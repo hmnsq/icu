@@ -4,48 +4,48 @@
 // locdistance.h
 // created: 2019may08 Markus W. Scherer
 
-#ifndef __LOCDISTANCE_H__
-#define __LOCDISTANCE_H__
+#اگر_غیر_تعریف_شدہ __LOCDISTANCE_H__
+#تعریف_کرو __LOCDISTANCE_H__
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/localematcher.h"
-#include "unicode/locid.h"
-#include "unicode/uobject.h"
-#include "lsr.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/bytestrie.h"
+#شامل "unicode/localematcher.h"
+#شامل "unicode/locid.h"
+#شامل "unicode/uobject.h"
+#شامل "lsr.h"
 
 U_NAMESPACE_BEGIN
 
-struct LocaleDistanceData;
+ساخت Locale_فاصلہ_ڈیٹا;
 
 /**
  * Offline-built data for LocaleMatcher.
  * Mostly but not only the data for mapping locales to their maximized forms.
  */
-class LocaleDistance final : public UMemory {
-public:
-    static const LocaleDistance *getSingleton(UErrorCode &errorCode);
+class Locale_فاصلہ final : عوامی UMemory {
+عوامی:
+    ساکن ثابت Locale_فاصلہ *getSingleton(UError_رمز &error_رمز);
 
-    static int32_t shiftDistance(int32_t distance) {
-        return distance << DISTANCE_SHIFT;
+    ساکن int32_t سرکاؤ_فاصلہ(int32_t فاصلہ) {
+        واپس فاصلہ << فاصلہ_سرکاؤ;
     }
 
-    static int32_t getShiftedDistance(int32_t indexAndDistance) {
-        return indexAndDistance & DISTANCE_MASK;
+    ساکن int32_t get_Shifted_فاصلہ(int32_t اشاریہ_And_فاصلہ) {
+        واپس اشاریہ_And_فاصلہ & فاصلہ_نقاب;
     }
 
-    static double getDistanceDouble(int32_t indexAndDistance) {
-        double shiftedDistance = getShiftedDistance(indexAndDistance);
-        return shiftedDistance / (1 << DISTANCE_SHIFT);
+    ساکن دوہرا get_فاصلہ_Double(int32_t اشاریہ_And_فاصلہ) {
+        دوہرا shifted_فاصلہ = get_Shifted_فاصلہ(اشاریہ_And_فاصلہ);
+        واپس shifted_فاصلہ / (1 << فاصلہ_سرکاؤ);
     }
 
-    static int32_t getDistanceFloor(int32_t indexAndDistance) {
-        return (indexAndDistance & DISTANCE_MASK) >> DISTANCE_SHIFT;
+    ساکن int32_t get_فاصلہ_Floor(int32_t اشاریہ_And_فاصلہ) {
+        واپس (اشاریہ_And_فاصلہ & فاصلہ_نقاب) >> فاصلہ_سرکاؤ;
     }
 
-    static int32_t getIndex(int32_t indexAndDistance) {
+    ساکن int32_t get_اشاریہ(int32_t اشاریہ_And_فاصلہ) {
         // assert indexAndDistance >= 0;
-        return indexAndDistance >> INDEX_SHIFT;
+        واپس اشاریہ_And_فاصلہ >> اشاریہ_سرکاؤ;
     }
 
     /**
@@ -56,96 +56,96 @@ public:
      * (negative if none has a distance below the threshold),
      * and its distance (0..ABOVE_THRESHOLD) in the low bits.
      */
-    int32_t getBestIndexAndDistance(const LSR &desired,
-                                    const LSR **supportedLSRs, int32_t supportedLSRsLength,
-                                    int32_t shiftedThreshold,
-                                    ULocMatchFavorSubtag favorSubtag,
-                                    ULocMatchDirection direction) const;
+    int32_t get_بہترین_اشاریہ_And_فاصلہ(ثابت LSR &desired,
+                                    ثابت LSR **supportedLSRs, int32_t supported_LSRs_لمبائی,
+                                    int32_t shifted_حد,
+                                    ULoc_مطابقت_Favor_Subtag favorSubtag,
+                                    ULoc_مطابقت_Direction direction) ثابت;
 
-    bool isParadigmLSR(const LSR &lsr) const;
+    bool isParadigmLSR(ثابت LSR &lsr) ثابت;
 
-    int32_t getDefaultScriptDistance() const {
-        return defaultScriptDistance;
+    int32_t get_Default_Script_فاصلہ() ثابت {
+        واپس default_Script_فاصلہ;
     }
 
-    int32_t getDefaultDemotionPerDesiredLocale() const {
-        return defaultDemotionPerDesiredLocale;
+    int32_t get_Default_Demotion_فی_Desired_Locale() ثابت {
+        واپس default_Demotion_فی_Desired_Locale;
     }
 
-private:
+نجی:
     // The distance is shifted left to gain some fraction bits.
-    static constexpr int32_t DISTANCE_SHIFT = 3;
-    static constexpr int32_t DISTANCE_FRACTION_MASK = 7;
+    ساکن constexpr int32_t فاصلہ_سرکاؤ = 3;
+    ساکن constexpr int32_t فاصلہ_FRACTION_نقاب = 7;
     // 7 bits for 0..100
-    static constexpr int32_t DISTANCE_INT_SHIFT = 7;
-    static constexpr int32_t INDEX_SHIFT = DISTANCE_INT_SHIFT + DISTANCE_SHIFT;
-    static constexpr int32_t DISTANCE_MASK = 0x3ff;
+    ساکن constexpr int32_t فاصلہ_INT_سرکاؤ = 7;
+    ساکن constexpr int32_t اشاریہ_سرکاؤ = فاصلہ_INT_سرکاؤ + فاصلہ_سرکاؤ;
+    ساکن constexpr int32_t فاصلہ_نقاب = 0x3ff;
     // tic constexpr int32_t MAX_INDEX = 0x1fffff;  // avoids sign bit
-    static constexpr int32_t INDEX_NEG_1 = 0xfffffc00;
+    ساکن constexpr int32_t اشاریہ_NEG_1 = 0xfffffc00;
 
-    LocaleDistance(const LocaleDistanceData &data, const LikelySubtags &likely);
-    LocaleDistance(const LocaleDistance &other) = delete;
-    LocaleDistance &operator=(const LocaleDistance &other) = delete;
+    Locale_فاصلہ(ثابت Locale_فاصلہ_ڈیٹا &ڈیٹا, ثابت LikelySubtags &likely);
+    Locale_فاصلہ(ثابت Locale_فاصلہ &other) = delete;
+    Locale_فاصلہ &عامل=(ثابت Locale_فاصلہ &other) = delete;
 
-    static void initLocaleDistance(UErrorCode &errorCode);
+    ساکن خالی init_Locale_فاصلہ(UError_رمز &error_رمز);
 
-    bool isMatch(const LSR &desired, const LSR &supported,
-                 int32_t shiftedThreshold, ULocMatchFavorSubtag favorSubtag) const {
-        const LSR *pSupp = &supported;
-        return getBestIndexAndDistance(
+    bool is_مطابقت(ثابت LSR &desired, ثابت LSR &supported,
+                 int32_t shifted_حد, ULoc_مطابقت_Favor_Subtag favorSubtag) ثابت {
+        ثابت LSR *pSupp = &supported;
+        واپس get_بہترین_اشاریہ_And_فاصلہ(
             desired, &pSupp, 1,
-            shiftedThreshold, favorSubtag, ULOCMATCH_DIRECTION_WITH_ONE_WAY) >= 0;
+            shifted_حد, favorSubtag, ULOCMATCH_DIRECTION_WITH_ONE_WAY) >= 0;
     }
 
-    static int32_t getDesSuppScriptDistance(BytesTrie &iter, uint64_t startState,
-                                            const char *desired, const char *supported);
+    ساکن int32_t get_Des_Supp_Script_فاصلہ(بائٹیں_Trie &iter, uint64_t آغاز_State,
+                                            ثابت حرف *desired, ثابت حرف *supported);
 
-    static int32_t getRegionPartitionsDistance(
-        BytesTrie &iter, uint64_t startState,
-        const char *desiredPartitions, const char *supportedPartitions,
-        int32_t threshold);
+    ساکن int32_t get_Region_Partitions_فاصلہ(
+        بائٹیں_Trie &iter, uint64_t آغاز_State,
+        ثابت حرف *desiredPartitions, ثابت حرف *supportedPartitions,
+        int32_t حد);
 
-    static int32_t getFallbackRegionDistance(BytesTrie &iter, uint64_t startState);
+    ساکن int32_t get_Fallback_Region_فاصلہ(بائٹیں_Trie &iter, uint64_t آغاز_State);
 
-    static int32_t trieNext(BytesTrie &iter, const char *s, bool wantValue);
+    ساکن int32_t trie_اگلا(بائٹیں_Trie &iter, ثابت حرف *s, bool want_قدر);
 
-    const char *partitionsForRegion(const LSR &lsr) const {
+    ثابت حرف *partitionsForRegion(ثابت LSR &lsr) ثابت {
         // ill-formed region -> one non-matching string
-        int32_t pIndex = regionToPartitionsIndex[lsr.regionIndex];
-        return partitionArrays[pIndex];
+        int32_t p_اشاریہ = region_مقصد_Partitions_اشاریہ[lsr.region_اشاریہ];
+        واپس تقسیم_Arrays[p_اشاریہ];
     }
 
-    int32_t getDefaultRegionDistance() const {
-        return defaultRegionDistance;
+    int32_t get_Default_Region_فاصلہ() ثابت {
+        واپس default_Region_فاصلہ;
     }
 
-    const LikelySubtags &likelySubtags;
+    ثابت LikelySubtags &likelySubtags;
 
     // The trie maps each dlang+slang+dscript+sscript+dregion+sregion
     // (encoded in ASCII with bit 7 set on the last character of each subtag) to a distance.
     // There is also a trie value for each subsequence of whole subtags.
     // One '*' is used for a (desired, supported) pair of "und", "Zzzz"/"", or "ZZ"/"".
-    BytesTrie trie;
+    بائٹیں_Trie trie;
 
     /**
      * Maps each region to zero or more single-character partitions.
      */
-    const uint8_t *regionToPartitionsIndex;
-    const char **partitionArrays;
+    ثابت uint8_t *region_مقصد_Partitions_اشاریہ;
+    ثابت حرف **تقسیم_Arrays;
 
     /**
      * Used to get the paradigm region for a cluster, if there is one.
      */
-    const LSR *paradigmLSRs;
-    int32_t paradigmLSRsLength;
+    ثابت LSR *paradigmLSRs;
+    int32_t paradigm_LSRs_لمبائی;
 
-    int32_t defaultLanguageDistance;
-    int32_t defaultScriptDistance;
-    int32_t defaultRegionDistance;
-    int32_t minRegionDistance;
-    int32_t defaultDemotionPerDesiredLocale;
+    int32_t default_Language_فاصلہ;
+    int32_t default_Script_فاصلہ;
+    int32_t default_Region_فاصلہ;
+    int32_t min_Region_فاصلہ;
+    int32_t default_Demotion_فی_Desired_Locale;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا
 
-#endif  // __LOCDISTANCE_H__
+#اگر_ختم  // __LOCDISTANCE_H__

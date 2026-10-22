@@ -23,18 +23,18 @@
 *============================================================================
 */
 
-#ifndef LOCMAP_H
-#define LOCMAP_H
+#اگر_غیر_تعریف_شدہ LOCMAP_H
+#تعریف_کرو LOCMAP_H
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#define LANGUAGE_LCID(hostID) (uint16_t)(0x03FF & hostID)
+#تعریف_کرو LANGUAGE_LCID(hostID) (uint16_t)(0x03FF & hostID)
 
-U_CAPI int32_t uprv_convertToPosix(uint32_t hostid, char* posixID, int32_t posixIDCapacity, UErrorCode* status);
+U_CAPI int32_t uprv_convert_مقصد_Posix(uint32_t hostid, حرف* posixID, int32_t posixIDCapacity, UError_رمز* حالت_2);
 
 /* Don't call these functions directly. Use uloc_getLCID instead. */
-U_CAPI uint32_t uprv_convertToLCIDPlatform(const char* localeID, UErrorCode* status); // Leverage platform conversion if possible
-U_CAPI uint32_t uprv_convertToLCID(const char* langID, const char* posixID, UErrorCode* status);
+U_CAPI uint32_t uprv_convert_مقصد_LCIDPlatform(ثابت حرف* localeID, UError_رمز* حالت_2); // Leverage platform conversion if possible
+U_CAPI uint32_t uprv_convert_مقصد_LCID(ثابت حرف* langID, ثابت حرف* posixID, UError_رمز* حالت_2);
 
-#endif /* LOCMAP_H */
+#اگر_ختم /* LOCMAP_H */
 

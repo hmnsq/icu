@@ -4,13 +4,13 @@
 // charstrmap.h
 // created: 2020sep01 Frank Yung-Fong Tang
 
-#ifndef __CHARSTRMAP_H__
-#define __CHARSTRMAP_H__
+#اگر_غیر_تعریف_شدہ __CHARSTRMAP_H__
+#تعریف_کرو __CHARSTRMAP_H__
 
-#include <utility>
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "uhash.h"
+#شامل <utility>
+#شامل "unicode/utypes.h"
+#شامل "unicode/uobject.h"
+#شامل "uhash.h"
 
 U_NAMESPACE_BEGIN
 
@@ -18,38 +18,38 @@ U_NAMESPACE_BEGIN
  * Map of const char * keys & values.
  * Stores pointers as is: Does not own/copy/adopt/release strings.
  */
-class CharStringMap final : public UMemory {
-public:
+class CharStringMap final : عوامی UMemory {
+عوامی:
     /** Constructs an unusable non-map. */
     CharStringMap() : map(nullptr) {}
-    CharStringMap(int32_t size, UErrorCode &errorCode) {
-        map = uhash_openSize(uhash_hashChars, uhash_compareChars, uhash_compareChars,
-                             size, &errorCode);
+    CharStringMap(int32_t سائز_2, UError_رمز &error_رمز) {
+        map = uhash_open_سائز(uhash_hashChars, uhash_compareChars, uhash_compareChars,
+                             سائز_2, &error_رمز);
     }
     CharStringMap(CharStringMap &&other) noexcept : map(other.map) {
         other.map = nullptr;
     }
-    CharStringMap(const CharStringMap &other) = delete;
+    CharStringMap(ثابت CharStringMap &other) = delete;
     ~CharStringMap() {
         uhash_close(map);
     }
 
-    CharStringMap &operator=(CharStringMap &&other) noexcept {
+    CharStringMap &عامل=(CharStringMap &&other) noexcept {
         map = other.map;
         other.map = nullptr;
-        return *this;
+        واپس *this;
     }
-    CharStringMap &operator=(const CharStringMap &other) = delete;
+    CharStringMap &عامل=(ثابت CharStringMap &other) = delete;
 
-    const char *get(const char *key) const { return static_cast<const char *>(uhash_get(map, key)); }
-    void put(const char *key, const char *value, UErrorCode &errorCode) {
-        uhash_put(map, const_cast<char *>(key), const_cast<char *>(value), &errorCode);
+    ثابت حرف *get(ثابت حرف *کلید) ثابت { واپس static_cast<ثابت حرف *>(uhash_get(map, کلید)); }
+    خالی put(ثابت حرف *کلید, ثابت حرف *قدر_2, UError_رمز &error_رمز) {
+        uhash_put(map, const_cast<حرف *>(کلید), const_cast<حرف *>(قدر_2), &error_رمز);
     }
 
-private:
+نجی:
     UHashtable *map;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا
 
-#endif  //  __CHARSTRMAP_H__
+#اگر_ختم  //  __CHARSTRMAP_H__

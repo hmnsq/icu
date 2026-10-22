@@ -11,13 +11,13 @@
 **********************************************************************
 */
 
-#ifndef CHARSTRING_H
-#define CHARSTRING_H
+#اگر_غیر_تعریف_شدہ CHARSTRING_H
+#تعریف_کرو CHARSTRING_H
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
-#include "cmemory.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/unistr.h"
+#شامل "unicode/uobject.h"
+#شامل "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
@@ -32,20 +32,20 @@ U_NAMESPACE_BEGIN
  * For example:
  *   cs.data()[5]='a';  // no need for setCharAt(5, 'a')
  */
-class U_COMMON_API_CLASS CharString : public UMemory {
-public:
-    U_COMMON_API CharString() : len(0) { buffer[0]=0; }
-    U_COMMON_API CharString(StringPiece s, UErrorCode &errorCode) : len(0) {
-        buffer[0]=0;
-        append(s, errorCode);
+class U_COMMON_API_CLASS CharString : عوامی UMemory {
+عوامی:
+    U_COMMON_API CharString() : len(0) { بفر[0]=0; }
+    U_COMMON_API CharString(StringPiece s, UError_رمز &error_رمز) : len(0) {
+        بفر[0]=0;
+        append(s, error_رمز);
     }
-    U_COMMON_API CharString(const CharString &s, UErrorCode &errorCode) : len(0) {
-        buffer[0]=0;
-        append(s, errorCode);
+    U_COMMON_API CharString(ثابت CharString &s, UError_رمز &error_رمز) : len(0) {
+        بفر[0]=0;
+        append(s, error_رمز);
     }
-    U_COMMON_API CharString(const char *s, int32_t sLength, UErrorCode &errorCode) : len(0) {
-        buffer[0]=0;
-        append(s, sLength, errorCode);
+    U_COMMON_API CharString(ثابت حرف *s, int32_t s_لمبائی, UError_رمز &error_رمز) : len(0) {
+        بفر[0]=0;
+        append(s, s_لمبائی, error_رمز);
     }
     U_COMMON_API ~CharString() {}
 
@@ -59,7 +59,7 @@ public:
      * This string will have the same contents and state that the source string had.
      * The behavior is undefined if *this and src are the same object.
      */
-    U_COMMON_API CharString &operator=(CharString &&src) noexcept;
+    U_COMMON_API CharString &عامل=(CharString &&src) noexcept;
 
     /**
      * Replaces this string's contents with the other string's contents.
@@ -67,21 +67,21 @@ public:
      * the assignment operator, to make copies explicit and to
      * use a UErrorCode where memory allocations might be needed.
      */
-    U_COMMON_API CharString &copyFrom(const CharString &other, UErrorCode &errorCode);
-    U_COMMON_API CharString &copyFrom(StringPiece s, UErrorCode &errorCode);
+    U_COMMON_API CharString &copyFrom(ثابت CharString &other, UError_رمز &error_رمز);
+    U_COMMON_API CharString &copyFrom(StringPiece s, UError_رمز &error_رمز);
 
-    U_COMMON_API UBool isEmpty() const { return len==0; }
-    U_COMMON_API int32_t length() const { return len; }
-    U_COMMON_API char operator[](int32_t index) const { return buffer[index]; }
-    U_COMMON_API StringPiece toStringPiece() const { return StringPiece(buffer.getAlias(), len); }
+    U_COMMON_API UBool is_خالی_خانے() ثابت { واپس len==0; }
+    U_COMMON_API int32_t لمبائی() ثابت { واپس len; }
+    U_COMMON_API حرف عامل[](int32_t اشاریہ) ثابت { واپس بفر[اشاریہ]; }
+    U_COMMON_API StringPiece مقصد_String_Piece() ثابت { واپس StringPiece(بفر.getAlias(), len); }
 
-    U_COMMON_API const char *data() const { return buffer.getAlias(); }
-    U_COMMON_API char *data() { return buffer.getAlias(); }
+    U_COMMON_API ثابت حرف *ڈیٹا() ثابت { واپس بفر.getAlias(); }
+    U_COMMON_API حرف *ڈیٹا() { واپس بفر.getAlias(); }
     /**
      * Allocates length()+1 chars and copies the NUL-terminated data().
      * The caller must uprv_free() the result.
      */
-    U_COMMON_API char *cloneData(UErrorCode &errorCode) const;
+    U_COMMON_API حرف *clone_ڈیٹا(UError_رمز &error_رمز) ثابت;
     /**
      * Copies the contents of the string into dest.
      * Checks if there is enough space in dest, extracts the entire string if possible,
@@ -97,40 +97,40 @@ public:
      * @param errorCode ICU error code.
      * @return length()
      */
-    U_COMMON_API int32_t extract(char *dest, int32_t capacity, UErrorCode &errorCode) const;
+    U_COMMON_API int32_t نکالو(حرف *dest, int32_t استعداد, UError_رمز &error_رمز) ثابت;
 
-    U_COMMON_API bool operator==(const CharString& other) const {
-        return len == other.length() && (len == 0 || uprv_memcmp(data(), other.data(), len) == 0);
+    U_COMMON_API bool عامل==(ثابت CharString& other) ثابت {
+        واپس len == other.لمبائی() && (len == 0 || uprv_memcmp(ڈیٹا(), other.ڈیٹا(), len) == 0);
     }
-    U_COMMON_API bool operator!=(const CharString& other) const {
-        return !operator==(other);
+    U_COMMON_API bool عامل!=(ثابت CharString& other) ثابت {
+        واپس !عامل==(other);
     }
 
-    U_COMMON_API bool operator==(StringPiece other) const {
-        return len == other.length() && (len == 0 || uprv_memcmp(data(), other.data(), len) == 0);
+    U_COMMON_API bool عامل==(StringPiece other) ثابت {
+        واپس len == other.لمبائی() && (len == 0 || uprv_memcmp(ڈیٹا(), other.ڈیٹا(), len) == 0);
     }
-    U_COMMON_API bool operator!=(StringPiece other) const {
-        return !operator==(other);
+    U_COMMON_API bool عامل!=(StringPiece other) ثابت {
+        واپس !عامل==(other);
     }
 
     /** @return last index of c, or -1 if c is not in this string */
-    U_COMMON_API int32_t lastIndexOf(char c) const;
+    U_COMMON_API int32_t آخری_اشاریہ_کا(حرف c) ثابت;
 
-    U_COMMON_API bool contains(StringPiece s) const;
+    U_COMMON_API bool شامل_ہے(StringPiece s) ثابت;
 
-    U_COMMON_API CharString &clear() { len=0; buffer[0]=0; return *this; }
-    U_COMMON_API CharString &truncate(int32_t newLength);
+    U_COMMON_API CharString &clear() { len=0; بفر[0]=0; واپس *this; }
+    U_COMMON_API CharString &truncate(int32_t new_لمبائی);
 
-    U_COMMON_API CharString &append(char c, UErrorCode &errorCode);
-    U_COMMON_API CharString &append(StringPiece s, UErrorCode &errorCode) {
-        return append(s.data(), s.length(), errorCode);
+    U_COMMON_API CharString &append(حرف c, UError_رمز &error_رمز);
+    U_COMMON_API CharString &append(StringPiece s, UError_رمز &error_رمز) {
+        واپس append(s.ڈیٹا(), s.لمبائی(), error_رمز);
     }
-    U_COMMON_API CharString &append(const CharString &s, UErrorCode &errorCode) {
-        return append(s.data(), s.length(), errorCode);
+    U_COMMON_API CharString &append(ثابت CharString &s, UError_رمز &error_رمز) {
+        واپس append(s.ڈیٹا(), s.لمبائی(), error_رمز);
     }
-    U_COMMON_API CharString &append(const char *s, int32_t sLength, UErrorCode &status);
+    U_COMMON_API CharString &append(ثابت حرف *s, int32_t s_لمبائی, UError_رمز &حالت_2);
 
-    U_COMMON_API CharString &appendNumber(int64_t number, UErrorCode &status);
+    U_COMMON_API CharString &append_نمبر(int64_t نمبر, UError_رمز &حالت_2);
 
     /**
      * Returns a writable buffer for appending and writes the buffer's capacity to
@@ -152,46 +152,46 @@ public:
      * @param errorCode in/out error code
      * @return a buffer with resultCapacity>=min_capacity
      */
-    U_COMMON_API char *getAppendBuffer(int32_t minCapacity,
-                                       int32_t desiredCapacityHint,
-                                       int32_t &resultCapacity,
-                                       UErrorCode &errorCode);
+    U_COMMON_API حرف *get_Append_بفر(int32_t min_استعداد,
+                                       int32_t desired_استعداد_Hint,
+                                       int32_t &نتیجہ_استعداد,
+                                       UError_رمز &error_رمز);
 
-    U_COMMON_API CharString &appendInvariantChars(const UnicodeString &s, UErrorCode &errorCode);
-    U_COMMON_API CharString &appendInvariantChars(const char16_t* uchars,
+    U_COMMON_API CharString &appendInvariantChars(ثابت UnicodeString &s, UError_رمز &error_رمز);
+    U_COMMON_API CharString &appendInvariantChars(ثابت char16_t* uchars,
                                                   int32_t ucharsLen,
-                                                  UErrorCode& errorCode);
+                                                  UError_رمز& error_رمز);
 
     /**
      * Appends a filename/path part, e.g., a directory name.
      * First appends a U_FILE_SEP_CHAR or U_FILE_ALT_SEP_CHAR if necessary.
      * Does nothing if s is empty.
      */
-    U_COMMON_API CharString &appendPathPart(StringPiece s, UErrorCode &errorCode);
+    U_COMMON_API CharString &append_راستہ_Part(StringPiece s, UError_رمز &error_رمز);
 
     /**
      * Appends a U_FILE_SEP_CHAR or U_FILE_ALT_SEP_CHAR if this string is not empty
      * and does not already end with a U_FILE_SEP_CHAR or U_FILE_ALT_SEP_CHAR.
      */
-    U_COMMON_API CharString &ensureEndsWithFileSeparator(UErrorCode &errorCode);
+    U_COMMON_API CharString &ensure_سرے_With_File_Separator(UError_رمز &error_رمز);
 
-private:
-    MaybeStackArray<char, 40> buffer;
+نجی:
+    Maybe_ڈھیر_Array<حرف, 40> بفر;
     int32_t len;
 
-    UBool ensureCapacity(int32_t capacity, int32_t desiredCapacityHint, UErrorCode &errorCode);
+    UBool ensure_استعداد(int32_t استعداد, int32_t desired_استعداد_Hint, UError_رمز &error_رمز);
 
-    CharString(const CharString &other) = delete; // forbid copying of this class
-    CharString &operator=(const CharString &other) = delete; // forbid copying of this class
+    CharString(ثابت CharString &other) = delete; // forbid copying of this class
+    CharString &عامل=(ثابت CharString &other) = delete; // forbid copying of this class
 
     /**
      * Returns U_FILE_ALT_SEP_CHAR if found in string, and U_FILE_SEP_CHAR is not found.
      * Otherwise returns U_FILE_SEP_CHAR.
      */
-    char getDirSepChar() const;
+    حرف getDirSepChar() ثابت;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا
 
-#endif
+#اگر_ختم
 //eof

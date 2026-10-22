@@ -16,40 +16,40 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !U_HAVE_WCSCPY
+#اگر !U_HAVE_WCSCPY
 
-#include "cwchar.h"
+#شامل "cwchar.h"
 
-U_CAPI wchar_t *uprv_wcscat(wchar_t *dst, const wchar_t *src) {
-    wchar_t *start=dst;
-    while(*dst!=0) {
+U_CAPI wchar_t *uprv_wcscat(wchar_t *dst, ثابت wchar_t *src) {
+    wchar_t *آغاز=dst;
+    جب(*dst!=0) {
         ++dst;
     }
-    while((*dst=*src)!=0) {
-        ++dst;
-        ++src;
-    }
-    return start;
-}
-
-U_CAPI wchar_t *uprv_wcscpy(wchar_t *dst, const wchar_t *src) {
-    wchar_t *start=dst;
-    while((*dst=*src)!=0) {
+    جب((*dst=*src)!=0) {
         ++dst;
         ++src;
     }
-    return start;
+    واپس آغاز;
 }
 
-U_CAPI size_t uprv_wcslen(const wchar_t *src) {
-    const wchar_t *start=src;
-    while(*src!=0) {
+U_CAPI wchar_t *uprv_wcscpy(wchar_t *dst, ثابت wchar_t *src) {
+    wchar_t *آغاز=dst;
+    جب((*dst=*src)!=0) {
+        ++dst;
         ++src;
     }
-    return src-start;
+    واپس آغاز;
 }
 
-#endif
+U_CAPI size_t uprv_wcslen(ثابت wchar_t *src) {
+    ثابت wchar_t *آغاز=src;
+    جب(*src!=0) {
+        ++src;
+    }
+    واپس src-آغاز;
+}
+
+#اگر_ختم
 

@@ -7,12 +7,12 @@
 ******************************************************************************
 */
 
-#include "utypeinfo.h"  // for 'typeid' to work
+#شامل "utypeinfo.h"  // for 'typeid' to work
 
-#include "unicode/uchriter.h"
-#include "unicode/ustring.h"
-#include "unicode/utf16.h"
-#include "ustr_imp.h"
+#شامل "unicode/uchriter.h"
+#شامل "unicode/ustring.h"
+#شامل "unicode/utf16.h"
+#شامل "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -20,349 +20,349 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UCharCharacterIterator)
 
 UCharCharacterIterator::UCharCharacterIterator()
   : CharacterIterator(),
-  text(nullptr)
+  متن(خالی_اشاریہ)
 {
     // never default construct!
 }
 
-UCharCharacterIterator::UCharCharacterIterator(ConstChar16Ptr textPtr U_LIFETIME_BOUND,
+UCharCharacterIterator::UCharCharacterIterator(ConstChar16Ptr متن_Ptr U_LIFETIME_BOUND,
                                                int32_t length)
-  : CharacterIterator(textPtr != nullptr ? (length >= 0 ? length : u_strlen(textPtr)) : 0),
-  text(textPtr)
+  : CharacterIterator(متن_Ptr != خالی_اشاریہ ? (length >= 0 ? length : u_strlen(متن_Ptr)) : 0),
+  متن(متن_Ptr)
 {
 }
 
-UCharCharacterIterator::UCharCharacterIterator(ConstChar16Ptr textPtr U_LIFETIME_BOUND,
+UCharCharacterIterator::UCharCharacterIterator(ConstChar16Ptr متن_Ptr U_LIFETIME_BOUND,
                                                int32_t length,
                                                int32_t position)
-  : CharacterIterator(textPtr != nullptr ? (length >= 0 ? length : u_strlen(textPtr)) : 0, position),
-  text(textPtr)
+  : CharacterIterator(متن_Ptr != خالی_اشاریہ ? (length >= 0 ? length : u_strlen(متن_Ptr)) : 0, position),
+  متن(متن_Ptr)
 {
 }
 
-UCharCharacterIterator::UCharCharacterIterator(ConstChar16Ptr textPtr U_LIFETIME_BOUND,
+UCharCharacterIterator::UCharCharacterIterator(ConstChar16Ptr متن_Ptr U_LIFETIME_BOUND,
                                                int32_t length,
-                                               int32_t textBegin,
-                                               int32_t textEnd,
+                                               int32_t متن_Begin,
+                                               int32_t متن_انتہا,
                                                int32_t position)
-  : CharacterIterator(textPtr != nullptr ? (length >= 0 ? length : u_strlen(textPtr)) : 0,
-                      textBegin, textEnd, position),
-  text(textPtr)
+  : CharacterIterator(متن_Ptr != خالی_اشاریہ ? (length >= 0 ? length : u_strlen(متن_Ptr)) : 0,
+                      متن_Begin, متن_انتہا, position),
+  متن(متن_Ptr)
 {
 }
 
-UCharCharacterIterator::UCharCharacterIterator(const UCharCharacterIterator& that)
+UCharCharacterIterator::UCharCharacterIterator(ثابت UCharCharacterIterator& that)
 : CharacterIterator(that),
-  text(that.text)
+  متن(that.متن)
 {
 }
 
 UCharCharacterIterator&
-UCharCharacterIterator::operator=(const UCharCharacterIterator& that) U_LIFETIME_BOUND {
-    CharacterIterator::operator=(that);
-    text = that.text;
-    return *this;
+UCharCharacterIterator::عامل=(ثابت UCharCharacterIterator& that) U_LIFETIME_BOUND {
+    CharacterIterator::عامل=(that);
+    متن = that.متن;
+    واپس *یہ;
 }
 
 UCharCharacterIterator::~UCharCharacterIterator() {
 }
 
-bool
-UCharCharacterIterator::operator==(const ForwardCharacterIterator& that) const {
-    if (this == &that) {
-        return true;
+منطقی
+UCharCharacterIterator::عامل==(ثابت ForwardCharacterIterator& that) ثابت {
+    اگر (یہ == &that) {
+        واپس سچ;
     }
-    if (typeid(*this) != typeid(that)) {
-        return false;
+    اگر (typeid(*یہ) != typeid(that)) {
+        واپس جھوٹ;
     }
 
-    const UCharCharacterIterator&    realThat = static_cast<const UCharCharacterIterator&>(that);
+    ثابت UCharCharacterIterator&    realThat = static_cast<ثابت UCharCharacterIterator&>(that);
 
-    return text == realThat.text
-        && textLength == realThat.textLength
+    واپس متن == realThat.متن
+        && متن_لمبائی == realThat.متن_لمبائی
         && pos == realThat.pos
         && begin == realThat.begin
-        && end == realThat.end;
+        && انتہا == realThat.انتہا;
 }
 
 int32_t
-UCharCharacterIterator::hashCode() const {
-    return ustr_hashUCharsN(text, textLength) ^ pos ^ begin ^ end;
+UCharCharacterIterator::hash_رمز() ثابت {
+    واپس ustr_hashUCharsN(متن, متن_لمبائی) ^ pos ^ begin ^ انتہا;
 }
 
 UCharCharacterIterator*
-UCharCharacterIterator::clone() const {
-    return new UCharCharacterIterator(*this);
+UCharCharacterIterator::clone() ثابت {
+    واپس نیا UCharCharacterIterator(*یہ);
 }
 
 char16_t
 UCharCharacterIterator::first() {
     pos = begin;
-    if(pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    اگر(pos < انتہا) {
+        واپس متن[pos];
+    } ورنہ {
+        واپس مکمل_2;
     }
 }
 
 char16_t
-UCharCharacterIterator::firstPostInc() {
+UCharCharacterIterator::پہلا_Post_Inc() {
     pos = begin;
-    if(pos < end) {
-        return text[pos++];
-    } else {
-        return DONE;
+    اگر(pos < انتہا) {
+        واپس متن[pos++];
+    } ورنہ {
+        واپس مکمل_2;
     }
 }
 
 char16_t
-UCharCharacterIterator::last() {
-    pos = end;
-    if(pos > begin) {
-        return text[--pos];
-    } else {
-        return DONE;
+UCharCharacterIterator::آخری() {
+    pos = انتہا;
+    اگر(pos > begin) {
+        واپس متن[--pos];
+    } ورنہ {
+        واپس مکمل_2;
     }
 }
 
 char16_t
-UCharCharacterIterator::setIndex(int32_t position) {
-    if(position < begin) {
+UCharCharacterIterator::سیٹ_اشاریہ(int32_t position) {
+    اگر(position < begin) {
         pos = begin;
-    } else if(position > end) {
-        pos = end;
-    } else {
+    } ورنہ اگر(position > انتہا) {
+        pos = انتہا;
+    } ورنہ {
         pos = position;
     }
-    if(pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    اگر(pos < انتہا) {
+        واپس متن[pos];
+    } ورنہ {
+        واپس مکمل_2;
     }
 }
 
 char16_t
-UCharCharacterIterator::current() const {
-    if (pos >= begin && pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+UCharCharacterIterator::current() ثابت {
+    اگر (pos >= begin && pos < انتہا) {
+        واپس متن[pos];
+    } ورنہ {
+        واپس مکمل_2;
     }
 }
 
 char16_t
 UCharCharacterIterator::next() {
-    if (pos + 1 < end) {
-        return text[++pos];
-    } else {
+    اگر (pos + 1 < انتہا) {
+        واپس متن[++pos];
+    } ورنہ {
         /* make current() return DONE */
-        pos = end;
-        return DONE;
+        pos = انتہا;
+        واپس مکمل_2;
     }
 }
 
 char16_t
-UCharCharacterIterator::nextPostInc() {
-    if (pos < end) {
-        return text[pos++];
-    } else {
-        return DONE;
+UCharCharacterIterator::اگلا_Post_Inc() {
+    اگر (pos < انتہا) {
+        واپس متن[pos++];
+    } ورنہ {
+        واپس مکمل_2;
     }
 }
 
 UBool
-UCharCharacterIterator::hasNext() {
-    return pos < end;
+UCharCharacterIterator::has_اگلا() {
+    واپس pos < انتہا;
 }
 
 char16_t
-UCharCharacterIterator::previous() {
-    if (pos > begin) {
-        return text[--pos];
-    } else {
-        return DONE;
+UCharCharacterIterator::پچھلا_2() {
+    اگر (pos > begin) {
+        واپس متن[--pos];
+    } ورنہ {
+        واپس مکمل_2;
     }
 }
 
 UBool
-UCharCharacterIterator::hasPrevious() {
-    return pos > begin;
+UCharCharacterIterator::has_پچھلا() {
+    واپس pos > begin;
 }
 
 UChar32
 UCharCharacterIterator::first32() {
     pos = begin;
-    if(pos < end) {
+    اگر(pos < انتہا) {
         int32_t i = pos;
         UChar32 c;
-        U16_NEXT(text, i, end, c);
-        return c;
-    } else {
-        return DONE;
+        U16_اگلا(متن, i, انتہا, c);
+        واپس c;
+    } ورنہ {
+        واپس مکمل_2;
     }
 }
 
 UChar32
 UCharCharacterIterator::first32PostInc() {
     pos = begin;
-    if(pos < end) {
+    اگر(pos < انتہا) {
         UChar32 c;
-        U16_NEXT(text, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        U16_اگلا(متن, pos, انتہا, c);
+        واپس c;
+    } ورنہ {
+        واپس مکمل_2;
     }
 }
 
 UChar32
 UCharCharacterIterator::last32() {
-    pos = end;
-    if(pos > begin) {
+    pos = انتہا;
+    اگر(pos > begin) {
         UChar32 c;
-        U16_PREV(text, begin, pos, c);
-        return c;
-    } else {
-        return DONE;
+        U16_پچھلا(متن, begin, pos, c);
+        واپس c;
+    } ورنہ {
+        واپس مکمل_2;
     }
 }
 
 UChar32
-UCharCharacterIterator::setIndex32(int32_t position) {
-    if(position < begin) {
+UCharCharacterIterator::سیٹ_Index32(int32_t position) {
+    اگر(position < begin) {
         position = begin;
-    } else if(position > end) {
-        position = end;
+    } ورنہ اگر(position > انتہا) {
+        position = انتہا;
     }
-    if(position < end) {
-        U16_SET_CP_START(text, begin, position);
-        int32_t i = this->pos = position;
+    اگر(position < انتہا) {
+        U16_سیٹ_CP_آغاز(متن, begin, position);
+        int32_t i = یہ->pos = position;
         UChar32 c;
-        U16_NEXT(text, i, end, c);
-        return c;
-    } else {
-        this->pos = position;
-        return DONE;
+        U16_اگلا(متن, i, انتہا, c);
+        واپس c;
+    } ورنہ {
+        یہ->pos = position;
+        واپس مکمل_2;
     }
 }
 
 UChar32
-UCharCharacterIterator::current32() const {
-    if (pos >= begin && pos < end) {
+UCharCharacterIterator::current32() ثابت {
+    اگر (pos >= begin && pos < انتہا) {
         UChar32 c;
-        U16_GET(text, begin, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        U16_GET(متن, begin, pos, انتہا, c);
+        واپس c;
+    } ورنہ {
+        واپس مکمل_2;
     }
 }
 
 UChar32
 UCharCharacterIterator::next32() {
-    if (pos < end) {
-        U16_FWD_1(text, pos, end);
-        if(pos < end) {
+    اگر (pos < انتہا) {
+        U16_FWD_1(متن, pos, انتہا);
+        اگر(pos < انتہا) {
             int32_t i = pos;
             UChar32 c;
-            U16_NEXT(text, i, end, c);
-            return c;
+            U16_اگلا(متن, i, انتہا, c);
+            واپس c;
         }
     }
     /* make current() return DONE */
-    pos = end;
-    return DONE;
+    pos = انتہا;
+    واپس مکمل_2;
 }
 
 UChar32
 UCharCharacterIterator::next32PostInc() {
-    if (pos < end) {
+    اگر (pos < انتہا) {
         UChar32 c;
-        U16_NEXT(text, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        U16_اگلا(متن, pos, انتہا, c);
+        واپس c;
+    } ورنہ {
+        واپس مکمل_2;
     }
 }
 
 UChar32
 UCharCharacterIterator::previous32() {
-    if (pos > begin) {
+    اگر (pos > begin) {
         UChar32 c;
-        U16_PREV(text, begin, pos, c);
-        return c;
-    } else {
-        return DONE;
+        U16_پچھلا(متن, begin, pos, c);
+        واپس c;
+    } ورنہ {
+        واپس مکمل_2;
     }
 }
 
 int32_t
 UCharCharacterIterator::move(int32_t delta, CharacterIterator::EOrigin origin) {
-    switch(origin) {
-    case kStart:
+    انتخاب(origin) {
+    حالت k_آغاز:
         pos = begin + delta;
-        break;
-    case kCurrent:
+        توڑو;
+    حالت kCurrent:
         pos += delta;
-        break;
-    case kEnd:
-        pos = end + delta;
-        break;
-    default:
-        break;
+        توڑو;
+    حالت k_انتہا:
+        pos = انتہا + delta;
+        توڑو;
+    طےشدہ:
+        توڑو;
     }
 
-    if(pos < begin) {
+    اگر(pos < begin) {
         pos = begin;
-    } else if(pos > end) {
-        pos = end;
+    } ورنہ اگر(pos > انتہا) {
+        pos = انتہا;
     }
 
-    return pos;
+    واپس pos;
 }
 
 int32_t
 UCharCharacterIterator::move32(int32_t delta, CharacterIterator::EOrigin origin) {
     // this implementation relies on the "safe" version of the UTF macros
     // (or the trustworthiness of the caller)
-    switch(origin) {
-    case kStart:
+    انتخاب(origin) {
+    حالت k_آغاز:
         pos = begin;
-        if(delta > 0) {
-            U16_FWD_N(text, pos, end, delta);
+        اگر(delta > 0) {
+            U16_FWD_N(متن, pos, انتہا, delta);
         }
-        break;
-    case kCurrent:
-        if(delta > 0) {
-            U16_FWD_N(text, pos, end, delta);
-        } else {
-            U16_BACK_N(text, begin, pos, -delta);
+        توڑو;
+    حالت kCurrent:
+        اگر(delta > 0) {
+            U16_FWD_N(متن, pos, انتہا, delta);
+        } ورنہ {
+            U16_عقب_N(متن, begin, pos, -delta);
         }
-        break;
-    case kEnd:
-        pos = end;
-        if(delta < 0) {
-            U16_BACK_N(text, begin, pos, -delta);
+        توڑو;
+    حالت k_انتہا:
+        pos = انتہا;
+        اگر(delta < 0) {
+            U16_عقب_N(متن, begin, pos, -delta);
         }
-        break;
-    default:
-        break;
+        توڑو;
+    طےشدہ:
+        توڑو;
     }
 
-    return pos;
+    واپس pos;
 }
 
-void UCharCharacterIterator::setText(ConstChar16Ptr newText,
-                                     int32_t      newTextLength) {
-    text = newText;
-    if (newText == nullptr || newTextLength < 0) {
-        newTextLength = 0;
+خالی UCharCharacterIterator::سیٹ_متن(ConstChar16Ptr new_متن,
+                                     int32_t      new_متن_لمبائی) {
+    متن = new_متن;
+    اگر (new_متن == خالی_اشاریہ || new_متن_لمبائی < 0) {
+        new_متن_لمبائی = 0;
     }
-    end = textLength = newTextLength;
+    انتہا = متن_لمبائی = new_متن_لمبائی;
     pos = begin = 0;
 }
 
-void
-UCharCharacterIterator::getText(UnicodeString& result) {
-    result = UnicodeString(text, textLength);
+خالی
+UCharCharacterIterator::get_متن(UnicodeString& نتیجہ) {
+    نتیجہ = UnicodeString(متن, متن_لمبائی);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا

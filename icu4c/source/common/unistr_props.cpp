@@ -18,60 +18,60 @@
 *   Character property dependent functions moved here from unistr.cpp
 */
 
-#include "unicode/utypes.h"
-#include "unicode/uchar.h"
-#include "unicode/unistr.h"
-#include "unicode/utf16.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/uchar.h"
+#شامل "unicode/unistr.h"
+#شامل "unicode/utf16.h"
 
 U_NAMESPACE_BEGIN
 
 UnicodeString& 
 UnicodeString::trim() U_LIFETIME_BOUND
 {
-  if(isBogus()) {
-    return *this;
+  اگر(isBogus()) {
+    واپس *یہ;
   }
 
-  char16_t *array = getArrayStart();
+  char16_t *array = get_Array_آغاز();
   UChar32 c;
-  int32_t oldLength = this->length();
-  int32_t i = oldLength, length;
+  int32_t old_لمبائی = یہ->length();
+  int32_t i = old_لمبائی, length;
 
   // first cut off trailing white space
-  for(;;) {
+  برائے(;;) {
     length = i;
-    if(i <= 0) {
-      break;
+    اگر(i <= 0) {
+      توڑو;
     }
-    U16_PREV(array, 0, i, c);
-    if(!(c == 0x20 || u_isWhitespace(c))) {
-      break;
+    U16_پچھلا(array, 0, i, c);
+    اگر(!(c == 0x20 || u_isWhitespace(c))) {
+      توڑو;
     }
   }
-  if(length < oldLength) {
-    setLength(length);
+  اگر(length < old_لمبائی) {
+    سیٹ_لمبائی(length);
   }
 
   // find leading white space
-  int32_t start;
+  int32_t آغاز;
   i = 0;
-  for(;;) {
-    start = i;
-    if(i >= length) {
-      break;
+  برائے(;;) {
+    آغاز = i;
+    اگر(i >= length) {
+      توڑو;
     }
-    U16_NEXT(array, i, length, c);
-    if(!(c == 0x20 || u_isWhitespace(c))) {
-      break;
+    U16_اگلا(array, i, length, c);
+    اگر(!(c == 0x20 || u_isWhitespace(c))) {
+      توڑو;
     }
   }
 
   // move string forward over leading white space
-  if(start > 0) {
-    doReplace(0, start, nullptr, 0, 0);
+  اگر(آغاز > 0) {
+    doReplace(0, آغاز, خالی_اشاریہ, 0, 0);
   }
 
-  return *this;
+  واپس *یہ;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا

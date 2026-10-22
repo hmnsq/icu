@@ -18,54 +18,54 @@
 *   Internal USet definitions.
 */
 
-#ifndef __USET_IMP_H__
-#define __USET_IMP_H__
+#اگر_غیر_تعریف_شدہ __USET_IMP_H__
+#تعریف_کرو __USET_IMP_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/uset.h"
 
 U_CDECL_BEGIN
 
-typedef void U_CALLCONV
-USetAdd(USet *set, UChar32 c);
+قسمتعریف خالی U_CALLCONV
+USet_جوڑو(USet *سیٹ, UChar32 c);
 
-typedef void U_CALLCONV
-USetAddRange(USet *set, UChar32 start, UChar32 end);
+قسمتعریف خالی U_CALLCONV
+USet_جوڑو_Range(USet *سیٹ, UChar32 آغاز, UChar32 انتہا);
 
-typedef void U_CALLCONV
-USetAddString(USet *set, const UChar *str, int32_t length);
+قسمتعریف خالی U_CALLCONV
+USet_جوڑو_String(USet *سیٹ, ثابت UChar *str, int32_t لمبائی);
 
-typedef void U_CALLCONV
-USetRemove(USet *set, UChar32 c);
+قسمتعریف خالی U_CALLCONV
+USetRemove(USet *سیٹ, UChar32 c);
 
-typedef void U_CALLCONV
-USetRemoveRange(USet *set, UChar32 start, UChar32 end);
+قسمتعریف خالی U_CALLCONV
+USetRemoveRange(USet *سیٹ, UChar32 آغاز, UChar32 انتہا);
 
 /**
  * Interface for adding items to a USet, to keep low-level code from
  * statically depending on the USet implementation.
  * Calls will look like sa->add(sa->set, c);
  */
-struct USetAdder {
-    USet *set;
-    USetAdd *add;
-    USetAddRange *addRange;
-    USetAddString *addString;
+ساخت USetAdder {
+    USet *سیٹ;
+    USet_جوڑو *جوڑو;
+    USet_جوڑو_Range *جوڑو_Range;
+    USet_جوڑو_String *جوڑو_String;
     USetRemove *remove;
     USetRemoveRange *removeRange;
 };
-typedef struct USetAdder USetAdder;
+قسمتعریف ساخت USetAdder USetAdder;
 
-U_CDECL_END
+U_CDECL_انتہا
 
-#ifdef __cplusplus
+#اگر_تعریف_شدہ __cplusplus
 
 namespace {
 
-constexpr int32_t USET_CASE_MASK = USET_CASE_INSENSITIVE | USET_ADD_CASE_MAPPINGS;
+constexpr int32_t USET_CASE_نقاب = USET_CASE_INSENSITIVE | USET_جوڑو_CASE_MAPPINGS;
 
 }  // namespace
 
-#endif  // __cplusplus
+#اگر_ختم  // __cplusplus
 
-#endif
+#اگر_ختم

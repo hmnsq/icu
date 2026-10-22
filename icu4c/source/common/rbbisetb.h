@@ -9,18 +9,18 @@
 **********************************************************************
 */
 
-#ifndef RBBISETB_H
-#define RBBISETB_H
+#اگر_غیر_تعریف_شدہ RBBISETB_H
+#تعریف_کرو RBBISETB_H
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#اگر !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/ucptrie.h"
-#include "unicode/umutablecptrie.h"
-#include "unicode/uobject.h"
-#include "rbbirb.h"
-#include "uvector.h"
+#شامل "unicode/ucptrie.h"
+#شامل "unicode/umutablecptrie.h"
+#شامل "unicode/uobject.h"
+#شامل "rbbirb.h"
+#شامل "uvector.h"
 
 U_NAMESPACE_BEGIN
 
@@ -39,28 +39,28 @@ U_NAMESPACE_BEGIN
 //     All of them are strung together in a linked list, which is kept in order
 //     (by character)
 //
-class RangeDescriptor : public UMemory {
-public:
-    UChar32            fStartChar {};            // Start of range, unicode 32 bit value.
-    UChar32            fEndChar {};              // End of range, unicode 32 bit value.
-    int32_t            fNum {0};                 // runtime-mapped input value for this range.
+class RangeDescriptor : عوامی UMemory {
+عوامی:
+    UChar32            f_آغاز_Char {};            // Start of range, unicode 32 bit value.
+    UChar32            f_انتہا_Char {};              // End of range, unicode 32 bit value.
+    int32_t            f_عدد {0};                 // runtime-mapped input value for this range.
     bool               fIncludesDict {false};    // True if the range includes $dictionary.
-    bool               fFirstInGroup {false};    // True if first range in a group with the same fNum.
+    bool               f_پہلا_اندر_گروہ {false};    // True if first range in a group with the same fNum.
     UVector           *fIncludesSets {nullptr};  // vector of the original
                                                  //   Unicode sets that include this range.
                                                  //    (Contains ptrs to uset nodes)
-    RangeDescriptor   *fNext {nullptr};          // Next RangeDescriptor in the linked list.
+    RangeDescriptor   *f_اگلا {nullptr};          // Next RangeDescriptor in the linked list.
 
-    RangeDescriptor(UErrorCode &status);
-    RangeDescriptor(const RangeDescriptor &other, UErrorCode &status);
+    RangeDescriptor(UError_رمز &حالت_2);
+    RangeDescriptor(ثابت RangeDescriptor &other, UError_رمز &حالت_2);
     ~RangeDescriptor();
-    void split(UChar32 where, UErrorCode &status);   // Spit this range in two at "where", with
+    خالی بانٹو(UChar32 where, UError_رمز &حالت_2);   // Spit this range in two at "where", with
                                         //   where appearing in the second (higher) part.
     bool isDictionaryRange();           // Check whether this range appears as part of
                                         //   the Unicode set named "dictionary"
 
-    RangeDescriptor(const RangeDescriptor &other) = delete; // forbid default copying of this class
-    RangeDescriptor &operator=(const RangeDescriptor &other) = delete; // forbid assigning of this class
+    RangeDescriptor(ثابت RangeDescriptor &other) = delete; // forbid default copying of this class
+    RangeDescriptor &عامل=(ثابت RangeDescriptor &other) = delete; // forbid assigning of this class
 };
 
 
@@ -79,66 +79,66 @@ public:
 //
 
 
-class RBBISetBuilder : public UMemory {
-public:
+class RBBISetBuilder : عوامی UMemory {
+عوامی:
     RBBISetBuilder(RBBIRuleBuilder *rb);
     ~RBBISetBuilder();
 
-    void     buildRanges();
-    void     buildTrie();
-    void     addValToSets(UVector *sets,      uint32_t val);
-    void     addValToSet (RBBINode *usetNode, uint32_t val);
-    int32_t  getNumCharCategories() const;   // CharCategories are the same as input symbol set to the
+    خالی     buildRanges();
+    خالی     buildTrie();
+    خالی     جوڑو_Val_مقصد_Sets(UVector *sets,      uint32_t val);
+    خالی     جوڑو_Val_مقصد_سیٹ (RBBINode *uset_گرہ, uint32_t val);
+    int32_t  get_عدد_Char_Categories() ثابت;   // CharCategories are the same as input symbol set to the
                                              //    runtime state machine, which are the same as
                                              //    columns in the DFA state table
-    int32_t  getDictCategoriesStart() const; // First char category that includes $dictionary, or
+    int32_t  get_Dict_Categories_آغاز() ثابت; // First char category that includes $dictionary, or
                                              // last category + 1 if there are no dictionary categories.
-    int32_t  getTrieSize() /*const*/;        // Size in bytes of the serialized Trie.
-    void     serializeTrie(uint8_t *where);  // write out the serialized Trie.
-    UChar32  getFirstChar(int32_t  val) const;
+    int32_t  get_Trie_سائز() /*const*/;        // Size in bytes of the serialized Trie.
+    خالی     serializeTrie(uint8_t *where);  // write out the serialized Trie.
+    UChar32  get_پہلا_Char(int32_t  val) ثابت;
 
     /**
      * Merge two character categories that have been identified as having equivalent behavior.
      * The ranges belonging to the second category (table column) will be added to the first.
      * @param categories the pair of categories to be merged.
      */
-    void     mergeCategories(IntPair categories);
+    خالی     ملاؤ_Categories(IntPair categories);
 
-#ifdef RBBI_DEBUG
-    void     printSets();
-    void     printRanges();
-    void     printRangeGroups();
-#else
-    #define printSets()
-    #define printRanges()
-    #define printRangeGroups()
-#endif
+#اگر_تعریف_شدہ RBBI_DEBUG
+    خالی     printSets();
+    خالی     printRanges();
+    خالی     printRangeGroups();
+#ورنہ
+    #تعریف_کرو printSets()
+    #تعریف_کرو printRanges()
+    #تعریف_کرو printRangeGroups()
+#اگر_ختم
 
-private:
+نجی:
     RBBIRuleBuilder       *fRB;             // The RBBI Rule Compiler that owns us.
-    UErrorCode            *fStatus;
+    UError_رمز            *f_حالت;
 
     RangeDescriptor       *fRangeList;      // Head of the linked list of RangeDescriptors
 
     UMutableCPTrie        *fMutableTrie;    // The mapping TRIE that is the end result of processing
     UCPTrie               *fTrie;           //  the Unicode Sets.
-    uint32_t               fTrieSize;
+    uint32_t               f_Trie_سائز;
 
     // Number of range groups, which are groups of ranges that are in the same original UnicodeSets.
-    int32_t               fGroupCount;
+    int32_t               f_گروہ_گنتی;
 
     // The number of the first dictionary char category.
     // If there are no Dictionary categories, set to the last category + 1.
-    int32_t               fDictCategoriesStart;
+    int32_t               f_Dict_Categories_آغاز;
 
-    RBBISetBuilder(const RBBISetBuilder &other) = delete; // forbid copying of this class
-    RBBISetBuilder &operator=(const RBBISetBuilder &other) = delete; // forbid copying of this class
+    RBBISetBuilder(ثابت RBBISetBuilder &other) = delete; // forbid copying of this class
+    RBBISetBuilder &عامل=(ثابت RBBISetBuilder &other) = delete; // forbid copying of this class
 };
 
 
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#اگر_ختم /* #if !UCONFIG_NO_BREAK_ITERATION */
 
-#endif
+#اگر_ختم

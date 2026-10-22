@@ -23,18 +23,18 @@
 *    which might (or might not) be easier if all swappers are in the common library.
 */
 
-#ifndef __UCOL_DATA_H__
-#define __UCOL_DATA_H__
+#اگر_غیر_تعریف_شدہ __UCOL_DATA_H__
+#تعریف_کرو __UCOL_DATA_H__
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_COLLATION
+#اگر !UCONFIG_NO_COLLATION
 
 /* let us know whether reserved fields are reset to zero or junked */
-#define UCOL_HEADER_MAGIC 0x20030618
+#تعریف_کرو UCOL_سرخی_MAGIC 0x20030618
 
-typedef struct {
-      int32_t size;
+قسمتعریف ساخت {
+      int32_t سائز_2;
       /* all the offsets are in bytes */
       /* to get the address add to the header address and cast properly */
       uint32_t options; /* these are the default options for the collator */
@@ -43,47 +43,47 @@ typedef struct {
       uint32_t magic;            /* magic number - lets us know whether reserved data is reset or junked */
       uint32_t mappingPosition;  /* const uint8_t *mappingPosition; */
       uint32_t expansion;        /* uint32_t *expansion;            */
-      uint32_t contractionIndex; /* char16_t *contractionIndex;        */
+      uint32_t contraction_اشاریہ; /* char16_t *contractionIndex;        */
       uint32_t contractionCEs;   /* uint32_t *contractionCEs;       */
-      uint32_t contractionSize;  /* needed for various closures */
+      uint32_t contraction_سائز;  /* needed for various closures */
       /*int32_t latinOneMapping;*/ /* this is now handled in the trie itself *//* fast track to latin1 chars      */
 
-      uint32_t endExpansionCE;      /* array of last collation element in
+      uint32_t انتہا_Expansion_CE;      /* array of last collation element in
                                        expansion */
       uint32_t expansionCESize;     /* array of maximum expansion size
                                        corresponding to the expansion
                                        collation elements with last element
                                        in endExpansionCE*/
-      int32_t  endExpansionCECount; /* size of endExpansionCE */
+      int32_t  انتہا_Expansion_CECount; /* size of endExpansionCE */
       uint32_t unsafeCP;            /* hash table of unsafe code points */
-      uint32_t contrEndCP;          /* hash table of final code points  */
+      uint32_t contr_انتہا_CP;          /* hash table of final code points  */
                                     /*   in contractions.               */
 
-      int32_t contractionUCACombosSize;     /* number of UCA contraction items. */
+      int32_t contraction_UCACombos_سائز;     /* number of UCA contraction items. */
                                             /*Length is contractionUCACombosSize*contractionUCACombosWidth*sizeof(char16_t) */
       UBool jamoSpecial;                    /* is jamoSpecial */
       UBool isBigEndian;                    /* is this data big endian? from the UDataInfo header*/
-      uint8_t charSetFamily;                /* what is the charset family of this data from the UDataInfo header*/
-      uint8_t contractionUCACombosWidth;    /* width of UCA combos field */
-      UVersionInfo version;
+      uint8_t char_سیٹ_Family;                /* what is the charset family of this data from the UDataInfo header*/
+      uint8_t contraction_UCACombos_چوڑائی;    /* width of UCA combos field */
+      UVersionInfo نسخہ;
       UVersionInfo UCAVersion;              /* version of the UCA, read from file */
       UVersionInfo UCDVersion;              /* UCD version, obtained by u_getUnicodeVersion */
-      UVersionInfo formatVersion;           /* format version from the UDataInfo header */
-      uint32_t scriptToLeadByte;            /* offset to script to lead collation byte mapping data */
-      uint32_t leadByteToScript;            /* offset to lead collation byte to script mapping data */
+      UVersionInfo format_نسخہ;           /* format version from the UDataInfo header */
+      uint32_t script_مقصد_Lead_Byte;            /* offset to script to lead collation byte mapping data */
+      uint32_t lead_Byte_مقصد_Script;            /* offset to lead collation byte to script mapping data */
       uint8_t reserved[76];                 /* for future use */
-} UCATableHeader;
+} UCATable_سرخی;
 
-typedef struct {
-  uint32_t byteSize;
-  uint32_t tableSize;
-  uint32_t contsSize;
-  uint32_t table;
+قسمتعریف ساخت {
+  uint32_t byte_سائز;
+  uint32_t جدول_سائز;
+  uint32_t conts_سائز;
+  uint32_t جدول;
   uint32_t conts;
   UVersionInfo UCAVersion;              /* version of the UCA, read from file */
   uint8_t padding[8];
-} InverseUCATableHeader;
+} Inverse_UCATable_سرخی;
 
-#endif  /* !UCONFIG_NO_COLLATION */
+#اگر_ختم  /* !UCONFIG_NO_COLLATION */
 
-#endif  /* __UCOL_DATA_H__ */
+#اگر_ختم  /* __UCOL_DATA_H__ */

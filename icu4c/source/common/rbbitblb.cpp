@@ -10,100 +10,100 @@
 //  rbbitblb.cpp
 //
 
-#include <functional>
+#شامل <functional>
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#اگر !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/unistr.h"
-#include "rbbitblb.h"
-#include "rbbirb.h"
-#include "rbbiscan.h"
-#include "rbbisetb.h"
-#include "rbbidata.h"
-#include "cstring.h"
-#include "uassert.h"
-#include "uvectr32.h"
-#include "cmemory.h"
+#شامل "unicode/unistr.h"
+#شامل "rbbitblb.h"
+#شامل "rbbirb.h"
+#شامل "rbbiscan.h"
+#شامل "rbbisetb.h"
+#شامل "rbbidata.h"
+#شامل "cstring.h"
+#شامل "uassert.h"
+#شامل "uvectr32.h"
+#شامل "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
-namespace {
+نامخلا {
 
 // Given the `RBBITableBuilder::fDStates` vector of `RBBIStateDescriptor`s, returns
 // true if a state for which `isSink` returns true is reachable from state `source` by following
 // transitions without going through any state for which `excludedState` returns true.
 // Note that “going through” is distinct from “reaching”, and means entering and then leaving: A
 // state can be both a sink and excluded, and can still be reachable.
-bool reachableByTransitions(const UVector &states, const int32_t source,
-                            const std::function<bool(int32_t)> isSink,
-                            const std::function<bool(int32_t)> excludedState, UErrorCode &status) {
-    UStack boundary(status);
+منطقی reachableByTransitions(ثابت UVector &حالتیں, ثابت int32_t ماخذ,
+                            ثابت std::function<منطقی(int32_t)> isSink,
+                            ثابت std::function<منطقی(int32_t)> excludedState, UError_رمز &حالت_2) {
+    UStack boundary(حالت_2);
     {
-        UVector32 &transitionsFromSource =
-            *static_cast<RBBIStateDescriptor *>(states.elementAt(source))->fDtran;
+        UVector32 &transitions_From_ماخذ =
+            *static_cast<RBBIStateDescriptor *>(حالتیں.elementAt(ماخذ))->fDtran;
         // We do not initialize boundary to `{source}`, but instead to the set of states one
         // transition away from `source`; if `source` sets lookahead l and accepts lookahead k, we
         // only need k and l to occupy distinct slots if there is a `source`-to-`source` path.
-        for (int32_t symbol = 0; symbol < transitionsFromSource.size(); ++symbol) {
-            const int32_t state = transitionsFromSource.elementAti(symbol);
-            if (state != 0) {
-                boundary.push(state, status);
+        برائے (int32_t علامت = 0; علامت < transitions_From_ماخذ.size(); ++علامت) {
+            ثابت int32_t state = transitions_From_ماخذ.elementAti(علامت);
+            اگر (state != 0) {
+                boundary.push(state, حالت_2);
             }
         }
     }
-    const auto visited = prv::make_unique<bool[]>(states.size(), status);
-    while (U_SUCCESS(status) && !boundary.empty()) {
-        const int32_t s = boundary.popi();
-        if (isSink(s)) {
-            return true;
+    ثابت خودکار دیکھا = prv::make_unique<منطقی[]>(حالتیں.size(), حالت_2);
+    جب (U_SUCCESS(حالت_2) && !boundary.empty()) {
+        ثابت int32_t s = boundary.popi();
+        اگر (isSink(s)) {
+            واپس سچ;
         }
-        if (excludedState(s) || visited[s]) {
-            continue;
+        اگر (excludedState(s) || دیکھا[s]) {
+            جاری;
         }
-        visited[s] = true;
-        UVector32 &transitions = *static_cast<RBBIStateDescriptor *>(states.elementAt(s))->fDtran;
-        for (int32_t symbol = 0; symbol < transitions.size(); ++symbol) {
-            const int32_t t = transitions.elementAti(symbol);
-            if (t != 0 && !visited[t]) {
-                boundary.push(t, status);
+        دیکھا[s] = سچ;
+        UVector32 &transitions = *static_cast<RBBIStateDescriptor *>(حالتیں.elementAt(s))->fDtran;
+        برائے (int32_t علامت = 0; علامت < transitions.size(); ++علامت) {
+            ثابت int32_t t = transitions.elementAti(علامت);
+            اگر (t != 0 && !دیکھا[t]) {
+                boundary.push(t, حالت_2);
             }
         }
     }
-    return false;
+    واپس جھوٹ;
 }
 
 } // namespace
 
-const int32_t kMaxStateFor8BitsTable = 255;
+ثابت int32_t k_Max_State_For8_بٹ_جدول = 255;
 
-RBBITableBuilder::RBBITableBuilder(RBBIRuleBuilder *rb, RBBINode **rootNode, UErrorCode &status) :
+RBBITableBuilder::RBBITableBuilder(RBBIRuleBuilder *rb, RBBINode **جڑ_گرہ, UError_رمز &حالت_2) :
         fRB(rb),
-        fTree(*rootNode),
-        fStatus(&status),
-        fDStates(nullptr),
-        fSafeTable(nullptr) {
-    if (U_FAILURE(status)) {
-        return;
+        f_درخت(*جڑ_گرہ),
+        f_حالت(&حالت_2),
+        fDStates(خالی_اشاریہ),
+        f_محفوظ_جدول(خالی_اشاریہ) {
+    اگر (U_FAILURE(حالت_2)) {
+        واپس;
     }
     // fDStates is UVector<RBBIStateDescriptor *>
-    fDStates = new UVector(status);
-    if (U_SUCCESS(status) && fDStates == nullptr ) {
-        status = U_MEMORY_ALLOCATION_ERROR;
+    fDStates = نیا UVector(حالت_2);
+    اگر (U_SUCCESS(حالت_2) && fDStates == خالی_اشاریہ ) {
+        حالت_2 = U_حافظہ_تخصیص_ERROR;
     }
 }
 
 
 
 RBBITableBuilder::~RBBITableBuilder() {
-    int i;
-    for (i=0; i<fDStates->size(); i++) {
-        delete static_cast<RBBIStateDescriptor*>(fDStates->elementAt(i));
+    صحیح i;
+    برائے (i=0; i<fDStates->size(); i++) {
+        حذف static_cast<RBBIStateDescriptor*>(fDStates->elementAt(i));
     }
-    delete fDStates;
-    delete fSafeTable;
-    delete fLookAheadRuleMap;
+    حذف fDStates;
+    حذف f_محفوظ_جدول;
+    حذف f_Look_Ahead_قاعدہ_Map;
 }
 
 
@@ -113,75 +113,75 @@ RBBITableBuilder::~RBBITableBuilder() {
 //                               the DFA state transition table from the RBBI rules parse tree.
 //
 //-----------------------------------------------------------------------------
-void  RBBITableBuilder::buildForwardTable() {
+خالی  RBBITableBuilder::build_Forward_جدول() {
 
-    if (U_FAILURE(*fStatus)) {
-        return;
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
 
     // If there were no rules, just return.  This situation can easily arise
     //   for the reverse rules.
-    if (fTree==nullptr) {
-        return;
+    اگر (f_درخت==خالی_اشاریہ) {
+        واپس;
     }
 
     //
     // Walk through the tree, replacing any references to $variables with a copy of the
     //   parse tree for the substitution expression.
     //
-    fTree = fTree->flattenVariables(*fStatus, 0);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    f_درخت = f_درخت->flattenVariables(*f_حالت, 0);
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
-#ifdef RBBI_DEBUG
-    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "ftree")) {
+#اگر_تعریف_شدہ RBBI_DEBUG
+    اگر (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "ftree")) {
         RBBIDebugPuts("\nParse tree after flattening variable references.");
-        RBBINode::printTree(fTree, true);
+        RBBINode::print_درخت(f_درخت, سچ);
     }
-#endif
+#اگر_ختم
 
     //
     // Add a unique right-end marker to the expression.
     //   Appears as a cat-node, left child being the original tree,
     //   right child being the end marker.
     //
-    RBBINode *cn = new RBBINode(RBBINode::opCat, *fStatus);
+    RBBINode *cn = نیا RBBINode(RBBINode::opCat, *f_حالت);
     // Exit if memory allocation failed.
-    if (cn == nullptr) {
-        *fStatus = U_MEMORY_ALLOCATION_ERROR;
+    اگر (cn == خالی_اشاریہ) {
+        *f_حالت = U_حافظہ_تخصیص_ERROR;
     }
-    if (U_FAILURE(*fStatus)) {
-        delete cn;
-        return;
+    اگر (U_FAILURE(*f_حالت)) {
+        حذف cn;
+        واپس;
     }
-    cn->fLeftChild = fTree;
-    fTree->fParent = cn;
-    RBBINode *endMarkerNode = cn->fRightChild = new RBBINode(RBBINode::endMark, *fStatus);
+    cn->f_بایاں_بچہ = f_درخت;
+    f_درخت->f_والد = cn;
+    RBBINode *انتہا_Marker_گرہ = cn->f_دایاں_بچہ = نیا RBBINode(RBBINode::انتہا_Mark, *f_حالت);
     // Delete and exit if memory allocation failed.
-    if (cn->fRightChild == nullptr) {
-        *fStatus = U_MEMORY_ALLOCATION_ERROR;
+    اگر (cn->f_دایاں_بچہ == خالی_اشاریہ) {
+        *f_حالت = U_حافظہ_تخصیص_ERROR;
     }
-    if (U_FAILURE(*fStatus)) {
-        delete cn;
-        return;
+    اگر (U_FAILURE(*f_حالت)) {
+        حذف cn;
+        واپس;
     }
-    cn->fRightChild->fParent = cn;
-    fTree = cn;
+    cn->f_دایاں_بچہ->f_والد = cn;
+    f_درخت = cn;
 
     //
     //  Replace all references to UnicodeSets with the tree for the equivalent
     //      expression.
     //
-    fTree->flattenSets(*fStatus, 0);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    f_درخت->flattenSets(*f_حالت, 0);
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
-#ifdef RBBI_DEBUG
-    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "stree")) {
+#اگر_تعریف_شدہ RBBI_DEBUG
+    اگر (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "stree")) {
         RBBIDebugPuts("\nParse tree after flattening Unicode Set references.");
-        RBBINode::printTree(fTree, true);
+        RBBINode::print_درخت(f_درخت, سچ);
     }
-#endif
+#اگر_ختم
 
 
     //
@@ -191,37 +191,37 @@ void  RBBITableBuilder::buildForwardTable() {
     //    Understanding how this works by looking at the code alone will be
     //       nearly impossible.
     //
-    calcNullable(fTree);
-    calcFirstPos(fTree);
-    calcLastPos(fTree);
-    calcFollowPos(fTree);
-    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "pos")) {
+    calcNullable(f_درخت);
+    calc_پہلا_Pos(f_درخت);
+    calc_آخری_Pos(f_درخت);
+    calcFollowPos(f_درخت);
+    اگر (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "pos")) {
         RBBIDebugPuts("\n");
-        printPosSets(fTree);
+        printPosSets(f_درخت);
     }
 
     //
     //  For "chained" rules, modify the followPos sets
     //
-    if (fRB->fChainRules) {
-        calcChainedFollowPos(fTree, endMarkerNode);
+    اگر (fRB->f_Chain_قواعد) {
+        calcChainedFollowPos(f_درخت, انتہا_Marker_گرہ);
     }
 
     //
     // Build the DFA state transition tables.
     //
-    buildStateTable();
-    mapLookAheadRules();
-    flagAcceptingStates();
-    flagLookAheadStates();
-    flagTaggedStates();
+    build_State_جدول();
+    map_Look_Ahead_قواعد();
+    flag_Accepting_حالتیں();
+    flag_Look_Ahead_حالتیں();
+    flag_Tagged_حالتیں();
 
     //
     // Update the global table of rule status {tag} values
     // The rule builder has a global vector of status values that are common
     //    for all tables.  Merge the ones from this table into the global set.
     //
-    mergeRuleStatusVals();
+    ملاؤ_قاعدہ_حالت_Vals();
 }
 
 
@@ -231,42 +231,42 @@ void  RBBITableBuilder::buildForwardTable() {
 //   calcNullable.    Impossible to explain succinctly.  See Aho, section 3.9
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::calcNullable(RBBINode *n) {
-    if (n == nullptr) {
-        return;
+خالی RBBITableBuilder::calcNullable(RBBINode *n) {
+    اگر (n == خالی_اشاریہ) {
+        واپس;
     }
-    if (n->fType == RBBINode::setRef ||
-        n->fType == RBBINode::endMark ) {
+    اگر (n->fType == RBBINode::سیٹ_Ref ||
+        n->fType == RBBINode::انتہا_Mark ) {
         // These are non-empty leaf node types.
-        n->fNullable = false;
-        return;
+        n->fNullable = جھوٹ;
+        واپس;
     }
 
-    if (n->fType == RBBINode::lookAhead || n->fType == RBBINode::tag) {
+    اگر (n->fType == RBBINode::lookAhead || n->fType == RBBINode::لیبل) {
         // Lookahead marker node.  It's a leaf, so no recursion on children.
         // It's nullable because it does not match any literal text from the input stream.
-        n->fNullable = true;
-        return;
+        n->fNullable = سچ;
+        واپس;
     }
 
 
     // The node is not a leaf.
     //  Calculate nullable on its children.
-    calcNullable(n->fLeftChild);
-    calcNullable(n->fRightChild);
+    calcNullable(n->f_بایاں_بچہ);
+    calcNullable(n->f_دایاں_بچہ);
 
     // Apply functions from table 3.40 in Aho
-    if (n->fType == RBBINode::opOr) {
-        n->fNullable = n->fLeftChild->fNullable || n->fRightChild->fNullable;
+    اگر (n->fType == RBBINode::opOr) {
+        n->fNullable = n->f_بایاں_بچہ->fNullable || n->f_دایاں_بچہ->fNullable;
     }
-    else if (n->fType == RBBINode::opCat) {
-        n->fNullable = n->fLeftChild->fNullable && n->fRightChild->fNullable;
+    ورنہ اگر (n->fType == RBBINode::opCat) {
+        n->fNullable = n->f_بایاں_بچہ->fNullable && n->f_دایاں_بچہ->fNullable;
     }
-    else if (n->fType == RBBINode::opStar || n->fType == RBBINode::opQuestion) {
-        n->fNullable = true;
+    ورنہ اگر (n->fType == RBBINode::op_ستارہ || n->fType == RBBINode::opQuestion) {
+        n->fNullable = سچ;
     }
-    else {
-        n->fNullable = false;
+    ورنہ {
+        n->fNullable = جھوٹ;
     }
 }
 
@@ -278,42 +278,42 @@ void RBBITableBuilder::calcNullable(RBBINode *n) {
 //   calcFirstPos.    Impossible to explain succinctly.  See Aho, section 3.9
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::calcFirstPos(RBBINode *n) {
-    if (n == nullptr) {
-        return;
+خالی RBBITableBuilder::calc_پہلا_Pos(RBBINode *n) {
+    اگر (n == خالی_اشاریہ) {
+        واپس;
     }
-    if (n->fType == RBBINode::leafChar  ||
-        n->fType == RBBINode::endMark   ||
+    اگر (n->fType == RBBINode::برگ_Char  ||
+        n->fType == RBBINode::انتہا_Mark   ||
         n->fType == RBBINode::lookAhead ||
-        n->fType == RBBINode::tag) {
+        n->fType == RBBINode::لیبل) {
         // These are non-empty leaf node types.
         // Note: In order to maintain the sort invariant on the set,
         // this function should only be called on a node whose set is
         // empty to start with.
-        n->fFirstPosSet->addElement(n, *fStatus);
-        return;
+        n->f_پہلا_Pos_سیٹ->جوڑو_Element(n, *f_حالت);
+        واپس;
     }
 
     // The node is not a leaf.
     //  Calculate firstPos on its children.
-    calcFirstPos(n->fLeftChild);
-    calcFirstPos(n->fRightChild);
+    calc_پہلا_Pos(n->f_بایاں_بچہ);
+    calc_پہلا_Pos(n->f_دایاں_بچہ);
 
     // Apply functions from table 3.40 in Aho
-    if (n->fType == RBBINode::opOr) {
-        setAdd(n->fFirstPosSet, n->fLeftChild->fFirstPosSet);
-        setAdd(n->fFirstPosSet, n->fRightChild->fFirstPosSet);
+    اگر (n->fType == RBBINode::opOr) {
+        سیٹ_جوڑو_2(n->f_پہلا_Pos_سیٹ, n->f_بایاں_بچہ->f_پہلا_Pos_سیٹ);
+        سیٹ_جوڑو_2(n->f_پہلا_Pos_سیٹ, n->f_دایاں_بچہ->f_پہلا_Pos_سیٹ);
     }
-    else if (n->fType == RBBINode::opCat) {
-        setAdd(n->fFirstPosSet, n->fLeftChild->fFirstPosSet);
-        if (n->fLeftChild->fNullable) {
-            setAdd(n->fFirstPosSet, n->fRightChild->fFirstPosSet);
+    ورنہ اگر (n->fType == RBBINode::opCat) {
+        سیٹ_جوڑو_2(n->f_پہلا_Pos_سیٹ, n->f_بایاں_بچہ->f_پہلا_Pos_سیٹ);
+        اگر (n->f_بایاں_بچہ->fNullable) {
+            سیٹ_جوڑو_2(n->f_پہلا_Pos_سیٹ, n->f_دایاں_بچہ->f_پہلا_Pos_سیٹ);
         }
     }
-    else if (n->fType == RBBINode::opStar ||
+    ورنہ اگر (n->fType == RBBINode::op_ستارہ ||
              n->fType == RBBINode::opQuestion ||
              n->fType == RBBINode::opPlus) {
-        setAdd(n->fFirstPosSet, n->fLeftChild->fFirstPosSet);
+        سیٹ_جوڑو_2(n->f_پہلا_Pos_سیٹ, n->f_بایاں_بچہ->f_پہلا_Pos_سیٹ);
     }
 }
 
@@ -324,42 +324,42 @@ void RBBITableBuilder::calcFirstPos(RBBINode *n) {
 //   calcLastPos.    Impossible to explain succinctly.  See Aho, section 3.9
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::calcLastPos(RBBINode *n) {
-    if (n == nullptr) {
-        return;
+خالی RBBITableBuilder::calc_آخری_Pos(RBBINode *n) {
+    اگر (n == خالی_اشاریہ) {
+        واپس;
     }
-    if (n->fType == RBBINode::leafChar  ||
-        n->fType == RBBINode::endMark   ||
+    اگر (n->fType == RBBINode::برگ_Char  ||
+        n->fType == RBBINode::انتہا_Mark   ||
         n->fType == RBBINode::lookAhead ||
-        n->fType == RBBINode::tag) {
+        n->fType == RBBINode::لیبل) {
         // These are non-empty leaf node types.
         // Note: In order to maintain the sort invariant on the set,
         // this function should only be called on a node whose set is
         // empty to start with.
-        n->fLastPosSet->addElement(n, *fStatus);
-        return;
+        n->f_آخری_Pos_سیٹ->جوڑو_Element(n, *f_حالت);
+        واپس;
     }
 
     // The node is not a leaf.
     //  Calculate lastPos on its children.
-    calcLastPos(n->fLeftChild);
-    calcLastPos(n->fRightChild);
+    calc_آخری_Pos(n->f_بایاں_بچہ);
+    calc_آخری_Pos(n->f_دایاں_بچہ);
 
     // Apply functions from table 3.40 in Aho
-    if (n->fType == RBBINode::opOr) {
-        setAdd(n->fLastPosSet, n->fLeftChild->fLastPosSet);
-        setAdd(n->fLastPosSet, n->fRightChild->fLastPosSet);
+    اگر (n->fType == RBBINode::opOr) {
+        سیٹ_جوڑو_2(n->f_آخری_Pos_سیٹ, n->f_بایاں_بچہ->f_آخری_Pos_سیٹ);
+        سیٹ_جوڑو_2(n->f_آخری_Pos_سیٹ, n->f_دایاں_بچہ->f_آخری_Pos_سیٹ);
     }
-    else if (n->fType == RBBINode::opCat) {
-        setAdd(n->fLastPosSet, n->fRightChild->fLastPosSet);
-        if (n->fRightChild->fNullable) {
-            setAdd(n->fLastPosSet, n->fLeftChild->fLastPosSet);
+    ورنہ اگر (n->fType == RBBINode::opCat) {
+        سیٹ_جوڑو_2(n->f_آخری_Pos_سیٹ, n->f_دایاں_بچہ->f_آخری_Pos_سیٹ);
+        اگر (n->f_دایاں_بچہ->fNullable) {
+            سیٹ_جوڑو_2(n->f_آخری_Pos_سیٹ, n->f_بایاں_بچہ->f_آخری_Pos_سیٹ);
         }
     }
-    else if (n->fType == RBBINode::opStar     ||
+    ورنہ اگر (n->fType == RBBINode::op_ستارہ     ||
              n->fType == RBBINode::opQuestion ||
              n->fType == RBBINode::opPlus) {
-        setAdd(n->fLastPosSet, n->fLeftChild->fLastPosSet);
+        سیٹ_جوڑو_2(n->f_آخری_Pos_سیٹ, n->f_بایاں_بچہ->f_آخری_Pos_سیٹ);
     }
 }
 
@@ -370,38 +370,38 @@ void RBBITableBuilder::calcLastPos(RBBINode *n) {
 //   calcFollowPos.    Impossible to explain succinctly.  See Aho, section 3.9
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::calcFollowPos(RBBINode *n) {
-    if (n == nullptr ||
-        n->fType == RBBINode::leafChar ||
-        n->fType == RBBINode::endMark) {
-        return;
+خالی RBBITableBuilder::calcFollowPos(RBBINode *n) {
+    اگر (n == خالی_اشاریہ ||
+        n->fType == RBBINode::برگ_Char ||
+        n->fType == RBBINode::انتہا_Mark) {
+        واپس;
     }
 
-    calcFollowPos(n->fLeftChild);
-    calcFollowPos(n->fRightChild);
+    calcFollowPos(n->f_بایاں_بچہ);
+    calcFollowPos(n->f_دایاں_بچہ);
 
     // Aho rule #1
-    if (n->fType == RBBINode::opCat) {
+    اگر (n->fType == RBBINode::opCat) {
         RBBINode *i;   // is 'i' in Aho's description
         uint32_t     ix;
 
-        UVector *LastPosOfLeftChild = n->fLeftChild->fLastPosSet;
+        UVector *آخری_Pos_کا_بایاں_بچہ = n->f_بایاں_بچہ->f_آخری_Pos_سیٹ;
 
-        for (ix = 0; ix < static_cast<uint32_t>(LastPosOfLeftChild->size()); ix++) {
-            i = static_cast<RBBINode*>(LastPosOfLeftChild->elementAt(ix));
-            setAdd(i->fFollowPos, n->fRightChild->fFirstPosSet);
+        برائے (ix = 0; ix < static_cast<uint32_t>(آخری_Pos_کا_بایاں_بچہ->size()); ix++) {
+            i = static_cast<RBBINode*>(آخری_Pos_کا_بایاں_بچہ->elementAt(ix));
+            سیٹ_جوڑو_2(i->fFollowPos, n->f_دایاں_بچہ->f_پہلا_Pos_سیٹ);
         }
     }
 
     // Aho rule #2
-    if (n->fType == RBBINode::opStar ||
+    اگر (n->fType == RBBINode::op_ستارہ ||
         n->fType == RBBINode::opPlus) {
         RBBINode   *i;  // again, n and i are the names from Aho's description.
         uint32_t    ix;
 
-        for (ix = 0; ix < static_cast<uint32_t>(n->fLastPosSet->size()); ix++) {
-            i = static_cast<RBBINode*>(n->fLastPosSet->elementAt(ix));
-            setAdd(i->fFollowPos, n->fFirstPosSet);
+        برائے (ix = 0; ix < static_cast<uint32_t>(n->f_آخری_Pos_سیٹ->size()); ix++) {
+            i = static_cast<RBBINode*>(n->f_آخری_Pos_سیٹ->elementAt(ix));
+            سیٹ_جوڑو_2(i->fFollowPos, n->f_پہلا_Pos_سیٹ);
         }
     }
 
@@ -415,19 +415,19 @@ void RBBITableBuilder::calcFollowPos(RBBINode *n) {
 //                        as roots of a rule to a destination vector.
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::addRuleRootNodes(UVector *dest, RBBINode *node) {
-    if (node == nullptr || U_FAILURE(*fStatus)) {
-        return;
+خالی RBBITableBuilder::جوڑو_قاعدہ_جڑ_Nodes(UVector *dest, RBBINode *گرہ) {
+    اگر (گرہ == خالی_اشاریہ || U_FAILURE(*f_حالت)) {
+        واپس;
     }
     U_ASSERT(!dest->hasDeleter());
-    if (node->fRuleRoot) {
-        dest->addElement(node, *fStatus);
+    اگر (گرہ->f_قاعدہ_جڑ) {
+        dest->جوڑو_Element(گرہ, *f_حالت);
         // Note: rules cannot nest. If we found a rule start node,
         //       no child node can also be a start node.
-        return;
+        واپس;
     }
-    addRuleRootNodes(dest, node->fLeftChild);
-    addRuleRootNodes(dest, node->fRightChild);
+    جوڑو_قاعدہ_جڑ_Nodes(dest, گرہ->f_بایاں_بچہ);
+    جوڑو_قاعدہ_جڑ_Nodes(dest, گرہ->f_دایاں_بچہ);
 }
 
 //-----------------------------------------------------------------------------
@@ -436,42 +436,42 @@ void RBBITableBuilder::addRuleRootNodes(UVector *dest, RBBINode *node) {
 //                            to implement rule chaining.  NOT described by Aho
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::calcChainedFollowPos(RBBINode *tree, RBBINode *endMarkNode) {
+خالی RBBITableBuilder::calcChainedFollowPos(RBBINode *درخت, RBBINode *انتہا_Mark_گرہ) {
 
-    UVector         leafNodes(*fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    UVector         برگ_Nodes(*f_حالت);
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
 
     // get a list all leaf nodes
-    tree->findNodes(&leafNodes, RBBINode::leafChar, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    درخت->ڈھونڈو_Nodes(&برگ_Nodes, RBBINode::برگ_Char, *f_حالت);
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
 
     // Collect all leaf nodes that can start matches for rules
     // with inbound chaining enabled, which is the union of the 
     // firstPosition sets from each of the rule root nodes.
     
-    UVector ruleRootNodes(*fStatus);
-    addRuleRootNodes(&ruleRootNodes, tree);
+    UVector قاعدہ_جڑ_Nodes(*f_حالت);
+    جوڑو_قاعدہ_جڑ_Nodes(&قاعدہ_جڑ_Nodes, درخت);
 
-    UVector matchStartNodes(*fStatus);
-    for (int j=0; j<ruleRootNodes.size(); ++j) {
-        RBBINode *node = static_cast<RBBINode *>(ruleRootNodes.elementAt(j));
-        if (node->fChainIn) {
-            setAdd(&matchStartNodes, node->fFirstPosSet);
+    UVector مطابقت_آغاز_Nodes(*f_حالت);
+    برائے (صحیح j=0; j<قاعدہ_جڑ_Nodes.size(); ++j) {
+        RBBINode *گرہ = static_cast<RBBINode *>(قاعدہ_جڑ_Nodes.elementAt(j));
+        اگر (گرہ->f_Chain_اندر) {
+            سیٹ_جوڑو_2(&مطابقت_آغاز_Nodes, گرہ->f_پہلا_Pos_سیٹ);
         }
     }
-    if (U_FAILURE(*fStatus)) {
-        return;
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
 
-    int32_t  endNodeIx;
-    int32_t  startNodeIx;
+    int32_t  انتہا_گرہ_Ix;
+    int32_t  آغاز_گرہ_Ix;
 
-    for (endNodeIx=0; endNodeIx<leafNodes.size(); endNodeIx++) {
-        RBBINode* endNode = static_cast<RBBINode*>(leafNodes.elementAt(endNodeIx));
+    برائے (انتہا_گرہ_Ix=0; انتہا_گرہ_Ix<برگ_Nodes.size(); انتہا_گرہ_Ix++) {
+        RBBINode* انتہا_گرہ = static_cast<RBBINode*>(برگ_Nodes.elementAt(انتہا_گرہ_Ix));
 
         // Identify leaf nodes that correspond to overall rule match positions.
         // These include the endMarkNode in their followPos sets.
@@ -481,22 +481,22 @@ void RBBITableBuilder::calcChainedFollowPos(RBBINode *tree, RBBINode *endMarkNod
         //       further matching. This leaves exactly one end marker node, the one
         //       at the end of the complete tree.
 
-        if (!endNode->fFollowPos->contains(endMarkNode)) {
-            continue;
+        اگر (!انتہا_گرہ->fFollowPos->شامل_ہے(انتہا_Mark_گرہ)) {
+            جاری;
         }
 
         // We've got a node that can end a match.
 
         // Now iterate over the nodes that can start a match, looking for ones
         //   with the same char class as our ending node.
-        RBBINode *startNode;
-        for (startNodeIx = 0; startNodeIx<matchStartNodes.size(); startNodeIx++) {
-            startNode = static_cast<RBBINode*>(matchStartNodes.elementAt(startNodeIx));
-            if (startNode->fType != RBBINode::leafChar) {
-                continue;
+        RBBINode *آغاز_گرہ;
+        برائے (آغاز_گرہ_Ix = 0; آغاز_گرہ_Ix<مطابقت_آغاز_Nodes.size(); آغاز_گرہ_Ix++) {
+            آغاز_گرہ = static_cast<RBBINode*>(مطابقت_آغاز_Nodes.elementAt(آغاز_گرہ_Ix));
+            اگر (آغاز_گرہ->fType != RBBINode::برگ_Char) {
+                جاری;
             }
 
-            if (endNode->fVal == startNode->fVal) {
+            اگر (انتہا_گرہ->fVal == آغاز_گرہ->fVal) {
                 // The end val (character class) of one possible match is the
                 //   same as the start of another.
 
@@ -504,7 +504,7 @@ void RBBITableBuilder::calcChainedFollowPos(RBBINode *tree, RBBINode *endMarkNod
                 //  followPos set of the end node, which will have the effect of
                 //  letting matches transition from a match state at endNode
                 //  to the second char of a match starting with startNode.
-                setAdd(endNode->fFollowPos, startNode->fFollowPos);
+                سیٹ_جوڑو_2(انتہا_گرہ->fFollowPos, آغاز_گرہ->fFollowPos);
             }
         }
     }
@@ -521,10 +521,10 @@ void RBBITableBuilder::calcChainedFollowPos(RBBINode *tree, RBBINode *endMarkNod
 //                This function has much in common with calcChainedFollowPos().
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::bofFixup() {
+خالی RBBITableBuilder::bofFixup() {
 
-    if (U_FAILURE(*fStatus)) {
-        return;
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
 
     //   The parse tree looks like this ...
@@ -537,32 +537,32 @@ void RBBITableBuilder::bofFixup() {
     //
     //    We will be adding things to the followPos set of the <bofNode>
     //
-    RBBINode  *bofNode = fTree->fLeftChild->fLeftChild;
-    U_ASSERT(bofNode->fType == RBBINode::leafChar);
-    U_ASSERT(bofNode->fVal == 2);
+    RBBINode  *bof_گرہ = f_درخت->f_بایاں_بچہ->f_بایاں_بچہ;
+    U_ASSERT(bof_گرہ->fType == RBBINode::برگ_Char);
+    U_ASSERT(bof_گرہ->fVal == 2);
 
     // Get all nodes that can be the start a match of the user-written rules
     //  (excluding the fake bofNode)
     //  We want the nodes that can start a match in the
     //     part labeled "rest of tree"
     // 
-    UVector *matchStartNodes = fTree->fLeftChild->fRightChild->fFirstPosSet;
+    UVector *مطابقت_آغاز_Nodes = f_درخت->f_بایاں_بچہ->f_دایاں_بچہ->f_پہلا_Pos_سیٹ;
 
-    RBBINode *startNode;
-    int       startNodeIx;
-    for (startNodeIx = 0; startNodeIx<matchStartNodes->size(); startNodeIx++) {
-        startNode = static_cast<RBBINode*>(matchStartNodes->elementAt(startNodeIx));
-        if (startNode->fType != RBBINode::leafChar) {
-            continue;
+    RBBINode *آغاز_گرہ;
+    صحیح       آغاز_گرہ_Ix;
+    برائے (آغاز_گرہ_Ix = 0; آغاز_گرہ_Ix<مطابقت_آغاز_Nodes->size(); آغاز_گرہ_Ix++) {
+        آغاز_گرہ = static_cast<RBBINode*>(مطابقت_آغاز_Nodes->elementAt(آغاز_گرہ_Ix));
+        اگر (آغاز_گرہ->fType != RBBINode::برگ_Char) {
+            جاری;
         }
 
-        if (startNode->fVal == bofNode->fVal) {
+        اگر (آغاز_گرہ->fVal == bof_گرہ->fVal) {
             //  We found a leaf node corresponding to a {bof} that was
             //    explicitly written into a rule.
             //  Add everything from the followPos set of this node to the
             //    followPos set of the fake bofNode at the start of the tree.
             //  
-            setAdd(bofNode->fFollowPos, startNode->fFollowPos);
+            سیٹ_جوڑو_2(bof_گرہ->fFollowPos, آغاز_گرہ->fFollowPos);
         }
     }
 }
@@ -576,143 +576,143 @@ void RBBITableBuilder::bofFixup() {
 //                        Most of the comments are quotes of Aho's pseudo-code.
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::buildStateTable() {
-    if (U_FAILURE(*fStatus)) {
-        return;
+خالی RBBITableBuilder::build_State_جدول() {
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
     RBBIStateDescriptor *failState;
     // Set it to nullptr to avoid uninitialized warning
-    RBBIStateDescriptor *initialState = nullptr;
+    RBBIStateDescriptor *initialState = خالی_اشاریہ;
     //
     // Add a dummy state 0 - the stop state.  Not from Aho.
-    int      lastInputSymbol = fRB->fSetBuilder->getNumCharCategories() - 1;
-    failState = new RBBIStateDescriptor(lastInputSymbol, fStatus);
-    if (failState == nullptr) {
-        *fStatus = U_MEMORY_ALLOCATION_ERROR;
-        goto ExitBuildSTdeleteall;
+    صحیح      آخری_داخلہ_علامت = fRB->f_سیٹ_Builder->get_عدد_Char_Categories() - 1;
+    failState = نیا RBBIStateDescriptor(آخری_داخلہ_علامت, f_حالت);
+    اگر (failState == خالی_اشاریہ) {
+        *f_حالت = U_حافظہ_تخصیص_ERROR;
+        جاؤ ExitBuildSTdeleteall;
     }
-    failState->fPositions = new UVector(*fStatus);
-    if (failState->fPositions == nullptr) {
-        *fStatus = U_MEMORY_ALLOCATION_ERROR;
+    failState->fPositions = نیا UVector(*f_حالت);
+    اگر (failState->fPositions == خالی_اشاریہ) {
+        *f_حالت = U_حافظہ_تخصیص_ERROR;
     }
-    if (failState->fPositions == nullptr || U_FAILURE(*fStatus)) {
-        goto ExitBuildSTdeleteall;
+    اگر (failState->fPositions == خالی_اشاریہ || U_FAILURE(*f_حالت)) {
+        جاؤ ExitBuildSTdeleteall;
     }
-    fDStates->addElement(failState, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        goto ExitBuildSTdeleteall;
+    fDStates->جوڑو_Element(failState, *f_حالت);
+    اگر (U_FAILURE(*f_حالت)) {
+        جاؤ ExitBuildSTdeleteall;
     }
 
     // initially, the only unmarked state in Dstates is firstpos(root),
     //       where toot is the root of the syntax tree for (r)#;
-    initialState = new RBBIStateDescriptor(lastInputSymbol, fStatus);
-    if (initialState == nullptr) {
-        *fStatus = U_MEMORY_ALLOCATION_ERROR;
+    initialState = نیا RBBIStateDescriptor(آخری_داخلہ_علامت, f_حالت);
+    اگر (initialState == خالی_اشاریہ) {
+        *f_حالت = U_حافظہ_تخصیص_ERROR;
     }
-    if (U_FAILURE(*fStatus)) {
-        goto ExitBuildSTdeleteall;
+    اگر (U_FAILURE(*f_حالت)) {
+        جاؤ ExitBuildSTdeleteall;
     }
-    initialState->fPositions = new UVector(*fStatus);
-    if (initialState->fPositions == nullptr) {
-        *fStatus = U_MEMORY_ALLOCATION_ERROR;
+    initialState->fPositions = نیا UVector(*f_حالت);
+    اگر (initialState->fPositions == خالی_اشاریہ) {
+        *f_حالت = U_حافظہ_تخصیص_ERROR;
     }
-    if (U_FAILURE(*fStatus)) {
-        goto ExitBuildSTdeleteall;
+    اگر (U_FAILURE(*f_حالت)) {
+        جاؤ ExitBuildSTdeleteall;
     }
-    setAdd(initialState->fPositions, fTree->fFirstPosSet);
-    fDStates->addElement(initialState, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        goto ExitBuildSTdeleteall;
+    سیٹ_جوڑو_2(initialState->fPositions, f_درخت->f_پہلا_Pos_سیٹ);
+    fDStates->جوڑو_Element(initialState, *f_حالت);
+    اگر (U_FAILURE(*f_حالت)) {
+        جاؤ ExitBuildSTdeleteall;
     }
 
     // while there is an unmarked state T in Dstates do begin
-    for (;;) {
-        RBBIStateDescriptor *T = nullptr;
+    برائے (;;) {
+        RBBIStateDescriptor *T = خالی_اشاریہ;
         int32_t              tx;
-        for (tx=1; tx<fDStates->size(); tx++) {
-            RBBIStateDescriptor *temp;
-            temp = static_cast<RBBIStateDescriptor*>(fDStates->elementAt(tx));
-            if (temp->fMarked == false) {
-                T = temp;
-                break;
+        برائے (tx=1; tx<fDStates->size(); tx++) {
+            RBBIStateDescriptor *عارضی;
+            عارضی = static_cast<RBBIStateDescriptor*>(fDStates->elementAt(tx));
+            اگر (عارضی->fMarked == جھوٹ) {
+                T = عارضی;
+                توڑو;
             }
         }
-        if (T == nullptr) {
-            break;
+        اگر (T == خالی_اشاریہ) {
+            توڑو;
         }
 
         // mark T;
-        T->fMarked = true;
+        T->fMarked = سچ;
 
         // for each input symbol a do begin
         int32_t  a;
-        for (a = 1; a<=lastInputSymbol; a++) {
+        برائے (a = 1; a<=آخری_داخلہ_علامت; a++) {
             // let U be the set of positions that are in followpos(p)
             //    for some position p in T
             //    such that the symbol at position p is a;
-            UVector    *U = nullptr;
+            UVector    *U = خالی_اشاریہ;
             RBBINode   *p;
             int32_t     px;
-            for (px=0; px<T->fPositions->size(); px++) {
+            برائے (px=0; px<T->fPositions->size(); px++) {
                 p = static_cast<RBBINode*>(T->fPositions->elementAt(px));
-                if ((p->fType == RBBINode::leafChar) &&  (p->fVal == a)) {
-                    if (U == nullptr) {
-                        U = new UVector(*fStatus);
-                        if (U == nullptr) {
-                        	*fStatus = U_MEMORY_ALLOCATION_ERROR;
-                        	goto ExitBuildSTdeleteall;
+                اگر ((p->fType == RBBINode::برگ_Char) &&  (p->fVal == a)) {
+                    اگر (U == خالی_اشاریہ) {
+                        U = نیا UVector(*f_حالت);
+                        اگر (U == خالی_اشاریہ) {
+                        	*f_حالت = U_حافظہ_تخصیص_ERROR;
+                        	جاؤ ExitBuildSTdeleteall;
                         }
                     }
-                    setAdd(U, p->fFollowPos);
+                    سیٹ_جوڑو_2(U, p->fFollowPos);
                 }
             }
 
             // if U is not empty and not in DStates then
             int32_t  ux = 0;
-            UBool    UinDstates = false;
-            if (U != nullptr) {
+            UBool    UinDstates = جھوٹ;
+            اگر (U != خالی_اشاریہ) {
                 U_ASSERT(U->size() > 0);
-                int  ix;
-                for (ix=0; ix<fDStates->size(); ix++) {
+                صحیح  ix;
+                برائے (ix=0; ix<fDStates->size(); ix++) {
                     RBBIStateDescriptor *temp2;
                     temp2 = static_cast<RBBIStateDescriptor*>(fDStates->elementAt(ix));
-                    if (setEquals(U, temp2->fPositions)) {
-                        delete U;
+                    اگر (سیٹ_Equals(U, temp2->fPositions)) {
+                        حذف U;
                         U  = temp2->fPositions;
                         ux = ix;
-                        UinDstates = true;
-                        break;
+                        UinDstates = سچ;
+                        توڑو;
                     }
                 }
 
                 // Add U as an unmarked state to Dstates
-                if (!UinDstates)
+                اگر (!UinDstates)
                 {
-                    RBBIStateDescriptor *newState = new RBBIStateDescriptor(lastInputSymbol, fStatus);
-                    if (newState == nullptr) {
-                    	*fStatus = U_MEMORY_ALLOCATION_ERROR;
+                    RBBIStateDescriptor *newState = نیا RBBIStateDescriptor(آخری_داخلہ_علامت, f_حالت);
+                    اگر (newState == خالی_اشاریہ) {
+                    	*f_حالت = U_حافظہ_تخصیص_ERROR;
                     }
-                    if (U_FAILURE(*fStatus)) {
-                        goto ExitBuildSTdeleteall;
+                    اگر (U_FAILURE(*f_حالت)) {
+                        جاؤ ExitBuildSTdeleteall;
                     }
                     newState->fPositions = U;
-                    fDStates->addElement(newState, *fStatus);
-                    if (U_FAILURE(*fStatus)) {
-                        return;
+                    fDStates->جوڑو_Element(newState, *f_حالت);
+                    اگر (U_FAILURE(*f_حالت)) {
+                        واپس;
                     }
                     ux = fDStates->size()-1;
                 }
 
                 // Dtran[T, a] := U;
-                T->fDtran->setElementAt(ux, a);
+                T->fDtran->سیٹ_Element_At(ux, a);
             }
         }
     }
-    return;
+    واپس;
     // delete local pointers only if error occurred.
 ExitBuildSTdeleteall:
-    delete initialState;
-    delete failState;
+    حذف initialState;
+    حذف failState;
 }
 
 
@@ -720,19 +720,19 @@ ExitBuildSTdeleteall:
  * mapLookAheadRules
  *
  */
-void RBBITableBuilder::mapLookAheadRules() {
-    fLookAheadRuleMap =  new UVector32(fRB->fScanner->numRules() + 1, *fStatus);
-    if (fLookAheadRuleMap == nullptr) {
-        *fStatus = U_MEMORY_ALLOCATION_ERROR;
+خالی RBBITableBuilder::map_Look_Ahead_قواعد() {
+    f_Look_Ahead_قاعدہ_Map =  نیا UVector32(fRB->fScanner->عدد_قواعد() + 1, *f_حالت);
+    اگر (f_Look_Ahead_قاعدہ_Map == خالی_اشاریہ) {
+        *f_حالت = U_حافظہ_تخصیص_ERROR;
     }
-    if (U_FAILURE(*fStatus)) {
-        return;
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
-    fLookAheadRuleMap->setSize(fRB->fScanner->numRules() + 1);
+    f_Look_Ahead_قاعدہ_Map->سیٹ_سائز(fRB->fScanner->عدد_قواعد() + 1);
 
-    for (int32_t n=0; n<fDStates->size(); n++) {
+    برائے (int32_t n=0; n<fDStates->size(); n++) {
         RBBIStateDescriptor* sd = static_cast<RBBIStateDescriptor*>(fDStates->elementAt(n));
-        int32_t laSlotForState = 0;
+        int32_t la_خانہ_For_State = 0;
 
         // Establish the look-ahead slot for this state, if the state covers
         // any look-ahead nodes - corresponding to the '/' in look-ahead rules.
@@ -740,48 +740,48 @@ void RBBITableBuilder::mapLookAheadRules() {
         // If any of the look-ahead nodes already have a slot assigned, use it,
         // otherwise assign a new one.
 
-        bool sawLookAheadNode = false;
-        for (int32_t ipos=0; ipos<sd->fPositions->size(); ++ipos) {
-            RBBINode *node = static_cast<RBBINode *>(sd->fPositions->elementAt(ipos));
-            if (node->fType != RBBINode::NodeType::lookAhead) {
-                continue;
+        منطقی saw_Look_Ahead_گرہ = جھوٹ;
+        برائے (int32_t ipos=0; ipos<sd->fPositions->size(); ++ipos) {
+            RBBINode *گرہ = static_cast<RBBINode *>(sd->fPositions->elementAt(ipos));
+            اگر (گرہ->fType != RBBINode::گرہ_Type::lookAhead) {
+                جاری;
             }
-            sawLookAheadNode = true;
-            int32_t ruleNum = node->fVal;     // Set when rule was originally parsed.
-            U_ASSERT(ruleNum < fLookAheadRuleMap->size());
-            U_ASSERT(ruleNum > 0);
-            int32_t laSlot = fLookAheadRuleMap->elementAti(ruleNum);
-            if (laSlot != 0) {
-                if (laSlotForState == 0) {
-                    laSlotForState = laSlot;
-                } else {
+            saw_Look_Ahead_گرہ = سچ;
+            int32_t قاعدہ_عدد = گرہ->fVal;     // Set when rule was originally parsed.
+            U_ASSERT(قاعدہ_عدد < f_Look_Ahead_قاعدہ_Map->size());
+            U_ASSERT(قاعدہ_عدد > 0);
+            int32_t la_خانہ = f_Look_Ahead_قاعدہ_Map->elementAti(قاعدہ_عدد);
+            اگر (la_خانہ != 0) {
+                اگر (la_خانہ_For_State == 0) {
+                    la_خانہ_For_State = la_خانہ;
+                } ورنہ {
                     // TODO: figure out if this can fail, change to setting an error code if so.
-                    U_ASSERT(laSlot == laSlotForState);
+                    U_ASSERT(la_خانہ == la_خانہ_For_State);
                 }
             }
         }
-        if (!sawLookAheadNode) {
-            continue;
+        اگر (!saw_Look_Ahead_گرہ) {
+            جاری;
         }
 
-        if (laSlotForState == 0) {
-            laSlotForState = ++fLASlotsInUse;
+        اگر (la_خانہ_For_State == 0) {
+            la_خانہ_For_State = ++f_LASlots_اندر_Use;
         }
 
         // For each look ahead node covered by this state,
         // set the mapping from the node's rule number to the look ahead slot.
         // There can be multiple nodes/rule numbers going to the same la slot.
 
-        for (int32_t ipos=0; ipos<sd->fPositions->size(); ++ipos) {
-            RBBINode *node = static_cast<RBBINode *>(sd->fPositions->elementAt(ipos));
-            if (node->fType != RBBINode::NodeType::lookAhead) {
-                continue;
+        برائے (int32_t ipos=0; ipos<sd->fPositions->size(); ++ipos) {
+            RBBINode *گرہ = static_cast<RBBINode *>(sd->fPositions->elementAt(ipos));
+            اگر (گرہ->fType != RBBINode::گرہ_Type::lookAhead) {
+                جاری;
             }
-            int32_t ruleNum = node->fVal;     // Set when rule was originally parsed.
-            int32_t existingVal = fLookAheadRuleMap->elementAti(ruleNum);
-            (void)existingVal;
-            U_ASSERT(existingVal == 0 || existingVal == laSlotForState);
-            fLookAheadRuleMap->setElementAt(laSlotForState, ruleNum);
+            int32_t قاعدہ_عدد = گرہ->fVal;     // Set when rule was originally parsed.
+            int32_t existingVal = f_Look_Ahead_قاعدہ_Map->elementAti(قاعدہ_عدد);
+            (خالی)existingVal;
+            U_ASSERT(existingVal == 0 || existingVal == la_خانہ_For_State);
+            f_Look_Ahead_قاعدہ_Map->سیٹ_Element_At(la_خانہ_For_State, قاعدہ_عدد);
         }
     }
 
@@ -796,45 +796,45 @@ void RBBITableBuilder::mapLookAheadRules() {
 //                                  s is an accepting state.
 //
 //-----------------------------------------------------------------------------
-void     RBBITableBuilder::flagAcceptingStates() {
-    if (U_FAILURE(*fStatus)) {
-        return;
+خالی     RBBITableBuilder::flag_Accepting_حالتیں() {
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
-    UVector     endMarkerNodes(*fStatus);
-    RBBINode    *endMarker;
+    UVector     انتہا_Marker_Nodes(*f_حالت);
+    RBBINode    *انتہا_Marker;
     int32_t     i;
     int32_t     n;
 
-    if (U_FAILURE(*fStatus)) {
-        return;
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
 
-    fTree->findNodes(&endMarkerNodes, RBBINode::endMark, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    f_درخت->ڈھونڈو_Nodes(&انتہا_Marker_Nodes, RBBINode::انتہا_Mark, *f_حالت);
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
 
-    for (i=0; i<endMarkerNodes.size(); i++) {
-        endMarker = static_cast<RBBINode*>(endMarkerNodes.elementAt(i));
-        for (n=0; n<fDStates->size(); n++) {
+    برائے (i=0; i<انتہا_Marker_Nodes.size(); i++) {
+        انتہا_Marker = static_cast<RBBINode*>(انتہا_Marker_Nodes.elementAt(i));
+        برائے (n=0; n<fDStates->size(); n++) {
             RBBIStateDescriptor* sd = static_cast<RBBIStateDescriptor*>(fDStates->elementAt(n));
-            if (sd->fPositions->indexOf(endMarker) >= 0) {
+            اگر (sd->fPositions->اشاریہ_کا(انتہا_Marker) >= 0) {
                 // Any non-zero value for fAccepting means this is an accepting node.
                 // The value is what will be returned to the user as the break status.
                 // If no other value was specified, force it to ACCEPTING_UNCONDITIONAL (1).
 
-                if (sd->fAccepting==0) {
+                اگر (sd->fAccepting==0) {
                     // State hasn't been marked as accepting yet.  Do it now.
-                    sd->fAccepting = fLookAheadRuleMap->elementAti(endMarker->fVal);
-                    if (sd->fAccepting == 0) {
+                    sd->fAccepting = f_Look_Ahead_قاعدہ_Map->elementAti(انتہا_Marker->fVal);
+                    اگر (sd->fAccepting == 0) {
                         sd->fAccepting = ACCEPTING_UNCONDITIONAL;
                     }
                 }
-                if (sd->fAccepting==ACCEPTING_UNCONDITIONAL && endMarker->fVal != 0) {
+                اگر (sd->fAccepting==ACCEPTING_UNCONDITIONAL && انتہا_Marker->fVal != 0) {
                     // Both lookahead and non-lookahead accepting for this state.
                     // Favor the look-ahead, because a look-ahead match needs to
                     // immediately stop the run-time engine. First match, not longest.
-                    sd->fAccepting = fLookAheadRuleMap->elementAti(endMarker->fVal);
+                    sd->fAccepting = f_Look_Ahead_قاعدہ_Map->elementAti(انتہا_Marker->fVal);
                 }
                 // implicit else:
                 // if sd->fAccepting already had a value other than 0 or 1, leave it be.
@@ -849,35 +849,35 @@ void     RBBITableBuilder::flagAcceptingStates() {
 //    flagLookAheadStates   Very similar to flagAcceptingStates, above.
 //
 //-----------------------------------------------------------------------------
-void     RBBITableBuilder::flagLookAheadStates() {
-    if (U_FAILURE(*fStatus)) {
-        return;
+خالی     RBBITableBuilder::flag_Look_Ahead_حالتیں() {
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
-    UVector     lookAheadNodes(*fStatus);
-    RBBINode    *lookAheadNode;
+    UVector     lookAheadNodes(*f_حالت);
+    RBBINode    *look_Ahead_گرہ;
     int32_t     i;
     int32_t     n;
 
-    fTree->findNodes(&lookAheadNodes, RBBINode::lookAhead, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    f_درخت->ڈھونڈو_Nodes(&lookAheadNodes, RBBINode::lookAhead, *f_حالت);
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
-    for (i=0; i<lookAheadNodes.size(); i++) {
-        lookAheadNode = static_cast<RBBINode*>(lookAheadNodes.elementAt(i));
-        U_ASSERT(lookAheadNode->fType == RBBINode::NodeType::lookAhead);
+    برائے (i=0; i<lookAheadNodes.size(); i++) {
+        look_Ahead_گرہ = static_cast<RBBINode*>(lookAheadNodes.elementAt(i));
+        U_ASSERT(look_Ahead_گرہ->fType == RBBINode::گرہ_Type::lookAhead);
 
-        for (n=0; n<fDStates->size(); n++) {
+        برائے (n=0; n<fDStates->size(); n++) {
             RBBIStateDescriptor* sd = static_cast<RBBIStateDescriptor*>(fDStates->elementAt(n));
-            int32_t positionsIdx = sd->fPositions->indexOf(lookAheadNode);
-            if (positionsIdx >= 0) {
-                U_ASSERT(lookAheadNode == sd->fPositions->elementAt(positionsIdx));
-                uint32_t lookaheadSlot = fLookAheadRuleMap->elementAti(lookAheadNode->fVal);
-                U_ASSERT(sd->fLookAhead == 0 || sd->fLookAhead == lookaheadSlot);
+            int32_t positionsIdx = sd->fPositions->اشاریہ_کا(look_Ahead_گرہ);
+            اگر (positionsIdx >= 0) {
+                U_ASSERT(look_Ahead_گرہ == sd->fPositions->elementAt(positionsIdx));
+                uint32_t lookahead_خانہ = f_Look_Ahead_قاعدہ_Map->elementAti(look_Ahead_گرہ->fVal);
+                U_ASSERT(sd->fLookAhead == 0 || sd->fLookAhead == lookahead_خانہ);
                 // if (sd->fLookAhead != 0 && sd->fLookAhead != lookaheadSlot) {
                 //     printf("%s:%d Bingo. sd->fLookAhead:%d   lookaheadSlot:%d\n",
                 //            __FILE__, __LINE__, sd->fLookAhead, lookaheadSlot);
                 // }
-                sd->fLookAhead = lookaheadSlot;
+                sd->fLookAhead = lookahead_خانہ;
             }
         }
     }
@@ -891,29 +891,29 @@ void     RBBITableBuilder::flagLookAheadStates() {
 //    flagTaggedStates
 //
 //-----------------------------------------------------------------------------
-void     RBBITableBuilder::flagTaggedStates() {
-    if (U_FAILURE(*fStatus)) {
-        return;
+خالی     RBBITableBuilder::flag_Tagged_حالتیں() {
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
-    UVector     tagNodes(*fStatus);
-    RBBINode    *tagNode;
+    UVector     لیبل_Nodes(*f_حالت);
+    RBBINode    *لیبل_گرہ;
     int32_t     i;
     int32_t     n;
 
-    if (U_FAILURE(*fStatus)) {
-        return;
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
-    fTree->findNodes(&tagNodes, RBBINode::tag, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    f_درخت->ڈھونڈو_Nodes(&لیبل_Nodes, RBBINode::لیبل, *f_حالت);
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
-    for (i=0; i<tagNodes.size(); i++) {                   // For each tag node t (all of 'em)
-        tagNode = static_cast<RBBINode*>(tagNodes.elementAt(i));
+    برائے (i=0; i<لیبل_Nodes.size(); i++) {                   // For each tag node t (all of 'em)
+        لیبل_گرہ = static_cast<RBBINode*>(لیبل_Nodes.elementAt(i));
 
-        for (n=0; n<fDStates->size(); n++) {              //    For each state  s (row in the state table)
+        برائے (n=0; n<fDStates->size(); n++) {              //    For each state  s (row in the state table)
             RBBIStateDescriptor* sd = static_cast<RBBIStateDescriptor*>(fDStates->elementAt(n));
-            if (sd->fPositions->indexOf(tagNode) >= 0) {  //       if  s include the tag node t
-                sortedAdd(&sd->fTagVals, tagNode->fVal);
+            اگر (sd->fPositions->اشاریہ_کا(لیبل_گرہ) >= 0) {  //       if  s include the tag node t
+                sorted_جوڑو(&sd->f_لیبل_Vals, لیبل_گرہ->fVal);
             }
         }
     }
@@ -931,7 +931,7 @@ void     RBBITableBuilder::flagTaggedStates() {
 //      for all tables.  Merge the ones from this table into the global set.
 //
 //-----------------------------------------------------------------------------
-void  RBBITableBuilder::mergeRuleStatusVals() {
+خالی  RBBITableBuilder::ملاؤ_قاعدہ_حالت_Vals() {
     //
     //  The basic outline of what happens here is this...
     //
@@ -942,68 +942,68 @@ void  RBBITableBuilder::mergeRuleStatusVals() {
     //       else
     //           add the tag list for this state to the global list.
     //
-    int i;
-    int n;
+    صحیح i;
+    صحیح n;
 
     // Pre-set a single tag of {0} into the table.
     //   We will need this as a default, for rule sets with no explicit tagging.
-    if (fRB->fRuleStatusVals->size() == 0) {
-        fRB->fRuleStatusVals->addElement(1, *fStatus);  // Num of statuses in group
-        fRB->fRuleStatusVals->addElement(static_cast<int32_t>(0), *fStatus); // and our single status of zero
+    اگر (fRB->f_قاعدہ_حالت_Vals->size() == 0) {
+        fRB->f_قاعدہ_حالت_Vals->جوڑو_Element(1, *f_حالت);  // Num of statuses in group
+        fRB->f_قاعدہ_حالت_Vals->جوڑو_Element(static_cast<int32_t>(0), *f_حالت); // and our single status of zero
     }
 
     //    For each state
-    for (n=0; n<fDStates->size(); n++) {
+    برائے (n=0; n<fDStates->size(); n++) {
         RBBIStateDescriptor* sd = static_cast<RBBIStateDescriptor*>(fDStates->elementAt(n));
-        UVector *thisStatesTagValues = sd->fTagVals;
-        if (thisStatesTagValues == nullptr) {
+        UVector *this_حالتیں_لیبل_اقدار = sd->f_لیبل_Vals;
+        اگر (this_حالتیں_لیبل_اقدار == خالی_اشاریہ) {
             // No tag values are explicitly associated with this state.
             //   Set the default tag value.
-            sd->fTagsIdx = 0;
-            continue;
+            sd->f_لیبل_فہرست_Idx = 0;
+            جاری;
         }
 
         // There are tag(s) associated with this state.
         //   fTagsIdx will be the index into the global tag list for this state's tag values.
         //   Initial value of -1 flags that we haven't got it set yet.
-        sd->fTagsIdx = -1;
-        int32_t  thisTagGroupStart = 0;   // indexes into the global rule status vals list
-        int32_t  nextTagGroupStart = 0;
+        sd->f_لیبل_فہرست_Idx = -1;
+        int32_t  this_لیبل_گروہ_آغاز = 0;   // indexes into the global rule status vals list
+        int32_t  اگلا_لیبل_گروہ_آغاز = 0;
 
         // Loop runs once per group of tags in the global list
-        while (nextTagGroupStart < fRB->fRuleStatusVals->size()) {
-            thisTagGroupStart = nextTagGroupStart;
-            nextTagGroupStart += fRB->fRuleStatusVals->elementAti(thisTagGroupStart) + 1;
-            if (thisStatesTagValues->size() != fRB->fRuleStatusVals->elementAti(thisTagGroupStart)) {
+        جب (اگلا_لیبل_گروہ_آغاز < fRB->f_قاعدہ_حالت_Vals->size()) {
+            this_لیبل_گروہ_آغاز = اگلا_لیبل_گروہ_آغاز;
+            اگلا_لیبل_گروہ_آغاز += fRB->f_قاعدہ_حالت_Vals->elementAti(this_لیبل_گروہ_آغاز) + 1;
+            اگر (this_حالتیں_لیبل_اقدار->size() != fRB->f_قاعدہ_حالت_Vals->elementAti(this_لیبل_گروہ_آغاز)) {
                 // The number of tags for this state is different from
                 //    the number of tags in this group from the global list.
                 //    Continue with the next group from the global list.
-                continue;
+                جاری;
             }
             // The lengths match, go ahead and compare the actual tag values
             //    between this state and the group from the global list.
-            for (i=0; i<thisStatesTagValues->size(); i++) {
-                if (thisStatesTagValues->elementAti(i) !=
-                    fRB->fRuleStatusVals->elementAti(thisTagGroupStart + 1 + i) ) {
+            برائے (i=0; i<this_حالتیں_لیبل_اقدار->size(); i++) {
+                اگر (this_حالتیں_لیبل_اقدار->elementAti(i) !=
+                    fRB->f_قاعدہ_حالت_Vals->elementAti(this_لیبل_گروہ_آغاز + 1 + i) ) {
                     // Mismatch.
-                    break;
+                    توڑو;
                 }
             }
 
-            if (i == thisStatesTagValues->size()) {
+            اگر (i == this_حالتیں_لیبل_اقدار->size()) {
                 // We found a set of tag values in the global list that match
                 //   those for this state.  Use them.
-                sd->fTagsIdx = thisTagGroupStart;
-                break;
+                sd->f_لیبل_فہرست_Idx = this_لیبل_گروہ_آغاز;
+                توڑو;
             }
         }
 
-        if (sd->fTagsIdx == -1) {
+        اگر (sd->f_لیبل_فہرست_Idx == -1) {
             // No suitable entry in the global tag list already.  Add one
-            sd->fTagsIdx = fRB->fRuleStatusVals->size();
-            fRB->fRuleStatusVals->addElement(thisStatesTagValues->size(), *fStatus);
-            for (i=0; i<thisStatesTagValues->size(); i++) {
-                fRB->fRuleStatusVals->addElement(thisStatesTagValues->elementAti(i), *fStatus);
+            sd->f_لیبل_فہرست_Idx = fRB->f_قاعدہ_حالت_Vals->size();
+            fRB->f_قاعدہ_حالت_Vals->جوڑو_Element(this_حالتیں_لیبل_اقدار->size(), *f_حالت);
+            برائے (i=0; i<this_حالتیں_لیبل_اقدار->size(); i++) {
+                fRB->f_قاعدہ_حالت_Vals->جوڑو_Element(this_حالتیں_لیبل_اقدار->elementAti(i), *f_حالت);
             }
         }
     }
@@ -1028,28 +1028,28 @@ void  RBBITableBuilder::mergeRuleStatusVals() {
 //
 //-----------------------------------------------------------------------------
 
-void RBBITableBuilder::minimizeStates() {
-    if (U_FAILURE(*fStatus)) {
-        return;
+خالی RBBITableBuilder::minimize_حالتیں() {
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
 
-#if UPRV_HAS_SANITIZER
-    if (fDStates->size() > 512) {
+#اگر UPRV_HAS_SANITIZER
+    اگر (fDStates->size() > 512) {
         // This algorithm is sluggish on large state machines, and even more sluggish with
         // sanitizers, which leads the fuzzer into the weeds, see
         // https://github.com/unicode-org/icu/pull/3948#issuecomment-4335461360.
-        *fStatus = U_REGEX_PATTERN_TOO_BIG;
-        return;
+        *f_حالت = U_REGEX_نمونہ_TOO_BIG;
+        واپس;
     }
-#endif
-    struct StateType {
+#اگر_ختم
+    ساخت StateType {
         uint32_t fAccepting;
         uint32_t fLookAhead;
-        int32_t fTagsIdx;
-        bool operator==(StateType const &other) const {
-            return fAccepting == other.fAccepting &&
+        int32_t f_لیبل_فہرست_Idx;
+        منطقی عامل==(StateType ثابت &other) ثابت {
+            واپس fAccepting == other.fAccepting &&
                    fLookAhead == other.fLookAhead &&
-                   fTagsIdx == other.fTagsIdx;
+                   f_لیبل_فہرست_Idx == other.f_لیبل_فہرست_Idx;
         }
     };
     // We wrap `UVector`s in `unique_ptr``s throughout so we can move them,
@@ -1059,53 +1059,53 @@ void RBBITableBuilder::minimizeStates() {
     // If there are no lookaheads and no tags, there are only two types
     // (accepting and non-accepting) in which case this is exactly step 1
     // of Algorithm 3.6.
-    struct TypeToStates : UMemory {
-        TypeToStates(const StateType &type, UErrorCode &status)
-            : type(type), states(prv::make_unique<UVector>(status, status)) {}
+    ساخت Type_مقصد_حالتیں : UMemory {
+        Type_مقصد_حالتیں(ثابت StateType &type, UError_رمز &حالت_2)
+            : type(type), حالتیں(prv::make_unique<UVector>(حالت_2, حالت_2)) {}
         StateType type;
-        prv::unique_ptr<UVector> states;
+        prv::unique_ptr<UVector> حالتیں;
     };
-    UVector initialPartition(*fStatus);
-    initialPartition.setDeleter(
-        [](void *p) { delete static_cast<TypeToStates *>(p); });
-    for (int32_t i = 0; i < fDStates->size(); ++i) {
-        const RBBIStateDescriptor &state =
+    UVector initial_تقسیم(*f_حالت);
+    initial_تقسیم.سیٹ_Deleter(
+        [](خالی *p) { حذف static_cast<Type_مقصد_حالتیں *>(p); });
+    برائے (int32_t i = 0; i < fDStates->size(); ++i) {
+        ثابت RBBIStateDescriptor &state =
             *static_cast<RBBIStateDescriptor *>(fDStates->elementAt(i));
-        const StateType type{state.fAccepting,
+        ثابت StateType type{state.fAccepting,
                              state.fLookAhead,
-                             state.fTagsIdx};
+                             state.f_لیبل_فہرست_Idx};
         int32_t j = 0;
-        for (; j < initialPartition.size(); ++j) {
-            auto &[type_j, states] =
-                *static_cast<TypeToStates *>(initialPartition.elementAt(j));
-            if (type_j == type) {
-                states->addElement(i, *fStatus);
-                break;
+        برائے (; j < initial_تقسیم.size(); ++j) {
+            خودکار &[type_j, حالتیں] =
+                *static_cast<Type_مقصد_حالتیں *>(initial_تقسیم.elementAt(j));
+            اگر (type_j == type) {
+                حالتیں->جوڑو_Element(i, *f_حالت);
+                توڑو;
             }
         }
-        if (j == initialPartition.size()) {
-            auto newEntry = prv::make_unique<TypeToStates>(type, *fStatus, *fStatus);
-            if (U_FAILURE(*fStatus)) {
-                return;
+        اگر (j == initial_تقسیم.size()) {
+            خودکار new_اندراج = prv::make_unique<Type_مقصد_حالتیں>(type, *f_حالت, *f_حالت);
+            اگر (U_FAILURE(*f_حالت)) {
+                واپس;
             }
-            newEntry->states->addElement(i, *fStatus);
-            initialPartition.adoptElement(newEntry.release(), *fStatus);
+            new_اندراج->حالتیں->جوڑو_Element(i, *f_حالت);
+            initial_تقسیم.adoptElement(new_اندراج.release(), *f_حالت);
         }
     }
     // The partition Π from Algorithm 3.6.
     // (We could call it Π, but some member companies that integrate the ICU
     // code base prohibit non-ASCII identifiers…).
-    auto partition = prv::make_unique<UVector>(*fStatus, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    خودکار تقسیم = prv::make_unique<UVector>(*f_حالت, *f_حالت);
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
-    partition->setDeleter(
-        [](void *p) { delete static_cast<UVector*>(p); });
+    تقسیم->سیٹ_Deleter(
+        [](خالی *p) { حذف static_cast<UVector*>(p); });
     
-    for (int32_t i = 0; i < initialPartition.size(); ++i) {
-        partition->adoptElement(
-            static_cast<TypeToStates*>(initialPartition.elementAt(i))->states.release(),
-            *fStatus);
+    برائے (int32_t i = 0; i < initial_تقسیم.size(); ++i) {
+        تقسیم->adoptElement(
+            static_cast<Type_مقصد_حالتیں*>(initial_تقسیم.elementAt(i))->حالتیں.release(),
+            *f_حالت);
     }
     // Given the index of a state 𝑠 in `fDStates`, returns a UVector of integers
     // σ(𝑠) such that 𝑠.fDtran[i] (the index of the state reached by the
@@ -1113,141 +1113,141 @@ void RBBITableBuilder::minimizeStates() {
     // We then have σ(𝑠) == σ(𝑡) if and only if “for all input symbols 𝑎, states
     // 𝑠 and 𝑡 have transitions on 𝑎 to states in the same group of Π” (which is
     // what defines the refinement of 𝐺 in Fig. 3.45).
-    auto partition_signature = [&partition, this](int32_t stateIndex) -> prv::unique_ptr<UVector> {
-        const RBBIStateDescriptor &state =
-            *static_cast<RBBIStateDescriptor *>(fDStates->elementAt(stateIndex));
-        auto result = prv::make_unique<UVector>(state.fDtran->size(), *fStatus, *fStatus);
-        if (U_FAILURE(*fStatus)) {
-            return nullptr;
+    خودکار تقسیم_signature = [&تقسیم, یہ](int32_t state_اشاریہ) -> prv::unique_ptr<UVector> {
+        ثابت RBBIStateDescriptor &state =
+            *static_cast<RBBIStateDescriptor *>(fDStates->elementAt(state_اشاریہ));
+        خودکار نتیجہ = prv::make_unique<UVector>(state.fDtran->size(), *f_حالت, *f_حالت);
+        اگر (U_FAILURE(*f_حالت)) {
+            واپس خالی_اشاریہ;
         }
-        for (int32_t i = 0; i < state.fDtran->size(); ++i) {
-            int32_t toState = state.fDtran->elementAti(i);
-            for (int32_t partIndex = 0; partIndex < partition->size(); ++partIndex) {
-                const UVector &part = *static_cast<UVector *>(partition->elementAt(partIndex));
-                if (part.contains(toState)) {
-                    result->addElement(partIndex, *fStatus);
-                    break;
+        برائے (int32_t i = 0; i < state.fDtran->size(); ++i) {
+            int32_t مقصد_State = state.fDtran->elementAti(i);
+            برائے (int32_t part_اشاریہ = 0; part_اشاریہ < تقسیم->size(); ++part_اشاریہ) {
+                ثابت UVector &part = *static_cast<UVector *>(تقسیم->elementAt(part_اشاریہ));
+                اگر (part.شامل_ہے(مقصد_State)) {
+                    نتیجہ->جوڑو_Element(part_اشاریہ, *f_حالت);
+                    توڑو;
                 }
             }
         }
-        result->setComparer([](const UElement left, const UElement right) -> UBool {
-            return left.integer == right.integer;
+        نتیجہ->سیٹ_Comparer([](ثابت UElement بائیں, ثابت UElement دائیں) -> UBool {
+            واپس بائیں.integer == دائیں.integer;
         });
-        return result;
+        واپس نتیجہ;
     };
     // The loop between steps 2. and 3. of Algorithm 3.6.
-    for (;;) {
+    برائے (;;) {
         // Π_new.
-        auto partitionNew = prv::make_unique<UVector>(*fStatus, *fStatus);
-        if (U_FAILURE(*fStatus)) {
-            return;
+        خودکار تقسیم_New = prv::make_unique<UVector>(*f_حالت, *f_حالت);
+        اگر (U_FAILURE(*f_حالت)) {
+            واپس;
         }
-        partitionNew->setDeleter(
-            [](void *p) { delete static_cast<UVector*>(p); });
+        تقسیم_New->سیٹ_Deleter(
+            [](خالی *p) { حذف static_cast<UVector*>(p); });
         // The procedure from Figure 3.45, Construction of Π_new.
-        bool refined = false;
-        for (int32_t i = 0; i < partition->size(); ++i) {
+        منطقی refined = جھوٹ;
+        برائے (int32_t i = 0; i < تقسیم->size(); ++i) {
             // Group 𝐺 in Π (=`partition`).
-            const UVector &group = *static_cast<UVector*>(partition->elementAt(i));
+            ثابت UVector &گروہ = *static_cast<UVector*>(تقسیم->elementAt(i));
             // Partition 𝐺 based on the signature, see above.
-            struct SignatureToStates : UMemory {
-                SignatureToStates(prv::unique_ptr<UVector> signature, UErrorCode &status)
-                    : signature(std::move(signature)), states(prv::make_unique<UVector>(status, status)) {
+            ساخت Signature_مقصد_حالتیں : UMemory {
+                Signature_مقصد_حالتیں(prv::unique_ptr<UVector> signature, UError_رمز &حالت_2)
+                    : signature(std::move(signature)), حالتیں(prv::make_unique<UVector>(حالت_2, حالت_2)) {
                 }
                 prv::unique_ptr<UVector> signature;
-                prv::unique_ptr<UVector> states;
+                prv::unique_ptr<UVector> حالتیں;
             };
-            UVector groupRefinement(*fStatus);
-            groupRefinement.setDeleter([](void *p) { delete static_cast<SignatureToStates*>(p); });
-            for (int32_t j = 0; j < group.size(); ++j) {
+            UVector گروہ_Refinement(*f_حالت);
+            گروہ_Refinement.سیٹ_Deleter([](خالی *p) { حذف static_cast<Signature_مقصد_حالتیں*>(p); });
+            برائے (int32_t j = 0; j < گروہ.size(); ++j) {
                 // Index of a state in the group.
-                const int32_t s = group.elementAti(j);
-                auto signature = partition_signature(s);
+                ثابت int32_t s = گروہ.elementAti(j);
+                خودکار signature = تقسیم_signature(s);
                 int32_t k = 0;
-                for (; k < groupRefinement.size(); ++k) {
-                    const auto &[subgroupSignature, subgroup] =
-                        *static_cast<SignatureToStates*>(groupRefinement.elementAt(k));
-                    if (*subgroupSignature == *signature) {
-                        subgroup->addElement(s, *fStatus);
-                        break;
+                برائے (; k < گروہ_Refinement.size(); ++k) {
+                    ثابت خودکار &[subgroupSignature, subgroup] =
+                        *static_cast<Signature_مقصد_حالتیں*>(گروہ_Refinement.elementAt(k));
+                    اگر (*subgroupSignature == *signature) {
+                        subgroup->جوڑو_Element(s, *f_حالت);
+                        توڑو;
                     }
                 }
-                if (k == groupRefinement.size()) {
-                    const auto newEntry =
-                        new SignatureToStates(std::move(signature), *fStatus);
-                    if (U_FAILURE(*fStatus)) {
-                        return;
+                اگر (k == گروہ_Refinement.size()) {
+                    ثابت خودکار new_اندراج =
+                        نیا Signature_مقصد_حالتیں(std::move(signature), *f_حالت);
+                    اگر (U_FAILURE(*f_حالت)) {
+                        واپس;
                     }
-                    if (newEntry == nullptr) {
-                      *fStatus = U_MEMORY_ALLOCATION_ERROR;
-                      return;
+                    اگر (new_اندراج == خالی_اشاریہ) {
+                      *f_حالت = U_حافظہ_تخصیص_ERROR;
+                      واپس;
                     }
-                    newEntry->states->addElement(s, *fStatus);
-                    groupRefinement.adoptElement(newEntry, *fStatus);
+                    new_اندراج->حالتیں->جوڑو_Element(s, *f_حالت);
+                    گروہ_Refinement.adoptElement(new_اندراج, *f_حالت);
                 }
             }
-            refined |= groupRefinement.size() > 1;
-            for (int32_t j = 0; j < groupRefinement.size(); ++j) {
-                auto &[_, subgroup] = *static_cast<SignatureToStates*>(
-                    groupRefinement.elementAt(j));
-                partitionNew->adoptElement(subgroup.release(), *fStatus);
+            refined |= گروہ_Refinement.size() > 1;
+            برائے (int32_t j = 0; j < گروہ_Refinement.size(); ++j) {
+                خودکار &[_, subgroup] = *static_cast<Signature_مقصد_حالتیں*>(
+                    گروہ_Refinement.elementAt(j));
+                تقسیم_New->adoptElement(subgroup.release(), *f_حالت);
             }
         }
-        if (refined) {
-            partition = std::move(partitionNew);
-        } else {
-            break;
+        اگر (refined) {
+            تقسیم = std::move(تقسیم_New);
+        } ورنہ {
+            توڑو;
         }
     }
     // We will use the indices in `partition` as the new state indices.  Make
     // sure that the start (1) and stop (0) states remain in their correct
     // places; everything else can merrily be scrambled.
-    for (int i = 0; i < partition->size(); ++i) {
-        UVector *const part_i = static_cast<UVector *>(partition->elementAt(i));
-        if (part_i->contains(0)) {
-            void *const part_0 = partition->elementAt(0);
+    برائے (صحیح i = 0; i < تقسیم->size(); ++i) {
+        UVector *ثابت part_i = static_cast<UVector *>(تقسیم->elementAt(i));
+        اگر (part_i->شامل_ہے(0)) {
+            خالی *ثابت part_0 = تقسیم->elementAt(0);
             // No swap on UVector, so we briefly remove the deleter.
-            const auto deleter = partition->setDeleter(nullptr);
-            partition->setElementAt(part_i, 0);
-            partition->setElementAt(part_0, i);
-            partition->setDeleter(deleter);
-        } else if (part_i->contains(1)) {
-            void *const part_1 = partition->elementAt(1);
-            const auto deleter = partition->setDeleter(nullptr);
-            partition->setElementAt(part_i, 1);
-            partition->setElementAt(part_1, i);
-            partition->setDeleter(deleter);
+            ثابت خودکار deleter = تقسیم->سیٹ_Deleter(خالی_اشاریہ);
+            تقسیم->سیٹ_Element_At(part_i, 0);
+            تقسیم->سیٹ_Element_At(part_0, i);
+            تقسیم->سیٹ_Deleter(deleter);
+        } ورنہ اگر (part_i->شامل_ہے(1)) {
+            خالی *ثابت part_1 = تقسیم->elementAt(1);
+            ثابت خودکار deleter = تقسیم->سیٹ_Deleter(خالی_اشاریہ);
+            تقسیم->سیٹ_Element_At(part_i, 1);
+            تقسیم->سیٹ_Element_At(part_1, i);
+            تقسیم->سیٹ_Deleter(deleter);
         }
     }
-    if (U_FAILURE(*fStatus)) {
-        return;
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
-    auto oldStateToPart = prv::make_unique_for_overwrite<uint16_t[]>(fDStates->size(), *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    خودکار old_State_مقصد_Part = prv::make_unique_for_overwrite<uint16_t[]>(fDStates->size(), *f_حالت);
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
-    for (int i = 0; i < partition->size(); ++i) {
-        const UVector &part = *static_cast<UVector*>(partition->elementAt(i));
-        for (int j = 0; j < part.size(); ++j) {
-            oldStateToPart[part.elementAti(j)] = i;
+    برائے (صحیح i = 0; i < تقسیم->size(); ++i) {
+        ثابت UVector &part = *static_cast<UVector*>(تقسیم->elementAt(i));
+        برائے (صحیح j = 0; j < part.size(); ++j) {
+            old_State_مقصد_Part[part.elementAti(j)] = i;
         }
     }
-    auto const oldStates = prv::unique_ptr<UVector>(fDStates);
-    fDStates = prv::make_unique<UVector>(*fStatus, *fStatus).release();
-    if (U_FAILURE(*fStatus)) {
-        return;
+    خودکار ثابت old_حالتیں = prv::unique_ptr<UVector>(fDStates);
+    fDStates = prv::make_unique<UVector>(*f_حالت, *f_حالت).release();
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
-    for (int i = 0; i < partition->size(); ++i) {
-        const UVector &part = *static_cast<UVector*>(partition->elementAt(i));
-        RBBIStateDescriptor *const state =
-            static_cast<RBBIStateDescriptor*>(oldStates->elementAt(part.elementAti(0)));
-        fDStates->addElement(state, *fStatus);
-        for (int j = 0; j < state->fDtran->size(); ++j) {
-            state->fDtran->setElementAt(oldStateToPart[state->fDtran->elementAti(j)], j);
+    برائے (صحیح i = 0; i < تقسیم->size(); ++i) {
+        ثابت UVector &part = *static_cast<UVector*>(تقسیم->elementAt(i));
+        RBBIStateDescriptor *ثابت state =
+            static_cast<RBBIStateDescriptor*>(old_حالتیں->elementAt(part.elementAti(0)));
+        fDStates->جوڑو_Element(state, *f_حالت);
+        برائے (صحیح j = 0; j < state->fDtran->size(); ++j) {
+            state->fDtran->سیٹ_Element_At(old_State_مقصد_Part[state->fDtran->elementAti(j)], j);
         }
-        oldStates->setElementAt(nullptr, part.elementAti(0));
+        old_حالتیں->سیٹ_Element_At(خالی_اشاریہ, part.elementAti(0));
     }
-    oldStates->setDeleter([](void *p) { delete static_cast<RBBIStateDescriptor*>(p); });
+    old_حالتیں->سیٹ_Deleter([](خالی *p) { حذف static_cast<RBBIStateDescriptor*>(p); });
 }
 
 
@@ -1264,28 +1264,28 @@ void RBBITableBuilder::minimizeStates() {
 //             Lazily create the vector if it does not already exist.
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::sortedAdd(UVector **vector, int32_t val) {
+خالی RBBITableBuilder::sorted_جوڑو(UVector **vector, int32_t val) {
     int32_t i;
 
-    if (*vector == nullptr) {
-        *vector = new UVector(*fStatus);
+    اگر (*vector == خالی_اشاریہ) {
+        *vector = نیا UVector(*f_حالت);
     }
-    if (*vector == nullptr || U_FAILURE(*fStatus)) {
-        return;
+    اگر (*vector == خالی_اشاریہ || U_FAILURE(*f_حالت)) {
+        واپس;
     }
     UVector *vec = *vector;
-    int32_t  vSize = vec->size();
-    for (i=0; i<vSize; i++) {
+    int32_t  v_سائز = vec->size();
+    برائے (i=0; i<v_سائز; i++) {
         int32_t valAtI = vec->elementAti(i);
-        if (valAtI == val) {
+        اگر (valAtI == val) {
             // The value is already in the vector.  Don't add it again.
-            return;
+            واپس;
         }
-        if (valAtI > val) {
-            break;
+        اگر (valAtI > val) {
+            توڑو;
         }
     }
-    vec->insertElementAt(val, i, *fStatus);
+    vec->داخل_کرو_Element_At(val, i, *f_حالت);
 }
 
 
@@ -1297,65 +1297,65 @@ void RBBITableBuilder::sortedAdd(UVector **vector, int32_t val) {
 //             Elements may only appear once and must be sorted.
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::setAdd(UVector *dest, UVector *source) {
+خالی RBBITableBuilder::سیٹ_جوڑو_2(UVector *dest, UVector *ماخذ) {
     U_ASSERT(!dest->hasDeleter());
-    U_ASSERT(!source->hasDeleter());
-    int32_t destOriginalSize = dest->size();
-    int32_t sourceSize       = source->size();
+    U_ASSERT(!ماخذ->hasDeleter());
+    int32_t dest_Original_سائز = dest->size();
+    int32_t ماخذ_سائز       = ماخذ->size();
     int32_t di           = 0;
-    MaybeStackArray<void *, 16> destArray, sourceArray;  // Handle small cases without malloc
-    void **destPtr, **sourcePtr;
-    void **destLim, **sourceLim;
+    Maybe_ڈھیر_Array<خالی *, 16> destArray, ماخذ_Array;  // Handle small cases without malloc
+    خالی **destPtr, **ماخذ_Ptr;
+    خالی **destLim, **ماخذ_Lim;
 
-    if (destOriginalSize > destArray.getCapacity()) {
-        if (destArray.resize(destOriginalSize) == nullptr) {
-            return;
+    اگر (dest_Original_سائز > destArray.get_استعداد()) {
+        اگر (destArray.resize(dest_Original_سائز) == خالی_اشاریہ) {
+            واپس;
         }
     }
     destPtr = destArray.getAlias();
-    destLim = destPtr + destOriginalSize;  // destArray.getArrayLimit()?
+    destLim = destPtr + dest_Original_سائز;  // destArray.getArrayLimit()?
 
-    if (sourceSize > sourceArray.getCapacity()) {
-        if (sourceArray.resize(sourceSize) == nullptr) {
-            return;
+    اگر (ماخذ_سائز > ماخذ_Array.get_استعداد()) {
+        اگر (ماخذ_Array.resize(ماخذ_سائز) == خالی_اشاریہ) {
+            واپس;
         }
     }
-    sourcePtr = sourceArray.getAlias();
-    sourceLim = sourcePtr + sourceSize;  // sourceArray.getArrayLimit()?
+    ماخذ_Ptr = ماخذ_Array.getAlias();
+    ماخذ_Lim = ماخذ_Ptr + ماخذ_سائز;  // sourceArray.getArrayLimit()?
 
     // Avoid multiple "get element" calls by getting the contents into arrays
-    (void) dest->toArray(destPtr);
-    (void) source->toArray(sourcePtr);
+    (خالی) dest->مقصد_Array(destPtr);
+    (خالی) ماخذ->مقصد_Array(ماخذ_Ptr);
 
-    dest->setSize(sourceSize+destOriginalSize, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    dest->سیٹ_سائز(ماخذ_سائز+dest_Original_سائز, *f_حالت);
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
 
-    while (sourcePtr < sourceLim && destPtr < destLim) {
-        if (*destPtr == *sourcePtr) {
-            dest->setElementAt(*sourcePtr++, di++);
+    جب (ماخذ_Ptr < ماخذ_Lim && destPtr < destLim) {
+        اگر (*destPtr == *ماخذ_Ptr) {
+            dest->سیٹ_Element_At(*ماخذ_Ptr++, di++);
             destPtr++;
         }
         // This check is required for machines with segmented memory, like i5/OS.
         // Direct pointer comparison is not recommended.
-        else if (uprv_memcmp(destPtr, sourcePtr, sizeof(void *)) < 0) {
-            dest->setElementAt(*destPtr++, di++);
+        ورنہ اگر (uprv_memcmp(destPtr, ماخذ_Ptr, حجم(خالی *)) < 0) {
+            dest->سیٹ_Element_At(*destPtr++, di++);
         }
-        else { /* *sourcePtr < *destPtr */
-            dest->setElementAt(*sourcePtr++, di++);
+        ورنہ { /* *sourcePtr < *destPtr */
+            dest->سیٹ_Element_At(*ماخذ_Ptr++, di++);
         }
     }
 
     // At most one of these two cleanup loops will execute
-    while (destPtr < destLim) {
-        dest->setElementAt(*destPtr++, di++);
+    جب (destPtr < destLim) {
+        dest->سیٹ_Element_At(*destPtr++, di++);
     }
-    while (sourcePtr < sourceLim) {
-        dest->setElementAt(*sourcePtr++, di++);
+    جب (ماخذ_Ptr < ماخذ_Lim) {
+        dest->سیٹ_Element_At(*ماخذ_Ptr++, di++);
     }
 
-    dest->setSize(di, *fStatus);
+    dest->سیٹ_سائز(di, *f_حالت);
 }
 
 
@@ -1367,8 +1367,8 @@ void RBBITableBuilder::setAdd(UVector *dest, UVector *source) {
 //              Elements must be sorted.
 //
 //-----------------------------------------------------------------------------
-UBool RBBITableBuilder::setEquals(UVector *a, UVector *b) {
-    return a->equals(*b);
+UBool RBBITableBuilder::سیٹ_Equals(UVector *a, UVector *b) {
+    واپس a->equals(*b);
 }
 
 
@@ -1378,126 +1378,126 @@ UBool RBBITableBuilder::setEquals(UVector *a, UVector *b) {
 //                 for each node in the tree.
 //
 //-----------------------------------------------------------------------------
-#ifdef RBBI_DEBUG
-void RBBITableBuilder::printPosSets(RBBINode *n) {
-    if (n==nullptr) {
-        return;
+#اگر_تعریف_شدہ RBBI_DEBUG
+خالی RBBITableBuilder::printPosSets(RBBINode *n) {
+    اگر (n==خالی_اشاریہ) {
+        واپس;
     }
-    printf("\n");
-    RBBINode::printNodeHeader();
-    RBBINode::printNode(n);
+    لکھو("\n");
+    RBBINode::print_گرہ_سرخی();
+    RBBINode::print_گرہ(n);
     RBBIDebugPrintf("         Nullable:  %s\n", n->fNullable?"true":"false");
 
     RBBIDebugPrintf("         firstpos:  ");
-    printSet(n->fFirstPosSet);
+    print_سیٹ(n->f_پہلا_Pos_سیٹ);
 
     RBBIDebugPrintf("         lastpos:   ");
-    printSet(n->fLastPosSet);
+    print_سیٹ(n->f_آخری_Pos_سیٹ);
 
     RBBIDebugPrintf("         followpos: ");
-    printSet(n->fFollowPos);
+    print_سیٹ(n->fFollowPos);
 
-    printPosSets(n->fLeftChild);
-    printPosSets(n->fRightChild);
+    printPosSets(n->f_بایاں_بچہ);
+    printPosSets(n->f_دایاں_بچہ);
 }
-#endif
+#اگر_ختم
 
 //
 //    findDuplCharClassFrom()
 //
-bool RBBITableBuilder::findDuplCharClassFrom(IntPair *categories) {
-    int32_t numStates = fDStates->size();
-    int32_t numCols = fRB->fSetBuilder->getNumCharCategories();
+منطقی RBBITableBuilder::ڈھونڈو_Dupl_Char_Class_From(IntPair *categories) {
+    int32_t عدد_حالتیں = fDStates->size();
+    int32_t عدد_ستون_تعداد = fRB->f_سیٹ_Builder->get_عدد_Char_Categories();
 
-    for (; categories->first < numCols-1; categories->first++) {
+    برائے (; categories->first < عدد_ستون_تعداد-1; categories->first++) {
         // Note: dictionary & non-dictionary columns cannot be merged.
         //       The limitSecond value prevents considering mixed pairs.
         //       Dictionary categories are >= DictCategoriesStart.
         //       Non dict categories are   <  DictCategoriesStart.
-        int limitSecond = categories->first < fRB->fSetBuilder->getDictCategoriesStart() ?
-            fRB->fSetBuilder->getDictCategoriesStart() : numCols;
-        for (categories->second=categories->first+1; categories->second < limitSecond; categories->second++) {
+        صحیح حد_بندی_دوسرا = categories->first < fRB->f_سیٹ_Builder->get_Dict_Categories_آغاز() ?
+            fRB->f_سیٹ_Builder->get_Dict_Categories_آغاز() : عدد_ستون_تعداد;
+        برائے (categories->دوسرا=categories->first+1; categories->دوسرا < حد_بندی_دوسرا; categories->دوسرا++) {
             // Initialized to different values to prevent returning true if numStates = 0 (implies no duplicates).
-            uint16_t table_base = 0;
-            uint16_t table_dupl = 1;
-            for (int32_t state=0; state<numStates; state++) {
+            uint16_t جدول_بنیاد = 0;
+            uint16_t جدول_dupl = 1;
+            برائے (int32_t state=0; state<عدد_حالتیں; state++) {
                 RBBIStateDescriptor* sd = static_cast<RBBIStateDescriptor*>(fDStates->elementAt(state));
-                table_base = static_cast<uint16_t>(sd->fDtran->elementAti(categories->first));
-                table_dupl = static_cast<uint16_t>(sd->fDtran->elementAti(categories->second));
-                if (table_base != table_dupl) {
-                    break;
+                جدول_بنیاد = static_cast<uint16_t>(sd->fDtran->elementAti(categories->first));
+                جدول_dupl = static_cast<uint16_t>(sd->fDtran->elementAti(categories->دوسرا));
+                اگر (جدول_بنیاد != جدول_dupl) {
+                    توڑو;
                 }
             }
-            if (table_base == table_dupl) {
-                return true;
+            اگر (جدول_بنیاد == جدول_dupl) {
+                واپس سچ;
             }
         }
     }
-    return false;
+    واپس جھوٹ;
 }
 
 
 //
 //    removeColumn()
 //
-void RBBITableBuilder::removeColumn(int32_t column) {
-    int32_t numStates = fDStates->size();
-    for (int32_t state=0; state<numStates; state++) {
+خالی RBBITableBuilder::remove_عمود(int32_t عمود) {
+    int32_t عدد_حالتیں = fDStates->size();
+    برائے (int32_t state=0; state<عدد_حالتیں; state++) {
         RBBIStateDescriptor* sd = static_cast<RBBIStateDescriptor*>(fDStates->elementAt(state));
-        U_ASSERT(column < sd->fDtran->size());
-        sd->fDtran->removeElementAt(column);
+        U_ASSERT(عمود < sd->fDtran->size());
+        sd->fDtran->removeElementAt(عمود);
     }
 }
 
 
-bool RBBITableBuilder::findDuplicateSafeState(IntPair *states) {
-    int32_t numStates = fSafeTable->size();
+منطقی RBBITableBuilder::ڈھونڈو_Duplicate_محفوظ_State(IntPair *حالتیں) {
+    int32_t عدد_حالتیں = f_محفوظ_جدول->size();
 
-    for (; states->first<numStates-1; states->first++) {
-        UnicodeString *firstRow = static_cast<UnicodeString *>(fSafeTable->elementAt(states->first));
-        for (states->second=states->first+1; states->second<numStates; states->second++) {
-            UnicodeString *duplRow = static_cast<UnicodeString *>(fSafeTable->elementAt(states->second));
-            bool rowsMatch = true;
-            int32_t numCols = firstRow->length();
-            for (int32_t col=0; col < numCols; ++col) {
-                int32_t firstVal = firstRow->charAt(col);
-                int32_t duplVal = duplRow->charAt(col);
-                if (!((firstVal == duplVal) ||
-                        ((firstVal == states->first || firstVal == states->second) &&
-                        (duplVal  == states->first || duplVal  == states->second)))) {
-                    rowsMatch = false;
-                    break;
+    برائے (; حالتیں->first<عدد_حالتیں-1; حالتیں->first++) {
+        UnicodeString *پہلا_صف = static_cast<UnicodeString *>(f_محفوظ_جدول->elementAt(حالتیں->first));
+        برائے (حالتیں->دوسرا=حالتیں->first+1; حالتیں->دوسرا<عدد_حالتیں; حالتیں->دوسرا++) {
+            UnicodeString *dupl_صف = static_cast<UnicodeString *>(f_محفوظ_جدول->elementAt(حالتیں->دوسرا));
+            منطقی صفیں_مطابقت = سچ;
+            int32_t عدد_ستون_تعداد = پہلا_صف->length();
+            برائے (int32_t ستون=0; ستون < عدد_ستون_تعداد; ++ستون) {
+                int32_t پہلا_Val = پہلا_صف->charAt(ستون);
+                int32_t duplVal = dupl_صف->charAt(ستون);
+                اگر (!((پہلا_Val == duplVal) ||
+                        ((پہلا_Val == حالتیں->first || پہلا_Val == حالتیں->دوسرا) &&
+                        (duplVal  == حالتیں->first || duplVal  == حالتیں->دوسرا)))) {
+                    صفیں_مطابقت = جھوٹ;
+                    توڑو;
                 }
             }
-            if (rowsMatch) {
-                return true;
+            اگر (صفیں_مطابقت) {
+                واپس سچ;
             }
         }
     }
-    return false;
+    واپس جھوٹ;
 }
 
-void RBBITableBuilder::removeSafeState(IntPair duplStates) {
-    const int32_t keepState = duplStates.first;
-    const int32_t duplState = duplStates.second;
+خالی RBBITableBuilder::remove_محفوظ_State(IntPair dupl_حالتیں) {
+    ثابت int32_t keepState = dupl_حالتیں.first;
+    ثابت int32_t duplState = dupl_حالتیں.دوسرا;
     U_ASSERT(keepState < duplState);
-    U_ASSERT(duplState < fSafeTable->size());
+    U_ASSERT(duplState < f_محفوظ_جدول->size());
 
-    fSafeTable->removeElementAt(duplState);   // Note that fSafeTable has a deleter function
+    f_محفوظ_جدول->removeElementAt(duplState);   // Note that fSafeTable has a deleter function
                                               // and will auto-delete the removed element.
-    int32_t numStates = fSafeTable->size();
-    for (int32_t state=0; state<numStates; ++state) {
-        UnicodeString* sd = static_cast<UnicodeString*>(fSafeTable->elementAt(state));
-        int32_t numCols = sd->length();
-        for (int32_t col=0; col<numCols; col++) {
-            int32_t existingVal = sd->charAt(col);
+    int32_t عدد_حالتیں = f_محفوظ_جدول->size();
+    برائے (int32_t state=0; state<عدد_حالتیں; ++state) {
+        UnicodeString* sd = static_cast<UnicodeString*>(f_محفوظ_جدول->elementAt(state));
+        int32_t عدد_ستون_تعداد = sd->length();
+        برائے (int32_t ستون=0; ستون<عدد_ستون_تعداد; ستون++) {
+            int32_t existingVal = sd->charAt(ستون);
             int32_t newVal = existingVal;
-            if (existingVal == duplState) {
+            اگر (existingVal == duplState) {
                 newVal = keepState;
-            } else if (existingVal > duplState) {
+            } ورنہ اگر (existingVal > duplState) {
                 newVal = existingVal - 1;
             }
-            sd->setCharAt(col, static_cast<char16_t>(newVal));
+            sd->سیٹ_Char_At(ستون, static_cast<char16_t>(newVal));
         }
     }
 }
@@ -1506,10 +1506,10 @@ void RBBITableBuilder::removeSafeState(IntPair duplStates) {
 /*
  * RemoveDuplicateStates
  */
-int32_t RBBITableBuilder::removeDuplicateStates() {
-    const int32_t oldStateCount = fDStates->size();
-    minimizeStates();
-    return fDStates->size() - oldStateCount;
+int32_t RBBITableBuilder::remove_Duplicate_حالتیں() {
+    ثابت int32_t old_State_گنتی = fDStates->size();
+    minimize_حالتیں();
+    واپس fDStates->size() - old_State_گنتی;
 }
 
 
@@ -1563,50 +1563,50 @@ int32_t RBBITableBuilder::removeDuplicateStates() {
  * This function first computes the adjacency matrix of lookahead reachability, and then colours the
  * graph of lookaheads and reassigns lookahead slots accordingly.
  */
-void RBBITableBuilder::minimizeLookaheads() {
-    if (fLASlotsInUse == ACCEPTING_UNCONDITIONAL) {
-        return;
+خالی RBBITableBuilder::minimizeLookaheads() {
+    اگر (f_LASlots_اندر_Use == ACCEPTING_UNCONDITIONAL) {
+        واپس;
     }
-    const int32_t lookaheadCount = fLASlotsInUse - ACCEPTING_UNCONDITIONAL;
+    ثابت int32_t lookahead_گنتی = f_LASlots_اندر_Use - ACCEPTING_UNCONDITIONAL;
     // The last lookahead is fLASlotsInUse.
-    const int32_t firstLookahead = ACCEPTING_UNCONDITIONAL + 1;
-    const auto stateDescriptor = [this](const int32_t state) -> RBBIStateDescriptor & {
-        return *static_cast<RBBIStateDescriptor *>(fDStates->elementAt(state));
+    ثابت int32_t پہلا_Lookahead = ACCEPTING_UNCONDITIONAL + 1;
+    ثابت خودکار stateDescriptor = [یہ](ثابت int32_t state) -> RBBIStateDescriptor & {
+        واپس *static_cast<RBBIStateDescriptor *>(fDStates->elementAt(state));
     };
 
-    const auto lookaheadReachability =
-        prv::make_unique<bool[]>(lookaheadCount * lookaheadCount, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    ثابت خودکار lookaheadReachability =
+        prv::make_unique<منطقی[]>(lookahead_گنتی * lookahead_گنتی, *f_حالت);
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
-    for (int32_t l = firstLookahead; l <= fLASlotsInUse; ++l) {
-        for (int32_t k = firstLookahead; k <= fLASlotsInUse; ++k) {
-            if (k != l) {
-                for (int32_t source = 1; source < fDStates->size(); ++source) {
-                    if (static_cast<int32_t>(stateDescriptor(source).fLookAhead) != l) {
-                        continue;
+    برائے (int32_t l = پہلا_Lookahead; l <= f_LASlots_اندر_Use; ++l) {
+        برائے (int32_t k = پہلا_Lookahead; k <= f_LASlots_اندر_Use; ++k) {
+            اگر (k != l) {
+                برائے (int32_t ماخذ = 1; ماخذ < fDStates->size(); ++ماخذ) {
+                    اگر (static_cast<int32_t>(stateDescriptor(ماخذ).fLookAhead) != l) {
+                        جاری;
                     }
-                    if (reachableByTransitions(
-                            *fDStates, source, /*isSink=*/
-                            [&](const int32_t state) {
-                                return static_cast<int32_t>(stateDescriptor(state).fAccepting) == k;
+                    اگر (reachableByTransitions(
+                            *fDStates, ماخذ, /*isSink=*/
+                            [&](ثابت int32_t state) {
+                                واپس static_cast<int32_t>(stateDescriptor(state).fAccepting) == k;
                             },
                             /*excludedState=*/
-                            [&](const int32_t state) {
-                                return static_cast<int32_t>(stateDescriptor(state).fLookAhead) == k;
+                            [&](ثابت int32_t state) {
+                                واپس static_cast<int32_t>(stateDescriptor(state).fLookAhead) == k;
                             },
-                            *fStatus)) {
-                        lookaheadReachability[(l - firstLookahead) * lookaheadCount + k -
-                                              firstLookahead] = true;
+                            *f_حالت)) {
+                        lookaheadReachability[(l - پہلا_Lookahead) * lookahead_گنتی + k -
+                                              پہلا_Lookahead] = سچ;
                     }
                 }
             }
         }
     }
 
-    const auto colours = prv::make_unique_for_overwrite<int32_t[]>(lookaheadCount, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    ثابت خودکار colours = prv::make_unique_for_overwrite<int32_t[]>(lookahead_گنتی, *f_حالت);
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
     // Brute-force colouring: the number of lookaheads is in practice small, and the chromatic
     // number is in practice 1, so this usually terminates in one iteration of the first two loops.
@@ -1614,50 +1614,50 @@ void RBBITableBuilder::minimizeLookaheads() {
     // expressions anyway.
     // The outer loop terminates after at most `lookaheadCount` iterations
     // (when the chromatic number equals the number of lookaheads being coloured).
-    for (int32_t chromaticNumber = 1;; ++chromaticNumber) {
-        uprv_memset(colours.get(), 0, sizeof(int32_t) * lookaheadCount);
+    برائے (int32_t chromatic_نمبر = 1;; ++chromatic_نمبر) {
+        uprv_memset(colours.get(), 0, حجم(int32_t) * lookahead_گنتی);
         // This loop terminates after at most chromaticNumber ** lookaheadCount iterations.
-        for (;;) {
+        برائے (;;) {
             // Here `source` and `sink` correspond to lookaheads, not states.
-            for (int source = 0; source < lookaheadCount; ++source) {
-                for (int sink = 0; sink < lookaheadCount; ++sink) {
-                    if (lookaheadReachability[source * lookaheadCount + sink] &&
-                        colours[source] == colours[sink]) {
-                        goto nextColouring;
+            برائے (صحیح ماخذ = 0; ماخذ < lookahead_گنتی; ++ماخذ) {
+                برائے (صحیح sink = 0; sink < lookahead_گنتی; ++sink) {
+                    اگر (lookaheadReachability[ماخذ * lookahead_گنتی + sink] &&
+                        colours[ماخذ] == colours[sink]) {
+                        جاؤ اگلا_Colouring;
                     }
                 }
             }
 
             // We have found a valid colouring of the graph of lookaheads.  Assign lookahead slots
             // accordingly.
-            for (int i = 0; i < fDStates->size(); ++i) {
-                if (stateDescriptor(i).fAccepting > ACCEPTING_UNCONDITIONAL) {
+            برائے (صحیح i = 0; i < fDStates->size(); ++i) {
+                اگر (stateDescriptor(i).fAccepting > ACCEPTING_UNCONDITIONAL) {
                     stateDescriptor(i).fAccepting =
-                        firstLookahead +
-                        colours[stateDescriptor(i).fAccepting - firstLookahead];
+                        پہلا_Lookahead +
+                        colours[stateDescriptor(i).fAccepting - پہلا_Lookahead];
                 }
-                if (stateDescriptor(i).fLookAhead != 0) {
+                اگر (stateDescriptor(i).fLookAhead != 0) {
                     stateDescriptor(i).fLookAhead =
                         ACCEPTING_UNCONDITIONAL + 1 +
-                        colours[stateDescriptor(i).fLookAhead - firstLookahead];
+                        colours[stateDescriptor(i).fLookAhead - پہلا_Lookahead];
                 }
             }
-            fLASlotsInUse = ACCEPTING_UNCONDITIONAL + chromaticNumber;
-            return;
+            f_LASlots_اندر_Use = ACCEPTING_UNCONDITIONAL + chromatic_نمبر;
+            واپس;
 
-          nextColouring:
+          اگلا_Colouring:
             // Increment the colour of the first lookahead, and then carry if we reach
             // `chromaticNumber` (which is one more than the greatest colour).
             ++colours[0];
-            for (int32_t i = 0; i < lookaheadCount - 1 && colours[i] == chromaticNumber;
+            برائے (int32_t i = 0; i < lookahead_گنتی - 1 && colours[i] == chromatic_نمبر;
                  ++i) {
                 colours[i] = 0;
                 ++colours[i + 1];
             }
-            if (colours[lookaheadCount - 1] == chromaticNumber) {
+            اگر (colours[lookahead_گنتی - 1] == chromatic_نمبر) {
                 // We tried all assignments of colours in {0, …, chromaticNumber - 1},
                 // we need more colours.
-                break;
+                توڑو;
             }
         }
     }
@@ -1670,32 +1670,32 @@ void RBBITableBuilder::minimizeLookaheads() {
 //                     state transition table.
 //
 //-----------------------------------------------------------------------------
-int32_t  RBBITableBuilder::getTableSize() const {
+int32_t  RBBITableBuilder::get_جدول_سائز() ثابت {
     int32_t    size = 0;
-    int32_t    numRows;
-    int32_t    numCols;
-    int32_t    rowSize;
+    int32_t    عدد_صفیں;
+    int32_t    عدد_ستون_تعداد;
+    int32_t    صف_سائز;
 
-    if (fTree == nullptr) {
-        return 0;
+    اگر (f_درخت == خالی_اشاریہ) {
+        واپس 0;
     }
 
-    size    = offsetof(RBBIStateTable, fTableData);    // The header, with no rows to the table.
+    size    = offsetof(RBBIState_جدول, f_جدول_ڈیٹا);    // The header, with no rows to the table.
 
-    numRows = fDStates->size();
-    numCols = fRB->fSetBuilder->getNumCharCategories();
+    عدد_صفیں = fDStates->size();
+    عدد_ستون_تعداد = fRB->f_سیٹ_Builder->get_عدد_Char_Categories();
 
-    if (use8BitsForTable()) {
-        rowSize = offsetof(RBBIStateTableRow8, fNextState) + sizeof(int8_t)*numCols;
-    } else {
-        rowSize = offsetof(RBBIStateTableRow16, fNextState) + sizeof(int16_t)*numCols;
+    اگر (use8_بٹ_For_جدول()) {
+        صف_سائز = offsetof(RBBIState_جدول_Row8, f_اگلا_State) + حجم(int8_t)*عدد_ستون_تعداد;
+    } ورنہ {
+        صف_سائز = offsetof(RBBIState_جدول_Row16, f_اگلا_State) + حجم(int16_t)*عدد_ستون_تعداد;
     }
-    size   += numRows * rowSize;
-    return size;
+    size   += عدد_صفیں * صف_سائز;
+    واپس size;
 }
 
-bool RBBITableBuilder::use8BitsForTable() const {
-    return fDStates->size() <= kMaxStateFor8BitsTable;
+منطقی RBBITableBuilder::use8_بٹ_For_جدول() ثابت {
+    واپس fDStates->size() <= k_Max_State_For8_بٹ_جدول;
 }
 
 //-----------------------------------------------------------------------------
@@ -1705,60 +1705,60 @@ bool RBBITableBuilder::use8BitsForTable() const {
 //                    must be available at the output address "where".
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::exportTable(void *where) {
-    RBBIStateTable* table = static_cast<RBBIStateTable*>(where);
+خالی RBBITableBuilder::export_جدول(خالی *where) {
+    RBBIState_جدول* جدول = static_cast<RBBIState_جدول*>(where);
     uint32_t           state;
-    int                col;
+    صحیح                ستون;
 
-    if (U_FAILURE(*fStatus) || fTree == nullptr) {
-        return;
+    اگر (U_FAILURE(*f_حالت) || f_درخت == خالی_اشاریہ) {
+        واپس;
     }
 
-    int32_t catCount = fRB->fSetBuilder->getNumCharCategories();
-    if (catCount > 0x7fff ||
+    int32_t cat_گنتی = fRB->f_سیٹ_Builder->get_عدد_Char_Categories();
+    اگر (cat_گنتی > 0x7fff ||
         fDStates->size() > 0x7fff) {
-        *fStatus = U_BRK_INTERNAL_ERROR;
-        return;
+        *f_حالت = U_BRK_اندرونی_ERROR;
+        واپس;
     }
 
-    table->fNumStates = fDStates->size();
-    table->fDictCategoriesStart = fRB->fSetBuilder->getDictCategoriesStart();
-    table->fLookAheadResultsSize = fLASlotsInUse == ACCEPTING_UNCONDITIONAL ? 0 : fLASlotsInUse + 1;
-    table->fFlags     = 0;
-    if (use8BitsForTable()) {
-        table->fRowLen    = offsetof(RBBIStateTableRow8, fNextState) + sizeof(uint8_t) * catCount;
-        table->fFlags  |= RBBI_8BITS_ROWS;
-    } else {
-        table->fRowLen    = offsetof(RBBIStateTableRow16, fNextState) + sizeof(int16_t) * catCount;
+    جدول->f_عدد_حالتیں = fDStates->size();
+    جدول->f_Dict_Categories_آغاز = fRB->f_سیٹ_Builder->get_Dict_Categories_آغاز();
+    جدول->f_Look_Ahead_Results_سائز = f_LASlots_اندر_Use == ACCEPTING_UNCONDITIONAL ? 0 : f_LASlots_اندر_Use + 1;
+    جدول->fFlags     = 0;
+    اگر (use8_بٹ_For_جدول()) {
+        جدول->f_صف_Len    = offsetof(RBBIState_جدول_Row8, f_اگلا_State) + حجم(uint8_t) * cat_گنتی;
+        جدول->fFlags  |= RBBI_8_بٹ_صفیں;
+    } ورنہ {
+        جدول->f_صف_Len    = offsetof(RBBIState_جدول_Row16, f_اگلا_State) + حجم(int16_t) * cat_گنتی;
     }
-    if (fRB->fLookAheadHardBreak) {
-        table->fFlags  |= RBBI_LOOKAHEAD_HARD_BREAK;
+    اگر (fRB->fLookAheadHardBreak) {
+        جدول->fFlags  |= RBBI_LOOKAHEAD_HARD_BREAK;
     }
 
-    for (state=0; state<table->fNumStates; state++) {
+    برائے (state=0; state<جدول->f_عدد_حالتیں; state++) {
         RBBIStateDescriptor* sd = static_cast<RBBIStateDescriptor*>(fDStates->elementAt(state));
-        RBBIStateTableRow* row = reinterpret_cast<RBBIStateTableRow*>(table->fTableData + state * table->fRowLen);
-        if (use8BitsForTable()) {
+        RBBIState_جدول_صف* صف = reinterpret_cast<RBBIState_جدول_صف*>(جدول->f_جدول_ڈیٹا + state * جدول->f_صف_Len);
+        اگر (use8_بٹ_For_جدول()) {
             U_ASSERT (sd->fAccepting <= 255);
             U_ASSERT (sd->fLookAhead <= 255);
-            U_ASSERT (0 <= sd->fTagsIdx && sd->fTagsIdx <= 255);
-            RBBIStateTableRow8* r8 = reinterpret_cast<RBBIStateTableRow8*>(row);
+            U_ASSERT (0 <= sd->f_لیبل_فہرست_Idx && sd->f_لیبل_فہرست_Idx <= 255);
+            RBBIState_جدول_Row8* r8 = reinterpret_cast<RBBIState_جدول_Row8*>(صف);
             r8->fAccepting = sd->fAccepting;
             r8->fLookAhead = sd->fLookAhead;
-            r8->fTagsIdx   = sd->fTagsIdx;
-            for (col=0; col<catCount; col++) {
-                U_ASSERT (sd->fDtran->elementAti(col) <= kMaxStateFor8BitsTable);
-                r8->fNextState[col] = sd->fDtran->elementAti(col);
+            r8->f_لیبل_فہرست_Idx   = sd->f_لیبل_فہرست_Idx;
+            برائے (ستون=0; ستون<cat_گنتی; ستون++) {
+                U_ASSERT (sd->fDtran->elementAti(ستون) <= k_Max_State_For8_بٹ_جدول);
+                r8->f_اگلا_State[ستون] = sd->fDtran->elementAti(ستون);
             }
-        } else {
+        } ورنہ {
             U_ASSERT (sd->fAccepting <= 0xffff);
             U_ASSERT (sd->fLookAhead <= 0xffff);
-            U_ASSERT (0 <= sd->fTagsIdx && sd->fTagsIdx <= 0xffff);
-            row->r16.fAccepting = sd->fAccepting;
-            row->r16.fLookAhead = sd->fLookAhead;
-            row->r16.fTagsIdx   = sd->fTagsIdx;
-            for (col=0; col<catCount; col++) {
-                row->r16.fNextState[col] = sd->fDtran->elementAti(col);
+            U_ASSERT (0 <= sd->f_لیبل_فہرست_Idx && sd->f_لیبل_فہرست_Idx <= 0xffff);
+            صف->r16.fAccepting = sd->fAccepting;
+            صف->r16.fLookAhead = sd->fLookAhead;
+            صف->r16.f_لیبل_فہرست_Idx   = sd->f_لیبل_فہرست_Idx;
+            برائے (ستون=0; ستون<cat_گنتی; ستون++) {
+                صف->r16.f_اگلا_State[ستون] = sd->fDtran->elementAti(ستون);
             }
         }
     }
@@ -1768,7 +1768,7 @@ void RBBITableBuilder::exportTable(void *where) {
 /**
  *   Synthesize a safe state table from the main state table.
  */
-void RBBITableBuilder::buildSafeReverseTable(UErrorCode &status) {
+خالی RBBITableBuilder::build_محفوظ_الٹ_جدول(UError_رمز &حالت_2) {
     // The safe table creation has three steps:
 
     // 1. Identify pairs of character classes that are "safe." Safe means that boundaries
@@ -1802,139 +1802,139 @@ void RBBITableBuilder::buildSafeReverseTable(UErrorCode &status) {
     // and can be folded together.
 
     // Each safe pair is stored as two UChars in the safePair string.
-    UnicodeString safePairs;
+    UnicodeString محفوظ_جوڑے;
 
-    int32_t numCharClasses = fRB->fSetBuilder->getNumCharCategories();
-    int32_t numStates = fDStates->size();
+    int32_t عدد_Char_Classes = fRB->f_سیٹ_Builder->get_عدد_Char_Categories();
+    int32_t عدد_حالتیں = fDStates->size();
     // The elements at indices 0 and ACCEPTING_UNCONDITIONAL (1) are never used.
-    const auto lookaheadPositions =
-        prv::make_unique_for_overwrite<int8_t[]>(fLASlotsInUse + 1, status);
-    const auto wantedLookaheadsInPair =
-        prv::make_unique_for_overwrite<int8_t[]>(fLASlotsInUse + 1, status);
-    if (U_FAILURE(status)) {
-        return;
+    ثابت خودکار lookaheadPositions =
+        prv::make_unique_for_overwrite<int8_t[]>(f_LASlots_اندر_Use + 1, حالت_2);
+    ثابت خودکار wanted_Lookaheads_اندر_Pair =
+        prv::make_unique_for_overwrite<int8_t[]>(f_LASlots_اندر_Use + 1, حالت_2);
+    اگر (U_FAILURE(حالت_2)) {
+        واپس;
     }
     // Same as in rbbi.cpp.
     // TODO(egg): Maybe this should move to rbbidata.h like ACCEPTING_UNCONDITIONAL?
-    constexpr int32_t START_STATE = 1;
+    constexpr int32_t آغاز_STATE = 1;
     // Index -2 is used to signify a text position before the pair (c1, c2).
     constexpr int32_t BEFORE_PAIR = -2;
     // In lookaheadPositions, index -1 is used to signify that the lookahead has not been set.
-    constexpr int8_t LOOKAHEAD_NOT_SET = -1;
-    for (int32_t c1 = 1; c1 < numCharClasses; ++c1) {
-        if (fRB->fSetBuilder->getFirstChar(c1) < 0) {
-          continue;
+    constexpr int8_t LOOKAHEAD_NOT_سیٹ = -1;
+    برائے (int32_t c1 = 1; c1 < عدد_Char_Classes; ++c1) {
+        اگر (fRB->f_سیٹ_Builder->get_پہلا_Char(c1) < 0) {
+          جاری;
         }
-        for (int32_t c2 = 1; c2 < numCharClasses; ++c2) {
-            if (fRB->fSetBuilder->getFirstChar(c2) < 0) {
-                continue;
+        برائے (int32_t c2 = 1; c2 < عدد_Char_Classes; ++c2) {
+            اگر (fRB->f_سیٹ_Builder->get_پہلا_Char(c2) < 0) {
+                جاری;
             }
-            int32_t wantedEndState = -1;
-            int32_t wantedLastAcceptingPosition;
-            bool mustCheckConsistentWithStartC2 = false;
-            const int32_t text[2] = {c1, c2};
-            for (int32_t injectedState = START_STATE; injectedState < numStates; ++injectedState) {
-                for (int32_t injectedLookahead = ACCEPTING_UNCONDITIONAL;
-                     injectedLookahead <= fLASlotsInUse; ++injectedLookahead) {
-                    int32_t lastBreak = BEFORE_PAIR;
-                    int32_t lastAcceptingPosition = BEFORE_PAIR;
-                    uprv_memset(lookaheadPositions.get(), LOOKAHEAD_NOT_SET, fLASlotsInUse + 1);
-                    if (injectedLookahead != ACCEPTING_UNCONDITIONAL) {
+            int32_t wanted_انتہا_State = -1;
+            int32_t wanted_آخری_Accepting_Position;
+            منطقی must_Check_Consistent_With_آغاز_C2 = جھوٹ;
+            ثابت int32_t متن[2] = {c1, c2};
+            برائے (int32_t injectedState = آغاز_STATE; injectedState < عدد_حالتیں; ++injectedState) {
+                برائے (int32_t injectedLookahead = ACCEPTING_UNCONDITIONAL;
+                     injectedLookahead <= f_LASlots_اندر_Use; ++injectedLookahead) {
+                    int32_t آخری_Break = BEFORE_PAIR;
+                    int32_t آخری_Accepting_Position = BEFORE_PAIR;
+                    uprv_memset(lookaheadPositions.get(), LOOKAHEAD_NOT_سیٹ, f_LASlots_اندر_Use + 1);
+                    اگر (injectedLookahead != ACCEPTING_UNCONDITIONAL) {
                         lookaheadPositions[injectedLookahead] = BEFORE_PAIR;
                     }
                     {
-                        const RBBIStateDescriptor &injectedStateDescriptor =
+                        ثابت RBBIStateDescriptor &injectedStateDescriptor =
                             *static_cast<RBBIStateDescriptor *>(fDStates->elementAt(injectedState));
-                        if (injectedStateDescriptor.fAccepting == ACCEPTING_UNCONDITIONAL) {
-                            lastAcceptingPosition = 0;
-                        } else if (static_cast<int32_t>(injectedStateDescriptor.fAccepting) ==
+                        اگر (injectedStateDescriptor.fAccepting == ACCEPTING_UNCONDITIONAL) {
+                            آخری_Accepting_Position = 0;
+                        } ورنہ اگر (static_cast<int32_t>(injectedStateDescriptor.fAccepting) ==
                                    injectedLookahead) {
-                            continue;
+                            جاری;
                         }
-                        if (injectedStateDescriptor.fLookAhead != 0) {
+                        اگر (injectedStateDescriptor.fLookAhead != 0) {
                             lookaheadPositions[injectedStateDescriptor.fLookAhead] = 0;
                         }
                     }
                     int32_t s = injectedState;
                     int32_t i = 0;
-                    goto dfaStep;
+                    جاؤ dfa_قدم;
                     // Loop Run_DFA in L2/26-135, without the termination condition (we do not need
                     // to simulate the end of text).
-                    for (;;) {
-                        s = START_STATE;
-                        uprv_memset(lookaheadPositions.get(), LOOKAHEAD_NOT_SET, fLASlotsInUse + 1);
-                        i = lastBreak;
+                    برائے (;;) {
+                        s = آغاز_STATE;
+                        uprv_memset(lookaheadPositions.get(), LOOKAHEAD_NOT_سیٹ, f_LASlots_اندر_Use + 1);
+                        i = آخری_Break;
                         // Loop Find_Next_Break in L2/26-135.
-                        for (;;) {
-                        dfaStep:
-                            if (i == BEFORE_PAIR || i == 2) {
-                                goto inspectFinalState;
+                        برائے (;;) {
+                        dfa_قدم:
+                            اگر (i == BEFORE_PAIR || i == 2) {
+                                جاؤ inspectFinalState;
                             }
-                            const int32_t symbolAhead = text[i];
+                            ثابت int32_t علامت_Ahead = متن[i];
                             ++i;
-                            const RBBIStateDescriptor *sDescriptor =
+                            ثابت RBBIStateDescriptor *sDescriptor =
                                 static_cast<RBBIStateDescriptor *>(fDStates->elementAt(s));
-                            if (sDescriptor->fDtran->elementAti(symbolAhead) != 0) {
-                                s = sDescriptor->fDtran->elementAti(symbolAhead);
+                            اگر (sDescriptor->fDtran->elementAti(علامت_Ahead) != 0) {
+                                s = sDescriptor->fDtran->elementAti(علامت_Ahead);
                                 sDescriptor =
                                     static_cast<RBBIStateDescriptor *>(fDStates->elementAt(s));
-                            } else {
-                                if (lastBreak != BEFORE_PAIR &&
-                                    lastAcceptingPosition == lastBreak) {
+                            } ورنہ {
+                                اگر (آخری_Break != BEFORE_PAIR &&
+                                    آخری_Accepting_Position == آخری_Break) {
                                     // The pair (c1, c2) puts us in an infinite loop from the
                                     // current configuration, presumably because some one-character
                                     // strings are not in the language recognized by the rules).
                                     // This should never happen for a segmentation algorithm.  The
                                     // RBBI implementation forcefully advances the iterator in that
                                     // case; let’s just say the pair is unsafe and move on.
-                                    goto nextSymbolPair;
+                                    جاؤ اگلا_علامت_Pair;
                                 }
-                                lastBreak = lastAcceptingPosition;
-                                break;
+                                آخری_Break = آخری_Accepting_Position;
+                                توڑو;
                             }
 
-                            if (sDescriptor->fAccepting == ACCEPTING_UNCONDITIONAL) {
-                                lastAcceptingPosition = i;
-                            } else if (sDescriptor->fAccepting > ACCEPTING_UNCONDITIONAL &&
+                            اگر (sDescriptor->fAccepting == ACCEPTING_UNCONDITIONAL) {
+                                آخری_Accepting_Position = i;
+                            } ورنہ اگر (sDescriptor->fAccepting > ACCEPTING_UNCONDITIONAL &&
                                        lookaheadPositions[sDescriptor->fAccepting] !=
-                                           LOOKAHEAD_NOT_SET) {
-                                lastBreak = lookaheadPositions[sDescriptor->fAccepting];
-                                break;
+                                           LOOKAHEAD_NOT_سیٹ) {
+                                آخری_Break = lookaheadPositions[sDescriptor->fAccepting];
+                                توڑو;
                             }
-                            if (sDescriptor->fLookAhead != 0) {
+                            اگر (sDescriptor->fLookAhead != 0) {
                                 lookaheadPositions[sDescriptor->fLookAhead] = i;
                             }
                         }
                     }
                 inspectFinalState:
-                    if (i == BEFORE_PAIR) {
+                    اگر (i == BEFORE_PAIR) {
                         // Starting on `injectedState` with `injectedLookahead` set, with the pair
                         // (c1, c2) ahead, the state machine finds a break before the pair; it will
                         // thus come back to the pair in a different configuration, which is covered
                         // by some other iteration of the loop over `injectedState` and
                         // `injectedLookahead`.
-                        continue;
+                        جاری;
                     }
-                    if (wantedEndState < 0) {
-                        wantedEndState = s;
-                        wantedLastAcceptingPosition = lastAcceptingPosition;
-                        for (int32_t l = ACCEPTING_UNCONDITIONAL + 1; l <= fLASlotsInUse; ++l) {
-                            if (lookaheadPositions[l] != LOOKAHEAD_NOT_SET &&
+                    اگر (wanted_انتہا_State < 0) {
+                        wanted_انتہا_State = s;
+                        wanted_آخری_Accepting_Position = آخری_Accepting_Position;
+                        برائے (int32_t l = ACCEPTING_UNCONDITIONAL + 1; l <= f_LASlots_اندر_Use; ++l) {
+                            اگر (lookaheadPositions[l] != LOOKAHEAD_NOT_سیٹ &&
                                 lookaheadPositions[l] != BEFORE_PAIR &&
                                 lookaheadPositions[l] != 0) {
-                                wantedLookaheadsInPair[l] = lookaheadPositions[i];
-                            } else {
-                                wantedLookaheadsInPair[l] = LOOKAHEAD_NOT_SET;
+                                wanted_Lookaheads_اندر_Pair[l] = lookaheadPositions[i];
+                            } ورنہ {
+                                wanted_Lookaheads_اندر_Pair[l] = LOOKAHEAD_NOT_سیٹ;
                             }
                         }
-                    } else {
-                        if (wantedEndState != s) {
+                    } ورنہ {
+                        اگر (wanted_انتہا_State != s) {
                             // We can get out of the pair on different states depending on the
                             // initial configuration.
-                            goto nextSymbolPair;
+                            جاؤ اگلا_علامت_Pair;
                         }
-                        if (wantedLastAcceptingPosition != lastAcceptingPosition) {
-                            goto nextSymbolPair;
+                        اگر (wanted_آخری_Accepting_Position != آخری_Accepting_Position) {
+                            جاؤ اگلا_علامت_Pair;
                         }
                     }
                     // A lookahead some distance before the pair (set to BEFORE_PAIR) means we
@@ -1946,59 +1946,59 @@ void RBBITableBuilder::buildSafeReverseTable(UErrorCode &status) {
                     // pair), these have two ways of being safe: either they are always set, or it
                     // does not matter if they are set, because if they match we come back with the
                     // same state.
-                    for (int32_t l = ACCEPTING_UNCONDITIONAL + 1; l <= fLASlotsInUse; ++l) {
-                        if (lookaheadPositions[l] == BEFORE_PAIR || lookaheadPositions[l] == 0 ||
-                            lookaheadPositions[l] == wantedLookaheadsInPair[l]) {
-                            continue;
+                    برائے (int32_t l = ACCEPTING_UNCONDITIONAL + 1; l <= f_LASlots_اندر_Use; ++l) {
+                        اگر (lookaheadPositions[l] == BEFORE_PAIR || lookaheadPositions[l] == 0 ||
+                            lookaheadPositions[l] == wanted_Lookaheads_اندر_Pair[l]) {
+                            جاری;
                         }
-                        if (lookaheadPositions[l] == 2 || wantedLookaheadsInPair[l] == 2) {
+                        اگر (lookaheadPositions[l] == 2 || wanted_Lookaheads_اندر_Pair[l] == 2) {
                             // A lookahead after the pair means we will come back to the end of the
                             // pair on the start state if it matches, so in order for the pair to be
                             // safe if that lookahead is not consistently set, we must have left it
                             // on the start state.
-                            if (wantedEndState != START_STATE) {
-                                goto nextSymbolPair;
+                            اگر (wanted_انتہا_State != آغاز_STATE) {
+                                جاؤ اگلا_علامت_Pair;
                             }
                         }
-                        if (lookaheadPositions[l] == 1 || wantedLookaheadsInPair[l] == 1) {
+                        اگر (lookaheadPositions[l] == 1 || wanted_Lookaheads_اندر_Pair[l] == 1) {
                             // If a lookahead in the middle of the pair matches, we will come back
                             // to c2 on the start state.
-                            mustCheckConsistentWithStartC2 = true;
+                            must_Check_Consistent_With_آغاز_C2 = سچ;
                         }
                     }
                 }
             }
-            if (mustCheckConsistentWithStartC2) {
-                const RBBIStateDescriptor& startDescriptor =
-                    *static_cast<RBBIStateDescriptor *>(fDStates->elementAt(START_STATE));
-                const auto c2State = startDescriptor.fDtran->elementAti(c2);
-                if (c2State != wantedEndState) {
-                    goto nextSymbolPair;
+            اگر (must_Check_Consistent_With_آغاز_C2) {
+                ثابت RBBIStateDescriptor& آغاز_Descriptor =
+                    *static_cast<RBBIStateDescriptor *>(fDStates->elementAt(آغاز_STATE));
+                ثابت خودکار c2State = آغاز_Descriptor.fDtran->elementAti(c2);
+                اگر (c2State != wanted_انتہا_State) {
+                    جاؤ اگلا_علامت_Pair;
                 }
-                const RBBIStateDescriptor& c2StateDescriptor =
+                ثابت RBBIStateDescriptor& c2StateDescriptor =
                     *static_cast<RBBIStateDescriptor *>(fDStates->elementAt(c2State));
                 // In a segmentation algorithm, any single symbol transitions to an
                 // accepting state from the start state (a single character is a
                 // possible segment), so we know c2State is accepting.
                 U_ASSERT(c2StateDescriptor.fAccepting == ACCEPTING_UNCONDITIONAL);
-                if (wantedLastAcceptingPosition != 2) {
-                    goto nextSymbolPair;
+                اگر (wanted_آخری_Accepting_Position != 2) {
+                    جاؤ اگلا_علامت_Pair;
                 }
                 // If that in turn sets a lookahead, we have a lookahead after the
                 // pair.  If we consistently have that the pair is safe.  Otherwise, if we match
                 // that lookahead, we end up on the start state.
-                for (int32_t l = ACCEPTING_UNCONDITIONAL + 1; l <= fLASlotsInUse; ++l) {
-                    if (((wantedLookaheadsInPair[l] == 2) !=
+                برائے (int32_t l = ACCEPTING_UNCONDITIONAL + 1; l <= f_LASlots_اندر_Use; ++l) {
+                    اگر (((wanted_Lookaheads_اندر_Pair[l] == 2) !=
                          (static_cast<int32_t>(c2StateDescriptor.fLookAhead) == l)) &&
-                        wantedEndState != START_STATE) {
-                        goto nextSymbolPair;
+                        wanted_انتہا_State != آغاز_STATE) {
+                        جاؤ اگلا_علامت_Pair;
                     }
                 }
             }
-            safePairs.append(static_cast<char16_t>(c1));
-            safePairs.append(static_cast<char16_t>(c2));
-        nextSymbolPair:
-            continue;
+            محفوظ_جوڑے.append(static_cast<char16_t>(c1));
+            محفوظ_جوڑے.append(static_cast<char16_t>(c2));
+        اگلا_علامت_Pair:
+            جاری;
         }
     }
 
@@ -2012,49 +2012,49 @@ void RBBITableBuilder::buildSafeReverseTable(UErrorCode &status) {
     // The String holds the nextState data only. The four leading fields of a row, fAccepting,
     // fLookAhead, etc. are not needed for the safe table, and are omitted at this stage of building.
 
-    U_ASSERT(fSafeTable == nullptr);
-    LocalPointer<UVector> lpSafeTable(
-        new UVector(uprv_deleteUObject, uhash_compareUnicodeString, numCharClasses + 2, status), status);
-    if (U_FAILURE(status)) {
-        return;
+    U_ASSERT(f_محفوظ_جدول == خالی_اشاریہ);
+    Local_اشارہ_گر<UVector> lp_محفوظ_جدول(
+        نیا UVector(uprv_deleteUObject, uhash_compareUnicodeString, عدد_Char_Classes + 2, حالت_2), حالت_2);
+    اگر (U_FAILURE(حالت_2)) {
+        واپس;
     }
-    fSafeTable = lpSafeTable.orphan();
-    for (int32_t row=0; row<numCharClasses + 2; ++row) {
-        LocalPointer<UnicodeString> lpString(new UnicodeString(numCharClasses, 0, numCharClasses+4), status);
-        fSafeTable->adoptElement(lpString.orphan(), status);
+    f_محفوظ_جدول = lp_محفوظ_جدول.orphan();
+    برائے (int32_t صف=0; صف<عدد_Char_Classes + 2; ++صف) {
+        Local_اشارہ_گر<UnicodeString> lpString(نیا UnicodeString(عدد_Char_Classes, 0, عدد_Char_Classes+4), حالت_2);
+        f_محفوظ_جدول->adoptElement(lpString.orphan(), حالت_2);
     }
-    if (U_FAILURE(status)) {
-        return;
+    اگر (U_FAILURE(حالت_2)) {
+        واپس;
     }
 
     // From the start state, each input char class transitions to the state for that input.
-    UnicodeString &startState = *static_cast<UnicodeString *>(fSafeTable->elementAt(1));
-    for (int32_t charClass=0; charClass < numCharClasses; ++charClass) {
+    UnicodeString &آغاز_State = *static_cast<UnicodeString *>(f_محفوظ_جدول->elementAt(1));
+    برائے (int32_t charClass=0; charClass < عدد_Char_Classes; ++charClass) {
         // Note: +2 for the start & stop state.
-        startState.setCharAt(charClass, static_cast<char16_t>(charClass+2));
+        آغاز_State.سیٹ_Char_At(charClass, static_cast<char16_t>(charClass+2));
     }
 
     // Initially make every other state table row look like the start state row,
-    for (int32_t row=2; row<numCharClasses+2; ++row) {
-        UnicodeString &rowState = *static_cast<UnicodeString *>(fSafeTable->elementAt(row));
-        rowState = startState;   // UnicodeString assignment, copies contents.
+    برائے (int32_t صف=2; صف<عدد_Char_Classes+2; ++صف) {
+        UnicodeString &صف_State = *static_cast<UnicodeString *>(f_محفوظ_جدول->elementAt(صف));
+        صف_State = آغاز_State;   // UnicodeString assignment, copies contents.
     }
 
     // Run through the safe pairs, set the next state to zero when pair has been seen.
     // Zero being the stop state, meaning we found a safe point.
-    for (int32_t pairIdx=0; pairIdx<safePairs.length(); pairIdx+=2) {
-        int32_t c1 = safePairs.charAt(pairIdx);
-        int32_t c2 = safePairs.charAt(pairIdx + 1);
+    برائے (int32_t pairIdx=0; pairIdx<محفوظ_جوڑے.length(); pairIdx+=2) {
+        int32_t c1 = محفوظ_جوڑے.charAt(pairIdx);
+        int32_t c2 = محفوظ_جوڑے.charAt(pairIdx + 1);
 
-        UnicodeString &rowState = *static_cast<UnicodeString *>(fSafeTable->elementAt(c2 + 2));
-        rowState.setCharAt(c1, 0);
+        UnicodeString &صف_State = *static_cast<UnicodeString *>(f_محفوظ_جدول->elementAt(c2 + 2));
+        صف_State.سیٹ_Char_At(c1, 0);
     }
 
     // Remove duplicate or redundant rows from the table.
-    IntPair states = {1, 0};
-    while (findDuplicateSafeState(&states)) {
+    IntPair حالتیں = {1, 0};
+    جب (ڈھونڈو_Duplicate_محفوظ_State(&حالتیں)) {
         // printf("Removing duplicate safe states (%d, %d)\n", states.first, states.second);
-        removeSafeState(states);
+        remove_محفوظ_State(حالتیں);
     }
 }
 
@@ -2065,32 +2065,32 @@ void RBBITableBuilder::buildSafeReverseTable(UErrorCode &status) {
 //                         safe state table.
 //
 //-----------------------------------------------------------------------------
-int32_t  RBBITableBuilder::getSafeTableSize() const {
+int32_t  RBBITableBuilder::get_محفوظ_جدول_سائز() ثابت {
     int32_t    size = 0;
-    int32_t    numRows;
-    int32_t    numCols;
-    int32_t    rowSize;
+    int32_t    عدد_صفیں;
+    int32_t    عدد_ستون_تعداد;
+    int32_t    صف_سائز;
 
-    if (fSafeTable == nullptr) {
-        return 0;
+    اگر (f_محفوظ_جدول == خالی_اشاریہ) {
+        واپس 0;
     }
 
-    size    = offsetof(RBBIStateTable, fTableData);    // The header, with no rows to the table.
+    size    = offsetof(RBBIState_جدول, f_جدول_ڈیٹا);    // The header, with no rows to the table.
 
-    numRows = fSafeTable->size();
-    numCols = fRB->fSetBuilder->getNumCharCategories();
+    عدد_صفیں = f_محفوظ_جدول->size();
+    عدد_ستون_تعداد = fRB->f_سیٹ_Builder->get_عدد_Char_Categories();
 
-    if (use8BitsForSafeTable()) {
-        rowSize = offsetof(RBBIStateTableRow8, fNextState) + sizeof(int8_t)*numCols;
-    } else {
-        rowSize = offsetof(RBBIStateTableRow16, fNextState) + sizeof(int16_t)*numCols;
+    اگر (use8_بٹ_For_محفوظ_جدول()) {
+        صف_سائز = offsetof(RBBIState_جدول_Row8, f_اگلا_State) + حجم(int8_t)*عدد_ستون_تعداد;
+    } ورنہ {
+        صف_سائز = offsetof(RBBIState_جدول_Row16, f_اگلا_State) + حجم(int16_t)*عدد_ستون_تعداد;
     }
-    size   += numRows * rowSize;
-    return size;
+    size   += عدد_صفیں * صف_سائز;
+    واپس size;
 }
 
-bool RBBITableBuilder::use8BitsForSafeTable() const {
-    return fSafeTable->size() <= kMaxStateFor8BitsTable;
+منطقی RBBITableBuilder::use8_بٹ_For_محفوظ_جدول() ثابت {
+    واپس f_محفوظ_جدول->size() <= k_Max_State_For8_بٹ_جدول;
 }
 
 //-----------------------------------------------------------------------------
@@ -2100,49 +2100,49 @@ bool RBBITableBuilder::use8BitsForSafeTable() const {
 //                       must be available at the output address "where".
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::exportSafeTable(void *where) {
-    RBBIStateTable* table = static_cast<RBBIStateTable*>(where);
+خالی RBBITableBuilder::export_محفوظ_جدول(خالی *where) {
+    RBBIState_جدول* جدول = static_cast<RBBIState_جدول*>(where);
     uint32_t           state;
-    int                col;
+    صحیح                ستون;
 
-    if (U_FAILURE(*fStatus) || fSafeTable == nullptr) {
-        return;
+    اگر (U_FAILURE(*f_حالت) || f_محفوظ_جدول == خالی_اشاریہ) {
+        واپس;
     }
 
-    int32_t catCount = fRB->fSetBuilder->getNumCharCategories();
-    if (catCount > 0x7fff ||
-            fSafeTable->size() > 0x7fff) {
-        *fStatus = U_BRK_INTERNAL_ERROR;
-        return;
+    int32_t cat_گنتی = fRB->f_سیٹ_Builder->get_عدد_Char_Categories();
+    اگر (cat_گنتی > 0x7fff ||
+            f_محفوظ_جدول->size() > 0x7fff) {
+        *f_حالت = U_BRK_اندرونی_ERROR;
+        واپس;
     }
 
-    table->fNumStates = fSafeTable->size();
-    table->fFlags     = 0;
-    if (use8BitsForSafeTable()) {
-        table->fRowLen    = offsetof(RBBIStateTableRow8, fNextState) + sizeof(uint8_t) * catCount;
-        table->fFlags  |= RBBI_8BITS_ROWS;
-    } else {
-        table->fRowLen    = offsetof(RBBIStateTableRow16, fNextState) + sizeof(int16_t) * catCount;
+    جدول->f_عدد_حالتیں = f_محفوظ_جدول->size();
+    جدول->fFlags     = 0;
+    اگر (use8_بٹ_For_محفوظ_جدول()) {
+        جدول->f_صف_Len    = offsetof(RBBIState_جدول_Row8, f_اگلا_State) + حجم(uint8_t) * cat_گنتی;
+        جدول->fFlags  |= RBBI_8_بٹ_صفیں;
+    } ورنہ {
+        جدول->f_صف_Len    = offsetof(RBBIState_جدول_Row16, f_اگلا_State) + حجم(int16_t) * cat_گنتی;
     }
 
-    for (state=0; state<table->fNumStates; state++) {
-        UnicodeString* rowString = static_cast<UnicodeString*>(fSafeTable->elementAt(state));
-        RBBIStateTableRow* row = reinterpret_cast<RBBIStateTableRow*>(table->fTableData + state * table->fRowLen);
-        if (use8BitsForSafeTable()) {
-            RBBIStateTableRow8* r8 = reinterpret_cast<RBBIStateTableRow8*>(row);
+    برائے (state=0; state<جدول->f_عدد_حالتیں; state++) {
+        UnicodeString* صف_String = static_cast<UnicodeString*>(f_محفوظ_جدول->elementAt(state));
+        RBBIState_جدول_صف* صف = reinterpret_cast<RBBIState_جدول_صف*>(جدول->f_جدول_ڈیٹا + state * جدول->f_صف_Len);
+        اگر (use8_بٹ_For_محفوظ_جدول()) {
+            RBBIState_جدول_Row8* r8 = reinterpret_cast<RBBIState_جدول_Row8*>(صف);
             r8->fAccepting = 0;
             r8->fLookAhead = 0;
-            r8->fTagsIdx    = 0;
-            for (col=0; col<catCount; col++) {
-                U_ASSERT(rowString->charAt(col) <= kMaxStateFor8BitsTable);
-                r8->fNextState[col] = static_cast<uint8_t>(rowString->charAt(col));
+            r8->f_لیبل_فہرست_Idx    = 0;
+            برائے (ستون=0; ستون<cat_گنتی; ستون++) {
+                U_ASSERT(صف_String->charAt(ستون) <= k_Max_State_For8_بٹ_جدول);
+                r8->f_اگلا_State[ستون] = static_cast<uint8_t>(صف_String->charAt(ستون));
             }
-        } else {
-            row->r16.fAccepting = 0;
-            row->r16.fLookAhead = 0;
-            row->r16.fTagsIdx    = 0;
-            for (col=0; col<catCount; col++) {
-                row->r16.fNextState[col] = rowString->charAt(col);
+        } ورنہ {
+            صف->r16.fAccepting = 0;
+            صف->r16.fLookAhead = 0;
+            صف->r16.f_لیبل_فہرست_Idx    = 0;
+            برائے (ستون=0; ستون<cat_گنتی; ستون++) {
+                صف->r16.f_اگلا_State[ستون] = صف_String->charAt(ستون);
             }
         }
     }
@@ -2156,16 +2156,16 @@ void RBBITableBuilder::exportSafeTable(void *where) {
 //   printSet    Debug function.   Print the contents of a UVector
 //
 //-----------------------------------------------------------------------------
-#ifdef RBBI_DEBUG
-void RBBITableBuilder::printSet(UVector *s) {
+#اگر_تعریف_شدہ RBBI_DEBUG
+خالی RBBITableBuilder::print_سیٹ(UVector *s) {
     int32_t  i;
-    for (i=0; i<s->size(); i++) {
-        const RBBINode *v = static_cast<const RBBINode *>(s->elementAt(i));
-        RBBIDebugPrintf("%5d", v==nullptr? -1 : v->fSerialNum);
+    برائے (i=0; i<s->size(); i++) {
+        ثابت RBBINode *v = static_cast<ثابت RBBINode *>(s->elementAt(i));
+        RBBIDebugPrintf("%5d", v==خالی_اشاریہ? -1 : v->f_Serial_عدد);
     }
     RBBIDebugPrintf("\n");
 }
-#endif
+#اگر_ختم
 
 
 //-----------------------------------------------------------------------------
@@ -2173,35 +2173,35 @@ void RBBITableBuilder::printSet(UVector *s) {
 //   printStates    Debug Function.  Dump the fully constructed state transition table.
 //
 //-----------------------------------------------------------------------------
-#ifdef RBBI_DEBUG
-void RBBITableBuilder::printStates() {
-    int     c;    // input "character"
-    int     n;    // state number
+#اگر_تعریف_شدہ RBBI_DEBUG
+خالی RBBITableBuilder::print_حالتیں() {
+    صحیح     c;    // input "character"
+    صحیح     n;    // state number
 
     RBBIDebugPrintf("state |           i n p u t     s y m b o l s \n");
     RBBIDebugPrintf("      | Acc  LA    Tag");
-    for (c=0; c<fRB->fSetBuilder->getNumCharCategories(); c++) {
+    برائے (c=0; c<fRB->f_سیٹ_Builder->get_عدد_Char_Categories(); c++) {
         RBBIDebugPrintf(" %3d", c);
     }
     RBBIDebugPrintf("\n");
     RBBIDebugPrintf("      |---------------");
-    for (c=0; c<fRB->fSetBuilder->getNumCharCategories(); c++) {
+    برائے (c=0; c<fRB->f_سیٹ_Builder->get_عدد_Char_Categories(); c++) {
         RBBIDebugPrintf("----");
     }
     RBBIDebugPrintf("\n");
 
-    for (n=0; n<fDStates->size(); n++) {
+    برائے (n=0; n<fDStates->size(); n++) {
         RBBIStateDescriptor *sd = (RBBIStateDescriptor *)fDStates->elementAt(n);
         RBBIDebugPrintf("  %3d | " , n);
-        RBBIDebugPrintf("%3d %3d %5d ", sd->fAccepting, sd->fLookAhead, sd->fTagsIdx);
-        for (c=0; c<fRB->fSetBuilder->getNumCharCategories(); c++) {
+        RBBIDebugPrintf("%3d %3d %5d ", sd->fAccepting, sd->fLookAhead, sd->f_لیبل_فہرست_Idx);
+        برائے (c=0; c<fRB->f_سیٹ_Builder->get_عدد_Char_Categories(); c++) {
             RBBIDebugPrintf(" %3d", sd->fDtran->elementAti(c));
         }
         RBBIDebugPrintf("\n");
     }
     RBBIDebugPrintf("\n\n");
 }
-#endif
+#اگر_ختم
 
 
 //-----------------------------------------------------------------------------
@@ -2209,40 +2209,40 @@ void RBBITableBuilder::printStates() {
 //   printSafeTable    Debug Function.  Dump the fully constructed safe table.
 //
 //-----------------------------------------------------------------------------
-#ifdef RBBI_DEBUG
-void RBBITableBuilder::printReverseTable() {
-    int     c;    // input "character"
-    int     n;    // state number
+#اگر_تعریف_شدہ RBBI_DEBUG
+خالی RBBITableBuilder::print_الٹ_جدول() {
+    صحیح     c;    // input "character"
+    صحیح     n;    // state number
 
     RBBIDebugPrintf("    Safe Reverse Table \n");
-    if (fSafeTable == nullptr) {
+    اگر (f_محفوظ_جدول == خالی_اشاریہ) {
         RBBIDebugPrintf("   --- nullptr ---\n");
-        return;
+        واپس;
     }
     RBBIDebugPrintf("state |           i n p u t     s y m b o l s \n");
     RBBIDebugPrintf("      | Acc  LA    Tag");
-    for (c=0; c<fRB->fSetBuilder->getNumCharCategories(); c++) {
+    برائے (c=0; c<fRB->f_سیٹ_Builder->get_عدد_Char_Categories(); c++) {
         RBBIDebugPrintf(" %2d", c);
     }
     RBBIDebugPrintf("\n");
     RBBIDebugPrintf("      |---------------");
-    for (c=0; c<fRB->fSetBuilder->getNumCharCategories(); c++) {
+    برائے (c=0; c<fRB->f_سیٹ_Builder->get_عدد_Char_Categories(); c++) {
         RBBIDebugPrintf("---");
     }
     RBBIDebugPrintf("\n");
 
-    for (n=0; n<fSafeTable->size(); n++) {
-        UnicodeString *rowString = (UnicodeString *)fSafeTable->elementAt(n);
+    برائے (n=0; n<f_محفوظ_جدول->size(); n++) {
+        UnicodeString *صف_String = (UnicodeString *)f_محفوظ_جدول->elementAt(n);
         RBBIDebugPrintf("  %3d | " , n);
         RBBIDebugPrintf("%3d %3d %5d ", 0, 0, 0);  // Accepting, LookAhead, Tags
-        for (c=0; c<fRB->fSetBuilder->getNumCharCategories(); c++) {
-            RBBIDebugPrintf(" %2d", rowString->charAt(c));
+        برائے (c=0; c<fRB->f_سیٹ_Builder->get_عدد_Char_Categories(); c++) {
+            RBBIDebugPrintf(" %2d", صف_String->charAt(c));
         }
         RBBIDebugPrintf("\n");
     }
     RBBIDebugPrintf("\n\n");
 }
-#endif
+#اگر_ختم
 
 
 
@@ -2251,28 +2251,28 @@ void RBBITableBuilder::printReverseTable() {
 //   printRuleStatusTable    Debug Function.  Dump the common rule status table
 //
 //-----------------------------------------------------------------------------
-#ifdef RBBI_DEBUG
-void RBBITableBuilder::printRuleStatusTable() {
-    int32_t  thisRecord = 0;
-    int32_t  nextRecord = 0;
-    int      i;
-    UVector  *tbl = fRB->fRuleStatusVals;
+#اگر_تعریف_شدہ RBBI_DEBUG
+خالی RBBITableBuilder::print_قاعدہ_حالت_جدول() {
+    int32_t  this_ریکارڈ = 0;
+    int32_t  اگلا_ریکارڈ = 0;
+    صحیح      i;
+    UVector  *tbl = fRB->f_قاعدہ_حالت_Vals;
 
     RBBIDebugPrintf("index |  tags \n");
     RBBIDebugPrintf("-------------------\n");
 
-    while (nextRecord < tbl->size()) {
-        thisRecord = nextRecord;
-        nextRecord = thisRecord + tbl->elementAti(thisRecord) + 1;
-        RBBIDebugPrintf("%4d   ", thisRecord);
-        for (i=thisRecord+1; i<nextRecord; i++) {
+    جب (اگلا_ریکارڈ < tbl->size()) {
+        this_ریکارڈ = اگلا_ریکارڈ;
+        اگلا_ریکارڈ = this_ریکارڈ + tbl->elementAti(this_ریکارڈ) + 1;
+        RBBIDebugPrintf("%4d   ", this_ریکارڈ);
+        برائے (i=this_ریکارڈ+1; i<اگلا_ریکارڈ; i++) {
             RBBIDebugPrintf("  %5d", tbl->elementAti(i));
         }
         RBBIDebugPrintf("\n");
     }
     RBBIDebugPrintf("\n\n");
 }
-#endif
+#اگر_ختم
 
 
 //-----------------------------------------------------------------------------
@@ -2282,24 +2282,24 @@ void RBBITableBuilder::printRuleStatusTable() {
 //
 //-----------------------------------------------------------------------------
 
-RBBIStateDescriptor::RBBIStateDescriptor(int lastInputSymbol, UErrorCode *fStatus) {
-    fMarked    = false;
+RBBIStateDescriptor::RBBIStateDescriptor(صحیح آخری_داخلہ_علامت, UError_رمز *f_حالت) {
+    fMarked    = جھوٹ;
     fAccepting = 0;
     fLookAhead = 0;
-    fTagsIdx   = 0;
-    fTagVals   = nullptr;
-    fPositions = nullptr;
-    fDtran     = nullptr;
+    f_لیبل_فہرست_Idx   = 0;
+    f_لیبل_Vals   = خالی_اشاریہ;
+    fPositions = خالی_اشاریہ;
+    fDtran     = خالی_اشاریہ;
 
-    fDtran     = new UVector32(lastInputSymbol+1, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    fDtran     = نیا UVector32(آخری_داخلہ_علامت+1, *f_حالت);
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
-    if (fDtran == nullptr) {
-        *fStatus = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    اگر (fDtran == خالی_اشاریہ) {
+        *f_حالت = U_حافظہ_تخصیص_ERROR;
+        واپس;
     }
-    fDtran->setSize(lastInputSymbol+1);    // fDtran needs to be pre-sized.
+    fDtran->سیٹ_سائز(آخری_داخلہ_علامت+1);    // fDtran needs to be pre-sized.
                                            //   It is indexed by input symbols, and will
                                            //   hold  the next state number for each
                                            //   symbol.
@@ -2307,14 +2307,14 @@ RBBIStateDescriptor::RBBIStateDescriptor(int lastInputSymbol, UErrorCode *fStatu
 
 
 RBBIStateDescriptor::~RBBIStateDescriptor() {
-    delete       fPositions;
-    delete       fDtran;
-    delete       fTagVals;
-    fPositions = nullptr;
-    fDtran     = nullptr;
-    fTagVals   = nullptr;
+    حذف       fPositions;
+    حذف       fDtran;
+    حذف       f_لیبل_Vals;
+    fPositions = خالی_اشاریہ;
+    fDtran     = خالی_اشاریہ;
+    f_لیبل_Vals   = خالی_اشاریہ;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#اگر_ختم /* #if !UCONFIG_NO_BREAK_ITERATION */

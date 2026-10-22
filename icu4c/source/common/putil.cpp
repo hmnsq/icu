@@ -41,55 +41,55 @@
 
 // Defines _XOPEN_SOURCE for access to POSIX functions.
 // Must be before any other #includes.
-#include "uposixdefs.h"
+#شامل "uposixdefs.h"
 
 // First, the platform type. Need this for U_PLATFORM.
-#include "unicode/platform.h"
+#شامل "unicode/platform.h"
 
 /*
  * Cygwin with GCC requires inclusion of time.h after the above disabling strict asci mode statement.
  */
-#include <time.h>
+#شامل <time.h>
 
-#if !U_PLATFORM_USES_ONLY_WIN32_API
-#include <sys/time.h>
-#endif
+#اگر !U_PLATFORM_استعمال_کرتا_ONLY_WIN32_API
+#شامل <sys/time.h>
+#اگر_ختم
 
 /* include the rest of the ICU headers */
-#include "unicode/putil.h"
-#include "unicode/ustring.h"
-#include "putilimp.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "locmap.h"
-#include "ucln_cmn.h"
-#include "charstr.h"
+#شامل "unicode/putil.h"
+#شامل "unicode/ustring.h"
+#شامل "putilimp.h"
+#شامل "uassert.h"
+#شامل "umutex.h"
+#شامل "cmemory.h"
+#شامل "cstring.h"
+#شامل "locmap.h"
+#شامل "ucln_cmn.h"
+#شامل "charstr.h"
 
 /* Include standard headers. */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <locale.h>
-#include <float.h>
+#شامل <stdio.h>
+#شامل <stdlib.h>
+#شامل <string.h>
+#شامل <math.h>
+#شامل <locale.h>
+#شامل <float.h>
 
-#ifndef U_COMMON_IMPLEMENTATION
-#error U_COMMON_IMPLEMENTATION not set - must be set for all ICU source files in common/ - see https://unicode-org.github.io/icu/userguide/icu/howtouseicu.html
-#endif
+#اگر_غیر_تعریف_شدہ U_COMMON_IMPLEMENTATION
+#غلطی U_COMMON_IMPLEMENTATION not سیٹ - must be سیٹ برائے all ICU ماخذ files in common/ - see https://unicode-org.github.io/icu/userguide/icu/howtouseicu.html
+#اگر_ختم
 
 
 /* include system headers */
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#اگر U_PLATFORM_استعمال_کرتا_ONLY_WIN32_API
     /*
      * TODO: U_PLATFORM_USES_ONLY_WIN32_API includes MinGW.
      * Should Cygwin be included as well (U_PLATFORM_HAS_WIN32_API)
      * to use native APIs as much as possible?
      */
-#ifndef WIN32_LEAN_AND_MEAN
-#   define WIN32_LEAN_AND_MEAN
-#endif
+#اگر_غیر_تعریف_شدہ WIN32_LEAN_AND_اوسط
+#   define WIN32_LEAN_AND_اوسط
+#اگر_ختم
 #   define VC_EXTRALEAN
 #   define NOUSER
 #   define NOSERVICE
@@ -98,18 +98,18 @@
 #   include <windows.h>
 #   include "unicode/uloc.h"
 #   include "wintz.h"
-#elif U_PLATFORM == U_PF_OS400
+#وگرنہ_اگر U_PLATFORM == U_PF_OS400
 #   include <float.h>
 #   include <qusec.h>       /* error code structure */
 #   include <qusrjobi.h>
 #   include <qliept.h>      /* EPT_CALL macro  - this include must be after all other "QSYSINCs" */
 #   include <mih/testptr.h> /* For uprv_maximumPtr */
-#elif U_PLATFORM == U_PF_OS390
+#وگرنہ_اگر U_PLATFORM == U_PF_OS390
 #   include "unicode/ucnv.h"   /* Needed for UCNV_SWAP_LFNL_OPTION_STRING */
-#elif U_PLATFORM_IS_DARWIN_BASED || U_PLATFORM_IS_LINUX_BASED || U_PLATFORM == U_PF_BSD || U_PLATFORM == U_PF_SOLARIS
+#وگرنہ_اگر U_PLATFORM_IS_DARWIN_BASED || U_PLATFORM_IS_LINUX_BASED || U_PLATFORM == U_PF_BSD || U_PLATFORM == U_PF_SOLARIS
 #   include <limits.h>
 #   include <unistd.h>
-#   if U_PLATFORM == U_PF_SOLARIS
+#   اگر U_PLATFORM == U_PF_SOLARIS
 #       ifndef _XPG4_2
 #           define _XPG4_2
 #       endif
@@ -117,9 +117,9 @@
 #       include <sys/system_properties.h>
 #       include <dlfcn.h>
 #   endif
-#elif U_PLATFORM == U_PF_QNX
+#وگرنہ_اگر U_PLATFORM == U_PF_QNX
 #   include <sys/neutrino.h>
-#endif
+#اگر_ختم
 
 
 /*
@@ -128,19 +128,19 @@
  *
  */
 
-#if U_HAVE_NL_LANGINFO_CODESET
-#include <langinfo.h>
-#endif
+#اگر U_HAVE_NL_LANGINFO_CODESET
+#شامل <langinfo.h>
+#اگر_ختم
 
 /**
  * Simple things (presence of functions, etc) should just go in configure.in and be added to
  * icucfg.h via autoheader.
  */
-#if U_PLATFORM_IMPLEMENTS_POSIX
-#   if U_PLATFORM == U_PF_OS400
+#اگر U_PLATFORM_IMPLEMENTS_POSIX
+#   اگر U_PLATFORM == U_PF_OS400
 #    define HAVE_DLFCN_H 0
 #    define HAVE_DLOPEN 0
-#   else
+#   ورنہ
 #   ifndef HAVE_DLFCN_H
 #    define HAVE_DLFCN_H 1
 #   endif
@@ -151,32 +151,32 @@
 #   ifndef HAVE_GETTIMEOFDAY
 #    define HAVE_GETTIMEOFDAY 1
 #   endif
-#else
+#ورنہ
 #   define HAVE_DLFCN_H 0
 #   define HAVE_DLOPEN 0
 #   define HAVE_GETTIMEOFDAY 0
-#endif
+#اگر_ختم
 
 U_NAMESPACE_USE
 
 /* Define the extension for data files, again... */
-#define DATA_TYPE "dat"
+#تعریف_کرو ڈیٹا_TYPE "dat"
 
 /* Leave this copyright notice here! */
-static const char copyright[] = U_COPYRIGHT_STRING;
+ساکن ثابت حرف copyright[] = U_COPYRIGHT_STRING;
 
 /* floating point implementations ------------------------------------------- */
 
 /* We return QNAN rather than SNAN*/
-#define SIGN 0x80000000U
+#تعریف_کرو SIGN 0x80000000U
 
 /* Make it easy to define certain types of constants */
-typedef union {
+قسمتعریف اتحاد {
     int64_t i64; /* This must be defined first in order to allow the initialization to work. This is a C89 feature. */
-    double d64;
-} BitPatternConversion;
-static const BitPatternConversion gNan = {static_cast<int64_t>(INT64_C(0x7FF8000000000000))};
-static const BitPatternConversion gInf = {static_cast<int64_t>(INT64_C(0x7FF0000000000000))};
+    دوہرا d64;
+} ثنائی_ہندسہ_نمونہ_Conversion;
+ساکن ثابت ثنائی_ہندسہ_نمونہ_Conversion gNan = {static_cast<int64_t>(INT64_C(0x7FF8000000000000))};
+ساکن ثابت ثنائی_ہندسہ_نمونہ_Conversion gInf = {static_cast<int64_t>(INT64_C(0x7FF0000000000000))};
 
 /*---------------------------------------------------------------------------
   Platform utilities
@@ -186,103 +186,103 @@ static const BitPatternConversion gInf = {static_cast<int64_t>(INT64_C(0x7FF0000
   functions).
   ---------------------------------------------------------------------------*/
 
-#if U_PLATFORM_USES_ONLY_WIN32_API || U_PLATFORM == U_PF_OS400
+#اگر U_PLATFORM_استعمال_کرتا_ONLY_WIN32_API || U_PLATFORM == U_PF_OS400
 #   undef U_POSIX_LOCALE
-#else
+#ورنہ
 #   define U_POSIX_LOCALE    1
-#endif
+#اگر_ختم
 
 /*
     WARNING! u_topNBytesOfDouble and u_bottomNBytesOfDouble
     can't be properly optimized by the gcc compiler sometimes (i.e. gcc 3.2).
 */
-#if !IEEE_754
-static char*
-u_topNBytesOfDouble(double* d, int n)
+#اگر !IEEE_754
+ساکن حرف*
+u_چوٹی_NBytes_کا_Double(دوہرا* d, صحیح n)
 {
-#if U_IS_BIG_ENDIAN
-    return (char*)d;
-#else
-    return (char*)(d + 1) - n;
-#endif
+#اگر U_IS_BIG_ENDIAN
+    واپس (حرف*)d;
+#ورنہ
+    واپس (حرف*)(d + 1) - n;
+#اگر_ختم
 }
 
-static char*
-u_bottomNBytesOfDouble(double* d, int n)
+ساکن حرف*
+u_bottom_NBytes_کا_Double(دوہرا* d, صحیح n)
 {
-#if U_IS_BIG_ENDIAN
-    return (char*)(d + 1) - n;
-#else
-    return (char*)d;
-#endif
+#اگر U_IS_BIG_ENDIAN
+    واپس (حرف*)(d + 1) - n;
+#ورنہ
+    واپس (حرف*)d;
+#اگر_ختم
 }
-#endif   /* !IEEE_754 */
+#اگر_ختم   /* !IEEE_754 */
 
-#if IEEE_754
-static UBool
-u_signBit(double d) {
+#اگر IEEE_754
+ساکن UBool
+u_sign_ثنائی_ہندسہ(دوہرا d) {
     uint8_t hiByte;
-#if U_IS_BIG_ENDIAN
+#اگر U_IS_BIG_ENDIAN
     hiByte = *(uint8_t *)&d;
-#else
-    hiByte = *(reinterpret_cast<uint8_t*>(&d) + sizeof(double) - 1);
-#endif
-    return (hiByte & 0x80) != 0;
+#ورنہ
+    hiByte = *(reinterpret_cast<uint8_t*>(&d) + حجم(دوہرا) - 1);
+#اگر_ختم
+    واپس (hiByte & 0x80) != 0;
 }
-#endif
+#اگر_ختم
 
 
 
-#if defined (U_DEBUG_FAKETIME)
+#اگر defined (U_DEBUG_FAKETIME)
 /* Override the clock to test things without having to move the system clock.
  * Assumes POSIX gettimeofday() will function
  */
 UDate fakeClock_t0 = 0; /** Time to start the clock from **/
 UDate fakeClock_dt = 0; /** Offset (fake time - real time) **/
-UBool fakeClock_set = false; /** True if fake clock has spun up **/
+UBool fake_Clock_سیٹ = جھوٹ; /** True if fake clock has spun up **/
 
-static UDate getUTCtime_real() {
-    struct timeval posixTime;
-    gettimeofday(&posixTime, nullptr);
-    return (UDate)(((int64_t)posixTime.tv_sec * U_MILLIS_PER_SECOND) + (posixTime.tv_usec/1000));
+ساکن UDate getUTCtime_real() {
+    ساخت timeval posix_وقت;
+    gettimeofday(&posix_وقت, خالی_اشاریہ);
+    واپس (UDate)(((int64_t)posix_وقت.tv_sec * U_MILLIS_فی_دوسرا) + (posix_وقت.tv_usec/1000));
 }
 
-static UDate getUTCtime_fake() {
-    static UMutex fakeClockMutex;
-    umtx_lock(&fakeClockMutex);
-    if(!fakeClock_set) {
+ساکن UDate getUTCtime_fake() {
+    ساکن UMutex fakeClockMutex;
+    umtx_تالا(&fakeClockMutex);
+    اگر(!fake_Clock_سیٹ) {
         UDate real = getUTCtime_real();
-        const char *fake_start = getenv("U_FAKETIME_START");
-        if((fake_start!=nullptr) && (fake_start[0]!=0)) {
-            sscanf(fake_start,"%lf",&fakeClock_t0);
+        ثابت حرف *fake_آغاز = getenv("U_FAKETIME_START");
+        اگر((fake_آغاز!=خالی_اشاریہ) && (fake_آغاز[0]!=0)) {
+            لڑی_سے_پڑھو(fake_آغاز,"%lf",&fakeClock_t0);
             fakeClock_dt = fakeClock_t0 - real;
             fprintf(stderr,"U_DEBUG_FAKETIME was set at compile time, so the ICU clock will start at a preset value\n"
                     "env variable U_FAKETIME_START=%.0f (%s) for an offset of %.0f ms from the current time %.0f\n",
-                    fakeClock_t0, fake_start, fakeClock_dt, real);
-        } else {
+                    fakeClock_t0, fake_آغاز, fakeClock_dt, real);
+        } ورنہ {
           fakeClock_dt = 0;
             fprintf(stderr,"U_DEBUG_FAKETIME was set at compile time, but U_FAKETIME_START was not set.\n"
                     "Set U_FAKETIME_START to the number of milliseconds since 1/1/1970 to set the ICU clock.\n");
         }
-        fakeClock_set = true;
+        fake_Clock_سیٹ = سچ;
     }
     umtx_unlock(&fakeClockMutex);
 
-    return getUTCtime_real() + fakeClock_dt;
+    واپس getUTCtime_real() + fakeClock_dt;
 }
-#endif
+#اگر_ختم
 
-#if U_PLATFORM_USES_ONLY_WIN32_API
-typedef union {
+#اگر U_PLATFORM_استعمال_کرتا_ONLY_WIN32_API
+قسمتعریف اتحاد {
     int64_t int64;
-    FILETIME fileTime;
-} FileTimeConversion;   /* This is like a ULARGE_INTEGER */
+    FILETIME file_وقت;
+} File_وقت_Conversion;   /* This is like a ULARGE_INTEGER */
 
 /* Number of 100 nanoseconds from 1/1/1601 to 1/1/1970 */
-#define EPOCH_BIAS  INT64_C(116444736000000000)
-#define HECTONANOSECOND_PER_MILLISECOND   10000
+#تعریف_کرو EPOCH_BIAS  INT64_C(116444736000000000)
+#تعریف_کرو HECTONANOSECOND_فی_MILLISECOND   10000
 
-#endif
+#اگر_ختم
 
 /*---------------------------------------------------------------------------
   Universal Implementations
@@ -294,35 +294,35 @@ typedef union {
 U_CAPI UDate U_EXPORT2
 uprv_getUTCtime()
 {
-#if defined(U_DEBUG_FAKETIME)
-    return getUTCtime_fake(); /* Hook for overriding the clock */
-#else
-    return uprv_getRawUTCtime();
-#endif
+#اگر defined(U_DEBUG_FAKETIME)
+    واپس getUTCtime_fake(); /* Hook for overriding the clock */
+#ورنہ
+    واپس uprv_getRawUTCtime();
+#اگر_ختم
 }
 
 /* Return UTC (GMT) time measured in milliseconds since 0:00 on 1/1/70.*/
 U_CAPI UDate U_EXPORT2
 uprv_getRawUTCtime()
 {
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#اگر U_PLATFORM_استعمال_کرتا_ONLY_WIN32_API
 
-    FileTimeConversion winTime;
-    GetSystemTimeAsFileTime(&winTime.fileTime);
-    return (UDate)((winTime.int64 - EPOCH_BIAS) / HECTONANOSECOND_PER_MILLISECOND);
-#else
+    File_وقت_Conversion win_وقت;
+    Get_System_وقت_As_File_وقت(&win_وقت.file_وقت);
+    واپس (UDate)((win_وقت.int64 - EPOCH_BIAS) / HECTONANOSECOND_فی_MILLISECOND);
+#ورنہ
 
-#if HAVE_GETTIMEOFDAY
-    struct timeval posixTime;
-    gettimeofday(&posixTime, nullptr);
-    return (UDate)(((int64_t)posixTime.tv_sec * U_MILLIS_PER_SECOND) + (posixTime.tv_usec/1000));
-#else
+#اگر HAVE_GETTIMEOFDAY
+    ساخت timeval posix_وقت;
+    gettimeofday(&posix_وقت, خالی_اشاریہ);
+    واپس (UDate)(((int64_t)posix_وقت.tv_sec * U_MILLIS_فی_دوسرا) + (posix_وقت.tv_usec/1000));
+#ورنہ
     time_t epochtime;
     time(&epochtime);
-    return (UDate)epochtime * U_MILLIS_PER_SECOND;
-#endif
+    واپس (UDate)epochtime * U_MILLIS_فی_دوسرا;
+#اگر_ختم
 
-#endif
+#اگر_ختم
 }
 
 /*-----------------------------------------------------------------------------
@@ -336,210 +336,210 @@ uprv_getRawUTCtime()
   ---------------------------------------------------------------------------*/
 
 U_CAPI UBool U_EXPORT2
-uprv_isNaN(double number)
+uprv_isNaN(دوہرا number)
 {
-#if IEEE_754
-    BitPatternConversion convertedNumber;
-    convertedNumber.d64 = number;
+#اگر IEEE_754
+    ثنائی_ہندسہ_نمونہ_Conversion converted_نمبر;
+    converted_نمبر.d64 = number;
     /* Infinity is 0x7FF0000000000000U. Anything greater than that is a NaN */
-    return (convertedNumber.i64 & U_INT64_MAX) > gInf.i64;
+    واپس (converted_نمبر.i64 & U_INT64_MAX) > gInf.i64;
 
-#elif U_PLATFORM == U_PF_OS390
-    uint32_t highBits = *(uint32_t*)u_topNBytesOfDouble(&number,
-                        sizeof(uint32_t));
-    uint32_t lowBits  = *(uint32_t*)u_bottomNBytesOfDouble(&number,
-                        sizeof(uint32_t));
+#وگرنہ_اگر U_PLATFORM == U_PF_OS390
+    uint32_t بلند_بٹ = *(uint32_t*)u_چوٹی_NBytes_کا_Double(&number,
+                        حجم(uint32_t));
+    uint32_t کم_بٹ  = *(uint32_t*)u_bottom_NBytes_کا_Double(&number,
+                        حجم(uint32_t));
 
-    return ((highBits & 0x7F080000L) == 0x7F080000L) &&
-      (lowBits == 0x00000000L);
+    واپس ((بلند_بٹ & 0x7F080000L) == 0x7F080000L) &&
+      (کم_بٹ == 0x00000000L);
 
-#else
+#ورنہ
     /* If your platform doesn't support IEEE 754 but *does* have an NaN value,*/
     /* you'll need to replace this default implementation with what's correct*/
     /* for your platform.*/
-    return number != number;
-#endif
+    واپس number != number;
+#اگر_ختم
 }
 
 U_CAPI UBool U_EXPORT2
-uprv_isInfinite(double number)
+uprv_isInfinite(دوہرا number)
 {
-#if IEEE_754
-    BitPatternConversion convertedNumber;
-    convertedNumber.d64 = number;
+#اگر IEEE_754
+    ثنائی_ہندسہ_نمونہ_Conversion converted_نمبر;
+    converted_نمبر.d64 = number;
     /* Infinity is exactly 0x7FF0000000000000U. */
-    return (convertedNumber.i64 & U_INT64_MAX) == gInf.i64;
-#elif U_PLATFORM == U_PF_OS390
-    uint32_t highBits = *(uint32_t*)u_topNBytesOfDouble(&number,
-                        sizeof(uint32_t));
-    uint32_t lowBits  = *(uint32_t*)u_bottomNBytesOfDouble(&number,
-                        sizeof(uint32_t));
+    واپس (converted_نمبر.i64 & U_INT64_MAX) == gInf.i64;
+#وگرنہ_اگر U_PLATFORM == U_PF_OS390
+    uint32_t بلند_بٹ = *(uint32_t*)u_چوٹی_NBytes_کا_Double(&number,
+                        حجم(uint32_t));
+    uint32_t کم_بٹ  = *(uint32_t*)u_bottom_NBytes_کا_Double(&number,
+                        حجم(uint32_t));
 
-    return ((highBits  & ~SIGN) == 0x70FF0000L) && (lowBits == 0x00000000L);
+    واپس ((بلند_بٹ  & ~SIGN) == 0x70FF0000L) && (کم_بٹ == 0x00000000L);
 
-#else
+#ورنہ
     /* If your platform doesn't support IEEE 754 but *does* have an infinity*/
     /* value, you'll need to replace this default implementation with what's*/
     /* correct for your platform.*/
-    return number == (2.0 * number);
-#endif
+    واپس number == (2.0 * number);
+#اگر_ختم
 }
 
 U_CAPI UBool U_EXPORT2
-uprv_isPositiveInfinity(double number)
+uprv_is_مثبت_Infinity(دوہرا number)
 {
-#if IEEE_754 || U_PLATFORM == U_PF_OS390
-    return number > 0 && uprv_isInfinite(number);
-#else
-    return uprv_isInfinite(number);
-#endif
+#اگر IEEE_754 || U_PLATFORM == U_PF_OS390
+    واپس number > 0 && uprv_isInfinite(number);
+#ورنہ
+    واپس uprv_isInfinite(number);
+#اگر_ختم
 }
 
 U_CAPI UBool U_EXPORT2
-uprv_isNegativeInfinity(double number)
+uprv_isNegativeInfinity(دوہرا number)
 {
-#if IEEE_754 || U_PLATFORM == U_PF_OS390
-    return number < 0 && uprv_isInfinite(number);
+#اگر IEEE_754 || U_PLATFORM == U_PF_OS390
+    واپس number < 0 && uprv_isInfinite(number);
 
-#else
-    uint32_t highBits = *(uint32_t*)u_topNBytesOfDouble(&number,
-                        sizeof(uint32_t));
-    return((highBits & SIGN) && uprv_isInfinite(number));
+#ورنہ
+    uint32_t بلند_بٹ = *(uint32_t*)u_چوٹی_NBytes_کا_Double(&number,
+                        حجم(uint32_t));
+    واپس((بلند_بٹ & SIGN) && uprv_isInfinite(number));
 
-#endif
+#اگر_ختم
 }
 
-U_CAPI double U_EXPORT2
+U_CAPI دوہرا U_EXPORT2
 uprv_getNaN()
 {
-#if IEEE_754 || U_PLATFORM == U_PF_OS390
-    return gNan.d64;
-#else
+#اگر IEEE_754 || U_PLATFORM == U_PF_OS390
+    واپس gNan.d64;
+#ورنہ
     /* If your platform doesn't support IEEE 754 but *does* have an NaN value,*/
     /* you'll need to replace this default implementation with what's correct*/
     /* for your platform.*/
-    return 0.0;
-#endif
+    واپس 0.0;
+#اگر_ختم
 }
 
-U_CAPI double U_EXPORT2
+U_CAPI دوہرا U_EXPORT2
 uprv_getInfinity()
 {
-#if IEEE_754 || U_PLATFORM == U_PF_OS390
-    return gInf.d64;
-#else
+#اگر IEEE_754 || U_PLATFORM == U_PF_OS390
+    واپس gInf.d64;
+#ورنہ
     /* If your platform doesn't support IEEE 754 but *does* have an infinity*/
     /* value, you'll need to replace this default implementation with what's*/
     /* correct for your platform.*/
-    return 0.0;
-#endif
+    واپس 0.0;
+#اگر_ختم
 }
 
-U_CAPI double U_EXPORT2
-uprv_floor(double x)
+U_CAPI دوہرا U_EXPORT2
+uprv_floor(دوہرا x)
 {
-    return floor(x);
+    واپس floor(x);
 }
 
-U_CAPI double U_EXPORT2
-uprv_ceil(double x)
+U_CAPI دوہرا U_EXPORT2
+uprv_ceil(دوہرا x)
 {
-    return ceil(x);
+    واپس ceil(x);
 }
 
-U_CAPI double U_EXPORT2
-uprv_round(double x)
+U_CAPI دوہرا U_EXPORT2
+uprv_باری(دوہرا x)
 {
-    return uprv_floor(x + 0.5);
+    واپس uprv_floor(x + 0.5);
 }
 
-U_CAPI double U_EXPORT2
-uprv_fabs(double x)
+U_CAPI دوہرا U_EXPORT2
+uprv_fabs(دوہرا x)
 {
-    return fabs(x);
+    واپس fabs(x);
 }
 
-U_CAPI double U_EXPORT2
-uprv_modf(double x, double* y)
+U_CAPI دوہرا U_EXPORT2
+uprv_modf(دوہرا x, دوہرا* y)
 {
-    return modf(x, y);
+    واپس modf(x, y);
 }
 
-U_CAPI double U_EXPORT2
-uprv_fmod(double x, double y)
+U_CAPI دوہرا U_EXPORT2
+uprv_fmod(دوہرا x, دوہرا y)
 {
-    return fmod(x, y);
+    واپس fmod(x, y);
 }
 
-U_CAPI double U_EXPORT2
-uprv_pow(double x, double y)
+U_CAPI دوہرا U_EXPORT2
+uprv_pow(دوہرا x, دوہرا y)
 {
     /* This is declared as "double pow(double x, double y)" */
-    return pow(x, y);
+    واپس قوت(x, y);
 }
 
-U_CAPI double U_EXPORT2
+U_CAPI دوہرا U_EXPORT2
 uprv_pow10(int32_t x)
 {
-    return pow(10.0, (double)x);
+    واپس قوت(10.0, (دوہرا)x);
 }
 
-U_CAPI double U_EXPORT2
-uprv_fmax(double x, double y)
+U_CAPI دوہرا U_EXPORT2
+uprv_fmax(دوہرا x, دوہرا y)
 {
-#if IEEE_754
+#اگر IEEE_754
     /* first handle NaN*/
-    if(uprv_isNaN(x) || uprv_isNaN(y))
-        return uprv_getNaN();
+    اگر(uprv_isNaN(x) || uprv_isNaN(y))
+        واپس uprv_getNaN();
 
     /* check for -0 and 0*/
-    if(x == 0.0 && y == 0.0 && u_signBit(x))
-        return y;
+    اگر(x == 0.0 && y == 0.0 && u_sign_ثنائی_ہندسہ(x))
+        واپس y;
 
-#endif
+#اگر_ختم
 
     /* this should work for all flt point w/o NaN and Inf special cases */
-    return (x > y ? x : y);
+    واپس (x > y ? x : y);
 }
 
-U_CAPI double U_EXPORT2
-uprv_fmin(double x, double y)
+U_CAPI دوہرا U_EXPORT2
+uprv_fmin(دوہرا x, دوہرا y)
 {
-#if IEEE_754
+#اگر IEEE_754
     /* first handle NaN*/
-    if(uprv_isNaN(x) || uprv_isNaN(y))
-        return uprv_getNaN();
+    اگر(uprv_isNaN(x) || uprv_isNaN(y))
+        واپس uprv_getNaN();
 
     /* check for -0 and 0*/
-    if(x == 0.0 && y == 0.0 && u_signBit(y))
-        return y;
+    اگر(x == 0.0 && y == 0.0 && u_sign_ثنائی_ہندسہ(y))
+        واپس y;
 
-#endif
+#اگر_ختم
 
     /* this should work for all flt point w/o NaN and Inf special cases */
-    return (x > y ? y : x);
+    واپس (x > y ? y : x);
 }
 
 U_CAPI UBool U_EXPORT2
-uprv_add32_overflow(int32_t a, int32_t b, int32_t* res) {
+uprv_add32_حد_سے_تجاوز(int32_t a, int32_t b, int32_t* res) {
     // NOTE: Some compilers (GCC, Clang) have primitives available, like __builtin_add_overflow.
     // This function could be optimized by calling one of those primitives.
-    auto a64 = static_cast<int64_t>(a);
-    auto b64 = static_cast<int64_t>(b);
+    خودکار a64 = static_cast<int64_t>(a);
+    خودکار b64 = static_cast<int64_t>(b);
     int64_t res64 = a64 + b64;
     *res = static_cast<int32_t>(res64);
-    return res64 != *res;
+    واپس res64 != *res;
 }
 
 U_CAPI UBool U_EXPORT2
-uprv_mul32_overflow(int32_t a, int32_t b, int32_t* res) {
+uprv_mul32_حد_سے_تجاوز(int32_t a, int32_t b, int32_t* res) {
     // NOTE: Some compilers (GCC, Clang) have primitives available, like __builtin_mul_overflow.
     // This function could be optimized by calling one of those primitives.
-    auto a64 = static_cast<int64_t>(a);
-    auto b64 = static_cast<int64_t>(b);
+    خودکار a64 = static_cast<int64_t>(a);
+    خودکار b64 = static_cast<int64_t>(b);
     int64_t res64 = a64 * b64;
     *res = static_cast<int32_t>(res64);
-    return res64 != *res;
+    واپس res64 != *res;
 }
 
 /**
@@ -549,47 +549,47 @@ uprv_mul32_overflow(int32_t a, int32_t b, int32_t* res) {
  * floor(3.3) = 3, floor(-3.3) = -4
  * ceil(3.3) = 4, ceil(-3.3) = -3
  */
-U_CAPI double U_EXPORT2
-uprv_trunc(double d)
+U_CAPI دوہرا U_EXPORT2
+uprv_trunc(دوہرا d)
 {
-#if IEEE_754
+#اگر IEEE_754
     /* handle error cases*/
-    if(uprv_isNaN(d))
-        return uprv_getNaN();
-    if(uprv_isInfinite(d))
-        return uprv_getInfinity();
+    اگر(uprv_isNaN(d))
+        واپس uprv_getNaN();
+    اگر(uprv_isInfinite(d))
+        واپس uprv_getInfinity();
 
-    if(u_signBit(d))    /* Signbit() picks up -0.0;  d<0 does not. */
-        return ceil(d);
-    else
-        return floor(d);
+    اگر(u_sign_ثنائی_ہندسہ(d))    /* Signbit() picks up -0.0;  d<0 does not. */
+        واپس ceil(d);
+    ورنہ
+        واپس floor(d);
 
-#else
-    return d >= 0 ? floor(d) : ceil(d);
+#ورنہ
+    واپس d >= 0 ? floor(d) : ceil(d);
 
-#endif
+#اگر_ختم
 }
 
 /**
  * Return the largest positive number that can be represented by an integer
  * type of arbitrary bit length.
  */
-U_CAPI double U_EXPORT2
+U_CAPI دوہرا U_EXPORT2
 uprv_maxMantissa()
 {
-    return pow(2.0, DBL_MANT_DIG + 1.0) - 1.0;
+    واپس قوت(2.0, DBL_MANT_DIG + 1.0) - 1.0;
 }
 
-U_CAPI double U_EXPORT2
-uprv_log(double d)
+U_CAPI دوہرا U_EXPORT2
+uprv_log(دوہرا d)
 {
-    return log(d);
+    واپس لوگارتھم(d);
 }
 
-U_CAPI void * U_EXPORT2
-uprv_maximumPtr(void * base)
+U_CAPI خالی * U_EXPORT2
+uprv_زیادہ_سے_زیادہ_Ptr(خالی * بنیاد)
 {
-#if U_PLATFORM == U_PF_OS400
+#اگر U_PLATFORM == U_PF_OS400
     /*
      * With the provided function we should never be out of range of a given segment
      * (a traditional/typical segment that is).  Our segments have 5 bytes for the
@@ -607,16 +607,16 @@ uprv_maximumPtr(void * base)
      * Unlike other operating systems, the pointer model isn't determined at
      * compile time on i5/OS.
      */
-    if ((base != nullptr) && (_TESTPTR(base, _C_TERASPACE_CHECK))) {
+    اگر ((بنیاد != خالی_اشاریہ) && (_TESTPTR(بنیاد, _C_TERASPACE_CHECK))) {
         /* if it is a TERASPACE pointer the max is 2GB - 4k */
-        return ((void *)(((char *)base)-((uint32_t)(base))+((uint32_t)0x7fffefff)));
+        واپس ((خالی *)(((حرف *)بنیاد)-((uint32_t)(بنیاد))+((uint32_t)0x7fffefff)));
     }
     /* otherwise 16MB since nullptr ptr is not checkable or the ptr is not TERASPACE */
-    return ((void *)(((char *)base)-((uint32_t)(base))+((uint32_t)0xffefff)));
+    واپس ((خالی *)(((حرف *)بنیاد)-((uint32_t)(بنیاد))+((uint32_t)0xffefff)));
 
-#else
-    return U_MAX_PTR(base);
-#endif
+#ورنہ
+    واپس U_MAX_PTR(بنیاد);
+#اگر_ختم
 }
 
 /*---------------------------------------------------------------------------
@@ -628,37 +628,37 @@ uprv_maximumPtr(void * base)
 /* Generic time zone layer -------------------------------------------------- */
 
 /* Time zone utilities */
-U_CAPI void U_EXPORT2
+U_CAPI خالی U_EXPORT2
 uprv_tzset()
 {
-#if defined(U_TZSET)
+#اگر defined(U_TZSET)
     U_TZSET();
-#else
+#ورنہ
     /* no initialization*/
-#endif
+#اگر_ختم
 }
 
 U_CAPI int32_t U_EXPORT2
 uprv_timezone()
 {
-#ifdef U_TIMEZONE
-    return U_TIMEZONE;
-#else
+#اگر_تعریف_شدہ U_TIMEZONE
+    واپس U_TIMEZONE;
+#ورنہ
     time_t t, t1, t2;
-    struct tm tmrec;
+    ساخت tm tmrec;
     int32_t tdiff = 0;
 
     time(&t);
-    uprv_memcpy( &tmrec, localtime(&t), sizeof(tmrec) );
-#if U_PLATFORM != U_PF_IPHONE
+    uprv_memcpy( &tmrec, localtime(&t), حجم(tmrec) );
+#اگر U_PLATFORM != U_PF_IPHONE
     UBool dst_checked = (tmrec.tm_isdst != 0); /* daylight savings time is checked*/
-#endif
+#اگر_ختم
     t1 = mktime(&tmrec);                 /* local time in seconds*/
-    uprv_memcpy( &tmrec, gmtime(&t), sizeof(tmrec) );
+    uprv_memcpy( &tmrec, gmtime(&t), حجم(tmrec) );
     t2 = mktime(&tmrec);                 /* GMT (or UTC) in seconds*/
     tdiff = t2 - t1;
 
-#if U_PLATFORM != U_PF_IPHONE
+#اگر U_PLATFORM != U_PF_IPHONE
     /* imitate NT behaviour, which returns same timezone offset to GMT for
        winter and summer.
        This does not work on all platforms. For instance, on glibc on Linux
@@ -667,22 +667,22 @@ uprv_timezone()
        platform where this does not work. Linux + glibc and Mac OS 10.5
        have U_TIMEZONE defined so that this code is not reached.
     */
-    if (dst_checked)
+    اگر (dst_checked)
         tdiff += 3600;
-#endif
-    return tdiff;
-#endif
+#اگر_ختم
+    واپس tdiff;
+#اگر_ختم
 }
 
 /* Note that U_TZNAME does *not* have to be tzname, but if it is,
    some platforms need to have it declared here. */
 
-#if defined(U_TZNAME) && (U_PLATFORM == U_PF_IRIX || U_PLATFORM_IS_DARWIN_BASED)
+#اگر defined(U_TZNAME) && (U_PLATFORM == U_PF_IRIX || U_PLATFORM_IS_DARWIN_BASED)
 /* RS6000 and others reject char **tzname.  */
-extern U_IMPORT char *U_TZNAME[];
-#endif
+خارجی U_IMPORT حرف *U_TZNAME[];
+#اگر_ختم
 
-#if !UCONFIG_NO_FILE_IO && ((U_PLATFORM_IS_DARWIN_BASED && (U_PLATFORM != U_PF_IPHONE || defined(U_TIMEZONE))) || U_PLATFORM_IS_LINUX_BASED || U_PLATFORM == U_PF_BSD || U_PLATFORM == U_PF_SOLARIS)
+#اگر !UCONFIG_NO_FILE_IO && ((U_PLATFORM_IS_DARWIN_BASED && (U_PLATFORM != U_PF_IPHONE || defined(U_TIMEZONE))) || U_PLATFORM_IS_LINUX_BASED || U_PLATFORM == U_PF_BSD || U_PLATFORM == U_PF_SOLARIS)
 /* These platforms are likely to use Olson timezone IDs. */
 /* common targets of the symbolic link at TZDEFAULT are:
  * "/usr/share/zoneinfo/<olsonID>" default, older Linux distros, macOS to 10.12
@@ -694,49 +694,49 @@ extern U_IMPORT char *U_TZNAME[];
  * before the <olsonID> ends with "/zoneinfo/", and the <olsonID> is valid.
  */
 
-#define CHECK_LOCALTIME_LINK 1
-#if U_PLATFORM_IS_DARWIN_BASED
-#include <tzfile.h>
-#define TZZONEINFO      (TZDIR "/")
-#elif U_PLATFORM == U_PF_SOLARIS
-#define TZDEFAULT       "/etc/localtime"
-#define TZZONEINFO      "/usr/share/lib/zoneinfo/"
-#define TZ_ENV_CHECK    "localtime"
-#else
-#define TZDEFAULT       "/etc/localtime"
-#define TZZONEINFO      "/usr/share/zoneinfo/"
-#endif
-#define TZZONEINFOTAIL  "/zoneinfo/"
-#if U_HAVE_DIRENT_H
-#define TZFILE_SKIP     "posixrules" /* tz file to skip when searching. */
+#تعریف_کرو CHECK_LOCALTIME_LINK 1
+#اگر U_PLATFORM_IS_DARWIN_BASED
+#شامل <tzfile.h>
+#تعریف_کرو TZZONEINFO      (TZDIR "/")
+#وگرنہ_اگر U_PLATFORM == U_PF_SOLARIS
+#تعریف_کرو TZDEFAULT       "/etc/localtime"
+#تعریف_کرو TZZONEINFO      "/usr/share/lib/zoneinfo/"
+#تعریف_کرو TZ_ENV_CHECK    "localtime"
+#ورنہ
+#تعریف_کرو TZDEFAULT       "/etc/localtime"
+#تعریف_کرو TZZONEINFO      "/usr/share/zoneinfo/"
+#اگر_ختم
+#تعریف_کرو TZZONEINFOTAIL  "/zoneinfo/"
+#اگر U_HAVE_DIRENT_H
+#تعریف_کرو TZFILE_SKIP     "posixrules" /* tz file to skip when searching. */
 /* Some Linux distributions have 'localtime' in /usr/share/zoneinfo
    symlinked to /etc/localtime, which makes searchForTZFile return
    'localtime' when it's the first match. */
-#define TZFILE_SKIP2    "localtime"
-#define SEARCH_TZFILE
-#include <dirent.h>  /* Needed to search through system timezone files */
-#endif
-static char gTimeZoneBuffer[PATH_MAX];
-static const char *gTimeZoneBufferPtr = nullptr;
-#endif
+#تعریف_کرو TZFILE_SKIP2    "localtime"
+#تعریف_کرو تلاش_TZFILE
+#شامل <dirent.h>  /* Needed to search through system timezone files */
+#اگر_ختم
+ساکن حرف g_وقت_Zone_بفر[راستہ_MAX];
+ساکن ثابت حرف *g_وقت_Zone_بفر_Ptr = خالی_اشاریہ;
+#اگر_ختم
 
-#if !U_PLATFORM_USES_ONLY_WIN32_API
-#define isNonDigit(ch) (ch < '0' || '9' < ch)
-#define isDigit(ch) ('0' <= ch && ch <= '9')
-static UBool isValidOlsonID(const char *id) {
+#اگر !U_PLATFORM_استعمال_کرتا_ONLY_WIN32_API
+#تعریف_کرو isNonDigit(ch) (ch < '0' || '9' < ch)
+#تعریف_کرو isDigit(ch) ('0' <= ch && ch <= '9')
+ساکن UBool isValidOlsonID(ثابت حرف *id) {
     int32_t idx = 0;
     int32_t idxMax = 0;
 
     /* Determine if this is something like Iceland (Olson ID)
     or AST4ADT (non-Olson ID) */
-    while (id[idx] && isNonDigit(id[idx]) && id[idx] != ',') {
+    جب (id[idx] && isNonDigit(id[idx]) && id[idx] != ',') {
         idx++;
     }
 
     /* Allow at maximum 2 numbers at the end of the id to support zone id's
     like GMT+11. */
     idxMax = idx + 2;
-    while (id[idx] && isDigit(id[idx]) && idx < idxMax) {
+    جب (id[idx] && isDigit(id[idx]) && idx < idxMax) {
         idx++;
     }
 
@@ -744,7 +744,7 @@ static UBool isValidOlsonID(const char *id) {
     The timezone is sometimes set to "CST-7CDT", "CST6CDT5,J129,J131/19:30",
     "GRNLNDST3GRNLNDDT" or similar, so we cannot use it.
     The rest of the time it could be an Olson ID. George */
-    return id[idx] == 0
+    واپس id[idx] == 0
         || uprv_strcmp(id, "PST8PDT") == 0
         || uprv_strcmp(id, "MST7MDT") == 0
         || uprv_strcmp(id, "CST6CDT") == 0
@@ -763,27 +763,27 @@ static UBool isValidOlsonID(const char *id) {
    fails because, say, 'posix/America/New_York' is not an Olson
    timezone id ('America/New_York' is). So, we have to skip
    'posix/' and 'right/' at the beginning. */
-static void skipZoneIDPrefix(const char** id) {
-    if (uprv_strncmp(*id, "posix/", 6) == 0
+ساکن خالی skipZoneIDPrefix(ثابت حرف** id) {
+    اگر (uprv_strncmp(*id, "posix/", 6) == 0
         || uprv_strncmp(*id, "right/", 6) == 0)
     {
         *id += 6;
     }
 }
-#endif
+#اگر_ختم
 
-#if defined(U_TZNAME) && !U_PLATFORM_USES_ONLY_WIN32_API
+#اگر defined(U_TZNAME) && !U_PLATFORM_استعمال_کرتا_ONLY_WIN32_API
 
-#define CONVERT_HOURS_TO_SECONDS(offset) (int32_t)(offset*3600)
-typedef struct OffsetZoneMapping {
-    int32_t offsetSeconds;
+#تعریف_کرو CONVERT_HOURS_مقصد_SECONDS(انحراف) (int32_t)(انحراف*3600)
+قسمتعریف ساخت انحراف_Zone_Mapping {
+    int32_t انحراف_Seconds;
     int32_t daylightType; /* 0=U_DAYLIGHT_NONE, 1=daylight in June-U_DAYLIGHT_JUNE, 2=daylight in December=U_DAYLIGHT_DECEMBER*/
-    const char *stdID;
-    const char *dstID;
-    const char *olsonID;
-} OffsetZoneMapping;
+    ثابت حرف *stdID;
+    ثابت حرف *dstID;
+    ثابت حرف *olsonID;
+} انحراف_Zone_Mapping;
 
-enum { U_DAYLIGHT_NONE=0,U_DAYLIGHT_JUNE=1,U_DAYLIGHT_DECEMBER=2 };
+شمار { U_DAYLIGHT_NONE=0,U_DAYLIGHT_JUNE=1,U_DAYLIGHT_DECEMBER=2 };
 
 /*
 This list tries to disambiguate a set of abbreviated timezone IDs and offsets
@@ -794,7 +794,7 @@ Sometimes no daylight savings (0) is important to define due to aliases.
 This list can be tested with icu/source/test/compat/tzone.pl
 More values could be added to daylightType to increase precision.
 */
-static const struct OffsetZoneMapping OFFSET_ZONE_MAPPINGS[] = {
+ساکن ثابت ساخت انحراف_Zone_Mapping انحراف_ZONE_MAPPINGS[] = {
     {-45900, 2, "CHAST", "CHADT", "Pacific/Chatham"},
     {-43200, 1, "PETT", "PETST", "Asia/Kamchatka"},
     {-43200, 2, "NZST", "NZDT", "Pacific/Auckland"},
@@ -858,32 +858,32 @@ static const struct OffsetZoneMapping OFFSET_ZONE_MAPPINGS[] = {
 
 /*#define DEBUG_TZNAME*/
 
-static const char* remapShortTimeZone(const char *stdID, const char *dstID, int32_t daylightType, int32_t offset)
+ساکن ثابت حرف* remap_Short_وقت_Zone(ثابت حرف *stdID, ثابت حرف *dstID, int32_t daylightType, int32_t انحراف)
 {
     int32_t idx;
-#ifdef DEBUG_TZNAME
-    fprintf(stderr, "TZ=%s std=%s dst=%s daylight=%d offset=%d\n", getenv("TZ"), stdID, dstID, daylightType, offset);
-#endif
-    for (idx = 0; idx < UPRV_LENGTHOF(OFFSET_ZONE_MAPPINGS); idx++)
+#اگر_تعریف_شدہ DEBUG_TZNAME
+    fprintf(stderr, "TZ=%s std=%s dst=%s daylight=%d offset=%d\n", getenv("TZ"), stdID, dstID, daylightType, انحراف);
+#اگر_ختم
+    برائے (idx = 0; idx < UPRV_LENGTHOF(انحراف_ZONE_MAPPINGS); idx++)
     {
-        if (offset == OFFSET_ZONE_MAPPINGS[idx].offsetSeconds
-            && daylightType == OFFSET_ZONE_MAPPINGS[idx].daylightType
-            && strcmp(OFFSET_ZONE_MAPPINGS[idx].stdID, stdID) == 0
-            && strcmp(OFFSET_ZONE_MAPPINGS[idx].dstID, dstID) == 0)
+        اگر (انحراف == انحراف_ZONE_MAPPINGS[idx].انحراف_Seconds
+            && daylightType == انحراف_ZONE_MAPPINGS[idx].daylightType
+            && strcmp(انحراف_ZONE_MAPPINGS[idx].stdID, stdID) == 0
+            && strcmp(انحراف_ZONE_MAPPINGS[idx].dstID, dstID) == 0)
         {
-            return OFFSET_ZONE_MAPPINGS[idx].olsonID;
+            واپس انحراف_ZONE_MAPPINGS[idx].olsonID;
         }
     }
-    return nullptr;
+    واپس خالی_اشاریہ;
 }
-#endif
+#اگر_ختم
 
-#ifdef SEARCH_TZFILE
-#define MAX_READ_SIZE 512
+#اگر_تعریف_شدہ تلاش_TZFILE
+#تعریف_کرو MAX_READ_سائز 512
 
-typedef struct DefaultTZInfo {
-    char* defaultTZBuffer;
-    int64_t defaultTZFileSize;
+قسمتعریف ساخت DefaultTZInfo {
+    حرف* defaultTZBuffer;
+    int64_t default_TZFile_سائز;
     FILE* defaultTZFilePtr;
     int32_t defaultTZPosition;
 } DefaultTZInfo;
@@ -892,145 +892,145 @@ typedef struct DefaultTZInfo {
  * This method compares the two files given to see if they are a match.
  * It is currently use to compare two TZ files.
  */
-static UBool compareBinaryFiles(const char* TZFileName, DefaultTZInfo* tzInfo) {
+ساکن UBool compare_ثنائی_Files(ثابت حرف* TZFileName, DefaultTZInfo* tzInfo) {
     FILE* file;
-    int64_t sizeFile;
-    int64_t sizeFileLeft;
-    int32_t sizeFileRead;
-    int32_t sizeFileToRead;
-    char bufferFile[MAX_READ_SIZE];
-    UBool result = true;
+    int64_t سائز_File;
+    int64_t سائز_File_بایاں;
+    int32_t سائز_File_Read;
+    int32_t سائز_File_مقصد_Read;
+    حرف بفر_File[MAX_READ_سائز];
+    UBool نتیجہ = سچ;
 
-    U_ASSERT(tzInfo->defaultTZFilePtr != nullptr);
+    U_ASSERT(tzInfo->defaultTZFilePtr != خالی_اشاریہ);
     file = fopen(TZFileName, "r");
 
     tzInfo->defaultTZPosition = 0; /* reset position to begin search */
 
-    if (file != nullptr) {
+    اگر (file != خالی_اشاریہ) {
         /* First check that the file size are equal. */
-        if (tzInfo->defaultTZFileSize == 0) {
+        اگر (tzInfo->default_TZFile_سائز == 0) {
             fseek(tzInfo->defaultTZFilePtr, 0, SEEK_END);
-            tzInfo->defaultTZFileSize = ftell(tzInfo->defaultTZFilePtr);
+            tzInfo->default_TZFile_سائز = ftell(tzInfo->defaultTZFilePtr);
         }
-        if (fseek(file, 0, SEEK_END) != 0) {
+        اگر (fseek(file, 0, SEEK_END) != 0) {
             fclose(file);
-            return false;
+            واپس جھوٹ;
         }
-        sizeFile = ftell(file);
-        if (sizeFile == -1) {
+        سائز_File = ftell(file);
+        اگر (سائز_File == -1) {
             fclose(file);
-            return false;
+            واپس جھوٹ;
         }
-        sizeFileLeft = sizeFile;
+        سائز_File_بایاں = سائز_File;
 
-        if (sizeFile != tzInfo->defaultTZFileSize) {
-            result = false;
-        } else {
+        اگر (سائز_File != tzInfo->default_TZFile_سائز) {
+            نتیجہ = جھوٹ;
+        } ورنہ {
             /* Store the data from the files in separate buffers and
              * compare each byte to determine equality.
              */
-            if (tzInfo->defaultTZBuffer == nullptr) {
-                if (fseek(tzInfo->defaultTZFilePtr, 0, SEEK_SET) != 0) {
+            اگر (tzInfo->defaultTZBuffer == خالی_اشاریہ) {
+                اگر (fseek(tzInfo->defaultTZFilePtr, 0, SEEK_SET) != 0) {
                     fclose(file);
-                    return false;
+                    واپس جھوٹ;
                 }
-                tzInfo->defaultTZBuffer = static_cast<char*>(uprv_malloc(sizeof(char) * tzInfo->defaultTZFileSize));
-                sizeFileRead = fread(tzInfo->defaultTZBuffer, 1, tzInfo->defaultTZFileSize, tzInfo->defaultTZFilePtr);
+                tzInfo->defaultTZBuffer = static_cast<حرف*>(uprv_malloc(حجم(حرف) * tzInfo->default_TZFile_سائز));
+                سائز_File_Read = fread(tzInfo->defaultTZBuffer, 1, tzInfo->default_TZFile_سائز, tzInfo->defaultTZFilePtr);
             }
-            if (fseek(file, 0, SEEK_SET) != 0) {
+            اگر (fseek(file, 0, SEEK_SET) != 0) {
                 fclose(file);
-                return false;
+                واپس جھوٹ;
             }
-            while(sizeFileLeft > 0) {
-                uprv_memset(bufferFile, 0, MAX_READ_SIZE);
-                sizeFileToRead = sizeFileLeft < MAX_READ_SIZE ? sizeFileLeft : MAX_READ_SIZE;
+            جب(سائز_File_بایاں > 0) {
+                uprv_memset(بفر_File, 0, MAX_READ_سائز);
+                سائز_File_مقصد_Read = سائز_File_بایاں < MAX_READ_سائز ? سائز_File_بایاں : MAX_READ_سائز;
 
-                sizeFileRead = fread(bufferFile, 1, sizeFileToRead, file);
-                if (sizeFileRead == -1) {
+                سائز_File_Read = fread(بفر_File, 1, سائز_File_مقصد_Read, file);
+                اگر (سائز_File_Read == -1) {
                     fclose(file);
-                    return false;
+                    واپس جھوٹ;
                 }
-                if (memcmp(tzInfo->defaultTZBuffer + tzInfo->defaultTZPosition, bufferFile, sizeFileRead) != 0) {
-                    result = false;
-                    break;
+                اگر (memcmp(tzInfo->defaultTZBuffer + tzInfo->defaultTZPosition, بفر_File, سائز_File_Read) != 0) {
+                    نتیجہ = جھوٹ;
+                    توڑو;
                 }
-                sizeFileLeft -= sizeFileRead;
-                tzInfo->defaultTZPosition += sizeFileRead;
+                سائز_File_بایاں -= سائز_File_Read;
+                tzInfo->defaultTZPosition += سائز_File_Read;
             }
         }
-    } else {
-        result = false;
+    } ورنہ {
+        نتیجہ = جھوٹ;
     }
 
-    if (file != nullptr) {
+    اگر (file != خالی_اشاریہ) {
         fclose(file);
     }
 
-    return result;
+    واپس نتیجہ;
 }
 
 
 /* dirent also lists two entries: "." and ".." that we can safely ignore. */
-#define SKIP1 "."
-#define SKIP2 ".."
-static UBool U_CALLCONV putil_cleanup();
-static CharString *gSearchTZFileResult = nullptr;
+#تعریف_کرو SKIP1 "."
+#تعریف_کرو SKIP2 ".."
+ساکن UBool U_CALLCONV putil_cleanup();
+ساکن CharString *g_تلاش_TZFile_نتیجہ = خالی_اشاریہ;
 
 /*
  * This method recursively traverses the directory given for a matching TZ file and returns the first match.
  * This function is not thread safe - it uses a global, gSearchTZFileResult, to hold its results.
  */
-static char* searchForTZFile(const char* path, DefaultTZInfo* tzInfo) {
-    DIR* dirp = nullptr;
-    struct dirent* dirEntry = nullptr;
-    char* result = nullptr;
-    UErrorCode status = U_ZERO_ERROR;
+ساکن حرف* تلاش_For_TZFile(ثابت حرف* راستہ, DefaultTZInfo* tzInfo) {
+    DIR* dirp = خالی_اشاریہ;
+    ساخت dirent* dir_اندراج = خالی_اشاریہ;
+    حرف* نتیجہ = خالی_اشاریہ;
+    UError_رمز حالت_2 = U_ZERO_ERROR;
 
     /* There is no reference file to compare against, so do not traverse the zoneinfo tree. */
-    if (tzInfo->defaultTZFilePtr == nullptr) {
-        return nullptr;
+    اگر (tzInfo->defaultTZFilePtr == خالی_اشاریہ) {
+        واپس خالی_اشاریہ;
     }
 
     /* Save the current path */
-    CharString curpath(path, -1, status);
-    if (U_FAILURE(status)) {
-        goto cleanupAndReturn;
+    CharString curpath(راستہ, -1, حالت_2);
+    اگر (U_FAILURE(حالت_2)) {
+        جاؤ cleanupAndReturn;
     }
 
-    dirp = opendir(path);
-    if (dirp == nullptr) {
-        goto cleanupAndReturn;
+    dirp = opendir(راستہ);
+    اگر (dirp == خالی_اشاریہ) {
+        جاؤ cleanupAndReturn;
     }
 
-    if (gSearchTZFileResult == nullptr) {
-        gSearchTZFileResult = new CharString;
-        if (gSearchTZFileResult == nullptr) {
-            goto cleanupAndReturn;
+    اگر (g_تلاش_TZFile_نتیجہ == خالی_اشاریہ) {
+        g_تلاش_TZFile_نتیجہ = نیا CharString;
+        اگر (g_تلاش_TZFile_نتیجہ == خالی_اشاریہ) {
+            جاؤ cleanupAndReturn;
         }
-        ucln_common_registerCleanup(UCLN_COMMON_PUTIL, putil_cleanup);
+        ucln_common_رجسٹر_Cleanup(UCLN_COMMON_PUTIL, putil_cleanup);
     }
 
     /* Check each entry in the directory. */
-    while((dirEntry = readdir(dirp)) != nullptr) {
-        const char* dirName = dirEntry->d_name;
-        if (uprv_strcmp(dirName, SKIP1) != 0 && uprv_strcmp(dirName, SKIP2) != 0
+    جب((dir_اندراج = readdir(dirp)) != خالی_اشاریہ) {
+        ثابت حرف* dirName = dir_اندراج->d_name;
+        اگر (uprv_strcmp(dirName, SKIP1) != 0 && uprv_strcmp(dirName, SKIP2) != 0
             && uprv_strcmp(TZFILE_SKIP, dirName) != 0 && uprv_strcmp(TZFILE_SKIP2, dirName) != 0) {
             /* Create a newpath with the new entry to test each entry in the directory. */
-            CharString newpath(curpath, status);
-            newpath.append(dirName, -1, status);
-            if (U_FAILURE(status)) {
-                break;
+            CharString newpath(curpath, حالت_2);
+            newpath.append(dirName, -1, حالت_2);
+            اگر (U_FAILURE(حالت_2)) {
+                توڑو;
             }
 
-            DIR* subDirp = nullptr;
-            if ((subDirp = opendir(newpath.data())) != nullptr) {
+            DIR* subDirp = خالی_اشاریہ;
+            اگر ((subDirp = opendir(newpath.ڈیٹا())) != خالی_اشاریہ) {
                 /* If this new path is a directory, make a recursive call with the newpath. */
                 closedir(subDirp);
-                newpath.append('/', status);
-                if (U_FAILURE(status)) {
-                    break;
+                newpath.append('/', حالت_2);
+                اگر (U_FAILURE(حالت_2)) {
+                    توڑو;
                 }
-                result = searchForTZFile(newpath.data(), tzInfo);
+                نتیجہ = تلاش_For_TZFile(newpath.ڈیٹا(), tzInfo);
                 /*
                  Have to get out here. Otherwise, we'd keep looking
                  and return the first match in the top-level directory
@@ -1039,110 +1039,110 @@ static char* searchForTZFile(const char* path, DefaultTZInfo* tzInfo) {
                  It worked without this in most cases because we have a fallback of calling
                  localtime_r to figure out the default timezone.
                 */
-                if (result != nullptr)
-                    break;
-            } else {
-                if(compareBinaryFiles(newpath.data(), tzInfo)) {
-                    int32_t amountToSkip = sizeof(TZZONEINFO) - 1;
-                    if (amountToSkip > newpath.length()) {
-                        amountToSkip = newpath.length();
+                اگر (نتیجہ != خالی_اشاریہ)
+                    توڑو;
+            } ورنہ {
+                اگر(compare_ثنائی_Files(newpath.ڈیٹا(), tzInfo)) {
+                    int32_t amount_مقصد_Skip = حجم(TZZONEINFO) - 1;
+                    اگر (amount_مقصد_Skip > newpath.length()) {
+                        amount_مقصد_Skip = newpath.length();
                     }
-                    const char* zoneid = newpath.data() + amountToSkip;
+                    ثابت حرف* zoneid = newpath.ڈیٹا() + amount_مقصد_Skip;
                     skipZoneIDPrefix(&zoneid);
-                    gSearchTZFileResult->clear();
-                    gSearchTZFileResult->append(zoneid, -1, status);
-                    if (U_FAILURE(status)) {
-                        break;
+                    g_تلاش_TZFile_نتیجہ->clear();
+                    g_تلاش_TZFile_نتیجہ->append(zoneid, -1, حالت_2);
+                    اگر (U_FAILURE(حالت_2)) {
+                        توڑو;
                     }
-                    result = gSearchTZFileResult->data();
+                    نتیجہ = g_تلاش_TZFile_نتیجہ->ڈیٹا();
                     /* Get out after the first one found. */
-                    break;
+                    توڑو;
                 }
             }
         }
     }
 
   cleanupAndReturn:
-    if (dirp) {
+    اگر (dirp) {
         closedir(dirp);
     }
-    return result;
+    واپس نتیجہ;
 }
-#endif
+#اگر_ختم
 
-#if U_PLATFORM == U_PF_ANDROID
-typedef int(system_property_read_callback)(const prop_info* info,
-                                           void (*callback)(void* cookie,
-                                                            const char* name,
-                                                            const char* value,
+#اگر U_PLATFORM == U_PF_ANDROID
+قسمتعریف صحیح(system_property_read_callback)(ثابت prop_info* info,
+                                           خالی (*callback)(خالی* cookie,
+                                                            ثابت حرف* name,
+                                                            ثابت حرف* value,
                                                             uint32_t serial),
-                                           void* cookie);
-typedef int(system_property_get)(const char*, char*);
+                                           خالی* cookie);
+قسمتعریف صحیح(system_property_get)(ثابت حرف*, حرف*);
 
-static char gAndroidTimeZone[PROP_VALUE_MAX] = { '\0' };
+ساکن حرف g_Android_وقت_Zone[PROP_قدر_MAX] = { '\0' };
 
-static void u_property_read(void* cookie, const char* name, const char* value,
+ساکن خالی u_property_read(خالی* cookie, ثابت حرف* name, ثابت حرف* value,
                             uint32_t serial) {
-    uprv_strcpy((char* )cookie, value);
+    uprv_strcpy((حرف* )cookie, value);
 }
-#endif
+#اگر_ختم
 
-U_CAPI void U_EXPORT2
+U_CAPI خالی U_EXPORT2
 uprv_tzname_clear_cache()
 {
-#if U_PLATFORM == U_PF_ANDROID
+#اگر U_PLATFORM == U_PF_ANDROID
     /* Android's timezone is stored in system property. */
-    gAndroidTimeZone[0] = '\0';
-    void* libc = dlopen("libc.so", RTLD_NOLOAD);
-    if (libc) {
+    g_Android_وقت_Zone[0] = '\0';
+    خالی* libc = dlopen("libc.so", RTLD_NOLOAD);
+    اگر (libc) {
         /* Android API 26+ has new API to get system property and old API
          * (__system_property_get) is deprecated */
         system_property_read_callback* property_read_callback =
             (system_property_read_callback*)dlsym(
                 libc, "__system_property_read_callback");
-        if (property_read_callback) {
-            const prop_info* info =
+        اگر (property_read_callback) {
+            ثابت prop_info* info =
                 __system_property_find("persist.sys.timezone");
-            if (info) {
-                property_read_callback(info, &u_property_read, gAndroidTimeZone);
+            اگر (info) {
+                property_read_callback(info, &u_property_read, g_Android_وقت_Zone);
             }
-        } else {
+        } ورنہ {
             system_property_get* property_get =
                 (system_property_get*)dlsym(libc, "__system_property_get");
-            if (property_get) {
-                property_get("persist.sys.timezone", gAndroidTimeZone);
+            اگر (property_get) {
+                property_get("persist.sys.timezone", g_Android_وقت_Zone);
             }
         }
         dlclose(libc);
     }
-#endif
+#اگر_ختم
 
-#if defined(CHECK_LOCALTIME_LINK) && !defined(DEBUG_SKIP_LOCALTIME_LINK)
-    gTimeZoneBufferPtr = nullptr;
-#endif
+#اگر defined(CHECK_LOCALTIME_LINK) && !defined(DEBUG_SKIP_LOCALTIME_LINK)
+    g_وقت_Zone_بفر_Ptr = خالی_اشاریہ;
+#اگر_ختم
 }
 
-U_CAPI const char* U_EXPORT2
-uprv_tzname(int n)
+U_CAPI ثابت حرف* U_EXPORT2
+uprv_tzname(صحیح n)
 {
-    (void)n; // Avoid unreferenced parameter warning.
-    const char *tzid = nullptr;
-#if U_PLATFORM_USES_ONLY_WIN32_API
-    tzid = uprv_detectWindowsTimeZone();
+    (خالی)n; // Avoid unreferenced parameter warning.
+    ثابت حرف *tzid = خالی_اشاریہ;
+#اگر U_PLATFORM_استعمال_کرتا_ONLY_WIN32_API
+    tzid = uprv_detect_Windows_وقت_Zone();
 
-    if (tzid != nullptr) {
-        return tzid;
+    اگر (tzid != خالی_اشاریہ) {
+        واپس tzid;
     }
 
-#ifndef U_TZNAME
+#اگر_غیر_تعریف_شدہ U_TZNAME
     // The return value is free'd in timezone.cpp on Windows because
     // the other code path returns a pointer to a heap location.
     // If we don't have a name already, then tzname wouldn't be any
     // better, so just fall back.
-    return uprv_strdup("");
-#endif // !U_TZNAME
+    واپس uprv_strdup("");
+#اگر_ختم // !U_TZNAME
 
-#else
+#ورنہ
 
 /*#if U_PLATFORM_IS_DARWIN_BASED
     int ret;
@@ -1154,41 +1154,41 @@ uprv_tzname(int n)
 #endif*/
 
 /* This code can be temporarily disabled to test tzname resolution later on. */
-#ifndef DEBUG_TZNAME
-#if U_PLATFORM == U_PF_ANDROID
-    tzid = gAndroidTimeZone;
-#else
+#اگر_غیر_تعریف_شدہ DEBUG_TZNAME
+#اگر U_PLATFORM == U_PF_ANDROID
+    tzid = g_Android_وقت_Zone;
+#ورنہ
     tzid = getenv("TZ");
-#endif
-    if (tzid != nullptr && isValidOlsonID(tzid)
-#if U_PLATFORM == U_PF_SOLARIS
+#اگر_ختم
+    اگر (tzid != خالی_اشاریہ && isValidOlsonID(tzid)
+#اگر U_PLATFORM == U_PF_SOLARIS
     /* Don't misinterpret TZ "localtime" on Solaris as a time zone name. */
         && uprv_strcmp(tzid, TZ_ENV_CHECK) != 0
-#endif
+#اگر_ختم
     ) {
         /* The colon forces tzset() to treat the remainder as zoneinfo path */
-        if (tzid[0] == ':') {
+        اگر (tzid[0] == ':') {
             tzid++;
         }
         /* This might be a good Olson ID. */
         skipZoneIDPrefix(&tzid);
-        return tzid;
+        واپس tzid;
     }
     /* else U_TZNAME will give a better result. */
-#endif
+#اگر_ختم
 
-#if defined(CHECK_LOCALTIME_LINK) && !defined(DEBUG_SKIP_LOCALTIME_LINK)
+#اگر defined(CHECK_LOCALTIME_LINK) && !defined(DEBUG_SKIP_LOCALTIME_LINK)
     /* Caller must handle threading issues */
-    if (gTimeZoneBufferPtr == nullptr) {
+    اگر (g_وقت_Zone_بفر_Ptr == خالی_اشاریہ) {
         /*
         This is a trick to look at the name of the link to get the Olson ID
         because the tzfile contents is underspecified.
         This isn't guaranteed to work because it may not be a symlink.
         */
-        char *ret = realpath(TZDEFAULT, gTimeZoneBuffer);
-        if (ret != nullptr && uprv_strcmp(TZDEFAULT, gTimeZoneBuffer) != 0) {
-            int32_t tzZoneInfoTailLen = uprv_strlen(TZZONEINFOTAIL);
-            const char *tzZoneInfoTailPtr = uprv_strstr(gTimeZoneBuffer, TZZONEINFOTAIL);
+        حرف *ret = realpath(TZDEFAULT, g_وقت_Zone_بفر);
+        اگر (ret != خالی_اشاریہ && uprv_strcmp(TZDEFAULT, g_وقت_Zone_بفر) != 0) {
+            int32_t tz_Zone_Info_دم_Len = uprv_strlen(TZZONEINFOTAIL);
+            ثابت حرف *tz_Zone_Info_دم_Ptr = uprv_strstr(g_وقت_Zone_بفر, TZZONEINFOTAIL);
             // MacOS14 has the realpath as something like
             // /usr/share/zoneinfo.default/Australia/Melbourne
             // which will not have "/zoneinfo/" in the path.
@@ -1196,60 +1196,60 @@ uprv_tzname(int n)
             // /var/db/timezone/zoneinfo/Australia/Melbourne
             // We also fall back to reading the link if the realpath leads to something like
             // /usr/share/zoneinfo/posixrules
-            if (tzZoneInfoTailPtr == nullptr ||
-                    uprv_strcmp(tzZoneInfoTailPtr + tzZoneInfoTailLen, "posixrules") == 0) {
-                ssize_t size = readlink(TZDEFAULT, gTimeZoneBuffer, sizeof(gTimeZoneBuffer)-1);
-                if (size > 0) {
-                    gTimeZoneBuffer[size] = 0;
-                    tzZoneInfoTailPtr = uprv_strstr(gTimeZoneBuffer, TZZONEINFOTAIL);
+            اگر (tz_Zone_Info_دم_Ptr == خالی_اشاریہ ||
+                    uprv_strcmp(tz_Zone_Info_دم_Ptr + tz_Zone_Info_دم_Len, "posixrules") == 0) {
+                ssize_t size = readlink(TZDEFAULT, g_وقت_Zone_بفر, حجم(g_وقت_Zone_بفر)-1);
+                اگر (size > 0) {
+                    g_وقت_Zone_بفر[size] = 0;
+                    tz_Zone_Info_دم_Ptr = uprv_strstr(g_وقت_Zone_بفر, TZZONEINFOTAIL);
                 }
             }
-            if (tzZoneInfoTailPtr != nullptr) {
-                tzZoneInfoTailPtr += tzZoneInfoTailLen;
-                skipZoneIDPrefix(&tzZoneInfoTailPtr);
-                if (isValidOlsonID(tzZoneInfoTailPtr)) {
-                    return (gTimeZoneBufferPtr = tzZoneInfoTailPtr);
+            اگر (tz_Zone_Info_دم_Ptr != خالی_اشاریہ) {
+                tz_Zone_Info_دم_Ptr += tz_Zone_Info_دم_Len;
+                skipZoneIDPrefix(&tz_Zone_Info_دم_Ptr);
+                اگر (isValidOlsonID(tz_Zone_Info_دم_Ptr)) {
+                    واپس (g_وقت_Zone_بفر_Ptr = tz_Zone_Info_دم_Ptr);
                 }
             }
-        } else {
-#if defined(SEARCH_TZFILE)
-            DefaultTZInfo* tzInfo = (DefaultTZInfo*)uprv_malloc(sizeof(DefaultTZInfo));
-            if (tzInfo != nullptr) {
-                tzInfo->defaultTZBuffer = nullptr;
-                tzInfo->defaultTZFileSize = 0;
+        } ورنہ {
+#اگر defined(تلاش_TZFILE)
+            DefaultTZInfo* tzInfo = (DefaultTZInfo*)uprv_malloc(حجم(DefaultTZInfo));
+            اگر (tzInfo != خالی_اشاریہ) {
+                tzInfo->defaultTZBuffer = خالی_اشاریہ;
+                tzInfo->default_TZFile_سائز = 0;
                 tzInfo->defaultTZFilePtr = fopen(TZDEFAULT, "r");
                 tzInfo->defaultTZPosition = 0;
 
-                gTimeZoneBufferPtr = searchForTZFile(TZZONEINFO, tzInfo);
+                g_وقت_Zone_بفر_Ptr = تلاش_For_TZFile(TZZONEINFO, tzInfo);
 
                 /* Free previously allocated memory */
-                if (tzInfo->defaultTZBuffer != nullptr) {
+                اگر (tzInfo->defaultTZBuffer != خالی_اشاریہ) {
                     uprv_free(tzInfo->defaultTZBuffer);
                 }
-                if (tzInfo->defaultTZFilePtr != nullptr) {
+                اگر (tzInfo->defaultTZFilePtr != خالی_اشاریہ) {
                     fclose(tzInfo->defaultTZFilePtr);
                 }
                 uprv_free(tzInfo);
             }
 
-            if (gTimeZoneBufferPtr != nullptr && isValidOlsonID(gTimeZoneBufferPtr)) {
-                return gTimeZoneBufferPtr;
+            اگر (g_وقت_Zone_بفر_Ptr != خالی_اشاریہ && isValidOlsonID(g_وقت_Zone_بفر_Ptr)) {
+                واپس g_وقت_Zone_بفر_Ptr;
             }
-#endif
+#اگر_ختم
         }
     }
-    else {
-        return gTimeZoneBufferPtr;
+    ورنہ {
+        واپس g_وقت_Zone_بفر_Ptr;
     }
-#endif
-#endif
+#اگر_ختم
+#اگر_ختم
 
-#ifdef U_TZNAME
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#اگر_تعریف_شدہ U_TZNAME
+#اگر U_PLATFORM_استعمال_کرتا_ONLY_WIN32_API
     /* The return value is free'd in timezone.cpp on Windows because
      * the other code path returns a pointer to a heap location. */
-    return uprv_strdup(U_TZNAME[n]);
-#else
+    واپس uprv_strdup(U_TZNAME[n]);
+#ورنہ
     /*
     U_TZNAME is usually a non-unique abbreviation, which isn't normally usable.
     So we remap the abbreviation to an olson ID.
@@ -1259,195 +1259,195 @@ uprv_tzname(int n)
     uprv_detectWindowsTimeZone should have already given the correct answer.
     */
     {
-        struct tm juneSol, decemberSol;
-        int daylightType;
-        static const time_t juneSolstice=1182478260; /*2007-06-21 18:11 UT*/
-        static const time_t decemberSolstice=1198332540; /*2007-12-22 06:09 UT*/
+        ساخت tm juneSol, decemberSol;
+        صحیح daylightType;
+        ساکن ثابت time_t juneSolstice=1182478260; /*2007-06-21 18:11 UT*/
+        ساکن ثابت time_t decemberSolstice=1198332540; /*2007-12-22 06:09 UT*/
 
         /* This probing will tell us when daylight savings occurs.  */
         localtime_r(&juneSolstice, &juneSol);
         localtime_r(&decemberSolstice, &decemberSol);
-        if(decemberSol.tm_isdst > 0) {
+        اگر(decemberSol.tm_isdst > 0) {
           daylightType = U_DAYLIGHT_DECEMBER;
-        } else if(juneSol.tm_isdst > 0) {
+        } ورنہ اگر(juneSol.tm_isdst > 0) {
           daylightType = U_DAYLIGHT_JUNE;
-        } else {
+        } ورنہ {
           daylightType = U_DAYLIGHT_NONE;
         }
-        tzid = remapShortTimeZone(U_TZNAME[0], U_TZNAME[1], daylightType, uprv_timezone());
-        if (tzid != nullptr) {
-            return tzid;
+        tzid = remap_Short_وقت_Zone(U_TZNAME[0], U_TZNAME[1], daylightType, uprv_timezone());
+        اگر (tzid != خالی_اشاریہ) {
+            واپس tzid;
         }
     }
-    return U_TZNAME[n];
-#endif
-#else
-    return "";
-#endif
+    واپس U_TZNAME[n];
+#اگر_ختم
+#ورنہ
+    واپس "";
+#اگر_ختم
 }
 
 /* Get and set the ICU data directory --------------------------------------- */
 
-static icu::UInitOnce gDataDirInitOnce {};
-static char *gDataDirectory = nullptr;
+ساکن icu::UInitOnce g_ڈیٹا_Dir_Init_Once {};
+ساکن حرف *g_ڈیٹا_Directory = خالی_اشاریہ;
 
-UInitOnce gTimeZoneFilesInitOnce {};
-static CharString *gTimeZoneFilesDirectory = nullptr;
+UInitOnce g_وقت_Zone_Files_Init_Once {};
+ساکن CharString *g_وقت_Zone_Files_Directory = خالی_اشاریہ;
 
-#if U_POSIX_LOCALE || U_PLATFORM_USES_ONLY_WIN32_API
- static const char *gCorrectedPOSIXLocale = nullptr; /* Sometimes heap allocated */
- static bool gCorrectedPOSIXLocaleHeapAllocated = false;
-#endif
+#اگر U_POSIX_LOCALE || U_PLATFORM_استعمال_کرتا_ONLY_WIN32_API
+ ساکن ثابت حرف *gCorrectedPOSIXLocale = خالی_اشاریہ; /* Sometimes heap allocated */
+ ساکن منطقی g_Corrected_POSIXLocale_ڈھیر_Allocated = جھوٹ;
+#اگر_ختم
 
-static UBool U_CALLCONV putil_cleanup()
+ساکن UBool U_CALLCONV putil_cleanup()
 {
-    if (gDataDirectory && *gDataDirectory) {
-        uprv_free(gDataDirectory);
+    اگر (g_ڈیٹا_Directory && *g_ڈیٹا_Directory) {
+        uprv_free(g_ڈیٹا_Directory);
     }
-    gDataDirectory = nullptr;
-    gDataDirInitOnce.reset();
+    g_ڈیٹا_Directory = خالی_اشاریہ;
+    g_ڈیٹا_Dir_Init_Once.reset();
 
-    delete gTimeZoneFilesDirectory;
-    gTimeZoneFilesDirectory = nullptr;
-    gTimeZoneFilesInitOnce.reset();
+    حذف g_وقت_Zone_Files_Directory;
+    g_وقت_Zone_Files_Directory = خالی_اشاریہ;
+    g_وقت_Zone_Files_Init_Once.reset();
 
-#ifdef SEARCH_TZFILE
-    delete gSearchTZFileResult;
-    gSearchTZFileResult = nullptr;
-#endif
+#اگر_تعریف_شدہ تلاش_TZFILE
+    حذف g_تلاش_TZFile_نتیجہ;
+    g_تلاش_TZFile_نتیجہ = خالی_اشاریہ;
+#اگر_ختم
 
-#if U_POSIX_LOCALE || U_PLATFORM_USES_ONLY_WIN32_API
-    if (gCorrectedPOSIXLocale && gCorrectedPOSIXLocaleHeapAllocated) {
-        uprv_free(const_cast<char *>(gCorrectedPOSIXLocale));
-        gCorrectedPOSIXLocale = nullptr;
-        gCorrectedPOSIXLocaleHeapAllocated = false;
+#اگر U_POSIX_LOCALE || U_PLATFORM_استعمال_کرتا_ONLY_WIN32_API
+    اگر (gCorrectedPOSIXLocale && g_Corrected_POSIXLocale_ڈھیر_Allocated) {
+        uprv_free(const_cast<حرف *>(gCorrectedPOSIXLocale));
+        gCorrectedPOSIXLocale = خالی_اشاریہ;
+        g_Corrected_POSIXLocale_ڈھیر_Allocated = جھوٹ;
     }
-#endif
-    return true;
+#اگر_ختم
+    واپس سچ;
 }
 
 /*
  * Set the data directory.
  *    Make a copy of the passed string, and set the global data dir to point to it.
  */
-U_CAPI void U_EXPORT2
-u_setDataDirectory(const char *directory) {
-    char *newDataDir;
+U_CAPI خالی U_EXPORT2
+u_سیٹ_ڈیٹا_Directory(ثابت حرف *directory) {
+    حرف *new_ڈیٹا_Dir;
     int32_t length;
 
-    if(directory==nullptr || *directory==0) {
+    اگر(directory==خالی_اشاریہ || *directory==0) {
         /* A small optimization to prevent the malloc and copy when the
         shared library is used, and this is a way to make sure that nullptr
         is never returned.
         */
-        newDataDir = (char *)"";
+        new_ڈیٹا_Dir = (حرف *)"";
     }
-    else {
+    ورنہ {
         length=(int32_t)uprv_strlen(directory);
-        newDataDir = (char *)uprv_malloc(length + 2);
+        new_ڈیٹا_Dir = (حرف *)uprv_malloc(length + 2);
         /* Exit out if newDataDir could not be created. */
-        if (newDataDir == nullptr) {
-            return;
+        اگر (new_ڈیٹا_Dir == خالی_اشاریہ) {
+            واپس;
         }
-        uprv_strcpy(newDataDir, directory);
+        uprv_strcpy(new_ڈیٹا_Dir, directory);
 
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
+#اگر (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
         {
-            char *p;
-            while((p = uprv_strchr(newDataDir, U_FILE_ALT_SEP_CHAR)) != nullptr) {
+            حرف *p;
+            جب((p = uprv_strchr(new_ڈیٹا_Dir, U_FILE_ALT_SEP_CHAR)) != خالی_اشاریہ) {
                 *p = U_FILE_SEP_CHAR;
             }
         }
-#endif
+#اگر_ختم
     }
 
-    if (gDataDirectory && *gDataDirectory) {
-        uprv_free(gDataDirectory);
+    اگر (g_ڈیٹا_Directory && *g_ڈیٹا_Directory) {
+        uprv_free(g_ڈیٹا_Directory);
     }
-    gDataDirectory = newDataDir;
-    ucln_common_registerCleanup(UCLN_COMMON_PUTIL, putil_cleanup);
+    g_ڈیٹا_Directory = new_ڈیٹا_Dir;
+    ucln_common_رجسٹر_Cleanup(UCLN_COMMON_PUTIL, putil_cleanup);
 }
 
 U_CAPI UBool U_EXPORT2
-uprv_pathIsAbsolute(const char *path)
+uprv_راستہ_Is_Absolute(ثابت حرف *راستہ)
 {
-  if(!path || !*path) {
-    return false;
+  اگر(!راستہ || !*راستہ) {
+    واپس جھوٹ;
   }
 
-  if(*path == U_FILE_SEP_CHAR) {
-    return true;
+  اگر(*راستہ == U_FILE_SEP_CHAR) {
+    واپس سچ;
   }
 
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
-  if(*path == U_FILE_ALT_SEP_CHAR) {
-    return true;
+#اگر (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
+  اگر(*راستہ == U_FILE_ALT_SEP_CHAR) {
+    واپس سچ;
   }
-#endif
+#اگر_ختم
 
-#if U_PLATFORM_USES_ONLY_WIN32_API
-  if( (((path[0] >= 'A') && (path[0] <= 'Z')) ||
-       ((path[0] >= 'a') && (path[0] <= 'z'))) &&
-      path[1] == ':' ) {
-    return true;
+#اگر U_PLATFORM_استعمال_کرتا_ONLY_WIN32_API
+  اگر( (((راستہ[0] >= 'A') && (راستہ[0] <= 'Z')) ||
+       ((راستہ[0] >= 'a') && (راستہ[0] <= 'z'))) &&
+      راستہ[1] == ':' ) {
+    واپس سچ;
   }
-#endif
+#اگر_ختم
 
-  return false;
+  واپس جھوٹ;
 }
 
 /* Backup setting of ICU_DATA_DIR_PREFIX_ENV_VAR
    (needed for some Darwin ICU build environments) */
-#if U_PLATFORM_IS_DARWIN_BASED && defined(TARGET_OS_SIMULATOR) && TARGET_OS_SIMULATOR
-# if !defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
-#  define ICU_DATA_DIR_PREFIX_ENV_VAR "IPHONE_SIMULATOR_ROOT"
+#اگر U_PLATFORM_IS_DARWIN_BASED && defined(ہدف_OS_SIMULATOR) && ہدف_OS_SIMULATOR
+# اگر !defined(ICU_ڈیٹا_DIR_سابقہ_ENV_VAR)
+#  define ICU_ڈیٹا_DIR_سابقہ_ENV_VAR "IPHONE_SIMULATOR_ROOT"
 # endif
-#endif
+#اگر_ختم
 
-#if defined(ICU_DATA_DIR_WINDOWS)
+#اگر defined(ICU_ڈیٹا_DIR_WINDOWS)
 // Helper function to get the ICU Data Directory under the Windows directory location.
-static BOOL U_CALLCONV getIcuDataDirectoryUnderWindowsDirectory(char* directoryBuffer, UINT bufferLength)
+ساکن BOOL U_CALLCONV get_Icu_ڈیٹا_Directory_Under_Windows_Directory(حرف* directory_بفر, UINT بفر_لمبائی)
 {
-    wchar_t windowsPath[MAX_PATH];
-    char windowsPathUtf8[MAX_PATH];
+    wchar_t windows_راستہ[MAX_راستہ];
+    حرف windows_راستہ_Utf8[MAX_راستہ];
 
-    UINT length = GetSystemWindowsDirectoryW(windowsPath, UPRV_LENGTHOF(windowsPath));
-    if ((length > 0) && (length < (UPRV_LENGTHOF(windowsPath) - 1))) {
+    UINT length = GetSystemWindowsDirectoryW(windows_راستہ, UPRV_LENGTHOF(windows_راستہ));
+    اگر ((length > 0) && (length < (UPRV_LENGTHOF(windows_راستہ) - 1))) {
         // Convert UTF-16 to a UTF-8 string.
-        UErrorCode status = U_ZERO_ERROR;
-        int32_t windowsPathUtf8Len = 0;
-        u_strToUTF8(windowsPathUtf8, static_cast<int32_t>(UPRV_LENGTHOF(windowsPathUtf8)),
-            &windowsPathUtf8Len, reinterpret_cast<const char16_t*>(windowsPath), -1, &status);
+        UError_رمز حالت_2 = U_ZERO_ERROR;
+        int32_t windows_راستہ_Utf8_Len = 0;
+        u_str_مقصد_UTF8(windows_راستہ_Utf8, static_cast<int32_t>(UPRV_LENGTHOF(windows_راستہ_Utf8)),
+            &windows_راستہ_Utf8_Len, reinterpret_cast<ثابت char16_t*>(windows_راستہ), -1, &حالت_2);
 
-        if (U_SUCCESS(status) && (status != U_STRING_NOT_TERMINATED_WARNING) &&
-            (windowsPathUtf8Len < (UPRV_LENGTHOF(windowsPathUtf8) - 1))) {
+        اگر (U_SUCCESS(حالت_2) && (حالت_2 != U_STRING_NOT_TERMINATED_WARNING) &&
+            (windows_راستہ_Utf8_Len < (UPRV_LENGTHOF(windows_راستہ_Utf8) - 1))) {
             // Ensure it always has a separator, so we can append the ICU data path.
-            if (windowsPathUtf8[windowsPathUtf8Len - 1] != U_FILE_SEP_CHAR) {
-                windowsPathUtf8[windowsPathUtf8Len++] = U_FILE_SEP_CHAR;
-                windowsPathUtf8[windowsPathUtf8Len] = '\0';
+            اگر (windows_راستہ_Utf8[windows_راستہ_Utf8_Len - 1] != U_FILE_SEP_CHAR) {
+                windows_راستہ_Utf8[windows_راستہ_Utf8_Len++] = U_FILE_SEP_CHAR;
+                windows_راستہ_Utf8[windows_راستہ_Utf8_Len] = '\0';
             }
             // Check if the concatenated string will fit.
-            if ((windowsPathUtf8Len + UPRV_LENGTHOF(ICU_DATA_DIR_WINDOWS)) < bufferLength) {
-                uprv_strcpy(directoryBuffer, windowsPathUtf8);
-                uprv_strcat(directoryBuffer, ICU_DATA_DIR_WINDOWS);
-                return true;
+            اگر ((windows_راستہ_Utf8_Len + UPRV_LENGTHOF(ICU_ڈیٹا_DIR_WINDOWS)) < بفر_لمبائی) {
+                uprv_strcpy(directory_بفر, windows_راستہ_Utf8);
+                uprv_strcat(directory_بفر, ICU_ڈیٹا_DIR_WINDOWS);
+                واپس سچ;
             }
         }
     }
 
-    return false;
+    واپس جھوٹ;
 }
-#endif
+#اگر_ختم
 
-static void U_CALLCONV dataDirectoryInitFn() {
+ساکن خالی U_CALLCONV ڈیٹا_Directory_Init_Fn() {
     /* If we already have the directory, then return immediately. Will happen if user called
      * u_setDataDirectory().
      */
-    if (gDataDirectory) {
-        return;
+    اگر (g_ڈیٹا_Directory) {
+        واپس;
     }
 
-    const char *path = nullptr;
+    ثابت حرف *راستہ = خالی_اشاریہ;
 
     /*
     When ICU_NO_USER_DATA_OVERRIDE is defined, users aren't allowed to
@@ -1462,10 +1462,10 @@ static void U_CALLCONV dataDirectoryInitFn() {
     There may also be some platforms where environment variables
     are not allowed.
     */
-#   if !defined(ICU_NO_USER_DATA_OVERRIDE) && !UCONFIG_NO_FILE_IO
+#   اگر !defined(ICU_NO_USER_ڈیٹا_OVERRIDE) && !UCONFIG_NO_FILE_IO
     /* First try to get the environment variable */
-#     if U_PLATFORM_HAS_WINUWP_API == 0  // Windows UWP does not support getenv
-        path=getenv("ICU_DATA");
+#     اگر U_PLATFORM_HAS_WINUWP_API == 0  // Windows UWP does not support getenv
+        راستہ=getenv("ICU_DATA");
 #     endif
 #   endif
 
@@ -1476,129 +1476,129 @@ static void U_CALLCONV dataDirectoryInitFn() {
      * directory of the data dat file. Users should use ICU_DATA_DIR if they want to
      * set their own path.
      */
-#if defined(ICU_DATA_DIR) || defined(U_ICU_DATA_DEFAULT_DIR)
-# if defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
-    char datadir_path_buffer[PATH_MAX];
+#اگر defined(ICU_ڈیٹا_DIR) || defined(U_ICU_ڈیٹا_DEFAULT_DIR)
+# اگر defined(ICU_ڈیٹا_DIR_سابقہ_ENV_VAR)
+    حرف datadir_راستہ_بفر[راستہ_MAX];
 # endif
-    if(path==nullptr || *path==0) {
-# if defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
-        const char *prefix = getenv(ICU_DATA_DIR_PREFIX_ENV_VAR);
+    اگر(راستہ==خالی_اشاریہ || *راستہ==0) {
+# اگر defined(ICU_ڈیٹا_DIR_سابقہ_ENV_VAR)
+        ثابت حرف *سابقہ = getenv(ICU_ڈیٹا_DIR_سابقہ_ENV_VAR);
 # endif
-# ifdef ICU_DATA_DIR
-        path=ICU_DATA_DIR;
-# else
-        path=U_ICU_DATA_DEFAULT_DIR;
+# ifdef ICU_ڈیٹا_DIR
+        راستہ=ICU_ڈیٹا_DIR;
+# ورنہ
+        راستہ=U_ICU_ڈیٹا_DEFAULT_DIR;
 # endif
-# if defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
-        if (prefix != nullptr) {
-            snprintf(datadir_path_buffer, sizeof(datadir_path_buffer), "%s%s", prefix, path);
-            path=datadir_path_buffer;
+# اگر defined(ICU_ڈیٹا_DIR_سابقہ_ENV_VAR)
+        اگر (سابقہ != خالی_اشاریہ) {
+            snprintf(datadir_راستہ_بفر, حجم(datadir_راستہ_بفر), "%s%s", سابقہ, راستہ);
+            راستہ=datadir_راستہ_بفر;
         }
 # endif
     }
-#endif
+#اگر_ختم
 
-#if defined(ICU_DATA_DIR_WINDOWS)
-    char datadir_path_buffer[MAX_PATH];
-    if (getIcuDataDirectoryUnderWindowsDirectory(datadir_path_buffer, UPRV_LENGTHOF(datadir_path_buffer))) {
-        path = datadir_path_buffer;
+#اگر defined(ICU_ڈیٹا_DIR_WINDOWS)
+    حرف datadir_راستہ_بفر[MAX_راستہ];
+    اگر (get_Icu_ڈیٹا_Directory_Under_Windows_Directory(datadir_راستہ_بفر, UPRV_LENGTHOF(datadir_راستہ_بفر))) {
+        راستہ = datadir_راستہ_بفر;
     }
-#endif
+#اگر_ختم
 
-    if(path==nullptr) {
+    اگر(راستہ==خالی_اشاریہ) {
         /* It looks really bad, set it to something. */
-        path = "";
+        راستہ = "";
     }
 
-    u_setDataDirectory(path);
+    u_سیٹ_ڈیٹا_Directory(راستہ);
 }
 
-U_CAPI const char * U_EXPORT2
-u_getDataDirectory() {
-    umtx_initOnce(gDataDirInitOnce, &dataDirectoryInitFn);
-    return gDataDirectory;
+U_CAPI ثابت حرف * U_EXPORT2
+u_get_ڈیٹا_Directory() {
+    umtx_initOnce(g_ڈیٹا_Dir_Init_Once, &ڈیٹا_Directory_Init_Fn);
+    واپس g_ڈیٹا_Directory;
 }
 
-static void setTimeZoneFilesDir(const char *path, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+ساکن خالی سیٹ_وقت_Zone_Files_Dir(ثابت حرف *راستہ, UError_رمز &حالت_2) {
+    اگر (U_FAILURE(حالت_2)) {
+        واپس;
     }
-    gTimeZoneFilesDirectory->clear();
-    gTimeZoneFilesDirectory->append(path, status);
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
-    char *p = gTimeZoneFilesDirectory->data();
-    while ((p = uprv_strchr(p, U_FILE_ALT_SEP_CHAR)) != nullptr) {
+    g_وقت_Zone_Files_Directory->clear();
+    g_وقت_Zone_Files_Directory->append(راستہ, حالت_2);
+#اگر (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
+    حرف *p = g_وقت_Zone_Files_Directory->ڈیٹا();
+    جب ((p = uprv_strchr(p, U_FILE_ALT_SEP_CHAR)) != خالی_اشاریہ) {
         *p = U_FILE_SEP_CHAR;
     }
-#endif
+#اگر_ختم
 }
 
-#define TO_STRING(x) TO_STRING_2(x)
-#define TO_STRING_2(x) #x
+#تعریف_کرو مقصد_STRING(x) مقصد_STRING_2(x)
+#تعریف_کرو مقصد_STRING_2(x) #x
 
-static void U_CALLCONV TimeZoneDataDirInitFn(UErrorCode &status) {
-    U_ASSERT(gTimeZoneFilesDirectory == nullptr);
-    ucln_common_registerCleanup(UCLN_COMMON_PUTIL, putil_cleanup);
-    gTimeZoneFilesDirectory = new CharString();
-    if (gTimeZoneFilesDirectory == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+ساکن خالی U_CALLCONV وقت_Zone_ڈیٹا_Dir_Init_Fn(UError_رمز &حالت_2) {
+    U_ASSERT(g_وقت_Zone_Files_Directory == خالی_اشاریہ);
+    ucln_common_رجسٹر_Cleanup(UCLN_COMMON_PUTIL, putil_cleanup);
+    g_وقت_Zone_Files_Directory = نیا CharString();
+    اگر (g_وقت_Zone_Files_Directory == خالی_اشاریہ) {
+        حالت_2 = U_حافظہ_تخصیص_ERROR;
+        واپس;
     }
 
-    const char *dir = "";
+    ثابت حرف *dir = "";
 
-#if defined(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR)
-    char timezonefilesdir_path_buffer[PATH_MAX];
-    const char *prefix = getenv(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR);
-#endif
+#اگر defined(ICU_TIMEZONE_FILES_DIR_سابقہ_ENV_VAR)
+    حرف timezonefilesdir_راستہ_بفر[راستہ_MAX];
+    ثابت حرف *سابقہ = getenv(ICU_TIMEZONE_FILES_DIR_سابقہ_ENV_VAR);
+#اگر_ختم
 
-#if U_PLATFORM_HAS_WINUWP_API == 1
+#اگر U_PLATFORM_HAS_WINUWP_API == 1
 // The UWP version does not support the environment variable setting.
 
-# if defined(ICU_DATA_DIR_WINDOWS)
+# اگر defined(ICU_ڈیٹا_DIR_WINDOWS)
     // When using the Windows system data, we can possibly pick up time zone data from the Windows directory.
-    char datadir_path_buffer[MAX_PATH];
-    if (getIcuDataDirectoryUnderWindowsDirectory(datadir_path_buffer, UPRV_LENGTHOF(datadir_path_buffer))) {
-        dir = datadir_path_buffer;
+    حرف datadir_راستہ_بفر[MAX_راستہ];
+    اگر (get_Icu_ڈیٹا_Directory_Under_Windows_Directory(datadir_راستہ_بفر, UPRV_LENGTHOF(datadir_راستہ_بفر))) {
+        dir = datadir_راستہ_بفر;
     }
 # endif
 
-#else
+#ورنہ
     dir = getenv("ICU_TIMEZONE_FILES_DIR");
-#endif // U_PLATFORM_HAS_WINUWP_API
+#اگر_ختم // U_PLATFORM_HAS_WINUWP_API
 
-#if defined(U_TIMEZONE_FILES_DIR)
-    if (dir == nullptr) {
+#اگر defined(U_TIMEZONE_FILES_DIR)
+    اگر (dir == خالی_اشاریہ) {
         // Build time configuration setting.
-        dir = TO_STRING(U_TIMEZONE_FILES_DIR);
+        dir = مقصد_STRING(U_TIMEZONE_FILES_DIR);
     }
-#endif
+#اگر_ختم
 
-    if (dir == nullptr) {
+    اگر (dir == خالی_اشاریہ) {
         dir = "";
     }
 
-#if defined(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR)
-    if (prefix != nullptr) {
-        snprintf(timezonefilesdir_path_buffer, sizeof(timezonefilesdir_path_buffer), "%s%s", prefix, dir);
-        dir = timezonefilesdir_path_buffer;
+#اگر defined(ICU_TIMEZONE_FILES_DIR_سابقہ_ENV_VAR)
+    اگر (سابقہ != خالی_اشاریہ) {
+        snprintf(timezonefilesdir_راستہ_بفر, حجم(timezonefilesdir_راستہ_بفر), "%s%s", سابقہ, dir);
+        dir = timezonefilesdir_راستہ_بفر;
     }
-#endif
+#اگر_ختم
 
-    setTimeZoneFilesDir(dir, status);
+    سیٹ_وقت_Zone_Files_Dir(dir, حالت_2);
 }
 
 
-U_CAPI const char * U_EXPORT2
-u_getTimeZoneFilesDirectory(UErrorCode *status) {
-    umtx_initOnce(gTimeZoneFilesInitOnce, &TimeZoneDataDirInitFn, *status);
-    return U_SUCCESS(*status) ? gTimeZoneFilesDirectory->data() : "";
+U_CAPI ثابت حرف * U_EXPORT2
+u_get_وقت_Zone_Files_Directory(UError_رمز *حالت_2) {
+    umtx_initOnce(g_وقت_Zone_Files_Init_Once, &وقت_Zone_ڈیٹا_Dir_Init_Fn, *حالت_2);
+    واپس U_SUCCESS(*حالت_2) ? g_وقت_Zone_Files_Directory->ڈیٹا() : "";
 }
 
-U_CAPI void U_EXPORT2
-u_setTimeZoneFilesDirectory(const char *path, UErrorCode *status) {
-    umtx_initOnce(gTimeZoneFilesInitOnce, &TimeZoneDataDirInitFn, *status);
-    setTimeZoneFilesDir(path, *status);
+U_CAPI خالی U_EXPORT2
+u_سیٹ_وقت_Zone_Files_Directory(ثابت حرف *راستہ, UError_رمز *حالت_2) {
+    umtx_initOnce(g_وقت_Zone_Files_Init_Once, &وقت_Zone_ڈیٹا_Dir_Init_Fn, *حالت_2);
+    سیٹ_وقت_Zone_Files_Dir(راستہ, *حالت_2);
 
     // Note: this function does some extra churn, first setting based on the
     //       environment, then immediately replacing with the value passed in.
@@ -1606,15 +1606,15 @@ u_setTimeZoneFilesDirectory(const char *path, UErrorCode *status) {
 }
 
 
-#if U_POSIX_LOCALE
+#اگر U_POSIX_LOCALE
 /* A helper function used by uprv_getPOSIXIDForDefaultLocale and
  * uprv_getPOSIXIDForDefaultCodepage. Returns the posix locale id for
  * LC_CTYPE and LC_MESSAGES. It doesn't support other locale categories.
  */
-static const char *uprv_getPOSIXIDForCategory(int category)
+ساکن ثابت حرف *uprv_getPOSIXIDForCategory(صحیح category)
 {
-    const char* posixID = nullptr;
-    if (category == LC_MESSAGES || category == LC_CTYPE) {
+    ثابت حرف* posixID = خالی_اشاریہ;
+    اگر (category == LC_MESSAGES || category == LC_CTYPE) {
         /*
         * On Solaris two different calls to setlocale can result in
         * different values. Only get this value once.
@@ -1633,8 +1633,8 @@ static const char *uprv_getPOSIXIDForCategory(int category)
         * Do not call setlocale(LC_*, "")! Using an empty string instead
         * of nullptr, will modify the libc behavior.
         */
-        posixID = setlocale(category, nullptr);
-        if ((posixID == nullptr)
+        posixID = setlocale(category, خالی_اشاریہ);
+        اگر ((posixID == خالی_اشاریہ)
             || (uprv_strcmp("C", posixID) == 0)
             || (uprv_strcmp("POSIX", posixID) == 0))
         {
@@ -1643,21 +1643,21 @@ static const char *uprv_getPOSIXIDForCategory(int category)
             /* Solaris speaks POSIX -  See IEEE Std 1003.1-2008
              * This is needed to properly handle empty env. variables
              */
-#if U_PLATFORM == U_PF_SOLARIS
-            if ((posixID == 0) || (posixID[0] == '\0')) {
+#اگر U_PLATFORM == U_PF_SOLARIS
+            اگر ((posixID == 0) || (posixID[0] == '\0')) {
                 posixID = getenv(category == LC_MESSAGES ? "LC_MESSAGES" : "LC_CTYPE");
-                if ((posixID == 0) || (posixID[0] == '\0')) {
-#else
-            if (posixID == nullptr) {
+                اگر ((posixID == 0) || (posixID[0] == '\0')) {
+#ورنہ
+            اگر (posixID == خالی_اشاریہ) {
                 posixID = getenv(category == LC_MESSAGES ? "LC_MESSAGES" : "LC_CTYPE");
-                if (posixID == nullptr) {
-#endif
+                اگر (posixID == خالی_اشاریہ) {
+#اگر_ختم
                     posixID = getenv("LANG");
                 }
             }
         }
     }
-    if ((posixID == nullptr)
+    اگر ((posixID == خالی_اشاریہ)
         || (uprv_strcmp("C", posixID) == 0)
         || (uprv_strcmp("POSIX", posixID) == 0))
     {
@@ -1668,41 +1668,41 @@ static const char *uprv_getPOSIXIDForCategory(int category)
         // Leave this mapping here for the uprv_getPOSIXIDForDefaultCodepage()
         // caller which expects to see "en_US_POSIX" in many branches.
     }
-    return posixID;
+    واپس posixID;
 }
 
 /* Return just the POSIX id for the default locale, whatever happens to be in
  * it. It gets the value from LC_MESSAGES and indirectly from LC_ALL and LANG.
  */
-static const char *uprv_getPOSIXIDForDefaultLocale()
+ساکن ثابت حرف *uprv_getPOSIXIDForDefaultLocale()
 {
-    static const char* posixID = nullptr;
-    if (posixID == nullptr) {
+    ساکن ثابت حرف* posixID = خالی_اشاریہ;
+    اگر (posixID == خالی_اشاریہ) {
         posixID = uprv_getPOSIXIDForCategory(LC_MESSAGES);
     }
-    return posixID;
+    واپس posixID;
 }
 
-#if !U_CHARSET_IS_UTF8
+#اگر !U_CHARSET_IS_UTF8
 /* Return just the POSIX id for the default codepage, whatever happens to be in
  * it. It gets the value from LC_CTYPE and indirectly from LC_ALL and LANG.
  */
-static const char *uprv_getPOSIXIDForDefaultCodepage()
+ساکن ثابت حرف *uprv_getPOSIXIDForDefaultCodepage()
 {
-    static const char* posixID = nullptr;
-    if (posixID == 0) {
+    ساکن ثابت حرف* posixID = خالی_اشاریہ;
+    اگر (posixID == 0) {
         posixID = uprv_getPOSIXIDForCategory(LC_CTYPE);
     }
-    return posixID;
+    واپس posixID;
 }
-#endif
-#endif
+#اگر_ختم
+#اگر_ختم
 
 /* NOTE: The caller should handle thread safety */
-U_CAPI const char* U_EXPORT2
+U_CAPI ثابت حرف* U_EXPORT2
 uprv_getDefaultLocaleID()
 {
-#if U_POSIX_LOCALE
+#اگر U_POSIX_LOCALE
 /*
   Note that:  (a '!' means the ID is improper somehow)
      LC_ALL  ---->     default_loc          codepage
@@ -1725,7 +1725,7 @@ The variant cannot have dots in it.
 The 'rightmost' variant (@xxx) wins.
 The leftmost codepage (.xxx) wins.
 */
-    const char* posixID = uprv_getPOSIXIDForDefaultLocale();
+    ثابت حرف* posixID = uprv_getPOSIXIDForDefaultLocale();
 
     /* Format: (no spaces)
     ll [ _CC ] [ . MM ] [ @ VV]
@@ -1733,27 +1733,27 @@ The leftmost codepage (.xxx) wins.
       l = lang, C = ctry, M = charmap, V = variant
     */
 
-    if (gCorrectedPOSIXLocale != nullptr) {
-        return gCorrectedPOSIXLocale;
+    اگر (gCorrectedPOSIXLocale != خالی_اشاریہ) {
+        واپس gCorrectedPOSIXLocale;
     }
 
     // Copy the ID into owned memory.
     // Over-allocate in case we replace "C" with "en_US_POSIX" (+10), + null termination
-    char *correctedPOSIXLocale = static_cast<char *>(uprv_malloc(uprv_strlen(posixID) + 10 + 1));
-    if (correctedPOSIXLocale == nullptr) {
-        return nullptr;
+    حرف *correctedPOSIXLocale = static_cast<حرف *>(uprv_malloc(uprv_strlen(posixID) + 10 + 1));
+    اگر (correctedPOSIXLocale == خالی_اشاریہ) {
+        واپس خالی_اشاریہ;
     }
     uprv_strcpy(correctedPOSIXLocale, posixID);
 
-    char *limit;
-    if ((limit = uprv_strchr(correctedPOSIXLocale, '.')) != nullptr) {
-        *limit = 0;
+    حرف *حد_بندی;
+    اگر ((حد_بندی = uprv_strchr(correctedPOSIXLocale, '.')) != خالی_اشاریہ) {
+        *حد_بندی = 0;
     }
-    if ((limit = uprv_strchr(correctedPOSIXLocale, '@')) != nullptr) {
-        *limit = 0;
+    اگر ((حد_بندی = uprv_strchr(correctedPOSIXLocale, '@')) != خالی_اشاریہ) {
+        *حد_بندی = 0;
     }
 
-    if ((uprv_strcmp("C", correctedPOSIXLocale) == 0) // no @ variant
+    اگر ((uprv_strcmp("C", correctedPOSIXLocale) == 0) // no @ variant
         || (uprv_strcmp("POSIX", correctedPOSIXLocale) == 0)) {
       // Raw input was C.* or POSIX.*, Give it a nice POSIX default value.
       // (The "C"/"POSIX" case is handled in uprv_getPOSIXIDForCategory())
@@ -1761,31 +1761,31 @@ The leftmost codepage (.xxx) wins.
     }
 
     /* Note that we scan the *uncorrected* ID. */
-    const char *p;
-    if ((p = uprv_strrchr(posixID, '@')) != nullptr) {
+    ثابت حرف *p;
+    اگر ((p = uprv_strrchr(posixID, '@')) != خالی_اشاریہ) {
         p++;
 
         /* Take care of any special cases here.. */
-        if (!uprv_strcmp(p, "nynorsk")) {
+        اگر (!uprv_strcmp(p, "nynorsk")) {
             p = "NY";
             /* Don't worry about no__NY. In practice, it won't appear. */
         }
 
-        if (uprv_strchr(correctedPOSIXLocale,'_') == nullptr) {
+        اگر (uprv_strchr(correctedPOSIXLocale,'_') == خالی_اشاریہ) {
             uprv_strcat(correctedPOSIXLocale, "__"); /* aa@b -> aa__b (note this can make the new locale 1 char longer) */
         }
-        else {
+        ورنہ {
             uprv_strcat(correctedPOSIXLocale, "_"); /* aa_CC@b -> aa_CC_b */
         }
 
-        const char *q;
-        if ((q = uprv_strchr(p, '.')) != nullptr) {
+        ثابت حرف *q;
+        اگر ((q = uprv_strchr(p, '.')) != خالی_اشاریہ) {
             /* How big will the resulting string be? */
             int32_t len = (int32_t)(uprv_strlen(correctedPOSIXLocale) + (q-p));
             uprv_strncat(correctedPOSIXLocale, p, q-p); // do not include charset
             correctedPOSIXLocale[len] = 0;
         }
-        else {
+        ورنہ {
             /* Anything following the @ sign */
             uprv_strcat(correctedPOSIXLocale, p);
         }
@@ -1797,59 +1797,59 @@ The leftmost codepage (.xxx) wins.
          */
     }
 
-    if (gCorrectedPOSIXLocale == nullptr) {
+    اگر (gCorrectedPOSIXLocale == خالی_اشاریہ) {
         gCorrectedPOSIXLocale = correctedPOSIXLocale;
-        gCorrectedPOSIXLocaleHeapAllocated = true;
-        ucln_common_registerCleanup(UCLN_COMMON_PUTIL, putil_cleanup);
-        correctedPOSIXLocale = nullptr;
+        g_Corrected_POSIXLocale_ڈھیر_Allocated = سچ;
+        ucln_common_رجسٹر_Cleanup(UCLN_COMMON_PUTIL, putil_cleanup);
+        correctedPOSIXLocale = خالی_اشاریہ;
     }
     posixID = gCorrectedPOSIXLocale;
 
-    if (correctedPOSIXLocale != nullptr) {  /* Was already set - clean up. */
+    اگر (correctedPOSIXLocale != خالی_اشاریہ) {  /* Was already set - clean up. */
         uprv_free(correctedPOSIXLocale);
     }
 
-    return posixID;
+    واپس posixID;
 
-#elif U_PLATFORM_USES_ONLY_WIN32_API
-#define POSIX_LOCALE_CAPACITY 64
-    UErrorCode status = U_ZERO_ERROR;
-    char *correctedPOSIXLocale = nullptr;
+#وگرنہ_اگر U_PLATFORM_استعمال_کرتا_ONLY_WIN32_API
+#تعریف_کرو POSIX_LOCALE_استعداد 64
+    UError_رمز حالت_2 = U_ZERO_ERROR;
+    حرف *correctedPOSIXLocale = خالی_اشاریہ;
 
     // If we have already figured this out just use the cached value
-    if (gCorrectedPOSIXLocale != nullptr) {
-        return gCorrectedPOSIXLocale;
+    اگر (gCorrectedPOSIXLocale != خالی_اشاریہ) {
+        واپس gCorrectedPOSIXLocale;
     }
 
     // No cached value, need to determine the current value
-    static WCHAR windowsLocale[LOCALE_NAME_MAX_LENGTH] = {};
-    int length = GetLocaleInfoEx(LOCALE_NAME_USER_DEFAULT, LOCALE_SNAME, windowsLocale, LOCALE_NAME_MAX_LENGTH);
+    ساکن WCHAR windowsLocale[LOCALE_NAME_MAX_لمبائی] = {};
+    صحیح length = GetLocaleInfoEx(LOCALE_NAME_USER_DEFAULT, LOCALE_SNAME, windowsLocale, LOCALE_NAME_MAX_لمبائی);
 
     // Now we should have a Windows locale name that needs converted to the POSIX style.
-    if (length > 0) // If length is 0, then the GetLocaleInfoEx failed.
+    اگر (length > 0) // If length is 0, then the GetLocaleInfoEx failed.
     {
         // First we need to go from UTF-16 to char (and also convert from _ to - while we're at it.)
-        char modifiedWindowsLocale[LOCALE_NAME_MAX_LENGTH] = {};
+        حرف modifiedWindowsLocale[LOCALE_NAME_MAX_لمبائی] = {};
 
         int32_t i;
-        for (i = 0; i < UPRV_LENGTHOF(modifiedWindowsLocale); i++)
+        برائے (i = 0; i < UPRV_LENGTHOF(modifiedWindowsLocale); i++)
         {
-            if (windowsLocale[i] == '_')
+            اگر (windowsLocale[i] == '_')
             {
                 modifiedWindowsLocale[i] = '-';
             }
-            else
+            ورنہ
             {
-                modifiedWindowsLocale[i] = static_cast<char>(windowsLocale[i]);
+                modifiedWindowsLocale[i] = static_cast<حرف>(windowsLocale[i]);
             }
 
-            if (modifiedWindowsLocale[i] == '\0')
+            اگر (modifiedWindowsLocale[i] == '\0')
             {
-                break;
+                توڑو;
             }
         }
 
-        if (i >= UPRV_LENGTHOF(modifiedWindowsLocale))
+        اگر (i >= UPRV_LENGTHOF(modifiedWindowsLocale))
         {
             // Ran out of room, can't really happen, maybe we'll be lucky about a matching
             // locale when tags are dropped
@@ -1857,19 +1857,19 @@ The leftmost codepage (.xxx) wins.
         }
 
         // Now normalize the resulting name
-        correctedPOSIXLocale = static_cast<char *>(uprv_malloc(POSIX_LOCALE_CAPACITY + 1));
+        correctedPOSIXLocale = static_cast<حرف *>(uprv_malloc(POSIX_LOCALE_استعداد + 1));
         /* TODO: Should we just exit on memory allocation failure? */
-        if (correctedPOSIXLocale)
+        اگر (correctedPOSIXLocale)
         {
-            int32_t posixLen = uloc_canonicalize(modifiedWindowsLocale, correctedPOSIXLocale, POSIX_LOCALE_CAPACITY, &status);
-            if (U_SUCCESS(status))
+            int32_t posixLen = uloc_canonicalize(modifiedWindowsLocale, correctedPOSIXLocale, POSIX_LOCALE_استعداد, &حالت_2);
+            اگر (U_SUCCESS(حالت_2))
             {
                 *(correctedPOSIXLocale + posixLen) = 0;
                 gCorrectedPOSIXLocale = correctedPOSIXLocale;
-                gCorrectedPOSIXLocaleHeapAllocated = true;
-                ucln_common_registerCleanup(UCLN_COMMON_PUTIL, putil_cleanup);
+                g_Corrected_POSIXLocale_ڈھیر_Allocated = سچ;
+                ucln_common_رجسٹر_Cleanup(UCLN_COMMON_PUTIL, putil_cleanup);
             }
-            else
+            ورنہ
             {
                 uprv_free(correctedPOSIXLocale);
             }
@@ -1877,27 +1877,27 @@ The leftmost codepage (.xxx) wins.
     }
 
     // If unable to find a locale we can agree upon, use en-US by default
-    if (gCorrectedPOSIXLocale == nullptr) {
+    اگر (gCorrectedPOSIXLocale == خالی_اشاریہ) {
         gCorrectedPOSIXLocale = "en_US";
     }
-    return gCorrectedPOSIXLocale;
+    واپس gCorrectedPOSIXLocale;
 
-#elif U_PLATFORM == U_PF_OS400
+#وگرنہ_اگر U_PLATFORM == U_PF_OS400
     /* locales are process scoped and are by definition thread safe */
-    static char correctedLocale[64];
-    const  char *localeID = getenv("LC_ALL");
-           char *p;
+    ساکن حرف correctedLocale[64];
+    ثابت  حرف *localeID = getenv("LC_ALL");
+           حرف *p;
 
-    if (localeID == nullptr)
+    اگر (localeID == خالی_اشاریہ)
         localeID = getenv("LANG");
-    if (localeID == nullptr)
-        localeID = setlocale(LC_ALL, nullptr);
+    اگر (localeID == خالی_اشاریہ)
+        localeID = setlocale(LC_ALL, خالی_اشاریہ);
     /* Make sure we have something... */
-    if (localeID == nullptr)
-        return "en_US_POSIX";
+    اگر (localeID == خالی_اشاریہ)
+        واپس "en_US_POSIX";
 
     /* Extract the locale name from the path. */
-    if((p = uprv_strrchr(localeID, '/')) != nullptr)
+    اگر((p = uprv_strrchr(localeID, '/')) != خالی_اشاریہ)
     {
         /* Increment p to start of locale name. */
         p++;
@@ -1908,12 +1908,12 @@ The leftmost codepage (.xxx) wins.
     uprv_strcpy(correctedLocale, localeID);
 
     /* Strip off the '.locale' extension. */
-    if((p = uprv_strchr(correctedLocale, '.')) != nullptr) {
+    اگر((p = uprv_strchr(correctedLocale, '.')) != خالی_اشاریہ) {
         *p = 0;
     }
 
     /* Upper case the locale name. */
-    T_CString_toUpperCase(correctedLocale);
+    T_CString_مقصد_بالائی_Case(correctedLocale);
 
     /* See if we are using the POSIX locale.  Any of the
     * following are equivalent and use the same QLGPGCMA
@@ -1922,25 +1922,25 @@ The leftmost codepage (.xxx) wins.
     * QLGPGCMA_4 means UTF-32
     * QLGPGCMA_8 means UTF-8
     */
-    if ((uprv_strcmp("C", correctedLocale) == 0) ||
+    اگر ((uprv_strcmp("C", correctedLocale) == 0) ||
         (uprv_strcmp("POSIX", correctedLocale) == 0) ||
         (uprv_strncmp("QLGPGCMA", correctedLocale, 8) == 0))
     {
         uprv_strcpy(correctedLocale, "en_US_POSIX");
     }
-    else
+    ورنہ
     {
         int16_t LocaleLen;
 
         /* Lower case the lang portion. */
-        for(p = correctedLocale; *p != 0 && *p != '_'; p++)
+        برائے(p = correctedLocale; *p != 0 && *p != '_'; p++)
         {
             *p = uprv_tolower(*p);
         }
 
         /* Adjust for Euro.  After '_E' add 'URO'. */
         LocaleLen = uprv_strlen(correctedLocale);
-        if (correctedLocale[LocaleLen - 2] == '_' &&
+        اگر (correctedLocale[LocaleLen - 2] == '_' &&
             correctedLocale[LocaleLen - 1] == 'E')
         {
             uprv_strcat(correctedLocale, "URO");
@@ -1949,7 +1949,7 @@ The leftmost codepage (.xxx) wins.
         /* If using Lotus-based locale then convert to
          * equivalent non Lotus.
          */
-        else if (correctedLocale[LocaleLen - 2] == '_' &&
+        ورنہ اگر (correctedLocale[LocaleLen - 2] == '_' &&
             correctedLocale[LocaleLen - 1] == 'L')
         {
             correctedLocale[LocaleLen - 2] = 0;
@@ -1958,27 +1958,27 @@ The leftmost codepage (.xxx) wins.
         /* There are separate simplified and traditional
          * locales called zh_HK_S and zh_HK_T.
          */
-        else if (uprv_strncmp(correctedLocale, "zh_HK", 5) == 0)
+        ورنہ اگر (uprv_strncmp(correctedLocale, "zh_HK", 5) == 0)
         {
             uprv_strcpy(correctedLocale, "zh_HK");
         }
 
         /* A special zh_CN_GBK locale...
         */
-        else if (uprv_strcmp(correctedLocale, "zh_CN_GBK") == 0)
+        ورنہ اگر (uprv_strcmp(correctedLocale, "zh_CN_GBK") == 0)
         {
             uprv_strcpy(correctedLocale, "zh_CN");
         }
 
     }
 
-    return correctedLocale;
-#endif
+    واپس correctedLocale;
+#اگر_ختم
 
 }
 
-#if !U_CHARSET_IS_UTF8
-#if U_POSIX_LOCALE
+#اگر !U_CHARSET_IS_UTF8
+#اگر U_POSIX_LOCALE
 /*
 Due to various platform differences, one platform may specify a charset,
 when they really mean a different charset. Remap the names so that they are
@@ -1986,53 +1986,53 @@ compatible with ICU. Only conflicting/ambiguous aliases should be resolved
 here. Before adding anything to this function, please consider adding unique
 names to the ICU alias table in the data directory.
 */
-static const char*
-remapPlatformDependentCodepage(const char *locale, const char *name) {
-    if (locale != nullptr && *locale == 0) {
+ساکن ثابت حرف*
+remapPlatformDependentCodepage(ثابت حرف *locale, ثابت حرف *name) {
+    اگر (locale != خالی_اشاریہ && *locale == 0) {
         /* Make sure that an empty locale is handled the same way. */
-        locale = nullptr;
+        locale = خالی_اشاریہ;
     }
-    if (name == nullptr) {
-        return nullptr;
+    اگر (name == خالی_اشاریہ) {
+        واپس خالی_اشاریہ;
     }
-#if U_PLATFORM == U_PF_AIX
-    if (uprv_strcmp(name, "IBM-943") == 0) {
+#اگر U_PLATFORM == U_PF_AIX
+    اگر (uprv_strcmp(name, "IBM-943") == 0) {
         /* Use the ASCII compatible ibm-943 */
         name = "Shift-JIS";
     }
-    else if (uprv_strcmp(name, "IBM-1252") == 0) {
+    ورنہ اگر (uprv_strcmp(name, "IBM-1252") == 0) {
         /* Use the windows-1252 that contains the Euro */
         name = "IBM-5348";
     }
-#elif U_PLATFORM == U_PF_SOLARIS
-    if (locale != nullptr && uprv_strcmp(name, "EUC") == 0) {
+#وگرنہ_اگر U_PLATFORM == U_PF_SOLARIS
+    اگر (locale != خالی_اشاریہ && uprv_strcmp(name, "EUC") == 0) {
         /* Solaris underspecifies the "EUC" name. */
-        if (uprv_strcmp(locale, "zh_CN") == 0) {
+        اگر (uprv_strcmp(locale, "zh_CN") == 0) {
             name = "EUC-CN";
         }
-        else if (uprv_strcmp(locale, "zh_TW") == 0) {
+        ورنہ اگر (uprv_strcmp(locale, "zh_TW") == 0) {
             name = "EUC-TW";
         }
-        else if (uprv_strcmp(locale, "ko_KR") == 0) {
+        ورنہ اگر (uprv_strcmp(locale, "ko_KR") == 0) {
             name = "EUC-KR";
         }
     }
-    else if (uprv_strcmp(name, "eucJP") == 0) {
+    ورنہ اگر (uprv_strcmp(name, "eucJP") == 0) {
         /*
         ibm-954 is the best match.
         ibm-33722 is the default for eucJP (similar to Windows).
         */
         name = "eucjis";
     }
-    else if (uprv_strcmp(name, "646") == 0) {
+    ورنہ اگر (uprv_strcmp(name, "646") == 0) {
         /*
          * The default codepage given by Solaris is 646 but the C library routines treat it as if it was
          * ISO-8859-1 instead of US-ASCII(646).
          */
         name = "ISO-8859-1";
     }
-#elif U_PLATFORM_IS_DARWIN_BASED
-    if (locale == nullptr && *name == 0) {
+#وگرنہ_اگر U_PLATFORM_IS_DARWIN_BASED
+    اگر (locale == خالی_اشاریہ && *name == 0) {
         /*
         No locale was specified, and an empty name was passed in.
         This usually indicates that nl_langinfo didn't return valid information.
@@ -2040,28 +2040,28 @@ remapPlatformDependentCodepage(const char *locale, const char *name) {
         */
         name = "UTF-8";
     }
-    else if (uprv_strcmp(name, "CP949") == 0) {
+    ورنہ اگر (uprv_strcmp(name, "CP949") == 0) {
         /* Remap CP949 to a similar codepage to avoid issues with backslash and won symbol. */
         name = "EUC-KR";
     }
-    else if (locale != nullptr && uprv_strcmp(locale, "en_US_POSIX") != 0 && uprv_strcmp(name, "US-ASCII") == 0) {
+    ورنہ اگر (locale != خالی_اشاریہ && uprv_strcmp(locale, "en_US_POSIX") != 0 && uprv_strcmp(name, "US-ASCII") == 0) {
         /*
          * For non C/POSIX locale, default the code page to UTF-8 instead of US-ASCII.
          */
         name = "UTF-8";
     }
-#elif U_PLATFORM == U_PF_BSD
-    if (uprv_strcmp(name, "CP949") == 0) {
+#وگرنہ_اگر U_PLATFORM == U_PF_BSD
+    اگر (uprv_strcmp(name, "CP949") == 0) {
         /* Remap CP949 to a similar codepage to avoid issues with backslash and won symbol. */
         name = "EUC-KR";
     }
-#elif U_PLATFORM == U_PF_HPUX
-    if (locale != nullptr && uprv_strcmp(locale, "zh_HK") == 0 && uprv_strcmp(name, "big5") == 0) {
+#وگرنہ_اگر U_PLATFORM == U_PF_HPUX
+    اگر (locale != خالی_اشاریہ && uprv_strcmp(locale, "zh_HK") == 0 && uprv_strcmp(name, "big5") == 0) {
         /* HP decided to extend big5 as hkbig5 even though it's not compatible :-( */
         /* zh_TW.big5 is not the same charset as zh_HK.big5! */
         name = "hkbig5";
     }
-    else if (uprv_strcmp(name, "eucJP") == 0) {
+    ورنہ اگر (uprv_strcmp(name, "eucJP") == 0) {
         /*
         ibm-1350 is the best match, but unavailable.
         ibm-954 is mostly a superset of ibm-1350.
@@ -2069,18 +2069,18 @@ remapPlatformDependentCodepage(const char *locale, const char *name) {
         */
         name = "eucjis";
     }
-#elif U_PLATFORM == U_PF_LINUX
-    if (locale != nullptr && uprv_strcmp(name, "euc") == 0) {
+#وگرنہ_اگر U_PLATFORM == U_PF_LINUX
+    اگر (locale != خالی_اشاریہ && uprv_strcmp(name, "euc") == 0) {
         /* Linux underspecifies the "EUC" name. */
-        if (uprv_strcmp(locale, "korean") == 0) {
+        اگر (uprv_strcmp(locale, "korean") == 0) {
             name = "EUC-KR";
         }
-        else if (uprv_strcmp(locale, "japanese") == 0) {
+        ورنہ اگر (uprv_strcmp(locale, "japanese") == 0) {
             /* See comment below about eucJP */
             name = "eucjis";
         }
     }
-    else if (uprv_strcmp(name, "eucjp") == 0) {
+    ورنہ اگر (uprv_strcmp(name, "eucjp") == 0) {
         /*
         ibm-1350 is the best match, but unavailable.
         ibm-954 is mostly a superset of ibm-1350.
@@ -2088,7 +2088,7 @@ remapPlatformDependentCodepage(const char *locale, const char *name) {
         */
         name = "eucjis";
     }
-    else if (locale != nullptr && uprv_strcmp(locale, "en_US_POSIX") != 0 &&
+    ورنہ اگر (locale != خالی_اشاریہ && uprv_strcmp(locale, "en_US_POSIX") != 0 &&
             (uprv_strcmp(name, "ANSI_X3.4-1968") == 0 || uprv_strcmp(name, "US-ASCII") == 0)) {
         /*
          * For non C/POSIX locale, default the code page to UTF-8 instead of US-ASCII.
@@ -2100,413 +2100,413 @@ remapPlatformDependentCodepage(const char *locale, const char *name) {
      * it by falling back to 'US-ASCII' when nullptr is returned from this
      * function. So, we don't have to worry about it here.
      */
-#endif
+#اگر_ختم
     /* return nullptr when "" is passed in */
-    if (*name == 0) {
-        name = nullptr;
+    اگر (*name == 0) {
+        name = خالی_اشاریہ;
     }
-    return name;
+    واپس name;
 }
 
-static const char*
-getCodepageFromPOSIXID(const char *localeName, char * buffer, int32_t buffCapacity)
+ساکن ثابت حرف*
+getCodepageFromPOSIXID(ثابت حرف *localeName, حرف * بفر, int32_t buff_استعداد)
 {
-    char localeBuf[100];
-    const char *name = nullptr;
-    char *variant = nullptr;
+    حرف localeBuf[100];
+    ثابت حرف *name = خالی_اشاریہ;
+    حرف *variant = خالی_اشاریہ;
 
-    if (localeName != nullptr && (name = (uprv_strchr(localeName, '.'))) != nullptr) {
-        size_t localeCapacity = uprv_min(sizeof(localeBuf), (name-localeName)+1);
-        uprv_strncpy(localeBuf, localeName, localeCapacity);
-        localeBuf[localeCapacity-1] = 0; /* ensure NUL termination */
-        name = uprv_strncpy(buffer, name+1, buffCapacity);
-        buffer[buffCapacity-1] = 0; /* ensure NUL termination */
-        if ((variant = const_cast<char *>(uprv_strchr(name, '@'))) != nullptr) {
+    اگر (localeName != خالی_اشاریہ && (name = (uprv_strchr(localeName, '.'))) != خالی_اشاریہ) {
+        size_t locale_استعداد = uprv_min(حجم(localeBuf), (name-localeName)+1);
+        uprv_strncpy(localeBuf, localeName, locale_استعداد);
+        localeBuf[locale_استعداد-1] = 0; /* ensure NUL termination */
+        name = uprv_strncpy(بفر, name+1, buff_استعداد);
+        بفر[buff_استعداد-1] = 0; /* ensure NUL termination */
+        اگر ((variant = const_cast<حرف *>(uprv_strchr(name, '@'))) != خالی_اشاریہ) {
             *variant = 0;
         }
         name = remapPlatformDependentCodepage(localeBuf, name);
     }
-    return name;
+    واپس name;
 }
-#endif
+#اگر_ختم
 
-static const char*
+ساکن ثابت حرف*
 int_getDefaultCodepage()
 {
-#if U_PLATFORM == U_PF_OS400
+#اگر U_PLATFORM == U_PF_OS400
     uint32_t ccsid = 37; /* Default to ibm-37 */
-    static char codepage[64];
+    ساکن حرف codepage[64];
     Qwc_JOBI0400_t jobinfo;
-    Qus_EC_t error = { sizeof(Qus_EC_t) }; /* SPI error code */
+    Qus_EC_t error = { حجم(Qus_EC_t) }; /* SPI error code */
 
-    EPT_CALL(QUSRJOBI)(&jobinfo, sizeof(jobinfo), "JOBI0400",
+    EPT_CALL(QUSRJOBI)(&jobinfo, حجم(jobinfo), "JOBI0400",
         "*                         ", "                ", &error);
 
-    if (error.Bytes_Available == 0) {
-        if (jobinfo.Coded_Char_Set_ID != 0xFFFF) {
-            ccsid = (uint32_t)jobinfo.Coded_Char_Set_ID;
+    اگر (error.بائٹیں_دستیاب == 0) {
+        اگر (jobinfo.Coded_Char_سیٹ_ID != 0xFFFF) {
+            ccsid = (uint32_t)jobinfo.Coded_Char_سیٹ_ID;
         }
-        else if (jobinfo.Default_Coded_Char_Set_Id != 0xFFFF) {
-            ccsid = (uint32_t)jobinfo.Default_Coded_Char_Set_Id;
+        ورنہ اگر (jobinfo.Default_Coded_Char_سیٹ_Id != 0xFFFF) {
+            ccsid = (uint32_t)jobinfo.Default_Coded_Char_سیٹ_Id;
         }
         /* else use the default */
     }
-    snprintf(codepage, sizeof(codepage), "ibm-%d", ccsid);
-    return codepage;
+    snprintf(codepage, حجم(codepage), "ibm-%d", ccsid);
+    واپس codepage;
 
-#elif U_PLATFORM == U_PF_OS390
-    static char codepage[64];
+#وگرنہ_اگر U_PLATFORM == U_PF_OS390
+    ساکن حرف codepage[64];
 
-    strncpy(codepage, nl_langinfo(CODESET),63-strlen(UCNV_SWAP_LFNL_OPTION_STRING));
-    strcat(codepage,UCNV_SWAP_LFNL_OPTION_STRING);
+    strncpy(codepage, nl_langinfo(CODESET),63-لڑی_لمبائی(UCNV_تبادلہ_LFNL_OPTION_STRING));
+    strcat(codepage,UCNV_تبادلہ_LFNL_OPTION_STRING);
     codepage[63] = 0; /* NUL terminate */
 
-    return codepage;
+    واپس codepage;
 
-#elif U_PLATFORM_USES_ONLY_WIN32_API
-    static char codepage[64];
-    DWORD codepageNumber = 0;
+#وگرنہ_اگر U_PLATFORM_استعمال_کرتا_ONLY_WIN32_API
+    ساکن حرف codepage[64];
+    DWORD codepage_نمبر = 0;
 
-#if U_PLATFORM_HAS_WINUWP_API == 1
+#اگر U_PLATFORM_HAS_WINUWP_API == 1
     // UWP doesn't have a direct API to get the default ACP as Microsoft would rather
     // have folks use Unicode than a "system" code page, however this is the same
     // codepage as the system default locale codepage.  (FWIW, the system locale is
     // ONLY used for codepage, it should never be used for anything else)
-    GetLocaleInfoEx(LOCALE_NAME_SYSTEM_DEFAULT, LOCALE_IDEFAULTANSICODEPAGE | LOCALE_RETURN_NUMBER,
-        (LPWSTR)&codepageNumber, sizeof(codepageNumber) / sizeof(WCHAR));
-#else
+    GetLocaleInfoEx(LOCALE_NAME_SYSTEM_DEFAULT, LOCALE_IDEFAULTANSICODEPAGE | LOCALE_RETURN_نمبر,
+        (LPWSTR)&codepage_نمبر, حجم(codepage_نمبر) / حجم(WCHAR));
+#ورنہ
     // Win32 apps can call GetACP
-    codepageNumber = GetACP();
-#endif
+    codepage_نمبر = GetACP();
+#اگر_ختم
     // Special case for UTF-8
-    if (codepageNumber == 65001)
+    اگر (codepage_نمبر == 65001)
     {
-        return "UTF-8";
+        واپس "UTF-8";
     }
     // Windows codepages can look like windows-1252, so format the found number
     // the numbers are eclectic, however all valid system code pages, besides UTF-8
     // are between 3 and 19999
-    if (codepageNumber > 0 && codepageNumber < 20000)
+    اگر (codepage_نمبر > 0 && codepage_نمبر < 20000)
     {
-        snprintf(codepage, sizeof(codepage), "windows-%ld", codepageNumber);
-        return codepage;
+        snprintf(codepage, حجم(codepage), "windows-%ld", codepage_نمبر);
+        واپس codepage;
     }
     // If the codepage number call failed then return UTF-8
-    return "UTF-8";
+    واپس "UTF-8";
 
-#elif U_POSIX_LOCALE
-    static char codesetName[100];
-    const char *localeName = nullptr;
-    const char *name = nullptr;
+#وگرنہ_اگر U_POSIX_LOCALE
+    ساکن حرف codesetName[100];
+    ثابت حرف *localeName = خالی_اشاریہ;
+    ثابت حرف *name = خالی_اشاریہ;
 
     localeName = uprv_getPOSIXIDForDefaultCodepage();
-    uprv_memset(codesetName, 0, sizeof(codesetName));
+    uprv_memset(codesetName, 0, حجم(codesetName));
     /* On Solaris nl_langinfo returns C locale values unless setlocale
      * was called earlier.
      */
-#if (U_HAVE_NL_LANGINFO_CODESET && U_PLATFORM != U_PF_SOLARIS)
+#اگر (U_HAVE_NL_LANGINFO_CODESET && U_PLATFORM != U_PF_SOLARIS)
     /* When available, check nl_langinfo first because it usually gives more
        useful names. It depends on LC_CTYPE.
        nl_langinfo may use the same buffer as setlocale. */
     {
-        const char *codeset = nl_langinfo(U_NL_LANGINFO_CODESET);
-#if U_PLATFORM_IS_DARWIN_BASED || U_PLATFORM_IS_LINUX_BASED
+        ثابت حرف *codeset = nl_langinfo(U_NL_LANGINFO_CODESET);
+#اگر U_PLATFORM_IS_DARWIN_BASED || U_PLATFORM_IS_LINUX_BASED
         /*
          * On Linux and MacOSX, ensure that default codepage for non C/POSIX locale is UTF-8
          * instead of ASCII.
          */
-        if (uprv_strcmp(localeName, "en_US_POSIX") != 0) {
+        اگر (uprv_strcmp(localeName, "en_US_POSIX") != 0) {
             codeset = remapPlatformDependentCodepage(localeName, codeset);
-        } else
-#endif
+        } ورنہ
+#اگر_ختم
         {
-            codeset = remapPlatformDependentCodepage(nullptr, codeset);
+            codeset = remapPlatformDependentCodepage(خالی_اشاریہ, codeset);
         }
 
-        if (codeset != nullptr) {
-            uprv_strncpy(codesetName, codeset, sizeof(codesetName));
-            codesetName[sizeof(codesetName)-1] = 0;
-            return codesetName;
+        اگر (codeset != خالی_اشاریہ) {
+            uprv_strncpy(codesetName, codeset, حجم(codesetName));
+            codesetName[حجم(codesetName)-1] = 0;
+            واپس codesetName;
         }
     }
-#endif
+#اگر_ختم
 
     /* Use setlocale in a nice way, and then check some environment variables.
        Maybe the application used setlocale already.
     */
-    uprv_memset(codesetName, 0, sizeof(codesetName));
-    name = getCodepageFromPOSIXID(localeName, codesetName, sizeof(codesetName));
-    if (name) {
+    uprv_memset(codesetName, 0, حجم(codesetName));
+    name = getCodepageFromPOSIXID(localeName, codesetName, حجم(codesetName));
+    اگر (name) {
         /* if we can find the codeset name from setlocale, return that. */
-        return name;
+        واپس name;
     }
 
-    if (*codesetName == 0)
+    اگر (*codesetName == 0)
     {
         /* Everything failed. Return US ASCII (ISO 646). */
-        (void)uprv_strcpy(codesetName, "US-ASCII");
+        (خالی)uprv_strcpy(codesetName, "US-ASCII");
     }
-    return codesetName;
-#else
-    return "US-ASCII";
-#endif
+    واپس codesetName;
+#ورنہ
+    واپس "US-ASCII";
+#اگر_ختم
 }
 
 
-U_CAPI const char*  U_EXPORT2
+U_CAPI ثابت حرف*  U_EXPORT2
 uprv_getDefaultCodepage()
 {
-    static char const  *name = nullptr;
-    umtx_lock(nullptr);
-    if (name == nullptr) {
+    ساکن حرف ثابت  *name = خالی_اشاریہ;
+    umtx_تالا(خالی_اشاریہ);
+    اگر (name == خالی_اشاریہ) {
         name = int_getDefaultCodepage();
     }
-    umtx_unlock(nullptr);
-    return name;
+    umtx_unlock(خالی_اشاریہ);
+    واپس name;
 }
-#endif  /* !U_CHARSET_IS_UTF8 */
+#اگر_ختم  /* !U_CHARSET_IS_UTF8 */
 
 
 /* end of platform-specific implementation -------------- */
 
 /* version handling --------------------------------------------------------- */
 
-U_CAPI void U_EXPORT2
-u_versionFromString(UVersionInfo versionArray, const char *versionString) {
-    char *end;
+U_CAPI خالی U_EXPORT2
+u_نسخہ_From_String(UVersionInfo نسخہ_Array, ثابت حرف *نسخہ_String) {
+    حرف *انتہا;
     uint16_t part=0;
 
-    if(versionArray==nullptr) {
-        return;
+    اگر(نسخہ_Array==خالی_اشاریہ) {
+        واپس;
     }
 
-    if(versionString!=nullptr) {
-        for(;;) {
-            versionArray[part]=(uint8_t)uprv_strtoul(versionString, &end, 10);
-            if(end==versionString || ++part==U_MAX_VERSION_LENGTH || *end!=U_VERSION_DELIMITER) {
-                break;
+    اگر(نسخہ_String!=خالی_اشاریہ) {
+        برائے(;;) {
+            نسخہ_Array[part]=(uint8_t)uprv_strtoul(نسخہ_String, &انتہا, 10);
+            اگر(انتہا==نسخہ_String || ++part==U_MAX_نسخہ_لمبائی || *انتہا!=U_نسخہ_DELIMITER) {
+                توڑو;
             }
-            versionString=end+1;
+            نسخہ_String=انتہا+1;
         }
     }
 
-    while(part<U_MAX_VERSION_LENGTH) {
-        versionArray[part++]=0;
+    جب(part<U_MAX_نسخہ_لمبائی) {
+        نسخہ_Array[part++]=0;
     }
 }
 
-U_CAPI void U_EXPORT2
-u_versionFromUString(UVersionInfo versionArray, const char16_t *versionString) {
-    if(versionArray!=nullptr && versionString!=nullptr) {
-        char versionChars[U_MAX_VERSION_STRING_LENGTH+1];
-        int32_t len = u_strlen(versionString);
-        if(len>U_MAX_VERSION_STRING_LENGTH) {
-            len = U_MAX_VERSION_STRING_LENGTH;
+U_CAPI خالی U_EXPORT2
+u_نسخہ_From_UString(UVersionInfo نسخہ_Array, ثابت char16_t *نسخہ_String) {
+    اگر(نسخہ_Array!=خالی_اشاریہ && نسخہ_String!=خالی_اشاریہ) {
+        حرف نسخہ_Chars[U_MAX_نسخہ_STRING_لمبائی+1];
+        int32_t len = u_strlen(نسخہ_String);
+        اگر(len>U_MAX_نسخہ_STRING_لمبائی) {
+            len = U_MAX_نسخہ_STRING_لمبائی;
         }
-        u_UCharsToChars(versionString, versionChars, len);
-        versionChars[len]=0;
-        u_versionFromString(versionArray, versionChars);
+        u_UChars_مقصد_Chars(نسخہ_String, نسخہ_Chars, len);
+        نسخہ_Chars[len]=0;
+        u_نسخہ_From_String(نسخہ_Array, نسخہ_Chars);
     }
 }
 
-U_CAPI void U_EXPORT2
-u_versionToString(const UVersionInfo versionArray, char *versionString) {
+U_CAPI خالی U_EXPORT2
+u_نسخہ_مقصد_String(ثابت UVersionInfo نسخہ_Array, حرف *نسخہ_String) {
     uint16_t count, part;
-    uint8_t field;
+    uint8_t میدان_2;
 
-    if(versionString==nullptr) {
-        return;
+    اگر(نسخہ_String==خالی_اشاریہ) {
+        واپس;
     }
 
-    if(versionArray==nullptr) {
-        versionString[0]=0;
-        return;
+    اگر(نسخہ_Array==خالی_اشاریہ) {
+        نسخہ_String[0]=0;
+        واپس;
     }
 
     /* count how many fields need to be written */
-    for(count=4; count>0 && versionArray[count-1]==0; --count) {
+    برائے(count=4; count>0 && نسخہ_Array[count-1]==0; --count) {
     }
 
-    if(count <= 1) {
+    اگر(count <= 1) {
         count = 2;
     }
 
     /* write the first part */
     /* write the decimal field value */
-    field=versionArray[0];
-    if(field>=100) {
-        *versionString++=(char)('0'+field/100);
-        field%=100;
+    میدان_2=نسخہ_Array[0];
+    اگر(میدان_2>=100) {
+        *نسخہ_String++=(حرف)('0'+میدان_2/100);
+        میدان_2%=100;
     }
-    if(field>=10) {
-        *versionString++=(char)('0'+field/10);
-        field%=10;
+    اگر(میدان_2>=10) {
+        *نسخہ_String++=(حرف)('0'+میدان_2/10);
+        میدان_2%=10;
     }
-    *versionString++=(char)('0'+field);
+    *نسخہ_String++=(حرف)('0'+میدان_2);
 
     /* write the following parts */
-    for(part=1; part<count; ++part) {
+    برائے(part=1; part<count; ++part) {
         /* write a dot first */
-        *versionString++=U_VERSION_DELIMITER;
+        *نسخہ_String++=U_نسخہ_DELIMITER;
 
         /* write the decimal field value */
-        field=versionArray[part];
-        if(field>=100) {
-            *versionString++=(char)('0'+field/100);
-            field%=100;
+        میدان_2=نسخہ_Array[part];
+        اگر(میدان_2>=100) {
+            *نسخہ_String++=(حرف)('0'+میدان_2/100);
+            میدان_2%=100;
         }
-        if(field>=10) {
-            *versionString++=(char)('0'+field/10);
-            field%=10;
+        اگر(میدان_2>=10) {
+            *نسخہ_String++=(حرف)('0'+میدان_2/10);
+            میدان_2%=10;
         }
-        *versionString++=(char)('0'+field);
+        *نسخہ_String++=(حرف)('0'+میدان_2);
     }
 
     /* NUL-terminate */
-    *versionString=0;
+    *نسخہ_String=0;
 }
 
-U_CAPI void U_EXPORT2
-u_getVersion(UVersionInfo versionArray) {
-    (void)copyright;   // Suppress unused variable warning from clang.
-    u_versionFromString(versionArray, U_ICU_VERSION);
+U_CAPI خالی U_EXPORT2
+u_get_نسخہ(UVersionInfo نسخہ_Array) {
+    (خالی)copyright;   // Suppress unused variable warning from clang.
+    u_نسخہ_From_String(نسخہ_Array, U_ICU_نسخہ);
 }
 
 /**
  * icucfg.h dependent code
  */
 
-#if U_ENABLE_DYLOAD && HAVE_DLOPEN && !U_PLATFORM_USES_ONLY_WIN32_API
+#اگر U_ENABLE_DYLOAD && HAVE_DLOPEN && !U_PLATFORM_استعمال_کرتا_ONLY_WIN32_API
 
-#if HAVE_DLFCN_H
-#ifdef __MVS__
-#ifndef __SUSV3
-#define __SUSV3 1
-#endif
-#endif
-#include <dlfcn.h>
-#endif /* HAVE_DLFCN_H */
+#اگر HAVE_DLFCN_H
+#اگر_تعریف_شدہ __MVS__
+#اگر_غیر_تعریف_شدہ __SUSV3
+#تعریف_کرو __SUSV3 1
+#اگر_ختم
+#اگر_ختم
+#شامل <dlfcn.h>
+#اگر_ختم /* HAVE_DLFCN_H */
 
-U_CAPI void * U_EXPORT2
-uprv_dl_open(const char *libName, UErrorCode *status) {
-  void *ret = nullptr;
-  if(U_FAILURE(*status)) return ret;
+U_CAPI خالی * U_EXPORT2
+uprv_dl_open(ثابت حرف *libName, UError_رمز *حالت_2) {
+  خالی *ret = خالی_اشاریہ;
+  اگر(U_FAILURE(*حالت_2)) واپس ret;
   ret =  dlopen(libName, RTLD_NOW|RTLD_GLOBAL);
-  if(ret==nullptr) {
-#ifdef U_TRACE_DYLOAD
-    printf("dlerror on dlopen(%s): %s\n", libName, dlerror());
-#endif
-    *status = U_MISSING_RESOURCE_ERROR;
+  اگر(ret==خالی_اشاریہ) {
+#اگر_تعریف_شدہ U_TRACE_DYLOAD
+    لکھو("dlerror on dlopen(%s): %s\n", libName, dlerror());
+#اگر_ختم
+    *حالت_2 = U_MISSING_RESOURCE_ERROR;
   }
-  return ret;
+  واپس ret;
 }
 
-U_CAPI void U_EXPORT2
-uprv_dl_close(void *lib, UErrorCode *status) {
-  if(U_FAILURE(*status)) return;
+U_CAPI خالی U_EXPORT2
+uprv_dl_close(خالی *lib, UError_رمز *حالت_2) {
+  اگر(U_FAILURE(*حالت_2)) واپس;
   dlclose(lib);
 }
 
 U_CAPI UVoidFunction* U_EXPORT2
-uprv_dlsym_func(void *lib, const char* sym, UErrorCode *status) {
-  union {
+uprv_dlsym_func(خالی *lib, ثابت حرف* sym, UError_رمز *حالت_2) {
+  اتحاد {
       UVoidFunction *fp;
-      void *vp;
+      خالی *vp;
   } uret;
-  uret.fp = nullptr;
-  if(U_FAILURE(*status)) return uret.fp;
+  uret.fp = خالی_اشاریہ;
+  اگر(U_FAILURE(*حالت_2)) واپس uret.fp;
   uret.vp = dlsym(lib, sym);
-  if(uret.vp == nullptr) {
-#ifdef U_TRACE_DYLOAD
-    printf("dlerror on dlsym(%p,%s): %s\n", lib,sym, dlerror());
-#endif
-    *status = U_MISSING_RESOURCE_ERROR;
+  اگر(uret.vp == خالی_اشاریہ) {
+#اگر_تعریف_شدہ U_TRACE_DYLOAD
+    لکھو("dlerror on dlsym(%p,%s): %s\n", lib,sym, dlerror());
+#اگر_ختم
+    *حالت_2 = U_MISSING_RESOURCE_ERROR;
   }
-  return uret.fp;
+  واپس uret.fp;
 }
 
-#elif U_ENABLE_DYLOAD && U_PLATFORM_USES_ONLY_WIN32_API && !U_PLATFORM_HAS_WINUWP_API
+#وگرنہ_اگر U_ENABLE_DYLOAD && U_PLATFORM_استعمال_کرتا_ONLY_WIN32_API && !U_PLATFORM_HAS_WINUWP_API
 
 /* Windows API implementation. */
 // Note: UWP does not expose/allow these APIs, so the UWP version gets the null implementation. */
 
-U_CAPI void * U_EXPORT2
-uprv_dl_open(const char *libName, UErrorCode *status) {
-  HMODULE lib = nullptr;
+U_CAPI خالی * U_EXPORT2
+uprv_dl_open(ثابت حرف *libName, UError_رمز *حالت_2) {
+  HMODULE lib = خالی_اشاریہ;
 
-  if(U_FAILURE(*status)) return nullptr;
+  اگر(U_FAILURE(*حالت_2)) واپس خالی_اشاریہ;
 
-  lib = LoadLibraryA(libName);
+  lib = بھرو_Library_A(libName);
 
-  if(lib==nullptr) {
-    *status = U_MISSING_RESOURCE_ERROR;
+  اگر(lib==خالی_اشاریہ) {
+    *حالت_2 = U_MISSING_RESOURCE_ERROR;
   }
 
-  return (void*)lib;
+  واپس (خالی*)lib;
 }
 
-U_CAPI void U_EXPORT2
-uprv_dl_close(void *lib, UErrorCode *status) {
+U_CAPI خالی U_EXPORT2
+uprv_dl_close(خالی *lib, UError_رمز *حالت_2) {
   HMODULE handle = (HMODULE)lib;
-  if(U_FAILURE(*status)) return;
+  اگر(U_FAILURE(*حالت_2)) واپس;
 
   FreeLibrary(handle);
 
-  return;
+  واپس;
 }
 
 U_CAPI UVoidFunction* U_EXPORT2
-uprv_dlsym_func(void *lib, const char* sym, UErrorCode *status) {
+uprv_dlsym_func(خالی *lib, ثابت حرف* sym, UError_رمز *حالت_2) {
   HMODULE handle = (HMODULE)lib;
-  UVoidFunction* addr = nullptr;
+  UVoidFunction* addr = خالی_اشاریہ;
 
-  if(U_FAILURE(*status) || lib==nullptr) return nullptr;
+  اگر(U_FAILURE(*حالت_2) || lib==خالی_اشاریہ) واپس خالی_اشاریہ;
 
-  addr = (UVoidFunction*)GetProcAddress(handle, sym);
+  addr = (UVoidFunction*)Get_Proc_پتہ(handle, sym);
 
-  if(addr==nullptr) {
-    DWORD lastError = GetLastError();
-    if(lastError == ERROR_PROC_NOT_FOUND) {
-      *status = U_MISSING_RESOURCE_ERROR;
-    } else {
-      *status = U_UNSUPPORTED_ERROR; /* other unknown error. */
+  اگر(addr==خالی_اشاریہ) {
+    DWORD آخری_Error = Get_آخری_Error();
+    اگر(آخری_Error == ERROR_PROC_NOT_ملا) {
+      *حالت_2 = U_MISSING_RESOURCE_ERROR;
+    } ورنہ {
+      *حالت_2 = U_UNSUPPORTED_ERROR; /* other unknown error. */
     }
   }
 
-  return addr;
+  واپس addr;
 }
 
-#else
+#ورنہ
 
 /* No dynamic loading, null (nonexistent) implementation. */
 
-U_CAPI void * U_EXPORT2
-uprv_dl_open(const char *libName, UErrorCode *status) {
-    (void)libName;
-    if(U_FAILURE(*status)) return nullptr;
-    *status = U_UNSUPPORTED_ERROR;
-    return nullptr;
+U_CAPI خالی * U_EXPORT2
+uprv_dl_open(ثابت حرف *libName, UError_رمز *حالت_2) {
+    (خالی)libName;
+    اگر(U_FAILURE(*حالت_2)) واپس خالی_اشاریہ;
+    *حالت_2 = U_UNSUPPORTED_ERROR;
+    واپس خالی_اشاریہ;
 }
 
-U_CAPI void U_EXPORT2
-uprv_dl_close(void *lib, UErrorCode *status) {
-    (void)lib;
-    if(U_FAILURE(*status)) return;
-    *status = U_UNSUPPORTED_ERROR;
-    return;
+U_CAPI خالی U_EXPORT2
+uprv_dl_close(خالی *lib, UError_رمز *حالت_2) {
+    (خالی)lib;
+    اگر(U_FAILURE(*حالت_2)) واپس;
+    *حالت_2 = U_UNSUPPORTED_ERROR;
+    واپس;
 }
 
 U_CAPI UVoidFunction* U_EXPORT2
-uprv_dlsym_func(void *lib, const char* sym, UErrorCode *status) {
-  (void)lib;
-  (void)sym;
-  if(U_SUCCESS(*status)) {
-    *status = U_UNSUPPORTED_ERROR;
+uprv_dlsym_func(خالی *lib, ثابت حرف* sym, UError_رمز *حالت_2) {
+  (خالی)lib;
+  (خالی)sym;
+  اگر(U_SUCCESS(*حالت_2)) {
+    *حالت_2 = U_UNSUPPORTED_ERROR;
   }
-  return (UVoidFunction*)nullptr;
+  واپس (UVoidFunction*)خالی_اشاریہ;
 }
 
-#endif
+#اگر_ختم
 
 /*
  * Hey, Emacs, please set the following:

@@ -18,17 +18,17 @@
  *   Arabic letter shaping implemented by Ayman Roshdy
  */
 
-#include "unicode/utypes.h"
-#include "unicode/uchar.h"
-#include "unicode/ustring.h"
-#include "unicode/ushape.h"
-#include "cmemory.h"
-#include "putilimp.h"
-#include "ustr_imp.h"
-#include "ubidi_props.h"
-#include "uassert.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/uchar.h"
+#شامل "unicode/ustring.h"
+#شامل "unicode/ushape.h"
+#شامل "cmemory.h"
+#شامل "putilimp.h"
+#شامل "ustr_imp.h"
+#شامل "ubidi_props.h"
+#شامل "uassert.h"
 
-#include <limits>
+#شامل <limits>
 /*
  * This implementation is designed for 16-bit Unicode strings.
  * The main assumption is that the Arabic characters and their
@@ -50,44 +50,44 @@
 
 /* definitions for Arabic letter shaping ------------------------------------ */
 
-#define IRRELEVANT 4
-#define LAMTYPE    16
-#define ALEFTYPE   32
-#define LINKR      1
-#define LINKL      2
-#define APRESENT   8
-#define SHADDA     64
-#define CSHADDA    128
-#define COMBINE    (SHADDA+CSHADDA)
+#تعریف_کرو IRRELEVANT 4
+#تعریف_کرو LAMTYPE    16
+#تعریف_کرو ALEFTYPE   32
+#تعریف_کرو LINKR      1
+#تعریف_کرو LINKL      2
+#تعریف_کرو APRESENT   8
+#تعریف_کرو SHADDA     64
+#تعریف_کرو CSHADDA    128
+#تعریف_کرو COMBINE    (SHADDA+CSHADDA)
 
-#define HAMZAFE_CHAR       0xfe80
-#define HAMZA06_CHAR       0x0621
-#define YEH_HAMZA_CHAR     0x0626
-#define YEH_HAMZAFE_CHAR   0xFE89
-#define LAMALEF_SPACE_SUB  0xFFFF
-#define TASHKEEL_SPACE_SUB 0xFFFE
-#define NEW_TAIL_CHAR      0xFE73
-#define OLD_TAIL_CHAR      0x200B
-#define LAM_CHAR           0x0644
-#define SPACE_CHAR         0x0020
-#define SHADDA_CHAR        0xFE7C
-#define TATWEEL_CHAR       0x0640
-#define SHADDA_TATWEEL_CHAR  0xFE7D
-#define SHADDA06_CHAR      0x0651
+#تعریف_کرو HAMZAFE_CHAR       0xfe80
+#تعریف_کرو HAMZA06_CHAR       0x0621
+#تعریف_کرو YEH_HAMZA_CHAR     0x0626
+#تعریف_کرو YEH_HAMZAFE_CHAR   0xFE89
+#تعریف_کرو LAMALEF_SPACE_SUB  0xFFFF
+#تعریف_کرو TASHKEEL_SPACE_SUB 0xFFFE
+#تعریف_کرو NEW_دم_CHAR      0xFE73
+#تعریف_کرو OLD_دم_CHAR      0x200B
+#تعریف_کرو LAM_CHAR           0x0644
+#تعریف_کرو SPACE_CHAR         0x0020
+#تعریف_کرو SHADDA_CHAR        0xFE7C
+#تعریف_کرو TATWEEL_CHAR       0x0640
+#تعریف_کرو SHADDA_TATWEEL_CHAR  0xFE7D
+#تعریف_کرو SHADDA06_CHAR      0x0651
 
-#define SHAPE_MODE   0
-#define DESHAPE_MODE 1
+#تعریف_کرو SHAPE_منوال   0
+#تعریف_کرو DESHAPE_منوال 1
 
-struct uShapeVariables {
-     char16_t tailChar;
+ساخت uShapeVariables {
+     char16_t دم_Char;
      uint32_t uShapeLamalefBegin;
-     uint32_t uShapeLamalefEnd;
+     uint32_t u_Shape_Lamalef_انتہا;
      uint32_t uShapeTashkeelBegin;
-     uint32_t uShapeTashkeelEnd;
-     int spacesRelativeToTextBeginEnd;
+     uint32_t u_Shape_Tashkeel_انتہا;
+     صحیح spaces_Relative_مقصد_متن_Begin_انتہا;
 };
 
-static const uint8_t tailFamilyIsolatedFinal[] = {
+ساکن ثابت uint8_t دم_Family_Isolated_Final[] = {
     /* FEB1 */ 1,
     /* FEB2 */ 1,
     /* FEB3 */ 0,
@@ -104,7 +104,7 @@ static const uint8_t tailFamilyIsolatedFinal[] = {
     /* FEBE */ 1
 };
 
-static const uint8_t tashkeelMedial[] = {
+ساکن ثابت uint8_t tashkeelMedial[] = {
     /* FE70 */ 0,
     /* FE71 */ 1,
     /* FE72 */ 0,
@@ -123,19 +123,19 @@ static const uint8_t tashkeelMedial[] = {
     /* FE7F */ 1
 };
 
-static const char16_t yehHamzaToYeh[] =
+ساکن ثابت char16_t yeh_Hamza_مقصد_Yeh[] =
 {
 /* isolated*/ 0xFEEF,
 /* final   */ 0xFEF0
 };
 
-static const uint8_t IrrelevantPos[] = {
+ساکن ثابت uint8_t IrrelevantPos[] = {
     0x0, 0x2, 0x4, 0x6,
     0x8, 0xA, 0xC, 0xE
 };
 
 
-static const char16_t convertLamAlef[] =
+ساکن ثابت char16_t convertLamAlef[] =
 {
 /*FEF5*/    0x0622,
 /*FEF6*/    0x0622,
@@ -147,7 +147,7 @@ static const char16_t convertLamAlef[] =
 /*FEFC*/    0x0627
 };
 
-static const char16_t araLink[178]=
+ساکن ثابت char16_t araLink[178]=
 {
   1           + 32 + 256 * 0x11,/*0x0622*/
   1           + 32 + 256 * 0x13,/*0x0623*/
@@ -259,7 +259,7 @@ static const char16_t araLink[178]=
   1     + 8        + 256 * 0x60 /*0x06D3*/
 };
 
-static const uint8_t presALink[] = {
+ساکن ثابت uint8_t presALink[] = {
 /***********0*****1*****2*****3*****4*****5*****6*****7*****8*****9*****A*****B*****C*****D*****E*****F*/
 /*FB5*/    0,    1,    0,    0,    0,    0,    0,    1,    2,1 + 2,    0,    0,    0,    0,    0,    0,
 /*FB6*/    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
@@ -281,7 +281,7 @@ static const uint8_t presALink[] = {
 /*FC6*/    4,    4,    4
 };
 
-static const uint8_t presBLink[]=
+ساکن ثابت uint8_t presBLink[]=
 {
 /***********0*****1*****2*****3*****4*****5*****6*****7*****8*****9*****A*****B*****C*****D*****E*****F*/
 /*FE7*/1 + 2,1 + 2,1 + 2,    0,1 + 2,    0,1 + 2,1 + 2,1 + 2,1 + 2,1 + 2,1 + 2,1 + 2,1 + 2,1 + 2,1 + 2,
@@ -295,7 +295,7 @@ static const uint8_t presBLink[]=
 /*FEF*/    1,    0,    1,    2,1 + 2,    0,    1,    0,    1,    0,    1,    0,    1,    0,    0,    0
 };
 
-static const char16_t convertFBto06[] =
+ساکن ثابت char16_t convertFBto06[] =
 {
 /***********0******1******2******3******4******5******6******7******8******9******A******B******C******D******E******F***/
 /*FB5*/   0x671, 0x671, 0x67B, 0x67B, 0x67B, 0x67B, 0x67E, 0x67E, 0x67E, 0x67E,     0,     0,     0,     0, 0x67A, 0x67A,
@@ -311,7 +311,7 @@ static const char16_t convertFBto06[] =
 /*FBF*/       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0, 0x6CC, 0x6CC, 0x6CC, 0x6CC
 };
 
-static const char16_t convertFEto06[] =
+ساکن ثابت char16_t convertFEto06[] =
 {
 /***********0******1******2******3******4******5******6******7******8******9******A******B******C******D******E******F***/
 /*FE7*/   0x64B, 0x64B, 0x64C, 0x64C, 0x64D, 0x64D, 0x64E, 0x64E, 0x64F, 0x64F, 0x650, 0x650, 0x651, 0x651, 0x652, 0x652,
@@ -325,7 +325,7 @@ static const char16_t convertFEto06[] =
 /*FEF*/   0x649, 0x64A, 0x64A, 0x64A, 0x64A, 0x65C, 0x65C, 0x65D, 0x65D, 0x65E, 0x65E, 0x65F, 0x65F
 };
 
-static const uint8_t shapeTable[4][4][4]=
+ساکن ثابت uint8_t shape_جدول[4][4][4]=
 {
   { {0,0,0,0}, {0,0,0,0}, {0,1,0,3}, {0,1,0,1} },
   { {0,0,2,2}, {0,0,1,2}, {0,1,1,2}, {0,1,1,3} },
@@ -339,54 +339,54 @@ static const uint8_t shapeTable[4][4][4]=
  * Since we know that we are only looking for BMP code points,
  * we can safely just work with code units (again, at least UTF-16).
  */
-static void
-_shapeToArabicDigitsWithContext(char16_t *s, int32_t length,
-                                char16_t digitBase,
-                                UBool isLogical, UBool lastStrongWasAL) {
+ساکن خالی
+shape_مقصد_Arabic_Digits_With_Context(char16_t *s, int32_t length,
+                                char16_t digit_بنیاد,
+                                UBool isLogical, UBool آخری_Strong_Was_AL) {
     int32_t i;
     char16_t c;
 
-    digitBase-=0x30;
+    digit_بنیاد-=0x30;
 
     /* the iteration direction depends on the type of input */
-    if(isLogical) {
-        for(i=0; i<length; ++i) {
+    اگر(isLogical) {
+        برائے(i=0; i<length; ++i) {
             c=s[i];
-            switch(ubidi_getClass(c)) {
-            case U_LEFT_TO_RIGHT: /* L */
-            case U_RIGHT_TO_LEFT: /* R */
-                lastStrongWasAL=false;
-                break;
-            case U_RIGHT_TO_LEFT_ARABIC: /* AL */
-                lastStrongWasAL=true;
-                break;
-            case U_EUROPEAN_NUMBER: /* EN */
-                if (lastStrongWasAL && static_cast<uint32_t>(c - 0x30) < 10) {
-                    s[i] = static_cast<char16_t>(digitBase + c); /* digitBase+(c-0x30) - digitBase was modified above */
+            انتخاب(ubidi_getClass(c)) {
+            حالت U_بایاں_مقصد_دایاں: /* L */
+            حالت U_دایاں_مقصد_بایاں: /* R */
+                آخری_Strong_Was_AL=جھوٹ;
+                توڑو;
+            حالت U_دایاں_مقصد_بایاں_ARABIC: /* AL */
+                آخری_Strong_Was_AL=سچ;
+                توڑو;
+            حالت U_EUROPEAN_نمبر: /* EN */
+                اگر (آخری_Strong_Was_AL && static_cast<uint32_t>(c - 0x30) < 10) {
+                    s[i] = static_cast<char16_t>(digit_بنیاد + c); /* digitBase+(c-0x30) - digitBase was modified above */
                 }
-                break;
-            default :
-                break;
+                توڑو;
+            طےشدہ :
+                توڑو;
             }
         }
-    } else {
-        for(i=length; i>0; /* pre-decrement in the body */) {
+    } ورنہ {
+        برائے(i=length; i>0; /* pre-decrement in the body */) {
             c=s[--i];
-            switch(ubidi_getClass(c)) {
-            case U_LEFT_TO_RIGHT: /* L */
-            case U_RIGHT_TO_LEFT: /* R */
-                lastStrongWasAL=false;
-                break;
-            case U_RIGHT_TO_LEFT_ARABIC: /* AL */
-                lastStrongWasAL=true;
-                break;
-            case U_EUROPEAN_NUMBER: /* EN */
-                if (lastStrongWasAL && static_cast<uint32_t>(c - 0x30) < 10) {
-                    s[i] = static_cast<char16_t>(digitBase + c); /* digitBase+(c-0x30) - digitBase was modified above */
+            انتخاب(ubidi_getClass(c)) {
+            حالت U_بایاں_مقصد_دایاں: /* L */
+            حالت U_دایاں_مقصد_بایاں: /* R */
+                آخری_Strong_Was_AL=جھوٹ;
+                توڑو;
+            حالت U_دایاں_مقصد_بایاں_ARABIC: /* AL */
+                آخری_Strong_Was_AL=سچ;
+                توڑو;
+            حالت U_EUROPEAN_نمبر: /* EN */
+                اگر (آخری_Strong_Was_AL && static_cast<uint32_t>(c - 0x30) < 10) {
+                    s[i] = static_cast<char16_t>(digit_بنیاد + c); /* digitBase+(c-0x30) - digitBase was modified above */
                 }
-                break;
-            default :
-                break;
+                توڑو;
+            طےشدہ :
+                توڑو;
             }
         }
     }
@@ -398,14 +398,14 @@ _shapeToArabicDigitsWithContext(char16_t *s, int32_t length,
  *           in case the user specifies the buffer to be
  *           U_SHAPE_TEXT_DIRECTION_LOGICAL
  */
-static void
-invertBuffer(char16_t *buffer, int32_t size, uint32_t /*options*/, int32_t lowlimit, int32_t highlimit) {
-    char16_t temp;
+ساکن خالی
+invert_بفر(char16_t *بفر, int32_t size, uint32_t /*options*/, int32_t lowlimit, int32_t highlimit) {
+    char16_t عارضی;
     int32_t i=0,j=0;
-    for(i=lowlimit,j=size-highlimit-1;i<j;i++,j--) {
-        temp = buffer[i];
-        buffer[i] = buffer[j];
-        buffer[j] = temp;
+    برائے(i=lowlimit,j=size-highlimit-1;i<j;i++,j--) {
+        عارضی = بفر[i];
+        بفر[i] = بفر[j];
+        بفر[j] = عارضی;
     }
 }
 
@@ -417,19 +417,19 @@ invertBuffer(char16_t *buffer, int32_t size, uint32_t /*options*/, int32_t lowli
  *           later it'll be converted into the 0xFExx LamAlefs
  *           in the shaping function.
  */
-static inline char16_t
+ساکن اندرونی char16_t
 changeLamAlef(char16_t ch) {
-    switch(ch) {
-    case 0x0622 :
-        return 0x065C;
-    case 0x0623 :
-        return 0x065D;
-    case 0x0625 :
-        return 0x065E;
-    case 0x0627 :
-        return 0x065F;
+    انتخاب(ch) {
+    حالت 0x0622 :
+        واپس 0x065C;
+    حالت 0x0623 :
+        واپس 0x065D;
+    حالت 0x0625 :
+        واپس 0x065E;
+    حالت 0x0627 :
+        واپس 0x065F;
     }
-    return 0;
+    واپس 0;
 }
 
 /*
@@ -438,20 +438,20 @@ changeLamAlef(char16_t ch) {
  *           Arabic characters have four forms :
  *           Isolated, Initial, Middle and Final Form
  */
-static char16_t
+ساکن char16_t
 getLink(char16_t ch) {
-    if(ch >= 0x0622 && ch <= 0x06D3) {
-        return(araLink[ch-0x0622]);
-    } else if(ch == 0x200D) {
-        return(3);
-    } else if(ch >= 0x206D && ch <= 0x206F) {
-        return(4);
-    }else if(ch >= 0xFB50 && ch <= 0xFC62) {
-        return(presALink[ch-0xFB50]);
-    } else if(ch >= 0xFE70 && ch <= 0xFEFC) {
-        return(presBLink[ch-0xFE70]);
-    }else {
-        return(0);
+    اگر(ch >= 0x0622 && ch <= 0x06D3) {
+        واپس(araLink[ch-0x0622]);
+    } ورنہ اگر(ch == 0x200D) {
+        واپس(3);
+    } ورنہ اگر(ch >= 0x206D && ch <= 0x206F) {
+        واپس(4);
+    }ورنہ اگر(ch >= 0xFB50 && ch <= 0xFC62) {
+        واپس(presALink[ch-0xFB50]);
+    } ورنہ اگر(ch >= 0xFE70 && ch <= 0xFEFC) {
+        واپس(presBLink[ch-0xFE70]);
+    }ورنہ {
+        واپس(0);
     }
 }
 
@@ -460,16 +460,16 @@ getLink(char16_t ch) {
  *Function : Counts the number of spaces
  *           at each end of the logical buffer
  */
-static void
-countSpaces(char16_t *dest, int32_t size, uint32_t /*options*/, int32_t *spacesCountl, int32_t *spacesCountr) {
+ساکن خالی
+گنتی_Spaces(char16_t *dest, int32_t size, uint32_t /*options*/, int32_t *spacesCountl, int32_t *spacesCountr) {
     int32_t i = 0;
     int32_t countl = 0,countr = 0;
-    while((dest[i] == SPACE_CHAR) && (countl < size)) {
+    جب((dest[i] == SPACE_CHAR) && (countl < size)) {
        countl++;
        i++;
     }
-    if (countl < size) {  /* the entire buffer is not all space */
-        while(dest[size-1] == SPACE_CHAR) {
+    اگر (countl < size) {  /* the entire buffer is not all space */
+        جب(dest[size-1] == SPACE_CHAR) {
             countr++;
             size--;
         }
@@ -482,36 +482,36 @@ countSpaces(char16_t *dest, int32_t size, uint32_t /*options*/, int32_t *spacesC
  *Name     : isTashkeelChar
  *Function : Returns 1 for Tashkeel characters in 06 range else return 0
  */
-static inline int32_t
+ساکن اندرونی int32_t
 isTashkeelChar(char16_t ch) {
-    return static_cast<int32_t>(ch >= 0x064B && ch <= 0x0652);
+    واپس static_cast<int32_t>(ch >= 0x064B && ch <= 0x0652);
 }
 
 /*
  *Name     : isTashkeelCharFE
  *Function : Returns 1 for Tashkeel characters in FE range else return 0
  */
-static inline int32_t
+ساکن اندرونی int32_t
 isTashkeelCharFE(char16_t ch) {
-    return static_cast<int32_t>(ch >= 0xFE70 && ch <= 0xFE7F);
+    واپس static_cast<int32_t>(ch >= 0xFE70 && ch <= 0xFE7F);
 }
 
 /*
  *Name     : isAlefChar
  *Function : Returns 1 for Alef characters else return 0
  */
-static inline int32_t
+ساکن اندرونی int32_t
 isAlefChar(char16_t ch) {
-    return static_cast<int32_t>(ch == 0x0622 || ch == 0x0623 || ch == 0x0625 || ch == 0x0627);
+    واپس static_cast<int32_t>(ch == 0x0622 || ch == 0x0623 || ch == 0x0625 || ch == 0x0627);
 }
 
 /*
  *Name     : isLamAlefChar
  *Function : Returns 1 for LamAlef characters else return 0
  */
-static inline int32_t
+ساکن اندرونی int32_t
 isLamAlefChar(char16_t ch) {
-    return static_cast<int32_t>(ch >= 0xFEF5 && ch <= 0xFEFC);
+    واپس static_cast<int32_t>(ch >= 0xFEF5 && ch <= 0xFEFC);
 }
 
 /*BIDI
@@ -519,12 +519,12 @@ isLamAlefChar(char16_t ch) {
  *Function : returns 1 if the character matches one of the tail characters (0xfe73 or 0x200b) otherwise returns 0
  */
 
-static inline int32_t
-isTailChar(char16_t ch) {
-    if(ch == OLD_TAIL_CHAR || ch == NEW_TAIL_CHAR){
-            return 1;
-    }else{
-            return 0;
+ساکن اندرونی int32_t
+is_دم_Char(char16_t ch) {
+    اگر(ch == OLD_دم_CHAR || ch == NEW_دم_CHAR){
+            واپس 1;
+    }ورنہ{
+            واپس 0;
     }
 }
 
@@ -534,12 +534,12 @@ isTailChar(char16_t ch) {
  *           in the FE range otherwise returns 0
  */
 
-static inline int32_t
-isSeenTailFamilyChar(char16_t ch) {
-    if(ch >= 0xfeb1 && ch < 0xfebf){
-            return tailFamilyIsolatedFinal [ch - 0xFEB1];
-    }else{
-            return 0;
+ساکن اندرونی int32_t
+is_نظر_آیا_دم_Family_Char(char16_t ch) {
+    اگر(ch >= 0xfeb1 && ch < 0xfebf){
+            واپس دم_Family_Isolated_Final [ch - 0xFEB1];
+    }ورنہ{
+            واپس 0;
     }
 }
 
@@ -548,12 +548,12 @@ isSeenTailFamilyChar(char16_t ch) {
   *            06 range otherwise returns 0
  */
 
-static inline int32_t
-isSeenFamilyChar(char16_t  ch){
-    if(ch >= 0x633 && ch <= 0x636){
-        return 1;
-    }else {
-        return 0;
+ساکن اندرونی int32_t
+is_نظر_آیا_Family_Char(char16_t  ch){
+    اگر(ch >= 0x633 && ch <= 0x636){
+        واپس 1;
+    }ورنہ {
+        واپس 0;
     }
 }
 
@@ -563,9 +563,9 @@ isSeenFamilyChar(char16_t  ch){
  *Function : returns 1 if the character is a Alef Maksoura Final or isolated
  *           otherwise returns 0
  */
-static inline int32_t
+ساکن اندرونی int32_t
 isAlefMaksouraChar(char16_t ch) {
-    return static_cast<int32_t>(ch == 0xFEEF || ch == 0xFEF0 || ch == 0x0649);
+    واپس static_cast<int32_t>(ch == 0xFEEF || ch == 0xFEF0 || ch == 0x0649);
 }
 
 /*
@@ -573,12 +573,12 @@ isAlefMaksouraChar(char16_t ch) {
  * Function : returns 1 if the character is a yehHamza isolated or yehhamza
  *            final is found otherwise returns 0
  */
-static inline int32_t
+ساکن اندرونی int32_t
 isYehHamzaChar(char16_t ch) {
-    if((ch==0xFE89)||(ch==0xFE8A)){
-        return 1;
-    }else{
-        return 0;
+    اگر((ch==0xFE89)||(ch==0xFE8A)){
+        واپس 1;
+    }ورنہ{
+        واپس 0;
     }
 }
 
@@ -589,15 +589,15 @@ isYehHamzaChar(char16_t ch) {
  *           Tashkeel with shadda on tatweel (FC range)return 2 otherwise
  *           returns 0
  */
-static inline int32_t
+ساکن اندرونی int32_t
 isTashkeelOnTatweelChar(char16_t ch){
-    if(ch >= 0xfe70 && ch <= 0xfe7f && ch != NEW_TAIL_CHAR && ch != 0xFE75 && ch != SHADDA_TATWEEL_CHAR)
+    اگر(ch >= 0xfe70 && ch <= 0xfe7f && ch != NEW_دم_CHAR && ch != 0xFE75 && ch != SHADDA_TATWEEL_CHAR)
     {
-        return tashkeelMedial [ch - 0xFE70];
-    }else if( (ch >= 0xfcf2 && ch <= 0xfcf4) || (ch == SHADDA_TATWEEL_CHAR)) {
-        return 2;
-    }else{
-        return 0;
+        واپس tashkeelMedial [ch - 0xFE70];
+    }ورنہ اگر( (ch >= 0xfcf2 && ch <= 0xfcf4) || (ch == SHADDA_TATWEEL_CHAR)) {
+        واپس 2;
+    }ورنہ{
+        واپس 0;
     }
 }
 
@@ -608,14 +608,14 @@ isTashkeelOnTatweelChar(char16_t ch){
  *           with shadda is in the isolated form (i.e. Unicode FC range)
  *           returns 2 otherwise returns 0
  */
-static inline int32_t
+ساکن اندرونی int32_t
 isIsolatedTashkeelChar(char16_t ch){
-    if(ch >= 0xfe70 && ch <= 0xfe7f && ch != NEW_TAIL_CHAR && ch != 0xFE75){
-        return (1 - tashkeelMedial [ch - 0xFE70]);
-    }else if(ch >= 0xfc5e && ch <= 0xfc63){
-        return 1;
-    }else{
-        return 0;
+    اگر(ch >= 0xfe70 && ch <= 0xfe7f && ch != NEW_دم_CHAR && ch != 0xFE75){
+        واپس (1 - tashkeelMedial [ch - 0xFE70]);
+    }ورنہ اگر(ch >= 0xfc5e && ch <= 0xfc63){
+        واپس 1;
+    }ورنہ{
+        واپس 0;
     }
 }
 
@@ -630,52 +630,52 @@ isIsolatedTashkeelChar(char16_t ch){
  *           destination buffer will be resized.
  */
 
-static int32_t
-calculateSize(const char16_t *source, int32_t sourceLength,
-int32_t destSize,uint32_t options) {
+ساکن int32_t
+calculate_سائز(ثابت char16_t *ماخذ, int32_t ماخذ_لمبائی,
+int32_t dest_سائز,uint32_t options) {
     int32_t i = 0;
 
-    int lamAlefOption = 0;
-    int tashkeelOption = 0;
+    صحیح lamAlefOption = 0;
+    صحیح tashkeelOption = 0;
 
-    destSize = sourceLength;
+    dest_سائز = ماخذ_لمبائی;
 
-    if (((options&U_SHAPE_LETTERS_MASK) == U_SHAPE_LETTERS_SHAPE ||
-        ((options&U_SHAPE_LETTERS_MASK) == U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED )) &&
-        ((options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_RESIZE )){
+    اگر (((options&U_SHAPE_LETTERS_نقاب) == U_SHAPE_LETTERS_SHAPE ||
+        ((options&U_SHAPE_LETTERS_نقاب) == U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED )) &&
+        ((options&U_SHAPE_LAMALEF_نقاب) == U_SHAPE_LAMALEF_RESIZE )){
             lamAlefOption = 1;
     }
-    if((options&U_SHAPE_LETTERS_MASK) == U_SHAPE_LETTERS_SHAPE &&
-       ((options&U_SHAPE_TASHKEEL_MASK) == U_SHAPE_TASHKEEL_RESIZE ) ){
+    اگر((options&U_SHAPE_LETTERS_نقاب) == U_SHAPE_LETTERS_SHAPE &&
+       ((options&U_SHAPE_TASHKEEL_نقاب) == U_SHAPE_TASHKEEL_RESIZE ) ){
             tashkeelOption = 1;
         }
 
-    if(lamAlefOption || tashkeelOption){
-        if((options&U_SHAPE_TEXT_DIRECTION_MASK)==U_SHAPE_TEXT_DIRECTION_VISUAL_LTR) {
-            for(i=0;i<sourceLength;i++) {
-                if( ((isAlefChar(source[i]))&& (i<(sourceLength-1)) &&(source[i+1] == LAM_CHAR)) || (isTashkeelCharFE(source[i])) ) {
-                        destSize--;
+    اگر(lamAlefOption || tashkeelOption){
+        اگر((options&U_SHAPE_متن_DIRECTION_نقاب)==U_SHAPE_متن_DIRECTION_VISUAL_LTR) {
+            برائے(i=0;i<ماخذ_لمبائی;i++) {
+                اگر( ((isAlefChar(ماخذ[i]))&& (i<(ماخذ_لمبائی-1)) &&(ماخذ[i+1] == LAM_CHAR)) || (isTashkeelCharFE(ماخذ[i])) ) {
+                        dest_سائز--;
                     }
                 }
-            }else if((options&U_SHAPE_TEXT_DIRECTION_MASK)==U_SHAPE_TEXT_DIRECTION_LOGICAL) {
-                for(i=0;i<sourceLength;i++) {
-                    if( ( (source[i] == LAM_CHAR) && (i<(sourceLength-1)) && (isAlefChar(source[i+1]))) || (isTashkeelCharFE(source[i])) ) {
-                        destSize--;
+            }ورنہ اگر((options&U_SHAPE_متن_DIRECTION_نقاب)==U_SHAPE_متن_DIRECTION_LOGICAL) {
+                برائے(i=0;i<ماخذ_لمبائی;i++) {
+                    اگر( ( (ماخذ[i] == LAM_CHAR) && (i<(ماخذ_لمبائی-1)) && (isAlefChar(ماخذ[i+1]))) || (isTashkeelCharFE(ماخذ[i])) ) {
+                        dest_سائز--;
                     }
                 }
             }
         }
 
-    if ((options&U_SHAPE_LETTERS_MASK) == U_SHAPE_LETTERS_UNSHAPE){
-        if ( (options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_RESIZE){
-            for(i=0;i<sourceLength;i++) {
-                if(isLamAlefChar(source[i]))
-                destSize++;
+    اگر ((options&U_SHAPE_LETTERS_نقاب) == U_SHAPE_LETTERS_UNSHAPE){
+        اگر ( (options&U_SHAPE_LAMALEF_نقاب) == U_SHAPE_LAMALEF_RESIZE){
+            برائے(i=0;i<ماخذ_لمبائی;i++) {
+                اگر(isLamAlefChar(ماخذ[i]))
+                dest_سائز++;
             }
         }
     }
 
-    return destSize;
+    واپس dest_سائز;
 }
 
 /*
@@ -687,21 +687,21 @@ int32_t destSize,uint32_t options) {
  *            Case 3: if the Tashkeel is isolated replace it with Space.
  *
  */
-static int32_t
-handleTashkeelWithTatweel(char16_t *dest, int32_t sourceLength,
+ساکن int32_t
+handleTashkeelWithTatweel(char16_t *dest, int32_t ماخذ_لمبائی,
              int32_t /*destSize*/, uint32_t /*options*/,
-             UErrorCode * /*pErrorCode*/) {
-                 int i;
-                 for(i = 0; i < sourceLength; i++){
-                     if((isTashkeelOnTatweelChar(dest[i]) == 1)){
+             UError_رمز * /*pErrorCode*/) {
+                 صحیح i;
+                 برائے(i = 0; i < ماخذ_لمبائی; i++){
+                     اگر((isTashkeelOnTatweelChar(dest[i]) == 1)){
                          dest[i] = TATWEEL_CHAR;
-                    }else if((isTashkeelOnTatweelChar(dest[i]) == 2)){
+                    }ورنہ اگر((isTashkeelOnTatweelChar(dest[i]) == 2)){
                          dest[i] = SHADDA_TATWEEL_CHAR;
-                    }else if(isIsolatedTashkeelChar(dest[i]) && dest[i] != SHADDA_CHAR){
+                    }ورنہ اگر(isIsolatedTashkeelChar(dest[i]) && dest[i] != SHADDA_CHAR){
                          dest[i] = SPACE_CHAR;
                     }
                  }
-                 return sourceLength;
+                 واپس ماخذ_لمبائی;
 }
 
 
@@ -725,123 +725,123 @@ handleTashkeelWithTatweel(char16_t *dest, int32_t sourceLength,
  *           BEGIN will place the space at the end of the buffer.
  */
 
-static int32_t
-handleGeneratedSpaces(char16_t *dest, int32_t sourceLength,
-                    int32_t destSize,
+ساکن int32_t
+handleGeneratedSpaces(char16_t *dest, int32_t ماخذ_لمبائی,
+                    int32_t dest_سائز,
                     uint32_t options,
-                    UErrorCode *pErrorCode,struct uShapeVariables shapeVars ) {
+                    UError_رمز *p_Error_رمز,ساخت uShapeVariables shapeVars ) {
 
     int32_t i = 0, j = 0;
     int32_t count = 0;
-    char16_t *tempbuffer=nullptr;
+    char16_t *tempbuffer=خالی_اشاریہ;
 
-    int lamAlefOption = 0;
-    int tashkeelOption = 0;
-    int shapingMode = SHAPE_MODE;
+    صحیح lamAlefOption = 0;
+    صحیح tashkeelOption = 0;
+    صحیح shaping_منوال = SHAPE_منوال;
 
-    if (shapingMode == 0){
-        if ( (options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_RESIZE ){
+    اگر (shaping_منوال == 0){
+        اگر ( (options&U_SHAPE_LAMALEF_نقاب) == U_SHAPE_LAMALEF_RESIZE ){
             lamAlefOption = 1;
         }
-        if ( (options&U_SHAPE_TASHKEEL_MASK) == U_SHAPE_TASHKEEL_RESIZE ){
+        اگر ( (options&U_SHAPE_TASHKEEL_نقاب) == U_SHAPE_TASHKEEL_RESIZE ){
             tashkeelOption = 1;
         }
     }
 
-    if (static_cast<size_t>(sourceLength) + 1 > std::numeric_limits<size_t>::max() / U_SIZEOF_UCHAR) {
-        *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+    اگر (static_cast<size_t>(ماخذ_لمبائی) + 1 > std::numeric_limits<size_t>::max() / U_SIZEOF_UCHAR) {
+        *p_Error_رمز = U_اشاریہ_OUTOFBOUNDS_ERROR;
+        واپس 0;
     }
-    tempbuffer = static_cast<char16_t*>(uprv_malloc((sourceLength + 1) * U_SIZEOF_UCHAR));
+    tempbuffer = static_cast<char16_t*>(uprv_malloc((ماخذ_لمبائی + 1) * U_SIZEOF_UCHAR));
     /* Test for nullptr */
-    if(tempbuffer == nullptr) {
-        *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+    اگر(tempbuffer == خالی_اشاریہ) {
+        *p_Error_رمز = U_حافظہ_تخصیص_ERROR;
+        واپس 0;
     }
 
 
-    if (lamAlefOption || tashkeelOption){
-        uprv_memset(tempbuffer, 0, (sourceLength+1)*U_SIZEOF_UCHAR);
+    اگر (lamAlefOption || tashkeelOption){
+        uprv_memset(tempbuffer, 0, (ماخذ_لمبائی+1)*U_SIZEOF_UCHAR);
 
         i = j = 0; count = 0;
-        while(i < sourceLength) {
-            if ( (lamAlefOption && dest[i] == LAMALEF_SPACE_SUB) ||
+        جب(i < ماخذ_لمبائی) {
+            اگر ( (lamAlefOption && dest[i] == LAMALEF_SPACE_SUB) ||
                (tashkeelOption && dest[i] == TASHKEEL_SPACE_SUB) ){
                 j--;
                 count++;
-            } else {
+            } ورنہ {
                 tempbuffer[j] = dest[i];
             }
             i++;
             j++;
         }
 
-        while(count >= 0) {
+        جب(count >= 0) {
             tempbuffer[i] = 0x0000;
             i--;
             count--;
         }
 
-        u_memcpy(dest, tempbuffer, sourceLength);
-        destSize = u_strlen(dest);
+        u_memcpy(dest, tempbuffer, ماخذ_لمبائی);
+        dest_سائز = u_strlen(dest);
     }
 
       lamAlefOption = 0;
 
-    if (shapingMode == 0){
-        if ( (options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_NEAR ){
+    اگر (shaping_منوال == 0){
+        اگر ( (options&U_SHAPE_LAMALEF_نقاب) == U_SHAPE_LAMALEF_NEAR ){
             lamAlefOption = 1;
         }
     }
 
-    if (lamAlefOption){
+    اگر (lamAlefOption){
         /* Lam+Alef is already shaped into LamAlef + FFFF */
         i = 0;
-        while(i < sourceLength) {
-            if(lamAlefOption&&dest[i] == LAMALEF_SPACE_SUB){
+        جب(i < ماخذ_لمبائی) {
+            اگر(lamAlefOption&&dest[i] == LAMALEF_SPACE_SUB){
                 dest[i] = SPACE_CHAR;
             }
             i++;
         }
-        destSize = sourceLength;
+        dest_سائز = ماخذ_لمبائی;
     }
     lamAlefOption = 0;
     tashkeelOption = 0;
 
-    if (shapingMode == 0) {
-        if ( ((options&U_SHAPE_LAMALEF_MASK) == shapeVars.uShapeLamalefBegin) ||
-              (((options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_AUTO )
-              && (shapeVars.spacesRelativeToTextBeginEnd==1)) ) {
+    اگر (shaping_منوال == 0) {
+        اگر ( ((options&U_SHAPE_LAMALEF_نقاب) == shapeVars.uShapeLamalefBegin) ||
+              (((options&U_SHAPE_LAMALEF_نقاب) == U_SHAPE_LAMALEF_AUTO )
+              && (shapeVars.spaces_Relative_مقصد_متن_Begin_انتہا==1)) ) {
             lamAlefOption = 1;
         }
-        if ( (options&U_SHAPE_TASHKEEL_MASK) == shapeVars.uShapeTashkeelBegin ) {
+        اگر ( (options&U_SHAPE_TASHKEEL_نقاب) == shapeVars.uShapeTashkeelBegin ) {
             tashkeelOption = 1;
         }
     }
 
-    if(lamAlefOption || tashkeelOption){
-        uprv_memset(tempbuffer, 0, (sourceLength+1)*U_SIZEOF_UCHAR);
+    اگر(lamAlefOption || tashkeelOption){
+        uprv_memset(tempbuffer, 0, (ماخذ_لمبائی+1)*U_SIZEOF_UCHAR);
         
-        i = j = sourceLength; count = 0;
+        i = j = ماخذ_لمبائی; count = 0;
         
-        while(i >= 0) {
-            if ( (lamAlefOption && dest[i] == LAMALEF_SPACE_SUB) ||
+        جب(i >= 0) {
+            اگر ( (lamAlefOption && dest[i] == LAMALEF_SPACE_SUB) ||
                  (tashkeelOption && dest[i] == TASHKEEL_SPACE_SUB) ){
                 j++;
                 count++;
-            }else {
+            }ورنہ {
                 tempbuffer[j] = dest[i];
             }
             i--;
             j--;
         }
 
-        for(i=0 ;i < count; i++){
+        برائے(i=0 ;i < count; i++){
                 tempbuffer[i] = SPACE_CHAR;
         }
 
-        u_memcpy(dest, tempbuffer, sourceLength);
-        destSize = sourceLength;
+        u_memcpy(dest, tempbuffer, ماخذ_لمبائی);
+        dest_سائز = ماخذ_لمبائی;
     }
 
 
@@ -849,49 +849,49 @@ handleGeneratedSpaces(char16_t *dest, int32_t sourceLength,
     lamAlefOption = 0;
     tashkeelOption = 0;
 
-    if (shapingMode == 0) {
-        if ( ((options&U_SHAPE_LAMALEF_MASK) == shapeVars.uShapeLamalefEnd) ||
-              (((options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_AUTO )
-              && (shapeVars.spacesRelativeToTextBeginEnd==0)) ) {
+    اگر (shaping_منوال == 0) {
+        اگر ( ((options&U_SHAPE_LAMALEF_نقاب) == shapeVars.u_Shape_Lamalef_انتہا) ||
+              (((options&U_SHAPE_LAMALEF_نقاب) == U_SHAPE_LAMALEF_AUTO )
+              && (shapeVars.spaces_Relative_مقصد_متن_Begin_انتہا==0)) ) {
             lamAlefOption = 1;
         }
-        if ( (options&U_SHAPE_TASHKEEL_MASK) == shapeVars.uShapeTashkeelEnd ){
+        اگر ( (options&U_SHAPE_TASHKEEL_نقاب) == shapeVars.u_Shape_Tashkeel_انتہا ){
             tashkeelOption = 1;
         }
     }
 
-    if(lamAlefOption || tashkeelOption){
-        uprv_memset(tempbuffer, 0, (sourceLength+1)*U_SIZEOF_UCHAR);
+    اگر(lamAlefOption || tashkeelOption){
+        uprv_memset(tempbuffer, 0, (ماخذ_لمبائی+1)*U_SIZEOF_UCHAR);
 
         i = j = 0; count = 0;
-        while(i < sourceLength) {
-            if ( (lamAlefOption && dest[i] == LAMALEF_SPACE_SUB) ||
+        جب(i < ماخذ_لمبائی) {
+            اگر ( (lamAlefOption && dest[i] == LAMALEF_SPACE_SUB) ||
                  (tashkeelOption && dest[i] == TASHKEEL_SPACE_SUB) ){
                 j--;
                 count++;
-            }else {
+            }ورنہ {
                 tempbuffer[j] = dest[i];
             }
             i++;
             j++;
         }
 
-        while(count >= 0) {
+        جب(count >= 0) {
             tempbuffer[i] = SPACE_CHAR;
             i--;
             count--;
         }
 
-        u_memcpy(dest, tempbuffer, sourceLength);
-        destSize = sourceLength;
+        u_memcpy(dest, tempbuffer, ماخذ_لمبائی);
+        dest_سائز = ماخذ_لمبائی;
     }
 
 
-    if(tempbuffer){
+    اگر(tempbuffer){
         uprv_free(tempbuffer);
     }
 
-    return destSize;
+    واپس dest_سائز;
 }
 
 /*
@@ -904,32 +904,32 @@ handleGeneratedSpaces(char16_t *dest, int32_t sourceLength,
  *         will be set to U_NO_SPACE_AVAILABLE as defined in utypes.h
  */
 
-static int32_t
-expandCompositCharAtBegin(char16_t *dest, int32_t sourceLength, int32_t destSize,UErrorCode *pErrorCode) {
+ساکن int32_t
+expandCompositCharAtBegin(char16_t *dest, int32_t ماخذ_لمبائی, int32_t dest_سائز,UError_رمز *p_Error_رمز) {
     int32_t      i = 0,j = 0;
     int32_t      countl = 0;
-    char16_t *tempbuffer=nullptr;
+    char16_t *tempbuffer=خالی_اشاریہ;
 
-    tempbuffer = static_cast<char16_t*>(uprv_malloc((sourceLength + 1) * U_SIZEOF_UCHAR));
+    tempbuffer = static_cast<char16_t*>(uprv_malloc((ماخذ_لمبائی + 1) * U_SIZEOF_UCHAR));
 
     /* Test for nullptr */
-    if(tempbuffer == nullptr) {
-        *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+    اگر(tempbuffer == خالی_اشاریہ) {
+        *p_Error_رمز = U_حافظہ_تخصیص_ERROR;
+        واپس 0;
     }
 
-        uprv_memset(tempbuffer, 0, (sourceLength+1)*U_SIZEOF_UCHAR);
+        uprv_memset(tempbuffer, 0, (ماخذ_لمبائی+1)*U_SIZEOF_UCHAR);
 
         i = 0;
-        while(dest[i] == SPACE_CHAR) {
+        جب(dest[i] == SPACE_CHAR) {
             countl++;
             i++;
         }
 
-        i = j = sourceLength-1;
+        i = j = ماخذ_لمبائی-1;
 
-        while(i >= 0 && j >= 0) {
-            if( countl>0 && isLamAlefChar(dest[i])) {
+        جب(i >= 0 && j >= 0) {
+            اگر( countl>0 && isLamAlefChar(dest[i])) {
                 tempbuffer[j] = LAM_CHAR;
                 /* to ensure the array index is within the range */
                 U_ASSERT(dest[i] >= 0xFEF5u
@@ -937,21 +937,21 @@ expandCompositCharAtBegin(char16_t *dest, int32_t sourceLength, int32_t destSize
                 tempbuffer[j-1] = convertLamAlef[ dest[i] - 0xFEF5 ];
                 j--;
                 countl--;
-            }else {
-                 if( countl == 0 && isLamAlefChar(dest[i]) ) {
-                     *pErrorCode=U_NO_SPACE_AVAILABLE;
+            }ورنہ {
+                 اگر( countl == 0 && isLamAlefChar(dest[i]) ) {
+                     *p_Error_رمز=U_NO_SPACE_دستیاب;
                      }
                  tempbuffer[j] = dest[i];
             }
             i--;
             j--;
         }
-        u_memcpy(dest, tempbuffer, sourceLength);
+        u_memcpy(dest, tempbuffer, ماخذ_لمبائی);
 
         uprv_free(tempbuffer);
 
-        destSize = sourceLength;
-        return destSize;
+        dest_سائز = ماخذ_لمبائی;
+        واپس dest_سائز;
 }
 
 /*
@@ -964,41 +964,41 @@ expandCompositCharAtBegin(char16_t *dest, int32_t sourceLength, int32_t destSize
  *           will be set to U_NO_SPACE_AVAILABLE as defined in utypes.h
  */
 
-static int32_t
-expandCompositCharAtEnd(char16_t *dest, int32_t sourceLength, int32_t destSize,UErrorCode *pErrorCode) {
+ساکن int32_t
+expand_Composit_Char_At_انتہا(char16_t *dest, int32_t ماخذ_لمبائی, int32_t dest_سائز,UError_رمز *p_Error_رمز) {
     int32_t      i = 0,j = 0;
 
     int32_t      countr = 0;
-    int32_t  inpsize = sourceLength;
+    int32_t  inpsize = ماخذ_لمبائی;
 
-    char16_t *tempbuffer=nullptr;
-    tempbuffer = static_cast<char16_t*>(uprv_malloc((sourceLength + 1) * U_SIZEOF_UCHAR));
+    char16_t *tempbuffer=خالی_اشاریہ;
+    tempbuffer = static_cast<char16_t*>(uprv_malloc((ماخذ_لمبائی + 1) * U_SIZEOF_UCHAR));
 
     /* Test for nullptr */
-    if(tempbuffer == nullptr) {
-        *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-         return 0;
+    اگر(tempbuffer == خالی_اشاریہ) {
+        *p_Error_رمز = U_حافظہ_تخصیص_ERROR;
+         واپس 0;
     }
 
-    uprv_memset(tempbuffer, 0, (sourceLength+1)*U_SIZEOF_UCHAR);
+    uprv_memset(tempbuffer, 0, (ماخذ_لمبائی+1)*U_SIZEOF_UCHAR);
 
-    while(inpsize>0 && dest[inpsize-1] == SPACE_CHAR) {
+    جب(inpsize>0 && dest[inpsize-1] == SPACE_CHAR) {
         countr++;
         inpsize--;
     }
 
-    i = sourceLength - countr - 1;
-    j = sourceLength - 1;
+    i = ماخذ_لمبائی - countr - 1;
+    j = ماخذ_لمبائی - 1;
 
-    while(i >= 0 && j >= 0) {
-        if( countr>0 && isLamAlefChar(dest[i]) ) {
+    جب(i >= 0 && j >= 0) {
+        اگر( countr>0 && isLamAlefChar(dest[i]) ) {
             tempbuffer[j] = LAM_CHAR;
             tempbuffer[j-1] = convertLamAlef[ dest[i] - 0xFEF5 ];
             j--;
             countr--;
-        }else {
-            if ((countr == 0) && isLamAlefChar(dest[i]) ) {
-                *pErrorCode=U_NO_SPACE_AVAILABLE;
+        }ورنہ {
+            اگر ((countr == 0) && isLamAlefChar(dest[i]) ) {
+                *p_Error_رمز=U_NO_SPACE_دستیاب;
             }
             tempbuffer[j] = dest[i];
         }
@@ -1006,20 +1006,20 @@ expandCompositCharAtEnd(char16_t *dest, int32_t sourceLength, int32_t destSize,U
         j--;
     }
 
-    if(countr > 0) {
-        u_memmove(tempbuffer, tempbuffer+countr, sourceLength);
-        if(u_strlen(tempbuffer) < sourceLength) {
-            for(i=sourceLength-1;i>=sourceLength-countr;i--) {
+    اگر(countr > 0) {
+        u_memmove(tempbuffer, tempbuffer+countr, ماخذ_لمبائی);
+        اگر(u_strlen(tempbuffer) < ماخذ_لمبائی) {
+            برائے(i=ماخذ_لمبائی-1;i>=ماخذ_لمبائی-countr;i--) {
                 tempbuffer[i] = SPACE_CHAR;
             }
         }
     }
-    u_memcpy(dest, tempbuffer, sourceLength);
+    u_memcpy(dest, tempbuffer, ماخذ_لمبائی);
 
     uprv_free(tempbuffer);
 
-    destSize = sourceLength;
-    return destSize;
+    dest_سائز = ماخذ_لمبائی;
+    واپس dest_سائز;
 }
 
 /*
@@ -1031,42 +1031,42 @@ expandCompositCharAtEnd(char16_t *dest, int32_t sourceLength, int32_t destSize,U
  *           will be set to U_NO_SPACE_AVAILABLE as defined in utypes.h
  */
 
-static int32_t
-expandCompositCharAtNear(char16_t *dest, int32_t sourceLength, int32_t destSize,UErrorCode *pErrorCode,
-                         int yehHamzaOption, int seenTailOption, int lamAlefOption, struct uShapeVariables shapeVars) {
+ساکن int32_t
+expandCompositCharAtNear(char16_t *dest, int32_t ماخذ_لمبائی, int32_t dest_سائز,UError_رمز *p_Error_رمز,
+                         صحیح yehHamzaOption, صحیح نظر_آیا_دم_Option, صحیح lamAlefOption, ساخت uShapeVariables shapeVars) {
     int32_t      i = 0;
 
 
     char16_t lamalefChar, yehhamzaChar;
 
-    for(i = 0 ;i<=sourceLength-1;i++) {
-            if (seenTailOption && isSeenTailFamilyChar(dest[i])) {
-                if ((i>0) && (dest[i-1] == SPACE_CHAR) ) {
-                    dest[i-1] = shapeVars.tailChar;
-                }else {
-                    *pErrorCode=U_NO_SPACE_AVAILABLE;
+    برائے(i = 0 ;i<=ماخذ_لمبائی-1;i++) {
+            اگر (نظر_آیا_دم_Option && is_نظر_آیا_دم_Family_Char(dest[i])) {
+                اگر ((i>0) && (dest[i-1] == SPACE_CHAR) ) {
+                    dest[i-1] = shapeVars.دم_Char;
+                }ورنہ {
+                    *p_Error_رمز=U_NO_SPACE_دستیاب;
                 }
-            }else if(yehHamzaOption && (isYehHamzaChar(dest[i])) ) {
-                if ((i>0) && (dest[i-1] == SPACE_CHAR) ) {
+            }ورنہ اگر(yehHamzaOption && (isYehHamzaChar(dest[i])) ) {
+                اگر ((i>0) && (dest[i-1] == SPACE_CHAR) ) {
                     yehhamzaChar = dest[i];
-                    dest[i] = yehHamzaToYeh[yehhamzaChar - YEH_HAMZAFE_CHAR];
+                    dest[i] = yeh_Hamza_مقصد_Yeh[yehhamzaChar - YEH_HAMZAFE_CHAR];
                     dest[i-1] = HAMZAFE_CHAR;
-                }else {
+                }ورنہ {
 
-                    *pErrorCode=U_NO_SPACE_AVAILABLE;
+                    *p_Error_رمز=U_NO_SPACE_دستیاب;
                 }
-            }else if(lamAlefOption && isLamAlefChar(dest[i+1])) {
-                if(dest[i] == SPACE_CHAR){
+            }ورنہ اگر(lamAlefOption && isLamAlefChar(dest[i+1])) {
+                اگر(dest[i] == SPACE_CHAR){
                     lamalefChar = dest[i+1];
                     dest[i+1] = LAM_CHAR;
                     dest[i] = convertLamAlef[ lamalefChar - 0xFEF5 ];
-                }else {
-                    *pErrorCode=U_NO_SPACE_AVAILABLE;
+                }ورنہ {
+                    *p_Error_رمز=U_NO_SPACE_دستیاب;
                 }
             }
        }
-       destSize = sourceLength;
-       return destSize;
+       dest_سائز = ماخذ_لمبائی;
+       واپس dest_سائز;
 }
  /*
  * Name     : expandCompositChar
@@ -1084,112 +1084,112 @@ expandCompositCharAtNear(char16_t *dest, int32_t sourceLength, int32_t destSize,
  *            U_NO_SPACE_AVAILABLE as defined in utypes.h
  */
 
-static int32_t
-expandCompositChar(char16_t *dest, int32_t sourceLength,
-              int32_t destSize,uint32_t options,
-              UErrorCode *pErrorCode, int shapingMode,struct uShapeVariables shapeVars) {
+ساکن int32_t
+expandCompositChar(char16_t *dest, int32_t ماخذ_لمبائی,
+              int32_t dest_سائز,uint32_t options,
+              UError_رمز *p_Error_رمز, صحیح shaping_منوال,ساخت uShapeVariables shapeVars) {
 
     int32_t      i = 0,j = 0;
 
-    char16_t *tempbuffer=nullptr;
-    int yehHamzaOption = 0;
-    int seenTailOption = 0;
-    int lamAlefOption = 0;
+    char16_t *tempbuffer=خالی_اشاریہ;
+    صحیح yehHamzaOption = 0;
+    صحیح نظر_آیا_دم_Option = 0;
+    صحیح lamAlefOption = 0;
 
-    if (shapingMode == 1){
-        if ( (options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_AUTO){
+    اگر (shaping_منوال == 1){
+        اگر ( (options&U_SHAPE_LAMALEF_نقاب) == U_SHAPE_LAMALEF_AUTO){
 
-            if(shapeVars.spacesRelativeToTextBeginEnd == 0) {
-                destSize = expandCompositCharAtEnd(dest, sourceLength, destSize, pErrorCode);
+            اگر(shapeVars.spaces_Relative_مقصد_متن_Begin_انتہا == 0) {
+                dest_سائز = expand_Composit_Char_At_انتہا(dest, ماخذ_لمبائی, dest_سائز, p_Error_رمز);
 
-                if(*pErrorCode == U_NO_SPACE_AVAILABLE) {
-                    *pErrorCode = U_ZERO_ERROR;
-                    destSize = expandCompositCharAtBegin(dest, sourceLength, destSize, pErrorCode);
+                اگر(*p_Error_رمز == U_NO_SPACE_دستیاب) {
+                    *p_Error_رمز = U_ZERO_ERROR;
+                    dest_سائز = expandCompositCharAtBegin(dest, ماخذ_لمبائی, dest_سائز, p_Error_رمز);
                 }
-            }else {
-                destSize = expandCompositCharAtBegin(dest, sourceLength, destSize, pErrorCode);
+            }ورنہ {
+                dest_سائز = expandCompositCharAtBegin(dest, ماخذ_لمبائی, dest_سائز, p_Error_رمز);
 
-                if(*pErrorCode == U_NO_SPACE_AVAILABLE) {
-                    *pErrorCode = U_ZERO_ERROR;
-                    destSize = expandCompositCharAtEnd(dest, sourceLength, destSize, pErrorCode);
+                اگر(*p_Error_رمز == U_NO_SPACE_دستیاب) {
+                    *p_Error_رمز = U_ZERO_ERROR;
+                    dest_سائز = expand_Composit_Char_At_انتہا(dest, ماخذ_لمبائی, dest_سائز, p_Error_رمز);
                 }
             }
 
-            if(*pErrorCode == U_NO_SPACE_AVAILABLE) {
-                *pErrorCode = U_ZERO_ERROR;
-                destSize = expandCompositCharAtNear(dest, sourceLength, destSize, pErrorCode, yehHamzaOption,
-                                                seenTailOption, 1,shapeVars);
+            اگر(*p_Error_رمز == U_NO_SPACE_دستیاب) {
+                *p_Error_رمز = U_ZERO_ERROR;
+                dest_سائز = expandCompositCharAtNear(dest, ماخذ_لمبائی, dest_سائز, p_Error_رمز, yehHamzaOption,
+                                                نظر_آیا_دم_Option, 1,shapeVars);
             }
         }
     }
 
-    if (shapingMode == 1){
-        if ( (options&U_SHAPE_LAMALEF_MASK) == shapeVars.uShapeLamalefEnd){
-            destSize = expandCompositCharAtEnd(dest, sourceLength, destSize, pErrorCode);
+    اگر (shaping_منوال == 1){
+        اگر ( (options&U_SHAPE_LAMALEF_نقاب) == shapeVars.u_Shape_Lamalef_انتہا){
+            dest_سائز = expand_Composit_Char_At_انتہا(dest, ماخذ_لمبائی, dest_سائز, p_Error_رمز);
         }
     }
 
-    if (shapingMode == 1){
-        if ( (options&U_SHAPE_LAMALEF_MASK) == shapeVars.uShapeLamalefBegin){
-            destSize = expandCompositCharAtBegin(dest, sourceLength, destSize, pErrorCode);
+    اگر (shaping_منوال == 1){
+        اگر ( (options&U_SHAPE_LAMALEF_نقاب) == shapeVars.uShapeLamalefBegin){
+            dest_سائز = expandCompositCharAtBegin(dest, ماخذ_لمبائی, dest_سائز, p_Error_رمز);
         }
     }
 
-    if (shapingMode == 0){
-         if ((options&U_SHAPE_YEHHAMZA_MASK) == U_SHAPE_YEHHAMZA_TWOCELL_NEAR){
+    اگر (shaping_منوال == 0){
+         اگر ((options&U_SHAPE_YEHHAMZA_نقاب) == U_SHAPE_YEHHAMZA_TWOCELL_NEAR){
              yehHamzaOption = 1;
          }
-         if ((options&U_SHAPE_SEEN_MASK) == U_SHAPE_SEEN_TWOCELL_NEAR){
-            seenTailOption = 1;
+         اگر ((options&U_SHAPE_نظر_آیا_نقاب) == U_SHAPE_نظر_آیا_TWOCELL_NEAR){
+            نظر_آیا_دم_Option = 1;
          }
     }
-    if (shapingMode == 1) {
-        if ( (options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_NEAR) {
+    اگر (shaping_منوال == 1) {
+        اگر ( (options&U_SHAPE_LAMALEF_نقاب) == U_SHAPE_LAMALEF_NEAR) {
             lamAlefOption = 1;
         }
     }
 
 
-    if (yehHamzaOption || seenTailOption || lamAlefOption){
-        destSize = expandCompositCharAtNear(dest, sourceLength, destSize, pErrorCode, yehHamzaOption,
-                                            seenTailOption,lamAlefOption,shapeVars);
+    اگر (yehHamzaOption || نظر_آیا_دم_Option || lamAlefOption){
+        dest_سائز = expandCompositCharAtNear(dest, ماخذ_لمبائی, dest_سائز, p_Error_رمز, yehHamzaOption,
+                                            نظر_آیا_دم_Option,lamAlefOption,shapeVars);
     }
 
 
-    if (shapingMode == 1){
-        if ( (options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_RESIZE){
-            destSize = calculateSize(dest,sourceLength,destSize,options);
-            tempbuffer = static_cast<char16_t*>(uprv_malloc((destSize + 1) * U_SIZEOF_UCHAR));
+    اگر (shaping_منوال == 1){
+        اگر ( (options&U_SHAPE_LAMALEF_نقاب) == U_SHAPE_LAMALEF_RESIZE){
+            dest_سائز = calculate_سائز(dest,ماخذ_لمبائی,dest_سائز,options);
+            tempbuffer = static_cast<char16_t*>(uprv_malloc((dest_سائز + 1) * U_SIZEOF_UCHAR));
 
             /* Test for nullptr */
-            if(tempbuffer == nullptr) {
-                *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-                return 0;
+            اگر(tempbuffer == خالی_اشاریہ) {
+                *p_Error_رمز = U_حافظہ_تخصیص_ERROR;
+                واپس 0;
             }
 
-            uprv_memset(tempbuffer, 0, (destSize+1)*U_SIZEOF_UCHAR);
+            uprv_memset(tempbuffer, 0, (dest_سائز+1)*U_SIZEOF_UCHAR);
 
             i = j = 0;
-            while(i < destSize && j < destSize) {
-                if(isLamAlefChar(dest[i]) ) {
+            جب(i < dest_سائز && j < dest_سائز) {
+                اگر(isLamAlefChar(dest[i]) ) {
                     tempbuffer[j] = convertLamAlef[ dest[i] - 0xFEF5 ];
                     tempbuffer[j+1] = LAM_CHAR;
                     j++;
-                }else {
+                }ورنہ {
                     tempbuffer[j] = dest[i];
                 }
                 i++;
                 j++;
             }
 
-            u_memcpy(dest, tempbuffer, destSize);
+            u_memcpy(dest, tempbuffer, dest_سائز);
         }
     }
 
-    if(tempbuffer) {
+    اگر(tempbuffer) {
         uprv_free(tempbuffer);
     }
-    return destSize;
+    واپس dest_سائز;
 }
 
 /*
@@ -1197,19 +1197,19 @@ expandCompositChar(char16_t *dest, int32_t sourceLength,
  *Function : Converts an Arabic Unicode buffer in 06xx Range into a shaped
  *           arabic Unicode buffer in FExx Range
  */
-static int32_t
-shapeUnicode(char16_t *dest, int32_t sourceLength,
-             int32_t destSize,uint32_t options,
-             UErrorCode *pErrorCode,
-             int tashkeelFlag, struct uShapeVariables shapeVars) {
+ساکن int32_t
+shapeUnicode(char16_t *dest, int32_t ماخذ_لمبائی,
+             int32_t dest_سائز,uint32_t options,
+             UError_رمز *p_Error_رمز,
+             صحیح tashkeelFlag, ساخت uShapeVariables shapeVars) {
 
     int32_t          i, iend;
-    int32_t          step;
-    int32_t          lastPos,Nx, Nw;
-    unsigned int     Shape;
-    int32_t          lamalef_found = 0;
-    int32_t seenfamFound = 0, yehhamzaFound =0, tashkeelFound  = 0;
-    char16_t         prevLink = 0, lastLink = 0, currLink, nextLink = 0;
+    int32_t          قدم;
+    int32_t          آخری_Pos,Nx, Nw;
+    غیرعلامتی صحیح     Shape;
+    int32_t          lamalef_ملا = 0;
+    int32_t seenfam_ملا = 0, yehhamza_ملا =0, tashkeel_ملا  = 0;
+    char16_t         پچھلا_Link = 0, آخری_Link = 0, currLink, اگلا_Link = 0;
     char16_t         wLamalef;
 
     /*
@@ -1218,26 +1218,26 @@ shapeUnicode(char16_t *dest, int32_t sourceLength,
      * even the lamalef is converted to the special region in
      * the 06xx range
      */
-    if ((options & U_SHAPE_PRESERVE_PRESENTATION_MASK)  == U_SHAPE_PRESERVE_PRESENTATION_NOOP) {
-        for (i = 0; i < sourceLength; i++) {
-            char16_t inputChar  = dest[i];
-            if ( (inputChar >= 0xFB50) && (inputChar <= 0xFBFF)) {
-                char16_t c = convertFBto06 [ (inputChar - 0xFB50) ];
-                if (c != 0)
+    اگر ((options & U_SHAPE_PRESERVE_PRESENTATION_نقاب)  == U_SHAPE_PRESERVE_PRESENTATION_NOOP) {
+        برائے (i = 0; i < ماخذ_لمبائی; i++) {
+            char16_t داخلہ_Char  = dest[i];
+            اگر ( (داخلہ_Char >= 0xFB50) && (داخلہ_Char <= 0xFBFF)) {
+                char16_t c = convertFBto06 [ (داخلہ_Char - 0xFB50) ];
+                اگر (c != 0)
                     dest[i] = c;
-            } else if ( (inputChar >= 0xFE70) && (inputChar <= 0xFEFC)) {
-                dest[i] = convertFEto06 [ (inputChar - 0xFE70) ] ;
-            } else {
-                dest[i] = inputChar ;
+            } ورنہ اگر ( (داخلہ_Char >= 0xFE70) && (داخلہ_Char <= 0xFEFC)) {
+                dest[i] = convertFEto06 [ (داخلہ_Char - 0xFE70) ] ;
+            } ورنہ {
+                dest[i] = داخلہ_Char ;
             }
         }
     }
 
 
     /* sets the index to the end of the buffer, together with the step point to -1 */
-    i = sourceLength - 1;
+    i = ماخذ_لمبائی - 1;
     iend = -1;
-    step = -1;
+    قدم = -1;
 
     /*
      * This function resolves the link between the characters .
@@ -1246,51 +1246,51 @@ shapeUnicode(char16_t *dest, int32_t sourceLength,
      */
     currLink = getLink(dest[i]);
 
-    lastPos = i;
+    آخری_Pos = i;
     Nx = -2, Nw = 0;
 
-    while (i != iend) {
+    جب (i != iend) {
         /* If high byte of currLink > 0 then more than one shape */
-        if ((currLink & 0xFF00) > 0 || (getLink(dest[i]) & IRRELEVANT) != 0) {
-            Nw = i + step;
-            while (Nx < 0) {         /* we need to know about next char */
-                if(Nw == iend) {
-                    nextLink = 0;
+        اگر ((currLink & 0xFF00) > 0 || (getLink(dest[i]) & IRRELEVANT) != 0) {
+            Nw = i + قدم;
+            جب (Nx < 0) {         /* we need to know about next char */
+                اگر(Nw == iend) {
+                    اگلا_Link = 0;
                     Nx = 3000;
-                } else {
-                    nextLink = getLink(dest[Nw]);
-                    if((nextLink & IRRELEVANT) == 0) {
+                } ورنہ {
+                    اگلا_Link = getLink(dest[Nw]);
+                    اگر((اگلا_Link & IRRELEVANT) == 0) {
                         Nx = Nw;
-                    } else {
-                        Nw = Nw + step;
+                    } ورنہ {
+                        Nw = Nw + قدم;
                     }
                 }
             }
 
-            if ( ((currLink & ALEFTYPE) > 0)  &&  ((lastLink & LAMTYPE) > 0) ) {
-                lamalef_found = 1;
+            اگر ( ((currLink & ALEFTYPE) > 0)  &&  ((آخری_Link & LAMTYPE) > 0) ) {
+                lamalef_ملا = 1;
                 wLamalef = changeLamAlef(dest[i]); /*get from 0x065C-0x065f */
-                if ( wLamalef != 0) {
+                اگر ( wLamalef != 0) {
                     dest[i] = LAMALEF_SPACE_SUB;            /* The default case is to drop the Alef and replace */
-                    dest[lastPos] =wLamalef;     /* it by LAMALEF_SPACE_SUB which is the last character in the  */
-                    i=lastPos;                   /* unicode private use area, this is done to make   */
+                    dest[آخری_Pos] =wLamalef;     /* it by LAMALEF_SPACE_SUB which is the last character in the  */
+                    i=آخری_Pos;                   /* unicode private use area, this is done to make   */
                 }                                /* sure that removeLamAlefSpaces() handles only the */
-                lastLink = prevLink;             /* spaces generated during lamalef generation.      */
+                آخری_Link = پچھلا_Link;             /* spaces generated during lamalef generation.      */
                 currLink = getLink(wLamalef);    /* LAMALEF_SPACE_SUB is added here and is replaced by spaces   */
             }                                    /* in removeLamAlefSpaces()                         */
 
-            if ((i > 0) && (dest[i-1] == SPACE_CHAR)){
-                if ( isSeenFamilyChar(dest[i])) {
-                    seenfamFound = 1;
-                } else if (dest[i] == YEH_HAMZA_CHAR) {
-                    yehhamzaFound = 1;
+            اگر ((i > 0) && (dest[i-1] == SPACE_CHAR)){
+                اگر ( is_نظر_آیا_Family_Char(dest[i])) {
+                    seenfam_ملا = 1;
+                } ورنہ اگر (dest[i] == YEH_HAMZA_CHAR) {
+                    yehhamza_ملا = 1;
                 }
             }
-            else if(i==0){
-                if ( isSeenFamilyChar(dest[i])){
-                    seenfamFound = 1;
-                } else if (dest[i] == YEH_HAMZA_CHAR) {
-                    yehhamzaFound = 1;
+            ورنہ اگر(i==0){
+                اگر ( is_نظر_آیا_Family_Char(dest[i])){
+                    seenfam_ملا = 1;
+                } ورنہ اگر (dest[i] == YEH_HAMZA_CHAR) {
+                    yehhamza_ملا = 1;
                 }
             }
 
@@ -1299,69 +1299,69 @@ shapeUnicode(char16_t *dest, int32_t sourceLength,
              * and of character; depends on the order of the shapes
              * (isolated, initial, middle, final) in the compatibility area
              */
-            Shape = shapeTable[nextLink & (LINKR + LINKL)]
-                              [lastLink & (LINKR + LINKL)]
+            Shape = shape_جدول[اگلا_Link & (LINKR + LINKL)]
+                              [آخری_Link & (LINKR + LINKL)]
                               [currLink & (LINKR + LINKL)];
 
-            if ((currLink & (LINKR+LINKL)) == 1) {
+            اگر ((currLink & (LINKR+LINKL)) == 1) {
                 Shape &= 1;
-            } else if(isTashkeelChar(dest[i])) {
-                if( (lastLink & LINKL) && (nextLink & LINKR) && (tashkeelFlag == 1) &&
+            } ورنہ اگر(isTashkeelChar(dest[i])) {
+                اگر( (آخری_Link & LINKL) && (اگلا_Link & LINKR) && (tashkeelFlag == 1) &&
                      dest[i] != 0x064C && dest[i] != 0x064D )
                 {
                     Shape = 1;
-                    if( (nextLink&ALEFTYPE) == ALEFTYPE && (lastLink&LAMTYPE) == LAMTYPE ) {
+                    اگر( (اگلا_Link&ALEFTYPE) == ALEFTYPE && (آخری_Link&LAMTYPE) == LAMTYPE ) {
                         Shape = 0;
                     }
-                } else if(tashkeelFlag == 2 && dest[i] == SHADDA06_CHAR){
+                } ورنہ اگر(tashkeelFlag == 2 && dest[i] == SHADDA06_CHAR){
                     Shape = 1;
-                } else {
+                } ورنہ {
                     Shape = 0;
                 }
             }
-            if ((dest[i] ^ 0x0600) < 0x100) {
-                if ( isTashkeelChar(dest[i]) ){
-                    if (tashkeelFlag == 2  && dest[i] != SHADDA06_CHAR){
+            اگر ((dest[i] ^ 0x0600) < 0x100) {
+                اگر ( isTashkeelChar(dest[i]) ){
+                    اگر (tashkeelFlag == 2  && dest[i] != SHADDA06_CHAR){
                         dest[i] = TASHKEEL_SPACE_SUB;
-                        tashkeelFound  = 1;
-                    } else {
+                        tashkeel_ملا  = 1;
+                    } ورنہ {
                         /* to ensure the array index is within the range */
                         U_ASSERT(dest[i] >= 0x064Bu
                             && dest[i]-0x064Bu < UPRV_LENGTHOF(IrrelevantPos));
                         dest[i] =  0xFE70 + IrrelevantPos[(dest[i] - 0x064B)] + static_cast<char16_t>(Shape);
                     }
-                }else if ((currLink & APRESENT) > 0) {
+                }ورنہ اگر ((currLink & APRESENT) > 0) {
                     dest[i] = static_cast<char16_t>(0xFB50 + (currLink >> 8) + Shape);
-                }else if ((currLink >> 8) > 0 && (currLink & IRRELEVANT) == 0) {
+                }ورنہ اگر ((currLink >> 8) > 0 && (currLink & IRRELEVANT) == 0) {
                     dest[i] = static_cast<char16_t>(0xFE70 + (currLink >> 8) + Shape);
                 }
             }
         }
 
         /* move one notch forward */
-        if ((currLink & IRRELEVANT) == 0) {
-            prevLink = lastLink;
-            lastLink = currLink;
-            lastPos = i;
+        اگر ((currLink & IRRELEVANT) == 0) {
+            پچھلا_Link = آخری_Link;
+            آخری_Link = currLink;
+            آخری_Pos = i;
         }
 
-        i = i + step;
-        if (i == Nx) {
-            currLink = nextLink;
+        i = i + قدم;
+        اگر (i == Nx) {
+            currLink = اگلا_Link;
             Nx = -2;
-        } else if(i != iend) {
+        } ورنہ اگر(i != iend) {
             currLink = getLink(dest[i]);
         }
     }
-    destSize = sourceLength;
-    if ( (lamalef_found != 0 ) || (tashkeelFound  != 0) ){
-        destSize = handleGeneratedSpaces(dest,sourceLength,destSize,options,pErrorCode, shapeVars);
+    dest_سائز = ماخذ_لمبائی;
+    اگر ( (lamalef_ملا != 0 ) || (tashkeel_ملا  != 0) ){
+        dest_سائز = handleGeneratedSpaces(dest,ماخذ_لمبائی,dest_سائز,options,p_Error_رمز, shapeVars);
     }
 
-    if ( (seenfamFound != 0) || (yehhamzaFound != 0) ) {
-        destSize = expandCompositChar(dest, sourceLength,destSize,options,pErrorCode, SHAPE_MODE,shapeVars);
+    اگر ( (seenfam_ملا != 0) || (yehhamza_ملا != 0) ) {
+        dest_سائز = expandCompositChar(dest, ماخذ_لمبائی,dest_سائز,options,p_Error_رمز, SHAPE_منوال,shapeVars);
     }
-    return destSize;
+    واپس dest_سائز;
 }
 
 /*
@@ -1369,51 +1369,51 @@ shapeUnicode(char16_t *dest, int32_t sourceLength,
  *Function : Converts an Arabic Unicode buffer in FExx Range into unshaped
  *           arabic Unicode buffer in 06xx Range
  */
-static int32_t
-deShapeUnicode(char16_t *dest, int32_t sourceLength,
-               int32_t destSize,uint32_t options,
-               UErrorCode *pErrorCode, struct uShapeVariables shapeVars) {
+ساکن int32_t
+deShapeUnicode(char16_t *dest, int32_t ماخذ_لمبائی,
+               int32_t dest_سائز,uint32_t options,
+               UError_رمز *p_Error_رمز, ساخت uShapeVariables shapeVars) {
     int32_t i = 0;
-    int32_t lamalef_found = 0;
+    int32_t lamalef_ملا = 0;
     int32_t yehHamzaComposeEnabled = 0;
-    int32_t seenComposeEnabled = 0;
+    int32_t نظر_آیا_Compose_Enabled = 0;
 
-    yehHamzaComposeEnabled = ((options&U_SHAPE_YEHHAMZA_MASK) == U_SHAPE_YEHHAMZA_TWOCELL_NEAR) ? 1 : 0;
-    seenComposeEnabled = ((options&U_SHAPE_SEEN_MASK) == U_SHAPE_SEEN_TWOCELL_NEAR)? 1 : 0;
+    yehHamzaComposeEnabled = ((options&U_SHAPE_YEHHAMZA_نقاب) == U_SHAPE_YEHHAMZA_TWOCELL_NEAR) ? 1 : 0;
+    نظر_آیا_Compose_Enabled = ((options&U_SHAPE_نظر_آیا_نقاب) == U_SHAPE_نظر_آیا_TWOCELL_NEAR)? 1 : 0;
 
     /*
      *This for loop changes the buffer from the Unicode FE range to
      *the Unicode 06 range
      */
 
-    for(i = 0; i < sourceLength; i++) {
-        char16_t  inputChar = dest[i];
-        if ( (inputChar >= 0xFB50) && (inputChar <= 0xFBFF)) { /* FBxx Arabic range */
-            char16_t c = convertFBto06 [ (inputChar - 0xFB50) ];
-            if (c != 0)
+    برائے(i = 0; i < ماخذ_لمبائی; i++) {
+        char16_t  داخلہ_Char = dest[i];
+        اگر ( (داخلہ_Char >= 0xFB50) && (داخلہ_Char <= 0xFBFF)) { /* FBxx Arabic range */
+            char16_t c = convertFBto06 [ (داخلہ_Char - 0xFB50) ];
+            اگر (c != 0)
                 dest[i] = c;
-        } else if( (yehHamzaComposeEnabled == 1) && ((inputChar == HAMZA06_CHAR) || (inputChar == HAMZAFE_CHAR))
-                && (i < (sourceLength - 1)) && isAlefMaksouraChar(dest[i+1] )) {
+        } ورنہ اگر( (yehHamzaComposeEnabled == 1) && ((داخلہ_Char == HAMZA06_CHAR) || (داخلہ_Char == HAMZAFE_CHAR))
+                && (i < (ماخذ_لمبائی - 1)) && isAlefMaksouraChar(dest[i+1] )) {
                  dest[i] = SPACE_CHAR;
                  dest[i+1] = YEH_HAMZA_CHAR;
-        } else if ( (seenComposeEnabled == 1) && (isTailChar(inputChar)) && (i< (sourceLength - 1))
-                        && (isSeenTailFamilyChar(dest[i+1])) ) {
+        } ورنہ اگر ( (نظر_آیا_Compose_Enabled == 1) && (is_دم_Char(داخلہ_Char)) && (i< (ماخذ_لمبائی - 1))
+                        && (is_نظر_آیا_دم_Family_Char(dest[i+1])) ) {
                 dest[i] = SPACE_CHAR;
-        } else if (( inputChar >= 0xFE70) && (inputChar <= 0xFEF4 )) { /* FExx Arabic range */
-                dest[i] = convertFEto06 [ (inputChar - 0xFE70) ];
-        } else {
-            dest[i] = inputChar ;
+        } ورنہ اگر (( داخلہ_Char >= 0xFE70) && (داخلہ_Char <= 0xFEF4 )) { /* FExx Arabic range */
+                dest[i] = convertFEto06 [ (داخلہ_Char - 0xFE70) ];
+        } ورنہ {
+            dest[i] = داخلہ_Char ;
         }
 
-        if( isLamAlefChar(dest[i]) )
-            lamalef_found = 1;
+        اگر( isLamAlefChar(dest[i]) )
+            lamalef_ملا = 1;
     }
 
-   destSize = sourceLength;
-   if (lamalef_found != 0){
-          destSize = expandCompositChar(dest,sourceLength,destSize,options,pErrorCode,DESHAPE_MODE, shapeVars);
+   dest_سائز = ماخذ_لمبائی;
+   اگر (lamalef_ملا != 0){
+          dest_سائز = expandCompositChar(dest,ماخذ_لمبائی,dest_سائز,options,p_Error_رمز,DESHAPE_منوال, shapeVars);
    }
-   return destSize;
+   واپس dest_سائز;
 }
 
 /*
@@ -1423,217 +1423,217 @@ deShapeUnicode(char16_t *dest, int32_t sourceLength,
  */
 
 U_CAPI int32_t U_EXPORT2
-u_shapeArabic(const char16_t *source, int32_t sourceLength,
-              char16_t *dest, int32_t destCapacity,
+u_shapeArabic(ثابت char16_t *ماخذ, int32_t ماخذ_لمبائی,
+              char16_t *dest, int32_t dest_استعداد,
               uint32_t options,
-              UErrorCode *pErrorCode) {
+              UError_رمز *p_Error_رمز) {
 
-    int32_t destLength;
-    struct  uShapeVariables shapeVars = { OLD_TAIL_CHAR,U_SHAPE_LAMALEF_BEGIN,U_SHAPE_LAMALEF_END,U_SHAPE_TASHKEEL_BEGIN,U_SHAPE_TASHKEEL_END,0};
+    int32_t dest_لمبائی;
+    ساخت  uShapeVariables shapeVars = { OLD_دم_CHAR,U_SHAPE_LAMALEF_BEGIN,U_SHAPE_LAMALEF_انتہا,U_SHAPE_TASHKEEL_BEGIN,U_SHAPE_TASHKEEL_انتہا,0};
 
     /* usual error checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    اگر(p_Error_رمز==خالی_اشاریہ || U_FAILURE(*p_Error_رمز)) {
+        واپس 0;
     }
 
     /* make sure that no reserved options values are used; allow dest==nullptr only for preflighting */
-    if( source==nullptr || sourceLength<-1 || (dest==nullptr && destCapacity!=0) || destCapacity<0 ||
-                (((options&U_SHAPE_TASHKEEL_MASK) > 0) &&
+    اگر( ماخذ==خالی_اشاریہ || ماخذ_لمبائی<-1 || (dest==خالی_اشاریہ && dest_استعداد!=0) || dest_استعداد<0 ||
+                (((options&U_SHAPE_TASHKEEL_نقاب) > 0) &&
                  ((options&U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED) == U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED) ) ||
-                (((options&U_SHAPE_TASHKEEL_MASK) > 0) &&
-                 ((options&U_SHAPE_LETTERS_MASK) == U_SHAPE_LETTERS_UNSHAPE)) ||
+                (((options&U_SHAPE_TASHKEEL_نقاب) > 0) &&
+                 ((options&U_SHAPE_LETTERS_نقاب) == U_SHAPE_LETTERS_UNSHAPE)) ||
                 (options&U_SHAPE_DIGIT_TYPE_RESERVED)==U_SHAPE_DIGIT_TYPE_RESERVED ||
-                (options&U_SHAPE_DIGITS_MASK)==U_SHAPE_DIGITS_RESERVED ||
-                ((options&U_SHAPE_LAMALEF_MASK) != U_SHAPE_LAMALEF_RESIZE  &&
-                (options&U_SHAPE_AGGREGATE_TASHKEEL_MASK) != 0) ||
-                ((options&U_SHAPE_AGGREGATE_TASHKEEL_MASK) == U_SHAPE_AGGREGATE_TASHKEEL &&
+                (options&U_SHAPE_DIGITS_نقاب)==U_SHAPE_DIGITS_RESERVED ||
+                ((options&U_SHAPE_LAMALEF_نقاب) != U_SHAPE_LAMALEF_RESIZE  &&
+                (options&U_SHAPE_AGGREGATE_TASHKEEL_نقاب) != 0) ||
+                ((options&U_SHAPE_AGGREGATE_TASHKEEL_نقاب) == U_SHAPE_AGGREGATE_TASHKEEL &&
                 (options&U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED) != U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED)
     )
     {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
     /* Validate  lamalef options */
-    if(((options&U_SHAPE_LAMALEF_MASK) > 0)&&
-              !(((options & U_SHAPE_LAMALEF_MASK)==U_SHAPE_LAMALEF_BEGIN) ||
-                ((options & U_SHAPE_LAMALEF_MASK)==U_SHAPE_LAMALEF_END ) ||
-                ((options & U_SHAPE_LAMALEF_MASK)==U_SHAPE_LAMALEF_RESIZE )||
-                 ((options & U_SHAPE_LAMALEF_MASK)==U_SHAPE_LAMALEF_AUTO) ||
-                 ((options & U_SHAPE_LAMALEF_MASK)==U_SHAPE_LAMALEF_NEAR)))
+    اگر(((options&U_SHAPE_LAMALEF_نقاب) > 0)&&
+              !(((options & U_SHAPE_LAMALEF_نقاب)==U_SHAPE_LAMALEF_BEGIN) ||
+                ((options & U_SHAPE_LAMALEF_نقاب)==U_SHAPE_LAMALEF_انتہا ) ||
+                ((options & U_SHAPE_LAMALEF_نقاب)==U_SHAPE_LAMALEF_RESIZE )||
+                 ((options & U_SHAPE_LAMALEF_نقاب)==U_SHAPE_LAMALEF_AUTO) ||
+                 ((options & U_SHAPE_LAMALEF_نقاب)==U_SHAPE_LAMALEF_NEAR)))
     {
-         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+         *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
     /* Validate  Tashkeel options */
-    if(((options&U_SHAPE_TASHKEEL_MASK) > 0)&&
-                   !(((options & U_SHAPE_TASHKEEL_MASK)==U_SHAPE_TASHKEEL_BEGIN) ||
-                     ((options & U_SHAPE_TASHKEEL_MASK)==U_SHAPE_TASHKEEL_END )
-                    ||((options & U_SHAPE_TASHKEEL_MASK)==U_SHAPE_TASHKEEL_RESIZE )||
-                    ((options & U_SHAPE_TASHKEEL_MASK)==U_SHAPE_TASHKEEL_REPLACE_BY_TATWEEL)))
+    اگر(((options&U_SHAPE_TASHKEEL_نقاب) > 0)&&
+                   !(((options & U_SHAPE_TASHKEEL_نقاب)==U_SHAPE_TASHKEEL_BEGIN) ||
+                     ((options & U_SHAPE_TASHKEEL_نقاب)==U_SHAPE_TASHKEEL_انتہا )
+                    ||((options & U_SHAPE_TASHKEEL_نقاب)==U_SHAPE_TASHKEEL_RESIZE )||
+                    ((options & U_SHAPE_TASHKEEL_نقاب)==U_SHAPE_TASHKEEL_REPLACE_BY_TATWEEL)))
     {
-         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+         *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
     /* determine the source length */
-    if(sourceLength==-1) {
-        sourceLength=u_strlen(source);
+    اگر(ماخذ_لمبائی==-1) {
+        ماخذ_لمبائی=u_strlen(ماخذ);
     }
-    if(sourceLength<=0) {
-        return u_terminateUChars(dest, destCapacity, 0, pErrorCode);
+    اگر(ماخذ_لمبائی<=0) {
+        واپس u_terminateUChars(dest, dest_استعداد, 0, p_Error_رمز);
     }
 
     /* check that source and destination do not overlap */
-    if( dest!=nullptr &&
-        ((source<=dest && dest<source+sourceLength) ||
-         (dest<=source && source<dest+destCapacity))) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    اگر( dest!=خالی_اشاریہ &&
+        ((ماخذ<=dest && dest<ماخذ+ماخذ_لمبائی) ||
+         (dest<=ماخذ && ماخذ<dest+dest_استعداد))) {
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
 
     /* Does Options contain the new Seen Tail Unicode code point option */
-    if ( (options&U_SHAPE_TAIL_TYPE_MASK) == U_SHAPE_TAIL_NEW_UNICODE){
-        shapeVars.tailChar = NEW_TAIL_CHAR;
-    }else {
-        shapeVars.tailChar = OLD_TAIL_CHAR;
+    اگر ( (options&U_SHAPE_دم_TYPE_نقاب) == U_SHAPE_دم_NEW_UNICODE){
+        shapeVars.دم_Char = NEW_دم_CHAR;
+    }ورنہ {
+        shapeVars.دم_Char = OLD_دم_CHAR;
     }
 
-    if((options&U_SHAPE_LETTERS_MASK)!=U_SHAPE_LETTERS_NOOP) {
-        char16_t buffer[300];
-        char16_t *tempbuffer, *tempsource = nullptr;
-        int32_t outputSize, spacesCountl=0, spacesCountr=0;
+    اگر((options&U_SHAPE_LETTERS_نقاب)!=U_SHAPE_LETTERS_NOOP) {
+        char16_t بفر[300];
+        char16_t *tempbuffer, *tempsource = خالی_اشاریہ;
+        int32_t output_سائز, spacesCountl=0, spacesCountr=0;
 
-        if((options&U_SHAPE_AGGREGATE_TASHKEEL_MASK)>0) {
-            int32_t logical_order = (options&U_SHAPE_TEXT_DIRECTION_MASK) == U_SHAPE_TEXT_DIRECTION_LOGICAL;
+        اگر((options&U_SHAPE_AGGREGATE_TASHKEEL_نقاب)>0) {
+            int32_t logical_ترتیب = (options&U_SHAPE_متن_DIRECTION_نقاب) == U_SHAPE_متن_DIRECTION_LOGICAL;
             int32_t aggregate_tashkeel =
-                        (options&(U_SHAPE_AGGREGATE_TASHKEEL_MASK+U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED)) ==
+                        (options&(U_SHAPE_AGGREGATE_TASHKEEL_نقاب+U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED)) ==
                         (U_SHAPE_AGGREGATE_TASHKEEL+U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED);
-            int step=logical_order?1:-1;
-            int j=logical_order?-1:2*sourceLength;
-            int i=logical_order?-1:sourceLength;
-            int end=logical_order?sourceLength:-1;
-            int aggregation_possible = 1;
-            char16_t prev = 0;
-            char16_t prevLink, currLink = 0;
-            int newSourceLength = 0;
-            tempsource = (char16_t *)uprv_malloc(2*sourceLength*U_SIZEOF_UCHAR);
-            if(tempsource == nullptr) {
-                *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-                return 0;
+            صحیح قدم=logical_ترتیب?1:-1;
+            صحیح j=logical_ترتیب?-1:2*ماخذ_لمبائی;
+            صحیح i=logical_ترتیب?-1:ماخذ_لمبائی;
+            صحیح انتہا=logical_ترتیب?ماخذ_لمبائی:-1;
+            صحیح aggregation_possible = 1;
+            char16_t پچھلا = 0;
+            char16_t پچھلا_Link, currLink = 0;
+            صحیح new_ماخذ_لمبائی = 0;
+            tempsource = (char16_t *)uprv_malloc(2*ماخذ_لمبائی*U_SIZEOF_UCHAR);
+            اگر(tempsource == خالی_اشاریہ) {
+                *p_Error_رمز = U_حافظہ_تخصیص_ERROR;
+                واپس 0;
             }
 
-            while ((i+=step) != end) {
-                prevLink = currLink;
-                currLink = getLink(source[i]);
-                if (aggregate_tashkeel && ((prevLink|currLink)&COMBINE) == COMBINE && aggregation_possible) {
-                    if (j<0 || j>=2*sourceLength) {
-                        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-                        if (tempsource != nullptr) uprv_free(tempsource);
-                        return 0;
+            جب ((i+=قدم) != انتہا) {
+                پچھلا_Link = currLink;
+                currLink = getLink(ماخذ[i]);
+                اگر (aggregate_tashkeel && ((پچھلا_Link|currLink)&COMBINE) == COMBINE && aggregation_possible) {
+                    اگر (j<0 || j>=2*ماخذ_لمبائی) {
+                        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+                        اگر (tempsource != خالی_اشاریہ) uprv_free(tempsource);
+                        واپس 0;
                     }
                     aggregation_possible = 0;
-                    tempsource[j] = (prev<source[i]?prev:source[i])-0x064C+0xFC5E;
+                    tempsource[j] = (پچھلا<ماخذ[i]?پچھلا:ماخذ[i])-0x064C+0xFC5E;
                     currLink = getLink(tempsource[j]);
-                } else {
+                } ورنہ {
                     aggregation_possible = 1;
-                    tempsource[j+=step] = source[i];
-                    prev = source[i];
-                    newSourceLength++;
+                    tempsource[j+=قدم] = ماخذ[i];
+                    پچھلا = ماخذ[i];
+                    new_ماخذ_لمبائی++;
                 }
             }
-            source = tempsource+(logical_order?0:j);
-            sourceLength = newSourceLength;
+            ماخذ = tempsource+(logical_ترتیب?0:j);
+            ماخذ_لمبائی = new_ماخذ_لمبائی;
         }
 
         /* calculate destination size */
         /* TODO: do we ever need to do this pure preflighting? */
-        if(((options&U_SHAPE_LAMALEF_MASK)==U_SHAPE_LAMALEF_RESIZE) ||
-           ((options&U_SHAPE_TASHKEEL_MASK)==U_SHAPE_TASHKEEL_RESIZE)) {
-            outputSize=calculateSize(source,sourceLength,destCapacity,options);
-        } else {
-            outputSize=sourceLength;
+        اگر(((options&U_SHAPE_LAMALEF_نقاب)==U_SHAPE_LAMALEF_RESIZE) ||
+           ((options&U_SHAPE_TASHKEEL_نقاب)==U_SHAPE_TASHKEEL_RESIZE)) {
+            output_سائز=calculate_سائز(ماخذ,ماخذ_لمبائی,dest_استعداد,options);
+        } ورنہ {
+            output_سائز=ماخذ_لمبائی;
         }
 
-        if(outputSize>destCapacity) {
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                if (tempsource != nullptr) uprv_free(tempsource);
-            return outputSize;
+        اگر(output_سائز>dest_استعداد) {
+            *p_Error_رمز=U_بفر_حد_سے_تجاوز_ERROR;
+                اگر (tempsource != خالی_اشاریہ) uprv_free(tempsource);
+            واپس output_سائز;
         }
 
         /*
          * need a temporary buffer of size max(outputSize, sourceLength)
          * because at first we copy source->temp
          */
-        if(sourceLength>outputSize) {
-            outputSize=sourceLength;
+        اگر(ماخذ_لمبائی>output_سائز) {
+            output_سائز=ماخذ_لمبائی;
         }
 
         /* Start of Arabic letter shaping part */
-        if(outputSize<=UPRV_LENGTHOF(buffer)) {
-            outputSize=UPRV_LENGTHOF(buffer);
-            tempbuffer=buffer;
-        } else {
-            tempbuffer = (char16_t *)uprv_malloc(outputSize*U_SIZEOF_UCHAR);
+        اگر(output_سائز<=UPRV_LENGTHOF(بفر)) {
+            output_سائز=UPRV_LENGTHOF(بفر);
+            tempbuffer=بفر;
+        } ورنہ {
+            tempbuffer = (char16_t *)uprv_malloc(output_سائز*U_SIZEOF_UCHAR);
 
             /*Test for nullptr*/
-            if(tempbuffer == nullptr) {
-                *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-                if (tempsource != nullptr) uprv_free(tempsource);
-                return 0;
+            اگر(tempbuffer == خالی_اشاریہ) {
+                *p_Error_رمز = U_حافظہ_تخصیص_ERROR;
+                اگر (tempsource != خالی_اشاریہ) uprv_free(tempsource);
+                واپس 0;
             }
         }
-        u_memcpy(tempbuffer, source, sourceLength);
-        if (tempsource != nullptr){
+        u_memcpy(tempbuffer, ماخذ, ماخذ_لمبائی);
+        اگر (tempsource != خالی_اشاریہ){
             uprv_free(tempsource);
         }
 
-        if(sourceLength<outputSize) {
-            uprv_memset(tempbuffer+sourceLength, 0, (outputSize-sourceLength)*U_SIZEOF_UCHAR);
+        اگر(ماخذ_لمبائی<output_سائز) {
+            uprv_memset(tempbuffer+ماخذ_لمبائی, 0, (output_سائز-ماخذ_لمبائی)*U_SIZEOF_UCHAR);
         }
 
-        if((options&U_SHAPE_TEXT_DIRECTION_MASK) == U_SHAPE_TEXT_DIRECTION_LOGICAL) {
-            countSpaces(tempbuffer,sourceLength,options,&spacesCountl,&spacesCountr);
-            invertBuffer(tempbuffer,sourceLength,options,spacesCountl,spacesCountr);
+        اگر((options&U_SHAPE_متن_DIRECTION_نقاب) == U_SHAPE_متن_DIRECTION_LOGICAL) {
+            گنتی_Spaces(tempbuffer,ماخذ_لمبائی,options,&spacesCountl,&spacesCountr);
+            invert_بفر(tempbuffer,ماخذ_لمبائی,options,spacesCountl,spacesCountr);
         }
 
-        if((options&U_SHAPE_TEXT_DIRECTION_MASK) == U_SHAPE_TEXT_DIRECTION_VISUAL_LTR) {
-            if((options&U_SHAPE_SPACES_RELATIVE_TO_TEXT_MASK) == U_SHAPE_SPACES_RELATIVE_TO_TEXT_BEGIN_END) {
-                shapeVars.spacesRelativeToTextBeginEnd = 1;
-                shapeVars.uShapeLamalefBegin = U_SHAPE_LAMALEF_END;
-                shapeVars.uShapeLamalefEnd = U_SHAPE_LAMALEF_BEGIN;
-                shapeVars.uShapeTashkeelBegin = U_SHAPE_TASHKEEL_END;
-                shapeVars.uShapeTashkeelEnd = U_SHAPE_TASHKEEL_BEGIN;
+        اگر((options&U_SHAPE_متن_DIRECTION_نقاب) == U_SHAPE_متن_DIRECTION_VISUAL_LTR) {
+            اگر((options&U_SHAPE_SPACES_RELATIVE_مقصد_متن_نقاب) == U_SHAPE_SPACES_RELATIVE_مقصد_متن_BEGIN_انتہا) {
+                shapeVars.spaces_Relative_مقصد_متن_Begin_انتہا = 1;
+                shapeVars.uShapeLamalefBegin = U_SHAPE_LAMALEF_انتہا;
+                shapeVars.u_Shape_Lamalef_انتہا = U_SHAPE_LAMALEF_BEGIN;
+                shapeVars.uShapeTashkeelBegin = U_SHAPE_TASHKEEL_انتہا;
+                shapeVars.u_Shape_Tashkeel_انتہا = U_SHAPE_TASHKEEL_BEGIN;
             }
         }
 
-        switch(options&U_SHAPE_LETTERS_MASK) {
-        case U_SHAPE_LETTERS_SHAPE :
-             if( (options&U_SHAPE_TASHKEEL_MASK)> 0
-                 && ((options&U_SHAPE_TASHKEEL_MASK) !=U_SHAPE_TASHKEEL_REPLACE_BY_TATWEEL)) {
+        انتخاب(options&U_SHAPE_LETTERS_نقاب) {
+        حالت U_SHAPE_LETTERS_SHAPE :
+             اگر( (options&U_SHAPE_TASHKEEL_نقاب)> 0
+                 && ((options&U_SHAPE_TASHKEEL_نقاب) !=U_SHAPE_TASHKEEL_REPLACE_BY_TATWEEL)) {
                 /* Call the shaping function with tashkeel flag == 2 for removal of tashkeel */
-                destLength = shapeUnicode(tempbuffer,sourceLength,destCapacity,options,pErrorCode,2,shapeVars);
-             }else {
+                dest_لمبائی = shapeUnicode(tempbuffer,ماخذ_لمبائی,dest_استعداد,options,p_Error_رمز,2,shapeVars);
+             }ورنہ {
                 /* default Call the shaping function with tashkeel flag == 1 */
-                destLength = shapeUnicode(tempbuffer,sourceLength,destCapacity,options,pErrorCode,1,shapeVars);
+                dest_لمبائی = shapeUnicode(tempbuffer,ماخذ_لمبائی,dest_استعداد,options,p_Error_رمز,1,shapeVars);
 
                 /*After shaping text check if user wants to remove tashkeel and replace it with tatweel*/
-                if( (options&U_SHAPE_TASHKEEL_MASK) == U_SHAPE_TASHKEEL_REPLACE_BY_TATWEEL){
-                  destLength = handleTashkeelWithTatweel(tempbuffer,destLength,destCapacity,options,pErrorCode);
+                اگر( (options&U_SHAPE_TASHKEEL_نقاب) == U_SHAPE_TASHKEEL_REPLACE_BY_TATWEEL){
+                  dest_لمبائی = handleTashkeelWithTatweel(tempbuffer,dest_لمبائی,dest_استعداد,options,p_Error_رمز);
                 }
             }
-            break;
-        case U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED :
+            توڑو;
+        حالت U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED :
             /* Call the shaping function with tashkeel flag == 0 */
-            destLength = shapeUnicode(tempbuffer,sourceLength,destCapacity,options,pErrorCode,0,shapeVars);
-            break;
+            dest_لمبائی = shapeUnicode(tempbuffer,ماخذ_لمبائی,dest_استعداد,options,p_Error_رمز,0,shapeVars);
+            توڑو;
 
-        case U_SHAPE_LETTERS_UNSHAPE :
+        حالت U_SHAPE_LETTERS_UNSHAPE :
             /* Call the deshaping function */
-            destLength = deShapeUnicode(tempbuffer,sourceLength,destCapacity,options,pErrorCode,shapeVars);
-            break;
-        default :
+            dest_لمبائی = deShapeUnicode(tempbuffer,ماخذ_لمبائی,dest_استعداد,options,p_Error_رمز,shapeVars);
+            توڑو;
+        طےشدہ :
             /* will never occur because of validity checks above */
-            destLength = 0;
-            break;
+            dest_لمبائی = 0;
+            توڑو;
         }
 
         /*
@@ -1643,34 +1643,34 @@ u_shapeArabic(const char16_t *source, int32_t sourceLength,
          * except for the adjustment above before the tempbuffer allocation
          */
 
-        if((options&U_SHAPE_TEXT_DIRECTION_MASK) == U_SHAPE_TEXT_DIRECTION_LOGICAL) {
-            countSpaces(tempbuffer,destLength,options,&spacesCountl,&spacesCountr);
-            invertBuffer(tempbuffer,destLength,options,spacesCountl,spacesCountr);
+        اگر((options&U_SHAPE_متن_DIRECTION_نقاب) == U_SHAPE_متن_DIRECTION_LOGICAL) {
+            گنتی_Spaces(tempbuffer,dest_لمبائی,options,&spacesCountl,&spacesCountr);
+            invert_بفر(tempbuffer,dest_لمبائی,options,spacesCountl,spacesCountr);
         }
-        u_memcpy(dest, tempbuffer, uprv_min(destLength, destCapacity));
+        u_memcpy(dest, tempbuffer, uprv_min(dest_لمبائی, dest_استعداد));
 
-        if(tempbuffer!=buffer) {
+        اگر(tempbuffer!=بفر) {
             uprv_free(tempbuffer);
         }
 
-        if(destLength>destCapacity) {
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            return destLength;
+        اگر(dest_لمبائی>dest_استعداد) {
+            *p_Error_رمز=U_بفر_حد_سے_تجاوز_ERROR;
+            واپس dest_لمبائی;
         }
 
         /* End of Arabic letter shaping part */
-    } else {
+    } ورنہ {
         /*
          * No letter shaping:
          * just make sure the destination is large enough and copy the string.
          */
-        if(destCapacity<sourceLength) {
+        اگر(dest_استعداد<ماخذ_لمبائی) {
             /* this catches preflighting, too */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            return sourceLength;
+            *p_Error_رمز=U_بفر_حد_سے_تجاوز_ERROR;
+            واپس ماخذ_لمبائی;
         }
-        u_memcpy(dest, source, sourceLength);
-        destLength=sourceLength;
+        u_memcpy(dest, ماخذ, ماخذ_لمبائی);
+        dest_لمبائی=ماخذ_لمبائی;
     }
 
     /*
@@ -1679,60 +1679,60 @@ u_shapeArabic(const char16_t *source, int32_t sourceLength,
      * The easiest way to do this is to operate on the destination and
      * "shape" the digits in-place.
      */
-    if((options&U_SHAPE_DIGITS_MASK)!=U_SHAPE_DIGITS_NOOP) {
-        char16_t digitBase;
+    اگر((options&U_SHAPE_DIGITS_نقاب)!=U_SHAPE_DIGITS_NOOP) {
+        char16_t digit_بنیاد;
         int32_t i;
 
         /* select the requested digit group */
-        switch(options&U_SHAPE_DIGIT_TYPE_MASK) {
-        case U_SHAPE_DIGIT_TYPE_AN:
-            digitBase=0x660; /* Unicode: "Arabic-Indic digits" */
-            break;
-        case U_SHAPE_DIGIT_TYPE_AN_EXTENDED:
-            digitBase=0x6f0; /* Unicode: "Eastern Arabic-Indic digits (Persian and Urdu)" */
-            break;
-        default:
+        انتخاب(options&U_SHAPE_DIGIT_TYPE_نقاب) {
+        حالت U_SHAPE_DIGIT_TYPE_AN:
+            digit_بنیاد=0x660; /* Unicode: "Arabic-Indic digits" */
+            توڑو;
+        حالت U_SHAPE_DIGIT_TYPE_AN_EXTENDED:
+            digit_بنیاد=0x6f0; /* Unicode: "Eastern Arabic-Indic digits (Persian and Urdu)" */
+            توڑو;
+        طےشدہ:
             /* will never occur because of validity checks above */
-            digitBase=0;
-            break;
+            digit_بنیاد=0;
+            توڑو;
         }
 
         /* perform the requested operation */
-        switch(options&U_SHAPE_DIGITS_MASK) {
-        case U_SHAPE_DIGITS_EN2AN:
+        انتخاب(options&U_SHAPE_DIGITS_نقاب) {
+        حالت U_SHAPE_DIGITS_EN2AN:
             /* add (digitBase-'0') to each European (ASCII) digit code point */
-            digitBase-=0x30;
-            for(i=0; i<destLength; ++i) {
-                if(((uint32_t)dest[i]-0x30)<10) {
-                    dest[i]+=digitBase;
+            digit_بنیاد-=0x30;
+            برائے(i=0; i<dest_لمبائی; ++i) {
+                اگر(((uint32_t)dest[i]-0x30)<10) {
+                    dest[i]+=digit_بنیاد;
                 }
             }
-            break;
-        case U_SHAPE_DIGITS_AN2EN:
+            توڑو;
+        حالت U_SHAPE_DIGITS_AN2EN:
             /* subtract (digitBase-'0') from each Arabic digit code point */
-            for(i=0; i<destLength; ++i) {
-                if(((uint32_t)dest[i]-(uint32_t)digitBase)<10) {
-                    dest[i]-=digitBase-0x30;
+            برائے(i=0; i<dest_لمبائی; ++i) {
+                اگر(((uint32_t)dest[i]-(uint32_t)digit_بنیاد)<10) {
+                    dest[i]-=digit_بنیاد-0x30;
                 }
             }
-            break;
-        case U_SHAPE_DIGITS_ALEN2AN_INIT_LR:
-            _shapeToArabicDigitsWithContext(dest, destLength,
-                                            digitBase,
-                                            (options & U_SHAPE_TEXT_DIRECTION_MASK) == U_SHAPE_TEXT_DIRECTION_LOGICAL,
-                                            false);
-            break;
-        case U_SHAPE_DIGITS_ALEN2AN_INIT_AL:
-            _shapeToArabicDigitsWithContext(dest, destLength,
-                                            digitBase,
-                                            (options & U_SHAPE_TEXT_DIRECTION_MASK) == U_SHAPE_TEXT_DIRECTION_LOGICAL,
-                                            true);
-            break;
-        default:
+            توڑو;
+        حالت U_SHAPE_DIGITS_ALEN2AN_INIT_LR:
+            shape_مقصد_Arabic_Digits_With_Context(dest, dest_لمبائی,
+                                            digit_بنیاد,
+                                            (options & U_SHAPE_متن_DIRECTION_نقاب) == U_SHAPE_متن_DIRECTION_LOGICAL,
+                                            جھوٹ);
+            توڑو;
+        حالت U_SHAPE_DIGITS_ALEN2AN_INIT_AL:
+            shape_مقصد_Arabic_Digits_With_Context(dest, dest_لمبائی,
+                                            digit_بنیاد,
+                                            (options & U_SHAPE_متن_DIRECTION_نقاب) == U_SHAPE_متن_DIRECTION_LOGICAL,
+                                            سچ);
+            توڑو;
+        طےشدہ:
             /* will never occur because of validity checks above */
-            break;
+            توڑو;
         }
     }
 
-    return u_terminateUChars(dest, destCapacity, destLength, pErrorCode);
+    واپس u_terminateUChars(dest, dest_استعداد, dest_لمبائی, p_Error_رمز);
 }

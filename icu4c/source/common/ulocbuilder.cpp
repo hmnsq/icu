@@ -1,151 +1,151 @@
 // © 2023 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#include <utility>
+#شامل <utility>
 
-#include "unicode/bytestream.h"
-#include "unicode/localebuilder.h"
-#include "unicode/locid.h"
-#include "unicode/stringpiece.h"
-#include "unicode/ulocbuilder.h"
-#include "unicode/utypes.h"
-#include "bytesinkutil.h"
-#include "cstring.h"
-#include "ustr_imp.h"
+#شامل "unicode/bytestream.h"
+#شامل "unicode/localebuilder.h"
+#شامل "unicode/locid.h"
+#شامل "unicode/stringpiece.h"
+#شامل "unicode/ulocbuilder.h"
+#شامل "unicode/utypes.h"
+#شامل "bytesinkutil.h"
+#شامل "cstring.h"
+#شامل "ustr_imp.h"
 
-using icu::StringPiece;
+استعمال icu::StringPiece;
 
-#define EXTERNAL(i) (reinterpret_cast<ULocaleBuilder*>(i))
-#define INTERNAL(e) (reinterpret_cast<icu::LocaleBuilder*>(e))
-#define CONST_INTERNAL(e) (reinterpret_cast<const icu::LocaleBuilder*>(e))
+#تعریف_کرو EXTERNAL(i) (reinterpret_cast<ULocaleBuilder*>(i))
+#تعریف_کرو اندرونی_2(e) (reinterpret_cast<icu::LocaleBuilder*>(e))
+#تعریف_کرو CONST_اندرونی(e) (reinterpret_cast<ثابت icu::LocaleBuilder*>(e))
 
 ULocaleBuilder* ulocbld_open() {
-    return EXTERNAL(new icu::LocaleBuilder());
+    واپس EXTERNAL(نیا icu::LocaleBuilder());
 }
 
-void ulocbld_close(ULocaleBuilder* builder) {
-    if (builder == nullptr) return;
-    delete INTERNAL(builder);
+خالی ulocbld_close(ULocaleBuilder* builder) {
+    اگر (builder == خالی_اشاریہ) واپس;
+    حذف اندرونی_2(builder);
 }
 
-void ulocbld_setLocale(ULocaleBuilder* builder, const char* locale, int32_t length) {
-    if (builder == nullptr) return;
+خالی ulocbld_سیٹ_Locale(ULocaleBuilder* builder, ثابت حرف* locale, int32_t length) {
+    اگر (builder == خالی_اشاریہ) واپس;
     icu::Locale l;
-    if (length < 0 || locale[length] == '\0') {
+    اگر (length < 0 || locale[length] == '\0') {
         l = icu::Locale(locale);
-    } else {
-        if (length >= ULOC_FULLNAME_CAPACITY) {
-            l.setToBogus();
-        } else {
+    } ورنہ {
+        اگر (length >= ULOC_FULLNAME_استعداد) {
+            l.سیٹ_مقصد_Bogus();
+        } ورنہ {
             // locale is not null termined but Locale API require one.
             // Create a null termined version in buf.
-            char buf[ULOC_FULLNAME_CAPACITY];
+            حرف buf[ULOC_FULLNAME_استعداد];
             uprv_memcpy(buf, locale, length);
             buf[length] = '\0';
             l = icu::Locale(buf);
         }
     }
-    INTERNAL(builder)->setLocale(l);
+    اندرونی_2(builder)->سیٹ_Locale(l);
 }
 
-void
+خالی
 ulocbld_adoptULocale(ULocaleBuilder* builder, ULocale* locale) {
-    if (builder == nullptr) return;
-    INTERNAL(builder)->setLocale(*(reinterpret_cast<const icu::Locale*>(locale)));
+    اگر (builder == خالی_اشاریہ) واپس;
+    اندرونی_2(builder)->سیٹ_Locale(*(reinterpret_cast<ثابت icu::Locale*>(locale)));
     ulocale_close(locale);
 }
 
-#define STRING_PIECE(s, l) ((l)<0 ? StringPiece(s) : StringPiece((s), (l)))
+#تعریف_کرو STRING_PIECE(s, l) ((l)<0 ? StringPiece(s) : StringPiece((s), (l)))
 
-#define IMPL_ULOCBLD_SETTER(N) \
-void ulocbld_##N(ULocaleBuilder* bld, const char* s, int32_t l) { \
-    if (bld == nullptr) return; \
-    INTERNAL(bld)->N(STRING_PIECE(s,l)); \
+#تعریف_کرو IMPL_ULOCBLD_SETTER(N) \
+خالی ulocbld_##N(ULocaleBuilder* bld, ثابت حرف* s, int32_t l) { \
+    اگر (bld == خالی_اشاریہ) واپس; \
+    اندرونی_2(bld)->N(STRING_PIECE(s,l)); \
 }
 
-IMPL_ULOCBLD_SETTER(setLanguageTag)
-IMPL_ULOCBLD_SETTER(setLanguage)
-IMPL_ULOCBLD_SETTER(setScript)
-IMPL_ULOCBLD_SETTER(setRegion)
-IMPL_ULOCBLD_SETTER(setVariant)
-IMPL_ULOCBLD_SETTER(addUnicodeLocaleAttribute)
+IMPL_ULOCBLD_SETTER(سیٹ_Language_لیبل)
+IMPL_ULOCBLD_SETTER(سیٹ_Language)
+IMPL_ULOCBLD_SETTER(سیٹ_Script)
+IMPL_ULOCBLD_SETTER(سیٹ_Region)
+IMPL_ULOCBLD_SETTER(سیٹ_Variant)
+IMPL_ULOCBLD_SETTER(جوڑو_Unicode_Locale_Attribute)
 IMPL_ULOCBLD_SETTER(removeUnicodeLocaleAttribute)
 
-void ulocbld_setExtension(ULocaleBuilder* builder, char key, const char* value, int32_t length) {
-    if (builder == nullptr) return;
-    INTERNAL(builder)->setExtension(key, STRING_PIECE(value, length));
+خالی ulocbld_سیٹ_Extension(ULocaleBuilder* builder, حرف کلید, ثابت حرف* value, int32_t length) {
+    اگر (builder == خالی_اشاریہ) واپس;
+    اندرونی_2(builder)->سیٹ_Extension(کلید, STRING_PIECE(value, length));
 }
 
-void ulocbld_setUnicodeLocaleKeyword(
-    ULocaleBuilder* builder, const char* key, int32_t keyLength,
-    const char* type, int32_t typeLength) {
-    if (builder == nullptr) return;
-    INTERNAL(builder)->setUnicodeLocaleKeyword(
-        STRING_PIECE(key, keyLength), STRING_PIECE(type, typeLength));
+خالی ulocbld_سیٹ_Unicode_Locale_Keyword(
+    ULocaleBuilder* builder, ثابت حرف* کلید, int32_t کلید_لمبائی,
+    ثابت حرف* type, int32_t type_لمبائی) {
+    اگر (builder == خالی_اشاریہ) واپس;
+    اندرونی_2(builder)->سیٹ_Unicode_Locale_Keyword(
+        STRING_PIECE(کلید, کلید_لمبائی), STRING_PIECE(type, type_لمبائی));
 }
 
-void ulocbld_clear(ULocaleBuilder* builder) {
-    if (builder == nullptr) return;
-    INTERNAL(builder)->clear();
+خالی ulocbld_clear(ULocaleBuilder* builder) {
+    اگر (builder == خالی_اشاریہ) واپس;
+    اندرونی_2(builder)->clear();
 }
 
-void ulocbld_clearExtensions(ULocaleBuilder* builder) {
-    if (builder == nullptr) return;
-    INTERNAL(builder)->clearExtensions();
+خالی ulocbld_clearExtensions(ULocaleBuilder* builder) {
+    اگر (builder == خالی_اشاریہ) واپس;
+    اندرونی_2(builder)->clearExtensions();
 }
 
 
-ULocale* ulocbld_buildULocale(ULocaleBuilder* builder, UErrorCode* err) {
-    if (builder == nullptr) {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+ULocale* ulocbld_buildULocale(ULocaleBuilder* builder, UError_رمز* err) {
+    اگر (builder == خالی_اشاریہ) {
+        *err = U_ILLEGAL_دلیل_ERROR;
+        واپس خالی_اشاریہ;
     }
-    icu::Locale l = INTERNAL(builder)->build(*err);
-    if (U_FAILURE(*err)) return nullptr;
+    icu::Locale l = اندرونی_2(builder)->build(*err);
+    اگر (U_FAILURE(*err)) واپس خالی_اشاریہ;
     icu::Locale* r = l.clone();
-    if (r == nullptr) {
-        *err = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    اگر (r == خالی_اشاریہ) {
+        *err = U_حافظہ_تخصیص_ERROR;
+        واپس خالی_اشاریہ;
     }
-    return reinterpret_cast<ULocale*>(r);
+    واپس reinterpret_cast<ULocale*>(r);
 }
 
 int32_t ulocbld_buildLocaleID(ULocaleBuilder* builder,
-                              char* buffer, int32_t bufferCapacity, UErrorCode* err) {
-    if (U_FAILURE(*err)) { return 0; }
-    if (builder == nullptr) {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+                              حرف* بفر, int32_t بفر_استعداد, UError_رمز* err) {
+    اگر (U_FAILURE(*err)) { واپس 0; }
+    اگر (builder == خالی_اشاریہ) {
+        *err = U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
-    icu::Locale l = INTERNAL(builder)->build(*err);
-    if (U_FAILURE(*err)) { return 0; }
+    icu::Locale l = اندرونی_2(builder)->build(*err);
+    اگر (U_FAILURE(*err)) { واپس 0; }
     int32_t length = static_cast<int32_t>(uprv_strlen(l.getName()));
-    if (0 < length && length <= bufferCapacity) {
-        uprv_memcpy(buffer, l.getName(), length);
+    اگر (0 < length && length <= بفر_استعداد) {
+        uprv_memcpy(بفر, l.getName(), length);
     }
-    return u_terminateChars(buffer, bufferCapacity, length, err);
+    واپس u_terminateChars(بفر, بفر_استعداد, length, err);
 }
 
-int32_t ulocbld_buildLanguageTag(ULocaleBuilder* builder,
-                  char* buffer, int32_t bufferCapacity, UErrorCode* err) {
-    if (U_FAILURE(*err)) { return 0; }
-    if (builder == nullptr) {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+int32_t ulocbld_build_Language_لیبل(ULocaleBuilder* builder,
+                  حرف* بفر, int32_t بفر_استعداد, UError_رمز* err) {
+    اگر (U_FAILURE(*err)) { واپس 0; }
+    اگر (builder == خالی_اشاریہ) {
+        *err = U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
-    icu::Locale l = INTERNAL(builder)->build(*err);
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
-        buffer, bufferCapacity,
-        [&](icu::ByteSink& sink, UErrorCode& status) {
-            l.toLanguageTag(sink, status);
+    icu::Locale l = اندرونی_2(builder)->build(*err);
+    واپس icu::ByteSinkUtil::بذریعہ_Byte_Sink_مقصد_Terminated_Chars(
+        بفر, بفر_استعداد,
+        [&](icu::ByteSink& sink, UError_رمز& حالت_2) {
+            l.مقصد_Language_لیبل(sink, حالت_2);
         },
         *err);
 }
 
-UBool ulocbld_copyErrorTo(const ULocaleBuilder* builder, UErrorCode *outErrorCode) {
-    if (builder == nullptr) {
-        *outErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return true;
+UBool ulocbld_copy_Error_مقصد(ثابت ULocaleBuilder* builder, UError_رمز *برآمد_Error_رمز) {
+    اگر (builder == خالی_اشاریہ) {
+        *برآمد_Error_رمز = U_ILLEGAL_دلیل_ERROR;
+        واپس سچ;
     }
-    return CONST_INTERNAL(builder)->copyErrorTo(*outErrorCode);
+    واپس CONST_اندرونی(builder)->copy_Error_مقصد(*برآمد_Error_رمز);
 }

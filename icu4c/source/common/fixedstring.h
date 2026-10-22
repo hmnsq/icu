@@ -1,15 +1,15 @@
 // © 2025 and later: Unicode, Inc. and others.
 // License & terms of use: https://www.unicode.org/copyright.html
 
-#ifndef FIXEDSTRING_H
-#define FIXEDSTRING_H
+#اگر_غیر_تعریف_شدہ FIXEDSTRING_H
+#تعریف_کرو FIXEDSTRING_H
 
-#include <string_view>
-#include <utility>
+#شامل <string_view>
+#شامل <utility>
 
-#include "unicode/uobject.h"
-#include "unicode/utypes.h"
-#include "cmemory.h"
+#شامل "unicode/uobject.h"
+#شامل "unicode/utypes.h"
+#شامل "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
@@ -26,79 +26,79 @@ class UnicodeString;
  * This class wants to be convenient but is also deliberately minimalist.
  * Please do not add methods if they only add minor convenience.
  */
-class FixedString : public UMemory {
-public:
-    FixedString() = default;
-    ~FixedString() { operator delete[](ptr); }
+class FixedString : عوامی UMemory {
+عوامی:
+    FixedString() = طےشدہ;
+    ~FixedString() { عامل delete[](ptr); }
 
-    FixedString(const FixedString& other) : FixedString(other.data()) {}
+    FixedString(ثابت FixedString& other) : FixedString(other.ڈیٹا()) {}
 
     FixedString(std::string_view init) {
-        size_t size = init.size();
-        if (size > 0 && reserve(size + 1)) {
-            uprv_memcpy(ptr, init.data(), size);
-            ptr[size] = '\0';
+        size_t سائز_2 = init.سائز_2();
+        اگر (سائز_2 > 0 && reserve(سائز_2 + 1)) {
+            uprv_memcpy(ptr, init.ڈیٹا(), سائز_2);
+            ptr[سائز_2] = '\0';
         }
     }
 
-    FixedString& operator=(const FixedString& other) {
-        *this = other.data();
-        return *this;
+    FixedString& عامل=(ثابت FixedString& other) {
+        *this = other.ڈیٹا();
+        واپس *this;
     }
 
-    FixedString& operator=(std::string_view init) {
-        if (init.empty()) {
-            operator delete[](ptr);
+    FixedString& عامل=(std::string_view init) {
+        اگر (init.خالی_خانے()) {
+            عامل delete[](ptr);
             ptr = nullptr;
-        } else {
-            size_t size = init.size();
-            if (reserve(size + 1)) {
-                uprv_memcpy(ptr, init.data(), size);
-                ptr[size] = '\0';
+        } ورنہ {
+            size_t سائز_2 = init.سائز_2();
+            اگر (reserve(سائز_2 + 1)) {
+                uprv_memcpy(ptr, init.ڈیٹا(), سائز_2);
+                ptr[سائز_2] = '\0';
             }
         }
-        return *this;
+        واپس *this;
     }
 
     FixedString(FixedString&& other) noexcept : ptr(std::exchange(other.ptr, nullptr)) {}
 
-    FixedString& operator=(FixedString&& other) noexcept {
-        operator delete[](ptr);
+    FixedString& عامل=(FixedString&& other) noexcept {
+        عامل delete[](ptr);
         ptr = other.ptr;
         other.ptr = nullptr;
-        return *this;
+        واپس *this;
     }
 
-    void clear() {
-        operator delete[](ptr);
+    خالی clear() {
+        عامل delete[](ptr);
         ptr = nullptr;
     }
 
-    const char* data() const {
-        return isEmpty() ? "" : ptr;
+    ثابت حرف* ڈیٹا() ثابت {
+        واپس is_خالی_خانے() ? "" : ptr;
     }
 
-    char* getAlias() {
-        return ptr;
+    حرف* getAlias() {
+        واپس ptr;
     }
 
-    bool isEmpty() const {
-        return ptr == nullptr;
+    bool is_خالی_خانے() ثابت {
+        واپس ptr == nullptr;
     }
 
     /** Allocate storage for a new string, without initializing it. */
-    bool reserve(size_t size) {
-        operator delete[](ptr);
-        ptr = static_cast<char*>(operator new[](size));
-        return ptr != nullptr;
+    bool reserve(size_t سائز_2) {
+        عامل delete[](ptr);
+        ptr = static_cast<حرف*>(عامل new[](سائز_2));
+        واپس ptr != nullptr;
     }
 
-private:
-    char* ptr = nullptr;
+نجی:
+    حرف* ptr = nullptr;
 };
 
-U_COMMON_API void copyInvariantChars(const UnicodeString& src, FixedString& dst, UErrorCode& status);
+U_COMMON_API خالی copyInvariantChars(ثابت UnicodeString& src, FixedString& dst, UError_رمز& حالت_2);
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا
 
-#endif
+#اگر_ختم

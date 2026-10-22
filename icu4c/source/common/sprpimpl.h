@@ -16,82 +16,82 @@
  *   created by: Ram Viswanadha
  */
 
-#ifndef SPRPIMPL_H
-#define SPRPIMPL_H
+#اگر_غیر_تعریف_شدہ SPRPIMPL_H
+#تعریف_کرو SPRPIMPL_H
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#اگر !UCONFIG_NO_IDNA
 
-#include "unicode/ustring.h"
-#include "unicode/parseerr.h"
-#include "unicode/usprep.h"
-#include "unicode/udata.h"
-#include "utrie.h"
-#include "udataswp.h"
-#include "ubidi_props.h"
+#شامل "unicode/ustring.h"
+#شامل "unicode/parseerr.h"
+#شامل "unicode/usprep.h"
+#شامل "unicode/udata.h"
+#شامل "utrie.h"
+#شامل "udataswp.h"
+#شامل "ubidi_props.h"
 
-#define _SPREP_DATA_TYPE "spp"
+#تعریف_کرو SPREP_ڈیٹا_TYPE "spp"
 
-enum UStringPrepType{
+شمار UStringPrepType{
     USPREP_UNASSIGNED           = 0x0000 ,
     USPREP_MAP                  = 0x0001 ,
     USPREP_PROHIBITED           = 0x0002 , 
     USPREP_DELETE               = 0x0003 ,
-    USPREP_TYPE_LIMIT           = 0x0004  
+    USPREP_TYPE_حد_بندی           = 0x0004  
 };
 
-typedef enum UStringPrepType UStringPrepType;
+قسمتعریف شمار UStringPrepType UStringPrepType;
 
-#ifdef USPREP_TYPE_NAMES_ARRAY
-static const char* usprepTypeNames[] ={
+#اگر_تعریف_شدہ USPREP_TYPE_نام_ARRAY
+ساکن ثابت حرف* usprep_Type_نام[] ={
     "UNASSIGNED" ,          
     "MAP" , 
     "PROHIBITED" ,        
     "DELETE",
     "TYPE_LIMIT" 
 };
-#endif
+#اگر_ختم
 
-enum{
+شمار{
     _SPREP_NORMALIZATION_ON = 0x0001,
     _SPREP_CHECK_BIDI_ON    = 0x0002
 };
 
-enum{
-    _SPREP_TYPE_THRESHOLD       = 0xFFF0,
-    _SPREP_MAX_INDEX_VALUE      = 0x3FBF,   /*16139*/ 
-    _SPREP_MAX_INDEX_TOP_LENGTH = 0x0003
+شمار{
+    SPREP_TYPE_حد       = 0xFFF0,
+    SPREP_MAX_اشاریہ_قدر      = 0x3FBF,   /*16139*/ 
+    SPREP_MAX_اشاریہ_چوٹی_لمبائی = 0x0003
 };
 
 /* indexes[] value names */
-enum {
-    _SPREP_INDEX_TRIE_SIZE                  = 0, /* number of bytes in StringPrep trie */
-    _SPREP_INDEX_MAPPING_DATA_SIZE          = 1, /* The array that contains the mapping   */
-    _SPREP_NORM_CORRECTNS_LAST_UNI_VERSION  = 2, /* The index of Unicode version of last entry in NormalizationCorrections.txt */ 
-    _SPREP_ONE_UCHAR_MAPPING_INDEX_START    = 3, /* The starting index of 1 UChar mapping index in the mapping data array */
-    _SPREP_TWO_UCHARS_MAPPING_INDEX_START   = 4, /* The starting index of 2 UChars mapping index in the mapping data array */
-    _SPREP_THREE_UCHARS_MAPPING_INDEX_START = 5, /* The starting index of 3 UChars mapping index in the mapping data array */
-    _SPREP_FOUR_UCHARS_MAPPING_INDEX_START  = 6, /* The starting index of 4 UChars mapping index in the mapping data array */
+شمار {
+    SPREP_اشاریہ_TRIE_سائز                  = 0, /* number of bytes in StringPrep trie */
+    SPREP_اشاریہ_MAPPING_ڈیٹا_سائز          = 1, /* The array that contains the mapping   */
+    SPREP_NORM_CORRECTNS_آخری_UNI_نسخہ  = 2, /* The index of Unicode version of last entry in NormalizationCorrections.txt */ 
+    SPREP_ONE_UCHAR_MAPPING_اشاریہ_آغاز    = 3, /* The starting index of 1 UChar mapping index in the mapping data array */
+    SPREP_TWO_UCHARS_MAPPING_اشاریہ_آغاز   = 4, /* The starting index of 2 UChars mapping index in the mapping data array */
+    SPREP_THREE_UCHARS_MAPPING_اشاریہ_آغاز = 5, /* The starting index of 3 UChars mapping index in the mapping data array */
+    SPREP_FOUR_UCHARS_MAPPING_اشاریہ_آغاز  = 6, /* The starting index of 4 UChars mapping index in the mapping data array */
     _SPREP_OPTIONS                          = 7, /* Bit set of options to turn on in the profile */
-    _SPREP_INDEX_TOP=16                          /* changing this requires a new formatVersion */
+    SPREP_اشاریہ_چوٹی=16                          /* changing this requires a new formatVersion */
 };
 
-typedef struct UStringPrepKey UStringPrepKey;
+قسمتعریف ساخت UString_Prep_کلید UString_Prep_کلید;
 
 
-struct UStringPrepKey{
-    char* name;
-    char* path;
+ساخت UString_Prep_کلید{
+    حرف* name;
+    حرف* راستہ;
 };
 
-struct UStringPrepProfile{
-    int32_t indexes[_SPREP_INDEX_TOP];
+ساخت UStringPrepProfile{
+    int32_t indexes[SPREP_اشاریہ_چوٹی];
     UTrie sprepTrie;
-    const uint16_t* mappingData;
-    UDataMemory* sprepData;
-    int32_t refCount;
-    UBool isDataLoaded;
+    ثابت uint16_t* mapping_ڈیٹا;
+    UData_حافظہ* sprep_ڈیٹا;
+    int32_t ref_گنتی;
+    UBool is_ڈیٹا_Loaded;
     UBool doNFKC;
     UBool checkBiDi;
 };
@@ -100,10 +100,10 @@ struct UStringPrepProfile{
  * Helper function for populating the UParseError struct
  * @internal
  */
-U_CAPI void U_EXPORT2
-uprv_syntaxError(const UChar* rules, 
+U_CAPI خالی U_EXPORT2
+uprv_syntaxError(ثابت UChar* قواعد, 
                  int32_t pos,
-                 int32_t rulesLen,
+                 int32_t قواعد_Len,
                  UParseError* parseError);
 
 
@@ -112,13 +112,13 @@ uprv_syntaxError(const UChar* rules,
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-usprep_swap(const UDataSwapper *ds,
-            const void *inData, int32_t length, void *outData,
-            UErrorCode *pErrorCode);
+usprep_تبادلہ(ثابت UDataSwapper *ds,
+            ثابت خالی *اندر_ڈیٹا, int32_t لمبائی, خالی *برآمد_ڈیٹا,
+            UError_رمز *p_Error_رمز);
 
-#endif /* #if !UCONFIG_NO_IDNA */
+#اگر_ختم /* #if !UCONFIG_NO_IDNA */
 
-#endif
+#اگر_ختم
 
 /*
  * Hey, Emacs, please set the following:

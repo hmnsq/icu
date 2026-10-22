@@ -18,44 +18,44 @@
  *                  a UDataMemory * is returned.
  *
  *----------------------------------------------------------------------------------*/
-#ifndef __UDATAMEM_H__
-#define __UDATAMEM_H__
+#اگر_غیر_تعریف_شدہ __UDATAMEM_H__
+#تعریف_کرو __UDATAMEM_H__
 
-#include "unicode/udata.h"
-#include "ucmndata.h"
+#شامل "unicode/udata.h"
+#شامل "ucmndata.h"
 
-struct UDataMemory {
-    const commonDataFuncs  *vFuncs;      /* Function Pointers for accessing TOC             */
+ساخت UData_حافظہ {
+    ثابت common_ڈیٹا_Funcs  *vFuncs;      /* Function Pointers for accessing TOC             */
 
-    const DataHeader *pHeader;     /* Header of the memory being described by this    */
+    ثابت ڈیٹا_سرخی *p_سرخی;     /* Header of the memory being described by this    */
                                    /*   UDataMemory object.                           */
-    const void       *toc;         /* For common memory, table of contents for        */
+    ثابت خالی       *toc;         /* For common memory, table of contents for        */
                                    /*   the pieces within.                            */
-    UBool             heapAllocated;  /* True if this UDataMemory Object is on the    */
+    UBool             ڈھیر_Allocated;  /* True if this UDataMemory Object is on the    */
                                    /*  heap and thus needs to be deleted when closed. */
 
-    void             *mapAddr;     /* For mapped or allocated memory, the start addr. */
+    خالی             *mapAddr;     /* For mapped or allocated memory, the start addr. */
                                    /* Only non-null if a close operation should unmap */
                                    /*  the associated data.                           */
-    void             *map;         /* Handle, or other data, OS dependent.            */
+    خالی             *map;         /* Handle, or other data, OS dependent.            */
                                    /* Only non-null if a close operation should unmap */
                                    /*  the associated data, and additional info       */
                                    /*   beyond the mapAddr is needed to do that.      */
-    int32_t           length;      /* Length of the data in bytes; -1 if unknown.     */
+    int32_t           لمبائی;      /* Length of the data in bytes; -1 if unknown.     */
 };
 
-U_CAPI  UDataMemory* U_EXPORT2 UDataMemory_createNewInstance(UErrorCode *pErr);
-U_CFUNC void         UDatamemory_assign  (UDataMemory *dest, UDataMemory *source);
-U_CFUNC void         UDataMemory_init    (UDataMemory *This);
-U_CFUNC UBool        UDataMemory_isLoaded(const UDataMemory *This);
-U_CFUNC void         UDataMemory_setData (UDataMemory *This, const void *dataAddr);
+U_CAPI  UData_حافظہ* U_EXPORT2 UData_حافظہ_create_New_Instance(UError_رمز *pErr);
+U_CFUNC خالی         UDatamemory_تفویض  (UData_حافظہ *dest, UData_حافظہ *ماخذ);
+U_CFUNC خالی         UData_حافظہ_init    (UData_حافظہ *This);
+U_CFUNC UBool        UData_حافظہ_is_Loaded(ثابت UData_حافظہ *This);
+U_CFUNC خالی         UData_حافظہ_سیٹ_ڈیٹا (UData_حافظہ *This, ثابت خالی *ڈیٹا_Addr);
 
-U_CFUNC const DataHeader* UDataMemory_normalizeDataPointer(const void* p U_LIFETIME_BOUND);
+U_CFUNC ثابت ڈیٹا_سرخی* UData_حافظہ_normalize_ڈیٹا_اشارہ_گر(ثابت خالی* p U_LIFETIME_BOUND);
 
 U_CAPI int32_t U_EXPORT2
-udata_getLength(const UDataMemory *pData);
+udata_get_لمبائی(ثابت UData_حافظہ *p_ڈیٹا);
 
-U_CAPI const void* U_EXPORT2
-udata_getRawMemory(const UDataMemory* pData U_LIFETIME_BOUND);
+U_CAPI ثابت خالی* U_EXPORT2
+udata_get_Raw_حافظہ(ثابت UData_حافظہ* p_ڈیٹا U_LIFETIME_BOUND);
 
-#endif
+#اگر_ختم

@@ -14,23 +14,23 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/stringpiece.h"
-#include "charstr.h"
-#include "uvectr32.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/bytestrie.h"
+#شامل "unicode/stringpiece.h"
+#شامل "charstr.h"
+#شامل "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
-BytesTrie::Iterator::Iterator(const void* trieBytes U_LIFETIME_BOUND,
-                              int32_t maxStringLength,
-                              UErrorCode& errorCode)
-        : bytes_(static_cast<const uint8_t *>(trieBytes)),
-          pos_(bytes_), initialPos_(bytes_),
-          remainingMatchLength_(-1), initialRemainingMatchLength_(-1),
-          str_(nullptr), maxLength_(maxStringLength), value_(0), stack_(nullptr) {
-    if(U_FAILURE(errorCode)) {
-        return;
+بائٹیں_Trie::Iterator::Iterator(ثابت خالی* trie_بائٹیں U_LIFETIME_BOUND,
+                              int32_t max_String_لمبائی,
+                              UError_رمز& error_رمز)
+        : بائٹیں_2(static_cast<ثابت uint8_t *>(trie_بائٹیں)),
+          pos_(بائٹیں_2), initialPos_(بائٹیں_2),
+          بقایا_مطابقت_لمبائی(-1), initial_بقایا_مطابقت_لمبائی(-1),
+          str_(خالی_اشاریہ), max_لمبائی(max_String_لمبائی), قدر(0), ڈھیر(خالی_اشاریہ) {
+    اگر(U_FAILURE(error_رمز)) {
+        واپس;
     }
     // str_ and stack_ are pointers so that it's easy to turn bytestrie.h into
     // a public API header for which we would want it to depend only on
@@ -38,159 +38,159 @@ BytesTrie::Iterator::Iterator(const void* trieBytes U_LIFETIME_BOUND,
     // Unlike BytesTrie itself, its Iterator performs memory allocations anyway
     // via the CharString and UVector32 implementations, so this additional
     // cost is minimal.
-    str_=new CharString();
-    stack_=new UVector32(errorCode);
-    if(U_SUCCESS(errorCode) && (str_==nullptr || stack_==nullptr)) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
+    str_=نیا CharString();
+    ڈھیر=نیا UVector32(error_رمز);
+    اگر(U_SUCCESS(error_رمز) && (str_==خالی_اشاریہ || ڈھیر==خالی_اشاریہ)) {
+        error_رمز=U_حافظہ_تخصیص_ERROR;
     }
 }
 
-BytesTrie::Iterator::Iterator(const BytesTrie &trie, int32_t maxStringLength,
-                              UErrorCode &errorCode)
-        : bytes_(trie.bytes_), pos_(trie.pos_), initialPos_(trie.pos_),
-          remainingMatchLength_(trie.remainingMatchLength_),
-          initialRemainingMatchLength_(trie.remainingMatchLength_),
-          str_(nullptr), maxLength_(maxStringLength), value_(0), stack_(nullptr) {
-    if(U_FAILURE(errorCode)) {
-        return;
+بائٹیں_Trie::Iterator::Iterator(ثابت بائٹیں_Trie &trie, int32_t max_String_لمبائی,
+                              UError_رمز &error_رمز)
+        : بائٹیں_2(trie.بائٹیں_2), pos_(trie.pos_), initialPos_(trie.pos_),
+          بقایا_مطابقت_لمبائی(trie.بقایا_مطابقت_لمبائی),
+          initial_بقایا_مطابقت_لمبائی(trie.بقایا_مطابقت_لمبائی),
+          str_(خالی_اشاریہ), max_لمبائی(max_String_لمبائی), قدر(0), ڈھیر(خالی_اشاریہ) {
+    اگر(U_FAILURE(error_رمز)) {
+        واپس;
     }
-    str_=new CharString();
-    stack_=new UVector32(errorCode);
-    if(U_FAILURE(errorCode)) {
-        return;
+    str_=نیا CharString();
+    ڈھیر=نیا UVector32(error_رمز);
+    اگر(U_FAILURE(error_رمز)) {
+        واپس;
     }
-    if(str_==nullptr || stack_==nullptr) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+    اگر(str_==خالی_اشاریہ || ڈھیر==خالی_اشاریہ) {
+        error_رمز=U_حافظہ_تخصیص_ERROR;
+        واپس;
     }
-    int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    if(length>=0) {
+    int32_t length=بقایا_مطابقت_لمبائی;  // Actual remaining match length minus 1.
+    اگر(length>=0) {
         // Pending linear-match node, append remaining bytes to str_.
         ++length;
-        if(maxLength_>0 && length>maxLength_) {
-            length=maxLength_;  // This will leave remainingMatchLength>=0 as a signal.
+        اگر(max_لمبائی>0 && length>max_لمبائی) {
+            length=max_لمبائی;  // This will leave remainingMatchLength>=0 as a signal.
         }
-        str_->append(reinterpret_cast<const char *>(pos_), length, errorCode);
+        str_->append(reinterpret_cast<ثابت حرف *>(pos_), length, error_رمز);
         pos_+=length;
-        remainingMatchLength_-=length;
+        بقایا_مطابقت_لمبائی-=length;
     }
 }
 
-BytesTrie::Iterator::~Iterator() {
-    delete str_;
-    delete stack_;
+بائٹیں_Trie::Iterator::~Iterator() {
+    حذف str_;
+    حذف ڈھیر;
 }
 
-BytesTrie::Iterator&
-BytesTrie::Iterator::reset() U_LIFETIME_BOUND {
+بائٹیں_Trie::Iterator&
+بائٹیں_Trie::Iterator::reset() U_LIFETIME_BOUND {
     pos_=initialPos_;
-    remainingMatchLength_=initialRemainingMatchLength_;
-    int32_t length=remainingMatchLength_+1;  // Remaining match length.
-    if(maxLength_>0 && length>maxLength_) {
-        length=maxLength_;
+    بقایا_مطابقت_لمبائی=initial_بقایا_مطابقت_لمبائی;
+    int32_t length=بقایا_مطابقت_لمبائی+1;  // Remaining match length.
+    اگر(max_لمبائی>0 && length>max_لمبائی) {
+        length=max_لمبائی;
     }
     str_->truncate(length);
     pos_+=length;
-    remainingMatchLength_-=length;
-    stack_->setSize(0);
-    return *this;
+    بقایا_مطابقت_لمبائی-=length;
+    ڈھیر->سیٹ_سائز(0);
+    واپس *یہ;
 }
 
 UBool
-BytesTrie::Iterator::hasNext() const { return pos_!=nullptr || !stack_->isEmpty(); }
+بائٹیں_Trie::Iterator::has_اگلا() ثابت { واپس pos_!=خالی_اشاریہ || !ڈھیر->is_خالی_خانے(); }
 
 UBool
-BytesTrie::Iterator::next(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+بائٹیں_Trie::Iterator::next(UError_رمز &error_رمز) {
+    اگر(U_FAILURE(error_رمز)) {
+        واپس جھوٹ;
     }
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        if(stack_->isEmpty()) {
-            return false;
+    ثابت uint8_t *pos=pos_;
+    اگر(pos==خالی_اشاریہ) {
+        اگر(ڈھیر->is_خالی_خانے()) {
+            واپس جھوٹ;
         }
         // Pop the state off the stack and continue with the next outbound edge of
         // the branch node.
-        int32_t stackSize=stack_->size();
-        int32_t length=stack_->elementAti(stackSize-1);
-        pos=bytes_+stack_->elementAti(stackSize-2);
-        stack_->setSize(stackSize-2);
+        int32_t ڈھیر_سائز=ڈھیر->size();
+        int32_t length=ڈھیر->elementAti(ڈھیر_سائز-1);
+        pos=بائٹیں_2+ڈھیر->elementAti(ڈھیر_سائز-2);
+        ڈھیر->سیٹ_سائز(ڈھیر_سائز-2);
         str_->truncate(length&0xffff);
         length = static_cast<int32_t>(static_cast<uint32_t>(length) >> 16);
-        if(length>1) {
-            pos=branchNext(pos, length, errorCode);
-            if(pos==nullptr) {
-                return true;  // Reached a final value.
+        اگر(length>1) {
+            pos=branch_اگلا(pos, length, error_رمز);
+            اگر(pos==خالی_اشاریہ) {
+                واپس سچ;  // Reached a final value.
             }
-        } else {
-            str_->append(static_cast<char>(*pos++), errorCode);
+        } ورنہ {
+            str_->append(static_cast<حرف>(*pos++), error_رمز);
         }
     }
-    if(remainingMatchLength_>=0) {
+    اگر(بقایا_مطابقت_لمبائی>=0) {
         // We only get here if we started in a pending linear-match node
         // with more than maxLength remaining bytes.
-        return truncateAndStop();
+        واپس truncateAndStop();
     }
-    for(;;) {
-        int32_t node=*pos++;
-        if(node>=kMinValueLead) {
+    برائے(;;) {
+        int32_t گرہ=*pos++;
+        اگر(گرہ>=k_Min_قدر_Lead) {
             // Deliver value for the byte sequence so far.
-            UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
-            value_=readValue(pos, node>>1);
-            if(isFinal || (maxLength_>0 && str_->length()==maxLength_)) {
-                pos_=nullptr;
-            } else {
-                pos_=skipValue(pos, node);
+            UBool isFinal = static_cast<UBool>(گرہ & k_قدر_Is_Final);
+            قدر=read_قدر(pos, گرہ>>1);
+            اگر(isFinal || (max_لمبائی>0 && str_->length()==max_لمبائی)) {
+                pos_=خالی_اشاریہ;
+            } ورنہ {
+                pos_=skip_قدر(pos, گرہ);
             }
-            return true;
+            واپس سچ;
         }
-        if(maxLength_>0 && str_->length()==maxLength_) {
-            return truncateAndStop();
+        اگر(max_لمبائی>0 && str_->length()==max_لمبائی) {
+            واپس truncateAndStop();
         }
-        if(node<kMinLinearMatch) {
-            if(node==0) {
-                node=*pos++;
+        اگر(گرہ<k_Min_خطی_مطابقت) {
+            اگر(گرہ==0) {
+                گرہ=*pos++;
             }
-            pos=branchNext(pos, node+1, errorCode);
-            if(pos==nullptr) {
-                return true;  // Reached a final value.
+            pos=branch_اگلا(pos, گرہ+1, error_رمز);
+            اگر(pos==خالی_اشاریہ) {
+                واپس سچ;  // Reached a final value.
             }
-        } else {
+        } ورنہ {
             // Linear-match node, append length bytes to str_.
-            int32_t length=node-kMinLinearMatch+1;
-            if(maxLength_>0 && str_->length()+length>maxLength_) {
-                str_->append(reinterpret_cast<const char *>(pos),
-                            maxLength_-str_->length(), errorCode);
-                return truncateAndStop();
+            int32_t length=گرہ-k_Min_خطی_مطابقت+1;
+            اگر(max_لمبائی>0 && str_->length()+length>max_لمبائی) {
+                str_->append(reinterpret_cast<ثابت حرف *>(pos),
+                            max_لمبائی-str_->length(), error_رمز);
+                واپس truncateAndStop();
             }
-            str_->append(reinterpret_cast<const char *>(pos), length, errorCode);
+            str_->append(reinterpret_cast<ثابت حرف *>(pos), length, error_رمز);
             pos+=length;
         }
     }
 }
 
 StringPiece
-BytesTrie::Iterator::getString() const U_LIFETIME_BOUND {
-    return str_ == nullptr ? StringPiece() : str_->toStringPiece();
+بائٹیں_Trie::Iterator::getString() ثابت U_LIFETIME_BOUND {
+    واپس str_ == خالی_اشاریہ ? StringPiece() : str_->مقصد_String_Piece();
 }
 
 UBool
-BytesTrie::Iterator::truncateAndStop() {
-    pos_=nullptr;
-    value_=-1;  // no real value for str
-    return true;
+بائٹیں_Trie::Iterator::truncateAndStop() {
+    pos_=خالی_اشاریہ;
+    قدر=-1;  // no real value for str
+    واپس سچ;
 }
 
 // Branch node, needs to take the first outbound edge and push state for the rest.
-const uint8_t*
-BytesTrie::Iterator::branchNext(const uint8_t* pos U_LIFETIME_BOUND,
+ثابت uint8_t*
+بائٹیں_Trie::Iterator::branch_اگلا(ثابت uint8_t* pos U_LIFETIME_BOUND,
                                 int32_t length,
-                                UErrorCode& errorCode) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+                                UError_رمز& error_رمز) {
+    جب(length>k_Max_Branch_خطی_Sub_گرہ_لمبائی) {
         ++pos;  // ignore the comparison byte
         // Push state for the greater-or-equal edge.
-        stack_->addElement(static_cast<int32_t>(skipDelta(pos) - bytes_), errorCode);
-        stack_->addElement(((length-(length>>1))<<16)|str_->length(), errorCode);
+        ڈھیر->جوڑو_Element(static_cast<int32_t>(skipDelta(pos) - بائٹیں_2), error_رمز);
+        ڈھیر->جوڑو_Element(((length-(length>>1))<<16)|str_->length(), error_رمز);
         // Follow the less-than edge.
         length>>=1;
         pos=jumpByDelta(pos);
@@ -198,20 +198,20 @@ BytesTrie::Iterator::branchNext(const uint8_t* pos U_LIFETIME_BOUND,
     // List of key-value pairs where values are either final values or jump deltas.
     // Read the first (key, value) pair.
     uint8_t trieByte=*pos++;
-    int32_t node=*pos++;
-    UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
-    int32_t value=readValue(pos, node>>1);
-    pos=skipValue(pos, node);
-    stack_->addElement(static_cast<int32_t>(pos - bytes_), errorCode);
-    stack_->addElement(((length-1)<<16)|str_->length(), errorCode);
-    str_->append(static_cast<char>(trieByte), errorCode);
-    if(isFinal) {
-        pos_=nullptr;
-        value_=value;
-        return nullptr;
-    } else {
-        return pos+value;
+    int32_t گرہ=*pos++;
+    UBool isFinal = static_cast<UBool>(گرہ & k_قدر_Is_Final);
+    int32_t value=read_قدر(pos, گرہ>>1);
+    pos=skip_قدر(pos, گرہ);
+    ڈھیر->جوڑو_Element(static_cast<int32_t>(pos - بائٹیں_2), error_رمز);
+    ڈھیر->جوڑو_Element(((length-1)<<16)|str_->length(), error_رمز);
+    str_->append(static_cast<حرف>(trieByte), error_رمز);
+    اگر(isFinal) {
+        pos_=خالی_اشاریہ;
+        قدر=value;
+        واپس خالی_اشاریہ;
+    } ورنہ {
+        واپس pos+value;
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا

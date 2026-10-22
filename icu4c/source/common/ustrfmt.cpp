@@ -7,8 +7,8 @@
 **********************************************************************
 */
 
-#include "cstring.h"
-#include "ustrfmt.h"
+#شامل "cstring.h"
+#شامل "ustrfmt.h"
 
 
 /***
@@ -27,33 +27,33 @@
  *        null
  */
 U_CAPI int32_t U_EXPORT2
-uprv_itou (char16_t * buffer, int32_t capacity,
+uprv_itou (char16_t * بفر, int32_t capacity,
            uint32_t i, uint32_t radix, int32_t minwidth)
 {
     int32_t length = 0;
-    int digit;
+    صحیح digit;
     int32_t j;
-    char16_t temp;
+    char16_t عارضی;
 
-    do{
-        digit = (int)(i % radix);
-        buffer[length++]=(char16_t)(digit<=9?(0x0030+digit):(0x0030+digit+7));
+    کرو{
+        digit = (صحیح)(i % radix);
+        بفر[length++]=(char16_t)(digit<=9?(0x0030+digit):(0x0030+digit+7));
         i=i/radix;
-    } while(i && length<capacity);
+    } جب(i && length<capacity);
 
-    while (length < minwidth){
-        buffer[length++] = (char16_t) 0x0030;/*zero padding */
+    جب (length < minwidth){
+        بفر[length++] = (char16_t) 0x0030;/*zero padding */
     }
     /* null terminate the buffer */
-    if(length<capacity){
-        buffer[length] = (char16_t) 0x0000;
+    اگر(length<capacity){
+        بفر[length] = (char16_t) 0x0000;
     }
 
     /* Reverses the string */
-    for (j = 0; j < (length / 2); j++){
-        temp = buffer[(length-1) - j];
-        buffer[(length-1) - j] = buffer[j];
-        buffer[j] = temp;
+    برائے (j = 0; j < (length / 2); j++){
+        عارضی = بفر[(length-1) - j];
+        بفر[(length-1) - j] = بفر[j];
+        بفر[j] = عارضی;
     }
-    return length;
+    واپس length;
 }

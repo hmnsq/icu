@@ -13,13 +13,13 @@
 //            Most of the code is unchanged from UVector.
 //
 
-#ifndef UVECTOR32_H
-#define UVECTOR32_H
+#اگر_غیر_تعریف_شدہ UVECTOR32_H
+#تعریف_کرو UVECTOR32_H
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "uhash.h"
-#include "uassert.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/uobject.h"
+#شامل "uhash.h"
+#شامل "uassert.h"
 
 U_NAMESPACE_BEGIN
 
@@ -58,80 +58,80 @@ U_NAMESPACE_BEGIN
  *
  * @author Alan Liu
  */
-class U_COMMON_API UVector32 : public UObject {
-private:
-    int32_t   count;
+class U_COMMON_API UVector32 : عوامی UObject {
+نجی:
+    int32_t   گنتی;
 
-    int32_t   capacity;
+    int32_t   استعداد;
     
-    int32_t   maxCapacity;   // Limit beyond which capacity is not permitted to grow.
+    int32_t   max_استعداد;   // Limit beyond which capacity is not permitted to grow.
 
     int32_t*  elements;
 
-public:
-    UVector32(UErrorCode &status);
+عوامی:
+    UVector32(UError_رمز &حالت_2);
 
-    UVector32(int32_t initialCapacity, UErrorCode &status);
+    UVector32(int32_t initial_استعداد, UError_رمز &حالت_2);
 
-    virtual ~UVector32();
+    مجازی ~UVector32();
 
     /**
      * Assign this object to another (make this a copy of 'other').
      * Use the 'assign' function to assign each element.
      */
-    void assign(const UVector32& other, UErrorCode &ec);
+    خالی تفویض(ثابت UVector32& other, UError_رمز &ec);
 
     /**
      * Compare this vector with another.  They will be considered
      * equal if they are of the same size and all elements are equal,
      * as compared using this object's comparer.
      */
-    bool operator==(const UVector32& other) const;
+    bool عامل==(ثابت UVector32& other) ثابت;
 
     /**
      * Equivalent to !operator==()
      */
-    inline bool operator!=(const UVector32& other) const;
+    اندرونی bool عامل!=(ثابت UVector32& other) ثابت;
 
     //------------------------------------------------------------
     // java.util.Vector API
     //------------------------------------------------------------
 
-    inline void addElement(int32_t elem, UErrorCode &status);
+    اندرونی خالی جوڑو_Element(int32_t elem, UError_رمز &حالت_2);
 
-    void setElementAt(int32_t elem, int32_t index);
+    خالی سیٹ_Element_At(int32_t elem, int32_t اشاریہ);
 
-    void insertElementAt(int32_t elem, int32_t index, UErrorCode &status);
+    خالی داخل_کرو_Element_At(int32_t elem, int32_t اشاریہ, UError_رمز &حالت_2);
     
-    inline int32_t elementAti(int32_t index) const;
+    اندرونی int32_t elementAti(int32_t اشاریہ) ثابت;
 
-    UBool equals(const UVector32 &other) const;
+    UBool equals(ثابت UVector32 &other) ثابت;
 
-    inline int32_t lastElementi() const;
+    اندرونی int32_t آخری_Elementi() ثابت;
 
-    int32_t indexOf(int32_t elem, int32_t startIndex = 0) const;
+    int32_t اشاریہ_کا(int32_t elem, int32_t آغاز_اشاریہ = 0) ثابت;
 
-    inline UBool contains(int32_t elem) const;
+    اندرونی UBool شامل_ہے(int32_t elem) ثابت;
 
-    UBool containsAll(const UVector32& other) const;
+    UBool شامل_ہے_All(ثابت UVector32& other) ثابت;
 
-    UBool removeAll(const UVector32& other);
+    UBool removeAll(ثابت UVector32& other);
 
-    UBool retainAll(const UVector32& other);
+    UBool retainAll(ثابت UVector32& other);
 
-    void removeElementAt(int32_t index);
+    خالی removeElementAt(int32_t اشاریہ);
 
-    void removeAllElements();
+    خالی removeAllElements();
 
-    inline int32_t size() const;
+    اندرونی int32_t سائز_2() ثابت;
 
-    inline UBool isEmpty() const;
+    اندرونی UBool is_خالی_خانے() ثابت;
 
     // Inline.  Use this one for speedy size check.
-    inline UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
+    اندرونی UBool ensure_استعداد(int32_t minimum_استعداد, UError_رمز &حالت_2);
 
     // Out-of-line, handles actual growth.  Called by ensureCapacity() when necessary.
-    UBool expandCapacity(int32_t minimumCapacity, UErrorCode &status);
+    UBool expand_استعداد(int32_t minimum_استعداد, UError_رمز &حالت_2);
 
     /**
      * Change the size of this vector as follows: If newSize is
@@ -139,7 +139,7 @@ public:
      * elements for i >= newSize.  If newSize is larger, grow the
      * array, filling in new slows with zero.
      */
-    void setSize(int32_t newSize);
+    خالی سیٹ_سائز(int32_t new_سائز);
 
     //------------------------------------------------------------
     // New API
@@ -151,19 +151,19 @@ public:
      * @param other vector to be checked for containment
      * @return true if the test condition is met
      */
-    UBool containsNone(const UVector32& other) const;
+    UBool شامل_ہے_None(ثابت UVector32& other) ثابت;
 
 
     /**
      * Insert the given integer into this vector at its sorted position.
      * The current elements are assumed to be sorted already.
      */
-    void sortedInsert(int32_t elem, UErrorCode& ec);
+    خالی sorted_داخل_کرو(int32_t elem, UError_رمز& ec);
 
     /**
      * Returns a pointer to the internal array holding the vector.
      */
-    inline int32_t *getBuffer() const;
+    اندرونی int32_t *get_بفر() ثابت;
 
     /**
      * Set the maximum allowed buffer capacity for this vector/stack.
@@ -171,136 +171,136 @@ public:
      * A Limit of zero means unlimited capacity.
      * Units are vector elements (32 bits each), not bytes.
      */
-    void setMaxCapacity(int32_t limit);
+    خالی سیٹ_Max_استعداد(int32_t حد_بندی);
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ساکن UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      */
-    virtual UClassID getDynamicClassID() const override;
+    مجازی UClassID getDynamicClassID() ثابت override;
 
-private:
-    void _init(int32_t initialCapacity, UErrorCode &status);
-
-    // Disallow
-    UVector32(const UVector32&) = delete;
+نجی:
+    خالی _init(int32_t initial_استعداد, UError_رمز &حالت_2);
 
     // Disallow
-    UVector32& operator=(const UVector32&) = delete;
+    UVector32(ثابت UVector32&) = delete;
+
+    // Disallow
+    UVector32& عامل=(ثابت UVector32&) = delete;
 
 
     //  API Functions for Stack operations.
     //  In the original UVector, these were in a separate derived class, UStack.
     //  Here in UVector32, they are all together.
-public:
-    inline UBool empty() const;   // TODO:  redundant, same as empty().  Remove it?
+عوامی:
+    اندرونی UBool خالی_خانے() ثابت;   // TODO:  redundant, same as empty().  Remove it?
 
-    inline int32_t peeki() const;
+    اندرونی int32_t peeki() ثابت;
     
-    inline int32_t popi();
+    اندرونی int32_t popi();
     
-    inline int32_t push(int32_t i, UErrorCode &status);
+    اندرونی int32_t ڈالو(int32_t i, UError_رمز &حالت_2);
 
-    inline int32_t *reserveBlock(int32_t size, UErrorCode &status);
-    inline int32_t *popFrame(int32_t size);
+    اندرونی int32_t *reserve_بلاک(int32_t سائز_2, UError_رمز &حالت_2);
+    اندرونی int32_t *نکالو_چوکھٹا(int32_t سائز_2);
 };
 
 
 // UVector32 inlines
 
-inline UBool UVector32::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
-        return true;
-    } else {
-        return expandCapacity(minimumCapacity, status);
+اندرونی UBool UVector32::ensure_استعداد(int32_t minimum_استعداد, UError_رمز &حالت_2) {
+    اگر ((minimum_استعداد >= 0) && (استعداد >= minimum_استعداد)) {
+        واپس true;
+    } ورنہ {
+        واپس expand_استعداد(minimum_استعداد, حالت_2);
     }
 }
 
-inline int32_t UVector32::elementAti(int32_t index) const {
-    return (index >= 0 && count > 0 && count - index > 0) ? elements[index] : 0;
+اندرونی int32_t UVector32::elementAti(int32_t اشاریہ) ثابت {
+    واپس (اشاریہ >= 0 && گنتی > 0 && گنتی - اشاریہ > 0) ? elements[اشاریہ] : 0;
 }
 
 
-inline void UVector32::addElement(int32_t elem, UErrorCode &status) {
-    if (ensureCapacity(count + 1, status)) {
-        elements[count] = elem;
-        count++;
+اندرونی خالی UVector32::جوڑو_Element(int32_t elem, UError_رمز &حالت_2) {
+    اگر (ensure_استعداد(گنتی + 1, حالت_2)) {
+        elements[گنتی] = elem;
+        گنتی++;
     }
 }
 
-inline int32_t *UVector32::reserveBlock(int32_t size, UErrorCode &status) {
-    if (ensureCapacity(count+size, status) == false) {
-        return nullptr;
+اندرونی int32_t *UVector32::reserve_بلاک(int32_t سائز_2, UError_رمز &حالت_2) {
+    اگر (ensure_استعداد(گنتی+سائز_2, حالت_2) == false) {
+        واپس nullptr;
     }
-    int32_t  *rp = elements+count;
-    count += size;
-    return rp;
+    int32_t  *rp = elements+گنتی;
+    گنتی += سائز_2;
+    واپس rp;
 }
 
-inline int32_t *UVector32::popFrame(int32_t size) {
-    U_ASSERT(count >= size);
-    count -= size;
-    if (count < 0) {
-        count = 0;
+اندرونی int32_t *UVector32::نکالو_چوکھٹا(int32_t سائز_2) {
+    U_ASSERT(گنتی >= سائز_2);
+    گنتی -= سائز_2;
+    اگر (گنتی < 0) {
+        گنتی = 0;
     }
-    return elements+count-size;
+    واپس elements+گنتی-سائز_2;
 }
 
 
 
-inline int32_t UVector32::size() const {
-    return count;
+اندرونی int32_t UVector32::سائز_2() ثابت {
+    واپس گنتی;
 }
 
-inline UBool UVector32::isEmpty() const {
-    return count == 0;
+اندرونی UBool UVector32::is_خالی_خانے() ثابت {
+    واپس گنتی == 0;
 }
 
-inline UBool UVector32::contains(int32_t obj) const {
-    return indexOf(obj) >= 0;
+اندرونی UBool UVector32::شامل_ہے(int32_t obj) ثابت {
+    واپس اشاریہ_کا(obj) >= 0;
 }
 
-inline int32_t UVector32::lastElementi() const {
-    return elementAti(count-1);
+اندرونی int32_t UVector32::آخری_Elementi() ثابت {
+    واپس elementAti(گنتی-1);
 }
 
-inline bool UVector32::operator!=(const UVector32& other) const {
-    return !operator==(other);
+اندرونی bool UVector32::عامل!=(ثابت UVector32& other) ثابت {
+    واپس !عامل==(other);
 }
 
-inline int32_t *UVector32::getBuffer() const {
-    return elements;
+اندرونی int32_t *UVector32::get_بفر() ثابت {
+    واپس elements;
 }
 
 
 // UStack inlines
 
-inline UBool UVector32::empty() const {
-    return isEmpty();
+اندرونی UBool UVector32::خالی_خانے() ثابت {
+    واپس is_خالی_خانے();
 }
 
-inline int32_t UVector32::peeki() const {
-    return lastElementi();
+اندرونی int32_t UVector32::peeki() ثابت {
+    واپس آخری_Elementi();
 }
 
-inline int32_t UVector32::push(int32_t i, UErrorCode &status) {
-    addElement(i, status);
-    return i;
+اندرونی int32_t UVector32::ڈالو(int32_t i, UError_رمز &حالت_2) {
+    جوڑو_Element(i, حالت_2);
+    واپس i;
 }
 
-inline int32_t UVector32::popi() {
-    int32_t result = 0;
-    if (count > 0) {
-        count--;
-        result = elements[count];
+اندرونی int32_t UVector32::popi() {
+    int32_t نتیجہ = 0;
+    اگر (گنتی > 0) {
+        گنتی--;
+        نتیجہ = elements[گنتی];
     }
-    return result;
+    واپس نتیجہ;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا
 
-#endif
+#اگر_ختم

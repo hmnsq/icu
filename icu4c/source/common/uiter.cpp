@@ -16,67 +16,67 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "unicode/chariter.h"
-#include "unicode/rep.h"
-#include "unicode/uiter.h"
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "cstring.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/ustring.h"
+#شامل "unicode/chariter.h"
+#شامل "unicode/rep.h"
+#شامل "unicode/uiter.h"
+#شامل "unicode/utf.h"
+#شامل "unicode/utf8.h"
+#شامل "unicode/utf16.h"
+#شامل "cstring.h"
 
 U_NAMESPACE_USE
 
-#define IS_EVEN(n) (((n)&1)==0)
-#define IS_POINTER_EVEN(p) IS_EVEN((size_t)p)
+#تعریف_کرو IS_EVEN(n) (((n)&1)==0)
+#تعریف_کرو IS_اشارہ_گر_EVEN(p) IS_EVEN((size_t)p)
 
 U_CDECL_BEGIN
 
 /* No-Op UCharIterator implementation for illegal input --------------------- */
 
-static int32_t U_CALLCONV
-noopGetIndex(UCharIterator * /*iter*/, UCharIteratorOrigin /*origin*/) {
-    return 0;
+ساکن int32_t U_CALLCONV
+noop_Get_اشاریہ(UCharIterator * /*iter*/, UCharIteratorOrigin /*origin*/) {
+    واپس 0;
 }
 
-static int32_t U_CALLCONV
+ساکن int32_t U_CALLCONV
 noopMove(UCharIterator * /*iter*/, int32_t /*delta*/, UCharIteratorOrigin /*origin*/) {
-    return 0;
+    واپس 0;
 }
 
-static UBool U_CALLCONV
-noopHasNext(UCharIterator * /*iter*/) {
-    return false;
+ساکن UBool U_CALLCONV
+noop_Has_اگلا(UCharIterator * /*iter*/) {
+    واپس جھوٹ;
 }
 
-static UChar32 U_CALLCONV
+ساکن UChar32 U_CALLCONV
 noopCurrent(UCharIterator * /*iter*/) {
-    return U_SENTINEL;
+    واپس U_SENTINEL;
 }
 
-static uint32_t U_CALLCONV
-noopGetState(const UCharIterator * /*iter*/) {
-    return UITER_NO_STATE;
+ساکن uint32_t U_CALLCONV
+noopGetState(ثابت UCharIterator * /*iter*/) {
+    واپس UITER_NO_STATE;
 }
 
-static void U_CALLCONV
-noopSetState(UCharIterator * /*iter*/, uint32_t /*state*/, UErrorCode *pErrorCode) {
-    *pErrorCode=U_UNSUPPORTED_ERROR;
+ساکن خالی U_CALLCONV
+noop_سیٹ_State(UCharIterator * /*iter*/, uint32_t /*state*/, UError_رمز *p_Error_رمز) {
+    *p_Error_رمز=U_UNSUPPORTED_ERROR;
 }
 
-static const UCharIterator noopIterator={
-    nullptr, 0, 0, 0, 0, 0,
-    noopGetIndex,
+ساکن ثابت UCharIterator noopIterator={
+    خالی_اشاریہ, 0, 0, 0, 0, 0,
+    noop_Get_اشاریہ,
     noopMove,
-    noopHasNext,
-    noopHasNext,
+    noop_Has_اگلا,
+    noop_Has_اگلا,
     noopCurrent,
     noopCurrent,
     noopCurrent,
-    nullptr,
+    خالی_اشاریہ,
     noopGetState,
-    noopSetState
+    noop_سیٹ_State
 };
 
 /* UCharIterator implementation for simple strings -------------------------- */
@@ -88,141 +88,141 @@ static const UCharIterator noopIterator={
  * The UCharIterator.context field holds a pointer to the string.
  */
 
-static int32_t U_CALLCONV
-stringIteratorGetIndex(UCharIterator *iter, UCharIteratorOrigin origin) UPRV_NO_SANITIZE_UNDEFINED {
-    switch(origin) {
-    case UITER_ZERO:
-        return 0;
-    case UITER_START:
-        return iter->start;
-    case UITER_CURRENT:
-        return iter->index;
-    case UITER_LIMIT:
-        return iter->limit;
-    case UITER_LENGTH:
-        return iter->length;
-    default:
+ساکن int32_t U_CALLCONV
+string_Iterator_Get_اشاریہ(UCharIterator *iter, UCharIteratorOrigin origin) UPRV_NO_SANITIZE_UNDEFINED {
+    انتخاب(origin) {
+    حالت UITER_ZERO:
+        واپس 0;
+    حالت UITER_آغاز:
+        واپس iter->آغاز;
+    حالت UITER_CURRENT:
+        واپس iter->اشاریہ;
+    حالت UITER_حد_بندی:
+        واپس iter->حد_بندی;
+    حالت UITER_لمبائی:
+        واپس iter->length;
+    طےشدہ:
         /* not a valid origin */
         /* Should never get here! */
-        return -1;
+        واپس -1;
     }
 }
 
-static int32_t U_CALLCONV
+ساکن int32_t U_CALLCONV
 stringIteratorMove(UCharIterator *iter, int32_t delta, UCharIteratorOrigin origin) UPRV_NO_SANITIZE_UNDEFINED {
     int32_t pos;
 
-    switch(origin) {
-    case UITER_ZERO:
+    انتخاب(origin) {
+    حالت UITER_ZERO:
         pos=delta;
-        break;
-    case UITER_START:
-        pos=iter->start+delta;
-        break;
-    case UITER_CURRENT:
-        pos=iter->index+delta;
-        break;
-    case UITER_LIMIT:
-        pos=iter->limit+delta;
-        break;
-    case UITER_LENGTH:
+        توڑو;
+    حالت UITER_آغاز:
+        pos=iter->آغاز+delta;
+        توڑو;
+    حالت UITER_CURRENT:
+        pos=iter->اشاریہ+delta;
+        توڑو;
+    حالت UITER_حد_بندی:
+        pos=iter->حد_بندی+delta;
+        توڑو;
+    حالت UITER_لمبائی:
         pos=iter->length+delta;
-        break;
-    default:
-        return -1;  /* Error */
+        توڑو;
+    طےشدہ:
+        واپس -1;  /* Error */
     }
 
-    if(pos<iter->start) {
-        pos=iter->start;
-    } else if(pos>iter->limit) {
-        pos=iter->limit;
+    اگر(pos<iter->آغاز) {
+        pos=iter->آغاز;
+    } ورنہ اگر(pos>iter->حد_بندی) {
+        pos=iter->حد_بندی;
     }
 
-    return iter->index=pos;
+    واپس iter->اشاریہ=pos;
 }
 
-static UBool U_CALLCONV
-stringIteratorHasNext(UCharIterator *iter) {
-    return iter->index<iter->limit;
+ساکن UBool U_CALLCONV
+string_Iterator_Has_اگلا(UCharIterator *iter) {
+    واپس iter->اشاریہ<iter->حد_بندی;
 }
 
-static UBool U_CALLCONV
-stringIteratorHasPrevious(UCharIterator *iter) {
-    return iter->index>iter->start;
+ساکن UBool U_CALLCONV
+string_Iterator_Has_پچھلا(UCharIterator *iter) {
+    واپس iter->اشاریہ>iter->آغاز;
 }
 
-static UChar32 U_CALLCONV
+ساکن UChar32 U_CALLCONV
 stringIteratorCurrent(UCharIterator *iter) {
-    if(iter->index<iter->limit) {
-        return ((const char16_t *)(iter->context))[iter->index];
-    } else {
-        return U_SENTINEL;
+    اگر(iter->اشاریہ<iter->حد_بندی) {
+        واپس ((ثابت char16_t *)(iter->context))[iter->اشاریہ];
+    } ورنہ {
+        واپس U_SENTINEL;
     }
 }
 
-static UChar32 U_CALLCONV
-stringIteratorNext(UCharIterator *iter) {
-    if(iter->index<iter->limit) {
-        return ((const char16_t *)(iter->context))[iter->index++];
-    } else {
-        return U_SENTINEL;
+ساکن UChar32 U_CALLCONV
+string_Iterator_اگلا(UCharIterator *iter) {
+    اگر(iter->اشاریہ<iter->حد_بندی) {
+        واپس ((ثابت char16_t *)(iter->context))[iter->اشاریہ++];
+    } ورنہ {
+        واپس U_SENTINEL;
     }
 }
 
-static UChar32 U_CALLCONV
-stringIteratorPrevious(UCharIterator *iter) {
-    if(iter->index>iter->start) {
-        return ((const char16_t *)(iter->context))[--iter->index];
-    } else {
-        return U_SENTINEL;
+ساکن UChar32 U_CALLCONV
+string_Iterator_پچھلا(UCharIterator *iter) {
+    اگر(iter->اشاریہ>iter->آغاز) {
+        واپس ((ثابت char16_t *)(iter->context))[--iter->اشاریہ];
+    } ورنہ {
+        واپس U_SENTINEL;
     }
 }
 
-static uint32_t U_CALLCONV
-stringIteratorGetState(const UCharIterator *iter) {
-    return (uint32_t)iter->index;
+ساکن uint32_t U_CALLCONV
+stringIteratorGetState(ثابت UCharIterator *iter) {
+    واپس (uint32_t)iter->اشاریہ;
 }
 
-static void U_CALLCONV
-stringIteratorSetState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+ساکن خالی U_CALLCONV
+string_Iterator_سیٹ_State(UCharIterator *iter, uint32_t state, UError_رمز *p_Error_رمز) {
+    اگر(p_Error_رمز==خالی_اشاریہ || U_FAILURE(*p_Error_رمز)) {
         /* do nothing */
-    } else if(iter==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-    } else if((int32_t)state<iter->start || iter->limit<(int32_t)state) {
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-    } else {
-        iter->index=(int32_t)state;
+    } ورنہ اگر(iter==خالی_اشاریہ) {
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+    } ورنہ اگر((int32_t)state<iter->آغاز || iter->حد_بندی<(int32_t)state) {
+        *p_Error_رمز=U_اشاریہ_OUTOFBOUNDS_ERROR;
+    } ورنہ {
+        iter->اشاریہ=(int32_t)state;
     }
 }
 
-static const UCharIterator stringIterator={
-    nullptr, 0, 0, 0, 0, 0,
-    stringIteratorGetIndex,
+ساکن ثابت UCharIterator stringIterator={
+    خالی_اشاریہ, 0, 0, 0, 0, 0,
+    string_Iterator_Get_اشاریہ,
     stringIteratorMove,
-    stringIteratorHasNext,
-    stringIteratorHasPrevious,
+    string_Iterator_Has_اگلا,
+    string_Iterator_Has_پچھلا,
     stringIteratorCurrent,
-    stringIteratorNext,
-    stringIteratorPrevious,
-    nullptr,
+    string_Iterator_اگلا,
+    string_Iterator_پچھلا,
+    خالی_اشاریہ,
     stringIteratorGetState,
-    stringIteratorSetState
+    string_Iterator_سیٹ_State
 };
 
-U_CAPI void U_EXPORT2
-uiter_setString(UCharIterator *iter, const char16_t *s, int32_t length) {
-    if (iter != nullptr) {
-        if (s != nullptr && length >= -1) {
+U_CAPI خالی U_EXPORT2
+uiter_سیٹ_String(UCharIterator *iter, ثابت char16_t *s, int32_t length) {
+    اگر (iter != خالی_اشاریہ) {
+        اگر (s != خالی_اشاریہ && length >= -1) {
             *iter=stringIterator;
             iter->context=s;
-            if(length>=0) {
+            اگر(length>=0) {
                 iter->length=length;
-            } else {
+            } ورنہ {
                 iter->length=u_strlen(s);
             }
-            iter->limit=iter->length;
-        } else {
+            iter->حد_بندی=iter->length;
+        } ورنہ {
             *iter=noopIterator;
         }
     }
@@ -241,59 +241,59 @@ uiter_setString(UCharIterator *iter, const char16_t *s, int32_t length) {
  */
 
 /* internal helper function */
-static inline UChar32
-utf16BEIteratorGet(UCharIterator *iter, int32_t index) {
-    const uint8_t *p=(const uint8_t *)iter->context;
-    return ((char16_t)p[2*index]<<8)|(char16_t)p[2*index+1];
+ساکن اندرونی UChar32
+utf16BEIteratorGet(UCharIterator *iter, int32_t اشاریہ) {
+    ثابت uint8_t *p=(ثابت uint8_t *)iter->context;
+    واپس ((char16_t)p[2*اشاریہ]<<8)|(char16_t)p[2*اشاریہ+1];
 }
 
-static UChar32 U_CALLCONV
+ساکن UChar32 U_CALLCONV
 utf16BEIteratorCurrent(UCharIterator *iter) {
-    int32_t index;
+    int32_t اشاریہ;
 
-    if((index=iter->index)<iter->limit) {
-        return utf16BEIteratorGet(iter, index);
-    } else {
-        return U_SENTINEL;
+    اگر((اشاریہ=iter->اشاریہ)<iter->حد_بندی) {
+        واپس utf16BEIteratorGet(iter, اشاریہ);
+    } ورنہ {
+        واپس U_SENTINEL;
     }
 }
 
-static UChar32 U_CALLCONV
-utf16BEIteratorNext(UCharIterator *iter) {
-    int32_t index;
+ساکن UChar32 U_CALLCONV
+utf16_BEIterator_اگلا(UCharIterator *iter) {
+    int32_t اشاریہ;
 
-    if((index=iter->index)<iter->limit) {
-        iter->index=index+1;
-        return utf16BEIteratorGet(iter, index);
-    } else {
-        return U_SENTINEL;
+    اگر((اشاریہ=iter->اشاریہ)<iter->حد_بندی) {
+        iter->اشاریہ=اشاریہ+1;
+        واپس utf16BEIteratorGet(iter, اشاریہ);
+    } ورنہ {
+        واپس U_SENTINEL;
     }
 }
 
-static UChar32 U_CALLCONV
-utf16BEIteratorPrevious(UCharIterator *iter) {
-    int32_t index;
+ساکن UChar32 U_CALLCONV
+utf16_BEIterator_پچھلا(UCharIterator *iter) {
+    int32_t اشاریہ;
 
-    if((index=iter->index)>iter->start) {
-        iter->index=--index;
-        return utf16BEIteratorGet(iter, index);
-    } else {
-        return U_SENTINEL;
+    اگر((اشاریہ=iter->اشاریہ)>iter->آغاز) {
+        iter->اشاریہ=--اشاریہ;
+        واپس utf16BEIteratorGet(iter, اشاریہ);
+    } ورنہ {
+        واپس U_SENTINEL;
     }
 }
 
-static const UCharIterator utf16BEIterator={
-    nullptr, 0, 0, 0, 0, 0,
-    stringIteratorGetIndex,
+ساکن ثابت UCharIterator utf16BEIterator={
+    خالی_اشاریہ, 0, 0, 0, 0, 0,
+    string_Iterator_Get_اشاریہ,
     stringIteratorMove,
-    stringIteratorHasNext,
-    stringIteratorHasPrevious,
+    string_Iterator_Has_اگلا,
+    string_Iterator_Has_پچھلا,
     utf16BEIteratorCurrent,
-    utf16BEIteratorNext,
-    utf16BEIteratorPrevious,
-    nullptr,
+    utf16_BEIterator_اگلا,
+    utf16_BEIterator_پچھلا,
+    خالی_اشاریہ,
     stringIteratorGetState,
-    stringIteratorSetState
+    string_Iterator_سیٹ_State
 };
 
 /*
@@ -301,49 +301,49 @@ static const UCharIterator utf16BEIterator={
  * i.e., before a pair of 0 bytes where the first 0 byte is at an even
  * offset from s.
  */
-static int32_t
-utf16BE_strlen(const char *s) {
-    if(IS_POINTER_EVEN(s)) {
+ساکن int32_t
+utf16BE_strlen(ثابت حرف *s) {
+    اگر(IS_اشارہ_گر_EVEN(s)) {
         /*
          * even-aligned, call u_strlen(s)
          * we are probably on a little-endian machine, but searching for char16_t NUL
          * does not care about endianness
          */
-        return u_strlen((const char16_t *)s);
-    } else {
+        واپس u_strlen((ثابت char16_t *)s);
+    } ورنہ {
         /* odd-aligned, search for pair of 0 bytes */
-        const char *p=s;
+        ثابت حرف *p=s;
 
-        while(!(*p==0 && p[1]==0)) {
+        جب(!(*p==0 && p[1]==0)) {
             p+=2;
         }
-        return (int32_t)((p-s)/2);
+        واپس (int32_t)((p-s)/2);
     }
 }
 
-U_CAPI void U_EXPORT2
-uiter_setUTF16BE(UCharIterator *iter, const char *s, int32_t length) {
-    if(iter!=nullptr) {
+U_CAPI خالی U_EXPORT2
+uiter_سیٹ_UTF16_BE(UCharIterator *iter, ثابت حرف *s, int32_t length) {
+    اگر(iter!=خالی_اشاریہ) {
         /* allow only even-length strings (the input length counts bytes) */
-        if(s!=nullptr && (length==-1 || (length>=0 && IS_EVEN(length)))) {
+        اگر(s!=خالی_اشاریہ && (length==-1 || (length>=0 && IS_EVEN(length)))) {
             /* length/=2, except that >>=1 also works for -1 (-1/2==0, -1>>1==-1) */
             length>>=1;
 
-            if(U_IS_BIG_ENDIAN && IS_POINTER_EVEN(s)) {
+            اگر(U_IS_BIG_ENDIAN && IS_اشارہ_گر_EVEN(s)) {
                 /* big-endian machine and 2-aligned UTF-16BE string: use normal char16_t iterator */
-                uiter_setString(iter, (const char16_t *)s, length);
-                return;
+                uiter_سیٹ_String(iter, (ثابت char16_t *)s, length);
+                واپس;
             }
 
             *iter=utf16BEIterator;
             iter->context=s;
-            if(length>=0) {
+            اگر(length>=0) {
                 iter->length=length;
-            } else {
+            } ورنہ {
                 iter->length=utf16BE_strlen(s);
             }
-            iter->limit=iter->length;
-        } else {
+            iter->حد_بندی=iter->length;
+        } ورنہ {
             *iter=noopIterator;
         }
     }
@@ -358,125 +358,125 @@ uiter_setUTF16BE(UCharIterator *iter, const char *s, int32_t length) {
  * The UCharIterator.context field holds a pointer to the CharacterIterator.
  */
 
-static int32_t U_CALLCONV
-characterIteratorGetIndex(UCharIterator *iter, UCharIteratorOrigin origin) UPRV_NO_SANITIZE_UNDEFINED {
-    switch(origin) {
-    case UITER_ZERO:
-        return 0;
-    case UITER_START:
-        return ((CharacterIterator *)(iter->context))->startIndex();
-    case UITER_CURRENT:
-        return ((CharacterIterator *)(iter->context))->getIndex();
-    case UITER_LIMIT:
-        return ((CharacterIterator *)(iter->context))->endIndex();
-    case UITER_LENGTH:
-        return ((CharacterIterator *)(iter->context))->getLength();
-    default:
+ساکن int32_t U_CALLCONV
+character_Iterator_Get_اشاریہ(UCharIterator *iter, UCharIteratorOrigin origin) UPRV_NO_SANITIZE_UNDEFINED {
+    انتخاب(origin) {
+    حالت UITER_ZERO:
+        واپس 0;
+    حالت UITER_آغاز:
+        واپس ((CharacterIterator *)(iter->context))->آغاز_اشاریہ();
+    حالت UITER_CURRENT:
+        واپس ((CharacterIterator *)(iter->context))->get_اشاریہ();
+    حالت UITER_حد_بندی:
+        واپس ((CharacterIterator *)(iter->context))->انتہا_اشاریہ();
+    حالت UITER_لمبائی:
+        واپس ((CharacterIterator *)(iter->context))->get_لمبائی();
+    طےشدہ:
         /* not a valid origin */
         /* Should never get here! */
-        return -1;
+        واپس -1;
     }
 }
 
-static int32_t U_CALLCONV
+ساکن int32_t U_CALLCONV
 characterIteratorMove(UCharIterator *iter, int32_t delta, UCharIteratorOrigin origin) UPRV_NO_SANITIZE_UNDEFINED {
-    switch(origin) {
-    case UITER_ZERO:
-        ((CharacterIterator *)(iter->context))->setIndex(delta);
-        return ((CharacterIterator *)(iter->context))->getIndex();
-    case UITER_START:
-    case UITER_CURRENT:
-    case UITER_LIMIT:
-        return ((CharacterIterator *)(iter->context))->move(delta, (CharacterIterator::EOrigin)origin);
-    case UITER_LENGTH:
-        ((CharacterIterator *)(iter->context))->setIndex(((CharacterIterator *)(iter->context))->getLength()+delta);
-        return ((CharacterIterator *)(iter->context))->getIndex();
-    default:
+    انتخاب(origin) {
+    حالت UITER_ZERO:
+        ((CharacterIterator *)(iter->context))->سیٹ_اشاریہ(delta);
+        واپس ((CharacterIterator *)(iter->context))->get_اشاریہ();
+    حالت UITER_آغاز:
+    حالت UITER_CURRENT:
+    حالت UITER_حد_بندی:
+        واپس ((CharacterIterator *)(iter->context))->move(delta, (CharacterIterator::EOrigin)origin);
+    حالت UITER_لمبائی:
+        ((CharacterIterator *)(iter->context))->سیٹ_اشاریہ(((CharacterIterator *)(iter->context))->get_لمبائی()+delta);
+        واپس ((CharacterIterator *)(iter->context))->get_اشاریہ();
+    طےشدہ:
         /* not a valid origin */
         /* Should never get here! */
-        return -1;
+        واپس -1;
     }
 }
 
-static UBool U_CALLCONV
-characterIteratorHasNext(UCharIterator *iter) {
-    return ((CharacterIterator *)(iter->context))->hasNext();
+ساکن UBool U_CALLCONV
+character_Iterator_Has_اگلا(UCharIterator *iter) {
+    واپس ((CharacterIterator *)(iter->context))->has_اگلا();
 }
 
-static UBool U_CALLCONV
-characterIteratorHasPrevious(UCharIterator *iter) {
-    return ((CharacterIterator *)(iter->context))->hasPrevious();
+ساکن UBool U_CALLCONV
+character_Iterator_Has_پچھلا(UCharIterator *iter) {
+    واپس ((CharacterIterator *)(iter->context))->has_پچھلا();
 }
 
-static UChar32 U_CALLCONV
+ساکن UChar32 U_CALLCONV
 characterIteratorCurrent(UCharIterator *iter) {
     UChar32 c;
 
     c=((CharacterIterator *)(iter->context))->current();
-    if(c!=0xffff || ((CharacterIterator *)(iter->context))->hasNext()) {
-        return c;
-    } else {
-        return U_SENTINEL;
+    اگر(c!=0xffff || ((CharacterIterator *)(iter->context))->has_اگلا()) {
+        واپس c;
+    } ورنہ {
+        واپس U_SENTINEL;
     }
 }
 
-static UChar32 U_CALLCONV
-characterIteratorNext(UCharIterator *iter) {
-    if(((CharacterIterator *)(iter->context))->hasNext()) {
-        return ((CharacterIterator *)(iter->context))->nextPostInc();
-    } else {
-        return U_SENTINEL;
+ساکن UChar32 U_CALLCONV
+character_Iterator_اگلا(UCharIterator *iter) {
+    اگر(((CharacterIterator *)(iter->context))->has_اگلا()) {
+        واپس ((CharacterIterator *)(iter->context))->اگلا_Post_Inc();
+    } ورنہ {
+        واپس U_SENTINEL;
     }
 }
 
-static UChar32 U_CALLCONV
-characterIteratorPrevious(UCharIterator *iter) {
-    if(((CharacterIterator *)(iter->context))->hasPrevious()) {
-        return ((CharacterIterator *)(iter->context))->previous();
-    } else {
-        return U_SENTINEL;
+ساکن UChar32 U_CALLCONV
+character_Iterator_پچھلا(UCharIterator *iter) {
+    اگر(((CharacterIterator *)(iter->context))->has_پچھلا()) {
+        واپس ((CharacterIterator *)(iter->context))->پچھلا_2();
+    } ورنہ {
+        واپس U_SENTINEL;
     }
 }
 
-static uint32_t U_CALLCONV
-characterIteratorGetState(const UCharIterator *iter) {
-    return ((CharacterIterator *)(iter->context))->getIndex();
+ساکن uint32_t U_CALLCONV
+characterIteratorGetState(ثابت UCharIterator *iter) {
+    واپس ((CharacterIterator *)(iter->context))->get_اشاریہ();
 }
 
-static void U_CALLCONV
-characterIteratorSetState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+ساکن خالی U_CALLCONV
+character_Iterator_سیٹ_State(UCharIterator *iter, uint32_t state, UError_رمز *p_Error_رمز) {
+    اگر(p_Error_رمز==خالی_اشاریہ || U_FAILURE(*p_Error_رمز)) {
         /* do nothing */
-    } else if(iter==nullptr || iter->context==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-    } else if((int32_t)state<((CharacterIterator *)(iter->context))->startIndex() || ((CharacterIterator *)(iter->context))->endIndex()<(int32_t)state) {
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-    } else {
-        ((CharacterIterator *)(iter->context))->setIndex((int32_t)state);
+    } ورنہ اگر(iter==خالی_اشاریہ || iter->context==خالی_اشاریہ) {
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+    } ورنہ اگر((int32_t)state<((CharacterIterator *)(iter->context))->آغاز_اشاریہ() || ((CharacterIterator *)(iter->context))->انتہا_اشاریہ()<(int32_t)state) {
+        *p_Error_رمز=U_اشاریہ_OUTOFBOUNDS_ERROR;
+    } ورنہ {
+        ((CharacterIterator *)(iter->context))->سیٹ_اشاریہ((int32_t)state);
     }
 }
 
-static const UCharIterator characterIteratorWrapper={
-    nullptr, 0, 0, 0, 0, 0,
-    characterIteratorGetIndex,
+ساکن ثابت UCharIterator characterIteratorWrapper={
+    خالی_اشاریہ, 0, 0, 0, 0, 0,
+    character_Iterator_Get_اشاریہ,
     characterIteratorMove,
-    characterIteratorHasNext,
-    characterIteratorHasPrevious,
+    character_Iterator_Has_اگلا,
+    character_Iterator_Has_پچھلا,
     characterIteratorCurrent,
-    characterIteratorNext,
-    characterIteratorPrevious,
-    nullptr,
+    character_Iterator_اگلا,
+    character_Iterator_پچھلا,
+    خالی_اشاریہ,
     characterIteratorGetState,
-    characterIteratorSetState
+    character_Iterator_سیٹ_State
 };
 
-U_CAPI void U_EXPORT2
-uiter_setCharacterIterator(UCharIterator *iter, CharacterIterator *charIter) {
-    if (iter != nullptr) {
-        if (charIter != nullptr) {
+U_CAPI خالی U_EXPORT2
+uiter_سیٹ_Character_Iterator(UCharIterator *iter, CharacterIterator *charIter) {
+    اگر (iter != خالی_اشاریہ) {
+        اگر (charIter != خالی_اشاریہ) {
             *iter=characterIteratorWrapper;
             iter->context=charIter;
-        } else {
+        } ورنہ {
             *iter=noopIterator;
         }
     }
@@ -493,55 +493,55 @@ uiter_setCharacterIterator(UCharIterator *iter, CharacterIterator *charIter) {
  * and the iteration index.
  */
 
-static UChar32 U_CALLCONV
+ساکن UChar32 U_CALLCONV
 replaceableIteratorCurrent(UCharIterator *iter) {
-    if(iter->index<iter->limit) {
-        return ((Replaceable *)(iter->context))->charAt(iter->index);
-    } else {
-        return U_SENTINEL;
+    اگر(iter->اشاریہ<iter->حد_بندی) {
+        واپس ((Replaceable *)(iter->context))->charAt(iter->اشاریہ);
+    } ورنہ {
+        واپس U_SENTINEL;
     }
 }
 
-static UChar32 U_CALLCONV
-replaceableIteratorNext(UCharIterator *iter) {
-    if(iter->index<iter->limit) {
-        return ((Replaceable *)(iter->context))->charAt(iter->index++);
-    } else {
-        return U_SENTINEL;
+ساکن UChar32 U_CALLCONV
+replaceable_Iterator_اگلا(UCharIterator *iter) {
+    اگر(iter->اشاریہ<iter->حد_بندی) {
+        واپس ((Replaceable *)(iter->context))->charAt(iter->اشاریہ++);
+    } ورنہ {
+        واپس U_SENTINEL;
     }
 }
 
-static UChar32 U_CALLCONV
-replaceableIteratorPrevious(UCharIterator *iter) {
-    if(iter->index>iter->start) {
-        return ((Replaceable *)(iter->context))->charAt(--iter->index);
-    } else {
-        return U_SENTINEL;
+ساکن UChar32 U_CALLCONV
+replaceable_Iterator_پچھلا(UCharIterator *iter) {
+    اگر(iter->اشاریہ>iter->آغاز) {
+        واپس ((Replaceable *)(iter->context))->charAt(--iter->اشاریہ);
+    } ورنہ {
+        واپس U_SENTINEL;
     }
 }
 
-static const UCharIterator replaceableIterator={
-    nullptr, 0, 0, 0, 0, 0,
-    stringIteratorGetIndex,
+ساکن ثابت UCharIterator replaceableIterator={
+    خالی_اشاریہ, 0, 0, 0, 0, 0,
+    string_Iterator_Get_اشاریہ,
     stringIteratorMove,
-    stringIteratorHasNext,
-    stringIteratorHasPrevious,
+    string_Iterator_Has_اگلا,
+    string_Iterator_Has_پچھلا,
     replaceableIteratorCurrent,
-    replaceableIteratorNext,
-    replaceableIteratorPrevious,
-    nullptr,
+    replaceable_Iterator_اگلا,
+    replaceable_Iterator_پچھلا,
+    خالی_اشاریہ,
     stringIteratorGetState,
-    stringIteratorSetState
+    string_Iterator_سیٹ_State
 };
 
-U_CAPI void U_EXPORT2
-uiter_setReplaceable(UCharIterator *iter, const Replaceable *rep) {
-    if (iter != nullptr) {
-        if (rep != nullptr) {
+U_CAPI خالی U_EXPORT2
+uiter_سیٹ_Replaceable(UCharIterator *iter, ثابت Replaceable *rep) {
+    اگر (iter != خالی_اشاریہ) {
+        اگر (rep != خالی_اشاریہ) {
             *iter=replaceableIterator;
             iter->context=rep;
-            iter->limit=iter->length=rep->length();
-        } else {
+            iter->حد_بندی=iter->length=rep->length();
+        } ورنہ {
             *iter=noopIterator;
         }
     }
@@ -557,7 +557,7 @@ uiter_setReplaceable(UCharIterator *iter, const Replaceable *rep) {
  * to introduce a uiter_close(iter).
  */
 
-#define UITER_CNV_CAPACITY 16
+#تعریف_کرو UITER_CNV_استعداد 16
 
 /*
  * Minimal implementation:
@@ -585,434 +585,434 @@ uiter_setReplaceable(UCharIterator *iter, const Replaceable *rep) {
  * Add implementations that do not call strlen() for iteration but check for NUL.
  */
 
-static int32_t U_CALLCONV
-utf8IteratorGetIndex(UCharIterator *iter, UCharIteratorOrigin origin) UPRV_NO_SANITIZE_UNDEFINED {
-    switch(origin) {
-    case UITER_ZERO:
-    case UITER_START:
-        return 0;
-    case UITER_CURRENT:
-        if(iter->index<0) {
+ساکن int32_t U_CALLCONV
+utf8_Iterator_Get_اشاریہ(UCharIterator *iter, UCharIteratorOrigin origin) UPRV_NO_SANITIZE_UNDEFINED {
+    انتخاب(origin) {
+    حالت UITER_ZERO:
+    حالت UITER_آغاز:
+        واپس 0;
+    حالت UITER_CURRENT:
+        اگر(iter->اشاریہ<0) {
             /* the current UTF-16 index is unknown after setState(), count from the beginning */
-            const uint8_t *s;
+            ثابت uint8_t *s;
             UChar32 c;
-            int32_t i, limit, index;
+            int32_t i, حد_بندی, اشاریہ;
 
-            s=(const uint8_t *)iter->context;
-            i=index=0;
-            limit=iter->start; /* count up to the UTF-8 index */
-            while(i<limit) {
-                U8_NEXT_OR_FFFD(s, i, limit, c);
-                index+=U16_LENGTH(c);
+            s=(ثابت uint8_t *)iter->context;
+            i=اشاریہ=0;
+            حد_بندی=iter->آغاز; /* count up to the UTF-8 index */
+            جب(i<حد_بندی) {
+                U8_اگلا_OR_FFFD(s, i, حد_بندی, c);
+                اشاریہ+=U16_لمبائی(c);
             }
 
-            iter->start=i; /* just in case setState() did not get us to a code point boundary */
-            if(i==iter->limit) {
-                iter->length=index; /* in case it was <0 or wrong */
+            iter->آغاز=i; /* just in case setState() did not get us to a code point boundary */
+            اگر(i==iter->حد_بندی) {
+                iter->length=اشاریہ; /* in case it was <0 or wrong */
             }
-            if(iter->reservedField!=0) {
-                --index; /* we are in the middle of a supplementary code point */
+            اگر(iter->reserved_میدان!=0) {
+                --اشاریہ; /* we are in the middle of a supplementary code point */
             }
-            iter->index=index;
+            iter->اشاریہ=اشاریہ;
         }
-        return iter->index;
-    case UITER_LIMIT:
-    case UITER_LENGTH:
-        if(iter->length<0) {
-            const uint8_t *s;
+        واپس iter->اشاریہ;
+    حالت UITER_حد_بندی:
+    حالت UITER_لمبائی:
+        اگر(iter->length<0) {
+            ثابت uint8_t *s;
             UChar32 c;
-            int32_t i, limit, length;
+            int32_t i, حد_بندی, length;
 
-            s=(const uint8_t *)iter->context;
-            if(iter->index<0) {
+            s=(ثابت uint8_t *)iter->context;
+            اگر(iter->اشاریہ<0) {
                 /*
                  * the current UTF-16 index is unknown after setState(),
                  * we must first count from the beginning to here
                  */
                 i=length=0;
-                limit=iter->start;
+                حد_بندی=iter->آغاز;
 
                 /* count from the beginning to the current index */
-                while(i<limit) {
-                    U8_NEXT_OR_FFFD(s, i, limit, c);
-                    length+=U16_LENGTH(c);
+                جب(i<حد_بندی) {
+                    U8_اگلا_OR_FFFD(s, i, حد_بندی, c);
+                    length+=U16_لمبائی(c);
                 }
 
                 /* assume i==limit==iter->start, set the UTF-16 index */
-                iter->start=i; /* just in case setState() did not get us to a code point boundary */
-                iter->index= iter->reservedField!=0 ? length-1 : length;
-            } else {
-                i=iter->start;
-                length=iter->index;
-                if(iter->reservedField!=0) {
+                iter->آغاز=i; /* just in case setState() did not get us to a code point boundary */
+                iter->اشاریہ= iter->reserved_میدان!=0 ? length-1 : length;
+            } ورنہ {
+                i=iter->آغاز;
+                length=iter->اشاریہ;
+                اگر(iter->reserved_میدان!=0) {
                     ++length;
                 }
             }
 
             /* count from the current index to the end */
-            limit=iter->limit;
-            while(i<limit) {
-                U8_NEXT_OR_FFFD(s, i, limit, c);
-                length+=U16_LENGTH(c);
+            حد_بندی=iter->حد_بندی;
+            جب(i<حد_بندی) {
+                U8_اگلا_OR_FFFD(s, i, حد_بندی, c);
+                length+=U16_لمبائی(c);
             }
             iter->length=length;
         }
-        return iter->length;
-    default:
+        واپس iter->length;
+    طےشدہ:
         /* not a valid origin */
         /* Should never get here! */
-        return -1;
+        واپس -1;
     }
 }
 
-static int32_t U_CALLCONV
+ساکن int32_t U_CALLCONV
 utf8IteratorMove(UCharIterator *iter, int32_t delta, UCharIteratorOrigin origin) UPRV_NO_SANITIZE_UNDEFINED {
-    const uint8_t *s;
+    ثابت uint8_t *s;
     UChar32 c;
     int32_t pos; /* requested UTF-16 index */
     int32_t i; /* UTF-8 index */
     UBool havePos;
 
     /* calculate the requested UTF-16 index */
-    switch(origin) {
-    case UITER_ZERO:
-    case UITER_START:
+    انتخاب(origin) {
+    حالت UITER_ZERO:
+    حالت UITER_آغاز:
         pos=delta;
-        havePos=true;
+        havePos=سچ;
         /* iter->index<0 (unknown) is possible */
-        break;
-    case UITER_CURRENT:
-        if(iter->index>=0) {
-            pos=iter->index+delta;
-            havePos=true;
-        } else {
+        توڑو;
+    حالت UITER_CURRENT:
+        اگر(iter->اشاریہ>=0) {
+            pos=iter->اشاریہ+delta;
+            havePos=سچ;
+        } ورنہ {
             /* the current UTF-16 index is unknown after setState(), use only delta */
             pos=0;
-            havePos=false;
+            havePos=جھوٹ;
         }
-        break;
-    case UITER_LIMIT:
-    case UITER_LENGTH:
-        if(iter->length>=0) {
+        توڑو;
+    حالت UITER_حد_بندی:
+    حالت UITER_لمبائی:
+        اگر(iter->length>=0) {
             pos=iter->length+delta;
-            havePos=true;
-        } else {
+            havePos=سچ;
+        } ورنہ {
             /* pin to the end, avoid counting the length */
-            iter->index=-1;
-            iter->start=iter->limit;
-            iter->reservedField=0;
-            if(delta>=0) {
-                return UITER_UNKNOWN_INDEX;
-            } else {
+            iter->اشاریہ=-1;
+            iter->آغاز=iter->حد_بندی;
+            iter->reserved_میدان=0;
+            اگر(delta>=0) {
+                واپس UITER_UNKNOWN_اشاریہ;
+            } ورنہ {
                 /* the current UTF-16 index is unknown, use only delta */
                 pos=0;
-                havePos=false;
+                havePos=جھوٹ;
             }
         }
-        break;
-    default:
-        return -1;  /* Error */
+        توڑو;
+    طےشدہ:
+        واپس -1;  /* Error */
     }
 
-    if(havePos) {
+    اگر(havePos) {
         /* shortcuts: pinning to the edges of the string */
-        if(pos<=0) {
-            iter->index=iter->start=iter->reservedField=0;
-            return 0;
-        } else if(iter->length>=0 && pos>=iter->length) {
-            iter->index=iter->length;
-            iter->start=iter->limit;
-            iter->reservedField=0;
-            return iter->index;
+        اگر(pos<=0) {
+            iter->اشاریہ=iter->آغاز=iter->reserved_میدان=0;
+            واپس 0;
+        } ورنہ اگر(iter->length>=0 && pos>=iter->length) {
+            iter->اشاریہ=iter->length;
+            iter->آغاز=iter->حد_بندی;
+            iter->reserved_میدان=0;
+            واپس iter->اشاریہ;
         }
 
         /* minimize the number of U8_NEXT/PREV operations */
-        if(iter->index<0 || pos<iter->index/2) {
+        اگر(iter->اشاریہ<0 || pos<iter->اشاریہ/2) {
             /* go forward from the start instead of backward from the current index */
-            iter->index=iter->start=iter->reservedField=0;
-        } else if(iter->length>=0 && (iter->length-pos)<(pos-iter->index)) {
+            iter->اشاریہ=iter->آغاز=iter->reserved_میدان=0;
+        } ورنہ اگر(iter->length>=0 && (iter->length-pos)<(pos-iter->اشاریہ)) {
             /*
              * if we have the UTF-16 index and length and the new position is
              * closer to the end than the current index,
              * then go backward from the end instead of forward from the current index
              */
-            iter->index=iter->length;
-            iter->start=iter->limit;
-            iter->reservedField=0;
+            iter->اشاریہ=iter->length;
+            iter->آغاز=iter->حد_بندی;
+            iter->reserved_میدان=0;
         }
 
-        delta=pos-iter->index;
-        if(delta==0) {
-            return iter->index; /* nothing to do */
+        delta=pos-iter->اشاریہ;
+        اگر(delta==0) {
+            واپس iter->اشاریہ; /* nothing to do */
         }
-    } else {
+    } ورنہ {
         /* move relative to unknown UTF-16 index */
-        if(delta==0) {
-            return UITER_UNKNOWN_INDEX; /* nothing to do */
-        } else if(-delta>=iter->start) {
+        اگر(delta==0) {
+            واپس UITER_UNKNOWN_اشاریہ; /* nothing to do */
+        } ورنہ اگر(-delta>=iter->آغاز) {
             /* moving backwards by more UChars than there are UTF-8 bytes, pin to 0 */
-            iter->index=iter->start=iter->reservedField=0;
-            return 0;
-        } else if(delta>=(iter->limit-iter->start)) {
+            iter->اشاریہ=iter->آغاز=iter->reserved_میدان=0;
+            واپس 0;
+        } ورنہ اگر(delta>=(iter->حد_بندی-iter->آغاز)) {
             /* moving forward by more UChars than the remaining UTF-8 bytes, pin to the end */
-            iter->index=iter->length; /* may or may not be <0 (unknown) */
-            iter->start=iter->limit;
-            iter->reservedField=0;
-            return iter->index>=0 ? iter->index : (int32_t)UITER_UNKNOWN_INDEX;
+            iter->اشاریہ=iter->length; /* may or may not be <0 (unknown) */
+            iter->آغاز=iter->حد_بندی;
+            iter->reserved_میدان=0;
+            واپس iter->اشاریہ>=0 ? iter->اشاریہ : (int32_t)UITER_UNKNOWN_اشاریہ;
         }
     }
 
     /* delta!=0 */
 
     /* move towards the requested position, pin to the edges of the string */
-    s=(const uint8_t *)iter->context;
-    pos=iter->index; /* could be <0 (unknown) */
-    i=iter->start;
-    if(delta>0) {
+    s=(ثابت uint8_t *)iter->context;
+    pos=iter->اشاریہ; /* could be <0 (unknown) */
+    i=iter->آغاز;
+    اگر(delta>0) {
         /* go forward */
-        int32_t limit=iter->limit;
-        if(iter->reservedField!=0) {
-            iter->reservedField=0;
+        int32_t حد_بندی=iter->حد_بندی;
+        اگر(iter->reserved_میدان!=0) {
+            iter->reserved_میدان=0;
             ++pos;
             --delta;
         }
-        while(delta>0 && i<limit) {
-            U8_NEXT_OR_FFFD(s, i, limit, c);
-            if(c<=0xffff) {
+        جب(delta>0 && i<حد_بندی) {
+            U8_اگلا_OR_FFFD(s, i, حد_بندی, c);
+            اگر(c<=0xffff) {
                 ++pos;
                 --delta;
-            } else if(delta>=2) {
+            } ورنہ اگر(delta>=2) {
                 pos+=2;
                 delta-=2;
-            } else /* delta==1 */ {
+            } ورنہ /* delta==1 */ {
                 /* stop in the middle of a supplementary code point */
-                iter->reservedField=c;
+                iter->reserved_میدان=c;
                 ++pos;
-                break; /* delta=0; */
+                توڑو; /* delta=0; */
             }
         }
-        if(i==limit) {
-            if(iter->length<0 && iter->index>=0) {
-                iter->length= iter->reservedField==0 ? pos : pos+1;
-            } else if(iter->index<0 && iter->length>=0) {
-                iter->index= iter->reservedField==0 ? iter->length : iter->length-1;
+        اگر(i==حد_بندی) {
+            اگر(iter->length<0 && iter->اشاریہ>=0) {
+                iter->length= iter->reserved_میدان==0 ? pos : pos+1;
+            } ورنہ اگر(iter->اشاریہ<0 && iter->length>=0) {
+                iter->اشاریہ= iter->reserved_میدان==0 ? iter->length : iter->length-1;
             }
         }
-    } else /* delta<0 */ {
+    } ورنہ /* delta<0 */ {
         /* go backward */
-        if(iter->reservedField!=0) {
-            iter->reservedField=0;
+        اگر(iter->reserved_میدان!=0) {
+            iter->reserved_میدان=0;
             i-=4; /* we stayed behind the supplementary code point; go before it now */
             --pos;
             ++delta;
         }
-        while(delta<0 && i>0) {
-            U8_PREV_OR_FFFD(s, 0, i, c);
-            if(c<=0xffff) {
+        جب(delta<0 && i>0) {
+            U8_پچھلا_OR_FFFD(s, 0, i, c);
+            اگر(c<=0xffff) {
                 --pos;
                 ++delta;
-            } else if(delta<=-2) {
+            } ورنہ اگر(delta<=-2) {
                 pos-=2;
                 delta+=2;
-            } else /* delta==-1 */ {
+            } ورنہ /* delta==-1 */ {
                 /* stop in the middle of a supplementary code point */
                 i+=4; /* back to behind this supplementary code point for consistent state */
-                iter->reservedField=c;
+                iter->reserved_میدان=c;
                 --pos;
-                break; /* delta=0; */
+                توڑو; /* delta=0; */
             }
         }
     }
 
-    iter->start=i;
-    if(iter->index>=0) {
-        return iter->index=pos;
-    } else {
+    iter->آغاز=i;
+    اگر(iter->اشاریہ>=0) {
+        واپس iter->اشاریہ=pos;
+    } ورنہ {
         /* we started with index<0 (unknown) so pos is bogus */
-        if(i<=1) {
-            return iter->index=i; /* reached the beginning */
-        } else {
+        اگر(i<=1) {
+            واپس iter->اشاریہ=i; /* reached the beginning */
+        } ورنہ {
             /* we still don't know the UTF-16 index */
-            return UITER_UNKNOWN_INDEX;
+            واپس UITER_UNKNOWN_اشاریہ;
         }
     }
 }
 
-static UBool U_CALLCONV
-utf8IteratorHasNext(UCharIterator *iter) {
-    return iter->start<iter->limit || iter->reservedField!=0;
+ساکن UBool U_CALLCONV
+utf8_Iterator_Has_اگلا(UCharIterator *iter) {
+    واپس iter->آغاز<iter->حد_بندی || iter->reserved_میدان!=0;
 }
 
-static UBool U_CALLCONV
-utf8IteratorHasPrevious(UCharIterator *iter) {
-    return iter->start>0;
+ساکن UBool U_CALLCONV
+utf8_Iterator_Has_پچھلا(UCharIterator *iter) {
+    واپس iter->آغاز>0;
 }
 
-static UChar32 U_CALLCONV
+ساکن UChar32 U_CALLCONV
 utf8IteratorCurrent(UCharIterator *iter) {
-    if(iter->reservedField!=0) {
-        return U16_TRAIL(iter->reservedField);
-    } else if(iter->start<iter->limit) {
-        const uint8_t *s=(const uint8_t *)iter->context;
+    اگر(iter->reserved_میدان!=0) {
+        واپس U16_TRAIL(iter->reserved_میدان);
+    } ورنہ اگر(iter->آغاز<iter->حد_بندی) {
+        ثابت uint8_t *s=(ثابت uint8_t *)iter->context;
         UChar32 c;
-        int32_t i=iter->start;
+        int32_t i=iter->آغاز;
 
-        U8_NEXT_OR_FFFD(s, i, iter->limit, c);
-        if(c<=0xffff) {
-            return c;
-        } else {
-            return U16_LEAD(c);
+        U8_اگلا_OR_FFFD(s, i, iter->حد_بندی, c);
+        اگر(c<=0xffff) {
+            واپس c;
+        } ورنہ {
+            واپس U16_LEAD(c);
         }
-    } else {
-        return U_SENTINEL;
+    } ورنہ {
+        واپس U_SENTINEL;
     }
 }
 
-static UChar32 U_CALLCONV
-utf8IteratorNext(UCharIterator *iter) {
-    int32_t index;
+ساکن UChar32 U_CALLCONV
+utf8_Iterator_اگلا(UCharIterator *iter) {
+    int32_t اشاریہ;
 
-    if(iter->reservedField!=0) {
-        char16_t trail=U16_TRAIL(iter->reservedField);
-        iter->reservedField=0;
-        if((index=iter->index)>=0) {
-            iter->index=index+1;
+    اگر(iter->reserved_میدان!=0) {
+        char16_t trail=U16_TRAIL(iter->reserved_میدان);
+        iter->reserved_میدان=0;
+        اگر((اشاریہ=iter->اشاریہ)>=0) {
+            iter->اشاریہ=اشاریہ+1;
         }
-        return trail;
-    } else if(iter->start<iter->limit) {
-        const uint8_t *s=(const uint8_t *)iter->context;
+        واپس trail;
+    } ورنہ اگر(iter->آغاز<iter->حد_بندی) {
+        ثابت uint8_t *s=(ثابت uint8_t *)iter->context;
         UChar32 c;
 
-        U8_NEXT_OR_FFFD(s, iter->start, iter->limit, c);
-        if((index=iter->index)>=0) {
-            iter->index=++index;
-            if(iter->length<0 && iter->start==iter->limit) {
-                iter->length= c<=0xffff ? index : index+1;
+        U8_اگلا_OR_FFFD(s, iter->آغاز, iter->حد_بندی, c);
+        اگر((اشاریہ=iter->اشاریہ)>=0) {
+            iter->اشاریہ=++اشاریہ;
+            اگر(iter->length<0 && iter->آغاز==iter->حد_بندی) {
+                iter->length= c<=0xffff ? اشاریہ : اشاریہ+1;
             }
-        } else if(iter->start==iter->limit && iter->length>=0) {
-            iter->index= c<=0xffff ? iter->length : iter->length-1;
+        } ورنہ اگر(iter->آغاز==iter->حد_بندی && iter->length>=0) {
+            iter->اشاریہ= c<=0xffff ? iter->length : iter->length-1;
         }
-        if(c<=0xffff) {
-            return c;
-        } else {
-            iter->reservedField=c;
-            return U16_LEAD(c);
+        اگر(c<=0xffff) {
+            واپس c;
+        } ورنہ {
+            iter->reserved_میدان=c;
+            واپس U16_LEAD(c);
         }
-    } else {
-        return U_SENTINEL;
+    } ورنہ {
+        واپس U_SENTINEL;
     }
 }
 
-static UChar32 U_CALLCONV
-utf8IteratorPrevious(UCharIterator *iter) {
-    int32_t index;
+ساکن UChar32 U_CALLCONV
+utf8_Iterator_پچھلا(UCharIterator *iter) {
+    int32_t اشاریہ;
 
-    if(iter->reservedField!=0) {
-        char16_t lead=U16_LEAD(iter->reservedField);
-        iter->reservedField=0;
-        iter->start-=4; /* we stayed behind the supplementary code point; go before it now */
-        if((index=iter->index)>0) {
-            iter->index=index-1;
+    اگر(iter->reserved_میدان!=0) {
+        char16_t lead=U16_LEAD(iter->reserved_میدان);
+        iter->reserved_میدان=0;
+        iter->آغاز-=4; /* we stayed behind the supplementary code point; go before it now */
+        اگر((اشاریہ=iter->اشاریہ)>0) {
+            iter->اشاریہ=اشاریہ-1;
         }
-        return lead;
-    } else if(iter->start>0) {
-        const uint8_t *s=(const uint8_t *)iter->context;
+        واپس lead;
+    } ورنہ اگر(iter->آغاز>0) {
+        ثابت uint8_t *s=(ثابت uint8_t *)iter->context;
         UChar32 c;
 
-        U8_PREV_OR_FFFD(s, 0, iter->start, c);
-        if((index=iter->index)>0) {
-            iter->index=index-1;
-        } else if(iter->start<=1) {
-            iter->index= c<=0xffff ? iter->start : iter->start+1;
+        U8_پچھلا_OR_FFFD(s, 0, iter->آغاز, c);
+        اگر((اشاریہ=iter->اشاریہ)>0) {
+            iter->اشاریہ=اشاریہ-1;
+        } ورنہ اگر(iter->آغاز<=1) {
+            iter->اشاریہ= c<=0xffff ? iter->آغاز : iter->آغاز+1;
         }
-        if(c<=0xffff) {
-            return c;
-        } else {
-            iter->start+=4; /* back to behind this supplementary code point for consistent state */
-            iter->reservedField=c;
-            return U16_TRAIL(c);
+        اگر(c<=0xffff) {
+            واپس c;
+        } ورنہ {
+            iter->آغاز+=4; /* back to behind this supplementary code point for consistent state */
+            iter->reserved_میدان=c;
+            واپس U16_TRAIL(c);
         }
-    } else {
-        return U_SENTINEL;
+    } ورنہ {
+        واپس U_SENTINEL;
     }
 }
 
-static uint32_t U_CALLCONV
-utf8IteratorGetState(const UCharIterator *iter) {
-    uint32_t state=(uint32_t)(iter->start<<1);
-    if(iter->reservedField!=0) {
+ساکن uint32_t U_CALLCONV
+utf8IteratorGetState(ثابت UCharIterator *iter) {
+    uint32_t state=(uint32_t)(iter->آغاز<<1);
+    اگر(iter->reserved_میدان!=0) {
         state|=1;
     }
-    return state;
+    واپس state;
 }
 
-static void U_CALLCONV
-utf8IteratorSetState(UCharIterator *iter,
+ساکن خالی U_CALLCONV
+utf8_Iterator_سیٹ_State(UCharIterator *iter,
                      uint32_t state,
-                     UErrorCode *pErrorCode)
+                     UError_رمز *p_Error_رمز)
 {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+    اگر(p_Error_رمز==خالی_اشاریہ || U_FAILURE(*p_Error_رمز)) {
         /* do nothing */
-    } else if(iter==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-    } else if(state==utf8IteratorGetState(iter)) {
+    } ورنہ اگر(iter==خالی_اشاریہ) {
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+    } ورنہ اگر(state==utf8IteratorGetState(iter)) {
         /* setting to the current state: no-op */
-    } else {
-        int32_t index=(int32_t)(state>>1); /* UTF-8 index */
+    } ورنہ {
+        int32_t اشاریہ=(int32_t)(state>>1); /* UTF-8 index */
         state&=1; /* 1 if in surrogate pair, must be index>=4 */
 
-        if((state==0 ? index<0 : index<4) || iter->limit<index) {
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        } else {
-            iter->start=index; /* restore UTF-8 byte index */
-            if(index<=1) {
-                iter->index=index;
-            } else {
-                iter->index=-1; /* unknown UTF-16 index */
+        اگر((state==0 ? اشاریہ<0 : اشاریہ<4) || iter->حد_بندی<اشاریہ) {
+            *p_Error_رمز=U_اشاریہ_OUTOFBOUNDS_ERROR;
+        } ورنہ {
+            iter->آغاز=اشاریہ; /* restore UTF-8 byte index */
+            اگر(اشاریہ<=1) {
+                iter->اشاریہ=اشاریہ;
+            } ورنہ {
+                iter->اشاریہ=-1; /* unknown UTF-16 index */
             }
-            if(state==0) {
-                iter->reservedField=0;
-            } else {
+            اگر(state==0) {
+                iter->reserved_میدان=0;
+            } ورنہ {
                 /* verified index>=4 above */
                 UChar32 c;
-                U8_PREV_OR_FFFD((const uint8_t *)iter->context, 0, index, c);
-                if(c<=0xffff) {
-                    *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                } else {
-                    iter->reservedField=c;
+                U8_پچھلا_OR_FFFD((ثابت uint8_t *)iter->context, 0, اشاریہ, c);
+                اگر(c<=0xffff) {
+                    *p_Error_رمز=U_اشاریہ_OUTOFBOUNDS_ERROR;
+                } ورنہ {
+                    iter->reserved_میدان=c;
                 }
             }
         }
     }
 }
 
-static const UCharIterator utf8Iterator={
-    nullptr, 0, 0, 0, 0, 0,
-    utf8IteratorGetIndex,
+ساکن ثابت UCharIterator utf8Iterator={
+    خالی_اشاریہ, 0, 0, 0, 0, 0,
+    utf8_Iterator_Get_اشاریہ,
     utf8IteratorMove,
-    utf8IteratorHasNext,
-    utf8IteratorHasPrevious,
+    utf8_Iterator_Has_اگلا,
+    utf8_Iterator_Has_پچھلا,
     utf8IteratorCurrent,
-    utf8IteratorNext,
-    utf8IteratorPrevious,
-    nullptr,
+    utf8_Iterator_اگلا,
+    utf8_Iterator_پچھلا,
+    خالی_اشاریہ,
     utf8IteratorGetState,
-    utf8IteratorSetState
+    utf8_Iterator_سیٹ_State
 };
 
-U_CAPI void U_EXPORT2
-uiter_setUTF8(UCharIterator *iter, const char *s, int32_t length) {
-    if (iter != nullptr) {
-        if (s != nullptr && length >= -1) {
+U_CAPI خالی U_EXPORT2
+uiter_سیٹ_UTF8(UCharIterator *iter, ثابت حرف *s, int32_t length) {
+    اگر (iter != خالی_اشاریہ) {
+        اگر (s != خالی_اشاریہ && length >= -1) {
             *iter=utf8Iterator;
             iter->context=s;
-            if(length>=0) {
-                iter->limit=length;
-            } else {
-                iter->limit=(int32_t)uprv_strlen(s);
+            اگر(length>=0) {
+                iter->حد_بندی=length;
+            } ورنہ {
+                iter->حد_بندی=(int32_t)uprv_strlen(s);
             }
-            iter->length= iter->limit<=1 ? iter->limit : -1;
-        } else {
+            iter->length= iter->حد_بندی<=1 ? iter->حد_بندی : -1;
+        } ورنہ {
             *iter=noopIterator;
         }
     }
@@ -1025,30 +1025,30 @@ uiter_current32(UCharIterator *iter) {
     UChar32 c, c2;
 
     c=iter->current(iter);
-    if(U16_IS_SURROGATE(c)) {
-        if(U16_IS_SURROGATE_LEAD(c)) {
+    اگر(U16_IS_SURROGATE(c)) {
+        اگر(U16_IS_SURROGATE_LEAD(c)) {
             /*
              * go to the next code unit
              * we know that we are not at the limit because c!=U_SENTINEL
              */
             iter->move(iter, 1, UITER_CURRENT);
-            if(U16_IS_TRAIL(c2=iter->current(iter))) {
+            اگر(U16_IS_TRAIL(c2=iter->current(iter))) {
                 c=U16_GET_SUPPLEMENTARY(c, c2);
             }
 
             /* undo index movement */
             iter->move(iter, -1, UITER_CURRENT);
-        } else {
-            if(U16_IS_LEAD(c2=iter->previous(iter))) {
+        } ورنہ {
+            اگر(U16_IS_LEAD(c2=iter->پچھلا_2(iter))) {
                 c=U16_GET_SUPPLEMENTARY(c2, c);
             }
-            if(c2>=0) {
+            اگر(c2>=0) {
                 /* undo index movement */
                 iter->move(iter, 1, UITER_CURRENT);
             }
         }
     }
-    return c;
+    واپس c;
 }
 
 U_CAPI UChar32 U_EXPORT2
@@ -1056,53 +1056,53 @@ uiter_next32(UCharIterator *iter) {
     UChar32 c, c2;
 
     c=iter->next(iter);
-    if(U16_IS_LEAD(c)) {
-        if(U16_IS_TRAIL(c2=iter->next(iter))) {
+    اگر(U16_IS_LEAD(c)) {
+        اگر(U16_IS_TRAIL(c2=iter->next(iter))) {
             c=U16_GET_SUPPLEMENTARY(c, c2);
-        } else if(c2>=0) {
+        } ورنہ اگر(c2>=0) {
             /* unmatched first surrogate, undo index movement */
             iter->move(iter, -1, UITER_CURRENT);
         }
     }
-    return c;
+    واپس c;
 }
 
 U_CAPI UChar32 U_EXPORT2
 uiter_previous32(UCharIterator *iter) {
     UChar32 c, c2;
 
-    c=iter->previous(iter);
-    if(U16_IS_TRAIL(c)) {
-        if(U16_IS_LEAD(c2=iter->previous(iter))) {
+    c=iter->پچھلا_2(iter);
+    اگر(U16_IS_TRAIL(c)) {
+        اگر(U16_IS_LEAD(c2=iter->پچھلا_2(iter))) {
             c=U16_GET_SUPPLEMENTARY(c2, c);
-        } else if(c2>=0) {
+        } ورنہ اگر(c2>=0) {
             /* unmatched second surrogate, undo index movement */
             iter->move(iter, 1, UITER_CURRENT);
         }
     }
-    return c;
+    واپس c;
 }
 
 U_CAPI uint32_t U_EXPORT2
-uiter_getState(const UCharIterator *iter) {
-    if(iter==nullptr || iter->getState==nullptr) {
-        return UITER_NO_STATE;
-    } else {
-        return iter->getState(iter);
+uiter_getState(ثابت UCharIterator *iter) {
+    اگر(iter==خالی_اشاریہ || iter->getState==خالی_اشاریہ) {
+        واپس UITER_NO_STATE;
+    } ورنہ {
+        واپس iter->getState(iter);
     }
 }
 
-U_CAPI void U_EXPORT2
-uiter_setState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+U_CAPI خالی U_EXPORT2
+uiter_سیٹ_State(UCharIterator *iter, uint32_t state, UError_رمز *p_Error_رمز) {
+    اگر(p_Error_رمز==خالی_اشاریہ || U_FAILURE(*p_Error_رمز)) {
         /* do nothing */
-    } else if(iter==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-    } else if(iter->setState==nullptr) {
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-    } else {
-        iter->setState(iter, state, pErrorCode);
+    } ورنہ اگر(iter==خالی_اشاریہ) {
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+    } ورنہ اگر(iter->سیٹ_State==خالی_اشاریہ) {
+        *p_Error_رمز=U_UNSUPPORTED_ERROR;
+    } ورنہ {
+        iter->سیٹ_State(iter, state, p_Error_رمز);
     }
 }
 
-U_CDECL_END
+U_CDECL_انتہا

@@ -15,14 +15,14 @@
 *******************************************************************************
 */
 
-#ifndef PARSEPOS_H
-#define PARSEPOS_H
+#اگر_غیر_تعریف_شدہ PARSEPOS_H
+#تعریف_کرو PARSEPOS_H
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#اگر U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#شامل "unicode/uobject.h"
 
  
 U_NAMESPACE_BEGIN
@@ -49,16 +49,16 @@ U_NAMESPACE_BEGIN
  * @see         java.text.Format
  */
 
-class U_COMMON_API ParsePosition : public UObject {
-public:
+class U_COMMON_API ParsePosition : عوامی UObject {
+عوامی:
     /**
      * Default constructor, the index starts with 0 as default.
      * @stable ICU 2.0
      */
     ParsePosition()
         : UObject(),
-        index(0),
-        errorIndex(-1)
+        اشاریہ(0),
+        error_اشاریہ(-1)
       {}
 
     /**
@@ -66,10 +66,10 @@ public:
      * @param newIndex the new text offset.
      * @stable ICU 2.0
      */
-    ParsePosition(int32_t newIndex)
+    ParsePosition(int32_t new_اشاریہ)
         : UObject(),
-        index(newIndex),
-        errorIndex(-1)
+        اشاریہ(new_اشاریہ),
+        error_اشاریہ(-1)
       {}
 
     /**
@@ -77,37 +77,37 @@ public:
      * @param copy the object to be copied from.
      * @stable ICU 2.0
      */
-    ParsePosition(const ParsePosition& copy)
+    ParsePosition(ثابت ParsePosition& copy)
         : UObject(copy),
-        index(copy.index),
-        errorIndex(copy.errorIndex)
+        اشاریہ(copy.اشاریہ),
+        error_اشاریہ(copy.error_اشاریہ)
       {}
 
     /**
      * Destructor
      * @stable ICU 2.0
      */
-    virtual ~ParsePosition();
+    مجازی ~ParsePosition();
 
     /**
      * Assignment operator
      * @stable ICU 2.0
      */
-    inline ParsePosition& operator=(const ParsePosition& copy) U_LIFETIME_BOUND;
+    اندرونی ParsePosition& عامل=(ثابت ParsePosition& copy) U_LIFETIME_BOUND;
 
     /**
      * Equality operator.
      * @return true if the two parse positions are equal, false otherwise.
      * @stable ICU 2.0
      */
-    inline bool               operator==(const ParsePosition& that) const;
+    اندرونی bool               عامل==(ثابت ParsePosition& that) ثابت;
 
     /**
      * Equality operator.
      * @return true if the two parse positions are not equal, false otherwise.
      * @stable ICU 2.0
      */
-    inline bool               operator!=(const ParsePosition& that) const;
+    اندرونی bool               عامل!=(ثابت ParsePosition& that) ثابت;
 
     /**
      * Clone this object.
@@ -120,7 +120,7 @@ public:
      * @see getDynamicClassID
      * @stable ICU 2.8
      */
-    ParsePosition *clone() const;
+    ParsePosition *clone() ثابت;
 
     /**
      * Retrieve the current parse position.  On input to a parse method, this
@@ -129,14 +129,14 @@ public:
      * @return the current index.
      * @stable ICU 2.0
      */
-    inline int32_t getIndex() const;
+    اندرونی int32_t get_اشاریہ() ثابت;
 
     /**
      * Set the current parse position.
      * @param index the new index.
      * @stable ICU 2.0
      */
-    inline void setIndex(int32_t index);
+    اندرونی خالی سیٹ_اشاریہ(int32_t اشاریہ);
 
     /**
      * Set the index at which a parse error occurred.  Formatters
@@ -145,93 +145,93 @@ public:
      * set.
      * @stable ICU 2.0
      */
-    inline void setErrorIndex(int32_t ei);
+    اندرونی خالی سیٹ_Error_اشاریہ(int32_t ei);
 
     /**
      * Retrieve the index at which an error occurred, or -1 if the
      * error index has not been set.
      * @stable ICU 2.0
      */
-    inline int32_t getErrorIndex() const;
+    اندرونی int32_t get_Error_اشاریہ() ثابت;
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      *
      * @stable ICU 2.2
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ساکن UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      *
      * @stable ICU 2.2
      */
-    virtual UClassID getDynamicClassID() const override;
+    مجازی UClassID getDynamicClassID() ثابت override;
 
-private:
+نجی:
     /**
      * Input: the place you start parsing.
      * <br>Output: position where the parse stopped.
      * This is designed to be used serially,
      * with each call setting index up for the next one.
      */
-    int32_t index;
+    int32_t اشاریہ;
 
     /**
      * The index at which a parse error occurred.
      */
-    int32_t errorIndex;
+    int32_t error_اشاریہ;
 
 };
 
-inline ParsePosition&
-ParsePosition::operator=(const ParsePosition& copy) U_LIFETIME_BOUND
+اندرونی ParsePosition&
+ParsePosition::عامل=(ثابت ParsePosition& copy) U_LIFETIME_BOUND
 {
-  index = copy.index;
-  errorIndex = copy.errorIndex;
-  return *this;
+  اشاریہ = copy.اشاریہ;
+  error_اشاریہ = copy.error_اشاریہ;
+  واپس *this;
 }
 
-inline bool
-ParsePosition::operator==(const ParsePosition& copy) const
+اندرونی bool
+ParsePosition::عامل==(ثابت ParsePosition& copy) ثابت
 {
-  if(index != copy.index || errorIndex != copy.errorIndex)
-  return false;
-  else
-  return true;
+  اگر(اشاریہ != copy.اشاریہ || error_اشاریہ != copy.error_اشاریہ)
+  واپس false;
+  ورنہ
+  واپس true;
 }
 
-inline bool
-ParsePosition::operator!=(const ParsePosition& copy) const
+اندرونی bool
+ParsePosition::عامل!=(ثابت ParsePosition& copy) ثابت
 {
-  return !operator==(copy);
+  واپس !عامل==(copy);
 }
 
-inline int32_t
-ParsePosition::getIndex() const
+اندرونی int32_t
+ParsePosition::get_اشاریہ() ثابت
 {
-  return index;
+  واپس اشاریہ;
 }
 
-inline void
-ParsePosition::setIndex(int32_t offset)
+اندرونی خالی
+ParsePosition::سیٹ_اشاریہ(int32_t انحراف)
 {
-  this->index = offset;
+  this->اشاریہ = انحراف;
 }
 
-inline int32_t
-ParsePosition::getErrorIndex() const
+اندرونی int32_t
+ParsePosition::get_Error_اشاریہ() ثابت
 {
-  return errorIndex;
+  واپس error_اشاریہ;
 }
 
-inline void
-ParsePosition::setErrorIndex(int32_t ei)
+اندرونی خالی
+ParsePosition::سیٹ_Error_اشاریہ(int32_t ei)
 {
-  this->errorIndex = ei;
+  this->error_اشاریہ = ei;
 }
-U_NAMESPACE_END
+U_NAMESPACE_انتہا
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#اگر_ختم /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#اگر_ختم

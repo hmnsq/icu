@@ -12,52 +12,52 @@
  *  aspect of the conversion code
  */
 
-#ifndef UCNV_IO_H
-#define UCNV_IO_H
+#اگر_غیر_تعریف_شدہ UCNV_IO_H
+#تعریف_کرو UCNV_IO_H
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#اگر !UCONFIG_NO_CONVERSION
 
-#include "udataswp.h"
+#شامل "udataswp.h"
 
-#define UCNV_AMBIGUOUS_ALIAS_MAP_BIT 0x8000
-#define UCNV_CONTAINS_OPTION_BIT 0x4000
-#define UCNV_CONVERTER_INDEX_MASK 0xFFF
-#define UCNV_NUM_RESERVED_TAGS 2
-#define UCNV_NUM_HIDDEN_TAGS 1
+#تعریف_کرو UCNV_AMBIGUOUS_ALIAS_MAP_ثنائی_ہندسہ 0x8000
+#تعریف_کرو UCNV_شامل_ہے_OPTION_ثنائی_ہندسہ 0x4000
+#تعریف_کرو UCNV_CONVERTER_اشاریہ_نقاب 0xFFF
+#تعریف_کرو UCNV_عدد_RESERVED_لیبل_فہرست 2
+#تعریف_کرو UCNV_عدد_HIDDEN_لیبل_فہرست 1
 
-enum {
+شمار {
     UCNV_IO_UNNORMALIZED,
     UCNV_IO_STD_NORMALIZED,
-    UCNV_IO_NORM_TYPE_COUNT
+    UCNV_IO_NORM_TYPE_گنتی
 };
 
-typedef struct {
+قسمتعریف ساخت {
     uint16_t stringNormalizationType;
-    uint16_t containsCnvOptionInfo;
+    uint16_t شامل_ہے_Cnv_Option_Info;
 } UConverterAliasOptions;
 
-typedef struct UConverterAlias {
-    const uint16_t *converterList;
-    const uint16_t *tagList;
-    const uint16_t *aliasList;
-    const uint16_t *untaggedConvArray;
-    const uint16_t *taggedAliasArray;
-    const uint16_t *taggedAliasLists;
-    const UConverterAliasOptions *optionTable;
-    const uint16_t *stringTable;
-    const uint16_t *normalizedStringTable;
+قسمتعریف ساخت UConverterAlias {
+    ثابت uint16_t *converterList;
+    ثابت uint16_t *لیبل_List;
+    ثابت uint16_t *aliasList;
+    ثابت uint16_t *untaggedConvArray;
+    ثابت uint16_t *taggedAliasArray;
+    ثابت uint16_t *taggedAliasLists;
+    ثابت UConverterAliasOptions *option_جدول;
+    ثابت uint16_t *string_جدول;
+    ثابت uint16_t *normalized_String_جدول;
 
-    uint32_t converterListSize;
-    uint32_t tagListSize;
-    uint32_t aliasListSize;
-    uint32_t untaggedConvArraySize;
-    uint32_t taggedAliasArraySize;
-    uint32_t taggedAliasListsSize;
-    uint32_t optionTableSize;
-    uint32_t stringTableSize;
-    uint32_t normalizedStringTableSize;
+    uint32_t converter_List_سائز;
+    uint32_t لیبل_List_سائز;
+    uint32_t alias_List_سائز;
+    uint32_t untagged_Conv_Array_سائز;
+    uint32_t tagged_Alias_Array_سائز;
+    uint32_t tagged_Alias_Lists_سائز;
+    uint32_t option_جدول_سائز;
+    uint32_t string_جدول_سائز;
+    uint32_t normalized_String_جدول_سائز;
 } UConverterAlias;
 
 /**
@@ -69,19 +69,19 @@ typedef struct UConverterAlias {
  * @see ucnv_compareNames
  * @return the destination buffer.
  */
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#اگر U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define ucnv_io_stripForCompare ucnv_io_stripASCIIForCompare
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#وگرنہ_اگر U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define ucnv_io_stripForCompare ucnv_io_stripEBCDICForCompare
-#else
+#ورنہ
 #   error U_CHARSET_FAMILY is not valid
-#endif
+#اگر_ختم
 
-U_CAPI char* U_CALLCONV
-ucnv_io_stripASCIIForCompare(char* dst U_LIFETIME_BOUND, const char* name);
+U_CAPI حرف* U_CALLCONV
+ucnv_io_stripASCIIForCompare(حرف* dst U_LIFETIME_BOUND, ثابت حرف* name);
 
-U_CAPI char* U_CALLCONV
-ucnv_io_stripEBCDICForCompare(char* dst U_LIFETIME_BOUND, const char* name);
+U_CAPI حرف* U_CALLCONV
+ucnv_io_stripEBCDICForCompare(حرف* dst U_LIFETIME_BOUND, ثابت حرف* name);
 
 /**
  * Map a converter alias name to a canonical converter name.
@@ -93,8 +93,8 @@ ucnv_io_stripEBCDICForCompare(char* dst U_LIFETIME_BOUND, const char* name);
  * @param pErrorCode The error code
  * @return the converter name in mixed-case, return NULL if the alias is not found.
  */
-U_CAPI const char *
-ucnv_io_getConverterName(const char *alias, UBool *containsOption, UErrorCode *pErrorCode);
+U_CAPI ثابت حرف *
+ucnv_io_getConverterName(ثابت حرف *alias, UBool *شامل_ہے_Option, UError_رمز *p_Error_رمز);
 
 /**
  * Return the number of all known converter names (no aliases).
@@ -102,20 +102,20 @@ ucnv_io_getConverterName(const char *alias, UBool *containsOption, UErrorCode *p
  * @return the number of all aliases
  */
 U_CAPI uint16_t
-ucnv_io_countKnownConverters(UErrorCode *pErrorCode);
+ucnv_io_گنتی_معلوم_Converters(UError_رمز *p_Error_رمز);
 
 /**
  * Swap an ICU converter alias table. See implementation for details.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ucnv_swapAliases(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
-                 UErrorCode *pErrorCode);
+ucnv_تبادلہ_Aliases(ثابت UDataSwapper *ds,
+                 ثابت خالی *اندر_ڈیٹا, int32_t لمبائی, خالی *برآمد_ڈیٹا,
+                 UError_رمز *p_Error_رمز);
 
-#endif
+#اگر_ختم
 
-#endif /* _UCNV_IO */
+#اگر_ختم /* _UCNV_IO */
 
 /*
  * Hey, Emacs, please set the following:

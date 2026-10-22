@@ -19,14 +19,14 @@
 * the core algorithm and core API to write reordered text.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "unicode/uchar.h"
-#include "unicode/ubidi.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "ustr_imp.h"
-#include "ubidiimp.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/ustring.h"
+#شامل "unicode/uchar.h"
+#شامل "unicode/ubidi.h"
+#شامل "unicode/utf16.h"
+#شامل "cmemory.h"
+#شامل "ustr_imp.h"
+#شامل "ubidiimp.h"
 
 /*
  * The function implementations in this file are designed
@@ -39,11 +39,11 @@
  *
  * Note: Since Unicode 18, u_charMirror(c) may change the number of code units.
  */
-#if defined(UTF_SIZE) && UTF_SIZE==8
-# error reimplement ubidi_writeReordered() for UTF-8, see comment above
-#endif
+#اگر defined(UTF_سائز) && UTF_سائز==8
+# error reimplement ubidi_writeReordered() برائے UTF-8, see comment above
+#اگر_ختم
 
-#define IS_COMBINING(type) ((1UL<<(type))&(1UL<<U_NON_SPACING_MARK|1UL<<U_COMBINING_SPACING_MARK|1UL<<U_ENCLOSING_MARK))
+#تعریف_کرو IS_COMBINING(type) ((1UL<<(type))&(1UL<<U_NON_SPACING_MARK|1UL<<U_COMBINING_SPACING_MARK|1UL<<U_ENCLOSING_MARK))
 
 /*
  * When we have UBIDI_OUTPUT_REVERSE set on ubidi_writeReordered(), then we
@@ -54,115 +54,115 @@
  * It looks strange to do mirroring in LTR output, but it is only because
  * we are writing RTL output in reverse.
  */
-static int32_t
-doWriteForward(const char16_t *src, int32_t srcLength,
-               char16_t *dest, int32_t destSize,
+ساکن int32_t
+doWriteForward(ثابت char16_t *src, int32_t src_لمبائی,
+               char16_t *dest, int32_t dest_سائز,
                uint16_t options,
-               UErrorCode *pErrorCode) {
-    if (srcLength<=0) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+               UError_رمز *p_Error_رمز) {
+    اگر (src_لمبائی<=0) {
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
     /* optimize for several combinations of options */
-    switch(options&(UBIDI_REMOVE_BIDI_CONTROLS|UBIDI_DO_MIRRORING)) {
-    case 0: {
+    انتخاب(options&(UBIDI_REMOVE_BIDI_CONTROLS|UBIDI_DO_MIRRORING)) {
+    حالت 0: {
         /* simply copy the LTR run to the destination */
-        int32_t length=srcLength;
-        if(destSize<length) {
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            return srcLength;
+        int32_t length=src_لمبائی;
+        اگر(dest_سائز<length) {
+            *p_Error_رمز=U_بفر_حد_سے_تجاوز_ERROR;
+            واپس src_لمبائی;
         }
-        do {
+        کرو {
             *dest++=*src++;
-        } while(--length>0);
-        return srcLength;
+        } جب(--length>0);
+        واپس src_لمبائی;
     }
-    case UBIDI_DO_MIRRORING: {
+    حالت UBIDI_DO_MIRRORING: {
         /* do mirroring */
         int32_t i=0, j=0;
         UChar32 c;
-        do {
-            U16_NEXT(src, i, srcLength, c);
+        کرو {
+            U16_اگلا(src, i, src_لمبائی, c);
             c=u_charMirror(c);
-            int32_t charLen = U16_LENGTH(c);
-            if(j + charLen <= destSize) {
-                int32_t temp = j;
-                U16_APPEND_UNSAFE(dest, temp, c);
+            int32_t charLen = U16_لمبائی(c);
+            اگر(j + charLen <= dest_سائز) {
+                int32_t عارضی = j;
+                U16_APPEND_UNSAFE(dest, عارضی, c);
             }
             j += charLen;
-        } while(i<srcLength);
-        if(destSize < j) {
-            *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
+        } جب(i<src_لمبائی);
+        اگر(dest_سائز < j) {
+            *p_Error_رمز = U_بفر_حد_سے_تجاوز_ERROR;
         }
-        if(j > srcLength) {
-            return j;
+        اگر(j > src_لمبائی) {
+            واپس j;
         }
         /* If mirroring caused code unit contraction (e.g., U+1DB10 contracting to U+221D),
          * pad trailing array slots up to srcLength to avoid leaving uninitialized memory.
          * If j > 0, repeat the preceding code unit; if j == 0, fallback to 0x0020 (ASCII space).
          */
-        while(j < srcLength && j < destSize) {
+        جب(j < src_لمبائی && j < dest_سائز) {
             dest[j] = j > 0 ? dest[j - 1] : 0x0020;
             j++;
         }
-        return srcLength;
+        واپس src_لمبائی;
     }
-    case UBIDI_REMOVE_BIDI_CONTROLS: {
+    حالت UBIDI_REMOVE_BIDI_CONTROLS: {
         /* copy the LTR run and remove any BiDi control characters */
-        int32_t remaining=destSize;
+        int32_t بقایا=dest_سائز;
         char16_t c;
-        do {
+        کرو {
             c=*src++;
-            if(!IS_BIDI_CONTROL_CHAR(c)) {
-                if(--remaining<0) {
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            اگر(!IS_BIDI_CONTROL_CHAR(c)) {
+                اگر(--بقایا<0) {
+                    *p_Error_رمز=U_بفر_حد_سے_تجاوز_ERROR;
 
                     /* preflight the length */
-                    while(--srcLength>0) {
+                    جب(--src_لمبائی>0) {
                         c=*src++;
-                        if(!IS_BIDI_CONTROL_CHAR(c)) {
-                            --remaining;
+                        اگر(!IS_BIDI_CONTROL_CHAR(c)) {
+                            --بقایا;
                         }
                     }
-                    return destSize-remaining;
+                    واپس dest_سائز-بقایا;
                 }
                 *dest++=c;
             }
-        } while(--srcLength>0);
-        return destSize-remaining;
+        } جب(--src_لمبائی>0);
+        واپس dest_سائز-بقایا;
     }
-    default: {
+    طےشدہ: {
         /* remove BiDi control characters and do mirroring */
         int32_t i, j=0;
         UChar32 c;
-        do {
+        کرو {
             i=0;
-            U16_NEXT(src, i, srcLength, c);
+            U16_اگلا(src, i, src_لمبائی, c);
             src+=i;
-            srcLength-=i;
-            if(!IS_BIDI_CONTROL_CHAR(c)) {
+            src_لمبائی-=i;
+            اگر(!IS_BIDI_CONTROL_CHAR(c)) {
                 c=u_charMirror(c);
-                int32_t charLen = U16_LENGTH(c);
-                if(j + charLen <= destSize) {
-                    int32_t temp = j;
-                    U16_APPEND_UNSAFE(dest, temp, c);
+                int32_t charLen = U16_لمبائی(c);
+                اگر(j + charLen <= dest_سائز) {
+                    int32_t عارضی = j;
+                    U16_APPEND_UNSAFE(dest, عارضی, c);
                 }
                 j += charLen;
             }
-        } while(srcLength>0);
-        if(destSize < j) {
-            *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
+        } جب(src_لمبائی>0);
+        اگر(dest_سائز < j) {
+            *p_Error_رمز = U_بفر_حد_سے_تجاوز_ERROR;
         }
-        return j;
+        واپس j;
     }
     } /* end of switch */
 }
 
-static int32_t
-doWriteReverse(const char16_t *src, int32_t srcLength,
-               char16_t *dest, int32_t destSize,
+ساکن int32_t
+do_Write_الٹ(ثابت char16_t *src, int32_t src_لمبائی,
+               char16_t *dest, int32_t dest_سائز,
                uint16_t options,
-               UErrorCode *pErrorCode) {
+               UError_رمز *p_Error_رمز) {
     /*
      * RTL run -
      *
@@ -184,72 +184,72 @@ doWriteReverse(const char16_t *src, int32_t srcLength,
     int32_t i, j;
     UChar32 c;
 
-    if(srcLength<=0) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    اگر(src_لمبائی<=0) {
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
 
     /* optimize for several combinations of options */
-    switch(options&(UBIDI_REMOVE_BIDI_CONTROLS|UBIDI_DO_MIRRORING|UBIDI_KEEP_BASE_COMBINING)) {
-    case 0:
+    انتخاب(options&(UBIDI_REMOVE_BIDI_CONTROLS|UBIDI_DO_MIRRORING|UBIDI_KEEP_بنیاد_COMBINING)) {
+    حالت 0:
         /*
          * With none of the "complicated" options set, the destination
          * run will have the same length as the source run,
          * and there is no mirroring and no keeping combining characters
          * with their base characters.
          */
-        if(destSize<srcLength) {
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            return srcLength;
+        اگر(dest_سائز<src_لمبائی) {
+            *p_Error_رمز=U_بفر_حد_سے_تجاوز_ERROR;
+            واپس src_لمبائی;
         }
-        destSize=srcLength;
+        dest_سائز=src_لمبائی;
 
         /* preserve character integrity */
-        do {
+        کرو {
             /* i is always after the last code unit known to need to be kept in this segment */
-            i=srcLength;
+            i=src_لمبائی;
 
             /* collect code units for one base character */
-            U16_PREV(src, 0, srcLength, c);
+            U16_پچھلا(src, 0, src_لمبائی, c);
 
             /* copy this base character */
-            j=srcLength;
-            do {
+            j=src_لمبائی;
+            کرو {
                 *dest++=src[j++];
-            } while(j<i);
-        } while(srcLength>0);
-        break;
-    case UBIDI_KEEP_BASE_COMBINING:
+            } جب(j<i);
+        } جب(src_لمبائی>0);
+        توڑو;
+    حالت UBIDI_KEEP_بنیاد_COMBINING:
         /*
          * Here, too, the destination
          * run will have the same length as the source run,
          * and there is no mirroring.
          * We do need to keep combining characters with their base characters.
          */
-        if(destSize<srcLength) {
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            return srcLength;
+        اگر(dest_سائز<src_لمبائی) {
+            *p_Error_رمز=U_بفر_حد_سے_تجاوز_ERROR;
+            واپس src_لمبائی;
         }
-        destSize=srcLength;
+        dest_سائز=src_لمبائی;
 
         /* preserve character integrity */
-        do {
+        کرو {
             /* i is always after the last code unit known to need to be kept in this segment */
-            i=srcLength;
+            i=src_لمبائی;
 
             /* collect code units and modifier letters for one base character */
-            do {
-                U16_PREV(src, 0, srcLength, c);
-            } while(srcLength>0 && IS_COMBINING(u_charType(c)));
+            کرو {
+                U16_پچھلا(src, 0, src_لمبائی, c);
+            } جب(src_لمبائی>0 && IS_COMBINING(u_charType(c)));
 
             /* copy this "user character" */
-            j=srcLength;
-            do {
+            j=src_لمبائی;
+            کرو {
                 *dest++=src[j++];
-            } while(j<i);
-        } while(srcLength>0);
-        break;
-    default: {
+            } جب(j<i);
+        } جب(src_لمبائی>0);
+        توڑو;
+    طےشدہ: {
         /*
          * Note on UBIDI_INTERNAL_RUNS_ONLY:
          * This internal flag is passed exclusively by setParaRunsOnly() in ubidi.cpp during
@@ -265,240 +265,240 @@ doWriteReverse(const char16_t *src, int32_t srcLength,
          * reordering), we use character stepping (j += origBaseLen) and return destLength,
          * which correctly handles expansion and contraction without leaking broken surrogates.
          */
-        if(options&UBIDI_INTERNAL_RUNS_ONLY) {
-            if(!(options&UBIDI_REMOVE_BIDI_CONTROLS)) {
-                i=srcLength;
-            } else {
-                int32_t length=srcLength;
+        اگر(options&UBIDI_اندرونی_RUNS_ONLY) {
+            اگر(!(options&UBIDI_REMOVE_BIDI_CONTROLS)) {
+                i=src_لمبائی;
+            } ورنہ {
+                int32_t length=src_لمبائی;
                 char16_t ch;
                 i=0;
                 /* Loop over all code units in the source run to count those that are not Bidi control characters,
                  * determining the required destination buffer length for preflighting when UBIDI_REMOVE_BIDI_CONTROLS is set.
                  */
-                do {
+                کرو {
                     ch=*src++;
-                    if(!IS_BIDI_CONTROL_CHAR(ch)) {
+                    اگر(!IS_BIDI_CONTROL_CHAR(ch)) {
                         ++i;
                     }
-                } while(--length>0);
-                src-=srcLength;
+                } جب(--length>0);
+                src-=src_لمبائی;
             }
-            if(destSize<i) {
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                return i;
+            اگر(dest_سائز<i) {
+                *p_Error_رمز=U_بفر_حد_سے_تجاوز_ERROR;
+                واپس i;
             }
             char16_t *saveDest=dest;
-            int32_t destLength=0;
+            int32_t dest_لمبائی=0;
             /* Loop backward across the source run segment by segment, using legacy 1-to-1 code unit stepping
              * to extract and reverse character clusters for internal setPara classification.
              */
-            do {
-                i=srcLength;
-                U16_PREV(src, 0, srcLength, c);
-                if(options&UBIDI_KEEP_BASE_COMBINING) {
+            کرو {
+                i=src_لمبائی;
+                U16_پچھلا(src, 0, src_لمبائی, c);
+                اگر(options&UBIDI_KEEP_بنیاد_COMBINING) {
                     /* Loop backward over any combining marks attached to the base character so that the combining
                      * sequence remains attached after its base character when reversed.
                      */
-                    while(srcLength>0 && IS_COMBINING(u_charType(c))) {
-                        U16_PREV(src, 0, srcLength, c);
+                    جب(src_لمبائی>0 && IS_COMBINING(u_charType(c))) {
+                        U16_پچھلا(src, 0, src_لمبائی, c);
                     }
                 }
-                if(options&UBIDI_REMOVE_BIDI_CONTROLS && IS_BIDI_CONTROL_CHAR(c)) {
-                    continue;
+                اگر(options&UBIDI_REMOVE_BIDI_CONTROLS && IS_BIDI_CONTROL_CHAR(c)) {
+                    جاری;
                 }
-                int32_t origBaseLen=U16_LENGTH(c);
-                j=srcLength;
-                if(options&UBIDI_DO_MIRRORING) {
+                int32_t orig_بنیاد_Len=U16_لمبائی(c);
+                j=src_لمبائی;
+                اگر(options&UBIDI_DO_MIRRORING) {
                     c=u_charMirror(c);
-                    int32_t k=U16_LENGTH(c);
-                    if(destLength+k<=destSize) {
-                        int32_t temp=destLength;
-                        U16_APPEND_UNSAFE(saveDest, temp, c);
+                    int32_t k=U16_لمبائی(c);
+                    اگر(dest_لمبائی+k<=dest_سائز) {
+                        int32_t عارضی=dest_لمبائی;
+                        U16_APPEND_UNSAFE(saveDest, عارضی, c);
                     }
-                    destLength+=k;
-                    j+=origBaseLen;
+                    dest_لمبائی+=k;
+                    j+=orig_بنیاد_Len;
                 }
                 /* Loop forward from the current segment index to copy any unmirrored code units (such as combining marks
                  * or surrogate halves) into dest in forward visual order.
                  */
-                while(j<i) {
-                    if(destLength<destSize) {
-                        saveDest[destLength]=src[j];
+                جب(j<i) {
+                    اگر(dest_لمبائی<dest_سائز) {
+                        saveDest[dest_لمبائی]=src[j];
                     }
-                    destLength++;
+                    dest_لمبائی++;
                     j++;
                 }
-            } while(srcLength>0);
-            if(destSize<destLength) {
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            } جب(src_لمبائی>0);
+            اگر(dest_سائز<dest_لمبائی) {
+                *p_Error_رمز=U_بفر_حد_سے_تجاوز_ERROR;
             }
-            return destLength;
+            واپس dest_لمبائی;
         }
-        int32_t destLength=0;
-        do {
-            i=srcLength;
-            U16_PREV(src, 0, srcLength, c);
-            if(options&UBIDI_KEEP_BASE_COMBINING) {
-                while(srcLength>0 && IS_COMBINING(u_charType(c))) {
-                    U16_PREV(src, 0, srcLength, c);
+        int32_t dest_لمبائی=0;
+        کرو {
+            i=src_لمبائی;
+            U16_پچھلا(src, 0, src_لمبائی, c);
+            اگر(options&UBIDI_KEEP_بنیاد_COMBINING) {
+                جب(src_لمبائی>0 && IS_COMBINING(u_charType(c))) {
+                    U16_پچھلا(src, 0, src_لمبائی, c);
                 }
             }
-            if(options&UBIDI_REMOVE_BIDI_CONTROLS && IS_BIDI_CONTROL_CHAR(c)) {
-                continue;
+            اگر(options&UBIDI_REMOVE_BIDI_CONTROLS && IS_BIDI_CONTROL_CHAR(c)) {
+                جاری;
             }
 
-            int32_t origBaseLen=U16_LENGTH(c);
-            j=srcLength;
-            if(options&UBIDI_DO_MIRRORING) {
+            int32_t orig_بنیاد_Len=U16_لمبائی(c);
+            j=src_لمبائی;
+            اگر(options&UBIDI_DO_MIRRORING) {
                 /* mirror only the base character */
                 c=u_charMirror(c);
-                int32_t k=U16_LENGTH(c);
-                if(destLength+k<=destSize) {
-                    int32_t temp=destLength;
-                    U16_APPEND_UNSAFE(dest, temp, c);
+                int32_t k=U16_لمبائی(c);
+                اگر(dest_لمبائی+k<=dest_سائز) {
+                    int32_t عارضی=dest_لمبائی;
+                    U16_APPEND_UNSAFE(dest, عارضی, c);
                 }
-                destLength+=k;
-                j+=origBaseLen;
+                dest_لمبائی+=k;
+                j+=orig_بنیاد_Len;
             }
-            while(j<i) {
-                if(destLength<destSize) {
-                    dest[destLength]=src[j];
+            جب(j<i) {
+                اگر(dest_لمبائی<dest_سائز) {
+                    dest[dest_لمبائی]=src[j];
                 }
-                destLength++;
+                dest_لمبائی++;
                 j++;
             }
-        } while(srcLength>0);
+        } جب(src_لمبائی>0);
 
 
-        if(destSize<destLength) {
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        اگر(dest_سائز<dest_لمبائی) {
+            *p_Error_رمز=U_بفر_حد_سے_تجاوز_ERROR;
         }
-        return destLength;
+        واپس dest_لمبائی;
     }
     } /* end of switch */
-    return destSize;
+    واپس dest_سائز;
 }
 
 U_CAPI int32_t U_EXPORT2
-ubidi_writeReverse(const char16_t *src, int32_t srcLength,
-                   char16_t *dest, int32_t destSize,
+ubidi_write_الٹ(ثابت char16_t *src, int32_t src_لمبائی,
+                   char16_t *dest, int32_t dest_سائز,
                    uint16_t options,
-                   UErrorCode *pErrorCode) {
-    int32_t destLength;
+                   UError_رمز *p_Error_رمز) {
+    int32_t dest_لمبائی;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    اگر(p_Error_رمز==خالی_اشاریہ || U_FAILURE(*p_Error_رمز)) {
+        واپس 0;
     }
 
     /* more error checking */
-    if( src==nullptr || srcLength<-1 ||
-        destSize<0 || (destSize>0 && dest==nullptr))
+    اگر( src==خالی_اشاریہ || src_لمبائی<-1 ||
+        dest_سائز<0 || (dest_سائز>0 && dest==خالی_اشاریہ))
     {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
 
     /* do input and output overlap? */
-    if( dest!=nullptr &&
-        ((src>=dest && src<dest+destSize) ||
-         (dest>=src && dest<src+srcLength)))
+    اگر( dest!=خالی_اشاریہ &&
+        ((src>=dest && src<dest+dest_سائز) ||
+         (dest>=src && dest<src+src_لمبائی)))
     {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
 
-    if(srcLength==-1) {
-        srcLength=u_strlen(src);
+    اگر(src_لمبائی==-1) {
+        src_لمبائی=u_strlen(src);
     }
-    if(srcLength>0) {
-        destLength=doWriteReverse(src, srcLength, dest, destSize, options, pErrorCode);
-    } else {
+    اگر(src_لمبائی>0) {
+        dest_لمبائی=do_Write_الٹ(src, src_لمبائی, dest, dest_سائز, options, p_Error_رمز);
+    } ورنہ {
         /* nothing to do */
-        destLength=0;
+        dest_لمبائی=0;
     }
 
-    return u_terminateUChars(dest, destSize, destLength, pErrorCode);
+    واپس u_terminateUChars(dest, dest_سائز, dest_لمبائی, p_Error_رمز);
 }
 
 // Ticket 20907 - The optimizer in MSVC/Visual Studio versions below 16.4 has trouble with this
 // function on Windows ARM64. As a work-around, we disable optimizations for this function.
 // This work-around could/should be removed once the following versions of Visual Studio are no
 // longer supported: All versions of VS2017, and versions of VS2019 below 16.4.
-#if (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
-#pragma optimize( "", off )
-#endif
+#اگر (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
+#ہدایت optimize( "", off )
+#اگر_ختم
 U_CAPI int32_t U_EXPORT2
 ubidi_writeReordered(UBiDi *pBiDi,
-                     char16_t *dest, int32_t destSize,
+                     char16_t *dest, int32_t dest_سائز,
                      uint16_t options,
-                     UErrorCode *pErrorCode) {
-    const char16_t *text;
+                     UError_رمز *p_Error_رمز) {
+    ثابت char16_t *متن;
     char16_t *saveDest;
-    int32_t length, destCapacity;
-    int32_t run, runCount, logicalStart, runLength;
+    int32_t length, dest_استعداد;
+    int32_t تسلسل_2, تسلسل_گنتی, logical_آغاز, تسلسل_لمبائی;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    اگر(p_Error_رمز==خالی_اشاریہ || U_FAILURE(*p_Error_رمز)) {
+        واپس 0;
     }
 
     /* more error checking */
-    if( pBiDi==nullptr ||
-        (text=pBiDi->text)==nullptr || (length=pBiDi->length)<0 ||
-        destSize<0 || (destSize>0 && dest==nullptr))
+    اگر( pBiDi==خالی_اشاریہ ||
+        (متن=pBiDi->متن)==خالی_اشاریہ || (length=pBiDi->length)<0 ||
+        dest_سائز<0 || (dest_سائز>0 && dest==خالی_اشاریہ))
     {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
 
     /* do input and output overlap? */
-    if( dest!=nullptr &&
-        ((text>=dest && text<dest+destSize) ||
-         (dest>=text && dest<text+pBiDi->originalLength)))
+    اگر( dest!=خالی_اشاریہ &&
+        ((متن>=dest && متن<dest+dest_سائز) ||
+         (dest>=متن && dest<متن+pBiDi->original_لمبائی)))
     {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
 
-    if(length==0) {
+    اگر(length==0) {
         /* nothing to do */
-        return u_terminateUChars(dest, destSize, 0, pErrorCode);
+        واپس u_terminateUChars(dest, dest_سائز, 0, p_Error_رمز);
     }
 
-    runCount=ubidi_countRuns(pBiDi, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    تسلسل_گنتی=ubidi_گنتی_Runs(pBiDi, p_Error_رمز);
+    اگر(U_FAILURE(*p_Error_رمز)) {
+        واپس 0;
     }
 
     /* destSize shrinks, later destination length=destCapacity-destSize */
     saveDest=dest;
-    destCapacity=destSize;
-    runLength = 0;
+    dest_استعداد=dest_سائز;
+    تسلسل_لمبائی = 0;
 
     /*
      * Option "insert marks" implies UBIDI_INSERT_LRM_FOR_NUMERIC if the
      * reordering mode (checked below) is appropriate.
      */
-    if(pBiDi->reorderingOptions & UBIDI_OPTION_INSERT_MARKS) {
-        options|=UBIDI_INSERT_LRM_FOR_NUMERIC;
+    اگر(pBiDi->reorderingOptions & UBIDI_OPTION_داخل_کرو_MARKS) {
+        options|=UBIDI_داخل_کرو_LRM_FOR_NUMERIC;
         options&=~UBIDI_REMOVE_BIDI_CONTROLS;
     }
     /*
      * Option "remove controls" implies UBIDI_REMOVE_BIDI_CONTROLS
      * and cancels UBIDI_INSERT_LRM_FOR_NUMERIC.
      */
-    if(pBiDi->reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
+    اگر(pBiDi->reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
         options|=UBIDI_REMOVE_BIDI_CONTROLS;
-        options&=~UBIDI_INSERT_LRM_FOR_NUMERIC;
+        options&=~UBIDI_داخل_کرو_LRM_FOR_NUMERIC;
     }
     /*
      * If we do not perform the "inverse BiDi" algorithm, then we
      * don't need to insert any LRMs, and don't need to test for it.
      */
-    if((pBiDi->reorderingMode != UBIDI_REORDER_INVERSE_NUMBERS_AS_L) &&
-       (pBiDi->reorderingMode != UBIDI_REORDER_INVERSE_LIKE_DIRECT)  &&
-       (pBiDi->reorderingMode != UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL) &&
-       (pBiDi->reorderingMode != UBIDI_REORDER_RUNS_ONLY)) {
-        options&=~UBIDI_INSERT_LRM_FOR_NUMERIC;
+    اگر((pBiDi->reordering_منوال != UBIDI_REORDER_INVERSE_NUMBERS_AS_L) &&
+       (pBiDi->reordering_منوال != UBIDI_REORDER_INVERSE_LIKE_براہ_راست)  &&
+       (pBiDi->reordering_منوال != UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL) &&
+       (pBiDi->reordering_منوال != UBIDI_REORDER_RUNS_ONLY)) {
+        options&=~UBIDI_داخل_کرو_LRM_FOR_NUMERIC;
     }
     /*
      * Iterate through all visual runs and copy the run text segments to
@@ -512,221 +512,221 @@ ubidi_writeReordered(UBiDi *pBiDi,
      * Note that the only errors that are set by doWriteXY() are buffer overflow
      * errors. Ignore them until the end, and continue for preflighting.
      */
-    if(!(options&UBIDI_OUTPUT_REVERSE)) {
+    اگر(!(options&UBIDI_OUTPUT_الٹ)) {
         /* forward output */
-        if(!(options&UBIDI_INSERT_LRM_FOR_NUMERIC)) {
+        اگر(!(options&UBIDI_داخل_کرو_LRM_FOR_NUMERIC)) {
             /* do not insert BiDi controls */
-            for(run=0; run<runCount; ++run) {
-                if(UBIDI_LTR==ubidi_getVisualRun(pBiDi, run, &logicalStart, &runLength)) {
-                    runLength=doWriteForward(text+logicalStart, runLength,
-                                             dest, destSize,
-                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), pErrorCode);
-                } else {
-                    runLength=doWriteReverse(text+logicalStart, runLength,
-                                             dest, destSize,
-                                             options, pErrorCode);
+            برائے(تسلسل_2=0; تسلسل_2<تسلسل_گنتی; ++تسلسل_2) {
+                اگر(UBIDI_LTR==ubidi_get_Visual_تسلسل(pBiDi, تسلسل_2, &logical_آغاز, &تسلسل_لمبائی)) {
+                    تسلسل_لمبائی=doWriteForward(متن+logical_آغاز, تسلسل_لمبائی,
+                                             dest, dest_سائز,
+                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), p_Error_رمز);
+                } ورنہ {
+                    تسلسل_لمبائی=do_Write_الٹ(متن+logical_آغاز, تسلسل_لمبائی,
+                                             dest, dest_سائز,
+                                             options, p_Error_رمز);
                 }
-                if(dest!=nullptr) {
-                  dest+=runLength;
+                اگر(dest!=خالی_اشاریہ) {
+                  dest+=تسلسل_لمبائی;
                 }
-                destSize-=runLength;
+                dest_سائز-=تسلسل_لمبائی;
             }
-        } else {
+        } ورنہ {
             /* insert BiDi controls for "inverse BiDi" */
-            const DirProp *dirProps=pBiDi->dirProps;
-            const char16_t *src;
+            ثابت DirProp *dirProps=pBiDi->dirProps;
+            ثابت char16_t *src;
             char16_t uc;
             UBiDiDirection dir;
             int32_t markFlag;
 
-            for(run=0; run<runCount; ++run) {
-                dir=ubidi_getVisualRun(pBiDi, run, &logicalStart, &runLength);
-                src=text+logicalStart;
+            برائے(تسلسل_2=0; تسلسل_2<تسلسل_گنتی; ++تسلسل_2) {
+                dir=ubidi_get_Visual_تسلسل(pBiDi, تسلسل_2, &logical_آغاز, &تسلسل_لمبائی);
+                src=متن+logical_آغاز;
                 /* check if something relevant in insertPoints */
-                markFlag=pBiDi->runs[run].insertRemove;
-                if(markFlag<0) {        /* BiDi controls count */
+                markFlag=pBiDi->runs[تسلسل_2].داخل_کرو_Remove;
+                اگر(markFlag<0) {        /* BiDi controls count */
                     markFlag=0;
                 }
 
-                if(UBIDI_LTR==dir) {
-                    if((pBiDi->isInverse) &&
-                       (/*run>0 &&*/ dirProps[logicalStart]!=L)) {
+                اگر(UBIDI_LTR==dir) {
+                    اگر((pBiDi->isInverse) &&
+                       (/*run>0 &&*/ dirProps[logical_آغاز]!=L)) {
                         markFlag |= LRM_BEFORE;
                     }
-                    if (markFlag & LRM_BEFORE) {
+                    اگر (markFlag & LRM_BEFORE) {
                         uc=LRM_CHAR;
                     }
-                    else if (markFlag & RLM_BEFORE) {
+                    ورنہ اگر (markFlag & RLM_BEFORE) {
                         uc=RLM_CHAR;
                     }
-                    else  uc=0;
-                    if(uc) {
-                        if(destSize>0) {
+                    ورنہ  uc=0;
+                    اگر(uc) {
+                        اگر(dest_سائز>0) {
                             *dest++=uc;
                         }
-                        --destSize;
+                        --dest_سائز;
                     }
 
-                    runLength=doWriteForward(src, runLength,
-                                             dest, destSize,
-                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), pErrorCode);
-                    if(dest!=nullptr) {
-                      dest+=runLength;
+                    تسلسل_لمبائی=doWriteForward(src, تسلسل_لمبائی,
+                                             dest, dest_سائز,
+                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), p_Error_رمز);
+                    اگر(dest!=خالی_اشاریہ) {
+                      dest+=تسلسل_لمبائی;
                     }
-                    destSize-=runLength;
+                    dest_سائز-=تسلسل_لمبائی;
 
-                    if((pBiDi->isInverse) &&
+                    اگر((pBiDi->isInverse) &&
                            (/*run<runCount-1 &&*/
-                            runLength > 0 && // doWriteForward may return 0 if src
+                            تسلسل_لمبائی > 0 && // doWriteForward may return 0 if src
                                              // only include bidi control chars
-                            dirProps[logicalStart+runLength-1]!=L)) {
+                            dirProps[logical_آغاز+تسلسل_لمبائی-1]!=L)) {
                         markFlag |= LRM_AFTER;
                     }
-                    if (markFlag & LRM_AFTER) {
+                    اگر (markFlag & LRM_AFTER) {
                         uc=LRM_CHAR;
                     }
-                    else if (markFlag & RLM_AFTER) {
+                    ورنہ اگر (markFlag & RLM_AFTER) {
                         uc=RLM_CHAR;
                     }
-                    else  uc=0;
-                    if(uc) {
-                        if(destSize>0) {
+                    ورنہ  uc=0;
+                    اگر(uc) {
+                        اگر(dest_سائز>0) {
                             *dest++=uc;
                         }
-                        --destSize;
+                        --dest_سائز;
                     }
-                } else {                /* RTL run */
-                    if((pBiDi->isInverse) &&
-                       (/*run>0 &&*/ !(MASK_R_AL&DIRPROP_FLAG(dirProps[logicalStart+runLength-1])))) {
+                } ورنہ {                /* RTL run */
+                    اگر((pBiDi->isInverse) &&
+                       (/*run>0 &&*/ !(نقاب_R_AL&DIRPROP_FLAG(dirProps[logical_آغاز+تسلسل_لمبائی-1])))) {
                         markFlag |= RLM_BEFORE;
                     }
-                    if (markFlag & LRM_BEFORE) {
+                    اگر (markFlag & LRM_BEFORE) {
                         uc=LRM_CHAR;
                     }
-                    else if (markFlag & RLM_BEFORE) {
+                    ورنہ اگر (markFlag & RLM_BEFORE) {
                         uc=RLM_CHAR;
                     }
-                    else  uc=0;
-                    if(uc) {
-                        if(destSize>0) {
+                    ورنہ  uc=0;
+                    اگر(uc) {
+                        اگر(dest_سائز>0) {
                             *dest++=uc;
                         }
-                        --destSize;
+                        --dest_سائز;
                     }
 
-                    runLength=doWriteReverse(src, runLength,
-                                             dest, destSize,
-                                             options, pErrorCode);
-                    if(dest!=nullptr) {
-                      dest+=runLength;
+                    تسلسل_لمبائی=do_Write_الٹ(src, تسلسل_لمبائی,
+                                             dest, dest_سائز,
+                                             options, p_Error_رمز);
+                    اگر(dest!=خالی_اشاریہ) {
+                      dest+=تسلسل_لمبائی;
                     }
-                    destSize-=runLength;
+                    dest_سائز-=تسلسل_لمبائی;
 
-                    if((pBiDi->isInverse) &&
-                       (/*run<runCount-1 &&*/ !(MASK_R_AL&DIRPROP_FLAG(dirProps[logicalStart])))) {
+                    اگر((pBiDi->isInverse) &&
+                       (/*run<runCount-1 &&*/ !(نقاب_R_AL&DIRPROP_FLAG(dirProps[logical_آغاز])))) {
                         markFlag |= RLM_AFTER;
                     }
-                    if (markFlag & LRM_AFTER) {
+                    اگر (markFlag & LRM_AFTER) {
                         uc=LRM_CHAR;
                     }
-                    else if (markFlag & RLM_AFTER) {
+                    ورنہ اگر (markFlag & RLM_AFTER) {
                         uc=RLM_CHAR;
                     }
-                    else  uc=0;
-                    if(uc) {
-                        if(destSize>0) {
+                    ورنہ  uc=0;
+                    اگر(uc) {
+                        اگر(dest_سائز>0) {
                             *dest++=uc;
                         }
-                        --destSize;
+                        --dest_سائز;
                     }
                 }
             }
         }
-    } else {
+    } ورنہ {
         /* reverse output */
-        if(!(options&UBIDI_INSERT_LRM_FOR_NUMERIC)) {
+        اگر(!(options&UBIDI_داخل_کرو_LRM_FOR_NUMERIC)) {
             /* do not insert BiDi controls */
-            for(run=runCount; --run>=0;) {
-                if(UBIDI_LTR==ubidi_getVisualRun(pBiDi, run, &logicalStart, &runLength)) {
-                    runLength=doWriteReverse(text+logicalStart, runLength,
-                                             dest, destSize,
-                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), pErrorCode);
-                } else {
-                    runLength=doWriteForward(text+logicalStart, runLength,
-                                             dest, destSize,
-                                             options, pErrorCode);
+            برائے(تسلسل_2=تسلسل_گنتی; --تسلسل_2>=0;) {
+                اگر(UBIDI_LTR==ubidi_get_Visual_تسلسل(pBiDi, تسلسل_2, &logical_آغاز, &تسلسل_لمبائی)) {
+                    تسلسل_لمبائی=do_Write_الٹ(متن+logical_آغاز, تسلسل_لمبائی,
+                                             dest, dest_سائز,
+                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), p_Error_رمز);
+                } ورنہ {
+                    تسلسل_لمبائی=doWriteForward(متن+logical_آغاز, تسلسل_لمبائی,
+                                             dest, dest_سائز,
+                                             options, p_Error_رمز);
                 }
-                if(dest!=nullptr) {
-                  dest+=runLength;
+                اگر(dest!=خالی_اشاریہ) {
+                  dest+=تسلسل_لمبائی;
                 }
-                destSize-=runLength;
+                dest_سائز-=تسلسل_لمبائی;
             }
-        } else {
+        } ورنہ {
             /* insert BiDi controls for "inverse BiDi" */
-            const DirProp *dirProps=pBiDi->dirProps;
-            const char16_t *src;
+            ثابت DirProp *dirProps=pBiDi->dirProps;
+            ثابت char16_t *src;
             UBiDiDirection dir;
 
-            for(run=runCount; --run>=0;) {
+            برائے(تسلسل_2=تسلسل_گنتی; --تسلسل_2>=0;) {
                 /* reverse output */
-                dir=ubidi_getVisualRun(pBiDi, run, &logicalStart, &runLength);
-                src=text+logicalStart;
+                dir=ubidi_get_Visual_تسلسل(pBiDi, تسلسل_2, &logical_آغاز, &تسلسل_لمبائی);
+                src=متن+logical_آغاز;
 
-                if(UBIDI_LTR==dir) {
-                    if(/*run<runCount-1 &&*/ dirProps[logicalStart+runLength-1]!=L) {
-                        if(destSize>0) {
+                اگر(UBIDI_LTR==dir) {
+                    اگر(/*run<runCount-1 &&*/ dirProps[logical_آغاز+تسلسل_لمبائی-1]!=L) {
+                        اگر(dest_سائز>0) {
                             *dest++=LRM_CHAR;
                         }
-                        --destSize;
+                        --dest_سائز;
                     }
 
-                    runLength=doWriteReverse(src, runLength,
-                                             dest, destSize,
-                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), pErrorCode);
-                    if(dest!=nullptr) {
-                      dest+=runLength;
+                    تسلسل_لمبائی=do_Write_الٹ(src, تسلسل_لمبائی,
+                                             dest, dest_سائز,
+                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), p_Error_رمز);
+                    اگر(dest!=خالی_اشاریہ) {
+                      dest+=تسلسل_لمبائی;
                     }
-                    destSize-=runLength;
+                    dest_سائز-=تسلسل_لمبائی;
 
-                    if(/*run>0 &&*/ dirProps[logicalStart]!=L) {
-                        if(destSize>0) {
+                    اگر(/*run>0 &&*/ dirProps[logical_آغاز]!=L) {
+                        اگر(dest_سائز>0) {
                             *dest++=LRM_CHAR;
                         }
-                        --destSize;
+                        --dest_سائز;
                     }
-                } else {
-                    if(/*run<runCount-1 &&*/ !(MASK_R_AL&DIRPROP_FLAG(dirProps[logicalStart]))) {
-                        if(destSize>0) {
+                } ورنہ {
+                    اگر(/*run<runCount-1 &&*/ !(نقاب_R_AL&DIRPROP_FLAG(dirProps[logical_آغاز]))) {
+                        اگر(dest_سائز>0) {
                             *dest++=RLM_CHAR;
                         }
-                        --destSize;
+                        --dest_سائز;
                     }
 
-                    int32_t originalRunLength = runLength;
-                    runLength=doWriteForward(src, runLength,
-                                             dest, destSize,
-                                             options, pErrorCode);
-                    if(dest!=nullptr) {
-                      dest+=runLength;
+                    int32_t original_تسلسل_لمبائی = تسلسل_لمبائی;
+                    تسلسل_لمبائی=doWriteForward(src, تسلسل_لمبائی,
+                                             dest, dest_سائز,
+                                             options, p_Error_رمز);
+                    اگر(dest!=خالی_اشاریہ) {
+                      dest+=تسلسل_لمبائی;
                     }
-                    destSize-=runLength;
+                    dest_سائز-=تسلسل_لمبائی;
 
-                    if(/*run>0 &&*/
-                            runLength > 0 && // doWriteForward may return 0 if src
+                    اگر(/*run>0 &&*/
+                            تسلسل_لمبائی > 0 && // doWriteForward may return 0 if src
                                              // only include bidi control chars
-                            !(MASK_R_AL&DIRPROP_FLAG(dirProps[logicalStart+originalRunLength-1]))) {
-                        if(destSize>0) {
+                            !(نقاب_R_AL&DIRPROP_FLAG(dirProps[logical_آغاز+original_تسلسل_لمبائی-1]))) {
+                        اگر(dest_سائز>0) {
                             *dest++=RLM_CHAR;
                         }
-                        --destSize;
+                        --dest_سائز;
                     }
                 }
             }
         }
     }
 
-    return u_terminateUChars(saveDest, destCapacity, destCapacity-destSize, pErrorCode);
+    واپس u_terminateUChars(saveDest, dest_استعداد, dest_استعداد-dest_سائز, p_Error_رمز);
 }
-#if (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
-#pragma optimize( "", on )
-#endif
+#اگر (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
+#ہدایت optimize( "", on )
+#اگر_ختم

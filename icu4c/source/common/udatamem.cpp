@@ -19,49 +19,49 @@
  *
  *----------------------------------------------------------------------------------*/
 
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "unicode/udata.h"
+#شامل "unicode/utypes.h"
+#شامل "cmemory.h"
+#شامل "unicode/udata.h"
 
-#include "udatamem.h"
+#شامل "udatamem.h"
 
-U_CFUNC void UDataMemory_init(UDataMemory *This) {
-    uprv_memset(This, 0, sizeof(UDataMemory));
+U_CFUNC خالی UData_حافظہ_init(UData_حافظہ *This) {
+    uprv_memset(This, 0, حجم(UData_حافظہ));
     This->length=-1;
 }
 
 
-U_CFUNC void UDatamemory_assign(UDataMemory *dest, UDataMemory *source) {
+U_CFUNC خالی UDatamemory_تفویض(UData_حافظہ *dest, UData_حافظہ *ماخذ) {
     /* UDataMemory Assignment.  Destination UDataMemory must be initialized first.  */
-    UBool mallocedFlag = dest->heapAllocated;
-    uprv_memcpy(dest, source, sizeof(UDataMemory));
-    dest->heapAllocated = mallocedFlag;
+    UBool mallocedFlag = dest->ڈھیر_Allocated;
+    uprv_memcpy(dest, ماخذ, حجم(UData_حافظہ));
+    dest->ڈھیر_Allocated = mallocedFlag;
 }
 
-U_CFUNC UDataMemory *UDataMemory_createNewInstance(UErrorCode *pErr) {
-    UDataMemory *This;
+U_CFUNC UData_حافظہ *UData_حافظہ_create_New_Instance(UError_رمز *pErr) {
+    UData_حافظہ *This;
 
-    if (U_FAILURE(*pErr)) {
-        return nullptr;
+    اگر (U_FAILURE(*pErr)) {
+        واپس خالی_اشاریہ;
     }
-    This = (UDataMemory *)uprv_malloc(sizeof(UDataMemory));
-    if (This == nullptr) {
-        *pErr = U_MEMORY_ALLOCATION_ERROR; }
-    else {
-        UDataMemory_init(This);
-        This->heapAllocated = true;
+    This = (UData_حافظہ *)uprv_malloc(حجم(UData_حافظہ));
+    اگر (This == خالی_اشاریہ) {
+        *pErr = U_حافظہ_تخصیص_ERROR; }
+    ورنہ {
+        UData_حافظہ_init(This);
+        This->ڈھیر_Allocated = سچ;
     }
-    return This;
+    واپس This;
 }
 
-U_CFUNC const DataHeader*
-UDataMemory_normalizeDataPointer(const void* p U_LIFETIME_BOUND) {
+U_CFUNC ثابت ڈیٹا_سرخی*
+UData_حافظہ_normalize_ڈیٹا_اشارہ_گر(ثابت خالی* p U_LIFETIME_BOUND) {
     /* allow the data to be optionally prepended with an alignment-forcing double value */
-    const DataHeader *pdh = (const DataHeader *)p;
-    if(pdh==nullptr || (pdh->dataHeader.magic1==0xda && pdh->dataHeader.magic2==0x27)) {
-        return pdh;
-    } else {
-#if U_PLATFORM == U_PF_OS400
+    ثابت ڈیٹا_سرخی *pdh = (ثابت ڈیٹا_سرخی *)p;
+    اگر(pdh==خالی_اشاریہ || (pdh->ڈیٹا_سرخی_2.magic1==0xda && pdh->ڈیٹا_سرخی_2.magic2==0x27)) {
+        واپس pdh;
+    } ورنہ {
+#اگر U_PLATFORM == U_PF_OS400
         /*
         TODO: Fix this once the compiler implements this feature. Keep in sync with genccode.c
 
@@ -74,37 +74,37 @@ UDataMemory_normalizeDataPointer(const void* p U_LIFETIME_BOUND) {
         magic numbers we must skip the initial double.
         [grhoten 4/24/2003]
         */
-        return (const DataHeader *)*((const void **)p+1);
-#else
-        return (const DataHeader *)((const double *)p+1);
-#endif
+        واپس (ثابت ڈیٹا_سرخی *)*((ثابت خالی **)p+1);
+#ورنہ
+        واپس (ثابت ڈیٹا_سرخی *)((ثابت دوہرا *)p+1);
+#اگر_ختم
     }
 }
 
 
-U_CFUNC void UDataMemory_setData (UDataMemory *This, const void *dataAddr) {
-    This->pHeader = UDataMemory_normalizeDataPointer(dataAddr);
+U_CFUNC خالی UData_حافظہ_سیٹ_ڈیٹا (UData_حافظہ *This, ثابت خالی *ڈیٹا_Addr) {
+    This->p_سرخی = UData_حافظہ_normalize_ڈیٹا_اشارہ_گر(ڈیٹا_Addr);
 }
 
 
-U_CAPI void U_EXPORT2
-udata_close(UDataMemory *pData) {
-    if(pData!=nullptr) {
-        uprv_unmapFile(pData);
-        if(pData->heapAllocated ) {
-            uprv_free(pData);
-        } else {
-            UDataMemory_init(pData);
+U_CAPI خالی U_EXPORT2
+udata_close(UData_حافظہ *p_ڈیٹا) {
+    اگر(p_ڈیٹا!=خالی_اشاریہ) {
+        uprv_unmapFile(p_ڈیٹا);
+        اگر(p_ڈیٹا->ڈھیر_Allocated ) {
+            uprv_free(p_ڈیٹا);
+        } ورنہ {
+            UData_حافظہ_init(p_ڈیٹا);
         }
     }
 }
 
-U_CAPI const void* U_EXPORT2
-udata_getMemory(UDataMemory* pData U_LIFETIME_BOUND) {
-    if(pData!=nullptr && pData->pHeader!=nullptr) {
-        return (char *)(pData->pHeader)+udata_getHeaderSize(pData->pHeader);
-    } else {
-        return nullptr;
+U_CAPI ثابت خالی* U_EXPORT2
+udata_get_حافظہ(UData_حافظہ* p_ڈیٹا U_LIFETIME_BOUND) {
+    اگر(p_ڈیٹا!=خالی_اشاریہ && p_ڈیٹا->p_سرخی!=خالی_اشاریہ) {
+        واپس (حرف *)(p_ڈیٹا->p_سرخی)+udata_get_سرخی_سائز(p_ڈیٹا->p_سرخی);
+    } ورنہ {
+        واپس خالی_اشاریہ;
     }
 }
 
@@ -129,15 +129,15 @@ udata_getMemory(UDataMemory* pData U_LIFETIME_BOUND) {
  * @internal Currently used only in cintltst/udatatst.c
  */
 U_CAPI int32_t U_EXPORT2
-udata_getLength(const UDataMemory *pData) {
-    if(pData!=nullptr && pData->pHeader!=nullptr && pData->length>=0) {
+udata_get_لمبائی(ثابت UData_حافظہ *p_ڈیٹا) {
+    اگر(p_ڈیٹا!=خالی_اشاریہ && p_ڈیٹا->p_سرخی!=خالی_اشاریہ && p_ڈیٹا->length>=0) {
         /*
          * subtract the header size,
          * return only the size of the actual data starting at udata_getMemory()
          */
-        return pData->length-udata_getHeaderSize(pData->pHeader);
-    } else {
-        return -1;
+        واپس p_ڈیٹا->length-udata_get_سرخی_سائز(p_ڈیٹا->p_سرخی);
+    } ورنہ {
+        واپس -1;
     }
 }
 
@@ -146,15 +146,15 @@ udata_getLength(const UDataMemory *pData) {
  * Used in cintltst/udatatst.c
  * @internal
  */
-U_CAPI const void* U_EXPORT2
-udata_getRawMemory(const UDataMemory* pData U_LIFETIME_BOUND) {
-    if(pData!=nullptr && pData->pHeader!=nullptr) {
-        return pData->pHeader;
-    } else {
-        return nullptr;
+U_CAPI ثابت خالی* U_EXPORT2
+udata_get_Raw_حافظہ(ثابت UData_حافظہ* p_ڈیٹا U_LIFETIME_BOUND) {
+    اگر(p_ڈیٹا!=خالی_اشاریہ && p_ڈیٹا->p_سرخی!=خالی_اشاریہ) {
+        واپس p_ڈیٹا->p_سرخی;
+    } ورنہ {
+        واپس خالی_اشاریہ;
     }
 }
 
-U_CFUNC UBool UDataMemory_isLoaded(const UDataMemory *This) {
-    return This->pHeader != nullptr;
+U_CFUNC UBool UData_حافظہ_is_Loaded(ثابت UData_حافظہ *This) {
+    واپس This->p_سرخی != خالی_اشاریہ;
 }

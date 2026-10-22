@@ -18,28 +18,28 @@
 *   Low-level Unicode character/string case mapping code.
 */
 
-#ifndef __UCASE_H__
-#define __UCASE_H__
+#اگر_غیر_تعریف_شدہ __UCASE_H__
+#تعریف_کرو __UCASE_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
-#include "putilimp.h"
-#include "uset_imp.h"
-#include "udataswp.h"
-#include "utrie2.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/uset.h"
+#شامل "putilimp.h"
+#شامل "uset_imp.h"
+#شامل "udataswp.h"
+#شامل "utrie2.h"
 
-#ifdef __cplusplus
+#اگر_تعریف_شدہ __cplusplus
 U_NAMESPACE_BEGIN
 
 class UnicodeString;
 
-U_NAMESPACE_END
-#endif
+U_NAMESPACE_انتہا
+#اگر_ختم
 
 /* library API -------------------------------------------------------------- */
 
-U_CFUNC void U_EXPORT2
-ucase_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode);
+U_CFUNC خالی U_EXPORT2
+ucase_جوڑو_Property_Starts(ثابت USetAdder *sa, UError_رمز *p_Error_رمز);
 
 /**
  * Requires non-NULL locale ID but otherwise does the equivalent of
@@ -47,12 +47,12 @@ ucase_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode);
  * Accepts both 2- and 3-letter codes and accepts case variants.
  */
 U_CFUNC int32_t
-ucase_getCaseLocale(const char *locale);
+ucase_getCaseLocale(ثابت حرف *locale);
 
 /* Casing locale types for ucase_getCaseLocale */
-enum {
+شمار {
     UCASE_LOC_UNKNOWN,
-    UCASE_LOC_ROOT,
+    UCASE_LOC_جڑ,
     UCASE_LOC_TURKISH,
     UCASE_LOC_LITHUANIAN,
     UCASE_LOC_GREEK,
@@ -66,7 +66,7 @@ enum {
  * See stringoptions.h. Also include _STRNCMP_STYLE and U_COMPARE_CODE_POINT_ORDER.
  * @internal
  */
-#define _STRCASECMP_OPTIONS_MASK 0xffff
+#تعریف_کرو STRCASECMP_OPTIONS_نقاب 0xffff
 
 /**
  * Bit mask for getting just the options from a string compare options word
@@ -80,7 +80,7 @@ enum {
  * See stringoptions.h.
  * @internal
  */
-#define _FOLD_CASE_OPTIONS_MASK 7
+#تعریف_کرو FOLD_CASE_OPTIONS_نقاب 7
 
 /* single-code point functions */
 
@@ -105,12 +105,12 @@ ucase_fold(UChar32 c, uint32_t options);
  * - for sharp s include ss
  * - for k include the Kelvin sign
  */
-U_CFUNC void U_EXPORT2
-ucase_addCaseClosure(UChar32 c, const USetAdder *sa);
+U_CFUNC خالی U_EXPORT2
+ucase_جوڑو_Case_احاطہ(UChar32 c, ثابت USetAdder *sa);
 
 /** Case closure with only scf=Simple_Case_Folding. */
-U_CFUNC void U_EXPORT2
-ucase_addSimpleCaseClosure(UChar32 c, const USetAdder *sa);
+U_CFUNC خالی U_EXPORT2
+ucase_جوڑو_Simple_Case_احاطہ(UChar32 c, ثابت USetAdder *sa);
 
 /**
  * Maps the string to single code points and adds the associated case closure
@@ -125,33 +125,33 @@ ucase_addSimpleCaseClosure(UChar32 c, const USetAdder *sa);
  * @return true if the string was found
  */
 U_CFUNC UBool U_EXPORT2
-ucase_addStringCaseClosure(const UChar *s, int32_t length, const USetAdder *sa);
+ucase_جوڑو_String_Case_احاطہ(ثابت UChar *s, int32_t لمبائی, ثابت USetAdder *sa);
 
-#ifdef __cplusplus
+#اگر_تعریف_شدہ __cplusplus
 U_NAMESPACE_BEGIN
 
 /**
  * Iterator over characters with more than one code point in the full default Case_Folding.
  */
-class U_COMMON_API FullCaseFoldingIterator {
-public:
+class U_COMMON_API بھرا_Case_Folding_Iterator {
+عوامی:
     /** Constructor. */
-    FullCaseFoldingIterator();
+    بھرا_Case_Folding_Iterator();
     /**
      * Returns the next (cp, full) pair where "full" is cp's full default Case_Folding.
      * Returns a negative cp value at the end of the iteration.
      */
-    UChar32 next(UnicodeString &full);
-private:
-    FullCaseFoldingIterator(const FullCaseFoldingIterator &) = delete;  // no copy
-    FullCaseFoldingIterator &operator=(const FullCaseFoldingIterator &) = delete;  // no assignment
+    UChar32 اگلا(UnicodeString &بھرا);
+نجی:
+    بھرا_Case_Folding_Iterator(ثابت بھرا_Case_Folding_Iterator &) = delete;  // no copy
+    بھرا_Case_Folding_Iterator &عامل=(ثابت بھرا_Case_Folding_Iterator &) = delete;  // no assignment
 
-    const char16_t *unfold;
-    int32_t unfoldRows;
-    int32_t unfoldRowWidth;
-    int32_t unfoldStringWidth;
-    int32_t currentRow;
-    int32_t rowCpIndex;
+    ثابت char16_t *unfold;
+    int32_t unfold_صفیں;
+    int32_t unfold_صف_چوڑائی;
+    int32_t unfold_String_چوڑائی;
+    int32_t current_صف;
+    int32_t صف_Cp_اشاریہ;
 };
 
 /**
@@ -163,26 +163,26 @@ private:
 namespace LatinCase {
 
 /** Case mapping/folding data for code points up to U+017F. */
-constexpr char16_t LIMIT = 0x180;
+constexpr char16_t حد_بندی_2 = 0x180;
 /** U+017F case-folds and uppercases crossing the ASCII boundary. */
 constexpr char16_t LONG_S = 0x17f;
 /** Exception: Complex mapping, or too-large delta. */
 constexpr int8_t EXC = -0x80;
 
 /** Deltas for lowercasing for most locales, and default case folding. */
-extern const int8_t TO_LOWER_NORMAL[LIMIT];
+خارجی ثابت int8_t مقصد_زیریں_معمول[حد_بندی_2];
 /** Deltas for lowercasing for tr/az/lt, and Turkic case folding. */
-extern const int8_t TO_LOWER_TR_LT[LIMIT];
+خارجی ثابت int8_t مقصد_زیریں_TR_LT[حد_بندی_2];
 
 /** Deltas for uppercasing for most locales. */
-extern const int8_t TO_UPPER_NORMAL[LIMIT];
+خارجی ثابت int8_t مقصد_بالائی_معمول[حد_بندی_2];
 /** Deltas for uppercasing for tr/az. */
-extern const int8_t TO_UPPER_TR[LIMIT];
+خارجی ثابت int8_t مقصد_بالائی_TR[حد_بندی_2];
 
 }  // namespace LatinCase
 
-U_NAMESPACE_END
-#endif
+U_NAMESPACE_انتہا
+#اگر_ختم
 
 /** @return UCASE_NONE, UCASE_LOWER, UCASE_UPPER, UCASE_TITLE */
 U_CAPI int32_t U_EXPORT2
@@ -220,27 +220,27 @@ U_CDECL_BEGIN
  *            if 0 then continue iterating in the current direction.
  * @return Next code point, or <0 when the iteration is done.
  */
-typedef UChar32 U_CALLCONV
-UCaseContextIterator(void *context, int8_t dir);
+قسمتعریف UChar32 U_CALLCONV
+UCaseContextIterator(خالی *context, int8_t dir);
 
 /**
  * Sample struct which may be used by some implementations of
  * UCaseContextIterator.
  */
-struct UCaseContext {
-    void *p;
-    int32_t start, index, limit;
-    int32_t cpStart, cpLimit;
+ساخت UCaseContext {
+    خالی *p;
+    int32_t آغاز, اشاریہ, حد_بندی;
+    int32_t cp_آغاز, cp_حد_بندی;
     int8_t dir;
     int8_t b1, b2, b3;
 };
-typedef struct UCaseContext UCaseContext;
+قسمتعریف ساخت UCaseContext UCaseContext;
 
-U_CDECL_END
+U_CDECL_انتہا
 
-#define UCASECONTEXT_INITIALIZER { NULL,  0, 0, 0,  0, 0,  0,  0, 0, 0 }
+#تعریف_کرو UCASECONTEXT_INITIALIZER { تہی,  0, 0, 0,  0, 0,  0,  0, 0, 0 }
 
-enum {
+شمار {
     /**
      * For string case mappings, a single character (a code point) is mapped
      * either to itself (in which case in-place mapping functions do nothing),
@@ -255,7 +255,7 @@ enum {
      * Mapping to a string: The string length (0..UCASE_MAX_STRING_LENGTH) is
      * returned. Note that the string result may indeed have zero length.
      */
-    UCASE_MAX_STRING_LENGTH=0x1f
+    UCASE_MAX_STRING_لمبائی=0x1f
 };
 
 /**
@@ -277,30 +277,30 @@ enum {
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ucase_toFullLower(UChar32 c,
-                  UCaseContextIterator *iter, void *context,
-                  const UChar **pString,
+ucase_مقصد_بھرا_زیریں(UChar32 c,
+                  UCaseContextIterator *iter, خالی *context,
+                  ثابت UChar **pString,
                   int32_t caseLocale);
 
 U_CAPI int32_t U_EXPORT2
-ucase_toFullUpper(UChar32 c,
-                  UCaseContextIterator *iter, void *context,
-                  const UChar **pString,
+ucase_مقصد_بھرا_بالائی(UChar32 c,
+                  UCaseContextIterator *iter, خالی *context,
+                  ثابت UChar **pString,
                   int32_t caseLocale);
 
 U_CAPI int32_t U_EXPORT2
-ucase_toFullTitle(UChar32 c,
-                  UCaseContextIterator *iter, void *context,
-                  const UChar **pString,
+ucase_مقصد_بھرا_Title(UChar32 c,
+                  UCaseContextIterator *iter, خالی *context,
+                  ثابت UChar **pString,
                   int32_t caseLocale);
 
 U_CAPI int32_t U_EXPORT2
-ucase_toFullFolding(UChar32 c,
-                    const UChar **pString,
+ucase_مقصد_بھرا_Folding(UChar32 c,
+                    ثابت UChar **pString,
                     uint32_t options);
 
 U_CFUNC int32_t U_EXPORT2
-ucase_hasBinaryProperty(UChar32 c, UProperty which);
+ucase_has_ثنائی_Property(UChar32 c, UProperty which);
 
 
 U_CDECL_BEGIN
@@ -308,79 +308,79 @@ U_CDECL_BEGIN
 /**
  * @internal
  */
-typedef int32_t U_CALLCONV
-UCaseMapFull(UChar32 c,
-             UCaseContextIterator *iter, void *context,
-             const UChar **pString,
+قسمتعریف int32_t U_CALLCONV
+UCase_Map_بھرا(UChar32 c,
+             UCaseContextIterator *iter, خالی *context,
+             ثابت UChar **pString,
              int32_t caseLocale);
 
-U_CDECL_END
+U_CDECL_انتہا
 
 /* for icuexportdata -------------------------------------------------------- */
 
-struct UCaseProps {
-    void *mem;  // TODO: was unused, and type UDataMemory -- remove
-    const int32_t *indexes;
-    const uint16_t *exceptions;
-    const uint16_t *unfold;
+ساخت UCaseProps {
+    خالی *mem;  // TODO: was unused, and type UDataMemory -- remove
+    ثابت int32_t *indexes;
+    ثابت uint16_t *exceptions;
+    ثابت uint16_t *unfold;
 
     UTrie2 trie;
-    uint8_t formatVersion[4];
+    uint8_t format_نسخہ[4];
 };
 
-U_CAPI const struct UCaseProps * U_EXPORT2
-ucase_getSingleton(int32_t *pExceptionsLength, int32_t *pUnfoldLength);
+U_CAPI ثابت ساخت UCaseProps * U_EXPORT2
+ucase_getSingleton(int32_t *p_Exceptions_لمبائی, int32_t *p_Unfold_لمبائی);
 
 /* file definitions --------------------------------------------------------- */
 
-#define UCASE_DATA_NAME "ucase"
-#define UCASE_DATA_TYPE "icu"
+#تعریف_کرو UCASE_ڈیٹا_NAME "ucase"
+#تعریف_کرو UCASE_ڈیٹا_TYPE "icu"
 
 /* format "cAsE" */
-#define UCASE_FMT_0 0x63
-#define UCASE_FMT_1 0x41
-#define UCASE_FMT_2 0x53
-#define UCASE_FMT_3 0x45
+#تعریف_کرو UCASE_FMT_0 0x63
+#تعریف_کرو UCASE_FMT_1 0x41
+#تعریف_کرو UCASE_FMT_2 0x53
+#تعریف_کرو UCASE_FMT_3 0x45
 
 /* indexes into indexes[] */
-enum {
-    UCASE_IX_INDEX_TOP,
-    UCASE_IX_LENGTH,
-    UCASE_IX_TRIE_SIZE,
-    UCASE_IX_EXC_LENGTH,
-    UCASE_IX_UNFOLD_LENGTH,
+شمار {
+    UCASE_IX_اشاریہ_چوٹی,
+    UCASE_IX_لمبائی,
+    UCASE_IX_TRIE_سائز,
+    UCASE_IX_EXC_لمبائی,
+    UCASE_IX_UNFOLD_لمبائی,
 
-    UCASE_IX_MAX_FULL_LENGTH=15,
-    UCASE_IX_TOP=16
+    UCASE_IX_MAX_بھرا_لمبائی=15,
+    UCASE_IX_چوٹی=16
 };
 
 /* definitions for 16-bit case properties word ------------------------------ */
 
-U_CFUNC const UTrie2 * U_EXPORT2
-ucase_getTrie(void);
+U_CFUNC ثابت UTrie2 * U_EXPORT2
+ucase_getTrie(خالی);
 
 /* 2-bit constants for types of cased characters */
-#define UCASE_TYPE_MASK     3
-enum {
+#تعریف_کرو UCASE_TYPE_نقاب     3
+شمار {
     UCASE_NONE,
-    UCASE_LOWER,
-    UCASE_UPPER,
+    UCASE_زیریں,
+    UCASE_بالائی,
     UCASE_TITLE
 };
 
-#define UCASE_GET_TYPE(props) ((props)&UCASE_TYPE_MASK)
-#define UCASE_GET_TYPE_AND_IGNORABLE(props) ((props)&7)
+#تعریف_کرو UCASE_GET_TYPE(props) ((props)&UCASE_TYPE_نقاب)
+#تعریف_کرو UCASE_GET_TYPE_AND_IGNORABLE(props) ((props)&7)
 
-#define UCASE_IS_UPPER_OR_TITLE(props) ((props)&2)
+#تعریف_کرو UCASE_IS_بالائی_OR_TITLE(props) ((props)&2)
 
-#define UCASE_IGNORABLE         4
-#define UCASE_EXCEPTION         8
-#define UCASE_SENSITIVE         0x10
+#تعریف_کرو UCASE_IGNORABLE         4
+#تعریف_کرو UCASE_EXCEPTION         8
+#تعریف_کرو UCASE_SENSITIVE         0x10
 
-#define UCASE_HAS_EXCEPTION(props) ((props)&UCASE_EXCEPTION)
+#تعریف_کرو UCASE_HAS_EXCEPTION(props) ((props)&UCASE_EXCEPTION)
 
-#define UCASE_DOT_MASK      0x60
-enum {
+#تعریف_کرو UCASE_DOT_نقاب      0x60
+شمار {
     UCASE_NO_DOT=0,         /* normal characters with cc=0 */
     UCASE_SOFT_DOTTED=0x20, /* soft-dotted characters with cc=0 */
     UCASE_ABOVE=0x40,       /* "above" accents with cc=230 */
@@ -388,52 +388,52 @@ enum {
 };
 
 /* no exception: bits 15..7 are a 9-bit signed case mapping delta */
-#define UCASE_DELTA_SHIFT   7
-#define UCASE_DELTA_MASK    0xff80
-#define UCASE_MAX_DELTA     0xff
-#define UCASE_MIN_DELTA     (-UCASE_MAX_DELTA-1)
+#تعریف_کرو UCASE_DELTA_سرکاؤ   7
+#تعریف_کرو UCASE_DELTA_نقاب    0xff80
+#تعریف_کرو UCASE_MAX_DELTA     0xff
+#تعریف_کرو UCASE_MIN_DELTA     (-UCASE_MAX_DELTA-1)
 
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
-#   define UCASE_GET_DELTA(props) ((int16_t)(props)>>UCASE_DELTA_SHIFT)
-#else
-#   define UCASE_GET_DELTA(props) (int16_t)(((props)&0x8000) ? (((props)>>UCASE_DELTA_SHIFT)|0xfe00) : ((uint16_t)(props)>>UCASE_DELTA_SHIFT))
-#endif
+#اگر U_SIGNED_دایاں_سرکاؤ_IS_ARITHMETIC
+#   define UCASE_GET_DELTA(props) ((int16_t)(props)>>UCASE_DELTA_سرکاؤ)
+#ورنہ
+#   define UCASE_GET_DELTA(props) (int16_t)(((props)&0x8000) ? (((props)>>UCASE_DELTA_سرکاؤ)|0xfe00) : ((uint16_t)(props)>>UCASE_DELTA_سرکاؤ))
+#اگر_ختم
 
 /* exception: bits 15..4 are an unsigned 12-bit index into the exceptions array */
-#define UCASE_EXC_SHIFT     4
-#define UCASE_EXC_MASK      0xfff0
-#define UCASE_MAX_EXCEPTIONS ((UCASE_EXC_MASK>>UCASE_EXC_SHIFT)+1)
+#تعریف_کرو UCASE_EXC_سرکاؤ     4
+#تعریف_کرو UCASE_EXC_نقاب      0xfff0
+#تعریف_کرو UCASE_MAX_EXCEPTIONS ((UCASE_EXC_نقاب>>UCASE_EXC_سرکاؤ)+1)
 
 /* definitions for 16-bit main exceptions word ------------------------------ */
 
 /* first 8 bits indicate values in optional slots */
-enum {
-    UCASE_EXC_LOWER,
+شمار {
+    UCASE_EXC_زیریں,
     UCASE_EXC_FOLD,
-    UCASE_EXC_UPPER,
+    UCASE_EXC_بالائی,
     UCASE_EXC_TITLE,
     UCASE_EXC_DELTA,
     UCASE_EXC_5,            /* reserved */
-    UCASE_EXC_CLOSURE,
-    UCASE_EXC_FULL_MAPPINGS,
+    UCASE_EXC_احاطہ,
+    UCASE_EXC_بھرا_MAPPINGS,
     UCASE_EXC_ALL_SLOTS     /* one past the last slot */
 };
 
 /* each slot is 2 uint16_t instead of 1 */
-#define UCASE_EXC_DOUBLE_SLOTS      0x100
+#تعریف_کرو UCASE_EXC_DOUBLE_SLOTS      0x100
 
-enum {
+شمار {
     UCASE_EXC_NO_SIMPLE_CASE_FOLDING=0x200,
     UCASE_EXC_DELTA_IS_NEGATIVE=0x400,
     UCASE_EXC_SENSITIVE=0x800
 };
 
 /* UCASE_EXC_DOT_MASK=UCASE_DOT_MASK<<UCASE_EXC_DOT_SHIFT */
-#define UCASE_EXC_DOT_SHIFT     7
+#تعریف_کرو UCASE_EXC_DOT_سرکاؤ     7
 
 /* normally stored in the main word, but pushed out for larger exception indexes */
-#define UCASE_EXC_DOT_MASK      0x3000
-enum {
+#تعریف_کرو UCASE_EXC_DOT_نقاب      0x3000
+شمار {
     UCASE_EXC_NO_DOT=0,
     UCASE_EXC_SOFT_DOTTED=0x1000,
     UCASE_EXC_ABOVE=0x2000,         /* "above" accents with cc=230 */
@@ -441,24 +441,24 @@ enum {
 };
 
 /* complex/conditional mappings */
-#define UCASE_EXC_CONDITIONAL_SPECIAL   0x4000
-#define UCASE_EXC_CONDITIONAL_FOLD      0x8000
+#تعریف_کرو UCASE_EXC_CONDITIONAL_SPECIAL   0x4000
+#تعریف_کرو UCASE_EXC_CONDITIONAL_FOLD      0x8000
 
 /* definitions for lengths word for full case mappings */
-#define UCASE_FULL_LOWER    0xf
-#define UCASE_FULL_FOLDING  0xf0
-#define UCASE_FULL_UPPER    0xf00
-#define UCASE_FULL_TITLE    0xf000
+#تعریف_کرو UCASE_بھرا_زیریں    0xf
+#تعریف_کرو UCASE_بھرا_FOLDING  0xf0
+#تعریف_کرو UCASE_بھرا_بالائی    0xf00
+#تعریف_کرو UCASE_بھرا_TITLE    0xf000
 
 /* maximum lengths */
-#define UCASE_FULL_MAPPINGS_MAX_LENGTH (4*0xf)
-#define UCASE_CLOSURE_MAX_LENGTH 0xf
+#تعریف_کرو UCASE_بھرا_MAPPINGS_MAX_لمبائی (4*0xf)
+#تعریف_کرو UCASE_احاطہ_MAX_لمبائی 0xf
 
 /* constants for reverse case folding ("unfold") data */
-enum {
-    UCASE_UNFOLD_ROWS,
-    UCASE_UNFOLD_ROW_WIDTH,
-    UCASE_UNFOLD_STRING_WIDTH
+شمار {
+    UCASE_UNFOLD_صفیں,
+    UCASE_UNFOLD_صف_چوڑائی,
+    UCASE_UNFOLD_STRING_چوڑائی
 };
 
-#endif
+#اگر_ختم

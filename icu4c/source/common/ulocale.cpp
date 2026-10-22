@@ -1,80 +1,80 @@
 // © 2023 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 //
-#include "unicode/bytestream.h"
-#include "unicode/errorcode.h"
-#include "unicode/stringpiece.h"
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "unicode/ulocale.h"
-#include "unicode/locid.h"
+#شامل "unicode/bytestream.h"
+#شامل "unicode/errorcode.h"
+#شامل "unicode/stringpiece.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/ustring.h"
+#شامل "unicode/ulocale.h"
+#شامل "unicode/locid.h"
 
-#include "bytesinkutil.h"
-#include "cmemory.h"
+#شامل "bytesinkutil.h"
+#شامل "cmemory.h"
 
 U_NAMESPACE_USE
-#define EXTERNAL(i) (reinterpret_cast<ULocale*>(i))
-#define CONST_INTERNAL(e) (reinterpret_cast<const icu::Locale*>(e))
-#define INTERNAL(e) (reinterpret_cast<icu::Locale*>(e))
+#تعریف_کرو EXTERNAL(i) (reinterpret_cast<ULocale*>(i))
+#تعریف_کرو CONST_اندرونی(e) (reinterpret_cast<ثابت icu::Locale*>(e))
+#تعریف_کرو اندرونی_2(e) (reinterpret_cast<icu::Locale*>(e))
 
 ULocale*
-ulocale_openForLocaleID(const char* localeID, int32_t length, UErrorCode* err) {
-    if (U_FAILURE(*err)) { return nullptr; }
-    if (length < 0) {
-        return EXTERNAL(icu::Locale::createFromName(localeID).clone());
+ulocale_openForLocaleID(ثابت حرف* localeID, int32_t length, UError_رمز* err) {
+    اگر (U_FAILURE(*err)) { واپس خالی_اشاریہ; }
+    اگر (length < 0) {
+        واپس EXTERNAL(icu::Locale::createFromName(localeID).clone());
     }
-    return EXTERNAL(icu::Locale::createFromName(StringPiece{localeID, length}).clone());
+    واپس EXTERNAL(icu::Locale::createFromName(StringPiece{localeID, length}).clone());
 }
 
 ULocale*
-ulocale_openForLanguageTag(const char* tag, int32_t length, UErrorCode* err) {
-  if (U_FAILURE(*err)) { return nullptr; }
-  Locale l = icu::Locale::forLanguageTag(length < 0 ? StringPiece(tag) : StringPiece(tag, length), *err);
-  if (U_FAILURE(*err)) { return nullptr; }
-  return EXTERNAL(l.clone());
+ulocale_open_For_Language_لیبل(ثابت حرف* لیبل, int32_t length, UError_رمز* err) {
+  اگر (U_FAILURE(*err)) { واپس خالی_اشاریہ; }
+  Locale l = icu::Locale::for_Language_لیبل(length < 0 ? StringPiece(لیبل) : StringPiece(لیبل, length), *err);
+  اگر (U_FAILURE(*err)) { واپس خالی_اشاریہ; }
+  واپس EXTERNAL(l.clone());
 }
 
-void
+خالی
 ulocale_close(ULocale* locale) {
-    delete INTERNAL(locale);
+    حذف اندرونی_2(locale);
 }
 
-#define IMPL_ULOCALE_STRING_GETTER(N1, N2) \
-const char* ulocale_get ## N1(const ULocale* locale U_LIFETIME_BOUND) { \
-    if (locale == nullptr) return nullptr; \
-    return CONST_INTERNAL(locale)->get ## N2(); \
+#تعریف_کرو IMPL_ULOCALE_STRING_GETTER(N1, N2) \
+ثابت حرف* ulocale_get ## N1(ثابت ULocale* locale U_LIFETIME_BOUND) { \
+    اگر (locale == خالی_اشاریہ) واپس خالی_اشاریہ; \
+    واپس CONST_اندرونی(locale)->get ## N2(); \
 }
 
-#define IMPL_ULOCALE_STRING_IDENTICAL_GETTER(N) IMPL_ULOCALE_STRING_GETTER(N, N)
+#تعریف_کرو IMPL_ULOCALE_STRING_IDENTICAL_GETTER(N) IMPL_ULOCALE_STRING_GETTER(N, N)
 
-#define IMPL_ULOCALE_GET_KEYWORD_VALUE(N) \
+#تعریف_کرو IMPL_ULOCALE_GET_KEYWORD_قدر(N) \
 int32_t ulocale_get ##N ( \
-    const ULocale* locale, const char* keyword, int32_t keywordLength, \
-    char* valueBuffer, int32_t bufferCapacity, UErrorCode *err) { \
-    if (U_FAILURE(*err)) return 0; \
-    if (locale == nullptr) { \
-        *err = U_ILLEGAL_ARGUMENT_ERROR; \
-        return 0; \
+    ثابت ULocale* locale, ثابت حرف* keyword, int32_t keyword_لمبائی, \
+    حرف* قدر_بفر, int32_t بفر_استعداد, UError_رمز *err) { \
+    اگر (U_FAILURE(*err)) واپس 0; \
+    اگر (locale == خالی_اشاریہ) { \
+        *err = U_ILLEGAL_دلیل_ERROR; \
+        واپس 0; \
     } \
-    return ByteSinkUtil::viaByteSinkToTerminatedChars( \
-        valueBuffer, bufferCapacity, \
-        [&](ByteSink& sink, UErrorCode& status) { \
-            CONST_INTERNAL(locale)->get ## N( \
-                keywordLength < 0 ? StringPiece(keyword) : StringPiece(keyword, keywordLength), \
-                sink, status); \
+    واپس ByteSinkUtil::بذریعہ_Byte_Sink_مقصد_Terminated_Chars( \
+        قدر_بفر, بفر_استعداد, \
+        [&](ByteSink& sink, UError_رمز& حالت_2) { \
+            CONST_اندرونی(locale)->get ## N( \
+                keyword_لمبائی < 0 ? StringPiece(keyword) : StringPiece(keyword, keyword_لمبائی), \
+                sink, حالت_2); \
         }, \
         *err); \
 }
 
-#define IMPL_ULOCALE_GET_KEYWORDS(N) \
-UEnumeration* ulocale_get ## N(const ULocale* locale, UErrorCode *err) { \
-    if (U_FAILURE(*err)) return nullptr; \
-    if (locale == nullptr) { \
-        *err = U_ILLEGAL_ARGUMENT_ERROR; \
-        return nullptr; \
+#تعریف_کرو IMPL_ULOCALE_GET_KEYWORDS(N) \
+UEnumeration* ulocale_get ## N(ثابت ULocale* locale, UError_رمز *err) { \
+    اگر (U_FAILURE(*err)) واپس خالی_اشاریہ; \
+    اگر (locale == خالی_اشاریہ) { \
+        *err = U_ILLEGAL_دلیل_ERROR; \
+        واپس خالی_اشاریہ; \
     } \
-    return uenum_openFromStringEnumeration( \
-        CONST_INTERNAL(locale)->create ## N(*err), err); \
+    واپس uenum_openFromStringEnumeration( \
+        CONST_اندرونی(locale)->create ## N(*err), err); \
 }
 
 IMPL_ULOCALE_STRING_IDENTICAL_GETTER(Language)
@@ -82,15 +82,15 @@ IMPL_ULOCALE_STRING_IDENTICAL_GETTER(Script)
 IMPL_ULOCALE_STRING_GETTER(Region, Country)
 IMPL_ULOCALE_STRING_IDENTICAL_GETTER(Variant)
 IMPL_ULOCALE_STRING_GETTER(LocaleID, Name)
-IMPL_ULOCALE_STRING_IDENTICAL_GETTER(BaseName)
-IMPL_ULOCALE_GET_KEYWORD_VALUE(KeywordValue)
-IMPL_ULOCALE_GET_KEYWORD_VALUE(UnicodeKeywordValue)
+IMPL_ULOCALE_STRING_IDENTICAL_GETTER(بنیاد_Name_2)
+IMPL_ULOCALE_GET_KEYWORD_قدر(Keyword_قدر)
+IMPL_ULOCALE_GET_KEYWORD_قدر(Unicode_Keyword_قدر)
 IMPL_ULOCALE_GET_KEYWORDS(Keywords)
 IMPL_ULOCALE_GET_KEYWORDS(UnicodeKeywords)
 
-bool ulocale_isBogus(const ULocale* locale) {
-    if (locale == nullptr) return false;
-    return CONST_INTERNAL(locale)->isBogus();
+منطقی ulocale_isBogus(ثابت ULocale* locale) {
+    اگر (locale == خالی_اشاریہ) واپس جھوٹ;
+    واپس CONST_اندرونی(locale)->isBogus();
 }
 
 /*eof*/

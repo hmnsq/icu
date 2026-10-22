@@ -17,21 +17,21 @@
 *   were moved here to break dependency cycles among parts of the common library.
 */
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#اگر !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/brkiter.h"
-#include "unicode/casemap.h"
-#include "unicode/chariter.h"
-#include "unicode/localpointer.h"
-#include "unicode/ubrk.h"
-#include "unicode/ucasemap.h"
-#include "unicode/utext.h"
-#include "cmemory.h"
-#include "uassert.h"
-#include "ucase.h"
-#include "ucasemap_imp.h"
+#شامل "unicode/brkiter.h"
+#شامل "unicode/casemap.h"
+#شامل "unicode/chariter.h"
+#شامل "unicode/localpointer.h"
+#شامل "unicode/ubrk.h"
+#شامل "unicode/ucasemap.h"
+#شامل "unicode/utext.h"
+#شامل "cmemory.h"
+#شامل "uassert.h"
+#شامل "ucase.h"
+#شامل "ucasemap_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -40,204 +40,204 @@ U_NAMESPACE_BEGIN
  * Titlecasing only calls setText(), first(), and next().
  * We implement the rest only to satisfy the abstract interface.
  */
-class WholeStringBreakIterator : public BreakIterator {
-public:
-    WholeStringBreakIterator() : BreakIterator(), length(0) {}
-    ~WholeStringBreakIterator() override;
-    bool operator==(const BreakIterator&) const override;
-    WholeStringBreakIterator *clone() const override;
-    static UClassID U_EXPORT2 getStaticClassID();
-    UClassID getDynamicClassID() const override;
-    CharacterIterator& getText() const U_LIFETIME_BOUND override;
-    UText* getUText(UText* fillIn U_LIFETIME_BOUND, UErrorCode& errorCode) const override;
-    void  setText(const UnicodeString &text) override;
-    void  setText(UText *text, UErrorCode &errorCode) override;
-    void  adoptText(CharacterIterator* it) override;
+جماعت پورا_String_Break_Iterator : عوامی BreakIterator {
+عوامی:
+    پورا_String_Break_Iterator() : BreakIterator(), length(0) {}
+    ~پورا_String_Break_Iterator() override;
+    منطقی عامل==(ثابت BreakIterator&) ثابت override;
+    پورا_String_Break_Iterator *clone() ثابت override;
+    ساکن UClassID U_EXPORT2 getStaticClassID();
+    UClassID getDynamicClassID() ثابت override;
+    CharacterIterator& get_متن() ثابت U_LIFETIME_BOUND override;
+    UText* getUText(UText* fill_اندر U_LIFETIME_BOUND, UError_رمز& error_رمز) ثابت override;
+    خالی  سیٹ_متن(ثابت UnicodeString &متن) override;
+    خالی  سیٹ_متن(UText *متن, UError_رمز &error_رمز) override;
+    خالی  adopt_متن(CharacterIterator* it) override;
     int32_t first() override;
-    int32_t last() override;
-    int32_t previous() override;
+    int32_t آخری() override;
+    int32_t پچھلا_2() override;
     int32_t next() override;
-    int32_t current() const override;
-    int32_t following(int32_t offset) override;
-    int32_t preceding(int32_t offset) override;
-    UBool isBoundary(int32_t offset) override;
+    int32_t current() ثابت override;
+    int32_t following(int32_t انحراف) override;
+    int32_t preceding(int32_t انحراف) override;
+    UBool isBoundary(int32_t انحراف) override;
     int32_t next(int32_t n) override;
-    WholeStringBreakIterator *createBufferClone(void *stackBuffer, int32_t &BufferSize,
-                                                UErrorCode &errorCode) override;
-    WholeStringBreakIterator& refreshInputText(UText* input,
-                                               UErrorCode& errorCode) U_LIFETIME_BOUND override;
+    پورا_String_Break_Iterator *create_بفر_Clone(خالی *ڈھیر_بفر, int32_t &بفر_سائز_2,
+                                                UError_رمز &error_رمز) override;
+    پورا_String_Break_Iterator& refresh_داخلہ_متن(UText* input,
+                                               UError_رمز& error_رمز) U_LIFETIME_BOUND override;
 
-private:
+نجی:
     int32_t length;
 };
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(WholeStringBreakIterator)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(پورا_String_Break_Iterator)
 
-WholeStringBreakIterator::~WholeStringBreakIterator() {}
-bool WholeStringBreakIterator::operator==(const BreakIterator&) const { return false; }
-WholeStringBreakIterator *WholeStringBreakIterator::clone() const { return nullptr; }
+پورا_String_Break_Iterator::~پورا_String_Break_Iterator() {}
+منطقی پورا_String_Break_Iterator::عامل==(ثابت BreakIterator&) ثابت { واپس جھوٹ; }
+پورا_String_Break_Iterator *پورا_String_Break_Iterator::clone() ثابت { واپس خالی_اشاریہ; }
 
-CharacterIterator& WholeStringBreakIterator::getText() const U_LIFETIME_BOUND {
+CharacterIterator& پورا_String_Break_Iterator::get_متن() ثابت U_LIFETIME_BOUND {
     UPRV_UNREACHABLE_EXIT;  // really should not be called
 }
-UText *WholeStringBreakIterator::getUText(UText * /*fillIn*/, UErrorCode &errorCode) const {
-    if (U_SUCCESS(errorCode)) {
-        errorCode = U_UNSUPPORTED_ERROR;
+UText *پورا_String_Break_Iterator::getUText(UText * /*fillIn*/, UError_رمز &error_رمز) ثابت {
+    اگر (U_SUCCESS(error_رمز)) {
+        error_رمز = U_UNSUPPORTED_ERROR;
     }
-    return nullptr;
+    واپس خالی_اشاریہ;
 }
 
-void  WholeStringBreakIterator::setText(const UnicodeString &text) {
-    length = text.length();
+خالی  پورا_String_Break_Iterator::سیٹ_متن(ثابت UnicodeString &متن) {
+    length = متن.length();
 }
-void  WholeStringBreakIterator::setText(UText *text, UErrorCode &errorCode) {
-    if (U_SUCCESS(errorCode)) {
-        int64_t length64 = utext_nativeLength(text);
-        if (length64 <= INT32_MAX) {
+خالی  پورا_String_Break_Iterator::سیٹ_متن(UText *متن, UError_رمز &error_رمز) {
+    اگر (U_SUCCESS(error_رمز)) {
+        int64_t length64 = utext_native_لمبائی(متن);
+        اگر (length64 <= INT32_MAX) {
             length = static_cast<int32_t>(length64);
-        } else {
-            errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
+        } ورنہ {
+            error_رمز = U_اشاریہ_OUTOFBOUNDS_ERROR;
         }
     }
 }
-void  WholeStringBreakIterator::adoptText(CharacterIterator*) {
+خالی  پورا_String_Break_Iterator::adopt_متن(CharacterIterator*) {
     UPRV_UNREACHABLE_EXIT;  // should not be called
 }
 
-int32_t WholeStringBreakIterator::first() { return 0; }
-int32_t WholeStringBreakIterator::last() { return length; }
-int32_t WholeStringBreakIterator::previous() { return 0; }
-int32_t WholeStringBreakIterator::next() { return length; }
-int32_t WholeStringBreakIterator::current() const { return 0; }
-int32_t WholeStringBreakIterator::following(int32_t /*offset*/) { return length; }
-int32_t WholeStringBreakIterator::preceding(int32_t /*offset*/) { return 0; }
-UBool WholeStringBreakIterator::isBoundary(int32_t /*offset*/) { return false; }
-int32_t WholeStringBreakIterator::next(int32_t /*n*/) { return length; }
+int32_t پورا_String_Break_Iterator::first() { واپس 0; }
+int32_t پورا_String_Break_Iterator::آخری() { واپس length; }
+int32_t پورا_String_Break_Iterator::پچھلا_2() { واپس 0; }
+int32_t پورا_String_Break_Iterator::next() { واپس length; }
+int32_t پورا_String_Break_Iterator::current() ثابت { واپس 0; }
+int32_t پورا_String_Break_Iterator::following(int32_t /*offset*/) { واپس length; }
+int32_t پورا_String_Break_Iterator::preceding(int32_t /*offset*/) { واپس 0; }
+UBool پورا_String_Break_Iterator::isBoundary(int32_t /*offset*/) { واپس جھوٹ; }
+int32_t پورا_String_Break_Iterator::next(int32_t /*n*/) { واپس length; }
 
-WholeStringBreakIterator *WholeStringBreakIterator::createBufferClone(
-        void * /*stackBuffer*/, int32_t & /*BufferSize*/, UErrorCode &errorCode) {
-    if (U_SUCCESS(errorCode)) {
-        errorCode = U_UNSUPPORTED_ERROR;
+پورا_String_Break_Iterator *پورا_String_Break_Iterator::create_بفر_Clone(
+        خالی * /*stackBuffer*/, int32_t & /*BufferSize*/, UError_رمز &error_رمز) {
+    اگر (U_SUCCESS(error_رمز)) {
+        error_رمز = U_UNSUPPORTED_ERROR;
     }
-    return nullptr;
+    واپس خالی_اشاریہ;
 }
-WholeStringBreakIterator&
-WholeStringBreakIterator::refreshInputText(UText* /*input*/,
-                                           UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if (U_SUCCESS(errorCode)) {
-        errorCode = U_UNSUPPORTED_ERROR;
+پورا_String_Break_Iterator&
+پورا_String_Break_Iterator::refresh_داخلہ_متن(UText* /*داخلہ*/,
+                                           UError_رمز& error_رمز) U_LIFETIME_BOUND {
+    اگر (U_SUCCESS(error_رمز)) {
+        error_رمز = U_UNSUPPORTED_ERROR;
     }
-    return *this;
+    واپس *یہ;
 }
 
 U_CFUNC
-BreakIterator* ustrcase_getTitleBreakIterator(const Locale* locale,
-                                              const char* locID,
+BreakIterator* ustrcase_getTitleBreakIterator(ثابت Locale* locale,
+                                              ثابت حرف* locID,
                                               uint32_t options,
                                               BreakIterator* iter U_LIFETIME_BOUND,
-                                              LocalPointer<BreakIterator>& ownedIter,
-                                              UErrorCode& errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    options &= U_TITLECASE_ITERATOR_MASK;
-    if (options != 0 && iter != nullptr) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+                                              Local_اشارہ_گر<BreakIterator>& ownedIter,
+                                              UError_رمز& error_رمز) {
+    اگر (U_FAILURE(error_رمز)) { واپس خالی_اشاریہ; }
+    options &= U_TITLECASE_ITERATOR_نقاب;
+    اگر (options != 0 && iter != خالی_اشاریہ) {
+        error_رمز = U_ILLEGAL_دلیل_ERROR;
+        واپس خالی_اشاریہ;
     }
-    if (iter == nullptr) {
-        switch (options) {
-        case 0:
-            iter = BreakIterator::createWordInstance(
-                locale != nullptr ? *locale : Locale(locID), errorCode);
-            break;
-        case U_TITLECASE_WHOLE_STRING:
-            iter = new WholeStringBreakIterator();
-            if (iter == nullptr) {
-                errorCode = U_MEMORY_ALLOCATION_ERROR;
+    اگر (iter == خالی_اشاریہ) {
+        انتخاب (options) {
+        حالت 0:
+            iter = BreakIterator::create_لفظ_Instance(
+                locale != خالی_اشاریہ ? *locale : Locale(locID), error_رمز);
+            توڑو;
+        حالت U_TITLECASE_پورا_STRING:
+            iter = نیا پورا_String_Break_Iterator();
+            اگر (iter == خالی_اشاریہ) {
+                error_رمز = U_حافظہ_تخصیص_ERROR;
             }
-            break;
-        case U_TITLECASE_SENTENCES:
+            توڑو;
+        حالت U_TITLECASE_SENTENCES:
             iter = BreakIterator::createSentenceInstance(
-                locale != nullptr ? *locale : Locale(locID), errorCode);
-            break;
-        default:
-            errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            break;
+                locale != خالی_اشاریہ ? *locale : Locale(locID), error_رمز);
+            توڑو;
+        طےشدہ:
+            error_رمز = U_ILLEGAL_دلیل_ERROR;
+            توڑو;
         }
         ownedIter.adoptInstead(iter);
     }
-    return iter;
+    واپس iter;
 }
 
-int32_t CaseMap::toTitle(
-        const char *locale, uint32_t options, BreakIterator *iter,
-        const char16_t *src, int32_t srcLength,
-        char16_t *dest, int32_t destCapacity, Edits *edits,
-        UErrorCode &errorCode) {
-    LocalPointer<BreakIterator> ownedIter;
-    iter = ustrcase_getTitleBreakIterator(nullptr, locale, options, iter, ownedIter, errorCode);
-    if(iter==nullptr) {
-        return 0;
+int32_t CaseMap::مقصد_Title(
+        ثابت حرف *locale, uint32_t options, BreakIterator *iter,
+        ثابت char16_t *src, int32_t src_لمبائی,
+        char16_t *dest, int32_t dest_استعداد, Edits *edits,
+        UError_رمز &error_رمز) {
+    Local_اشارہ_گر<BreakIterator> ownedIter;
+    iter = ustrcase_getTitleBreakIterator(خالی_اشاریہ, locale, options, iter, ownedIter, error_رمز);
+    اگر(iter==خالی_اشاریہ) {
+        واپس 0;
     }
-    UnicodeString s(srcLength<0, src, srcLength);
-    iter->setText(s);
-    return ustrcase_map(
+    UnicodeString s(src_لمبائی<0, src, src_لمبائی);
+    iter->سیٹ_متن(s);
+    واپس ustrcase_map(
         ustrcase_getCaseLocale(locale), options, iter,
-        dest, destCapacity,
-        src, srcLength,
-        ustrcase_internalToTitle, edits, errorCode);
+        dest, dest_استعداد,
+        src, src_لمبائی,
+        ustrcase_اندرونی_مقصد_Title, edits, error_رمز);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا
 
 U_NAMESPACE_USE
 
 U_CAPI int32_t U_EXPORT2
-u_strToTitle(char16_t *dest, int32_t destCapacity,
-             const char16_t *src, int32_t srcLength,
+u_str_مقصد_Title(char16_t *dest, int32_t dest_استعداد,
+             ثابت char16_t *src, int32_t src_لمبائی,
              UBreakIterator *titleIter,
-             const char *locale,
-             UErrorCode *pErrorCode) {
-    LocalPointer<BreakIterator> ownedIter;
+             ثابت حرف *locale,
+             UError_رمز *p_Error_رمز) {
+    Local_اشارہ_گر<BreakIterator> ownedIter;
     BreakIterator *iter = ustrcase_getTitleBreakIterator(
-        nullptr, locale, 0, reinterpret_cast<BreakIterator *>(titleIter),
-        ownedIter, *pErrorCode);
-    if (iter == nullptr) {
-        return 0;
+        خالی_اشاریہ, locale, 0, reinterpret_cast<BreakIterator *>(titleIter),
+        ownedIter, *p_Error_رمز);
+    اگر (iter == خالی_اشاریہ) {
+        واپس 0;
     }
-    UnicodeString s(srcLength<0, src, srcLength);
-    iter->setText(s);
-    return ustrcase_mapWithOverlap(
+    UnicodeString s(src_لمبائی<0, src, src_لمبائی);
+    iter->سیٹ_متن(s);
+    واپس ustrcase_mapWithOverlap(
         ustrcase_getCaseLocale(locale), 0, iter,
-        dest, destCapacity,
-        src, srcLength,
-        ustrcase_internalToTitle, *pErrorCode);
+        dest, dest_استعداد,
+        src, src_لمبائی,
+        ustrcase_اندرونی_مقصد_Title, *p_Error_رمز);
 }
 
 U_CAPI int32_t U_EXPORT2
-ucasemap_toTitle(UCaseMap *csm,
-                 char16_t *dest, int32_t destCapacity,
-                 const char16_t *src, int32_t srcLength,
-                 UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return 0;
+ucasemap_مقصد_Title(UCaseMap *csm,
+                 char16_t *dest, int32_t dest_استعداد,
+                 ثابت char16_t *src, int32_t src_لمبائی,
+                 UError_رمز *p_Error_رمز) {
+    اگر (U_FAILURE(*p_Error_رمز)) {
+        واپس 0;
     }
-    auto *impl = reinterpret_cast<UCaseMapImpl *>(csm);
-    if (impl->iter == nullptr) {
-        LocalPointer<BreakIterator> ownedIter;
+    خودکار *impl = reinterpret_cast<UCaseMapImpl *>(csm);
+    اگر (impl->iter == خالی_اشاریہ) {
+        Local_اشارہ_گر<BreakIterator> ownedIter;
         BreakIterator *iter = ustrcase_getTitleBreakIterator(
-            nullptr, impl->locale, impl->options, nullptr, ownedIter, *pErrorCode);
-        if (iter == nullptr) {
-            return 0;
+            خالی_اشاریہ, impl->locale, impl->options, خالی_اشاریہ, ownedIter, *p_Error_رمز);
+        اگر (iter == خالی_اشاریہ) {
+            واپس 0;
         }
         impl->iter = ownedIter.orphan();
     }
-    UnicodeString s(srcLength<0, src, srcLength);
-    impl->iter->setText(s);
-    return ustrcase_map(
+    UnicodeString s(src_لمبائی<0, src, src_لمبائی);
+    impl->iter->سیٹ_متن(s);
+    واپس ustrcase_map(
         impl->caseLocale, impl->options, impl->iter,
-        dest, destCapacity,
-        src, srcLength,
-        ustrcase_internalToTitle, nullptr, *pErrorCode);
+        dest, dest_استعداد,
+        src, src_لمبائی,
+        ustrcase_اندرونی_مقصد_Title, خالی_اشاریہ, *p_Error_رمز);
 }
 
-#endif  // !UCONFIG_NO_BREAK_ITERATION
+#اگر_ختم  // !UCONFIG_NO_BREAK_ITERATION

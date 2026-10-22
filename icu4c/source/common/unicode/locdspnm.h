@@ -7,25 +7,25 @@
 ******************************************************************************
 */
 
-#ifndef LOCDSPNM_H
-#define LOCDSPNM_H
+#اگر_غیر_تعریف_شدہ LOCDSPNM_H
+#تعریف_کرو LOCDSPNM_H
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#اگر U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
  * \brief C++ API: Provides display names of Locale and its components.
  */
 
-#if !UCONFIG_NO_FORMATTING
+#اگر !UCONFIG_NO_FORMATTING
 
-#include "unicode/locid.h"
-#include "unicode/strenum.h"
-#include "unicode/uscript.h"
-#include "unicode/uldnames.h"
-#include "unicode/udisplaycontext.h"
+#شامل "unicode/locid.h"
+#شامل "unicode/strenum.h"
+#شامل "unicode/uscript.h"
+#شامل "unicode/uldnames.h"
+#شامل "unicode/udisplaycontext.h"
 
 U_NAMESPACE_BEGIN
 
@@ -35,13 +35,13 @@ U_NAMESPACE_BEGIN
  * values, see Locale.
  * @stable ICU 4.4
  */
-class U_COMMON_API LocaleDisplayNames : public UObject {
-public:
+class U_COMMON_API Locale_Display_نام : عوامی UObject {
+عوامی:
     /**
      * Destructor.
      * @stable ICU 4.4
      */
-    virtual ~LocaleDisplayNames();
+    مجازی ~Locale_Display_نام();
 
     /**
      * Convenience overload of
@@ -51,7 +51,7 @@ public:
      * @return a LocaleDisplayNames instance
      * @stable ICU 4.4
      */
-    inline static LocaleDisplayNames* U_EXPORT2 createInstance(const Locale& locale);
+    اندرونی ساکن Locale_Display_نام* U_EXPORT2 createInstance(ثابت Locale& locale);
 
     /**
      * Returns an instance of LocaleDisplayNames that returns names
@@ -63,7 +63,7 @@ public:
      * @return a LocaleDisplayNames instance
      * @stable ICU 4.4
      */
-    static LocaleDisplayNames* U_EXPORT2 createInstance(const Locale& locale,
+    ساکن Locale_Display_نام* U_EXPORT2 createInstance(ثابت Locale& locale,
                             UDialectHandling dialectHandling);
 
     /**
@@ -77,8 +77,8 @@ public:
      * @return a LocaleDisplayNames instance
      * @stable ICU 51
      */
-    static LocaleDisplayNames* U_EXPORT2 createInstance(const Locale& locale,
-                            UDisplayContext *contexts, int32_t length);
+    ساکن Locale_Display_نام* U_EXPORT2 createInstance(ثابت Locale& locale,
+                            UDisplayContext *contexts, int32_t لمبائی);
 
     // getters for state
     /**
@@ -87,14 +87,14 @@ public:
      * @return the display locale
      * @stable ICU 4.4
      */
-    virtual const Locale& getLocale() const U_LIFETIME_BOUND = 0;
+    مجازی ثابت Locale& getLocale() ثابت U_LIFETIME_BOUND = 0;
 
     /**
      * Returns the dialect handling used in the display names.
      * @return the dialect handling enum
      * @stable ICU 4.4
      */
-    virtual UDialectHandling getDialectHandling() const = 0;
+    مجازی UDialectHandling getDialectHandling() ثابت = 0;
 
     /**
      * Returns the UDisplayContext value for the specified UDisplayContextType.
@@ -102,7 +102,7 @@ public:
      * @return the UDisplayContext for the specified type.
      * @stable ICU 51
      */
-    virtual UDisplayContext getContext(UDisplayContextType type) const = 0;
+    مجازی UDisplayContext getContext(UDisplayContextType type) ثابت = 0;
 
     // names for entire locales
     /**
@@ -112,8 +112,8 @@ public:
      * @return the display name of the provided locale
      * @stable ICU 4.4
      */
-    virtual UnicodeString& localeDisplayName(const Locale& locale,
-                                             UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    مجازی UnicodeString& localeDisplayName(ثابت Locale& locale,
+                                             UnicodeString& نتیجہ U_LIFETIME_BOUND) ثابت = 0;
 
     /**
      * Returns the display name of the provided locale id.
@@ -122,8 +122,8 @@ public:
      * @return the display name of the provided locale
      * @stable ICU 4.4
      */
-    virtual UnicodeString& localeDisplayName(const char* localeId,
-                                             UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    مجازی UnicodeString& localeDisplayName(ثابت حرف* localeId,
+                                             UnicodeString& نتیجہ U_LIFETIME_BOUND) ثابت = 0;
 
     // names for components of a locale id
     /**
@@ -133,8 +133,8 @@ public:
      * @return the display name of the provided language code
      * @stable ICU 4.4
      */
-    virtual UnicodeString& languageDisplayName(const char* lang,
-                                               UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    مجازی UnicodeString& languageDisplayName(ثابت حرف* lang,
+                                               UnicodeString& نتیجہ U_LIFETIME_BOUND) ثابت = 0;
 
     /**
      * Returns the display name of the provided script code.
@@ -143,8 +143,8 @@ public:
      * @return the display name of the provided script code
      * @stable ICU 4.4
      */
-    virtual UnicodeString& scriptDisplayName(const char* script,
-                                             UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    مجازی UnicodeString& scriptDisplayName(ثابت حرف* script,
+                                             UnicodeString& نتیجہ U_LIFETIME_BOUND) ثابت = 0;
 
     /**
      * Returns the display name of the provided script code.
@@ -153,8 +153,8 @@ public:
      * @return the display name of the provided script code
      * @stable ICU 4.4
      */
-    virtual UnicodeString& scriptDisplayName(UScriptCode scriptCode,
-                                             UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    مجازی UnicodeString& scriptDisplayName(UScript_رمز script_رمز,
+                                             UnicodeString& نتیجہ U_LIFETIME_BOUND) ثابت = 0;
 
     /**
      * Returns the display name of the provided region code.
@@ -163,8 +163,8 @@ public:
      * @return the display name of the provided region code
      * @stable ICU 4.4
      */
-    virtual UnicodeString& regionDisplayName(const char* region,
-                                             UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    مجازی UnicodeString& regionDisplayName(ثابت حرف* region,
+                                             UnicodeString& نتیجہ U_LIFETIME_BOUND) ثابت = 0;
 
     /**
      * Returns the display name of the provided variant.
@@ -173,8 +173,8 @@ public:
      * @return the display name of the provided variant
      * @stable ICU 4.4
      */
-    virtual UnicodeString& variantDisplayName(const char* variant,
-                                              UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    مجازی UnicodeString& variantDisplayName(ثابت حرف* variant,
+                                              UnicodeString& نتیجہ U_LIFETIME_BOUND) ثابت = 0;
 
     /**
      * Returns the display name of the provided locale key.
@@ -183,8 +183,8 @@ public:
      * @return the display name of the provided locale key
      * @stable ICU 4.4
      */
-    virtual UnicodeString& keyDisplayName(const char* key,
-                                          UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    مجازی UnicodeString& کلید_Display_Name(ثابت حرف* کلید,
+                                          UnicodeString& نتیجہ U_LIFETIME_BOUND) ثابت = 0;
 
     /**
      * Returns the display name of the provided value (used with the provided key).
@@ -194,18 +194,18 @@ public:
      * @return the display name of the provided value
      * @stable ICU 4.4
      */
-    virtual UnicodeString& keyValueDisplayName(const char* key, const char* value,
-                                               UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    مجازی UnicodeString& کلید_قدر_Display_Name(ثابت حرف* کلید, ثابت حرف* قدر_2,
+                                               UnicodeString& نتیجہ U_LIFETIME_BOUND) ثابت = 0;
 };
 
-inline LocaleDisplayNames* LocaleDisplayNames::createInstance(const Locale& locale) {
-  return LocaleDisplayNames::createInstance(locale, ULDN_STANDARD_NAMES);
+اندرونی Locale_Display_نام* Locale_Display_نام::createInstance(ثابت Locale& locale) {
+  واپس Locale_Display_نام::createInstance(locale, ULDN_STANDARD_نام);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا
 
-#endif
+#اگر_ختم
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#اگر_ختم /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#اگر_ختم

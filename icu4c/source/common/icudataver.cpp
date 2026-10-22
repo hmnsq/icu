@@ -9,22 +9,22 @@
 ******************************************************************************
 */
 
-#include "unicode/utypes.h"
-#include "unicode/icudataver.h"
-#include "unicode/ures.h"
-#include "uresimp.h" /* for ures_getVersionByKey */
+#شامل "unicode/utypes.h"
+#شامل "unicode/icudataver.h"
+#شامل "unicode/ures.h"
+#شامل "uresimp.h" /* for ures_getVersionByKey */
 
-U_CAPI void U_EXPORT2 u_getDataVersion(UVersionInfo dataVersionFillin, UErrorCode *status) {
-    UResourceBundle *icudatares = nullptr;
+U_CAPI خالی U_EXPORT2 u_get_ڈیٹا_نسخہ(UVersionInfo ڈیٹا_نسخہ_Fillin, UError_رمز *حالت_2) {
+    UResourceBundle *icudatares = خالی_اشاریہ;
     
-    if (U_FAILURE(*status)) {
-        return;
+    اگر (U_FAILURE(*حالت_2)) {
+        واپس;
     }
     
-    if (dataVersionFillin != nullptr) {
-        icudatares = ures_openDirect(nullptr, U_ICU_VERSION_BUNDLE , status);
-        if (U_SUCCESS(*status)) {
-            ures_getVersionByKey(icudatares, U_ICU_DATA_KEY, dataVersionFillin, status);
+    اگر (ڈیٹا_نسخہ_Fillin != خالی_اشاریہ) {
+        icudatares = ures_open_براہ_راست(خالی_اشاریہ, U_ICU_نسخہ_BUNDLE , حالت_2);
+        اگر (U_SUCCESS(*حالت_2)) {
+            ures_get_نسخہ_By_کلید(icudatares, U_ICU_ڈیٹا_کلید, ڈیٹا_نسخہ_Fillin, حالت_2);
         }
         ures_close(icudatares);
     }

@@ -12,15 +12,15 @@
 ******************************************************************************
 */
 
-#include "hash.h"
+#شامل "hash.h"
 
 /**
  * Deleter for Hashtable objects.
  */
-U_CAPI void U_EXPORT2
-uhash_deleteHashtable(void *obj) {
+U_CAPI خالی U_EXPORT2
+uhash_deleteHashtable(خالی *obj) {
     U_NAMESPACE_USE
-    delete (Hashtable*) obj;
+    حذف (Hashtable*) obj;
 }
 
 //eof

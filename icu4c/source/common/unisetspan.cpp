@@ -16,14 +16,14 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/uniset.h"
-#include "unicode/ustring.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "uvector.h"
-#include "unisetspan.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/uniset.h"
+#شامل "unicode/ustring.h"
+#شامل "unicode/utf8.h"
+#شامل "unicode/utf16.h"
+#شامل "cmemory.h"
+#شامل "uvector.h"
+#شامل "unisetspan.h"
 
 U_NAMESPACE_BEGIN
 
@@ -54,37 +54,37 @@ U_NAMESPACE_BEGIN
  * the integer would simply be shifted when lower offsets are removed.
  * UnicodeSet does not have a limit on the lengths of strings.
  */
-class OffsetList {  // Only ever stack-allocated, does not need to inherit UMemory.
-public:
-    OffsetList() : list(staticList), capacity(0), length(0), start(0) {}
+جماعت انحراف_List {  // Only ever stack-allocated, does not need to inherit UMemory.
+عوامی:
+    انحراف_List() : list(staticList), capacity(0), length(0), آغاز(0) {}
 
-    ~OffsetList() {
-        if(list!=staticList) {
+    ~انحراف_List() {
+        اگر(list!=staticList) {
             uprv_free(list);
         }
     }
 
     // Call exactly once if the list is to be used.
-    void setMaxLength(int32_t maxLength) {
-        if (maxLength <= static_cast<int32_t>(sizeof(staticList))) {
-            capacity = static_cast<int32_t>(sizeof(staticList));
-        } else {
-            UBool* l = static_cast<UBool*>(uprv_malloc(maxLength));
-            if(l!=nullptr) {
+    خالی سیٹ_Max_لمبائی(int32_t max_لمبائی_2) {
+        اگر (max_لمبائی_2 <= static_cast<int32_t>(حجم(staticList))) {
+            capacity = static_cast<int32_t>(حجم(staticList));
+        } ورنہ {
+            UBool* l = static_cast<UBool*>(uprv_malloc(max_لمبائی_2));
+            اگر(l!=خالی_اشاریہ) {
                 list=l;
-                capacity=maxLength;
+                capacity=max_لمبائی_2;
             }
         }
         uprv_memset(list, 0, capacity);
     }
 
-    void clear() {
+    خالی clear() {
         uprv_memset(list, 0, capacity);
-        start=length=0;
+        آغاز=length=0;
     }
 
-    UBool isEmpty() const {
-        return length == 0;
+    UBool is_خالی_خانے() ثابت {
+        واپس length == 0;
     }
 
     // Reduce all stored offsets by delta, used when the current position
@@ -92,128 +92,128 @@ public:
     // There must not be any offsets lower than delta.
     // If there is an offset equal to delta, it is removed.
     // delta=[1..maxLength]
-    void shift(int32_t delta) {
-        int32_t i=start+delta;
-        if(i>=capacity) {
+    خالی سرکاؤ(int32_t delta) {
+        int32_t i=آغاز+delta;
+        اگر(i>=capacity) {
             i-=capacity;
         }
-        if(list[i]) {
-            list[i]=false;
+        اگر(list[i]) {
+            list[i]=جھوٹ;
             --length;
         }
-        start=i;
+        آغاز=i;
     }
 
     // Add an offset. The list must not contain it yet.
     // offset=[1..maxLength]
-    void addOffset(int32_t offset) {
-        int32_t i=start+offset;
-        if(i>=capacity) {
+    خالی جوڑو_انحراف(int32_t انحراف) {
+        int32_t i=آغاز+انحراف;
+        اگر(i>=capacity) {
             i-=capacity;
         }
-        list[i]=true;
+        list[i]=سچ;
         ++length;
     }
 
     // offset=[1..maxLength]
-    UBool containsOffset(int32_t offset) const {
-        int32_t i=start+offset;
-        if(i>=capacity) {
+    UBool شامل_ہے_انحراف(int32_t انحراف) ثابت {
+        int32_t i=آغاز+انحراف;
+        اگر(i>=capacity) {
             i-=capacity;
         }
-        return list[i];
+        واپس list[i];
     }
 
     // Find the lowest stored offset from a non-empty list, remove it,
     // and reduce all other offsets by this minimum.
     // Returns [1..maxLength].
-    int32_t popMinimum() {
+    int32_t نکالو_Minimum() {
         // Look for the next offset in list[start+1..capacity-1].
-        int32_t i=start, result;
-        while(++i<capacity) {
-            if(list[i]) {
-                list[i]=false;
+        int32_t i=آغاز, نتیجہ;
+        جب(++i<capacity) {
+            اگر(list[i]) {
+                list[i]=جھوٹ;
                 --length;
-                result=i-start;
-                start=i;
-                return result;
+                نتیجہ=i-آغاز;
+                آغاز=i;
+                واپس نتیجہ;
             }
         }
         // i==capacity
 
         // Wrap around and look for the next offset in list[0..start].
         // Since the list is not empty, there will be one.
-        result=capacity-start;
+        نتیجہ=capacity-آغاز;
         i=0;
-        while(!list[i]) {
+        جب(!list[i]) {
             ++i;
         }
-        list[i]=false;
+        list[i]=جھوٹ;
         --length;
-        start=i;
-        return result+=i;
+        آغاز=i;
+        واپس نتیجہ+=i;
     }
 
-private:
+نجی:
     UBool *list;
     int32_t capacity;
     int32_t length;
-    int32_t start;
+    int32_t آغاز;
 
     UBool staticList[16];
 };
 
 // Get the number of UTF-8 bytes for a UTF-16 (sub)string.
-static int32_t
-getUTF8Length(const char16_t *s, int32_t length) {
-    UErrorCode errorCode=U_ZERO_ERROR;
+ساکن int32_t
+get_UTF8_لمبائی(ثابت char16_t *s, int32_t length) {
+    UError_رمز error_رمز=U_ZERO_ERROR;
     int32_t length8=0;
-    u_strToUTF8(nullptr, 0, &length8, s, length, &errorCode);
-    if(U_SUCCESS(errorCode) || errorCode==U_BUFFER_OVERFLOW_ERROR) {
-        return length8;
-    } else {
+    u_str_مقصد_UTF8(خالی_اشاریہ, 0, &length8, s, length, &error_رمز);
+    اگر(U_SUCCESS(error_رمز) || error_رمز==U_بفر_حد_سے_تجاوز_ERROR) {
+        واپس length8;
+    } ورنہ {
         // The string contains an unpaired surrogate.
         // Ignore this string.
-        return 0;
+        واپس 0;
     }
 }
 
 // Append the UTF-8 version of the string to t and return the appended UTF-8 length.
-static int32_t
-appendUTF8(const char16_t *s, int32_t length, uint8_t *t, int32_t capacity) {
-    UErrorCode errorCode=U_ZERO_ERROR;
+ساکن int32_t
+appendUTF8(ثابت char16_t *s, int32_t length, uint8_t *t, int32_t capacity) {
+    UError_رمز error_رمز=U_ZERO_ERROR;
     int32_t length8=0;
-    u_strToUTF8(reinterpret_cast<char*>(t), capacity, &length8, s, length, &errorCode);
-    if(U_SUCCESS(errorCode)) {
-        return length8;
-    } else {
+    u_str_مقصد_UTF8(reinterpret_cast<حرف*>(t), capacity, &length8, s, length, &error_رمز);
+    اگر(U_SUCCESS(error_رمز)) {
+        واپس length8;
+    } ورنہ {
         // The string contains an unpaired surrogate.
         // Ignore this string.
-        return 0;
+        واپس 0;
     }
 }
 
-static inline uint8_t
-makeSpanLengthByte(int32_t spanLength) {
+ساکن اندرونی uint8_t
+make_وسعت_لمبائی_Byte(int32_t وسعت_لمبائی) {
     // 0xfe==UnicodeSetStringSpan::LONG_SPAN
-    return spanLength < 0xfe ? static_cast<uint8_t>(spanLength) : static_cast<uint8_t>(0xfe);
+    واپس وسعت_لمبائی < 0xfe ? static_cast<uint8_t>(وسعت_لمبائی) : static_cast<uint8_t>(0xfe);
 }
 
 // Construct for all variants of span(), or only for any one variant.
 // Initialize as little as possible, for single use.
-UnicodeSetStringSpan::UnicodeSetStringSpan(const UnicodeSet &set,
-                                           const UVector &setStrings,
+Unicode_سیٹ_String_وسعت::Unicode_سیٹ_String_وسعت(ثابت Unicode_سیٹ &سیٹ,
+                                           ثابت UVector &سیٹ_لڑیاں,
                                            uint32_t which)
-        : spanSet(0, 0x10ffff), pSpanNotSet(nullptr), strings(setStrings),
-          utf8Lengths(nullptr), spanLengths(nullptr), utf8(nullptr),
-          utf8Length(0),
+        : وسعت_سیٹ(0, 0x10ffff), p_وسعت_Not_سیٹ(خالی_اشاریہ), لڑیاں(سیٹ_لڑیاں),
+          utf8Lengths(خالی_اشاریہ), وسعت_Lengths(خالی_اشاریہ), utf8(خالی_اشاریہ),
+          utf8_لمبائی(0),
           maxLength16(0), maxLength8(0),
           all(static_cast<UBool>(which == ALL)) {
-    spanSet.retainAll(set);
-    if(which&NOT_CONTAINED) {
+    وسعت_سیٹ.retainAll(سیٹ);
+    اگر(which&NOT_CONTAINED) {
         // Default to the same sets.
         // addToSpanNotSet() will create a separate set if necessary.
-        pSpanNotSet=&spanSet;
+        p_وسعت_Not_سیٹ=&وسعت_سیٹ;
     }
 
     // Determine if the strings even need to be taken into account at all for span() etc.
@@ -223,307 +223,307 @@ UnicodeSetStringSpan::UnicodeSetStringSpan(const UnicodeSet &set,
     //   and do not store UTF-8 strings if !thisRelevant and CONTAINED.
     //   (Only store irrelevant UTF-8 strings for LONGEST_MATCH where they are relevant after all.)
     // Also count the lengths of the UTF-8 versions of the strings for memory allocation.
-    int32_t stringsLength=strings.size();
+    int32_t لڑیاں_لمبائی=لڑیاں.size();
 
-    int32_t i, spanLength;
-    UBool someRelevant=false;
-    for(i=0; i<stringsLength; ++i) {
-        const UnicodeString& string = *static_cast<const UnicodeString*>(strings.elementAt(i));
-        const char16_t *s16=string.getBuffer();
+    int32_t i, وسعت_لمبائی;
+    UBool someRelevant=جھوٹ;
+    برائے(i=0; i<لڑیاں_لمبائی; ++i) {
+        ثابت UnicodeString& string = *static_cast<ثابت UnicodeString*>(لڑیاں.elementAt(i));
+        ثابت char16_t *s16=string.get_بفر();
         int32_t length16=string.length();
-        if (length16==0) {
-            continue;  // skip the empty string
+        اگر (length16==0) {
+            جاری;  // skip the empty string
         }
         UBool thisRelevant;
-        spanLength=spanSet.span(s16, length16, USET_SPAN_CONTAINED);
-        if(spanLength<length16) {  // Relevant string.
-            someRelevant=thisRelevant=true;
-        } else {
-            thisRelevant=false;
+        وسعت_لمبائی=وسعت_سیٹ.وسعت(s16, length16, USET_وسعت_CONTAINED);
+        اگر(وسعت_لمبائی<length16) {  // Relevant string.
+            someRelevant=thisRelevant=سچ;
+        } ورنہ {
+            thisRelevant=جھوٹ;
         }
-        if((which&UTF16) && length16>maxLength16) {
+        اگر((which&UTF16) && length16>maxLength16) {
             maxLength16=length16;
         }
-        if((which&UTF8) && (thisRelevant || (which&CONTAINED))) {
-            int32_t length8=getUTF8Length(s16, length16);
-            utf8Length+=length8;
-            if(length8>maxLength8) {
+        اگر((which&UTF8) && (thisRelevant || (which&CONTAINED))) {
+            int32_t length8=get_UTF8_لمبائی(s16, length16);
+            utf8_لمبائی+=length8;
+            اگر(length8>maxLength8) {
                 maxLength8=length8;
             }
         }
     }
-    if(!someRelevant) {
+    اگر(!someRelevant) {
         maxLength16=maxLength8=0;
-        return;
+        واپس;
     }
 
     // Freeze after checking for the need to use strings at all because freezing
     // a set takes some time and memory which are wasted if there are no relevant strings.
-    if(all) {
-        spanSet.freeze();
+    اگر(all) {
+        وسعت_سیٹ.freeze();
     }
 
-    uint8_t *spanBackLengths;
-    uint8_t *spanUTF8Lengths;
-    uint8_t *spanBackUTF8Lengths;
+    uint8_t *وسعت_عقب_Lengths;
+    uint8_t *وسعت_UTF8_Lengths;
+    uint8_t *وسعت_عقب_UTF8_Lengths;
 
     // Allocate a block of meta data.
-    int32_t allocSize;
-    if(all) {
+    int32_t alloc_سائز_2;
+    اگر(all) {
         // UTF-8 lengths, 4 sets of span lengths, UTF-8 strings.
-        allocSize=stringsLength*(4+1+1+1+1)+utf8Length;
-    } else {
-        allocSize=stringsLength;  // One set of span lengths.
-        if(which&UTF8) {
+        alloc_سائز_2=لڑیاں_لمبائی*(4+1+1+1+1)+utf8_لمبائی;
+    } ورنہ {
+        alloc_سائز_2=لڑیاں_لمبائی;  // One set of span lengths.
+        اگر(which&UTF8) {
             // UTF-8 lengths and UTF-8 strings.
-            allocSize+=stringsLength*4+utf8Length;
+            alloc_سائز_2+=لڑیاں_لمبائی*4+utf8_لمبائی;
         }
     }
-    if (allocSize <= static_cast<int32_t>(sizeof(staticLengths))) {
+    اگر (alloc_سائز_2 <= static_cast<int32_t>(حجم(staticLengths))) {
         utf8Lengths=staticLengths;
-    } else {
-        utf8Lengths = static_cast<int32_t*>(uprv_malloc(allocSize));
-        if(utf8Lengths==nullptr) {
+    } ورنہ {
+        utf8Lengths = static_cast<int32_t*>(uprv_malloc(alloc_سائز_2));
+        اگر(utf8Lengths==خالی_اشاریہ) {
             maxLength16=maxLength8=0;  // Prevent usage by making needsStringSpanUTF16/8() return false.
-            return;  // Out of memory.
+            واپس;  // Out of memory.
         }
     }
 
-    if(all) {
+    اگر(all) {
         // Store span lengths for all span() variants.
-        spanLengths = reinterpret_cast<uint8_t*>(utf8Lengths + stringsLength);
-        spanBackLengths=spanLengths+stringsLength;
-        spanUTF8Lengths=spanBackLengths+stringsLength;
-        spanBackUTF8Lengths=spanUTF8Lengths+stringsLength;
-        utf8=spanBackUTF8Lengths+stringsLength;
-    } else {
+        وسعت_Lengths = reinterpret_cast<uint8_t*>(utf8Lengths + لڑیاں_لمبائی);
+        وسعت_عقب_Lengths=وسعت_Lengths+لڑیاں_لمبائی;
+        وسعت_UTF8_Lengths=وسعت_عقب_Lengths+لڑیاں_لمبائی;
+        وسعت_عقب_UTF8_Lengths=وسعت_UTF8_Lengths+لڑیاں_لمبائی;
+        utf8=وسعت_عقب_UTF8_Lengths+لڑیاں_لمبائی;
+    } ورنہ {
         // Store span lengths for only one span() variant.
-        if(which&UTF8) {
-            spanLengths = reinterpret_cast<uint8_t*>(utf8Lengths + stringsLength);
-            utf8=spanLengths+stringsLength;
-        } else {
-            spanLengths = reinterpret_cast<uint8_t*>(utf8Lengths);
+        اگر(which&UTF8) {
+            وسعت_Lengths = reinterpret_cast<uint8_t*>(utf8Lengths + لڑیاں_لمبائی);
+            utf8=وسعت_Lengths+لڑیاں_لمبائی;
+        } ورنہ {
+            وسعت_Lengths = reinterpret_cast<uint8_t*>(utf8Lengths);
         }
-        spanBackLengths=spanUTF8Lengths=spanBackUTF8Lengths=spanLengths;
+        وسعت_عقب_Lengths=وسعت_UTF8_Lengths=وسعت_عقب_UTF8_Lengths=وسعت_Lengths;
     }
 
     // Set the meta data and pSpanNotSet and write the UTF-8 strings.
-    int32_t utf8Count=0;  // Count UTF-8 bytes written so far.
+    int32_t utf8_گنتی=0;  // Count UTF-8 bytes written so far.
 
-    for(i=0; i<stringsLength; ++i) {
-        const UnicodeString& string = *static_cast<const UnicodeString*>(strings.elementAt(i));
-        const char16_t *s16=string.getBuffer();
+    برائے(i=0; i<لڑیاں_لمبائی; ++i) {
+        ثابت UnicodeString& string = *static_cast<ثابت UnicodeString*>(لڑیاں.elementAt(i));
+        ثابت char16_t *s16=string.get_بفر();
         int32_t length16=string.length();
-        spanLength=spanSet.span(s16, length16, USET_SPAN_CONTAINED);
-        if(spanLength<length16 && length16>0) {  // Relevant string.
-            if(which&UTF16) {
-                if(which&CONTAINED) {
-                    if(which&FWD) {
-                        spanLengths[i]=makeSpanLengthByte(spanLength);
+        وسعت_لمبائی=وسعت_سیٹ.وسعت(s16, length16, USET_وسعت_CONTAINED);
+        اگر(وسعت_لمبائی<length16 && length16>0) {  // Relevant string.
+            اگر(which&UTF16) {
+                اگر(which&CONTAINED) {
+                    اگر(which&FWD) {
+                        وسعت_Lengths[i]=make_وسعت_لمبائی_Byte(وسعت_لمبائی);
                     }
-                    if(which&BACK) {
-                        spanLength=length16-spanSet.spanBack(s16, length16, USET_SPAN_CONTAINED);
-                        spanBackLengths[i]=makeSpanLengthByte(spanLength);
+                    اگر(which&عقب_2) {
+                        وسعت_لمبائی=length16-وسعت_سیٹ.وسعت_عقب(s16, length16, USET_وسعت_CONTAINED);
+                        وسعت_عقب_Lengths[i]=make_وسعت_لمبائی_Byte(وسعت_لمبائی);
                     }
-                } else /* not CONTAINED, not all, but NOT_CONTAINED */ {
-                    spanLengths[i]=spanBackLengths[i]=0;  // Only store a relevant/irrelevant flag.
+                } ورنہ /* not CONTAINED, not all, but NOT_CONTAINED */ {
+                    وسعت_Lengths[i]=وسعت_عقب_Lengths[i]=0;  // Only store a relevant/irrelevant flag.
                 }
             }
-            if(which&UTF8) {
-                uint8_t *s8=utf8+utf8Count;
-                int32_t length8=appendUTF8(s16, length16, s8, utf8Length-utf8Count);
-                utf8Count+=utf8Lengths[i]=length8;
-                if(length8==0) {  // Irrelevant for UTF-8 because not representable in UTF-8.
-                    spanUTF8Lengths[i] = spanBackUTF8Lengths[i] = static_cast<uint8_t>(ALL_CP_CONTAINED);
-                } else {  // Relevant for UTF-8.
-                    if(which&CONTAINED) {
-                        if(which&FWD) {
-                            spanLength = spanSet.spanUTF8(reinterpret_cast<const char*>(s8), length8, USET_SPAN_CONTAINED);
-                            spanUTF8Lengths[i]=makeSpanLengthByte(spanLength);
+            اگر(which&UTF8) {
+                uint8_t *s8=utf8+utf8_گنتی;
+                int32_t length8=appendUTF8(s16, length16, s8, utf8_لمبائی-utf8_گنتی);
+                utf8_گنتی+=utf8Lengths[i]=length8;
+                اگر(length8==0) {  // Irrelevant for UTF-8 because not representable in UTF-8.
+                    وسعت_UTF8_Lengths[i] = وسعت_عقب_UTF8_Lengths[i] = static_cast<uint8_t>(ALL_CP_CONTAINED);
+                } ورنہ {  // Relevant for UTF-8.
+                    اگر(which&CONTAINED) {
+                        اگر(which&FWD) {
+                            وسعت_لمبائی = وسعت_سیٹ.وسعت_UTF8(reinterpret_cast<ثابت حرف*>(s8), length8, USET_وسعت_CONTAINED);
+                            وسعت_UTF8_Lengths[i]=make_وسعت_لمبائی_Byte(وسعت_لمبائی);
                         }
-                        if(which&BACK) {
-                            spanLength = length8 - spanSet.spanBackUTF8(reinterpret_cast<const char*>(s8), length8, USET_SPAN_CONTAINED);
-                            spanBackUTF8Lengths[i]=makeSpanLengthByte(spanLength);
+                        اگر(which&عقب_2) {
+                            وسعت_لمبائی = length8 - وسعت_سیٹ.وسعت_عقب_UTF8(reinterpret_cast<ثابت حرف*>(s8), length8, USET_وسعت_CONTAINED);
+                            وسعت_عقب_UTF8_Lengths[i]=make_وسعت_لمبائی_Byte(وسعت_لمبائی);
                         }
-                    } else /* not CONTAINED, not all, but NOT_CONTAINED */ {
-                        spanUTF8Lengths[i]=spanBackUTF8Lengths[i]=0;  // Only store a relevant/irrelevant flag.
+                    } ورنہ /* not CONTAINED, not all, but NOT_CONTAINED */ {
+                        وسعت_UTF8_Lengths[i]=وسعت_عقب_UTF8_Lengths[i]=0;  // Only store a relevant/irrelevant flag.
                     }
                 }
             }
-            if(which&NOT_CONTAINED) {
+            اگر(which&NOT_CONTAINED) {
                 // Add string start and end code points to the spanNotSet so that
                 // a span(while not contained) stops before any string.
                 UChar32 c;
-                if(which&FWD) {
+                اگر(which&FWD) {
                     int32_t len=0;
-                    U16_NEXT(s16, len, length16, c);
-                    addToSpanNotSet(c);
+                    U16_اگلا(s16, len, length16, c);
+                    جوڑو_مقصد_وسعت_Not_سیٹ(c);
                 }
-                if(which&BACK) {
+                اگر(which&عقب_2) {
                     int32_t len=length16;
-                    U16_PREV(s16, 0, len, c);
-                    addToSpanNotSet(c);
+                    U16_پچھلا(s16, 0, len, c);
+                    جوڑو_مقصد_وسعت_Not_سیٹ(c);
                 }
             }
-        } else {  // Irrelevant string. (Also the empty string.)
-            if(which&UTF8) {
-                if(which&CONTAINED) {  // Only necessary for LONGEST_MATCH.
-                    uint8_t *s8=utf8+utf8Count;
-                    int32_t length8=appendUTF8(s16, length16, s8, utf8Length-utf8Count);
-                    utf8Count+=utf8Lengths[i]=length8;
-                } else {
+        } ورنہ {  // Irrelevant string. (Also the empty string.)
+            اگر(which&UTF8) {
+                اگر(which&CONTAINED) {  // Only necessary for LONGEST_MATCH.
+                    uint8_t *s8=utf8+utf8_گنتی;
+                    int32_t length8=appendUTF8(s16, length16, s8, utf8_لمبائی-utf8_گنتی);
+                    utf8_گنتی+=utf8Lengths[i]=length8;
+                } ورنہ {
                     utf8Lengths[i]=0;
                 }
             }
-            if(all) {
-                spanLengths[i]=spanBackLengths[i]=
-                    spanUTF8Lengths[i]=spanBackUTF8Lengths[i]=
+            اگر(all) {
+                وسعت_Lengths[i]=وسعت_عقب_Lengths[i]=
+                    وسعت_UTF8_Lengths[i]=وسعت_عقب_UTF8_Lengths[i]=
                         static_cast<uint8_t>(ALL_CP_CONTAINED);
-            } else {
+            } ورنہ {
                 // All spanXYZLengths pointers contain the same address.
-                spanLengths[i] = static_cast<uint8_t>(ALL_CP_CONTAINED);
+                وسعت_Lengths[i] = static_cast<uint8_t>(ALL_CP_CONTAINED);
             }
         }
     }
 
     // Finish.
-    if(all) {
-        pSpanNotSet->freeze();
+    اگر(all) {
+        p_وسعت_Not_سیٹ->freeze();
     }
 }
 
 // Copy constructor. Assumes which==ALL for a frozen set.
-UnicodeSetStringSpan::UnicodeSetStringSpan(const UnicodeSetStringSpan &otherStringSpan,
-                                           const UVector &newParentSetStrings)
-        : spanSet(otherStringSpan.spanSet), pSpanNotSet(nullptr), strings(newParentSetStrings),
-          utf8Lengths(nullptr), spanLengths(nullptr), utf8(nullptr),
-          utf8Length(otherStringSpan.utf8Length),
-          maxLength16(otherStringSpan.maxLength16), maxLength8(otherStringSpan.maxLength8),
-          all(true) {
-    if(otherStringSpan.pSpanNotSet==&otherStringSpan.spanSet) {
-        pSpanNotSet=&spanSet;
-    } else {
-        pSpanNotSet=otherStringSpan.pSpanNotSet->clone();
+Unicode_سیٹ_String_وسعت::Unicode_سیٹ_String_وسعت(ثابت Unicode_سیٹ_String_وسعت &other_String_وسعت,
+                                           ثابت UVector &new_والد_سیٹ_لڑیاں)
+        : وسعت_سیٹ(other_String_وسعت.وسعت_سیٹ), p_وسعت_Not_سیٹ(خالی_اشاریہ), لڑیاں(new_والد_سیٹ_لڑیاں),
+          utf8Lengths(خالی_اشاریہ), وسعت_Lengths(خالی_اشاریہ), utf8(خالی_اشاریہ),
+          utf8_لمبائی(other_String_وسعت.utf8_لمبائی),
+          maxLength16(other_String_وسعت.maxLength16), maxLength8(other_String_وسعت.maxLength8),
+          all(سچ) {
+    اگر(other_String_وسعت.p_وسعت_Not_سیٹ==&other_String_وسعت.وسعت_سیٹ) {
+        p_وسعت_Not_سیٹ=&وسعت_سیٹ;
+    } ورنہ {
+        p_وسعت_Not_سیٹ=other_String_وسعت.p_وسعت_Not_سیٹ->clone();
     }
 
     // Allocate a block of meta data.
     // UTF-8 lengths, 4 sets of span lengths, UTF-8 strings.
-    int32_t stringsLength=strings.size();
-    int32_t allocSize=stringsLength*(4+1+1+1+1)+utf8Length;
-    if (allocSize <= static_cast<int32_t>(sizeof(staticLengths))) {
+    int32_t لڑیاں_لمبائی=لڑیاں.size();
+    int32_t alloc_سائز_2=لڑیاں_لمبائی*(4+1+1+1+1)+utf8_لمبائی;
+    اگر (alloc_سائز_2 <= static_cast<int32_t>(حجم(staticLengths))) {
         utf8Lengths=staticLengths;
-    } else {
-        utf8Lengths = static_cast<int32_t*>(uprv_malloc(allocSize));
-        if(utf8Lengths==nullptr) {
+    } ورنہ {
+        utf8Lengths = static_cast<int32_t*>(uprv_malloc(alloc_سائز_2));
+        اگر(utf8Lengths==خالی_اشاریہ) {
             maxLength16=maxLength8=0;  // Prevent usage by making needsStringSpanUTF16/8() return false.
-            return;  // Out of memory.
+            واپس;  // Out of memory.
         }
     }
 
-    spanLengths = reinterpret_cast<uint8_t*>(utf8Lengths + stringsLength);
-    utf8=spanLengths+stringsLength*4;
-    uprv_memcpy(utf8Lengths, otherStringSpan.utf8Lengths, allocSize);
+    وسعت_Lengths = reinterpret_cast<uint8_t*>(utf8Lengths + لڑیاں_لمبائی);
+    utf8=وسعت_Lengths+لڑیاں_لمبائی*4;
+    uprv_memcpy(utf8Lengths, other_String_وسعت.utf8Lengths, alloc_سائز_2);
 }
 
-UnicodeSetStringSpan::~UnicodeSetStringSpan() {
-    if(pSpanNotSet!=nullptr && pSpanNotSet!=&spanSet) {
-        delete pSpanNotSet;
+Unicode_سیٹ_String_وسعت::~Unicode_سیٹ_String_وسعت() {
+    اگر(p_وسعت_Not_سیٹ!=خالی_اشاریہ && p_وسعت_Not_سیٹ!=&وسعت_سیٹ) {
+        حذف p_وسعت_Not_سیٹ;
     }
-    if(utf8Lengths!=nullptr && utf8Lengths!=staticLengths) {
+    اگر(utf8Lengths!=خالی_اشاریہ && utf8Lengths!=staticLengths) {
         uprv_free(utf8Lengths);
     }
 }
 
-void UnicodeSetStringSpan::addToSpanNotSet(UChar32 c) {
-    if(pSpanNotSet==nullptr || pSpanNotSet==&spanSet) {
-        if(spanSet.contains(c)) {
-            return;  // Nothing to do.
+خالی Unicode_سیٹ_String_وسعت::جوڑو_مقصد_وسعت_Not_سیٹ(UChar32 c) {
+    اگر(p_وسعت_Not_سیٹ==خالی_اشاریہ || p_وسعت_Not_سیٹ==&وسعت_سیٹ) {
+        اگر(وسعت_سیٹ.شامل_ہے(c)) {
+            واپس;  // Nothing to do.
         }
-        UnicodeSet *newSet=spanSet.cloneAsThawed();
-        if(newSet==nullptr) {
-            return;  // Out of memory.
-        } else {
-            pSpanNotSet=newSet;
+        Unicode_سیٹ *new_سیٹ=وسعت_سیٹ.cloneAsThawed();
+        اگر(new_سیٹ==خالی_اشاریہ) {
+            واپس;  // Out of memory.
+        } ورنہ {
+            p_وسعت_Not_سیٹ=new_سیٹ;
         }
     }
-    pSpanNotSet->add(c);
+    p_وسعت_Not_سیٹ->جوڑو(c);
 }
 
 // Compare strings without any argument checks. Requires length>0.
-static inline UBool
-matches16(const char16_t *s, const char16_t *t, int32_t length) {
-    do {
-        if(*s++!=*t++) {
-            return false;
+ساکن اندرونی UBool
+matches16(ثابت char16_t *s, ثابت char16_t *t, int32_t length) {
+    کرو {
+        اگر(*s++!=*t++) {
+            واپس جھوٹ;
         }
-    } while(--length>0);
-    return true;
+    } جب(--length>0);
+    واپس سچ;
 }
 
-static inline UBool
-matches8(const uint8_t *s, const uint8_t *t, int32_t length) {
-    do {
-        if(*s++!=*t++) {
-            return false;
+ساکن اندرونی UBool
+matches8(ثابت uint8_t *s, ثابت uint8_t *t, int32_t length) {
+    کرو {
+        اگر(*s++!=*t++) {
+            واپس جھوٹ;
         }
-    } while(--length>0);
-    return true;
+    } جب(--length>0);
+    واپس سچ;
 }
 
 // Compare 16-bit Unicode strings (which may be malformed UTF-16)
 // at code point boundaries.
 // That is, each edge of a match must not be in the middle of a surrogate pair.
-static inline UBool
-matches16CPB(const char16_t *s, int32_t start, int32_t limit, const char16_t *t, int32_t length) {
-    s+=start;
-    limit-=start;
-    return matches16(s, t, length) &&
-           !(0<start && U16_IS_LEAD(s[-1]) && U16_IS_TRAIL(s[0])) &&
-           !(length<limit && U16_IS_LEAD(s[length-1]) && U16_IS_TRAIL(s[length]));
+ساکن اندرونی UBool
+matches16CPB(ثابت char16_t *s, int32_t آغاز, int32_t حد_بندی, ثابت char16_t *t, int32_t length) {
+    s+=آغاز;
+    حد_بندی-=آغاز;
+    واپس matches16(s, t, length) &&
+           !(0<آغاز && U16_IS_LEAD(s[-1]) && U16_IS_TRAIL(s[0])) &&
+           !(length<حد_بندی && U16_IS_LEAD(s[length-1]) && U16_IS_TRAIL(s[length]));
 }
 
 // Does the set contain the next code point?
 // If so, return its length; otherwise return its negative length.
-static inline int32_t
-spanOne(const UnicodeSet &set, const char16_t *s, int32_t length) {
+ساکن اندرونی int32_t
+وسعت_One(ثابت Unicode_سیٹ &سیٹ, ثابت char16_t *s, int32_t length) {
     char16_t c=*s, c2;
-    if(c>=0xd800 && c<=0xdbff && length>=2 && U16_IS_TRAIL(c2=s[1])) {
-        return set.contains(U16_GET_SUPPLEMENTARY(c, c2)) ? 2 : -2;
+    اگر(c>=0xd800 && c<=0xdbff && length>=2 && U16_IS_TRAIL(c2=s[1])) {
+        واپس سیٹ.شامل_ہے(U16_GET_SUPPLEMENTARY(c, c2)) ? 2 : -2;
     }
-    return set.contains(c) ? 1 : -1;
+    واپس سیٹ.شامل_ہے(c) ? 1 : -1;
 }
 
-static inline int32_t
-spanOneBack(const UnicodeSet &set, const char16_t *s, int32_t length) {
+ساکن اندرونی int32_t
+وسعت_One_عقب(ثابت Unicode_سیٹ &سیٹ, ثابت char16_t *s, int32_t length) {
     char16_t c=s[length-1], c2;
-    if(c>=0xdc00 && c<=0xdfff && length>=2 && U16_IS_LEAD(c2=s[length-2])) {
-        return set.contains(U16_GET_SUPPLEMENTARY(c2, c)) ? 2 : -2;
+    اگر(c>=0xdc00 && c<=0xdfff && length>=2 && U16_IS_LEAD(c2=s[length-2])) {
+        واپس سیٹ.شامل_ہے(U16_GET_SUPPLEMENTARY(c2, c)) ? 2 : -2;
     }
-    return set.contains(c) ? 1 : -1;
+    واپس سیٹ.شامل_ہے(c) ? 1 : -1;
 }
 
-static inline int32_t
-spanOneUTF8(const UnicodeSet &set, const uint8_t *s, int32_t length) {
+ساکن اندرونی int32_t
+وسعت_One_UTF8(ثابت Unicode_سیٹ &سیٹ, ثابت uint8_t *s, int32_t length) {
     UChar32 c=*s;
-    if(U8_IS_SINGLE(c)) {
-        return set.contains(c) ? 1 : -1;
+    اگر(U8_IS_SINGLE(c)) {
+        واپس سیٹ.شامل_ہے(c) ? 1 : -1;
     }
     // Take advantage of non-ASCII fastpaths in U8_NEXT_OR_FFFD().
     int32_t i=0;
-    U8_NEXT_OR_FFFD(s, i, length, c);
-    return set.contains(c) ? i : -i;
+    U8_اگلا_OR_FFFD(s, i, length, c);
+    واپس سیٹ.شامل_ہے(c) ? i : -i;
 }
 
-static inline int32_t
-spanOneBackUTF8(const UnicodeSet &set, const uint8_t *s, int32_t length) {
+ساکن اندرونی int32_t
+وسعت_One_عقب_UTF8(ثابت Unicode_سیٹ &سیٹ, ثابت uint8_t *s, int32_t length) {
     UChar32 c=s[length-1];
-    if(U8_IS_SINGLE(c)) {
-        return set.contains(c) ? 1 : -1;
+    اگر(U8_IS_SINGLE(c)) {
+        واپس سیٹ.شامل_ہے(c) ? 1 : -1;
     }
     int32_t i=length-1;
-    c=utf8_prevCharSafeBody(s, 0, &i, c, -3);
+    c=utf8_پچھلا_Char_محفوظ_Body(s, 0, &i, c, -3);
     length-=i;
-    return set.contains(c) ? length : -length;
+    واپس سیٹ.شامل_ہے(c) ? length : -length;
 }
 
 /*
@@ -634,440 +634,440 @@ spanOneBackUTF8(const UnicodeSet &set, const uint8_t *s, int32_t length) {
  *     Stop if spanLength==0, otherwise continue the loop.
  */
 
-int32_t UnicodeSetStringSpan::span(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(spanCondition==USET_SPAN_NOT_CONTAINED) {
-        return spanNot(s, length);
+int32_t Unicode_سیٹ_String_وسعت::وسعت(ثابت char16_t *s, int32_t length, USet_وسعت_Condition وسعت_Condition) ثابت {
+    اگر(وسعت_Condition==USET_وسعت_NOT_CONTAINED) {
+        واپس وسعت_Not(s, length);
     }
-    int32_t spanLength=spanSet.span(s, length, USET_SPAN_CONTAINED);
-    if(spanLength==length) {
-        return length;
+    int32_t وسعت_لمبائی=وسعت_سیٹ.وسعت(s, length, USET_وسعت_CONTAINED);
+    اگر(وسعت_لمبائی==length) {
+        واپس length;
     }
 
     // Consider strings; they may overlap with the span.
-    OffsetList offsets;
-    if(spanCondition==USET_SPAN_CONTAINED) {
+    انحراف_List offsets;
+    اگر(وسعت_Condition==USET_وسعت_CONTAINED) {
         // Use offset list to try all possibilities.
-        offsets.setMaxLength(maxLength16);
+        offsets.سیٹ_Max_لمبائی(maxLength16);
     }
-    int32_t pos=spanLength, rest=length-pos;
-    int32_t i, stringsLength=strings.size();
-    for(;;) {
-        if(spanCondition==USET_SPAN_CONTAINED) {
-            for(i=0; i<stringsLength; ++i) {
-                int32_t overlap=spanLengths[i];
-                if(overlap==ALL_CP_CONTAINED) {
-                    continue;  // Irrelevant string. (Also the empty string.)
+    int32_t pos=وسعت_لمبائی, rest=length-pos;
+    int32_t i, لڑیاں_لمبائی=لڑیاں.size();
+    برائے(;;) {
+        اگر(وسعت_Condition==USET_وسعت_CONTAINED) {
+            برائے(i=0; i<لڑیاں_لمبائی; ++i) {
+                int32_t overlap=وسعت_Lengths[i];
+                اگر(overlap==ALL_CP_CONTAINED) {
+                    جاری;  // Irrelevant string. (Also the empty string.)
                 }
-                const UnicodeString& string = *static_cast<const UnicodeString*>(strings.elementAt(i));
-                const char16_t *s16=string.getBuffer();
+                ثابت UnicodeString& string = *static_cast<ثابت UnicodeString*>(لڑیاں.elementAt(i));
+                ثابت char16_t *s16=string.get_بفر();
                 int32_t length16=string.length();
                 U_ASSERT(length>0);
 
                 // Try to match this string at pos-overlap..pos.
-                if(overlap>=LONG_SPAN) {
+                اگر(overlap>=LONG_وسعت) {
                     overlap=length16;
                     // While contained: No point matching fully inside the code point span.
-                    U16_BACK_1(s16, 0, overlap);  // Length of the string minus the last code point.
+                    U16_عقب_1(s16, 0, overlap);  // Length of the string minus the last code point.
                 }
-                if(overlap>spanLength) {
-                    overlap=spanLength;
+                اگر(overlap>وسعت_لمبائی) {
+                    overlap=وسعت_لمبائی;
                 }
                 int32_t inc=length16-overlap;  // Keep overlap+inc==length16.
-                for(;;) {
-                    if(inc>rest) {
-                        break;
+                برائے(;;) {
+                    اگر(inc>rest) {
+                        توڑو;
                     }
                     // Try to match if the increment is not listed already.
-                    if(!offsets.containsOffset(inc) && matches16CPB(s, pos-overlap, length, s16, length16)) {
-                        if(inc==rest) {
-                            return length;  // Reached the end of the string.
+                    اگر(!offsets.شامل_ہے_انحراف(inc) && matches16CPB(s, pos-overlap, length, s16, length16)) {
+                        اگر(inc==rest) {
+                            واپس length;  // Reached the end of the string.
                         }
-                        offsets.addOffset(inc);
+                        offsets.جوڑو_انحراف(inc);
                     }
-                    if(overlap==0) {
-                        break;
+                    اگر(overlap==0) {
+                        توڑو;
                     }
                     --overlap;
                     ++inc;
                 }
             }
-        } else /* USET_SPAN_SIMPLE */ {
+        } ورنہ /* USET_SPAN_SIMPLE */ {
             int32_t maxInc=0, maxOverlap=0;
-            for(i=0; i<stringsLength; ++i) {
-                int32_t overlap=spanLengths[i];
+            برائے(i=0; i<لڑیاں_لمبائی; ++i) {
+                int32_t overlap=وسعت_Lengths[i];
                 // For longest match, we do need to try to match even an all-contained string
                 // to find the match from the earliest start.
 
-                const UnicodeString& string = *static_cast<const UnicodeString*>(strings.elementAt(i));
-                const char16_t *s16=string.getBuffer();
+                ثابت UnicodeString& string = *static_cast<ثابت UnicodeString*>(لڑیاں.elementAt(i));
+                ثابت char16_t *s16=string.get_بفر();
                 int32_t length16=string.length();
-                if (length16==0) {
-                    continue;  // skip the empty string
+                اگر (length16==0) {
+                    جاری;  // skip the empty string
                 }
 
                 // Try to match this string at pos-overlap..pos.
-                if(overlap>=LONG_SPAN) {
+                اگر(overlap>=LONG_وسعت) {
                     overlap=length16;
                     // Longest match: Need to match fully inside the code point span
                     // to find the match from the earliest start.
                 }
-                if(overlap>spanLength) {
-                    overlap=spanLength;
+                اگر(overlap>وسعت_لمبائی) {
+                    overlap=وسعت_لمبائی;
                 }
                 int32_t inc=length16-overlap;  // Keep overlap+inc==length16.
-                for(;;) {
-                    if(inc>rest || overlap<maxOverlap) {
-                        break;
+                برائے(;;) {
+                    اگر(inc>rest || overlap<maxOverlap) {
+                        توڑو;
                     }
                     // Try to match if the string is longer or starts earlier.
-                    if( (overlap>maxOverlap || /* redundant overlap==maxOverlap && */ inc>maxInc) &&
+                    اگر( (overlap>maxOverlap || /* redundant overlap==maxOverlap && */ inc>maxInc) &&
                         matches16CPB(s, pos-overlap, length, s16, length16)
                     ) {
                         maxInc=inc;  // Longest match from earliest start.
                         maxOverlap=overlap;
-                        break;
+                        توڑو;
                     }
                     --overlap;
                     ++inc;
                 }
             }
 
-            if(maxInc!=0 || maxOverlap!=0) {
+            اگر(maxInc!=0 || maxOverlap!=0) {
                 // Longest-match algorithm, and there was a string match.
                 // Simply continue after it.
                 pos+=maxInc;
                 rest-=maxInc;
-                if(rest==0) {
-                    return length;  // Reached the end of the string.
+                اگر(rest==0) {
+                    واپس length;  // Reached the end of the string.
                 }
-                spanLength=0;  // Match strings from after a string match.
-                continue;
+                وسعت_لمبائی=0;  // Match strings from after a string match.
+                جاری;
             }
         }
         // Finished trying to match all strings at pos.
 
-        if(spanLength!=0 || pos==0) {
+        اگر(وسعت_لمبائی!=0 || pos==0) {
             // The position is after an unlimited code point span (spanLength!=0),
             // not after a string match.
             // The only position where spanLength==0 after a span is pos==0.
             // Otherwise, an unlimited code point span is only tried again when no
             // strings match, and if such a non-initial span fails we stop.
-            if(offsets.isEmpty()) {
-                return pos;  // No strings matched after a span.
+            اگر(offsets.is_خالی_خانے()) {
+                واپس pos;  // No strings matched after a span.
             }
             // Match strings from after the next string match.
-        } else {
+        } ورنہ {
             // The position is after a string match (or a single code point).
-            if(offsets.isEmpty()) {
+            اگر(offsets.is_خالی_خانے()) {
                 // No more strings matched after a previous string match.
                 // Try another code point span from after the last string match.
-                spanLength=spanSet.span(s+pos, rest, USET_SPAN_CONTAINED);
-                if( spanLength==rest || // Reached the end of the string, or
-                    spanLength==0       // neither strings nor span progressed.
+                وسعت_لمبائی=وسعت_سیٹ.وسعت(s+pos, rest, USET_وسعت_CONTAINED);
+                اگر( وسعت_لمبائی==rest || // Reached the end of the string, or
+                    وسعت_لمبائی==0       // neither strings nor span progressed.
                 ) {
-                    return pos+spanLength;
+                    واپس pos+وسعت_لمبائی;
                 }
-                pos+=spanLength;
-                rest-=spanLength;
-                continue;  // spanLength>0: Match strings from after a span.
-            } else {
+                pos+=وسعت_لمبائی;
+                rest-=وسعت_لمبائی;
+                جاری;  // spanLength>0: Match strings from after a span.
+            } ورنہ {
                 // Try to match only one code point from after a string match if some
                 // string matched beyond it, so that we try all possible positions
                 // and don't overshoot.
-                spanLength=spanOne(spanSet, s+pos, rest);
-                if(spanLength>0) {
-                    if(spanLength==rest) {
-                        return length;  // Reached the end of the string.
+                وسعت_لمبائی=وسعت_One(وسعت_سیٹ, s+pos, rest);
+                اگر(وسعت_لمبائی>0) {
+                    اگر(وسعت_لمبائی==rest) {
+                        واپس length;  // Reached the end of the string.
                     }
                     // Match strings after this code point.
                     // There cannot be any increments below it because UnicodeSet strings
                     // contain multiple code points.
-                    pos+=spanLength;
-                    rest-=spanLength;
-                    offsets.shift(spanLength);
-                    spanLength=0;
-                    continue;  // Match strings from after a single code point.
+                    pos+=وسعت_لمبائی;
+                    rest-=وسعت_لمبائی;
+                    offsets.سرکاؤ(وسعت_لمبائی);
+                    وسعت_لمبائی=0;
+                    جاری;  // Match strings from after a single code point.
                 }
                 // Match strings from after the next string match.
             }
         }
-        int32_t minOffset=offsets.popMinimum();
-        pos+=minOffset;
-        rest-=minOffset;
-        spanLength=0;  // Match strings from after a string match.
+        int32_t min_انحراف=offsets.نکالو_Minimum();
+        pos+=min_انحراف;
+        rest-=min_انحراف;
+        وسعت_لمبائی=0;  // Match strings from after a string match.
     }
 }
 
-int32_t UnicodeSetStringSpan::spanBack(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(spanCondition==USET_SPAN_NOT_CONTAINED) {
-        return spanNotBack(s, length);
+int32_t Unicode_سیٹ_String_وسعت::وسعت_عقب(ثابت char16_t *s, int32_t length, USet_وسعت_Condition وسعت_Condition) ثابت {
+    اگر(وسعت_Condition==USET_وسعت_NOT_CONTAINED) {
+        واپس وسعت_Not_عقب(s, length);
     }
-    int32_t pos=spanSet.spanBack(s, length, USET_SPAN_CONTAINED);
-    if(pos==0) {
-        return 0;
+    int32_t pos=وسعت_سیٹ.وسعت_عقب(s, length, USET_وسعت_CONTAINED);
+    اگر(pos==0) {
+        واپس 0;
     }
-    int32_t spanLength=length-pos;
+    int32_t وسعت_لمبائی=length-pos;
 
     // Consider strings; they may overlap with the span.
-    OffsetList offsets;
-    if(spanCondition==USET_SPAN_CONTAINED) {
+    انحراف_List offsets;
+    اگر(وسعت_Condition==USET_وسعت_CONTAINED) {
         // Use offset list to try all possibilities.
-        offsets.setMaxLength(maxLength16);
+        offsets.سیٹ_Max_لمبائی(maxLength16);
     }
-    int32_t i, stringsLength=strings.size();
-    uint8_t *spanBackLengths=spanLengths;
-    if(all) {
-        spanBackLengths+=stringsLength;
+    int32_t i, لڑیاں_لمبائی=لڑیاں.size();
+    uint8_t *وسعت_عقب_Lengths=وسعت_Lengths;
+    اگر(all) {
+        وسعت_عقب_Lengths+=لڑیاں_لمبائی;
     }
-    for(;;) {
-        if(spanCondition==USET_SPAN_CONTAINED) {
-            for(i=0; i<stringsLength; ++i) {
-                int32_t overlap=spanBackLengths[i];
-                if(overlap==ALL_CP_CONTAINED) {
-                    continue;  // Irrelevant string. (Also the empty string.)
+    برائے(;;) {
+        اگر(وسعت_Condition==USET_وسعت_CONTAINED) {
+            برائے(i=0; i<لڑیاں_لمبائی; ++i) {
+                int32_t overlap=وسعت_عقب_Lengths[i];
+                اگر(overlap==ALL_CP_CONTAINED) {
+                    جاری;  // Irrelevant string. (Also the empty string.)
                 }
-                const UnicodeString& string = *static_cast<const UnicodeString*>(strings.elementAt(i));
-                const char16_t *s16=string.getBuffer();
+                ثابت UnicodeString& string = *static_cast<ثابت UnicodeString*>(لڑیاں.elementAt(i));
+                ثابت char16_t *s16=string.get_بفر();
                 int32_t length16=string.length();
                 U_ASSERT(length>0);
 
                 // Try to match this string at pos-(length16-overlap)..pos-length16.
-                if(overlap>=LONG_SPAN) {
+                اگر(overlap>=LONG_وسعت) {
                     overlap=length16;
                     // While contained: No point matching fully inside the code point span.
                     int32_t len1=0;
                     U16_FWD_1(s16, len1, overlap);
                     overlap-=len1;  // Length of the string minus the first code point.
                 }
-                if(overlap>spanLength) {
-                    overlap=spanLength;
+                اگر(overlap>وسعت_لمبائی) {
+                    overlap=وسعت_لمبائی;
                 }
                 int32_t dec=length16-overlap;  // Keep dec+overlap==length16.
-                for(;;) {
-                    if(dec>pos) {
-                        break;
+                برائے(;;) {
+                    اگر(dec>pos) {
+                        توڑو;
                     }
                     // Try to match if the decrement is not listed already.
-                    if(!offsets.containsOffset(dec) && matches16CPB(s, pos-dec, length, s16, length16)) {
-                        if(dec==pos) {
-                            return 0;  // Reached the start of the string.
+                    اگر(!offsets.شامل_ہے_انحراف(dec) && matches16CPB(s, pos-dec, length, s16, length16)) {
+                        اگر(dec==pos) {
+                            واپس 0;  // Reached the start of the string.
                         }
-                        offsets.addOffset(dec);
+                        offsets.جوڑو_انحراف(dec);
                     }
-                    if(overlap==0) {
-                        break;
+                    اگر(overlap==0) {
+                        توڑو;
                     }
                     --overlap;
                     ++dec;
                 }
             }
-        } else /* USET_SPAN_SIMPLE */ {
+        } ورنہ /* USET_SPAN_SIMPLE */ {
             int32_t maxDec=0, maxOverlap=0;
-            for(i=0; i<stringsLength; ++i) {
-                int32_t overlap=spanBackLengths[i];
+            برائے(i=0; i<لڑیاں_لمبائی; ++i) {
+                int32_t overlap=وسعت_عقب_Lengths[i];
                 // For longest match, we do need to try to match even an all-contained string
                 // to find the match from the latest end.
 
-                const UnicodeString& string = *static_cast<const UnicodeString*>(strings.elementAt(i));
-                const char16_t *s16=string.getBuffer();
+                ثابت UnicodeString& string = *static_cast<ثابت UnicodeString*>(لڑیاں.elementAt(i));
+                ثابت char16_t *s16=string.get_بفر();
                 int32_t length16=string.length();
-                if (length16==0) {
-                    continue;  // skip the empty string
+                اگر (length16==0) {
+                    جاری;  // skip the empty string
                 }
 
                 // Try to match this string at pos-(length16-overlap)..pos-length16.
-                if(overlap>=LONG_SPAN) {
+                اگر(overlap>=LONG_وسعت) {
                     overlap=length16;
                     // Longest match: Need to match fully inside the code point span
                     // to find the match from the latest end.
                 }
-                if(overlap>spanLength) {
-                    overlap=spanLength;
+                اگر(overlap>وسعت_لمبائی) {
+                    overlap=وسعت_لمبائی;
                 }
                 int32_t dec=length16-overlap;  // Keep dec+overlap==length16.
-                for(;;) {
-                    if(dec>pos || overlap<maxOverlap) {
-                        break;
+                برائے(;;) {
+                    اگر(dec>pos || overlap<maxOverlap) {
+                        توڑو;
                     }
                     // Try to match if the string is longer or ends later.
-                    if( (overlap>maxOverlap || /* redundant overlap==maxOverlap && */ dec>maxDec) &&
+                    اگر( (overlap>maxOverlap || /* redundant overlap==maxOverlap && */ dec>maxDec) &&
                         matches16CPB(s, pos-dec, length, s16, length16)
                     ) {
                         maxDec=dec;  // Longest match from latest end.
                         maxOverlap=overlap;
-                        break;
+                        توڑو;
                     }
                     --overlap;
                     ++dec;
                 }
             }
 
-            if(maxDec!=0 || maxOverlap!=0) {
+            اگر(maxDec!=0 || maxOverlap!=0) {
                 // Longest-match algorithm, and there was a string match.
                 // Simply continue before it.
                 pos-=maxDec;
-                if(pos==0) {
-                    return 0;  // Reached the start of the string.
+                اگر(pos==0) {
+                    واپس 0;  // Reached the start of the string.
                 }
-                spanLength=0;  // Match strings from before a string match.
-                continue;
+                وسعت_لمبائی=0;  // Match strings from before a string match.
+                جاری;
             }
         }
         // Finished trying to match all strings at pos.
 
-        if(spanLength!=0 || pos==length) {
+        اگر(وسعت_لمبائی!=0 || pos==length) {
             // The position is before an unlimited code point span (spanLength!=0),
             // not before a string match.
             // The only position where spanLength==0 before a span is pos==length.
             // Otherwise, an unlimited code point span is only tried again when no
             // strings match, and if such a non-initial span fails we stop.
-            if(offsets.isEmpty()) {
-                return pos;  // No strings matched before a span.
+            اگر(offsets.is_خالی_خانے()) {
+                واپس pos;  // No strings matched before a span.
             }
             // Match strings from before the next string match.
-        } else {
+        } ورنہ {
             // The position is before a string match (or a single code point).
-            if(offsets.isEmpty()) {
+            اگر(offsets.is_خالی_خانے()) {
                 // No more strings matched before a previous string match.
                 // Try another code point span from before the last string match.
                 int32_t oldPos=pos;
-                pos=spanSet.spanBack(s, oldPos, USET_SPAN_CONTAINED);
-                spanLength=oldPos-pos;
-                if( pos==0 ||           // Reached the start of the string, or
-                    spanLength==0       // neither strings nor span progressed.
+                pos=وسعت_سیٹ.وسعت_عقب(s, oldPos, USET_وسعت_CONTAINED);
+                وسعت_لمبائی=oldPos-pos;
+                اگر( pos==0 ||           // Reached the start of the string, or
+                    وسعت_لمبائی==0       // neither strings nor span progressed.
                 ) {
-                    return pos;
+                    واپس pos;
                 }
-                continue;  // spanLength>0: Match strings from before a span.
-            } else {
+                جاری;  // spanLength>0: Match strings from before a span.
+            } ورنہ {
                 // Try to match only one code point from before a string match if some
                 // string matched beyond it, so that we try all possible positions
                 // and don't overshoot.
-                spanLength=spanOneBack(spanSet, s, pos);
-                if(spanLength>0) {
-                    if(spanLength==pos) {
-                        return 0;  // Reached the start of the string.
+                وسعت_لمبائی=وسعت_One_عقب(وسعت_سیٹ, s, pos);
+                اگر(وسعت_لمبائی>0) {
+                    اگر(وسعت_لمبائی==pos) {
+                        واپس 0;  // Reached the start of the string.
                     }
                     // Match strings before this code point.
                     // There cannot be any decrements below it because UnicodeSet strings
                     // contain multiple code points.
-                    pos-=spanLength;
-                    offsets.shift(spanLength);
-                    spanLength=0;
-                    continue;  // Match strings from before a single code point.
+                    pos-=وسعت_لمبائی;
+                    offsets.سرکاؤ(وسعت_لمبائی);
+                    وسعت_لمبائی=0;
+                    جاری;  // Match strings from before a single code point.
                 }
                 // Match strings from before the next string match.
             }
         }
-        pos-=offsets.popMinimum();
-        spanLength=0;  // Match strings from before a string match.
+        pos-=offsets.نکالو_Minimum();
+        وسعت_لمبائی=0;  // Match strings from before a string match.
     }
 }
 
-int32_t UnicodeSetStringSpan::spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(spanCondition==USET_SPAN_NOT_CONTAINED) {
-        return spanNotUTF8(s, length);
+int32_t Unicode_سیٹ_String_وسعت::وسعت_UTF8(ثابت uint8_t *s, int32_t length, USet_وسعت_Condition وسعت_Condition) ثابت {
+    اگر(وسعت_Condition==USET_وسعت_NOT_CONTAINED) {
+        واپس وسعت_Not_UTF8(s, length);
     }
-    int32_t spanLength = spanSet.spanUTF8(reinterpret_cast<const char*>(s), length, USET_SPAN_CONTAINED);
-    if(spanLength==length) {
-        return length;
+    int32_t وسعت_لمبائی = وسعت_سیٹ.وسعت_UTF8(reinterpret_cast<ثابت حرف*>(s), length, USET_وسعت_CONTAINED);
+    اگر(وسعت_لمبائی==length) {
+        واپس length;
     }
 
     // Consider strings; they may overlap with the span.
-    OffsetList offsets;
-    if(spanCondition==USET_SPAN_CONTAINED) {
+    انحراف_List offsets;
+    اگر(وسعت_Condition==USET_وسعت_CONTAINED) {
         // Use offset list to try all possibilities.
-        offsets.setMaxLength(maxLength8);
+        offsets.سیٹ_Max_لمبائی(maxLength8);
     }
-    int32_t pos=spanLength, rest=length-pos;
-    int32_t i, stringsLength=strings.size();
-    uint8_t *spanUTF8Lengths=spanLengths;
-    if(all) {
-        spanUTF8Lengths+=2*stringsLength;
+    int32_t pos=وسعت_لمبائی, rest=length-pos;
+    int32_t i, لڑیاں_لمبائی=لڑیاں.size();
+    uint8_t *وسعت_UTF8_Lengths=وسعت_Lengths;
+    اگر(all) {
+        وسعت_UTF8_Lengths+=2*لڑیاں_لمبائی;
     }
-    for(;;) {
-        const uint8_t *s8=utf8;
+    برائے(;;) {
+        ثابت uint8_t *s8=utf8;
         int32_t length8;
-        if(spanCondition==USET_SPAN_CONTAINED) {
-            for(i=0; i<stringsLength; ++i) {
+        اگر(وسعت_Condition==USET_وسعت_CONTAINED) {
+            برائے(i=0; i<لڑیاں_لمبائی; ++i) {
                 length8=utf8Lengths[i];
-                if(length8==0) {
-                    continue;  // String not representable in UTF-8.
+                اگر(length8==0) {
+                    جاری;  // String not representable in UTF-8.
                 }
-                int32_t overlap=spanUTF8Lengths[i];
-                if(overlap==ALL_CP_CONTAINED) {
+                int32_t overlap=وسعت_UTF8_Lengths[i];
+                اگر(overlap==ALL_CP_CONTAINED) {
                     s8+=length8;
-                    continue;  // Irrelevant string.
+                    جاری;  // Irrelevant string.
                 }
 
                 // Try to match this string at pos-overlap..pos.
-                if(overlap>=LONG_SPAN) {
+                اگر(overlap>=LONG_وسعت) {
                     overlap=length8;
                     // While contained: No point matching fully inside the code point span.
-                    U8_BACK_1(s8, 0, overlap);  // Length of the string minus the last code point.
+                    U8_عقب_1(s8, 0, overlap);  // Length of the string minus the last code point.
                 }
-                if(overlap>spanLength) {
-                    overlap=spanLength;
+                اگر(overlap>وسعت_لمبائی) {
+                    overlap=وسعت_لمبائی;
                 }
                 int32_t inc=length8-overlap;  // Keep overlap+inc==length8.
-                for(;;) {
-                    if(inc>rest) {
-                        break;
+                برائے(;;) {
+                    اگر(inc>rest) {
+                        توڑو;
                     }
                     // Try to match if the increment is not listed already.
                     // Match at code point boundaries. (The UTF-8 strings were converted
                     // from UTF-16 and are guaranteed to be well-formed.)
-                    if(!U8_IS_TRAIL(s[pos-overlap]) &&
-                            !offsets.containsOffset(inc) &&
+                    اگر(!U8_IS_TRAIL(s[pos-overlap]) &&
+                            !offsets.شامل_ہے_انحراف(inc) &&
                             matches8(s+pos-overlap, s8, length8)) {
-                        if(inc==rest) {
-                            return length;  // Reached the end of the string.
+                        اگر(inc==rest) {
+                            واپس length;  // Reached the end of the string.
                         }
-                        offsets.addOffset(inc);
+                        offsets.جوڑو_انحراف(inc);
                     }
-                    if(overlap==0) {
-                        break;
+                    اگر(overlap==0) {
+                        توڑو;
                     }
                     --overlap;
                     ++inc;
                 }
                 s8+=length8;
             }
-        } else /* USET_SPAN_SIMPLE */ {
+        } ورنہ /* USET_SPAN_SIMPLE */ {
             int32_t maxInc=0, maxOverlap=0;
-            for(i=0; i<stringsLength; ++i) {
+            برائے(i=0; i<لڑیاں_لمبائی; ++i) {
                 length8=utf8Lengths[i];
-                if(length8==0) {
-                    continue;  // String not representable in UTF-8.
+                اگر(length8==0) {
+                    جاری;  // String not representable in UTF-8.
                 }
-                int32_t overlap=spanUTF8Lengths[i];
+                int32_t overlap=وسعت_UTF8_Lengths[i];
                 // For longest match, we do need to try to match even an all-contained string
                 // to find the match from the earliest start.
 
                 // Try to match this string at pos-overlap..pos.
-                if(overlap>=LONG_SPAN) {
+                اگر(overlap>=LONG_وسعت) {
                     overlap=length8;
                     // Longest match: Need to match fully inside the code point span
                     // to find the match from the earliest start.
                 }
-                if(overlap>spanLength) {
-                    overlap=spanLength;
+                اگر(overlap>وسعت_لمبائی) {
+                    overlap=وسعت_لمبائی;
                 }
                 int32_t inc=length8-overlap;  // Keep overlap+inc==length8.
-                for(;;) {
-                    if(inc>rest || overlap<maxOverlap) {
-                        break;
+                برائے(;;) {
+                    اگر(inc>rest || overlap<maxOverlap) {
+                        توڑو;
                     }
                     // Try to match if the string is longer or starts earlier.
                     // Match at code point boundaries. (The UTF-8 strings were converted
                     // from UTF-16 and are guaranteed to be well-formed.)
-                    if(!U8_IS_TRAIL(s[pos-overlap]) &&
+                    اگر(!U8_IS_TRAIL(s[pos-overlap]) &&
                             (overlap>maxOverlap ||
                                 /* redundant overlap==maxOverlap && */ inc>maxInc) &&
                             matches8(s+pos-overlap, s8, length8)) {
                         maxInc=inc;  // Longest match from earliest start.
                         maxOverlap=overlap;
-                        break;
+                        توڑو;
                     }
                     --overlap;
                     ++inc;
@@ -1075,179 +1075,179 @@ int32_t UnicodeSetStringSpan::spanUTF8(const uint8_t *s, int32_t length, USetSpa
                 s8+=length8;
             }
 
-            if(maxInc!=0 || maxOverlap!=0) {
+            اگر(maxInc!=0 || maxOverlap!=0) {
                 // Longest-match algorithm, and there was a string match.
                 // Simply continue after it.
                 pos+=maxInc;
                 rest-=maxInc;
-                if(rest==0) {
-                    return length;  // Reached the end of the string.
+                اگر(rest==0) {
+                    واپس length;  // Reached the end of the string.
                 }
-                spanLength=0;  // Match strings from after a string match.
-                continue;
+                وسعت_لمبائی=0;  // Match strings from after a string match.
+                جاری;
             }
         }
         // Finished trying to match all strings at pos.
 
-        if(spanLength!=0 || pos==0) {
+        اگر(وسعت_لمبائی!=0 || pos==0) {
             // The position is after an unlimited code point span (spanLength!=0),
             // not after a string match.
             // The only position where spanLength==0 after a span is pos==0.
             // Otherwise, an unlimited code point span is only tried again when no
             // strings match, and if such a non-initial span fails we stop.
-            if(offsets.isEmpty()) {
-                return pos;  // No strings matched after a span.
+            اگر(offsets.is_خالی_خانے()) {
+                واپس pos;  // No strings matched after a span.
             }
             // Match strings from after the next string match.
-        } else {
+        } ورنہ {
             // The position is after a string match (or a single code point).
-            if(offsets.isEmpty()) {
+            اگر(offsets.is_خالی_خانے()) {
                 // No more strings matched after a previous string match.
                 // Try another code point span from after the last string match.
-                spanLength = spanSet.spanUTF8(reinterpret_cast<const char*>(s) + pos, rest, USET_SPAN_CONTAINED);
-                if( spanLength==rest || // Reached the end of the string, or
-                    spanLength==0       // neither strings nor span progressed.
+                وسعت_لمبائی = وسعت_سیٹ.وسعت_UTF8(reinterpret_cast<ثابت حرف*>(s) + pos, rest, USET_وسعت_CONTAINED);
+                اگر( وسعت_لمبائی==rest || // Reached the end of the string, or
+                    وسعت_لمبائی==0       // neither strings nor span progressed.
                 ) {
-                    return pos+spanLength;
+                    واپس pos+وسعت_لمبائی;
                 }
-                pos+=spanLength;
-                rest-=spanLength;
-                continue;  // spanLength>0: Match strings from after a span.
-            } else {
+                pos+=وسعت_لمبائی;
+                rest-=وسعت_لمبائی;
+                جاری;  // spanLength>0: Match strings from after a span.
+            } ورنہ {
                 // Try to match only one code point from after a string match if some
                 // string matched beyond it, so that we try all possible positions
                 // and don't overshoot.
-                spanLength=spanOneUTF8(spanSet, s+pos, rest);
-                if(spanLength>0) {
-                    if(spanLength==rest) {
-                        return length;  // Reached the end of the string.
+                وسعت_لمبائی=وسعت_One_UTF8(وسعت_سیٹ, s+pos, rest);
+                اگر(وسعت_لمبائی>0) {
+                    اگر(وسعت_لمبائی==rest) {
+                        واپس length;  // Reached the end of the string.
                     }
                     // Match strings after this code point.
                     // There cannot be any increments below it because UnicodeSet strings
                     // contain multiple code points.
-                    pos+=spanLength;
-                    rest-=spanLength;
-                    offsets.shift(spanLength);
-                    spanLength=0;
-                    continue;  // Match strings from after a single code point.
+                    pos+=وسعت_لمبائی;
+                    rest-=وسعت_لمبائی;
+                    offsets.سرکاؤ(وسعت_لمبائی);
+                    وسعت_لمبائی=0;
+                    جاری;  // Match strings from after a single code point.
                 }
                 // Match strings from after the next string match.
             }
         }
-        int32_t minOffset=offsets.popMinimum();
-        pos+=minOffset;
-        rest-=minOffset;
-        spanLength=0;  // Match strings from after a string match.
+        int32_t min_انحراف=offsets.نکالو_Minimum();
+        pos+=min_انحراف;
+        rest-=min_انحراف;
+        وسعت_لمبائی=0;  // Match strings from after a string match.
     }
 }
 
-int32_t UnicodeSetStringSpan::spanBackUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(spanCondition==USET_SPAN_NOT_CONTAINED) {
-        return spanNotBackUTF8(s, length);
+int32_t Unicode_سیٹ_String_وسعت::وسعت_عقب_UTF8(ثابت uint8_t *s, int32_t length, USet_وسعت_Condition وسعت_Condition) ثابت {
+    اگر(وسعت_Condition==USET_وسعت_NOT_CONTAINED) {
+        واپس وسعت_Not_عقب_UTF8(s, length);
     }
-    int32_t pos = spanSet.spanBackUTF8(reinterpret_cast<const char*>(s), length, USET_SPAN_CONTAINED);
-    if(pos==0) {
-        return 0;
+    int32_t pos = وسعت_سیٹ.وسعت_عقب_UTF8(reinterpret_cast<ثابت حرف*>(s), length, USET_وسعت_CONTAINED);
+    اگر(pos==0) {
+        واپس 0;
     }
-    int32_t spanLength=length-pos;
+    int32_t وسعت_لمبائی=length-pos;
 
     // Consider strings; they may overlap with the span.
-    OffsetList offsets;
-    if(spanCondition==USET_SPAN_CONTAINED) {
+    انحراف_List offsets;
+    اگر(وسعت_Condition==USET_وسعت_CONTAINED) {
         // Use offset list to try all possibilities.
-        offsets.setMaxLength(maxLength8);
+        offsets.سیٹ_Max_لمبائی(maxLength8);
     }
-    int32_t i, stringsLength=strings.size();
-    uint8_t *spanBackUTF8Lengths=spanLengths;
-    if(all) {
-        spanBackUTF8Lengths+=3*stringsLength;
+    int32_t i, لڑیاں_لمبائی=لڑیاں.size();
+    uint8_t *وسعت_عقب_UTF8_Lengths=وسعت_Lengths;
+    اگر(all) {
+        وسعت_عقب_UTF8_Lengths+=3*لڑیاں_لمبائی;
     }
-    for(;;) {
-        const uint8_t *s8=utf8;
+    برائے(;;) {
+        ثابت uint8_t *s8=utf8;
         int32_t length8;
-        if(spanCondition==USET_SPAN_CONTAINED) {
-            for(i=0; i<stringsLength; ++i) {
+        اگر(وسعت_Condition==USET_وسعت_CONTAINED) {
+            برائے(i=0; i<لڑیاں_لمبائی; ++i) {
                 length8=utf8Lengths[i];
-                if(length8==0) {
-                    continue;  // String not representable in UTF-8.
+                اگر(length8==0) {
+                    جاری;  // String not representable in UTF-8.
                 }
-                int32_t overlap=spanBackUTF8Lengths[i];
-                if(overlap==ALL_CP_CONTAINED) {
+                int32_t overlap=وسعت_عقب_UTF8_Lengths[i];
+                اگر(overlap==ALL_CP_CONTAINED) {
                     s8+=length8;
-                    continue;  // Irrelevant string.
+                    جاری;  // Irrelevant string.
                 }
 
                 // Try to match this string at pos-(length8-overlap)..pos-length8.
-                if(overlap>=LONG_SPAN) {
+                اگر(overlap>=LONG_وسعت) {
                     overlap=length8;
                     // While contained: No point matching fully inside the code point span.
                     int32_t len1=0;
                     U8_FWD_1(s8, len1, overlap);
                     overlap-=len1;  // Length of the string minus the first code point.
                 }
-                if(overlap>spanLength) {
-                    overlap=spanLength;
+                اگر(overlap>وسعت_لمبائی) {
+                    overlap=وسعت_لمبائی;
                 }
                 int32_t dec=length8-overlap;  // Keep dec+overlap==length8.
-                for(;;) {
-                    if(dec>pos) {
-                        break;
+                برائے(;;) {
+                    اگر(dec>pos) {
+                        توڑو;
                     }
                     // Try to match if the decrement is not listed already.
                     // Match at code point boundaries. (The UTF-8 strings were converted
                     // from UTF-16 and are guaranteed to be well-formed.)
-                    if( !U8_IS_TRAIL(s[pos-dec]) &&
-                        !offsets.containsOffset(dec) &&
+                    اگر( !U8_IS_TRAIL(s[pos-dec]) &&
+                        !offsets.شامل_ہے_انحراف(dec) &&
                         matches8(s+pos-dec, s8, length8)
                     ) {
-                        if(dec==pos) {
-                            return 0;  // Reached the start of the string.
+                        اگر(dec==pos) {
+                            واپس 0;  // Reached the start of the string.
                         }
-                        offsets.addOffset(dec);
+                        offsets.جوڑو_انحراف(dec);
                     }
-                    if(overlap==0) {
-                        break;
+                    اگر(overlap==0) {
+                        توڑو;
                     }
                     --overlap;
                     ++dec;
                 }
                 s8+=length8;
             }
-        } else /* USET_SPAN_SIMPLE */ {
+        } ورنہ /* USET_SPAN_SIMPLE */ {
             int32_t maxDec=0, maxOverlap=0;
-            for(i=0; i<stringsLength; ++i) {
+            برائے(i=0; i<لڑیاں_لمبائی; ++i) {
                 length8=utf8Lengths[i];
-                if(length8==0) {
-                    continue;  // String not representable in UTF-8.
+                اگر(length8==0) {
+                    جاری;  // String not representable in UTF-8.
                 }
-                int32_t overlap=spanBackUTF8Lengths[i];
+                int32_t overlap=وسعت_عقب_UTF8_Lengths[i];
                 // For longest match, we do need to try to match even an all-contained string
                 // to find the match from the latest end.
 
                 // Try to match this string at pos-(length8-overlap)..pos-length8.
-                if(overlap>=LONG_SPAN) {
+                اگر(overlap>=LONG_وسعت) {
                     overlap=length8;
                     // Longest match: Need to match fully inside the code point span
                     // to find the match from the latest end.
                 }
-                if(overlap>spanLength) {
-                    overlap=spanLength;
+                اگر(overlap>وسعت_لمبائی) {
+                    overlap=وسعت_لمبائی;
                 }
                 int32_t dec=length8-overlap;  // Keep dec+overlap==length8.
-                for(;;) {
-                    if(dec>pos || overlap<maxOverlap) {
-                        break;
+                برائے(;;) {
+                    اگر(dec>pos || overlap<maxOverlap) {
+                        توڑو;
                     }
                     // Try to match if the string is longer or ends later.
                     // Match at code point boundaries. (The UTF-8 strings were converted
                     // from UTF-16 and are guaranteed to be well-formed.)
-                    if( !U8_IS_TRAIL(s[pos-dec]) &&
+                    اگر( !U8_IS_TRAIL(s[pos-dec]) &&
                         (overlap>maxOverlap || /* redundant overlap==maxOverlap && */ dec>maxDec) &&
                         matches8(s+pos-dec, s8, length8)
                     ) {
                         maxDec=dec;  // Longest match from latest end.
                         maxOverlap=overlap;
-                        break;
+                        توڑو;
                     }
                     --overlap;
                     ++dec;
@@ -1255,65 +1255,65 @@ int32_t UnicodeSetStringSpan::spanBackUTF8(const uint8_t *s, int32_t length, USe
                 s8+=length8;
             }
 
-            if(maxDec!=0 || maxOverlap!=0) {
+            اگر(maxDec!=0 || maxOverlap!=0) {
                 // Longest-match algorithm, and there was a string match.
                 // Simply continue before it.
                 pos-=maxDec;
-                if(pos==0) {
-                    return 0;  // Reached the start of the string.
+                اگر(pos==0) {
+                    واپس 0;  // Reached the start of the string.
                 }
-                spanLength=0;  // Match strings from before a string match.
-                continue;
+                وسعت_لمبائی=0;  // Match strings from before a string match.
+                جاری;
             }
         }
         // Finished trying to match all strings at pos.
 
-        if(spanLength!=0 || pos==length) {
+        اگر(وسعت_لمبائی!=0 || pos==length) {
             // The position is before an unlimited code point span (spanLength!=0),
             // not before a string match.
             // The only position where spanLength==0 before a span is pos==length.
             // Otherwise, an unlimited code point span is only tried again when no
             // strings match, and if such a non-initial span fails we stop.
-            if(offsets.isEmpty()) {
-                return pos;  // No strings matched before a span.
+            اگر(offsets.is_خالی_خانے()) {
+                واپس pos;  // No strings matched before a span.
             }
             // Match strings from before the next string match.
-        } else {
+        } ورنہ {
             // The position is before a string match (or a single code point).
-            if(offsets.isEmpty()) {
+            اگر(offsets.is_خالی_خانے()) {
                 // No more strings matched before a previous string match.
                 // Try another code point span from before the last string match.
                 int32_t oldPos=pos;
-                pos = spanSet.spanBackUTF8(reinterpret_cast<const char*>(s), oldPos, USET_SPAN_CONTAINED);
-                spanLength=oldPos-pos;
-                if( pos==0 ||           // Reached the start of the string, or
-                    spanLength==0       // neither strings nor span progressed.
+                pos = وسعت_سیٹ.وسعت_عقب_UTF8(reinterpret_cast<ثابت حرف*>(s), oldPos, USET_وسعت_CONTAINED);
+                وسعت_لمبائی=oldPos-pos;
+                اگر( pos==0 ||           // Reached the start of the string, or
+                    وسعت_لمبائی==0       // neither strings nor span progressed.
                 ) {
-                    return pos;
+                    واپس pos;
                 }
-                continue;  // spanLength>0: Match strings from before a span.
-            } else {
+                جاری;  // spanLength>0: Match strings from before a span.
+            } ورنہ {
                 // Try to match only one code point from before a string match if some
                 // string matched beyond it, so that we try all possible positions
                 // and don't overshoot.
-                spanLength=spanOneBackUTF8(spanSet, s, pos);
-                if(spanLength>0) {
-                    if(spanLength==pos) {
-                        return 0;  // Reached the start of the string.
+                وسعت_لمبائی=وسعت_One_عقب_UTF8(وسعت_سیٹ, s, pos);
+                اگر(وسعت_لمبائی>0) {
+                    اگر(وسعت_لمبائی==pos) {
+                        واپس 0;  // Reached the start of the string.
                     }
                     // Match strings before this code point.
                     // There cannot be any decrements below it because UnicodeSet strings
                     // contain multiple code points.
-                    pos-=spanLength;
-                    offsets.shift(spanLength);
-                    spanLength=0;
-                    continue;  // Match strings from before a single code point.
+                    pos-=وسعت_لمبائی;
+                    offsets.سرکاؤ(وسعت_لمبائی);
+                    وسعت_لمبائی=0;
+                    جاری;  // Match strings from before a single code point.
                 }
                 // Match strings from before the next string match.
             }
         }
-        pos-=offsets.popMinimum();
-        spanLength=0;  // Match strings from before a string match.
+        pos-=offsets.نکالو_Minimum();
+        وسعت_لمبائی=0;  // Match strings from before a string match.
     }
 }
 
@@ -1346,124 +1346,124 @@ int32_t UnicodeSetStringSpan::spanBackUTF8(const uint8_t *s, int32_t length, USe
  *     when there is not actually a match for such a set string.
  */
 
-int32_t UnicodeSetStringSpan::spanNot(const char16_t *s, int32_t length) const {
+int32_t Unicode_سیٹ_String_وسعت::وسعت_Not(ثابت char16_t *s, int32_t length) ثابت {
     int32_t pos=0, rest=length;
-    int32_t i, stringsLength=strings.size();
-    do {
+    int32_t i, لڑیاں_لمبائی=لڑیاں.size();
+    کرو {
         // Span until we find a code point from the set,
         // or a code point that starts or ends some string.
-        i=pSpanNotSet->span(s+pos, rest, USET_SPAN_NOT_CONTAINED);
-        if(i==rest) {
-            return length;  // Reached the end of the string.
+        i=p_وسعت_Not_سیٹ->وسعت(s+pos, rest, USET_وسعت_NOT_CONTAINED);
+        اگر(i==rest) {
+            واپس length;  // Reached the end of the string.
         }
         pos+=i;
         rest-=i;
 
         // Check whether the current code point is in the original set,
         // without the string starts and ends.
-        int32_t cpLength=spanOne(spanSet, s+pos, rest);
-        if(cpLength>0) {
-            return pos;  // There is a set element at pos.
+        int32_t cp_لمبائی=وسعت_One(وسعت_سیٹ, s+pos, rest);
+        اگر(cp_لمبائی>0) {
+            واپس pos;  // There is a set element at pos.
         }
 
         // Try to match the strings at pos.
-        for(i=0; i<stringsLength; ++i) {
-            if(spanLengths[i]==ALL_CP_CONTAINED) {
-                continue;  // Irrelevant string. (Also the empty string.)
+        برائے(i=0; i<لڑیاں_لمبائی; ++i) {
+            اگر(وسعت_Lengths[i]==ALL_CP_CONTAINED) {
+                جاری;  // Irrelevant string. (Also the empty string.)
             }
-            const UnicodeString& string = *static_cast<const UnicodeString*>(strings.elementAt(i));
-            const char16_t *s16=string.getBuffer();
+            ثابت UnicodeString& string = *static_cast<ثابت UnicodeString*>(لڑیاں.elementAt(i));
+            ثابت char16_t *s16=string.get_بفر();
             int32_t length16=string.length();
             U_ASSERT(length>0);
-            if(length16<=rest && matches16CPB(s, pos, length, s16, length16)) {
-                return pos;  // There is a set element at pos.
+            اگر(length16<=rest && matches16CPB(s, pos, length, s16, length16)) {
+                واپس pos;  // There is a set element at pos.
             }
         }
 
         // The span(while not contained) ended on a string start/end which is
         // not in the original set. Skip this code point and continue.
         // cpLength<0
-        pos-=cpLength;
-        rest+=cpLength;
-    } while(rest!=0);
-    return length;  // Reached the end of the string.
+        pos-=cp_لمبائی;
+        rest+=cp_لمبائی;
+    } جب(rest!=0);
+    واپس length;  // Reached the end of the string.
 }
 
-int32_t UnicodeSetStringSpan::spanNotBack(const char16_t *s, int32_t length) const {
+int32_t Unicode_سیٹ_String_وسعت::وسعت_Not_عقب(ثابت char16_t *s, int32_t length) ثابت {
     int32_t pos=length;
-    int32_t i, stringsLength=strings.size();
-    do {
+    int32_t i, لڑیاں_لمبائی=لڑیاں.size();
+    کرو {
         // Span until we find a code point from the set,
         // or a code point that starts or ends some string.
-        pos=pSpanNotSet->spanBack(s, pos, USET_SPAN_NOT_CONTAINED);
-        if(pos==0) {
-            return 0;  // Reached the start of the string.
+        pos=p_وسعت_Not_سیٹ->وسعت_عقب(s, pos, USET_وسعت_NOT_CONTAINED);
+        اگر(pos==0) {
+            واپس 0;  // Reached the start of the string.
         }
 
         // Check whether the current code point is in the original set,
         // without the string starts and ends.
-        int32_t cpLength=spanOneBack(spanSet, s, pos);
-        if(cpLength>0) {
-            return pos;  // There is a set element at pos.
+        int32_t cp_لمبائی=وسعت_One_عقب(وسعت_سیٹ, s, pos);
+        اگر(cp_لمبائی>0) {
+            واپس pos;  // There is a set element at pos.
         }
 
         // Try to match the strings at pos.
-        for(i=0; i<stringsLength; ++i) {
+        برائے(i=0; i<لڑیاں_لمبائی; ++i) {
             // Use spanLengths rather than a spanBackLengths pointer because
             // it is easier and we only need to know whether the string is irrelevant
             // which is the same in either array.
-            if(spanLengths[i]==ALL_CP_CONTAINED) {
-                continue;  // Irrelevant string. (Also the empty string.)
+            اگر(وسعت_Lengths[i]==ALL_CP_CONTAINED) {
+                جاری;  // Irrelevant string. (Also the empty string.)
             }
-            const UnicodeString& string = *static_cast<const UnicodeString*>(strings.elementAt(i));
-            const char16_t *s16=string.getBuffer();
+            ثابت UnicodeString& string = *static_cast<ثابت UnicodeString*>(لڑیاں.elementAt(i));
+            ثابت char16_t *s16=string.get_بفر();
             int32_t length16=string.length();
             U_ASSERT(length>0);
-            if(length16<=pos && matches16CPB(s, pos-length16, length, s16, length16)) {
-                return pos;  // There is a set element at pos.
+            اگر(length16<=pos && matches16CPB(s, pos-length16, length, s16, length16)) {
+                واپس pos;  // There is a set element at pos.
             }
         }
 
         // The span(while not contained) ended on a string start/end which is
         // not in the original set. Skip this code point and continue.
         // cpLength<0
-        pos+=cpLength;
-    } while(pos!=0);
-    return 0;  // Reached the start of the string.
+        pos+=cp_لمبائی;
+    } جب(pos!=0);
+    واپس 0;  // Reached the start of the string.
 }
 
-int32_t UnicodeSetStringSpan::spanNotUTF8(const uint8_t *s, int32_t length) const {
+int32_t Unicode_سیٹ_String_وسعت::وسعت_Not_UTF8(ثابت uint8_t *s, int32_t length) ثابت {
     int32_t pos=0, rest=length;
-    int32_t i, stringsLength=strings.size();
-    uint8_t *spanUTF8Lengths=spanLengths;
-    if(all) {
-        spanUTF8Lengths+=2*stringsLength;
+    int32_t i, لڑیاں_لمبائی=لڑیاں.size();
+    uint8_t *وسعت_UTF8_Lengths=وسعت_Lengths;
+    اگر(all) {
+        وسعت_UTF8_Lengths+=2*لڑیاں_لمبائی;
     }
-    do {
+    کرو {
         // Span until we find a code point from the set,
         // or a code point that starts or ends some string.
-        i = pSpanNotSet->spanUTF8(reinterpret_cast<const char*>(s) + pos, rest, USET_SPAN_NOT_CONTAINED);
-        if(i==rest) {
-            return length;  // Reached the end of the string.
+        i = p_وسعت_Not_سیٹ->وسعت_UTF8(reinterpret_cast<ثابت حرف*>(s) + pos, rest, USET_وسعت_NOT_CONTAINED);
+        اگر(i==rest) {
+            واپس length;  // Reached the end of the string.
         }
         pos+=i;
         rest-=i;
 
         // Check whether the current code point is in the original set,
         // without the string starts and ends.
-        int32_t cpLength=spanOneUTF8(spanSet, s+pos, rest);
-        if(cpLength>0) {
-            return pos;  // There is a set element at pos.
+        int32_t cp_لمبائی=وسعت_One_UTF8(وسعت_سیٹ, s+pos, rest);
+        اگر(cp_لمبائی>0) {
+            واپس pos;  // There is a set element at pos.
         }
 
         // Try to match the strings at pos.
-        const uint8_t *s8=utf8;
+        ثابت uint8_t *s8=utf8;
         int32_t length8;
-        for(i=0; i<stringsLength; ++i) {
+        برائے(i=0; i<لڑیاں_لمبائی; ++i) {
             length8=utf8Lengths[i];
             // ALL_CP_CONTAINED: Irrelevant string.
-            if(length8!=0 && spanUTF8Lengths[i]!=ALL_CP_CONTAINED && length8<=rest && matches8(s+pos, s8, length8)) {
-                return pos;  // There is a set element at pos.
+            اگر(length8!=0 && وسعت_UTF8_Lengths[i]!=ALL_CP_CONTAINED && length8<=rest && matches8(s+pos, s8, length8)) {
+                واپس pos;  // There is a set element at pos.
             }
             s8+=length8;
         }
@@ -1471,42 +1471,42 @@ int32_t UnicodeSetStringSpan::spanNotUTF8(const uint8_t *s, int32_t length) cons
         // The span(while not contained) ended on a string start/end which is
         // not in the original set. Skip this code point and continue.
         // cpLength<0
-        pos-=cpLength;
-        rest+=cpLength;
-    } while(rest!=0);
-    return length;  // Reached the end of the string.
+        pos-=cp_لمبائی;
+        rest+=cp_لمبائی;
+    } جب(rest!=0);
+    واپس length;  // Reached the end of the string.
 }
 
-int32_t UnicodeSetStringSpan::spanNotBackUTF8(const uint8_t *s, int32_t length) const {
+int32_t Unicode_سیٹ_String_وسعت::وسعت_Not_عقب_UTF8(ثابت uint8_t *s, int32_t length) ثابت {
     int32_t pos=length;
-    int32_t i, stringsLength=strings.size();
-    uint8_t *spanBackUTF8Lengths=spanLengths;
-    if(all) {
-        spanBackUTF8Lengths+=3*stringsLength;
+    int32_t i, لڑیاں_لمبائی=لڑیاں.size();
+    uint8_t *وسعت_عقب_UTF8_Lengths=وسعت_Lengths;
+    اگر(all) {
+        وسعت_عقب_UTF8_Lengths+=3*لڑیاں_لمبائی;
     }
-    do {
+    کرو {
         // Span until we find a code point from the set,
         // or a code point that starts or ends some string.
-        pos = pSpanNotSet->spanBackUTF8(reinterpret_cast<const char*>(s), pos, USET_SPAN_NOT_CONTAINED);
-        if(pos==0) {
-            return 0;  // Reached the start of the string.
+        pos = p_وسعت_Not_سیٹ->وسعت_عقب_UTF8(reinterpret_cast<ثابت حرف*>(s), pos, USET_وسعت_NOT_CONTAINED);
+        اگر(pos==0) {
+            واپس 0;  // Reached the start of the string.
         }
 
         // Check whether the current code point is in the original set,
         // without the string starts and ends.
-        int32_t cpLength=spanOneBackUTF8(spanSet, s, pos);
-        if(cpLength>0) {
-            return pos;  // There is a set element at pos.
+        int32_t cp_لمبائی=وسعت_One_عقب_UTF8(وسعت_سیٹ, s, pos);
+        اگر(cp_لمبائی>0) {
+            واپس pos;  // There is a set element at pos.
         }
 
         // Try to match the strings at pos.
-        const uint8_t *s8=utf8;
+        ثابت uint8_t *s8=utf8;
         int32_t length8;
-        for(i=0; i<stringsLength; ++i) {
+        برائے(i=0; i<لڑیاں_لمبائی; ++i) {
             length8=utf8Lengths[i];
             // ALL_CP_CONTAINED: Irrelevant string.
-            if(length8!=0 && spanBackUTF8Lengths[i]!=ALL_CP_CONTAINED && length8<=pos && matches8(s+pos-length8, s8, length8)) {
-                return pos;  // There is a set element at pos.
+            اگر(length8!=0 && وسعت_عقب_UTF8_Lengths[i]!=ALL_CP_CONTAINED && length8<=pos && matches8(s+pos-length8, s8, length8)) {
+                واپس pos;  // There is a set element at pos.
             }
             s8+=length8;
         }
@@ -1514,9 +1514,9 @@ int32_t UnicodeSetStringSpan::spanNotBackUTF8(const uint8_t *s, int32_t length) 
         // The span(while not contained) ended on a string start/end which is
         // not in the original set. Skip this code point and continue.
         // cpLength<0
-        pos+=cpLength;
-    } while(pos!=0);
-    return 0;  // Reached the start of the string.
+        pos+=cp_لمبائی;
+    } جب(pos!=0);
+    واپس 0;  // Reached the start of the string.
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا

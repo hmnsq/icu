@@ -8,22 +8,22 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#اگر !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "uassert.h"
+#شامل "unicode/resbund.h"
+#شامل "uresimp.h"
+#شامل "cmemory.h"
+#شامل "servloc.h"
+#شامل "ustrfmt.h"
+#شامل "uhash.h"
+#شامل "charstr.h"
+#شامل "uassert.h"
 
-#define UNDERSCORE_CHAR ((char16_t)0x005f)
-#define AT_SIGN_CHAR    ((char16_t)64)
-#define PERIOD_CHAR     ((char16_t)46)
+#تعریف_کرو UNDERSCORE_CHAR ((char16_t)0x005f)
+#تعریف_کرو AT_SIGN_CHAR    ((char16_t)64)
+#تعریف_کرو PERIOD_CHAR     ((char16_t)46)
 
 U_NAMESPACE_BEGIN
 
@@ -31,49 +31,49 @@ U_NAMESPACE_BEGIN
  ******************************************************************
  */
 
-SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
-                                               const UnicodeString& locale,
-                                               int32_t kind,
+Simple_Locale_کلید_Factory::Simple_Locale_کلید_Factory(UObject* obj_مقصد_Adopt,
+                                               ثابت UnicodeString& locale,
+                                               int32_t قسم,
                                                int32_t coverage)
-  : LocaleKeyFactory(coverage)
-  , _obj(objToAdopt)
+  : Locale_کلید_Factory(coverage)
+  , _obj(obj_مقصد_Adopt)
   , _id(locale)
-  , _kind(kind)
+  , قسم_2(قسم)
 {
 }
 
-SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
-                                               const Locale& locale,
-                                               int32_t kind,
+Simple_Locale_کلید_Factory::Simple_Locale_کلید_Factory(UObject* obj_مقصد_Adopt,
+                                               ثابت Locale& locale,
+                                               int32_t قسم,
                                                int32_t coverage)
-  : LocaleKeyFactory(coverage)
-  , _obj(objToAdopt)
+  : Locale_کلید_Factory(coverage)
+  , _obj(obj_مقصد_Adopt)
   , _id()
-  , _kind(kind)
+  , قسم_2(قسم)
 {
     LocaleUtility::initNameFromLocale(locale, _id);
 }
 
-SimpleLocaleKeyFactory::~SimpleLocaleKeyFactory()
+Simple_Locale_کلید_Factory::~Simple_Locale_کلید_Factory()
 {
-  delete _obj;
-  _obj = nullptr;
+  حذف _obj;
+  _obj = خالی_اشاریہ;
 }
 
 UObject*
-SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const
+Simple_Locale_کلید_Factory::create(ثابت ICUService_کلید& کلید, ثابت ICUService* service, UError_رمز& حالت_2) ثابت
 {
-    if (U_SUCCESS(status)) {
-        const LocaleKey& lkey = static_cast<const LocaleKey&>(key);
-        if (_kind == LocaleKey::KIND_ANY || _kind == lkey.kind()) {
-            UnicodeString keyID;
-            lkey.currentID(keyID);
-            if (_id == keyID) {
-                return service->cloneInstance(_obj);
+    اگر (U_SUCCESS(حالت_2)) {
+        ثابت Locale_کلید& lkey = static_cast<ثابت Locale_کلید&>(کلید);
+        اگر (قسم_2 == Locale_کلید::قسم_ANY || قسم_2 == lkey.قسم()) {
+            UnicodeString کلید_ID;
+            lkey.currentID(کلید_ID);
+            اگر (_id == کلید_ID) {
+                واپس service->cloneInstance(_obj);
             }
         }
     }
-    return nullptr;
+    واپس خالی_اشاریہ;
 }
 
 //UBool
@@ -82,42 +82,42 @@ SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* servi
 //    return id == _id;
 //}
 
-void
-SimpleLocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const
+خالی
+Simple_Locale_کلید_Factory::updateVisibleIDs(Hashtable& نتیجہ, UError_رمز& حالت_2) ثابت
 {
-    if (U_SUCCESS(status)) {
-        if (_coverage & 0x1) {
-            result.remove(_id);
-        } else {
-            result.put(_id, (void*)this, status);
+    اگر (U_SUCCESS(حالت_2)) {
+        اگر (_coverage & 0x1) {
+            نتیجہ.remove(_id);
+        } ورنہ {
+            نتیجہ.put(_id, (خالی*)یہ, حالت_2);
         }
     }
 }
 
-#ifdef SERVICE_DEBUG
+#اگر_تعریف_شدہ SERVICE_DEBUG
 UnicodeString&
-SimpleLocaleKeyFactory::debug(UnicodeString& result) const
+Simple_Locale_کلید_Factory::debug(UnicodeString& نتیجہ) ثابت
 {
-    LocaleKeyFactory::debug(result);
-    result.append((UnicodeString)", id: ");
-    result.append(_id);
-    result.append((UnicodeString)", kind: ");
-    result.append(_kind);
-    return result;
+    Locale_کلید_Factory::debug(نتیجہ);
+    نتیجہ.append((UnicodeString)", id: ");
+    نتیجہ.append(_id);
+    نتیجہ.append((UnicodeString)", kind: ");
+    نتیجہ.append(قسم_2);
+    واپس نتیجہ;
 }
 
 UnicodeString&
-SimpleLocaleKeyFactory::debugClass(UnicodeString& result) const
+Simple_Locale_کلید_Factory::debugClass(UnicodeString& نتیجہ) ثابت
 {
-    return result.append((UnicodeString)"SimpleLocaleKeyFactory");
+    واپس نتیجہ.append((UnicodeString)"SimpleLocaleKeyFactory");
 }
-#endif
+#اگر_ختم
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(SimpleLocaleKeyFactory)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Simple_Locale_کلید_Factory)
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا
 
 /* !UCONFIG_NO_SERVICE */
-#endif
+#اگر_ختم
 
 

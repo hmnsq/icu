@@ -7,9 +7,9 @@
 **********************************************************************
 */
 
-#ifndef UBRKIMPL_H
-#define UBRKIMPL_H
+#اگر_غیر_تعریف_شدہ UBRKIMPL_H
+#تعریف_کرو UBRKIMPL_H
 
-#define U_ICUDATA_BRKITR U_ICUDATA_NAME U_TREE_SEPARATOR_STRING "brkitr"
+#تعریف_کرو U_ICUDATA_BRKITR U_ICUDATA_NAME U_درخت_SEPARATOR_STRING "brkitr"
 
-#endif /*UBRKIMPL_H*/
+#اگر_ختم /*UBRKIMPL_H*/

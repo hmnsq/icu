@@ -14,28 +14,28 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __BYTESTRIE_H__
-#define __BYTESTRIE_H__
+#اگر_غیر_تعریف_شدہ __BYTESTRIE_H__
+#تعریف_کرو __BYTESTRIE_H__
 
 /**
  * \file
  * \brief C++ API: Trie for mapping byte sequences to integer values.
  */
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#اگر U_SHOW_CPLUSPLUS_API
 
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
-#include "unicode/ustringtrie.h"
+#شامل "unicode/stringpiece.h"
+#شامل "unicode/uobject.h"
+#شامل "unicode/ustringtrie.h"
 
-class BytesTrieTest;
+class بائٹیں_Trie_Test;
 
 U_NAMESPACE_BEGIN
 
 class ByteSink;
-class BytesTrieBuilder;
+class بائٹیں_Trie_Builder;
 class CharString;
 class UVector32;
 
@@ -52,8 +52,8 @@ class UVector32;
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API BytesTrie : public UMemory {
-public:
+class U_COMMON_API بائٹیں_Trie : عوامی UMemory {
+عوامی:
     /**
      * Constructs a BytesTrie reader instance.
      *
@@ -68,15 +68,15 @@ public:
      * @param trieBytes The byte array that contains the serialized trie.
      * @stable ICU 4.8
      */
-    BytesTrie(const void* trieBytes U_LIFETIME_BOUND)
-            : ownedArray_(nullptr), bytes_(static_cast<const uint8_t *>(trieBytes)),
-              pos_(bytes_), remainingMatchLength_(-1) {}
+    بائٹیں_Trie(ثابت خالی* trie_بائٹیں U_LIFETIME_BOUND)
+            : ownedArray_(nullptr), بائٹیں_2(static_cast<ثابت uint8_t *>(trie_بائٹیں)),
+              pos_(بائٹیں_2), بقایا_مطابقت_لمبائی(-1) {}
 
     /**
      * Destructor.
      * @stable ICU 4.8
      */
-    ~BytesTrie();
+    ~بائٹیں_Trie();
 
     /**
      * Copy constructor, copies the other trie reader object and its state,
@@ -84,19 +84,19 @@ public:
      * @param other Another BytesTrie object.
      * @stable ICU 4.8
      */
-    BytesTrie(const BytesTrie &other)
-            : ownedArray_(nullptr), bytes_(other.bytes_),
-              pos_(other.pos_), remainingMatchLength_(other.remainingMatchLength_) {}
+    بائٹیں_Trie(ثابت بائٹیں_Trie &other)
+            : ownedArray_(nullptr), بائٹیں_2(other.بائٹیں_2),
+              pos_(other.pos_), بقایا_مطابقت_لمبائی(other.بقایا_مطابقت_لمبائی) {}
 
     /**
      * Resets this trie to its initial state.
      * @return *this
      * @stable ICU 4.8
      */
-    BytesTrie& reset() U_LIFETIME_BOUND {
-        pos_=bytes_;
-        remainingMatchLength_=-1;
-        return *this;
+    بائٹیں_Trie& reset() U_LIFETIME_BOUND {
+        pos_=بائٹیں_2;
+        بقایا_مطابقت_لمبائی=-1;
+        واپس *this;
     }
 
     /**
@@ -107,9 +107,9 @@ public:
      * @see resetToState64
      * @stable ICU 65
      */
-    uint64_t getState64() const {
-        return (static_cast<uint64_t>(remainingMatchLength_ + 2) << kState64RemainingShift) |
-            static_cast<uint64_t>(pos_ - bytes_);
+    uint64_t getState64() ثابت {
+        واپس (static_cast<uint64_t>(بقایا_مطابقت_لمبائی + 2) << k_State64_بقایا_سرکاؤ) |
+            static_cast<uint64_t>(pos_ - بائٹیں_2);
     }
 
     /**
@@ -126,10 +126,10 @@ public:
      * @see reset
      * @stable ICU 65
      */
-    BytesTrie& resetToState64(uint64_t state) U_LIFETIME_BOUND {
-        remainingMatchLength_ = static_cast<int32_t>(state >> kState64RemainingShift) - 2;
-        pos_ = bytes_ + (state & kState64PosMask);
-        return *this;
+    بائٹیں_Trie& reset_مقصد_State64(uint64_t state) U_LIFETIME_BOUND {
+        بقایا_مطابقت_لمبائی = static_cast<int32_t>(state >> k_State64_بقایا_سرکاؤ) - 2;
+        pos_ = بائٹیں_2 + (state & k_State64_Pos_نقاب);
+        واپس *this;
     }
 
     /**
@@ -137,19 +137,19 @@ public:
      * and resetting the trie back to this state later.
      * @stable ICU 4.8
      */
-    class State : public UMemory {
-    public:
+    class State : عوامی UMemory {
+    عوامی:
         /**
          * Constructs an empty State.
          * @stable ICU 4.8
          */
-        State() { bytes=nullptr; }
-    private:
-        friend class BytesTrie;
+        State() { بائٹیں=nullptr; }
+    نجی:
+        دوست class بائٹیں_Trie;
 
-        const uint8_t *bytes;
-        const uint8_t *pos;
-        int32_t remainingMatchLength;
+        ثابت uint8_t *بائٹیں;
+        ثابت uint8_t *pos;
+        int32_t بقایا_مطابقت_لمبائی_2;
     };
 
     /**
@@ -159,11 +159,11 @@ public:
      * @see resetToState
      * @stable ICU 4.8
      */
-    const BytesTrie& saveState(State& state) const U_LIFETIME_BOUND {
-        state.bytes=bytes_;
+    ثابت بائٹیں_Trie& saveState(State& state) ثابت U_LIFETIME_BOUND {
+        state.بائٹیں=بائٹیں_2;
         state.pos=pos_;
-        state.remainingMatchLength=remainingMatchLength_;
-        return *this;
+        state.بقایا_مطابقت_لمبائی_2=بقایا_مطابقت_لمبائی;
+        واپس *this;
     }
 
     /**
@@ -176,12 +176,12 @@ public:
      * @see reset
      * @stable ICU 4.8
      */
-    BytesTrie& resetToState(const State& state) U_LIFETIME_BOUND {
-        if(bytes_==state.bytes && bytes_!=nullptr) {
+    بائٹیں_Trie& reset_مقصد_State(ثابت State& state) U_LIFETIME_BOUND {
+        اگر(بائٹیں_2==state.بائٹیں && بائٹیں_2!=nullptr) {
             pos_=state.pos;
-            remainingMatchLength_=state.remainingMatchLength;
+            بقایا_مطابقت_لمبائی=state.بقایا_مطابقت_لمبائی_2;
         }
-        return *this;
+        واپس *this;
     }
 
     /**
@@ -190,7 +190,7 @@ public:
      * @return The match/value Result.
      * @stable ICU 4.8
      */
-    UStringTrieResult current() const;
+    UString_Trie_نتیجہ current() ثابت;
 
     /**
      * Traverses the trie from the initial state for this input byte.
@@ -200,12 +200,12 @@ public:
      * @return The match/value Result.
      * @stable ICU 4.8
      */
-    inline UStringTrieResult first(int32_t inByte) {
-        remainingMatchLength_=-1;
-        if(inByte<0) {
-            inByte+=0x100;
+    اندرونی UString_Trie_نتیجہ پہلا(int32_t اندر_Byte) {
+        بقایا_مطابقت_لمبائی=-1;
+        اگر(اندر_Byte<0) {
+            اندر_Byte+=0x100;
         }
-        return nextImpl(bytes_, inByte);
+        واپس اگلا_Impl(بائٹیں_2, اندر_Byte);
     }
 
     /**
@@ -215,7 +215,7 @@ public:
      * @return The match/value Result.
      * @stable ICU 4.8
      */
-    UStringTrieResult next(int32_t inByte);
+    UString_Trie_نتیجہ اگلا(int32_t اندر_Byte);
 
     /**
      * Traverses the trie from the current state for this byte sequence.
@@ -232,7 +232,7 @@ public:
      * @return The match/value Result.
      * @stable ICU 4.8
      */
-    UStringTrieResult next(const char *s, int32_t length);
+    UString_Trie_نتیجہ اگلا(ثابت حرف *s, int32_t لمبائی);
 
     /**
      * Returns a matching byte sequence's value if called immediately after
@@ -243,11 +243,11 @@ public:
      * @return The value for the byte sequence so far.
      * @stable ICU 4.8
      */
-    inline int32_t getValue() const {
-        const uint8_t *pos=pos_;
+    اندرونی int32_t get_قدر() ثابت {
+        ثابت uint8_t *pos=pos_;
         int32_t leadByte=*pos++;
         // U_ASSERT(leadByte>=kMinValueLead);
-        return readValue(pos, leadByte>>1);
+        واپس read_قدر(pos, leadByte>>1);
     }
 
     /**
@@ -259,10 +259,10 @@ public:
      *         map to the same value.
      * @stable ICU 4.8
      */
-    inline UBool hasUniqueValue(int32_t &uniqueValue) const {
-        const uint8_t *pos=pos_;
+    اندرونی UBool has_Unique_قدر(int32_t &unique_قدر) ثابت {
+        ثابت uint8_t *pos=pos_;
         // Skip the rest of a pending linear-match node.
-        return pos!=nullptr && findUniqueValue(pos+remainingMatchLength_+1, false, uniqueValue);
+        واپس pos!=nullptr && ڈھونڈو_Unique_قدر(pos+بقایا_مطابقت_لمبائی+1, false, unique_قدر);
     }
 
     /**
@@ -273,14 +273,14 @@ public:
      * @return the number of bytes which continue the byte sequence from here
      * @stable ICU 4.8
      */
-    int32_t getNextBytes(ByteSink &out) const;
+    int32_t get_اگلا_بائٹیں(ByteSink &برآمد) ثابت;
 
     /**
      * Iterator for all of the (byte sequence, value) pairs in a BytesTrie.
      * @stable ICU 4.8
      */
-    class U_COMMON_API Iterator : public UMemory {
-    public:
+    class U_COMMON_API Iterator : عوامی UMemory {
+    عوامی:
         /**
          * Iterates from the root of a byte-serialized BytesTrie.
          * @param trieBytes The trie bytes.
@@ -292,9 +292,9 @@ public:
          *                  function chaining. (See User Guide for details.)
          * @stable ICU 4.8
          */
-        Iterator(const void* trieBytes U_LIFETIME_BOUND,
-                 int32_t maxStringLength,
-                 UErrorCode& errorCode);
+        Iterator(ثابت خالی* trie_بائٹیں U_LIFETIME_BOUND,
+                 int32_t max_String_لمبائی,
+                 UError_رمز& error_رمز);
 
         /**
          * Iterates from the current state of the specified BytesTrie.
@@ -307,7 +307,7 @@ public:
          *                  function chaining. (See User Guide for details.)
          * @stable ICU 4.8
          */
-        Iterator(const BytesTrie &trie, int32_t maxStringLength, UErrorCode &errorCode);
+        Iterator(ثابت بائٹیں_Trie &trie, int32_t max_String_لمبائی, UError_رمز &error_رمز);
 
         /**
          * Destructor.
@@ -326,7 +326,7 @@ public:
          * @return true if there are more elements.
          * @stable ICU 4.8
          */
-        UBool hasNext() const;
+        UBool has_اگلا() ثابت;
 
         /**
          * Finds the next (byte sequence, value) pair if there is one.
@@ -342,35 +342,35 @@ public:
          * @return true if there is another element.
          * @stable ICU 4.8
          */
-        UBool next(UErrorCode &errorCode);
+        UBool اگلا(UError_رمز &error_رمز);
 
         /**
          * @return The NUL-terminated byte sequence for the last successful next().
          * @stable ICU 4.8
          */
-        StringPiece getString() const U_LIFETIME_BOUND;
+        StringPiece getString() ثابت U_LIFETIME_BOUND;
         /**
          * @return The value for the last successful next().
          * @stable ICU 4.8
          */
-        int32_t getValue() const { return value_; }
+        int32_t get_قدر() ثابت { واپس قدر; }
 
-    private:
+    نجی:
         UBool truncateAndStop();
 
-        const uint8_t* branchNext(const uint8_t* pos U_LIFETIME_BOUND,
-                                  int32_t length,
-                                  UErrorCode& errorCode);
+        ثابت uint8_t* branch_اگلا(ثابت uint8_t* pos U_LIFETIME_BOUND,
+                                  int32_t لمبائی,
+                                  UError_رمز& error_رمز);
 
-        const uint8_t *bytes_;
-        const uint8_t *pos_;
-        const uint8_t *initialPos_;
-        int32_t remainingMatchLength_;
-        int32_t initialRemainingMatchLength_;
+        ثابت uint8_t *بائٹیں_2;
+        ثابت uint8_t *pos_;
+        ثابت uint8_t *initialPos_;
+        int32_t بقایا_مطابقت_لمبائی;
+        int32_t initial_بقایا_مطابقت_لمبائی;
 
         CharString *str_;
-        int32_t maxLength_;
-        int32_t value_;
+        int32_t max_لمبائی;
+        int32_t قدر;
 
         // The stack stores pairs of integers for backtracking to another
         // outbound edge of a branch node.
@@ -379,12 +379,12 @@ public:
         // and the remaining branch length in bits 24..16. (Bits 31..25 are unused.)
         // (We could store the remaining branch length minus 1 in bits 23..16 and not use bits 31..24,
         // but the code looks more confusing that way.)
-        UVector32 *stack_;
+        UVector32 *ڈھیر;
     };
 
-private:
-    friend class BytesTrieBuilder;
-    friend class ::BytesTrieTest;
+نجی:
+    دوست class بائٹیں_Trie_Builder;
+    دوست class ::بائٹیں_Trie_Test;
 
     /**
      * Constructs a BytesTrie reader instance.
@@ -392,81 +392,81 @@ private:
      * this constructor adopts the builder's array.
      * This constructor is only called by the builder.
      */
-    BytesTrie(void *adoptBytes, const void *trieBytes)
-            : ownedArray_(static_cast<uint8_t *>(adoptBytes)),
-              bytes_(static_cast<const uint8_t *>(trieBytes)),
-              pos_(bytes_), remainingMatchLength_(-1) {}
+    بائٹیں_Trie(خالی *adopt_بائٹیں, ثابت خالی *trie_بائٹیں)
+            : ownedArray_(static_cast<uint8_t *>(adopt_بائٹیں)),
+              بائٹیں_2(static_cast<ثابت uint8_t *>(trie_بائٹیں)),
+              pos_(بائٹیں_2), بقایا_مطابقت_لمبائی(-1) {}
 
     // No assignment operator.
-    BytesTrie &operator=(const BytesTrie &other) = delete;
+    بائٹیں_Trie &عامل=(ثابت بائٹیں_Trie &other) = delete;
 
-    inline void stop() {
+    اندرونی خالی stop() {
         pos_=nullptr;
     }
 
     // Reads a compact 32-bit integer.
     // pos is already after the leadByte, and the lead byte is already shifted right by 1.
-    static int32_t readValue(const uint8_t *pos, int32_t leadByte);
-    static inline const uint8_t* skipValue(const uint8_t* pos U_LIFETIME_BOUND, int32_t leadByte) {
+    ساکن int32_t read_قدر(ثابت uint8_t *pos, int32_t leadByte);
+    ساکن اندرونی ثابت uint8_t* skip_قدر(ثابت uint8_t* pos U_LIFETIME_BOUND, int32_t leadByte) {
         // U_ASSERT(leadByte>=kMinValueLead);
-        if(leadByte>=(kMinTwoByteValueLead<<1)) {
-            if(leadByte<(kMinThreeByteValueLead<<1)) {
+        اگر(leadByte>=(k_Min_Two_Byte_قدر_Lead<<1)) {
+            اگر(leadByte<(k_Min_Three_Byte_قدر_Lead<<1)) {
                 ++pos;
-            } else if(leadByte<(kFourByteValueLead<<1)) {
+            } ورنہ اگر(leadByte<(k_Four_Byte_قدر_Lead<<1)) {
                 pos+=2;
-            } else {
+            } ورنہ {
                 pos+=3+((leadByte>>1)&1);
             }
         }
-        return pos;
+        واپس pos;
     }
-    static inline const uint8_t* skipValue(const uint8_t* pos U_LIFETIME_BOUND) {
+    ساکن اندرونی ثابت uint8_t* skip_قدر(ثابت uint8_t* pos U_LIFETIME_BOUND) {
         int32_t leadByte=*pos++;
-        return skipValue(pos, leadByte);
+        واپس skip_قدر(pos, leadByte);
     }
 
     // Reads a jump delta and jumps.
-    static const uint8_t* jumpByDelta(const uint8_t* pos U_LIFETIME_BOUND);
+    ساکن ثابت uint8_t* jumpByDelta(ثابت uint8_t* pos U_LIFETIME_BOUND);
 
-    static inline const uint8_t* skipDelta(const uint8_t* pos U_LIFETIME_BOUND) {
+    ساکن اندرونی ثابت uint8_t* skipDelta(ثابت uint8_t* pos U_LIFETIME_BOUND) {
         int32_t delta=*pos++;
-        if(delta>=kMinTwoByteDeltaLead) {
-            if(delta<kMinThreeByteDeltaLead) {
+        اگر(delta>=kMinTwoByteDeltaLead) {
+            اگر(delta<kMinThreeByteDeltaLead) {
                 ++pos;
-            } else if(delta<kFourByteDeltaLead) {
+            } ورنہ اگر(delta<kFourByteDeltaLead) {
                 pos+=2;
-            } else {
+            } ورنہ {
                 pos+=3+(delta&1);
             }
         }
-        return pos;
+        واپس pos;
     }
 
-    static inline UStringTrieResult valueResult(int32_t node) {
-        return static_cast<UStringTrieResult>(USTRINGTRIE_INTERMEDIATE_VALUE - (node & kValueIsFinal));
+    ساکن اندرونی UString_Trie_نتیجہ قدر_نتیجہ(int32_t گرہ) {
+        واپس static_cast<UString_Trie_نتیجہ>(USTRINGTRIE_INTERMEDIATE_قدر - (گرہ & k_قدر_Is_Final));
     }
 
     // Handles a branch node for both next(byte) and next(string).
-    UStringTrieResult branchNext(const uint8_t *pos, int32_t length, int32_t inByte);
+    UString_Trie_نتیجہ branch_اگلا(ثابت uint8_t *pos, int32_t لمبائی, int32_t اندر_Byte);
 
     // Requires remainingLength_<0.
-    UStringTrieResult nextImpl(const uint8_t *pos, int32_t inByte);
+    UString_Trie_نتیجہ اگلا_Impl(ثابت uint8_t *pos, int32_t اندر_Byte);
 
     // Helper functions for hasUniqueValue().
     // Recursively finds a unique value (or whether there is not a unique one)
     // from a branch.
-    static const uint8_t* findUniqueValueFromBranch(const uint8_t* pos U_LIFETIME_BOUND,
-                                                    int32_t length,
-                                                    UBool haveUniqueValue,
-                                                    int32_t& uniqueValue);
+    ساکن ثابت uint8_t* ڈھونڈو_Unique_قدر_From_Branch(ثابت uint8_t* pos U_LIFETIME_BOUND,
+                                                    int32_t لمبائی,
+                                                    UBool have_Unique_قدر,
+                                                    int32_t& unique_قدر);
     // Recursively finds a unique value (or whether there is not a unique one)
     // starting from a position on a node lead byte.
-    static UBool findUniqueValue(const uint8_t *pos, UBool haveUniqueValue, int32_t &uniqueValue);
+    ساکن UBool ڈھونڈو_Unique_قدر(ثابت uint8_t *pos, UBool have_Unique_قدر, int32_t &unique_قدر);
 
     // Helper functions for getNextBytes().
     // getNextBytes() when pos is on a branch node.
-    static void getNextBranchBytes(const uint8_t *pos, int32_t length, ByteSink &out);
-    static void append(ByteSink &out, int c);
+    ساکن خالی get_اگلا_Branch_بائٹیں(ثابت uint8_t *pos, int32_t لمبائی, ByteSink &برآمد);
+    ساکن خالی append(ByteSink &برآمد, صحیح c);
 
     // BytesTrie data structure
     //
@@ -507,68 +507,68 @@ private:
 
     // For a branch sub-node with at most this many entries, we drop down
     // to a linear search.
-    static const int32_t kMaxBranchLinearSubNodeLength=5;
+    ساکن ثابت int32_t k_Max_Branch_خطی_Sub_گرہ_لمبائی=5;
 
     // 10..1f: Linear-match node, match 1..16 bytes and continue reading the next node.
-    static const int32_t kMinLinearMatch=0x10;
-    static const int32_t kMaxLinearMatchLength=0x10;
+    ساکن ثابت int32_t k_Min_خطی_مطابقت=0x10;
+    ساکن ثابت int32_t k_Max_خطی_مطابقت_لمبائی=0x10;
 
     // 20..ff: Variable-length value node.
     // If odd, the value is final. (Otherwise, intermediate value or jump delta.)
     // Then shift-right by 1 bit.
     // The remaining lead byte value indicates the number of following bytes (0..4)
     // and contains the value's top bits.
-    static const int32_t kMinValueLead=kMinLinearMatch+kMaxLinearMatchLength;  // 0x20
+    ساکن ثابت int32_t k_Min_قدر_Lead=k_Min_خطی_مطابقت+k_Max_خطی_مطابقت_لمبائی;  // 0x20
     // It is a final value if bit 0 is set.
-    static const int32_t kValueIsFinal=1;
+    ساکن ثابت int32_t k_قدر_Is_Final=1;
 
     // Compact value: After testing bit 0, shift right by 1 and then use the following thresholds.
-    static const int32_t kMinOneByteValueLead=kMinValueLead/2;  // 0x10
-    static const int32_t kMaxOneByteValue=0x40;  // At least 6 bits in the first byte.
+    ساکن ثابت int32_t k_Min_One_Byte_قدر_Lead=k_Min_قدر_Lead/2;  // 0x10
+    ساکن ثابت int32_t k_Max_One_Byte_قدر=0x40;  // At least 6 bits in the first byte.
 
-    static const int32_t kMinTwoByteValueLead=kMinOneByteValueLead+kMaxOneByteValue+1;  // 0x51
-    static const int32_t kMaxTwoByteValue=0x1aff;
+    ساکن ثابت int32_t k_Min_Two_Byte_قدر_Lead=k_Min_One_Byte_قدر_Lead+k_Max_One_Byte_قدر+1;  // 0x51
+    ساکن ثابت int32_t k_Max_Two_Byte_قدر=0x1aff;
 
-    static const int32_t kMinThreeByteValueLead=kMinTwoByteValueLead+(kMaxTwoByteValue>>8)+1;  // 0x6c
-    static const int32_t kFourByteValueLead=0x7e;
+    ساکن ثابت int32_t k_Min_Three_Byte_قدر_Lead=k_Min_Two_Byte_قدر_Lead+(k_Max_Two_Byte_قدر>>8)+1;  // 0x6c
+    ساکن ثابت int32_t k_Four_Byte_قدر_Lead=0x7e;
 
     // A little more than Unicode code points. (0x11ffff)
-    static const int32_t kMaxThreeByteValue=((kFourByteValueLead-kMinThreeByteValueLead)<<16)-1;
+    ساکن ثابت int32_t k_Max_Three_Byte_قدر=((k_Four_Byte_قدر_Lead-k_Min_Three_Byte_قدر_Lead)<<16)-1;
 
-    static const int32_t kFiveByteValueLead=0x7f;
+    ساکن ثابت int32_t k_Five_Byte_قدر_Lead=0x7f;
 
     // Compact delta integers.
-    static const int32_t kMaxOneByteDelta=0xbf;
-    static const int32_t kMinTwoByteDeltaLead=kMaxOneByteDelta+1;  // 0xc0
-    static const int32_t kMinThreeByteDeltaLead=0xf0;
-    static const int32_t kFourByteDeltaLead=0xfe;
-    static const int32_t kFiveByteDeltaLead=0xff;
+    ساکن ثابت int32_t kMaxOneByteDelta=0xbf;
+    ساکن ثابت int32_t kMinTwoByteDeltaLead=kMaxOneByteDelta+1;  // 0xc0
+    ساکن ثابت int32_t kMinThreeByteDeltaLead=0xf0;
+    ساکن ثابت int32_t kFourByteDeltaLead=0xfe;
+    ساکن ثابت int32_t kFiveByteDeltaLead=0xff;
 
-    static const int32_t kMaxTwoByteDelta=((kMinThreeByteDeltaLead-kMinTwoByteDeltaLead)<<8)-1;  // 0x2fff
-    static const int32_t kMaxThreeByteDelta=((kFourByteDeltaLead-kMinThreeByteDeltaLead)<<16)-1;  // 0xdffff
+    ساکن ثابت int32_t kMaxTwoByteDelta=((kMinThreeByteDeltaLead-kMinTwoByteDeltaLead)<<8)-1;  // 0x2fff
+    ساکن ثابت int32_t kMaxThreeByteDelta=((kFourByteDeltaLead-kMinThreeByteDeltaLead)<<16)-1;  // 0xdffff
 
     // For getState64():
     // The remainingMatchLength_ is -1..14=(kMaxLinearMatchLength=0x10)-2
     // so we need at least 5 bits for that.
     // We add 2 to store it as a positive value 1..16=kMaxLinearMatchLength.
-    static constexpr int32_t kState64RemainingShift = 59;
-    static constexpr uint64_t kState64PosMask = (UINT64_C(1) << kState64RemainingShift) - 1;
+    ساکن constexpr int32_t k_State64_بقایا_سرکاؤ = 59;
+    ساکن constexpr uint64_t k_State64_Pos_نقاب = (UINT64_C(1) << k_State64_بقایا_سرکاؤ) - 1;
 
     uint8_t *ownedArray_;
 
     // Fixed value referencing the BytesTrie bytes.
-    const uint8_t *bytes_;
+    ثابت uint8_t *بائٹیں_2;
 
     // Iterator variables.
 
     // Pointer to next trie byte to read. nullptr if no more matches.
-    const uint8_t *pos_;
+    ثابت uint8_t *pos_;
     // Remaining length of a linear-match node, minus 1. Negative if not in such a node.
-    int32_t remainingMatchLength_;
+    int32_t بقایا_مطابقت_لمبائی;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#اگر_ختم /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __BYTESTRIE_H__
+#اگر_ختم  // __BYTESTRIE_H__

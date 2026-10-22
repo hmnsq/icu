@@ -18,11 +18,11 @@
 ******************************************************************************
 */
 
-#ifndef _PLATFORM_H
-#define _PLATFORM_H
+#اگر_غیر_تعریف_شدہ _PLATFORM_H
+#تعریف_کرو _PLATFORM_H
 
-#include "unicode/uconfig.h"
-#include "unicode/uvernum.h"
+#شامل "unicode/uconfig.h"
+#شامل "unicode/uvernum.h"
 
 /**
  * \file
@@ -56,14 +56,14 @@
  * Define some things so that they can be documented.
  * @internal
  */
-#ifdef U_IN_DOXYGEN
+#اگر_تعریف_شدہ U_اندر_DOXYGEN
 /*
  * Problem: "platform.h:335: warning: documentation for unknown define U_HAVE_STD_STRING found." means that U_HAVE_STD_STRING is not documented.
  * Solution: #define any defines for non @internal API here, so that they are visible in the docs.  If you just set PREDEFINED in Doxyfile.in,  they won't be documented.
  */
 
 /* None for now. */
-#endif
+#اگر_ختم
 
 /**
  * \def U_PLATFORM
@@ -86,28 +86,28 @@
  */
 
 /** Unknown platform. @internal */
-#define U_PF_UNKNOWN 0
+#تعریف_کرو U_PF_UNKNOWN 0
 /** Windows @internal */
-#define U_PF_WINDOWS 1000
+#تعریف_کرو U_PF_WINDOWS 1000
 /** MinGW. Windows, calls to Win32 API, but using GNU gcc and binutils. @internal */
-#define U_PF_MINGW 1800
+#تعریف_کرو U_PF_MINGW 1800
 /**
  * Cygwin. Windows, calls to cygwin1.dll for Posix functions,
  * using MSVC or GNU gcc and binutils.
  * @internal
  */
-#define U_PF_CYGWIN 1900
+#تعریف_کرو U_PF_CYGWIN 1900
 /* Reserve 2000 for U_PF_UNIX? */
 /** HP-UX is based on UNIX System V. @internal */
-#define U_PF_HPUX 2100
+#تعریف_کرو U_PF_HPUX 2100
 /** Solaris is a Unix operating system based on SVR4. @internal */
-#define U_PF_SOLARIS 2600
+#تعریف_کرو U_PF_SOLARIS 2600
 /** BSD is a UNIX operating system derivative. @internal */
-#define U_PF_BSD 3000
+#تعریف_کرو U_PF_BSD 3000
 /** AIX is based on UNIX System V Releases and 4.3 BSD. @internal */
-#define U_PF_AIX 3100
+#تعریف_کرو U_PF_AIX 3100
 /** IRIX is based on UNIX System V with BSD extensions. @internal */
-#define U_PF_IRIX 3200
+#تعریف_کرو U_PF_IRIX 3200
 /**
  * Darwin is a POSIX-compliant operating system, composed of code developed by Apple,
  * as well as code derived from NeXTSTEP, BSD, and other projects,
@@ -116,26 +116,26 @@
  * (Original description modified from WikiPedia.)
  * @internal
  */
-#define U_PF_DARWIN 3500
+#تعریف_کرو U_PF_DARWIN 3500
 /** iPhone OS (iOS) is a derivative of Mac OS X. @internal */
-#define U_PF_IPHONE 3550
+#تعریف_کرو U_PF_IPHONE 3550
 /** QNX is a commercial Unix-like real-time operating system related to BSD. @internal */
-#define U_PF_QNX 3700
+#تعریف_کرو U_PF_QNX 3700
 /** Linux is a Unix-like operating system. @internal */
-#define U_PF_LINUX 4000
+#تعریف_کرو U_PF_LINUX 4000
 /**
  * Native Client is pretty close to Linux.
  * See https://developer.chrome.com/native-client and
  *  http://www.chromium.org/nativeclient
  *  @internal
  */
-#define U_PF_BROWSER_NATIVE_CLIENT 4020
+#تعریف_کرو U_PF_BROWSER_NATIVE_CLIENT 4020
 /** Android is based on Linux. @internal */
-#define U_PF_ANDROID 4050
+#تعریف_کرو U_PF_ANDROID 4050
 /** Haiku is a POSIX-ish platform. @internal */
-#define U_PF_HAIKU 4080
+#تعریف_کرو U_PF_HAIKU 4080
 /** Fuchsia is a POSIX-ish platform. @internal */
-#define U_PF_FUCHSIA 4100
+#تعریف_کرو U_PF_FUCHSIA 4100
 /* Maximum value for Linux-based platform is 4499 */
 /**
  * Emscripten is a C++ transpiler for the Web that can target asm.js or
@@ -144,73 +144,73 @@
  * either.
  * @internal
  */
-#define U_PF_EMSCRIPTEN 5010
+#تعریف_کرو U_PF_EMSCRIPTEN 5010
 /** z/OS is the successor to OS/390 which was the successor to MVS. @internal */
-#define U_PF_OS390 9000
+#تعریف_کرو U_PF_OS390 9000
 /** "IBM i" is the current name of what used to be i5/OS and earlier OS/400. @internal */
-#define U_PF_OS400 9400
+#تعریف_کرو U_PF_OS400 9400
 
-#ifdef U_PLATFORM
+#اگر_تعریف_شدہ U_PLATFORM
     /* Use the predefined value. */
-#elif defined(__MINGW32__)
+#وگرنہ_اگر defined(__MINGW32__)
 #   define U_PLATFORM U_PF_MINGW
-#elif defined(__CYGWIN__)
+#وگرنہ_اگر defined(__CYGWIN__)
 #   define U_PLATFORM U_PF_CYGWIN
     /* Cygwin uchar.h doesn't exist until Cygwin 3.5. */
 #   include <cygwin/version.h>
-#elif defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+#وگرنہ_اگر defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 #   define U_PLATFORM U_PF_WINDOWS
-#elif defined(__ANDROID__)
+#وگرنہ_اگر defined(__ANDROID__)
 #   define U_PLATFORM U_PF_ANDROID
     /* Android wchar_t support depends on the API level. */
 #   include <android/api-level.h>
-#elif defined(__pnacl__) || defined(__native_client__)
+#وگرنہ_اگر defined(__pnacl__) || defined(__native_client__)
 #   define U_PLATFORM U_PF_BROWSER_NATIVE_CLIENT
-#elif defined(__Fuchsia__)
+#وگرنہ_اگر defined(__Fuchsia__)
 #   define U_PLATFORM U_PF_FUCHSIA
-#elif defined(linux) || defined(__linux__) || defined(__linux)
+#وگرنہ_اگر defined(linux) || defined(__linux__) || defined(__linux)
 #   define U_PLATFORM U_PF_LINUX
-#elif defined(__APPLE__) && defined(__MACH__)
+#وگرنہ_اگر defined(__APPLE__) && defined(__MACH__)
 #   include <TargetConditionals.h>
-#   if (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) && (defined(TARGET_OS_MACCATALYST) && !TARGET_OS_MACCATALYST)   /* variant of TARGET_OS_MAC */
+#   اگر (defined(ہدف_OS_IPHONE) && ہدف_OS_IPHONE) && (defined(ہدف_OS_MACCATALYST) && !ہدف_OS_MACCATALYST)   /* variant of TARGET_OS_MAC */
 #       define U_PLATFORM U_PF_IPHONE
-#   else
+#   ورنہ
 #       define U_PLATFORM U_PF_DARWIN
 #   endif
-#elif defined(BSD) || defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__MirBSD__)
-#   if defined(__FreeBSD__)
+#وگرنہ_اگر defined(BSD) || defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__MirBSD__)
+#   اگر defined(__FreeBSD__)
 #       include <sys/endian.h>
 #   endif
 #   define U_PLATFORM U_PF_BSD
-#elif defined(sun) || defined(__sun)
+#وگرنہ_اگر defined(sun) || defined(__sun)
     /* Check defined(__SVR4) || defined(__svr4__) to distinguish Solaris from SunOS? */
 #   define U_PLATFORM U_PF_SOLARIS
-#   if defined(__GNUC__)
+#   اگر defined(__GNUC__)
         /* Solaris/GCC needs this header file to get the proper endianness. Normally, this
          * header file is included with stddef.h but on Solairs/GCC, the GCC version of stddef.h
          *  is included which does not include this header file.
          */
 #       include <sys/isa_defs.h>
 #   endif
-#elif defined(_AIX) || defined(__TOS_AIX__)
+#وگرنہ_اگر defined(_AIX) || defined(__TOS_AIX__)
 #   define U_PLATFORM U_PF_AIX
-#elif defined(_hpux) || defined(hpux) || defined(__hpux)
+#وگرنہ_اگر defined(_hpux) || defined(hpux) || defined(__hpux)
 #   define U_PLATFORM U_PF_HPUX
-#elif defined(sgi) || defined(__sgi)
+#وگرنہ_اگر defined(sgi) || defined(__sgi)
 #   define U_PLATFORM U_PF_IRIX
-#elif defined(__QNX__) || defined(__QNXNTO__)
+#وگرنہ_اگر defined(__QNX__) || defined(__QNXNTO__)
 #   define U_PLATFORM U_PF_QNX
-#elif defined(__TOS_MVS__)
+#وگرنہ_اگر defined(__TOS_MVS__)
 #   define U_PLATFORM U_PF_OS390
-#elif defined(__OS400__) || defined(__TOS_OS400__)
+#وگرنہ_اگر defined(__OS400__) || defined(__TOS_OS400__)
 #   define U_PLATFORM U_PF_OS400
-#elif defined(__HAIKU__)
+#وگرنہ_اگر defined(__HAIKU__)
 #   define U_PLATFORM U_PF_HAIKU
-#elif defined(__EMSCRIPTEN__)
+#وگرنہ_اگر defined(__EMSCRIPTEN__)
 #   define U_PLATFORM U_PF_EMSCRIPTEN
-#else
+#ورنہ
 #   define U_PLATFORM U_PF_UNKNOWN
-#endif
+#اگر_ختم
 
 /**
  * \def U_REAL_MSVC
@@ -219,9 +219,9 @@
  * Otherwise undefined.
  * @internal
  */
-#if (defined(_MSC_VER) && !(defined(__clang__) && __clang__)) || defined(U_IN_DOXYGEN)
+#اگر (defined(_MSC_VER) && !(defined(__clang__) && __clang__)) || defined(U_اندر_DOXYGEN)
 #   define U_REAL_MSVC
-#endif
+#اگر_ختم
 
 /**
  * \def CYGWINMSVC
@@ -234,9 +234,9 @@
 #   define CYGWINMSVC
 #endif
 */
-#ifdef U_IN_DOXYGEN
+#اگر_تعریف_شدہ U_اندر_DOXYGEN
 #   define CYGWINMSVC
-#endif
+#اگر_ختم
 
 /**
  * \def U_PLATFORM_USES_ONLY_WIN32_API
@@ -244,14 +244,14 @@
  * Set to 1 for Windows/MSVC, ClangCL and MinGW but not Cygwin.
  * @internal
  */
-#ifdef U_PLATFORM_USES_ONLY_WIN32_API
+#اگر_تعریف_شدہ U_PLATFORM_استعمال_کرتا_ONLY_WIN32_API
     /* Use the predefined value. */
-#elif (U_PF_WINDOWS <= U_PLATFORM && U_PLATFORM <= U_PF_MINGW) || defined(CYGWINMSVC)
-#   define U_PLATFORM_USES_ONLY_WIN32_API 1
-#else
+#وگرنہ_اگر (U_PF_WINDOWS <= U_PLATFORM && U_PLATFORM <= U_PF_MINGW) || defined(CYGWINMSVC)
+#   define U_PLATFORM_استعمال_کرتا_ONLY_WIN32_API 1
+#ورنہ
     /* Cygwin implements POSIX. */
-#   define U_PLATFORM_USES_ONLY_WIN32_API 0
-#endif
+#   define U_PLATFORM_استعمال_کرتا_ONLY_WIN32_API 0
+#اگر_ختم
 
 /**
  * \def U_PLATFORM_HAS_WIN32_API
@@ -259,13 +259,13 @@
  * Set to 1 for Windows/MSVC, ClangCL, MinGW and Cygwin.
  * @internal
  */
-#ifdef U_PLATFORM_HAS_WIN32_API
+#اگر_تعریف_شدہ U_PLATFORM_HAS_WIN32_API
     /* Use the predefined value. */
-#elif U_PF_WINDOWS <= U_PLATFORM && U_PLATFORM <= U_PF_CYGWIN
+#وگرنہ_اگر U_PF_WINDOWS <= U_PLATFORM && U_PLATFORM <= U_PF_CYGWIN
 #   define U_PLATFORM_HAS_WIN32_API 1
-#else
+#ورنہ
 #   define U_PLATFORM_HAS_WIN32_API 0
-#endif
+#اگر_ختم
 
 /**
  * \def U_PLATFORM_HAS_WINUWP_API
@@ -273,11 +273,11 @@
  * Set to 1 for Windows10 Release Solution Configuration
  * @internal
  */
-#ifdef U_PLATFORM_HAS_WINUWP_API
+#اگر_تعریف_شدہ U_PLATFORM_HAS_WINUWP_API
     /* Use the predefined value. */
-#else
+#ورنہ
 #   define U_PLATFORM_HAS_WINUWP_API 0
-#endif
+#اگر_ختم
 
 /**
  * \def U_PLATFORM_IMPLEMENTS_POSIX
@@ -285,39 +285,39 @@
  * Set to 1 for Cygwin and most other platforms.
  * @internal
  */
-#ifdef U_PLATFORM_IMPLEMENTS_POSIX
+#اگر_تعریف_شدہ U_PLATFORM_IMPLEMENTS_POSIX
     /* Use the predefined value. */
-#elif U_PLATFORM_USES_ONLY_WIN32_API
+#وگرنہ_اگر U_PLATFORM_استعمال_کرتا_ONLY_WIN32_API
 #   define U_PLATFORM_IMPLEMENTS_POSIX 0
-#else
+#ورنہ
 #   define U_PLATFORM_IMPLEMENTS_POSIX 1
-#endif
+#اگر_ختم
 
 /**
  * \def U_PLATFORM_IS_LINUX_BASED
  * Defines whether the platform is Linux or one of its derivatives.
  * @internal
  */
-#ifdef U_PLATFORM_IS_LINUX_BASED
+#اگر_تعریف_شدہ U_PLATFORM_IS_LINUX_BASED
     /* Use the predefined value. */
-#elif U_PF_LINUX <= U_PLATFORM && U_PLATFORM <= 4499
+#وگرنہ_اگر U_PF_LINUX <= U_PLATFORM && U_PLATFORM <= 4499
 #   define U_PLATFORM_IS_LINUX_BASED 1
-#else
+#ورنہ
 #   define U_PLATFORM_IS_LINUX_BASED 0
-#endif
+#اگر_ختم
 
 /**
  * \def U_PLATFORM_IS_DARWIN_BASED
  * Defines whether the platform is Darwin or one of its derivatives.
  * @internal
  */
-#ifdef U_PLATFORM_IS_DARWIN_BASED
+#اگر_تعریف_شدہ U_PLATFORM_IS_DARWIN_BASED
     /* Use the predefined value. */
-#elif U_PF_DARWIN <= U_PLATFORM && U_PLATFORM <= U_PF_IPHONE
+#وگرنہ_اگر U_PF_DARWIN <= U_PLATFORM && U_PLATFORM <= U_PF_IPHONE
 #   define U_PLATFORM_IS_DARWIN_BASED 1
-#else
+#ورنہ
 #   define U_PLATFORM_IS_DARWIN_BASED 0
-#endif
+#اگر_ختم
 
 /*===========================================================================*/
 /** @{ Compiler and environment features                                     */
@@ -333,40 +333,40 @@
  * use "#if U_GCC_MAJOR_MINOR >= 406".
  * @internal
  */
-#ifdef __GNUC__
+#اگر_تعریف_شدہ __GNUC__
 #   define U_GCC_MAJOR_MINOR (__GNUC__ * 100 + __GNUC_MINOR__)
-#else
+#ورنہ
 #   define U_GCC_MAJOR_MINOR 0
-#endif
+#اگر_ختم
 
 /**
  * \def U_IS_BIG_ENDIAN
  * Determines the endianness of the platform.
  * @internal
  */
-#ifdef U_IS_BIG_ENDIAN
+#اگر_تعریف_شدہ U_IS_BIG_ENDIAN
     /* Use the predefined value. */
-#elif defined(BYTE_ORDER) && defined(BIG_ENDIAN)
+#وگرنہ_اگر defined(BYTE_ORDER) && defined(BIG_ENDIAN)
 #   define U_IS_BIG_ENDIAN (BYTE_ORDER == BIG_ENDIAN)
-#elif defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__)
+#وگرنہ_اگر defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__)
     /* gcc */
 #   define U_IS_BIG_ENDIAN (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
-#elif defined(__BIG_ENDIAN__) || defined(_BIG_ENDIAN)
+#وگرنہ_اگر defined(__BIG_ENDIAN__) || defined(_BIG_ENDIAN)
 #   define U_IS_BIG_ENDIAN 1
-#elif defined(__LITTLE_ENDIAN__) || defined(_LITTLE_ENDIAN)
+#وگرنہ_اگر defined(__LITTLE_ENDIAN__) || defined(_LITTLE_ENDIAN)
 #   define U_IS_BIG_ENDIAN 0
-#elif U_PLATFORM == U_PF_OS390 || U_PLATFORM == U_PF_OS400 || defined(__s390__) || defined(__s390x__)
+#وگرنہ_اگر U_PLATFORM == U_PF_OS390 || U_PLATFORM == U_PF_OS400 || defined(__s390__) || defined(__s390x__)
     /* These platforms do not appear to predefine any endianness macros. */
 #   define U_IS_BIG_ENDIAN 1
-#elif defined(_PA_RISC1_0) || defined(_PA_RISC1_1) || defined(_PA_RISC2_0)
+#وگرنہ_اگر defined(_PA_RISC1_0) || defined(_PA_RISC1_1) || defined(_PA_RISC2_0)
     /* HPPA do not appear to predefine any endianness macros. */
 #   define U_IS_BIG_ENDIAN 1
-#elif defined(sparc) || defined(__sparc) || defined(__sparc__)
+#وگرنہ_اگر defined(sparc) || defined(__sparc) || defined(__sparc__)
     /* Some sparc based systems (e.g. Linux) do not predefine any endianness macros. */
 #   define U_IS_BIG_ENDIAN 1
-#else
+#ورنہ
 #   define U_IS_BIG_ENDIAN 0
-#endif
+#اگر_ختم
 
 /**
  * \def U_HAVE_DEBUG_LOCATION_NEW 
@@ -374,96 +374,96 @@
  *
  * @stable ICU 3.4
  */
-#ifdef U_HAVE_DEBUG_LOCATION_NEW
+#اگر_تعریف_شدہ U_HAVE_DEBUG_LOCATION_NEW
     /* Use the predefined value. */
-#elif defined(_MSC_VER)
+#وگرنہ_اگر defined(_MSC_VER)
 #   define U_HAVE_DEBUG_LOCATION_NEW 1
-#else
+#ورنہ
 #   define U_HAVE_DEBUG_LOCATION_NEW 0
-#endif
+#اگر_ختم
 
 /* Compatibility with compilers other than clang: http://clang.llvm.org/docs/LanguageExtensions.html */
-#ifdef __has_attribute
+#اگر_تعریف_شدہ __has_attribute
 #   define UPRV_HAS_ATTRIBUTE(x) __has_attribute(x)
-#else
+#ورنہ
 #   define UPRV_HAS_ATTRIBUTE(x) 0
-#endif
-#ifdef __has_cpp_attribute
+#اگر_ختم
+#اگر_تعریف_شدہ __has_cpp_attribute
 #   define UPRV_HAS_CPP_ATTRIBUTE(x) __has_cpp_attribute(x)
-#else
+#ورنہ
 #   define UPRV_HAS_CPP_ATTRIBUTE(x) 0
-#endif
-#ifdef __has_declspec_attribute
+#اگر_ختم
+#اگر_تعریف_شدہ __has_declspec_attribute
 #   define UPRV_HAS_DECLSPEC_ATTRIBUTE(x) __has_declspec_attribute(x)
-#else
+#ورنہ
 #   define UPRV_HAS_DECLSPEC_ATTRIBUTE(x) 0
-#endif
-#ifdef __has_builtin
+#اگر_ختم
+#اگر_تعریف_شدہ __has_builtin
 #   define UPRV_HAS_BUILTIN(x) __has_builtin(x)
-#else
+#ورنہ
 #   define UPRV_HAS_BUILTIN(x) 0
-#endif
-#ifdef __has_feature
+#اگر_ختم
+#اگر_تعریف_شدہ __has_feature
 #   define UPRV_HAS_FEATURE(x) __has_feature(x)
-#else
+#ورنہ
 #   define UPRV_HAS_FEATURE(x) 0
-#endif
-#if UPRV_HAS_FEATURE(address_sanitizer) || \
-    UPRV_HAS_FEATURE(memory_sanitizer) || \
+#اگر_ختم
+#اگر UPRV_HAS_FEATURE(پتہ_sanitizer) || \
+    UPRV_HAS_FEATURE(حافظہ_sanitizer) || \
     UPRV_HAS_FEATURE(thread_sanitizer) || \
     UPRV_HAS_FEATURE(undefined_sanitizer) || \
     defined(__SANITIZE_ADDRESS__) || \
     defined(__SANITIZE_THREAD__) || \
     defined(__SANITIZE_UNDEFINED__)
 #   define UPRV_HAS_SANITIZER 1
-#else
+#ورنہ
 #   define UPRV_HAS_SANITIZER 0
-#endif
-#ifdef __has_extension
+#اگر_ختم
+#اگر_تعریف_شدہ __has_extension
 #   define UPRV_HAS_EXTENSION(x) __has_extension(x)
-#else
+#ورنہ
 #   define UPRV_HAS_EXTENSION(x) 0
-#endif
-#ifdef __has_warning
+#اگر_ختم
+#اگر_تعریف_شدہ __has_warning
 #   define UPRV_HAS_WARNING(x) __has_warning(x)
-#else
+#ورنہ
 #   define UPRV_HAS_WARNING(x) 0
-#endif
+#اگر_ختم
 
 
-#if defined(__clang__)
-#define UPRV_NO_SANITIZE_FUNCTION __attribute__((no_sanitize("function")))
-#define UPRV_NO_SANITIZE_UNDEFINED __attribute__((no_sanitize("undefined")))
-#else
-#define UPRV_NO_SANITIZE_FUNCTION
-#define UPRV_NO_SANITIZE_UNDEFINED
-#endif
+#اگر defined(__clang__)
+#تعریف_کرو UPRV_NO_SANITIZE_FUNCTION __attribute__((no_sanitize("function")))
+#تعریف_کرو UPRV_NO_SANITIZE_UNDEFINED __attribute__((no_sanitize("undefined")))
+#ورنہ
+#تعریف_کرو UPRV_NO_SANITIZE_FUNCTION
+#تعریف_کرو UPRV_NO_SANITIZE_UNDEFINED
+#اگر_ختم
 
 /**
  * \def U_MALLOC_ATTR
  * Attribute to mark functions as malloc-like
  * @internal
  */
-#if defined(__GNUC__) && __GNUC__>=3
+#اگر defined(__GNUC__) && __GNUC__>=3
 #    define U_MALLOC_ATTR __attribute__ ((__malloc__))
-#else
+#ورنہ
 #    define U_MALLOC_ATTR
-#endif
+#اگر_ختم
 
 /**
  * \def U_ALLOC_SIZE_ATTR
  * Attribute to specify the size of the allocated buffer for malloc-like functions
  * @internal
  */
-#if (defined(__GNUC__) &&                                            \
+#اگر (defined(__GNUC__) &&                                            \
         (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 3))) || \
-        UPRV_HAS_ATTRIBUTE(alloc_size)
-#   define U_ALLOC_SIZE_ATTR(X) __attribute__ ((alloc_size(X)))
-#   define U_ALLOC_SIZE_ATTR2(X,Y) __attribute__ ((alloc_size(X,Y)))
-#else
-#   define U_ALLOC_SIZE_ATTR(X)
-#   define U_ALLOC_SIZE_ATTR2(X,Y)
-#endif
+        UPRV_HAS_ATTRIBUTE(alloc_سائز)
+#   define U_ALLOC_سائز_ATTR(X) __attribute__ ((alloc_سائز(X)))
+#   define U_ALLOC_سائز_ATTR2(X,Y) __attribute__ ((alloc_سائز(X,Y)))
+#ورنہ
+#   define U_ALLOC_سائز_ATTR(X)
+#   define U_ALLOC_سائز_ATTR2(X,Y)
+#اگر_ختم
 
 /**
  * \def U_CPLUSPLUS_VERSION
@@ -471,30 +471,30 @@
  * Support for specific features cannot always be determined by the C++ version alone.
  * @internal
  */
-#ifdef U_CPLUSPLUS_VERSION
-#   if U_CPLUSPLUS_VERSION != 0 && !defined(__cplusplus)
-#       undef U_CPLUSPLUS_VERSION
-#       define U_CPLUSPLUS_VERSION 0
+#اگر_تعریف_شدہ U_CPLUSPLUS_نسخہ
+#   اگر U_CPLUSPLUS_نسخہ != 0 && !defined(__cplusplus)
+#       undef U_CPLUSPLUS_نسخہ
+#       define U_CPLUSPLUS_نسخہ 0
 #   endif
     /* Otherwise use the predefined value. */
-#elif !defined(__cplusplus)
-#   define U_CPLUSPLUS_VERSION 0
+#وگرنہ_اگر !defined(__cplusplus)
+#   define U_CPLUSPLUS_نسخہ 0
 // The value of _MSVC_LANG for C++23 preview is undocumented, except that it is larger than 202002.
 // As of this writing, it is 202004.
-#elif __cplusplus >= 202302L || (defined(_MSVC_LANG) && _MSVC_LANG > 202002L)
-#   define U_CPLUSPLUS_VERSION 23
-#elif __cplusplus >= 202002L || (defined(_MSVC_LANG) && _MSVC_LANG >= 202002L)
-#   define U_CPLUSPLUS_VERSION 20
-#elif __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
-#   define U_CPLUSPLUS_VERSION 17
-#elif __cplusplus >= 201402L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201402L)
-#   define U_CPLUSPLUS_VERSION 14
-#elif __cplusplus >= 201103L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201103L)
-#   define U_CPLUSPLUS_VERSION 11
-#else
+#وگرنہ_اگر __cplusplus >= 202302L || (defined(_MSVC_LANG) && _MSVC_LANG > 202002L)
+#   define U_CPLUSPLUS_نسخہ 23
+#وگرنہ_اگر __cplusplus >= 202002L || (defined(_MSVC_LANG) && _MSVC_LANG >= 202002L)
+#   define U_CPLUSPLUS_نسخہ 20
+#وگرنہ_اگر __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
+#   define U_CPLUSPLUS_نسخہ 17
+#وگرنہ_اگر __cplusplus >= 201402L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201402L)
+#   define U_CPLUSPLUS_نسخہ 14
+#وگرنہ_اگر __cplusplus >= 201103L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201103L)
+#   define U_CPLUSPLUS_نسخہ 11
+#ورنہ
     // C++98 or C++03
-#   define U_CPLUSPLUS_VERSION 1
-#endif
+#   define U_CPLUSPLUS_نسخہ 1
+#اگر_ختم
 
 /**
  * \def U_FALLTHROUGH
@@ -502,25 +502,25 @@
  * https://clang.llvm.org/docs/AttributeReference.html#fallthrough
  * @internal
  */
-#if defined(U_FALLTHROUGH)
+#اگر defined(U_FALLTHROUGH)
     // Use the predefined value.
-#elif defined(__clang__)
+#وگرنہ_اگر defined(__clang__)
     // Test for compiler vs. feature separately.
     // Other compilers might choke on the feature test.
-#    if UPRV_HAS_CPP_ATTRIBUTE(clang::fallthrough) || \
-             (UPRV_HAS_FEATURE(cxx_attributes) &&     \
+#    اگر UPRV_HAS_CPP_ATTRIBUTE(clang::fallthrough) || \
+             (UPRV_HAS_FEATURE(cxx_اوصاف) &&     \
              UPRV_HAS_WARNING("-Wimplicit-fallthrough"))
 #       define U_FALLTHROUGH [[clang::fallthrough]]
 #   endif
-#elif defined(__GNUC__) && (__GNUC__ >= 7)
+#وگرنہ_اگر defined(__GNUC__) && (__GNUC__ >= 7)
 #   define U_FALLTHROUGH __attribute__((fallthrough))
-#endif
+#اگر_ختم
 
-#ifndef U_FALLTHROUGH
+#اگر_غیر_تعریف_شدہ U_FALLTHROUGH
 #   define U_FALLTHROUGH
-#endif
+#اگر_ختم
 
-#ifndef U_IN_DOXYGEN
+#اگر_غیر_تعریف_شدہ U_اندر_DOXYGEN
 /**
  * \def U_LIFETIME_BOUND
  *
@@ -534,22 +534,22 @@
  *
  * @internal
  */
-#ifndef __cplusplus
+#اگر_غیر_تعریف_شدہ __cplusplus
 // Not for C.
-#elif defined(U_LIFETIME_BOUND)
+#وگرنہ_اگر defined(U_LIFETIME_BOUND)
 // Use the predefined value.
-#elif  UPRV_HAS_CPP_ATTRIBUTE(clang::lifetimebound)
+#وگرنہ_اگر  UPRV_HAS_CPP_ATTRIBUTE(clang::lifetimebound)
 #   define U_LIFETIME_BOUND [[clang::lifetimebound]]
-#elif UPRV_HAS_CPP_ATTRIBUTE(msvc::lifetimebound)
+#وگرنہ_اگر UPRV_HAS_CPP_ATTRIBUTE(msvc::lifetimebound)
 #   define U_LIFETIME_BOUND [[msvc::lifetimebound]]
-#elif UPRV_HAS_ATTRIBUTE(lifetimebound)
+#وگرنہ_اگر UPRV_HAS_ATTRIBUTE(lifetimebound)
 #   define U_LIFETIME_BOUND __attribute__((lifetimebound))
-#endif
+#اگر_ختم
 
-#ifndef U_LIFETIME_BOUND
+#اگر_غیر_تعریف_شدہ U_LIFETIME_BOUND
 #   define U_LIFETIME_BOUND
-#endif
-#endif
+#اگر_ختم
+#اگر_ختم
 
 /** @} */
 
@@ -561,13 +561,13 @@
  * U_CHARSET_FAMILY is equal to this value when the platform is an ASCII based platform.
  * @stable ICU 2.0
  */
-#define U_ASCII_FAMILY 0
+#تعریف_کرو U_ASCII_FAMILY 0
 
 /**
  * U_CHARSET_FAMILY is equal to this value when the platform is an EBCDIC based platform.
  * @stable ICU 2.0
  */
-#define U_EBCDIC_FAMILY 1
+#تعریف_کرو U_EBCDIC_FAMILY 1
 
 /**
  * \def U_CHARSET_FAMILY
@@ -611,15 +611,15 @@
  * \endcode
  * @stable ICU 2.0
  */
-#ifdef U_CHARSET_FAMILY
+#اگر_تعریف_شدہ U_CHARSET_FAMILY
     /* Use the predefined value. */
-#elif U_PLATFORM == U_PF_OS390 && (!defined(__CHARSET_LIB) || !__CHARSET_LIB)
+#وگرنہ_اگر U_PLATFORM == U_PF_OS390 && (!defined(__CHARSET_LIB) || !__CHARSET_LIB)
 #   define U_CHARSET_FAMILY U_EBCDIC_FAMILY
-#elif U_PLATFORM == U_PF_OS400 && !defined(__UTF32__)
+#وگرنہ_اگر U_PLATFORM == U_PF_OS400 && !defined(__UTF32__)
 #   define U_CHARSET_FAMILY U_EBCDIC_FAMILY
-#else
+#ورنہ
 #   define U_CHARSET_FAMILY U_ASCII_FAMILY
-#endif
+#اگر_ختم
 
 /**
  * \def U_CHARSET_IS_UTF8
@@ -641,14 +641,14 @@
  * @stable ICU 4.2
  * @see UCONFIG_NO_CONVERSION
  */
-#ifdef U_CHARSET_IS_UTF8
+#اگر_تعریف_شدہ U_CHARSET_IS_UTF8
     /* Use the predefined value. */
-#elif U_PLATFORM_IS_LINUX_BASED || U_PLATFORM_IS_DARWIN_BASED || \
+#وگرنہ_اگر U_PLATFORM_IS_LINUX_BASED || U_PLATFORM_IS_DARWIN_BASED || \
         U_PLATFORM == U_PF_EMSCRIPTEN
 #   define U_CHARSET_IS_UTF8 1
-#else
+#ورنہ
 #   define U_CHARSET_IS_UTF8 0
-#endif
+#اگر_ختم
 
 /** @} */
 
@@ -662,18 +662,18 @@
  *
  * @stable ICU 2.0
  */
-#ifdef U_HAVE_WCHAR_H
+#اگر_تعریف_شدہ U_HAVE_WCHAR_H
     /* Use the predefined value. */
-#elif U_PLATFORM == U_PF_ANDROID && __ANDROID_API__ < 9
+#وگرنہ_اگر U_PLATFORM == U_PF_ANDROID && __ANDROID_API__ < 9
     /*
      * Android before Gingerbread (Android 2.3, API level 9) did not support wchar_t.
      * The type and header existed, but the library functions did not work as expected.
      * The size of wchar_t was 1 but L"xyz" string literals had 32-bit units anyway.
      */
 #   define U_HAVE_WCHAR_H 0
-#else
+#ورنہ
 #   define U_HAVE_WCHAR_H 1
-#endif
+#اگر_ختم
 
 /**
  * \def U_SIZEOF_WCHAR_T
@@ -681,17 +681,17 @@
  *
  * @stable ICU 2.0
  */
-#ifdef U_SIZEOF_WCHAR_T
+#اگر_تعریف_شدہ U_SIZEOF_WCHAR_T
     /* Use the predefined value. */
-#elif (U_PLATFORM == U_PF_ANDROID && __ANDROID_API__ < 9)
+#وگرنہ_اگر (U_PLATFORM == U_PF_ANDROID && __ANDROID_API__ < 9)
     /*
      * Classic Mac OS and Mac OS X before 10.3 (Panther) did not support wchar_t or wstring.
      * Newer Mac OS X has size 4.
      */
 #   define U_SIZEOF_WCHAR_T 1
-#elif U_PLATFORM_HAS_WIN32_API || U_PLATFORM == U_PF_CYGWIN
+#وگرنہ_اگر U_PLATFORM_HAS_WIN32_API || U_PLATFORM == U_PF_CYGWIN
 #   define U_SIZEOF_WCHAR_T 2
-#elif U_PLATFORM == U_PF_AIX
+#وگرنہ_اگر U_PLATFORM == U_PF_AIX
     /*
      * AIX 6.1 information, section "Wide character data representation":
      * "... the wchar_t datatype is 32-bit in the 64-bit environment and
@@ -702,10 +702,10 @@
      */
 #   ifdef __64BIT__
 #       define U_SIZEOF_WCHAR_T 4
-#   else
+#   ورنہ
 #       define U_SIZEOF_WCHAR_T 2
 #   endif
-#elif U_PLATFORM == U_PF_OS390
+#وگرنہ_اگر U_PLATFORM == U_PF_OS390
     /*
      * z/OS V1R11 information center, section "LP64 | ILP32":
      * "In 31-bit mode, the size of long and pointers is 4 bytes and the size of wchar_t is 2 bytes.
@@ -713,11 +713,11 @@
      */
 #   ifdef _LP64
 #       define U_SIZEOF_WCHAR_T 4
-#   else
+#   ورنہ
 #       define U_SIZEOF_WCHAR_T 2
 #   endif
-#elif U_PLATFORM == U_PF_OS400
-#   if defined(__UTF32__)
+#وگرنہ_اگر U_PLATFORM == U_PF_OS400
+#   اگر defined(__UTF32__)
         /*
          * LOCALETYPE(*LOCALEUTF) is specified.
          * Wide-character strings are in UTF-32,
@@ -731,7 +731,7 @@
          * narrow-character strings are in EBCDIC.
          */
 #       define U_SIZEOF_WCHAR_T 2
-#   else
+#   ورنہ
         /*
          * LOCALETYPE(*CLD) or LOCALETYPE(*LOCALE) is specified.
          * Wide-character strings are in 16-bit EBCDIC,
@@ -739,13 +739,13 @@
          */
 #       define U_SIZEOF_WCHAR_T 2
 #   endif
-#else
+#ورنہ
 #   define U_SIZEOF_WCHAR_T 4
-#endif
+#اگر_ختم
 
-#ifndef U_HAVE_WCSCPY
-#define U_HAVE_WCSCPY U_HAVE_WCHAR_H
-#endif
+#اگر_غیر_تعریف_شدہ U_HAVE_WCSCPY
+#تعریف_کرو U_HAVE_WCSCPY U_HAVE_WCHAR_H
+#اگر_ختم
 
 /** @} */
 
@@ -757,24 +757,24 @@
  * but has been available in some compilers before.
  * @internal
  */
-#ifdef U_HAVE_CHAR16_T
+#اگر_تعریف_شدہ U_HAVE_CHAR16_T
     /* Use the predefined value. */
-#else
+#ورنہ
     /*
      * Notes:
      * C++11 and C11 require support for UTF-16 literals
      * Doesn't work on Mac C11 (see workaround in ptypes.h)
      * or Cygwin less than 3.5.
      */
-#   if defined(__cplusplus)
+#   اگر defined(__cplusplus)
 #       define U_HAVE_CHAR16_T 1
-#   elif U_PLATFORM_IS_DARWIN_BASED || (U_PLATFORM == U_PF_CYGWIN && CYGWIN_VERSION_DLL_MAJOR < 3005)
+#   elif U_PLATFORM_IS_DARWIN_BASED || (U_PLATFORM == U_PF_CYGWIN && CYGWIN_نسخہ_DLL_MAJOR < 3005)
 #       define U_HAVE_CHAR16_T 0
-#   else
+#   ورنہ
         // conformant C11
 #       define U_HAVE_CHAR16_T 1
 #   endif
-#endif
+#اگر_ختم
 
 /**
  * @{
@@ -785,20 +785,20 @@
  * See also the public U_STRING_DECL macro.
  * @internal
  */
-#ifdef U_DECLARE_UTF16
+#اگر_تعریف_شدہ U_DECLARE_UTF16
     /* Use the predefined value. */
-#elif U_HAVE_CHAR16_T \
+#وگرنہ_اگر U_HAVE_CHAR16_T \
     || (defined(__xlC__) && defined(__IBM_UTF_LITERAL) && U_SIZEOF_WCHAR_T != 2) \
     || (defined(__HP_aCC) && __HP_aCC >= 035000) \
     || (defined(__HP_cc) && __HP_cc >= 111106) \
-    || (defined(U_IN_DOXYGEN))
+    || (defined(U_اندر_DOXYGEN))
 #   define U_DECLARE_UTF16(string) u ## string
-#elif U_SIZEOF_WCHAR_T == 2 \
+#وگرنہ_اگر U_SIZEOF_WCHAR_T == 2 \
     && (U_CHARSET_FAMILY == 0 || (U_PF_OS390 <= U_PLATFORM && U_PLATFORM <= U_PF_OS400 && defined(__UCS2__)))
 #   define U_DECLARE_UTF16(string) L ## string
-#else
+#ورنہ
     /* Leave U_DECLARE_UTF16 undefined. See unistr.h. */
-#endif
+#اگر_ختم
 
 /** @} */
 
@@ -806,42 +806,42 @@
 /** @{ Symbol import-export control                                          */
 /*===========================================================================*/
 
-#ifdef U_EXPORT
+#اگر_تعریف_شدہ U_EXPORT
     /* Use the predefined value. */
-#elif defined(U_STATIC_IMPLEMENTATION)
+#وگرنہ_اگر defined(U_STATIC_IMPLEMENTATION)
 #   define U_EXPORT
-#elif defined(_MSC_VER) || (UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllexport__) && \
+#وگرنہ_اگر defined(_MSC_VER) || (UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllexport__) && \
                             UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllimport__))
 #   define U_EXPORT __declspec(dllexport)
-#elif defined(__GNUC__) || defined(__open_xl__)
+#وگرنہ_اگر defined(__GNUC__) || defined(__open_xl__)
 #   define U_EXPORT __attribute__((visibility("default")))
-#elif (defined(__SUNPRO_CC) && __SUNPRO_CC >= 0x550) \
+#وگرنہ_اگر (defined(__SUNPRO_CC) && __SUNPRO_CC >= 0x550) \
    || (defined(__SUNPRO_C) && __SUNPRO_C >= 0x550) 
 #   define U_EXPORT __global
 /*#elif defined(__HP_aCC) || defined(__HP_cc)
 #   define U_EXPORT __declspec(dllexport)*/
-#else
+#ورنہ
 #   define U_EXPORT
-#endif
+#اگر_ختم
 
 /* U_CALLCONV is related to U_EXPORT2 */
-#ifdef U_EXPORT2
+#اگر_تعریف_شدہ U_EXPORT2
     /* Use the predefined value. */
-#elif defined(_MSC_VER)
+#وگرنہ_اگر defined(_MSC_VER)
 #   define U_EXPORT2 __cdecl
-#else
+#ورنہ
 #   define U_EXPORT2
-#endif
+#اگر_ختم
 
-#ifdef U_IMPORT
+#اگر_تعریف_شدہ U_IMPORT
     /* Use the predefined value. */
-#elif defined(_MSC_VER) || (UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllexport__) && \
+#وگرنہ_اگر defined(_MSC_VER) || (UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllexport__) && \
                             UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllimport__))
     /* Windows needs to export/import data. */
 #   define U_IMPORT __declspec(dllimport)
-#else
+#ورنہ
 #   define U_IMPORT 
-#endif
+#اگر_ختم
 
 /**
  * \def U_HIDDEN
@@ -850,13 +850,13 @@
  * class within which they are declared. 
  * @internal
  */
-#ifdef U_HIDDEN
+#اگر_تعریف_شدہ U_HIDDEN
     /* Use the predefined value. */
-#elif defined(__GNUC__) || defined(__open_xl__)
+#وگرنہ_اگر defined(__GNUC__) || defined(__open_xl__)
 #   define U_HIDDEN __attribute__((visibility("hidden")))
-#else
+#ورنہ
 #   define U_HIDDEN 
-#endif
+#اگر_ختم
 
 /**
  * \def U_CALLCONV
@@ -875,22 +875,22 @@
  *
  * @stable ICU 2.0
  */
-#if U_PLATFORM == U_PF_OS390 && defined(__cplusplus)
+#اگر U_PLATFORM == U_PF_OS390 && defined(__cplusplus)
 #    define U_CALLCONV __cdecl
-#else
+#ورنہ
 #    define U_CALLCONV U_EXPORT2
-#endif
+#اگر_ختم
 
 /**
  * \def U_CALLCONV_FPTR
  * Similar to U_CALLCONV, but only used on function pointers.
  * @internal
  */
-#if U_PLATFORM == U_PF_OS390 && defined(__cplusplus)
+#اگر U_PLATFORM == U_PF_OS390 && defined(__cplusplus)
 #    define U_CALLCONV_FPTR U_CALLCONV
-#else
+#ورنہ
 #    define U_CALLCONV_FPTR
-#endif
+#اگر_ختم
 /** @} */
 
-#endif  // _PLATFORM_H
+#اگر_ختم  // _PLATFORM_H

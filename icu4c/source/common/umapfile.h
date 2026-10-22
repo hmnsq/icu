@@ -22,30 +22,30 @@
  *
  *----------------------------------------------------------------------------------*/
 
-#ifndef __UMAPFILE_H__
-#define __UMAPFILE_H__
+#اگر_غیر_تعریف_شدہ __UMAPFILE_H__
+#تعریف_کرو __UMAPFILE_H__
 
-#include "unicode/putil.h"
-#include "unicode/udata.h"
-#include "putilimp.h"
+#شامل "unicode/putil.h"
+#شامل "unicode/udata.h"
+#شامل "putilimp.h"
 
-U_CAPI  UBool U_EXPORT2 uprv_mapFile(UDataMemory *pdm, const char *path, UErrorCode *status);
-U_CFUNC void  uprv_unmapFile(UDataMemory *pData);
+U_CAPI  UBool U_EXPORT2 uprv_mapFile(UData_حافظہ *pdm, ثابت حرف *راستہ, UError_رمز *حالت_2);
+U_CFUNC خالی  uprv_unmapFile(UData_حافظہ *p_ڈیٹا);
 
 /* MAP_NONE: no memory mapping, no file access at all */
-#define MAP_NONE        0
-#define MAP_WIN32       1
-#define MAP_POSIX       2
-#define MAP_STDIO       3
+#تعریف_کرو MAP_NONE        0
+#تعریف_کرو MAP_WIN32       1
+#تعریف_کرو MAP_POSIX       2
+#تعریف_کرو MAP_STDIO       3
 
-#if UCONFIG_NO_FILE_IO
+#اگر UCONFIG_NO_FILE_IO
 #   define MAP_IMPLEMENTATION MAP_NONE
-#elif U_PLATFORM_USES_ONLY_WIN32_API
+#وگرنہ_اگر U_PLATFORM_استعمال_کرتا_ONLY_WIN32_API
 #   define MAP_IMPLEMENTATION MAP_WIN32
-#elif U_HAVE_MMAP || U_PLATFORM == U_PF_OS390
+#وگرنہ_اگر U_HAVE_MMAP || U_PLATFORM == U_PF_OS390
 #   define MAP_IMPLEMENTATION MAP_POSIX
-#else /* unknown platform, no memory map implementation: use stdio.h and uprv_malloc() instead */
+#ورنہ /* unknown platform, no memory map implementation: use stdio.h and uprv_malloc() instead */
 #   define MAP_IMPLEMENTATION MAP_STDIO
-#endif
+#اگر_ختم
 
-#endif
+#اگر_ختم

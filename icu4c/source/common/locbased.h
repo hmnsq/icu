@@ -10,11 +10,11 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#ifndef LOCBASED_H
-#define LOCBASED_H
+#اگر_غیر_تعریف_شدہ LOCBASED_H
+#تعریف_کرو LOCBASED_H
 
-#include "unicode/locid.h"
-#include "unicode/uobject.h"
+#شامل "unicode/locid.h"
+#شامل "unicode/uobject.h"
 
 U_NAMESPACE_BEGIN
 
@@ -25,9 +25,9 @@ U_NAMESPACE_BEGIN
  * services framework.
  * @since ICU 2.8
  */
-class U_COMMON_API LocaleBased : public UMemory {
+class U_COMMON_API LocaleBased : عوامی UMemory {
 
- public:
+ عوامی:
 
     /**
      * Return locale meta-data for the service object wrapped by this
@@ -39,11 +39,11 @@ class U_COMMON_API LocaleBased : public UMemory {
      * @param status input-output error code
      * @return the indicated locale
      */
-    static const Locale& getLocale(
-        const Locale& valid U_LIFETIME_BOUND,
-        const Locale& actual U_LIFETIME_BOUND,
-        ULocDataLocaleType type,
-        UErrorCode& status);
+    ساکن ثابت Locale& getLocale(
+        ثابت Locale& valid U_LIFETIME_BOUND,
+        ثابت Locale& actual U_LIFETIME_BOUND,
+        ULoc_ڈیٹا_Locale_Type type,
+        UError_رمز& حالت_2);
 
     /**
      * Return the locale ID for the service object wrapped by this
@@ -55,12 +55,12 @@ class U_COMMON_API LocaleBased : public UMemory {
      * @param status input-output error code
      * @return the indicated locale ID
      */
-    static const char* getLocaleID(
-        const Locale& valid, const Locale& actual,
-        ULocDataLocaleType type, UErrorCode& status);
+    ساکن ثابت حرف* getLocaleID(
+        ثابت Locale& valid, ثابت Locale& actual,
+        ULoc_ڈیٹا_Locale_Type type, UError_رمز& حالت_2);
 
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا
 
-#endif
+#اگر_ختم

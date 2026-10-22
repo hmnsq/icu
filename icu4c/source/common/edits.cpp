@@ -4,268 +4,268 @@
 // edits.cpp
 // created: 2017feb08 Markus W. Scherer
 
-#include "unicode/edits.h"
-#include "unicode/unistr.h"
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "uassert.h"
-#include "util.h"
+#شامل "unicode/edits.h"
+#شامل "unicode/unistr.h"
+#شامل "unicode/utypes.h"
+#شامل "cmemory.h"
+#شامل "uassert.h"
+#شامل "util.h"
 
 U_NAMESPACE_BEGIN
 
-namespace {
+نامخلا {
 
 // 0000uuuuuuuuuuuu records u+1 unchanged text units.
-const int32_t MAX_UNCHANGED_LENGTH = 0x1000;
-const int32_t MAX_UNCHANGED = MAX_UNCHANGED_LENGTH - 1;
+ثابت int32_t MAX_UNCHANGED_لمبائی = 0x1000;
+ثابت int32_t MAX_UNCHANGED = MAX_UNCHANGED_لمبائی - 1;
 
 // 0mmmnnnccccccccc with m=1..6 records ccc+1 replacements of m:n text units.
-const int32_t MAX_SHORT_CHANGE_OLD_LENGTH = 6;
-const int32_t MAX_SHORT_CHANGE_NEW_LENGTH = 7;
-const int32_t SHORT_CHANGE_NUM_MASK = 0x1ff;
-const int32_t MAX_SHORT_CHANGE = 0x6fff;
+ثابت int32_t MAX_SHORT_CHANGE_OLD_لمبائی = 6;
+ثابت int32_t MAX_SHORT_CHANGE_NEW_لمبائی = 7;
+ثابت int32_t SHORT_CHANGE_عدد_نقاب = 0x1ff;
+ثابت int32_t MAX_SHORT_CHANGE = 0x6fff;
 
 // 0111mmmmmmnnnnnn records a replacement of m text units with n.
 // m or n = 61: actual length follows in the next edits array unit.
 // m or n = 62..63: actual length follows in the next two edits array units.
 // Bit 30 of the actual length is in the head unit.
 // Trailing units have bit 15 set.
-const int32_t LENGTH_IN_1TRAIL = 61;
-const int32_t LENGTH_IN_2TRAIL = 62;
+ثابت int32_t لمبائی_اندر_1_TRAIL = 61;
+ثابت int32_t لمبائی_اندر_2_TRAIL = 62;
 
 }  // namespace
 
-void Edits::releaseArray() noexcept {
-    if (array != stackArray) {
+خالی Edits::releaseArray() noexcept {
+    اگر (array != ڈھیر_Array) {
         uprv_free(array);
     }
 }
 
-Edits& Edits::copyArray(const Edits& other) U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) {
-        length = delta = numChanges = 0;
-        return *this;
+Edits& Edits::copyArray(ثابت Edits& other) U_LIFETIME_BOUND {
+    اگر (U_FAILURE(error_رمز_2)) {
+        length = delta = عدد_Changes = 0;
+        واپس *یہ;
     }
-    if (length > capacity) {
+    اگر (length > capacity) {
         uint16_t* newArray = static_cast<uint16_t*>(uprv_malloc(static_cast<size_t>(length) * 2));
-        if (newArray == nullptr) {
-            length = delta = numChanges = 0;
-            errorCode_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+        اگر (newArray == خالی_اشاریہ) {
+            length = delta = عدد_Changes = 0;
+            error_رمز_2 = U_حافظہ_تخصیص_ERROR;
+            واپس *یہ;
         }
         releaseArray();
         array = newArray;
         capacity = length;
     }
-    if (length > 0) {
+    اگر (length > 0) {
         uprv_memcpy(array, other.array, (size_t)length * 2);
     }
-    return *this;
+    واپس *یہ;
 }
 
 Edits& Edits::moveArray(Edits& src) noexcept U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) {
-        length = delta = numChanges = 0;
-        return *this;
+    اگر (U_FAILURE(error_رمز_2)) {
+        length = delta = عدد_Changes = 0;
+        واپس *یہ;
     }
     releaseArray();
-    if (length > STACK_CAPACITY) {
+    اگر (length > ڈھیر_استعداد_2) {
         array = src.array;
         capacity = src.capacity;
-        src.array = src.stackArray;
-        src.capacity = STACK_CAPACITY;
+        src.array = src.ڈھیر_Array;
+        src.capacity = ڈھیر_استعداد_2;
         src.reset();
-        return *this;
+        واپس *یہ;
     }
-    array = stackArray;
-    capacity = STACK_CAPACITY;
-    if (length > 0) {
+    array = ڈھیر_Array;
+    capacity = ڈھیر_استعداد_2;
+    اگر (length > 0) {
         uprv_memcpy(array, src.array, (size_t)length * 2);
     }
-    return *this;
+    واپس *یہ;
 }
 
-Edits& Edits::operator=(const Edits& other) U_LIFETIME_BOUND {
-    if (this == &other) { return *this; }  // self-assignment: no-op
+Edits& Edits::عامل=(ثابت Edits& other) U_LIFETIME_BOUND {
+    اگر (یہ == &other) { واپس *یہ; }  // self-assignment: no-op
     length = other.length;
     delta = other.delta;
-    numChanges = other.numChanges;
-    errorCode_ = other.errorCode_;
-    return copyArray(other);
+    عدد_Changes = other.عدد_Changes;
+    error_رمز_2 = other.error_رمز_2;
+    واپس copyArray(other);
 }
 
-Edits& Edits::operator=(Edits&& src) noexcept U_LIFETIME_BOUND {
+Edits& Edits::عامل=(Edits&& src) noexcept U_LIFETIME_BOUND {
     length = src.length;
     delta = src.delta;
-    numChanges = src.numChanges;
-    errorCode_ = src.errorCode_;
-    return moveArray(src);
+    عدد_Changes = src.عدد_Changes;
+    error_رمز_2 = src.error_رمز_2;
+    واپس moveArray(src);
 }
 
 Edits::~Edits() {
     releaseArray();
 }
 
-void Edits::reset() noexcept {
-    length = delta = numChanges = 0;
-    errorCode_ = U_ZERO_ERROR;
+خالی Edits::reset() noexcept {
+    length = delta = عدد_Changes = 0;
+    error_رمز_2 = U_ZERO_ERROR;
 }
 
-void Edits::addUnchanged(int32_t unchangedLength) {
-    if(U_FAILURE(errorCode_) || unchangedLength == 0) { return; }
-    if(unchangedLength < 0) {
-        errorCode_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+خالی Edits::جوڑو_Unchanged(int32_t unchanged_لمبائی) {
+    اگر(U_FAILURE(error_رمز_2) || unchanged_لمبائی == 0) { واپس; }
+    اگر(unchanged_لمبائی < 0) {
+        error_رمز_2 = U_ILLEGAL_دلیل_ERROR;
+        واپس;
     }
     // Merge into previous unchanged-text record, if any.
-    int32_t last = lastUnit();
-    if(last < MAX_UNCHANGED) {
-        int32_t remaining = MAX_UNCHANGED - last;
-        if (remaining >= unchangedLength) {
-            setLastUnit(last + unchangedLength);
-            return;
+    int32_t آخری = آخری_Unit();
+    اگر(آخری < MAX_UNCHANGED) {
+        int32_t بقایا = MAX_UNCHANGED - آخری;
+        اگر (بقایا >= unchanged_لمبائی) {
+            سیٹ_آخری_Unit(آخری + unchanged_لمبائی);
+            واپس;
         }
-        setLastUnit(MAX_UNCHANGED);
-        unchangedLength -= remaining;
+        سیٹ_آخری_Unit(MAX_UNCHANGED);
+        unchanged_لمبائی -= بقایا;
     }
     // Split large lengths into multiple units.
-    while(unchangedLength >= MAX_UNCHANGED_LENGTH) {
+    جب(unchanged_لمبائی >= MAX_UNCHANGED_لمبائی) {
         append(MAX_UNCHANGED);
-        unchangedLength -= MAX_UNCHANGED_LENGTH;
+        unchanged_لمبائی -= MAX_UNCHANGED_لمبائی;
     }
     // Write a small (remaining) length.
-    if(unchangedLength > 0) {
-        append(unchangedLength - 1);
+    اگر(unchanged_لمبائی > 0) {
+        append(unchanged_لمبائی - 1);
     }
 }
 
-void Edits::addReplace(int32_t oldLength, int32_t newLength) {
-    if(U_FAILURE(errorCode_)) { return; }
-    if(oldLength < 0 || newLength < 0) {
-        errorCode_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+خالی Edits::جوڑو_Replace(int32_t old_لمبائی, int32_t new_لمبائی) {
+    اگر(U_FAILURE(error_رمز_2)) { واپس; }
+    اگر(old_لمبائی < 0 || new_لمبائی < 0) {
+        error_رمز_2 = U_ILLEGAL_دلیل_ERROR;
+        واپس;
     }
-    if (oldLength == 0 && newLength == 0) {
-        return;
+    اگر (old_لمبائی == 0 && new_لمبائی == 0) {
+        واپس;
     }
-    ++numChanges;
-    int32_t newDelta = newLength - oldLength;
-    if (newDelta != 0) {
-        if ((newDelta > 0 && delta >= 0 && newDelta > (INT32_MAX - delta)) ||
+    ++عدد_Changes;
+    int32_t newDelta = new_لمبائی - old_لمبائی;
+    اگر (newDelta != 0) {
+        اگر ((newDelta > 0 && delta >= 0 && newDelta > (INT32_MAX - delta)) ||
                 (newDelta < 0 && delta < 0 && newDelta < (INT32_MIN - delta))) {
             // Integer overflow or underflow.
-            errorCode_ = U_INDEX_OUTOFBOUNDS_ERROR;
-            return;
+            error_رمز_2 = U_اشاریہ_OUTOFBOUNDS_ERROR;
+            واپس;
         }
         delta += newDelta;
     }
 
-    if(0 < oldLength && oldLength <= MAX_SHORT_CHANGE_OLD_LENGTH &&
-            newLength <= MAX_SHORT_CHANGE_NEW_LENGTH) {
+    اگر(0 < old_لمبائی && old_لمبائی <= MAX_SHORT_CHANGE_OLD_لمبائی &&
+            new_لمبائی <= MAX_SHORT_CHANGE_NEW_لمبائی) {
         // Merge into previous same-lengths short-replacement record, if any.
-        int32_t u = (oldLength << 12) | (newLength << 9);
-        int32_t last = lastUnit();
-        if(MAX_UNCHANGED < last && last < MAX_SHORT_CHANGE &&
-                (last & ~SHORT_CHANGE_NUM_MASK) == u &&
-                (last & SHORT_CHANGE_NUM_MASK) < SHORT_CHANGE_NUM_MASK) {
-            setLastUnit(last + 1);
-            return;
+        int32_t u = (old_لمبائی << 12) | (new_لمبائی << 9);
+        int32_t آخری = آخری_Unit();
+        اگر(MAX_UNCHANGED < آخری && آخری < MAX_SHORT_CHANGE &&
+                (آخری & ~SHORT_CHANGE_عدد_نقاب) == u &&
+                (آخری & SHORT_CHANGE_عدد_نقاب) < SHORT_CHANGE_عدد_نقاب) {
+            سیٹ_آخری_Unit(آخری + 1);
+            واپس;
         }
         append(u);
-        return;
+        واپس;
     }
 
-    int32_t head = 0x7000;
-    if (oldLength < LENGTH_IN_1TRAIL && newLength < LENGTH_IN_1TRAIL) {
-        head |= oldLength << 6;
-        head |= newLength;
-        append(head);
-    } else if ((capacity - length) >= 5 || growArray()) {
-        int32_t limit = length + 1;
-        if(oldLength < LENGTH_IN_1TRAIL) {
-            head |= oldLength << 6;
-        } else if(oldLength <= 0x7fff) {
-            head |= LENGTH_IN_1TRAIL << 6;
-            array[limit++] = static_cast<uint16_t>(0x8000 | oldLength);
-        } else {
-            head |= (LENGTH_IN_2TRAIL + (oldLength >> 30)) << 6;
-            array[limit++] = static_cast<uint16_t>(0x8000 | (oldLength >> 15));
-            array[limit++] = static_cast<uint16_t>(0x8000 | oldLength);
+    int32_t سر = 0x7000;
+    اگر (old_لمبائی < لمبائی_اندر_1_TRAIL && new_لمبائی < لمبائی_اندر_1_TRAIL) {
+        سر |= old_لمبائی << 6;
+        سر |= new_لمبائی;
+        append(سر);
+    } ورنہ اگر ((capacity - length) >= 5 || growArray()) {
+        int32_t حد_بندی = length + 1;
+        اگر(old_لمبائی < لمبائی_اندر_1_TRAIL) {
+            سر |= old_لمبائی << 6;
+        } ورنہ اگر(old_لمبائی <= 0x7fff) {
+            سر |= لمبائی_اندر_1_TRAIL << 6;
+            array[حد_بندی++] = static_cast<uint16_t>(0x8000 | old_لمبائی);
+        } ورنہ {
+            سر |= (لمبائی_اندر_2_TRAIL + (old_لمبائی >> 30)) << 6;
+            array[حد_بندی++] = static_cast<uint16_t>(0x8000 | (old_لمبائی >> 15));
+            array[حد_بندی++] = static_cast<uint16_t>(0x8000 | old_لمبائی);
         }
-        if(newLength < LENGTH_IN_1TRAIL) {
-            head |= newLength;
-        } else if(newLength <= 0x7fff) {
-            head |= LENGTH_IN_1TRAIL;
-            array[limit++] = static_cast<uint16_t>(0x8000 | newLength);
-        } else {
-            head |= LENGTH_IN_2TRAIL + (newLength >> 30);
-            array[limit++] = static_cast<uint16_t>(0x8000 | (newLength >> 15));
-            array[limit++] = static_cast<uint16_t>(0x8000 | newLength);
+        اگر(new_لمبائی < لمبائی_اندر_1_TRAIL) {
+            سر |= new_لمبائی;
+        } ورنہ اگر(new_لمبائی <= 0x7fff) {
+            سر |= لمبائی_اندر_1_TRAIL;
+            array[حد_بندی++] = static_cast<uint16_t>(0x8000 | new_لمبائی);
+        } ورنہ {
+            سر |= لمبائی_اندر_2_TRAIL + (new_لمبائی >> 30);
+            array[حد_بندی++] = static_cast<uint16_t>(0x8000 | (new_لمبائی >> 15));
+            array[حد_بندی++] = static_cast<uint16_t>(0x8000 | new_لمبائی);
         }
-        array[length] = static_cast<uint16_t>(head);
-        length = limit;
+        array[length] = static_cast<uint16_t>(سر);
+        length = حد_بندی;
     }
 }
 
-void Edits::append(int32_t r) {
-    if(length < capacity || growArray()) {
+خالی Edits::append(int32_t r) {
+    اگر(length < capacity || growArray()) {
         array[length++] = static_cast<uint16_t>(r);
     }
 }
 
 UBool Edits::growArray() {
-    int32_t newCapacity;
-    if (array == stackArray) {
-        newCapacity = 2000;
-    } else if (capacity == INT32_MAX) {
+    int32_t new_استعداد;
+    اگر (array == ڈھیر_Array) {
+        new_استعداد = 2000;
+    } ورنہ اگر (capacity == INT32_MAX) {
         // Not U_BUFFER_OVERFLOW_ERROR because that could be confused on a string transform API
         // with a result-string-buffer overflow.
-        errorCode_ = U_INDEX_OUTOFBOUNDS_ERROR;
-        return false;
-    } else if (capacity >= (INT32_MAX / 2)) {
-        newCapacity = INT32_MAX;
-    } else {
-        newCapacity = 2 * capacity;
+        error_رمز_2 = U_اشاریہ_OUTOFBOUNDS_ERROR;
+        واپس جھوٹ;
+    } ورنہ اگر (capacity >= (INT32_MAX / 2)) {
+        new_استعداد = INT32_MAX;
+    } ورنہ {
+        new_استعداد = 2 * capacity;
     }
     // Grow by at least 5 units so that a maximal change record will fit.
-    if ((newCapacity - capacity) < 5) {
-        errorCode_ = U_INDEX_OUTOFBOUNDS_ERROR;
-        return false;
+    اگر ((new_استعداد - capacity) < 5) {
+        error_رمز_2 = U_اشاریہ_OUTOFBOUNDS_ERROR;
+        واپس جھوٹ;
     }
-    uint16_t* newArray = static_cast<uint16_t*>(uprv_malloc(static_cast<size_t>(newCapacity) * 2));
-    if (newArray == nullptr) {
-        errorCode_ = U_MEMORY_ALLOCATION_ERROR;
-        return false;
+    uint16_t* newArray = static_cast<uint16_t*>(uprv_malloc(static_cast<size_t>(new_استعداد) * 2));
+    اگر (newArray == خالی_اشاریہ) {
+        error_رمز_2 = U_حافظہ_تخصیص_ERROR;
+        واپس جھوٹ;
     }
     uprv_memcpy(newArray, array, (size_t)length * 2);
     releaseArray();
     array = newArray;
-    capacity = newCapacity;
-    return true;
+    capacity = new_استعداد;
+    واپس سچ;
 }
 
-UBool Edits::copyErrorTo(UErrorCode &outErrorCode) const {
-    if (U_FAILURE(outErrorCode)) { return true; }
-    if (U_SUCCESS(errorCode_)) { return false; }
-    outErrorCode = errorCode_;
-    return true;
+UBool Edits::copy_Error_مقصد(UError_رمز &برآمد_Error_رمز) ثابت {
+    اگر (U_FAILURE(برآمد_Error_رمز)) { واپس سچ; }
+    اگر (U_SUCCESS(error_رمز_2)) { واپس جھوٹ; }
+    برآمد_Error_رمز = error_رمز_2;
+    واپس سچ;
 }
 
-Edits& Edits::mergeAndAppend(const Edits& ab,
-                             const Edits& bc,
-                             UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if (copyErrorTo(errorCode)) { return *this; }
+Edits& Edits::ملاؤ_And_Append(ثابت Edits& ab,
+                             ثابت Edits& bc,
+                             UError_رمز& error_رمز) U_LIFETIME_BOUND {
+    اگر (copy_Error_مقصد(error_رمز)) { واپس *یہ; }
     // Picture string a --(Edits ab)--> string b --(Edits bc)--> string c.
     // Parallel iteration over both Edits.
     Iterator abIter = ab.getFineIterator();
     Iterator bcIter = bc.getFineIterator();
-    UBool abHasNext = true, bcHasNext = true;
+    UBool ab_Has_اگلا = سچ, bc_Has_اگلا = سچ;
     // Copy iterator state into local variables, so that we can modify and subdivide spans.
     // ab old & new length, bc old & new length
-    int32_t aLength = 0, ab_bLength = 0, bc_bLength = 0, cLength = 0;
+    int32_t a_لمبائی = 0, ab_b_لمبائی = 0, bc_b_لمبائی = 0, c_لمبائی = 0;
     // When we have different-intermediate-length changes, we accumulate a larger change.
-    int32_t pending_aLength = 0, pending_cLength = 0;
-    for (;;) {
+    int32_t pending_a_لمبائی = 0, pending_c_لمبائی = 0;
+    برائے (;;) {
         // At this point, for each of the two iterators:
         // Either we are done with the locally cached current edit,
         // and its intermediate-string length has been reset,
@@ -278,55 +278,55 @@ Edits& Edits::mergeAndAppend(const Edits& ab,
         // However, the result is observably different when
         // ab deletions meet bc insertions at the same intermediate-string index.
         // Some users expect the bc insertions to come first, so we fetch from bc first.
-        if (bc_bLength == 0) {
-            if (bcHasNext && (bcHasNext = bcIter.next(errorCode)) != 0) {
-                bc_bLength = bcIter.oldLength();
-                cLength = bcIter.newLength();
-                if (bc_bLength == 0) {
+        اگر (bc_b_لمبائی == 0) {
+            اگر (bc_Has_اگلا && (bc_Has_اگلا = bcIter.next(error_رمز)) != 0) {
+                bc_b_لمبائی = bcIter.old_لمبائی();
+                c_لمبائی = bcIter.new_لمبائی();
+                اگر (bc_b_لمبائی == 0) {
                     // insertion
-                    if (ab_bLength == 0 || !abIter.hasChange()) {
-                        addReplace(pending_aLength, pending_cLength + cLength);
-                        pending_aLength = pending_cLength = 0;
-                    } else {
-                        pending_cLength += cLength;
+                    اگر (ab_b_لمبائی == 0 || !abIter.hasChange()) {
+                        جوڑو_Replace(pending_a_لمبائی, pending_c_لمبائی + c_لمبائی);
+                        pending_a_لمبائی = pending_c_لمبائی = 0;
+                    } ورنہ {
+                        pending_c_لمبائی += c_لمبائی;
                     }
-                    continue;
+                    جاری;
                 }
             }
             // else see if the other iterator is done, too.
         }
-        if (ab_bLength == 0) {
-            if (abHasNext && (abHasNext = abIter.next(errorCode)) != 0) {
-                aLength = abIter.oldLength();
-                ab_bLength = abIter.newLength();
-                if (ab_bLength == 0) {
+        اگر (ab_b_لمبائی == 0) {
+            اگر (ab_Has_اگلا && (ab_Has_اگلا = abIter.next(error_رمز)) != 0) {
+                a_لمبائی = abIter.old_لمبائی();
+                ab_b_لمبائی = abIter.new_لمبائی();
+                اگر (ab_b_لمبائی == 0) {
                     // deletion
-                    if (bc_bLength == bcIter.oldLength() || !bcIter.hasChange()) {
-                        addReplace(pending_aLength + aLength, pending_cLength);
-                        pending_aLength = pending_cLength = 0;
-                    } else {
-                        pending_aLength += aLength;
+                    اگر (bc_b_لمبائی == bcIter.old_لمبائی() || !bcIter.hasChange()) {
+                        جوڑو_Replace(pending_a_لمبائی + a_لمبائی, pending_c_لمبائی);
+                        pending_a_لمبائی = pending_c_لمبائی = 0;
+                    } ورنہ {
+                        pending_a_لمبائی += a_لمبائی;
                     }
-                    continue;
+                    جاری;
                 }
-            } else if (bc_bLength == 0) {
+            } ورنہ اگر (bc_b_لمبائی == 0) {
                 // Both iterators are done at the same time:
                 // The intermediate-string lengths match.
-                break;
-            } else {
+                توڑو;
+            } ورنہ {
                 // The ab output string is shorter than the bc input string.
-                if (!copyErrorTo(errorCode)) {
-                    errorCode = U_ILLEGAL_ARGUMENT_ERROR;
+                اگر (!copy_Error_مقصد(error_رمز)) {
+                    error_رمز = U_ILLEGAL_دلیل_ERROR;
                 }
-                return *this;
+                واپس *یہ;
             }
         }
-        if (bc_bLength == 0) {
+        اگر (bc_b_لمبائی == 0) {
             // The bc input string is shorter than the ab output string.
-            if (!copyErrorTo(errorCode)) {
-                errorCode = U_ILLEGAL_ARGUMENT_ERROR;
+            اگر (!copy_Error_مقصد(error_رمز)) {
+                error_رمز = U_ILLEGAL_دلیل_ERROR;
             }
-            return *this;
+            واپس *یہ;
         }
         //  Done fetching: ab_bLength > 0 && bc_bLength > 0
 
@@ -336,471 +336,471 @@ Edits& Edits::mergeAndAppend(const Edits& ab,
         //   At least one side is newly fetched.
         //   One side might be a truncated remainder of an edit we fetched earlier.
 
-        if (!abIter.hasChange() && !bcIter.hasChange()) {
+        اگر (!abIter.hasChange() && !bcIter.hasChange()) {
             // An unchanged span all the way from string a to string c.
-            if (pending_aLength != 0 || pending_cLength != 0) {
-                addReplace(pending_aLength, pending_cLength);
-                pending_aLength = pending_cLength = 0;
+            اگر (pending_a_لمبائی != 0 || pending_c_لمبائی != 0) {
+                جوڑو_Replace(pending_a_لمبائی, pending_c_لمبائی);
+                pending_a_لمبائی = pending_c_لمبائی = 0;
             }
-            int32_t unchangedLength = aLength <= cLength ? aLength : cLength;
-            addUnchanged(unchangedLength);
-            ab_bLength = aLength -= unchangedLength;
-            bc_bLength = cLength -= unchangedLength;
+            int32_t unchanged_لمبائی = a_لمبائی <= c_لمبائی ? a_لمبائی : c_لمبائی;
+            جوڑو_Unchanged(unchanged_لمبائی);
+            ab_b_لمبائی = a_لمبائی -= unchanged_لمبائی;
+            bc_b_لمبائی = c_لمبائی -= unchanged_لمبائی;
             // At least one of the unchanged spans is now empty.
-            continue;
+            جاری;
         }
-        if (!abIter.hasChange() && bcIter.hasChange()) {
+        اگر (!abIter.hasChange() && bcIter.hasChange()) {
             // Unchanged a->b but changed b->c.
-            if (ab_bLength >= bc_bLength) {
+            اگر (ab_b_لمبائی >= bc_b_لمبائی) {
                 // Split the longer unchanged span into change + remainder.
-                addReplace(pending_aLength + bc_bLength, pending_cLength + cLength);
-                pending_aLength = pending_cLength = 0;
-                aLength = ab_bLength -= bc_bLength;
-                bc_bLength = 0;
-                continue;
+                جوڑو_Replace(pending_a_لمبائی + bc_b_لمبائی, pending_c_لمبائی + c_لمبائی);
+                pending_a_لمبائی = pending_c_لمبائی = 0;
+                a_لمبائی = ab_b_لمبائی -= bc_b_لمبائی;
+                bc_b_لمبائی = 0;
+                جاری;
             }
             // Handle the shorter unchanged span below like a change.
-        } else if (abIter.hasChange() && !bcIter.hasChange()) {
+        } ورنہ اگر (abIter.hasChange() && !bcIter.hasChange()) {
             // Changed a->b and then unchanged b->c.
-            if (ab_bLength <= bc_bLength) {
+            اگر (ab_b_لمبائی <= bc_b_لمبائی) {
                 // Split the longer unchanged span into change + remainder.
-                addReplace(pending_aLength + aLength, pending_cLength + ab_bLength);
-                pending_aLength = pending_cLength = 0;
-                cLength = bc_bLength -= ab_bLength;
-                ab_bLength = 0;
-                continue;
+                جوڑو_Replace(pending_a_لمبائی + a_لمبائی, pending_c_لمبائی + ab_b_لمبائی);
+                pending_a_لمبائی = pending_c_لمبائی = 0;
+                c_لمبائی = bc_b_لمبائی -= ab_b_لمبائی;
+                ab_b_لمبائی = 0;
+                جاری;
             }
             // Handle the shorter unchanged span below like a change.
-        } else {  // both abIter.hasChange() && bcIter.hasChange()
-            if (ab_bLength == bc_bLength) {
+        } ورنہ {  // both abIter.hasChange() && bcIter.hasChange()
+            اگر (ab_b_لمبائی == bc_b_لمبائی) {
                 // Changes on both sides up to the same position. Emit & reset.
-                addReplace(pending_aLength + aLength, pending_cLength + cLength);
-                pending_aLength = pending_cLength = 0;
-                ab_bLength = bc_bLength = 0;
-                continue;
+                جوڑو_Replace(pending_a_لمبائی + a_لمبائی, pending_c_لمبائی + c_لمبائی);
+                pending_a_لمبائی = pending_c_لمبائی = 0;
+                ab_b_لمبائی = bc_b_لمبائی = 0;
+                جاری;
             }
         }
         // Accumulate the a->c change, reset the shorter side,
         // keep a remainder of the longer one.
-        pending_aLength += aLength;
-        pending_cLength += cLength;
-        if (ab_bLength < bc_bLength) {
-            bc_bLength -= ab_bLength;
-            cLength = ab_bLength = 0;
-        } else {  // ab_bLength > bc_bLength
-            ab_bLength -= bc_bLength;
-            aLength = bc_bLength = 0;
+        pending_a_لمبائی += a_لمبائی;
+        pending_c_لمبائی += c_لمبائی;
+        اگر (ab_b_لمبائی < bc_b_لمبائی) {
+            bc_b_لمبائی -= ab_b_لمبائی;
+            c_لمبائی = ab_b_لمبائی = 0;
+        } ورنہ {  // ab_bLength > bc_bLength
+            ab_b_لمبائی -= bc_b_لمبائی;
+            a_لمبائی = bc_b_لمبائی = 0;
         }
     }
-    if (pending_aLength != 0 || pending_cLength != 0) {
-        addReplace(pending_aLength, pending_cLength);
+    اگر (pending_a_لمبائی != 0 || pending_c_لمبائی != 0) {
+        جوڑو_Replace(pending_a_لمبائی, pending_c_لمبائی);
     }
-    copyErrorTo(errorCode);
-    return *this;
+    copy_Error_مقصد(error_رمز);
+    واپس *یہ;
 }
 
-Edits::Iterator::Iterator(const uint16_t* a U_LIFETIME_BOUND, int32_t len, UBool oc, UBool crs) :
-        array(a), index(0), length(len), remaining(0),
+Edits::Iterator::Iterator(ثابت uint16_t* a U_LIFETIME_BOUND, int32_t len, UBool oc, UBool crs) :
+        array(a), اشاریہ(0), length(len), بقایا(0),
         onlyChanges_(oc), coarse(crs),
-        dir(0), changed(false), oldLength_(0), newLength_(0),
-        srcIndex(0), replIndex(0), destIndex(0) {}
+        dir(0), بدلا(جھوٹ), old_لمبائی_2(0), new_لمبائی_2(0),
+        src_اشاریہ(0), repl_اشاریہ(0), dest_اشاریہ(0) {}
 
-int32_t Edits::Iterator::readLength(int32_t head) {
-    if (head < LENGTH_IN_1TRAIL) {
-        return head;
-    } else if (head < LENGTH_IN_2TRAIL) {
-        U_ASSERT(index < length);
-        U_ASSERT(array[index] >= 0x8000);
-        return array[index++] & 0x7fff;
-    } else {
-        U_ASSERT((index + 2) <= length);
-        U_ASSERT(array[index] >= 0x8000);
-        U_ASSERT(array[index + 1] >= 0x8000);
-        int32_t len = ((head & 1) << 30) |
-                (static_cast<int32_t>(array[index] & 0x7fff) << 15) |
-                (array[index + 1] & 0x7fff);
-        index += 2;
-        return len;
+int32_t Edits::Iterator::read_لمبائی(int32_t سر) {
+    اگر (سر < لمبائی_اندر_1_TRAIL) {
+        واپس سر;
+    } ورنہ اگر (سر < لمبائی_اندر_2_TRAIL) {
+        U_ASSERT(اشاریہ < length);
+        U_ASSERT(array[اشاریہ] >= 0x8000);
+        واپس array[اشاریہ++] & 0x7fff;
+    } ورنہ {
+        U_ASSERT((اشاریہ + 2) <= length);
+        U_ASSERT(array[اشاریہ] >= 0x8000);
+        U_ASSERT(array[اشاریہ + 1] >= 0x8000);
+        int32_t len = ((سر & 1) << 30) |
+                (static_cast<int32_t>(array[اشاریہ] & 0x7fff) << 15) |
+                (array[اشاریہ + 1] & 0x7fff);
+        اشاریہ += 2;
+        واپس len;
     }
 }
 
-void Edits::Iterator::updateNextIndexes() {
-    srcIndex += oldLength_;
-    if (changed) {
-        replIndex += newLength_;
+خالی Edits::Iterator::update_اگلا_Indexes() {
+    src_اشاریہ += old_لمبائی_2;
+    اگر (بدلا) {
+        repl_اشاریہ += new_لمبائی_2;
     }
-    destIndex += newLength_;
+    dest_اشاریہ += new_لمبائی_2;
 }
 
-void Edits::Iterator::updatePreviousIndexes() {
-    srcIndex -= oldLength_;
-    if (changed) {
-        replIndex -= newLength_;
+خالی Edits::Iterator::update_پچھلا_Indexes() {
+    src_اشاریہ -= old_لمبائی_2;
+    اگر (بدلا) {
+        repl_اشاریہ -= new_لمبائی_2;
     }
-    destIndex -= newLength_;
+    dest_اشاریہ -= new_لمبائی_2;
 }
 
-UBool Edits::Iterator::noNext() {
+UBool Edits::Iterator::no_اگلا() {
     // No change before or beyond the string.
     dir = 0;
-    changed = false;
-    oldLength_ = newLength_ = 0;
-    return false;
+    بدلا = جھوٹ;
+    old_لمبائی_2 = new_لمبائی_2 = 0;
+    واپس جھوٹ;
 }
 
-UBool Edits::Iterator::next(UBool onlyChanges, UErrorCode &errorCode) {
+UBool Edits::Iterator::next(UBool onlyChanges, UError_رمز &error_رمز) {
     // Forward iteration: Update the string indexes to the limit of the current span,
     // and post-increment-read array units to assemble a new span.
     // Leaves the array index one after the last unit of that span.
-    if (U_FAILURE(errorCode)) { return false; }
+    اگر (U_FAILURE(error_رمز)) { واپس جھوٹ; }
     // We have an errorCode in case we need to start guarding against integer overflows.
     // It is also convenient for caller loops if we bail out when an error was set elsewhere.
-    if (dir > 0) {
-        updateNextIndexes();
-    } else {
-        if (dir < 0) {
+    اگر (dir > 0) {
+        update_اگلا_Indexes();
+    } ورنہ {
+        اگر (dir < 0) {
             // Turn around from previous() to next().
             // Post-increment-read the same span again.
-            if (remaining > 0) {
+            اگر (بقایا > 0) {
                 // Fine-grained iterator:
                 // Stay on the current one of a sequence of compressed changes.
-                ++index;  // next() rests on the index after the sequence unit.
+                ++اشاریہ;  // next() rests on the index after the sequence unit.
                 dir = 1;
-                return true;
+                واپس سچ;
             }
         }
         dir = 1;
     }
-    if (remaining >= 1) {
+    اگر (بقایا >= 1) {
         // Fine-grained iterator: Continue a sequence of compressed changes.
-        if (remaining > 1) {
-            --remaining;
-            return true;
+        اگر (بقایا > 1) {
+            --بقایا;
+            واپس سچ;
         }
-        remaining = 0;
+        بقایا = 0;
     }
-    if (index >= length) {
-        return noNext();
+    اگر (اشاریہ >= length) {
+        واپس no_اگلا();
     }
-    int32_t u = array[index++];
-    if (u <= MAX_UNCHANGED) {
+    int32_t u = array[اشاریہ++];
+    اگر (u <= MAX_UNCHANGED) {
         // Combine adjacent unchanged ranges.
-        changed = false;
-        oldLength_ = u + 1;
-        while (index < length && (u = array[index]) <= MAX_UNCHANGED) {
-            ++index;
-            oldLength_ += u + 1;
+        بدلا = جھوٹ;
+        old_لمبائی_2 = u + 1;
+        جب (اشاریہ < length && (u = array[اشاریہ]) <= MAX_UNCHANGED) {
+            ++اشاریہ;
+            old_لمبائی_2 += u + 1;
         }
-        newLength_ = oldLength_;
-        if (onlyChanges) {
-            updateNextIndexes();
-            if (index >= length) {
-                return noNext();
+        new_لمبائی_2 = old_لمبائی_2;
+        اگر (onlyChanges) {
+            update_اگلا_Indexes();
+            اگر (اشاریہ >= length) {
+                واپس no_اگلا();
             }
             // already fetched u > MAX_UNCHANGED at index
-            ++index;
-        } else {
-            return true;
+            ++اشاریہ;
+        } ورنہ {
+            واپس سچ;
         }
     }
-    changed = true;
-    if (u <= MAX_SHORT_CHANGE) {
+    بدلا = سچ;
+    اگر (u <= MAX_SHORT_CHANGE) {
         int32_t oldLen = u >> 12;
-        int32_t newLen = (u >> 9) & MAX_SHORT_CHANGE_NEW_LENGTH;
-        int32_t num = (u & SHORT_CHANGE_NUM_MASK) + 1;
-        if (coarse) {
-            oldLength_ = num * oldLen;
-            newLength_ = num * newLen;
-        } else {
+        int32_t newLen = (u >> 9) & MAX_SHORT_CHANGE_NEW_لمبائی;
+        int32_t num = (u & SHORT_CHANGE_عدد_نقاب) + 1;
+        اگر (coarse) {
+            old_لمبائی_2 = num * oldLen;
+            new_لمبائی_2 = num * newLen;
+        } ورنہ {
             // Split a sequence of changes that was compressed into one unit.
-            oldLength_ = oldLen;
-            newLength_ = newLen;
-            if (num > 1) {
-                remaining = num;  // This is the first of two or more changes.
+            old_لمبائی_2 = oldLen;
+            new_لمبائی_2 = newLen;
+            اگر (num > 1) {
+                بقایا = num;  // This is the first of two or more changes.
             }
-            return true;
+            واپس سچ;
         }
-    } else {
+    } ورنہ {
         U_ASSERT(u <= 0x7fff);
-        oldLength_ = readLength((u >> 6) & 0x3f);
-        newLength_ = readLength(u & 0x3f);
-        if (!coarse) {
-            return true;
+        old_لمبائی_2 = read_لمبائی((u >> 6) & 0x3f);
+        new_لمبائی_2 = read_لمبائی(u & 0x3f);
+        اگر (!coarse) {
+            واپس سچ;
         }
     }
     // Combine adjacent changes.
-    while (index < length && (u = array[index]) > MAX_UNCHANGED) {
-        ++index;
-        if (u <= MAX_SHORT_CHANGE) {
-            int32_t num = (u & SHORT_CHANGE_NUM_MASK) + 1;
-            oldLength_ += (u >> 12) * num;
-            newLength_ += ((u >> 9) & MAX_SHORT_CHANGE_NEW_LENGTH) * num;
-        } else {
+    جب (اشاریہ < length && (u = array[اشاریہ]) > MAX_UNCHANGED) {
+        ++اشاریہ;
+        اگر (u <= MAX_SHORT_CHANGE) {
+            int32_t num = (u & SHORT_CHANGE_عدد_نقاب) + 1;
+            old_لمبائی_2 += (u >> 12) * num;
+            new_لمبائی_2 += ((u >> 9) & MAX_SHORT_CHANGE_NEW_لمبائی) * num;
+        } ورنہ {
             U_ASSERT(u <= 0x7fff);
-            oldLength_ += readLength((u >> 6) & 0x3f);
-            newLength_ += readLength(u & 0x3f);
+            old_لمبائی_2 += read_لمبائی((u >> 6) & 0x3f);
+            new_لمبائی_2 += read_لمبائی(u & 0x3f);
         }
     }
-    return true;
+    واپس سچ;
 }
 
-UBool Edits::Iterator::previous(UErrorCode &errorCode) {
+UBool Edits::Iterator::پچھلا_2(UError_رمز &error_رمز) {
     // Backward iteration: Pre-decrement-read array units to assemble a new span,
     // then update the string indexes to the start of that span.
     // Leaves the array index on the head unit of that span.
-    if (U_FAILURE(errorCode)) { return false; }
+    اگر (U_FAILURE(error_رمز)) { واپس جھوٹ; }
     // We have an errorCode in case we need to start guarding against integer overflows.
     // It is also convenient for caller loops if we bail out when an error was set elsewhere.
-    if (dir >= 0) {
-        if (dir > 0) {
+    اگر (dir >= 0) {
+        اگر (dir > 0) {
             // Turn around from next() to previous().
             // Set the string indexes to the span limit and
             // pre-decrement-read the same span again.
-            if (remaining > 0) {
+            اگر (بقایا > 0) {
                 // Fine-grained iterator:
                 // Stay on the current one of a sequence of compressed changes.
-                --index;  // previous() rests on the sequence unit.
+                --اشاریہ;  // previous() rests on the sequence unit.
                 dir = -1;
-                return true;
+                واپس سچ;
             }
-            updateNextIndexes();
+            update_اگلا_Indexes();
         }
         dir = -1;
     }
-    if (remaining > 0) {
+    اگر (بقایا > 0) {
         // Fine-grained iterator: Continue a sequence of compressed changes.
-        int32_t u = array[index];
+        int32_t u = array[اشاریہ];
         U_ASSERT(MAX_UNCHANGED < u && u <= MAX_SHORT_CHANGE);
-        if (remaining <= (u & SHORT_CHANGE_NUM_MASK)) {
-            ++remaining;
-            updatePreviousIndexes();
-            return true;
+        اگر (بقایا <= (u & SHORT_CHANGE_عدد_نقاب)) {
+            ++بقایا;
+            update_پچھلا_Indexes();
+            واپس سچ;
         }
-        remaining = 0;
+        بقایا = 0;
     }
-    if (index <= 0) {
-        return noNext();
+    اگر (اشاریہ <= 0) {
+        واپس no_اگلا();
     }
-    int32_t u = array[--index];
-    if (u <= MAX_UNCHANGED) {
+    int32_t u = array[--اشاریہ];
+    اگر (u <= MAX_UNCHANGED) {
         // Combine adjacent unchanged ranges.
-        changed = false;
-        oldLength_ = u + 1;
-        while (index > 0 && (u = array[index - 1]) <= MAX_UNCHANGED) {
-            --index;
-            oldLength_ += u + 1;
+        بدلا = جھوٹ;
+        old_لمبائی_2 = u + 1;
+        جب (اشاریہ > 0 && (u = array[اشاریہ - 1]) <= MAX_UNCHANGED) {
+            --اشاریہ;
+            old_لمبائی_2 += u + 1;
         }
-        newLength_ = oldLength_;
+        new_لمبائی_2 = old_لمبائی_2;
         // No need to handle onlyChanges as long as previous() is called only from findIndex().
-        updatePreviousIndexes();
-        return true;
+        update_پچھلا_Indexes();
+        واپس سچ;
     }
-    changed = true;
-    if (u <= MAX_SHORT_CHANGE) {
+    بدلا = سچ;
+    اگر (u <= MAX_SHORT_CHANGE) {
         int32_t oldLen = u >> 12;
-        int32_t newLen = (u >> 9) & MAX_SHORT_CHANGE_NEW_LENGTH;
-        int32_t num = (u & SHORT_CHANGE_NUM_MASK) + 1;
-        if (coarse) {
-            oldLength_ = num * oldLen;
-            newLength_ = num * newLen;
-        } else {
+        int32_t newLen = (u >> 9) & MAX_SHORT_CHANGE_NEW_لمبائی;
+        int32_t num = (u & SHORT_CHANGE_عدد_نقاب) + 1;
+        اگر (coarse) {
+            old_لمبائی_2 = num * oldLen;
+            new_لمبائی_2 = num * newLen;
+        } ورنہ {
             // Split a sequence of changes that was compressed into one unit.
-            oldLength_ = oldLen;
-            newLength_ = newLen;
-            if (num > 1) {
-                remaining = 1;  // This is the last of two or more changes.
+            old_لمبائی_2 = oldLen;
+            new_لمبائی_2 = newLen;
+            اگر (num > 1) {
+                بقایا = 1;  // This is the last of two or more changes.
             }
-            updatePreviousIndexes();
-            return true;
+            update_پچھلا_Indexes();
+            واپس سچ;
         }
-    } else {
-        if (u <= 0x7fff) {
+    } ورنہ {
+        اگر (u <= 0x7fff) {
             // The change is encoded in u alone.
-            oldLength_ = readLength((u >> 6) & 0x3f);
-            newLength_ = readLength(u & 0x3f);
-        } else {
+            old_لمبائی_2 = read_لمبائی((u >> 6) & 0x3f);
+            new_لمبائی_2 = read_لمبائی(u & 0x3f);
+        } ورنہ {
             // Back up to the head of the change, read the lengths,
             // and reset the index to the head again.
-            U_ASSERT(index > 0);
-            while ((u = array[--index]) > 0x7fff) {}
+            U_ASSERT(اشاریہ > 0);
+            جب ((u = array[--اشاریہ]) > 0x7fff) {}
             U_ASSERT(u > MAX_SHORT_CHANGE);
-            int32_t headIndex = index++;
-            oldLength_ = readLength((u >> 6) & 0x3f);
-            newLength_ = readLength(u & 0x3f);
-            index = headIndex;
+            int32_t سر_اشاریہ = اشاریہ++;
+            old_لمبائی_2 = read_لمبائی((u >> 6) & 0x3f);
+            new_لمبائی_2 = read_لمبائی(u & 0x3f);
+            اشاریہ = سر_اشاریہ;
         }
-        if (!coarse) {
-            updatePreviousIndexes();
-            return true;
+        اگر (!coarse) {
+            update_پچھلا_Indexes();
+            واپس سچ;
         }
     }
     // Combine adjacent changes.
-    while (index > 0 && (u = array[index - 1]) > MAX_UNCHANGED) {
-        --index;
-        if (u <= MAX_SHORT_CHANGE) {
-            int32_t num = (u & SHORT_CHANGE_NUM_MASK) + 1;
-            oldLength_ += (u >> 12) * num;
-            newLength_ += ((u >> 9) & MAX_SHORT_CHANGE_NEW_LENGTH) * num;
-        } else if (u <= 0x7fff) {
+    جب (اشاریہ > 0 && (u = array[اشاریہ - 1]) > MAX_UNCHANGED) {
+        --اشاریہ;
+        اگر (u <= MAX_SHORT_CHANGE) {
+            int32_t num = (u & SHORT_CHANGE_عدد_نقاب) + 1;
+            old_لمبائی_2 += (u >> 12) * num;
+            new_لمبائی_2 += ((u >> 9) & MAX_SHORT_CHANGE_NEW_لمبائی) * num;
+        } ورنہ اگر (u <= 0x7fff) {
             // Read the lengths, and reset the index to the head again.
-            int32_t headIndex = index++;
-            oldLength_ += readLength((u >> 6) & 0x3f);
-            newLength_ += readLength(u & 0x3f);
-            index = headIndex;
+            int32_t سر_اشاریہ = اشاریہ++;
+            old_لمبائی_2 += read_لمبائی((u >> 6) & 0x3f);
+            new_لمبائی_2 += read_لمبائی(u & 0x3f);
+            اشاریہ = سر_اشاریہ;
         }
     }
-    updatePreviousIndexes();
-    return true;
+    update_پچھلا_Indexes();
+    واپس سچ;
 }
 
-int32_t Edits::Iterator::findIndex(int32_t i, UBool findSource, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode) || i < 0) { return -1; }
-    int32_t spanStart, spanLength;
-    if (findSource) {  // find source index
-        spanStart = srcIndex;
-        spanLength = oldLength_;
-    } else {  // find destination index
-        spanStart = destIndex;
-        spanLength = newLength_;
+int32_t Edits::Iterator::ڈھونڈو_اشاریہ(int32_t i, UBool ڈھونڈو_ماخذ, UError_رمز &error_رمز) {
+    اگر (U_FAILURE(error_رمز) || i < 0) { واپس -1; }
+    int32_t وسعت_آغاز, وسعت_لمبائی;
+    اگر (ڈھونڈو_ماخذ) {  // find source index
+        وسعت_آغاز = src_اشاریہ;
+        وسعت_لمبائی = old_لمبائی_2;
+    } ورنہ {  // find destination index
+        وسعت_آغاز = dest_اشاریہ;
+        وسعت_لمبائی = new_لمبائی_2;
     }
-    if (i < spanStart) {
-        if (i >= (spanStart / 2)) {
+    اگر (i < وسعت_آغاز) {
+        اگر (i >= (وسعت_آغاز / 2)) {
             // Search backwards.
-            for (;;) {
-                UBool hasPrevious = previous(errorCode);
-                U_ASSERT(hasPrevious);  // because i>=0 and the first span starts at 0
-                (void)hasPrevious;  // avoid unused-variable warning
-                spanStart = findSource ? srcIndex : destIndex;
-                if (i >= spanStart) {
+            برائے (;;) {
+                UBool has_پچھلا = پچھلا_2(error_رمز);
+                U_ASSERT(has_پچھلا);  // because i>=0 and the first span starts at 0
+                (خالی)has_پچھلا;  // avoid unused-variable warning
+                وسعت_آغاز = ڈھونڈو_ماخذ ? src_اشاریہ : dest_اشاریہ;
+                اگر (i >= وسعت_آغاز) {
                     // The index is in the current span.
-                    return 0;
+                    واپس 0;
                 }
-                if (remaining > 0) {
+                اگر (بقایا > 0) {
                     // Is the index in one of the remaining compressed edits?
                     // spanStart is the start of the current span, first of the remaining ones.
-                    spanLength = findSource ? oldLength_ : newLength_;
-                    int32_t u = array[index];
+                    وسعت_لمبائی = ڈھونڈو_ماخذ ? old_لمبائی_2 : new_لمبائی_2;
+                    int32_t u = array[اشاریہ];
                     U_ASSERT(MAX_UNCHANGED < u && u <= MAX_SHORT_CHANGE);
-                    int32_t num = (u & SHORT_CHANGE_NUM_MASK) + 1 - remaining;
-                    int32_t len = num * spanLength;
-                    if (i >= (spanStart - len)) {
-                        int32_t n = ((spanStart - i - 1) / spanLength) + 1;
+                    int32_t num = (u & SHORT_CHANGE_عدد_نقاب) + 1 - بقایا;
+                    int32_t len = num * وسعت_لمبائی;
+                    اگر (i >= (وسعت_آغاز - len)) {
+                        int32_t n = ((وسعت_آغاز - i - 1) / وسعت_لمبائی) + 1;
                         // 1 <= n <= num
-                        srcIndex -= n * oldLength_;
-                        replIndex -= n * newLength_;
-                        destIndex -= n * newLength_;
-                        remaining += n;
-                        return 0;
+                        src_اشاریہ -= n * old_لمبائی_2;
+                        repl_اشاریہ -= n * new_لمبائی_2;
+                        dest_اشاریہ -= n * new_لمبائی_2;
+                        بقایا += n;
+                        واپس 0;
                     }
                     // Skip all of these edits at once.
-                    srcIndex -= num * oldLength_;
-                    replIndex -= num * newLength_;
-                    destIndex -= num * newLength_;
-                    remaining = 0;
+                    src_اشاریہ -= num * old_لمبائی_2;
+                    repl_اشاریہ -= num * new_لمبائی_2;
+                    dest_اشاریہ -= num * new_لمبائی_2;
+                    بقایا = 0;
                 }
             }
         }
         // Reset the iterator to the start.
         dir = 0;
-        index = remaining = oldLength_ = newLength_ = srcIndex = replIndex = destIndex = 0;
-    } else if (i < (spanStart + spanLength)) {
+        اشاریہ = بقایا = old_لمبائی_2 = new_لمبائی_2 = src_اشاریہ = repl_اشاریہ = dest_اشاریہ = 0;
+    } ورنہ اگر (i < (وسعت_آغاز + وسعت_لمبائی)) {
         // The index is in the current span.
-        return 0;
+        واپس 0;
     }
-    while (next(false, errorCode)) {
-        if (findSource) {
-            spanStart = srcIndex;
-            spanLength = oldLength_;
-        } else {
-            spanStart = destIndex;
-            spanLength = newLength_;
+    جب (next(جھوٹ, error_رمز)) {
+        اگر (ڈھونڈو_ماخذ) {
+            وسعت_آغاز = src_اشاریہ;
+            وسعت_لمبائی = old_لمبائی_2;
+        } ورنہ {
+            وسعت_آغاز = dest_اشاریہ;
+            وسعت_لمبائی = new_لمبائی_2;
         }
-        if (i < (spanStart + spanLength)) {
+        اگر (i < (وسعت_آغاز + وسعت_لمبائی)) {
             // The index is in the current span.
-            return 0;
+            واپس 0;
         }
-        if (remaining > 1) {
+        اگر (بقایا > 1) {
             // Is the index in one of the remaining compressed edits?
             // spanStart is the start of the current span, first of the remaining ones.
-            int32_t len = remaining * spanLength;
-            if (i < (spanStart + len)) {
-                int32_t n = (i - spanStart) / spanLength;  // 1 <= n <= remaining - 1
-                srcIndex += n * oldLength_;
-                replIndex += n * newLength_;
-                destIndex += n * newLength_;
-                remaining -= n;
-                return 0;
+            int32_t len = بقایا * وسعت_لمبائی;
+            اگر (i < (وسعت_آغاز + len)) {
+                int32_t n = (i - وسعت_آغاز) / وسعت_لمبائی;  // 1 <= n <= remaining - 1
+                src_اشاریہ += n * old_لمبائی_2;
+                repl_اشاریہ += n * new_لمبائی_2;
+                dest_اشاریہ += n * new_لمبائی_2;
+                بقایا -= n;
+                واپس 0;
             }
             // Make next() skip all of these edits at once.
-            oldLength_ *= remaining;
-            newLength_ *= remaining;
-            remaining = 0;
+            old_لمبائی_2 *= بقایا;
+            new_لمبائی_2 *= بقایا;
+            بقایا = 0;
         }
     }
-    return 1;
+    واپس 1;
 }
 
-int32_t Edits::Iterator::destinationIndexFromSourceIndex(int32_t i, UErrorCode &errorCode) {
-    int32_t where = findIndex(i, true, errorCode);
-    if (where < 0) {
+int32_t Edits::Iterator::destination_اشاریہ_From_ماخذ_اشاریہ(int32_t i, UError_رمز &error_رمز) {
+    int32_t where = ڈھونڈو_اشاریہ(i, سچ, error_رمز);
+    اگر (where < 0) {
         // Error or before the string.
-        return 0;
+        واپس 0;
     }
-    if (where > 0 || i == srcIndex) {
+    اگر (where > 0 || i == src_اشاریہ) {
         // At or after string length, or at start of the found span.
-        return destIndex;
+        واپس dest_اشاریہ;
     }
-    if (changed) {
+    اگر (بدلا) {
         // In a change span, map to its end.
-        return destIndex + newLength_;
-    } else {
+        واپس dest_اشاریہ + new_لمبائی_2;
+    } ورنہ {
         // In an unchanged span, offset 1:1 within it.
-        return destIndex + (i - srcIndex);
+        واپس dest_اشاریہ + (i - src_اشاریہ);
     }
 }
 
-int32_t Edits::Iterator::sourceIndexFromDestinationIndex(int32_t i, UErrorCode &errorCode) {
-    int32_t where = findIndex(i, false, errorCode);
-    if (where < 0) {
+int32_t Edits::Iterator::ماخذ_اشاریہ_From_Destination_اشاریہ(int32_t i, UError_رمز &error_رمز) {
+    int32_t where = ڈھونڈو_اشاریہ(i, جھوٹ, error_رمز);
+    اگر (where < 0) {
         // Error or before the string.
-        return 0;
+        واپس 0;
     }
-    if (where > 0 || i == destIndex) {
+    اگر (where > 0 || i == dest_اشاریہ) {
         // At or after string length, or at start of the found span.
-        return srcIndex;
+        واپس src_اشاریہ;
     }
-    if (changed) {
+    اگر (بدلا) {
         // In a change span, map to its end.
-        return srcIndex + oldLength_;
-    } else {
+        واپس src_اشاریہ + old_لمبائی_2;
+    } ورنہ {
         // In an unchanged span, offset within it.
-        return srcIndex + (i - destIndex);
+        واپس src_اشاریہ + (i - dest_اشاریہ);
     }
 }
 
-UnicodeString& Edits::Iterator::toString(UnicodeString& sb U_LIFETIME_BOUND) const {
+UnicodeString& Edits::Iterator::مقصد_String(UnicodeString& sb U_LIFETIME_BOUND) ثابت {
     sb.append(u"{ src[", -1);
-    ICU_Utility::appendNumber(sb, srcIndex);
+    ICU_Utility::append_نمبر(sb, src_اشاریہ);
     sb.append(u"..", -1);
-    ICU_Utility::appendNumber(sb, srcIndex + oldLength_);
-    if (changed) {
+    ICU_Utility::append_نمبر(sb, src_اشاریہ + old_لمبائی_2);
+    اگر (بدلا) {
         sb.append(u"] ⇝ dest[", -1);
-    } else {
+    } ورنہ {
         sb.append(u"] ≡ dest[", -1);
     }
-    ICU_Utility::appendNumber(sb, destIndex);
+    ICU_Utility::append_نمبر(sb, dest_اشاریہ);
     sb.append(u"..", -1);
-    ICU_Utility::appendNumber(sb, destIndex + newLength_);
-    if (changed) {
+    ICU_Utility::append_نمبر(sb, dest_اشاریہ + new_لمبائی_2);
+    اگر (بدلا) {
         sb.append(u"], repl[", -1);
-        ICU_Utility::appendNumber(sb, replIndex);
+        ICU_Utility::append_نمبر(sb, repl_اشاریہ);
         sb.append(u"..", -1);
-        ICU_Utility::appendNumber(sb, replIndex + newLength_);
+        ICU_Utility::append_نمبر(sb, repl_اشاریہ + new_لمبائی_2);
         sb.append(u"] }", -1);
-    } else {
+    } ورنہ {
         sb.append(u"] (no-change) }", -1);
     }
-    return sb;
+    واپس sb;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا

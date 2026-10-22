@@ -18,13 +18,13 @@
 *   Internal function for sorting arrays.
 */
 
-#include <cstddef>
+#شامل <cstddef>
 
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "uarrsort.h"
+#شامل "unicode/utypes.h"
+#شامل "cmemory.h"
+#شامل "uarrsort.h"
 
-enum {
+شمار {
     /**
      * "from Knuth"
      *
@@ -33,55 +33,55 @@ enum {
      * A linear search over 8 items on average also performs 4 comparisons.
      */
     MIN_QSORT=9,
-    STACK_ITEM_SIZE=200
+    ڈھیر_شے_سائز=200
 };
 
-static constexpr int32_t sizeInMaxAlignTs(int32_t sizeInBytes) {
-    return (sizeInBytes + sizeof(std::max_align_t) - 1) / sizeof(std::max_align_t);
+ساکن constexpr int32_t سائز_اندر_Max_Align_Ts(int32_t سائز_اندر_بائٹیں) {
+    واپس (سائز_اندر_بائٹیں + حجم(std::max_align_t) - 1) / حجم(std::max_align_t);
 }
 
 /* UComparator convenience implementations ---------------------------------- */
 
 U_CAPI int32_t U_EXPORT2
-uprv_uint16Comparator(const void *context, const void *left, const void *right) {
-    (void)context;
-    return (int32_t)*(const uint16_t *)left - (int32_t)*(const uint16_t *)right;
+uprv_uint16Comparator(ثابت خالی *context, ثابت خالی *بائیں, ثابت خالی *دائیں) {
+    (خالی)context;
+    واپس (int32_t)*(ثابت uint16_t *)بائیں - (int32_t)*(ثابت uint16_t *)دائیں;
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_int32Comparator(const void *context, const void *left, const void *right) {
-    (void)context;
-    return *(const int32_t *)left - *(const int32_t *)right;
+uprv_int32Comparator(ثابت خالی *context, ثابت خالی *بائیں, ثابت خالی *دائیں) {
+    (خالی)context;
+    واپس *(ثابت int32_t *)بائیں - *(ثابت int32_t *)دائیں;
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_uint32Comparator(const void *context, const void *left, const void *right) {
-    (void)context;
-    uint32_t l=*(const uint32_t *)left, r=*(const uint32_t *)right;
+uprv_uint32Comparator(ثابت خالی *context, ثابت خالی *بائیں, ثابت خالی *دائیں) {
+    (خالی)context;
+    uint32_t l=*(ثابت uint32_t *)بائیں, r=*(ثابت uint32_t *)دائیں;
 
     /* compare directly because (l-r) would overflow the int32_t result */
-    if(l<r) {
-        return -1;
-    } else if(l==r) {
-        return 0;
-    } else /* l>r */ {
-        return 1;
+    اگر(l<r) {
+        واپس -1;
+    } ورنہ اگر(l==r) {
+        واپس 0;
+    } ورنہ /* l>r */ {
+        واپس 1;
     }
 }
 
 /* Insertion sort using binary search --------------------------------------- */
 
 U_CAPI int32_t U_EXPORT2
-uprv_stableBinarySearch(char *array, int32_t limit, void *item, int32_t itemSize,
-                        UComparator *cmp, const void *context) {
-    int32_t start=0;
-    UBool found=false;
+uprv_stable_ثنائی_تلاش(حرف *array, int32_t حد_بندی, خالی *شے, int32_t شے_سائز,
+                        UComparator *cmp, ثابت خالی *context) {
+    int32_t آغاز=0;
+    UBool ملا=جھوٹ;
 
     /* Binary search until we get down to a tiny sub-array. */
-    while((limit-start)>=MIN_QSORT) {
-        int32_t i=(start+limit)/2;
-        int32_t diff=cmp(context, item, array+i*itemSize);
-        if(diff==0) {
+    جب((حد_بندی-آغاز)>=MIN_QSORT) {
+        int32_t i=(آغاز+حد_بندی)/2;
+        int32_t diff=cmp(context, شے, array+i*شے_سائز);
+        اگر(diff==0) {
             /*
              * Found the item. We look for the *last* occurrence of such
              * an item, for stable sorting.
@@ -93,62 +93,62 @@ uprv_stableBinarySearch(char *array, int32_t limit, void *item, int32_t itemSize
              * (where found will never become true in the insertion sort)
              * or potentially many duplicates.
              */
-            found=true;
-            start=i+1;
-        } else if(diff<0) {
-            limit=i;
-        } else {
-            start=i;
+            ملا=سچ;
+            آغاز=i+1;
+        } ورنہ اگر(diff<0) {
+            حد_بندی=i;
+        } ورنہ {
+            آغاز=i;
         }
     }
 
     /* Linear search over the remaining tiny sub-array. */
-    while(start<limit) {
-        int32_t diff=cmp(context, item, array+start*itemSize);
-        if(diff==0) {
-            found=true;
-        } else if(diff<0) {
-            break;
+    جب(آغاز<حد_بندی) {
+        int32_t diff=cmp(context, شے, array+آغاز*شے_سائز);
+        اگر(diff==0) {
+            ملا=سچ;
+        } ورنہ اگر(diff<0) {
+            توڑو;
         }
-        ++start;
+        ++آغاز;
     }
-    return found ? (start-1) : ~start;
+    واپس ملا ? (آغاز-1) : ~آغاز;
 }
 
-static void
-doInsertionSort(char *array, int32_t length, int32_t itemSize,
-                UComparator *cmp, const void *context, void *pv) {
+ساکن خالی
+do_Insertion_ترتیب_دو(حرف *array, int32_t length, int32_t شے_سائز,
+                UComparator *cmp, ثابت خالی *context, خالی *pv) {
     int32_t j;
 
-    for(j=1; j<length; ++j) {
-        char *item=array+j*itemSize;
-        int32_t insertionPoint=uprv_stableBinarySearch(array, j, item, itemSize, cmp, context);
-        if(insertionPoint<0) {
-            insertionPoint=~insertionPoint;
-        } else {
-            ++insertionPoint;  /* one past the last equal item */
+    برائے(j=1; j<length; ++j) {
+        حرف *شے=array+j*شے_سائز;
+        int32_t insertion_نقطہ=uprv_stable_ثنائی_تلاش(array, j, شے, شے_سائز, cmp, context);
+        اگر(insertion_نقطہ<0) {
+            insertion_نقطہ=~insertion_نقطہ;
+        } ورنہ {
+            ++insertion_نقطہ;  /* one past the last equal item */
         }
-        if(insertionPoint<j) {
-            char *dest=array+insertionPoint*itemSize;
-            uprv_memcpy(pv, item, itemSize);  /* v=array[j] */
-            uprv_memmove(dest+itemSize, dest, (j-insertionPoint)*(size_t)itemSize);
-            uprv_memcpy(dest, pv, itemSize);  /* array[insertionPoint]=v */
+        اگر(insertion_نقطہ<j) {
+            حرف *dest=array+insertion_نقطہ*شے_سائز;
+            uprv_memcpy(pv, شے, شے_سائز);  /* v=array[j] */
+            uprv_memmove(dest+شے_سائز, dest, (j-insertion_نقطہ)*(size_t)شے_سائز);
+            uprv_memcpy(dest, pv, شے_سائز);  /* array[insertionPoint]=v */
         }
     }
 }
 
-static void
-insertionSort(char *array, int32_t length, int32_t itemSize,
-              UComparator *cmp, const void *context, UErrorCode *pErrorCode) {
+ساکن خالی
+insertion_ترتیب_دو(حرف *array, int32_t length, int32_t شے_سائز,
+              UComparator *cmp, ثابت خالی *context, UError_رمز *p_Error_رمز) {
 
-    icu::MaybeStackArray<std::max_align_t, sizeInMaxAlignTs(STACK_ITEM_SIZE)> v;
-    if (sizeInMaxAlignTs(itemSize) > v.getCapacity() &&
-            v.resize(sizeInMaxAlignTs(itemSize)) == nullptr) {
-        *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    icu::Maybe_ڈھیر_Array<std::max_align_t, سائز_اندر_Max_Align_Ts(ڈھیر_شے_سائز)> v;
+    اگر (سائز_اندر_Max_Align_Ts(شے_سائز) > v.get_استعداد() &&
+            v.resize(سائز_اندر_Max_Align_Ts(شے_سائز)) == خالی_اشاریہ) {
+        *p_Error_رمز = U_حافظہ_تخصیص_ERROR;
+        واپس;
     }
 
-    doInsertionSort(array, length, itemSize, cmp, context, v.getAlias());
+    do_Insertion_ترتیب_دو(array, length, شے_سائز, cmp, context, v.getAlias());
 }
 
 /* QuickSort ---------------------------------------------------------------- */
@@ -165,85 +165,85 @@ insertionSort(char *array, int32_t length, int32_t itemSize,
  * 4. Auflage 1986
  * ISBN 3-519-02260-5
  */
-static void
-subQuickSort(char *array, int32_t start, int32_t limit, int32_t itemSize,
-             UComparator *cmp, const void *context,
-             void *px, void *pw) {
-    int32_t left, right;
+ساکن خالی
+sub_تیز_ترتیب_دو(حرف *array, int32_t آغاز, int32_t حد_بندی, int32_t شے_سائز,
+             UComparator *cmp, ثابت خالی *context,
+             خالی *px, خالی *pw) {
+    int32_t بائیں, دائیں;
 
     /* start and left are inclusive, limit and right are exclusive */
-    do {
-        if((start+MIN_QSORT)>=limit) {
-            doInsertionSort(array+start*itemSize, limit-start, itemSize, cmp, context, px);
-            break;
+    کرو {
+        اگر((آغاز+MIN_QSORT)>=حد_بندی) {
+            do_Insertion_ترتیب_دو(array+آغاز*شے_سائز, حد_بندی-آغاز, شے_سائز, cmp, context, px);
+            توڑو;
         }
 
-        left=start;
-        right=limit;
+        بائیں=آغاز;
+        دائیں=حد_بندی;
 
         /* x=array[middle] */
-        uprv_memcpy(px, array+(size_t)((start+limit)/2)*itemSize, itemSize);
+        uprv_memcpy(px, array+(size_t)((آغاز+حد_بندی)/2)*شے_سائز, شے_سائز);
 
-        do {
-            while(/* array[left]<x */
-                  cmp(context, array+left*itemSize, px)<0
+        کرو {
+            جب(/* array[left]<x */
+                  cmp(context, array+بائیں*شے_سائز, px)<0
             ) {
-                ++left;
+                ++بائیں;
             }
-            while(/* x<array[right-1] */
-                  cmp(context, px, array+(right-1)*itemSize)<0
+            جب(/* x<array[right-1] */
+                  cmp(context, px, array+(دائیں-1)*شے_سائز)<0
             ) {
-                --right;
+                --دائیں;
             }
 
             /* swap array[left] and array[right-1] via w; ++left; --right */
-            if(left<right) {
-                --right;
+            اگر(بائیں<دائیں) {
+                --دائیں;
 
-                if(left<right) {
-                    uprv_memcpy(pw, array+(size_t)left*itemSize, itemSize);
-                    uprv_memcpy(array+(size_t)left*itemSize, array+(size_t)right*itemSize, itemSize);
-                    uprv_memcpy(array+(size_t)right*itemSize, pw, itemSize);
+                اگر(بائیں<دائیں) {
+                    uprv_memcpy(pw, array+(size_t)بائیں*شے_سائز, شے_سائز);
+                    uprv_memcpy(array+(size_t)بائیں*شے_سائز, array+(size_t)دائیں*شے_سائز, شے_سائز);
+                    uprv_memcpy(array+(size_t)دائیں*شے_سائز, pw, شے_سائز);
                 }
 
-                ++left;
+                ++بائیں;
             }
-        } while(left<right);
+        } جب(بائیں<دائیں);
 
         /* sort sub-arrays */
-        if((right-start)<(limit-left)) {
+        اگر((دائیں-آغاز)<(حد_بندی-بائیں)) {
             /* sort [start..right[ */
-            if(start<(right-1)) {
-                subQuickSort(array, start, right, itemSize, cmp, context, px, pw);
+            اگر(آغاز<(دائیں-1)) {
+                sub_تیز_ترتیب_دو(array, آغاز, دائیں, شے_سائز, cmp, context, px, pw);
             }
 
             /* sort [left..limit[ */
-            start=left;
-        } else {
+            آغاز=بائیں;
+        } ورنہ {
             /* sort [left..limit[ */
-            if(left<(limit-1)) {
-                subQuickSort(array, left, limit, itemSize, cmp, context, px, pw);
+            اگر(بائیں<(حد_بندی-1)) {
+                sub_تیز_ترتیب_دو(array, بائیں, حد_بندی, شے_سائز, cmp, context, px, pw);
             }
 
             /* sort [start..right[ */
-            limit=right;
+            حد_بندی=دائیں;
         }
-    } while(start<(limit-1));
+    } جب(آغاز<(حد_بندی-1));
 }
 
-static void
-quickSort(char *array, int32_t length, int32_t itemSize,
-            UComparator *cmp, const void *context, UErrorCode *pErrorCode) {
+ساکن خالی
+تیز_ترتیب_دو(حرف *array, int32_t length, int32_t شے_سائز,
+            UComparator *cmp, ثابت خالی *context, UError_رمز *p_Error_رمز) {
     /* allocate two intermediate item variables (x and w) */
-    icu::MaybeStackArray<std::max_align_t, sizeInMaxAlignTs(STACK_ITEM_SIZE) * 2> xw;
-    if(sizeInMaxAlignTs(itemSize)*2 > xw.getCapacity() &&
-            xw.resize(sizeInMaxAlignTs(itemSize) * 2) == nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+    icu::Maybe_ڈھیر_Array<std::max_align_t, سائز_اندر_Max_Align_Ts(ڈھیر_شے_سائز) * 2> xw;
+    اگر(سائز_اندر_Max_Align_Ts(شے_سائز)*2 > xw.get_استعداد() &&
+            xw.resize(سائز_اندر_Max_Align_Ts(شے_سائز) * 2) == خالی_اشاریہ) {
+        *p_Error_رمز=U_حافظہ_تخصیص_ERROR;
+        واپس;
     }
 
-    subQuickSort(array, 0, length, itemSize, cmp, context,
-                 xw.getAlias(), xw.getAlias() + sizeInMaxAlignTs(itemSize));
+    sub_تیز_ترتیب_دو(array, 0, length, شے_سائز, cmp, context,
+                 xw.getAlias(), xw.getAlias() + سائز_اندر_Max_Align_Ts(شے_سائز));
 }
 
 /* uprv_sortArray() API ----------------------------------------------------- */
@@ -252,23 +252,23 @@ quickSort(char *array, int32_t length, int32_t itemSize,
  * Check arguments, select an appropriate implementation,
  * cast the array to char * so that array+i*itemSize works.
  */
-U_CAPI void U_EXPORT2
-uprv_sortArray(void *array, int32_t length, int32_t itemSize,
-               UComparator *cmp, const void *context,
-               UBool sortStable, UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+U_CAPI خالی U_EXPORT2
+uprv_ترتیب_دو_Array(خالی *array, int32_t length, int32_t شے_سائز,
+               UComparator *cmp, ثابت خالی *context,
+               UBool ترتیب_دو_Stable, UError_رمز *p_Error_رمز) {
+    اگر(p_Error_رمز==خالی_اشاریہ || U_FAILURE(*p_Error_رمز)) {
+        واپس;
     }
-    if((length>0 && array==nullptr) || length<0 || itemSize<=0 || cmp==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    اگر((length>0 && array==خالی_اشاریہ) || length<0 || شے_سائز<=0 || cmp==خالی_اشاریہ) {
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس;
     }
 
-    if(length<=1) {
-        return;
-    } else if(length<MIN_QSORT || sortStable) {
-        insertionSort((char *)array, length, itemSize, cmp, context, pErrorCode);
-    } else {
-        quickSort((char *)array, length, itemSize, cmp, context, pErrorCode);
+    اگر(length<=1) {
+        واپس;
+    } ورنہ اگر(length<MIN_QSORT || ترتیب_دو_Stable) {
+        insertion_ترتیب_دو((حرف *)array, length, شے_سائز, cmp, context, p_Error_رمز);
+    } ورنہ {
+        تیز_ترتیب_دو((حرف *)array, length, شے_سائز, cmp, context, p_Error_رمز);
     }
 }

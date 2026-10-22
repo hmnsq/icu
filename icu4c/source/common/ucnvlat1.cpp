@@ -14,150 +14,150 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#اگر !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/uset.h"
-#include "unicode/utf8.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "ustr_imp.h"
+#شامل "unicode/ucnv.h"
+#شامل "unicode/uset.h"
+#شامل "unicode/utf8.h"
+#شامل "ucnv_bld.h"
+#شامل "ucnv_cnv.h"
+#شامل "ustr_imp.h"
 
 /* control optimizations according to the platform */
-#define LATIN1_UNROLL_FROM_UNICODE 1
+#تعریف_کرو LATIN1_UNROLL_FROM_UNICODE 1
 
 /* ISO 8859-1 --------------------------------------------------------------- */
 
 /* This is a table-less and callback-less version of ucnv_MBCSSingleToBMPWithOffsets(). */
 U_CDECL_BEGIN
-static void U_CALLCONV
-_Latin1ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                            UErrorCode *pErrorCode) {
-    const uint8_t *source;
-    char16_t *target;
-    int32_t targetCapacity, length;
+ساکن خالی U_CALLCONV
+Latin1_مقصد_Unicode_With_Offsets(UConverter_مقصد_Unicode_دلائل *p_دلائل,
+                            UError_رمز *p_Error_رمز) {
+    ثابت uint8_t *ماخذ;
+    char16_t *ہدف;
+    int32_t ہدف_استعداد, length;
     int32_t *offsets;
 
-    int32_t sourceIndex;
+    int32_t ماخذ_اشاریہ;
 
     /* set up the local pointers */
-    source=(const uint8_t *)pArgs->source;
-    target=pArgs->target;
-    targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
-    offsets=pArgs->offsets;
+    ماخذ=(ثابت uint8_t *)p_دلائل->ماخذ;
+    ہدف=p_دلائل->ہدف;
+    ہدف_استعداد=(int32_t)(p_دلائل->ہدف_حد_بندی-p_دلائل->ہدف);
+    offsets=p_دلائل->offsets;
 
-    sourceIndex=0;
+    ماخذ_اشاریہ=0;
 
     /*
      * since the conversion here is 1:1 char16_t:uint8_t, we need only one counter
      * for the minimum of the sourceLength and targetCapacity
      */
-    length=(int32_t)((const uint8_t *)pArgs->sourceLimit-source);
-    if(length<=targetCapacity) {
-        targetCapacity=length;
-    } else {
+    length=(int32_t)((ثابت uint8_t *)p_دلائل->ماخذ_حد_بندی-ماخذ);
+    اگر(length<=ہدف_استعداد) {
+        ہدف_استعداد=length;
+    } ورنہ {
         /* target will be full */
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-        length=targetCapacity;
+        *p_Error_رمز=U_بفر_حد_سے_تجاوز_ERROR;
+        length=ہدف_استعداد;
     }
 
-    if(targetCapacity>=8) {
+    اگر(ہدف_استعداد>=8) {
         /* This loop is unrolled for speed and improved pipelining. */
         int32_t count, loops;
 
-        loops=count=targetCapacity>>3;
-        length=targetCapacity&=0x7;
-        do {
-            target[0]=source[0];
-            target[1]=source[1];
-            target[2]=source[2];
-            target[3]=source[3];
-            target[4]=source[4];
-            target[5]=source[5];
-            target[6]=source[6];
-            target[7]=source[7];
-            target+=8;
-            source+=8;
-        } while(--count>0);
+        loops=count=ہدف_استعداد>>3;
+        length=ہدف_استعداد&=0x7;
+        کرو {
+            ہدف[0]=ماخذ[0];
+            ہدف[1]=ماخذ[1];
+            ہدف[2]=ماخذ[2];
+            ہدف[3]=ماخذ[3];
+            ہدف[4]=ماخذ[4];
+            ہدف[5]=ماخذ[5];
+            ہدف[6]=ماخذ[6];
+            ہدف[7]=ماخذ[7];
+            ہدف+=8;
+            ماخذ+=8;
+        } جب(--count>0);
 
-        if(offsets!=nullptr) {
-            do {
-                offsets[0]=sourceIndex++;
-                offsets[1]=sourceIndex++;
-                offsets[2]=sourceIndex++;
-                offsets[3]=sourceIndex++;
-                offsets[4]=sourceIndex++;
-                offsets[5]=sourceIndex++;
-                offsets[6]=sourceIndex++;
-                offsets[7]=sourceIndex++;
+        اگر(offsets!=خالی_اشاریہ) {
+            کرو {
+                offsets[0]=ماخذ_اشاریہ++;
+                offsets[1]=ماخذ_اشاریہ++;
+                offsets[2]=ماخذ_اشاریہ++;
+                offsets[3]=ماخذ_اشاریہ++;
+                offsets[4]=ماخذ_اشاریہ++;
+                offsets[5]=ماخذ_اشاریہ++;
+                offsets[6]=ماخذ_اشاریہ++;
+                offsets[7]=ماخذ_اشاریہ++;
                 offsets+=8;
-            } while(--loops>0);
+            } جب(--loops>0);
         }
     }
 
     /* conversion loop */
-    while(targetCapacity>0) {
-        *target++=*source++;
-        --targetCapacity;
+    جب(ہدف_استعداد>0) {
+        *ہدف++=*ماخذ++;
+        --ہدف_استعداد;
     }
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
+    p_دلائل->ماخذ=(ثابت حرف *)ماخذ;
+    p_دلائل->ہدف=ہدف;
 
     /* set offsets */
-    if(offsets!=nullptr) {
-        while(length>0) {
-            *offsets++=sourceIndex++;
+    اگر(offsets!=خالی_اشاریہ) {
+        جب(length>0) {
+            *offsets++=ماخذ_اشاریہ++;
             --length;
         }
-        pArgs->offsets=offsets;
+        p_دلائل->offsets=offsets;
     }
 }
 
 /* This is a table-less and callback-less version of ucnv_MBCSSingleGetNextUChar(). */
-static UChar32 U_CALLCONV
-_Latin1GetNextUChar(UConverterToUnicodeArgs *pArgs,
-                    UErrorCode *pErrorCode) {
-    const uint8_t *source=(const uint8_t *)pArgs->source;
-    if(source<(const uint8_t *)pArgs->sourceLimit) {
-        pArgs->source=(const char *)(source+1);
-        return *source;
+ساکن UChar32 U_CALLCONV
+Latin1_Get_اگلا_UChar(UConverter_مقصد_Unicode_دلائل *p_دلائل,
+                    UError_رمز *p_Error_رمز) {
+    ثابت uint8_t *ماخذ=(ثابت uint8_t *)p_دلائل->ماخذ;
+    اگر(ماخذ<(ثابت uint8_t *)p_دلائل->ماخذ_حد_بندی) {
+        p_دلائل->ماخذ=(ثابت حرف *)(ماخذ+1);
+        واپس *ماخذ;
     }
 
     /* no output because of empty input */
-    *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-    return 0xffff;
+    *p_Error_رمز=U_اشاریہ_OUTOFBOUNDS_ERROR;
+    واپس 0xffff;
 }
 
 /* This is a table-less version of ucnv_MBCSSingleFromBMPWithOffsets(). */
-static void U_CALLCONV
-_Latin1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                              UErrorCode *pErrorCode) {
+ساکن خالی U_CALLCONV
+_Latin1FromUnicodeWithOffsets(UConverter_From_Unicode_دلائل *p_دلائل,
+                              UError_رمز *p_Error_رمز) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
-    uint8_t *target, *oldTarget;
-    int32_t targetCapacity, length;
+    ثابت char16_t *ماخذ, *ماخذ_حد_بندی;
+    uint8_t *ہدف, *old_ہدف;
+    int32_t ہدف_استعداد, length;
     int32_t *offsets;
 
     UChar32 cp;
     char16_t c, max;
 
-    int32_t sourceIndex;
+    int32_t ماخذ_اشاریہ;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target=oldTarget=(uint8_t *)pArgs->target;
-    targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
-    offsets=pArgs->offsets;
+    cnv=p_دلائل->converter;
+    ماخذ=p_دلائل->ماخذ;
+    ماخذ_حد_بندی=p_دلائل->ماخذ_حد_بندی;
+    ہدف=old_ہدف=(uint8_t *)p_دلائل->ہدف;
+    ہدف_استعداد=(int32_t)(p_دلائل->ہدف_حد_بندی-p_دلائل->ہدف);
+    offsets=p_دلائل->offsets;
 
-    if(cnv->sharedData==&_Latin1Data) {
+    اگر(cnv->shared_ڈیٹا==&Latin1_ڈیٹا) {
         max=0xff; /* Latin-1 */
-    } else {
+    } ورنہ {
         max=0x7f; /* US-ASCII */
     }
 
@@ -165,201 +165,201 @@ _Latin1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     cp=cnv->fromUChar32;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex= cp==0 ? 0 : -1;
+    ماخذ_اشاریہ= cp==0 ? 0 : -1;
 
     /*
      * since the conversion here is 1:1 char16_t:uint8_t, we need only one counter
      * for the minimum of the sourceLength and targetCapacity
      */
-    length=(int32_t)(sourceLimit-source);
-    if(length<targetCapacity) {
-        targetCapacity=length;
+    length=(int32_t)(ماخذ_حد_بندی-ماخذ);
+    اگر(length<ہدف_استعداد) {
+        ہدف_استعداد=length;
     }
 
     /* conversion loop */
-    if(cp!=0 && targetCapacity>0) {
-        goto getTrail;
+    اگر(cp!=0 && ہدف_استعداد>0) {
+        جاؤ getTrail;
     }
 
-#if LATIN1_UNROLL_FROM_UNICODE
+#اگر LATIN1_UNROLL_FROM_UNICODE
     /* unroll the loop with the most common case */
-    if(targetCapacity>=16) {
+    اگر(ہدف_استعداد>=16) {
         int32_t count, loops;
         char16_t u, oredChars;
 
-        loops=count=targetCapacity>>4;
-        do {
-            oredChars=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
+        loops=count=ہدف_استعداد>>4;
+        کرو {
+            oredChars=u=*ماخذ++;
+            *ہدف++=(uint8_t)u;
+            oredChars|=u=*ماخذ++;
+            *ہدف++=(uint8_t)u;
+            oredChars|=u=*ماخذ++;
+            *ہدف++=(uint8_t)u;
+            oredChars|=u=*ماخذ++;
+            *ہدف++=(uint8_t)u;
+            oredChars|=u=*ماخذ++;
+            *ہدف++=(uint8_t)u;
+            oredChars|=u=*ماخذ++;
+            *ہدف++=(uint8_t)u;
+            oredChars|=u=*ماخذ++;
+            *ہدف++=(uint8_t)u;
+            oredChars|=u=*ماخذ++;
+            *ہدف++=(uint8_t)u;
+            oredChars|=u=*ماخذ++;
+            *ہدف++=(uint8_t)u;
+            oredChars|=u=*ماخذ++;
+            *ہدف++=(uint8_t)u;
+            oredChars|=u=*ماخذ++;
+            *ہدف++=(uint8_t)u;
+            oredChars|=u=*ماخذ++;
+            *ہدف++=(uint8_t)u;
+            oredChars|=u=*ماخذ++;
+            *ہدف++=(uint8_t)u;
+            oredChars|=u=*ماخذ++;
+            *ہدف++=(uint8_t)u;
+            oredChars|=u=*ماخذ++;
+            *ہدف++=(uint8_t)u;
+            oredChars|=u=*ماخذ++;
+            *ہدف++=(uint8_t)u;
 
             /* were all 16 entries really valid? */
-            if(oredChars>max) {
+            اگر(oredChars>max) {
                 /* no, return to the first of these 16 */
-                source-=16;
-                target-=16;
-                break;
+                ماخذ-=16;
+                ہدف-=16;
+                توڑو;
             }
-        } while(--count>0);
+        } جب(--count>0);
         count=loops-count;
-        targetCapacity-=16*count;
+        ہدف_استعداد-=16*count;
 
-        if(offsets!=nullptr) {
-            oldTarget+=16*count;
-            while(count>0) {
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
+        اگر(offsets!=خالی_اشاریہ) {
+            old_ہدف+=16*count;
+            جب(count>0) {
+                *offsets++=ماخذ_اشاریہ++;
+                *offsets++=ماخذ_اشاریہ++;
+                *offsets++=ماخذ_اشاریہ++;
+                *offsets++=ماخذ_اشاریہ++;
+                *offsets++=ماخذ_اشاریہ++;
+                *offsets++=ماخذ_اشاریہ++;
+                *offsets++=ماخذ_اشاریہ++;
+                *offsets++=ماخذ_اشاریہ++;
+                *offsets++=ماخذ_اشاریہ++;
+                *offsets++=ماخذ_اشاریہ++;
+                *offsets++=ماخذ_اشاریہ++;
+                *offsets++=ماخذ_اشاریہ++;
+                *offsets++=ماخذ_اشاریہ++;
+                *offsets++=ماخذ_اشاریہ++;
+                *offsets++=ماخذ_اشاریہ++;
+                *offsets++=ماخذ_اشاریہ++;
                 --count;
             }
         }
     }
-#endif
+#اگر_ختم
 
     /* conversion loop */
     c=0;
-    while(targetCapacity>0 && (c=*source++)<=max) {
+    جب(ہدف_استعداد>0 && (c=*ماخذ++)<=max) {
         /* convert the Unicode code point */
-        *target++=(uint8_t)c;
-        --targetCapacity;
+        *ہدف++=(uint8_t)c;
+        --ہدف_استعداد;
     }
 
-    if(c>max) {
+    اگر(c>max) {
         cp=c;
-        if(!U_IS_SURROGATE(cp)) {
+        اگر(!U_IS_SURROGATE(cp)) {
             /* callback(unassigned) */
-        } else if(U_IS_SURROGATE_LEAD(cp)) {
+        } ورنہ اگر(U_IS_SURROGATE_LEAD(cp)) {
 getTrail:
-            if(source<sourceLimit) {
+            اگر(ماخذ<ماخذ_حد_بندی) {
                 /* test the following code unit */
-                char16_t trail=*source;
-                if(U16_IS_TRAIL(trail)) {
-                    ++source;
+                char16_t trail=*ماخذ;
+                اگر(U16_IS_TRAIL(trail)) {
+                    ++ماخذ;
                     cp=U16_GET_SUPPLEMENTARY(cp, trail);
                     /* this codepage does not map supplementary code points */
                     /* callback(unassigned) */
-                } else {
+                } ورنہ {
                     /* this is an unmatched lead code unit (1st surrogate) */
                     /* callback(illegal) */
                 }
-            } else {
+            } ورنہ {
                 /* no more input */
                 cnv->fromUChar32=cp;
-                goto noMoreInput;
+                جاؤ no_مزید_داخلہ;
             }
-        } else {
+        } ورنہ {
             /* this is an unmatched trail code unit (2nd surrogate) */
             /* callback(illegal) */
         }
 
-        *pErrorCode= U_IS_SURROGATE(cp) ? U_ILLEGAL_CHAR_FOUND : U_INVALID_CHAR_FOUND;
+        *p_Error_رمز= U_IS_SURROGATE(cp) ? U_ILLEGAL_CHAR_ملا : U_INVALID_CHAR_ملا;
         cnv->fromUChar32=cp;
     }
-noMoreInput:
+no_مزید_داخلہ:
 
     /* set offsets since the start */
-    if(offsets!=nullptr) {
-        size_t count=target-oldTarget;
-        while(count>0) {
-            *offsets++=sourceIndex++;
+    اگر(offsets!=خالی_اشاریہ) {
+        size_t count=ہدف-old_ہدف;
+        جب(count>0) {
+            *offsets++=ماخذ_اشاریہ++;
             --count;
         }
     }
 
-    if(U_SUCCESS(*pErrorCode) && source<sourceLimit && target>=(uint8_t *)pArgs->targetLimit) {
+    اگر(U_SUCCESS(*p_Error_رمز) && ماخذ<ماخذ_حد_بندی && ہدف>=(uint8_t *)p_دلائل->ہدف_حد_بندی) {
         /* target is full */
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        *p_Error_رمز=U_بفر_حد_سے_تجاوز_ERROR;
     }
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=(char *)target;
-    pArgs->offsets=offsets;
+    p_دلائل->ماخذ=ماخذ;
+    p_دلائل->ہدف=(حرف *)ہدف;
+    p_دلائل->offsets=offsets;
 }
 
 /* Convert UTF-8 to Latin-1. Adapted from ucnv_SBCSFromUTF8(). */
-static void U_CALLCONV
-ucnv_Latin1FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
-                    UConverterToUnicodeArgs *pToUArgs,
-                    UErrorCode *pErrorCode) {
+ساکن خالی U_CALLCONV
+ucnv_Latin1FromUTF8(UConverter_From_Unicode_دلائل *pFromUArgs,
+                    UConverter_مقصد_Unicode_دلائل *p_مقصد_UArgs,
+                    UError_رمز *p_Error_رمز) {
     UConverter *utf8;
-    const uint8_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity;
+    ثابت uint8_t *ماخذ, *ماخذ_حد_بندی;
+    uint8_t *ہدف;
+    int32_t ہدف_استعداد;
 
     UChar32 c;
     uint8_t b, t1;
 
     /* set up the local pointers */
-    utf8=pToUArgs->converter;
-    source=(uint8_t *)pToUArgs->source;
-    sourceLimit=(uint8_t *)pToUArgs->sourceLimit;
-    target=(uint8_t *)pFromUArgs->target;
-    targetCapacity=(int32_t)(pFromUArgs->targetLimit-pFromUArgs->target);
+    utf8=p_مقصد_UArgs->converter;
+    ماخذ=(uint8_t *)p_مقصد_UArgs->ماخذ;
+    ماخذ_حد_بندی=(uint8_t *)p_مقصد_UArgs->ماخذ_حد_بندی;
+    ہدف=(uint8_t *)pFromUArgs->ہدف;
+    ہدف_استعداد=(int32_t)(pFromUArgs->ہدف_حد_بندی-pFromUArgs->ہدف);
 
     /* get the converter state from the UTF-8 UConverter */
-    if (utf8->toULength > 0) {
-        c=(UChar32)utf8->toUnicodeStatus;
-    } else {
+    اگر (utf8->مقصد_ULength > 0) {
+        c=(UChar32)utf8->مقصد_Unicode_حالت;
+    } ورنہ {
         c = 0;
     }
-    if(c!=0 && source<sourceLimit) {
-        if(targetCapacity==0) {
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            return;
-        } else if(c>=0xc2 && c<=0xc3 && (t1=(uint8_t)(*source-0x80)) <= 0x3f) {
-            ++source;
-            *target++=(uint8_t)(((c&3)<<6)|t1);
-            --targetCapacity;
+    اگر(c!=0 && ماخذ<ماخذ_حد_بندی) {
+        اگر(ہدف_استعداد==0) {
+            *p_Error_رمز=U_بفر_حد_سے_تجاوز_ERROR;
+            واپس;
+        } ورنہ اگر(c>=0xc2 && c<=0xc3 && (t1=(uint8_t)(*ماخذ-0x80)) <= 0x3f) {
+            ++ماخذ;
+            *ہدف++=(uint8_t)(((c&3)<<6)|t1);
+            --ہدف_استعداد;
 
-            utf8->toUnicodeStatus=0;
-            utf8->toULength=0;
-        } else {
+            utf8->مقصد_Unicode_حالت=0;
+            utf8->مقصد_ULength=0;
+        } ورنہ {
             /* complicated, illegal or unmappable input: fall back to the pivoting implementation */
-            *pErrorCode=U_USING_DEFAULT_WARNING;
-            return;
+            *p_Error_رمز=U_USING_DEFAULT_WARNING;
+            واپس;
         }
     }
 
@@ -371,36 +371,36 @@ ucnv_Latin1FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
      * For Latin-1, adjust sourceLimit only for 1 trail byte because
      * the conversion loop handles at most 2-byte sequences.
      */
-    if(source<sourceLimit && U8_IS_LEAD(*(sourceLimit-1))) {
-        --sourceLimit;
+    اگر(ماخذ<ماخذ_حد_بندی && U8_IS_LEAD(*(ماخذ_حد_بندی-1))) {
+        --ماخذ_حد_بندی;
     }
 
     /* conversion loop */
-    while(source<sourceLimit) {
-        if(targetCapacity>0) {
-            b=*source++;
-            if(U8_IS_SINGLE(b)) {
+    جب(ماخذ<ماخذ_حد_بندی) {
+        اگر(ہدف_استعداد>0) {
+            b=*ماخذ++;
+            اگر(U8_IS_SINGLE(b)) {
                 /* convert ASCII */
-                *target++ = b;
-                --targetCapacity;
-            } else if( /* handle U+0080..U+00FF inline */
+                *ہدف++ = b;
+                --ہدف_استعداد;
+            } ورنہ اگر( /* handle U+0080..U+00FF inline */
                        b>=0xc2 && b<=0xc3 &&
-                       (t1=(uint8_t)(*source-0x80)) <= 0x3f
+                       (t1=(uint8_t)(*ماخذ-0x80)) <= 0x3f
             ) {
-                ++source;
-                *target++=(uint8_t)(((b&3)<<6)|t1);
-                --targetCapacity;
-            } else {
+                ++ماخذ;
+                *ہدف++=(uint8_t)(((b&3)<<6)|t1);
+                --ہدف_استعداد;
+            } ورنہ {
                 /* complicated, illegal or unmappable input: fall back to the pivoting implementation */
-                pToUArgs->source=(char *)(source-1);
-                pFromUArgs->target=(char *)target;
-                *pErrorCode=U_USING_DEFAULT_WARNING;
-                return;
+                p_مقصد_UArgs->ماخذ=(حرف *)(ماخذ-1);
+                pFromUArgs->ہدف=(حرف *)ہدف;
+                *p_Error_رمز=U_USING_DEFAULT_WARNING;
+                واپس;
             }
-        } else {
+        } ورنہ {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *p_Error_رمز=U_بفر_حد_سے_تجاوز_ERROR;
+            توڑو;
         }
     }
 
@@ -411,142 +411,142 @@ ucnv_Latin1FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
      * For Latin-1, there is at most exactly one lead byte because of the
      * smaller sourceLimit adjustment logic.
      */
-    if(U_SUCCESS(*pErrorCode) && source<(sourceLimit=(uint8_t *)pToUArgs->sourceLimit)) {
-        utf8->toUnicodeStatus=utf8->toUBytes[0]=b=*source++;
-        utf8->toULength=1;
-        utf8->mode=U8_COUNT_BYTES(b);
+    اگر(U_SUCCESS(*p_Error_رمز) && ماخذ<(ماخذ_حد_بندی=(uint8_t *)p_مقصد_UArgs->ماخذ_حد_بندی)) {
+        utf8->مقصد_Unicode_حالت=utf8->مقصد_UBytes[0]=b=*ماخذ++;
+        utf8->مقصد_ULength=1;
+        utf8->منوال=U8_گنتی_بائٹیں(b);
     }
 
     /* write back the updated pointers */
-    pToUArgs->source=(char *)source;
-    pFromUArgs->target=(char *)target;
+    p_مقصد_UArgs->ماخذ=(حرف *)ماخذ;
+    pFromUArgs->ہدف=(حرف *)ہدف;
 }
 
-static void U_CALLCONV
-_Latin1GetUnicodeSet(const UConverter *cnv,
-                     const USetAdder *sa,
-                     UConverterUnicodeSet which,
-                     UErrorCode *pErrorCode) {
-    (void)cnv;
-    (void)which;
-    (void)pErrorCode;
-    sa->addRange(sa->set, 0, 0xff);
+ساکن خالی U_CALLCONV
+Latin1_Get_Unicode_سیٹ(ثابت UConverter *cnv,
+                     ثابت USetAdder *sa,
+                     UConverter_Unicode_سیٹ which,
+                     UError_رمز *p_Error_رمز) {
+    (خالی)cnv;
+    (خالی)which;
+    (خالی)p_Error_رمز;
+    sa->جوڑو_Range(sa->سیٹ, 0, 0xff);
 }
-U_CDECL_END
+U_CDECL_انتہا
 
 
-static const UConverterImpl _Latin1Impl={
+ساکن ثابت UConverterImpl _Latin1Impl={
     UCNV_LATIN_1,
 
-    nullptr,
-    nullptr,
+    خالی_اشاریہ,
+    خالی_اشاریہ,
 
-    nullptr,
-    nullptr,
-    nullptr,
+    خالی_اشاریہ,
+    خالی_اشاریہ,
+    خالی_اشاریہ,
 
-    _Latin1ToUnicodeWithOffsets,
-    _Latin1ToUnicodeWithOffsets,
+    Latin1_مقصد_Unicode_With_Offsets,
+    Latin1_مقصد_Unicode_With_Offsets,
     _Latin1FromUnicodeWithOffsets,
     _Latin1FromUnicodeWithOffsets,
-    _Latin1GetNextUChar,
+    Latin1_Get_اگلا_UChar,
 
-    nullptr,
-    nullptr,
-    nullptr,
-    nullptr,
-    _Latin1GetUnicodeSet,
+    خالی_اشاریہ,
+    خالی_اشاریہ,
+    خالی_اشاریہ,
+    خالی_اشاریہ,
+    Latin1_Get_Unicode_سیٹ,
 
-    nullptr,
+    خالی_اشاریہ,
     ucnv_Latin1FromUTF8
 };
 
-static const UConverterStaticData _Latin1StaticData={
-    sizeof(UConverterStaticData),
+ساکن ثابت UConverter_Static_ڈیٹا Latin1_Static_ڈیٹا={
+    حجم(UConverter_Static_ڈیٹا),
     "ISO-8859-1",
     819, UCNV_IBM, UCNV_LATIN_1, 1, 1,
-    { 0x1a, 0, 0, 0 }, 1, false, false,
+    { 0x1a, 0, 0, 0 }, 1, جھوٹ, جھوٹ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _Latin1Data=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_Latin1StaticData, &_Latin1Impl);
+ثابت UConverter_Shared_ڈیٹا Latin1_ڈیٹا=
+        UCNV_IMMUTABLE_SHARED_ڈیٹا_INITIALIZER(&Latin1_Static_ڈیٹا, &_Latin1Impl);
 
 /* US-ASCII ----------------------------------------------------------------- */
 
 U_CDECL_BEGIN
 /* This is a table-less version of ucnv_MBCSSingleToBMPWithOffsets(). */
-static void U_CALLCONV
-_ASCIIToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                           UErrorCode *pErrorCode) {
-    const uint8_t *source, *sourceLimit;
-    char16_t *target, *oldTarget;
-    int32_t targetCapacity, length;
+ساکن خالی U_CALLCONV
+_ASCIIToUnicodeWithOffsets(UConverter_مقصد_Unicode_دلائل *p_دلائل,
+                           UError_رمز *p_Error_رمز) {
+    ثابت uint8_t *ماخذ, *ماخذ_حد_بندی;
+    char16_t *ہدف, *old_ہدف;
+    int32_t ہدف_استعداد, length;
     int32_t *offsets;
 
-    int32_t sourceIndex;
+    int32_t ماخذ_اشاریہ;
 
     uint8_t c;
 
     /* set up the local pointers */
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
-    target=oldTarget=pArgs->target;
-    targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
-    offsets=pArgs->offsets;
+    ماخذ=(ثابت uint8_t *)p_دلائل->ماخذ;
+    ماخذ_حد_بندی=(ثابت uint8_t *)p_دلائل->ماخذ_حد_بندی;
+    ہدف=old_ہدف=p_دلائل->ہدف;
+    ہدف_استعداد=(int32_t)(p_دلائل->ہدف_حد_بندی-p_دلائل->ہدف);
+    offsets=p_دلائل->offsets;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=0;
+    ماخذ_اشاریہ=0;
 
     /*
      * since the conversion here is 1:1 char16_t:uint8_t, we need only one counter
      * for the minimum of the sourceLength and targetCapacity
      */
-    length=(int32_t)(sourceLimit-source);
-    if(length<targetCapacity) {
-        targetCapacity=length;
+    length=(int32_t)(ماخذ_حد_بندی-ماخذ);
+    اگر(length<ہدف_استعداد) {
+        ہدف_استعداد=length;
     }
 
-    if(targetCapacity>=8) {
+    اگر(ہدف_استعداد>=8) {
         /* This loop is unrolled for speed and improved pipelining. */
         int32_t count, loops;
         char16_t oredChars;
 
-        loops=count=targetCapacity>>3;
-        do {
-            oredChars=target[0]=source[0];
-            oredChars|=target[1]=source[1];
-            oredChars|=target[2]=source[2];
-            oredChars|=target[3]=source[3];
-            oredChars|=target[4]=source[4];
-            oredChars|=target[5]=source[5];
-            oredChars|=target[6]=source[6];
-            oredChars|=target[7]=source[7];
+        loops=count=ہدف_استعداد>>3;
+        کرو {
+            oredChars=ہدف[0]=ماخذ[0];
+            oredChars|=ہدف[1]=ماخذ[1];
+            oredChars|=ہدف[2]=ماخذ[2];
+            oredChars|=ہدف[3]=ماخذ[3];
+            oredChars|=ہدف[4]=ماخذ[4];
+            oredChars|=ہدف[5]=ماخذ[5];
+            oredChars|=ہدف[6]=ماخذ[6];
+            oredChars|=ہدف[7]=ماخذ[7];
 
             /* were all 16 entries really valid? */
-            if(oredChars>0x7f) {
+            اگر(oredChars>0x7f) {
                 /* no, return to the first of these 16 */
-                break;
+                توڑو;
             }
-            source+=8;
-            target+=8;
-        } while(--count>0);
+            ماخذ+=8;
+            ہدف+=8;
+        } جب(--count>0);
         count=loops-count;
-        targetCapacity-=count*8;
+        ہدف_استعداد-=count*8;
 
-        if(offsets!=nullptr) {
-            oldTarget+=count*8;
-            while(count>0) {
-                offsets[0]=sourceIndex++;
-                offsets[1]=sourceIndex++;
-                offsets[2]=sourceIndex++;
-                offsets[3]=sourceIndex++;
-                offsets[4]=sourceIndex++;
-                offsets[5]=sourceIndex++;
-                offsets[6]=sourceIndex++;
-                offsets[7]=sourceIndex++;
+        اگر(offsets!=خالی_اشاریہ) {
+            old_ہدف+=count*8;
+            جب(count>0) {
+                offsets[0]=ماخذ_اشاریہ++;
+                offsets[1]=ماخذ_اشاریہ++;
+                offsets[2]=ماخذ_اشاریہ++;
+                offsets[3]=ماخذ_اشاریہ++;
+                offsets[4]=ماخذ_اشاریہ++;
+                offsets[5]=ماخذ_اشاریہ++;
+                offsets[6]=ماخذ_اشاریہ++;
+                offsets[7]=ماخذ_اشاریہ++;
                 offsets+=8;
                 --count;
             }
@@ -555,202 +555,202 @@ _ASCIIToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
 
     /* conversion loop */
     c=0;
-    while(targetCapacity>0 && (c=*source++)<=0x7f) {
-        *target++=c;
-        --targetCapacity;
+    جب(ہدف_استعداد>0 && (c=*ماخذ++)<=0x7f) {
+        *ہدف++=c;
+        --ہدف_استعداد;
     }
 
-    if(c>0x7f) {
+    اگر(c>0x7f) {
         /* callback(illegal); copy the current bytes to toUBytes[] */
-        UConverter *cnv=pArgs->converter;
-        cnv->toUBytes[0]=c;
-        cnv->toULength=1;
-        *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-    } else if(source<sourceLimit && target>=pArgs->targetLimit) {
+        UConverter *cnv=p_دلائل->converter;
+        cnv->مقصد_UBytes[0]=c;
+        cnv->مقصد_ULength=1;
+        *p_Error_رمز=U_ILLEGAL_CHAR_ملا;
+    } ورنہ اگر(ماخذ<ماخذ_حد_بندی && ہدف>=p_دلائل->ہدف_حد_بندی) {
         /* target is full */
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        *p_Error_رمز=U_بفر_حد_سے_تجاوز_ERROR;
     }
 
     /* set offsets since the start */
-    if(offsets!=nullptr) {
-        size_t count=target-oldTarget;
-        while(count>0) {
-            *offsets++=sourceIndex++;
+    اگر(offsets!=خالی_اشاریہ) {
+        size_t count=ہدف-old_ہدف;
+        جب(count>0) {
+            *offsets++=ماخذ_اشاریہ++;
             --count;
         }
     }
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_دلائل->ماخذ=(ثابت حرف *)ماخذ;
+    p_دلائل->ہدف=ہدف;
+    p_دلائل->offsets=offsets;
 }
 
 /* This is a table-less version of ucnv_MBCSSingleGetNextUChar(). */
-static UChar32 U_CALLCONV
-_ASCIIGetNextUChar(UConverterToUnicodeArgs *pArgs,
-                   UErrorCode *pErrorCode) {
-    const uint8_t *source;
+ساکن UChar32 U_CALLCONV
+ASCIIGet_اگلا_UChar(UConverter_مقصد_Unicode_دلائل *p_دلائل,
+                   UError_رمز *p_Error_رمز) {
+    ثابت uint8_t *ماخذ;
     uint8_t b;
 
-    source=(const uint8_t *)pArgs->source;
-    if(source<(const uint8_t *)pArgs->sourceLimit) {
-        b=*source++;
-        pArgs->source=(const char *)source;
-        if(b<=0x7f) {
-            return b;
-        } else {
-            UConverter *cnv=pArgs->converter;
-            cnv->toUBytes[0]=b;
-            cnv->toULength=1;
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-            return 0xffff;
+    ماخذ=(ثابت uint8_t *)p_دلائل->ماخذ;
+    اگر(ماخذ<(ثابت uint8_t *)p_دلائل->ماخذ_حد_بندی) {
+        b=*ماخذ++;
+        p_دلائل->ماخذ=(ثابت حرف *)ماخذ;
+        اگر(b<=0x7f) {
+            واپس b;
+        } ورنہ {
+            UConverter *cnv=p_دلائل->converter;
+            cnv->مقصد_UBytes[0]=b;
+            cnv->مقصد_ULength=1;
+            *p_Error_رمز=U_ILLEGAL_CHAR_ملا;
+            واپس 0xffff;
         }
     }
 
     /* no output because of empty input */
-    *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-    return 0xffff;
+    *p_Error_رمز=U_اشاریہ_OUTOFBOUNDS_ERROR;
+    واپس 0xffff;
 }
 
 /* "Convert" UTF-8 to US-ASCII: Validate and copy. */
-static void U_CALLCONV
-ucnv_ASCIIFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
-                   UConverterToUnicodeArgs *pToUArgs,
-                   UErrorCode *pErrorCode) {
-    const uint8_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity, length;
+ساکن خالی U_CALLCONV
+ucnv_ASCIIFromUTF8(UConverter_From_Unicode_دلائل *pFromUArgs,
+                   UConverter_مقصد_Unicode_دلائل *p_مقصد_UArgs,
+                   UError_رمز *p_Error_رمز) {
+    ثابت uint8_t *ماخذ, *ماخذ_حد_بندی;
+    uint8_t *ہدف;
+    int32_t ہدف_استعداد, length;
 
     uint8_t c;
 
-    if(pToUArgs->converter->toULength > 0) {
+    اگر(p_مقصد_UArgs->converter->مقصد_ULength > 0) {
         /* no handling of partial UTF-8 characters here, fall back to pivoting */
-        *pErrorCode=U_USING_DEFAULT_WARNING;
-        return;
+        *p_Error_رمز=U_USING_DEFAULT_WARNING;
+        واپس;
     }
 
     /* set up the local pointers */
-    source=(const uint8_t *)pToUArgs->source;
-    sourceLimit=(const uint8_t *)pToUArgs->sourceLimit;
-    target=(uint8_t *)pFromUArgs->target;
-    targetCapacity=(int32_t)(pFromUArgs->targetLimit-pFromUArgs->target);
+    ماخذ=(ثابت uint8_t *)p_مقصد_UArgs->ماخذ;
+    ماخذ_حد_بندی=(ثابت uint8_t *)p_مقصد_UArgs->ماخذ_حد_بندی;
+    ہدف=(uint8_t *)pFromUArgs->ہدف;
+    ہدف_استعداد=(int32_t)(pFromUArgs->ہدف_حد_بندی-pFromUArgs->ہدف);
 
     /*
      * since the conversion here is 1:1 uint8_t:uint8_t, we need only one counter
      * for the minimum of the sourceLength and targetCapacity
      */
-    length=(int32_t)(sourceLimit-source);
-    if(length<targetCapacity) {
-        targetCapacity=length;
+    length=(int32_t)(ماخذ_حد_بندی-ماخذ);
+    اگر(length<ہدف_استعداد) {
+        ہدف_استعداد=length;
     }
 
     /* unroll the loop with the most common case */
-    if(targetCapacity>=16) {
+    اگر(ہدف_استعداد>=16) {
         int32_t count, loops;
         uint8_t oredChars;
 
-        loops=count=targetCapacity>>4;
-        do {
-            oredChars=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
+        loops=count=ہدف_استعداد>>4;
+        کرو {
+            oredChars=*ہدف++=*ماخذ++;
+            oredChars|=*ہدف++=*ماخذ++;
+            oredChars|=*ہدف++=*ماخذ++;
+            oredChars|=*ہدف++=*ماخذ++;
+            oredChars|=*ہدف++=*ماخذ++;
+            oredChars|=*ہدف++=*ماخذ++;
+            oredChars|=*ہدف++=*ماخذ++;
+            oredChars|=*ہدف++=*ماخذ++;
+            oredChars|=*ہدف++=*ماخذ++;
+            oredChars|=*ہدف++=*ماخذ++;
+            oredChars|=*ہدف++=*ماخذ++;
+            oredChars|=*ہدف++=*ماخذ++;
+            oredChars|=*ہدف++=*ماخذ++;
+            oredChars|=*ہدف++=*ماخذ++;
+            oredChars|=*ہدف++=*ماخذ++;
+            oredChars|=*ہدف++=*ماخذ++;
 
             /* were all 16 entries really valid? */
-            if(oredChars>0x7f) {
+            اگر(oredChars>0x7f) {
                 /* no, return to the first of these 16 */
-                source-=16;
-                target-=16;
-                break;
+                ماخذ-=16;
+                ہدف-=16;
+                توڑو;
             }
-        } while(--count>0);
+        } جب(--count>0);
         count=loops-count;
-        targetCapacity-=16*count;
+        ہدف_استعداد-=16*count;
     }
 
     /* conversion loop */
     c=0;
-    while(targetCapacity>0 && (c=*source)<=0x7f) {
-        ++source;
-        *target++=c;
-        --targetCapacity;
+    جب(ہدف_استعداد>0 && (c=*ماخذ)<=0x7f) {
+        ++ماخذ;
+        *ہدف++=c;
+        --ہدف_استعداد;
     }
 
-    if(c>0x7f) {
+    اگر(c>0x7f) {
         /* non-ASCII character, handle in standard converter */
-        *pErrorCode=U_USING_DEFAULT_WARNING;
-    } else if(source<sourceLimit && target>=(const uint8_t *)pFromUArgs->targetLimit) {
+        *p_Error_رمز=U_USING_DEFAULT_WARNING;
+    } ورنہ اگر(ماخذ<ماخذ_حد_بندی && ہدف>=(ثابت uint8_t *)pFromUArgs->ہدف_حد_بندی) {
         /* target is full */
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        *p_Error_رمز=U_بفر_حد_سے_تجاوز_ERROR;
     }
 
     /* write back the updated pointers */
-    pToUArgs->source=(const char *)source;
-    pFromUArgs->target=(char *)target;
+    p_مقصد_UArgs->ماخذ=(ثابت حرف *)ماخذ;
+    pFromUArgs->ہدف=(حرف *)ہدف;
 }
 
-static void U_CALLCONV
-_ASCIIGetUnicodeSet(const UConverter *cnv,
-                    const USetAdder *sa,
-                    UConverterUnicodeSet which,
-                    UErrorCode *pErrorCode) {
-    (void)cnv;
-    (void)which;
-    (void)pErrorCode;
-    sa->addRange(sa->set, 0, 0x7f);
+ساکن خالی U_CALLCONV
+ASCIIGet_Unicode_سیٹ(ثابت UConverter *cnv,
+                    ثابت USetAdder *sa,
+                    UConverter_Unicode_سیٹ which,
+                    UError_رمز *p_Error_رمز) {
+    (خالی)cnv;
+    (خالی)which;
+    (خالی)p_Error_رمز;
+    sa->جوڑو_Range(sa->سیٹ, 0, 0x7f);
 }
-U_CDECL_END
+U_CDECL_انتہا
 
-static const UConverterImpl _ASCIIImpl={
+ساکن ثابت UConverterImpl _ASCIIImpl={
     UCNV_US_ASCII,
 
-    nullptr,
-    nullptr,
+    خالی_اشاریہ,
+    خالی_اشاریہ,
 
-    nullptr,
-    nullptr,
-    nullptr,
+    خالی_اشاریہ,
+    خالی_اشاریہ,
+    خالی_اشاریہ,
 
     _ASCIIToUnicodeWithOffsets,
     _ASCIIToUnicodeWithOffsets,
     _Latin1FromUnicodeWithOffsets,
     _Latin1FromUnicodeWithOffsets,
-    _ASCIIGetNextUChar,
+    ASCIIGet_اگلا_UChar,
 
-    nullptr,
-    nullptr,
-    nullptr,
-    nullptr,
-    _ASCIIGetUnicodeSet,
+    خالی_اشاریہ,
+    خالی_اشاریہ,
+    خالی_اشاریہ,
+    خالی_اشاریہ,
+    ASCIIGet_Unicode_سیٹ,
 
-    nullptr,
+    خالی_اشاریہ,
     ucnv_ASCIIFromUTF8
 };
 
-static const UConverterStaticData _ASCIIStaticData={
-    sizeof(UConverterStaticData),
+ساکن ثابت UConverter_Static_ڈیٹا ASCIIStatic_ڈیٹا={
+    حجم(UConverter_Static_ڈیٹا),
     "US-ASCII",
     367, UCNV_IBM, UCNV_US_ASCII, 1, 1,
-    { 0x1a, 0, 0, 0 }, 1, false, false,
+    { 0x1a, 0, 0, 0 }, 1, جھوٹ, جھوٹ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _ASCIIData=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_ASCIIStaticData, &_ASCIIImpl);
+ثابت UConverter_Shared_ڈیٹا _ASCIIData=
+        UCNV_IMMUTABLE_SHARED_ڈیٹا_INITIALIZER(&ASCIIStatic_ڈیٹا, &_ASCIIImpl);
 
-#endif
+#اگر_ختم

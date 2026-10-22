@@ -17,40 +17,40 @@
 *   06/29/2000  helena      Major rewrite of the callback APIs.
 */
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#اگر !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv_err.h"
-#include "unicode/ucnv_cb.h"
-#include "ucnv_cnv.h"
-#include "cmemory.h"
-#include "unicode/ucnv.h"
-#include "ustrfmt.h"
+#شامل "unicode/ucnv_err.h"
+#شامل "unicode/ucnv_cb.h"
+#شامل "ucnv_cnv.h"
+#شامل "cmemory.h"
+#شامل "unicode/ucnv.h"
+#شامل "ustrfmt.h"
 
-#define VALUE_STRING_LENGTH 48
+#تعریف_کرو قدر_STRING_لمبائی 48
 /*Magic # 32 = 4(number of char in value string) * 8(max number of bytes per char for any converter) */
-#define UNICODE_PERCENT_SIGN_CODEPOINT  0x0025
-#define UNICODE_U_CODEPOINT             0x0055
-#define UNICODE_X_CODEPOINT             0x0058
-#define UNICODE_RS_CODEPOINT            0x005C
-#define UNICODE_U_LOW_CODEPOINT         0x0075
-#define UNICODE_X_LOW_CODEPOINT         0x0078
-#define UNICODE_AMP_CODEPOINT           0x0026
-#define UNICODE_HASH_CODEPOINT          0x0023
-#define UNICODE_SEMICOLON_CODEPOINT     0x003B
-#define UNICODE_PLUS_CODEPOINT          0x002B
-#define UNICODE_LEFT_CURLY_CODEPOINT    0x007B
-#define UNICODE_RIGHT_CURLY_CODEPOINT   0x007D
-#define UNICODE_SPACE_CODEPOINT         0x0020
-#define UCNV_PRV_ESCAPE_ICU         0
-#define UCNV_PRV_ESCAPE_C           'C'
-#define UCNV_PRV_ESCAPE_XML_DEC     'D'
-#define UCNV_PRV_ESCAPE_XML_HEX     'X'
-#define UCNV_PRV_ESCAPE_JAVA        'J'
-#define UCNV_PRV_ESCAPE_UNICODE     'U'
-#define UCNV_PRV_ESCAPE_CSS2        'S'
-#define UCNV_PRV_STOP_ON_ILLEGAL    'i'
+#تعریف_کرو UNICODE_PERCENT_SIGN_CODEPOINT  0x0025
+#تعریف_کرو UNICODE_U_CODEPOINT             0x0055
+#تعریف_کرو UNICODE_X_CODEPOINT             0x0058
+#تعریف_کرو UNICODE_RS_CODEPOINT            0x005C
+#تعریف_کرو UNICODE_U_کم_CODEPOINT         0x0075
+#تعریف_کرو UNICODE_X_کم_CODEPOINT         0x0078
+#تعریف_کرو UNICODE_AMP_CODEPOINT           0x0026
+#تعریف_کرو UNICODE_HASH_CODEPOINT          0x0023
+#تعریف_کرو UNICODE_SEMICOLON_CODEPOINT     0x003B
+#تعریف_کرو UNICODE_PLUS_CODEPOINT          0x002B
+#تعریف_کرو UNICODE_بایاں_CURLY_CODEPOINT    0x007B
+#تعریف_کرو UNICODE_دایاں_CURLY_CODEPOINT   0x007D
+#تعریف_کرو UNICODE_SPACE_CODEPOINT         0x0020
+#تعریف_کرو UCNV_PRV_ESCAPE_ICU         0
+#تعریف_کرو UCNV_PRV_ESCAPE_C           'C'
+#تعریف_کرو UCNV_PRV_ESCAPE_XML_DEC     'D'
+#تعریف_کرو UCNV_PRV_ESCAPE_XML_HEX     'X'
+#تعریف_کرو UCNV_PRV_ESCAPE_JAVA        'J'
+#تعریف_کرو UCNV_PRV_ESCAPE_UNICODE     'U'
+#تعریف_کرو UCNV_PRV_ESCAPE_CSS2        'S'
+#تعریف_کرو UCNV_PRV_STOP_ON_ILLEGAL    'i'
 
 /*
  * IS_DEFAULT_IGNORABLE_CODE_POINT
@@ -65,7 +65,7 @@
  *
  * This list should be sync with the one in CharsetCallback.java
  */
-#define IS_DEFAULT_IGNORABLE_CODE_POINT(c) ( \
+#تعریف_کرو IS_DEFAULT_IGNORABLE_رمز_نقطہ(c) ( \
     (c == 0x00AD) || \
     (c == 0x034F) || \
     (c == 0x061C) || \
@@ -87,21 +87,21 @@
 
 
 /*Function Pointer STOPS at the ILLEGAL_SEQUENCE */
-U_CAPI void    U_EXPORT2
+U_CAPI خالی    U_EXPORT2
 UCNV_FROM_U_CALLBACK_STOP (
-                  const void *context,
-                  UConverterFromUnicodeArgs *fromUArgs,
-                  const char16_t* codeUnits,
+                  ثابت خالی *context,
+                  UConverter_From_Unicode_دلائل *fromUArgs,
+                  ثابت char16_t* رمز_Units,
                   int32_t length,
-                  UChar32 codePoint,
+                  UChar32 رمز_نقطہ,
                   UConverterCallbackReason reason,
-                  UErrorCode * err)
+                  UError_رمز * err)
 {
-    (void)context;
-    (void)fromUArgs;
-    (void)codeUnits;
-    (void)length;
-    if (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
+    (خالی)context;
+    (خالی)fromUArgs;
+    (خالی)رمز_Units;
+    (خالی)length;
+    اگر (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_رمز_نقطہ(رمز_نقطہ))
     {
         /*
          * Skip if the codepoint has unicode property of default ignorable.
@@ -113,42 +113,42 @@ UCNV_FROM_U_CALLBACK_STOP (
 
 
 /*Function Pointer STOPS at the ILLEGAL_SEQUENCE */
-U_CAPI void    U_EXPORT2
-UCNV_TO_U_CALLBACK_STOP (
-                   const void *context,
-                   UConverterToUnicodeArgs *toUArgs,
-                   const char* codePoints,
+U_CAPI خالی    U_EXPORT2
+UCNV_مقصد_U_CALLBACK_STOP (
+                   ثابت خالی *context,
+                   UConverter_مقصد_Unicode_دلائل *مقصد_UArgs,
+                   ثابت حرف* رمز_Points,
                    int32_t length,
                    UConverterCallbackReason reason,
-                   UErrorCode * err)
+                   UError_رمز * err)
 {
     /* the caller must have set the error code accordingly */
-    (void)context; (void)toUArgs; (void)codePoints; (void)length; (void)reason; (void)err;
+    (خالی)context; (خالی)مقصد_UArgs; (خالی)رمز_Points; (خالی)length; (خالی)reason; (خالی)err;
 }
 
-U_CAPI void    U_EXPORT2
+U_CAPI خالی    U_EXPORT2
 UCNV_FROM_U_CALLBACK_SKIP (                  
-                  const void *context,
-                  UConverterFromUnicodeArgs *fromUArgs,
-                  const char16_t* codeUnits,
+                  ثابت خالی *context,
+                  UConverter_From_Unicode_دلائل *fromUArgs,
+                  ثابت char16_t* رمز_Units,
                   int32_t length,
-                  UChar32 codePoint,
+                  UChar32 رمز_نقطہ,
                   UConverterCallbackReason reason,
-                  UErrorCode * err)
+                  UError_رمز * err)
 {
-    (void)fromUArgs;
-    (void)codeUnits;
-    (void)length;
-    if (reason <= UCNV_IRREGULAR)
+    (خالی)fromUArgs;
+    (خالی)رمز_Units;
+    (خالی)length;
+    اگر (reason <= UCNV_IRREGULAR)
     {
-        if (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
+        اگر (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_رمز_نقطہ(رمز_نقطہ))
         {
             /*
              * Skip if the codepoint has unicode property of default ignorable.
              */
             *err = U_ZERO_ERROR;
         }
-        else if (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
+        ورنہ اگر (context == خالی_اشاریہ || (*((حرف*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
         {
             *err = U_ZERO_ERROR;
         }
@@ -157,31 +157,31 @@ UCNV_FROM_U_CALLBACK_SKIP (
     /* else ignore the reset, close and clone calls. */
 }
 
-U_CAPI void    U_EXPORT2
+U_CAPI خالی    U_EXPORT2
 UCNV_FROM_U_CALLBACK_SUBSTITUTE (
-                  const void *context,
-                  UConverterFromUnicodeArgs *fromArgs,
-                  const char16_t* codeUnits,
+                  ثابت خالی *context,
+                  UConverter_From_Unicode_دلائل *from_دلائل,
+                  ثابت char16_t* رمز_Units,
                   int32_t length,
-                  UChar32 codePoint,
+                  UChar32 رمز_نقطہ,
                   UConverterCallbackReason reason,
-                  UErrorCode * err)
+                  UError_رمز * err)
 {
-    (void)codeUnits;
-    (void)length;
-    if (reason <= UCNV_IRREGULAR)
+    (خالی)رمز_Units;
+    (خالی)length;
+    اگر (reason <= UCNV_IRREGULAR)
     {
-        if (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
+        اگر (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_رمز_نقطہ(رمز_نقطہ))
         {
             /*
              * Skip if the codepoint has unicode property of default ignorable.
              */
             *err = U_ZERO_ERROR;
         }
-        else if (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
+        ورنہ اگر (context == خالی_اشاریہ || (*((حرف*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
         {
             *err = U_ZERO_ERROR;
-            ucnv_cbFromUWriteSub(fromArgs, 0, err);
+            ucnv_cbFromUWriteSub(from_دلائل, 0, err);
         }
         /* else the caller must have set the error code accordingly. */
     }
@@ -193,183 +193,183 @@ UCNV_FROM_U_CALLBACK_SUBSTITUTE (
  *escape sequence to the target codepage (if conversion failure happens then
  *we revert to substituting with subchar)
  */
-U_CAPI void    U_EXPORT2
+U_CAPI خالی    U_EXPORT2
 UCNV_FROM_U_CALLBACK_ESCAPE (
-                         const void *context,
-                         UConverterFromUnicodeArgs *fromArgs,
-                         const char16_t *codeUnits,
+                         ثابت خالی *context,
+                         UConverter_From_Unicode_دلائل *from_دلائل,
+                         ثابت char16_t *رمز_Units,
                          int32_t length,
-                         UChar32 codePoint,
+                         UChar32 رمز_نقطہ,
                          UConverterCallbackReason reason,
-                         UErrorCode * err)
+                         UError_رمز * err)
 {
 
-  char16_t valueString[VALUE_STRING_LENGTH];
-  int32_t valueStringLength = 0;
+  char16_t قدر_String[قدر_STRING_لمبائی];
+  int32_t قدر_String_لمبائی = 0;
   int32_t i = 0;
 
-  const char16_t *myValueSource = nullptr;
-  UErrorCode err2 = U_ZERO_ERROR;
-  UConverterFromUCallback original = nullptr;
-  const void *originalContext;
+  ثابت char16_t *my_قدر_ماخذ = خالی_اشاریہ;
+  UError_رمز err2 = U_ZERO_ERROR;
+  UConverterFromUCallback original = خالی_اشاریہ;
+  ثابت خالی *originalContext;
 
-  UConverterFromUCallback ignoredCallback = nullptr;
-  const void *ignoredContext;
+  UConverterFromUCallback ignoredCallback = خالی_اشاریہ;
+  ثابت خالی *ignoredContext;
   
-  if (reason > UCNV_IRREGULAR)
+  اگر (reason > UCNV_IRREGULAR)
   {
-      return;
+      واپس;
   }
-  else if (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
+  ورنہ اگر (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_رمز_نقطہ(رمز_نقطہ))
   {
       /*
        * Skip if the codepoint has unicode property of default ignorable.
        */
       *err = U_ZERO_ERROR;
-      return;
+      واپس;
   }
 
-  ucnv_setFromUCallBack (fromArgs->converter,
+  ucnv_سیٹ_From_UCall_عقب (from_دلائل->converter,
                      (UConverterFromUCallback) UCNV_FROM_U_CALLBACK_SUBSTITUTE,
-                     nullptr,
+                     خالی_اشاریہ,
                      &original,
                      &originalContext,
                      &err2);
   
-  if (U_FAILURE (err2))
+  اگر (U_FAILURE (err2))
   {
     *err = err2;
-    return;
+    واپس;
   } 
-  if(context==nullptr)
+  اگر(context==خالی_اشاریہ)
   { 
-      while (i < length)
+      جب (i < length)
       {
-        valueString[valueStringLength++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT;  /* adding % */
-        valueString[valueStringLength++] = (char16_t) UNICODE_U_CODEPOINT; /* adding U */
-        valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[i++], 16, 4);
+        قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT;  /* adding % */
+        قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_U_CODEPOINT; /* adding U */
+        قدر_String_لمبائی += uprv_itou (قدر_String + قدر_String_لمبائی, قدر_STRING_لمبائی - قدر_String_لمبائی, (uint16_t)رمز_Units[i++], 16, 4);
       }
   }
-  else
+  ورنہ
   {
-      switch(*((char*)context))
+      انتخاب(*((حرف*)context))
       {
-      case UCNV_PRV_ESCAPE_JAVA:
-          while (i < length)
+      حالت UCNV_PRV_ESCAPE_JAVA:
+          جب (i < length)
           {
-              valueString[valueStringLength++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
-              valueString[valueStringLength++] = (char16_t) UNICODE_U_LOW_CODEPOINT; /* adding u */
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[i++], 16, 4);
+              قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
+              قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_U_کم_CODEPOINT; /* adding u */
+              قدر_String_لمبائی += uprv_itou (قدر_String + قدر_String_لمبائی, قدر_STRING_لمبائی - قدر_String_لمبائی, (uint16_t)رمز_Units[i++], 16, 4);
           }
-          break;
+          توڑو;
 
-      case UCNV_PRV_ESCAPE_C:
-          valueString[valueStringLength++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
+      حالت UCNV_PRV_ESCAPE_C:
+          قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
 
-          if(length==2){
-              valueString[valueStringLength++] = (char16_t) UNICODE_U_CODEPOINT; /* adding U */
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 16, 8);
+          اگر(length==2){
+              قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_U_CODEPOINT; /* adding U */
+              قدر_String_لمبائی += uprv_itou (قدر_String + قدر_String_لمبائی, قدر_STRING_لمبائی - قدر_String_لمبائی, رمز_نقطہ, 16, 8);
 
           }
-          else{
-              valueString[valueStringLength++] = (char16_t) UNICODE_U_LOW_CODEPOINT; /* adding u */
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[0], 16, 4);
+          ورنہ{
+              قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_U_کم_CODEPOINT; /* adding u */
+              قدر_String_لمبائی += uprv_itou (قدر_String + قدر_String_لمبائی, قدر_STRING_لمبائی - قدر_String_لمبائی, (uint16_t)رمز_Units[0], 16, 4);
           }
-          break;
+          توڑو;
 
-      case UCNV_PRV_ESCAPE_XML_DEC:
+      حالت UCNV_PRV_ESCAPE_XML_DEC:
 
-          valueString[valueStringLength++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
-          valueString[valueStringLength++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
-          if(length==2){
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 10, 0);
+          قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
+          قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
+          اگر(length==2){
+              قدر_String_لمبائی += uprv_itou (قدر_String + قدر_String_لمبائی, قدر_STRING_لمبائی - قدر_String_لمبائی, رمز_نقطہ, 10, 0);
           }
-          else{
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[0], 10, 0);
+          ورنہ{
+              قدر_String_لمبائی += uprv_itou (قدر_String + قدر_String_لمبائی, قدر_STRING_لمبائی - قدر_String_لمبائی, (uint16_t)رمز_Units[0], 10, 0);
           }
-          valueString[valueStringLength++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
-          break;
+          قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
+          توڑو;
 
-      case UCNV_PRV_ESCAPE_XML_HEX:
+      حالت UCNV_PRV_ESCAPE_XML_HEX:
 
-          valueString[valueStringLength++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
-          valueString[valueStringLength++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
-          valueString[valueStringLength++] = (char16_t) UNICODE_X_LOW_CODEPOINT; /* adding x */
-          if(length==2){
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 16, 0);
+          قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
+          قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
+          قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_X_کم_CODEPOINT; /* adding x */
+          اگر(length==2){
+              قدر_String_لمبائی += uprv_itou (قدر_String + قدر_String_لمبائی, قدر_STRING_لمبائی - قدر_String_لمبائی, رمز_نقطہ, 16, 0);
           }
-          else{
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[0], 16, 0);
+          ورنہ{
+              قدر_String_لمبائی += uprv_itou (قدر_String + قدر_String_لمبائی, قدر_STRING_لمبائی - قدر_String_لمبائی, (uint16_t)رمز_Units[0], 16, 0);
           }
-          valueString[valueStringLength++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
-          break;
+          قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
+          توڑو;
 
-      case UCNV_PRV_ESCAPE_UNICODE:
-          valueString[valueStringLength++] = (char16_t) UNICODE_LEFT_CURLY_CODEPOINT;    /* adding { */
-          valueString[valueStringLength++] = (char16_t) UNICODE_U_CODEPOINT;    /* adding U */
-          valueString[valueStringLength++] = (char16_t) UNICODE_PLUS_CODEPOINT; /* adding + */
-          if (length == 2) {
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 16, 4);
-          } else {
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[0], 16, 4);
+      حالت UCNV_PRV_ESCAPE_UNICODE:
+          قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_بایاں_CURLY_CODEPOINT;    /* adding { */
+          قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_U_CODEPOINT;    /* adding U */
+          قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_PLUS_CODEPOINT; /* adding + */
+          اگر (length == 2) {
+              قدر_String_لمبائی += uprv_itou (قدر_String + قدر_String_لمبائی, قدر_STRING_لمبائی - قدر_String_لمبائی, رمز_نقطہ, 16, 4);
+          } ورنہ {
+              قدر_String_لمبائی += uprv_itou (قدر_String + قدر_String_لمبائی, قدر_STRING_لمبائی - قدر_String_لمبائی, (uint16_t)رمز_Units[0], 16, 4);
           }
-          valueString[valueStringLength++] = (char16_t) UNICODE_RIGHT_CURLY_CODEPOINT;    /* adding } */
-          break;
+          قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_دایاں_CURLY_CODEPOINT;    /* adding } */
+          توڑو;
 
-      case UCNV_PRV_ESCAPE_CSS2:
-          valueString[valueStringLength++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
-          valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 16, 0);
+      حالت UCNV_PRV_ESCAPE_CSS2:
+          قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
+          قدر_String_لمبائی += uprv_itou (قدر_String + قدر_String_لمبائی, قدر_STRING_لمبائی - قدر_String_لمبائی, رمز_نقطہ, 16, 0);
           /* Always add space character, because the next character might be whitespace,
              which would erroneously be considered the termination of the escape sequence. */
-          valueString[valueStringLength++] = (char16_t) UNICODE_SPACE_CODEPOINT;
-          break;
+          قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_SPACE_CODEPOINT;
+          توڑو;
 
-      default:
-          while (i < length)
+      طےشدہ:
+          جب (i < length)
           {
-              valueString[valueStringLength++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT;  /* adding % */
-              valueString[valueStringLength++] = (char16_t) UNICODE_U_CODEPOINT;             /* adding U */
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[i++], 16, 4);
+              قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT;  /* adding % */
+              قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_U_CODEPOINT;             /* adding U */
+              قدر_String_لمبائی += uprv_itou (قدر_String + قدر_String_لمبائی, قدر_STRING_لمبائی - قدر_String_لمبائی, (uint16_t)رمز_Units[i++], 16, 4);
           }
       }
   }  
-  myValueSource = valueString;
+  my_قدر_ماخذ = قدر_String;
 
   /* reset the error */
   *err = U_ZERO_ERROR;
 
-  ucnv_cbFromUWriteUChars(fromArgs, &myValueSource, myValueSource+valueStringLength, 0, err);
+  ucnv_cbFromUWriteUChars(from_دلائل, &my_قدر_ماخذ, my_قدر_ماخذ+قدر_String_لمبائی, 0, err);
 
-  ucnv_setFromUCallBack (fromArgs->converter,
+  ucnv_سیٹ_From_UCall_عقب (from_دلائل->converter,
                          original,
                          originalContext,
                          &ignoredCallback,
                          &ignoredContext,
                          &err2);
-  if (U_FAILURE (err2))
+  اگر (U_FAILURE (err2))
   {
       *err = err2;
-      return;
+      واپس;
   }
 }
 
 
 
-U_CAPI void  U_EXPORT2
-UCNV_TO_U_CALLBACK_SKIP (
-                 const void *context,
-                 UConverterToUnicodeArgs *toArgs,
-                 const char* codeUnits,
+U_CAPI خالی  U_EXPORT2
+UCNV_مقصد_U_CALLBACK_SKIP (
+                 ثابت خالی *context,
+                 UConverter_مقصد_Unicode_دلائل *مقصد_دلائل,
+                 ثابت حرف* رمز_Units,
                  int32_t length,
                  UConverterCallbackReason reason,
-                 UErrorCode * err)
+                 UError_رمز * err)
 {
-    (void)toArgs;
-    (void)codeUnits;
-    (void)length;
-    if (reason <= UCNV_IRREGULAR)
+    (خالی)مقصد_دلائل;
+    (خالی)رمز_Units;
+    (خالی)length;
+    اگر (reason <= UCNV_IRREGULAR)
     {
-        if (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
+        اگر (context == خالی_اشاریہ || (*((حرف*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
         {
             *err = U_ZERO_ERROR;
         }
@@ -378,23 +378,23 @@ UCNV_TO_U_CALLBACK_SKIP (
     /* else ignore the reset, close and clone calls. */
 }
 
-U_CAPI void    U_EXPORT2
-UCNV_TO_U_CALLBACK_SUBSTITUTE (
-                 const void *context,
-                 UConverterToUnicodeArgs *toArgs,
-                 const char* codeUnits,
+U_CAPI خالی    U_EXPORT2
+UCNV_مقصد_U_CALLBACK_SUBSTITUTE (
+                 ثابت خالی *context,
+                 UConverter_مقصد_Unicode_دلائل *مقصد_دلائل,
+                 ثابت حرف* رمز_Units,
                  int32_t length,
                  UConverterCallbackReason reason,
-                 UErrorCode * err)
+                 UError_رمز * err)
 {
-    (void)codeUnits;
-    (void)length;
-    if (reason <= UCNV_IRREGULAR)
+    (خالی)رمز_Units;
+    (خالی)length;
+    اگر (reason <= UCNV_IRREGULAR)
     {
-        if (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
+        اگر (context == خالی_اشاریہ || (*((حرف*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
         {
             *err = U_ZERO_ERROR;
-            ucnv_cbToUWriteSub(toArgs,0,err);
+            ucnv_cb_مقصد_UWrite_Sub(مقصد_دلائل,0,err);
         }
         /* else the caller must have set the error code accordingly. */
     }
@@ -404,79 +404,79 @@ UCNV_TO_U_CALLBACK_SUBSTITUTE (
 /*uses uprv_itou to get a unicode escape sequence of the offensive sequence,
  *and uses that as the substitution sequence
  */
-U_CAPI void   U_EXPORT2
-UCNV_TO_U_CALLBACK_ESCAPE (
-                 const void *context,
-                 UConverterToUnicodeArgs *toArgs,
-                 const char* codeUnits,
+U_CAPI خالی   U_EXPORT2
+UCNV_مقصد_U_CALLBACK_ESCAPE (
+                 ثابت خالی *context,
+                 UConverter_مقصد_Unicode_دلائل *مقصد_دلائل,
+                 ثابت حرف* رمز_Units,
                  int32_t length,
                  UConverterCallbackReason reason,
-                 UErrorCode * err)
+                 UError_رمز * err)
 {
-    char16_t uniValueString[VALUE_STRING_LENGTH];
-    int32_t valueStringLength = 0;
+    char16_t uni_قدر_String[قدر_STRING_لمبائی];
+    int32_t قدر_String_لمبائی = 0;
     int32_t i = 0;
 
-    if (reason > UCNV_IRREGULAR)
+    اگر (reason > UCNV_IRREGULAR)
     {
-        return;
+        واپس;
     }
 
-    if(context==nullptr)
+    اگر(context==خالی_اشاریہ)
     {    
-        while (i < length)
+        جب (i < length)
         {
-            uniValueString[valueStringLength++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT; /* adding % */
-            uniValueString[valueStringLength++] = (char16_t) UNICODE_X_CODEPOINT;    /* adding X */
-            valueStringLength += uprv_itou (uniValueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint8_t) codeUnits[i++], 16, 2);
+            uni_قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT; /* adding % */
+            uni_قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_X_CODEPOINT;    /* adding X */
+            قدر_String_لمبائی += uprv_itou (uni_قدر_String + قدر_String_لمبائی, قدر_STRING_لمبائی - قدر_String_لمبائی, (uint8_t) رمز_Units[i++], 16, 2);
         }
     }
-    else
+    ورنہ
     {
-        switch(*((char*)context))
+        انتخاب(*((حرف*)context))
         {
-        case UCNV_PRV_ESCAPE_XML_DEC:
-            while (i < length)
+        حالت UCNV_PRV_ESCAPE_XML_DEC:
+            جب (i < length)
             {
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
-                valueStringLength += uprv_itou (uniValueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint8_t)codeUnits[i++], 10, 0);
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
+                uni_قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
+                uni_قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
+                قدر_String_لمبائی += uprv_itou (uni_قدر_String + قدر_String_لمبائی, قدر_STRING_لمبائی - قدر_String_لمبائی, (uint8_t)رمز_Units[i++], 10, 0);
+                uni_قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
             }
-            break;
+            توڑو;
 
-        case UCNV_PRV_ESCAPE_XML_HEX:
-            while (i < length)
+        حالت UCNV_PRV_ESCAPE_XML_HEX:
+            جب (i < length)
             {
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_X_LOW_CODEPOINT; /* adding x */
-                valueStringLength += uprv_itou (uniValueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint8_t)codeUnits[i++], 16, 0);
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
+                uni_قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
+                uni_قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
+                uni_قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_X_کم_CODEPOINT; /* adding x */
+                قدر_String_لمبائی += uprv_itou (uni_قدر_String + قدر_String_لمبائی, قدر_STRING_لمبائی - قدر_String_لمبائی, (uint8_t)رمز_Units[i++], 16, 0);
+                uni_قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
             }
-            break;
-        case UCNV_PRV_ESCAPE_C:
-            while (i < length)
+            توڑو;
+        حالت UCNV_PRV_ESCAPE_C:
+            جب (i < length)
             {
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_X_LOW_CODEPOINT; /* adding x */
-                valueStringLength += uprv_itou (uniValueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint8_t)codeUnits[i++], 16, 2);
+                uni_قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
+                uni_قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_X_کم_CODEPOINT; /* adding x */
+                قدر_String_لمبائی += uprv_itou (uni_قدر_String + قدر_String_لمبائی, قدر_STRING_لمبائی - قدر_String_لمبائی, (uint8_t)رمز_Units[i++], 16, 2);
             }
-            break;
-        default:
-            while (i < length)
+            توڑو;
+        طےشدہ:
+            جب (i < length)
             {
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT; /* adding % */
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_X_CODEPOINT;    /* adding X */
-                uprv_itou (uniValueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint8_t) codeUnits[i++], 16, 2);
-                valueStringLength += 2;
+                uni_قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT; /* adding % */
+                uni_قدر_String[قدر_String_لمبائی++] = (char16_t) UNICODE_X_CODEPOINT;    /* adding X */
+                uprv_itou (uni_قدر_String + قدر_String_لمبائی, قدر_STRING_لمبائی - قدر_String_لمبائی, (uint8_t) رمز_Units[i++], 16, 2);
+                قدر_String_لمبائی += 2;
             }
         }
     }
     /* reset the error */
     *err = U_ZERO_ERROR;
 
-    ucnv_cbToUWriteUChars(toArgs, uniValueString, valueStringLength, 0, err);
+    ucnv_cb_مقصد_UWrite_UChars(مقصد_دلائل, uni_قدر_String, قدر_String_لمبائی, 0, err);
 }
 
-#endif
+#اگر_ختم

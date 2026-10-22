@@ -23,12 +23,12 @@
 
 
 
-#include <stdlib.h>
-#include <stdio.h>
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uassert.h"
+#شامل <stdlib.h>
+#شامل <stdio.h>
+#شامل "unicode/utypes.h"
+#شامل "cmemory.h"
+#شامل "cstring.h"
+#شامل "uassert.h"
 
 /*
  * We hardcode case conversion for invariant characters to match our expectation
@@ -49,32 +49,32 @@
  */
 
 U_CAPI UBool U_EXPORT2
-uprv_isASCIILetter(char c) {
-#if U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-    return
+uprv_isASCIILetter(حرف c) {
+#اگر U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+    واپس
         ('a'<=c && c<='i') || ('j'<=c && c<='r') || ('s'<=c && c<='z') ||
         ('A'<=c && c<='I') || ('J'<=c && c<='R') || ('S'<=c && c<='Z');
-#else
-    return ('a'<=c && c<='z') || ('A'<=c && c<='Z');
-#endif
+#ورنہ
+    واپس ('a'<=c && c<='z') || ('A'<=c && c<='Z');
+#اگر_ختم
 }
 
-U_CAPI char U_EXPORT2
-uprv_toupper(char c) {
-#if U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-    if(('a'<=c && c<='i') || ('j'<=c && c<='r') || ('s'<=c && c<='z')) {
-        c=(char)(c+('A'-'a'));
+U_CAPI حرف U_EXPORT2
+uprv_toupper(حرف c) {
+#اگر U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+    اگر(('a'<=c && c<='i') || ('j'<=c && c<='r') || ('s'<=c && c<='z')) {
+        c=(حرف)(c+('A'-'a'));
     }
-#else
-    if('a'<=c && c<='z') {
-        c=(char)(c+('A'-'a'));
+#ورنہ
+    اگر('a'<=c && c<='z') {
+        c=(حرف)(c+('A'-'a'));
     }
-#endif
-    return c;
+#اگر_ختم
+    واپس c;
 }
 
 
-#if 0
+#اگر 0
 /*
  * Commented out because cstring.h defines uprv_tolower() to be
  * the same as either uprv_asciitolower() or uprv_ebcdictolower()
@@ -84,67 +84,67 @@ uprv_toupper(char c) {
  * charset families, not just ASCII and EBCDIC, because its #else branch
  * is written generically.
  */
-U_CAPI char U_EXPORT2
-uprv_tolower(char c) {
-#if U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-    if(('A'<=c && c<='I') || ('J'<=c && c<='R') || ('S'<=c && c<='Z')) {
-        c=(char)(c+('a'-'A'));
+U_CAPI حرف U_EXPORT2
+uprv_tolower(حرف c) {
+#اگر U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+    اگر(('A'<=c && c<='I') || ('J'<=c && c<='R') || ('S'<=c && c<='Z')) {
+        c=(حرف)(c+('a'-'A'));
     }
-#else
-    if('A'<=c && c<='Z') {
-        c=(char)(c+('a'-'A'));
+#ورنہ
+    اگر('A'<=c && c<='Z') {
+        c=(حرف)(c+('a'-'A'));
     }
-#endif
-    return c;
+#اگر_ختم
+    واپس c;
 }
-#endif
+#اگر_ختم
 
-U_CAPI char U_EXPORT2
-uprv_asciitolower(char c) {
-    if(0x41<=c && c<=0x5a) {
-        c=(char)(c+0x20);
+U_CAPI حرف U_EXPORT2
+uprv_asciitolower(حرف c) {
+    اگر(0x41<=c && c<=0x5a) {
+        c=(حرف)(c+0x20);
     }
-    return c;
+    واپس c;
 }
 
-U_CAPI char U_EXPORT2
-uprv_ebcdictolower(char c) {
-    if( (0xc1<=(uint8_t)c && (uint8_t)c<=0xc9) ||
+U_CAPI حرف U_EXPORT2
+uprv_ebcdictolower(حرف c) {
+    اگر( (0xc1<=(uint8_t)c && (uint8_t)c<=0xc9) ||
         (0xd1<=(uint8_t)c && (uint8_t)c<=0xd9) ||
         (0xe2<=(uint8_t)c && (uint8_t)c<=0xe9)
     ) {
-        c=(char)(c-0x40);
+        c=(حرف)(c-0x40);
     }
-    return c;
+    واپس c;
 }
 
 
-U_CAPI char* U_EXPORT2
-T_CString_toLowerCase(char* str)
+U_CAPI حرف* U_EXPORT2
+T_CString_مقصد_زیریں_Case(حرف* str)
 {
-    char* origPtr = str;
+    حرف* origPtr = str;
 
-    if (str) {
-        do
+    اگر (str) {
+        کرو
             *str = uprv_tolower(*str);
-        while (*(str++));
+        جب (*(str++));
     }
 
-    return origPtr;
+    واپس origPtr;
 }
 
-U_CAPI char* U_EXPORT2
-T_CString_toUpperCase(char* str)
+U_CAPI حرف* U_EXPORT2
+T_CString_مقصد_بالائی_Case(حرف* str)
 {
-    char* origPtr = str;
+    حرف* origPtr = str;
 
-    if (str) {
-        do
+    اگر (str) {
+        کرو
             *str = uprv_toupper(*str);
-        while (*(str++));
+        جب (*(str++));
     }
 
-    return origPtr;
+    واپس origPtr;
 }
 
 /*
@@ -154,34 +154,34 @@ T_CString_toUpperCase(char* str)
  * Returns the length of the string (not including the NUL).
  */
 U_CAPI int32_t U_EXPORT2
-T_CString_integerToString(char* buffer, int32_t v, int32_t radix)
+T_CString_integer_مقصد_String(حرف* بفر, int32_t v, int32_t radix)
 {
-    char      tbuf[30];
-    int32_t   tbx    = sizeof(tbuf);
+    حرف      tbuf[30];
+    int32_t   tbx    = حجم(tbuf);
     uint8_t   digit;
     int32_t   length = 0;
     uint32_t  uval;
     
     U_ASSERT(radix>=2 && radix<=16);
     uval = (uint32_t) v;
-    if(v<0 && radix == 10) {
+    اگر(v<0 && radix == 10) {
         /* Only in base 10 do we conside numbers to be signed. */
         uval = (uint32_t)(-v); 
-        buffer[length++] = '-';
+        بفر[length++] = '-';
     }
     
-    tbx = sizeof(tbuf)-1;
+    tbx = حجم(tbuf)-1;
     tbuf[tbx] = 0;   /* We are generating the digits backwards.  Null term the end. */
-    do {
+    کرو {
         digit = (uint8_t)(uval % radix);
-        tbuf[--tbx] = (char)(T_CString_itosOffset(digit));
+        tbuf[--tbx] = (حرف)(T_CString_itos_انحراف(digit));
         uval  = uval / radix;
-    } while (uval != 0);
+    } جب (uval != 0);
     
     /* copy converted number into user buffer  */
-    uprv_strcpy(buffer+length, tbuf+tbx);
-    length += sizeof(tbuf) - tbx -1;
-    return length;
+    uprv_strcpy(بفر+length, tbuf+tbx);
+    length += حجم(tbuf) - tbx -1;
+    واپس length;
 }
 
 
@@ -192,76 +192,76 @@ T_CString_integerToString(char* buffer, int32_t v, int32_t radix)
  * Returns the length of the string, not including the terminating NUL.
  */
 U_CAPI int32_t U_EXPORT2
-T_CString_int64ToString(char* buffer, int64_t v, uint32_t radix)
+T_CString_int64_مقصد_String(حرف* بفر, int64_t v, uint32_t radix)
 {
-    char      tbuf[30];
-    int32_t   tbx    = sizeof(tbuf);
+    حرف      tbuf[30];
+    int32_t   tbx    = حجم(tbuf);
     uint8_t   digit;
     int32_t   length = 0;
     uint64_t  uval;
     
     U_ASSERT(radix>=2 && radix<=16);
     uval = (uint64_t) v;
-    if(v<0 && radix == 10) {
+    اگر(v<0 && radix == 10) {
         /* Only in base 10 do we conside numbers to be signed. */
         uval = (uint64_t)(-v); 
-        buffer[length++] = '-';
+        بفر[length++] = '-';
     }
     
-    tbx = sizeof(tbuf)-1;
+    tbx = حجم(tbuf)-1;
     tbuf[tbx] = 0;   /* We are generating the digits backwards.  Null term the end. */
-    do {
+    کرو {
         digit = (uint8_t)(uval % radix);
-        tbuf[--tbx] = (char)(T_CString_itosOffset(digit));
+        tbuf[--tbx] = (حرف)(T_CString_itos_انحراف(digit));
         uval  = uval / radix;
-    } while (uval != 0);
+    } جب (uval != 0);
     
     /* copy converted number into user buffer  */
-    uprv_strcpy(buffer+length, tbuf+tbx);
-    length += sizeof(tbuf) - tbx -1;
-    return length;
+    uprv_strcpy(بفر+length, tbuf+tbx);
+    length += حجم(tbuf) - tbx -1;
+    واپس length;
 }
 
 
 U_CAPI int32_t U_EXPORT2
-T_CString_stringToInteger(const char *integerString, int32_t radix)
+T_CString_string_مقصد_Integer(ثابت حرف *integerString, int32_t radix)
 {
-    char *end;
-    return uprv_strtoul(integerString, &end, radix);
+    حرف *انتہا;
+    واپس uprv_strtoul(integerString, &انتہا, radix);
 
 }
 
-U_CAPI int U_EXPORT2
-uprv_stricmp(const char *str1, const char *str2) {
-    if(str1==nullptr) {
-        if(str2==nullptr) {
-            return 0;
-        } else {
-            return -1;
+U_CAPI صحیح U_EXPORT2
+uprv_stricmp(ثابت حرف *str1, ثابت حرف *str2) {
+    اگر(str1==خالی_اشاریہ) {
+        اگر(str2==خالی_اشاریہ) {
+            واپس 0;
+        } ورنہ {
+            واپس -1;
         }
-    } else if(str2==nullptr) {
-        return 1;
-    } else {
+    } ورنہ اگر(str2==خالی_اشاریہ) {
+        واپس 1;
+    } ورنہ {
         /* compare non-nullptr strings lexically with lowercase */
-        int rc;
-        unsigned char c1, c2;
+        صحیح rc;
+        غیرعلامتی حرف c1, c2;
 
-        for(;;) {
-            c1=(unsigned char)*str1;
-            c2=(unsigned char)*str2;
-            if(c1==0) {
-                if(c2==0) {
-                    return 0;
-                } else {
-                    return -1;
+        برائے(;;) {
+            c1=(غیرعلامتی حرف)*str1;
+            c2=(غیرعلامتی حرف)*str2;
+            اگر(c1==0) {
+                اگر(c2==0) {
+                    واپس 0;
+                } ورنہ {
+                    واپس -1;
                 }
-            } else if(c2==0) {
-                return 1;
-            } else {
+            } ورنہ اگر(c2==0) {
+                واپس 1;
+            } ورنہ {
                 /* compare non-zero characters with lowercase */
-                rc=(int)(unsigned char)uprv_tolower(c1)-(int)(unsigned char)uprv_tolower(c2);
-                if(rc!=0) {
-                    return rc;
+                rc=(صحیح)(غیرعلامتی حرف)uprv_tolower(c1)-(صحیح)(غیرعلامتی حرف)uprv_tolower(c2);
+                اگر(rc!=0) {
+                    واپس rc;
                 }
             }
             ++str1;
@@ -270,37 +270,37 @@ uprv_stricmp(const char *str1, const char *str2) {
     }
 }
 
-U_CAPI int U_EXPORT2
-uprv_strnicmp(const char *str1, const char *str2, uint32_t n) {
-    if(str1==nullptr) {
-        if(str2==nullptr) {
-            return 0;
-        } else {
-            return -1;
+U_CAPI صحیح U_EXPORT2
+uprv_strnicmp(ثابت حرف *str1, ثابت حرف *str2, uint32_t n) {
+    اگر(str1==خالی_اشاریہ) {
+        اگر(str2==خالی_اشاریہ) {
+            واپس 0;
+        } ورنہ {
+            واپس -1;
         }
-    } else if(str2==nullptr) {
-        return 1;
-    } else {
+    } ورنہ اگر(str2==خالی_اشاریہ) {
+        واپس 1;
+    } ورنہ {
         /* compare non-nullptr strings lexically with lowercase */
-        int rc;
-        unsigned char c1, c2;
+        صحیح rc;
+        غیرعلامتی حرف c1, c2;
 
-        for(; n--;) {
-            c1=(unsigned char)*str1;
-            c2=(unsigned char)*str2;
-            if(c1==0) {
-                if(c2==0) {
-                    return 0;
-                } else {
-                    return -1;
+        برائے(; n--;) {
+            c1=(غیرعلامتی حرف)*str1;
+            c2=(غیرعلامتی حرف)*str2;
+            اگر(c1==0) {
+                اگر(c2==0) {
+                    واپس 0;
+                } ورنہ {
+                    واپس -1;
                 }
-            } else if(c2==0) {
-                return 1;
-            } else {
+            } ورنہ اگر(c2==0) {
+                واپس 1;
+            } ورنہ {
                 /* compare non-zero characters with lowercase */
-                rc=(int)(unsigned char)uprv_tolower(c1)-(int)(unsigned char)uprv_tolower(c2);
-                if(rc!=0) {
-                    return rc;
+                rc=(صحیح)(غیرعلامتی حرف)uprv_tolower(c1)-(صحیح)(غیرعلامتی حرف)uprv_tolower(c2);
+                اگر(rc!=0) {
+                    واپس rc;
                 }
             }
             ++str1;
@@ -308,34 +308,34 @@ uprv_strnicmp(const char *str1, const char *str2, uint32_t n) {
         }
     }
 
-    return 0;
+    واپس 0;
 }
 
-U_CAPI char* U_EXPORT2
-uprv_strdup(const char *src) {
+U_CAPI حرف* U_EXPORT2
+uprv_strdup(ثابت حرف *src) {
     size_t len = uprv_strlen(src) + 1;
-    char *dup = (char *) uprv_malloc(len);
+    حرف *dup = (حرف *) uprv_malloc(len);
 
-    if (dup) {
+    اگر (dup) {
         uprv_memcpy(dup, src, len);
     }
 
-    return dup;
+    واپس dup;
 }
 
-U_CAPI char* U_EXPORT2
-uprv_strndup(const char *src, int32_t n) {
-    char *dup;
+U_CAPI حرف* U_EXPORT2
+uprv_strndup(ثابت حرف *src, int32_t n) {
+    حرف *dup;
 
-    if(n < 0) {
+    اگر(n < 0) {
         dup = uprv_strdup(src);
-    } else {
-        dup = (char*)uprv_malloc(n+1);
-        if (dup) { 
+    } ورنہ {
+        dup = (حرف*)uprv_malloc(n+1);
+        اگر (dup) { 
             uprv_memcpy(dup, src, n);
             dup[n] = 0;
         }
     }
 
-    return dup;
+    واپس dup;
 }

@@ -30,39 +30,39 @@
      l = lang, C = ctry, M = charmap, V = variant
 */
 
-#include <algorithm>
-#include <optional>
-#include <string_view>
+#شامل <algorithm>
+#شامل <optional>
+#شامل <string_view>
 
-#include "unicode/bytestream.h"
-#include "unicode/errorcode.h"
-#include "unicode/stringpiece.h"
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "unicode/uloc.h"
+#شامل "unicode/bytestream.h"
+#شامل "unicode/errorcode.h"
+#شامل "unicode/stringpiece.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/ustring.h"
+#شامل "unicode/uloc.h"
 
-#include "bytesinkutil.h"
-#include "putilimp.h"
-#include "ustr_imp.h"
-#include "ulocimp.h"
-#include "umutex.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "locmap.h"
-#include "uarrsort.h"
-#include "uenumimp.h"
-#include "uassert.h"
-#include "charstr.h"
+#شامل "bytesinkutil.h"
+#شامل "putilimp.h"
+#شامل "ustr_imp.h"
+#شامل "ulocimp.h"
+#شامل "umutex.h"
+#شامل "cstring.h"
+#شامل "cmemory.h"
+#شامل "locmap.h"
+#شامل "uarrsort.h"
+#شامل "uenumimp.h"
+#شامل "uassert.h"
+#شامل "charstr.h"
 
 U_NAMESPACE_USE
 
 /* ### Declarations **************************************************/
 
 /* Locale stuff from locid.cpp */
-U_CFUNC void locale_set_default(const char *id);
-U_CFUNC const char *locale_get_default();
+U_CFUNC خالی locale_سیٹ_default(ثابت حرف *id);
+U_CFUNC ثابت حرف *locale_get_default();
 
-namespace {
+نامخلا {
 
 /* ### Data tables **************************************************/
 
@@ -100,7 +100,7 @@ namespace {
 /* Generated using org.unicode.cldr.icu.GenerateISO639LanguageTables */
 /* ISO639 table version is 20150505 */
 /* Subsequent hand addition of selected languages */
-constexpr const char* LANGUAGES[] = {
+constexpr ثابت حرف* LANGUAGES[] = {
     "aa", "ab", "ace", "ach", "ada", "ady", "ae", "aeb", "af", "afh", "agq", "ain", "ak", "akk",
     "akz", "ale", "aln", "alt", "am", "an", "ang", "anp", "ar", "arc", "arn", "aro", "arp",
     "arq", "ars", "arw", "ary", "arz", "as", "asa", "ase", "ast", "av", "avk", "awa", "ay",
@@ -150,16 +150,16 @@ constexpr const char* LANGUAGES[] = {
     "wo", "wuu", "xal", "xh", "xmf", "xnr", "xog", "yao", "yap", "yav", "ybb", "yi", "yo",
     "ypk", "yrl", "yue", "za", "zap", "zbl", "zea", "zen", "zgh", "zh", "znd", "zu", "zun",
     "zxx", "zza",
-nullptr,
+خالی_اشاریہ,
     "in",  "iw",  "ji",  "jw",  "mo",  "sh",  "swc", "tl",  /* obsolete language codes */
-nullptr
+خالی_اشاریہ
 };
 
-constexpr const char* DEPRECATED_LANGUAGES[]={
-    "in", "iw", "ji", "jw", "mo", nullptr, nullptr
+constexpr ثابت حرف* DEPRECATED_LANGUAGES[]={
+    "in", "iw", "ji", "jw", "mo", خالی_اشاریہ, خالی_اشاریہ
 };
-constexpr const char* REPLACEMENT_LANGUAGES[]={
-    "id", "he", "yi", "jv", "ro", nullptr, nullptr
+constexpr ثابت حرف* REPLACEMENT_LANGUAGES[]={
+    "id", "he", "yi", "jv", "ro", خالی_اشاریہ, خالی_اشاریہ
 };
 
 /**
@@ -181,7 +181,7 @@ constexpr const char* REPLACEMENT_LANGUAGES[]={
 /* Generated using org.unicode.cldr.icu.GenerateISO639LanguageTables */
 /* ISO639 table version is 20150505 */
 /* Subsequent hand addition of selected languages */
-constexpr const char* LANGUAGES_3[] = {
+constexpr ثابت حرف* LANGUAGES_3[] = {
     "aar", "abk", "ace", "ach", "ada", "ady", "ave", "aeb", "afr", "afh", "agq", "ain", "aka",
     "akk", "akz", "ale", "aln", "alt", "amh", "arg", "ang", "anp", "ara", "arc", "arn", "aro",
     "arp", "arq", "ars", "arw", "ary", "arz", "asm", "asa", "ase", "ast", "ava", "avk", "awa",
@@ -232,10 +232,10 @@ constexpr const char* LANGUAGES_3[] = {
     "wak", "wal", "war", "was", "wbp", "wen", "wol", "wuu", "xal", "xho", "xmf", "xnr", "xog",
     "yao", "yap", "yav", "ybb", "yid", "yor", "ypk", "yrl", "yue", "zha", "zap", "zbl", "zea",
     "zen", "zgh", "zho", "znd", "zul", "zun", "zxx", "zza",
-nullptr,
+خالی_اشاریہ,
 /*  "in",  "iw",  "ji",  "jw",  "mo",  "sh",  "swc", "tl",  */
     "ind", "heb", "yid", "jaw", "mol", "srp", "swc", "tgl",
-nullptr
+خالی_اشاریہ
 };
 
 /**
@@ -262,7 +262,7 @@ nullptr
  * RO(ROM) is now RO(ROU) according to
  * http://www.iso.org/iso/en/prods-services/iso3166ma/03updates-on-iso-3166/nlv3e-rou.html
  */
-constexpr const char* COUNTRIES[] = {
+constexpr ثابت حرف* COUNTRIES[] = {
     "AD",  "AE",  "AF",  "AG",  "AI",  "AL",  "AM",
     "AO",  "AQ",  "AR",  "AS",  "AT",  "AU",  "AW",  "AX",  "AZ",
     "BA",  "BB",  "BD",  "BE",  "BF",  "BG",  "BH",  "BI",
@@ -293,17 +293,17 @@ constexpr const char* COUNTRIES[] = {
     "TW",  "TZ",  "UA",  "UG",  "UM",  "US",  "UY",  "UZ",
     "VA",  "VC",  "VE",  "VG",  "VI",  "VN",  "VU",  "WF",
     "WS",  "XK",  "YE",  "YT",  "ZA",  "ZM",  "ZW",
-nullptr,
+خالی_اشاریہ,
     "AN",  "BU", "CS", "FX", "RO", "SU", "TP", "YD", "YU", "ZR",   /* obsolete country codes */
-nullptr
+خالی_اشاریہ
 };
 
-constexpr const char* DEPRECATED_COUNTRIES[] = {
-    "AN", "BU", "CS", "DD", "DY", "FX", "HV", "NH", "RH", "SU", "TP", "UK", "VD", "YD", "YU", "ZR", nullptr, nullptr /* deprecated country list */
+constexpr ثابت حرف* DEPRECATED_COUNTRIES[] = {
+    "AN", "BU", "CS", "DD", "DY", "FX", "HV", "NH", "RH", "SU", "TP", "UK", "VD", "YD", "YU", "ZR", خالی_اشاریہ, خالی_اشاریہ /* deprecated country list */
 };
-constexpr const char* REPLACEMENT_COUNTRIES[] = {
+constexpr ثابت حرف* REPLACEMENT_COUNTRIES[] = {
 /*  "AN", "BU", "CS", "DD", "DY", "FX", "HV", "NH", "RH", "SU", "TP", "UK", "VD", "YD", "YU", "ZR" */
-    "CW", "MM", "RS", "DE", "BJ", "FR", "BF", "VU", "ZW", "RU", "TL", "GB", "VN", "YE", "RS", "CD", nullptr, nullptr  /* replacement country codes */
+    "CW", "MM", "RS", "DE", "BJ", "FR", "BF", "VU", "ZW", "RU", "TL", "GB", "VN", "YE", "RS", "CD", خالی_اشاریہ, خالی_اشاریہ  /* replacement country codes */
 };
 
 /**
@@ -319,7 +319,7 @@ constexpr const char* REPLACEMENT_COUNTRIES[] = {
  * second list, and another nullptr entry.  The two lists correspond to
  * the two lists in COUNTRIES.
  */
-constexpr const char* COUNTRIES_3[] = {
+constexpr ثابت حرف* COUNTRIES_3[] = {
 /*  "AD",  "AE",  "AF",  "AG",  "AI",  "AL",  "AM",      */
     "AND", "ARE", "AFG", "ATG", "AIA", "ALB", "ARM",
 /*  "AO",  "AQ",  "AR",  "AS",  "AT",  "AU",  "AW",  "AX",  "AZ",     */
@@ -380,15 +380,15 @@ constexpr const char* COUNTRIES_3[] = {
     "VAT", "VCT", "VEN", "VGB", "VIR", "VNM", "VUT", "WLF",
 /*  "WS",  "XK",  "YE",  "YT",  "ZA",  "ZM",  "ZW",          */
     "WSM", "XKK", "YEM", "MYT", "ZAF", "ZMB", "ZWE",
-nullptr,
+خالی_اشاریہ,
 /*  "AN",  "BU",  "CS",  "FX",  "RO", "SU",  "TP",  "YD",  "YU",  "ZR" */
     "ANT", "BUR", "SCG", "FXX", "ROM", "SUN", "TMP", "YMD", "YUG", "ZAR",
-nullptr
+خالی_اشاریہ
 };
 
-typedef struct CanonicalizationMap {
-    const char *id;          /* input ID */
-    const char *canonicalID; /* canonicalized output ID */
+قسمتعریف ساخت CanonicalizationMap {
+    ثابت حرف *id;          /* input ID */
+    ثابت حرف *canonicalID; /* canonicalized output ID */
 } CanonicalizationMap;
 
 /**
@@ -411,243 +411,243 @@ constexpr CanonicalizationMap CANONICALIZE_MAP[] = {
 
 /* ### BCP47 Conversion *******************************************/
 /* Gets the size of the shortest subtag in the given localeID. */
-int32_t getShortestSubtagLength(std::string_view localeID) {
+int32_t get_مختصر_ترین_Subtag_لمبائی(std::string_view localeID) {
     int32_t localeIDLength = static_cast<int32_t>(localeID.length());
     int32_t length = localeIDLength;
-    int32_t tmpLength = 0;
+    int32_t tmp_لمبائی = 0;
     int32_t i;
-    bool reset = true;
+    منطقی reset = سچ;
 
-    for (i = 0; i < localeIDLength; i++) {
-        if (localeID[i] != '_' && localeID[i] != '-') {
-            if (reset) {
-                tmpLength = 0;
-                reset = false;
+    برائے (i = 0; i < localeIDLength; i++) {
+        اگر (localeID[i] != '_' && localeID[i] != '-') {
+            اگر (reset) {
+                tmp_لمبائی = 0;
+                reset = جھوٹ;
             }
-            tmpLength++;
-        } else {
-            if (tmpLength != 0 && tmpLength < length) {
-                length = tmpLength;
+            tmp_لمبائی++;
+        } ورنہ {
+            اگر (tmp_لمبائی != 0 && tmp_لمبائی < length) {
+                length = tmp_لمبائی;
             }
-            reset = true;
+            reset = سچ;
         }
     }
 
-    return length;
+    واپس length;
 }
 /* Test if the locale id has BCP47 u extension and does not have '@' */
-inline bool _hasBCP47Extension(std::string_view id) {
-    return id.find('@') == std::string_view::npos && getShortestSubtagLength(id) == 1;
+اندرونی منطقی _hasBCP47Extension(std::string_view id) {
+    واپس id.find('@') == std::string_view::npos && get_مختصر_ترین_Subtag_لمبائی(id) == 1;
 }
 
 /* ### Keywords **************************************************/
-inline bool UPRV_ISDIGIT(char c) { return c >= '0' && c <= '9'; }
-inline bool UPRV_ISALPHANUM(char c) { return uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
+اندرونی منطقی UPRV_ISDIGIT(حرف c) { واپس c >= '0' && c <= '9'; }
+اندرونی منطقی UPRV_ISALPHANUM(حرف c) { واپس uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
 /* Punctuation/symbols allowed in legacy key values */
-inline bool UPRV_OK_VALUE_PUNCTUATION(char c) { return c == '_' || c == '-' || c == '+' || c == '/'; }
+اندرونی منطقی UPRV_OK_قدر_PUNCTUATION(حرف c) { واپس c == '_' || c == '-' || c == '+' || c == '/'; }
 
 }  // namespace
 
-#define ULOC_KEYWORD_BUFFER_LEN 25
-#define ULOC_MAX_NO_KEYWORDS 25
+#تعریف_کرو ULOC_KEYWORD_بفر_LEN 25
+#تعریف_کرو ULOC_MAX_NO_KEYWORDS 25
 
-U_CAPI const char* U_EXPORT2
-locale_getKeywordsStart(std::string_view localeID U_LIFETIME_BOUND) {
-    if (size_t pos = localeID.find('@'); pos != std::string_view::npos) {
-        return localeID.data() + pos;
+U_CAPI ثابت حرف* U_EXPORT2
+locale_get_Keywords_آغاز(std::string_view localeID U_LIFETIME_BOUND) {
+    اگر (size_t pos = localeID.find('@'); pos != std::string_view::npos) {
+        واپس localeID.ڈیٹا() + pos;
     }
-#if (U_CHARSET_FAMILY == U_EBCDIC_FAMILY)
-    else {
+#اگر (U_CHARSET_FAMILY == U_EBCDIC_FAMILY)
+    ورنہ {
         /* We do this because the @ sign is variant, and the @ sign used on one
         EBCDIC machine won't be compiled the same way on other EBCDIC based
         machines. */
-        static const uint8_t ebcdicSigns[] = { 0x7C, 0x44, 0x66, 0x80, 0xAC, 0xAE, 0xAF, 0xB5, 0xEC, 0xEF, 0x00 };
-        const uint8_t *charToFind = ebcdicSigns;
-        while(*charToFind) {
-            if (size_t pos = localeID.find(*charToFind); pos != std::string_view::npos) {
-                return localeID.data() + pos;
+        ساکن ثابت uint8_t ebcdicSigns[] = { 0x7C, 0x44, 0x66, 0x80, 0xAC, 0xAE, 0xAF, 0xB5, 0xEC, 0xEF, 0x00 };
+        ثابت uint8_t *char_مقصد_ڈھونڈو = ebcdicSigns;
+        جب(*char_مقصد_ڈھونڈو) {
+            اگر (size_t pos = localeID.find(*char_مقصد_ڈھونڈو); pos != std::string_view::npos) {
+                واپس localeID.ڈیٹا() + pos;
             }
-            charToFind++;
+            char_مقصد_ڈھونڈو++;
         }
     }
-#endif
-    return nullptr;
+#اگر_ختم
+    واپس خالی_اشاریہ;
 }
 
-namespace {
+نامخلا {
 
 /**
  * @param keywordName incoming name to be canonicalized
  * @param status return status (keyword too long)
  * @return the keyword name
  */
-CharString locale_canonKeywordName(std::string_view keywordName, UErrorCode& status)
+CharString locale_canonKeywordName(std::string_view keywordName, UError_رمز& حالت_2)
 {
-  if (U_FAILURE(status)) { return {}; }
-  CharString result;
+  اگر (U_FAILURE(حالت_2)) { واپس {}; }
+  CharString نتیجہ;
 
-  for (char c : keywordName) {
-    if (!UPRV_ISALPHANUM(c)) {
-      status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
-      return {};
+  برائے (حرف c : keywordName) {
+    اگر (!UPRV_ISALPHANUM(c)) {
+      حالت_2 = U_ILLEGAL_دلیل_ERROR; /* malformed keyword name */
+      واپس {};
     }
-    result.append(uprv_tolower(c), status);
+    نتیجہ.append(uprv_tolower(c), حالت_2);
   }
-  if (result.isEmpty()) {
-    status = U_ILLEGAL_ARGUMENT_ERROR; /* empty keyword name */
-    return {};
+  اگر (نتیجہ.is_خالی_خانے()) {
+    حالت_2 = U_ILLEGAL_دلیل_ERROR; /* empty keyword name */
+    واپس {};
   }
 
-  return result;
+  واپس نتیجہ;
 }
 
-typedef struct {
-    char keyword[ULOC_KEYWORD_BUFFER_LEN];
+قسمتعریف ساخت {
+    حرف keyword[ULOC_KEYWORD_بفر_LEN];
     int32_t keywordLen;
-    const char *valueStart;
-    int32_t valueLen;
+    ثابت حرف *قدر_آغاز;
+    int32_t قدر_Len;
 } KeywordStruct;
 
 int32_t U_CALLCONV
-compareKeywordStructs(const void * /*context*/, const void *left, const void *right) {
-    const char* leftString = static_cast<const KeywordStruct*>(left)->keyword;
-    const char* rightString = static_cast<const KeywordStruct*>(right)->keyword;
-    return uprv_strcmp(leftString, rightString);
+compareKeywordStructs(ثابت خالی * /*context*/, ثابت خالی *بائیں, ثابت خالی *دائیں) {
+    ثابت حرف* بایاں_String = static_cast<ثابت KeywordStruct*>(بائیں)->keyword;
+    ثابت حرف* دایاں_String = static_cast<ثابت KeywordStruct*>(دائیں)->keyword;
+    واپس uprv_strcmp(بایاں_String, دایاں_String);
 }
 
 }  // namespace
 
 U_EXPORT CharString
 ulocimp_getKeywords(std::string_view localeID,
-                    char prev,
-                    bool valuesToo,
-                    UErrorCode& status)
+                    حرف پچھلا,
+                    منطقی اقدار_Too,
+                    UError_رمز& حالت_2)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
+    واپس ByteSinkUtil::بذریعہ_Byte_Sink_مقصد_Char_String(
+        [&](ByteSink& sink, UError_رمز& حالت_2) {
             ulocimp_getKeywords(localeID,
-                                prev,
+                                پچھلا,
                                 sink,
-                                valuesToo,
-                                status);
+                                اقدار_Too,
+                                حالت_2);
         },
-        status);
+        حالت_2);
 }
 
-U_EXPORT void
+U_EXPORT خالی
 ulocimp_getKeywords(std::string_view localeID,
-                    char prev,
+                    حرف پچھلا,
                     ByteSink& sink,
-                    bool valuesToo,
-                    UErrorCode& status)
+                    منطقی اقدار_Too,
+                    UError_رمز& حالت_2)
 {
-    if (U_FAILURE(status)) { return; }
+    اگر (U_FAILURE(حالت_2)) { واپس; }
 
     KeywordStruct keywordList[ULOC_MAX_NO_KEYWORDS];
 
     int32_t maxKeywords = ULOC_MAX_NO_KEYWORDS;
-    int32_t numKeywords = 0;
+    int32_t عدد_Keywords = 0;
     size_t equalSign = std::string_view::npos;
     size_t semicolon = std::string_view::npos;
     int32_t i = 0, j, n;
 
-    if(prev == '@') { /* start of keyword definition */
+    اگر(پچھلا == '@') { /* start of keyword definition */
         /* we will grab pairs, trim spaces, lowercase keywords, sort and return */
-        do {
-            bool duplicate = false;
+        کرو {
+            منطقی duplicate = جھوٹ;
             /* skip leading spaces */
-            while (!localeID.empty() && localeID.front() == ' ') {
-                localeID.remove_prefix(1);
+            جب (!localeID.empty() && localeID.front() == ' ') {
+                localeID.remove_سابقہ(1);
             }
-            if (localeID.empty()) { /* handle trailing "; " */
-                break;
+            اگر (localeID.empty()) { /* handle trailing "; " */
+                توڑو;
             }
-            if(numKeywords == maxKeywords) {
-                status = U_INTERNAL_PROGRAM_ERROR;
-                return;
+            اگر(عدد_Keywords == maxKeywords) {
+                حالت_2 = U_اندرونی_پروگرام_ERROR;
+                واپس;
             }
             equalSign = localeID.find('=');
             semicolon = localeID.find(';');
             /* lack of '=' [foo@currency] is illegal */
             /* ';' before '=' [foo@currency;collation=pinyin] is illegal */
-            if (equalSign == std::string_view::npos ||
+            اگر (equalSign == std::string_view::npos ||
                 (semicolon != std::string_view::npos && semicolon < equalSign)) {
-                status = U_INVALID_FORMAT_ERROR;
-                return;
+                حالت_2 = U_INVALID_FORMAT_ERROR;
+                واپس;
             }
             /* zero-length keyword is an error. */
-            if (equalSign == 0) {
-                status = U_INVALID_FORMAT_ERROR;
-                return;
+            اگر (equalSign == 0) {
+                حالت_2 = U_INVALID_FORMAT_ERROR;
+                واپس;
             }
             /* need to normalize both keyword and keyword name */
-            if (equalSign >= ULOC_KEYWORD_BUFFER_LEN) {
+            اگر (equalSign >= ULOC_KEYWORD_بفر_LEN) {
                 /* keyword name too long for internal buffer */
-                status = U_INTERNAL_PROGRAM_ERROR;
-                return;
+                حالت_2 = U_اندرونی_پروگرام_ERROR;
+                واپس;
             }
-            for (i = 0, n = 0; static_cast<size_t>(i) < equalSign; ++i) {
-                if (localeID[i] != ' ') {
-                    keywordList[numKeywords].keyword[n++] = uprv_tolower(localeID[i]);
+            برائے (i = 0, n = 0; static_cast<size_t>(i) < equalSign; ++i) {
+                اگر (localeID[i] != ' ') {
+                    keywordList[عدد_Keywords].keyword[n++] = uprv_tolower(localeID[i]);
                 }
             }
 
-            keywordList[numKeywords].keyword[n] = 0;
-            keywordList[numKeywords].keywordLen = n;
+            keywordList[عدد_Keywords].keyword[n] = 0;
+            keywordList[عدد_Keywords].keywordLen = n;
             /* now grab the value part. First we skip the '=' */
             equalSign++;
             /* then we leading spaces */
-            while (equalSign < localeID.length() && localeID[equalSign] == ' ') {
+            جب (equalSign < localeID.length() && localeID[equalSign] == ' ') {
                 equalSign++;
             }
 
             /* Premature end or zero-length value */
-            if (equalSign == localeID.length() || equalSign == semicolon) {
-                status = U_INVALID_FORMAT_ERROR;
-                return;
+            اگر (equalSign == localeID.length() || equalSign == semicolon) {
+                حالت_2 = U_INVALID_FORMAT_ERROR;
+                واپس;
             }
 
-            keywordList[numKeywords].valueStart = localeID.data() + equalSign;
+            keywordList[عدد_Keywords].قدر_آغاز = localeID.ڈیٹا() + equalSign;
 
             std::string_view value = localeID;
-            if (semicolon != std::string_view::npos) {
+            اگر (semicolon != std::string_view::npos) {
                 value.remove_suffix(value.length() - semicolon);
-                localeID.remove_prefix(semicolon + 1);
-            } else {
+                localeID.remove_سابقہ(semicolon + 1);
+            } ورنہ {
                 localeID = {};
             }
-            value.remove_prefix(equalSign);
-            if (size_t last = value.find_last_not_of(' '); last != std::string_view::npos) {
-                value.remove_suffix(value.length() - last - 1);
+            value.remove_سابقہ(equalSign);
+            اگر (size_t آخری = value.find_last_not_of(' '); آخری != std::string_view::npos) {
+                value.remove_suffix(value.length() - آخری - 1);
             }
-            keywordList[numKeywords].valueLen = static_cast<int32_t>(value.length());
+            keywordList[عدد_Keywords].قدر_Len = static_cast<int32_t>(value.length());
 
             /* If this is a duplicate keyword, then ignore it */
-            for (j=0; j<numKeywords; ++j) {
-                if (uprv_strcmp(keywordList[j].keyword, keywordList[numKeywords].keyword) == 0) {
-                    duplicate = true;
-                    break;
+            برائے (j=0; j<عدد_Keywords; ++j) {
+                اگر (uprv_strcmp(keywordList[j].keyword, keywordList[عدد_Keywords].keyword) == 0) {
+                    duplicate = سچ;
+                    توڑو;
                 }
             }
-            if (!duplicate) {
-                ++numKeywords;
+            اگر (!duplicate) {
+                ++عدد_Keywords;
             }
-        } while (!localeID.empty());
+        } جب (!localeID.empty());
 
         /* now we have a list of keywords */
         /* we need to sort it */
-        uprv_sortArray(keywordList, numKeywords, sizeof(KeywordStruct), compareKeywordStructs, nullptr, false, &status);
+        uprv_ترتیب_دو_Array(keywordList, عدد_Keywords, حجم(KeywordStruct), compareKeywordStructs, خالی_اشاریہ, جھوٹ, &حالت_2);
 
         /* Now construct the keyword part */
-        for(i = 0; i < numKeywords; i++) {
+        برائے(i = 0; i < عدد_Keywords; i++) {
             sink.Append(keywordList[i].keyword, keywordList[i].keywordLen);
-            if(valuesToo) {
+            اگر(اقدار_Too) {
                 sink.Append("=", 1);
-                sink.Append(keywordList[i].valueStart, keywordList[i].valueLen);
-                if(i < numKeywords - 1) {
+                sink.Append(keywordList[i].قدر_آغاز, keywordList[i].قدر_Len);
+                اگر(i < عدد_Keywords - 1) {
                     sink.Append(";", 1);
                 }
-            } else {
+            } ورنہ {
                 sink.Append("\0", 1);
             }
         }
@@ -655,180 +655,180 @@ ulocimp_getKeywords(std::string_view localeID,
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getKeywordValue(const char* localeID,
-                     const char* keywordName,
-                     char* buffer, int32_t bufferCapacity,
-                     UErrorCode* status)
+uloc_get_Keyword_قدر(ثابت حرف* localeID,
+                     ثابت حرف* keywordName,
+                     حرف* بفر, int32_t بفر_استعداد,
+                     UError_رمز* حالت_2)
 {
-    if (U_FAILURE(*status)) { return 0; }
-    if (keywordName == nullptr || *keywordName == '\0') {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    اگر (U_FAILURE(*حالت_2)) { واپس 0; }
+    اگر (keywordName == خالی_اشاریہ || *keywordName == '\0') {
+        *حالت_2 = U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        buffer, bufferCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getKeywordValue(localeID, keywordName, sink, status);
+    واپس ByteSinkUtil::بذریعہ_Byte_Sink_مقصد_Terminated_Chars(
+        بفر, بفر_استعداد,
+        [&](ByteSink& sink, UError_رمز& حالت_2) {
+            ulocimp_get_Keyword_قدر(localeID, keywordName, sink, حالت_2);
         },
-        *status);
+        *حالت_2);
 }
 
 U_EXPORT CharString
-ulocimp_getKeywordValue(const char* localeID,
+ulocimp_get_Keyword_قدر(ثابت حرف* localeID,
                         std::string_view keywordName,
-                        UErrorCode& status)
+                        UError_رمز& حالت_2)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getKeywordValue(localeID, keywordName, sink, status);
+    واپس ByteSinkUtil::بذریعہ_Byte_Sink_مقصد_Char_String(
+        [&](ByteSink& sink, UError_رمز& حالت_2) {
+            ulocimp_get_Keyword_قدر(localeID, keywordName, sink, حالت_2);
         },
-        status);
+        حالت_2);
 }
 
-U_EXPORT void
-ulocimp_getKeywordValue(const char* localeID,
+U_EXPORT خالی
+ulocimp_get_Keyword_قدر(ثابت حرف* localeID,
                         std::string_view keywordName,
                         icu::ByteSink& sink,
-                        UErrorCode& status)
+                        UError_رمز& حالت_2)
 {
-    if (U_FAILURE(status)) { return; }
+    اگر (U_FAILURE(حالت_2)) { واپس; }
 
-    if (localeID == nullptr || keywordName.empty()) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    اگر (localeID == خالی_اشاریہ || keywordName.empty()) {
+        حالت_2 = U_ILLEGAL_دلیل_ERROR;
+        واپس;
     }
 
-    const char* startSearchHere = nullptr;
-    const char* nextSeparator = nullptr;
+    ثابت حرف* آغاز_تلاش_یہاں = خالی_اشاریہ;
+    ثابت حرف* اگلا_Separator = خالی_اشاریہ;
 
-    CharString tempBuffer;
-    const char* tmpLocaleID;
+    CharString عارضی_بفر;
+    ثابت حرف* tmpLocaleID;
 
-    CharString canonKeywordName = locale_canonKeywordName(keywordName, status);
-    if (U_FAILURE(status)) {
-      return;
+    CharString canonKeywordName = locale_canonKeywordName(keywordName, حالت_2);
+    اگر (U_FAILURE(حالت_2)) {
+      واپس;
     }
 
-    if (localeID != nullptr && _hasBCP47Extension(localeID)) {
-        tempBuffer = ulocimp_forLanguageTag(localeID, -1, nullptr, status);
-        tmpLocaleID = U_SUCCESS(status) && !tempBuffer.isEmpty() ? tempBuffer.data() : localeID;
-    } else {
+    اگر (localeID != خالی_اشاریہ && _hasBCP47Extension(localeID)) {
+        عارضی_بفر = ulocimp_for_Language_لیبل(localeID, -1, خالی_اشاریہ, حالت_2);
+        tmpLocaleID = U_SUCCESS(حالت_2) && !عارضی_بفر.is_خالی_خانے() ? عارضی_بفر.ڈیٹا() : localeID;
+    } ورنہ {
         tmpLocaleID=localeID;
     }
 
-    startSearchHere = locale_getKeywordsStart(tmpLocaleID);
-    if(startSearchHere == nullptr) {
+    آغاز_تلاش_یہاں = locale_get_Keywords_آغاز(tmpLocaleID);
+    اگر(آغاز_تلاش_یہاں == خالی_اشاریہ) {
         /* no keywords, return at once */
-        return;
+        واپس;
     }
 
     /* find the first keyword */
-    while(startSearchHere) {
-        const char* keyValueTail;
+    جب(آغاز_تلاش_یہاں) {
+        ثابت حرف* کلید_قدر_دم;
 
-        startSearchHere++; /* skip @ or ; */
-        nextSeparator = uprv_strchr(startSearchHere, '=');
-        if(!nextSeparator) {
-            status = U_ILLEGAL_ARGUMENT_ERROR; /* key must have =value */
-            return;
+        آغاز_تلاش_یہاں++; /* skip @ or ; */
+        اگلا_Separator = uprv_strchr(آغاز_تلاش_یہاں, '=');
+        اگر(!اگلا_Separator) {
+            حالت_2 = U_ILLEGAL_دلیل_ERROR; /* key must have =value */
+            واپس;
         }
         /* strip leading & trailing spaces (TC decided to tolerate these) */
-        while(*startSearchHere == ' ') {
-            startSearchHere++;
+        جب(*آغاز_تلاش_یہاں == ' ') {
+            آغاز_تلاش_یہاں++;
         }
-        keyValueTail = nextSeparator;
-        while (keyValueTail > startSearchHere && *(keyValueTail-1) == ' ') {
-            keyValueTail--;
+        کلید_قدر_دم = اگلا_Separator;
+        جب (کلید_قدر_دم > آغاز_تلاش_یہاں && *(کلید_قدر_دم-1) == ' ') {
+            کلید_قدر_دم--;
         }
         /* now keyValueTail points to first char after the keyName */
         /* copy & normalize keyName from locale */
-        if (startSearchHere == keyValueTail) {
-            status = U_ILLEGAL_ARGUMENT_ERROR; /* empty keyword name in passed-in locale */
-            return;
+        اگر (آغاز_تلاش_یہاں == کلید_قدر_دم) {
+            حالت_2 = U_ILLEGAL_دلیل_ERROR; /* empty keyword name in passed-in locale */
+            واپس;
         }
         CharString localeKeywordName;
-        while (startSearchHere < keyValueTail) {
-          if (!UPRV_ISALPHANUM(*startSearchHere)) {
-            status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
-            return;
+        جب (آغاز_تلاش_یہاں < کلید_قدر_دم) {
+          اگر (!UPRV_ISALPHANUM(*آغاز_تلاش_یہاں)) {
+            حالت_2 = U_ILLEGAL_دلیل_ERROR; /* malformed keyword name */
+            واپس;
           }
-          localeKeywordName.append(uprv_tolower(*startSearchHere++), status);
+          localeKeywordName.append(uprv_tolower(*آغاز_تلاش_یہاں++), حالت_2);
         }
-        if (U_FAILURE(status)) {
-            return;
+        اگر (U_FAILURE(حالت_2)) {
+            واپس;
         }
 
-        startSearchHere = uprv_strchr(nextSeparator, ';');
+        آغاز_تلاش_یہاں = uprv_strchr(اگلا_Separator, ';');
 
-        if (canonKeywordName == localeKeywordName) {
+        اگر (canonKeywordName == localeKeywordName) {
              /* current entry matches the keyword. */
-           nextSeparator++; /* skip '=' */
+           اگلا_Separator++; /* skip '=' */
             /* First strip leading & trailing spaces (TC decided to tolerate these) */
-            while(*nextSeparator == ' ') {
-              nextSeparator++;
+            جب(*اگلا_Separator == ' ') {
+              اگلا_Separator++;
             }
-            keyValueTail = (startSearchHere)? startSearchHere: nextSeparator + uprv_strlen(nextSeparator);
-            while(keyValueTail > nextSeparator && *(keyValueTail-1) == ' ') {
-              keyValueTail--;
+            کلید_قدر_دم = (آغاز_تلاش_یہاں)? آغاز_تلاش_یہاں: اگلا_Separator + uprv_strlen(اگلا_Separator);
+            جب(کلید_قدر_دم > اگلا_Separator && *(کلید_قدر_دم-1) == ' ') {
+              کلید_قدر_دم--;
             }
             /* Now copy the value, but check well-formedness */
-            if (nextSeparator == keyValueTail) {
-              status = U_ILLEGAL_ARGUMENT_ERROR; /* empty key value name in passed-in locale */
-              return;
+            اگر (اگلا_Separator == کلید_قدر_دم) {
+              حالت_2 = U_ILLEGAL_دلیل_ERROR; /* empty key value name in passed-in locale */
+              واپس;
             }
-            while (nextSeparator < keyValueTail) {
-              if (!UPRV_ISALPHANUM(*nextSeparator) && !UPRV_OK_VALUE_PUNCTUATION(*nextSeparator)) {
-                status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed key value */
-                return;
+            جب (اگلا_Separator < کلید_قدر_دم) {
+              اگر (!UPRV_ISALPHANUM(*اگلا_Separator) && !UPRV_OK_قدر_PUNCTUATION(*اگلا_Separator)) {
+                حالت_2 = U_ILLEGAL_دلیل_ERROR; /* malformed key value */
+                واپس;
               }
               /* Should we lowercase value to return here? Tests expect as-is. */
-              sink.Append(nextSeparator++, 1);
+              sink.Append(اگلا_Separator++, 1);
             }
-            return;
+            واپس;
         }
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_setKeywordValue(const char* keywordName,
-                     const char* keywordValue,
-                     char* buffer, int32_t bufferCapacity,
-                     UErrorCode* status)
+uloc_سیٹ_Keyword_قدر(ثابت حرف* keywordName,
+                     ثابت حرف* keyword_قدر,
+                     حرف* بفر, int32_t بفر_استعداد,
+                     UError_رمز* حالت_2)
 {
-    if (U_FAILURE(*status)) { return 0; }
+    اگر (U_FAILURE(*حالت_2)) { واپس 0; }
 
-    if (keywordName == nullptr || *keywordName == 0) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    اگر (keywordName == خالی_اشاریہ || *keywordName == 0) {
+        *حالت_2 = U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
 
-    if (bufferCapacity <= 1) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    اگر (بفر_استعداد <= 1) {
+        *حالت_2 = U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
 
-    int32_t bufLen = (int32_t)uprv_strlen(buffer);
-    if(bufferCapacity<bufLen) {
+    int32_t bufLen = (int32_t)uprv_strlen(بفر);
+    اگر(بفر_استعداد<bufLen) {
         /* The capacity is less than the length?! Is this NUL terminated? */
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *حالت_2 = U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
 
-    char* keywords = const_cast<char*>(
-        locale_getKeywordsStart({buffer, static_cast<std::string_view::size_type>(bufLen)}));
-    int32_t baseLen = keywords == nullptr ? bufLen : keywords - buffer;
+    حرف* keywords = const_cast<حرف*>(
+        locale_get_Keywords_آغاز({بفر, static_cast<std::string_view::size_type>(bufLen)}));
+    int32_t بنیاد_Len = keywords == خالی_اشاریہ ? bufLen : keywords - بفر;
     // Remove -1 from the capacity so that this function can guarantee NUL termination.
-    CheckedArrayByteSink sink(keywords == nullptr ? buffer + bufLen : keywords,
-                              bufferCapacity - baseLen - 1);
-    int32_t reslen = ulocimp_setKeywordValue(
-        keywords == nullptr ? std::string_view() : keywords,
+    CheckedArrayByteSink sink(keywords == خالی_اشاریہ ? بفر + bufLen : keywords,
+                              بفر_استعداد - بنیاد_Len - 1);
+    int32_t reslen = ulocimp_سیٹ_Keyword_قدر(
+        keywords == خالی_اشاریہ ? std::string_view() : keywords,
         keywordName,
-        keywordValue == nullptr ? std::string_view() : keywordValue,
+        keyword_قدر == خالی_اشاریہ ? std::string_view() : keyword_قدر,
         sink,
-        *status);
+        *حالت_2);
 
-    if (U_FAILURE(*status)) {
-        return *status == U_BUFFER_OVERFLOW_ERROR ? reslen + baseLen : 0;
+    اگر (U_FAILURE(*حالت_2)) {
+        واپس *حالت_2 == U_بفر_حد_سے_تجاوز_ERROR ? reslen + بنیاد_Len : 0;
     }
 
     // See the documentation for this function, it's guaranteed to never
@@ -836,187 +836,187 @@ uloc_setKeywordValue(const char* keywordName,
     // In this case, nothing has been written to the sink, so it cannot have Overflowed().
     U_ASSERT(!sink.Overflowed());
     U_ASSERT(reslen >= 0);
-    return u_terminateChars(buffer, bufferCapacity, reslen + baseLen, status);
+    واپس u_terminateChars(بفر, بفر_استعداد, reslen + بنیاد_Len, حالت_2);
 }
 
-U_EXPORT void
-ulocimp_setKeywordValue(std::string_view keywordName,
-                        std::string_view keywordValue,
+U_EXPORT خالی
+ulocimp_سیٹ_Keyword_قدر(std::string_view keywordName,
+                        std::string_view keyword_قدر,
                         CharString& localeID,
-                        UErrorCode& status)
+                        UError_رمز& حالت_2)
 {
-    if (U_FAILURE(status)) { return; }
+    اگر (U_FAILURE(حالت_2)) { واپس; }
     std::string_view keywords;
-    if (const char* start = locale_getKeywordsStart(localeID.toStringPiece()); start != nullptr) {
+    اگر (ثابت حرف* آغاز = locale_get_Keywords_آغاز(localeID.مقصد_String_Piece()); آغاز != خالی_اشاریہ) {
         // This is safe because CharString::truncate() doesn't actually erase any
         // data, but simply sets the position for where new data will be written.
-        int32_t size = start - localeID.data();
-        keywords = localeID.toStringPiece();
-        keywords.remove_prefix(size);
+        int32_t size = آغاز - localeID.ڈیٹا();
+        keywords = localeID.مقصد_String_Piece();
+        keywords.remove_سابقہ(size);
         localeID.truncate(size);
     }
     CharStringByteSink sink(&localeID);
-    ulocimp_setKeywordValue(keywords, keywordName, keywordValue, sink, status);
+    ulocimp_سیٹ_Keyword_قدر(keywords, keywordName, keyword_قدر, sink, حالت_2);
 }
 
 U_EXPORT int32_t
-ulocimp_setKeywordValue(std::string_view keywords,
+ulocimp_سیٹ_Keyword_قدر(std::string_view keywords,
                         std::string_view keywordName,
-                        std::string_view keywordValue,
+                        std::string_view keyword_قدر,
                         ByteSink& sink,
-                        UErrorCode& status)
+                        UError_رمز& حالت_2)
 {
-    if (U_FAILURE(status)) { return 0; }
+    اگر (U_FAILURE(حالت_2)) { واپس 0; }
 
     /* TODO: sorting. removal. */
     int32_t needLen = 0;
     int32_t rc;
-    CharString updatedKeysAndValues;
-    bool handledInputKeyAndValue = false;
-    char keyValuePrefix = '@';
+    CharString updated_کلیدیں_And_اقدار;
+    منطقی handled_داخلہ_کلید_And_قدر = جھوٹ;
+    حرف کلید_قدر_سابقہ = '@';
 
-    if (status == U_STRING_NOT_TERMINATED_WARNING) {
-        status = U_ZERO_ERROR;
+    اگر (حالت_2 == U_STRING_NOT_TERMINATED_WARNING) {
+        حالت_2 = U_ZERO_ERROR;
     }
-    if (keywordName.empty()) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    اگر (keywordName.empty()) {
+        حالت_2 = U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
-    CharString canonKeywordName = locale_canonKeywordName(keywordName, status);
-    if (U_FAILURE(status)) {
-        return 0;
+    CharString canonKeywordName = locale_canonKeywordName(keywordName, حالت_2);
+    اگر (U_FAILURE(حالت_2)) {
+        واپس 0;
     }
 
-    CharString canonKeywordValue;
-    for (char c : keywordValue) {
-        if (!UPRV_ISALPHANUM(c) && !UPRV_OK_VALUE_PUNCTUATION(c)) {
-            status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed key value */
-            return 0;
+    CharString canon_Keyword_قدر;
+    برائے (حرف c : keyword_قدر) {
+        اگر (!UPRV_ISALPHANUM(c) && !UPRV_OK_قدر_PUNCTUATION(c)) {
+            حالت_2 = U_ILLEGAL_دلیل_ERROR; /* malformed key value */
+            واپس 0;
         }
         /* Should we force lowercase in value to set? */
-        canonKeywordValue.append(c, status);
+        canon_Keyword_قدر.append(c, حالت_2);
     }
-    if (U_FAILURE(status)) {
-        return 0;
+    اگر (U_FAILURE(حالت_2)) {
+        واپس 0;
     }
 
-    if (keywords.size() <= 1) {
-        if (canonKeywordValue.isEmpty()) { /* no keywords = nothing to remove */
-            U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
-            return 0;
+    اگر (keywords.size() <= 1) {
+        اگر (canon_Keyword_قدر.is_خالی_خانے()) { /* no keywords = nothing to remove */
+            U_ASSERT(حالت_2 != U_STRING_NOT_TERMINATED_WARNING);
+            واپس 0;
         }
 
-        needLen = 1 + canonKeywordName.length() + 1 + canonKeywordValue.length();
+        needLen = 1 + canonKeywordName.length() + 1 + canon_Keyword_قدر.length();
         int32_t capacity = 0;
-        char* buffer = sink.GetAppendBuffer(
-                needLen, needLen, nullptr, needLen, &capacity);
-        if (capacity < needLen || buffer == nullptr) {
-            status = U_BUFFER_OVERFLOW_ERROR;
-            return needLen; /* no change */
+        حرف* بفر = sink.Get_Append_بفر(
+                needLen, needLen, خالی_اشاریہ, needLen, &capacity);
+        اگر (capacity < needLen || بفر == خالی_اشاریہ) {
+            حالت_2 = U_بفر_حد_سے_تجاوز_ERROR;
+            واپس needLen; /* no change */
         }
-        char* it = buffer;
+        حرف* it = بفر;
 
         *it++ = '@';
-        uprv_memcpy(it, canonKeywordName.data(), canonKeywordName.length());
+        uprv_memcpy(it, canonKeywordName.ڈیٹا(), canonKeywordName.length());
         it += canonKeywordName.length();
         *it++ = '=';
-        uprv_memcpy(it, canonKeywordValue.data(), canonKeywordValue.length());
-        sink.Append(buffer, needLen);
-        U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
-        return needLen;
+        uprv_memcpy(it, canon_Keyword_قدر.ڈیٹا(), canon_Keyword_قدر.length());
+        sink.Append(بفر, needLen);
+        U_ASSERT(حالت_2 != U_STRING_NOT_TERMINATED_WARNING);
+        واپس needLen;
     } /* end shortcut - no @ */
 
     /* search for keyword */
-    for (size_t keywordStart = 0; keywordStart != std::string_view::npos;) {
-        keywordStart++; /* skip @ or ; */
-        size_t nextEqualsign = keywords.find('=', keywordStart);
-        if (nextEqualsign == std::string_view::npos) {
-            status = U_ILLEGAL_ARGUMENT_ERROR; /* key must have =value */
-            return 0;
+    برائے (size_t keyword_آغاز = 0; keyword_آغاز != std::string_view::npos;) {
+        keyword_آغاز++; /* skip @ or ; */
+        size_t اگلا_Equalsign = keywords.find('=', keyword_آغاز);
+        اگر (اگلا_Equalsign == std::string_view::npos) {
+            حالت_2 = U_ILLEGAL_دلیل_ERROR; /* key must have =value */
+            واپس 0;
         }
         /* strip leading & trailing spaces (TC decided to tolerate these) */
-        while (keywordStart < keywords.size() && keywords[keywordStart] == ' ') {
-            keywordStart++;
+        جب (keyword_آغاز < keywords.size() && keywords[keyword_آغاز] == ' ') {
+            keyword_آغاز++;
         }
-        size_t keyValueTail = nextEqualsign;
-        while (keyValueTail > keywordStart && keywords[keyValueTail - 1] == ' ') {
-            keyValueTail--;
+        size_t کلید_قدر_دم = اگلا_Equalsign;
+        جب (کلید_قدر_دم > keyword_آغاز && keywords[کلید_قدر_دم - 1] == ' ') {
+            کلید_قدر_دم--;
         }
         /* now keyValueTail points to first char after the keyName */
         /* copy & normalize keyName from locale */
-        if (keywordStart == keyValueTail) {
-            status = U_ILLEGAL_ARGUMENT_ERROR; /* empty keyword name in passed-in locale */
-            return 0;
+        اگر (keyword_آغاز == کلید_قدر_دم) {
+            حالت_2 = U_ILLEGAL_دلیل_ERROR; /* empty keyword name in passed-in locale */
+            واپس 0;
         }
         CharString localeKeywordName;
-        while (keywordStart < keyValueTail) {
-            if (!UPRV_ISALPHANUM(keywords[keywordStart])) {
-                status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
-                return 0;
+        جب (keyword_آغاز < کلید_قدر_دم) {
+            اگر (!UPRV_ISALPHANUM(keywords[keyword_آغاز])) {
+                حالت_2 = U_ILLEGAL_دلیل_ERROR; /* malformed keyword name */
+                واپس 0;
             }
-            localeKeywordName.append(uprv_tolower(keywords[keywordStart++]), status);
+            localeKeywordName.append(uprv_tolower(keywords[keyword_آغاز++]), حالت_2);
         }
-        if (U_FAILURE(status)) {
-            return 0;
+        اگر (U_FAILURE(حالت_2)) {
+            واپس 0;
         }
 
-        size_t nextSeparator = keywords.find(';', nextEqualsign);
+        size_t اگلا_Separator = keywords.find(';', اگلا_Equalsign);
 
         /* start processing the value part */
-        nextEqualsign++; /* skip '=' */
+        اگلا_Equalsign++; /* skip '=' */
         /* First strip leading & trailing spaces (TC decided to tolerate these) */
-        while (nextEqualsign < keywords.size() && keywords[nextEqualsign] == ' ') {
-            nextEqualsign++;
+        جب (اگلا_Equalsign < keywords.size() && keywords[اگلا_Equalsign] == ' ') {
+            اگلا_Equalsign++;
         }
-        keyValueTail = nextSeparator == std::string_view::npos ? keywords.size() : nextSeparator;
-        while (keyValueTail > nextEqualsign && keywords[keyValueTail - 1] == ' ') {
-            keyValueTail--;
+        کلید_قدر_دم = اگلا_Separator == std::string_view::npos ? keywords.size() : اگلا_Separator;
+        جب (کلید_قدر_دم > اگلا_Equalsign && keywords[کلید_قدر_دم - 1] == ' ') {
+            کلید_قدر_دم--;
         }
-        if (nextEqualsign == keyValueTail) {
-            status = U_ILLEGAL_ARGUMENT_ERROR; /* empty key value in passed-in locale */
-            return 0;
+        اگر (اگلا_Equalsign == کلید_قدر_دم) {
+            حالت_2 = U_ILLEGAL_دلیل_ERROR; /* empty key value in passed-in locale */
+            واپس 0;
         }
 
-        rc = uprv_strcmp(canonKeywordName.data(), localeKeywordName.data());
-        if(rc == 0) {
+        rc = uprv_strcmp(canonKeywordName.ڈیٹا(), localeKeywordName.ڈیٹا());
+        اگر(rc == 0) {
             /* Current entry matches the input keyword. Update the entry */
-            if (!canonKeywordValue.isEmpty()) { /* updating a value */
-                updatedKeysAndValues.append(keyValuePrefix, status);
-                keyValuePrefix = ';'; /* for any subsequent key-value pair */
-                updatedKeysAndValues.append(canonKeywordName, status);
-                updatedKeysAndValues.append('=', status);
-                updatedKeysAndValues.append(canonKeywordValue, status);
+            اگر (!canon_Keyword_قدر.is_خالی_خانے()) { /* updating a value */
+                updated_کلیدیں_And_اقدار.append(کلید_قدر_سابقہ, حالت_2);
+                کلید_قدر_سابقہ = ';'; /* for any subsequent key-value pair */
+                updated_کلیدیں_And_اقدار.append(canonKeywordName, حالت_2);
+                updated_کلیدیں_And_اقدار.append('=', حالت_2);
+                updated_کلیدیں_And_اقدار.append(canon_Keyword_قدر, حالت_2);
             } /* else removing this entry, don't emit anything */
-            handledInputKeyAndValue = true;
-        } else {
+            handled_داخلہ_کلید_And_قدر = سچ;
+        } ورنہ {
            /* input keyword sorts earlier than current entry, add before current entry */
-            if (rc < 0 && !canonKeywordValue.isEmpty() && !handledInputKeyAndValue) {
+            اگر (rc < 0 && !canon_Keyword_قدر.is_خالی_خانے() && !handled_داخلہ_کلید_And_قدر) {
                 /* insert new entry at this location */
-                updatedKeysAndValues.append(keyValuePrefix, status);
-                keyValuePrefix = ';'; /* for any subsequent key-value pair */
-                updatedKeysAndValues.append(canonKeywordName, status);
-                updatedKeysAndValues.append('=', status);
-                updatedKeysAndValues.append(canonKeywordValue, status);
-                handledInputKeyAndValue = true;
+                updated_کلیدیں_And_اقدار.append(کلید_قدر_سابقہ, حالت_2);
+                کلید_قدر_سابقہ = ';'; /* for any subsequent key-value pair */
+                updated_کلیدیں_And_اقدار.append(canonKeywordName, حالت_2);
+                updated_کلیدیں_And_اقدار.append('=', حالت_2);
+                updated_کلیدیں_And_اقدار.append(canon_Keyword_قدر, حالت_2);
+                handled_داخلہ_کلید_And_قدر = سچ;
             }
             /* copy the current entry */
-            updatedKeysAndValues.append(keyValuePrefix, status);
-            keyValuePrefix = ';'; /* for any subsequent key-value pair */
-            updatedKeysAndValues.append(localeKeywordName, status);
-            updatedKeysAndValues.append('=', status);
-            updatedKeysAndValues.append(keywords.data() + nextEqualsign,
-                                        static_cast<int32_t>(keyValueTail - nextEqualsign), status);
+            updated_کلیدیں_And_اقدار.append(کلید_قدر_سابقہ, حالت_2);
+            کلید_قدر_سابقہ = ';'; /* for any subsequent key-value pair */
+            updated_کلیدیں_And_اقدار.append(localeKeywordName, حالت_2);
+            updated_کلیدیں_And_اقدار.append('=', حالت_2);
+            updated_کلیدیں_And_اقدار.append(keywords.ڈیٹا() + اگلا_Equalsign,
+                                        static_cast<int32_t>(کلید_قدر_دم - اگلا_Equalsign), حالت_2);
         }
-        if (nextSeparator == std::string_view::npos && !canonKeywordValue.isEmpty() && !handledInputKeyAndValue) {
+        اگر (اگلا_Separator == std::string_view::npos && !canon_Keyword_قدر.is_خالی_خانے() && !handled_داخلہ_کلید_And_قدر) {
             /* append new entry at the end, it sorts later than existing entries */
-            updatedKeysAndValues.append(keyValuePrefix, status);
+            updated_کلیدیں_And_اقدار.append(کلید_قدر_سابقہ, حالت_2);
             /* skip keyValuePrefix update, no subsequent key-value pair */
-            updatedKeysAndValues.append(canonKeywordName, status);
-            updatedKeysAndValues.append('=', status);
-            updatedKeysAndValues.append(canonKeywordValue, status);
-            handledInputKeyAndValue = true;
+            updated_کلیدیں_And_اقدار.append(canonKeywordName, حالت_2);
+            updated_کلیدیں_And_اقدار.append('=', حالت_2);
+            updated_کلیدیں_And_اقدار.append(canon_Keyword_قدر, حالت_2);
+            handled_داخلہ_کلید_And_قدر = سچ;
         }
-        keywordStart = nextSeparator;
+        keyword_آغاز = اگلا_Separator;
     } /* end loop searching */
 
     /* Any error from updatedKeysAndValues.append above would be internal and not due to
@@ -1027,68 +1027,68 @@ ulocimp_setKeywordValue(std::string_view keywords,
      * error return but the passed-in locale is unmodified and the original bufLen is
      * returned.
      */
-    if (!handledInputKeyAndValue || U_FAILURE(status)) {
+    اگر (!handled_داخلہ_کلید_And_قدر || U_FAILURE(حالت_2)) {
         /* if input key/value specified removal of a keyword not present in locale, or
          * there was an error in CharString.append, leave original locale alone. */
-        U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
+        U_ASSERT(حالت_2 != U_STRING_NOT_TERMINATED_WARNING);
         // The sink is expected to be a buffer which already contains the full
         // locale string, so when it isn't going to be modified there's no need
         // to actually write any data to it, as the data is already there. Only
         // the first character needs to be overwritten (changing '\0' to '@').
         needLen = static_cast<int32_t>(keywords.size());
         int32_t capacity = 0;
-        char* buffer = sink.GetAppendBuffer(
-                needLen, needLen, nullptr, needLen, &capacity);
-        if (capacity < needLen || buffer == nullptr) {
-            status = U_BUFFER_OVERFLOW_ERROR;
-        } else {
-            *buffer = '@';
-            sink.Append(buffer, needLen);
+        حرف* بفر = sink.Get_Append_بفر(
+                needLen, needLen, خالی_اشاریہ, needLen, &capacity);
+        اگر (capacity < needLen || بفر == خالی_اشاریہ) {
+            حالت_2 = U_بفر_حد_سے_تجاوز_ERROR;
+        } ورنہ {
+            *بفر = '@';
+            sink.Append(بفر, needLen);
         }
-        return needLen;
+        واپس needLen;
     }
 
-    needLen = updatedKeysAndValues.length();
+    needLen = updated_کلیدیں_And_اقدار.length();
     // Check to see can we fit the updatedKeysAndValues, if not, return
     // U_BUFFER_OVERFLOW_ERROR without copy updatedKeysAndValues into it.
     // We do this because this API function does not behave like most others:
     // It promises never to set a U_STRING_NOT_TERMINATED_WARNING.
     // When the contents fits but without the terminating NUL, in this case we need to not change
     // the buffer contents and return with a buffer overflow error.
-    if (needLen > 0) {
+    اگر (needLen > 0) {
         int32_t capacity = 0;
-        char* buffer = sink.GetAppendBuffer(
-                needLen, needLen, nullptr, needLen, &capacity);
-        if (capacity < needLen || buffer == nullptr) {
-            status = U_BUFFER_OVERFLOW_ERROR;
-            return needLen;
+        حرف* بفر = sink.Get_Append_بفر(
+                needLen, needLen, خالی_اشاریہ, needLen, &capacity);
+        اگر (capacity < needLen || بفر == خالی_اشاریہ) {
+            حالت_2 = U_بفر_حد_سے_تجاوز_ERROR;
+            واپس needLen;
         }
-        uprv_memcpy(buffer, updatedKeysAndValues.data(), needLen);
-        sink.Append(buffer, needLen);
+        uprv_memcpy(بفر, updated_کلیدیں_And_اقدار.ڈیٹا(), needLen);
+        sink.Append(بفر, needLen);
     }
-    U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
-    return needLen;
+    U_ASSERT(حالت_2 != U_STRING_NOT_TERMINATED_WARNING);
+    واپس needLen;
 }
 
 /* ### ID parsing implementation **************************************************/
 
-namespace {
+نامخلا {
 
-inline bool _isPrefixLetter(char a) { return a == 'x' || a == 'X' || a == 'i' || a == 'I'; }
+اندرونی منطقی is_سابقہ_Letter(حرف a) { واپس a == 'x' || a == 'X' || a == 'i' || a == 'I'; }
 
 /*returns true if one of the special prefixes is here (s=string)
   'x-' or 'i-' */
-inline bool _isIDPrefix(std::string_view s) {
-    return s.size() >= 2 && _isPrefixLetter(s[0]) && _isIDSeparator(s[1]);
+اندرونی منطقی _isIDPrefix(std::string_view s) {
+    واپس s.size() >= 2 && is_سابقہ_Letter(s[0]) && _isIDSeparator(s[1]);
 }
 
 /* Dot terminates it because of POSIX form  where dot precedes the codepage
  * except for variant
  */
-inline bool _isTerminator(char a) { return a == '.' || a == '@'; }
+اندرونی منطقی _isTerminator(حرف a) { واپس a == '.' || a == '@'; }
 
-inline bool _isBCP47Extension(std::string_view p) {
-    return p.size() >= 3 &&
+اندرونی منطقی _isBCP47Extension(std::string_view p) {
+    واپس p.size() >= 3 &&
            p[0] == '-' &&
            (p[1] == 't' || p[1] == 'T' ||
             p[1] == 'u' || p[1] == 'U' ||
@@ -1103,38 +1103,38 @@ inline bool _isBCP47Extension(std::string_view p) {
  * The 'list' param should be LANGUAGES, LANGUAGES_3, COUNTRIES, or
  * COUNTRIES_3.
  */
-std::optional<int16_t> _findIndex(const char* const* list, const char* key)
+std::optional<int16_t> ڈھونڈو_اشاریہ_2(ثابت حرف* ثابت* list, ثابت حرف* کلید)
 {
-    const char* const* anchor = list;
+    ثابت حرف* ثابت* anchor = list;
     int32_t pass = 0;
 
     /* Make two passes through two nullptr-terminated arrays at 'list' */
-    while (pass++ < 2) {
-        while (*list) {
-            if (uprv_strcmp(key, *list) == 0) {
-                return static_cast<int16_t>(list - anchor);
+    جب (pass++ < 2) {
+        جب (*list) {
+            اگر (uprv_strcmp(کلید, *list) == 0) {
+                واپس static_cast<int16_t>(list - anchor);
             }
             list++;
         }
         ++list;     /* skip final nullptr *CWB*/
     }
-    return std::nullopt;
+    واپس std::nullopt;
 }
 
 }  // namespace
 
-U_CFUNC const char*
-uloc_getCurrentCountryID(const char* oldID U_LIFETIME_BOUND) {
-    std::optional<int16_t> offset = _findIndex(DEPRECATED_COUNTRIES, oldID);
-    return offset.has_value() ? REPLACEMENT_COUNTRIES[*offset] : oldID;
+U_CFUNC ثابت حرف*
+uloc_getCurrentCountryID(ثابت حرف* oldID U_LIFETIME_BOUND) {
+    std::optional<int16_t> انحراف = ڈھونڈو_اشاریہ_2(DEPRECATED_COUNTRIES, oldID);
+    واپس انحراف.has_value() ? REPLACEMENT_COUNTRIES[*انحراف] : oldID;
 }
-U_CFUNC const char*
-uloc_getCurrentLanguageID(const char* oldID U_LIFETIME_BOUND) {
-    std::optional<int16_t> offset = _findIndex(DEPRECATED_LANGUAGES, oldID);
-    return offset.has_value() ? REPLACEMENT_LANGUAGES[*offset] : oldID;
+U_CFUNC ثابت حرف*
+uloc_getCurrentLanguageID(ثابت حرف* oldID U_LIFETIME_BOUND) {
+    std::optional<int16_t> انحراف = ڈھونڈو_اشاریہ_2(DEPRECATED_LANGUAGES, oldID);
+    واپس انحراف.has_value() ? REPLACEMENT_LANGUAGES[*انحراف] : oldID;
 }
 
-namespace {
+نامخلا {
 
 /*
  * the internal functions _getLanguage(), _getScript(), _getRegion(), _getVariant()
@@ -1145,130 +1145,130 @@ namespace {
  * TODO try to use this in Locale
  */
 
-size_t _getLanguage(std::string_view localeID, ByteSink* sink, UErrorCode& status) {
+size_t _getLanguage(std::string_view localeID, ByteSink* sink, UError_رمز& حالت_2) {
     size_t skip = 0;
-    if (localeID.size() == 4 && uprv_strnicmp(localeID.data(), "root", 4) == 0) {
+    اگر (localeID.size() == 4 && uprv_strnicmp(localeID.ڈیٹا(), "root", 4) == 0) {
         skip = 4;
-        localeID.remove_prefix(skip);
-    } else if (localeID.size() >= 3 && uprv_strnicmp(localeID.data(), "und", 3) == 0 &&
+        localeID.remove_سابقہ(skip);
+    } ورنہ اگر (localeID.size() >= 3 && uprv_strnicmp(localeID.ڈیٹا(), "und", 3) == 0 &&
                (localeID.size() == 3 ||
                 localeID[3] == '-' ||
                 localeID[3] == '_' ||
                 localeID[3] == '@')) {
         skip = 3;
-        localeID.remove_prefix(skip);
+        localeID.remove_سابقہ(skip);
     }
 
-    constexpr int32_t MAXLEN = ULOC_LANG_CAPACITY - 1;  // Minus NUL.
+    constexpr int32_t MAXLEN = ULOC_LANG_استعداد - 1;  // Minus NUL.
 
     /* if it starts with i- or x- then copy that prefix */
     size_t len = _isIDPrefix(localeID) ? 2 : 0;
-    while (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len])) {
-        if (len == MAXLEN) {
-            status = U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+    جب (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len])) {
+        اگر (len == MAXLEN) {
+            حالت_2 = U_ILLEGAL_دلیل_ERROR;
+            واپس 0;
         }
         len++;
     }
 
-    if (sink == nullptr || len == 0) { return skip + len; }
+    اگر (sink == خالی_اشاریہ || len == 0) { واپس skip + len; }
 
-    int32_t minCapacity = uprv_max(static_cast<int32_t>(len), 4);  // Minimum 3 letters plus NUL.
-    char scratch[MAXLEN];
+    int32_t min_استعداد = uprv_max(static_cast<int32_t>(len), 4);  // Minimum 3 letters plus NUL.
+    حرف scratch[MAXLEN];
     int32_t capacity = 0;
-    char* buffer = sink->GetAppendBuffer(
-            minCapacity, minCapacity, scratch, UPRV_LENGTHOF(scratch), &capacity);
+    حرف* بفر = sink->Get_Append_بفر(
+            min_استعداد, min_استعداد, scratch, UPRV_LENGTHOF(scratch), &capacity);
 
-    for (size_t i = 0; i < len; ++i) {
-        buffer[i] = uprv_tolower(localeID[i]);
+    برائے (size_t i = 0; i < len; ++i) {
+        بفر[i] = uprv_tolower(localeID[i]);
     }
-    if (localeID.size() >= 2 && _isIDSeparator(localeID[1])) {
-        buffer[1] = '-';
+    اگر (localeID.size() >= 2 && _isIDSeparator(localeID[1])) {
+        بفر[1] = '-';
     }
 
-    if (len == 3) {
+    اگر (len == 3) {
         /* convert 3 character code to 2 character code if possible *CWB*/
         U_ASSERT(capacity >= 4);
-        buffer[3] = '\0';
-        std::optional<int16_t> offset = _findIndex(LANGUAGES_3, buffer);
-        if (offset.has_value()) {
-            const char* const alias = LANGUAGES[*offset];
+        بفر[3] = '\0';
+        std::optional<int16_t> انحراف = ڈھونڈو_اشاریہ_2(LANGUAGES_3, بفر);
+        اگر (انحراف.has_value()) {
+            ثابت حرف* ثابت alias = LANGUAGES[*انحراف];
             sink->Append(alias, static_cast<int32_t>(uprv_strlen(alias)));
-            return skip + len;
+            واپس skip + len;
         }
     }
 
-    sink->Append(buffer, static_cast<int32_t>(len));
-    return skip + len;
+    sink->Append(بفر, static_cast<int32_t>(len));
+    واپس skip + len;
 }
 
 size_t _getScript(std::string_view localeID, ByteSink* sink) {
-    constexpr int32_t LENGTH = 4;
+    constexpr int32_t لمبائی_3 = 4;
 
     size_t len = 0;
-    while (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len]) &&
+    جب (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len]) &&
             uprv_isASCIILetter(localeID[len])) {
-        if (len == LENGTH) { return 0; }
+        اگر (len == لمبائی_3) { واپس 0; }
         len++;
     }
-    if (len != LENGTH) { return 0; }
+    اگر (len != لمبائی_3) { واپس 0; }
 
-    if (sink == nullptr) { return len; }
+    اگر (sink == خالی_اشاریہ) { واپس len; }
 
-    char scratch[LENGTH];
+    حرف scratch[لمبائی_3];
     int32_t capacity = 0;
-    char* buffer = sink->GetAppendBuffer(
-            LENGTH, LENGTH, scratch, UPRV_LENGTHOF(scratch), &capacity);
+    حرف* بفر = sink->Get_Append_بفر(
+            لمبائی_3, لمبائی_3, scratch, UPRV_LENGTHOF(scratch), &capacity);
 
-    buffer[0] = uprv_toupper(localeID[0]);
-    for (int32_t i = 1; i < LENGTH; ++i) {
-        buffer[i] = uprv_tolower(localeID[i]);
+    بفر[0] = uprv_toupper(localeID[0]);
+    برائے (int32_t i = 1; i < لمبائی_3; ++i) {
+        بفر[i] = uprv_tolower(localeID[i]);
     }
 
-    sink->Append(buffer, LENGTH);
-    return len;
+    sink->Append(بفر, لمبائی_3);
+    واپس len;
 }
 
 size_t _getRegion(std::string_view localeID, ByteSink* sink) {
     constexpr int32_t MINLEN = 2;
-    constexpr int32_t MAXLEN = ULOC_COUNTRY_CAPACITY - 1;  // Minus NUL.
+    constexpr int32_t MAXLEN = ULOC_COUNTRY_استعداد - 1;  // Minus NUL.
 
     size_t len = 0;
-    while (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len])) {
-        if (len == MAXLEN) { return 0; }
+    جب (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len])) {
+        اگر (len == MAXLEN) { واپس 0; }
         len++;
     }
-    if (len < MINLEN) { return 0; }
+    اگر (len < MINLEN) { واپس 0; }
 
-    if (sink == nullptr) { return len; }
+    اگر (sink == خالی_اشاریہ) { واپس len; }
 
-    char scratch[ULOC_COUNTRY_CAPACITY];
+    حرف scratch[ULOC_COUNTRY_استعداد];
     int32_t capacity = 0;
-    char* buffer = sink->GetAppendBuffer(
-            ULOC_COUNTRY_CAPACITY,
-            ULOC_COUNTRY_CAPACITY,
+    حرف* بفر = sink->Get_Append_بفر(
+            ULOC_COUNTRY_استعداد,
+            ULOC_COUNTRY_استعداد,
             scratch,
             UPRV_LENGTHOF(scratch),
             &capacity);
 
-    for (size_t i = 0; i < len; ++i) {
-        buffer[i] = uprv_toupper(localeID[i]);
+    برائے (size_t i = 0; i < len; ++i) {
+        بفر[i] = uprv_toupper(localeID[i]);
     }
 
-    if (len == 3) {
+    اگر (len == 3) {
         /* convert 3 character code to 2 character code if possible *CWB*/
         U_ASSERT(capacity >= 4);
-        buffer[3] = '\0';
-        std::optional<int16_t> offset = _findIndex(COUNTRIES_3, buffer);
-        if (offset.has_value()) {
-            const char* const alias = COUNTRIES[*offset];
+        بفر[3] = '\0';
+        std::optional<int16_t> انحراف = ڈھونڈو_اشاریہ_2(COUNTRIES_3, بفر);
+        اگر (انحراف.has_value()) {
+            ثابت حرف* ثابت alias = COUNTRIES[*انحراف];
             sink->Append(alias, static_cast<int32_t>(uprv_strlen(alias)));
-            return len;
+            واپس len;
         }
     }
 
-    sink->Append(buffer, static_cast<int32_t>(len));
-    return len;
+    sink->Append(بفر, static_cast<int32_t>(len));
+    واپس len;
 }
 
 /**
@@ -1277,11 +1277,11 @@ size_t _getRegion(std::string_view localeID, ByteSink* sink) {
  */
 size_t
 _getVariant(std::string_view localeID,
-            char prev,
+            حرف پچھلا,
             ByteSink* sink,
-            bool needSeparator,
-            UErrorCode& status) {
-    if (U_FAILURE(status) || localeID.empty()) return 0;
+            منطقی needSeparator,
+            UError_رمز& حالت_2) {
+    اگر (U_FAILURE(حالت_2) || localeID.empty()) واپس 0;
 
     // Reasonable upper limit for variants
     // There are no strict limitation of the syntax of variant in the legacy
@@ -1291,396 +1291,396 @@ _getVariant(std::string_view localeID,
     // 179 would allow 20 unicode_variant_subtag with sep in the
     // unicode_locale_id
     // 8*20 + 1*(20-1) = 179
-    constexpr int32_t MAX_VARIANTS_LENGTH = 179;
+    constexpr int32_t MAX_VARIANTS_لمبائی = 179;
 
     /* get one or more variant tags and separate them with '_' */
-    size_t index = 0;
-    if (_isIDSeparator(prev)) {
+    size_t اشاریہ = 0;
+    اگر (_isIDSeparator(پچھلا)) {
         /* get a variant string after a '-' or '_' */
-        for (std::string_view sub = localeID;;) {
+        برائے (std::string_view sub = localeID;;) {
             size_t next = sub.find_first_of(".@_-");
             // For historical reasons, a trailing separator is included in the variant.
-            bool finished = next == std::string_view::npos || next + 1 == sub.length();
-            size_t limit = finished ? sub.length() : next;
-            index += limit;
-            if (index > MAX_VARIANTS_LENGTH) {
-                status = U_ILLEGAL_ARGUMENT_ERROR;
-                return 0;
+            منطقی ختم_شدہ = next == std::string_view::npos || next + 1 == sub.length();
+            size_t حد_بندی = ختم_شدہ ? sub.length() : next;
+            اشاریہ += حد_بندی;
+            اگر (اشاریہ > MAX_VARIANTS_لمبائی) {
+                حالت_2 = U_ILLEGAL_دلیل_ERROR;
+                واپس 0;
             }
 
-            if (sink != nullptr) {
-                if (needSeparator) {
+            اگر (sink != خالی_اشاریہ) {
+                اگر (needSeparator) {
                     sink->Append("_", 1);
-                } else {
-                    needSeparator = true;
+                } ورنہ {
+                    needSeparator = سچ;
                 }
 
-                int32_t length = static_cast<int32_t>(limit);
-                int32_t minCapacity = uprv_min(length, MAX_VARIANTS_LENGTH);
-                char scratch[MAX_VARIANTS_LENGTH];
+                int32_t length = static_cast<int32_t>(حد_بندی);
+                int32_t min_استعداد = uprv_min(length, MAX_VARIANTS_لمبائی);
+                حرف scratch[MAX_VARIANTS_لمبائی];
                 int32_t capacity = 0;
-                char* buffer = sink->GetAppendBuffer(
-                        minCapacity, minCapacity, scratch, UPRV_LENGTHOF(scratch), &capacity);
+                حرف* بفر = sink->Get_Append_بفر(
+                        min_استعداد, min_استعداد, scratch, UPRV_LENGTHOF(scratch), &capacity);
 
-                for (size_t i = 0; i < limit; ++i) {
-                    buffer[i] = uprv_toupper(sub[i]);
+                برائے (size_t i = 0; i < حد_بندی; ++i) {
+                    بفر[i] = uprv_toupper(sub[i]);
                 }
-                sink->Append(buffer, length);
+                sink->Append(بفر, length);
             }
 
-            if (finished) { return index; }
-            sub.remove_prefix(next);
-            if (_isTerminator(sub.front()) || _isBCP47Extension(sub)) { return index; }
-            sub.remove_prefix(1);
-            index++;
+            اگر (ختم_شدہ) { واپس اشاریہ; }
+            sub.remove_سابقہ(next);
+            اگر (_isTerminator(sub.front()) || _isBCP47Extension(sub)) { واپس اشاریہ; }
+            sub.remove_سابقہ(1);
+            اشاریہ++;
         }
     }
 
     size_t skip = 0;
     /* if there is no variant tag after a '-' or '_' then look for '@' */
-    if (prev == '@') {
+    اگر (پچھلا == '@') {
         /* keep localeID */
-    } else if (const char* p = locale_getKeywordsStart(localeID); p != nullptr) {
-        skip = 1 + p - localeID.data(); /* point after the '@' */
-        localeID.remove_prefix(skip);
-    } else {
-        return 0;
+    } ورنہ اگر (ثابت حرف* p = locale_get_Keywords_آغاز(localeID); p != خالی_اشاریہ) {
+        skip = 1 + p - localeID.ڈیٹا(); /* point after the '@' */
+        localeID.remove_سابقہ(skip);
+    } ورنہ {
+        واپس 0;
     }
-    for (; index < localeID.size() && !_isTerminator(localeID[index]); index++) {
-        if (index >= MAX_VARIANTS_LENGTH) { // same as length > MAX_VARIANTS_LENGTH
-            status = U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+    برائے (; اشاریہ < localeID.size() && !_isTerminator(localeID[اشاریہ]); اشاریہ++) {
+        اگر (اشاریہ >= MAX_VARIANTS_لمبائی) { // same as length > MAX_VARIANTS_LENGTH
+            حالت_2 = U_ILLEGAL_دلیل_ERROR;
+            واپس 0;
         }
-        if (needSeparator) {
-            if (sink != nullptr) {
+        اگر (needSeparator) {
+            اگر (sink != خالی_اشاریہ) {
                 sink->Append("_", 1);
             }
-            needSeparator = false;
+            needSeparator = جھوٹ;
         }
-        if (sink != nullptr) {
-            char c = uprv_toupper(localeID[index]);
-            if (c == '-' || c == ',') c = '_';
+        اگر (sink != خالی_اشاریہ) {
+            حرف c = uprv_toupper(localeID[اشاریہ]);
+            اگر (c == '-' || c == ',') c = '_';
             sink->Append(&c, 1);
         }
     }
-    return skip + index;
+    واپس skip + اشاریہ;
 }
 
 }  // namespace
 
 U_EXPORT CharString
-ulocimp_getLanguage(std::string_view localeID, UErrorCode& status) {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
+ulocimp_getLanguage(std::string_view localeID, UError_رمز& حالت_2) {
+    واپس ByteSinkUtil::بذریعہ_Byte_Sink_مقصد_Char_String(
+        [&](ByteSink& sink, UError_رمز& حالت_2) {
             ulocimp_getSubtags(
                     localeID,
                     &sink,
-                    nullptr,
-                    nullptr,
-                    nullptr,
-                    nullptr,
-                    status);
+                    خالی_اشاریہ,
+                    خالی_اشاریہ,
+                    خالی_اشاریہ,
+                    خالی_اشاریہ,
+                    حالت_2);
         },
-        status);
+        حالت_2);
 }
 
 U_EXPORT CharString
-ulocimp_getScript(std::string_view localeID, UErrorCode& status) {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
+ulocimp_getScript(std::string_view localeID, UError_رمز& حالت_2) {
+    واپس ByteSinkUtil::بذریعہ_Byte_Sink_مقصد_Char_String(
+        [&](ByteSink& sink, UError_رمز& حالت_2) {
             ulocimp_getSubtags(
                     localeID,
-                    nullptr,
+                    خالی_اشاریہ,
                     &sink,
-                    nullptr,
-                    nullptr,
-                    nullptr,
-                    status);
+                    خالی_اشاریہ,
+                    خالی_اشاریہ,
+                    خالی_اشاریہ,
+                    حالت_2);
         },
-        status);
+        حالت_2);
 }
 
 U_EXPORT CharString
-ulocimp_getRegion(std::string_view localeID, UErrorCode& status) {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
+ulocimp_getRegion(std::string_view localeID, UError_رمز& حالت_2) {
+    واپس ByteSinkUtil::بذریعہ_Byte_Sink_مقصد_Char_String(
+        [&](ByteSink& sink, UError_رمز& حالت_2) {
             ulocimp_getSubtags(
                     localeID,
-                    nullptr,
-                    nullptr,
+                    خالی_اشاریہ,
+                    خالی_اشاریہ,
                     &sink,
-                    nullptr,
-                    nullptr,
-                    status);
+                    خالی_اشاریہ,
+                    خالی_اشاریہ,
+                    حالت_2);
         },
-        status);
+        حالت_2);
 }
 
 U_EXPORT CharString
-ulocimp_getVariant(std::string_view localeID, UErrorCode& status) {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
+ulocimp_getVariant(std::string_view localeID, UError_رمز& حالت_2) {
+    واپس ByteSinkUtil::بذریعہ_Byte_Sink_مقصد_Char_String(
+        [&](ByteSink& sink, UError_رمز& حالت_2) {
             ulocimp_getSubtags(
                     localeID,
-                    nullptr,
-                    nullptr,
-                    nullptr,
+                    خالی_اشاریہ,
+                    خالی_اشاریہ,
+                    خالی_اشاریہ,
                     &sink,
-                    nullptr,
-                    status);
+                    خالی_اشاریہ,
+                    حالت_2);
         },
-        status);
+        حالت_2);
 }
 
-U_EXPORT void
+U_EXPORT خالی
 ulocimp_getSubtags(
         std::string_view localeID,
         CharString* language,
         CharString* script,
         CharString* region,
         CharString* variant,
-        const char** pEnd,
-        UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+        ثابت حرف** p_انتہا,
+        UError_رمز& حالت_2) {
+    اگر (U_FAILURE(حالت_2)) { واپس; }
 
     std::optional<CharStringByteSink> languageSink;
     std::optional<CharStringByteSink> scriptSink;
     std::optional<CharStringByteSink> regionSink;
     std::optional<CharStringByteSink> variantSink;
 
-    if (language != nullptr) { languageSink.emplace(language); }
-    if (script != nullptr) { scriptSink.emplace(script); }
-    if (region != nullptr) { regionSink.emplace(region); }
-    if (variant != nullptr) { variantSink.emplace(variant); }
+    اگر (language != خالی_اشاریہ) { languageSink.emplace(language); }
+    اگر (script != خالی_اشاریہ) { scriptSink.emplace(script); }
+    اگر (region != خالی_اشاریہ) { regionSink.emplace(region); }
+    اگر (variant != خالی_اشاریہ) { variantSink.emplace(variant); }
 
     ulocimp_getSubtags(
             localeID,
-            languageSink.has_value() ? &*languageSink : nullptr,
-            scriptSink.has_value() ? &*scriptSink : nullptr,
-            regionSink.has_value() ? &*regionSink : nullptr,
-            variantSink.has_value() ? &*variantSink : nullptr,
-            pEnd,
-            status);
+            languageSink.has_value() ? &*languageSink : خالی_اشاریہ,
+            scriptSink.has_value() ? &*scriptSink : خالی_اشاریہ,
+            regionSink.has_value() ? &*regionSink : خالی_اشاریہ,
+            variantSink.has_value() ? &*variantSink : خالی_اشاریہ,
+            p_انتہا,
+            حالت_2);
 }
 
-U_EXPORT void
+U_EXPORT خالی
 ulocimp_getSubtags(
         std::string_view localeID,
         ByteSink* language,
         ByteSink* script,
         ByteSink* region,
         ByteSink* variant,
-        const char** pEnd,
-        UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+        ثابت حرف** p_انتہا,
+        UError_رمز& حالت_2) {
+    اگر (U_FAILURE(حالت_2)) { واپس; }
 
-    if (pEnd != nullptr) {
-        *pEnd = localeID.data();
-    } else if (language == nullptr &&
-               script == nullptr &&
-               region == nullptr &&
-               variant == nullptr) {
-        return;
+    اگر (p_انتہا != خالی_اشاریہ) {
+        *p_انتہا = localeID.ڈیٹا();
+    } ورنہ اگر (language == خالی_اشاریہ &&
+               script == خالی_اشاریہ &&
+               region == خالی_اشاریہ &&
+               variant == خالی_اشاریہ) {
+        واپس;
     }
 
-    if (localeID.empty()) { return; }
+    اگر (localeID.empty()) { واپس; }
 
-    bool hasRegion = false;
+    منطقی hasRegion = جھوٹ;
 
     {
-        size_t len = _getLanguage(localeID, language, status);
-        if (U_FAILURE(status)) { return; }
-        if (len > 0) {
-            localeID.remove_prefix(len);
+        size_t len = _getLanguage(localeID, language, حالت_2);
+        اگر (U_FAILURE(حالت_2)) { واپس; }
+        اگر (len > 0) {
+            localeID.remove_سابقہ(len);
         }
     }
 
-    if (pEnd != nullptr) {
-        *pEnd = localeID.data();
-    } else if (script == nullptr &&
-               region == nullptr &&
-               variant == nullptr) {
-        return;
+    اگر (p_انتہا != خالی_اشاریہ) {
+        *p_انتہا = localeID.ڈیٹا();
+    } ورنہ اگر (script == خالی_اشاریہ &&
+               region == خالی_اشاریہ &&
+               variant == خالی_اشاریہ) {
+        واپس;
     }
 
-    if (localeID.empty()) { return; }
+    اگر (localeID.empty()) { واپس; }
 
-    if (_isIDSeparator(localeID.front())) {
+    اگر (_isIDSeparator(localeID.front())) {
         std::string_view sub = localeID;
-        sub.remove_prefix(1);
+        sub.remove_سابقہ(1);
         size_t len = _getScript(sub, script);
-        if (len > 0) {
-            localeID.remove_prefix(len + 1);
-            if (pEnd != nullptr) { *pEnd = localeID.data(); }
+        اگر (len > 0) {
+            localeID.remove_سابقہ(len + 1);
+            اگر (p_انتہا != خالی_اشاریہ) { *p_انتہا = localeID.ڈیٹا(); }
         }
     }
 
-    if ((region == nullptr && variant == nullptr && pEnd == nullptr) || localeID.empty()) { return; }
+    اگر ((region == خالی_اشاریہ && variant == خالی_اشاریہ && p_انتہا == خالی_اشاریہ) || localeID.empty()) { واپس; }
 
-    if (_isIDSeparator(localeID.front())) {
+    اگر (_isIDSeparator(localeID.front())) {
         std::string_view sub = localeID;
-        sub.remove_prefix(1);
+        sub.remove_سابقہ(1);
         size_t len = _getRegion(sub, region);
-        if (len > 0) {
-            hasRegion = true;
-            localeID.remove_prefix(len + 1);
-            if (pEnd != nullptr) { *pEnd = localeID.data(); }
+        اگر (len > 0) {
+            hasRegion = سچ;
+            localeID.remove_سابقہ(len + 1);
+            اگر (p_انتہا != خالی_اشاریہ) { *p_انتہا = localeID.ڈیٹا(); }
         }
     }
 
-    if ((variant == nullptr && pEnd == nullptr) || localeID.empty()) { return; }
+    اگر ((variant == خالی_اشاریہ && p_انتہا == خالی_اشاریہ) || localeID.empty()) { واپس; }
 
-    bool hasVariant = false;
+    منطقی hasVariant = جھوٹ;
 
-    if (_isIDSeparator(localeID.front()) && !_isBCP47Extension(localeID)) {
+    اگر (_isIDSeparator(localeID.front()) && !_isBCP47Extension(localeID)) {
         std::string_view sub = localeID;
         /* If there was no country ID, skip a possible extra IDSeparator */
         size_t skip = !hasRegion && localeID.size() > 1 && _isIDSeparator(localeID[1]) ? 2 : 1;
-        sub.remove_prefix(skip);
-        size_t len = _getVariant(sub, localeID[0], variant, false, status);
-        if (U_FAILURE(status)) { return; }
-        if (len > 0) {
-            hasVariant = true;
-            localeID.remove_prefix(skip + len);
-            if (pEnd != nullptr) { *pEnd = localeID.data(); }
+        sub.remove_سابقہ(skip);
+        size_t len = _getVariant(sub, localeID[0], variant, جھوٹ, حالت_2);
+        اگر (U_FAILURE(حالت_2)) { واپس; }
+        اگر (len > 0) {
+            hasVariant = سچ;
+            localeID.remove_سابقہ(skip + len);
+            اگر (p_انتہا != خالی_اشاریہ) { *p_انتہا = localeID.ڈیٹا(); }
         }
     }
 
-    if ((variant == nullptr && pEnd == nullptr) || localeID.empty()) { return; }
+    اگر ((variant == خالی_اشاریہ && p_انتہا == خالی_اشاریہ) || localeID.empty()) { واپس; }
 
-    if (_isBCP47Extension(localeID)) {
-        localeID.remove_prefix(2);
-        constexpr char vaposix[] = "-va-posix";
-        constexpr size_t length = sizeof vaposix - 1;
-        for (size_t next;; localeID.remove_prefix(next)) {
+    اگر (_isBCP47Extension(localeID)) {
+        localeID.remove_سابقہ(2);
+        constexpr حرف vaposix[] = "-va-posix";
+        constexpr size_t length = حجم vaposix - 1;
+        برائے (size_t next;; localeID.remove_سابقہ(next)) {
             next = localeID.find('-', 1);
-            if (next == std::string_view::npos) { break; }
+            اگر (next == std::string_view::npos) { توڑو; }
             next = localeID.find('-', next + 1);
-            bool finished = next == std::string_view::npos;
+            منطقی ختم_شدہ = next == std::string_view::npos;
             std::string_view sub = localeID;
-            if (!finished) { sub.remove_suffix(sub.length() - next); }
+            اگر (!ختم_شدہ) { sub.remove_suffix(sub.length() - next); }
 
-            if (sub.length() == length && uprv_strnicmp(sub.data(), vaposix, length) == 0) {
-                if (variant != nullptr) {
-                    if (hasVariant) { variant->Append("_", 1); }
-                    constexpr char posix[] = "POSIX";
-                    variant->Append(posix, sizeof posix - 1);
+            اگر (sub.length() == length && uprv_strnicmp(sub.ڈیٹا(), vaposix, length) == 0) {
+                اگر (variant != خالی_اشاریہ) {
+                    اگر (hasVariant) { variant->Append("_", 1); }
+                    constexpr حرف posix[] = "POSIX";
+                    variant->Append(posix, حجم posix - 1);
                 }
-                if (pEnd != nullptr) { *pEnd = localeID.data() + length; }
+                اگر (p_انتہا != خالی_اشاریہ) { *p_انتہا = localeID.ڈیٹا() + length; }
             }
 
-            if (finished) { break; }
+            اگر (ختم_شدہ) { توڑو; }
         }
     }
 }
 
 /* Keyword enumeration */
 
-typedef struct UKeywordsContext {
-    char* keywords;
-    char* current;
+قسمتعریف ساخت UKeywordsContext {
+    حرف* keywords;
+    حرف* current;
 } UKeywordsContext;
 
 U_CDECL_BEGIN
 
-static void U_CALLCONV
+ساکن خالی U_CALLCONV
 uloc_kw_closeKeywords(UEnumeration *enumerator) {
     uprv_free(((UKeywordsContext *)enumerator->context)->keywords);
     uprv_free(enumerator->context);
     uprv_free(enumerator);
 }
 
-static int32_t U_CALLCONV
-uloc_kw_countKeywords(UEnumeration *en, UErrorCode * /*status*/) {
-    char *kw = ((UKeywordsContext *)en->context)->keywords;
-    int32_t result = 0;
-    while(*kw) {
-        result++;
+ساکن int32_t U_CALLCONV
+uloc_kw_گنتی_Keywords(UEnumeration *en, UError_رمز * /*حالت*/) {
+    حرف *kw = ((UKeywordsContext *)en->context)->keywords;
+    int32_t نتیجہ = 0;
+    جب(*kw) {
+        نتیجہ++;
         kw += uprv_strlen(kw)+1;
     }
-    return result;
+    واپس نتیجہ;
 }
 
-static const char * U_CALLCONV
-uloc_kw_nextKeyword(UEnumeration* en,
-                    int32_t* resultLength,
-                    UErrorCode* /*status*/) {
-    const char* result = ((UKeywordsContext *)en->context)->current;
+ساکن ثابت حرف * U_CALLCONV
+uloc_kw_اگلا_Keyword(UEnumeration* en,
+                    int32_t* نتیجہ_لمبائی,
+                    UError_رمز* /*حالت*/) {
+    ثابت حرف* نتیجہ = ((UKeywordsContext *)en->context)->current;
     int32_t len = 0;
-    if(*result) {
+    اگر(*نتیجہ) {
         len = (int32_t)uprv_strlen(((UKeywordsContext *)en->context)->current);
         ((UKeywordsContext *)en->context)->current += len+1;
-    } else {
-        result = nullptr;
+    } ورنہ {
+        نتیجہ = خالی_اشاریہ;
     }
-    if (resultLength) {
-        *resultLength = len;
+    اگر (نتیجہ_لمبائی) {
+        *نتیجہ_لمبائی = len;
     }
-    return result;
+    واپس نتیجہ;
 }
 
-static void U_CALLCONV
+ساکن خالی U_CALLCONV
 uloc_kw_resetKeywords(UEnumeration* en,
-                      UErrorCode* /*status*/) {
+                      UError_رمز* /*حالت*/) {
     ((UKeywordsContext *)en->context)->current = ((UKeywordsContext *)en->context)->keywords;
 }
 
-U_CDECL_END
+U_CDECL_انتہا
 
 
-static const UEnumeration gKeywordsEnum = {
-    nullptr,
-    nullptr,
+ساکن ثابت UEnumeration gKeywordsEnum = {
+    خالی_اشاریہ,
+    خالی_اشاریہ,
     uloc_kw_closeKeywords,
-    uloc_kw_countKeywords,
+    uloc_kw_گنتی_Keywords,
     uenum_unextDefault,
-    uloc_kw_nextKeyword,
+    uloc_kw_اگلا_Keyword,
     uloc_kw_resetKeywords
 };
 
 U_CAPI UEnumeration* U_EXPORT2
-uloc_openKeywordList(const char *keywordList, int32_t keywordListSize, UErrorCode* status)
+uloc_openKeywordList(ثابت حرف *keywordList, int32_t keyword_List_سائز, UError_رمز* حالت_2)
 {
-    if (U_FAILURE(*status)) { return nullptr; }
+    اگر (U_FAILURE(*حالت_2)) { واپس خالی_اشاریہ; }
 
-    LocalMemory<UKeywordsContext> myContext;
-    LocalMemory<UEnumeration> result;
+    Local_حافظہ<UKeywordsContext> myContext;
+    Local_حافظہ<UEnumeration> نتیجہ;
 
-    myContext.adoptInstead(static_cast<UKeywordsContext *>(uprv_malloc(sizeof(UKeywordsContext))));
-    result.adoptInstead(static_cast<UEnumeration *>(uprv_malloc(sizeof(UEnumeration))));
-    if (myContext.isNull() || result.isNull()) {
-        *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    myContext.adoptInstead(static_cast<UKeywordsContext *>(uprv_malloc(حجم(UKeywordsContext))));
+    نتیجہ.adoptInstead(static_cast<UEnumeration *>(uprv_malloc(حجم(UEnumeration))));
+    اگر (myContext.isNull() || نتیجہ.isNull()) {
+        *حالت_2 = U_حافظہ_تخصیص_ERROR;
+        واپس خالی_اشاریہ;
     }
-    uprv_memcpy(result.getAlias(), &gKeywordsEnum, sizeof(UEnumeration));
-    myContext->keywords = static_cast<char *>(uprv_malloc(keywordListSize+1));
-    if (myContext->keywords == nullptr) {
-        *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    uprv_memcpy(نتیجہ.getAlias(), &gKeywordsEnum, حجم(UEnumeration));
+    myContext->keywords = static_cast<حرف *>(uprv_malloc(keyword_List_سائز+1));
+    اگر (myContext->keywords == خالی_اشاریہ) {
+        *حالت_2 = U_حافظہ_تخصیص_ERROR;
+        واپس خالی_اشاریہ;
     }
-    uprv_memcpy(myContext->keywords, keywordList, keywordListSize);
-    myContext->keywords[keywordListSize] = 0;
+    uprv_memcpy(myContext->keywords, keywordList, keyword_List_سائز);
+    myContext->keywords[keyword_List_سائز] = 0;
     myContext->current = myContext->keywords;
-    result->context = myContext.orphan();
-    return result.orphan();
+    نتیجہ->context = myContext.orphan();
+    واپس نتیجہ.orphan();
 }
 
 U_CAPI UEnumeration* U_EXPORT2
-uloc_openKeywords(const char* localeID,
-                        UErrorCode* status)
+uloc_openKeywords(ثابت حرف* localeID,
+                        UError_رمز* حالت_2)
 {
-    if(status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    اگر(حالت_2==خالی_اشاریہ || U_FAILURE(*حالت_2)) {
+        واپس خالی_اشاریہ;
     }
 
-    CharString tempBuffer;
-    const char* tmpLocaleID;
+    CharString عارضی_بفر;
+    ثابت حرف* tmpLocaleID;
 
-    if (localeID != nullptr && _hasBCP47Extension(localeID)) {
-        tempBuffer = ulocimp_forLanguageTag(localeID, -1, nullptr, *status);
-        tmpLocaleID = U_SUCCESS(*status) && !tempBuffer.isEmpty() ? tempBuffer.data() : localeID;
-    } else {
-        if (localeID==nullptr) {
+    اگر (localeID != خالی_اشاریہ && _hasBCP47Extension(localeID)) {
+        عارضی_بفر = ulocimp_for_Language_لیبل(localeID, -1, خالی_اشاریہ, *حالت_2);
+        tmpLocaleID = U_SUCCESS(*حالت_2) && !عارضی_بفر.is_خالی_خانے() ? عارضی_بفر.ڈیٹا() : localeID;
+    } ورنہ {
+        اگر (localeID==خالی_اشاریہ) {
             localeID=uloc_getDefault();
         }
         tmpLocaleID=localeID;
@@ -1688,38 +1688,38 @@ uloc_openKeywords(const char* localeID,
 
     ulocimp_getSubtags(
             tmpLocaleID,
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr,
+            خالی_اشاریہ,
+            خالی_اشاریہ,
+            خالی_اشاریہ,
+            خالی_اشاریہ,
             &tmpLocaleID,
-            *status);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+            *حالت_2);
+    اگر (U_FAILURE(*حالت_2)) {
+        واپس خالی_اشاریہ;
     }
 
     /* keywords are located after '@' */
-    if((tmpLocaleID = locale_getKeywordsStart(tmpLocaleID)) != nullptr) {
-        CharString keywords = ulocimp_getKeywords(tmpLocaleID + 1, '@', false, *status);
-        if (U_FAILURE(*status)) {
-            return nullptr;
+    اگر((tmpLocaleID = locale_get_Keywords_آغاز(tmpLocaleID)) != خالی_اشاریہ) {
+        CharString keywords = ulocimp_getKeywords(tmpLocaleID + 1, '@', جھوٹ, *حالت_2);
+        اگر (U_FAILURE(*حالت_2)) {
+            واپس خالی_اشاریہ;
         }
-        return uloc_openKeywordList(keywords.data(), keywords.length(), status);
+        واپس uloc_openKeywordList(keywords.ڈیٹا(), keywords.length(), حالت_2);
     }
-    return nullptr;
+    واپس خالی_اشاریہ;
 }
 
 
 /* bit-flags for 'options' parameter of _canonicalize */
-#define _ULOC_STRIP_KEYWORDS 0x2
-#define _ULOC_CANONICALIZE   0x1
+#تعریف_کرو _ULOC_STRIP_KEYWORDS 0x2
+#تعریف_کرو _ULOC_CANONICALIZE   0x1
 
-namespace {
+نامخلا {
 
-inline bool OPTION_SET(uint32_t options, uint32_t mask) { return (options & mask) != 0; }
+اندرونی منطقی OPTION_سیٹ(uint32_t options, uint32_t mask) { واپس (options & mask) != 0; }
 
-constexpr char i_default[] = {'i', '-', 'd', 'e', 'f', 'a', 'u', 'l', 't'};
-constexpr int32_t I_DEFAULT_LENGTH = UPRV_LENGTHOF(i_default);
+constexpr حرف i_default[] = {'i', '-', 'd', 'e', 'f', 'a', 'u', 'l', 't'};
+constexpr int32_t I_DEFAULT_لمبائی = UPRV_LENGTHOF(i_default);
 
 /**
  * Canonicalize the given localeID, to level 1 or to level 2,
@@ -1728,102 +1728,102 @@ constexpr int32_t I_DEFAULT_LENGTH = UPRV_LENGTHOF(i_default);
  *
  * This is the code underlying uloc_getName and uloc_canonicalize.
  */
-void
+خالی
 _canonicalize(std::string_view localeID,
               ByteSink& sink,
               uint32_t options,
-              UErrorCode& err) {
-    if (U_FAILURE(err)) {
-        return;
+              UError_رمز& err) {
+    اگر (U_FAILURE(err)) {
+        واپس;
     }
 
-    int32_t j, fieldCount=0;
-    CharString tempBuffer;  // if localeID has a BCP47 extension, tmpLocaleID points to this
+    int32_t j, میدان_گنتی=0;
+    CharString عارضی_بفر;  // if localeID has a BCP47 extension, tmpLocaleID points to this
     CharString localeIDWithHyphens;  // if localeID has a BPC47 extension and have _, tmpLocaleID points to this
     std::string_view origLocaleID;
     std::string_view tmpLocaleID;
-    size_t keywordAssign = std::string_view::npos;
+    size_t keyword_تفویض = std::string_view::npos;
     size_t separatorIndicator = std::string_view::npos;
 
-    if (_hasBCP47Extension(localeID)) {
+    اگر (_hasBCP47Extension(localeID)) {
         std::string_view localeIDPtr = localeID;
 
         // convert all underbars to hyphens, unless the "BCP47 extension" comes at the beginning of the string
-        if (localeID.size() >= 2 && localeID.find('_') != std::string_view::npos && localeID[1] != '-' && localeID[1] != '_') {
+        اگر (localeID.size() >= 2 && localeID.find('_') != std::string_view::npos && localeID[1] != '-' && localeID[1] != '_') {
             localeIDWithHyphens.append(localeID, err);
-            if (U_SUCCESS(err)) {
-                for (char* p = localeIDWithHyphens.data(); *p != '\0'; ++p) {
-                    if (*p == '_') {
+            اگر (U_SUCCESS(err)) {
+                برائے (حرف* p = localeIDWithHyphens.ڈیٹا(); *p != '\0'; ++p) {
+                    اگر (*p == '_') {
                         *p = '-';
                     }
                 }
-                localeIDPtr = localeIDWithHyphens.toStringPiece();
+                localeIDPtr = localeIDWithHyphens.مقصد_String_Piece();
             }
         }
 
-        tempBuffer = ulocimp_forLanguageTag(localeIDPtr.data(), static_cast<int32_t>(localeIDPtr.size()), nullptr, err);
-        tmpLocaleID = U_SUCCESS(err) && !tempBuffer.isEmpty() ? static_cast<std::string_view>(tempBuffer.toStringPiece()) : localeIDPtr;
-    } else {
+        عارضی_بفر = ulocimp_for_Language_لیبل(localeIDPtr.ڈیٹا(), static_cast<int32_t>(localeIDPtr.size()), خالی_اشاریہ, err);
+        tmpLocaleID = U_SUCCESS(err) && !عارضی_بفر.is_خالی_خانے() ? static_cast<std::string_view>(عارضی_بفر.مقصد_String_Piece()) : localeIDPtr;
+    } ورنہ {
         tmpLocaleID=localeID;
     }
 
     origLocaleID=tmpLocaleID;
 
     /* get all pieces, one after another, and separate with '_' */
-    CharString tag;
+    CharString لیبل;
     CharString script;
     CharString country;
     CharString variant;
-    const char* end = nullptr;
+    ثابت حرف* انتہا = خالی_اشاریہ;
     ulocimp_getSubtags(
             tmpLocaleID,
-            &tag,
+            &لیبل,
             &script,
             &country,
             &variant,
-            &end,
+            &انتہا,
             err);
-    if (U_FAILURE(err)) {
-        return;
+    اگر (U_FAILURE(err)) {
+        واپس;
     }
-    U_ASSERT(end != nullptr);
-    if (end > tmpLocaleID.data()) {
-        tmpLocaleID.remove_prefix(end - tmpLocaleID.data());
+    U_ASSERT(انتہا != خالی_اشاریہ);
+    اگر (انتہا > tmpLocaleID.ڈیٹا()) {
+        tmpLocaleID.remove_سابقہ(انتہا - tmpLocaleID.ڈیٹا());
     }
 
-    if (tag.length() == I_DEFAULT_LENGTH && origLocaleID.length() >= I_DEFAULT_LENGTH &&
-            uprv_strncmp(origLocaleID.data(), i_default, I_DEFAULT_LENGTH) == 0) {
-        tag.clear();
-        tag.append(uloc_getDefault(), err);
-    } else {
-        if (!script.isEmpty()) {
-            ++fieldCount;
-            tag.append('_', err);
-            tag.append(script, err);
+    اگر (لیبل.length() == I_DEFAULT_لمبائی && origLocaleID.length() >= I_DEFAULT_لمبائی &&
+            uprv_strncmp(origLocaleID.ڈیٹا(), i_default, I_DEFAULT_لمبائی) == 0) {
+        لیبل.clear();
+        لیبل.append(uloc_getDefault(), err);
+    } ورنہ {
+        اگر (!script.is_خالی_خانے()) {
+            ++میدان_گنتی;
+            لیبل.append('_', err);
+            لیبل.append(script, err);
         }
-        if (!country.isEmpty()) {
-            ++fieldCount;
-            tag.append('_', err);
-            tag.append(country, err);
+        اگر (!country.is_خالی_خانے()) {
+            ++میدان_گنتی;
+            لیبل.append('_', err);
+            لیبل.append(country, err);
         }
-        if (!variant.isEmpty()) {
-            ++fieldCount;
-            if (country.isEmpty()) {
-                tag.append('_', err);
+        اگر (!variant.is_خالی_خانے()) {
+            ++میدان_گنتی;
+            اگر (country.is_خالی_خانے()) {
+                لیبل.append('_', err);
             }
-            tag.append('_', err);
-            tag.append(variant, err);
+            لیبل.append('_', err);
+            لیبل.append(variant, err);
         }
     }
 
     /* Copy POSIX-style charset specifier, if any [mr.utf8] */
-    if (!OPTION_SET(options, _ULOC_CANONICALIZE) && !tmpLocaleID.empty() && tmpLocaleID.front() == '.') {
-        tag.append('.', err);
-        tmpLocaleID.remove_prefix(1);
+    اگر (!OPTION_سیٹ(options, _ULOC_CANONICALIZE) && !tmpLocaleID.empty() && tmpLocaleID.front() == '.') {
+        لیبل.append('.', err);
+        tmpLocaleID.remove_سابقہ(1);
         size_t length;
-        if (size_t atPos = tmpLocaleID.find('@'); atPos != std::string_view::npos) {
+        اگر (size_t atPos = tmpLocaleID.find('@'); atPos != std::string_view::npos) {
             length = atPos;
-        } else {
+        } ورنہ {
             length = tmpLocaleID.length();
         }
         // The longest charset name we found in IANA charset registry
@@ -1831,77 +1831,77 @@ _canonicalize(std::string_view localeID,
         // "Extended_UNIX_Code_Packed_Format_for_Japanese" in length 45.
         // we therefore restrict the length here to be 64 which is a power of 2
         // number that is longer than 45.
-        constexpr size_t kMaxCharsetLength = 64;
-        if (length > kMaxCharsetLength) {
-           err = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
-           return;
+        constexpr size_t k_Max_Charset_لمبائی = 64;
+        اگر (length > k_Max_Charset_لمبائی) {
+           err = U_ILLEGAL_دلیل_ERROR; /* malformed keyword name */
+           واپس;
         }
-        if (length > 0) {
-            tag.append(tmpLocaleID.data(), static_cast<int32_t>(length), err);
-            tmpLocaleID.remove_prefix(length);
+        اگر (length > 0) {
+            لیبل.append(tmpLocaleID.ڈیٹا(), static_cast<int32_t>(length), err);
+            tmpLocaleID.remove_سابقہ(length);
         }
     }
 
     /* Scan ahead to next '@' and determine if it is followed by '=' and/or ';'
        After this, tmpLocaleID either starts at '@' or is empty. */
-    if (const char* start = locale_getKeywordsStart(tmpLocaleID); start != nullptr) {
-        if (start > tmpLocaleID.data()) {
-            tmpLocaleID.remove_prefix(start - tmpLocaleID.data());
+    اگر (ثابت حرف* آغاز = locale_get_Keywords_آغاز(tmpLocaleID); آغاز != خالی_اشاریہ) {
+        اگر (آغاز > tmpLocaleID.ڈیٹا()) {
+            tmpLocaleID.remove_سابقہ(آغاز - tmpLocaleID.ڈیٹا());
         }
-        keywordAssign = tmpLocaleID.find('=');
+        keyword_تفویض = tmpLocaleID.find('=');
         separatorIndicator = tmpLocaleID.find(';');
-    } else {
+    } ورنہ {
         tmpLocaleID = {};
     }
 
     /* Copy POSIX-style variant, if any [mr@FOO] */
-    if (!OPTION_SET(options, _ULOC_CANONICALIZE) &&
-        !tmpLocaleID.empty() && keywordAssign == std::string_view::npos) {
-        tag.append(tmpLocaleID, err);
+    اگر (!OPTION_سیٹ(options, _ULOC_CANONICALIZE) &&
+        !tmpLocaleID.empty() && keyword_تفویض == std::string_view::npos) {
+        لیبل.append(tmpLocaleID, err);
         tmpLocaleID = {};
     }
 
-    if (OPTION_SET(options, _ULOC_CANONICALIZE)) {
+    اگر (OPTION_سیٹ(options, _ULOC_CANONICALIZE)) {
         /* Handle @FOO variant if @ is present and not followed by = */
-        if (!tmpLocaleID.empty() && keywordAssign == std::string_view::npos) {
+        اگر (!tmpLocaleID.empty() && keyword_تفویض == std::string_view::npos) {
             /* Add missing '_' if needed */
-            if (fieldCount < 2 || (fieldCount < 3 && !script.isEmpty())) {
-                do {
-                    tag.append('_', err);
-                    ++fieldCount;
-                } while(fieldCount<2);
+            اگر (میدان_گنتی < 2 || (میدان_گنتی < 3 && !script.is_خالی_خانے())) {
+                کرو {
+                    لیبل.append('_', err);
+                    ++میدان_گنتی;
+                } جب(میدان_گنتی<2);
             }
 
-            CharStringByteSink s(&tag);
+            CharStringByteSink s(&لیبل);
             std::string_view sub = tmpLocaleID;
-            sub.remove_prefix(1);
-            _getVariant(sub, '@', &s, !variant.isEmpty(), err);
-            if (U_FAILURE(err)) { return; }
+            sub.remove_سابقہ(1);
+            _getVariant(sub, '@', &s, !variant.is_خالی_خانے(), err);
+            اگر (U_FAILURE(err)) { واپس; }
         }
 
         /* Look up the ID in the canonicalization map */
-        for (j=0; j<UPRV_LENGTHOF(CANONICALIZE_MAP); j++) {
+        برائے (j=0; j<UPRV_LENGTHOF(CANONICALIZE_MAP); j++) {
             StringPiece id(CANONICALIZE_MAP[j].id);
-            if (tag == id) {
-                if (id.empty() && !tmpLocaleID.empty()) {
-                    break; /* Don't remap "" if keywords present */
+            اگر (لیبل == id) {
+                اگر (id.empty() && !tmpLocaleID.empty()) {
+                    توڑو; /* Don't remap "" if keywords present */
                 }
-                tag.clear();
-                tag.append(CANONICALIZE_MAP[j].canonicalID, err);
-                break;
+                لیبل.clear();
+                لیبل.append(CANONICALIZE_MAP[j].canonicalID, err);
+                توڑو;
             }
         }
     }
 
-    sink.Append(tag.data(), tag.length());
+    sink.Append(لیبل.ڈیٹا(), لیبل.length());
 
-    if (!OPTION_SET(options, _ULOC_STRIP_KEYWORDS)) {
-        if (!tmpLocaleID.empty() && keywordAssign != std::string_view::npos &&
-            (separatorIndicator == std::string_view::npos || separatorIndicator > keywordAssign)) {
+    اگر (!OPTION_سیٹ(options, _ULOC_STRIP_KEYWORDS)) {
+        اگر (!tmpLocaleID.empty() && keyword_تفویض != std::string_view::npos &&
+            (separatorIndicator == std::string_view::npos || separatorIndicator > keyword_تفویض)) {
             sink.Append("@", 1);
-            ++fieldCount;
-            tmpLocaleID.remove_prefix(1);
-            ulocimp_getKeywords(tmpLocaleID, '@', sink, true, err);
+            ++میدان_گنتی;
+            tmpLocaleID.remove_سابقہ(1);
+            ulocimp_getKeywords(tmpLocaleID, '@', sink, سچ, err);
         }
     }
 }
@@ -1911,52 +1911,52 @@ _canonicalize(std::string_view localeID,
 /* ### ID parsing API **************************************************/
 
 U_CAPI int32_t  U_EXPORT2
-uloc_getParent(const char*    localeID,
-               char* parent,
-               int32_t parentCapacity,
-               UErrorCode* err)
+uloc_get_والد(ثابت حرف*    localeID,
+               حرف* والد,
+               int32_t والد_استعداد,
+               UError_رمز* err)
 {
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        parent, parentCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getParent(localeID, sink, status);
+    واپس ByteSinkUtil::بذریعہ_Byte_Sink_مقصد_Terminated_Chars(
+        والد, والد_استعداد,
+        [&](ByteSink& sink, UError_رمز& حالت_2) {
+            ulocimp_get_والد(localeID, sink, حالت_2);
         },
         *err);
 }
 
 U_EXPORT CharString
-ulocimp_getParent(const char* localeID,
-                  UErrorCode& err)
+ulocimp_get_والد(ثابت حرف* localeID,
+                  UError_رمز& err)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getParent(localeID, sink, status);
+    واپس ByteSinkUtil::بذریعہ_Byte_Sink_مقصد_Char_String(
+        [&](ByteSink& sink, UError_رمز& حالت_2) {
+            ulocimp_get_والد(localeID, sink, حالت_2);
         },
         err);
 }
 
-U_EXPORT void
-ulocimp_getParent(const char* localeID,
+U_EXPORT خالی
+ulocimp_get_والد(ثابت حرف* localeID,
                   icu::ByteSink& sink,
-                  UErrorCode& err)
+                  UError_رمز& err)
 {
-    if (U_FAILURE(err)) { return; }
+    اگر (U_FAILURE(err)) { واپس; }
 
-    const char *lastUnderscore;
+    ثابت حرف *آخری_Underscore;
     int32_t i;
 
-    if (localeID == nullptr)
+    اگر (localeID == خالی_اشاریہ)
         localeID = uloc_getDefault();
 
-    lastUnderscore=uprv_strrchr(localeID, '_');
-    if(lastUnderscore!=nullptr) {
-        i = static_cast<int32_t>(lastUnderscore - localeID);
-    } else {
+    آخری_Underscore=uprv_strrchr(localeID, '_');
+    اگر(آخری_Underscore!=خالی_اشاریہ) {
+        i = static_cast<int32_t>(آخری_Underscore - localeID);
+    } ورنہ {
         i=0;
     }
 
-    if (i > 0) {
-        if (uprv_strnicmp(localeID, "und_", 4) == 0) {
+    اگر (i > 0) {
+        اگر (uprv_strnicmp(localeID, "und_", 4) == 0) {
             localeID += 3;
             i -= 3;
         }
@@ -1965,317 +1965,317 @@ ulocimp_getParent(const char* localeID,
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getLanguage(const char*    localeID,
-         char* language,
-         int32_t languageCapacity,
-         UErrorCode* err)
+uloc_getLanguage(ثابت حرف*    localeID,
+         حرف* language,
+         int32_t language_استعداد,
+         UError_رمز* err)
 {
-    if (localeID == nullptr) {
+    اگر (localeID == خالی_اشاریہ) {
         localeID = uloc_getDefault();
     }
 
     /* uloc_getLanguage will return a 2 character iso-639 code if one exists. *CWB*/
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        language, languageCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
+    واپس ByteSinkUtil::بذریعہ_Byte_Sink_مقصد_Terminated_Chars(
+        language, language_استعداد,
+        [&](ByteSink& sink, UError_رمز& حالت_2) {
             ulocimp_getSubtags(
                     localeID,
                     &sink,
-                    nullptr,
-                    nullptr,
-                    nullptr,
-                    nullptr,
-                    status);
+                    خالی_اشاریہ,
+                    خالی_اشاریہ,
+                    خالی_اشاریہ,
+                    خالی_اشاریہ,
+                    حالت_2);
         },
         *err);
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getScript(const char*    localeID,
-         char* script,
-         int32_t scriptCapacity,
-         UErrorCode* err)
+uloc_getScript(ثابت حرف*    localeID,
+         حرف* script,
+         int32_t script_استعداد,
+         UError_رمز* err)
 {
-    if (localeID == nullptr) {
+    اگر (localeID == خالی_اشاریہ) {
         localeID = uloc_getDefault();
     }
 
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        script, scriptCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
+    واپس ByteSinkUtil::بذریعہ_Byte_Sink_مقصد_Terminated_Chars(
+        script, script_استعداد,
+        [&](ByteSink& sink, UError_رمز& حالت_2) {
             ulocimp_getSubtags(
                     localeID,
-                    nullptr,
+                    خالی_اشاریہ,
                     &sink,
-                    nullptr,
-                    nullptr,
-                    nullptr,
-                    status);
+                    خالی_اشاریہ,
+                    خالی_اشاریہ,
+                    خالی_اشاریہ,
+                    حالت_2);
         },
         *err);
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_getCountry(const char* localeID,
-            char* country,
-            int32_t countryCapacity,
-            UErrorCode* err)
+uloc_getCountry(ثابت حرف* localeID,
+            حرف* country,
+            int32_t country_استعداد,
+            UError_رمز* err)
 {
-    if (localeID == nullptr) {
+    اگر (localeID == خالی_اشاریہ) {
         localeID = uloc_getDefault();
     }
 
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        country, countryCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
+    واپس ByteSinkUtil::بذریعہ_Byte_Sink_مقصد_Terminated_Chars(
+        country, country_استعداد,
+        [&](ByteSink& sink, UError_رمز& حالت_2) {
             ulocimp_getSubtags(
                     localeID,
-                    nullptr,
-                    nullptr,
+                    خالی_اشاریہ,
+                    خالی_اشاریہ,
                     &sink,
-                    nullptr,
-                    nullptr,
-                    status);
+                    خالی_اشاریہ,
+                    خالی_اشاریہ,
+                    حالت_2);
         },
         *err);
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_getVariant(const char* localeID,
-                char* variant,
-                int32_t variantCapacity,
-                UErrorCode* err)
+uloc_getVariant(ثابت حرف* localeID,
+                حرف* variant,
+                int32_t variant_استعداد,
+                UError_رمز* err)
 {
-    if (localeID == nullptr) {
+    اگر (localeID == خالی_اشاریہ) {
         localeID = uloc_getDefault();
     }
 
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        variant, variantCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
+    واپس ByteSinkUtil::بذریعہ_Byte_Sink_مقصد_Terminated_Chars(
+        variant, variant_استعداد,
+        [&](ByteSink& sink, UError_رمز& حالت_2) {
             ulocimp_getSubtags(
                     localeID,
-                    nullptr,
-                    nullptr,
-                    nullptr,
+                    خالی_اشاریہ,
+                    خالی_اشاریہ,
+                    خالی_اشاریہ,
                     &sink,
-                    nullptr,
-                    status);
+                    خالی_اشاریہ,
+                    حالت_2);
         },
         *err);
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_getName(const char* localeID,
-             char* name,
-             int32_t nameCapacity,
-             UErrorCode* err)
+uloc_getName(ثابت حرف* localeID,
+             حرف* name,
+             int32_t name_استعداد,
+             UError_رمز* err)
 {
-    if (localeID == nullptr) {
+    اگر (localeID == خالی_اشاریہ) {
         localeID = uloc_getDefault();
     }
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        name, nameCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getName(localeID, sink, status);
+    واپس ByteSinkUtil::بذریعہ_Byte_Sink_مقصد_Terminated_Chars(
+        name, name_استعداد,
+        [&](ByteSink& sink, UError_رمز& حالت_2) {
+            ulocimp_getName(localeID, sink, حالت_2);
         },
         *err);
 }
 
 U_EXPORT CharString
 ulocimp_getName(std::string_view localeID,
-                UErrorCode& err)
+                UError_رمز& err)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getName(localeID, sink, status);
+    واپس ByteSinkUtil::بذریعہ_Byte_Sink_مقصد_Char_String(
+        [&](ByteSink& sink, UError_رمز& حالت_2) {
+            ulocimp_getName(localeID, sink, حالت_2);
         },
         err);
 }
 
-U_EXPORT void
+U_EXPORT خالی
 ulocimp_getName(std::string_view localeID,
                 ByteSink& sink,
-                UErrorCode& err)
+                UError_رمز& err)
 {
     _canonicalize(localeID, sink, 0, err);
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_getBaseName(const char* localeID,
-                 char* name,
-                 int32_t nameCapacity,
-                 UErrorCode* err)
+uloc_get_بنیاد_Name(ثابت حرف* localeID,
+                 حرف* name,
+                 int32_t name_استعداد,
+                 UError_رمز* err)
 {
-    if (localeID == nullptr) {
+    اگر (localeID == خالی_اشاریہ) {
         localeID = uloc_getDefault();
     }
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        name, nameCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getBaseName(localeID, sink, status);
+    واپس ByteSinkUtil::بذریعہ_Byte_Sink_مقصد_Terminated_Chars(
+        name, name_استعداد,
+        [&](ByteSink& sink, UError_رمز& حالت_2) {
+            ulocimp_get_بنیاد_Name(localeID, sink, حالت_2);
         },
         *err);
 }
 
 U_EXPORT CharString
-ulocimp_getBaseName(std::string_view localeID,
-                    UErrorCode& err)
+ulocimp_get_بنیاد_Name(std::string_view localeID,
+                    UError_رمز& err)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getBaseName(localeID, sink, status);
+    واپس ByteSinkUtil::بذریعہ_Byte_Sink_مقصد_Char_String(
+        [&](ByteSink& sink, UError_رمز& حالت_2) {
+            ulocimp_get_بنیاد_Name(localeID, sink, حالت_2);
         },
         err);
 }
 
-U_EXPORT void
-ulocimp_getBaseName(std::string_view localeID,
+U_EXPORT خالی
+ulocimp_get_بنیاد_Name(std::string_view localeID,
                     ByteSink& sink,
-                    UErrorCode& err)
+                    UError_رمز& err)
 {
     _canonicalize(localeID, sink, _ULOC_STRIP_KEYWORDS, err);
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_canonicalize(const char* localeID,
-                  char* name,
-                  int32_t nameCapacity,
-                  UErrorCode* err)
+uloc_canonicalize(ثابت حرف* localeID,
+                  حرف* name,
+                  int32_t name_استعداد,
+                  UError_رمز* err)
 {
-    if (localeID == nullptr) {
+    اگر (localeID == خالی_اشاریہ) {
         localeID = uloc_getDefault();
     }
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        name, nameCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_canonicalize(localeID, sink, status);
+    واپس ByteSinkUtil::بذریعہ_Byte_Sink_مقصد_Terminated_Chars(
+        name, name_استعداد,
+        [&](ByteSink& sink, UError_رمز& حالت_2) {
+            ulocimp_canonicalize(localeID, sink, حالت_2);
         },
         *err);
 }
 
 U_EXPORT CharString
 ulocimp_canonicalize(std::string_view localeID,
-                     UErrorCode& err)
+                     UError_رمز& err)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_canonicalize(localeID, sink, status);
+    واپس ByteSinkUtil::بذریعہ_Byte_Sink_مقصد_Char_String(
+        [&](ByteSink& sink, UError_رمز& حالت_2) {
+            ulocimp_canonicalize(localeID, sink, حالت_2);
         },
         err);
 }
 
-U_EXPORT void
+U_EXPORT خالی
 ulocimp_canonicalize(std::string_view localeID,
                      ByteSink& sink,
-                     UErrorCode& err)
+                     UError_رمز& err)
 {
     _canonicalize(localeID, sink, _ULOC_CANONICALIZE, err);
 }
 
-U_CAPI const char*  U_EXPORT2
-uloc_getISO3Language(const char* localeID)
+U_CAPI ثابت حرف*  U_EXPORT2
+uloc_getISO3Language(ثابت حرف* localeID)
 {
-    UErrorCode err = U_ZERO_ERROR;
+    UError_رمز err = U_ZERO_ERROR;
 
-    if (localeID == nullptr)
+    اگر (localeID == خالی_اشاریہ)
     {
         localeID = uloc_getDefault();
     }
     CharString lang = ulocimp_getLanguage(localeID, err);
-    if (U_FAILURE(err))
-        return "";
-    std::optional<int16_t> offset = _findIndex(LANGUAGES, lang.data());
-    return offset.has_value() ? LANGUAGES_3[*offset] : "";
+    اگر (U_FAILURE(err))
+        واپس "";
+    std::optional<int16_t> انحراف = ڈھونڈو_اشاریہ_2(LANGUAGES, lang.ڈیٹا());
+    واپس انحراف.has_value() ? LANGUAGES_3[*انحراف] : "";
 }
 
-U_CAPI const char*  U_EXPORT2
-uloc_getISO3Country(const char* localeID)
+U_CAPI ثابت حرف*  U_EXPORT2
+uloc_getISO3Country(ثابت حرف* localeID)
 {
-    UErrorCode err = U_ZERO_ERROR;
+    UError_رمز err = U_ZERO_ERROR;
 
-    if (localeID == nullptr)
+    اگر (localeID == خالی_اشاریہ)
     {
         localeID = uloc_getDefault();
     }
     CharString cntry = ulocimp_getRegion(localeID, err);
-    if (U_FAILURE(err))
-        return "";
-    std::optional<int16_t> offset = _findIndex(COUNTRIES, cntry.data());
-    return offset.has_value() ? COUNTRIES_3[*offset] : "";
+    اگر (U_FAILURE(err))
+        واپس "";
+    std::optional<int16_t> انحراف = ڈھونڈو_اشاریہ_2(COUNTRIES, cntry.ڈیٹا());
+    واپس انحراف.has_value() ? COUNTRIES_3[*انحراف] : "";
 }
 
 U_CAPI uint32_t  U_EXPORT2
-uloc_getLCID(const char* localeID)
+uloc_getLCID(ثابت حرف* localeID)
 {
-    UErrorCode status = U_ZERO_ERROR;
+    UError_رمز حالت_2 = U_ZERO_ERROR;
     uint32_t   lcid = 0;
 
     /* Check for incomplete id. */
-    if (!localeID || uprv_strlen(localeID) < 2) {
-        return 0;
+    اگر (!localeID || uprv_strlen(localeID) < 2) {
+        واپس 0;
     }
 
     // First, attempt Windows platform lookup if available, but fall
     // through to catch any special cases (ICU vs Windows name differences).
-    lcid = uprv_convertToLCIDPlatform(localeID, &status);
-    if (U_FAILURE(status)) {
-        return 0;
+    lcid = uprv_convert_مقصد_LCIDPlatform(localeID, &حالت_2);
+    اگر (U_FAILURE(حالت_2)) {
+        واپس 0;
     }
-    if (lcid > 0) {
+    اگر (lcid > 0) {
         // Windows found an LCID, return that
-        return lcid;
+        واپس lcid;
     }
 
-    CharString langID = ulocimp_getLanguage(localeID, status);
-    if (U_FAILURE(status)) {
-        return 0;
+    CharString langID = ulocimp_getLanguage(localeID, حالت_2);
+    اگر (U_FAILURE(حالت_2)) {
+        واپس 0;
     }
 
-    if (uprv_strchr(localeID, '@')) {
+    اگر (uprv_strchr(localeID, '@')) {
         // uprv_convertToLCID does not support keywords other than collation.
         // Remove all keywords except collation.
-        CharString collVal = ulocimp_getKeywordValue(localeID, "collation", status);
-        if (U_SUCCESS(status) && !collVal.isEmpty()) {
-            CharString tmpLocaleID = ulocimp_getBaseName(localeID, status);
-            ulocimp_setKeywordValue("collation", collVal.toStringPiece(), tmpLocaleID, status);
-            if (U_SUCCESS(status)) {
-                return uprv_convertToLCID(langID.data(), tmpLocaleID.data(), &status);
+        CharString collVal = ulocimp_get_Keyword_قدر(localeID, "collation", حالت_2);
+        اگر (U_SUCCESS(حالت_2) && !collVal.is_خالی_خانے()) {
+            CharString tmpLocaleID = ulocimp_get_بنیاد_Name(localeID, حالت_2);
+            ulocimp_سیٹ_Keyword_قدر("collation", collVal.مقصد_String_Piece(), tmpLocaleID, حالت_2);
+            اگر (U_SUCCESS(حالت_2)) {
+                واپس uprv_convert_مقصد_LCID(langID.ڈیٹا(), tmpLocaleID.ڈیٹا(), &حالت_2);
             }
         }
 
         // fall through - all keywords are simply ignored
-        status = U_ZERO_ERROR;
+        حالت_2 = U_ZERO_ERROR;
     }
 
-    return uprv_convertToLCID(langID.data(), localeID, &status);
+    واپس uprv_convert_مقصد_LCID(langID.ڈیٹا(), localeID, &حالت_2);
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getLocaleForLCID(uint32_t hostid, char *locale, int32_t localeCapacity,
-                UErrorCode *status)
+uloc_getLocaleForLCID(uint32_t hostid, حرف *locale, int32_t locale_استعداد,
+                UError_رمز *حالت_2)
 {
-    return uprv_convertToPosix(hostid, locale, localeCapacity, status);
+    واپس uprv_convert_مقصد_Posix(hostid, locale, locale_استعداد, حالت_2);
 }
 
 /* ### Default locale **************************************************/
 
-U_CAPI const char*  U_EXPORT2
+U_CAPI ثابت حرف*  U_EXPORT2
 uloc_getDefault()
 {
-    return locale_get_default();
+    واپس locale_get_default();
 }
 
-U_CAPI void  U_EXPORT2
-uloc_setDefault(const char*   newDefaultLocale,
-             UErrorCode* err)
+U_CAPI خالی  U_EXPORT2
+uloc_سیٹ_Default(ثابت حرف*   newDefaultLocale,
+             UError_رمز* err)
 {
-    if (U_FAILURE(*err))
-        return;
+    اگر (U_FAILURE(*err))
+        واپس;
     /* the error code isn't currently used for anything by this function*/
 
     /* propagate change to C++ */
-    locale_set_default(newDefaultLocale);
+    locale_سیٹ_default(newDefaultLocale);
 }
 
 /**
@@ -2284,10 +2284,10 @@ uloc_setDefault(const char*   newDefaultLocale,
  * by ICU-- do not delete them, and do not write through them.  The array is
  * terminated with a null pointer.
  */
-U_CAPI const char* const*  U_EXPORT2
+U_CAPI ثابت حرف* ثابت*  U_EXPORT2
 uloc_getISOLanguages()
 {
-    return LANGUAGES;
+    واپس LANGUAGES;
 }
 
 /**
@@ -2296,95 +2296,95 @@ uloc_getISOLanguages()
  * owned by ICU-- do not delete them, and do not write through them.  The array is
  * terminated with a null pointer.
  */
-U_CAPI const char* const*  U_EXPORT2
+U_CAPI ثابت حرف* ثابت*  U_EXPORT2
 uloc_getISOCountries()
 {
-    return COUNTRIES;
+    واپس COUNTRIES;
 }
 
-U_CAPI const char* U_EXPORT2
-uloc_toUnicodeLocaleKey(const char* keyword U_LIFETIME_BOUND)
+U_CAPI ثابت حرف* U_EXPORT2
+uloc_مقصد_Unicode_Locale_کلید(ثابت حرف* keyword U_LIFETIME_BOUND)
 {
-    if (keyword == nullptr || *keyword == '\0') { return nullptr; }
-    std::optional<std::string_view> result = ulocimp_toBcpKeyWithFallback(keyword);
-    return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
+    اگر (keyword == خالی_اشاریہ || *keyword == '\0') { واپس خالی_اشاریہ; }
+    std::optional<std::string_view> نتیجہ = ulocimp_مقصد_Bcp_کلید_With_Fallback(keyword);
+    واپس نتیجہ.has_value() ? نتیجہ->ڈیٹا() : خالی_اشاریہ;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toBcpKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND)
+ulocimp_مقصد_Bcp_کلید_With_Fallback(std::string_view keyword U_LIFETIME_BOUND)
 {
-    std::optional<std::string_view> bcpKey = ulocimp_toBcpKey(keyword);
-    if (!bcpKey.has_value() &&
-        ultag_isUnicodeLocaleKey(keyword.data(), static_cast<int32_t>(keyword.size()))) {
+    std::optional<std::string_view> bcp_کلید = ulocimp_مقصد_Bcp_کلید(keyword);
+    اگر (!bcp_کلید.has_value() &&
+        ultag_is_Unicode_Locale_کلید(keyword.ڈیٹا(), static_cast<int32_t>(keyword.size()))) {
         // unknown keyword, but syntax is fine..
-        return keyword;
+        واپس keyword;
     }
-    return bcpKey;
+    واپس bcp_کلید;
 }
 
-U_CAPI const char* U_EXPORT2
-uloc_toUnicodeLocaleType(const char* keyword, const char* value U_LIFETIME_BOUND)
+U_CAPI ثابت حرف* U_EXPORT2
+uloc_مقصد_Unicode_Locale_Type(ثابت حرف* keyword, ثابت حرف* value U_LIFETIME_BOUND)
 {
-    if (keyword == nullptr || *keyword == '\0' ||
-        value == nullptr || *value == '\0') { return nullptr; }
-    std::optional<std::string_view> result = ulocimp_toBcpTypeWithFallback(keyword, value);
-    return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
+    اگر (keyword == خالی_اشاریہ || *keyword == '\0' ||
+        value == خالی_اشاریہ || *value == '\0') { واپس خالی_اشاریہ; }
+    std::optional<std::string_view> نتیجہ = ulocimp_مقصد_Bcp_Type_With_Fallback(keyword, value);
+    واپس نتیجہ.has_value() ? نتیجہ->ڈیٹا() : خالی_اشاریہ;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toBcpTypeWithFallback(std::string_view keyword, std::string_view value U_LIFETIME_BOUND)
+ulocimp_مقصد_Bcp_Type_With_Fallback(std::string_view keyword, std::string_view value U_LIFETIME_BOUND)
 {
-    std::optional<std::string_view> bcpType = ulocimp_toBcpType(keyword, value);
-    if (!bcpType.has_value() &&
-        ultag_isUnicodeLocaleType(value.data(), static_cast<int32_t>(value.size()))) {
+    std::optional<std::string_view> bcpType = ulocimp_مقصد_Bcp_Type(keyword, value);
+    اگر (!bcpType.has_value() &&
+        ultag_isUnicodeLocaleType(value.ڈیٹا(), static_cast<int32_t>(value.size()))) {
         // unknown keyword, but syntax is fine..
-        return value;
+        واپس value;
     }
-    return bcpType;
+    واپس bcpType;
 }
 
-namespace {
+نامخلا {
 
-bool
-isWellFormedLegacyKey(std::string_view key)
+منطقی
+is_Well_Formed_Legacy_کلید(std::string_view کلید)
 {
-    return std::all_of(key.begin(), key.end(), UPRV_ISALPHANUM);
+    واپس std::all_of(کلید.begin(), کلید.انتہا(), UPRV_ISALPHANUM);
 }
 
-bool
+منطقی
 isWellFormedLegacyType(std::string_view legacyType)
 {
-    int32_t alphaNumLen = 0;
-    for (char c : legacyType) {
-        if (c == '_' || c == '/' || c == '-') {
-            if (alphaNumLen == 0) {
-                return false;
+    int32_t alpha_عدد_Len = 0;
+    برائے (حرف c : legacyType) {
+        اگر (c == '_' || c == '/' || c == '-') {
+            اگر (alpha_عدد_Len == 0) {
+                واپس جھوٹ;
             }
-            alphaNumLen = 0;
-        } else if (UPRV_ISALPHANUM(c)) {
-            alphaNumLen++;
-        } else {
-            return false;
+            alpha_عدد_Len = 0;
+        } ورنہ اگر (UPRV_ISALPHANUM(c)) {
+            alpha_عدد_Len++;
+        } ورنہ {
+            واپس جھوٹ;
         }
     }
-    return alphaNumLen != 0;
+    واپس alpha_عدد_Len != 0;
 }
 
 }  // namespace
 
-U_CAPI const char* U_EXPORT2
-uloc_toLegacyKey(const char* keyword U_LIFETIME_BOUND)
+U_CAPI ثابت حرف* U_EXPORT2
+uloc_مقصد_Legacy_کلید(ثابت حرف* keyword U_LIFETIME_BOUND)
 {
-    if (keyword == nullptr || *keyword == '\0') { return nullptr; }
-    std::optional<std::string_view> result = ulocimp_toLegacyKeyWithFallback(keyword);
-    return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
+    اگر (keyword == خالی_اشاریہ || *keyword == '\0') { واپس خالی_اشاریہ; }
+    std::optional<std::string_view> نتیجہ = ulocimp_مقصد_Legacy_کلید_With_Fallback(keyword);
+    واپس نتیجہ.has_value() ? نتیجہ->ڈیٹا() : خالی_اشاریہ;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toLegacyKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND)
+ulocimp_مقصد_Legacy_کلید_With_Fallback(std::string_view keyword U_LIFETIME_BOUND)
 {
-    std::optional<std::string_view> legacyKey = ulocimp_toLegacyKey(keyword);
-    if (!legacyKey.has_value() && isWellFormedLegacyKey(keyword)) {
+    std::optional<std::string_view> legacy_کلید_2 = ulocimp_مقصد_Legacy_کلید(keyword);
+    اگر (!legacy_کلید_2.has_value() && is_Well_Formed_Legacy_کلید(keyword)) {
         // Checks if the specified locale key is well-formed with the legacy locale syntax.
         //
         // Note:
@@ -2392,25 +2392,25 @@ ulocimp_toLegacyKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND)
         //  * http://www.unicode.org/reports/tr35/#Unicode_locale_identifier and
         //  * http://www.unicode.org/reports/tr35/#Old_Locale_Extension_Syntax
         //  Keys can only consist of [0-9a-zA-Z].
-        return keyword;
+        واپس keyword;
     }
-    return legacyKey;
+    واپس legacy_کلید_2;
 }
 
-U_CAPI const char* U_EXPORT2
-uloc_toLegacyType(const char* keyword, const char* value U_LIFETIME_BOUND)
+U_CAPI ثابت حرف* U_EXPORT2
+uloc_مقصد_Legacy_Type(ثابت حرف* keyword, ثابت حرف* value U_LIFETIME_BOUND)
 {
-    if (keyword == nullptr || *keyword == '\0' ||
-        value == nullptr || *value == '\0') { return nullptr; }
-    std::optional<std::string_view> result = ulocimp_toLegacyTypeWithFallback(keyword, value);
-    return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
+    اگر (keyword == خالی_اشاریہ || *keyword == '\0' ||
+        value == خالی_اشاریہ || *value == '\0') { واپس خالی_اشاریہ; }
+    std::optional<std::string_view> نتیجہ = ulocimp_مقصد_Legacy_Type_With_Fallback(keyword, value);
+    واپس نتیجہ.has_value() ? نتیجہ->ڈیٹا() : خالی_اشاریہ;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toLegacyTypeWithFallback(std::string_view keyword, std::string_view value U_LIFETIME_BOUND)
+ulocimp_مقصد_Legacy_Type_With_Fallback(std::string_view keyword, std::string_view value U_LIFETIME_BOUND)
 {
-    std::optional<std::string_view> legacyType = ulocimp_toLegacyType(keyword, value);
-    if (!legacyType.has_value() && isWellFormedLegacyType(value)) {
+    std::optional<std::string_view> legacyType = ulocimp_مقصد_Legacy_Type(keyword, value);
+    اگر (!legacyType.has_value() && isWellFormedLegacyType(value)) {
         // Checks if the specified locale type is well-formed with the legacy locale syntax.
         //
         // Note:
@@ -2419,9 +2419,9 @@ ulocimp_toLegacyTypeWithFallback(std::string_view keyword, std::string_view valu
         //  * http://www.unicode.org/reports/tr35/#Old_Locale_Extension_Syntax
         //  Values (types) can only consist of [0-9a-zA-Z], plus for legacy values
         //  we allow [/_-+] in the middle (e.g. "Etc/GMT+1", "Asia/Tel_Aviv")
-        return value;
+        واپس value;
     }
-    return legacyType;
+    واپس legacyType;
 }
 
 /*eof*/

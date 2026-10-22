@@ -14,13 +14,13 @@
 *
 ******************************************************************************
 */
-#ifndef U_ASSERT_H
-#define U_ASSERT_H
+#اگر_غیر_تعریف_شدہ U_ASSERT_H
+#تعریف_کرو U_ASSERT_H
 
 /* utypes.h is included to get the proper define for uint8_t */
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 /* for abort */
-#include <stdlib.h>
+#شامل <stdlib.h>
 
 /**
  * \def U_ASSERT
@@ -28,14 +28,14 @@
  * By changing the definition here, the assert behavior for ICU can be changed
  * without affecting other non - ICU uses of the C library assert().
 */
-#if U_DEBUG
+#اگر U_DEBUG
 #   include <assert.h>
-#   define U_ASSERT(exp) assert(exp)
-#elif U_CPLUSPLUS_VERSION
-#   define U_ASSERT(exp) (void)0
-#else
-#   define U_ASSERT(exp)
-#endif
+#   define U_ASSERT(قوت_نما) أكد(قوت_نما)
+#وگرنہ_اگر U_CPLUSPLUS_نسخہ
+#   define U_ASSERT(قوت_نما) (خالی)0
+#ورنہ
+#   define U_ASSERT(قوت_نما)
+#اگر_ختم
 
 /**
  * \def UPRV_UNREACHABLE_ASSERT
@@ -46,26 +46,26 @@
  * with UPRV_UNREACHABLE_EXIT.
  * @internal
 */
-#if defined(UPRV_UNREACHABLE_ASSERT)
+#اگر defined(UPRV_UNREACHABLE_ASSERT)
     // Use the predefined value.
-#elif U_DEBUG
+#وگرنہ_اگر U_DEBUG
 #   include <assert.h>
-#   define UPRV_UNREACHABLE_ASSERT assert(false)
-#elif U_CPLUSPLUS_VERSION
-#   define UPRV_UNREACHABLE_ASSERT (void)0
-#else
+#   define UPRV_UNREACHABLE_ASSERT أكد(false)
+#وگرنہ_اگر U_CPLUSPLUS_نسخہ
+#   define UPRV_UNREACHABLE_ASSERT (خالی)0
+#ورنہ
 #   define UPRV_UNREACHABLE_ASSERT
-#endif
+#اگر_ختم
 
 /**
  * \def UPRV_UNREACHABLE_EXIT
  * This macro is used to unconditionally abort if unreachable code is ever executed.
  * @internal
 */
-#if defined(UPRV_UNREACHABLE_EXIT)
+#اگر defined(UPRV_UNREACHABLE_EXIT)
     // Use the predefined value.
-#else
+#ورنہ
 #   define UPRV_UNREACHABLE_EXIT abort()
-#endif
+#اگر_ختم
 
-#endif
+#اگر_ختم

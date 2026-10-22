@@ -11,14 +11,14 @@
 **********************************************************************
 */
 
-#ifndef UVECTOR_H
-#define UVECTOR_H
+#اگر_غیر_تعریف_شدہ UVECTOR_H
+#تعریف_کرو UVECTOR_H
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "cmemory.h"
-#include "uarrsort.h"
-#include "uelement.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/uobject.h"
+#شامل "cmemory.h"
+#شامل "uarrsort.h"
+#شامل "uelement.h"
 
 U_NAMESPACE_BEGIN
 
@@ -73,16 +73,16 @@ U_NAMESPACE_BEGIN
  *
  * @author Alan Liu
  */
-class U_COMMON_API UVector : public UObject {
+class U_COMMON_API UVector : عوامی UObject {
     // NOTE: UVector uses the UElement (union of void* and int32_t) as
     // its basic storage type.  It uses UElementsAreEqual as its
     // comparison function.  It uses UObjectDeleter as its deleter
     // function.  This allows sharing of support functions with UHashtable.
 
-private:
-    int32_t count = 0;
+نجی:
+    int32_t گنتی = 0;
 
-    int32_t capacity = 0;
+    int32_t استعداد = 0;
 
     UElement* elements = nullptr;
 
@@ -90,34 +90,34 @@ private:
 
     UElementsAreEqual *comparer = nullptr;
 
-public:
-    UVector(UErrorCode &status);
+عوامی:
+    UVector(UError_رمز &حالت_2);
 
-    UVector(int32_t initialCapacity, UErrorCode &status);
+    UVector(int32_t initial_استعداد, UError_رمز &حالت_2);
 
-    UVector(UObjectDeleter *d, UElementsAreEqual *c, UErrorCode &status);
+    UVector(UObjectDeleter *d, UElementsAreEqual *c, UError_رمز &حالت_2);
 
-    UVector(UObjectDeleter *d, UElementsAreEqual *c, int32_t initialCapacity, UErrorCode &status);
+    UVector(UObjectDeleter *d, UElementsAreEqual *c, int32_t initial_استعداد, UError_رمز &حالت_2);
 
-    virtual ~UVector();
+    مجازی ~UVector();
 
     /**
      * Assign this object to another (make this a copy of 'other').
      * Use the 'assign' function to assign each element.
      */
-    void assign(const UVector& other, UElementAssigner *assign, UErrorCode &ec);
+    خالی تفویض(ثابت UVector& other, UElementAssigner *تفویض, UError_رمز &ec);
 
     /**
      * Compare this vector with another.  They will be considered
      * equal if they are of the same size and all elements are equal,
      * as compared using this object's comparer.
      */
-    bool operator==(const UVector& other) const;
+    bool عامل==(ثابت UVector& other) ثابت;
 
     /**
      * Equivalent to !operator==()
      */
-    inline bool operator!=(const UVector& other) const {return !operator==(other);}
+    اندرونی bool عامل!=(ثابت UVector& other) ثابت {واپس !عامل==(other);}
 
     //------------------------------------------------------------
     // java.util.Vector API
@@ -128,7 +128,7 @@ public:
      * For use only with vectors that do not adopt their elements, which is to say,
      * have not set an element deleter function. See `adoptElement()`.
      */
-    void addElement(void *obj, UErrorCode &status);
+    خالی جوڑو_Element(خالی *obj, UError_رمز &حالت_2);
 
     /**
      * Add an element at the end of the vector.
@@ -143,55 +143,55 @@ public:
      * to see what the function is doing at call sites. Having a single combined function,
      * as in earlier versions of UVector, had proved to be error-prone.
      */
-    void adoptElement(void *obj, UErrorCode &status);
+    خالی adoptElement(خالی *obj, UError_رمز &حالت_2);
 
-    void addElement(int32_t elem, UErrorCode &status);
+    خالی جوڑو_Element(int32_t elem, UError_رمز &حالت_2);
 
-    void setElementAt(void* obj, int32_t index);
+    خالی سیٹ_Element_At(خالی* obj, int32_t اشاریہ);
 
-    void setElementAt(int32_t elem, int32_t index);
+    خالی سیٹ_Element_At(int32_t elem, int32_t اشاریہ);
 
-    void insertElementAt(void* obj, int32_t index, UErrorCode &status);
+    خالی داخل_کرو_Element_At(خالی* obj, int32_t اشاریہ, UError_رمز &حالت_2);
 
-    void insertElementAt(int32_t elem, int32_t index, UErrorCode &status);
+    خالی داخل_کرو_Element_At(int32_t elem, int32_t اشاریہ, UError_رمز &حالت_2);
     
-    void* elementAt(int32_t index) const;
+    خالی* elementAt(int32_t اشاریہ) ثابت;
 
-    int32_t elementAti(int32_t index) const;
+    int32_t elementAti(int32_t اشاریہ) ثابت;
 
-    UBool equals(const UVector &other) const;
+    UBool equals(ثابت UVector &other) ثابت;
 
-    inline void* firstElement() const {return elementAt(0);}
+    اندرونی خالی* پہلا_Element() ثابت {واپس elementAt(0);}
 
-    inline void* lastElement() const {return elementAt(count-1);}
+    اندرونی خالی* آخری_Element() ثابت {واپس elementAt(گنتی-1);}
 
-    inline int32_t lastElementi() const {return elementAti(count-1);}
+    اندرونی int32_t آخری_Elementi() ثابت {واپس elementAti(گنتی-1);}
 
-    int32_t indexOf(void* obj, int32_t startIndex = 0) const;
+    int32_t اشاریہ_کا(خالی* obj, int32_t آغاز_اشاریہ = 0) ثابت;
 
-    int32_t indexOf(int32_t obj, int32_t startIndex = 0) const;
+    int32_t اشاریہ_کا(int32_t obj, int32_t آغاز_اشاریہ = 0) ثابت;
 
-    inline UBool contains(void* obj) const {return indexOf(obj) >= 0;}
+    اندرونی UBool شامل_ہے(خالی* obj) ثابت {واپس اشاریہ_کا(obj) >= 0;}
 
-    inline UBool contains(int32_t obj) const {return indexOf(obj) >= 0;}
+    اندرونی UBool شامل_ہے(int32_t obj) ثابت {واپس اشاریہ_کا(obj) >= 0;}
 
-    UBool containsAll(const UVector& other) const;
+    UBool شامل_ہے_All(ثابت UVector& other) ثابت;
 
-    UBool removeAll(const UVector& other);
+    UBool removeAll(ثابت UVector& other);
 
-    UBool retainAll(const UVector& other);
+    UBool retainAll(ثابت UVector& other);
 
-    void removeElementAt(int32_t index);
+    خالی removeElementAt(int32_t اشاریہ);
 
-    UBool removeElement(void* obj);
+    UBool removeElement(خالی* obj);
 
-    void removeAllElements();
+    خالی removeAllElements();
 
-    inline int32_t size() const {return count;}
+    اندرونی int32_t سائز_2() ثابت {واپس گنتی;}
 
-    inline UBool isEmpty() const {return count == 0;}
+    اندرونی UBool is_خالی_خانے() ثابت {واپس گنتی == 0;}
 
-    UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
+    UBool ensure_استعداد(int32_t minimum_استعداد, UError_رمز &حالت_2);
 
     /**
      * Change the size of this vector as follows: If newSize is
@@ -199,23 +199,23 @@ public:
      * elements for i >= newSize.  If newSize is larger, grow the
      * array, filling in new slots with nullptr.
      */
-    void setSize(int32_t newSize, UErrorCode &status);
+    خالی سیٹ_سائز(int32_t new_سائز, UError_رمز &حالت_2);
 
     /**
      * Fill in the given array with all elements of this vector.
      */
-    void** toArray(void** result) const;
+    خالی** مقصد_Array(خالی** نتیجہ) ثابت;
 
     //------------------------------------------------------------
     // New API
     //------------------------------------------------------------
 
-    UObjectDeleter *setDeleter(UObjectDeleter *d);
-    bool hasDeleter() {return deleter != nullptr;}
+    UObjectDeleter *سیٹ_Deleter(UObjectDeleter *d);
+    bool hasDeleter() {واپس deleter != nullptr;}
 
-    UElementsAreEqual *setComparer(UElementsAreEqual *c);
+    UElementsAreEqual *سیٹ_Comparer(UElementsAreEqual *c);
 
-    inline void* operator[](int32_t index) const {return elementAt(index);}
+    اندرونی خالی* عامل[](int32_t اشاریہ) ثابت {واپس elementAt(اشاریہ);}
 
     /**
      * Removes the element at the given index from this vector and
@@ -226,7 +226,7 @@ public:
      * index is out of range or if there is no item at the given index
      * then 0 is returned and the vector is unchanged.
      */
-    void* orphanElementAt(int32_t index);
+    خالی* orphanElementAt(int32_t اشاریہ);
 
     /**
      * Returns true if this vector contains none of the elements
@@ -234,27 +234,27 @@ public:
      * @param other vector to be checked for containment
      * @return true if the test condition is met
      */
-    UBool containsNone(const UVector& other) const;
+    UBool شامل_ہے_None(ثابت UVector& other) ثابت;
 
     /**
      * Insert the given object into this vector at its sorted position
      * as defined by 'compare'.  The current elements are assumed to
      * be sorted already.
      */
-    void sortedInsert(void* obj, UElementComparator *compare, UErrorCode& ec);
+    خالی sorted_داخل_کرو(خالی* obj, UElementComparator *compare, UError_رمز& ec);
 
     /**
      * Insert the given integer into this vector at its sorted position
      * as defined by 'compare'.  The current elements are assumed to
      * be sorted already.
      */
-    void sortedInsert(int32_t obj, UElementComparator *compare, UErrorCode& ec);
+    خالی sorted_داخل_کرو(int32_t obj, UElementComparator *compare, UError_رمز& ec);
 
     /**
      * Sort the contents of the vector, assuming that the contents of the
      * vector are of type int32_t.
      */
-    void sorti(UErrorCode &ec);
+    خالی sorti(UError_رمز &ec);
 
     /**
       * Sort the contents of this vector, using a caller-supplied function
@@ -262,7 +262,7 @@ public:
       *  UVector's UElementComparator function is different from the
       *  UComparator function type defined in uarrsort.h)
       */
-    void sort(UElementComparator *compare, UErrorCode &ec);
+    خالی ترتیب_دو(UElementComparator *compare, UError_رمز &ec);
 
     /**
      * Stable sort the contents of this vector using a caller-supplied function
@@ -270,29 +270,29 @@ public:
      * than UVector::sort() because an additional user parameter can be passed to
      * the comparison function.
      */
-    void sortWithUComparator(UComparator *compare, const void *context, UErrorCode &ec);
+    خالی ترتیب_دو_With_UComparator(UComparator *compare, ثابت خالی *context, UError_رمز &ec);
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ساکن UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      */
-    virtual UClassID getDynamicClassID() const override;
+    مجازی UClassID getDynamicClassID() ثابت override;
 
-private:
-    int32_t indexOf(UElement key, int32_t startIndex = 0, int8_t hint = 0) const;
+نجی:
+    int32_t اشاریہ_کا(UElement کلید, int32_t آغاز_اشاریہ = 0, int8_t hint = 0) ثابت;
 
-    void sortedInsert(UElement e, UElementComparator *compare, UErrorCode& ec);
+    خالی sorted_داخل_کرو(UElement e, UElementComparator *compare, UError_رمز& ec);
 
-public:
+عوامی:
     // Disallow
-    UVector(const UVector&) = delete;
+    UVector(ثابت UVector&) = delete;
 
     // Disallow
-    UVector& operator=(const UVector&) = delete;
+    UVector& عامل=(ثابت UVector&) = delete;
 
 };
 
@@ -313,74 +313,74 @@ public:
  *
  * @author Alan Liu
  */
-class U_COMMON_API UStack : public UVector {
-public:
-    UStack(UErrorCode &status);
+class U_COMMON_API UStack : عوامی UVector {
+عوامی:
+    UStack(UError_رمز &حالت_2);
 
-    UStack(int32_t initialCapacity, UErrorCode &status);
+    UStack(int32_t initial_استعداد, UError_رمز &حالت_2);
 
-    UStack(UObjectDeleter *d, UElementsAreEqual *c, UErrorCode &status);
+    UStack(UObjectDeleter *d, UElementsAreEqual *c, UError_رمز &حالت_2);
 
-    UStack(UObjectDeleter *d, UElementsAreEqual *c, int32_t initialCapacity, UErrorCode &status);
+    UStack(UObjectDeleter *d, UElementsAreEqual *c, int32_t initial_استعداد, UError_رمز &حالت_2);
 
-    virtual ~UStack();
+    مجازی ~UStack();
 
     // It's okay not to have a virtual destructor (in UVector)
     // because UStack has no special cleanup to do.
 
-    inline UBool empty() const {return isEmpty();}
+    اندرونی UBool خالی_خانے() ثابت {واپس is_خالی_خانے();}
 
-    inline void* peek() const {return lastElement();}
+    اندرونی خالی* peek() ثابت {واپس آخری_Element();}
 
-    inline int32_t peeki() const {return lastElementi();}
+    اندرونی int32_t peeki() ثابت {واپس آخری_Elementi();}
     
     /**
      * Pop and return an element from the stack.
      * For stacks with a deleter function, the caller takes ownership
      * of the popped element.
      */
-    void* pop();
+    خالی* نکالو_2();
     
     int32_t popi();
     
-    inline void* push(void* obj, UErrorCode &status) {
-        if (hasDeleter()) {
-            adoptElement(obj, status);
-            return (U_SUCCESS(status)) ? obj : nullptr;
-        } else {
-            addElement(obj, status);
-            return obj;
+    اندرونی خالی* ڈالو(خالی* obj, UError_رمز &حالت_2) {
+        اگر (hasDeleter()) {
+            adoptElement(obj, حالت_2);
+            واپس (U_SUCCESS(حالت_2)) ? obj : nullptr;
+        } ورنہ {
+            جوڑو_Element(obj, حالت_2);
+            واپس obj;
         }
     }
 
-    inline int32_t push(int32_t i, UErrorCode &status) {
-        addElement(i, status);
-        return i;
+    اندرونی int32_t ڈالو(int32_t i, UError_رمز &حالت_2) {
+        جوڑو_Element(i, حالت_2);
+        واپس i;
     }
 
     /*
     If the object o occurs as an item in this stack,
     this method returns the 1-based distance from the top of the stack.
     */
-    int32_t search(void* obj) const;
+    int32_t تلاش(خالی* obj) ثابت;
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ساکن UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      */
-    virtual UClassID getDynamicClassID() const override;
+    مجازی UClassID getDynamicClassID() ثابت override;
 
     // Disallow
-    UStack(const UStack&) = delete;
+    UStack(ثابت UStack&) = delete;
 
     // Disallow
-    UStack& operator=(const UStack&) = delete;
+    UStack& عامل=(ثابت UStack&) = delete;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا
 
-#endif
+#اگر_ختم

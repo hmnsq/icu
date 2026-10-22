@@ -26,216 +26,216 @@
  * stores all encodings a codepoint can map to
  */
 
-#include "unicode/ucnvsel.h"
+#شامل "unicode/ucnvsel.h"
 
-#if !UCONFIG_NO_CONVERSION
+#اگر !UCONFIG_NO_CONVERSION
 
-#include <string.h>
+#شامل <string.h>
 
-#include "unicode/uchar.h"
-#include "unicode/uniset.h"
-#include "unicode/ucnv.h"
-#include "unicode/ustring.h"
-#include "unicode/uchriter.h"
-#include "utrie2.h"
-#include "propsvec.h"
-#include "uassert.h"
-#include "ucmndata.h"
-#include "udataswp.h"
-#include "uenumimp.h"
-#include "cmemory.h"
-#include "cstring.h"
+#شامل "unicode/uchar.h"
+#شامل "unicode/uniset.h"
+#شامل "unicode/ucnv.h"
+#شامل "unicode/ustring.h"
+#شامل "unicode/uchriter.h"
+#شامل "utrie2.h"
+#شامل "propsvec.h"
+#شامل "uassert.h"
+#شامل "ucmndata.h"
+#شامل "udataswp.h"
+#شامل "uenumimp.h"
+#شامل "cmemory.h"
+#شامل "cstring.h"
 
 U_NAMESPACE_USE
 
-struct UConverterSelector {
+ساخت UConverterSelector {
   UTrie2 *trie;              // 16 bit trie containing offsets into pv
   uint32_t* pv;              // table of bits!
-  int32_t pvCount;
-  char** encodings;          // which encodings did user ask to use?
-  int32_t encodingsCount;
-  int32_t encodingStrLength;
+  int32_t pv_گنتی;
+  حرف** encodings;          // which encodings did user ask to use?
+  int32_t encodings_گنتی;
+  int32_t encoding_Str_لمبائی;
   uint8_t* swapped;
-  UBool ownPv, ownEncodingStrings;
+  UBool ownPv, own_Encoding_لڑیاں;
 };
 
-static void generateSelectorData(UConverterSelector* result,
+ساکن خالی generate_Selector_ڈیٹا(UConverterSelector* نتیجہ,
                                  UPropsVectors *upvec,
-                                 const USet* excludedCodePoints,
-                                 const UConverterUnicodeSet whichSet,
-                                 UErrorCode* status) {
-  if (U_FAILURE(*status)) {
-    return;
+                                 ثابت USet* excluded_رمز_Points,
+                                 ثابت UConverter_Unicode_سیٹ which_سیٹ,
+                                 UError_رمز* حالت_2) {
+  اگر (U_FAILURE(*حالت_2)) {
+    واپس;
   }
 
-  int32_t columns = (result->encodingsCount+31)/32;
+  int32_t columns = (نتیجہ->encodings_گنتی+31)/32;
 
   // set errorValue to all-ones
-  for (int32_t col = 0; col < columns; col++) {
-    upvec_setValue(upvec, UPVEC_ERROR_VALUE_CP, UPVEC_ERROR_VALUE_CP,
-                   col, static_cast<uint32_t>(~0), static_cast<uint32_t>(~0), status);
+  برائے (int32_t ستون = 0; ستون < columns; ستون++) {
+    upvec_سیٹ_قدر(upvec, UPVEC_ERROR_قدر_CP, UPVEC_ERROR_قدر_CP,
+                   ستون, static_cast<uint32_t>(~0), static_cast<uint32_t>(~0), حالت_2);
   }
 
-  for (int32_t i = 0; i < result->encodingsCount; ++i) {
+  برائے (int32_t i = 0; i < نتیجہ->encodings_گنتی; ++i) {
     uint32_t mask;
-    uint32_t column;
-    int32_t item_count;
+    uint32_t عمود;
+    int32_t شے_گنتی;
     int32_t j;
-    UConverter* test_converter = ucnv_open(result->encodings[i], status);
-    if (U_FAILURE(*status)) {
-      return;
+    UConverter* test_converter = ucnv_open(نتیجہ->encodings[i], حالت_2);
+    اگر (U_FAILURE(*حالت_2)) {
+      واپس;
     }
-    USet* unicode_point_set;
-    unicode_point_set = uset_open(1, 0);  // empty set
+    USet* unicode_نقطہ_سیٹ;
+    unicode_نقطہ_سیٹ = uset_open(1, 0);  // empty set
 
-    ucnv_getUnicodeSet(test_converter, unicode_point_set,
-                       whichSet, status);
-    if (U_FAILURE(*status)) {
+    ucnv_get_Unicode_سیٹ(test_converter, unicode_نقطہ_سیٹ,
+                       which_سیٹ, حالت_2);
+    اگر (U_FAILURE(*حالت_2)) {
       ucnv_close(test_converter);
-      return;
+      واپس;
     }
 
-    column = i / 32;
+    عمود = i / 32;
     mask = 1 << (i%32);
     // now iterate over intervals on set i!
-    item_count = uset_getItemCount(unicode_point_set);
+    شے_گنتی = uset_get_شے_گنتی(unicode_نقطہ_سیٹ);
 
-    for (j = 0; j < item_count; ++j) {
-      UChar32 start_char;
-      UChar32 end_char;
-      UErrorCode smallStatus = U_ZERO_ERROR;
-      uset_getItem(unicode_point_set, j, &start_char, &end_char, nullptr, 0,
-                   &smallStatus);
-      if (U_FAILURE(smallStatus)) {
+    برائے (j = 0; j < شے_گنتی; ++j) {
+      UChar32 آغاز_char;
+      UChar32 انتہا_char;
+      UError_رمز small_حالت = U_ZERO_ERROR;
+      uset_get_شے(unicode_نقطہ_سیٹ, j, &آغاز_char, &انتہا_char, خالی_اشاریہ, 0,
+                   &small_حالت);
+      اگر (U_FAILURE(small_حالت)) {
         // this will be reached for the converters that fill the set with
         // strings. Those should be ignored by our system
-      } else {
-        upvec_setValue(upvec, start_char, end_char, column, static_cast<uint32_t>(~0), mask,
-                       status);
+      } ورنہ {
+        upvec_سیٹ_قدر(upvec, آغاز_char, انتہا_char, عمود, static_cast<uint32_t>(~0), mask,
+                       حالت_2);
       }
     }
     ucnv_close(test_converter);
-    uset_close(unicode_point_set);
-    if (U_FAILURE(*status)) {
-      return;
+    uset_close(unicode_نقطہ_سیٹ);
+    اگر (U_FAILURE(*حالت_2)) {
+      واپس;
     }
   }
 
   // handle excluded encodings! Simply set their values to all 1's in the upvec
-  if (excludedCodePoints) {
-    int32_t item_count = uset_getItemCount(excludedCodePoints);
-    for (int32_t j = 0; j < item_count; ++j) {
-      UChar32 start_char;
-      UChar32 end_char;
+  اگر (excluded_رمز_Points) {
+    int32_t شے_گنتی = uset_get_شے_گنتی(excluded_رمز_Points);
+    برائے (int32_t j = 0; j < شے_گنتی; ++j) {
+      UChar32 آغاز_char;
+      UChar32 انتہا_char;
 
-      uset_getItem(excludedCodePoints, j, &start_char, &end_char, nullptr, 0,
-                   status);
-      for (int32_t col = 0; col < columns; col++) {
-        upvec_setValue(upvec, start_char, end_char, col, static_cast<uint32_t>(~0), static_cast<uint32_t>(~0),
-                      status);
+      uset_get_شے(excluded_رمز_Points, j, &آغاز_char, &انتہا_char, خالی_اشاریہ, 0,
+                   حالت_2);
+      برائے (int32_t ستون = 0; ستون < columns; ستون++) {
+        upvec_سیٹ_قدر(upvec, آغاز_char, انتہا_char, ستون, static_cast<uint32_t>(~0), static_cast<uint32_t>(~0),
+                      حالت_2);
       }
     }
   }
 
   // alright. Now, let's put things in the same exact form you'd get when you
   // unserialize things.
-  result->trie = upvec_compactToUTrie2WithRowIndexes(upvec, status);
-  result->pv = upvec_cloneArray(upvec, &result->pvCount, nullptr, status);
-  result->pvCount *= columns;  // number of uint32_t = rows * columns
-  result->ownPv = true;
+  نتیجہ->trie = upvec_compact_مقصد_UTrie2_With_صف_Indexes(upvec, حالت_2);
+  نتیجہ->pv = upvec_cloneArray(upvec, &نتیجہ->pv_گنتی, خالی_اشاریہ, حالت_2);
+  نتیجہ->pv_گنتی *= columns;  // number of uint32_t = rows * columns
+  نتیجہ->ownPv = سچ;
 }
 
 /* open a selector. If converterListSize is 0, build for all converters.
    If excludedCodePoints is nullptr, don't exclude any codepoints */
 U_CAPI UConverterSelector* U_EXPORT2
-ucnvsel_open(const char* const*  converterList, int32_t converterListSize,
-             const USet* excludedCodePoints,
-             const UConverterUnicodeSet whichSet, UErrorCode* status) {
+ucnvsel_open(ثابت حرف* ثابت*  converterList, int32_t converter_List_سائز,
+             ثابت USet* excluded_رمز_Points,
+             ثابت UConverter_Unicode_سیٹ which_سیٹ, UError_رمز* حالت_2) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  اگر (U_FAILURE(*حالت_2)) {
+    واپس خالی_اشاریہ;
   }
   // ensure args make sense!
-  if (converterListSize < 0 || (converterList == nullptr && converterListSize != 0)) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+  اگر (converter_List_سائز < 0 || (converterList == خالی_اشاریہ && converter_List_سائز != 0)) {
+    *حالت_2 = U_ILLEGAL_دلیل_ERROR;
+    واپس خالی_اشاریہ;
   }
 
   // allocate a new converter
-  LocalUConverterSelectorPointer newSelector(
-    (UConverterSelector*)uprv_malloc(sizeof(UConverterSelector)));
-  if (newSelector.isNull()) {
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+  Local_UConverter_Selector_اشارہ_گر newSelector(
+    (UConverterSelector*)uprv_malloc(حجم(UConverterSelector)));
+  اگر (newSelector.isNull()) {
+    *حالت_2 = U_حافظہ_تخصیص_ERROR;
+    واپس خالی_اشاریہ;
   }
-  uprv_memset(newSelector.getAlias(), 0, sizeof(UConverterSelector));
+  uprv_memset(newSelector.getAlias(), 0, حجم(UConverterSelector));
 
-  if (converterListSize == 0) {
-    converterList = nullptr;
-    converterListSize = ucnv_countAvailable();
+  اگر (converter_List_سائز == 0) {
+    converterList = خالی_اشاریہ;
+    converter_List_سائز = ucnv_گنتی_دستیاب();
   }
   newSelector->encodings =
-    (char**)uprv_malloc(converterListSize * sizeof(char*));
-  if (!newSelector->encodings) {
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    (حرف**)uprv_malloc(converter_List_سائز * حجم(حرف*));
+  اگر (!newSelector->encodings) {
+    *حالت_2 = U_حافظہ_تخصیص_ERROR;
+    واپس خالی_اشاریہ;
   }
-  newSelector->encodings[0] = nullptr;  // now we can call ucnvsel_close()
+  newSelector->encodings[0] = خالی_اشاریہ;  // now we can call ucnvsel_close()
 
   // make a backup copy of the list of converters
-  int32_t totalSize = 0;
+  int32_t کل_سائز = 0;
   int32_t i;
-  for (i = 0; i < converterListSize; i++) {
-    totalSize +=
-      (int32_t)uprv_strlen(converterList != nullptr ? converterList[i] : ucnv_getAvailableName(i)) + 1;
+  برائے (i = 0; i < converter_List_سائز; i++) {
+    کل_سائز +=
+      (int32_t)uprv_strlen(converterList != خالی_اشاریہ ? converterList[i] : ucnv_get_دستیاب_Name(i)) + 1;
   }
   // 4-align the totalSize to 4-align the size of the serialized form
-  int32_t encodingStrPadding = totalSize & 3;
-  if (encodingStrPadding != 0) {
+  int32_t encodingStrPadding = کل_سائز & 3;
+  اگر (encodingStrPadding != 0) {
     encodingStrPadding = 4 - encodingStrPadding;
   }
-  newSelector->encodingStrLength = totalSize += encodingStrPadding;
-  char* allStrings = (char*) uprv_malloc(totalSize);
-  if (!allStrings) {
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+  newSelector->encoding_Str_لمبائی = کل_سائز += encodingStrPadding;
+  حرف* all_لڑیاں = (حرف*) uprv_malloc(کل_سائز);
+  اگر (!all_لڑیاں) {
+    *حالت_2 = U_حافظہ_تخصیص_ERROR;
+    واپس خالی_اشاریہ;
   }
 
-  for (i = 0; i < converterListSize; i++) {
-    newSelector->encodings[i] = allStrings;
+  برائے (i = 0; i < converter_List_سائز; i++) {
+    newSelector->encodings[i] = all_لڑیاں;
     uprv_strcpy(newSelector->encodings[i],
-                converterList != nullptr ? converterList[i] : ucnv_getAvailableName(i));
-    allStrings += uprv_strlen(newSelector->encodings[i]) + 1;
+                converterList != خالی_اشاریہ ? converterList[i] : ucnv_get_دستیاب_Name(i));
+    all_لڑیاں += uprv_strlen(newSelector->encodings[i]) + 1;
   }
-  while (encodingStrPadding > 0) {
-    *allStrings++ = 0;
+  جب (encodingStrPadding > 0) {
+    *all_لڑیاں++ = 0;
     --encodingStrPadding;
   }
 
-  newSelector->ownEncodingStrings = true;
-  newSelector->encodingsCount = converterListSize;
-  UPropsVectors *upvec = upvec_open((converterListSize+31)/32, status);
-  generateSelectorData(newSelector.getAlias(), upvec, excludedCodePoints, whichSet, status);
+  newSelector->own_Encoding_لڑیاں = سچ;
+  newSelector->encodings_گنتی = converter_List_سائز;
+  UPropsVectors *upvec = upvec_open((converter_List_سائز+31)/32, حالت_2);
+  generate_Selector_ڈیٹا(newSelector.getAlias(), upvec, excluded_رمز_Points, which_سیٹ, حالت_2);
   upvec_close(upvec);
 
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  اگر (U_FAILURE(*حالت_2)) {
+    واپس خالی_اشاریہ;
   }
 
-  return newSelector.orphan();
+  واپس newSelector.orphan();
 }
 
 /* close opened selector */
-U_CAPI void U_EXPORT2
+U_CAPI خالی U_EXPORT2
 ucnvsel_close(UConverterSelector *sel) {
-  if (!sel) {
-    return;
+  اگر (!sel) {
+    واپس;
   }
-  if (sel->ownEncodingStrings) {
+  اگر (sel->own_Encoding_لڑیاں) {
     uprv_free(sel->encodings[0]);
   }
   uprv_free(sel->encodings);
-  if (sel->ownPv) {
+  اگر (sel->ownPv) {
     uprv_free(sel->pv);
   }
   utrie2_close(sel->trie);
@@ -243,8 +243,8 @@ ucnvsel_close(UConverterSelector *sel) {
   uprv_free(sel);
 }
 
-static const UDataInfo dataInfo = {
-  sizeof(UDataInfo),
+ساکن ثابت UDataInfo ڈیٹا_Info = {
+  حجم(UDataInfo),
   0,
 
   U_IS_BIG_ENDIAN,
@@ -257,13 +257,13 @@ static const UDataInfo dataInfo = {
   { 0, 0, 0, 0 }                /* dataVersion */
 };
 
-enum {
-  UCNVSEL_INDEX_TRIE_SIZE,      // trie size in bytes
-  UCNVSEL_INDEX_PV_COUNT,       // number of uint32_t in the bit vectors
-  UCNVSEL_INDEX_NAMES_COUNT,    // number of encoding names
-  UCNVSEL_INDEX_NAMES_LENGTH,   // number of encoding name bytes including padding
-  UCNVSEL_INDEX_SIZE = 15,      // bytes following the DataHeader
-  UCNVSEL_INDEX_COUNT = 16
+شمار {
+  UCNVSEL_اشاریہ_TRIE_سائز,      // trie size in bytes
+  UCNVSEL_اشاریہ_PV_گنتی,       // number of uint32_t in the bit vectors
+  UCNVSEL_اشاریہ_نام_گنتی,    // number of encoding names
+  UCNVSEL_اشاریہ_نام_لمبائی,   // number of encoding name bytes including padding
+  UCNVSEL_اشاریہ_سائز = 15,      // bytes following the DataHeader
+  UCNVSEL_اشاریہ_گنتی = 16
 };
 
 /*
@@ -280,73 +280,73 @@ enum {
 
 /* serialize a selector */
 U_CAPI int32_t U_EXPORT2
-ucnvsel_serialize(const UConverterSelector* sel,
-                  void* buffer, int32_t bufferCapacity, UErrorCode* status) {
+ucnvsel_serialize(ثابت UConverterSelector* sel,
+                  خالی* بفر, int32_t بفر_استعداد, UError_رمز* حالت_2) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return 0;
+  اگر (U_FAILURE(*حالت_2)) {
+    واپس 0;
   }
   // ensure args make sense!
-  uint8_t *p = (uint8_t *)buffer;
-  if (bufferCapacity < 0 ||
-      (bufferCapacity > 0 && (p == nullptr || (U_POINTER_MASK_LSB(p, 3) != 0)))
+  uint8_t *p = (uint8_t *)بفر;
+  اگر (بفر_استعداد < 0 ||
+      (بفر_استعداد > 0 && (p == خالی_اشاریہ || (U_اشارہ_گر_نقاب_LSB(p, 3) != 0)))
   ) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+    *حالت_2 = U_ILLEGAL_دلیل_ERROR;
+    واپس 0;
   }
   // add up the size of the serialized form
-  int32_t serializedTrieSize = utrie2_serialize(sel->trie, nullptr, 0, status);
-  if (*status != U_BUFFER_OVERFLOW_ERROR && U_FAILURE(*status)) {
-    return 0;
+  int32_t serialized_Trie_سائز = utrie2_serialize(sel->trie, خالی_اشاریہ, 0, حالت_2);
+  اگر (*حالت_2 != U_بفر_حد_سے_تجاوز_ERROR && U_FAILURE(*حالت_2)) {
+    واپس 0;
   }
-  *status = U_ZERO_ERROR;
+  *حالت_2 = U_ZERO_ERROR;
 
-  DataHeader header;
-  uprv_memset(&header, 0, sizeof(header));
-  header.dataHeader.headerSize = (uint16_t)((sizeof(header) + 15) & ~15);
-  header.dataHeader.magic1 = 0xda;
-  header.dataHeader.magic2 = 0x27;
-  uprv_memcpy(&header.info, &dataInfo, sizeof(dataInfo));
+  ڈیٹا_سرخی سرخی;
+  uprv_memset(&سرخی, 0, حجم(سرخی));
+  سرخی.ڈیٹا_سرخی_2.سرخی_سائز = (uint16_t)((حجم(سرخی) + 15) & ~15);
+  سرخی.ڈیٹا_سرخی_2.magic1 = 0xda;
+  سرخی.ڈیٹا_سرخی_2.magic2 = 0x27;
+  uprv_memcpy(&سرخی.info, &ڈیٹا_Info, حجم(ڈیٹا_Info));
 
-  int32_t indexes[UCNVSEL_INDEX_COUNT] = {
-    serializedTrieSize,
-    sel->pvCount,
-    sel->encodingsCount,
-    sel->encodingStrLength
+  int32_t indexes[UCNVSEL_اشاریہ_گنتی] = {
+    serialized_Trie_سائز,
+    sel->pv_گنتی,
+    sel->encodings_گنتی,
+    sel->encoding_Str_لمبائی
   };
 
-  int32_t totalSize =
-    header.dataHeader.headerSize +
-    (int32_t)sizeof(indexes) +
-    serializedTrieSize +
-    sel->pvCount * 4 +
-    sel->encodingStrLength;
-  indexes[UCNVSEL_INDEX_SIZE] = totalSize - header.dataHeader.headerSize;
-  if (totalSize > bufferCapacity) {
-    *status = U_BUFFER_OVERFLOW_ERROR;
-    return totalSize;
+  int32_t کل_سائز =
+    سرخی.ڈیٹا_سرخی_2.سرخی_سائز +
+    (int32_t)حجم(indexes) +
+    serialized_Trie_سائز +
+    sel->pv_گنتی * 4 +
+    sel->encoding_Str_لمبائی;
+  indexes[UCNVSEL_اشاریہ_سائز] = کل_سائز - سرخی.ڈیٹا_سرخی_2.سرخی_سائز;
+  اگر (کل_سائز > بفر_استعداد) {
+    *حالت_2 = U_بفر_حد_سے_تجاوز_ERROR;
+    واپس کل_سائز;
   }
   // ok, save!
-  int32_t length = header.dataHeader.headerSize;
-  uprv_memcpy(p, &header, sizeof(header));
-  uprv_memset(p + sizeof(header), 0, length - sizeof(header));
+  int32_t length = سرخی.ڈیٹا_سرخی_2.سرخی_سائز;
+  uprv_memcpy(p, &سرخی, حجم(سرخی));
+  uprv_memset(p + حجم(سرخی), 0, length - حجم(سرخی));
   p += length;
 
-  length = (int32_t)sizeof(indexes);
+  length = (int32_t)حجم(indexes);
   uprv_memcpy(p, indexes, length);
   p += length;
 
-  utrie2_serialize(sel->trie, p, serializedTrieSize, status);
-  p += serializedTrieSize;
+  utrie2_serialize(sel->trie, p, serialized_Trie_سائز, حالت_2);
+  p += serialized_Trie_سائز;
 
-  length = sel->pvCount * 4;
+  length = sel->pv_گنتی * 4;
   uprv_memcpy(p, sel->pv, length);
   p += length;
 
-  uprv_memcpy(p, sel->encodings[0], sel->encodingStrLength);
-  p += sel->encodingStrLength;
+  uprv_memcpy(p, sel->encodings[0], sel->encoding_Str_لمبائی);
+  p += sel->encoding_Str_لمبائی;
 
-  return totalSize;
+  واپس کل_سائز;
 }
 
 /**
@@ -366,466 +366,466 @@ ucnvsel_serialize(const UConverterSelector* sel,
  * @return 0 on failure, number of bytes swapped on success
  *         number of bytes swapped can be smaller than length
  */
-static int32_t
-ucnvsel_swap(const UDataSwapper *ds,
-             const void *inData, int32_t length,
-             void *outData, UErrorCode *status) {
+ساکن int32_t
+ucnvsel_تبادلہ(ثابت UDataSwapper *ds,
+             ثابت خالی *اندر_ڈیٹا, int32_t length,
+             خالی *برآمد_ڈیٹا, UError_رمز *حالت_2) {
   /* udata_swapDataHeader checks the arguments */
-  int32_t headerSize = udata_swapDataHeader(ds, inData, length, outData, status);
-  if(U_FAILURE(*status)) {
-    return 0;
+  int32_t سرخی_سائز = udata_تبادلہ_ڈیٹا_سرخی(ds, اندر_ڈیٹا, length, برآمد_ڈیٹا, حالت_2);
+  اگر(U_FAILURE(*حالت_2)) {
+    واپس 0;
   }
 
   /* check data format and format version */
-  const UDataInfo* pInfo = reinterpret_cast<const UDataInfo*>(static_cast<const char*>(inData) + 4);
-  if(!(
-    pInfo->dataFormat[0] == 0x43 &&  /* dataFormat="CSel" */
-    pInfo->dataFormat[1] == 0x53 &&
-    pInfo->dataFormat[2] == 0x65 &&
-    pInfo->dataFormat[3] == 0x6c
+  ثابت UDataInfo* pInfo = reinterpret_cast<ثابت UDataInfo*>(static_cast<ثابت حرف*>(اندر_ڈیٹا) + 4);
+  اگر(!(
+    pInfo->ڈیٹا_Format[0] == 0x43 &&  /* dataFormat="CSel" */
+    pInfo->ڈیٹا_Format[1] == 0x53 &&
+    pInfo->ڈیٹا_Format[2] == 0x65 &&
+    pInfo->ڈیٹا_Format[3] == 0x6c
   )) {
     udata_printError(ds, "ucnvsel_swap(): data format %02x.%02x.%02x.%02x is not recognized as UConverterSelector data\n",
-                     pInfo->dataFormat[0], pInfo->dataFormat[1],
-                     pInfo->dataFormat[2], pInfo->dataFormat[3]);
-    *status = U_INVALID_FORMAT_ERROR;
-    return 0;
+                     pInfo->ڈیٹا_Format[0], pInfo->ڈیٹا_Format[1],
+                     pInfo->ڈیٹا_Format[2], pInfo->ڈیٹا_Format[3]);
+    *حالت_2 = U_INVALID_FORMAT_ERROR;
+    واپس 0;
   }
-  if(pInfo->formatVersion[0] != 1) {
+  اگر(pInfo->format_نسخہ[0] != 1) {
     udata_printError(ds, "ucnvsel_swap(): format version %02x is not supported\n",
-                     pInfo->formatVersion[0]);
-    *status = U_UNSUPPORTED_ERROR;
-    return 0;
+                     pInfo->format_نسخہ[0]);
+    *حالت_2 = U_UNSUPPORTED_ERROR;
+    واپس 0;
   }
 
-  if(length >= 0) {
-    length -= headerSize;
-    if(length < 16*4) {
+  اگر(length >= 0) {
+    length -= سرخی_سائز;
+    اگر(length < 16*4) {
       udata_printError(ds, "ucnvsel_swap(): too few bytes (%d after header) for UConverterSelector data\n",
                        length);
-      *status = U_INDEX_OUTOFBOUNDS_ERROR;
-      return 0;
+      *حالت_2 = U_اشاریہ_OUTOFBOUNDS_ERROR;
+      واپس 0;
     }
   }
 
-  const uint8_t* inBytes = static_cast<const uint8_t*>(inData) + headerSize;
-  uint8_t* outBytes = static_cast<uint8_t*>(outData) + headerSize;
+  ثابت uint8_t* اندر_بائٹیں = static_cast<ثابت uint8_t*>(اندر_ڈیٹا) + سرخی_سائز;
+  uint8_t* برآمد_بائٹیں = static_cast<uint8_t*>(برآمد_ڈیٹا) + سرخی_سائز;
 
   /* read the indexes */
-  const int32_t* inIndexes = reinterpret_cast<const int32_t*>(inBytes);
+  ثابت int32_t* اندر_Indexes = reinterpret_cast<ثابت int32_t*>(اندر_بائٹیں);
   int32_t indexes[16];
   int32_t i;
-  for(i = 0; i < 16; ++i) {
-    indexes[i] = udata_readInt32(ds, inIndexes[i]);
+  برائے(i = 0; i < 16; ++i) {
+    indexes[i] = udata_readInt32(ds, اندر_Indexes[i]);
   }
 
   /* get the total length of the data */
-  int32_t size = indexes[UCNVSEL_INDEX_SIZE];
-  if(length >= 0) {
-    if(length < size) {
+  int32_t size = indexes[UCNVSEL_اشاریہ_سائز];
+  اگر(length >= 0) {
+    اگر(length < size) {
       udata_printError(ds, "ucnvsel_swap(): too few bytes (%d after header) for all of UConverterSelector data\n",
                        length);
-      *status = U_INDEX_OUTOFBOUNDS_ERROR;
-      return 0;
+      *حالت_2 = U_اشاریہ_OUTOFBOUNDS_ERROR;
+      واپس 0;
     }
 
     /* copy the data for inaccessible bytes */
-    if(inBytes != outBytes) {
-      uprv_memcpy(outBytes, inBytes, size);
+    اگر(اندر_بائٹیں != برآمد_بائٹیں) {
+      uprv_memcpy(برآمد_بائٹیں, اندر_بائٹیں, size);
     }
 
-    int32_t offset = 0, count;
+    int32_t انحراف = 0, count;
 
     /* swap the int32_t indexes[] */
-    count = UCNVSEL_INDEX_COUNT*4;
-    ds->swapArray32(ds, inBytes, count, outBytes, status);
-    offset += count;
+    count = UCNVSEL_اشاریہ_گنتی*4;
+    ds->تبادلہ_Array32(ds, اندر_بائٹیں, count, برآمد_بائٹیں, حالت_2);
+    انحراف += count;
 
     /* swap the UTrie2 */
-    count = indexes[UCNVSEL_INDEX_TRIE_SIZE];
-    utrie2_swap(ds, inBytes + offset, count, outBytes + offset, status);
-    offset += count;
+    count = indexes[UCNVSEL_اشاریہ_TRIE_سائز];
+    utrie2_تبادلہ(ds, اندر_بائٹیں + انحراف, count, برآمد_بائٹیں + انحراف, حالت_2);
+    انحراف += count;
 
     /* swap the uint32_t pv[] */
-    count = indexes[UCNVSEL_INDEX_PV_COUNT]*4;
-    ds->swapArray32(ds, inBytes + offset, count, outBytes + offset, status);
-    offset += count;
+    count = indexes[UCNVSEL_اشاریہ_PV_گنتی]*4;
+    ds->تبادلہ_Array32(ds, اندر_بائٹیں + انحراف, count, برآمد_بائٹیں + انحراف, حالت_2);
+    انحراف += count;
 
     /* swap the encoding names */
-    count = indexes[UCNVSEL_INDEX_NAMES_LENGTH];
-    ds->swapInvChars(ds, inBytes + offset, count, outBytes + offset, status);
-    offset += count;
+    count = indexes[UCNVSEL_اشاریہ_نام_لمبائی];
+    ds->تبادلہ_Inv_Chars(ds, اندر_بائٹیں + انحراف, count, برآمد_بائٹیں + انحراف, حالت_2);
+    انحراف += count;
 
-    U_ASSERT(offset == size);
+    U_ASSERT(انحراف == size);
   }
 
-  return headerSize + size;
+  واپس سرخی_سائز + size;
 }
 
 /* unserialize a selector */
 U_CAPI UConverterSelector* U_EXPORT2
-ucnvsel_openFromSerialized(const void* buffer U_LIFETIME_BOUND,
+ucnvsel_openFromSerialized(ثابت خالی* بفر U_LIFETIME_BOUND,
                            int32_t length,
-                           UErrorCode* status) {
+                           UError_رمز* حالت_2) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  اگر (U_FAILURE(*حالت_2)) {
+    واپس خالی_اشاریہ;
   }
   // ensure args make sense!
-  const uint8_t *p = (const uint8_t *)buffer;
-  if (length <= 0 ||
-      (length > 0 && (p == nullptr || (U_POINTER_MASK_LSB(p, 3) != 0)))
+  ثابت uint8_t *p = (ثابت uint8_t *)بفر;
+  اگر (length <= 0 ||
+      (length > 0 && (p == خالی_اشاریہ || (U_اشارہ_گر_نقاب_LSB(p, 3) != 0)))
   ) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+    *حالت_2 = U_ILLEGAL_دلیل_ERROR;
+    واپس خالی_اشاریہ;
   }
-  // header
-  if (length < 32) {
+  //سرخی
+  اگر (length < 32) {
     // not even enough space for a minimal header
-    *status = U_INDEX_OUTOFBOUNDS_ERROR;
-    return nullptr;
+    *حالت_2 = U_اشاریہ_OUTOFBOUNDS_ERROR;
+    واپس خالی_اشاریہ;
   }
-  const DataHeader *pHeader = (const DataHeader *)p;
-  if (!(
-    pHeader->dataHeader.magic1==0xda &&
-    pHeader->dataHeader.magic2==0x27 &&
-    pHeader->info.dataFormat[0] == 0x43 &&
-    pHeader->info.dataFormat[1] == 0x53 &&
-    pHeader->info.dataFormat[2] == 0x65 &&
-    pHeader->info.dataFormat[3] == 0x6c
+  ثابت ڈیٹا_سرخی *p_سرخی = (ثابت ڈیٹا_سرخی *)p;
+  اگر (!(
+    p_سرخی->ڈیٹا_سرخی_2.magic1==0xda &&
+    p_سرخی->ڈیٹا_سرخی_2.magic2==0x27 &&
+    p_سرخی->info.ڈیٹا_Format[0] == 0x43 &&
+    p_سرخی->info.ڈیٹا_Format[1] == 0x53 &&
+    p_سرخی->info.ڈیٹا_Format[2] == 0x65 &&
+    p_سرخی->info.ڈیٹا_Format[3] == 0x6c
   )) {
     /* header not valid or dataFormat not recognized */
-    *status = U_INVALID_FORMAT_ERROR;
-    return nullptr;
+    *حالت_2 = U_INVALID_FORMAT_ERROR;
+    واپس خالی_اشاریہ;
   }
-  if (pHeader->info.formatVersion[0] != 1) {
-    *status = U_UNSUPPORTED_ERROR;
-    return nullptr;
+  اگر (p_سرخی->info.format_نسخہ[0] != 1) {
+    *حالت_2 = U_UNSUPPORTED_ERROR;
+    واپس خالی_اشاریہ;
   }
-  uint8_t* swapped = nullptr;
-  if (pHeader->info.isBigEndian != U_IS_BIG_ENDIAN ||
-      pHeader->info.charsetFamily != U_CHARSET_FAMILY
+  uint8_t* swapped = خالی_اشاریہ;
+  اگر (p_سرخی->info.isBigEndian != U_IS_BIG_ENDIAN ||
+      p_سرخی->info.charsetFamily != U_CHARSET_FAMILY
   ) {
     // swap the data
     UDataSwapper *ds =
-      udata_openSwapperForInputData(p, length, U_IS_BIG_ENDIAN, U_CHARSET_FAMILY, status);
-    int32_t totalSize = ucnvsel_swap(ds, p, -1, nullptr, status);
-    if (U_FAILURE(*status)) {
+      udata_open_Swapper_For_داخلہ_ڈیٹا(p, length, U_IS_BIG_ENDIAN, U_CHARSET_FAMILY, حالت_2);
+    int32_t کل_سائز = ucnvsel_تبادلہ(ds, p, -1, خالی_اشاریہ, حالت_2);
+    اگر (U_FAILURE(*حالت_2)) {
       udata_closeSwapper(ds);
-      return nullptr;
+      واپس خالی_اشاریہ;
     }
-    if (length < totalSize) {
+    اگر (length < کل_سائز) {
       udata_closeSwapper(ds);
-      *status = U_INDEX_OUTOFBOUNDS_ERROR;
-      return nullptr;
+      *حالت_2 = U_اشاریہ_OUTOFBOUNDS_ERROR;
+      واپس خالی_اشاریہ;
     }
-    swapped = (uint8_t*)uprv_malloc(totalSize);
-    if (swapped == nullptr) {
+    swapped = (uint8_t*)uprv_malloc(کل_سائز);
+    اگر (swapped == خالی_اشاریہ) {
       udata_closeSwapper(ds);
-      *status = U_MEMORY_ALLOCATION_ERROR;
-      return nullptr;
+      *حالت_2 = U_حافظہ_تخصیص_ERROR;
+      واپس خالی_اشاریہ;
     }
-    ucnvsel_swap(ds, p, length, swapped, status);
+    ucnvsel_تبادلہ(ds, p, length, swapped, حالت_2);
     udata_closeSwapper(ds);
-    if (U_FAILURE(*status)) {
+    اگر (U_FAILURE(*حالت_2)) {
       uprv_free(swapped);
-      return nullptr;
+      واپس خالی_اشاریہ;
     }
     p = swapped;
-    pHeader = (const DataHeader *)p;
+    p_سرخی = (ثابت ڈیٹا_سرخی *)p;
   }
-  if (length < (pHeader->dataHeader.headerSize + 16 * 4)) {
+  اگر (length < (p_سرخی->ڈیٹا_سرخی_2.سرخی_سائز + 16 * 4)) {
     // not even enough space for the header and the indexes
     uprv_free(swapped);
-    *status = U_INDEX_OUTOFBOUNDS_ERROR;
-    return nullptr;
+    *حالت_2 = U_اشاریہ_OUTOFBOUNDS_ERROR;
+    واپس خالی_اشاریہ;
   }
-  p += pHeader->dataHeader.headerSize;
-  length -= pHeader->dataHeader.headerSize;
+  p += p_سرخی->ڈیٹا_سرخی_2.سرخی_سائز;
+  length -= p_سرخی->ڈیٹا_سرخی_2.سرخی_سائز;
   // indexes
-  const int32_t *indexes = (const int32_t *)p;
-  if (length < indexes[UCNVSEL_INDEX_SIZE]) {
+  ثابت int32_t *indexes = (ثابت int32_t *)p;
+  اگر (length < indexes[UCNVSEL_اشاریہ_سائز]) {
     uprv_free(swapped);
-    *status = U_INDEX_OUTOFBOUNDS_ERROR;
-    return nullptr;
+    *حالت_2 = U_اشاریہ_OUTOFBOUNDS_ERROR;
+    واپس خالی_اشاریہ;
   }
-  p += UCNVSEL_INDEX_COUNT * 4;
+  p += UCNVSEL_اشاریہ_گنتی * 4;
   // create and populate the selector object
-  UConverterSelector* sel = (UConverterSelector*)uprv_malloc(sizeof(UConverterSelector));
-  char **encodings =
-    (char **)uprv_malloc(
-      indexes[UCNVSEL_INDEX_NAMES_COUNT] * sizeof(char *));
-  if (sel == nullptr || encodings == nullptr) {
+  UConverterSelector* sel = (UConverterSelector*)uprv_malloc(حجم(UConverterSelector));
+  حرف **encodings =
+    (حرف **)uprv_malloc(
+      indexes[UCNVSEL_اشاریہ_نام_گنتی] * حجم(حرف *));
+  اگر (sel == خالی_اشاریہ || encodings == خالی_اشاریہ) {
     uprv_free(swapped);
     uprv_free(sel);
     uprv_free(encodings);
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    *حالت_2 = U_حافظہ_تخصیص_ERROR;
+    واپس خالی_اشاریہ;
   }
-  uprv_memset(sel, 0, sizeof(UConverterSelector));
-  sel->pvCount = indexes[UCNVSEL_INDEX_PV_COUNT];
+  uprv_memset(sel, 0, حجم(UConverterSelector));
+  sel->pv_گنتی = indexes[UCNVSEL_اشاریہ_PV_گنتی];
   sel->encodings = encodings;
-  sel->encodingsCount = indexes[UCNVSEL_INDEX_NAMES_COUNT];
-  sel->encodingStrLength = indexes[UCNVSEL_INDEX_NAMES_LENGTH];
+  sel->encodings_گنتی = indexes[UCNVSEL_اشاریہ_نام_گنتی];
+  sel->encoding_Str_لمبائی = indexes[UCNVSEL_اشاریہ_نام_لمبائی];
   sel->swapped = swapped;
   // trie
-  sel->trie = utrie2_openFromSerialized(UTRIE2_16_VALUE_BITS,
-                                        p, indexes[UCNVSEL_INDEX_TRIE_SIZE], nullptr,
-                                        status);
-  p += indexes[UCNVSEL_INDEX_TRIE_SIZE];
-  if (U_FAILURE(*status)) {
+  sel->trie = utrie2_openFromSerialized(UTRIE2_16_قدر_بٹ,
+                                        p, indexes[UCNVSEL_اشاریہ_TRIE_سائز], خالی_اشاریہ,
+                                        حالت_2);
+  p += indexes[UCNVSEL_اشاریہ_TRIE_سائز];
+  اگر (U_FAILURE(*حالت_2)) {
     ucnvsel_close(sel);
-    return nullptr;
+    واپس خالی_اشاریہ;
   }
   // bit vectors
   sel->pv = (uint32_t *)p;
-  p += sel->pvCount * 4;
+  p += sel->pv_گنتی * 4;
   // encoding names
-  char* s = (char*)p;
-  for (int32_t i = 0; i < sel->encodingsCount; ++i) {
+  حرف* s = (حرف*)p;
+  برائے (int32_t i = 0; i < sel->encodings_گنتی; ++i) {
     sel->encodings[i] = s;
     s += uprv_strlen(s) + 1;
   }
-  p += sel->encodingStrLength;
+  p += sel->encoding_Str_لمبائی;
 
-  return sel;
+  واپس sel;
 }
 
 // a bunch of functions for the enumeration thingie! Nothing fancy here. Just
 // iterate over the selected encodings
-struct Enumerator {
-  int16_t* index;
+ساخت Enumerator {
+  int16_t* اشاریہ;
   int16_t length;
   int16_t cur;
-  const UConverterSelector* sel;
+  ثابت UConverterSelector* sel;
 };
 
 U_CDECL_BEGIN
 
-static void U_CALLCONV
+ساکن خالی U_CALLCONV
 ucnvsel_close_selector_iterator(UEnumeration *enumerator) {
-  uprv_free(((Enumerator*)(enumerator->context))->index);
+  uprv_free(((Enumerator*)(enumerator->context))->اشاریہ);
   uprv_free(enumerator->context);
   uprv_free(enumerator);
 }
 
 
-static int32_t U_CALLCONV
-ucnvsel_count_encodings(UEnumeration *enumerator, UErrorCode *status) {
+ساکن int32_t U_CALLCONV
+ucnvsel_گنتی_encodings(UEnumeration *enumerator, UError_رمز *حالت_2) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return 0;
+  اگر (U_FAILURE(*حالت_2)) {
+    واپس 0;
   }
-  return ((Enumerator*)(enumerator->context))->length;
+  واپس ((Enumerator*)(enumerator->context))->length;
 }
 
 
-static const char* U_CALLCONV ucnvsel_next_encoding(UEnumeration* enumerator,
-                                                 int32_t* resultLength,
-                                                 UErrorCode* status) {
+ساکن ثابت حرف* U_CALLCONV ucnvsel_اگلا_encoding(UEnumeration* enumerator,
+                                                 int32_t* نتیجہ_لمبائی,
+                                                 UError_رمز* حالت_2) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  اگر (U_FAILURE(*حالت_2)) {
+    واپس خالی_اشاریہ;
   }
 
   int16_t cur = ((Enumerator*)(enumerator->context))->cur;
-  const UConverterSelector* sel;
-  const char* result;
-  if (cur >= ((Enumerator*)(enumerator->context))->length) {
-    return nullptr;
+  ثابت UConverterSelector* sel;
+  ثابت حرف* نتیجہ;
+  اگر (cur >= ((Enumerator*)(enumerator->context))->length) {
+    واپس خالی_اشاریہ;
   }
   sel = ((Enumerator*)(enumerator->context))->sel;
-  result = sel->encodings[((Enumerator*)(enumerator->context))->index[cur] ];
+  نتیجہ = sel->encodings[((Enumerator*)(enumerator->context))->اشاریہ[cur] ];
   ((Enumerator*)(enumerator->context))->cur++;
-  if (resultLength) {
-    *resultLength = (int32_t)uprv_strlen(result);
+  اگر (نتیجہ_لمبائی) {
+    *نتیجہ_لمبائی = (int32_t)uprv_strlen(نتیجہ);
   }
-  return result;
+  واپس نتیجہ;
 }
 
-static void U_CALLCONV ucnvsel_reset_iterator(UEnumeration* enumerator,
-                                           UErrorCode* status) {
+ساکن خالی U_CALLCONV ucnvsel_reset_iterator(UEnumeration* enumerator,
+                                           UError_رمز* حالت_2) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return ;
+  اگر (U_FAILURE(*حالت_2)) {
+    واپس ;
   }
   ((Enumerator*)(enumerator->context))->cur = 0;
 }
 
-U_CDECL_END
+U_CDECL_انتہا
 
 
-static const UEnumeration defaultEncodings = {
-  nullptr,
-    nullptr,
+ساکن ثابت UEnumeration defaultEncodings = {
+  خالی_اشاریہ,
+    خالی_اشاریہ,
     ucnvsel_close_selector_iterator,
-    ucnvsel_count_encodings,
+    ucnvsel_گنتی_encodings,
     uenum_unextDefault,
-    ucnvsel_next_encoding, 
+    ucnvsel_اگلا_encoding, 
     ucnvsel_reset_iterator
 };
 
 
 // internal fn to intersect two sets of masks
 // returns whether the mask has reduced to all zeros
-static UBool intersectMasks(uint32_t* dest, const uint32_t* source1, int32_t len) {
+ساکن UBool intersectMasks(uint32_t* dest, ثابت uint32_t* source1, int32_t len) {
   int32_t i;
   uint32_t oredDest = 0;
-  for (i = 0 ; i < len ; ++i) {
+  برائے (i = 0 ; i < len ; ++i) {
     oredDest |= (dest[i] &= source1[i]);
   }
-  return oredDest == 0;
+  واپس oredDest == 0;
 }
 
 // internal fn to count how many 1's are there in a mask
 // algorithm taken from  http://graphics.stanford.edu/~seander/bithacks.html
-static int16_t countOnes(uint32_t* mask, int32_t len) {
-  int32_t i, totalOnes = 0;
-  for (i = 0 ; i < len ; ++i) {
+ساکن int16_t گنتی_Ones(uint32_t* mask, int32_t len) {
+  int32_t i, کل_Ones = 0;
+  برائے (i = 0 ; i < len ; ++i) {
     uint32_t ent = mask[i];
-    for (; ent; totalOnes++)
+    برائے (; ent; کل_Ones++)
     {
       ent &= ent - 1; // clear the least significant bit set
     }
   }
-  return static_cast<int16_t>(totalOnes);
+  واپس static_cast<int16_t>(کل_Ones);
 }
 
 
 /* internal function! */
-static UEnumeration*
-selectForMask(const UConverterSelector* sel U_LIFETIME_BOUND,
-              uint32_t* theMask,
-              UErrorCode* status) {
-  LocalMemory<uint32_t> mask(theMask);
+ساکن UEnumeration*
+select_For_نقاب(ثابت UConverterSelector* sel U_LIFETIME_BOUND,
+              uint32_t* the_نقاب,
+              UError_رمز* حالت_2) {
+  Local_حافظہ<uint32_t> mask(the_نقاب);
   // this is the context we will use. Store a table of indices to which
   // encodings are legit.
-  LocalMemory<Enumerator> result(static_cast<Enumerator *>(uprv_malloc(sizeof(Enumerator))));
-  if (result.isNull()) {
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+  Local_حافظہ<Enumerator> نتیجہ(static_cast<Enumerator *>(uprv_malloc(حجم(Enumerator))));
+  اگر (نتیجہ.isNull()) {
+    *حالت_2 = U_حافظہ_تخصیص_ERROR;
+    واپس خالی_اشاریہ;
   }
-  result->index = nullptr;  // this will be allocated later!
-  result->length = result->cur = 0;
-  result->sel = sel;
+  نتیجہ->اشاریہ = خالی_اشاریہ;  // this will be allocated later!
+  نتیجہ->length = نتیجہ->cur = 0;
+  نتیجہ->sel = sel;
 
-  LocalMemory<UEnumeration> en(static_cast<UEnumeration *>(uprv_malloc(sizeof(UEnumeration))));
-  if (en.isNull()) {
+  Local_حافظہ<UEnumeration> en(static_cast<UEnumeration *>(uprv_malloc(حجم(UEnumeration))));
+  اگر (en.isNull()) {
     // TODO(markus): Combine Enumerator and UEnumeration into one struct.
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    *حالت_2 = U_حافظہ_تخصیص_ERROR;
+    واپس خالی_اشاریہ;
   }
-  memcpy(en.getAlias(), &defaultEncodings, sizeof(UEnumeration));
+  حافظہ_نقل(en.getAlias(), &defaultEncodings, حجم(UEnumeration));
   
-  int32_t columns = (sel->encodingsCount+31)/32;
-  int16_t numOnes = countOnes(mask.getAlias(), columns);
+  int32_t columns = (sel->encodings_گنتی+31)/32;
+  int16_t عدد_Ones = گنتی_Ones(mask.getAlias(), columns);
   // now, we know the exact space we need for index
-  if (numOnes > 0) {
-    result->index = static_cast<int16_t*>(uprv_malloc(numOnes * sizeof(int16_t)));
-    if (result->index == nullptr) {
-      *status = U_MEMORY_ALLOCATION_ERROR;
-      return nullptr;
+  اگر (عدد_Ones > 0) {
+    نتیجہ->اشاریہ = static_cast<int16_t*>(uprv_malloc(عدد_Ones * حجم(int16_t)));
+    اگر (نتیجہ->اشاریہ == خالی_اشاریہ) {
+      *حالت_2 = U_حافظہ_تخصیص_ERROR;
+      واپس خالی_اشاریہ;
     }
     int32_t i, j;
     int16_t k = 0;
-    for (j = 0 ; j < columns; j++) {
+    برائے (j = 0 ; j < columns; j++) {
       uint32_t v = mask[j];
-      for (i = 0 ; i < 32 && k < sel->encodingsCount; i++, k++) {
-        if ((v & 1) != 0) {
-          result->index[result->length++] = k;
+      برائے (i = 0 ; i < 32 && k < sel->encodings_گنتی; i++, k++) {
+        اگر ((v & 1) != 0) {
+          نتیجہ->اشاریہ[نتیجہ->length++] = k;
         }
         v >>= 1;
       }
     }
   } //otherwise, index will remain nullptr (and will never be touched by
     //the enumerator code anyway)
-  en->context = result.orphan();
-  return en.orphan();
+  en->context = نتیجہ.orphan();
+  واپس en.orphan();
 }
 
 /* check a string against the selector - UTF16 version */
 U_CAPI UEnumeration* U_EXPORT2
-ucnvsel_selectForString(const UConverterSelector* sel U_LIFETIME_BOUND,
-                        const char16_t* s,
+ucnvsel_selectForString(ثابت UConverterSelector* sel U_LIFETIME_BOUND,
+                        ثابت char16_t* s,
                         int32_t length,
-                        UErrorCode* status) {
+                        UError_رمز* حالت_2) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  اگر (U_FAILURE(*حالت_2)) {
+    واپس خالی_اشاریہ;
   }
   // ensure args make sense!
-  if (sel == nullptr || (s == nullptr && length != 0)) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+  اگر (sel == خالی_اشاریہ || (s == خالی_اشاریہ && length != 0)) {
+    *حالت_2 = U_ILLEGAL_دلیل_ERROR;
+    واپس خالی_اشاریہ;
   }
 
-  int32_t columns = (sel->encodingsCount+31)/32;
+  int32_t columns = (sel->encodings_گنتی+31)/32;
   uint32_t* mask = (uint32_t*) uprv_malloc(columns * 4);
-  if (mask == nullptr) {
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+  اگر (mask == خالی_اشاریہ) {
+    *حالت_2 = U_حافظہ_تخصیص_ERROR;
+    واپس خالی_اشاریہ;
   }
   uprv_memset(mask, ~0, columns *4);
 
-  if(s!=nullptr) {
-    const char16_t *limit;
-    if (length >= 0) {
-      limit = s + length;
-    } else {
-      limit = nullptr;
+  اگر(s!=خالی_اشاریہ) {
+    ثابت char16_t *حد_بندی;
+    اگر (length >= 0) {
+      حد_بندی = s + length;
+    } ورنہ {
+      حد_بندی = خالی_اشاریہ;
     }
     
-    while (limit == nullptr ? *s != 0 : s != limit) {
+    جب (حد_بندی == خالی_اشاریہ ? *s != 0 : s != حد_بندی) {
       UChar32 c;
-      uint16_t pvIndex;
-      UTRIE2_U16_NEXT16(sel->trie, s, limit, c, pvIndex);
-      if (intersectMasks(mask, sel->pv+pvIndex, columns)) {
-        break;
+      uint16_t pv_اشاریہ;
+      UTRIE2_U16_NEXT16(sel->trie, s, حد_بندی, c, pv_اشاریہ);
+      اگر (intersectMasks(mask, sel->pv+pv_اشاریہ, columns)) {
+        توڑو;
       }
     }
   }
-  return selectForMask(sel, mask, status);
+  واپس select_For_نقاب(sel, mask, حالت_2);
 }
 
 /* check a string against the selector - UTF8 version */
 U_CAPI UEnumeration* U_EXPORT2
-ucnvsel_selectForUTF8(const UConverterSelector* sel U_LIFETIME_BOUND,
-                      const char* s,
+ucnvsel_selectForUTF8(ثابت UConverterSelector* sel U_LIFETIME_BOUND,
+                      ثابت حرف* s,
                       int32_t length,
-                      UErrorCode* status) {
+                      UError_رمز* حالت_2) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  اگر (U_FAILURE(*حالت_2)) {
+    واپس خالی_اشاریہ;
   }
   // ensure args make sense!
-  if (sel == nullptr || (s == nullptr && length != 0)) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+  اگر (sel == خالی_اشاریہ || (s == خالی_اشاریہ && length != 0)) {
+    *حالت_2 = U_ILLEGAL_دلیل_ERROR;
+    واپس خالی_اشاریہ;
   }
 
-  int32_t columns = (sel->encodingsCount+31)/32;
+  int32_t columns = (sel->encodings_گنتی+31)/32;
   uint32_t* mask = (uint32_t*) uprv_malloc(columns * 4);
-  if (mask == nullptr) {
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+  اگر (mask == خالی_اشاریہ) {
+    *حالت_2 = U_حافظہ_تخصیص_ERROR;
+    واپس خالی_اشاریہ;
   }
   uprv_memset(mask, ~0, columns *4);
 
-  if (length < 0) {
+  اگر (length < 0) {
     length = (int32_t)uprv_strlen(s);
   }
 
-  if(s!=nullptr) {
-    const char *limit = s + length;
+  اگر(s!=خالی_اشاریہ) {
+    ثابت حرف *حد_بندی = s + length;
     
-    while (s != limit) {
-      uint16_t pvIndex;
-      UTRIE2_U8_NEXT16(sel->trie, s, limit, pvIndex);
-      if (intersectMasks(mask, sel->pv+pvIndex, columns)) {
-        break;
+    جب (s != حد_بندی) {
+      uint16_t pv_اشاریہ;
+      UTRIE2_U8_NEXT16(sel->trie, s, حد_بندی, pv_اشاریہ);
+      اگر (intersectMasks(mask, sel->pv+pv_اشاریہ, columns)) {
+        توڑو;
       }
     }
   }
-  return selectForMask(sel, mask, status);
+  واپس select_For_نقاب(sel, mask, حالت_2);
 }
 
-#endif  // !UCONFIG_NO_CONVERSION
+#اگر_ختم  // !UCONFIG_NO_CONVERSION

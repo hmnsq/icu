@@ -1,11 +1,11 @@
 // © 2023 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
-#ifndef __ULOCBUILDER_H__
-#define __ULOCBUILDER_H__
+#اگر_غیر_تعریف_شدہ __ULOCBUILDER_H__
+#تعریف_کرو __ULOCBUILDER_H__
 
-#include "unicode/localpointer.h"
-#include "unicode/ulocale.h"
-#include "unicode/utypes.h"
+#شامل "unicode/localpointer.h"
+#شامل "unicode/ulocale.h"
+#شامل "unicode/utypes.h"
 
 /**
  * \file
@@ -16,13 +16,13 @@
  * Opaque C service object type for the locale builder API
  * @stable ICU 74
  */
-struct ULocaleBuilder;
+ساخت ULocaleBuilder;
 
 /**
  * C typedef for struct ULocaleBuilder.
  * @stable ICU 74
  */
-typedef struct ULocaleBuilder ULocaleBuilder;
+قسمتعریف ساخت ULocaleBuilder ULocaleBuilder;
 
 /**
  * <code>ULocaleBuilder</code> is used to build valid <code>locale</code> id
@@ -72,14 +72,14 @@ typedef struct ULocaleBuilder ULocaleBuilder;
  * @stable ICU 74
  */
 U_CAPI ULocaleBuilder* U_EXPORT2
-ulocbld_open(void);
+ulocbld_open(خالی);
 
 /**
  * Close the builder and destroy it's internal states.
  * @param builder the builder
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
+U_CAPI خالی U_EXPORT2
 ulocbld_close(ULocaleBuilder* builder);
 
 /**
@@ -97,8 +97,8 @@ ulocbld_close(ULocaleBuilder* builder);
  *
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
-ulocbld_setLocale(ULocaleBuilder* builder, const char* locale, int32_t length);
+U_CAPI خالی U_EXPORT2
+ulocbld_سیٹ_Locale(ULocaleBuilder* builder, ثابت حرف* locale, int32_t لمبائی);
 
 /**
  * Resets the <code>ULocaleBuilder</code> to match the provided
@@ -113,7 +113,7 @@ ulocbld_setLocale(ULocaleBuilder* builder, const char* locale, int32_t length);
  *
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
+U_CAPI خالی U_EXPORT2
 ulocbld_adoptULocale(ULocaleBuilder* builder, ULocale* locale);
 
 /**
@@ -136,8 +136,8 @@ ulocbld_adoptULocale(ULocaleBuilder* builder, ULocale* locale);
  *               null terminated,
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
-ulocbld_setLanguageTag(ULocaleBuilder* builder, const char* tag, int32_t length);
+U_CAPI خالی U_EXPORT2
+ulocbld_سیٹ_Language_لیبل(ULocaleBuilder* builder, ثابت حرف* لیبل, int32_t لمبائی);
 
 /**
  * Sets the language.  If <code>language</code> is the empty string, the
@@ -156,8 +156,8 @@ ulocbld_setLanguageTag(ULocaleBuilder* builder, const char* tag, int32_t length)
  *               null terminated,
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
-ulocbld_setLanguage(ULocaleBuilder* builder, const char* language, int32_t length);
+U_CAPI خالی U_EXPORT2
+ulocbld_سیٹ_Language(ULocaleBuilder* builder, ثابت حرف* language, int32_t لمبائی);
 
 /**
  * Sets the script. If <code>script</code> is the empty string, the script in
@@ -177,8 +177,8 @@ ulocbld_setLanguage(ULocaleBuilder* builder, const char* language, int32_t lengt
  *               null terminated,
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
-ulocbld_setScript(ULocaleBuilder* builder, const char* script, int32_t length);
+U_CAPI خالی U_EXPORT2
+ulocbld_سیٹ_Script(ULocaleBuilder* builder, ثابت حرف* script, int32_t لمبائی);
 
 /**
  * Sets the region.  If region is the empty string, the region in this
@@ -201,8 +201,8 @@ ulocbld_setScript(ULocaleBuilder* builder, const char* script, int32_t length);
  *               null terminated,
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
-ulocbld_setRegion(ULocaleBuilder* builder, const char* region, int32_t length);
+U_CAPI خالی U_EXPORT2
+ulocbld_سیٹ_Region(ULocaleBuilder* builder, ثابت حرف* region, int32_t لمبائی);
 
 /**
  * Sets the variant.  If variant is the empty string, the variant in this
@@ -227,8 +227,8 @@ ulocbld_setRegion(ULocaleBuilder* builder, const char* region, int32_t length);
  *               null terminated,
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
-ulocbld_setVariant(ULocaleBuilder* builder, const char* variant, int32_t length);
+U_CAPI خالی U_EXPORT2
+ulocbld_سیٹ_Variant(ULocaleBuilder* builder, ثابت حرف* variant, int32_t لمبائی);
 
 /**
  * Sets the extension for the given key. If the value is the empty string,
@@ -253,8 +253,8 @@ ulocbld_setVariant(ULocaleBuilder* builder, const char* variant, int32_t length)
  *               null terminated,
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
-ulocbld_setExtension(ULocaleBuilder* builder, char key, const char* value, int32_t length);
+U_CAPI خالی U_EXPORT2
+ulocbld_سیٹ_Extension(ULocaleBuilder* builder, حرف کلید, ثابت حرف* قدر_2, int32_t لمبائی);
 
 /**
  * Sets the Unicode locale keyword type for the given key. If the type
@@ -281,9 +281,9 @@ ulocbld_setExtension(ULocaleBuilder* builder, char key, const char* value, int32
  *               be null terminated,
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
-ulocbld_setUnicodeLocaleKeyword(ULocaleBuilder* builder,
-        const char* key, int32_t keyLength, const char* type, int32_t typeLength);
+U_CAPI خالی U_EXPORT2
+ulocbld_سیٹ_Unicode_Locale_Keyword(ULocaleBuilder* builder,
+        ثابت حرف* کلید, int32_t کلید_لمبائی, ثابت حرف* type, int32_t type_لمبائی);
 
 /**
  * Adds a unicode locale attribute, if not already present, otherwise
@@ -298,9 +298,9 @@ ulocbld_setUnicodeLocaleKeyword(ULocaleBuilder* builder,
  *               need to be null terminated,
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
-ulocbld_addUnicodeLocaleAttribute(
-    ULocaleBuilder* builder, const char* attribute, int32_t length);
+U_CAPI خالی U_EXPORT2
+ulocbld_جوڑو_Unicode_Locale_Attribute(
+    ULocaleBuilder* builder, ثابت حرف* attribute, int32_t لمبائی);
 
 /**
  * Removes a unicode locale attribute, if present, otherwise has no
@@ -317,9 +317,9 @@ ulocbld_addUnicodeLocaleAttribute(
  *               need to be null terminated,
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
+U_CAPI خالی U_EXPORT2
 ulocbld_removeUnicodeLocaleAttribute(
-    ULocaleBuilder* builder, const char* attribute, int32_t length);
+    ULocaleBuilder* builder, ثابت حرف* attribute, int32_t لمبائی);
 
 /**
  * Resets the builder to its initial, empty state.
@@ -328,7 +328,7 @@ ulocbld_removeUnicodeLocaleAttribute(
  * @param builder the builder
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
+U_CAPI خالی U_EXPORT2
 ulocbld_clear(ULocaleBuilder* builder);
 
 /**
@@ -338,7 +338,7 @@ ulocbld_clear(ULocaleBuilder* builder);
  * @param builder the builder
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
+U_CAPI خالی U_EXPORT2
 ulocbld_clearExtensions(ULocaleBuilder* builder);
 
 /**
@@ -358,8 +358,8 @@ ulocbld_clearExtensions(ULocaleBuilder* builder);
  * @stable ICU 74
  */
 U_CAPI int32_t U_EXPORT2
-ulocbld_buildLocaleID(ULocaleBuilder* builder, char* locale,
-                      int32_t localeCapacity, UErrorCode* err);
+ulocbld_buildLocaleID(ULocaleBuilder* builder, حرف* locale,
+                      int32_t locale_استعداد, UError_رمز* err);
 
 /**
  * Build the ULocale object from the fields set on this builder.
@@ -377,7 +377,7 @@ ulocbld_buildLocaleID(ULocaleBuilder* builder, char* locale,
  * @stable ICU 74
  */
 U_CAPI ULocale* U_EXPORT2
-ulocbld_buildULocale(ULocaleBuilder* builder, UErrorCode* err);
+ulocbld_buildULocale(ULocaleBuilder* builder, UError_رمز* err);
 
 /**
  * Build the IETF BCP 47 language tag string from the fields set on this builder.
@@ -397,8 +397,8 @@ ulocbld_buildULocale(ULocaleBuilder* builder, UErrorCode* err);
  * @stable ICU 74
  */
 U_CAPI int32_t U_EXPORT2
-ulocbld_buildLanguageTag(ULocaleBuilder* builder, char* language,
-                      int32_t languageCapacity, UErrorCode* err);
+ulocbld_build_Language_لیبل(ULocaleBuilder* builder, حرف* language,
+                      int32_t language_استعداد, UError_رمز* err);
 
 /**
  * Sets the UErrorCode if an error occurred while recording sets.
@@ -412,9 +412,9 @@ ulocbld_buildLanguageTag(ULocaleBuilder* builder, char* language,
  * @stable ICU 74
  */
 U_CAPI UBool U_EXPORT2
-ulocbld_copyErrorTo(const ULocaleBuilder* builder, UErrorCode *outErrorCode);
+ulocbld_copy_Error_مقصد(ثابت ULocaleBuilder* builder, UError_رمز *برآمد_Error_رمز);
 
-#if U_SHOW_CPLUSPLUS_API
+#اگر U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -427,10 +427,10 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 74
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalULocaleBuilderPointer, ULocaleBuilder, ulocbld_close);
+U_DEFINE_LOCAL_OPEN_اشارہ_گر(Local_ULocale_Builder_اشارہ_گر, ULocaleBuilder, ulocbld_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا
 
-#endif  /* U_SHOW_CPLUSPLUS_API */
+#اگر_ختم  /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __ULOCBUILDER_H__
+#اگر_ختم  // __ULOCBUILDER_H__

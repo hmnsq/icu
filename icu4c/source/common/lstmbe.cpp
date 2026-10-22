@@ -1,30 +1,30 @@
 // © 2021 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#include <complex>
-#include <utility>
+#شامل <complex>
+#شامل <utility>
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#اگر !UCONFIG_NO_BREAK_ITERATION
 
-#include "brkeng.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "lstmbe.h"
-#include "putilimp.h"
-#include "uassert.h"
-#include "ubrkimpl.h"
-#include "uresimp.h"
-#include "uvectr32.h"
-#include "uvector.h"
+#شامل "brkeng.h"
+#شامل "charstr.h"
+#شامل "cmemory.h"
+#شامل "lstmbe.h"
+#شامل "putilimp.h"
+#شامل "uassert.h"
+#شامل "ubrkimpl.h"
+#شامل "uresimp.h"
+#شامل "uvectr32.h"
+#شامل "uvector.h"
 
-#include "unicode/brkiter.h"
-#include "unicode/resbund.h"
-#include "unicode/ubrk.h"
-#include "unicode/uniset.h"
-#include "unicode/ustring.h"
-#include "unicode/utf.h"
+#شامل "unicode/brkiter.h"
+#شامل "unicode/resbund.h"
+#شامل "unicode/ubrk.h"
+#شامل "unicode/uniset.h"
+#شامل "unicode/ustring.h"
+#شامل "unicode/utf.h"
 
 U_NAMESPACE_BEGIN
 
@@ -35,22 +35,22 @@ U_NAMESPACE_BEGIN
 /**
  * Interface for reading 1D array.
  */
-class ReadArray1D {
-public:
-    virtual ~ReadArray1D();
-    virtual int32_t d1() const = 0;
-    virtual float get(int32_t i) const = 0;
+جماعت ReadArray1D {
+عوامی:
+    مجازی ~ReadArray1D();
+    مجازی int32_t d1() ثابت = 0;
+    مجازی اعشاری get(int32_t i) ثابت = 0;
 
-#ifdef LSTM_DEBUG
-    void print() const {
-        printf("\n[");
-        for (int32_t i = 0; i < d1(); i++) {
-           printf("%0.8e ", get(i));
-           if (i % 4 == 3) printf("\n");
+#اگر_تعریف_شدہ LSTM_DEBUG
+    خالی print() ثابت {
+        لکھو("\n[");
+        برائے (int32_t i = 0; i < d1(); i++) {
+           لکھو("%0.8e ", get(i));
+           اگر (i % 4 == 3) لکھو("\n");
         }
-        printf("]\n");
+        لکھو("]\n");
     }
-#endif
+#اگر_ختم
 };
 
 ReadArray1D::~ReadArray1D()
@@ -60,12 +60,12 @@ ReadArray1D::~ReadArray1D()
 /**
  * Interface for reading 2D array.
  */
-class ReadArray2D {
-public:
-    virtual ~ReadArray2D();
-    virtual int32_t d1() const = 0;
-    virtual int32_t d2() const = 0;
-    virtual float get(int32_t i, int32_t j) const = 0;
+جماعت ReadArray2D {
+عوامی:
+    مجازی ~ReadArray2D();
+    مجازی int32_t d1() ثابت = 0;
+    مجازی int32_t d2() ثابت = 0;
+    مجازی اعشاری get(int32_t i, int32_t j) ثابت = 0;
 };
 
 ReadArray2D::~ReadArray2D()
@@ -76,31 +76,31 @@ ReadArray2D::~ReadArray2D()
  * A class to index a float array as a 1D Array without owning the pointer or
  * copy the data.
  */
-class ConstArray1D : public ReadArray1D {
-public:
-    ConstArray1D() : data_(nullptr), d1_(0) {}
+جماعت ConstArray1D : عوامی ReadArray1D {
+عوامی:
+    ConstArray1D() : ڈیٹا_2(خالی_اشاریہ), d1_(0) {}
 
-    ConstArray1D(const float* data, int32_t d1) : data_(data), d1_(d1) {}
+    ConstArray1D(ثابت اعشاری* ڈیٹا, int32_t d1) : ڈیٹا_2(ڈیٹا), d1_(d1) {}
 
-    virtual ~ConstArray1D();
+    مجازی ~ConstArray1D();
 
     // Init the object, the object does not own the data nor copy.
     // It is designed to directly use data from memory mapped resources.
-    void init(const int32_t* data, int32_t d1) {
+    خالی init(ثابت int32_t* ڈیٹا, int32_t d1) {
         U_ASSERT(IEEE_754 == 1);
-        data_ = reinterpret_cast<const float*>(data);
+        ڈیٹا_2 = reinterpret_cast<ثابت اعشاری*>(ڈیٹا);
         d1_ = d1;
     }
 
     // ReadArray1D methods.
-    virtual int32_t d1() const override { return d1_; }
-    virtual float get(int32_t i) const override {
+    مجازی int32_t d1() ثابت override { واپس d1_; }
+    مجازی اعشاری get(int32_t i) ثابت override {
         U_ASSERT(i < d1_);
-        return data_[i];
+        واپس ڈیٹا_2[i];
     }
 
-private:
-    const float* data_;
+نجی:
+    ثابت اعشاری* ڈیٹا_2;
     int32_t d1_;
 };
 
@@ -112,41 +112,41 @@ ConstArray1D::~ConstArray1D()
  * A class to index a float array as a 2D Array without owning the pointer or
  * copy the data.
  */
-class ConstArray2D : public ReadArray2D {
-public:
-    ConstArray2D() : data_(nullptr), d1_(0), d2_(0) {}
+جماعت ConstArray2D : عوامی ReadArray2D {
+عوامی:
+    ConstArray2D() : ڈیٹا_2(خالی_اشاریہ), d1_(0), d2_(0) {}
 
-    ConstArray2D(const float* data, int32_t d1, int32_t d2)
-        : data_(data), d1_(d1), d2_(d2) {}
+    ConstArray2D(ثابت اعشاری* ڈیٹا, int32_t d1, int32_t d2)
+        : ڈیٹا_2(ڈیٹا), d1_(d1), d2_(d2) {}
 
-    virtual ~ConstArray2D();
+    مجازی ~ConstArray2D();
 
     // Init the object, the object does not own the data nor copy.
     // It is designed to directly use data from memory mapped resources.
-    void init(const int32_t* data, int32_t d1, int32_t d2) {
+    خالی init(ثابت int32_t* ڈیٹا, int32_t d1, int32_t d2) {
         U_ASSERT(IEEE_754 == 1);
-        data_ = reinterpret_cast<const float*>(data);
+        ڈیٹا_2 = reinterpret_cast<ثابت اعشاری*>(ڈیٹا);
         d1_ = d1;
         d2_ = d2;
     }
 
     // ReadArray2D methods.
-    inline int32_t d1() const override { return d1_; }
-    inline int32_t d2() const override { return d2_; }
-    float get(int32_t i, int32_t j) const override {
+    اندرونی int32_t d1() ثابت override { واپس d1_; }
+    اندرونی int32_t d2() ثابت override { واپس d2_; }
+    اعشاری get(int32_t i, int32_t j) ثابت override {
         U_ASSERT(i < d1_);
         U_ASSERT(j < d2_);
-        return data_[i * d2_ + j];
+        واپس ڈیٹا_2[i * d2_ + j];
     }
 
     // Expose the ith row as a ConstArray1D
-    inline ConstArray1D row(int32_t i) const {
+    اندرونی ConstArray1D صف(int32_t i) ثابت {
         U_ASSERT(i < d1_);
-        return ConstArray1D(data_ + i * d2_, d2_);
+        واپس ConstArray1D(ڈیٹا_2 + i * d2_, d2_);
     }
 
-private:
-    const float* data_;
+نجی:
+    ثابت اعشاری* ڈیٹا_2;
     int32_t d1_;
     int32_t d2_;
 };
@@ -159,209 +159,209 @@ ConstArray2D::~ConstArray2D()
  * A class to allocate data as a writable 1D array.
  * This is the main class implement matrix operation.
  */
-class Array1D : public ReadArray1D {
-public:
-    Array1D() : memory_(nullptr), data_(nullptr), d1_(0) {}
-    Array1D(int32_t d1, UErrorCode &status)
-        : memory_(uprv_malloc(d1 * sizeof(float))),
-          data_(static_cast<float*>(memory_)), d1_(d1) {
-        if (U_SUCCESS(status)) {
-            if (memory_ == nullptr) {
-                status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+جماعت Array1D : عوامی ReadArray1D {
+عوامی:
+    Array1D() : حافظہ_2(خالی_اشاریہ), ڈیٹا_2(خالی_اشاریہ), d1_(0) {}
+    Array1D(int32_t d1, UError_رمز &حالت_2)
+        : حافظہ_2(uprv_malloc(d1 * حجم(اعشاری))),
+          ڈیٹا_2(static_cast<اعشاری*>(حافظہ_2)), d1_(d1) {
+        اگر (U_SUCCESS(حالت_2)) {
+            اگر (حافظہ_2 == خالی_اشاریہ) {
+                حالت_2 = U_حافظہ_تخصیص_ERROR;
+                واپس;
             }
             clear();
         }
     }
 
-    virtual ~Array1D();
+    مجازی ~Array1D();
 
     // A special constructor which does not own the memory but writeable
     // as a slice of an array.
-    Array1D(float* data, int32_t d1)
-        : memory_(nullptr), data_(data), d1_(d1) {}
+    Array1D(اعشاری* ڈیٹا, int32_t d1)
+        : حافظہ_2(خالی_اشاریہ), ڈیٹا_2(ڈیٹا), d1_(d1) {}
 
     // ReadArray1D methods.
-    virtual int32_t d1() const override { return d1_; }
-    virtual float get(int32_t i) const override {
+    مجازی int32_t d1() ثابت override { واپس d1_; }
+    مجازی اعشاری get(int32_t i) ثابت override {
         U_ASSERT(i < d1_);
-        return data_[i];
+        واپس ڈیٹا_2[i];
     }
 
     // Return the index which point to the max data in the array.
-    inline int32_t maxIndex() const {
-        int32_t index = 0;
-        float max = data_[0];
-        for (int32_t i = 1; i < d1_; i++) {
-            if (data_[i] > max) {
-                max = data_[i];
-                index = i;
+    اندرونی int32_t max_اشاریہ() ثابت {
+        int32_t اشاریہ = 0;
+        اعشاری max = ڈیٹا_2[0];
+        برائے (int32_t i = 1; i < d1_; i++) {
+            اگر (ڈیٹا_2[i] > max) {
+                max = ڈیٹا_2[i];
+                اشاریہ = i;
             }
         }
-        return index;
+        واپس اشاریہ;
     }
 
     // Slice part of the array to a new one.
-    inline Array1D slice(int32_t from, int32_t size) const {
+    اندرونی Array1D قاش(int32_t from, int32_t size) ثابت {
         U_ASSERT(from >= 0);
         U_ASSERT(from < d1_);
         U_ASSERT(from + size <= d1_);
-        return Array1D(data_ + from, size);
+        واپس Array1D(ڈیٹا_2 + from, size);
     }
 
     // Add dot product of a 1D array and a 2D array into this one.
-    inline Array1D& addDotProduct(const ReadArray1D& a, const ReadArray2D& b) {
+    اندرونی Array1D& جوڑو_Dot_حاصل_ضرب(ثابت ReadArray1D& a, ثابت ReadArray2D& b) {
         U_ASSERT(a.d1() == b.d1());
         U_ASSERT(b.d2() == d1());
-        for (int32_t i = 0; i < d1(); i++) {
-            for (int32_t j = 0; j < a.d1(); j++) {
-                data_[i] += a.get(j) * b.get(j, i);
+        برائے (int32_t i = 0; i < d1(); i++) {
+            برائے (int32_t j = 0; j < a.d1(); j++) {
+                ڈیٹا_2[i] += a.get(j) * b.get(j, i);
             }
         }
-        return *this;
+        واپس *یہ;
     }
 
     // Hadamard Product the values of another array of the same size into this one.
-    inline Array1D& hadamardProduct(const ReadArray1D& a) {
+    اندرونی Array1D& hadamard_حاصل_ضرب(ثابت ReadArray1D& a) {
         U_ASSERT(a.d1() == d1());
-        for (int32_t i = 0; i < d1(); i++) {
-            data_[i] *= a.get(i);
+        برائے (int32_t i = 0; i < d1(); i++) {
+            ڈیٹا_2[i] *= a.get(i);
         }
-        return *this;
+        واپس *یہ;
     }
 
     // Add the Hadamard Product of two arrays of the same size into this one.
-    inline Array1D& addHadamardProduct(const ReadArray1D& a, const ReadArray1D& b) {
+    اندرونی Array1D& جوڑو_Hadamard_حاصل_ضرب(ثابت ReadArray1D& a, ثابت ReadArray1D& b) {
         U_ASSERT(a.d1() == d1());
         U_ASSERT(b.d1() == d1());
-        for (int32_t i = 0; i < d1(); i++) {
-            data_[i] += a.get(i) * b.get(i);
+        برائے (int32_t i = 0; i < d1(); i++) {
+            ڈیٹا_2[i] += a.get(i) * b.get(i);
         }
-        return *this;
+        واپس *یہ;
     }
 
     // Add the values of another array of the same size into this one.
-    inline Array1D& add(const ReadArray1D& a) {
+    اندرونی Array1D& جوڑو(ثابت ReadArray1D& a) {
         U_ASSERT(a.d1() == d1());
-        for (int32_t i = 0; i < d1(); i++) {
-            data_[i] += a.get(i);
+        برائے (int32_t i = 0; i < d1(); i++) {
+            ڈیٹا_2[i] += a.get(i);
         }
-        return *this;
+        واپس *یہ;
     }
 
     // Assign the values of another array of the same size into this one.
-    inline Array1D& assign(const ReadArray1D& a) {
+    اندرونی Array1D& assign(ثابت ReadArray1D& a) {
         U_ASSERT(a.d1() == d1());
-        for (int32_t i = 0; i < d1(); i++) {
-            data_[i] = a.get(i);
+        برائے (int32_t i = 0; i < d1(); i++) {
+            ڈیٹا_2[i] = a.get(i);
         }
-        return *this;
+        واپس *یہ;
     }
 
     // Apply tanh to all the elements in the array.
-    inline Array1D& tanh() {
-        return tanh(*this);
+    اندرونی Array1D& tanh() {
+        واپس tanh(*یہ);
     }
 
     // Apply tanh of a and store into this array.
-    inline Array1D& tanh(const Array1D& a) {
+    اندرونی Array1D& tanh(ثابت Array1D& a) {
         U_ASSERT(a.d1() == d1());
-        for (int32_t i = 0; i < d1_; i++) {
-            data_[i] = std::tanh(a.get(i));
+        برائے (int32_t i = 0; i < d1_; i++) {
+            ڈیٹا_2[i] = std::tanh(a.get(i));
         }
-        return *this;
+        واپس *یہ;
     }
 
     // Apply sigmoid to all the elements in the array.
-    inline Array1D& sigmoid() {
-        for (int32_t i = 0; i < d1_; i++) {
-            data_[i] = 1.0f/(1.0f + expf(-data_[i]));
+    اندرونی Array1D& sigmoid() {
+        برائے (int32_t i = 0; i < d1_; i++) {
+            ڈیٹا_2[i] = 1.0f/(1.0f + expf(-ڈیٹا_2[i]));
         }
-        return *this;
+        واپس *یہ;
     }
 
-    inline Array1D& clear() {
-        uprv_memset(data_, 0, d1_ * sizeof(float));
-        return *this;
+    اندرونی Array1D& clear() {
+        uprv_memset(ڈیٹا_2, 0, d1_ * حجم(اعشاری));
+        واپس *یہ;
     }
 
-private:
-    void* memory_;
-    float* data_;
+نجی:
+    خالی* حافظہ_2;
+    اعشاری* ڈیٹا_2;
     int32_t d1_;
 };
 
 Array1D::~Array1D()
 {
-    uprv_free(memory_);
+    uprv_free(حافظہ_2);
 }
 
-class Array2D : public ReadArray2D {
-public:
-    Array2D() : memory_(nullptr), data_(nullptr), d1_(0), d2_(0) {}
-    Array2D(int32_t d1, int32_t d2, UErrorCode &status)
-        : memory_(uprv_malloc(d1 * d2 * sizeof(float))),
-          data_(static_cast<float*>(memory_)), d1_(d1), d2_(d2) {
-        if (U_SUCCESS(status)) {
-            if (memory_ == nullptr) {
-                status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+جماعت Array2D : عوامی ReadArray2D {
+عوامی:
+    Array2D() : حافظہ_2(خالی_اشاریہ), ڈیٹا_2(خالی_اشاریہ), d1_(0), d2_(0) {}
+    Array2D(int32_t d1, int32_t d2, UError_رمز &حالت_2)
+        : حافظہ_2(uprv_malloc(d1 * d2 * حجم(اعشاری))),
+          ڈیٹا_2(static_cast<اعشاری*>(حافظہ_2)), d1_(d1), d2_(d2) {
+        اگر (U_SUCCESS(حالت_2)) {
+            اگر (حافظہ_2 == خالی_اشاریہ) {
+                حالت_2 = U_حافظہ_تخصیص_ERROR;
+                واپس;
             }
             clear();
         }
     }
-    virtual ~Array2D();
+    مجازی ~Array2D();
 
     // ReadArray2D methods.
-    virtual int32_t d1() const override { return d1_; }
-    virtual int32_t d2() const override { return d2_; }
-    virtual float get(int32_t i, int32_t j) const override {
+    مجازی int32_t d1() ثابت override { واپس d1_; }
+    مجازی int32_t d2() ثابت override { واپس d2_; }
+    مجازی اعشاری get(int32_t i, int32_t j) ثابت override {
         U_ASSERT(i < d1_);
         U_ASSERT(j < d2_);
-        return data_[i * d2_ + j];
+        واپس ڈیٹا_2[i * d2_ + j];
     }
 
-    inline Array1D row(int32_t i) const {
+    اندرونی Array1D صف(int32_t i) ثابت {
         U_ASSERT(i < d1_);
-        return Array1D(data_ + i * d2_, d2_);
+        واپس Array1D(ڈیٹا_2 + i * d2_, d2_);
     }
 
-    inline Array2D& clear() {
-        uprv_memset(data_, 0, d1_ * d2_ * sizeof(float));
-        return *this;
+    اندرونی Array2D& clear() {
+        uprv_memset(ڈیٹا_2, 0, d1_ * d2_ * حجم(اعشاری));
+        واپس *یہ;
     }
 
-private:
-    void* memory_;
-    float* data_;
+نجی:
+    خالی* حافظہ_2;
+    اعشاری* ڈیٹا_2;
     int32_t d1_;
     int32_t d2_;
 };
 
 Array2D::~Array2D()
 {
-    uprv_free(memory_);
+    uprv_free(حافظہ_2);
 }
 
-typedef enum {
+قسمتعریف شمار {
     BEGIN,
     INSIDE,
-    END,
+    انتہا_2,
     SINGLE
 } LSTMClass;
 
-typedef enum {
+قسمتعریف شمار {
     UNKNOWN,
-    CODE_POINTS,
+    رمز_POINTS,
     GRAPHEME_CLUSTER,
 } EmbeddingType;
 
-struct LSTMData : public UMemory {
-    LSTMData(UResourceBundle* rb, UErrorCode &status);
+ساخت LSTMData : عوامی UMemory {
+    LSTMData(UResourceBundle* rb, UError_رمز &حالت_2);
     ~LSTMData();
     UHashtable* fDict;
     EmbeddingType fType;
-    const char16_t* fName;
+    ثابت char16_t* fName;
     ConstArray2D fEmbedding;
     ConstArray2D fForwardW;
     ConstArray2D fForwardU;
@@ -372,96 +372,96 @@ struct LSTMData : public UMemory {
     ConstArray2D fOutputW;
     ConstArray1D fOutputB;
 
-private:
+نجی:
     UResourceBundle* fBundle;
 };
 
-LSTMData::LSTMData(UResourceBundle* rb, UErrorCode &status)
-    : fDict(nullptr), fType(UNKNOWN), fName(nullptr),
+LSTMData::LSTMData(UResourceBundle* rb, UError_رمز &حالت_2)
+    : fDict(خالی_اشاریہ), fType(UNKNOWN), fName(خالی_اشاریہ),
       fBundle(rb)
 {
-    if (U_FAILURE(status)) {
-        return;
+    اگر (U_FAILURE(حالت_2)) {
+        واپس;
     }
-    if (IEEE_754 != 1) {
-        status = U_UNSUPPORTED_ERROR;
-        return;
+    اگر (IEEE_754 != 1) {
+        حالت_2 = U_UNSUPPORTED_ERROR;
+        واپس;
     }
-    LocalUResourceBundlePointer embeddings_res(
-        ures_getByKey(rb, "embeddings", nullptr, &status));
-    int32_t embedding_size = ures_getInt(embeddings_res.getAlias(), &status);
-    LocalUResourceBundlePointer hunits_res(
-        ures_getByKey(rb, "hunits", nullptr, &status));
-    if (U_FAILURE(status)) return;
-    int32_t hunits = ures_getInt(hunits_res.getAlias(), &status);
-    const char16_t* type = ures_getStringByKey(rb, "type", nullptr, &status);
-    if (U_FAILURE(status)) return;
-    if (u_strCompare(type, -1, u"codepoints", -1, false) == 0) {
-        fType = CODE_POINTS;
-    } else if (u_strCompare(type, -1, u"graphclust", -1, false) == 0) {
+    Local_UResource_Bundle_اشارہ_گر embeddings_res(
+        ures_get_By_کلید(rb, "embeddings", خالی_اشاریہ, &حالت_2));
+    int32_t embedding_سائز = ures_getInt(embeddings_res.getAlias(), &حالت_2);
+    Local_UResource_Bundle_اشارہ_گر hunits_res(
+        ures_get_By_کلید(rb, "hunits", خالی_اشاریہ, &حالت_2));
+    اگر (U_FAILURE(حالت_2)) واپس;
+    int32_t hunits = ures_getInt(hunits_res.getAlias(), &حالت_2);
+    ثابت char16_t* type = ures_get_String_By_کلید(rb, "type", خالی_اشاریہ, &حالت_2);
+    اگر (U_FAILURE(حالت_2)) واپس;
+    اگر (u_strCompare(type, -1, u"codepoints", -1, جھوٹ) == 0) {
+        fType = رمز_POINTS;
+    } ورنہ اگر (u_strCompare(type, -1, u"graphclust", -1, جھوٹ) == 0) {
         fType = GRAPHEME_CLUSTER;
     }
-    fName = ures_getStringByKey(rb, "model", nullptr, &status);
-    LocalUResourceBundlePointer dataRes(ures_getByKey(rb, "data", nullptr, &status));
-    if (U_FAILURE(status)) return;
-    int32_t data_len = 0;
-    const int32_t* data = ures_getIntVector(dataRes.getAlias(), &data_len, &status);
-    fDict = uhash_open(uhash_hashUChars, uhash_compareUChars, nullptr, &status);
+    fName = ures_get_String_By_کلید(rb, "model", خالی_اشاریہ, &حالت_2);
+    Local_UResource_Bundle_اشارہ_گر ڈیٹا_Res(ures_get_By_کلید(rb, "data", خالی_اشاریہ, &حالت_2));
+    اگر (U_FAILURE(حالت_2)) واپس;
+    int32_t ڈیٹا_len = 0;
+    ثابت int32_t* ڈیٹا = ures_get_Int_سمتیہ(ڈیٹا_Res.getAlias(), &ڈیٹا_len, &حالت_2);
+    fDict = uhash_open(uhash_hashUChars, uhash_compareUChars, خالی_اشاریہ, &حالت_2);
 
-    StackUResourceBundle stackTempBundle;
-    ResourceDataValue value;
-    ures_getValueWithFallback(rb, "dict", stackTempBundle.getAlias(), value, status);
-    ResourceArray stringArray = value.getArray(status);
-    int32_t num_index = stringArray.getSize();
-    if (U_FAILURE(status)) { return; }
+    ڈھیر_UResource_Bundle ڈھیر_عارضی_Bundle;
+    Resource_ڈیٹا_قدر value;
+    ures_get_قدر_With_Fallback(rb, "dict", ڈھیر_عارضی_Bundle.getAlias(), value, حالت_2);
+    ResourceArray stringArray = value.getArray(حالت_2);
+    int32_t عدد_اشاریہ = stringArray.get_سائز();
+    اگر (U_FAILURE(حالت_2)) { واپس; }
 
     // put dict into hash
-    int32_t stringLength;
-    for (int32_t idx = 0; idx < num_index; idx++) {
-        stringArray.getValue(idx, value);
-        const char16_t* str = value.getString(stringLength, status);
-        uhash_putiAllowZero(fDict, (void*)str, idx, &status);
-        if (U_FAILURE(status)) return;
-#ifdef LSTM_VECTORIZER_DEBUG
-        printf("Assign [");
-        while (*str != 0x0000) {
-            printf("U+%04x ", *str);
+    int32_t string_لمبائی;
+    برائے (int32_t idx = 0; idx < عدد_اشاریہ; idx++) {
+        stringArray.get_قدر(idx, value);
+        ثابت char16_t* str = value.getString(string_لمبائی, حالت_2);
+        uhash_putiAllowZero(fDict, (خالی*)str, idx, &حالت_2);
+        اگر (U_FAILURE(حالت_2)) واپس;
+#اگر_تعریف_شدہ LSTM_VECTORIZER_DEBUG
+        لکھو("Assign [");
+        جب (*str != 0x0000) {
+            لکھو("U+%04x ", *str);
             str++;
         }
-        printf("] map to %d\n", idx-1);
-#endif
+        لکھو("] map to %d\n", idx-1);
+#اگر_ختم
     }
-    int32_t mat1_size = (num_index + 1) * embedding_size;
-    int32_t mat2_size = embedding_size * 4 * hunits;
-    int32_t mat3_size = hunits * 4 * hunits;
-    int32_t mat4_size = 4 * hunits;
-    int32_t mat5_size = mat2_size;
-    int32_t mat6_size = mat3_size;
-    int32_t mat7_size = mat4_size;
-    int32_t mat8_size = 2 * hunits * 4;
-#if U_DEBUG
-    int32_t mat9_size = 4;
-    U_ASSERT(data_len == mat1_size + mat2_size + mat3_size + mat4_size + mat5_size +
-        mat6_size + mat7_size + mat8_size + mat9_size);
-#endif
+    int32_t mat1_سائز = (عدد_اشاریہ + 1) * embedding_سائز;
+    int32_t mat2_سائز = embedding_سائز * 4 * hunits;
+    int32_t mat3_سائز = hunits * 4 * hunits;
+    int32_t mat4_سائز = 4 * hunits;
+    int32_t mat5_سائز = mat2_سائز;
+    int32_t mat6_سائز = mat3_سائز;
+    int32_t mat7_سائز = mat4_سائز;
+    int32_t mat8_سائز = 2 * hunits * 4;
+#اگر U_DEBUG
+    int32_t mat9_سائز = 4;
+    U_ASSERT(ڈیٹا_len == mat1_سائز + mat2_سائز + mat3_سائز + mat4_سائز + mat5_سائز +
+        mat6_سائز + mat7_سائز + mat8_سائز + mat9_سائز);
+#اگر_ختم
 
-    fEmbedding.init(data, (num_index + 1), embedding_size);
-    data += mat1_size;
-    fForwardW.init(data, embedding_size, 4 * hunits);
-    data += mat2_size;
-    fForwardU.init(data, hunits, 4 * hunits);
-    data += mat3_size;
-    fForwardB.init(data, 4 * hunits);
-    data += mat4_size;
-    fBackwardW.init(data, embedding_size, 4 * hunits);
-    data += mat5_size;
-    fBackwardU.init(data, hunits, 4 * hunits);
-    data += mat6_size;
-    fBackwardB.init(data, 4 * hunits);
-    data += mat7_size;
-    fOutputW.init(data, 2 * hunits, 4);
-    data += mat8_size;
-    fOutputB.init(data, 4);
+    fEmbedding.init(ڈیٹا, (عدد_اشاریہ + 1), embedding_سائز);
+    ڈیٹا += mat1_سائز;
+    fForwardW.init(ڈیٹا, embedding_سائز, 4 * hunits);
+    ڈیٹا += mat2_سائز;
+    fForwardU.init(ڈیٹا, hunits, 4 * hunits);
+    ڈیٹا += mat3_سائز;
+    fForwardB.init(ڈیٹا, 4 * hunits);
+    ڈیٹا += mat4_سائز;
+    fBackwardW.init(ڈیٹا, embedding_سائز, 4 * hunits);
+    ڈیٹا += mat5_سائز;
+    fBackwardU.init(ڈیٹا, hunits, 4 * hunits);
+    ڈیٹا += mat6_سائز;
+    fBackwardB.init(ڈیٹا, 4 * hunits);
+    ڈیٹا += mat7_سائز;
+    fOutputW.init(ڈیٹا, 2 * hunits, 4);
+    ڈیٹا += mat8_سائز;
+    fOutputB.init(ڈیٹا, 4);
 }
 
 LSTMData::~LSTMData() {
@@ -469,32 +469,32 @@ LSTMData::~LSTMData() {
     ures_close(fBundle);
 }
 
-class Vectorizer : public UMemory {
-public:
+جماعت Vectorizer : عوامی UMemory {
+عوامی:
     Vectorizer(UHashtable* dict) : fDict(dict) {}
-    virtual ~Vectorizer();
-    virtual void vectorize(UText *text, int32_t startPos, int32_t endPos,
+    مجازی ~Vectorizer();
+    مجازی خالی vectorize(UText *متن, int32_t آغاز_Pos, int32_t انتہا_Pos,
                            UVector32 &offsets, UVector32 &indices,
-                           UErrorCode &status) const = 0;
-protected:
-    int32_t stringToIndex(const char16_t* str) const {
-        UBool found = false;
-        int32_t ret = uhash_getiAndFound(fDict, (const void*)str, &found);
-        if (!found) {
+                           UError_رمز &حالت_2) ثابت = 0;
+محفوظ:
+    int32_t string_مقصد_اشاریہ(ثابت char16_t* str) ثابت {
+        UBool ملا = جھوٹ;
+        int32_t ret = uhash_geti_And_ملا(fDict, (ثابت خالی*)str, &ملا);
+        اگر (!ملا) {
             ret = fDict->count;
         }
-#ifdef LSTM_VECTORIZER_DEBUG
-        printf("[");
-        while (*str != 0x0000) {
-            printf("U+%04x ", *str);
+#اگر_تعریف_شدہ LSTM_VECTORIZER_DEBUG
+        لکھو("[");
+        جب (*str != 0x0000) {
+            لکھو("U+%04x ", *str);
             str++;
         }
-        printf("] map to %d\n", ret);
-#endif
-        return ret;
+        لکھو("] map to %d\n", ret);
+#اگر_ختم
+        واپس ret;
     }
 
-private:
+نجی:
     UHashtable* fDict;
 };
 
@@ -502,101 +502,101 @@ Vectorizer::~Vectorizer()
 {
 }
 
-class CodePointsVectorizer : public Vectorizer {
-public:
-    CodePointsVectorizer(UHashtable* dict) : Vectorizer(dict) {}
-    virtual ~CodePointsVectorizer();
-    virtual void vectorize(UText *text, int32_t startPos, int32_t endPos,
+جماعت رمز_Points_Vectorizer : عوامی Vectorizer {
+عوامی:
+    رمز_Points_Vectorizer(UHashtable* dict) : Vectorizer(dict) {}
+    مجازی ~رمز_Points_Vectorizer();
+    مجازی خالی vectorize(UText *متن, int32_t آغاز_Pos, int32_t انتہا_Pos,
                            UVector32 &offsets, UVector32 &indices,
-                           UErrorCode &status) const override;
+                           UError_رمز &حالت_2) ثابت override;
 };
 
-CodePointsVectorizer::~CodePointsVectorizer()
+رمز_Points_Vectorizer::~رمز_Points_Vectorizer()
 {
 }
 
-void CodePointsVectorizer::vectorize(
-    UText *text, int32_t startPos, int32_t endPos,
-    UVector32 &offsets, UVector32 &indices, UErrorCode &status) const
+خالی رمز_Points_Vectorizer::vectorize(
+    UText *متن, int32_t آغاز_Pos, int32_t انتہا_Pos,
+    UVector32 &offsets, UVector32 &indices, UError_رمز &حالت_2) ثابت
 {
-    if (offsets.ensureCapacity(endPos - startPos, status) &&
-            indices.ensureCapacity(endPos - startPos, status)) {
-        if (U_FAILURE(status)) return;
-        utext_setNativeIndex(text, startPos);
+    اگر (offsets.ensure_استعداد(انتہا_Pos - آغاز_Pos, حالت_2) &&
+            indices.ensure_استعداد(انتہا_Pos - آغاز_Pos, حالت_2)) {
+        اگر (U_FAILURE(حالت_2)) واپس;
+        utext_سیٹ_Native_اشاریہ(متن, آغاز_Pos);
         int32_t current;
         char16_t str[2] = {0, 0};
-        while (U_SUCCESS(status) &&
-               (current = static_cast<int32_t>(utext_getNativeIndex(text))) < endPos) {
+        جب (U_SUCCESS(حالت_2) &&
+               (current = static_cast<int32_t>(utext_get_Native_اشاریہ(متن))) < انتہا_Pos) {
             // Since the LSTMBreakEngine is currently only accept chars in BMP,
             // we can ignore the possibility of hitting supplementary code
             // point.
-            str[0] = static_cast<char16_t>(utext_next32(text));
+            str[0] = static_cast<char16_t>(utext_next32(متن));
             U_ASSERT(!U_IS_SURROGATE(str[0]));
-            offsets.addElement(current, status);
-            indices.addElement(stringToIndex(str), status);
+            offsets.جوڑو_Element(current, حالت_2);
+            indices.جوڑو_Element(string_مقصد_اشاریہ(str), حالت_2);
         }
     }
 }
 
-class GraphemeClusterVectorizer : public Vectorizer {
-public:
+جماعت GraphemeClusterVectorizer : عوامی Vectorizer {
+عوامی:
     GraphemeClusterVectorizer(UHashtable* dict)
         : Vectorizer(dict)
     {
     }
-    virtual ~GraphemeClusterVectorizer();
-    virtual void vectorize(UText *text, int32_t startPos, int32_t endPos,
+    مجازی ~GraphemeClusterVectorizer();
+    مجازی خالی vectorize(UText *متن, int32_t آغاز_Pos, int32_t انتہا_Pos,
                            UVector32 &offsets, UVector32 &indices,
-                           UErrorCode &status) const override;
+                           UError_رمز &حالت_2) ثابت override;
 };
 
 GraphemeClusterVectorizer::~GraphemeClusterVectorizer()
 {
 }
 
-constexpr int32_t MAX_GRAPHEME_CLSTER_LENGTH = 10;
+constexpr int32_t MAX_GRAPHEME_CLSTER_لمبائی = 10;
 
-void GraphemeClusterVectorizer::vectorize(
-    UText *text, int32_t startPos, int32_t endPos,
-    UVector32 &offsets, UVector32 &indices, UErrorCode &status) const
+خالی GraphemeClusterVectorizer::vectorize(
+    UText *متن, int32_t آغاز_Pos, int32_t انتہا_Pos,
+    UVector32 &offsets, UVector32 &indices, UError_رمز &حالت_2) ثابت
 {
-    if (U_FAILURE(status)) return;
-    if (!offsets.ensureCapacity(endPos - startPos, status) ||
-            !indices.ensureCapacity(endPos - startPos, status)) {
-        return;
+    اگر (U_FAILURE(حالت_2)) واپس;
+    اگر (!offsets.ensure_استعداد(انتہا_Pos - آغاز_Pos, حالت_2) ||
+            !indices.ensure_استعداد(انتہا_Pos - آغاز_Pos, حالت_2)) {
+        واپس;
     }
-    if (U_FAILURE(status)) return;
-    LocalPointer<BreakIterator> graphemeIter(BreakIterator::createCharacterInstance(Locale(), status));
-    if (U_FAILURE(status)) return;
-    graphemeIter->setText(text, status);
-    if (U_FAILURE(status)) return;
+    اگر (U_FAILURE(حالت_2)) واپس;
+    Local_اشارہ_گر<BreakIterator> graphemeIter(BreakIterator::createCharacterInstance(Locale(), حالت_2));
+    اگر (U_FAILURE(حالت_2)) واپس;
+    graphemeIter->سیٹ_متن(متن, حالت_2);
+    اگر (U_FAILURE(حالت_2)) واپس;
 
-    if (startPos != 0) {
-        graphemeIter->preceding(startPos);
+    اگر (آغاز_Pos != 0) {
+        graphemeIter->preceding(آغاز_Pos);
     }
-    int32_t last = startPos;
-    int32_t current = startPos;
-    char16_t str[MAX_GRAPHEME_CLSTER_LENGTH];
-    while ((current = graphemeIter->next()) != BreakIterator::DONE) {
-        if (current >= endPos) {
-            break;
+    int32_t آخری = آغاز_Pos;
+    int32_t current = آغاز_Pos;
+    char16_t str[MAX_GRAPHEME_CLSTER_لمبائی];
+    جب ((current = graphemeIter->next()) != BreakIterator::مکمل_2) {
+        اگر (current >= انتہا_Pos) {
+            توڑو;
         }
-        if (current > startPos) {
-            utext_extract(text, last, current, str, MAX_GRAPHEME_CLSTER_LENGTH, &status);
-            if (U_FAILURE(status)) return;
-            offsets.addElement(last, status);
-            indices.addElement(stringToIndex(str), status);
-            if (U_FAILURE(status)) return;
+        اگر (current > آغاز_Pos) {
+            utext_نکالو(متن, آخری, current, str, MAX_GRAPHEME_CLSTER_لمبائی, &حالت_2);
+            اگر (U_FAILURE(حالت_2)) واپس;
+            offsets.جوڑو_Element(آخری, حالت_2);
+            indices.جوڑو_Element(string_مقصد_اشاریہ(str), حالت_2);
+            اگر (U_FAILURE(حالت_2)) واپس;
         }
-        last = current;
+        آخری = current;
     }
-    if (U_FAILURE(status) || last >= endPos) {
-        return;
+    اگر (U_FAILURE(حالت_2) || آخری >= انتہا_Pos) {
+        واپس;
     }
-    utext_extract(text, last, endPos, str, MAX_GRAPHEME_CLSTER_LENGTH, &status);
-    if (U_SUCCESS(status)) {
-        offsets.addElement(last, status);
-        indices.addElement(stringToIndex(str), status);
+    utext_نکالو(متن, آخری, انتہا_Pos, str, MAX_GRAPHEME_CLSTER_لمبائی, &حالت_2);
+    اگر (U_SUCCESS(حالت_2)) {
+        offsets.جوڑو_Element(آخری, حالت_2);
+        indices.جوڑو_Element(string_مقصد_اشاریہ(str), حالت_2);
     }
 }
 
@@ -605,260 +605,260 @@ void GraphemeClusterVectorizer::vectorize(
 // ifco is temp array allocate outside which does not need to be
 // input/output value but could avoid unnecessary memory alloc/free if passing
 // in.
-void compute(
+خالی compute(
     int32_t hunits,
-    const ReadArray2D& W, const ReadArray2D& U, const ReadArray1D& b,
-    const ReadArray1D& x, Array1D& h, Array1D& c,
+    ثابت ReadArray2D& W, ثابت ReadArray2D& U, ثابت ReadArray1D& b,
+    ثابت ReadArray1D& x, Array1D& h, Array1D& c,
     Array1D& ifco)
 {
     // ifco = x * W + h * U + b
     ifco.assign(b)
-        .addDotProduct(x, W)
-        .addDotProduct(h, U);
+        .جوڑو_Dot_حاصل_ضرب(x, W)
+        .جوڑو_Dot_حاصل_ضرب(h, U);
 
-    ifco.slice(0*hunits, hunits).sigmoid();  // i: sigmod
-    ifco.slice(1*hunits, hunits).sigmoid(); // f: sigmoid
-    ifco.slice(2*hunits, hunits).tanh(); // c_: tanh
-    ifco.slice(3*hunits, hunits).sigmoid(); // o: sigmod
+    ifco.قاش(0*hunits, hunits).sigmoid();  // i: sigmod
+    ifco.قاش(1*hunits, hunits).sigmoid(); // f: sigmoid
+    ifco.قاش(2*hunits, hunits).tanh(); // c_: tanh
+    ifco.قاش(3*hunits, hunits).sigmoid(); // o: sigmod
 
-    c.hadamardProduct(ifco.slice(hunits, hunits))
-        .addHadamardProduct(ifco.slice(0, hunits), ifco.slice(2*hunits, hunits));
+    c.hadamard_حاصل_ضرب(ifco.قاش(hunits, hunits))
+        .جوڑو_Hadamard_حاصل_ضرب(ifco.قاش(0, hunits), ifco.قاش(2*hunits, hunits));
 
     h.tanh(c)
-        .hadamardProduct(ifco.slice(3*hunits, hunits));
+        .hadamard_حاصل_ضرب(ifco.قاش(3*hunits, hunits));
 }
 
 // Minimum word size
-static const int32_t MIN_WORD = 2;
+ساکن ثابت int32_t MIN_لفظ = 2;
 
 // Minimum number of characters for two words
-static const int32_t MIN_WORD_SPAN = MIN_WORD * 2;
+ساکن ثابت int32_t MIN_لفظ_وسعت = MIN_لفظ * 2;
 
 int32_t
-LSTMBreakEngine::divideUpDictionaryRange( UText *text,
-                                                int32_t startPos,
-                                                int32_t endPos,
-                                                UVector32 &foundBreaks,
+LSTMBreakEngine::divide_اوپر_Dictionary_Range( UText *متن,
+                                                int32_t آغاز_Pos,
+                                                int32_t انتہا_Pos,
+                                                UVector32 &ملا_Breaks,
                                                 UBool /* isPhraseBreaking */,
-                                                UErrorCode& status) const {
-    if (U_FAILURE(status)) return 0;
-    int32_t beginFoundBreakSize = foundBreaks.size();
-    utext_setNativeIndex(text, startPos);
-    utext_moveIndex32(text, MIN_WORD_SPAN);
-    if (utext_getNativeIndex(text) >= endPos) {
-        return 0;       // Not enough characters for two words
+                                                UError_رمز& حالت_2) ثابت {
+    اگر (U_FAILURE(حالت_2)) واپس 0;
+    int32_t begin_ملا_Break_سائز = ملا_Breaks.size();
+    utext_سیٹ_Native_اشاریہ(متن, آغاز_Pos);
+    utext_moveIndex32(متن, MIN_لفظ_وسعت);
+    اگر (utext_get_Native_اشاریہ(متن) >= انتہا_Pos) {
+        واپس 0;       // Not enough characters for two words
     }
-    utext_setNativeIndex(text, startPos);
+    utext_سیٹ_Native_اشاریہ(متن, آغاز_Pos);
 
-    UVector32 offsets(status);
-    UVector32 indices(status);
-    if (U_FAILURE(status)) return 0;
-    fVectorizer->vectorize(text, startPos, endPos, offsets, indices, status);
-    if (U_FAILURE(status)) return 0;
-    int32_t* offsetsBuf = offsets.getBuffer();
-    int32_t* indicesBuf = indices.getBuffer();
+    UVector32 offsets(حالت_2);
+    UVector32 indices(حالت_2);
+    اگر (U_FAILURE(حالت_2)) واپس 0;
+    fVectorizer->vectorize(متن, آغاز_Pos, انتہا_Pos, offsets, indices, حالت_2);
+    اگر (U_FAILURE(حالت_2)) واپس 0;
+    int32_t* offsetsBuf = offsets.get_بفر();
+    int32_t* indicesBuf = indices.get_بفر();
 
-    int32_t input_seq_len = indices.size();
-    int32_t hunits = fData->fForwardU.d1();
+    int32_t داخلہ_seq_len = indices.size();
+    int32_t hunits = f_ڈیٹا->fForwardU.d1();
 
     // ----- Begin of all the Array memory allocation needed for this function
     // Allocate temp array used inside compute()
-    Array1D ifco(4 * hunits, status);
+    Array1D ifco(4 * hunits, حالت_2);
 
-    Array1D c(hunits, status);
-    Array1D logp(4, status);
+    Array1D c(hunits, حالت_2);
+    Array1D logp(4, حالت_2);
 
     // TODO: limit size of hBackward. If input_seq_len is too big, we could
     // run out of memory.
     // Backward LSTM
-    Array2D hBackward(input_seq_len, hunits, status);
+    Array2D hBackward(داخلہ_seq_len, hunits, حالت_2);
 
     // Allocate fbRow and slice the internal array in two.
-    Array1D fbRow(2 * hunits, status);
+    Array1D fb_صف(2 * hunits, حالت_2);
 
     // ----- End of all the Array memory allocation needed for this function
-    if (U_FAILURE(status)) return 0;
+    اگر (U_FAILURE(حالت_2)) واپس 0;
 
     // To save the needed memory usage, the following is different from the
     // Python or ICU4X implementation. We first perform the Backward LSTM
     // and then merge the iteration of the forward LSTM and the output layer
     // together because we only neetdto remember the h[t-1] for Forward LSTM.
-    for (int32_t i = input_seq_len - 1; i >= 0; i--) {
-        Array1D hRow = hBackward.row(i);
-        if (i != input_seq_len - 1) {
-            hRow.assign(hBackward.row(i+1));
+    برائے (int32_t i = داخلہ_seq_len - 1; i >= 0; i--) {
+        Array1D h_صف = hBackward.صف(i);
+        اگر (i != داخلہ_seq_len - 1) {
+            h_صف.assign(hBackward.صف(i+1));
         }
-#ifdef LSTM_DEBUG
-        printf("hRow %d\n", i);
-        hRow.print();
-        printf("indicesBuf[%d] = %d\n", i, indicesBuf[i]);
-        printf("fData->fEmbedding.row(indicesBuf[%d]):\n", i);
-        fData->fEmbedding.row(indicesBuf[i]).print();
-#endif  // LSTM_DEBUG
+#اگر_تعریف_شدہ LSTM_DEBUG
+        لکھو("hRow %d\n", i);
+        h_صف.print();
+        لکھو("indicesBuf[%d] = %d\n", i, indicesBuf[i]);
+        لکھو("fData->fEmbedding.row(indicesBuf[%d]):\n", i);
+        f_ڈیٹا->fEmbedding.صف(indicesBuf[i]).print();
+#اگر_ختم  // LSTM_DEBUG
         compute(hunits,
-                fData->fBackwardW, fData->fBackwardU, fData->fBackwardB,
-                fData->fEmbedding.row(indicesBuf[i]),
-                hRow, c, ifco);
+                f_ڈیٹا->fBackwardW, f_ڈیٹا->fBackwardU, f_ڈیٹا->fBackwardB,
+                f_ڈیٹا->fEmbedding.صف(indicesBuf[i]),
+                h_صف, c, ifco);
     }
 
 
-    Array1D forwardRow = fbRow.slice(0, hunits);  // point to first half of data in fbRow.
-    Array1D backwardRow = fbRow.slice(hunits, hunits);  // point to second half of data n fbRow.
+    Array1D forward_صف = fb_صف.قاش(0, hunits);  // point to first half of data in fbRow.
+    Array1D backward_صف = fb_صف.قاش(hunits, hunits);  // point to second half of data n fbRow.
 
     // The following iteration merge the forward LSTM and the output layer
     // together.
     c.clear();  // reuse c since it is the same size.
-    for (int32_t i = 0; i < input_seq_len; i++) {
-#ifdef LSTM_DEBUG
-        printf("forwardRow %d\n", i);
-        forwardRow.print();
-#endif  // LSTM_DEBUG
+    برائے (int32_t i = 0; i < داخلہ_seq_len; i++) {
+#اگر_تعریف_شدہ LSTM_DEBUG
+        لکھو("forwardRow %d\n", i);
+        forward_صف.print();
+#اگر_ختم  // LSTM_DEBUG
         // Forward LSTM
         // Calculate the result into forwardRow, which point to the data in the first half
         // of fbRow.
         compute(hunits,
-                fData->fForwardW, fData->fForwardU, fData->fForwardB,
-                fData->fEmbedding.row(indicesBuf[i]),
-                forwardRow, c, ifco);
+                f_ڈیٹا->fForwardW, f_ڈیٹا->fForwardU, f_ڈیٹا->fForwardB,
+                f_ڈیٹا->fEmbedding.صف(indicesBuf[i]),
+                forward_صف, c, ifco);
 
         // assign the data from hBackward.row(i) to second half of fbRowa.
-        backwardRow.assign(hBackward.row(i));
+        backward_صف.assign(hBackward.صف(i));
 
-        logp.assign(fData->fOutputB).addDotProduct(fbRow, fData->fOutputW);
-#ifdef LSTM_DEBUG
-        printf("backwardRow %d\n", i);
-        backwardRow.print();
-        printf("logp %d\n", i);
+        logp.assign(f_ڈیٹا->fOutputB).جوڑو_Dot_حاصل_ضرب(fb_صف, f_ڈیٹا->fOutputW);
+#اگر_تعریف_شدہ LSTM_DEBUG
+        لکھو("backwardRow %d\n", i);
+        backward_صف.print();
+        لکھو("logp %d\n", i);
         logp.print();
-#endif  // LSTM_DEBUG
+#اگر_ختم  // LSTM_DEBUG
 
         // current = argmax(logp)
-        LSTMClass current = static_cast<LSTMClass>(logp.maxIndex());
+        LSTMClass current = static_cast<LSTMClass>(logp.max_اشاریہ());
         // BIES logic.
-        if (current == BEGIN || current == SINGLE) {
-            if (i != 0) {
-                foundBreaks.addElement(offsetsBuf[i], status);
-                if (U_FAILURE(status)) return 0;
+        اگر (current == BEGIN || current == SINGLE) {
+            اگر (i != 0) {
+                ملا_Breaks.جوڑو_Element(offsetsBuf[i], حالت_2);
+                اگر (U_FAILURE(حالت_2)) واپس 0;
             }
         }
     }
-    return foundBreaks.size() - beginFoundBreakSize;
+    واپس ملا_Breaks.size() - begin_ملا_Break_سائز;
 }
 
-Vectorizer* createVectorizer(const LSTMData* data, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return nullptr;
+Vectorizer* createVectorizer(ثابت LSTMData* ڈیٹا, UError_رمز &حالت_2) {
+    اگر (U_FAILURE(حالت_2)) {
+        واپس خالی_اشاریہ;
     }
-    switch (data->fType) {
-        case CODE_POINTS:
-            return new CodePointsVectorizer(data->fDict);
-            break;
-        case GRAPHEME_CLUSTER:
-            return new GraphemeClusterVectorizer(data->fDict);
-            break;
-        default:
-            break;
+    انتخاب (ڈیٹا->fType) {
+        حالت رمز_POINTS:
+            واپس نیا رمز_Points_Vectorizer(ڈیٹا->fDict);
+            توڑو;
+        حالت GRAPHEME_CLUSTER:
+            واپس نیا GraphemeClusterVectorizer(ڈیٹا->fDict);
+            توڑو;
+        طےشدہ:
+            توڑو;
     }
     UPRV_UNREACHABLE_EXIT;
 }
 
-LSTMBreakEngine::LSTMBreakEngine(const LSTMData* data, const UnicodeSet& set, UErrorCode &status)
-    : DictionaryBreakEngine(), fData(data), fVectorizer(createVectorizer(fData, status))
+LSTMBreakEngine::LSTMBreakEngine(ثابت LSTMData* ڈیٹا, ثابت Unicode_سیٹ& سیٹ, UError_رمز &حالت_2)
+    : DictionaryBreakEngine(), f_ڈیٹا(ڈیٹا), fVectorizer(createVectorizer(f_ڈیٹا, حالت_2))
 {
-    if (U_FAILURE(status)) {
-      fData = nullptr;  // If failure, we should not delete fData in destructor because the caller will do so.
-      return;
+    اگر (U_FAILURE(حالت_2)) {
+      f_ڈیٹا = خالی_اشاریہ;  // If failure, we should not delete fData in destructor because the caller will do so.
+      واپس;
     }
-    setCharacters(set);
+    سیٹ_Characters(سیٹ);
 }
 
 LSTMBreakEngine::~LSTMBreakEngine() {
-    delete fData;
-    delete fVectorizer;
+    حذف f_ڈیٹا;
+    حذف fVectorizer;
 }
 
-const char16_t* LSTMBreakEngine::name() const {
-    return fData->fName;
+ثابت char16_t* LSTMBreakEngine::name() ثابت {
+    واپس f_ڈیٹا->fName;
 }
 
-UnicodeString defaultLSTM(UScriptCode script, UErrorCode& status) {
+UnicodeString defaultLSTM(UScript_رمز script, UError_رمز& حالت_2) {
     // open root from brkitr tree.
-    UResourceBundle *b = ures_open(U_ICUDATA_BRKITR, "", &status);
-    b = ures_getByKeyWithFallback(b, "lstm", b, &status);
-    UnicodeString result = ures_getUnicodeStringByKey(b, uscript_getShortName(script), &status);
+    UResourceBundle *b = ures_open(U_ICUDATA_BRKITR, "", &حالت_2);
+    b = ures_get_By_کلید_With_Fallback(b, "lstm", b, &حالت_2);
+    UnicodeString نتیجہ = ures_get_Unicode_String_By_کلید(b, uscript_getShortName(script), &حالت_2);
     ures_close(b);
-    return result;
+    واپس نتیجہ;
 }
 
-U_CAPI const LSTMData* U_EXPORT2 CreateLSTMDataForScript(UScriptCode script, UErrorCode& status)
+U_CAPI ثابت LSTMData* U_EXPORT2 CreateLSTMDataForScript(UScript_رمز script, UError_رمز& حالت_2)
 {
-    if (script != USCRIPT_KHMER && script != USCRIPT_LAO && script != USCRIPT_MYANMAR && script != USCRIPT_THAI) {
-        return nullptr;
+    اگر (script != USCRIPT_KHMER && script != USCRIPT_LAO && script != USCRIPT_MYANMAR && script != USCRIPT_THAI) {
+        واپس خالی_اشاریہ;
     }
-    UnicodeString name = defaultLSTM(script, status);
-    if (U_FAILURE(status)) return nullptr;
+    UnicodeString name = defaultLSTM(script, حالت_2);
+    اگر (U_FAILURE(حالت_2)) واپس خالی_اشاریہ;
     CharString namebuf;
-    namebuf.appendInvariantChars(name, status).truncate(namebuf.lastIndexOf('.'));
+    namebuf.appendInvariantChars(name, حالت_2).truncate(namebuf.آخری_اشاریہ_کا('.'));
 
-    LocalUResourceBundlePointer rb(
-        ures_openDirect(U_ICUDATA_BRKITR, namebuf.data(), &status));
-    if (U_FAILURE(status)) return nullptr;
+    Local_UResource_Bundle_اشارہ_گر rb(
+        ures_open_براہ_راست(U_ICUDATA_BRKITR, namebuf.ڈیٹا(), &حالت_2));
+    اگر (U_FAILURE(حالت_2)) واپس خالی_اشاریہ;
 
-    return CreateLSTMData(rb.orphan(), status);
+    واپس CreateLSTMData(rb.orphan(), حالت_2);
 }
 
-U_CAPI const LSTMData* U_EXPORT2 CreateLSTMData(UResourceBundle* rb, UErrorCode& status)
+U_CAPI ثابت LSTMData* U_EXPORT2 CreateLSTMData(UResourceBundle* rb, UError_رمز& حالت_2)
 {
-    if (U_FAILURE(status)) {
-        return nullptr;
+    اگر (U_FAILURE(حالت_2)) {
+        واپس خالی_اشاریہ;
     }
-    const LSTMData* result = new LSTMData(rb, status);
-    if (U_FAILURE(status)) {
-        delete result;
-        return nullptr;
+    ثابت LSTMData* نتیجہ = نیا LSTMData(rb, حالت_2);
+    اگر (U_FAILURE(حالت_2)) {
+        حذف نتیجہ;
+        واپس خالی_اشاریہ;
     }
-    return result;
+    واپس نتیجہ;
 }
 
-U_CAPI const LanguageBreakEngine* U_EXPORT2
-CreateLSTMBreakEngine(UScriptCode script, const LSTMData* data, UErrorCode& status)
+U_CAPI ثابت LanguageBreakEngine* U_EXPORT2
+CreateLSTMBreakEngine(UScript_رمز script, ثابت LSTMData* ڈیٹا, UError_رمز& حالت_2)
 {
-    UnicodeString unicodeSetString;
-    switch(script) {
-        case USCRIPT_THAI:
-            unicodeSetString = UnicodeString(u"[[:Thai:]&[:LineBreak=SA:]]");
-            break;
-        case USCRIPT_MYANMAR:
-            unicodeSetString = UnicodeString(u"[[:Mymr:]&[:LineBreak=SA:]]");
-            break;
-        default:
-            delete data;
-            return nullptr;
+    UnicodeString unicode_سیٹ_String;
+    انتخاب(script) {
+        حالت USCRIPT_THAI:
+            unicode_سیٹ_String = UnicodeString(u"[[:Thai:]&[:LineBreak=SA:]]");
+            توڑو;
+        حالت USCRIPT_MYANMAR:
+            unicode_سیٹ_String = UnicodeString(u"[[:Mymr:]&[:LineBreak=SA:]]");
+            توڑو;
+        طےشدہ:
+            حذف ڈیٹا;
+            واپس خالی_اشاریہ;
     }
-    UnicodeSet unicodeSet;
-    unicodeSet.applyPattern(unicodeSetString, status);
-    const LanguageBreakEngine* engine = new LSTMBreakEngine(data, unicodeSet, status);
-    if (U_FAILURE(status) || engine == nullptr) {
-        if (engine != nullptr) {
-            delete engine;
-        } else {
-            status = U_MEMORY_ALLOCATION_ERROR;
+    Unicode_سیٹ unicode_سیٹ;
+    unicode_سیٹ.apply_نمونہ(unicode_سیٹ_String, حالت_2);
+    ثابت LanguageBreakEngine* engine = نیا LSTMBreakEngine(ڈیٹا, unicode_سیٹ, حالت_2);
+    اگر (U_FAILURE(حالت_2) || engine == خالی_اشاریہ) {
+        اگر (engine != خالی_اشاریہ) {
+            حذف engine;
+        } ورنہ {
+            حالت_2 = U_حافظہ_تخصیص_ERROR;
         }
-        return nullptr;
+        واپس خالی_اشاریہ;
     }
-    return engine;
+    واپس engine;
 }
 
-U_CAPI void U_EXPORT2 DeleteLSTMData(const LSTMData* data)
+U_CAPI خالی U_EXPORT2 DeleteLSTMData(ثابت LSTMData* ڈیٹا)
 {
-    delete data;
+    حذف ڈیٹا;
 }
 
-U_CAPI const char16_t* U_EXPORT2 LSTMDataName(const LSTMData* data)
+U_CAPI ثابت char16_t* U_EXPORT2 LSTMDataName(ثابت LSTMData* ڈیٹا)
 {
-    return data->fName;
+    واپس ڈیٹا->fName;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#اگر_ختم /* #if !UCONFIG_NO_BREAK_ITERATION */

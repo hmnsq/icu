@@ -14,16 +14,16 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/ucharstriebuilder.h"
-#include "unicode/unistr.h"
-#include "unicode/ustring.h"
-#include "cmemory.h"
-#include "uarrsort.h"
-#include "uassert.h"
-#include "uhash.h"
-#include "ustr_imp.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/ucharstrie.h"
+#شامل "unicode/ucharstriebuilder.h"
+#شامل "unicode/unistr.h"
+#شامل "unicode/ustring.h"
+#شامل "cmemory.h"
+#شامل "uarrsort.h"
+#شامل "uassert.h"
+#شامل "uhash.h"
+#شامل "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -33,414 +33,414 @@ U_NAMESPACE_BEGIN
  * It might(!) take less memory if we collected the data in a temporary, dynamic trie.
  */
 
-class UCharsTrieElement : public UMemory {
-public:
+جماعت UCharsTrieElement : عوامی UMemory {
+عوامی:
     // Use compiler's default constructor, initializes nothing.
 
-    void setTo(const UnicodeString &s, int32_t val, UnicodeString &strings, UErrorCode &errorCode);
+    خالی سیٹ_مقصد(ثابت UnicodeString &s, int32_t val, UnicodeString &لڑیاں, UError_رمز &error_رمز);
 
-    UnicodeString getString(const UnicodeString& strings U_LIFETIME_BOUND) const {
-        int32_t length=strings[stringOffset];
-        return strings.tempSubString(stringOffset+1, length);
+    UnicodeString getString(ثابت UnicodeString& لڑیاں U_LIFETIME_BOUND) ثابت {
+        int32_t length=لڑیاں[string_انحراف];
+        واپس لڑیاں.عارضی_Sub_String(string_انحراف+1, length);
     }
-    int32_t getStringLength(const UnicodeString &strings) const {
-        return strings[stringOffset];
-    }
-
-    char16_t charAt(int32_t index, const UnicodeString &strings) const {
-        return strings[stringOffset+1+index];
+    int32_t get_String_لمبائی(ثابت UnicodeString &لڑیاں) ثابت {
+        واپس لڑیاں[string_انحراف];
     }
 
-    int32_t getValue() const { return value; }
+    char16_t charAt(int32_t اشاریہ, ثابت UnicodeString &لڑیاں) ثابت {
+        واپس لڑیاں[string_انحراف+1+اشاریہ];
+    }
 
-    int32_t compareStringTo(const UCharsTrieElement &o, const UnicodeString &strings) const;
+    int32_t get_قدر() ثابت { واپس value; }
 
-private:
+    int32_t compare_String_مقصد(ثابت UCharsTrieElement &o, ثابت UnicodeString &لڑیاں) ثابت;
+
+نجی:
     // The first strings unit contains the string length.
     // (Compared with a stringLength field here, this saves 2 bytes per string.)
-    int32_t stringOffset;
+    int32_t string_انحراف;
     int32_t value;
 };
 
-void
-UCharsTrieElement::setTo(const UnicodeString &s, int32_t val,
-                         UnicodeString &strings, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+خالی
+UCharsTrieElement::سیٹ_مقصد(ثابت UnicodeString &s, int32_t val,
+                         UnicodeString &لڑیاں, UError_رمز &error_رمز) {
+    اگر(U_FAILURE(error_رمز)) {
+        واپس;
     }
     int32_t length=s.length();
-    if(length>0xffff) {
+    اگر(length>0xffff) {
         // Too long: We store the length in 1 unit.
-        errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        error_رمز=U_اشاریہ_OUTOFBOUNDS_ERROR;
+        واپس;
     }
-    stringOffset=strings.length();
-    strings.append(static_cast<char16_t>(length));
+    string_انحراف=لڑیاں.length();
+    لڑیاں.append(static_cast<char16_t>(length));
     value=val;
-    strings.append(s);
+    لڑیاں.append(s);
 }
 
 int32_t
-UCharsTrieElement::compareStringTo(const UCharsTrieElement &other, const UnicodeString &strings) const {
-    return getString(strings).compare(other.getString(strings));
+UCharsTrieElement::compare_String_مقصد(ثابت UCharsTrieElement &other, ثابت UnicodeString &لڑیاں) ثابت {
+    واپس getString(لڑیاں).compare(other.getString(لڑیاں));
 }
 
-UCharsTrieBuilder::UCharsTrieBuilder(UErrorCode & /*errorCode*/)
-        : elements(nullptr), elementsCapacity(0), elementsLength(0),
-          uchars(nullptr), ucharsCapacity(0), ucharsLength(0) {}
+UCharsTrieBuilder::UCharsTrieBuilder(UError_رمز & /*errorCode*/)
+        : elements(خالی_اشاریہ), elements_استعداد(0), elements_لمبائی(0),
+          uchars(خالی_اشاریہ), uchars_استعداد(0), uchars_لمبائی(0) {}
 
 UCharsTrieBuilder::~UCharsTrieBuilder() {
-    delete[] elements;
+    حذف[] elements;
     uprv_free(uchars);
 }
 
 UCharsTrieBuilder&
-UCharsTrieBuilder::add(const UnicodeString& s,
+UCharsTrieBuilder::جوڑو(ثابت UnicodeString& s,
                        int32_t value,
-                       UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+                       UError_رمز& error_رمز) U_LIFETIME_BOUND {
+    اگر(U_FAILURE(error_رمز)) {
+        واپس *یہ;
     }
-    if(ucharsLength>0) {
+    اگر(uchars_لمبائی>0) {
         // Cannot add elements after building.
-        errorCode=U_NO_WRITE_PERMISSION;
-        return *this;
+        error_رمز=U_NO_WRITE_PERMISSION;
+        واپس *یہ;
     }
-    if(elementsLength==elementsCapacity) {
-        int32_t newCapacity;
-        if(elementsCapacity==0) {
-            newCapacity=1024;
-        } else {
-            newCapacity=4*elementsCapacity;
+    اگر(elements_لمبائی==elements_استعداد) {
+        int32_t new_استعداد;
+        اگر(elements_استعداد==0) {
+            new_استعداد=1024;
+        } ورنہ {
+            new_استعداد=4*elements_استعداد;
         }
-        UCharsTrieElement *newElements=new UCharsTrieElement[newCapacity];
-        if(newElements==nullptr) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+        UCharsTrieElement *newElements=نیا UCharsTrieElement[new_استعداد];
+        اگر(newElements==خالی_اشاریہ) {
+            error_رمز=U_حافظہ_تخصیص_ERROR;
+            واپس *یہ;
         }
-        if(elementsLength>0) {
-            uprv_memcpy(newElements, elements, (size_t)elementsLength*sizeof(UCharsTrieElement));
+        اگر(elements_لمبائی>0) {
+            uprv_memcpy(newElements, elements, (size_t)elements_لمبائی*حجم(UCharsTrieElement));
         }
-        delete[] elements;
+        حذف[] elements;
         elements=newElements;
-        elementsCapacity=newCapacity;
+        elements_استعداد=new_استعداد;
     }
-    elements[elementsLength++].setTo(s, value, strings, errorCode);
-    if(U_SUCCESS(errorCode) && strings.isBogus()) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
+    elements[elements_لمبائی++].سیٹ_مقصد(s, value, لڑیاں, error_رمز);
+    اگر(U_SUCCESS(error_رمز) && لڑیاں.isBogus()) {
+        error_رمز=U_حافظہ_تخصیص_ERROR;
     }
-    return *this;
+    واپس *یہ;
 }
 
 U_CDECL_BEGIN
 
-static int32_t U_CALLCONV
-compareElementStrings(const void *context, const void *left, const void *right) {
-    const UnicodeString *strings=static_cast<const UnicodeString *>(context);
-    const UCharsTrieElement *leftElement=static_cast<const UCharsTrieElement *>(left);
-    const UCharsTrieElement *rightElement=static_cast<const UCharsTrieElement *>(right);
-    return leftElement->compareStringTo(*rightElement, *strings);
+ساکن int32_t U_CALLCONV
+compare_Element_لڑیاں(ثابت خالی *context, ثابت خالی *بائیں, ثابت خالی *دائیں) {
+    ثابت UnicodeString *لڑیاں=static_cast<ثابت UnicodeString *>(context);
+    ثابت UCharsTrieElement *بایاں_Element=static_cast<ثابت UCharsTrieElement *>(بائیں);
+    ثابت UCharsTrieElement *دایاں_Element=static_cast<ثابت UCharsTrieElement *>(دائیں);
+    واپس بایاں_Element->compare_String_مقصد(*دایاں_Element, *لڑیاں);
 }
 
-U_CDECL_END
+U_CDECL_انتہا
 
 UCharsTrie *
-UCharsTrieBuilder::build(UStringTrieBuildOption buildOption, UErrorCode &errorCode) {
-    buildUChars(buildOption, errorCode);
-    UCharsTrie *newTrie=nullptr;
-    if(U_SUCCESS(errorCode)) {
-        newTrie=new UCharsTrie(uchars, uchars+(ucharsCapacity-ucharsLength));
-        if(newTrie==nullptr) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
-        } else {
-            uchars=nullptr;  // The new trie now owns the array.
-            ucharsCapacity=0;
+UCharsTrieBuilder::build(UStringTrieBuildOption buildOption, UError_رمز &error_رمز) {
+    buildUChars(buildOption, error_رمز);
+    UCharsTrie *newTrie=خالی_اشاریہ;
+    اگر(U_SUCCESS(error_رمز)) {
+        newTrie=نیا UCharsTrie(uchars, uchars+(uchars_استعداد-uchars_لمبائی));
+        اگر(newTrie==خالی_اشاریہ) {
+            error_رمز=U_حافظہ_تخصیص_ERROR;
+        } ورنہ {
+            uchars=خالی_اشاریہ;  // The new trie now owns the array.
+            uchars_استعداد=0;
         }
     }
-    return newTrie;
+    واپس newTrie;
 }
 
 UnicodeString&
 UCharsTrieBuilder::buildUnicodeString(UStringTrieBuildOption buildOption,
-                                      UnicodeString& result U_LIFETIME_BOUND,
-                                      UErrorCode& errorCode) U_LIFETIME_BOUND {
-    buildUChars(buildOption, errorCode);
-    if(U_SUCCESS(errorCode)) {
-        result.setTo(false, uchars+(ucharsCapacity-ucharsLength), ucharsLength);
+                                      UnicodeString& نتیجہ U_LIFETIME_BOUND,
+                                      UError_رمز& error_رمز) U_LIFETIME_BOUND {
+    buildUChars(buildOption, error_رمز);
+    اگر(U_SUCCESS(error_رمز)) {
+        نتیجہ.سیٹ_مقصد(جھوٹ, uchars+(uchars_استعداد-uchars_لمبائی), uchars_لمبائی);
     }
-    return result;
+    واپس نتیجہ;
 }
 
-void
-UCharsTrieBuilder::buildUChars(UStringTrieBuildOption buildOption, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+خالی
+UCharsTrieBuilder::buildUChars(UStringTrieBuildOption buildOption, UError_رمز &error_رمز) {
+    اگر(U_FAILURE(error_رمز)) {
+        واپس;
     }
-    if(uchars!=nullptr && ucharsLength>0) {
+    اگر(uchars!=خالی_اشاریہ && uchars_لمبائی>0) {
         // Already built.
-        return;
+        واپس;
     }
-    if(ucharsLength==0) {
-        if(elementsLength==0) {
-            errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return;
+    اگر(uchars_لمبائی==0) {
+        اگر(elements_لمبائی==0) {
+            error_رمز=U_اشاریہ_OUTOFBOUNDS_ERROR;
+            واپس;
         }
-        if(strings.isBogus()) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+        اگر(لڑیاں.isBogus()) {
+            error_رمز=U_حافظہ_تخصیص_ERROR;
+            واپس;
         }
-        uprv_sortArray(elements, elementsLength, static_cast<int32_t>(sizeof(UCharsTrieElement)),
-                      compareElementStrings, &strings,
-                      false,  // need not be a stable sort
-                      &errorCode);
-        if(U_FAILURE(errorCode)) {
-            return;
+        uprv_ترتیب_دو_Array(elements, elements_لمبائی, static_cast<int32_t>(حجم(UCharsTrieElement)),
+                      compare_Element_لڑیاں, &لڑیاں,
+                      جھوٹ,  // need not be a stable sort
+                      &error_رمز);
+        اگر(U_FAILURE(error_رمز)) {
+            واپس;
         }
         // Duplicate strings are not allowed.
-        UnicodeString prev=elements[0].getString(strings);
-        for(int32_t i=1; i<elementsLength; ++i) {
-            UnicodeString current=elements[i].getString(strings);
-            if(prev==current) {
-                errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-                return;
+        UnicodeString پچھلا=elements[0].getString(لڑیاں);
+        برائے(int32_t i=1; i<elements_لمبائی; ++i) {
+            UnicodeString current=elements[i].getString(لڑیاں);
+            اگر(پچھلا==current) {
+                error_رمز=U_ILLEGAL_دلیل_ERROR;
+                واپس;
             }
-            prev.fastCopyFrom(current);
+            پچھلا.fastCopyFrom(current);
         }
     }
     // Create and char16_t-serialize the trie for the elements.
-    ucharsLength=0;
-    int32_t capacity=strings.length();
-    if(capacity<1024) {
+    uchars_لمبائی=0;
+    int32_t capacity=لڑیاں.length();
+    اگر(capacity<1024) {
         capacity=1024;
     }
-    if(ucharsCapacity<capacity) {
+    اگر(uchars_استعداد<capacity) {
         uprv_free(uchars);
         uchars=static_cast<char16_t *>(uprv_malloc(capacity*2));
-        if(uchars==nullptr) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
-            ucharsCapacity=0;
-            return;
+        اگر(uchars==خالی_اشاریہ) {
+            error_رمز=U_حافظہ_تخصیص_ERROR;
+            uchars_استعداد=0;
+            واپس;
         }
-        ucharsCapacity=capacity;
+        uchars_استعداد=capacity;
     }
-    StringTrieBuilder::build(buildOption, elementsLength, errorCode);
-    if(uchars==nullptr) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
+    StringTrieBuilder::build(buildOption, elements_لمبائی, error_رمز);
+    اگر(uchars==خالی_اشاریہ) {
+        error_رمز=U_حافظہ_تخصیص_ERROR;
     }
 }
 
 int32_t
-UCharsTrieBuilder::getElementStringLength(int32_t i) const {
-    return elements[i].getStringLength(strings);
+UCharsTrieBuilder::get_Element_String_لمبائی(int32_t i) ثابت {
+    واپس elements[i].get_String_لمبائی(لڑیاں);
 }
 
 char16_t
-UCharsTrieBuilder::getElementUnit(int32_t i, int32_t unitIndex) const {
-    return elements[i].charAt(unitIndex, strings);
+UCharsTrieBuilder::getElementUnit(int32_t i, int32_t unit_اشاریہ) ثابت {
+    واپس elements[i].charAt(unit_اشاریہ, لڑیاں);
 }
 
 int32_t
-UCharsTrieBuilder::getElementValue(int32_t i) const {
-    return elements[i].getValue();
+UCharsTrieBuilder::get_Element_قدر(int32_t i) ثابت {
+    واپس elements[i].get_قدر();
 }
 
 int32_t
-UCharsTrieBuilder::getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) const {
-    const UCharsTrieElement &firstElement=elements[first];
-    const UCharsTrieElement &lastElement=elements[last];
-    int32_t minStringLength=firstElement.getStringLength(strings);
-    while(++unitIndex<minStringLength &&
-            firstElement.charAt(unitIndex, strings)==
-            lastElement.charAt(unitIndex, strings)) {}
-    return unitIndex;
+UCharsTrieBuilder::get_حد_بندی_کا_خطی_مطابقت(int32_t first, int32_t آخری, int32_t unit_اشاریہ) ثابت {
+    ثابت UCharsTrieElement &پہلا_Element=elements[first];
+    ثابت UCharsTrieElement &آخری_Element=elements[آخری];
+    int32_t min_String_لمبائی=پہلا_Element.get_String_لمبائی(لڑیاں);
+    جب(++unit_اشاریہ<min_String_لمبائی &&
+            پہلا_Element.charAt(unit_اشاریہ, لڑیاں)==
+            آخری_Element.charAt(unit_اشاریہ, لڑیاں)) {}
+    واپس unit_اشاریہ;
 }
 
 int32_t
-UCharsTrieBuilder::countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const {
+UCharsTrieBuilder::گنتی_Element_Units(int32_t آغاز, int32_t حد_بندی, int32_t unit_اشاریہ) ثابت {
     int32_t length=0;  // Number of different units at unitIndex.
-    int32_t i=start;
-    do {
-        char16_t unit=elements[i++].charAt(unitIndex, strings);
-        while(i<limit && unit==elements[i].charAt(unitIndex, strings)) {
+    int32_t i=آغاز;
+    کرو {
+        char16_t unit=elements[i++].charAt(unit_اشاریہ, لڑیاں);
+        جب(i<حد_بندی && unit==elements[i].charAt(unit_اشاریہ, لڑیاں)) {
             ++i;
         }
         ++length;
-    } while(i<limit);
-    return length;
+    } جب(i<حد_بندی);
+    واپس length;
 }
 
 int32_t
-UCharsTrieBuilder::skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const {
-    do {
-        char16_t unit=elements[i++].charAt(unitIndex, strings);
-        while(unit==elements[i].charAt(unitIndex, strings)) {
+UCharsTrieBuilder::skipElementsBySomeUnits(int32_t i, int32_t unit_اشاریہ, int32_t count) ثابت {
+    کرو {
+        char16_t unit=elements[i++].charAt(unit_اشاریہ, لڑیاں);
+        جب(unit==elements[i].charAt(unit_اشاریہ, لڑیاں)) {
             ++i;
         }
-    } while(--count>0);
-    return i;
+    } جب(--count>0);
+    واپس i;
 }
 
 int32_t
-UCharsTrieBuilder::indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const {
-    while(unit==elements[i].charAt(unitIndex, strings)) {
+UCharsTrieBuilder::اشاریہ_کا_Element_With_اگلا_Unit(int32_t i, int32_t unit_اشاریہ, char16_t unit) ثابت {
+    جب(unit==elements[i].charAt(unit_اشاریہ, لڑیاں)) {
         ++i;
     }
-    return i;
+    واپس i;
 }
 
-UCharsTrieBuilder::UCTLinearMatchNode::UCTLinearMatchNode(const char16_t *units, int32_t len, Node *nextNode)
-        : LinearMatchNode(len, nextNode), s(units) {
+UCharsTrieBuilder::UCTLinear_مطابقت_گرہ::UCTLinear_مطابقت_گرہ(ثابت char16_t *units, int32_t len, Node *اگلا_گرہ)
+        : خطی_مطابقت_گرہ(len, اگلا_گرہ), s(units) {
     hash=hash*37u+ustr_hashUCharsN(units, len);
 }
 
-bool
-UCharsTrieBuilder::UCTLinearMatchNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
+منطقی
+UCharsTrieBuilder::UCTLinear_مطابقت_گرہ::عامل==(ثابت Node &other) ثابت {
+    اگر(یہ==&other) {
+        واپس سچ;
     }
-    if(!LinearMatchNode::operator==(other)) {
-        return false;
+    اگر(!خطی_مطابقت_گرہ::عامل==(other)) {
+        واپس جھوٹ;
     }
-    const UCTLinearMatchNode &o=static_cast<const UCTLinearMatchNode &>(other);
-    return 0==u_memcmp(s, o.s, length);
+    ثابت UCTLinear_مطابقت_گرہ &o=static_cast<ثابت UCTLinear_مطابقت_گرہ &>(other);
+    واپس 0==u_memcmp(s, o.s, length);
 }
 
-void
-UCharsTrieBuilder::UCTLinearMatchNode::write(StringTrieBuilder &builder) {
+خالی
+UCharsTrieBuilder::UCTLinear_مطابقت_گرہ::اكتب(StringTrieBuilder &builder) {
     UCharsTrieBuilder &b=(UCharsTrieBuilder &)builder;
-    next->write(builder);
-    b.write(s, length);
-    offset=b.writeValueAndType(hasValue, value, b.getMinLinearMatch()+length-1);
+    next->اكتب(builder);
+    b.اكتب(s, length);
+    انحراف=b.write_قدر_And_Type(has_قدر, value, b.get_Min_خطی_مطابقت()+length-1);
 }
 
 StringTrieBuilder::Node *
-UCharsTrieBuilder::createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                         Node *nextNode) const {
-    return new UCTLinearMatchNode(
-            elements[i].getString(strings).getBuffer()+unitIndex,
+UCharsTrieBuilder::create_خطی_مطابقت_گرہ(int32_t i, int32_t unit_اشاریہ, int32_t length,
+                                         Node *اگلا_گرہ) ثابت {
+    واپس نیا UCTLinear_مطابقت_گرہ(
+            elements[i].getString(لڑیاں).get_بفر()+unit_اشاریہ,
             length,
-            nextNode);
+            اگلا_گرہ);
 }
 
 UBool
-UCharsTrieBuilder::ensureCapacity(int32_t length) {
-    if(uchars==nullptr) {
-        return false;  // previous memory allocation had failed
+UCharsTrieBuilder::ensure_استعداد(int32_t length) {
+    اگر(uchars==خالی_اشاریہ) {
+        واپس جھوٹ;  // previous memory allocation had failed
     }
-    if(length>ucharsCapacity) {
-        int32_t newCapacity=ucharsCapacity;
-        do {
-            newCapacity*=2;
-        } while(newCapacity<=length);
-        char16_t *newUChars=static_cast<char16_t *>(uprv_malloc(newCapacity*2));
-        if(newUChars==nullptr) {
+    اگر(length>uchars_استعداد) {
+        int32_t new_استعداد=uchars_استعداد;
+        کرو {
+            new_استعداد*=2;
+        } جب(new_استعداد<=length);
+        char16_t *newUChars=static_cast<char16_t *>(uprv_malloc(new_استعداد*2));
+        اگر(newUChars==خالی_اشاریہ) {
             // unable to allocate memory
             uprv_free(uchars);
-            uchars=nullptr;
-            ucharsCapacity=0;
-            return false;
+            uchars=خالی_اشاریہ;
+            uchars_استعداد=0;
+            واپس جھوٹ;
         }
-        u_memcpy(newUChars+(newCapacity-ucharsLength),
-                 uchars+(ucharsCapacity-ucharsLength), ucharsLength);
+        u_memcpy(newUChars+(new_استعداد-uchars_لمبائی),
+                 uchars+(uchars_استعداد-uchars_لمبائی), uchars_لمبائی);
         uprv_free(uchars);
         uchars=newUChars;
-        ucharsCapacity=newCapacity;
+        uchars_استعداد=new_استعداد;
     }
-    return true;
+    واپس سچ;
 }
 
 int32_t
-UCharsTrieBuilder::write(int32_t unit) {
-    int32_t newLength=ucharsLength+1;
-    if(ensureCapacity(newLength)) {
-        ucharsLength=newLength;
-        uchars[ucharsCapacity - ucharsLength] = static_cast<char16_t>(unit);
+UCharsTrieBuilder::اكتب(int32_t unit) {
+    int32_t new_لمبائی=uchars_لمبائی+1;
+    اگر(ensure_استعداد(new_لمبائی)) {
+        uchars_لمبائی=new_لمبائی;
+        uchars[uchars_استعداد - uchars_لمبائی] = static_cast<char16_t>(unit);
     }
-    return ucharsLength;
+    واپس uchars_لمبائی;
 }
 
 int32_t
-UCharsTrieBuilder::write(const char16_t *s, int32_t length) {
-    int32_t newLength=ucharsLength+length;
-    if(ensureCapacity(newLength)) {
-        ucharsLength=newLength;
-        u_memcpy(uchars+(ucharsCapacity-ucharsLength), s, length);
+UCharsTrieBuilder::اكتب(ثابت char16_t *s, int32_t length) {
+    int32_t new_لمبائی=uchars_لمبائی+length;
+    اگر(ensure_استعداد(new_لمبائی)) {
+        uchars_لمبائی=new_لمبائی;
+        u_memcpy(uchars+(uchars_استعداد-uchars_لمبائی), s, length);
     }
-    return ucharsLength;
+    واپس uchars_لمبائی;
 }
 
 int32_t
-UCharsTrieBuilder::writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) {
-    return write(elements[i].getString(strings).getBuffer()+unitIndex, length);
+UCharsTrieBuilder::writeElementUnits(int32_t i, int32_t unit_اشاریہ, int32_t length) {
+    واپس اكتب(elements[i].getString(لڑیاں).get_بفر()+unit_اشاریہ, length);
 }
 
 int32_t
-UCharsTrieBuilder::writeValueAndFinal(int32_t i, UBool isFinal) {
-    if(0<=i && i<=UCharsTrie::kMaxOneUnitValue) {
-        return write(i|(isFinal<<15));
+UCharsTrieBuilder::write_قدر_And_Final(int32_t i, UBool isFinal) {
+    اگر(0<=i && i<=UCharsTrie::k_Max_One_Unit_قدر) {
+        واپس اكتب(i|(isFinal<<15));
     }
     char16_t intUnits[3];
     int32_t length;
-    if(i<0 || i>UCharsTrie::kMaxTwoUnitValue) {
-        intUnits[0] = static_cast<char16_t>(UCharsTrie::kThreeUnitValueLead);
+    اگر(i<0 || i>UCharsTrie::k_Max_Two_Unit_قدر) {
+        intUnits[0] = static_cast<char16_t>(UCharsTrie::k_Three_Unit_قدر_Lead);
         intUnits[1] = static_cast<char16_t>(static_cast<uint32_t>(i) >> 16);
         intUnits[2] = static_cast<char16_t>(i);
         length=3;
     // } else if(i<=UCharsTrie::kMaxOneUnitValue) {
     //     intUnits[0]=(char16_t)(i);
     //     length=1;
-    } else {
-        intUnits[0] = static_cast<char16_t>(UCharsTrie::kMinTwoUnitValueLead + (i >> 16));
+    } ورنہ {
+        intUnits[0] = static_cast<char16_t>(UCharsTrie::k_Min_Two_Unit_قدر_Lead + (i >> 16));
         intUnits[1] = static_cast<char16_t>(i);
         length=2;
     }
     intUnits[0] = static_cast<char16_t>(intUnits[0] | (isFinal << 15));
-    return write(intUnits, length);
+    واپس اكتب(intUnits, length);
 }
 
 int32_t
-UCharsTrieBuilder::writeValueAndType(UBool hasValue, int32_t value, int32_t node) {
-    if(!hasValue) {
-        return write(node);
+UCharsTrieBuilder::write_قدر_And_Type(UBool has_قدر, int32_t value, int32_t گرہ) {
+    اگر(!has_قدر) {
+        واپس اكتب(گرہ);
     }
     char16_t intUnits[3];
     int32_t length;
-    if(value<0 || value>UCharsTrie::kMaxTwoUnitNodeValue) {
-        intUnits[0] = static_cast<char16_t>(UCharsTrie::kThreeUnitNodeValueLead);
+    اگر(value<0 || value>UCharsTrie::k_Max_Two_Unit_گرہ_قدر) {
+        intUnits[0] = static_cast<char16_t>(UCharsTrie::k_Three_Unit_گرہ_قدر_Lead);
         intUnits[1] = static_cast<char16_t>(static_cast<uint32_t>(value) >> 16);
         intUnits[2] = static_cast<char16_t>(value);
         length=3;
-    } else if(value<=UCharsTrie::kMaxOneUnitNodeValue) {
+    } ورنہ اگر(value<=UCharsTrie::k_Max_One_Unit_گرہ_قدر) {
         intUnits[0] = static_cast<char16_t>((value + 1) << 6);
         length=1;
-    } else {
-        intUnits[0] = static_cast<char16_t>(UCharsTrie::kMinTwoUnitNodeValueLead + ((value >> 10) & 0x7fc0));
+    } ورنہ {
+        intUnits[0] = static_cast<char16_t>(UCharsTrie::k_Min_Two_Unit_گرہ_قدر_Lead + ((value >> 10) & 0x7fc0));
         intUnits[1] = static_cast<char16_t>(value);
         length=2;
     }
-    intUnits[0] |= static_cast<char16_t>(node);
-    return write(intUnits, length);
+    intUnits[0] |= static_cast<char16_t>(گرہ);
+    واپس اكتب(intUnits, length);
 }
 
 int32_t
-UCharsTrieBuilder::writeDeltaTo(int32_t jumpTarget) {
-    int32_t i=ucharsLength-jumpTarget;
+UCharsTrieBuilder::write_Delta_مقصد(int32_t jump_ہدف) {
+    int32_t i=uchars_لمبائی-jump_ہدف;
     U_ASSERT(i>=0);
-    if(i<=UCharsTrie::kMaxOneUnitDelta) {
-        return write(i);
+    اگر(i<=UCharsTrie::kMaxOneUnitDelta) {
+        واپس اكتب(i);
     }
     char16_t intUnits[3];
     int32_t length;
-    if(i<=UCharsTrie::kMaxTwoUnitDelta) {
+    اگر(i<=UCharsTrie::kMaxTwoUnitDelta) {
         intUnits[0] = static_cast<char16_t>(UCharsTrie::kMinTwoUnitDeltaLead + (i >> 16));
         length=1;
-    } else {
+    } ورنہ {
         intUnits[0] = static_cast<char16_t>(UCharsTrie::kThreeUnitDeltaLead);
         intUnits[1] = static_cast<char16_t>(i >> 16);
         length=2;
     }
     intUnits[length++] = static_cast<char16_t>(i);
-    return write(intUnits, length);
+    واپس اكتب(intUnits, length);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا

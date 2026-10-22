@@ -16,30 +16,30 @@
 *   created by: Markus W. Scherer
 */
 
-#include <cstddef>
+#شامل <cstddef>
 
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "unicode/unistr.h"
-#include "unicode/chariter.h"
-#include "unicode/utext.h"
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "ustr_imp.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uassert.h"
-#include "putilimp.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/ustring.h"
+#شامل "unicode/unistr.h"
+#شامل "unicode/chariter.h"
+#شامل "unicode/utext.h"
+#شامل "unicode/utf.h"
+#شامل "unicode/utf8.h"
+#شامل "unicode/utf16.h"
+#شامل "ustr_imp.h"
+#شامل "cmemory.h"
+#شامل "cstring.h"
+#شامل "uassert.h"
+#شامل "putilimp.h"
 
 U_NAMESPACE_USE
 
-#define I32_FLAG(bitIndex) ((int32_t)1<<(bitIndex))
+#تعریف_کرو I32_FLAG(ثنائی_ہندسہ_اشاریہ) ((int32_t)1<<(ثنائی_ہندسہ_اشاریہ))
 
 
-static UBool
-utext_access(UText *ut, int64_t index, UBool forward) {
-    return ut->pFuncs->access(ut, index, forward);
+ساکن UBool
+utext_access(UText *ut, int64_t اشاریہ, UBool forward) {
+    واپس ut->pFuncs->access(ut, اشاریہ, forward);
 }
 
 
@@ -47,92 +47,92 @@ utext_access(UText *ut, int64_t index, UBool forward) {
 U_CAPI UBool U_EXPORT2
 utext_moveIndex32(UText *ut, int32_t delta) {
     UChar32  c;
-    if (delta > 0) {
-        do {
-            if(ut->chunkOffset>=ut->chunkLength && !utext_access(ut, ut->chunkNativeLimit, true)) {
-                return false;
+    اگر (delta > 0) {
+        کرو {
+            اگر(ut->chunk_انحراف>=ut->chunk_لمبائی && !utext_access(ut, ut->chunk_Native_حد_بندی, سچ)) {
+                واپس جھوٹ;
             }
-            c = ut->chunkContents[ut->chunkOffset];
-            if (U16_IS_SURROGATE(c)) {
+            c = ut->chunkContents[ut->chunk_انحراف];
+            اگر (U16_IS_SURROGATE(c)) {
                 c = utext_next32(ut);
-                if (c == U_SENTINEL) {
-                    return false;
+                اگر (c == U_SENTINEL) {
+                    واپس جھوٹ;
                 }
-            } else {
-                ut->chunkOffset++;
+            } ورنہ {
+                ut->chunk_انحراف++;
             }
-        } while(--delta>0);
+        } جب(--delta>0);
 
-    } else if (delta<0) {
-        do {
-            if(ut->chunkOffset<=0 && !utext_access(ut, ut->chunkNativeStart, false)) {
-                return false;
+    } ورنہ اگر (delta<0) {
+        کرو {
+            اگر(ut->chunk_انحراف<=0 && !utext_access(ut, ut->chunk_Native_آغاز, جھوٹ)) {
+                واپس جھوٹ;
             }
-            c = ut->chunkContents[ut->chunkOffset-1];
-            if (U16_IS_SURROGATE(c)) {
+            c = ut->chunkContents[ut->chunk_انحراف-1];
+            اگر (U16_IS_SURROGATE(c)) {
                 c = utext_previous32(ut);
-                if (c == U_SENTINEL) {
-                    return false;
+                اگر (c == U_SENTINEL) {
+                    واپس جھوٹ;
                 }
-            } else {
-                ut->chunkOffset--;
+            } ورنہ {
+                ut->chunk_انحراف--;
             }
-        } while(++delta<0);
+        } جب(++delta<0);
     }
 
-    return true;
+    واپس سچ;
 }
 
 
 U_CAPI int64_t U_EXPORT2
-utext_nativeLength(UText *ut) {
-    return ut->pFuncs->nativeLength(ut);
+utext_native_لمبائی(UText *ut) {
+    واپس ut->pFuncs->native_لمبائی(ut);
 }
 
 
 U_CAPI UBool U_EXPORT2
-utext_isLengthExpensive(const UText *ut) {
-    UBool r = (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE)) != 0;
-    return r;
+utext_is_لمبائی_Expensive(ثابت UText *ut) {
+    UBool r = (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_لمبائی_IS_EXPENSIVE)) != 0;
+    واپس r;
 }
 
 
 U_CAPI int64_t U_EXPORT2
-utext_getNativeIndex(const UText *ut) {
-    if(ut->chunkOffset <= ut->nativeIndexingLimit) {
-        return ut->chunkNativeStart+ut->chunkOffset;
-    } else {
-        return ut->pFuncs->mapOffsetToNative(ut);
+utext_get_Native_اشاریہ(ثابت UText *ut) {
+    اگر(ut->chunk_انحراف <= ut->native_Indexing_حد_بندی) {
+        واپس ut->chunk_Native_آغاز+ut->chunk_انحراف;
+    } ورنہ {
+        واپس ut->pFuncs->map_انحراف_مقصد_Native(ut);
     }
 }
 
 
-U_CAPI void U_EXPORT2
-utext_setNativeIndex(UText *ut, int64_t index) {
-    if(index<ut->chunkNativeStart || index>=ut->chunkNativeLimit) {
+U_CAPI خالی U_EXPORT2
+utext_سیٹ_Native_اشاریہ(UText *ut, int64_t اشاریہ) {
+    اگر(اشاریہ<ut->chunk_Native_آغاز || اشاریہ>=ut->chunk_Native_حد_بندی) {
         // The desired position is outside of the current chunk.
         // Access the new position.  Assume a forward iteration from here,
         // which will also be optimimum for a single random access.
         // Reverse iterations may suffer slightly.
-        ut->pFuncs->access(ut, index, true);
-    } else if((int32_t)(index - ut->chunkNativeStart) <= ut->nativeIndexingLimit) {
+        ut->pFuncs->access(ut, اشاریہ, سچ);
+    } ورنہ اگر((int32_t)(اشاریہ - ut->chunk_Native_آغاز) <= ut->native_Indexing_حد_بندی) {
         // utf-16 indexing.
-        ut->chunkOffset=(int32_t)(index-ut->chunkNativeStart);
-    } else {
-         ut->chunkOffset=ut->pFuncs->mapNativeIndexToUTF16(ut, index);
+        ut->chunk_انحراف=(int32_t)(اشاریہ-ut->chunk_Native_آغاز);
+    } ورنہ {
+         ut->chunk_انحراف=ut->pFuncs->map_Native_اشاریہ_مقصد_UTF16(ut, اشاریہ);
     }
     // The convention is that the index must always be on a code point boundary.
     // Adjust the index position if it is in the middle of a surrogate pair.
-    if (ut->chunkOffset<ut->chunkLength) {
-        char16_t c= ut->chunkContents[ut->chunkOffset];
-        if (U16_IS_TRAIL(c)) {
-            if (ut->chunkOffset==0) {
-                ut->pFuncs->access(ut, ut->chunkNativeStart, false);
+    اگر (ut->chunk_انحراف<ut->chunk_لمبائی) {
+        char16_t c= ut->chunkContents[ut->chunk_انحراف];
+        اگر (U16_IS_TRAIL(c)) {
+            اگر (ut->chunk_انحراف==0) {
+                ut->pFuncs->access(ut, ut->chunk_Native_آغاز, جھوٹ);
             }
-            if (ut->chunkOffset>0) {
-                char16_t lead = ut->chunkContents[ut->chunkOffset-1];
-                if (U16_IS_LEAD(lead)) {
-                    ut->chunkOffset--;
+            اگر (ut->chunk_انحراف>0) {
+                char16_t lead = ut->chunkContents[ut->chunk_انحراف-1];
+                اگر (U16_IS_LEAD(lead)) {
+                    ut->chunk_انحراف--;
                 }
             }
         }
@@ -142,40 +142,40 @@ utext_setNativeIndex(UText *ut, int64_t index) {
 
 
 U_CAPI int64_t U_EXPORT2
-utext_getPreviousNativeIndex(UText *ut) {
+utext_get_پچھلا_Native_اشاریہ(UText *ut) {
     //
     //  Fast-path the common case.
     //     Common means current position is not at the beginning of a chunk
     //     and the preceding character is not supplementary.
     //
-    int32_t i = ut->chunkOffset - 1;
-    int64_t result;
-    if (i >= 0) {
+    int32_t i = ut->chunk_انحراف - 1;
+    int64_t نتیجہ;
+    اگر (i >= 0) {
         char16_t c = ut->chunkContents[i];
-        if (U16_IS_TRAIL(c) == false) {
-            if (i <= ut->nativeIndexingLimit) {
-                result = ut->chunkNativeStart + i;
-            } else {
-                ut->chunkOffset = i;
-                result = ut->pFuncs->mapOffsetToNative(ut);
-                ut->chunkOffset++;
+        اگر (U16_IS_TRAIL(c) == جھوٹ) {
+            اگر (i <= ut->native_Indexing_حد_بندی) {
+                نتیجہ = ut->chunk_Native_آغاز + i;
+            } ورنہ {
+                ut->chunk_انحراف = i;
+                نتیجہ = ut->pFuncs->map_انحراف_مقصد_Native(ut);
+                ut->chunk_انحراف++;
             }
-            return result;
+            واپس نتیجہ;
         }
     }
 
     // If at the start of text, simply return 0.
-    if (ut->chunkOffset==0 && ut->chunkNativeStart==0) {
-        return 0;
+    اگر (ut->chunk_انحراف==0 && ut->chunk_Native_آغاز==0) {
+        واپس 0;
     }
 
     // Harder, less common cases.  We are at a chunk boundary, or on a surrogate.
     //    Keep it simple, use other functions to handle the edges.
     //
     utext_previous32(ut);
-    result = UTEXT_GETNATIVEINDEX(ut);
+    نتیجہ = UTEXT_GETNATIVEINDEX(ut);
     utext_next32(ut);
-    return result;
+    واپس نتیجہ;
 }
 
 
@@ -187,18 +187,18 @@ utext_getPreviousNativeIndex(UText *ut) {
 U_CAPI UChar32 U_EXPORT2
 utext_current32(UText *ut) {
     UChar32  c;
-    if (ut->chunkOffset==ut->chunkLength) {
+    اگر (ut->chunk_انحراف==ut->chunk_لمبائی) {
         // Current position is just off the end of the chunk.
-        if (ut->pFuncs->access(ut, ut->chunkNativeLimit, true) == false) {
+        اگر (ut->pFuncs->access(ut, ut->chunk_Native_حد_بندی, سچ) == جھوٹ) {
             // Off the end of the text.
-            return U_SENTINEL;
+            واپس U_SENTINEL;
         }
     }
 
-    c = ut->chunkContents[ut->chunkOffset];
-    if (U16_IS_LEAD(c) == false) {
+    c = ut->chunkContents[ut->chunk_انحراف];
+    اگر (U16_IS_LEAD(c) == جھوٹ) {
         // Normal, non-supplementary case.
-        return c;
+        واپس c;
     }
 
     //
@@ -206,10 +206,10 @@ utext_current32(UText *ut) {
     //
     UChar32   trail = 0;
     UChar32   supplementaryC = c;
-    if ((ut->chunkOffset+1) < ut->chunkLength) {
+    اگر ((ut->chunk_انحراف+1) < ut->chunk_لمبائی) {
         // The trail surrogate is in the same chunk.
-        trail = ut->chunkContents[ut->chunkOffset+1];
-    } else {
+        trail = ut->chunkContents[ut->chunk_انحراف+1];
+    } ورنہ {
         //  The trail surrogate is in a different chunk.
         //     Because we must maintain the iteration position, we need to switch forward
         //     into the new chunk, get the trail surrogate, then revert the chunk back to the
@@ -217,54 +217,54 @@ utext_current32(UText *ut) {
         //     An edge case to be careful of:  the entire text may end with an unpaired
         //        leading surrogate.  The attempt to access the trail will fail, but
         //        the original position before the unpaired lead still needs to be restored.
-        int64_t  nativePosition = ut->chunkNativeLimit;
-        if (ut->pFuncs->access(ut, nativePosition, true)) {
-            trail = ut->chunkContents[ut->chunkOffset];
+        int64_t  nativePosition = ut->chunk_Native_حد_بندی;
+        اگر (ut->pFuncs->access(ut, nativePosition, سچ)) {
+            trail = ut->chunkContents[ut->chunk_انحراف];
         }
-        UBool r = ut->pFuncs->access(ut, nativePosition, false);  // reverse iteration flag loads preceding chunk
+        UBool r = ut->pFuncs->access(ut, nativePosition, جھوٹ);  // reverse iteration flag loads preceding chunk
         U_ASSERT(r);
         // Here we need to restore chunkOffset since the access functions were called with
         // chunkNativeLimit but that is not where we were (we were 1 code unit before the
         // limit). Restoring was originally added in ICU-4669 but did not support access
         // functions that changed the chunk size, the following does.
-        ut->chunkOffset = ut->chunkLength - 1;
-        if(!r) {
-            return U_SENTINEL;
+        ut->chunk_انحراف = ut->chunk_لمبائی - 1;
+        اگر(!r) {
+            واپس U_SENTINEL;
         }
     }
 
-    if (U16_IS_TRAIL(trail)) {
+    اگر (U16_IS_TRAIL(trail)) {
         supplementaryC = U16_GET_SUPPLEMENTARY(c, trail);
     }
-    return supplementaryC;
+    واپس supplementaryC;
 
 }
 
 
 U_CAPI UChar32 U_EXPORT2
-utext_char32At(UText *ut, int64_t nativeIndex) {
+utext_char32At(UText *ut, int64_t native_اشاریہ) {
     UChar32 c = U_SENTINEL;
 
     // Fast path the common case.
-    if (nativeIndex>=ut->chunkNativeStart && nativeIndex < ut->chunkNativeStart + ut->nativeIndexingLimit) {
-        ut->chunkOffset = (int32_t)(nativeIndex - ut->chunkNativeStart);
-        c = ut->chunkContents[ut->chunkOffset];
-        if (U16_IS_SURROGATE(c) == false) {
-            return c;
+    اگر (native_اشاریہ>=ut->chunk_Native_آغاز && native_اشاریہ < ut->chunk_Native_آغاز + ut->native_Indexing_حد_بندی) {
+        ut->chunk_انحراف = (int32_t)(native_اشاریہ - ut->chunk_Native_آغاز);
+        c = ut->chunkContents[ut->chunk_انحراف];
+        اگر (U16_IS_SURROGATE(c) == جھوٹ) {
+            واپس c;
         }
     }
 
 
-    utext_setNativeIndex(ut, nativeIndex);
-    if (nativeIndex>=ut->chunkNativeStart && ut->chunkOffset<ut->chunkLength) {
-        c = ut->chunkContents[ut->chunkOffset];
-        if (U16_IS_SURROGATE(c)) {
+    utext_سیٹ_Native_اشاریہ(ut, native_اشاریہ);
+    اگر (native_اشاریہ>=ut->chunk_Native_آغاز && ut->chunk_انحراف<ut->chunk_لمبائی) {
+        c = ut->chunkContents[ut->chunk_انحراف];
+        اگر (U16_IS_SURROGATE(c)) {
             // For surrogates, let current32() deal with the complications
             //    of supplementaries that may span chunk boundaries.
             c = utext_current32(ut);
         }
     }
-    return c;
+    واپس c;
 }
 
 
@@ -272,39 +272,39 @@ U_CAPI UChar32 U_EXPORT2
 utext_next32(UText *ut) {
     UChar32       c;
 
-    if (ut->chunkOffset >= ut->chunkLength) {
-        if (ut->pFuncs->access(ut, ut->chunkNativeLimit, true) == false) {
-            return U_SENTINEL;
+    اگر (ut->chunk_انحراف >= ut->chunk_لمبائی) {
+        اگر (ut->pFuncs->access(ut, ut->chunk_Native_حد_بندی, سچ) == جھوٹ) {
+            واپس U_SENTINEL;
         }
     }
 
-    c = ut->chunkContents[ut->chunkOffset++];
-    if (U16_IS_LEAD(c) == false) {
+    c = ut->chunkContents[ut->chunk_انحراف++];
+    اگر (U16_IS_LEAD(c) == جھوٹ) {
         // Normal case, not supplementary.
         //   (A trail surrogate seen here is just returned as is, as a surrogate value.
         //    It cannot be part of a pair.)
-        return c;
+        واپس c;
     }
 
-    if (ut->chunkOffset >= ut->chunkLength) {
-        if (ut->pFuncs->access(ut, ut->chunkNativeLimit, true) == false) {
+    اگر (ut->chunk_انحراف >= ut->chunk_لمبائی) {
+        اگر (ut->pFuncs->access(ut, ut->chunk_Native_حد_بندی, سچ) == جھوٹ) {
             // c is an unpaired lead surrogate at the end of the text.
             // return it as it is.
-            return c;
+            واپس c;
         }
     }
-    UChar32 trail = ut->chunkContents[ut->chunkOffset];
-    if (U16_IS_TRAIL(trail) == false) {
+    UChar32 trail = ut->chunkContents[ut->chunk_انحراف];
+    اگر (U16_IS_TRAIL(trail) == جھوٹ) {
         // c was an unpaired lead surrogate, not at the end of the text.
         // return it as it is (unpaired).  Iteration position is on the
         // following character, possibly in the next chunk, where the
         //  trail surrogate would have been if it had existed.
-        return c;
+        واپس c;
     }
 
     UChar32 supplementary = U16_GET_SUPPLEMENTARY(c, trail);
-    ut->chunkOffset++;   // move iteration position over the trail surrogate.
-    return supplementary;
+    ut->chunk_انحراف++;   // move iteration position over the trail surrogate.
+    واپس supplementary;
     }
 
 
@@ -312,78 +312,78 @@ U_CAPI UChar32 U_EXPORT2
 utext_previous32(UText *ut) {
     UChar32       c;
 
-    if (ut->chunkOffset <= 0) {
-        if (ut->pFuncs->access(ut, ut->chunkNativeStart, false) == false) {
-            return U_SENTINEL;
+    اگر (ut->chunk_انحراف <= 0) {
+        اگر (ut->pFuncs->access(ut, ut->chunk_Native_آغاز, جھوٹ) == جھوٹ) {
+            واپس U_SENTINEL;
         }
     }
-    ut->chunkOffset--;
-    c = ut->chunkContents[ut->chunkOffset];
-    if (U16_IS_TRAIL(c) == false) {
+    ut->chunk_انحراف--;
+    c = ut->chunkContents[ut->chunk_انحراف];
+    اگر (U16_IS_TRAIL(c) == جھوٹ) {
         // Normal case, not supplementary.
         //   (A lead surrogate seen here is just returned as is, as a surrogate value.
         //    It cannot be part of a pair.)
-        return c;
+        واپس c;
     }
 
-    if (ut->chunkOffset <= 0) {
-        if (ut->pFuncs->access(ut, ut->chunkNativeStart, false) == false) {
+    اگر (ut->chunk_انحراف <= 0) {
+        اگر (ut->pFuncs->access(ut, ut->chunk_Native_آغاز, جھوٹ) == جھوٹ) {
             // c is an unpaired trail surrogate at the start of the text.
             // return it as it is.
-            return c;
+            واپس c;
         }
     }
 
-    UChar32 lead = ut->chunkContents[ut->chunkOffset-1];
-    if (U16_IS_LEAD(lead) == false) {
+    UChar32 lead = ut->chunkContents[ut->chunk_انحراف-1];
+    اگر (U16_IS_LEAD(lead) == جھوٹ) {
         // c was an unpaired trail surrogate, not at the end of the text.
         // return it as it is (unpaired).  Iteration position is at c
-        return c;
+        واپس c;
     }
 
     UChar32 supplementary = U16_GET_SUPPLEMENTARY(lead, c);
-    ut->chunkOffset--;   // move iteration position over the lead surrogate.
-    return supplementary;
+    ut->chunk_انحراف--;   // move iteration position over the lead surrogate.
+    واپس supplementary;
 }
 
 
 
 U_CAPI UChar32 U_EXPORT2
-utext_next32From(UText *ut, int64_t index) {
+utext_next32From(UText *ut, int64_t اشاریہ) {
     UChar32       c      = U_SENTINEL;
 
-    if(index<ut->chunkNativeStart || index>=ut->chunkNativeLimit) {
+    اگر(اشاریہ<ut->chunk_Native_آغاز || اشاریہ>=ut->chunk_Native_حد_بندی) {
         // Desired position is outside of the current chunk.
-        if(!ut->pFuncs->access(ut, index, true)) {
+        اگر(!ut->pFuncs->access(ut, اشاریہ, سچ)) {
             // no chunk available here
-            return U_SENTINEL;
+            واپس U_SENTINEL;
         }
-    } else if (index - ut->chunkNativeStart  <= (int64_t)ut->nativeIndexingLimit) {
+    } ورنہ اگر (اشاریہ - ut->chunk_Native_آغاز  <= (int64_t)ut->native_Indexing_حد_بندی) {
         // Desired position is in chunk, with direct 1:1 native to UTF16 indexing
-        ut->chunkOffset = (int32_t)(index - ut->chunkNativeStart);
-    } else {
+        ut->chunk_انحراف = (int32_t)(اشاریہ - ut->chunk_Native_آغاز);
+    } ورنہ {
         // Desired position is in chunk, with non-UTF16 indexing.
-        ut->chunkOffset = ut->pFuncs->mapNativeIndexToUTF16(ut, index);
+        ut->chunk_انحراف = ut->pFuncs->map_Native_اشاریہ_مقصد_UTF16(ut, اشاریہ);
     }
 
-    c = ut->chunkContents[ut->chunkOffset++];
-    if (U16_IS_SURROGATE(c)) {
+    c = ut->chunkContents[ut->chunk_انحراف++];
+    اگر (U16_IS_SURROGATE(c)) {
         // Surrogates.  Many edge cases.  Use other functions that already
         //              deal with the problems.
-        utext_setNativeIndex(ut, index);
+        utext_سیٹ_Native_اشاریہ(ut, اشاریہ);
         c = utext_next32(ut);
     }
-    return c;
+    واپس c;
 }
 
 
 U_CAPI UChar32 U_EXPORT2
-utext_previous32From(UText *ut, int64_t index) {
+utext_previous32From(UText *ut, int64_t اشاریہ) {
     //
     //  Return the character preceding the specified index.
     //  Leave the iteration position at the start of the character that was returned.
     //
-    UChar32     cPrev;    // The character preceding cCurr, which is what we will return.
+    UChar32     c_پچھلا;    // The character preceding cCurr, which is what we will return.
 
     // Address the chunk containing the position preceding the incoming index
     // A tricky edge case:
@@ -392,84 +392,84 @@ utext_previous32From(UText *ut, int64_t index) {
     //    BUT, this test can fail with UTF-8 (or any other multibyte encoding), when the
     //    requested index is on something other than the first position of the first char.
     //
-    if(index<=ut->chunkNativeStart || index>ut->chunkNativeLimit) {
+    اگر(اشاریہ<=ut->chunk_Native_آغاز || اشاریہ>ut->chunk_Native_حد_بندی) {
         // Requested native index is outside of the current chunk.
-        if(!ut->pFuncs->access(ut, index, false)) {
+        اگر(!ut->pFuncs->access(ut, اشاریہ, جھوٹ)) {
             // no chunk available here
-            return U_SENTINEL;
+            واپس U_SENTINEL;
         }
-    } else if(index - ut->chunkNativeStart <= (int64_t)ut->nativeIndexingLimit) {
+    } ورنہ اگر(اشاریہ - ut->chunk_Native_آغاز <= (int64_t)ut->native_Indexing_حد_بندی) {
         // Direct UTF-16 indexing.
-        ut->chunkOffset = (int32_t)(index - ut->chunkNativeStart);
-    } else {
-        ut->chunkOffset=ut->pFuncs->mapNativeIndexToUTF16(ut, index);
-        if (ut->chunkOffset==0 && !ut->pFuncs->access(ut, index, false)) {
+        ut->chunk_انحراف = (int32_t)(اشاریہ - ut->chunk_Native_آغاز);
+    } ورنہ {
+        ut->chunk_انحراف=ut->pFuncs->map_Native_اشاریہ_مقصد_UTF16(ut, اشاریہ);
+        اگر (ut->chunk_انحراف==0 && !ut->pFuncs->access(ut, اشاریہ, جھوٹ)) {
             // no chunk available here
-            return U_SENTINEL;
+            واپس U_SENTINEL;
         }
     }
 
     //
     // Simple case with no surrogates.
     //
-    ut->chunkOffset--;
-    cPrev = ut->chunkContents[ut->chunkOffset];
+    ut->chunk_انحراف--;
+    c_پچھلا = ut->chunkContents[ut->chunk_انحراف];
 
-    if (U16_IS_SURROGATE(cPrev)) {
+    اگر (U16_IS_SURROGATE(c_پچھلا)) {
         // Possible supplementary.  Many edge cases.
         // Let other functions do the heavy lifting.
-        utext_setNativeIndex(ut, index);
-        cPrev = utext_previous32(ut);
+        utext_سیٹ_Native_اشاریہ(ut, اشاریہ);
+        c_پچھلا = utext_previous32(ut);
     }
-    return cPrev;
+    واپس c_پچھلا;
 }
 
 
 U_CAPI int32_t U_EXPORT2
-utext_extract(UText *ut,
-             int64_t start, int64_t limit,
-             char16_t *dest, int32_t destCapacity,
-             UErrorCode *status) {
-                 return ut->pFuncs->extract(ut, start, limit, dest, destCapacity, status);
+utext_نکالو(UText *ut,
+             int64_t آغاز, int64_t حد_بندی,
+             char16_t *dest, int32_t dest_استعداد,
+             UError_رمز *حالت_2) {
+                 واپس ut->pFuncs->extract(ut, آغاز, حد_بندی, dest, dest_استعداد, حالت_2);
              }
 
 
 
 U_CAPI UBool U_EXPORT2
-utext_equals(const UText *a, const UText *b) {
-    if (a==nullptr || b==nullptr ||
+utext_equals(ثابت UText *a, ثابت UText *b) {
+    اگر (a==خالی_اشاریہ || b==خالی_اشاریہ ||
         a->magic != UTEXT_MAGIC ||
         b->magic != UTEXT_MAGIC) {
             // Null or invalid arguments don't compare equal to anything.
-            return false;
+            واپس جھوٹ;
     }
 
-    if (a->pFuncs != b->pFuncs) {
+    اگر (a->pFuncs != b->pFuncs) {
         // Different types of text providers.
-        return false;
+        واپس جھوٹ;
     }
 
-    if (a->context != b->context) {
+    اگر (a->context != b->context) {
         // Different sources (different strings)
-        return false;
+        واپس جھوٹ;
     }
-    if (utext_getNativeIndex(a) != utext_getNativeIndex(b)) {
+    اگر (utext_get_Native_اشاریہ(a) != utext_get_Native_اشاریہ(b)) {
         // Different current position in the string.
-        return false;
+        واپس جھوٹ;
     }
 
-    return true;
+    واپس سچ;
 }
 
 U_CAPI UBool U_EXPORT2
-utext_isWritable(const UText *ut)
+utext_isWritable(ثابت UText *ut)
 {
     UBool b = (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_WRITABLE)) != 0;
-    return b;
+    واپس b;
 }
 
 
-U_CAPI void U_EXPORT2
+U_CAPI خالی U_EXPORT2
 utext_freeze(UText *ut) {
     // Zero out the WRITABLE flag.
     ut->providerProperties &= ~(I32_FLAG(UTEXT_PROVIDER_WRITABLE));
@@ -477,69 +477,69 @@ utext_freeze(UText *ut) {
 
 
 U_CAPI UBool U_EXPORT2
-utext_hasMetaData(const UText *ut)
+utext_has_Meta_ڈیٹا(ثابت UText *ut)
 {
-    UBool b = (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_HAS_META_DATA)) != 0;
-    return b;
+    UBool b = (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_HAS_META_ڈیٹا)) != 0;
+    واپس b;
 }
 
 
 
 U_CAPI int32_t U_EXPORT2
 utext_replace(UText *ut,
-             int64_t nativeStart, int64_t nativeLimit,
-             const char16_t *replacementText, int32_t replacementLength,
-             UErrorCode *status)
+             int64_t native_آغاز, int64_t native_حد_بندی,
+             ثابت char16_t *replacement_متن, int32_t replacement_لمبائی,
+             UError_رمز *حالت_2)
 {
-    if (U_FAILURE(*status)) {
-        return 0;
+    اگر (U_FAILURE(*حالت_2)) {
+        واپس 0;
     }
-    if ((ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_WRITABLE)) == 0) {
-        *status = U_NO_WRITE_PERMISSION;
-        return 0;
+    اگر ((ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_WRITABLE)) == 0) {
+        *حالت_2 = U_NO_WRITE_PERMISSION;
+        واپس 0;
     }
-    int32_t i = ut->pFuncs->replace(ut, nativeStart, nativeLimit, replacementText, replacementLength, status);
-    return i;
+    int32_t i = ut->pFuncs->replace(ut, native_آغاز, native_حد_بندی, replacement_متن, replacement_لمبائی, حالت_2);
+    واپس i;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI خالی U_EXPORT2
 utext_copy(UText *ut,
-          int64_t nativeStart, int64_t nativeLimit,
-          int64_t destIndex,
+          int64_t native_آغاز, int64_t native_حد_بندی,
+          int64_t dest_اشاریہ,
           UBool move,
-          UErrorCode *status)
+          UError_رمز *حالت_2)
 {
-    if (U_FAILURE(*status)) {
-        return;
+    اگر (U_FAILURE(*حالت_2)) {
+        واپس;
     }
-    if ((ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_WRITABLE)) == 0) {
-        *status = U_NO_WRITE_PERMISSION;
-        return;
+    اگر ((ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_WRITABLE)) == 0) {
+        *حالت_2 = U_NO_WRITE_PERMISSION;
+        واپس;
     }
-    ut->pFuncs->copy(ut, nativeStart, nativeLimit, destIndex, move, status);
+    ut->pFuncs->copy(ut, native_آغاز, native_حد_بندی, dest_اشاریہ, move, حالت_2);
 }
 
 U_CAPI UText* U_EXPORT2
 utext_clone(UText* dest U_LIFETIME_BOUND,
-            const UText* src,
+            ثابت UText* src,
             UBool deep,
             UBool readOnly,
-            UErrorCode* status) {
-    if (U_FAILURE(*status)) {
-        return dest;
+            UError_رمز* حالت_2) {
+    اگر (U_FAILURE(*حالت_2)) {
+        واپس dest;
     }
-    UText *result = src->pFuncs->clone(dest, src, deep, status);
-    if (U_FAILURE(*status)) {
-        return result;
+    UText *نتیجہ = src->pFuncs->clone(dest, src, deep, حالت_2);
+    اگر (U_FAILURE(*حالت_2)) {
+        واپس نتیجہ;
     }
-    if (result == nullptr) {
-        *status = U_MEMORY_ALLOCATION_ERROR;
-        return result;
+    اگر (نتیجہ == خالی_اشاریہ) {
+        *حالت_2 = U_حافظہ_تخصیص_ERROR;
+        واپس نتیجہ;
     }
-    if (readOnly) {
-        utext_freeze(result);
+    اگر (readOnly) {
+        utext_freeze(نتیجہ);
     }
-    return result;
+    واپس نتیجہ;
 }
 
 
@@ -553,11 +553,11 @@ utext_clone(UText* dest U_LIFETIME_BOUND,
 //
 //  UText.flags bit definitions
 //
-enum {
-    UTEXT_HEAP_ALLOCATED  = 1,      //  1 if ICU has allocated this UText struct on the heap.
+شمار {
+    UTEXT_ڈھیر_ALLOCATED  = 1,      //  1 if ICU has allocated this UText struct on the heap.
                                     //  0 if caller provided storage for the UText.
 
-    UTEXT_EXTRA_HEAP_ALLOCATED = 2, //  1 if ICU has allocated extra storage as a separate
+    UTEXT_EXTRA_ڈھیر_ALLOCATED = 2, //  1 if ICU has allocated extra storage as a separate
                                     //     heap block.
                                     //  0 if there is no separate allocation.  Either no extra
                                     //     storage was requested, or it is appended to the end
@@ -572,141 +572,141 @@ enum {
 //  Extended form of a UText.  The purpose is to aid in computing the total size required
 //    when a provider asks for a UText to be allocated with extra storage.
 
-struct ExtendedUText {
+ساخت ExtendedUText {
     UText               ut;
     std::max_align_t    extension;
 };
 
-static const UText emptyText = UTEXT_INITIALIZER;
+ساکن ثابت UText خالی_خانے_متن = UTEXT_INITIALIZER;
 
 U_CAPI UText* U_EXPORT2
-utext_setup(UText* ut U_LIFETIME_BOUND, int32_t extraSpace, UErrorCode* status) {
-    if (U_FAILURE(*status)) {
-        return ut;
+utext_تیاری(UText* ut U_LIFETIME_BOUND, int32_t extraSpace, UError_رمز* حالت_2) {
+    اگر (U_FAILURE(*حالت_2)) {
+        واپس ut;
     }
 
-    if (ut == nullptr) {
+    اگر (ut == خالی_اشاریہ) {
         // We need to heap-allocate storage for the new UText
-        int32_t spaceRequired = sizeof(UText);
-        if (extraSpace > 0) {
-            spaceRequired = sizeof(ExtendedUText) + extraSpace - sizeof(std::max_align_t);
+        int32_t spaceRequired = حجم(UText);
+        اگر (extraSpace > 0) {
+            spaceRequired = حجم(ExtendedUText) + extraSpace - حجم(std::max_align_t);
         }
         ut = (UText *)uprv_malloc(spaceRequired);
-        if (ut == nullptr) {
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
-        } else {
-            *ut = emptyText;
-            ut->flags |= UTEXT_HEAP_ALLOCATED;
-            if (spaceRequired>0) {
-                ut->extraSize = extraSpace;
+        اگر (ut == خالی_اشاریہ) {
+            *حالت_2 = U_حافظہ_تخصیص_ERROR;
+            واپس خالی_اشاریہ;
+        } ورنہ {
+            *ut = خالی_خانے_متن;
+            ut->flags |= UTEXT_ڈھیر_ALLOCATED;
+            اگر (spaceRequired>0) {
+                ut->extra_سائز = extraSpace;
                 ut->pExtra    = &((ExtendedUText *)ut)->extension;
             }
         }
-    } else {
+    } ورنہ {
         // We have been supplied with an already existing UText.
         // Verify that it really appears to be a UText.
-        if (ut->magic != UTEXT_MAGIC) {
-            *status = U_ILLEGAL_ARGUMENT_ERROR;
-            return ut;
+        اگر (ut->magic != UTEXT_MAGIC) {
+            *حالت_2 = U_ILLEGAL_دلیل_ERROR;
+            واپس ut;
         }
         // If the ut is already open and there's a provider supplied close
         //   function, call it.
-        if ((ut->flags & UTEXT_OPEN) && ut->pFuncs->close != nullptr)  {
+        اگر ((ut->flags & UTEXT_OPEN) && ut->pFuncs->close != خالی_اشاریہ)  {
             ut->pFuncs->close(ut);
         }
         ut->flags &= ~UTEXT_OPEN;
 
         // If extra space was requested by our caller, check whether
         //   sufficient already exists, and allocate new if needed.
-        if (extraSpace > ut->extraSize) {
+        اگر (extraSpace > ut->extra_سائز) {
             // Need more space.  If there is existing separately allocated space,
             //   delete it first, then allocate new space.
-            if (ut->flags & UTEXT_EXTRA_HEAP_ALLOCATED) {
+            اگر (ut->flags & UTEXT_EXTRA_ڈھیر_ALLOCATED) {
                 uprv_free(ut->pExtra);
-                ut->extraSize = 0;
+                ut->extra_سائز = 0;
             }
             ut->pExtra = uprv_malloc(extraSpace);
-            if (ut->pExtra == nullptr) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
-            } else {
-                ut->extraSize = extraSpace;
-                ut->flags |= UTEXT_EXTRA_HEAP_ALLOCATED;
+            اگر (ut->pExtra == خالی_اشاریہ) {
+                *حالت_2 = U_حافظہ_تخصیص_ERROR;
+            } ورنہ {
+                ut->extra_سائز = extraSpace;
+                ut->flags |= UTEXT_EXTRA_ڈھیر_ALLOCATED;
             }
         }
     }
-    if (U_SUCCESS(*status)) {
+    اگر (U_SUCCESS(*حالت_2)) {
         ut->flags |= UTEXT_OPEN;
 
         // Initialize all remaining fields of the UText.
         //
-        ut->context             = nullptr;
-        ut->chunkContents       = nullptr;
-        ut->p                   = nullptr;
-        ut->q                   = nullptr;
-        ut->r                   = nullptr;
+        ut->context             = خالی_اشاریہ;
+        ut->chunkContents       = خالی_اشاریہ;
+        ut->p                   = خالی_اشاریہ;
+        ut->q                   = خالی_اشاریہ;
+        ut->r                   = خالی_اشاریہ;
         ut->a                   = 0;
         ut->b                   = 0;
         ut->c                   = 0;
-        ut->chunkOffset         = 0;
-        ut->chunkLength         = 0;
-        ut->chunkNativeStart    = 0;
-        ut->chunkNativeLimit    = 0;
-        ut->nativeIndexingLimit = 0;
+        ut->chunk_انحراف         = 0;
+        ut->chunk_لمبائی         = 0;
+        ut->chunk_Native_آغاز    = 0;
+        ut->chunk_Native_حد_بندی    = 0;
+        ut->native_Indexing_حد_بندی = 0;
         ut->providerProperties  = 0;
         ut->privA               = 0;
         ut->privB               = 0;
         ut->privC               = 0;
-        ut->privP               = nullptr;
-        if (ut->pExtra!=nullptr && ut->extraSize>0)
-            uprv_memset(ut->pExtra, 0, ut->extraSize);
+        ut->privP               = خالی_اشاریہ;
+        اگر (ut->pExtra!=خالی_اشاریہ && ut->extra_سائز>0)
+            uprv_memset(ut->pExtra, 0, ut->extra_سائز);
 
     }
-    return ut;
+    واپس ut;
 }
 
 
 U_CAPI UText* U_EXPORT2
 utext_close(UText* ut U_LIFETIME_BOUND) {
-    if (ut==nullptr ||
+    اگر (ut==خالی_اشاریہ ||
         ut->magic != UTEXT_MAGIC ||
         (ut->flags & UTEXT_OPEN) == 0)
     {
         // The supplied ut is not an open UText.
         // Do nothing.
-        return ut;
+        واپس ut;
     }
 
     // If the provider gave us a close function, call it now.
     // This will clean up anything allocated specifically by the provider.
-    if (ut->pFuncs->close != nullptr) {
+    اگر (ut->pFuncs->close != خالی_اشاریہ) {
         ut->pFuncs->close(ut);
     }
     ut->flags &= ~UTEXT_OPEN;
 
     // If we (the framework) allocated the UText or subsidiary storage,
     //   delete it.
-    if (ut->flags & UTEXT_EXTRA_HEAP_ALLOCATED) {
+    اگر (ut->flags & UTEXT_EXTRA_ڈھیر_ALLOCATED) {
         uprv_free(ut->pExtra);
-        ut->pExtra = nullptr;
-        ut->flags &= ~UTEXT_EXTRA_HEAP_ALLOCATED;
-        ut->extraSize = 0;
+        ut->pExtra = خالی_اشاریہ;
+        ut->flags &= ~UTEXT_EXTRA_ڈھیر_ALLOCATED;
+        ut->extra_سائز = 0;
     }
 
     // Zero out function table of the closed UText.  This is a defensive move,
     //   intended to cause applications that inadvertently use a closed
     //   utext to crash with null pointer errors.
-    ut->pFuncs        = nullptr;
+    ut->pFuncs        = خالی_اشاریہ;
 
-    if (ut->flags & UTEXT_HEAP_ALLOCATED) {
+    اگر (ut->flags & UTEXT_ڈھیر_ALLOCATED) {
         // This UText was allocated by UText setup.  We need to free it.
         // Clear magic, so we can detect if the user messes up and immediately
         //  tries to reopen another UText using the deleted storage.
         ut->magic = 0;
         uprv_free(ut);
-        ut = nullptr;
+        ut = خالی_اشاریہ;
     }
-    return ut;
+    واپس ut;
 }
 
 
@@ -719,13 +719,13 @@ utext_close(UText* ut U_LIFETIME_BOUND) {
 //                   backing text, potentially putting it out of sync with the
 //                   contents in the chunk.
 //
-static void
+ساکن خالی
 invalidateChunk(UText *ut) {
-    ut->chunkLength = 0;
-    ut->chunkNativeLimit = 0;
-    ut->chunkNativeStart = 0;
-    ut->chunkOffset = 0;
-    ut->nativeIndexingLimit = 0;
+    ut->chunk_لمبائی = 0;
+    ut->chunk_Native_حد_بندی = 0;
+    ut->chunk_Native_آغاز = 0;
+    ut->chunk_انحراف = 0;
+    ut->native_Indexing_حد_بندی = 0;
 }
 
 //
@@ -733,14 +733,14 @@ invalidateChunk(UText *ut) {
 //                 64 bit pinning is done in place.
 //                 32 bit truncated result is returned as a convenience for
 //                        use in providers that don't need 64 bits.
-static int32_t
-pinIndex(int64_t &index, int64_t limit) {
-    if (index<0) {
-        index = 0;
-    } else if (index > limit) {
-        index = limit;
+ساکن int32_t
+pin_اشاریہ(int64_t &اشاریہ, int64_t حد_بندی) {
+    اگر (اشاریہ<0) {
+        اشاریہ = 0;
+    } ورنہ اگر (اشاریہ > حد_بندی) {
+        اشاریہ = حد_بندی;
     }
-    return static_cast<int32_t>(index);
+    واپس static_cast<int32_t>(اشاریہ);
 }
 
 
@@ -752,17 +752,17 @@ U_CDECL_BEGIN
 //   Adjust a pointer that refers to something within one UText (the source)
 //   to refer to the same relative offset within a another UText (the target)
 //
-static void adjustPointer(UText *dest, const void **destPtr, const UText *src) {
+ساکن خالی adjust_اشارہ_گر(UText *dest, ثابت خالی **destPtr, ثابت UText *src) {
     // convert all pointers to (char *) so that byte address arithmetic will work.
-    char  *dptr = (char *)*destPtr;
-    char  *dUText = (char *)dest;
-    char  *sUText = (char *)src;
+    حرف  *dptr = (حرف *)*destPtr;
+    حرف  *dUText = (حرف *)dest;
+    حرف  *sUText = (حرف *)src;
 
-    if (dptr >= (char *)src->pExtra && dptr < ((char*)src->pExtra)+src->extraSize) {
+    اگر (dptr >= (حرف *)src->pExtra && dptr < ((حرف*)src->pExtra)+src->extra_سائز) {
         // target ptr was to something within the src UText's pExtra storage.
         //   relocate it into the target UText's pExtra region.
-        *destPtr = ((char *)dest->pExtra) + (dptr - (char *)src->pExtra);
-    } else if (dptr>=sUText && dptr < sUText+src->sizeOfStruct) {
+        *destPtr = ((حرف *)dest->pExtra) + (dptr - (حرف *)src->pExtra);
+    } ورنہ اگر (dptr>=sUText && dptr < sUText+src->سائز_کا_Struct) {
         // target ptr was pointing to somewhere within the source UText itself.
         //   Move it to the same offset within the target UText.
         *destPtr = dUText + (dptr-sUText);
@@ -774,19 +774,19 @@ static void adjustPointer(UText *dest, const void **destPtr, const UText *src) {
 //  Clone.  This is a generic copy-the-utext-by-value clone function that can be
 //          used as-is with some utext types, and as a helper by other clones.
 //
-static UText * U_CALLCONV
-shallowTextClone(UText * dest, const UText * src, UErrorCode * status) {
-    if (U_FAILURE(*status)) {
-        return nullptr;
+ساکن UText * U_CALLCONV
+shallow_متن_Clone(UText * dest, ثابت UText * src, UError_رمز * حالت_2) {
+    اگر (U_FAILURE(*حالت_2)) {
+        واپس خالی_اشاریہ;
     }
-    int32_t  srcExtraSize = src->extraSize;
+    int32_t  src_Extra_سائز = src->extra_سائز;
 
     //
     // Use the generic text_setup to allocate storage if required.
     //
-    dest = utext_setup(dest, srcExtraSize, status);
-    if (U_FAILURE(*status)) {
-        return dest;
+    dest = utext_تیاری(dest, src_Extra_سائز, حالت_2);
+    اگر (U_FAILURE(*حالت_2)) {
+        واپس dest;
     }
 
     //
@@ -795,7 +795,7 @@ shallowTextClone(UText * dest, const UText * src, UErrorCode * status) {
     //   were set up by utext_setup.  Save them separately before
     //   copying the whole struct.
     //
-    void *destExtra = dest->pExtra;
+    خالی *destExtra = dest->pExtra;
     int32_t flags   = dest->flags;
 
 
@@ -803,37 +803,37 @@ shallowTextClone(UText * dest, const UText * src, UErrorCode * status) {
     //  Copy the whole UText struct by value.
     //  Any "Extra" storage is copied also.
     //
-    int sizeToCopy = src->sizeOfStruct;
-    if (sizeToCopy > dest->sizeOfStruct) {
-        sizeToCopy = dest->sizeOfStruct;
+    صحیح سائز_مقصد_Copy = src->سائز_کا_Struct;
+    اگر (سائز_مقصد_Copy > dest->سائز_کا_Struct) {
+        سائز_مقصد_Copy = dest->سائز_کا_Struct;
     }
-    uprv_memcpy(dest, src, sizeToCopy);
+    uprv_memcpy(dest, src, سائز_مقصد_Copy);
     dest->pExtra = destExtra;
     dest->flags  = flags;
-    if (srcExtraSize > 0) {
-        uprv_memcpy(dest->pExtra, src->pExtra, srcExtraSize);
+    اگر (src_Extra_سائز > 0) {
+        uprv_memcpy(dest->pExtra, src->pExtra, src_Extra_سائز);
     }
 
     //
     // Relocate any pointers in the target that refer to the UText itself
     //   to point to the cloned copy rather than the original source.
     //
-    adjustPointer(dest, &dest->context, src);
-    adjustPointer(dest, &dest->p, src);
-    adjustPointer(dest, &dest->q, src);
-    adjustPointer(dest, &dest->r, src);
-    adjustPointer(dest, (const void **)&dest->chunkContents, src);
+    adjust_اشارہ_گر(dest, &dest->context, src);
+    adjust_اشارہ_گر(dest, &dest->p, src);
+    adjust_اشارہ_گر(dest, &dest->q, src);
+    adjust_اشارہ_گر(dest, &dest->r, src);
+    adjust_اشارہ_گر(dest, (ثابت خالی **)&dest->chunkContents, src);
 
     // The newly shallow-cloned UText does _not_ own the underlying storage for the text.
     // (The source for the clone may or may not have owned the text.)
 
-    dest->providerProperties &= ~I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT);
+    dest->providerProperties &= ~I32_FLAG(UTEXT_PROVIDER_OWNS_متن);
 
-    return dest;
+    واپس dest;
 }
 
 
-U_CDECL_END
+U_CDECL_انتہا
 
 
 
@@ -860,7 +860,7 @@ U_CDECL_END
 //     The longest illegal byte sequence treated as a single error (and converted to U+FFFD)
 //     is a three-byte sequence (truncated four-byte sequence).
 //
-enum { UTF8_TEXT_CHUNK_SIZE=32 };
+شمار { UTF8_متن_CHUNK_سائز=32 };
 
 //
 // UTF8Buf  Two of these structs will be set up in the UText's extra allocated space.
@@ -876,29 +876,29 @@ enum { UTF8_TEXT_CHUNK_SIZE=32 };
 //     pair.  Doing this is simpler than checking for the edge case.
 //
 
-struct UTF8Buf {
-    int32_t   bufNativeStart;                        // Native index of first char in char16_t buf
-    int32_t   bufNativeLimit;                        // Native index following last char in buf.
-    int32_t   bufStartIdx;                           // First filled position in buf.
-    int32_t   bufLimitIdx;                           // Limit of filled range in buf.
+ساخت UTF8Buf {
+    int32_t   buf_Native_آغاز;                        // Native index of first char in char16_t buf
+    int32_t   buf_Native_حد_بندی;                        // Native index following last char in buf.
+    int32_t   buf_آغاز_Idx;                           // First filled position in buf.
+    int32_t   buf_حد_بندی_Idx;                           // Limit of filled range in buf.
     int32_t   bufNILimit;                            // Limit of native indexing part of buf
-    int32_t   toUCharsMapStart;                      // Native index corresponding to
+    int32_t   مقصد_UChars_Map_آغاز;                      // Native index corresponding to
                                                      //   mapToUChars[0].
                                                      //   Set to bufNativeStart when filling forwards.
                                                      //   Set to computed value when filling backwards.
 
-    char16_t  buf[UTF8_TEXT_CHUNK_SIZE+4];           // The char16_t buffer.  Requires one extra position beyond the
+    char16_t  buf[UTF8_متن_CHUNK_سائز+4];           // The char16_t buffer.  Requires one extra position beyond the
                                                      //   the chunk size, to allow for surrogate at the end.
                                                      //   Length must be identical to mapToNative array, below,
                                                      //   because of the way indexing works when the array is
                                                      //   filled backwards during a reverse iteration.  Thus,
                                                      //   the additional extra size.
-    uint8_t   mapToNative[UTF8_TEXT_CHUNK_SIZE+4];   // map char16_t index in buf to
+    uint8_t   map_مقصد_Native[UTF8_متن_CHUNK_سائز+4];   // map char16_t index in buf to
                                                      //  native offset from bufNativeStart.
                                                      //  Requires two extra slots,
                                                      //    one for a supplementary starting in the last normal position,
                                                      //    and one for an entry for the buffer limit position.
-    uint8_t   mapToUChars[UTF8_TEXT_CHUNK_SIZE*3+6]; // Map native offset from bufNativeStart to
+    uint8_t   map_مقصد_UChars[UTF8_متن_CHUNK_سائز*3+6]; // Map native offset from bufNativeStart to
                                                      //   corresponding offset in filled part of buf.
     int32_t   align;
 };
@@ -911,25 +911,25 @@ U_CDECL_BEGIN
 //        Get the length of the string.  If we don't already know it,
 //              we'll need to scan for the trailing  nul.
 //
-static int64_t U_CALLCONV
-utf8TextLength(UText *ut) {
-    if (ut->b < 0) {
+ساکن int64_t U_CALLCONV
+utf8_متن_لمبائی(UText *ut) {
+    اگر (ut->b < 0) {
         // Zero terminated string, and we haven't scanned to the end yet.
         // Scan it now.
-        const char *r = (const char *)ut->context + ut->c;
-        while (*r != 0) {
+        ثابت حرف *r = (ثابت حرف *)ut->context + ut->c;
+        جب (*r != 0) {
             r++;
         }
-        if ((r - (const char *)ut->context) < 0x7fffffff) {
-            ut->b = (int32_t)(r - (const char *)ut->context);
-        } else {
+        اگر ((r - (ثابت حرف *)ut->context) < 0x7fffffff) {
+            ut->b = (int32_t)(r - (ثابت حرف *)ut->context);
+        } ورنہ {
             // Actual string was bigger (more than 2 gig) than we
             //   can handle.  Clip it to 2 GB.
             ut->b = 0x7fffffff;
         }
-        ut->providerProperties &= ~I32_FLAG(UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE);
+        ut->providerProperties &= ~I32_FLAG(UTEXT_PROVIDER_لمبائی_IS_EXPENSIVE);
     }
-    return ut->b;
+    واپس ut->b;
 }
 
 
@@ -937,46 +937,46 @@ utf8TextLength(UText *ut) {
 
 
 
-static UBool U_CALLCONV
-utf8TextAccess(UText *ut, int64_t index, UBool forward) {
+ساکن UBool U_CALLCONV
+utf8_متن_Access(UText *ut, int64_t اشاریہ, UBool forward) {
     //
     //  Apologies to those who are allergic to goto statements.
     //    Consider each goto to a labelled block to be the equivalent of
     //         call the named block as if it were a function();
     //         return;
     //
-    const uint8_t *s8=(const uint8_t *)ut->context;
-    UTF8Buf *u8b = nullptr;
+    ثابت uint8_t *s8=(ثابت uint8_t *)ut->context;
+    UTF8Buf *u8b = خالی_اشاریہ;
     int32_t  length = ut->b;         // Length of original utf-8
-    int32_t  ix= (int32_t)index;     // Requested index, trimmed to 32 bits.
-    int32_t  mapIndex = 0;
-    if (index<0) {
+    int32_t  ix= (int32_t)اشاریہ;     // Requested index, trimmed to 32 bits.
+    int32_t  map_اشاریہ = 0;
+    اگر (اشاریہ<0) {
         ix=0;
-    } else if (index > 0x7fffffff) {
+    } ورنہ اگر (اشاریہ > 0x7fffffff) {
         // Strings with 64 bit lengths not supported by this UTF-8 provider.
         ix = 0x7fffffff;
     }
 
     // Pin requested index to the string length.
-    if (ix>length) {
-        if (length>=0) {
+    اگر (ix>length) {
+        اگر (length>=0) {
             ix=length;
-        } else if (ix>=ut->c) {
+        } ورنہ اگر (ix>=ut->c) {
             // Zero terminated string, and requested index is beyond
             //   the region that has already been scanned.
             //   Scan up to either the end of the string or to the
             //   requested position, whichever comes first.
-            while (ut->c<ix && s8[ut->c]!=0) {
+            جب (ut->c<ix && s8[ut->c]!=0) {
                 ut->c++;
             }
             //  TODO:  support for null terminated string length > 32 bits.
-            if (s8[ut->c] == 0) {
+            اگر (s8[ut->c] == 0) {
                 // We just found the actual length of the string.
                 //  Trim the requested index back to that.
                 ix     = ut->c;
                 ut->b  = ut->c;
                 length = ut->c;
-                ut->providerProperties &= ~I32_FLAG(UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE);
+                ut->providerProperties &= ~I32_FLAG(UTEXT_PROVIDER_لمبائی_IS_EXPENSIVE);
             }
         }
     }
@@ -984,21 +984,21 @@ utf8TextAccess(UText *ut, int64_t index, UBool forward) {
     //
     // Dispatch to the appropriate action for a forward iteration request.
     //
-    if (forward) {
-        if (ix==ut->chunkNativeLimit) {
+    اگر (forward) {
+        اگر (ix==ut->chunk_Native_حد_بندی) {
             // Check for normal sequential iteration cases first.
-            if (ix==length) {
+            اگر (ix==length) {
                 // Just reached end of string
                 // Don't swap buffers, but do set the
                 //   current buffer position.
-                ut->chunkOffset = ut->chunkLength;
-                return false;
-            } else {
+                ut->chunk_انحراف = ut->chunk_لمبائی;
+                واپس جھوٹ;
+            } ورنہ {
                 // End of current buffer.
                 //   check whether other buffer already has what we need.
                 UTF8Buf *altB = (UTF8Buf *)ut->q;
-                if (ix>=altB->bufNativeStart && ix<altB->bufNativeLimit) {
-                    goto swapBuffers;
+                اگر (ix>=altB->buf_Native_آغاز && ix<altB->buf_Native_حد_بندی) {
+                    جاؤ تبادلہ_Buffers;
                 }
             }
         }
@@ -1009,41 +1009,41 @@ utf8TextAccess(UText *ut, int64_t index, UBool forward) {
         //    move back and forth over a fairly limited range
         {
             u8b = (UTF8Buf *)ut->q;   // the alternate buffer
-            if (ix>=u8b->bufNativeStart && ix<u8b->bufNativeLimit) {
+            اگر (ix>=u8b->buf_Native_آغاز && ix<u8b->buf_Native_حد_بندی) {
                 // Requested index is in the other buffer.
-                goto swapBuffers;
+                جاؤ تبادلہ_Buffers;
             }
-            if (ix == length) {
+            اگر (ix == length) {
                 // Requested index is end-of-string.
                 //   (this is the case of randomly seeking to the end.
                 //    The case of iterating off the end is handled earlier.)
-                if (ix == ut->chunkNativeLimit) {
+                اگر (ix == ut->chunk_Native_حد_بندی) {
                     // Current buffer extends up to the end of the string.
                     //   Leave it as the current buffer.
-                    ut->chunkOffset = ut->chunkLength;
-                    return false;
+                    ut->chunk_انحراف = ut->chunk_لمبائی;
+                    واپس جھوٹ;
                 }
-                if (ix == u8b->bufNativeLimit) {
+                اگر (ix == u8b->buf_Native_حد_بندی) {
                     // Alternate buffer extends to the end of string.
                     //   Swap it in as the current buffer.
-                    goto swapBuffersAndFail;
+                    جاؤ تبادلہ_Buffers_And_Fail;
                 }
 
                 // Neither existing buffer extends to the end of the string.
-                goto makeStubBuffer;
+                جاؤ make_Stub_بفر;
             }
 
-            if (ix<ut->chunkNativeStart || ix>=ut->chunkNativeLimit) {
+            اگر (ix<ut->chunk_Native_آغاز || ix>=ut->chunk_Native_حد_بندی) {
                 // Requested index is in neither buffer.
-                goto fillForward;
+                جاؤ fillForward;
             }
 
             // Requested index is in this buffer.
             u8b = (UTF8Buf *)ut->p;   // the current buffer
-            mapIndex = ix - u8b->toUCharsMapStart;
-            U_ASSERT(mapIndex < (int32_t)sizeof(UTF8Buf::mapToUChars));
-            ut->chunkOffset = u8b->mapToUChars[mapIndex] - u8b->bufStartIdx;
-            return true;
+            map_اشاریہ = ix - u8b->مقصد_UChars_Map_آغاز;
+            U_ASSERT(map_اشاریہ < (int32_t)حجم(UTF8Buf::map_مقصد_UChars));
+            ut->chunk_انحراف = u8b->map_مقصد_UChars[map_اشاریہ] - u8b->buf_آغاز_Idx;
+            واپس سچ;
 
         }
     }
@@ -1053,20 +1053,20 @@ utf8TextAccess(UText *ut, int64_t index, UBool forward) {
     // Dispatch to the appropriate action for a
     //   Backwards Direction iteration request.
     //
-    if (ix==ut->chunkNativeStart) {
+    اگر (ix==ut->chunk_Native_آغاز) {
         // Check for normal sequential iteration cases first.
-        if (ix==0) {
+        اگر (ix==0) {
             // Just reached the start of string
             // Don't swap buffers, but do set the
             //   current buffer position.
-            ut->chunkOffset = 0;
-            return false;
-        } else {
+            ut->chunk_انحراف = 0;
+            واپس جھوٹ;
+        } ورنہ {
             // Start of current buffer.
             //   check whether other buffer already has what we need.
             UTF8Buf *altB = (UTF8Buf *)ut->q;
-            if (ix>altB->bufNativeStart && ix<=altB->bufNativeLimit) {
-                goto swapBuffers;
+            اگر (ix>altB->buf_Native_آغاز && ix<=altB->buf_Native_حد_بندی) {
+                جاؤ تبادلہ_Buffers;
             }
         }
     }
@@ -1077,50 +1077,50 @@ utf8TextAccess(UText *ut, int64_t index, UBool forward) {
     //    Second most likely: in neither buffer.
     //    Unlikely, but must work:  in the current buffer.
     u8b = (UTF8Buf *)ut->q;   // the alternate buffer
-    if (ix>u8b->bufNativeStart && ix<=u8b->bufNativeLimit) {
+    اگر (ix>u8b->buf_Native_آغاز && ix<=u8b->buf_Native_حد_بندی) {
         // Requested index is in the other buffer.
-        goto swapBuffers;
+        جاؤ تبادلہ_Buffers;
     }
     // Requested index is start-of-string.
     //   (this is the case of randomly seeking to the start.
     //    The case of iterating off the start is handled earlier.)
-    if (ix==0) {
-        if (u8b->bufNativeStart==0) {
+    اگر (ix==0) {
+        اگر (u8b->buf_Native_آغاز==0) {
             // Alternate buffer contains the data for the start string.
             // Make it be the current buffer.
-            goto swapBuffersAndFail;
-        } else {
+            جاؤ تبادلہ_Buffers_And_Fail;
+        } ورنہ {
             // Request for data before the start of string,
             //   neither buffer is usable.
             //   set up a zero-length buffer.
-            goto makeStubBuffer;
+            جاؤ make_Stub_بفر;
         }
     }
 
-    if (ix<=ut->chunkNativeStart || ix>ut->chunkNativeLimit) {
+    اگر (ix<=ut->chunk_Native_آغاز || ix>ut->chunk_Native_حد_بندی) {
         // Requested index is in neither buffer.
-        goto fillReverse;
+        جاؤ fill_الٹ;
     }
 
     // Requested index is in this buffer.
     //   Set the utf16 buffer index.
     u8b = (UTF8Buf *)ut->p;
-    mapIndex = ix - u8b->toUCharsMapStart;
-    ut->chunkOffset = u8b->mapToUChars[mapIndex] - u8b->bufStartIdx;
-    if (ut->chunkOffset==0) {
+    map_اشاریہ = ix - u8b->مقصد_UChars_Map_آغاز;
+    ut->chunk_انحراف = u8b->map_مقصد_UChars[map_اشاریہ] - u8b->buf_آغاز_Idx;
+    اگر (ut->chunk_انحراف==0) {
         // This occurs when the first character in the text is
         //   a multi-byte UTF-8 char, and the requested index is to
         //   one of the trailing bytes.  Because there is no preceding ,
         //   character, this access fails.  We can't pick up on the
         //   situation sooner because the requested index is not zero.
-        return false;
-    } else {
-        return true;
+        واپس جھوٹ;
+    } ورنہ {
+        واپس سچ;
     }
 
 
 
-swapBuffers:
+تبادلہ_Buffers:
     //  The alternate buffer (ut->q) has the string data that was requested.
     //  Swap the primary and alternate buffers, and set the
     //   chunk index into the new primary buffer.
@@ -1128,27 +1128,27 @@ swapBuffers:
         u8b   = (UTF8Buf *)ut->q;
         ut->q = ut->p;
         ut->p = u8b;
-        ut->chunkContents       = &u8b->buf[u8b->bufStartIdx];
-        ut->chunkLength         = u8b->bufLimitIdx - u8b->bufStartIdx;
-        ut->chunkNativeStart    = u8b->bufNativeStart;
-        ut->chunkNativeLimit    = u8b->bufNativeLimit;
-        ut->nativeIndexingLimit = u8b->bufNILimit;
+        ut->chunkContents       = &u8b->buf[u8b->buf_آغاز_Idx];
+        ut->chunk_لمبائی         = u8b->buf_حد_بندی_Idx - u8b->buf_آغاز_Idx;
+        ut->chunk_Native_آغاز    = u8b->buf_Native_آغاز;
+        ut->chunk_Native_حد_بندی    = u8b->buf_Native_حد_بندی;
+        ut->native_Indexing_حد_بندی = u8b->bufNILimit;
 
         // Index into the (now current) chunk
         // Use the map to set the chunk index.  It's more trouble than it's worth
         //    to check whether native indexing can be used.
-        U_ASSERT(ix>=u8b->bufNativeStart);
-        U_ASSERT(ix<=u8b->bufNativeLimit);
-        mapIndex = ix - u8b->toUCharsMapStart;
-        U_ASSERT(mapIndex>=0);
-        U_ASSERT(mapIndex<(int32_t)sizeof(u8b->mapToUChars));
-        ut->chunkOffset = u8b->mapToUChars[mapIndex] - u8b->bufStartIdx;
+        U_ASSERT(ix>=u8b->buf_Native_آغاز);
+        U_ASSERT(ix<=u8b->buf_Native_حد_بندی);
+        map_اشاریہ = ix - u8b->مقصد_UChars_Map_آغاز;
+        U_ASSERT(map_اشاریہ>=0);
+        U_ASSERT(map_اشاریہ<(int32_t)حجم(u8b->map_مقصد_UChars));
+        ut->chunk_انحراف = u8b->map_مقصد_UChars[map_اشاریہ] - u8b->buf_آغاز_Idx;
 
-        return true;
+        واپس سچ;
     }
 
 
- swapBuffersAndFail:
+ تبادلہ_Buffers_And_Fail:
     // We got a request for either the start or end of the string,
     //  with iteration continuing in the out-of-bounds direction.
     // The alternate buffer already contains the data up to the
@@ -1160,176 +1160,176 @@ swapBuffers:
     u8b   = (UTF8Buf *)ut->q;
     ut->q = ut->p;
     ut->p = u8b;
-    ut->chunkContents       = &u8b->buf[u8b->bufStartIdx];
-    ut->chunkLength         = u8b->bufLimitIdx - u8b->bufStartIdx;
-    ut->chunkNativeStart    = u8b->bufNativeStart;
-    ut->chunkNativeLimit    = u8b->bufNativeLimit;
-    ut->nativeIndexingLimit = u8b->bufNILimit;
+    ut->chunkContents       = &u8b->buf[u8b->buf_آغاز_Idx];
+    ut->chunk_لمبائی         = u8b->buf_حد_بندی_Idx - u8b->buf_آغاز_Idx;
+    ut->chunk_Native_آغاز    = u8b->buf_Native_آغاز;
+    ut->chunk_Native_حد_بندی    = u8b->buf_Native_حد_بندی;
+    ut->native_Indexing_حد_بندی = u8b->bufNILimit;
 
     // Index into the (now current) chunk
     //  For this function  (swapBuffersAndFail), the requested index
     //    will always be at either the start or end of the chunk.
-    if (ix==u8b->bufNativeLimit) {
-        ut->chunkOffset = ut->chunkLength;
-    } else  {
-        ut->chunkOffset = 0;
-        U_ASSERT(ix == u8b->bufNativeStart);
+    اگر (ix==u8b->buf_Native_حد_بندی) {
+        ut->chunk_انحراف = ut->chunk_لمبائی;
+    } ورنہ  {
+        ut->chunk_انحراف = 0;
+        U_ASSERT(ix == u8b->buf_Native_آغاز);
     }
-    return false;
+    واپس جھوٹ;
 
-makeStubBuffer:
+make_Stub_بفر:
     //   The user has done a seek/access past the start or end
     //   of the string.  Rather than loading data that is likely
     //   to never be used, just set up a zero-length buffer at
     //   the position.
     u8b = (UTF8Buf *)ut->q;
-    u8b->bufNativeStart   = ix;
-    u8b->bufNativeLimit   = ix;
-    u8b->bufStartIdx      = 0;
-    u8b->bufLimitIdx      = 0;
+    u8b->buf_Native_آغاز   = ix;
+    u8b->buf_Native_حد_بندی   = ix;
+    u8b->buf_آغاز_Idx      = 0;
+    u8b->buf_حد_بندی_Idx      = 0;
     u8b->bufNILimit       = 0;
-    u8b->toUCharsMapStart = ix;
-    u8b->mapToNative[0]   = 0;
-    u8b->mapToUChars[0]   = 0;
-    goto swapBuffersAndFail;
+    u8b->مقصد_UChars_Map_آغاز = ix;
+    u8b->map_مقصد_Native[0]   = 0;
+    u8b->map_مقصد_UChars[0]   = 0;
+    جاؤ تبادلہ_Buffers_And_Fail;
 
 
 
 fillForward:
     {
         // Move the incoming index to a code point boundary.
-        U8_SET_CP_START(s8, 0, ix);
+        U8_سیٹ_CP_آغاز(s8, 0, ix);
 
         // Swap the UText buffers.
         //  We want to fill what was previously the alternate buffer,
         //  and make what was the current buffer be the new alternate.
-        UTF8Buf *u8b_swap = (UTF8Buf *)ut->q;
+        UTF8Buf *u8b_تبادلہ = (UTF8Buf *)ut->q;
         ut->q = ut->p;
-        ut->p = u8b_swap;
+        ut->p = u8b_تبادلہ;
 
         int32_t strLen = ut->b;
-        UBool   nulTerminated = false;
-        if (strLen < 0) {
+        UBool   nulTerminated = جھوٹ;
+        اگر (strLen < 0) {
             strLen = 0x7fffffff;
-            nulTerminated = true;
+            nulTerminated = سچ;
         }
 
-        char16_t   *buf = u8b_swap->buf;
-        uint8_t *mapToNative  = u8b_swap->mapToNative;
-        uint8_t *mapToUChars  = u8b_swap->mapToUChars;
+        char16_t   *buf = u8b_تبادلہ->buf;
+        uint8_t *map_مقصد_Native  = u8b_تبادلہ->map_مقصد_Native;
+        uint8_t *map_مقصد_UChars  = u8b_تبادلہ->map_مقصد_UChars;
         int32_t  destIx       = 0;
         int32_t  srcIx        = ix;
-        UBool    seenNonAscii = false;
+        UBool    نظر_آیا_Non_Ascii = جھوٹ;
         UChar32  c = 0;
 
         // Fill the chunk buffer and mapping arrays.
-        while (destIx<UTF8_TEXT_CHUNK_SIZE) {
+        جب (destIx<UTF8_متن_CHUNK_سائز) {
             c = s8[srcIx];
-            if (c>0 && c<0x80) {
+            اگر (c>0 && c<0x80) {
                 // Special case ASCII range for speed.
                 //   zero is excluded to simplify bounds checking.
                 buf[destIx] = (char16_t)c;
-                mapToNative[destIx]    = (uint8_t)(srcIx - ix);
-                mapToUChars[srcIx-ix]  = (uint8_t)destIx;
+                map_مقصد_Native[destIx]    = (uint8_t)(srcIx - ix);
+                map_مقصد_UChars[srcIx-ix]  = (uint8_t)destIx;
                 srcIx++;
                 destIx++;
-            } else {
+            } ورنہ {
                 // General case, handle everything.
-                if (seenNonAscii == false) {
-                    seenNonAscii = true;
-                    u8b_swap->bufNILimit = destIx;
+                اگر (نظر_آیا_Non_Ascii == جھوٹ) {
+                    نظر_آیا_Non_Ascii = سچ;
+                    u8b_تبادلہ->bufNILimit = destIx;
                 }
 
                 int32_t  cIx      = srcIx;
                 int32_t  dIx      = destIx;
                 int32_t  dIxSaved = destIx;
-                U8_NEXT_OR_FFFD(s8, srcIx, strLen, c);
-                if (c==0 && nulTerminated) {
+                U8_اگلا_OR_FFFD(s8, srcIx, strLen, c);
+                اگر (c==0 && nulTerminated) {
                     srcIx--;
-                    break;
+                    توڑو;
                 }
 
                 U16_APPEND_UNSAFE(buf, destIx, c);
-                do {
-                    mapToNative[dIx++] = (uint8_t)(cIx - ix);
-                } while (dIx < destIx);
+                کرو {
+                    map_مقصد_Native[dIx++] = (uint8_t)(cIx - ix);
+                } جب (dIx < destIx);
 
-                do {
-                    mapToUChars[cIx++ - ix] = (uint8_t)dIxSaved;
-                } while (cIx < srcIx);
+                کرو {
+                    map_مقصد_UChars[cIx++ - ix] = (uint8_t)dIxSaved;
+                } جب (cIx < srcIx);
             }
-            if (srcIx>=strLen) {
-                break;
+            اگر (srcIx>=strLen) {
+                توڑو;
             }
 
         }
 
         //  store Native <--> Chunk Map entries for the end of the buffer.
         //    There is no actual character here, but the index position is valid.
-        mapToNative[destIx]     = (uint8_t)(srcIx - ix);
-        mapToUChars[srcIx - ix] = (uint8_t)destIx;
+        map_مقصد_Native[destIx]     = (uint8_t)(srcIx - ix);
+        map_مقصد_UChars[srcIx - ix] = (uint8_t)destIx;
 
         //  fill in Buffer descriptor
-        u8b_swap->bufNativeStart     = ix;
-        u8b_swap->bufNativeLimit     = srcIx;
-        u8b_swap->bufStartIdx        = 0;
-        u8b_swap->bufLimitIdx        = destIx;
-        if (seenNonAscii == false) {
-            u8b_swap->bufNILimit     = destIx;
+        u8b_تبادلہ->buf_Native_آغاز     = ix;
+        u8b_تبادلہ->buf_Native_حد_بندی     = srcIx;
+        u8b_تبادلہ->buf_آغاز_Idx        = 0;
+        u8b_تبادلہ->buf_حد_بندی_Idx        = destIx;
+        اگر (نظر_آیا_Non_Ascii == جھوٹ) {
+            u8b_تبادلہ->bufNILimit     = destIx;
         }
-        u8b_swap->toUCharsMapStart   = u8b_swap->bufNativeStart;
+        u8b_تبادلہ->مقصد_UChars_Map_آغاز   = u8b_تبادلہ->buf_Native_آغاز;
 
         // Set UText chunk to refer to this buffer.
         ut->chunkContents       = buf;
-        ut->chunkOffset         = 0;
-        ut->chunkLength         = u8b_swap->bufLimitIdx;
-        ut->chunkNativeStart    = u8b_swap->bufNativeStart;
-        ut->chunkNativeLimit    = u8b_swap->bufNativeLimit;
-        ut->nativeIndexingLimit = u8b_swap->bufNILimit;
+        ut->chunk_انحراف         = 0;
+        ut->chunk_لمبائی         = u8b_تبادلہ->buf_حد_بندی_Idx;
+        ut->chunk_Native_آغاز    = u8b_تبادلہ->buf_Native_آغاز;
+        ut->chunk_Native_حد_بندی    = u8b_تبادلہ->buf_Native_حد_بندی;
+        ut->native_Indexing_حد_بندی = u8b_تبادلہ->bufNILimit;
 
         // For zero terminated strings, keep track of the maximum point
         //   scanned so far.
-        if (nulTerminated && srcIx>ut->c) {
+        اگر (nulTerminated && srcIx>ut->c) {
             ut->c = srcIx;
-            if (c==0) {
+            اگر (c==0) {
                 // We scanned to the end.
                 //   Remember the actual length.
                 ut->b = srcIx;
-                ut->providerProperties &= ~I32_FLAG(UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE);
+                ut->providerProperties &= ~I32_FLAG(UTEXT_PROVIDER_لمبائی_IS_EXPENSIVE);
             }
         }
-        return true;
+        واپس سچ;
     }
 
 
-fillReverse:
+fill_الٹ:
     {
         // Move the incoming index to a code point boundary.
         // Can only do this if the incoming index is somewhere in the interior of the string.
         //   If index is at the end, there is no character there to look at.
-        if (ix != ut->b) {
+        اگر (ix != ut->b) {
             // Note: this function will only move the index back if it is on a trail byte
             //       and there is a preceding lead byte and the sequence from the lead 
             //       through this trail could be part of a valid UTF-8 sequence
             //       Otherwise the index remains unchanged.
-            U8_SET_CP_START(s8, 0, ix);
+            U8_سیٹ_CP_آغاز(s8, 0, ix);
         }
 
         // Swap the UText buffers.
         //  We want to fill what was previously the alternate buffer,
         //  and make what was the current buffer be the new alternate.
-        UTF8Buf *u8b_swap = (UTF8Buf *)ut->q;
+        UTF8Buf *u8b_تبادلہ = (UTF8Buf *)ut->q;
         ut->q = ut->p;
-        ut->p = u8b_swap;
+        ut->p = u8b_تبادلہ;
 
-        char16_t   *buf = u8b_swap->buf;
-        uint8_t *mapToNative = u8b_swap->mapToNative;
-        uint8_t *mapToUChars = u8b_swap->mapToUChars;
-        int32_t  toUCharsMapStart = ix - sizeof(UTF8Buf::mapToUChars) + 1;
+        char16_t   *buf = u8b_تبادلہ->buf;
+        uint8_t *map_مقصد_Native = u8b_تبادلہ->map_مقصد_Native;
+        uint8_t *map_مقصد_UChars = u8b_تبادلہ->map_مقصد_UChars;
+        int32_t  مقصد_UChars_Map_آغاز = ix - حجم(UTF8Buf::map_مقصد_UChars) + 1;
         // Note that toUCharsMapStart can be negative. Happens when the remaining
         // text from current position to the beginning is less than the buffer size.
         // + 1 because mapToUChars must have a slot at the end for the bufNativeLimit entry.
-        int32_t  destIx = UTF8_TEXT_CHUNK_SIZE+2;   // Start in the overflow region
+        int32_t  destIx = UTF8_متن_CHUNK_سائز+2;   // Start in the overflow region
                                                     //   at end of buffer to leave room
                                                     //   for a surrogate pair at the
                                                     //   buffer start.
@@ -1340,25 +1340,25 @@ fillReverse:
         // Map to/from Native Indexes, fill in for the position at the end of
         //   the buffer.
         //
-        mapToNative[destIx] = (uint8_t)(srcIx - toUCharsMapStart);
-        mapToUChars[srcIx - toUCharsMapStart] = (uint8_t)destIx;
+        map_مقصد_Native[destIx] = (uint8_t)(srcIx - مقصد_UChars_Map_آغاز);
+        map_مقصد_UChars[srcIx - مقصد_UChars_Map_آغاز] = (uint8_t)destIx;
 
         // Fill the chunk buffer
         // Work backwards, filling from the end of the buffer towards the front.
         //
-        while (destIx>2 && (srcIx - toUCharsMapStart > 5) && (srcIx > 0)) {
+        جب (destIx>2 && (srcIx - مقصد_UChars_Map_آغاز > 5) && (srcIx > 0)) {
             srcIx--;
             destIx--;
 
             // Get last byte of the UTF-8 character
             c = s8[srcIx];
-            if (c<0x80) {
+            اگر (c<0x80) {
                 // Special case ASCII range for speed.
                 buf[destIx] = (char16_t)c;
-                U_ASSERT(toUCharsMapStart <= srcIx);
-                mapToUChars[srcIx - toUCharsMapStart] = (uint8_t)destIx;
-                mapToNative[destIx] = (uint8_t)(srcIx - toUCharsMapStart);
-            } else {
+                U_ASSERT(مقصد_UChars_Map_آغاز <= srcIx);
+                map_مقصد_UChars[srcIx - مقصد_UChars_Map_آغاز] = (uint8_t)destIx;
+                map_مقصد_Native[destIx] = (uint8_t)(srcIx - مقصد_UChars_Map_آغاز);
+            } ورنہ {
                 // General case, handle everything non-ASCII.
 
                 int32_t  sIx      = srcIx;  // ix of last byte of multi-byte u8 char
@@ -1367,25 +1367,25 @@ fillReverse:
                 //   use code derived from the macros in utf8.h
                 //   Leaves srcIx pointing at the first byte of the UTF-8 char.
                 //
-                c=utf8_prevCharSafeBody(s8, 0, &srcIx, c, -3);
+                c=utf8_پچھلا_Char_محفوظ_Body(s8, 0, &srcIx, c, -3);
                 // leaves srcIx at first byte of the multi-byte char.
 
                 // Store the character in UTF-16 buffer.
-                if (c<0x10000) {
+                اگر (c<0x10000) {
                     buf[destIx] = (char16_t)c;
-                    mapToNative[destIx] = (uint8_t)(srcIx - toUCharsMapStart);
-                } else {
+                    map_مقصد_Native[destIx] = (uint8_t)(srcIx - مقصد_UChars_Map_آغاز);
+                } ورنہ {
                     buf[destIx]         = U16_TRAIL(c);
-                    mapToNative[destIx] = (uint8_t)(srcIx - toUCharsMapStart);
+                    map_مقصد_Native[destIx] = (uint8_t)(srcIx - مقصد_UChars_Map_آغاز);
                     buf[--destIx]       = U16_LEAD(c);
-                    mapToNative[destIx] = (uint8_t)(srcIx - toUCharsMapStart);
+                    map_مقصد_Native[destIx] = (uint8_t)(srcIx - مقصد_UChars_Map_آغاز);
                 }
 
                 // Fill in the map from native indexes to UChars buf index.
-                do {
-                    mapToUChars[sIx-- - toUCharsMapStart] = (uint8_t)destIx;
-                } while (sIx >= srcIx);
-                U_ASSERT(toUCharsMapStart <= (srcIx+1));
+                کرو {
+                    map_مقصد_UChars[sIx-- - مقصد_UChars_Map_آغاز] = (uint8_t)destIx;
+                } جب (sIx >= srcIx);
+                U_ASSERT(مقصد_UChars_Map_آغاز <= (srcIx+1));
 
                 // Set native indexing limit to be the current position.
                 //   We are processing a non-ascii, non-native-indexing char now;
@@ -1394,20 +1394,20 @@ fillReverse:
                 bufNILimit = destIx;
             }
         }
-        u8b_swap->bufNativeStart     = srcIx;
-        u8b_swap->bufNativeLimit     = ix;
-        u8b_swap->bufStartIdx        = destIx;
-        u8b_swap->bufLimitIdx        = UTF8_TEXT_CHUNK_SIZE+2;
-        u8b_swap->bufNILimit         = bufNILimit - u8b_swap->bufStartIdx;
-        u8b_swap->toUCharsMapStart   = toUCharsMapStart;
+        u8b_تبادلہ->buf_Native_آغاز     = srcIx;
+        u8b_تبادلہ->buf_Native_حد_بندی     = ix;
+        u8b_تبادلہ->buf_آغاز_Idx        = destIx;
+        u8b_تبادلہ->buf_حد_بندی_Idx        = UTF8_متن_CHUNK_سائز+2;
+        u8b_تبادلہ->bufNILimit         = bufNILimit - u8b_تبادلہ->buf_آغاز_Idx;
+        u8b_تبادلہ->مقصد_UChars_Map_آغاز   = مقصد_UChars_Map_آغاز;
 
-        ut->chunkContents       = &buf[u8b_swap->bufStartIdx];
-        ut->chunkLength         = u8b_swap->bufLimitIdx - u8b_swap->bufStartIdx;
-        ut->chunkOffset         = ut->chunkLength;
-        ut->chunkNativeStart    = u8b_swap->bufNativeStart;
-        ut->chunkNativeLimit    = u8b_swap->bufNativeLimit;
-        ut->nativeIndexingLimit = u8b_swap->bufNILimit;
-        return true;
+        ut->chunkContents       = &buf[u8b_تبادلہ->buf_آغاز_Idx];
+        ut->chunk_لمبائی         = u8b_تبادلہ->buf_حد_بندی_Idx - u8b_تبادلہ->buf_آغاز_Idx;
+        ut->chunk_انحراف         = ut->chunk_لمبائی;
+        ut->chunk_Native_آغاز    = u8b_تبادلہ->buf_Native_آغاز;
+        ut->chunk_Native_حد_بندی    = u8b_تبادلہ->buf_Native_حد_بندی;
+        ut->native_Indexing_حد_بندی = u8b_تبادلہ->bufNILimit;
+        واپس سچ;
     }
 
 }
@@ -1419,158 +1419,158 @@ fillReverse:
 //     Inserts a Replacement Char rather than failing on invalid UTF-8
 //     Removes unnecessary features.
 //
-static char16_t*
+ساکن char16_t*
 utext_strFromUTF8(char16_t *dest,
-              int32_t destCapacity,
-              int32_t *pDestLength,
-              const char* src,
-              int32_t srcLength,        // required.  NUL terminated not supported.
-              UErrorCode *pErrorCode
+              int32_t dest_استعداد,
+              int32_t *p_Dest_لمبائی,
+              ثابت حرف* src,
+              int32_t src_لمبائی,        // required.  NUL terminated not supported.
+              UError_رمز *p_Error_رمز
               )
 {
 
     char16_t *pDest = dest;
-    char16_t *pDestLimit = (dest!=nullptr)?(dest+destCapacity):nullptr;
+    char16_t *p_Dest_حد_بندی = (dest!=خالی_اشاریہ)?(dest+dest_استعداد):خالی_اشاریہ;
     UChar32 ch=0;
-    int32_t index = 0;
-    int32_t reqLength = 0;
+    int32_t اشاریہ = 0;
+    int32_t req_لمبائی = 0;
     uint8_t* pSrc = (uint8_t*) src;
 
 
-    while((index < srcLength)&&(pDest<pDestLimit)){
-        ch = pSrc[index++];
-        if(ch <=0x7f){
+    جب((اشاریہ < src_لمبائی)&&(pDest<p_Dest_حد_بندی)){
+        ch = pSrc[اشاریہ++];
+        اگر(ch <=0x7f){
             *pDest++=(char16_t)ch;
-        }else{
-            ch=utf8_nextCharSafeBody(pSrc, &index, srcLength, ch, -3);
-            if(U_IS_BMP(ch)){
+        }ورنہ{
+            ch=utf8_اگلا_Char_محفوظ_Body(pSrc, &اشاریہ, src_لمبائی, ch, -3);
+            اگر(U_IS_BMP(ch)){
                 *(pDest++)=(char16_t)ch;
-            }else{
+            }ورنہ{
                 *(pDest++)=U16_LEAD(ch);
-                if(pDest<pDestLimit){
+                اگر(pDest<p_Dest_حد_بندی){
                     *(pDest++)=U16_TRAIL(ch);
-                }else{
-                    reqLength++;
-                    break;
+                }ورنہ{
+                    req_لمبائی++;
+                    توڑو;
                 }
             }
         }
     }
     /* donot fill the dest buffer just count the UChars needed */
-    while(index < srcLength){
-        ch = pSrc[index++];
-        if(ch <= 0x7f){
-            reqLength++;
-        }else{
-            ch=utf8_nextCharSafeBody(pSrc, &index, srcLength, ch, -3);
-            reqLength+=U16_LENGTH(ch);
+    جب(اشاریہ < src_لمبائی){
+        ch = pSrc[اشاریہ++];
+        اگر(ch <= 0x7f){
+            req_لمبائی++;
+        }ورنہ{
+            ch=utf8_اگلا_Char_محفوظ_Body(pSrc, &اشاریہ, src_لمبائی, ch, -3);
+            req_لمبائی+=U16_لمبائی(ch);
         }
     }
 
-    reqLength+=(int32_t)(pDest - dest);
+    req_لمبائی+=(int32_t)(pDest - dest);
 
-    if(pDestLength){
-        *pDestLength = reqLength;
+    اگر(p_Dest_لمبائی){
+        *p_Dest_لمبائی = req_لمبائی;
     }
 
     /* Terminate the buffer */
-    u_terminateUChars(dest,destCapacity,reqLength,pErrorCode);
+    u_terminateUChars(dest,dest_استعداد,req_لمبائی,p_Error_رمز);
 
-    return dest;
+    واپس dest;
 }
 
 
 
-static int32_t U_CALLCONV
-utf8TextExtract(UText *ut,
-                int64_t start, int64_t limit,
-                char16_t *dest, int32_t destCapacity,
-                UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+ساکن int32_t U_CALLCONV
+utf8_متن_نکالو(UText *ut,
+                int64_t آغاز, int64_t حد_بندی,
+                char16_t *dest, int32_t dest_استعداد,
+                UError_رمز *p_Error_رمز) {
+    اگر(U_FAILURE(*p_Error_رمز)) {
+        واپس 0;
     }
-    if(destCapacity<0 || (dest==nullptr && destCapacity>0)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    اگر(dest_استعداد<0 || (dest==خالی_اشاریہ && dest_استعداد>0)) {
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
     int32_t  length  = ut->b;
-    int32_t  start32 = pinIndex(start, length);
-    int32_t  limit32 = pinIndex(limit, length);
+    int32_t  start32 = pin_اشاریہ(آغاز, length);
+    int32_t  limit32 = pin_اشاریہ(حد_بندی, length);
 
-    if(start32>limit32) {
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+    اگر(start32>limit32) {
+        *p_Error_رمز=U_اشاریہ_OUTOFBOUNDS_ERROR;
+        واپس 0;
     }
 
 
     // adjust the incoming indexes to land on code point boundaries if needed.
     //    adjust by no more than three, because that is the largest number of trail bytes
     //    in a well formed UTF8 character.
-    const uint8_t *buf = (const uint8_t *)ut->context;
-    int i;
-    if (start32 < ut->chunkNativeLimit) {
-        for (i=0; i<3; i++) {
-            if (U8_IS_SINGLE(buf[start32]) || U8_IS_LEAD(buf[start32]) || start32==0) {
-                break;
+    ثابت uint8_t *buf = (ثابت uint8_t *)ut->context;
+    صحیح i;
+    اگر (start32 < ut->chunk_Native_حد_بندی) {
+        برائے (i=0; i<3; i++) {
+            اگر (U8_IS_SINGLE(buf[start32]) || U8_IS_LEAD(buf[start32]) || start32==0) {
+                توڑو;
             }
             start32--;
         }
     }
 
-    if (limit32 < ut->chunkNativeLimit) {
-        for (i=0; i<3; i++) {
-            if (U8_IS_SINGLE(buf[limit32]) || U8_IS_LEAD(buf[limit32]) || limit32==0) {
-                break;
+    اگر (limit32 < ut->chunk_Native_حد_بندی) {
+        برائے (i=0; i<3; i++) {
+            اگر (U8_IS_SINGLE(buf[limit32]) || U8_IS_LEAD(buf[limit32]) || limit32==0) {
+                توڑو;
             }
             limit32--;
         }
     }
 
     // Do the actual extract.
-    int32_t destLength=0;
-    utext_strFromUTF8(dest, destCapacity, &destLength,
-                    (const char *)ut->context+start32, limit32-start32,
-                    pErrorCode);
-    utf8TextAccess(ut, limit32, true);
-    return destLength;
+    int32_t dest_لمبائی=0;
+    utext_strFromUTF8(dest, dest_استعداد, &dest_لمبائی,
+                    (ثابت حرف *)ut->context+start32, limit32-start32,
+                    p_Error_رمز);
+    utf8_متن_Access(ut, limit32, سچ);
+    واپس dest_لمبائی;
 }
 
 //
 // utf8TextMapOffsetToNative
 //
 // Map a chunk (UTF-16) offset to a native index.
-static int64_t U_CALLCONV
-utf8TextMapOffsetToNative(const UText *ut) {
+ساکن int64_t U_CALLCONV
+utf8_متن_Map_انحراف_مقصد_Native(ثابت UText *ut) {
     //
     UTF8Buf *u8b = (UTF8Buf *)ut->p;
-    U_ASSERT(ut->chunkOffset>ut->nativeIndexingLimit && ut->chunkOffset<=ut->chunkLength);
-    int32_t nativeOffset = u8b->mapToNative[ut->chunkOffset + u8b->bufStartIdx] + u8b->toUCharsMapStart;
-    U_ASSERT(nativeOffset >= ut->chunkNativeStart && nativeOffset <= ut->chunkNativeLimit);
-    return nativeOffset;
+    U_ASSERT(ut->chunk_انحراف>ut->native_Indexing_حد_بندی && ut->chunk_انحراف<=ut->chunk_لمبائی);
+    int32_t native_انحراف = u8b->map_مقصد_Native[ut->chunk_انحراف + u8b->buf_آغاز_Idx] + u8b->مقصد_UChars_Map_آغاز;
+    U_ASSERT(native_انحراف >= ut->chunk_Native_آغاز && native_انحراف <= ut->chunk_Native_حد_بندی);
+    واپس native_انحراف;
 }
 
 //
 // Map a native index to the corresponding chunk offset
 //
-static int32_t U_CALLCONV
-utf8TextMapIndexToUTF16(const UText *ut, int64_t index64) {
+ساکن int32_t U_CALLCONV
+utf8_متن_Map_اشاریہ_مقصد_UTF16(ثابت UText *ut, int64_t index64) {
     U_ASSERT(index64 <= 0x7fffffff);
-    int32_t index = (int32_t)index64;
+    int32_t اشاریہ = (int32_t)index64;
     UTF8Buf *u8b = (UTF8Buf *)ut->p;
-    U_ASSERT(index>=ut->chunkNativeStart+ut->nativeIndexingLimit);
-    U_ASSERT(index<=ut->chunkNativeLimit);
-    int32_t mapIndex = index - u8b->toUCharsMapStart;
-    U_ASSERT(mapIndex < (int32_t)sizeof(UTF8Buf::mapToUChars));
-    int32_t offset = u8b->mapToUChars[mapIndex] - u8b->bufStartIdx;
-    U_ASSERT(offset>=0 && offset<=ut->chunkLength);
-    return offset;
+    U_ASSERT(اشاریہ>=ut->chunk_Native_آغاز+ut->native_Indexing_حد_بندی);
+    U_ASSERT(اشاریہ<=ut->chunk_Native_حد_بندی);
+    int32_t map_اشاریہ = اشاریہ - u8b->مقصد_UChars_Map_آغاز;
+    U_ASSERT(map_اشاریہ < (int32_t)حجم(UTF8Buf::map_مقصد_UChars));
+    int32_t انحراف = u8b->map_مقصد_UChars[map_اشاریہ] - u8b->buf_آغاز_Idx;
+    U_ASSERT(انحراف>=0 && انحراف<=ut->chunk_لمبائی);
+    واپس انحراف;
 }
 
-static UText * U_CALLCONV
-utf8TextClone(UText *dest, const UText *src, UBool deep, UErrorCode *status)
+ساکن UText * U_CALLCONV
+utf8_متن_Clone(UText *dest, ثابت UText *src, UBool deep, UError_رمز *حالت_2)
 {
     // First do a generic shallow clone.  Does everything needed for the UText struct itself.
-    dest = shallowTextClone(dest, src, status);
+    dest = shallow_متن_Clone(dest, src, حالت_2);
 
     // For deep clones, make a copy of the string.
     //  The copied storage is owned by the newly created clone.
@@ -1581,90 +1581,90 @@ utf8TextClone(UText *dest, const UText *src, UBool deep, UErrorCode *status)
     //        This function (clone()) is const.
     //        There potentially a thread safety issue lurking here.
     //
-    if (deep && U_SUCCESS(*status)) {
-        int32_t  len = (int32_t)utext_nativeLength((UText *)src);
-        char *copyStr = (char *)uprv_malloc(len+1);
-        if (copyStr == nullptr) {
-            *status = U_MEMORY_ALLOCATION_ERROR;
-        } else {
+    اگر (deep && U_SUCCESS(*حالت_2)) {
+        int32_t  len = (int32_t)utext_native_لمبائی((UText *)src);
+        حرف *copyStr = (حرف *)uprv_malloc(len+1);
+        اگر (copyStr == خالی_اشاریہ) {
+            *حالت_2 = U_حافظہ_تخصیص_ERROR;
+        } ورنہ {
             uprv_memcpy(copyStr, src->context, len+1);
             dest->context = copyStr;
-            dest->providerProperties |= I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT);
+            dest->providerProperties |= I32_FLAG(UTEXT_PROVIDER_OWNS_متن);
         }
     }
-    return dest;
+    واپس dest;
 }
 
 
-static void U_CALLCONV
-utf8TextClose(UText *ut) {
+ساکن خالی U_CALLCONV
+utf8_متن_Close(UText *ut) {
     // Most of the work of close is done by the generic UText framework close.
     // All that needs to be done here is to delete the UTF8 string if the UText
     //  owns it.  This occurs if the UText was created by cloning.
-    if (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT)) {
-        char *s = (char *)ut->context;
+    اگر (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_OWNS_متن)) {
+        حرف *s = (حرف *)ut->context;
         uprv_free(s);
-        ut->context = nullptr;
+        ut->context = خالی_اشاریہ;
     }
 }
 
-U_CDECL_END
+U_CDECL_انتہا
 
 
-static const struct UTextFuncs utf8Funcs =
+ساکن ثابت ساخت UTextFuncs utf8Funcs =
 {
-    sizeof(UTextFuncs),
+    حجم(UTextFuncs),
     0, 0, 0,             // Reserved alignment padding
-    utf8TextClone,
-    utf8TextLength,
-    utf8TextAccess,
-    utf8TextExtract,
-    nullptr,                /* replace*/
-    nullptr,                /* copy   */
-    utf8TextMapOffsetToNative,
-    utf8TextMapIndexToUTF16,
-    utf8TextClose,
-    nullptr,                // spare 1
-    nullptr,                // spare 2
-    nullptr                 // spare 3
+    utf8_متن_Clone,
+    utf8_متن_لمبائی,
+    utf8_متن_Access,
+    utf8_متن_نکالو,
+    خالی_اشاریہ,                /* replace*/
+    خالی_اشاریہ,                /* copy   */
+    utf8_متن_Map_انحراف_مقصد_Native,
+    utf8_متن_Map_اشاریہ_مقصد_UTF16,
+    utf8_متن_Close,
+    خالی_اشاریہ,                // spare 1
+    خالی_اشاریہ,                // spare 2
+    خالی_اشاریہ                 // spare 3
 };
 
 
-static const char gEmptyString[] = {0};
+ساکن ثابت حرف g_خالی_خانے_String[] = {0};
 
 U_CAPI UText* U_EXPORT2
 utext_openUTF8(UText* ut U_LIFETIME_BOUND,
-               const char* s U_LIFETIME_BOUND,
+               ثابت حرف* s U_LIFETIME_BOUND,
                int64_t length,
-               UErrorCode* status) {
-    if(U_FAILURE(*status)) {
-        return nullptr;
+               UError_رمز* حالت_2) {
+    اگر(U_FAILURE(*حالت_2)) {
+        واپس خالی_اشاریہ;
     }
-    if(s==nullptr && length==0) {
-        s = gEmptyString;
-    }
-
-    if(s==nullptr || length<-1 || length>INT32_MAX) {
-        *status=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    اگر(s==خالی_اشاریہ && length==0) {
+        s = g_خالی_خانے_String;
     }
 
-    ut = utext_setup(ut, sizeof(UTF8Buf) * 2, status);
-    if (U_FAILURE(*status)) {
-        return ut;
+    اگر(s==خالی_اشاریہ || length<-1 || length>INT32_MAX) {
+        *حالت_2=U_ILLEGAL_دلیل_ERROR;
+        واپس خالی_اشاریہ;
+    }
+
+    ut = utext_تیاری(ut, حجم(UTF8Buf) * 2, حالت_2);
+    اگر (U_FAILURE(*حالت_2)) {
+        واپس ut;
     }
 
     ut->pFuncs  = &utf8Funcs;
     ut->context = s;
     ut->b       = (int32_t)length;
     ut->c       = (int32_t)length;
-    if (ut->c < 0) {
+    اگر (ut->c < 0) {
         ut->c = 0;
-        ut->providerProperties |= I32_FLAG(UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE);
+        ut->providerProperties |= I32_FLAG(UTEXT_PROVIDER_لمبائی_IS_EXPENSIVE);
     }
     ut->p = ut->pExtra;
-    ut->q = (char *)ut->pExtra + sizeof(UTF8Buf);
-    return ut;
+    ut->q = (حرف *)ut->pExtra + حجم(UTF8Buf);
+    واپس ut;
 
 }
 
@@ -1689,70 +1689,70 @@ utext_openUTF8(UText* ut U_LIFETIME_BOUND,
 
 // minimum chunk size for this implementation: 3
 // to allow for possible trimming for code point boundaries
-enum { REP_TEXT_CHUNK_SIZE=10 };
+شمار { REP_متن_CHUNK_سائز=10 };
 
-struct ReplExtra {
+ساخت ReplExtra {
     /*
      * Chunk UChars.
      * +1 to simplify filling with surrogate pair at the end.
      */
-    char16_t s[REP_TEXT_CHUNK_SIZE+1];
+    char16_t s[REP_متن_CHUNK_سائز+1];
 };
 
 
 U_CDECL_BEGIN
 
-static UText * U_CALLCONV
-repTextClone(UText *dest, const UText *src, UBool deep, UErrorCode *status) {
+ساکن UText * U_CALLCONV
+rep_متن_Clone(UText *dest, ثابت UText *src, UBool deep, UError_رمز *حالت_2) {
     // First do a generic shallow clone.  Does everything needed for the UText struct itself.
-    dest = shallowTextClone(dest, src, status);
+    dest = shallow_متن_Clone(dest, src, حالت_2);
 
     // For deep clones, make a copy of the Replaceable.
     //  The copied Replaceable storage is owned by the newly created UText clone.
     //  A non-nullptr pointer in UText.p is the signal to the close() function to delete
     //    it.
     //
-    if (deep && U_SUCCESS(*status)) {
-        const Replaceable *replSrc = (const Replaceable *)src->context;
+    اگر (deep && U_SUCCESS(*حالت_2)) {
+        ثابت Replaceable *replSrc = (ثابت Replaceable *)src->context;
         dest->context = replSrc->clone();
-        dest->providerProperties |= I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT);
+        dest->providerProperties |= I32_FLAG(UTEXT_PROVIDER_OWNS_متن);
 
         // with deep clone, the copy is writable, even when the source is not.
         dest->providerProperties |= I32_FLAG(UTEXT_PROVIDER_WRITABLE);
     }
-    return dest;
+    واپس dest;
 }
 
 
-static void U_CALLCONV
-repTextClose(UText *ut) {
+ساکن خالی U_CALLCONV
+rep_متن_Close(UText *ut) {
     // Most of the work of close is done by the generic UText framework close.
     // All that needs to be done here is delete the Replaceable if the UText
     //  owns it.  This occurs if the UText was created by cloning.
-    if (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT)) {
+    اگر (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_OWNS_متن)) {
         Replaceable *rep = (Replaceable *)ut->context;
-        delete rep;
-        ut->context = nullptr;
+        حذف rep;
+        ut->context = خالی_اشاریہ;
     }
 }
 
 
-static int64_t U_CALLCONV
-repTextLength(UText *ut) {
-    const Replaceable *replSrc = (const Replaceable *)ut->context;
+ساکن int64_t U_CALLCONV
+rep_متن_لمبائی(UText *ut) {
+    ثابت Replaceable *replSrc = (ثابت Replaceable *)ut->context;
     int32_t  len = replSrc->length();
-    return len;
+    واپس len;
 }
 
 
-static UBool U_CALLCONV
-repTextAccess(UText *ut, int64_t index, UBool forward) {
-    const Replaceable *rep=(const Replaceable *)ut->context;
+ساکن UBool U_CALLCONV
+rep_متن_Access(UText *ut, int64_t اشاریہ, UBool forward) {
+    ثابت Replaceable *rep=(ثابت Replaceable *)ut->context;
     int32_t length=rep->length();   // Full length of the input text (bigger than a chunk)
 
     // clip the requested index to the limits of the text.
-    int32_t index32 = pinIndex(index, length);
-    U_ASSERT(index<=INT32_MAX);
+    int32_t index32 = pin_اشاریہ(اشاریہ, length);
+    U_ASSERT(اشاریہ<=INT32_MAX);
 
 
     /*
@@ -1763,45 +1763,45 @@ repTextAccess(UText *ut, int64_t index, UBool forward) {
      * going in the forward direction.  This will ensure that the buffer has the
      * entire code point at the specified index.
      */
-    if(forward) {
+    اگر(forward) {
 
-        if (index32>=ut->chunkNativeStart && index32<ut->chunkNativeLimit) {
+        اگر (index32>=ut->chunk_Native_آغاز && index32<ut->chunk_Native_حد_بندی) {
             // Buffer already contains the requested position.
-            ut->chunkOffset = (int32_t)(index - ut->chunkNativeStart);
-            return true;
+            ut->chunk_انحراف = (int32_t)(اشاریہ - ut->chunk_Native_آغاز);
+            واپس سچ;
         }
-        if (index32>=length && ut->chunkNativeLimit==length) {
+        اگر (index32>=length && ut->chunk_Native_حد_بندی==length) {
             // Request for end of string, and buffer already extends up to it.
             // Can't get the data, but don't change the buffer.
-            ut->chunkOffset = length - (int32_t)ut->chunkNativeStart;
-            return false;
+            ut->chunk_انحراف = length - (int32_t)ut->chunk_Native_آغاز;
+            واپس جھوٹ;
         }
 
-        ut->chunkNativeLimit = index + REP_TEXT_CHUNK_SIZE - 1;
+        ut->chunk_Native_حد_بندی = اشاریہ + REP_متن_CHUNK_سائز - 1;
         // Going forward, so we want to have the buffer with stuff at and beyond
         //   the requested index.  The -1 gets us one code point before the
         //   requested index also, to handle the case of the index being on
         //   a trail surrogate of a surrogate pair.
-        if(ut->chunkNativeLimit > length) {
-            ut->chunkNativeLimit = length;
+        اگر(ut->chunk_Native_حد_بندی > length) {
+            ut->chunk_Native_حد_بندی = length;
         }
         // unless buffer ran off end, start is index-1.
-        ut->chunkNativeStart = ut->chunkNativeLimit - REP_TEXT_CHUNK_SIZE;
-        if(ut->chunkNativeStart < 0) {
-            ut->chunkNativeStart = 0;
+        ut->chunk_Native_آغاز = ut->chunk_Native_حد_بندی - REP_متن_CHUNK_سائز;
+        اگر(ut->chunk_Native_آغاز < 0) {
+            ut->chunk_Native_آغاز = 0;
         }
-    } else {
+    } ورنہ {
         // Reverse iteration.  Fill buffer with data preceding the requested index.
-        if (index32>ut->chunkNativeStart && index32<=ut->chunkNativeLimit) {
+        اگر (index32>ut->chunk_Native_آغاز && index32<=ut->chunk_Native_حد_بندی) {
             // Requested position already in buffer.
-            ut->chunkOffset = index32 - (int32_t)ut->chunkNativeStart;
-            return true;
+            ut->chunk_انحراف = index32 - (int32_t)ut->chunk_Native_آغاز;
+            واپس سچ;
         }
-        if (index32==0 && ut->chunkNativeStart==0) {
+        اگر (index32==0 && ut->chunk_Native_آغاز==0) {
             // Request for start, buffer already begins at start.
             //  No data, but keep the buffer as is.
-            ut->chunkOffset = 0;
-            return false;
+            ut->chunk_انحراف = 0;
+            واپس جھوٹ;
         }
 
         // Figure out the bounds of the chunk to extract for reverse iteration.
@@ -1810,132 +1810,132 @@ repTextAccess(UText *ut, int64_t index, UBool forward) {
         // Fix by requesting a chunk that includes an extra char16_t at the end.
         // If this turns out to be a lead surrogate, we can lop it off and still have
         //   the data we wanted.
-        ut->chunkNativeStart = index32 + 1 - REP_TEXT_CHUNK_SIZE;
-        if (ut->chunkNativeStart < 0) {
-            ut->chunkNativeStart = 0;
+        ut->chunk_Native_آغاز = index32 + 1 - REP_متن_CHUNK_سائز;
+        اگر (ut->chunk_Native_آغاز < 0) {
+            ut->chunk_Native_آغاز = 0;
         }
 
-        ut->chunkNativeLimit = index32 + 1;
-        if (ut->chunkNativeLimit > length) {
-            ut->chunkNativeLimit = length;
+        ut->chunk_Native_حد_بندی = index32 + 1;
+        اگر (ut->chunk_Native_حد_بندی > length) {
+            ut->chunk_Native_حد_بندی = length;
         }
     }
 
     // Extract the new chunk of text from the Replaceable source.
     ReplExtra *ex = (ReplExtra *)ut->pExtra;
     // UnicodeString with its buffer a writable alias to the chunk buffer
-    UnicodeString buffer(ex->s, 0 /*buffer length*/, REP_TEXT_CHUNK_SIZE /*buffer capacity*/);
-    rep->extractBetween((int32_t)ut->chunkNativeStart, (int32_t)ut->chunkNativeLimit, buffer);
+    UnicodeString بفر(ex->s, 0 /*buffer length*/, REP_متن_CHUNK_سائز /*buffer capacity*/);
+    rep->نکالو_Between((int32_t)ut->chunk_Native_آغاز, (int32_t)ut->chunk_Native_حد_بندی, بفر);
 
     ut->chunkContents  = ex->s;
-    ut->chunkLength    = (int32_t)(ut->chunkNativeLimit - ut->chunkNativeStart);
-    ut->chunkOffset    = (int32_t)(index32 - ut->chunkNativeStart);
+    ut->chunk_لمبائی    = (int32_t)(ut->chunk_Native_حد_بندی - ut->chunk_Native_آغاز);
+    ut->chunk_انحراف    = (int32_t)(index32 - ut->chunk_Native_آغاز);
 
     // Surrogate pairs from the input text must not span chunk boundaries.
     // If end of chunk could be the start of a surrogate, trim it off.
-    if (ut->chunkNativeLimit < length &&
-        U16_IS_LEAD(ex->s[ut->chunkLength-1])) {
-            ut->chunkLength--;
-            ut->chunkNativeLimit--;
-            if (ut->chunkOffset > ut->chunkLength) {
-                ut->chunkOffset = ut->chunkLength;
+    اگر (ut->chunk_Native_حد_بندی < length &&
+        U16_IS_LEAD(ex->s[ut->chunk_لمبائی-1])) {
+            ut->chunk_لمبائی--;
+            ut->chunk_Native_حد_بندی--;
+            اگر (ut->chunk_انحراف > ut->chunk_لمبائی) {
+                ut->chunk_انحراف = ut->chunk_لمبائی;
             }
         }
 
     // if the first char16_t in the chunk could be the trailing half of a surrogate pair,
     // trim it off.
-    if(ut->chunkNativeStart>0 && U16_IS_TRAIL(ex->s[0])) {
+    اگر(ut->chunk_Native_آغاز>0 && U16_IS_TRAIL(ex->s[0])) {
         ++(ut->chunkContents);
-        ++(ut->chunkNativeStart);
-        --(ut->chunkLength);
-        --(ut->chunkOffset);
+        ++(ut->chunk_Native_آغاز);
+        --(ut->chunk_لمبائی);
+        --(ut->chunk_انحراف);
     }
 
     // adjust the index/chunkOffset to a code point boundary
-    U16_SET_CP_START(ut->chunkContents, 0, ut->chunkOffset);
+    U16_سیٹ_CP_آغاز(ut->chunkContents, 0, ut->chunk_انحراف);
 
     // Use fast indexing for get/setNativeIndex()
-    ut->nativeIndexingLimit = ut->chunkLength;
+    ut->native_Indexing_حد_بندی = ut->chunk_لمبائی;
 
-    return true;
+    واپس سچ;
 }
 
 
 
-static int32_t U_CALLCONV
-repTextExtract(UText *ut,
-               int64_t start, int64_t limit,
-               char16_t *dest, int32_t destCapacity,
-               UErrorCode *status) {
-    const Replaceable *rep=(const Replaceable *)ut->context;
+ساکن int32_t U_CALLCONV
+rep_متن_نکالو(UText *ut,
+               int64_t آغاز, int64_t حد_بندی,
+               char16_t *dest, int32_t dest_استعداد,
+               UError_رمز *حالت_2) {
+    ثابت Replaceable *rep=(ثابت Replaceable *)ut->context;
     int32_t  length=rep->length();
 
-    if(U_FAILURE(*status)) {
-        return 0;
+    اگر(U_FAILURE(*حالت_2)) {
+        واپس 0;
     }
-    if(destCapacity<0 || (dest==nullptr && destCapacity>0)) {
-        *status=U_ILLEGAL_ARGUMENT_ERROR;
+    اگر(dest_استعداد<0 || (dest==خالی_اشاریہ && dest_استعداد>0)) {
+        *حالت_2=U_ILLEGAL_دلیل_ERROR;
     }
-    if(start>limit) {
-        *status=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+    اگر(آغاز>حد_بندی) {
+        *حالت_2=U_اشاریہ_OUTOFBOUNDS_ERROR;
+        واپس 0;
     }
 
-    int32_t  start32 = pinIndex(start, length);
-    int32_t  limit32 = pinIndex(limit, length);
+    int32_t  start32 = pin_اشاریہ(آغاز, length);
+    int32_t  limit32 = pin_اشاریہ(حد_بندی, length);
 
     // adjust start, limit if they point to trail half of surrogates
-    if (start32<length && U16_IS_TRAIL(rep->charAt(start32)) &&
+    اگر (start32<length && U16_IS_TRAIL(rep->charAt(start32)) &&
         U_IS_SUPPLEMENTARY(rep->char32At(start32))){
             start32--;
     }
-    if (limit32<length && U16_IS_TRAIL(rep->charAt(limit32)) &&
+    اگر (limit32<length && U16_IS_TRAIL(rep->charAt(limit32)) &&
         U_IS_SUPPLEMENTARY(rep->char32At(limit32))){
             limit32--;
     }
 
     length=limit32-start32;
-    if(length>destCapacity) {
-        limit32 = start32 + destCapacity;
+    اگر(length>dest_استعداد) {
+        limit32 = start32 + dest_استعداد;
     }
-    UnicodeString buffer(dest, 0, destCapacity); // writable alias
-    rep->extractBetween(start32, limit32, buffer);
-    repTextAccess(ut, limit32, true);
+    UnicodeString بفر(dest, 0, dest_استعداد); // writable alias
+    rep->نکالو_Between(start32, limit32, بفر);
+    rep_متن_Access(ut, limit32, سچ);
 
-    return u_terminateUChars(dest, destCapacity, length, status);
+    واپس u_terminateUChars(dest, dest_استعداد, length, حالت_2);
 }
 
-static int32_t U_CALLCONV
-repTextReplace(UText *ut,
-               int64_t start, int64_t limit,
-               const char16_t *src, int32_t length,
-               UErrorCode *status) {
+ساکن int32_t U_CALLCONV
+rep_متن_Replace(UText *ut,
+               int64_t آغاز, int64_t حد_بندی,
+               ثابت char16_t *src, int32_t length,
+               UError_رمز *حالت_2) {
     Replaceable *rep=(Replaceable *)ut->context;
-    int32_t oldLength;
+    int32_t old_لمبائی;
 
-    if(U_FAILURE(*status)) {
-        return 0;
+    اگر(U_FAILURE(*حالت_2)) {
+        واپس 0;
     }
-    if(src==nullptr && length!=0) {
-        *status=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    اگر(src==خالی_اشاریہ && length!=0) {
+        *حالت_2=U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
-    oldLength=rep->length(); // will subtract from new length
-    if(start>limit ) {
-        *status=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+    old_لمبائی=rep->length(); // will subtract from new length
+    اگر(آغاز>حد_بندی ) {
+        *حالت_2=U_اشاریہ_OUTOFBOUNDS_ERROR;
+        واپس 0;
     }
 
-    int32_t start32 = pinIndex(start, oldLength);
-    int32_t limit32 = pinIndex(limit, oldLength);
+    int32_t start32 = pin_اشاریہ(آغاز, old_لمبائی);
+    int32_t limit32 = pin_اشاریہ(حد_بندی, old_لمبائی);
 
     // Snap start & limit to code point boundaries.
-    if (start32<oldLength && U16_IS_TRAIL(rep->charAt(start32)) &&
+    اگر (start32<old_لمبائی && U16_IS_TRAIL(rep->charAt(start32)) &&
         start32>0 && U16_IS_LEAD(rep->charAt(start32-1)))
     {
             start32--;
     }
-    if (limit32<oldLength && U16_IS_LEAD(rep->charAt(limit32-1)) &&
+    اگر (limit32<old_لمبائی && U16_IS_LEAD(rep->charAt(limit32-1)) &&
         U16_IS_TRAIL(rep->charAt(limit32)))
     {
             limit32++;
@@ -1944,131 +1944,131 @@ repTextReplace(UText *ut,
     // Do the actual replace operation using methods of the Replaceable class
     UnicodeString replStr(length < 0, src, length); // read-only alias
     rep->handleReplaceBetween(start32, limit32, replStr);
-    int32_t newLength = rep->length();
-    int32_t lengthDelta = newLength - oldLength;
+    int32_t new_لمبائی = rep->length();
+    int32_t لمبائی_Delta = new_لمبائی - old_لمبائی;
 
     // Is the UText chunk buffer OK?
-    if (ut->chunkNativeLimit > start32) {
+    اگر (ut->chunk_Native_حد_بندی > start32) {
         // this replace operation may have impacted the current chunk.
         // invalidate it, which will force a reload on the next access.
         invalidateChunk(ut);
     }
 
     // set the iteration position to the end of the newly inserted replacement text.
-    int32_t newIndexPos = limit32 + lengthDelta;
-    repTextAccess(ut, newIndexPos, true);
+    int32_t new_اشاریہ_Pos = limit32 + لمبائی_Delta;
+    rep_متن_Access(ut, new_اشاریہ_Pos, سچ);
 
-    return lengthDelta;
+    واپس لمبائی_Delta;
 }
 
 
-static void U_CALLCONV
-repTextCopy(UText *ut,
-                int64_t start, int64_t limit,
-                int64_t destIndex,
+ساکن خالی U_CALLCONV
+rep_متن_Copy(UText *ut,
+                int64_t آغاز, int64_t حد_بندی,
+                int64_t dest_اشاریہ,
                 UBool move,
-                UErrorCode *status)
+                UError_رمز *حالت_2)
 {
     Replaceable *rep=(Replaceable *)ut->context;
     int32_t length=rep->length();
 
-    if(U_FAILURE(*status)) {
-        return;
+    اگر(U_FAILURE(*حالت_2)) {
+        واپس;
     }
-    if (start>limit || (start<destIndex && destIndex<limit))
+    اگر (آغاز>حد_بندی || (آغاز<dest_اشاریہ && dest_اشاریہ<حد_بندی))
     {
-        *status=U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        *حالت_2=U_اشاریہ_OUTOFBOUNDS_ERROR;
+        واپس;
     }
 
-    int32_t start32     = pinIndex(start, length);
-    int32_t limit32     = pinIndex(limit, length);
-    int32_t destIndex32 = pinIndex(destIndex, length);
+    int32_t start32     = pin_اشاریہ(آغاز, length);
+    int32_t limit32     = pin_اشاریہ(حد_بندی, length);
+    int32_t destIndex32 = pin_اشاریہ(dest_اشاریہ, length);
 
     // TODO:  snap input parameters to code point boundaries.
 
-    if(move) {
+    اگر(move) {
         // move: copy to destIndex, then replace original with nothing
-        int32_t segLength=limit32-start32;
+        int32_t seg_لمبائی=limit32-start32;
         rep->copy(start32, limit32, destIndex32);
-        if(destIndex32<start32) {
-            start32+=segLength;
-            limit32+=segLength;
+        اگر(destIndex32<start32) {
+            start32+=seg_لمبائی;
+            limit32+=seg_لمبائی;
         }
         rep->handleReplaceBetween(start32, limit32, UnicodeString());
-    } else {
+    } ورنہ {
         // copy
         rep->copy(start32, limit32, destIndex32);
     }
 
     // If the change to the text touched the region in the chunk buffer,
     //  invalidate the buffer.
-    int32_t firstAffectedIndex = destIndex32;
-    if (move && start32<firstAffectedIndex) {
-        firstAffectedIndex = start32;
+    int32_t پہلا_Affected_اشاریہ = destIndex32;
+    اگر (move && start32<پہلا_Affected_اشاریہ) {
+        پہلا_Affected_اشاریہ = start32;
     }
-    if (firstAffectedIndex < ut->chunkNativeLimit) {
+    اگر (پہلا_Affected_اشاریہ < ut->chunk_Native_حد_بندی) {
         // changes may have affected range covered by the chunk
         invalidateChunk(ut);
     }
 
     // Put iteration position at the newly inserted (moved) block,
-    int32_t  nativeIterIndex = destIndex32 + limit32 - start32;
-    if (move && destIndex32>start32) {
+    int32_t  native_Iter_اشاریہ = destIndex32 + limit32 - start32;
+    اگر (move && destIndex32>start32) {
         // moved a block of text towards the end of the string.
-        nativeIterIndex = destIndex32;
+        native_Iter_اشاریہ = destIndex32;
     }
 
     // Set position, reload chunk if needed.
-    repTextAccess(ut, nativeIterIndex, true);
+    rep_متن_Access(ut, native_Iter_اشاریہ, سچ);
 }
 
-static const struct UTextFuncs repFuncs =
+ساکن ثابت ساخت UTextFuncs repFuncs =
 {
-    sizeof(UTextFuncs),
+    حجم(UTextFuncs),
     0, 0, 0,           // Reserved alignment padding
-    repTextClone,
-    repTextLength,
-    repTextAccess,
-    repTextExtract,
-    repTextReplace,
-    repTextCopy,
-    nullptr,              // MapOffsetToNative,
-    nullptr,              // MapIndexToUTF16,
-    repTextClose,
-    nullptr,              // spare 1
-    nullptr,              // spare 2
-    nullptr               // spare 3
+    rep_متن_Clone,
+    rep_متن_لمبائی,
+    rep_متن_Access,
+    rep_متن_نکالو,
+    rep_متن_Replace,
+    rep_متن_Copy,
+    خالی_اشاریہ,              // MapOffsetToNative,
+    خالی_اشاریہ,              // MapIndexToUTF16,
+    rep_متن_Close,
+    خالی_اشاریہ,              // spare 1
+    خالی_اشاریہ,              // spare 2
+    خالی_اشاریہ               // spare 3
 };
 
 
 U_CAPI UText* U_EXPORT2
 utext_openReplaceable(UText* ut U_LIFETIME_BOUND,
                       Replaceable* rep U_LIFETIME_BOUND,
-                      UErrorCode* status) {
-    if(U_FAILURE(*status)) {
-        return nullptr;
+                      UError_رمز* حالت_2) {
+    اگر(U_FAILURE(*حالت_2)) {
+        واپس خالی_اشاریہ;
     }
-    if(rep==nullptr) {
-        *status=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    اگر(rep==خالی_اشاریہ) {
+        *حالت_2=U_ILLEGAL_دلیل_ERROR;
+        واپس خالی_اشاریہ;
     }
-    ut = utext_setup(ut, sizeof(ReplExtra), status);
-    if(U_FAILURE(*status)) {
-        return ut;
+    ut = utext_تیاری(ut, حجم(ReplExtra), حالت_2);
+    اگر(U_FAILURE(*حالت_2)) {
+        واپس ut;
     }
 
     ut->providerProperties = I32_FLAG(UTEXT_PROVIDER_WRITABLE);
-    if(rep->hasMetaData()) {
-        ut->providerProperties |=I32_FLAG(UTEXT_PROVIDER_HAS_META_DATA);
+    اگر(rep->has_Meta_ڈیٹا()) {
+        ut->providerProperties |=I32_FLAG(UTEXT_PROVIDER_HAS_META_ڈیٹا);
     }
 
     ut->pFuncs  = &repFuncs;
     ut->context =  rep;
-    return ut;
+    واپس ut;
 }
 
-U_CDECL_END
+U_CDECL_انتہا
 
 
 
@@ -2093,254 +2093,254 @@ U_CDECL_END
 U_CDECL_BEGIN
 
 
-static UText * U_CALLCONV
-unistrTextClone(UText *dest, const UText *src, UBool deep, UErrorCode *status) {
+ساکن UText * U_CALLCONV
+unistr_متن_Clone(UText *dest, ثابت UText *src, UBool deep, UError_رمز *حالت_2) {
     // First do a generic shallow clone.  Does everything needed for the UText struct itself.
-    dest = shallowTextClone(dest, src, status);
+    dest = shallow_متن_Clone(dest, src, حالت_2);
 
     // For deep clones, make a copy of the UnicodeSring.
     //  The copied UnicodeString storage is owned by the newly created UText clone.
     //  A non-nullptr pointer in UText.p is the signal to the close() function to delete
     //    the UText.
     //
-    if (deep && U_SUCCESS(*status)) {
-        const UnicodeString *srcString = (const UnicodeString *)src->context;
-        dest->context = new UnicodeString(*srcString);
-        dest->chunkContents = ((const UnicodeString *)dest->context)->getBuffer();
-        dest->providerProperties |= I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT);
+    اگر (deep && U_SUCCESS(*حالت_2)) {
+        ثابت UnicodeString *srcString = (ثابت UnicodeString *)src->context;
+        dest->context = نیا UnicodeString(*srcString);
+        dest->chunkContents = ((ثابت UnicodeString *)dest->context)->get_بفر();
+        dest->providerProperties |= I32_FLAG(UTEXT_PROVIDER_OWNS_متن);
 
         // with deep clone, the copy is writable, even when the source is not.
         dest->providerProperties |= I32_FLAG(UTEXT_PROVIDER_WRITABLE);
     }
-    return dest;
+    واپس dest;
 }
 
-static void U_CALLCONV
-unistrTextClose(UText *ut) {
+ساکن خالی U_CALLCONV
+unistr_متن_Close(UText *ut) {
     // Most of the work of close is done by the generic UText framework close.
     // All that needs to be done here is delete the UnicodeString if the UText
     //  owns it.  This occurs if the UText was created by cloning.
-    if (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT)) {
+    اگر (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_OWNS_متن)) {
         UnicodeString *str = (UnicodeString *)ut->context;
-        delete str;
-        ut->context = nullptr;
+        حذف str;
+        ut->context = خالی_اشاریہ;
     }
 }
 
 
-static int64_t U_CALLCONV
-unistrTextLength(UText *t) {
-    return ((const UnicodeString *)t->context)->length();
+ساکن int64_t U_CALLCONV
+unistr_متن_لمبائی(UText *t) {
+    واپس ((ثابت UnicodeString *)t->context)->length();
 }
 
 
-static UBool U_CALLCONV
-unistrTextAccess(UText *ut, int64_t index, UBool  forward) {
-    int32_t length  = ut->chunkLength;
-    ut->chunkOffset = pinIndex(index, length);
+ساکن UBool U_CALLCONV
+unistr_متن_Access(UText *ut, int64_t اشاریہ, UBool  forward) {
+    int32_t length  = ut->chunk_لمبائی;
+    ut->chunk_انحراف = pin_اشاریہ(اشاریہ, length);
 
     // Check whether request is at the start or end
-    UBool retVal = (forward && index<length) || (!forward && index>0);
-    return retVal;
+    UBool retVal = (forward && اشاریہ<length) || (!forward && اشاریہ>0);
+    واپس retVal;
 }
 
 
 
-static int32_t U_CALLCONV
-unistrTextExtract(UText *t,
-                  int64_t start, int64_t limit,
-                  char16_t *dest, int32_t destCapacity,
-                  UErrorCode *pErrorCode) {
-    const UnicodeString *us=(const UnicodeString *)t->context;
+ساکن int32_t U_CALLCONV
+unistr_متن_نکالو(UText *t,
+                  int64_t آغاز, int64_t حد_بندی,
+                  char16_t *dest, int32_t dest_استعداد,
+                  UError_رمز *p_Error_رمز) {
+    ثابت UnicodeString *us=(ثابت UnicodeString *)t->context;
     int32_t length=us->length();
 
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    اگر(U_FAILURE(*p_Error_رمز)) {
+        واپس 0;
     }
-    if(destCapacity<0 || (dest==nullptr && destCapacity>0)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
+    اگر(dest_استعداد<0 || (dest==خالی_اشاریہ && dest_استعداد>0)) {
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
     }
-    if(start<0 || start>limit) {
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+    اگر(آغاز<0 || آغاز>حد_بندی) {
+        *p_Error_رمز=U_اشاریہ_OUTOFBOUNDS_ERROR;
+        واپس 0;
     }
 
-    int32_t start32 = start<length ? us->getChar32Start((int32_t)start) : length;
-    int32_t limit32 = limit<length ? us->getChar32Start((int32_t)limit) : length;
+    int32_t start32 = آغاز<length ? us->get_Char32_آغاز((int32_t)آغاز) : length;
+    int32_t limit32 = حد_بندی<length ? us->get_Char32_آغاز((int32_t)حد_بندی) : length;
 
     length=limit32-start32;
-    if (destCapacity>0 && dest!=nullptr) {
-        int32_t trimmedLength = length;
-        if(trimmedLength>destCapacity) {
-            trimmedLength=destCapacity;
+    اگر (dest_استعداد>0 && dest!=خالی_اشاریہ) {
+        int32_t trimmed_لمبائی = length;
+        اگر(trimmed_لمبائی>dest_استعداد) {
+            trimmed_لمبائی=dest_استعداد;
         }
-        us->extract(start32, trimmedLength, dest);
-        t->chunkOffset = start32+trimmedLength;
-    } else {
-        t->chunkOffset = start32;
+        us->extract(start32, trimmed_لمبائی, dest);
+        t->chunk_انحراف = start32+trimmed_لمبائی;
+    } ورنہ {
+        t->chunk_انحراف = start32;
     }
-    u_terminateUChars(dest, destCapacity, length, pErrorCode);
-    return length;
+    u_terminateUChars(dest, dest_استعداد, length, p_Error_رمز);
+    واپس length;
 }
 
-static int32_t U_CALLCONV
-unistrTextReplace(UText *ut,
-                  int64_t start, int64_t limit,
-                  const char16_t *src, int32_t length,
-                  UErrorCode *pErrorCode) {
+ساکن int32_t U_CALLCONV
+unistr_متن_Replace(UText *ut,
+                  int64_t آغاز, int64_t حد_بندی,
+                  ثابت char16_t *src, int32_t length,
+                  UError_رمز *p_Error_رمز) {
     UnicodeString *us=(UnicodeString *)ut->context;
-    int32_t oldLength;
+    int32_t old_لمبائی;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    اگر(U_FAILURE(*p_Error_رمز)) {
+        واپس 0;
     }
-    if(src==nullptr && length!=0) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
+    اگر(src==خالی_اشاریہ && length!=0) {
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
     }
-    if(start>limit) {
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+    اگر(آغاز>حد_بندی) {
+        *p_Error_رمز=U_اشاریہ_OUTOFBOUNDS_ERROR;
+        واپس 0;
     }
-    oldLength=us->length();
-    int32_t start32 = pinIndex(start, oldLength);
-    int32_t limit32 = pinIndex(limit, oldLength);
-    if (start32 < oldLength) {
-        start32 = us->getChar32Start(start32);
+    old_لمبائی=us->length();
+    int32_t start32 = pin_اشاریہ(آغاز, old_لمبائی);
+    int32_t limit32 = pin_اشاریہ(حد_بندی, old_لمبائی);
+    اگر (start32 < old_لمبائی) {
+        start32 = us->get_Char32_آغاز(start32);
     }
-    if (limit32 < oldLength) {
-        limit32 = us->getChar32Start(limit32);
+    اگر (limit32 < old_لمبائی) {
+        limit32 = us->get_Char32_آغاز(limit32);
     }
 
     // replace
     us->replace(start32, limit32-start32, src, length);
-    int32_t newLength = us->length();
+    int32_t new_لمبائی = us->length();
 
     // Update the chunk description.
-    ut->chunkContents    = us->getBuffer();
-    ut->chunkLength      = newLength;
-    ut->chunkNativeLimit = newLength;
-    ut->nativeIndexingLimit = newLength;
+    ut->chunkContents    = us->get_بفر();
+    ut->chunk_لمبائی      = new_لمبائی;
+    ut->chunk_Native_حد_بندی = new_لمبائی;
+    ut->native_Indexing_حد_بندی = new_لمبائی;
 
     // Set iteration position to the point just following the newly inserted text.
-    int32_t lengthDelta = newLength - oldLength;
-    ut->chunkOffset = limit32 + lengthDelta;
+    int32_t لمبائی_Delta = new_لمبائی - old_لمبائی;
+    ut->chunk_انحراف = limit32 + لمبائی_Delta;
 
-    return lengthDelta;
+    واپس لمبائی_Delta;
 }
 
-static void U_CALLCONV
-unistrTextCopy(UText *ut,
-               int64_t start, int64_t limit,
-               int64_t destIndex,
+ساکن خالی U_CALLCONV
+unistr_متن_Copy(UText *ut,
+               int64_t آغاز, int64_t حد_بندی,
+               int64_t dest_اشاریہ,
                UBool move,
-               UErrorCode *pErrorCode) {
+               UError_رمز *p_Error_رمز) {
     UnicodeString *us=(UnicodeString *)ut->context;
     int32_t length=us->length();
 
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    اگر(U_FAILURE(*p_Error_رمز)) {
+        واپس;
     }
-    int32_t start32 = pinIndex(start, length);
-    int32_t limit32 = pinIndex(limit, length);
-    int32_t destIndex32 = pinIndex(destIndex, length);
+    int32_t start32 = pin_اشاریہ(آغاز, length);
+    int32_t limit32 = pin_اشاریہ(حد_بندی, length);
+    int32_t destIndex32 = pin_اشاریہ(dest_اشاریہ, length);
 
-    if( start32>limit32 || (start32<destIndex32 && destIndex32<limit32)) {
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+    اگر( start32>limit32 || (start32<destIndex32 && destIndex32<limit32)) {
+        *p_Error_رمز=U_اشاریہ_OUTOFBOUNDS_ERROR;
+        واپس;
     }
 
-    if(move) {
+    اگر(move) {
         // move: copy to destIndex, then remove original
-        int32_t segLength=limit32-start32;
+        int32_t seg_لمبائی=limit32-start32;
         us->copy(start32, limit32, destIndex32);
-        if(destIndex32<start32) {
-            start32+=segLength;
+        اگر(destIndex32<start32) {
+            start32+=seg_لمبائی;
         }
-        us->remove(start32, segLength);
-    } else {
+        us->remove(start32, seg_لمبائی);
+    } ورنہ {
         // copy
         us->copy(start32, limit32, destIndex32);
     }
 
     // update chunk description, set iteration position.
-    ut->chunkContents = us->getBuffer();
-    if (move==false) {
+    ut->chunkContents = us->get_بفر();
+    اگر (move==جھوٹ) {
         // copy operation, string length grows
-        ut->chunkLength += limit32-start32;
-        ut->chunkNativeLimit = ut->chunkLength;
-        ut->nativeIndexingLimit = ut->chunkLength;
+        ut->chunk_لمبائی += limit32-start32;
+        ut->chunk_Native_حد_بندی = ut->chunk_لمبائی;
+        ut->native_Indexing_حد_بندی = ut->chunk_لمبائی;
     }
 
     // Iteration position to end of the newly inserted text.
-    ut->chunkOffset = destIndex32+limit32-start32;
-    if (move && destIndex32>start32) {
-        ut->chunkOffset = destIndex32;
+    ut->chunk_انحراف = destIndex32+limit32-start32;
+    اگر (move && destIndex32>start32) {
+        ut->chunk_انحراف = destIndex32;
     }
 
 }
 
-static const struct UTextFuncs unistrFuncs =
+ساکن ثابت ساخت UTextFuncs unistrFuncs =
 {
-    sizeof(UTextFuncs),
+    حجم(UTextFuncs),
     0, 0, 0,             // Reserved alignment padding
-    unistrTextClone,
-    unistrTextLength,
-    unistrTextAccess,
-    unistrTextExtract,
-    unistrTextReplace,
-    unistrTextCopy,
-    nullptr,                // MapOffsetToNative,
-    nullptr,                // MapIndexToUTF16,
-    unistrTextClose,
-    nullptr,                // spare 1
-    nullptr,                // spare 2
-    nullptr                 // spare 3
+    unistr_متن_Clone,
+    unistr_متن_لمبائی,
+    unistr_متن_Access,
+    unistr_متن_نکالو,
+    unistr_متن_Replace,
+    unistr_متن_Copy,
+    خالی_اشاریہ,                // MapOffsetToNative,
+    خالی_اشاریہ,                // MapIndexToUTF16,
+    unistr_متن_Close,
+    خالی_اشاریہ,                // spare 1
+    خالی_اشاریہ,                // spare 2
+    خالی_اشاریہ                 // spare 3
 };
 
 
 
-U_CDECL_END
+U_CDECL_انتہا
 
 
 U_CAPI UText* U_EXPORT2
 utext_openUnicodeString(UText* ut U_LIFETIME_BOUND,
                         UnicodeString* s U_LIFETIME_BOUND,
-                        UErrorCode* status) {
-    ut = utext_openConstUnicodeString(ut, s, status);
-    if (U_SUCCESS(*status)) {
+                        UError_رمز* حالت_2) {
+    ut = utext_openConstUnicodeString(ut, s, حالت_2);
+    اگر (U_SUCCESS(*حالت_2)) {
         ut->providerProperties |= I32_FLAG(UTEXT_PROVIDER_WRITABLE);
     }
-    return ut;
+    واپس ut;
 }
 
 
 
 U_CAPI UText* U_EXPORT2
 utext_openConstUnicodeString(UText* ut U_LIFETIME_BOUND,
-                             const UnicodeString* s U_LIFETIME_BOUND,
-                             UErrorCode* status) {
-    if (U_SUCCESS(*status) && s->isBogus()) {
+                             ثابت UnicodeString* s U_LIFETIME_BOUND,
+                             UError_رمز* حالت_2) {
+    اگر (U_SUCCESS(*حالت_2) && s->isBogus()) {
         // The UnicodeString is bogus, but we still need to detach the UText
         //   from whatever it was hooked to before, if anything.
-        utext_openUChars(ut, nullptr, 0, status);
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return ut;
+        utext_openUChars(ut, خالی_اشاریہ, 0, حالت_2);
+        *حالت_2 = U_ILLEGAL_دلیل_ERROR;
+        واپس ut;
     }
-    ut = utext_setup(ut, 0, status);
+    ut = utext_تیاری(ut, 0, حالت_2);
     //    note:  use the standard (writable) function table for UnicodeString.
     //           The flag settings disable writing, so having the functions in
     //           the table is harmless.
-    if (U_SUCCESS(*status)) {
+    اگر (U_SUCCESS(*حالت_2)) {
         ut->pFuncs              = &unistrFuncs;
         ut->context             = s;
         ut->providerProperties  = I32_FLAG(UTEXT_PROVIDER_STABLE_CHUNKS);
-        ut->chunkContents       = s->getBuffer();
-        ut->chunkLength         = s->length();
-        ut->chunkNativeStart    = 0;
-        ut->chunkNativeLimit    = ut->chunkLength;
-        ut->nativeIndexingLimit = ut->chunkLength;
+        ut->chunkContents       = s->get_بفر();
+        ut->chunk_لمبائی         = s->length();
+        ut->chunk_Native_آغاز    = 0;
+        ut->chunk_Native_حد_بندی    = ut->chunk_لمبائی;
+        ut->native_Indexing_حد_بندی = ut->chunk_لمبائی;
     }
-    return ut;
+    واپس ut;
 }
 
 //------------------------------------------------------------------------------
@@ -2358,177 +2358,177 @@ utext_openConstUnicodeString(UText* ut U_LIFETIME_BOUND,
 U_CDECL_BEGIN
 
 
-static UText * U_CALLCONV
-ucstrTextClone(UText *dest, const UText * src, UBool deep, UErrorCode * status) {
+ساکن UText * U_CALLCONV
+ucstr_متن_Clone(UText *dest, ثابت UText * src, UBool deep, UError_رمز * حالت_2) {
     // First do a generic shallow clone.
-    dest = shallowTextClone(dest, src, status);
+    dest = shallow_متن_Clone(dest, src, حالت_2);
 
     // For deep clones, make a copy of the string.
     //  The copied storage is owned by the newly created clone.
     //  A non-nullptr pointer in UText.p is the signal to the close() function to delete
     //    it.
     //
-    if (deep && U_SUCCESS(*status)) {
-        U_ASSERT(utext_nativeLength(dest) < INT32_MAX);
-        int32_t  len = (int32_t)utext_nativeLength(dest);
+    اگر (deep && U_SUCCESS(*حالت_2)) {
+        U_ASSERT(utext_native_لمبائی(dest) < INT32_MAX);
+        int32_t  len = (int32_t)utext_native_لمبائی(dest);
 
         // The cloned string IS going to be NUL terminated, whether or not the original was.
-        const char16_t *srcStr = (const char16_t *)src->context;
-        char16_t *copyStr = (char16_t *)uprv_malloc((len+1) * sizeof(char16_t));
-        if (copyStr == nullptr) {
-            *status = U_MEMORY_ALLOCATION_ERROR;
-        } else {
+        ثابت char16_t *srcStr = (ثابت char16_t *)src->context;
+        char16_t *copyStr = (char16_t *)uprv_malloc((len+1) * حجم(char16_t));
+        اگر (copyStr == خالی_اشاریہ) {
+            *حالت_2 = U_حافظہ_تخصیص_ERROR;
+        } ورنہ {
             int64_t i;
-            for (i=0; i<len; i++) {
+            برائے (i=0; i<len; i++) {
                 copyStr[i] = srcStr[i];
             }
             copyStr[len] = 0;
             dest->context = copyStr;
             dest->chunkContents = copyStr;
-            dest->providerProperties |= I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT);
+            dest->providerProperties |= I32_FLAG(UTEXT_PROVIDER_OWNS_متن);
         }
     }
-    return dest;
+    واپس dest;
 }
 
 
-static void U_CALLCONV
-ucstrTextClose(UText *ut) {
+ساکن خالی U_CALLCONV
+ucstr_متن_Close(UText *ut) {
     // Most of the work of close is done by the generic UText framework close.
     // All that needs to be done here is delete the string if the UText
     //  owns it.  This occurs if the UText was created by cloning.
-    if (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT)) {
+    اگر (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_OWNS_متن)) {
         char16_t *s = (char16_t *)ut->context;
         uprv_free(s);
-        ut->context = nullptr;
+        ut->context = خالی_اشاریہ;
     }
 }
 
 
 
-static int64_t U_CALLCONV
-ucstrTextLength(UText *ut) {
-    if (ut->a < 0) {
+ساکن int64_t U_CALLCONV
+ucstr_متن_لمبائی(UText *ut) {
+    اگر (ut->a < 0) {
         // null terminated, we don't yet know the length. Scan for it.
         //    Access is not convenient for doing this
         //    because the current iteration position can't be changed.
-        const char16_t  *str = (const char16_t *)ut->context;
-        for (;;) {
-            if (str[ut->chunkNativeLimit] == 0) {
-                break;
+        ثابت char16_t  *str = (ثابت char16_t *)ut->context;
+        برائے (;;) {
+            اگر (str[ut->chunk_Native_حد_بندی] == 0) {
+                توڑو;
             }
-            ut->chunkNativeLimit++;
+            ut->chunk_Native_حد_بندی++;
         }
-        ut->a = ut->chunkNativeLimit;
-        ut->chunkLength = (int32_t)ut->chunkNativeLimit;
-        ut->nativeIndexingLimit = ut->chunkLength;
-        ut->providerProperties &= ~I32_FLAG(UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE);
+        ut->a = ut->chunk_Native_حد_بندی;
+        ut->chunk_لمبائی = (int32_t)ut->chunk_Native_حد_بندی;
+        ut->native_Indexing_حد_بندی = ut->chunk_لمبائی;
+        ut->providerProperties &= ~I32_FLAG(UTEXT_PROVIDER_لمبائی_IS_EXPENSIVE);
     }
-    return ut->a;
+    واپس ut->a;
 }
 
 
-static UBool U_CALLCONV
-ucstrTextAccess(UText *ut, int64_t index, UBool  forward) {
-    const char16_t *str   = (const char16_t *)ut->context;
+ساکن UBool U_CALLCONV
+ucstr_متن_Access(UText *ut, int64_t اشاریہ, UBool  forward) {
+    ثابت char16_t *str   = (ثابت char16_t *)ut->context;
 
     // pin the requested index to the bounds of the string,
     //  and set current iteration position.
-    if (index<0) {
-        index = 0;
-    } else if (index < ut->chunkNativeLimit) {
+    اگر (اشاریہ<0) {
+        اشاریہ = 0;
+    } ورنہ اگر (اشاریہ < ut->chunk_Native_حد_بندی) {
         // The request data is within the chunk as it is known so far.
         // Put index on a code point boundary.
-        U16_SET_CP_START(str, 0, index);
-    } else if (ut->a >= 0) {
+        U16_سیٹ_CP_آغاز(str, 0, اشاریہ);
+    } ورنہ اگر (ut->a >= 0) {
         // We know the length of this string, and the user is requesting something
         // at or beyond the length.  Pin the requested index to the length.
-        index = ut->a;
-    } else {
+        اشاریہ = ut->a;
+    } ورنہ {
         // Null terminated string, length not yet known, and the requested index
         //  is beyond where we have scanned so far.
         //  Scan to 32 UChars beyond the requested index.  The strategy here is
         //  to avoid fully scanning a long string when the caller only wants to
         //  see a few characters at its beginning.
-        int32_t scanLimit = (int32_t)index + 32;
-        if ((index + 32)>INT32_MAX || (index + 32)<0 ) {   // note: int64 expression
-            scanLimit = INT32_MAX;
+        int32_t جائزہ_حد_بندی = (int32_t)اشاریہ + 32;
+        اگر ((اشاریہ + 32)>INT32_MAX || (اشاریہ + 32)<0 ) {   // note: int64 expression
+            جائزہ_حد_بندی = INT32_MAX;
         }
 
-        int32_t chunkLimit = (int32_t)ut->chunkNativeLimit;
-        for (; chunkLimit<scanLimit; chunkLimit++) {
-            if (str[chunkLimit] == 0) {
+        int32_t chunk_حد_بندی = (int32_t)ut->chunk_Native_حد_بندی;
+        برائے (; chunk_حد_بندی<جائزہ_حد_بندی; chunk_حد_بندی++) {
+            اگر (str[chunk_حد_بندی] == 0) {
                 // We found the end of the string.  Remember it, pin the requested index to it,
                 //  and bail out of here.
-                ut->a = chunkLimit;
-                ut->chunkLength = chunkLimit;
-                ut->nativeIndexingLimit = chunkLimit;
-                if (index >= chunkLimit) {
-                    index = chunkLimit;
-                } else {
-                    U16_SET_CP_START(str, 0, index);
+                ut->a = chunk_حد_بندی;
+                ut->chunk_لمبائی = chunk_حد_بندی;
+                ut->native_Indexing_حد_بندی = chunk_حد_بندی;
+                اگر (اشاریہ >= chunk_حد_بندی) {
+                    اشاریہ = chunk_حد_بندی;
+                } ورنہ {
+                    U16_سیٹ_CP_آغاز(str, 0, اشاریہ);
                 }
 
-                ut->chunkNativeLimit = chunkLimit;
-                ut->providerProperties &= ~I32_FLAG(UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE);
-                goto breakout;
+                ut->chunk_Native_حد_بندی = chunk_حد_بندی;
+                ut->providerProperties &= ~I32_FLAG(UTEXT_PROVIDER_لمبائی_IS_EXPENSIVE);
+                جاؤ breakout;
             }
         }
         // We scanned through the next batch of UChars without finding the end.
-        U16_SET_CP_START(str, 0, index);
-        if (chunkLimit == INT32_MAX) {
+        U16_سیٹ_CP_آغاز(str, 0, اشاریہ);
+        اگر (chunk_حد_بندی == INT32_MAX) {
             // Scanned to the limit of a 32 bit length.
             // Forceably trim the overlength string back so length fits in int32
             //  TODO:  add support for 64 bit strings.
-            ut->a = chunkLimit;
-            ut->chunkLength = chunkLimit;
-            ut->nativeIndexingLimit = chunkLimit;
-            if (index > chunkLimit) {
-                index = chunkLimit;
+            ut->a = chunk_حد_بندی;
+            ut->chunk_لمبائی = chunk_حد_بندی;
+            ut->native_Indexing_حد_بندی = chunk_حد_بندی;
+            اگر (اشاریہ > chunk_حد_بندی) {
+                اشاریہ = chunk_حد_بندی;
             }
-            ut->chunkNativeLimit = chunkLimit;
-            ut->providerProperties &= ~I32_FLAG(UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE);
-        } else {
+            ut->chunk_Native_حد_بندی = chunk_حد_بندی;
+            ut->providerProperties &= ~I32_FLAG(UTEXT_PROVIDER_لمبائی_IS_EXPENSIVE);
+        } ورنہ {
             // The endpoint of a chunk must not be left in the middle of a surrogate pair.
             // If the current end is on a lead surrogate, back the end up by one.
             // It doesn't matter if the end char happens to be an unpaired surrogate,
             //    and it's simpler not to worry about it.
-            if (U16_IS_LEAD(str[chunkLimit-1])) {
-                --chunkLimit;
+            اگر (U16_IS_LEAD(str[chunk_حد_بندی-1])) {
+                --chunk_حد_بندی;
             }
             // Null-terminated chunk with end still unknown.
             // Update the chunk length to reflect what has been scanned thus far.
             // That the full length is still unknown is (still) flagged by
             //    ut->a being < 0.
-            ut->chunkNativeLimit = chunkLimit;
-            ut->nativeIndexingLimit = chunkLimit;
-            ut->chunkLength = chunkLimit;
+            ut->chunk_Native_حد_بندی = chunk_حد_بندی;
+            ut->native_Indexing_حد_بندی = chunk_حد_بندی;
+            ut->chunk_لمبائی = chunk_حد_بندی;
         }
 
     }
 breakout:
-    U_ASSERT(index<=INT32_MAX);
-    ut->chunkOffset = (int32_t)index;
+    U_ASSERT(اشاریہ<=INT32_MAX);
+    ut->chunk_انحراف = (int32_t)اشاریہ;
 
     // Check whether request is at the start or end
-    UBool retVal = (forward && index<ut->chunkNativeLimit) || (!forward && index>0);
-    return retVal;
+    UBool retVal = (forward && اشاریہ<ut->chunk_Native_حد_بندی) || (!forward && اشاریہ>0);
+    واپس retVal;
 }
 
 
 
-static int32_t U_CALLCONV
-ucstrTextExtract(UText *ut,
-                  int64_t start, int64_t limit,
-                  char16_t *dest, int32_t destCapacity,
-                  UErrorCode *pErrorCode)
+ساکن int32_t U_CALLCONV
+ucstr_متن_نکالو(UText *ut,
+                  int64_t آغاز, int64_t حد_بندی,
+                  char16_t *dest, int32_t dest_استعداد,
+                  UError_رمز *p_Error_رمز)
 {
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    اگر(U_FAILURE(*p_Error_رمز)) {
+        واپس 0;
     }
-    if(destCapacity<0 || (dest==nullptr && destCapacity>0) || start>limit) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    اگر(dest_استعداد<0 || (dest==خالی_اشاریہ && dest_استعداد>0) || آغاز>حد_بندی) {
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
 
     //const char16_t *s=(const char16_t *)ut->context;
@@ -2540,39 +2540,39 @@ ucstrTextExtract(UText *ut,
     // Access the start.  Does two things we need:
     //   Pins 'start' to the length of the string, if it came in out-of-bounds.
     //   Snaps 'start' to the beginning of a code point.
-    ucstrTextAccess(ut, start, true);
-    const char16_t *s=ut->chunkContents;
-    start32 = ut->chunkOffset;
+    ucstr_متن_Access(ut, آغاز, سچ);
+    ثابت char16_t *s=ut->chunkContents;
+    start32 = ut->chunk_انحراف;
 
-    int32_t strLength=(int32_t)ut->a;
-    if (strLength >= 0) {
-        limit32 = pinIndex(limit, strLength);
-    } else {
-        limit32 = pinIndex(limit, INT32_MAX);
+    int32_t str_لمبائی=(int32_t)ut->a;
+    اگر (str_لمبائی >= 0) {
+        limit32 = pin_اشاریہ(حد_بندی, str_لمبائی);
+    } ورنہ {
+        limit32 = pin_اشاریہ(حد_بندی, INT32_MAX);
     }
     di = 0;
-    for (si=start32; si<limit32; si++) {
-        if (strLength<0 && s[si]==0) {
+    برائے (si=start32; si<limit32; si++) {
+        اگر (str_لمبائی<0 && s[si]==0) {
             // Just hit the end of a null-terminated string.
             ut->a = si;               // set string length for this UText
-            ut->chunkNativeLimit    = si;
-            ut->chunkLength         = si;
-            ut->nativeIndexingLimit = si;
-            strLength               = si;
+            ut->chunk_Native_حد_بندی    = si;
+            ut->chunk_لمبائی         = si;
+            ut->native_Indexing_حد_بندی = si;
+            str_لمبائی               = si;
             limit32                 = si;
-            break;
+            توڑو;
         }
         U_ASSERT(di>=0); /* to ensure di never exceeds INT32_MAX, which must not happen logically */
-        if (di<destCapacity) {
+        اگر (di<dest_استعداد) {
             // only store if there is space.
             dest[di] = s[si];
-        } else {
-            if (strLength>=0) {
+        } ورنہ {
+            اگر (str_لمبائی>=0) {
                 // We have filled the destination buffer, and the string length is known.
                 //  Cut the loop short.  There is no need to scan string termination.
                 di = limit32 - start32;
                 si = limit32;
-                break;
+                توڑو;
             }
         }
         di++;
@@ -2580,10 +2580,10 @@ ucstrTextExtract(UText *ut,
 
     // If the limit index points to a lead surrogate of a pair,
     //   add the corresponding trail surrogate to the destination.
-    if (si>0 && U16_IS_LEAD(s[si-1]) &&
-            ((si<strLength || strLength<0)  && U16_IS_TRAIL(s[si])))
+    اگر (si>0 && U16_IS_LEAD(s[si-1]) &&
+            ((si<str_لمبائی || str_لمبائی<0)  && U16_IS_TRAIL(s[si])))
     {
-        if (di<destCapacity) {
+        اگر (di<dest_استعداد) {
             // store only if there is space in the output buffer.
             dest[di++] = s[si];
         }
@@ -2591,72 +2591,72 @@ ucstrTextExtract(UText *ut,
     }
 
     // Put iteration position at the point just following the extracted text
-    if (si <= ut->chunkNativeLimit) {
-        ut->chunkOffset = si;
-    } else {
-        ucstrTextAccess(ut, si, true);
+    اگر (si <= ut->chunk_Native_حد_بندی) {
+        ut->chunk_انحراف = si;
+    } ورنہ {
+        ucstr_متن_Access(ut, si, سچ);
     }
 
     // Add a terminating NUL if space in the buffer permits,
     // and set the error status as required.
-    u_terminateUChars(dest, destCapacity, di, pErrorCode);
-    return di;
+    u_terminateUChars(dest, dest_استعداد, di, p_Error_رمز);
+    واپس di;
 }
 
-static const struct UTextFuncs ucstrFuncs =
+ساکن ثابت ساخت UTextFuncs ucstrFuncs =
 {
-    sizeof(UTextFuncs),
+    حجم(UTextFuncs),
     0, 0, 0,           // Reserved alignment padding
-    ucstrTextClone,
-    ucstrTextLength,
-    ucstrTextAccess,
-    ucstrTextExtract,
-    nullptr,              // Replace
-    nullptr,              // Copy
-    nullptr,              // MapOffsetToNative,
-    nullptr,              // MapIndexToUTF16,
-    ucstrTextClose,
-    nullptr,              // spare 1
-    nullptr,              // spare 2
-    nullptr,              // spare 3
+    ucstr_متن_Clone,
+    ucstr_متن_لمبائی,
+    ucstr_متن_Access,
+    ucstr_متن_نکالو,
+    خالی_اشاریہ,              // Replace
+    خالی_اشاریہ,              // Copy
+    خالی_اشاریہ,              // MapOffsetToNative,
+    خالی_اشاریہ,              // MapIndexToUTF16,
+    ucstr_متن_Close,
+    خالی_اشاریہ,              // spare 1
+    خالی_اشاریہ,              // spare 2
+    خالی_اشاریہ,              // spare 3
 };
 
-U_CDECL_END
+U_CDECL_انتہا
 
-static const char16_t gEmptyUString[] = {0};
+ساکن ثابت char16_t g_خالی_خانے_UString[] = {0};
 
 U_CAPI UText* U_EXPORT2
 utext_openUChars(UText* ut U_LIFETIME_BOUND,
-                 const char16_t* s U_LIFETIME_BOUND,
+                 ثابت char16_t* s U_LIFETIME_BOUND,
                  int64_t length,
-                 UErrorCode* status) {
-    if (U_FAILURE(*status)) {
-        return nullptr;
+                 UError_رمز* حالت_2) {
+    اگر (U_FAILURE(*حالت_2)) {
+        واپس خالی_اشاریہ;
     }
-    if(s==nullptr && length==0) {
-        s = gEmptyUString;
+    اگر(s==خالی_اشاریہ && length==0) {
+        s = g_خالی_خانے_UString;
     }
-    if (s==nullptr || length < -1 || length>INT32_MAX) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    اگر (s==خالی_اشاریہ || length < -1 || length>INT32_MAX) {
+        *حالت_2 = U_ILLEGAL_دلیل_ERROR;
+        واپس خالی_اشاریہ;
     }
-    ut = utext_setup(ut, 0, status);
-    if (U_SUCCESS(*status)) {
+    ut = utext_تیاری(ut, 0, حالت_2);
+    اگر (U_SUCCESS(*حالت_2)) {
         ut->pFuncs               = &ucstrFuncs;
         ut->context              = s;
         ut->providerProperties   = I32_FLAG(UTEXT_PROVIDER_STABLE_CHUNKS);
-        if (length==-1) {
-            ut->providerProperties |= I32_FLAG(UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE);
+        اگر (length==-1) {
+            ut->providerProperties |= I32_FLAG(UTEXT_PROVIDER_لمبائی_IS_EXPENSIVE);
         }
         ut->a                    = length;
         ut->chunkContents        = s;
-        ut->chunkNativeStart     = 0;
-        ut->chunkNativeLimit     = length>=0? length : 0;
-        ut->chunkLength          = (int32_t)ut->chunkNativeLimit;
-        ut->chunkOffset          = 0;
-        ut->nativeIndexingLimit  = ut->chunkLength;
+        ut->chunk_Native_آغاز     = 0;
+        ut->chunk_Native_حد_بندی     = length>=0? length : 0;
+        ut->chunk_لمبائی          = (int32_t)ut->chunk_Native_حد_بندی;
+        ut->chunk_انحراف          = 0;
+        ut->native_Indexing_حد_بندی  = ut->chunk_لمبائی;
     }
-    return ut;
+    واپس ut;
 }
 
 
@@ -2675,208 +2675,208 @@ utext_openUChars(UText* ut U_LIFETIME_BOUND,
 //                       Null otherwise.
 //
 //------------------------------------------------------------------------------
-#define CIBufSize 16
+#تعریف_کرو CIBuf_سائز 16
 
 U_CDECL_BEGIN
-static void U_CALLCONV
-charIterTextClose(UText *ut) {
+ساکن خالی U_CALLCONV
+char_Iter_متن_Close(UText *ut) {
     // Most of the work of close is done by the generic UText framework close.
     // All that needs to be done here is delete the CharacterIterator if the UText
     //  owns it.  This occurs if the UText was created by cloning.
     CharacterIterator *ci = (CharacterIterator *)ut->r;
-    delete ci;
-    ut->r = nullptr;
+    حذف ci;
+    ut->r = خالی_اشاریہ;
 }
 
-static int64_t U_CALLCONV
-charIterTextLength(UText *ut) {
-    return (int32_t)ut->a;
+ساکن int64_t U_CALLCONV
+char_Iter_متن_لمبائی(UText *ut) {
+    واپس (int32_t)ut->a;
 }
 
-static UBool U_CALLCONV
-charIterTextAccess(UText *ut, int64_t index, UBool  forward) {
+ساکن UBool U_CALLCONV
+char_Iter_متن_Access(UText *ut, int64_t اشاریہ, UBool  forward) {
     CharacterIterator *ci   = (CharacterIterator *)ut->context;
 
-    int32_t clippedIndex = (int32_t)index;
-    if (clippedIndex<0) {
-        clippedIndex=0;
-    } else if (clippedIndex>=ut->a) {
-        clippedIndex=(int32_t)ut->a;
+    int32_t clipped_اشاریہ = (int32_t)اشاریہ;
+    اگر (clipped_اشاریہ<0) {
+        clipped_اشاریہ=0;
+    } ورنہ اگر (clipped_اشاریہ>=ut->a) {
+        clipped_اشاریہ=(int32_t)ut->a;
     }
-    int32_t neededIndex = clippedIndex;
-    if (!forward && neededIndex>0) {
+    int32_t needed_اشاریہ = clipped_اشاریہ;
+    اگر (!forward && needed_اشاریہ>0) {
         // reverse iteration, want the position just before what was asked for.
-        neededIndex--;
-    } else if (forward && neededIndex==ut->a && neededIndex>0) {
+        needed_اشاریہ--;
+    } ورنہ اگر (forward && needed_اشاریہ==ut->a && needed_اشاریہ>0) {
         // Forward iteration, don't ask for something past the end of the text.
-        neededIndex--;
+        needed_اشاریہ--;
     }
 
     // Find the native index of the start of the buffer containing what we want.
-    neededIndex -= neededIndex % CIBufSize;
+    needed_اشاریہ -= needed_اشاریہ % CIBuf_سائز;
 
-    char16_t *buf = nullptr;
-    UBool  needChunkSetup = true;
-    int    i;
-    if (ut->chunkNativeStart == neededIndex) {
+    char16_t *buf = خالی_اشاریہ;
+    UBool  need_Chunk_تیاری = سچ;
+    صحیح    i;
+    اگر (ut->chunk_Native_آغاز == needed_اشاریہ) {
         // The buffer we want is already the current chunk.
-        needChunkSetup = false;
-    } else if (ut->b == neededIndex) {
+        need_Chunk_تیاری = جھوٹ;
+    } ورنہ اگر (ut->b == needed_اشاریہ) {
         // The first buffer (buffer p) has what we need.
         buf = (char16_t *)ut->p;
-    } else if (ut->c == neededIndex) {
+    } ورنہ اگر (ut->c == needed_اشاریہ) {
         // The second buffer (buffer q) has what we need.
         buf = (char16_t *)ut->q;
-    } else {
+    } ورنہ {
         // Neither buffer already has what we need.
         // Load new data from the character iterator.
         // Use the buf that is not the current buffer.
         buf = (char16_t *)ut->p;
-        if (ut->p == ut->chunkContents) {
+        اگر (ut->p == ut->chunkContents) {
             buf = (char16_t *)ut->q;
         }
-        ci->setIndex(neededIndex);
-        for (i=0; i<CIBufSize; i++) {
-            buf[i] = ci->nextPostInc();
-            if (i+neededIndex > ut->a) {
-                break;
+        ci->سیٹ_اشاریہ(needed_اشاریہ);
+        برائے (i=0; i<CIBuf_سائز; i++) {
+            buf[i] = ci->اگلا_Post_Inc();
+            اگر (i+needed_اشاریہ > ut->a) {
+                توڑو;
             }
         }
     }
 
     // We have a buffer with the data we need.
     // Set it up as the current chunk, if it wasn't already.
-    if (needChunkSetup) {
+    اگر (need_Chunk_تیاری) {
         ut->chunkContents = buf;
-        ut->chunkLength   = CIBufSize;
-        ut->chunkNativeStart = neededIndex;
-        ut->chunkNativeLimit = neededIndex + CIBufSize;
-        if (ut->chunkNativeLimit > ut->a) {
-            ut->chunkNativeLimit = ut->a;
-            ut->chunkLength  = (int32_t)(ut->chunkNativeLimit)-(int32_t)(ut->chunkNativeStart);
+        ut->chunk_لمبائی   = CIBuf_سائز;
+        ut->chunk_Native_آغاز = needed_اشاریہ;
+        ut->chunk_Native_حد_بندی = needed_اشاریہ + CIBuf_سائز;
+        اگر (ut->chunk_Native_حد_بندی > ut->a) {
+            ut->chunk_Native_حد_بندی = ut->a;
+            ut->chunk_لمبائی  = (int32_t)(ut->chunk_Native_حد_بندی)-(int32_t)(ut->chunk_Native_آغاز);
         }
-        ut->nativeIndexingLimit = ut->chunkLength;
-        U_ASSERT(ut->chunkOffset>=0 && ut->chunkOffset<=CIBufSize);
+        ut->native_Indexing_حد_بندی = ut->chunk_لمبائی;
+        U_ASSERT(ut->chunk_انحراف>=0 && ut->chunk_انحراف<=CIBuf_سائز);
     }
-    ut->chunkOffset = clippedIndex - (int32_t)ut->chunkNativeStart;
-    UBool success = (forward? ut->chunkOffset<ut->chunkLength : ut->chunkOffset>0);
-    return success;
+    ut->chunk_انحراف = clipped_اشاریہ - (int32_t)ut->chunk_Native_آغاز;
+    UBool success = (forward? ut->chunk_انحراف<ut->chunk_لمبائی : ut->chunk_انحراف>0);
+    واپس success;
 }
 
-static UText * U_CALLCONV
-charIterTextClone(UText *dest, const UText *src, UBool deep, UErrorCode * status) {
-    if (U_FAILURE(*status)) {
-        return nullptr;
+ساکن UText * U_CALLCONV
+char_Iter_متن_Clone(UText *dest, ثابت UText *src, UBool deep, UError_رمز * حالت_2) {
+    اگر (U_FAILURE(*حالت_2)) {
+        واپس خالی_اشاریہ;
     }
 
-    if (deep) {
+    اگر (deep) {
         // There is no CharacterIterator API for cloning the underlying text storage.
-        *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
-    } else {
+        *حالت_2 = U_UNSUPPORTED_ERROR;
+        واپس خالی_اشاریہ;
+    } ورنہ {
         CharacterIterator *srcCI =(CharacterIterator *)src->context;
         srcCI = srcCI->clone();
-        dest = utext_openCharacterIterator(dest, srcCI, status);
-        if (U_FAILURE(*status)) {
-            return dest;
+        dest = utext_openCharacterIterator(dest, srcCI, حالت_2);
+        اگر (U_FAILURE(*حالت_2)) {
+            واپس dest;
         }
         // cast off const on getNativeIndex.
         //   For CharacterIterator based UTexts, this is safe, the operation is const.
-        int64_t  ix = utext_getNativeIndex((UText *)src);
-        utext_setNativeIndex(dest, ix);
+        int64_t  ix = utext_get_Native_اشاریہ((UText *)src);
+        utext_سیٹ_Native_اشاریہ(dest, ix);
         dest->r = srcCI;    // flags that this UText owns the CharacterIterator
     }
-    return dest;
+    واپس dest;
 }
 
-static int32_t U_CALLCONV
-charIterTextExtract(UText *ut,
-                  int64_t start, int64_t limit,
-                  char16_t *dest, int32_t destCapacity,
-                  UErrorCode *status)
+ساکن int32_t U_CALLCONV
+char_Iter_متن_نکالو(UText *ut,
+                  int64_t آغاز, int64_t حد_بندی,
+                  char16_t *dest, int32_t dest_استعداد,
+                  UError_رمز *حالت_2)
 {
-    if(U_FAILURE(*status)) {
-        return 0;
+    اگر(U_FAILURE(*حالت_2)) {
+        واپس 0;
     }
-    if(destCapacity<0 || (dest==nullptr && destCapacity>0) || start>limit) {
-        *status=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    اگر(dest_استعداد<0 || (dest==خالی_اشاریہ && dest_استعداد>0) || آغاز>حد_بندی) {
+        *حالت_2=U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
     int32_t  length  = (int32_t)ut->a;
-    int32_t  start32 = pinIndex(start, length);
-    int32_t  limit32 = pinIndex(limit, length);
+    int32_t  start32 = pin_اشاریہ(آغاز, length);
+    int32_t  limit32 = pin_اشاریہ(حد_بندی, length);
     int32_t  desti   = 0;
     int32_t  srci;
-    int32_t  copyLimit;
+    int32_t  copy_حد_بندی;
 
     CharacterIterator *ci = (CharacterIterator *)ut->context;
-    ci->setIndex32(start32);   // Moves ix to lead of surrogate pair, if needed.
-    srci = ci->getIndex();
-    copyLimit = srci;
-    while (srci<limit32) {
+    ci->سیٹ_Index32(start32);   // Moves ix to lead of surrogate pair, if needed.
+    srci = ci->get_اشاریہ();
+    copy_حد_بندی = srci;
+    جب (srci<limit32) {
         UChar32 c = ci->next32PostInc();
-        int32_t  len = U16_LENGTH(c);
+        int32_t  len = U16_لمبائی(c);
         U_ASSERT(desti+len>0); /* to ensure desti+len never exceeds MAX_INT32, which must not happen logically */
-        if (desti+len <= destCapacity) {
+        اگر (desti+len <= dest_استعداد) {
             U16_APPEND_UNSAFE(dest, desti, c);
-            copyLimit = srci+len;
-        } else {
+            copy_حد_بندی = srci+len;
+        } ورنہ {
             desti += len;
-            *status = U_BUFFER_OVERFLOW_ERROR;
+            *حالت_2 = U_بفر_حد_سے_تجاوز_ERROR;
         }
         srci += len;
     }
 
-    charIterTextAccess(ut, copyLimit, true);
+    char_Iter_متن_Access(ut, copy_حد_بندی, سچ);
 
-    u_terminateUChars(dest, destCapacity, desti, status);
-    return desti;
+    u_terminateUChars(dest, dest_استعداد, desti, حالت_2);
+    واپس desti;
 }
 
-static const struct UTextFuncs charIterFuncs =
+ساکن ثابت ساخت UTextFuncs charIterFuncs =
 {
-    sizeof(UTextFuncs),
+    حجم(UTextFuncs),
     0, 0, 0,             // Reserved alignment padding
-    charIterTextClone,
-    charIterTextLength,
-    charIterTextAccess,
-    charIterTextExtract,
-    nullptr,                // Replace
-    nullptr,                // Copy
-    nullptr,                // MapOffsetToNative,
-    nullptr,                // MapIndexToUTF16,
-    charIterTextClose,
-    nullptr,                // spare 1
-    nullptr,                // spare 2
-    nullptr                 // spare 3
+    char_Iter_متن_Clone,
+    char_Iter_متن_لمبائی,
+    char_Iter_متن_Access,
+    char_Iter_متن_نکالو,
+    خالی_اشاریہ,                // Replace
+    خالی_اشاریہ,                // Copy
+    خالی_اشاریہ,                // MapOffsetToNative,
+    خالی_اشاریہ,                // MapIndexToUTF16,
+    char_Iter_متن_Close,
+    خالی_اشاریہ,                // spare 1
+    خالی_اشاریہ,                // spare 2
+    خالی_اشاریہ                 // spare 3
 };
-U_CDECL_END
+U_CDECL_انتہا
 
 U_CAPI UText* U_EXPORT2
 utext_openCharacterIterator(UText* ut U_LIFETIME_BOUND,
                             CharacterIterator* ci U_LIFETIME_BOUND,
-                            UErrorCode* status) {
-    if (U_FAILURE(*status)) {
-        return nullptr;
+                            UError_رمز* حالت_2) {
+    اگر (U_FAILURE(*حالت_2)) {
+        واپس خالی_اشاریہ;
     }
 
-    if (ci->startIndex() > 0) {
+    اگر (ci->آغاز_اشاریہ() > 0) {
         // No support for CharacterIterators that do not start indexing from zero.
-        *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+        *حالت_2 = U_UNSUPPORTED_ERROR;
+        واپس خالی_اشاریہ;
     }
 
     // Extra space in UText for 2 buffers of CIBufSize UChars each.
-    int32_t  extraSpace = 2 * CIBufSize * sizeof(char16_t);
-    ut = utext_setup(ut, extraSpace, status);
-    if (U_SUCCESS(*status)) {
+    int32_t  extraSpace = 2 * CIBuf_سائز * حجم(char16_t);
+    ut = utext_تیاری(ut, extraSpace, حالت_2);
+    اگر (U_SUCCESS(*حالت_2)) {
         ut->pFuncs                = &charIterFuncs;
         ut->context              = ci;
         ut->providerProperties   = 0;
-        ut->a                    = ci->endIndex();        // Length of text
+        ut->a                    = ci->انتہا_اشاریہ();        // Length of text
         ut->p                    = ut->pExtra;            // First buffer
         ut->b                    = -1;                    // Native index of first buffer contents
-        ut->q                    = (char16_t*)ut->pExtra+CIBufSize;  // Second buffer
+        ut->q                    = (char16_t*)ut->pExtra+CIBuf_سائز;  // Second buffer
         ut->c                    = -1;                    // Native index of second buffer contents
 
         // Initialize current chunk contents to be empty.
@@ -2886,11 +2886,11 @@ utext_openCharacterIterator(UText* ut U_LIFETIME_BOUND,
         //          if no call to Access() has ever been made.  They can't be both
         //          zero without Access() thinking that the chunk is valid.
         ut->chunkContents        = (char16_t *)ut->p;
-        ut->chunkNativeStart     = -1;
-        ut->chunkOffset          = 1;
-        ut->chunkNativeLimit     = 0;
-        ut->chunkLength          = 0;
-        ut->nativeIndexingLimit  = ut->chunkOffset;  // enables native indexing
+        ut->chunk_Native_آغاز     = -1;
+        ut->chunk_انحراف          = 1;
+        ut->chunk_Native_حد_بندی     = 0;
+        ut->chunk_لمبائی          = 0;
+        ut->native_Indexing_حد_بندی  = ut->chunk_انحراف;  // enables native indexing
     }
-    return ut;
+    واپس ut;
 }

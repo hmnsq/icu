@@ -11,18 +11,18 @@
 * 2010nov19 Markus Scherer  Rewrite for formatVersion 2.
 **********************************************************************
 */
-#include "propname.h"
-#include "unicode/uchar.h"
-#include "unicode/udata.h"
-#include "unicode/uscript.h"
-#include "umutex.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uarrsort.h"
-#include "uinvchar.h"
+#شامل "propname.h"
+#شامل "unicode/uchar.h"
+#شامل "unicode/udata.h"
+#شامل "unicode/uscript.h"
+#شامل "umutex.h"
+#شامل "cmemory.h"
+#شامل "cstring.h"
+#شامل "uarrsort.h"
+#شامل "uinvchar.h"
 
-#define INCLUDED_FROM_PROPNAME_CPP
-#include "propname_data.h"
+#تعریف_کرو INCLUDED_FROM_PROPNAME_CPP
+#شامل "propname_data.h"
 
 U_CDECL_BEGIN
 
@@ -31,21 +31,21 @@ U_CDECL_BEGIN
  * and lowercases it.
  * @return ((advance count for the name)<<8)|character
  */
-static inline int32_t
-getASCIIPropertyNameChar(const char *name) {
+ساکن اندرونی int32_t
+getASCIIPropertyNameChar(ثابت حرف *name) {
     int32_t i;
-    char c;
+    حرف c;
 
     /* Ignore delimiters '-', '_', and ASCII White_Space */
-    for(i=0;
+    برائے(i=0;
         (c=name[i++])==0x2d || c==0x5f ||
         c==0x20 || (0x09<=c && c<=0x0d);
     ) {}
 
-    if(c!=0) {
-        return (i << 8) | static_cast<uint8_t>(uprv_asciitolower(c));
-    } else {
-        return i<<8;
+    اگر(c!=0) {
+        واپس (i << 8) | static_cast<uint8_t>(uprv_asciitolower(c));
+    } ورنہ {
+        واپس i<<8;
     }
 }
 
@@ -54,21 +54,21 @@ getASCIIPropertyNameChar(const char *name) {
  * and lowercases it.
  * @return ((advance count for the name)<<8)|character
  */
-static inline int32_t
-getEBCDICPropertyNameChar(const char *name) {
+ساکن اندرونی int32_t
+getEBCDICPropertyNameChar(ثابت حرف *name) {
     int32_t i;
-    char c;
+    حرف c;
 
     /* Ignore delimiters '-', '_', and EBCDIC White_Space */
-    for(i=0;
+    برائے(i=0;
         (c=name[i++])==0x60 || c==0x6d ||
         c==0x40 || c==0x05 || c==0x15 || c==0x25 || c==0x0b || c==0x0c || c==0x0d;
     ) {}
 
-    if(c!=0) {
-        return (i << 8) | static_cast<uint8_t>(uprv_ebcdictolower(c));
-    } else {
-        return i<<8;
+    اگر(c!=0) {
+        واپس (i << 8) | static_cast<uint8_t>(uprv_ebcdictolower(c));
+    } ورنہ {
+        واپس i<<8;
     }
 }
 
@@ -90,23 +90,23 @@ getEBCDICPropertyNameChar(const char *name) {
  */
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareASCIIPropertyNames(const char *name1, const char *name2) {
+uprv_compare_ASCIIProperty_نام(ثابت حرف *name1, ثابت حرف *name2) {
     int32_t rc, r1, r2;
 
-    for(;;) {
+    برائے(;;) {
         r1=getASCIIPropertyNameChar(name1);
         r2=getASCIIPropertyNameChar(name2);
 
         /* If we reach the ends of both strings then they match */
-        if(((r1|r2)&0xff)==0) {
-            return 0;
+        اگر(((r1|r2)&0xff)==0) {
+            واپس 0;
         }
 
         /* Compare the lowercased characters */
-        if(r1!=r2) {
+        اگر(r1!=r2) {
             rc=(r1&0xff)-(r2&0xff);
-            if(rc!=0) {
-                return rc;
+            اگر(rc!=0) {
+                واپس rc;
             }
         }
 
@@ -116,23 +116,23 @@ uprv_compareASCIIPropertyNames(const char *name1, const char *name2) {
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareEBCDICPropertyNames(const char *name1, const char *name2) {
+uprv_compare_EBCDICProperty_نام(ثابت حرف *name1, ثابت حرف *name2) {
     int32_t rc, r1, r2;
 
-    for(;;) {
+    برائے(;;) {
         r1=getEBCDICPropertyNameChar(name1);
         r2=getEBCDICPropertyNameChar(name2);
 
         /* If we reach the ends of both strings then they match */
-        if(((r1|r2)&0xff)==0) {
-            return 0;
+        اگر(((r1|r2)&0xff)==0) {
+            واپس 0;
         }
 
         /* Compare the lowercased characters */
-        if(r1!=r2) {
+        اگر(r1!=r2) {
             rc=(r1&0xff)-(r2&0xff);
-            if(rc!=0) {
-                return rc;
+            اگر(rc!=0) {
+                واپس rc;
             }
         }
 
@@ -141,194 +141,194 @@ uprv_compareEBCDICPropertyNames(const char *name1, const char *name2) {
     }
 }
 
-U_CDECL_END
+U_CDECL_انتہا
 
 U_NAMESPACE_BEGIN
 
-int32_t PropNameData::findProperty(int32_t property) {
+int32_t Prop_Name_ڈیٹا::ڈھونڈو_Property(int32_t property) {
     int32_t i=1;  // valueMaps index, initially after numRanges
-    for(int32_t numRanges=valueMaps[0]; numRanges>0; --numRanges) {
+    برائے(int32_t عدد_Ranges=قدر_Maps[0]; عدد_Ranges>0; --عدد_Ranges) {
         // Read and skip the start and limit of this range.
-        int32_t start=valueMaps[i];
-        int32_t limit=valueMaps[i+1];
+        int32_t آغاز=قدر_Maps[i];
+        int32_t حد_بندی=قدر_Maps[i+1];
         i+=2;
-        if(property<start) {
-            break;
+        اگر(property<آغاز) {
+            توڑو;
         }
-        if(property<limit) {
-            return i+(property-start)*2;
+        اگر(property<حد_بندی) {
+            واپس i+(property-آغاز)*2;
         }
-        i+=(limit-start)*2;  // Skip all entries for this range.
+        i+=(حد_بندی-آغاز)*2;  // Skip all entries for this range.
     }
-    return 0;
+    واپس 0;
 }
 
-int32_t PropNameData::findPropertyValueNameGroup(int32_t valueMapIndex, int32_t value) {
-    if(valueMapIndex==0) {
-        return 0;  // The property does not have named values.
+int32_t Prop_Name_ڈیٹا::ڈھونڈو_Property_قدر_Name_گروہ(int32_t قدر_Map_اشاریہ, int32_t value) {
+    اگر(قدر_Map_اشاریہ==0) {
+        واپس 0;  // The property does not have named values.
     }
-    ++valueMapIndex;  // Skip the BytesTrie offset.
-    int32_t numRanges=valueMaps[valueMapIndex++];
-    if(numRanges<0x10) {
+    ++قدر_Map_اشاریہ;  // Skip the BytesTrie offset.
+    int32_t عدد_Ranges=قدر_Maps[قدر_Map_اشاریہ++];
+    اگر(عدد_Ranges<0x10) {
         // Ranges of values.
-        for(; numRanges>0; --numRanges) {
+        برائے(; عدد_Ranges>0; --عدد_Ranges) {
             // Read and skip the start and limit of this range.
-            int32_t start=valueMaps[valueMapIndex];
-            int32_t limit=valueMaps[valueMapIndex+1];
-            valueMapIndex+=2;
-            if(value<start) {
-                break;
+            int32_t آغاز=قدر_Maps[قدر_Map_اشاریہ];
+            int32_t حد_بندی=قدر_Maps[قدر_Map_اشاریہ+1];
+            قدر_Map_اشاریہ+=2;
+            اگر(value<آغاز) {
+                توڑو;
             }
-            if(value<limit) {
-                return valueMaps[valueMapIndex+value-start];
+            اگر(value<حد_بندی) {
+                واپس قدر_Maps[قدر_Map_اشاریہ+value-آغاز];
             }
-            valueMapIndex+=limit-start;  // Skip all entries for this range.
+            قدر_Map_اشاریہ+=حد_بندی-آغاز;  // Skip all entries for this range.
         }
-    } else {
+    } ورنہ {
         // List of values.
-        int32_t valuesStart=valueMapIndex;
-        int32_t nameGroupOffsetsStart=valueMapIndex+numRanges-0x10;
-        do {
-            int32_t v=valueMaps[valueMapIndex];
-            if(value<v) {
-                break;
+        int32_t اقدار_آغاز=قدر_Map_اشاریہ;
+        int32_t name_گروہ_Offsets_آغاز=قدر_Map_اشاریہ+عدد_Ranges-0x10;
+        کرو {
+            int32_t v=قدر_Maps[قدر_Map_اشاریہ];
+            اگر(value<v) {
+                توڑو;
             }
-            if(value==v) {
-                return valueMaps[nameGroupOffsetsStart+valueMapIndex-valuesStart];
+            اگر(value==v) {
+                واپس قدر_Maps[name_گروہ_Offsets_آغاز+قدر_Map_اشاریہ-اقدار_آغاز];
             }
-        } while(++valueMapIndex<nameGroupOffsetsStart);
+        } جب(++قدر_Map_اشاریہ<name_گروہ_Offsets_آغاز);
     }
-    return 0;
+    واپس 0;
 }
 
-const char *PropNameData::getName(const char *nameGroup, int32_t nameIndex) {
-    int32_t numNames=*nameGroup++;
-    if(nameIndex<0 || numNames<=nameIndex) {
-        return nullptr;
+ثابت حرف *Prop_Name_ڈیٹا::getName(ثابت حرف *name_گروہ, int32_t name_اشاریہ) {
+    int32_t عدد_نام=*name_گروہ++;
+    اگر(name_اشاریہ<0 || عدد_نام<=name_اشاریہ) {
+        واپس خالی_اشاریہ;
     }
     // Skip nameIndex names.
-    for(; nameIndex>0; --nameIndex) {
-        nameGroup=uprv_strchr(nameGroup, 0)+1;
+    برائے(; name_اشاریہ>0; --name_اشاریہ) {
+        name_گروہ=uprv_strchr(name_گروہ, 0)+1;
     }
-    if(*nameGroup==0) {
-        return nullptr;  // no name (Property[Value]Aliases.txt has "n/a")
+    اگر(*name_گروہ==0) {
+        واپس خالی_اشاریہ;  // no name (Property[Value]Aliases.txt has "n/a")
     }
-    return nameGroup;
+    واپس name_گروہ;
 }
 
-UBool PropNameData::containsName(BytesTrie &trie, const char *name) {
-    if(name==nullptr) {
-        return false;
+UBool Prop_Name_ڈیٹا::شامل_ہے_Name(بائٹیں_Trie &trie, ثابت حرف *name) {
+    اگر(name==خالی_اشاریہ) {
+        واپس جھوٹ;
     }
-    UStringTrieResult result=USTRINGTRIE_NO_VALUE;
-    char c;
-    while((c=*name++)!=0) {
-        c=uprv_invCharToLowercaseAscii(c);
+    UString_Trie_نتیجہ نتیجہ=USTRINGTRIE_NO_قدر;
+    حرف c;
+    جب((c=*name++)!=0) {
+        c=uprv_inv_Char_مقصد_Lowercase_Ascii(c);
         // Ignore delimiters '-', '_', and ASCII White_Space.
-        if(c==0x2d || c==0x5f || c==0x20 || (0x09<=c && c<=0x0d)) {
-            continue;
+        اگر(c==0x2d || c==0x5f || c==0x20 || (0x09<=c && c<=0x0d)) {
+            جاری;
         }
-        if(!USTRINGTRIE_HAS_NEXT(result)) {
-            return false;
+        اگر(!USTRINGTRIE_HAS_اگلا(نتیجہ)) {
+            واپس جھوٹ;
         }
-        result = trie.next(static_cast<uint8_t>(c));
+        نتیجہ = trie.next(static_cast<uint8_t>(c));
     }
-    return USTRINGTRIE_HAS_VALUE(result);
+    واپس USTRINGTRIE_HAS_قدر(نتیجہ);
 }
 
-const char *PropNameData::getPropertyName(int32_t property, int32_t nameChoice) {
-    int32_t valueMapIndex=findProperty(property);
-    if(valueMapIndex==0) {
-        return nullptr;  // Not a known property.
+ثابت حرف *Prop_Name_ڈیٹا::getPropertyName(int32_t property, int32_t nameChoice) {
+    int32_t قدر_Map_اشاریہ=ڈھونڈو_Property(property);
+    اگر(قدر_Map_اشاریہ==0) {
+        واپس خالی_اشاریہ;  // Not a known property.
     }
-    return getName(nameGroups+valueMaps[valueMapIndex], nameChoice);
+    واپس getName(nameGroups+قدر_Maps[قدر_Map_اشاریہ], nameChoice);
 }
 
-const char *PropNameData::getPropertyValueName(int32_t property, int32_t value, int32_t nameChoice) {
-    int32_t valueMapIndex=findProperty(property);
-    if(valueMapIndex==0) {
-        return nullptr;  // Not a known property.
+ثابت حرف *Prop_Name_ڈیٹا::get_Property_قدر_Name(int32_t property, int32_t value, int32_t nameChoice) {
+    int32_t قدر_Map_اشاریہ=ڈھونڈو_Property(property);
+    اگر(قدر_Map_اشاریہ==0) {
+        واپس خالی_اشاریہ;  // Not a known property.
     }
-    int32_t nameGroupOffset=findPropertyValueNameGroup(valueMaps[valueMapIndex+1], value);
-    if(nameGroupOffset==0) {
-        return nullptr;
+    int32_t name_گروہ_انحراف=ڈھونڈو_Property_قدر_Name_گروہ(قدر_Maps[قدر_Map_اشاریہ+1], value);
+    اگر(name_گروہ_انحراف==0) {
+        واپس خالی_اشاریہ;
     }
-    return getName(nameGroups+nameGroupOffset, nameChoice);
+    واپس getName(nameGroups+name_گروہ_انحراف, nameChoice);
 }
 
-int32_t PropNameData::getPropertyOrValueEnum(int32_t bytesTrieOffset, const char *alias) {
-    BytesTrie trie(bytesTries+bytesTrieOffset);
-    if(containsName(trie, alias)) {
-        return trie.getValue();
-    } else {
-        return UCHAR_INVALID_CODE;
+int32_t Prop_Name_ڈیٹا::get_Property_Or_قدر_Enum(int32_t بائٹیں_Trie_انحراف, ثابت حرف *alias) {
+    بائٹیں_Trie trie(بائٹیں_Tries+بائٹیں_Trie_انحراف);
+    اگر(شامل_ہے_Name(trie, alias)) {
+        واپس trie.get_قدر();
+    } ورنہ {
+        واپس UCHAR_INVALID_رمز;
     }
 }
 
-int32_t PropNameData::getPropertyEnum(const char *alias) {
-    return getPropertyOrValueEnum(0, alias);
+int32_t Prop_Name_ڈیٹا::getPropertyEnum(ثابت حرف *alias) {
+    واپس get_Property_Or_قدر_Enum(0, alias);
 }
 
-int32_t PropNameData::getPropertyValueEnum(int32_t property, const char *alias) {
-    int32_t valueMapIndex=findProperty(property);
-    if(valueMapIndex==0) {
-        return UCHAR_INVALID_CODE;  // Not a known property.
+int32_t Prop_Name_ڈیٹا::get_Property_قدر_Enum(int32_t property, ثابت حرف *alias) {
+    int32_t قدر_Map_اشاریہ=ڈھونڈو_Property(property);
+    اگر(قدر_Map_اشاریہ==0) {
+        واپس UCHAR_INVALID_رمز;  // Not a known property.
     }
-    valueMapIndex=valueMaps[valueMapIndex+1];
-    if(valueMapIndex==0) {
-        return UCHAR_INVALID_CODE;  // The property does not have named values.
+    قدر_Map_اشاریہ=قدر_Maps[قدر_Map_اشاریہ+1];
+    اگر(قدر_Map_اشاریہ==0) {
+        واپس UCHAR_INVALID_رمز;  // The property does not have named values.
     }
     // valueMapIndex is the start of the property's valueMap,
     // where the first word is the BytesTrie offset.
-    return getPropertyOrValueEnum(valueMaps[valueMapIndex], alias);
+    واپس get_Property_Or_قدر_Enum(قدر_Maps[قدر_Map_اشاریہ], alias);
 }
-U_NAMESPACE_END
+U_NAMESPACE_انتہا
 
 //----------------------------------------------------------------------
 // Public API implementation
 
-U_CAPI const char* U_EXPORT2
+U_CAPI ثابت حرف* U_EXPORT2
 u_getPropertyName(UProperty property,
                   UPropertyNameChoice nameChoice) UPRV_NO_SANITIZE_UNDEFINED {
     // The nameChoice is really an integer with a couple of named constants.
     // Unicode allows for names other than short and long ones.
     // If present, these will be returned for U_LONG_PROPERTY_NAME + i, where i=1, 2,...
     U_NAMESPACE_USE
-    return PropNameData::getPropertyName(property, nameChoice);
+    واپس Prop_Name_ڈیٹا::getPropertyName(property, nameChoice);
 }
 
 U_CAPI UProperty U_EXPORT2
-u_getPropertyEnum(const char* alias) {
+u_getPropertyEnum(ثابت حرف* alias) {
     U_NAMESPACE_USE
-    return (UProperty)PropNameData::getPropertyEnum(alias);
+    واپس (UProperty)Prop_Name_ڈیٹا::getPropertyEnum(alias);
 }
 
-U_CAPI const char* U_EXPORT2
-u_getPropertyValueName(UProperty property,
+U_CAPI ثابت حرف* U_EXPORT2
+u_get_Property_قدر_Name(UProperty property,
                        int32_t value,
                        UPropertyNameChoice nameChoice) UPRV_NO_SANITIZE_UNDEFINED {
     // The nameChoice is really an integer with a couple of named constants.
     // Unicode allows for names other than short and long ones.
     // If present, these will be returned for U_LONG_PROPERTY_NAME + i, where i=1, 2,...
     U_NAMESPACE_USE
-    return PropNameData::getPropertyValueName(property, value, nameChoice);
+    واپس Prop_Name_ڈیٹا::get_Property_قدر_Name(property, value, nameChoice);
 }
 
 U_CAPI int32_t U_EXPORT2
-u_getPropertyValueEnum(UProperty property,
-                       const char* alias) {
+u_get_Property_قدر_Enum(UProperty property,
+                       ثابت حرف* alias) {
     U_NAMESPACE_USE
-    return PropNameData::getPropertyValueEnum(property, alias);
+    واپس Prop_Name_ڈیٹا::get_Property_قدر_Enum(property, alias);
 }
 
-U_CAPI const char*  U_EXPORT2
-uscript_getName(UScriptCode scriptCode){
-    return u_getPropertyValueName(UCHAR_SCRIPT, scriptCode,
+U_CAPI ثابت حرف*  U_EXPORT2
+uscript_getName(UScript_رمز script_رمز){
+    واپس u_get_Property_قدر_Name(UCHAR_SCRIPT, script_رمز,
                                   U_LONG_PROPERTY_NAME);
 }
 
-U_CAPI const char*  U_EXPORT2
-uscript_getShortName(UScriptCode scriptCode){
-    return u_getPropertyValueName(UCHAR_SCRIPT, scriptCode,
+U_CAPI ثابت حرف*  U_EXPORT2
+uscript_getShortName(UScript_رمز script_رمز){
+    واپس u_get_Property_قدر_Name(UCHAR_SCRIPT, script_رمز,
                                   U_SHORT_PROPERTY_NAME);
 }

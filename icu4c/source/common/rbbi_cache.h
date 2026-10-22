@@ -3,17 +3,17 @@
 
 // file: rbbi_cache.h
 //
-#ifndef RBBI_CACHE_H
-#define RBBI_CACHE_H
+#اگر_غیر_تعریف_شدہ RBBI_CACHE_H
+#تعریف_کرو RBBI_CACHE_H
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#اگر !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/rbbi.h"
-#include "unicode/uobject.h"
+#شامل "unicode/rbbi.h"
+#شامل "unicode/uobject.h"
 
-#include "uvectr32.h"
+#شامل "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
@@ -31,15 +31,15 @@ U_NAMESPACE_BEGIN
  *                 The boundaries are stored in a simple ArrayList (vector), with the
  *                 assumption that they will be accessed sequentially.
  */                 
-class RuleBasedBreakIterator::DictionaryCache: public UMemory {
-  public:
-     DictionaryCache(RuleBasedBreakIterator *bi, UErrorCode &status);
+class قاعدہ_Based_Break_Iterator::DictionaryCache: عوامی UMemory {
+  عوامی:
+     DictionaryCache(قاعدہ_Based_Break_Iterator *bi, UError_رمز &حالت_2);
      ~DictionaryCache();
 
-     void reset();
+     خالی reset();
 
-     UBool following(int32_t fromPos, int32_t *pos, int32_t *statusIndex);
-     UBool preceding(int32_t fromPos, int32_t *pos, int32_t *statusIndex);
+     UBool following(int32_t fromPos, int32_t *pos, int32_t *حالت_اشاریہ);
+     UBool preceding(int32_t fromPos, int32_t *pos, int32_t *حالت_اشاریہ);
 
     /**
      * Populate the cache with the dictionary based boundaries within a region of text.
@@ -49,28 +49,28 @@ class RuleBasedBreakIterator::DictionaryCache: public UMemory {
      * @param otherRuleStatus The rule status index that applies to boundaries other than startPos
      * @internal
      */
-    void populateDictionary(int32_t startPos, int32_t endPos,
-                         int32_t firstRuleStatus, int32_t otherRuleStatus);
+    خالی populateDictionary(int32_t آغاز_Pos, int32_t انتہا_Pos,
+                         int32_t پہلا_قاعدہ_حالت, int32_t other_قاعدہ_حالت);
 
 
 
-    RuleBasedBreakIterator *fBI;
+    قاعدہ_Based_Break_Iterator *fBI;
     
     UVector32           fBreaks;                // A vector containing the boundaries.
-    int32_t             fPositionInCache;       // Index in fBreaks of last boundary returned by following()
+    int32_t             f_Position_اندر_Cache;       // Index in fBreaks of last boundary returned by following()
                                                 //    or preceding(). Optimizes sequential access.
-    int32_t             fStart;                 // Text position of first boundary in cache.
-    int32_t             fLimit;                 // Last boundary in cache. Which is the limit of the
+    int32_t             f_آغاز;                 // Text position of first boundary in cache.
+    int32_t             f_حد_بندی;                 // Last boundary in cache. Which is the limit of the
                                                 //    text segment being handled by the dictionary.
-    int32_t             fFirstRuleStatusIndex;  // Rule status info for first boundary.
-    int32_t             fOtherRuleStatusIndex;  // Rule status info for 2nd through last boundaries.
+    int32_t             f_پہلا_قاعدہ_حالت_اشاریہ;  // Rule status info for first boundary.
+    int32_t             f_Other_قاعدہ_حالت_اشاریہ;  // Rule status info for 2nd through last boundaries.
 
     // If `this->isWordLike`, the status of dictionary breaks is equal to the status of the final
     // break of the rule-based segment they refine (fOtherRuleStatusIndex); otherwise, dictionary
     // breaks have status 0.
     // For compatibility, this property is determined by the largest status value used by `*fBI`:
     // rules that have a largest status greater than 100 are considered word-like.
-    bool isWordLike;
+    bool is_لفظ_Like;
 };
 
 
@@ -90,29 +90,29 @@ class RuleBasedBreakIterator::DictionaryCache: public UMemory {
  * size of the circular cache buffer.
  */
 
-class RuleBasedBreakIterator::BreakCache: public UMemory {
-  public:
-                BreakCache(RuleBasedBreakIterator *bi, UErrorCode &status);
-    virtual     ~BreakCache();
-    void        reset(int32_t pos = 0, int32_t ruleStatus = 0);
-    void        next() {    if (fBufIdx == fEndBufIdx) {
-                                nextOL();
-                            } else {
-                                fBufIdx = modChunkSize(fBufIdx + 1);
-                                fTextIdx = fBI->fPosition = fBoundaries[fBufIdx];
-                                fBI->fRuleStatusIndex = fStatuses[fBufIdx];
+class قاعدہ_Based_Break_Iterator::BreakCache: عوامی UMemory {
+  عوامی:
+                BreakCache(قاعدہ_Based_Break_Iterator *bi, UError_رمز &حالت_2);
+    مجازی     ~BreakCache();
+    خالی        reset(int32_t pos = 0, int32_t قاعدہ_حالت = 0);
+    خالی        اگلا() {    اگر (fBufIdx == f_انتہا_Buf_Idx) {
+                                اگلا_OL();
+                            } ورنہ {
+                                fBufIdx = mod_Chunk_سائز(fBufIdx + 1);
+                                f_متن_Idx = fBI->fPosition = fBoundaries[fBufIdx];
+                                fBI->f_قاعدہ_حالت_اشاریہ = fStatuses[fBufIdx];
                             }
                 }
 
 
-    void        nextOL();
-    void        previous(UErrorCode &status);
+    خالی        اگلا_OL();
+    خالی        پچھلا_2(UError_رمز &حالت_2);
 
     // Move the iteration state to the position following the startPosition.
     // Input position must be pinned to the input length.
-    void        following(int32_t startPosition, UErrorCode &status);
+    خالی        following(int32_t آغاز_Position, UError_رمز &حالت_2);
 
-    void        preceding(int32_t startPosition, UErrorCode &status);
+    خالی        preceding(int32_t آغاز_Position, UError_رمز &حالت_2);
 
     /*
      * Update the state of the public BreakIterator (fBI) to reflect the
@@ -135,7 +135,7 @@ class RuleBasedBreakIterator::BreakCache: public UMemory {
      *
      * Return false if the operation failed.
      */
-    UBool populateNear(int32_t position, UErrorCode &status);
+    UBool populateNear(int32_t position, UError_رمز &حالت_2);
 
     /**
      *  Add boundary(s) to the cache following the current last boundary.
@@ -149,9 +149,9 @@ class RuleBasedBreakIterator::BreakCache: public UMemory {
      *  Leave the iteration position on the first added boundary.
      *  Return false if no boundaries could be added (if at the start of the text.)
      */
-    UBool populatePreceding(UErrorCode &status);
+    UBool populatePreceding(UError_رمز &حالت_2);
 
-    enum UpdatePositionValues {
+    شمار Update_Position_اقدار {
         RetainCachePosition = 0,
         UpdateCachePosition = 1
     };
@@ -161,7 +161,7 @@ class RuleBasedBreakIterator::BreakCache: public UMemory {
      * The current position can be left as it was, or changed to the newly added boundary,
      * as specified by the update parameter.
      */
-    void addFollowing(int32_t position, int32_t ruleStatusIdx, UpdatePositionValues update);
+    خالی جوڑو_Following(int32_t position, int32_t قاعدہ_حالت_Idx, Update_Position_اقدار update);
 
 
     /*
@@ -169,7 +169,7 @@ class RuleBasedBreakIterator::BreakCache: public UMemory {
      * The current position can be left as it was, or changed to the newly added boundary,
      * as specified by the update parameter.
      */
-    bool addPreceding(int32_t position, int32_t ruleStatusIdx, UpdatePositionValues update);
+    bool جوڑو_Preceding(int32_t position, int32_t قاعدہ_حالت_Idx, Update_Position_اقدار update);
 
     /**
      *  Set the cache position to the specified position, or, if the position
@@ -180,31 +180,31 @@ class RuleBasedBreakIterator::BreakCache: public UMemory {
      *  Return true if successful, false if the specified position is after
      *  the last cached boundary or before the first.
      */
-    UBool                   seek(int32_t startPosition);
+    UBool                   seek(int32_t آغاز_Position);
 
-    void dumpCache();
+    خالی dumpCache();
 
-  private:
-    static inline int32_t   modChunkSize(int index) { return index & (CACHE_SIZE - 1); }
+  نجی:
+    ساکن اندرونی int32_t   mod_Chunk_سائز(صحیح اشاریہ) { واپس اشاریہ & (CACHE_سائز - 1); }
 
-    static constexpr int32_t CACHE_SIZE = 128;
-    static_assert((CACHE_SIZE & (CACHE_SIZE-1)) == 0, "CACHE_SIZE must be power of two.");
+    ساکن constexpr int32_t CACHE_سائز = 128;
+    static_assert((CACHE_سائز & (CACHE_سائز-1)) == 0, "CACHE_SIZE must be power of two.");
 
-    RuleBasedBreakIterator *fBI;
-    int32_t                 fStartBufIdx;
-    int32_t                 fEndBufIdx;    // inclusive
+    قاعدہ_Based_Break_Iterator *fBI;
+    int32_t                 f_آغاز_Buf_Idx;
+    int32_t                 f_انتہا_Buf_Idx;    // inclusive
 
-    int32_t                 fTextIdx;
+    int32_t                 f_متن_Idx;
     int32_t                 fBufIdx;
 
-    int32_t                 fBoundaries[CACHE_SIZE];
-    uint16_t                fStatuses[CACHE_SIZE];
+    int32_t                 fBoundaries[CACHE_سائز];
+    uint16_t                fStatuses[CACHE_سائز];
 
-    UVector32               fSideBuffer;
+    UVector32               f_Side_بفر;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا
 
-#endif // #if !UCONFIG_NO_BREAK_ITERATION
+#اگر_ختم // #if !UCONFIG_NO_BREAK_ITERATION
 
-#endif // RBBI_CACHE_H
+#اگر_ختم // RBBI_CACHE_H

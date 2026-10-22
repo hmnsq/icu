@@ -4,67 +4,67 @@
 // localeprioritylist.cpp
 // created: 2019jul11 Markus W. Scherer
 
-#include "unicode/utypes.h"
-#include "unicode/localpointer.h"
-#include "unicode/locid.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "localeprioritylist.h"
-#include "uarrsort.h"
-#include "uassert.h"
-#include "uhash.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/localpointer.h"
+#شامل "unicode/locid.h"
+#شامل "unicode/stringpiece.h"
+#شامل "unicode/uobject.h"
+#شامل "charstr.h"
+#شامل "cmemory.h"
+#شامل "localeprioritylist.h"
+#شامل "uarrsort.h"
+#شامل "uassert.h"
+#شامل "uhash.h"
 
 U_NAMESPACE_BEGIN
 
-namespace {
+نامخلا {
 
-int32_t hashLocale(const UHashTok token) {
-    const auto* locale = static_cast<const Locale*>(token.pointer);
-    return locale->hashCode();
+int32_t hashLocale(ثابت UHashTok token) {
+    ثابت خودکار* locale = static_cast<ثابت Locale*>(token.اشارہ_گر);
+    واپس locale->hash_رمز();
 }
 
-UBool compareLocales(const UHashTok t1, const UHashTok t2) {
-    const auto* l1 = static_cast<const Locale*>(t1.pointer);
-    const auto* l2 = static_cast<const Locale*>(t2.pointer);
-    return *l1 == *l2;
+UBool compareLocales(ثابت UHashTok t1, ثابت UHashTok t2) {
+    ثابت خودکار* l1 = static_cast<ثابت Locale*>(t1.اشارہ_گر);
+    ثابت خودکار* l2 = static_cast<ثابت Locale*>(t2.اشارہ_گر);
+    واپس *l1 == *l2;
 }
 
-constexpr int32_t WEIGHT_ONE = 1000;
+constexpr int32_t وزن_ONE = 1000;
 
-struct LocaleAndWeight {
+ساخت Locale_And_وزن {
     Locale *locale;
-    int32_t weight;  // 0..1000 = 0.0..1.0
-    int32_t index;  // force stable sort
+    int32_t وزن;  // 0..1000 = 0.0..1.0
+    int32_t اشاریہ;  // force stable sort
 
-    int32_t compare(const LocaleAndWeight &other) const {
-        int32_t diff = other.weight - weight;  // descending: other-this
-        if (diff != 0) { return diff; }
-        return index - other.index;
+    int32_t compare(ثابت Locale_And_وزن &other) ثابت {
+        int32_t diff = other.وزن - وزن;  // descending: other-this
+        اگر (diff != 0) { واپس diff; }
+        واپس اشاریہ - other.اشاریہ;
     }
 };
 
 int32_t U_CALLCONV
-compareLocaleAndWeight(const void * /*context*/, const void *left, const void *right) {
-    return static_cast<const LocaleAndWeight *>(left)->
-        compare(*static_cast<const LocaleAndWeight *>(right));
+compare_Locale_And_وزن(ثابت خالی * /*context*/, ثابت خالی *بائیں, ثابت خالی *دائیں) {
+    واپس static_cast<ثابت Locale_And_وزن *>(بائیں)->
+        compare(*static_cast<ثابت Locale_And_وزن *>(دائیں));
 }
 
-const char *skipSpaces(const char *p, const char *limit) {
-    while (p < limit && *p == ' ') { ++p; }
-    return p;
+ثابت حرف *skipSpaces(ثابت حرف *p, ثابت حرف *حد_بندی) {
+    جب (p < حد_بندی && *p == ' ') { ++p; }
+    واپس p;
 }
 
-int32_t findTagLength(const char *p, const char *limit) {
+int32_t ڈھونڈو_لیبل_لمبائی(ثابت حرف *p, ثابت حرف *حد_بندی) {
     // Look for accept-language delimiters.
     // Leave other validation up to the Locale constructor.
-    const char *q;
-    for (q = p; q < limit; ++q) {
-        char c = *q;
-        if (c == ' ' || c == ',' || c == ';') { break; }
+    ثابت حرف *q;
+    برائے (q = p; q < حد_بندی; ++q) {
+        حرف c = *q;
+        اگر (c == ' ' || c == ',' || c == ';') { توڑو; }
     }
-    return static_cast<int32_t>(q - p);
+    واپس static_cast<int32_t>(q - p);
 }
 
 /**
@@ -72,25 +72,25 @@ int32_t findTagLength(const char *p, const char *limit) {
  * Advances p to after the parsed substring.
  * Returns a negative value if parsing fails.
  */
-int32_t parseWeight(const char *&p, const char *limit) {
-    p = skipSpaces(p, limit);
-    char c;
-    if (p == limit || ((c = *p) != '0' && c != '1')) { return -1; }
-    int32_t weight = (c - '0') * 1000;
-    if (++p == limit || *p != '.') { return weight; }
+int32_t parse_وزن(ثابت حرف *&p, ثابت حرف *حد_بندی) {
+    p = skipSpaces(p, حد_بندی);
+    حرف c;
+    اگر (p == حد_بندی || ((c = *p) != '0' && c != '1')) { واپس -1; }
+    int32_t وزن = (c - '0') * 1000;
+    اگر (++p == حد_بندی || *p != '.') { واپس وزن; }
     int32_t multiplier = 100;
-    while (++p != limit && '0' <= (c = *p) && c <= '9') {
+    جب (++p != حد_بندی && '0' <= (c = *p) && c <= '9') {
         c -= '0';
-        if (multiplier > 0) {
-            weight += c * multiplier;
+        اگر (multiplier > 0) {
+            وزن += c * multiplier;
             multiplier /= 10;
-        } else if (multiplier == 0) {
+        } ورنہ اگر (multiplier == 0) {
             // round up
-            if (c >= 5) { ++weight; }
+            اگر (c >= 5) { ++وزن; }
             multiplier = -1;
         }  // else ignore further fraction digits
     }
-    return weight <= WEIGHT_ONE ? weight : -1;  // bad if > 1.0
+    واپس وزن <= وزن_ONE ? وزن : -1;  // bad if > 1.0
 }
 
 }  // namespace
@@ -106,135 +106,135 @@ int32_t parseWeight(const char *&p, const char *limit) {
  * template export declaration of some kind for the MaybeStackArray specialization
  * to be properly exported from the common DLL.
  */
-struct LocaleAndWeightArray : public UMemory {
-    MaybeStackArray<LocaleAndWeight, 20> array;
+ساخت Locale_And_وزن_Array : عوامی UMemory {
+    Maybe_ڈھیر_Array<Locale_And_وزن, 20> array;
 };
 
-LocalePriorityList::LocalePriorityList(StringPiece s, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return; }
-    list = new LocaleAndWeightArray();
-    if (list == nullptr) {
-        errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+Locale_ترجیح_List::Locale_ترجیح_List(StringPiece s, UError_رمز &error_رمز) {
+    اگر (U_FAILURE(error_رمز)) { واپس; }
+    list = نیا Locale_And_وزن_Array();
+    اگر (list == خالی_اشاریہ) {
+        error_رمز = U_حافظہ_تخصیص_ERROR;
+        واپس;
     }
-    const char *p = s.data();
-    const char *limit = p + s.length();
-    while ((p = skipSpaces(p, limit)) != limit) {
-        if (*p == ',') {  // empty range field
+    ثابت حرف *p = s.ڈیٹا();
+    ثابت حرف *حد_بندی = p + s.length();
+    جب ((p = skipSpaces(p, حد_بندی)) != حد_بندی) {
+        اگر (*p == ',') {  // empty range field
             ++p;
-            continue;
+            جاری;
         }
-        int32_t tagLength = findTagLength(p, limit);
-        if (tagLength == 0) {
-            errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+        int32_t لیبل_لمبائی = ڈھونڈو_لیبل_لمبائی(p, حد_بندی);
+        اگر (لیبل_لمبائی == 0) {
+            error_رمز = U_ILLEGAL_دلیل_ERROR;
+            واپس;
         }
-        CharString tag(p, tagLength, errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        Locale locale = Locale(tag.data());
-        if (locale.isBogus()) {
-            errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+        CharString لیبل(p, لیبل_لمبائی, error_رمز);
+        اگر (U_FAILURE(error_رمز)) { واپس; }
+        Locale locale = Locale(لیبل.ڈیٹا());
+        اگر (locale.isBogus()) {
+            error_رمز = U_ILLEGAL_دلیل_ERROR;
+            واپس;
         }
-        int32_t weight = WEIGHT_ONE;
-        if ((p = skipSpaces(p + tagLength, limit)) != limit && *p == ';') {
-            if ((p = skipSpaces(p + 1, limit)) == limit || *p != 'q' ||
-                    (p = skipSpaces(p + 1, limit)) == limit || *p != '=' ||
-                    (++p, (weight = parseWeight(p, limit)) < 0)) {
-                errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                return;
+        int32_t وزن = وزن_ONE;
+        اگر ((p = skipSpaces(p + لیبل_لمبائی, حد_بندی)) != حد_بندی && *p == ';') {
+            اگر ((p = skipSpaces(p + 1, حد_بندی)) == حد_بندی || *p != 'q' ||
+                    (p = skipSpaces(p + 1, حد_بندی)) == حد_بندی || *p != '=' ||
+                    (++p, (وزن = parse_وزن(p, حد_بندی)) < 0)) {
+                error_رمز = U_ILLEGAL_دلیل_ERROR;
+                واپس;
             }
-            p = skipSpaces(p, limit);
+            p = skipSpaces(p, حد_بندی);
         }
-        if (p != limit && *p != ',') {  // trailing junk
-            errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+        اگر (p != حد_بندی && *p != ',') {  // trailing junk
+            error_رمز = U_ILLEGAL_دلیل_ERROR;
+            واپس;
         }
-        add(locale, weight, errorCode);
-        if (p == limit) { break; }
+        جوڑو(locale, وزن, error_رمز);
+        اگر (p == حد_بندی) { توڑو; }
         ++p;
     }
-    sort(errorCode);
+    sort(error_رمز);
 }
 
-LocalePriorityList::~LocalePriorityList() {
-    if (list != nullptr) {
-        for (int32_t i = 0; i < listLength; ++i) {
-            delete list->array[i].locale;
+Locale_ترجیح_List::~Locale_ترجیح_List() {
+    اگر (list != خالی_اشاریہ) {
+        برائے (int32_t i = 0; i < list_لمبائی; ++i) {
+            حذف list->array[i].locale;
         }
-        delete list;
+        حذف list;
     }
     uhash_close(map);
 }
 
-const Locale *LocalePriorityList::localeAt(int32_t i) const {
-    return list->array[i].locale;
+ثابت Locale *Locale_ترجیح_List::localeAt(int32_t i) ثابت {
+    واپس list->array[i].locale;
 }
 
-Locale *LocalePriorityList::orphanLocaleAt(int32_t i) {
-    if (list == nullptr) { return nullptr; }
-    LocaleAndWeight &lw = list->array[i];
+Locale *Locale_ترجیح_List::orphanLocaleAt(int32_t i) {
+    اگر (list == خالی_اشاریہ) { واپس خالی_اشاریہ; }
+    Locale_And_وزن &lw = list->array[i];
     Locale *l = lw.locale;
-    lw.locale = nullptr;
-    return l;
+    lw.locale = خالی_اشاریہ;
+    واپس l;
 }
 
-bool LocalePriorityList::add(const Locale &locale, int32_t weight, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    if (map == nullptr) {
-        if (weight <= 0) { return true; }  // do not add q=0
-        map = uhash_open(hashLocale, compareLocales, uhash_compareLong, &errorCode);
-        if (U_FAILURE(errorCode)) { return false; }
+منطقی Locale_ترجیح_List::جوڑو(ثابت Locale &locale, int32_t وزن, UError_رمز &error_رمز) {
+    اگر (U_FAILURE(error_رمز)) { واپس جھوٹ; }
+    اگر (map == خالی_اشاریہ) {
+        اگر (وزن <= 0) { واپس سچ; }  // do not add q=0
+        map = uhash_open(hashLocale, compareLocales, uhash_compareLong, &error_رمز);
+        اگر (U_FAILURE(error_رمز)) { واپس جھوٹ; }
     }
-    LocalPointer<Locale> clone;
-    UBool found = false;
-    int32_t index = uhash_getiAndFound(map, &locale, &found);
-    if (found) {
+    Local_اشارہ_گر<Locale> clone;
+    UBool ملا = جھوٹ;
+    int32_t اشاریہ = uhash_geti_And_ملا(map, &locale, &ملا);
+    اگر (ملا) {
         // Duplicate: Remove the old item and append it anew.
-        LocaleAndWeight &lw = list->array[index];
+        Locale_And_وزن &lw = list->array[اشاریہ];
         clone.adoptInstead(lw.locale);
-        lw.locale = nullptr;
-        lw.weight = 0;
-        ++numRemoved;
+        lw.locale = خالی_اشاریہ;
+        lw.وزن = 0;
+        ++عدد_Removed;
     }
-    if (weight <= 0) {  // do not add q=0
-        if (found) {
+    اگر (وزن <= 0) {  // do not add q=0
+        اگر (ملا) {
             // Not strictly necessary but cleaner.
             uhash_removei(map, &locale);
         }
-        return true;
+        واپس سچ;
     }
-    if (clone.isNull()) {
+    اگر (clone.isNull()) {
         clone.adoptInstead(locale.clone());
-        if (clone.isNull() || (clone->isBogus() && !locale.isBogus())) {
-            errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return false;
+        اگر (clone.isNull() || (clone->isBogus() && !locale.isBogus())) {
+            error_رمز = U_حافظہ_تخصیص_ERROR;
+            واپس جھوٹ;
         }
     }
-    if (listLength == list->array.getCapacity()) {
-        int32_t newCapacity = listLength < 50 ? 100 : 4 * listLength;
-        if (list->array.resize(newCapacity, listLength) == nullptr) {
-            errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return false;
+    اگر (list_لمبائی == list->array.get_استعداد()) {
+        int32_t new_استعداد = list_لمبائی < 50 ? 100 : 4 * list_لمبائی;
+        اگر (list->array.resize(new_استعداد, list_لمبائی) == خالی_اشاریہ) {
+            error_رمز = U_حافظہ_تخصیص_ERROR;
+            واپس جھوٹ;
         }
     }
-    uhash_putiAllowZero(map, clone.getAlias(), listLength, &errorCode);
-    if (U_FAILURE(errorCode)) { return false; }
-    LocaleAndWeight &lw = list->array[listLength];
+    uhash_putiAllowZero(map, clone.getAlias(), list_لمبائی, &error_رمز);
+    اگر (U_FAILURE(error_رمز)) { واپس جھوٹ; }
+    Locale_And_وزن &lw = list->array[list_لمبائی];
     lw.locale = clone.orphan();
-    lw.weight = weight;
-    lw.index = listLength++;
-    if (weight < WEIGHT_ONE) { hasWeights = true; }
-    U_ASSERT(uhash_count(map) == getLength());
-    return true;
+    lw.وزن = وزن;
+    lw.اشاریہ = list_لمبائی++;
+    اگر (وزن < وزن_ONE) { hasWeights = سچ; }
+    U_ASSERT(uhash_گنتی(map) == get_لمبائی());
+    واپس سچ;
 }
 
-void LocalePriorityList::sort(UErrorCode &errorCode) {
+خالی Locale_ترجیح_List::sort(UError_رمز &error_رمز) {
     // Sort by descending weights if there is a mix of weights.
     // The comparator forces a stable sort via the item index.
-    if (U_FAILURE(errorCode) || getLength() <= 1 || !hasWeights) { return; }
-    uprv_sortArray(list->array.getAlias(), listLength, sizeof(LocaleAndWeight),
-                   compareLocaleAndWeight, nullptr, false, &errorCode);
+    اگر (U_FAILURE(error_رمز) || get_لمبائی() <= 1 || !hasWeights) { واپس; }
+    uprv_ترتیب_دو_Array(list->array.getAlias(), list_لمبائی, حجم(Locale_And_وزن),
+                   compare_Locale_And_وزن, خالی_اشاریہ, جھوٹ, &error_رمز);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا

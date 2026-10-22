@@ -82,71 +82,71 @@
  *  substituted to be the default substitution character.
  */
 
-#ifndef UCNV_ERR_H
-#define UCNV_ERR_H
+#اگر_غیر_تعریف_شدہ UCNV_ERR_H
+#تعریف_کرو UCNV_ERR_H
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#اگر !UCONFIG_NO_CONVERSION
 
 /** Forward declaring the UConverter structure. @stable ICU 2.0 */
-struct UConverter;
+ساخت UConverter;
 
 /** @stable ICU 2.0 */
-typedef struct UConverter UConverter;
+قسمتعریف ساخت UConverter UConverter;
 
 /**
  * FROM_U, TO_U context options for sub callback
  * @stable ICU 2.0
  */
-#define UCNV_SUB_STOP_ON_ILLEGAL "i"
+#تعریف_کرو UCNV_SUB_STOP_ON_ILLEGAL "i"
 
 /**
  * FROM_U, TO_U context options for skip callback
  * @stable ICU 2.0
  */
-#define UCNV_SKIP_STOP_ON_ILLEGAL "i"
+#تعریف_کرو UCNV_SKIP_STOP_ON_ILLEGAL "i"
 
 /**
  * FROM_U_CALLBACK_ESCAPE context option to escape the code unit according to ICU (%UXXXX) 
  * @stable ICU 2.0
  */
-#define UCNV_ESCAPE_ICU       NULL
+#تعریف_کرو UCNV_ESCAPE_ICU       تہی
 /**
  * FROM_U_CALLBACK_ESCAPE context option to escape the code unit according to JAVA (\\uXXXX)
  * @stable ICU 2.0
  */
-#define UCNV_ESCAPE_JAVA      "J"
+#تعریف_کرو UCNV_ESCAPE_JAVA      "J"
 /**
  * FROM_U_CALLBACK_ESCAPE context option to escape the code unit according to C (\\uXXXX \\UXXXXXXXX)
  * TO_U_CALLBACK_ESCAPE option to escape the character value according to C (\\xXXXX)
  * @stable ICU 2.0
  */
-#define UCNV_ESCAPE_C         "C"
+#تعریف_کرو UCNV_ESCAPE_C         "C"
 /**
  * FROM_U_CALLBACK_ESCAPE context option to escape the code unit according to XML Decimal escape \htmlonly(&amp;#DDDD;)\endhtmlonly
  * TO_U_CALLBACK_ESCAPE context option to escape the character value according to XML Decimal escape \htmlonly(&amp;#DDDD;)\endhtmlonly
  * @stable ICU 2.0
  */
-#define UCNV_ESCAPE_XML_DEC   "D"
+#تعریف_کرو UCNV_ESCAPE_XML_DEC   "D"
 /**
  * FROM_U_CALLBACK_ESCAPE context option to escape the code unit according to XML Hex escape \htmlonly(&amp;#xXXXX;)\endhtmlonly
  * TO_U_CALLBACK_ESCAPE context option to escape the character value according to XML Hex escape \htmlonly(&amp;#xXXXX;)\endhtmlonly
  * @stable ICU 2.0
  */
-#define UCNV_ESCAPE_XML_HEX   "X"
+#تعریف_کرو UCNV_ESCAPE_XML_HEX   "X"
 /**
  * FROM_U_CALLBACK_ESCAPE context option to escape the code unit according to Unicode (U+XXXXX)
  * @stable ICU 2.0
  */
-#define UCNV_ESCAPE_UNICODE   "U"
+#تعریف_کرو UCNV_ESCAPE_UNICODE   "U"
 
 /**
  * FROM_U_CALLBACK_ESCAPE context option to escape the code unit according to CSS2 conventions (\\HH..H<space>, that is,
  * a backslash, 1..6 hex digits, and a space)
  * @stable ICU 4.0
  */
-#define UCNV_ESCAPE_CSS2   "S"
+#تعریف_کرو UCNV_ESCAPE_CSS2   "S"
 
 /** 
  * The process condition code to be used with the callbacks.  
@@ -154,7 +154,7 @@ typedef struct UConverter UConverter;
  * passed on to any chained callbacks.
  * @stable ICU 2.0
  */
-typedef enum {
+قسمتعریف شمار {
     UCNV_UNASSIGNED = 0,  /**< The code point is unassigned.
                              The error code U_INVALID_CHAR_FOUND will be set. */
     UCNV_ILLEGAL = 1,     /**< The code point is illegal. For example, 
@@ -191,32 +191,32 @@ typedef enum {
  * The structure for the fromUnicode callback function parameter.
  * @stable ICU 2.0
  */
-typedef struct {
-    uint16_t size;              /**< The size of this struct. @stable ICU 2.0 */
+قسمتعریف ساخت {
+    uint16_t سائز_2;              /**< The size of this struct. @stable ICU 2.0 */
     UBool flush;                /**< The internal state of converter will be reset and data flushed if set to true. @stable ICU 2.0    */
     UConverter *converter;      /**< Pointer to the converter that is opened and to which this struct is passed as an argument. @stable ICU 2.0  */
-    const UChar *source;        /**< Pointer to the source source buffer. @stable ICU 2.0    */
-    const UChar *sourceLimit;   /**< Pointer to the limit (end + 1) of source buffer. @stable ICU 2.0    */
-    char *target;               /**< Pointer to the target buffer. @stable ICU 2.0    */
-    const char *targetLimit;    /**< Pointer to the limit (end + 1) of target buffer. @stable ICU 2.0     */
+    ثابت UChar *ماخذ;        /**< Pointer to the source source buffer. @stable ICU 2.0    */
+    ثابت UChar *ماخذ_حد_بندی;   /**< Pointer to the limit (end + 1) of source buffer. @stable ICU 2.0    */
+    حرف *ہدف;               /**< Pointer to the target buffer. @stable ICU 2.0    */
+    ثابت حرف *ہدف_حد_بندی;    /**< Pointer to the limit (end + 1) of target buffer. @stable ICU 2.0     */
     int32_t *offsets;           /**< Pointer to the buffer that receives the offsets. *offset = blah ; offset++;. @stable ICU 2.0  */
-} UConverterFromUnicodeArgs;
+} UConverter_From_Unicode_دلائل;
 
 
 /**
  * The structure for the toUnicode callback function parameter.
  * @stable ICU 2.0
  */
-typedef struct {
-    uint16_t size;              /**< The size of this struct   @stable ICU 2.0 */
+قسمتعریف ساخت {
+    uint16_t سائز_2;              /**< The size of this struct   @stable ICU 2.0 */
     UBool flush;                /**< The internal state of converter will be reset and data flushed if set to true. @stable ICU 2.0   */
     UConverter *converter;      /**< Pointer to the converter that is opened and to which this struct is passed as an argument. @stable ICU 2.0 */
-    const char *source;         /**< Pointer to the source source buffer. @stable ICU 2.0    */
-    const char *sourceLimit;    /**< Pointer to the limit (end + 1) of source buffer. @stable ICU 2.0    */
-    UChar *target;              /**< Pointer to the target buffer. @stable ICU 2.0    */
-    const UChar *targetLimit;   /**< Pointer to the limit (end + 1) of target buffer. @stable ICU 2.0     */
+    ثابت حرف *ماخذ;         /**< Pointer to the source source buffer. @stable ICU 2.0    */
+    ثابت حرف *ماخذ_حد_بندی;    /**< Pointer to the limit (end + 1) of source buffer. @stable ICU 2.0    */
+    UChar *ہدف;              /**< Pointer to the target buffer. @stable ICU 2.0    */
+    ثابت UChar *ہدف_حد_بندی;   /**< Pointer to the limit (end + 1) of target buffer. @stable ICU 2.0     */
     int32_t *offsets;           /**< Pointer to the buffer that receives the offsets. *offset = blah ; offset++;. @stable ICU 2.0  */
-} UConverterToUnicodeArgs;
+} UConverter_مقصد_Unicode_دلائل;
 
 
 /**
@@ -233,14 +233,14 @@ typedef struct {
  * @param err This should always be set to a failure status prior to calling.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_STOP (
-                  const void *context,
-                  UConverterFromUnicodeArgs *fromUArgs,
-                  const UChar* codeUnits,
-                  int32_t length,
-                  UChar32 codePoint,
+U_CAPI خالی U_EXPORT2 UCNV_FROM_U_CALLBACK_STOP (
+                  ثابت خالی *context,
+                  UConverter_From_Unicode_دلائل *fromUArgs,
+                  ثابت UChar* رمز_Units,
+                  int32_t لمبائی,
+                  UChar32 رمز_نقطہ,
                   UConverterCallbackReason reason,
-                  UErrorCode * err);
+                  UError_رمز * err);
 
 
 
@@ -257,13 +257,13 @@ U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_STOP (
  * @param err This should always be set to a failure status prior to calling.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_STOP (
-                  const void *context,
-                  UConverterToUnicodeArgs *toUArgs,
-                  const char* codeUnits,
-                  int32_t length,
+U_CAPI خالی U_EXPORT2 UCNV_مقصد_U_CALLBACK_STOP (
+                  ثابت خالی *context,
+                  UConverter_مقصد_Unicode_دلائل *مقصد_UArgs,
+                  ثابت حرف* رمز_Units,
+                  int32_t لمبائی,
                   UConverterCallbackReason reason,
-                  UErrorCode * err);
+                  UError_رمز * err);
 
 /**
  * DO NOT CALL THIS FUNCTION DIRECTLY!
@@ -284,14 +284,14 @@ U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_STOP (
  *      otherwise this value will be set to a failure status.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_SKIP (
-                  const void *context,
-                  UConverterFromUnicodeArgs *fromUArgs,
-                  const UChar* codeUnits,
-                  int32_t length,
-                  UChar32 codePoint,
+U_CAPI خالی U_EXPORT2 UCNV_FROM_U_CALLBACK_SKIP (
+                  ثابت خالی *context,
+                  UConverter_From_Unicode_دلائل *fromUArgs,
+                  ثابت UChar* رمز_Units,
+                  int32_t لمبائی,
+                  UChar32 رمز_نقطہ,
                   UConverterCallbackReason reason,
-                  UErrorCode * err);
+                  UError_رمز * err);
 
 /**
  * DO NOT CALL THIS FUNCTION DIRECTLY!
@@ -314,14 +314,14 @@ U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_SKIP (
  * @see ucnv_setSubstChars
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_SUBSTITUTE (
-                  const void *context,
-                  UConverterFromUnicodeArgs *fromUArgs,
-                  const UChar* codeUnits,
-                  int32_t length,
-                  UChar32 codePoint,
+U_CAPI خالی U_EXPORT2 UCNV_FROM_U_CALLBACK_SUBSTITUTE (
+                  ثابت خالی *context,
+                  UConverter_From_Unicode_دلائل *fromUArgs,
+                  ثابت UChar* رمز_Units,
+                  int32_t لمبائی,
+                  UChar32 رمز_نقطہ,
                   UConverterCallbackReason reason,
-                  UErrorCode * err);
+                  UError_رمز * err);
 
 /**
  * DO NOT CALL THIS FUNCTION DIRECTLY!
@@ -370,14 +370,14 @@ U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_SUBSTITUTE (
  *      otherwise this value will be set to a failure status.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_ESCAPE (
-                  const void *context,
-                  UConverterFromUnicodeArgs *fromUArgs,
-                  const UChar* codeUnits,
-                  int32_t length,
-                  UChar32 codePoint,
+U_CAPI خالی U_EXPORT2 UCNV_FROM_U_CALLBACK_ESCAPE (
+                  ثابت خالی *context,
+                  UConverter_From_Unicode_دلائل *fromUArgs,
+                  ثابت UChar* رمز_Units,
+                  int32_t لمبائی,
+                  UChar32 رمز_نقطہ,
                   UConverterCallbackReason reason,
-                  UErrorCode * err);
+                  UError_رمز * err);
 
 
 /**
@@ -398,13 +398,13 @@ U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_ESCAPE (
  *      otherwise this value will be set to a failure status.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_SKIP (
-                  const void *context,
-                  UConverterToUnicodeArgs *toUArgs,
-                  const char* codeUnits,
-                  int32_t length,
+U_CAPI خالی U_EXPORT2 UCNV_مقصد_U_CALLBACK_SKIP (
+                  ثابت خالی *context,
+                  UConverter_مقصد_Unicode_دلائل *مقصد_UArgs,
+                  ثابت حرف* رمز_Units,
+                  int32_t لمبائی,
                   UConverterCallbackReason reason,
-                  UErrorCode * err);
+                  UError_رمز * err);
 
 /**
  * DO NOT CALL THIS FUNCTION DIRECTLY!
@@ -424,13 +424,13 @@ U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_SKIP (
  *      otherwise this value will be set to a failure status.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_SUBSTITUTE (
-                  const void *context,
-                  UConverterToUnicodeArgs *toUArgs,
-                  const char* codeUnits,
-                  int32_t length,
+U_CAPI خالی U_EXPORT2 UCNV_مقصد_U_CALLBACK_SUBSTITUTE (
+                  ثابت خالی *context,
+                  UConverter_مقصد_Unicode_دلائل *مقصد_UArgs,
+                  ثابت حرف* رمز_Units,
+                  int32_t لمبائی,
                   UConverterCallbackReason reason,
-                  UErrorCode * err);
+                  UError_رمز * err);
 
 /**
  * DO NOT CALL THIS FUNCTION DIRECTLY!
@@ -450,16 +450,16 @@ U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_SUBSTITUTE (
  * @stable ICU 2.0
  */
 
-U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_ESCAPE (
-                  const void *context,
-                  UConverterToUnicodeArgs *toUArgs,
-                  const char* codeUnits,
-                  int32_t length,
+U_CAPI خالی U_EXPORT2 UCNV_مقصد_U_CALLBACK_ESCAPE (
+                  ثابت خالی *context,
+                  UConverter_مقصد_Unicode_دلائل *مقصد_UArgs,
+                  ثابت حرف* رمز_Units,
+                  int32_t لمبائی,
                   UConverterCallbackReason reason,
-                  UErrorCode * err);
+                  UError_رمز * err);
 
-#endif
+#اگر_ختم
 
-#endif
+#اگر_ختم
 
 /*UCNV_ERR_H*/ 

@@ -21,37 +21,37 @@
 *   06/20/2000  helena      OS/400 port changes; mostly typecast.
 */
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#اگر !UCONFIG_NO_CONVERSION
 
-#include <memory>
+#شامل <memory>
 
-#include "unicode/ustring.h"
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_err.h"
-#include "unicode/uset.h"
-#include "unicode/utf.h"
-#include "unicode/utf16.h"
-#include "putilimp.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uassert.h"
-#include "utracimp.h"
-#include "ustr_imp.h"
-#include "ucnv_imp.h"
-#include "ucnv_cnv.h"
-#include "ucnv_bld.h"
+#شامل "unicode/ustring.h"
+#شامل "unicode/ucnv.h"
+#شامل "unicode/ucnv_err.h"
+#شامل "unicode/uset.h"
+#شامل "unicode/utf.h"
+#شامل "unicode/utf16.h"
+#شامل "putilimp.h"
+#شامل "cmemory.h"
+#شامل "cstring.h"
+#شامل "uassert.h"
+#شامل "utracimp.h"
+#شامل "ustr_imp.h"
+#شامل "ucnv_imp.h"
+#شامل "ucnv_cnv.h"
+#شامل "ucnv_bld.h"
 
 /* size of intermediate and preflighting buffers in ucnv_convert() */
-#define CHUNK_SIZE 1024
+#تعریف_کرو CHUNK_سائز 1024
 
-typedef struct UAmbiguousConverter {
-    const char *name;
-    const char16_t variant5c;
+قسمتعریف ساخت UAmbiguousConverter {
+    ثابت حرف *name;
+    ثابت char16_t variant5c;
 } UAmbiguousConverter;
 
-static const UAmbiguousConverter ambiguousConverters[]={
+ساکن ثابت UAmbiguousConverter ambiguousConverters[]={
     { "ibm-897_P100-1995", 0xa5 },
     { "ibm-942_P120-1999", 0xa5 },
     { "ibm-943_P130-1999", 0xa5 },
@@ -70,42 +70,42 @@ static const UAmbiguousConverter ambiguousConverters[]={
 
 /*Calls through createConverter */
 U_CAPI UConverter* U_EXPORT2
-ucnv_open (const char *name,
-                       UErrorCode * err)
+ucnv_open (ثابت حرف *name,
+                       UError_رمز * err)
 {
     UConverter *r;
 
-    if (err == nullptr || U_FAILURE (*err)) {
-        return nullptr;
+    اگر (err == خالی_اشاریہ || U_FAILURE (*err)) {
+        واپس خالی_اشاریہ;
     }
 
-    r =  ucnv_createConverter(nullptr, name, err);
-    return r;
+    r =  ucnv_createConverter(خالی_اشاریہ, name, err);
+    واپس r;
 }
 
 U_CAPI UConverter* U_EXPORT2 
-ucnv_openPackage   (const char *packageName, const char *converterName, UErrorCode * err)
+ucnv_openPackage   (ثابت حرف *packageName, ثابت حرف *converterName, UError_رمز * err)
 {
-    return ucnv_createConverterFromPackage(packageName, converterName,  err);
+    واپس ucnv_createConverterFromPackage(packageName, converterName,  err);
 }
 
 /*Extracts the char16_t* to a char* and calls through createConverter */
 U_CAPI UConverter*   U_EXPORT2
-ucnv_openU (const char16_t * name,
-                         UErrorCode * err)
+ucnv_openU (ثابت char16_t * name,
+                         UError_رمز * err)
 {
-    char asciiName[UCNV_MAX_CONVERTER_NAME_LENGTH];
+    حرف asciiName[UCNV_MAX_CONVERTER_NAME_لمبائی];
 
-    if (err == nullptr || U_FAILURE(*err))
-        return nullptr;
-    if (name == nullptr)
-        return ucnv_open (nullptr, err);
-    if (u_strlen(name) >= UCNV_MAX_CONVERTER_NAME_LENGTH)
+    اگر (err == خالی_اشاریہ || U_FAILURE(*err))
+        واپس خالی_اشاریہ;
+    اگر (name == خالی_اشاریہ)
+        واپس ucnv_open (خالی_اشاریہ, err);
+    اگر (u_strlen(name) >= UCNV_MAX_CONVERTER_NAME_لمبائی)
     {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        *err = U_ILLEGAL_دلیل_ERROR;
+        واپس خالی_اشاریہ;
     }
-    return ucnv_open(u_austrcpy(asciiName, name), err);
+    واپس ucnv_open(u_austrcpy(asciiName, name), err);
 }
 
 /* Copy the string that is represented by the UConverterPlatform enum
@@ -113,21 +113,21 @@ ucnv_openU (const char16_t * name,
  * @param platform An enum representing a platform
  * @return the length of the copied string.
  */
-static int32_t
-ucnv_copyPlatformString(char *platformString, UConverterPlatform pltfrm)
+ساکن int32_t
+ucnv_copyPlatformString(حرف *platformString, UConverterPlatform pltfrm)
 {
-    switch (pltfrm)
+    انتخاب (pltfrm)
     {
-    case UCNV_IBM:
+    حالت UCNV_IBM:
         uprv_strcpy(platformString, "ibm-");
-        return 4;
-    case UCNV_UNKNOWN:
-        break;
+        واپس 4;
+    حالت UCNV_UNKNOWN:
+        توڑو;
     }
 
     /* default to empty string */
     *platformString = 0;
-    return 0;
+    واپس 0;
 }
 
 /*Assumes a $platform-#codepage.$CONVERTER_FILE_EXTENSION scheme and calls
@@ -135,19 +135,19 @@ ucnv_copyPlatformString(char *platformString, UConverterPlatform pltfrm)
 U_CAPI UConverter*   U_EXPORT2
 ucnv_openCCSID (int32_t codepage,
                 UConverterPlatform platform,
-                UErrorCode * err)
+                UError_رمز * err)
 {
-    char myName[UCNV_MAX_CONVERTER_NAME_LENGTH];
+    حرف myName[UCNV_MAX_CONVERTER_NAME_لمبائی];
     int32_t myNameLen;
 
-    if (err == nullptr || U_FAILURE (*err))
-        return nullptr;
+    اگر (err == خالی_اشاریہ || U_FAILURE (*err))
+        واپس خالی_اشاریہ;
 
     /* ucnv_copyPlatformString could return "ibm-" or "cp" */
     myNameLen = ucnv_copyPlatformString(myName, platform);
-    T_CString_integerToString(myName + myNameLen, codepage, 10);
+    T_CString_integer_مقصد_String(myName + myNameLen, codepage, 10);
 
-    return ucnv_createConverter(nullptr, myName, err);
+    واپس ucnv_createConverter(خالی_اشاریہ, myName, err);
 }
 
 /* Creating a temporary stack-based object that can be used in one thread, 
@@ -155,248 +155,248 @@ and created from a converter that is shared across threads.
 */
 
 U_CAPI UConverter* U_EXPORT2
-ucnv_safeClone(const UConverter* cnv,
-               void* stackBuffer U_LIFETIME_BOUND,
-               int32_t* pBufferSize,
-               UErrorCode* status)
+ucnv_محفوظ_Clone(ثابت UConverter* cnv,
+               خالی* ڈھیر_بفر U_LIFETIME_BOUND,
+               int32_t* p_بفر_سائز,
+               UError_رمز* حالت_2)
 {
     UConverter *localConverter, *allocatedConverter;
-    int32_t stackBufferSize;
-    int32_t bufferSizeNeeded;
-    UErrorCode cbErr;
-    UConverterToUnicodeArgs toUArgs = {
-        sizeof(UConverterToUnicodeArgs),
-            true,
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr
+    int32_t ڈھیر_بفر_سائز;
+    int32_t بفر_سائز_Needed;
+    UError_رمز cbErr;
+    UConverter_مقصد_Unicode_دلائل مقصد_UArgs = {
+        حجم(UConverter_مقصد_Unicode_دلائل),
+            سچ,
+            خالی_اشاریہ,
+            خالی_اشاریہ,
+            خالی_اشاریہ,
+            خالی_اشاریہ,
+            خالی_اشاریہ,
+            خالی_اشاریہ
     };
-    UConverterFromUnicodeArgs fromUArgs = {
-        sizeof(UConverterFromUnicodeArgs),
-            true,
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr
+    UConverter_From_Unicode_دلائل fromUArgs = {
+        حجم(UConverter_From_Unicode_دلائل),
+            سچ,
+            خالی_اشاریہ,
+            خالی_اشاریہ,
+            خالی_اشاریہ,
+            خالی_اشاریہ,
+            خالی_اشاریہ,
+            خالی_اشاریہ
     };
 
-    UTRACE_ENTRY_OC(UTRACE_UCNV_CLONE);
+    UTRACE_اندراج_OC(UTRACE_UCNV_CLONE);
 
-    if (status == nullptr || U_FAILURE(*status)){
-        UTRACE_EXIT_STATUS(status? *status: U_ILLEGAL_ARGUMENT_ERROR);
-        return nullptr;
+    اگر (حالت_2 == خالی_اشاریہ || U_FAILURE(*حالت_2)){
+        UTRACE_EXIT_حالت(حالت_2? *حالت_2: U_ILLEGAL_دلیل_ERROR);
+        واپس خالی_اشاریہ;
     }
 
-    if (cnv == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        UTRACE_EXIT_STATUS(*status);
-        return nullptr;
+    اگر (cnv == خالی_اشاریہ) {
+        *حالت_2 = U_ILLEGAL_دلیل_ERROR;
+        UTRACE_EXIT_حالت(*حالت_2);
+        واپس خالی_اشاریہ;
     }
 
     UTRACE_DATA3(UTRACE_OPEN_CLOSE, "clone converter %s at %p into stackBuffer %p",
-                                    ucnv_getName(cnv, status), cnv, stackBuffer);
+                                    ucnv_getName(cnv, حالت_2), cnv, ڈھیر_بفر);
 
-    if (cnv->sharedData->impl->safeClone != nullptr) {
+    اگر (cnv->shared_ڈیٹا->impl->محفوظ_Clone != خالی_اشاریہ) {
         /* call the custom safeClone function for sizing */
-        bufferSizeNeeded = 0;
-        cnv->sharedData->impl->safeClone(cnv, nullptr, &bufferSizeNeeded, status);
-        if (U_FAILURE(*status)) {
-            UTRACE_EXIT_STATUS(*status);
-            return nullptr;
+        بفر_سائز_Needed = 0;
+        cnv->shared_ڈیٹا->impl->محفوظ_Clone(cnv, خالی_اشاریہ, &بفر_سائز_Needed, حالت_2);
+        اگر (U_FAILURE(*حالت_2)) {
+            UTRACE_EXIT_حالت(*حالت_2);
+            واپس خالی_اشاریہ;
         }
     }
-    else
+    ورنہ
     {
         /* inherent sizing */
-        bufferSizeNeeded = sizeof(UConverter);
+        بفر_سائز_Needed = حجم(UConverter);
     }
 
-    if (pBufferSize == nullptr) {
-        stackBufferSize = 1;
-        pBufferSize = &stackBufferSize;
-    } else {
-        stackBufferSize = *pBufferSize;
-        if (stackBufferSize <= 0){ /* 'preflighting' request - set needed size into *pBufferSize */
-            *pBufferSize = bufferSizeNeeded;
-            UTRACE_EXIT_VALUE(bufferSizeNeeded);
-            return nullptr;
+    اگر (p_بفر_سائز == خالی_اشاریہ) {
+        ڈھیر_بفر_سائز = 1;
+        p_بفر_سائز = &ڈھیر_بفر_سائز;
+    } ورنہ {
+        ڈھیر_بفر_سائز = *p_بفر_سائز;
+        اگر (ڈھیر_بفر_سائز <= 0){ /* 'preflighting' request - set needed size into *pBufferSize */
+            *p_بفر_سائز = بفر_سائز_Needed;
+            UTRACE_EXIT_قدر(بفر_سائز_Needed);
+            واپس خالی_اشاریہ;
         }
     }
 
     /* Adjust (if necessary) the stackBuffer pointer to be aligned correctly for a UConverter.
      * TODO(Jira ICU-20736) Redo this using std::align() once g++4.9 compatibility is no longer needed.
      */
-    if (stackBuffer) {
-        uintptr_t p = reinterpret_cast<uintptr_t>(stackBuffer);
+    اگر (ڈھیر_بفر) {
+        uintptr_t p = reinterpret_cast<uintptr_t>(ڈھیر_بفر);
         uintptr_t aligned_p = (p + alignof(UConverter) - 1) & ~(alignof(UConverter) - 1);
-        ptrdiff_t pointerAdjustment = aligned_p - p;
-        if (bufferSizeNeeded + pointerAdjustment <= stackBufferSize) {
-            stackBuffer = reinterpret_cast<void *>(aligned_p);
-            stackBufferSize -= static_cast<int32_t>(pointerAdjustment);
-        } else {
+        ptrdiff_t اشارہ_گر_Adjustment = aligned_p - p;
+        اگر (بفر_سائز_Needed + اشارہ_گر_Adjustment <= ڈھیر_بفر_سائز) {
+            ڈھیر_بفر = reinterpret_cast<خالی *>(aligned_p);
+            ڈھیر_بفر_سائز -= static_cast<int32_t>(اشارہ_گر_Adjustment);
+        } ورنہ {
             /* prevent using the stack buffer but keep the size > 0 so that we do not just preflight */
-            stackBufferSize = 1;
+            ڈھیر_بفر_سائز = 1;
         }
     }
 
     /* Now, see if we must allocate any memory */
-    if (stackBufferSize < bufferSizeNeeded || stackBuffer == nullptr)
+    اگر (ڈھیر_بفر_سائز < بفر_سائز_Needed || ڈھیر_بفر == خالی_اشاریہ)
     {
         /* allocate one here...*/
-        localConverter = allocatedConverter = (UConverter *) uprv_malloc (bufferSizeNeeded);
+        localConverter = allocatedConverter = (UConverter *) uprv_malloc (بفر_سائز_Needed);
 
-        if(localConverter == nullptr) {
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            UTRACE_EXIT_STATUS(*status);
-            return nullptr;
+        اگر(localConverter == خالی_اشاریہ) {
+            *حالت_2 = U_حافظہ_تخصیص_ERROR;
+            UTRACE_EXIT_حالت(*حالت_2);
+            واپس خالی_اشاریہ;
         }
         // If pBufferSize was nullptr as the input, pBufferSize is set to &stackBufferSize in this function.
-        if (pBufferSize != &stackBufferSize) {
-            *status = U_SAFECLONE_ALLOCATED_WARNING;
+        اگر (p_بفر_سائز != &ڈھیر_بفر_سائز) {
+            *حالت_2 = U_SAFECLONE_ALLOCATED_WARNING;
         }
 
         /* record the fact that memory was allocated */
-        *pBufferSize = bufferSizeNeeded;
-    } else {
+        *p_بفر_سائز = بفر_سائز_Needed;
+    } ورنہ {
         /* just use the stack buffer */
-        localConverter = (UConverter*) stackBuffer;
-        allocatedConverter = nullptr;
+        localConverter = (UConverter*) ڈھیر_بفر;
+        allocatedConverter = خالی_اشاریہ;
     }
 
-    uprv_memset(localConverter, 0, bufferSizeNeeded);
+    uprv_memset(localConverter, 0, بفر_سائز_Needed);
 
     /* Copy initial state */
-    uprv_memcpy(localConverter, cnv, sizeof(UConverter));
-    localConverter->isCopyLocal = localConverter->isExtraLocal = false;
+    uprv_memcpy(localConverter, cnv, حجم(UConverter));
+    localConverter->isCopyLocal = localConverter->isExtraLocal = جھوٹ;
 
     /* copy the substitution string */
-    if (cnv->subChars == (uint8_t *)cnv->subUChars) {
+    اگر (cnv->subChars == (uint8_t *)cnv->subUChars) {
         localConverter->subChars = (uint8_t *)localConverter->subUChars;
-    } else {
-        localConverter->subChars = (uint8_t *)uprv_malloc(UCNV_ERROR_BUFFER_LENGTH * U_SIZEOF_UCHAR);
-        if (localConverter->subChars == nullptr) {
+    } ورنہ {
+        localConverter->subChars = (uint8_t *)uprv_malloc(UCNV_ERROR_بفر_لمبائی * U_SIZEOF_UCHAR);
+        اگر (localConverter->subChars == خالی_اشاریہ) {
             uprv_free(allocatedConverter);
-            UTRACE_EXIT_STATUS(*status);
-            return nullptr;
+            UTRACE_EXIT_حالت(*حالت_2);
+            واپس خالی_اشاریہ;
         }
-        uprv_memcpy(localConverter->subChars, cnv->subChars, UCNV_ERROR_BUFFER_LENGTH * U_SIZEOF_UCHAR);
+        uprv_memcpy(localConverter->subChars, cnv->subChars, UCNV_ERROR_بفر_لمبائی * U_SIZEOF_UCHAR);
     }
 
     /* now either call the safeclone fcn or not */
-    if (cnv->sharedData->impl->safeClone != nullptr) {
+    اگر (cnv->shared_ڈیٹا->impl->محفوظ_Clone != خالی_اشاریہ) {
         /* call the custom safeClone function */
-        localConverter = cnv->sharedData->impl->safeClone(cnv, localConverter, pBufferSize, status);
+        localConverter = cnv->shared_ڈیٹا->impl->محفوظ_Clone(cnv, localConverter, p_بفر_سائز, حالت_2);
     }
 
-    if(localConverter==nullptr || U_FAILURE(*status)) {
-        if (allocatedConverter != nullptr && allocatedConverter->subChars != (uint8_t *)allocatedConverter->subUChars) {
+    اگر(localConverter==خالی_اشاریہ || U_FAILURE(*حالت_2)) {
+        اگر (allocatedConverter != خالی_اشاریہ && allocatedConverter->subChars != (uint8_t *)allocatedConverter->subUChars) {
             uprv_free(allocatedConverter->subChars);
         }
         uprv_free(allocatedConverter);
-        UTRACE_EXIT_STATUS(*status);
-        return nullptr;
+        UTRACE_EXIT_حالت(*حالت_2);
+        واپس خالی_اشاریہ;
     }
 
     /* increment refcount of shared data if needed */
-    if (cnv->sharedData->isReferenceCounted) {
-        ucnv_incrementRefCount(cnv->sharedData);
+    اگر (cnv->shared_ڈیٹا->isReferenceCounted) {
+        ucnv_increment_Ref_گنتی(cnv->shared_ڈیٹا);
     }
 
-    if(localConverter == (UConverter*)stackBuffer) {
+    اگر(localConverter == (UConverter*)ڈھیر_بفر) {
         /* we're using user provided data - set to not destroy */
-        localConverter->isCopyLocal = true;
+        localConverter->isCopyLocal = سچ;
     }
 
     /* allow callback functions to handle any memory allocation */
-    toUArgs.converter = fromUArgs.converter = localConverter;
+    مقصد_UArgs.converter = fromUArgs.converter = localConverter;
     cbErr = U_ZERO_ERROR;
-    cnv->fromCharErrorBehaviour(cnv->toUContext, &toUArgs, nullptr, 0, UCNV_CLONE, &cbErr);
+    cnv->fromCharErrorBehaviour(cnv->مقصد_UContext, &مقصد_UArgs, خالی_اشاریہ, 0, UCNV_CLONE, &cbErr);
     cbErr = U_ZERO_ERROR;
-    cnv->fromUCharErrorBehaviour(cnv->fromUContext, &fromUArgs, nullptr, 0, 0, UCNV_CLONE, &cbErr);
+    cnv->fromUCharErrorBehaviour(cnv->fromUContext, &fromUArgs, خالی_اشاریہ, 0, 0, UCNV_CLONE, &cbErr);
 
-    UTRACE_EXIT_PTR_STATUS(localConverter, *status);
-    return localConverter;
+    UTRACE_EXIT_PTR_حالت(localConverter, *حالت_2);
+    واپس localConverter;
 }
 
 U_CAPI UConverter* U_EXPORT2
-ucnv_clone(const UConverter* cnv, UErrorCode *status)
+ucnv_clone(ثابت UConverter* cnv, UError_رمز *حالت_2)
 {
-    return ucnv_safeClone(cnv, nullptr, nullptr, status);
+    واپس ucnv_محفوظ_Clone(cnv, خالی_اشاریہ, خالی_اشاریہ, حالت_2);
 }
 
 /*Decreases the reference counter in the shared immutable section of the object
  *and frees the mutable part*/
 
-U_CAPI void  U_EXPORT2
+U_CAPI خالی  U_EXPORT2
 ucnv_close (UConverter * converter)
 {
-    UErrorCode errorCode = U_ZERO_ERROR;
+    UError_رمز error_رمز = U_ZERO_ERROR;
 
-    UTRACE_ENTRY_OC(UTRACE_UCNV_CLOSE);
+    UTRACE_اندراج_OC(UTRACE_UCNV_CLOSE);
 
-    if (converter == nullptr)
+    اگر (converter == خالی_اشاریہ)
     {
         UTRACE_EXIT();
-        return;
+        واپس;
     }
 
     UTRACE_DATA3(UTRACE_OPEN_CLOSE, "close converter %s at %p, isCopyLocal=%b",
-        ucnv_getName(converter, &errorCode), converter, converter->isCopyLocal);
+        ucnv_getName(converter, &error_رمز), converter, converter->isCopyLocal);
 
     /* In order to speed up the close, only call the callbacks when they have been changed.
     This performance check will only work when the callbacks are set within a shared library
     or from user code that statically links this code. */
     /* first, notify the callback functions that the converter is closed */
-    if (converter->fromCharErrorBehaviour != UCNV_TO_U_DEFAULT_CALLBACK) {
-        UConverterToUnicodeArgs toUArgs = {
-            sizeof(UConverterToUnicodeArgs),
-                true,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr
+    اگر (converter->fromCharErrorBehaviour != UCNV_مقصد_U_DEFAULT_CALLBACK) {
+        UConverter_مقصد_Unicode_دلائل مقصد_UArgs = {
+            حجم(UConverter_مقصد_Unicode_دلائل),
+                سچ,
+                خالی_اشاریہ,
+                خالی_اشاریہ,
+                خالی_اشاریہ,
+                خالی_اشاریہ,
+                خالی_اشاریہ,
+                خالی_اشاریہ
         };
 
-        toUArgs.converter = converter;
-        errorCode = U_ZERO_ERROR;
-        converter->fromCharErrorBehaviour(converter->toUContext, &toUArgs, nullptr, 0, UCNV_CLOSE, &errorCode);
+        مقصد_UArgs.converter = converter;
+        error_رمز = U_ZERO_ERROR;
+        converter->fromCharErrorBehaviour(converter->مقصد_UContext, &مقصد_UArgs, خالی_اشاریہ, 0, UCNV_CLOSE, &error_رمز);
     }
-    if (converter->fromUCharErrorBehaviour != UCNV_FROM_U_DEFAULT_CALLBACK) {
-        UConverterFromUnicodeArgs fromUArgs = {
-            sizeof(UConverterFromUnicodeArgs),
-                true,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr
+    اگر (converter->fromUCharErrorBehaviour != UCNV_FROM_U_DEFAULT_CALLBACK) {
+        UConverter_From_Unicode_دلائل fromUArgs = {
+            حجم(UConverter_From_Unicode_دلائل),
+                سچ,
+                خالی_اشاریہ,
+                خالی_اشاریہ,
+                خالی_اشاریہ,
+                خالی_اشاریہ,
+                خالی_اشاریہ,
+                خالی_اشاریہ
         };
         fromUArgs.converter = converter;
-        errorCode = U_ZERO_ERROR;
-        converter->fromUCharErrorBehaviour(converter->fromUContext, &fromUArgs, nullptr, 0, 0, UCNV_CLOSE, &errorCode);
+        error_رمز = U_ZERO_ERROR;
+        converter->fromUCharErrorBehaviour(converter->fromUContext, &fromUArgs, خالی_اشاریہ, 0, 0, UCNV_CLOSE, &error_رمز);
     }
 
-    if (converter->sharedData->impl->close != nullptr) {
-        converter->sharedData->impl->close(converter);
+    اگر (converter->shared_ڈیٹا->impl->close != خالی_اشاریہ) {
+        converter->shared_ڈیٹا->impl->close(converter);
     }
 
-    if (converter->subChars != (uint8_t *)converter->subUChars) {
+    اگر (converter->subChars != (uint8_t *)converter->subUChars) {
         uprv_free(converter->subChars);
     }
 
-    if (converter->sharedData->isReferenceCounted) {
-        ucnv_unloadSharedDataIfReady(converter->sharedData);
+    اگر (converter->shared_ڈیٹا->isReferenceCounted) {
+        ucnv_unload_Shared_ڈیٹا_If_Ready(converter->shared_ڈیٹا);
     }
 
-    if(!converter->isCopyLocal){
+    اگر(!converter->isCopyLocal){
         uprv_free(converter);
     }
 
@@ -405,66 +405,66 @@ ucnv_close (UConverter * converter)
 
 /*returns a single Name from the list, will return nullptr if out of bounds
  */
-U_CAPI const char*   U_EXPORT2
-ucnv_getAvailableName (int32_t n)
+U_CAPI ثابت حرف*   U_EXPORT2
+ucnv_get_دستیاب_Name (int32_t n)
 {
-    if (0 <= n && n <= 0xffff) {
-        UErrorCode err = U_ZERO_ERROR;
-        const char *name = ucnv_bld_getAvailableConverter((uint16_t)n, &err);
-        if (U_SUCCESS(err)) {
-            return name;
+    اگر (0 <= n && n <= 0xffff) {
+        UError_رمز err = U_ZERO_ERROR;
+        ثابت حرف *name = ucnv_bld_get_دستیاب_Converter((uint16_t)n, &err);
+        اگر (U_SUCCESS(err)) {
+            واپس name;
         }
     }
-    return nullptr;
+    واپس خالی_اشاریہ;
 }
 
 U_CAPI int32_t   U_EXPORT2
-ucnv_countAvailable ()
+ucnv_گنتی_دستیاب ()
 {
-    UErrorCode err = U_ZERO_ERROR;
-    return ucnv_bld_countAvailableConverters(&err);
+    UError_رمز err = U_ZERO_ERROR;
+    واپس ucnv_bld_گنتی_دستیاب_Converters(&err);
 }
 
-U_CAPI void    U_EXPORT2
-ucnv_getSubstChars (const UConverter * converter,
-                    char *mySubChar,
+U_CAPI خالی    U_EXPORT2
+ucnv_getSubstChars (ثابت UConverter * converter,
+                    حرف *mySubChar,
                     int8_t * len,
-                    UErrorCode * err)
+                    UError_رمز * err)
 {
-    if (U_FAILURE (*err))
-        return;
+    اگر (U_FAILURE (*err))
+        واپس;
 
-    if (converter->subCharLen <= 0) {
+    اگر (converter->subCharLen <= 0) {
         /* Unicode string or empty string from ucnv_setSubstString(). */
         *len = 0;
-        return;
+        واپس;
     }
 
-    if (*len < converter->subCharLen) /*not enough space in subChars */
+    اگر (*len < converter->subCharLen) /*not enough space in subChars */
     {
-        *err = U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        *err = U_اشاریہ_OUTOFBOUNDS_ERROR;
+        واپس;
     }
 
     uprv_memcpy (mySubChar, converter->subChars, converter->subCharLen);   /*fills in the subchars */
     *len = converter->subCharLen; /*store # of bytes copied to buffer */
 }
 
-U_CAPI void    U_EXPORT2
-ucnv_setSubstChars (UConverter * converter,
-                    const char *mySubChar,
+U_CAPI خالی    U_EXPORT2
+ucnv_سیٹ_Subst_Chars (UConverter * converter,
+                    ثابت حرف *mySubChar,
                     int8_t len,
-                    UErrorCode * err)
+                    UError_رمز * err)
 {
-    if (U_FAILURE (*err))
-        return;
+    اگر (U_FAILURE (*err))
+        واپس;
     
     /*Makes sure that the subChar is within the codepages char length boundaries */
-    if ((len > converter->sharedData->staticData->maxBytesPerChar)
-     || (len < converter->sharedData->staticData->minBytesPerChar))
+    اگر ((len > converter->shared_ڈیٹا->static_ڈیٹا->max_بائٹیں_فی_Char)
+     || (len < converter->shared_ڈیٹا->static_ڈیٹا->min_بائٹیں_فی_Char))
     {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *err = U_ILLEGAL_دلیل_ERROR;
+        واپس;
     }
     
     uprv_memcpy (converter->subChars, mySubChar, len); /*copies the subchars */
@@ -478,54 +478,54 @@ ucnv_setSubstChars (UConverter * converter,
     converter->subChar1 = 0;
 }
 
-U_CAPI void U_EXPORT2
-ucnv_setSubstString(UConverter *cnv,
-                    const char16_t *s,
+U_CAPI خالی U_EXPORT2
+ucnv_سیٹ_Subst_String(UConverter *cnv,
+                    ثابت char16_t *s,
                     int32_t length,
-                    UErrorCode *err) {
-    alignas(UConverter) char cloneBuffer[U_CNV_SAFECLONE_BUFFERSIZE];
-    char chars[UCNV_ERROR_BUFFER_LENGTH];
+                    UError_رمز *err) {
+    alignas(UConverter) حرف clone_بفر[U_CNV_SAFECLONE_BUFFERSIZE];
+    حرف chars[UCNV_ERROR_بفر_لمبائی];
 
     UConverter *clone;
     uint8_t *subChars;
-    int32_t cloneSize, length8;
+    int32_t clone_سائز, length8;
 
     /* Let the following functions check all arguments. */
-    cloneSize = sizeof(cloneBuffer);
-    clone = ucnv_safeClone(cnv, cloneBuffer, &cloneSize, err);
-    ucnv_setFromUCallBack(clone, UCNV_FROM_U_CALLBACK_STOP, nullptr, nullptr, nullptr, err);
-    length8 = ucnv_fromUChars(clone, chars, (int32_t)sizeof(chars), s, length, err);
+    clone_سائز = حجم(clone_بفر);
+    clone = ucnv_محفوظ_Clone(cnv, clone_بفر, &clone_سائز, err);
+    ucnv_سیٹ_From_UCall_عقب(clone, UCNV_FROM_U_CALLBACK_STOP, خالی_اشاریہ, خالی_اشاریہ, خالی_اشاریہ, err);
+    length8 = ucnv_fromUChars(clone, chars, (int32_t)حجم(chars), s, length, err);
     ucnv_close(clone);
-    if (U_FAILURE(*err)) {
-        return;
+    اگر (U_FAILURE(*err)) {
+        واپس;
     }
 
-    if (cnv->sharedData->impl->writeSub == nullptr
-#if !UCONFIG_NO_LEGACY_CONVERSION
-        || (cnv->sharedData->staticData->conversionType == UCNV_MBCS &&
+    اگر (cnv->shared_ڈیٹا->impl->writeSub == خالی_اشاریہ
+#اگر !UCONFIG_NO_LEGACY_CONVERSION
+        || (cnv->shared_ڈیٹا->static_ڈیٹا->conversionType == UCNV_MBCS &&
          ucnv_MBCSGetType(cnv) != UCNV_EBCDIC_STATEFUL)
-#endif
+#اگر_ختم
     ) {
         /* The converter is not stateful. Store the charset bytes as a fixed string. */
         subChars = (uint8_t *)chars;
-    } else {
+    } ورنہ {
         /*
          * The converter has a non-default writeSub() function, indicating
          * that it is stateful.
          * Store the Unicode string for on-the-fly conversion for correct
          * state handling.
          */
-        if (length > UCNV_ERROR_BUFFER_LENGTH) {
+        اگر (length > UCNV_ERROR_بفر_لمبائی) {
             /*
              * Should not occur. The converter should output at least one byte
              * per char16_t, which means that ucnv_fromUChars() should catch all
              * overflows.
              */
-            *err = U_BUFFER_OVERFLOW_ERROR;
-            return;
+            *err = U_بفر_حد_سے_تجاوز_ERROR;
+            واپس;
         }
         subChars = (uint8_t *)s;
-        if (length < 0) {
+        اگر (length < 0) {
             length = u_strlen(s);
         }
         length8 = length * U_SIZEOF_UCHAR;
@@ -535,28 +535,28 @@ ucnv_setSubstString(UConverter *cnv,
      * For storing the substitution string, select either the small buffer inside
      * UConverter or allocate a subChars buffer.
      */
-    if (length8 > UCNV_MAX_SUBCHAR_LEN) {
+    اگر (length8 > UCNV_MAX_SUBCHAR_LEN) {
         /* Use a separate buffer for the string. Outside UConverter to not make it too large. */
-        if (cnv->subChars == (uint8_t *)cnv->subUChars) {
+        اگر (cnv->subChars == (uint8_t *)cnv->subUChars) {
             /* Allocate a new buffer for the string. */
-            cnv->subChars = (uint8_t *)uprv_malloc(UCNV_ERROR_BUFFER_LENGTH * U_SIZEOF_UCHAR);
-            if (cnv->subChars == nullptr) {
+            cnv->subChars = (uint8_t *)uprv_malloc(UCNV_ERROR_بفر_لمبائی * U_SIZEOF_UCHAR);
+            اگر (cnv->subChars == خالی_اشاریہ) {
                 cnv->subChars = (uint8_t *)cnv->subUChars;
-                *err = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                *err = U_حافظہ_تخصیص_ERROR;
+                واپس;
             }
-            uprv_memset(cnv->subChars, 0, UCNV_ERROR_BUFFER_LENGTH * U_SIZEOF_UCHAR);
+            uprv_memset(cnv->subChars, 0, UCNV_ERROR_بفر_لمبائی * U_SIZEOF_UCHAR);
         }
     }
 
     /* Copy the substitution string into the UConverter or its subChars buffer. */
-    if (length8 == 0) {
+    اگر (length8 == 0) {
         cnv->subCharLen = 0;
-    } else {
+    } ورنہ {
         uprv_memcpy(cnv->subChars, subChars, length8);
-        if (subChars == (uint8_t *)chars) {
+        اگر (subChars == (uint8_t *)chars) {
             cnv->subCharLen = (int8_t)length8;
-        } else /* subChars == s */ {
+        } ورنہ /* subChars == s */ {
             cnv->subCharLen = (int8_t)-length;
         }
     }
@@ -568,212 +568,212 @@ ucnv_setSubstString(UConverter *cnv,
 /*resets the internal states of a converter
  *goal : have the same behaviour than a freshly created converter
  */
-static void _reset(UConverter *converter, UConverterResetChoice choice,
+ساکن خالی _reset(UConverter *converter, UConverterResetChoice choice,
                    UBool callCallback) {
-    if(converter == nullptr) {
-        return;
+    اگر(converter == خالی_اشاریہ) {
+        واپس;
     }
 
-    if(callCallback) {
+    اگر(callCallback) {
         /* first, notify the callback functions that the converter is reset */
-        UErrorCode errorCode;
+        UError_رمز error_رمز;
 
-        if(choice<=UCNV_RESET_TO_UNICODE && converter->fromCharErrorBehaviour != UCNV_TO_U_DEFAULT_CALLBACK) {
-            UConverterToUnicodeArgs toUArgs = {
-                sizeof(UConverterToUnicodeArgs),
-                true,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr
+        اگر(choice<=UCNV_RESET_مقصد_UNICODE && converter->fromCharErrorBehaviour != UCNV_مقصد_U_DEFAULT_CALLBACK) {
+            UConverter_مقصد_Unicode_دلائل مقصد_UArgs = {
+                حجم(UConverter_مقصد_Unicode_دلائل),
+                سچ,
+                خالی_اشاریہ,
+                خالی_اشاریہ,
+                خالی_اشاریہ,
+                خالی_اشاریہ,
+                خالی_اشاریہ,
+                خالی_اشاریہ
             };
-            toUArgs.converter = converter;
-            errorCode = U_ZERO_ERROR;
-            converter->fromCharErrorBehaviour(converter->toUContext, &toUArgs, nullptr, 0, UCNV_RESET, &errorCode);
+            مقصد_UArgs.converter = converter;
+            error_رمز = U_ZERO_ERROR;
+            converter->fromCharErrorBehaviour(converter->مقصد_UContext, &مقصد_UArgs, خالی_اشاریہ, 0, UCNV_RESET, &error_رمز);
         }
-        if(choice!=UCNV_RESET_TO_UNICODE && converter->fromUCharErrorBehaviour != UCNV_FROM_U_DEFAULT_CALLBACK) {
-            UConverterFromUnicodeArgs fromUArgs = {
-                sizeof(UConverterFromUnicodeArgs),
-                true,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr
+        اگر(choice!=UCNV_RESET_مقصد_UNICODE && converter->fromUCharErrorBehaviour != UCNV_FROM_U_DEFAULT_CALLBACK) {
+            UConverter_From_Unicode_دلائل fromUArgs = {
+                حجم(UConverter_From_Unicode_دلائل),
+                سچ,
+                خالی_اشاریہ,
+                خالی_اشاریہ,
+                خالی_اشاریہ,
+                خالی_اشاریہ,
+                خالی_اشاریہ,
+                خالی_اشاریہ
             };
             fromUArgs.converter = converter;
-            errorCode = U_ZERO_ERROR;
-            converter->fromUCharErrorBehaviour(converter->fromUContext, &fromUArgs, nullptr, 0, 0, UCNV_RESET, &errorCode);
+            error_رمز = U_ZERO_ERROR;
+            converter->fromUCharErrorBehaviour(converter->fromUContext, &fromUArgs, خالی_اشاریہ, 0, 0, UCNV_RESET, &error_رمز);
         }
     }
 
     /* now reset the converter itself */
-    if(choice<=UCNV_RESET_TO_UNICODE) {
-        converter->toUnicodeStatus = converter->sharedData->toUnicodeStatus;
-        converter->mode = 0;
-        converter->toULength = 0;
-        converter->invalidCharLength = converter->UCharErrorBufferLength = 0;
-        converter->preToULength = 0;
+    اگر(choice<=UCNV_RESET_مقصد_UNICODE) {
+        converter->مقصد_Unicode_حالت = converter->shared_ڈیٹا->مقصد_Unicode_حالت;
+        converter->منوال = 0;
+        converter->مقصد_ULength = 0;
+        converter->invalid_Char_لمبائی = converter->UChar_Error_بفر_لمبائی = 0;
+        converter->pre_مقصد_ULength = 0;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
-        converter->fromUnicodeStatus = 0;
+    اگر(choice!=UCNV_RESET_مقصد_UNICODE) {
+        converter->from_Unicode_حالت = 0;
         converter->fromUChar32 = 0;
-        converter->invalidUCharLength = converter->charErrorBufferLength = 0;
+        converter->invalid_UChar_لمبائی = converter->char_Error_بفر_لمبائی = 0;
         converter->preFromUFirstCP = U_SENTINEL;
         converter->preFromULength = 0;
     }
 
-    if (converter->sharedData->impl->reset != nullptr) {
+    اگر (converter->shared_ڈیٹا->impl->reset != خالی_اشاریہ) {
         /* call the custom reset function */
-        converter->sharedData->impl->reset(converter, choice);
+        converter->shared_ڈیٹا->impl->reset(converter, choice);
     }
 }
 
-U_CAPI void  U_EXPORT2
+U_CAPI خالی  U_EXPORT2
 ucnv_reset(UConverter *converter)
 {
-    _reset(converter, UCNV_RESET_BOTH, true);
+    _reset(converter, UCNV_RESET_BOTH, سچ);
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_resetToUnicode(UConverter *converter)
+U_CAPI خالی  U_EXPORT2
+ucnv_reset_مقصد_Unicode(UConverter *converter)
 {
-    _reset(converter, UCNV_RESET_TO_UNICODE, true);
+    _reset(converter, UCNV_RESET_مقصد_UNICODE, سچ);
 }
 
-U_CAPI void  U_EXPORT2
+U_CAPI خالی  U_EXPORT2
 ucnv_resetFromUnicode(UConverter *converter)
 {
-    _reset(converter, UCNV_RESET_FROM_UNICODE, true);
+    _reset(converter, UCNV_RESET_FROM_UNICODE, سچ);
 }
 
 U_CAPI int8_t   U_EXPORT2
-ucnv_getMaxCharSize (const UConverter * converter)
+ucnv_get_Max_Char_سائز (ثابت UConverter * converter)
 {
-    return converter->maxBytesPerUChar;
+    واپس converter->max_بائٹیں_فی_UChar;
 }
 
 
 U_CAPI int8_t   U_EXPORT2
-ucnv_getMinCharSize (const UConverter * converter)
+ucnv_get_Min_Char_سائز (ثابت UConverter * converter)
 {
-    return converter->sharedData->staticData->minBytesPerChar;
+    واپس converter->shared_ڈیٹا->static_ڈیٹا->min_بائٹیں_فی_Char;
 }
 
-U_CAPI const char* U_EXPORT2
-ucnv_getName(const UConverter* converter U_LIFETIME_BOUND, UErrorCode* err)
+U_CAPI ثابت حرف* U_EXPORT2
+ucnv_getName(ثابت UConverter* converter U_LIFETIME_BOUND, UError_رمز* err)
 {
-    if (U_FAILURE (*err))
-        return nullptr;
-    if(converter->sharedData->impl->getName){
-        const char* temp= converter->sharedData->impl->getName(converter);
-        if(temp)
-            return temp;
+    اگر (U_FAILURE (*err))
+        واپس خالی_اشاریہ;
+    اگر(converter->shared_ڈیٹا->impl->getName){
+        ثابت حرف* عارضی= converter->shared_ڈیٹا->impl->getName(converter);
+        اگر(عارضی)
+            واپس عارضی;
     }
-    return converter->sharedData->staticData->name;
+    واپس converter->shared_ڈیٹا->static_ڈیٹا->name;
 }
 
 U_CAPI int32_t U_EXPORT2
-ucnv_getCCSID(const UConverter * converter,
-              UErrorCode * err)
+ucnv_getCCSID(ثابت UConverter * converter,
+              UError_رمز * err)
 {
     int32_t ccsid;
-    if (U_FAILURE (*err))
-        return -1;
+    اگر (U_FAILURE (*err))
+        واپس -1;
 
-    ccsid = converter->sharedData->staticData->codepage;
-    if (ccsid == 0) {
+    ccsid = converter->shared_ڈیٹا->static_ڈیٹا->codepage;
+    اگر (ccsid == 0) {
         /* Rare case. This is for cases like gb18030,
         which doesn't have an IBM canonical name, but does have an IBM alias. */
-        const char *standardName = ucnv_getStandardName(ucnv_getName(converter, err), "IBM", err);
-        if (U_SUCCESS(*err) && standardName) {
-            const char *ccsidStr = uprv_strchr(standardName, '-');
-            if (ccsidStr) {
+        ثابت حرف *standardName = ucnv_getStandardName(ucnv_getName(converter, err), "IBM", err);
+        اگر (U_SUCCESS(*err) && standardName) {
+            ثابت حرف *ccsidStr = uprv_strchr(standardName, '-');
+            اگر (ccsidStr) {
                 ccsid = (int32_t)atol(ccsidStr+1);  /* +1 to skip '-' */
             }
         }
     }
-    return ccsid;
+    واپس ccsid;
 }
 
 
 U_CAPI UConverterPlatform   U_EXPORT2
-ucnv_getPlatform (const UConverter * converter,
-                                      UErrorCode * err)
+ucnv_getPlatform (ثابت UConverter * converter,
+                                      UError_رمز * err)
 {
-    if (U_FAILURE (*err))
-        return UCNV_UNKNOWN;
+    اگر (U_FAILURE (*err))
+        واپس UCNV_UNKNOWN;
 
-    return (UConverterPlatform)converter->sharedData->staticData->platform;
+    واپس (UConverterPlatform)converter->shared_ڈیٹا->static_ڈیٹا->platform;
 }
 
-U_CAPI void U_EXPORT2
-    ucnv_getToUCallBack (const UConverter * converter,
-                         UConverterToUCallback *action,
-                         const void **context)
+U_CAPI خالی U_EXPORT2
+    ucnv_get_مقصد_UCall_عقب (ثابت UConverter * converter,
+                         UConverter_مقصد_UCallback *action,
+                         ثابت خالی **context)
 {
     *action = converter->fromCharErrorBehaviour;
-    *context = converter->toUContext;
+    *context = converter->مقصد_UContext;
 }
 
-U_CAPI void U_EXPORT2
-    ucnv_getFromUCallBack (const UConverter * converter,
+U_CAPI خالی U_EXPORT2
+    ucnv_get_From_UCall_عقب (ثابت UConverter * converter,
                            UConverterFromUCallback *action,
-                           const void **context)
+                           ثابت خالی **context)
 {
     *action = converter->fromUCharErrorBehaviour;
     *context = converter->fromUContext;
 }
 
-U_CAPI void    U_EXPORT2
-ucnv_setToUCallBack (UConverter * converter,
-                            UConverterToUCallback newAction,
-                            const void* newContext,
-                            UConverterToUCallback *oldAction,
-                            const void** oldContext,
-                            UErrorCode * err)
+U_CAPI خالی    U_EXPORT2
+ucnv_سیٹ_مقصد_UCall_عقب (UConverter * converter,
+                            UConverter_مقصد_UCallback newAction,
+                            ثابت خالی* newContext,
+                            UConverter_مقصد_UCallback *oldAction,
+                            ثابت خالی** oldContext,
+                            UError_رمز * err)
 {
-    if (U_FAILURE (*err))
-        return;
-    if (oldAction) *oldAction = converter->fromCharErrorBehaviour;
+    اگر (U_FAILURE (*err))
+        واپس;
+    اگر (oldAction) *oldAction = converter->fromCharErrorBehaviour;
     converter->fromCharErrorBehaviour = newAction;
-    if (oldContext) *oldContext = converter->toUContext;
-    converter->toUContext = newContext;
+    اگر (oldContext) *oldContext = converter->مقصد_UContext;
+    converter->مقصد_UContext = newContext;
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_setFromUCallBack (UConverter * converter,
+U_CAPI خالی  U_EXPORT2
+ucnv_سیٹ_From_UCall_عقب (UConverter * converter,
                             UConverterFromUCallback newAction,
-                            const void* newContext,
+                            ثابت خالی* newContext,
                             UConverterFromUCallback *oldAction,
-                            const void** oldContext,
-                            UErrorCode * err)
+                            ثابت خالی** oldContext,
+                            UError_رمز * err)
 {
-    if (U_FAILURE (*err))
-        return;
-    if (oldAction) *oldAction = converter->fromUCharErrorBehaviour;
+    اگر (U_FAILURE (*err))
+        واپس;
+    اگر (oldAction) *oldAction = converter->fromUCharErrorBehaviour;
     converter->fromUCharErrorBehaviour = newAction;
-    if (oldContext) *oldContext = converter->fromUContext;
+    اگر (oldContext) *oldContext = converter->fromUContext;
     converter->fromUContext = newContext;
 }
 
-static void
+ساکن خالی
 _updateOffsets(int32_t *offsets, int32_t length,
-               int32_t sourceIndex, int32_t errorInputLength) {
-    int32_t *limit;
-    int32_t delta, offset;
+               int32_t ماخذ_اشاریہ, int32_t error_داخلہ_لمبائی) {
+    int32_t *حد_بندی;
+    int32_t delta, انحراف;
 
-    if(sourceIndex>=0) {
+    اگر(ماخذ_اشاریہ>=0) {
         /*
          * adjust each offset by adding the previous sourceIndex
          * minus the length of the input sequence that caused an
          * error, if any
          */
-        delta=sourceIndex-errorInputLength;
-    } else {
+        delta=ماخذ_اشاریہ-error_داخلہ_لمبائی;
+    } ورنہ {
         /*
          * set each offset to -1 because this conversion function
          * does not handle offsets
@@ -781,25 +781,25 @@ _updateOffsets(int32_t *offsets, int32_t length,
         delta=-1;
     }
 
-    limit=offsets+length;
-    if(delta==0) {
+    حد_بندی=offsets+length;
+    اگر(delta==0) {
         /* most common case, nothing to do */
-    } else if(delta>0) {
+    } ورنہ اگر(delta>0) {
         /* add the delta to each offset (but not if the offset is <0) */
-        while(offsets<limit) {
-            offset=*offsets;
-            if(offset>=0) {
-                *offsets=offset+delta;
+        جب(offsets<حد_بندی) {
+            انحراف=*offsets;
+            اگر(انحراف>=0) {
+                *offsets=انحراف+delta;
             }
             ++offsets;
         }
-    } else /* delta<0 */ {
+    } ورنہ /* delta<0 */ {
         /*
          * set each offset to -1 because this conversion function
          * does not handle offsets
          * or the error input sequence started in a previous buffer
          */
-        while(offsets<limit) {
+        جب(offsets<حد_بندی) {
             *offsets++=-1;
         }
     }
@@ -829,70 +829,70 @@ _updateOffsets(int32_t *offsets, int32_t length,
  * and wrong output, but they will not cause a crash.
  */
 
-static void
-_fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
+ساکن خالی
+_fromUnicodeWithCallback(UConverter_From_Unicode_دلائل *p_دلائل, UError_رمز *err) {
     UConverterFromUnicode fromUnicode;
     UConverter *cnv;
-    const char16_t *s;
-    char *t;
+    ثابت char16_t *s;
+    حرف *t;
     int32_t *offsets;
-    int32_t sourceIndex;
-    int32_t errorInputLength;
-    UBool converterSawEndOfInput, calledCallback;
+    int32_t ماخذ_اشاریہ;
+    int32_t error_داخلہ_لمبائی;
+    UBool converter_Saw_انتہا_کا_داخلہ, calledCallback;
 
     /* variables for m:n conversion */
     char16_t replay[UCNV_EXT_MAX_UCHARS];
-    const char16_t *realSource, *realSourceLimit;
-    int32_t realSourceIndex;
+    ثابت char16_t *real_ماخذ, *real_ماخذ_حد_بندی;
+    int32_t real_ماخذ_اشاریہ;
     UBool realFlush;
 
-    cnv=pArgs->converter;
-    s=pArgs->source;
-    t=pArgs->target;
-    offsets=pArgs->offsets;
+    cnv=p_دلائل->converter;
+    s=p_دلائل->ماخذ;
+    t=p_دلائل->ہدف;
+    offsets=p_دلائل->offsets;
 
     /* get the converter implementation function */
-    sourceIndex=0;
-    if(offsets==nullptr) {
-        fromUnicode=cnv->sharedData->impl->fromUnicode;
-    } else {
-        fromUnicode=cnv->sharedData->impl->fromUnicodeWithOffsets;
-        if(fromUnicode==nullptr) {
+    ماخذ_اشاریہ=0;
+    اگر(offsets==خالی_اشاریہ) {
+        fromUnicode=cnv->shared_ڈیٹا->impl->fromUnicode;
+    } ورنہ {
+        fromUnicode=cnv->shared_ڈیٹا->impl->fromUnicodeWithOffsets;
+        اگر(fromUnicode==خالی_اشاریہ) {
             /* there is no WithOffsets implementation */
-            fromUnicode=cnv->sharedData->impl->fromUnicode;
+            fromUnicode=cnv->shared_ڈیٹا->impl->fromUnicode;
             /* we will write -1 for each offset */
-            sourceIndex=-1;
+            ماخذ_اشاریہ=-1;
         }
     }
 
-    if(cnv->preFromULength>=0) {
+    اگر(cnv->preFromULength>=0) {
         /* normal mode */
-        realSource=nullptr;
+        real_ماخذ=خالی_اشاریہ;
 
         /* avoid compiler warnings - not otherwise necessary, and the values do not matter */
-        realSourceLimit=nullptr;
-        realFlush=false;
-        realSourceIndex=0;
-    } else {
+        real_ماخذ_حد_بندی=خالی_اشاریہ;
+        realFlush=جھوٹ;
+        real_ماخذ_اشاریہ=0;
+    } ورنہ {
         /*
          * Previous m:n conversion stored source units from a partial match
          * and failed to consume all of them.
          * We need to "replay" them from a temporary buffer and convert them first.
          */
-        if (!pArgs->source) {
-            *err=U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+        اگر (!p_دلائل->ماخذ) {
+            *err=U_ILLEGAL_دلیل_ERROR;
+            واپس;
         }
-        realSource=pArgs->source;
-        realSourceLimit=pArgs->sourceLimit;
-        realFlush=pArgs->flush;
-        realSourceIndex=sourceIndex;
+        real_ماخذ=p_دلائل->ماخذ;
+        real_ماخذ_حد_بندی=p_دلائل->ماخذ_حد_بندی;
+        realFlush=p_دلائل->flush;
+        real_ماخذ_اشاریہ=ماخذ_اشاریہ;
 
         uprv_memcpy(replay, cnv->preFromU, -cnv->preFromULength*U_SIZEOF_UCHAR);
-        pArgs->source=replay;
-        pArgs->sourceLimit=replay-cnv->preFromULength;
-        pArgs->flush=false;
-        sourceIndex=-1;
+        p_دلائل->ماخذ=replay;
+        p_دلائل->ماخذ_حد_بندی=replay-cnv->preFromULength;
+        p_دلائل->flush=جھوٹ;
+        ماخذ_اشاریہ=-1;
 
         cnv->preFromULength=0;
     }
@@ -909,10 +909,10 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
      *   }
      * }
      */
-    for(;;) {
-        if(U_SUCCESS(*err)) {
+    برائے(;;) {
+        اگر(U_SUCCESS(*err)) {
             /* convert */
-            fromUnicode(pArgs, err);
+            fromUnicode(p_دلائل, err);
 
             /*
              * set a flag for whether the converter
@@ -921,20 +921,20 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
              * need not check cnv->preFromULength==0 because a replay (<0) will cause
              * s<sourceLimit before converterSawEndOfInput is checked
              */
-            converterSawEndOfInput=
+            converter_Saw_انتہا_کا_داخلہ=
                 static_cast<UBool>(U_SUCCESS(*err) &&
-                        pArgs->flush && pArgs->source==pArgs->sourceLimit &&
+                        p_دلائل->flush && p_دلائل->ماخذ==p_دلائل->ماخذ_حد_بندی &&
                         cnv->fromUChar32==0);
-        } else {
+        } ورنہ {
             /* handle error from ucnv_convertEx() */
-            converterSawEndOfInput=false;
+            converter_Saw_انتہا_کا_داخلہ=جھوٹ;
         }
 
         /* no callback called yet for this iteration */
-        calledCallback=false;
+        calledCallback=جھوٹ;
 
         /* no sourceIndex adjustment for conversion, only for callback output */
-        errorInputLength=0;
+        error_داخلہ_لمبائی=0;
 
         /*
          * loop for offsets and error handling
@@ -944,12 +944,12 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
          * 2. after the callback
          * 3. after the callback again if there was truncated input
          */
-        for(;;) {
+        برائے(;;) {
             /* update offsets if we write any */
-            if(offsets!=nullptr) {
-                int32_t length = static_cast<int32_t>(pArgs->target - t);
-                if(length>0) {
-                    _updateOffsets(offsets, length, sourceIndex, errorInputLength);
+            اگر(offsets!=خالی_اشاریہ) {
+                int32_t length = static_cast<int32_t>(p_دلائل->ہدف - t);
+                اگر(length>0) {
+                    _updateOffsets(offsets, length, ماخذ_اشاریہ, error_داخلہ_لمبائی);
 
                     /*
                      * if a converter handles offsets and updates the offsets
@@ -958,73 +958,73 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
                      * however, some converters do not handle offsets at all
                      * (sourceIndex<0) or may not update the offsets pointer
                      */
-                    pArgs->offsets=offsets+=length;
+                    p_دلائل->offsets=offsets+=length;
                 }
 
-                if(sourceIndex>=0) {
-                    sourceIndex += static_cast<int32_t>(pArgs->source - s);
+                اگر(ماخذ_اشاریہ>=0) {
+                    ماخذ_اشاریہ += static_cast<int32_t>(p_دلائل->ماخذ - s);
                 }
             }
 
-            if(cnv->preFromULength<0) {
+            اگر(cnv->preFromULength<0) {
                 /*
                  * switch the source to new replay units (cannot occur while replaying)
                  * after offset handling and before end-of-input and callback handling
                  */
-                if(realSource==nullptr) {
-                    realSource=pArgs->source;
-                    realSourceLimit=pArgs->sourceLimit;
-                    realFlush=pArgs->flush;
-                    realSourceIndex=sourceIndex;
+                اگر(real_ماخذ==خالی_اشاریہ) {
+                    real_ماخذ=p_دلائل->ماخذ;
+                    real_ماخذ_حد_بندی=p_دلائل->ماخذ_حد_بندی;
+                    realFlush=p_دلائل->flush;
+                    real_ماخذ_اشاریہ=ماخذ_اشاریہ;
 
                     uprv_memcpy(replay, cnv->preFromU, -cnv->preFromULength*U_SIZEOF_UCHAR);
-                    pArgs->source=replay;
-                    pArgs->sourceLimit=replay-cnv->preFromULength;
-                    pArgs->flush=false;
-                    if((sourceIndex+=cnv->preFromULength)<0) {
-                        sourceIndex=-1;
+                    p_دلائل->ماخذ=replay;
+                    p_دلائل->ماخذ_حد_بندی=replay-cnv->preFromULength;
+                    p_دلائل->flush=جھوٹ;
+                    اگر((ماخذ_اشاریہ+=cnv->preFromULength)<0) {
+                        ماخذ_اشاریہ=-1;
                     }
 
                     cnv->preFromULength=0;
-                } else {
+                } ورنہ {
                     /* see implementation note before _fromUnicodeWithCallback() */
-                    U_ASSERT(realSource==nullptr);
-                    *err=U_INTERNAL_PROGRAM_ERROR;
+                    U_ASSERT(real_ماخذ==خالی_اشاریہ);
+                    *err=U_اندرونی_پروگرام_ERROR;
                 }
             }
 
             /* update pointers */
-            s=pArgs->source;
-            t=pArgs->target;
+            s=p_دلائل->ماخذ;
+            t=p_دلائل->ہدف;
 
-            if(U_SUCCESS(*err)) {
-                if(s<pArgs->sourceLimit) {
+            اگر(U_SUCCESS(*err)) {
+                اگر(s<p_دلائل->ماخذ_حد_بندی) {
                     /*
                      * continue with the conversion loop while there is still input left
                      * (continue converting by breaking out of only the inner loop)
                      */
-                    break;
-                } else if(realSource!=nullptr) {
+                    توڑو;
+                } ورنہ اگر(real_ماخذ!=خالی_اشاریہ) {
                     /* switch back from replaying to the real source and continue */
-                    pArgs->source=realSource;
-                    pArgs->sourceLimit=realSourceLimit;
-                    pArgs->flush=realFlush;
-                    sourceIndex=realSourceIndex;
+                    p_دلائل->ماخذ=real_ماخذ;
+                    p_دلائل->ماخذ_حد_بندی=real_ماخذ_حد_بندی;
+                    p_دلائل->flush=realFlush;
+                    ماخذ_اشاریہ=real_ماخذ_اشاریہ;
 
-                    realSource=nullptr;
-                    break;
-                } else if(pArgs->flush && cnv->fromUChar32!=0) {
+                    real_ماخذ=خالی_اشاریہ;
+                    توڑو;
+                } ورنہ اگر(p_دلائل->flush && cnv->fromUChar32!=0) {
                     /*
                      * the entire input stream is consumed
                      * and there is a partial, truncated input sequence left
                      */
 
                     /* inject an error and continue with callback handling */
-                    *err=U_TRUNCATED_CHAR_FOUND;
-                    calledCallback=false; /* new error condition */
-                } else {
+                    *err=U_TRUNCATED_CHAR_ملا;
+                    calledCallback=جھوٹ; /* new error condition */
+                } ورنہ {
                     /* input consumed */
-                    if(pArgs->flush) {
+                    اگر(p_دلائل->flush) {
                         /*
                          * return to the conversion loop once more if the flush
                          * flag is set and the conversion function has not
@@ -1032,28 +1032,28 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
                          *
                          * (continue converting by breaking out of only the inner loop)
                          */
-                        if(!converterSawEndOfInput) {
-                            break;
+                        اگر(!converter_Saw_انتہا_کا_داخلہ) {
+                            توڑو;
                         }
 
                         /* reset the converter without calling the callback function */
-                        _reset(cnv, UCNV_RESET_FROM_UNICODE, false);
+                        _reset(cnv, UCNV_RESET_FROM_UNICODE, جھوٹ);
                     }
 
                     /* done successfully */
-                    return;
+                    واپس;
                 }
             }
 
             /* U_FAILURE(*err) */
             {
-                UErrorCode e;
+                UError_رمز e;
 
-                if( calledCallback ||
-                    (e=*err)==U_BUFFER_OVERFLOW_ERROR ||
-                    (e!=U_INVALID_CHAR_FOUND &&
-                     e!=U_ILLEGAL_CHAR_FOUND &&
-                     e!=U_TRUNCATED_CHAR_FOUND)
+                اگر( calledCallback ||
+                    (e=*err)==U_بفر_حد_سے_تجاوز_ERROR ||
+                    (e!=U_INVALID_CHAR_ملا &&
+                     e!=U_ILLEGAL_CHAR_ملا &&
+                     e!=U_TRUNCATED_CHAR_ملا)
                 ) {
                     /*
                      * the callback did not or cannot resolve the error:
@@ -1067,43 +1067,43 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
                      * copied back into the UConverter
                      * and the real arguments must be restored
                      */
-                    if(realSource!=nullptr) {
+                    اگر(real_ماخذ!=خالی_اشاریہ) {
                         int32_t length;
 
                         U_ASSERT(cnv->preFromULength==0);
 
-                        length = static_cast<int32_t>(pArgs->sourceLimit - pArgs->source);
-                        if(length>0) {
-                            u_memcpy(cnv->preFromU, pArgs->source, length);
+                        length = static_cast<int32_t>(p_دلائل->ماخذ_حد_بندی - p_دلائل->ماخذ);
+                        اگر(length>0) {
+                            u_memcpy(cnv->preFromU, p_دلائل->ماخذ, length);
                             cnv->preFromULength = static_cast<int8_t>(-length);
                         }
 
-                        pArgs->source=realSource;
-                        pArgs->sourceLimit=realSourceLimit;
-                        pArgs->flush=realFlush;
+                        p_دلائل->ماخذ=real_ماخذ;
+                        p_دلائل->ماخذ_حد_بندی=real_ماخذ_حد_بندی;
+                        p_دلائل->flush=realFlush;
                     }
 
-                    return;
+                    واپس;
                 }
             }
 
             /* callback handling */
             {
-                UChar32 codePoint;
+                UChar32 رمز_نقطہ;
 
                 /* get and write the code point */
-                codePoint=cnv->fromUChar32;
-                errorInputLength=0;
-                U16_APPEND_UNSAFE(cnv->invalidUCharBuffer, errorInputLength, codePoint);
-                cnv->invalidUCharLength = static_cast<int8_t>(errorInputLength);
+                رمز_نقطہ=cnv->fromUChar32;
+                error_داخلہ_لمبائی=0;
+                U16_APPEND_UNSAFE(cnv->invalid_UChar_بفر, error_داخلہ_لمبائی, رمز_نقطہ);
+                cnv->invalid_UChar_لمبائی = static_cast<int8_t>(error_داخلہ_لمبائی);
 
                 /* set the converter state to deal with the next character */
                 cnv->fromUChar32=0;
 
                 /* call the callback function */
-                cnv->fromUCharErrorBehaviour(cnv->fromUContext, pArgs,
-                    cnv->invalidUCharBuffer, errorInputLength, codePoint,
-                    *err==U_INVALID_CHAR_FOUND ? UCNV_UNASSIGNED : UCNV_ILLEGAL,
+                cnv->fromUCharErrorBehaviour(cnv->fromUContext, p_دلائل,
+                    cnv->invalid_UChar_بفر, error_داخلہ_لمبائی, رمز_نقطہ,
+                    *err==U_INVALID_CHAR_ملا ? UCNV_UNASSIGNED : UCNV_ILLEGAL,
                     err);
             }
 
@@ -1114,7 +1114,7 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
              * that a callback was called;
              * if the callback did not resolve the error, then we return
              */
-            calledCallback=true;
+            calledCallback=سچ;
         }
     }
 }
@@ -1124,90 +1124,90 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
  * Call this function if(cnv->charErrorBufferLength>0).
  * @return true if overflow
  */
-static UBool
-ucnv_outputOverflowFromUnicode(UConverter *cnv,
-                               char **target, const char *targetLimit,
+ساکن UBool
+ucnv_output_حد_سے_تجاوز_From_Unicode(UConverter *cnv,
+                               حرف **ہدف, ثابت حرف *ہدف_حد_بندی,
                                int32_t **pOffsets,
-                               UErrorCode *err) {
+                               UError_رمز *err) {
     int32_t *offsets;
-    char *overflow, *t;
+    حرف *حد_سے_تجاوز, *t;
     int32_t i, length;
 
-    t=*target;
-    if(pOffsets!=nullptr) {
+    t=*ہدف;
+    اگر(pOffsets!=خالی_اشاریہ) {
         offsets=*pOffsets;
-    } else {
-        offsets=nullptr;
+    } ورنہ {
+        offsets=خالی_اشاریہ;
     }
 
-    overflow = reinterpret_cast<char*>(cnv->charErrorBuffer);
-    length=cnv->charErrorBufferLength;
+    حد_سے_تجاوز = reinterpret_cast<حرف*>(cnv->char_Error_بفر);
+    length=cnv->char_Error_بفر_لمبائی;
     i=0;
-    while(i<length) {
-        if(t==targetLimit) {
+    جب(i<length) {
+        اگر(t==ہدف_حد_بندی) {
             /* the overflow buffer contains too much, keep the rest */
             int32_t j=0;
 
-            do {
-                overflow[j++]=overflow[i++];
-            } while(i<length);
+            کرو {
+                حد_سے_تجاوز[j++]=حد_سے_تجاوز[i++];
+            } جب(i<length);
 
-            cnv->charErrorBufferLength = static_cast<int8_t>(j);
-            *target=t;
-            if(offsets!=nullptr) {
+            cnv->char_Error_بفر_لمبائی = static_cast<int8_t>(j);
+            *ہدف=t;
+            اگر(offsets!=خالی_اشاریہ) {
                 *pOffsets=offsets;
             }
-            *err=U_BUFFER_OVERFLOW_ERROR;
-            return true;
+            *err=U_بفر_حد_سے_تجاوز_ERROR;
+            واپس سچ;
         }
 
         /* copy the overflow contents to the target */
-        *t++=overflow[i++];
-        if(offsets!=nullptr) {
+        *t++=حد_سے_تجاوز[i++];
+        اگر(offsets!=خالی_اشاریہ) {
             *offsets++=-1; /* no source index available for old output */
         }
     }
 
     /* the overflow buffer is completely copied to the target */
-    cnv->charErrorBufferLength=0;
-    *target=t;
-    if(offsets!=nullptr) {
+    cnv->char_Error_بفر_لمبائی=0;
+    *ہدف=t;
+    اگر(offsets!=خالی_اشاریہ) {
         *pOffsets=offsets;
     }
-    return false;
+    واپس جھوٹ;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI خالی U_EXPORT2
 ucnv_fromUnicode(UConverter *cnv,
-                 char **target, const char *targetLimit,
-                 const char16_t **source, const char16_t *sourceLimit,
+                 حرف **ہدف, ثابت حرف *ہدف_حد_بندی,
+                 ثابت char16_t **ماخذ, ثابت char16_t *ماخذ_حد_بندی,
                  int32_t *offsets,
                  UBool flush,
-                 UErrorCode *err) {
-    UConverterFromUnicodeArgs args;
-    const char16_t *s;
-    char *t;
+                 UError_رمز *err) {
+    UConverter_From_Unicode_دلائل دلائل_2;
+    ثابت char16_t *s;
+    حرف *t;
 
     /* check parameters */
-    if(err==nullptr || U_FAILURE(*err)) {
-        return;
+    اگر(err==خالی_اشاریہ || U_FAILURE(*err)) {
+        واپس;
     }
 
-    if(cnv==nullptr || target==nullptr || source==nullptr) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    اگر(cnv==خالی_اشاریہ || ہدف==خالی_اشاریہ || ماخذ==خالی_اشاریہ) {
+        *err=U_ILLEGAL_دلیل_ERROR;
+        واپس;
     }
 
-    s=*source;
-    t=*target;
+    s=*ماخذ;
+    t=*ہدف;
 
-    if ((const void *)U_MAX_PTR(sourceLimit) == (const void *)sourceLimit) {
+    اگر ((ثابت خالی *)U_MAX_PTR(ماخذ_حد_بندی) == (ثابت خالی *)ماخذ_حد_بندی) {
         /*
         Prevent code from going into an infinite loop in case we do hit this
         limit. The limit pointer is expected to be on a char16_t * boundary.
         This also prevents the next argument check from failing.
         */
-        sourceLimit = (const char16_t *)(((const char *)sourceLimit) - 1);
+        ماخذ_حد_بندی = (ثابت char16_t *)(((ثابت حرف *)ماخذ_حد_بندی) - 1);
     }
 
     /*
@@ -1229,27 +1229,27 @@ ucnv_fromUnicode(UConverter *cnv,
      * 3) Make sure that the user didn't incorrectly cast a char16_t * pointer
      * to a char * pointer and provide an incomplete char16_t code unit.
      */
-    if (sourceLimit<s || targetLimit<t ||
-        ((size_t)(sourceLimit-s)>(size_t)0x3fffffff && sourceLimit>s) ||
-        ((size_t)(targetLimit-t)>(size_t)0x7fffffff && targetLimit>t) ||
-        (((const char *)sourceLimit-(const char *)s) & 1) != 0)
+    اگر (ماخذ_حد_بندی<s || ہدف_حد_بندی<t ||
+        ((size_t)(ماخذ_حد_بندی-s)>(size_t)0x3fffffff && ماخذ_حد_بندی>s) ||
+        ((size_t)(ہدف_حد_بندی-t)>(size_t)0x7fffffff && ہدف_حد_بندی>t) ||
+        (((ثابت حرف *)ماخذ_حد_بندی-(ثابت حرف *)s) & 1) != 0)
     {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *err=U_ILLEGAL_دلیل_ERROR;
+        واپس;
     }
     
     /* output the target overflow buffer */
-    if( cnv->charErrorBufferLength>0 &&
-        ucnv_outputOverflowFromUnicode(cnv, target, targetLimit, &offsets, err)
+    اگر( cnv->char_Error_بفر_لمبائی>0 &&
+        ucnv_output_حد_سے_تجاوز_From_Unicode(cnv, ہدف, ہدف_حد_بندی, &offsets, err)
     ) {
         /* U_BUFFER_OVERFLOW_ERROR */
-        return;
+        واپس;
     }
     /* *target may have moved, therefore stop using t */
 
-    if(!flush && s==sourceLimit && cnv->preFromULength>=0) {
+    اگر(!flush && s==ماخذ_حد_بندی && cnv->preFromULength>=0) {
         /* the overflow buffer is emptied and there is no new input: we are done */
-        return;
+        واپس;
     }
 
     /*
@@ -1261,89 +1261,89 @@ ucnv_fromUnicode(UConverter *cnv,
      */
 
     /* prepare the converter arguments */
-    args.converter=cnv;
-    args.flush=flush;
-    args.offsets=offsets;
-    args.source=s;
-    args.sourceLimit=sourceLimit;
-    args.target=*target;
-    args.targetLimit=targetLimit;
-    args.size=sizeof(args);
+    دلائل_2.converter=cnv;
+    دلائل_2.flush=flush;
+    دلائل_2.offsets=offsets;
+    دلائل_2.ماخذ=s;
+    دلائل_2.ماخذ_حد_بندی=ماخذ_حد_بندی;
+    دلائل_2.ہدف=*ہدف;
+    دلائل_2.ہدف_حد_بندی=ہدف_حد_بندی;
+    دلائل_2.size=حجم(دلائل_2);
 
-    _fromUnicodeWithCallback(&args, err);
+    _fromUnicodeWithCallback(&دلائل_2, err);
 
-    *source=args.source;
-    *target=args.target;
+    *ماخذ=دلائل_2.ماخذ;
+    *ہدف=دلائل_2.ہدف;
 }
 
 /* ucnv_toUnicode() --------------------------------------------------------- */
 
-static void
-_toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
-    UConverterToUnicode toUnicode;
+ساکن خالی
+مقصد_Unicode_With_Callback(UConverter_مقصد_Unicode_دلائل *p_دلائل, UError_رمز *err) {
+    UConverter_مقصد_Unicode مقصد_Unicode;
     UConverter *cnv;
-    const char *s;
+    ثابت حرف *s;
     char16_t *t;
     int32_t *offsets;
-    int32_t sourceIndex;
-    int32_t errorInputLength;
-    UBool converterSawEndOfInput, calledCallback;
+    int32_t ماخذ_اشاریہ;
+    int32_t error_داخلہ_لمبائی;
+    UBool converter_Saw_انتہا_کا_داخلہ, calledCallback;
 
     /* variables for m:n conversion */
-    char replay[UCNV_EXT_MAX_BYTES];
-    const char *realSource, *realSourceLimit;
-    int32_t realSourceIndex;
+    حرف replay[UCNV_EXT_MAX_بائٹیں];
+    ثابت حرف *real_ماخذ, *real_ماخذ_حد_بندی;
+    int32_t real_ماخذ_اشاریہ;
     UBool realFlush;
 
-    cnv=pArgs->converter;
-    s=pArgs->source;
-    t=pArgs->target;
-    offsets=pArgs->offsets;
+    cnv=p_دلائل->converter;
+    s=p_دلائل->ماخذ;
+    t=p_دلائل->ہدف;
+    offsets=p_دلائل->offsets;
 
     /* get the converter implementation function */
-    sourceIndex=0;
-    if(offsets==nullptr) {
-        toUnicode=cnv->sharedData->impl->toUnicode;
-    } else {
-        toUnicode=cnv->sharedData->impl->toUnicodeWithOffsets;
-        if(toUnicode==nullptr) {
+    ماخذ_اشاریہ=0;
+    اگر(offsets==خالی_اشاریہ) {
+        مقصد_Unicode=cnv->shared_ڈیٹا->impl->مقصد_Unicode;
+    } ورنہ {
+        مقصد_Unicode=cnv->shared_ڈیٹا->impl->مقصد_Unicode_With_Offsets;
+        اگر(مقصد_Unicode==خالی_اشاریہ) {
             /* there is no WithOffsets implementation */
-            toUnicode=cnv->sharedData->impl->toUnicode;
+            مقصد_Unicode=cnv->shared_ڈیٹا->impl->مقصد_Unicode;
             /* we will write -1 for each offset */
-            sourceIndex=-1;
+            ماخذ_اشاریہ=-1;
         }
     }
 
-    if(cnv->preToULength>=0) {
+    اگر(cnv->pre_مقصد_ULength>=0) {
         /* normal mode */
-        realSource=nullptr;
+        real_ماخذ=خالی_اشاریہ;
 
         /* avoid compiler warnings - not otherwise necessary, and the values do not matter */
-        realSourceLimit=nullptr;
-        realFlush=false;
-        realSourceIndex=0;
-    } else {
+        real_ماخذ_حد_بندی=خالی_اشاریہ;
+        realFlush=جھوٹ;
+        real_ماخذ_اشاریہ=0;
+    } ورنہ {
         /*
          * Previous m:n conversion stored source units from a partial match
          * and failed to consume all of them.
          * We need to "replay" them from a temporary buffer and convert them first.
          */
-        if (!pArgs->source) {
-            *err=U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+        اگر (!p_دلائل->ماخذ) {
+            *err=U_ILLEGAL_دلیل_ERROR;
+            واپس;
         }
-        realSource=pArgs->source;
-        realSourceLimit=pArgs->sourceLimit;
-        realFlush=pArgs->flush;
-        realSourceIndex=sourceIndex;
+        real_ماخذ=p_دلائل->ماخذ;
+        real_ماخذ_حد_بندی=p_دلائل->ماخذ_حد_بندی;
+        realFlush=p_دلائل->flush;
+        real_ماخذ_اشاریہ=ماخذ_اشاریہ;
 
-        uprv_memcpy(replay, cnv->preToU, -cnv->preToULength);
-        pArgs->source=replay;
-        pArgs->sourceLimit=replay-cnv->preToULength;
-        pArgs->flush=false;
-        sourceIndex=-1;
+        uprv_memcpy(replay, cnv->pre_مقصد_U, -cnv->pre_مقصد_ULength);
+        p_دلائل->ماخذ=replay;
+        p_دلائل->ماخذ_حد_بندی=replay-cnv->pre_مقصد_ULength;
+        p_دلائل->flush=جھوٹ;
+        ماخذ_اشاریہ=-1;
 
-        cnv->preToULength=0;
+        cnv->pre_مقصد_ULength=0;
     }
 
     /*
@@ -1358,10 +1358,10 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
      *   }
      * }
      */
-    for(;;) {
-        if(U_SUCCESS(*err)) {
+    برائے(;;) {
+        اگر(U_SUCCESS(*err)) {
             /* convert */
-            toUnicode(pArgs, err);
+            مقصد_Unicode(p_دلائل, err);
 
             /*
              * set a flag for whether the converter
@@ -1370,20 +1370,20 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
              * need not check cnv->preToULength==0 because a replay (<0) will cause
              * s<sourceLimit before converterSawEndOfInput is checked
              */
-            converterSawEndOfInput=
+            converter_Saw_انتہا_کا_داخلہ=
                 static_cast<UBool>(U_SUCCESS(*err) &&
-                        pArgs->flush && pArgs->source==pArgs->sourceLimit &&
-                        cnv->toULength==0);
-        } else {
+                        p_دلائل->flush && p_دلائل->ماخذ==p_دلائل->ماخذ_حد_بندی &&
+                        cnv->مقصد_ULength==0);
+        } ورنہ {
             /* handle error from getNextUChar() or ucnv_convertEx() */
-            converterSawEndOfInput=false;
+            converter_Saw_انتہا_کا_داخلہ=جھوٹ;
         }
 
         /* no callback called yet for this iteration */
-        calledCallback=false;
+        calledCallback=جھوٹ;
 
         /* no sourceIndex adjustment for conversion, only for callback output */
-        errorInputLength=0;
+        error_داخلہ_لمبائی=0;
 
         /*
          * loop for offsets and error handling
@@ -1393,12 +1393,12 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
          * 2. after the callback
          * 3. after the callback again if there was truncated input
          */
-        for(;;) {
+        برائے(;;) {
             /* update offsets if we write any */
-            if(offsets!=nullptr) {
-                int32_t length = static_cast<int32_t>(pArgs->target - t);
-                if(length>0) {
-                    _updateOffsets(offsets, length, sourceIndex, errorInputLength);
+            اگر(offsets!=خالی_اشاریہ) {
+                int32_t length = static_cast<int32_t>(p_دلائل->ہدف - t);
+                اگر(length>0) {
+                    _updateOffsets(offsets, length, ماخذ_اشاریہ, error_داخلہ_لمبائی);
 
                     /*
                      * if a converter handles offsets and updates the offsets
@@ -1407,73 +1407,73 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
                      * however, some converters do not handle offsets at all
                      * (sourceIndex<0) or may not update the offsets pointer
                      */
-                    pArgs->offsets=offsets+=length;
+                    p_دلائل->offsets=offsets+=length;
                 }
 
-                if(sourceIndex>=0) {
-                    sourceIndex += static_cast<int32_t>(pArgs->source - s);
+                اگر(ماخذ_اشاریہ>=0) {
+                    ماخذ_اشاریہ += static_cast<int32_t>(p_دلائل->ماخذ - s);
                 }
             }
 
-            if(cnv->preToULength<0) {
+            اگر(cnv->pre_مقصد_ULength<0) {
                 /*
                  * switch the source to new replay units (cannot occur while replaying)
                  * after offset handling and before end-of-input and callback handling
                  */
-                if(realSource==nullptr) {
-                    realSource=pArgs->source;
-                    realSourceLimit=pArgs->sourceLimit;
-                    realFlush=pArgs->flush;
-                    realSourceIndex=sourceIndex;
+                اگر(real_ماخذ==خالی_اشاریہ) {
+                    real_ماخذ=p_دلائل->ماخذ;
+                    real_ماخذ_حد_بندی=p_دلائل->ماخذ_حد_بندی;
+                    realFlush=p_دلائل->flush;
+                    real_ماخذ_اشاریہ=ماخذ_اشاریہ;
 
-                    uprv_memcpy(replay, cnv->preToU, -cnv->preToULength);
-                    pArgs->source=replay;
-                    pArgs->sourceLimit=replay-cnv->preToULength;
-                    pArgs->flush=false;
-                    if((sourceIndex+=cnv->preToULength)<0) {
-                        sourceIndex=-1;
+                    uprv_memcpy(replay, cnv->pre_مقصد_U, -cnv->pre_مقصد_ULength);
+                    p_دلائل->ماخذ=replay;
+                    p_دلائل->ماخذ_حد_بندی=replay-cnv->pre_مقصد_ULength;
+                    p_دلائل->flush=جھوٹ;
+                    اگر((ماخذ_اشاریہ+=cnv->pre_مقصد_ULength)<0) {
+                        ماخذ_اشاریہ=-1;
                     }
 
-                    cnv->preToULength=0;
-                } else {
+                    cnv->pre_مقصد_ULength=0;
+                } ورنہ {
                     /* see implementation note before _fromUnicodeWithCallback() */
-                    U_ASSERT(realSource==nullptr);
-                    *err=U_INTERNAL_PROGRAM_ERROR;
+                    U_ASSERT(real_ماخذ==خالی_اشاریہ);
+                    *err=U_اندرونی_پروگرام_ERROR;
                 }
             }
 
             /* update pointers */
-            s=pArgs->source;
-            t=pArgs->target;
+            s=p_دلائل->ماخذ;
+            t=p_دلائل->ہدف;
 
-            if(U_SUCCESS(*err)) {
-                if(s<pArgs->sourceLimit) {
+            اگر(U_SUCCESS(*err)) {
+                اگر(s<p_دلائل->ماخذ_حد_بندی) {
                     /*
                      * continue with the conversion loop while there is still input left
                      * (continue converting by breaking out of only the inner loop)
                      */
-                    break;
-                } else if(realSource!=nullptr) {
+                    توڑو;
+                } ورنہ اگر(real_ماخذ!=خالی_اشاریہ) {
                     /* switch back from replaying to the real source and continue */
-                    pArgs->source=realSource;
-                    pArgs->sourceLimit=realSourceLimit;
-                    pArgs->flush=realFlush;
-                    sourceIndex=realSourceIndex;
+                    p_دلائل->ماخذ=real_ماخذ;
+                    p_دلائل->ماخذ_حد_بندی=real_ماخذ_حد_بندی;
+                    p_دلائل->flush=realFlush;
+                    ماخذ_اشاریہ=real_ماخذ_اشاریہ;
 
-                    realSource=nullptr;
-                    break;
-                } else if(pArgs->flush && cnv->toULength>0) {
+                    real_ماخذ=خالی_اشاریہ;
+                    توڑو;
+                } ورنہ اگر(p_دلائل->flush && cnv->مقصد_ULength>0) {
                     /*
                      * the entire input stream is consumed
                      * and there is a partial, truncated input sequence left
                      */
 
                     /* inject an error and continue with callback handling */
-                    *err=U_TRUNCATED_CHAR_FOUND;
-                    calledCallback=false; /* new error condition */
-                } else {
+                    *err=U_TRUNCATED_CHAR_ملا;
+                    calledCallback=جھوٹ; /* new error condition */
+                } ورنہ {
                     /* input consumed */
-                    if(pArgs->flush) {
+                    اگر(p_دلائل->flush) {
                         /*
                          * return to the conversion loop once more if the flush
                          * flag is set and the conversion function has not
@@ -1481,28 +1481,28 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
                          *
                          * (continue converting by breaking out of only the inner loop)
                          */
-                        if(!converterSawEndOfInput) {
-                            break;
+                        اگر(!converter_Saw_انتہا_کا_داخلہ) {
+                            توڑو;
                         }
 
                         /* reset the converter without calling the callback function */
-                        _reset(cnv, UCNV_RESET_TO_UNICODE, false);
+                        _reset(cnv, UCNV_RESET_مقصد_UNICODE, جھوٹ);
                     }
 
                     /* done successfully */
-                    return;
+                    واپس;
                 }
             }
 
             /* U_FAILURE(*err) */
             {
-                UErrorCode e;
+                UError_رمز e;
 
-                if( calledCallback ||
-                    (e=*err)==U_BUFFER_OVERFLOW_ERROR ||
-                    (e!=U_INVALID_CHAR_FOUND &&
-                     e!=U_ILLEGAL_CHAR_FOUND &&
-                     e!=U_TRUNCATED_CHAR_FOUND &&
+                اگر( calledCallback ||
+                    (e=*err)==U_بفر_حد_سے_تجاوز_ERROR ||
+                    (e!=U_INVALID_CHAR_ملا &&
+                     e!=U_ILLEGAL_CHAR_ملا &&
+                     e!=U_TRUNCATED_CHAR_ملا &&
                      e!=U_ILLEGAL_ESCAPE_SEQUENCE &&
                      e!=U_UNSUPPORTED_ESCAPE_SEQUENCE)
                 ) {
@@ -1518,44 +1518,44 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
                      * copied back into the UConverter
                      * and the real arguments must be restored
                      */
-                    if(realSource!=nullptr) {
+                    اگر(real_ماخذ!=خالی_اشاریہ) {
                         int32_t length;
 
-                        U_ASSERT(cnv->preToULength==0);
+                        U_ASSERT(cnv->pre_مقصد_ULength==0);
 
-                        length = static_cast<int32_t>(pArgs->sourceLimit - pArgs->source);
-                        if(length>0) {
-                            uprv_memcpy(cnv->preToU, pArgs->source, length);
-                            cnv->preToULength = static_cast<int8_t>(-length);
+                        length = static_cast<int32_t>(p_دلائل->ماخذ_حد_بندی - p_دلائل->ماخذ);
+                        اگر(length>0) {
+                            uprv_memcpy(cnv->pre_مقصد_U, p_دلائل->ماخذ, length);
+                            cnv->pre_مقصد_ULength = static_cast<int8_t>(-length);
                         }
 
-                        pArgs->source=realSource;
-                        pArgs->sourceLimit=realSourceLimit;
-                        pArgs->flush=realFlush;
+                        p_دلائل->ماخذ=real_ماخذ;
+                        p_دلائل->ماخذ_حد_بندی=real_ماخذ_حد_بندی;
+                        p_دلائل->flush=realFlush;
                     }
 
-                    return;
+                    واپس;
                 }
             }
 
             /* copy toUBytes[] to invalidCharBuffer[] */
-            errorInputLength=cnv->invalidCharLength=cnv->toULength;
-            if(errorInputLength>0) {
-                uprv_memcpy(cnv->invalidCharBuffer, cnv->toUBytes, errorInputLength);
+            error_داخلہ_لمبائی=cnv->invalid_Char_لمبائی=cnv->مقصد_ULength;
+            اگر(error_داخلہ_لمبائی>0) {
+                uprv_memcpy(cnv->invalid_Char_بفر, cnv->مقصد_UBytes, error_داخلہ_لمبائی);
             }
 
             /* set the converter state to deal with the next character */
-            cnv->toULength=0;
+            cnv->مقصد_ULength=0;
 
             /* call the callback function */
-            if(cnv->toUCallbackReason==UCNV_ILLEGAL && *err==U_INVALID_CHAR_FOUND) {
-                cnv->toUCallbackReason = UCNV_UNASSIGNED;
+            اگر(cnv->مقصد_UCallback_Reason==UCNV_ILLEGAL && *err==U_INVALID_CHAR_ملا) {
+                cnv->مقصد_UCallback_Reason = UCNV_UNASSIGNED;
             }
-            cnv->fromCharErrorBehaviour(cnv->toUContext, pArgs,
-                cnv->invalidCharBuffer, errorInputLength,
-                cnv->toUCallbackReason,
+            cnv->fromCharErrorBehaviour(cnv->مقصد_UContext, p_دلائل,
+                cnv->invalid_Char_بفر, error_داخلہ_لمبائی,
+                cnv->مقصد_UCallback_Reason,
                 err);
-            cnv->toUCallbackReason = UCNV_ILLEGAL; /* reset to default value */
+            cnv->مقصد_UCallback_Reason = UCNV_ILLEGAL; /* reset to default value */
 
             /*
              * loop back to the offset handling
@@ -1564,7 +1564,7 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
              * that a callback was called;
              * if the callback did not resolve the error, then we return
              */
-            calledCallback=true;
+            calledCallback=سچ;
         }
     }
 }
@@ -1574,90 +1574,90 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
  * Call this function if(cnv->UCharErrorBufferLength>0).
  * @return true if overflow
  */
-static UBool
-ucnv_outputOverflowToUnicode(UConverter *cnv,
-                             char16_t **target, const char16_t *targetLimit,
+ساکن UBool
+ucnv_output_حد_سے_تجاوز_مقصد_Unicode(UConverter *cnv,
+                             char16_t **ہدف, ثابت char16_t *ہدف_حد_بندی,
                              int32_t **pOffsets,
-                             UErrorCode *err) {
+                             UError_رمز *err) {
     int32_t *offsets;
-    char16_t *overflow, *t;
+    char16_t *حد_سے_تجاوز, *t;
     int32_t i, length;
 
-    t=*target;
-    if(pOffsets!=nullptr) {
+    t=*ہدف;
+    اگر(pOffsets!=خالی_اشاریہ) {
         offsets=*pOffsets;
-    } else {
-        offsets=nullptr;
+    } ورنہ {
+        offsets=خالی_اشاریہ;
     }
 
-    overflow=cnv->UCharErrorBuffer;
-    length=cnv->UCharErrorBufferLength;
+    حد_سے_تجاوز=cnv->UChar_Error_بفر;
+    length=cnv->UChar_Error_بفر_لمبائی;
     i=0;
-    while(i<length) {
-        if(t==targetLimit) {
+    جب(i<length) {
+        اگر(t==ہدف_حد_بندی) {
             /* the overflow buffer contains too much, keep the rest */
             int32_t j=0;
 
-            do {
-                overflow[j++]=overflow[i++];
-            } while(i<length);
+            کرو {
+                حد_سے_تجاوز[j++]=حد_سے_تجاوز[i++];
+            } جب(i<length);
 
-            cnv->UCharErrorBufferLength = static_cast<int8_t>(j);
-            *target=t;
-            if(offsets!=nullptr) {
+            cnv->UChar_Error_بفر_لمبائی = static_cast<int8_t>(j);
+            *ہدف=t;
+            اگر(offsets!=خالی_اشاریہ) {
                 *pOffsets=offsets;
             }
-            *err=U_BUFFER_OVERFLOW_ERROR;
-            return true;
+            *err=U_بفر_حد_سے_تجاوز_ERROR;
+            واپس سچ;
         }
 
         /* copy the overflow contents to the target */
-        *t++=overflow[i++];
-        if(offsets!=nullptr) {
+        *t++=حد_سے_تجاوز[i++];
+        اگر(offsets!=خالی_اشاریہ) {
             *offsets++=-1; /* no source index available for old output */
         }
     }
 
     /* the overflow buffer is completely copied to the target */
-    cnv->UCharErrorBufferLength=0;
-    *target=t;
-    if(offsets!=nullptr) {
+    cnv->UChar_Error_بفر_لمبائی=0;
+    *ہدف=t;
+    اگر(offsets!=خالی_اشاریہ) {
         *pOffsets=offsets;
     }
-    return false;
+    واپس جھوٹ;
 }
 
-U_CAPI void U_EXPORT2
-ucnv_toUnicode(UConverter *cnv,
-               char16_t **target, const char16_t *targetLimit,
-               const char **source, const char *sourceLimit,
+U_CAPI خالی U_EXPORT2
+ucnv_مقصد_Unicode(UConverter *cnv,
+               char16_t **ہدف, ثابت char16_t *ہدف_حد_بندی,
+               ثابت حرف **ماخذ, ثابت حرف *ماخذ_حد_بندی,
                int32_t *offsets,
                UBool flush,
-               UErrorCode *err) {
-    UConverterToUnicodeArgs args;
-    const char *s;
+               UError_رمز *err) {
+    UConverter_مقصد_Unicode_دلائل دلائل_2;
+    ثابت حرف *s;
     char16_t *t;
 
     /* check parameters */
-    if(err==nullptr || U_FAILURE(*err)) {
-        return;
+    اگر(err==خالی_اشاریہ || U_FAILURE(*err)) {
+        واپس;
     }
 
-    if(cnv==nullptr || target==nullptr || source==nullptr) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    اگر(cnv==خالی_اشاریہ || ہدف==خالی_اشاریہ || ماخذ==خالی_اشاریہ) {
+        *err=U_ILLEGAL_دلیل_ERROR;
+        واپس;
     }
 
-    s=*source;
-    t=*target;
+    s=*ماخذ;
+    t=*ہدف;
 
-    if ((const void *)U_MAX_PTR(targetLimit) == (const void *)targetLimit) {
+    اگر ((ثابت خالی *)U_MAX_PTR(ہدف_حد_بندی) == (ثابت خالی *)ہدف_حد_بندی) {
         /*
         Prevent code from going into an infinite loop in case we do hit this
         limit. The limit pointer is expected to be on a char16_t * boundary.
         This also prevents the next argument check from failing.
         */
-        targetLimit = (const char16_t *)(((const char *)targetLimit) - 1);
+        ہدف_حد_بندی = (ثابت char16_t *)(((ثابت حرف *)ہدف_حد_بندی) - 1);
     }
 
     /*
@@ -1679,27 +1679,27 @@ ucnv_toUnicode(UConverter *cnv,
      * 3) Make sure that the user didn't incorrectly cast a char16_t * pointer
      * to a char * pointer and provide an incomplete char16_t code unit.
      */
-    if (sourceLimit<s || targetLimit<t ||
-        ((size_t)(sourceLimit-s)>(size_t)0x7fffffff && sourceLimit>s) ||
-        ((size_t)(targetLimit-t)>(size_t)0x3fffffff && targetLimit>t) ||
-        (((const char *)targetLimit-(const char *)t) & 1) != 0
+    اگر (ماخذ_حد_بندی<s || ہدف_حد_بندی<t ||
+        ((size_t)(ماخذ_حد_بندی-s)>(size_t)0x7fffffff && ماخذ_حد_بندی>s) ||
+        ((size_t)(ہدف_حد_بندی-t)>(size_t)0x3fffffff && ہدف_حد_بندی>t) ||
+        (((ثابت حرف *)ہدف_حد_بندی-(ثابت حرف *)t) & 1) != 0
     ) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *err=U_ILLEGAL_دلیل_ERROR;
+        واپس;
     }
     
     /* output the target overflow buffer */
-    if( cnv->UCharErrorBufferLength>0 &&
-        ucnv_outputOverflowToUnicode(cnv, target, targetLimit, &offsets, err)
+    اگر( cnv->UChar_Error_بفر_لمبائی>0 &&
+        ucnv_output_حد_سے_تجاوز_مقصد_Unicode(cnv, ہدف, ہدف_حد_بندی, &offsets, err)
     ) {
         /* U_BUFFER_OVERFLOW_ERROR */
-        return;
+        واپس;
     }
     /* *target may have moved, therefore stop using t */
 
-    if(!flush && s==sourceLimit && cnv->preToULength>=0) {
+    اگر(!flush && s==ماخذ_حد_بندی && cnv->pre_مقصد_ULength>=0) {
         /* the overflow buffer is emptied and there is no new input: we are done */
-        return;
+        واپس;
     }
 
     /*
@@ -1711,171 +1711,171 @@ ucnv_toUnicode(UConverter *cnv,
      */
 
     /* prepare the converter arguments */
-    args.converter=cnv;
-    args.flush=flush;
-    args.offsets=offsets;
-    args.source=s;
-    args.sourceLimit=sourceLimit;
-    args.target=*target;
-    args.targetLimit=targetLimit;
-    args.size=sizeof(args);
+    دلائل_2.converter=cnv;
+    دلائل_2.flush=flush;
+    دلائل_2.offsets=offsets;
+    دلائل_2.ماخذ=s;
+    دلائل_2.ماخذ_حد_بندی=ماخذ_حد_بندی;
+    دلائل_2.ہدف=*ہدف;
+    دلائل_2.ہدف_حد_بندی=ہدف_حد_بندی;
+    دلائل_2.size=حجم(دلائل_2);
 
-    _toUnicodeWithCallback(&args, err);
+    مقصد_Unicode_With_Callback(&دلائل_2, err);
 
-    *source=args.source;
-    *target=args.target;
+    *ماخذ=دلائل_2.ماخذ;
+    *ہدف=دلائل_2.ہدف;
 }
 
 /* ucnv_to/fromUChars() ----------------------------------------------------- */
 
 U_CAPI int32_t U_EXPORT2
 ucnv_fromUChars(UConverter *cnv,
-                char *dest, int32_t destCapacity,
-                const char16_t *src, int32_t srcLength,
-                UErrorCode *pErrorCode) {
-    const char16_t *srcLimit;
-    char *originalDest, *destLimit;
-    int32_t destLength;
+                حرف *dest, int32_t dest_استعداد,
+                ثابت char16_t *src, int32_t src_لمبائی,
+                UError_رمز *p_Error_رمز) {
+    ثابت char16_t *src_حد_بندی;
+    حرف *originalDest, *dest_حد_بندی;
+    int32_t dest_لمبائی;
 
     /* check arguments */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    اگر(p_Error_رمز==خالی_اشاریہ || U_FAILURE(*p_Error_رمز)) {
+        واپس 0;
     }
 
-    if( cnv==nullptr ||
-        destCapacity<0 || (destCapacity>0 && dest==nullptr) ||
-        srcLength<-1 || (srcLength!=0 && src==nullptr)
+    اگر( cnv==خالی_اشاریہ ||
+        dest_استعداد<0 || (dest_استعداد>0 && dest==خالی_اشاریہ) ||
+        src_لمبائی<-1 || (src_لمبائی!=0 && src==خالی_اشاریہ)
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
 
     /* initialize */
     ucnv_resetFromUnicode(cnv);
     originalDest=dest;
-    if(srcLength==-1) {
-        srcLength=u_strlen(src);
+    اگر(src_لمبائی==-1) {
+        src_لمبائی=u_strlen(src);
     }
-    if(srcLength>0) {
-        srcLimit=src+srcLength;
-        destCapacity=pinCapacity(dest, destCapacity);
-        destLimit=dest+destCapacity;
+    اگر(src_لمبائی>0) {
+        src_حد_بندی=src+src_لمبائی;
+        dest_استعداد=pin_استعداد(dest, dest_استعداد);
+        dest_حد_بندی=dest+dest_استعداد;
 
         /* perform the conversion */
-        UErrorCode bufferStatus = U_ZERO_ERROR;
-        ucnv_fromUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, true, &bufferStatus);
-        destLength=(int32_t)(dest-originalDest);
+        UError_رمز بفر_حالت = U_ZERO_ERROR;
+        ucnv_fromUnicode(cnv, &dest, dest_حد_بندی, &src, src_حد_بندی, خالی_اشاریہ, سچ, &بفر_حالت);
+        dest_لمبائی=(int32_t)(dest-originalDest);
 
         /* if an overflow occurs, then get the preflighting length */
-        if(bufferStatus==U_BUFFER_OVERFLOW_ERROR) {
-            char buffer[1024];
+        اگر(بفر_حالت==U_بفر_حد_سے_تجاوز_ERROR) {
+            حرف بفر[1024];
 
-            destLimit=buffer+sizeof(buffer);
-            do {
-                dest=buffer;
-                bufferStatus=U_ZERO_ERROR;
-                ucnv_fromUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, true, &bufferStatus);
-                destLength+=(int32_t)(dest-buffer);
-            } while(bufferStatus==U_BUFFER_OVERFLOW_ERROR);
+            dest_حد_بندی=بفر+حجم(بفر);
+            کرو {
+                dest=بفر;
+                بفر_حالت=U_ZERO_ERROR;
+                ucnv_fromUnicode(cnv, &dest, dest_حد_بندی, &src, src_حد_بندی, خالی_اشاریہ, سچ, &بفر_حالت);
+                dest_لمبائی+=(int32_t)(dest-بفر);
+            } جب(بفر_حالت==U_بفر_حد_سے_تجاوز_ERROR);
         }
-        if (U_FAILURE(bufferStatus)) {
-            *pErrorCode = bufferStatus;
+        اگر (U_FAILURE(بفر_حالت)) {
+            *p_Error_رمز = بفر_حالت;
         }
-    } else {
-        destLength=0;
+    } ورنہ {
+        dest_لمبائی=0;
     }
 
-    return u_terminateChars(originalDest, destCapacity, destLength, pErrorCode);
+    واپس u_terminateChars(originalDest, dest_استعداد, dest_لمبائی, p_Error_رمز);
 }
 
 U_CAPI int32_t U_EXPORT2
-ucnv_toUChars(UConverter *cnv,
-              char16_t *dest, int32_t destCapacity,
-              const char *src, int32_t srcLength,
-              UErrorCode *pErrorCode) {
-    const char *srcLimit;
-    char16_t *originalDest, *destLimit;
-    int32_t destLength;
+ucnv_مقصد_UChars(UConverter *cnv,
+              char16_t *dest, int32_t dest_استعداد,
+              ثابت حرف *src, int32_t src_لمبائی,
+              UError_رمز *p_Error_رمز) {
+    ثابت حرف *src_حد_بندی;
+    char16_t *originalDest, *dest_حد_بندی;
+    int32_t dest_لمبائی;
 
     /* check arguments */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    اگر(p_Error_رمز==خالی_اشاریہ || U_FAILURE(*p_Error_رمز)) {
+        واپس 0;
     }
 
-    if( cnv==nullptr ||
-        destCapacity<0 || (destCapacity>0 && dest==nullptr) ||
-        srcLength<-1 || (srcLength!=0 && src==nullptr))
+    اگر( cnv==خالی_اشاریہ ||
+        dest_استعداد<0 || (dest_استعداد>0 && dest==خالی_اشاریہ) ||
+        src_لمبائی<-1 || (src_لمبائی!=0 && src==خالی_اشاریہ))
     {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
 
     /* initialize */
-    ucnv_resetToUnicode(cnv);
+    ucnv_reset_مقصد_Unicode(cnv);
     originalDest=dest;
-    if(srcLength==-1) {
-        srcLength=(int32_t)uprv_strlen(src);
+    اگر(src_لمبائی==-1) {
+        src_لمبائی=(int32_t)uprv_strlen(src);
     }
-    if(srcLength>0) {
-        srcLimit=src+srcLength;
-        destCapacity=pinCapacity(dest, destCapacity);
-        destLimit=dest+destCapacity;
+    اگر(src_لمبائی>0) {
+        src_حد_بندی=src+src_لمبائی;
+        dest_استعداد=pin_استعداد(dest, dest_استعداد);
+        dest_حد_بندی=dest+dest_استعداد;
 
         /* perform the conversion */
-        UErrorCode bufferStatus = U_ZERO_ERROR;
-        ucnv_toUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, true, &bufferStatus);
-        destLength=(int32_t)(dest-originalDest);
+        UError_رمز بفر_حالت = U_ZERO_ERROR;
+        ucnv_مقصد_Unicode(cnv, &dest, dest_حد_بندی, &src, src_حد_بندی, خالی_اشاریہ, سچ, &بفر_حالت);
+        dest_لمبائی=(int32_t)(dest-originalDest);
 
         /* if an overflow occurs, then get the preflighting length */
-        if(bufferStatus==U_BUFFER_OVERFLOW_ERROR)
+        اگر(بفر_حالت==U_بفر_حد_سے_تجاوز_ERROR)
         {
-            char16_t buffer[1024];
+            char16_t بفر[1024];
 
-            destLimit=buffer+UPRV_LENGTHOF(buffer);
-            do {
-                dest=buffer;
-                bufferStatus=U_ZERO_ERROR;
-                ucnv_toUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, true, &bufferStatus);
-                destLength+=(int32_t)(dest-buffer);
+            dest_حد_بندی=بفر+UPRV_LENGTHOF(بفر);
+            کرو {
+                dest=بفر;
+                بفر_حالت=U_ZERO_ERROR;
+                ucnv_مقصد_Unicode(cnv, &dest, dest_حد_بندی, &src, src_حد_بندی, خالی_اشاریہ, سچ, &بفر_حالت);
+                dest_لمبائی+=(int32_t)(dest-بفر);
             }
-            while(bufferStatus==U_BUFFER_OVERFLOW_ERROR);
+            جب(بفر_حالت==U_بفر_حد_سے_تجاوز_ERROR);
         }
-        if (U_FAILURE(bufferStatus)) {
-            *pErrorCode = bufferStatus;
+        اگر (U_FAILURE(بفر_حالت)) {
+            *p_Error_رمز = بفر_حالت;
         }
-    } else {
-        destLength=0;
+    } ورنہ {
+        dest_لمبائی=0;
     }
 
-    return u_terminateUChars(originalDest, destCapacity, destLength, pErrorCode);
+    واپس u_terminateUChars(originalDest, dest_استعداد, dest_لمبائی, p_Error_رمز);
 }
 
 /* ucnv_getNextUChar() ------------------------------------------------------ */
 
 U_CAPI UChar32 U_EXPORT2
-ucnv_getNextUChar(UConverter *cnv,
-                  const char **source, const char *sourceLimit,
-                  UErrorCode *err) {
-    UConverterToUnicodeArgs args;
-    char16_t buffer[U16_MAX_LENGTH];
-    const char *s;
+ucnv_get_اگلا_UChar(UConverter *cnv,
+                  ثابت حرف **ماخذ, ثابت حرف *ماخذ_حد_بندی,
+                  UError_رمز *err) {
+    UConverter_مقصد_Unicode_دلائل دلائل_2;
+    char16_t بفر[U16_MAX_لمبائی];
+    ثابت حرف *s;
     UChar32 c;
     int32_t i, length;
 
     /* check parameters */
-    if(err==nullptr || U_FAILURE(*err)) {
-        return 0xffff;
+    اگر(err==خالی_اشاریہ || U_FAILURE(*err)) {
+        واپس 0xffff;
     }
 
-    if(cnv==nullptr || source==nullptr) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0xffff;
+    اگر(cnv==خالی_اشاریہ || ماخذ==خالی_اشاریہ) {
+        *err=U_ILLEGAL_دلیل_ERROR;
+        واپس 0xffff;
     }
 
-    s=*source;
-    if(sourceLimit<s) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0xffff;
+    s=*ماخذ;
+    اگر(ماخذ_حد_بندی<s) {
+        *err=U_ILLEGAL_دلیل_ERROR;
+        واپس 0xffff;
     }
 
     /*
@@ -1890,30 +1890,30 @@ ucnv_getNextUChar(UConverter *cnv,
      * consumed or the target filled (unless an error occurs).
      * An adjustment would be sourceLimit=t+0x7fffffff; for example.
      */
-    if(((size_t)(sourceLimit-s)>(size_t)0x7fffffff && sourceLimit>s)) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0xffff;
+    اگر(((size_t)(ماخذ_حد_بندی-s)>(size_t)0x7fffffff && ماخذ_حد_بندی>s)) {
+        *err=U_ILLEGAL_دلیل_ERROR;
+        واپس 0xffff;
     }
 
     c=U_SENTINEL;
 
     /* flush the target overflow buffer */
-    if(cnv->UCharErrorBufferLength>0) {
-        char16_t *overflow;
+    اگر(cnv->UChar_Error_بفر_لمبائی>0) {
+        char16_t *حد_سے_تجاوز;
 
-        overflow=cnv->UCharErrorBuffer;
+        حد_سے_تجاوز=cnv->UChar_Error_بفر;
         i=0;
-        length=cnv->UCharErrorBufferLength;
-        U16_NEXT(overflow, i, length, c);
+        length=cnv->UChar_Error_بفر_لمبائی;
+        U16_اگلا(حد_سے_تجاوز, i, length, c);
 
         /* move the remaining overflow contents up to the beginning */
-        if((cnv->UCharErrorBufferLength=(int8_t)(length-i))>0) {
-            uprv_memmove(cnv->UCharErrorBuffer, cnv->UCharErrorBuffer+i,
-                         cnv->UCharErrorBufferLength*U_SIZEOF_UCHAR);
+        اگر((cnv->UChar_Error_بفر_لمبائی=(int8_t)(length-i))>0) {
+            uprv_memmove(cnv->UChar_Error_بفر, cnv->UChar_Error_بفر+i,
+                         cnv->UChar_Error_بفر_لمبائی*U_SIZEOF_UCHAR);
         }
 
-        if(!U16_IS_LEAD(c) || i<length) {
-            return c;
+        اگر(!U16_IS_LEAD(c) || i<length) {
+            واپس c;
         }
         /*
          * Continue if the overflow buffer contained only a lead surrogate,
@@ -1930,16 +1930,16 @@ ucnv_getNextUChar(UConverter *cnv,
      */
 
     /* prepare the converter arguments */
-    args.converter=cnv;
-    args.flush=true;
-    args.offsets=nullptr;
-    args.source=s;
-    args.sourceLimit=sourceLimit;
-    args.target=buffer;
-    args.targetLimit=buffer+1;
-    args.size=sizeof(args);
+    دلائل_2.converter=cnv;
+    دلائل_2.flush=سچ;
+    دلائل_2.offsets=خالی_اشاریہ;
+    دلائل_2.ماخذ=s;
+    دلائل_2.ماخذ_حد_بندی=ماخذ_حد_بندی;
+    دلائل_2.ہدف=بفر;
+    دلائل_2.ہدف_حد_بندی=بفر+1;
+    دلائل_2.size=حجم(دلائل_2);
 
-    if(c<0) {
+    اگر(c<0) {
         /*
          * call the native getNextUChar() implementation if we are
          * at a character boundary (toULength==0)
@@ -1948,15 +1948,15 @@ ucnv_getNextUChar(UConverter *cnv,
          * U_TRUNCATED_CHAR_FOUND for truncated input,
          * in addition to setting toULength/toUBytes[]
          */
-        if(cnv->toULength==0 && cnv->sharedData->impl->getNextUChar!=nullptr) {
-            c=cnv->sharedData->impl->getNextUChar(&args, err);
-            *source=s=args.source;
-            if(*err==U_INDEX_OUTOFBOUNDS_ERROR) {
+        اگر(cnv->مقصد_ULength==0 && cnv->shared_ڈیٹا->impl->get_اگلا_UChar!=خالی_اشاریہ) {
+            c=cnv->shared_ڈیٹا->impl->get_اگلا_UChar(&دلائل_2, err);
+            *ماخذ=s=دلائل_2.ماخذ;
+            اگر(*err==U_اشاریہ_OUTOFBOUNDS_ERROR) {
                 /* reset the converter without calling the callback function */
-                _reset(cnv, UCNV_RESET_TO_UNICODE, false);
-                return 0xffff; /* no output */
-            } else if(U_SUCCESS(*err) && c>=0) {
-                return c;
+                _reset(cnv, UCNV_RESET_مقصد_UNICODE, جھوٹ);
+                واپس 0xffff; /* no output */
+            } ورنہ اگر(U_SUCCESS(*err) && c>=0) {
+                واپس c;
             /*
              * else fall through to use _toUnicode() because
              *   UCNV_GET_NEXT_UCHAR_USE_TO_U: the native function did not want to handle it after all
@@ -1966,64 +1966,64 @@ ucnv_getNextUChar(UConverter *cnv,
         }
 
         /* convert to one char16_t in buffer[0], or handle getNextUChar() errors */
-        _toUnicodeWithCallback(&args, err);
+        مقصد_Unicode_With_Callback(&دلائل_2, err);
 
-        if(*err==U_BUFFER_OVERFLOW_ERROR) {
+        اگر(*err==U_بفر_حد_سے_تجاوز_ERROR) {
             *err=U_ZERO_ERROR;
         }
 
         i=0;
-        length=(int32_t)(args.target-buffer);
-    } else {
+        length=(int32_t)(دلائل_2.ہدف-بفر);
+    } ورنہ {
         /* write the lead surrogate from the overflow buffer */
-        buffer[0]=(char16_t)c;
-        args.target=buffer+1;
+        بفر[0]=(char16_t)c;
+        دلائل_2.ہدف=بفر+1;
         i=0;
         length=1;
     }
 
     /* buffer contents starts at i and ends before length */
 
-    if(U_FAILURE(*err)) {
+    اگر(U_FAILURE(*err)) {
         c=0xffff; /* no output */
-    } else if(length==0) {
+    } ورنہ اگر(length==0) {
         /* no input or only state changes */
-        *err=U_INDEX_OUTOFBOUNDS_ERROR;
+        *err=U_اشاریہ_OUTOFBOUNDS_ERROR;
         /* no need to reset explicitly because _toUnicodeWithCallback() did it */
         c=0xffff; /* no output */
-    } else {
-        c=buffer[0];
+    } ورنہ {
+        c=بفر[0];
         i=1;
-        if(!U16_IS_LEAD(c)) {
+        اگر(!U16_IS_LEAD(c)) {
             /* consume c=buffer[0], done */
-        } else {
+        } ورنہ {
             /* got a lead surrogate, see if a trail surrogate follows */
             char16_t c2;
 
-            if(cnv->UCharErrorBufferLength>0) {
+            اگر(cnv->UChar_Error_بفر_لمبائی>0) {
                 /* got overflow output from the conversion */
-                if(U16_IS_TRAIL(c2=cnv->UCharErrorBuffer[0])) {
+                اگر(U16_IS_TRAIL(c2=cnv->UChar_Error_بفر[0])) {
                     /* got a trail surrogate, too */
                     c=U16_GET_SUPPLEMENTARY(c, c2);
 
                     /* move the remaining overflow contents up to the beginning */
-                    if((--cnv->UCharErrorBufferLength)>0) {
-                        uprv_memmove(cnv->UCharErrorBuffer, cnv->UCharErrorBuffer+1,
-                                     cnv->UCharErrorBufferLength*U_SIZEOF_UCHAR);
+                    اگر((--cnv->UChar_Error_بفر_لمبائی)>0) {
+                        uprv_memmove(cnv->UChar_Error_بفر, cnv->UChar_Error_بفر+1,
+                                     cnv->UChar_Error_بفر_لمبائی*U_SIZEOF_UCHAR);
                     }
-                } else {
+                } ورنہ {
                     /* c is an unpaired lead surrogate, just return it */
                 }
-            } else if(args.source<sourceLimit) {
+            } ورنہ اگر(دلائل_2.ماخذ<ماخذ_حد_بندی) {
                 /* convert once more, to buffer[1] */
-                args.targetLimit=buffer+2;
-                _toUnicodeWithCallback(&args, err);
-                if(*err==U_BUFFER_OVERFLOW_ERROR) {
+                دلائل_2.ہدف_حد_بندی=بفر+2;
+                مقصد_Unicode_With_Callback(&دلائل_2, err);
+                اگر(*err==U_بفر_حد_سے_تجاوز_ERROR) {
                     *err=U_ZERO_ERROR;
                 }
 
-                length=(int32_t)(args.target-buffer);
-                if(U_SUCCESS(*err) && length==2 && U16_IS_TRAIL(c2=buffer[1])) {
+                length=(int32_t)(دلائل_2.ہدف-بفر);
+                اگر(U_SUCCESS(*err) && length==2 && U16_IS_TRAIL(c2=بفر[1])) {
                     /* got a trail surrogate, too */
                     c=U16_GET_SUPPLEMENTARY(c, c2);
                     i=2;
@@ -2036,135 +2036,135 @@ ucnv_getNextUChar(UConverter *cnv,
      * move leftover output from buffer[i..length[
      * into the beginning of the overflow buffer
      */
-    if(i<length) {
+    اگر(i<length) {
         /* move further overflow back */
         int32_t delta=length-i;
-        if((length=cnv->UCharErrorBufferLength)>0) {
-            uprv_memmove(cnv->UCharErrorBuffer+delta, cnv->UCharErrorBuffer,
+        اگر((length=cnv->UChar_Error_بفر_لمبائی)>0) {
+            uprv_memmove(cnv->UChar_Error_بفر+delta, cnv->UChar_Error_بفر,
                          length*U_SIZEOF_UCHAR);
         }
-        cnv->UCharErrorBufferLength=(int8_t)(length+delta);
+        cnv->UChar_Error_بفر_لمبائی=(int8_t)(length+delta);
 
-        cnv->UCharErrorBuffer[0]=buffer[i++];
-        if(delta>1) {
-            cnv->UCharErrorBuffer[1]=buffer[i];
+        cnv->UChar_Error_بفر[0]=بفر[i++];
+        اگر(delta>1) {
+            cnv->UChar_Error_بفر[1]=بفر[i];
         }
     }
 
-    *source=args.source;
-    return c;
+    *ماخذ=دلائل_2.ماخذ;
+    واپس c;
 }
 
 /* ucnv_convert() and siblings ---------------------------------------------- */
 
-U_CAPI void U_EXPORT2
-ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
-               char **target, const char *targetLimit,
-               const char **source, const char *sourceLimit,
-               char16_t *pivotStart, char16_t **pivotSource,
-               char16_t **pivotTarget, const char16_t *pivotLimit,
+U_CAPI خالی U_EXPORT2
+ucnv_convertEx(UConverter *ہدف_Cnv, UConverter *ماخذ_Cnv,
+               حرف **ہدف, ثابت حرف *ہدف_حد_بندی,
+               ثابت حرف **ماخذ, ثابت حرف *ماخذ_حد_بندی,
+               char16_t *محور_آغاز, char16_t **محور_ماخذ,
+               char16_t **محور_ہدف, ثابت char16_t *محور_حد_بندی,
                UBool reset, UBool flush,
-               UErrorCode *pErrorCode) {
-    char16_t pivotBuffer[CHUNK_SIZE];
-    const char16_t *myPivotSource;
-    char16_t *myPivotTarget;
-    const char *s;
-    char *t;
+               UError_رمز *p_Error_رمز) {
+    char16_t محور_بفر[CHUNK_سائز];
+    ثابت char16_t *my_محور_ماخذ;
+    char16_t *my_محور_ہدف;
+    ثابت حرف *s;
+    حرف *t;
 
-    UConverterToUnicodeArgs toUArgs;
-    UConverterFromUnicodeArgs fromUArgs;
+    UConverter_مقصد_Unicode_دلائل مقصد_UArgs;
+    UConverter_From_Unicode_دلائل fromUArgs;
     UConverterConvert convert;
 
     /* error checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    اگر(p_Error_رمز==خالی_اشاریہ || U_FAILURE(*p_Error_رمز)) {
+        واپس;
     }
 
-    if( targetCnv==nullptr || sourceCnv==nullptr ||
-        source==nullptr || *source==nullptr ||
-        target==nullptr || *target==nullptr || targetLimit==nullptr
+    اگر( ہدف_Cnv==خالی_اشاریہ || ماخذ_Cnv==خالی_اشاریہ ||
+        ماخذ==خالی_اشاریہ || *ماخذ==خالی_اشاریہ ||
+        ہدف==خالی_اشاریہ || *ہدف==خالی_اشاریہ || ہدف_حد_بندی==خالی_اشاریہ
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس;
     }
 
-    s=*source;
-    t=*target;
-    if((sourceLimit!=nullptr && sourceLimit<s) || targetLimit<t) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    s=*ماخذ;
+    t=*ہدف;
+    اگر((ماخذ_حد_بندی!=خالی_اشاریہ && ماخذ_حد_بندی<s) || ہدف_حد_بندی<t) {
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس;
     }
 
     /*
      * Make sure that the buffer sizes do not exceed the number range for
      * int32_t. See ucnv_toUnicode() for a more detailed comment.
      */
-    if(
-        (sourceLimit!=nullptr && ((size_t)(sourceLimit-s)>(size_t)0x7fffffff && sourceLimit>s)) ||
-        ((size_t)(targetLimit-t)>(size_t)0x7fffffff && targetLimit>t)
+    اگر(
+        (ماخذ_حد_بندی!=خالی_اشاریہ && ((size_t)(ماخذ_حد_بندی-s)>(size_t)0x7fffffff && ماخذ_حد_بندی>s)) ||
+        ((size_t)(ہدف_حد_بندی-t)>(size_t)0x7fffffff && ہدف_حد_بندی>t)
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس;
     }
     
-    if(pivotStart==nullptr) {
-        if(!flush) {
+    اگر(محور_آغاز==خالی_اشاریہ) {
+        اگر(!flush) {
             /* streaming conversion requires an explicit pivot buffer */
-            *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+            واپس;
         }
 
         /* use the stack pivot buffer */
-        myPivotSource=myPivotTarget=pivotStart=pivotBuffer;
-        pivotSource=(char16_t **)&myPivotSource;
-        pivotTarget=&myPivotTarget;
-        pivotLimit=pivotBuffer+CHUNK_SIZE;
-    } else if(  pivotStart>=pivotLimit ||
-                pivotSource==nullptr || *pivotSource==nullptr ||
-                pivotTarget==nullptr || *pivotTarget==nullptr ||
-                pivotLimit==nullptr
+        my_محور_ماخذ=my_محور_ہدف=محور_آغاز=محور_بفر;
+        محور_ماخذ=(char16_t **)&my_محور_ماخذ;
+        محور_ہدف=&my_محور_ہدف;
+        محور_حد_بندی=محور_بفر+CHUNK_سائز;
+    } ورنہ اگر(  محور_آغاز>=محور_حد_بندی ||
+                محور_ماخذ==خالی_اشاریہ || *محور_ماخذ==خالی_اشاریہ ||
+                محور_ہدف==خالی_اشاریہ || *محور_ہدف==خالی_اشاریہ ||
+                محور_حد_بندی==خالی_اشاریہ
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس;
     }
 
-    if(sourceLimit==nullptr) {
+    اگر(ماخذ_حد_بندی==خالی_اشاریہ) {
         /* get limit of single-byte-NUL-terminated source string */
-        sourceLimit=uprv_strchr(*source, 0);
+        ماخذ_حد_بندی=uprv_strchr(*ماخذ, 0);
     }
 
-    if(reset) {
-        ucnv_resetToUnicode(sourceCnv);
-        ucnv_resetFromUnicode(targetCnv);
-        *pivotSource=*pivotTarget=pivotStart;
-    } else if(targetCnv->charErrorBufferLength>0) {
+    اگر(reset) {
+        ucnv_reset_مقصد_Unicode(ماخذ_Cnv);
+        ucnv_resetFromUnicode(ہدف_Cnv);
+        *محور_ماخذ=*محور_ہدف=محور_آغاز;
+    } ورنہ اگر(ہدف_Cnv->char_Error_بفر_لمبائی>0) {
         /* output the targetCnv overflow buffer */
-        if(ucnv_outputOverflowFromUnicode(targetCnv, target, targetLimit, nullptr, pErrorCode)) {
+        اگر(ucnv_output_حد_سے_تجاوز_From_Unicode(ہدف_Cnv, ہدف, ہدف_حد_بندی, خالی_اشاریہ, p_Error_رمز)) {
             /* U_BUFFER_OVERFLOW_ERROR */
-            return;
+            واپس;
         }
         /* *target has moved, therefore stop using t */
 
-        if( !flush &&
-            targetCnv->preFromULength>=0 && *pivotSource==*pivotTarget &&
-            sourceCnv->UCharErrorBufferLength==0 && sourceCnv->preToULength>=0 && s==sourceLimit
+        اگر( !flush &&
+            ہدف_Cnv->preFromULength>=0 && *محور_ماخذ==*محور_ہدف &&
+            ماخذ_Cnv->UChar_Error_بفر_لمبائی==0 && ماخذ_Cnv->pre_مقصد_ULength>=0 && s==ماخذ_حد_بندی
         ) {
             /* the fromUnicode overflow buffer is emptied and there is no new input: we are done */
-            return;
+            واپس;
         }
     }
 
     /* Is direct-UTF-8 conversion available? */
-    if( sourceCnv->sharedData->staticData->conversionType==UCNV_UTF8 &&
-        targetCnv->sharedData->impl->fromUTF8!=nullptr
+    اگر( ماخذ_Cnv->shared_ڈیٹا->static_ڈیٹا->conversionType==UCNV_UTF8 &&
+        ہدف_Cnv->shared_ڈیٹا->impl->fromUTF8!=خالی_اشاریہ
     ) {
-        convert=targetCnv->sharedData->impl->fromUTF8;
-    } else if( targetCnv->sharedData->staticData->conversionType==UCNV_UTF8 &&
-               sourceCnv->sharedData->impl->toUTF8!=nullptr
+        convert=ہدف_Cnv->shared_ڈیٹا->impl->fromUTF8;
+    } ورنہ اگر( ہدف_Cnv->shared_ڈیٹا->static_ڈیٹا->conversionType==UCNV_UTF8 &&
+               ماخذ_Cnv->shared_ڈیٹا->impl->مقصد_UTF8!=خالی_اشاریہ
     ) {
-        convert=sourceCnv->sharedData->impl->toUTF8;
-    } else {
-        convert=nullptr;
+        convert=ماخذ_Cnv->shared_ڈیٹا->impl->مقصد_UTF8;
+    } ورنہ {
+        convert=خالی_اشاریہ;
     }
 
     /*
@@ -2186,25 +2186,25 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
      * conversion, with function call overhead outweighing the benefits
      * of direct conversion.
      */
-    if(convert!=nullptr && (pivotLimit-pivotStart)>32) {
-        pivotLimit=pivotStart+32;
+    اگر(convert!=خالی_اشاریہ && (محور_حد_بندی-محور_آغاز)>32) {
+        محور_حد_بندی=محور_آغاز+32;
     }
 
     /* prepare the converter arguments */
-    fromUArgs.converter=targetCnv;
-    fromUArgs.flush=false;
-    fromUArgs.offsets=nullptr;
-    fromUArgs.target=*target;
-    fromUArgs.targetLimit=targetLimit;
-    fromUArgs.size=sizeof(fromUArgs);
+    fromUArgs.converter=ہدف_Cnv;
+    fromUArgs.flush=جھوٹ;
+    fromUArgs.offsets=خالی_اشاریہ;
+    fromUArgs.ہدف=*ہدف;
+    fromUArgs.ہدف_حد_بندی=ہدف_حد_بندی;
+    fromUArgs.size=حجم(fromUArgs);
 
-    toUArgs.converter=sourceCnv;
-    toUArgs.flush=flush;
-    toUArgs.offsets=nullptr;
-    toUArgs.source=s;
-    toUArgs.sourceLimit=sourceLimit;
-    toUArgs.targetLimit=pivotLimit;
-    toUArgs.size=sizeof(toUArgs);
+    مقصد_UArgs.converter=ماخذ_Cnv;
+    مقصد_UArgs.flush=flush;
+    مقصد_UArgs.offsets=خالی_اشاریہ;
+    مقصد_UArgs.ماخذ=s;
+    مقصد_UArgs.ماخذ_حد_بندی=ماخذ_حد_بندی;
+    مقصد_UArgs.ہدف_حد_بندی=محور_حد_بندی;
+    مقصد_UArgs.size=حجم(مقصد_UArgs);
 
     /*
      * TODO: Consider separating this function into two functions,
@@ -2213,7 +2213,7 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
      *
      * Otherwise stop using s and t from here on.
      */
-    s=t=nullptr;
+    s=t=خالی_اشاریہ;
 
     /*
      * conversion loop
@@ -2226,7 +2226,7 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
      *
      * The targetCnv overflow buffer is flushed out only once before the loop.
      */
-    for(;;) {
+    برائے(;;) {
         /*
          * if(pivot not empty or error or replay or flush fromUnicode) {
          *   fromUnicode(pivot -> target);
@@ -2235,18 +2235,18 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          * For pivoting conversion; and for direct conversion for
          * error callback handling and flushing the replay buffer.
          */
-        if( *pivotSource<*pivotTarget ||
-            U_FAILURE(*pErrorCode) ||
-            targetCnv->preFromULength<0 ||
+        اگر( *محور_ماخذ<*محور_ہدف ||
+            U_FAILURE(*p_Error_رمز) ||
+            ہدف_Cnv->preFromULength<0 ||
             fromUArgs.flush
         ) {
-            fromUArgs.source=*pivotSource;
-            fromUArgs.sourceLimit=*pivotTarget;
-            _fromUnicodeWithCallback(&fromUArgs, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
+            fromUArgs.ماخذ=*محور_ماخذ;
+            fromUArgs.ماخذ_حد_بندی=*محور_ہدف;
+            _fromUnicodeWithCallback(&fromUArgs, p_Error_رمز);
+            اگر(U_FAILURE(*p_Error_رمز)) {
                 /* target overflow, or conversion error */
-                *pivotSource=(char16_t *)fromUArgs.source;
-                break;
+                *محور_ماخذ=(char16_t *)fromUArgs.ماخذ;
+                توڑو;
             }
 
             /*
@@ -2256,7 +2256,7 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
         }
 
         /* The pivot buffer is empty; reset it so we start at pivotStart. */
-        *pivotSource=*pivotTarget=pivotStart;
+        *محور_ماخذ=*محور_ہدف=محور_آغاز;
 
         /*
          * if(sourceCnv overflow buffer not empty) {
@@ -2265,12 +2265,12 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          * }
          */
         /* output the sourceCnv overflow buffer */
-        if(sourceCnv->UCharErrorBufferLength>0) {
-            if(ucnv_outputOverflowToUnicode(sourceCnv, pivotTarget, pivotLimit, nullptr, pErrorCode)) {
+        اگر(ماخذ_Cnv->UChar_Error_بفر_لمبائی>0) {
+            اگر(ucnv_output_حد_سے_تجاوز_مقصد_Unicode(ماخذ_Cnv, محور_ہدف, محور_حد_بندی, خالی_اشاریہ, p_Error_رمز)) {
                 /* U_BUFFER_OVERFLOW_ERROR */
-                *pErrorCode=U_ZERO_ERROR;
+                *p_Error_رمز=U_ZERO_ERROR;
             }
-            continue;
+            جاری;
         }
 
         /*
@@ -2280,12 +2280,12 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          * have been called with the flush flag set if the ucnv_convertEx()
          * caller set it.
          */
-        if( toUArgs.source==sourceLimit &&
-            sourceCnv->preToULength>=0 && sourceCnv->toULength==0 &&
+        اگر( مقصد_UArgs.ماخذ==ماخذ_حد_بندی &&
+            ماخذ_Cnv->pre_مقصد_ULength>=0 && ماخذ_Cnv->مقصد_ULength==0 &&
             (!flush || fromUArgs.flush)
         ) {
             /* done successfully */
-            break;
+            توڑو;
         }
 
         /*
@@ -2293,16 +2293,16 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          * but not if continuing a partial match
          * or flushing the toUnicode replay buffer
          */
-        if(convert!=nullptr && targetCnv->preFromUFirstCP<0 && sourceCnv->preToULength==0) {
-            if(*pErrorCode==U_USING_DEFAULT_WARNING) {
+        اگر(convert!=خالی_اشاریہ && ہدف_Cnv->preFromUFirstCP<0 && ماخذ_Cnv->pre_مقصد_ULength==0) {
+            اگر(*p_Error_رمز==U_USING_DEFAULT_WARNING) {
                 /* remove a warning that may be set by this function */
-                *pErrorCode=U_ZERO_ERROR;
+                *p_Error_رمز=U_ZERO_ERROR;
             }
-            convert(&fromUArgs, &toUArgs, pErrorCode);
-            if(*pErrorCode==U_BUFFER_OVERFLOW_ERROR) {
-                break;
-            } else if(U_FAILURE(*pErrorCode)) {
-                if(sourceCnv->toULength>0) {
+            convert(&fromUArgs, &مقصد_UArgs, p_Error_رمز);
+            اگر(*p_Error_رمز==U_بفر_حد_سے_تجاوز_ERROR) {
+                توڑو;
+            } ورنہ اگر(U_FAILURE(*p_Error_رمز)) {
+                اگر(ماخذ_Cnv->مقصد_ULength>0) {
                     /*
                      * Fall through to calling _toUnicodeWithCallback()
                      * for callback handling.
@@ -2312,47 +2312,47 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
                      * which indicates a toUnicode error to the caller
                      * (*pivotSource==pivotStart shows no pivot UChars consumed).
                      */
-                } else {
+                } ورنہ {
                     /*
                      * Indicate a fromUnicode error to the caller
                      * (*pivotSource>pivotStart shows some pivot UChars consumed).
                      */
-                    *pivotSource=*pivotTarget=pivotStart+1;
+                    *محور_ماخذ=*محور_ہدف=محور_آغاز+1;
                     /*
                      * Loop around to calling _fromUnicodeWithCallbacks()
                      * for callback handling.
                      */
-                    continue;
+                    جاری;
                 }
-            } else if(*pErrorCode==U_USING_DEFAULT_WARNING) {
+            } ورنہ اگر(*p_Error_رمز==U_USING_DEFAULT_WARNING) {
                 /*
                  * No error, but the implementation requested to temporarily
                  * fall back to pivoting.
                  */
-                *pErrorCode=U_ZERO_ERROR;
+                *p_Error_رمز=U_ZERO_ERROR;
             /*
              * The following else branches are almost identical to the end-of-input
              * handling in _toUnicodeWithCallback().
              * Avoid calling it just for the end of input.
              */
-            } else if(flush && sourceCnv->toULength>0) { /* flush==toUArgs.flush */
+            } ورنہ اگر(flush && ماخذ_Cnv->مقصد_ULength>0) { /* flush==toUArgs.flush */
                 /*
                  * the entire input stream is consumed
                  * and there is a partial, truncated input sequence left
                  */
 
                 /* inject an error and continue with callback handling */
-                *pErrorCode=U_TRUNCATED_CHAR_FOUND;
-            } else {
+                *p_Error_رمز=U_TRUNCATED_CHAR_ملا;
+            } ورنہ {
                 /* input consumed */
-                if(flush) {
+                اگر(flush) {
                     /* reset the converters without calling the callback functions */
-                    _reset(sourceCnv, UCNV_RESET_TO_UNICODE, false);
-                    _reset(targetCnv, UCNV_RESET_FROM_UNICODE, false);
+                    _reset(ماخذ_Cnv, UCNV_RESET_مقصد_UNICODE, جھوٹ);
+                    _reset(ہدف_Cnv, UCNV_RESET_FROM_UNICODE, جھوٹ);
                 }
 
                 /* done successfully */
-                break;
+                توڑو;
             }
         }
         
@@ -2365,16 +2365,16 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          *
          * The pivot buffer is empty and reset.
          */
-        toUArgs.target=pivotStart; /* ==*pivotTarget */
+        مقصد_UArgs.ہدف=محور_آغاز; /* ==*pivotTarget */
         /* toUArgs.targetLimit=pivotLimit; already set before the loop */
-        _toUnicodeWithCallback(&toUArgs, pErrorCode);
-        *pivotTarget=toUArgs.target;
-        if(*pErrorCode==U_BUFFER_OVERFLOW_ERROR) {
+        مقصد_Unicode_With_Callback(&مقصد_UArgs, p_Error_رمز);
+        *محور_ہدف=مقصد_UArgs.ہدف;
+        اگر(*p_Error_رمز==U_بفر_حد_سے_تجاوز_ERROR) {
             /* pivot overflow: continue with the conversion loop */
-            *pErrorCode=U_ZERO_ERROR;
-        } else if(U_FAILURE(*pErrorCode) || (!flush && *pivotTarget==pivotStart)) {
+            *p_Error_رمز=U_ZERO_ERROR;
+        } ورنہ اگر(U_FAILURE(*p_Error_رمز) || (!flush && *محور_ہدف==محور_آغاز)) {
             /* conversion error, or there was nothing left to convert */
-            break;
+            توڑو;
         }
         /*
          * else:
@@ -2384,11 +2384,11 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          * Set the fromUnicode flush flag if we flush and if toUnicode has
          * processed the end of the input.
          */
-        if( flush && toUArgs.source==sourceLimit &&
-            sourceCnv->preToULength>=0 &&
-            sourceCnv->UCharErrorBufferLength==0
+        اگر( flush && مقصد_UArgs.ماخذ==ماخذ_حد_بندی &&
+            ماخذ_Cnv->pre_مقصد_ULength>=0 &&
+            ماخذ_Cnv->UChar_Error_بفر_لمبائی==0
         ) {
-            fromUArgs.flush=true;
+            fromUArgs.flush=سچ;
         }
     }
 
@@ -2399,63 +2399,63 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
      * - a conversion error occurred
      */
 
-    *source=toUArgs.source;
-    *target=fromUArgs.target;
+    *ماخذ=مقصد_UArgs.ماخذ;
+    *ہدف=fromUArgs.ہدف;
 
     /* terminate the target buffer if possible */
-    if(flush && U_SUCCESS(*pErrorCode)) {
-        if(*target!=targetLimit) {
-            **target=0;
-            if(*pErrorCode==U_STRING_NOT_TERMINATED_WARNING) {
-                *pErrorCode=U_ZERO_ERROR;
+    اگر(flush && U_SUCCESS(*p_Error_رمز)) {
+        اگر(*ہدف!=ہدف_حد_بندی) {
+            **ہدف=0;
+            اگر(*p_Error_رمز==U_STRING_NOT_TERMINATED_WARNING) {
+                *p_Error_رمز=U_ZERO_ERROR;
             }
-        } else {
-            *pErrorCode=U_STRING_NOT_TERMINATED_WARNING;
+        } ورنہ {
+            *p_Error_رمز=U_STRING_NOT_TERMINATED_WARNING;
         }
     }
 }
 
 /* internal implementation of ucnv_convert() etc. with preflighting */
-static int32_t
-ucnv_internalConvert(UConverter *outConverter, UConverter *inConverter,
-                     char *target, int32_t targetCapacity,
-                     const char *source, int32_t sourceLength,
-                     UErrorCode *pErrorCode) {
-    char16_t pivotBuffer[CHUNK_SIZE];
-    char16_t *pivot, *pivot2;
+ساکن int32_t
+ucnv_اندرونی_Convert(UConverter *برآمد_Converter, UConverter *اندر_Converter,
+                     حرف *ہدف, int32_t ہدف_استعداد,
+                     ثابت حرف *ماخذ, int32_t ماخذ_لمبائی,
+                     UError_رمز *p_Error_رمز) {
+    char16_t محور_بفر[CHUNK_سائز];
+    char16_t *محور, *pivot2;
 
-    char *myTarget;
-    const char *sourceLimit;
-    const char *targetLimit;
-    int32_t targetLength=0;
+    حرف *my_ہدف;
+    ثابت حرف *ماخذ_حد_بندی;
+    ثابت حرف *ہدف_حد_بندی;
+    int32_t ہدف_لمبائی=0;
 
     /* set up */
-    if(sourceLength<0) {
-        sourceLimit=uprv_strchr(source, 0);
-    } else {
-        sourceLimit=source+sourceLength;
+    اگر(ماخذ_لمبائی<0) {
+        ماخذ_حد_بندی=uprv_strchr(ماخذ, 0);
+    } ورنہ {
+        ماخذ_حد_بندی=ماخذ+ماخذ_لمبائی;
     }
 
     /* if there is no input data, we're done */
-    if(source==sourceLimit) {
-        return u_terminateChars(target, targetCapacity, 0, pErrorCode);
+    اگر(ماخذ==ماخذ_حد_بندی) {
+        واپس u_terminateChars(ہدف, ہدف_استعداد, 0, p_Error_رمز);
     }
 
-    pivot=pivot2=pivotBuffer;
-    myTarget=target;
-    targetLength=0;
+    محور=pivot2=محور_بفر;
+    my_ہدف=ہدف;
+    ہدف_لمبائی=0;
 
-    if(targetCapacity>0) {
+    اگر(ہدف_استعداد>0) {
         /* perform real conversion */
-        targetLimit=target+targetCapacity;
-        ucnv_convertEx(outConverter, inConverter,
-                       &myTarget, targetLimit,
-                       &source, sourceLimit,
-                       pivotBuffer, &pivot, &pivot2, pivotBuffer+CHUNK_SIZE,
-                       false,
-                       true,
-                       pErrorCode);
-        targetLength = static_cast<int32_t>(myTarget - target);
+        ہدف_حد_بندی=ہدف+ہدف_استعداد;
+        ucnv_convertEx(برآمد_Converter, اندر_Converter,
+                       &my_ہدف, ہدف_حد_بندی,
+                       &ماخذ, ماخذ_حد_بندی,
+                       محور_بفر, &محور, &pivot2, محور_بفر+CHUNK_سائز,
+                       جھوٹ,
+                       سچ,
+                       p_Error_رمز);
+        ہدف_لمبائی = static_cast<int32_t>(my_ہدف - ہدف);
     }
 
     /*
@@ -2463,375 +2463,375 @@ ucnv_internalConvert(UConverter *outConverter, UConverter *inConverter,
      * to it but continue the conversion in order to store in targetCapacity
      * the number of bytes that was required.
      */
-    if(*pErrorCode==U_BUFFER_OVERFLOW_ERROR || targetCapacity==0)
+    اگر(*p_Error_رمز==U_بفر_حد_سے_تجاوز_ERROR || ہدف_استعداد==0)
     {
-        char targetBuffer[CHUNK_SIZE];
+        حرف ہدف_بفر[CHUNK_سائز];
 
-        targetLimit=targetBuffer+CHUNK_SIZE;
-        do {
-            *pErrorCode=U_ZERO_ERROR;
-            myTarget=targetBuffer;
-            ucnv_convertEx(outConverter, inConverter,
-                           &myTarget, targetLimit,
-                           &source, sourceLimit,
-                           pivotBuffer, &pivot, &pivot2, pivotBuffer+CHUNK_SIZE,
-                           false,
-                           true,
-                           pErrorCode);
-            targetLength += static_cast<int32_t>(myTarget - targetBuffer);
-        } while(*pErrorCode==U_BUFFER_OVERFLOW_ERROR);
+        ہدف_حد_بندی=ہدف_بفر+CHUNK_سائز;
+        کرو {
+            *p_Error_رمز=U_ZERO_ERROR;
+            my_ہدف=ہدف_بفر;
+            ucnv_convertEx(برآمد_Converter, اندر_Converter,
+                           &my_ہدف, ہدف_حد_بندی,
+                           &ماخذ, ماخذ_حد_بندی,
+                           محور_بفر, &محور, &pivot2, محور_بفر+CHUNK_سائز,
+                           جھوٹ,
+                           سچ,
+                           p_Error_رمز);
+            ہدف_لمبائی += static_cast<int32_t>(my_ہدف - ہدف_بفر);
+        } جب(*p_Error_رمز==U_بفر_حد_سے_تجاوز_ERROR);
 
         /* done with preflighting, set warnings and errors as appropriate */
-        return u_terminateChars(target, targetCapacity, targetLength, pErrorCode);
+        واپس u_terminateChars(ہدف, ہدف_استعداد, ہدف_لمبائی, p_Error_رمز);
     }
 
     /* no need to call u_terminateChars() because ucnv_convertEx() took care of that */
-    return targetLength;
+    واپس ہدف_لمبائی;
 }
 
 U_CAPI int32_t U_EXPORT2
-ucnv_convert(const char *toConverterName, const char *fromConverterName,
-             char *target, int32_t targetCapacity,
-             const char *source, int32_t sourceLength,
-             UErrorCode *pErrorCode) {
+ucnv_convert(ثابت حرف *مقصد_Converter_Name, ثابت حرف *fromConverterName,
+             حرف *ہدف, int32_t ہدف_استعداد,
+             ثابت حرف *ماخذ, int32_t ماخذ_لمبائی,
+             UError_رمز *p_Error_رمز) {
     UConverter in, out; /* stack-allocated */
-    UConverter *inConverter, *outConverter;
-    int32_t targetLength;
+    UConverter *اندر_Converter, *برآمد_Converter;
+    int32_t ہدف_لمبائی;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    اگر(p_Error_رمز==خالی_اشاریہ || U_FAILURE(*p_Error_رمز)) {
+        واپس 0;
     }
 
-    if( source==nullptr || sourceLength<-1 ||
-        targetCapacity<0 || (targetCapacity>0 && target==nullptr)
+    اگر( ماخذ==خالی_اشاریہ || ماخذ_لمبائی<-1 ||
+        ہدف_استعداد<0 || (ہدف_استعداد>0 && ہدف==خالی_اشاریہ)
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
 
     /* if there is no input data, we're done */
-    if(sourceLength==0 || (sourceLength<0 && *source==0)) {
-        return u_terminateChars(target, targetCapacity, 0, pErrorCode);
+    اگر(ماخذ_لمبائی==0 || (ماخذ_لمبائی<0 && *ماخذ==0)) {
+        واپس u_terminateChars(ہدف, ہدف_استعداد, 0, p_Error_رمز);
     }
 
     /* create the converters */
-    inConverter=ucnv_createConverter(&in, fromConverterName, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    اندر_Converter=ucnv_createConverter(&in, fromConverterName, p_Error_رمز);
+    اگر(U_FAILURE(*p_Error_رمز)) {
+        واپس 0;
     }
 
-    outConverter=ucnv_createConverter(&out, toConverterName, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        ucnv_close(inConverter);
-        return 0;
+    برآمد_Converter=ucnv_createConverter(&out, مقصد_Converter_Name, p_Error_رمز);
+    اگر(U_FAILURE(*p_Error_رمز)) {
+        ucnv_close(اندر_Converter);
+        واپس 0;
     }
 
-    targetLength=ucnv_internalConvert(outConverter, inConverter,
-                                      target, targetCapacity,
-                                      source, sourceLength,
-                                      pErrorCode);
+    ہدف_لمبائی=ucnv_اندرونی_Convert(برآمد_Converter, اندر_Converter,
+                                      ہدف, ہدف_استعداد,
+                                      ماخذ, ماخذ_لمبائی,
+                                      p_Error_رمز);
 
-    ucnv_close(inConverter);
-    ucnv_close(outConverter);
+    ucnv_close(اندر_Converter);
+    ucnv_close(برآمد_Converter);
 
-    return targetLength;
+    واپس ہدف_لمبائی;
 }
 
 /* @internal */
-static int32_t
-ucnv_convertAlgorithmic(UBool convertToAlgorithmic,
+ساکن int32_t
+ucnv_convertAlgorithmic(UBool convert_مقصد_Algorithmic,
                         UConverterType algorithmicType,
                         UConverter *cnv,
-                        char *target, int32_t targetCapacity,
-                        const char *source, int32_t sourceLength,
-                        UErrorCode *pErrorCode) {
+                        حرف *ہدف, int32_t ہدف_استعداد,
+                        ثابت حرف *ماخذ, int32_t ماخذ_لمبائی,
+                        UError_رمز *p_Error_رمز) {
     UConverter algoConverterStatic; /* stack-allocated */
-    UConverter *algoConverter, *to, *from;
-    int32_t targetLength;
+    UConverter *algoConverter, *مقصد, *from;
+    int32_t ہدف_لمبائی;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    اگر(p_Error_رمز==خالی_اشاریہ || U_FAILURE(*p_Error_رمز)) {
+        واپس 0;
     }
 
-    if( cnv==nullptr || source==nullptr || sourceLength<-1 ||
-        targetCapacity<0 || (targetCapacity>0 && target==nullptr)
+    اگر( cnv==خالی_اشاریہ || ماخذ==خالی_اشاریہ || ماخذ_لمبائی<-1 ||
+        ہدف_استعداد<0 || (ہدف_استعداد>0 && ہدف==خالی_اشاریہ)
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
 
     /* if there is no input data, we're done */
-    if(sourceLength==0 || (sourceLength<0 && *source==0)) {
-        return u_terminateChars(target, targetCapacity, 0, pErrorCode);
+    اگر(ماخذ_لمبائی==0 || (ماخذ_لمبائی<0 && *ماخذ==0)) {
+        واپس u_terminateChars(ہدف, ہدف_استعداد, 0, p_Error_رمز);
     }
 
     /* create the algorithmic converter */
     algoConverter=ucnv_createAlgorithmicConverter(&algoConverterStatic, algorithmicType,
-                                                  "", 0, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+                                                  "", 0, p_Error_رمز);
+    اگر(U_FAILURE(*p_Error_رمز)) {
+        واپس 0;
     }
 
     /* reset the other converter */
-    if(convertToAlgorithmic) {
+    اگر(convert_مقصد_Algorithmic) {
         /* cnv->Unicode->algo */
-        ucnv_resetToUnicode(cnv);
-        to=algoConverter;
+        ucnv_reset_مقصد_Unicode(cnv);
+        مقصد=algoConverter;
         from=cnv;
-    } else {
+    } ورنہ {
         /* algo->Unicode->cnv */
         ucnv_resetFromUnicode(cnv);
         from=algoConverter;
-        to=cnv;
+        مقصد=cnv;
     }
 
-    targetLength=ucnv_internalConvert(to, from,
-                                      target, targetCapacity,
-                                      source, sourceLength,
-                                      pErrorCode);
+    ہدف_لمبائی=ucnv_اندرونی_Convert(مقصد, from,
+                                      ہدف, ہدف_استعداد,
+                                      ماخذ, ماخذ_لمبائی,
+                                      p_Error_رمز);
 
     ucnv_close(algoConverter);
 
-    return targetLength;
+    واپس ہدف_لمبائی;
 }
 
 U_CAPI int32_t U_EXPORT2
-ucnv_toAlgorithmic(UConverterType algorithmicType,
+ucnv_مقصد_Algorithmic(UConverterType algorithmicType,
                    UConverter *cnv,
-                   char *target, int32_t targetCapacity,
-                   const char *source, int32_t sourceLength,
-                   UErrorCode *pErrorCode) {
-    return ucnv_convertAlgorithmic(true, algorithmicType, cnv,
-                                   target, targetCapacity,
-                                   source, sourceLength,
-                                   pErrorCode);
+                   حرف *ہدف, int32_t ہدف_استعداد,
+                   ثابت حرف *ماخذ, int32_t ماخذ_لمبائی,
+                   UError_رمز *p_Error_رمز) {
+    واپس ucnv_convertAlgorithmic(سچ, algorithmicType, cnv,
+                                   ہدف, ہدف_استعداد,
+                                   ماخذ, ماخذ_لمبائی,
+                                   p_Error_رمز);
 }
 
 U_CAPI int32_t U_EXPORT2
 ucnv_fromAlgorithmic(UConverter *cnv,
                      UConverterType algorithmicType,
-                     char *target, int32_t targetCapacity,
-                     const char *source, int32_t sourceLength,
-                     UErrorCode *pErrorCode) UPRV_NO_SANITIZE_UNDEFINED {
+                     حرف *ہدف, int32_t ہدف_استعداد,
+                     ثابت حرف *ماخذ, int32_t ماخذ_لمبائی,
+                     UError_رمز *p_Error_رمز) UPRV_NO_SANITIZE_UNDEFINED {
 
-    if(algorithmicType<0 || UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES<=algorithmicType) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    اگر(algorithmicType<0 || UCNV_نمبر_کا_SUPPORTED_CONVERTER_TYPES<=algorithmicType) {
+        *p_Error_رمز = U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
-    return ucnv_convertAlgorithmic(false, algorithmicType, cnv,
-                                   target, targetCapacity,
-                                   source, sourceLength,
-                                   pErrorCode);
+    واپس ucnv_convertAlgorithmic(جھوٹ, algorithmicType, cnv,
+                                   ہدف, ہدف_استعداد,
+                                   ماخذ, ماخذ_لمبائی,
+                                   p_Error_رمز);
 }
 
 U_CAPI UConverterType  U_EXPORT2
-ucnv_getType(const UConverter* converter)
+ucnv_getType(ثابت UConverter* converter)
 {
-    int8_t type = converter->sharedData->staticData->conversionType;
-#if !UCONFIG_NO_LEGACY_CONVERSION
-    if(type == UCNV_MBCS) {
-        return ucnv_MBCSGetType(converter);
+    int8_t type = converter->shared_ڈیٹا->static_ڈیٹا->conversionType;
+#اگر !UCONFIG_NO_LEGACY_CONVERSION
+    اگر(type == UCNV_MBCS) {
+        واپس ucnv_MBCSGetType(converter);
     }
-#endif
-    return (UConverterType)type;
+#اگر_ختم
+    واپس (UConverterType)type;
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_getStarters(const UConverter* converter, 
+U_CAPI خالی  U_EXPORT2
+ucnv_getStarters(ثابت UConverter* converter, 
                  UBool starters[256],
-                 UErrorCode* err)
+                 UError_رمز* err)
 {
-    if (err == nullptr || U_FAILURE(*err)) {
-        return;
+    اگر (err == خالی_اشاریہ || U_FAILURE(*err)) {
+        واپس;
     }
 
-    if(converter->sharedData->impl->getStarters != nullptr) {
-        converter->sharedData->impl->getStarters(converter, starters, err);
-    } else {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
+    اگر(converter->shared_ڈیٹا->impl->getStarters != خالی_اشاریہ) {
+        converter->shared_ڈیٹا->impl->getStarters(converter, starters, err);
+    } ورنہ {
+        *err = U_ILLEGAL_دلیل_ERROR;
     }
 }
 
-static const UAmbiguousConverter *ucnv_getAmbiguous(const UConverter *cnv)
+ساکن ثابت UAmbiguousConverter *ucnv_getAmbiguous(ثابت UConverter *cnv)
 {
-    UErrorCode errorCode;
-    const char *name;
+    UError_رمز error_رمز;
+    ثابت حرف *name;
     int32_t i;
 
-    if(cnv==nullptr) {
-        return nullptr;
+    اگر(cnv==خالی_اشاریہ) {
+        واپس خالی_اشاریہ;
     }
 
-    errorCode=U_ZERO_ERROR;
-    name=ucnv_getName(cnv, &errorCode);
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+    error_رمز=U_ZERO_ERROR;
+    name=ucnv_getName(cnv, &error_رمز);
+    اگر(U_FAILURE(error_رمز)) {
+        واپس خالی_اشاریہ;
     }
 
-    for(i=0; i<UPRV_LENGTHOF(ambiguousConverters); ++i)
+    برائے(i=0; i<UPRV_LENGTHOF(ambiguousConverters); ++i)
     {
-        if(0==uprv_strcmp(name, ambiguousConverters[i].name))
+        اگر(0==uprv_strcmp(name, ambiguousConverters[i].name))
         {
-            return ambiguousConverters+i;
+            واپس ambiguousConverters+i;
         }
     }
 
-    return nullptr;
+    واپس خالی_اشاریہ;
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_fixFileSeparator(const UConverter *cnv, 
-                      char16_t* source,
-                      int32_t sourceLength) {
-    const UAmbiguousConverter *a;
+U_CAPI خالی  U_EXPORT2
+ucnv_fixFileSeparator(ثابت UConverter *cnv, 
+                      char16_t* ماخذ,
+                      int32_t ماخذ_لمبائی) {
+    ثابت UAmbiguousConverter *a;
     int32_t i;
     char16_t variant5c;
 
-    if(cnv==nullptr || source==nullptr || sourceLength<=0 || (a=ucnv_getAmbiguous(cnv))==nullptr)
+    اگر(cnv==خالی_اشاریہ || ماخذ==خالی_اشاریہ || ماخذ_لمبائی<=0 || (a=ucnv_getAmbiguous(cnv))==خالی_اشاریہ)
     {
-        return;
+        واپس;
     }
 
     variant5c=a->variant5c;
-    for(i=0; i<sourceLength; ++i) {
-        if(source[i]==variant5c) {
-            source[i]=0x5c;
+    برائے(i=0; i<ماخذ_لمبائی; ++i) {
+        اگر(ماخذ[i]==variant5c) {
+            ماخذ[i]=0x5c;
         }
     }
 }
 
 U_CAPI UBool  U_EXPORT2
-ucnv_isAmbiguous(const UConverter *cnv) {
-    return ucnv_getAmbiguous(cnv)!=nullptr;
+ucnv_isAmbiguous(ثابت UConverter *cnv) {
+    واپس ucnv_getAmbiguous(cnv)!=خالی_اشاریہ;
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_setFallback(UConverter *cnv, UBool usesFallback)
+U_CAPI خالی  U_EXPORT2
+ucnv_سیٹ_Fallback(UConverter *cnv, UBool استعمال_کرتا_Fallback)
 {
-    cnv->useFallback = usesFallback;
+    cnv->useFallback = استعمال_کرتا_Fallback;
 }
 
 U_CAPI UBool  U_EXPORT2
-ucnv_usesFallback(const UConverter *cnv)
+ucnv_استعمال_کرتا_Fallback(ثابت UConverter *cnv)
 {
-    return cnv->useFallback;
+    واپس cnv->useFallback;
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_getInvalidChars (const UConverter * converter,
-                      char *errBytes,
+U_CAPI خالی  U_EXPORT2
+ucnv_getInvalidChars (ثابت UConverter * converter,
+                      حرف *err_بائٹیں,
                       int8_t * len,
-                      UErrorCode * err)
+                      UError_رمز * err)
 {
-    if (err == nullptr || U_FAILURE(*err))
+    اگر (err == خالی_اشاریہ || U_FAILURE(*err))
     {
-        return;
+        واپس;
     }
-    if (len == nullptr || errBytes == nullptr || converter == nullptr)
+    اگر (len == خالی_اشاریہ || err_بائٹیں == خالی_اشاریہ || converter == خالی_اشاریہ)
     {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *err = U_ILLEGAL_دلیل_ERROR;
+        واپس;
     }
-    if (*len < converter->invalidCharLength)
+    اگر (*len < converter->invalid_Char_لمبائی)
     {
-        *err = U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        *err = U_اشاریہ_OUTOFBOUNDS_ERROR;
+        واپس;
     }
-    if ((*len = converter->invalidCharLength) > 0)
+    اگر ((*len = converter->invalid_Char_لمبائی) > 0)
     {
-        uprv_memcpy (errBytes, converter->invalidCharBuffer, *len);
+        uprv_memcpy (err_بائٹیں, converter->invalid_Char_بفر, *len);
     }
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_getInvalidUChars (const UConverter * converter,
+U_CAPI خالی  U_EXPORT2
+ucnv_getInvalidUChars (ثابت UConverter * converter,
                        char16_t *errChars,
                        int8_t * len,
-                       UErrorCode * err)
+                       UError_رمز * err)
 {
-    if (err == nullptr || U_FAILURE(*err))
+    اگر (err == خالی_اشاریہ || U_FAILURE(*err))
     {
-        return;
+        واپس;
     }
-    if (len == nullptr || errChars == nullptr || converter == nullptr)
+    اگر (len == خالی_اشاریہ || errChars == خالی_اشاریہ || converter == خالی_اشاریہ)
     {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *err = U_ILLEGAL_دلیل_ERROR;
+        واپس;
     }
-    if (*len < converter->invalidUCharLength)
+    اگر (*len < converter->invalid_UChar_لمبائی)
     {
-        *err = U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        *err = U_اشاریہ_OUTOFBOUNDS_ERROR;
+        واپس;
     }
-    if ((*len = converter->invalidUCharLength) > 0)
+    اگر ((*len = converter->invalid_UChar_لمبائی) > 0)
     {
-        u_memcpy (errChars, converter->invalidUCharBuffer, *len);
+        u_memcpy (errChars, converter->invalid_UChar_بفر, *len);
     }
 }
 
-#define SIG_MAX_LEN 5
+#تعریف_کرو SIG_MAX_LEN 5
 
-U_CAPI const char* U_EXPORT2
-ucnv_detectUnicodeSignature( const char* source,
-                             int32_t sourceLength,
-                             int32_t* signatureLength,
-                             UErrorCode* pErrorCode) {
+U_CAPI ثابت حرف* U_EXPORT2
+ucnv_detectUnicodeSignature( ثابت حرف* ماخذ,
+                             int32_t ماخذ_لمبائی,
+                             int32_t* signature_لمبائی,
+                             UError_رمز* p_Error_رمز) {
     int32_t dummy;
 
     /* initial 0xa5 bytes: make sure that if we read <SIG_MAX_LEN
      * bytes we don't misdetect something 
      */
-    char start[SIG_MAX_LEN]={ '\xa5', '\xa5', '\xa5', '\xa5', '\xa5' };
-    int i = 0;
+    حرف آغاز[SIG_MAX_LEN]={ '\xa5', '\xa5', '\xa5', '\xa5', '\xa5' };
+    صحیح i = 0;
 
-    if((pErrorCode==nullptr) || U_FAILURE(*pErrorCode)){
-        return nullptr;
+    اگر((p_Error_رمز==خالی_اشاریہ) || U_FAILURE(*p_Error_رمز)){
+        واپس خالی_اشاریہ;
     }
     
-    if(source == nullptr || sourceLength < -1){
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    اگر(ماخذ == خالی_اشاریہ || ماخذ_لمبائی < -1){
+        *p_Error_رمز = U_ILLEGAL_دلیل_ERROR;
+        واپس خالی_اشاریہ;
     }
 
-    if(signatureLength == nullptr) {
-        signatureLength = &dummy;
+    اگر(signature_لمبائی == خالی_اشاریہ) {
+        signature_لمبائی = &dummy;
     }
 
-    if(sourceLength==-1){
-        sourceLength=(int32_t)uprv_strlen(source);
+    اگر(ماخذ_لمبائی==-1){
+        ماخذ_لمبائی=(int32_t)uprv_strlen(ماخذ);
     }
 
     
-    while(i<sourceLength&& i<SIG_MAX_LEN){
-        start[i]=source[i];
+    جب(i<ماخذ_لمبائی&& i<SIG_MAX_LEN){
+        آغاز[i]=ماخذ[i];
         i++;
     }
 
-    if(start[0] == '\xFE' && start[1] == '\xFF') {
-        *signatureLength=2;
-        return  "UTF-16BE";
-    } else if(start[0] == '\xFF' && start[1] == '\xFE') {
-        if(start[2] == '\x00' && start[3] =='\x00') {
-            *signatureLength=4;
-            return "UTF-32LE";
-        } else {
-            *signatureLength=2;
-            return  "UTF-16LE";
+    اگر(آغاز[0] == '\xFE' && آغاز[1] == '\xFF') {
+        *signature_لمبائی=2;
+        واپس  "UTF-16BE";
+    } ورنہ اگر(آغاز[0] == '\xFF' && آغاز[1] == '\xFE') {
+        اگر(آغاز[2] == '\x00' && آغاز[3] =='\x00') {
+            *signature_لمبائی=4;
+            واپس "UTF-32LE";
+        } ورنہ {
+            *signature_لمبائی=2;
+            واپس  "UTF-16LE";
         }
-    } else if(start[0] == '\xEF' && start[1] == '\xBB' && start[2] == '\xBF') {
-        *signatureLength=3;
-        return  "UTF-8";
-    } else if(start[0] == '\x00' && start[1] == '\x00' && 
-              start[2] == '\xFE' && start[3]=='\xFF') {
-        *signatureLength=4;
-        return  "UTF-32BE";
-    } else if(start[0] == '\x0E' && start[1] == '\xFE' && start[2] == '\xFF') {
-        *signatureLength=3;
-        return "SCSU";
-    } else if(start[0] == '\xFB' && start[1] == '\xEE' && start[2] == '\x28') {
-        *signatureLength=3;
-        return "BOCU-1";
-    } else if(start[0] == '\x2B' && start[1] == '\x2F' && start[2] == '\x76') {
+    } ورنہ اگر(آغاز[0] == '\xEF' && آغاز[1] == '\xBB' && آغاز[2] == '\xBF') {
+        *signature_لمبائی=3;
+        واپس  "UTF-8";
+    } ورنہ اگر(آغاز[0] == '\x00' && آغاز[1] == '\x00' && 
+              آغاز[2] == '\xFE' && آغاز[3]=='\xFF') {
+        *signature_لمبائی=4;
+        واپس  "UTF-32BE";
+    } ورنہ اگر(آغاز[0] == '\x0E' && آغاز[1] == '\xFE' && آغاز[2] == '\xFF') {
+        *signature_لمبائی=3;
+        واپس "SCSU";
+    } ورنہ اگر(آغاز[0] == '\xFB' && آغاز[1] == '\xEE' && آغاز[2] == '\x28') {
+        *signature_لمبائی=3;
+        واپس "BOCU-1";
+    } ورنہ اگر(آغاز[0] == '\x2B' && آغاز[1] == '\x2F' && آغاز[2] == '\x76') {
         /*
          * UTF-7: Initial U+FEFF is encoded as +/v8  or  +/v9  or  +/v+  or  +/v/
          * depending on the second UTF-16 code unit.
@@ -2840,93 +2840,93 @@ ucnv_detectUnicodeSignature( const char* source,
          *
          * So far we have +/v
          */
-        if(start[3] == '\x38' && start[4] == '\x2D') {
+        اگر(آغاز[3] == '\x38' && آغاز[4] == '\x2D') {
             /* 5 bytes +/v8- */
-            *signatureLength=5;
-            return "UTF-7";
-        } else if(start[3] == '\x38' || start[3] == '\x39' || start[3] == '\x2B' || start[3] == '\x2F') {
+            *signature_لمبائی=5;
+            واپس "UTF-7";
+        } ورنہ اگر(آغاز[3] == '\x38' || آغاز[3] == '\x39' || آغاز[3] == '\x2B' || آغاز[3] == '\x2F') {
             /* 4 bytes +/v8  or  +/v9  or  +/v+  or  +/v/ */
-            *signatureLength=4;
-            return "UTF-7";
+            *signature_لمبائی=4;
+            واپس "UTF-7";
         }
-    }else if(start[0]=='\xDD' && start[1]== '\x73'&& start[2]=='\x66' && start[3]=='\x73'){
-        *signatureLength=4;
-        return "UTF-EBCDIC";
+    }ورنہ اگر(آغاز[0]=='\xDD' && آغاز[1]== '\x73'&& آغاز[2]=='\x66' && آغاز[3]=='\x73'){
+        *signature_لمبائی=4;
+        واپس "UTF-EBCDIC";
     }
 
 
     /* no known Unicode signature byte sequence recognized */
-    *signatureLength=0;
-    return nullptr;
+    *signature_لمبائی=0;
+    واپس خالی_اشاریہ;
 }
 
 U_CAPI int32_t U_EXPORT2
-ucnv_fromUCountPending(const UConverter* cnv, UErrorCode* status)
+ucnv_fromUCountPending(ثابت UConverter* cnv, UError_رمز* حالت_2)
 {
-    if(status == nullptr || U_FAILURE(*status)){
-        return -1;
+    اگر(حالت_2 == خالی_اشاریہ || U_FAILURE(*حالت_2)){
+        واپس -1;
     }
-    if(cnv == nullptr){
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return -1;
+    اگر(cnv == خالی_اشاریہ){
+        *حالت_2 = U_ILLEGAL_دلیل_ERROR;
+        واپس -1;
     }
 
-    if(cnv->preFromUFirstCP >= 0){
-        return U16_LENGTH(cnv->preFromUFirstCP)+cnv->preFromULength ;
-    }else if(cnv->preFromULength < 0){
-        return -cnv->preFromULength ;
-    }else if(cnv->fromUChar32 > 0){
-        return 1;
+    اگر(cnv->preFromUFirstCP >= 0){
+        واپس U16_لمبائی(cnv->preFromUFirstCP)+cnv->preFromULength ;
+    }ورنہ اگر(cnv->preFromULength < 0){
+        واپس -cnv->preFromULength ;
+    }ورنہ اگر(cnv->fromUChar32 > 0){
+        واپس 1;
     }
-    return 0; 
+    واپس 0; 
 
 }
 
 U_CAPI int32_t U_EXPORT2
-ucnv_toUCountPending(const UConverter* cnv, UErrorCode* status){
+ucnv_مقصد_UCount_Pending(ثابت UConverter* cnv, UError_رمز* حالت_2){
 
-    if(status == nullptr || U_FAILURE(*status)){
-        return -1;
+    اگر(حالت_2 == خالی_اشاریہ || U_FAILURE(*حالت_2)){
+        واپس -1;
     }
-    if(cnv == nullptr){
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return -1;
+    اگر(cnv == خالی_اشاریہ){
+        *حالت_2 = U_ILLEGAL_دلیل_ERROR;
+        واپس -1;
     }
 
-    if(cnv->preToULength > 0){
-        return cnv->preToULength ;
-    }else if(cnv->preToULength < 0){
-        return -cnv->preToULength;
-    }else if(cnv->toULength > 0){
-        return cnv->toULength;
+    اگر(cnv->pre_مقصد_ULength > 0){
+        واپس cnv->pre_مقصد_ULength ;
+    }ورنہ اگر(cnv->pre_مقصد_ULength < 0){
+        واپس -cnv->pre_مقصد_ULength;
+    }ورنہ اگر(cnv->مقصد_ULength > 0){
+        واپس cnv->مقصد_ULength;
     }
-    return 0;
+    واپس 0;
 }
 
 U_CAPI UBool U_EXPORT2
-ucnv_isFixedWidth(UConverter *cnv, UErrorCode *status){
-    if (U_FAILURE(*status)) {
-        return false;
+ucnv_is_Fixed_چوڑائی(UConverter *cnv, UError_رمز *حالت_2){
+    اگر (U_FAILURE(*حالت_2)) {
+        واپس جھوٹ;
     }
 
-    if (cnv == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+    اگر (cnv == خالی_اشاریہ) {
+        *حالت_2 = U_ILLEGAL_دلیل_ERROR;
+        واپس جھوٹ;
     }
 
-    switch (ucnv_getType(cnv)) {
-        case UCNV_SBCS:
-        case UCNV_DBCS:
-        case UCNV_UTF32_BigEndian:
-        case UCNV_UTF32_LittleEndian:
-        case UCNV_UTF32:
-        case UCNV_US_ASCII:
-            return true;
-        default:
-            return false;
+    انتخاب (ucnv_getType(cnv)) {
+        حالت UCNV_SBCS:
+        حالت UCNV_DBCS:
+        حالت UCNV_UTF32_BigEndian:
+        حالت UCNV_UTF32_LittleEndian:
+        حالت UCNV_UTF32:
+        حالت UCNV_US_ASCII:
+            واپس سچ;
+        طےشدہ:
+            واپس جھوٹ;
     }
 }
-#endif
+#اگر_ختم
 
 /*
  * Hey, Emacs, please set the following:

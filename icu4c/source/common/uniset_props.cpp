@@ -18,92 +18,92 @@
 *   Character property dependent functions moved here from uniset.cpp
 */
 
-#include <array>
-#include <optional>
+#شامل <array>
+#شامل <optional>
 
-#include "unicode/utypes.h"
-#include "unicode/uniset.h"
-#include "unicode/parsepos.h"
-#include "unicode/uchar.h"
-#include "unicode/uscript.h"
-#include "unicode/symtable.h"
-#include "unicode/uset.h"
-#include "unicode/locid.h"
-#include "unicode/brkiter.h"
-#include "unicode/utfiterator.h"
-#include "uset_imp.h"
-#include "ruleiter.h"
-#include "cmemory.h"
-#include "ucln_cmn.h"
-#include "util.h"
-#include "uvector.h"
-#include "uprops.h"
-#include "patternprops.h"
-#include "propname.h"
-#include "normalizer2impl.h"
-#include "uinvchar.h"
-#include "uprops.h"
-#include "charstr.h"
-#include "cstring.h"
-#include "mutex.h"
-#include "umutex.h"
-#include "uassert.h"
-#include "hash.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/uniset.h"
+#شامل "unicode/parsepos.h"
+#شامل "unicode/uchar.h"
+#شامل "unicode/uscript.h"
+#شامل "unicode/symtable.h"
+#شامل "unicode/uset.h"
+#شامل "unicode/locid.h"
+#شامل "unicode/brkiter.h"
+#شامل "unicode/utfiterator.h"
+#شامل "uset_imp.h"
+#شامل "ruleiter.h"
+#شامل "cmemory.h"
+#شامل "ucln_cmn.h"
+#شامل "util.h"
+#شامل "uvector.h"
+#شامل "uprops.h"
+#شامل "patternprops.h"
+#شامل "propname.h"
+#شامل "normalizer2impl.h"
+#شامل "uinvchar.h"
+#شامل "uprops.h"
+#شامل "charstr.h"
+#شامل "cstring.h"
+#شامل "mutex.h"
+#شامل "umutex.h"
+#شامل "uassert.h"
+#شامل "hash.h"
 
 U_NAMESPACE_USE
 
-namespace {
+نامخلا {
 
 // Special property set IDs
-constexpr char ANY[]   = "ANY";   // [\u0000-\U0010FFFF]
-constexpr char ASCII[] = "ASCII"; // [\u0000-\u007F]
-constexpr char ASSIGNED[] = "Assigned"; // [:^Cn:]
+constexpr حرف ANY[]   = "ANY";   // [\u0000-\U0010FFFF]
+constexpr حرف ASCII[] = "ASCII"; // [\u0000-\u007F]
+constexpr حرف ASSIGNED[] = "Assigned"; // [:^Cn:]
 
 }  // namespace
 
 // Cached sets ------------------------------------------------------------- ***
 
 U_CDECL_BEGIN
-static UBool U_CALLCONV uset_cleanup();
+ساکن UBool U_CALLCONV uset_cleanup();
 
-static UnicodeSet *uni32Singleton;
-static icu::UInitOnce uni32InitOnce {};
+ساکن Unicode_سیٹ *uni32Singleton;
+ساکن icu::UInitOnce uni32InitOnce {};
 
 /**
  * Cleanup function for UnicodeSet
  */
-static UBool U_CALLCONV uset_cleanup() {
-    delete uni32Singleton;
-    uni32Singleton = nullptr;
+ساکن UBool U_CALLCONV uset_cleanup() {
+    حذف uni32Singleton;
+    uni32Singleton = خالی_اشاریہ;
     uni32InitOnce.reset();
-    return true;
+    واپس سچ;
 }
 
-U_CDECL_END
+U_CDECL_انتہا
 
 U_NAMESPACE_BEGIN
 
-using U_HEADER_ONLY_NAMESPACE::utfStringCodePoints;
+استعمال U_سرخی_ONLY_NAMESPACE::utf_String_رمز_Points;
 
-namespace {
+نامخلا {
 
 // Cache some sets for other services -------------------------------------- ***
-void U_CALLCONV createUni32Set(UErrorCode &errorCode) {
-    U_ASSERT(uni32Singleton == nullptr);
-    uni32Singleton = new UnicodeSet(UnicodeString(u"[:age=3.2:]"), errorCode);
-    if(uni32Singleton==nullptr) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
-    } else {
+خالی U_CALLCONV create_Uni32_سیٹ(UError_رمز &error_رمز) {
+    U_ASSERT(uni32Singleton == خالی_اشاریہ);
+    uni32Singleton = نیا Unicode_سیٹ(UnicodeString(u"[:age=3.2:]"), error_رمز);
+    اگر(uni32Singleton==خالی_اشاریہ) {
+        error_رمز=U_حافظہ_تخصیص_ERROR;
+    } ورنہ {
         uni32Singleton->freeze();
     }
-    ucln_common_registerCleanup(UCLN_COMMON_USET, uset_cleanup);
+    ucln_common_رجسٹر_Cleanup(UCLN_COMMON_USET, uset_cleanup);
 }
 
 
-U_CFUNC UnicodeSet *
-uniset_getUnicode32Instance(UErrorCode &errorCode) {
-    umtx_initOnce(uni32InitOnce, &createUni32Set, errorCode);
-    return uni32Singleton;
+U_CFUNC Unicode_سیٹ *
+uniset_getUnicode32Instance(UError_رمز &error_رمز) {
+    umtx_initOnce(uni32InitOnce, &create_Uni32_سیٹ, error_رمز);
+    واپس uni32Singleton;
 }
 
 // helper functions for matching of pattern syntax pieces ------------------ ***
@@ -113,10 +113,10 @@ uniset_getUnicode32Instance(UErrorCode &errorCode) {
 // caseCompare(), but they also make UnicodeSet work for simple patterns when
 // no Unicode properties data is available - when caseCompare() fails
 
-inline UBool
-isPerlOpen(const UnicodeString &pattern, int32_t pos) {
+اندرونی UBool
+isPerlOpen(ثابت UnicodeString &نمونہ, int32_t pos) {
     char16_t c;
-    return pattern.charAt(pos)==u'\\' && ((c=pattern.charAt(pos+1))==u'p' || c==u'P');
+    واپس نمونہ.charAt(pos)==u'\\' && ((c=نمونہ.charAt(pos+1))==u'p' || c==u'P');
 }
 
 /*static inline UBool
@@ -124,14 +124,14 @@ isPerlClose(const UnicodeString &pattern, int32_t pos) {
     return pattern.charAt(pos)==u'}';
 }*/
 
-inline UBool
-isNameOpen(const UnicodeString &pattern, int32_t pos) {
-    return pattern.charAt(pos)==u'\\' && pattern.charAt(pos+1)==u'N';
+اندرونی UBool
+isNameOpen(ثابت UnicodeString &نمونہ, int32_t pos) {
+    واپس نمونہ.charAt(pos)==u'\\' && نمونہ.charAt(pos+1)==u'N';
 }
 
-inline UBool
-isPOSIXOpen(const UnicodeString &pattern, int32_t pos) {
-    return pattern.charAt(pos)==u'[' && pattern.charAt(pos+1)==u':';
+اندرونی UBool
+isPOSIXOpen(ثابت UnicodeString &نمونہ, int32_t pos) {
+    واپس نمونہ.charAt(pos)==u'[' && نمونہ.charAt(pos+1)==u':';
 }
 
 /*static inline UBool
@@ -142,19 +142,19 @@ isPOSIXClose(const UnicodeString &pattern, int32_t pos) {
 // TODO memory debugging provided inside uniset.cpp
 // could be made available here but probably obsolete with use of modern
 // memory leak checker tools
-#define _dbgct(me)
+#تعریف_کرو _dbgct(me)
 
 // Returns the character with the given name or name alias, or U_SENTINEL if no such character
 // exists.
-UChar32 getCharacterByName(const CharString& name) {
-    for (const UCharNameChoice nameChoice : std::array{U_EXTENDED_CHAR_NAME, U_CHAR_NAME_ALIAS}) {
-        UErrorCode ec = U_ZERO_ERROR;
-        UChar32 ch = u_charFromName(nameChoice, name.data(), &ec);
-        if (U_SUCCESS(ec)) {
-            return ch;
+UChar32 getCharacterByName(ثابت CharString& name) {
+    برائے (ثابت UCharNameChoice nameChoice : std::array{U_EXTENDED_CHAR_NAME, U_CHAR_NAME_ALIAS}) {
+        UError_رمز ec = U_ZERO_ERROR;
+        UChar32 ch = u_charFromName(nameChoice, name.ڈیٹا(), &ec);
+        اگر (U_SUCCESS(ec)) {
+            واپس ch;
         }
     }
-    return U_SENTINEL;
+    واپس U_SENTINEL;
 }
 
 }  // namespace
@@ -169,167 +169,167 @@ UChar32 getCharacterByName(const CharString& name) {
  * pattern language.
  * @param pattern a string specifying what characters are in the set
  */
-UnicodeSet::UnicodeSet(const UnicodeString& pattern,
-                       UErrorCode& status) {
-    applyPattern(pattern, status);
-    _dbgct(this);
+Unicode_سیٹ::Unicode_سیٹ(ثابت UnicodeString& نمونہ,
+                       UError_رمز& حالت_2) {
+    apply_نمونہ(نمونہ, حالت_2);
+    _dbgct(یہ);
 }
 
 //----------------------------------------------------------------
 // Public API
 //----------------------------------------------------------------
 
-UnicodeSet& UnicodeSet::applyPattern(const UnicodeString& pattern,
-                                     UErrorCode& status) U_LIFETIME_BOUND {
+Unicode_سیٹ& Unicode_سیٹ::apply_نمونہ(ثابت UnicodeString& نمونہ,
+                                     UError_رمز& حالت_2) U_LIFETIME_BOUND {
     // Equivalent to
     //   return applyPattern(pattern, USET_IGNORE_SPACE, nullptr, status);
     // but without dependency on closeOver().
     ParsePosition pos(0);
-    applyPatternIgnoreSpace(pattern, pos, nullptr, status);
-    if (U_FAILURE(status)) return *this;
+    apply_نمونہ_Ignore_Space(نمونہ, pos, خالی_اشاریہ, حالت_2);
+    اگر (U_FAILURE(حالت_2)) واپس *یہ;
 
-    int32_t i = pos.getIndex();
+    int32_t i = pos.get_اشاریہ();
     // Skip over trailing whitespace
-    ICU_Utility::skipWhitespace(pattern, i, true);
-    if (i != pattern.length()) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
+    ICU_Utility::skipWhitespace(نمونہ, i, سچ);
+    اگر (i != نمونہ.length()) {
+        حالت_2 = U_ILLEGAL_دلیل_ERROR;
     }
-    return *this;
+    واپس *یہ;
 }
 
-void
-UnicodeSet::applyPatternIgnoreSpace(const UnicodeString& pattern,
+خالی
+Unicode_سیٹ::apply_نمونہ_Ignore_Space(ثابت UnicodeString& نمونہ,
                                     ParsePosition& pos,
-                                    const SymbolTable* symbols,
-                                    UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+                                    ثابت علامت_جدول* symbols,
+                                    UError_رمز& حالت_2) {
+    اگر (U_FAILURE(حالت_2)) {
+        واپس;
     }
-    if (isFrozen()) {
-        status = U_NO_WRITE_PERMISSION;
-        return;
+    اگر (isFrozen()) {
+        حالت_2 = U_NO_WRITE_PERMISSION;
+        واپس;
     }
     // Need to build the pattern in a temporary string because
     // _applyPattern calls add() etc., which set pat to empty.
     UnicodeString rebuiltPat;
-    RuleCharacterIterator chars(pattern, symbols, pos);
-    applyPattern(pattern, pos, chars, symbols, rebuiltPat, USET_IGNORE_SPACE, nullptr, status);
-    if (U_FAILURE(status)) return;
-    if (chars.inVariable()) {
+    قاعدہ_Character_Iterator chars(نمونہ, symbols, pos);
+    apply_نمونہ(نمونہ, pos, chars, symbols, rebuiltPat, USET_IGNORE_SPACE, خالی_اشاریہ, حالت_2);
+    اگر (U_FAILURE(حالت_2)) واپس;
+    اگر (chars.اندر_Variable()) {
         // syntaxError(chars, "Extra chars in variable value");
-        status = U_MALFORMED_SET;
-        return;
+        حالت_2 = U_MALFORMED_سیٹ;
+        واپس;
     }
-    setPattern(rebuiltPat);
+    سیٹ_نمونہ(rebuiltPat);
 }
 
 /**
  * Return true if the given position, in the given pattern, appears
  * to be the start of a UnicodeSet pattern.
  */
-UBool UnicodeSet::resemblesPattern(const UnicodeString& pattern, int32_t pos) {
-    return ((pos+1) < pattern.length() &&
-            pattern.charAt(pos) == static_cast<char16_t>(91)/*[*/) ||
-        resemblesPropertyPattern(pattern, pos);
+UBool Unicode_سیٹ::resembles_نمونہ(ثابت UnicodeString& نمونہ, int32_t pos) {
+    واپس ((pos+1) < نمونہ.length() &&
+            نمونہ.charAt(pos) == static_cast<char16_t>(91)/*[*/) ||
+        resembles_Property_نمونہ(نمونہ, pos);
 }
 
 //----------------------------------------------------------------
 // Implementation: Pattern parsing
 //----------------------------------------------------------------
 
-#define U_DEBUGGING_UNICODESET_PARSING 0
+#تعریف_کرو U_DEBUGGING_UNICODESET_PARSING 0
 
-class UnicodeSet::Lexer {
-  public:
-    Lexer(const UnicodeString &pattern,
-          const ParsePosition &parsePosition,
-          RuleCharacterIterator &chars,
-          uint32_t unicodeSetOptions,
-          const SymbolTable *const symbols,
-          UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute))
-        : pattern_(pattern), parsePosition_(parsePosition), chars_(chars),
-          unicodeSetOptions_(unicodeSetOptions),
-          charsOptions_(RuleCharacterIterator::PARSE_ESCAPES |
-                        ((unicodeSetOptions & USET_IGNORE_SPACE) != 0
-                             ? RuleCharacterIterator::SKIP_WHITESPACE
+جماعت Unicode_سیٹ::Lexer {
+  عوامی:
+    Lexer(ثابت UnicodeString &نمونہ,
+          ثابت ParsePosition &parsePosition,
+          قاعدہ_Character_Iterator &chars,
+          uint32_t unicode_سیٹ_Options,
+          ثابت علامت_جدول *ثابت symbols,
+          Unicode_سیٹ &(Unicode_سیٹ::*case_احاطہ)(int32_t attribute))
+        : نمونہ_2(نمونہ), parsePosition_(parsePosition), chars_(chars),
+          unicode_سیٹ_Options_2(unicode_سیٹ_Options),
+          charsOptions_(قاعدہ_Character_Iterator::PARSE_ESCAPES |
+                        ((unicode_سیٹ_Options & USET_IGNORE_SPACE) != 0
+                             ? قاعدہ_Character_Iterator::SKIP_WHITESPACE
                              : 0)),
           symbols_(symbols),
-          caseClosure_(caseClosure) {}
+          case_احاطہ_2(case_احاطہ) {}
 
-    class LexicalElement {
-      public:
-        bool isSetOperator(const char16_t op) const {
-            return U_SUCCESS(errorCode_) && category_ == SET_OPERATOR && string_[0] == op;
+    جماعت LexicalElement {
+      عوامی:
+        منطقی is_سیٹ_Operator(ثابت char16_t op) ثابت {
+            واپس U_SUCCESS(error_رمز_2) && category_ == سیٹ_OPERATOR && string_[0] == op;
         }
 
-        bool isStringLiteral() const {
-            return U_SUCCESS(errorCode_) && category_ == STRING_LITERAL;
+        منطقی isStringLiteral() ثابت {
+            واپس U_SUCCESS(error_رمز_2) && category_ == STRING_LITERAL;
         }
 
-        bool isNamedElement() const {
-            return U_SUCCESS(errorCode_) && category_ == NAMED_ELEMENT;
+        منطقی isNamedElement() ثابت {
+            واپس U_SUCCESS(error_رمز_2) && category_ == NAMED_ELEMENT;
         }
 
-        bool isBracketedElement() const {
-            return U_SUCCESS(errorCode_) && category_ == BRACKETED_ELEMENT;
+        منطقی isBracketedElement() ثابت {
+            واپس U_SUCCESS(error_رمز_2) && category_ == BRACKETED_ELEMENT;
         }
 
-        std::optional<UnicodeString> element() const {
-            if (U_SUCCESS(errorCode_) &&
+        std::optional<UnicodeString> element() ثابت {
+            اگر (U_SUCCESS(error_رمز_2) &&
                 (category_ == LITERAL_ELEMENT || category_ == ESCAPED_ELEMENT ||
                  category_ == BRACKETED_ELEMENT || category_ == STRING_LITERAL)) {
-                return string_;
+                واپس string_;
             }
-            return std::nullopt;
+            واپس std::nullopt;
         }
 
-        std::optional<UChar32> codePoint() const {
-            if (U_SUCCESS(errorCode_) && (category_ == LITERAL_ELEMENT || category_ == ESCAPED_ELEMENT ||
+        std::optional<UChar32> رمز_نقطہ() ثابت {
+            اگر (U_SUCCESS(error_رمز_2) && (category_ == LITERAL_ELEMENT || category_ == ESCAPED_ELEMENT ||
                                           category_ == BRACKETED_ELEMENT || category_ == NAMED_ELEMENT)) {
-                return string_.char32At(0);
+                واپس string_.char32At(0);
             }
-            return std::nullopt;
+            واپس std::nullopt;
         }
 
         // If `*this` is a valid property-query or set-valued-variable, returns the set represented
         // by this lexical element, which lives at least as long as `*this`.  Null otherwise.
-        const UnicodeSet *set() const {
-            if (U_FAILURE(errorCode_)) {
-                return nullptr;
+        ثابت Unicode_سیٹ *سیٹ() ثابت {
+            اگر (U_FAILURE(error_رمز_2)) {
+                واپس خالی_اشاریہ;
             }
-            if (category_ == PROPERTY_QUERY || category_ == VARIABLE) {
-                if (precomputedSet_ != nullptr) {
-                    return precomputedSet_;
-                } else {
-                    return &set_;
+            اگر (category_ == PROPERTY_QUERY || category_ == VARIABLE) {
+                اگر (precomputed_سیٹ != خالی_اشاریہ) {
+                    واپس precomputed_سیٹ;
+                } ورنہ {
+                    واپس &سیٹ_2;
                 }
             }
-            return nullptr;
+            واپس خالی_اشاریہ;
         }
 
-        const UErrorCode& errorCode() const{
-          return errorCode_;
+        ثابت UError_رمز& error_رمز() ثابت{
+          واپس error_رمز_2;
         }
 
-#if U_DEBUGGING_UNICODESET_PARSING
-        UnicodeString debugString() const {
-            UnicodeString result;
-            if (U_FAILURE(errorCode_)) {
-                result.append(u"Ill-formed token (")
-                    .append(UnicodeString::fromUTF8(u_errorName(errorCode_)))
+#اگر U_DEBUGGING_UNICODESET_PARSING
+        UnicodeString debugString() ثابت {
+            UnicodeString نتیجہ;
+            اگر (U_FAILURE(error_رمز_2)) {
+                نتیجہ.append(u"Ill-formed token (")
+                    .append(UnicodeString::fromUTF8(u_errorName(error_رمز_2)))
                     .append(u"), possibly ");
             }
-            return result.append(category_names_[category_])
+            واپس نتیجہ.append(category_نام[category_])
                 .append(u" '")
-                .append(sourceText_)
+                .append(ماخذ_متن)
                 .append(u"'");
         }
-#endif
+#اگر_ختم
 
-      private:
+      نجی:
         // See https://unicode.org/reports/tr61#Lexical-Elements.
-        enum Category : std::uint8_t {
-            SET_OPERATOR,
+        شمار Category : std::uint8_t {
+            سیٹ_OPERATOR,
             LITERAL_ELEMENT,
             ESCAPED_ELEMENT,
             NAMED_ELEMENT,
@@ -342,9 +342,9 @@ class UnicodeSet::Lexer {
             // the category PROPERTY_QUERY, $a=a has the category LITERAL_ELEMENT, and $s={Zeichenkette}
             // has the category STRING_LITERAL.
             VARIABLE,
-            END_OF_TEXT,
+            انتہا_کا_متن,
         };
-        static constexpr std::array<std::u16string_view, END_OF_TEXT + 1> category_names_{{
+        ساکن constexpr std::array<std::u16string_view, انتہا_کا_متن + 1> category_نام{{
             u"set-operator",
             u"literal-element",
             u"escaped-element",
@@ -355,33 +355,33 @@ class UnicodeSet::Lexer {
             u"variable",
             u"(end of text)",
         }};
-        LexicalElement(Category category, UnicodeString string, RuleCharacterIterator::Pos after,
-                       const UErrorCode errorCode, const UnicodeSet *precomputedSet, UnicodeSet set,
-                       std::u16string_view sourceText, bool separated,
-                       std::optional<LexicalElement> const &preceding)
-            : category_(category), string_(std::move(string)), after_(after), errorCode_(errorCode),
-              precomputedSet_(precomputedSet), set_(set), sourceText_(sourceText) {
-            if (U_FAILURE(errorCode_) || separated || !preceding.has_value()) {
-                return;
+        LexicalElement(Category category, UnicodeString string, قاعدہ_Character_Iterator::Pos after,
+                       ثابت UError_رمز error_رمز, ثابت Unicode_سیٹ *precomputed_سیٹ_2, Unicode_سیٹ سیٹ,
+                       std::u16string_view ماخذ_متن_2, منطقی separated,
+                       std::optional<LexicalElement> ثابت &preceding)
+            : category_(category), string_(std::move(string)), after_(after), error_رمز_2(error_رمز),
+              precomputed_سیٹ(precomputed_سیٹ_2), سیٹ_2(سیٹ), ماخذ_متن(ماخذ_متن_2) {
+            اگر (U_FAILURE(error_رمز_2) || separated || !preceding.has_value()) {
+                واپس;
             }
-            if (preceding->isSetOperator(u'[') && category == LITERAL_ELEMENT &&
-                *codePoint() == u':') {
-                errorCode_ = U_MALFORMED_SET;
-            } else if (preceding->category_ == ESCAPED_ELEMENT) {
-                if (U_IS_LEAD(*preceding->codePoint()) && category_ == ESCAPED_ELEMENT &&
-                    U_IS_TRAIL(*codePoint())) {
-                    errorCode_ = U_MALFORMED_SET;
-                } else if (preceding->sourceText_.length() <= 3 && category == LITERAL_ELEMENT) {
-                    UChar32 cp = *codePoint();
-                    if (preceding->sourceText_[1] == u'x') {
-                        if ((cp >= u'0' && cp <= u'9') || (cp >= u'A' && cp <= u'F') ||
+            اگر (preceding->is_سیٹ_Operator(u'[') && category == LITERAL_ELEMENT &&
+                *رمز_نقطہ() == u':') {
+                error_رمز_2 = U_MALFORMED_سیٹ;
+            } ورنہ اگر (preceding->category_ == ESCAPED_ELEMENT) {
+                اگر (U_IS_LEAD(*preceding->رمز_نقطہ()) && category_ == ESCAPED_ELEMENT &&
+                    U_IS_TRAIL(*رمز_نقطہ())) {
+                    error_رمز_2 = U_MALFORMED_سیٹ;
+                } ورنہ اگر (preceding->ماخذ_متن.length() <= 3 && category == LITERAL_ELEMENT) {
+                    UChar32 cp = *رمز_نقطہ();
+                    اگر (preceding->ماخذ_متن[1] == u'x') {
+                        اگر ((cp >= u'0' && cp <= u'9') || (cp >= u'A' && cp <= u'F') ||
                             (cp >= u'a' && cp <= u'f')) {
-                            errorCode_ = U_MALFORMED_SET;
+                            error_رمز_2 = U_MALFORMED_سیٹ;
                         }
-                    } else if (preceding->sourceText_[1] >= u'0' &&
-                               preceding->sourceText_[1] <= u'7') {
-                        if (cp >= u'0' && cp <= u'7') {
-                            errorCode_ = U_MALFORMED_SET;
+                    } ورنہ اگر (preceding->ماخذ_متن[1] >= u'0' &&
+                               preceding->ماخذ_متن[1] <= u'7') {
+                        اگر (cp >= u'0' && cp <= u'7') {
+                            error_رمز_2 = U_MALFORMED_سیٹ;
                         }
                     }
                 }
@@ -389,48 +389,48 @@ class UnicodeSet::Lexer {
         }
         Category category_;
         UnicodeString string_;
-        RuleCharacterIterator::Pos after_;
-        UErrorCode errorCode_;
-        const UnicodeSet *precomputedSet_;
-        UnicodeSet set_;
-        std::u16string_view sourceText_;
+        قاعدہ_Character_Iterator::Pos after_;
+        UError_رمز error_رمز_2;
+        ثابت Unicode_سیٹ *precomputed_سیٹ;
+        Unicode_سیٹ سیٹ_2;
+        std::u16string_view ماخذ_متن;
 
-        friend class Lexer;
+        دوست جماعت Lexer;
     };
 
-    UnicodeString getPositionForDebugging() const {
-        return pattern_.tempSubString(0, parsePosition_.getIndex()) + u"☞" +
-               pattern_.tempSubString(parsePosition_.getIndex(), 60);
+    UnicodeString getPositionForDebugging() ثابت {
+        واپس نمونہ_2.عارضی_Sub_String(0, parsePosition_.get_اشاریہ()) + u"☞" +
+               نمونہ_2.عارضی_Sub_String(parsePosition_.get_اشاریہ(), 60);
     }
 
-    bool acceptSetOperator(char16_t op) {
-        if (lookahead().isSetOperator(op)) {
+    منطقی accept_سیٹ_Operator(char16_t op) {
+        اگر (lookahead().is_سیٹ_Operator(op)) {
             advance();
-            return true;
+            واپس سچ;
         }
-        return false;
+        واپس جھوٹ;
     }
 
-    const LexicalElement &lookahead() {
-        if (!ahead_.has_value()) {
-            const RuleCharacterIterator::Pos before = getPos();
-            ahead_.emplace(nextToken(behind_));
-            chars_.setPos(before);
+    ثابت LexicalElement &lookahead() {
+        اگر (!ahead_.has_value()) {
+            ثابت قاعدہ_Character_Iterator::Pos before = getPos();
+            ahead_.emplace(اگلا_Token(behind_));
+            chars_.سیٹ_Pos(before);
         }
-        return *ahead_;
+        واپس *ahead_;
     }
 
-    const LexicalElement &lookahead2() {
-        if (!ahead2_.has_value()) {
+    ثابت LexicalElement &lookahead2() {
+        اگر (!ahead2_.has_value()) {
             // Note that if someone has called `getCharacterIterator` and played with the result,
             // `before` may not actually be before `ahead_`, but we do not actually depend on this here,
             // since we start from ahead_.after_.
-            const RuleCharacterIterator::Pos before = getPos();
-            chars_.setPos(lookahead().after_);
-            ahead2_.emplace(nextToken(ahead_));
-            chars_.setPos(before);
+            ثابت قاعدہ_Character_Iterator::Pos before = getPos();
+            chars_.سیٹ_Pos(lookahead().after_);
+            ahead2_.emplace(اگلا_Token(ahead_));
+            chars_.سیٹ_Pos(before);
         }
-        return *ahead2_;
+        واپس *ahead2_;
     }
 
     // For use in older functions that take the `RuleCharacterIterator` directly.
@@ -439,119 +439,119 @@ class UnicodeSet::Lexer {
     // Once `advance` or `acceptSetOperator` has been called, the result of a call to
     // `getCharacterIterator` preceding the call to `advance` or `acceptSetOperator` must no longer be
     // used.
-    RuleCharacterIterator &getCharacterIterator() {
+    قاعدہ_Character_Iterator &getCharacterIterator() {
         // Make sure we compute a correct `ahead_.after_` so we do not depend on the current value of
         // `getPos()` for lexing.
         lookahead();
-        return chars_;
+        واپس chars_;
     }
 
     int32_t charsOptions() {
-        return charsOptions_;
+        واپس charsOptions_;
     }
 
-    bool atEnd() const {
-        return chars_.atEnd();
+    منطقی at_انتہا() ثابت {
+        واپس chars_.at_انتہا();
     }
 
-    void advance() {
+    خالی advance() {
         // If someone called `getCharacterIterator`, we are now changing the character iterator under
         // their feet; further, we may not have an `ahead_`, so if they keep playing with it we would be
         // working on incorrect values of `getPos`.  This is why the result of `getCharacterIterator`
         // must no longer be used.
-        chars_.setPos(lookahead().after_);
+        chars_.سیٹ_Pos(lookahead().after_);
         behind_ = ahead_;
         ahead_ = ahead2_;
         ahead2_.reset();
     }
 
-  private:
+  نجی:
     // A version of getPos that returns its position instead of taking it as at out parameter, so we
     // can have const positions.
-    RuleCharacterIterator::Pos getPos() const {
-        RuleCharacterIterator::Pos result;
-        chars_.getPos(result);
-        return result;
+    قاعدہ_Character_Iterator::Pos getPos() ثابت {
+        قاعدہ_Character_Iterator::Pos نتیجہ;
+        chars_.getPos(نتیجہ);
+        واپس نتیجہ;
     }
 
-    LexicalElement nextToken(std::optional<LexicalElement> const& preceding) {
-        UErrorCode errorCode = U_ZERO_ERROR;
-        bool separated = false;
-        if (charsOptions_ & RuleCharacterIterator::SKIP_WHITESPACE) {
+    LexicalElement اگلا_Token(std::optional<LexicalElement> ثابت& preceding) {
+        UError_رمز error_رمز = U_ZERO_ERROR;
+        منطقی separated = جھوٹ;
+        اگر (charsOptions_ & قاعدہ_Character_Iterator::SKIP_WHITESPACE) {
             UChar32 s;
-            RuleCharacterIterator::Pos pos;
-            for (;;) {
-                UBool unusedEscaped;
+            قاعدہ_Character_Iterator::Pos pos;
+            برائے (;;) {
+                UBool غیر_مستعمل_Escaped;
                 chars_.getPos(pos);
-                s = chars_.next(charsOptions_ & ~(RuleCharacterIterator::PARSE_ESCAPES |
-                                                  RuleCharacterIterator::SKIP_WHITESPACE),
-                                unusedEscaped, errorCode);
-                if (!PatternProps::isWhiteSpace(s)) {
-                    chars_.setPos(pos);
-                    break;
+                s = chars_.next(charsOptions_ & ~(قاعدہ_Character_Iterator::PARSE_ESCAPES |
+                                                  قاعدہ_Character_Iterator::SKIP_WHITESPACE),
+                                غیر_مستعمل_Escaped, error_رمز);
+                اگر (!نمونہ_Props::isWhiteSpace(s)) {
+                    chars_.سیٹ_Pos(pos);
+                    توڑو;
                 }
-                if (s != u'\u200E' && s != u'\u200F') {
-                    separated = true;
+                اگر (s != u'\u200E' && s != u'\u200F') {
+                    separated = سچ;
                 }
             }
         }
         chars_.skipIgnored(charsOptions_);
-        if (chars_.atEnd()) {
-            return LexicalElement(LexicalElement::END_OF_TEXT, {}, getPos(), errorCode,
-                                  /*precomputedSet=*/nullptr,
+        اگر (chars_.at_انتہا()) {
+            واپس LexicalElement(LexicalElement::انتہا_کا_متن, {}, getPos(), error_رمز,
+                                  /*precomputedSet=*/خالی_اشاریہ,
                                   /*set=*/{},
                                   u"", separated, preceding);
         }
-        const int32_t start = parsePosition_.getIndex();
-        const RuleCharacterIterator::Pos before = getPos();
+        ثابت int32_t آغاز = parsePosition_.get_اشاریہ();
+        ثابت قاعدہ_Character_Iterator::Pos before = getPos();
         // First try to get the next character without parsing escapes.
-        UBool unusedEscaped;
-        const UChar32 first =
-            chars_.next(charsOptions_ & ~RuleCharacterIterator::PARSE_ESCAPES, unusedEscaped, errorCode);
-        if (first == u'[' || first == u'\\') {
-            const RuleCharacterIterator::Pos afterFirst = getPos();
+        UBool غیر_مستعمل_Escaped;
+        ثابت UChar32 first =
+            chars_.next(charsOptions_ & ~قاعدہ_Character_Iterator::PARSE_ESCAPES, غیر_مستعمل_Escaped, error_رمز);
+        اگر (first == u'[' || first == u'\\') {
+            ثابت قاعدہ_Character_Iterator::Pos after_پہلا = getPos();
             // This could be a property-query or named-element.
-            const UChar32 second = chars_.next(charsOptions_ & ~(RuleCharacterIterator::PARSE_ESCAPES |
-                                                                 RuleCharacterIterator::SKIP_WHITESPACE),
-                                               unusedEscaped, errorCode);
-            if ((first == u'[' && second == u':') ||
-                (first == u'\\' && (second == u'p' || second == u'P' || second == u'N'))) {
-                if (second == u'N') {
-                    UChar32 const queryResult = scanNamedElementBrackets(errorCode);
-                    return LexicalElement(
-                        LexicalElement::NAMED_ELEMENT, UnicodeString(queryResult), getPos(), errorCode,
-                        /*precomputedSet=*/nullptr,
+            ثابت UChar32 دوسرا = chars_.next(charsOptions_ & ~(قاعدہ_Character_Iterator::PARSE_ESCAPES |
+                                                                 قاعدہ_Character_Iterator::SKIP_WHITESPACE),
+                                               غیر_مستعمل_Escaped, error_رمز);
+            اگر ((first == u'[' && دوسرا == u':') ||
+                (first == u'\\' && (دوسرا == u'p' || دوسرا == u'P' || دوسرا == u'N'))) {
+                اگر (دوسرا == u'N') {
+                    UChar32 ثابت query_نتیجہ = جائزہ_Named_Element_Brackets(error_رمز);
+                    واپس LexicalElement(
+                        LexicalElement::NAMED_ELEMENT, UnicodeString(query_نتیجہ), getPos(), error_رمز,
+                        /*precomputedSet=*/خالی_اشاریہ,
                         /*set=*/{},
-                        std::u16string_view(pattern_).substr(start, parsePosition_.getIndex() - start),
+                        std::u16string_view(نمونہ_2).substr(آغاز, parsePosition_.get_اشاریہ() - آغاز),
                         separated, preceding);
-                } else {
-                    UnicodeSet queryResult = scanPropertyQueryAfterStart(first, second, start, errorCode);
-                    return LexicalElement(
-                        LexicalElement::PROPERTY_QUERY, {}, getPos(), errorCode,
-                        /*precomputedSet=*/nullptr, /*set=*/std::move(queryResult),
-                        std::u16string_view(pattern_).substr(start, parsePosition_.getIndex() - start),
+                } ورنہ {
+                    Unicode_سیٹ query_نتیجہ = جائزہ_Property_Query_After_آغاز(first, دوسرا, آغاز, error_رمز);
+                    واپس LexicalElement(
+                        LexicalElement::PROPERTY_QUERY, {}, getPos(), error_رمز,
+                        /*precomputedSet=*/خالی_اشاریہ, /*set=*/std::move(query_نتیجہ),
+                        std::u16string_view(نمونہ_2).substr(آغاز, parsePosition_.get_اشاریہ() - آغاز),
                         separated, preceding);
                 }
             }
             // Not a property-query.
-            chars_.setPos(afterFirst);
+            chars_.سیٹ_Pos(after_پہلا);
         }
-        if (first == u'$' && symbols_ != nullptr) {
-            auto nameEnd = parsePosition_;
+        اگر (first == u'$' && symbols_ != خالی_اشاریہ) {
+            خودکار name_انتہا = parsePosition_;
             // The SymbolTable defines the lexing of variable names past the $.
-            if (UnicodeString name = symbols_->parseReference(pattern_, nameEnd, pattern_.length());
+            اگر (UnicodeString name = symbols_->parseReference(نمونہ_2, name_انتہا, نمونہ_2.length());
                 // LexicalElements returned here and from evaluateVariable are always constructed
                 // with separated=true, preceding=nullopt: the separation constraints are lexical,
                 // and variables are their own lexical elements; their values are not affected by
                 // lexical constraints.
-                !name.isEmpty()) {
-                chars_.jumpahead(nameEnd.getIndex() - (start + 1));
-                const std::u16string_view source =
-                    std::u16string_view(pattern_).substr(start, parsePosition_.getIndex() - start);
-                const UnicodeSet *precomputedSet = symbols_->lookupSet(name);
-                if (precomputedSet != nullptr) {
-                    return LexicalElement(LexicalElement::VARIABLE, {}, getPos(), U_ZERO_ERROR,
-                                          precomputedSet, /*set=*/{}, source, /*separated=*/true,
+                !name.is_خالی_خانے()) {
+                chars_.jumpahead(name_انتہا.get_اشاریہ() - (آغاز + 1));
+                ثابت std::u16string_view ماخذ =
+                    std::u16string_view(نمونہ_2).substr(آغاز, parsePosition_.get_اشاریہ() - آغاز);
+                ثابت Unicode_سیٹ *precomputed_سیٹ_2 = symbols_->lookup_سیٹ(name);
+                اگر (precomputed_سیٹ_2 != خالی_اشاریہ) {
+                    واپس LexicalElement(LexicalElement::VARIABLE, {}, getPos(), U_ZERO_ERROR,
+                                          precomputed_سیٹ_2, /*set=*/{}, ماخذ, /*separated=*/سچ,
                                           /*preceding=*/std::nullopt);
                 }
                 // The variable was not a precomputed set.  Use the old-fashioned `lookup`, which
@@ -560,445 +560,445 @@ class UnicodeSet::Lexer {
                 // Implementers of higher-level syntaxes that pre-parse UnicodeSet-valued variables
                 // can use variables in their variable definitions, but those that simply use the
                 // source text substitution API cannot.
-                const UnicodeString *const expression = symbols_->lookup(name);
-                if (expression == nullptr) {
-                    return LexicalElement(
+                ثابت UnicodeString *ثابت expression = symbols_->lookup(name);
+                اگر (expression == خالی_اشاریہ) {
+                    واپس LexicalElement(
                         LexicalElement::VARIABLE, {}, getPos(), U_UNDEFINED_VARIABLE,
-                        /*precomputedSet=*/nullptr,
+                        /*precomputedSet=*/خالی_اشاریہ,
                         /*set=*/{},
-                        source,
-                        /*separated=*/true,
+                        ماخذ,
+                        /*separated=*/سچ,
                         /*preceding=*/std::nullopt);
                 }
-                return evaluateVariable(*expression, source);
+                واپس evaluateVariable(*expression, ماخذ);
             }
         }
-        switch (first) {
-        case u'[':
-            return LexicalElement(
-                LexicalElement::SET_OPERATOR, UnicodeString(u'['), getPos(), errorCode,
-                /*precomputedSet=*/nullptr,
+        انتخاب (first) {
+        حالت u'[':
+            واپس LexicalElement(
+                LexicalElement::سیٹ_OPERATOR, UnicodeString(u'['), getPos(), error_رمز,
+                /*precomputedSet=*/خالی_اشاریہ,
                 /*set=*/{},
-                std::u16string_view(pattern_).substr(start, parsePosition_.getIndex() - start),
+                std::u16string_view(نمونہ_2).substr(آغاز, parsePosition_.get_اشاریہ() - آغاز),
                 separated, preceding);
-        case u'\\': {
+        حالت u'\\': {
             // Now try to parse the escape.
-            chars_.setPos(before);
-            UChar32 codePoint = chars_.next(charsOptions_, unusedEscaped, errorCode);
-            return LexicalElement(
+            chars_.سیٹ_Pos(before);
+            UChar32 رمز_نقطہ = chars_.next(charsOptions_, غیر_مستعمل_Escaped, error_رمز);
+            واپس LexicalElement(
                 LexicalElement::ESCAPED_ELEMENT,
-                UnicodeString(codePoint), getPos(), errorCode,
-                nullptr,
+                UnicodeString(رمز_نقطہ), getPos(), error_رمز,
+                خالی_اشاریہ,
                 /*set=*/{},
-                std::u16string_view(pattern_).substr(start, parsePosition_.getIndex() - start),
+                std::u16string_view(نمونہ_2).substr(آغاز, parsePosition_.get_اشاریہ() - آغاز),
                 separated, preceding);
         }
-        case u'&':
-        case u'-':
-        case u']':
-        case u'^':
-        case u'$':
+        حالت u'&':
+        حالت u'-':
+        حالت u']':
+        حالت u'^':
+        حالت u'$':
             // We make $ a set-operator to handle the ICU extensions involving $.
-            return LexicalElement(
-                LexicalElement::SET_OPERATOR, UnicodeString(first), getPos(), errorCode,
-                /*precomputedSet=*/nullptr,
+            واپس LexicalElement(
+                LexicalElement::سیٹ_OPERATOR, UnicodeString(first), getPos(), error_رمز,
+                /*precomputedSet=*/خالی_اشاریہ,
                 /*set=*/{},
-                std::u16string_view(pattern_).substr(start, parsePosition_.getIndex() - start),
+                std::u16string_view(نمونہ_2).substr(آغاز, parsePosition_.get_اشاریہ() - آغاز),
                 separated, preceding);
-        case u'{': {
+        حالت u'{': {
             UnicodeString string;
             UBool escaped;
             UChar32 next;
-            int32_t codePointCount = 0;
-            while (!chars_.atEnd() && U_SUCCESS(errorCode)) {
-                const RuleCharacterIterator::Pos beforeNext = getPos();
-                next = chars_.next(charsOptions_ & ~(RuleCharacterIterator::PARSE_ESCAPES |
-                                                     RuleCharacterIterator::SKIP_WHITESPACE),
-                                   unusedEscaped, errorCode);
-                if (next == u'\\') {
-                    const UChar32 afterBackslash =
-                        chars_.next(charsOptions_ & ~(RuleCharacterIterator::PARSE_ESCAPES |
-                                                      RuleCharacterIterator::SKIP_WHITESPACE),
-                                    unusedEscaped, errorCode);
-                    if (afterBackslash == u'N') {
-                        next = scanNamedElementBrackets(errorCode);
-                        escaped = true;
-                    } else if (afterBackslash == u'p' || afterBackslash == u'P') {
-                        return LexicalElement(LexicalElement::STRING_LITERAL, {}, getPos(),
-                                              U_MALFORMED_SET,
-                                              /*precomputedSet=*/nullptr,
+            int32_t رمز_نقطہ_گنتی = 0;
+            جب (!chars_.at_انتہا() && U_SUCCESS(error_رمز)) {
+                ثابت قاعدہ_Character_Iterator::Pos before_اگلا = getPos();
+                next = chars_.next(charsOptions_ & ~(قاعدہ_Character_Iterator::PARSE_ESCAPES |
+                                                     قاعدہ_Character_Iterator::SKIP_WHITESPACE),
+                                   غیر_مستعمل_Escaped, error_رمز);
+                اگر (next == u'\\') {
+                    ثابت UChar32 afterBackslash =
+                        chars_.next(charsOptions_ & ~(قاعدہ_Character_Iterator::PARSE_ESCAPES |
+                                                      قاعدہ_Character_Iterator::SKIP_WHITESPACE),
+                                    غیر_مستعمل_Escaped, error_رمز);
+                    اگر (afterBackslash == u'N') {
+                        next = جائزہ_Named_Element_Brackets(error_رمز);
+                        escaped = سچ;
+                    } ورنہ اگر (afterBackslash == u'p' || afterBackslash == u'P') {
+                        واپس LexicalElement(LexicalElement::STRING_LITERAL, {}, getPos(),
+                                              U_MALFORMED_سیٹ,
+                                              /*precomputedSet=*/خالی_اشاریہ,
                                               /*set=*/{},
-                                              std::u16string_view(pattern_).substr(
-                                                  start, parsePosition_.getIndex() - start),
+                                              std::u16string_view(نمونہ_2).substr(
+                                                  آغاز, parsePosition_.get_اشاریہ() - آغاز),
                                               separated, preceding);
-                    } else {
-                        chars_.setPos(beforeNext);
+                    } ورنہ {
+                        chars_.سیٹ_Pos(before_اگلا);
                         // Parse the escape.
-                        next = chars_.next(charsOptions_, escaped, errorCode);
+                        next = chars_.next(charsOptions_, escaped, error_رمز);
                     }
-                } else {
-#if U_ICU_VERSION_MAJOR_NUM < 81
-                    if (U_SUCCESS(errorCode) && PatternProps::isWhiteSpace(next)) {
+                } ورنہ {
+#اگر U_ICU_نسخہ_MAJOR_عدد < 81
+                    اگر (U_SUCCESS(error_رمز) && نمونہ_Props::isWhiteSpace(next)) {
                         // Transitional prohibition of unescaped spaces in string literals (in
                         // ICU 78 and earlier, these were ignored; in ICU 81 they will mean
                         // themselves).
-                        errorCode = UErrorCode::U_ILLEGAL_ARGUMENT_ERROR;
+                        error_رمز = UError_رمز::U_ILLEGAL_دلیل_ERROR;
                     }
-#else
-#error Remove this transitional check, see ICU-23307 and ICU-TC minutes of 2026-01-16.
-#endif
-                    escaped = false;
+#ورنہ
+#غلطی Remove یہ transitional check, see ICU-23307 and ICU-TC minutes of 2026-01-16.
+#اگر_ختم
+                    escaped = جھوٹ;
                 }
-                if (!escaped && next == u'}') {
-                    return LexicalElement(
-                        codePointCount == 1 ? LexicalElement::BRACKETED_ELEMENT
+                اگر (!escaped && next == u'}') {
+                    واپس LexicalElement(
+                        رمز_نقطہ_گنتی == 1 ? LexicalElement::BRACKETED_ELEMENT
                                             : LexicalElement::STRING_LITERAL,
-                        std::move(string), getPos(), errorCode,
-                        /*precomputedSet=*/nullptr,
+                        std::move(string), getPos(), error_رمز,
+                        /*precomputedSet=*/خالی_اشاریہ,
                         /*set=*/{},
-                        std::u16string_view(pattern_).substr(start, parsePosition_.getIndex() - start),
+                        std::u16string_view(نمونہ_2).substr(آغاز, parsePosition_.get_اشاریہ() - آغاز),
                         separated, preceding);
                 }
                 string.append(next);
-                codePointCount += 1;
+                رمز_نقطہ_گنتی += 1;
             }
-            return LexicalElement(
-                LexicalElement::STRING_LITERAL, {}, getPos(), U_MALFORMED_SET,
-                /*precomputedSet=*/nullptr,
+            واپس LexicalElement(
+                LexicalElement::STRING_LITERAL, {}, getPos(), U_MALFORMED_سیٹ,
+                /*precomputedSet=*/خالی_اشاریہ,
                 /*set=*/{},
-                std::u16string_view(pattern_).substr(start, parsePosition_.getIndex() - start),
+                std::u16string_view(نمونہ_2).substr(آغاز, parsePosition_.get_اشاریہ() - آغاز),
                 separated, preceding);
         }
-        default:
-            return LexicalElement(
-                LexicalElement::LITERAL_ELEMENT, UnicodeString(first), getPos(), errorCode, nullptr,
+        طےشدہ:
+            واپس LexicalElement(
+                LexicalElement::LITERAL_ELEMENT, UnicodeString(first), getPos(), error_رمز, خالی_اشاریہ,
                 /*set=*/{},
-                std::u16string_view(pattern_).substr(start, parsePosition_.getIndex() - start),
+                std::u16string_view(نمونہ_2).substr(آغاز, parsePosition_.get_اشاریہ() - آغاز),
                 separated, preceding);
         }
     }
 
-    UChar32 scanNamedElementBrackets(UErrorCode &errorCode) {
-        UBool unusedEscaped;
-        const UChar32 open = chars_.next(charsOptions_ & ~(RuleCharacterIterator::PARSE_ESCAPES |
-                                                           RuleCharacterIterator::SKIP_WHITESPACE),
-                                         unusedEscaped, errorCode);
-        if (open == u'{') {
-            int32_t start = parsePosition_.getIndex();
+    UChar32 جائزہ_Named_Element_Brackets(UError_رمز &error_رمز) {
+        UBool غیر_مستعمل_Escaped;
+        ثابت UChar32 open = chars_.next(charsOptions_ & ~(قاعدہ_Character_Iterator::PARSE_ESCAPES |
+                                                           قاعدہ_Character_Iterator::SKIP_WHITESPACE),
+                                         غیر_مستعمل_Escaped, error_رمز);
+        اگر (open == u'{') {
+            int32_t آغاز = parsePosition_.get_اشاریہ();
             std::optional<UChar32> hex;
             std::optional<UChar32> literal;
-            while (!chars_.atEnd() && U_SUCCESS(errorCode)) {
-                UChar32 last = chars_.next(charsOptions_ & ~(RuleCharacterIterator::PARSE_ESCAPES |
-                                                             RuleCharacterIterator::SKIP_WHITESPACE),
-                                           unusedEscaped, errorCode);
-                if (last == u':') {
-                    if (!hex.has_value()) {
+            جب (!chars_.at_انتہا() && U_SUCCESS(error_رمز)) {
+                UChar32 آخری = chars_.next(charsOptions_ & ~(قاعدہ_Character_Iterator::PARSE_ESCAPES |
+                                                             قاعدہ_Character_Iterator::SKIP_WHITESPACE),
+                                           غیر_مستعمل_Escaped, error_رمز);
+                اگر (آخری == u':') {
+                    اگر (!hex.has_value()) {
                         hex.emplace();
-                        if (start == parsePosition_.getIndex() - 1) {
-                            errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                            return {};
+                        اگر (آغاز == parsePosition_.get_اشاریہ() - 1) {
+                            error_رمز = U_ILLEGAL_دلیل_ERROR;
+                            واپس {};
                         }
-                        for (char16_t digit : std::u16string_view(pattern_).substr(
-                                 start, parsePosition_.getIndex() - 1 - start)) {
+                        برائے (char16_t digit : std::u16string_view(نمونہ_2).substr(
+                                 آغاز, parsePosition_.get_اشاریہ() - 1 - آغاز)) {
                             uint8_t nibble;
-                            if (digit >= u'0' && digit <= u'9') {
+                            اگر (digit >= u'0' && digit <= u'9') {
                                 nibble = digit - '0';
-                            } else {
+                            } ورنہ {
                                 digit = digit & ~0x20;
-                                if (digit >= u'A' && digit <= u'F') {
+                                اگر (digit >= u'A' && digit <= u'F') {
                                     nibble = digit - u'A' + 0xA;
-                                } else {
-                                    errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                                    return {};
+                                } ورنہ {
+                                    error_رمز = U_ILLEGAL_دلیل_ERROR;
+                                    واپس {};
                                 }
                             }
                             *hex = (*hex << 4) + nibble;
-                            if (hex > 0x10FFFF) {
-                                errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                                return {};
+                            اگر (hex > 0x10FFFF) {
+                                error_رمز = U_ILLEGAL_دلیل_ERROR;
+                                واپس {};
                             }
                         }
-                    } else if (!literal.has_value()) {
-                        const auto literalCodePoints = utfStringCodePoints<UChar32, UTF_BEHAVIOR_FFFD>(
-                            std::u16string_view(pattern_).substr(start,
-                                                                 parsePosition_.getIndex() - 1 - start));
-                        auto it = literalCodePoints.begin();
-                        if (it == literalCodePoints.end() || !it->wellFormed() ||
-                                (literal = it->codePoint(), ++it) != literalCodePoints.end()) {
-                            errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                            return {};
+                    } ورنہ اگر (!literal.has_value()) {
+                        ثابت خودکار literal_رمز_Points = utf_String_رمز_Points<UChar32, UTF_BEHAVIOR_FFFD>(
+                            std::u16string_view(نمونہ_2).substr(آغاز,
+                                                                 parsePosition_.get_اشاریہ() - 1 - آغاز));
+                        خودکار it = literal_رمز_Points.begin();
+                        اگر (it == literal_رمز_Points.انتہا() || !it->wellFormed() ||
+                                (literal = it->رمز_نقطہ(), ++it) != literal_رمز_Points.انتہا()) {
+                            error_رمز = U_ILLEGAL_دلیل_ERROR;
+                            واپس {};
                         }
-                    } else {
-                        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                        return {};
+                    } ورنہ {
+                        error_رمز = U_ILLEGAL_دلیل_ERROR;
+                        واپس {};
                     }
-                    start = parsePosition_.getIndex();
-                } else if (last == u'}') {
-                    const std::u16string_view u16name = std::u16string_view(pattern_).substr(
-                        start, parsePosition_.getIndex() - 1 - start);
-                    const UChar32 result = getCharacterByName(CharString().appendInvariantChars(
-                        u16name.data(), static_cast<int32_t>(u16name.length()), errorCode));
-                    if (!U_SUCCESS(errorCode)) {
+                    آغاز = parsePosition_.get_اشاریہ();
+                } ورنہ اگر (آخری == u'}') {
+                    ثابت std::u16string_view u16name = std::u16string_view(نمونہ_2).substr(
+                        آغاز, parsePosition_.get_اشاریہ() - 1 - آغاز);
+                    ثابت UChar32 نتیجہ = getCharacterByName(CharString().appendInvariantChars(
+                        u16name.ڈیٹا(), static_cast<int32_t>(u16name.length()), error_رمز));
+                    اگر (!U_SUCCESS(error_رمز)) {
                         // Convert U_INVARIANT_CONVERSION_ERROR to U_ILLEGAL_ARGUMENT_ERROR.
-                        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                        return {};
+                        error_رمز = U_ILLEGAL_دلیل_ERROR;
+                        واپس {};
                     }
-                    if (result < 0 || (hex.has_value() && result != hex) ||
-                            (literal.has_value() && result != literal)) {
-                        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                        return {};
+                    اگر (نتیجہ < 0 || (hex.has_value() && نتیجہ != hex) ||
+                            (literal.has_value() && نتیجہ != literal)) {
+                        error_رمز = U_ILLEGAL_دلیل_ERROR;
+                        واپس {};
                     }
-                    return result;
+                    واپس نتیجہ;
                 }
             }
         }
-        if (U_SUCCESS(errorCode)) {
-            errorCode = U_ILLEGAL_ARGUMENT_ERROR;
+        اگر (U_SUCCESS(error_رمز)) {
+            error_رمز = U_ILLEGAL_دلیل_ERROR;
         }
-        return {};
+        واپس {};
     }
 
-    LexicalElement evaluateVariable(const UnicodeString &expression,
-                                    const std::u16string_view source) {
-        UErrorCode errorCode = U_ZERO_ERROR;
-        ParsePosition expressionPosition;
-        RuleCharacterIterator expressionIterator(expression, symbols_, expressionPosition);
+    LexicalElement evaluateVariable(ثابت UnicodeString &expression,
+                                    ثابت std::u16string_view ماخذ) {
+        UError_رمز error_رمز = U_ZERO_ERROR;
+        ParsePosition عبارت_Position;
+        قاعدہ_Character_Iterator عبارت_Iterator(expression, symbols_, عبارت_Position);
         // Do not pass the symbols: we do not support recursive expansion of variables.
-        Lexer expressionLexer(expression, expressionPosition, expressionIterator, unicodeSetOptions_,
-                              /*symbols=*/nullptr, caseClosure_);
-        auto variableToken = expressionLexer.lookahead();
-        if (variableToken.isSetOperator(u'[')) {
-            UnicodeString rebuiltPattern;
-            UnicodeSet expressionValue =
-                parseUnicodeSet(expressionLexer, rebuiltPattern, unicodeSetOptions_, caseClosure_,
-                                /*depth=*/0, errorCode);
-            expressionValue.setPattern(rebuiltPattern);
-            if (!expressionLexer.atEnd()) {
-                return LexicalElement(
+        Lexer عبارت_Lexer(expression, عبارت_Position, عبارت_Iterator, unicode_سیٹ_Options_2,
+                              /*symbols=*/خالی_اشاریہ, case_احاطہ_2);
+        خودکار variableToken = عبارت_Lexer.lookahead();
+        اگر (variableToken.is_سیٹ_Operator(u'[')) {
+            UnicodeString rebuilt_نمونہ;
+            Unicode_سیٹ عبارت_قدر =
+                parse_Unicode_سیٹ(عبارت_Lexer, rebuilt_نمونہ, unicode_سیٹ_Options_2, case_احاطہ_2,
+                                /*depth=*/0, error_رمز);
+            عبارت_قدر.سیٹ_نمونہ(rebuilt_نمونہ);
+            اگر (!عبارت_Lexer.at_انتہا()) {
+                واپس LexicalElement(
                     LexicalElement::VARIABLE, {}, getPos(), U_MALFORMED_VARIABLE_DEFINITION,
-                    /*precomputedSet=*/nullptr,
+                    /*precomputedSet=*/خالی_اشاریہ,
                     /*set=*/{},
-                    source,
-                    /*separated=*/true,
+                    ماخذ,
+                    /*separated=*/سچ,
                     /*preceding=*/std::nullopt);
             }
-            return LexicalElement(
-                LexicalElement::VARIABLE, {}, getPos(), errorCode,
-                /*precomputedSet=*/nullptr,
-                /*set=*/std::move(expressionValue),
-                source,
-                /*separated=*/true,
+            واپس LexicalElement(
+                LexicalElement::VARIABLE, {}, getPos(), error_رمز,
+                /*precomputedSet=*/خالی_اشاریہ,
+                /*set=*/std::move(عبارت_قدر),
+                ماخذ,
+                /*separated=*/سچ,
                 /*preceding=*/std::nullopt);
-        } else {
-            expressionLexer.advance();
-            if (!expressionLexer.atEnd()) {
-                return LexicalElement(
+        } ورنہ {
+            عبارت_Lexer.advance();
+            اگر (!عبارت_Lexer.at_انتہا()) {
+                واپس LexicalElement(
                     LexicalElement::VARIABLE, {}, getPos(), U_MALFORMED_VARIABLE_DEFINITION,
-                    /*precomputedSet=*/nullptr,
+                    /*precomputedSet=*/خالی_اشاریہ,
                     /*set=*/{},
-                    source,
-                    /*separated=*/true,
+                    ماخذ,
+                    /*separated=*/سچ,
                     /*preceding=*/std::nullopt);
             }
-            switch (variableToken.category_) {
-            case LexicalElement::LITERAL_ELEMENT:
-            case LexicalElement::ESCAPED_ELEMENT:
-            case LexicalElement::NAMED_ELEMENT:
-            case LexicalElement::BRACKETED_ELEMENT:
-            case LexicalElement::STRING_LITERAL:
-            case LexicalElement::PROPERTY_QUERY:
+            انتخاب (variableToken.category_) {
+            حالت LexicalElement::LITERAL_ELEMENT:
+            حالت LexicalElement::ESCAPED_ELEMENT:
+            حالت LexicalElement::NAMED_ELEMENT:
+            حالت LexicalElement::BRACKETED_ELEMENT:
+            حالت LexicalElement::STRING_LITERAL:
+            حالت LexicalElement::PROPERTY_QUERY:
                 // Return the same lexical element that we found while parsing the variable contents,
                 // except the source position corresponds to the position of the variable rather than 0
                 // in its expansion, and the source is the name of the variable rather than its
                 // expansion.
-                return LexicalElement(
+                واپس LexicalElement(
                     variableToken.category_, std::move(variableToken.string_), getPos(),
-                    variableToken.errorCode_, variableToken.precomputedSet_, std::move(variableToken.set_), source,
-                    /*separated=*/true,
+                    variableToken.error_رمز_2, variableToken.precomputed_سیٹ, std::move(variableToken.سیٹ_2), ماخذ,
+                    /*separated=*/سچ,
                     /*preceding=*/std::nullopt);
-            default:
-                return LexicalElement(LexicalElement::VARIABLE, {}, getPos(),
+            طےشدہ:
+                واپس LexicalElement(LexicalElement::VARIABLE, {}, getPos(),
                                       U_MALFORMED_VARIABLE_DEFINITION,
-                                      /*precomputedSet=*/nullptr,
-                                      /*set=*/{}, source,
-                                      /*separated=*/true,
+                                      /*precomputedSet=*/خالی_اشاریہ,
+                                      /*set=*/{}, ماخذ,
+                                      /*separated=*/سچ,
                                       /*preceding=*/std::nullopt);
             }
         }
     }
 
-    UnicodeSet scanPropertyQueryAfterStart(UChar32 first, UChar32 second, int32_t queryStart, UErrorCode &errorCode) {
+    Unicode_سیٹ جائزہ_Property_Query_After_آغاز(UChar32 first, UChar32 دوسرا, int32_t query_آغاز, UError_رمز &error_رمز) {
         std::optional<int32_t> queryOperatorPosition;
-        int32_t queryExpressionStart = parsePosition_.getIndex();
-        bool exteriorlyNegated = false;
-        bool interiorlyNegated = false;
-        UBool unusedEscaped;
+        int32_t query_عبارت_آغاز = parsePosition_.get_اشاریہ();
+        منطقی exteriorlyNegated = جھوٹ;
+        منطقی interiorlyNegated = جھوٹ;
+        UBool غیر_مستعمل_Escaped;
         // Do not skip whitespace so we can recognize unspaced :].  Lex escapes and
         // named-element: while ICU does not support string-valued properties and thus has no
         // use for escapes, we still want to lex through escapes to allow downstream
         // implementations (mostly unicodetools) to implement string-valued properties.
-        const UChar32 third = chars_.next(charsOptions_ & ~(RuleCharacterIterator::PARSE_ESCAPES |
-                                                            RuleCharacterIterator::SKIP_WHITESPACE),
-                                          unusedEscaped, errorCode);
-        if (first == u'\\') {
-            if (third != u'{') {
-                errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                return {};
+        ثابت UChar32 تیسرا = chars_.next(charsOptions_ & ~(قاعدہ_Character_Iterator::PARSE_ESCAPES |
+                                                            قاعدہ_Character_Iterator::SKIP_WHITESPACE),
+                                          غیر_مستعمل_Escaped, error_رمز);
+        اگر (first == u'\\') {
+            اگر (تیسرا != u'{') {
+                error_رمز = U_ILLEGAL_دلیل_ERROR;
+                واپس {};
             }
-            exteriorlyNegated = second == u'P';
-            queryExpressionStart = parsePosition_.getIndex();
-        } else {
-            if (third == u'^') {
-                exteriorlyNegated = true;
-                queryExpressionStart = parsePosition_.getIndex();
+            exteriorlyNegated = دوسرا == u'P';
+            query_عبارت_آغاز = parsePosition_.get_اشاریہ();
+        } ورنہ {
+            اگر (تیسرا == u'^') {
+                exteriorlyNegated = سچ;
+                query_عبارت_آغاز = parsePosition_.get_اشاریہ();
             }
         }
-        RuleCharacterIterator::Pos beforePenultimate = getPos();
+        قاعدہ_Character_Iterator::Pos beforePenultimate = getPos();
         UChar32 penultimateUnescaped =
-            chars_.next(charsOptions_ & ~(RuleCharacterIterator::PARSE_ESCAPES |
-                                          RuleCharacterIterator::SKIP_WHITESPACE),
-                        unusedEscaped, errorCode);
+            chars_.next(charsOptions_ & ~(قاعدہ_Character_Iterator::PARSE_ESCAPES |
+                                          قاعدہ_Character_Iterator::SKIP_WHITESPACE),
+                        غیر_مستعمل_Escaped, error_رمز);
 
-        while (!chars_.atEnd() && U_SUCCESS(errorCode)) {
-            const RuleCharacterIterator::Pos beforeLast = getPos();
-            UChar32 lastUnescaped =
-                chars_.next(charsOptions_ & ~(RuleCharacterIterator::PARSE_ESCAPES |
-                                              RuleCharacterIterator::SKIP_WHITESPACE),
-                            unusedEscaped, errorCode);
-            if (penultimateUnescaped == u'\\') {
-                if (lastUnescaped == 'N') {
-                    scanNamedElementBrackets(errorCode);
-                    if (!U_SUCCESS(errorCode)) {
-                        return {};
+        جب (!chars_.at_انتہا() && U_SUCCESS(error_رمز)) {
+            ثابت قاعدہ_Character_Iterator::Pos before_آخری = getPos();
+            UChar32 آخری_Unescaped =
+                chars_.next(charsOptions_ & ~(قاعدہ_Character_Iterator::PARSE_ESCAPES |
+                                              قاعدہ_Character_Iterator::SKIP_WHITESPACE),
+                            غیر_مستعمل_Escaped, error_رمز);
+            اگر (penultimateUnescaped == u'\\') {
+                اگر (آخری_Unescaped == 'N') {
+                    جائزہ_Named_Element_Brackets(error_رمز);
+                    اگر (!U_SUCCESS(error_رمز)) {
+                        واپس {};
                     }
-                } else {
+                } ورنہ {
                     // There must be an escaped-element starting at beforePenultimate.  Go
                     // back there and advance through it.
-                    chars_.setPos(beforePenultimate);
-                    chars_.next(charsOptions_ & ~RuleCharacterIterator::SKIP_WHITESPACE, unusedEscaped,
-                                errorCode);
+                    chars_.سیٹ_Pos(beforePenultimate);
+                    chars_.next(charsOptions_ & ~قاعدہ_Character_Iterator::SKIP_WHITESPACE, غیر_مستعمل_Escaped,
+                                error_رمز);
                 }
                 // Neither a named-element nor an escaped-element can be part of a closing :].
-                lastUnescaped = -1;
-            } else if (!queryOperatorPosition.has_value() && lastUnescaped == u'=') {
-                queryOperatorPosition = parsePosition_.getIndex() - 1;
-            } else if (!queryOperatorPosition.has_value() && lastUnescaped == u'≠') {
-                if (exteriorlyNegated) {
+                آخری_Unescaped = -1;
+            } ورنہ اگر (!queryOperatorPosition.has_value() && آخری_Unescaped == u'=') {
+                queryOperatorPosition = parsePosition_.get_اشاریہ() - 1;
+            } ورنہ اگر (!queryOperatorPosition.has_value() && آخری_Unescaped == u'≠') {
+                اگر (exteriorlyNegated) {
                     // Reject doubly negated property queries.
-                    errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                    return {};
+                    error_رمز = U_ILLEGAL_دلیل_ERROR;
+                    واپس {};
                 }
-                interiorlyNegated = true;
-                queryOperatorPosition = parsePosition_.getIndex() - 1;
-            } else if ((first == u'[' && penultimateUnescaped == u':' && lastUnescaped == u']') ||
-                       (first == u'\\' && lastUnescaped == u'}')) {
+                interiorlyNegated = سچ;
+                queryOperatorPosition = parsePosition_.get_اشاریہ() - 1;
+            } ورنہ اگر ((first == u'[' && penultimateUnescaped == u':' && آخری_Unescaped == u']') ||
+                       (first == u'\\' && آخری_Unescaped == u'}')) {
                 // Note that no unescaping is performed here, as ICU does not support string-valued or
                 // or miscellaneous properties.
-                const int32_t queryExpressionLimit =
-                    first == u'[' ? parsePosition_.getIndex() - 2 : parsePosition_.getIndex() - 1;
+                ثابت int32_t query_عبارت_حد_بندی =
+                    first == u'[' ? parsePosition_.get_اشاریہ() - 2 : parsePosition_.get_اشاریہ() - 1;
                 // Contrary to Java, applyPropertyAlias does not support a null property-predicate in
                 // C++; instead "" indicates the absence of a property-predicate.  This is OK with the
                 // properties supported by ICU, but not with string-valued or miscellaneous properties;
                 // see https://github.com/unicode-org/icu/pull/3456.
                 UnicodeString propertyPredicate;
-                if (queryOperatorPosition.has_value()) {
+                اگر (queryOperatorPosition.has_value()) {
                     propertyPredicate =
-                        pattern_.tempSubStringBetween(*queryOperatorPosition + 1, queryExpressionLimit);
-                    if (propertyPredicate.isEmpty()) {
+                        نمونہ_2.عارضی_Sub_String_Between(*queryOperatorPosition + 1, query_عبارت_حد_بندی);
+                    اگر (propertyPredicate.is_خالی_خانے()) {
                         // \p{X=} is valid if X is a string-valued or miscellaneous property, but
                         // ICU does not support those.  Thus, it is invalid for ICU purposes, and
                         // passing an empty propertyPredicate to applyPropertyAlias can be valid
                         // (this is how we represent \p{X}), so we need to return the error here.
-                        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                        return {};
+                        error_رمز = U_ILLEGAL_دلیل_ERROR;
+                        واپس {};
                     }
                 }
-                UnicodeSet result;
-                result.applyPropertyAlias(
-                    pattern_.tempSubStringBetween(queryExpressionStart,
-                                                  queryOperatorPosition.value_or(queryExpressionLimit)),
-                    propertyPredicate, errorCode);
-                if (exteriorlyNegated != interiorlyNegated) {
-                    result.complement().removeAllStrings();
+                Unicode_سیٹ نتیجہ;
+                نتیجہ.applyPropertyAlias(
+                    نمونہ_2.عارضی_Sub_String_Between(query_عبارت_آغاز,
+                                                  queryOperatorPosition.value_or(query_عبارت_حد_بندی)),
+                    propertyPredicate, error_رمز);
+                اگر (exteriorlyNegated != interiorlyNegated) {
+                    نتیجہ.complement().remove_All_لڑیاں();
                 }
-                result.setPattern(pattern_.tempSubStringBetween(queryStart, parsePosition_.getIndex()));
-                return result;
+                نتیجہ.سیٹ_نمونہ(نمونہ_2.عارضی_Sub_String_Between(query_آغاز, parsePosition_.get_اشاریہ()));
+                واپس نتیجہ;
             }
-            beforePenultimate = beforeLast;
-            penultimateUnescaped = lastUnescaped;
+            beforePenultimate = before_آخری;
+            penultimateUnescaped = آخری_Unescaped;
         }
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return {};
+        error_رمز = U_ILLEGAL_دلیل_ERROR;
+        واپس {};
     }
 
-    const UnicodeString &pattern_;
-    const ParsePosition &parsePosition_;
-    RuleCharacterIterator &chars_;
-    const uint32_t unicodeSetOptions_;
-    const int32_t charsOptions_;
-    const SymbolTable *const symbols_;
-    UnicodeSet &(UnicodeSet::* const caseClosure_)(int32_t attribute);
+    ثابت UnicodeString &نمونہ_2;
+    ثابت ParsePosition &parsePosition_;
+    قاعدہ_Character_Iterator &chars_;
+    ثابت uint32_t unicode_سیٹ_Options_2;
+    ثابت int32_t charsOptions_;
+    ثابت علامت_جدول *ثابت symbols_;
+    Unicode_سیٹ &(Unicode_سیٹ::* ثابت case_احاطہ_2)(int32_t attribute);
     std::optional<LexicalElement> behind_;
     std::optional<LexicalElement> ahead_;
     std::optional<LexicalElement> ahead2_;
 };
 
-namespace {
+نامخلا {
 
-constexpr int32_t MAX_DEPTH = 100;
+constexpr int32_t MAX_گہرائی = 100;
 
-#if U_DEBUGGING_UNICODESET_PARSING
+#اگر U_DEBUGGING_UNICODESET_PARSING
 
-#define U_UNICODESET_RETURN_IF_ERROR(result, ec)                                                   \
-    do {                                                                                           \
+#تعریف_کرو U_UNICODESET_RETURN_IF_ERROR(نتیجہ, ec)                                                   \
+    کرو {                                                                                           \
         constexpr std::string_view functionName = __func__;                                        \
         static_assert(functionName.substr(0, 5) == "parse");                                       \
-        if (U_FAILURE(ec)) {                                                                       \
-            if (depth < 5) {                                                                       \
-                printf("--- in %s l. %d\n", __func__ + 5, __LINE__);                               \
-            } else if (depth == 5 && std::string_view(__func__ + 5) == "UnicodeSet") {             \
-                printf("--- [...]\n");                                                             \
+        اگر (U_FAILURE(ec)) {                                                                       \
+            اگر (گہرائی < 5) {                                                                       \
+                لکھو("--- in %s l. %d\n", __func__ + 5, __LINE__);                               \
+            } ورنہ اگر (گہرائی == 5 && std::string_view(__func__ + 5) == "UnicodeSet") {             \
+                لکھو("--- [...]\n");                                                             \
             }                                                                                      \
-            return result;                                                                         \
+            واپس نتیجہ;                                                                         \
         }                                                                                          \
-    } while (false)
-#define U_UNICODESET_RETURN_WITH_PARSE_ERROR(result, expected, actual, lexer, ec)                  \
-    do {                                                                                           \
+    } جب (جھوٹ)
+#تعریف_کرو U_UNICODESET_RETURN_WITH_PARSE_ERROR(نتیجہ, expected, actual, lexer, ec)                  \
+    کرو {                                                                                           \
         constexpr std::string_view functionName = __func__;                                        \
         static_assert(functionName.substr(0, 5) == "parse");                                       \
         std::string actualUTF8;                                                                    \
         std::string contextUTF8;                                                                   \
-        printf("*** Expected %s, got %s %s\n", (expected),                                         \
-               UnicodeString(actual).toUTF8String(actualUTF8).c_str(),                             \
-               lexer.getPositionForDebugging().toUTF8String(contextUTF8).c_str());                 \
-        printf("--- in %s l. %d\n", __func__ + 5, __LINE__);                                       \
-        if (U_FAILURE(lexer.lookahead().errorCode())) {                                            \
-            (ec) = lexer.lookahead().errorCode();                                                  \
-        } else {                                                                                   \
-            (ec) = U_MALFORMED_SET;                                                                \
+        لکھو("*** Expected %s, got %s %s\n", (expected),                                         \
+               UnicodeString(actual).مقصد_UTF8_String(actualUTF8).c_str(),                             \
+               lexer.getPositionForDebugging().مقصد_UTF8_String(contextUTF8).c_str());                 \
+        لکھو("--- in %s l. %d\n", __func__ + 5, __LINE__);                                       \
+        اگر (U_FAILURE(lexer.lookahead().error_رمز())) {                                            \
+            (ec) = lexer.lookahead().error_رمز();                                                  \
+        } ورنہ {                                                                                   \
+            (ec) = U_MALFORMED_سیٹ;                                                                \
         }                                                                                          \
-        return result;                                                                             \
-    } while (false)
+        واپس نتیجہ;                                                                             \
+    } جب (جھوٹ)
 
-#else
+#ورنہ
 
-#define U_UNICODESET_RETURN_IF_ERROR(result, ec)                                                   \
-    do {                                                                                           \
-        if (U_FAILURE(ec)) {                                                                       \
-            return result;                                                                         \
+#تعریف_کرو U_UNICODESET_RETURN_IF_ERROR(نتیجہ, ec)                                                   \
+    کرو {                                                                                           \
+        اگر (U_FAILURE(ec)) {                                                                       \
+            واپس نتیجہ;                                                                         \
         }                                                                                          \
-    } while (false)
-#define U_UNICODESET_RETURN_WITH_PARSE_ERROR(result, expected, actual, lexer, ec)                  \
-    do {                                                                                           \
-        if (U_FAILURE(lexer.lookahead().errorCode())) {                                            \
-            (ec) = lexer.lookahead().errorCode();                                                  \
-        } else {                                                                                   \
-            (ec) = U_MALFORMED_SET;                                                                \
+    } جب (جھوٹ)
+#تعریف_کرو U_UNICODESET_RETURN_WITH_PARSE_ERROR(نتیجہ, expected, actual, lexer, ec)                  \
+    کرو {                                                                                           \
+        اگر (U_FAILURE(lexer.lookahead().error_رمز())) {                                            \
+            (ec) = lexer.lookahead().error_رمز();                                                  \
+        } ورنہ {                                                                                   \
+            (ec) = U_MALFORMED_سیٹ;                                                                \
         }                                                                                          \
-        return result;                                                                             \
-    } while (false)
+        واپس نتیجہ;                                                                             \
+    } جب (جھوٹ)
 
-#endif
+#اگر_ختم
 
 }  // namespace
 
@@ -1019,68 +1019,68 @@ constexpr int32_t MAX_DEPTH = 100;
  * IGNORE_SPACE, CASE.
  */
 
-void UnicodeSet::applyPattern(const UnicodeString &pattern,
-                              const ParsePosition &parsePosition,
-                              RuleCharacterIterator &chars,
-                              const SymbolTable *symbols,
+خالی Unicode_سیٹ::apply_نمونہ(ثابت UnicodeString &نمونہ,
+                              ثابت ParsePosition &parsePosition,
+                              قاعدہ_Character_Iterator &chars,
+                              ثابت علامت_جدول *symbols,
                               UnicodeString &rebuiltPat,
                               uint32_t options,
-                              UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute),
-                              UErrorCode &ec) {
-    if (U_FAILURE(ec)) return;
-    Lexer lexer(pattern, parsePosition, chars, options, symbols, caseClosure);
-    *this = parseUnicodeSet(lexer, rebuiltPat, options, caseClosure, /*depth=*/0, ec);
+                              Unicode_سیٹ &(Unicode_سیٹ::*case_احاطہ)(int32_t attribute),
+                              UError_رمز &ec) {
+    اگر (U_FAILURE(ec)) واپس;
+    Lexer lexer(نمونہ, parsePosition, chars, options, symbols, case_احاطہ);
+    *یہ = parse_Unicode_سیٹ(lexer, rebuiltPat, options, case_احاطہ, /*depth=*/0, ec);
 }
 
-UnicodeSet UnicodeSet::parseUnicodeSet(Lexer &lexer,
+Unicode_سیٹ Unicode_سیٹ::parse_Unicode_سیٹ(Lexer &lexer,
                                        UnicodeString& rebuiltPat,
                                        uint32_t options,
-                                       UnicodeSet& (UnicodeSet::*caseClosure)(int32_t attribute),
-                                       int32_t depth,
-                                       UErrorCode &ec) {
-    UnicodeSet result;
+                                       Unicode_سیٹ& (Unicode_سیٹ::*case_احاطہ)(int32_t attribute),
+                                       int32_t گہرائی,
+                                       UError_رمز &ec) {
+    Unicode_سیٹ نتیجہ;
 
-    if (depth > MAX_DEPTH) {
-        U_UNICODESET_RETURN_WITH_PARSE_ERROR({}, ("depth <= " + std::to_string(MAX_DEPTH)).c_str(),
-                                             ("depth = " + std::to_string(depth)).c_str(), lexer,
+    اگر (گہرائی > MAX_گہرائی) {
+        U_UNICODESET_RETURN_WITH_PARSE_ERROR({}, ("depth <= " + std::to_string(MAX_گہرائی)).c_str(),
+                                             ("depth = " + std::to_string(گہرائی)).c_str(), lexer,
                                              ec);
     }
 
-    bool isComplement = false;
+    منطقی isComplement = جھوٹ;
     // Whether to keep the syntax of the pattern at this level, only doing basic pretty-printing, e.g.,
     // turn [ c - z[a]a - b ] into [c-z[a]a-b], but not into [a-z].
     // This is true for a property query, or when there is a nested set.  Note that since we recurse,
     // innermost sets consisting only of ranges will get simplified.
-    bool preserveSyntaxInPattern = false;
+    منطقی preserve_Syntax_اندر_نمونہ = جھوٹ;
     // A pattern that preserves the original syntax but strips spaces, normalizes escaping, etc.
-    UnicodeString prettyPrintedPattern;
-    if (lexer.lookahead().set() != nullptr) {
+    UnicodeString pretty_Printed_نمونہ;
+    اگر (lexer.lookahead().سیٹ() != خالی_اشاریہ) {
         // UnicodeSet ::= property-query
         // Extension:
         //              | set-valued-variable
-        result = *lexer.lookahead().set();
-        result._toPattern(prettyPrintedPattern, /*escapeUnprintable=*/false);
+        نتیجہ = *lexer.lookahead().سیٹ();
+        نتیجہ.مقصد_نمونہ_2(pretty_Printed_نمونہ, /*escapeUnprintable=*/جھوٹ);
         lexer.advance();
-        preserveSyntaxInPattern = true;
-    } else {
+        preserve_Syntax_اندر_نمونہ = سچ;
+    } ورنہ {
         // UnicodeSet ::=                [   Content ]
         //              | Complement ::= [ ^ Content ]
-        if (lexer.acceptSetOperator(u'[')) {
-            prettyPrintedPattern.append(u'[');
-            if (lexer.acceptSetOperator(u'^')) {
-                prettyPrintedPattern.append(u'^');
-                isComplement = true;
+        اگر (lexer.accept_سیٹ_Operator(u'[')) {
+            pretty_Printed_نمونہ.append(u'[');
+            اگر (lexer.accept_سیٹ_Operator(u'^')) {
+                pretty_Printed_نمونہ.append(u'^');
+                isComplement = سچ;
             }
-            result = parseContent(lexer, prettyPrintedPattern, options, caseClosure, depth,
-                                  /*containsSetOperation=*/preserveSyntaxInPattern, ec);
-            U_UNICODESET_RETURN_IF_ERROR(result, ec);
-            if (!lexer.acceptSetOperator(u']')) {
-                U_UNICODESET_RETURN_WITH_PARSE_ERROR(result, "]", lexer.lookahead().debugString(),
+            نتیجہ = parseContent(lexer, pretty_Printed_نمونہ, options, case_احاطہ, گہرائی,
+                                  /*containsSetOperation=*/preserve_Syntax_اندر_نمونہ, ec);
+            U_UNICODESET_RETURN_IF_ERROR(نتیجہ, ec);
+            اگر (!lexer.accept_سیٹ_Operator(u']')) {
+                U_UNICODESET_RETURN_WITH_PARSE_ERROR(نتیجہ, "]", lexer.lookahead().debugString(),
                                                      lexer, ec);
             }
-            prettyPrintedPattern.append(u']');
-        } else {
-            U_UNICODESET_RETURN_WITH_PARSE_ERROR(result, "property-query | [",
+            pretty_Printed_نمونہ.append(u']');
+        } ورنہ {
+            U_UNICODESET_RETURN_WITH_PARSE_ERROR(نتیجہ, "property-query | [",
                                                  lexer.lookahead().debugString(), lexer, ec);
         }
     }
@@ -1091,28 +1091,28 @@ UnicodeSet UnicodeSet::parseUnicodeSet(Lexer &lexer,
      * to close over case BEFORE COMPLEMENTING.  This makes
      * patterns like /[^abc]/i work.
      */
-    if ((options & USET_CASE_MASK) != 0) {
-        (result.*caseClosure)(options);
+    اگر ((options & USET_CASE_نقاب) != 0) {
+        (نتیجہ.*case_احاطہ)(options);
     }
-    if (isComplement) {
-        result.complement().removeAllStrings(); // code point complement
+    اگر (isComplement) {
+        نتیجہ.complement().remove_All_لڑیاں(); // code point complement
     }
-    if (preserveSyntaxInPattern) {
-        rebuiltPat.append(prettyPrintedPattern);
-    } else {
-        result._generatePattern(rebuiltPat, /*escapeUnprintable=*/false);
+    اگر (preserve_Syntax_اندر_نمونہ) {
+        rebuiltPat.append(pretty_Printed_نمونہ);
+    } ورنہ {
+        نتیجہ.generate_نمونہ(rebuiltPat, /*escapeUnprintable=*/جھوٹ);
     }
-    return result;
+    واپس نتیجہ;
 }
 
-UnicodeSet UnicodeSet::parseContent(Lexer &lexer,
+Unicode_سیٹ Unicode_سیٹ::parseContent(Lexer &lexer,
                                     UnicodeString &rebuiltPat,
                                     uint32_t options,
-                                    UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute),
-                                    int32_t depth,
-                                    bool &containsSetOperation,
-                                    UErrorCode &ec) {
-    UnicodeSet result;
+                                    Unicode_سیٹ &(Unicode_سیٹ::*case_احاطہ)(int32_t attribute),
+                                    int32_t گہرائی,
+                                    منطقی &شامل_ہے_سیٹ_Operation,
+                                    UError_رمز &ec) {
+    Unicode_سیٹ نتیجہ;
     //   Content ::= ""
     //             | ElementList
     //             | ElementList UnescapedHyphenMinus
@@ -1158,50 +1158,50 @@ UnicodeSet UnicodeSet::parseContent(Lexer &lexer,
     //              | DollarElements  -- ICU extension
     //   FinalMutation ::= Elements
     //                   | SetOperations
-    if (lexer.acceptSetOperator(u'-')) {
-        result.add(u'-');
+    اگر (lexer.accept_سیٹ_Operator(u'-')) {
+        نتیجہ.جوڑو(u'-');
         // When we otherwise preserve the syntax, we escape an initial UnescapedHyphenMinus, but not a
         // final one, for consistency with older ICU behaviour.
         rebuiltPat.append(u"\\-");
     }
-    while (!lexer.atEnd()) {
-        if (lexer.acceptSetOperator(u'-')) {
+    جب (!lexer.at_انتہا()) {
+        اگر (lexer.accept_سیٹ_Operator(u'-')) {
             // We can be here on the first iteration: [--] is allowed by the
             // grammar and by the old parser.
             rebuiltPat.append(u'-');
-            result.add(u'-');
-            return result;
-        } else if (lexer.lookahead().isSetOperator(u'$')) {
-            if (lexer.lookahead2().isSetOperator(u']')) {
+            نتیجہ.جوڑو(u'-');
+            واپس نتیجہ;
+        } ورنہ اگر (lexer.lookahead().is_سیٹ_Operator(u'$')) {
+            اگر (lexer.lookahead2().is_سیٹ_Operator(u']')) {
                 // ICU extensions: A $ is allowed in an ElementList if followed by Elements, or
                 // if followed by UnicodeSet (in a Union).
                 // A $ at the end of a Content is an Æther.
                 rebuiltPat.append(u'$');
                 // Consume the dollar.
                 lexer.advance();
-                result.add(U_ETHER);
-                containsSetOperation = true;
-                return result;
+                نتیجہ.جوڑو(U_ETHER);
+                شامل_ہے_سیٹ_Operation = سچ;
+                واپس نتیجہ;
             }
         }
-        if (lexer.lookahead().isSetOperator(u']')) {
-            return result;
+        اگر (lexer.lookahead().is_سیٹ_Operator(u']')) {
+            واپس نتیجہ;
         }
         // Also handles FinalMutation.
-        result.parseMutation(lexer, rebuiltPat, options, caseClosure, depth, containsSetOperation,
+        نتیجہ.parseMutation(lexer, rebuiltPat, options, case_احاطہ, گہرائی, شامل_ہے_سیٹ_Operation,
                              ec);
-        U_UNICODESET_RETURN_IF_ERROR(result, ec);
+        U_UNICODESET_RETURN_IF_ERROR(نتیجہ, ec);
     }
-    return result;
+    واپس نتیجہ;
 }
 
-void UnicodeSet::parseMutation(Lexer &lexer,
+خالی Unicode_سیٹ::parseMutation(Lexer &lexer,
                                UnicodeString &rebuiltPat,
                                uint32_t options,
-                               UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute),
-                               int32_t depth,
-                               bool &containsSetOperation,
-                               UErrorCode &ec) {
+                               Unicode_سیٹ &(Unicode_سیٹ::*case_احاطہ)(int32_t attribute),
+                               int32_t گہرائی,
+                               منطقی &شامل_ہے_سیٹ_Operation,
+                               UError_رمز &ec) {
     //   Mutation ::= Elements
     //              | SetOperations
     //              | DollarElements  -- ICU extension
@@ -1209,23 +1209,23 @@ void UnicodeSet::parseMutation(Lexer &lexer,
     //                   | SetOperations
     //   SetOperations ::= UnicodeSet RightHandSides
     // So if we see the beginning of a UnicodeSet, we have SetOperations.
-    if (lexer.lookahead().isSetOperator('[') || lexer.lookahead().set() != nullptr) {
-        containsSetOperation = true;
-        parseSetOperations(lexer, rebuiltPat, options, caseClosure, depth, ec);
+    اگر (lexer.lookahead().is_سیٹ_Operator('[') || lexer.lookahead().سیٹ() != خالی_اشاریہ) {
+        شامل_ہے_سیٹ_Operation = سچ;
+        parse_سیٹ_Operations(lexer, rebuiltPat, options, case_احاطہ, گہرائی, ec);
         U_UNICODESET_RETURN_IF_ERROR(, ec);
-    } else {
+    } ورنہ {
         // Also handles DollarElements.
-        addAll(parseElements(lexer, rebuiltPat, ec));
+        جوڑو_All(parseElements(lexer, rebuiltPat, ec));
         U_UNICODESET_RETURN_IF_ERROR(, ec);
     }
 }
 
-void UnicodeSet::parseSetOperations(Lexer &lexer,
+خالی Unicode_سیٹ::parse_سیٹ_Operations(Lexer &lexer,
                                     UnicodeString &rebuiltPat,
                                     uint32_t options,
-                                    UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute),
-                                    int32_t depth,
-                                    UErrorCode &ec) {
+                                    Unicode_سیٹ &(Unicode_سیٹ::*case_احاطہ)(int32_t attribute),
+                                    int32_t گہرائی,
+                                    UError_رمز &ec) {
     // When we return from this function, this object represents a
     // https://www.unicode.org/reports/tr61/#SetOperation:
     //   SetOperation ::= Union
@@ -1246,9 +1246,9 @@ void UnicodeSet::parseSetOperations(Lexer &lexer,
     // but note that the tree resulting from this LL version is not an expression tree: the
     // operations are left-associative.
     // Start by parsing the first UnicodeSet.
-    const UnicodeSet leftHandSide =
-        parseUnicodeSet(lexer, rebuiltPat, options, caseClosure, depth + 1, ec);
-    addAll(leftHandSide);
+    ثابت Unicode_سیٹ بایاں_Hand_Side =
+        parse_Unicode_سیٹ(lexer, rebuiltPat, options, case_احاطہ, گہرائی + 1, ec);
+    جوڑو_All(بایاں_Hand_Side);
     U_UNICODESET_RETURN_IF_ERROR(, ec);
     // In terms of the LR expression grammar, at this point this object is the Union, which is a
     // SetOperation.
@@ -1256,44 +1256,44 @@ void UnicodeSet::parseSetOperations(Lexer &lexer,
     // Keep looking for an operator that would continue the RightHandSides in the LL grammar.
     // The loop terminates because when we run out of source text, the lookahead token will not be a
     // set operator, so that we hit the else branch and return.
-    for (;;) {
+    برائے (;;) {
         // In terms of the LR expression grammar, at this point this object is a SetOperation; if &
         // follows, we have an Intersection; if - follows, we have a Difference.
-        if (lexer.acceptSetOperator(u'&')) {
+        اگر (lexer.accept_سیٹ_Operator(u'&')) {
             // Intersection ::= SetOperation & UnicodeSet
             rebuiltPat.append(u'&');
-            const UnicodeSet rightHandSide =
-                parseUnicodeSet(lexer, rebuiltPat, options, caseClosure, depth + 1, ec);
+            ثابت Unicode_سیٹ دایاں_Hand_Side =
+                parse_Unicode_سیٹ(lexer, rebuiltPat, options, case_احاطہ, گہرائی + 1, ec);
             U_UNICODESET_RETURN_IF_ERROR(, ec);
-            retainAll(rightHandSide);
-        } else if (lexer.lookahead().isSetOperator(u'-')) {
+            retainAll(دایاں_Hand_Side);
+        } ورنہ اگر (lexer.lookahead().is_سیٹ_Operator(u'-')) {
             // Here the grammar requires two tokens of lookahead to figure out whether the - is
             // the operator of a Difference or an UnescapedHyphenMinus in the enclosing Union.
-            if (lexer.lookahead2().isSetOperator(u']')) {
+            اگر (lexer.lookahead2().is_سیٹ_Operator(u']')) {
                 // The operator is actually an UnescapedHyphenMinus; terminate the SetOperation
                 // before it.  We return to parseMutation, which immediately returns to
                 // parseContent, which will accept the - and add it to *this.
-                return;
+                واپس;
             }
             // Consume the hyphen-minus.
             lexer.advance();
             // Difference ::= SetOperation - UnicodeSet
             rebuiltPat.append(u'-');
-            const UnicodeSet rightHandSide =
-                parseUnicodeSet(lexer, rebuiltPat, options, caseClosure, depth + 1, ec);
+            ثابت Unicode_سیٹ دایاں_Hand_Side =
+                parse_Unicode_سیٹ(lexer, rebuiltPat, options, case_احاطہ, گہرائی + 1, ec);
             U_UNICODESET_RETURN_IF_ERROR(, ec);
-            removeAll(rightHandSide);
-        } else {
+            removeAll(دایاں_Hand_Side);
+        } ورنہ {
             // Not an operator, end of the SetOperation (and of the SetOperations in the LL
             // grammar).
-            return;
+            واپس;
         }
     }
 }
 
-UnicodeSet UnicodeSet::parseElements(Lexer &lexer,
+Unicode_سیٹ Unicode_سیٹ::parseElements(Lexer &lexer,
                                      UnicodeString &rebuiltPat,
-                                     UErrorCode &ec) {
+                                     UError_رمز &ec) {
     // Elements     ::= Element
     //                | Range
     // Range        ::= RangeElement - RangeElement
@@ -1310,108 +1310,108 @@ UnicodeSet UnicodeSet::parseElements(Lexer &lexer,
     // which cannot appear at the end of Content.
     // A Content-final $ would already have been interpreted as an Æther by parseContent, so we
     // only need to check that RangeElement - $ is not Content-final.
-    if (lexer.lookahead().isStringLiteral()) {
-        const UnicodeString element = *lexer.lookahead().element();
+    اگر (lexer.lookahead().isStringLiteral()) {
+        ثابت UnicodeString element = *lexer.lookahead().element();
         rebuiltPat.append(u'{');
-        _appendToPat(rebuiltPat, element, /*escapeUnprintable=*/false);
+        append_مقصد_Pat(rebuiltPat, element, /*escapeUnprintable=*/جھوٹ);
         rebuiltPat.append(u'}');
         lexer.advance();
-        return UnicodeSet().add(element);
+        واپس Unicode_سیٹ().جوڑو(element);
     }
     UChar32 first;
-    if (lexer.lookahead().isSetOperator(u'$')) {
+    اگر (lexer.lookahead().is_سیٹ_Operator(u'$')) {
         // Disallowed by UTS #61, but historically accepted by ICU.  This is an extension.
         first = u'$';
-    } else if (lexer.lookahead().codePoint().has_value()) {
-        first = *lexer.lookahead().codePoint();
-    } else {
+    } ورنہ اگر (lexer.lookahead().رمز_نقطہ().has_value()) {
+        first = *lexer.lookahead().رمز_نقطہ();
+    } ورنہ {
         U_UNICODESET_RETURN_WITH_PARSE_ERROR({}, "RangeElement | string-literal",
                                              lexer.lookahead().debugString(), lexer, ec);
     }
     lexer.advance();
-    _appendToPat(rebuiltPat, first, /*escapeUnprintable=*/false);
-    if (!lexer.lookahead().isSetOperator(u'-')) {
+    append_مقصد_Pat(rebuiltPat, first, /*escapeUnprintable=*/جھوٹ);
+    اگر (!lexer.lookahead().is_سیٹ_Operator(u'-')) {
         // No operator,
         // Elements ::= Element
-        return UnicodeSet(first, first);
+        واپس Unicode_سیٹ(first, first);
     }
     // Here the grammar requires two tokens of lookahead to figure out whether the - is the operator
     // of a Range or an UnescapedHyphenMinus in the enclosing Union.
-    if (lexer.lookahead2().isSetOperator(u']')) {
+    اگر (lexer.lookahead2().is_سیٹ_Operator(u']')) {
         // The operator is actually an UnescapedHyphenMinus; terminate the Elements before it.
-        return UnicodeSet(first, first);
+        واپس Unicode_سیٹ(first, first);
     }
     // Consume the hyphen-minus.
     lexer.advance();
     // Elements ::= Range ::= RangeElement - RangeElement
     rebuiltPat.append(u'-');
-    UChar32 last;
-    if (lexer.lookahead().isSetOperator(u'$')) {
+    UChar32 آخری;
+    اگر (lexer.lookahead().is_سیٹ_Operator(u'$')) {
         // Disallowed by UTS #61, but historically accepted by ICU except at the end of a Content.
         // This is an extension.
-        last = u'$';
-        if (lexer.lookahead2().isSetOperator(u']')) {
+        آخری = u'$';
+        اگر (lexer.lookahead2().is_سیٹ_Operator(u']')) {
             U_UNICODESET_RETURN_WITH_PARSE_ERROR(
                 {}, "Elements or UnicodeSet after Range ending in unescaped $",
                 lexer.lookahead().debugString() + u" followed by " +
                     lexer.lookahead2().debugString(),
                 lexer, ec);
         }
-    } else if (lexer.lookahead().codePoint().has_value()) {
-        last = *lexer.lookahead().codePoint();
-    } else {
+    } ورنہ اگر (lexer.lookahead().رمز_نقطہ().has_value()) {
+        آخری = *lexer.lookahead().رمز_نقطہ();
+    } ورنہ {
         U_UNICODESET_RETURN_WITH_PARSE_ERROR({}, "RangeElement", lexer.lookahead().debugString(),
                                              lexer, ec);
     }
-    if (last <= first) {
+    اگر (آخری <= first) {
         U_UNICODESET_RETURN_WITH_PARSE_ERROR({}, "first < last in Range",
-                                             UnicodeString(last) + u"-" + UnicodeString(first),
+                                             UnicodeString(آخری) + u"-" + UnicodeString(first),
                                              lexer, ec);
     }
     lexer.advance();
-    _appendToPat(rebuiltPat, last, /*escapeUnprintable=*/false);
-    return UnicodeSet(first, last);
+    append_مقصد_Pat(rebuiltPat, آخری, /*escapeUnprintable=*/جھوٹ);
+    واپس Unicode_سیٹ(first, آخری);
 }
 
 //----------------------------------------------------------------
 // Property set implementation
 //----------------------------------------------------------------
 
-namespace {
+نامخلا {
 
-UBool numericValueFilter(UChar32 ch, void* context) {
-    return u_getNumericValue(ch) == *static_cast<double*>(context);
+UBool numeric_قدر_Filter(UChar32 ch, خالی* context) {
+    واپس u_get_Numeric_قدر(ch) == *static_cast<دوہرا*>(context);
 }
 
-UBool generalCategoryMaskFilter(UChar32 ch, void* context) {
+UBool general_Category_نقاب_Filter(UChar32 ch, خالی* context) {
     int32_t value = *static_cast<int32_t*>(context);
-    return (U_GET_GC_MASK((UChar32) ch) & value) != 0;
+    واپس (U_GET_GC_نقاب((UChar32) ch) & value) != 0;
 }
 
-UBool versionFilter(UChar32 ch, void* context) {
-    static const UVersionInfo none = { 0, 0, 0, 0 };
+UBool نسخہ_Filter(UChar32 ch, خالی* context) {
+    ساکن ثابت UVersionInfo none = { 0, 0, 0, 0 };
     UVersionInfo v;
     u_charAge(ch, v);
-    UVersionInfo* version = static_cast<UVersionInfo*>(context);
-    return uprv_memcmp(&v, &none, sizeof(v)) > 0 && uprv_memcmp(&v, version, sizeof(v)) <= 0;
+    UVersionInfo* نسخہ = static_cast<UVersionInfo*>(context);
+    واپس uprv_memcmp(&v, &none, حجم(v)) > 0 && uprv_memcmp(&v, نسخہ, حجم(v)) <= 0;
 }
 
-typedef struct {
+قسمتعریف ساخت {
     UProperty prop;
     int32_t value;
 } IntPropertyContext;
 
-UBool intPropertyFilter(UChar32 ch, void* context) {
+UBool intPropertyFilter(UChar32 ch, خالی* context) {
     IntPropertyContext* c = static_cast<IntPropertyContext*>(context);
-    return u_getIntPropertyValue(ch, c->prop) == c->value;
+    واپس u_get_Int_Property_قدر(ch, c->prop) == c->value;
 }
 
-UBool scriptExtensionsFilter(UChar32 ch, void* context) {
-    return uscript_hasScript(ch, *static_cast<UScriptCode*>(context));
+UBool scriptExtensionsFilter(UChar32 ch, خالی* context) {
+    واپس uscript_hasScript(ch, *static_cast<UScript_رمز*>(context));
 }
 
-UBool idTypeFilter(UChar32 ch, void* context) {
-    return u_hasIDType(ch, *static_cast<UIdentifierType*>(context));
+UBool idTypeFilter(UChar32 ch, خالی* context) {
+    واپس u_hasIDType(ch, *static_cast<UIdentifierType*>(context));
 }
 
 }  // namespace
@@ -1419,11 +1419,11 @@ UBool idTypeFilter(UChar32 ch, void* context) {
 /**
  * Generic filter-based scanning code for UCD property UnicodeSets.
  */
-void UnicodeSet::applyFilter(UnicodeSet::Filter filter,
-                             void* context,
-                             const UnicodeSet* inclusions,
-                             UErrorCode &status) {
-    if (U_FAILURE(status)) return;
+خالی Unicode_سیٹ::applyFilter(Unicode_سیٹ::Filter filter,
+                             خالی* context,
+                             ثابت Unicode_سیٹ* inclusions,
+                             UError_رمز &حالت_2) {
+    اگر (U_FAILURE(حالت_2)) واپس;
 
     // Logically, walk through all Unicode characters, noting the start
     // and end of each range for which filter.contain(c) is
@@ -1437,38 +1437,38 @@ void UnicodeSet::applyFilter(UnicodeSet::Filter filter,
 
     clear();
 
-    UChar32 startHasProperty = -1;
-    int32_t limitRange = inclusions->getRangeCount();
+    UChar32 آغاز_Has_Property = -1;
+    int32_t حد_بندی_Range = inclusions->get_Range_گنتی();
 
-    for (int j=0; j<limitRange; ++j) {
+    برائے (صحیح j=0; j<حد_بندی_Range; ++j) {
         // get current range
-        UChar32 start = inclusions->getRangeStart(j);
-        UChar32 end = inclusions->getRangeEnd(j);
+        UChar32 آغاز = inclusions->get_Range_آغاز(j);
+        UChar32 انتہا = inclusions->get_Range_انتہا(j);
 
         // for all the code points in the range, process
-        for (UChar32 ch = start; ch <= end; ++ch) {
+        برائے (UChar32 ch = آغاز; ch <= انتہا; ++ch) {
             // only add to this UnicodeSet on inflection points --
             // where the hasProperty value changes to false
-            if ((*filter)(ch, context)) {
-                if (startHasProperty < 0) {
-                    startHasProperty = ch;
+            اگر ((*filter)(ch, context)) {
+                اگر (آغاز_Has_Property < 0) {
+                    آغاز_Has_Property = ch;
                 }
-            } else if (startHasProperty >= 0) {
-                add(startHasProperty, ch-1);
-                startHasProperty = -1;
+            } ورنہ اگر (آغاز_Has_Property >= 0) {
+                جوڑو(آغاز_Has_Property, ch-1);
+                آغاز_Has_Property = -1;
             }
         }
     }
-    if (startHasProperty >= 0) {
-        add(startHasProperty, static_cast<UChar32>(0x10FFFF));
+    اگر (آغاز_Has_Property >= 0) {
+        جوڑو(آغاز_Has_Property, static_cast<UChar32>(0x10FFFF));
     }
-    if (isBogus() && U_SUCCESS(status)) {
+    اگر (isBogus() && U_SUCCESS(حالت_2)) {
         // We likely ran out of memory. AHHH!
-        status = U_MEMORY_ALLOCATION_ERROR;
+        حالت_2 = U_حافظہ_تخصیص_ERROR;
     }
 }
 
-namespace {
+نامخلا {
 
 }  // namespace
 
@@ -1476,51 +1476,51 @@ namespace {
 // Property set API
 //----------------------------------------------------------------
 
-#define FAIL(ec) UPRV_BLOCK_MACRO_BEGIN { \
-    ec=U_ILLEGAL_ARGUMENT_ERROR; \
-    return *this; \
-} UPRV_BLOCK_MACRO_END
+#تعریف_کرو FAIL(ec) UPRV_بلاک_MACRO_BEGIN { \
+    ec=U_ILLEGAL_دلیل_ERROR; \
+    واپس *یہ; \
+} UPRV_بلاک_MACRO_انتہا
 
-UnicodeSet&
-UnicodeSet::applyIntPropertyValue(UProperty prop, int32_t value, UErrorCode& ec) U_LIFETIME_BOUND {
-    if (U_FAILURE(ec) || isFrozen()) { return *this; }
-    if (prop == UCHAR_GENERAL_CATEGORY_MASK) {
-        const UnicodeSet* inclusions = CharacterProperties::getInclusionsForProperty(prop, ec);
-        applyFilter(generalCategoryMaskFilter, &value, inclusions, ec);
-    } else if (prop == UCHAR_SCRIPT_EXTENSIONS) {
-        const UnicodeSet* inclusions = CharacterProperties::getInclusionsForProperty(prop, ec);
-        UScriptCode script = static_cast<UScriptCode>(value);
+Unicode_سیٹ&
+Unicode_سیٹ::apply_Int_Property_قدر(UProperty prop, int32_t value, UError_رمز& ec) U_LIFETIME_BOUND {
+    اگر (U_FAILURE(ec) || isFrozen()) { واپس *یہ; }
+    اگر (prop == UCHAR_GENERAL_CATEGORY_نقاب) {
+        ثابت Unicode_سیٹ* inclusions = CharacterProperties::getInclusionsForProperty(prop, ec);
+        applyFilter(general_Category_نقاب_Filter, &value, inclusions, ec);
+    } ورنہ اگر (prop == UCHAR_SCRIPT_EXTENSIONS) {
+        ثابت Unicode_سیٹ* inclusions = CharacterProperties::getInclusionsForProperty(prop, ec);
+        UScript_رمز script = static_cast<UScript_رمز>(value);
         applyFilter(scriptExtensionsFilter, &script, inclusions, ec);
-    } else if (prop == UCHAR_IDENTIFIER_TYPE) {
-        const UnicodeSet* inclusions = CharacterProperties::getInclusionsForProperty(prop, ec);
+    } ورنہ اگر (prop == UCHAR_IDENTIFIER_TYPE) {
+        ثابت Unicode_سیٹ* inclusions = CharacterProperties::getInclusionsForProperty(prop, ec);
         UIdentifierType idType = static_cast<UIdentifierType>(value);
         applyFilter(idTypeFilter, &idType, inclusions, ec);
-    } else if (0 <= prop && prop < UCHAR_BINARY_LIMIT) {
-        if (value == 0 || value == 1) {
-            const USet *set = u_getBinaryPropertySet(prop, &ec);
-            if (U_FAILURE(ec)) { return *this; }
-            copyFrom(*UnicodeSet::fromUSet(set), true);
-            if (value == 0) {
-                complement().removeAllStrings();  // code point complement
+    } ورنہ اگر (0 <= prop && prop < UCHAR_ثنائی_حد_بندی) {
+        اگر (value == 0 || value == 1) {
+            ثابت USet *سیٹ = u_get_ثنائی_Property_سیٹ(prop, &ec);
+            اگر (U_FAILURE(ec)) { واپس *یہ; }
+            copyFrom(*Unicode_سیٹ::fromUSet(سیٹ), سچ);
+            اگر (value == 0) {
+                complement().remove_All_لڑیاں();  // code point complement
             }
-        } else {
+        } ورنہ {
             clear();
         }
-    } else if (UCHAR_INT_START <= prop && prop < UCHAR_INT_LIMIT) {
-        const UnicodeSet* inclusions = CharacterProperties::getInclusionsForProperty(prop, ec);
+    } ورنہ اگر (UCHAR_INT_آغاز <= prop && prop < UCHAR_INT_حد_بندی) {
+        ثابت Unicode_سیٹ* inclusions = CharacterProperties::getInclusionsForProperty(prop, ec);
         IntPropertyContext c = {prop, value};
         applyFilter(intPropertyFilter, &c, inclusions, ec);
-    } else {
-        ec = U_ILLEGAL_ARGUMENT_ERROR;
+    } ورنہ {
+        ec = U_ILLEGAL_دلیل_ERROR;
     }
-    return *this;
+    واپس *یہ;
 }
 
-UnicodeSet&
-UnicodeSet::applyPropertyAlias(const UnicodeString& prop,
-                               const UnicodeString& value,
-                               UErrorCode& ec) U_LIFETIME_BOUND {
-    if (U_FAILURE(ec) || isFrozen()) return *this;
+Unicode_سیٹ&
+Unicode_سیٹ::applyPropertyAlias(ثابت UnicodeString& prop,
+                               ثابت UnicodeString& value,
+                               UError_رمز& ec) U_LIFETIME_BOUND {
+    اگر (U_FAILURE(ec) || isFrozen()) واپس *یہ;
 
     // prop and value used to be converted to char * using the default
     // converter instead of the invariant conversion.
@@ -1528,105 +1528,105 @@ UnicodeSet::applyPropertyAlias(const UnicodeString& prop,
     // names use only invariant characters.
     // If there are any variant characters, then we won't find them anyway.
     // Checking first avoids assertion failures in the conversion.
-    if( !uprv_isInvariantUString(prop.getBuffer(), prop.length()) ||
-        !uprv_isInvariantUString(value.getBuffer(), value.length())
+    اگر( !uprv_isInvariantUString(prop.get_بفر(), prop.length()) ||
+        !uprv_isInvariantUString(value.get_بفر(), value.length())
     ) {
         FAIL(ec);
     }
     CharString pname, vname;
     pname.appendInvariantChars(prop, ec);
     vname.appendInvariantChars(value, ec);
-    if (U_FAILURE(ec)) return *this;
+    اگر (U_FAILURE(ec)) واپس *یہ;
 
     UProperty p;
     int32_t v;
-    UBool invert = false;
+    UBool invert = جھوٹ;
 
-    if (value.length() > 0) {
-        p = u_getPropertyEnum(pname.data());
-        if (p == UCHAR_INVALID_CODE) FAIL(ec);
+    اگر (value.length() > 0) {
+        p = u_getPropertyEnum(pname.ڈیٹا());
+        اگر (p == UCHAR_INVALID_رمز) FAIL(ec);
 
         // Treat gc as gcm
-        if (p == UCHAR_GENERAL_CATEGORY) {
-            p = UCHAR_GENERAL_CATEGORY_MASK;
+        اگر (p == UCHAR_GENERAL_CATEGORY) {
+            p = UCHAR_GENERAL_CATEGORY_نقاب;
         }
 
-        if ((p >= UCHAR_BINARY_START && p < UCHAR_BINARY_LIMIT) ||
-            (p >= UCHAR_INT_START && p < UCHAR_INT_LIMIT) ||
-            (p >= UCHAR_MASK_START && p < UCHAR_MASK_LIMIT)) {
-            v = u_getPropertyValueEnum(p, vname.data());
-            if (v == UCHAR_INVALID_CODE) {
+        اگر ((p >= UCHAR_ثنائی_آغاز && p < UCHAR_ثنائی_حد_بندی) ||
+            (p >= UCHAR_INT_آغاز && p < UCHAR_INT_حد_بندی) ||
+            (p >= UCHAR_نقاب_آغاز && p < UCHAR_نقاب_حد_بندی)) {
+            v = u_get_Property_قدر_Enum(p, vname.ڈیٹا());
+            اگر (v == UCHAR_INVALID_رمز) {
                 // Handle numeric CCC
-                if (p == UCHAR_CANONICAL_COMBINING_CLASS ||
+                اگر (p == UCHAR_CANONICAL_COMBINING_CLASS ||
                     p == UCHAR_TRAIL_CANONICAL_COMBINING_CLASS ||
                     p == UCHAR_LEAD_CANONICAL_COMBINING_CLASS) {
-                    char* end;
-                    double val = uprv_strtod(vname.data(), &end);
+                    حرف* انتہا;
+                    دوہرا val = uprv_strtod(vname.ڈیٹا(), &انتہا);
                     // Anything between 0 and 255 is valid even if unused.
                     // Cast double->int only after range check.
                     // We catch NaN here because comparing it with both 0 and 255 will be false
                     // (as are all comparisons with NaN).
-                    if (*end != 0 || !(0 <= val && val <= 255) ||
+                    اگر (*انتہا != 0 || !(0 <= val && val <= 255) ||
                             (v = static_cast<int32_t>(val)) != val) {
                         // non-integral value or outside 0..255, or trailing junk
                         FAIL(ec);
                     }
-                } else {
+                } ورنہ {
                     FAIL(ec);
                 }
             }
         }
 
-        else {
+        ورنہ {
 
-            switch (p) {
-            case UCHAR_NUMERIC_VALUE:
+            انتخاب (p) {
+            حالت UCHAR_NUMERIC_قدر:
                 {
-                    char* end;
-                    double val = uprv_strtod(vname.data(), &end);
-                    if (*end != 0) {
+                    حرف* انتہا;
+                    دوہرا val = uprv_strtod(vname.ڈیٹا(), &انتہا);
+                    اگر (*انتہا != 0) {
                         FAIL(ec);
                     }
-                    applyFilter(numericValueFilter, &val,
+                    applyFilter(numeric_قدر_Filter, &val,
                                 CharacterProperties::getInclusionsForProperty(p, ec), ec);
-                    return *this;
+                    واپس *یہ;
                 }
-            case UCHAR_NAME:
+            حالت UCHAR_NAME:
                 {
-                    const UChar32 ch = getCharacterByName(vname);
-                    if (ch < 0) {
+                    ثابت UChar32 ch = getCharacterByName(vname);
+                    اگر (ch < 0) {
                         FAIL(ec);
                     }
                     clear();
-                    add(ch);
-                    return *this;
+                    جوڑو(ch);
+                    واپس *یہ;
                 }
-            case UCHAR_UNICODE_1_NAME:
+            حالت UCHAR_UNICODE_1_NAME:
                 // ICU 49 deprecates the Unicode_1_Name property APIs.
                 FAIL(ec);
-            case UCHAR_AGE:
+            حالت UCHAR_AGE:
                 {
-                    UVersionInfo version;
-                    u_versionFromString(version, vname.data());
-                    applyFilter(versionFilter, &version,
+                    UVersionInfo نسخہ;
+                    u_نسخہ_From_String(نسخہ, vname.ڈیٹا());
+                    applyFilter(نسخہ_Filter, &نسخہ,
                                 CharacterProperties::getInclusionsForProperty(p, ec), ec);
-                    return *this;
+                    واپس *یہ;
                 }
-            case UCHAR_SCRIPT_EXTENSIONS:
-                v = u_getPropertyValueEnum(UCHAR_SCRIPT, vname.data());
-                if (v == UCHAR_INVALID_CODE) {
+            حالت UCHAR_SCRIPT_EXTENSIONS:
+                v = u_get_Property_قدر_Enum(UCHAR_SCRIPT, vname.ڈیٹا());
+                اگر (v == UCHAR_INVALID_رمز) {
                     FAIL(ec);
                 }
                 // fall through to calling applyIntPropertyValue()
-                break;
-            case UCHAR_IDENTIFIER_TYPE:
-                v = u_getPropertyValueEnum(p, vname.data());
-                if (v == UCHAR_INVALID_CODE) {
+                توڑو;
+            حالت UCHAR_IDENTIFIER_TYPE:
+                v = u_get_Property_قدر_Enum(p, vname.ڈیٹا());
+                اگر (v == UCHAR_INVALID_رمز) {
                     FAIL(ec);
                 }
                 // fall through to calling applyIntPropertyValue()
-                break;
-            default:
+                توڑو;
+            طےشدہ:
                 // p is a non-binary, non-enumerated property that we
                 // don't support (yet).
                 FAIL(ec);
@@ -1634,46 +1634,46 @@ UnicodeSet::applyPropertyAlias(const UnicodeString& prop,
         }
     }
 
-    else {
+    ورنہ {
         // value is empty.  Interpret as General Category, Script, or
         // Binary property.
-        p = UCHAR_GENERAL_CATEGORY_MASK;
-        v = u_getPropertyValueEnum(p, pname.data());
-        if (v == UCHAR_INVALID_CODE) {
+        p = UCHAR_GENERAL_CATEGORY_نقاب;
+        v = u_get_Property_قدر_Enum(p, pname.ڈیٹا());
+        اگر (v == UCHAR_INVALID_رمز) {
             p = UCHAR_SCRIPT;
-            v = u_getPropertyValueEnum(p, pname.data());
-            if (v == UCHAR_INVALID_CODE) {
-                p = u_getPropertyEnum(pname.data());
-                if (p >= UCHAR_BINARY_START && p < UCHAR_BINARY_LIMIT) {
+            v = u_get_Property_قدر_Enum(p, pname.ڈیٹا());
+            اگر (v == UCHAR_INVALID_رمز) {
+                p = u_getPropertyEnum(pname.ڈیٹا());
+                اگر (p >= UCHAR_ثنائی_آغاز && p < UCHAR_ثنائی_حد_بندی) {
                     v = 1;
-                } else if (0 == uprv_comparePropertyNames(ANY, pname.data())) {
-                    set(MIN_VALUE, MAX_VALUE);
-                    return *this;
-                } else if (0 == uprv_comparePropertyNames(ASCII, pname.data())) {
-                    set(0, 0x7F);
-                    return *this;
-                } else if (0 == uprv_comparePropertyNames(ASSIGNED, pname.data())) {
+                } ورنہ اگر (0 == uprv_compare_Property_نام(ANY, pname.ڈیٹا())) {
+                    سیٹ(MIN_قدر, MAX_قدر);
+                    واپس *یہ;
+                } ورنہ اگر (0 == uprv_compare_Property_نام(ASCII, pname.ڈیٹا())) {
+                    سیٹ(0, 0x7F);
+                    واپس *یہ;
+                } ورنہ اگر (0 == uprv_compare_Property_نام(ASSIGNED, pname.ڈیٹا())) {
                     // [:Assigned:]=[:^Cn:]
-                    p = UCHAR_GENERAL_CATEGORY_MASK;
-                    v = U_GC_CN_MASK;
-                    invert = true;
-                } else {
+                    p = UCHAR_GENERAL_CATEGORY_نقاب;
+                    v = U_GC_CN_نقاب;
+                    invert = سچ;
+                } ورنہ {
                     FAIL(ec);
                 }
             }
         }
     }
 
-    applyIntPropertyValue(p, v, ec);
-    if(invert) {
-        complement().removeAllStrings();  // code point complement
+    apply_Int_Property_قدر(p, v, ec);
+    اگر(invert) {
+        complement().remove_All_لڑیاں();  // code point complement
     }
 
-    if (isBogus() && U_SUCCESS(ec)) {
+    اگر (isBogus() && U_SUCCESS(ec)) {
         // We likely ran out of memory. AHHH!
-        ec = U_MEMORY_ALLOCATION_ERROR;
+        ec = U_حافظہ_تخصیص_ERROR;
     }
-    return *this;
+    واپس *یہ;
 }
 
 //----------------------------------------------------------------
@@ -1684,15 +1684,15 @@ UnicodeSet::applyPropertyAlias(const UnicodeString& prop,
  * Return true if the given position, in the given pattern, appears
  * to be the start of a property set pattern.
  */
-UBool UnicodeSet::resemblesPropertyPattern(const UnicodeString& pattern,
+UBool Unicode_سیٹ::resembles_Property_نمونہ(ثابت UnicodeString& نمونہ,
                                            int32_t pos) {
     // Patterns are at least 5 characters long
-    if ((pos+5) > pattern.length()) {
-        return false;
+    اگر ((pos+5) > نمونہ.length()) {
+        واپس جھوٹ;
     }
 
     // Look for an opening [:, [:^, \p, or \P
-    return isPOSIXOpen(pattern, pos) || isPerlOpen(pattern, pos) || isNameOpen(pattern, pos);
+    واپس isPOSIXOpen(نمونہ, pos) || isPerlOpen(نمونہ, pos) || isNameOpen(نمونہ, pos);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا

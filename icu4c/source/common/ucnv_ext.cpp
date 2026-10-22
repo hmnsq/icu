@@ -18,42 +18,42 @@
 *   Conversion extensions
 */
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION
+#اگر !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION
 
-#include "unicode/uset.h"
-#include "unicode/ustring.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "ucnv_ext.h"
-#include "cmemory.h"
-#include "uassert.h"
+#شامل "unicode/uset.h"
+#شامل "unicode/ustring.h"
+#شامل "ucnv_bld.h"
+#شامل "ucnv_cnv.h"
+#شامل "ucnv_ext.h"
+#شامل "cmemory.h"
+#شامل "uassert.h"
 
 /* to Unicode --------------------------------------------------------------- */
 
 /*
  * @return lookup value for the byte, if found; else 0
  */
-static inline uint32_t
-ucnv_extFindToU(const uint32_t *toUSection, int32_t length, uint8_t byte) {
-    uint32_t word0, word;
-    int32_t i, start, limit;
+ساکن اندرونی uint32_t
+ucnv_ext_ڈھونڈو_مقصد_U(ثابت uint32_t *مقصد_USection, int32_t length, uint8_t byte) {
+    uint32_t word0, لفظ;
+    int32_t i, آغاز, حد_بندی;
 
     /* check the input byte against the lowest and highest section bytes */
-    start = static_cast<int32_t>(UCNV_EXT_TO_U_GET_BYTE(toUSection[0]));
-    limit = static_cast<int32_t>(UCNV_EXT_TO_U_GET_BYTE(toUSection[length - 1]));
-    if(byte<start || limit<byte) {
-        return 0; /* the byte is out of range */
+    آغاز = static_cast<int32_t>(UCNV_EXT_مقصد_U_GET_BYTE(مقصد_USection[0]));
+    حد_بندی = static_cast<int32_t>(UCNV_EXT_مقصد_U_GET_BYTE(مقصد_USection[length - 1]));
+    اگر(byte<آغاز || حد_بندی<byte) {
+        واپس 0; /* the byte is out of range */
     }
 
-    if(length==((limit-start)+1)) {
+    اگر(length==((حد_بندی-آغاز)+1)) {
         /* direct access on a linear array */
-        return UCNV_EXT_TO_U_GET_VALUE(toUSection[byte-start]); /* could be 0 */
+        واپس UCNV_EXT_مقصد_U_GET_قدر(مقصد_USection[byte-آغاز]); /* could be 0 */
     }
 
     /* word0 is suitable for <=toUSection[] comparison, word for <toUSection[] */
-    word0=UCNV_EXT_TO_U_MAKE_WORD(byte, 0);
+    word0=UCNV_EXT_مقصد_U_MAKE_لفظ(byte, 0);
 
     /*
      * Shift byte once instead of each section word and add 0xffffff.
@@ -63,47 +63,47 @@ ucnv_extFindToU(const uint32_t *toUSection, int32_t length, uint8_t byte) {
      * for all v=0..f
      * so we need not mask off the lower 24 bits of each section word.
      */
-    word=word0|UCNV_EXT_TO_U_VALUE_MASK;
+    لفظ=word0|UCNV_EXT_مقصد_U_قدر_نقاب;
 
     /* binary search */
-    start=0;
-    limit=length;
-    for(;;) {
-        i=limit-start;
-        if(i<=1) {
-            break; /* done */
+    آغاز=0;
+    حد_بندی=length;
+    برائے(;;) {
+        i=حد_بندی-آغاز;
+        اگر(i<=1) {
+            توڑو; /*مکمل*/
         }
         /* start<limit-1 */
 
-        if(i<=4) {
+        اگر(i<=4) {
             /* linear search for the last part */
-            if(word0<=toUSection[start]) {
-                break;
+            اگر(word0<=مقصد_USection[آغاز]) {
+                توڑو;
             }
-            if(++start<limit && word0<=toUSection[start]) {
-                break;
+            اگر(++آغاز<حد_بندی && word0<=مقصد_USection[آغاز]) {
+                توڑو;
             }
-            if(++start<limit && word0<=toUSection[start]) {
-                break;
+            اگر(++آغاز<حد_بندی && word0<=مقصد_USection[آغاز]) {
+                توڑو;
             }
             /* always break at start==limit-1 */
-            ++start;
-            break;
+            ++آغاز;
+            توڑو;
         }
 
-        i=(start+limit)/2;
-        if(word<toUSection[i]) {
-            limit=i;
-        } else {
-            start=i;
+        i=(آغاز+حد_بندی)/2;
+        اگر(لفظ<مقصد_USection[i]) {
+            حد_بندی=i;
+        } ورنہ {
+            آغاز=i;
         }
     }
 
     /* did we really find it? */
-    if(start<limit && byte==UCNV_EXT_TO_U_GET_BYTE(word=toUSection[start])) {
-        return UCNV_EXT_TO_U_GET_VALUE(word); /* never 0 */
-    } else {
-        return 0; /* not found */
+    اگر(آغاز<حد_بندی && byte==UCNV_EXT_مقصد_U_GET_BYTE(لفظ=مقصد_USection[آغاز])) {
+        واپس UCNV_EXT_مقصد_U_GET_قدر(لفظ); /* never 0 */
+    } ورنہ {
+        واپس 0; /* not found */
     }
 }
 
@@ -111,8 +111,8 @@ ucnv_extFindToU(const uint32_t *toUSection, int32_t length, uint8_t byte) {
  * true if not an SI/SO stateful converter,
  * or if the match length fits with the current converter state
  */
-#define UCNV_EXT_TO_U_VERIFY_SISO_MATCH(sisoState, match) \
-    ((sisoState)<0 || ((sisoState)==0) == (match==1))
+#تعریف_کرو UCNV_EXT_مقصد_U_VERIFY_SISO_مطابقت(sisoState, مطابقت) \
+    ((sisoState)<0 || ((sisoState)==0) == (مطابقت==1))
 
 /*
  * this works like ucnv_extMatchFromU() except
@@ -120,143 +120,143 @@ ucnv_extFindToU(const uint32_t *toUSection, int32_t length, uint8_t byte) {
  * - no trie is used
  * - the returned matchLength is not offset by 2
  */
-static int32_t
-ucnv_extMatchToU(const int32_t *cx, int8_t sisoState,
-                 const char *pre, int32_t preLength,
-                 const char *src, int32_t srcLength,
-                 uint32_t *pMatchValue,
+ساکن int32_t
+ucnv_ext_مطابقت_مقصد_U(ثابت int32_t *cx, int8_t sisoState,
+                 ثابت حرف *pre, int32_t pre_لمبائی,
+                 ثابت حرف *src, int32_t src_لمبائی,
+                 uint32_t *p_مطابقت_قدر,
                  UBool /*useFallback*/, UBool flush) {
-    const uint32_t *toUTable, *toUSection;
+    ثابت uint32_t *مقصد_UTable, *مقصد_USection;
 
-    uint32_t value, matchValue;
-    int32_t i, j, idx, length, matchLength;
+    uint32_t value, مطابقت_قدر;
+    int32_t i, j, idx, length, مطابقت_لمبائی;
     uint8_t b;
 
-    if(cx==nullptr || cx[UCNV_EXT_TO_U_LENGTH]<=0) {
-        return 0; /* no extension data, no match */
+    اگر(cx==خالی_اشاریہ || cx[UCNV_EXT_مقصد_U_لمبائی]<=0) {
+        واپس 0; /* no extension data, no match */
     }
 
     /* initialize */
-    toUTable=UCNV_EXT_ARRAY(cx, UCNV_EXT_TO_U_INDEX, uint32_t);
+    مقصد_UTable=UCNV_EXT_ARRAY(cx, UCNV_EXT_مقصد_U_اشاریہ, uint32_t);
     idx=0;
 
-    matchValue=0;
-    i=j=matchLength=0;
+    مطابقت_قدر=0;
+    i=j=مطابقت_لمبائی=0;
 
-    if(sisoState==0) {
+    اگر(sisoState==0) {
         /* SBCS state of an SI/SO stateful converter, look at only exactly 1 byte */
-        if(preLength>1) {
-            return 0; /* no match of a DBCS sequence in SBCS mode */
-        } else if(preLength==1) {
-            srcLength=0;
-        } else /* preLength==0 */ {
-            if(srcLength>1) {
-                srcLength=1;
+        اگر(pre_لمبائی>1) {
+            واپس 0; /* no match of a DBCS sequence in SBCS mode */
+        } ورنہ اگر(pre_لمبائی==1) {
+            src_لمبائی=0;
+        } ورنہ /* preLength==0 */ {
+            اگر(src_لمبائی>1) {
+                src_لمبائی=1;
             }
         }
-        flush=true;
+        flush=سچ;
     }
 
     /* we must not remember fallback matches when not using fallbacks */
 
     /* match input units until there is a full match or the input is consumed */
-    for(;;) {
+    برائے(;;) {
         /* go to the next section */
-        toUSection=toUTable+idx;
+        مقصد_USection=مقصد_UTable+idx;
 
         /* read first pair of the section */
-        value=*toUSection++;
-        length=UCNV_EXT_TO_U_GET_BYTE(value);
-        value=UCNV_EXT_TO_U_GET_VALUE(value);
-        if( value!=0 &&
-            (UCNV_EXT_TO_U_IS_ROUNDTRIP(value) ||
-             TO_U_USE_FALLBACK(useFallback)) &&
-            UCNV_EXT_TO_U_VERIFY_SISO_MATCH(sisoState, i+j)
+        value=*مقصد_USection++;
+        length=UCNV_EXT_مقصد_U_GET_BYTE(value);
+        value=UCNV_EXT_مقصد_U_GET_قدر(value);
+        اگر( value!=0 &&
+            (UCNV_EXT_مقصد_U_IS_ROUNDTRIP(value) ||
+             مقصد_U_USE_FALLBACK(useFallback)) &&
+            UCNV_EXT_مقصد_U_VERIFY_SISO_مطابقت(sisoState, i+j)
         ) {
             /* remember longest match so far */
-            matchValue=value;
-            matchLength=i+j;
+            مطابقت_قدر=value;
+            مطابقت_لمبائی=i+j;
         }
 
         /* match pre[] then src[] */
-        if(i<preLength) {
+        اگر(i<pre_لمبائی) {
             b = static_cast<uint8_t>(pre[i++]);
-        } else if(j<srcLength) {
+        } ورنہ اگر(j<src_لمبائی) {
             b = static_cast<uint8_t>(src[j++]);
-        } else {
+        } ورنہ {
             /* all input consumed, partial match */
-            if(flush || (length=(i+j))>UCNV_EXT_MAX_BYTES) {
+            اگر(flush || (length=(i+j))>UCNV_EXT_MAX_بائٹیں) {
                 /*
                  * end of the entire input stream, stop with the longest match so far
                  * or: partial match must not be longer than UCNV_EXT_MAX_BYTES
                  * because it must fit into state buffers
                  */
-                break;
-            } else {
+                توڑو;
+            } ورنہ {
                 /* continue with more input next time */
-                return -length;
+                واپس -length;
             }
         }
 
         /* search for the current char16_t */
-        value=ucnv_extFindToU(toUSection, length, b);
-        if(value==0) {
+        value=ucnv_ext_ڈھونڈو_مقصد_U(مقصد_USection, length, b);
+        اگر(value==0) {
             /* no match here, stop with the longest match so far */
-            break;
-        } else {
-            if(UCNV_EXT_TO_U_IS_PARTIAL(value)) {
+            توڑو;
+        } ورنہ {
+            اگر(UCNV_EXT_مقصد_U_IS_PARTIAL(value)) {
                 /* partial match, continue */
-                idx = static_cast<int32_t>(UCNV_EXT_TO_U_GET_PARTIAL_INDEX(value));
-            } else {
-                if( (UCNV_EXT_TO_U_IS_ROUNDTRIP(value) ||
-                     TO_U_USE_FALLBACK(useFallback)) &&
-                    UCNV_EXT_TO_U_VERIFY_SISO_MATCH(sisoState, i+j)
+                idx = static_cast<int32_t>(UCNV_EXT_مقصد_U_GET_PARTIAL_اشاریہ(value));
+            } ورنہ {
+                اگر( (UCNV_EXT_مقصد_U_IS_ROUNDTRIP(value) ||
+                     مقصد_U_USE_FALLBACK(useFallback)) &&
+                    UCNV_EXT_مقصد_U_VERIFY_SISO_مطابقت(sisoState, i+j)
                 ) {
                     /* full match, stop with result */
-                    matchValue=value;
-                    matchLength=i+j;
-                } else {
+                    مطابقت_قدر=value;
+                    مطابقت_لمبائی=i+j;
+                } ورنہ {
                     /* full match on fallback not taken, stop with the longest match so far */
                 }
-                break;
+                توڑو;
             }
         }
     }
 
-    if(matchLength==0) {
+    اگر(مطابقت_لمبائی==0) {
         /* no match at all */
-        return 0;
+        واپس 0;
     }
 
     /* return result */
-    *pMatchValue=UCNV_EXT_TO_U_MASK_ROUNDTRIP(matchValue);
-    return matchLength;
+    *p_مطابقت_قدر=UCNV_EXT_مقصد_U_نقاب_ROUNDTRIP(مطابقت_قدر);
+    واپس مطابقت_لمبائی;
 }
 
-static inline void
-ucnv_extWriteToU(UConverter *cnv, const int32_t *cx,
+ساکن اندرونی خالی
+ucnv_ext_Write_مقصد_U(UConverter *cnv, ثابت int32_t *cx,
                  uint32_t value,
-                 char16_t **target, const char16_t *targetLimit,
-                 int32_t **offsets, int32_t srcIndex,
-                 UErrorCode *pErrorCode) {
+                 char16_t **ہدف, ثابت char16_t *ہدف_حد_بندی,
+                 int32_t **offsets, int32_t src_اشاریہ,
+                 UError_رمز *p_Error_رمز) {
     /* output the result */
-    if(UCNV_EXT_TO_U_IS_CODE_POINT(value)) {
+    اگر(UCNV_EXT_مقصد_U_IS_رمز_نقطہ(value)) {
         /* output a single code point */
-        ucnv_toUWriteCodePoint(
-            cnv, UCNV_EXT_TO_U_GET_CODE_POINT(value),
-            target, targetLimit,
-            offsets, srcIndex,
-            pErrorCode);
-    } else {
+        ucnv_مقصد_UWrite_رمز_نقطہ(
+            cnv, UCNV_EXT_مقصد_U_GET_رمز_نقطہ(value),
+            ہدف, ہدف_حد_بندی,
+            offsets, src_اشاریہ,
+            p_Error_رمز);
+    } ورنہ {
         /* output a string - with correct data we have resultLength>0 */
-        ucnv_toUWriteUChars(
+        ucnv_مقصد_UWrite_UChars(
             cnv,
-            UCNV_EXT_ARRAY(cx, UCNV_EXT_TO_U_UCHARS_INDEX, char16_t)+
-                UCNV_EXT_TO_U_GET_INDEX(value),
-            UCNV_EXT_TO_U_GET_LENGTH(value),
-            target, targetLimit,
-            offsets, srcIndex,
-            pErrorCode);
+            UCNV_EXT_ARRAY(cx, UCNV_EXT_مقصد_U_UCHARS_اشاریہ, char16_t)+
+                UCNV_EXT_مقصد_U_GET_اشاریہ(value),
+            UCNV_EXT_مقصد_U_GET_لمبائی(value),
+            ہدف, ہدف_حد_بندی,
+            offsets, src_اشاریہ,
+            p_Error_رمز);
     }
 }
 
@@ -268,88 +268,88 @@ ucnv_extWriteToU(UConverter *cnv, const int32_t *cx,
  * Note: For SI/SO stateful converters getting here,
  * cnv->mode==0 is equivalent to firstLength==1.
  */
-#define UCNV_SISO_STATE(cnv) \
-    ((cnv)->sharedData->mbcs.outputType==MBCS_OUTPUT_2_SISO ? (int8_t)(cnv)->mode : \
-     (cnv)->sharedData->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY ? 1 : -1)
+#تعریف_کرو UCNV_SISO_STATE(cnv) \
+    ((cnv)->shared_ڈیٹا->mbcs.outputType==MBCS_OUTPUT_2_SISO ? (int8_t)(cnv)->منوال : \
+     (cnv)->shared_ڈیٹا->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY ? 1 : -1)
 
 /*
  * target<targetLimit; set error code for overflow
  */
 U_CFUNC UBool
-ucnv_extInitialMatchToU(UConverter *cnv, const int32_t *cx,
-                        int32_t firstLength,
-                        const char **src, const char *srcLimit,
-                        char16_t **target, const char16_t *targetLimit,
-                        int32_t **offsets, int32_t srcIndex,
+ucnv_ext_Initial_مطابقت_مقصد_U(UConverter *cnv, ثابت int32_t *cx,
+                        int32_t پہلا_لمبائی,
+                        ثابت حرف **src, ثابت حرف *src_حد_بندی,
+                        char16_t **ہدف, ثابت char16_t *ہدف_حد_بندی,
+                        int32_t **offsets, int32_t src_اشاریہ,
                         UBool flush,
-                        UErrorCode *pErrorCode) {
+                        UError_رمز *p_Error_رمز) {
     uint32_t value = 0;  /* initialize output-only param to 0 to silence gcc */
-    int32_t match;
+    int32_t مطابقت;
 
     /* try to match */
-    match=ucnv_extMatchToU(cx, (int8_t)UCNV_SISO_STATE(cnv),
-                           (const char *)cnv->toUBytes, firstLength,
-                           *src, (int32_t)(srcLimit-*src),
+    مطابقت=ucnv_ext_مطابقت_مقصد_U(cx, (int8_t)UCNV_SISO_STATE(cnv),
+                           (ثابت حرف *)cnv->مقصد_UBytes, پہلا_لمبائی,
+                           *src, (int32_t)(src_حد_بندی-*src),
                            &value,
                            cnv->useFallback, flush);
-    if(match>0) {
+    اگر(مطابقت>0) {
         /* advance src pointer for the consumed input */
-        *src+=match-firstLength;
+        *src+=مطابقت-پہلا_لمبائی;
 
         /* write result to target */
-        ucnv_extWriteToU(cnv, cx,
+        ucnv_ext_Write_مقصد_U(cnv, cx,
                          value,
-                         target, targetLimit,
-                         offsets, srcIndex,
-                         pErrorCode);
-        return true;
-    } else if(match<0) {
+                         ہدف, ہدف_حد_بندی,
+                         offsets, src_اشاریہ,
+                         p_Error_رمز);
+        واپس سچ;
+    } ورنہ اگر(مطابقت<0) {
         /* save state for partial match */
-        const char *s;
+        ثابت حرف *s;
         int32_t j;
 
         /* copy the first code point */
-        s=(const char *)cnv->toUBytes;
-        cnv->preToUFirstLength=(int8_t)firstLength;
-        for(j=0; j<firstLength; ++j) {
-            cnv->preToU[j]=*s++;
+        s=(ثابت حرف *)cnv->مقصد_UBytes;
+        cnv->pre_مقصد_UFirst_لمبائی=(int8_t)پہلا_لمبائی;
+        برائے(j=0; j<پہلا_لمبائی; ++j) {
+            cnv->pre_مقصد_U[j]=*s++;
         }
 
         /* now copy the newly consumed input */
         s=*src;
-        match=-match;
-        for(; j<match; ++j) {
-            cnv->preToU[j]=*s++;
+        مطابقت=-مطابقت;
+        برائے(; j<مطابقت; ++j) {
+            cnv->pre_مقصد_U[j]=*s++;
         }
         *src=s; /* same as *src=srcLimit; because we reached the end of input */
-        cnv->preToULength=(int8_t)match;
-        return true;
-    } else /* match==0 no match */ {
-        return false;
+        cnv->pre_مقصد_ULength=(int8_t)مطابقت;
+        واپس سچ;
+    } ورنہ /* match==0 no match */ {
+        واپس جھوٹ;
     }
 }
 
 U_CFUNC UChar32
-ucnv_extSimpleMatchToU(const int32_t *cx,
-                       const char *source, int32_t length,
+ucnv_ext_Simple_مطابقت_مقصد_U(ثابت int32_t *cx,
+                       ثابت حرف *ماخذ, int32_t length,
                        UBool useFallback) {
     uint32_t value = 0;  /* initialize output-only param to 0 to silence gcc */
-    int32_t match;
+    int32_t مطابقت;
 
-    if(length<=0) {
-        return 0xffff;
+    اگر(length<=0) {
+        واپس 0xffff;
     }
 
     /* try to match */
-    match=ucnv_extMatchToU(cx, -1,
-                           source, length,
-                           nullptr, 0,
+    مطابقت=ucnv_ext_مطابقت_مقصد_U(cx, -1,
+                           ماخذ, length,
+                           خالی_اشاریہ, 0,
                            &value,
-                           useFallback, true);
-    if(match==length) {
+                           useFallback, سچ);
+    اگر(مطابقت==length) {
         /* write result for simple, single-character conversion */
-        if(UCNV_EXT_TO_U_IS_CODE_POINT(value)) {
-            return UCNV_EXT_TO_U_GET_CODE_POINT(value);
+        اگر(UCNV_EXT_مقصد_U_IS_رمز_نقطہ(value)) {
+            واپس UCNV_EXT_مقصد_U_GET_رمز_نقطہ(value);
         }
     }
 
@@ -360,57 +360,57 @@ ucnv_extSimpleMatchToU(const int32_t *cx,
      * - match==0: no match found in the first place
      * - match<0: partial match, not supported for simple conversion (and flush==true)
      */
-    return 0xfffe;
+    واپس 0xfffe;
 }
 
 /*
  * continue partial match with new input
  * never called for simple, single-character conversion
  */
-U_CFUNC void
-ucnv_extContinueMatchToU(UConverter *cnv,
-                         UConverterToUnicodeArgs *pArgs, int32_t srcIndex,
-                         UErrorCode *pErrorCode) {
+U_CFUNC خالی
+ucnv_ext_Continue_مطابقت_مقصد_U(UConverter *cnv,
+                         UConverter_مقصد_Unicode_دلائل *p_دلائل, int32_t src_اشاریہ,
+                         UError_رمز *p_Error_رمز) {
     uint32_t value = 0;  /* initialize output-only param to 0 to silence gcc */
-    int32_t match, length;
+    int32_t مطابقت, length;
 
-    match=ucnv_extMatchToU(cnv->sharedData->mbcs.extIndexes, (int8_t)UCNV_SISO_STATE(cnv),
-                           cnv->preToU, cnv->preToULength,
-                           pArgs->source, (int32_t)(pArgs->sourceLimit-pArgs->source),
+    مطابقت=ucnv_ext_مطابقت_مقصد_U(cnv->shared_ڈیٹا->mbcs.extIndexes, (int8_t)UCNV_SISO_STATE(cnv),
+                           cnv->pre_مقصد_U, cnv->pre_مقصد_ULength,
+                           p_دلائل->ماخذ, (int32_t)(p_دلائل->ماخذ_حد_بندی-p_دلائل->ماخذ),
                            &value,
-                           cnv->useFallback, pArgs->flush);
-    if(match>0) {
-        if(match>=cnv->preToULength) {
+                           cnv->useFallback, p_دلائل->flush);
+    اگر(مطابقت>0) {
+        اگر(مطابقت>=cnv->pre_مقصد_ULength) {
             /* advance src pointer for the consumed input */
-            pArgs->source+=match-cnv->preToULength;
-            cnv->preToULength=0;
-        } else {
+            p_دلائل->ماخذ+=مطابقت-cnv->pre_مقصد_ULength;
+            cnv->pre_مقصد_ULength=0;
+        } ورنہ {
             /* the match did not use all of preToU[] - keep the rest for replay */
-            length=cnv->preToULength-match;
-            uprv_memmove(cnv->preToU, cnv->preToU+match, length);
-            cnv->preToULength=(int8_t)-length;
+            length=cnv->pre_مقصد_ULength-مطابقت;
+            uprv_memmove(cnv->pre_مقصد_U, cnv->pre_مقصد_U+مطابقت, length);
+            cnv->pre_مقصد_ULength=(int8_t)-length;
         }
 
         /* write result */
-        ucnv_extWriteToU(cnv, cnv->sharedData->mbcs.extIndexes,
+        ucnv_ext_Write_مقصد_U(cnv, cnv->shared_ڈیٹا->mbcs.extIndexes,
                          value,
-                         &pArgs->target, pArgs->targetLimit,
-                         &pArgs->offsets, srcIndex,
-                         pErrorCode);
-    } else if(match<0) {
+                         &p_دلائل->ہدف, p_دلائل->ہدف_حد_بندی,
+                         &p_دلائل->offsets, src_اشاریہ,
+                         p_Error_رمز);
+    } ورنہ اگر(مطابقت<0) {
         /* save state for partial match */
-        const char *s;
+        ثابت حرف *s;
         int32_t j;
 
         /* just _append_ the newly consumed input to preToU[] */
-        s=pArgs->source;
-        match=-match;
-        for(j=cnv->preToULength; j<match; ++j) {
-            cnv->preToU[j]=*s++;
+        s=p_دلائل->ماخذ;
+        مطابقت=-مطابقت;
+        برائے(j=cnv->pre_مقصد_ULength; j<مطابقت; ++j) {
+            cnv->pre_مقصد_U[j]=*s++;
         }
-        pArgs->source=s; /* same as *src=srcLimit; because we reached the end of input */
-        cnv->preToULength=(int8_t)match;
-    } else /* match==0 */ {
+        p_دلائل->ماخذ=s; /* same as *src=srcLimit; because we reached the end of input */
+        cnv->pre_مقصد_ULength=(int8_t)مطابقت;
+    } ورنہ /* match==0 */ {
         /*
          * no match
          *
@@ -430,80 +430,80 @@ ucnv_extContinueMatchToU(UConverter *cnv,
          */
 
         /* move the first codepage character to the error field */
-        uprv_memcpy(cnv->toUBytes, cnv->preToU, cnv->preToUFirstLength);
-        cnv->toULength=cnv->preToUFirstLength;
+        uprv_memcpy(cnv->مقصد_UBytes, cnv->pre_مقصد_U, cnv->pre_مقصد_UFirst_لمبائی);
+        cnv->مقصد_ULength=cnv->pre_مقصد_UFirst_لمبائی;
 
         /* move the rest up inside the buffer */
-        length=cnv->preToULength-cnv->preToUFirstLength;
-        if(length>0) {
-            uprv_memmove(cnv->preToU, cnv->preToU+cnv->preToUFirstLength, length);
+        length=cnv->pre_مقصد_ULength-cnv->pre_مقصد_UFirst_لمبائی;
+        اگر(length>0) {
+            uprv_memmove(cnv->pre_مقصد_U, cnv->pre_مقصد_U+cnv->pre_مقصد_UFirst_لمبائی, length);
         }
 
         /* mark preToU for replay */
-        cnv->preToULength=(int8_t)-length;
+        cnv->pre_مقصد_ULength=(int8_t)-length;
 
         /* set the error code for unassigned */
-        *pErrorCode=U_INVALID_CHAR_FOUND;
+        *p_Error_رمز=U_INVALID_CHAR_ملا;
     }
 }
 
 /* from Unicode ------------------------------------------------------------- */
 
 // Use roundtrips, "good one-way" mappings, and some normal fallbacks.
-static inline UBool
-extFromUUseMapping(UBool useFallback, uint32_t value, UChar32 firstCP) {
-    return
-        ((value&UCNV_EXT_FROM_U_STATUS_MASK)!=0 ||
-            FROM_U_USE_FALLBACK(useFallback, firstCP)) &&
-        (value&UCNV_EXT_FROM_U_RESERVED_MASK)==0;
+ساکن اندرونی UBool
+extFromUUseMapping(UBool useFallback, uint32_t value, UChar32 پہلا_CP) {
+    واپس
+        ((value&UCNV_EXT_FROM_U_حالت_نقاب)!=0 ||
+            FROM_U_USE_FALLBACK(useFallback, پہلا_CP)) &&
+        (value&UCNV_EXT_FROM_U_RESERVED_نقاب)==0;
 }
 
 /*
  * @return index of the char16_t, if found; else <0
  */
-static inline int32_t
-ucnv_extFindFromU(const char16_t *fromUSection, int32_t length, char16_t u) {
-    int32_t i, start, limit;
+ساکن اندرونی int32_t
+ucnv_ext_ڈھونڈو_From_U(ثابت char16_t *fromUSection, int32_t length, char16_t u) {
+    int32_t i, آغاز, حد_بندی;
 
     /* binary search */
-    start=0;
-    limit=length;
-    for(;;) {
-        i=limit-start;
-        if(i<=1) {
-            break; /* done */
+    آغاز=0;
+    حد_بندی=length;
+    برائے(;;) {
+        i=حد_بندی-آغاز;
+        اگر(i<=1) {
+            توڑو; /*مکمل*/
         }
         /* start<limit-1 */
 
-        if(i<=4) {
+        اگر(i<=4) {
             /* linear search for the last part */
-            if(u<=fromUSection[start]) {
-                break;
+            اگر(u<=fromUSection[آغاز]) {
+                توڑو;
             }
-            if(++start<limit && u<=fromUSection[start]) {
-                break;
+            اگر(++آغاز<حد_بندی && u<=fromUSection[آغاز]) {
+                توڑو;
             }
-            if(++start<limit && u<=fromUSection[start]) {
-                break;
+            اگر(++آغاز<حد_بندی && u<=fromUSection[آغاز]) {
+                توڑو;
             }
             /* always break at start==limit-1 */
-            ++start;
-            break;
+            ++آغاز;
+            توڑو;
         }
 
-        i=(start+limit)/2;
-        if(u<fromUSection[i]) {
-            limit=i;
-        } else {
-            start=i;
+        i=(آغاز+حد_بندی)/2;
+        اگر(u<fromUSection[i]) {
+            حد_بندی=i;
+        } ورنہ {
+            آغاز=i;
         }
     }
 
     /* did we really find it? */
-    if(start<limit && u==fromUSection[start]) {
-        return start;
-    } else {
-        return -1; /* not found */
+    اگر(آغاز<حد_بندی && u==fromUSection[آغاز]) {
+        واپس آغاز;
+    } ورنہ {
+        واپس -1; /* not found */
     }
 }
 
@@ -527,41 +527,41 @@ ucnv_extFindFromU(const char16_t *fromUSection, int32_t length, char16_t u) {
  *         the matchLength is 2 if only firstCP matched, and >2 if firstCP and
  *         further code units matched
  */
-static int32_t
-ucnv_extMatchFromU(const int32_t *cx,
-                   UChar32 firstCP,
-                   const char16_t *pre, int32_t preLength,
-                   const char16_t *src, int32_t srcLength,
-                   uint32_t *pMatchValue,
+ساکن int32_t
+ucnv_ext_مطابقت_From_U(ثابت int32_t *cx,
+                   UChar32 پہلا_CP,
+                   ثابت char16_t *pre, int32_t pre_لمبائی,
+                   ثابت char16_t *src, int32_t src_لمبائی,
+                   uint32_t *p_مطابقت_قدر,
                    UBool useFallback, UBool flush) {
-    const uint16_t *stage12, *stage3;
-    const uint32_t *stage3b;
+    ثابت uint16_t *stage12, *stage3;
+    ثابت uint32_t *stage3b;
 
-    const char16_t *fromUTableUChars, *fromUSectionUChars;
-    const uint32_t *fromUTableValues, *fromUSectionValues;
+    ثابت char16_t *fromUTableUChars, *fromUSectionUChars;
+    ثابت uint32_t *from_UTable_اقدار, *from_USection_اقدار;
 
-    uint32_t value, matchValue;
-    int32_t i, j, idx, length, matchLength;
+    uint32_t value, مطابقت_قدر;
+    int32_t i, j, idx, length, مطابقت_لمبائی;
     char16_t c;
 
-    if(cx==nullptr) {
-        return 0; /* no extension data, no match */
+    اگر(cx==خالی_اشاریہ) {
+        واپس 0; /* no extension data, no match */
     }
 
     /* trie lookup of firstCP */
-    idx=firstCP>>10; /* stage 1 index */
-    if(idx>=cx[UCNV_EXT_FROM_U_STAGE_1_LENGTH]) {
-        return 0; /* the first code point is outside the trie */
+    idx=پہلا_CP>>10; /* stage 1 index */
+    اگر(idx>=cx[UCNV_EXT_FROM_U_STAGE_1_لمبائی]) {
+        واپس 0; /* the first code point is outside the trie */
     }
 
-    stage12=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_12_INDEX, uint16_t);
-    stage3=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_3_INDEX, uint16_t);
-    idx=UCNV_EXT_FROM_U(stage12, stage3, idx, firstCP);
+    stage12=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_12_اشاریہ, uint16_t);
+    stage3=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_3_اشاریہ, uint16_t);
+    idx=UCNV_EXT_FROM_U(stage12, stage3, idx, پہلا_CP);
 
-    stage3b=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_3B_INDEX, uint32_t);
+    stage3b=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_3_B_اشاریہ, uint32_t);
     value=stage3b[idx];
-    if(value==0) {
-        return 0;
+    اگر(value==0) {
+        واپس 0;
     }
 
     /*
@@ -570,218 +570,218 @@ ucnv_extMatchFromU(const int32_t *cx,
      * and do not even remember intermediate results with reserved bits used.
      */
 
-    if(UCNV_EXT_TO_U_IS_PARTIAL(value)) {
+    اگر(UCNV_EXT_مقصد_U_IS_PARTIAL(value)) {
         /* partial match, enter the loop below */
-        idx = static_cast<int32_t>(UCNV_EXT_FROM_U_GET_PARTIAL_INDEX(value));
+        idx = static_cast<int32_t>(UCNV_EXT_FROM_U_GET_PARTIAL_اشاریہ(value));
 
         /* initialize */
-        fromUTableUChars=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_UCHARS_INDEX, char16_t);
-        fromUTableValues=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_VALUES_INDEX, uint32_t);
+        fromUTableUChars=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_UCHARS_اشاریہ, char16_t);
+        from_UTable_اقدار=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_اقدار_اشاریہ, uint32_t);
 
-        matchValue=0;
-        i=j=matchLength=0;
+        مطابقت_قدر=0;
+        i=j=مطابقت_لمبائی=0;
 
         /* we must not remember fallback matches when not using fallbacks */
 
         /* match input units until there is a full match or the input is consumed */
-        for(;;) {
+        برائے(;;) {
             /* go to the next section */
             fromUSectionUChars=fromUTableUChars+idx;
-            fromUSectionValues=fromUTableValues+idx;
+            from_USection_اقدار=from_UTable_اقدار+idx;
 
             /* read first pair of the section */
             length=*fromUSectionUChars++;
-            value=*fromUSectionValues++;
-            if(value!=0 && extFromUUseMapping(useFallback, value, firstCP)) {
+            value=*from_USection_اقدار++;
+            اگر(value!=0 && extFromUUseMapping(useFallback, value, پہلا_CP)) {
                 /* remember longest match so far */
-                matchValue=value;
-                matchLength=2+i+j;
+                مطابقت_قدر=value;
+                مطابقت_لمبائی=2+i+j;
             }
 
             /* match pre[] then src[] */
-            if(i<preLength) {
+            اگر(i<pre_لمبائی) {
                 c=pre[i++];
-            } else if(j<srcLength) {
+            } ورنہ اگر(j<src_لمبائی) {
                 c=src[j++];
-            } else {
+            } ورنہ {
                 /* all input consumed, partial match */
-                if(flush || (length=(i+j))>UCNV_EXT_MAX_UCHARS) {
+                اگر(flush || (length=(i+j))>UCNV_EXT_MAX_UCHARS) {
                     /*
                      * end of the entire input stream, stop with the longest match so far
                      * or: partial match must not be longer than UCNV_EXT_MAX_UCHARS
                      * because it must fit into state buffers
                      */
-                    break;
-                } else {
+                    توڑو;
+                } ورنہ {
                     /* continue with more input next time */
-                    return -(2+length);
+                    واپس -(2+length);
                 }
             }
 
             /* search for the current char16_t */
-            idx=ucnv_extFindFromU(fromUSectionUChars, length, c);
-            if(idx<0) {
+            idx=ucnv_ext_ڈھونڈو_From_U(fromUSectionUChars, length, c);
+            اگر(idx<0) {
                 /* no match here, stop with the longest match so far */
-                break;
-            } else {
-                value=fromUSectionValues[idx];
-                if(UCNV_EXT_FROM_U_IS_PARTIAL(value)) {
+                توڑو;
+            } ورنہ {
+                value=from_USection_اقدار[idx];
+                اگر(UCNV_EXT_FROM_U_IS_PARTIAL(value)) {
                     /* partial match, continue */
-                    idx = static_cast<int32_t>(UCNV_EXT_FROM_U_GET_PARTIAL_INDEX(value));
-                } else {
-                    if(extFromUUseMapping(useFallback, value, firstCP)) {
+                    idx = static_cast<int32_t>(UCNV_EXT_FROM_U_GET_PARTIAL_اشاریہ(value));
+                } ورنہ {
+                    اگر(extFromUUseMapping(useFallback, value, پہلا_CP)) {
                         /* full match, stop with result */
-                        matchValue=value;
-                        matchLength=2+i+j;
-                    } else {
+                        مطابقت_قدر=value;
+                        مطابقت_لمبائی=2+i+j;
+                    } ورنہ {
                         /* full match on fallback not taken, stop with the longest match so far */
                     }
-                    break;
+                    توڑو;
                 }
             }
         }
 
-        if(matchLength==0) {
+        اگر(مطابقت_لمبائی==0) {
             /* no match at all */
-            return 0;
+            واپس 0;
         }
-    } else /* result from firstCP trie lookup */ {
-        if(extFromUUseMapping(useFallback, value, firstCP)) {
+    } ورنہ /* result from firstCP trie lookup */ {
+        اگر(extFromUUseMapping(useFallback, value, پہلا_CP)) {
             /* full match, stop with result */
-            matchValue=value;
-            matchLength=2;
-        } else {
+            مطابقت_قدر=value;
+            مطابقت_لمبائی=2;
+        } ورنہ {
             /* fallback not taken */
-            return 0;
+            واپس 0;
         }
     }
 
     /* return result */
-    if(matchValue==UCNV_EXT_FROM_U_SUBCHAR1) {
-        return 1; /* assert matchLength==2 */
+    اگر(مطابقت_قدر==UCNV_EXT_FROM_U_SUBCHAR1) {
+        واپس 1; /* assert matchLength==2 */
     }
 
-    *pMatchValue=matchValue;
-    return matchLength;
+    *p_مطابقت_قدر=مطابقت_قدر;
+    واپس مطابقت_لمبائی;
 }
 
 /*
  * @param value fromUnicode mapping table value; ignores roundtrip and reserved bits
  */
-static inline void
-ucnv_extWriteFromU(UConverter *cnv, const int32_t *cx,
+ساکن اندرونی خالی
+ucnv_extWriteFromU(UConverter *cnv, ثابت int32_t *cx,
                    uint32_t value,
-                   char **target, const char *targetLimit,
-                   int32_t **offsets, int32_t srcIndex,
-                   UErrorCode *pErrorCode) {
-    uint8_t buffer[1+UCNV_EXT_MAX_BYTES];
-    const uint8_t *result;
-    int32_t length, prevLength;
+                   حرف **ہدف, ثابت حرف *ہدف_حد_بندی,
+                   int32_t **offsets, int32_t src_اشاریہ,
+                   UError_رمز *p_Error_رمز) {
+    uint8_t بفر[1+UCNV_EXT_MAX_بائٹیں];
+    ثابت uint8_t *نتیجہ;
+    int32_t length, پچھلا_لمبائی;
 
-    length=UCNV_EXT_FROM_U_GET_LENGTH(value);
-    value = UCNV_EXT_FROM_U_GET_DATA(value);
+    length=UCNV_EXT_FROM_U_GET_لمبائی(value);
+    value = UCNV_EXT_FROM_U_GET_ڈیٹا(value);
 
     /* output the result */
-    if(length<=UCNV_EXT_FROM_U_MAX_DIRECT_LENGTH) {
+    اگر(length<=UCNV_EXT_FROM_U_MAX_براہ_راست_لمبائی) {
         /*
          * Generate a byte array and then write it below.
          * This is not the fastest possible way, but it should be ok for
          * extension mappings, and it is much simpler.
          * Offset and overflow handling are only done once this way.
          */
-        uint8_t *p=buffer+1; /* reserve buffer[0] for shiftByte below */
-        switch(length) {
-        case 3:
+        uint8_t *p=بفر+1; /* reserve buffer[0] for shiftByte below */
+        انتخاب(length) {
+        حالت 3:
             *p++ = static_cast<uint8_t>(value >> 16);
             U_FALLTHROUGH;
-        case 2:
+        حالت 2:
             *p++ = static_cast<uint8_t>(value >> 8);
             U_FALLTHROUGH;
-        case 1:
+        حالت 1:
             *p++ = static_cast<uint8_t>(value);
             U_FALLTHROUGH;
-        default:
-            break; /* will never occur */
+        طےشدہ:
+            توڑو; /* will never occur */
         }
-        result=buffer+1;
-    } else {
-        result=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_BYTES_INDEX, uint8_t)+value;
+        نتیجہ=بفر+1;
+    } ورنہ {
+        نتیجہ=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_بائٹیں_اشاریہ, uint8_t)+value;
     }
 
     /* with correct data we have length>0 */
 
-    if((prevLength=cnv->fromUnicodeStatus)!=0) {
+    اگر((پچھلا_لمبائی=cnv->from_Unicode_حالت)!=0) {
         /* handle SI/SO stateful output */
-        uint8_t shiftByte;
+        uint8_t سرکاؤ_Byte;
 
-        if(prevLength>1 && length==1) {
+        اگر(پچھلا_لمبائی>1 && length==1) {
             /* change from double-byte mode to single-byte */
-            shiftByte = static_cast<uint8_t>(UCNV_SI);
-            cnv->fromUnicodeStatus=1;
-        } else if(prevLength==1 && length>1) {
+            سرکاؤ_Byte = static_cast<uint8_t>(UCNV_SI);
+            cnv->from_Unicode_حالت=1;
+        } ورنہ اگر(پچھلا_لمبائی==1 && length>1) {
             /* change from single-byte mode to double-byte */
-            shiftByte = static_cast<uint8_t>(UCNV_SO);
-            cnv->fromUnicodeStatus=2;
-        } else {
-            shiftByte=0;
+            سرکاؤ_Byte = static_cast<uint8_t>(UCNV_SO);
+            cnv->from_Unicode_حالت=2;
+        } ورنہ {
+            سرکاؤ_Byte=0;
         }
 
-        if(shiftByte!=0) {
+        اگر(سرکاؤ_Byte!=0) {
             /* prepend the shift byte to the result bytes */
-            buffer[0]=shiftByte;
-            if(result!=buffer+1) {
-                uprv_memcpy(buffer+1, result, length);
+            بفر[0]=سرکاؤ_Byte;
+            اگر(نتیجہ!=بفر+1) {
+                uprv_memcpy(بفر+1, نتیجہ, length);
             }
-            result=buffer;
+            نتیجہ=بفر;
             ++length;
         }
     }
 
-    ucnv_fromUWriteBytes(cnv, reinterpret_cast<const char*>(result), length,
-                         target, targetLimit,
-                         offsets, srcIndex,
-                         pErrorCode);
+    ucnv_from_UWrite_بائٹیں(cnv, reinterpret_cast<ثابت حرف*>(نتیجہ), length,
+                         ہدف, ہدف_حد_بندی,
+                         offsets, src_اشاریہ,
+                         p_Error_رمز);
 }
 
 /*
  * target<targetLimit; set error code for overflow
  */
 U_CFUNC UBool
-ucnv_extInitialMatchFromU(UConverter *cnv, const int32_t *cx,
+ucnv_ext_Initial_مطابقت_From_U(UConverter *cnv, ثابت int32_t *cx,
                           UChar32 cp,
-                          const char16_t **src, const char16_t *srcLimit,
-                          char **target, const char *targetLimit,
-                          int32_t **offsets, int32_t srcIndex,
+                          ثابت char16_t **src, ثابت char16_t *src_حد_بندی,
+                          حرف **ہدف, ثابت حرف *ہدف_حد_بندی,
+                          int32_t **offsets, int32_t src_اشاریہ,
                           UBool flush,
-                          UErrorCode *pErrorCode) {
+                          UError_رمز *p_Error_رمز) {
     uint32_t value = 0;  /* initialize output-only param to 0 to silence gcc */
-    int32_t match;
+    int32_t مطابقت;
 
     /* try to match */
-    match=ucnv_extMatchFromU(cx, cp,
-                             nullptr, 0,
-                             *src, (int32_t)(srcLimit-*src),
+    مطابقت=ucnv_ext_مطابقت_From_U(cx, cp,
+                             خالی_اشاریہ, 0,
+                             *src, (int32_t)(src_حد_بندی-*src),
                              &value,
                              cnv->useFallback, flush);
 
     /* reject a match if the result is a single byte for DBCS-only */
-    if( match>=2 &&
-        !(UCNV_EXT_FROM_U_GET_LENGTH(value)==1 &&
-          cnv->sharedData->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY)
+    اگر( مطابقت>=2 &&
+        !(UCNV_EXT_FROM_U_GET_لمبائی(value)==1 &&
+          cnv->shared_ڈیٹا->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY)
     ) {
         /* advance src pointer for the consumed input */
-        *src+=match-2; /* remove 2 for the initial code point */
+        *src+=مطابقت-2; /* remove 2 for the initial code point */
 
         /* write result to target */
         ucnv_extWriteFromU(cnv, cx,
                            value,
-                           target, targetLimit,
-                           offsets, srcIndex,
-                           pErrorCode);
-        return true;
-    } else if(match<0) {
+                           ہدف, ہدف_حد_بندی,
+                           offsets, src_اشاریہ,
+                           p_Error_رمز);
+        واپس سچ;
+    } ورنہ اگر(مطابقت<0) {
         /* save state for partial match */
-        const char16_t *s;
+        ثابت char16_t *s;
         int32_t j;
 
         /* copy the first code point */
@@ -789,19 +789,19 @@ ucnv_extInitialMatchFromU(UConverter *cnv, const int32_t *cx,
 
         /* now copy the newly consumed input */
         s=*src;
-        match=-match-2; /* remove 2 for the initial code point */
-        for(j=0; j<match; ++j) {
+        مطابقت=-مطابقت-2; /* remove 2 for the initial code point */
+        برائے(j=0; j<مطابقت; ++j) {
             cnv->preFromU[j]=*s++;
         }
         *src=s; /* same as *src=srcLimit; because we reached the end of input */
-        cnv->preFromULength=(int8_t)match;
-        return true;
-    } else if(match==1) {
+        cnv->preFromULength=(int8_t)مطابقت;
+        واپس سچ;
+    } ورنہ اگر(مطابقت==1) {
         /* matched, no mapping but request for <subchar1> */
-        cnv->useSubChar1=true;
-        return false;
-    } else /* match==0 no match */ {
-        return false;
+        cnv->useSubChar1=سچ;
+        واپس جھوٹ;
+    } ورنہ /* match==0 no match */ {
+        واپس جھوٹ;
     }
 }
 
@@ -810,42 +810,42 @@ ucnv_extInitialMatchFromU(UConverter *cnv, const int32_t *cx,
  * @return number of bytes in *pValue; negative number if fallback; 0 for no mapping
  */
 U_CFUNC int32_t
-ucnv_extSimpleMatchFromU(const int32_t *cx,
-                         UChar32 cp, uint32_t *pValue,
+ucnv_ext_Simple_مطابقت_From_U(ثابت int32_t *cx,
+                         UChar32 cp, uint32_t *p_قدر,
                          UBool useFallback) {
     uint32_t value;
-    int32_t match;
+    int32_t مطابقت;
 
     /* try to match */
-    match=ucnv_extMatchFromU(cx,
+    مطابقت=ucnv_ext_مطابقت_From_U(cx,
                              cp,
-                             nullptr, 0,
-                             nullptr, 0,
+                             خالی_اشاریہ, 0,
+                             خالی_اشاریہ, 0,
                              &value,
-                             useFallback, true);
-    if(match>=2) {
+                             useFallback, سچ);
+    اگر(مطابقت>=2) {
         /* write result for simple, single-character conversion */
         int32_t length;
-        int isRoundtrip;
+        صحیح isRoundtrip;
 
         isRoundtrip=UCNV_EXT_FROM_U_IS_ROUNDTRIP(value);
-        length=UCNV_EXT_FROM_U_GET_LENGTH(value);
-        value = UCNV_EXT_FROM_U_GET_DATA(value);
+        length=UCNV_EXT_FROM_U_GET_لمبائی(value);
+        value = UCNV_EXT_FROM_U_GET_ڈیٹا(value);
 
-        if(length<=UCNV_EXT_FROM_U_MAX_DIRECT_LENGTH) {
-            *pValue=value;
-            return isRoundtrip ? length : -length;
-#if 0 /* not currently used */
-        } else if(length==4) {
+        اگر(length<=UCNV_EXT_FROM_U_MAX_براہ_راست_لمبائی) {
+            *p_قدر=value;
+            واپس isRoundtrip ? length : -length;
+#اگر 0 /* not currently used */
+        } ورنہ اگر(length==4) {
             /* de-serialize a 4-byte result */
-            const uint8_t *result=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_BYTES_INDEX, uint8_t)+value;
-            *pValue=
-                ((uint32_t)result[0]<<24)|
-                ((uint32_t)result[1]<<16)|
-                ((uint32_t)result[2]<<8)|
-                result[3];
-            return isRoundtrip ? 4 : -4;
-#endif
+            ثابت uint8_t *نتیجہ=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_بائٹیں_اشاریہ, uint8_t)+value;
+            *p_قدر=
+                ((uint32_t)نتیجہ[0]<<24)|
+                ((uint32_t)نتیجہ[1]<<16)|
+                ((uint32_t)نتیجہ[2]<<8)|
+                نتیجہ[3];
+            واپس isRoundtrip ? 4 : -4;
+#اگر_ختم
         }
     }
 
@@ -856,37 +856,37 @@ ucnv_extSimpleMatchFromU(const int32_t *cx,
      * - match==0: no match found in the first place
      * - match<0: partial match, not supported for simple conversion (and flush==true)
      */
-    return 0;
+    واپس 0;
 }
 
 /*
  * continue partial match with new input, requires cnv->preFromUFirstCP>=0
  * never called for simple, single-character conversion
  */
-U_CFUNC void
-ucnv_extContinueMatchFromU(UConverter *cnv,
-                           UConverterFromUnicodeArgs *pArgs, int32_t srcIndex,
-                           UErrorCode *pErrorCode) {
+U_CFUNC خالی
+ucnv_ext_Continue_مطابقت_From_U(UConverter *cnv,
+                           UConverter_From_Unicode_دلائل *p_دلائل, int32_t src_اشاریہ,
+                           UError_رمز *p_Error_رمز) {
     uint32_t value = 0;  /* initialize output-only param to 0 to silence gcc */
-    int32_t match;
+    int32_t مطابقت;
 
-    match=ucnv_extMatchFromU(cnv->sharedData->mbcs.extIndexes,
+    مطابقت=ucnv_ext_مطابقت_From_U(cnv->shared_ڈیٹا->mbcs.extIndexes,
                              cnv->preFromUFirstCP,
                              cnv->preFromU, cnv->preFromULength,
-                             pArgs->source, (int32_t)(pArgs->sourceLimit-pArgs->source),
+                             p_دلائل->ماخذ, (int32_t)(p_دلائل->ماخذ_حد_بندی-p_دلائل->ماخذ),
                              &value,
-                             cnv->useFallback, pArgs->flush);
-    if(match>=2) {
-        match-=2; /* remove 2 for the initial code point */
+                             cnv->useFallback, p_دلائل->flush);
+    اگر(مطابقت>=2) {
+        مطابقت-=2; /* remove 2 for the initial code point */
 
-        if(match>=cnv->preFromULength) {
+        اگر(مطابقت>=cnv->preFromULength) {
             /* advance src pointer for the consumed input */
-            pArgs->source+=match-cnv->preFromULength;
+            p_دلائل->ماخذ+=مطابقت-cnv->preFromULength;
             cnv->preFromULength=0;
-        } else {
+        } ورنہ {
             /* the match did not use all of preFromU[] - keep the rest for replay */
-            int32_t length=cnv->preFromULength-match;
-            u_memmove(cnv->preFromU, cnv->preFromU+match, length);
+            int32_t length=cnv->preFromULength-مطابقت;
+            u_memmove(cnv->preFromU, cnv->preFromU+مطابقت, length);
             cnv->preFromULength=(int8_t)-length;
         }
 
@@ -894,26 +894,26 @@ ucnv_extContinueMatchFromU(UConverter *cnv,
         cnv->preFromUFirstCP=U_SENTINEL;
 
         /* write result */
-        ucnv_extWriteFromU(cnv, cnv->sharedData->mbcs.extIndexes,
+        ucnv_extWriteFromU(cnv, cnv->shared_ڈیٹا->mbcs.extIndexes,
                            value,
-                           &pArgs->target, pArgs->targetLimit,
-                           &pArgs->offsets, srcIndex,
-                           pErrorCode);
-    } else if(match<0) {
+                           &p_دلائل->ہدف, p_دلائل->ہدف_حد_بندی,
+                           &p_دلائل->offsets, src_اشاریہ,
+                           p_Error_رمز);
+    } ورنہ اگر(مطابقت<0) {
         /* save state for partial match */
-        const char16_t *s;
+        ثابت char16_t *s;
         int32_t j;
 
         /* just _append_ the newly consumed input to preFromU[] */
-        s=pArgs->source;
-        match=-match-2; /* remove 2 for the initial code point */
-        for(j=cnv->preFromULength; j<match; ++j) {
+        s=p_دلائل->ماخذ;
+        مطابقت=-مطابقت-2; /* remove 2 for the initial code point */
+        برائے(j=cnv->preFromULength; j<مطابقت; ++j) {
             U_ASSERT(j>=0);
             cnv->preFromU[j]=*s++;
         }
-        pArgs->source=s; /* same as *src=srcLimit; because we reached the end of input */
-        cnv->preFromULength=(int8_t)match;
-    } else /* match==0 or 1 */ {
+        p_دلائل->ماخذ=s; /* same as *src=srcLimit; because we reached the end of input */
+        cnv->preFromULength=(int8_t)مطابقت;
+    } ورنہ /* match==0 or 1 */ {
         /*
          * no match
          *
@@ -932,9 +932,9 @@ ucnv_extContinueMatchFromU(UConverter *cnv,
          *    The replay will be handled by the ucnv.c conversion code.
          */
 
-        if(match==1) {
+        اگر(مطابقت==1) {
             /* matched, no mapping but request for <subchar1> */
-            cnv->useSubChar1=true;
+            cnv->useSubChar1=سچ;
         }
 
         /* move the first code point to the error field */
@@ -945,13 +945,13 @@ ucnv_extContinueMatchFromU(UConverter *cnv,
         cnv->preFromULength=-cnv->preFromULength;
 
         /* set the error code for unassigned */
-        *pErrorCode=U_INVALID_CHAR_FOUND;
+        *p_Error_رمز=U_INVALID_CHAR_ملا;
     }
 }
 
-static UBool
-extSetUseMapping(UConverterUnicodeSet which, int32_t minLength, uint32_t value) {
-    if(which==UCNV_ROUNDTRIP_SET) {
+ساکن UBool
+ext_سیٹ_Use_Mapping(UConverter_Unicode_سیٹ which, int32_t min_لمبائی, uint32_t value) {
+    اگر(which==UCNV_ROUNDTRIP_سیٹ) {
         // Add only code points for which the roundtrip flag is set.
         // Do not add any fallbacks, even if ucnv_fromUnicode() would use them
         // (fallbacks from PUA). See the API docs for ucnv_getUnicodeSet().
@@ -959,185 +959,185 @@ extSetUseMapping(UConverterUnicodeSet which, int32_t minLength, uint32_t value) 
         // By analogy, also do not add "good one-way" mappings.
         //
         // Do not add entries with reserved bits set.
-        if(((value&(UCNV_EXT_FROM_U_ROUNDTRIP_FLAG|UCNV_EXT_FROM_U_RESERVED_MASK))!=
+        اگر(((value&(UCNV_EXT_FROM_U_ROUNDTRIP_FLAG|UCNV_EXT_FROM_U_RESERVED_نقاب))!=
                 UCNV_EXT_FROM_U_ROUNDTRIP_FLAG)) {
-            return false;
+            واپس جھوٹ;
         }
-    } else /* UCNV_ROUNDTRIP_AND_FALLBACK_SET */ {
+    } ورنہ /* UCNV_ROUNDTRIP_AND_FALLBACK_SET */ {
         // Do not add entries with reserved bits set.
-        if((value&UCNV_EXT_FROM_U_RESERVED_MASK)!=0) {
-            return false;
+        اگر((value&UCNV_EXT_FROM_U_RESERVED_نقاب)!=0) {
+            واپس جھوٹ;
         }
     }
     // Do not add <subchar1> entries or other (future?) pseudo-entries
     // with an output length of 0.
-    return UCNV_EXT_FROM_U_GET_LENGTH(value)>=minLength;
+    واپس UCNV_EXT_FROM_U_GET_لمبائی(value)>=min_لمبائی;
 }
 
-static void
-ucnv_extGetUnicodeSetString(const UConverterSharedData *sharedData,
-                            const int32_t *cx,
-                            const USetAdder *sa,
-                            UConverterUnicodeSet which,
-                            int32_t minLength,
-                            UChar32 firstCP,
+ساکن خالی
+ucnv_ext_Get_Unicode_سیٹ_String(ثابت UConverter_Shared_ڈیٹا *shared_ڈیٹا,
+                            ثابت int32_t *cx,
+                            ثابت USetAdder *sa,
+                            UConverter_Unicode_سیٹ which,
+                            int32_t min_لمبائی,
+                            UChar32 پہلا_CP,
                             char16_t s[UCNV_EXT_MAX_UCHARS], int32_t length,
-                            int32_t sectionIndex,
-                            UErrorCode *pErrorCode) {
-    const char16_t *fromUSectionUChars;
-    const uint32_t *fromUSectionValues;
+                            int32_t section_اشاریہ,
+                            UError_رمز *p_Error_رمز) {
+    ثابت char16_t *fromUSectionUChars;
+    ثابت uint32_t *from_USection_اقدار;
 
     uint32_t value;
     int32_t i, count;
 
-    fromUSectionUChars=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_UCHARS_INDEX, char16_t)+sectionIndex;
-    fromUSectionValues=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_VALUES_INDEX, uint32_t)+sectionIndex;
+    fromUSectionUChars=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_UCHARS_اشاریہ, char16_t)+section_اشاریہ;
+    from_USection_اقدار=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_اقدار_اشاریہ, uint32_t)+section_اشاریہ;
 
     /* read first pair of the section */
     count=*fromUSectionUChars++;
-    value=*fromUSectionValues++;
+    value=*from_USection_اقدار++;
 
-    if(extSetUseMapping(which, minLength, value)) {
-        if(length==U16_LENGTH(firstCP)) {
+    اگر(ext_سیٹ_Use_Mapping(which, min_لمبائی, value)) {
+        اگر(length==U16_لمبائی(پہلا_CP)) {
             /* add the initial code point */
-            sa->add(sa->set, firstCP);
-        } else {
+            sa->جوڑو(sa->سیٹ, پہلا_CP);
+        } ورنہ {
             /* add the string so far */
-            sa->addString(sa->set, s, length);
+            sa->جوڑو_String(sa->سیٹ, s, length);
         }
     }
 
-    for(i=0; i<count; ++i) {
+    برائے(i=0; i<count; ++i) {
         /* append this code unit and recurse or add the string */
         s[length]=fromUSectionUChars[i];
-        value=fromUSectionValues[i];
+        value=from_USection_اقدار[i];
 
-        if(value==0) {
+        اگر(value==0) {
             /* no mapping, do nothing */
-        } else if(UCNV_EXT_FROM_U_IS_PARTIAL(value)) {
-            ucnv_extGetUnicodeSetString(
-                sharedData, cx, sa, which, minLength,
-                firstCP, s, length+1,
-                static_cast<int32_t>(UCNV_EXT_FROM_U_GET_PARTIAL_INDEX(value)),
-                pErrorCode);
-        } else if(extSetUseMapping(which, minLength, value)) {
-            sa->addString(sa->set, s, length+1);
+        } ورنہ اگر(UCNV_EXT_FROM_U_IS_PARTIAL(value)) {
+            ucnv_ext_Get_Unicode_سیٹ_String(
+                shared_ڈیٹا, cx, sa, which, min_لمبائی,
+                پہلا_CP, s, length+1,
+                static_cast<int32_t>(UCNV_EXT_FROM_U_GET_PARTIAL_اشاریہ(value)),
+                p_Error_رمز);
+        } ورنہ اگر(ext_سیٹ_Use_Mapping(which, min_لمبائی, value)) {
+            sa->جوڑو_String(sa->سیٹ, s, length+1);
         }
     }
 }
 
-U_CFUNC void
-ucnv_extGetUnicodeSet(const UConverterSharedData *sharedData,
-                      const USetAdder *sa,
-                      UConverterUnicodeSet which,
-                      UConverterSetFilter filter,
-                      UErrorCode *pErrorCode) {
-    const int32_t *cx;
-    const uint16_t *stage12, *stage3, *ps2, *ps3;
-    const uint32_t *stage3b;
+U_CFUNC خالی
+ucnv_ext_Get_Unicode_سیٹ(ثابت UConverter_Shared_ڈیٹا *shared_ڈیٹا,
+                      ثابت USetAdder *sa,
+                      UConverter_Unicode_سیٹ which,
+                      UConverter_سیٹ_Filter filter,
+                      UError_رمز *p_Error_رمز) {
+    ثابت int32_t *cx;
+    ثابت uint16_t *stage12, *stage3, *ps2, *ps3;
+    ثابت uint32_t *stage3b;
 
     uint32_t value;
-    int32_t st1, stage1Length, st2, st3, minLength;
+    int32_t st1, stage1_لمبائی, st2, st3, min_لمبائی;
 
     char16_t s[UCNV_EXT_MAX_UCHARS];
     UChar32 c;
     int32_t length;
 
-    cx=sharedData->mbcs.extIndexes;
-    if(cx==nullptr) {
-        return;
+    cx=shared_ڈیٹا->mbcs.extIndexes;
+    اگر(cx==خالی_اشاریہ) {
+        واپس;
     }
 
-    stage12=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_12_INDEX, uint16_t);
-    stage3=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_3_INDEX, uint16_t);
-    stage3b=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_3B_INDEX, uint32_t);
+    stage12=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_12_اشاریہ, uint16_t);
+    stage3=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_3_اشاریہ, uint16_t);
+    stage3b=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_3_B_اشاریہ, uint32_t);
 
-    stage1Length=cx[UCNV_EXT_FROM_U_STAGE_1_LENGTH];
+    stage1_لمبائی=cx[UCNV_EXT_FROM_U_STAGE_1_لمبائی];
 
     /* enumerate the from-Unicode trie table */
     c=0; /* keep track of the current code point while enumerating */
 
-    if(filter==UCNV_SET_FILTER_2022_CN) {
-        minLength=3;
-    } else if( sharedData->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY ||
-               filter!=UCNV_SET_FILTER_NONE
+    اگر(filter==UCNV_سیٹ_FILTER_2022_CN) {
+        min_لمبائی=3;
+    } ورنہ اگر( shared_ڈیٹا->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY ||
+               filter!=UCNV_سیٹ_FILTER_NONE
     ) {
         /* DBCS-only, ignore single-byte results */
-        minLength=2;
-    } else {
-        minLength=1;
+        min_لمبائی=2;
+    } ورنہ {
+        min_لمبائی=1;
     }
 
     /*
      * the trie enumeration is almost the same as
      * in MBCSGetUnicodeSet() for MBCS_OUTPUT_1
      */
-    for(st1=0; st1<stage1Length; ++st1) {
+    برائے(st1=0; st1<stage1_لمبائی; ++st1) {
         st2=stage12[st1];
-        if(st2>stage1Length) {
+        اگر(st2>stage1_لمبائی) {
             ps2=stage12+st2;
-            for(st2=0; st2<64; ++st2) {
-                if((st3=(int32_t)ps2[st2]<<UCNV_EXT_STAGE_2_LEFT_SHIFT)!=0) {
+            برائے(st2=0; st2<64; ++st2) {
+                اگر((st3=(int32_t)ps2[st2]<<UCNV_EXT_STAGE_2_بایاں_سرکاؤ)!=0) {
                     /* read the stage 3 block */
                     ps3=stage3+st3;
 
-                    do {
+                    کرو {
                         value=stage3b[*ps3++];
-                        if(value==0) {
+                        اگر(value==0) {
                             /* no mapping, do nothing */
-                        } else if(UCNV_EXT_FROM_U_IS_PARTIAL(value)) {
+                        } ورنہ اگر(UCNV_EXT_FROM_U_IS_PARTIAL(value)) {
                             // Recurse for partial results.
                             length=0;
                             U16_APPEND_UNSAFE(s, length, c);
-                            ucnv_extGetUnicodeSetString(
-                                sharedData, cx, sa, which, minLength,
+                            ucnv_ext_Get_Unicode_سیٹ_String(
+                                shared_ڈیٹا, cx, sa, which, min_لمبائی,
                                 c, s, length,
-                                (int32_t)UCNV_EXT_FROM_U_GET_PARTIAL_INDEX(value),
-                                pErrorCode);
-                        } else if(extSetUseMapping(which, minLength, value)) {
-                            switch(filter) {
-                            case UCNV_SET_FILTER_2022_CN:
-                                if(!(UCNV_EXT_FROM_U_GET_LENGTH(value)==3 && UCNV_EXT_FROM_U_GET_DATA(value)<=0x82ffff)) {
-                                    continue;
+                                (int32_t)UCNV_EXT_FROM_U_GET_PARTIAL_اشاریہ(value),
+                                p_Error_رمز);
+                        } ورنہ اگر(ext_سیٹ_Use_Mapping(which, min_لمبائی, value)) {
+                            انتخاب(filter) {
+                            حالت UCNV_سیٹ_FILTER_2022_CN:
+                                اگر(!(UCNV_EXT_FROM_U_GET_لمبائی(value)==3 && UCNV_EXT_FROM_U_GET_ڈیٹا(value)<=0x82ffff)) {
+                                    جاری;
                                 }
-                                break;
-                            case UCNV_SET_FILTER_SJIS:
-                                if(!(UCNV_EXT_FROM_U_GET_LENGTH(value)==2 && (value=UCNV_EXT_FROM_U_GET_DATA(value))>=0x8140 && value<=0xeffc)) {
-                                    continue;
+                                توڑو;
+                            حالت UCNV_سیٹ_FILTER_SJIS:
+                                اگر(!(UCNV_EXT_FROM_U_GET_لمبائی(value)==2 && (value=UCNV_EXT_FROM_U_GET_ڈیٹا(value))>=0x8140 && value<=0xeffc)) {
+                                    جاری;
                                 }
-                                break;
-                            case UCNV_SET_FILTER_GR94DBCS:
-                                if(!(UCNV_EXT_FROM_U_GET_LENGTH(value)==2 &&
-                                     (uint16_t)((value=UCNV_EXT_FROM_U_GET_DATA(value))-0xa1a1)<=(0xfefe - 0xa1a1) &&
+                                توڑو;
+                            حالت UCNV_سیٹ_FILTER_GR94_DBCS:
+                                اگر(!(UCNV_EXT_FROM_U_GET_لمبائی(value)==2 &&
+                                     (uint16_t)((value=UCNV_EXT_FROM_U_GET_ڈیٹا(value))-0xa1a1)<=(0xfefe - 0xa1a1) &&
                                      (uint8_t)(value-0xa1)<=(0xfe - 0xa1))) {
-                                    continue;
+                                    جاری;
                                 }
-                                break;
-                            case UCNV_SET_FILTER_HZ:
-                                if(!(UCNV_EXT_FROM_U_GET_LENGTH(value)==2 &&
-                                     (uint16_t)((value=UCNV_EXT_FROM_U_GET_DATA(value))-0xa1a1)<=(0xfdfe - 0xa1a1) &&
+                                توڑو;
+                            حالت UCNV_سیٹ_FILTER_HZ:
+                                اگر(!(UCNV_EXT_FROM_U_GET_لمبائی(value)==2 &&
+                                     (uint16_t)((value=UCNV_EXT_FROM_U_GET_ڈیٹا(value))-0xa1a1)<=(0xfdfe - 0xa1a1) &&
                                      (uint8_t)(value-0xa1)<=(0xfe - 0xa1))) {
-                                    continue;
+                                    جاری;
                                 }
-                                break;
-                            default:
+                                توڑو;
+                            طےشدہ:
                                 /*
                                  * UCNV_SET_FILTER_NONE,
                                  * or UCNV_SET_FILTER_DBCS_ONLY which is handled via minLength
                                  */
-                                break;
+                                توڑو;
                             }
-                            sa->add(sa->set, c);
+                            sa->جوڑو(sa->سیٹ, c);
                         }
-                    } while((++c&0xf)!=0);
-                } else {
+                    } جب((++c&0xf)!=0);
+                } ورنہ {
                     c+=16; /* empty stage 3 block */
                 }
             }
-        } else {
+        } ورنہ {
             c+=1024; /* empty stage 2 block */
         }
     }
 }
 
-#endif /* #if !UCONFIG_NO_LEGACY_CONVERSION */
+#اگر_ختم /* #if !UCONFIG_NO_LEGACY_CONVERSION */

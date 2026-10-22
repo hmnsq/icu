@@ -15,47 +15,47 @@
 ******************************************************************************
 */
 
-#include "unicode/uscript.h"
-#include "usc_impl.h"
-#include "cmemory.h"
+#شامل "unicode/uscript.h"
+#شامل "usc_impl.h"
+#شامل "cmemory.h"
 
-#define PAREN_STACK_DEPTH 32
+#تعریف_کرو PAREN_ڈھیر_گہرائی 32
 
-#define MOD(sp) ((sp) % PAREN_STACK_DEPTH)
-#define LIMIT_INC(sp) (((sp) < PAREN_STACK_DEPTH)? (sp) + 1 : PAREN_STACK_DEPTH)
-#define INC(sp,count) (MOD((sp) + (count)))
-#define INC1(sp) (INC(sp, 1))
-#define DEC(sp,count) (MOD((sp) + PAREN_STACK_DEPTH - (count)))
-#define DEC1(sp) (DEC(sp, 1))
-#define STACK_IS_EMPTY(scriptRun) ((scriptRun)->pushCount <= 0)
-#define STACK_IS_NOT_EMPTY(scriptRun) (! STACK_IS_EMPTY(scriptRun))
-#define TOP(scriptRun) ((scriptRun)->parenStack[(scriptRun)->parenSP])
-#define SYNC_FIXUP(scriptRun) ((scriptRun)->fixupCount = 0)
+#تعریف_کرو MOD(sp) ((sp) % PAREN_ڈھیر_گہرائی)
+#تعریف_کرو حد_بندی_INC(sp) (((sp) < PAREN_ڈھیر_گہرائی)? (sp) + 1 : PAREN_ڈھیر_گہرائی)
+#تعریف_کرو INC(sp,count) (MOD((sp) + (count)))
+#تعریف_کرو INC1(sp) (INC(sp, 1))
+#تعریف_کرو DEC(sp,count) (MOD((sp) + PAREN_ڈھیر_گہرائی - (count)))
+#تعریف_کرو DEC1(sp) (DEC(sp, 1))
+#تعریف_کرو ڈھیر_IS_خالی_خانے(script_تسلسل) ((script_تسلسل)->ڈالو_گنتی <= 0)
+#تعریف_کرو ڈھیر_IS_NOT_خالی_خانے(script_تسلسل) (! ڈھیر_IS_خالی_خانے(script_تسلسل))
+#تعریف_کرو چوٹی_2(script_تسلسل) ((script_تسلسل)->paren_ڈھیر[(script_تسلسل)->parenSP])
+#تعریف_کرو SYNC_FIXUP(script_تسلسل) ((script_تسلسل)->fixup_گنتی = 0)
 
-struct ParenStackEntry
+ساخت Paren_ڈھیر_اندراج
 {
-    int32_t pairIndex;
-    UScriptCode scriptCode;
+    int32_t pair_اشاریہ;
+    UScript_رمز script_رمز;
 };
 
-struct UScriptRun
+ساخت UScript_تسلسل
 {
-    int32_t textLength;
-    const char16_t *textArray;
+    int32_t متن_لمبائی;
+    ثابت char16_t *متن_Array;
 
-    int32_t scriptStart;
-    int32_t scriptLimit;
-    UScriptCode scriptCode;
+    int32_t script_آغاز;
+    int32_t script_حد_بندی;
+    UScript_رمز script_رمز;
 
-    struct ParenStackEntry parenStack[PAREN_STACK_DEPTH];
+    ساخت Paren_ڈھیر_اندراج paren_ڈھیر[PAREN_ڈھیر_گہرائی];
     int32_t parenSP;
-    int32_t pushCount;
-    int32_t fixupCount;
+    int32_t ڈالو_گنتی;
+    int32_t fixup_گنتی;
 };
 
-static int8_t highBit(int32_t value);
+ساکن int8_t بلند_ثنائی_ہندسہ(int32_t value);
 
-static const UChar32 pairedChars[] = {
+ساکن ثابت UChar32 pairedChars[] = {
     0x0028, 0x0029, /* ascii paired punctuation */
     0x003c, 0x003e,
     0x005b, 0x005d,
@@ -75,223 +75,223 @@ static const UChar32 pairedChars[] = {
     0x301a, 0x301b
 };
 
-static void push(UScriptRun *scriptRun, int32_t pairIndex, UScriptCode scriptCode)
+ساکن خالی push(UScript_تسلسل *script_تسلسل, int32_t pair_اشاریہ, UScript_رمز script_رمز)
 {
-    scriptRun->pushCount  = LIMIT_INC(scriptRun->pushCount);
-    scriptRun->fixupCount = LIMIT_INC(scriptRun->fixupCount);
+    script_تسلسل->ڈالو_گنتی  = حد_بندی_INC(script_تسلسل->ڈالو_گنتی);
+    script_تسلسل->fixup_گنتی = حد_بندی_INC(script_تسلسل->fixup_گنتی);
     
-    scriptRun->parenSP = INC1(scriptRun->parenSP);
-    scriptRun->parenStack[scriptRun->parenSP].pairIndex  = pairIndex;
-    scriptRun->parenStack[scriptRun->parenSP].scriptCode = scriptCode;
+    script_تسلسل->parenSP = INC1(script_تسلسل->parenSP);
+    script_تسلسل->paren_ڈھیر[script_تسلسل->parenSP].pair_اشاریہ  = pair_اشاریہ;
+    script_تسلسل->paren_ڈھیر[script_تسلسل->parenSP].script_رمز = script_رمز;
 }
 
-static void pop(UScriptRun *scriptRun)
+ساکن خالی pop(UScript_تسلسل *script_تسلسل)
 {
-    if (STACK_IS_EMPTY(scriptRun)) {
-        return;
+    اگر (ڈھیر_IS_خالی_خانے(script_تسلسل)) {
+        واپس;
     }
     
-    if (scriptRun->fixupCount > 0) {
-        scriptRun->fixupCount -= 1;
+    اگر (script_تسلسل->fixup_گنتی > 0) {
+        script_تسلسل->fixup_گنتی -= 1;
     }
     
-    scriptRun->pushCount -= 1;
-    scriptRun->parenSP = DEC1(scriptRun->parenSP);
+    script_تسلسل->ڈالو_گنتی -= 1;
+    script_تسلسل->parenSP = DEC1(script_تسلسل->parenSP);
     
     /* If the stack is now empty, reset the stack
        pointers to their initial values.
      */
-    if (STACK_IS_EMPTY(scriptRun)) {
-        scriptRun->parenSP = -1;
+    اگر (ڈھیر_IS_خالی_خانے(script_تسلسل)) {
+        script_تسلسل->parenSP = -1;
     }
 }
 
-static void fixup(UScriptRun *scriptRun, UScriptCode scriptCode)
+ساکن خالی fixup(UScript_تسلسل *script_تسلسل, UScript_رمز script_رمز)
 {
-    int32_t fixupSP = DEC(scriptRun->parenSP, scriptRun->fixupCount);
+    int32_t fixupSP = DEC(script_تسلسل->parenSP, script_تسلسل->fixup_گنتی);
     
-    while (scriptRun->fixupCount-- > 0) {
+    جب (script_تسلسل->fixup_گنتی-- > 0) {
         fixupSP = INC1(fixupSP);
-        scriptRun->parenStack[fixupSP].scriptCode = scriptCode;
+        script_تسلسل->paren_ڈھیر[fixupSP].script_رمز = script_رمز;
     }
 }
 
-static int8_t
-highBit(int32_t value)
+ساکن int8_t
+بلند_ثنائی_ہندسہ(int32_t value)
 {
     int8_t bit = 0;
 
-    if (value <= 0) {
-        return -32;
+    اگر (value <= 0) {
+        واپس -32;
     }
 
-    if (value >= 1 << 16) {
+    اگر (value >= 1 << 16) {
         value >>= 16;
         bit += 16;
     }
 
-    if (value >= 1 << 8) {
+    اگر (value >= 1 << 8) {
         value >>= 8;
         bit += 8;
     }
 
-    if (value >= 1 << 4) {
+    اگر (value >= 1 << 4) {
         value >>= 4;
         bit += 4;
     }
 
-    if (value >= 1 << 2) {
+    اگر (value >= 1 << 2) {
         value >>= 2;
         bit += 2;
     }
 
-    if (value >= 1 << 1) {
+    اگر (value >= 1 << 1) {
         //value >>= 1;
         bit += 1;
     }
 
-    return bit;
+    واپس bit;
 }
 
-static int32_t
-getPairIndex(UChar32 ch)
+ساکن int32_t
+get_Pair_اشاریہ(UChar32 ch)
 {
-    int32_t pairedCharCount = UPRV_LENGTHOF(pairedChars);
-    int32_t pairedCharPower = 1 << highBit(pairedCharCount);
-    int32_t pairedCharExtra = pairedCharCount - pairedCharPower;
+    int32_t paired_Char_گنتی = UPRV_LENGTHOF(pairedChars);
+    int32_t pairedCharPower = 1 << بلند_ثنائی_ہندسہ(paired_Char_گنتی);
+    int32_t pairedCharExtra = paired_Char_گنتی - pairedCharPower;
 
     int32_t probe = pairedCharPower;
-    int32_t pairIndex = 0;
+    int32_t pair_اشاریہ = 0;
 
-    if (ch >= pairedChars[pairedCharExtra]) {
-        pairIndex = pairedCharExtra;
+    اگر (ch >= pairedChars[pairedCharExtra]) {
+        pair_اشاریہ = pairedCharExtra;
     }
 
-    while (probe > (1 << 0)) {
+    جب (probe > (1 << 0)) {
         probe >>= 1;
 
-        if (ch >= pairedChars[pairIndex + probe]) {
-            pairIndex += probe;
+        اگر (ch >= pairedChars[pair_اشاریہ + probe]) {
+            pair_اشاریہ += probe;
         }
     }
 
-    if (pairedChars[pairIndex] != ch) {
-        pairIndex = -1;
+    اگر (pairedChars[pair_اشاریہ] != ch) {
+        pair_اشاریہ = -1;
     }
 
-    return pairIndex;
+    واپس pair_اشاریہ;
 }
 
-static UBool
-sameScript(UScriptCode scriptOne, UScriptCode scriptTwo)
+ساکن UBool
+sameScript(UScript_رمز scriptOne, UScript_رمز scriptTwo)
 {
-    return scriptOne <= USCRIPT_INHERITED || scriptTwo <= USCRIPT_INHERITED || scriptOne == scriptTwo;
+    واپس scriptOne <= USCRIPT_INHERITED || scriptTwo <= USCRIPT_INHERITED || scriptOne == scriptTwo;
 }
 
-U_CAPI UScriptRun * U_EXPORT2
-uscript_openRun(const char16_t *src, int32_t length, UErrorCode *pErrorCode)
+U_CAPI UScript_تسلسل * U_EXPORT2
+uscript_open_تسلسل(ثابت char16_t *src, int32_t length, UError_رمز *p_Error_رمز)
 {
-    UScriptRun *result = nullptr;
+    UScript_تسلسل *نتیجہ = خالی_اشاریہ;
 
-    if (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    اگر (p_Error_رمز == خالی_اشاریہ || U_FAILURE(*p_Error_رمز)) {
+        واپس خالی_اشاریہ;
     }
 
-    result = (UScriptRun *)uprv_malloc(sizeof (UScriptRun));
+    نتیجہ = (UScript_تسلسل *)uprv_malloc(حجم (UScript_تسلسل));
 
-    if (result == nullptr) {
-        *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    اگر (نتیجہ == خالی_اشاریہ) {
+        *p_Error_رمز = U_حافظہ_تخصیص_ERROR;
+        واپس خالی_اشاریہ;
     }
 
-    uscript_setRunText(result, src, length, pErrorCode);
+    uscript_سیٹ_تسلسل_متن(نتیجہ, src, length, p_Error_رمز);
 
     /* Release the UScriptRun if uscript_setRunText() returns an error */
-    if (U_FAILURE(*pErrorCode)) {
-        uprv_free(result);
-        result = nullptr;
+    اگر (U_FAILURE(*p_Error_رمز)) {
+        uprv_free(نتیجہ);
+        نتیجہ = خالی_اشاریہ;
     }
 
-    return result;
+    واپس نتیجہ;
 }
 
-U_CAPI void U_EXPORT2
-uscript_closeRun(UScriptRun *scriptRun)
+U_CAPI خالی U_EXPORT2
+uscript_close_تسلسل(UScript_تسلسل *script_تسلسل)
 {
-    if (scriptRun != nullptr) {
-        uprv_free(scriptRun);
-    }
-}
-
-U_CAPI void U_EXPORT2
-uscript_resetRun(UScriptRun *scriptRun)
-{
-    if (scriptRun != nullptr) {
-        scriptRun->scriptStart = 0;
-        scriptRun->scriptLimit = 0;
-        scriptRun->scriptCode  = USCRIPT_INVALID_CODE;
-        scriptRun->parenSP     = -1;
-        scriptRun->pushCount   =  0;
-        scriptRun->fixupCount  =  0;
+    اگر (script_تسلسل != خالی_اشاریہ) {
+        uprv_free(script_تسلسل);
     }
 }
 
-U_CAPI void U_EXPORT2
-uscript_setRunText(UScriptRun *scriptRun, const char16_t *src, int32_t length, UErrorCode *pErrorCode)
+U_CAPI خالی U_EXPORT2
+uscript_reset_تسلسل(UScript_تسلسل *script_تسلسل)
 {
-    if (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    اگر (script_تسلسل != خالی_اشاریہ) {
+        script_تسلسل->script_آغاز = 0;
+        script_تسلسل->script_حد_بندی = 0;
+        script_تسلسل->script_رمز  = USCRIPT_INVALID_رمز;
+        script_تسلسل->parenSP     = -1;
+        script_تسلسل->ڈالو_گنتی   =  0;
+        script_تسلسل->fixup_گنتی  =  0;
+    }
+}
+
+U_CAPI خالی U_EXPORT2
+uscript_سیٹ_تسلسل_متن(UScript_تسلسل *script_تسلسل, ثابت char16_t *src, int32_t length, UError_رمز *p_Error_رمز)
+{
+    اگر (p_Error_رمز == خالی_اشاریہ || U_FAILURE(*p_Error_رمز)) {
+        واپس;
     }
 
-    if (scriptRun == nullptr || length < 0 || ((src == nullptr) != (length == 0))) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    اگر (script_تسلسل == خالی_اشاریہ || length < 0 || ((src == خالی_اشاریہ) != (length == 0))) {
+        *p_Error_رمز = U_ILLEGAL_دلیل_ERROR;
+        واپس;
     }
 
-    scriptRun->textArray  = src;
-    scriptRun->textLength = length;
+    script_تسلسل->متن_Array  = src;
+    script_تسلسل->متن_لمبائی = length;
 
-    uscript_resetRun(scriptRun);
+    uscript_reset_تسلسل(script_تسلسل);
 }
 
 U_CAPI UBool U_EXPORT2
-uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, UScriptCode *pRunScript)
+uscript_اگلا_تسلسل(UScript_تسلسل *script_تسلسل, int32_t *p_تسلسل_آغاز, int32_t *p_تسلسل_حد_بندی, UScript_رمز *p_تسلسل_Script)
 {
-    UErrorCode error = U_ZERO_ERROR;
+    UError_رمز error = U_ZERO_ERROR;
 
     /* if we've fallen off the end of the text, we're done */
-    if (scriptRun == nullptr || scriptRun->scriptLimit >= scriptRun->textLength) {
-        return false;
+    اگر (script_تسلسل == خالی_اشاریہ || script_تسلسل->script_حد_بندی >= script_تسلسل->متن_لمبائی) {
+        واپس جھوٹ;
     }
     
-    SYNC_FIXUP(scriptRun);
-    scriptRun->scriptCode = USCRIPT_COMMON;
+    SYNC_FIXUP(script_تسلسل);
+    script_تسلسل->script_رمز = USCRIPT_COMMON;
 
-    for (scriptRun->scriptStart = scriptRun->scriptLimit; scriptRun->scriptLimit < scriptRun->textLength; scriptRun->scriptLimit += 1) {
-        char16_t high = scriptRun->textArray[scriptRun->scriptLimit];
-        UChar32  ch   = high;
-        UScriptCode sc;
-        int32_t pairIndex;
+    برائے (script_تسلسل->script_آغاز = script_تسلسل->script_حد_بندی; script_تسلسل->script_حد_بندی < script_تسلسل->متن_لمبائی; script_تسلسل->script_حد_بندی += 1) {
+        char16_t بلند = script_تسلسل->متن_Array[script_تسلسل->script_حد_بندی];
+        UChar32  ch   = بلند;
+        UScript_رمز sc;
+        int32_t pair_اشاریہ;
 
         /*
          * if the character is a high surrogate and it's not the last one
          * in the text, see if it's followed by a low surrogate
          */
-        if (high >= 0xD800 && high <= 0xDBFF && scriptRun->scriptLimit < scriptRun->textLength - 1) {
-            char16_t low = scriptRun->textArray[scriptRun->scriptLimit + 1];
+        اگر (بلند >= 0xD800 && بلند <= 0xDBFF && script_تسلسل->script_حد_بندی < script_تسلسل->متن_لمبائی - 1) {
+            char16_t کم = script_تسلسل->متن_Array[script_تسلسل->script_حد_بندی + 1];
 
             /*
              * if it is followed by a low surrogate,
              * consume it and form the full character
              */
-            if (low >= 0xDC00 && low <= 0xDFFF) {
-                ch = (high - 0xD800) * 0x0400 + low - 0xDC00 + 0x10000;
-                scriptRun->scriptLimit += 1;
+            اگر (کم >= 0xDC00 && کم <= 0xDFFF) {
+                ch = (بلند - 0xD800) * 0x0400 + کم - 0xDC00 + 0x10000;
+                script_تسلسل->script_حد_بندی += 1;
             }
         }
 
         sc = uscript_getScript(ch, &error);
-        pairIndex = getPairIndex(ch);
+        pair_اشاریہ = get_Pair_اشاریہ(ch);
 
         /*
          * Paired character handling:
@@ -301,61 +301,61 @@ uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, U
          * stack, and use that script code. Any non-matching open
          * characters above it on the stack will be poped.
          */
-        if (pairIndex >= 0) {
-            if ((pairIndex & 1) == 0) {
-                push(scriptRun, pairIndex, scriptRun->scriptCode);
-            } else {
-                int32_t pi = pairIndex & ~1;
+        اگر (pair_اشاریہ >= 0) {
+            اگر ((pair_اشاریہ & 1) == 0) {
+                push(script_تسلسل, pair_اشاریہ, script_تسلسل->script_رمز);
+            } ورنہ {
+                int32_t pi = pair_اشاریہ & ~1;
 
-                while (STACK_IS_NOT_EMPTY(scriptRun) && TOP(scriptRun).pairIndex != pi) {
-                    pop(scriptRun);
+                جب (ڈھیر_IS_NOT_خالی_خانے(script_تسلسل) && چوٹی_2(script_تسلسل).pair_اشاریہ != pi) {
+                    pop(script_تسلسل);
                 }
 
-                if (STACK_IS_NOT_EMPTY(scriptRun)) {
-                    sc = TOP(scriptRun).scriptCode;
+                اگر (ڈھیر_IS_NOT_خالی_خانے(script_تسلسل)) {
+                    sc = چوٹی_2(script_تسلسل).script_رمز;
                 }
             }
         }
 
-        if (sameScript(scriptRun->scriptCode, sc)) {
-            if (scriptRun->scriptCode <= USCRIPT_INHERITED && sc > USCRIPT_INHERITED) {
-                scriptRun->scriptCode = sc;
+        اگر (sameScript(script_تسلسل->script_رمز, sc)) {
+            اگر (script_تسلسل->script_رمز <= USCRIPT_INHERITED && sc > USCRIPT_INHERITED) {
+                script_تسلسل->script_رمز = sc;
 
-                fixup(scriptRun, scriptRun->scriptCode);
+                fixup(script_تسلسل, script_تسلسل->script_رمز);
             }
 
             /*
              * if this character is a close paired character,
              * pop the matching open character from the stack
              */
-            if (pairIndex >= 0 && (pairIndex & 1) != 0) {
-                pop(scriptRun);
+            اگر (pair_اشاریہ >= 0 && (pair_اشاریہ & 1) != 0) {
+                pop(script_تسلسل);
             }
-        } else {
+        } ورنہ {
             /*
              * if the run broke on a surrogate pair,
              * end it before the high surrogate
              */
-            if (ch >= 0x10000) {
-                scriptRun->scriptLimit -= 1;
+            اگر (ch >= 0x10000) {
+                script_تسلسل->script_حد_بندی -= 1;
             }
 
-            break;
+            توڑو;
         }
     }
 
 
-    if (pRunStart != nullptr) {
-        *pRunStart = scriptRun->scriptStart;
+    اگر (p_تسلسل_آغاز != خالی_اشاریہ) {
+        *p_تسلسل_آغاز = script_تسلسل->script_آغاز;
     }
 
-    if (pRunLimit != nullptr) {
-        *pRunLimit = scriptRun->scriptLimit;
+    اگر (p_تسلسل_حد_بندی != خالی_اشاریہ) {
+        *p_تسلسل_حد_بندی = script_تسلسل->script_حد_بندی;
     }
 
-    if (pRunScript != nullptr) {
-        *pRunScript = scriptRun->scriptCode;
+    اگر (p_تسلسل_Script != خالی_اشاریہ) {
+        *p_تسلسل_Script = script_تسلسل->script_رمز;
     }
 
-    return true;
+    واپس سچ;
 }

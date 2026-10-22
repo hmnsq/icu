@@ -17,78 +17,78 @@
 *   were moved here to break dependency cycles among parts of the common library.
 */
 
-#include "unicode/utypes.h"
-#include "uassert.h"
-#include "unicode/brkiter.h"
-#include "unicode/casemap.h"
-#include "unicode/ucasemap.h"
-#include "unicode/uloc.h"
-#include "unicode/ustring.h"
-#include "ucase.h"
-#include "ucasemap_imp.h"
+#شامل "unicode/utypes.h"
+#شامل "uassert.h"
+#شامل "unicode/brkiter.h"
+#شامل "unicode/casemap.h"
+#شامل "unicode/ucasemap.h"
+#شامل "unicode/uloc.h"
+#شامل "unicode/ustring.h"
+#شامل "ucase.h"
+#شامل "ucasemap_imp.h"
 
 U_CFUNC int32_t
-ustrcase_getCaseLocale(const char *locale) {
-    if (locale == nullptr) {
+ustrcase_getCaseLocale(ثابت حرف *locale) {
+    اگر (locale == خالی_اشاریہ) {
         locale = uloc_getDefault();
     }
-    if (*locale == 0) {
-        return UCASE_LOC_ROOT;
-    } else {
-        return ucase_getCaseLocale(locale);
+    اگر (*locale == 0) {
+        واپس UCASE_LOC_جڑ;
+    } ورنہ {
+        واپس ucase_getCaseLocale(locale);
     }
 }
 
 /* public API functions */
 
 U_CAPI int32_t U_EXPORT2
-u_strToLower(char16_t *dest, int32_t destCapacity,
-             const char16_t *src, int32_t srcLength,
-             const char *locale,
-             UErrorCode *pErrorCode) {
-    return ustrcase_mapWithOverlap(
+u_str_مقصد_زیریں(char16_t *dest, int32_t dest_استعداد,
+             ثابت char16_t *src, int32_t src_لمبائی,
+             ثابت حرف *locale,
+             UError_رمز *p_Error_رمز) {
+    واپس ustrcase_mapWithOverlap(
         ustrcase_getCaseLocale(locale), 0, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ustrcase_internalToLower, *pErrorCode);
+        dest, dest_استعداد,
+        src, src_لمبائی,
+        ustrcase_اندرونی_مقصد_زیریں, *p_Error_رمز);
 }
 
 U_CAPI int32_t U_EXPORT2
-u_strToUpper(char16_t *dest, int32_t destCapacity,
-             const char16_t *src, int32_t srcLength,
-             const char *locale,
-             UErrorCode *pErrorCode) {
-    return ustrcase_mapWithOverlap(
+u_str_مقصد_بالائی(char16_t *dest, int32_t dest_استعداد,
+             ثابت char16_t *src, int32_t src_لمبائی,
+             ثابت حرف *locale,
+             UError_رمز *p_Error_رمز) {
+    واپس ustrcase_mapWithOverlap(
         ustrcase_getCaseLocale(locale), 0, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ustrcase_internalToUpper, *pErrorCode);
+        dest, dest_استعداد,
+        src, src_لمبائی,
+        ustrcase_اندرونی_مقصد_بالائی, *p_Error_رمز);
 }
 
 U_NAMESPACE_BEGIN
 
-int32_t CaseMap::toLower(
-        const char *locale, uint32_t options,
-        const char16_t *src, int32_t srcLength,
-        char16_t *dest, int32_t destCapacity, Edits *edits,
-        UErrorCode &errorCode) {
-    return ustrcase_map(
+int32_t CaseMap::مقصد_زیریں(
+        ثابت حرف *locale, uint32_t options,
+        ثابت char16_t *src, int32_t src_لمبائی,
+        char16_t *dest, int32_t dest_استعداد, Edits *edits,
+        UError_رمز &error_رمز) {
+    واپس ustrcase_map(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ustrcase_internalToLower, edits, errorCode);
+        dest, dest_استعداد,
+        src, src_لمبائی,
+        ustrcase_اندرونی_مقصد_زیریں, edits, error_رمز);
 }
 
-int32_t CaseMap::toUpper(
-        const char *locale, uint32_t options,
-        const char16_t *src, int32_t srcLength,
-        char16_t *dest, int32_t destCapacity, Edits *edits,
-        UErrorCode &errorCode) {
-    return ustrcase_map(
+int32_t CaseMap::مقصد_بالائی(
+        ثابت حرف *locale, uint32_t options,
+        ثابت char16_t *src, int32_t src_لمبائی,
+        char16_t *dest, int32_t dest_استعداد, Edits *edits,
+        UError_رمز &error_رمز) {
+    واپس ustrcase_map(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ustrcase_internalToUpper, edits, errorCode);
+        dest, dest_استعداد,
+        src, src_لمبائی,
+        ustrcase_اندرونی_مقصد_بالائی, edits, error_رمز);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا

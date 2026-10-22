@@ -7,95 +7,95 @@
  *******************************************************************************
  */
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#اگر !UCONFIG_NO_SERVICE
 
-#include "servnotf.h"
-#ifdef NOTIFIER_DEBUG
-#include <stdio.h>
-#endif
+#شامل "servnotf.h"
+#اگر_تعریف_شدہ NOTIFIER_DEBUG
+#شامل <stdio.h>
+#اگر_ختم
 
 U_NAMESPACE_BEGIN
 
 EventListener::~EventListener() {}
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(EventListener)
 
-static UMutex notifyLock;
+ساکن UMutex notify_تالا;
 
 ICUNotifier::ICUNotifier() 
-: listeners(nullptr) 
+: listeners(خالی_اشاریہ) 
 {
 }
 
 ICUNotifier::~ICUNotifier() {
     {
-        Mutex lmx(&notifyLock);
-        delete listeners;
-        listeners = nullptr;
+        Mutex lmx(&notify_تالا);
+        حذف listeners;
+        listeners = خالی_اشاریہ;
     }
 }
 
 
-void 
-ICUNotifier::addListener(const EventListener* l, UErrorCode& status) 
+خالی 
+ICUNotifier::جوڑو_Listener(ثابت EventListener* l, UError_رمز& حالت_2) 
 {
-    if (U_SUCCESS(status)) {
-        if (l == nullptr) {
-            status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+    اگر (U_SUCCESS(حالت_2)) {
+        اگر (l == خالی_اشاریہ) {
+            حالت_2 = U_ILLEGAL_دلیل_ERROR;
+            واپس;
         }
 
-        if (acceptsListener(*l)) {
-            Mutex lmx(&notifyLock);
-            if (listeners == nullptr) {
-                LocalPointer<UVector> lpListeners(new UVector(5, status), status);
-                if (U_FAILURE(status)) {
-                    return;
+        اگر (قبول_کرتا_Listener(*l)) {
+            Mutex lmx(&notify_تالا);
+            اگر (listeners == خالی_اشاریہ) {
+                Local_اشارہ_گر<UVector> lpListeners(نیا UVector(5, حالت_2), حالت_2);
+                اگر (U_FAILURE(حالت_2)) {
+                    واپس;
                 }
                 listeners = lpListeners.orphan();
-            } else {
-                for (int i = 0, e = listeners->size(); i < e; ++i) {
-                    const EventListener* el = static_cast<const EventListener*>(listeners->elementAt(i));
-                    if (l == el) {
-                        return;
+            } ورنہ {
+                برائے (صحیح i = 0, e = listeners->size(); i < e; ++i) {
+                    ثابت EventListener* el = static_cast<ثابت EventListener*>(listeners->elementAt(i));
+                    اگر (l == el) {
+                        واپس;
                     }
                 }
             }
 
-            listeners->addElement((void*)l, status); // cast away const
+            listeners->جوڑو_Element((خالی*)l, حالت_2); // cast away const
         }
-#ifdef NOTIFIER_DEBUG
-        else {
+#اگر_تعریف_شدہ NOTIFIER_DEBUG
+        ورنہ {
             fprintf(stderr, "Listener invalid for this notifier.");
-            exit(1);
+            باہر_نکلو(1);
         }
-#endif
+#اگر_ختم
     }
 }
 
-void 
-ICUNotifier::removeListener(const EventListener *l, UErrorCode& status) 
+خالی 
+ICUNotifier::removeListener(ثابت EventListener *l, UError_رمز& حالت_2) 
 {
-    if (U_SUCCESS(status)) {
-        if (l == nullptr) {
-            status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+    اگر (U_SUCCESS(حالت_2)) {
+        اگر (l == خالی_اشاریہ) {
+            حالت_2 = U_ILLEGAL_دلیل_ERROR;
+            واپس;
         }
 
         {
-            Mutex lmx(&notifyLock);
-            if (listeners != nullptr) {
+            Mutex lmx(&notify_تالا);
+            اگر (listeners != خالی_اشاریہ) {
                 // identity equality check
-                for (int i = 0, e = listeners->size(); i < e; ++i) {
-                    const EventListener* el = static_cast<const EventListener*>(listeners->elementAt(i));
-                    if (l == el) {
+                برائے (صحیح i = 0, e = listeners->size(); i < e; ++i) {
+                    ثابت EventListener* el = static_cast<ثابت EventListener*>(listeners->elementAt(i));
+                    اگر (l == el) {
                         listeners->removeElementAt(i);
-                        if (listeners->size() == 0) {
-                            delete listeners;
-                            listeners = nullptr;
+                        اگر (listeners->size() == 0) {
+                            حذف listeners;
+                            listeners = خالی_اشاریہ;
                         }
-                        return;
+                        واپس;
                     }
                 }
             }
@@ -103,20 +103,20 @@ ICUNotifier::removeListener(const EventListener *l, UErrorCode& status)
     }
 }
 
-void 
-ICUNotifier::notifyChanged() 
+خالی 
+ICUNotifier::notify_بدلا() 
 {
-    Mutex lmx(&notifyLock);
-    if (listeners != nullptr) {
-        for (int i = 0, e = listeners->size(); i < e; ++i) {
+    Mutex lmx(&notify_تالا);
+    اگر (listeners != خالی_اشاریہ) {
+        برائے (صحیح i = 0, e = listeners->size(); i < e; ++i) {
             EventListener* el = static_cast<EventListener*>(listeners->elementAt(i));
             notifyListener(*el);
         }
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا
 
 /* UCONFIG_NO_SERVICE */
-#endif
+#اگر_ختم
 

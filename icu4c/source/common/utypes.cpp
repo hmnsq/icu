@@ -15,12 +15,12 @@
 ******************************************************************************
 */
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
 /* u_errorName() ------------------------------------------------------------ */
 
-static const char * const
-_uErrorInfoName[U_ERROR_WARNING_LIMIT-U_ERROR_WARNING_START]={
+ساکن ثابت حرف * ثابت
+_uErrorInfoName[U_ERROR_WARNING_حد_بندی-U_ERROR_WARNING_آغاز]={
     "U_USING_FALLBACK_WARNING",
     "U_USING_DEFAULT_WARNING",
     "U_SAFECLONE_ALLOCATED_WARNING",
@@ -32,8 +32,8 @@ _uErrorInfoName[U_ERROR_WARNING_LIMIT-U_ERROR_WARNING_START]={
     "U_PLUGIN_CHANGED_LEVEL_WARNING",
 };
 
-static const char * const
-_uTransErrorName[U_PARSE_ERROR_LIMIT - U_PARSE_ERROR_START]={
+ساکن ثابت حرف * ثابت
+_uTransErrorName[U_PARSE_ERROR_حد_بندی - U_PARSE_ERROR_آغاز]={
     "U_BAD_VARIABLE_DEFINITION",
     "U_MALFORMED_RULE",
     "U_MALFORMED_SET",
@@ -71,8 +71,8 @@ _uTransErrorName[U_PARSE_ERROR_LIMIT - U_PARSE_ERROR_START]={
     "U_INVALID_FUNCTION"
 };
 
-static const char * const
-_uErrorName[U_STANDARD_ERROR_LIMIT]={
+ساکن ثابت حرف * ثابت
+_uErrorName[U_STANDARD_ERROR_حد_بندی]={
     "U_ZERO_ERROR",
 
     "U_ILLEGAL_ARGUMENT_ERROR",
@@ -107,8 +107,8 @@ _uErrorName[U_STANDARD_ERROR_LIMIT]={
     "U_NO_WRITE_PERMISSION",
     "U_INPUT_TOO_LONG_ERROR"
 };
-static const char * const
-_uFmtErrorName[U_FMT_PARSE_ERROR_LIMIT - U_FMT_PARSE_ERROR_START] = {
+ساکن ثابت حرف * ثابت
+_uFmtErrorName[U_FMT_PARSE_ERROR_حد_بندی - U_FMT_PARSE_ERROR_آغاز] = {
     "U_UNEXPECTED_TOKEN",
     "U_MULTIPLE_DECIMAL_SEPARATORS",
     "U_MULTIPLE_EXPONENTIAL_SYMBOLS",
@@ -144,8 +144,8 @@ _uFmtErrorName[U_FMT_PARSE_ERROR_LIMIT - U_FMT_PARSE_ERROR_START] = {
     "U_MF_BAD_OPTION"
 };
 
-static const char * const
-_uBrkErrorName[U_BRK_ERROR_LIMIT - U_BRK_ERROR_START] = {
+ساکن ثابت حرف * ثابت
+_uBrkErrorName[U_BRK_ERROR_حد_بندی - U_BRK_ERROR_آغاز] = {
     "U_BRK_INTERNAL_ERROR",
     "U_BRK_HEX_DIGITS_EXPECTED",
     "U_BRK_SEMICOLON_EXPECTED",
@@ -162,8 +162,8 @@ _uBrkErrorName[U_BRK_ERROR_LIMIT - U_BRK_ERROR_START] = {
     "U_BRK_MALFORMED_RULE_TAG"
 };
 
-static const char * const
-_uRegexErrorName[U_REGEX_ERROR_LIMIT - U_REGEX_ERROR_START] = {
+ساکن ثابت حرف * ثابت
+_uRegexErrorName[U_REGEX_ERROR_حد_بندی - U_REGEX_ERROR_آغاز] = {
     "U_REGEX_INTERNAL_ERROR",
     "U_REGEX_RULE_SYNTAX",
     "U_REGEX_INVALID_STATE",
@@ -188,8 +188,8 @@ _uRegexErrorName[U_REGEX_ERROR_LIMIT - U_REGEX_ERROR_START] = {
     "U_REGEX_INVALID_CAPTURE_GROUP_NAME"
 };
 
-static const char * const
-_uIDNAErrorName[U_IDNA_ERROR_LIMIT - U_IDNA_ERROR_START] = {
+ساکن ثابت حرف * ثابت
+_uIDNAErrorName[U_IDNA_ERROR_حد_بندی - U_IDNA_ERROR_آغاز] = {
      "U_STRINGPREP_PROHIBITED_ERROR",
      "U_STRINGPREP_UNASSIGNED_ERROR",
      "U_STRINGPREP_CHECK_BIDI_ERROR",
@@ -201,32 +201,32 @@ _uIDNAErrorName[U_IDNA_ERROR_LIMIT - U_IDNA_ERROR_START] = {
      "U_IDNA_DOMAIN_NAME_TOO_LONG_ERROR"
 };
 
-static const char * const
-_uPluginErrorName[U_PLUGIN_ERROR_LIMIT - U_PLUGIN_ERROR_START] = {
+ساکن ثابت حرف * ثابت
+_uPluginErrorName[U_PLUGIN_ERROR_حد_بندی - U_PLUGIN_ERROR_آغاز] = {
      "U_PLUGIN_TOO_HIGH",
      "U_PLUGIN_DIDNT_SET_LEVEL",
 };
 
-U_CAPI const char * U_EXPORT2
-u_errorName(UErrorCode code) {
-    if(U_ZERO_ERROR <= code && code < U_STANDARD_ERROR_LIMIT) {
-        return _uErrorName[code];
-    } else if(U_ERROR_WARNING_START <= code && code < U_ERROR_WARNING_LIMIT) {
-        return _uErrorInfoName[code - U_ERROR_WARNING_START];
-    } else if(U_PARSE_ERROR_START <= code && code < U_PARSE_ERROR_LIMIT){
-        return _uTransErrorName[code - U_PARSE_ERROR_START];
-    } else if(U_FMT_PARSE_ERROR_START <= code && code < U_FMT_PARSE_ERROR_LIMIT){
-        return _uFmtErrorName[code - U_FMT_PARSE_ERROR_START];
-    } else if (U_BRK_ERROR_START <= code  && code < U_BRK_ERROR_LIMIT){
-        return _uBrkErrorName[code - U_BRK_ERROR_START];
-    } else if (U_REGEX_ERROR_START <= code && code < U_REGEX_ERROR_LIMIT) {
-        return _uRegexErrorName[code - U_REGEX_ERROR_START];
-    } else if(U_IDNA_ERROR_START <= code && code < U_IDNA_ERROR_LIMIT) {
-        return _uIDNAErrorName[code - U_IDNA_ERROR_START];
-    } else if(U_PLUGIN_ERROR_START <= code && code < U_PLUGIN_ERROR_LIMIT) {
-        return _uPluginErrorName[code - U_PLUGIN_ERROR_START];
-    } else {
-        return "[BOGUS UErrorCode]";
+U_CAPI ثابت حرف * U_EXPORT2
+u_errorName(UError_رمز رمز) {
+    اگر(U_ZERO_ERROR <= رمز && رمز < U_STANDARD_ERROR_حد_بندی) {
+        واپس _uErrorName[رمز];
+    } ورنہ اگر(U_ERROR_WARNING_آغاز <= رمز && رمز < U_ERROR_WARNING_حد_بندی) {
+        واپس _uErrorInfoName[رمز - U_ERROR_WARNING_آغاز];
+    } ورنہ اگر(U_PARSE_ERROR_آغاز <= رمز && رمز < U_PARSE_ERROR_حد_بندی){
+        واپس _uTransErrorName[رمز - U_PARSE_ERROR_آغاز];
+    } ورنہ اگر(U_FMT_PARSE_ERROR_آغاز <= رمز && رمز < U_FMT_PARSE_ERROR_حد_بندی){
+        واپس _uFmtErrorName[رمز - U_FMT_PARSE_ERROR_آغاز];
+    } ورنہ اگر (U_BRK_ERROR_آغاز <= رمز  && رمز < U_BRK_ERROR_حد_بندی){
+        واپس _uBrkErrorName[رمز - U_BRK_ERROR_آغاز];
+    } ورنہ اگر (U_REGEX_ERROR_آغاز <= رمز && رمز < U_REGEX_ERROR_حد_بندی) {
+        واپس _uRegexErrorName[رمز - U_REGEX_ERROR_آغاز];
+    } ورنہ اگر(U_IDNA_ERROR_آغاز <= رمز && رمز < U_IDNA_ERROR_حد_بندی) {
+        واپس _uIDNAErrorName[رمز - U_IDNA_ERROR_آغاز];
+    } ورنہ اگر(U_PLUGIN_ERROR_آغاز <= رمز && رمز < U_PLUGIN_ERROR_حد_بندی) {
+        واپس _uPluginErrorName[رمز - U_PLUGIN_ERROR_آغاز];
+    } ورنہ {
+        واپس "[BOGUS UErrorCode]";
     }
 }
 

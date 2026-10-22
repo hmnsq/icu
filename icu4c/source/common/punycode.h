@@ -24,12 +24,12 @@ Adam M. Costello
 http://www.nicemice.net/amc/
 */
 
-#ifndef __PUNYCODE_H__
-#define __PUNYCODE_H__
+#اگر_غیر_تعریف_شدہ __PUNYCODE_H__
+#تعریف_کرو __PUNYCODE_H__
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#اگر !UCONFIG_NO_IDNA
 
 /**
  * u_strToPunycode() converts Unicode to Punycode.
@@ -66,10 +66,10 @@ http://www.nicemice.net/amc/
  * @see u_strFromPunycode
  */
 U_CAPI int32_t
-u_strToPunycode(const UChar *src, int32_t srcLength,
-                UChar *dest, int32_t destCapacity,
-                const UBool *caseFlags,
-                UErrorCode *pErrorCode);
+u_str_مقصد_Punycode(ثابت UChar *src, int32_t src_لمبائی,
+                UChar *dest, int32_t dest_استعداد,
+                ثابت UBool *caseFlags,
+                UError_رمز *p_Error_رمز);
 
 /**
  * u_strFromPunycode() converts Punycode to Unicode.
@@ -101,14 +101,14 @@ u_strToPunycode(const UChar *src, int32_t srcLength,
  * @see u_strToPunycode
  */
 U_CAPI int32_t
-u_strFromPunycode(const UChar *src, int32_t srcLength,
-                  UChar *dest, int32_t destCapacity,
+u_strFromPunycode(ثابت UChar *src, int32_t src_لمبائی,
+                  UChar *dest, int32_t dest_استعداد,
                   UBool *caseFlags,
-                  UErrorCode *pErrorCode);
+                  UError_رمز *p_Error_رمز);
 
-#endif /* #if !UCONFIG_NO_IDNA */
+#اگر_ختم /* #if !UCONFIG_NO_IDNA */
 
-#endif
+#اگر_ختم
 
 /*
  * Hey, Emacs, please set the following:

@@ -30,22 +30,22 @@
 //                      the previous step.
 //
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#اگر !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/uniset.h"
-#include "uvector.h"
-#include "uassert.h"
-#include "cmemory.h"
-#include "cstring.h"
+#شامل "unicode/uniset.h"
+#شامل "uvector.h"
+#شامل "uassert.h"
+#شامل "cmemory.h"
+#شامل "cstring.h"
 
-#include "rbbisetb.h"
-#include "rbbinode.h"
+#شامل "rbbisetb.h"
+#شامل "rbbinode.h"
 
 U_NAMESPACE_BEGIN
 
-const int32_t kMaxCharCategoriesFor8BitsTrie = 255;
+ثابت int32_t k_Max_Char_Categories_For8_بٹ_Trie = 255;
 //------------------------------------------------------------------------
 //
 //   Constructor
@@ -54,12 +54,12 @@ const int32_t kMaxCharCategoriesFor8BitsTrie = 255;
 RBBISetBuilder::RBBISetBuilder(RBBIRuleBuilder *rb)
 {
     fRB             = rb;
-    fStatus         = rb->fStatus;
-    fRangeList      = nullptr;
-    fMutableTrie    = nullptr;
-    fTrie           = nullptr;
-    fTrieSize       = 0;
-    fGroupCount     = 0;
+    f_حالت         = rb->f_حالت;
+    fRangeList      = خالی_اشاریہ;
+    fMutableTrie    = خالی_اشاریہ;
+    fTrie           = خالی_اشاریہ;
+    f_Trie_سائز       = 0;
+    f_گروہ_گنتی     = 0;
 }
 
 
@@ -70,13 +70,13 @@ RBBISetBuilder::RBBISetBuilder(RBBIRuleBuilder *rb)
 //------------------------------------------------------------------------
 RBBISetBuilder::~RBBISetBuilder()
 {
-    RangeDescriptor   *nextRangeDesc;
+    RangeDescriptor   *اگلا_Range_Desc;
 
     // Walk through & delete the linked list of RangeDescriptors
-    for (nextRangeDesc = fRangeList; nextRangeDesc!=nullptr;) {
-        RangeDescriptor *r = nextRangeDesc;
-        nextRangeDesc      = r->fNext;
-        delete r;
+    برائے (اگلا_Range_Desc = fRangeList; اگلا_Range_Desc!=خالی_اشاریہ;) {
+        RangeDescriptor *r = اگلا_Range_Desc;
+        اگلا_Range_Desc      = r->f_اگلا;
+        حذف r;
     }
 
     ucptrie_close(fTrie);
@@ -92,54 +92,54 @@ RBBISetBuilder::~RBBISetBuilder()
 //                  from the Unicode Sets.
 //
 //------------------------------------------------------------------------
-void RBBISetBuilder::buildRanges() {
-    RBBINode        *usetNode;
+خالی RBBISetBuilder::buildRanges() {
+    RBBINode        *uset_گرہ;
     RangeDescriptor *rlRange;
 
-    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "usets")) {printSets();}
+    اگر (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "usets")) {printSets();}
 
     //
     //  Initialize the process by creating a single range encompassing all characters
     //  that is in no sets.
     //
-    fRangeList                = new RangeDescriptor(*fStatus); // will check for status here
-    if (fRangeList == nullptr) {
-        *fStatus = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    fRangeList                = نیا RangeDescriptor(*f_حالت); // will check for status here
+    اگر (fRangeList == خالی_اشاریہ) {
+        *f_حالت = U_حافظہ_تخصیص_ERROR;
+        واپس;
     }
-    fRangeList->fStartChar    = 0;
-    fRangeList->fEndChar      = 0x10ffff;
+    fRangeList->f_آغاز_Char    = 0;
+    fRangeList->f_انتہا_Char      = 0x10ffff;
 
-    if (U_FAILURE(*fStatus)) {
-        return;
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس;
     }
 
     //
     //  Find the set of non-overlapping ranges of characters
     //
-    int  ni;
-    for (ni=0; ; ni++) {        // Loop over each of the UnicodeSets encountered in the input rules
-        usetNode = static_cast<RBBINode*>(this->fRB->fUSetNodes->elementAt(ni));
-        if (usetNode==nullptr) {
-            break;
+    صحیح  ni;
+    برائے (ni=0; ; ni++) {        // Loop over each of the UnicodeSets encountered in the input rules
+        uset_گرہ = static_cast<RBBINode*>(یہ->fRB->fUSetNodes->elementAt(ni));
+        اگر (uset_گرہ==خالی_اشاریہ) {
+            توڑو;
         }
 
-        UnicodeSet      *inputSet             = usetNode->fInputSet;
-        int32_t          inputSetRangeCount   = inputSet->getRangeCount();
-        int              inputSetRangeIndex   = 0;
+        Unicode_سیٹ      *داخلہ_سیٹ             = uset_گرہ->f_داخلہ_سیٹ;
+        int32_t          داخلہ_سیٹ_Range_گنتی   = داخلہ_سیٹ->get_Range_گنتی();
+        صحیح              داخلہ_سیٹ_Range_اشاریہ   = 0;
                          rlRange              = fRangeList;
 
-        for (;;) {
-            if (inputSetRangeIndex >= inputSetRangeCount) {
-                break;
+        برائے (;;) {
+            اگر (داخلہ_سیٹ_Range_اشاریہ >= داخلہ_سیٹ_Range_گنتی) {
+                توڑو;
             }
-            UChar32      inputSetRangeBegin  = inputSet->getRangeStart(inputSetRangeIndex);
-            UChar32      inputSetRangeEnd    = inputSet->getRangeEnd(inputSetRangeIndex);
+            UChar32      داخلہ_سیٹ_Range_Begin  = داخلہ_سیٹ->get_Range_آغاز(داخلہ_سیٹ_Range_اشاریہ);
+            UChar32      داخلہ_سیٹ_Range_انتہا    = داخلہ_سیٹ->get_Range_انتہا(داخلہ_سیٹ_Range_اشاریہ);
 
             // skip over ranges from the range list that are completely
             //   below the current range from the input unicode set.
-            while (rlRange->fEndChar < inputSetRangeBegin) {
-                rlRange = rlRange->fNext;
+            جب (rlRange->f_انتہا_Char < داخلہ_سیٹ_Range_Begin) {
+                rlRange = rlRange->f_اگلا;
             }
 
             // If the start of the range from the range list is before with
@@ -148,12 +148,12 @@ void RBBISetBuilder::buildRanges() {
             //   and the other containing the rest.
             //   Then continue the loop; the post-split current range will then be skipped
             //     over
-            if (rlRange->fStartChar < inputSetRangeBegin) {
-                rlRange->split(inputSetRangeBegin, *fStatus);
-                if (U_FAILURE(*fStatus)) {
-                    return;
+            اگر (rlRange->f_آغاز_Char < داخلہ_سیٹ_Range_Begin) {
+                rlRange->بانٹو(داخلہ_سیٹ_Range_Begin, *f_حالت);
+                اگر (U_FAILURE(*f_حالت)) {
+                    واپس;
                 }
-                continue;
+                جاری;
             }
 
             // Same thing at the end of the ranges...
@@ -161,31 +161,31 @@ void RBBISetBuilder::buildRanges() {
             //   the end of the range from the unicode set, split the range list
             //   range in two.  The first part of the split range will be
             //   wholly inside the Unicode set.
-            if (rlRange->fEndChar > inputSetRangeEnd) {
-                rlRange->split(inputSetRangeEnd+1, *fStatus);
-                if (U_FAILURE(*fStatus)) {
-                    return;
+            اگر (rlRange->f_انتہا_Char > داخلہ_سیٹ_Range_انتہا) {
+                rlRange->بانٹو(داخلہ_سیٹ_Range_انتہا+1, *f_حالت);
+                اگر (U_FAILURE(*f_حالت)) {
+                    واپس;
                 }
             }
 
             // The current rlRange is now entirely within the UnicodeSet range.
             // Add this unicode set to the list of sets for this rlRange
-            if (rlRange->fIncludesSets->indexOf(usetNode) == -1) {
-                rlRange->fIncludesSets->addElement(usetNode, *fStatus);
-                if (U_FAILURE(*fStatus)) {
-                    return;
+            اگر (rlRange->fIncludesSets->اشاریہ_کا(uset_گرہ) == -1) {
+                rlRange->fIncludesSets->جوڑو_Element(uset_گرہ, *f_حالت);
+                اگر (U_FAILURE(*f_حالت)) {
+                    واپس;
                 }
             }
 
             // Advance over ranges that we are finished with.
-            if (inputSetRangeEnd == rlRange->fEndChar) {
-                inputSetRangeIndex++;
+            اگر (داخلہ_سیٹ_Range_انتہا == rlRange->f_انتہا_Char) {
+                داخلہ_سیٹ_Range_اشاریہ++;
             }
-            rlRange = rlRange->fNext;
+            rlRange = rlRange->f_اگلا;
         }
     }
 
-    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "range")) { printRanges();}
+    اگر (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "range")) { printRanges();}
 
     //
     //  Group the above ranges, with each group consisting of one or more
@@ -198,26 +198,26 @@ void RBBISetBuilder::buildRanges() {
     //               # 2  is reserved - table column 2 is for beginning-of-input
     //               # 3  is the first range list.
     //
-    RangeDescriptor *rlSearchRange;
-    int32_t dictGroupCount = 0;
+    RangeDescriptor *rl_تلاش_Range;
+    int32_t dict_گروہ_گنتی = 0;
 
-    for (rlRange = fRangeList; rlRange!=nullptr; rlRange=rlRange->fNext) {
-        for (rlSearchRange=fRangeList; rlSearchRange != rlRange; rlSearchRange=rlSearchRange->fNext) {
-            if (rlRange->fIncludesSets->equals(*rlSearchRange->fIncludesSets)) {
-                rlRange->fNum = rlSearchRange->fNum;
-                rlRange->fIncludesDict = rlSearchRange->fIncludesDict;
-                break;
+    برائے (rlRange = fRangeList; rlRange!=خالی_اشاریہ; rlRange=rlRange->f_اگلا) {
+        برائے (rl_تلاش_Range=fRangeList; rl_تلاش_Range != rlRange; rl_تلاش_Range=rl_تلاش_Range->f_اگلا) {
+            اگر (rlRange->fIncludesSets->equals(*rl_تلاش_Range->fIncludesSets)) {
+                rlRange->f_عدد = rl_تلاش_Range->f_عدد;
+                rlRange->fIncludesDict = rl_تلاش_Range->fIncludesDict;
+                توڑو;
             }
         }
-        if (rlRange->fNum == 0) {
-            rlRange->fFirstInGroup = true;
-            if (rlRange->isDictionaryRange()) {
-                rlRange->fNum = ++dictGroupCount;
-                rlRange->fIncludesDict = true;
-            } else {
-                fGroupCount++;
-                rlRange->fNum = fGroupCount+2;
-                addValToSets(rlRange->fIncludesSets, rlRange->fNum);
+        اگر (rlRange->f_عدد == 0) {
+            rlRange->f_پہلا_اندر_گروہ = سچ;
+            اگر (rlRange->isDictionaryRange()) {
+                rlRange->f_عدد = ++dict_گروہ_گنتی;
+                rlRange->fIncludesDict = سچ;
+            } ورنہ {
+                f_گروہ_گنتی++;
+                rlRange->f_عدد = f_گروہ_گنتی+2;
+                جوڑو_Val_مقصد_Sets(rlRange->fIncludesSets, rlRange->f_عدد);
             }
         }
     }
@@ -225,16 +225,16 @@ void RBBISetBuilder::buildRanges() {
     // Move the character category numbers for any dictionary ranges up, so that they
     // immediately follow the non-dictionary ranges.
 
-    fDictCategoriesStart = fGroupCount + 3;
-    for (rlRange = fRangeList; rlRange!=nullptr; rlRange=rlRange->fNext) {
-        if (rlRange->fIncludesDict) {
-            rlRange->fNum += fDictCategoriesStart - 1;
-            if (rlRange->fFirstInGroup) {
-                addValToSets(rlRange->fIncludesSets, rlRange->fNum);
+    f_Dict_Categories_آغاز = f_گروہ_گنتی + 3;
+    برائے (rlRange = fRangeList; rlRange!=خالی_اشاریہ; rlRange=rlRange->f_اگلا) {
+        اگر (rlRange->fIncludesDict) {
+            rlRange->f_عدد += f_Dict_Categories_آغاز - 1;
+            اگر (rlRange->f_پہلا_اندر_گروہ) {
+                جوڑو_Val_مقصد_Sets(rlRange->fIncludesSets, rlRange->f_عدد);
             }
         }
     }
-    fGroupCount += dictGroupCount;
+    f_گروہ_گنتی += dict_گروہ_گنتی;
 
 
     // Handle input sets that contain the special string {eof}.
@@ -245,20 +245,20 @@ void RBBISetBuilder::buildRanges() {
     //   it doesn’t affect the computation of ranges or TRIE.
 
     UnicodeString eofString(u"eof");
-    for (ni=0; ; ni++) {        // Loop over each of the UnicodeSets encountered in the input rules
-        usetNode = static_cast<RBBINode*>(this->fRB->fUSetNodes->elementAt(ni));
-        if (usetNode==nullptr) {
-            break;
+    برائے (ni=0; ; ni++) {        // Loop over each of the UnicodeSets encountered in the input rules
+        uset_گرہ = static_cast<RBBINode*>(یہ->fRB->fUSetNodes->elementAt(ni));
+        اگر (uset_گرہ==خالی_اشاریہ) {
+            توڑو;
         }
-        UnicodeSet      *inputSet = usetNode->fInputSet;
-        if (inputSet->contains(eofString)) {
-            addValToSet(usetNode, 1);
+        Unicode_سیٹ      *داخلہ_سیٹ = uset_گرہ->f_داخلہ_سیٹ;
+        اگر (داخلہ_سیٹ->شامل_ہے(eofString)) {
+            جوڑو_Val_مقصد_سیٹ(uset_گرہ, 1);
         }
     }
 
 
-    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "rgroup")) {printRangeGroups();}
-    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "esets")) {printSets();}
+    اگر (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "rgroup")) {printRangeGroups();}
+    اگر (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "esets")) {printSets();}
 }
 
 
@@ -266,39 +266,39 @@ void RBBISetBuilder::buildRanges() {
 // Build the Trie table for mapping UChar32 values to the corresponding
 // range group number.
 //
-void RBBISetBuilder::buildTrie() {
+خالی RBBISetBuilder::buildTrie() {
     fMutableTrie = umutablecptrie_open(
                         0,       //  Initial value for all code points.
                         0,       //  Error value for out-of-range input.
-                        fStatus);
+                        f_حالت);
 
-    for (RangeDescriptor *range = fRangeList; range!=nullptr && U_SUCCESS(*fStatus); range=range->fNext) {
-        umutablecptrie_setRange(fMutableTrie,
-                                range->fStartChar,     // Range start
-                                range->fEndChar,       // Range end (inclusive)
-                                range->fNum,           // value for range
-                                fStatus);
+    برائے (RangeDescriptor *range = fRangeList; range!=خالی_اشاریہ && U_SUCCESS(*f_حالت); range=range->f_اگلا) {
+        umutablecptrie_سیٹ_Range(fMutableTrie,
+                                range->f_آغاز_Char,     // Range start
+                                range->f_انتہا_Char,       // Range end (inclusive)
+                                range->f_عدد,           // value for range
+                                f_حالت);
     }
 }
 
 
-void RBBISetBuilder::mergeCategories(IntPair categories) {
+خالی RBBISetBuilder::ملاؤ_Categories(IntPair categories) {
     U_ASSERT(categories.first >= 1);
-    U_ASSERT(categories.second > categories.first);
-    U_ASSERT((categories.first <  fDictCategoriesStart && categories.second <  fDictCategoriesStart) ||
-             (categories.first >= fDictCategoriesStart && categories.second >= fDictCategoriesStart));
+    U_ASSERT(categories.دوسرا > categories.first);
+    U_ASSERT((categories.first <  f_Dict_Categories_آغاز && categories.دوسرا <  f_Dict_Categories_آغاز) ||
+             (categories.first >= f_Dict_Categories_آغاز && categories.دوسرا >= f_Dict_Categories_آغاز));
 
-    for (RangeDescriptor *rd = fRangeList; rd != nullptr; rd = rd->fNext) {
-        int32_t rangeNum = rd->fNum;
-        if (rangeNum == categories.second) {
-            rd->fNum = categories.first;
-        } else if (rangeNum > categories.second) {
-            rd->fNum--;
+    برائے (RangeDescriptor *rd = fRangeList; rd != خالی_اشاریہ; rd = rd->f_اگلا) {
+        int32_t range_عدد = rd->f_عدد;
+        اگر (range_عدد == categories.دوسرا) {
+            rd->f_عدد = categories.first;
+        } ورنہ اگر (range_عدد > categories.دوسرا) {
+            rd->f_عدد--;
         }
     }
-    --fGroupCount;
-    if (categories.second <= fDictCategoriesStart) {
-        --fDictCategoriesStart;
+    --f_گروہ_گنتی;
+    اگر (categories.دوسرا <= f_Dict_Categories_آغاز) {
+        --f_Dict_Categories_آغاز;
     }
 }
 
@@ -308,24 +308,24 @@ void RBBISetBuilder::mergeCategories(IntPair categories) {
 //  getTrieSize()    Return the size that will be required to serialize the Trie.
 //
 //-----------------------------------------------------------------------------------
-int32_t RBBISetBuilder::getTrieSize()  {
-    if (U_FAILURE(*fStatus)) {
-        return 0;
+int32_t RBBISetBuilder::get_Trie_سائز()  {
+    اگر (U_FAILURE(*f_حالت)) {
+        واپس 0;
     }
-    if (fTrie == nullptr) {
-        bool use8Bits = getNumCharCategories() <= kMaxCharCategoriesFor8BitsTrie;
+    اگر (fTrie == خالی_اشاریہ) {
+        منطقی use8_بٹ = get_عدد_Char_Categories() <= k_Max_Char_Categories_For8_بٹ_Trie;
         fTrie = umutablecptrie_buildImmutable(
             fMutableTrie,
             UCPTRIE_TYPE_FAST,
-            use8Bits ? UCPTRIE_VALUE_BITS_8 : UCPTRIE_VALUE_BITS_16,
-            fStatus);
-        UErrorCode bufferStatus = *fStatus;
-        fTrieSize = ucptrie_toBinary(fTrie, nullptr, 0, &bufferStatus);
-        if (bufferStatus != U_BUFFER_OVERFLOW_ERROR && U_FAILURE(bufferStatus)) {
-            *fStatus = bufferStatus;
+            use8_بٹ ? UCPTRIE_قدر_بٹ_8 : UCPTRIE_قدر_بٹ_16,
+            f_حالت);
+        UError_رمز بفر_حالت = *f_حالت;
+        f_Trie_سائز = ucptrie_مقصد_ثنائی(fTrie, خالی_اشاریہ, 0, &بفر_حالت);
+        اگر (بفر_حالت != U_بفر_حد_سے_تجاوز_ERROR && U_FAILURE(بفر_حالت)) {
+            *f_حالت = بفر_حالت;
         }
     }
-    return fTrieSize;
+    واپس f_Trie_سائز;
 }
 
 
@@ -336,11 +336,11 @@ int32_t RBBISetBuilder::getTrieSize()  {
 //                    getTrieSize() MUST be called first.
 //
 //-----------------------------------------------------------------------------------
-void RBBISetBuilder::serializeTrie(uint8_t *where) {
-    ucptrie_toBinary(fTrie,
-                     where,                // Buffer
-                     fTrieSize,            // Capacity
-                     fStatus);
+خالی RBBISetBuilder::serializeTrie(uint8_t *where) {
+    ucptrie_مقصد_ثنائی(fTrie,
+                     where,                //بفر
+                     f_Trie_سائز,            //استعداد
+                     f_حالت);
 }
 
 //------------------------------------------------------------------------
@@ -357,48 +357,48 @@ void RBBISetBuilder::serializeTrie(uint8_t *where) {
 //                   or-ing together of all of the symbols that go into the set.
 //
 //------------------------------------------------------------------------
-void  RBBISetBuilder::addValToSets(UVector *sets, uint32_t val) {
+خالی  RBBISetBuilder::جوڑو_Val_مقصد_Sets(UVector *sets, uint32_t val) {
     int32_t       ix;
 
-    for (ix=0; ix<sets->size(); ix++) {
-        RBBINode* usetNode = static_cast<RBBINode*>(sets->elementAt(ix));
-        addValToSet(usetNode, val);
+    برائے (ix=0; ix<sets->size(); ix++) {
+        RBBINode* uset_گرہ = static_cast<RBBINode*>(sets->elementAt(ix));
+        جوڑو_Val_مقصد_سیٹ(uset_گرہ, val);
     }
 }
 
-void  RBBISetBuilder::addValToSet(RBBINode *usetNode, uint32_t val) {
-    RBBINode *leafNode = new RBBINode(RBBINode::leafChar, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        delete leafNode;
-        return;
+خالی  RBBISetBuilder::جوڑو_Val_مقصد_سیٹ(RBBINode *uset_گرہ, uint32_t val) {
+    RBBINode *برگ_گرہ = نیا RBBINode(RBBINode::برگ_Char, *f_حالت);
+    اگر (U_FAILURE(*f_حالت)) {
+        حذف برگ_گرہ;
+        واپس;
     }
-    if (leafNode == nullptr) {
-        *fStatus = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    اگر (برگ_گرہ == خالی_اشاریہ) {
+        *f_حالت = U_حافظہ_تخصیص_ERROR;
+        واپس;
     }
-    leafNode->fVal = static_cast<unsigned short>(val);
-    if (usetNode->fLeftChild == nullptr) {
-        usetNode->fLeftChild = leafNode;
-        leafNode->fParent    = usetNode;
-    } else {
+    برگ_گرہ->fVal = static_cast<غیرعلامتی مختصر>(val);
+    اگر (uset_گرہ->f_بایاں_بچہ == خالی_اشاریہ) {
+        uset_گرہ->f_بایاں_بچہ = برگ_گرہ;
+        برگ_گرہ->f_والد    = uset_گرہ;
+    } ورنہ {
         // There are already input symbols present for this set.
         // Set up an OR node, with the previous stuff as the left child
         //   and the new value as the right child.
-        RBBINode *orNode = new RBBINode(RBBINode::opOr, *fStatus);
-        if (orNode == nullptr) {
-            *fStatus = U_MEMORY_ALLOCATION_ERROR;
+        RBBINode *or_گرہ = نیا RBBINode(RBBINode::opOr, *f_حالت);
+        اگر (or_گرہ == خالی_اشاریہ) {
+            *f_حالت = U_حافظہ_تخصیص_ERROR;
         }
-        if (U_FAILURE(*fStatus)) {
-            delete orNode;
-            delete leafNode;
-            return;
+        اگر (U_FAILURE(*f_حالت)) {
+            حذف or_گرہ;
+            حذف برگ_گرہ;
+            واپس;
         }
-        orNode->fLeftChild  = usetNode->fLeftChild;
-        orNode->fRightChild = leafNode;
-        orNode->fLeftChild->fParent  = orNode;
-        orNode->fRightChild->fParent = orNode;
-        usetNode->fLeftChild = orNode;
-        orNode->fParent = usetNode;
+        or_گرہ->f_بایاں_بچہ  = uset_گرہ->f_بایاں_بچہ;
+        or_گرہ->f_دایاں_بچہ = برگ_گرہ;
+        or_گرہ->f_بایاں_بچہ->f_والد  = or_گرہ;
+        or_گرہ->f_دایاں_بچہ->f_والد = or_گرہ;
+        uset_گرہ->f_بایاں_بچہ = or_گرہ;
+        or_گرہ->f_والد = uset_گرہ;
     }
 }
 
@@ -408,8 +408,8 @@ void  RBBISetBuilder::addValToSet(RBBINode *usetNode, uint32_t val) {
 //   getNumCharCategories
 //
 //------------------------------------------------------------------------
-int32_t  RBBISetBuilder::getNumCharCategories() const {
-    return fGroupCount + 3;
+int32_t  RBBISetBuilder::get_عدد_Char_Categories() ثابت {
+    واپس f_گروہ_گنتی + 3;
 }
 
 
@@ -418,8 +418,8 @@ int32_t  RBBISetBuilder::getNumCharCategories() const {
 //   getDictCategoriesStart
 //
 //------------------------------------------------------------------------
-int32_t  RBBISetBuilder::getDictCategoriesStart() const {
-    return fDictCategoriesStart;
+int32_t  RBBISetBuilder::get_Dict_Categories_آغاز() ثابت {
+    واپس f_Dict_Categories_آغاز;
 }
 
 
@@ -429,16 +429,16 @@ int32_t  RBBISetBuilder::getDictCategoriesStart() const {
 //                     the first UChar32 that is in the set of chars 
 //                     in the category.
 //------------------------------------------------------------------------
-UChar32  RBBISetBuilder::getFirstChar(int32_t category) const {
+UChar32  RBBISetBuilder::get_پہلا_Char(int32_t category) ثابت {
     RangeDescriptor   *rlRange;
     UChar32 retVal = static_cast<UChar32>(-1);
-    for (rlRange = fRangeList; rlRange!=nullptr; rlRange=rlRange->fNext) {
-        if (rlRange->fNum == category) {
-            retVal = rlRange->fStartChar;
-            break;
+    برائے (rlRange = fRangeList; rlRange!=خالی_اشاریہ; rlRange=rlRange->f_اگلا) {
+        اگر (rlRange->f_عدد == category) {
+            retVal = rlRange->f_آغاز_Char;
+            توڑو;
         }
     }
-    return retVal;
+    واپس retVal;
 }
 
 
@@ -448,31 +448,31 @@ UChar32  RBBISetBuilder::getFirstChar(int32_t category) const {
 //                      dump out all of the range definitions.
 //
 //------------------------------------------------------------------------
-#ifdef RBBI_DEBUG
-void RBBISetBuilder::printRanges() {
+#اگر_تعریف_شدہ RBBI_DEBUG
+خالی RBBISetBuilder::printRanges() {
     RangeDescriptor       *rlRange;
-    int                    i;
+    صحیح                    i;
 
     RBBIDebugPrintf("\n\n Nonoverlapping Ranges ...\n");
-    for (rlRange = fRangeList; rlRange!=nullptr; rlRange=rlRange->fNext) {
-        RBBIDebugPrintf("%4x-%4x  ", rlRange->fStartChar, rlRange->fEndChar);
+    برائے (rlRange = fRangeList; rlRange!=خالی_اشاریہ; rlRange=rlRange->f_اگلا) {
+        RBBIDebugPrintf("%4x-%4x  ", rlRange->f_آغاز_Char, rlRange->f_انتہا_Char);
 
-        for (i=0; i<rlRange->fIncludesSets->size(); i++) {
-            RBBINode       *usetNode    = (RBBINode *)rlRange->fIncludesSets->elementAt(i);
-            UnicodeString   setName {u"anon"};
-            RBBINode       *setRef = usetNode->fParent;
-            if (setRef != nullptr) {
-                RBBINode *varRef = setRef->fParent;
-                if (varRef != nullptr  &&  varRef->fType == RBBINode::varRef) {
-                    setName = varRef->fText;
+        برائے (i=0; i<rlRange->fIncludesSets->size(); i++) {
+            RBBINode       *uset_گرہ    = (RBBINode *)rlRange->fIncludesSets->elementAt(i);
+            UnicodeString   سیٹ_Name {u"anon"};
+            RBBINode       *سیٹ_Ref = uset_گرہ->f_والد;
+            اگر (سیٹ_Ref != خالی_اشاریہ) {
+                RBBINode *varRef = سیٹ_Ref->f_والد;
+                اگر (varRef != خالی_اشاریہ  &&  varRef->fType == RBBINode::varRef) {
+                    سیٹ_Name = varRef->f_متن;
                 }
             }
-            RBBI_DEBUG_printUnicodeString(setName); RBBIDebugPrintf("  ");
+            RBBI_DEBUG_printUnicodeString(سیٹ_Name); RBBIDebugPrintf("  ");
         }
         RBBIDebugPrintf("\n");
     }
 }
-#endif
+#اگر_ختم
 
 
 //------------------------------------------------------------------------
@@ -481,38 +481,38 @@ void RBBISetBuilder::printRanges() {
 //                        dump out all of the range groups.
 //
 //------------------------------------------------------------------------
-#ifdef RBBI_DEBUG
-void RBBISetBuilder::printRangeGroups() {
-    int                    i;
+#اگر_تعریف_شدہ RBBI_DEBUG
+خالی RBBISetBuilder::printRangeGroups() {
+    صحیح                    i;
 
     RBBIDebugPrintf("\nRanges grouped by Unicode Set Membership...\n");
-    for (RangeDescriptor *rlRange = fRangeList; rlRange!=nullptr; rlRange=rlRange->fNext) {
-        if (rlRange->fFirstInGroup) {
-            int groupNum = rlRange->fNum;
-            RBBIDebugPrintf("%2i  ", groupNum);
+    برائے (RangeDescriptor *rlRange = fRangeList; rlRange!=خالی_اشاریہ; rlRange=rlRange->f_اگلا) {
+        اگر (rlRange->f_پہلا_اندر_گروہ) {
+            صحیح گروہ_عدد = rlRange->f_عدد;
+            RBBIDebugPrintf("%2i  ", گروہ_عدد);
 
-            if (groupNum >= fDictCategoriesStart) { RBBIDebugPrintf(" <DICT> ");}
+            اگر (گروہ_عدد >= f_Dict_Categories_آغاز) { RBBIDebugPrintf(" <DICT> ");}
 
-            for (i=0; i<rlRange->fIncludesSets->size(); i++) {
-                RBBINode       *usetNode    = (RBBINode *)rlRange->fIncludesSets->elementAt(i);
-                UnicodeString   setName = UNICODE_STRING("anon", 4);
-                RBBINode       *setRef = usetNode->fParent;
-                if (setRef != nullptr) {
-                    RBBINode *varRef = setRef->fParent;
-                    if (varRef != nullptr  &&  varRef->fType == RBBINode::varRef) {
-                        setName = varRef->fText;
+            برائے (i=0; i<rlRange->fIncludesSets->size(); i++) {
+                RBBINode       *uset_گرہ    = (RBBINode *)rlRange->fIncludesSets->elementAt(i);
+                UnicodeString   سیٹ_Name = UNICODE_STRING("anon", 4);
+                RBBINode       *سیٹ_Ref = uset_گرہ->f_والد;
+                اگر (سیٹ_Ref != خالی_اشاریہ) {
+                    RBBINode *varRef = سیٹ_Ref->f_والد;
+                    اگر (varRef != خالی_اشاریہ  &&  varRef->fType == RBBINode::varRef) {
+                        سیٹ_Name = varRef->f_متن;
                     }
                 }
-                RBBI_DEBUG_printUnicodeString(setName); RBBIDebugPrintf(" ");
+                RBBI_DEBUG_printUnicodeString(سیٹ_Name); RBBIDebugPrintf(" ");
             }
 
             i = 0;
-            for (RangeDescriptor *tRange = rlRange; tRange != nullptr; tRange = tRange->fNext) {
-                if (tRange->fNum == rlRange->fNum) {
-                    if (i++ % 5 == 0) {
+            برائے (RangeDescriptor *tRange = rlRange; tRange != خالی_اشاریہ; tRange = tRange->f_اگلا) {
+                اگر (tRange->f_عدد == rlRange->f_عدد) {
+                    اگر (i++ % 5 == 0) {
                         RBBIDebugPrintf("\n    ");
                     }
-                    RBBIDebugPrintf("  %05x-%05x", tRange->fStartChar, tRange->fEndChar);
+                    RBBIDebugPrintf("  %05x-%05x", tRange->f_آغاز_Char, tRange->f_انتہا_Char);
                 }
             }
             RBBIDebugPrintf("\n");
@@ -520,7 +520,7 @@ void RBBISetBuilder::printRangeGroups() {
     }
     RBBIDebugPrintf("\n");
 }
-#endif
+#اگر_ختم
 
 
 //------------------------------------------------------------------------
@@ -529,42 +529,42 @@ void RBBISetBuilder::printRangeGroups() {
 //                      dump out all of the set definitions.
 //
 //------------------------------------------------------------------------
-#ifdef RBBI_DEBUG
-void RBBISetBuilder::printSets() {
-    int                   i;
+#اگر_تعریف_شدہ RBBI_DEBUG
+خالی RBBISetBuilder::printSets() {
+    صحیح                   i;
 
     RBBIDebugPrintf("\n\nUnicode Sets List\n------------------\n");
-    for (i=0; ; i++) {
-        RBBINode        *usetNode;
-        RBBINode        *setRef;
+    برائے (i=0; ; i++) {
+        RBBINode        *uset_گرہ;
+        RBBINode        *سیٹ_Ref;
         RBBINode        *varRef;
-        UnicodeString    setName;
+        UnicodeString    سیٹ_Name;
 
-        usetNode = (RBBINode *)fRB->fUSetNodes->elementAt(i);
-        if (usetNode == nullptr) {
-            break;
+        uset_گرہ = (RBBINode *)fRB->fUSetNodes->elementAt(i);
+        اگر (uset_گرہ == خالی_اشاریہ) {
+            توڑو;
         }
 
         RBBIDebugPrintf("%3d    ", i);
-        setName = UNICODE_STRING("anonymous", 9);
-        setRef = usetNode->fParent;
-        if (setRef != nullptr) {
-            varRef = setRef->fParent;
-            if (varRef != nullptr  &&  varRef->fType == RBBINode::varRef) {
-                setName = varRef->fText;
+        سیٹ_Name = UNICODE_STRING("anonymous", 9);
+        سیٹ_Ref = uset_گرہ->f_والد;
+        اگر (سیٹ_Ref != خالی_اشاریہ) {
+            varRef = سیٹ_Ref->f_والد;
+            اگر (varRef != خالی_اشاریہ  &&  varRef->fType == RBBINode::varRef) {
+                سیٹ_Name = varRef->f_متن;
             }
         }
-        RBBI_DEBUG_printUnicodeString(setName);
+        RBBI_DEBUG_printUnicodeString(سیٹ_Name);
         RBBIDebugPrintf("   ");
-        RBBI_DEBUG_printUnicodeString(usetNode->fText);
+        RBBI_DEBUG_printUnicodeString(uset_گرہ->f_متن);
         RBBIDebugPrintf("\n");
-        if (usetNode->fLeftChild != nullptr) {
-            RBBINode::printTree(usetNode->fLeftChild, true);
+        اگر (uset_گرہ->f_بایاں_بچہ != خالی_اشاریہ) {
+            RBBINode::print_درخت(uset_گرہ->f_بایاں_بچہ, سچ);
         }
     }
     RBBIDebugPrintf("\n");
 }
-#endif
+#اگر_ختم
 
 
 
@@ -574,23 +574,23 @@ void RBBISetBuilder::printSets() {
 //
 //-------------------------------------------------------------------------------------
 
-RangeDescriptor::RangeDescriptor(const RangeDescriptor &other, UErrorCode &status) :
-        fStartChar(other.fStartChar), fEndChar {other.fEndChar}, fNum {other.fNum},
-        fIncludesDict{other.fIncludesDict}, fFirstInGroup{other.fFirstInGroup} {
+RangeDescriptor::RangeDescriptor(ثابت RangeDescriptor &other, UError_رمز &حالت_2) :
+        f_آغاز_Char(other.f_آغاز_Char), f_انتہا_Char {other.f_انتہا_Char}, f_عدد {other.f_عدد},
+        fIncludesDict{other.fIncludesDict}, f_پہلا_اندر_گروہ{other.f_پہلا_اندر_گروہ} {
 
-    if (U_FAILURE(status)) {
-        return;
+    اگر (U_FAILURE(حالت_2)) {
+        واپس;
     }
-    fIncludesSets = new UVector(status);
-    if (this->fIncludesSets == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
+    fIncludesSets = نیا UVector(حالت_2);
+    اگر (یہ->fIncludesSets == خالی_اشاریہ) {
+        حالت_2 = U_حافظہ_تخصیص_ERROR;
     }
-    if (U_FAILURE(status)) {
-        return;
+    اگر (U_FAILURE(حالت_2)) {
+        واپس;
     }
 
-    for (int32_t i=0; i<other.fIncludesSets->size(); i++) {
-        this->fIncludesSets->addElement(other.fIncludesSets->elementAt(i), status);
+    برائے (int32_t i=0; i<other.fIncludesSets->size(); i++) {
+        یہ->fIncludesSets->جوڑو_Element(other.fIncludesSets->elementAt(i), حالت_2);
     }
 }
 
@@ -600,13 +600,13 @@ RangeDescriptor::RangeDescriptor(const RangeDescriptor &other, UErrorCode &statu
 //  RangeDesriptor default constructor
 //
 //-------------------------------------------------------------------------------------
-RangeDescriptor::RangeDescriptor(UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+RangeDescriptor::RangeDescriptor(UError_رمز &حالت_2) {
+    اگر (U_FAILURE(حالت_2)) {
+        واپس;
     }
-    fIncludesSets = new UVector(status);
-    if (fIncludesSets == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
+    fIncludesSets = نیا UVector(حالت_2);
+    اگر (fIncludesSets == خالی_اشاریہ) {
+        حالت_2 = U_حافظہ_تخصیص_ERROR;
     }
 }
 
@@ -617,8 +617,8 @@ RangeDescriptor::RangeDescriptor(UErrorCode &status) {
 //
 //-------------------------------------------------------------------------------------
 RangeDescriptor::~RangeDescriptor() {
-    delete  fIncludesSets;
-    fIncludesSets = nullptr;
+    حذف  fIncludesSets;
+    fIncludesSets = خالی_اشاریہ;
 }
 
 //-------------------------------------------------------------------------------------
@@ -626,23 +626,23 @@ RangeDescriptor::~RangeDescriptor() {
 //  RangeDesriptor::split()
 //
 //-------------------------------------------------------------------------------------
-void RangeDescriptor::split(UChar32 where, UErrorCode &status) {
-    U_ASSERT(where>fStartChar && where<=fEndChar);
-    RangeDescriptor *nr = new RangeDescriptor(*this, status);
-    if(nr == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+خالی RangeDescriptor::بانٹو(UChar32 where, UError_رمز &حالت_2) {
+    U_ASSERT(where>f_آغاز_Char && where<=f_انتہا_Char);
+    RangeDescriptor *nr = نیا RangeDescriptor(*یہ, حالت_2);
+    اگر(nr == خالی_اشاریہ) {
+        حالت_2 = U_حافظہ_تخصیص_ERROR;
+        واپس;
     }
-    if (U_FAILURE(status)) {
-        delete nr;
-        return;
+    اگر (U_FAILURE(حالت_2)) {
+        حذف nr;
+        واپس;
     }
     //  RangeDescriptor copy constructor copies all fields.
     //  Only need to update those that are different after the split.
-    nr->fStartChar = where;
-    this->fEndChar = where-1;
-    nr->fNext      = this->fNext;
-    this->fNext    = nr;
+    nr->f_آغاز_Char = where;
+    یہ->f_انتہا_Char = where-1;
+    nr->f_اگلا      = یہ->f_اگلا;
+    یہ->f_اگلا    = nr;
 }
 
 
@@ -661,24 +661,24 @@ void RangeDescriptor::split(UChar32 where, UErrorCode &status) {
 //                   up by name every time.
 //
 //-------------------------------------------------------------------------------------
-bool RangeDescriptor::isDictionaryRange() {
-    static const char16_t *dictionary = u"dictionary";
-    for (int32_t i=0; i<fIncludesSets->size(); i++) {
-        RBBINode* usetNode = static_cast<RBBINode*>(fIncludesSets->elementAt(i));
-        RBBINode *setRef = usetNode->fParent;
-        if (setRef != nullptr) {
-            RBBINode *varRef = setRef->fParent;
-            if (varRef && varRef->fType == RBBINode::varRef) {
-                const UnicodeString *setName = &varRef->fText;
-                if (setName->compare(dictionary, -1) == 0) {
-                    return true;
+منطقی RangeDescriptor::isDictionaryRange() {
+    ساکن ثابت char16_t *dictionary = u"dictionary";
+    برائے (int32_t i=0; i<fIncludesSets->size(); i++) {
+        RBBINode* uset_گرہ = static_cast<RBBINode*>(fIncludesSets->elementAt(i));
+        RBBINode *سیٹ_Ref = uset_گرہ->f_والد;
+        اگر (سیٹ_Ref != خالی_اشاریہ) {
+            RBBINode *varRef = سیٹ_Ref->f_والد;
+            اگر (varRef && varRef->fType == RBBINode::varRef) {
+                ثابت UnicodeString *سیٹ_Name = &varRef->f_متن;
+                اگر (سیٹ_Name->compare(dictionary, -1) == 0) {
+                    واپس سچ;
                 }
             }
         }
     }
-    return false;
+    واپس جھوٹ;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#اگر_ختم /* #if !UCONFIG_NO_BREAK_ITERATION */

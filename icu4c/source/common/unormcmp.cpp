@@ -20,17 +20,17 @@
 *   Allows unorm.cpp to not depend on any character properties code.
 */
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#اگر !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/unorm.h"
-#include "unicode/ustring.h"
-#include "cmemory.h"
-#include "normalizer2impl.h"
-#include "ucase.h"
-#include "uprops.h"
-#include "ustr_imp.h"
+#شامل "unicode/unorm.h"
+#شامل "unicode/ustring.h"
+#شامل "cmemory.h"
+#شامل "normalizer2impl.h"
+#شامل "ucase.h"
+#شامل "uprops.h"
+#شامل "ustr_imp.h"
 
 U_NAMESPACE_USE
 
@@ -127,30 +127,30 @@ U_NAMESPACE_USE
  */
 
 /* stack element for previous-level source/decomposition pointers */
-struct CmpEquivLevel {
-    const char16_t *start, *s, *limit;
+ساخت CmpEquivLevel {
+    ثابت char16_t *آغاز, *s, *حد_بندی;
 };
-typedef struct CmpEquivLevel CmpEquivLevel;
+قسمتعریف ساخت CmpEquivLevel CmpEquivLevel;
 
 /**
  * Internal option for unorm_cmpEquivFold() for decomposing.
  * If not set, just do strcasecmp().
  */
-#define _COMPARE_EQUIV 0x80000
+#تعریف_کرو _COMPARE_EQUIV 0x80000
 
 /* internal function */
-static int32_t
-unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
-                   const char16_t *s2, int32_t length2,
+ساکن int32_t
+unorm_cmpEquivFold(ثابت char16_t *s1, int32_t length1,
+                   ثابت char16_t *s2, int32_t length2,
                    uint32_t options,
-                   UErrorCode *pErrorCode) {
-    const Normalizer2Impl *nfcImpl;
+                   UError_رمز *p_Error_رمز) {
+    ثابت Normalizer2Impl *nfcImpl;
 
     /* current-level start/limit - s1/s2 as current */
-    const char16_t *start1, *start2, *limit1, *limit2;
+    ثابت char16_t *start1, *start2, *limit1, *limit2;
 
     /* decomposition and case folding variables */
-    const char16_t *p;
+    ثابت char16_t *p;
     int32_t length;
 
     /* stacks of previous-level start/current/limit */
@@ -160,7 +160,7 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
     char16_t decomp1[4], decomp2[4];
 
     /* case folding buffers, only use current-level start/limit */
-    char16_t fold1[UCASE_MAX_STRING_LENGTH+1], fold2[UCASE_MAX_STRING_LENGTH+1];
+    char16_t fold1[UCASE_MAX_STRING_لمبائی+1], fold2[UCASE_MAX_STRING_لمبائی+1];
 
     /* track which is the current level per string */
     int32_t level1, level2;
@@ -177,27 +177,27 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
      */
 
     /* normalization/properties data loaded? */
-    if((options&_COMPARE_EQUIV)!=0) {
-        nfcImpl=Normalizer2Factory::getNFCImpl(*pErrorCode);
-    } else {
-        nfcImpl=nullptr;
+    اگر((options&_COMPARE_EQUIV)!=0) {
+        nfcImpl=Normalizer2Factory::getNFCImpl(*p_Error_رمز);
+    } ورنہ {
+        nfcImpl=خالی_اشاریہ;
     }
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    اگر(U_FAILURE(*p_Error_رمز)) {
+        واپس 0;
     }
 
     /* initialize */
     start1=s1;
-    if(length1==-1) {
-        limit1=nullptr;
-    } else {
+    اگر(length1==-1) {
+        limit1=خالی_اشاریہ;
+    } ورنہ {
         limit1=s1+length1;
     }
 
     start2=s2;
-    if(length2==-1) {
-        limit2=nullptr;
-    } else {
+    اگر(length2==-1) {
+        limit2=خالی_اشاریہ;
+    } ورنہ {
         limit2=s2+length2;
     }
 
@@ -205,55 +205,55 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
     c1=c2=-1;
 
     /* comparison loop */
-    for(;;) {
+    برائے(;;) {
         /*
          * here a code unit value of -1 means "get another code unit"
          * below it will mean "this source is finished"
          */
 
-        if(c1<0) {
+        اگر(c1<0) {
             /* get next code unit from string 1, post-increment */
-            for(;;) {
-                if(s1==limit1 || ((c1=*s1)==0 && (limit1==nullptr || (options&_STRNCMP_STYLE)))) {
-                    if(level1==0) {
+            برائے(;;) {
+                اگر(s1==limit1 || ((c1=*s1)==0 && (limit1==خالی_اشاریہ || (options&_STRNCMP_STYLE)))) {
+                    اگر(level1==0) {
                         c1=-1;
-                        break;
+                        توڑو;
                     }
-                } else {
+                } ورنہ {
                     ++s1;
-                    break;
+                    توڑو;
                 }
 
                 /* reached end of level buffer, pop one level */
-                do {
+                کرو {
                     --level1;
-                    start1=stack1[level1].start;    /*Not uninitialized*/
-                } while(start1==nullptr);
+                    start1=stack1[level1].آغاز;    /*Not uninitialized*/
+                } جب(start1==خالی_اشاریہ);
                 s1=stack1[level1].s;                /*Not uninitialized*/
-                limit1=stack1[level1].limit;        /*Not uninitialized*/
+                limit1=stack1[level1].حد_بندی;        /*Not uninitialized*/
             }
         }
 
-        if(c2<0) {
+        اگر(c2<0) {
             /* get next code unit from string 2, post-increment */
-            for(;;) {
-                if(s2==limit2 || ((c2=*s2)==0 && (limit2==nullptr || (options&_STRNCMP_STYLE)))) {
-                    if(level2==0) {
+            برائے(;;) {
+                اگر(s2==limit2 || ((c2=*s2)==0 && (limit2==خالی_اشاریہ || (options&_STRNCMP_STYLE)))) {
+                    اگر(level2==0) {
                         c2=-1;
-                        break;
+                        توڑو;
                     }
-                } else {
+                } ورنہ {
                     ++s2;
-                    break;
+                    توڑو;
                 }
 
                 /* reached end of level buffer, pop one level */
-                do {
+                کرو {
                     --level2;
-                    start2=stack2[level2].start;    /*Not uninitialized*/
-                } while(start2==nullptr);
+                    start2=stack2[level2].آغاز;    /*Not uninitialized*/
+                } جب(start2==خالی_اشاریہ);
                 s2=stack2[level2].s;                /*Not uninitialized*/
-                limit2=stack2[level2].limit;        /*Not uninitialized*/
+                limit2=stack2[level2].حد_بندی;        /*Not uninitialized*/
             }
         }
 
@@ -261,47 +261,47 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
          * compare c1 and c2
          * either variable c1, c2 is -1 only if the corresponding string is finished
          */
-        if(c1==c2) {
-            if(c1<0) {
-                return 0;   /* c1==c2==-1 indicating end of strings */
+        اگر(c1==c2) {
+            اگر(c1<0) {
+                واپس 0;   /* c1==c2==-1 indicating end of strings */
             }
             c1=c2=-1;       /* make us fetch new code units */
-            continue;
-        } else if(c1<0) {
-            return -1;      /* string 1 ends before string 2 */
-        } else if(c2<0) {
-            return 1;       /* string 2 ends before string 1 */
+            جاری;
+        } ورنہ اگر(c1<0) {
+            واپس -1;      /* string 1 ends before string 2 */
+        } ورنہ اگر(c2<0) {
+            واپس 1;       /* string 2 ends before string 1 */
         }
         /* c1!=c2 && c1>=0 && c2>=0 */
 
         /* get complete code points for c1, c2 for lookups if either is a surrogate */
         cp1=c1;
-        if(U_IS_SURROGATE(c1)) {
+        اگر(U_IS_SURROGATE(c1)) {
             char16_t c;
 
-            if(U_IS_SURROGATE_LEAD(c1)) {
-                if(s1!=limit1 && U16_IS_TRAIL(c=*s1)) {
+            اگر(U_IS_SURROGATE_LEAD(c1)) {
+                اگر(s1!=limit1 && U16_IS_TRAIL(c=*s1)) {
                     /* advance ++s1; only below if cp1 decomposes/case-folds */
                     cp1=U16_GET_SUPPLEMENTARY(c1, c);
                 }
-            } else /* isTrail(c1) */ {
-                if(start1<=(s1-2) && U16_IS_LEAD(c=*(s1-2))) {
+            } ورنہ /* isTrail(c1) */ {
+                اگر(start1<=(s1-2) && U16_IS_LEAD(c=*(s1-2))) {
                     cp1=U16_GET_SUPPLEMENTARY(c, c1);
                 }
             }
         }
 
         cp2=c2;
-        if(U_IS_SURROGATE(c2)) {
+        اگر(U_IS_SURROGATE(c2)) {
             char16_t c;
 
-            if(U_IS_SURROGATE_LEAD(c2)) {
-                if(s2!=limit2 && U16_IS_TRAIL(c=*s2)) {
+            اگر(U_IS_SURROGATE_LEAD(c2)) {
+                اگر(s2!=limit2 && U16_IS_TRAIL(c=*s2)) {
                     /* advance ++s2; only below if cp2 decomposes/case-folds */
                     cp2=U16_GET_SUPPLEMENTARY(c2, c);
                 }
-            } else /* isTrail(c2) */ {
-                if(start2<=(s2-2) && U16_IS_LEAD(c=*(s2-2))) {
+            } ورنہ /* isTrail(c2) */ {
+                اگر(start2<=(s2-2) && U16_IS_LEAD(c=*(s2-2))) {
                     cp2=U16_GET_SUPPLEMENTARY(c, c2);
                 }
             }
@@ -312,15 +312,15 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
          * continue with the main loop as soon as there is a real change
          */
 
-        if( level1==0 && (options&U_COMPARE_IGNORE_CASE) &&
-            (length = ucase_toFullFolding(cp1, &p, options)) >= 0
+        اگر( level1==0 && (options&U_COMPARE_IGNORE_CASE) &&
+            (length = ucase_مقصد_بھرا_Folding(cp1, &p, options)) >= 0
         ) {
             /* cp1 case-folds to the code point "length" or to p[length] */
-            if(U_IS_SURROGATE(c1)) {
-                if(U_IS_SURROGATE_LEAD(c1)) {
+            اگر(U_IS_SURROGATE(c1)) {
+                اگر(U_IS_SURROGATE_LEAD(c1)) {
                     /* advance beyond source surrogate pair if it case-folds */
                     ++s1;
-                } else /* isTrail(c1) */ {
+                } ورنہ /* isTrail(c1) */ {
                     /*
                      * we got a supplementary code point when hitting its trail surrogate,
                      * therefore the lead surrogate must have been the same as in the other string;
@@ -334,15 +334,15 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
             }
 
             /* push current level pointers */
-            stack1[0].start=start1;
+            stack1[0].آغاز=start1;
             stack1[0].s=s1;
-            stack1[0].limit=limit1;
+            stack1[0].حد_بندی=limit1;
             ++level1;
 
             /* copy the folding result to fold1[] */
-            if(length<=UCASE_MAX_STRING_LENGTH) {
+            اگر(length<=UCASE_MAX_STRING_لمبائی) {
                 u_memcpy(fold1, p, length);
-            } else {
+            } ورنہ {
                 int32_t i=0;
                 U16_APPEND_UNSAFE(fold1, i, length);
                 length=i;
@@ -354,18 +354,18 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
 
             /* get ready to read from decomposition, continue with loop */
             c1=-1;
-            continue;
+            جاری;
         }
 
-        if( level2==0 && (options&U_COMPARE_IGNORE_CASE) &&
-            (length = ucase_toFullFolding(cp2, &p, options)) >= 0
+        اگر( level2==0 && (options&U_COMPARE_IGNORE_CASE) &&
+            (length = ucase_مقصد_بھرا_Folding(cp2, &p, options)) >= 0
         ) {
             /* cp2 case-folds to the code point "length" or to p[length] */
-            if(U_IS_SURROGATE(c2)) {
-                if(U_IS_SURROGATE_LEAD(c2)) {
+            اگر(U_IS_SURROGATE(c2)) {
+                اگر(U_IS_SURROGATE_LEAD(c2)) {
                     /* advance beyond source surrogate pair if it case-folds */
                     ++s2;
-                } else /* isTrail(c2) */ {
+                } ورنہ /* isTrail(c2) */ {
                     /*
                      * we got a supplementary code point when hitting its trail surrogate,
                      * therefore the lead surrogate must have been the same as in the other string;
@@ -379,15 +379,15 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
             }
 
             /* push current level pointers */
-            stack2[0].start=start2;
+            stack2[0].آغاز=start2;
             stack2[0].s=s2;
-            stack2[0].limit=limit2;
+            stack2[0].حد_بندی=limit2;
             ++level2;
 
             /* copy the folding result to fold2[] */
-            if(length<=UCASE_MAX_STRING_LENGTH) {
+            اگر(length<=UCASE_MAX_STRING_لمبائی) {
                 u_memcpy(fold2, p, length);
-            } else {
+            } ورنہ {
                 int32_t i=0;
                 U16_APPEND_UNSAFE(fold2, i, length);
                 length=i;
@@ -399,18 +399,18 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
 
             /* get ready to read from decomposition, continue with loop */
             c2=-1;
-            continue;
+            جاری;
         }
 
-        if( level1<2 && (options&_COMPARE_EQUIV) &&
-            nullptr != (p = nfcImpl->getDecomposition(cp1, decomp1, length))
+        اگر( level1<2 && (options&_COMPARE_EQUIV) &&
+            خالی_اشاریہ != (p = nfcImpl->getDecomposition(cp1, decomp1, length))
         ) {
             /* cp1 decomposes into p[length] */
-            if(U_IS_SURROGATE(c1)) {
-                if(U_IS_SURROGATE_LEAD(c1)) {
+            اگر(U_IS_SURROGATE(c1)) {
+                اگر(U_IS_SURROGATE_LEAD(c1)) {
                     /* advance beyond source surrogate pair if it decomposes */
                     ++s1;
-                } else /* isTrail(c1) */ {
+                } ورنہ /* isTrail(c1) */ {
                     /*
                      * we got a supplementary code point when hitting its trail surrogate,
                      * therefore the lead surrogate must have been the same as in the other string;
@@ -424,14 +424,14 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
             }
 
             /* push current level pointers */
-            stack1[level1].start=start1;
+            stack1[level1].آغاز=start1;
             stack1[level1].s=s1;
-            stack1[level1].limit=limit1;
+            stack1[level1].حد_بندی=limit1;
             ++level1;
 
             /* set empty intermediate level if skipped */
-            if(level1<2) {
-                stack1[level1++].start=nullptr;
+            اگر(level1<2) {
+                stack1[level1++].آغاز=خالی_اشاریہ;
             }
 
             /* set next level pointers to decomposition */
@@ -440,18 +440,18 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
 
             /* get ready to read from decomposition, continue with loop */
             c1=-1;
-            continue;
+            جاری;
         }
 
-        if( level2<2 && (options&_COMPARE_EQUIV) &&
-            nullptr != (p = nfcImpl->getDecomposition(cp2, decomp2, length))
+        اگر( level2<2 && (options&_COMPARE_EQUIV) &&
+            خالی_اشاریہ != (p = nfcImpl->getDecomposition(cp2, decomp2, length))
         ) {
             /* cp2 decomposes into p[length] */
-            if(U_IS_SURROGATE(c2)) {
-                if(U_IS_SURROGATE_LEAD(c2)) {
+            اگر(U_IS_SURROGATE(c2)) {
+                اگر(U_IS_SURROGATE_LEAD(c2)) {
                     /* advance beyond source surrogate pair if it decomposes */
                     ++s2;
-                } else /* isTrail(c2) */ {
+                } ورنہ /* isTrail(c2) */ {
                     /*
                      * we got a supplementary code point when hitting its trail surrogate,
                      * therefore the lead surrogate must have been the same as in the other string;
@@ -465,14 +465,14 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
             }
 
             /* push current level pointers */
-            stack2[level2].start=start2;
+            stack2[level2].آغاز=start2;
             stack2[level2].s=s2;
-            stack2[level2].limit=limit2;
+            stack2[level2].حد_بندی=limit2;
             ++level2;
 
             /* set empty intermediate level if skipped */
-            if(level2<2) {
-                stack2[level2++].start=nullptr;
+            اگر(level2<2) {
+                stack2[level2++].آغاز=خالی_اشاریہ;
             }
 
             /* set next level pointers to decomposition */
@@ -481,7 +481,7 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
 
             /* get ready to read from decomposition, continue with loop */
             c2=-1;
-            continue;
+            جاری;
         }
 
         /*
@@ -501,42 +501,42 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
          * so we have slightly different pointer/start/limit comparisons here
          */
 
-        if(c1>=0xd800 && c2>=0xd800 && (options&U_COMPARE_CODE_POINT_ORDER)) {
+        اگر(c1>=0xd800 && c2>=0xd800 && (options&U_COMPARE_رمز_نقطہ_ترتیب)) {
             /* subtract 0x2800 from BMP code points to make them smaller than supplementary ones */
-            if(
+            اگر(
                 (c1<=0xdbff && s1!=limit1 && U16_IS_TRAIL(*s1)) ||
                 (U16_IS_TRAIL(c1) && start1!=(s1-1) && U16_IS_LEAD(*(s1-2)))
             ) {
                 /* part of a surrogate pair, leave >=d800 */
-            } else {
+            } ورنہ {
                 /* BMP code point - may be surrogate code point - make <d800 */
                 c1-=0x2800;
             }
 
-            if(
+            اگر(
                 (c2<=0xdbff && s2!=limit2 && U16_IS_TRAIL(*s2)) ||
                 (U16_IS_TRAIL(c2) && start2!=(s2-1) && U16_IS_LEAD(*(s2-2)))
             ) {
                 /* part of a surrogate pair, leave >=d800 */
-            } else {
+            } ورنہ {
                 /* BMP code point - may be surrogate code point - make <d800 */
                 c2-=0x2800;
             }
         }
 
-        return c1-c2;
+        واپس c1-c2;
     }
 }
 
-static
-UBool _normalize(const Normalizer2 *n2, const char16_t *s, int32_t length,
-                UnicodeString &normalized, UErrorCode *pErrorCode) {
+ساکن
+UBool _normalize(ثابت Normalizer2 *n2, ثابت char16_t *s, int32_t length,
+                UnicodeString &normalized, UError_رمز *p_Error_رمز) {
     UnicodeString str(length<0, s, length);
 
     // check if s fulfill the conditions
-    int32_t spanQCYes=n2->spanQuickCheckYes(str, *pErrorCode);
-    if (U_FAILURE(*pErrorCode)) {
-        return false;
+    int32_t وسعت_QCYes=n2->وسعت_تیز_Check_Yes(str, *p_Error_رمز);
+    اگر (U_FAILURE(*p_Error_رمز)) {
+        واپس جھوٹ;
     }
     /*
      * ICU 2.4 had a further optimization:
@@ -546,33 +546,33 @@ UBool _normalize(const Normalizer2 *n2, const char16_t *s, int32_t length,
      * definition of the canonical caseless match.
      * Therefore, ICU 2.6 removes that optimization.
      */
-    if(spanQCYes<str.length()) {
-        UnicodeString unnormalized=str.tempSubString(spanQCYes);
-        normalized.setTo(false, str.getBuffer(), spanQCYes);
-        n2->normalizeSecondAndAppend(normalized, unnormalized, *pErrorCode);
-        if (U_SUCCESS(*pErrorCode)) {
-            return true;
+    اگر(وسعت_QCYes<str.length()) {
+        UnicodeString unnormalized=str.عارضی_Sub_String(وسعت_QCYes);
+        normalized.سیٹ_مقصد(جھوٹ, str.get_بفر(), وسعت_QCYes);
+        n2->normalize_دوسرا_And_Append(normalized, unnormalized, *p_Error_رمز);
+        اگر (U_SUCCESS(*p_Error_رمز)) {
+            واپس سچ;
         }
     }
-    return false;
+    واپس جھوٹ;
 }
 
 U_CAPI int32_t U_EXPORT2
-unorm_compare(const char16_t *s1, int32_t length1,
-              const char16_t *s2, int32_t length2,
+unorm_compare(ثابت char16_t *s1, int32_t length1,
+              ثابت char16_t *s2, int32_t length2,
               uint32_t options,
-              UErrorCode *pErrorCode) {
+              UError_رمز *p_Error_رمز) {
     /* argument checking */
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    اگر(U_FAILURE(*p_Error_رمز)) {
+        واپس 0;
     }
-    if (s1 == nullptr || length1 < -1 || s2 == nullptr || length2 < -1) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    اگر (s1 == خالی_اشاریہ || length1 < -1 || s2 == خالی_اشاریہ || length2 < -1) {
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
 
     UnicodeString fcd1, fcd2;
-    int32_t normOptions=(int32_t)(options>>UNORM_COMPARE_NORM_OPTIONS_SHIFT);
+    int32_t normOptions=(int32_t)(options>>UNORM_COMPARE_NORM_OPTIONS_سرکاؤ);
     options|=_COMPARE_EQUIV;
 
     /*
@@ -596,45 +596,45 @@ unorm_compare(const char16_t *s1, int32_t length1,
      * are first decomposed or not, so an FCD check - a check only for
      * canonical order - is not sufficient.
      */
-    if(!(options&UNORM_INPUT_IS_FCD) || (options&U_FOLD_CASE_EXCLUDE_SPECIAL_I)) {
-        const Normalizer2 *n2;
-        if(options&U_FOLD_CASE_EXCLUDE_SPECIAL_I) {
-            n2=Normalizer2::getNFDInstance(*pErrorCode);
-        } else {
-            n2=Normalizer2Factory::getFCDInstance(*pErrorCode);
+    اگر(!(options&UNORM_داخلہ_IS_FCD) || (options&U_FOLD_CASE_EXCLUDE_SPECIAL_I)) {
+        ثابت Normalizer2 *n2;
+        اگر(options&U_FOLD_CASE_EXCLUDE_SPECIAL_I) {
+            n2=Normalizer2::getNFDInstance(*p_Error_رمز);
+        } ورنہ {
+            n2=Normalizer2Factory::getFCDInstance(*p_Error_رمز);
         }
-        if (U_FAILURE(*pErrorCode)) {
-            return 0;
+        اگر (U_FAILURE(*p_Error_رمز)) {
+            واپس 0;
         }
 
-        if(normOptions&UNORM_UNICODE_3_2) {
-            const UnicodeSet *uni32=uniset_getUnicode32Instance(*pErrorCode);
+        اگر(normOptions&UNORM_UNICODE_3_2) {
+            ثابت Unicode_سیٹ *uni32=uniset_getUnicode32Instance(*p_Error_رمز);
             FilteredNormalizer2 fn2(*n2, *uni32);
-            if(_normalize(&fn2, s1, length1, fcd1, pErrorCode)) {
-                s1=fcd1.getBuffer();
+            اگر(_normalize(&fn2, s1, length1, fcd1, p_Error_رمز)) {
+                s1=fcd1.get_بفر();
                 length1=fcd1.length();
             }
-            if(_normalize(&fn2, s2, length2, fcd2, pErrorCode)) {
-                s2=fcd2.getBuffer();
+            اگر(_normalize(&fn2, s2, length2, fcd2, p_Error_رمز)) {
+                s2=fcd2.get_بفر();
                 length2=fcd2.length();
             }
-        } else {
-            if(_normalize(n2, s1, length1, fcd1, pErrorCode)) {
-                s1=fcd1.getBuffer();
+        } ورنہ {
+            اگر(_normalize(n2, s1, length1, fcd1, p_Error_رمز)) {
+                s1=fcd1.get_بفر();
                 length1=fcd1.length();
             }
-            if(_normalize(n2, s2, length2, fcd2, pErrorCode)) {
-                s2=fcd2.getBuffer();
+            اگر(_normalize(n2, s2, length2, fcd2, p_Error_رمز)) {
+                s2=fcd2.get_بفر();
                 length2=fcd2.length();
             }
         }
     }
 
-    if(U_SUCCESS(*pErrorCode)) {
-        return unorm_cmpEquivFold(s1, length1, s2, length2, options, pErrorCode);
-    } else {
-        return 0;
+    اگر(U_SUCCESS(*p_Error_رمز)) {
+        واپس unorm_cmpEquivFold(s1, length1, s2, length2, options, p_Error_رمز);
+    } ورنہ {
+        واپس 0;
     }
 }
 
-#endif /* #if !UCONFIG_NO_NORMALIZATION */
+#اگر_ختم /* #if !UCONFIG_NO_NORMALIZATION */

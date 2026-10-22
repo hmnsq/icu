@@ -18,40 +18,40 @@
 *   Swap collation binaries.
 */
 
-#include "unicode/udata.h" /* UDataInfo */
-#include "utrie.h"
-#include "utrie2.h"
-#include "udataswp.h"
-#include "cmemory.h"
-#include "ucol_data.h"
-#include "ucol_swp.h"
+#شامل "unicode/udata.h" /* UDataInfo */
+#شامل "utrie.h"
+#شامل "utrie2.h"
+#شامل "udataswp.h"
+#شامل "cmemory.h"
+#شامل "ucol_data.h"
+#شامل "ucol_swp.h"
 
 /* swapping ----------------------------------------------------------------- */
 
-#if !UCONFIG_NO_COLLATION
+#اگر !UCONFIG_NO_COLLATION
 
 U_CAPI UBool U_EXPORT2
-ucol_looksLikeCollationBinary(const UDataSwapper *ds,
-                              const void *inData, int32_t length) {
-    if(ds==nullptr || inData==nullptr || length<-1) {
-        return false;
+ucol_looks_Like_Collation_ثنائی(ثابت UDataSwapper *ds,
+                              ثابت خالی *اندر_ڈیٹا, int32_t length) {
+    اگر(ds==خالی_اشاریہ || اندر_ڈیٹا==خالی_اشاریہ || length<-1) {
+        واپس جھوٹ;
     }
 
     // First check for format version 4+ which has a standard data header.
-    UErrorCode errorCode=U_ZERO_ERROR;
-    (void)udata_swapDataHeader(ds, inData, -1, nullptr, &errorCode);
-    if(U_SUCCESS(errorCode)) {
-        const UDataInfo &info=*(const UDataInfo *)((const char *)inData+4);
-        if(info.dataFormat[0]==0x55 &&   // dataFormat="UCol"
-                info.dataFormat[1]==0x43 &&
-                info.dataFormat[2]==0x6f &&
-                info.dataFormat[3]==0x6c) {
-            return true;
+    UError_رمز error_رمز=U_ZERO_ERROR;
+    (خالی)udata_تبادلہ_ڈیٹا_سرخی(ds, اندر_ڈیٹا, -1, خالی_اشاریہ, &error_رمز);
+    اگر(U_SUCCESS(error_رمز)) {
+        ثابت UDataInfo &info=*(ثابت UDataInfo *)((ثابت حرف *)اندر_ڈیٹا+4);
+        اگر(info.ڈیٹا_Format[0]==0x55 &&   // dataFormat="UCol"
+                info.ڈیٹا_Format[1]==0x43 &&
+                info.ڈیٹا_Format[2]==0x6f &&
+                info.ڈیٹا_Format[3]==0x6c) {
+            واپس سچ;
         }
     }
 
     // Else check for format version 3.
-    const UCATableHeader *inHeader=(const UCATableHeader *)inData;
+    ثابت UCATable_سرخی *اندر_سرخی=(ثابت UCATable_سرخی *)اندر_ڈیٹا;
 
     /*
      * The collation binary must contain at least the UCATableHeader,
@@ -59,60 +59,60 @@ ucol_looksLikeCollationBinary(const UDataSwapper *ds,
      * sizeof(UCATableHeader)==42*4 in ICU 2.8
      * check the length against the header size before reading the size field
      */
-    UCATableHeader header;
-    uprv_memset(&header, 0, sizeof(header));
-    if(length<0) {
-        header.size=udata_readInt32(ds, inHeader->size);
-    } else if((length<(42*4) || length<(header.size=udata_readInt32(ds, inHeader->size)))) {
-        return false;
+    UCATable_سرخی سرخی;
+    uprv_memset(&سرخی, 0, حجم(سرخی));
+    اگر(length<0) {
+        سرخی.size=udata_readInt32(ds, اندر_سرخی->size);
+    } ورنہ اگر((length<(42*4) || length<(سرخی.size=udata_readInt32(ds, اندر_سرخی->size)))) {
+        واپس جھوٹ;
     }
 
-    header.magic=ds->readUInt32(inHeader->magic);
-    if(!(
-        header.magic==UCOL_HEADER_MAGIC &&
-        inHeader->formatVersion[0]==3 /*&&
+    سرخی.magic=ds->readUInt32(اندر_سرخی->magic);
+    اگر(!(
+        سرخی.magic==UCOL_سرخی_MAGIC &&
+        اندر_سرخی->format_نسخہ[0]==3 /*&&
         inHeader->formatVersion[1]>=0*/
     )) {
-        return false;
+        واپس جھوٹ;
     }
 
-    if(inHeader->isBigEndian!=ds->inIsBigEndian || inHeader->charSetFamily!=ds->inCharset) {
-        return false;
+    اگر(اندر_سرخی->isBigEndian!=ds->اندر_Is_Big_Endian || اندر_سرخی->char_سیٹ_Family!=ds->اندر_Charset) {
+        واپس جھوٹ;
     }
 
-    return true;
+    واپس سچ;
 }
 
-namespace {
+نامخلا {
 
 /* swap a header-less collation formatVersion=3 binary, inside a resource bundle or ucadata.icu */
 int32_t
-swapFormatVersion3(const UDataSwapper *ds,
-                   const void *inData, int32_t length, void *outData,
-                   UErrorCode *pErrorCode) {
-    const uint8_t *inBytes;
-    uint8_t *outBytes;
+تبادلہ_Format_Version3(ثابت UDataSwapper *ds,
+                   ثابت خالی *اندر_ڈیٹا, int32_t length, خالی *برآمد_ڈیٹا,
+                   UError_رمز *p_Error_رمز) {
+    ثابت uint8_t *اندر_بائٹیں;
+    uint8_t *برآمد_بائٹیں;
 
-    const UCATableHeader *inHeader;
-    UCATableHeader *outHeader;
-    UCATableHeader header;
+    ثابت UCATable_سرخی *اندر_سرخی;
+    UCATable_سرخی *برآمد_سرخی;
+    UCATable_سرخی سرخی;
 
     uint32_t count;
 
     /* argument checking in case we were not called from ucol_swap() */
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    اگر(U_FAILURE(*p_Error_رمز)) {
+        واپس 0;
     }
-    if(ds==nullptr || inData==nullptr || length<-1 || (length>0 && outData==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    اگر(ds==خالی_اشاریہ || اندر_ڈیٹا==خالی_اشاریہ || length<-1 || (length>0 && برآمد_ڈیٹا==خالی_اشاریہ)) {
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس 0;
     }
 
-    inBytes = static_cast<const uint8_t*>(inData);
-    outBytes = static_cast<uint8_t*>(outData);
+    اندر_بائٹیں = static_cast<ثابت uint8_t*>(اندر_ڈیٹا);
+    برآمد_بائٹیں = static_cast<uint8_t*>(برآمد_ڈیٹا);
 
-    inHeader = static_cast<const UCATableHeader*>(inData);
-    outHeader = static_cast<UCATableHeader*>(outData);
+    اندر_سرخی = static_cast<ثابت UCATable_سرخی*>(اندر_ڈیٹا);
+    برآمد_سرخی = static_cast<UCATable_سرخی*>(برآمد_ڈیٹا);
 
     /*
      * The collation binary must contain at least the UCATableHeader,
@@ -120,151 +120,151 @@ swapFormatVersion3(const UDataSwapper *ds,
      * sizeof(UCATableHeader)==42*4 in ICU 2.8
      * check the length against the header size before reading the size field
      */
-    uprv_memset(&header, 0, sizeof(header));
-    if(length<0) {
-        header.size=udata_readInt32(ds, inHeader->size);
-    } else if((length<(42*4) || length<(header.size=udata_readInt32(ds, inHeader->size)))) {
+    uprv_memset(&سرخی, 0, حجم(سرخی));
+    اگر(length<0) {
+        سرخی.size=udata_readInt32(ds, اندر_سرخی->size);
+    } ورنہ اگر((length<(42*4) || length<(سرخی.size=udata_readInt32(ds, اندر_سرخی->size)))) {
         udata_printError(ds, "ucol_swap(formatVersion=3): too few bytes (%d after header) for collation data\n",
                          length);
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        *p_Error_رمز=U_اشاریہ_OUTOFBOUNDS_ERROR;
+        واپس 0;
     }
 
-    header.magic=ds->readUInt32(inHeader->magic);
-    if(!(
-        header.magic==UCOL_HEADER_MAGIC &&
-        inHeader->formatVersion[0]==3 /*&&
+    سرخی.magic=ds->readUInt32(اندر_سرخی->magic);
+    اگر(!(
+        سرخی.magic==UCOL_سرخی_MAGIC &&
+        اندر_سرخی->format_نسخہ[0]==3 /*&&
         inHeader->formatVersion[1]>=0*/
     )) {
         udata_printError(ds, "ucol_swap(formatVersion=3): magic 0x%08x or format version %02x.%02x is not a collation binary\n",
-                         header.magic,
-                         inHeader->formatVersion[0], inHeader->formatVersion[1]);
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+                         سرخی.magic,
+                         اندر_سرخی->format_نسخہ[0], اندر_سرخی->format_نسخہ[1]);
+        *p_Error_رمز=U_UNSUPPORTED_ERROR;
+        واپس 0;
     }
 
-    if(inHeader->isBigEndian!=ds->inIsBigEndian || inHeader->charSetFamily!=ds->inCharset) {
+    اگر(اندر_سرخی->isBigEndian!=ds->اندر_Is_Big_Endian || اندر_سرخی->char_سیٹ_Family!=ds->اندر_Charset) {
         udata_printError(ds, "ucol_swap(formatVersion=3): endianness %d or charset %d does not match the swapper\n",
-                         inHeader->isBigEndian, inHeader->charSetFamily);
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return 0;
+                         اندر_سرخی->isBigEndian, اندر_سرخی->char_سیٹ_Family);
+        *p_Error_رمز=U_INVALID_FORMAT_ERROR;
+        واپس 0;
     }
 
-    if(length>=0) {
+    اگر(length>=0) {
         /* copy everything, takes care of data that needs no swapping */
-        if(inBytes!=outBytes) {
-            uprv_memcpy(outBytes, inBytes, header.size);
+        اگر(اندر_بائٹیں!=برآمد_بائٹیں) {
+            uprv_memcpy(برآمد_بائٹیں, اندر_بائٹیں, سرخی.size);
         }
 
         /* swap the necessary pieces in the order of their occurrence in the data */
 
         /* read more of the UCATableHeader (the size field was read above) */
-        header.options=                 ds->readUInt32(inHeader->options);
-        header.UCAConsts=               ds->readUInt32(inHeader->UCAConsts);
-        header.contractionUCACombos=    ds->readUInt32(inHeader->contractionUCACombos);
-        header.mappingPosition=         ds->readUInt32(inHeader->mappingPosition);
-        header.expansion=               ds->readUInt32(inHeader->expansion);
-        header.contractionIndex=        ds->readUInt32(inHeader->contractionIndex);
-        header.contractionCEs=          ds->readUInt32(inHeader->contractionCEs);
-        header.contractionSize=         ds->readUInt32(inHeader->contractionSize);
-        header.endExpansionCE=          ds->readUInt32(inHeader->endExpansionCE);
-        header.expansionCESize=         ds->readUInt32(inHeader->expansionCESize);
-        header.endExpansionCECount=     udata_readInt32(ds, inHeader->endExpansionCECount);
-        header.contractionUCACombosSize=udata_readInt32(ds, inHeader->contractionUCACombosSize);
-        header.scriptToLeadByte=        ds->readUInt32(inHeader->scriptToLeadByte);
-        header.leadByteToScript=        ds->readUInt32(inHeader->leadByteToScript);
+        سرخی.options=                 ds->readUInt32(اندر_سرخی->options);
+        سرخی.UCAConsts=               ds->readUInt32(اندر_سرخی->UCAConsts);
+        سرخی.contractionUCACombos=    ds->readUInt32(اندر_سرخی->contractionUCACombos);
+        سرخی.mappingPosition=         ds->readUInt32(اندر_سرخی->mappingPosition);
+        سرخی.expansion=               ds->readUInt32(اندر_سرخی->expansion);
+        سرخی.contraction_اشاریہ=        ds->readUInt32(اندر_سرخی->contraction_اشاریہ);
+        سرخی.contractionCEs=          ds->readUInt32(اندر_سرخی->contractionCEs);
+        سرخی.contraction_سائز=         ds->readUInt32(اندر_سرخی->contraction_سائز);
+        سرخی.انتہا_Expansion_CE=          ds->readUInt32(اندر_سرخی->انتہا_Expansion_CE);
+        سرخی.expansionCESize=         ds->readUInt32(اندر_سرخی->expansionCESize);
+        سرخی.انتہا_Expansion_CECount=     udata_readInt32(ds, اندر_سرخی->انتہا_Expansion_CECount);
+        سرخی.contraction_UCACombos_سائز=udata_readInt32(ds, اندر_سرخی->contraction_UCACombos_سائز);
+        سرخی.script_مقصد_Lead_Byte=        ds->readUInt32(اندر_سرخی->script_مقصد_Lead_Byte);
+        سرخی.lead_Byte_مقصد_Script=        ds->readUInt32(اندر_سرخی->lead_Byte_مقصد_Script);
         
         /* swap the 32-bit integers in the header */
-        ds->swapArray32(ds, inHeader, static_cast<int32_t>(reinterpret_cast<const char*>(&inHeader->jamoSpecial) - reinterpret_cast<const char*>(inHeader)),
-                           outHeader, pErrorCode);
-        ds->swapArray32(ds, &(inHeader->scriptToLeadByte), sizeof(header.scriptToLeadByte) + sizeof(header.leadByteToScript),
-                           &(outHeader->scriptToLeadByte), pErrorCode);
+        ds->تبادلہ_Array32(ds, اندر_سرخی, static_cast<int32_t>(reinterpret_cast<ثابت حرف*>(&اندر_سرخی->jamoSpecial) - reinterpret_cast<ثابت حرف*>(اندر_سرخی)),
+                           برآمد_سرخی, p_Error_رمز);
+        ds->تبادلہ_Array32(ds, &(اندر_سرخی->script_مقصد_Lead_Byte), حجم(سرخی.script_مقصد_Lead_Byte) + حجم(سرخی.lead_Byte_مقصد_Script),
+                           &(برآمد_سرخی->script_مقصد_Lead_Byte), p_Error_رمز);
         /* set the output platform properties */
-        outHeader->isBigEndian=ds->outIsBigEndian;
-        outHeader->charSetFamily=ds->outCharset;
+        برآمد_سرخی->isBigEndian=ds->برآمد_Is_Big_Endian;
+        برآمد_سرخی->char_سیٹ_Family=ds->برآمد_Charset;
 
         /* swap the options */
-        if(header.options!=0) {
-            ds->swapArray32(ds, inBytes+header.options, header.expansion-header.options,
-                               outBytes+header.options, pErrorCode);
+        اگر(سرخی.options!=0) {
+            ds->تبادلہ_Array32(ds, اندر_بائٹیں+سرخی.options, سرخی.expansion-سرخی.options,
+                               برآمد_بائٹیں+سرخی.options, p_Error_رمز);
         }
 
         /* swap the expansions */
-        if(header.mappingPosition!=0 && header.expansion!=0) {
-            if(header.contractionIndex!=0) {
+        اگر(سرخی.mappingPosition!=0 && سرخی.expansion!=0) {
+            اگر(سرخی.contraction_اشاریہ!=0) {
                 /* expansions bounded by contractions */
-                count=header.contractionIndex-header.expansion;
-            } else {
+                count=سرخی.contraction_اشاریہ-سرخی.expansion;
+            } ورنہ {
                 /* no contractions: expansions bounded by the main trie */
-                count=header.mappingPosition-header.expansion;
+                count=سرخی.mappingPosition-سرخی.expansion;
             }
-            ds->swapArray32(ds, inBytes + header.expansion, static_cast<int32_t>(count),
-                               outBytes+header.expansion, pErrorCode);
+            ds->تبادلہ_Array32(ds, اندر_بائٹیں + سرخی.expansion, static_cast<int32_t>(count),
+                               برآمد_بائٹیں+سرخی.expansion, p_Error_رمز);
         }
 
         /* swap the contractions */
-        if(header.contractionSize!=0) {
+        اگر(سرخی.contraction_سائز!=0) {
             /* contractionIndex: char16_t[] */
-            ds->swapArray16(ds, inBytes+header.contractionIndex, header.contractionSize*2,
-                               outBytes+header.contractionIndex, pErrorCode);
+            ds->تبادلہ_Array16(ds, اندر_بائٹیں+سرخی.contraction_اشاریہ, سرخی.contraction_سائز*2,
+                               برآمد_بائٹیں+سرخی.contraction_اشاریہ, p_Error_رمز);
 
             /* contractionCEs: CEs[] */
-            ds->swapArray32(ds, inBytes+header.contractionCEs, header.contractionSize*4,
-                               outBytes+header.contractionCEs, pErrorCode);
+            ds->تبادلہ_Array32(ds, اندر_بائٹیں+سرخی.contractionCEs, سرخی.contraction_سائز*4,
+                               برآمد_بائٹیں+سرخی.contractionCEs, p_Error_رمز);
         }
 
         /* swap the main trie */
-        if(header.mappingPosition!=0) {
-            count=header.endExpansionCE-header.mappingPosition;
-            utrie_swap(ds, inBytes + header.mappingPosition, static_cast<int32_t>(count),
-                          outBytes+header.mappingPosition, pErrorCode);
+        اگر(سرخی.mappingPosition!=0) {
+            count=سرخی.انتہا_Expansion_CE-سرخی.mappingPosition;
+            utrie_تبادلہ(ds, اندر_بائٹیں + سرخی.mappingPosition, static_cast<int32_t>(count),
+                          برآمد_بائٹیں+سرخی.mappingPosition, p_Error_رمز);
         }
 
         /* swap the max expansion table */
-        if(header.endExpansionCECount!=0) {
-            ds->swapArray32(ds, inBytes+header.endExpansionCE, header.endExpansionCECount*4,
-                               outBytes+header.endExpansionCE, pErrorCode);
+        اگر(سرخی.انتہا_Expansion_CECount!=0) {
+            ds->تبادلہ_Array32(ds, اندر_بائٹیں+سرخی.انتہا_Expansion_CE, سرخی.انتہا_Expansion_CECount*4,
+                               برآمد_بائٹیں+سرخی.انتہا_Expansion_CE, p_Error_رمز);
         }
 
         /* expansionCESize, unsafeCP, contrEndCP: uint8_t[], no need to swap */
 
         /* swap UCA constants */
-        if(header.UCAConsts!=0) {
+        اگر(سرخی.UCAConsts!=0) {
             /*
              * if UCAConsts!=0 then contractionUCACombos because we are swapping
              * the UCA data file, and we know that the UCA contains contractions
              */
-            ds->swapArray32(ds, inBytes+header.UCAConsts, header.contractionUCACombos-header.UCAConsts,
-                               outBytes+header.UCAConsts, pErrorCode);
+            ds->تبادلہ_Array32(ds, اندر_بائٹیں+سرخی.UCAConsts, سرخی.contractionUCACombos-سرخی.UCAConsts,
+                               برآمد_بائٹیں+سرخی.UCAConsts, p_Error_رمز);
         }
 
         /* swap UCA contractions */
-        if(header.contractionUCACombosSize!=0) {
-            count=header.contractionUCACombosSize*inHeader->contractionUCACombosWidth*U_SIZEOF_UCHAR;
-            ds->swapArray16(ds, inBytes + header.contractionUCACombos, static_cast<int32_t>(count),
-                               outBytes+header.contractionUCACombos, pErrorCode);
+        اگر(سرخی.contraction_UCACombos_سائز!=0) {
+            count=سرخی.contraction_UCACombos_سائز*اندر_سرخی->contraction_UCACombos_چوڑائی*U_SIZEOF_UCHAR;
+            ds->تبادلہ_Array16(ds, اندر_بائٹیں + سرخی.contractionUCACombos, static_cast<int32_t>(count),
+                               برآمد_بائٹیں+سرخی.contractionUCACombos, p_Error_رمز);
         }
         
         /* swap the script to lead bytes */
-        if(header.scriptToLeadByte!=0) {
-            int indexCount = ds->readUInt16(*((uint16_t*)(inBytes+header.scriptToLeadByte))); // each entry = 2 * uint16
-            int dataCount = ds->readUInt16(*((uint16_t*)(inBytes+header.scriptToLeadByte + 2))); // each entry = uint16
-            ds->swapArray16(ds, inBytes+header.scriptToLeadByte, 
-                                4 + (4 * indexCount) + (2 * dataCount),
-                                outBytes+header.scriptToLeadByte, pErrorCode);
+        اگر(سرخی.script_مقصد_Lead_Byte!=0) {
+            صحیح اشاریہ_گنتی = ds->readUInt16(*((uint16_t*)(اندر_بائٹیں+سرخی.script_مقصد_Lead_Byte))); // each entry = 2 * uint16
+            صحیح ڈیٹا_گنتی = ds->readUInt16(*((uint16_t*)(اندر_بائٹیں+سرخی.script_مقصد_Lead_Byte + 2))); // each entry = uint16
+            ds->تبادلہ_Array16(ds, اندر_بائٹیں+سرخی.script_مقصد_Lead_Byte, 
+                                4 + (4 * اشاریہ_گنتی) + (2 * ڈیٹا_گنتی),
+                                برآمد_بائٹیں+سرخی.script_مقصد_Lead_Byte, p_Error_رمز);
         }
         
         /* swap the lead byte to scripts */
-        if(header.leadByteToScript!=0) {
-            int indexCount = ds->readUInt16(*((uint16_t*)(inBytes+header.leadByteToScript))); // each entry = uint16
-            int dataCount = ds->readUInt16(*((uint16_t*)(inBytes+header.leadByteToScript + 2))); // each entry = uint16
-            ds->swapArray16(ds, inBytes+header.leadByteToScript, 
-                                4 + (2 * indexCount) + (2 * dataCount),
-                                outBytes+header.leadByteToScript, pErrorCode);
+        اگر(سرخی.lead_Byte_مقصد_Script!=0) {
+            صحیح اشاریہ_گنتی = ds->readUInt16(*((uint16_t*)(اندر_بائٹیں+سرخی.lead_Byte_مقصد_Script))); // each entry = uint16
+            صحیح ڈیٹا_گنتی = ds->readUInt16(*((uint16_t*)(اندر_بائٹیں+سرخی.lead_Byte_مقصد_Script + 2))); // each entry = uint16
+            ds->تبادلہ_Array16(ds, اندر_بائٹیں+سرخی.lead_Byte_مقصد_Script, 
+                                4 + (2 * اشاریہ_گنتی) + (2 * ڈیٹا_گنتی),
+                                برآمد_بائٹیں+سرخی.lead_Byte_مقصد_Script, p_Error_رمز);
         }
     }
 
-    return header.size;
+    واپس سرخی.size;
 }
 
 // swap formatVersion 4 or 5 ----------------------------------------------- ***
@@ -273,297 +273,297 @@ swapFormatVersion3(const UDataSwapper *ds,
 // for an awkward relocation of the i18n collationdatareader.h file into the common library.
 // Keep them in sync!
 
-enum {
-    IX_INDEXES_LENGTH,  // 0
+شمار {
+    IX_INDEXES_لمبائی,  // 0
     IX_OPTIONS,
     IX_RESERVED2,
     IX_RESERVED3,
 
-    IX_JAMO_CE32S_START,  // 4
-    IX_REORDER_CODES_OFFSET,
-    IX_REORDER_TABLE_OFFSET,
-    IX_TRIE_OFFSET,
+    IX_JAMO_CE32_S_آغاز,  // 4
+    IX_REORDER_CODES_انحراف,
+    IX_REORDER_جدول_انحراف,
+    IX_TRIE_انحراف,
 
-    IX_RESERVED8_OFFSET,  // 8
-    IX_CES_OFFSET,
-    IX_RESERVED10_OFFSET,
-    IX_CE32S_OFFSET,
+    IX_RESERVED8_انحراف,  // 8
+    IX_CES_انحراف,
+    IX_RESERVED10_انحراف,
+    IX_CE32_S_انحراف,
 
-    IX_ROOT_ELEMENTS_OFFSET,  // 12
-    IX_CONTEXTS_OFFSET,
-    IX_UNSAFE_BWD_OFFSET,
-    IX_FAST_LATIN_TABLE_OFFSET,
+    IX_جڑ_ELEMENTS_انحراف,  // 12
+    IX_CONTEXTS_انحراف,
+    IX_UNSAFE_BWD_انحراف,
+    IX_FAST_LATIN_جدول_انحراف,
 
-    IX_SCRIPTS_OFFSET,  // 16
-    IX_COMPRESSIBLE_BYTES_OFFSET,
-    IX_RESERVED18_OFFSET,
-    IX_TOTAL_SIZE
+    IX_SCRIPTS_انحراف,  // 16
+    IX_COMPRESSIBLE_بائٹیں_انحراف,
+    IX_RESERVED18_انحراف,
+    IX_کل_سائز
 };
 
 int32_t
-swapFormatVersion4(const UDataSwapper *ds,
-                   const void *inData, int32_t length, void *outData,
-                   UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return 0; }
+تبادلہ_Format_Version4(ثابت UDataSwapper *ds,
+                   ثابت خالی *اندر_ڈیٹا, int32_t length, خالی *برآمد_ڈیٹا,
+                   UError_رمز &error_رمز) {
+    اگر(U_FAILURE(error_رمز)) { واپس 0; }
 
-    const uint8_t* inBytes = static_cast<const uint8_t*>(inData);
-    uint8_t* outBytes = static_cast<uint8_t*>(outData);
+    ثابت uint8_t* اندر_بائٹیں = static_cast<ثابت uint8_t*>(اندر_ڈیٹا);
+    uint8_t* برآمد_بائٹیں = static_cast<uint8_t*>(برآمد_ڈیٹا);
 
-    const int32_t* inIndexes = reinterpret_cast<const int32_t*>(inBytes);
-    int32_t indexes[IX_TOTAL_SIZE+1];
+    ثابت int32_t* اندر_Indexes = reinterpret_cast<ثابت int32_t*>(اندر_بائٹیں);
+    int32_t indexes[IX_کل_سائز+1];
 
     // Need at least IX_INDEXES_LENGTH and IX_OPTIONS.
-    if(0<=length && length<8) {
+    اگر(0<=length && length<8) {
         udata_printError(ds, "ucol_swap(formatVersion=4): too few bytes "
                          "(%d after header) for collation data\n",
                          length);
-        errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        error_رمز=U_اشاریہ_OUTOFBOUNDS_ERROR;
+        واپس 0;
     }
 
-    int32_t indexesLength=indexes[0]=udata_readInt32(ds, inIndexes[0]);
-    if(0<=length && length<(indexesLength*4)) {
+    int32_t indexes_لمبائی=indexes[0]=udata_readInt32(ds, اندر_Indexes[0]);
+    اگر(0<=length && length<(indexes_لمبائی*4)) {
         udata_printError(ds, "ucol_swap(formatVersion=4): too few bytes "
                          "(%d after header) for collation data\n",
                          length);
-        errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        error_رمز=U_اشاریہ_OUTOFBOUNDS_ERROR;
+        واپس 0;
     }
 
-    for(int32_t i=1; i<=IX_TOTAL_SIZE && i<indexesLength; ++i) {
-        indexes[i]=udata_readInt32(ds, inIndexes[i]);
+    برائے(int32_t i=1; i<=IX_کل_سائز && i<indexes_لمبائی; ++i) {
+        indexes[i]=udata_readInt32(ds, اندر_Indexes[i]);
     }
-    for(int32_t i=indexesLength; i<=IX_TOTAL_SIZE; ++i) {
+    برائے(int32_t i=indexes_لمبائی; i<=IX_کل_سائز; ++i) {
         indexes[i]=-1;
     }
-    inIndexes=nullptr;  // Make sure we do not accidentally use these instead of indexes[].
+    اندر_Indexes=خالی_اشاریہ;  // Make sure we do not accidentally use these instead of indexes[].
 
     // Get the total length of the data.
     int32_t size;
-    if(indexesLength>IX_TOTAL_SIZE) {
-        size=indexes[IX_TOTAL_SIZE];
-    } else if(indexesLength>IX_REORDER_CODES_OFFSET) {
-        size=indexes[indexesLength-1];
-    } else {
-        size=indexesLength*4;
+    اگر(indexes_لمبائی>IX_کل_سائز) {
+        size=indexes[IX_کل_سائز];
+    } ورنہ اگر(indexes_لمبائی>IX_REORDER_CODES_انحراف) {
+        size=indexes[indexes_لمبائی-1];
+    } ورنہ {
+        size=indexes_لمبائی*4;
     }
-    if(length<0) { return size; }
+    اگر(length<0) { واپس size; }
 
-    if(length<size) {
+    اگر(length<size) {
         udata_printError(ds, "ucol_swap(formatVersion=4): too few bytes "
                          "(%d after header) for collation data\n",
                          length);
-        errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        error_رمز=U_اشاریہ_OUTOFBOUNDS_ERROR;
+        واپس 0;
     }
 
     // Copy the data for inaccessible bytes and arrays of bytes.
-    if(inBytes!=outBytes) {
-        uprv_memcpy(outBytes, inBytes, size);
+    اگر(اندر_بائٹیں!=برآمد_بائٹیں) {
+        uprv_memcpy(برآمد_بائٹیں, اندر_بائٹیں, size);
     }
 
     // Swap the int32_t indexes[].
-    ds->swapArray32(ds, inBytes, indexesLength * 4, outBytes, &errorCode);
+    ds->تبادلہ_Array32(ds, اندر_بائٹیں, indexes_لمبائی * 4, برآمد_بائٹیں, &error_رمز);
 
     // The following is a modified version of CollationDataReader::read().
     // Here we use indexes[] not inIndexes[] because
     // the inIndexes[] may not be in this machine's endianness.
-    int32_t index;  // one of the indexes[] slots
-    int32_t offset;  // byte offset for the index part
+    int32_t اشاریہ;  // one of the indexes[] slots
+    int32_t انحراف;  // byte offset for the index part
     // int32_t length;  // number of bytes in the index part
 
-    index = IX_REORDER_CODES_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
-        ds->swapArray32(ds, inBytes + offset, length, outBytes + offset, &errorCode);
+    اشاریہ = IX_REORDER_CODES_انحراف;
+    انحراف = indexes[اشاریہ];
+    length = indexes[اشاریہ + 1] - انحراف;
+    اگر(length > 0) {
+        ds->تبادلہ_Array32(ds, اندر_بائٹیں + انحراف, length, برآمد_بائٹیں + انحراف, &error_رمز);
     }
 
     // Skip the IX_REORDER_TABLE_OFFSET byte array.
 
-    index = IX_TRIE_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
-        utrie2_swap(ds, inBytes + offset, length, outBytes + offset, &errorCode);
+    اشاریہ = IX_TRIE_انحراف;
+    انحراف = indexes[اشاریہ];
+    length = indexes[اشاریہ + 1] - انحراف;
+    اگر(length > 0) {
+        utrie2_تبادلہ(ds, اندر_بائٹیں + انحراف, length, برآمد_بائٹیں + انحراف, &error_رمز);
     }
 
-    index = IX_RESERVED8_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
+    اشاریہ = IX_RESERVED8_انحراف;
+    انحراف = indexes[اشاریہ];
+    length = indexes[اشاریہ + 1] - انحراف;
+    اگر(length > 0) {
         udata_printError(ds, "ucol_swap(formatVersion=4): unknown data at IX_RESERVED8_OFFSET\n", length);
-        errorCode = U_UNSUPPORTED_ERROR;
-        return 0;
+        error_رمز = U_UNSUPPORTED_ERROR;
+        واپس 0;
     }
 
-    index = IX_CES_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
-        ds->swapArray64(ds, inBytes + offset, length, outBytes + offset, &errorCode);
+    اشاریہ = IX_CES_انحراف;
+    انحراف = indexes[اشاریہ];
+    length = indexes[اشاریہ + 1] - انحراف;
+    اگر(length > 0) {
+        ds->تبادلہ_Array64(ds, اندر_بائٹیں + انحراف, length, برآمد_بائٹیں + انحراف, &error_رمز);
     }
 
-    index = IX_RESERVED10_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
+    اشاریہ = IX_RESERVED10_انحراف;
+    انحراف = indexes[اشاریہ];
+    length = indexes[اشاریہ + 1] - انحراف;
+    اگر(length > 0) {
         udata_printError(ds, "ucol_swap(formatVersion=4): unknown data at IX_RESERVED10_OFFSET\n", length);
-        errorCode = U_UNSUPPORTED_ERROR;
-        return 0;
+        error_رمز = U_UNSUPPORTED_ERROR;
+        واپس 0;
     }
 
-    index = IX_CE32S_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
-        ds->swapArray32(ds, inBytes + offset, length, outBytes + offset, &errorCode);
+    اشاریہ = IX_CE32_S_انحراف;
+    انحراف = indexes[اشاریہ];
+    length = indexes[اشاریہ + 1] - انحراف;
+    اگر(length > 0) {
+        ds->تبادلہ_Array32(ds, اندر_بائٹیں + انحراف, length, برآمد_بائٹیں + انحراف, &error_رمز);
     }
 
-    index = IX_ROOT_ELEMENTS_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
-        ds->swapArray32(ds, inBytes + offset, length, outBytes + offset, &errorCode);
+    اشاریہ = IX_جڑ_ELEMENTS_انحراف;
+    انحراف = indexes[اشاریہ];
+    length = indexes[اشاریہ + 1] - انحراف;
+    اگر(length > 0) {
+        ds->تبادلہ_Array32(ds, اندر_بائٹیں + انحراف, length, برآمد_بائٹیں + انحراف, &error_رمز);
     }
 
-    index = IX_CONTEXTS_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
-        ds->swapArray16(ds, inBytes + offset, length, outBytes + offset, &errorCode);
+    اشاریہ = IX_CONTEXTS_انحراف;
+    انحراف = indexes[اشاریہ];
+    length = indexes[اشاریہ + 1] - انحراف;
+    اگر(length > 0) {
+        ds->تبادلہ_Array16(ds, اندر_بائٹیں + انحراف, length, برآمد_بائٹیں + انحراف, &error_رمز);
     }
 
-    index = IX_UNSAFE_BWD_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
-        ds->swapArray16(ds, inBytes + offset, length, outBytes + offset, &errorCode);
+    اشاریہ = IX_UNSAFE_BWD_انحراف;
+    انحراف = indexes[اشاریہ];
+    length = indexes[اشاریہ + 1] - انحراف;
+    اگر(length > 0) {
+        ds->تبادلہ_Array16(ds, اندر_بائٹیں + انحراف, length, برآمد_بائٹیں + انحراف, &error_رمز);
     }
 
-    index = IX_FAST_LATIN_TABLE_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
-        ds->swapArray16(ds, inBytes + offset, length, outBytes + offset, &errorCode);
+    اشاریہ = IX_FAST_LATIN_جدول_انحراف;
+    انحراف = indexes[اشاریہ];
+    length = indexes[اشاریہ + 1] - انحراف;
+    اگر(length > 0) {
+        ds->تبادلہ_Array16(ds, اندر_بائٹیں + انحراف, length, برآمد_بائٹیں + انحراف, &error_رمز);
     }
 
-    index = IX_SCRIPTS_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
-        ds->swapArray16(ds, inBytes + offset, length, outBytes + offset, &errorCode);
+    اشاریہ = IX_SCRIPTS_انحراف;
+    انحراف = indexes[اشاریہ];
+    length = indexes[اشاریہ + 1] - انحراف;
+    اگر(length > 0) {
+        ds->تبادلہ_Array16(ds, اندر_بائٹیں + انحراف, length, برآمد_بائٹیں + انحراف, &error_رمز);
     }
 
     // Skip the  IX_COMPRESSIBLE_BYTES_OFFSET byte array.
 
-    index = IX_RESERVED18_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
+    اشاریہ = IX_RESERVED18_انحراف;
+    انحراف = indexes[اشاریہ];
+    length = indexes[اشاریہ + 1] - انحراف;
+    اگر(length > 0) {
         udata_printError(ds, "ucol_swap(formatVersion=4): unknown data at IX_RESERVED18_OFFSET\n", length);
-        errorCode = U_UNSUPPORTED_ERROR;
-        return 0;
+        error_رمز = U_UNSUPPORTED_ERROR;
+        واپس 0;
     }
 
-    return size;
+    واپس size;
 }
 
 }  // namespace
 
 /* swap ICU collation data like ucadata.icu */
 U_CAPI int32_t U_EXPORT2
-ucol_swap(const UDataSwapper *ds,
-          const void *inData, int32_t length, void *outData,
-          UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) { return 0; }
+ucol_تبادلہ(ثابت UDataSwapper *ds,
+          ثابت خالی *اندر_ڈیٹا, int32_t length, خالی *برآمد_ڈیٹا,
+          UError_رمز *p_Error_رمز) {
+    اگر(U_FAILURE(*p_Error_رمز)) { واپس 0; }
 
     /* udata_swapDataHeader checks the arguments */
-    int32_t headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
+    int32_t سرخی_سائز=udata_تبادلہ_ڈیٹا_سرخی(ds, اندر_ڈیٹا, length, برآمد_ڈیٹا, p_Error_رمز);
+    اگر(U_FAILURE(*p_Error_رمز)) {
         // Try to swap the old format version which did not have a standard data header.
-        *pErrorCode=U_ZERO_ERROR;
-        return swapFormatVersion3(ds, inData, length, outData, pErrorCode);
+        *p_Error_رمز=U_ZERO_ERROR;
+        واپس تبادلہ_Format_Version3(ds, اندر_ڈیٹا, length, برآمد_ڈیٹا, p_Error_رمز);
     }
 
     /* check data format and format version */
-    const UDataInfo &info=*(const UDataInfo *)((const char *)inData+4);
-    if(!(
-        info.dataFormat[0]==0x55 &&   // dataFormat="UCol"
-        info.dataFormat[1]==0x43 &&
-        info.dataFormat[2]==0x6f &&
-        info.dataFormat[3]==0x6c &&
-        (3<=info.formatVersion[0] && info.formatVersion[0]<=5)
+    ثابت UDataInfo &info=*(ثابت UDataInfo *)((ثابت حرف *)اندر_ڈیٹا+4);
+    اگر(!(
+        info.ڈیٹا_Format[0]==0x55 &&   // dataFormat="UCol"
+        info.ڈیٹا_Format[1]==0x43 &&
+        info.ڈیٹا_Format[2]==0x6f &&
+        info.ڈیٹا_Format[3]==0x6c &&
+        (3<=info.format_نسخہ[0] && info.format_نسخہ[0]<=5)
     )) {
         udata_printError(ds, "ucol_swap(): data format %02x.%02x.%02x.%02x "
                          "(format version %02x.%02x) is not recognized as collation data\n",
-                         info.dataFormat[0], info.dataFormat[1],
-                         info.dataFormat[2], info.dataFormat[3],
-                         info.formatVersion[0], info.formatVersion[1]);
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+                         info.ڈیٹا_Format[0], info.ڈیٹا_Format[1],
+                         info.ڈیٹا_Format[2], info.ڈیٹا_Format[3],
+                         info.format_نسخہ[0], info.format_نسخہ[1]);
+        *p_Error_رمز=U_UNSUPPORTED_ERROR;
+        واپس 0;
     }
 
-    inData=(const char *)inData+headerSize;
-    if(length>=0) { length-=headerSize; }
-    outData=(outData == nullptr) ? nullptr : (char *)outData+headerSize;
-    int32_t collationSize;
-    if(info.formatVersion[0]>=4) {
-        collationSize=swapFormatVersion4(ds, inData, length, outData, *pErrorCode);
-    } else {
-        collationSize=swapFormatVersion3(ds, inData, length, outData, pErrorCode);
+    اندر_ڈیٹا=(ثابت حرف *)اندر_ڈیٹا+سرخی_سائز;
+    اگر(length>=0) { length-=سرخی_سائز; }
+    برآمد_ڈیٹا=(برآمد_ڈیٹا == خالی_اشاریہ) ? خالی_اشاریہ : (حرف *)برآمد_ڈیٹا+سرخی_سائز;
+    int32_t collation_سائز;
+    اگر(info.format_نسخہ[0]>=4) {
+        collation_سائز=تبادلہ_Format_Version4(ds, اندر_ڈیٹا, length, برآمد_ڈیٹا, *p_Error_رمز);
+    } ورنہ {
+        collation_سائز=تبادلہ_Format_Version3(ds, اندر_ڈیٹا, length, برآمد_ڈیٹا, p_Error_رمز);
     }
-    if(U_SUCCESS(*pErrorCode)) {
-        return headerSize+collationSize;
-    } else {
-        return 0;
+    اگر(U_SUCCESS(*p_Error_رمز)) {
+        واپس سرخی_سائز+collation_سائز;
+    } ورنہ {
+        واپس 0;
     }
 }
 
 /* swap inverse UCA collation data (invuca.icu) */
 U_CAPI int32_t U_EXPORT2
-ucol_swapInverseUCA(const UDataSwapper *ds,
-                    const void *inData, int32_t length, void *outData,
-                    UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
-    int32_t headerSize;
+ucol_تبادلہ_Inverse_UCA(ثابت UDataSwapper *ds,
+                    ثابت خالی *اندر_ڈیٹا, int32_t length, خالی *برآمد_ڈیٹا,
+                    UError_رمز *p_Error_رمز) {
+    ثابت UDataInfo *pInfo;
+    int32_t سرخی_سائز;
 
-    const uint8_t *inBytes;
-    uint8_t *outBytes;
+    ثابت uint8_t *اندر_بائٹیں;
+    uint8_t *برآمد_بائٹیں;
 
-    const InverseUCATableHeader *inHeader;
-    InverseUCATableHeader *outHeader;
-    InverseUCATableHeader header={ 0,0,0,0,0,{0,0,0,0},{0,0,0,0,0,0,0,0} };
+    ثابت Inverse_UCATable_سرخی *اندر_سرخی;
+    Inverse_UCATable_سرخی *برآمد_سرخی;
+    Inverse_UCATable_سرخی سرخی={ 0,0,0,0,0,{0,0,0,0},{0,0,0,0,0,0,0,0} };
 
     /* udata_swapDataHeader checks the arguments */
-    headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    سرخی_سائز=udata_تبادلہ_ڈیٹا_سرخی(ds, اندر_ڈیٹا, length, برآمد_ڈیٹا, p_Error_رمز);
+    اگر(p_Error_رمز==خالی_اشاریہ || U_FAILURE(*p_Error_رمز)) {
+        واپس 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
-        pInfo->dataFormat[0]==0x49 &&   /* dataFormat="InvC" */
-        pInfo->dataFormat[1]==0x6e &&
-        pInfo->dataFormat[2]==0x76 &&
-        pInfo->dataFormat[3]==0x43 &&
-        pInfo->formatVersion[0]==2 &&
-        pInfo->formatVersion[1]>=1
+    pInfo=(ثابت UDataInfo *)((ثابت حرف *)اندر_ڈیٹا+4);
+    اگر(!(
+        pInfo->ڈیٹا_Format[0]==0x49 &&   /* dataFormat="InvC" */
+        pInfo->ڈیٹا_Format[1]==0x6e &&
+        pInfo->ڈیٹا_Format[2]==0x76 &&
+        pInfo->ڈیٹا_Format[3]==0x43 &&
+        pInfo->format_نسخہ[0]==2 &&
+        pInfo->format_نسخہ[1]>=1
     )) {
         udata_printError(ds, "ucol_swapInverseUCA(): data format %02x.%02x.%02x.%02x (format version %02x.%02x) is not an inverse UCA collation file\n",
-                         pInfo->dataFormat[0], pInfo->dataFormat[1],
-                         pInfo->dataFormat[2], pInfo->dataFormat[3],
-                         pInfo->formatVersion[0], pInfo->formatVersion[1]);
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+                         pInfo->ڈیٹا_Format[0], pInfo->ڈیٹا_Format[1],
+                         pInfo->ڈیٹا_Format[2], pInfo->ڈیٹا_Format[3],
+                         pInfo->format_نسخہ[0], pInfo->format_نسخہ[1]);
+        *p_Error_رمز=U_UNSUPPORTED_ERROR;
+        واپس 0;
     }
 
-    inBytes=(const uint8_t *)inData+headerSize;
-    outBytes=(uint8_t *)outData+headerSize;
+    اندر_بائٹیں=(ثابت uint8_t *)اندر_ڈیٹا+سرخی_سائز;
+    برآمد_بائٹیں=(uint8_t *)برآمد_ڈیٹا+سرخی_سائز;
 
-    inHeader=(const InverseUCATableHeader *)inBytes;
-    outHeader=(InverseUCATableHeader *)outBytes;
+    اندر_سرخی=(ثابت Inverse_UCATable_سرخی *)اندر_بائٹیں;
+    برآمد_سرخی=(Inverse_UCATable_سرخی *)برآمد_بائٹیں;
 
     /*
      * The inverse UCA collation binary must contain at least the InverseUCATableHeader,
@@ -571,45 +571,45 @@ ucol_swapInverseUCA(const UDataSwapper *ds,
      * sizeof(UCATableHeader)==8*4 in ICU 2.8
      * check the length against the header size before reading the size field
      */
-    if(length<0) {
-        header.byteSize=udata_readInt32(ds, inHeader->byteSize);
-    } else if(
-        ((length-headerSize)<(8*4) ||
-         (uint32_t)(length-headerSize)<(header.byteSize=udata_readInt32(ds, inHeader->byteSize)))
+    اگر(length<0) {
+        سرخی.byte_سائز=udata_readInt32(ds, اندر_سرخی->byte_سائز);
+    } ورنہ اگر(
+        ((length-سرخی_سائز)<(8*4) ||
+         (uint32_t)(length-سرخی_سائز)<(سرخی.byte_سائز=udata_readInt32(ds, اندر_سرخی->byte_سائز)))
     ) {
         udata_printError(ds, "ucol_swapInverseUCA(): too few bytes (%d after header) for inverse UCA collation data\n",
                          length);
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        *p_Error_رمز=U_اشاریہ_OUTOFBOUNDS_ERROR;
+        واپس 0;
     }
 
-    if(length>=0) {
+    اگر(length>=0) {
         /* copy everything, takes care of data that needs no swapping */
-        if(inBytes!=outBytes) {
-            uprv_memcpy(outBytes, inBytes, header.byteSize);
+        اگر(اندر_بائٹیں!=برآمد_بائٹیں) {
+            uprv_memcpy(برآمد_بائٹیں, اندر_بائٹیں, سرخی.byte_سائز);
         }
 
         /* swap the necessary pieces in the order of their occurrence in the data */
 
         /* read more of the InverseUCATableHeader (the byteSize field was read above) */
-        header.tableSize=   ds->readUInt32(inHeader->tableSize);
-        header.contsSize=   ds->readUInt32(inHeader->contsSize);
-        header.table=       ds->readUInt32(inHeader->table);
-        header.conts=       ds->readUInt32(inHeader->conts);
+        سرخی.جدول_سائز=   ds->readUInt32(اندر_سرخی->جدول_سائز);
+        سرخی.conts_سائز=   ds->readUInt32(اندر_سرخی->conts_سائز);
+        سرخی.جدول=       ds->readUInt32(اندر_سرخی->جدول);
+        سرخی.conts=       ds->readUInt32(اندر_سرخی->conts);
 
         /* swap the 32-bit integers in the header */
-        ds->swapArray32(ds, inHeader, 5*4, outHeader, pErrorCode);
+        ds->تبادلہ_Array32(ds, اندر_سرخی, 5*4, برآمد_سرخی, p_Error_رمز);
 
         /* swap the inverse table; tableSize counts uint32_t[3] rows */
-        ds->swapArray32(ds, inBytes+header.table, header.tableSize*3*4,
-                           outBytes+header.table, pErrorCode);
+        ds->تبادلہ_Array32(ds, اندر_بائٹیں+سرخی.جدول, سرخی.جدول_سائز*3*4,
+                           برآمد_بائٹیں+سرخی.جدول, p_Error_رمز);
 
         /* swap the continuation table; contsSize counts UChars */
-        ds->swapArray16(ds, inBytes+header.conts, header.contsSize*U_SIZEOF_UCHAR,
-                           outBytes+header.conts, pErrorCode);
+        ds->تبادلہ_Array16(ds, اندر_بائٹیں+سرخی.conts, سرخی.conts_سائز*U_SIZEOF_UCHAR,
+                           برآمد_بائٹیں+سرخی.conts, p_Error_رمز);
     }
 
-    return headerSize+header.byteSize;
+    واپس سرخی_سائز+سرخی.byte_سائز;
 }
 
-#endif /* #if !UCONFIG_NO_COLLATION */
+#اگر_ختم /* #if !UCONFIG_NO_COLLATION */

@@ -16,21 +16,21 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/uniset.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "bmpset.h"
-#include "uassert.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/uniset.h"
+#شامل "unicode/utf8.h"
+#شامل "unicode/utf16.h"
+#شامل "cmemory.h"
+#شامل "bmpset.h"
+#شامل "uassert.h"
 
 U_NAMESPACE_BEGIN
 
-BMPSet::BMPSet(const int32_t *parentList, int32_t parentListLength) :
-        list(parentList), listLength(parentListLength) {
-    uprv_memset(latin1Contains, 0, sizeof(latin1Contains));
-    uprv_memset(table7FF, 0, sizeof(table7FF));
-    uprv_memset(bmpBlockBits, 0, sizeof(bmpBlockBits));
+BMPSet::BMPSet(ثابت int32_t *والد_List, int32_t والد_List_لمبائی) :
+        list(والد_List), list_لمبائی(والد_List_لمبائی) {
+    uprv_memset(latin1_شامل_ہے, 0, حجم(latin1_شامل_ہے));
+    uprv_memset(table7FF, 0, حجم(table7FF));
+    uprv_memset(bmp_بلاک_بٹ, 0, حجم(bmp_بلاک_بٹ));
 
     /*
      * Set the list indexes for binary searches for
@@ -39,25 +39,25 @@ BMPSet::BMPSet(const int32_t *parentList, int32_t parentListLength) :
      * looked up in the bit tables.
      * The last pair of indexes is for finding supplementary code points.
      */
-    list4kStarts[0]=findCodePoint(0x800, 0, listLength-1);
+    list4kStarts[0]=ڈھونڈو_رمز_نقطہ(0x800, 0, list_لمبائی-1);
     int32_t i;
-    for(i=1; i<=0x10; ++i) {
-        list4kStarts[i]=findCodePoint(i<<12, list4kStarts[i-1], listLength-1);
+    برائے(i=1; i<=0x10; ++i) {
+        list4kStarts[i]=ڈھونڈو_رمز_نقطہ(i<<12, list4kStarts[i-1], list_لمبائی-1);
     }
-    list4kStarts[0x11]=listLength-1;
-    containsFFFD=containsSlow(0xfffd, list4kStarts[0xf], list4kStarts[0x10]);
+    list4kStarts[0x11]=list_لمبائی-1;
+    شامل_ہے_FFFD=شامل_ہے_Slow(0xfffd, list4kStarts[0xf], list4kStarts[0x10]);
 
-    initBits();
+    init_بٹ();
     overrideIllegal();
 }
 
-BMPSet::BMPSet(const BMPSet &otherBMPSet, const int32_t *newParentList, int32_t newParentListLength) :
-        containsFFFD(otherBMPSet.containsFFFD),
-        list(newParentList), listLength(newParentListLength) {
-    uprv_memcpy(latin1Contains, otherBMPSet.latin1Contains, sizeof(latin1Contains));
-    uprv_memcpy(table7FF, otherBMPSet.table7FF, sizeof(table7FF));
-    uprv_memcpy(bmpBlockBits, otherBMPSet.bmpBlockBits, sizeof(bmpBlockBits));
-    uprv_memcpy(list4kStarts, otherBMPSet.list4kStarts, sizeof(list4kStarts));
+BMPSet::BMPSet(ثابت BMPSet &otherBMPSet, ثابت int32_t *new_والد_List, int32_t new_والد_List_لمبائی) :
+        شامل_ہے_FFFD(otherBMPSet.شامل_ہے_FFFD),
+        list(new_والد_List), list_لمبائی(new_والد_List_لمبائی) {
+    uprv_memcpy(latin1_شامل_ہے, otherBMPSet.latin1_شامل_ہے, حجم(latin1_شامل_ہے));
+    uprv_memcpy(table7FF, otherBMPSet.table7FF, حجم(table7FF));
+    uprv_memcpy(bmp_بلاک_بٹ, otherBMPSet.bmp_بلاک_بٹ, حجم(bmp_بلاک_بٹ));
+    uprv_memcpy(list4kStarts, otherBMPSet.list4kStarts, حجم(list4kStarts));
 }
 
 BMPSet::~BMPSet() {
@@ -67,153 +67,153 @@ BMPSet::~BMPSet() {
  * Set bits in a bit rectangle in "vertical" bit organization.
  * start<limit<=0x800
  */
-static void set32x64Bits(uint32_t table[64], int32_t start, int32_t limit) {
-    U_ASSERT(start<limit);
-    U_ASSERT(limit<=0x800);
+ساکن خالی set32x64_بٹ(uint32_t جدول[64], int32_t آغاز, int32_t حد_بندی) {
+    U_ASSERT(آغاز<حد_بندی);
+    U_ASSERT(حد_بندی<=0x800);
 
-    int32_t lead=start>>6;  // Named for UTF-8 2-byte lead byte with upper 5 bits.
-    int32_t trail=start&0x3f;  // Named for UTF-8 2-byte trail byte with lower 6 bits.
+    int32_t lead=آغاز>>6;  // Named for UTF-8 2-byte lead byte with upper 5 bits.
+    int32_t trail=آغاز&0x3f;  // Named for UTF-8 2-byte trail byte with lower 6 bits.
 
     // Set one bit indicating an all-one block.
-    uint32_t bits = static_cast<uint32_t>(1) << lead;
-    if((start+1)==limit) {  // Single-character shortcut.
-        table[trail]|=bits;
-        return;
+    uint32_t بٹ = static_cast<uint32_t>(1) << lead;
+    اگر((آغاز+1)==حد_بندی) {  // Single-character shortcut.
+        جدول[trail]|=بٹ;
+        واپس;
     }
 
-    int32_t limitLead=limit>>6;
-    int32_t limitTrail=limit&0x3f;
+    int32_t حد_بندی_Lead=حد_بندی>>6;
+    int32_t حد_بندی_Trail=حد_بندی&0x3f;
 
-    if(lead==limitLead) {
+    اگر(lead==حد_بندی_Lead) {
         // Partial vertical bit column.
-        while(trail<limitTrail) {
-            table[trail++]|=bits;
+        جب(trail<حد_بندی_Trail) {
+            جدول[trail++]|=بٹ;
         }
-    } else {
+    } ورنہ {
         // Partial vertical bit column,
         // followed by a bit rectangle,
         // followed by another partial vertical bit column.
-        if(trail>0) {
-            do {
-                table[trail++]|=bits;
-            } while(trail<64);
+        اگر(trail>0) {
+            کرو {
+                جدول[trail++]|=بٹ;
+            } جب(trail<64);
             ++lead;
         }
-        if(lead<limitLead) {
-            bits = ~((static_cast<unsigned>(1) << lead) - 1);
-            if(limitLead<0x20) {
-                bits &= (static_cast<unsigned>(1) << limitLead) - 1;
+        اگر(lead<حد_بندی_Lead) {
+            بٹ = ~((static_cast<غیرعلامتی>(1) << lead) - 1);
+            اگر(حد_بندی_Lead<0x20) {
+                بٹ &= (static_cast<غیرعلامتی>(1) << حد_بندی_Lead) - 1;
             }
-            for(trail=0; trail<64; ++trail) {
-                table[trail]|=bits;
+            برائے(trail=0; trail<64; ++trail) {
+                جدول[trail]|=بٹ;
             }
         }
         // limit<=0x800. If limit==0x800 then limitLead=32 and limitTrail=0.
         // In that case, bits=1<<limitLead is undefined but the bits value
         // is not used because trail<limitTrail is already false.
-        bits = static_cast<uint32_t>(1) << ((limitLead == 0x20) ? (limitLead - 1) : limitLead);
-        for(trail=0; trail<limitTrail; ++trail) {
-            table[trail]|=bits;
+        بٹ = static_cast<uint32_t>(1) << ((حد_بندی_Lead == 0x20) ? (حد_بندی_Lead - 1) : حد_بندی_Lead);
+        برائے(trail=0; trail<حد_بندی_Trail; ++trail) {
+            جدول[trail]|=بٹ;
         }
     }
 }
 
-void BMPSet::initBits() {
-    UChar32 start, limit;
-    int32_t listIndex=0;
+خالی BMPSet::init_بٹ() {
+    UChar32 آغاز, حد_بندی;
+    int32_t list_اشاریہ=0;
 
     // Set latin1Contains[].
-    do {
-        start=list[listIndex++];
-        if(listIndex<listLength) {
-            limit=list[listIndex++];
-        } else {
-            limit=0x110000;
+    کرو {
+        آغاز=list[list_اشاریہ++];
+        اگر(list_اشاریہ<list_لمبائی) {
+            حد_بندی=list[list_اشاریہ++];
+        } ورنہ {
+            حد_بندی=0x110000;
         }
-        if(start>=0x100) {
-            break;
+        اگر(آغاز>=0x100) {
+            توڑو;
         }
-        do {
-            latin1Contains[start++]=1;
-        } while(start<limit && start<0x100);
-    } while(limit<=0x100);
+        کرو {
+            latin1_شامل_ہے[آغاز++]=1;
+        } جب(آغاز<حد_بندی && آغاز<0x100);
+    } جب(حد_بندی<=0x100);
 
     // Find the first range overlapping with (or after) 80..FF again,
     // to include them in table7FF as well.
-    for(listIndex=0;;) {
-        start=list[listIndex++];
-        if(listIndex<listLength) {
-            limit=list[listIndex++];
-        } else {
-            limit=0x110000;
+    برائے(list_اشاریہ=0;;) {
+        آغاز=list[list_اشاریہ++];
+        اگر(list_اشاریہ<list_لمبائی) {
+            حد_بندی=list[list_اشاریہ++];
+        } ورنہ {
+            حد_بندی=0x110000;
         }
-        if(limit>0x80) {
-            if(start<0x80) {
-                start=0x80;
+        اگر(حد_بندی>0x80) {
+            اگر(آغاز<0x80) {
+                آغاز=0x80;
             }
-            break;
+            توڑو;
         }
     }
 
     // Set table7FF[].
-    while(start<0x800) {
-        set32x64Bits(table7FF, start, limit<=0x800 ? limit : 0x800);
-        if(limit>0x800) {
-            start=0x800;
-            break;
+    جب(آغاز<0x800) {
+        set32x64_بٹ(table7FF, آغاز, حد_بندی<=0x800 ? حد_بندی : 0x800);
+        اگر(حد_بندی>0x800) {
+            آغاز=0x800;
+            توڑو;
         }
 
-        start=list[listIndex++];
-        if(listIndex<listLength) {
-            limit=list[listIndex++];
-        } else {
-            limit=0x110000;
+        آغاز=list[list_اشاریہ++];
+        اگر(list_اشاریہ<list_لمبائی) {
+            حد_بندی=list[list_اشاریہ++];
+        } ورنہ {
+            حد_بندی=0x110000;
         }
     }
 
     // Set bmpBlockBits[].
-    int32_t minStart=0x800;
-    while(start<0x10000) {
-        if(limit>0x10000) {
-            limit=0x10000;
+    int32_t min_آغاز=0x800;
+    جب(آغاز<0x10000) {
+        اگر(حد_بندی>0x10000) {
+            حد_بندی=0x10000;
         }
 
-        if(start<minStart) {
-            start=minStart;
+        اگر(آغاز<min_آغاز) {
+            آغاز=min_آغاز;
         }
-        if(start<limit) {  // Else: Another range entirely in a known mixed-value block.
-            if(start&0x3f) {
+        اگر(آغاز<حد_بندی) {  // Else: Another range entirely in a known mixed-value block.
+            اگر(آغاز&0x3f) {
                 // Mixed-value block of 64 code points.
-                start>>=6;
-                bmpBlockBits[start&0x3f]|=0x10001<<(start>>6);
-                start=(start+1)<<6;  // Round up to the next block boundary.
-                minStart=start;      // Ignore further ranges in this block.
+                آغاز>>=6;
+                bmp_بلاک_بٹ[آغاز&0x3f]|=0x10001<<(آغاز>>6);
+                آغاز=(آغاز+1)<<6;  // Round up to the next block boundary.
+                min_آغاز=آغاز;      // Ignore further ranges in this block.
             }
-            if(start<limit) {
-                if(start<(limit&~0x3f)) {
+            اگر(آغاز<حد_بندی) {
+                اگر(آغاز<(حد_بندی&~0x3f)) {
                     // Multiple all-ones blocks of 64 code points each.
-                    set32x64Bits(bmpBlockBits, start>>6, limit>>6);
+                    set32x64_بٹ(bmp_بلاک_بٹ, آغاز>>6, حد_بندی>>6);
                 }
 
-                if(limit&0x3f) {
+                اگر(حد_بندی&0x3f) {
                     // Mixed-value block of 64 code points.
-                    limit>>=6;
-                    bmpBlockBits[limit&0x3f]|=0x10001<<(limit>>6);
-                    limit=(limit+1)<<6;  // Round up to the next block boundary.
-                    minStart=limit;      // Ignore further ranges in this block.
+                    حد_بندی>>=6;
+                    bmp_بلاک_بٹ[حد_بندی&0x3f]|=0x10001<<(حد_بندی>>6);
+                    حد_بندی=(حد_بندی+1)<<6;  // Round up to the next block boundary.
+                    min_آغاز=حد_بندی;      // Ignore further ranges in this block.
                 }
             }
         }
 
-        if(limit==0x10000) {
-            break;
+        اگر(حد_بندی==0x10000) {
+            توڑو;
         }
 
-        start=list[listIndex++];
-        if(listIndex<listLength) {
-            limit=list[listIndex++];
-        } else {
-            limit=0x110000;
+        آغاز=list[list_اشاریہ++];
+        اگر(list_اشاریہ<list_لمبائی) {
+            حد_بندی=list[list_اشاریہ++];
+        } ورنہ {
+            حد_بندی=0x110000;
         }
     }
 }
@@ -226,35 +226,35 @@ void BMPSet::initBits() {
  * (table7FF[] 0..7F, bmpBlockBits[] 0..7FF)
  * Need to set 0 values for surrogates D800..DFFF.
  */
-void BMPSet::overrideIllegal() {
-    uint32_t bits, mask;
+خالی BMPSet::overrideIllegal() {
+    uint32_t بٹ, mask;
     int32_t i;
 
-    if(containsFFFD) {
-        bits=3;                 // Lead bytes 0xC0 and 0xC1.
-        for(i=0; i<64; ++i) {
-            table7FF[i]|=bits;
+    اگر(شامل_ہے_FFFD) {
+        بٹ=3;                 // Lead bytes 0xC0 and 0xC1.
+        برائے(i=0; i<64; ++i) {
+            table7FF[i]|=بٹ;
         }
 
-        bits=1;                 // Lead byte 0xE0.
-        for(i=0; i<32; ++i) {   // First half of 4k block.
-            bmpBlockBits[i]|=bits;
+        بٹ=1;                 // Lead byte 0xE0.
+        برائے(i=0; i<32; ++i) {   // First half of 4k block.
+            bmp_بلاک_بٹ[i]|=بٹ;
         }
 
         mask= static_cast<uint32_t>(~(0x10001<<0xd));   // Lead byte 0xED.
-        bits=1<<0xd;
-        for(i=32; i<64; ++i) {  // Second half of 4k block.
-            bmpBlockBits[i]=(bmpBlockBits[i]&mask)|bits;
+        بٹ=1<<0xd;
+        برائے(i=32; i<64; ++i) {  // Second half of 4k block.
+            bmp_بلاک_بٹ[i]=(bmp_بلاک_بٹ[i]&mask)|بٹ;
         }
-    } else {
+    } ورنہ {
         mask= static_cast<uint32_t>(~(0x10001<<0xd));   // Lead byte 0xED.
-        for(i=32; i<64; ++i) {  // Second half of 4k block.
-            bmpBlockBits[i]&=mask;
+        برائے(i=32; i<64; ++i) {  // Second half of 4k block.
+            bmp_بلاک_بٹ[i]&=mask;
         }
     }
 }
 
-int32_t BMPSet::findCodePoint(UChar32 c, int32_t lo, int32_t hi) const {
+int32_t BMPSet::ڈھونڈو_رمز_نقطہ(UChar32 c, int32_t lo, int32_t hi) ثابت {
     /* Examples:
                                        findCodePoint(c)
        set              list[]         c=0 1 3 4 7 8
@@ -267,51 +267,51 @@ int32_t BMPSet::findCodePoint(UChar32 c, int32_t lo, int32_t hi) const {
 
     // Return the smallest i such that c < list[i].  Assume
     // list[len - 1] == HIGH and that c is legal (0..HIGH-1).
-    if (c < list[lo])
-        return lo;
+    اگر (c < list[lo])
+        واپس lo;
     // High runner test.  c is often after the last range, so an
     // initial check for this condition pays off.
-    if (lo >= hi || c >= list[hi-1])
-        return hi;
+    اگر (lo >= hi || c >= list[hi-1])
+        واپس hi;
     // invariant: c >= list[lo]
     // invariant: c < list[hi]
-    for (;;) {
+    برائے (;;) {
         int32_t i = (lo + hi) >> 1;
-        if (i == lo) {
-            break; // Found!
-        } else if (c < list[i]) {
+        اگر (i == lo) {
+            توڑو; // Found!
+        } ورنہ اگر (c < list[i]) {
             hi = i;
-        } else {
+        } ورنہ {
             lo = i;
         }
     }
-    return hi;
+    واپس hi;
 }
 
 UBool
-BMPSet::contains(UChar32 c) const {
-    if (static_cast<uint32_t>(c) <= 0xff) {
-        return latin1Contains[c];
-    } else if (static_cast<uint32_t>(c) <= 0x7ff) {
-        return (table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0;
-    } else if (static_cast<uint32_t>(c) < 0xd800 || (c >= 0xe000 && c <= 0xffff)) {
-        int lead=c>>12;
-        uint32_t twoBits=(bmpBlockBits[(c>>6)&0x3f]>>lead)&0x10001;
-        if(twoBits<=1) {
+BMPSet::شامل_ہے(UChar32 c) ثابت {
+    اگر (static_cast<uint32_t>(c) <= 0xff) {
+        واپس latin1_شامل_ہے[c];
+    } ورنہ اگر (static_cast<uint32_t>(c) <= 0x7ff) {
+        واپس (table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0;
+    } ورنہ اگر (static_cast<uint32_t>(c) < 0xd800 || (c >= 0xe000 && c <= 0xffff)) {
+        صحیح lead=c>>12;
+        uint32_t two_بٹ=(bmp_بلاک_بٹ[(c>>6)&0x3f]>>lead)&0x10001;
+        اگر(two_بٹ<=1) {
             // All 64 code points with the same bits 15..6
             // are either in the set or not.
-            return twoBits;
-        } else {
+            واپس two_بٹ;
+        } ورنہ {
             // Look up the code point in its 4k block of code points.
-            return containsSlow(c, list4kStarts[lead], list4kStarts[lead+1]);
+            واپس شامل_ہے_Slow(c, list4kStarts[lead], list4kStarts[lead+1]);
         }
-    } else if (static_cast<uint32_t>(c) <= 0x10ffff) {
+    } ورنہ اگر (static_cast<uint32_t>(c) <= 0x10ffff) {
         // surrogate or supplementary code point
-        return containsSlow(c, list4kStarts[0xd], list4kStarts[0x11]);
-    } else {
+        واپس شامل_ہے_Slow(c, list4kStarts[0xd], list4kStarts[0x11]);
+    } ورنہ {
         // Out-of-range code points get false, consistent with long-standing
         // behavior of UnicodeSet::contains(c).
-        return false;
+        واپس جھوٹ;
     }
 }
 
@@ -319,222 +319,222 @@ BMPSet::contains(UChar32 c) const {
  * Check for sufficient length for trail unit for each surrogate pair.
  * Handle single surrogates as surrogate code points as usual in ICU.
  */
-const char16_t *
-BMPSet::span(const char16_t *s, const char16_t *limit, USetSpanCondition spanCondition) const {
+ثابت char16_t *
+BMPSet::وسعت(ثابت char16_t *s, ثابت char16_t *حد_بندی, USet_وسعت_Condition وسعت_Condition) ثابت {
     char16_t c, c2;
 
-    if(spanCondition) {
-        // span
-        do {
+    اگر(وسعت_Condition) {
+        //وسعت
+        کرو {
             c=*s;
-            if(c<=0xff) {
-                if(!latin1Contains[c]) {
-                    break;
+            اگر(c<=0xff) {
+                اگر(!latin1_شامل_ہے[c]) {
+                    توڑو;
                 }
-            } else if(c<=0x7ff) {
-                if ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) == 0) {
-                    break;
+            } ورنہ اگر(c<=0x7ff) {
+                اگر ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) == 0) {
+                    توڑو;
                 }
-            } else if(c<0xd800 || c>=0xe000) {
-                int lead=c>>12;
-                uint32_t twoBits=(bmpBlockBits[(c>>6)&0x3f]>>lead)&0x10001;
-                if(twoBits<=1) {
+            } ورنہ اگر(c<0xd800 || c>=0xe000) {
+                صحیح lead=c>>12;
+                uint32_t two_بٹ=(bmp_بلاک_بٹ[(c>>6)&0x3f]>>lead)&0x10001;
+                اگر(two_بٹ<=1) {
                     // All 64 code points with the same bits 15..6
                     // are either in the set or not.
-                    if(twoBits==0) {
-                        break;
+                    اگر(two_بٹ==0) {
+                        توڑو;
                     }
-                } else {
+                } ورنہ {
                     // Look up the code point in its 4k block of code points.
-                    if(!containsSlow(c, list4kStarts[lead], list4kStarts[lead+1])) {
-                        break;
+                    اگر(!شامل_ہے_Slow(c, list4kStarts[lead], list4kStarts[lead+1])) {
+                        توڑو;
                     }
                 }
-            } else if(c>=0xdc00 || (s+1)==limit || (c2=s[1])<0xdc00 || c2>=0xe000) {
+            } ورنہ اگر(c>=0xdc00 || (s+1)==حد_بندی || (c2=s[1])<0xdc00 || c2>=0xe000) {
                 // surrogate code point
-                if(!containsSlow(c, list4kStarts[0xd], list4kStarts[0xe])) {
-                    break;
+                اگر(!شامل_ہے_Slow(c, list4kStarts[0xd], list4kStarts[0xe])) {
+                    توڑو;
                 }
-            } else {
+            } ورنہ {
                 // surrogate pair
-                if(!containsSlow(U16_GET_SUPPLEMENTARY(c, c2), list4kStarts[0x10], list4kStarts[0x11])) {
-                    break;
+                اگر(!شامل_ہے_Slow(U16_GET_SUPPLEMENTARY(c, c2), list4kStarts[0x10], list4kStarts[0x11])) {
+                    توڑو;
                 }
                 ++s;
             }
-        } while(++s<limit);
-    } else {
+        } جب(++s<حد_بندی);
+    } ورنہ {
         // span not
-        do {
+        کرو {
             c=*s;
-            if(c<=0xff) {
-                if(latin1Contains[c]) {
-                    break;
+            اگر(c<=0xff) {
+                اگر(latin1_شامل_ہے[c]) {
+                    توڑو;
                 }
-            } else if(c<=0x7ff) {
-                if ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0) {
-                    break;
+            } ورنہ اگر(c<=0x7ff) {
+                اگر ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0) {
+                    توڑو;
                 }
-            } else if(c<0xd800 || c>=0xe000) {
-                int lead=c>>12;
-                uint32_t twoBits=(bmpBlockBits[(c>>6)&0x3f]>>lead)&0x10001;
-                if(twoBits<=1) {
+            } ورنہ اگر(c<0xd800 || c>=0xe000) {
+                صحیح lead=c>>12;
+                uint32_t two_بٹ=(bmp_بلاک_بٹ[(c>>6)&0x3f]>>lead)&0x10001;
+                اگر(two_بٹ<=1) {
                     // All 64 code points with the same bits 15..6
                     // are either in the set or not.
-                    if(twoBits!=0) {
-                        break;
+                    اگر(two_بٹ!=0) {
+                        توڑو;
                     }
-                } else {
+                } ورنہ {
                     // Look up the code point in its 4k block of code points.
-                    if(containsSlow(c, list4kStarts[lead], list4kStarts[lead+1])) {
-                        break;
+                    اگر(شامل_ہے_Slow(c, list4kStarts[lead], list4kStarts[lead+1])) {
+                        توڑو;
                     }
                 }
-            } else if(c>=0xdc00 || (s+1)==limit || (c2=s[1])<0xdc00 || c2>=0xe000) {
+            } ورنہ اگر(c>=0xdc00 || (s+1)==حد_بندی || (c2=s[1])<0xdc00 || c2>=0xe000) {
                 // surrogate code point
-                if(containsSlow(c, list4kStarts[0xd], list4kStarts[0xe])) {
-                    break;
+                اگر(شامل_ہے_Slow(c, list4kStarts[0xd], list4kStarts[0xe])) {
+                    توڑو;
                 }
-            } else {
+            } ورنہ {
                 // surrogate pair
-                if(containsSlow(U16_GET_SUPPLEMENTARY(c, c2), list4kStarts[0x10], list4kStarts[0x11])) {
-                    break;
+                اگر(شامل_ہے_Slow(U16_GET_SUPPLEMENTARY(c, c2), list4kStarts[0x10], list4kStarts[0x11])) {
+                    توڑو;
                 }
                 ++s;
             }
-        } while(++s<limit);
+        } جب(++s<حد_بندی);
     }
-    return s;
+    واپس s;
 }
 
 /* Symmetrical with span(). */
-const char16_t *
-BMPSet::spanBack(const char16_t *s, const char16_t *limit, USetSpanCondition spanCondition) const {
+ثابت char16_t *
+BMPSet::وسعت_عقب(ثابت char16_t *s, ثابت char16_t *حد_بندی, USet_وسعت_Condition وسعت_Condition) ثابت {
     char16_t c, c2;
 
-    if(spanCondition) {
-        // span
-        for(;;) {
-            c=*(--limit);
-            if(c<=0xff) {
-                if(!latin1Contains[c]) {
-                    break;
+    اگر(وسعت_Condition) {
+        //وسعت
+        برائے(;;) {
+            c=*(--حد_بندی);
+            اگر(c<=0xff) {
+                اگر(!latin1_شامل_ہے[c]) {
+                    توڑو;
                 }
-            } else if(c<=0x7ff) {
-                if ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) == 0) {
-                    break;
+            } ورنہ اگر(c<=0x7ff) {
+                اگر ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) == 0) {
+                    توڑو;
                 }
-            } else if(c<0xd800 || c>=0xe000) {
-                int lead=c>>12;
-                uint32_t twoBits=(bmpBlockBits[(c>>6)&0x3f]>>lead)&0x10001;
-                if(twoBits<=1) {
+            } ورنہ اگر(c<0xd800 || c>=0xe000) {
+                صحیح lead=c>>12;
+                uint32_t two_بٹ=(bmp_بلاک_بٹ[(c>>6)&0x3f]>>lead)&0x10001;
+                اگر(two_بٹ<=1) {
                     // All 64 code points with the same bits 15..6
                     // are either in the set or not.
-                    if(twoBits==0) {
-                        break;
+                    اگر(two_بٹ==0) {
+                        توڑو;
                     }
-                } else {
+                } ورنہ {
                     // Look up the code point in its 4k block of code points.
-                    if(!containsSlow(c, list4kStarts[lead], list4kStarts[lead+1])) {
-                        break;
+                    اگر(!شامل_ہے_Slow(c, list4kStarts[lead], list4kStarts[lead+1])) {
+                        توڑو;
                     }
                 }
-            } else if(c<0xdc00 || s==limit || (c2=*(limit-1))<0xd800 || c2>=0xdc00) {
+            } ورنہ اگر(c<0xdc00 || s==حد_بندی || (c2=*(حد_بندی-1))<0xd800 || c2>=0xdc00) {
                 // surrogate code point
-                if(!containsSlow(c, list4kStarts[0xd], list4kStarts[0xe])) {
-                    break;
+                اگر(!شامل_ہے_Slow(c, list4kStarts[0xd], list4kStarts[0xe])) {
+                    توڑو;
                 }
-            } else {
+            } ورنہ {
                 // surrogate pair
-                if(!containsSlow(U16_GET_SUPPLEMENTARY(c2, c), list4kStarts[0x10], list4kStarts[0x11])) {
-                    break;
+                اگر(!شامل_ہے_Slow(U16_GET_SUPPLEMENTARY(c2, c), list4kStarts[0x10], list4kStarts[0x11])) {
+                    توڑو;
                 }
-                --limit;
+                --حد_بندی;
             }
-            if(s==limit) {
-                return s;
+            اگر(s==حد_بندی) {
+                واپس s;
             }
         }
-    } else {
+    } ورنہ {
         // span not
-        for(;;) {
-            c=*(--limit);
-            if(c<=0xff) {
-                if(latin1Contains[c]) {
-                    break;
+        برائے(;;) {
+            c=*(--حد_بندی);
+            اگر(c<=0xff) {
+                اگر(latin1_شامل_ہے[c]) {
+                    توڑو;
                 }
-            } else if(c<=0x7ff) {
-                if ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0) {
-                    break;
+            } ورنہ اگر(c<=0x7ff) {
+                اگر ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0) {
+                    توڑو;
                 }
-            } else if(c<0xd800 || c>=0xe000) {
-                int lead=c>>12;
-                uint32_t twoBits=(bmpBlockBits[(c>>6)&0x3f]>>lead)&0x10001;
-                if(twoBits<=1) {
+            } ورنہ اگر(c<0xd800 || c>=0xe000) {
+                صحیح lead=c>>12;
+                uint32_t two_بٹ=(bmp_بلاک_بٹ[(c>>6)&0x3f]>>lead)&0x10001;
+                اگر(two_بٹ<=1) {
                     // All 64 code points with the same bits 15..6
                     // are either in the set or not.
-                    if(twoBits!=0) {
-                        break;
+                    اگر(two_بٹ!=0) {
+                        توڑو;
                     }
-                } else {
+                } ورنہ {
                     // Look up the code point in its 4k block of code points.
-                    if(containsSlow(c, list4kStarts[lead], list4kStarts[lead+1])) {
-                        break;
+                    اگر(شامل_ہے_Slow(c, list4kStarts[lead], list4kStarts[lead+1])) {
+                        توڑو;
                     }
                 }
-            } else if(c<0xdc00 || s==limit || (c2=*(limit-1))<0xd800 || c2>=0xdc00) {
+            } ورنہ اگر(c<0xdc00 || s==حد_بندی || (c2=*(حد_بندی-1))<0xd800 || c2>=0xdc00) {
                 // surrogate code point
-                if(containsSlow(c, list4kStarts[0xd], list4kStarts[0xe])) {
-                    break;
+                اگر(شامل_ہے_Slow(c, list4kStarts[0xd], list4kStarts[0xe])) {
+                    توڑو;
                 }
-            } else {
+            } ورنہ {
                 // surrogate pair
-                if(containsSlow(U16_GET_SUPPLEMENTARY(c2, c), list4kStarts[0x10], list4kStarts[0x11])) {
-                    break;
+                اگر(شامل_ہے_Slow(U16_GET_SUPPLEMENTARY(c2, c), list4kStarts[0x10], list4kStarts[0x11])) {
+                    توڑو;
                 }
-                --limit;
+                --حد_بندی;
             }
-            if(s==limit) {
-                return s;
+            اگر(s==حد_بندی) {
+                واپس s;
             }
         }
     }
-    return limit+1;
+    واپس حد_بندی+1;
 }
 
 /*
  * Precheck for sufficient trail bytes at end of string only once per span.
  * Check validity.
  */
-const uint8_t *
-BMPSet::spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const {
-    const uint8_t *limit=s+length;
+ثابت uint8_t *
+BMPSet::وسعت_UTF8(ثابت uint8_t *s, int32_t length, USet_وسعت_Condition وسعت_Condition) ثابت {
+    ثابت uint8_t *حد_بندی=s+length;
     uint8_t b=*s;
-    if(U8_IS_SINGLE(b)) {
+    اگر(U8_IS_SINGLE(b)) {
         // Initial all-ASCII span.
-        if(spanCondition) {
-            do {
-                if(!latin1Contains[b] || ++s==limit) {
-                    return s;
+        اگر(وسعت_Condition) {
+            کرو {
+                اگر(!latin1_شامل_ہے[b] || ++s==حد_بندی) {
+                    واپس s;
                 }
                 b=*s;
-            } while(U8_IS_SINGLE(b));
-        } else {
-            do {
-                if(latin1Contains[b] || ++s==limit) {
-                    return s;
+            } جب(U8_IS_SINGLE(b));
+        } ورنہ {
+            کرو {
+                اگر(latin1_شامل_ہے[b] || ++s==حد_بندی) {
+                    واپس s;
                 }
                 b=*s;
-            } while(U8_IS_SINGLE(b));
+            } جب(U8_IS_SINGLE(b));
         }
-        length = static_cast<int32_t>(limit - s);
+        length = static_cast<int32_t>(حد_بندی - s);
     }
 
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
-        spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
+    اگر(وسعت_Condition!=USET_وسعت_NOT_CONTAINED) {
+        وسعت_Condition=USET_وسعت_CONTAINED;  // Pin to 0/1 values.
     }
 
-    const uint8_t *limit0=limit;
+    ثابت uint8_t *limit0=حد_بندی;
 
     /*
      * Make sure that the last 1/2/3/4-byte sequence before limit is complete
@@ -546,122 +546,122 @@ BMPSet::spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanConditi
      * including it if that is part of the span, otherwise set limit0 to before
      * the truncated sequence.
      */
-    b=*(limit-1);
-    if (static_cast<int8_t>(b) < 0) {
+    b=*(حد_بندی-1);
+    اگر (static_cast<int8_t>(b) < 0) {
         // b>=0x80: lead or trail byte
-        if(b<0xc0) {
+        اگر(b<0xc0) {
             // single trail byte, check for preceding 3- or 4-byte lead byte
-            if(length>=2 && (b=*(limit-2))>=0xe0) {
-                limit-=2;
-                if(containsFFFD!=spanCondition) {
-                    limit0=limit;
+            اگر(length>=2 && (b=*(حد_بندی-2))>=0xe0) {
+                حد_بندی-=2;
+                اگر(شامل_ہے_FFFD!=وسعت_Condition) {
+                    limit0=حد_بندی;
                 }
-            } else if(b<0xc0 && b>=0x80 && length>=3 && (b=*(limit-3))>=0xf0) {
+            } ورنہ اگر(b<0xc0 && b>=0x80 && length>=3 && (b=*(حد_بندی-3))>=0xf0) {
                 // 4-byte lead byte with only two trail bytes
-                limit-=3;
-                if(containsFFFD!=spanCondition) {
-                    limit0=limit;
+                حد_بندی-=3;
+                اگر(شامل_ہے_FFFD!=وسعت_Condition) {
+                    limit0=حد_بندی;
                 }
             }
-        } else {
+        } ورنہ {
             // lead byte with no trail bytes
-            --limit;
-            if(containsFFFD!=spanCondition) {
-                limit0=limit;
+            --حد_بندی;
+            اگر(شامل_ہے_FFFD!=وسعت_Condition) {
+                limit0=حد_بندی;
             }
         }
     }
 
     uint8_t t1, t2, t3;
 
-    while(s<limit) {
+    جب(s<حد_بندی) {
         b=*s;
-        if(U8_IS_SINGLE(b)) {
+        اگر(U8_IS_SINGLE(b)) {
             // ASCII
-            if(spanCondition) {
-                do {
-                    if(!latin1Contains[b]) {
-                        return s;
-                    } else if(++s==limit) {
-                        return limit0;
+            اگر(وسعت_Condition) {
+                کرو {
+                    اگر(!latin1_شامل_ہے[b]) {
+                        واپس s;
+                    } ورنہ اگر(++s==حد_بندی) {
+                        واپس limit0;
                     }
                     b=*s;
-                } while(U8_IS_SINGLE(b));
-            } else {
-                do {
-                    if(latin1Contains[b]) {
-                        return s;
-                    } else if(++s==limit) {
-                        return limit0;
+                } جب(U8_IS_SINGLE(b));
+            } ورنہ {
+                کرو {
+                    اگر(latin1_شامل_ہے[b]) {
+                        واپس s;
+                    } ورنہ اگر(++s==حد_بندی) {
+                        واپس limit0;
                     }
                     b=*s;
-                } while(U8_IS_SINGLE(b));
+                } جب(U8_IS_SINGLE(b));
             }
         }
         ++s;  // Advance past the lead byte.
-        if(b>=0xe0) {
-            if(b<0xf0) {
-                if( /* handle U+0000..U+FFFF inline */
+        اگر(b>=0xe0) {
+            اگر(b<0xf0) {
+                اگر( /* handle U+0000..U+FFFF inline */
                     (t1 = static_cast<uint8_t>(s[0] - 0x80)) <= 0x3f &&
                     (t2 = static_cast<uint8_t>(s[1] - 0x80)) <= 0x3f
                 ) {
                     b&=0xf;
-                    uint32_t twoBits=(bmpBlockBits[t1]>>b)&0x10001;
-                    if(twoBits<=1) {
+                    uint32_t two_بٹ=(bmp_بلاک_بٹ[t1]>>b)&0x10001;
+                    اگر(two_بٹ<=1) {
                         // All 64 code points with this lead byte and middle trail byte
                         // are either in the set or not.
-                        if (twoBits != static_cast<uint32_t>(spanCondition)) {
-                            return s-1;
+                        اگر (two_بٹ != static_cast<uint32_t>(وسعت_Condition)) {
+                            واپس s-1;
                         }
-                    } else {
+                    } ورنہ {
                         // Look up the code point in its 4k block of code points.
                         UChar32 c=(b<<12)|(t1<<6)|t2;
-                        if(containsSlow(c, list4kStarts[b], list4kStarts[b+1]) != spanCondition) {
-                            return s-1;
+                        اگر(شامل_ہے_Slow(c, list4kStarts[b], list4kStarts[b+1]) != وسعت_Condition) {
+                            واپس s-1;
                         }
                     }
                     s+=2;
-                    continue;
+                    جاری;
                 }
-            } else if( /* handle U+10000..U+10FFFF inline */
+            } ورنہ اگر( /* handle U+10000..U+10FFFF inline */
                 (t1 = static_cast<uint8_t>(s[0] - 0x80)) <= 0x3f &&
                 (t2 = static_cast<uint8_t>(s[1] - 0x80)) <= 0x3f &&
                 (t3 = static_cast<uint8_t>(s[2] - 0x80)) <= 0x3f
             ) {
                 // Give an illegal sequence the same value as the result of contains(FFFD).
                 UChar32 c = (static_cast<UChar32>(b - 0xf0) << 18) | (static_cast<UChar32>(t1) << 12) | (t2 << 6) | t3;
-                if( (   (0x10000<=c && c<=0x10ffff) ?
-                            containsSlow(c, list4kStarts[0x10], list4kStarts[0x11]) :
-                            containsFFFD
-                    ) != spanCondition
+                اگر( (   (0x10000<=c && c<=0x10ffff) ?
+                            شامل_ہے_Slow(c, list4kStarts[0x10], list4kStarts[0x11]) :
+                            شامل_ہے_FFFD
+                    ) != وسعت_Condition
                 ) {
-                    return s-1;
+                    واپس s-1;
                 }
                 s+=3;
-                continue;
+                جاری;
             }
-        } else {
-            if( /* handle U+0000..U+07FF inline */
+        } ورنہ {
+            اگر( /* handle U+0000..U+07FF inline */
                 b>=0xc0 &&
                 (t1 = static_cast<uint8_t>(*s - 0x80)) <= 0x3f
             ) {
-                if (static_cast<USetSpanCondition>((table7FF[t1] & (static_cast<uint32_t>(1) << (b & 0x1f))) != 0) != spanCondition) {
-                    return s-1;
+                اگر (static_cast<USet_وسعت_Condition>((table7FF[t1] & (static_cast<uint32_t>(1) << (b & 0x1f))) != 0) != وسعت_Condition) {
+                    واپس s-1;
                 }
                 ++s;
-                continue;
+                جاری;
             }
         }
 
         // Give an illegal sequence the same value as the result of contains(FFFD).
         // Handle each byte of an illegal sequence separately to simplify the code;
         // no need to optimize error handling.
-        if(containsFFFD!=spanCondition) {
-            return s-1;
+        اگر(شامل_ہے_FFFD!=وسعت_Condition) {
+            واپس s-1;
         }
     }
 
-    return limit0;
+    واپس limit0;
 }
 
 /*
@@ -672,70 +672,70 @@ BMPSet::spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanConditi
  * is much harder than going forward.
  */
 int32_t
-BMPSet::spanBackUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
-        spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
+BMPSet::وسعت_عقب_UTF8(ثابت uint8_t *s, int32_t length, USet_وسعت_Condition وسعت_Condition) ثابت {
+    اگر(وسعت_Condition!=USET_وسعت_NOT_CONTAINED) {
+        وسعت_Condition=USET_وسعت_CONTAINED;  // Pin to 0/1 values.
     }
 
     uint8_t b;
 
-    do {
+    کرو {
         b=s[--length];
-        if(U8_IS_SINGLE(b)) {
+        اگر(U8_IS_SINGLE(b)) {
             // ASCII sub-span
-            if(spanCondition) {
-                do {
-                    if(!latin1Contains[b]) {
-                        return length+1;
-                    } else if(length==0) {
-                        return 0;
+            اگر(وسعت_Condition) {
+                کرو {
+                    اگر(!latin1_شامل_ہے[b]) {
+                        واپس length+1;
+                    } ورنہ اگر(length==0) {
+                        واپس 0;
                     }
                     b=s[--length];
-                } while(U8_IS_SINGLE(b));
-            } else {
-                do {
-                    if(latin1Contains[b]) {
-                        return length+1;
-                    } else if(length==0) {
-                        return 0;
+                } جب(U8_IS_SINGLE(b));
+            } ورنہ {
+                کرو {
+                    اگر(latin1_شامل_ہے[b]) {
+                        واپس length+1;
+                    } ورنہ اگر(length==0) {
+                        واپس 0;
                     }
                     b=s[--length];
-                } while(U8_IS_SINGLE(b));
+                } جب(U8_IS_SINGLE(b));
             }
         }
 
-        int32_t prev=length;
+        int32_t پچھلا=length;
         UChar32 c;
         // trail byte: collect a multi-byte character
         // (or  lead byte in last-trail position)
-        c=utf8_prevCharSafeBody(s, 0, &length, b, -3);
+        c=utf8_پچھلا_Char_محفوظ_Body(s, 0, &length, b, -3);
         // c is a valid code point, not ASCII, not a surrogate
-        if(c<=0x7ff) {
-            if (static_cast<USetSpanCondition>((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0) != spanCondition) {
-                return prev+1;
+        اگر(c<=0x7ff) {
+            اگر (static_cast<USet_وسعت_Condition>((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0) != وسعت_Condition) {
+                واپس پچھلا+1;
             }
-        } else if(c<=0xffff) {
-            int lead=c>>12;
-            uint32_t twoBits=(bmpBlockBits[(c>>6)&0x3f]>>lead)&0x10001;
-            if(twoBits<=1) {
+        } ورنہ اگر(c<=0xffff) {
+            صحیح lead=c>>12;
+            uint32_t two_بٹ=(bmp_بلاک_بٹ[(c>>6)&0x3f]>>lead)&0x10001;
+            اگر(two_بٹ<=1) {
                 // All 64 code points with the same bits 15..6
                 // are either in the set or not.
-                if (twoBits != static_cast<uint32_t>(spanCondition)) {
-                    return prev+1;
+                اگر (two_بٹ != static_cast<uint32_t>(وسعت_Condition)) {
+                    واپس پچھلا+1;
                 }
-            } else {
+            } ورنہ {
                 // Look up the code point in its 4k block of code points.
-                if(containsSlow(c, list4kStarts[lead], list4kStarts[lead+1]) != spanCondition) {
-                    return prev+1;
+                اگر(شامل_ہے_Slow(c, list4kStarts[lead], list4kStarts[lead+1]) != وسعت_Condition) {
+                    واپس پچھلا+1;
                 }
             }
-        } else {
-            if(containsSlow(c, list4kStarts[0x10], list4kStarts[0x11]) != spanCondition) {
-                return prev+1;
+        } ورنہ {
+            اگر(شامل_ہے_Slow(c, list4kStarts[0x10], list4kStarts[0x11]) != وسعت_Condition) {
+                واپس پچھلا+1;
             }
         }
-    } while(length>0);
-    return 0;
+    } جب(length>0);
+    واپس 0;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا

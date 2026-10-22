@@ -6,81 +6,81 @@
 // Copyright 2007 Google Inc. All Rights Reserved.
 // Author: sanjay@google.com (Sanjay Ghemawat)
 
-#include "unicode/utypes.h"
-#include "unicode/bytestream.h"
-#include "cmemory.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/bytestream.h"
+#شامل "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
 ByteSink::~ByteSink() {}
 
-char* ByteSink::GetAppendBuffer(int32_t min_capacity,
+حرف* ByteSink::Get_Append_بفر(int32_t min_استعداد_2,
                                 int32_t /*desired_capacity_hint*/,
-                                char* scratch U_LIFETIME_BOUND,
-                                int32_t scratch_capacity,
-                                int32_t* result_capacity) U_LIFETIME_BOUND {
-  if (min_capacity < 1 || scratch_capacity < min_capacity) {
-    *result_capacity = 0;
-    return nullptr;
+                                حرف* scratch U_LIFETIME_BOUND,
+                                int32_t scratch_استعداد_2,
+                                int32_t* نتیجہ_استعداد_2) U_LIFETIME_BOUND {
+  اگر (min_استعداد_2 < 1 || scratch_استعداد_2 < min_استعداد_2) {
+    *نتیجہ_استعداد_2 = 0;
+    واپس خالی_اشاریہ;
   }
-  *result_capacity = scratch_capacity;
-  return scratch;
+  *نتیجہ_استعداد_2 = scratch_استعداد_2;
+  واپس scratch;
 }
 
-void ByteSink::Flush() {}
+خالی ByteSink::Flush() {}
 
-CheckedArrayByteSink::CheckedArrayByteSink(char* outbuf, int32_t capacity)
-    : outbuf_(outbuf), capacity_(capacity < 0 ? 0 : capacity),
-      size_(0), appended_(0), overflowed_(false) {
+CheckedArrayByteSink::CheckedArrayByteSink(حرف* outbuf, int32_t capacity)
+    : outbuf_(outbuf), استعداد_2(capacity < 0 ? 0 : capacity),
+      سائز(0), appended_(0), overflowed_(جھوٹ) {
 }
 
 CheckedArrayByteSink::~CheckedArrayByteSink() {}
 
 CheckedArrayByteSink& CheckedArrayByteSink::Reset() U_LIFETIME_BOUND {
-  size_ = appended_ = 0;
-  overflowed_ = false;
-  return *this;
+  سائز = appended_ = 0;
+  overflowed_ = جھوٹ;
+  واپس *یہ;
 }
 
-void CheckedArrayByteSink::Append(const char* bytes, int32_t n) {
-  if (n <= 0) {
-    return;
+خالی CheckedArrayByteSink::Append(ثابت حرف* بائٹیں, int32_t n) {
+  اگر (n <= 0) {
+    واپس;
   }
-  if (n > (INT32_MAX - appended_)) {
+  اگر (n > (INT32_MAX - appended_)) {
     // TODO: Report as integer overflow, not merely buffer overflow.
     appended_ = INT32_MAX;
-    overflowed_ = true;
-    return;
+    overflowed_ = سچ;
+    واپس;
   }
   appended_ += n;
-  int32_t available = capacity_ - size_;
-  if (n > available) {
-    n = available;
-    overflowed_ = true;
+  int32_t دستیاب = استعداد_2 - سائز;
+  اگر (n > دستیاب) {
+    n = دستیاب;
+    overflowed_ = سچ;
   }
-  if (n > 0 && bytes != (outbuf_ + size_)) {
-    uprv_memcpy(outbuf_ + size_, bytes, n);
+  اگر (n > 0 && بائٹیں != (outbuf_ + سائز)) {
+    uprv_memcpy(outbuf_ + سائز, بائٹیں, n);
   }
-  size_ += n;
+  سائز += n;
 }
 
-char* CheckedArrayByteSink::GetAppendBuffer(int32_t min_capacity,
+حرف* CheckedArrayByteSink::Get_Append_بفر(int32_t min_استعداد_2,
                                             int32_t /*desired_capacity_hint*/,
-                                            char* scratch U_LIFETIME_BOUND,
-                                            int32_t scratch_capacity,
-                                            int32_t* result_capacity) U_LIFETIME_BOUND {
-  if (min_capacity < 1 || scratch_capacity < min_capacity) {
-    *result_capacity = 0;
-    return nullptr;
+                                            حرف* scratch U_LIFETIME_BOUND,
+                                            int32_t scratch_استعداد_2,
+                                            int32_t* نتیجہ_استعداد_2) U_LIFETIME_BOUND {
+  اگر (min_استعداد_2 < 1 || scratch_استعداد_2 < min_استعداد_2) {
+    *نتیجہ_استعداد_2 = 0;
+    واپس خالی_اشاریہ;
   }
-  int32_t available = capacity_ - size_;
-  if (available >= min_capacity) {
-    *result_capacity = available;
-    return outbuf_ + size_;
-  } else {
-    *result_capacity = scratch_capacity;
-    return scratch;
+  int32_t دستیاب = استعداد_2 - سائز;
+  اگر (دستیاب >= min_استعداد_2) {
+    *نتیجہ_استعداد_2 = دستیاب;
+    واپس outbuf_ + سائز;
+  } ورنہ {
+    *نتیجہ_استعداد_2 = scratch_استعداد_2;
+    واپس scratch;
   }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا

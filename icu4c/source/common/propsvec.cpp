@@ -18,351 +18,351 @@
 *   Store bits (Unicode character properties) in bit set vectors.
 */
 
-#include <stdlib.h>
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "utrie.h"
-#include "utrie2.h"
-#include "uarrsort.h"
-#include "propsvec.h"
-#include "uassert.h"
+#شامل <stdlib.h>
+#شامل "unicode/utypes.h"
+#شامل "cmemory.h"
+#شامل "utrie.h"
+#شامل "utrie2.h"
+#شامل "uarrsort.h"
+#شامل "propsvec.h"
+#شامل "uassert.h"
 
-struct UPropsVectors {
+ساخت UPropsVectors {
     uint32_t *v;
     int32_t columns;  /* number of columns, plus two for start & limit values */
-    int32_t maxRows;
-    int32_t rows;
-    int32_t prevRow;  /* search optimization: remember last row seen */
+    int32_t max_صفیں;
+    int32_t صفیں;
+    int32_t پچھلا_صف;  /* search optimization: remember last row seen */
     UBool isCompacted;
 };
 
-#define UPVEC_INITIAL_ROWS (1<<12)
-#define UPVEC_MEDIUM_ROWS ((int32_t)1<<16)
-#define UPVEC_MAX_ROWS (UPVEC_MAX_CP+1)
+#تعریف_کرو UPVEC_INITIAL_صفیں (1<<12)
+#تعریف_کرو UPVEC_MEDIUM_صفیں ((int32_t)1<<16)
+#تعریف_کرو UPVEC_MAX_صفیں (UPVEC_MAX_CP+1)
 
 U_CAPI UPropsVectors * U_EXPORT2
-upvec_open(int32_t columns, UErrorCode *pErrorCode) {
+upvec_open(int32_t columns, UError_رمز *p_Error_رمز) {
     UPropsVectors *pv;
-    uint32_t *v, *row;
+    uint32_t *v, *صف;
     uint32_t cp;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    اگر(U_FAILURE(*p_Error_رمز)) {
+        واپس خالی_اشاریہ;
     }
-    if(columns<1) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    اگر(columns<1) {
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس خالی_اشاریہ;
     }
     columns+=2; /* count range start and limit columns */
 
-    pv=(UPropsVectors *)uprv_malloc(sizeof(UPropsVectors));
-    v=(uint32_t *)uprv_malloc(UPVEC_INITIAL_ROWS*columns*4);
-    if(pv==nullptr || v==nullptr) {
+    pv=(UPropsVectors *)uprv_malloc(حجم(UPropsVectors));
+    v=(uint32_t *)uprv_malloc(UPVEC_INITIAL_صفیں*columns*4);
+    اگر(pv==خالی_اشاریہ || v==خالی_اشاریہ) {
         uprv_free(pv);
         uprv_free(v);
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        *p_Error_رمز=U_حافظہ_تخصیص_ERROR;
+        واپس خالی_اشاریہ;
     }
-    uprv_memset(pv, 0, sizeof(UPropsVectors));
+    uprv_memset(pv, 0, حجم(UPropsVectors));
     pv->v=v;
     pv->columns=columns;
-    pv->maxRows=UPVEC_INITIAL_ROWS;
-    pv->rows=2+(UPVEC_MAX_CP-UPVEC_FIRST_SPECIAL_CP);
+    pv->max_صفیں=UPVEC_INITIAL_صفیں;
+    pv->صفیں=2+(UPVEC_MAX_CP-UPVEC_پہلا_SPECIAL_CP);
 
     /* set the all-Unicode row and the special-value rows */
-    row=pv->v;
-    uprv_memset(row, 0, pv->rows*columns*4);
-    row[0]=0;
-    row[1]=0x110000;
-    row+=columns;
-    for(cp=UPVEC_FIRST_SPECIAL_CP; cp<=UPVEC_MAX_CP; ++cp) {
-        row[0]=cp;
-        row[1]=cp+1;
-        row+=columns;
+    صف=pv->v;
+    uprv_memset(صف, 0, pv->صفیں*columns*4);
+    صف[0]=0;
+    صف[1]=0x110000;
+    صف+=columns;
+    برائے(cp=UPVEC_پہلا_SPECIAL_CP; cp<=UPVEC_MAX_CP; ++cp) {
+        صف[0]=cp;
+        صف[1]=cp+1;
+        صف+=columns;
     }
-    return pv;
+    واپس pv;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI خالی U_EXPORT2
 upvec_close(UPropsVectors *pv) {
-    if(pv!=nullptr) {
+    اگر(pv!=خالی_اشاریہ) {
         uprv_free(pv->v);
         uprv_free(pv);
     }
 }
 
-static uint32_t *
-_findRow(UPropsVectors *pv, UChar32 rangeStart) {
-    uint32_t *row;
-    int32_t columns, i, start, limit, prevRow;
+ساکن uint32_t *
+ڈھونڈو_صف(UPropsVectors *pv, UChar32 range_آغاز) {
+    uint32_t *صف;
+    int32_t columns, i, آغاز, حد_بندی, پچھلا_صف;
 
     columns=pv->columns;
-    limit=pv->rows;
-    prevRow=pv->prevRow;
+    حد_بندی=pv->صفیں;
+    پچھلا_صف=pv->پچھلا_صف;
 
     /* check the vicinity of the last-seen row (start searching with an unrolled loop) */
-    row=pv->v+prevRow*columns;
-    if (rangeStart >= static_cast<UChar32>(row[0])) {
-        if (rangeStart < static_cast<UChar32>(row[1])) {
+    صف=pv->v+پچھلا_صف*columns;
+    اگر (range_آغاز >= static_cast<UChar32>(صف[0])) {
+        اگر (range_آغاز < static_cast<UChar32>(صف[1])) {
             /* same row as last seen */
-            return row;
-        } else if (rangeStart < static_cast<UChar32>((row += columns)[1])) {
+            واپس صف;
+        } ورنہ اگر (range_آغاز < static_cast<UChar32>((صف += columns)[1])) {
             /* next row after the last one */
-            pv->prevRow=prevRow+1;
-            return row;
-        } else if (rangeStart < static_cast<UChar32>((row += columns)[1])) {
+            pv->پچھلا_صف=پچھلا_صف+1;
+            واپس صف;
+        } ورنہ اگر (range_آغاز < static_cast<UChar32>((صف += columns)[1])) {
             /* second row after the last one */
-            pv->prevRow=prevRow+2;
-            return row;
-        } else if ((rangeStart - static_cast<UChar32>(row[1])) < 10) {
+            pv->پچھلا_صف=پچھلا_صف+2;
+            واپس صف;
+        } ورنہ اگر ((range_آغاز - static_cast<UChar32>(صف[1])) < 10) {
             /* we are close, continue looping */
-            prevRow+=2;
-            do {
-                ++prevRow;
-                row+=columns;
-            } while (rangeStart >= static_cast<UChar32>(row[1]));
-            pv->prevRow=prevRow;
-            return row;
+            پچھلا_صف+=2;
+            کرو {
+                ++پچھلا_صف;
+                صف+=columns;
+            } جب (range_آغاز >= static_cast<UChar32>(صف[1]));
+            pv->پچھلا_صف=پچھلا_صف;
+            واپس صف;
         }
-    } else if (rangeStart < static_cast<UChar32>(pv->v[1])) {
+    } ورنہ اگر (range_آغاز < static_cast<UChar32>(pv->v[1])) {
         /* the very first row */
-        pv->prevRow=0;
-        return pv->v;
+        pv->پچھلا_صف=0;
+        واپس pv->v;
     }
 
     /* do a binary search for the start of the range */
-    start=0;
-    while(start<limit-1) {
-        i=(start+limit)/2;
-        row=pv->v+i*columns;
-        if (rangeStart < static_cast<UChar32>(row[0])) {
-            limit=i;
-        } else if (rangeStart < static_cast<UChar32>(row[1])) {
-            pv->prevRow=i;
-            return row;
-        } else {
-            start=i;
+    آغاز=0;
+    جب(آغاز<حد_بندی-1) {
+        i=(آغاز+حد_بندی)/2;
+        صف=pv->v+i*columns;
+        اگر (range_آغاز < static_cast<UChar32>(صف[0])) {
+            حد_بندی=i;
+        } ورنہ اگر (range_آغاز < static_cast<UChar32>(صف[1])) {
+            pv->پچھلا_صف=i;
+            واپس صف;
+        } ورنہ {
+            آغاز=i;
         }
     }
 
     /* must be found because all ranges together always cover all of Unicode */
-    pv->prevRow=start;
-    return pv->v+start*columns;
+    pv->پچھلا_صف=آغاز;
+    واپس pv->v+آغاز*columns;
 }
 
-U_CAPI void U_EXPORT2
-upvec_setValue(UPropsVectors *pv,
-               UChar32 start, UChar32 end,
-               int32_t column,
+U_CAPI خالی U_EXPORT2
+upvec_سیٹ_قدر(UPropsVectors *pv,
+               UChar32 آغاز, UChar32 انتہا,
+               int32_t عمود,
                uint32_t value, uint32_t mask,
-               UErrorCode *pErrorCode) {
-    uint32_t *firstRow, *lastRow;
+               UError_رمز *p_Error_رمز) {
+    uint32_t *پہلا_صف, *آخری_صف;
     int32_t columns;
-    UChar32 limit;
-    UBool splitFirstRow, splitLastRow;
+    UChar32 حد_بندی;
+    UBool بانٹو_پہلا_صف, بانٹو_آخری_صف;
 
     /* argument checking */
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    اگر(U_FAILURE(*p_Error_رمز)) {
+        واپس;
     }
-    if( pv==nullptr ||
-        start<0 || start>end || end>UPVEC_MAX_CP ||
-        column<0 || column>=(pv->columns-2)
+    اگر( pv==خالی_اشاریہ ||
+        آغاز<0 || آغاز>انتہا || انتہا>UPVEC_MAX_CP ||
+        عمود<0 || عمود>=(pv->columns-2)
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس;
     }
-    if(pv->isCompacted) {
-        *pErrorCode=U_NO_WRITE_PERMISSION;
-        return;
+    اگر(pv->isCompacted) {
+        *p_Error_رمز=U_NO_WRITE_PERMISSION;
+        واپس;
     }
-    limit=end+1;
+    حد_بندی=انتہا+1;
 
     /* initialize */
     columns=pv->columns;
-    column+=2; /* skip range start and limit columns */
+    عمود+=2; /* skip range start and limit columns */
     value&=mask;
 
     /* find the rows whose ranges overlap with the input range */
 
     /* find the first and last rows, always successful */
-    firstRow=_findRow(pv, start);
-    lastRow=_findRow(pv, end);
+    پہلا_صف=ڈھونڈو_صف(pv, آغاز);
+    آخری_صف=ڈھونڈو_صف(pv, انتہا);
 
     /*
      * Rows need to be split if they partially overlap with the
      * input range (only possible for the first and last rows)
      * and if their value differs from the input value.
      */
-    splitFirstRow = start != static_cast<UChar32>(firstRow[0]) && value != (firstRow[column] & mask);
-    splitLastRow = limit != static_cast<UChar32>(lastRow[1]) && value != (lastRow[column] & mask);
+    بانٹو_پہلا_صف = آغاز != static_cast<UChar32>(پہلا_صف[0]) && value != (پہلا_صف[عمود] & mask);
+    بانٹو_آخری_صف = حد_بندی != static_cast<UChar32>(آخری_صف[1]) && value != (آخری_صف[عمود] & mask);
 
     /* split first/last rows if necessary */
-    if(splitFirstRow || splitLastRow) {
-        int32_t count, rows;
+    اگر(بانٹو_پہلا_صف || بانٹو_آخری_صف) {
+        int32_t count, صفیں;
 
-        rows=pv->rows;
-        if((rows+splitFirstRow+splitLastRow)>pv->maxRows) {
+        صفیں=pv->صفیں;
+        اگر((صفیں+بانٹو_پہلا_صف+بانٹو_آخری_صف)>pv->max_صفیں) {
             uint32_t *newVectors;
-            int32_t newMaxRows;
+            int32_t new_Max_صفیں;
 
-            if(pv->maxRows<UPVEC_MEDIUM_ROWS) {
-                newMaxRows=UPVEC_MEDIUM_ROWS;
-            } else if(pv->maxRows<UPVEC_MAX_ROWS) {
-                newMaxRows=UPVEC_MAX_ROWS;
-            } else {
+            اگر(pv->max_صفیں<UPVEC_MEDIUM_صفیں) {
+                new_Max_صفیں=UPVEC_MEDIUM_صفیں;
+            } ورنہ اگر(pv->max_صفیں<UPVEC_MAX_صفیں) {
+                new_Max_صفیں=UPVEC_MAX_صفیں;
+            } ورنہ {
                 /* Implementation bug, or UPVEC_MAX_ROWS too low. */
-                *pErrorCode=U_INTERNAL_PROGRAM_ERROR;
-                return;
+                *p_Error_رمز=U_اندرونی_پروگرام_ERROR;
+                واپس;
             }
-            newVectors=(uint32_t *)uprv_malloc(newMaxRows*columns*4);
-            if(newVectors==nullptr) {
-                *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                return;
+            newVectors=(uint32_t *)uprv_malloc(new_Max_صفیں*columns*4);
+            اگر(newVectors==خالی_اشاریہ) {
+                *p_Error_رمز=U_حافظہ_تخصیص_ERROR;
+                واپس;
             }
-            uprv_memcpy(newVectors, pv->v, (size_t)rows*columns*4);
-            firstRow=newVectors+(firstRow-pv->v);
-            lastRow=newVectors+(lastRow-pv->v);
+            uprv_memcpy(newVectors, pv->v, (size_t)صفیں*columns*4);
+            پہلا_صف=newVectors+(پہلا_صف-pv->v);
+            آخری_صف=newVectors+(آخری_صف-pv->v);
             uprv_free(pv->v);
             pv->v=newVectors;
-            pv->maxRows=newMaxRows;
+            pv->max_صفیں=new_Max_صفیں;
         }
 
         /* count the number of row cells to move after the last row, and move them */
-        count = (int32_t)((pv->v+rows*columns)-(lastRow+columns));
-        if(count>0) {
+        count = (int32_t)((pv->v+صفیں*columns)-(آخری_صف+columns));
+        اگر(count>0) {
             uprv_memmove(
-                lastRow+(1+splitFirstRow+splitLastRow)*columns,
-                lastRow+columns,
+                آخری_صف+(1+بانٹو_پہلا_صف+بانٹو_آخری_صف)*columns,
+                آخری_صف+columns,
                 count*4);
         }
-        pv->rows=rows+splitFirstRow+splitLastRow;
+        pv->صفیں=صفیں+بانٹو_پہلا_صف+بانٹو_آخری_صف;
 
         /* split the first row, and move the firstRow pointer to the second part */
-        if(splitFirstRow) {
+        اگر(بانٹو_پہلا_صف) {
             /* copy all affected rows up one and move the lastRow pointer */
-            count = (int32_t)((lastRow-firstRow)+columns);
-            uprv_memmove(firstRow+columns, firstRow, (size_t)count*4);
-            lastRow+=columns;
+            count = (int32_t)((آخری_صف-پہلا_صف)+columns);
+            uprv_memmove(پہلا_صف+columns, پہلا_صف, (size_t)count*4);
+            آخری_صف+=columns;
 
             /* split the range and move the firstRow pointer */
-            firstRow[1]=firstRow[columns]=(uint32_t)start;
-            firstRow+=columns;
+            پہلا_صف[1]=پہلا_صف[columns]=(uint32_t)آغاز;
+            پہلا_صف+=columns;
         }
 
         /* split the last row */
-        if(splitLastRow) {
+        اگر(بانٹو_آخری_صف) {
             /* copy the last row data */
-            uprv_memcpy(lastRow+columns, lastRow, (size_t)columns*4);
+            uprv_memcpy(آخری_صف+columns, آخری_صف, (size_t)columns*4);
 
             /* split the range and move the firstRow pointer */
-            lastRow[1]=lastRow[columns]=(uint32_t)limit;
+            آخری_صف[1]=آخری_صف[columns]=(uint32_t)حد_بندی;
         }
     }
 
     /* set the "row last seen" to the last row for the range */
-    pv->prevRow=(int32_t)((lastRow-(pv->v))/columns);
+    pv->پچھلا_صف=(int32_t)((آخری_صف-(pv->v))/columns);
 
     /* set the input value in all remaining rows */
-    firstRow+=column;
-    lastRow+=column;
+    پہلا_صف+=عمود;
+    آخری_صف+=عمود;
     mask=~mask;
-    for(;;) {
-        *firstRow=(*firstRow&mask)|value;
-        if(firstRow==lastRow) {
-            break;
+    برائے(;;) {
+        *پہلا_صف=(*پہلا_صف&mask)|value;
+        اگر(پہلا_صف==آخری_صف) {
+            توڑو;
         }
-        firstRow+=columns;
+        پہلا_صف+=columns;
     }
 }
 
 U_CAPI uint32_t U_EXPORT2
-upvec_getValue(const UPropsVectors *pv, UChar32 c, int32_t column) {
-    uint32_t *row;
+upvec_get_قدر(ثابت UPropsVectors *pv, UChar32 c, int32_t عمود) {
+    uint32_t *صف;
     UPropsVectors *ncpv;
 
-    if(pv->isCompacted || c<0 || c>UPVEC_MAX_CP || column<0 || column>=(pv->columns-2)) {
-        return 0;
+    اگر(pv->isCompacted || c<0 || c>UPVEC_MAX_CP || عمود<0 || عمود>=(pv->columns-2)) {
+        واپس 0;
     }
     ncpv=(UPropsVectors *)pv;
-    row=_findRow(ncpv, c);
-    return row[2+column];
+    صف=ڈھونڈو_صف(ncpv, c);
+    واپس صف[2+عمود];
 }
 
 U_CAPI uint32_t * U_EXPORT2
-upvec_getRow(const UPropsVectors *pv, int32_t rowIndex,
-             UChar32 *pRangeStart, UChar32 *pRangeEnd) {
-    uint32_t *row;
+upvec_get_صف(ثابت UPropsVectors *pv, int32_t صف_اشاریہ,
+             UChar32 *p_Range_آغاز, UChar32 *p_Range_انتہا) {
+    uint32_t *صف;
     int32_t columns;
 
-    if(pv->isCompacted || rowIndex<0 || rowIndex>=pv->rows) {
-        return nullptr;
+    اگر(pv->isCompacted || صف_اشاریہ<0 || صف_اشاریہ>=pv->صفیں) {
+        واپس خالی_اشاریہ;
     }
 
     columns=pv->columns;
-    row=pv->v+rowIndex*columns;
-    if(pRangeStart!=nullptr) {
-        *pRangeStart=(UChar32)row[0];
+    صف=pv->v+صف_اشاریہ*columns;
+    اگر(p_Range_آغاز!=خالی_اشاریہ) {
+        *p_Range_آغاز=(UChar32)صف[0];
     }
-    if(pRangeEnd!=nullptr) {
-        *pRangeEnd=(UChar32)row[1]-1;
+    اگر(p_Range_انتہا!=خالی_اشاریہ) {
+        *p_Range_انتہا=(UChar32)صف[1]-1;
     }
-    return row+2;
+    واپس صف+2;
 }
 
-static int32_t U_CALLCONV
-upvec_compareRows(const void *context, const void *l, const void *r) {
-    const uint32_t* left = static_cast<const uint32_t*>(l), *right = static_cast<const uint32_t*>(r);
-    const UPropsVectors* pv = static_cast<const UPropsVectors*>(context);
+ساکن int32_t U_CALLCONV
+upvec_compare_صفیں(ثابت خالی *context, ثابت خالی *l, ثابت خالی *r) {
+    ثابت uint32_t* بائیں = static_cast<ثابت uint32_t*>(l), *دائیں = static_cast<ثابت uint32_t*>(r);
+    ثابت UPropsVectors* pv = static_cast<ثابت UPropsVectors*>(context);
     int32_t i, count, columns;
 
     count=columns=pv->columns; /* includes start/limit columns */
 
     /* start comparing after start/limit but wrap around to them */
     i=2;
-    do {
-        if(left[i]!=right[i]) {
-            return left[i]<right[i] ? -1 : 1;
+    کرو {
+        اگر(بائیں[i]!=دائیں[i]) {
+            واپس بائیں[i]<دائیں[i] ? -1 : 1;
         }
-        if(++i==columns) {
+        اگر(++i==columns) {
             i=0;
         }
-    } while(--count>0);
+    } جب(--count>0);
 
-    return 0;
+    واپس 0;
 }
 
-U_CAPI void U_EXPORT2
-upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, void *context, UErrorCode *pErrorCode) {
-    uint32_t *row;
-    int32_t i, columns, valueColumns, rows, count;
-    UChar32 start, limit;
+U_CAPI خالی U_EXPORT2
+upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, خالی *context, UError_رمز *p_Error_رمز) {
+    uint32_t *صف;
+    int32_t i, columns, قدر_Columns, صفیں, count;
+    UChar32 آغاز, حد_بندی;
 
     /* argument checking */
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    اگر(U_FAILURE(*p_Error_رمز)) {
+        واپس;
     }
-    if(handler==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    اگر(handler==خالی_اشاریہ) {
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس;
     }
-    if(pv->isCompacted) {
-        return;
+    اگر(pv->isCompacted) {
+        واپس;
     }
 
     /* Set the flag now: Sorting and compacting destroys the builder data structure. */
-    pv->isCompacted=true;
+    pv->isCompacted=سچ;
 
-    rows=pv->rows;
+    صفیں=pv->صفیں;
     columns=pv->columns;
     U_ASSERT(columns>=3); /* upvec_open asserts this */
-    valueColumns=columns-2; /* not counting start & limit */
+    قدر_Columns=columns-2; /* not counting start & limit */
 
     /* sort the properties vectors to find unique vector values */
-    uprv_sortArray(pv->v, rows, columns*4,
-                   upvec_compareRows, pv, false, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    uprv_ترتیب_دو_Array(pv->v, صفیں, columns*4,
+                   upvec_compare_صفیں, pv, جھوٹ, p_Error_رمز);
+    اگر(U_FAILURE(*p_Error_رمز)) {
+        واپس;
     }
 
     /*
@@ -370,34 +370,34 @@ upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, void *context, UE
      * This has to do almost the same work as the compaction below,
      * to find the indexes where the special-value rows will move.
      */
-    row=pv->v;
-    count=-valueColumns;
-    for(i=0; i<rows; ++i) {
-        start=(UChar32)row[0];
+    صف=pv->v;
+    count=-قدر_Columns;
+    برائے(i=0; i<صفیں; ++i) {
+        آغاز=(UChar32)صف[0];
 
         /* count a new values vector if it is different from the current one */
-        if(count<0 || 0!=uprv_memcmp(row+2, row-valueColumns, valueColumns*4)) {
-            count+=valueColumns;
+        اگر(count<0 || 0!=uprv_memcmp(صف+2, صف-قدر_Columns, قدر_Columns*4)) {
+            count+=قدر_Columns;
         }
 
-        if(start>=UPVEC_FIRST_SPECIAL_CP) {
-            handler(context, start, start, count, row+2, valueColumns, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
-                return;
+        اگر(آغاز>=UPVEC_پہلا_SPECIAL_CP) {
+            handler(context, آغاز, آغاز, count, صف+2, قدر_Columns, p_Error_رمز);
+            اگر(U_FAILURE(*p_Error_رمز)) {
+                واپس;
             }
         }
 
-        row+=columns;
+        صف+=columns;
     }
 
     /* count is at the beginning of the last vector, add valueColumns to include that last vector */
-    count+=valueColumns;
+    count+=قدر_Columns;
 
     /* Call the handler once more to signal the start of delivering real values. */
-    handler(context, UPVEC_START_REAL_VALUES_CP, UPVEC_START_REAL_VALUES_CP,
-            count, row-valueColumns, valueColumns, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    handler(context, UPVEC_آغاز_REAL_اقدار_CP, UPVEC_آغاز_REAL_اقدار_CP,
+            count, صف-قدر_Columns, قدر_Columns, p_Error_رمز);
+    اگر(U_FAILURE(*p_Error_رمز)) {
+        واپس;
     }
 
     /*
@@ -407,86 +407,86 @@ upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, void *context, UE
      * This destroys the Properties Vector structure and replaces it
      * with an array of just vector values.
      */
-    row=pv->v;
-    count=-valueColumns;
-    for(i=0; i<rows; ++i) {
+    صف=pv->v;
+    count=-قدر_Columns;
+    برائے(i=0; i<صفیں; ++i) {
         /* fetch these first before memmove() may overwrite them */
-        start=(UChar32)row[0];
-        limit=(UChar32)row[1];
+        آغاز=(UChar32)صف[0];
+        حد_بندی=(UChar32)صف[1];
 
         /* add a new values vector if it is different from the current one */
-        if(count<0 || 0!=uprv_memcmp(row+2, pv->v+count, valueColumns*4)) {
-            count+=valueColumns;
-            uprv_memmove(pv->v+count, row+2, (size_t)valueColumns*4);
+        اگر(count<0 || 0!=uprv_memcmp(صف+2, pv->v+count, قدر_Columns*4)) {
+            count+=قدر_Columns;
+            uprv_memmove(pv->v+count, صف+2, (size_t)قدر_Columns*4);
         }
 
-        if(start<UPVEC_FIRST_SPECIAL_CP) {
-            handler(context, start, limit-1, count, pv->v+count, valueColumns, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
-                return;
+        اگر(آغاز<UPVEC_پہلا_SPECIAL_CP) {
+            handler(context, آغاز, حد_بندی-1, count, pv->v+count, قدر_Columns, p_Error_رمز);
+            اگر(U_FAILURE(*p_Error_رمز)) {
+                واپس;
             }
         }
 
-        row+=columns;
+        صف+=columns;
     }
 
     /* count is at the beginning of the last vector, add one to include that last vector */
-    pv->rows=count/valueColumns+1;
+    pv->صفیں=count/قدر_Columns+1;
 }
 
-U_CAPI const uint32_t * U_EXPORT2
-upvec_getArray(const UPropsVectors *pv, int32_t *pRows, int32_t *pColumns) {
-    if(!pv->isCompacted) {
-        return nullptr;
+U_CAPI ثابت uint32_t * U_EXPORT2
+upvec_getArray(ثابت UPropsVectors *pv, int32_t *p_صفیں, int32_t *pColumns) {
+    اگر(!pv->isCompacted) {
+        واپس خالی_اشاریہ;
     }
-    if(pRows!=nullptr) {
-        *pRows=pv->rows;
+    اگر(p_صفیں!=خالی_اشاریہ) {
+        *p_صفیں=pv->صفیں;
     }
-    if(pColumns!=nullptr) {
+    اگر(pColumns!=خالی_اشاریہ) {
         *pColumns=pv->columns-2;
     }
-    return pv->v;
+    واپس pv->v;
 }
 
 U_CAPI uint32_t * U_EXPORT2
-upvec_cloneArray(const UPropsVectors *pv,
-                 int32_t *pRows, int32_t *pColumns, UErrorCode *pErrorCode) {
+upvec_cloneArray(ثابت UPropsVectors *pv,
+                 int32_t *p_صفیں, int32_t *pColumns, UError_رمز *p_Error_رمز) {
     uint32_t *clonedArray;
-    int32_t byteLength;
+    int32_t byte_لمبائی;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    اگر(U_FAILURE(*p_Error_رمز)) {
+        واپس خالی_اشاریہ;
     }
-    if(!pv->isCompacted) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    اگر(!pv->isCompacted) {
+        *p_Error_رمز=U_ILLEGAL_دلیل_ERROR;
+        واپس خالی_اشاریہ;
     }
-    byteLength=pv->rows*(pv->columns-2)*4;
-    clonedArray=(uint32_t *)uprv_malloc(byteLength);
-    if(clonedArray==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    byte_لمبائی=pv->صفیں*(pv->columns-2)*4;
+    clonedArray=(uint32_t *)uprv_malloc(byte_لمبائی);
+    اگر(clonedArray==خالی_اشاریہ) {
+        *p_Error_رمز=U_حافظہ_تخصیص_ERROR;
+        واپس خالی_اشاریہ;
     }
-    uprv_memcpy(clonedArray, pv->v, byteLength);
-    if(pRows!=nullptr) {
-        *pRows=pv->rows;
+    uprv_memcpy(clonedArray, pv->v, byte_لمبائی);
+    اگر(p_صفیں!=خالی_اشاریہ) {
+        *p_صفیں=pv->صفیں;
     }
-    if(pColumns!=nullptr) {
+    اگر(pColumns!=خالی_اشاریہ) {
         *pColumns=pv->columns-2;
     }
-    return clonedArray;
+    واپس clonedArray;
 }
 
 U_CAPI UTrie2 * U_EXPORT2
-upvec_compactToUTrie2WithRowIndexes(UPropsVectors *pv, UErrorCode *pErrorCode) {
-    UPVecToUTrie2Context toUTrie2={ nullptr, 0, 0, 0 };
-    upvec_compact(pv, upvec_compactToUTrie2Handler, &toUTrie2, pErrorCode);
-    utrie2_freeze(toUTrie2.trie, UTRIE2_16_VALUE_BITS, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        utrie2_close(toUTrie2.trie);
-        toUTrie2.trie=nullptr;
+upvec_compact_مقصد_UTrie2_With_صف_Indexes(UPropsVectors *pv, UError_رمز *p_Error_رمز) {
+    UPVec_مقصد_UTrie2_Context مقصد_UTrie2={ خالی_اشاریہ, 0, 0, 0 };
+    upvec_compact(pv, upvec_compact_مقصد_UTrie2_Handler, &مقصد_UTrie2, p_Error_رمز);
+    utrie2_freeze(مقصد_UTrie2.trie, UTRIE2_16_قدر_بٹ, p_Error_رمز);
+    اگر(U_FAILURE(*p_Error_رمز)) {
+        utrie2_close(مقصد_UTrie2.trie);
+        مقصد_UTrie2.trie=خالی_اشاریہ;
     }
-    return toUTrie2.trie;
+    واپس مقصد_UTrie2.trie;
 }
 
 /*
@@ -494,36 +494,36 @@ upvec_compactToUTrie2WithRowIndexes(UPropsVectors *pv, UErrorCode *pErrorCode) {
  * some 16-bit field and builds and returns a UTrie2.
  */
 
-U_CAPI void U_CALLCONV
-upvec_compactToUTrie2Handler(void *context,
-                             UChar32 start, UChar32 end,
-                             int32_t rowIndex, uint32_t *row, int32_t columns,
-                             UErrorCode *pErrorCode) {
-    (void)row;
-    (void)columns;
-    UPVecToUTrie2Context *toUTrie2=(UPVecToUTrie2Context *)context;
-    if(start<UPVEC_FIRST_SPECIAL_CP) {
-        utrie2_setRange32(toUTrie2->trie, start, end, (uint32_t)rowIndex, true, pErrorCode);
-    } else {
-        switch(start) {
-        case UPVEC_INITIAL_VALUE_CP:
-            toUTrie2->initialValue=rowIndex;
-            break;
-        case UPVEC_ERROR_VALUE_CP:
-            toUTrie2->errorValue=rowIndex;
-            break;
-        case UPVEC_START_REAL_VALUES_CP:
-            toUTrie2->maxValue=rowIndex;
-            if(rowIndex>0xffff) {
+U_CAPI خالی U_CALLCONV
+upvec_compact_مقصد_UTrie2_Handler(خالی *context,
+                             UChar32 آغاز, UChar32 انتہا,
+                             int32_t صف_اشاریہ, uint32_t *صف, int32_t columns,
+                             UError_رمز *p_Error_رمز) {
+    (خالی)صف;
+    (خالی)columns;
+    UPVec_مقصد_UTrie2_Context *مقصد_UTrie2=(UPVec_مقصد_UTrie2_Context *)context;
+    اگر(آغاز<UPVEC_پہلا_SPECIAL_CP) {
+        utrie2_سیٹ_Range32(مقصد_UTrie2->trie, آغاز, انتہا, (uint32_t)صف_اشاریہ, سچ, p_Error_رمز);
+    } ورنہ {
+        انتخاب(آغاز) {
+        حالت UPVEC_INITIAL_قدر_CP:
+            مقصد_UTrie2->initial_قدر=صف_اشاریہ;
+            توڑو;
+        حالت UPVEC_ERROR_قدر_CP:
+            مقصد_UTrie2->error_قدر=صف_اشاریہ;
+            توڑو;
+        حالت UPVEC_آغاز_REAL_اقدار_CP:
+            مقصد_UTrie2->max_قدر=صف_اشاریہ;
+            اگر(صف_اشاریہ>0xffff) {
                 /* too many rows for a 16-bit trie */
-                *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            } else {
-                toUTrie2->trie=utrie2_open(toUTrie2->initialValue,
-                                           toUTrie2->errorValue, pErrorCode);
+                *p_Error_رمز=U_اشاریہ_OUTOFBOUNDS_ERROR;
+            } ورنہ {
+                مقصد_UTrie2->trie=utrie2_open(مقصد_UTrie2->initial_قدر,
+                                           مقصد_UTrie2->error_قدر, p_Error_رمز);
             }
-            break;
-        default:
-            break;
+            توڑو;
+        طےشدہ:
+            توڑو;
         }
     }
 }

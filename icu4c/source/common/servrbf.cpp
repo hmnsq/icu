@@ -8,89 +8,89 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#اگر !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "ucln_cmn.h"
-#include "uassert.h"
+#شامل "unicode/resbund.h"
+#شامل "uresimp.h"
+#شامل "cmemory.h"
+#شامل "servloc.h"
+#شامل "ustrfmt.h"
+#شامل "uhash.h"
+#شامل "charstr.h"
+#شامل "ucln_cmn.h"
+#شامل "uassert.h"
 
-#define UNDERSCORE_CHAR ((char16_t)0x005f)
-#define AT_SIGN_CHAR    ((char16_t)64)
-#define PERIOD_CHAR     ((char16_t)46)
+#تعریف_کرو UNDERSCORE_CHAR ((char16_t)0x005f)
+#تعریف_کرو AT_SIGN_CHAR    ((char16_t)64)
+#تعریف_کرو PERIOD_CHAR     ((char16_t)46)
 
 U_NAMESPACE_BEGIN
 
 ICUResourceBundleFactory::ICUResourceBundleFactory()
-  : LocaleKeyFactory(VISIBLE)
+  : Locale_کلید_Factory(VISIBLE)
   , _bundleName()
 {
 }
 
-ICUResourceBundleFactory::ICUResourceBundleFactory(const UnicodeString& bundleName)
-  : LocaleKeyFactory(VISIBLE)
+ICUResourceBundleFactory::ICUResourceBundleFactory(ثابت UnicodeString& bundleName)
+  : Locale_کلید_Factory(VISIBLE)
   , _bundleName(bundleName)
 {
 }
 
 ICUResourceBundleFactory::~ICUResourceBundleFactory() {}
 
-const Hashtable*
-ICUResourceBundleFactory::getSupportedIDs(UErrorCode& status) const
+ثابت Hashtable*
+ICUResourceBundleFactory::getSupportedIDs(UError_رمز& حالت_2) ثابت
 {
-    if (U_SUCCESS(status)) {
-        return LocaleUtility::getAvailableLocaleNames(_bundleName);
+    اگر (U_SUCCESS(حالت_2)) {
+        واپس LocaleUtility::get_دستیاب_Locale_نام(_bundleName);
     }
-    return nullptr;
+    واپس خالی_اشاریہ;
 }
 
 UObject*
-ICUResourceBundleFactory::handleCreate(const Locale& loc, int32_t /* kind */, const ICUService* /* service */, UErrorCode& status) const
+ICUResourceBundleFactory::handleCreate(ثابت Locale& loc, int32_t /*قسم*/, ثابت ICUService* /* service */, UError_رمز& حالت_2) ثابت
 {
-    if (U_SUCCESS(status)) {
+    اگر (U_SUCCESS(حالت_2)) {
         // _bundleName is a package name
         // and should only contain invariant characters
                 // ??? is it always true that the max length of the bundle name is 19?
                 // who made this change? -- dlf
-        char pkg[20];
+        حرف pkg[20];
         int32_t length;
-        length = _bundleName.extract(0, INT32_MAX, pkg, static_cast<int32_t>(sizeof(pkg)), US_INV);
-        if (length >= static_cast<int32_t>(sizeof(pkg))) {
-            return nullptr;
+        length = _bundleName.extract(0, INT32_MAX, pkg, static_cast<int32_t>(حجم(pkg)), US_INV);
+        اگر (length >= static_cast<int32_t>(حجم(pkg))) {
+            واپس خالی_اشاریہ;
         }
-        return new ResourceBundle(pkg, loc, status);
+        واپس نیا ResourceBundle(pkg, loc, حالت_2);
     }
-    return nullptr;
+    واپس خالی_اشاریہ;
 }
 
-#ifdef SERVICE_DEBUG
+#اگر_تعریف_شدہ SERVICE_DEBUG
 UnicodeString&
-ICUResourceBundleFactory::debug(UnicodeString& result) const
+ICUResourceBundleFactory::debug(UnicodeString& نتیجہ) ثابت
 {
-    LocaleKeyFactory::debug(result);
-    result.append((UnicodeString)", bundle: ");
-    return result.append(_bundleName);
+    Locale_کلید_Factory::debug(نتیجہ);
+    نتیجہ.append((UnicodeString)", bundle: ");
+    واپس نتیجہ.append(_bundleName);
 }
 
 UnicodeString&
-ICUResourceBundleFactory::debugClass(UnicodeString& result) const
+ICUResourceBundleFactory::debugClass(UnicodeString& نتیجہ) ثابت
 {
-    return result.append((UnicodeString)"ICUResourceBundleFactory");
+    واپس نتیجہ.append((UnicodeString)"ICUResourceBundleFactory");
 }
-#endif
+#اگر_ختم
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ICUResourceBundleFactory)
 
-U_NAMESPACE_END
+U_NAMESPACE_انتہا
 
 /* !UCONFIG_NO_SERVICE */
-#endif
+#اگر_ختم
 
 
