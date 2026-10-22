@@ -20,132 +20,132 @@
 *   charset families (ASCII<->EBCDIC).
 */
 
-#include <stdarg.h>
-#include "unicode/utypes.h"
-#include "unicode/udata.h" /* UDataInfo */
-#include "ucmndata.h" /* DataHeader */
-#include "cmemory.h"
-#include "udataswp.h"
+#ضمن <stdarg.h>
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/udata.h" /* UDataInfo */
+#ضمن "ucmndata.h" /* DataHeader */
+#ضمن "cmemory.h"
+#ضمن "udataswp.h"
 
 /* swapping primitives ------------------------------------------------------ */
 
-static int32_t U_CALLCONV
-uprv_swapArray16(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
-                 UErrorCode *pErrorCode) {
-    const uint16_t *p;
+ساكن int32_t U_CALLCONV
+uprv_مٽا_سٽا_Array16(ثابت UDataSwapper *ds,
+                 ثابت فراغ *اندريون_معلومات, int32_t length, فراغ *ٻاهريون_معلومات,
+                 UError_ڪوڊ *p_Error_ڪوڊ) {
+    ثابت uint16_t *p;
     uint16_t *q;
     int32_t count;
     uint16_t x;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    إذا(p_Error_ڪوڊ==خالي_اشارو || U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length&1)!=0 || outData==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا(ds==خالي_اشارو || اندريون_معلومات==خالي_اشارو || length<0 || (length&1)!=0 || ٻاهريون_معلومات==خالي_اشارو) {
+        *p_Error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+        أرجع 0;
     }
 
     /* setup and swapping */
-    p = static_cast<const uint16_t*>(inData);
-    q = static_cast<uint16_t*>(outData);
+    p = static_cast<ثابت uint16_t*>(اندريون_معلومات);
+    q = static_cast<uint16_t*>(ٻاهريون_معلومات);
     count=length/2;
-    while(count>0) {
+    طالما(count>0) {
         x=*p++;
         *q++ = static_cast<uint16_t>((x << 8) | (x >> 8));
         --count;
     }
 
-    return length;
+    أرجع length;
 }
 
-static int32_t U_CALLCONV
-uprv_copyArray16(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
-                 UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+ساكن int32_t U_CALLCONV
+uprv_copyArray16(ثابت UDataSwapper *ds,
+                 ثابت فراغ *اندريون_معلومات, int32_t length, فراغ *ٻاهريون_معلومات,
+                 UError_ڪوڊ *p_Error_ڪوڊ) {
+    إذا(p_Error_ڪوڊ==خالي_اشارو || U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length&1)!=0 || outData==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا(ds==خالي_اشارو || اندريون_معلومات==خالي_اشارو || length<0 || (length&1)!=0 || ٻاهريون_معلومات==خالي_اشارو) {
+        *p_Error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+        أرجع 0;
     }
 
-    if(length>0 && inData!=outData) {
-        uprv_memcpy(outData, inData, length);
+    إذا(length>0 && اندريون_معلومات!=ٻاهريون_معلومات) {
+        uprv_memcpy(ٻاهريون_معلومات, اندريون_معلومات, length);
     }
-    return length;
+    أرجع length;
 }
 
-static int32_t U_CALLCONV
-uprv_swapArray32(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
-                 UErrorCode *pErrorCode) {
-    const uint32_t *p;
+ساكن int32_t U_CALLCONV
+uprv_مٽا_سٽا_Array32(ثابت UDataSwapper *ds,
+                 ثابت فراغ *اندريون_معلومات, int32_t length, فراغ *ٻاهريون_معلومات,
+                 UError_ڪوڊ *p_Error_ڪوڊ) {
+    ثابت uint32_t *p;
     uint32_t *q;
     int32_t count;
     uint32_t x;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    إذا(p_Error_ڪوڊ==خالي_اشارو || U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length&3)!=0 || outData==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا(ds==خالي_اشارو || اندريون_معلومات==خالي_اشارو || length<0 || (length&3)!=0 || ٻاهريون_معلومات==خالي_اشارو) {
+        *p_Error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+        أرجع 0;
     }
 
     /* setup and swapping */
-    p = static_cast<const uint32_t*>(inData);
-    q = static_cast<uint32_t*>(outData);
+    p = static_cast<ثابت uint32_t*>(اندريون_معلومات);
+    q = static_cast<uint32_t*>(ٻاهريون_معلومات);
     count=length/4;
-    while(count>0) {
+    طالما(count>0) {
         x=*p++;
         *q++ = (x << 24) | ((x << 8) & 0xff0000) | ((x >> 8) & 0xff00) | (x >> 24);
         --count;
     }
 
-    return length;
+    أرجع length;
 }
 
-static int32_t U_CALLCONV
-uprv_copyArray32(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
-                 UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+ساكن int32_t U_CALLCONV
+uprv_copyArray32(ثابت UDataSwapper *ds,
+                 ثابت فراغ *اندريون_معلومات, int32_t length, فراغ *ٻاهريون_معلومات,
+                 UError_ڪوڊ *p_Error_ڪوڊ) {
+    إذا(p_Error_ڪوڊ==خالي_اشارو || U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length&3)!=0 || outData==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا(ds==خالي_اشارو || اندريون_معلومات==خالي_اشارو || length<0 || (length&3)!=0 || ٻاهريون_معلومات==خالي_اشارو) {
+        *p_Error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+        أرجع 0;
     }
 
-    if(length>0 && inData!=outData) {
-        uprv_memcpy(outData, inData, length);
+    إذا(length>0 && اندريون_معلومات!=ٻاهريون_معلومات) {
+        uprv_memcpy(ٻاهريون_معلومات, اندريون_معلومات, length);
     }
-    return length;
+    أرجع length;
 }
 
-static int32_t U_CALLCONV
-uprv_swapArray64(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
-                 UErrorCode *pErrorCode) {
-    const uint64_t *p;
+ساكن int32_t U_CALLCONV
+uprv_مٽا_سٽا_Array64(ثابت UDataSwapper *ds,
+                 ثابت فراغ *اندريون_معلومات, int32_t length, فراغ *ٻاهريون_معلومات,
+                 UError_ڪوڊ *p_Error_ڪوڊ) {
+    ثابت uint64_t *p;
     uint64_t *q;
     int32_t count;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    إذا(p_Error_ڪوڊ==خالي_اشارو || U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length&7)!=0 || outData==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا(ds==خالي_اشارو || اندريون_معلومات==خالي_اشارو || length<0 || (length&7)!=0 || ٻاهريون_معلومات==خالي_اشارو) {
+        *p_Error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+        أرجع 0;
     }
 
     /* setup and swapping */
-    p = static_cast<const uint64_t*>(inData);
-    q = static_cast<uint64_t*>(outData);
+    p = static_cast<ثابت uint64_t*>(اندريون_معلومات);
+    q = static_cast<uint64_t*>(ٻاهريون_معلومات);
     count=length/8;
-    while(count>0) {
+    طالما(count>0) {
         uint64_t x=*p++;
         x=(x<<56)|((x&0xff00)<<40)|((x&0xff0000)<<24)|((x&0xff000000)<<8)|
             ((x>>8)&0xff000000)|((x>>24)&0xff0000)|((x>>40)&0xff00)|(x>>56);
@@ -153,75 +153,75 @@ uprv_swapArray64(const UDataSwapper *ds,
         --count;
     }
 
-    return length;
+    أرجع length;
 }
 
-static int32_t U_CALLCONV
-uprv_copyArray64(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
-                 UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+ساكن int32_t U_CALLCONV
+uprv_copyArray64(ثابت UDataSwapper *ds,
+                 ثابت فراغ *اندريون_معلومات, int32_t length, فراغ *ٻاهريون_معلومات,
+                 UError_ڪوڊ *p_Error_ڪوڊ) {
+    إذا(p_Error_ڪوڊ==خالي_اشارو || U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length&7)!=0 || outData==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا(ds==خالي_اشارو || اندريون_معلومات==خالي_اشارو || length<0 || (length&7)!=0 || ٻاهريون_معلومات==خالي_اشارو) {
+        *p_Error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+        أرجع 0;
     }
 
-    if(length>0 && inData!=outData) {
-        uprv_memcpy(outData, inData, length);
+    إذا(length>0 && اندريون_معلومات!=ٻاهريون_معلومات) {
+        uprv_memcpy(ٻاهريون_معلومات, اندريون_معلومات, length);
     }
-    return length;
+    أرجع length;
 }
 
-static uint16_t U_CALLCONV
-uprv_readSwapUInt16(uint16_t x) {
-    return static_cast<uint16_t>((x << 8) | (x >> 8));
+ساكن uint16_t U_CALLCONV
+uprv_read_مٽا_سٽا_UInt16(uint16_t x) {
+    أرجع static_cast<uint16_t>((x << 8) | (x >> 8));
 }
 
-static uint16_t U_CALLCONV
-uprv_readDirectUInt16(uint16_t x) {
-    return x;
+ساكن uint16_t U_CALLCONV
+uprv_read_سڌو_UInt16(uint16_t x) {
+    أرجع x;
 }
 
-static uint32_t U_CALLCONV
-uprv_readSwapUInt32(uint32_t x) {
-    return (x << 24) | ((x << 8) & 0xff0000) | ((x >> 8) & 0xff00) | (x >> 24);
+ساكن uint32_t U_CALLCONV
+uprv_read_مٽا_سٽا_UInt32(uint32_t x) {
+    أرجع (x << 24) | ((x << 8) & 0xff0000) | ((x >> 8) & 0xff00) | (x >> 24);
 }
 
-static uint32_t U_CALLCONV
-uprv_readDirectUInt32(uint32_t x) {
-    return x;
+ساكن uint32_t U_CALLCONV
+uprv_read_سڌو_UInt32(uint32_t x) {
+    أرجع x;
 }
 
-static void U_CALLCONV
-uprv_writeSwapUInt16(uint16_t *p, uint16_t x) {
+ساكن فراغ U_CALLCONV
+uprv_write_مٽا_سٽا_UInt16(uint16_t *p, uint16_t x) {
     *p = static_cast<uint16_t>((x << 8) | (x >> 8));
 }
 
-static void U_CALLCONV
-uprv_writeDirectUInt16(uint16_t *p, uint16_t x) {
+ساكن فراغ U_CALLCONV
+uprv_write_سڌو_UInt16(uint16_t *p, uint16_t x) {
     *p=x;
 }
 
-static void U_CALLCONV
-uprv_writeSwapUInt32(uint32_t *p, uint32_t x) {
+ساكن فراغ U_CALLCONV
+uprv_write_مٽا_سٽا_UInt32(uint32_t *p, uint32_t x) {
     *p = (x << 24) | ((x << 8) & 0xff0000) | ((x >> 8) & 0xff00) | (x >> 24);
 }
 
-static void U_CALLCONV
-uprv_writeDirectUInt32(uint32_t *p, uint32_t x) {
+ساكن فراغ U_CALLCONV
+uprv_write_سڌو_UInt32(uint32_t *p, uint32_t x) {
     *p=x;
 }
 
 U_CAPI int16_t U_EXPORT2
-udata_readInt16(const UDataSwapper *ds, int16_t x) {
-    return (int16_t)ds->readUInt16((uint16_t)x);
+udata_readInt16(ثابت UDataSwapper *ds, int16_t x) {
+    أرجع (int16_t)ds->readUInt16((uint16_t)x);
 }
 
 U_CAPI int32_t U_EXPORT2
-udata_readInt32(const UDataSwapper *ds, int32_t x) {
-    return (int32_t)ds->readUInt32((uint32_t)x);
+udata_readInt32(ثابت UDataSwapper *ds, int32_t x) {
+    أرجع (int32_t)ds->readUInt32((uint32_t)x);
 }
 
 /**
@@ -230,244 +230,244 @@ udata_readInt32(const UDataSwapper *ds, int32_t x) {
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-udata_swapInvStringBlock(const UDataSwapper *ds,
-                         const void *inData, int32_t length, void *outData,
-                         UErrorCode *pErrorCode) {
-    const char *inChars;
-    int32_t stringsLength;
+udata_مٽا_سٽا_Inv_String_بلاڪ(ثابت UDataSwapper *ds,
+                         ثابت فراغ *اندريون_معلومات, int32_t length, فراغ *ٻاهريون_معلومات,
+                         UError_ڪوڊ *p_Error_ڪوڊ) {
+    ثابت حرف *اندريون_Chars;
+    int32_t لڙيون_ڊيگهائي;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    إذا(p_Error_ڪوڊ==خالي_اشارو || U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا(ds==خالي_اشارو || اندريون_معلومات==خالي_اشارو || length<0 || (length>0 && ٻاهريون_معلومات==خالي_اشارو)) {
+        *p_Error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+        أرجع 0;
     }
 
     /* reduce the strings length to not include bytes after the last NUL */
-    inChars=(const char *)inData;
-    stringsLength=length;
-    while(stringsLength>0 && inChars[stringsLength-1]!=0) {
-        --stringsLength;
+    اندريون_Chars=(ثابت حرف *)اندريون_معلومات;
+    لڙيون_ڊيگهائي=length;
+    طالما(لڙيون_ڊيگهائي>0 && اندريون_Chars[لڙيون_ڊيگهائي-1]!=0) {
+        --لڙيون_ڊيگهائي;
     }
 
     /* swap up to the last NUL */
-    ds->swapInvChars(ds, inData, stringsLength, outData, pErrorCode);
+    ds->مٽا_سٽا_Inv_Chars(ds, اندريون_معلومات, لڙيون_ڊيگهائي, ٻاهريون_معلومات, p_Error_ڪوڊ);
 
     /* copy the bytes after the last NUL */
-    if(inData!=outData && length>stringsLength) {
-        uprv_memcpy((char *)outData+stringsLength, inChars+stringsLength, length-stringsLength);
+    إذا(اندريون_معلومات!=ٻاهريون_معلومات && length>لڙيون_ڊيگهائي) {
+        uprv_memcpy((حرف *)ٻاهريون_معلومات+لڙيون_ڊيگهائي, اندريون_Chars+لڙيون_ڊيگهائي, length-لڙيون_ڊيگهائي);
     }
 
     /* return the length including padding bytes */
-    if(U_SUCCESS(*pErrorCode)) {
-        return length;
-    } else {
-        return 0;
+    إذا(U_SUCCESS(*p_Error_ڪوڊ)) {
+        أرجع length;
+    } وإلا {
+        أرجع 0;
     }
 }
 
-U_CAPI void U_EXPORT2
-udata_printError(const UDataSwapper *ds,
-                 const char *fmt,
+U_CAPI فراغ U_EXPORT2
+udata_printError(ثابت UDataSwapper *ds,
+                 ثابت حرف *fmt,
                  ...) {
-    va_list args;
+    va_list دليلون_2;
 
-    if(ds->printError!=nullptr) {
-        va_start(args, fmt);
-        ds->printError(ds->printErrorContext, fmt, args);
-        va_end(args);
+    إذا(ds->printError!=خالي_اشارو) {
+        va_start(دليلون_2, fmt);
+        ds->printError(ds->printErrorContext, fmt, دليلون_2);
+        va_end(دليلون_2);
     }
 }
 
 /* swap a data header ------------------------------------------------------- */
 
 U_CAPI int32_t U_EXPORT2
-udata_swapDataHeader(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
-                     UErrorCode *pErrorCode) {
-    const DataHeader *pHeader;
-    uint16_t headerSize, infoSize;
+udata_مٽا_سٽا_معلومات_سرو(ثابت UDataSwapper *ds,
+                     ثابت فراغ *اندريون_معلومات, int32_t length, فراغ *ٻاهريون_معلومات,
+                     UError_ڪوڊ *p_Error_ڪوڊ) {
+    ثابت معلومات_سرو *p_سرو;
+    uint16_t سرو_سائيز, info_سائيز;
 
     /* argument checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    إذا(p_Error_ڪوڊ==خالي_اشارو || U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع 0;
     }
-    if(ds==nullptr || inData==nullptr || length<-1 || (length>0 && outData==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا(ds==خالي_اشارو || اندريون_معلومات==خالي_اشارو || length<-1 || (length>0 && ٻاهريون_معلومات==خالي_اشارو)) {
+        *p_Error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+        أرجع 0;
     }
 
     /* check minimum length and magic bytes */
-    pHeader=(const DataHeader *)inData;
-    if( (length>=0 && length<(int32_t)sizeof(DataHeader)) ||
-        pHeader->dataHeader.magic1!=0xda ||
-        pHeader->dataHeader.magic2!=0x27 ||
-        pHeader->info.sizeofUChar!=2
+    p_سرو=(ثابت معلومات_سرو *)اندريون_معلومات;
+    إذا( (length>=0 && length<(int32_t)حجم(معلومات_سرو)) ||
+        p_سرو->معلومات_سرو_2.magic1!=0xda ||
+        p_سرو->معلومات_سرو_2.magic2!=0x27 ||
+        p_سرو->info.sizeofUChar!=2
     ) {
         udata_printError(ds, "udata_swapDataHeader(): initial bytes do not look like ICU data\n");
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+        *p_Error_ڪوڊ=U_UNSUPPORTED_ERROR;
+        أرجع 0;
     }
 
-    headerSize=ds->readUInt16(pHeader->dataHeader.headerSize);
-    infoSize=ds->readUInt16(pHeader->info.size);
+    سرو_سائيز=ds->readUInt16(p_سرو->معلومات_سرو_2.سرو_سائيز);
+    info_سائيز=ds->readUInt16(p_سرو->info.size);
 
-    if( headerSize<sizeof(DataHeader) ||
-        infoSize<sizeof(UDataInfo) ||
-        headerSize<(sizeof(pHeader->dataHeader)+infoSize) ||
-        (length>=0 && length<headerSize)
+    إذا( سرو_سائيز<حجم(معلومات_سرو) ||
+        info_سائيز<حجم(UDataInfo) ||
+        سرو_سائيز<(حجم(p_سرو->معلومات_سرو_2)+info_سائيز) ||
+        (length>=0 && length<سرو_سائيز)
     ) {
         udata_printError(ds, "udata_swapDataHeader(): header size mismatch - headerSize %d infoSize %d length %d\n",
-                         headerSize, infoSize, length);
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+                         سرو_سائيز, info_سائيز, length);
+        *p_Error_ڪوڊ=U_اشاريو_OUTOFBOUNDS_ERROR;
+        أرجع 0;
     }
 
-    if(length>0) {
-        DataHeader *outHeader;
-        const char *s;
-        int32_t maxLength;
+    إذا(length>0) {
+        معلومات_سرو *ٻاهريون_سرو;
+        ثابت حرف *s;
+        int32_t max_ڊيگهائي_2;
 
         /* Most of the fields are just bytes and need no swapping. */
-        if(inData!=outData) {
-            uprv_memcpy(outData, inData, headerSize);
+        إذا(اندريون_معلومات!=ٻاهريون_معلومات) {
+            uprv_memcpy(ٻاهريون_معلومات, اندريون_معلومات, سرو_سائيز);
         }
-        outHeader=(DataHeader *)outData;
+        ٻاهريون_سرو=(معلومات_سرو *)ٻاهريون_معلومات;
 
-        outHeader->info.isBigEndian = ds->outIsBigEndian;
-        outHeader->info.charsetFamily = ds->outCharset;
+        ٻاهريون_سرو->info.isBigEndian = ds->ٻاهريون_Is_Big_Endian;
+        ٻاهريون_سرو->info.charsetFamily = ds->ٻاهريون_Charset;
 
         /* swap headerSize */
-        ds->swapArray16(ds, &pHeader->dataHeader.headerSize, 2, &outHeader->dataHeader.headerSize, pErrorCode);
+        ds->مٽا_سٽا_Array16(ds, &p_سرو->معلومات_سرو_2.سرو_سائيز, 2, &ٻاهريون_سرو->معلومات_سرو_2.سرو_سائيز, p_Error_ڪوڊ);
 
         /* swap UDataInfo size and reservedWord */
-        ds->swapArray16(ds, &pHeader->info.size, 4, &outHeader->info.size, pErrorCode);
+        ds->مٽا_سٽا_Array16(ds, &p_سرو->info.size, 4, &ٻاهريون_سرو->info.size, p_Error_ڪوڊ);
 
         /* swap copyright statement after the UDataInfo */
-        infoSize+=sizeof(pHeader->dataHeader);
-        s=(const char *)inData+infoSize;
-        maxLength=headerSize-infoSize;
+        info_سائيز+=حجم(p_سرو->معلومات_سرو_2);
+        s=(ثابت حرف *)اندريون_معلومات+info_سائيز;
+        max_ڊيگهائي_2=سرو_سائيز-info_سائيز;
         /* get the length of the string */
-        for(length=0; length<maxLength && s[length]!=0; ++length) {}
+        لكل(length=0; length<max_ڊيگهائي_2 && s[length]!=0; ++length) {}
         /* swap the string contents */
-        ds->swapInvChars(ds, s, length, (char *)outData+infoSize, pErrorCode);
+        ds->مٽا_سٽا_Inv_Chars(ds, s, length, (حرف *)ٻاهريون_معلومات+info_سائيز, p_Error_ڪوڊ);
     }
 
-    return headerSize;
+    أرجع سرو_سائيز;
 }
 
 /* API functions ------------------------------------------------------------ */
 
 U_CAPI UDataSwapper * U_EXPORT2
-udata_openSwapper(UBool inIsBigEndian, uint8_t inCharset,
-                  UBool outIsBigEndian, uint8_t outCharset,
-                  UErrorCode *pErrorCode) {
+udata_openSwapper(UBool اندريون_Is_Big_Endian, uint8_t اندريون_Charset,
+                  UBool ٻاهريون_Is_Big_Endian, uint8_t ٻاهريون_Charset,
+                  UError_ڪوڊ *p_Error_ڪوڊ) {
     UDataSwapper *swapper;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    إذا(p_Error_ڪوڊ==خالي_اشارو || U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع خالي_اشارو;
     }
-    if(inCharset>U_EBCDIC_FAMILY || outCharset>U_EBCDIC_FAMILY) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    إذا(اندريون_Charset>U_EBCDIC_FAMILY || ٻاهريون_Charset>U_EBCDIC_FAMILY) {
+        *p_Error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+        أرجع خالي_اشارو;
     }
 
     /* allocate the swapper */
-    swapper=(UDataSwapper *)uprv_malloc(sizeof(UDataSwapper));
-    if(swapper==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    swapper=(UDataSwapper *)uprv_malloc(حجم(UDataSwapper));
+    إذا(swapper==خالي_اشارو) {
+        *p_Error_ڪوڊ=U_يادگيري_ورهاست_ERROR;
+        أرجع خالي_اشارو;
     }
-    uprv_memset(swapper, 0, sizeof(UDataSwapper));
+    uprv_memset(swapper, 0, حجم(UDataSwapper));
 
     /* set values and functions pointers according to in/out parameters */
-    swapper->inIsBigEndian=inIsBigEndian;
-    swapper->inCharset=inCharset;
-    swapper->outIsBigEndian=outIsBigEndian;
-    swapper->outCharset=outCharset;
+    swapper->اندريون_Is_Big_Endian=اندريون_Is_Big_Endian;
+    swapper->اندريون_Charset=اندريون_Charset;
+    swapper->ٻاهريون_Is_Big_Endian=ٻاهريون_Is_Big_Endian;
+    swapper->ٻاهريون_Charset=ٻاهريون_Charset;
 
-    swapper->readUInt16= inIsBigEndian==U_IS_BIG_ENDIAN ? uprv_readDirectUInt16 : uprv_readSwapUInt16;
-    swapper->readUInt32= inIsBigEndian==U_IS_BIG_ENDIAN ? uprv_readDirectUInt32 : uprv_readSwapUInt32;
+    swapper->readUInt16= اندريون_Is_Big_Endian==U_IS_BIG_ENDIAN ? uprv_read_سڌو_UInt16 : uprv_read_مٽا_سٽا_UInt16;
+    swapper->readUInt32= اندريون_Is_Big_Endian==U_IS_BIG_ENDIAN ? uprv_read_سڌو_UInt32 : uprv_read_مٽا_سٽا_UInt32;
 
-    swapper->writeUInt16= outIsBigEndian==U_IS_BIG_ENDIAN ? uprv_writeDirectUInt16 : uprv_writeSwapUInt16;
-    swapper->writeUInt32= outIsBigEndian==U_IS_BIG_ENDIAN ? uprv_writeDirectUInt32 : uprv_writeSwapUInt32;
+    swapper->writeUInt16= ٻاهريون_Is_Big_Endian==U_IS_BIG_ENDIAN ? uprv_write_سڌو_UInt16 : uprv_write_مٽا_سٽا_UInt16;
+    swapper->writeUInt32= ٻاهريون_Is_Big_Endian==U_IS_BIG_ENDIAN ? uprv_write_سڌو_UInt32 : uprv_write_مٽا_سٽا_UInt32;
 
-    swapper->compareInvChars= outCharset==U_ASCII_FAMILY ? uprv_compareInvAscii : uprv_compareInvEbcdic;
+    swapper->compareInvChars= ٻاهريون_Charset==U_ASCII_FAMILY ? uprv_compareInvAscii : uprv_compareInvEbcdic;
 
-    if(inIsBigEndian==outIsBigEndian) {
-        swapper->swapArray16=uprv_copyArray16;
-        swapper->swapArray32=uprv_copyArray32;
-        swapper->swapArray64=uprv_copyArray64;
-    } else {
-        swapper->swapArray16=uprv_swapArray16;
-        swapper->swapArray32=uprv_swapArray32;
-        swapper->swapArray64=uprv_swapArray64;
+    إذا(اندريون_Is_Big_Endian==ٻاهريون_Is_Big_Endian) {
+        swapper->مٽا_سٽا_Array16=uprv_copyArray16;
+        swapper->مٽا_سٽا_Array32=uprv_copyArray32;
+        swapper->مٽا_سٽا_Array64=uprv_copyArray64;
+    } وإلا {
+        swapper->مٽا_سٽا_Array16=uprv_مٽا_سٽا_Array16;
+        swapper->مٽا_سٽا_Array32=uprv_مٽا_سٽا_Array32;
+        swapper->مٽا_سٽا_Array64=uprv_مٽا_سٽا_Array64;
     }
 
-    if(inCharset==U_ASCII_FAMILY) {
-        swapper->swapInvChars= outCharset==U_ASCII_FAMILY ? uprv_copyAscii : uprv_ebcdicFromAscii;
-    } else /* U_EBCDIC_FAMILY */ {
-        swapper->swapInvChars= outCharset==U_EBCDIC_FAMILY ? uprv_copyEbcdic : uprv_asciiFromEbcdic;
+    إذا(اندريون_Charset==U_ASCII_FAMILY) {
+        swapper->مٽا_سٽا_Inv_Chars= ٻاهريون_Charset==U_ASCII_FAMILY ? uprv_copyAscii : uprv_ebcdicFromAscii;
+    } وإلا /* U_EBCDIC_FAMILY */ {
+        swapper->مٽا_سٽا_Inv_Chars= ٻاهريون_Charset==U_EBCDIC_FAMILY ? uprv_copyEbcdic : uprv_asciiFromEbcdic;
     }
 
-    return swapper;
+    أرجع swapper;
 }
 
 U_CAPI UDataSwapper * U_EXPORT2
-udata_openSwapperForInputData(const void *data, int32_t length,
-                              UBool outIsBigEndian, uint8_t outCharset,
-                              UErrorCode *pErrorCode) {
-    const DataHeader *pHeader;
-    uint16_t headerSize, infoSize;
-    UBool inIsBigEndian;
-    int8_t inCharset;
+udata_open_Swapper_For_داخلا_معلومات(ثابت فراغ *معلومات, int32_t length,
+                              UBool ٻاهريون_Is_Big_Endian, uint8_t ٻاهريون_Charset,
+                              UError_ڪوڊ *p_Error_ڪوڊ) {
+    ثابت معلومات_سرو *p_سرو;
+    uint16_t سرو_سائيز, info_سائيز;
+    UBool اندريون_Is_Big_Endian;
+    int8_t اندريون_Charset;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    إذا(p_Error_ڪوڊ==خالي_اشارو || U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع خالي_اشارو;
     }
-    if( data==nullptr ||
-        (length>=0 && length<(int32_t)sizeof(DataHeader)) ||
-        outCharset>U_EBCDIC_FAMILY
+    إذا( معلومات==خالي_اشارو ||
+        (length>=0 && length<(int32_t)حجم(معلومات_سرو)) ||
+        ٻاهريون_Charset>U_EBCDIC_FAMILY
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        *p_Error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+        أرجع خالي_اشارو;
     }
 
-    pHeader=(const DataHeader *)data;
-    if( (length>=0 && length<(int32_t)sizeof(DataHeader)) ||
-        pHeader->dataHeader.magic1!=0xda ||
-        pHeader->dataHeader.magic2!=0x27 ||
-        pHeader->info.sizeofUChar!=2
+    p_سرو=(ثابت معلومات_سرو *)معلومات;
+    إذا( (length>=0 && length<(int32_t)حجم(معلومات_سرو)) ||
+        p_سرو->معلومات_سرو_2.magic1!=0xda ||
+        p_سرو->معلومات_سرو_2.magic2!=0x27 ||
+        p_سرو->info.sizeofUChar!=2
     ) {
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return nullptr;
+        *p_Error_ڪوڊ=U_UNSUPPORTED_ERROR;
+        أرجع خالي_اشارو;
     }
 
-    inIsBigEndian=(UBool)pHeader->info.isBigEndian;
-    inCharset=pHeader->info.charsetFamily;
+    اندريون_Is_Big_Endian=(UBool)p_سرو->info.isBigEndian;
+    اندريون_Charset=p_سرو->info.charsetFamily;
 
-    if(inIsBigEndian==U_IS_BIG_ENDIAN) {
-        headerSize=pHeader->dataHeader.headerSize;
-        infoSize=pHeader->info.size;
-    } else {
-        headerSize=uprv_readSwapUInt16(pHeader->dataHeader.headerSize);
-        infoSize=uprv_readSwapUInt16(pHeader->info.size);
+    إذا(اندريون_Is_Big_Endian==U_IS_BIG_ENDIAN) {
+        سرو_سائيز=p_سرو->معلومات_سرو_2.سرو_سائيز;
+        info_سائيز=p_سرو->info.size;
+    } وإلا {
+        سرو_سائيز=uprv_read_مٽا_سٽا_UInt16(p_سرو->معلومات_سرو_2.سرو_سائيز);
+        info_سائيز=uprv_read_مٽا_سٽا_UInt16(p_سرو->info.size);
     }
 
-    if( headerSize<sizeof(DataHeader) ||
-        infoSize<sizeof(UDataInfo) ||
-        headerSize<(sizeof(pHeader->dataHeader)+infoSize) ||
-        (length>=0 && length<headerSize)
+    إذا( سرو_سائيز<حجم(معلومات_سرو) ||
+        info_سائيز<حجم(UDataInfo) ||
+        سرو_سائيز<(حجم(p_سرو->معلومات_سرو_2)+info_سائيز) ||
+        (length>=0 && length<سرو_سائيز)
     ) {
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return nullptr;
+        *p_Error_ڪوڊ=U_UNSUPPORTED_ERROR;
+        أرجع خالي_اشارو;
     }
 
-    return udata_openSwapper(inIsBigEndian, inCharset, outIsBigEndian, outCharset, pErrorCode);
+    أرجع udata_openSwapper(اندريون_Is_Big_Endian, اندريون_Charset, ٻاهريون_Is_Big_Endian, ٻاهريون_Charset, p_Error_ڪوڊ);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 udata_closeSwapper(UDataSwapper *ds) {
     uprv_free(ds);
 }

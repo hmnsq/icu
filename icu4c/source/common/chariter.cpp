@@ -7,7 +7,7 @@
 **********************************************************************
 */
 
-#include "unicode/chariter.h"
+#ضمن "unicode/chariter.h"
 
 U_NAMESPACE_BEGIN
 
@@ -15,86 +15,86 @@ ForwardCharacterIterator::~ForwardCharacterIterator() {}
 ForwardCharacterIterator::ForwardCharacterIterator()
 : UObject()
 {}
-ForwardCharacterIterator::ForwardCharacterIterator(const ForwardCharacterIterator &other)
+ForwardCharacterIterator::ForwardCharacterIterator(ثابت ForwardCharacterIterator &other)
 : UObject(other)
 {}
 
 
 CharacterIterator::CharacterIterator()
-: textLength(0), pos(0), begin(0), end(0) {
+: متن_ڊيگهائي(0), pos(0), begin(0), پڇاڙي(0) {
 }
 
 CharacterIterator::CharacterIterator(int32_t length)
-: textLength(length), pos(0), begin(0), end(length) {
-    if(textLength < 0) {
-        textLength = end = 0;
+: متن_ڊيگهائي(length), pos(0), begin(0), پڇاڙي(length) {
+    إذا(متن_ڊيگهائي < 0) {
+        متن_ڊيگهائي = پڇاڙي = 0;
     }
 }
 
 CharacterIterator::CharacterIterator(int32_t length, int32_t position)
-: textLength(length), pos(position), begin(0), end(length) {
-    if(textLength < 0) {
-        textLength = end = 0;
+: متن_ڊيگهائي(length), pos(position), begin(0), پڇاڙي(length) {
+    إذا(متن_ڊيگهائي < 0) {
+        متن_ڊيگهائي = پڇاڙي = 0;
     }
-    if(pos < 0) {
+    إذا(pos < 0) {
         pos = 0;
-    } else if(pos > end) {
-        pos = end;
+    } وإلا إذا(pos > پڇاڙي) {
+        pos = پڇاڙي;
     }
 }
 
-CharacterIterator::CharacterIterator(int32_t length, int32_t textBegin, int32_t textEnd, int32_t position)
-: textLength(length), pos(position), begin(textBegin), end(textEnd) {
-    if(textLength < 0) {
-        textLength = 0;
+CharacterIterator::CharacterIterator(int32_t length, int32_t متن_Begin, int32_t متن_پڇاڙي, int32_t position)
+: متن_ڊيگهائي(length), pos(position), begin(متن_Begin), پڇاڙي(متن_پڇاڙي) {
+    إذا(متن_ڊيگهائي < 0) {
+        متن_ڊيگهائي = 0;
     }
-    if(begin < 0) {
+    إذا(begin < 0) {
         begin = 0;
-    } else if(begin > textLength) {
-        begin = textLength;
+    } وإلا إذا(begin > متن_ڊيگهائي) {
+        begin = متن_ڊيگهائي;
     }
-    if(end < begin) {
-        end = begin;
-    } else if(end > textLength) {
-        end = textLength;
+    إذا(پڇاڙي < begin) {
+        پڇاڙي = begin;
+    } وإلا إذا(پڇاڙي > متن_ڊيگهائي) {
+        پڇاڙي = متن_ڊيگهائي;
     }
-    if(pos < begin) {
+    إذا(pos < begin) {
         pos = begin;
-    } else if(pos > end) {
-        pos = end;
+    } وإلا إذا(pos > پڇاڙي) {
+        pos = پڇاڙي;
     }
 }
 
 CharacterIterator::~CharacterIterator() {}
 
-CharacterIterator::CharacterIterator(const CharacterIterator &that) :
+CharacterIterator::CharacterIterator(ثابت CharacterIterator &that) :
 ForwardCharacterIterator(that),
-textLength(that.textLength), pos(that.pos), begin(that.begin), end(that.end)
+متن_ڊيگهائي(that.متن_ڊيگهائي), pos(that.pos), begin(that.begin), پڇاڙي(that.پڇاڙي)
 {
 }
 
 CharacterIterator&
-CharacterIterator::operator=(const CharacterIterator& that) U_LIFETIME_BOUND {
-    ForwardCharacterIterator::operator=(that);
-    textLength = that.textLength;
+CharacterIterator::عامل=(ثابت CharacterIterator& that) U_LIFETIME_BOUND {
+    ForwardCharacterIterator::عامل=(that);
+    متن_ڊيگهائي = that.متن_ڊيگهائي;
     pos = that.pos;
     begin = that.begin;
-    end = that.end;
-    return *this;
+    پڇاڙي = that.پڇاڙي;
+    أرجع *هذا;
 }
 
 // implementing first[32]PostInc() directly in a subclass should be faster
 // but these implementations make subclassing a little easier
 char16_t
-CharacterIterator::firstPostInc() {
-    setToStart();
-    return nextPostInc();
+CharacterIterator::پهريون_Post_Inc() {
+    سيٽ_منزل_شروعات();
+    أرجع ايندڙ_Post_Inc();
 }
 
 UChar32
 CharacterIterator::first32PostInc() {
-    setToStart();
-    return next32PostInc();
+    سيٽ_منزل_شروعات();
+    أرجع next32PostInc();
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي

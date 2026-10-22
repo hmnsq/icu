@@ -5,584 +5,584 @@
 // created: 2017dec29 Markus W. Scherer
 
 // #define UCPTRIE_DEBUG
-#ifdef UCPTRIE_DEBUG
+#جيڪڏهن_وصف_ٿيل UCPTRIE_DEBUG
 #   include <stdio.h>
-#endif
+#جيڪڏهن_پورو
 
-#include "unicode/utypes.h"
-#include "unicode/ucptrie.h"
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "uassert.h"
-#include "ucptrie_impl.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/ucptrie.h"
+#ضمن "unicode/utf.h"
+#ضمن "unicode/utf8.h"
+#ضمن "unicode/utf16.h"
+#ضمن "cmemory.h"
+#ضمن "uassert.h"
+#ضمن "ucptrie_impl.h"
 
 U_CAPI UCPTrie* U_EXPORT2
-ucptrie_openFromBinary(UCPTrieType type,
-                       UCPTrieValueWidth valueWidth,
-                       const void* data U_LIFETIME_BOUND,
+ucptrie_open_From_ٻٽو(UCPTrieType type,
+                       UCPTrie_قدر_ويڪر قدر_ويڪر,
+                       ثابت فراغ* معلومات U_LIFETIME_BOUND,
                        int32_t length,
-                       int32_t* pActualLength,
-                       UErrorCode* pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+                       int32_t* p_Actual_ڊيگهائي,
+                       UError_ڪوڊ* p_Error_ڪوڊ) {
+    إذا (U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع خالي_اشارو;
     }
 
-    if (length <= 0 || (U_POINTER_MASK_LSB(data, 3) != 0) ||
+    إذا (length <= 0 || (U_اشارو_نقاب_LSB(معلومات, 3) != 0) ||
             type < UCPTRIE_TYPE_ANY || UCPTRIE_TYPE_SMALL < type ||
-            valueWidth < UCPTRIE_VALUE_BITS_ANY || UCPTRIE_VALUE_BITS_8 < valueWidth) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+            قدر_ويڪر < UCPTRIE_قدر_بٽ_ANY || UCPTRIE_قدر_بٽ_8 < قدر_ويڪر) {
+        *p_Error_ڪوڊ = U_ILLEGAL_دليل_ERROR;
+        أرجع خالي_اشارو;
     }
 
     // Enough data for a trie header?
-    if (length < (int32_t)sizeof(UCPTrieHeader)) {
-        *pErrorCode = U_INVALID_FORMAT_ERROR;
-        return nullptr;
+    إذا (length < (int32_t)حجم(UCPTrie_سرو)) {
+        *p_Error_ڪوڊ = U_INVALID_FORMAT_ERROR;
+        أرجع خالي_اشارو;
     }
 
     // Check the signature.
-    const UCPTrieHeader *header = (const UCPTrieHeader *)data;
-    if (header->signature != UCPTRIE_SIG) {
-        *pErrorCode = U_INVALID_FORMAT_ERROR;
-        return nullptr;
+    ثابت UCPTrie_سرو *سرو = (ثابت UCPTrie_سرو *)معلومات;
+    إذا (سرو->signature != UCPTRIE_SIG) {
+        *p_Error_ڪوڊ = U_INVALID_FORMAT_ERROR;
+        أرجع خالي_اشارو;
     }
 
-    int32_t options = header->options;
+    int32_t options = سرو->options;
     int32_t typeInt = (options >> 6) & 3;
-    int32_t valueWidthInt = options & UCPTRIE_OPTIONS_VALUE_BITS_MASK;
-    if (typeInt > UCPTRIE_TYPE_SMALL || valueWidthInt > UCPTRIE_VALUE_BITS_8 ||
-            (options & UCPTRIE_OPTIONS_RESERVED_MASK) != 0) {
-        *pErrorCode = U_INVALID_FORMAT_ERROR;
-        return nullptr;
+    int32_t قدر_ويڪر_Int = options & UCPTRIE_OPTIONS_قدر_بٽ_نقاب;
+    إذا (typeInt > UCPTRIE_TYPE_SMALL || قدر_ويڪر_Int > UCPTRIE_قدر_بٽ_8 ||
+            (options & UCPTRIE_OPTIONS_RESERVED_نقاب) != 0) {
+        *p_Error_ڪوڊ = U_INVALID_FORMAT_ERROR;
+        أرجع خالي_اشارو;
     }
     UCPTrieType actualType = (UCPTrieType)typeInt;
-    UCPTrieValueWidth actualValueWidth = (UCPTrieValueWidth)valueWidthInt;
-    if (type < 0) {
+    UCPTrie_قدر_ويڪر actual_قدر_ويڪر = (UCPTrie_قدر_ويڪر)قدر_ويڪر_Int;
+    إذا (type < 0) {
         type = actualType;
     }
-    if (valueWidth < 0) {
-        valueWidth = actualValueWidth;
+    إذا (قدر_ويڪر < 0) {
+        قدر_ويڪر = actual_قدر_ويڪر;
     }
-    if (type != actualType || valueWidth != actualValueWidth) {
-        *pErrorCode = U_INVALID_FORMAT_ERROR;
-        return nullptr;
+    إذا (type != actualType || قدر_ويڪر != actual_قدر_ويڪر) {
+        *p_Error_ڪوڊ = U_INVALID_FORMAT_ERROR;
+        أرجع خالي_اشارو;
     }
 
     // Get the length values and offsets.
-    UCPTrie tempTrie;
-    uprv_memset(&tempTrie, 0, sizeof(tempTrie));
-    tempTrie.indexLength = header->indexLength;
-    tempTrie.dataLength =
-        ((options & UCPTRIE_OPTIONS_DATA_LENGTH_MASK) << 4) | header->dataLength;
-    tempTrie.index3NullOffset = header->index3NullOffset;
-    tempTrie.dataNullOffset =
-        ((options & UCPTRIE_OPTIONS_DATA_NULL_OFFSET_MASK) << 8) | header->dataNullOffset;
+    UCPTrie عارضي_Trie;
+    uprv_memset(&عارضي_Trie, 0, حجم(عارضي_Trie));
+    عارضي_Trie.اشاريو_ڊيگهائي = سرو->اشاريو_ڊيگهائي;
+    عارضي_Trie.معلومات_ڊيگهائي =
+        ((options & UCPTRIE_OPTIONS_معلومات_ڊيگهائي_نقاب) << 4) | سرو->معلومات_ڊيگهائي;
+    عارضي_Trie.index3_Null_وٿي = سرو->index3_Null_وٿي;
+    عارضي_Trie.معلومات_Null_وٿي =
+        ((options & UCPTRIE_OPTIONS_معلومات_NULL_وٿي_نقاب) << 8) | سرو->معلومات_Null_وٿي;
 
-    tempTrie.highStart = header->shiftedHighStart << UCPTRIE_SHIFT_2;
-    tempTrie.shifted12HighStart = (tempTrie.highStart + 0xfff) >> 12;
-    tempTrie.type = type;
-    tempTrie.valueWidth = valueWidth;
+    عارضي_Trie.مٿاهون_شروعات = سرو->shifted_مٿاهون_شروعات << UCPTRIE_سرڪايو_2;
+    عارضي_Trie.shifted12_مٿاهون_شروعات = (عارضي_Trie.مٿاهون_شروعات + 0xfff) >> 12;
+    عارضي_Trie.type = type;
+    عارضي_Trie.قدر_ويڪر = قدر_ويڪر;
 
     // Calculate the actual length.
-    int32_t actualLength = (int32_t)sizeof(UCPTrieHeader) + tempTrie.indexLength * 2;
-    if (valueWidth == UCPTRIE_VALUE_BITS_16) {
-        actualLength += tempTrie.dataLength * 2;
-    } else if (valueWidth == UCPTRIE_VALUE_BITS_32) {
-        actualLength += tempTrie.dataLength * 4;
-    } else {
-        actualLength += tempTrie.dataLength;
+    int32_t actual_ڊيگهائي = (int32_t)حجم(UCPTrie_سرو) + عارضي_Trie.اشاريو_ڊيگهائي * 2;
+    إذا (قدر_ويڪر == UCPTRIE_قدر_بٽ_16) {
+        actual_ڊيگهائي += عارضي_Trie.معلومات_ڊيگهائي * 2;
+    } وإلا إذا (قدر_ويڪر == UCPTRIE_قدر_بٽ_32) {
+        actual_ڊيگهائي += عارضي_Trie.معلومات_ڊيگهائي * 4;
+    } وإلا {
+        actual_ڊيگهائي += عارضي_Trie.معلومات_ڊيگهائي;
     }
-    if (length < actualLength) {
-        *pErrorCode = U_INVALID_FORMAT_ERROR;  // Not enough bytes.
-        return nullptr;
+    إذا (length < actual_ڊيگهائي) {
+        *p_Error_ڪوڊ = U_INVALID_FORMAT_ERROR;  // Not enough bytes.
+        أرجع خالي_اشارو;
     }
 
     // Allocate the trie.
-    UCPTrie *trie = (UCPTrie *)uprv_malloc(sizeof(UCPTrie));
-    if (trie == nullptr) {
-        *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    UCPTrie *trie = (UCPTrie *)uprv_malloc(حجم(UCPTrie));
+    إذا (trie == خالي_اشارو) {
+        *p_Error_ڪوڊ = U_يادگيري_ورهاست_ERROR;
+        أرجع خالي_اشارو;
     }
-    uprv_memcpy(trie, &tempTrie, sizeof(tempTrie));
-#ifdef UCPTRIE_DEBUG
+    uprv_memcpy(trie, &عارضي_Trie, حجم(عارضي_Trie));
+#جيڪڏهن_وصف_ٿيل UCPTRIE_DEBUG
     trie->name = "fromSerialized";
-#endif
+#جيڪڏهن_پورو
 
     // Set the pointers to its index and data arrays.
-    const uint16_t *p16 = (const uint16_t *)(header + 1);
-    trie->index = p16;
-    p16 += trie->indexLength;
+    ثابت uint16_t *p16 = (ثابت uint16_t *)(سرو + 1);
+    trie->اشاريو = p16;
+    p16 += trie->اشاريو_ڊيگهائي;
 
     // Get the data.
-    int32_t nullValueOffset = trie->dataNullOffset;
-    if (nullValueOffset >= trie->dataLength) {
-        nullValueOffset = trie->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET;
+    int32_t null_قدر_وٿي = trie->معلومات_Null_وٿي;
+    إذا (null_قدر_وٿي >= trie->معلومات_ڊيگهائي) {
+        null_قدر_وٿي = trie->معلومات_ڊيگهائي - UCPTRIE_مٿاهون_قدر_NEG_معلومات_وٿي;
     }
-    switch (valueWidth) {
-    case UCPTRIE_VALUE_BITS_16:
-        trie->data.ptr16 = p16;
-        trie->nullValue = trie->data.ptr16[nullValueOffset];
-        break;
-    case UCPTRIE_VALUE_BITS_32:
-        trie->data.ptr32 = (const uint32_t *)p16;
-        trie->nullValue = trie->data.ptr32[nullValueOffset];
-        break;
-    case UCPTRIE_VALUE_BITS_8:
-        trie->data.ptr8 = (const uint8_t *)p16;
-        trie->nullValue = trie->data.ptr8[nullValueOffset];
-        break;
-    default:
+    بدل (قدر_ويڪر) {
+    حالة UCPTRIE_قدر_بٽ_16:
+        trie->معلومات.ptr16 = p16;
+        trie->null_قدر = trie->معلومات.ptr16[null_قدر_وٿي];
+        اكسر;
+    حالة UCPTRIE_قدر_بٽ_32:
+        trie->معلومات.ptr32 = (ثابت uint32_t *)p16;
+        trie->null_قدر = trie->معلومات.ptr32[null_قدر_وٿي];
+        اكسر;
+    حالة UCPTRIE_قدر_بٽ_8:
+        trie->معلومات.ptr8 = (ثابت uint8_t *)p16;
+        trie->null_قدر = trie->معلومات.ptr8[null_قدر_وٿي];
+        اكسر;
+    افتراضي:
         // Unreachable because valueWidth was checked above.
-        *pErrorCode = U_INVALID_FORMAT_ERROR;
-        return nullptr;
+        *p_Error_ڪوڊ = U_INVALID_FORMAT_ERROR;
+        أرجع خالي_اشارو;
     }
 
-    if (pActualLength != nullptr) {
-        *pActualLength = actualLength;
+    إذا (p_Actual_ڊيگهائي != خالي_اشارو) {
+        *p_Actual_ڊيگهائي = actual_ڊيگهائي;
     }
-    return trie;
+    أرجع trie;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 ucptrie_close(UCPTrie *trie) {
     uprv_free(trie);
 }
 
 U_CAPI UCPTrieType U_EXPORT2
-ucptrie_getType(const UCPTrie *trie) {
-    return (UCPTrieType)trie->type;
+ucptrie_getType(ثابت UCPTrie *trie) {
+    أرجع (UCPTrieType)trie->type;
 }
 
-U_CAPI UCPTrieValueWidth U_EXPORT2
-ucptrie_getValueWidth(const UCPTrie *trie) {
-    return (UCPTrieValueWidth)trie->valueWidth;
+U_CAPI UCPTrie_قدر_ويڪر U_EXPORT2
+ucptrie_get_قدر_ويڪر(ثابت UCPTrie *trie) {
+    أرجع (UCPTrie_قدر_ويڪر)trie->قدر_ويڪر;
 }
 
 U_CAPI int32_t U_EXPORT2
-ucptrie_internalSmallIndex(const UCPTrie *trie, UChar32 c) {
-    int32_t i1 = c >> UCPTRIE_SHIFT_1;
-    if (trie->type == UCPTRIE_TYPE_FAST) {
-        U_ASSERT(0xffff < c && c < trie->highStart);
-        i1 += UCPTRIE_BMP_INDEX_LENGTH - UCPTRIE_OMITTED_BMP_INDEX_1_LENGTH;
-    } else {
-        U_ASSERT((uint32_t)c < (uint32_t)trie->highStart && trie->highStart > UCPTRIE_SMALL_LIMIT);
-        i1 += UCPTRIE_SMALL_INDEX_LENGTH;
+ucptrie_اندروني_Small_اشاريو(ثابت UCPTrie *trie, UChar32 c) {
+    int32_t i1 = c >> UCPTRIE_سرڪايو_1;
+    إذا (trie->type == UCPTRIE_TYPE_FAST) {
+        U_ASSERT(0xffff < c && c < trie->مٿاهون_شروعات);
+        i1 += UCPTRIE_BMP_اشاريو_ڊيگهائي - UCPTRIE_OMITTED_BMP_اشاريو_1_ڊيگهائي;
+    } وإلا {
+        U_ASSERT((uint32_t)c < (uint32_t)trie->مٿاهون_شروعات && trie->مٿاهون_شروعات > UCPTRIE_SMALL_حد_بندي);
+        i1 += UCPTRIE_SMALL_اشاريو_ڊيگهائي;
     }
-    int32_t i3Block = trie->index[
-        (int32_t)trie->index[i1] + ((c >> UCPTRIE_SHIFT_2) & UCPTRIE_INDEX_2_MASK)];
-    int32_t i3 = (c >> UCPTRIE_SHIFT_3) & UCPTRIE_INDEX_3_MASK;
-    int32_t dataBlock;
-    if ((i3Block & 0x8000) == 0) {
+    int32_t i3_بلاڪ = trie->اشاريو[
+        (int32_t)trie->اشاريو[i1] + ((c >> UCPTRIE_سرڪايو_2) & UCPTRIE_اشاريو_2_نقاب)];
+    int32_t i3 = (c >> UCPTRIE_سرڪايو_3) & UCPTRIE_اشاريو_3_نقاب;
+    int32_t معلومات_بلاڪ;
+    إذا ((i3_بلاڪ & 0x8000) == 0) {
         // 16-bit indexes
-        dataBlock = trie->index[i3Block + i3];
-    } else {
+        معلومات_بلاڪ = trie->اشاريو[i3_بلاڪ + i3];
+    } وإلا {
         // 18-bit indexes stored in groups of 9 entries per 8 indexes.
-        i3Block = (i3Block & 0x7fff) + (i3 & ~7) + (i3 >> 3);
+        i3_بلاڪ = (i3_بلاڪ & 0x7fff) + (i3 & ~7) + (i3 >> 3);
         i3 &= 7;
-        dataBlock = ((int32_t)trie->index[i3Block++] << (2 + (2 * i3))) & 0x30000;
-        dataBlock |= trie->index[i3Block + i3];
+        معلومات_بلاڪ = ((int32_t)trie->اشاريو[i3_بلاڪ++] << (2 + (2 * i3))) & 0x30000;
+        معلومات_بلاڪ |= trie->اشاريو[i3_بلاڪ + i3];
     }
-    return dataBlock + (c & UCPTRIE_SMALL_DATA_MASK);
+    أرجع معلومات_بلاڪ + (c & UCPTRIE_SMALL_معلومات_نقاب);
 }
 
 U_CAPI int32_t U_EXPORT2
-ucptrie_internalSmallU8Index(const UCPTrie *trie, int32_t lt1, uint8_t t2, uint8_t t3) {
+ucptrie_اندروني_Small_U8_اشاريو(ثابت UCPTrie *trie, int32_t lt1, uint8_t t2, uint8_t t3) {
     UChar32 c = (lt1 << 12) | (t2 << 6) | t3;
-    if (c >= trie->highStart) {
+    إذا (c >= trie->مٿاهون_شروعات) {
         // Possible because the UTF-8 macro compares with shifted12HighStart which may be higher.
-        return trie->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET;
+        أرجع trie->معلومات_ڊيگهائي - UCPTRIE_مٿاهون_قدر_NEG_معلومات_وٿي;
     }
-    return ucptrie_internalSmallIndex(trie, c);
+    أرجع ucptrie_اندروني_Small_اشاريو(trie, c);
 }
 
 U_CAPI int32_t U_EXPORT2
-ucptrie_internalU8PrevIndex(const UCPTrie *trie, UChar32 c,
-                            const uint8_t *start, const uint8_t *src) {
+ucptrie_اندروني_U8_Prev_اشاريو(ثابت UCPTrie *trie, UChar32 c,
+                            ثابت uint8_t *شروعات, ثابت uint8_t *src) {
     int32_t i, length;
     // Support 64-bit pointers by avoiding cast of arbitrary difference.
-    if ((src - start) <= 7) {
-        i = length = (int32_t)(src - start);
-    } else {
+    إذا ((src - شروعات) <= 7) {
+        i = length = (int32_t)(src - شروعات);
+    } وإلا {
         i = length = 7;
-        start = src - 7;
+        شروعات = src - 7;
     }
-    c = utf8_prevCharSafeBody(start, 0, &i, c, -1);
+    c = utf8_prev_Char_محفوظ_Body(شروعات, 0, &i, c, -1);
     i = length - i;  // Number of bytes read backward from src.
-    int32_t idx = _UCPTRIE_CP_INDEX(trie, 0xffff, c);
-    return (idx << 3) | i;
+    int32_t idx = UCPTRIE_CP_اشاريو(trie, 0xffff, c);
+    أرجع (idx << 3) | i;
 }
 
-namespace {
+نطاق {
 
-inline uint32_t getValue(UCPTrieData data, UCPTrieValueWidth valueWidth, int32_t dataIndex) {
-    switch (valueWidth) {
-    case UCPTRIE_VALUE_BITS_16:
-        return data.ptr16[dataIndex];
-    case UCPTRIE_VALUE_BITS_32:
-        return data.ptr32[dataIndex];
-    case UCPTRIE_VALUE_BITS_8:
-        return data.ptr8[dataIndex];
-    default:
+مضمن uint32_t get_قدر(UCPTrie_معلومات معلومات, UCPTrie_قدر_ويڪر قدر_ويڪر, int32_t معلومات_اشاريو) {
+    بدل (قدر_ويڪر) {
+    حالة UCPTRIE_قدر_بٽ_16:
+        أرجع معلومات.ptr16[معلومات_اشاريو];
+    حالة UCPTRIE_قدر_بٽ_32:
+        أرجع معلومات.ptr32[معلومات_اشاريو];
+    حالة UCPTRIE_قدر_بٽ_8:
+        أرجع معلومات.ptr8[معلومات_اشاريو];
+    افتراضي:
         // Unreachable if the trie is properly initialized.
-        return 0xffffffff;
+        أرجع 0xffffffff;
     }
 }
 
 }  // namespace
 
 U_CAPI uint32_t U_EXPORT2
-ucptrie_get(const UCPTrie *trie, UChar32 c) {
-    int32_t dataIndex;
-    if ((uint32_t)c <= 0x7f) {
+ucptrie_get(ثابت UCPTrie *trie, UChar32 c) {
+    int32_t معلومات_اشاريو;
+    إذا ((uint32_t)c <= 0x7f) {
         // linear ASCII
-        dataIndex = c;
-    } else {
+        معلومات_اشاريو = c;
+    } وإلا {
         UChar32 fastMax = trie->type == UCPTRIE_TYPE_FAST ? 0xffff : UCPTRIE_SMALL_MAX;
-        dataIndex = _UCPTRIE_CP_INDEX(trie, fastMax, c);
+        معلومات_اشاريو = UCPTRIE_CP_اشاريو(trie, fastMax, c);
     }
-    return getValue(trie->data, (UCPTrieValueWidth)trie->valueWidth, dataIndex);
+    أرجع get_قدر(trie->معلومات, (UCPTrie_قدر_ويڪر)trie->قدر_ويڪر, معلومات_اشاريو);
 }
 
-namespace {
+نطاق {
 
 constexpr int32_t MAX_UNICODE = 0x10ffff;
 
-inline uint32_t maybeFilterValue(uint32_t value, uint32_t trieNullValue, uint32_t nullValue,
-                                 UCPMapValueFilter *filter, const void *context) {
-    if (value == trieNullValue) {
-        value = nullValue;
-    } else if (filter != nullptr) {
+مضمن uint32_t maybe_Filter_قدر(uint32_t value, uint32_t trie_Null_قدر, uint32_t null_قدر,
+                                 UCPMap_قدر_Filter *filter, ثابت فراغ *context) {
+    إذا (value == trie_Null_قدر) {
+        value = null_قدر;
+    } وإلا إذا (filter != خالي_اشارو) {
         value = filter(context, value);
     }
-    return value;
+    أرجع value;
 }
 
-UChar32 getRange(const void *t, UChar32 start,
-                 UCPMapValueFilter *filter, const void *context, uint32_t *pValue) {
-    if (static_cast<uint32_t>(start) > MAX_UNICODE) {
-        return U_SENTINEL;
+UChar32 getRange(ثابت فراغ *t, UChar32 شروعات,
+                 UCPMap_قدر_Filter *filter, ثابت فراغ *context, uint32_t *p_قدر) {
+    إذا (static_cast<uint32_t>(شروعات) > MAX_UNICODE) {
+        أرجع U_SENTINEL;
     }
-    const UCPTrie *trie = reinterpret_cast<const UCPTrie *>(t);
-    UCPTrieValueWidth valueWidth = static_cast<UCPTrieValueWidth>(trie->valueWidth);
-    if (start >= trie->highStart) {
-        if (pValue != nullptr) {
-            int32_t di = trie->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET;
-            uint32_t value = getValue(trie->data, valueWidth, di);
-            if (filter != nullptr) { value = filter(context, value); }
-            *pValue = value;
+    ثابت UCPTrie *trie = reinterpret_cast<ثابت UCPTrie *>(t);
+    UCPTrie_قدر_ويڪر قدر_ويڪر = static_cast<UCPTrie_قدر_ويڪر>(trie->قدر_ويڪر);
+    إذا (شروعات >= trie->مٿاهون_شروعات) {
+        إذا (p_قدر != خالي_اشارو) {
+            int32_t di = trie->معلومات_ڊيگهائي - UCPTRIE_مٿاهون_قدر_NEG_معلومات_وٿي;
+            uint32_t value = get_قدر(trie->معلومات, قدر_ويڪر, di);
+            إذا (filter != خالي_اشارو) { value = filter(context, value); }
+            *p_قدر = value;
         }
-        return MAX_UNICODE;
+        أرجع MAX_UNICODE;
     }
 
-    uint32_t nullValue = trie->nullValue;
-    if (filter != nullptr) { nullValue = filter(context, nullValue); }
-    const uint16_t *index = trie->index;
+    uint32_t null_قدر = trie->null_قدر;
+    إذا (filter != خالي_اشارو) { null_قدر = filter(context, null_قدر); }
+    ثابت uint16_t *اشاريو = trie->اشاريو;
 
-    int32_t prevI3Block = -1;
-    int32_t prevBlock = -1;
-    UChar32 c = start;
-    uint32_t trieValue, value = nullValue;
-    bool haveValue = false;
-    do {
-        int32_t i3Block;
+    int32_t prev_I3_بلاڪ = -1;
+    int32_t prev_بلاڪ = -1;
+    UChar32 c = شروعات;
+    uint32_t trie_قدر, value = null_قدر;
+    منطقي have_قدر = خطأ;
+    افعل {
+        int32_t i3_بلاڪ;
         int32_t i3;
-        int32_t i3BlockLength;
-        int32_t dataBlockLength;
-        if (c <= 0xffff && (trie->type == UCPTRIE_TYPE_FAST || c <= UCPTRIE_SMALL_MAX)) {
-            i3Block = 0;
-            i3 = c >> UCPTRIE_FAST_SHIFT;
-            i3BlockLength = trie->type == UCPTRIE_TYPE_FAST ?
-                UCPTRIE_BMP_INDEX_LENGTH : UCPTRIE_SMALL_INDEX_LENGTH;
-            dataBlockLength = UCPTRIE_FAST_DATA_BLOCK_LENGTH;
-        } else {
+        int32_t i3_بلاڪ_ڊيگهائي;
+        int32_t معلومات_بلاڪ_ڊيگهائي;
+        إذا (c <= 0xffff && (trie->type == UCPTRIE_TYPE_FAST || c <= UCPTRIE_SMALL_MAX)) {
+            i3_بلاڪ = 0;
+            i3 = c >> UCPTRIE_FAST_سرڪايو;
+            i3_بلاڪ_ڊيگهائي = trie->type == UCPTRIE_TYPE_FAST ?
+                UCPTRIE_BMP_اشاريو_ڊيگهائي : UCPTRIE_SMALL_اشاريو_ڊيگهائي;
+            معلومات_بلاڪ_ڊيگهائي = UCPTRIE_FAST_معلومات_بلاڪ_ڊيگهائي;
+        } وإلا {
             // Use the multi-stage index.
-            int32_t i1 = c >> UCPTRIE_SHIFT_1;
-            if (trie->type == UCPTRIE_TYPE_FAST) {
-                U_ASSERT(0xffff < c && c < trie->highStart);
-                i1 += UCPTRIE_BMP_INDEX_LENGTH - UCPTRIE_OMITTED_BMP_INDEX_1_LENGTH;
-            } else {
-                U_ASSERT(c < trie->highStart && trie->highStart > UCPTRIE_SMALL_LIMIT);
-                i1 += UCPTRIE_SMALL_INDEX_LENGTH;
+            int32_t i1 = c >> UCPTRIE_سرڪايو_1;
+            إذا (trie->type == UCPTRIE_TYPE_FAST) {
+                U_ASSERT(0xffff < c && c < trie->مٿاهون_شروعات);
+                i1 += UCPTRIE_BMP_اشاريو_ڊيگهائي - UCPTRIE_OMITTED_BMP_اشاريو_1_ڊيگهائي;
+            } وإلا {
+                U_ASSERT(c < trie->مٿاهون_شروعات && trie->مٿاهون_شروعات > UCPTRIE_SMALL_حد_بندي);
+                i1 += UCPTRIE_SMALL_اشاريو_ڊيگهائي;
             }
-            i3Block = trie->index[
-                static_cast<int32_t>(trie->index[i1]) + ((c >> UCPTRIE_SHIFT_2) & UCPTRIE_INDEX_2_MASK)];
-            if (i3Block == prevI3Block && (c - start) >= UCPTRIE_CP_PER_INDEX_2_ENTRY) {
+            i3_بلاڪ = trie->اشاريو[
+                static_cast<int32_t>(trie->اشاريو[i1]) + ((c >> UCPTRIE_سرڪايو_2) & UCPTRIE_اشاريو_2_نقاب)];
+            إذا (i3_بلاڪ == prev_I3_بلاڪ && (c - شروعات) >= UCPTRIE_CP_في_اشاريو_2_داخلا) {
                 // The index-3 block is the same as the previous one, and filled with value.
-                U_ASSERT((c & (UCPTRIE_CP_PER_INDEX_2_ENTRY - 1)) == 0);
-                c += UCPTRIE_CP_PER_INDEX_2_ENTRY;
-                continue;
+                U_ASSERT((c & (UCPTRIE_CP_في_اشاريو_2_داخلا - 1)) == 0);
+                c += UCPTRIE_CP_في_اشاريو_2_داخلا;
+                استمر;
             }
-            prevI3Block = i3Block;
-            if (i3Block == trie->index3NullOffset) {
+            prev_I3_بلاڪ = i3_بلاڪ;
+            إذا (i3_بلاڪ == trie->index3_Null_وٿي) {
                 // This is the index-3 null block.
-                if (haveValue) {
-                    if (nullValue != value) {
-                        return c - 1;
+                إذا (have_قدر) {
+                    إذا (null_قدر != value) {
+                        أرجع c - 1;
                     }
-                } else {
-                    trieValue = trie->nullValue;
-                    value = nullValue;
-                    if (pValue != nullptr) { *pValue = nullValue; }
-                    haveValue = true;
+                } وإلا {
+                    trie_قدر = trie->null_قدر;
+                    value = null_قدر;
+                    إذا (p_قدر != خالي_اشارو) { *p_قدر = null_قدر; }
+                    have_قدر = سچ;
                 }
-                prevBlock = trie->dataNullOffset;
-                c = (c + UCPTRIE_CP_PER_INDEX_2_ENTRY) & ~(UCPTRIE_CP_PER_INDEX_2_ENTRY - 1);
-                continue;
+                prev_بلاڪ = trie->معلومات_Null_وٿي;
+                c = (c + UCPTRIE_CP_في_اشاريو_2_داخلا) & ~(UCPTRIE_CP_في_اشاريو_2_داخلا - 1);
+                استمر;
             }
-            i3 = (c >> UCPTRIE_SHIFT_3) & UCPTRIE_INDEX_3_MASK;
-            i3BlockLength = UCPTRIE_INDEX_3_BLOCK_LENGTH;
-            dataBlockLength = UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
+            i3 = (c >> UCPTRIE_سرڪايو_3) & UCPTRIE_اشاريو_3_نقاب;
+            i3_بلاڪ_ڊيگهائي = UCPTRIE_اشاريو_3_بلاڪ_ڊيگهائي;
+            معلومات_بلاڪ_ڊيگهائي = UCPTRIE_SMALL_معلومات_بلاڪ_ڊيگهائي;
         }
         // Enumerate data blocks for one index-3 block.
-        do {
-            int32_t block;
-            if ((i3Block & 0x8000) == 0) {
-                block = index[i3Block + i3];
-            } else {
+        افعل {
+            int32_t بلاڪ;
+            إذا ((i3_بلاڪ & 0x8000) == 0) {
+                بلاڪ = اشاريو[i3_بلاڪ + i3];
+            } وإلا {
                 // 18-bit indexes stored in groups of 9 entries per 8 indexes.
-                int32_t group = (i3Block & 0x7fff) + (i3 & ~7) + (i3 >> 3);
+                int32_t گروهه = (i3_بلاڪ & 0x7fff) + (i3 & ~7) + (i3 >> 3);
                 int32_t gi = i3 & 7;
-                block = (static_cast<int32_t>(index[group++]) << (2 + (2 * gi))) & 0x30000;
-                block |= index[group + gi];
+                بلاڪ = (static_cast<int32_t>(اشاريو[گروهه++]) << (2 + (2 * gi))) & 0x30000;
+                بلاڪ |= اشاريو[گروهه + gi];
             }
-            if (block == prevBlock && (c - start) >= dataBlockLength) {
+            إذا (بلاڪ == prev_بلاڪ && (c - شروعات) >= معلومات_بلاڪ_ڊيگهائي) {
                 // The block is the same as the previous one, and filled with value.
-                U_ASSERT((c & (dataBlockLength - 1)) == 0);
-                c += dataBlockLength;
-            } else {
-                int32_t dataMask = dataBlockLength - 1;
-                prevBlock = block;
-                if (block == trie->dataNullOffset) {
+                U_ASSERT((c & (معلومات_بلاڪ_ڊيگهائي - 1)) == 0);
+                c += معلومات_بلاڪ_ڊيگهائي;
+            } وإلا {
+                int32_t معلومات_نقاب = معلومات_بلاڪ_ڊيگهائي - 1;
+                prev_بلاڪ = بلاڪ;
+                إذا (بلاڪ == trie->معلومات_Null_وٿي) {
                     // This is the data null block.
-                    if (haveValue) {
-                        if (nullValue != value) {
-                            return c - 1;
+                    إذا (have_قدر) {
+                        إذا (null_قدر != value) {
+                            أرجع c - 1;
                         }
-                    } else {
-                        trieValue = trie->nullValue;
-                        value = nullValue;
-                        if (pValue != nullptr) { *pValue = nullValue; }
-                        haveValue = true;
+                    } وإلا {
+                        trie_قدر = trie->null_قدر;
+                        value = null_قدر;
+                        إذا (p_قدر != خالي_اشارو) { *p_قدر = null_قدر; }
+                        have_قدر = سچ;
                     }
-                    c = (c + dataBlockLength) & ~dataMask;
-                } else {
-                    int32_t di = block + (c & dataMask);
-                    uint32_t trieValue2 = getValue(trie->data, valueWidth, di);
-                    if (haveValue) {
-                        if (trieValue2 != trieValue) {
-                            if (filter == nullptr ||
-                                    maybeFilterValue(trieValue2, trie->nullValue, nullValue,
+                    c = (c + معلومات_بلاڪ_ڊيگهائي) & ~معلومات_نقاب;
+                } وإلا {
+                    int32_t di = بلاڪ + (c & معلومات_نقاب);
+                    uint32_t trieValue2 = get_قدر(trie->معلومات, قدر_ويڪر, di);
+                    إذا (have_قدر) {
+                        إذا (trieValue2 != trie_قدر) {
+                            إذا (filter == خالي_اشارو ||
+                                    maybe_Filter_قدر(trieValue2, trie->null_قدر, null_قدر,
                                                      filter, context) != value) {
-                                return c - 1;
+                                أرجع c - 1;
                             }
-                            trieValue = trieValue2;  // may or may not help
+                            trie_قدر = trieValue2;  // may or may not help
                         }
-                    } else {
-                        trieValue = trieValue2;
-                        value = maybeFilterValue(trieValue2, trie->nullValue, nullValue,
+                    } وإلا {
+                        trie_قدر = trieValue2;
+                        value = maybe_Filter_قدر(trieValue2, trie->null_قدر, null_قدر,
                                                  filter, context);
-                        if (pValue != nullptr) { *pValue = value; }
-                        haveValue = true;
+                        إذا (p_قدر != خالي_اشارو) { *p_قدر = value; }
+                        have_قدر = سچ;
                     }
-                    while ((++c & dataMask) != 0) {
-                        trieValue2 = getValue(trie->data, valueWidth, ++di);
-                        if (trieValue2 != trieValue) {
-                            if (filter == nullptr ||
-                                    maybeFilterValue(trieValue2, trie->nullValue, nullValue,
+                    طالما ((++c & معلومات_نقاب) != 0) {
+                        trieValue2 = get_قدر(trie->معلومات, قدر_ويڪر, ++di);
+                        إذا (trieValue2 != trie_قدر) {
+                            إذا (filter == خالي_اشارو ||
+                                    maybe_Filter_قدر(trieValue2, trie->null_قدر, null_قدر,
                                                      filter, context) != value) {
-                                return c - 1;
+                                أرجع c - 1;
                             }
-                            trieValue = trieValue2;  // may or may not help
+                            trie_قدر = trieValue2;  // may or may not help
                         }
                     }
                 }
             }
-        } while (++i3 < i3BlockLength);
-    } while (c < trie->highStart);
-    U_ASSERT(haveValue);
-    int32_t di = trie->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET;
-    uint32_t highValue = getValue(trie->data, valueWidth, di);
-    if (maybeFilterValue(highValue, trie->nullValue, nullValue,
+        } طالما (++i3 < i3_بلاڪ_ڊيگهائي);
+    } طالما (c < trie->مٿاهون_شروعات);
+    U_ASSERT(have_قدر);
+    int32_t di = trie->معلومات_ڊيگهائي - UCPTRIE_مٿاهون_قدر_NEG_معلومات_وٿي;
+    uint32_t مٿاهون_قدر = get_قدر(trie->معلومات, قدر_ويڪر, di);
+    إذا (maybe_Filter_قدر(مٿاهون_قدر, trie->null_قدر, null_قدر,
                          filter, context) != value) {
-        return c - 1;
-    } else {
-        return MAX_UNICODE;
+        أرجع c - 1;
+    } وإلا {
+        أرجع MAX_UNICODE;
     }
 }
 
 }  // namespace
 
 U_CFUNC UChar32
-ucptrie_internalGetRange(UCPTrieGetRange *getRange,
-                         const void *trie, UChar32 start,
-                         UCPMapRangeOption option, uint32_t surrogateValue,
-                         UCPMapValueFilter *filter, const void *context, uint32_t *pValue) {
-    if (option == UCPMAP_RANGE_NORMAL) {
-        return getRange(trie, start, filter, context, pValue);
+ucptrie_اندروني_Get_Range(UCPTrieGetRange *getRange,
+                         ثابت فراغ *trie, UChar32 شروعات,
+                         UCPMapRangeOption option, uint32_t surrogate_قدر,
+                         UCPMap_قدر_Filter *filter, ثابت فراغ *context, uint32_t *p_قدر) {
+    إذا (option == UCPMAP_RANGE_عام) {
+        أرجع getRange(trie, شروعات, filter, context, p_قدر);
     }
     uint32_t value;
-    if (pValue == nullptr) {
+    إذا (p_قدر == خالي_اشارو) {
         // We need to examine the range value even if the caller does not want it.
-        pValue = &value;
+        p_قدر = &value;
     }
-    UChar32 surrEnd = option == UCPMAP_RANGE_FIXED_ALL_SURROGATES ? 0xdfff : 0xdbff;
-    UChar32 end = getRange(trie, start, filter, context, pValue);
-    if (end < 0xd7ff || start > surrEnd) {
-        return end;
+    UChar32 surr_پڇاڙي = option == UCPMAP_RANGE_FIXED_ALL_SURROGATES ? 0xdfff : 0xdbff;
+    UChar32 پڇاڙي = getRange(trie, شروعات, filter, context, p_قدر);
+    إذا (پڇاڙي < 0xd7ff || شروعات > surr_پڇاڙي) {
+        أرجع پڇاڙي;
     }
     // The range overlaps with surrogates, or ends just before the first one.
-    if (*pValue == surrogateValue) {
-        if (end >= surrEnd) {
+    إذا (*p_قدر == surrogate_قدر) {
+        إذا (پڇاڙي >= surr_پڇاڙي) {
             // Surrogates followed by a non-surrogateValue range,
             // or surrogates are part of a larger surrogateValue range.
-            return end;
+            أرجع پڇاڙي;
         }
-    } else {
-        if (start <= 0xd7ff) {
-            return 0xd7ff;  // Non-surrogateValue range ends before surrogateValue surrogates.
+    } وإلا {
+        إذا (شروعات <= 0xd7ff) {
+            أرجع 0xd7ff;  // Non-surrogateValue range ends before surrogateValue surrogates.
         }
         // Start is a surrogate with a non-surrogateValue code *unit* value.
         // Return a surrogateValue code *point* range.
-        *pValue = surrogateValue;
-        if (end > surrEnd) {
-            return surrEnd;  // Surrogate range ends before non-surrogateValue rest of range.
+        *p_قدر = surrogate_قدر;
+        إذا (پڇاڙي > surr_پڇاڙي) {
+            أرجع surr_پڇاڙي;  // Surrogate range ends before non-surrogateValue rest of range.
         }
     }
     // See if the surrogateValue surrogate range can be merged with
     // an immediately following range.
     uint32_t value2;
-    UChar32 end2 = getRange(trie, surrEnd + 1, filter, context, &value2);
-    if (value2 == surrogateValue) {
-        return end2;
+    UChar32 end2 = getRange(trie, surr_پڇاڙي + 1, filter, context, &value2);
+    إذا (value2 == surrogate_قدر) {
+        أرجع end2;
     }
-    return surrEnd;
+    أرجع surr_پڇاڙي;
 }
 
 U_CAPI UChar32 U_EXPORT2
-ucptrie_getRange(const UCPTrie *trie, UChar32 start,
-                 UCPMapRangeOption option, uint32_t surrogateValue,
-                 UCPMapValueFilter *filter, const void *context, uint32_t *pValue) {
-    return ucptrie_internalGetRange(getRange, trie, start,
-                                    option, surrogateValue,
-                                    filter, context, pValue);
+ucptrie_getRange(ثابت UCPTrie *trie, UChar32 شروعات,
+                 UCPMapRangeOption option, uint32_t surrogate_قدر,
+                 UCPMap_قدر_Filter *filter, ثابت فراغ *context, uint32_t *p_قدر) {
+    أرجع ucptrie_اندروني_Get_Range(getRange, trie, شروعات,
+                                    option, surrogate_قدر,
+                                    filter, context, p_قدر);
 }
 
 U_CAPI int32_t U_EXPORT2
-ucptrie_toBinary(const UCPTrie *trie,
-                 void *data, int32_t capacity,
-                 UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return 0;
+ucptrie_منزل_ٻٽو(ثابت UCPTrie *trie,
+                 فراغ *معلومات, int32_t capacity,
+                 UError_ڪوڊ *p_Error_ڪوڊ) {
+    إذا (U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع 0;
     }
 
     UCPTrieType type = (UCPTrieType)trie->type;
-    UCPTrieValueWidth valueWidth = (UCPTrieValueWidth)trie->valueWidth;
-    if (type < UCPTRIE_TYPE_FAST || UCPTRIE_TYPE_SMALL < type ||
-            valueWidth < UCPTRIE_VALUE_BITS_16 || UCPTRIE_VALUE_BITS_8 < valueWidth ||
+    UCPTrie_قدر_ويڪر قدر_ويڪر = (UCPTrie_قدر_ويڪر)trie->قدر_ويڪر;
+    إذا (type < UCPTRIE_TYPE_FAST || UCPTRIE_TYPE_SMALL < type ||
+            قدر_ويڪر < UCPTRIE_قدر_بٽ_16 || UCPTRIE_قدر_بٽ_8 < قدر_ويڪر ||
             capacity < 0 ||
-            (capacity > 0 && (data == nullptr || (U_POINTER_MASK_LSB(data, 3) != 0)))) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+            (capacity > 0 && (معلومات == خالي_اشارو || (U_اشارو_نقاب_LSB(معلومات, 3) != 0)))) {
+        *p_Error_ڪوڊ = U_ILLEGAL_دليل_ERROR;
+        أرجع 0;
     }
 
-    int32_t length = (int32_t)sizeof(UCPTrieHeader) + trie->indexLength * 2;
-    switch (valueWidth) {
-    case UCPTRIE_VALUE_BITS_16:
-        length += trie->dataLength * 2;
-        break;
-    case UCPTRIE_VALUE_BITS_32:
-        length += trie->dataLength * 4;
-        break;
-    case UCPTRIE_VALUE_BITS_8:
-        length += trie->dataLength;
-        break;
-    default:
+    int32_t length = (int32_t)حجم(UCPTrie_سرو) + trie->اشاريو_ڊيگهائي * 2;
+    بدل (قدر_ويڪر) {
+    حالة UCPTRIE_قدر_بٽ_16:
+        length += trie->معلومات_ڊيگهائي * 2;
+        اكسر;
+    حالة UCPTRIE_قدر_بٽ_32:
+        length += trie->معلومات_ڊيگهائي * 4;
+        اكسر;
+    حالة UCPTRIE_قدر_بٽ_8:
+        length += trie->معلومات_ڊيگهائي;
+        اكسر;
+    افتراضي:
         // unreachable
-        break;
+        اكسر;
     }
-    if (capacity < length) {
-        *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
-        return length;
+    إذا (capacity < length) {
+        *p_Error_ڪوڊ = U_بفر_حد_کان_مٿي_ERROR;
+        أرجع length;
     }
 
-    char *bytes = (char *)data;
-    UCPTrieHeader *header = (UCPTrieHeader *)bytes;
-    header->signature = UCPTRIE_SIG;  // "Tri3"
-    header->options = (uint16_t)(
-        ((trie->dataLength & 0xf0000) >> 4) |
-        ((trie->dataNullOffset & 0xf0000) >> 8) |
+    حرف *بائيٽون = (حرف *)معلومات;
+    UCPTrie_سرو *سرو = (UCPTrie_سرو *)بائيٽون;
+    سرو->signature = UCPTRIE_SIG;  // "Tri3"
+    سرو->options = (uint16_t)(
+        ((trie->معلومات_ڊيگهائي & 0xf0000) >> 4) |
+        ((trie->معلومات_Null_وٿي & 0xf0000) >> 8) |
         (trie->type << 6) |
-        valueWidth);
-    header->indexLength = (uint16_t)trie->indexLength;
-    header->dataLength = (uint16_t)trie->dataLength;
-    header->index3NullOffset = trie->index3NullOffset;
-    header->dataNullOffset = (uint16_t)trie->dataNullOffset;
-    header->shiftedHighStart = trie->highStart >> UCPTRIE_SHIFT_2;
-    bytes += sizeof(UCPTrieHeader);
+        قدر_ويڪر);
+    سرو->اشاريو_ڊيگهائي = (uint16_t)trie->اشاريو_ڊيگهائي;
+    سرو->معلومات_ڊيگهائي = (uint16_t)trie->معلومات_ڊيگهائي;
+    سرو->index3_Null_وٿي = trie->index3_Null_وٿي;
+    سرو->معلومات_Null_وٿي = (uint16_t)trie->معلومات_Null_وٿي;
+    سرو->shifted_مٿاهون_شروعات = trie->مٿاهون_شروعات >> UCPTRIE_سرڪايو_2;
+    بائيٽون += حجم(UCPTrie_سرو);
 
-    uprv_memcpy(bytes, trie->index, trie->indexLength * 2);
-    bytes += trie->indexLength * 2;
+    uprv_memcpy(بائيٽون, trie->اشاريو, trie->اشاريو_ڊيگهائي * 2);
+    بائيٽون += trie->اشاريو_ڊيگهائي * 2;
 
-    switch (valueWidth) {
-    case UCPTRIE_VALUE_BITS_16:
-        uprv_memcpy(bytes, trie->data.ptr16, trie->dataLength * 2);
-        break;
-    case UCPTRIE_VALUE_BITS_32:
-        uprv_memcpy(bytes, trie->data.ptr32, trie->dataLength * 4);
-        break;
-    case UCPTRIE_VALUE_BITS_8:
-        uprv_memcpy(bytes, trie->data.ptr8, trie->dataLength);
-        break;
-    default:
+    بدل (قدر_ويڪر) {
+    حالة UCPTRIE_قدر_بٽ_16:
+        uprv_memcpy(بائيٽون, trie->معلومات.ptr16, trie->معلومات_ڊيگهائي * 2);
+        اكسر;
+    حالة UCPTRIE_قدر_بٽ_32:
+        uprv_memcpy(بائيٽون, trie->معلومات.ptr32, trie->معلومات_ڊيگهائي * 4);
+        اكسر;
+    حالة UCPTRIE_قدر_بٽ_8:
+        uprv_memcpy(بائيٽون, trie->معلومات.ptr8, trie->معلومات_ڊيگهائي);
+        اكسر;
+    افتراضي:
         // unreachable
-        break;
+        اكسر;
     }
-    return length;
+    أرجع length;
 }
 
-namespace {
+نطاق {
 
-#ifdef UCPTRIE_DEBUG
-long countNull(const UCPTrie *trie) {
-    uint32_t nullValue=trie->nullValue;
-    int32_t length=trie->dataLength;
-    long count=0;
-    switch (trie->valueWidth) {
-    case UCPTRIE_VALUE_BITS_16:
-        for(int32_t i=0; i<length; ++i) {
-            if(trie->data.ptr16[i]==nullValue) { ++count; }
+#جيڪڏهن_وصف_ٿيل UCPTRIE_DEBUG
+ڊگهو ڳڻپ_Null(ثابت UCPTrie *trie) {
+    uint32_t null_قدر=trie->null_قدر;
+    int32_t length=trie->معلومات_ڊيگهائي;
+    ڊگهو count=0;
+    بدل (trie->قدر_ويڪر) {
+    حالة UCPTRIE_قدر_بٽ_16:
+        لكل(int32_t i=0; i<length; ++i) {
+            إذا(trie->معلومات.ptr16[i]==null_قدر) { ++count; }
         }
-        break;
-    case UCPTRIE_VALUE_BITS_32:
-        for(int32_t i=0; i<length; ++i) {
-            if(trie->data.ptr32[i]==nullValue) { ++count; }
+        اكسر;
+    حالة UCPTRIE_قدر_بٽ_32:
+        لكل(int32_t i=0; i<length; ++i) {
+            إذا(trie->معلومات.ptr32[i]==null_قدر) { ++count; }
         }
-        break;
-    case UCPTRIE_VALUE_BITS_8:
-        for(int32_t i=0; i<length; ++i) {
-            if(trie->data.ptr8[i]==nullValue) { ++count; }
+        اكسر;
+    حالة UCPTRIE_قدر_بٽ_8:
+        لكل(int32_t i=0; i<length; ++i) {
+            إذا(trie->معلومات.ptr8[i]==null_قدر) { ++count; }
         }
-        break;
-    default:
+        اكسر;
+    افتراضي:
         // unreachable
-        break;
+        اكسر;
     }
-    return count;
+    أرجع count;
 }
 
-U_CFUNC void
-ucptrie_printLengths(const UCPTrie *trie, const char *which) {
-    long indexLength=trie->indexLength;
-    long dataLength=(long)trie->dataLength;
-    long totalLength=(long)sizeof(UCPTrieHeader)+indexLength*2+
-            dataLength*(trie->valueWidth==UCPTRIE_VALUE_BITS_16 ? 2 :
-                        trie->valueWidth==UCPTRIE_VALUE_BITS_32 ? 4 : 1);
-    printf("**UCPTrieLengths(%s %s)** index:%6ld  data:%6ld  countNull:%6ld  serialized:%6ld\n",
-           which, trie->name, indexLength, dataLength, countNull(trie), totalLength);
+U_CFUNC فراغ
+ucptrie_printLengths(ثابت UCPTrie *trie, ثابت حرف *which) {
+    ڊگهو اشاريو_ڊيگهائي=trie->اشاريو_ڊيگهائي;
+    ڊگهو معلومات_ڊيگهائي=(ڊگهو)trie->معلومات_ڊيگهائي;
+    ڊگهو ڪل_ڊيگهائي=(ڊگهو)حجم(UCPTrie_سرو)+اشاريو_ڊيگهائي*2+
+            معلومات_ڊيگهائي*(trie->قدر_ويڪر==UCPTRIE_قدر_بٽ_16 ? 2 :
+                        trie->قدر_ويڪر==UCPTRIE_قدر_بٽ_32 ? 4 : 1);
+    لکو("**UCPTrieLengths(%s %s)** index:%6ld  data:%6ld  countNull:%6ld  serialized:%6ld\n",
+           which, trie->name, اشاريو_ڊيگهائي, معلومات_ڊيگهائي, ڳڻپ_Null(trie), ڪل_ڊيگهائي);
 }
-#endif
+#جيڪڏهن_پورو
 
 }  // namespace
 
@@ -590,15 +590,15 @@ ucptrie_printLengths(const UCPTrie *trie, const char *which) {
 // Initially, this is the same as UCPTrie. This may well change.
 
 U_CAPI uint32_t U_EXPORT2
-ucpmap_get(const UCPMap *map, UChar32 c) {
-    return ucptrie_get(reinterpret_cast<const UCPTrie *>(map), c);
+ucpmap_get(ثابت UCPMap *map, UChar32 c) {
+    أرجع ucptrie_get(reinterpret_cast<ثابت UCPTrie *>(map), c);
 }
 
 U_CAPI UChar32 U_EXPORT2
-ucpmap_getRange(const UCPMap *map, UChar32 start,
-                UCPMapRangeOption option, uint32_t surrogateValue,
-                UCPMapValueFilter *filter, const void *context, uint32_t *pValue) {
-    return ucptrie_getRange(reinterpret_cast<const UCPTrie *>(map), start,
-                            option, surrogateValue,
-                            filter, context, pValue);
+ucpmap_getRange(ثابت UCPMap *map, UChar32 شروعات,
+                UCPMapRangeOption option, uint32_t surrogate_قدر,
+                UCPMap_قدر_Filter *filter, ثابت فراغ *context, uint32_t *p_قدر) {
+    أرجع ucptrie_getRange(reinterpret_cast<ثابت UCPTrie *>(map), شروعات,
+                            option, surrogate_قدر,
+                            filter, context, p_قدر);
 }

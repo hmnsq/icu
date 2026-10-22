@@ -15,59 +15,59 @@
 ******************************************************************************
 */
 
-#include "unicode/icuplug.h"
+#ضمن "unicode/icuplug.h"
 
 
-#if UCONFIG_ENABLE_PLUGINS
+#إذا UCONFIG_ENABLE_PLUGINS
 
 
-#include "icuplugimp.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "putilimp.h"
-#include "ucln.h"
-#include <stdio.h>
-#ifdef __MVS__  /* defined by z/OS compiler */
-#define _POSIX_SOURCE
-#include <cics.h> /* 12 Nov 2011 JAM iscics() function */
-#endif
-#include "charstr.h"
+#ضمن "icuplugimp.h"
+#ضمن "cstring.h"
+#ضمن "cmemory.h"
+#ضمن "putilimp.h"
+#ضمن "ucln.h"
+#ضمن <stdio.h>
+#جيڪڏهن_وصف_ٿيل __MVS__  /* defined by z/OS compiler */
+#وصف_ڪريو _POSIX_SOURCE
+#ضمن <cics.h> /* 12 Nov 2011 JAM iscics() function */
+#جيڪڏهن_پورو
+#ضمن "charstr.h"
 
-using namespace icu;
+استعمال نطاق icu;
 
-#ifndef UPLUG_TRACE
-#define UPLUG_TRACE 0
-#endif
+#جيڪڏهن_وصف_نه_ٿيل UPLUG_TRACE
+#وصف_ڪريو UPLUG_TRACE 0
+#جيڪڏهن_پورو
 
-#if UPLUG_TRACE
-#include <stdio.h>
-#define DBG(x) fprintf(stderr, "%s:%d: ",__FILE__,__LINE__); fprintf x
-#endif
+#إذا UPLUG_TRACE
+#ضمن <stdio.h>
+#وصف_ڪريو DBG(x) fprintf(stderr, "%s:%d: ",__FILE__,__LINE__); fprintf x
+#جيڪڏهن_پورو
 
 /**
  * Internal structure of an ICU plugin. 
  */
 
-struct UPlugData {
+بنية UPlug_معلومات {
   UPlugEntrypoint  *entrypoint; /**< plugin entrypoint */
-  uint32_t structSize;    /**< initialized to the size of this structure */
+  uint32_t struct_سائيز;    /**< initialized to the size of this structure */
   uint32_t token;         /**< must be U_PLUG_TOKEN */
-  void *lib;              /**< plugin library, or nullptr */
-  char libName[UPLUG_NAME_MAX];   /**< library name */
-  char sym[UPLUG_NAME_MAX];        /**< plugin symbol, or nullptr */
-  char config[UPLUG_NAME_MAX];     /**< configuration data */
-  void *context;          /**< user context data */
-  char name[UPLUG_NAME_MAX];   /**< name of plugin */
+  فراغ *lib;              /**< plugin library, or nullptr */
+  حرف libName[UPLUG_NAME_MAX];   /**< library name */
+  حرف sym[UPLUG_NAME_MAX];        /**< plugin symbol, or nullptr */
+  حرف config[UPLUG_NAME_MAX];     /**< configuration data */
+  فراغ *context;          /**< user context data */
+  حرف name[UPLUG_NAME_MAX];   /**< name of plugin */
   UPlugLevel  level; /**< level of plugin */
-  UBool   awaitingLoad; /**< true if the plugin is awaiting a load call */
+  UBool   awaiting_ڀريو; /**< true if the plugin is awaiting a load call */
   UBool   dontUnload; /**< true if plugin must stay resident (leak plugin and lib) */
-  UErrorCode pluginStatus; /**< status code of plugin */
+  UError_ڪوڊ plugin_حالت; /**< status code of plugin */
 };
 
 
 
-#define UPLUG_LIBRARY_INITIAL_COUNT 8
-#define UPLUG_PLUGIN_INITIAL_COUNT 12
+#وصف_ڪريو UPLUG_LIBRARY_INITIAL_ڳڻپ 8
+#وصف_ڪريو UPLUG_PLUGIN_INITIAL_ڳڻپ 12
 
 /**
  * Remove an item
@@ -77,191 +77,191 @@ struct UPlugData {
  * @param itemToRemove the item number of the member
  * @return the new listsize 
  */
-static int32_t uplug_removeEntryAt(void *list, int32_t listSize, int32_t memberSize, int32_t itemToRemove) {
+ساكن int32_t uplug_remove_داخلا_At(فراغ *list, int32_t list_سائيز, int32_t member_سائيز, int32_t شي_منزل_Remove) {
   uint8_t *bytePtr = (uint8_t *)list;
     
   /* get rid of some bad cases first */
-  if(listSize<1) {
-    return listSize;
+  إذا(list_سائيز<1) {
+    أرجع list_سائيز;
   }
     
   /* is there anything to move? */
-  if(listSize > itemToRemove+1) {
-    memmove(bytePtr+(itemToRemove*memberSize), bytePtr+((itemToRemove+1)*memberSize), memberSize);
+  إذا(list_سائيز > شي_منزل_Remove+1) {
+    memmove(bytePtr+(شي_منزل_Remove*member_سائيز), bytePtr+((شي_منزل_Remove+1)*member_سائيز), member_سائيز);
   }
     
-  return listSize-1;
+  أرجع list_سائيز-1;
 }
 
 
 
 
-#if U_ENABLE_DYLOAD
+#إذا U_ENABLE_DYLOAD
 /**
  * Library management. Internal. 
  * @internal
  */
-struct UPlugLibrary;
+بنية UPlugLibrary;
 
 /**
  * Library management. Internal. 
  * @internal
  */
-typedef struct UPlugLibrary {
-  void *lib;                           /**< library ptr */
-  char name[UPLUG_NAME_MAX]; /**< library name */
+تعريفنوع بنية UPlugLibrary {
+  فراغ *lib;                           /**< library ptr */
+  حرف name[UPLUG_NAME_MAX]; /**< library name */
   uint32_t ref;                        /**< reference count */
 } UPlugLibrary;
 
-static UPlugLibrary   staticLibraryList[UPLUG_LIBRARY_INITIAL_COUNT];
-static UPlugLibrary * libraryList = staticLibraryList;
-static int32_t libraryCount = 0;
-static int32_t libraryMax = UPLUG_LIBRARY_INITIAL_COUNT;
+ساكن UPlugLibrary   staticLibraryList[UPLUG_LIBRARY_INITIAL_ڳڻپ];
+ساكن UPlugLibrary * libraryList = staticLibraryList;
+ساكن int32_t library_ڳڻپ = 0;
+ساكن int32_t libraryMax = UPLUG_LIBRARY_INITIAL_ڳڻپ;
 
 /**
  * Search for a library. Doesn't lock
  * @param libName libname to search for
  * @return the library's struct
  */
-static int32_t searchForLibraryName(const char *libName) {
+ساكن int32_t ڳولا_For_Library_Name(ثابت حرف *libName) {
   int32_t i;
     
-  for(i=0;i<libraryCount;i++) {
-    if(!uprv_strcmp(libName, libraryList[i].name)) {
-      return i;
+  لكل(i=0;i<library_ڳڻپ;i++) {
+    إذا(!uprv_strcmp(libName, libraryList[i].name)) {
+      أرجع i;
     }
   }
-  return -1;
+  أرجع -1;
 }
 
-static int32_t searchForLibrary(void *lib) {
+ساكن int32_t ڳولا_For_Library(فراغ *lib) {
   int32_t i;
     
-  for(i=0;i<libraryCount;i++) {
-    if(lib==libraryList[i].lib) {
-      return i;
+  لكل(i=0;i<library_ڳڻپ;i++) {
+    إذا(lib==libraryList[i].lib) {
+      أرجع i;
     }
   }
-  return -1;
+  أرجع -1;
 }
 
-U_CAPI char * U_EXPORT2
-uplug_findLibrary(void *lib, UErrorCode *status) {
+U_CAPI حرف * U_EXPORT2
+uplug_ڳوليو_Library(فراغ *lib, UError_ڪوڊ *حالت) {
   int32_t libEnt;
-  char *ret = nullptr;
-  if(U_FAILURE(*status)) {
-    return nullptr;
+  حرف *ret = خالي_اشارو;
+  إذا(U_FAILURE(*حالت)) {
+    أرجع خالي_اشارو;
   }
-  libEnt = searchForLibrary(lib);
-  if(libEnt!=-1) { 
+  libEnt = ڳولا_For_Library(lib);
+  إذا(libEnt!=-1) { 
     ret = libraryList[libEnt].name;
-  } else {
-    *status = U_MISSING_RESOURCE_ERROR;
+  } وإلا {
+    *حالت = U_MISSING_RESOURCE_ERROR;
   }
-  return ret;
+  أرجع ret;
 }
 
-U_CAPI void * U_EXPORT2
-uplug_openLibrary(const char *libName, UErrorCode *status) {
-  int32_t libEntry = -1;
-  void *lib = nullptr;
+U_CAPI فراغ * U_EXPORT2
+uplug_openLibrary(ثابت حرف *libName, UError_ڪوڊ *حالت) {
+  int32_t lib_داخلا = -1;
+  فراغ *lib = خالي_اشارو;
     
-  if(U_FAILURE(*status)) return nullptr;
+  إذا(U_FAILURE(*حالت)) أرجع خالي_اشارو;
 
-  libEntry = searchForLibraryName(libName);
-  if(libEntry == -1) {
-    libEntry = libraryCount++;
-    if(libraryCount >= libraryMax) {
+  lib_داخلا = ڳولا_For_Library_Name(libName);
+  إذا(lib_داخلا == -1) {
+    lib_داخلا = library_ڳڻپ++;
+    إذا(library_ڳڻپ >= libraryMax) {
       /* Ran out of library slots. Statically allocated because we can't depend on allocating memory.. */
-      *status = U_MEMORY_ALLOCATION_ERROR;
-#if UPLUG_TRACE
+      *حالت = U_يادگيري_ورهاست_ERROR;
+#إذا UPLUG_TRACE
       DBG((stderr, "uplug_openLibrary() - out of library slots (max %d)\n", libraryMax));
-#endif
-      return nullptr;
+#جيڪڏهن_پورو
+      أرجع خالي_اشارو;
     }
     /* Some operating systems don't want 
        DL operations from multiple threads. */
-    libraryList[libEntry].lib = uprv_dl_open(libName, status);
-#if UPLUG_TRACE
-    DBG((stderr, "uplug_openLibrary(%s,%s) libEntry %d, lib %p\n", libName, u_errorName(*status), libEntry, lib));
-#endif
+    libraryList[lib_داخلا].lib = uprv_dl_open(libName, حالت);
+#إذا UPLUG_TRACE
+    DBG((stderr, "uplug_openLibrary(%s,%s) libEntry %d, lib %p\n", libName, u_errorName(*حالت), lib_داخلا, lib));
+#جيڪڏهن_پورو
         
-    if(libraryList[libEntry].lib == nullptr || U_FAILURE(*status)) {
+    إذا(libraryList[lib_داخلا].lib == خالي_اشارو || U_FAILURE(*حالت)) {
       /* cleanup. */
-      libraryList[libEntry].lib = nullptr; /* failure with open */
-      libraryList[libEntry].name[0] = 0;
-#if UPLUG_TRACE
-      DBG((stderr, "uplug_openLibrary(%s,%s) libEntry %d, lib %p\n", libName, u_errorName(*status), libEntry, lib));
-#endif
+      libraryList[lib_داخلا].lib = خالي_اشارو; /* failure with open */
+      libraryList[lib_داخلا].name[0] = 0;
+#إذا UPLUG_TRACE
+      DBG((stderr, "uplug_openLibrary(%s,%s) libEntry %d, lib %p\n", libName, u_errorName(*حالت), lib_داخلا, lib));
+#جيڪڏهن_پورو
       /* no need to free - just won't increase the count. */
-      libraryCount--;
-    } else { /* is it still there? */
+      library_ڳڻپ--;
+    } وإلا { /* is it still there? */
       /* link it in */
-      uprv_strncpy(libraryList[libEntry].name,libName,UPLUG_NAME_MAX);
-      libraryList[libEntry].ref=1;
-      lib = libraryList[libEntry].lib;
+      uprv_strncpy(libraryList[lib_داخلا].name,libName,UPLUG_NAME_MAX);
+      libraryList[lib_داخلا].ref=1;
+      lib = libraryList[lib_داخلا].lib;
     }
 
-  } else {
-    lib = libraryList[libEntry].lib;
-    libraryList[libEntry].ref++;
+  } وإلا {
+    lib = libraryList[lib_داخلا].lib;
+    libraryList[lib_داخلا].ref++;
   }
-  return lib;
+  أرجع lib;
 }
 
-U_CAPI void U_EXPORT2
-uplug_closeLibrary(void *lib, UErrorCode *status) {
+U_CAPI فراغ U_EXPORT2
+uplug_closeLibrary(فراغ *lib, UError_ڪوڊ *حالت) {
   int32_t i;
     
-#if UPLUG_TRACE
-  DBG((stderr, "uplug_closeLibrary(%p,%s) list %p\n", lib, u_errorName(*status), (void*)libraryList));
-#endif
-  if(U_FAILURE(*status)) return;
+#إذا UPLUG_TRACE
+  DBG((stderr, "uplug_closeLibrary(%p,%s) list %p\n", lib, u_errorName(*حالت), (فراغ*)libraryList));
+#جيڪڏهن_پورو
+  إذا(U_FAILURE(*حالت)) أرجع;
     
-  for(i=0;i<libraryCount;i++) {
-    if(lib==libraryList[i].lib) {
-      if(--(libraryList[i].ref) == 0) {
-        uprv_dl_close(libraryList[i].lib, status);
-        libraryCount = uplug_removeEntryAt(libraryList, libraryCount, sizeof(*libraryList), i);
+  لكل(i=0;i<library_ڳڻپ;i++) {
+    إذا(lib==libraryList[i].lib) {
+      إذا(--(libraryList[i].ref) == 0) {
+        uprv_dl_close(libraryList[i].lib, حالت);
+        library_ڳڻپ = uplug_remove_داخلا_At(libraryList, library_ڳڻپ, حجم(*libraryList), i);
       }
-      return;
+      أرجع;
     }
   }
-  *status = U_INTERNAL_PROGRAM_ERROR; /* could not find the entry! */
+  *حالت = U_اندروني_پروگرام_ERROR; /* could not find the entry! */
 }
 
-#endif
+#جيڪڏهن_پورو
 
-static UPlugData pluginList[UPLUG_PLUGIN_INITIAL_COUNT];
-static int32_t pluginCount = 0;
+ساكن UPlug_معلومات pluginList[UPLUG_PLUGIN_INITIAL_ڳڻپ];
+ساكن int32_t plugin_ڳڻپ = 0;
 
 
 
   
-static int32_t uplug_pluginNumber(UPlugData* d) {
-  UPlugData *pastPlug = &pluginList[pluginCount];
-  if(d<=pluginList) {
-    return 0;
-  } else if(d>=pastPlug) {
-    return pluginCount;
-  } else {
-    return (d-pluginList)/sizeof(pluginList[0]);
+ساكن int32_t uplug_plugin_عدد(UPlug_معلومات* d) {
+  UPlug_معلومات *pastPlug = &pluginList[plugin_ڳڻپ];
+  إذا(d<=pluginList) {
+    أرجع 0;
+  } وإلا إذا(d>=pastPlug) {
+    أرجع plugin_ڳڻپ;
+  } وإلا {
+    أرجع (d-pluginList)/حجم(pluginList[0]);
   }
 }
 
 
-U_CAPI UPlugData * U_EXPORT2
-uplug_nextPlug(UPlugData *prior) {
-  if(prior==nullptr) {
-    return pluginList;
-  } else {
-    UPlugData *nextPlug = &prior[1];
-    UPlugData *pastPlug = &pluginList[pluginCount];
+U_CAPI UPlug_معلومات * U_EXPORT2
+uplug_ايندڙ_Plug(UPlug_معلومات *اڳواٽ) {
+  إذا(اڳواٽ==خالي_اشارو) {
+    أرجع pluginList;
+  } وإلا {
+    UPlug_معلومات *ايندڙ_Plug = &اڳواٽ[1];
+    UPlug_معلومات *pastPlug = &pluginList[plugin_ڳڻپ];
     
-    if(nextPlug>=pastPlug) {
-      return nullptr;
-    } else {
-      return nextPlug;
+    إذا(ايندڙ_Plug>=pastPlug) {
+      أرجع خالي_اشارو;
+    } وإلا {
+      أرجع ايندڙ_Plug;
     }
   }
 }
@@ -271,255 +271,255 @@ uplug_nextPlug(UPlugData *prior) {
 /**
  * Call the plugin with some params
  */
-static void uplug_callPlug(UPlugData *plug, UPlugReason reason, UErrorCode *status) {
+ساكن فراغ uplug_callPlug(UPlug_معلومات *plug, UPlugReason reason, UError_ڪوڊ *حالت) {
   UPlugTokenReturn token;
-  if(plug==nullptr||U_FAILURE(*status)) {
-    return;
+  إذا(plug==خالي_اشارو||U_FAILURE(*حالت)) {
+    أرجع;
   }
-  token = (*(plug->entrypoint))(plug, reason, status);
-  if(token!=UPLUG_TOKEN) {
-    *status = U_INTERNAL_PROGRAM_ERROR;
+  token = (*(plug->entrypoint))(plug, reason, حالت);
+  إذا(token!=UPLUG_TOKEN) {
+    *حالت = U_اندروني_پروگرام_ERROR;
   }
 }
 
 
-static void uplug_unloadPlug(UPlugData *plug, UErrorCode *status) {
-  if(plug->awaitingLoad) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
-    *status = U_INTERNAL_PROGRAM_ERROR;
-    return; 
+ساكن فراغ uplug_unloadPlug(UPlug_معلومات *plug, UError_ڪوڊ *حالت) {
+  إذا(plug->awaiting_ڀريو) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
+    *حالت = U_اندروني_پروگرام_ERROR;
+    أرجع; 
   }
-  if(U_SUCCESS(plug->pluginStatus)) {
+  إذا(U_SUCCESS(plug->plugin_حالت)) {
     /* Don't unload a plug which has a failing load status - means it didn't actually load. */
-    uplug_callPlug(plug, UPLUG_REASON_UNLOAD, status);
+    uplug_callPlug(plug, UPLUG_REASON_UNLOAD, حالت);
   }
 }
 
-static void uplug_queryPlug(UPlugData *plug, UErrorCode *status) {
-  if(!plug->awaitingLoad || !(plug->level == UPLUG_LEVEL_UNKNOWN) ) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
-    *status = U_INTERNAL_PROGRAM_ERROR;
-    return; 
+ساكن فراغ uplug_queryPlug(UPlug_معلومات *plug, UError_ڪوڊ *حالت) {
+  إذا(!plug->awaiting_ڀريو || !(plug->level == UPLUG_LEVEL_UNKNOWN) ) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
+    *حالت = U_اندروني_پروگرام_ERROR;
+    أرجع; 
   }
   plug->level = UPLUG_LEVEL_INVALID;
-  uplug_callPlug(plug, UPLUG_REASON_QUERY, status);
-  if(U_SUCCESS(*status)) { 
-    if(plug->level == UPLUG_LEVEL_INVALID) {
-      plug->pluginStatus = U_PLUGIN_DIDNT_SET_LEVEL;
-      plug->awaitingLoad = false;
+  uplug_callPlug(plug, UPLUG_REASON_QUERY, حالت);
+  إذا(U_SUCCESS(*حالت)) { 
+    إذا(plug->level == UPLUG_LEVEL_INVALID) {
+      plug->plugin_حالت = U_PLUGIN_DIDNT_سيٽ_LEVEL;
+      plug->awaiting_ڀريو = خطأ;
     }
-  } else {
-    plug->pluginStatus = U_INTERNAL_PROGRAM_ERROR;
-    plug->awaitingLoad = false;
+  } وإلا {
+    plug->plugin_حالت = U_اندروني_پروگرام_ERROR;
+    plug->awaiting_ڀريو = خطأ;
   }
 }
 
 
-static void uplug_loadPlug(UPlugData *plug, UErrorCode *status) {
-  if(U_FAILURE(*status)) {
-    return;
+ساكن فراغ uplug_ڀريو_Plug(UPlug_معلومات *plug, UError_ڪوڊ *حالت) {
+  إذا(U_FAILURE(*حالت)) {
+    أرجع;
   }
-  if(!plug->awaitingLoad || (plug->level < UPLUG_LEVEL_LOW) ) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
-    *status = U_INTERNAL_PROGRAM_ERROR;
-    return;
+  إذا(!plug->awaiting_ڀريو || (plug->level < UPLUG_LEVEL_هيٺيون) ) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
+    *حالت = U_اندروني_پروگرام_ERROR;
+    أرجع;
   }
-  uplug_callPlug(plug, UPLUG_REASON_LOAD, status);
-  plug->awaitingLoad = false;
-  if(!U_SUCCESS(*status)) {
-    plug->pluginStatus = U_INTERNAL_PROGRAM_ERROR;
+  uplug_callPlug(plug, UPLUG_REASON_ڀريو, حالت);
+  plug->awaiting_ڀريو = خطأ;
+  إذا(!U_SUCCESS(*حالت)) {
+    plug->plugin_حالت = U_اندروني_پروگرام_ERROR;
   }
 }
 
-static UPlugData *uplug_allocateEmptyPlug(UErrorCode *status)
+ساكن UPlug_معلومات *uplug_allocate_خالي_جايون_Plug(UError_ڪوڊ *حالت)
 {
-  UPlugData *plug = nullptr;
+  UPlug_معلومات *plug = خالي_اشارو;
 
-  if(U_FAILURE(*status)) {
-    return nullptr;
+  إذا(U_FAILURE(*حالت)) {
+    أرجع خالي_اشارو;
   }
 
-  if(pluginCount == UPLUG_PLUGIN_INITIAL_COUNT) {
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+  إذا(plugin_ڳڻپ == UPLUG_PLUGIN_INITIAL_ڳڻپ) {
+    *حالت = U_يادگيري_ورهاست_ERROR;
+    أرجع خالي_اشارو;
   }
 
-  plug = &pluginList[pluginCount++];
+  plug = &pluginList[plugin_ڳڻپ++];
 
   plug->token = UPLUG_TOKEN;
-  plug->structSize = sizeof(UPlugData);
+  plug->struct_سائيز = حجم(UPlug_معلومات);
   plug->name[0]=0;
   plug->level = UPLUG_LEVEL_UNKNOWN; /* initialize to null state */
-  plug->awaitingLoad = true;
-  plug->dontUnload = false;
-  plug->pluginStatus = U_ZERO_ERROR;
+  plug->awaiting_ڀريو = سچ;
+  plug->dontUnload = خطأ;
+  plug->plugin_حالت = U_ZERO_ERROR;
   plug->libName[0] = 0;
   plug->config[0]=0;
   plug->sym[0]=0;
-  plug->lib=nullptr;
-  plug->entrypoint=nullptr;
+  plug->lib=خالي_اشارو;
+  plug->entrypoint=خالي_اشارو;
 
 
-  return plug;
+  أرجع plug;
 }
 
-static UPlugData *uplug_allocatePlug(UPlugEntrypoint *entrypoint, const char *config, void *lib, const char *symName,
-                                     UErrorCode *status) {
-  UPlugData *plug = uplug_allocateEmptyPlug(status);
-  if(U_FAILURE(*status)) {
-    return nullptr;
+ساكن UPlug_معلومات *uplug_allocatePlug(UPlugEntrypoint *entrypoint, ثابت حرف *config, فراغ *lib, ثابت حرف *symName,
+                                     UError_ڪوڊ *حالت) {
+  UPlug_معلومات *plug = uplug_allocate_خالي_جايون_Plug(حالت);
+  إذا(U_FAILURE(*حالت)) {
+    أرجع خالي_اشارو;
   }
 
-  if(config!=nullptr) {
+  إذا(config!=خالي_اشارو) {
     uprv_strncpy(plug->config, config, UPLUG_NAME_MAX);
-  } else {
+  } وإلا {
     plug->config[0] = 0;
   }
     
-  if(symName!=nullptr) {
+  إذا(symName!=خالي_اشارو) {
     uprv_strncpy(plug->sym, symName, UPLUG_NAME_MAX);
-  } else {
+  } وإلا {
     plug->sym[0] = 0;
   }
     
   plug->entrypoint = entrypoint;
   plug->lib = lib;
-  uplug_queryPlug(plug, status);
+  uplug_queryPlug(plug, حالت);
     
-  return plug;
+  أرجع plug;
 }
 
-static void uplug_deallocatePlug(UPlugData *plug, UErrorCode *status) {
-  UErrorCode subStatus = U_ZERO_ERROR;
-  if(!plug->dontUnload) {
-#if U_ENABLE_DYLOAD
-    uplug_closeLibrary(plug->lib, &subStatus);
-#endif
+ساكن فراغ uplug_deallocatePlug(UPlug_معلومات *plug, UError_ڪوڊ *حالت) {
+  UError_ڪوڊ sub_حالت = U_ZERO_ERROR;
+  إذا(!plug->dontUnload) {
+#إذا U_ENABLE_DYLOAD
+    uplug_closeLibrary(plug->lib, &sub_حالت);
+#جيڪڏهن_پورو
   }
-  plug->lib = nullptr;
-  if(U_SUCCESS(*status) && U_FAILURE(subStatus)) {
-    *status = subStatus;
+  plug->lib = خالي_اشارو;
+  إذا(U_SUCCESS(*حالت) && U_FAILURE(sub_حالت)) {
+    *حالت = sub_حالت;
   }
   /* shift plugins up and decrement count. */
-  if(U_SUCCESS(*status)) {
+  إذا(U_SUCCESS(*حالت)) {
     /* all ok- remove. */
-    pluginCount = uplug_removeEntryAt(pluginList, pluginCount, sizeof(plug[0]), uplug_pluginNumber(plug));
-  } else {
+    plugin_ڳڻپ = uplug_remove_داخلا_At(pluginList, plugin_ڳڻپ, حجم(plug[0]), uplug_plugin_عدد(plug));
+  } وإلا {
     /* not ok- leave as a message. */
-    plug->awaitingLoad=false;
+    plug->awaiting_ڀريو=خطأ;
     plug->entrypoint=0;
-    plug->dontUnload=true;
+    plug->dontUnload=سچ;
   }
 }
 
-static void uplug_doUnloadPlug(UPlugData *plugToRemove, UErrorCode *status) {
-  if(plugToRemove != nullptr) {
-    uplug_unloadPlug(plugToRemove, status);
-    uplug_deallocatePlug(plugToRemove, status);
+ساكن فراغ uplug_doUnloadPlug(UPlug_معلومات *plug_منزل_Remove, UError_ڪوڊ *حالت) {
+  إذا(plug_منزل_Remove != خالي_اشارو) {
+    uplug_unloadPlug(plug_منزل_Remove, حالت);
+    uplug_deallocatePlug(plug_منزل_Remove, حالت);
   }
 }
 
-U_CAPI void U_EXPORT2
-uplug_removePlug(UPlugData *plug, UErrorCode *status)  {
-  UPlugData *cursor = nullptr;
-  UPlugData *plugToRemove = nullptr;
-  if(U_FAILURE(*status)) return;
+U_CAPI فراغ U_EXPORT2
+uplug_removePlug(UPlug_معلومات *plug, UError_ڪوڊ *حالت)  {
+  UPlug_معلومات *cursor = خالي_اشارو;
+  UPlug_معلومات *plug_منزل_Remove = خالي_اشارو;
+  إذا(U_FAILURE(*حالت)) أرجع;
     
-  for(cursor=pluginList;cursor!=nullptr;) {
-    if(cursor==plug) {
-      plugToRemove = plug;
-      cursor=nullptr;
-    } else {
-      cursor = uplug_nextPlug(cursor);
+  لكل(cursor=pluginList;cursor!=خالي_اشارو;) {
+    إذا(cursor==plug) {
+      plug_منزل_Remove = plug;
+      cursor=خالي_اشارو;
+    } وإلا {
+      cursor = uplug_ايندڙ_Plug(cursor);
     }
   }
     
-  uplug_doUnloadPlug(plugToRemove, status);
+  uplug_doUnloadPlug(plug_منزل_Remove, حالت);
 }
 
 
 
 
-U_CAPI void U_EXPORT2 
-uplug_setPlugNoUnload(UPlugData *data, UBool dontUnload)
+U_CAPI فراغ U_EXPORT2 
+uplug_سيٽ_Plug_No_Unload(UPlug_معلومات *معلومات, UBool dontUnload)
 {
-  data->dontUnload = dontUnload;
+  معلومات->dontUnload = dontUnload;
 }
 
 
-U_CAPI void U_EXPORT2
-uplug_setPlugLevel(UPlugData *data, UPlugLevel level) {
-  data->level = level;
+U_CAPI فراغ U_EXPORT2
+uplug_سيٽ_Plug_Level(UPlug_معلومات *معلومات, UPlugLevel level) {
+  معلومات->level = level;
 }
 
 
 U_CAPI UPlugLevel U_EXPORT2
-uplug_getPlugLevel(UPlugData *data) {
-  return data->level;
+uplug_getPlugLevel(UPlug_معلومات *معلومات) {
+  أرجع معلومات->level;
 }
 
 
-U_CAPI void U_EXPORT2
-uplug_setPlugName(UPlugData *data, const char *name) {
-  uprv_strncpy(data->name, name, UPLUG_NAME_MAX);
+U_CAPI فراغ U_EXPORT2
+uplug_سيٽ_Plug_Name(UPlug_معلومات *معلومات, ثابت حرف *name) {
+  uprv_strncpy(معلومات->name, name, UPLUG_NAME_MAX);
 }
 
 
-U_CAPI const char* U_EXPORT2
-uplug_getPlugName(UPlugData* data U_LIFETIME_BOUND) {
-  return data->name;
+U_CAPI ثابت حرف* U_EXPORT2
+uplug_getPlugName(UPlug_معلومات* معلومات U_LIFETIME_BOUND) {
+  أرجع معلومات->name;
 }
 
 
-U_CAPI const char* U_EXPORT2
-uplug_getSymbolName(UPlugData* data U_LIFETIME_BOUND) {
-  return data->sym;
+U_CAPI ثابت حرف* U_EXPORT2
+uplug_get_نشان_Name(UPlug_معلومات* معلومات U_LIFETIME_BOUND) {
+  أرجع معلومات->sym;
 }
 
-U_CAPI const char* U_EXPORT2
-uplug_getLibraryName(UPlugData* data U_LIFETIME_BOUND, UErrorCode* status) {
-  if(data->libName[0]) {
-    return data->libName;
-  } else {
-#if U_ENABLE_DYLOAD
-    return uplug_findLibrary(data->lib, status);
-#else
-    return nullptr;
-#endif
+U_CAPI ثابت حرف* U_EXPORT2
+uplug_getLibraryName(UPlug_معلومات* معلومات U_LIFETIME_BOUND, UError_ڪوڊ* حالت) {
+  إذا(معلومات->libName[0]) {
+    أرجع معلومات->libName;
+  } وإلا {
+#إذا U_ENABLE_DYLOAD
+    أرجع uplug_ڳوليو_Library(معلومات->lib, حالت);
+#وإلا
+    أرجع خالي_اشارو;
+#جيڪڏهن_پورو
   }
 }
 
-U_CAPI void * U_EXPORT2
-uplug_getLibrary(UPlugData *data) {
-  return data->lib;
+U_CAPI فراغ * U_EXPORT2
+uplug_getLibrary(UPlug_معلومات *معلومات) {
+  أرجع معلومات->lib;
 }
 
-U_CAPI void * U_EXPORT2
-uplug_getContext(UPlugData *data) {
-  return data->context;
+U_CAPI فراغ * U_EXPORT2
+uplug_getContext(UPlug_معلومات *معلومات) {
+  أرجع معلومات->context;
 }
 
 
-U_CAPI void U_EXPORT2
-uplug_setContext(UPlugData *data, void *context) {
-  data->context = context;
+U_CAPI فراغ U_EXPORT2
+uplug_سيٽ_Context(UPlug_معلومات *معلومات, فراغ *context) {
+  معلومات->context = context;
 }
 
-U_CAPI const char* U_EXPORT2
-uplug_getConfiguration(UPlugData* data U_LIFETIME_BOUND) {
-  return data->config;
+U_CAPI ثابت حرف* U_EXPORT2
+uplug_getConfiguration(UPlug_معلومات* معلومات U_LIFETIME_BOUND) {
+  أرجع معلومات->config;
 }
 
-U_CAPI UPlugData* U_EXPORT2
-uplug_getPlugInternal(int32_t n) { 
-  if(n <0 || n >= pluginCount) {
-    return nullptr;
-  } else { 
-    return &(pluginList[n]);
+U_CAPI UPlug_معلومات* U_EXPORT2
+uplug_get_Plug_اندروني(int32_t n) { 
+  إذا(n <0 || n >= plugin_ڳڻپ) {
+    أرجع خالي_اشارو;
+  } وإلا { 
+    أرجع &(pluginList[n]);
   }
 }
 
 
-U_CAPI UErrorCode U_EXPORT2
-uplug_getPlugLoadStatus(UPlugData *plug) {
-  return plug->pluginStatus;
+U_CAPI UError_ڪوڊ U_EXPORT2
+uplug_get_Plug_ڀريو_حالت(UPlug_معلومات *plug) {
+  أرجع plug->plugin_حالت;
 }
 
 
@@ -528,226 +528,226 @@ uplug_getPlugLoadStatus(UPlugData *plug) {
 /**
  * Initialize a plugin from an entrypoint and library - but don't load it.
  */
-static UPlugData* uplug_initPlugFromEntrypointAndLibrary(UPlugEntrypoint *entrypoint, const char *config, void *lib, const char *sym,
-                                                         UErrorCode *status) {
-  UPlugData *plug = nullptr;
+ساكن UPlug_معلومات* uplug_initPlugFromEntrypointAndLibrary(UPlugEntrypoint *entrypoint, ثابت حرف *config, فراغ *lib, ثابت حرف *sym,
+                                                         UError_ڪوڊ *حالت) {
+  UPlug_معلومات *plug = خالي_اشارو;
 
-  plug = uplug_allocatePlug(entrypoint, config, lib, sym, status);
+  plug = uplug_allocatePlug(entrypoint, config, lib, sym, حالت);
 
-  if(U_SUCCESS(*status)) {
-    return plug;
-  } else {
-    uplug_deallocatePlug(plug, status);
-    return nullptr;
+  إذا(U_SUCCESS(*حالت)) {
+    أرجع plug;
+  } وإلا {
+    uplug_deallocatePlug(plug, حالت);
+    أرجع خالي_اشارو;
   }
 }
 
-U_CAPI UPlugData* U_EXPORT2
-uplug_loadPlugFromEntrypoint(UPlugEntrypoint *entrypoint, const char *config, UErrorCode *status) {
-  UPlugData* plug = uplug_initPlugFromEntrypointAndLibrary(entrypoint, config, nullptr, nullptr, status);
-  uplug_loadPlug(plug, status);
-  return plug;
+U_CAPI UPlug_معلومات* U_EXPORT2
+uplug_ڀريو_Plug_From_Entrypoint(UPlugEntrypoint *entrypoint, ثابت حرف *config, UError_ڪوڊ *حالت) {
+  UPlug_معلومات* plug = uplug_initPlugFromEntrypointAndLibrary(entrypoint, config, خالي_اشارو, خالي_اشارو, حالت);
+  uplug_ڀريو_Plug(plug, حالت);
+  أرجع plug;
 }
 
-#if U_ENABLE_DYLOAD
+#إذا U_ENABLE_DYLOAD
 
-static UPlugData* 
-uplug_initErrorPlug(const char *libName, const char *sym, const char *config, const char *nameOrError, UErrorCode loadStatus, UErrorCode *status)
+ساكن UPlug_معلومات* 
+uplug_initErrorPlug(ثابت حرف *libName, ثابت حرف *sym, ثابت حرف *config, ثابت حرف *nameOrError, UError_ڪوڊ ڀريو_حالت, UError_ڪوڊ *حالت)
 {
-  UPlugData *plug = uplug_allocateEmptyPlug(status);
-  if(U_FAILURE(*status)) return nullptr;
+  UPlug_معلومات *plug = uplug_allocate_خالي_جايون_Plug(حالت);
+  إذا(U_FAILURE(*حالت)) أرجع خالي_اشارو;
 
-  plug->pluginStatus = loadStatus;
-  plug->awaitingLoad = false; /* Won't load. */
-  plug->dontUnload = true; /* cannot unload. */
+  plug->plugin_حالت = ڀريو_حالت;
+  plug->awaiting_ڀريو = خطأ; /* Won't load. */
+  plug->dontUnload = سچ; /* cannot unload. */
 
-  if(sym!=nullptr) {
+  إذا(sym!=خالي_اشارو) {
     uprv_strncpy(plug->sym, sym, UPLUG_NAME_MAX);
   }
 
-  if(libName!=nullptr) {
+  إذا(libName!=خالي_اشارو) {
     uprv_strncpy(plug->libName, libName, UPLUG_NAME_MAX);
   }
 
-  if(nameOrError!=nullptr) {
+  إذا(nameOrError!=خالي_اشارو) {
     uprv_strncpy(plug->name, nameOrError, UPLUG_NAME_MAX);
   }
 
-  if(config!=nullptr) {
+  إذا(config!=خالي_اشارو) {
     uprv_strncpy(plug->config, config, UPLUG_NAME_MAX);
   }
 
-  return plug;
+  أرجع plug;
 }
 
 /**
  * Fetch a plugin from DLL, and then initialize it from a library- but don't load it.
  */
-static UPlugData* 
-uplug_initPlugFromLibrary(const char *libName, const char *sym, const char *config, UErrorCode *status) {
-  void *lib = nullptr;
-  UPlugData *plug = nullptr;
-  if(U_FAILURE(*status)) { return nullptr; }
-  lib = uplug_openLibrary(libName, status);
-  if(lib!=nullptr && U_SUCCESS(*status)) {
-    UPlugEntrypoint *entrypoint = nullptr;
-    entrypoint = (UPlugEntrypoint*)uprv_dlsym_func(lib, sym, status);
+ساكن UPlug_معلومات* 
+uplug_initPlugFromLibrary(ثابت حرف *libName, ثابت حرف *sym, ثابت حرف *config, UError_ڪوڊ *حالت) {
+  فراغ *lib = خالي_اشارو;
+  UPlug_معلومات *plug = خالي_اشارو;
+  إذا(U_FAILURE(*حالت)) { أرجع خالي_اشارو; }
+  lib = uplug_openLibrary(libName, حالت);
+  إذا(lib!=خالي_اشارو && U_SUCCESS(*حالت)) {
+    UPlugEntrypoint *entrypoint = خالي_اشارو;
+    entrypoint = (UPlugEntrypoint*)uprv_dlsym_func(lib, sym, حالت);
 
-    if(entrypoint!=nullptr&&U_SUCCESS(*status)) {
-      plug = uplug_initPlugFromEntrypointAndLibrary(entrypoint, config, lib, sym, status);
-      if(plug!=nullptr&&U_SUCCESS(*status)) {
+    إذا(entrypoint!=خالي_اشارو&&U_SUCCESS(*حالت)) {
+      plug = uplug_initPlugFromEntrypointAndLibrary(entrypoint, config, lib, sym, حالت);
+      إذا(plug!=خالي_اشارو&&U_SUCCESS(*حالت)) {
         plug->lib = lib; /* plug takes ownership of library */
-        lib = nullptr; /* library is now owned by plugin. */
+        lib = خالي_اشارو; /* library is now owned by plugin. */
       }
-    } else {
-      UErrorCode subStatus = U_ZERO_ERROR;
-      plug = uplug_initErrorPlug(libName,sym,config,"ERROR: Could not load entrypoint",(lib==nullptr)?U_MISSING_RESOURCE_ERROR:*status,&subStatus);
+    } وإلا {
+      UError_ڪوڊ sub_حالت = U_ZERO_ERROR;
+      plug = uplug_initErrorPlug(libName,sym,config,"ERROR: Could not load entrypoint",(lib==خالي_اشارو)?U_MISSING_RESOURCE_ERROR:*حالت,&sub_حالت);
     }
-    if(lib!=nullptr) { /* still need to close the lib */
-      UErrorCode subStatus = U_ZERO_ERROR;
-      uplug_closeLibrary(lib, &subStatus); /* don't care here */
+    إذا(lib!=خالي_اشارو) { /* still need to close the lib */
+      UError_ڪوڊ sub_حالت = U_ZERO_ERROR;
+      uplug_closeLibrary(lib, &sub_حالت); /* don't care here */
     }
-  } else {
-    UErrorCode subStatus = U_ZERO_ERROR;
-    plug = uplug_initErrorPlug(libName,sym,config,"ERROR: could not load library",(lib==nullptr)?U_MISSING_RESOURCE_ERROR:*status,&subStatus);
+  } وإلا {
+    UError_ڪوڊ sub_حالت = U_ZERO_ERROR;
+    plug = uplug_initErrorPlug(libName,sym,config,"ERROR: could not load library",(lib==خالي_اشارو)?U_MISSING_RESOURCE_ERROR:*حالت,&sub_حالت);
   }
-  return plug;
+  أرجع plug;
 }
 
-U_CAPI UPlugData* U_EXPORT2
-uplug_loadPlugFromLibrary(const char *libName, const char *sym, const char *config, UErrorCode *status) { 
-  UPlugData *plug = nullptr;
-  if(U_FAILURE(*status)) { return nullptr; }
-  plug = uplug_initPlugFromLibrary(libName, sym, config, status);
-  uplug_loadPlug(plug, status);
+U_CAPI UPlug_معلومات* U_EXPORT2
+uplug_ڀريو_Plug_From_Library(ثابت حرف *libName, ثابت حرف *sym, ثابت حرف *config, UError_ڪوڊ *حالت) { 
+  UPlug_معلومات *plug = خالي_اشارو;
+  إذا(U_FAILURE(*حالت)) { أرجع خالي_اشارو; }
+  plug = uplug_initPlugFromLibrary(libName, sym, config, حالت);
+  uplug_ڀريو_Plug(plug, حالت);
 
-  return plug;
+  أرجع plug;
 }
 
-#endif
+#جيڪڏهن_پورو
 
-static UPlugLevel gCurrentLevel = UPLUG_LEVEL_LOW;
+ساكن UPlugLevel gCurrentLevel = UPLUG_LEVEL_هيٺيون;
 
 U_CAPI UPlugLevel U_EXPORT2 uplug_getCurrentLevel() {
-  return gCurrentLevel;
+  أرجع gCurrentLevel;
 }
 
-static UBool U_CALLCONV uplug_cleanup()
+ساكن UBool U_CALLCONV uplug_cleanup()
 {
   int32_t i;
     
-  UPlugData *pluginToRemove;
+  UPlug_معلومات *plugin_منزل_Remove;
   /* cleanup plugs */
-  for(i=0;i<pluginCount;i++) {
-    UErrorCode subStatus = U_ZERO_ERROR;
-    pluginToRemove = &pluginList[i];
+  لكل(i=0;i<plugin_ڳڻپ;i++) {
+    UError_ڪوڊ sub_حالت = U_ZERO_ERROR;
+    plugin_منزل_Remove = &pluginList[i];
     /* unload and deallocate */
-    uplug_doUnloadPlug(pluginToRemove, &subStatus);
+    uplug_doUnloadPlug(plugin_منزل_Remove, &sub_حالت);
   }
   /* close other held libs? */
-  gCurrentLevel = UPLUG_LEVEL_LOW;
-  return true;
+  gCurrentLevel = UPLUG_LEVEL_هيٺيون;
+  أرجع سچ;
 }
 
-#if U_ENABLE_DYLOAD
+#إذا U_ENABLE_DYLOAD
 
-static void uplug_loadWaitingPlugs(UErrorCode *status) {
+ساكن فراغ uplug_ڀريو_انتظار_Plugs(UError_ڪوڊ *حالت) {
   int32_t i;
   UPlugLevel currentLevel = uplug_getCurrentLevel();
     
-  if(U_FAILURE(*status)) {
-    return;
+  إذا(U_FAILURE(*حالت)) {
+    أرجع;
   }
-#if UPLUG_TRACE
+#إذا UPLUG_TRACE
   DBG((stderr,  "uplug_loadWaitingPlugs() Level: %d\n", currentLevel));
-#endif
+#جيڪڏهن_پورو
   /* pass #1: low level plugs */
-  for(i=0;i<pluginCount;i++) {
-    UErrorCode subStatus = U_ZERO_ERROR;
-    UPlugData *pluginToLoad = &pluginList[i];
-    if(pluginToLoad->awaitingLoad) {
-      if(pluginToLoad->level == UPLUG_LEVEL_LOW) {
-        if(currentLevel > UPLUG_LEVEL_LOW) {
-          pluginToLoad->pluginStatus = U_PLUGIN_TOO_HIGH;
-        } else {
+  لكل(i=0;i<plugin_ڳڻپ;i++) {
+    UError_ڪوڊ sub_حالت = U_ZERO_ERROR;
+    UPlug_معلومات *plugin_منزل_ڀريو = &pluginList[i];
+    إذا(plugin_منزل_ڀريو->awaiting_ڀريو) {
+      إذا(plugin_منزل_ڀريو->level == UPLUG_LEVEL_هيٺيون) {
+        إذا(currentLevel > UPLUG_LEVEL_هيٺيون) {
+          plugin_منزل_ڀريو->plugin_حالت = U_PLUGIN_TOO_مٿاهون;
+        } وإلا {
           UPlugLevel newLevel;
-          uplug_loadPlug(pluginToLoad, &subStatus);
+          uplug_ڀريو_Plug(plugin_منزل_ڀريو, &sub_حالت);
           newLevel = uplug_getCurrentLevel();
-          if(newLevel > currentLevel) {
-            pluginToLoad->pluginStatus = U_PLUGIN_CHANGED_LEVEL_WARNING;
+          إذا(newLevel > currentLevel) {
+            plugin_منزل_ڀريو->plugin_حالت = U_PLUGIN_بدليو_LEVEL_WARNING;
             currentLevel = newLevel;
           }
         }
-        pluginToLoad->awaitingLoad = false;
+        plugin_منزل_ڀريو->awaiting_ڀريو = خطأ;
       } 
     }
   }    
-  for(i=0;i<pluginCount;i++) {
-    UErrorCode subStatus = U_ZERO_ERROR;
-    UPlugData *pluginToLoad = &pluginList[i];
+  لكل(i=0;i<plugin_ڳڻپ;i++) {
+    UError_ڪوڊ sub_حالت = U_ZERO_ERROR;
+    UPlug_معلومات *plugin_منزل_ڀريو = &pluginList[i];
         
-    if(pluginToLoad->awaitingLoad) {
-      if(pluginToLoad->level == UPLUG_LEVEL_INVALID) { 
-        pluginToLoad->pluginStatus = U_PLUGIN_DIDNT_SET_LEVEL;
-      } else if(pluginToLoad->level == UPLUG_LEVEL_UNKNOWN) {
-        pluginToLoad->pluginStatus = U_INTERNAL_PROGRAM_ERROR;
-      } else {
-        uplug_loadPlug(pluginToLoad, &subStatus);
+    إذا(plugin_منزل_ڀريو->awaiting_ڀريو) {
+      إذا(plugin_منزل_ڀريو->level == UPLUG_LEVEL_INVALID) { 
+        plugin_منزل_ڀريو->plugin_حالت = U_PLUGIN_DIDNT_سيٽ_LEVEL;
+      } وإلا إذا(plugin_منزل_ڀريو->level == UPLUG_LEVEL_UNKNOWN) {
+        plugin_منزل_ڀريو->plugin_حالت = U_اندروني_پروگرام_ERROR;
+      } وإلا {
+        uplug_ڀريو_Plug(plugin_منزل_ڀريو, &sub_حالت);
       }
-      pluginToLoad->awaitingLoad = false;
+      plugin_منزل_ڀريو->awaiting_ڀريو = خطأ;
     }
   }
     
-#if UPLUG_TRACE
+#إذا UPLUG_TRACE
   DBG((stderr,  " Done Loading Plugs. Level: %d\n", (int32_t)uplug_getCurrentLevel()));
-#endif
+#جيڪڏهن_پورو
 }
 
 /* Name of the plugin config file */
-static char plugin_file[2048] = "";
-#endif
+ساكن حرف plugin_file[2048] = "";
+#جيڪڏهن_پورو
 
-U_CAPI const char* U_EXPORT2
+U_CAPI ثابت حرف* U_EXPORT2
 uplug_getPluginFile() {
-#if U_ENABLE_DYLOAD && !UCONFIG_NO_FILE_IO
-  return plugin_file;
-#else
-  return nullptr;
-#endif
+#إذا U_ENABLE_DYLOAD && !UCONFIG_NO_FILE_IO
+  أرجع plugin_file;
+#وإلا
+  أرجع خالي_اشارو;
+#جيڪڏهن_پورو
 }
 
 
 //  uplug_init()  is called first thing from u_init().
 
-U_CAPI void U_EXPORT2
-uplug_init(UErrorCode *status) {
-#if !U_ENABLE_DYLOAD
-  (void)status; /* unused */
-#elif !UCONFIG_NO_FILE_IO
+U_CAPI فراغ U_EXPORT2
+uplug_init(UError_ڪوڊ *حالت) {
+#إذا !U_ENABLE_DYLOAD
+  (فراغ)حالت; /*اڻ_استعمال_ٿيل*/
+#وإلاإذا !UCONFIG_NO_FILE_IO
   CharString plugin_dir;
-  const char *env = getenv("ICU_PLUGINS");
+  ثابت حرف *env = getenv("ICU_PLUGINS");
 
-  if(U_FAILURE(*status)) return;
-  if(env != nullptr) {
-    plugin_dir.append(env, -1, *status);
+  إذا(U_FAILURE(*حالت)) أرجع;
+  إذا(env != خالي_اشارو) {
+    plugin_dir.append(env, -1, *حالت);
   }
-  if(U_FAILURE(*status)) return;
+  إذا(U_FAILURE(*حالت)) أرجع;
 
-#if defined(DEFAULT_ICU_PLUGINS) 
-  if(plugin_dir.isEmpty()) {
-    plugin_dir.append(DEFAULT_ICU_PLUGINS, -1, *status);
+#إذا defined(DEFAULT_ICU_PLUGINS) 
+  إذا(plugin_dir.is_خالي_جايون()) {
+    plugin_dir.append(DEFAULT_ICU_PLUGINS, -1, *حالت);
   }
-#endif
+#جيڪڏهن_پورو
 
-#if UPLUG_TRACE
-  DBG((stderr, "ICU_PLUGINS=%s\n", plugin_dir.data()));
-#endif
+#إذا UPLUG_TRACE
+  DBG((stderr, "ICU_PLUGINS=%s\n", plugin_dir.معلومات()));
+#جيڪڏهن_پورو
 
-  if(!plugin_dir.isEmpty()) {
+  إذا(!plugin_dir.is_خالي_جايون()) {
     FILE *f;
         
     CharString pluginFile;
-#ifdef ICU_PLUGINS_DD
+#جيڪڏهن_وصف_ٿيل ICU_PLUGINS_DD
 /* There are potentially a lot of ways to implement a plugin directory on OS390/zOS  */
 /* Keeping in mind that unauthorized file access is logged, monitored, and enforced  */
 /* I've chosen to open a DDNAME if BATCH and leave it alone for (presumably) UNIX    */
@@ -755,130 +755,130 @@ uplug_init(UErrorCode *status) {
 /* SYS1.PARMLIB or setting an environment variable "ICU_PLUGIN_PATH" (?).  The       */
 /* DDNAME can be connected to a file in the HFS if need be.                          */
 
-    pluginFile.append("//DD:ICUPLUG", -1, *status);        /* JAM 20 Oct 2011 */
-#else
-    pluginFile.append(plugin_dir, *status);
-    pluginFile.append(U_FILE_SEP_STRING, -1, *status);
-    pluginFile.append("icuplugins", -1, *status);
-    pluginFile.append(U_ICU_VERSION_SHORT, -1, *status);
-    pluginFile.append(".txt", -1, *status);
-#endif
+    pluginFile.append("//DD:ICUPLUG", -1, *حالت);        /* JAM 20 Oct 2011 */
+#وإلا
+    pluginFile.append(plugin_dir, *حالت);
+    pluginFile.append(U_FILE_SEP_STRING, -1, *حالت);
+    pluginFile.append("icuplugins", -1, *حالت);
+    pluginFile.append(U_ICU_نسخو_SHORT, -1, *حالت);
+    pluginFile.append(".txt", -1, *حالت);
+#جيڪڏهن_پورو
 
-#if UPLUG_TRACE
-    DBG((stderr, "status=%s\n", u_errorName(*status)));
-#endif
+#إذا UPLUG_TRACE
+    DBG((stderr, "status=%s\n", u_errorName(*حالت)));
+#جيڪڏهن_پورو
 
-    if(U_FAILURE(*status)) {
-      return;
+    إذا(U_FAILURE(*حالت)) {
+      أرجع;
     }
-    if((size_t)pluginFile.length() > (sizeof(plugin_file)-1)) {
-      *status = U_BUFFER_OVERFLOW_ERROR;
-#if UPLUG_TRACE
-      DBG((stderr, "status=%s\n", u_errorName(*status)));
-#endif
-      return;
+    إذا((size_t)pluginFile.length() > (حجم(plugin_file)-1)) {
+      *حالت = U_بفر_حد_کان_مٿي_ERROR;
+#إذا UPLUG_TRACE
+      DBG((stderr, "status=%s\n", u_errorName(*حالت)));
+#جيڪڏهن_پورو
+      أرجع;
     }
     
     /* plugin_file is not used for processing - it is only used 
        so that uplug_getPluginFile() works (i.e. icuinfo)
     */
-    pluginFile.extract(plugin_file, sizeof(plugin_file), *status);
+    pluginFile.extract(plugin_file, حجم(plugin_file), *حالت);
 
-#if UPLUG_TRACE
-    DBG((stderr, "pluginfile= %s len %d/%d\n", plugin_file, (int)strlen(plugin_file), (int)sizeof(plugin_file)));
-#endif
+#إذا UPLUG_TRACE
+    DBG((stderr, "pluginfile= %s len %d/%d\n", plugin_file, (صحيح)لڙي_ڊيگهه(plugin_file), (صحيح)حجم(plugin_file)));
+#جيڪڏهن_پورو
         
-#ifdef __MVS__
-    if (iscics()) /* 12 Nov 2011 JAM */
+#جيڪڏهن_وصف_ٿيل __MVS__
+    إذا (iscics()) /* 12 Nov 2011 JAM */
     {
-        f = nullptr;
+        f = خالي_اشارو;
     }
-    else
-#endif
+    وإلا
+#جيڪڏهن_پورو
     {
-        f = fopen(pluginFile.data(), "r");
+        f = fopen(pluginFile.معلومات(), "r");
     }
 
-    if(f != nullptr) {
-      char linebuf[1024];
-      char *p, *libName=nullptr, *symName=nullptr, *config=nullptr;
-      int32_t line = 0;
+    إذا(f != خالي_اشارو) {
+      حرف linebuf[1024];
+      حرف *p, *libName=خالي_اشارو, *symName=خالي_اشارو, *config=خالي_اشارو;
+      int32_t سٽ = 0;
             
             
-      while(fgets(linebuf,1023,f)) {
-        line++;
+      طالما(fgets(linebuf,1023,f)) {
+        سٽ++;
 
-        if(!*linebuf || *linebuf=='#') {
-          continue;
-        } else {
+        إذا(!*linebuf || *linebuf=='#') {
+          استمر;
+        } وإلا {
           p = linebuf;
-          while(*p&&isspace((int)*p))
+          طالما(*p&&خال_آهي((صحيح)*p))
             p++;
-          if(!*p || *p=='#') continue;
+          إذا(!*p || *p=='#') استمر;
           libName = p;
-          while(*p&&!isspace((int)*p)) {
+          طالما(*p&&!خال_آهي((صحيح)*p)) {
             p++;
           }
-          if(!*p || *p=='#') continue; /* no tab after libname */
+          إذا(!*p || *p=='#') استمر; /* no tab after libname */
           *p=0; /* end of libname */
           p++;
-          while(*p&&isspace((int)*p)) {
+          طالما(*p&&خال_آهي((صحيح)*p)) {
             p++;
           }
-          if(!*p||*p=='#') continue; /* no symname after libname +tab */
+          إذا(!*p||*p=='#') استمر; /* no symname after libname +tab */
           symName = p;
-          while(*p&&!isspace((int)*p)) {
+          طالما(*p&&!خال_آهي((صحيح)*p)) {
             p++;
           }
                     
-          if(*p) { /* has config */
+          إذا(*p) { /* has config */
             *p=0;
             ++p;
-            while(*p&&isspace((int)*p)) {
+            طالما(*p&&خال_آهي((صحيح)*p)) {
               p++;
             }
-            if(*p) {
+            إذا(*p) {
               config = p;
             }
           }
                     
           /* chop whitespace at the end of the config */
-          if(config!=nullptr&&*config!=0) {
-            p = config+strlen(config);
-            while(p>config&&isspace((int)*(--p))) {
+          إذا(config!=خالي_اشارو&&*config!=0) {
+            p = config+لڙي_ڊيگهه(config);
+            طالما(p>config&&خال_آهي((صحيح)*(--p))) {
               *p=0;
             }
           }
                 
           /* OK, we're good. */
           { 
-            UErrorCode subStatus = U_ZERO_ERROR;
-            UPlugData *plug = uplug_initPlugFromLibrary(libName, symName, config, &subStatus);
-            if(U_FAILURE(subStatus) && U_SUCCESS(*status)) {
-              *status = subStatus;
+            UError_ڪوڊ sub_حالت = U_ZERO_ERROR;
+            UPlug_معلومات *plug = uplug_initPlugFromLibrary(libName, symName, config, &sub_حالت);
+            إذا(U_FAILURE(sub_حالت) && U_SUCCESS(*حالت)) {
+              *حالت = sub_حالت;
             }
-#if UPLUG_TRACE
+#إذا UPLUG_TRACE
             DBG((stderr, "PLUGIN libName=[%s], sym=[%s], config=[%s]\n", libName, symName, config));
-            DBG((stderr, " -> %p, %s\n", (void*)plug, u_errorName(subStatus)));
-#else
-            (void)plug; /* unused */
-#endif
+            DBG((stderr, " -> %p, %s\n", (فراغ*)plug, u_errorName(sub_حالت)));
+#وإلا
+            (فراغ)plug; /*اڻ_استعمال_ٿيل*/
+#جيڪڏهن_پورو
           }
         }
       }
       fclose(f);
-    } else {
-#if UPLUG_TRACE
+    } وإلا {
+#إذا UPLUG_TRACE
       DBG((stderr, "Can't open plugin file %s\n", plugin_file));
-#endif
+#جيڪڏهن_پورو
     }
   }
-  uplug_loadWaitingPlugs(status);
-#endif /* U_ENABLE_DYLOAD */
-  gCurrentLevel = UPLUG_LEVEL_HIGH;
-  ucln_registerCleanup(UCLN_UPLUG, uplug_cleanup);
+  uplug_ڀريو_انتظار_Plugs(حالت);
+#جيڪڏهن_پورو /* U_ENABLE_DYLOAD */
+  gCurrentLevel = UPLUG_LEVEL_مٿاهون;
+  ucln_رجسٽر_Cleanup(UCLN_UPLUG, uplug_cleanup);
 }
 
-#endif
+#جيڪڏهن_پورو
 
 

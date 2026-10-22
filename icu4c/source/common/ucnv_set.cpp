@@ -20,51 +20,51 @@
 *   implementation functions on the USet implementation.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
-#include "unicode/ucnv.h"
-#include "ucnv_bld.h"
-#include "uset_imp.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uset.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "ucnv_bld.h"
+#ضمن "uset_imp.h"
 
-#if !UCONFIG_NO_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION
 
-U_CAPI void U_EXPORT2
-ucnv_getUnicodeSet(const UConverter *cnv,
-                   USet *setFillIn,
-                   UConverterUnicodeSet whichSet,
-                   UErrorCode *pErrorCode) {
+U_CAPI فراغ U_EXPORT2
+ucnv_get_Unicode_سيٽ(ثابت UConverter *cnv,
+                   USet *سيٽ_Fill_اندريون,
+                   UConverter_Unicode_سيٽ which_سيٽ,
+                   UError_ڪوڊ *p_Error_ڪوڊ) {
     /* argument checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    إذا(p_Error_ڪوڊ==خالي_اشارو || U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع;
     }
-    if(cnv==nullptr || setFillIn==nullptr || whichSet<UCNV_ROUNDTRIP_SET || UCNV_SET_COUNT<=whichSet) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    إذا(cnv==خالي_اشارو || سيٽ_Fill_اندريون==خالي_اشارو || which_سيٽ<UCNV_ROUNDTRIP_سيٽ || UCNV_سيٽ_ڳڻپ<=which_سيٽ) {
+        *p_Error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+        أرجع;
     }
 
     /* does this converter support this function? */
-    if(cnv->sharedData->impl->getUnicodeSet==nullptr) {
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return;
+    إذا(cnv->shared_معلومات->impl->get_Unicode_سيٽ==خالي_اشارو) {
+        *p_Error_ڪوڊ=U_UNSUPPORTED_ERROR;
+        أرجع;
     }
 
     {
         USetAdder sa={
-            nullptr,
-            uset_add,
-            uset_addRange,
-            uset_addString,
+            خالي_اشارو,
+            uset_جوڙيو,
+            uset_جوڙيو_Range,
+            uset_جوڙيو_String,
             uset_remove,
             uset_removeRange
         };
-        sa.set=setFillIn;
+        sa.سيٽ=سيٽ_Fill_اندريون;
 
         /* empty the set */
-        uset_clear(setFillIn);
+        uset_clear(سيٽ_Fill_اندريون);
 
         /* call the converter to add the code points it supports */
-        cnv->sharedData->impl->getUnicodeSet(cnv, &sa, whichSet, pErrorCode);
+        cnv->shared_معلومات->impl->get_Unicode_سيٽ(cnv, &sa, which_سيٽ, p_Error_ڪوڊ);
     }
 }
 
-#endif
+#جيڪڏهن_پورو

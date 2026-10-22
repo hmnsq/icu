@@ -14,62 +14,62 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/appendable.h"
-#include "unicode/utf16.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/appendable.h"
+#ضمن "unicode/utf16.h"
 
 U_NAMESPACE_BEGIN
 
 Appendable::~Appendable() {}
 
 UBool
-Appendable::appendCodePoint(UChar32 c) {
-    if(c<=0xffff) {
-        return appendCodeUnit(static_cast<char16_t>(c));
-    } else {
-        return appendCodeUnit(U16_LEAD(c)) && appendCodeUnit(U16_TRAIL(c));
+Appendable::append_ڪوڊ_نقطو(UChar32 c) {
+    إذا(c<=0xffff) {
+        أرجع append_ڪوڊ_Unit(static_cast<char16_t>(c));
+    } وإلا {
+        أرجع append_ڪوڊ_Unit(U16_LEAD(c)) && append_ڪوڊ_Unit(U16_TRAIL(c));
     }
 }
 
 UBool
-Appendable::appendString(const char16_t *s, int32_t length) {
-    if(length<0) {
+Appendable::appendString(ثابت char16_t *s, int32_t length) {
+    إذا(length<0) {
         char16_t c;
-        while((c=*s++)!=0) {
-            if(!appendCodeUnit(c)) {
-                return false;
+        طالما((c=*s++)!=0) {
+            إذا(!append_ڪوڊ_Unit(c)) {
+                أرجع خطأ;
             }
         }
-    } else if(length>0) {
-        const char16_t *limit=s+length;
-        do {
-            if(!appendCodeUnit(*s++)) {
-                return false;
+    } وإلا إذا(length>0) {
+        ثابت char16_t *حد_بندي=s+length;
+        افعل {
+            إذا(!append_ڪوڊ_Unit(*s++)) {
+                أرجع خطأ;
             }
-        } while(s<limit);
+        } طالما(s<حد_بندي);
     }
-    return true;
+    أرجع سچ;
 }
 
 UBool
-Appendable::reserveAppendCapacity(int32_t /*appendCapacity*/) {
-    return true;
+Appendable::reserve_Append_صلاحيت(int32_t /*appendCapacity*/) {
+    أرجع سچ;
 }
 
 char16_t*
-Appendable::getAppendBuffer(int32_t minCapacity,
+Appendable::get_Append_بفر(int32_t min_صلاحيت,
                             int32_t /*desiredCapacityHint*/,
                             char16_t* scratch U_LIFETIME_BOUND,
-                            int32_t scratchCapacity,
-                            int32_t* resultCapacity) U_LIFETIME_BOUND {
-    if(minCapacity<1 || scratchCapacity<minCapacity) {
-        *resultCapacity=0;
-        return nullptr;
+                            int32_t scratch_صلاحيت,
+                            int32_t* نتيجو_صلاحيت) U_LIFETIME_BOUND {
+    إذا(min_صلاحيت<1 || scratch_صلاحيت<min_صلاحيت) {
+        *نتيجو_صلاحيت=0;
+        أرجع خالي_اشارو;
     }
-    *resultCapacity=scratchCapacity;
-    return scratch;
+    *نتيجو_صلاحيت=scratch_صلاحيت;
+    أرجع scratch;
 }
 
 // UnicodeStringAppendable is implemented in unistr.cpp.
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي

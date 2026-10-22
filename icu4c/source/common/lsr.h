@@ -4,82 +4,82 @@
 // lsr.h
 // created: 2019may08 Markus W. Scherer
 
-#ifndef __LSR_H__
-#define __LSR_H__
+#جيڪڏهن_وصف_نه_ٿيل __LSR_H__
+#وصف_ڪريو __LSR_H__
 
-#include "unicode/stringpiece.h"
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "cstring.h"
+#ضمن "unicode/stringpiece.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uobject.h"
+#ضمن "cstring.h"
 
 U_NAMESPACE_BEGIN
 
-struct LSR final : public UMemory {
-    static constexpr int32_t REGION_INDEX_LIMIT = 1001 + 26 * 26;
+بنية LSR final : عام UMemory {
+    ساكن constexpr int32_t REGION_اشاريو_حد_بندي = 1001 + 26 * 26;
 
-    static constexpr int32_t EXPLICIT_LSR = 7;
-    static constexpr int32_t EXPLICIT_LANGUAGE = 4;
-    static constexpr int32_t EXPLICIT_SCRIPT = 2;
-    static constexpr int32_t EXPLICIT_REGION = 1;
-    static constexpr int32_t IMPLICIT_LSR = 0;
-    static constexpr int32_t DONT_CARE_FLAGS = 0;
+    ساكن constexpr int32_t EXPLICIT_LSR = 7;
+    ساكن constexpr int32_t EXPLICIT_LANGUAGE = 4;
+    ساكن constexpr int32_t EXPLICIT_SCRIPT = 2;
+    ساكن constexpr int32_t EXPLICIT_REGION = 1;
+    ساكن constexpr int32_t IMPLICIT_LSR = 0;
+    ساكن constexpr int32_t DONT_CARE_FLAGS = 0;
 
-    const char *language;
-    const char *script;
-    const char *region;
-    char *owned = nullptr;
+    ثابت حرف *language;
+    ثابت حرف *script;
+    ثابت حرف *region;
+    حرف *owned = nullptr;
     /** Index for region, 0 if ill-formed. @see indexForRegion */
-    int32_t regionIndex = 0;
+    int32_t region_اشاريو = 0;
     int32_t flags = 0;
     /** Only set for LSRs that will be used in a hash table. */
-    int32_t hashCode = 0;
+    int32_t hash_ڪوڊ = 0;
 
     LSR() : language("und"), script(""), region("") {}
 
     /** Constructor which aliases all subtag pointers. */
-    LSR(const char *lang, const char *scr, const char *r, int32_t f) :
+    LSR(ثابت حرف *lang, ثابت حرف *scr, ثابت حرف *r, int32_t f) :
             language(lang),  script(scr), region(r),
-            regionIndex(indexForRegion(region)), flags(f) {}
+            region_اشاريو(اشاريو_For_Region(region)), flags(f) {}
     /**
      * Constructor which prepends the prefix to the language and script,
      * copies those into owned memory, and aliases the region.
      */
-    LSR(char prefix, const char *lang, const char *scr, const char *r, int32_t f,
-        UErrorCode &errorCode);
+    LSR(حرف اڳياڙي, ثابت حرف *lang, ثابت حرف *scr, ثابت حرف *r, int32_t f,
+        UError_ڪوڊ &error_ڪوڊ);
     LSR(StringPiece lang, StringPiece scr, StringPiece r, int32_t f,
-        UErrorCode &errorCode);
+        UError_ڪوڊ &error_ڪوڊ);
     LSR(LSR &&other) noexcept;
-    LSR(const LSR &other) = delete;
-    inline ~LSR() {
+    LSR(ثابت LSR &other) = delete;
+    مضمن ~LSR() {
         // Pure inline code for almost all instances.
-        if (owned != nullptr) {
+        إذا (owned != nullptr) {
             deleteOwned();
         }
     }
 
-    LSR &operator=(LSR &&other) noexcept;
-    LSR &operator=(const LSR &other) = delete;
+    LSR &عامل=(LSR &&other) noexcept;
+    LSR &عامل=(ثابت LSR &other) = delete;
 
     /**
      * Returns a positive index (>0) for a well-formed region code.
      * Do not rely on a particular region->index mapping; it may change.
      * Returns 0 for ill-formed strings.
      */
-    static int32_t indexForRegion(const char *region);
+    ساكن int32_t اشاريو_For_Region(ثابت حرف *region);
 
-    UBool isEquivalentTo(const LSR &other) const;
-    bool operator==(const LSR &other) const;
+    UBool is_Equivalent_منزل(ثابت LSR &other) ثابت;
+    bool عامل==(ثابت LSR &other) ثابت;
 
-    inline bool operator!=(const LSR &other) const {
-        return !operator==(other);
+    مضمن bool عامل!=(ثابت LSR &other) ثابت {
+        أرجع !عامل==(other);
     }
 
-    LSR &setHashCode();
+    LSR &سيٽ_Hash_ڪوڊ();
 
-private:
-    void deleteOwned();
+خاص:
+    فراغ deleteOwned();
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
-#endif  // __LSR_H__
+#جيڪڏهن_پورو  // __LSR_H__

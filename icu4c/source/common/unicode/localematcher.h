@@ -4,18 +4,18 @@
 // localematcher.h
 // created: 2019may08 Markus W. Scherer
 
-#ifndef __LOCALEMATCHER_H__
-#define __LOCALEMATCHER_H__
+#جيڪڏهن_وصف_نه_ٿيل __LOCALEMATCHER_H__
+#وصف_ڪريو __LOCALEMATCHER_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#include <optional>
+#ضمن <optional>
 
-#include "unicode/locid.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
+#ضمن "unicode/locid.h"
+#ضمن "unicode/stringpiece.h"
+#ضمن "unicode/uobject.h"
 
 /**
  * \file
@@ -28,7 +28,7 @@
  * @see LocaleMatcher::Builder#setFavorSubtag(ULocMatchFavorSubtag)
  * @stable ICU 65
  */
-enum ULocMatchFavorSubtag {
+تعداد ULoc_ميلاپ_Favor_Subtag {
     /**
      * Language differences are most important, then script differences, then region differences.
      * (This is the default behavior.)
@@ -43,9 +43,9 @@ enum ULocMatchFavorSubtag {
      */
     ULOCMATCH_FAVOR_SCRIPT
 };
-#ifndef U_IN_DOXYGEN
-typedef enum ULocMatchFavorSubtag ULocMatchFavorSubtag;
-#endif
+#جيڪڏهن_وصف_نه_ٿيل U_اندريون_DOXYGEN
+تعريفنوع تعداد ULoc_ميلاپ_Favor_Subtag ULoc_ميلاپ_Favor_Subtag;
+#جيڪڏهن_پورو
 
 /**
  * Builder option for whether all desired locales are treated equally or
@@ -54,7 +54,7 @@ typedef enum ULocMatchFavorSubtag ULocMatchFavorSubtag;
  * @see LocaleMatcher::Builder#setDemotionPerDesiredLocale(ULocMatchDemotion)
  * @stable ICU 65
  */
-enum ULocMatchDemotion {
+تعداد ULoc_ميلاپ_Demotion {
     /**
      * All desired locales are treated equally.
      *
@@ -89,9 +89,9 @@ enum ULocMatchDemotion {
      */
     ULOCMATCH_DEMOTION_REGION
 };
-#ifndef U_IN_DOXYGEN
-typedef enum ULocMatchDemotion ULocMatchDemotion;
-#endif
+#جيڪڏهن_وصف_نه_ٿيل U_اندريون_DOXYGEN
+تعريفنوع تعداد ULoc_ميلاپ_Demotion ULoc_ميلاپ_Demotion;
+#جيڪڏهن_پورو
 
 /**
  * Builder option for whether to include or ignore one-way (fallback) match data.
@@ -110,7 +110,7 @@ typedef enum ULocMatchDemotion ULocMatchDemotion;
  * @see LocaleMatcher::Builder#setDirection(ULocMatchDirection)
  * @stable ICU 67
  */
-enum ULocMatchDirection {
+تعداد ULoc_ميلاپ_Direction {
     /**
      * Locale matching includes one-way matches such as Breton→French. (default)
      *
@@ -125,18 +125,18 @@ enum ULocMatchDirection {
      */
     ULOCMATCH_DIRECTION_ONLY_TWO_WAY
 };
-#ifndef U_IN_DOXYGEN
-typedef enum ULocMatchDirection ULocMatchDirection;
-#endif
+#جيڪڏهن_وصف_نه_ٿيل U_اندريون_DOXYGEN
+تعريفنوع تعداد ULoc_ميلاپ_Direction ULoc_ميلاپ_Direction;
+#جيڪڏهن_پورو
 
-struct UHashtable;
+بنية UHashtable;
 
 U_NAMESPACE_BEGIN
 
-struct LSR;
+بنية LSR;
 
 class LikelySubtags;
-class LocaleDistance;
+class Locale_مفاصلو;
 class LocaleLsrIterator;
 class UVector;
 
@@ -183,16 +183,16 @@ class UVector;
  *
  * @stable ICU 65
  */
-class U_COMMON_API LocaleMatcher : public UMemory {
-public:
+class U_COMMON_API LocaleMatcher : عام UMemory {
+عام:
     /**
      * Data for the best-matching pair of a desired and a supported locale.
      * Movable but not copyable.
      *
      * @stable ICU 65
      */
-    class U_COMMON_API Result : public UMemory {
-    public:
+    class U_COMMON_API نتيجو_2 : عام UMemory {
+    عام:
         /**
          * Move constructor; might modify the source.
          * This object will have the same contents that the source object had.
@@ -200,14 +200,14 @@ public:
          * @param src Result to move contents from.
          * @stable ICU 65
          */
-        Result(Result &&src) noexcept;
+        نتيجو_2(نتيجو_2 &&src) noexcept;
 
         /**
          * Destructor.
          *
          * @stable ICU 65
          */
-        ~Result();
+        ~نتيجو_2();
 
         /**
          * Move assignment; might modify the source.
@@ -216,7 +216,7 @@ public:
          * @param src Result to move contents from.
          * @stable ICU 65
          */
-        Result& operator=(Result&& src) noexcept U_LIFETIME_BOUND;
+        نتيجو_2& عامل=(نتيجو_2&& src) noexcept U_LIFETIME_BOUND;
 
         /**
          * Returns the best-matching desired locale.
@@ -225,7 +225,7 @@ public:
          * @return the best-matching desired locale, or nullptr.
          * @stable ICU 65
          */
-        inline const Locale* getDesiredLocale() const U_LIFETIME_BOUND { return desiredLocale; }
+        مضمن ثابت Locale* getDesiredLocale() ثابت U_LIFETIME_BOUND { أرجع desiredLocale; }
 
         /**
          * Returns the best-matching supported locale.
@@ -236,7 +236,7 @@ public:
          * @return the best-matching supported locale, or nullptr.
          * @stable ICU 65
          */
-        inline const Locale* getSupportedLocale() const U_LIFETIME_BOUND { return supportedLocale; }
+        مضمن ثابت Locale* getSupportedLocale() ثابت U_LIFETIME_BOUND { أرجع supportedLocale; }
 
         /**
          * Returns the index of the best-matching desired locale in the input Iterable order.
@@ -245,7 +245,7 @@ public:
          * @return the index of the best-matching desired locale, or -1.
          * @stable ICU 65
          */
-        inline int32_t getDesiredIndex() const { return desiredIndex; }
+        مضمن int32_t get_Desired_اشاريو() ثابت { أرجع desired_اشاريو; }
 
         /**
          * Returns the index of the best-matching supported locale in the
@@ -257,7 +257,7 @@ public:
          * @return the index of the best-matching supported locale, or -1.
          * @stable ICU 65
          */
-        inline int32_t getSupportedIndex() const { return supportedIndex; }
+        مضمن int32_t get_Supported_اشاريو() ثابت { أرجع supported_اشاريو; }
 
         /**
          * Takes the best-matching supported locale and adds relevant fields of the
@@ -271,25 +271,25 @@ public:
          * @return a locale combining the best-matching desired and supported locales.
          * @stable ICU 65
          */
-        Locale makeResolvedLocale(UErrorCode &errorCode) const;
+        Locale makeResolvedLocale(UError_ڪوڊ &error_ڪوڊ) ثابت;
 
-    private:
-        Result(const Locale *desired, const Locale *supported,
-               int32_t desIndex, int32_t suppIndex, UBool owned) :
+    خاص:
+        نتيجو_2(ثابت Locale *desired, ثابت Locale *supported,
+               int32_t des_اشاريو, int32_t supp_اشاريو, UBool owned) :
                 desiredLocale(desired), supportedLocale(supported),
-                desiredIndex(desIndex), supportedIndex(suppIndex),
+                desired_اشاريو(des_اشاريو), supported_اشاريو(supp_اشاريو),
                 desiredIsOwned(owned) {}
 
-        Result(const Result &other) = delete;
-        Result &operator=(const Result &other) = delete;
+        نتيجو_2(ثابت نتيجو_2 &other) = delete;
+        نتيجو_2 &عامل=(ثابت نتيجو_2 &other) = delete;
 
-        const Locale *desiredLocale;
-        const Locale *supportedLocale;
-        int32_t desiredIndex;
-        int32_t supportedIndex;
+        ثابت Locale *desiredLocale;
+        ثابت Locale *supportedLocale;
+        int32_t desired_اشاريو;
+        int32_t supported_اشاريو;
         UBool desiredIsOwned;
 
-        friend class LocaleMatcher;
+        دوست class LocaleMatcher;
     };
 
     /**
@@ -298,8 +298,8 @@ public:
      *
      * @stable ICU 65
      */
-    class U_COMMON_API Builder : public UMemory {
-    public:
+    class U_COMMON_API Builder : عام UMemory {
+    عام:
         /**
          * Constructs a builder used in chaining parameters for building a LocaleMatcher.
          *
@@ -330,7 +330,7 @@ public:
          * @param src Builder to move contents from.
          * @stable ICU 65
          */
-        Builder& operator=(Builder&& src) noexcept U_LIFETIME_BOUND;
+        Builder& عامل=(Builder&& src) noexcept U_LIFETIME_BOUND;
 
         /**
          * Parses an Accept-Language string
@@ -343,7 +343,7 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        Builder& setSupportedLocalesFromListString(StringPiece locales) U_LIFETIME_BOUND;
+        Builder& سيٽ_Supported_Locales_From_List_String(StringPiece locales) U_LIFETIME_BOUND;
 
         /**
          * Copies the supported locales, preserving iteration order.
@@ -354,7 +354,7 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        Builder& setSupportedLocales(Locale::Iterator& locales) U_LIFETIME_BOUND;
+        Builder& سيٽ_Supported_Locales(Locale::Iterator& locales) U_LIFETIME_BOUND;
 
         /**
          * Copies the supported locales from the begin/end range, preserving iteration order.
@@ -369,14 +369,14 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        template <typename Iter>
-        Builder& setSupportedLocales(Iter begin, Iter end) U_LIFETIME_BOUND {
-            if (U_FAILURE(errorCode_)) { return *this; }
+        سانچو <typename Iter>
+        Builder& سيٽ_Supported_Locales(Iter begin, Iter پڇاڙي) U_LIFETIME_BOUND {
+            إذا (U_FAILURE(error_ڪوڊ_2)) { أرجع *this; }
             clearSupportedLocales();
-            while (begin != end) {
-                addSupportedLocale(*begin++);
+            طالما (begin != پڇاڙي) {
+                جوڙيو_Supported_Locale(*begin++);
             }
-            return *this;
+            أرجع *this;
         }
 
         /**
@@ -394,15 +394,15 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        template <typename Iter, typename Conv>
-        Builder& setSupportedLocalesViaConverter(Iter begin, Iter end,
+        سانچو <typename Iter, typename Conv>
+        Builder& سيٽ_Supported_Locales_ذريعي_Converter(Iter begin, Iter پڇاڙي,
                                                  Conv converter) U_LIFETIME_BOUND {
-            if (U_FAILURE(errorCode_)) { return *this; }
+            إذا (U_FAILURE(error_ڪوڊ_2)) { أرجع *this; }
             clearSupportedLocales();
-            while (begin != end) {
-                addSupportedLocale(converter(*begin++));
+            طالما (begin != پڇاڙي) {
+                جوڙيو_Supported_Locale(converter(*begin++));
             }
-            return *this;
+            أرجع *this;
         }
 
         /**
@@ -413,7 +413,7 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        Builder& addSupportedLocale(const Locale& locale) U_LIFETIME_BOUND;
+        Builder& جوڙيو_Supported_Locale(ثابت Locale& locale) U_LIFETIME_BOUND;
 
         /**
          * Sets no default locale.
@@ -423,7 +423,7 @@ public:
          *
          * @stable ICU 68
          */
-        Builder& setNoDefaultLocale() U_LIFETIME_BOUND;
+        Builder& سيٽ_No_Default_Locale() U_LIFETIME_BOUND;
 
         /**
          * Sets the default locale; if nullptr, or if it is not set explicitly,
@@ -435,7 +435,7 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        Builder& setDefaultLocale(const Locale* defaultLocale) U_LIFETIME_BOUND;
+        Builder& سيٽ_Default_Locale(ثابت Locale* defaultLocale) U_LIFETIME_BOUND;
 
         /**
          * If ULOCMATCH_FAVOR_SCRIPT, then the language differences are smaller than script
@@ -447,7 +447,7 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        Builder& setFavorSubtag(ULocMatchFavorSubtag subtag) U_LIFETIME_BOUND;
+        Builder& سيٽ_Favor_Subtag(ULoc_ميلاپ_Favor_Subtag subtag) U_LIFETIME_BOUND;
 
         /**
          * Option for whether all desired locales are treated equally or
@@ -457,7 +457,7 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        Builder& setDemotionPerDesiredLocale(ULocMatchDemotion demotion) U_LIFETIME_BOUND;
+        Builder& سيٽ_Demotion_في_Desired_Locale(ULoc_ميلاپ_Demotion demotion) U_LIFETIME_BOUND;
 
         /**
          * Option for whether to include or ignore one-way (fallback) match data.
@@ -467,11 +467,11 @@ public:
          * @return this Builder object
          * @stable ICU 67
          */
-        Builder& setDirection(ULocMatchDirection matchDirection) U_LIFETIME_BOUND {
-            if (U_SUCCESS(errorCode_)) {
-                direction_ = matchDirection;
+        Builder& سيٽ_Direction(ULoc_ميلاپ_Direction ميلاپ_Direction) U_LIFETIME_BOUND {
+            إذا (U_SUCCESS(error_ڪوڊ_2)) {
+                direction_ = ميلاپ_Direction;
             }
-            return *this;
+            أرجع *this;
         }
 
         /**
@@ -495,7 +495,7 @@ public:
          * @return this Builder object
          * @stable ICU 68
          */
-        Builder& setMaxDistance(const Locale& desired, const Locale& supported) U_LIFETIME_BOUND;
+        Builder& سيٽ_Max_مفاصلو(ثابت Locale& desired, ثابت Locale& supported) U_LIFETIME_BOUND;
 
         /**
          * Sets the UErrorCode if an error occurred while setting parameters.
@@ -507,7 +507,7 @@ public:
          * @return true if U_FAILURE(outErrorCode)
          * @stable ICU 65
          */
-        UBool copyErrorTo(UErrorCode &outErrorCode) const;
+        UBool copy_Error_منزل(UError_ڪوڊ &ٻاهريون_Error_ڪوڊ) ثابت;
 
         /**
          * Builds and returns a new locale matcher.
@@ -519,27 +519,27 @@ public:
          * @return LocaleMatcher
          * @stable ICU 65
          */
-        LocaleMatcher build(UErrorCode &errorCode) const;
+        LocaleMatcher build(UError_ڪوڊ &error_ڪوڊ) ثابت;
 
-    private:
-        friend class LocaleMatcher;
+    خاص:
+        دوست class LocaleMatcher;
 
-        Builder(const Builder &other) = delete;
-        Builder &operator=(const Builder &other) = delete;
+        Builder(ثابت Builder &other) = delete;
+        Builder &عامل=(ثابت Builder &other) = delete;
 
-        void clearSupportedLocales();
-        bool ensureSupportedLocaleVector();
+        فراغ clearSupportedLocales();
+        bool ensure_Supported_Locale_ويڪٽر();
 
-        UErrorCode errorCode_ = U_ZERO_ERROR;
+        UError_ڪوڊ error_ڪوڊ_2 = U_ZERO_ERROR;
         UVector *supportedLocales_ = nullptr;
-        int32_t thresholdDistance_ = -1;
-        ULocMatchDemotion demotion_ = ULOCMATCH_DEMOTION_REGION;
+        int32_t حد_مفاصلو = -1;
+        ULoc_ميلاپ_Demotion demotion_ = ULOCMATCH_DEMOTION_REGION;
         Locale *defaultLocale_ = nullptr;
         bool withDefault_ = true;
-        ULocMatchFavorSubtag favor_ = ULOCMATCH_FAVOR_LANGUAGE;
-        ULocMatchDirection direction_ = ULOCMATCH_DIRECTION_WITH_ONE_WAY;
-        Locale *maxDistanceDesired_ = nullptr;
-        Locale *maxDistanceSupported_ = nullptr;
+        ULoc_ميلاپ_Favor_Subtag favor_ = ULOCMATCH_FAVOR_LANGUAGE;
+        ULoc_ميلاپ_Direction direction_ = ULOCMATCH_DIRECTION_WITH_ONE_WAY;
+        Locale *max_مفاصلو_Desired = nullptr;
+        Locale *max_مفاصلو_Supported = nullptr;
     };
 
     // FYI No public LocaleMatcher constructors in C++; use the Builder.
@@ -566,7 +566,7 @@ public:
      * @return *this
      * @stable ICU 65
      */
-    LocaleMatcher& operator=(LocaleMatcher&& src) noexcept U_LIFETIME_BOUND;
+    LocaleMatcher& عامل=(LocaleMatcher&& src) noexcept U_LIFETIME_BOUND;
 
     /**
      * Returns the supported locale which best matches the desired locale.
@@ -578,8 +578,8 @@ public:
      * @return the best-matching supported locale.
      * @stable ICU 65
      */
-    const Locale* getBestMatch(const Locale& desiredLocale,
-                               UErrorCode& errorCode) const U_LIFETIME_BOUND;
+    ثابت Locale* get_بهترين_ميلاپ(ثابت Locale& desiredLocale,
+                               UError_ڪوڊ& error_ڪوڊ) ثابت U_LIFETIME_BOUND;
 
     /**
      * Returns the supported locale which best matches one of the desired locales.
@@ -591,8 +591,8 @@ public:
      * @return the best-matching supported locale.
      * @stable ICU 65
      */
-    const Locale* getBestMatch(Locale::Iterator& desiredLocales,
-                               UErrorCode& errorCode) const U_LIFETIME_BOUND;
+    ثابت Locale* get_بهترين_ميلاپ(Locale::Iterator& desiredLocales,
+                               UError_ڪوڊ& error_ڪوڊ) ثابت U_LIFETIME_BOUND;
 
     /**
      * Parses an Accept-Language string
@@ -608,8 +608,8 @@ public:
      * @return the best-matching supported locale.
      * @stable ICU 65
      */
-    const Locale* getBestMatchForListString(StringPiece desiredLocaleList,
-                                            UErrorCode& errorCode) const U_LIFETIME_BOUND;
+    ثابت Locale* get_بهترين_ميلاپ_For_List_String(StringPiece desiredLocaleList,
+                                            UError_ڪوڊ& error_ڪوڊ) ثابت U_LIFETIME_BOUND;
 
     /**
      * Returns the best match between the desired locale and the supported locales.
@@ -623,8 +623,8 @@ public:
      * @return the best-matching pair of the desired and a supported locale.
      * @stable ICU 65
      */
-    Result getBestMatchResult(const Locale& desiredLocale U_LIFETIME_BOUND,
-                              UErrorCode& errorCode) const U_LIFETIME_BOUND;
+    نتيجو_2 get_بهترين_ميلاپ_نتيجو(ثابت Locale& desiredLocale U_LIFETIME_BOUND,
+                              UError_ڪوڊ& error_ڪوڊ) ثابت U_LIFETIME_BOUND;
 
     /**
      * Returns the best match between the desired and supported locales.
@@ -638,8 +638,8 @@ public:
      * @return the best-matching pair of a desired and a supported locale.
      * @stable ICU 65
      */
-    Result getBestMatchResult(Locale::Iterator& desiredLocales,
-                              UErrorCode& errorCode) const U_LIFETIME_BOUND;
+    نتيجو_2 get_بهترين_ميلاپ_نتيجو(Locale::Iterator& desiredLocales,
+                              UError_ڪوڊ& error_ڪوڊ) ثابت U_LIFETIME_BOUND;
 
     /**
      * Returns true if the pair of locales matches acceptably.
@@ -654,9 +654,9 @@ public:
      * @return true if the pair of locales matches acceptably.
      * @stable ICU 68
      */
-    UBool isMatch(const Locale &desired, const Locale &supported, UErrorCode &errorCode) const;
+    UBool is_ميلاپ(ثابت Locale &desired, ثابت Locale &supported, UError_ڪوڊ &error_ڪوڊ) ثابت;
 
-#ifndef U_HIDE_INTERNAL_API
+#جيڪڏهن_وصف_نه_ٿيل U_HIDE_اندروني_API
     /**
      * Returns a fraction between 0 and 1, where 1 means that the languages are a
      * perfect match, and 0 means that they are completely different.
@@ -675,41 +675,41 @@ public:
      * @return value between 0 and 1, inclusive.
      * @internal (has a known user)
      */
-    double internalMatch(const Locale &desired, const Locale &supported, UErrorCode &errorCode) const;
-#endif  // U_HIDE_INTERNAL_API
+    مزدوج اندروني_ميلاپ(ثابت Locale &desired, ثابت Locale &supported, UError_ڪوڊ &error_ڪوڊ) ثابت;
+#جيڪڏهن_پورو  // U_HIDE_INTERNAL_API
 
-private:
-    LocaleMatcher(const Builder &builder, UErrorCode &errorCode);
-    LocaleMatcher(const LocaleMatcher &other) = delete;
-    LocaleMatcher &operator=(const LocaleMatcher &other) = delete;
+خاص:
+    LocaleMatcher(ثابت Builder &builder, UError_ڪوڊ &error_ڪوڊ);
+    LocaleMatcher(ثابت LocaleMatcher &other) = delete;
+    LocaleMatcher &عامل=(ثابت LocaleMatcher &other) = delete;
 
-    int32_t putIfAbsent(const LSR &lsr, int32_t i, int32_t suppLength, UErrorCode &errorCode);
+    int32_t putIfAbsent(ثابت LSR &lsr, int32_t i, int32_t supp_ڊيگهائي, UError_ڪوڊ &error_ڪوڊ);
 
-    std::optional<int32_t> getBestSuppIndex(LSR desiredLSR, LocaleLsrIterator *remainingIter, UErrorCode &errorCode) const;
+    std::optional<int32_t> get_بهترين_Supp_اشاريو(LSR desiredLSR, LocaleLsrIterator *بچيل_Iter, UError_ڪوڊ &error_ڪوڊ) ثابت;
 
-    const LikelySubtags &likelySubtags;
-    const LocaleDistance &localeDistance;
-    int32_t thresholdDistance;
-    int32_t demotionPerDesiredLocale;
-    ULocMatchFavorSubtag favorSubtag;
-    ULocMatchDirection direction;
+    ثابت LikelySubtags &likelySubtags;
+    ثابت Locale_مفاصلو &locale_مفاصلو;
+    int32_t حد_مفاصلو_2;
+    int32_t demotion_في_Desired_Locale;
+    ULoc_ميلاپ_Favor_Subtag favorSubtag;
+    ULoc_ميلاپ_Direction direction;
 
     // These are in input order.
-    const Locale ** supportedLocales;
+    ثابت Locale ** supportedLocales;
     LSR *lsrs;
-    int32_t supportedLocalesLength;
+    int32_t supported_Locales_ڊيگهائي;
     // These are in preference order: 1. Default locale 2. paradigm locales 3. others.
-    UHashtable *supportedLsrToIndex;  // Map<LSR, Integer>
+    UHashtable *supported_Lsr_منزل_اشاريو;  // Map<LSR, Integer>
     // Array versions of the supportedLsrToIndex keys and values.
     // The distance lookup loops over the supportedLSRs and returns the index of the best match.
-    const LSR **supportedLSRs;
+    ثابت LSR **supportedLSRs;
     int32_t *supportedIndexes;
-    int32_t supportedLSRsLength;
+    int32_t supported_LSRs_ڊيگهائي;
     Locale *ownedDefaultLocale;
-    const Locale *defaultLocale;
+    ثابت Locale *defaultLocale;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
-#endif  // U_SHOW_CPLUSPLUS_API
-#endif  // __LOCALEMATCHER_H__
+#جيڪڏهن_پورو  // U_SHOW_CPLUSPLUS_API
+#جيڪڏهن_پورو  // __LOCALEMATCHER_H__

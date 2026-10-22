@@ -18,41 +18,41 @@
 *   Swap collation binaries.
 */
 
-#ifndef __UCOL_SWP_H__
-#define __UCOL_SWP_H__
+#جيڪڏهن_وصف_نه_ٿيل __UCOL_SWP_H__
+#وصف_ڪريو __UCOL_SWP_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_COLLATION
+#إذا !UCONFIG_NO_COLLATION
 
-#include "udataswp.h"
+#ضمن "udataswp.h"
 
 /*
  * Does the data look like a collation binary?
  * @internal
  */
 U_CAPI UBool U_EXPORT2
-ucol_looksLikeCollationBinary(const UDataSwapper *ds,
-                              const void *inData, int32_t length);
+ucol_looks_Like_Collation_ٻٽو(ثابت UDataSwapper *ds,
+                              ثابت فراغ *اندريون_معلومات, int32_t ڊيگهائي);
 
 /**
  * Swap ICU collation data like ucadata.icu. See udataswp.h.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ucol_swap(const UDataSwapper *ds,
-          const void *inData, int32_t length, void *outData,
-          UErrorCode *pErrorCode);
+ucol_مٽا_سٽا(ثابت UDataSwapper *ds,
+          ثابت فراغ *اندريون_معلومات, int32_t ڊيگهائي, فراغ *ٻاهريون_معلومات,
+          UError_ڪوڊ *p_Error_ڪوڊ);
 
 /**
  * Swap inverse UCA collation data (invuca.icu). See udataswp.h.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ucol_swapInverseUCA(const UDataSwapper *ds,
-                    const void *inData, int32_t length, void *outData,
-                    UErrorCode *pErrorCode);
+ucol_مٽا_سٽا_Inverse_UCA(ثابت UDataSwapper *ds,
+                    ثابت فراغ *اندريون_معلومات, int32_t ڊيگهائي, فراغ *ٻاهريون_معلومات,
+                    UError_ڪوڊ *p_Error_ڪوڊ);
 
-#endif /* #if !UCONFIG_NO_COLLATION */
+#جيڪڏهن_پورو /* #if !UCONFIG_NO_COLLATION */
 
-#endif
+#جيڪڏهن_پورو

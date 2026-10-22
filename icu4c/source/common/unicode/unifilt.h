@@ -9,15 +9,15 @@
 *   11/17/99    aliu        Creation.
 **********************************************************************
 */
-#ifndef UNIFILT_H
-#define UNIFILT_H
+#جيڪڏهن_وصف_نه_ٿيل UNIFILT_H
+#وصف_ڪريو UNIFILT_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#include "unicode/unifunct.h"
-#include "unicode/unimatch.h"
+#ضمن "unicode/unifunct.h"
+#ضمن "unicode/unimatch.h"
 
 /**
  * \file 
@@ -34,7 +34,7 @@ U_NAMESPACE_BEGIN
  * defined range.
  * @stable ICU 3.0
  */
-#define U_ETHER ((char16_t)0xFFFF)
+#وصف_ڪريو U_ETHER ((char16_t)0xFFFF)
 
 /**
  *
@@ -62,14 +62,14 @@ U_NAMESPACE_BEGIN
  * @see UnicodeFilterLogic
  * @stable ICU 2.0
  */
-class U_COMMON_API UnicodeFilter : public UnicodeFunctor, public UnicodeMatcher {
+class U_COMMON_API UnicodeFilter : عام UnicodeFunctor, عام UnicodeMatcher {
 
-public:
+عام:
     /**
      * Destructor
      * @stable ICU 2.0
      */
-    virtual ~UnicodeFilter();
+    مجازي ~UnicodeFilter();
 
     /**
      * Clones this object polymorphically.
@@ -77,7 +77,7 @@ public:
      * @return clone, or nullptr if an error occurred
      * @stable ICU 2.4
      */
-    virtual UnicodeFilter* clone() const override = 0;
+    مجازي UnicodeFilter* clone() ثابت override = 0;
 
     /**
      * Returns <tt>true</tt> for characters that are in the selected
@@ -86,38 +86,38 @@ public:
      * <b><tt>false</tt></b>.
      * @stable ICU 2.0
      */
-    virtual UBool contains(UChar32 c) const = 0;
+    مجازي UBool شامل_آهي(UChar32 c) ثابت = 0;
 
     /**
      * UnicodeFunctor API.  Cast 'this' to a UnicodeMatcher* pointer
      * and return the pointer.
      * @stable ICU 2.4
      */
-    virtual UnicodeMatcher* toMatcher() const U_LIFETIME_BOUND override;
+    مجازي UnicodeMatcher* منزل_Matcher() ثابت U_LIFETIME_BOUND override;
 
     /**
      * Implement UnicodeMatcher API.
      * @stable ICU 2.4
      */
-    virtual UMatchDegree matches(const Replaceable& text,
-                                 int32_t& offset,
-                                 int32_t limit,
+    مجازي UMatchDegree matches(ثابت Replaceable& متن,
+                                 int32_t& وٿي,
+                                 int32_t حد_بندي,
                                  UBool incremental) override;
 
     /**
      * UnicodeFunctor API.  Nothing to do.
      * @stable ICU 2.4
      */
-    virtual void setData(const TransliterationRuleData*) override;
+    مجازي فراغ سيٽ_معلومات(ثابت Transliteration_قاعدو_معلومات*) override;
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      *
      * @stable ICU 2.2
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ساكن UClassID U_EXPORT2 getStaticClassID();
 
-protected:
+محمي:
 
     /*
      * Since this class has pure virtual functions,
@@ -129,8 +129,8 @@ protected:
 
 /*inline UnicodeFilter::UnicodeFilter() {}*/
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#جيڪڏهن_پورو /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#جيڪڏهن_پورو

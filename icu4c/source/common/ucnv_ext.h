@@ -18,15 +18,15 @@
 *   Conversion extensions
 */
 
-#ifndef __UCNV_EXT_H__
-#define __UCNV_EXT_H__
+#جيڪڏهن_وصف_نه_ٿيل __UCNV_EXT_H__
+#وصف_ڪريو __UCNV_EXT_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "ucnv_cnv.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "ucnv_cnv.h"
 
 /*
  * See icuhtml/design/conversion/conversion_extensions.html
@@ -308,85 +308,85 @@
  *   Contains fromUnicode mapping results, stored as sequences of chars.
  *   Indexes and lengths stored in the fromUTableValues[].
  */
-enum {
-    UCNV_EXT_INDEXES_LENGTH,            /* 0 */
+تعداد {
+    UCNV_EXT_INDEXES_ڊيگهائي,            /* 0 */
 
-    UCNV_EXT_TO_U_INDEX,                /* 1 */
-    UCNV_EXT_TO_U_LENGTH,
-    UCNV_EXT_TO_U_UCHARS_INDEX,
-    UCNV_EXT_TO_U_UCHARS_LENGTH,
+    UCNV_EXT_منزل_U_اشاريو,                /* 1 */
+    UCNV_EXT_منزل_U_ڊيگهائي,
+    UCNV_EXT_منزل_U_UCHARS_اشاريو,
+    UCNV_EXT_منزل_U_UCHARS_ڊيگهائي,
 
-    UCNV_EXT_FROM_U_UCHARS_INDEX,       /* 5 */
-    UCNV_EXT_FROM_U_VALUES_INDEX,
-    UCNV_EXT_FROM_U_LENGTH,
-    UCNV_EXT_FROM_U_BYTES_INDEX,
-    UCNV_EXT_FROM_U_BYTES_LENGTH,
+    UCNV_EXT_FROM_U_UCHARS_اشاريو,       /* 5 */
+    UCNV_EXT_FROM_U_قدرون_اشاريو,
+    UCNV_EXT_FROM_U_ڊيگهائي,
+    UCNV_EXT_FROM_U_بائيٽون_اشاريو,
+    UCNV_EXT_FROM_U_بائيٽون_ڊيگهائي,
 
-    UCNV_EXT_FROM_U_STAGE_12_INDEX,     /* 10 */
-    UCNV_EXT_FROM_U_STAGE_1_LENGTH,
-    UCNV_EXT_FROM_U_STAGE_12_LENGTH,
-    UCNV_EXT_FROM_U_STAGE_3_INDEX,
-    UCNV_EXT_FROM_U_STAGE_3_LENGTH,
-    UCNV_EXT_FROM_U_STAGE_3B_INDEX,
-    UCNV_EXT_FROM_U_STAGE_3B_LENGTH,
+    UCNV_EXT_FROM_U_STAGE_12_اشاريو,     /* 10 */
+    UCNV_EXT_FROM_U_STAGE_1_ڊيگهائي,
+    UCNV_EXT_FROM_U_STAGE_12_ڊيگهائي,
+    UCNV_EXT_FROM_U_STAGE_3_اشاريو,
+    UCNV_EXT_FROM_U_STAGE_3_ڊيگهائي,
+    UCNV_EXT_FROM_U_STAGE_3_B_اشاريو,
+    UCNV_EXT_FROM_U_STAGE_3_B_ڊيگهائي,
 
-    UCNV_EXT_COUNT_BYTES,               /* 17 */
-    UCNV_EXT_COUNT_UCHARS,
+    UCNV_EXT_ڳڻپ_بائيٽون,               /* 17 */
+    UCNV_EXT_ڳڻپ_UCHARS,
     UCNV_EXT_FLAGS,
 
-    UCNV_EXT_RESERVED_INDEX,            /* 20, moves with additional indexes */
+    UCNV_EXT_RESERVED_اشاريو,            /* 20, moves with additional indexes */
 
-    UCNV_EXT_SIZE=31,
-    UCNV_EXT_INDEXES_MIN_LENGTH=32
+    UCNV_EXT_سائيز=31,
+    UCNV_EXT_INDEXES_MIN_ڊيگهائي=32
 };
 
 /* get the pointer to an extension array from indexes[index] */
-#define UCNV_EXT_ARRAY(indexes, index, itemType) \
-    ((const itemType *)((const char *)(indexes)+(indexes)[index]))
+#وصف_ڪريو UCNV_EXT_ARRAY(indexes, اشاريو, شي_Type) \
+    ((ثابت شي_Type *)((ثابت حرف *)(indexes)+(indexes)[اشاريو]))
 
-#define UCNV_GET_MAX_BYTES_PER_UCHAR(indexes) \
-    ((indexes)[UCNV_EXT_COUNT_BYTES]&0xff)
+#وصف_ڪريو UCNV_GET_MAX_بائيٽون_في_UCHAR(indexes) \
+    ((indexes)[UCNV_EXT_ڳڻپ_بائيٽون]&0xff)
 
 /* internal API ------------------------------------------------------------- */
 
 U_CFUNC UBool
-ucnv_extInitialMatchToU(UConverter *cnv, const int32_t *cx,
-                        int32_t firstLength,
-                        const char **src, const char *srcLimit,
-                        UChar **target, const UChar *targetLimit,
-                        int32_t **offsets, int32_t srcIndex,
+ucnv_ext_Initial_ميلاپ_منزل_U(UConverter *cnv, ثابت int32_t *cx,
+                        int32_t پهريون_ڊيگهائي,
+                        ثابت حرف **src, ثابت حرف *src_حد_بندي,
+                        UChar **هدف, ثابت UChar *هدف_حد_بندي,
+                        int32_t **offsets, int32_t src_اشاريو,
                         UBool flush,
-                        UErrorCode *pErrorCode);
+                        UError_ڪوڊ *p_Error_ڪوڊ);
 
 U_CFUNC UChar32
-ucnv_extSimpleMatchToU(const int32_t *cx,
-                       const char *source, int32_t length,
+ucnv_ext_Simple_ميلاپ_منزل_U(ثابت int32_t *cx,
+                       ثابت حرف *ذريعو, int32_t ڊيگهائي,
                        UBool useFallback);
 
-U_CFUNC void
-ucnv_extContinueMatchToU(UConverter *cnv,
-                         UConverterToUnicodeArgs *pArgs, int32_t srcIndex,
-                         UErrorCode *pErrorCode);
+U_CFUNC فراغ
+ucnv_ext_Continue_ميلاپ_منزل_U(UConverter *cnv,
+                         UConverter_منزل_Unicode_دليلون *p_دليلون, int32_t src_اشاريو,
+                         UError_ڪوڊ *p_Error_ڪوڊ);
 
 
 U_CFUNC UBool
-ucnv_extInitialMatchFromU(UConverter *cnv, const int32_t *cx,
+ucnv_ext_Initial_ميلاپ_From_U(UConverter *cnv, ثابت int32_t *cx,
                           UChar32 cp,
-                          const UChar **src, const UChar *srcLimit,
-                          char **target, const char *targetLimit,
-                          int32_t **offsets, int32_t srcIndex,
+                          ثابت UChar **src, ثابت UChar *src_حد_بندي,
+                          حرف **هدف, ثابت حرف *هدف_حد_بندي,
+                          int32_t **offsets, int32_t src_اشاريو,
                           UBool flush,
-                          UErrorCode *pErrorCode);
+                          UError_ڪوڊ *p_Error_ڪوڊ);
 
 U_CFUNC int32_t
-ucnv_extSimpleMatchFromU(const int32_t *cx,
-                         UChar32 cp, uint32_t *pValue,
+ucnv_ext_Simple_ميلاپ_From_U(ثابت int32_t *cx,
+                         UChar32 cp, uint32_t *p_قدر,
                          UBool useFallback);
 
-U_CFUNC void
-ucnv_extContinueMatchFromU(UConverter *cnv,
-                           UConverterFromUnicodeArgs *pArgs, int32_t srcIndex,
-                           UErrorCode *pErrorCode);
+U_CFUNC فراغ
+ucnv_ext_Continue_ميلاپ_From_U(UConverter *cnv,
+                           UConverter_From_Unicode_دليلون *p_دليلون, int32_t src_اشاريو,
+                           UError_ڪوڊ *p_Error_ڪوڊ);
 
 /*
  * Add code points and strings to the set according to the extension mappings.
@@ -397,85 +397,85 @@ ucnv_extContinueMatchFromU(UConverter *cnv,
  * For example, the Shift-JIS filter only works for 2-byte results and tests
  * that those 2 bytes are in the JIS X 0208 range of Shift-JIS.
  */
-U_CFUNC void
-ucnv_extGetUnicodeSet(const UConverterSharedData *sharedData,
-                      const USetAdder *sa,
-                      UConverterUnicodeSet which,
-                      UConverterSetFilter filter,
-                      UErrorCode *pErrorCode);
+U_CFUNC فراغ
+ucnv_ext_Get_Unicode_سيٽ(ثابت UConverter_Shared_معلومات *shared_معلومات,
+                      ثابت USetAdder *sa,
+                      UConverter_Unicode_سيٽ which,
+                      UConverter_سيٽ_Filter filter,
+                      UError_ڪوڊ *p_Error_ڪوڊ);
 
 /* toUnicode helpers -------------------------------------------------------- */
 
-#define UCNV_EXT_TO_U_BYTE_SHIFT 24
-#define UCNV_EXT_TO_U_VALUE_MASK 0xffffff
-#define UCNV_EXT_TO_U_MIN_CODE_POINT 0x1f0000
-#define UCNV_EXT_TO_U_MAX_CODE_POINT 0x2fffff
-#define UCNV_EXT_TO_U_ROUNDTRIP_FLAG ((uint32_t)1<<23)
-#define UCNV_EXT_TO_U_INDEX_MASK 0x3ffff
-#define UCNV_EXT_TO_U_LENGTH_SHIFT 18
-#define UCNV_EXT_TO_U_LENGTH_OFFSET 12
+#وصف_ڪريو UCNV_EXT_منزل_U_BYTE_سرڪايو 24
+#وصف_ڪريو UCNV_EXT_منزل_U_قدر_نقاب 0xffffff
+#وصف_ڪريو UCNV_EXT_منزل_U_MIN_ڪوڊ_نقطو 0x1f0000
+#وصف_ڪريو UCNV_EXT_منزل_U_MAX_ڪوڊ_نقطو 0x2fffff
+#وصف_ڪريو UCNV_EXT_منزل_U_ROUNDTRIP_FLAG ((uint32_t)1<<23)
+#وصف_ڪريو UCNV_EXT_منزل_U_اشاريو_نقاب 0x3ffff
+#وصف_ڪريو UCNV_EXT_منزل_U_ڊيگهائي_سرڪايو 18
+#وصف_ڪريو UCNV_EXT_منزل_U_ڊيگهائي_وٿي 12
 
 /* maximum number of indexed UChars */
-#define UCNV_EXT_MAX_UCHARS 19
+#وصف_ڪريو UCNV_EXT_MAX_UCHARS 19
 
-#define UCNV_EXT_TO_U_MAKE_WORD(byte, value) (((uint32_t)(byte)<<UCNV_EXT_TO_U_BYTE_SHIFT)|(value))
+#وصف_ڪريو UCNV_EXT_منزل_U_MAKE_لفظ(byte, قدر_2) (((uint32_t)(byte)<<UCNV_EXT_منزل_U_BYTE_سرڪايو)|(قدر_2))
 
-#define UCNV_EXT_TO_U_GET_BYTE(word) ((word)>>UCNV_EXT_TO_U_BYTE_SHIFT)
-#define UCNV_EXT_TO_U_GET_VALUE(word) ((word)&UCNV_EXT_TO_U_VALUE_MASK)
+#وصف_ڪريو UCNV_EXT_منزل_U_GET_BYTE(لفظ_2) ((لفظ_2)>>UCNV_EXT_منزل_U_BYTE_سرڪايو)
+#وصف_ڪريو UCNV_EXT_منزل_U_GET_قدر(لفظ_2) ((لفظ_2)&UCNV_EXT_منزل_U_قدر_نقاب)
 
-#define UCNV_EXT_TO_U_IS_PARTIAL(value) ((value)<UCNV_EXT_TO_U_MIN_CODE_POINT)
-#define UCNV_EXT_TO_U_GET_PARTIAL_INDEX(value) (value)
+#وصف_ڪريو UCNV_EXT_منزل_U_IS_PARTIAL(قدر_2) ((قدر_2)<UCNV_EXT_منزل_U_MIN_ڪوڊ_نقطو)
+#وصف_ڪريو UCNV_EXT_منزل_U_GET_PARTIAL_اشاريو(قدر_2) (قدر_2)
 
-#define UCNV_EXT_TO_U_IS_ROUNDTRIP(value) (((value)&UCNV_EXT_TO_U_ROUNDTRIP_FLAG)!=0)
-#define UCNV_EXT_TO_U_MASK_ROUNDTRIP(value) ((value)&~UCNV_EXT_TO_U_ROUNDTRIP_FLAG)
+#وصف_ڪريو UCNV_EXT_منزل_U_IS_ROUNDTRIP(قدر_2) (((قدر_2)&UCNV_EXT_منزل_U_ROUNDTRIP_FLAG)!=0)
+#وصف_ڪريو UCNV_EXT_منزل_U_نقاب_ROUNDTRIP(قدر_2) ((قدر_2)&~UCNV_EXT_منزل_U_ROUNDTRIP_FLAG)
 
 /* use after masking off the roundtrip flag */
-#define UCNV_EXT_TO_U_IS_CODE_POINT(value) ((value)<=UCNV_EXT_TO_U_MAX_CODE_POINT)
-#define UCNV_EXT_TO_U_GET_CODE_POINT(value) ((value)-UCNV_EXT_TO_U_MIN_CODE_POINT)
+#وصف_ڪريو UCNV_EXT_منزل_U_IS_ڪوڊ_نقطو(قدر_2) ((قدر_2)<=UCNV_EXT_منزل_U_MAX_ڪوڊ_نقطو)
+#وصف_ڪريو UCNV_EXT_منزل_U_GET_ڪوڊ_نقطو(قدر_2) ((قدر_2)-UCNV_EXT_منزل_U_MIN_ڪوڊ_نقطو)
 
-#define UCNV_EXT_TO_U_GET_INDEX(value) ((value)&UCNV_EXT_TO_U_INDEX_MASK)
-#define UCNV_EXT_TO_U_GET_LENGTH(value) (((value)>>UCNV_EXT_TO_U_LENGTH_SHIFT)-UCNV_EXT_TO_U_LENGTH_OFFSET)
+#وصف_ڪريو UCNV_EXT_منزل_U_GET_اشاريو(قدر_2) ((قدر_2)&UCNV_EXT_منزل_U_اشاريو_نقاب)
+#وصف_ڪريو UCNV_EXT_منزل_U_GET_ڊيگهائي(قدر_2) (((قدر_2)>>UCNV_EXT_منزل_U_ڊيگهائي_سرڪايو)-UCNV_EXT_منزل_U_ڊيگهائي_وٿي)
 
 /* fromUnicode helpers ------------------------------------------------------ */
 
 /* most trie constants are shared with ucnvmbcs.h */
 
 /* see similar utrie.h UTRIE_INDEX_SHIFT and UTRIE_DATA_GRANULARITY */
-#define UCNV_EXT_STAGE_2_LEFT_SHIFT 2
-#define UCNV_EXT_STAGE_3_GRANULARITY 4
+#وصف_ڪريو UCNV_EXT_STAGE_2_کاٻو_سرڪايو 2
+#وصف_ڪريو UCNV_EXT_STAGE_3_GRANULARITY 4
 
 /* trie access, returns the stage 3 value=index to stage 3b; s1Index=c>>10 */
-#define UCNV_EXT_FROM_U(stage12, stage3, s1Index, c) \
-    (stage3)[ ((int32_t)(stage12)[ (stage12)[s1Index] +(((c)>>4)&0x3f) ]<<UCNV_EXT_STAGE_2_LEFT_SHIFT) +((c)&0xf) ]
+#وصف_ڪريو UCNV_EXT_FROM_U(stage12, stage3, s1_اشاريو, c) \
+    (stage3)[ ((int32_t)(stage12)[ (stage12)[s1_اشاريو] +(((c)>>4)&0x3f) ]<<UCNV_EXT_STAGE_2_کاٻو_سرڪايو) +((c)&0xf) ]
 
-#define UCNV_EXT_FROM_U_LENGTH_SHIFT 24
-#define UCNV_EXT_FROM_U_ROUNDTRIP_FLAG ((uint32_t)1<<31)
-#define UCNV_EXT_FROM_U_GOOD_ONE_WAY_FLAG 0x40000000
-#define UCNV_EXT_FROM_U_STATUS_MASK 0xc0000000
-#define UCNV_EXT_FROM_U_RESERVED_MASK 0x20000000
-#define UCNV_EXT_FROM_U_DATA_MASK 0xffffff
+#وصف_ڪريو UCNV_EXT_FROM_U_ڊيگهائي_سرڪايو 24
+#وصف_ڪريو UCNV_EXT_FROM_U_ROUNDTRIP_FLAG ((uint32_t)1<<31)
+#وصف_ڪريو UCNV_EXT_FROM_U_GOOD_ONE_WAY_FLAG 0x40000000
+#وصف_ڪريو UCNV_EXT_FROM_U_حالت_نقاب 0xc0000000
+#وصف_ڪريو UCNV_EXT_FROM_U_RESERVED_نقاب 0x20000000
+#وصف_ڪريو UCNV_EXT_FROM_U_معلومات_نقاب 0xffffff
 
 /* special value for "no mapping" to <subchar1> (impossible roundtrip to 0 bytes, value 01) */
-#define UCNV_EXT_FROM_U_SUBCHAR1 0x80000001
+#وصف_ڪريو UCNV_EXT_FROM_U_SUBCHAR1 0x80000001
 
 /* at most 3 bytes in the lower part of the value */
-#define UCNV_EXT_FROM_U_MAX_DIRECT_LENGTH 3
+#وصف_ڪريو UCNV_EXT_FROM_U_MAX_سڌو_ڊيگهائي 3
 
 /* maximum number of indexed bytes */
-#define UCNV_EXT_MAX_BYTES 0x1f
+#وصف_ڪريو UCNV_EXT_MAX_بائيٽون 0x1f
 
-#define UCNV_EXT_FROM_U_IS_PARTIAL(value) (((value)>>UCNV_EXT_FROM_U_LENGTH_SHIFT)==0)
-#define UCNV_EXT_FROM_U_GET_PARTIAL_INDEX(value) (value)
+#وصف_ڪريو UCNV_EXT_FROM_U_IS_PARTIAL(قدر_2) (((قدر_2)>>UCNV_EXT_FROM_U_ڊيگهائي_سرڪايو)==0)
+#وصف_ڪريو UCNV_EXT_FROM_U_GET_PARTIAL_اشاريو(قدر_2) (قدر_2)
 
-#define UCNV_EXT_FROM_U_IS_ROUNDTRIP(value) (((value)&UCNV_EXT_FROM_U_ROUNDTRIP_FLAG)!=0)
-#define UCNV_EXT_FROM_U_MASK_ROUNDTRIP(value) ((value)&~UCNV_EXT_FROM_U_ROUNDTRIP_FLAG)
+#وصف_ڪريو UCNV_EXT_FROM_U_IS_ROUNDTRIP(قدر_2) (((قدر_2)&UCNV_EXT_FROM_U_ROUNDTRIP_FLAG)!=0)
+#وصف_ڪريو UCNV_EXT_FROM_U_نقاب_ROUNDTRIP(قدر_2) ((قدر_2)&~UCNV_EXT_FROM_U_ROUNDTRIP_FLAG)
 
 /* get length; masks away all other bits */
-#define UCNV_EXT_FROM_U_GET_LENGTH(value) (int32_t)(((value)>>UCNV_EXT_FROM_U_LENGTH_SHIFT)&UCNV_EXT_MAX_BYTES)
+#وصف_ڪريو UCNV_EXT_FROM_U_GET_ڊيگهائي(قدر_2) (int32_t)(((قدر_2)>>UCNV_EXT_FROM_U_ڊيگهائي_سرڪايو)&UCNV_EXT_MAX_بائيٽون)
 
 /* get bytes or bytes index */
-#define UCNV_EXT_FROM_U_GET_DATA(value) ((value)&UCNV_EXT_FROM_U_DATA_MASK)
+#وصف_ڪريو UCNV_EXT_FROM_U_GET_معلومات(قدر_2) ((قدر_2)&UCNV_EXT_FROM_U_معلومات_نقاب)
 
-#endif
+#جيڪڏهن_پورو
 
-#endif
+#جيڪڏهن_پورو

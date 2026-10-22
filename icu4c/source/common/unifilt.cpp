@@ -10,9 +10,9 @@
 **********************************************************************
 */
 
-#include "unicode/unifilt.h"
-#include "unicode/rep.h"
-#include "unicode/utf16.h"
+#ضمن "unicode/unifilt.h"
+#ضمن "unicode/rep.h"
+#ضمن "unicode/utf16.h"
 
 U_NAMESPACE_BEGIN
 UOBJECT_DEFINE_ABSTRACT_RTTI_IMPLEMENTATION(UnicodeFilter)
@@ -28,44 +28,44 @@ UnicodeFilter::~UnicodeFilter() {}
  * UnicodeFunctor API.
  *   Note that UnicodeMatcher is a base class of UnicodeFilter.
  */
-UnicodeMatcher* UnicodeFilter::toMatcher() const U_LIFETIME_BOUND {
-  return const_cast<UnicodeFilter *>(this);
+UnicodeMatcher* UnicodeFilter::منزل_Matcher() ثابت U_LIFETIME_BOUND {
+  أرجع const_cast<UnicodeFilter *>(هذا);
 }
 
-void UnicodeFilter::setData(const TransliterationRuleData*) {}
+فراغ UnicodeFilter::سيٽ_معلومات(ثابت Transliteration_قاعدو_معلومات*) {}
 
 /**
  * Default implementation of UnicodeMatcher::matches() for Unicode
  * filters.  Matches a single code point at offset (either one or
  * two 16-bit code units).
  */
-UMatchDegree UnicodeFilter::matches(const Replaceable& text,
-                                    int32_t& offset,
-                                    int32_t limit,
+UMatchDegree UnicodeFilter::matches(ثابت Replaceable& متن,
+                                    int32_t& وٿي,
+                                    int32_t حد_بندي,
                                     UBool incremental) {
     UChar32 c;
-    if (offset < limit &&
-        contains(c = text.char32At(offset))) {
-        offset += U16_LENGTH(c);
-        return U_MATCH;
+    إذا (وٿي < حد_بندي &&
+        شامل_آهي(c = متن.char32At(وٿي))) {
+        وٿي += U16_ڊيگهائي(c);
+        أرجع U_ميلاپ;
     }
-    if (offset > limit &&
-        contains(c = text.char32At(offset))) {
+    إذا (وٿي > حد_بندي &&
+        شامل_آهي(c = متن.char32At(وٿي))) {
         // Backup offset by 1, unless the preceding character is a
         // surrogate pair -- then backup by 2 (keep offset pointing at
         // the lead surrogate).
-        --offset;
-        if (offset >= 0) {
-            offset -= U16_LENGTH(text.char32At(offset)) - 1;
+        --وٿي;
+        إذا (وٿي >= 0) {
+            وٿي -= U16_ڊيگهائي(متن.char32At(وٿي)) - 1;
         }
-        return U_MATCH;
+        أرجع U_ميلاپ;
     }
-    if (incremental && offset == limit) {
-        return U_PARTIAL_MATCH;
+    إذا (incremental && وٿي == حد_بندي) {
+        أرجع U_PARTIAL_ميلاپ;
     }
-    return U_MISMATCH;
+    أرجع U_MISMATCH;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
 //eof

@@ -17,15 +17,15 @@
 ******************************************************************************
 */
 
-#ifndef SCHRITER_H
-#define SCHRITER_H
+#جيڪڏهن_وصف_نه_ٿيل SCHRITER_H
+#وصف_ڪريو SCHRITER_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#include "unicode/chariter.h"
-#include "unicode/uchriter.h"
+#ضمن "unicode/chariter.h"
+#ضمن "unicode/uchriter.h"
 
 /**
  * \file 
@@ -45,8 +45,8 @@ U_NAMESPACE_BEGIN
  * @see ForwardCharacterIterator
  * @stable ICU 2.0
  */
-class U_COMMON_API StringCharacterIterator : public UCharCharacterIterator {
-public:
+class U_COMMON_API StringCharacterIterator : عام UCharCharacterIterator {
+عام:
   /**
    * Create an iterator over the UnicodeString referred to by "textStr".
    * The UnicodeString object is copied.
@@ -54,7 +54,7 @@ public:
    * @param textStr The unicode string used to create an iterator
    * @stable ICU 2.0
    */
-  StringCharacterIterator(const UnicodeString& textStr);
+  StringCharacterIterator(ثابت UnicodeString& متن_Str);
 
   /**
    * Create an iterator over the UnicodeString referred to by "textStr".
@@ -65,8 +65,8 @@ public:
    * @param textPos The starting position of the iteration
    * @stable ICU 2.0
    */
-  StringCharacterIterator(const UnicodeString&    textStr,
-              int32_t              textPos);
+  StringCharacterIterator(ثابت UnicodeString&    متن_Str,
+              int32_t              متن_Pos);
 
   /**
    * Create an iterator over the UnicodeString referred to by "textStr".
@@ -84,10 +84,10 @@ public:
    * @param textPos    The starting position of the iteration
    * @stable ICU 2.0
    */
-  StringCharacterIterator(const UnicodeString&    textStr,
-              int32_t              textBegin,
-              int32_t              textEnd,
-              int32_t              textPos);
+  StringCharacterIterator(ثابت UnicodeString&    متن_Str,
+              int32_t              متن_Begin,
+              int32_t              متن_پڇاڙي,
+              int32_t              متن_Pos);
 
   /**
    * Copy constructor.  The new iterator iterates over the same range
@@ -97,13 +97,13 @@ public:
    * @param that The StringCharacterIterator to be copied
    * @stable ICU 2.0
    */
-  StringCharacterIterator(const StringCharacterIterator&  that);
+  StringCharacterIterator(ثابت StringCharacterIterator&  that);
 
   /**
    * Destructor.
    * @stable ICU 2.0
    */
-  virtual ~StringCharacterIterator();
+  مجازي ~StringCharacterIterator();
 
   /**
    * Assignment operator.  *this is altered to iterate over the same
@@ -113,7 +113,7 @@ public:
    * @return the newly created object.
    * @stable ICU 2.0
    */
-  StringCharacterIterator& operator=(const StringCharacterIterator& that) U_LIFETIME_BOUND;
+  StringCharacterIterator& عامل=(ثابت StringCharacterIterator& that) U_LIFETIME_BOUND;
 
   /**
    * Returns true if the iterators iterate over the same range of the
@@ -123,7 +123,7 @@ public:
    * same string and are pointing at the same character.
    * @stable ICU 2.0
    */
-  virtual bool           operator==(const ForwardCharacterIterator& that) const override;
+  مجازي bool           عامل==(ثابت ForwardCharacterIterator& that) ثابت override;
 
   /**
    * Returns a new StringCharacterIterator referring to the same
@@ -132,14 +132,14 @@ public:
    * @return the newly cloned object.
    * @stable ICU 2.0
    */
-  virtual StringCharacterIterator* clone() const override;
+  مجازي StringCharacterIterator* clone() ثابت override;
 
   /**
    * Sets the iterator to iterate over the provided string.
    * @param newText The string to be iterated over
    * @stable ICU 2.0
    */
-  void setText(const UnicodeString& newText);
+  فراغ سيٽ_متن(ثابت UnicodeString& new_متن);
 
   /**
    * Copies the UnicodeString under iteration into the UnicodeString
@@ -148,23 +148,23 @@ public:
    * @param result Receives a copy of the text under iteration.
    * @stable ICU 2.0
    */
-  virtual void            getText(UnicodeString& result) override;
+  مجازي فراغ            get_متن(UnicodeString& نتيجو) override;
 
   /**
    * Return a class ID for this object (not really public)
    * @return a class ID for this object.
    * @stable ICU 2.0
    */
-  virtual UClassID getDynamicClassID() const override;
+  مجازي UClassID getDynamicClassID() ثابت override;
 
   /**
    * Return a class ID for this class (not really public)
    * @return a class ID for this class
    * @stable ICU 2.0
    */
-  static UClassID U_EXPORT2 getStaticClassID();
+  ساكن UClassID U_EXPORT2 getStaticClassID();
 
-protected:
+محمي:
   /**
    * Default constructor, iteration over empty string.
    * @stable ICU 2.0
@@ -175,12 +175,12 @@ protected:
    * Copy of the iterated string object.
    * @stable ICU 2.0
    */
-  UnicodeString            text;
+  UnicodeString            متن;
 
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#جيڪڏهن_پورو /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#جيڪڏهن_پورو

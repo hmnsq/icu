@@ -16,18 +16,18 @@
 *   UTF-16 converter implementation. Used to be in ucnv_utf.c.
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/uversion.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "cmemory.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "unicode/uversion.h"
+#ضمن "ucnv_bld.h"
+#ضمن "ucnv_cnv.h"
+#ضمن "cmemory.h"
 
-enum {
-    UCNV_NEED_TO_WRITE_BOM=1
+تعداد {
+    UCNV_NEED_منزل_WRITE_BOM=1
 };
 
 U_CDECL_BEGIN
@@ -35,486 +35,486 @@ U_CDECL_BEGIN
  * The UTF-16 toUnicode implementation is also used for the Java-specific
  * "with BOM" variants of UTF-16BE and UTF-16LE.
  */
-static void  U_CALLCONV
-_UTF16ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                           UErrorCode *pErrorCode);
+ساكن فراغ  U_CALLCONV
+UTF16_منزل_Unicode_With_Offsets(UConverter_منزل_Unicode_دليلون *p_دليلون,
+                           UError_ڪوڊ *p_Error_ڪوڊ);
 
 /* UTF-16BE ----------------------------------------------------------------- */
 
-#if U_IS_BIG_ENDIAN
+#إذا U_IS_BIG_ENDIAN
 #   define _UTF16PEFromUnicodeWithOffsets   _UTF16BEFromUnicodeWithOffsets
-#else
+#وإلا
 #   define _UTF16PEFromUnicodeWithOffsets   _UTF16LEFromUnicodeWithOffsets
-#endif
+#جيڪڏهن_پورو
 
 
-static void  U_CALLCONV
-_UTF16BEFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                               UErrorCode *pErrorCode) {
+ساكن فراغ  U_CALLCONV
+_UTF16BEFromUnicodeWithOffsets(UConverter_From_Unicode_دليلون *p_دليلون,
+                               UError_ڪوڊ *p_Error_ڪوڊ) {
     UConverter *cnv;
-    const char16_t *source;
-    char *target;
+    ثابت char16_t *ذريعو;
+    حرف *هدف;
     int32_t *offsets;
 
-    uint32_t targetCapacity, length, sourceIndex;
+    uint32_t هدف_صلاحيت, length, ذريعو_اشاريو;
     char16_t c, trail;
-    char overflow[4];
+    حرف حد_کان_مٿي[4];
 
-    source=pArgs->source;
-    length=(int32_t)(pArgs->sourceLimit-source);
-    if(length<=0) {
+    ذريعو=p_دليلون->ذريعو;
+    length=(int32_t)(p_دليلون->ذريعو_حد_بندي-ذريعو);
+    إذا(length<=0) {
         /* no input, nothing to do */
-        return;
+        أرجع;
     }
 
-    cnv=pArgs->converter;
+    cnv=p_دليلون->converter;
 
     /* write the BOM if necessary */
-    if(cnv->fromUnicodeStatus==UCNV_NEED_TO_WRITE_BOM) {
-        static const char bom[]={ (char)0xfeu, (char)0xffu };
-        ucnv_fromUWriteBytes(cnv,
+    إذا(cnv->from_Unicode_حالت==UCNV_NEED_منزل_WRITE_BOM) {
+        ساكن ثابت حرف bom[]={ (حرف)0xfeu, (حرف)0xffu };
+        ucnv_from_UWrite_بائيٽون(cnv,
                              bom, 2,
-                             &pArgs->target, pArgs->targetLimit,
-                             &pArgs->offsets, -1,
-                             pErrorCode);
-        cnv->fromUnicodeStatus=0;
+                             &p_دليلون->هدف, p_دليلون->هدف_حد_بندي,
+                             &p_دليلون->offsets, -1,
+                             p_Error_ڪوڊ);
+        cnv->from_Unicode_حالت=0;
     }
 
-    target=pArgs->target;
-    if(target >= pArgs->targetLimit) {
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-        return;
+    هدف=p_دليلون->هدف;
+    إذا(هدف >= p_دليلون->هدف_حد_بندي) {
+        *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+        أرجع;
     }
 
-    targetCapacity=(uint32_t)(pArgs->targetLimit-target);
-    offsets=pArgs->offsets;
-    sourceIndex=0;
+    هدف_صلاحيت=(uint32_t)(p_دليلون->هدف_حد_بندي-هدف);
+    offsets=p_دليلون->offsets;
+    ذريعو_اشاريو=0;
 
     /* c!=0 indicates in several places outside the main loops that a surrogate was found */
 
-    if((c=(char16_t)cnv->fromUChar32)!=0 && U16_IS_TRAIL(trail=*source) && targetCapacity>=4) {
+    إذا((c=(char16_t)cnv->fromUChar32)!=0 && U16_IS_TRAIL(trail=*ذريعو) && هدف_صلاحيت>=4) {
         /* the last buffer ended with a lead surrogate, output the surrogate pair */
-        ++source;
+        ++ذريعو;
         --length;
-        target[0]=(uint8_t)(c>>8);
-        target[1]=(uint8_t)c;
-        target[2]=(uint8_t)(trail>>8);
-        target[3]=(uint8_t)trail;
-        target+=4;
-        targetCapacity-=4;
-        if(offsets!=nullptr) {
+        هدف[0]=(uint8_t)(c>>8);
+        هدف[1]=(uint8_t)c;
+        هدف[2]=(uint8_t)(trail>>8);
+        هدف[3]=(uint8_t)trail;
+        هدف+=4;
+        هدف_صلاحيت-=4;
+        إذا(offsets!=خالي_اشارو) {
             *offsets++=-1;
             *offsets++=-1;
             *offsets++=-1;
             *offsets++=-1;
         }
-        sourceIndex=1;
+        ذريعو_اشاريو=1;
         cnv->fromUChar32=c=0;
     }
 
-    if(c==0) {
+    إذا(c==0) {
         /* copy an even number of bytes for complete UChars */
         uint32_t count=2*length;
-        if(count>targetCapacity) {
-            count=targetCapacity&~1;
+        إذا(count>هدف_صلاحيت) {
+            count=هدف_صلاحيت&~1;
         }
         /* count is even */
-        targetCapacity-=count;
+        هدف_صلاحيت-=count;
         count>>=1;
         length-=count;
 
-        if(offsets==nullptr) {
-            while(count>0) {
-                c=*source++;
-                if(U16_IS_SINGLE(c)) {
-                    target[0]=(uint8_t)(c>>8);
-                    target[1]=(uint8_t)c;
-                    target+=2;
-                } else if(U16_IS_SURROGATE_LEAD(c) && count>=2 && U16_IS_TRAIL(trail=*source)) {
-                    ++source;
+        إذا(offsets==خالي_اشارو) {
+            طالما(count>0) {
+                c=*ذريعو++;
+                إذا(U16_IS_SINGLE(c)) {
+                    هدف[0]=(uint8_t)(c>>8);
+                    هدف[1]=(uint8_t)c;
+                    هدف+=2;
+                } وإلا إذا(U16_IS_SURROGATE_LEAD(c) && count>=2 && U16_IS_TRAIL(trail=*ذريعو)) {
+                    ++ذريعو;
                     --count;
-                    target[0]=(uint8_t)(c>>8);
-                    target[1]=(uint8_t)c;
-                    target[2]=(uint8_t)(trail>>8);
-                    target[3]=(uint8_t)trail;
-                    target+=4;
-                } else {
-                    break;
+                    هدف[0]=(uint8_t)(c>>8);
+                    هدف[1]=(uint8_t)c;
+                    هدف[2]=(uint8_t)(trail>>8);
+                    هدف[3]=(uint8_t)trail;
+                    هدف+=4;
+                } وإلا {
+                    اكسر;
                 }
                 --count;
             }
-        } else {
-            while(count>0) {
-                c=*source++;
-                if(U16_IS_SINGLE(c)) {
-                    target[0]=(uint8_t)(c>>8);
-                    target[1]=(uint8_t)c;
-                    target+=2;
-                    *offsets++=sourceIndex;
-                    *offsets++=sourceIndex++;
-                } else if(U16_IS_SURROGATE_LEAD(c) && count>=2 && U16_IS_TRAIL(trail=*source)) {
-                    ++source;
+        } وإلا {
+            طالما(count>0) {
+                c=*ذريعو++;
+                إذا(U16_IS_SINGLE(c)) {
+                    هدف[0]=(uint8_t)(c>>8);
+                    هدف[1]=(uint8_t)c;
+                    هدف+=2;
+                    *offsets++=ذريعو_اشاريو;
+                    *offsets++=ذريعو_اشاريو++;
+                } وإلا إذا(U16_IS_SURROGATE_LEAD(c) && count>=2 && U16_IS_TRAIL(trail=*ذريعو)) {
+                    ++ذريعو;
                     --count;
-                    target[0]=(uint8_t)(c>>8);
-                    target[1]=(uint8_t)c;
-                    target[2]=(uint8_t)(trail>>8);
-                    target[3]=(uint8_t)trail;
-                    target+=4;
-                    *offsets++=sourceIndex;
-                    *offsets++=sourceIndex;
-                    *offsets++=sourceIndex;
-                    *offsets++=sourceIndex;
-                    sourceIndex+=2;
-                } else {
-                    break;
+                    هدف[0]=(uint8_t)(c>>8);
+                    هدف[1]=(uint8_t)c;
+                    هدف[2]=(uint8_t)(trail>>8);
+                    هدف[3]=(uint8_t)trail;
+                    هدف+=4;
+                    *offsets++=ذريعو_اشاريو;
+                    *offsets++=ذريعو_اشاريو;
+                    *offsets++=ذريعو_اشاريو;
+                    *offsets++=ذريعو_اشاريو;
+                    ذريعو_اشاريو+=2;
+                } وإلا {
+                    اكسر;
                 }
                 --count;
             }
         }
 
-        if(count==0) {
+        إذا(count==0) {
             /* done with the loop for complete UChars */
-            if(length>0 && targetCapacity>0) {
+            إذا(length>0 && هدف_صلاحيت>0) {
                 /*
                  * there is more input and some target capacity -
                  * it must be targetCapacity==1 because otherwise
                  * the above would have copied more;
                  * prepare for overflow output
                  */
-                if(U16_IS_SINGLE(c=*source++)) {
-                    overflow[0]=(char)(c>>8);
-                    overflow[1]=(char)c;
+                إذا(U16_IS_SINGLE(c=*ذريعو++)) {
+                    حد_کان_مٿي[0]=(حرف)(c>>8);
+                    حد_کان_مٿي[1]=(حرف)c;
                     length=2; /* 2 bytes to output */
                     c=0;
                 /* } else { keep c for surrogate handling, length will be set there */
                 }
-            } else {
+            } وإلا {
                 length=0;
                 c=0;
             }
-        } else {
+        } وإلا {
             /* keep c for surrogate handling, length will be set there */
-            targetCapacity+=2*count;
+            هدف_صلاحيت+=2*count;
         }
-    } else {
+    } وإلا {
         length=0; /* from here on, length counts the bytes in overflow[] */
     }
     
-    if(c!=0) {
+    إذا(c!=0) {
         /*
          * c is a surrogate, and
          * - source or target too short
          * - or the surrogate is unmatched
          */
         length=0;
-        if(U16_IS_SURROGATE_LEAD(c)) {
-            if(source<pArgs->sourceLimit) {
-                if(U16_IS_TRAIL(trail=*source)) {
+        إذا(U16_IS_SURROGATE_LEAD(c)) {
+            إذا(ذريعو<p_دليلون->ذريعو_حد_بندي) {
+                إذا(U16_IS_TRAIL(trail=*ذريعو)) {
                     /* output the surrogate pair, will overflow (see conditions comment above) */
-                    ++source;
-                    overflow[0]=(char)(c>>8);
-                    overflow[1]=(char)c;
-                    overflow[2]=(char)(trail>>8);
-                    overflow[3]=(char)trail;
+                    ++ذريعو;
+                    حد_کان_مٿي[0]=(حرف)(c>>8);
+                    حد_کان_مٿي[1]=(حرف)c;
+                    حد_کان_مٿي[2]=(حرف)(trail>>8);
+                    حد_کان_مٿي[3]=(حرف)trail;
                     length=4; /* 4 bytes to output */
                     c=0;
-                } else {
+                } وإلا {
                     /* unmatched lead surrogate */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                    *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
                 }
-            } else {
+            } وإلا {
                 /* see if the trail surrogate is in the next buffer */
             }
-        } else {
+        } وإلا {
             /* unmatched trail surrogate */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+            *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
         }
         cnv->fromUChar32=c;
     }
 
-    if(length>0) {
+    إذا(length>0) {
         /* output length bytes with overflow (length>targetCapacity>0) */
-        ucnv_fromUWriteBytes(cnv,
-                             overflow, length,
-                             &target, pArgs->targetLimit,
-                             &offsets, sourceIndex,
-                             pErrorCode);
-        targetCapacity = static_cast<uint32_t>(pArgs->targetLimit - target);
+        ucnv_from_UWrite_بائيٽون(cnv,
+                             حد_کان_مٿي, length,
+                             &هدف, p_دليلون->هدف_حد_بندي,
+                             &offsets, ذريعو_اشاريو,
+                             p_Error_ڪوڊ);
+        هدف_صلاحيت = static_cast<uint32_t>(p_دليلون->هدف_حد_بندي - هدف);
     }
 
-    if(U_SUCCESS(*pErrorCode) && source<pArgs->sourceLimit && targetCapacity==0) {
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+    إذا(U_SUCCESS(*p_Error_ڪوڊ) && ذريعو<p_دليلون->ذريعو_حد_بندي && هدف_صلاحيت==0) {
+        *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
     }
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target = target;
-    pArgs->offsets=offsets;
+    p_دليلون->ذريعو=ذريعو;
+    p_دليلون->هدف = هدف;
+    p_دليلون->offsets=offsets;
 }
 
-static void  U_CALLCONV
-_UTF16BEToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                             UErrorCode *pErrorCode) {
+ساكن فراغ  U_CALLCONV
+_UTF16BEToUnicodeWithOffsets(UConverter_منزل_Unicode_دليلون *p_دليلون,
+                             UError_ڪوڊ *p_Error_ڪوڊ) {
     UConverter *cnv;
-    const uint8_t *source;
-    char16_t *target;
+    ثابت uint8_t *ذريعو;
+    char16_t *هدف;
     int32_t *offsets;
 
-    uint32_t targetCapacity, length, count, sourceIndex;
+    uint32_t هدف_صلاحيت, length, count, ذريعو_اشاريو;
     char16_t c, trail;
 
-    if(pArgs->converter->mode<8) {
-        _UTF16ToUnicodeWithOffsets(pArgs, pErrorCode);
-        return;
+    إذا(p_دليلون->converter->گهڻائي<8) {
+        UTF16_منزل_Unicode_With_Offsets(p_دليلون, p_Error_ڪوڊ);
+        أرجع;
     }
 
-    cnv=pArgs->converter;
-    source=(const uint8_t *)pArgs->source;
-    length=(int32_t)((const uint8_t *)pArgs->sourceLimit-source);
-    if(length<=0 && cnv->toUnicodeStatus==0) {
+    cnv=p_دليلون->converter;
+    ذريعو=(ثابت uint8_t *)p_دليلون->ذريعو;
+    length=(int32_t)((ثابت uint8_t *)p_دليلون->ذريعو_حد_بندي-ذريعو);
+    إذا(length<=0 && cnv->منزل_Unicode_حالت==0) {
         /* no input, nothing to do */
-        return;
+        أرجع;
     }
 
-    target=pArgs->target;
-    if(target >= pArgs->targetLimit) {
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-        return;
+    هدف=p_دليلون->هدف;
+    إذا(هدف >= p_دليلون->هدف_حد_بندي) {
+        *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+        أرجع;
     }
 
-    targetCapacity=(uint32_t)(pArgs->targetLimit-target);
-    offsets=pArgs->offsets;
-    sourceIndex=0;
+    هدف_صلاحيت=(uint32_t)(p_دليلون->هدف_حد_بندي-هدف);
+    offsets=p_دليلون->offsets;
+    ذريعو_اشاريو=0;
     c=0;
 
     /* complete a partial char16_t or pair from the last call */
-    if(cnv->toUnicodeStatus!=0) {
+    إذا(cnv->منزل_Unicode_حالت!=0) {
         /*
          * special case: single byte from a previous buffer,
          * where the byte turned out not to belong to a trail surrogate
          * and the preceding, unmatched lead surrogate was put into toUBytes[]
          * for error handling
          */
-        cnv->toUBytes[0]=(uint8_t)cnv->toUnicodeStatus;
-        cnv->toULength=1;
-        cnv->toUnicodeStatus=0;
+        cnv->منزل_UBytes[0]=(uint8_t)cnv->منزل_Unicode_حالت;
+        cnv->منزل_ULength=1;
+        cnv->منزل_Unicode_حالت=0;
     }
-    if((count=cnv->toULength)!=0) {
-        uint8_t *p=cnv->toUBytes;
-        do {
-            p[count++]=*source++;
-            ++sourceIndex;
+    إذا((count=cnv->منزل_ULength)!=0) {
+        uint8_t *p=cnv->منزل_UBytes;
+        افعل {
+            p[count++]=*ذريعو++;
+            ++ذريعو_اشاريو;
             --length;
-            if(count==2) {
+            إذا(count==2) {
                 c=((char16_t)p[0]<<8)|p[1];
-                if(U16_IS_SINGLE(c)) {
+                إذا(U16_IS_SINGLE(c)) {
                     /* output the BMP code point */
-                    *target++=c;
-                    if(offsets!=nullptr) {
+                    *هدف++=c;
+                    إذا(offsets!=خالي_اشارو) {
                         *offsets++=-1;
                     }
-                    --targetCapacity;
+                    --هدف_صلاحيت;
                     count=0;
                     c=0;
-                    break;
-                } else if(U16_IS_SURROGATE_LEAD(c)) {
+                    اكسر;
+                } وإلا إذا(U16_IS_SURROGATE_LEAD(c)) {
                     /* continue collecting bytes for the trail surrogate */
                     c=0; /* avoid unnecessary surrogate handling below */
-                } else {
+                } وإلا {
                     /* fall through to error handling for an unmatched trail surrogate */
-                    break;
+                    اكسر;
                 }
-            } else if(count==4) {
+            } وإلا إذا(count==4) {
                 c=((char16_t)p[0]<<8)|p[1];
                 trail=((char16_t)p[2]<<8)|p[3];
-                if(U16_IS_TRAIL(trail)) {
+                إذا(U16_IS_TRAIL(trail)) {
                     /* output the surrogate pair */
-                    *target++=c;
-                    if(targetCapacity>=2) {
-                        *target++=trail;
-                        if(offsets!=nullptr) {
+                    *هدف++=c;
+                    إذا(هدف_صلاحيت>=2) {
+                        *هدف++=trail;
+                        إذا(offsets!=خالي_اشارو) {
                             *offsets++=-1;
                             *offsets++=-1;
                         }
-                        targetCapacity-=2;
-                    } else /* targetCapacity==1 */ {
-                        targetCapacity=0;
-                        cnv->UCharErrorBuffer[0]=trail;
-                        cnv->UCharErrorBufferLength=1;
-                        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                        هدف_صلاحيت-=2;
+                    } وإلا /* targetCapacity==1 */ {
+                        هدف_صلاحيت=0;
+                        cnv->UChar_Error_بفر[0]=trail;
+                        cnv->UChar_Error_بفر_ڊيگهائي=1;
+                        *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
                     }
                     count=0;
                     c=0;
-                    break;
-                } else {
+                    اكسر;
+                } وإلا {
                     /* unmatched lead surrogate, handle here for consistent toUBytes[] */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                    *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
 
                     /* back out reading the code unit after it */
-                    if(((const uint8_t *)pArgs->source-source)>=2) {
-                        source-=2;
-                    } else {
+                    إذا(((ثابت uint8_t *)p_دليلون->ذريعو-ذريعو)>=2) {
+                        ذريعو-=2;
+                    } وإلا {
                         /*
                          * if the trail unit's first byte was in a previous buffer, then
                          * we need to put it into a special place because toUBytes[] will be
                          * used for the lead unit's bytes
                          */
-                        cnv->toUnicodeStatus=0x100|p[2];
-                        --source;
+                        cnv->منزل_Unicode_حالت=0x100|p[2];
+                        --ذريعو;
                     }
-                    cnv->toULength=2;
+                    cnv->منزل_ULength=2;
 
                     /* write back the updated pointers */
-                    pArgs->source=(const char *)source;
-                    pArgs->target=target;
-                    pArgs->offsets=offsets;
-                    return;
+                    p_دليلون->ذريعو=(ثابت حرف *)ذريعو;
+                    p_دليلون->هدف=هدف;
+                    p_دليلون->offsets=offsets;
+                    أرجع;
                 }
             }
-        } while(length>0);
-        cnv->toULength=(int8_t)count;
+        } طالما(length>0);
+        cnv->منزل_ULength=(int8_t)count;
     }
 
     /* copy an even number of bytes for complete UChars */
-    count=2*targetCapacity;
-    if(count>length) {
+    count=2*هدف_صلاحيت;
+    إذا(count>length) {
         count=length&~1;
     }
-    if(c==0 && count>0) {
+    إذا(c==0 && count>0) {
         length-=count;
         count>>=1;
-        targetCapacity-=count;
-        if(offsets==nullptr) {
-            do {
-                c=((char16_t)source[0]<<8)|source[1];
-                source+=2;
-                if(U16_IS_SINGLE(c)) {
-                    *target++=c;
-                } else if(U16_IS_SURROGATE_LEAD(c) && count>=2 &&
-                          U16_IS_TRAIL(trail=((char16_t)source[0]<<8)|source[1])
+        هدف_صلاحيت-=count;
+        إذا(offsets==خالي_اشارو) {
+            افعل {
+                c=((char16_t)ذريعو[0]<<8)|ذريعو[1];
+                ذريعو+=2;
+                إذا(U16_IS_SINGLE(c)) {
+                    *هدف++=c;
+                } وإلا إذا(U16_IS_SURROGATE_LEAD(c) && count>=2 &&
+                          U16_IS_TRAIL(trail=((char16_t)ذريعو[0]<<8)|ذريعو[1])
                 ) {
-                    source+=2;
+                    ذريعو+=2;
                     --count;
-                    *target++=c;
-                    *target++=trail;
-                } else {
-                    break;
+                    *هدف++=c;
+                    *هدف++=trail;
+                } وإلا {
+                    اكسر;
                 }
-            } while(--count>0);
-        } else {
-            do {
-                c=((char16_t)source[0]<<8)|source[1];
-                source+=2;
-                if(U16_IS_SINGLE(c)) {
-                    *target++=c;
-                    *offsets++=sourceIndex;
-                    sourceIndex+=2;
-                } else if(U16_IS_SURROGATE_LEAD(c) && count>=2 &&
-                          U16_IS_TRAIL(trail=((char16_t)source[0]<<8)|source[1])
+            } طالما(--count>0);
+        } وإلا {
+            افعل {
+                c=((char16_t)ذريعو[0]<<8)|ذريعو[1];
+                ذريعو+=2;
+                إذا(U16_IS_SINGLE(c)) {
+                    *هدف++=c;
+                    *offsets++=ذريعو_اشاريو;
+                    ذريعو_اشاريو+=2;
+                } وإلا إذا(U16_IS_SURROGATE_LEAD(c) && count>=2 &&
+                          U16_IS_TRAIL(trail=((char16_t)ذريعو[0]<<8)|ذريعو[1])
                 ) {
-                    source+=2;
+                    ذريعو+=2;
                     --count;
-                    *target++=c;
-                    *target++=trail;
-                    *offsets++=sourceIndex;
-                    *offsets++=sourceIndex;
-                    sourceIndex+=4;
-                } else {
-                    break;
+                    *هدف++=c;
+                    *هدف++=trail;
+                    *offsets++=ذريعو_اشاريو;
+                    *offsets++=ذريعو_اشاريو;
+                    ذريعو_اشاريو+=4;
+                } وإلا {
+                    اكسر;
                 }
-            } while(--count>0);
+            } طالما(--count>0);
         }
 
-        if(count==0) {
+        إذا(count==0) {
             /* done with the loop for complete UChars */
             c=0;
-        } else {
+        } وإلا {
             /* keep c for surrogate handling, trail will be set there */
             length+=2*(count-1); /* one more byte pair was consumed than count decremented */
-            targetCapacity+=count;
+            هدف_صلاحيت+=count;
         }
     }
 
-    if(c!=0) {
+    إذا(c!=0) {
         /*
          * c is a surrogate, and
          * - source or target too short
          * - or the surrogate is unmatched
          */
-        cnv->toUBytes[0]=(uint8_t)(c>>8);
-        cnv->toUBytes[1]=(uint8_t)c;
-        cnv->toULength=2;
+        cnv->منزل_UBytes[0]=(uint8_t)(c>>8);
+        cnv->منزل_UBytes[1]=(uint8_t)c;
+        cnv->منزل_ULength=2;
 
-        if(U16_IS_SURROGATE_LEAD(c)) {
-            if(length>=2) {
-                if(U16_IS_TRAIL(trail=((char16_t)source[0]<<8)|source[1])) {
+        إذا(U16_IS_SURROGATE_LEAD(c)) {
+            إذا(length>=2) {
+                إذا(U16_IS_TRAIL(trail=((char16_t)ذريعو[0]<<8)|ذريعو[1])) {
                     /* output the surrogate pair, will overflow (see conditions comment above) */
-                    source+=2;
+                    ذريعو+=2;
                     length-=2;
-                    *target++=c;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    *هدف++=c;
+                    إذا(offsets!=خالي_اشارو) {
+                        *offsets++=ذريعو_اشاريو;
                     }
-                    cnv->UCharErrorBuffer[0]=trail;
-                    cnv->UCharErrorBufferLength=1;
-                    cnv->toULength=0;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                } else {
+                    cnv->UChar_Error_بفر[0]=trail;
+                    cnv->UChar_Error_بفر_ڊيگهائي=1;
+                    cnv->منزل_ULength=0;
+                    *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+                } وإلا {
                     /* unmatched lead surrogate */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                    *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
                 }
-            } else {
+            } وإلا {
                 /* see if the trail surrogate is in the next buffer */
             }
-        } else {
+        } وإلا {
             /* unmatched trail surrogate */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+            *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
         }
     }
 
-    if(U_SUCCESS(*pErrorCode)) {
+    إذا(U_SUCCESS(*p_Error_ڪوڊ)) {
         /* check for a remaining source byte */
-        if(length>0) {
-            if(targetCapacity==0) {
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            } else {
+        إذا(length>0) {
+            إذا(هدف_صلاحيت==0) {
+                *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+            } وإلا {
                 /* it must be length==1 because otherwise the above would have copied more */
-                cnv->toUBytes[cnv->toULength++]=*source++;
+                cnv->منزل_UBytes[cnv->منزل_ULength++]=*ذريعو++;
             }
         }
     }
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_دليلون->ذريعو=(ثابت حرف *)ذريعو;
+    p_دليلون->هدف=هدف;
+    p_دليلون->offsets=offsets;
 }
 
-static UChar32  U_CALLCONV
-_UTF16BEGetNextUChar(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
-    const uint8_t *s, *sourceLimit;
+ساكن UChar32  U_CALLCONV
+UTF16_BEGet_ايندڙ_UChar(UConverter_منزل_Unicode_دليلون *p_دليلون, UError_ڪوڊ *err) {
+    ثابت uint8_t *s, *ذريعو_حد_بندي;
     UChar32 c;
 
-    if(pArgs->converter->mode<8) {
-        return UCNV_GET_NEXT_UCHAR_USE_TO_U;
+    إذا(p_دليلون->converter->گهڻائي<8) {
+        أرجع UCNV_GET_ايندڙ_UCHAR_USE_منزل_U;
     }
 
-    s=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
+    s=(ثابت uint8_t *)p_دليلون->ذريعو;
+    ذريعو_حد_بندي=(ثابت uint8_t *)p_دليلون->ذريعو_حد_بندي;
 
-    if(s>=sourceLimit) {
+    إذا(s>=ذريعو_حد_بندي) {
         /* no input */
-        *err=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0xffff;
+        *err=U_اشاريو_OUTOFBOUNDS_ERROR;
+        أرجع 0xffff;
     }
 
-    if(s+2>sourceLimit) {
+    إذا(s+2>ذريعو_حد_بندي) {
         /* only one byte: truncated char16_t */
-        pArgs->converter->toUBytes[0]=*s++;
-        pArgs->converter->toULength=1;
-        pArgs->source=(const char *)s;
-        *err = U_TRUNCATED_CHAR_FOUND;
-        return 0xffff;
+        p_دليلون->converter->منزل_UBytes[0]=*s++;
+        p_دليلون->converter->منزل_ULength=1;
+        p_دليلون->ذريعو=(ثابت حرف *)s;
+        *err = U_TRUNCATED_CHAR_مليو;
+        أرجع 0xffff;
     }
 
     /* get one char16_t */
@@ -522,600 +522,600 @@ _UTF16BEGetNextUChar(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
     s+=2;
 
     /* check for a surrogate pair */
-    if(U_IS_SURROGATE(c)) {
-        if(U16_IS_SURROGATE_LEAD(c)) {
-            if(s+2<=sourceLimit) {
+    إذا(U_IS_SURROGATE(c)) {
+        إذا(U16_IS_SURROGATE_LEAD(c)) {
+            إذا(s+2<=ذريعو_حد_بندي) {
                 char16_t trail;
 
                 /* get a second char16_t and see if it is a trail surrogate */
                 trail=((char16_t)*s<<8)|s[1];
-                if(U16_IS_TRAIL(trail)) {
+                إذا(U16_IS_TRAIL(trail)) {
                     c=U16_GET_SUPPLEMENTARY(c, trail);
                     s+=2;
-                } else {
+                } وإلا {
                     /* unmatched lead surrogate */
                     c=-2;
                 }
-            } else {
+            } وإلا {
                 /* too few (2 or 3) bytes for a surrogate pair: truncated code point */
-                uint8_t *bytes=pArgs->converter->toUBytes;
+                uint8_t *بائيٽون=p_دليلون->converter->منزل_UBytes;
                 s-=2;
-                pArgs->converter->toULength=(int8_t)(sourceLimit-s);
-                do {
-                    *bytes++=*s++;
-                } while(s<sourceLimit);
+                p_دليلون->converter->منزل_ULength=(int8_t)(ذريعو_حد_بندي-s);
+                افعل {
+                    *بائيٽون++=*s++;
+                } طالما(s<ذريعو_حد_بندي);
 
                 c=0xffff;
-                *err=U_TRUNCATED_CHAR_FOUND;
+                *err=U_TRUNCATED_CHAR_مليو;
             }
-        } else {
+        } وإلا {
             /* unmatched trail surrogate */
             c=-2;
         }
 
-        if(c<0) {
+        إذا(c<0) {
             /* write the unmatched surrogate */
-            uint8_t *bytes=pArgs->converter->toUBytes;
-            pArgs->converter->toULength=2;
-            *bytes=*(s-2);
-            bytes[1]=*(s-1);
+            uint8_t *بائيٽون=p_دليلون->converter->منزل_UBytes;
+            p_دليلون->converter->منزل_ULength=2;
+            *بائيٽون=*(s-2);
+            بائيٽون[1]=*(s-1);
 
             c=0xffff;
-            *err=U_ILLEGAL_CHAR_FOUND;
+            *err=U_ILLEGAL_CHAR_مليو;
         }
     }
 
-    pArgs->source=(const char *)s;
-    return c;
+    p_دليلون->ذريعو=(ثابت حرف *)s;
+    أرجع c;
 } 
 
-static void  U_CALLCONV
+ساكن فراغ  U_CALLCONV
 _UTF16BEReset(UConverter *cnv, UConverterResetChoice choice) {
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    إذا(choice<=UCNV_RESET_منزل_UNICODE) {
         /* reset toUnicode state */
-        if(UCNV_GET_VERSION(cnv)==0) {
-            cnv->mode=8; /* no BOM handling */
-        } else {
-            cnv->mode=0; /* Java-specific "UnicodeBig" requires BE BOM or no BOM */
+        إذا(UCNV_GET_نسخو(cnv)==0) {
+            cnv->گهڻائي=8; /* no BOM handling */
+        } وإلا {
+            cnv->گهڻائي=0; /* Java-specific "UnicodeBig" requires BE BOM or no BOM */
         }
     }
-    if(choice!=UCNV_RESET_TO_UNICODE && UCNV_GET_VERSION(cnv)==1) {
+    إذا(choice!=UCNV_RESET_منزل_UNICODE && UCNV_GET_نسخو(cnv)==1) {
         /* reset fromUnicode for "UnicodeBig": prepare to output the UTF-16BE BOM */
-        cnv->fromUnicodeStatus=UCNV_NEED_TO_WRITE_BOM;
+        cnv->from_Unicode_حالت=UCNV_NEED_منزل_WRITE_BOM;
     }
 }
 
-static void  U_CALLCONV
+ساكن فراغ  U_CALLCONV
 _UTF16BEOpen(UConverter *cnv,
-             UConverterLoadArgs *pArgs,
-             UErrorCode *pErrorCode) {
-    (void)pArgs;
-    if(UCNV_GET_VERSION(cnv)<=1) {
+             UConverter_ڀريو_دليلون *p_دليلون,
+             UError_ڪوڊ *p_Error_ڪوڊ) {
+    (فراغ)p_دليلون;
+    إذا(UCNV_GET_نسخو(cnv)<=1) {
         _UTF16BEReset(cnv, UCNV_RESET_BOTH);
-    } else {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
+    } وإلا {
+        *p_Error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
     }
 }
 
-static const char *  U_CALLCONV
-_UTF16BEGetName(const UConverter *cnv) {
-    if(UCNV_GET_VERSION(cnv)==0) {
-        return "UTF-16BE";
-    } else {
-        return "UTF-16BE,version=1";
+ساكن ثابت حرف *  U_CALLCONV
+_UTF16BEGetName(ثابت UConverter *cnv) {
+    إذا(UCNV_GET_نسخو(cnv)==0) {
+        أرجع "UTF-16BE";
+    } وإلا {
+        أرجع "UTF-16BE,version=1";
     }
 }
-U_CDECL_END
+U_CDECL_پڇاڙي
 
-static const UConverterImpl _UTF16BEImpl={
+ساكن ثابت UConverterImpl _UTF16BEImpl={
     UCNV_UTF16_BigEndian,
 
-    nullptr,
-    nullptr,
+    خالي_اشارو,
+    خالي_اشارو,
 
     _UTF16BEOpen,
-    nullptr,
+    خالي_اشارو,
     _UTF16BEReset,
 
     _UTF16BEToUnicodeWithOffsets,
     _UTF16BEToUnicodeWithOffsets,
     _UTF16BEFromUnicodeWithOffsets,
     _UTF16BEFromUnicodeWithOffsets,
-    _UTF16BEGetNextUChar,
+    UTF16_BEGet_ايندڙ_UChar,
 
-    nullptr,
+    خالي_اشارو,
     _UTF16BEGetName,
-    nullptr,
-    nullptr,
-    ucnv_getNonSurrogateUnicodeSet,
+    خالي_اشارو,
+    خالي_اشارو,
+    ucnv_get_Non_Surrogate_Unicode_سيٽ,
 
-    nullptr,
-    nullptr
+    خالي_اشارو,
+    خالي_اشارو
 };
 
-static const UConverterStaticData _UTF16BEStaticData={
-    sizeof(UConverterStaticData),
+ساكن ثابت UConverter_Static_معلومات UTF16_BEStatic_معلومات={
+    حجم(UConverter_Static_معلومات),
     "UTF-16BE",
     1200, UCNV_IBM, UCNV_UTF16_BigEndian, 2, 2,
-    { 0xff, 0xfd, 0, 0 },2,false,false,
+    { 0xff, 0xfd, 0, 0 },2,خطأ,خطأ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
 
-const UConverterSharedData _UTF16BEData=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF16BEStaticData, &_UTF16BEImpl);
+ثابت UConverter_Shared_معلومات _UTF16BEData=
+        UCNV_IMMUTABLE_SHARED_معلومات_INITIALIZER(&UTF16_BEStatic_معلومات, &_UTF16BEImpl);
 
 /* UTF-16LE ----------------------------------------------------------------- */
 U_CDECL_BEGIN
-static void  U_CALLCONV
-_UTF16LEFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                               UErrorCode *pErrorCode) {
+ساكن فراغ  U_CALLCONV
+_UTF16LEFromUnicodeWithOffsets(UConverter_From_Unicode_دليلون *p_دليلون,
+                               UError_ڪوڊ *p_Error_ڪوڊ) {
     UConverter *cnv;
-    const char16_t *source;
-    char *target;
+    ثابت char16_t *ذريعو;
+    حرف *هدف;
     int32_t *offsets;
 
-    uint32_t targetCapacity, length, sourceIndex;
+    uint32_t هدف_صلاحيت, length, ذريعو_اشاريو;
     char16_t c, trail;
-    char overflow[4];
+    حرف حد_کان_مٿي[4];
 
-    source=pArgs->source;
-    length=(int32_t)(pArgs->sourceLimit-source);
-    if(length<=0) {
+    ذريعو=p_دليلون->ذريعو;
+    length=(int32_t)(p_دليلون->ذريعو_حد_بندي-ذريعو);
+    إذا(length<=0) {
         /* no input, nothing to do */
-        return;
+        أرجع;
     }
 
-    cnv=pArgs->converter;
+    cnv=p_دليلون->converter;
 
     /* write the BOM if necessary */
-    if(cnv->fromUnicodeStatus==UCNV_NEED_TO_WRITE_BOM) {
-        static const char bom[]={ (char)0xffu, (char)0xfeu };
-        ucnv_fromUWriteBytes(cnv,
+    إذا(cnv->from_Unicode_حالت==UCNV_NEED_منزل_WRITE_BOM) {
+        ساكن ثابت حرف bom[]={ (حرف)0xffu, (حرف)0xfeu };
+        ucnv_from_UWrite_بائيٽون(cnv,
                              bom, 2,
-                             &pArgs->target, pArgs->targetLimit,
-                             &pArgs->offsets, -1,
-                             pErrorCode);
-        cnv->fromUnicodeStatus=0;
+                             &p_دليلون->هدف, p_دليلون->هدف_حد_بندي,
+                             &p_دليلون->offsets, -1,
+                             p_Error_ڪوڊ);
+        cnv->from_Unicode_حالت=0;
     }
 
-    target=pArgs->target;
-    if(target >= pArgs->targetLimit) {
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-        return;
+    هدف=p_دليلون->هدف;
+    إذا(هدف >= p_دليلون->هدف_حد_بندي) {
+        *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+        أرجع;
     }
 
-    targetCapacity=(uint32_t)(pArgs->targetLimit-pArgs->target);
-    offsets=pArgs->offsets;
-    sourceIndex=0;
+    هدف_صلاحيت=(uint32_t)(p_دليلون->هدف_حد_بندي-p_دليلون->هدف);
+    offsets=p_دليلون->offsets;
+    ذريعو_اشاريو=0;
 
     /* c!=0 indicates in several places outside the main loops that a surrogate was found */
 
-    if((c=(char16_t)cnv->fromUChar32)!=0 && U16_IS_TRAIL(trail=*source) && targetCapacity>=4) {
+    إذا((c=(char16_t)cnv->fromUChar32)!=0 && U16_IS_TRAIL(trail=*ذريعو) && هدف_صلاحيت>=4) {
         /* the last buffer ended with a lead surrogate, output the surrogate pair */
-        ++source;
+        ++ذريعو;
         --length;
-        target[0]=(uint8_t)c;
-        target[1]=(uint8_t)(c>>8);
-        target[2]=(uint8_t)trail;
-        target[3]=(uint8_t)(trail>>8);
-        target+=4;
-        targetCapacity-=4;
-        if(offsets!=nullptr) {
+        هدف[0]=(uint8_t)c;
+        هدف[1]=(uint8_t)(c>>8);
+        هدف[2]=(uint8_t)trail;
+        هدف[3]=(uint8_t)(trail>>8);
+        هدف+=4;
+        هدف_صلاحيت-=4;
+        إذا(offsets!=خالي_اشارو) {
             *offsets++=-1;
             *offsets++=-1;
             *offsets++=-1;
             *offsets++=-1;
         }
-        sourceIndex=1;
+        ذريعو_اشاريو=1;
         cnv->fromUChar32=c=0;
     }
 
-    if(c==0) {
+    إذا(c==0) {
         /* copy an even number of bytes for complete UChars */
         uint32_t count=2*length;
-        if(count>targetCapacity) {
-            count=targetCapacity&~1;
+        إذا(count>هدف_صلاحيت) {
+            count=هدف_صلاحيت&~1;
         }
         /* count is even */
-        targetCapacity-=count;
+        هدف_صلاحيت-=count;
         count>>=1;
         length-=count;
 
-        if(offsets==nullptr) {
-            while(count>0) {
-                c=*source++;
-                if(U16_IS_SINGLE(c)) {
-                    target[0]=(uint8_t)c;
-                    target[1]=(uint8_t)(c>>8);
-                    target+=2;
-                } else if(U16_IS_SURROGATE_LEAD(c) && count>=2 && U16_IS_TRAIL(trail=*source)) {
-                    ++source;
+        إذا(offsets==خالي_اشارو) {
+            طالما(count>0) {
+                c=*ذريعو++;
+                إذا(U16_IS_SINGLE(c)) {
+                    هدف[0]=(uint8_t)c;
+                    هدف[1]=(uint8_t)(c>>8);
+                    هدف+=2;
+                } وإلا إذا(U16_IS_SURROGATE_LEAD(c) && count>=2 && U16_IS_TRAIL(trail=*ذريعو)) {
+                    ++ذريعو;
                     --count;
-                    target[0]=(uint8_t)c;
-                    target[1]=(uint8_t)(c>>8);
-                    target[2]=(uint8_t)trail;
-                    target[3]=(uint8_t)(trail>>8);
-                    target+=4;
-                } else {
-                    break;
+                    هدف[0]=(uint8_t)c;
+                    هدف[1]=(uint8_t)(c>>8);
+                    هدف[2]=(uint8_t)trail;
+                    هدف[3]=(uint8_t)(trail>>8);
+                    هدف+=4;
+                } وإلا {
+                    اكسر;
                 }
                 --count;
             }
-        } else {
-            while(count>0) {
-                c=*source++;
-                if(U16_IS_SINGLE(c)) {
-                    target[0]=(uint8_t)c;
-                    target[1]=(uint8_t)(c>>8);
-                    target+=2;
-                    *offsets++=sourceIndex;
-                    *offsets++=sourceIndex++;
-                } else if(U16_IS_SURROGATE_LEAD(c) && count>=2 && U16_IS_TRAIL(trail=*source)) {
-                    ++source;
+        } وإلا {
+            طالما(count>0) {
+                c=*ذريعو++;
+                إذا(U16_IS_SINGLE(c)) {
+                    هدف[0]=(uint8_t)c;
+                    هدف[1]=(uint8_t)(c>>8);
+                    هدف+=2;
+                    *offsets++=ذريعو_اشاريو;
+                    *offsets++=ذريعو_اشاريو++;
+                } وإلا إذا(U16_IS_SURROGATE_LEAD(c) && count>=2 && U16_IS_TRAIL(trail=*ذريعو)) {
+                    ++ذريعو;
                     --count;
-                    target[0]=(uint8_t)c;
-                    target[1]=(uint8_t)(c>>8);
-                    target[2]=(uint8_t)trail;
-                    target[3]=(uint8_t)(trail>>8);
-                    target+=4;
-                    *offsets++=sourceIndex;
-                    *offsets++=sourceIndex;
-                    *offsets++=sourceIndex;
-                    *offsets++=sourceIndex;
-                    sourceIndex+=2;
-                } else {
-                    break;
+                    هدف[0]=(uint8_t)c;
+                    هدف[1]=(uint8_t)(c>>8);
+                    هدف[2]=(uint8_t)trail;
+                    هدف[3]=(uint8_t)(trail>>8);
+                    هدف+=4;
+                    *offsets++=ذريعو_اشاريو;
+                    *offsets++=ذريعو_اشاريو;
+                    *offsets++=ذريعو_اشاريو;
+                    *offsets++=ذريعو_اشاريو;
+                    ذريعو_اشاريو+=2;
+                } وإلا {
+                    اكسر;
                 }
                 --count;
             }
         }
 
-        if(count==0) {
+        إذا(count==0) {
             /* done with the loop for complete UChars */
-            if(length>0 && targetCapacity>0) {
+            إذا(length>0 && هدف_صلاحيت>0) {
                 /*
                  * there is more input and some target capacity -
                  * it must be targetCapacity==1 because otherwise
                  * the above would have copied more;
                  * prepare for overflow output
                  */
-                if(U16_IS_SINGLE(c=*source++)) {
-                    overflow[0]=(char)c;
-                    overflow[1]=(char)(c>>8);
+                إذا(U16_IS_SINGLE(c=*ذريعو++)) {
+                    حد_کان_مٿي[0]=(حرف)c;
+                    حد_کان_مٿي[1]=(حرف)(c>>8);
                     length=2; /* 2 bytes to output */
                     c=0;
                 /* } else { keep c for surrogate handling, length will be set there */
                 }
-            } else {
+            } وإلا {
                 length=0;
                 c=0;
             }
-        } else {
+        } وإلا {
             /* keep c for surrogate handling, length will be set there */
-            targetCapacity+=2*count;
+            هدف_صلاحيت+=2*count;
         }
-    } else {
+    } وإلا {
         length=0; /* from here on, length counts the bytes in overflow[] */
     }
     
-    if(c!=0) {
+    إذا(c!=0) {
         /*
          * c is a surrogate, and
          * - source or target too short
          * - or the surrogate is unmatched
          */
         length=0;
-        if(U16_IS_SURROGATE_LEAD(c)) {
-            if(source<pArgs->sourceLimit) {
-                if(U16_IS_TRAIL(trail=*source)) {
+        إذا(U16_IS_SURROGATE_LEAD(c)) {
+            إذا(ذريعو<p_دليلون->ذريعو_حد_بندي) {
+                إذا(U16_IS_TRAIL(trail=*ذريعو)) {
                     /* output the surrogate pair, will overflow (see conditions comment above) */
-                    ++source;
-                    overflow[0]=(char)c;
-                    overflow[1]=(char)(c>>8);
-                    overflow[2]=(char)trail;
-                    overflow[3]=(char)(trail>>8);
+                    ++ذريعو;
+                    حد_کان_مٿي[0]=(حرف)c;
+                    حد_کان_مٿي[1]=(حرف)(c>>8);
+                    حد_کان_مٿي[2]=(حرف)trail;
+                    حد_کان_مٿي[3]=(حرف)(trail>>8);
                     length=4; /* 4 bytes to output */
                     c=0;
-                } else {
+                } وإلا {
                     /* unmatched lead surrogate */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                    *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
                 }
-            } else {
+            } وإلا {
                 /* see if the trail surrogate is in the next buffer */
             }
-        } else {
+        } وإلا {
             /* unmatched trail surrogate */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+            *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
         }
         cnv->fromUChar32=c;
     }
 
-    if(length>0) {
+    إذا(length>0) {
         /* output length bytes with overflow (length>targetCapacity>0) */
-        ucnv_fromUWriteBytes(cnv,
-                             overflow, length,
-                             &target, pArgs->targetLimit,
-                             &offsets, sourceIndex,
-                             pErrorCode);
-        targetCapacity = static_cast<uint32_t>(pArgs->targetLimit - target);
+        ucnv_from_UWrite_بائيٽون(cnv,
+                             حد_کان_مٿي, length,
+                             &هدف, p_دليلون->هدف_حد_بندي,
+                             &offsets, ذريعو_اشاريو,
+                             p_Error_ڪوڊ);
+        هدف_صلاحيت = static_cast<uint32_t>(p_دليلون->هدف_حد_بندي - هدف);
     }
 
-    if(U_SUCCESS(*pErrorCode) && source<pArgs->sourceLimit && targetCapacity==0) {
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+    إذا(U_SUCCESS(*p_Error_ڪوڊ) && ذريعو<p_دليلون->ذريعو_حد_بندي && هدف_صلاحيت==0) {
+        *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
     }
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_دليلون->ذريعو=ذريعو;
+    p_دليلون->هدف=هدف;
+    p_دليلون->offsets=offsets;
 }
 
-static void  U_CALLCONV
-_UTF16LEToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                             UErrorCode *pErrorCode) {
+ساكن فراغ  U_CALLCONV
+_UTF16LEToUnicodeWithOffsets(UConverter_منزل_Unicode_دليلون *p_دليلون,
+                             UError_ڪوڊ *p_Error_ڪوڊ) {
     UConverter *cnv;
-    const uint8_t *source;
-    char16_t *target;
+    ثابت uint8_t *ذريعو;
+    char16_t *هدف;
     int32_t *offsets;
 
-    uint32_t targetCapacity, length, count, sourceIndex;
+    uint32_t هدف_صلاحيت, length, count, ذريعو_اشاريو;
     char16_t c, trail;
 
-    if(pArgs->converter->mode<8) {
-        _UTF16ToUnicodeWithOffsets(pArgs, pErrorCode);
-        return;
+    إذا(p_دليلون->converter->گهڻائي<8) {
+        UTF16_منزل_Unicode_With_Offsets(p_دليلون, p_Error_ڪوڊ);
+        أرجع;
     }
 
-    cnv=pArgs->converter;
-    source=(const uint8_t *)pArgs->source;
-    length=(int32_t)((const uint8_t *)pArgs->sourceLimit-source);
-    if(length<=0 && cnv->toUnicodeStatus==0) {
+    cnv=p_دليلون->converter;
+    ذريعو=(ثابت uint8_t *)p_دليلون->ذريعو;
+    length=(int32_t)((ثابت uint8_t *)p_دليلون->ذريعو_حد_بندي-ذريعو);
+    إذا(length<=0 && cnv->منزل_Unicode_حالت==0) {
         /* no input, nothing to do */
-        return;
+        أرجع;
     }
 
-    target=pArgs->target;
-    if(target >= pArgs->targetLimit) {
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-        return;
+    هدف=p_دليلون->هدف;
+    إذا(هدف >= p_دليلون->هدف_حد_بندي) {
+        *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+        أرجع;
     }
 
-    targetCapacity=(uint32_t)(pArgs->targetLimit-pArgs->target);
-    offsets=pArgs->offsets;
-    sourceIndex=0;
+    هدف_صلاحيت=(uint32_t)(p_دليلون->هدف_حد_بندي-p_دليلون->هدف);
+    offsets=p_دليلون->offsets;
+    ذريعو_اشاريو=0;
     c=0;
 
     /* complete a partial char16_t or pair from the last call */
-    if(cnv->toUnicodeStatus!=0) {
+    إذا(cnv->منزل_Unicode_حالت!=0) {
         /*
          * special case: single byte from a previous buffer,
          * where the byte turned out not to belong to a trail surrogate
          * and the preceding, unmatched lead surrogate was put into toUBytes[]
          * for error handling
          */
-        cnv->toUBytes[0]=(uint8_t)cnv->toUnicodeStatus;
-        cnv->toULength=1;
-        cnv->toUnicodeStatus=0;
+        cnv->منزل_UBytes[0]=(uint8_t)cnv->منزل_Unicode_حالت;
+        cnv->منزل_ULength=1;
+        cnv->منزل_Unicode_حالت=0;
     }
-    if((count=cnv->toULength)!=0) {
-        uint8_t *p=cnv->toUBytes;
-        do {
-            p[count++]=*source++;
-            ++sourceIndex;
+    إذا((count=cnv->منزل_ULength)!=0) {
+        uint8_t *p=cnv->منزل_UBytes;
+        افعل {
+            p[count++]=*ذريعو++;
+            ++ذريعو_اشاريو;
             --length;
-            if(count==2) {
+            إذا(count==2) {
                 c=((char16_t)p[1]<<8)|p[0];
-                if(U16_IS_SINGLE(c)) {
+                إذا(U16_IS_SINGLE(c)) {
                     /* output the BMP code point */
-                    *target++=c;
-                    if(offsets!=nullptr) {
+                    *هدف++=c;
+                    إذا(offsets!=خالي_اشارو) {
                         *offsets++=-1;
                     }
-                    --targetCapacity;
+                    --هدف_صلاحيت;
                     count=0;
                     c=0;
-                    break;
-                } else if(U16_IS_SURROGATE_LEAD(c)) {
+                    اكسر;
+                } وإلا إذا(U16_IS_SURROGATE_LEAD(c)) {
                     /* continue collecting bytes for the trail surrogate */
                     c=0; /* avoid unnecessary surrogate handling below */
-                } else {
+                } وإلا {
                     /* fall through to error handling for an unmatched trail surrogate */
-                    break;
+                    اكسر;
                 }
-            } else if(count==4) {
+            } وإلا إذا(count==4) {
                 c=((char16_t)p[1]<<8)|p[0];
                 trail=((char16_t)p[3]<<8)|p[2];
-                if(U16_IS_TRAIL(trail)) {
+                إذا(U16_IS_TRAIL(trail)) {
                     /* output the surrogate pair */
-                    *target++=c;
-                    if(targetCapacity>=2) {
-                        *target++=trail;
-                        if(offsets!=nullptr) {
+                    *هدف++=c;
+                    إذا(هدف_صلاحيت>=2) {
+                        *هدف++=trail;
+                        إذا(offsets!=خالي_اشارو) {
                             *offsets++=-1;
                             *offsets++=-1;
                         }
-                        targetCapacity-=2;
-                    } else /* targetCapacity==1 */ {
-                        targetCapacity=0;
-                        cnv->UCharErrorBuffer[0]=trail;
-                        cnv->UCharErrorBufferLength=1;
-                        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                        هدف_صلاحيت-=2;
+                    } وإلا /* targetCapacity==1 */ {
+                        هدف_صلاحيت=0;
+                        cnv->UChar_Error_بفر[0]=trail;
+                        cnv->UChar_Error_بفر_ڊيگهائي=1;
+                        *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
                     }
                     count=0;
                     c=0;
-                    break;
-                } else {
+                    اكسر;
+                } وإلا {
                     /* unmatched lead surrogate, handle here for consistent toUBytes[] */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                    *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
 
                     /* back out reading the code unit after it */
-                    if(((const uint8_t *)pArgs->source-source)>=2) {
-                        source-=2;
-                    } else {
+                    إذا(((ثابت uint8_t *)p_دليلون->ذريعو-ذريعو)>=2) {
+                        ذريعو-=2;
+                    } وإلا {
                         /*
                          * if the trail unit's first byte was in a previous buffer, then
                          * we need to put it into a special place because toUBytes[] will be
                          * used for the lead unit's bytes
                          */
-                        cnv->toUnicodeStatus=0x100|p[2];
-                        --source;
+                        cnv->منزل_Unicode_حالت=0x100|p[2];
+                        --ذريعو;
                     }
-                    cnv->toULength=2;
+                    cnv->منزل_ULength=2;
 
                     /* write back the updated pointers */
-                    pArgs->source=(const char *)source;
-                    pArgs->target=target;
-                    pArgs->offsets=offsets;
-                    return;
+                    p_دليلون->ذريعو=(ثابت حرف *)ذريعو;
+                    p_دليلون->هدف=هدف;
+                    p_دليلون->offsets=offsets;
+                    أرجع;
                 }
             }
-        } while(length>0);
-        cnv->toULength=(int8_t)count;
+        } طالما(length>0);
+        cnv->منزل_ULength=(int8_t)count;
     }
 
     /* copy an even number of bytes for complete UChars */
-    count=2*targetCapacity;
-    if(count>length) {
+    count=2*هدف_صلاحيت;
+    إذا(count>length) {
         count=length&~1;
     }
-    if(c==0 && count>0) {
+    إذا(c==0 && count>0) {
         length-=count;
         count>>=1;
-        targetCapacity-=count;
-        if(offsets==nullptr) {
-            do {
-                c=((char16_t)source[1]<<8)|source[0];
-                source+=2;
-                if(U16_IS_SINGLE(c)) {
-                    *target++=c;
-                } else if(U16_IS_SURROGATE_LEAD(c) && count>=2 &&
-                          U16_IS_TRAIL(trail=((char16_t)source[1]<<8)|source[0])
+        هدف_صلاحيت-=count;
+        إذا(offsets==خالي_اشارو) {
+            افعل {
+                c=((char16_t)ذريعو[1]<<8)|ذريعو[0];
+                ذريعو+=2;
+                إذا(U16_IS_SINGLE(c)) {
+                    *هدف++=c;
+                } وإلا إذا(U16_IS_SURROGATE_LEAD(c) && count>=2 &&
+                          U16_IS_TRAIL(trail=((char16_t)ذريعو[1]<<8)|ذريعو[0])
                 ) {
-                    source+=2;
+                    ذريعو+=2;
                     --count;
-                    *target++=c;
-                    *target++=trail;
-                } else {
-                    break;
+                    *هدف++=c;
+                    *هدف++=trail;
+                } وإلا {
+                    اكسر;
                 }
-            } while(--count>0);
-        } else {
-            do {
-                c=((char16_t)source[1]<<8)|source[0];
-                source+=2;
-                if(U16_IS_SINGLE(c)) {
-                    *target++=c;
-                    *offsets++=sourceIndex;
-                    sourceIndex+=2;
-                } else if(U16_IS_SURROGATE_LEAD(c) && count>=2 &&
-                          U16_IS_TRAIL(trail=((char16_t)source[1]<<8)|source[0])
+            } طالما(--count>0);
+        } وإلا {
+            افعل {
+                c=((char16_t)ذريعو[1]<<8)|ذريعو[0];
+                ذريعو+=2;
+                إذا(U16_IS_SINGLE(c)) {
+                    *هدف++=c;
+                    *offsets++=ذريعو_اشاريو;
+                    ذريعو_اشاريو+=2;
+                } وإلا إذا(U16_IS_SURROGATE_LEAD(c) && count>=2 &&
+                          U16_IS_TRAIL(trail=((char16_t)ذريعو[1]<<8)|ذريعو[0])
                 ) {
-                    source+=2;
+                    ذريعو+=2;
                     --count;
-                    *target++=c;
-                    *target++=trail;
-                    *offsets++=sourceIndex;
-                    *offsets++=sourceIndex;
-                    sourceIndex+=4;
-                } else {
-                    break;
+                    *هدف++=c;
+                    *هدف++=trail;
+                    *offsets++=ذريعو_اشاريو;
+                    *offsets++=ذريعو_اشاريو;
+                    ذريعو_اشاريو+=4;
+                } وإلا {
+                    اكسر;
                 }
-            } while(--count>0);
+            } طالما(--count>0);
         }
 
-        if(count==0) {
+        إذا(count==0) {
             /* done with the loop for complete UChars */
             c=0;
-        } else {
+        } وإلا {
             /* keep c for surrogate handling, trail will be set there */
             length+=2*(count-1); /* one more byte pair was consumed than count decremented */
-            targetCapacity+=count;
+            هدف_صلاحيت+=count;
         }
     }
 
-    if(c!=0) {
+    إذا(c!=0) {
         /*
          * c is a surrogate, and
          * - source or target too short
          * - or the surrogate is unmatched
          */
-        cnv->toUBytes[0]=(uint8_t)c;
-        cnv->toUBytes[1]=(uint8_t)(c>>8);
-        cnv->toULength=2;
+        cnv->منزل_UBytes[0]=(uint8_t)c;
+        cnv->منزل_UBytes[1]=(uint8_t)(c>>8);
+        cnv->منزل_ULength=2;
 
-        if(U16_IS_SURROGATE_LEAD(c)) {
-            if(length>=2) {
-                if(U16_IS_TRAIL(trail=((char16_t)source[1]<<8)|source[0])) {
+        إذا(U16_IS_SURROGATE_LEAD(c)) {
+            إذا(length>=2) {
+                إذا(U16_IS_TRAIL(trail=((char16_t)ذريعو[1]<<8)|ذريعو[0])) {
                     /* output the surrogate pair, will overflow (see conditions comment above) */
-                    source+=2;
+                    ذريعو+=2;
                     length-=2;
-                    *target++=c;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    *هدف++=c;
+                    إذا(offsets!=خالي_اشارو) {
+                        *offsets++=ذريعو_اشاريو;
                     }
-                    cnv->UCharErrorBuffer[0]=trail;
-                    cnv->UCharErrorBufferLength=1;
-                    cnv->toULength=0;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                } else {
+                    cnv->UChar_Error_بفر[0]=trail;
+                    cnv->UChar_Error_بفر_ڊيگهائي=1;
+                    cnv->منزل_ULength=0;
+                    *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+                } وإلا {
                     /* unmatched lead surrogate */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                    *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
                 }
-            } else {
+            } وإلا {
                 /* see if the trail surrogate is in the next buffer */
             }
-        } else {
+        } وإلا {
             /* unmatched trail surrogate */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+            *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
         }
     }
 
-    if(U_SUCCESS(*pErrorCode)) {
+    إذا(U_SUCCESS(*p_Error_ڪوڊ)) {
         /* check for a remaining source byte */
-        if(length>0) {
-            if(targetCapacity==0) {
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            } else {
+        إذا(length>0) {
+            إذا(هدف_صلاحيت==0) {
+                *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+            } وإلا {
                 /* it must be length==1 because otherwise the above would have copied more */
-                cnv->toUBytes[cnv->toULength++]=*source++;
+                cnv->منزل_UBytes[cnv->منزل_ULength++]=*ذريعو++;
             }
         }
     }
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_دليلون->ذريعو=(ثابت حرف *)ذريعو;
+    p_دليلون->هدف=هدف;
+    p_دليلون->offsets=offsets;
 }
 
-static UChar32  U_CALLCONV
-_UTF16LEGetNextUChar(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
-    const uint8_t *s, *sourceLimit;
+ساكن UChar32  U_CALLCONV
+UTF16_LEGet_ايندڙ_UChar(UConverter_منزل_Unicode_دليلون *p_دليلون, UError_ڪوڊ *err) {
+    ثابت uint8_t *s, *ذريعو_حد_بندي;
     UChar32 c;
 
-    if(pArgs->converter->mode<8) {
-        return UCNV_GET_NEXT_UCHAR_USE_TO_U;
+    إذا(p_دليلون->converter->گهڻائي<8) {
+        أرجع UCNV_GET_ايندڙ_UCHAR_USE_منزل_U;
     }
 
-    s=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
+    s=(ثابت uint8_t *)p_دليلون->ذريعو;
+    ذريعو_حد_بندي=(ثابت uint8_t *)p_دليلون->ذريعو_حد_بندي;
 
-    if(s>=sourceLimit) {
+    إذا(s>=ذريعو_حد_بندي) {
         /* no input */
-        *err=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0xffff;
+        *err=U_اشاريو_OUTOFBOUNDS_ERROR;
+        أرجع 0xffff;
     }
 
-    if(s+2>sourceLimit) {
+    إذا(s+2>ذريعو_حد_بندي) {
         /* only one byte: truncated char16_t */
-        pArgs->converter->toUBytes[0]=*s++;
-        pArgs->converter->toULength=1;
-        pArgs->source=(const char *)s;
-        *err = U_TRUNCATED_CHAR_FOUND;
-        return 0xffff;
+        p_دليلون->converter->منزل_UBytes[0]=*s++;
+        p_دليلون->converter->منزل_ULength=1;
+        p_دليلون->ذريعو=(ثابت حرف *)s;
+        *err = U_TRUNCATED_CHAR_مليو;
+        أرجع 0xffff;
     }
 
     /* get one char16_t */
@@ -1123,131 +1123,131 @@ _UTF16LEGetNextUChar(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
     s+=2;
 
     /* check for a surrogate pair */
-    if(U_IS_SURROGATE(c)) {
-        if(U16_IS_SURROGATE_LEAD(c)) {
-            if(s+2<=sourceLimit) {
+    إذا(U_IS_SURROGATE(c)) {
+        إذا(U16_IS_SURROGATE_LEAD(c)) {
+            إذا(s+2<=ذريعو_حد_بندي) {
                 char16_t trail;
 
                 /* get a second char16_t and see if it is a trail surrogate */
                 trail=((char16_t)s[1]<<8)|*s;
-                if(U16_IS_TRAIL(trail)) {
+                إذا(U16_IS_TRAIL(trail)) {
                     c=U16_GET_SUPPLEMENTARY(c, trail);
                     s+=2;
-                } else {
+                } وإلا {
                     /* unmatched lead surrogate */
                     c=-2;
                 }
-            } else {
+            } وإلا {
                 /* too few (2 or 3) bytes for a surrogate pair: truncated code point */
-                uint8_t *bytes=pArgs->converter->toUBytes;
+                uint8_t *بائيٽون=p_دليلون->converter->منزل_UBytes;
                 s-=2;
-                pArgs->converter->toULength=(int8_t)(sourceLimit-s);
-                do {
-                    *bytes++=*s++;
-                } while(s<sourceLimit);
+                p_دليلون->converter->منزل_ULength=(int8_t)(ذريعو_حد_بندي-s);
+                افعل {
+                    *بائيٽون++=*s++;
+                } طالما(s<ذريعو_حد_بندي);
 
                 c=0xffff;
-                *err=U_TRUNCATED_CHAR_FOUND;
+                *err=U_TRUNCATED_CHAR_مليو;
             }
-        } else {
+        } وإلا {
             /* unmatched trail surrogate */
             c=-2;
         }
 
-        if(c<0) {
+        إذا(c<0) {
             /* write the unmatched surrogate */
-            uint8_t *bytes=pArgs->converter->toUBytes;
-            pArgs->converter->toULength=2;
-            *bytes=*(s-2);
-            bytes[1]=*(s-1);
+            uint8_t *بائيٽون=p_دليلون->converter->منزل_UBytes;
+            p_دليلون->converter->منزل_ULength=2;
+            *بائيٽون=*(s-2);
+            بائيٽون[1]=*(s-1);
 
             c=0xffff;
-            *err=U_ILLEGAL_CHAR_FOUND;
+            *err=U_ILLEGAL_CHAR_مليو;
         }
     }
 
-    pArgs->source=(const char *)s;
-    return c;
+    p_دليلون->ذريعو=(ثابت حرف *)s;
+    أرجع c;
 } 
 
-static void  U_CALLCONV
+ساكن فراغ  U_CALLCONV
 _UTF16LEReset(UConverter *cnv, UConverterResetChoice choice) {
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    إذا(choice<=UCNV_RESET_منزل_UNICODE) {
         /* reset toUnicode state */
-        if(UCNV_GET_VERSION(cnv)==0) {
-            cnv->mode=8; /* no BOM handling */
-        } else {
-            cnv->mode=0; /* Java-specific "UnicodeLittle" requires LE BOM or no BOM */
+        إذا(UCNV_GET_نسخو(cnv)==0) {
+            cnv->گهڻائي=8; /* no BOM handling */
+        } وإلا {
+            cnv->گهڻائي=0; /* Java-specific "UnicodeLittle" requires LE BOM or no BOM */
         }
     }
-    if(choice!=UCNV_RESET_TO_UNICODE && UCNV_GET_VERSION(cnv)==1) {
+    إذا(choice!=UCNV_RESET_منزل_UNICODE && UCNV_GET_نسخو(cnv)==1) {
         /* reset fromUnicode for "UnicodeLittle": prepare to output the UTF-16LE BOM */
-        cnv->fromUnicodeStatus=UCNV_NEED_TO_WRITE_BOM;
+        cnv->from_Unicode_حالت=UCNV_NEED_منزل_WRITE_BOM;
     }
 }
 
-static void  U_CALLCONV
+ساكن فراغ  U_CALLCONV
 _UTF16LEOpen(UConverter *cnv,
-             UConverterLoadArgs *pArgs,
-             UErrorCode *pErrorCode) {
-    (void)pArgs;
-    if(UCNV_GET_VERSION(cnv)<=1) {
+             UConverter_ڀريو_دليلون *p_دليلون,
+             UError_ڪوڊ *p_Error_ڪوڊ) {
+    (فراغ)p_دليلون;
+    إذا(UCNV_GET_نسخو(cnv)<=1) {
         _UTF16LEReset(cnv, UCNV_RESET_BOTH);
-    } else {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
+    } وإلا {
+        *p_Error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
     }
 }
 
-static const char *  U_CALLCONV
-_UTF16LEGetName(const UConverter *cnv) {
-    if(UCNV_GET_VERSION(cnv)==0) {
-        return "UTF-16LE";
-    } else {
-        return "UTF-16LE,version=1";
+ساكن ثابت حرف *  U_CALLCONV
+_UTF16LEGetName(ثابت UConverter *cnv) {
+    إذا(UCNV_GET_نسخو(cnv)==0) {
+        أرجع "UTF-16LE";
+    } وإلا {
+        أرجع "UTF-16LE,version=1";
     }
 }
-U_CDECL_END
+U_CDECL_پڇاڙي
 
-static const UConverterImpl _UTF16LEImpl={
+ساكن ثابت UConverterImpl _UTF16LEImpl={
     UCNV_UTF16_LittleEndian,
 
-    nullptr,
-    nullptr,
+    خالي_اشارو,
+    خالي_اشارو,
 
     _UTF16LEOpen,
-    nullptr,
+    خالي_اشارو,
     _UTF16LEReset,
 
     _UTF16LEToUnicodeWithOffsets,
     _UTF16LEToUnicodeWithOffsets,
     _UTF16LEFromUnicodeWithOffsets,
     _UTF16LEFromUnicodeWithOffsets,
-    _UTF16LEGetNextUChar,
+    UTF16_LEGet_ايندڙ_UChar,
 
-    nullptr,
+    خالي_اشارو,
     _UTF16LEGetName,
-    nullptr,
-    nullptr,
-    ucnv_getNonSurrogateUnicodeSet,
+    خالي_اشارو,
+    خالي_اشارو,
+    ucnv_get_Non_Surrogate_Unicode_سيٽ,
 
-    nullptr,
-    nullptr
+    خالي_اشارو,
+    خالي_اشارو
 };
 
 
-static const UConverterStaticData _UTF16LEStaticData={
-    sizeof(UConverterStaticData),
+ساكن ثابت UConverter_Static_معلومات UTF16_LEStatic_معلومات={
+    حجم(UConverter_Static_معلومات),
     "UTF-16LE",
     1202, UCNV_IBM, UCNV_UTF16_LittleEndian, 2, 2,
-    { 0xfd, 0xff, 0, 0 },2,false,false,
+    { 0xfd, 0xff, 0, 0 },2,خطأ,خطأ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
 
-const UConverterSharedData _UTF16LEData=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF16LEStaticData, &_UTF16LEImpl);
+ثابت UConverter_Shared_معلومات _UTF16LEData=
+        UCNV_IMMUTABLE_SHARED_معلومات_INITIALIZER(&UTF16_LEStatic_معلومات, &_UTF16LEImpl);
 
 /* UTF-16 (Detect BOM) ------------------------------------------------------ */
 
@@ -1275,137 +1275,137 @@ const UConverterSharedData _UTF16LEData=
  *   UTF-16LE,version=1 (Java "UnicodeLittle" encoding) treat a reverse BOM as an error.
  */
 U_CDECL_BEGIN
-static void  U_CALLCONV
+ساكن فراغ  U_CALLCONV
 _UTF16Reset(UConverter *cnv, UConverterResetChoice choice) {
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    إذا(choice<=UCNV_RESET_منزل_UNICODE) {
         /* reset toUnicode: state=0 */
-        cnv->mode=0;
+        cnv->گهڻائي=0;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
+    إذا(choice!=UCNV_RESET_منزل_UNICODE) {
         /* reset fromUnicode: prepare to output the UTF-16PE BOM */
-        cnv->fromUnicodeStatus=UCNV_NEED_TO_WRITE_BOM;
+        cnv->from_Unicode_حالت=UCNV_NEED_منزل_WRITE_BOM;
     }
 }
-U_CDECL_END
-extern const UConverterSharedData _UTF16v2Data;
+U_CDECL_پڇاڙي
+خارجي ثابت UConverter_Shared_معلومات UTF16v2_معلومات;
 U_CDECL_BEGIN
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 _UTF16Open(UConverter *cnv,
-           UConverterLoadArgs *pArgs,
-           UErrorCode *pErrorCode) {
-    if(UCNV_GET_VERSION(cnv)<=2) {
-        if(UCNV_GET_VERSION(cnv)==2 && !pArgs->onlyTestIsLoadable) {
+           UConverter_ڀريو_دليلون *p_دليلون,
+           UError_ڪوڊ *p_Error_ڪوڊ) {
+    إذا(UCNV_GET_نسخو(cnv)<=2) {
+        إذا(UCNV_GET_نسخو(cnv)==2 && !p_دليلون->onlyTestIsLoadable) {
             /*
              * Switch implementation, and switch the staticData that's different
              * and was copied into the UConverter.
              * (See ucnv_createConverterFromSharedData() in ucnv_bld.c.)
              * UTF-16,version=2 fromUnicode() always writes a big-endian byte stream.
              */
-            cnv->sharedData=(UConverterSharedData*)&_UTF16v2Data;
-            uprv_memcpy(cnv->subChars, _UTF16v2Data.staticData->subChar, UCNV_MAX_SUBCHAR_LEN);
+            cnv->shared_معلومات=(UConverter_Shared_معلومات*)&UTF16v2_معلومات;
+            uprv_memcpy(cnv->subChars, UTF16v2_معلومات.static_معلومات->subChar, UCNV_MAX_SUBCHAR_LEN);
         }
         _UTF16Reset(cnv, UCNV_RESET_BOTH);
-    } else {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
+    } وإلا {
+        *p_Error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
     }
 }
 
-static const char *  U_CALLCONV
-_UTF16GetName(const UConverter *cnv) {
-    if(UCNV_GET_VERSION(cnv)==0) {
-        return "UTF-16";
-    } else if(UCNV_GET_VERSION(cnv)==1) {
-        return "UTF-16,version=1";
-    } else {
-        return "UTF-16,version=2";
+ساكن ثابت حرف *  U_CALLCONV
+_UTF16GetName(ثابت UConverter *cnv) {
+    إذا(UCNV_GET_نسخو(cnv)==0) {
+        أرجع "UTF-16";
+    } وإلا إذا(UCNV_GET_نسخو(cnv)==1) {
+        أرجع "UTF-16,version=1";
+    } وإلا {
+        أرجع "UTF-16,version=2";
     }
 }
-U_CDECL_END
-extern const UConverterSharedData _UTF16Data;
+U_CDECL_پڇاڙي
+خارجي ثابت UConverter_Shared_معلومات UTF16_معلومات;
 
-static inline bool IS_UTF16BE(const UConverter *cnv) {
-    return ((cnv)->sharedData == &_UTF16BEData);
+ساكن مضمن منطقي IS_UTF16BE(ثابت UConverter *cnv) {
+    أرجع ((cnv)->shared_معلومات == &_UTF16BEData);
 }
 
-static inline bool IS_UTF16LE(const UConverter *cnv) {
-    return ((cnv)->sharedData == &_UTF16LEData);
+ساكن مضمن منطقي IS_UTF16LE(ثابت UConverter *cnv) {
+    أرجع ((cnv)->shared_معلومات == &_UTF16LEData);
 }
 
-static inline bool IS_UTF16(const UConverter *cnv) {
-    return ((cnv)->sharedData==&_UTF16Data) || ((cnv)->sharedData == &_UTF16v2Data);
+ساكن مضمن منطقي IS_UTF16(ثابت UConverter *cnv) {
+    أرجع ((cnv)->shared_معلومات==&UTF16_معلومات) || ((cnv)->shared_معلومات == &UTF16v2_معلومات);
 }
 
 U_CDECL_BEGIN
-static void U_CALLCONV
-_UTF16ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                           UErrorCode *pErrorCode) {
-    UConverter *cnv=pArgs->converter;
-    const char *source=pArgs->source;
-    const char *sourceLimit=pArgs->sourceLimit;
-    int32_t *offsets=pArgs->offsets;
+ساكن فراغ U_CALLCONV
+UTF16_منزل_Unicode_With_Offsets(UConverter_منزل_Unicode_دليلون *p_دليلون,
+                           UError_ڪوڊ *p_Error_ڪوڊ) {
+    UConverter *cnv=p_دليلون->converter;
+    ثابت حرف *ذريعو=p_دليلون->ذريعو;
+    ثابت حرف *ذريعو_حد_بندي=p_دليلون->ذريعو_حد_بندي;
+    int32_t *offsets=p_دليلون->offsets;
 
-    int32_t state, offsetDelta;
+    int32_t state, وٿي_Delta;
     uint8_t b;
 
-    state=cnv->mode;
+    state=cnv->گهڻائي;
 
     /*
      * If we detect a BOM in this buffer, then we must add the BOM size to the
      * offsets because the actual converter function will not see and count the BOM.
      * offsetDelta will have the number of the BOM bytes that are in the current buffer.
      */
-    offsetDelta=0;
+    وٿي_Delta=0;
 
-    while(source<sourceLimit && U_SUCCESS(*pErrorCode)) {
-        switch(state) {
-        case 0:
-            cnv->toUBytes[0]=(uint8_t)*source++;
-            cnv->toULength=1;
+    طالما(ذريعو<ذريعو_حد_بندي && U_SUCCESS(*p_Error_ڪوڊ)) {
+        بدل(state) {
+        حالة 0:
+            cnv->منزل_UBytes[0]=(uint8_t)*ذريعو++;
+            cnv->منزل_ULength=1;
             state=1;
-            break;
-        case 1:
+            اكسر;
+        حالة 1:
             /*
              * Only inside this switch case can the state variable
              * temporarily take two additional values:
              * 6: BOM error, continue with BE
              * 7: BOM error, continue with LE
              */
-            b=*source;
-            if(cnv->toUBytes[0]==0xfe && b==0xff) {
-                if(IS_UTF16LE(cnv)) {
+            b=*ذريعو;
+            إذا(cnv->منزل_UBytes[0]==0xfe && b==0xff) {
+                إذا(IS_UTF16LE(cnv)) {
                     state=7; /* illegal reverse BOM for Java "UnicodeLittle" */
-                } else {
+                } وإلا {
                     state=8; /* detect UTF-16BE */
                 }
-            } else if(cnv->toUBytes[0]==0xff && b==0xfe) {
-                if(IS_UTF16BE(cnv)) {
+            } وإلا إذا(cnv->منزل_UBytes[0]==0xff && b==0xfe) {
+                إذا(IS_UTF16BE(cnv)) {
                     state=6; /* illegal reverse BOM for Java "UnicodeBig" */
-                } else {
+                } وإلا {
                     state=9; /* detect UTF-16LE */
                 }
-            } else if((IS_UTF16(cnv) && UCNV_GET_VERSION(cnv)==1)) {
+            } وإلا إذا((IS_UTF16(cnv) && UCNV_GET_نسخو(cnv)==1)) {
                 state=6; /* illegal missing BOM for Java "Unicode" */
             }
-            if(state>=8) {
+            إذا(state>=8) {
                 /* BOM detected, consume it */
-                ++source;
-                cnv->toULength=0;
-                offsetDelta=(int32_t)(source-pArgs->source);
-            } else if(state<6) {
+                ++ذريعو;
+                cnv->منزل_ULength=0;
+                وٿي_Delta=(int32_t)(ذريعو-p_دليلون->ذريعو);
+            } وإلا إذا(state<6) {
                 /* ok: no BOM, and not a reverse BOM */
-                if(source!=pArgs->source) {
+                إذا(ذريعو!=p_دليلون->ذريعو) {
                     /* reset the source for a correct first offset */
-                    source=pArgs->source;
-                    cnv->toULength=0;
+                    ذريعو=p_دليلون->ذريعو;
+                    cnv->منزل_ULength=0;
                 }
-                if(IS_UTF16LE(cnv)) {
+                إذا(IS_UTF16LE(cnv)) {
                     /* Make Java "UnicodeLittle" default to LE. */
                     state=9;
-                } else {
+                } وإلا {
                     /* Make standard UTF-16 and Java "UnicodeBig" default to BE. */
                     state=8;
                 }
-            } else {
+            } وإلا {
                 /*
                  * error: missing BOM, or reverse BOM
                  * UTF-16,version=1: Java-specific "Unicode" requires a BOM.
@@ -1413,167 +1413,167 @@ _UTF16ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
                  * UTF-16LE,version=1: Java-specific "UnicodeLittle" requires an LE BOM or no BOM.
                  */
                 /* report the non-BOM or reverse BOM as an illegal sequence */
-                cnv->toUBytes[1]=b;
-                cnv->toULength=2;
-                pArgs->source=source+1;
+                cnv->منزل_UBytes[1]=b;
+                cnv->منزل_ULength=2;
+                p_دليلون->ذريعو=ذريعو+1;
                 /* continue with conversion if the callback resets the error */
                 /*
                  * Make Java "Unicode" default to BE like standard UTF-16.
                  * Make Java "UnicodeBig" and "UnicodeLittle" default
                  * to their normal endiannesses.
                  */
-                cnv->mode=state+2;
-                *pErrorCode=U_ILLEGAL_ESCAPE_SEQUENCE;
-                return;
+                cnv->گهڻائي=state+2;
+                *p_Error_ڪوڊ=U_ILLEGAL_ESCAPE_SEQUENCE;
+                أرجع;
             }
             /* convert the rest of the stream */
-            cnv->mode=state;
-            continue;
-        case 8:
+            cnv->گهڻائي=state;
+            استمر;
+        حالة 8:
             /* call UTF-16BE */
-            pArgs->source=source;
-            _UTF16BEToUnicodeWithOffsets(pArgs, pErrorCode);
-            source=pArgs->source;
-            break;
-        case 9:
+            p_دليلون->ذريعو=ذريعو;
+            _UTF16BEToUnicodeWithOffsets(p_دليلون, p_Error_ڪوڊ);
+            ذريعو=p_دليلون->ذريعو;
+            اكسر;
+        حالة 9:
             /* call UTF-16LE */
-            pArgs->source=source;
-            _UTF16LEToUnicodeWithOffsets(pArgs, pErrorCode);
-            source=pArgs->source;
-            break;
-        default:
-            break; /* does not occur */
+            p_دليلون->ذريعو=ذريعو;
+            _UTF16LEToUnicodeWithOffsets(p_دليلون, p_Error_ڪوڊ);
+            ذريعو=p_دليلون->ذريعو;
+            اكسر;
+        افتراضي:
+            اكسر; /* does not occur */
         }
     }
 
     /* add BOM size to offsets - see comment at offsetDelta declaration */
-    if(offsets!=nullptr && offsetDelta!=0) {
-        int32_t *offsetsLimit=pArgs->offsets;
-        while(offsets<offsetsLimit) {
-            *offsets++ += offsetDelta;
+    إذا(offsets!=خالي_اشارو && وٿي_Delta!=0) {
+        int32_t *offsets_حد_بندي=p_دليلون->offsets;
+        طالما(offsets<offsets_حد_بندي) {
+            *offsets++ += وٿي_Delta;
         }
     }
 
-    pArgs->source=source;
+    p_دليلون->ذريعو=ذريعو;
 
-    if(source==sourceLimit && pArgs->flush) {
+    إذا(ذريعو==ذريعو_حد_بندي && p_دليلون->flush) {
         /* handle truncated input */
-        switch(state) {
-        case 0:
-            break; /* no input at all, nothing to do */
-        case 8:
-            _UTF16BEToUnicodeWithOffsets(pArgs, pErrorCode);
-            break;
-        case 9:
-            _UTF16LEToUnicodeWithOffsets(pArgs, pErrorCode);
-            break;
-        default:
+        بدل(state) {
+        حالة 0:
+            اكسر; /* no input at all, nothing to do */
+        حالة 8:
+            _UTF16BEToUnicodeWithOffsets(p_دليلون, p_Error_ڪوڊ);
+            اكسر;
+        حالة 9:
+            _UTF16LEToUnicodeWithOffsets(p_دليلون, p_Error_ڪوڊ);
+            اكسر;
+        افتراضي:
             /* 0<state<8: framework will report truncation, nothing to do here */
-            break;
+            اكسر;
         }
     }
 
-    cnv->mode=state;
+    cnv->گهڻائي=state;
 }
 
-static UChar32 U_CALLCONV
-_UTF16GetNextUChar(UConverterToUnicodeArgs *pArgs,
-                   UErrorCode *pErrorCode) {
-    switch(pArgs->converter->mode) {
-    case 8:
-        return _UTF16BEGetNextUChar(pArgs, pErrorCode);
-    case 9:
-        return _UTF16LEGetNextUChar(pArgs, pErrorCode);
-    default:
-        return UCNV_GET_NEXT_UCHAR_USE_TO_U;
+ساكن UChar32 U_CALLCONV
+UTF16_Get_ايندڙ_UChar(UConverter_منزل_Unicode_دليلون *p_دليلون,
+                   UError_ڪوڊ *p_Error_ڪوڊ) {
+    بدل(p_دليلون->converter->گهڻائي) {
+    حالة 8:
+        أرجع UTF16_BEGet_ايندڙ_UChar(p_دليلون, p_Error_ڪوڊ);
+    حالة 9:
+        أرجع UTF16_LEGet_ايندڙ_UChar(p_دليلون, p_Error_ڪوڊ);
+    افتراضي:
+        أرجع UCNV_GET_ايندڙ_UCHAR_USE_منزل_U;
     }
 }
-U_CDECL_END
+U_CDECL_پڇاڙي
 
-static const UConverterImpl _UTF16Impl = {
+ساكن ثابت UConverterImpl _UTF16Impl = {
     UCNV_UTF16,
 
-    nullptr,
-    nullptr,
+    خالي_اشارو,
+    خالي_اشارو,
 
     _UTF16Open,
-    nullptr,
+    خالي_اشارو,
     _UTF16Reset,
 
-    _UTF16ToUnicodeWithOffsets,
-    _UTF16ToUnicodeWithOffsets,
+    UTF16_منزل_Unicode_With_Offsets,
+    UTF16_منزل_Unicode_With_Offsets,
     _UTF16PEFromUnicodeWithOffsets,
     _UTF16PEFromUnicodeWithOffsets,
-    _UTF16GetNextUChar,
+    UTF16_Get_ايندڙ_UChar,
 
-    nullptr, /* ### TODO implement getStarters for all Unicode encodings?! */
+    خالي_اشارو, /* ### TODO implement getStarters for all Unicode encodings?! */
     _UTF16GetName,
-    nullptr,
-    nullptr,
-    ucnv_getNonSurrogateUnicodeSet,
+    خالي_اشارو,
+    خالي_اشارو,
+    ucnv_get_Non_Surrogate_Unicode_سيٽ,
 
-    nullptr,
-    nullptr
+    خالي_اشارو,
+    خالي_اشارو
 };
 
-static const UConverterStaticData _UTF16StaticData = {
-    sizeof(UConverterStaticData),
+ساكن ثابت UConverter_Static_معلومات UTF16_Static_معلومات = {
+    حجم(UConverter_Static_معلومات),
     "UTF-16",
     1204, /* CCSID for BOM sensitive UTF-16 */
     UCNV_IBM, UCNV_UTF16, 2, 2,
-#if U_IS_BIG_ENDIAN
+#إذا U_IS_BIG_ENDIAN
     { 0xff, 0xfd, 0, 0 }, 2,
-#else
+#وإلا
     { 0xfd, 0xff, 0, 0 }, 2,
-#endif
-    false, false,
+#جيڪڏهن_پورو
+    خطأ, خطأ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _UTF16Data =
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF16StaticData, &_UTF16Impl);
+ثابت UConverter_Shared_معلومات UTF16_معلومات =
+        UCNV_IMMUTABLE_SHARED_معلومات_INITIALIZER(&UTF16_Static_معلومات, &_UTF16Impl);
 
-static const UConverterImpl _UTF16v2Impl = {
+ساكن ثابت UConverterImpl _UTF16v2Impl = {
     UCNV_UTF16,
 
-    nullptr,
-    nullptr,
+    خالي_اشارو,
+    خالي_اشارو,
 
     _UTF16Open,
-    nullptr,
+    خالي_اشارو,
     _UTF16Reset,
 
-    _UTF16ToUnicodeWithOffsets,
-    _UTF16ToUnicodeWithOffsets,
+    UTF16_منزل_Unicode_With_Offsets,
+    UTF16_منزل_Unicode_With_Offsets,
     _UTF16BEFromUnicodeWithOffsets,
     _UTF16BEFromUnicodeWithOffsets,
-    _UTF16GetNextUChar,
+    UTF16_Get_ايندڙ_UChar,
 
-    nullptr, /* ### TODO implement getStarters for all Unicode encodings?! */
+    خالي_اشارو, /* ### TODO implement getStarters for all Unicode encodings?! */
     _UTF16GetName,
-    nullptr,
-    nullptr,
-    ucnv_getNonSurrogateUnicodeSet,
+    خالي_اشارو,
+    خالي_اشارو,
+    ucnv_get_Non_Surrogate_Unicode_سيٽ,
 
-    nullptr,
-    nullptr
+    خالي_اشارو,
+    خالي_اشارو
 };
 
-static const UConverterStaticData _UTF16v2StaticData = {
-    sizeof(UConverterStaticData),
+ساكن ثابت UConverter_Static_معلومات UTF16v2_Static_معلومات = {
+    حجم(UConverter_Static_معلومات),
     "UTF-16,version=2",
     1204, /* CCSID for BOM sensitive UTF-16 */
     UCNV_IBM, UCNV_UTF16, 2, 2,
     { 0xff, 0xfd, 0, 0 }, 2,
-    false, false,
+    خطأ, خطأ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _UTF16v2Data =
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF16v2StaticData, &_UTF16v2Impl);
+ثابت UConverter_Shared_معلومات UTF16v2_معلومات =
+        UCNV_IMMUTABLE_SHARED_معلومات_INITIALIZER(&UTF16v2_Static_معلومات, &_UTF16v2Impl);
 
-#endif
+#جيڪڏهن_پورو

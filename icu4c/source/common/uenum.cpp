@@ -16,176 +16,176 @@
 *   created by: Vladimir Weinstein
 */
 
-#include "unicode/putil.h"
-#include "uenumimp.h"
-#include "cmemory.h"
+#ضمن "unicode/putil.h"
+#ضمن "uenumimp.h"
+#ضمن "cmemory.h"
 
 /* Layout of the baseContext buffer. */
-typedef struct {
+تعريفنوع بنية {
     int32_t len;  /* number of bytes available starting at 'data' */
-    char    data; /* actual data starts here */
-} _UEnumBuffer;
+    حرف    معلومات; /* actual data starts here */
+} UEnum_بفر;
 
 /* Extra bytes to allocate in the baseContext buffer. */
-static const int32_t PAD = 8;
+ساكن ثابت int32_t PAD = 8;
 
 /* Return a pointer to the baseContext buffer, possibly allocating
    or reallocating it if at least 'capacity' bytes are not available. */
-static void* _getBuffer(UEnumeration* en U_LIFETIME_BOUND, int32_t capacity) {
+ساكن فراغ* get_بفر_2(UEnumeration* en U_LIFETIME_BOUND, int32_t capacity) {
 
-    if (en->baseContext != nullptr) {
-        if (static_cast<_UEnumBuffer*>(en->baseContext)->len < capacity) {
+    إذا (en->بنياد_Context != خالي_اشارو) {
+        إذا (static_cast<UEnum_بفر*>(en->بنياد_Context)->len < capacity) {
             capacity += PAD;
-            en->baseContext = uprv_realloc(en->baseContext,
-                                           sizeof(int32_t) + capacity);
-            if (en->baseContext == nullptr) {
-                return nullptr;
+            en->بنياد_Context = uprv_realloc(en->بنياد_Context,
+                                           حجم(int32_t) + capacity);
+            إذا (en->بنياد_Context == خالي_اشارو) {
+                أرجع خالي_اشارو;
             }
-            static_cast<_UEnumBuffer*>(en->baseContext)->len = capacity;
+            static_cast<UEnum_بفر*>(en->بنياد_Context)->len = capacity;
         }
-    } else {
+    } وإلا {
         capacity += PAD;
-        en->baseContext = uprv_malloc(sizeof(int32_t) + capacity);
-        if (en->baseContext == nullptr) {
-            return nullptr;
+        en->بنياد_Context = uprv_malloc(حجم(int32_t) + capacity);
+        إذا (en->بنياد_Context == خالي_اشارو) {
+            أرجع خالي_اشارو;
         }
-        static_cast<_UEnumBuffer*>(en->baseContext)->len = capacity;
+        static_cast<UEnum_بفر*>(en->بنياد_Context)->len = capacity;
     }
     
-    return static_cast<void*>(&static_cast<_UEnumBuffer*>(en->baseContext)->data);
+    أرجع static_cast<فراغ*>(&static_cast<UEnum_بفر*>(en->بنياد_Context)->معلومات);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 uenum_close(UEnumeration* en)
 {
-    if (en) {
-        if (en->close != nullptr) {
-            if (en->baseContext) {
-                uprv_free(en->baseContext);
+    إذا (en) {
+        إذا (en->close != خالي_اشارو) {
+            إذا (en->بنياد_Context) {
+                uprv_free(en->بنياد_Context);
             }
             en->close(en);
-        } else { /* this seems dangerous, but we better kill the object */
+        } وإلا { /* this seems dangerous, but we better kill the object */
             uprv_free(en);
         }
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-uenum_count(UEnumeration* en, UErrorCode* status)
+uenum_ڳڻپ(UEnumeration* en, UError_ڪوڊ* حالت)
 {
-    if (!en || U_FAILURE(*status)) {
-        return -1;
+    إذا (!en || U_FAILURE(*حالت)) {
+        أرجع -1;
     }
-    if (en->count != nullptr) {
-        return en->count(en, status);
-    } else {
-        *status = U_UNSUPPORTED_ERROR;
-        return -1;
+    إذا (en->count != خالي_اشارو) {
+        أرجع en->count(en, حالت);
+    } وإلا {
+        *حالت = U_UNSUPPORTED_ERROR;
+        أرجع -1;
     }
 }
 
 /* Don't call this directly. Only uenum_unext should be calling this. */
-U_CAPI const char16_t* U_EXPORT2
+U_CAPI ثابت char16_t* U_EXPORT2
 uenum_unextDefault(UEnumeration* en U_LIFETIME_BOUND,
-                   int32_t* resultLength,
-                   UErrorCode* status)
+                   int32_t* نتيجو_ڊيگهائي,
+                   UError_ڪوڊ* حالت)
 {
-    char16_t *ustr = nullptr;
+    char16_t *ustr = خالي_اشارو;
     int32_t len = 0;
-    if (en->next != nullptr) {
-        const char *cstr = en->next(en, &len, status);
-        if (cstr != nullptr) {
-            ustr = (char16_t*) _getBuffer(en, (len+1) * sizeof(char16_t));
-            if (ustr == nullptr) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
-            } else {
-                u_charsToUChars(cstr, ustr, len);
+    إذا (en->next != خالي_اشارو) {
+        ثابت حرف *cstr = en->next(en, &len, حالت);
+        إذا (cstr != خالي_اشارو) {
+            ustr = (char16_t*) get_بفر_2(en, (len+1) * حجم(char16_t));
+            إذا (ustr == خالي_اشارو) {
+                *حالت = U_يادگيري_ورهاست_ERROR;
+            } وإلا {
+                u_chars_منزل_UChars(cstr, ustr, len);
                 ustr[len] = 0;
             }
         }
-    } else {
-        *status = U_UNSUPPORTED_ERROR;
+    } وإلا {
+        *حالت = U_UNSUPPORTED_ERROR;
     }
-    if (resultLength) {
-        *resultLength = len;
+    إذا (نتيجو_ڊيگهائي) {
+        *نتيجو_ڊيگهائي = len;
     }
-    return ustr;
+    أرجع ustr;
 }
 
 /* Don't call this directly. Only uenum_next should be calling this. */
-U_CAPI const char* U_EXPORT2
-uenum_nextDefault(UEnumeration* en U_LIFETIME_BOUND,
-                  int32_t* resultLength,
-                  UErrorCode* status)
+U_CAPI ثابت حرف* U_EXPORT2
+uenum_ايندڙ_Default(UEnumeration* en U_LIFETIME_BOUND,
+                  int32_t* نتيجو_ڊيگهائي,
+                  UError_ڪوڊ* حالت)
 {
-    if (en->uNext != nullptr) {
-        char *tempCharVal;
-        const char16_t *tempUCharVal = en->uNext(en, resultLength, status);
-        if (tempUCharVal == nullptr) {
-            return nullptr;
+    إذا (en->u_ايندڙ != خالي_اشارو) {
+        حرف *عارضي_Char_Val;
+        ثابت char16_t *عارضي_UChar_Val = en->u_ايندڙ(en, نتيجو_ڊيگهائي, حالت);
+        إذا (عارضي_UChar_Val == خالي_اشارو) {
+            أرجع خالي_اشارو;
         }
-        tempCharVal = (char*)
-            _getBuffer(en, (*resultLength+1) * sizeof(char));
-        if (!tempCharVal) {
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+        عارضي_Char_Val = (حرف*)
+            get_بفر_2(en, (*نتيجو_ڊيگهائي+1) * حجم(حرف));
+        إذا (!عارضي_Char_Val) {
+            *حالت = U_يادگيري_ورهاست_ERROR;
+            أرجع خالي_اشارو;
         }
-        u_UCharsToChars(tempUCharVal, tempCharVal, *resultLength);
-        tempCharVal[*resultLength] = 0;
-        return tempCharVal;
-    } else {
-        *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+        u_UChars_منزل_Chars(عارضي_UChar_Val, عارضي_Char_Val, *نتيجو_ڊيگهائي);
+        عارضي_Char_Val[*نتيجو_ڊيگهائي] = 0;
+        أرجع عارضي_Char_Val;
+    } وإلا {
+        *حالت = U_UNSUPPORTED_ERROR;
+        أرجع خالي_اشارو;
     }
 }
 
-U_CAPI const char16_t* U_EXPORT2
+U_CAPI ثابت char16_t* U_EXPORT2
 uenum_unext(UEnumeration* en U_LIFETIME_BOUND,
-            int32_t* resultLength,
-            UErrorCode* status)
+            int32_t* نتيجو_ڊيگهائي,
+            UError_ڪوڊ* حالت)
 {
-    if (!en || U_FAILURE(*status)) {
-        return nullptr;
+    إذا (!en || U_FAILURE(*حالت)) {
+        أرجع خالي_اشارو;
     }
-    if (en->uNext != nullptr) {
-        return en->uNext(en, resultLength, status);
-    } else {
-        *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+    إذا (en->u_ايندڙ != خالي_اشارو) {
+        أرجع en->u_ايندڙ(en, نتيجو_ڊيگهائي, حالت);
+    } وإلا {
+        *حالت = U_UNSUPPORTED_ERROR;
+        أرجع خالي_اشارو;
     }
 }
 
-U_CAPI const char* U_EXPORT2
-uenum_next(UEnumeration* en U_LIFETIME_BOUND,
-           int32_t* resultLength,
-           UErrorCode* status)
+U_CAPI ثابت حرف* U_EXPORT2
+uenum_ايندڙ(UEnumeration* en U_LIFETIME_BOUND,
+           int32_t* نتيجو_ڊيگهائي,
+           UError_ڪوڊ* حالت)
 {
-    if (!en || U_FAILURE(*status)) {
-        return nullptr;
+    إذا (!en || U_FAILURE(*حالت)) {
+        أرجع خالي_اشارو;
     }
-    if (en->next != nullptr) {
-        if (resultLength != nullptr) {
-            return en->next(en, resultLength, status);
+    إذا (en->next != خالي_اشارو) {
+        إذا (نتيجو_ڊيگهائي != خالي_اشارو) {
+            أرجع en->next(en, نتيجو_ڊيگهائي, حالت);
         }
-        else {
-            int32_t dummyLength=0;
-            return en->next(en, &dummyLength, status);
+        وإلا {
+            int32_t dummy_ڊيگهائي=0;
+            أرجع en->next(en, &dummy_ڊيگهائي, حالت);
         }
-    } else {
-        *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+    } وإلا {
+        *حالت = U_UNSUPPORTED_ERROR;
+        أرجع خالي_اشارو;
     }
 }
 
-U_CAPI void U_EXPORT2
-uenum_reset(UEnumeration* en, UErrorCode* status)
+U_CAPI فراغ U_EXPORT2
+uenum_reset(UEnumeration* en, UError_ڪوڊ* حالت)
 {
-    if (!en || U_FAILURE(*status)) {
-        return;
+    إذا (!en || U_FAILURE(*حالت)) {
+        أرجع;
     }
-    if (en->reset != nullptr) {
-        en->reset(en, status);
-    } else {
-        *status = U_UNSUPPORTED_ERROR;
+    إذا (en->reset != خالي_اشارو) {
+        en->reset(en, حالت);
+    } وإلا {
+        *حالت = U_UNSUPPORTED_ERROR;
     }
 }

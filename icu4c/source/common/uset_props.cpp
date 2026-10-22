@@ -19,125 +19,125 @@
 *   uniset_props.cpp, split off for modularization.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "unicode/uset.h"
-#include "unicode/uniset.h"
-#include "cmemory.h"
-#include "unicode/ustring.h"
-#include "unicode/parsepos.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uobject.h"
+#ضمن "unicode/uset.h"
+#ضمن "unicode/uniset.h"
+#ضمن "cmemory.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/parsepos.h"
 
 U_NAMESPACE_USE
 
 U_CAPI USet* U_EXPORT2
-uset_openPattern(const char16_t* pattern, int32_t patternLength,
-                 UErrorCode* ec)
+uset_open_نمونو(ثابت char16_t* نمونو, int32_t نمونو_ڊيگهائي,
+                 UError_ڪوڊ* ec)
 {
-    UnicodeString pat(patternLength==-1, pattern, patternLength);
-    UnicodeSet* set = new UnicodeSet(pat, *ec);
+    UnicodeString pat(نمونو_ڊيگهائي==-1, نمونو, نمونو_ڊيگهائي);
+    Unicode_سيٽ* سيٽ = جديد Unicode_سيٽ(pat, *ec);
     /* test for nullptr */
-    if (set == nullptr) {
-        *ec = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    إذا (سيٽ == خالي_اشارو) {
+        *ec = U_يادگيري_ورهاست_ERROR;
+        أرجع خالي_اشارو;
     }
 
-    if (U_FAILURE(*ec)) {
-        delete set;
-        set = nullptr;
+    إذا (U_FAILURE(*ec)) {
+        ميٽيو سيٽ;
+        سيٽ = خالي_اشارو;
     }
-    return (USet*) set;
+    أرجع (USet*) سيٽ;
 }
 
 U_CAPI USet* U_EXPORT2
-uset_openPatternOptions(const char16_t* pattern, int32_t patternLength,
+uset_open_نمونو_Options(ثابت char16_t* نمونو, int32_t نمونو_ڊيگهائي,
                  uint32_t options,
-                 UErrorCode* ec)
+                 UError_ڪوڊ* ec)
 {
-    UnicodeString pat(patternLength==-1, pattern, patternLength);
-    UnicodeSet* set = new UnicodeSet(pat, options, nullptr, *ec);
+    UnicodeString pat(نمونو_ڊيگهائي==-1, نمونو, نمونو_ڊيگهائي);
+    Unicode_سيٽ* سيٽ = جديد Unicode_سيٽ(pat, options, خالي_اشارو, *ec);
     /* test for nullptr */
-    if (set == nullptr) {
-        *ec = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    إذا (سيٽ == خالي_اشارو) {
+        *ec = U_يادگيري_ورهاست_ERROR;
+        أرجع خالي_اشارو;
     }
 
-    if (U_FAILURE(*ec)) {
-        delete set;
-        set = nullptr;
+    إذا (U_FAILURE(*ec)) {
+        ميٽيو سيٽ;
+        سيٽ = خالي_اشارو;
     }
-    return (USet*) set;
+    أرجع (USet*) سيٽ;
 }
 
 
 U_CAPI int32_t U_EXPORT2 
-uset_applyPattern(USet *set,
-                  const char16_t *pattern, int32_t patternLength,
+uset_apply_نمونو(USet *سيٽ,
+                  ثابت char16_t *نمونو, int32_t نمونو_ڊيگهائي,
                   uint32_t options,
-                  UErrorCode *status){
+                  UError_ڪوڊ *حالت){
 
     // status code needs to be checked since we 
     // dereference it
-    if(status == nullptr || U_FAILURE(*status)){
-        return 0;
+    إذا(حالت == خالي_اشارو || U_FAILURE(*حالت)){
+        أرجع 0;
     }
 
     // check only the set paramenter
     // if pattern is nullptr or NUL terminated
     // UnicodeString constructor takes care of it
-    if(set == nullptr){
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا(سيٽ == خالي_اشارو){
+        *حالت = U_ILLEGAL_دليل_ERROR;
+        أرجع 0;
     }
 
-    UnicodeString pat(pattern, patternLength);
+    UnicodeString pat(نمونو, نمونو_ڊيگهائي);
 
     ParsePosition pos;
    
-    ((UnicodeSet*) set)->applyPattern(pat, pos, options, nullptr, *status);
+    ((Unicode_سيٽ*) سيٽ)->apply_نمونو(pat, pos, options, خالي_اشارو, *حالت);
     
-    return pos.getIndex();
+    أرجع pos.get_اشاريو();
 }
 
-U_CAPI void U_EXPORT2
-uset_applyIntPropertyValue(USet* set,
-               UProperty prop, int32_t value, UErrorCode* ec) {
-    ((UnicodeSet*) set)->applyIntPropertyValue(prop, value, *ec);
+U_CAPI فراغ U_EXPORT2
+uset_apply_Int_Property_قدر(USet* سيٽ,
+               UProperty prop, int32_t value, UError_ڪوڊ* ec) {
+    ((Unicode_سيٽ*) سيٽ)->apply_Int_Property_قدر(prop, value, *ec);
 }
 
-U_CAPI void U_EXPORT2
-uset_applyPropertyAlias(USet* set,
-                        const char16_t *prop, int32_t propLength,
-                        const char16_t *value, int32_t valueLength,
-            UErrorCode* ec) {
+U_CAPI فراغ U_EXPORT2
+uset_applyPropertyAlias(USet* سيٽ,
+                        ثابت char16_t *prop, int32_t prop_ڊيگهائي,
+                        ثابت char16_t *value, int32_t قدر_ڊيگهائي,
+            UError_ڪوڊ* ec) {
 
-    UnicodeString p(prop, propLength);
-    UnicodeString v(value, valueLength);
+    UnicodeString p(prop, prop_ڊيگهائي);
+    UnicodeString v(value, قدر_ڊيگهائي);
 
-    ((UnicodeSet*) set)->applyPropertyAlias(p, v, *ec);
+    ((Unicode_سيٽ*) سيٽ)->applyPropertyAlias(p, v, *ec);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_resemblesPattern(const char16_t *pattern, int32_t patternLength,
+uset_resembles_نمونو(ثابت char16_t *نمونو, int32_t نمونو_ڊيگهائي,
                       int32_t pos) {
 
-    UnicodeString pat(pattern, patternLength);
+    UnicodeString pat(نمونو, نمونو_ڊيگهائي);
 
-    return ((pos+1) < pat.length() &&
+    أرجع ((pos+1) < pat.length() &&
             pat.charAt(pos) == (char16_t)91/*[*/) ||
-            UnicodeSet::resemblesPattern(pat, pos);
+            Unicode_سيٽ::resembles_نمونو(pat, pos);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_toPattern(const USet* set,
-               char16_t* result, int32_t resultCapacity,
+uset_منزل_نمونو(ثابت USet* سيٽ,
+               char16_t* نتيجو, int32_t نتيجو_صلاحيت,
                UBool escapeUnprintable,
-               UErrorCode* ec) {
+               UError_ڪوڊ* ec) {
     UnicodeString pat;
-    ((const UnicodeSet*) set)->toPattern(pat, escapeUnprintable);
-    return pat.extract(result, resultCapacity, *ec);
+    ((ثابت Unicode_سيٽ*) سيٽ)->منزل_نمونو(pat, escapeUnprintable);
+    أرجع pat.extract(نتيجو, نتيجو_صلاحيت, *ec);
 }
 
-U_CAPI void U_EXPORT2
-uset_closeOver(USet* set, int32_t attributes) {
-    ((UnicodeSet*) set)->UnicodeSet::closeOver(attributes);
+U_CAPI فراغ U_EXPORT2
+uset_closeOver(USet* سيٽ, int32_t خاصيتون) {
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::closeOver(خاصيتون);
 }

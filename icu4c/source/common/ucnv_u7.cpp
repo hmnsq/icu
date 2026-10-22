@@ -16,15 +16,15 @@
 *   UTF-7 converter implementation. Used to be in ucnv_utf.c.
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "cmemory.h"
-#include "unicode/ucnv.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "uassert.h"
+#ضمن "cmemory.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "ucnv_bld.h"
+#ضمن "ucnv_cnv.h"
+#ضمن "uassert.h"
 
 /* UTF-7 -------------------------------------------------------------------- */
 
@@ -70,7 +70,7 @@
  * - DEL
  * - all codes beyond US-ASCII, i.e. all >127
  */
-#define inSetD(c) \
+#وصف_ڪريو اندريون_سيٽ_D(c) \
     ((uint8_t)((c)-97)<26 || (uint8_t)((c)-65)<26 || /* letters */ \
      (uint8_t)((c)-48)<10 ||    /* digits */ \
      (uint8_t)((c)-39)<3 ||     /* '() */ \
@@ -78,7 +78,7 @@
      (c)==58 || (c)==63         /* :? */ \
     )
 
-#define inSetO(c) \
+#وصف_ڪريو اندريون_سيٽ_O(c) \
     ((uint8_t)((c)-33)<6 ||         /* !"#$%& */ \
      (uint8_t)((c)-59)<4 ||         /* ;<=> */ \
      (uint8_t)((c)-93)<4 ||         /* ]^_` */ \
@@ -86,19 +86,19 @@
      (c)==42 || (c)==64 || (c)==91  /* *@[ */ \
     )
 
-#define isCRLFTAB(c) ((c)==13 || (c)==10 || (c)==9)
-#define isCRLFSPTAB(c) ((c)==32 || (c)==13 || (c)==10 || (c)==9)
+#وصف_ڪريو isCRLFTAB(c) ((c)==13 || (c)==10 || (c)==9)
+#وصف_ڪريو isCRLFSPTAB(c) ((c)==32 || (c)==13 || (c)==10 || (c)==9)
 
-#define PLUS  43
-#define MINUS 45
-#define BACKSLASH 92
-#define TILDE 126
+#وصف_ڪريو PLUS  43
+#وصف_ڪريو MINUS 45
+#وصف_ڪريو BACKSLASH 92
+#وصف_ڪريو TILDE 126
 
 /* legal byte values: all US-ASCII graphic characters from space to before tilde, and CR LF TAB */
-#define isLegalUTF7(c) (((uint8_t)((c)-32)<94 && (c)!=BACKSLASH) || isCRLFTAB(c))
+#وصف_ڪريو isLegalUTF7(c) (((uint8_t)((c)-32)<94 && (c)!=BACKSLASH) || isCRLFTAB(c))
 
 /* encode directly sets D and O and CR LF SP TAB */
-static const UBool encodeDirectlyMaximum[128]={
+ساكن ثابت UBool encode_Directly_وڌ_کان_وڌ[128]={
  /* 0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -114,7 +114,7 @@ static const UBool encodeDirectlyMaximum[128]={
 };
 
 /* encode directly set D and CR LF SP TAB but not set O */
-static const UBool encodeDirectlyRestricted[128]={
+ساكن ثابت UBool encodeDirectlyRestricted[128]={
  /* 0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -129,8 +129,8 @@ static const UBool encodeDirectlyRestricted[128]={
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0
 };
 
-static const uint8_t
-toBase64[64]={
+ساكن ثابت uint8_t
+منزل_Base64[64]={
     /* A-Z */
     65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77,
     78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
@@ -143,7 +143,7 @@ toBase64[64]={
     43, 47
 };
 
-static const int8_t
+ساكن ثابت int8_t
 fromBase64[128]={
     /* C0 controls, -1 for legal ones (CR LF TAB), -3 for illegal ones */
     -3, -3, -3, -3, -3, -3, -3, -3, -3, -1, -1, -3, -3, -1, -3, -3,
@@ -180,81 +180,81 @@ fromBase64[128]={
  */
 
 U_CDECL_BEGIN
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 _UTF7Reset(UConverter *cnv, UConverterResetChoice choice) {
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    إذا(choice<=UCNV_RESET_منزل_UNICODE) {
         /* reset toUnicode */
-        cnv->toUnicodeStatus=0x1000000; /* inDirectMode=true */
-        cnv->toULength=0;
+        cnv->منزل_Unicode_حالت=0x1000000; /* inDirectMode=true */
+        cnv->منزل_ULength=0;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
+    إذا(choice!=UCNV_RESET_منزل_UNICODE) {
         /* reset fromUnicode */
-        cnv->fromUnicodeStatus=(cnv->fromUnicodeStatus&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
+        cnv->from_Unicode_حالت=(cnv->from_Unicode_حالت&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
     }
 }
 
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 _UTF7Open(UConverter *cnv,
-          UConverterLoadArgs *pArgs,
-          UErrorCode *pErrorCode) {
-    (void)pArgs;
-    if(UCNV_GET_VERSION(cnv)<=1) {
+          UConverter_ڀريو_دليلون *p_دليلون,
+          UError_ڪوڊ *p_Error_ڪوڊ) {
+    (فراغ)p_دليلون;
+    إذا(UCNV_GET_نسخو(cnv)<=1) {
         /* TODO(markus): Should just use cnv->options rather than copying the version number. */
-        cnv->fromUnicodeStatus=UCNV_GET_VERSION(cnv)<<28;
+        cnv->from_Unicode_حالت=UCNV_GET_نسخو(cnv)<<28;
         _UTF7Reset(cnv, UCNV_RESET_BOTH);
-    } else {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
+    } وإلا {
+        *p_Error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
     }
 }
 
-static void U_CALLCONV
-_UTF7ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                          UErrorCode *pErrorCode) {
+ساكن فراغ U_CALLCONV
+UTF7_منزل_Unicode_With_Offsets(UConverter_منزل_Unicode_دليلون *p_دليلون,
+                          UError_ڪوڊ *p_Error_ڪوڊ) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit;
-    char16_t *target;
-    const char16_t *targetLimit;
+    ثابت uint8_t *ذريعو, *ذريعو_حد_بندي;
+    char16_t *هدف;
+    ثابت char16_t *هدف_حد_بندي;
     int32_t *offsets;
 
-    uint8_t *bytes;
-    uint8_t byteIndex;
+    uint8_t *بائيٽون;
+    uint8_t byte_اشاريو;
 
-    int32_t length, targetCapacity;
+    int32_t length, هدف_صلاحيت;
 
     /* UTF-7 state */
-    uint16_t bits;
+    uint16_t بٽ;
     int8_t base64Counter;
-    UBool inDirectMode;
+    UBool اندريون_سڌو_گهڻائي;
 
-    int8_t base64Value;
+    int8_t base64_قدر;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t ذريعو_اشاريو, ايندڙ_ذريعو_اشاريو;
 
     uint8_t b;
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_دليلون->converter;
 
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    ذريعو=(ثابت uint8_t *)p_دليلون->ذريعو;
+    ذريعو_حد_بندي=(ثابت uint8_t *)p_دليلون->ذريعو_حد_بندي;
+    هدف=p_دليلون->هدف;
+    هدف_حد_بندي=p_دليلون->هدف_حد_بندي;
+    offsets=p_دليلون->offsets;
     /* get the state machine state */
     {
-        uint32_t status=cnv->toUnicodeStatus;
-        inDirectMode=(UBool)((status>>24)&1);
-        base64Counter=(int8_t)(status>>16);
-        bits=(uint16_t)status;
+        uint32_t حالت=cnv->منزل_Unicode_حالت;
+        اندريون_سڌو_گهڻائي=(UBool)((حالت>>24)&1);
+        base64Counter=(int8_t)(حالت>>16);
+        بٽ=(uint16_t)حالت;
     }
-    bytes=cnv->toUBytes;
-    byteIndex=cnv->toULength;
+    بائيٽون=cnv->منزل_UBytes;
+    byte_اشاريو=cnv->منزل_ULength;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=byteIndex==0 ? 0 : -1;
-    nextSourceIndex=0;
+    ذريعو_اشاريو=byte_اشاريو==0 ? 0 : -1;
+    ايندڙ_ذريعو_اشاريو=0;
 
-    if(inDirectMode) {
-directMode:
+    إذا(اندريون_سڌو_گهڻائي) {
+سڌو_گهڻائي:
         /*
          * In Direct Mode, most US-ASCII characters are encoded directly, i.e.,
          * with their US-ASCII byte values.
@@ -263,43 +263,43 @@ directMode:
          *
          * In Direct Mode, only the sourceIndex is used.
          */
-        byteIndex=0;
-        length=(int32_t)(sourceLimit-source);
-        targetCapacity=(int32_t)(targetLimit-target);
-        if(length>targetCapacity) {
-            length=targetCapacity;
+        byte_اشاريو=0;
+        length=(int32_t)(ذريعو_حد_بندي-ذريعو);
+        هدف_صلاحيت=(int32_t)(هدف_حد_بندي-هدف);
+        إذا(length>هدف_صلاحيت) {
+            length=هدف_صلاحيت;
         }
-        while(length>0) {
-            b=*source++;
-            if(!isLegalUTF7(b)) {
+        طالما(length>0) {
+            b=*ذريعو++;
+            إذا(!isLegalUTF7(b)) {
                 /* illegal */
-                bytes[0]=b;
-                byteIndex=1;
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                break;
-            } else if(b!=PLUS) {
+                بائيٽون[0]=b;
+                byte_اشاريو=1;
+                *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
+                اكسر;
+            } وإلا إذا(b!=PLUS) {
                 /* write directly encoded character */
-                *target++=b;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex++;
+                *هدف++=b;
+                إذا(offsets!=خالي_اشارو) {
+                    *offsets++=ذريعو_اشاريو++;
                 }
-            } else /* PLUS */ {
+            } وإلا /* PLUS */ {
                 /* switch to Unicode mode */
-                nextSourceIndex=++sourceIndex;
-                inDirectMode=false;
-                byteIndex=0;
-                bits=0;
+                ايندڙ_ذريعو_اشاريو=++ذريعو_اشاريو;
+                اندريون_سڌو_گهڻائي=خطأ;
+                byte_اشاريو=0;
+                بٽ=0;
                 base64Counter=-1;
-                goto unicodeMode;
+                اذهب unicode_گهڻائي;
             }
             --length;
         }
-        if(source<sourceLimit && target>=targetLimit) {
+        إذا(ذريعو<ذريعو_حد_بندي && هدف>=هدف_حد_بندي) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
         }
-    } else {
-unicodeMode:
+    } وإلا {
+unicode_گهڻائي:
         /*
          * In Unicode (or "escape") Mode, UTF-16BE is base64-encoded.
          * The base64 sequence ends with any character that is not in the base64 alphabet.
@@ -310,12 +310,12 @@ unicodeMode:
          * keeping the index to the following byte.
          * Note that in 2 out of 3 cases, UChars overlap within a base64 byte.
          */
-        while(source<sourceLimit) {
-            if(target<targetLimit) {
-                bytes[byteIndex++]=b=*source++;
-                ++nextSourceIndex;
-                base64Value = -3; /* initialize as illegal */
-                if(b>=126 || (base64Value=fromBase64[b])==-3 || base64Value==-1) {
+        طالما(ذريعو<ذريعو_حد_بندي) {
+            إذا(هدف<هدف_حد_بندي) {
+                بائيٽون[byte_اشاريو++]=b=*ذريعو++;
+                ++ايندڙ_ذريعو_اشاريو;
+                base64_قدر = -3; /* initialize as illegal */
+                إذا(b>=126 || (base64_قدر=fromBase64[b])==-3 || base64_قدر==-1) {
                     /* either
                      * base64Value==-1 for any legal character except base64 and minus sign, or
                      * base64Value==-3 for illegal characters:
@@ -329,263 +329,263 @@ unicodeMode:
                      *        It may be for example, a plus which we need to deal with in direct mode.
                      * 2.2.2. Else if the current char is illegal, we might as well deal with it here.
                      */
-                    inDirectMode=true;
-                    if(base64Counter==-1) {
+                    اندريون_سڌو_گهڻائي=سچ;
+                    إذا(base64Counter==-1) {
                         /* illegal: + immediately followed by something other than base64 or minus sign */
                         /* include the plus sign in the reported sequence, but not the subsequent char */
-                        --source;
-                        bytes[0]=PLUS;
-                        byteIndex=1;
-                        *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        break;
-                    } else if(bits!=0) {
+                        --ذريعو;
+                        بائيٽون[0]=PLUS;
+                        byte_اشاريو=1;
+                        *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
+                        اكسر;
+                    } وإلا إذا(بٽ!=0) {
                         /* bits are illegally left over, a char16_t is incomplete */
                         /* don't include current char (legal or illegal) in error seq */
-                        --source;
-                        --byteIndex;
-                        *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        break;
-                    } else {
+                        --ذريعو;
+                        --byte_اشاريو;
+                        *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
+                        اكسر;
+                    } وإلا {
                         /* previous char16_t was complete */
-                        if(base64Value==-3) {
+                        إذا(base64_قدر==-3) {
                             /* current character is illegal, deal with it here */
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            break;
-                        } else {
+                            *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
+                            اكسر;
+                        } وإلا {
                             /* un-read the current character in case it is a plus sign */
-                            --source;
-                            sourceIndex=nextSourceIndex-1;
-                            goto directMode;
+                            --ذريعو;
+                            ذريعو_اشاريو=ايندڙ_ذريعو_اشاريو-1;
+                            اذهب سڌو_گهڻائي;
                         }
                     }
-                } else if(base64Value>=0) {
+                } وإلا إذا(base64_قدر>=0) {
                     /* collect base64 bytes into UChars */
-                    switch(base64Counter) {
-                    case -1: /* -1 is immediately after the + */
-                    case 0:
-                        bits=base64Value;
+                    بدل(base64Counter) {
+                    حالة -1: /* -1 is immediately after the + */
+                    حالة 0:
+                        بٽ=base64_قدر;
                         base64Counter=1;
-                        break;
-                    case 1:
-                    case 3:
-                    case 4:
-                    case 6:
-                        bits=(uint16_t)((bits<<6)|base64Value);
+                        اكسر;
+                    حالة 1:
+                    حالة 3:
+                    حالة 4:
+                    حالة 6:
+                        بٽ=(uint16_t)((بٽ<<6)|base64_قدر);
                         ++base64Counter;
-                        break;
-                    case 2:
-                        *target++=(char16_t)((bits<<4)|(base64Value>>2));
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
-                            sourceIndex=nextSourceIndex-1;
+                        اكسر;
+                    حالة 2:
+                        *هدف++=(char16_t)((بٽ<<4)|(base64_قدر>>2));
+                        إذا(offsets!=خالي_اشارو) {
+                            *offsets++=ذريعو_اشاريو;
+                            ذريعو_اشاريو=ايندڙ_ذريعو_اشاريو-1;
                         }
-                        bytes[0]=b; /* keep this byte in case an error occurs */
-                        byteIndex=1;
-                        bits=(uint16_t)(base64Value&3);
+                        بائيٽون[0]=b; /* keep this byte in case an error occurs */
+                        byte_اشاريو=1;
+                        بٽ=(uint16_t)(base64_قدر&3);
                         base64Counter=3;
-                        break;
-                    case 5:
-                        *target++=(char16_t)((bits<<2)|(base64Value>>4));
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
-                            sourceIndex=nextSourceIndex-1;
+                        اكسر;
+                    حالة 5:
+                        *هدف++=(char16_t)((بٽ<<2)|(base64_قدر>>4));
+                        إذا(offsets!=خالي_اشارو) {
+                            *offsets++=ذريعو_اشاريو;
+                            ذريعو_اشاريو=ايندڙ_ذريعو_اشاريو-1;
                         }
-                        bytes[0]=b; /* keep this byte in case an error occurs */
-                        byteIndex=1;
-                        bits=(uint16_t)(base64Value&15);
+                        بائيٽون[0]=b; /* keep this byte in case an error occurs */
+                        byte_اشاريو=1;
+                        بٽ=(uint16_t)(base64_قدر&15);
                         base64Counter=6;
-                        break;
-                    case 7:
-                        *target++=(char16_t)((bits<<6)|base64Value);
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
-                            sourceIndex=nextSourceIndex;
+                        اكسر;
+                    حالة 7:
+                        *هدف++=(char16_t)((بٽ<<6)|base64_قدر);
+                        إذا(offsets!=خالي_اشارو) {
+                            *offsets++=ذريعو_اشاريو;
+                            ذريعو_اشاريو=ايندڙ_ذريعو_اشاريو;
                         }
-                        byteIndex=0;
-                        bits=0;
+                        byte_اشاريو=0;
+                        بٽ=0;
                         base64Counter=0;
-                        break;
-                    default:
+                        اكسر;
+                    افتراضي:
                         /* will never occur */
-                        break;
+                        اكسر;
                     }
-                } else /*base64Value==-2*/ {
+                } وإلا /*base64Value==-2*/ {
                     /* minus sign terminates the base64 sequence */
-                    inDirectMode=true;
-                    if(base64Counter==-1) {
+                    اندريون_سڌو_گهڻائي=سچ;
+                    إذا(base64Counter==-1) {
                         /* +- i.e. a minus immediately following a plus */
-                        *target++=PLUS;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex-1;
+                        *هدف++=PLUS;
+                        إذا(offsets!=خالي_اشارو) {
+                            *offsets++=ذريعو_اشاريو-1;
                         }
-                    } else {
+                    } وإلا {
                         /* absorb the minus and leave the Unicode Mode */
-                        if(bits!=0) {
+                        إذا(بٽ!=0) {
                             /* bits are illegally left over, a char16_t is incomplete */
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            break;
+                            *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
+                            اكسر;
                         }
                     }
-                    sourceIndex=nextSourceIndex;
-                    goto directMode;
+                    ذريعو_اشاريو=ايندڙ_ذريعو_اشاريو;
+                    اذهب سڌو_گهڻائي;
                 }
-            } else {
+            } وإلا {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+                اكسر;
             }
         }
     }
 
-    if(U_SUCCESS(*pErrorCode) && pArgs->flush && source==sourceLimit && bits==0) {
+    إذا(U_SUCCESS(*p_Error_ڪوڊ) && p_دليلون->flush && ذريعو==ذريعو_حد_بندي && بٽ==0) {
         /*
          * if we are in Unicode mode, then the byteIndex might not be 0,
          * but that is ok if bits==0
          * -> we set byteIndex=0 at the end of the stream to avoid a truncated error
          * (not true for IMAP-mailbox-name where we must end in direct mode)
          */
-        byteIndex=0;
+        byte_اشاريو=0;
     }
 
     /* set the converter state back into UConverter */
-    cnv->toUnicodeStatus=((uint32_t)inDirectMode<<24)|((uint32_t)((uint8_t)base64Counter)<<16)|(uint32_t)bits;
-    cnv->toULength=byteIndex;
+    cnv->منزل_Unicode_حالت=((uint32_t)اندريون_سڌو_گهڻائي<<24)|((uint32_t)((uint8_t)base64Counter)<<16)|(uint32_t)بٽ;
+    cnv->منزل_ULength=byte_اشاريو;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_دليلون->ذريعو=(ثابت حرف *)ذريعو;
+    p_دليلون->هدف=هدف;
+    p_دليلون->offsets=offsets;
 }
 
-static void U_CALLCONV
-_UTF7FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                            UErrorCode *pErrorCode) {
+ساكن فراغ U_CALLCONV
+_UTF7FromUnicodeWithOffsets(UConverter_From_Unicode_دليلون *p_دليلون,
+                            UError_ڪوڊ *p_Error_ڪوڊ) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
-    uint8_t *target, *targetLimit;
+    ثابت char16_t *ذريعو, *ذريعو_حد_بندي;
+    uint8_t *هدف, *هدف_حد_بندي;
     int32_t *offsets;
 
-    int32_t length, targetCapacity, sourceIndex;
+    int32_t length, هدف_صلاحيت, ذريعو_اشاريو;
     char16_t c;
 
     /* UTF-7 state */
-    const UBool *encodeDirectly;
-    uint8_t bits;
+    ثابت UBool *encodeDirectly;
+    uint8_t بٽ;
     int8_t base64Counter;
-    UBool inDirectMode;
+    UBool اندريون_سڌو_گهڻائي;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_دليلون->converter;
 
     /* set up the local pointers */
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target=(uint8_t *)pArgs->target;
-    targetLimit=(uint8_t *)pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    ذريعو=p_دليلون->ذريعو;
+    ذريعو_حد_بندي=p_دليلون->ذريعو_حد_بندي;
+    هدف=(uint8_t *)p_دليلون->هدف;
+    هدف_حد_بندي=(uint8_t *)p_دليلون->هدف_حد_بندي;
+    offsets=p_دليلون->offsets;
 
     /* get the state machine state */
     {
-        uint32_t status=cnv->fromUnicodeStatus;
-        encodeDirectly= status<0x10000000 ? encodeDirectlyMaximum : encodeDirectlyRestricted;
-        inDirectMode=(UBool)((status>>24)&1);
-        base64Counter=(int8_t)(status>>16);
-        bits=(uint8_t)status;
-        U_ASSERT(bits<=UPRV_LENGTHOF(toBase64));
+        uint32_t حالت=cnv->from_Unicode_حالت;
+        encodeDirectly= حالت<0x10000000 ? encode_Directly_وڌ_کان_وڌ : encodeDirectlyRestricted;
+        اندريون_سڌو_گهڻائي=(UBool)((حالت>>24)&1);
+        base64Counter=(int8_t)(حالت>>16);
+        بٽ=(uint8_t)حالت;
+        U_ASSERT(بٽ<=UPRV_LENGTHOF(منزل_Base64));
     }
 
     /* UTF-7 always encodes UTF-16 code units, therefore we need only a simple sourceIndex */
-    sourceIndex=0;
+    ذريعو_اشاريو=0;
 
-    if(inDirectMode) {
-directMode:
-        length=(int32_t)(sourceLimit-source);
-        targetCapacity=(int32_t)(targetLimit-target);
-        if(length>targetCapacity) {
-            length=targetCapacity;
+    إذا(اندريون_سڌو_گهڻائي) {
+سڌو_گهڻائي:
+        length=(int32_t)(ذريعو_حد_بندي-ذريعو);
+        هدف_صلاحيت=(int32_t)(هدف_حد_بندي-هدف);
+        إذا(length>هدف_صلاحيت) {
+            length=هدف_صلاحيت;
         }
-        while(length>0) {
-            c=*source++;
+        طالما(length>0) {
+            c=*ذريعو++;
             /* currently always encode CR LF SP TAB directly */
-            if(c<=127 && encodeDirectly[c]) {
+            إذا(c<=127 && encodeDirectly[c]) {
                 /* encode directly */
-                *target++=(uint8_t)c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex++;
+                *هدف++=(uint8_t)c;
+                إذا(offsets!=خالي_اشارو) {
+                    *offsets++=ذريعو_اشاريو++;
                 }
-            } else if(c==PLUS) {
+            } وإلا إذا(c==PLUS) {
                 /* output +- for + */
-                *target++=PLUS;
-                if(target<targetLimit) {
-                    *target++=MINUS;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
-                        *offsets++=sourceIndex++;
+                *هدف++=PLUS;
+                إذا(هدف<هدف_حد_بندي) {
+                    *هدف++=MINUS;
+                    إذا(offsets!=خالي_اشارو) {
+                        *offsets++=ذريعو_اشاريو;
+                        *offsets++=ذريعو_اشاريو++;
                     }
                     /* realign length and targetCapacity */
-                    goto directMode;
-                } else {
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex++;
+                    اذهب سڌو_گهڻائي;
+                } وإلا {
+                    إذا(offsets!=خالي_اشارو) {
+                        *offsets++=ذريعو_اشاريو++;
                     }
-                    cnv->charErrorBuffer[0]=MINUS;
-                    cnv->charErrorBufferLength=1;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    cnv->char_Error_بفر[0]=MINUS;
+                    cnv->char_Error_بفر_ڊيگهائي=1;
+                    *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+                    اكسر;
                 }
-            } else {
+            } وإلا {
                 /* un-read this character and switch to Unicode Mode */
-                --source;
-                *target++=PLUS;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                --ذريعو;
+                *هدف++=PLUS;
+                إذا(offsets!=خالي_اشارو) {
+                    *offsets++=ذريعو_اشاريو;
                 }
-                inDirectMode=false;
+                اندريون_سڌو_گهڻائي=خطأ;
                 base64Counter=0;
-                goto unicodeMode;
+                اذهب unicode_گهڻائي;
             }
             --length;
         }
-        if(source<sourceLimit && target>=targetLimit) {
+        إذا(ذريعو<ذريعو_حد_بندي && هدف>=هدف_حد_بندي) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
         }
-    } else {
-unicodeMode:
-        while(source<sourceLimit) {
-            if(target<targetLimit) {
-                c=*source++;
-                if(c<=127 && encodeDirectly[c]) {
+    } وإلا {
+unicode_گهڻائي:
+        طالما(ذريعو<ذريعو_حد_بندي) {
+            إذا(هدف<هدف_حد_بندي) {
+                c=*ذريعو++;
+                إذا(c<=127 && encodeDirectly[c]) {
                     /* encode directly */
-                    inDirectMode=true;
+                    اندريون_سڌو_گهڻائي=سچ;
 
                     /* trick: back out this character to make this easier */
-                    --source;
+                    --ذريعو;
 
                     /* terminate the base64 sequence */
-                    if(base64Counter!=0) {
+                    إذا(base64Counter!=0) {
                         /* write remaining bits for the previous character */
-                        *target++=toBase64[bits];
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex-1;
+                        *هدف++=منزل_Base64[بٽ];
+                        إذا(offsets!=خالي_اشارو) {
+                            *offsets++=ذريعو_اشاريو-1;
                         }
                     }
-                    if(fromBase64[c]!=-1) {
+                    إذا(fromBase64[c]!=-1) {
                         /* need to terminate with a minus */
-                        if(target<targetLimit) {
-                            *target++=MINUS;
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex-1;
+                        إذا(هدف<هدف_حد_بندي) {
+                            *هدف++=MINUS;
+                            إذا(offsets!=خالي_اشارو) {
+                                *offsets++=ذريعو_اشاريو-1;
                             }
-                        } else {
-                            cnv->charErrorBuffer[0]=MINUS;
-                            cnv->charErrorBufferLength=1;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                            break;
+                        } وإلا {
+                            cnv->char_Error_بفر[0]=MINUS;
+                            cnv->char_Error_بفر_ڊيگهائي=1;
+                            *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+                            اكسر;
                         }
                     }
-                    goto directMode;
-                } else {
+                    اذهب سڌو_گهڻائي;
+                } وإلا {
                     /*
                      * base64 this character:
                      * Output 2 or 3 base64 bytes for the remaining bits of the previous character
@@ -595,195 +595,195 @@ unicodeMode:
                      * character to the next. The actual 2 or 4 bits are shifted to the left edge
                      * of the 6-bits field 5..0 to make the termination of the base64 sequence easier.
                      */
-                    switch(base64Counter) {
-                    case 0:
-                        *target++=toBase64[c>>10];
-                        if(target<targetLimit) {
-                            *target++=toBase64[(c>>4)&0x3f];
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex;
-                                *offsets++=sourceIndex++;
+                    بدل(base64Counter) {
+                    حالة 0:
+                        *هدف++=منزل_Base64[c>>10];
+                        إذا(هدف<هدف_حد_بندي) {
+                            *هدف++=منزل_Base64[(c>>4)&0x3f];
+                            إذا(offsets!=خالي_اشارو) {
+                                *offsets++=ذريعو_اشاريو;
+                                *offsets++=ذريعو_اشاريو++;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex++;
+                        } وإلا {
+                            إذا(offsets!=خالي_اشارو) {
+                                *offsets++=ذريعو_اشاريو++;
                             }
-                            cnv->charErrorBuffer[0]=toBase64[(c>>4)&0x3f];
-                            cnv->charErrorBufferLength=1;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                            cnv->char_Error_بفر[0]=منزل_Base64[(c>>4)&0x3f];
+                            cnv->char_Error_بفر_ڊيگهائي=1;
+                            *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
                         }
-                        bits=(uint8_t)((c&15)<<2);
+                        بٽ=(uint8_t)((c&15)<<2);
                         base64Counter=1;
-                        break;
-                    case 1:
-                        *target++=toBase64[bits|(c>>14)];
-                        if(target<targetLimit) {
-                            *target++=toBase64[(c>>8)&0x3f];
-                            if(target<targetLimit) {
-                                *target++=toBase64[(c>>2)&0x3f];
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                        اكسر;
+                    حالة 1:
+                        *هدف++=منزل_Base64[بٽ|(c>>14)];
+                        إذا(هدف<هدف_حد_بندي) {
+                            *هدف++=منزل_Base64[(c>>8)&0x3f];
+                            إذا(هدف<هدف_حد_بندي) {
+                                *هدف++=منزل_Base64[(c>>2)&0x3f];
+                                إذا(offsets!=خالي_اشارو) {
+                                    *offsets++=ذريعو_اشاريو;
+                                    *offsets++=ذريعو_اشاريو;
+                                    *offsets++=ذريعو_اشاريو++;
                                 }
-                            } else {
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                            } وإلا {
+                                إذا(offsets!=خالي_اشارو) {
+                                    *offsets++=ذريعو_اشاريو;
+                                    *offsets++=ذريعو_اشاريو++;
                                 }
-                                cnv->charErrorBuffer[0]=toBase64[(c>>2)&0x3f];
-                                cnv->charErrorBufferLength=1;
-                                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                                cnv->char_Error_بفر[0]=منزل_Base64[(c>>2)&0x3f];
+                                cnv->char_Error_بفر_ڊيگهائي=1;
+                                *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex++;
+                        } وإلا {
+                            إذا(offsets!=خالي_اشارو) {
+                                *offsets++=ذريعو_اشاريو++;
                             }
-                            cnv->charErrorBuffer[0]=toBase64[(c>>8)&0x3f];
-                            cnv->charErrorBuffer[1]=toBase64[(c>>2)&0x3f];
-                            cnv->charErrorBufferLength=2;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                            cnv->char_Error_بفر[0]=منزل_Base64[(c>>8)&0x3f];
+                            cnv->char_Error_بفر[1]=منزل_Base64[(c>>2)&0x3f];
+                            cnv->char_Error_بفر_ڊيگهائي=2;
+                            *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
                         }
-                        bits=(uint8_t)((c&3)<<4);
+                        بٽ=(uint8_t)((c&3)<<4);
                         base64Counter=2;
-                        break;
-                    case 2:
-                        *target++=toBase64[bits|(c>>12)];
-                        if(target<targetLimit) {
-                            *target++=toBase64[(c>>6)&0x3f];
-                            if(target<targetLimit) {
-                                *target++=toBase64[c&0x3f];
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                        اكسر;
+                    حالة 2:
+                        *هدف++=منزل_Base64[بٽ|(c>>12)];
+                        إذا(هدف<هدف_حد_بندي) {
+                            *هدف++=منزل_Base64[(c>>6)&0x3f];
+                            إذا(هدف<هدف_حد_بندي) {
+                                *هدف++=منزل_Base64[c&0x3f];
+                                إذا(offsets!=خالي_اشارو) {
+                                    *offsets++=ذريعو_اشاريو;
+                                    *offsets++=ذريعو_اشاريو;
+                                    *offsets++=ذريعو_اشاريو++;
                                 }
-                            } else {
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                            } وإلا {
+                                إذا(offsets!=خالي_اشارو) {
+                                    *offsets++=ذريعو_اشاريو;
+                                    *offsets++=ذريعو_اشاريو++;
                                 }
-                                cnv->charErrorBuffer[0]=toBase64[c&0x3f];
-                                cnv->charErrorBufferLength=1;
-                                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                                cnv->char_Error_بفر[0]=منزل_Base64[c&0x3f];
+                                cnv->char_Error_بفر_ڊيگهائي=1;
+                                *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex++;
+                        } وإلا {
+                            إذا(offsets!=خالي_اشارو) {
+                                *offsets++=ذريعو_اشاريو++;
                             }
-                            cnv->charErrorBuffer[0]=toBase64[(c>>6)&0x3f];
-                            cnv->charErrorBuffer[1]=toBase64[c&0x3f];
-                            cnv->charErrorBufferLength=2;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                            cnv->char_Error_بفر[0]=منزل_Base64[(c>>6)&0x3f];
+                            cnv->char_Error_بفر[1]=منزل_Base64[c&0x3f];
+                            cnv->char_Error_بفر_ڊيگهائي=2;
+                            *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
                         }
-                        bits=0;
+                        بٽ=0;
                         base64Counter=0;
-                        break;
-                    default:
+                        اكسر;
+                    افتراضي:
                         /* will never occur */
-                        break;
+                        اكسر;
                     }
                 }
-            } else {
+            } وإلا {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+                اكسر;
             }
         }
     }
 
-    if(pArgs->flush && source>=sourceLimit) {
+    إذا(p_دليلون->flush && ذريعو>=ذريعو_حد_بندي) {
         /* flush remaining bits to the target */
-        if(!inDirectMode) {
-            if (base64Counter!=0) {
-                if(target<targetLimit) {
-                    *target++=toBase64[bits];
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex-1;
+        إذا(!اندريون_سڌو_گهڻائي) {
+            إذا (base64Counter!=0) {
+                إذا(هدف<هدف_حد_بندي) {
+                    *هدف++=منزل_Base64[بٽ];
+                    إذا(offsets!=خالي_اشارو) {
+                        *offsets++=ذريعو_اشاريو-1;
                     }
-                } else {
-                    cnv->charErrorBuffer[cnv->charErrorBufferLength++]=toBase64[bits];
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                } وإلا {
+                    cnv->char_Error_بفر[cnv->char_Error_بفر_ڊيگهائي++]=منزل_Base64[بٽ];
+                    *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
                 }
             }
             /* Add final MINUS to terminate unicodeMode */
-            if(target<targetLimit) {
-                *target++=MINUS;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex-1;
+            إذا(هدف<هدف_حد_بندي) {
+                *هدف++=MINUS;
+                إذا(offsets!=خالي_اشارو) {
+                    *offsets++=ذريعو_اشاريو-1;
                 }
-            } else {
-                cnv->charErrorBuffer[cnv->charErrorBufferLength++]=MINUS;
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            } وإلا {
+                cnv->char_Error_بفر[cnv->char_Error_بفر_ڊيگهائي++]=MINUS;
+                *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
             }
         }
         /* reset the state for the next conversion */
-        cnv->fromUnicodeStatus=(cnv->fromUnicodeStatus&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
-    } else {
+        cnv->from_Unicode_حالت=(cnv->from_Unicode_حالت&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
+    } وإلا {
         /* set the converter state back into UConverter */
-        cnv->fromUnicodeStatus=
-            (cnv->fromUnicodeStatus&0xf0000000)|    /* keep version*/
-            ((uint32_t)inDirectMode<<24)|((uint32_t)base64Counter<<16)|(uint32_t)bits;
+        cnv->from_Unicode_حالت=
+            (cnv->from_Unicode_حالت&0xf0000000)|    /* keep version*/
+            ((uint32_t)اندريون_سڌو_گهڻائي<<24)|((uint32_t)base64Counter<<16)|(uint32_t)بٽ;
     }
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=(char *)target;
-    pArgs->offsets=offsets;
+    p_دليلون->ذريعو=ذريعو;
+    p_دليلون->هدف=(حرف *)هدف;
+    p_دليلون->offsets=offsets;
 }
 
-static const char * U_CALLCONV
-_UTF7GetName(const UConverter *cnv) {
-    switch(cnv->fromUnicodeStatus>>28) {
-    case 1:
-        return "UTF-7,version=1";
-    default:
-        return "UTF-7";
+ساكن ثابت حرف * U_CALLCONV
+_UTF7GetName(ثابت UConverter *cnv) {
+    بدل(cnv->from_Unicode_حالت>>28) {
+    حالة 1:
+        أرجع "UTF-7,version=1";
+    افتراضي:
+        أرجع "UTF-7";
     }
 }
-U_CDECL_END
+U_CDECL_پڇاڙي
 
-static const UConverterImpl _UTF7Impl={
+ساكن ثابت UConverterImpl _UTF7Impl={
     UCNV_UTF7,
 
-    nullptr,
-    nullptr,
+    خالي_اشارو,
+    خالي_اشارو,
 
     _UTF7Open,
-    nullptr,
+    خالي_اشارو,
     _UTF7Reset,
 
-    _UTF7ToUnicodeWithOffsets,
-    _UTF7ToUnicodeWithOffsets,
+    UTF7_منزل_Unicode_With_Offsets,
+    UTF7_منزل_Unicode_With_Offsets,
     _UTF7FromUnicodeWithOffsets,
     _UTF7FromUnicodeWithOffsets,
-    nullptr,
+    خالي_اشارو,
 
-    nullptr,
+    خالي_اشارو,
     _UTF7GetName,
-    nullptr, /* we don't need writeSub() because we never call a callback at fromUnicode() */
-    nullptr,
-    ucnv_getCompleteUnicodeSet,
+    خالي_اشارو, /* we don't need writeSub() because we never call a callback at fromUnicode() */
+    خالي_اشارو,
+    ucnv_get_Complete_Unicode_سيٽ,
 
-    nullptr,
-    nullptr
+    خالي_اشارو,
+    خالي_اشارو
 };
 
-static const UConverterStaticData _UTF7StaticData={
-    sizeof(UConverterStaticData),
+ساكن ثابت UConverter_Static_معلومات UTF7_Static_معلومات={
+    حجم(UConverter_Static_معلومات),
     "UTF-7",
     0, /* TODO CCSID for UTF-7 */
     UCNV_IBM, UCNV_UTF7,
     1, 4,
     { 0x3f, 0, 0, 0 }, 1, /* the subchar is not used */
-    false, false,
+    خطأ, خطأ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _UTF7Data=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF7StaticData, &_UTF7Impl);
+ثابت UConverter_Shared_معلومات UTF7_معلومات=
+        UCNV_IMMUTABLE_SHARED_معلومات_INITIALIZER(&UTF7_Static_معلومات, &_UTF7Impl);
 
 /* IMAP mailbox name encoding ----------------------------------------------- */
 
@@ -859,18 +859,18 @@ const UConverterSharedData _UTF7Data=
  */
 
 /* uses '&' not '+' to start a base64 sequence */
-#define AMPERSAND 0x26
-#define COMMA 0x2c
-#define SLASH 0x2f
+#وصف_ڪريو AMPERSAND 0x26
+#وصف_ڪريو COMMA 0x2c
+#وصف_ڪريو SLASH 0x2f
 
 /* legal byte values: all US-ASCII graphic characters 0x20..0x7e */
-#define isLegalIMAP(c) (0x20<=(c) && (c)<=0x7e)
+#وصف_ڪريو isLegalIMAP(c) (0x20<=(c) && (c)<=0x7e)
 
 /* direct-encode all of printable ASCII 0x20..0x7e except '&' 0x26 */
-#define inSetDIMAP(c) (isLegalIMAP(c) && c!=AMPERSAND)
+#وصف_ڪريو اندريون_سيٽ_DIMAP(c) (isLegalIMAP(c) && c!=AMPERSAND)
 
-#define TO_BASE64_IMAP(n) ((n)<63 ? toBase64[n] : COMMA)
-#define FROM_BASE64_IMAP(c) ((c)==COMMA ? 63 : (c)==SLASH ? -1 : fromBase64[c])
+#وصف_ڪريو منزل_BASE64_IMAP(n) ((n)<63 ? منزل_Base64[n] : COMMA)
+#وصف_ڪريو FROM_BASE64_IMAP(c) ((c)==COMMA ? 63 : (c)==SLASH ? -1 : fromBase64[c])
 
 /*
  * converter status values:
@@ -889,56 +889,56 @@ const UConverterSharedData _UTF7Data=
  */
 
 U_CDECL_BEGIN
-static void U_CALLCONV
-_IMAPToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                          UErrorCode *pErrorCode) {
+ساكن فراغ U_CALLCONV
+_IMAPToUnicodeWithOffsets(UConverter_منزل_Unicode_دليلون *p_دليلون,
+                          UError_ڪوڊ *p_Error_ڪوڊ) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit;
-    char16_t *target;
-    const char16_t *targetLimit;
+    ثابت uint8_t *ذريعو, *ذريعو_حد_بندي;
+    char16_t *هدف;
+    ثابت char16_t *هدف_حد_بندي;
     int32_t *offsets;
 
-    uint8_t *bytes;
-    uint8_t byteIndex;
+    uint8_t *بائيٽون;
+    uint8_t byte_اشاريو;
 
-    int32_t length, targetCapacity;
+    int32_t length, هدف_صلاحيت;
 
     /* UTF-7 state */
-    uint16_t bits;
+    uint16_t بٽ;
     int8_t base64Counter;
-    UBool inDirectMode;
+    UBool اندريون_سڌو_گهڻائي;
 
-    int8_t base64Value;
+    int8_t base64_قدر;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t ذريعو_اشاريو, ايندڙ_ذريعو_اشاريو;
 
     char16_t c;
     uint8_t b;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_دليلون->converter;
 
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    ذريعو=(ثابت uint8_t *)p_دليلون->ذريعو;
+    ذريعو_حد_بندي=(ثابت uint8_t *)p_دليلون->ذريعو_حد_بندي;
+    هدف=p_دليلون->هدف;
+    هدف_حد_بندي=p_دليلون->هدف_حد_بندي;
+    offsets=p_دليلون->offsets;
     /* get the state machine state */
     {
-        uint32_t status=cnv->toUnicodeStatus;
-        inDirectMode=(UBool)((status>>24)&1);
-        base64Counter=(int8_t)(status>>16);
-        bits=(uint16_t)status;
+        uint32_t حالت=cnv->منزل_Unicode_حالت;
+        اندريون_سڌو_گهڻائي=(UBool)((حالت>>24)&1);
+        base64Counter=(int8_t)(حالت>>16);
+        بٽ=(uint16_t)حالت;
     }
-    bytes=cnv->toUBytes;
-    byteIndex=cnv->toULength;
+    بائيٽون=cnv->منزل_UBytes;
+    byte_اشاريو=cnv->منزل_ULength;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=byteIndex==0 ? 0 : -1;
-    nextSourceIndex=0;
+    ذريعو_اشاريو=byte_اشاريو==0 ? 0 : -1;
+    ايندڙ_ذريعو_اشاريو=0;
 
-    if(inDirectMode) {
-directMode:
+    إذا(اندريون_سڌو_گهڻائي) {
+سڌو_گهڻائي:
         /*
          * In Direct Mode, US-ASCII characters are encoded directly, i.e.,
          * with their US-ASCII byte values.
@@ -946,43 +946,43 @@ directMode:
          *
          * In Direct Mode, only the sourceIndex is used.
          */
-        byteIndex=0;
-        length=(int32_t)(sourceLimit-source);
-        targetCapacity=(int32_t)(targetLimit-target);
-        if(length>targetCapacity) {
-            length=targetCapacity;
+        byte_اشاريو=0;
+        length=(int32_t)(ذريعو_حد_بندي-ذريعو);
+        هدف_صلاحيت=(int32_t)(هدف_حد_بندي-هدف);
+        إذا(length>هدف_صلاحيت) {
+            length=هدف_صلاحيت;
         }
-        while(length>0) {
-            b=*source++;
-            if(!isLegalIMAP(b)) {
+        طالما(length>0) {
+            b=*ذريعو++;
+            إذا(!isLegalIMAP(b)) {
                 /* illegal */
-                bytes[0]=b;
-                byteIndex=1;
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                break;
-            } else if(b!=AMPERSAND) {
+                بائيٽون[0]=b;
+                byte_اشاريو=1;
+                *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
+                اكسر;
+            } وإلا إذا(b!=AMPERSAND) {
                 /* write directly encoded character */
-                *target++=b;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex++;
+                *هدف++=b;
+                إذا(offsets!=خالي_اشارو) {
+                    *offsets++=ذريعو_اشاريو++;
                 }
-            } else /* AMPERSAND */ {
+            } وإلا /* AMPERSAND */ {
                 /* switch to Unicode mode */
-                nextSourceIndex=++sourceIndex;
-                inDirectMode=false;
-                byteIndex=0;
-                bits=0;
+                ايندڙ_ذريعو_اشاريو=++ذريعو_اشاريو;
+                اندريون_سڌو_گهڻائي=خطأ;
+                byte_اشاريو=0;
+                بٽ=0;
                 base64Counter=-1;
-                goto unicodeMode;
+                اذهب unicode_گهڻائي;
             }
             --length;
         }
-        if(source<sourceLimit && target>=targetLimit) {
+        إذا(ذريعو<ذريعو_حد_بندي && هدف>=هدف_حد_بندي) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
         }
-    } else {
-unicodeMode:
+    } وإلا {
+unicode_گهڻائي:
         /*
          * In Unicode (or "escape") Mode, UTF-16BE is base64-encoded.
          * The base64 sequence ends with any character that is not in the base64 alphabet.
@@ -994,127 +994,127 @@ unicodeMode:
          * keeping the index to the following byte.
          * Note that in 2 out of 3 cases, UChars overlap within a base64 byte.
          */
-        while(source<sourceLimit) {
-            if(target<targetLimit) {
-                bytes[byteIndex++]=b=*source++;
-                ++nextSourceIndex;
-                if(b>0x7e) {
+        طالما(ذريعو<ذريعو_حد_بندي) {
+            إذا(هدف<هدف_حد_بندي) {
+                بائيٽون[byte_اشاريو++]=b=*ذريعو++;
+                ++ايندڙ_ذريعو_اشاريو;
+                إذا(b>0x7e) {
                     /* illegal - test other illegal US-ASCII values by base64Value==-3 */
-                    inDirectMode=true;
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    break;
-                } else if((base64Value=FROM_BASE64_IMAP(b))>=0) {
+                    اندريون_سڌو_گهڻائي=سچ;
+                    *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
+                    اكسر;
+                } وإلا إذا((base64_قدر=FROM_BASE64_IMAP(b))>=0) {
                     /* collect base64 bytes into UChars */
-                    switch(base64Counter) {
-                    case -1: /* -1 is immediately after the & */
-                    case 0:
-                        bits=base64Value;
+                    بدل(base64Counter) {
+                    حالة -1: /* -1 is immediately after the & */
+                    حالة 0:
+                        بٽ=base64_قدر;
                         base64Counter=1;
-                        break;
-                    case 1:
-                    case 3:
-                    case 4:
-                    case 6:
-                        bits=(uint16_t)((bits<<6)|base64Value);
+                        اكسر;
+                    حالة 1:
+                    حالة 3:
+                    حالة 4:
+                    حالة 6:
+                        بٽ=(uint16_t)((بٽ<<6)|base64_قدر);
                         ++base64Counter;
-                        break;
-                    case 2:
-                        c=(char16_t)((bits<<4)|(base64Value>>2));
-                        if(isLegalIMAP(c)) {
+                        اكسر;
+                    حالة 2:
+                        c=(char16_t)((بٽ<<4)|(base64_قدر>>2));
+                        إذا(isLegalIMAP(c)) {
                             /* illegal */
-                            inDirectMode=true;
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            اندريون_سڌو_گهڻائي=سچ;
+                            *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
+                            اذهب endloop;
                         }
-                        *target++=c;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
-                            sourceIndex=nextSourceIndex-1;
+                        *هدف++=c;
+                        إذا(offsets!=خالي_اشارو) {
+                            *offsets++=ذريعو_اشاريو;
+                            ذريعو_اشاريو=ايندڙ_ذريعو_اشاريو-1;
                         }
-                        bytes[0]=b; /* keep this byte in case an error occurs */
-                        byteIndex=1;
-                        bits=(uint16_t)(base64Value&3);
+                        بائيٽون[0]=b; /* keep this byte in case an error occurs */
+                        byte_اشاريو=1;
+                        بٽ=(uint16_t)(base64_قدر&3);
                         base64Counter=3;
-                        break;
-                    case 5:
-                        c=(char16_t)((bits<<2)|(base64Value>>4));
-                        if(isLegalIMAP(c)) {
+                        اكسر;
+                    حالة 5:
+                        c=(char16_t)((بٽ<<2)|(base64_قدر>>4));
+                        إذا(isLegalIMAP(c)) {
                             /* illegal */
-                            inDirectMode=true;
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            اندريون_سڌو_گهڻائي=سچ;
+                            *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
+                            اذهب endloop;
                         }
-                        *target++=c;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
-                            sourceIndex=nextSourceIndex-1;
+                        *هدف++=c;
+                        إذا(offsets!=خالي_اشارو) {
+                            *offsets++=ذريعو_اشاريو;
+                            ذريعو_اشاريو=ايندڙ_ذريعو_اشاريو-1;
                         }
-                        bytes[0]=b; /* keep this byte in case an error occurs */
-                        byteIndex=1;
-                        bits=(uint16_t)(base64Value&15);
+                        بائيٽون[0]=b; /* keep this byte in case an error occurs */
+                        byte_اشاريو=1;
+                        بٽ=(uint16_t)(base64_قدر&15);
                         base64Counter=6;
-                        break;
-                    case 7:
-                        c=(char16_t)((bits<<6)|base64Value);
-                        if(isLegalIMAP(c)) {
+                        اكسر;
+                    حالة 7:
+                        c=(char16_t)((بٽ<<6)|base64_قدر);
+                        إذا(isLegalIMAP(c)) {
                             /* illegal */
-                            inDirectMode=true;
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            اندريون_سڌو_گهڻائي=سچ;
+                            *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
+                            اذهب endloop;
                         }
-                        *target++=c;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
-                            sourceIndex=nextSourceIndex;
+                        *هدف++=c;
+                        إذا(offsets!=خالي_اشارو) {
+                            *offsets++=ذريعو_اشاريو;
+                            ذريعو_اشاريو=ايندڙ_ذريعو_اشاريو;
                         }
-                        byteIndex=0;
-                        bits=0;
+                        byte_اشاريو=0;
+                        بٽ=0;
                         base64Counter=0;
-                        break;
-                    default:
+                        اكسر;
+                    افتراضي:
                         /* will never occur */
-                        break;
+                        اكسر;
                     }
-                } else if(base64Value==-2) {
+                } وإلا إذا(base64_قدر==-2) {
                     /* minus sign terminates the base64 sequence */
-                    inDirectMode=true;
-                    if(base64Counter==-1) {
+                    اندريون_سڌو_گهڻائي=سچ;
+                    إذا(base64Counter==-1) {
                         /* &- i.e. a minus immediately following an ampersand */
-                        *target++=AMPERSAND;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex-1;
+                        *هدف++=AMPERSAND;
+                        إذا(offsets!=خالي_اشارو) {
+                            *offsets++=ذريعو_اشاريو-1;
                         }
-                    } else {
+                    } وإلا {
                         /* absorb the minus and leave the Unicode Mode */
-                        if(bits!=0 || (base64Counter!=0 && base64Counter!=3 && base64Counter!=6)) {
+                        إذا(بٽ!=0 || (base64Counter!=0 && base64Counter!=3 && base64Counter!=6)) {
                             /* bits are illegally left over, a char16_t is incomplete */
                             /* base64Counter other than 0, 3, 6 means non-minimal zero-padding, also illegal */
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            break;
+                            *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
+                            اكسر;
                         }
                     }
-                    sourceIndex=nextSourceIndex;
-                    goto directMode;
-                } else {
-                    if(base64Counter==-1) {
+                    ذريعو_اشاريو=ايندڙ_ذريعو_اشاريو;
+                    اذهب سڌو_گهڻائي;
+                } وإلا {
+                    إذا(base64Counter==-1) {
                         /* illegal: & immediately followed by something other than base64 or minus sign */
                         /* include the ampersand in the reported sequence */
-                        --sourceIndex;
-                        bytes[0]=AMPERSAND;
-                        bytes[1]=b;
-                        byteIndex=2;
+                        --ذريعو_اشاريو;
+                        بائيٽون[0]=AMPERSAND;
+                        بائيٽون[1]=b;
+                        byte_اشاريو=2;
                     }
                     /* base64Value==-1 for characters that are illegal only in Unicode mode */
                     /* base64Value==-3 for illegal characters */
                     /* illegal */
-                    inDirectMode=true;
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    break;
+                    اندريون_سڌو_گهڻائي=سچ;
+                    *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
+                    اكسر;
                 }
-            } else {
+            } وإلا {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+                اكسر;
             }
         }
     }
@@ -1130,157 +1130,157 @@ endloop:
      *   in Unicode mode and byteIndex==0
      *   end of input and no truncated input
      */
-    if( U_SUCCESS(*pErrorCode) &&
-        !inDirectMode && byteIndex==0 &&
-        pArgs->flush && source>=sourceLimit
+    إذا( U_SUCCESS(*p_Error_ڪوڊ) &&
+        !اندريون_سڌو_گهڻائي && byte_اشاريو==0 &&
+        p_دليلون->flush && ذريعو>=ذريعو_حد_بندي
     ) {
-        if(base64Counter==-1) {
+        إذا(base64Counter==-1) {
             /* & at the very end of the input */
             /* make the ampersand the reported sequence */
-            bytes[0]=AMPERSAND;
-            byteIndex=1;
+            بائيٽون[0]=AMPERSAND;
+            byte_اشاريو=1;
         }
         /* else if(base64Counter!=-1) byteIndex remains 0 because there is no particular byte sequence */
 
-        inDirectMode=true; /* avoid looping */
-        *pErrorCode=U_TRUNCATED_CHAR_FOUND;
+        اندريون_سڌو_گهڻائي=سچ; /* avoid looping */
+        *p_Error_ڪوڊ=U_TRUNCATED_CHAR_مليو;
     }
 
     /* set the converter state back into UConverter */
-    cnv->toUnicodeStatus=((uint32_t)inDirectMode<<24)|((uint32_t)((uint8_t)base64Counter)<<16)|(uint32_t)bits;
-    cnv->toULength=byteIndex;
+    cnv->منزل_Unicode_حالت=((uint32_t)اندريون_سڌو_گهڻائي<<24)|((uint32_t)((uint8_t)base64Counter)<<16)|(uint32_t)بٽ;
+    cnv->منزل_ULength=byte_اشاريو;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_دليلون->ذريعو=(ثابت حرف *)ذريعو;
+    p_دليلون->هدف=هدف;
+    p_دليلون->offsets=offsets;
 }
 
-static void U_CALLCONV
-_IMAPFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                            UErrorCode *pErrorCode) {
+ساكن فراغ U_CALLCONV
+_IMAPFromUnicodeWithOffsets(UConverter_From_Unicode_دليلون *p_دليلون,
+                            UError_ڪوڊ *p_Error_ڪوڊ) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
-    uint8_t *target, *targetLimit;
+    ثابت char16_t *ذريعو, *ذريعو_حد_بندي;
+    uint8_t *هدف, *هدف_حد_بندي;
     int32_t *offsets;
 
-    int32_t length, targetCapacity, sourceIndex;
+    int32_t length, هدف_صلاحيت, ذريعو_اشاريو;
     char16_t c;
     uint8_t b;
 
     /* UTF-7 state */
-    uint8_t bits;
+    uint8_t بٽ;
     int8_t base64Counter;
-    UBool inDirectMode;
+    UBool اندريون_سڌو_گهڻائي;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_دليلون->converter;
 
     /* set up the local pointers */
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target=(uint8_t *)pArgs->target;
-    targetLimit=(uint8_t *)pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    ذريعو=p_دليلون->ذريعو;
+    ذريعو_حد_بندي=p_دليلون->ذريعو_حد_بندي;
+    هدف=(uint8_t *)p_دليلون->هدف;
+    هدف_حد_بندي=(uint8_t *)p_دليلون->هدف_حد_بندي;
+    offsets=p_دليلون->offsets;
 
     /* get the state machine state */
     {
-        uint32_t status=cnv->fromUnicodeStatus;
-        inDirectMode=(UBool)((status>>24)&1);
-        base64Counter=(int8_t)(status>>16);
-        bits=(uint8_t)status;
+        uint32_t حالت=cnv->from_Unicode_حالت;
+        اندريون_سڌو_گهڻائي=(UBool)((حالت>>24)&1);
+        base64Counter=(int8_t)(حالت>>16);
+        بٽ=(uint8_t)حالت;
     }
 
     /* UTF-7 always encodes UTF-16 code units, therefore we need only a simple sourceIndex */
-    sourceIndex=0;
+    ذريعو_اشاريو=0;
 
-    if(inDirectMode) {
-directMode:
-        length=(int32_t)(sourceLimit-source);
-        targetCapacity=(int32_t)(targetLimit-target);
-        if(length>targetCapacity) {
-            length=targetCapacity;
+    إذا(اندريون_سڌو_گهڻائي) {
+سڌو_گهڻائي:
+        length=(int32_t)(ذريعو_حد_بندي-ذريعو);
+        هدف_صلاحيت=(int32_t)(هدف_حد_بندي-هدف);
+        إذا(length>هدف_صلاحيت) {
+            length=هدف_صلاحيت;
         }
-        while(length>0) {
-            c=*source++;
+        طالما(length>0) {
+            c=*ذريعو++;
             /* encode 0x20..0x7e except '&' directly */
-            if(inSetDIMAP(c)) {
+            إذا(اندريون_سيٽ_DIMAP(c)) {
                 /* encode directly */
-                *target++=(uint8_t)c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex++;
+                *هدف++=(uint8_t)c;
+                إذا(offsets!=خالي_اشارو) {
+                    *offsets++=ذريعو_اشاريو++;
                 }
-            } else if(c==AMPERSAND) {
+            } وإلا إذا(c==AMPERSAND) {
                 /* output &- for & */
-                *target++=AMPERSAND;
-                if(target<targetLimit) {
-                    *target++=MINUS;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
-                        *offsets++=sourceIndex++;
+                *هدف++=AMPERSAND;
+                إذا(هدف<هدف_حد_بندي) {
+                    *هدف++=MINUS;
+                    إذا(offsets!=خالي_اشارو) {
+                        *offsets++=ذريعو_اشاريو;
+                        *offsets++=ذريعو_اشاريو++;
                     }
                     /* realign length and targetCapacity */
-                    goto directMode;
-                } else {
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex++;
+                    اذهب سڌو_گهڻائي;
+                } وإلا {
+                    إذا(offsets!=خالي_اشارو) {
+                        *offsets++=ذريعو_اشاريو++;
                     }
-                    cnv->charErrorBuffer[0]=MINUS;
-                    cnv->charErrorBufferLength=1;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    cnv->char_Error_بفر[0]=MINUS;
+                    cnv->char_Error_بفر_ڊيگهائي=1;
+                    *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+                    اكسر;
                 }
-            } else {
+            } وإلا {
                 /* un-read this character and switch to Unicode Mode */
-                --source;
-                *target++=AMPERSAND;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                --ذريعو;
+                *هدف++=AMPERSAND;
+                إذا(offsets!=خالي_اشارو) {
+                    *offsets++=ذريعو_اشاريو;
                 }
-                inDirectMode=false;
+                اندريون_سڌو_گهڻائي=خطأ;
                 base64Counter=0;
-                goto unicodeMode;
+                اذهب unicode_گهڻائي;
             }
             --length;
         }
-        if(source<sourceLimit && target>=targetLimit) {
+        إذا(ذريعو<ذريعو_حد_بندي && هدف>=هدف_حد_بندي) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
         }
-    } else {
-unicodeMode:
-        while(source<sourceLimit) {
-            if(target<targetLimit) {
-                c=*source++;
-                if(isLegalIMAP(c)) {
+    } وإلا {
+unicode_گهڻائي:
+        طالما(ذريعو<ذريعو_حد_بندي) {
+            إذا(هدف<هدف_حد_بندي) {
+                c=*ذريعو++;
+                إذا(isLegalIMAP(c)) {
                     /* encode directly */
-                    inDirectMode=true;
+                    اندريون_سڌو_گهڻائي=سچ;
 
                     /* trick: back out this character to make this easier */
-                    --source;
+                    --ذريعو;
 
                     /* terminate the base64 sequence */
-                    if(base64Counter!=0) {
+                    إذا(base64Counter!=0) {
                         /* write remaining bits for the previous character */
-                        *target++=TO_BASE64_IMAP(bits);
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex-1;
+                        *هدف++=منزل_BASE64_IMAP(بٽ);
+                        إذا(offsets!=خالي_اشارو) {
+                            *offsets++=ذريعو_اشاريو-1;
                         }
                     }
                     /* need to terminate with a minus */
-                    if(target<targetLimit) {
-                        *target++=MINUS;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex-1;
+                    إذا(هدف<هدف_حد_بندي) {
+                        *هدف++=MINUS;
+                        إذا(offsets!=خالي_اشارو) {
+                            *offsets++=ذريعو_اشاريو-1;
                         }
-                    } else {
-                        cnv->charErrorBuffer[0]=MINUS;
-                        cnv->charErrorBufferLength=1;
-                        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                        break;
+                    } وإلا {
+                        cnv->char_Error_بفر[0]=MINUS;
+                        cnv->char_Error_بفر_ڊيگهائي=1;
+                        *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+                        اكسر;
                     }
-                    goto directMode;
-                } else {
+                    اذهب سڌو_گهڻائي;
+                } وإلا {
                     /*
                      * base64 this character:
                      * Output 2 or 3 base64 bytes for the remaining bits of the previous character
@@ -1290,198 +1290,198 @@ unicodeMode:
                      * character to the next. The actual 2 or 4 bits are shifted to the left edge
                      * of the 6-bits field 5..0 to make the termination of the base64 sequence easier.
                      */
-                    switch(base64Counter) {
-                    case 0:
+                    بدل(base64Counter) {
+                    حالة 0:
                         b=(uint8_t)(c>>10);
-                        *target++=TO_BASE64_IMAP(b);
-                        if(target<targetLimit) {
+                        *هدف++=منزل_BASE64_IMAP(b);
+                        إذا(هدف<هدف_حد_بندي) {
                             b=(uint8_t)((c>>4)&0x3f);
-                            *target++=TO_BASE64_IMAP(b);
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex;
-                                *offsets++=sourceIndex++;
+                            *هدف++=منزل_BASE64_IMAP(b);
+                            إذا(offsets!=خالي_اشارو) {
+                                *offsets++=ذريعو_اشاريو;
+                                *offsets++=ذريعو_اشاريو++;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex++;
+                        } وإلا {
+                            إذا(offsets!=خالي_اشارو) {
+                                *offsets++=ذريعو_اشاريو++;
                             }
                             b=(uint8_t)((c>>4)&0x3f);
-                            cnv->charErrorBuffer[0]=TO_BASE64_IMAP(b);
-                            cnv->charErrorBufferLength=1;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                            cnv->char_Error_بفر[0]=منزل_BASE64_IMAP(b);
+                            cnv->char_Error_بفر_ڊيگهائي=1;
+                            *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
                         }
-                        bits=(uint8_t)((c&15)<<2);
+                        بٽ=(uint8_t)((c&15)<<2);
                         base64Counter=1;
-                        break;
-                    case 1:
-                        b=(uint8_t)(bits|(c>>14));
-                        *target++=TO_BASE64_IMAP(b);
-                        if(target<targetLimit) {
+                        اكسر;
+                    حالة 1:
+                        b=(uint8_t)(بٽ|(c>>14));
+                        *هدف++=منزل_BASE64_IMAP(b);
+                        إذا(هدف<هدف_حد_بندي) {
                             b=(uint8_t)((c>>8)&0x3f);
-                            *target++=TO_BASE64_IMAP(b);
-                            if(target<targetLimit) {
+                            *هدف++=منزل_BASE64_IMAP(b);
+                            إذا(هدف<هدف_حد_بندي) {
                                 b=(uint8_t)((c>>2)&0x3f);
-                                *target++=TO_BASE64_IMAP(b);
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                                *هدف++=منزل_BASE64_IMAP(b);
+                                إذا(offsets!=خالي_اشارو) {
+                                    *offsets++=ذريعو_اشاريو;
+                                    *offsets++=ذريعو_اشاريو;
+                                    *offsets++=ذريعو_اشاريو++;
                                 }
-                            } else {
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                            } وإلا {
+                                إذا(offsets!=خالي_اشارو) {
+                                    *offsets++=ذريعو_اشاريو;
+                                    *offsets++=ذريعو_اشاريو++;
                                 }
                                 b=(uint8_t)((c>>2)&0x3f);
-                                cnv->charErrorBuffer[0]=TO_BASE64_IMAP(b);
-                                cnv->charErrorBufferLength=1;
-                                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                                cnv->char_Error_بفر[0]=منزل_BASE64_IMAP(b);
+                                cnv->char_Error_بفر_ڊيگهائي=1;
+                                *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex++;
+                        } وإلا {
+                            إذا(offsets!=خالي_اشارو) {
+                                *offsets++=ذريعو_اشاريو++;
                             }
                             b=(uint8_t)((c>>8)&0x3f);
-                            cnv->charErrorBuffer[0]=TO_BASE64_IMAP(b);
+                            cnv->char_Error_بفر[0]=منزل_BASE64_IMAP(b);
                             b=(uint8_t)((c>>2)&0x3f);
-                            cnv->charErrorBuffer[1]=TO_BASE64_IMAP(b);
-                            cnv->charErrorBufferLength=2;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                            cnv->char_Error_بفر[1]=منزل_BASE64_IMAP(b);
+                            cnv->char_Error_بفر_ڊيگهائي=2;
+                            *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
                         }
-                        bits=(uint8_t)((c&3)<<4);
+                        بٽ=(uint8_t)((c&3)<<4);
                         base64Counter=2;
-                        break;
-                    case 2:
-                        b=(uint8_t)(bits|(c>>12));
-                        *target++=TO_BASE64_IMAP(b);
-                        if(target<targetLimit) {
+                        اكسر;
+                    حالة 2:
+                        b=(uint8_t)(بٽ|(c>>12));
+                        *هدف++=منزل_BASE64_IMAP(b);
+                        إذا(هدف<هدف_حد_بندي) {
                             b=(uint8_t)((c>>6)&0x3f);
-                            *target++=TO_BASE64_IMAP(b);
-                            if(target<targetLimit) {
+                            *هدف++=منزل_BASE64_IMAP(b);
+                            إذا(هدف<هدف_حد_بندي) {
                                 b=(uint8_t)(c&0x3f);
-                                *target++=TO_BASE64_IMAP(b);
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                                *هدف++=منزل_BASE64_IMAP(b);
+                                إذا(offsets!=خالي_اشارو) {
+                                    *offsets++=ذريعو_اشاريو;
+                                    *offsets++=ذريعو_اشاريو;
+                                    *offsets++=ذريعو_اشاريو++;
                                 }
-                            } else {
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                            } وإلا {
+                                إذا(offsets!=خالي_اشارو) {
+                                    *offsets++=ذريعو_اشاريو;
+                                    *offsets++=ذريعو_اشاريو++;
                                 }
                                 b=(uint8_t)(c&0x3f);
-                                cnv->charErrorBuffer[0]=TO_BASE64_IMAP(b);
-                                cnv->charErrorBufferLength=1;
-                                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                                cnv->char_Error_بفر[0]=منزل_BASE64_IMAP(b);
+                                cnv->char_Error_بفر_ڊيگهائي=1;
+                                *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex++;
+                        } وإلا {
+                            إذا(offsets!=خالي_اشارو) {
+                                *offsets++=ذريعو_اشاريو++;
                             }
                             b=(uint8_t)((c>>6)&0x3f);
-                            cnv->charErrorBuffer[0]=TO_BASE64_IMAP(b);
+                            cnv->char_Error_بفر[0]=منزل_BASE64_IMAP(b);
                             b=(uint8_t)(c&0x3f);
-                            cnv->charErrorBuffer[1]=TO_BASE64_IMAP(b);
-                            cnv->charErrorBufferLength=2;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                            cnv->char_Error_بفر[1]=منزل_BASE64_IMAP(b);
+                            cnv->char_Error_بفر_ڊيگهائي=2;
+                            *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
                         }
-                        bits=0;
+                        بٽ=0;
                         base64Counter=0;
-                        break;
-                    default:
+                        اكسر;
+                    افتراضي:
                         /* will never occur */
-                        break;
+                        اكسر;
                     }
                 }
-            } else {
+            } وإلا {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+                اكسر;
             }
         }
     }
 
-    if(pArgs->flush && source>=sourceLimit) {
+    إذا(p_دليلون->flush && ذريعو>=ذريعو_حد_بندي) {
         /* flush remaining bits to the target */
-        if(!inDirectMode) {
-            if(base64Counter!=0) {
-                if(target<targetLimit) {
-                    *target++=TO_BASE64_IMAP(bits);
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex-1;
+        إذا(!اندريون_سڌو_گهڻائي) {
+            إذا(base64Counter!=0) {
+                إذا(هدف<هدف_حد_بندي) {
+                    *هدف++=منزل_BASE64_IMAP(بٽ);
+                    إذا(offsets!=خالي_اشارو) {
+                        *offsets++=ذريعو_اشاريو-1;
                     }
-                } else {
-                    cnv->charErrorBuffer[cnv->charErrorBufferLength++]=TO_BASE64_IMAP(bits);
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                } وإلا {
+                    cnv->char_Error_بفر[cnv->char_Error_بفر_ڊيگهائي++]=منزل_BASE64_IMAP(بٽ);
+                    *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
                 }
             }
             /* need to terminate with a minus */
-            if(target<targetLimit) {
-                *target++=MINUS;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex-1;
+            إذا(هدف<هدف_حد_بندي) {
+                *هدف++=MINUS;
+                إذا(offsets!=خالي_اشارو) {
+                    *offsets++=ذريعو_اشاريو-1;
                 }
-            } else {
-                cnv->charErrorBuffer[cnv->charErrorBufferLength++]=MINUS;
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            } وإلا {
+                cnv->char_Error_بفر[cnv->char_Error_بفر_ڊيگهائي++]=MINUS;
+                *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
             }
         }
         /* reset the state for the next conversion */
-        cnv->fromUnicodeStatus=(cnv->fromUnicodeStatus&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
-    } else {
+        cnv->from_Unicode_حالت=(cnv->from_Unicode_حالت&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
+    } وإلا {
         /* set the converter state back into UConverter */
-        cnv->fromUnicodeStatus=
-            (cnv->fromUnicodeStatus&0xf0000000)|    /* keep version*/
-            ((uint32_t)inDirectMode<<24)|((uint32_t)base64Counter<<16)|(uint32_t)bits;
+        cnv->from_Unicode_حالت=
+            (cnv->from_Unicode_حالت&0xf0000000)|    /* keep version*/
+            ((uint32_t)اندريون_سڌو_گهڻائي<<24)|((uint32_t)base64Counter<<16)|(uint32_t)بٽ;
     }
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=(char *)target;
-    pArgs->offsets=offsets;
+    p_دليلون->ذريعو=ذريعو;
+    p_دليلون->هدف=(حرف *)هدف;
+    p_دليلون->offsets=offsets;
 }
-U_CDECL_END
+U_CDECL_پڇاڙي
 
-static const UConverterImpl _IMAPImpl={
+ساكن ثابت UConverterImpl _IMAPImpl={
     UCNV_IMAP_MAILBOX,
 
-    nullptr,
-    nullptr,
+    خالي_اشارو,
+    خالي_اشارو,
 
     _UTF7Open,
-    nullptr,
+    خالي_اشارو,
     _UTF7Reset,
 
     _IMAPToUnicodeWithOffsets,
     _IMAPToUnicodeWithOffsets,
     _IMAPFromUnicodeWithOffsets,
     _IMAPFromUnicodeWithOffsets,
-    nullptr,
+    خالي_اشارو,
 
-    nullptr,
-    nullptr,
-    nullptr, /* we don't need writeSub() because we never call a callback at fromUnicode() */
-    nullptr,
-    ucnv_getCompleteUnicodeSet,
-    nullptr,
-    nullptr
+    خالي_اشارو,
+    خالي_اشارو,
+    خالي_اشارو, /* we don't need writeSub() because we never call a callback at fromUnicode() */
+    خالي_اشارو,
+    ucnv_get_Complete_Unicode_سيٽ,
+    خالي_اشارو,
+    خالي_اشارو
 };
 
-static const UConverterStaticData _IMAPStaticData={
-    sizeof(UConverterStaticData),
+ساكن ثابت UConverter_Static_معلومات IMAPStatic_معلومات={
+    حجم(UConverter_Static_معلومات),
     "IMAP-mailbox-name",
     0, /* TODO CCSID for IMAP-mailbox-name */
     UCNV_IBM, UCNV_IMAP_MAILBOX,
     1, 4,
     { 0x3f, 0, 0, 0 }, 1, /* the subchar is not used */
-    false, false,
+    خطأ, خطأ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _IMAPData=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_IMAPStaticData, &_IMAPImpl);
+ثابت UConverter_Shared_معلومات _IMAPData=
+        UCNV_IMMUTABLE_SHARED_معلومات_INITIALIZER(&IMAPStatic_معلومات, &_IMAPImpl);
 
-#endif
+#جيڪڏهن_پورو

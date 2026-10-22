@@ -16,11 +16,11 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UNISETSPAN_H__
-#define __UNISETSPAN_H__
+#جيڪڏهن_وصف_نه_ٿيل __UNISETSPAN_H__
+#وصف_ڪريو __UNISETSPAN_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uniset.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uniset.h"
 
 U_NAMESPACE_BEGIN
 
@@ -29,16 +29,16 @@ U_NAMESPACE_BEGIN
  * Avoid recursion because of its exponential complexity.
  * Instead, try multiple paths at once and track them with an IndexList.
  */
-class UnicodeSetStringSpan : public UMemory {
-public:
+class Unicode_سيٽ_String_وسعت : عام UMemory {
+عام:
     /*
      * Which span() variant will be used?
      * The object is either built for one variant and used once,
      * or built for all and may be used many times.
      */
-    enum {
+    تعداد {
         FWD             = 0x20,
-        BACK            = 0x10,
+        پٺ_2            = 0x10,
         UTF16           = 8,
         UTF8            = 4,
         CONTAINED       = 2,
@@ -50,65 +50,65 @@ public:
         FWD_UTF16_NOT_CONTAINED = FWD  | UTF16 | NOT_CONTAINED,
         FWD_UTF8_CONTAINED      = FWD  | UTF8  |     CONTAINED,
         FWD_UTF8_NOT_CONTAINED  = FWD  | UTF8  | NOT_CONTAINED,
-        BACK_UTF16_CONTAINED    = BACK | UTF16 |     CONTAINED,
-        BACK_UTF16_NOT_CONTAINED= BACK | UTF16 | NOT_CONTAINED,
-        BACK_UTF8_CONTAINED     = BACK | UTF8  |     CONTAINED,
-        BACK_UTF8_NOT_CONTAINED = BACK | UTF8  | NOT_CONTAINED
+        پٺ_UTF16_CONTAINED    = پٺ_2 | UTF16 |     CONTAINED,
+        پٺ_UTF16_NOT_CONTAINED= پٺ_2 | UTF16 | NOT_CONTAINED,
+        پٺ_UTF8_CONTAINED     = پٺ_2 | UTF8  |     CONTAINED,
+        پٺ_UTF8_NOT_CONTAINED = پٺ_2 | UTF8  | NOT_CONTAINED
     };
 
-    UnicodeSetStringSpan(const UnicodeSet &set, const UVector &setStrings, uint32_t which);
+    Unicode_سيٽ_String_وسعت(ثابت Unicode_سيٽ &سيٽ, ثابت UVector &سيٽ_لڙيون, uint32_t which);
 
     // Copy constructor. Assumes which==ALL for a frozen set.
-    UnicodeSetStringSpan(const UnicodeSetStringSpan &otherStringSpan, const UVector &newParentSetStrings);
+    Unicode_سيٽ_String_وسعت(ثابت Unicode_سيٽ_String_وسعت &other_String_وسعت, ثابت UVector &new_والد_سيٽ_لڙيون);
 
-    ~UnicodeSetStringSpan();
+    ~Unicode_سيٽ_String_وسعت();
 
     /*
      * Do the strings need to be checked in span() etc.?
      * @return true if strings need to be checked (call span() here),
      *         false if not (use a BMPSet for best performance).
      */
-    inline UBool needsStringSpanUTF16();
-    inline UBool needsStringSpanUTF8();
+    مضمن UBool needs_String_وسعت_UTF16();
+    مضمن UBool needs_String_وسعت_UTF8();
 
     // For fast UnicodeSet::contains(c).
-    inline UBool contains(UChar32 c) const;
+    مضمن UBool شامل_آهي(UChar32 c) ثابت;
 
-    int32_t span(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t وسعت(ثابت char16_t *s, int32_t ڊيگهائي, USet_وسعت_Condition وسعت_Condition) ثابت;
 
-    int32_t spanBack(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t وسعت_پٺ(ثابت char16_t *s, int32_t ڊيگهائي, USet_وسعت_Condition وسعت_Condition) ثابت;
 
-    int32_t spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t وسعت_UTF8(ثابت uint8_t *s, int32_t ڊيگهائي, USet_وسعت_Condition وسعت_Condition) ثابت;
 
-    int32_t spanBackUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t وسعت_پٺ_UTF8(ثابت uint8_t *s, int32_t ڊيگهائي, USet_وسعت_Condition وسعت_Condition) ثابت;
 
-private:
+خاص:
     // Special spanLength byte values.
-    enum {
+    تعداد {
         // The spanLength is >=0xfe.
-        LONG_SPAN=0xfe,
+        LONG_وسعت=0xfe,
         // All code points in the string are contained in the parent set.
         ALL_CP_CONTAINED=0xff
     };
 
     // Add a starting or ending string character to the spanNotSet
     // so that a character span ends before any string.
-    void addToSpanNotSet(UChar32 c);
+    فراغ جوڙيو_منزل_وسعت_Not_سيٽ(UChar32 c);
 
-    int32_t spanNot(const char16_t *s, int32_t length) const;
-    int32_t spanNotBack(const char16_t *s, int32_t length) const;
-    int32_t spanNotUTF8(const uint8_t *s, int32_t length) const;
-    int32_t spanNotBackUTF8(const uint8_t *s, int32_t length) const;
+    int32_t وسعت_Not(ثابت char16_t *s, int32_t ڊيگهائي) ثابت;
+    int32_t وسعت_Not_پٺ(ثابت char16_t *s, int32_t ڊيگهائي) ثابت;
+    int32_t وسعت_Not_UTF8(ثابت uint8_t *s, int32_t ڊيگهائي) ثابت;
+    int32_t وسعت_Not_پٺ_UTF8(ثابت uint8_t *s, int32_t ڊيگهائي) ثابت;
 
     // Set for span(). Same as parent but without strings.
-    UnicodeSet spanSet;
+    Unicode_سيٽ وسعت_سيٽ;
 
     // Set for span(not contained).
     // Same as spanSet, plus characters that start or end strings.
-    UnicodeSet *pSpanNotSet;
+    Unicode_سيٽ *p_وسعت_Not_سيٽ;
 
     // The strings of the parent set.
-    const UVector &strings;
+    ثابت UVector &لڙيون;
 
     // Pointer to the UTF-8 string lengths.
     // Also pointer to further allocated storage for meta data and
@@ -117,14 +117,14 @@ private:
 
     // Pointer to the part of the (utf8Lengths) memory block that stores
     // the lengths of span(), spanBack() etc. for each string.
-    uint8_t *spanLengths;
+    uint8_t *وسعت_Lengths;
 
     // Pointer to the part of the (utf8Lengths) memory block that stores
     // the UTF-8 versions of the parent set's strings.
     uint8_t *utf8;
 
     // Number of bytes for all UTF-8 versions of strings together.
-    int32_t utf8Length;
+    int32_t utf8_ڊيگهائي;
 
     // Maximum lengths of relevant strings.
     int32_t maxLength16;
@@ -140,18 +140,18 @@ private:
     int32_t staticLengths[32];
 };
 
-UBool UnicodeSetStringSpan::needsStringSpanUTF16() {
-    return maxLength16 != 0;
+UBool Unicode_سيٽ_String_وسعت::needs_String_وسعت_UTF16() {
+    أرجع maxLength16 != 0;
 }
 
-UBool UnicodeSetStringSpan::needsStringSpanUTF8() {
-    return maxLength8 != 0;
+UBool Unicode_سيٽ_String_وسعت::needs_String_وسعت_UTF8() {
+    أرجع maxLength8 != 0;
 }
 
-UBool UnicodeSetStringSpan::contains(UChar32 c) const {
-    return spanSet.contains(c);
+UBool Unicode_سيٽ_String_وسعت::شامل_آهي(UChar32 c) ثابت {
+    أرجع وسعت_سيٽ.شامل_آهي(c);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
-#endif
+#جيڪڏهن_پورو

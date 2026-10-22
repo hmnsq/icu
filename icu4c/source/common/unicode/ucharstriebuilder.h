@@ -14,16 +14,16 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UCHARSTRIEBUILDER_H__
-#define __UCHARSTRIEBUILDER_H__
+#جيڪڏهن_وصف_نه_ٿيل __UCHARSTRIEBUILDER_H__
+#وصف_ڪريو __UCHARSTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#include "unicode/stringtriebuilder.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/unistr.h"
+#ضمن "unicode/stringtriebuilder.h"
+#ضمن "unicode/ucharstrie.h"
+#ضمن "unicode/unistr.h"
 
 /**
  * \file
@@ -40,20 +40,20 @@ class UCharsTrieElement;
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API UCharsTrieBuilder : public StringTrieBuilder {
-public:
+class U_COMMON_API UCharsTrieBuilder : عام StringTrieBuilder {
+عام:
     /**
      * Constructs an empty builder.
      * @param errorCode Standard ICU error code.
      * @stable ICU 4.8
      */
-    UCharsTrieBuilder(UErrorCode &errorCode);
+    UCharsTrieBuilder(UError_ڪوڊ &error_ڪوڊ);
 
     /**
      * Destructor.
      * @stable ICU 4.8
      */
-    virtual ~UCharsTrieBuilder();
+    مجازي ~UCharsTrieBuilder();
 
     /**
      * Adds a (string, value) pair.
@@ -69,9 +69,9 @@ public:
      * @return *this
      * @stable ICU 4.8
      */
-    UCharsTrieBuilder& add(const UnicodeString& s,
-                           int32_t value,
-                           UErrorCode& errorCode) U_LIFETIME_BOUND;
+    UCharsTrieBuilder& جوڙيو(ثابت UnicodeString& s,
+                           int32_t قدر_2,
+                           UError_ڪوڊ& error_ڪوڊ) U_LIFETIME_BOUND;
 
     /**
      * Builds a UCharsTrie for the add()ed data.
@@ -91,7 +91,7 @@ public:
      * @return A new UCharsTrie for the add()ed data.
      * @stable ICU 4.8
      */
-    UCharsTrie *build(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
+    UCharsTrie *build(UStringTrieBuildOption buildOption, UError_ڪوڊ &error_ڪوڊ);
 
     /**
      * Builds a UCharsTrie for the add()ed data and char16_t-serializes it.
@@ -119,8 +119,8 @@ public:
      * @stable ICU 4.8
      */
     UnicodeString& buildUnicodeString(UStringTrieBuildOption buildOption,
-                                      UnicodeString& result U_LIFETIME_BOUND,
-                                      UErrorCode& errorCode) U_LIFETIME_BOUND;
+                                      UnicodeString& نتيجو U_LIFETIME_BOUND,
+                                      UError_ڪوڊ& error_ڪوڊ) U_LIFETIME_BOUND;
 
     /**
      * Removes all (string, value) pairs.
@@ -129,68 +129,68 @@ public:
      * @stable ICU 4.8
      */
     UCharsTrieBuilder& clear() U_LIFETIME_BOUND {
-        strings.remove();
-        elementsLength=0;
-        ucharsLength=0;
-        return *this;
+        لڙيون.remove();
+        elements_ڊيگهائي=0;
+        uchars_ڊيگهائي=0;
+        أرجع *this;
     }
 
-private:
-    UCharsTrieBuilder(const UCharsTrieBuilder &other) = delete;  // no copy constructor
-    UCharsTrieBuilder &operator=(const UCharsTrieBuilder &other) = delete;  // no assignment operator
+خاص:
+    UCharsTrieBuilder(ثابت UCharsTrieBuilder &other) = delete;  // no copy constructor
+    UCharsTrieBuilder &عامل=(ثابت UCharsTrieBuilder &other) = delete;  // no assignment operator
 
-    void buildUChars(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
+    فراغ buildUChars(UStringTrieBuildOption buildOption, UError_ڪوڊ &error_ڪوڊ);
 
-    virtual int32_t getElementStringLength(int32_t i) const override;
-    virtual char16_t getElementUnit(int32_t i, int32_t unitIndex) const override;
-    virtual int32_t getElementValue(int32_t i) const override;
+    مجازي int32_t get_Element_String_ڊيگهائي(int32_t i) ثابت override;
+    مجازي char16_t getElementUnit(int32_t i, int32_t unit_اشاريو) ثابت override;
+    مجازي int32_t get_Element_قدر(int32_t i) ثابت override;
 
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) const override;
+    مجازي int32_t get_حد_بندي_جو_لڪيري_ميلاپ(int32_t پهريون, int32_t آخري, int32_t unit_اشاريو) ثابت override;
 
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const override;
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const override;
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const override;
+    مجازي int32_t ڳڻپ_Element_Units(int32_t شروعات, int32_t حد_بندي, int32_t unit_اشاريو) ثابت override;
+    مجازي int32_t skipElementsBySomeUnits(int32_t i, int32_t unit_اشاريو, int32_t ڳڻپ) ثابت override;
+    مجازي int32_t اشاريو_جو_Element_With_ايندڙ_Unit(int32_t i, int32_t unit_اشاريو, char16_t unit) ثابت override;
 
-    virtual UBool matchNodesCanHaveValues() const override { return true; }
+    مجازي UBool ميلاپ_Nodes_Can_Have_قدرون() ثابت override { أرجع true; }
 
-    virtual int32_t getMaxBranchLinearSubNodeLength() const override { return UCharsTrie::kMaxBranchLinearSubNodeLength; }
-    virtual int32_t getMinLinearMatch() const override { return UCharsTrie::kMinLinearMatch; }
-    virtual int32_t getMaxLinearMatchLength() const override { return UCharsTrie::kMaxLinearMatchLength; }
+    مجازي int32_t get_Max_Branch_لڪيري_Sub_ڳنڍ_ڊيگهائي() ثابت override { أرجع UCharsTrie::k_Max_Branch_لڪيري_Sub_ڳنڍ_ڊيگهائي; }
+    مجازي int32_t get_Min_لڪيري_ميلاپ() ثابت override { أرجع UCharsTrie::k_Min_لڪيري_ميلاپ; }
+    مجازي int32_t get_Max_لڪيري_ميلاپ_ڊيگهائي() ثابت override { أرجع UCharsTrie::k_Max_لڪيري_ميلاپ_ڊيگهائي; }
 
-    class UCTLinearMatchNode : public LinearMatchNode {
-    public:
-        UCTLinearMatchNode(const char16_t *units, int32_t len, Node *nextNode);
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    private:
-        const char16_t *s;
+    class UCTLinear_ميلاپ_ڳنڍ : عام لڪيري_ميلاپ_ڳنڍ {
+    عام:
+        UCTLinear_ميلاپ_ڳنڍ(ثابت char16_t *units, int32_t len, ڳنڍ_2 *ايندڙ_ڳنڍ);
+        مجازي bool عامل==(ثابت ڳنڍ_2 &other) ثابت override;
+        مجازي فراغ اكتب(StringTrieBuilder &builder) override;
+    خاص:
+        ثابت char16_t *s;
     };
 
-    virtual Node *createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                        Node *nextNode) const override;
+    مجازي ڳنڍ_2 *create_لڪيري_ميلاپ_ڳنڍ(int32_t i, int32_t unit_اشاريو, int32_t ڊيگهائي,
+                                        ڳنڍ_2 *ايندڙ_ڳنڍ) ثابت override;
 
-    UBool ensureCapacity(int32_t length);
-    virtual int32_t write(int32_t unit) override;
-    int32_t write(const char16_t *s, int32_t length);
-    virtual int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) override;
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) override;
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) override;
-    virtual int32_t writeDeltaTo(int32_t jumpTarget) override;
+    UBool ensure_صلاحيت(int32_t ڊيگهائي);
+    مجازي int32_t اكتب(int32_t unit) override;
+    int32_t اكتب(ثابت char16_t *s, int32_t ڊيگهائي);
+    مجازي int32_t writeElementUnits(int32_t i, int32_t unit_اشاريو, int32_t ڊيگهائي) override;
+    مجازي int32_t write_قدر_And_Final(int32_t i, UBool isFinal) override;
+    مجازي int32_t write_قدر_And_Type(UBool has_قدر, int32_t قدر_2, int32_t ڳنڍ) override;
+    مجازي int32_t write_Delta_منزل(int32_t jump_هدف) override;
 
-    UnicodeString strings;
+    UnicodeString لڙيون;
     UCharsTrieElement *elements;
-    int32_t elementsCapacity;
-    int32_t elementsLength;
+    int32_t elements_صلاحيت;
+    int32_t elements_ڊيگهائي;
 
     // char16_t serialization of the trie.
     // Grows from the back: ucharsLength measures from the end of the buffer!
     char16_t *uchars;
-    int32_t ucharsCapacity;
-    int32_t ucharsLength;
+    int32_t uchars_صلاحيت;
+    int32_t uchars_ڊيگهائي;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#جيڪڏهن_پورو /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __UCHARSTRIEBUILDER_H__
+#جيڪڏهن_پورو  // __UCHARSTRIEBUILDER_H__

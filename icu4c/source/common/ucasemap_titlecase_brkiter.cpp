@@ -17,121 +17,121 @@
 *   were moved here to break dependency cycles among parts of the common library.
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#إذا !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/brkiter.h"
-#include "unicode/ubrk.h"
-#include "unicode/casemap.h"
-#include "unicode/ucasemap.h"
-#include "cmemory.h"
-#include "ucase.h"
-#include "ucasemap_imp.h"
+#ضمن "unicode/brkiter.h"
+#ضمن "unicode/ubrk.h"
+#ضمن "unicode/casemap.h"
+#ضمن "unicode/ucasemap.h"
+#ضمن "cmemory.h"
+#ضمن "ucase.h"
+#ضمن "ucasemap_imp.h"
 
 U_NAMESPACE_BEGIN
 
-void CaseMap::utf8ToTitle(
-        const char *locale, uint32_t options, BreakIterator *iter,
+فراغ CaseMap::utf8_منزل_Title(
+        ثابت حرف *locale, uint32_t options, BreakIterator *iter,
         StringPiece src, ByteSink &sink, Edits *edits,
-        UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return;
+        UError_ڪوڊ &error_ڪوڊ) {
+    إذا (U_FAILURE(error_ڪوڊ)) {
+        أرجع;
     }
     UText utext = UTEXT_INITIALIZER;
-    utext_openUTF8(&utext, src.data(), src.length(), &errorCode);
-    LocalPointer<BreakIterator> ownedIter;
-    iter = ustrcase_getTitleBreakIterator(nullptr, locale, options, iter, ownedIter, errorCode);
-    if (iter == nullptr) {
+    utext_openUTF8(&utext, src.معلومات(), src.length(), &error_ڪوڊ);
+    Local_اشارو<BreakIterator> ownedIter;
+    iter = ustrcase_getTitleBreakIterator(خالي_اشارو, locale, options, iter, ownedIter, error_ڪوڊ);
+    إذا (iter == خالي_اشارو) {
         utext_close(&utext);
-        return;
+        أرجع;
     }
-    iter->setText(&utext, errorCode);
+    iter->سيٽ_متن(&utext, error_ڪوڊ);
     ucasemap_mapUTF8(
         ustrcase_getCaseLocale(locale), options, iter,
-        src.data(), src.length(),
-        ucasemap_internalUTF8ToTitle, sink, edits, errorCode);
+        src.معلومات(), src.length(),
+        ucasemap_اندروني_UTF8_منزل_Title, sink, edits, error_ڪوڊ);
     utext_close(&utext);
 }
 
-int32_t CaseMap::utf8ToTitle(
-        const char *locale, uint32_t options, BreakIterator *iter,
-        const char *src, int32_t srcLength,
-        char *dest, int32_t destCapacity, Edits *edits,
-        UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return 0;
+int32_t CaseMap::utf8_منزل_Title(
+        ثابت حرف *locale, uint32_t options, BreakIterator *iter,
+        ثابت حرف *src, int32_t src_ڊيگهائي,
+        حرف *dest, int32_t dest_صلاحيت, Edits *edits,
+        UError_ڪوڊ &error_ڪوڊ) {
+    إذا (U_FAILURE(error_ڪوڊ)) {
+        أرجع 0;
     }
     UText utext=UTEXT_INITIALIZER;
-    utext_openUTF8(&utext, src, srcLength, &errorCode);
-    LocalPointer<BreakIterator> ownedIter;
-    iter = ustrcase_getTitleBreakIterator(nullptr, locale, options, iter, ownedIter, errorCode);
-    if(iter==nullptr) {
+    utext_openUTF8(&utext, src, src_ڊيگهائي, &error_ڪوڊ);
+    Local_اشارو<BreakIterator> ownedIter;
+    iter = ustrcase_getTitleBreakIterator(خالي_اشارو, locale, options, iter, ownedIter, error_ڪوڊ);
+    إذا(iter==خالي_اشارو) {
         utext_close(&utext);
-        return 0;
+        أرجع 0;
     }
-    iter->setText(&utext, errorCode);
+    iter->سيٽ_متن(&utext, error_ڪوڊ);
     int32_t length=ucasemap_mapUTF8(
         ustrcase_getCaseLocale(locale), options, iter,
-        dest, destCapacity,
-        src, srcLength,
-        ucasemap_internalUTF8ToTitle, edits, errorCode);
+        dest, dest_صلاحيت,
+        src, src_ڊيگهائي,
+        ucasemap_اندروني_UTF8_منزل_Title, edits, error_ڪوڊ);
     utext_close(&utext);
-    return length;
+    أرجع length;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
 U_NAMESPACE_USE
 
-U_CAPI const UBreakIterator* U_EXPORT2
-ucasemap_getBreakIterator(const UCaseMap* csm U_LIFETIME_BOUND) {
-    auto *impl = reinterpret_cast<const UCaseMapImpl *>(csm);
-    return reinterpret_cast<UBreakIterator *>(impl->iter);
+U_CAPI ثابت UBreakIterator* U_EXPORT2
+ucasemap_getBreakIterator(ثابت UCaseMap* csm U_LIFETIME_BOUND) {
+    خودڪار *impl = reinterpret_cast<ثابت UCaseMapImpl *>(csm);
+    أرجع reinterpret_cast<UBreakIterator *>(impl->iter);
 }
 
-U_CAPI void U_EXPORT2
-ucasemap_setBreakIterator(UCaseMap *csm, UBreakIterator *iterToAdopt, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+U_CAPI فراغ U_EXPORT2
+ucasemap_سيٽ_Break_Iterator(UCaseMap *csm, UBreakIterator *iter_منزل_Adopt, UError_ڪوڊ *p_Error_ڪوڊ) {
+    إذا(U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع;
     }
-    auto *impl = reinterpret_cast<UCaseMapImpl *>(csm);
-    delete impl->iter;
-    impl->iter=reinterpret_cast<BreakIterator *>(iterToAdopt);
+    خودڪار *impl = reinterpret_cast<UCaseMapImpl *>(csm);
+    ميٽيو impl->iter;
+    impl->iter=reinterpret_cast<BreakIterator *>(iter_منزل_Adopt);
 }
 
 U_CAPI int32_t U_EXPORT2
-ucasemap_utf8ToTitle(UCaseMap *csm,
-                     char *dest, int32_t destCapacity,
-                     const char *src, int32_t srcLength,
-                     UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return 0;
+ucasemap_utf8_منزل_Title(UCaseMap *csm,
+                     حرف *dest, int32_t dest_صلاحيت,
+                     ثابت حرف *src, int32_t src_ڊيگهائي,
+                     UError_ڪوڊ *p_Error_ڪوڊ) {
+    إذا (U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع 0;
     }
     UText utext=UTEXT_INITIALIZER;
-    utext_openUTF8(&utext, src, srcLength, pErrorCode);
-    if (U_FAILURE(*pErrorCode)) {
-        return 0;
+    utext_openUTF8(&utext, src, src_ڊيگهائي, p_Error_ڪوڊ);
+    إذا (U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع 0;
     }
-    auto *impl = reinterpret_cast<UCaseMapImpl *>(csm);
-    if(impl->iter==nullptr) {
-        LocalPointer<BreakIterator> ownedIter;
+    خودڪار *impl = reinterpret_cast<UCaseMapImpl *>(csm);
+    إذا(impl->iter==خالي_اشارو) {
+        Local_اشارو<BreakIterator> ownedIter;
         BreakIterator *iter = ustrcase_getTitleBreakIterator(
-            nullptr, impl->locale, impl->options, nullptr, ownedIter, *pErrorCode);
-        if (iter == nullptr) {
+            خالي_اشارو, impl->locale, impl->options, خالي_اشارو, ownedIter, *p_Error_ڪوڊ);
+        إذا (iter == خالي_اشارو) {
             utext_close(&utext);
-            return 0;
+            أرجع 0;
         }
         impl->iter = ownedIter.orphan();
     }
-    impl->iter->setText(&utext, *pErrorCode);
+    impl->iter->سيٽ_متن(&utext, *p_Error_ڪوڊ);
     int32_t length=ucasemap_mapUTF8(
             impl->caseLocale, impl->options, impl->iter,
-            dest, destCapacity,
-            src, srcLength,
-            ucasemap_internalUTF8ToTitle, nullptr, *pErrorCode);
+            dest, dest_صلاحيت,
+            src, src_ڊيگهائي,
+            ucasemap_اندروني_UTF8_منزل_Title, خالي_اشارو, *p_Error_ڪوڊ);
     utext_close(&utext);
-    return length;
+    أرجع length;
 }
 
-#endif  // !UCONFIG_NO_BREAK_ITERATION
+#جيڪڏهن_پورو  // !UCONFIG_NO_BREAK_ITERATION

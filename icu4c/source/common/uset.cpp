@@ -20,264 +20,264 @@
 *   instantiating a new USet.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/char16ptr.h"
-#include "unicode/uobject.h"
-#include "unicode/uset.h"
-#include "unicode/uniset.h"
-#include "cmemory.h"
-#include "unicode/ustring.h"
-#include "unicode/parsepos.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/char16ptr.h"
+#ضمن "unicode/uobject.h"
+#ضمن "unicode/uset.h"
+#ضمن "unicode/uniset.h"
+#ضمن "cmemory.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/parsepos.h"
 
 U_NAMESPACE_USE
 
 U_CAPI USet* U_EXPORT2
-uset_openEmpty() {
-    return (USet*) new UnicodeSet();
+uset_open_خالي_جايون() {
+    أرجع (USet*) جديد Unicode_سيٽ();
 }
 
 U_CAPI USet* U_EXPORT2
-uset_open(UChar32 start, UChar32 end) {
-    return (USet*) new UnicodeSet(start, end);
+uset_open(UChar32 شروعات, UChar32 پڇاڙي) {
+    أرجع (USet*) جديد Unicode_سيٽ(شروعات, پڇاڙي);
 }
 
-U_CAPI void U_EXPORT2
-uset_close(USet* set) {
-    delete (UnicodeSet*) set;
+U_CAPI فراغ U_EXPORT2
+uset_close(USet* سيٽ) {
+    ميٽيو (Unicode_سيٽ*) سيٽ;
 }
 
 U_CAPI USet * U_EXPORT2
-uset_clone(const USet *set) {
-    return (USet*) (((UnicodeSet*) set)->UnicodeSet::clone());
+uset_clone(ثابت USet *سيٽ) {
+    أرجع (USet*) (((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::clone());
 }
 
 U_CAPI UBool U_EXPORT2
-uset_isFrozen(const USet *set) {
-    return ((UnicodeSet*) set)->UnicodeSet::isFrozen();
+uset_isFrozen(ثابت USet *سيٽ) {
+    أرجع ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::isFrozen();
 }
 
-U_CAPI void U_EXPORT2
-uset_freeze(USet *set) {
-    ((UnicodeSet*) set)->UnicodeSet::freeze();
+U_CAPI فراغ U_EXPORT2
+uset_freeze(USet *سيٽ) {
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::freeze();
 }
 
 U_CAPI USet * U_EXPORT2
-uset_cloneAsThawed(const USet *set) {
-    return (USet*) (((UnicodeSet*) set)->UnicodeSet::cloneAsThawed());
+uset_cloneAsThawed(ثابت USet *سيٽ) {
+    أرجع (USet*) (((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::cloneAsThawed());
 }
 
-U_CAPI void U_EXPORT2
-uset_set(USet* set,
-     UChar32 start, UChar32 end) {
-    ((UnicodeSet*) set)->UnicodeSet::set(start, end);
+U_CAPI فراغ U_EXPORT2
+uset_سيٽ(USet* سيٽ,
+     UChar32 شروعات, UChar32 پڇاڙي) {
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::سيٽ(شروعات, پڇاڙي);
 }
 
-U_CAPI void U_EXPORT2
-uset_addAll(USet* set, const USet *additionalSet) {
-    ((UnicodeSet*) set)->UnicodeSet::addAll(*((const UnicodeSet*)additionalSet));
+U_CAPI فراغ U_EXPORT2
+uset_جوڙيو_All(USet* سيٽ, ثابت USet *additional_سيٽ) {
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::جوڙيو_All(*((ثابت Unicode_سيٽ*)additional_سيٽ));
 }
 
-U_CAPI void U_EXPORT2
-uset_add(USet* set, UChar32 c) {
-    ((UnicodeSet*) set)->UnicodeSet::add(c);
+U_CAPI فراغ U_EXPORT2
+uset_جوڙيو(USet* سيٽ, UChar32 c) {
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::جوڙيو(c);
 }
 
-U_CAPI void U_EXPORT2
-uset_addRange(USet* set, UChar32 start, UChar32 end) {
-    ((UnicodeSet*) set)->UnicodeSet::add(start, end);    
+U_CAPI فراغ U_EXPORT2
+uset_جوڙيو_Range(USet* سيٽ, UChar32 شروعات, UChar32 پڇاڙي) {
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::جوڙيو(شروعات, پڇاڙي);    
 }
 
-U_CAPI void U_EXPORT2
-uset_addString(USet* set, const char16_t* str, int32_t strLen) {
+U_CAPI فراغ U_EXPORT2
+uset_جوڙيو_String(USet* سيٽ, ثابت char16_t* str, int32_t strLen) {
     // UnicodeString handles -1 for strLen
     UnicodeString s(strLen<0, str, strLen);
-    ((UnicodeSet*) set)->UnicodeSet::add(s);
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::جوڙيو(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_addAllCodePoints(USet* set, const char16_t *str, int32_t strLen) {
+U_CAPI فراغ U_EXPORT2
+uset_جوڙيو_All_ڪوڊ_Points(USet* سيٽ, ثابت char16_t *str, int32_t strLen) {
     // UnicodeString handles -1 for strLen
     UnicodeString s(str, strLen);
-    ((UnicodeSet*) set)->UnicodeSet::addAll(s);
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::جوڙيو_All(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_remove(USet* set, UChar32 c) {
-    ((UnicodeSet*) set)->UnicodeSet::remove(c);
+U_CAPI فراغ U_EXPORT2
+uset_remove(USet* سيٽ, UChar32 c) {
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::remove(c);
 }
 
-U_CAPI void U_EXPORT2
-uset_removeRange(USet* set, UChar32 start, UChar32 end) {
-    ((UnicodeSet*) set)->UnicodeSet::remove(start, end);
+U_CAPI فراغ U_EXPORT2
+uset_removeRange(USet* سيٽ, UChar32 شروعات, UChar32 پڇاڙي) {
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::remove(شروعات, پڇاڙي);
 }
 
-U_CAPI void U_EXPORT2
-uset_removeString(USet* set, const char16_t* str, int32_t strLen) {
+U_CAPI فراغ U_EXPORT2
+uset_removeString(USet* سيٽ, ثابت char16_t* str, int32_t strLen) {
     UnicodeString s(strLen==-1, str, strLen);
-    ((UnicodeSet*) set)->UnicodeSet::remove(s);
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::remove(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_removeAllCodePoints(USet *set, const char16_t *str, int32_t length) {
+U_CAPI فراغ U_EXPORT2
+uset_remove_All_ڪوڊ_Points(USet *سيٽ, ثابت char16_t *str, int32_t length) {
     UnicodeString s(length==-1, str, length);
-    ((UnicodeSet*) set)->UnicodeSet::removeAll(s);
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::removeAll(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_removeAll(USet* set, const USet* remove) {
-    ((UnicodeSet*) set)->UnicodeSet::removeAll(*(const UnicodeSet*)remove);
+U_CAPI فراغ U_EXPORT2
+uset_removeAll(USet* سيٽ, ثابت USet* remove) {
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::removeAll(*(ثابت Unicode_سيٽ*)remove);
 }
 
-U_CAPI void U_EXPORT2
-uset_retain(USet* set, UChar32 start, UChar32 end) {
-    ((UnicodeSet*) set)->UnicodeSet::retain(start, end);
+U_CAPI فراغ U_EXPORT2
+uset_retain(USet* سيٽ, UChar32 شروعات, UChar32 پڇاڙي) {
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::retain(شروعات, پڇاڙي);
 }
 
-U_CAPI void U_EXPORT2
-uset_retainString(USet *set, const char16_t *str, int32_t length) {
+U_CAPI فراغ U_EXPORT2
+uset_retainString(USet *سيٽ, ثابت char16_t *str, int32_t length) {
     UnicodeString s(length==-1, str, length);
-    ((UnicodeSet*) set)->UnicodeSet::retain(s);
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::retain(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_retainAllCodePoints(USet *set, const char16_t *str, int32_t length) {
+U_CAPI فراغ U_EXPORT2
+uset_retain_All_ڪوڊ_Points(USet *سيٽ, ثابت char16_t *str, int32_t length) {
     UnicodeString s(length==-1, str, length);
-    ((UnicodeSet*) set)->UnicodeSet::retainAll(s);
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::retainAll(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_retainAll(USet* set, const USet* retain) {
-    ((UnicodeSet*) set)->UnicodeSet::retainAll(*(const UnicodeSet*)retain);
+U_CAPI فراغ U_EXPORT2
+uset_retainAll(USet* سيٽ, ثابت USet* retain) {
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::retainAll(*(ثابت Unicode_سيٽ*)retain);
 }
 
-U_CAPI void U_EXPORT2
-uset_compact(USet* set) {
-    ((UnicodeSet*) set)->UnicodeSet::compact();
+U_CAPI فراغ U_EXPORT2
+uset_compact(USet* سيٽ) {
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::compact();
 }
 
-U_CAPI void U_EXPORT2
-uset_complement(USet* set) {
-    ((UnicodeSet*) set)->UnicodeSet::complement();
+U_CAPI فراغ U_EXPORT2
+uset_complement(USet* سيٽ) {
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::complement();
 }
 
-U_CAPI void U_EXPORT2
-uset_complementRange(USet *set, UChar32 start, UChar32 end) {
-    ((UnicodeSet*) set)->UnicodeSet::complement(start, end);
+U_CAPI فراغ U_EXPORT2
+uset_complementRange(USet *سيٽ, UChar32 شروعات, UChar32 پڇاڙي) {
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::complement(شروعات, پڇاڙي);
 }
 
-U_CAPI void U_EXPORT2
-uset_complementString(USet *set, const char16_t *str, int32_t length) {
+U_CAPI فراغ U_EXPORT2
+uset_complementString(USet *سيٽ, ثابت char16_t *str, int32_t length) {
     UnicodeString s(length==-1, str, length);
-    ((UnicodeSet*) set)->UnicodeSet::complement(s);
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::complement(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_complementAllCodePoints(USet *set, const char16_t *str, int32_t length) {
+U_CAPI فراغ U_EXPORT2
+uset_complement_All_ڪوڊ_Points(USet *سيٽ, ثابت char16_t *str, int32_t length) {
     UnicodeString s(length==-1, str, length);
-    ((UnicodeSet*) set)->UnicodeSet::complementAll(s);
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::complementAll(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_complementAll(USet* set, const USet* complement) {
-    ((UnicodeSet*) set)->UnicodeSet::complementAll(*(const UnicodeSet*)complement);
+U_CAPI فراغ U_EXPORT2
+uset_complementAll(USet* سيٽ, ثابت USet* complement) {
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::complementAll(*(ثابت Unicode_سيٽ*)complement);
 }
 
-U_CAPI void U_EXPORT2
-uset_clear(USet* set) {
-    ((UnicodeSet*) set)->UnicodeSet::clear();
+U_CAPI فراغ U_EXPORT2
+uset_clear(USet* سيٽ) {
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::clear();
 }
 
-U_CAPI void U_EXPORT2
-uset_removeAllStrings(USet* set) {
-    ((UnicodeSet*) set)->UnicodeSet::removeAllStrings();
+U_CAPI فراغ U_EXPORT2
+uset_remove_All_لڙيون(USet* سيٽ) {
+    ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::remove_All_لڙيون();
 }
 
 U_CAPI UBool U_EXPORT2
-uset_isEmpty(const USet* set) {
-    return ((const UnicodeSet*) set)->UnicodeSet::isEmpty();
+uset_is_خالي_جايون(ثابت USet* سيٽ) {
+    أرجع ((ثابت Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::is_خالي_جايون();
 }
 
 U_CAPI UBool U_EXPORT2
-uset_hasStrings(const USet* set) {
-    return ((const UnicodeSet*) set)->UnicodeSet::hasStrings();
+uset_has_لڙيون(ثابت USet* سيٽ) {
+    أرجع ((ثابت Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::has_لڙيون();
 }
 
 U_CAPI UBool U_EXPORT2
-uset_contains(const USet* set, UChar32 c) {
-    return ((const UnicodeSet*) set)->UnicodeSet::contains(c);
+uset_شامل_آهي(ثابت USet* سيٽ, UChar32 c) {
+    أرجع ((ثابت Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::شامل_آهي(c);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsRange(const USet* set, UChar32 start, UChar32 end) {
-    return ((const UnicodeSet*) set)->UnicodeSet::contains(start, end);
+uset_شامل_آهي_Range(ثابت USet* سيٽ, UChar32 شروعات, UChar32 پڇاڙي) {
+    أرجع ((ثابت Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::شامل_آهي(شروعات, پڇاڙي);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsString(const USet* set, const char16_t* str, int32_t strLen) {
+uset_شامل_آهي_String(ثابت USet* سيٽ, ثابت char16_t* str, int32_t strLen) {
     UnicodeString s(strLen==-1, str, strLen);
-    return ((const UnicodeSet*) set)->UnicodeSet::contains(s);
+    أرجع ((ثابت Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::شامل_آهي(s);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsAll(const USet* set1, const USet* set2) {
-    return ((const UnicodeSet*) set1)->UnicodeSet::containsAll(* (const UnicodeSet*) set2);
+uset_شامل_آهي_All(ثابت USet* set1, ثابت USet* set2) {
+    أرجع ((ثابت Unicode_سيٽ*) set1)->Unicode_سيٽ::شامل_آهي_All(* (ثابت Unicode_سيٽ*) set2);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsAllCodePoints(const USet* set, const char16_t *str, int32_t strLen) {
+uset_شامل_آهي_All_ڪوڊ_Points(ثابت USet* سيٽ, ثابت char16_t *str, int32_t strLen) {
     // Create a string alias, since nothing is being added to the set.
     UnicodeString s(strLen==-1, str, strLen);
-    return ((const UnicodeSet*) set)->UnicodeSet::containsAll(s);
+    أرجع ((ثابت Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::شامل_آهي_All(s);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsNone(const USet* set1, const USet* set2) {
-    return ((const UnicodeSet*) set1)->UnicodeSet::containsNone(* (const UnicodeSet*) set2);
+uset_شامل_آهي_None(ثابت USet* set1, ثابت USet* set2) {
+    أرجع ((ثابت Unicode_سيٽ*) set1)->Unicode_سيٽ::شامل_آهي_None(* (ثابت Unicode_سيٽ*) set2);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsSome(const USet* set1, const USet* set2) {
-    return ((const UnicodeSet*) set1)->UnicodeSet::containsSome(* (const UnicodeSet*) set2);
+uset_شامل_آهي_Some(ثابت USet* set1, ثابت USet* set2) {
+    أرجع ((ثابت Unicode_سيٽ*) set1)->Unicode_سيٽ::شامل_آهي_Some(* (ثابت Unicode_سيٽ*) set2);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_span(const USet *set, const char16_t *s, int32_t length, USetSpanCondition spanCondition) {
-    return ((UnicodeSet*) set)->UnicodeSet::span(s, length, spanCondition);
+uset_وسعت(ثابت USet *سيٽ, ثابت char16_t *s, int32_t length, USet_وسعت_Condition وسعت_Condition) {
+    أرجع ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::وسعت(s, length, وسعت_Condition);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_spanBack(const USet *set, const char16_t *s, int32_t length, USetSpanCondition spanCondition) {
-    return ((UnicodeSet*) set)->UnicodeSet::spanBack(s, length, spanCondition);
+uset_وسعت_پٺ(ثابت USet *سيٽ, ثابت char16_t *s, int32_t length, USet_وسعت_Condition وسعت_Condition) {
+    أرجع ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::وسعت_پٺ(s, length, وسعت_Condition);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_spanUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition spanCondition) {
-    return ((UnicodeSet*) set)->UnicodeSet::spanUTF8(s, length, spanCondition);
+uset_وسعت_UTF8(ثابت USet *سيٽ, ثابت حرف *s, int32_t length, USet_وسعت_Condition وسعت_Condition) {
+    أرجع ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::وسعت_UTF8(s, length, وسعت_Condition);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_spanBackUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition spanCondition) {
-    return ((UnicodeSet*) set)->UnicodeSet::spanBackUTF8(s, length, spanCondition);
+uset_وسعت_پٺ_UTF8(ثابت USet *سيٽ, ثابت حرف *s, int32_t length, USet_وسعت_Condition وسعت_Condition) {
+    أرجع ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::وسعت_پٺ_UTF8(s, length, وسعت_Condition);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_equals(const USet* set1, const USet* set2) {
-    return *(const UnicodeSet*)set1 == *(const UnicodeSet*)set2;
+uset_equals(ثابت USet* set1, ثابت USet* set2) {
+    أرجع *(ثابت Unicode_سيٽ*)set1 == *(ثابت Unicode_سيٽ*)set2;
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_indexOf(const USet* set, UChar32 c) {
-    return ((UnicodeSet*) set)->UnicodeSet::indexOf(c);
+uset_اشاريو_جو(ثابت USet* سيٽ, UChar32 c) {
+    أرجع ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::اشاريو_جو(c);
 }
 
 U_CAPI UChar32 U_EXPORT2
-uset_charAt(const USet* set, int32_t index) {
-    return ((UnicodeSet*) set)->UnicodeSet::charAt(index);
+uset_charAt(ثابت USet* سيٽ, int32_t اشاريو) {
+    أرجع ((Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::charAt(اشاريو);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_size(const USet* set) {
-    return ((const UnicodeSet*) set)->UnicodeSet::size();
+uset_سائيز(ثابت USet* سيٽ) {
+    أرجع ((ثابت Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::size();
 }
 
 U_NAMESPACE_BEGIN
@@ -286,77 +286,77 @@ U_NAMESPACE_BEGIN
  * USet support API.  Declaring a class a friend is more portable than
  * trying to declare extern "C" functions as friends.
  */
-class USetAccess /* not : public UObject because all methods are static */ {
-public:
+صنف USetAccess /* not : public UObject because all methods are static */ {
+عام:
     /* Try to have the compiler inline these*/
-    inline static int32_t getStringCount(const UnicodeSet& set) {
-        return set.stringsSize();
+    مضمن ساكن int32_t get_String_ڳڻپ(ثابت Unicode_سيٽ& سيٽ) {
+        أرجع سيٽ.لڙيون_سائيز();
     }
-    inline static const UnicodeString* getString(const UnicodeSet& set U_LIFETIME_BOUND,
+    مضمن ساكن ثابت UnicodeString* getString(ثابت Unicode_سيٽ& سيٽ U_LIFETIME_BOUND,
                                                  int32_t i) {
-        return set.getString(i);
+        أرجع سيٽ.getString(i);
     }
-private:
+خاص:
     /* do not instantiate*/
     USetAccess();
 };
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
 U_CAPI int32_t U_EXPORT2
-uset_getRangeCount(const USet *set) {
-    return ((const UnicodeSet *)set)->UnicodeSet::getRangeCount();
+uset_get_Range_ڳڻپ(ثابت USet *سيٽ) {
+    أرجع ((ثابت Unicode_سيٽ *)سيٽ)->Unicode_سيٽ::get_Range_ڳڻپ();
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_getStringCount(const USet *uset) {
-    const UnicodeSet &set = *(const UnicodeSet *)uset;
-    return USetAccess::getStringCount(set);
+uset_get_String_ڳڻپ(ثابت USet *uset) {
+    ثابت Unicode_سيٽ &سيٽ = *(ثابت Unicode_سيٽ *)uset;
+    أرجع USetAccess::get_String_ڳڻپ(سيٽ);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_getItemCount(const USet* uset) {
-    const UnicodeSet& set = *(const UnicodeSet*)uset;
-    return set.getRangeCount() + USetAccess::getStringCount(set);
+uset_get_شي_ڳڻپ(ثابت USet* uset) {
+    ثابت Unicode_سيٽ& سيٽ = *(ثابت Unicode_سيٽ*)uset;
+    أرجع سيٽ.get_Range_ڳڻپ() + USetAccess::get_String_ڳڻپ(سيٽ);
 }
 
-U_CAPI const UChar* U_EXPORT2
-uset_getString(const USet* uset U_LIFETIME_BOUND, int32_t index, int32_t* pLength) {
-    if (pLength == nullptr) { return nullptr; }
-    const UnicodeSet &set = *(const UnicodeSet *)uset;
-    int32_t count = USetAccess::getStringCount(set);
-    if (index < 0 || count <= index) {
-        *pLength = 0;
-        return nullptr;
+U_CAPI ثابت UChar* U_EXPORT2
+uset_getString(ثابت USet* uset U_LIFETIME_BOUND, int32_t اشاريو, int32_t* p_ڊيگهائي) {
+    إذا (p_ڊيگهائي == خالي_اشارو) { أرجع خالي_اشارو; }
+    ثابت Unicode_سيٽ &سيٽ = *(ثابت Unicode_سيٽ *)uset;
+    int32_t count = USetAccess::get_String_ڳڻپ(سيٽ);
+    إذا (اشاريو < 0 || count <= اشاريو) {
+        *p_ڊيگهائي = 0;
+        أرجع خالي_اشارو;
     }
-    const UnicodeString *s = USetAccess::getString(set, index);
-    *pLength = s->length();
-    return toUCharPtr(s->getBuffer());
+    ثابت UnicodeString *s = USetAccess::getString(سيٽ, اشاريو);
+    *p_ڊيگهائي = s->length();
+    أرجع منزل_UChar_Ptr(s->get_بفر());
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_getItem(const USet* uset, int32_t itemIndex,
-             UChar32* start, UChar32* end,
-             char16_t* str, int32_t strCapacity,
-             UErrorCode* ec) {
-    if (U_FAILURE(*ec)) return 0;
-    const UnicodeSet& set = *(const UnicodeSet*)uset;
-    int32_t rangeCount;
+uset_get_شي(ثابت USet* uset, int32_t شي_اشاريو,
+             UChar32* شروعات, UChar32* پڇاڙي,
+             char16_t* str, int32_t str_صلاحيت,
+             UError_ڪوڊ* ec) {
+    إذا (U_FAILURE(*ec)) أرجع 0;
+    ثابت Unicode_سيٽ& سيٽ = *(ثابت Unicode_سيٽ*)uset;
+    int32_t range_ڳڻپ;
 
-    if (itemIndex < 0) {
-        *ec = U_ILLEGAL_ARGUMENT_ERROR;
-        return -1;
-    } else if (itemIndex < (rangeCount = set.getRangeCount())) {
-        *start = set.getRangeStart(itemIndex);
-        *end = set.getRangeEnd(itemIndex);
-        return 0;
-    } else {
-        itemIndex -= rangeCount;
-        if (itemIndex < USetAccess::getStringCount(set)) {
-            const UnicodeString* s = USetAccess::getString(set, itemIndex);
-            return s->extract(str, strCapacity, *ec);
-        } else {
-            *ec = U_INDEX_OUTOFBOUNDS_ERROR;
-            return -1;
+    إذا (شي_اشاريو < 0) {
+        *ec = U_ILLEGAL_دليل_ERROR;
+        أرجع -1;
+    } وإلا إذا (شي_اشاريو < (range_ڳڻپ = سيٽ.get_Range_ڳڻپ())) {
+        *شروعات = سيٽ.get_Range_شروعات(شي_اشاريو);
+        *پڇاڙي = سيٽ.get_Range_پڇاڙي(شي_اشاريو);
+        أرجع 0;
+    } وإلا {
+        شي_اشاريو -= range_ڳڻپ;
+        إذا (شي_اشاريو < USetAccess::get_String_ڳڻپ(سيٽ)) {
+            ثابت UnicodeString* s = USetAccess::getString(سيٽ, شي_اشاريو);
+            أرجع s->extract(str, str_صلاحيت, *ec);
+        } وإلا {
+            *ec = U_اشاريو_OUTOFBOUNDS_ERROR;
+            أرجع -1;
         }
     }
 }
@@ -392,189 +392,189 @@ uset_getItem(const USet* uset, int32_t itemIndex,
  * - some supplementary: (length|0x8000) (bmpLength<length) BMP, .., BMP, supp-high, supp-low, ..
  */
 U_CAPI int32_t U_EXPORT2
-uset_serialize(const USet* set, uint16_t* dest, int32_t destCapacity, UErrorCode* ec) {
-    if (ec==nullptr || U_FAILURE(*ec)) {
-        return 0;
+uset_serialize(ثابت USet* سيٽ, uint16_t* dest, int32_t dest_صلاحيت, UError_ڪوڊ* ec) {
+    إذا (ec==خالي_اشارو || U_FAILURE(*ec)) {
+        أرجع 0;
     }
 
-    return ((const UnicodeSet*) set)->UnicodeSet::serialize(dest, destCapacity,* ec);
+    أرجع ((ثابت Unicode_سيٽ*) سيٽ)->Unicode_سيٽ::serialize(dest, dest_صلاحيت,* ec);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_getSerializedSet(USerializedSet* fillSet, const uint16_t* src, int32_t srcLength) {
+uset_get_Serialized_سيٽ(USerialized_سيٽ* fill_سيٽ, ثابت uint16_t* src, int32_t src_ڊيگهائي) {
     int32_t length;
 
-    if(fillSet==nullptr) {
-        return false;
+    إذا(fill_سيٽ==خالي_اشارو) {
+        أرجع خطأ;
     }
-    if(src==nullptr || srcLength<=0) {
-        fillSet->length=fillSet->bmpLength=0;
-        return false;
+    إذا(src==خالي_اشارو || src_ڊيگهائي<=0) {
+        fill_سيٽ->length=fill_سيٽ->bmp_ڊيگهائي=0;
+        أرجع خطأ;
     }
 
     length=*src++;
-    if(length&0x8000) {
+    إذا(length&0x8000) {
         /* there are supplementary values */
         length&=0x7fff;
-        if(srcLength<(2+length)) {
-            fillSet->length=fillSet->bmpLength=0;
-            return false;
+        إذا(src_ڊيگهائي<(2+length)) {
+            fill_سيٽ->length=fill_سيٽ->bmp_ڊيگهائي=0;
+            أرجع خطأ;
         }
-        fillSet->bmpLength=*src++;
-    } else {
+        fill_سيٽ->bmp_ڊيگهائي=*src++;
+    } وإلا {
         /* only BMP values */
-        if(srcLength<(1+length)) {
-            fillSet->length=fillSet->bmpLength=0;
-            return false;
+        إذا(src_ڊيگهائي<(1+length)) {
+            fill_سيٽ->length=fill_سيٽ->bmp_ڊيگهائي=0;
+            أرجع خطأ;
         }
-        fillSet->bmpLength=length;
+        fill_سيٽ->bmp_ڊيگهائي=length;
     }
-    fillSet->array=src;
-    fillSet->length=length;
-    return true;
+    fill_سيٽ->array=src;
+    fill_سيٽ->length=length;
+    أرجع سچ;
 }
 
-U_CAPI void U_EXPORT2
-uset_setSerializedToOne(USerializedSet* fillSet, UChar32 c) {
-    if(fillSet==nullptr || (uint32_t)c>0x10ffff) {
-        return;
+U_CAPI فراغ U_EXPORT2
+uset_سيٽ_Serialized_منزل_One(USerialized_سيٽ* fill_سيٽ, UChar32 c) {
+    إذا(fill_سيٽ==خالي_اشارو || (uint32_t)c>0x10ffff) {
+        أرجع;
     }
 
-    fillSet->array=fillSet->staticArray;
-    if(c<0xffff) {
-        fillSet->bmpLength=fillSet->length=2;
-        fillSet->staticArray[0]=(uint16_t)c;
-        fillSet->staticArray[1]=(uint16_t)c+1;
-    } else if(c==0xffff) {
-        fillSet->bmpLength=1;
-        fillSet->length=3;
-        fillSet->staticArray[0]=0xffff;
-        fillSet->staticArray[1]=1;
-        fillSet->staticArray[2]=0;
-    } else if(c<0x10ffff) {
-        fillSet->bmpLength=0;
-        fillSet->length=4;
-        fillSet->staticArray[0]=(uint16_t)(c>>16);
-        fillSet->staticArray[1]=(uint16_t)c;
+    fill_سيٽ->array=fill_سيٽ->staticArray;
+    إذا(c<0xffff) {
+        fill_سيٽ->bmp_ڊيگهائي=fill_سيٽ->length=2;
+        fill_سيٽ->staticArray[0]=(uint16_t)c;
+        fill_سيٽ->staticArray[1]=(uint16_t)c+1;
+    } وإلا إذا(c==0xffff) {
+        fill_سيٽ->bmp_ڊيگهائي=1;
+        fill_سيٽ->length=3;
+        fill_سيٽ->staticArray[0]=0xffff;
+        fill_سيٽ->staticArray[1]=1;
+        fill_سيٽ->staticArray[2]=0;
+    } وإلا إذا(c<0x10ffff) {
+        fill_سيٽ->bmp_ڊيگهائي=0;
+        fill_سيٽ->length=4;
+        fill_سيٽ->staticArray[0]=(uint16_t)(c>>16);
+        fill_سيٽ->staticArray[1]=(uint16_t)c;
         ++c;
-        fillSet->staticArray[2]=(uint16_t)(c>>16);
-        fillSet->staticArray[3]=(uint16_t)c;
-    } else /* c==0x10ffff */ {
-        fillSet->bmpLength=0;
-        fillSet->length=2;
-        fillSet->staticArray[0]=0x10;
-        fillSet->staticArray[1]=0xffff;
+        fill_سيٽ->staticArray[2]=(uint16_t)(c>>16);
+        fill_سيٽ->staticArray[3]=(uint16_t)c;
+    } وإلا /* c==0x10ffff */ {
+        fill_سيٽ->bmp_ڊيگهائي=0;
+        fill_سيٽ->length=2;
+        fill_سيٽ->staticArray[0]=0x10;
+        fill_سيٽ->staticArray[1]=0xffff;
     }
 }
 
 U_CAPI UBool U_EXPORT2
-uset_serializedContains(const USerializedSet* set, UChar32 c) {
-    const uint16_t* array;
+uset_serialized_شامل_آهي(ثابت USerialized_سيٽ* سيٽ, UChar32 c) {
+    ثابت uint16_t* array;
 
-    if(set==nullptr || (uint32_t)c>0x10ffff) {
-        return false;
+    إذا(سيٽ==خالي_اشارو || (uint32_t)c>0x10ffff) {
+        أرجع خطأ;
     }
 
-    array=set->array;
-    if(c<=0xffff) {
+    array=سيٽ->array;
+    إذا(c<=0xffff) {
         /* find c in the BMP part */
         int32_t lo = 0;
-        int32_t hi = set->bmpLength-1;
-        if (c < array[0]) {
+        int32_t hi = سيٽ->bmp_ڊيگهائي-1;
+        إذا (c < array[0]) {
             hi = 0;
-        } else if (c < array[hi]) {
-            for(;;) {
+        } وإلا إذا (c < array[hi]) {
+            لكل(;;) {
                 int32_t i = (lo + hi) >> 1;
-                if (i == lo) {
-                    break;  // Done!
-                } else if (c < array[i]) {
+                إذا (i == lo) {
+                    اكسر;  // Done!
+                } وإلا إذا (c < array[i]) {
                     hi = i;
-                } else {
+                } وإلا {
                     lo = i;
                 }
             }
-        } else {
+        } وإلا {
             hi += 1;
         }
-        return hi&1;
-    } else {
+        أرجع hi&1;
+    } وإلا {
         /* find c in the supplementary part */
-        uint16_t high=(uint16_t)(c>>16), low=(uint16_t)c;
-        int32_t base = set->bmpLength;
+        uint16_t مٿاهون=(uint16_t)(c>>16), هيٺيون=(uint16_t)c;
+        int32_t بنياد = سيٽ->bmp_ڊيگهائي;
         int32_t lo = 0;
-        int32_t hi = set->length - 2 - base;
-        if (high < array[base] || (high==array[base] && low<array[base+1])) {
+        int32_t hi = سيٽ->length - 2 - بنياد;
+        إذا (مٿاهون < array[بنياد] || (مٿاهون==array[بنياد] && هيٺيون<array[بنياد+1])) {
             hi = 0;
-        } else if (high < array[base+hi] || (high==array[base+hi] && low<array[base+hi+1])) {
-            for (;;) {
+        } وإلا إذا (مٿاهون < array[بنياد+hi] || (مٿاهون==array[بنياد+hi] && هيٺيون<array[بنياد+hi+1])) {
+            لكل (;;) {
                 int32_t i = ((lo + hi) >> 1) & ~1;  // Guarantee even result
-                int32_t iabs = i + base;
-                if (i == lo) {
-                    break;  // Done!
-                } else if (high < array[iabs] || (high==array[iabs] && low<array[iabs+1])) {
+                int32_t iabs = i + بنياد;
+                إذا (i == lo) {
+                    اكسر;  // Done!
+                } وإلا إذا (مٿاهون < array[iabs] || (مٿاهون==array[iabs] && هيٺيون<array[iabs+1])) {
                     hi = i;
-                } else {
+                } وإلا {
                     lo = i;
                 }
             }
-        } else {
+        } وإلا {
             hi += 2;
         }
         /* count pairs of 16-bit units even per BMP and check if the number of pairs is odd */
-        return ((hi+(base<<1))&2)!=0;
+        أرجع ((hi+(بنياد<<1))&2)!=0;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_getSerializedRangeCount(const USerializedSet* set) {
-    if(set==nullptr) {
-        return 0;
+uset_get_Serialized_Range_ڳڻپ(ثابت USerialized_سيٽ* سيٽ) {
+    إذا(سيٽ==خالي_اشارو) {
+        أرجع 0;
     }
 
-    return (set->bmpLength+(set->length-set->bmpLength)/2+1)/2;
+    أرجع (سيٽ->bmp_ڊيگهائي+(سيٽ->length-سيٽ->bmp_ڊيگهائي)/2+1)/2;
 }
 
 U_CAPI UBool U_EXPORT2
-uset_getSerializedRange(const USerializedSet* set, int32_t rangeIndex,
-                        UChar32* pStart, UChar32* pEnd) {
-    const uint16_t* array;
-    int32_t bmpLength, length;
+uset_getSerializedRange(ثابت USerialized_سيٽ* سيٽ, int32_t range_اشاريو,
+                        UChar32* p_شروعات, UChar32* p_پڇاڙي) {
+    ثابت uint16_t* array;
+    int32_t bmp_ڊيگهائي, length;
 
-    if(set==nullptr || rangeIndex<0 || pStart==nullptr || pEnd==nullptr) {
-        return false;
+    إذا(سيٽ==خالي_اشارو || range_اشاريو<0 || p_شروعات==خالي_اشارو || p_پڇاڙي==خالي_اشارو) {
+        أرجع خطأ;
     }
 
-    array=set->array;
-    length=set->length;
-    bmpLength=set->bmpLength;
+    array=سيٽ->array;
+    length=سيٽ->length;
+    bmp_ڊيگهائي=سيٽ->bmp_ڊيگهائي;
 
-    rangeIndex*=2; /* address start/limit pairs */
-    if(rangeIndex<bmpLength) {
-        *pStart=array[rangeIndex++];
-        if(rangeIndex<bmpLength) {
-            *pEnd=array[rangeIndex]-1;
-        } else if(rangeIndex<length) {
-            *pEnd=((((int32_t)array[rangeIndex])<<16)|array[rangeIndex+1])-1;
-        } else {
-            *pEnd=0x10ffff;
+    range_اشاريو*=2; /* address start/limit pairs */
+    إذا(range_اشاريو<bmp_ڊيگهائي) {
+        *p_شروعات=array[range_اشاريو++];
+        إذا(range_اشاريو<bmp_ڊيگهائي) {
+            *p_پڇاڙي=array[range_اشاريو]-1;
+        } وإلا إذا(range_اشاريو<length) {
+            *p_پڇاڙي=((((int32_t)array[range_اشاريو])<<16)|array[range_اشاريو+1])-1;
+        } وإلا {
+            *p_پڇاڙي=0x10ffff;
         }
-        return true;
-    } else {
-        rangeIndex-=bmpLength;
-        rangeIndex*=2; /* address pairs of pairs of units */
-        length-=bmpLength;
-        if(rangeIndex<length) {
-            array+=bmpLength;
-            *pStart=(((int32_t)array[rangeIndex])<<16)|array[rangeIndex+1];
-            rangeIndex+=2;
-            if(rangeIndex<length) {
-                *pEnd=((((int32_t)array[rangeIndex])<<16)|array[rangeIndex+1])-1;
-            } else {
-                *pEnd=0x10ffff;
+        أرجع سچ;
+    } وإلا {
+        range_اشاريو-=bmp_ڊيگهائي;
+        range_اشاريو*=2; /* address pairs of pairs of units */
+        length-=bmp_ڊيگهائي;
+        إذا(range_اشاريو<length) {
+            array+=bmp_ڊيگهائي;
+            *p_شروعات=(((int32_t)array[range_اشاريو])<<16)|array[range_اشاريو+1];
+            range_اشاريو+=2;
+            إذا(range_اشاريو<length) {
+                *p_پڇاڙي=((((int32_t)array[range_اشاريو])<<16)|array[range_اشاريو+1])-1;
+            } وإلا {
+                *p_پڇاڙي=0x10ffff;
             }
-            return true;
-        } else {
-            return false;
+            أرجع سچ;
+        } وإلا {
+            أرجع خطأ;
         }
     }
 }

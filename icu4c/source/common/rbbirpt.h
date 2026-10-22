@@ -12,180 +12,180 @@
 //   and others. All rights reserved.  
 //
 //---------------------------------------------------------------------------------
-#ifndef RBBIRPT_H
-#define RBBIRPT_H
+#جيڪڏهن_وصف_نه_ٿيل RBBIRPT_H
+#وصف_ڪريو RBBIRPT_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
 U_NAMESPACE_BEGIN
 //
 // Character classes for RBBI rule scanning.
 //
-    static const uint8_t kRuleSet_digit_char = 128;
-    static const uint8_t kRuleSet_name_char = 129;
-    static const uint8_t kRuleSet_name_start_char = 130;
-    static const uint8_t kRuleSet_rule_char = 131;
-    static const uint8_t kRuleSet_white_space = 132;
+    ساكن ثابت uint8_t k_قاعدو_سيٽ_digit_char = 128;
+    ساكن ثابت uint8_t k_قاعدو_سيٽ_name_char = 129;
+    ساكن ثابت uint8_t k_قاعدو_سيٽ_name_شروعات_char = 130;
+    ساكن ثابت uint8_t k_قاعدو_سيٽ_قاعدو_char = 131;
+    ساكن ثابت uint8_t k_قاعدو_سيٽ_white_space = 132;
 
 
-enum RBBI_RuleParseAction {
+تعداد RBBI_قاعدو_Parse_Action {
     doCheckVarDef,
     doDotAny,
-    doEndAssign,
-    doEndOfRule,
-    doEndVariableName,
+    do_پڇاڙي_سونپيو,
+    do_پڇاڙي_جو_قاعدو,
+    do_پڇاڙي_Variable_Name,
     doExit,
-    doExprCatOperator,
-    doExprFinished,
-    doExprOrOperator,
-    doExprRParen,
-    doExprStart,
+    do_اظهار_Cat_Operator,
+    do_اظهار_ختم,
+    do_اظهار_Or_Operator,
+    do_اظهار_RParen,
+    do_اظهار_شروعات,
     doLParen,
     doNOP,
     doNoChain,
-    doOptionEnd,
-    doOptionStart,
-    doReverseDir,
-    doRuleChar,
-    doRuleError,
-    doRuleErrorAssignExpr,
-    doScanUnicodeSet,
+    do_Option_پڇاڙي,
+    do_Option_شروعات,
+    do_ابتو_Dir,
+    do_قاعدو_Char,
+    do_قاعدو_Error,
+    do_قاعدو_Error_سونپيو_اظهار,
+    do_جاچ_Unicode_سيٽ,
     doSlash,
-    doStartAssign,
-    doStartTagValue,
-    doStartVariableName,
-    doTagDigit,
-    doTagExpectedError,
-    doTagValue,
+    do_شروعات_سونپيو,
+    do_شروعات_ٽيگ_قدر,
+    do_شروعات_Variable_Name,
+    do_ٽيگ_Digit,
+    do_ٽيگ_Expected_Error,
+    do_ٽيگ_قدر,
     doUnaryOpPlus,
     doUnaryOpQuestion,
-    doUnaryOpStar,
+    do_Unary_Op_تارو,
     doVariableNameExpectedErr,
-    rbbiLastAction};
+    rbbi_آخري_Action};
 
 //-------------------------------------------------------------------------------
 //
 //  RBBIRuleTableEl    represents the structure of a row in the transition table
 //                     for the rule parser state machine.
 //-------------------------------------------------------------------------------
-struct RBBIRuleTableEl {
-    RBBI_RuleParseAction          fAction;
+بنية RBBIRule_جدول_El {
+    RBBI_قاعدو_Parse_Action          fAction;
     uint8_t                       fCharClass;       // 0-127:    an individual ASCII character
                                                     // 128-255:  character class index
-    uint8_t                       fNextState;       // 0-250:    normal next-stat numbers
+    uint8_t                       f_ايندڙ_State;       // 0-250:    normal next-stat numbers
                                                     // 255:      pop next-state from stack.
-    uint8_t                       fPushState;
-    UBool                         fNextChar;
+    uint8_t                       f_ڌڪو_State;
+    UBool                         f_ايندڙ_Char;
 };
 
-static const struct RBBIRuleTableEl gRuleParseStateTable[] = {
+ساكن ثابت بنية RBBIRule_جدول_El g_قاعدو_Parse_State_جدول[] = {
     {doNOP, 0, 0, 0, true}
-    , {doExprStart, 254, 29, 9, false}     //  1      start
+    , {do_اظهار_شروعات, 254, 29, 9, false}     //  1      start
     , {doNOP, 132, 1,0,  true}     //  2 
     , {doNoChain, 94 /* ^ */, 12, 9, true}     //  3 
-    , {doExprStart, 36 /* $ */, 88, 98, false}     //  4 
+    , {do_اظهار_شروعات, 36 /* $ */, 88, 98, false}     //  4 
     , {doNOP, 33 /* ! */, 19,0,  true}     //  5 
     , {doNOP, 59 /* ; */, 1,0,  true}     //  6 
     , {doNOP, 252, 0,0,  false}     //  7 
-    , {doExprStart, 255, 29, 9, false}     //  8 
-    , {doEndOfRule, 59 /* ; */, 1,0,  true}     //  9      break-rule-end
+    , {do_اظهار_شروعات, 255, 29, 9, false}     //  8 
+    , {do_پڇاڙي_جو_قاعدو, 59 /* ; */, 1,0,  true}     //  9      break-rule-end
     , {doNOP, 132, 9,0,  true}     //  10 
-    , {doRuleError, 255, 103,0,  false}     //  11 
-    , {doExprStart, 254, 29,0,  false}     //  12      start-after-caret
+    , {do_قاعدو_Error, 255, 103,0,  false}     //  11 
+    , {do_اظهار_شروعات, 254, 29,0,  false}     //  12      start-after-caret
     , {doNOP, 132, 12,0,  true}     //  13 
-    , {doRuleError, 94 /* ^ */, 103,0,  false}     //  14 
-    , {doExprStart, 36 /* $ */, 88, 37, false}     //  15 
-    , {doRuleError, 59 /* ; */, 103,0,  false}     //  16 
-    , {doRuleError, 252, 103,0,  false}     //  17 
-    , {doExprStart, 255, 29,0,  false}     //  18 
+    , {do_قاعدو_Error, 94 /* ^ */, 103,0,  false}     //  14 
+    , {do_اظهار_شروعات, 36 /* $ */, 88, 37, false}     //  15 
+    , {do_قاعدو_Error, 59 /* ; */, 103,0,  false}     //  16 
+    , {do_قاعدو_Error, 252, 103,0,  false}     //  17 
+    , {do_اظهار_شروعات, 255, 29,0,  false}     //  18 
     , {doNOP, 33 /* ! */, 21,0,  true}     //  19      rev-option
-    , {doReverseDir, 255, 28, 9, false}     //  20 
-    , {doOptionStart, 130, 23,0,  true}     //  21      option-scan1
-    , {doRuleError, 255, 103,0,  false}     //  22 
+    , {do_ابتو_Dir, 255, 28, 9, false}     //  20 
+    , {do_Option_شروعات, 130, 23,0,  true}     //  21      option-scan1
+    , {do_قاعدو_Error, 255, 103,0,  false}     //  22 
     , {doNOP, 129, 23,0,  true}     //  23      option-scan2
-    , {doOptionEnd, 255, 25,0,  false}     //  24 
+    , {do_Option_پڇاڙي, 255, 25,0,  false}     //  24 
     , {doNOP, 59 /* ; */, 1,0,  true}     //  25      option-scan3
     , {doNOP, 132, 25,0,  true}     //  26 
-    , {doRuleError, 255, 103,0,  false}     //  27 
-    , {doExprStart, 255, 29, 9, false}     //  28      reverse-rule
-    , {doRuleChar, 254, 38,0,  true}     //  29      term
+    , {do_قاعدو_Error, 255, 103,0,  false}     //  27 
+    , {do_اظهار_شروعات, 255, 29, 9, false}     //  28      reverse-rule
+    , {do_قاعدو_Char, 254, 38,0,  true}     //  29      term
     , {doNOP, 132, 29,0,  true}     //  30 
-    , {doRuleChar, 131, 38,0,  true}     //  31 
+    , {do_قاعدو_Char, 131, 38,0,  true}     //  31 
     , {doNOP, 91 /* [ */, 94, 38, false}     //  32 
     , {doLParen, 40 /* ( */, 29, 38, true}     //  33 
     , {doNOP, 36 /* $ */, 88, 37, false}     //  34 
     , {doDotAny, 46 /* . */, 38,0,  true}     //  35 
-    , {doRuleError, 255, 103,0,  false}     //  36 
+    , {do_قاعدو_Error, 255, 103,0,  false}     //  36 
     , {doCheckVarDef, 255, 38,0,  false}     //  37      term-var-ref
     , {doNOP, 132, 38,0,  true}     //  38      expr-mod
-    , {doUnaryOpStar, 42 /* * */, 43,0,  true}     //  39 
+    , {do_Unary_Op_تارو, 42 /* * */, 43,0,  true}     //  39 
     , {doUnaryOpPlus, 43 /* + */, 43,0,  true}     //  40 
     , {doUnaryOpQuestion, 63 /* ? */, 43,0,  true}     //  41 
     , {doNOP, 255, 43,0,  false}     //  42 
-    , {doExprCatOperator, 254, 29,0,  false}     //  43      expr-cont
+    , {do_اظهار_Cat_Operator, 254, 29,0,  false}     //  43      expr-cont
     , {doNOP, 132, 43,0,  true}     //  44 
-    , {doExprCatOperator, 131, 29,0,  false}     //  45 
-    , {doExprCatOperator, 91 /* [ */, 29,0,  false}     //  46 
-    , {doExprCatOperator, 40 /* ( */, 29,0,  false}     //  47 
-    , {doExprCatOperator, 36 /* $ */, 29,0,  false}     //  48 
-    , {doExprCatOperator, 46 /* . */, 29,0,  false}     //  49 
-    , {doExprCatOperator, 47 /* / */, 55,0,  false}     //  50 
-    , {doExprCatOperator, 123 /* { */, 67,0,  true}     //  51 
-    , {doExprOrOperator, 124 /* | */, 29,0,  true}     //  52 
-    , {doExprRParen, 41 /* ) */, 255,0,  true}     //  53 
-    , {doExprFinished, 255, 255,0,  false}     //  54 
+    , {do_اظهار_Cat_Operator, 131, 29,0,  false}     //  45 
+    , {do_اظهار_Cat_Operator, 91 /* [ */, 29,0,  false}     //  46 
+    , {do_اظهار_Cat_Operator, 40 /* ( */, 29,0,  false}     //  47 
+    , {do_اظهار_Cat_Operator, 36 /* $ */, 29,0,  false}     //  48 
+    , {do_اظهار_Cat_Operator, 46 /* . */, 29,0,  false}     //  49 
+    , {do_اظهار_Cat_Operator, 47 /* / */, 55,0,  false}     //  50 
+    , {do_اظهار_Cat_Operator, 123 /* { */, 67,0,  true}     //  51 
+    , {do_اظهار_Or_Operator, 124 /* | */, 29,0,  true}     //  52 
+    , {do_اظهار_RParen, 41 /* ) */, 255,0,  true}     //  53 
+    , {do_اظهار_ختم, 255, 255,0,  false}     //  54 
     , {doSlash, 47 /* / */, 57,0,  true}     //  55      look-ahead
     , {doNOP, 255, 103,0,  false}     //  56 
-    , {doExprCatOperator, 254, 29,0,  false}     //  57      expr-cont-no-slash
+    , {do_اظهار_Cat_Operator, 254, 29,0,  false}     //  57      expr-cont-no-slash
     , {doNOP, 132, 43,0,  true}     //  58 
-    , {doExprCatOperator, 131, 29,0,  false}     //  59 
-    , {doExprCatOperator, 91 /* [ */, 29,0,  false}     //  60 
-    , {doExprCatOperator, 40 /* ( */, 29,0,  false}     //  61 
-    , {doExprCatOperator, 36 /* $ */, 29,0,  false}     //  62 
-    , {doExprCatOperator, 46 /* . */, 29,0,  false}     //  63 
-    , {doExprOrOperator, 124 /* | */, 29,0,  true}     //  64 
-    , {doExprRParen, 41 /* ) */, 255,0,  true}     //  65 
-    , {doExprFinished, 255, 255,0,  false}     //  66 
+    , {do_اظهار_Cat_Operator, 131, 29,0,  false}     //  59 
+    , {do_اظهار_Cat_Operator, 91 /* [ */, 29,0,  false}     //  60 
+    , {do_اظهار_Cat_Operator, 40 /* ( */, 29,0,  false}     //  61 
+    , {do_اظهار_Cat_Operator, 36 /* $ */, 29,0,  false}     //  62 
+    , {do_اظهار_Cat_Operator, 46 /* . */, 29,0,  false}     //  63 
+    , {do_اظهار_Or_Operator, 124 /* | */, 29,0,  true}     //  64 
+    , {do_اظهار_RParen, 41 /* ) */, 255,0,  true}     //  65 
+    , {do_اظهار_ختم, 255, 255,0,  false}     //  66 
     , {doNOP, 132, 67,0,  true}     //  67      tag-open
-    , {doStartTagValue, 128, 70,0,  false}     //  68 
-    , {doTagExpectedError, 255, 103,0,  false}     //  69 
+    , {do_شروعات_ٽيگ_قدر, 128, 70,0,  false}     //  68 
+    , {do_ٽيگ_Expected_Error, 255, 103,0,  false}     //  69 
     , {doNOP, 132, 74,0,  true}     //  70      tag-value
     , {doNOP, 125 /* } */, 74,0,  false}     //  71 
-    , {doTagDigit, 128, 70,0,  true}     //  72 
-    , {doTagExpectedError, 255, 103,0,  false}     //  73 
+    , {do_ٽيگ_Digit, 128, 70,0,  true}     //  72 
+    , {do_ٽيگ_Expected_Error, 255, 103,0,  false}     //  73 
     , {doNOP, 132, 74,0,  true}     //  74      tag-close
-    , {doTagValue, 125 /* } */, 77,0,  true}     //  75 
-    , {doTagExpectedError, 255, 103,0,  false}     //  76 
-    , {doExprCatOperator, 254, 29,0,  false}     //  77      expr-cont-no-tag
+    , {do_ٽيگ_قدر, 125 /* } */, 77,0,  true}     //  75 
+    , {do_ٽيگ_Expected_Error, 255, 103,0,  false}     //  76 
+    , {do_اظهار_Cat_Operator, 254, 29,0,  false}     //  77      expr-cont-no-tag
     , {doNOP, 132, 77,0,  true}     //  78 
-    , {doExprCatOperator, 131, 29,0,  false}     //  79 
-    , {doExprCatOperator, 91 /* [ */, 29,0,  false}     //  80 
-    , {doExprCatOperator, 40 /* ( */, 29,0,  false}     //  81 
-    , {doExprCatOperator, 36 /* $ */, 29,0,  false}     //  82 
-    , {doExprCatOperator, 46 /* . */, 29,0,  false}     //  83 
-    , {doExprCatOperator, 47 /* / */, 55,0,  false}     //  84 
-    , {doExprOrOperator, 124 /* | */, 29,0,  true}     //  85 
-    , {doExprRParen, 41 /* ) */, 255,0,  true}     //  86 
-    , {doExprFinished, 255, 255,0,  false}     //  87 
-    , {doStartVariableName, 36 /* $ */, 90,0,  true}     //  88      scan-var-name
+    , {do_اظهار_Cat_Operator, 131, 29,0,  false}     //  79 
+    , {do_اظهار_Cat_Operator, 91 /* [ */, 29,0,  false}     //  80 
+    , {do_اظهار_Cat_Operator, 40 /* ( */, 29,0,  false}     //  81 
+    , {do_اظهار_Cat_Operator, 36 /* $ */, 29,0,  false}     //  82 
+    , {do_اظهار_Cat_Operator, 46 /* . */, 29,0,  false}     //  83 
+    , {do_اظهار_Cat_Operator, 47 /* / */, 55,0,  false}     //  84 
+    , {do_اظهار_Or_Operator, 124 /* | */, 29,0,  true}     //  85 
+    , {do_اظهار_RParen, 41 /* ) */, 255,0,  true}     //  86 
+    , {do_اظهار_ختم, 255, 255,0,  false}     //  87 
+    , {do_شروعات_Variable_Name, 36 /* $ */, 90,0,  true}     //  88      scan-var-name
     , {doNOP, 255, 103,0,  false}     //  89 
     , {doNOP, 130, 92,0,  true}     //  90      scan-var-start
     , {doVariableNameExpectedErr, 255, 103,0,  false}     //  91 
     , {doNOP, 129, 92,0,  true}     //  92      scan-var-body
-    , {doEndVariableName, 255, 255,0,  false}     //  93 
-    , {doScanUnicodeSet, 91 /* [ */, 255,0,  true}     //  94      scan-unicode-set
-    , {doScanUnicodeSet, 112 /* p */, 255,0,  true}     //  95 
-    , {doScanUnicodeSet, 80 /* P */, 255,0,  true}     //  96 
+    , {do_پڇاڙي_Variable_Name, 255, 255,0,  false}     //  93 
+    , {do_جاچ_Unicode_سيٽ, 91 /* [ */, 255,0,  true}     //  94      scan-unicode-set
+    , {do_جاچ_Unicode_سيٽ, 112 /* p */, 255,0,  true}     //  95 
+    , {do_جاچ_Unicode_سيٽ, 80 /* P */, 255,0,  true}     //  96 
     , {doNOP, 255, 103,0,  false}     //  97 
     , {doNOP, 132, 98,0,  true}     //  98      assign-or-rule
-    , {doStartAssign, 61 /* = */, 29, 101, true}     //  99 
+    , {do_شروعات_سونپيو, 61 /* = */, 29, 101, true}     //  99 
     , {doNOP, 255, 37, 9, false}     //  100 
-    , {doEndAssign, 59 /* ; */, 1,0,  true}     //  101      assign-end
-    , {doRuleErrorAssignExpr, 255, 103,0,  false}     //  102 
+    , {do_پڇاڙي_سونپيو, 59 /* ; */, 1,0,  true}     //  101      assign-end
+    , {do_قاعدو_Error_سونپيو_اظهار, 255, 103,0,  false}     //  102 
     , {doExit, 255, 103,0,  true}     //  103      errorDeath
  };
-#ifdef RBBI_DEBUG
-static const char * const RBBIRuleStateNames[] = {    0,
+#جيڪڏهن_وصف_ٿيل RBBI_DEBUG
+ساكن ثابت حرف * ثابت RBBIRule_State_نالا[] = {    0,
      "start",
     0,
     0,
@@ -290,7 +290,7 @@ static const char * const RBBIRuleStateNames[] = {    0,
     0,
      "errorDeath",
     0};
-#endif
+#جيڪڏهن_پورو
 
-U_NAMESPACE_END
-#endif
+U_NAMESPACE_پڇاڙي
+#جيڪڏهن_پورو

@@ -25,23 +25,23 @@
 *   06/28/2000  helena           Major rewrite for the callback API changes.
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "unicode/ucnv_err.h"
-#include "unicode/ucnv.h"
-#include "unicode/uset.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uassert.h"
-#include "ucnv_imp.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
+#ضمن "unicode/ucnv_err.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "unicode/uset.h"
+#ضمن "cmemory.h"
+#ضمن "cstring.h"
+#ضمن "uassert.h"
+#ضمن "ucnv_imp.h"
+#ضمن "ucnv_bld.h"
+#ضمن "ucnv_cnv.h"
 
-#ifdef EBCDIC_RTL
-    #include "ascii_a.h"
-#endif
+#جيڪڏهن_وصف_ٿيل EBCDIC_RTL
+    #ضمن "ascii_a.h"
+#جيڪڏهن_پورو
 
 /*
   LMBCS
@@ -83,20 +83,20 @@
   That is, a sometimes-optional 'group' byte, followed by 1 and sometimes 2
   data bytes. The maximum size of a LMBCS character is 3 bytes:
 */
-#define ULMBCS_CHARSIZE_MAX      3
+#وصف_ڪريو ULMBCS_CHARSIZE_MAX      3
 /*
   The single-byte values from 0x20 to 0x7F are examples of single D1 bytes.
   We often have to figure out if byte values are below or above this, so we 
   use the ANSI nomenclature 'C0' and 'C1' to refer to the range of control 
   characters just above & below the common lower-ANSI  range */
-#define ULMBCS_C0END           0x1F   
-#define ULMBCS_C1START         0x80   
+#وصف_ڪريو ULMBCS_C0_پڇاڙي           0x1F   
+#وصف_ڪريو ULMBCS_C1_شروعات         0x80   
 /*
   Since LMBCS is always dealing in byte units. we create a local type here for 
   dealing with these units of LMBCS code units:
 
 */  
-typedef uint8_t ulmbcs_byte_t;
+تعريفنوع uint8_t ulmbcs_byte_t;
 
 /* 
    Most of the values less than 0x20 are reserved in LMBCS to announce 
@@ -105,18 +105,18 @@ typedef uint8_t ulmbcs_byte_t;
    for these character-set announcers:
 */
 
-#define ULMBCS_GRP_L1         0x01   /* Latin-1    :ibm-850  */
-#define ULMBCS_GRP_GR         0x02   /* Greek      :ibm-851  */
-#define ULMBCS_GRP_HE         0x03   /* Hebrew     :ibm-1255 */
-#define ULMBCS_GRP_AR         0x04   /* Arabic     :ibm-1256 */
-#define ULMBCS_GRP_RU         0x05   /* Cyrillic   :ibm-1251 */
-#define ULMBCS_GRP_L2         0x06   /* Latin-2    :ibm-852  */
-#define ULMBCS_GRP_TR         0x08   /* Turkish    :ibm-1254 */
-#define ULMBCS_GRP_TH         0x0B   /* Thai       :ibm-874  */
-#define ULMBCS_GRP_JA         0x10   /* Japanese   :ibm-943  */
-#define ULMBCS_GRP_KO         0x11   /* Korean     :ibm-1261 */
-#define ULMBCS_GRP_TW         0x12   /* Chinese SC :ibm-950  */
-#define ULMBCS_GRP_CN         0x13   /* Chinese TC :ibm-1386 */
+#وصف_ڪريو ULMBCS_GRP_L1         0x01   /* Latin-1    :ibm-850  */
+#وصف_ڪريو ULMBCS_GRP_GR         0x02   /* Greek      :ibm-851  */
+#وصف_ڪريو ULMBCS_GRP_HE         0x03   /* Hebrew     :ibm-1255 */
+#وصف_ڪريو ULMBCS_GRP_AR         0x04   /* Arabic     :ibm-1256 */
+#وصف_ڪريو ULMBCS_GRP_RU         0x05   /* Cyrillic   :ibm-1251 */
+#وصف_ڪريو ULMBCS_GRP_L2         0x06   /* Latin-2    :ibm-852  */
+#وصف_ڪريو ULMBCS_GRP_TR         0x08   /* Turkish    :ibm-1254 */
+#وصف_ڪريو ULMBCS_GRP_TH         0x0B   /* Thai       :ibm-874  */
+#وصف_ڪريو ULMBCS_GRP_JA         0x10   /* Japanese   :ibm-943  */
+#وصف_ڪريو ULMBCS_GRP_KO         0x11   /* Korean     :ibm-1261 */
+#وصف_ڪريو ULMBCS_GRP_TW         0x12   /* Chinese SC :ibm-950  */
+#وصف_ڪريو ULMBCS_GRP_CN         0x13   /* Chinese TC :ibm-1386 */
 
 /*
    So, the beginning of understanding LMBCS is that IF the first byte of a LMBCS 
@@ -130,7 +130,7 @@ typedef uint8_t ulmbcs_byte_t;
    before the multi-byte character sets. When we need to tell whether a 
    group byte is for a single byte char set or not we use this define: */
 
-#define ULMBCS_DOUBLEOPTGROUP_START  0x10   
+#وصف_ڪريو ULMBCS_DOUBLEOPTGROUP_شروعات  0x10   
 
 /* 
 However, to fully understand LMBCS, you must also understand a series of 
@@ -152,26 +152,26 @@ We reserve a few special single byte values for common control
 characters. These are in the same place as their ANSI equivalents for speed.
 */
                      
-#define ULMBCS_HT    0x09   /* Fixed control char - Horizontal Tab */
-#define ULMBCS_LF    0x0A   /* Fixed control char - Line Feed */
-#define ULMBCS_CR    0x0D   /* Fixed control char - Carriage Return */
+#وصف_ڪريو ULMBCS_HT    0x09   /* Fixed control char - Horizontal Tab */
+#وصف_ڪريو ULMBCS_LF    0x0A   /* Fixed control char - Line Feed */
+#وصف_ڪريو ULMBCS_CR    0x0D   /* Fixed control char - Carriage Return */
 
 /* Then, 1-2-3 reserved a special single-byte character to put at the 
 beginning of internal 'system' range names: */
 
-#define ULMBCS_123SYSTEMRANGE  0x19   
+#وصف_ڪريو ULMBCS_123SYSTEMRANGE  0x19   
 
 /* Then we needed a place to put all the other ansi control characters 
 that must be moved to different values because LMBCS reserves those 
 values for other purposes. To represent the control characters, we start 
 with a first byte of 0xF & add the control character value as the 
 second byte */
-#define ULMBCS_GRP_CTRL       0x0F   
+#وصف_ڪريو ULMBCS_GRP_CTRL       0x0F   
 
 /* For the C0 controls (less than 0x20), we add 0x20 to preserve the 
 useful doctrine that any byte less than 0x20 in a LMBCS char must be 
 the first byte of a character:*/
-#define ULMBCS_CTRLOFFSET      0x20   
+#وصف_ڪريو ULMBCS_CTRLOFFSET      0x20   
 
 /* 
 Where to put the characters that aren't part of any of the 12 national 
@@ -186,23 +186,23 @@ LMBCS, was to use up the spaces of the form
  lot of stray values. Internally, in this implementation, we track this 
  as group '0', as a place to tuck this exceptions list.*/
 
-#define ULMBCS_GRP_EXCEPT     0x00    
+#وصف_ڪريو ULMBCS_GRP_EXCEPT     0x00    
 /*
  Finally, as the durability and usefulness of UNICODE became clear, 
  LOTUS added a new group 0x14 to hold Unicode values not otherwise 
  represented in LMBCS: */
-#define ULMBCS_GRP_UNICODE    0x14   
+#وصف_ڪريو ULMBCS_GRP_UNICODE    0x14   
 /* The two bytes appearing after a 0x14 are interpreted as UFT-16 BE
 (Big-Endian) characters. The exception comes when the UTF16 
 representation would have a zero as the second byte. In that case,
 'F6' is used in its place, and the bytes are swapped. (This prevents 
 LMBCS from encoding any Unicode values of the form U+F6xx, but that's OK:
 0xF6xx is in the middle of the Private Use Area.)*/
-#define ULMBCS_UNICOMPATZERO   0xF6   
+#وصف_ڪريو ULMBCS_UNICOMPATZERO   0xF6   
 
 /* It is also useful in our code to have a constant for the size of 
 a LMBCS char that holds a literal Unicode value */
-#define ULMBCS_UNICODE_SIZE      3    
+#وصف_ڪريو ULMBCS_UNICODE_سائيز      3    
 
 /* 
 To squish the LMBCS representations down even further, and to make 
@@ -211,7 +211,7 @@ from a LMBCS character. This is decided on a process-by-process basis. The
 group byte that is dropped is called the 'optimization group'.
 
 For Notes, the optimzation group is always 0x1.*/
-#define ULMBCS_DEFAULTOPTGROUP 0x1    
+#وصف_ڪريو ULMBCS_DEFAULTOPTGROUP 0x1    
 /* For 1-2-3 files, the optimzation group is stored in the header of the 1-2-3 
 file. 
 
@@ -232,9 +232,9 @@ ICU converters can be created and used as needed. */
 byte, only those at 0x13 or below can map to an actual converter. To limit
 some loops and searches, we define a value for that last group converter:*/
 
-#define ULMBCS_GRP_LAST       0x13   /* last LMBCS group that has a converter */
+#وصف_ڪريو ULMBCS_GRP_آخري       0x13   /* last LMBCS group that has a converter */
 
-static const char * const OptGroupByteToCPName[ULMBCS_GRP_LAST + 1] = {
+ساكن ثابت حرف * ثابت Opt_گروهه_Byte_منزل_CPName[ULMBCS_GRP_آخري + 1] = {
    /* 0x0000 */ "lmb-excp", /* internal home for the LOTUS exceptions list */
    /* 0x0001 */ "ibm-850",
    /* 0x0002 */ "ibm-851",
@@ -242,15 +242,15 @@ static const char * const OptGroupByteToCPName[ULMBCS_GRP_LAST + 1] = {
    /* 0x0004 */ "windows-1256",
    /* 0x0005 */ "windows-1251",
    /* 0x0006 */ "ibm-852",
-   /* 0x0007 */ nullptr,      /* Unused */
+   /* 0x0007 */ خالي_اشارو,      /* Unused */
    /* 0x0008 */ "windows-1254",
-   /* 0x0009 */ nullptr,      /* Control char HT */
-   /* 0x000A */ nullptr,      /* Control char LF */
+   /* 0x0009 */ خالي_اشارو,      /* Control char HT */
+   /* 0x000A */ خالي_اشارو,      /* Control char LF */
    /* 0x000B */ "windows-874",
-   /* 0x000C */ nullptr,      /* Unused */
-   /* 0x000D */ nullptr,      /* Control char CR */
-   /* 0x000E */ nullptr,      /* Unused */
-   /* 0x000F */ nullptr,      /* Control chars: 0x0F20 + C0/C1 character: algorithmic */
+   /* 0x000C */ خالي_اشارو,      /* Unused */
+   /* 0x000D */ خالي_اشارو,      /* Control char CR */
+   /* 0x000E */ خالي_اشارو,      /* Unused */
+   /* 0x000F */ خالي_اشارو,      /* Control chars: 0x0F20 + C0/C1 character: algorithmic */
    /* 0x0010 */ "windows-932",
    /* 0x0011 */ "windows-949",
    /* 0x0012 */ "windows-950",
@@ -277,30 +277,30 @@ SBCS, the table will place it in the SBCS sets, to make the LMBCS code point
 length as small as possible. Here's the two special markers we use to indicate
 ambiguous mappings: */
 
-#define ULMBCS_AMBIGUOUS_SBCS   0x80   /* could fit in more than one 
+#وصف_ڪريو ULMBCS_AMBIGUOUS_SBCS   0x80   /* could fit in more than one 
                                           LMBCS sbcs native encoding 
                                           (example: most accented latin) */
-#define ULMBCS_AMBIGUOUS_MBCS   0x81   /* could fit in more than one 
+#وصف_ڪريو ULMBCS_AMBIGUOUS_MBCS   0x81   /* could fit in more than one 
                                           LMBCS mbcs native encoding 
                                           (example: Unihan) */
-#define ULMBCS_AMBIGUOUS_ALL   0x82
+#وصف_ڪريو ULMBCS_AMBIGUOUS_ALL   0x82
 /* And here's a simple way to see if a group falls in an appropriate range */
-#define ULMBCS_AMBIGUOUS_MATCH(agroup, xgroup) \
+#وصف_ڪريو ULMBCS_AMBIGUOUS_ميلاپ(agroup, xgroup) \
                   ((((agroup) == ULMBCS_AMBIGUOUS_SBCS) && \
-                  (xgroup) < ULMBCS_DOUBLEOPTGROUP_START) || \
+                  (xgroup) < ULMBCS_DOUBLEOPTGROUP_شروعات) || \
                   (((agroup) == ULMBCS_AMBIGUOUS_MBCS) && \
-                  (xgroup) >= ULMBCS_DOUBLEOPTGROUP_START)) || \
+                  (xgroup) >= ULMBCS_DOUBLEOPTGROUP_شروعات)) || \
                   ((agroup) == ULMBCS_AMBIGUOUS_ALL)
 
 
 /* The table & some code to use it: */
 
 
-static const struct _UniLMBCSGrpMap  
+ساكن ثابت بنية _UniLMBCSGrpMap  
 {
-   const char16_t uniStartRange;
-   const char16_t uniEndRange;
-   const ulmbcs_byte_t  GrpType;
+   ثابت char16_t uni_شروعات_Range;
+   ثابت char16_t uni_پڇاڙي_Range;
+   ثابت ulmbcs_byte_t  GrpType;
 } UniLMBCSGrpMap[]
 =
 {
@@ -444,21 +444,21 @@ static const struct _UniLMBCSGrpMap
     {0xFFFF, 0xFFFF,  ULMBCS_GRP_UNICODE}
 };
    
-static ulmbcs_byte_t 
-FindLMBCSUniRange(char16_t uniChar)
+ساكن ulmbcs_byte_t 
+ڳوليو_LMBCSUni_Range(char16_t uniChar)
 {
-   const struct _UniLMBCSGrpMap * pTable = UniLMBCSGrpMap;
+   ثابت بنية _UniLMBCSGrpMap * p_جدول = UniLMBCSGrpMap;
 
-   while (uniChar > pTable->uniEndRange) 
+   طالما (uniChar > p_جدول->uni_پڇاڙي_Range) 
    {
-      pTable++;
+      p_جدول++;
    }
 
-   if (uniChar >= pTable->uniStartRange) 
+   إذا (uniChar >= p_جدول->uni_شروعات_Range) 
    {
-      return pTable->GrpType;
+      أرجع p_جدول->GrpType;
    }
-   return ULMBCS_GRP_UNICODE;
+   أرجع ULMBCS_GRP_UNICODE;
 }
 
 /* 
@@ -483,10 +483,10 @@ do the lookup: */
   search to go quickly.
  *************************************************/
 
-static const struct _LocaleLMBCSGrpMap
+ساكن ثابت بنية _LocaleLMBCSGrpMap
 {
-   const char    *LocaleID;
-   const ulmbcs_byte_t OptGroup;
+   ثابت حرف    *LocaleID;
+   ثابت ulmbcs_byte_t Opt_گروهه;
 } LocaleLMBCSGrpMap[] =
 {
     {"ar", ULMBCS_GRP_AR},
@@ -530,34 +530,34 @@ static const struct _LocaleLMBCSGrpMap
    /* {"vi", ULMBCS_GRP_L1}, */
     {"zhTW", ULMBCS_GRP_TW},
     {"zh", ULMBCS_GRP_CN},
-    {nullptr, ULMBCS_GRP_L1}
+    {خالي_اشارو, ULMBCS_GRP_L1}
 };
 
 
-static ulmbcs_byte_t 
-FindLMBCSLocale(const char *LocaleID)
+ساكن ulmbcs_byte_t 
+ڳوليو_LMBCSLocale(ثابت حرف *LocaleID)
 {
-   const struct _LocaleLMBCSGrpMap *pTable = LocaleLMBCSGrpMap;
+   ثابت بنية _LocaleLMBCSGrpMap *p_جدول = LocaleLMBCSGrpMap;
 
-   if ((!LocaleID) || (!*LocaleID)) 
+   إذا ((!LocaleID) || (!*LocaleID)) 
    {
-      return 0;
+      أرجع 0;
    }
 
-   while (pTable->LocaleID)
+   طالما (p_جدول->LocaleID)
    {
-      if (*pTable->LocaleID == *LocaleID) /* Check only first char for speed */
+      إذا (*p_جدول->LocaleID == *LocaleID) /* Check only first char for speed */
       {
          /* First char matches - check whole name, for entry-length */
-         if (uprv_strncmp(pTable->LocaleID, LocaleID, strlen(pTable->LocaleID)) == 0)
-            return pTable->OptGroup;
+         إذا (uprv_strncmp(p_جدول->LocaleID, LocaleID, لڙي_ڊيگهه(p_جدول->LocaleID)) == 0)
+            أرجع p_جدول->Opt_گروهه;
       }
-      else
-      if (*pTable->LocaleID > *LocaleID) /* Sorted alphabetically - exit */
-         break;
-      pTable++;
+      وإلا
+      إذا (*p_جدول->LocaleID > *LocaleID) /* Sorted alphabetically - exit */
+         اكسر;
+      p_جدول++;
    }
-   return ULMBCS_GRP_L1;
+   أرجع ULMBCS_GRP_L1;
 }
 
 
@@ -574,155 +574,155 @@ FindLMBCSLocale(const char *LocaleID)
   the definitions of these structures, see unicode\ucnv_bld.h
 */
 
-typedef struct
+تعريفنوع بنية
   {
-    UConverterSharedData *OptGrpConverter[ULMBCS_GRP_LAST+1];    /* Converter per Opt. grp. */
-    uint8_t    OptGroup;                  /* default Opt. grp. for this LMBCS session */
-    uint8_t    localeConverterIndex;      /* reasonable locale match for index */
+    UConverter_Shared_معلومات *OptGrpConverter[ULMBCS_GRP_آخري+1];    /* Converter per Opt. grp. */
+    uint8_t    Opt_گروهه;                  /* default Opt. grp. for this LMBCS session */
+    uint8_t    locale_Converter_اشاريو;      /* reasonable locale match for index */
   }
-UConverterDataLMBCS;
+UConverter_معلومات_LMBCS;
 
 U_CDECL_BEGIN
-static void  U_CALLCONV _LMBCSClose(UConverter * _this);
-U_CDECL_END
+ساكن فراغ  U_CALLCONV _LMBCSClose(UConverter * _this);
+U_CDECL_پڇاڙي
 
-#define DECLARE_LMBCS_DATA(n) \
-static const UConverterImpl _LMBCSImpl##n={\
+#وصف_ڪريو DECLARE_LMBCS_معلومات(n) \
+ساكن ثابت UConverterImpl _LMBCSImpl##n={\
     UCNV_LMBCS_##n,\
-    nullptr,nullptr,\
+    خالي_اشارو,خالي_اشارو,\
     _LMBCSOpen##n,\
     _LMBCSClose,\
-    nullptr,\
+    خالي_اشارو,\
     _LMBCSToUnicodeWithOffsets,\
     _LMBCSToUnicodeWithOffsets,\
     _LMBCSFromUnicode,\
     _LMBCSFromUnicode,\
-    nullptr,\
-    nullptr,\
-    nullptr,\
-    nullptr,\
+    خالي_اشارو,\
+    خالي_اشارو,\
+    خالي_اشارو,\
+    خالي_اشارو,\
     _LMBCSSafeClone,\
-    ucnv_getCompleteUnicodeSet,\
-    nullptr,\
-    nullptr\
+    ucnv_get_Complete_Unicode_سيٽ,\
+    خالي_اشارو,\
+    خالي_اشارو\
 };\
-static const UConverterStaticData _LMBCSStaticData##n={\
-  sizeof(UConverterStaticData),\
+ساكن ثابت UConverter_Static_معلومات LMBCSStatic_معلومات##n={\
+  حجم(UConverter_Static_معلومات),\
  "LMBCS-"  #n,\
     0, UCNV_IBM, UCNV_LMBCS_##n, 1, 3,\
-    { 0x3f, 0, 0, 0 },1,false,false,0,0,{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} \
+    { 0x3f, 0, 0, 0 },1,خطأ,خطأ,0,0,{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} \
 };\
-const UConverterSharedData _LMBCSData##n= \
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_LMBCSStaticData##n, &_LMBCSImpl##n);
+ثابت UConverter_Shared_معلومات _LMBCSData##n= \
+        UCNV_IMMUTABLE_SHARED_معلومات_INITIALIZER(&LMBCSStatic_معلومات##n, &_LMBCSImpl##n);
 
  /* The only function we needed to duplicate 12 times was the 'open'
 function, which will do basically the same thing except set a  different
 optimization group. So, we put the common stuff into a worker function, 
 and set up another macro to stamp out the 12 open functions:*/
-#define DEFINE_LMBCS_OPEN(n) \
-static void U_CALLCONV \
-   _LMBCSOpen##n(UConverter* _this, UConverterLoadArgs* pArgs, UErrorCode* err) \
-{ _LMBCSOpenWorker(_this, pArgs, err, n); }
+#وصف_ڪريو DEFINE_LMBCS_OPEN(n) \
+ساكن فراغ U_CALLCONV \
+   _LMBCSOpen##n(UConverter* _this, UConverter_ڀريو_دليلون* p_دليلون, UError_ڪوڊ* err) \
+{ LMBCSOpen_ڪم_ڪندڙ(_this, p_دليلون, err, n); }
 
 
 
 /* Here's the open worker & the common close function */
-static void 
-_LMBCSOpenWorker(UConverter*  _this,
-                 UConverterLoadArgs *pArgs,
-                 UErrorCode*  err,
-                 ulmbcs_byte_t OptGroup)
+ساكن فراغ 
+LMBCSOpen_ڪم_ڪندڙ(UConverter*  _this,
+                 UConverter_ڀريو_دليلون *p_دليلون,
+                 UError_ڪوڊ*  err,
+                 ulmbcs_byte_t Opt_گروهه)
 {
-    UConverterDataLMBCS* extraInfo = static_cast<UConverterDataLMBCS*>(uprv_malloc(sizeof(UConverterDataLMBCS)));
+    UConverter_معلومات_LMBCS* extraInfo = static_cast<UConverter_معلومات_LMBCS*>(uprv_malloc(حجم(UConverter_معلومات_LMBCS)));
     _this->extraInfo = extraInfo;
-    if(extraInfo != nullptr)
+    إذا(extraInfo != خالي_اشارو)
     {
-        UConverterNamePieces stackPieces;
-        UConverterLoadArgs stackArgs= UCNV_LOAD_ARGS_INITIALIZER;
+        UConverterNamePieces ڍير_Pieces;
+        UConverter_ڀريو_دليلون ڍير_دليلون= UCNV_ڀريو_دليلون_INITIALIZER;
         ulmbcs_byte_t i;
 
-        uprv_memset(extraInfo, 0, sizeof(UConverterDataLMBCS));
+        uprv_memset(extraInfo, 0, حجم(UConverter_معلومات_LMBCS));
 
-        stackArgs.onlyTestIsLoadable = pArgs->onlyTestIsLoadable;
+        ڍير_دليلون.onlyTestIsLoadable = p_دليلون->onlyTestIsLoadable;
 
-        for (i=0; i <= ULMBCS_GRP_LAST && U_SUCCESS(*err); i++)         
+        لكل (i=0; i <= ULMBCS_GRP_آخري && U_SUCCESS(*err); i++)         
         {
-            if(OptGroupByteToCPName[i] != nullptr) {
-                extraInfo->OptGrpConverter[i] = ucnv_loadSharedData(OptGroupByteToCPName[i], &stackPieces, &stackArgs, err);
+            إذا(Opt_گروهه_Byte_منزل_CPName[i] != خالي_اشارو) {
+                extraInfo->OptGrpConverter[i] = ucnv_ڀريو_Shared_معلومات(Opt_گروهه_Byte_منزل_CPName[i], &ڍير_Pieces, &ڍير_دليلون, err);
             }
         }
 
-        if(U_FAILURE(*err) || pArgs->onlyTestIsLoadable) {
+        إذا(U_FAILURE(*err) || p_دليلون->onlyTestIsLoadable) {
             _LMBCSClose(_this);
-            return;
+            أرجع;
         }
-        extraInfo->OptGroup = OptGroup;
-        extraInfo->localeConverterIndex = FindLMBCSLocale(pArgs->locale);
+        extraInfo->Opt_گروهه = Opt_گروهه;
+        extraInfo->locale_Converter_اشاريو = ڳوليو_LMBCSLocale(p_دليلون->locale);
     }
-    else
+    وإلا
     {
-        *err = U_MEMORY_ALLOCATION_ERROR;
+        *err = U_يادگيري_ورهاست_ERROR;
     }
 }
 
 U_CDECL_BEGIN
-static void  U_CALLCONV
+ساكن فراغ  U_CALLCONV
 _LMBCSClose(UConverter *   _this) 
 {
-    if (_this->extraInfo != nullptr)
+    إذا (_this->extraInfo != خالي_اشارو)
     {
         ulmbcs_byte_t Ix;
-        UConverterDataLMBCS * extraInfo = (UConverterDataLMBCS *) _this->extraInfo;
+        UConverter_معلومات_LMBCS * extraInfo = (UConverter_معلومات_LMBCS *) _this->extraInfo;
 
-        for (Ix=0; Ix <= ULMBCS_GRP_LAST; Ix++)
+        لكل (Ix=0; Ix <= ULMBCS_GRP_آخري; Ix++)
         {
-           if (extraInfo->OptGrpConverter[Ix] != nullptr)
-              ucnv_unloadSharedDataIfReady(extraInfo->OptGrpConverter[Ix]);
+           إذا (extraInfo->OptGrpConverter[Ix] != خالي_اشارو)
+              ucnv_unload_Shared_معلومات_If_Ready(extraInfo->OptGrpConverter[Ix]);
         }
-        if (!_this->isExtraLocal) {
+        إذا (!_this->isExtraLocal) {
             uprv_free (_this->extraInfo);
-            _this->extraInfo = nullptr;
+            _this->extraInfo = خالي_اشارو;
         }
     }
 }
 
-typedef struct LMBCSClone {
+تعريفنوع بنية LMBCSClone {
     UConverter cnv;
-    UConverterDataLMBCS lmbcs;
+    UConverter_معلومات_LMBCS lmbcs;
 } LMBCSClone;
 
-static UConverter *  U_CALLCONV
-_LMBCSSafeClone(const UConverter *cnv, 
-                void *stackBuffer, 
-                int32_t *pBufferSize, 
-                UErrorCode *status) {
-    (void)status;
+ساكن UConverter *  U_CALLCONV
+_LMBCSSafeClone(ثابت UConverter *cnv, 
+                فراغ *ڍير_بفر, 
+                int32_t *p_بفر_سائيز, 
+                UError_ڪوڊ *حالت) {
+    (فراغ)حالت;
     LMBCSClone *newLMBCS;
-    UConverterDataLMBCS *extraInfo;
+    UConverter_معلومات_LMBCS *extraInfo;
     int32_t i;
 
-    if(*pBufferSize<=0) {
-        *pBufferSize=(int32_t)sizeof(LMBCSClone);
-        return nullptr;
+    إذا(*p_بفر_سائيز<=0) {
+        *p_بفر_سائيز=(int32_t)حجم(LMBCSClone);
+        أرجع خالي_اشارو;
     }
 
-    extraInfo=(UConverterDataLMBCS *)cnv->extraInfo;
-    newLMBCS=(LMBCSClone *)stackBuffer;
+    extraInfo=(UConverter_معلومات_LMBCS *)cnv->extraInfo;
+    newLMBCS=(LMBCSClone *)ڍير_بفر;
 
     /* ucnv.c/ucnv_safeClone() copied the main UConverter already */
 
-    uprv_memcpy(&newLMBCS->lmbcs, extraInfo, sizeof(UConverterDataLMBCS));
+    uprv_memcpy(&newLMBCS->lmbcs, extraInfo, حجم(UConverter_معلومات_LMBCS));
 
     /* share the subconverters */
-    for(i = 0; i <= ULMBCS_GRP_LAST; ++i) {
-        if(extraInfo->OptGrpConverter[i] != nullptr) {
-            ucnv_incrementRefCount(extraInfo->OptGrpConverter[i]);
+    لكل(i = 0; i <= ULMBCS_GRP_آخري; ++i) {
+        إذا(extraInfo->OptGrpConverter[i] != خالي_اشارو) {
+            ucnv_increment_Ref_ڳڻپ(extraInfo->OptGrpConverter[i]);
         }
     }
 
     newLMBCS->cnv.extraInfo = &newLMBCS->lmbcs;
-    newLMBCS->cnv.isExtraLocal = true;
-    return &newLMBCS->cnv;
+    newLMBCS->cnv.isExtraLocal = سچ;
+    أرجع &newLMBCS->cnv;
 }
 
 /*
@@ -743,123 +743,123 @@ _LMBCSSafeClone(const UConverter *cnv,
    starting at pStartLMBCS (if any).
 */
 
-static size_t
-LMBCSConversionWorker (
-   UConverterDataLMBCS * extraInfo,    /* subconverters, opt & locale groups */
-   ulmbcs_byte_t group,                /* The group to try */
-   ulmbcs_byte_t  * pStartLMBCS,              /* where to put the results */
+ساكن size_t
+LMBCSConversion_ڪم_ڪندڙ (
+   UConverter_معلومات_LMBCS * extraInfo,    /* subconverters, opt & locale groups */
+   ulmbcs_byte_t گروهه,                /* The group to try */
+   ulmbcs_byte_t  * p_شروعات_LMBCS,              /* where to put the results */
    char16_t * pUniChar,                   /* The input unicode character */
-   ulmbcs_byte_t * lastConverterIndex, /* output: track last successful group used */
+   ulmbcs_byte_t * آخري_Converter_اشاريو, /* output: track last successful group used */
    UBool * groups_tried                /* output: track any unsuccessful groups */
 )   
 {
-   ulmbcs_byte_t  * pLMBCS = pStartLMBCS;
-   UConverterSharedData * xcnv = extraInfo->OptGrpConverter[group];
+   ulmbcs_byte_t  * pLMBCS = p_شروعات_LMBCS;
+   UConverter_Shared_معلومات * xcnv = extraInfo->OptGrpConverter[گروهه];
 
-   int bytesConverted;
+   صحيح بائيٽون_Converted;
    uint32_t value;
-   ulmbcs_byte_t firstByte;
+   ulmbcs_byte_t پهريون_Byte;
 
    U_ASSERT(xcnv);
-   U_ASSERT(group<ULMBCS_GRP_UNICODE);
+   U_ASSERT(گروهه<ULMBCS_GRP_UNICODE);
 
-   bytesConverted = ucnv_MBCSFromUChar32(xcnv, *pUniChar, &value, false);
+   بائيٽون_Converted = ucnv_MBCSFromUChar32(xcnv, *pUniChar, &value, خطأ);
 
    /* get the first result byte */
-   if(bytesConverted > 0) {
-      firstByte = (ulmbcs_byte_t)(value >> ((bytesConverted - 1) * 8));
-   } else {
+   إذا(بائيٽون_Converted > 0) {
+      پهريون_Byte = (ulmbcs_byte_t)(value >> ((بائيٽون_Converted - 1) * 8));
+   } وإلا {
       /* most common failure mode is an unassigned character */
-      groups_tried[group] = true;
-      return 0;
+      groups_tried[گروهه] = سچ;
+      أرجع 0;
    }
 
-   *lastConverterIndex = group;
+   *آخري_Converter_اشاريو = گروهه;
 
    /* All initial byte values in lower ascii range should have been caught by now,
       except with the exception group.
     */
-   U_ASSERT((firstByte <= ULMBCS_C0END) || (firstByte >= ULMBCS_C1START) || (group == ULMBCS_GRP_EXCEPT));
+   U_ASSERT((پهريون_Byte <= ULMBCS_C0_پڇاڙي) || (پهريون_Byte >= ULMBCS_C1_شروعات) || (گروهه == ULMBCS_GRP_EXCEPT));
    
    /* use converted data: first write 0, 1 or two group bytes */
-   if (group != ULMBCS_GRP_EXCEPT && extraInfo->OptGroup != group)
+   إذا (گروهه != ULMBCS_GRP_EXCEPT && extraInfo->Opt_گروهه != گروهه)
    {
-      *pLMBCS++ = group;
-      if (bytesConverted == 1 && group >= ULMBCS_DOUBLEOPTGROUP_START)
+      *pLMBCS++ = گروهه;
+      إذا (بائيٽون_Converted == 1 && گروهه >= ULMBCS_DOUBLEOPTGROUP_شروعات)
       {
-         *pLMBCS++ = group;
+         *pLMBCS++ = گروهه;
       }
    }
 
   /* don't emit control chars */
-   if ( bytesConverted == 1 && firstByte < 0x20 )
-      return 0;
+   إذا ( بائيٽون_Converted == 1 && پهريون_Byte < 0x20 )
+      أرجع 0;
 
 
    /* then move over the converted data */
-   switch(bytesConverted)
+   بدل(بائيٽون_Converted)
    {
-   case 4:
+   حالة 4:
       *pLMBCS++ = (ulmbcs_byte_t)(value >> 24);
       U_FALLTHROUGH;
-   case 3:
+   حالة 3:
       *pLMBCS++ = (ulmbcs_byte_t)(value >> 16);
       U_FALLTHROUGH;
-   case 2:
+   حالة 2:
       *pLMBCS++ = (ulmbcs_byte_t)(value >> 8);
       U_FALLTHROUGH;
-   case 1:
+   حالة 1:
       *pLMBCS++ = (ulmbcs_byte_t)value;
       U_FALLTHROUGH;
-   default:
+   افتراضي:
       /* will never occur */
-      break;
+      اكسر;
    }
 
-   return (pLMBCS - pStartLMBCS);
+   أرجع (pLMBCS - p_شروعات_LMBCS);
 }
 
 
 /* This is a much simpler version of above, when we 
 know we are writing LMBCS using the Unicode group
 */
-static size_t 
+ساكن size_t 
 LMBCSConvertUni(ulmbcs_byte_t * pLMBCS, char16_t uniChar)
 {
      /* encode into LMBCS Unicode range */
-   uint8_t LowCh =   (uint8_t)(uniChar & 0x00FF);
-   uint8_t HighCh  = (uint8_t)(uniChar >> 8);
+   uint8_t هيٺيون_Ch =   (uint8_t)(uniChar & 0x00FF);
+   uint8_t مٿاهون_Ch  = (uint8_t)(uniChar >> 8);
 
    *pLMBCS++ = ULMBCS_GRP_UNICODE;
 
-   if (LowCh == 0)
+   إذا (هيٺيون_Ch == 0)
    {
       *pLMBCS++ = ULMBCS_UNICOMPATZERO;
-      *pLMBCS++ = HighCh;
+      *pLMBCS++ = مٿاهون_Ch;
    }
-   else
+   وإلا
    {
-      *pLMBCS++ = HighCh;
-      *pLMBCS++ = LowCh;
+      *pLMBCS++ = مٿاهون_Ch;
+      *pLMBCS++ = هيٺيون_Ch;
    }
-   return ULMBCS_UNICODE_SIZE;
+   أرجع ULMBCS_UNICODE_سائيز;
 }
 
 
 
 /* The main Unicode to LMBCS conversion function */
-static void  U_CALLCONV
-_LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
-                  UErrorCode*     err)
+ساكن فراغ  U_CALLCONV
+_LMBCSFromUnicode(UConverter_From_Unicode_دليلون*     دليلون_2,
+                  UError_ڪوڊ*     err)
 {
-   ulmbcs_byte_t lastConverterIndex = 0;
+   ulmbcs_byte_t آخري_Converter_اشاريو = 0;
    char16_t uniChar;
    ulmbcs_byte_t  LMBCS[ULMBCS_CHARSIZE_MAX];
    ulmbcs_byte_t  * pLMBCS;
-   int32_t bytes_written;
-   UBool groups_tried[ULMBCS_GRP_LAST+1];
-   UConverterDataLMBCS * extraInfo = (UConverterDataLMBCS *) args->converter->extraInfo;
-   int sourceIndex = 0; 
+   int32_t بائيٽون_written;
+   UBool groups_tried[ULMBCS_GRP_آخري+1];
+   UConverter_معلومات_LMBCS * extraInfo = (UConverter_معلومات_LMBCS *) دليلون_2->converter->extraInfo;
+   صحيح ذريعو_اشاريو = 0; 
 
    /* Basic strategy: attempt to fill in local LMBCS 1-char buffer.(LMBCS)
       If that succeeds, see if it will all fit into the target & copy it over 
@@ -885,198 +885,198 @@ _LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
    */
 
     /*Fix for SPR#DJOE66JFN3 (Lotus)*/
-    ulmbcs_byte_t OldConverterIndex = 0;
+    ulmbcs_byte_t Old_Converter_اشاريو = 0;
 
-   while (args->source < args->sourceLimit && !U_FAILURE(*err))
+   طالما (دليلون_2->ذريعو < دليلون_2->ذريعو_حد_بندي && !U_FAILURE(*err))
    {
       /*Fix for SPR#DJOE66JFN3 (Lotus)*/
-      OldConverterIndex = extraInfo->localeConverterIndex;
+      Old_Converter_اشاريو = extraInfo->locale_Converter_اشاريو;
 
-      if (args->target >= args->targetLimit)
+      إذا (دليلون_2->هدف >= دليلون_2->هدف_حد_بندي)
       {
-         *err = U_BUFFER_OVERFLOW_ERROR;
-         break;
+         *err = U_بفر_حد_کان_مٿي_ERROR;
+         اكسر;
       }
-      uniChar = *(args->source);
-      bytes_written = 0;
+      uniChar = *(دليلون_2->ذريعو);
+      بائيٽون_written = 0;
       pLMBCS = LMBCS;
 
       /* check cases in rough order of how common they are, for speed */
 
       /* single byte matches: strategy 1 */
       /*Fix for SPR#DJOE66JFN3 (Lotus)*/
-      if((uniChar>=0x80) && (uniChar<=0xff)
+      إذا((uniChar>=0x80) && (uniChar<=0xff)
       /*Fix for SPR#JUYA6XAERU and TSAO7GL5NK (Lotus)*/ &&(uniChar!=0xB1) &&(uniChar!=0xD7) &&(uniChar!=0xF7)
         &&(uniChar!=0xB0) &&(uniChar!=0xB4) &&(uniChar!=0xB6) &&(uniChar!=0xA7) &&(uniChar!=0xA8))
       {
-            extraInfo->localeConverterIndex = ULMBCS_GRP_L1;
+            extraInfo->locale_Converter_اشاريو = ULMBCS_GRP_L1;
       }
-      if (((uniChar > ULMBCS_C0END) && (uniChar < ULMBCS_C1START)) ||
+      إذا (((uniChar > ULMBCS_C0_پڇاڙي) && (uniChar < ULMBCS_C1_شروعات)) ||
           uniChar == 0 || uniChar == ULMBCS_HT || uniChar == ULMBCS_CR || 
           uniChar == ULMBCS_LF || uniChar == ULMBCS_123SYSTEMRANGE 
           )
       {
          *pLMBCS++ = (ulmbcs_byte_t ) uniChar;
-         bytes_written = 1;
+         بائيٽون_written = 1;
       }
 
 
-      if (!bytes_written) 
+      إذا (!بائيٽون_written) 
       {
          /* Check by UNICODE range (Strategy 2) */
-         ulmbcs_byte_t group = FindLMBCSUniRange(uniChar);
+         ulmbcs_byte_t گروهه = ڳوليو_LMBCSUni_Range(uniChar);
          
-         if (group == ULMBCS_GRP_UNICODE)  /* (Strategy 2A) */
+         إذا (گروهه == ULMBCS_GRP_UNICODE)  /* (Strategy 2A) */
          {
             pLMBCS += LMBCSConvertUni(pLMBCS,uniChar);
             
-            bytes_written = (int32_t)(pLMBCS - LMBCS);
+            بائيٽون_written = (int32_t)(pLMBCS - LMBCS);
          }
-         else if (group == ULMBCS_GRP_CTRL)  /* (Strategy 2B) */
+         وإلا إذا (گروهه == ULMBCS_GRP_CTRL)  /* (Strategy 2B) */
          {
             /* Handle control characters here */
-            if (uniChar <= ULMBCS_C0END)
+            إذا (uniChar <= ULMBCS_C0_پڇاڙي)
             {
                *pLMBCS++ = ULMBCS_GRP_CTRL;
                *pLMBCS++ = (ulmbcs_byte_t)(ULMBCS_CTRLOFFSET + uniChar);
             }
-            else if (uniChar >= ULMBCS_C1START && uniChar <= ULMBCS_C1START + ULMBCS_CTRLOFFSET)
+            وإلا إذا (uniChar >= ULMBCS_C1_شروعات && uniChar <= ULMBCS_C1_شروعات + ULMBCS_CTRLOFFSET)
             {
                *pLMBCS++ = ULMBCS_GRP_CTRL;
                *pLMBCS++ = (ulmbcs_byte_t ) (uniChar & 0x00FF);
             }
-            bytes_written = (int32_t)(pLMBCS - LMBCS);
+            بائيٽون_written = (int32_t)(pLMBCS - LMBCS);
          }
-         else if (group < ULMBCS_GRP_UNICODE)  /* (Strategy 2C) */
+         وإلا إذا (گروهه < ULMBCS_GRP_UNICODE)  /* (Strategy 2C) */
          {
             /* a specific converter has been identified - use it */
-            bytes_written = (int32_t)LMBCSConversionWorker (
-                              extraInfo, group, pLMBCS, &uniChar, 
-                              &lastConverterIndex, groups_tried);
+            بائيٽون_written = (int32_t)LMBCSConversion_ڪم_ڪندڙ (
+                              extraInfo, گروهه, pLMBCS, &uniChar, 
+                              &آخري_Converter_اشاريو, groups_tried);
          }
-         if (!bytes_written)    /* the ambiguous group cases  (Strategy 3) */
+         إذا (!بائيٽون_written)    /* the ambiguous group cases  (Strategy 3) */
          {
-            uprv_memset(groups_tried, 0, sizeof(groups_tried));
+            uprv_memset(groups_tried, 0, حجم(groups_tried));
 
             /* check for non-default optimization group (Strategy 3A )*/
-            if ((extraInfo->OptGroup != 1) && (ULMBCS_AMBIGUOUS_MATCH(group, extraInfo->OptGroup)))
+            إذا ((extraInfo->Opt_گروهه != 1) && (ULMBCS_AMBIGUOUS_ميلاپ(گروهه, extraInfo->Opt_گروهه)))
             {
                 /*zhujin: upgrade, merge #39299 here (Lotus) */
                 /*To make R5 compatible translation, look for exceptional group first for non-DBCS*/
 
-                if(extraInfo->localeConverterIndex < ULMBCS_DOUBLEOPTGROUP_START)
+                إذا(extraInfo->locale_Converter_اشاريو < ULMBCS_DOUBLEOPTGROUP_شروعات)
                 {
-                  bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
+                  بائيٽون_written = (int32_t)LMBCSConversion_ڪم_ڪندڙ (extraInfo,
                      ULMBCS_GRP_L1, pLMBCS, &uniChar,
-                     &lastConverterIndex, groups_tried);
+                     &آخري_Converter_اشاريو, groups_tried);
 
-                  if(!bytes_written)
+                  إذا(!بائيٽون_written)
                   {
-                     bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
+                     بائيٽون_written = (int32_t)LMBCSConversion_ڪم_ڪندڙ (extraInfo,
                          ULMBCS_GRP_EXCEPT, pLMBCS, &uniChar,
-                         &lastConverterIndex, groups_tried);
+                         &آخري_Converter_اشاريو, groups_tried);
                   }
-                  if(!bytes_written)
+                  إذا(!بائيٽون_written)
                   {
-                      bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
-                          extraInfo->localeConverterIndex, pLMBCS, &uniChar,
-                          &lastConverterIndex, groups_tried);
+                      بائيٽون_written = (int32_t)LMBCSConversion_ڪم_ڪندڙ (extraInfo,
+                          extraInfo->locale_Converter_اشاريو, pLMBCS, &uniChar,
+                          &آخري_Converter_اشاريو, groups_tried);
                   }
                 }
-                else
+                وإلا
                 {
-                     bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
-                         extraInfo->localeConverterIndex, pLMBCS, &uniChar,
-                         &lastConverterIndex, groups_tried);
+                     بائيٽون_written = (int32_t)LMBCSConversion_ڪم_ڪندڙ (extraInfo,
+                         extraInfo->locale_Converter_اشاريو, pLMBCS, &uniChar,
+                         &آخري_Converter_اشاريو, groups_tried);
                 }
             }
             /* check for locale optimization group (Strategy 3B) */
-            if (!bytes_written && (extraInfo->localeConverterIndex) && (ULMBCS_AMBIGUOUS_MATCH(group, extraInfo->localeConverterIndex)))
+            إذا (!بائيٽون_written && (extraInfo->locale_Converter_اشاريو) && (ULMBCS_AMBIGUOUS_ميلاپ(گروهه, extraInfo->locale_Converter_اشاريو)))
             {
-                bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
-                        extraInfo->localeConverterIndex, pLMBCS, &uniChar, &lastConverterIndex, groups_tried);
+                بائيٽون_written = (int32_t)LMBCSConversion_ڪم_ڪندڙ (extraInfo,
+                        extraInfo->locale_Converter_اشاريو, pLMBCS, &uniChar, &آخري_Converter_اشاريو, groups_tried);
             }
             /* check for last optimization group used for this string (Strategy 3C) */
-            if (!bytes_written && (lastConverterIndex) && (ULMBCS_AMBIGUOUS_MATCH(group, lastConverterIndex)))
+            إذا (!بائيٽون_written && (آخري_Converter_اشاريو) && (ULMBCS_AMBIGUOUS_ميلاپ(گروهه, آخري_Converter_اشاريو)))
             {
-                bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
-                        lastConverterIndex, pLMBCS, &uniChar, &lastConverterIndex, groups_tried);
+                بائيٽون_written = (int32_t)LMBCSConversion_ڪم_ڪندڙ (extraInfo,
+                        آخري_Converter_اشاريو, pLMBCS, &uniChar, &آخري_Converter_اشاريو, groups_tried);
             }
-            if (!bytes_written)
+            إذا (!بائيٽون_written)
             {
                /* just check every possible matching converter (Strategy 3D) */ 
-               ulmbcs_byte_t grp_start;
-               ulmbcs_byte_t grp_end;  
+               ulmbcs_byte_t grp_شروعات;
+               ulmbcs_byte_t grp_پڇاڙي;  
                ulmbcs_byte_t grp_ix;
-               grp_start = (ulmbcs_byte_t)((group == ULMBCS_AMBIGUOUS_MBCS) 
-                        ? ULMBCS_DOUBLEOPTGROUP_START 
+               grp_شروعات = (ulmbcs_byte_t)((گروهه == ULMBCS_AMBIGUOUS_MBCS) 
+                        ? ULMBCS_DOUBLEOPTGROUP_شروعات 
                         :  ULMBCS_GRP_L1);
-               grp_end = (ulmbcs_byte_t)((group == ULMBCS_AMBIGUOUS_MBCS) 
-                        ? ULMBCS_GRP_LAST 
+               grp_پڇاڙي = (ulmbcs_byte_t)((گروهه == ULMBCS_AMBIGUOUS_MBCS) 
+                        ? ULMBCS_GRP_آخري 
                         :  ULMBCS_GRP_TH);
-               if(group == ULMBCS_AMBIGUOUS_ALL)
+               إذا(گروهه == ULMBCS_AMBIGUOUS_ALL)
                {
-                   grp_start = ULMBCS_GRP_L1;
-                   grp_end = ULMBCS_GRP_LAST;
+                   grp_شروعات = ULMBCS_GRP_L1;
+                   grp_پڇاڙي = ULMBCS_GRP_آخري;
                }
-               for (grp_ix = grp_start;
-                   grp_ix <= grp_end && !bytes_written; 
+               لكل (grp_ix = grp_شروعات;
+                   grp_ix <= grp_پڇاڙي && !بائيٽون_written; 
                     grp_ix++)
                {
-                  if (extraInfo->OptGrpConverter [grp_ix] && !groups_tried [grp_ix])
+                  إذا (extraInfo->OptGrpConverter [grp_ix] && !groups_tried [grp_ix])
                   {
-                     bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
+                     بائيٽون_written = (int32_t)LMBCSConversion_ڪم_ڪندڙ (extraInfo,
                        grp_ix, pLMBCS, &uniChar, 
-                       &lastConverterIndex, groups_tried);
+                       &آخري_Converter_اشاريو, groups_tried);
                   }
                }
                 /* a final conversion fallback to the exceptions group if its likely 
                      to be single byte  (Strategy 3E) */
-               if (!bytes_written && grp_start == ULMBCS_GRP_L1)
+               إذا (!بائيٽون_written && grp_شروعات == ULMBCS_GRP_L1)
                {
-                  bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
+                  بائيٽون_written = (int32_t)LMBCSConversion_ڪم_ڪندڙ (extraInfo,
                      ULMBCS_GRP_EXCEPT, pLMBCS, &uniChar, 
-                     &lastConverterIndex, groups_tried);
+                     &آخري_Converter_اشاريو, groups_tried);
                }
             }
             /* all of our other strategies failed. Fallback to Unicode. (Strategy 4)*/
-            if (!bytes_written)
+            إذا (!بائيٽون_written)
             {
 
                pLMBCS += LMBCSConvertUni(pLMBCS, uniChar);
-               bytes_written = (int32_t)(pLMBCS - LMBCS);
+               بائيٽون_written = (int32_t)(pLMBCS - LMBCS);
             }
          }
       }
   
       /* we have a translation. increment source and write as much as possible to target */
-      args->source++;
+      دليلون_2->ذريعو++;
       pLMBCS = LMBCS;
-      while (args->target < args->targetLimit && bytes_written--)
+      طالما (دليلون_2->هدف < دليلون_2->هدف_حد_بندي && بائيٽون_written--)
       {
-         *(args->target)++ = *pLMBCS++;
-         if (args->offsets)
+         *(دليلون_2->هدف)++ = *pLMBCS++;
+         إذا (دليلون_2->offsets)
          {
-            *(args->offsets)++ = sourceIndex;
+            *(دليلون_2->offsets)++ = ذريعو_اشاريو;
          }
       }
-      sourceIndex++;
-      if (bytes_written > 0)
+      ذريعو_اشاريو++;
+      إذا (بائيٽون_written > 0)
       {
          /* write any bytes that didn't fit in target to the error buffer,
             common code will move this to target if we get called back with
             enough target room
          */
-         uint8_t * pErrorBuffer = args->converter->charErrorBuffer;
-         *err = U_BUFFER_OVERFLOW_ERROR;
-         args->converter->charErrorBufferLength = (int8_t)bytes_written;
-         while (bytes_written--)
+         uint8_t * p_Error_بفر = دليلون_2->converter->char_Error_بفر;
+         *err = U_بفر_حد_کان_مٿي_ERROR;
+         دليلون_2->converter->char_Error_بفر_ڊيگهائي = (int8_t)بائيٽون_written;
+         طالما (بائيٽون_written--)
          {
-            *pErrorBuffer++ = *pLMBCS++;
+            *p_Error_بفر++ = *pLMBCS++;
          }
       }
       /*Fix for SPR#DJOE66JFN3 (Lotus)*/
-      extraInfo->localeConverterIndex = OldConverterIndex;
+      extraInfo->locale_Converter_اشاريو = Old_Converter_اشاريو;
    }     
 }
 
@@ -1085,18 +1085,18 @@ _LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
 
 
 /* A function to call when we are looking at the Unicode group byte in LMBCS */
-static char16_t
-GetUniFromLMBCSUni(char const ** ppLMBCSin)  /* Called with LMBCS-style Unicode byte stream */
+ساكن char16_t
+GetUniFromLMBCSUni(حرف ثابت ** ppLMBCSin)  /* Called with LMBCS-style Unicode byte stream */
 {
-   uint8_t  HighCh = *(*ppLMBCSin)++;  /* Big-endian Unicode in LMBCS compatibility group*/
-   uint8_t  LowCh  = *(*ppLMBCSin)++;
+   uint8_t  مٿاهون_Ch = *(*ppLMBCSin)++;  /* Big-endian Unicode in LMBCS compatibility group*/
+   uint8_t  هيٺيون_Ch  = *(*ppLMBCSin)++;
 
-   if (HighCh == ULMBCS_UNICOMPATZERO ) 
+   إذا (مٿاهون_Ch == ULMBCS_UNICOMPATZERO ) 
    {
-      HighCh = LowCh;
-      LowCh = 0; /* zero-byte in LSB special character */
+      مٿاهون_Ch = هيٺيون_Ch;
+      هيٺيون_Ch = 0; /* zero-byte in LSB special character */
    }
-   return (char16_t)((HighCh << 8) | LowCh);
+   أرجع (char16_t)((مٿاهون_Ch << 8) | هيٺيون_Ch);
 }
 
 
@@ -1107,31 +1107,31 @@ GetUniFromLMBCSUni(char const ** ppLMBCSin)  /* Called with LMBCS-style Unicode 
    all input as required by ICU converter semantics.
 */
 
-#define CHECK_SOURCE_LIMIT(index) UPRV_BLOCK_MACRO_BEGIN { \
-    if (args->source+index > args->sourceLimit) { \
-        *err = U_TRUNCATED_CHAR_FOUND; \
-        args->source = args->sourceLimit; \
-        return 0xffff; \
+#وصف_ڪريو CHECK_ذريعو_حد_بندي(اشاريو) UPRV_بلاڪ_MACRO_BEGIN { \
+    إذا (دليلون_2->ذريعو+اشاريو > دليلون_2->ذريعو_حد_بندي) { \
+        *err = U_TRUNCATED_CHAR_مليو; \
+        دليلون_2->ذريعو = دليلون_2->ذريعو_حد_بندي; \
+        أرجع 0xffff; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_بلاڪ_MACRO_پڇاڙي
 
 /* Return the Unicode representation for the current LMBCS character */
 
-static UChar32  U_CALLCONV
-_LMBCSGetNextUCharWorker(UConverterToUnicodeArgs*   args,
-                         UErrorCode*   err)
+ساكن UChar32  U_CALLCONV
+LMBCSGet_ايندڙ_UChar_ڪم_ڪندڙ(UConverter_منزل_Unicode_دليلون*   دليلون_2,
+                         UError_ڪوڊ*   err)
 {
     UChar32 uniChar = 0;    /* an output UNICODE char */
     ulmbcs_byte_t   CurByte; /* A byte from the input stream */
 
     /* error check */
-    if (args->source >= args->sourceLimit)
+    إذا (دليلون_2->ذريعو >= دليلون_2->ذريعو_حد_بندي)
     {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0xffff;
+        *err = U_ILLEGAL_دليل_ERROR;
+        أرجع 0xffff;
     }
     /* Grab first byte & save address for error recovery */
-    CurByte = *((ulmbcs_byte_t  *) (args->source++));
+    CurByte = *((ulmbcs_byte_t  *) (دليلون_2->ذريعو++));
    
     /*
     * at entry of each if clause:
@@ -1145,211 +1145,211 @@ _LMBCSGetNextUCharWorker(UConverterToUnicodeArgs*   args,
    
     /* First lets check the simple fixed values. */
 
-    if(((CurByte > ULMBCS_C0END) && (CurByte < ULMBCS_C1START)) /* ascii range */
+    إذا(((CurByte > ULMBCS_C0_پڇاڙي) && (CurByte < ULMBCS_C1_شروعات)) /* ascii range */
     ||  (CurByte == 0) 
     ||  CurByte == ULMBCS_HT || CurByte == ULMBCS_CR 
     ||  CurByte == ULMBCS_LF || CurByte == ULMBCS_123SYSTEMRANGE)
     {
         uniChar = CurByte;
     }
-    else  
+    وإلا  
     {
-        UConverterDataLMBCS * extraInfo;
-        ulmbcs_byte_t group; 
-        UConverterSharedData *cnv; 
+        UConverter_معلومات_LMBCS * extraInfo;
+        ulmbcs_byte_t گروهه; 
+        UConverter_Shared_معلومات *cnv; 
         
-        if (CurByte == ULMBCS_GRP_CTRL)  /* Control character group - no opt group update */
+        إذا (CurByte == ULMBCS_GRP_CTRL)  /* Control character group - no opt group update */
         {
             ulmbcs_byte_t  C0C1byte;
-            CHECK_SOURCE_LIMIT(1);
-            C0C1byte = *(args->source)++;
-            uniChar = (C0C1byte < ULMBCS_C1START) ? C0C1byte - ULMBCS_CTRLOFFSET : C0C1byte;
+            CHECK_ذريعو_حد_بندي(1);
+            C0C1byte = *(دليلون_2->ذريعو)++;
+            uniChar = (C0C1byte < ULMBCS_C1_شروعات) ? C0C1byte - ULMBCS_CTRLOFFSET : C0C1byte;
         }
-        else 
-        if (CurByte == ULMBCS_GRP_UNICODE) /* Unicode compatibility group: BigEndian UTF16 */
+        وإلا 
+        إذا (CurByte == ULMBCS_GRP_UNICODE) /* Unicode compatibility group: BigEndian UTF16 */
         {
-            CHECK_SOURCE_LIMIT(2);
+            CHECK_ذريعو_حد_بندي(2);
      
             /* don't check for error indicators fffe/ffff below */
-            return GetUniFromLMBCSUni(&(args->source));
+            أرجع GetUniFromLMBCSUni(&(دليلون_2->ذريعو));
         }
-        else if (CurByte <= ULMBCS_CTRLOFFSET)  
+        وإلا إذا (CurByte <= ULMBCS_CTRLOFFSET)  
         {
-            group = CurByte;                   /* group byte is in the source */
-            extraInfo = (UConverterDataLMBCS *) args->converter->extraInfo;
-            if (group > ULMBCS_GRP_LAST || (cnv = extraInfo->OptGrpConverter[group]) == nullptr)
+            گروهه = CurByte;                   /* group byte is in the source */
+            extraInfo = (UConverter_معلومات_LMBCS *) دليلون_2->converter->extraInfo;
+            إذا (گروهه > ULMBCS_GRP_آخري || (cnv = extraInfo->OptGrpConverter[گروهه]) == خالي_اشارو)
             {
                 /* this is not a valid group byte - no converter*/
-                *err = U_INVALID_CHAR_FOUND;
+                *err = U_INVALID_CHAR_مليو;
             }      
-            else if (group >= ULMBCS_DOUBLEOPTGROUP_START)    /* double byte conversion */
+            وإلا إذا (گروهه >= ULMBCS_DOUBLEOPTGROUP_شروعات)    /* double byte conversion */
             {
 
-                CHECK_SOURCE_LIMIT(2);
+                CHECK_ذريعو_حد_بندي(2);
 
                 /* check for LMBCS doubled-group-byte case */
-                if (*args->source == group) {
+                إذا (*دليلون_2->ذريعو == گروهه) {
                     /* single byte */
-                    ++args->source;
-                    uniChar = ucnv_MBCSSimpleGetNextUChar(cnv, args->source, 1, false);
-                    ++args->source;
-                } else {
+                    ++دليلون_2->ذريعو;
+                    uniChar = ucnv_MBCSSimple_Get_ايندڙ_UChar(cnv, دليلون_2->ذريعو, 1, خطأ);
+                    ++دليلون_2->ذريعو;
+                } وإلا {
                     /* double byte */
-                    uniChar = ucnv_MBCSSimpleGetNextUChar(cnv, args->source, 2, false);
-                    args->source += 2;
+                    uniChar = ucnv_MBCSSimple_Get_ايندڙ_UChar(cnv, دليلون_2->ذريعو, 2, خطأ);
+                    دليلون_2->ذريعو += 2;
                 }
             }
-            else {                                  /* single byte conversion */
-                CHECK_SOURCE_LIMIT(1);
-                CurByte = *(args->source)++;
+            وإلا {                                  /* single byte conversion */
+                CHECK_ذريعو_حد_بندي(1);
+                CurByte = *(دليلون_2->ذريعو)++;
         
-                if (CurByte >= ULMBCS_C1START)
+                إذا (CurByte >= ULMBCS_C1_شروعات)
                 {
-                    uniChar = _MBCS_SINGLE_SIMPLE_GET_NEXT_BMP(cnv, CurByte);
+                    uniChar = MBCS_SINGLE_SIMPLE_GET_ايندڙ_BMP(cnv, CurByte);
                 }
-                else
+                وإلا
                 {
                     /* The non-optimizable oddballs where there is an explicit byte 
                     * AND the second byte is not in the upper ascii range
                     */
-                    char bytes[2];
+                    حرف بائيٽون[2];
 
-                    extraInfo = (UConverterDataLMBCS *) args->converter->extraInfo;
+                    extraInfo = (UConverter_معلومات_LMBCS *) دليلون_2->converter->extraInfo;
                     cnv = extraInfo->OptGrpConverter [ULMBCS_GRP_EXCEPT];  
         
                     /* Lookup value must include opt group */
-                    bytes[0] = group;
-                    bytes[1] = CurByte;
-                    uniChar = ucnv_MBCSSimpleGetNextUChar(cnv, bytes, 2, false);
+                    بائيٽون[0] = گروهه;
+                    بائيٽون[1] = CurByte;
+                    uniChar = ucnv_MBCSSimple_Get_ايندڙ_UChar(cnv, بائيٽون, 2, خطأ);
                 }
             }
         }
-        else if (CurByte >= ULMBCS_C1START) /* group byte is implicit */
+        وإلا إذا (CurByte >= ULMBCS_C1_شروعات) /* group byte is implicit */
         {
-            extraInfo = (UConverterDataLMBCS *) args->converter->extraInfo;
-            group = extraInfo->OptGroup;
-            cnv = extraInfo->OptGrpConverter[group];
-            if (group >= ULMBCS_DOUBLEOPTGROUP_START)    /* double byte conversion */
+            extraInfo = (UConverter_معلومات_LMBCS *) دليلون_2->converter->extraInfo;
+            گروهه = extraInfo->Opt_گروهه;
+            cnv = extraInfo->OptGrpConverter[گروهه];
+            إذا (گروهه >= ULMBCS_DOUBLEOPTGROUP_شروعات)    /* double byte conversion */
             {
-                if (!ucnv_MBCSIsLeadByte(cnv, CurByte))
+                إذا (!ucnv_MBCSIsLeadByte(cnv, CurByte))
                 {
-                    CHECK_SOURCE_LIMIT(0);
+                    CHECK_ذريعو_حد_بندي(0);
 
                     /* let the MBCS conversion consume CurByte again */
-                    uniChar = ucnv_MBCSSimpleGetNextUChar(cnv, args->source - 1, 1, false);
+                    uniChar = ucnv_MBCSSimple_Get_ايندڙ_UChar(cnv, دليلون_2->ذريعو - 1, 1, خطأ);
                 }
-                else
+                وإلا
                 {
-                    CHECK_SOURCE_LIMIT(1);
+                    CHECK_ذريعو_حد_بندي(1);
                     /* let the MBCS conversion consume CurByte again */
-                    uniChar = ucnv_MBCSSimpleGetNextUChar(cnv, args->source - 1, 2, false);
-                    ++args->source;
+                    uniChar = ucnv_MBCSSimple_Get_ايندڙ_UChar(cnv, دليلون_2->ذريعو - 1, 2, خطأ);
+                    ++دليلون_2->ذريعو;
                 }
             }
-            else                                   /* single byte conversion */
+            وإلا                                   /* single byte conversion */
             {
-                uniChar = _MBCS_SINGLE_SIMPLE_GET_NEXT_BMP(cnv, CurByte);
+                uniChar = MBCS_SINGLE_SIMPLE_GET_ايندڙ_BMP(cnv, CurByte);
             }
         }
     }
-    return uniChar;
+    أرجع uniChar;
 }
 
 
 /* The exported function that converts lmbcs to one or more
    UChars - currently UTF-16
 */
-static void  U_CALLCONV
-_LMBCSToUnicodeWithOffsets(UConverterToUnicodeArgs*    args,
-                     UErrorCode*    err)
+ساكن فراغ  U_CALLCONV
+_LMBCSToUnicodeWithOffsets(UConverter_منزل_Unicode_دليلون*    دليلون_2,
+                     UError_ڪوڊ*    err)
 {
-   char LMBCS [ULMBCS_CHARSIZE_MAX];
+   حرف LMBCS [ULMBCS_CHARSIZE_MAX];
    char16_t uniChar;    /* one output UNICODE char */
-   const char * saveSource; /* beginning of current code point */
-   const char * pStartLMBCS = args->source;  /* beginning of whole string */
-   const char * errSource = nullptr; /* pointer to actual input in case an error occurs */
+   ثابت حرف * save_ذريعو; /* beginning of current code point */
+   ثابت حرف * p_شروعات_LMBCS = دليلون_2->ذريعو;  /* beginning of whole string */
+   ثابت حرف * err_ذريعو = خالي_اشارو; /* pointer to actual input in case an error occurs */
    int8_t savebytes = 0;
 
    /* Process from source to limit, or until error */
-   while (U_SUCCESS(*err) && args->sourceLimit > args->source && args->targetLimit > args->target)
+   طالما (U_SUCCESS(*err) && دليلون_2->ذريعو_حد_بندي > دليلون_2->ذريعو && دليلون_2->هدف_حد_بندي > دليلون_2->هدف)
    {
-      saveSource = args->source; /* beginning of current code point */
+      save_ذريعو = دليلون_2->ذريعو; /* beginning of current code point */
 
-      if (args->converter->toULength) /* reassemble char from previous call */
+      إذا (دليلون_2->converter->منزل_ULength) /* reassemble char from previous call */
       {
-        const char *saveSourceLimit; 
-        size_t size_old = args->converter->toULength;
+        ثابت حرف *save_ذريعو_حد_بندي; 
+        size_t سائيز_old = دليلون_2->converter->منزل_ULength;
 
          /* limit from source is either remainder of temp buffer, or user limit on source */
-        size_t size_new_maybe_1 = sizeof(LMBCS) - size_old;
-        size_t size_new_maybe_2 = args->sourceLimit - args->source;
-        size_t size_new = (size_new_maybe_1 < size_new_maybe_2) ? size_new_maybe_1 : size_new_maybe_2;
+        size_t سائيز_new_maybe_1 = حجم(LMBCS) - سائيز_old;
+        size_t سائيز_new_maybe_2 = دليلون_2->ذريعو_حد_بندي - دليلون_2->ذريعو;
+        size_t سائيز_new = (سائيز_new_maybe_1 < سائيز_new_maybe_2) ? سائيز_new_maybe_1 : سائيز_new_maybe_2;
          
       
-        uprv_memcpy(LMBCS, args->converter->toUBytes, size_old);
-        uprv_memcpy(LMBCS + size_old, args->source, size_new);
-        saveSourceLimit = args->sourceLimit;
-        args->source = errSource = LMBCS;
-        args->sourceLimit = LMBCS+size_old+size_new;
-        savebytes = (int8_t)(size_old+size_new);
-        uniChar = (char16_t) _LMBCSGetNextUCharWorker(args, err);
-        args->source = saveSource + ((args->source - LMBCS) - size_old);
-        args->sourceLimit = saveSourceLimit;
+        uprv_memcpy(LMBCS, دليلون_2->converter->منزل_UBytes, سائيز_old);
+        uprv_memcpy(LMBCS + سائيز_old, دليلون_2->ذريعو, سائيز_new);
+        save_ذريعو_حد_بندي = دليلون_2->ذريعو_حد_بندي;
+        دليلون_2->ذريعو = err_ذريعو = LMBCS;
+        دليلون_2->ذريعو_حد_بندي = LMBCS+سائيز_old+سائيز_new;
+        savebytes = (int8_t)(سائيز_old+سائيز_new);
+        uniChar = (char16_t) LMBCSGet_ايندڙ_UChar_ڪم_ڪندڙ(دليلون_2, err);
+        دليلون_2->ذريعو = save_ذريعو + ((دليلون_2->ذريعو - LMBCS) - سائيز_old);
+        دليلون_2->ذريعو_حد_بندي = save_ذريعو_حد_بندي;
 
-        if (*err == U_TRUNCATED_CHAR_FOUND)
+        إذا (*err == U_TRUNCATED_CHAR_مليو)
         {
             /* evil special case: source buffers so small a char spans more than 2 buffers */
-            args->converter->toULength = savebytes;
-            uprv_memcpy(args->converter->toUBytes, LMBCS, savebytes);
-            args->source = args->sourceLimit;
+            دليلون_2->converter->منزل_ULength = savebytes;
+            uprv_memcpy(دليلون_2->converter->منزل_UBytes, LMBCS, savebytes);
+            دليلون_2->ذريعو = دليلون_2->ذريعو_حد_بندي;
             *err = U_ZERO_ERROR;
-            return;
+            أرجع;
          }
-         else
+         وإلا
          {
             /* clear the partial-char marker */
-            args->converter->toULength = 0;
+            دليلون_2->converter->منزل_ULength = 0;
          }
       }
-      else
+      وإلا
       {
-         errSource = saveSource;
-         uniChar = (char16_t) _LMBCSGetNextUCharWorker(args, err);
-         savebytes = (int8_t)(args->source - saveSource);
+         err_ذريعو = save_ذريعو;
+         uniChar = (char16_t) LMBCSGet_ايندڙ_UChar_ڪم_ڪندڙ(دليلون_2, err);
+         savebytes = (int8_t)(دليلون_2->ذريعو - save_ذريعو);
       }
-      if (U_SUCCESS(*err))
+      إذا (U_SUCCESS(*err))
       {
-         if (uniChar < 0xfffe)
+         إذا (uniChar < 0xfffe)
          {
-            *(args->target)++ = uniChar;
-            if(args->offsets)
+            *(دليلون_2->هدف)++ = uniChar;
+            إذا(دليلون_2->offsets)
             {
-               *(args->offsets)++ = (int32_t)(saveSource - pStartLMBCS);
+               *(دليلون_2->offsets)++ = (int32_t)(save_ذريعو - p_شروعات_LMBCS);
             }
          }
-         else if (uniChar == 0xfffe)
+         وإلا إذا (uniChar == 0xfffe)
          {
-            *err = U_INVALID_CHAR_FOUND;
+            *err = U_INVALID_CHAR_مليو;
          }
-         else /* if (uniChar == 0xffff) */
+         وإلا /* if (uniChar == 0xffff) */
          {
-            *err = U_ILLEGAL_CHAR_FOUND;
+            *err = U_ILLEGAL_CHAR_مليو;
          }
       }
    }
    /* if target ran out before source, return U_BUFFER_OVERFLOW_ERROR */
-   if (U_SUCCESS(*err) && args->sourceLimit > args->source && args->targetLimit <= args->target)
+   إذا (U_SUCCESS(*err) && دليلون_2->ذريعو_حد_بندي > دليلون_2->ذريعو && دليلون_2->هدف_حد_بندي <= دليلون_2->هدف)
    {
-      *err = U_BUFFER_OVERFLOW_ERROR;
+      *err = U_بفر_حد_کان_مٿي_ERROR;
    }
-   else if (U_FAILURE(*err)) 
+   وإلا إذا (U_FAILURE(*err)) 
    {
       /* If character incomplete or unmappable/illegal, store it in toUBytes[] */
-      args->converter->toULength = savebytes;
-      if (savebytes > 0) {
-         uprv_memcpy(args->converter->toUBytes, errSource, savebytes);
+      دليلون_2->converter->منزل_ULength = savebytes;
+      إذا (savebytes > 0) {
+         uprv_memcpy(دليلون_2->converter->منزل_UBytes, err_ذريعو, savebytes);
       }
-      if (*err == U_TRUNCATED_CHAR_FOUND) {
+      إذا (*err == U_TRUNCATED_CHAR_مليو) {
          *err = U_ZERO_ERROR;
       }
    }
@@ -1370,19 +1370,19 @@ DEFINE_LMBCS_OPEN(18)
 DEFINE_LMBCS_OPEN(19)
 
 
-DECLARE_LMBCS_DATA(1)
-DECLARE_LMBCS_DATA(2)
-DECLARE_LMBCS_DATA(3)
-DECLARE_LMBCS_DATA(4)
-DECLARE_LMBCS_DATA(5)
-DECLARE_LMBCS_DATA(6)
-DECLARE_LMBCS_DATA(8)
-DECLARE_LMBCS_DATA(11)
-DECLARE_LMBCS_DATA(16)
-DECLARE_LMBCS_DATA(17)
-DECLARE_LMBCS_DATA(18)
-DECLARE_LMBCS_DATA(19)
+DECLARE_LMBCS_معلومات(1)
+DECLARE_LMBCS_معلومات(2)
+DECLARE_LMBCS_معلومات(3)
+DECLARE_LMBCS_معلومات(4)
+DECLARE_LMBCS_معلومات(5)
+DECLARE_LMBCS_معلومات(6)
+DECLARE_LMBCS_معلومات(8)
+DECLARE_LMBCS_معلومات(11)
+DECLARE_LMBCS_معلومات(16)
+DECLARE_LMBCS_معلومات(17)
+DECLARE_LMBCS_معلومات(18)
+DECLARE_LMBCS_معلومات(19)
 
-U_CDECL_END
+U_CDECL_پڇاڙي
 
-#endif /* #if !UCONFIG_NO_LEGACY_CONVERSION */
+#جيڪڏهن_پورو /* #if !UCONFIG_NO_LEGACY_CONVERSION */

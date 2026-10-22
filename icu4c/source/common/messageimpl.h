@@ -14,14 +14,14 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __MESSAGEIMPL_H__
-#define __MESSAGEIMPL_H__
+#جيڪڏهن_وصف_نه_ٿيل __MESSAGEIMPL_H__
+#وصف_ڪريو __MESSAGEIMPL_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#إذا !UCONFIG_NO_FORMATTING
 
-#include "unicode/messagepattern.h"
+#ضمن "unicode/messagepattern.h"
 
 U_NAMESPACE_BEGIN
 
@@ -30,36 +30,36 @@ U_NAMESPACE_BEGIN
  * In Java, these are package-private methods in MessagePattern itself.
  * In C++, they are declared here and implemented in messagepattern.cpp.
  */
-class U_COMMON_API MessageImpl {
-public:
+class U_COMMON_API پيغام_Impl {
+عام:
     /**
      * @return true if getApostropheMode()==UMSGPAT_APOS_DOUBLE_REQUIRED
      */
-    static UBool jdkAposMode(const MessagePattern &msgPattern) {
-        return msgPattern.getApostropheMode()==UMSGPAT_APOS_DOUBLE_REQUIRED;
+    ساكن UBool jdk_Apos_گهڻائي(ثابت پيغام_نمونو &نياپو_نمونو) {
+        أرجع نياپو_نمونو.get_Apostrophe_گهڻائي()==UMSGPAT_APOS_DOUBLE_REQUIRED;
     }
 
     /**
      * Appends the s[start, limit[ substring to sb, but with only half of the apostrophes
      * according to JDK pattern behavior.
      */
-    static void appendReducedApostrophes(const UnicodeString &s, int32_t start, int32_t limit,
+    ساكن فراغ appendReducedApostrophes(ثابت UnicodeString &s, int32_t شروعات, int32_t حد_بندي,
                                          UnicodeString &sb);
 
     /**
      * Appends the sub-message to the result string.
      * Omits SKIP_SYNTAX and appends whole arguments using appendReducedApostrophes().
      */
-    static UnicodeString& appendSubMessageWithoutSkipSyntax(const MessagePattern& msgPattern,
-                                                            int32_t msgStart,
-                                                            UnicodeString& result U_LIFETIME_BOUND);
+    ساكن UnicodeString& append_Sub_پيغام_Without_Skip_Syntax(ثابت پيغام_نمونو& نياپو_نمونو,
+                                                            int32_t نياپو_شروعات,
+                                                            UnicodeString& نتيجو U_LIFETIME_BOUND);
 
-private:
-    MessageImpl() = delete;  // no constructor: all static methods
+خاص:
+    پيغام_Impl() = delete;  // no constructor: all static methods
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
-#endif  // !UCONFIG_NO_FORMATTING
+#جيڪڏهن_پورو  // !UCONFIG_NO_FORMATTING
 
-#endif  // __MESSAGEIMPL_H__
+#جيڪڏهن_پورو  // __MESSAGEIMPL_H__

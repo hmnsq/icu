@@ -39,47 +39,47 @@
   *                            for the Unicode version.
   */
 
-#ifndef UVERNUM_H
-#define UVERNUM_H
+#جيڪڏهن_وصف_نه_ٿيل UVERNUM_H
+#وصف_ڪريو UVERNUM_H
 
 /** The standard copyright notice that gets compiled into each library.
  *  This value will change in the subsequent releases of ICU
  *  @stable ICU 2.4
  */
-#define U_COPYRIGHT_STRING \
+#وصف_ڪريو U_COPYRIGHT_STRING \
   " Copyright (C) 2016 and later: Unicode, Inc. and others. License & terms of use: http://www.unicode.org/copyright.html "
 
 /** The current ICU major version as an integer.
  *  This value will change in the subsequent releases of ICU
  *  @stable ICU 2.4
  */
-#define U_ICU_VERSION_MAJOR_NUM 79
+#وصف_ڪريو U_ICU_نسخو_MAJOR_انگ 79
 
 /** The current ICU minor version as an integer.
  *  This value will change in the subsequent releases of ICU
  *  @stable ICU 2.6
  */
-#define U_ICU_VERSION_MINOR_NUM 1
+#وصف_ڪريو U_ICU_نسخو_MINOR_انگ 1
 
 /** The current ICU patchlevel version as an integer.
  *  This value will change in the subsequent releases of ICU
  *  @stable ICU 2.4
  */
-#define U_ICU_VERSION_PATCHLEVEL_NUM 0
+#وصف_ڪريو U_ICU_نسخو_PATCHLEVEL_انگ 0
 
 /** The current ICU build level version as an integer.
  *  This value is for use by ICU clients. It defaults to 0.
  *  @stable ICU 4.0
  */
-#ifndef U_ICU_VERSION_BUILDLEVEL_NUM
-#define U_ICU_VERSION_BUILDLEVEL_NUM 0
-#endif
+#جيڪڏهن_وصف_نه_ٿيل U_ICU_نسخو_BUILDLEVEL_انگ
+#وصف_ڪريو U_ICU_نسخو_BUILDLEVEL_انگ 0
+#جيڪڏهن_پورو
 
 /** Glued version suffix for renamers
  *  This value will change in the subsequent releases of ICU
  *  @stable ICU 2.6
  */
-#define U_ICU_VERSION_SUFFIX _79
+#وصف_ڪريو U_ICU_نسخو_SUFFIX _79
 
 /**
  * \def U_DEF2_ICU_ENTRY_POINT_RENAME
@@ -101,38 +101,38 @@
  * \def U_DISABLE_VERSION_SUFFIX
  * @internal
  */
-#ifndef U_DISABLE_VERSION_SUFFIX
-#define U_DISABLE_VERSION_SUFFIX 0
-#endif
+#جيڪڏهن_وصف_نه_ٿيل U_DISABLE_نسخو_SUFFIX
+#وصف_ڪريو U_DISABLE_نسخو_SUFFIX 0
+#جيڪڏهن_پورو
 
-#ifndef U_ICU_ENTRY_POINT_RENAME
-#ifdef U_HAVE_LIB_SUFFIX
-#   if !U_DISABLE_VERSION_SUFFIX
-#       define U_DEF_ICU_ENTRY_POINT_RENAME(x,y,z) x ## y ##  z
-#       define U_DEF2_ICU_ENTRY_POINT_RENAME(x,y,z) U_DEF_ICU_ENTRY_POINT_RENAME(x,y,z)
-#       define U_ICU_ENTRY_POINT_RENAME(x)    U_DEF2_ICU_ENTRY_POINT_RENAME(x,U_ICU_VERSION_SUFFIX,U_LIB_SUFFIX_C_NAME)
-#   else
-#       define U_DEF_ICU_ENTRY_POINT_RENAME(x,y) x ## y
-#       define U_DEF2_ICU_ENTRY_POINT_RENAME(x,y) U_DEF_ICU_ENTRY_POINT_RENAME(x,y)
-#       define U_ICU_ENTRY_POINT_RENAME(x)    U_DEF2_ICU_ENTRY_POINT_RENAME(x,U_LIB_SUFFIX_C_NAME)
+#جيڪڏهن_وصف_نه_ٿيل U_ICU_داخلا_نقطو_RENAME
+#جيڪڏهن_وصف_ٿيل U_HAVE_LIB_SUFFIX
+#   إذا !U_DISABLE_نسخو_SUFFIX
+#       define U_DEF_ICU_داخلا_نقطو_RENAME(x,y,z) x ## y ##  z
+#       define U_DEF2_ICU_داخلا_نقطو_RENAME(x,y,z) U_DEF_ICU_داخلا_نقطو_RENAME(x,y,z)
+#       define U_ICU_داخلا_نقطو_RENAME(x)    U_DEF2_ICU_داخلا_نقطو_RENAME(x,U_ICU_نسخو_SUFFIX,U_LIB_SUFFIX_C_NAME)
+#   وإلا
+#       define U_DEF_ICU_داخلا_نقطو_RENAME(x,y) x ## y
+#       define U_DEF2_ICU_داخلا_نقطو_RENAME(x,y) U_DEF_ICU_داخلا_نقطو_RENAME(x,y)
+#       define U_ICU_داخلا_نقطو_RENAME(x)    U_DEF2_ICU_داخلا_نقطو_RENAME(x,U_LIB_SUFFIX_C_NAME)
 #   endif
-#else
-#   if !U_DISABLE_VERSION_SUFFIX
-#       define U_DEF_ICU_ENTRY_POINT_RENAME(x,y) x ## y
-#       define U_DEF2_ICU_ENTRY_POINT_RENAME(x,y) U_DEF_ICU_ENTRY_POINT_RENAME(x,y)
-#       define U_ICU_ENTRY_POINT_RENAME(x)    U_DEF2_ICU_ENTRY_POINT_RENAME(x,U_ICU_VERSION_SUFFIX)
-#   else
-#       define U_ICU_ENTRY_POINT_RENAME(x)    x
+#وإلا
+#   إذا !U_DISABLE_نسخو_SUFFIX
+#       define U_DEF_ICU_داخلا_نقطو_RENAME(x,y) x ## y
+#       define U_DEF2_ICU_داخلا_نقطو_RENAME(x,y) U_DEF_ICU_داخلا_نقطو_RENAME(x,y)
+#       define U_ICU_داخلا_نقطو_RENAME(x)    U_DEF2_ICU_داخلا_نقطو_RENAME(x,U_ICU_نسخو_SUFFIX)
+#   وإلا
+#       define U_ICU_داخلا_نقطو_RENAME(x)    x
 #   endif
-#endif
-#endif
+#جيڪڏهن_پورو
+#جيڪڏهن_پورو
 
 /** The current ICU library version as a dotted-decimal string. The patchlevel
  *  only appears in this string if it non-zero.
  *  This value will change in the subsequent releases of ICU
  *  @stable ICU 2.4
  */
-#define U_ICU_VERSION "79.1"
+#وصف_ڪريو U_ICU_نسخو "79.1"
 
 /**
  * The current ICU library major version number as a string, for library name suffixes.
@@ -145,14 +145,14 @@
  *
  * @stable ICU 2.6
  */
-#define U_ICU_VERSION_SHORT "79"
+#وصف_ڪريو U_ICU_نسخو_SHORT "79"
 
-#ifndef U_HIDE_INTERNAL_API
+#جيڪڏهن_وصف_نه_ٿيل U_HIDE_اندروني_API
 /** Data version in ICU4C.
  * @internal ICU 4.4 Internal Use Only
  **/
-#define U_ICU_DATA_VERSION "79.1"
-#endif  /* U_HIDE_INTERNAL_API */
+#وصف_ڪريو U_ICU_معلومات_نسخو "79.1"
+#جيڪڏهن_پورو  /* U_HIDE_INTERNAL_API */
 
 /*===========================================================================
  * ICU collation framework version information
@@ -167,7 +167,7 @@
  * This value may change in subsequent releases of ICU.
  * @stable ICU 2.4
  */
-#define UCOL_RUNTIME_VERSION 9
+#وصف_ڪريو UCOL_RUNTIME_نسخو 9
 
 /**
  * Collation builder code version.
@@ -176,16 +176,16 @@
  * This value may change in subsequent releases of ICU.
  * @stable ICU 2.4
  */
-#define UCOL_BUILDER_VERSION 9
+#وصف_ڪريو UCOL_BUILDER_نسخو 9
 
-#ifndef U_HIDE_DEPRECATED_API
+#جيڪڏهن_وصف_نه_ٿيل U_HIDE_DEPRECATED_API
 /**
  * Constant 1.
  * This was intended to be the version of collation tailorings,
  * but instead the tailoring data carries a version number.
  * @deprecated ICU 54
  */
-#define UCOL_TAILORINGS_VERSION 1
-#endif  /* U_HIDE_DEPRECATED_API */
+#وصف_ڪريو UCOL_TAILORINGS_نسخو 1
+#جيڪڏهن_پورو  /* U_HIDE_DEPRECATED_API */
 
-#endif
+#جيڪڏهن_پورو

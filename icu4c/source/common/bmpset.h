@@ -16,11 +16,11 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __BMPSET_H__
-#define __BMPSET_H__
+#جيڪڏهن_وصف_نه_ٿيل __BMPSET_H__
+#وصف_ڪريو __BMPSET_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uniset.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uniset.h"
 
 U_NAMESPACE_BEGIN
 
@@ -35,45 +35,45 @@ U_NAMESPACE_BEGIN
  * Supplementary characters: Binary search over
  * the supplementary part of the parent set's inversion list.
  */
-class BMPSet : public UMemory {
-public:
-    BMPSet(const int32_t *parentList, int32_t parentListLength);
-    BMPSet(const BMPSet &otherBMPSet, const int32_t *newParentList, int32_t newParentListLength);
-    virtual ~BMPSet();
+class BMPSet : عام UMemory {
+عام:
+    BMPSet(ثابت int32_t *والد_List, int32_t والد_List_ڊيگهائي);
+    BMPSet(ثابت BMPSet &otherBMPSet, ثابت int32_t *new_والد_List, int32_t new_والد_List_ڊيگهائي);
+    مجازي ~BMPSet();
 
-    virtual UBool contains(UChar32 c) const;
+    مجازي UBool شامل_آهي(UChar32 c) ثابت;
 
     /*
      * Span the initial substring for which each character c has spanCondition==contains(c).
      * It must be s<limit and spanCondition==0 or 1.
      * @return The string pointer which limits the span.
      */
-    const char16_t *span(const char16_t *s, const char16_t *limit, USetSpanCondition spanCondition) const;
+    ثابت char16_t *وسعت(ثابت char16_t *s, ثابت char16_t *حد_بندي, USet_وسعت_Condition وسعت_Condition) ثابت;
 
     /*
      * Span the trailing substring for which each character c has spanCondition==contains(c).
      * It must be s<limit and spanCondition==0 or 1.
      * @return The string pointer which starts the span.
      */
-    const char16_t *spanBack(const char16_t *s, const char16_t *limit, USetSpanCondition spanCondition) const;
+    ثابت char16_t *وسعت_پٺ(ثابت char16_t *s, ثابت char16_t *حد_بندي, USet_وسعت_Condition وسعت_Condition) ثابت;
 
     /*
      * Span the initial substring for which each character c has spanCondition==contains(c).
      * It must be length>0 and spanCondition==0 or 1.
      * @return The string pointer which limits the span.
      */
-    const uint8_t *spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    ثابت uint8_t *وسعت_UTF8(ثابت uint8_t *s, int32_t ڊيگهائي, USet_وسعت_Condition وسعت_Condition) ثابت;
 
     /*
      * Span the trailing substring for which each character c has spanCondition==contains(c).
      * It must be length>0 and spanCondition==0 or 1.
      * @return The start of the span.
      */
-    int32_t spanBackUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t وسعت_پٺ_UTF8(ثابت uint8_t *s, int32_t ڊيگهائي, USet_وسعت_Condition وسعت_Condition) ثابت;
 
-private:
-    void initBits();
-    void overrideIllegal();
+خاص:
+    فراغ init_بٽ();
+    فراغ overrideIllegal();
 
     /**
      * Same as UnicodeSet::findCodePoint(UChar32 c) const except that the
@@ -92,17 +92,17 @@ private:
      * @return the smallest integer i in the range lo..hi,
      *         inclusive, such that c < list[i]
      */
-    int32_t findCodePoint(UChar32 c, int32_t lo, int32_t hi) const;
+    int32_t ڳوليو_ڪوڊ_نقطو(UChar32 c, int32_t lo, int32_t hi) ثابت;
 
-    inline UBool containsSlow(UChar32 c, int32_t lo, int32_t hi) const;
+    مضمن UBool شامل_آهي_Slow(UChar32 c, int32_t lo, int32_t hi) ثابت;
 
     /*
      * One byte 0 or 1 per Latin-1 character.
      */
-    UBool latin1Contains[0x100];
+    UBool latin1_شامل_آهي[0x100];
 
     /* true if contains(U+FFFD). */
-    UBool containsFFFD;
+    UBool شامل_آهي_FFFD;
 
     /*
      * One bit per code point from U+0000..U+07FF.
@@ -134,7 +134,7 @@ private:
      * Bits for 0..7FF (non-shortest forms) and D800..DFFF are set to
      * the result of contains(FFFD) for faster validity checking at runtime.
      */
-    uint32_t bmpBlockBits[64];
+    uint32_t bmp_بلاڪ_بٽ[64];
 
     /*
      * Inversion list indexes for restricted binary searches in
@@ -151,14 +151,14 @@ private:
      * for mixed BMP blocks and for supplementary code points.
      * The list is terminated with list[listLength-1]=0x110000.
      */
-    const int32_t *list;
-    int32_t listLength;
+    ثابت int32_t *list;
+    int32_t list_ڊيگهائي;
 };
 
-inline UBool BMPSet::containsSlow(UChar32 c, int32_t lo, int32_t hi) const {
-    return findCodePoint(c, lo, hi) & 1;
+مضمن UBool BMPSet::شامل_آهي_Slow(UChar32 c, int32_t lo, int32_t hi) ثابت {
+    أرجع ڳوليو_ڪوڊ_نقطو(c, lo, hi) & 1;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
-#endif
+#جيڪڏهن_پورو

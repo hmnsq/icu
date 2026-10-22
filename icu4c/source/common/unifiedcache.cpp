@@ -10,212 +10,212 @@
 ******************************************************************************
 */
 
-#include "unifiedcache.h"
+#ضمن "unifiedcache.h"
 
-#include <algorithm>      // For std::max()
-#include <mutex>
+#ضمن <algorithm>      // For std::max()
+#ضمن <mutex>
 
-#include "uassert.h"
-#include "uhash.h"
-#include "ucln_cmn.h"
+#ضمن "uassert.h"
+#ضمن "uhash.h"
+#ضمن "ucln_cmn.h"
 
-static icu::UnifiedCache *gCache = nullptr;
-static std::mutex *gCacheMutex = nullptr;
-static std::condition_variable *gInProgressValueAddedCond;
-static icu::UInitOnce gCacheInitOnce {};
+ساكن icu::UnifiedCache *gCache = خالي_اشارو;
+ساكن std::mutex *gCacheMutex = خالي_اشارو;
+ساكن std::condition_variable *g_اندريون_ترقي_قدر_Added_Cond;
+ساكن icu::UInitOnce gCacheInitOnce {};
 
-static const int32_t MAX_EVICT_ITERATIONS = 10;
-static const int32_t DEFAULT_MAX_UNUSED = 1000;
-static const int32_t DEFAULT_PERCENTAGE_OF_IN_USE = 100;
+ساكن ثابت int32_t MAX_EVICT_ITERATIONS = 10;
+ساكن ثابت int32_t DEFAULT_MAX_اڻ_استعمال_ٿيل = 1000;
+ساكن ثابت int32_t DEFAULT_PERCENTAGE_جو_اندريون_USE = 100;
 
 
 U_CDECL_BEGIN
-static UBool U_CALLCONV unifiedcache_cleanup() {
+ساكن UBool U_CALLCONV unifiedcache_cleanup() {
     gCacheInitOnce.reset();
-    delete gCache;
-    gCache = nullptr;
+    ميٽيو gCache;
+    gCache = خالي_اشارو;
     gCacheMutex->~mutex();
-    gCacheMutex = nullptr;
-    gInProgressValueAddedCond->~condition_variable();
-    gInProgressValueAddedCond = nullptr;
-    return true;
+    gCacheMutex = خالي_اشارو;
+    g_اندريون_ترقي_قدر_Added_Cond->~condition_variable();
+    g_اندريون_ترقي_قدر_Added_Cond = خالي_اشارو;
+    أرجع سچ;
 }
-U_CDECL_END
+U_CDECL_پڇاڙي
 
 
 U_NAMESPACE_BEGIN
 
 int32_t U_EXPORT2
-ucache_hashKeys(const UHashTok key) {
-    const CacheKeyBase* ckey = static_cast<const CacheKeyBase*>(key.pointer);
-    return ckey->hashCode();
+ucache_hash_ڪنجيون(ثابت UHashTok ڪنجي) {
+    ثابت Cache_ڪنجي_بنياد* ckey = static_cast<ثابت Cache_ڪنجي_بنياد*>(ڪنجي.اشارو);
+    أرجع ckey->hash_ڪوڊ();
 }
 
 UBool U_EXPORT2
-ucache_compareKeys(const UHashTok key1, const UHashTok key2) {
-    const CacheKeyBase* p1 = static_cast<const CacheKeyBase*>(key1.pointer);
-    const CacheKeyBase* p2 = static_cast<const CacheKeyBase*>(key2.pointer);
-    return *p1 == *p2;
+ucache_compare_ڪنجيون(ثابت UHashTok key1, ثابت UHashTok key2) {
+    ثابت Cache_ڪنجي_بنياد* p1 = static_cast<ثابت Cache_ڪنجي_بنياد*>(key1.اشارو);
+    ثابت Cache_ڪنجي_بنياد* p2 = static_cast<ثابت Cache_ڪنجي_بنياد*>(key2.اشارو);
+    أرجع *p1 == *p2;
 }
 
-void U_EXPORT2
-ucache_deleteKey(void *obj) {
-    CacheKeyBase* p = static_cast<CacheKeyBase*>(obj);
-    delete p;
+فراغ U_EXPORT2
+ucache_delete_ڪنجي(فراغ *obj) {
+    Cache_ڪنجي_بنياد* p = static_cast<Cache_ڪنجي_بنياد*>(obj);
+    ميٽيو p;
 }
 
-CacheKeyBase::~CacheKeyBase() {
+Cache_ڪنجي_بنياد::~Cache_ڪنجي_بنياد() {
 }
 
-static void U_CALLCONV cacheInit(UErrorCode &status) {
-    U_ASSERT(gCache == nullptr);
-    ucln_common_registerCleanup(
+ساكن فراغ U_CALLCONV cacheInit(UError_ڪوڊ &حالت) {
+    U_ASSERT(gCache == خالي_اشارو);
+    ucln_common_رجسٽر_Cleanup(
             UCLN_COMMON_UNIFIED_CACHE, unifiedcache_cleanup);
 
     gCacheMutex = STATIC_NEW(std::mutex);
-    gInProgressValueAddedCond = STATIC_NEW(std::condition_variable);
-    gCache = new UnifiedCache(status);
-    if (gCache == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
+    g_اندريون_ترقي_قدر_Added_Cond = STATIC_NEW(std::condition_variable);
+    gCache = جديد UnifiedCache(حالت);
+    إذا (gCache == خالي_اشارو) {
+        حالت = U_يادگيري_ورهاست_ERROR;
     }
-    if (U_FAILURE(status)) {
-        delete gCache;
-        gCache = nullptr;
-        return;
+    إذا (U_FAILURE(حالت)) {
+        ميٽيو gCache;
+        gCache = خالي_اشارو;
+        أرجع;
     }
 }
 
-UnifiedCache *UnifiedCache::getInstance(UErrorCode &status) {
-    umtx_initOnce(gCacheInitOnce, &cacheInit, status);
-    if (U_FAILURE(status)) {
-        return nullptr;
+UnifiedCache *UnifiedCache::getInstance(UError_ڪوڊ &حالت) {
+    umtx_initOnce(gCacheInitOnce, &cacheInit, حالت);
+    إذا (U_FAILURE(حالت)) {
+        أرجع خالي_اشارو;
     }
-    U_ASSERT(gCache != nullptr);
-    return gCache;
+    U_ASSERT(gCache != خالي_اشارو);
+    أرجع gCache;
 }
 
-UnifiedCache::UnifiedCache(UErrorCode &status) :
-        fHashtable(nullptr),
-        fEvictPos(UHASH_FIRST),
-        fNumValuesTotal(0),
-        fNumValuesInUse(0),
-        fMaxUnused(DEFAULT_MAX_UNUSED),
-        fMaxPercentageOfInUse(DEFAULT_PERCENTAGE_OF_IN_USE),
-        fAutoEvictedCount(0),
-        fNoValue(nullptr) {
-    if (U_FAILURE(status)) {
-        return;
+UnifiedCache::UnifiedCache(UError_ڪوڊ &حالت) :
+        fHashtable(خالي_اشارو),
+        fEvictPos(UHASH_پهريون),
+        f_انگ_قدرون_ڪل(0),
+        f_انگ_قدرون_اندريون_Use(0),
+        f_Max_اڻ_استعمال_ٿيل(DEFAULT_MAX_اڻ_استعمال_ٿيل),
+        f_Max_Percentage_جو_اندريون_Use(DEFAULT_PERCENTAGE_جو_اندريون_USE),
+        f_Auto_Evicted_ڳڻپ(0),
+        f_No_قدر(خالي_اشارو) {
+    إذا (U_FAILURE(حالت)) {
+        أرجع;
     }
-    fNoValue = new SharedObject();
-    if (fNoValue == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    f_No_قدر = جديد SharedObject();
+    إذا (f_No_قدر == خالي_اشارو) {
+        حالت = U_يادگيري_ورهاست_ERROR;
+        أرجع;
     }
-    fNoValue->softRefCount = 1;  // Add fake references to prevent fNoValue from being deleted
-    fNoValue->hardRefCount = 1;  // when other references to it are removed.
-    fNoValue->cachePtr = this;
+    f_No_قدر->soft_Ref_ڳڻپ = 1;  // Add fake references to prevent fNoValue from being deleted
+    f_No_قدر->hard_Ref_ڳڻپ = 1;  // when other references to it are removed.
+    f_No_قدر->cachePtr = هذا;
 
     fHashtable = uhash_open(
-            &ucache_hashKeys,
-            &ucache_compareKeys,
-            nullptr,
-            &status);
-    if (U_FAILURE(status)) {
-        return;
+            &ucache_hash_ڪنجيون,
+            &ucache_compare_ڪنجيون,
+            خالي_اشارو,
+            &حالت);
+    إذا (U_FAILURE(حالت)) {
+        أرجع;
     }
-    uhash_setKeyDeleter(fHashtable, &ucache_deleteKey);
+    uhash_سيٽ_ڪنجي_Deleter(fHashtable, &ucache_delete_ڪنجي);
 }
 
-void UnifiedCache::setEvictionPolicy(
-        int32_t count, int32_t percentageOfInUseItems, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+فراغ UnifiedCache::سيٽ_Eviction_Policy(
+        int32_t count, int32_t percentage_جو_اندريون_Use_شيون, UError_ڪوڊ &حالت) {
+    إذا (U_FAILURE(حالت)) {
+        أرجع;
     }
-    if (count < 0 || percentageOfInUseItems < 0) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    إذا (count < 0 || percentage_جو_اندريون_Use_شيون < 0) {
+        حالت = U_ILLEGAL_دليل_ERROR;
+        أرجع;
     }
-    std::lock_guard<std::mutex> lock(*gCacheMutex);
-    fMaxUnused = count;
-    fMaxPercentageOfInUse = percentageOfInUseItems;
+    std::lock_guard<std::mutex> تالو(*gCacheMutex);
+    f_Max_اڻ_استعمال_ٿيل = count;
+    f_Max_Percentage_جو_اندريون_Use = percentage_جو_اندريون_Use_شيون;
 }
 
-int32_t UnifiedCache::unusedCount() const {
-    std::lock_guard<std::mutex> lock(*gCacheMutex);
-    return uhash_count(fHashtable) - fNumValuesInUse;
+int32_t UnifiedCache::اڻ_استعمال_ٿيل_ڳڻپ() ثابت {
+    std::lock_guard<std::mutex> تالو(*gCacheMutex);
+    أرجع uhash_ڳڻپ(fHashtable) - f_انگ_قدرون_اندريون_Use;
 }
 
-int64_t UnifiedCache::autoEvictedCount() const {
-    std::lock_guard<std::mutex> lock(*gCacheMutex);
-    return fAutoEvictedCount;
+int64_t UnifiedCache::auto_Evicted_ڳڻپ() ثابت {
+    std::lock_guard<std::mutex> تالو(*gCacheMutex);
+    أرجع f_Auto_Evicted_ڳڻپ;
 }
 
-int32_t UnifiedCache::keyCount() const {
-    std::lock_guard<std::mutex> lock(*gCacheMutex);
-    return uhash_count(fHashtable);
+int32_t UnifiedCache::ڪنجي_ڳڻپ() ثابت {
+    std::lock_guard<std::mutex> تالو(*gCacheMutex);
+    أرجع uhash_ڳڻپ(fHashtable);
 }
 
-void UnifiedCache::flush() const {
-    std::lock_guard<std::mutex> lock(*gCacheMutex);
+فراغ UnifiedCache::flush() ثابت {
+    std::lock_guard<std::mutex> تالو(*gCacheMutex);
 
     // Use a loop in case cache items that are flushed held hard references to
     // other cache items making those additional cache items eligible for
     // flushing.
-    while (_flush(false));
+    طالما (_flush(خطأ));
 }
 
-void UnifiedCache::handleUnreferencedObject() const {
-    std::lock_guard<std::mutex> lock(*gCacheMutex);
-    --fNumValuesInUse;
-    _runEvictionSlice();
+فراغ UnifiedCache::handleUnreferencedObject() ثابت {
+    std::lock_guard<std::mutex> تالو(*gCacheMutex);
+    --f_انگ_قدرون_اندريون_Use;
+    لاڳيتو_Eviction_ٽڪرو();
 }
 
-#ifdef UNIFIED_CACHE_DEBUG
-#include <stdio.h>
+#جيڪڏهن_وصف_ٿيل UNIFIED_CACHE_DEBUG
+#ضمن <stdio.h>
 
-void UnifiedCache::dump() {
-    UErrorCode status = U_ZERO_ERROR;
-    const UnifiedCache *cache = getInstance(status);
-    if (U_FAILURE(status)) {
+فراغ UnifiedCache::dump() {
+    UError_ڪوڊ حالت = U_ZERO_ERROR;
+    ثابت UnifiedCache *cache = getInstance(حالت);
+    إذا (U_FAILURE(حالت)) {
         fprintf(stderr, "Unified Cache: Error fetching cache.\n");
-        return;
+        أرجع;
     }
     cache->dumpContents();
 }
 
-void UnifiedCache::dumpContents() const {
-    std::lock_guard<std::mutex> lock(*gCacheMutex);
+فراغ UnifiedCache::dumpContents() ثابت {
+    std::lock_guard<std::mutex> تالو(*gCacheMutex);
     _dumpContents();
 }
 
 // Dumps content of cache.
 // On entry, gCacheMutex must be held.
 // On exit, cache contents dumped to stderr.
-void UnifiedCache::_dumpContents() const {
-    int32_t pos = UHASH_FIRST;
-    const UHashElement *element = uhash_nextElement(fHashtable, &pos);
-    char buffer[256];
+فراغ UnifiedCache::_dumpContents() ثابت {
+    int32_t pos = UHASH_پهريون;
+    ثابت UHashElement *element = uhash_ايندڙ_Element(fHashtable, &pos);
+    حرف بفر[256];
     int32_t cnt = 0;
-    for (; element != nullptr; element = uhash_nextElement(fHashtable, &pos)) {
-        const SharedObject *sharedObject =
-                (const SharedObject *) element->value.pointer;
-        const CacheKeyBase *key =
-                (const CacheKeyBase *) element->key.pointer;
-        if (sharedObject->hasHardReferences()) {
+    لكل (; element != خالي_اشارو; element = uhash_ايندڙ_Element(fHashtable, &pos)) {
+        ثابت SharedObject *sharedObject =
+                (ثابت SharedObject *) element->value.اشارو;
+        ثابت Cache_ڪنجي_بنياد *ڪنجي =
+                (ثابت Cache_ڪنجي_بنياد *) element->ڪنجي.اشارو;
+        إذا (sharedObject->hasHardReferences()) {
             ++cnt;
             fprintf(
                     stderr,
                     "Unified Cache: Key '%s', error %d, value %p, total refcount %d, soft refcount %d\n",
-                    key->writeDescription(buffer, 256),
-                    key->creationStatus,
-                    sharedObject == fNoValue ? nullptr :sharedObject,
-                    sharedObject->getRefCount(),
-                    sharedObject->getSoftRefCount());
+                    ڪنجي->writeDescription(بفر, 256),
+                    ڪنجي->creation_حالت,
+                    sharedObject == f_No_قدر ? خالي_اشارو :sharedObject,
+                    sharedObject->get_Ref_ڳڻپ(),
+                    sharedObject->get_Soft_Ref_ڳڻپ());
         }
     }
-    fprintf(stderr, "Unified Cache: %d out of a total of %d still have hard references\n", cnt, uhash_count(fHashtable));
+    fprintf(stderr, "Unified Cache: %d out of a total of %d still have hard references\n", cnt, uhash_ڳڻپ(fHashtable));
 }
-#endif
+#جيڪڏهن_پورو
 
 UnifiedCache::~UnifiedCache() {
     // Try our best to clean up first.
@@ -224,298 +224,298 @@ UnifiedCache::~UnifiedCache() {
         // Now all that should be left in the cache are entries that refer to
         // each other and entries with hard references from outside the cache.
         // Nothing we can do about these so proceed to wipe out the cache.
-        std::lock_guard<std::mutex> lock(*gCacheMutex);
-        _flush(true);
+        std::lock_guard<std::mutex> تالو(*gCacheMutex);
+        _flush(سچ);
     }
     uhash_close(fHashtable);
-    fHashtable = nullptr;
-    delete fNoValue;
-    fNoValue = nullptr;
+    fHashtable = خالي_اشارو;
+    ميٽيو f_No_قدر;
+    f_No_قدر = خالي_اشارو;
 }
 
-const UHashElement *
-UnifiedCache::_nextElement() const {
-    const UHashElement *element = uhash_nextElement(fHashtable, &fEvictPos);
-    if (element == nullptr) {
-        fEvictPos = UHASH_FIRST;
-        return uhash_nextElement(fHashtable, &fEvictPos);
+ثابت UHashElement *
+UnifiedCache::ايندڙ_Element_2() ثابت {
+    ثابت UHashElement *element = uhash_ايندڙ_Element(fHashtable, &fEvictPos);
+    إذا (element == خالي_اشارو) {
+        fEvictPos = UHASH_پهريون;
+        أرجع uhash_ايندڙ_Element(fHashtable, &fEvictPos);
     }
-    return element;
+    أرجع element;
 }
 
-UBool UnifiedCache::_flush(UBool all) const {
-    UBool result = false;
-    int32_t origSize = uhash_count(fHashtable);
-    for (int32_t i = 0; i < origSize; ++i) {
-        const UHashElement *element = _nextElement();
-        if (element == nullptr) {
-            break;
+UBool UnifiedCache::_flush(UBool all) ثابت {
+    UBool نتيجو = خطأ;
+    int32_t orig_سائيز = uhash_ڳڻپ(fHashtable);
+    لكل (int32_t i = 0; i < orig_سائيز; ++i) {
+        ثابت UHashElement *element = ايندڙ_Element_2();
+        إذا (element == خالي_اشارو) {
+            اكسر;
         }
-        if (all || _isEvictable(element)) {
-            const SharedObject *sharedObject =
-                    static_cast<const SharedObject*>(element->value.pointer);
-            U_ASSERT(sharedObject->cachePtr == this);
+        إذا (all || _isEvictable(element)) {
+            ثابت SharedObject *sharedObject =
+                    static_cast<ثابت SharedObject*>(element->value.اشارو);
+            U_ASSERT(sharedObject->cachePtr == هذا);
             uhash_removeElement(fHashtable, element);
             removeSoftRef(sharedObject);    // Deletes the sharedObject when softRefCount goes to zero.
-            result = true;
+            نتيجو = سچ;
         }
     }
-    return result;
+    أرجع نتيجو;
 }
 
-int32_t UnifiedCache::_computeCountOfItemsToEvict() const {
-    int32_t totalItems = uhash_count(fHashtable);
-    int32_t evictableItems = totalItems - fNumValuesInUse;
+int32_t UnifiedCache::compute_ڳڻپ_جو_شيون_منزل_Evict() ثابت {
+    int32_t ڪل_شيون = uhash_ڳڻپ(fHashtable);
+    int32_t evictable_شيون = ڪل_شيون - f_انگ_قدرون_اندريون_Use;
 
-    int32_t unusedLimitByPercentage = fNumValuesInUse * fMaxPercentageOfInUse / 100;
-    int32_t unusedLimit = std::max(unusedLimitByPercentage, fMaxUnused);
-    int32_t countOfItemsToEvict = std::max<int32_t>(0, evictableItems - unusedLimit);
-    return countOfItemsToEvict;
+    int32_t اڻ_استعمال_ٿيل_حد_بندي_By_Percentage = f_انگ_قدرون_اندريون_Use * f_Max_Percentage_جو_اندريون_Use / 100;
+    int32_t اڻ_استعمال_ٿيل_حد_بندي = std::max(اڻ_استعمال_ٿيل_حد_بندي_By_Percentage, f_Max_اڻ_استعمال_ٿيل);
+    int32_t ڳڻپ_جو_شيون_منزل_Evict = std::max<int32_t>(0, evictable_شيون - اڻ_استعمال_ٿيل_حد_بندي);
+    أرجع ڳڻپ_جو_شيون_منزل_Evict;
 }
 
-void UnifiedCache::_runEvictionSlice() const {
-    int32_t maxItemsToEvict = _computeCountOfItemsToEvict();
-    if (maxItemsToEvict <= 0) {
-        return;
+فراغ UnifiedCache::لاڳيتو_Eviction_ٽڪرو() ثابت {
+    int32_t max_شيون_منزل_Evict = compute_ڳڻپ_جو_شيون_منزل_Evict();
+    إذا (max_شيون_منزل_Evict <= 0) {
+        أرجع;
     }
-    for (int32_t i = 0; i < MAX_EVICT_ITERATIONS; ++i) {
-        const UHashElement *element = _nextElement();
-        if (element == nullptr) {
-            break;
+    لكل (int32_t i = 0; i < MAX_EVICT_ITERATIONS; ++i) {
+        ثابت UHashElement *element = ايندڙ_Element_2();
+        إذا (element == خالي_اشارو) {
+            اكسر;
         }
-        if (_isEvictable(element)) {
-            const SharedObject *sharedObject =
-                    static_cast<const SharedObject*>(element->value.pointer);
+        إذا (_isEvictable(element)) {
+            ثابت SharedObject *sharedObject =
+                    static_cast<ثابت SharedObject*>(element->value.اشارو);
             uhash_removeElement(fHashtable, element);
             removeSoftRef(sharedObject);   // Deletes sharedObject when SoftRefCount goes to zero.
-            ++fAutoEvictedCount;
-            if (--maxItemsToEvict == 0) {
-                break;
+            ++f_Auto_Evicted_ڳڻپ;
+            إذا (--max_شيون_منزل_Evict == 0) {
+                اكسر;
             }
         }
     }
 }
 
-void UnifiedCache::_putNew(
-        const CacheKeyBase &key,
-        const SharedObject *value,
-        const UErrorCode creationStatus,
-        UErrorCode &status) const {
-    if (U_FAILURE(status)) {
-        return;
+فراغ UnifiedCache::_putNew(
+        ثابت Cache_ڪنجي_بنياد &ڪنجي,
+        ثابت SharedObject *value,
+        ثابت UError_ڪوڊ creation_حالت,
+        UError_ڪوڊ &حالت) ثابت {
+    إذا (U_FAILURE(حالت)) {
+        أرجع;
     }
-    CacheKeyBase *keyToAdopt = key.clone();
-    if (keyToAdopt == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    Cache_ڪنجي_بنياد *ڪنجي_منزل_Adopt = ڪنجي.clone();
+    إذا (ڪنجي_منزل_Adopt == خالي_اشارو) {
+        حالت = U_يادگيري_ورهاست_ERROR;
+        أرجع;
     }
-    keyToAdopt->fCreationStatus = creationStatus;
-    if (value->softRefCount == 0) {
-        _registerPrimary(keyToAdopt, value);
+    ڪنجي_منزل_Adopt->f_Creation_حالت = creation_حالت;
+    إذا (value->soft_Ref_ڳڻپ == 0) {
+        رجسٽر_Primary(ڪنجي_منزل_Adopt, value);
     }
-    void *oldValue = uhash_put(fHashtable, keyToAdopt, (void *) value, &status);
-    U_ASSERT(oldValue == nullptr);
-    (void)oldValue;
-    if (U_SUCCESS(status)) {
-        value->softRefCount++;
+    فراغ *old_قدر = uhash_put(fHashtable, ڪنجي_منزل_Adopt, (فراغ *) value, &حالت);
+    U_ASSERT(old_قدر == خالي_اشارو);
+    (فراغ)old_قدر;
+    إذا (U_SUCCESS(حالت)) {
+        value->soft_Ref_ڳڻپ++;
     }
 }
 
-void UnifiedCache::_putIfAbsentAndGet(
-        const CacheKeyBase &key,
-        const SharedObject *&value,
-        UErrorCode &status) const {
-    std::lock_guard<std::mutex> lock(*gCacheMutex);
-    const UHashElement *element = uhash_find(fHashtable, &key);
-    if (element != nullptr && !_inProgress(element)) {
-        _fetch(element, value, status);
-        return;
+فراغ UnifiedCache::_putIfAbsentAndGet(
+        ثابت Cache_ڪنجي_بنياد &ڪنجي,
+        ثابت SharedObject *&value,
+        UError_ڪوڊ &حالت) ثابت {
+    std::lock_guard<std::mutex> تالو(*gCacheMutex);
+    ثابت UHashElement *element = uhash_ڳوليو(fHashtable, &ڪنجي);
+    إذا (element != خالي_اشارو && !اندريون_ترقي(element)) {
+        _fetch(element, value, حالت);
+        أرجع;
     }
-    if (element == nullptr) {
-        UErrorCode putError = U_ZERO_ERROR;
+    إذا (element == خالي_اشارو) {
+        UError_ڪوڊ putError = U_ZERO_ERROR;
         // best-effort basis only.
-        _putNew(key, value, status, putError);
-    } else {
-        _put(element, value, status);
+        _putNew(ڪنجي, value, حالت, putError);
+    } وإلا {
+        _put(element, value, حالت);
     }
     // Run an eviction slice. This will run even if we added a primary entry
     // which doesn't increase the unused count, but that is still o.k
-    _runEvictionSlice();
+    لاڳيتو_Eviction_ٽڪرو();
 }
 
 
 UBool UnifiedCache::_poll(
-        const CacheKeyBase &key,
-        const SharedObject *&value,
-        UErrorCode &status) const {
-    U_ASSERT(value == nullptr);
-    U_ASSERT(status == U_ZERO_ERROR);
-    std::unique_lock<std::mutex> lock(*gCacheMutex);
-    const UHashElement *element = uhash_find(fHashtable, &key);
+        ثابت Cache_ڪنجي_بنياد &ڪنجي,
+        ثابت SharedObject *&value,
+        UError_ڪوڊ &حالت) ثابت {
+    U_ASSERT(value == خالي_اشارو);
+    U_ASSERT(حالت == U_ZERO_ERROR);
+    std::unique_lock<std::mutex> تالو(*gCacheMutex);
+    ثابت UHashElement *element = uhash_ڳوليو(fHashtable, &ڪنجي);
 
     // If the hash table contains an inProgress placeholder entry for this key,
     // this means that another thread is currently constructing the value object.
     // Loop, waiting for that construction to complete.
-     while (element != nullptr && _inProgress(element)) {
-         gInProgressValueAddedCond->wait(lock);
-         element = uhash_find(fHashtable, &key);
+     طالما (element != خالي_اشارو && اندريون_ترقي(element)) {
+         g_اندريون_ترقي_قدر_Added_Cond->wait(تالو);
+         element = uhash_ڳوليو(fHashtable, &ڪنجي);
     }
 
     // If the hash table contains an entry for the key,
     // fetch out the contents and return them.
-    if (element != nullptr) {
-         _fetch(element, value, status);
-        return true;
+    إذا (element != خالي_اشارو) {
+         _fetch(element, value, حالت);
+        أرجع سچ;
     }
 
     // The hash table contained nothing for this key.
     // Insert an inProgress place holder value.
     // Our caller will create the final value and update the hash table.
-    _putNew(key, fNoValue, U_ZERO_ERROR, status);
-    return false;
+    _putNew(ڪنجي, f_No_قدر, U_ZERO_ERROR, حالت);
+    أرجع خطأ;
 }
 
-void UnifiedCache::_get(
-        const CacheKeyBase &key,
-        const SharedObject *&value,
-        const void *creationContext,
-        UErrorCode &status) const {
-    U_ASSERT(value == nullptr);
-    U_ASSERT(status == U_ZERO_ERROR);
-    if (_poll(key, value, status)) {
-        if (value == fNoValue) {
+فراغ UnifiedCache::_get(
+        ثابت Cache_ڪنجي_بنياد &ڪنجي,
+        ثابت SharedObject *&value,
+        ثابت فراغ *creationContext,
+        UError_ڪوڊ &حالت) ثابت {
+    U_ASSERT(value == خالي_اشارو);
+    U_ASSERT(حالت == U_ZERO_ERROR);
+    إذا (_poll(ڪنجي, value, حالت)) {
+        إذا (value == f_No_قدر) {
             SharedObject::clearPtr(value);
         }
-        return;
+        أرجع;
     }
-    if (U_FAILURE(status)) {
-        return;
+    إذا (U_FAILURE(حالت)) {
+        أرجع;
     }
-    value = key.createObject(creationContext, status);
-    U_ASSERT(value == nullptr || value->hasHardReferences());
-    U_ASSERT(value != nullptr || status != U_ZERO_ERROR);
-    if (value == nullptr) {
-        SharedObject::copyPtr(fNoValue, value);
+    value = ڪنجي.createObject(creationContext, حالت);
+    U_ASSERT(value == خالي_اشارو || value->hasHardReferences());
+    U_ASSERT(value != خالي_اشارو || حالت != U_ZERO_ERROR);
+    إذا (value == خالي_اشارو) {
+        SharedObject::copyPtr(f_No_قدر, value);
     }
-    _putIfAbsentAndGet(key, value, status);
-    if (value == fNoValue) {
+    _putIfAbsentAndGet(ڪنجي, value, حالت);
+    إذا (value == f_No_قدر) {
         SharedObject::clearPtr(value);
     }
 }
 
-void UnifiedCache::_registerPrimary(
-            const CacheKeyBase *theKey, const SharedObject *value) const {
-    theKey->fIsPrimary = true;
-    value->cachePtr = this;
-    ++fNumValuesTotal;
-    ++fNumValuesInUse;
+فراغ UnifiedCache::رجسٽر_Primary(
+            ثابت Cache_ڪنجي_بنياد *the_ڪنجي, ثابت SharedObject *value) ثابت {
+    the_ڪنجي->fIsPrimary = سچ;
+    value->cachePtr = هذا;
+    ++f_انگ_قدرون_ڪل;
+    ++f_انگ_قدرون_اندريون_Use;
 }
 
-void UnifiedCache::_put(
-        const UHashElement *element,
-        const SharedObject *value,
-        const UErrorCode status) const {
-    U_ASSERT(_inProgress(element));
-    const CacheKeyBase* theKey = static_cast<const CacheKeyBase*>(element->key.pointer);
-    const SharedObject* oldValue = static_cast<const SharedObject*>(element->value.pointer);
-    theKey->fCreationStatus = status;
-    if (value->softRefCount == 0) {
-        _registerPrimary(theKey, value);
+فراغ UnifiedCache::_put(
+        ثابت UHashElement *element,
+        ثابت SharedObject *value,
+        ثابت UError_ڪوڊ حالت) ثابت {
+    U_ASSERT(اندريون_ترقي(element));
+    ثابت Cache_ڪنجي_بنياد* the_ڪنجي = static_cast<ثابت Cache_ڪنجي_بنياد*>(element->ڪنجي.اشارو);
+    ثابت SharedObject* old_قدر = static_cast<ثابت SharedObject*>(element->value.اشارو);
+    the_ڪنجي->f_Creation_حالت = حالت;
+    إذا (value->soft_Ref_ڳڻپ == 0) {
+        رجسٽر_Primary(the_ڪنجي, value);
     }
-    value->softRefCount++;
+    value->soft_Ref_ڳڻپ++;
     UHashElement *ptr = const_cast<UHashElement *>(element);
-    ptr->value.pointer = (void *) value;
-    U_ASSERT(oldValue == fNoValue);
-    removeSoftRef(oldValue);
+    ptr->value.اشارو = (فراغ *) value;
+    U_ASSERT(old_قدر == f_No_قدر);
+    removeSoftRef(old_قدر);
 
     // Tell waiting threads that we replace in-progress status with
     // an error.
-    gInProgressValueAddedCond->notify_all();
+    g_اندريون_ترقي_قدر_Added_Cond->notify_all();
 }
 
-void UnifiedCache::_fetch(
-        const UHashElement *element,
-        const SharedObject *&value,
-        UErrorCode &status) const {
-    const CacheKeyBase* theKey = static_cast<const CacheKeyBase*>(element->key.pointer);
-    status = theKey->fCreationStatus;
+فراغ UnifiedCache::_fetch(
+        ثابت UHashElement *element,
+        ثابت SharedObject *&value,
+        UError_ڪوڊ &حالت) ثابت {
+    ثابت Cache_ڪنجي_بنياد* the_ڪنجي = static_cast<ثابت Cache_ڪنجي_بنياد*>(element->ڪنجي.اشارو);
+    حالت = the_ڪنجي->f_Creation_حالت;
 
     // Since we have the cache lock, calling regular SharedObject add/removeRef
     // could cause us to deadlock on ourselves since they may need to lock
     // the cache mutex.
     removeHardRef(value);
-    value = static_cast<const SharedObject *>(element->value.pointer);
-    addHardRef(value);
+    value = static_cast<ثابت SharedObject *>(element->value.اشارو);
+    جوڙيو_Hard_Ref(value);
 }
 
 
-UBool UnifiedCache::_inProgress(const UHashElement* element) const {
-    UErrorCode status = U_ZERO_ERROR;
-    const SharedObject * value = nullptr;
-    _fetch(element, value, status);
-    UBool result = _inProgress(value, status);
+UBool UnifiedCache::اندريون_ترقي(ثابت UHashElement* element) ثابت {
+    UError_ڪوڊ حالت = U_ZERO_ERROR;
+    ثابت SharedObject * value = خالي_اشارو;
+    _fetch(element, value, حالت);
+    UBool نتيجو = اندريون_ترقي(value, حالت);
     removeHardRef(value);
-    return result;
+    أرجع نتيجو;
 }
 
-UBool UnifiedCache::_inProgress(
-        const SharedObject* theValue, UErrorCode creationStatus) const {
-    return (theValue == fNoValue && creationStatus == U_ZERO_ERROR);
+UBool UnifiedCache::اندريون_ترقي(
+        ثابت SharedObject* the_قدر, UError_ڪوڊ creation_حالت) ثابت {
+    أرجع (the_قدر == f_No_قدر && creation_حالت == U_ZERO_ERROR);
 }
 
-UBool UnifiedCache::_isEvictable(const UHashElement *element) const
+UBool UnifiedCache::_isEvictable(ثابت UHashElement *element) ثابت
 {
-    const CacheKeyBase* theKey = static_cast<const CacheKeyBase*>(element->key.pointer);
-    const SharedObject* theValue = static_cast<const SharedObject*>(element->value.pointer);
+    ثابت Cache_ڪنجي_بنياد* the_ڪنجي = static_cast<ثابت Cache_ڪنجي_بنياد*>(element->ڪنجي.اشارو);
+    ثابت SharedObject* the_قدر = static_cast<ثابت SharedObject*>(element->value.اشارو);
 
     // Entries that are under construction are never evictable
-    if (_inProgress(theValue, theKey->fCreationStatus)) {
-        return false;
+    إذا (اندريون_ترقي(the_قدر, the_ڪنجي->f_Creation_حالت)) {
+        أرجع خطأ;
     }
 
     // We can evict entries that are either not a primary or have just
     // one reference (The one reference being from the cache itself).
-    return (!theKey->fIsPrimary || (theValue->softRefCount == 1 && theValue->noHardReferences()));
+    أرجع (!the_ڪنجي->fIsPrimary || (the_قدر->soft_Ref_ڳڻپ == 1 && the_قدر->noHardReferences()));
 }
 
-void UnifiedCache::removeSoftRef(const SharedObject *value) const {
-    U_ASSERT(value->cachePtr == this);
-    U_ASSERT(value->softRefCount > 0);
-    if (--value->softRefCount == 0) {
-        --fNumValuesTotal;
-        if (value->noHardReferences()) {
-            delete value;
-        } else {
+فراغ UnifiedCache::removeSoftRef(ثابت SharedObject *value) ثابت {
+    U_ASSERT(value->cachePtr == هذا);
+    U_ASSERT(value->soft_Ref_ڳڻپ > 0);
+    إذا (--value->soft_Ref_ڳڻپ == 0) {
+        --f_انگ_قدرون_ڪل;
+        إذا (value->noHardReferences()) {
+            ميٽيو value;
+        } وإلا {
             // This path only happens from flush(all). Which only happens from the
             // UnifiedCache destructor.  Nulling out value.cacheptr changes the behavior
             // of value.removeRef(), causing the deletion to be done there.
-            value->cachePtr = nullptr;
+            value->cachePtr = خالي_اشارو;
         }
     }
 }
 
-int32_t UnifiedCache::removeHardRef(const SharedObject *value) const {
-    int refCount = 0;
-    if (value) {
-        refCount = umtx_atomic_dec(&value->hardRefCount);
-        U_ASSERT(refCount >= 0);
-        if (refCount == 0) {
-            --fNumValuesInUse;
+int32_t UnifiedCache::removeHardRef(ثابت SharedObject *value) ثابت {
+    صحيح ref_ڳڻپ = 0;
+    إذا (value) {
+        ref_ڳڻپ = umtx_atomic_dec(&value->hard_Ref_ڳڻپ);
+        U_ASSERT(ref_ڳڻپ >= 0);
+        إذا (ref_ڳڻپ == 0) {
+            --f_انگ_قدرون_اندريون_Use;
         }
     }
-    return refCount;
+    أرجع ref_ڳڻپ;
 }
 
-int32_t UnifiedCache::addHardRef(const SharedObject *value) const {
-    int refCount = 0;
-    if (value) {
-        refCount = umtx_atomic_inc(&value->hardRefCount);
-        U_ASSERT(refCount >= 1);
-        if (refCount == 1) {
-            fNumValuesInUse++;
+int32_t UnifiedCache::جوڙيو_Hard_Ref(ثابت SharedObject *value) ثابت {
+    صحيح ref_ڳڻپ = 0;
+    إذا (value) {
+        ref_ڳڻپ = umtx_atomic_inc(&value->hard_Ref_ڳڻپ);
+        U_ASSERT(ref_ڳڻپ >= 1);
+        إذا (ref_ڳڻپ == 1) {
+            f_انگ_قدرون_اندريون_Use++;
         }
     }
-    return refCount;
+    أرجع ref_ڳڻپ;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي

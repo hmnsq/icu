@@ -19,17 +19,17 @@
 *   in its MIME-friendly form as defined in http://www.unicode.org/notes/tn6/
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_cb.h"
-#include "unicode/utf16.h"
-#include "putilimp.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "uassert.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "unicode/ucnv_cb.h"
+#ضمن "unicode/utf16.h"
+#ضمن "putilimp.h"
+#ضمن "ucnv_bld.h"
+#ضمن "ucnv_cnv.h"
+#ضمن "uassert.h"
 
 /* BOCU-1 constants and macros ---------------------------------------------- */
 
@@ -53,69 +53,69 @@
  */
 
 /* initial value for "prev": middle of the ASCII range */
-#define BOCU1_ASCII_PREV        0x40
+#وصف_ڪريو BOCU1_ASCII_PREV        0x40
 
 /* bounding byte values for differences */
-#define BOCU1_MIN               0x21
-#define BOCU1_MIDDLE            0x90
-#define BOCU1_MAX_LEAD          0xfe
-#define BOCU1_MAX_TRAIL         0xff
-#define BOCU1_RESET             0xff
+#وصف_ڪريو BOCU1_MIN               0x21
+#وصف_ڪريو BOCU1_وچ            0x90
+#وصف_ڪريو BOCU1_MAX_LEAD          0xfe
+#وصف_ڪريو BOCU1_MAX_TRAIL         0xff
+#وصف_ڪريو BOCU1_RESET             0xff
 
 /* number of lead bytes */
-#define BOCU1_COUNT             (BOCU1_MAX_LEAD-BOCU1_MIN+1)
+#وصف_ڪريو BOCU1_ڳڻپ             (BOCU1_MAX_LEAD-BOCU1_MIN+1)
 
 /* adjust trail byte counts for the use of some C0 control byte values */
-#define BOCU1_TRAIL_CONTROLS_COUNT  20
-#define BOCU1_TRAIL_BYTE_OFFSET     (BOCU1_MIN-BOCU1_TRAIL_CONTROLS_COUNT)
+#وصف_ڪريو BOCU1_TRAIL_CONTROLS_ڳڻپ  20
+#وصف_ڪريو BOCU1_TRAIL_BYTE_وٿي     (BOCU1_MIN-BOCU1_TRAIL_CONTROLS_ڳڻپ)
 
 /* number of trail bytes */
-#define BOCU1_TRAIL_COUNT       ((BOCU1_MAX_TRAIL-BOCU1_MIN+1)+BOCU1_TRAIL_CONTROLS_COUNT)
+#وصف_ڪريو BOCU1_TRAIL_ڳڻپ       ((BOCU1_MAX_TRAIL-BOCU1_MIN+1)+BOCU1_TRAIL_CONTROLS_ڳڻپ)
 
 /*
  * number of positive and negative single-byte codes
  * (counting 0==BOCU1_MIDDLE among the positive ones)
  */
-#define BOCU1_SINGLE            64
+#وصف_ڪريو BOCU1_SINGLE            64
 
 /* number of lead bytes for positive and negative 2/3/4-byte sequences */
-#define BOCU1_LEAD_2            43
-#define BOCU1_LEAD_3            3
-#define BOCU1_LEAD_4            1
+#وصف_ڪريو BOCU1_LEAD_2            43
+#وصف_ڪريو BOCU1_LEAD_3            3
+#وصف_ڪريو BOCU1_LEAD_4            1
 
 /* The difference value range for single-byters. */
-#define BOCU1_REACH_POS_1   (BOCU1_SINGLE-1)
-#define BOCU1_REACH_NEG_1   (-BOCU1_SINGLE)
+#وصف_ڪريو BOCU1_پهچ_POS_1   (BOCU1_SINGLE-1)
+#وصف_ڪريو BOCU1_پهچ_NEG_1   (-BOCU1_SINGLE)
 
 /* The difference value range for double-byters. */
-#define BOCU1_REACH_POS_2   (BOCU1_REACH_POS_1+BOCU1_LEAD_2*BOCU1_TRAIL_COUNT)
-#define BOCU1_REACH_NEG_2   (BOCU1_REACH_NEG_1-BOCU1_LEAD_2*BOCU1_TRAIL_COUNT)
+#وصف_ڪريو BOCU1_پهچ_POS_2   (BOCU1_پهچ_POS_1+BOCU1_LEAD_2*BOCU1_TRAIL_ڳڻپ)
+#وصف_ڪريو BOCU1_پهچ_NEG_2   (BOCU1_پهچ_NEG_1-BOCU1_LEAD_2*BOCU1_TRAIL_ڳڻپ)
 
 /* The difference value range for 3-byters. */
-#define BOCU1_REACH_POS_3   \
-    (BOCU1_REACH_POS_2+BOCU1_LEAD_3*BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT)
+#وصف_ڪريو BOCU1_پهچ_POS_3   \
+    (BOCU1_پهچ_POS_2+BOCU1_LEAD_3*BOCU1_TRAIL_ڳڻپ*BOCU1_TRAIL_ڳڻپ)
 
-#define BOCU1_REACH_NEG_3   (BOCU1_REACH_NEG_2-BOCU1_LEAD_3*BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT)
+#وصف_ڪريو BOCU1_پهچ_NEG_3   (BOCU1_پهچ_NEG_2-BOCU1_LEAD_3*BOCU1_TRAIL_ڳڻپ*BOCU1_TRAIL_ڳڻپ)
 
 /* The lead byte start values. */
-#define BOCU1_START_POS_2   (BOCU1_MIDDLE+BOCU1_REACH_POS_1+1)
-#define BOCU1_START_POS_3   (BOCU1_START_POS_2+BOCU1_LEAD_2)
-#define BOCU1_START_POS_4   (BOCU1_START_POS_3+BOCU1_LEAD_3)
+#وصف_ڪريو BOCU1_شروعات_POS_2   (BOCU1_وچ+BOCU1_پهچ_POS_1+1)
+#وصف_ڪريو BOCU1_شروعات_POS_3   (BOCU1_شروعات_POS_2+BOCU1_LEAD_2)
+#وصف_ڪريو BOCU1_شروعات_POS_4   (BOCU1_شروعات_POS_3+BOCU1_LEAD_3)
      /* ==BOCU1_MAX_LEAD */
 
-#define BOCU1_START_NEG_2   (BOCU1_MIDDLE+BOCU1_REACH_NEG_1)
-#define BOCU1_START_NEG_3   (BOCU1_START_NEG_2-BOCU1_LEAD_2)
-#define BOCU1_START_NEG_4   (BOCU1_START_NEG_3-BOCU1_LEAD_3)
+#وصف_ڪريو BOCU1_شروعات_NEG_2   (BOCU1_وچ+BOCU1_پهچ_NEG_1)
+#وصف_ڪريو BOCU1_شروعات_NEG_3   (BOCU1_شروعات_NEG_2-BOCU1_LEAD_2)
+#وصف_ڪريو BOCU1_شروعات_NEG_4   (BOCU1_شروعات_NEG_3-BOCU1_LEAD_3)
      /* ==BOCU1_MIN+1 */
 
 /* The length of a byte sequence, according to the lead byte (!=BOCU1_RESET). */
-#define BOCU1_LENGTH_FROM_LEAD(lead) \
-    ((BOCU1_START_NEG_2<=(lead) && (lead)<BOCU1_START_POS_2) ? 1 : \
-     (BOCU1_START_NEG_3<=(lead) && (lead)<BOCU1_START_POS_3) ? 2 : \
-     (BOCU1_START_NEG_4<=(lead) && (lead)<BOCU1_START_POS_4) ? 3 : 4)
+#وصف_ڪريو BOCU1_ڊيگهائي_FROM_LEAD(lead) \
+    ((BOCU1_شروعات_NEG_2<=(lead) && (lead)<BOCU1_شروعات_POS_2) ? 1 : \
+     (BOCU1_شروعات_NEG_3<=(lead) && (lead)<BOCU1_شروعات_POS_3) ? 2 : \
+     (BOCU1_شروعات_NEG_4<=(lead) && (lead)<BOCU1_شروعات_POS_4) ? 3 : 4)
 
 /* The length of a byte sequence, according to its packed form. */
-#define BOCU1_LENGTH_FROM_PACKED(packed) \
+#وصف_ڪريو BOCU1_ڊيگهائي_FROM_PACKED(packed) \
     ((uint32_t)(packed)<0x04000000 ? (packed)>>24 : 4)
 
 /*
@@ -146,7 +146,7 @@
  * but are also used as trail bytes in difference encoding
  * (for better compression).
  */
-#define BOCU1_TRAIL_TO_BYTE(t) ((t)>=BOCU1_TRAIL_CONTROLS_COUNT ? (t)+BOCU1_TRAIL_BYTE_OFFSET : bocu1TrailToByte[t])
+#وصف_ڪريو BOCU1_TRAIL_منزل_BYTE(t) ((t)>=BOCU1_TRAIL_CONTROLS_ڳڻپ ? (t)+BOCU1_TRAIL_BYTE_وٿي : bocu1_Trail_منزل_Byte[t])
 
 /*
  * Byte value map for control codes,
@@ -154,8 +154,8 @@
  * to trail byte values 0..19 (0..0x13) as used in the difference calculation.
  * External byte values that are illegal as trail bytes are mapped to -1.
  */
-static const int8_t
-bocu1ByteToTrail[BOCU1_MIN]={
+ساكن ثابت int8_t
+bocu1_Byte_منزل_Trail[BOCU1_MIN]={
 /*  0     1     2     3     4     5     6     7    */
     -1,   0x00, 0x01, 0x02, 0x03, 0x04, 0x05, -1,
 
@@ -177,8 +177,8 @@ bocu1ByteToTrail[BOCU1_MIN]={
  * from trail byte values 0..19 (0..0x13) as used in the difference calculation
  * to external byte values 0x00..0x20.
  */
-static const int8_t
-bocu1TrailToByte[BOCU1_TRAIL_CONTROLS_COUNT]={
+ساكن ثابت int8_t
+bocu1_Trail_منزل_Byte[BOCU1_TRAIL_CONTROLS_ڳڻپ]={
 /*  0     1     2     3     4     5     6     7    */
     0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x10, 0x11,
 
@@ -202,29 +202,29 @@ bocu1TrailToByte[BOCU1_TRAIL_CONTROLS_COUNT]={
  * @param d Divisor.
  * @param m Output variable for the rest (modulo result).
  */
-#define NEGDIVMOD(n, d, m) UPRV_BLOCK_MACRO_BEGIN { \
+#وصف_ڪريو NEGDIVMOD(n, d, m) UPRV_بلاڪ_MACRO_BEGIN { \
     (m)=(n)%(d); \
     (n)/=(d); \
-    if((m)<0) { \
+    إذا((m)<0) { \
         --(n); \
         (m)+=(d); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_بلاڪ_MACRO_پڇاڙي
 
 /* Faster versions of packDiff() for single-byte-encoded diff values. */
 
 /** Is a diff value encodable in a single byte? */
-#define DIFF_IS_SINGLE(diff) (BOCU1_REACH_NEG_1<=(diff) && (diff)<=BOCU1_REACH_POS_1)
+#وصف_ڪريو DIFF_IS_SINGLE(diff) (BOCU1_پهچ_NEG_1<=(diff) && (diff)<=BOCU1_پهچ_POS_1)
 
 /** Encode a diff value in a single byte. */
-#define PACK_SINGLE_DIFF(diff) (BOCU1_MIDDLE+(diff))
+#وصف_ڪريو PACK_SINGLE_DIFF(diff) (BOCU1_وچ+(diff))
 
 /** Is a diff value encodable in two bytes? */
-#define DIFF_IS_DOUBLE(diff) (BOCU1_REACH_NEG_2<=(diff) && (diff)<=BOCU1_REACH_POS_2)
+#وصف_ڪريو DIFF_IS_DOUBLE(diff) (BOCU1_پهچ_NEG_2<=(diff) && (diff)<=BOCU1_پهچ_POS_2)
 
 /* BOCU-1 implementation functions ------------------------------------------ */
 
-#define BOCU1_SIMPLE_PREV(c) (((c)&~0x7f)+BOCU1_ASCII_PREV)
+#وصف_ڪريو BOCU1_SIMPLE_PREV(c) (((c)&~0x7f)+BOCU1_ASCII_PREV)
 
 /**
  * Compute the next "previous" value for differencing
@@ -233,26 +233,26 @@ bocu1TrailToByte[BOCU1_TRAIL_CONTROLS_COUNT]={
  * @param c current code point, 0x3040..0xd7a3 (rest handled by macro below)
  * @return "previous code point" state value
  */
-static inline int32_t
+ساكن مضمن int32_t
 bocu1Prev(int32_t c) {
     /* compute new prev */
-    if(/* 0x3040<=c && */ c<=0x309f) {
+    إذا(/* 0x3040<=c && */ c<=0x309f) {
         /* Hiragana is not 128-aligned */
-        return 0x3070;
-    } else if(0x4e00<=c && c<=0x9fa5) {
+        أرجع 0x3070;
+    } وإلا إذا(0x4e00<=c && c<=0x9fa5) {
         /* CJK Unihan */
-        return 0x4e00-BOCU1_REACH_NEG_2;
-    } else if(0xac00<=c /* && c<=0xd7a3 */) {
+        أرجع 0x4e00-BOCU1_پهچ_NEG_2;
+    } وإلا إذا(0xac00<=c /* && c<=0xd7a3 */) {
         /* Korean Hangul */
-        return (0xd7a3+0xac00)/2;
-    } else {
+        أرجع (0xd7a3+0xac00)/2;
+    } وإلا {
         /* mostly small scripts */
-        return BOCU1_SIMPLE_PREV(c);
+        أرجع BOCU1_SIMPLE_PREV(c);
     }
 }
 
 /** Fast version of bocu1Prev() for most scripts. */
-#define BOCU1_PREV(c) ((c)<0x3040 || (c)>0xd7a3 ? BOCU1_SIMPLE_PREV(c) : bocu1Prev(c))
+#وصف_ڪريو BOCU1_PREV(c) ((c)<0x3040 || (c)>0xd7a3 ? BOCU1_SIMPLE_PREV(c) : bocu1Prev(c))
 
 /*
  * The BOCU-1 converter uses the standard setup code in ucnv.c/ucnv_bld.c.
@@ -283,218 +283,218 @@ bocu1Prev(int32_t c) {
  *      0x03xxyyzz for 3-byte sequence xx yy zz
  *      0xwwxxyyzz for 4-byte sequence ww xx yy zz (ww>0x03)
  */
-static int32_t
+ساكن int32_t
 packDiff(int32_t diff) {
-    int32_t result, m;
+    int32_t نتيجو, m;
 
     U_ASSERT(!DIFF_IS_SINGLE(diff)); /* assume we won't be called where diff==BOCU1_REACH_NEG_1=-64 */
-    if(diff>=BOCU1_REACH_NEG_1) {
+    إذا(diff>=BOCU1_پهچ_NEG_1) {
         /* mostly positive differences, and single-byte negative ones */
-#if 0   /* single-byte case handled in macros, see below */
-        if(diff<=BOCU1_REACH_POS_1) {
+#إذا 0   /* single-byte case handled in macros, see below */
+        إذا(diff<=BOCU1_پهچ_POS_1) {
             /* single byte */
-            return 0x01000000|(BOCU1_MIDDLE+diff);
-        } else
-#endif
-        if(diff<=BOCU1_REACH_POS_2) {
+            أرجع 0x01000000|(BOCU1_وچ+diff);
+        } وإلا
+#جيڪڏهن_پورو
+        إذا(diff<=BOCU1_پهچ_POS_2) {
             /* two bytes */
-            diff-=BOCU1_REACH_POS_1+1;
-            result=0x02000000;
+            diff-=BOCU1_پهچ_POS_1+1;
+            نتيجو=0x02000000;
 
-            m=diff%BOCU1_TRAIL_COUNT;
-            diff/=BOCU1_TRAIL_COUNT;
-            result|=BOCU1_TRAIL_TO_BYTE(m);
+            m=diff%BOCU1_TRAIL_ڳڻپ;
+            diff/=BOCU1_TRAIL_ڳڻپ;
+            نتيجو|=BOCU1_TRAIL_منزل_BYTE(m);
 
-            result|=(BOCU1_START_POS_2+diff)<<8;
-        } else if(diff<=BOCU1_REACH_POS_3) {
+            نتيجو|=(BOCU1_شروعات_POS_2+diff)<<8;
+        } وإلا إذا(diff<=BOCU1_پهچ_POS_3) {
             /* three bytes */
-            diff-=BOCU1_REACH_POS_2+1;
-            result=0x03000000;
+            diff-=BOCU1_پهچ_POS_2+1;
+            نتيجو=0x03000000;
 
-            m=diff%BOCU1_TRAIL_COUNT;
-            diff/=BOCU1_TRAIL_COUNT;
-            result|=BOCU1_TRAIL_TO_BYTE(m);
+            m=diff%BOCU1_TRAIL_ڳڻپ;
+            diff/=BOCU1_TRAIL_ڳڻپ;
+            نتيجو|=BOCU1_TRAIL_منزل_BYTE(m);
 
-            m=diff%BOCU1_TRAIL_COUNT;
-            diff/=BOCU1_TRAIL_COUNT;
-            result|=BOCU1_TRAIL_TO_BYTE(m)<<8;
+            m=diff%BOCU1_TRAIL_ڳڻپ;
+            diff/=BOCU1_TRAIL_ڳڻپ;
+            نتيجو|=BOCU1_TRAIL_منزل_BYTE(m)<<8;
 
-            result|=(BOCU1_START_POS_3+diff)<<16;
-        } else {
+            نتيجو|=(BOCU1_شروعات_POS_3+diff)<<16;
+        } وإلا {
             /* four bytes */
-            diff-=BOCU1_REACH_POS_3+1;
+            diff-=BOCU1_پهچ_POS_3+1;
 
-            m=diff%BOCU1_TRAIL_COUNT;
-            diff/=BOCU1_TRAIL_COUNT;
-            result=BOCU1_TRAIL_TO_BYTE(m);
+            m=diff%BOCU1_TRAIL_ڳڻپ;
+            diff/=BOCU1_TRAIL_ڳڻپ;
+            نتيجو=BOCU1_TRAIL_منزل_BYTE(m);
 
-            m=diff%BOCU1_TRAIL_COUNT;
-            diff/=BOCU1_TRAIL_COUNT;
-            result|=BOCU1_TRAIL_TO_BYTE(m)<<8;
+            m=diff%BOCU1_TRAIL_ڳڻپ;
+            diff/=BOCU1_TRAIL_ڳڻپ;
+            نتيجو|=BOCU1_TRAIL_منزل_BYTE(m)<<8;
 
             /*
              * We know that / and % would deliver quotient 0 and rest=diff.
              * Avoid division and modulo for performance.
              */
-            result|=BOCU1_TRAIL_TO_BYTE(diff)<<16;
+            نتيجو|=BOCU1_TRAIL_منزل_BYTE(diff)<<16;
 
-            result |= static_cast<uint32_t>(BOCU1_START_POS_4) << 24;
+            نتيجو |= static_cast<uint32_t>(BOCU1_شروعات_POS_4) << 24;
         }
-    } else {
+    } وإلا {
         /* two- to four-byte negative differences */
-        if(diff>=BOCU1_REACH_NEG_2) {
+        إذا(diff>=BOCU1_پهچ_NEG_2) {
             /* two bytes */
-            diff-=BOCU1_REACH_NEG_1;
-            result=0x02000000;
+            diff-=BOCU1_پهچ_NEG_1;
+            نتيجو=0x02000000;
 
-            NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
-            result|=BOCU1_TRAIL_TO_BYTE(m);
+            NEGDIVMOD(diff, BOCU1_TRAIL_ڳڻپ, m);
+            نتيجو|=BOCU1_TRAIL_منزل_BYTE(m);
 
-            result|=(BOCU1_START_NEG_2+diff)<<8;
-        } else if(diff>=BOCU1_REACH_NEG_3) {
+            نتيجو|=(BOCU1_شروعات_NEG_2+diff)<<8;
+        } وإلا إذا(diff>=BOCU1_پهچ_NEG_3) {
             /* three bytes */
-            diff-=BOCU1_REACH_NEG_2;
-            result=0x03000000;
+            diff-=BOCU1_پهچ_NEG_2;
+            نتيجو=0x03000000;
 
-            NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
-            result|=BOCU1_TRAIL_TO_BYTE(m);
+            NEGDIVMOD(diff, BOCU1_TRAIL_ڳڻپ, m);
+            نتيجو|=BOCU1_TRAIL_منزل_BYTE(m);
 
-            NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
-            result|=BOCU1_TRAIL_TO_BYTE(m)<<8;
+            NEGDIVMOD(diff, BOCU1_TRAIL_ڳڻپ, m);
+            نتيجو|=BOCU1_TRAIL_منزل_BYTE(m)<<8;
 
-            result|=(BOCU1_START_NEG_3+diff)<<16;
-        } else {
+            نتيجو|=(BOCU1_شروعات_NEG_3+diff)<<16;
+        } وإلا {
             /* four bytes */
-            diff-=BOCU1_REACH_NEG_3;
+            diff-=BOCU1_پهچ_NEG_3;
 
-            NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
-            result=BOCU1_TRAIL_TO_BYTE(m);
+            NEGDIVMOD(diff, BOCU1_TRAIL_ڳڻپ, m);
+            نتيجو=BOCU1_TRAIL_منزل_BYTE(m);
 
-            NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
-            result|=BOCU1_TRAIL_TO_BYTE(m)<<8;
+            NEGDIVMOD(diff, BOCU1_TRAIL_ڳڻپ, m);
+            نتيجو|=BOCU1_TRAIL_منزل_BYTE(m)<<8;
 
             /*
              * We know that NEGDIVMOD would deliver
              * quotient -1 and rest=diff+BOCU1_TRAIL_COUNT.
              * Avoid division and modulo for performance.
              */
-            m=diff+BOCU1_TRAIL_COUNT;
-            result|=BOCU1_TRAIL_TO_BYTE(m)<<16;
+            m=diff+BOCU1_TRAIL_ڳڻپ;
+            نتيجو|=BOCU1_TRAIL_منزل_BYTE(m)<<16;
 
-            result|=BOCU1_MIN<<24;
+            نتيجو|=BOCU1_MIN<<24;
         }
     }
-    return result;
+    أرجع نتيجو;
 }
 
 
-static void U_CALLCONV
-_Bocu1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                             UErrorCode *pErrorCode) {
+ساكن فراغ U_CALLCONV
+_Bocu1FromUnicodeWithOffsets(UConverter_From_Unicode_دليلون *p_دليلون,
+                             UError_ڪوڊ *p_Error_ڪوڊ) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity;
+    ثابت char16_t *ذريعو, *ذريعو_حد_بندي;
+    uint8_t *هدف;
+    int32_t هدف_صلاحيت;
     int32_t *offsets;
 
     int32_t prev, c, diff;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t ذريعو_اشاريو, ايندڙ_ذريعو_اشاريو;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target = reinterpret_cast<uint8_t*>(pArgs->target);
-    targetCapacity = static_cast<int32_t>(pArgs->targetLimit - pArgs->target);
-    offsets=pArgs->offsets;
+    cnv=p_دليلون->converter;
+    ذريعو=p_دليلون->ذريعو;
+    ذريعو_حد_بندي=p_دليلون->ذريعو_حد_بندي;
+    هدف = reinterpret_cast<uint8_t*>(p_دليلون->هدف);
+    هدف_صلاحيت = static_cast<int32_t>(p_دليلون->هدف_حد_بندي - p_دليلون->هدف);
+    offsets=p_دليلون->offsets;
 
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
-    prev = static_cast<int32_t>(cnv->fromUnicodeStatus);
-    if(prev==0) {
+    prev = static_cast<int32_t>(cnv->from_Unicode_حالت);
+    إذا(prev==0) {
         prev=BOCU1_ASCII_PREV;
     }
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex= c==0 ? 0 : -1;
-    nextSourceIndex=0;
+    ذريعو_اشاريو= c==0 ? 0 : -1;
+    ايندڙ_ذريعو_اشاريو=0;
 
     /* conversion loop */
-    if(c!=0 && targetCapacity>0) {
-        goto getTrail;
+    إذا(c!=0 && هدف_صلاحيت>0) {
+        اذهب getTrail;
     }
 
 fastSingle:
     /* fast loop for single-byte differences */
     /* use only one loop counter variable, targetCapacity, not also source */
-    diff = static_cast<int32_t>(sourceLimit - source);
-    if(targetCapacity>diff) {
-        targetCapacity=diff;
+    diff = static_cast<int32_t>(ذريعو_حد_بندي - ذريعو);
+    إذا(هدف_صلاحيت>diff) {
+        هدف_صلاحيت=diff;
     }
-    while(targetCapacity>0 && (c=*source)<0x3000) {
-        if(c<=0x20) {
-            if(c!=0x20) {
+    طالما(هدف_صلاحيت>0 && (c=*ذريعو)<0x3000) {
+        إذا(c<=0x20) {
+            إذا(c!=0x20) {
                 prev=BOCU1_ASCII_PREV;
             }
-            *target++ = static_cast<uint8_t>(c);
-            *offsets++=nextSourceIndex++;
-            ++source;
-            --targetCapacity;
-        } else {
+            *هدف++ = static_cast<uint8_t>(c);
+            *offsets++=ايندڙ_ذريعو_اشاريو++;
+            ++ذريعو;
+            --هدف_صلاحيت;
+        } وإلا {
             diff=c-prev;
-            if(DIFF_IS_SINGLE(diff)) {
+            إذا(DIFF_IS_SINGLE(diff)) {
                 prev=BOCU1_SIMPLE_PREV(c);
-                *target++ = static_cast<uint8_t>(PACK_SINGLE_DIFF(diff));
-                *offsets++=nextSourceIndex++;
-                ++source;
-                --targetCapacity;
-            } else {
-                break;
+                *هدف++ = static_cast<uint8_t>(PACK_SINGLE_DIFF(diff));
+                *offsets++=ايندڙ_ذريعو_اشاريو++;
+                ++ذريعو;
+                --هدف_صلاحيت;
+            } وإلا {
+                اكسر;
             }
         }
     }
     /* restore real values */
-    targetCapacity = static_cast<int32_t>(reinterpret_cast<const uint8_t*>(pArgs->targetLimit) - target);
-    sourceIndex=nextSourceIndex; /* wrong if offsets==nullptr but does not matter */
+    هدف_صلاحيت = static_cast<int32_t>(reinterpret_cast<ثابت uint8_t*>(p_دليلون->هدف_حد_بندي) - هدف);
+    ذريعو_اشاريو=ايندڙ_ذريعو_اشاريو; /* wrong if offsets==nullptr but does not matter */
 
     /* regular loop for all cases */
-    while(source<sourceLimit) {
-        if(targetCapacity>0) {
-            c=*source++;
-            ++nextSourceIndex;
+    طالما(ذريعو<ذريعو_حد_بندي) {
+        إذا(هدف_صلاحيت>0) {
+            c=*ذريعو++;
+            ++ايندڙ_ذريعو_اشاريو;
 
-            if(c<=0x20) {
+            إذا(c<=0x20) {
                 /*
                  * ISO C0 control & space:
                  * Encode directly for MIME compatibility,
                  * and reset state except for space, to not disrupt compression.
                  */
-                if(c!=0x20) {
+                إذا(c!=0x20) {
                     prev=BOCU1_ASCII_PREV;
                 }
-                *target++ = static_cast<uint8_t>(c);
-                *offsets++=sourceIndex;
-                --targetCapacity;
+                *هدف++ = static_cast<uint8_t>(c);
+                *offsets++=ذريعو_اشاريو;
+                --هدف_صلاحيت;
 
-                sourceIndex=nextSourceIndex;
-                continue;
+                ذريعو_اشاريو=ايندڙ_ذريعو_اشاريو;
+                استمر;
             }
 
-            if(U16_IS_LEAD(c)) {
+            إذا(U16_IS_LEAD(c)) {
 getTrail:
-                if(source<sourceLimit) {
+                إذا(ذريعو<ذريعو_حد_بندي) {
                     /* test the following code unit */
-                    char16_t trail=*source;
-                    if(U16_IS_TRAIL(trail)) {
-                        ++source;
-                        ++nextSourceIndex;
+                    char16_t trail=*ذريعو;
+                    إذا(U16_IS_TRAIL(trail)) {
+                        ++ذريعو;
+                        ++ايندڙ_ذريعو_اشاريو;
                         c=U16_GET_SUPPLEMENTARY(c, trail);
                     }
-                } else {
+                } وإلا {
                     /* no more input */
                     c=-c; /* negative lead surrogate as "incomplete" indicator to avoid c=0 everywhere else */
-                    break;
+                    اكسر;
                 }
             }
 
@@ -509,68 +509,68 @@ getTrail:
              */
             diff=c-prev;
             prev=BOCU1_PREV(c);
-            if(DIFF_IS_SINGLE(diff)) {
-                *target++ = static_cast<uint8_t>(PACK_SINGLE_DIFF(diff));
-                *offsets++=sourceIndex;
-                --targetCapacity;
-                sourceIndex=nextSourceIndex;
-                if(c<0x3000) {
-                    goto fastSingle;
+            إذا(DIFF_IS_SINGLE(diff)) {
+                *هدف++ = static_cast<uint8_t>(PACK_SINGLE_DIFF(diff));
+                *offsets++=ذريعو_اشاريو;
+                --هدف_صلاحيت;
+                ذريعو_اشاريو=ايندڙ_ذريعو_اشاريو;
+                إذا(c<0x3000) {
+                    اذهب fastSingle;
                 }
-            } else if(DIFF_IS_DOUBLE(diff) && 2<=targetCapacity) {
+            } وإلا إذا(DIFF_IS_DOUBLE(diff) && 2<=هدف_صلاحيت) {
                 /* optimize 2-byte case */
                 int32_t m;
 
-                if(diff>=0) {
-                    diff-=BOCU1_REACH_POS_1+1;
-                    m=diff%BOCU1_TRAIL_COUNT;
-                    diff/=BOCU1_TRAIL_COUNT;
-                    diff+=BOCU1_START_POS_2;
-                } else {
-                    diff-=BOCU1_REACH_NEG_1;
-                    NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
-                    diff+=BOCU1_START_NEG_2;
+                إذا(diff>=0) {
+                    diff-=BOCU1_پهچ_POS_1+1;
+                    m=diff%BOCU1_TRAIL_ڳڻپ;
+                    diff/=BOCU1_TRAIL_ڳڻپ;
+                    diff+=BOCU1_شروعات_POS_2;
+                } وإلا {
+                    diff-=BOCU1_پهچ_NEG_1;
+                    NEGDIVMOD(diff, BOCU1_TRAIL_ڳڻپ, m);
+                    diff+=BOCU1_شروعات_NEG_2;
                 }
-                *target++ = static_cast<uint8_t>(diff);
-                *target++ = static_cast<uint8_t>(BOCU1_TRAIL_TO_BYTE(m));
-                *offsets++=sourceIndex;
-                *offsets++=sourceIndex;
-                targetCapacity-=2;
-                sourceIndex=nextSourceIndex;
-            } else {
+                *هدف++ = static_cast<uint8_t>(diff);
+                *هدف++ = static_cast<uint8_t>(BOCU1_TRAIL_منزل_BYTE(m));
+                *offsets++=ذريعو_اشاريو;
+                *offsets++=ذريعو_اشاريو;
+                هدف_صلاحيت-=2;
+                ذريعو_اشاريو=ايندڙ_ذريعو_اشاريو;
+            } وإلا {
                 int32_t length; /* will be 2..4 */
 
                 diff=packDiff(diff);
-                length=BOCU1_LENGTH_FROM_PACKED(diff);
+                length=BOCU1_ڊيگهائي_FROM_PACKED(diff);
 
                 /* write the output character bytes from diff and length */
                 /* from the first if in the loop we know that targetCapacity>0 */
-                if(length<=targetCapacity) {
-                    switch(length) {
+                إذا(length<=هدف_صلاحيت) {
+                    بدل(length) {
                         /* each branch falls through to the next one */
-                    case 4:
-                        *target++ = static_cast<uint8_t>(diff >> 24);
-                        *offsets++=sourceIndex;
+                    حالة 4:
+                        *هدف++ = static_cast<uint8_t>(diff >> 24);
+                        *offsets++=ذريعو_اشاريو;
                         U_FALLTHROUGH;
-                    case 3:
-                        *target++ = static_cast<uint8_t>(diff >> 16);
-                        *offsets++=sourceIndex;
+                    حالة 3:
+                        *هدف++ = static_cast<uint8_t>(diff >> 16);
+                        *offsets++=ذريعو_اشاريو;
                         U_FALLTHROUGH;
-                    case 2:
-                        *target++ = static_cast<uint8_t>(diff >> 8);
-                        *offsets++=sourceIndex;
+                    حالة 2:
+                        *هدف++ = static_cast<uint8_t>(diff >> 8);
+                        *offsets++=ذريعو_اشاريو;
                     /* case 1: handled above */
-                        *target++ = static_cast<uint8_t>(diff);
-                        *offsets++=sourceIndex;
+                        *هدف++ = static_cast<uint8_t>(diff);
+                        *offsets++=ذريعو_اشاريو;
                         U_FALLTHROUGH;
-                    default:
+                    افتراضي:
                         /* will never occur */
-                        break;
+                        اكسر;
                     }
-                    targetCapacity-=length;
-                    sourceIndex=nextSourceIndex;
-                } else {
-                    uint8_t *charErrorBuffer;
+                    هدف_صلاحيت-=length;
+                    ذريعو_اشاريو=ايندڙ_ذريعو_اشاريو;
+                } وإلا {
+                    uint8_t *char_Error_بفر;
 
                     /*
                      * We actually do this backwards here:
@@ -579,67 +579,67 @@ getTrail:
                      * regular target.
                      */
                     /* we know that 1<=targetCapacity<length<=4 */
-                    length-=targetCapacity;
-                    charErrorBuffer=(uint8_t *)cnv->charErrorBuffer;
-                    switch(length) {
+                    length-=هدف_صلاحيت;
+                    char_Error_بفر=(uint8_t *)cnv->char_Error_بفر;
+                    بدل(length) {
                         /* each branch falls through to the next one */
-                    case 3:
-                        *charErrorBuffer++ = static_cast<uint8_t>(diff >> 16);
+                    حالة 3:
+                        *char_Error_بفر++ = static_cast<uint8_t>(diff >> 16);
                         U_FALLTHROUGH;
-                    case 2:
-                        *charErrorBuffer++ = static_cast<uint8_t>(diff >> 8);
+                    حالة 2:
+                        *char_Error_بفر++ = static_cast<uint8_t>(diff >> 8);
                         U_FALLTHROUGH;
-                    case 1:
-                        *charErrorBuffer = static_cast<uint8_t>(diff);
+                    حالة 1:
+                        *char_Error_بفر = static_cast<uint8_t>(diff);
                         U_FALLTHROUGH;
-                    default:
+                    افتراضي:
                         /* will never occur */
-                        break;
+                        اكسر;
                     }
-                    cnv->charErrorBufferLength = static_cast<int8_t>(length);
+                    cnv->char_Error_بفر_ڊيگهائي = static_cast<int8_t>(length);
 
                     /* now output what fits into the regular target */
                     diff>>=8*length; /* length was reduced by targetCapacity */
-                    switch(targetCapacity) {
+                    بدل(هدف_صلاحيت) {
                         /* each branch falls through to the next one */
-                    case 3:
-                        *target++ = static_cast<uint8_t>(diff >> 16);
-                        *offsets++=sourceIndex;
+                    حالة 3:
+                        *هدف++ = static_cast<uint8_t>(diff >> 16);
+                        *offsets++=ذريعو_اشاريو;
                         U_FALLTHROUGH;
-                    case 2:
-                        *target++ = static_cast<uint8_t>(diff >> 8);
-                        *offsets++=sourceIndex;
+                    حالة 2:
+                        *هدف++ = static_cast<uint8_t>(diff >> 8);
+                        *offsets++=ذريعو_اشاريو;
                         U_FALLTHROUGH;
-                    case 1:
-                        *target++ = static_cast<uint8_t>(diff);
-                        *offsets++=sourceIndex;
+                    حالة 1:
+                        *هدف++ = static_cast<uint8_t>(diff);
+                        *offsets++=ذريعو_اشاريو;
                         U_FALLTHROUGH;
-                    default:
+                    افتراضي:
                         /* will never occur */
-                        break;
+                        اكسر;
                     }
 
                     /* target overflow */
-                    targetCapacity=0;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    هدف_صلاحيت=0;
+                    *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+                    اكسر;
                 }
             }
-        } else {
+        } وإلا {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+            اكسر;
         }
     }
 
     /* set the converter state back into UConverter */
     cnv->fromUChar32= c<0 ? -c : 0;
-    cnv->fromUnicodeStatus = static_cast<uint32_t>(prev);
+    cnv->from_Unicode_حالت = static_cast<uint32_t>(prev);
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target = reinterpret_cast<char*>(target);
-    pArgs->offsets=offsets;
+    p_دليلون->ذريعو=ذريعو;
+    p_دليلون->هدف = reinterpret_cast<حرف*>(هدف);
+    p_دليلون->offsets=offsets;
 }
 
 /*
@@ -649,95 +649,95 @@ getTrail:
  * re-copy the original function and remove the variables
  * offsets, sourceIndex, and nextSourceIndex.
  */
-static void U_CALLCONV
-_Bocu1FromUnicode(UConverterFromUnicodeArgs *pArgs,
-                  UErrorCode *pErrorCode) {
+ساكن فراغ U_CALLCONV
+_Bocu1FromUnicode(UConverter_From_Unicode_دليلون *p_دليلون,
+                  UError_ڪوڊ *p_Error_ڪوڊ) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity;
+    ثابت char16_t *ذريعو, *ذريعو_حد_بندي;
+    uint8_t *هدف;
+    int32_t هدف_صلاحيت;
 
     int32_t prev, c, diff;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target = reinterpret_cast<uint8_t*>(pArgs->target);
-    targetCapacity = static_cast<int32_t>(pArgs->targetLimit - pArgs->target);
+    cnv=p_دليلون->converter;
+    ذريعو=p_دليلون->ذريعو;
+    ذريعو_حد_بندي=p_دليلون->ذريعو_حد_بندي;
+    هدف = reinterpret_cast<uint8_t*>(p_دليلون->هدف);
+    هدف_صلاحيت = static_cast<int32_t>(p_دليلون->هدف_حد_بندي - p_دليلون->هدف);
 
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
-    prev = static_cast<int32_t>(cnv->fromUnicodeStatus);
-    if(prev==0) {
+    prev = static_cast<int32_t>(cnv->from_Unicode_حالت);
+    إذا(prev==0) {
         prev=BOCU1_ASCII_PREV;
     }
 
     /* conversion loop */
-    if(c!=0 && targetCapacity>0) {
-        goto getTrail;
+    إذا(c!=0 && هدف_صلاحيت>0) {
+        اذهب getTrail;
     }
 
 fastSingle:
     /* fast loop for single-byte differences */
     /* use only one loop counter variable, targetCapacity, not also source */
-    diff = static_cast<int32_t>(sourceLimit - source);
-    if(targetCapacity>diff) {
-        targetCapacity=diff;
+    diff = static_cast<int32_t>(ذريعو_حد_بندي - ذريعو);
+    إذا(هدف_صلاحيت>diff) {
+        هدف_صلاحيت=diff;
     }
-    while(targetCapacity>0 && (c=*source)<0x3000) {
-        if(c<=0x20) {
-            if(c!=0x20) {
+    طالما(هدف_صلاحيت>0 && (c=*ذريعو)<0x3000) {
+        إذا(c<=0x20) {
+            إذا(c!=0x20) {
                 prev=BOCU1_ASCII_PREV;
             }
-            *target++ = static_cast<uint8_t>(c);
-        } else {
+            *هدف++ = static_cast<uint8_t>(c);
+        } وإلا {
             diff=c-prev;
-            if(DIFF_IS_SINGLE(diff)) {
+            إذا(DIFF_IS_SINGLE(diff)) {
                 prev=BOCU1_SIMPLE_PREV(c);
-                *target++ = static_cast<uint8_t>(PACK_SINGLE_DIFF(diff));
-            } else {
-                break;
+                *هدف++ = static_cast<uint8_t>(PACK_SINGLE_DIFF(diff));
+            } وإلا {
+                اكسر;
             }
         }
-        ++source;
-        --targetCapacity;
+        ++ذريعو;
+        --هدف_صلاحيت;
     }
     /* restore real values */
-    targetCapacity = static_cast<int32_t>(reinterpret_cast<const uint8_t*>(pArgs->targetLimit) - target);
+    هدف_صلاحيت = static_cast<int32_t>(reinterpret_cast<ثابت uint8_t*>(p_دليلون->هدف_حد_بندي) - هدف);
 
     /* regular loop for all cases */
-    while(source<sourceLimit) {
-        if(targetCapacity>0) {
-            c=*source++;
+    طالما(ذريعو<ذريعو_حد_بندي) {
+        إذا(هدف_صلاحيت>0) {
+            c=*ذريعو++;
 
-            if(c<=0x20) {
+            إذا(c<=0x20) {
                 /*
                  * ISO C0 control & space:
                  * Encode directly for MIME compatibility,
                  * and reset state except for space, to not disrupt compression.
                  */
-                if(c!=0x20) {
+                إذا(c!=0x20) {
                     prev=BOCU1_ASCII_PREV;
                 }
-                *target++ = static_cast<uint8_t>(c);
-                --targetCapacity;
-                continue;
+                *هدف++ = static_cast<uint8_t>(c);
+                --هدف_صلاحيت;
+                استمر;
             }
 
-            if(U16_IS_LEAD(c)) {
+            إذا(U16_IS_LEAD(c)) {
 getTrail:
-                if(source<sourceLimit) {
+                إذا(ذريعو<ذريعو_حد_بندي) {
                     /* test the following code unit */
-                    char16_t trail=*source;
-                    if(U16_IS_TRAIL(trail)) {
-                        ++source;
+                    char16_t trail=*ذريعو;
+                    إذا(U16_IS_TRAIL(trail)) {
+                        ++ذريعو;
                         c=U16_GET_SUPPLEMENTARY(c, trail);
                     }
-                } else {
+                } وإلا {
                     /* no more input */
                     c=-c; /* negative lead surrogate as "incomplete" indicator to avoid c=0 everywhere else */
-                    break;
+                    اكسر;
                 }
             }
 
@@ -752,57 +752,57 @@ getTrail:
              */
             diff=c-prev;
             prev=BOCU1_PREV(c);
-            if(DIFF_IS_SINGLE(diff)) {
-                *target++ = static_cast<uint8_t>(PACK_SINGLE_DIFF(diff));
-                --targetCapacity;
-                if(c<0x3000) {
-                    goto fastSingle;
+            إذا(DIFF_IS_SINGLE(diff)) {
+                *هدف++ = static_cast<uint8_t>(PACK_SINGLE_DIFF(diff));
+                --هدف_صلاحيت;
+                إذا(c<0x3000) {
+                    اذهب fastSingle;
                 }
-            } else if(DIFF_IS_DOUBLE(diff) && 2<=targetCapacity) {
+            } وإلا إذا(DIFF_IS_DOUBLE(diff) && 2<=هدف_صلاحيت) {
                 /* optimize 2-byte case */
                 int32_t m;
 
-                if(diff>=0) {
-                    diff-=BOCU1_REACH_POS_1+1;
-                    m=diff%BOCU1_TRAIL_COUNT;
-                    diff/=BOCU1_TRAIL_COUNT;
-                    diff+=BOCU1_START_POS_2;
-                } else {
-                    diff-=BOCU1_REACH_NEG_1;
-                    NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
-                    diff+=BOCU1_START_NEG_2;
+                إذا(diff>=0) {
+                    diff-=BOCU1_پهچ_POS_1+1;
+                    m=diff%BOCU1_TRAIL_ڳڻپ;
+                    diff/=BOCU1_TRAIL_ڳڻپ;
+                    diff+=BOCU1_شروعات_POS_2;
+                } وإلا {
+                    diff-=BOCU1_پهچ_NEG_1;
+                    NEGDIVMOD(diff, BOCU1_TRAIL_ڳڻپ, m);
+                    diff+=BOCU1_شروعات_NEG_2;
                 }
-                *target++ = static_cast<uint8_t>(diff);
-                *target++ = static_cast<uint8_t>(BOCU1_TRAIL_TO_BYTE(m));
-                targetCapacity-=2;
-            } else {
+                *هدف++ = static_cast<uint8_t>(diff);
+                *هدف++ = static_cast<uint8_t>(BOCU1_TRAIL_منزل_BYTE(m));
+                هدف_صلاحيت-=2;
+            } وإلا {
                 int32_t length; /* will be 2..4 */
 
                 diff=packDiff(diff);
-                length=BOCU1_LENGTH_FROM_PACKED(diff);
+                length=BOCU1_ڊيگهائي_FROM_PACKED(diff);
 
                 /* write the output character bytes from diff and length */
                 /* from the first if in the loop we know that targetCapacity>0 */
-                if(length<=targetCapacity) {
-                    switch(length) {
+                إذا(length<=هدف_صلاحيت) {
+                    بدل(length) {
                         /* each branch falls through to the next one */
-                    case 4:
-                        *target++ = static_cast<uint8_t>(diff >> 24);
+                    حالة 4:
+                        *هدف++ = static_cast<uint8_t>(diff >> 24);
                         U_FALLTHROUGH;
-                    case 3:
-                        *target++ = static_cast<uint8_t>(diff >> 16);
+                    حالة 3:
+                        *هدف++ = static_cast<uint8_t>(diff >> 16);
                     /* case 2: handled above */
-                        *target++ = static_cast<uint8_t>(diff >> 8);
+                        *هدف++ = static_cast<uint8_t>(diff >> 8);
                     /* case 1: handled above */
-                        *target++ = static_cast<uint8_t>(diff);
+                        *هدف++ = static_cast<uint8_t>(diff);
                         U_FALLTHROUGH;
-                    default:
+                    افتراضي:
                         /* will never occur */
-                        break;
+                        اكسر;
                     }
-                    targetCapacity-=length;
-                } else {
-                    uint8_t *charErrorBuffer;
+                    هدف_صلاحيت-=length;
+                } وإلا {
+                    uint8_t *char_Error_بفر;
 
                     /*
                      * We actually do this backwards here:
@@ -811,63 +811,63 @@ getTrail:
                      * regular target.
                      */
                     /* we know that 1<=targetCapacity<length<=4 */
-                    length-=targetCapacity;
-                    charErrorBuffer=(uint8_t *)cnv->charErrorBuffer;
-                    switch(length) {
+                    length-=هدف_صلاحيت;
+                    char_Error_بفر=(uint8_t *)cnv->char_Error_بفر;
+                    بدل(length) {
                         /* each branch falls through to the next one */
-                    case 3:
-                        *charErrorBuffer++ = static_cast<uint8_t>(diff >> 16);
+                    حالة 3:
+                        *char_Error_بفر++ = static_cast<uint8_t>(diff >> 16);
                         U_FALLTHROUGH;
-                    case 2:
-                        *charErrorBuffer++ = static_cast<uint8_t>(diff >> 8);
+                    حالة 2:
+                        *char_Error_بفر++ = static_cast<uint8_t>(diff >> 8);
                         U_FALLTHROUGH;
-                    case 1:
-                        *charErrorBuffer = static_cast<uint8_t>(diff);
+                    حالة 1:
+                        *char_Error_بفر = static_cast<uint8_t>(diff);
                         U_FALLTHROUGH;
-                    default:
+                    افتراضي:
                         /* will never occur */
-                        break;
+                        اكسر;
                     }
-                    cnv->charErrorBufferLength = static_cast<int8_t>(length);
+                    cnv->char_Error_بفر_ڊيگهائي = static_cast<int8_t>(length);
 
                     /* now output what fits into the regular target */
                     diff>>=8*length; /* length was reduced by targetCapacity */
-                    switch(targetCapacity) {
+                    بدل(هدف_صلاحيت) {
                         /* each branch falls through to the next one */
-                    case 3:
-                        *target++ = static_cast<uint8_t>(diff >> 16);
+                    حالة 3:
+                        *هدف++ = static_cast<uint8_t>(diff >> 16);
                         U_FALLTHROUGH;
-                    case 2:
-                        *target++ = static_cast<uint8_t>(diff >> 8);
+                    حالة 2:
+                        *هدف++ = static_cast<uint8_t>(diff >> 8);
                         U_FALLTHROUGH;
-                    case 1:
-                        *target++ = static_cast<uint8_t>(diff);
+                    حالة 1:
+                        *هدف++ = static_cast<uint8_t>(diff);
                         U_FALLTHROUGH;
-                    default:
+                    افتراضي:
                         /* will never occur */
-                        break;
+                        اكسر;
                     }
 
                     /* target overflow */
-                    targetCapacity=0;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    هدف_صلاحيت=0;
+                    *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+                    اكسر;
                 }
             }
-        } else {
+        } وإلا {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+            اكسر;
         }
     }
 
     /* set the converter state back into UConverter */
     cnv->fromUChar32= c<0 ? -c : 0;
-    cnv->fromUnicodeStatus = static_cast<uint32_t>(prev);
+    cnv->from_Unicode_حالت = static_cast<uint32_t>(prev);
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target = reinterpret_cast<char*>(target);
+    p_دليلون->ذريعو=ذريعو;
+    p_دليلون->هدف = reinterpret_cast<حرف*>(هدف);
 }
 
 /* BOCU-1-to-Unicode conversion functions ----------------------------------- */
@@ -879,44 +879,44 @@ getTrail:
  *          BOCU1_MIN<=b<BOCU1_START_NEG_2 or BOCU1_START_POS_2<=b<BOCU1_MAX_LEAD
  * @return (diff<<2)|count
  */
-static inline int32_t
+ساكن مضمن int32_t
 decodeBocu1LeadByte(int32_t b) {
     int32_t diff, count;
 
-    if(b>=BOCU1_START_NEG_2) {
+    إذا(b>=BOCU1_شروعات_NEG_2) {
         /* positive difference */
-        if(b<BOCU1_START_POS_3) {
+        إذا(b<BOCU1_شروعات_POS_3) {
             /* two bytes */
-            diff = (b - BOCU1_START_POS_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_POS_1 + 1;
+            diff = (b - BOCU1_شروعات_POS_2) * BOCU1_TRAIL_ڳڻپ + BOCU1_پهچ_POS_1 + 1;
             count=1;
-        } else if(b<BOCU1_START_POS_4) {
+        } وإلا إذا(b<BOCU1_شروعات_POS_4) {
             /* three bytes */
-            diff = (b - BOCU1_START_POS_3) * BOCU1_TRAIL_COUNT * BOCU1_TRAIL_COUNT + BOCU1_REACH_POS_2 + 1;
+            diff = (b - BOCU1_شروعات_POS_3) * BOCU1_TRAIL_ڳڻپ * BOCU1_TRAIL_ڳڻپ + BOCU1_پهچ_POS_2 + 1;
             count=2;
-        } else {
+        } وإلا {
             /* four bytes */
-            diff=BOCU1_REACH_POS_3+1;
+            diff=BOCU1_پهچ_POS_3+1;
             count=3;
         }
-    } else {
+    } وإلا {
         /* negative difference */
-        if(b>=BOCU1_START_NEG_3) {
+        إذا(b>=BOCU1_شروعات_NEG_3) {
             /* two bytes */
-            diff = (b - BOCU1_START_NEG_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_NEG_1;
+            diff = (b - BOCU1_شروعات_NEG_2) * BOCU1_TRAIL_ڳڻپ + BOCU1_پهچ_NEG_1;
             count=1;
-        } else if(b>BOCU1_MIN) {
+        } وإلا إذا(b>BOCU1_MIN) {
             /* three bytes */
-            diff = (b - BOCU1_START_NEG_3) * BOCU1_TRAIL_COUNT * BOCU1_TRAIL_COUNT + BOCU1_REACH_NEG_2;
+            diff = (b - BOCU1_شروعات_NEG_3) * BOCU1_TRAIL_ڳڻپ * BOCU1_TRAIL_ڳڻپ + BOCU1_پهچ_NEG_2;
             count=2;
-        } else {
+        } وإلا {
             /* four bytes */
-            diff=-BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT+BOCU1_REACH_NEG_3;
+            diff=-BOCU1_TRAIL_ڳڻپ*BOCU1_TRAIL_ڳڻپ*BOCU1_TRAIL_ڳڻپ+BOCU1_پهچ_NEG_3;
             count=3;
         }
     }
 
     /* return the state for decoding the trail byte(s) */
-    return (static_cast<uint32_t>(diff) << 2) | count;
+    أرجع (static_cast<uint32_t>(diff) << 2) | count;
 }
 
 /**
@@ -928,243 +928,243 @@ decodeBocu1LeadByte(int32_t b) {
  *
  * @see decodeBocu1
  */
-static inline int32_t
+ساكن مضمن int32_t
 decodeBocu1TrailByte(int32_t count, int32_t b) {
-    if(b<=0x20) {
+    إذا(b<=0x20) {
         /* skip some C0 controls and make the trail byte range contiguous */
-        b=bocu1ByteToTrail[b];
+        b=bocu1_Byte_منزل_Trail[b];
         /* b<0 for an illegal trail byte value will result in return<0 below */
-#if BOCU1_MAX_TRAIL<0xff
-    } else if(b>BOCU1_MAX_TRAIL) {
-        return -99;
-#endif
-    } else {
-        b-=BOCU1_TRAIL_BYTE_OFFSET;
+#إذا BOCU1_MAX_TRAIL<0xff
+    } وإلا إذا(b>BOCU1_MAX_TRAIL) {
+        أرجع -99;
+#جيڪڏهن_پورو
+    } وإلا {
+        b-=BOCU1_TRAIL_BYTE_وٿي;
     }
 
     /* add trail byte into difference and decrement count */
-    if(count==1) {
-        return b;
-    } else if(count==2) {
-        return b*BOCU1_TRAIL_COUNT;
-    } else /* count==3 */ {
-        return b*(BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT);
+    إذا(count==1) {
+        أرجع b;
+    } وإلا إذا(count==2) {
+        أرجع b*BOCU1_TRAIL_ڳڻپ;
+    } وإلا /* count==3 */ {
+        أرجع b*(BOCU1_TRAIL_ڳڻپ*BOCU1_TRAIL_ڳڻپ);
     }
 }
 
-static void U_CALLCONV
-_Bocu1ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                           UErrorCode *pErrorCode) {
+ساكن فراغ U_CALLCONV
+Bocu1_منزل_Unicode_With_Offsets(UConverter_منزل_Unicode_دليلون *p_دليلون,
+                           UError_ڪوڊ *p_Error_ڪوڊ) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit;
-    char16_t *target;
-    const char16_t *targetLimit;
+    ثابت uint8_t *ذريعو, *ذريعو_حد_بندي;
+    char16_t *هدف;
+    ثابت char16_t *هدف_حد_بندي;
     int32_t *offsets;
 
     int32_t prev, count, diff, c;
 
-    int8_t byteIndex;
-    uint8_t *bytes;
+    int8_t byte_اشاريو;
+    uint8_t *بائيٽون;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t ذريعو_اشاريو, ايندڙ_ذريعو_اشاريو;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source = reinterpret_cast<const uint8_t*>(pArgs->source);
-    sourceLimit = reinterpret_cast<const uint8_t*>(pArgs->sourceLimit);
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    cnv=p_دليلون->converter;
+    ذريعو = reinterpret_cast<ثابت uint8_t*>(p_دليلون->ذريعو);
+    ذريعو_حد_بندي = reinterpret_cast<ثابت uint8_t*>(p_دليلون->ذريعو_حد_بندي);
+    هدف=p_دليلون->هدف;
+    هدف_حد_بندي=p_دليلون->هدف_حد_بندي;
+    offsets=p_دليلون->offsets;
 
     /* get the converter state from UConverter */
-    prev = static_cast<int32_t>(cnv->toUnicodeStatus);
-    if(prev==0) {
+    prev = static_cast<int32_t>(cnv->منزل_Unicode_حالت);
+    إذا(prev==0) {
         prev=BOCU1_ASCII_PREV;
     }
-    diff=cnv->mode; /* mode may be set to UCNV_SI by ucnv_bld.c but then toULength==0 */
+    diff=cnv->گهڻائي; /* mode may be set to UCNV_SI by ucnv_bld.c but then toULength==0 */
     count=diff&3;
     diff>>=2;
 
-    byteIndex=cnv->toULength;
-    bytes=cnv->toUBytes;
+    byte_اشاريو=cnv->منزل_ULength;
+    بائيٽون=cnv->منزل_UBytes;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=byteIndex==0 ? 0 : -1;
-    nextSourceIndex=0;
+    ذريعو_اشاريو=byte_اشاريو==0 ? 0 : -1;
+    ايندڙ_ذريعو_اشاريو=0;
 
     /* conversion "loop" similar to _SCSUToUnicodeWithOffsets() */
-    if(count>0 && byteIndex>0 && target<targetLimit) {
-        goto getTrail;
+    إذا(count>0 && byte_اشاريو>0 && هدف<هدف_حد_بندي) {
+        اذهب getTrail;
     }
 
 fastSingle:
     /* fast loop for single-byte differences */
     /* use count as the only loop counter variable */
-    diff = static_cast<int32_t>(sourceLimit - source);
-    count = static_cast<int32_t>(pArgs->targetLimit - target);
-    if(count>diff) {
+    diff = static_cast<int32_t>(ذريعو_حد_بندي - ذريعو);
+    count = static_cast<int32_t>(p_دليلون->هدف_حد_بندي - هدف);
+    إذا(count>diff) {
         count=diff;
     }
-    while(count>0) {
-        if(BOCU1_START_NEG_2<=(c=*source) && c<BOCU1_START_POS_2) {
-            c=prev+(c-BOCU1_MIDDLE);
-            if(c<0x3000) {
-                *target++ = static_cast<char16_t>(c);
-                *offsets++=nextSourceIndex++;
+    طالما(count>0) {
+        إذا(BOCU1_شروعات_NEG_2<=(c=*ذريعو) && c<BOCU1_شروعات_POS_2) {
+            c=prev+(c-BOCU1_وچ);
+            إذا(c<0x3000) {
+                *هدف++ = static_cast<char16_t>(c);
+                *offsets++=ايندڙ_ذريعو_اشاريو++;
                 prev=BOCU1_SIMPLE_PREV(c);
-            } else {
-                break;
+            } وإلا {
+                اكسر;
             }
-        } else if(c<=0x20) {
-            if(c!=0x20) {
+        } وإلا إذا(c<=0x20) {
+            إذا(c!=0x20) {
                 prev=BOCU1_ASCII_PREV;
             }
-            *target++ = static_cast<char16_t>(c);
-            *offsets++=nextSourceIndex++;
-        } else {
-            break;
+            *هدف++ = static_cast<char16_t>(c);
+            *offsets++=ايندڙ_ذريعو_اشاريو++;
+        } وإلا {
+            اكسر;
         }
-        ++source;
+        ++ذريعو;
         --count;
     }
-    sourceIndex=nextSourceIndex; /* wrong if offsets==nullptr but does not matter */
+    ذريعو_اشاريو=ايندڙ_ذريعو_اشاريو; /* wrong if offsets==nullptr but does not matter */
 
     /* decode a sequence of single and lead bytes */
-    while(source<sourceLimit) {
-        if(target>=targetLimit) {
+    طالما(ذريعو<ذريعو_حد_بندي) {
+        إذا(هدف>=هدف_حد_بندي) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+            اكسر;
         }
 
-        ++nextSourceIndex;
-        c=*source++;
-        if(BOCU1_START_NEG_2<=c && c<BOCU1_START_POS_2) {
+        ++ايندڙ_ذريعو_اشاريو;
+        c=*ذريعو++;
+        إذا(BOCU1_شروعات_NEG_2<=c && c<BOCU1_شروعات_POS_2) {
             /* Write a code point directly from a single-byte difference. */
-            c=prev+(c-BOCU1_MIDDLE);
-            if(c<0x3000) {
-                *target++ = static_cast<char16_t>(c);
-                *offsets++=sourceIndex;
+            c=prev+(c-BOCU1_وچ);
+            إذا(c<0x3000) {
+                *هدف++ = static_cast<char16_t>(c);
+                *offsets++=ذريعو_اشاريو;
                 prev=BOCU1_SIMPLE_PREV(c);
-                sourceIndex=nextSourceIndex;
-                goto fastSingle;
+                ذريعو_اشاريو=ايندڙ_ذريعو_اشاريو;
+                اذهب fastSingle;
             }
-        } else if(c<=0x20) {
+        } وإلا إذا(c<=0x20) {
             /*
              * Direct-encoded C0 control code or space.
              * Reset prev for C0 control codes but not for space.
              */
-            if(c!=0x20) {
+            إذا(c!=0x20) {
                 prev=BOCU1_ASCII_PREV;
             }
-            *target++ = static_cast<char16_t>(c);
-            *offsets++=sourceIndex;
-            sourceIndex=nextSourceIndex;
-            continue;
-        } else if(BOCU1_START_NEG_3<=c && c<BOCU1_START_POS_3 && source<sourceLimit) {
+            *هدف++ = static_cast<char16_t>(c);
+            *offsets++=ذريعو_اشاريو;
+            ذريعو_اشاريو=ايندڙ_ذريعو_اشاريو;
+            استمر;
+        } وإلا إذا(BOCU1_شروعات_NEG_3<=c && c<BOCU1_شروعات_POS_3 && ذريعو<ذريعو_حد_بندي) {
             /* Optimize two-byte case. */
-            if(c>=BOCU1_MIDDLE) {
-                diff = (c - BOCU1_START_POS_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_POS_1 + 1;
-            } else {
-                diff = (c - BOCU1_START_NEG_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_NEG_1;
+            إذا(c>=BOCU1_وچ) {
+                diff = (c - BOCU1_شروعات_POS_2) * BOCU1_TRAIL_ڳڻپ + BOCU1_پهچ_POS_1 + 1;
+            } وإلا {
+                diff = (c - BOCU1_شروعات_NEG_2) * BOCU1_TRAIL_ڳڻپ + BOCU1_پهچ_NEG_1;
             }
 
             /* trail byte */
-            ++nextSourceIndex;
-            c=decodeBocu1TrailByte(1, *source++);
-            if (c < 0 || static_cast<uint32_t>(c = prev + diff + c) > 0x10ffff) {
-                bytes[0]=source[-2];
-                bytes[1]=source[-1];
-                byteIndex=2;
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                break;
+            ++ايندڙ_ذريعو_اشاريو;
+            c=decodeBocu1TrailByte(1, *ذريعو++);
+            إذا (c < 0 || static_cast<uint32_t>(c = prev + diff + c) > 0x10ffff) {
+                بائيٽون[0]=ذريعو[-2];
+                بائيٽون[1]=ذريعو[-1];
+                byte_اشاريو=2;
+                *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
+                اكسر;
             }
-        } else if(c==BOCU1_RESET) {
+        } وإلا إذا(c==BOCU1_RESET) {
             /* only reset the state, no code point */
             prev=BOCU1_ASCII_PREV;
-            sourceIndex=nextSourceIndex;
-            continue;
-        } else {
+            ذريعو_اشاريو=ايندڙ_ذريعو_اشاريو;
+            استمر;
+        } وإلا {
             /*
              * For multi-byte difference lead bytes, set the decoder state
              * with the partial difference value from the lead byte and
              * with the number of trail bytes.
              */
-            bytes[0] = static_cast<uint8_t>(c);
-            byteIndex=1;
+            بائيٽون[0] = static_cast<uint8_t>(c);
+            byte_اشاريو=1;
 
             diff=decodeBocu1LeadByte(c);
             count=diff&3;
             diff>>=2;
 getTrail:
-            for(;;) {
-                if(source>=sourceLimit) {
-                    goto endloop;
+            لكل(;;) {
+                إذا(ذريعو>=ذريعو_حد_بندي) {
+                    اذهب endloop;
                 }
-                ++nextSourceIndex;
-                c=bytes[byteIndex++]=*source++;
+                ++ايندڙ_ذريعو_اشاريو;
+                c=بائيٽون[byte_اشاريو++]=*ذريعو++;
 
                 /* trail byte in any position */
                 c=decodeBocu1TrailByte(count, c);
-                if(c<0) {
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    goto endloop;
+                إذا(c<0) {
+                    *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
+                    اذهب endloop;
                 }
 
                 diff+=c;
-                if(--count==0) {
+                إذا(--count==0) {
                     /* final trail byte, deliver a code point */
-                    byteIndex=0;
+                    byte_اشاريو=0;
                     c=prev+diff;
-                    if (static_cast<uint32_t>(c) > 0x10ffff) {
-                        *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        goto endloop;
+                    إذا (static_cast<uint32_t>(c) > 0x10ffff) {
+                        *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
+                        اذهب endloop;
                     }
-                    break;
+                    اكسر;
                 }
             }
         }
 
         /* calculate the next prev and output c */
         prev=BOCU1_PREV(c);
-        if(c<=0xffff) {
-            *target++ = static_cast<char16_t>(c);
-            *offsets++=sourceIndex;
-        } else {
+        إذا(c<=0xffff) {
+            *هدف++ = static_cast<char16_t>(c);
+            *offsets++=ذريعو_اشاريو;
+        } وإلا {
             /* output surrogate pair */
-            *target++=U16_LEAD(c);
-            if(target<targetLimit) {
-                *target++=U16_TRAIL(c);
-                *offsets++=sourceIndex;
-                *offsets++=sourceIndex;
-            } else {
+            *هدف++=U16_LEAD(c);
+            إذا(هدف<هدف_حد_بندي) {
+                *هدف++=U16_TRAIL(c);
+                *offsets++=ذريعو_اشاريو;
+                *offsets++=ذريعو_اشاريو;
+            } وإلا {
                 /* target overflow */
-                *offsets++=sourceIndex;
-                cnv->UCharErrorBuffer[0]=U16_TRAIL(c);
-                cnv->UCharErrorBufferLength=1;
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *offsets++=ذريعو_اشاريو;
+                cnv->UChar_Error_بفر[0]=U16_TRAIL(c);
+                cnv->UChar_Error_بفر_ڊيگهائي=1;
+                *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+                اكسر;
             }
         }
-        sourceIndex=nextSourceIndex;
+        ذريعو_اشاريو=ايندڙ_ذريعو_اشاريو;
     }
 endloop:
 
-    if(*pErrorCode==U_ILLEGAL_CHAR_FOUND) {
+    إذا(*p_Error_ڪوڊ==U_ILLEGAL_CHAR_مليو) {
         /* set the converter state in UConverter to deal with the next character */
-        cnv->toUnicodeStatus=BOCU1_ASCII_PREV;
-        cnv->mode=0;
-    } else {
+        cnv->منزل_Unicode_حالت=BOCU1_ASCII_PREV;
+        cnv->گهڻائي=0;
+    } وإلا {
         /* set the converter state back into UConverter */
-        cnv->toUnicodeStatus = static_cast<uint32_t>(prev);
-        cnv->mode = static_cast<int32_t>(static_cast<uint32_t>(diff) << 2) | count;
+        cnv->منزل_Unicode_حالت = static_cast<uint32_t>(prev);
+        cnv->گهڻائي = static_cast<int32_t>(static_cast<uint32_t>(diff) << 2) | count;
     }
-    cnv->toULength=byteIndex;
+    cnv->منزل_ULength=byte_اشاريو;
 
     /* write back the updated pointers */
-    pArgs->source = reinterpret_cast<const char*>(source);
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_دليلون->ذريعو = reinterpret_cast<ثابت حرف*>(ذريعو);
+    p_دليلون->هدف=هدف;
+    p_دليلون->offsets=offsets;
 }
 
 /*
@@ -1174,238 +1174,238 @@ endloop:
  * re-copy the original function and remove the variables
  * offsets, sourceIndex, and nextSourceIndex.
  */
-static void U_CALLCONV
-_Bocu1ToUnicode(UConverterToUnicodeArgs *pArgs,
-                UErrorCode *pErrorCode) {
+ساكن فراغ U_CALLCONV
+Bocu1_منزل_Unicode(UConverter_منزل_Unicode_دليلون *p_دليلون,
+                UError_ڪوڊ *p_Error_ڪوڊ) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit;
-    char16_t *target;
-    const char16_t *targetLimit;
+    ثابت uint8_t *ذريعو, *ذريعو_حد_بندي;
+    char16_t *هدف;
+    ثابت char16_t *هدف_حد_بندي;
 
     int32_t prev, count, diff, c;
 
-    int8_t byteIndex;
-    uint8_t *bytes;
+    int8_t byte_اشاريو;
+    uint8_t *بائيٽون;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source = reinterpret_cast<const uint8_t*>(pArgs->source);
-    sourceLimit = reinterpret_cast<const uint8_t*>(pArgs->sourceLimit);
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
+    cnv=p_دليلون->converter;
+    ذريعو = reinterpret_cast<ثابت uint8_t*>(p_دليلون->ذريعو);
+    ذريعو_حد_بندي = reinterpret_cast<ثابت uint8_t*>(p_دليلون->ذريعو_حد_بندي);
+    هدف=p_دليلون->هدف;
+    هدف_حد_بندي=p_دليلون->هدف_حد_بندي;
 
     /* get the converter state from UConverter */
-    prev = static_cast<int32_t>(cnv->toUnicodeStatus);
-    if(prev==0) {
+    prev = static_cast<int32_t>(cnv->منزل_Unicode_حالت);
+    إذا(prev==0) {
         prev=BOCU1_ASCII_PREV;
     }
-    diff=cnv->mode; /* mode may be set to UCNV_SI by ucnv_bld.c but then toULength==0 */
+    diff=cnv->گهڻائي; /* mode may be set to UCNV_SI by ucnv_bld.c but then toULength==0 */
     count=diff&3;
     diff>>=2;
 
-    byteIndex=cnv->toULength;
-    bytes=cnv->toUBytes;
+    byte_اشاريو=cnv->منزل_ULength;
+    بائيٽون=cnv->منزل_UBytes;
 
     /* conversion "loop" similar to _SCSUToUnicodeWithOffsets() */
-    if(count>0 && byteIndex>0 && target<targetLimit) {
-        goto getTrail;
+    إذا(count>0 && byte_اشاريو>0 && هدف<هدف_حد_بندي) {
+        اذهب getTrail;
     }
 
 fastSingle:
     /* fast loop for single-byte differences */
     /* use count as the only loop counter variable */
-    diff = static_cast<int32_t>(sourceLimit - source);
-    count = static_cast<int32_t>(pArgs->targetLimit - target);
-    if(count>diff) {
+    diff = static_cast<int32_t>(ذريعو_حد_بندي - ذريعو);
+    count = static_cast<int32_t>(p_دليلون->هدف_حد_بندي - هدف);
+    إذا(count>diff) {
         count=diff;
     }
-    while(count>0) {
-        if(BOCU1_START_NEG_2<=(c=*source) && c<BOCU1_START_POS_2) {
-            c=prev+(c-BOCU1_MIDDLE);
-            if(c<0x3000) {
-                *target++ = static_cast<char16_t>(c);
+    طالما(count>0) {
+        إذا(BOCU1_شروعات_NEG_2<=(c=*ذريعو) && c<BOCU1_شروعات_POS_2) {
+            c=prev+(c-BOCU1_وچ);
+            إذا(c<0x3000) {
+                *هدف++ = static_cast<char16_t>(c);
                 prev=BOCU1_SIMPLE_PREV(c);
-            } else {
-                break;
+            } وإلا {
+                اكسر;
             }
-        } else if(c<=0x20) {
-            if(c!=0x20) {
+        } وإلا إذا(c<=0x20) {
+            إذا(c!=0x20) {
                 prev=BOCU1_ASCII_PREV;
             }
-            *target++ = static_cast<char16_t>(c);
-        } else {
-            break;
+            *هدف++ = static_cast<char16_t>(c);
+        } وإلا {
+            اكسر;
         }
-        ++source;
+        ++ذريعو;
         --count;
     }
 
     /* decode a sequence of single and lead bytes */
-    while(source<sourceLimit) {
-        if(target>=targetLimit) {
+    طالما(ذريعو<ذريعو_حد_بندي) {
+        إذا(هدف>=هدف_حد_بندي) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+            اكسر;
         }
 
-        c=*source++;
-        if(BOCU1_START_NEG_2<=c && c<BOCU1_START_POS_2) {
+        c=*ذريعو++;
+        إذا(BOCU1_شروعات_NEG_2<=c && c<BOCU1_شروعات_POS_2) {
             /* Write a code point directly from a single-byte difference. */
-            c=prev+(c-BOCU1_MIDDLE);
-            if(c<0x3000) {
-                *target++ = static_cast<char16_t>(c);
+            c=prev+(c-BOCU1_وچ);
+            إذا(c<0x3000) {
+                *هدف++ = static_cast<char16_t>(c);
                 prev=BOCU1_SIMPLE_PREV(c);
-                goto fastSingle;
+                اذهب fastSingle;
             }
-        } else if(c<=0x20) {
+        } وإلا إذا(c<=0x20) {
             /*
              * Direct-encoded C0 control code or space.
              * Reset prev for C0 control codes but not for space.
              */
-            if(c!=0x20) {
+            إذا(c!=0x20) {
                 prev=BOCU1_ASCII_PREV;
             }
-            *target++ = static_cast<char16_t>(c);
-            continue;
-        } else if(BOCU1_START_NEG_3<=c && c<BOCU1_START_POS_3 && source<sourceLimit) {
+            *هدف++ = static_cast<char16_t>(c);
+            استمر;
+        } وإلا إذا(BOCU1_شروعات_NEG_3<=c && c<BOCU1_شروعات_POS_3 && ذريعو<ذريعو_حد_بندي) {
             /* Optimize two-byte case. */
-            if(c>=BOCU1_MIDDLE) {
-                diff = (c - BOCU1_START_POS_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_POS_1 + 1;
-            } else {
-                diff = (c - BOCU1_START_NEG_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_NEG_1;
+            إذا(c>=BOCU1_وچ) {
+                diff = (c - BOCU1_شروعات_POS_2) * BOCU1_TRAIL_ڳڻپ + BOCU1_پهچ_POS_1 + 1;
+            } وإلا {
+                diff = (c - BOCU1_شروعات_NEG_2) * BOCU1_TRAIL_ڳڻپ + BOCU1_پهچ_NEG_1;
             }
 
             /* trail byte */
-            c=decodeBocu1TrailByte(1, *source++);
-            if (c < 0 || static_cast<uint32_t>(c = prev + diff + c) > 0x10ffff) {
-                bytes[0]=source[-2];
-                bytes[1]=source[-1];
-                byteIndex=2;
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                break;
+            c=decodeBocu1TrailByte(1, *ذريعو++);
+            إذا (c < 0 || static_cast<uint32_t>(c = prev + diff + c) > 0x10ffff) {
+                بائيٽون[0]=ذريعو[-2];
+                بائيٽون[1]=ذريعو[-1];
+                byte_اشاريو=2;
+                *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
+                اكسر;
             }
-        } else if(c==BOCU1_RESET) {
+        } وإلا إذا(c==BOCU1_RESET) {
             /* only reset the state, no code point */
             prev=BOCU1_ASCII_PREV;
-            continue;
-        } else {
+            استمر;
+        } وإلا {
             /*
              * For multi-byte difference lead bytes, set the decoder state
              * with the partial difference value from the lead byte and
              * with the number of trail bytes.
              */
-            bytes[0] = static_cast<uint8_t>(c);
-            byteIndex=1;
+            بائيٽون[0] = static_cast<uint8_t>(c);
+            byte_اشاريو=1;
 
             diff=decodeBocu1LeadByte(c);
             count=diff&3;
             diff>>=2;
 getTrail:
-            for(;;) {
-                if(source>=sourceLimit) {
-                    goto endloop;
+            لكل(;;) {
+                إذا(ذريعو>=ذريعو_حد_بندي) {
+                    اذهب endloop;
                 }
-                c=bytes[byteIndex++]=*source++;
+                c=بائيٽون[byte_اشاريو++]=*ذريعو++;
 
                 /* trail byte in any position */
                 c=decodeBocu1TrailByte(count, c);
-                if(c<0) {
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    goto endloop;
+                إذا(c<0) {
+                    *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
+                    اذهب endloop;
                 }
 
                 diff+=c;
-                if(--count==0) {
+                إذا(--count==0) {
                     /* final trail byte, deliver a code point */
-                    byteIndex=0;
+                    byte_اشاريو=0;
                     c=prev+diff;
-                    if (static_cast<uint32_t>(c) > 0x10ffff) {
-                        *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        goto endloop;
+                    إذا (static_cast<uint32_t>(c) > 0x10ffff) {
+                        *p_Error_ڪوڊ=U_ILLEGAL_CHAR_مليو;
+                        اذهب endloop;
                     }
-                    break;
+                    اكسر;
                 }
             }
         }
 
         /* calculate the next prev and output c */
         prev=BOCU1_PREV(c);
-        if(c<=0xffff) {
-            *target++ = static_cast<char16_t>(c);
-        } else {
+        إذا(c<=0xffff) {
+            *هدف++ = static_cast<char16_t>(c);
+        } وإلا {
             /* output surrogate pair */
-            *target++=U16_LEAD(c);
-            if(target<targetLimit) {
-                *target++=U16_TRAIL(c);
-            } else {
+            *هدف++=U16_LEAD(c);
+            إذا(هدف<هدف_حد_بندي) {
+                *هدف++=U16_TRAIL(c);
+            } وإلا {
                 /* target overflow */
-                cnv->UCharErrorBuffer[0]=U16_TRAIL(c);
-                cnv->UCharErrorBufferLength=1;
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                cnv->UChar_Error_بفر[0]=U16_TRAIL(c);
+                cnv->UChar_Error_بفر_ڊيگهائي=1;
+                *p_Error_ڪوڊ=U_بفر_حد_کان_مٿي_ERROR;
+                اكسر;
             }
         }
     }
 endloop:
 
-    if(*pErrorCode==U_ILLEGAL_CHAR_FOUND) {
+    إذا(*p_Error_ڪوڊ==U_ILLEGAL_CHAR_مليو) {
         /* set the converter state in UConverter to deal with the next character */
-        cnv->toUnicodeStatus=BOCU1_ASCII_PREV;
-        cnv->mode=0;
-    } else {
+        cnv->منزل_Unicode_حالت=BOCU1_ASCII_PREV;
+        cnv->گهڻائي=0;
+    } وإلا {
         /* set the converter state back into UConverter */
-        cnv->toUnicodeStatus = static_cast<uint32_t>(prev);
-        cnv->mode = (static_cast<uint32_t>(diff) << 2) | count;
+        cnv->منزل_Unicode_حالت = static_cast<uint32_t>(prev);
+        cnv->گهڻائي = (static_cast<uint32_t>(diff) << 2) | count;
     }
-    cnv->toULength=byteIndex;
+    cnv->منزل_ULength=byte_اشاريو;
 
     /* write back the updated pointers */
-    pArgs->source = reinterpret_cast<const char*>(source);
-    pArgs->target=target;
+    p_دليلون->ذريعو = reinterpret_cast<ثابت حرف*>(ذريعو);
+    p_دليلون->هدف=هدف;
 }
 
 /* miscellaneous ------------------------------------------------------------ */
 
-static const UConverterImpl _Bocu1Impl={
+ساكن ثابت UConverterImpl _Bocu1Impl={
     UCNV_BOCU1,
 
-    nullptr,
-    nullptr,
+    خالي_اشارو,
+    خالي_اشارو,
 
-    nullptr,
-    nullptr,
-    nullptr,
+    خالي_اشارو,
+    خالي_اشارو,
+    خالي_اشارو,
 
-    _Bocu1ToUnicode,
-    _Bocu1ToUnicodeWithOffsets,
+    Bocu1_منزل_Unicode,
+    Bocu1_منزل_Unicode_With_Offsets,
     _Bocu1FromUnicode,
     _Bocu1FromUnicodeWithOffsets,
-    nullptr,
+    خالي_اشارو,
 
-    nullptr,
-    nullptr,
-    nullptr,
-    nullptr,
-    ucnv_getCompleteUnicodeSet,
+    خالي_اشارو,
+    خالي_اشارو,
+    خالي_اشارو,
+    خالي_اشارو,
+    ucnv_get_Complete_Unicode_سيٽ,
 
-    nullptr,
-    nullptr
+    خالي_اشارو,
+    خالي_اشارو
 };
 
-static const UConverterStaticData _Bocu1StaticData={
-    sizeof(UConverterStaticData),
+ساكن ثابت UConverter_Static_معلومات Bocu1_Static_معلومات={
+    حجم(UConverter_Static_معلومات),
     "BOCU-1",
     1214, /* CCSID for BOCU-1 */
     UCNV_IBM, UCNV_BOCU1,
     1, 4, /* one char16_t generates at least 1 byte and at most 4 bytes */
     { 0x1a, 0, 0, 0 }, 1, /* BOCU-1 never needs to write a subchar */
-    false, false,
+    خطأ, خطأ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _Bocu1Data=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_Bocu1StaticData, &_Bocu1Impl);
+ثابت UConverter_Shared_معلومات Bocu1_معلومات=
+        UCNV_IMMUTABLE_SHARED_معلومات_INITIALIZER(&Bocu1_Static_معلومات, &_Bocu1Impl);
 
-#endif
+#جيڪڏهن_پورو

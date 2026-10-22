@@ -25,68 +25,68 @@
 * 2009-nov..2010-jan  Markus Scherer  total rewrite, new Normalizer2 API & code
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#إذا !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/udata.h"
-#include "unicode/ustring.h"
-#include "unicode/uiter.h"
-#include "unicode/unorm.h"
-#include "unicode/unorm2.h"
-#include "normalizer2impl.h"
-#include "unormimp.h"
-#include "uprops.h"
-#include "ustr_imp.h"
+#ضمن "unicode/udata.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/uiter.h"
+#ضمن "unicode/unorm.h"
+#ضمن "unicode/unorm2.h"
+#ضمن "normalizer2impl.h"
+#ضمن "unormimp.h"
+#ضمن "uprops.h"
+#ضمن "ustr_imp.h"
 
 U_NAMESPACE_USE
 
 /* quick check functions ---------------------------------------------------- */
 
-U_CAPI UNormalizationCheckResult U_EXPORT2
-unorm_quickCheck(const char16_t *src,
-                 int32_t srcLength, 
-                 UNormalizationMode mode,
-                 UErrorCode *pErrorCode) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
-    return unorm2_quickCheck((const UNormalizer2 *)n2, src, srcLength, pErrorCode);
+U_CAPI UNormalization_Check_نتيجو U_EXPORT2
+unorm_تيز_Check(ثابت char16_t *src,
+                 int32_t src_ڊيگهائي, 
+                 UNormalization_گهڻائي گهڻائي,
+                 UError_ڪوڊ *p_Error_ڪوڊ) {
+    ثابت Normalizer2 *n2=Normalizer2Factory::getInstance(گهڻائي, *p_Error_ڪوڊ);
+    أرجع unorm2_تيز_Check((ثابت UNormalizer2 *)n2, src, src_ڊيگهائي, p_Error_ڪوڊ);
 }
 
-U_CAPI UNormalizationCheckResult U_EXPORT2
-unorm_quickCheckWithOptions(const char16_t *src, int32_t srcLength,
-                            UNormalizationMode mode, int32_t options,
-                            UErrorCode *pErrorCode) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
-    if(options&UNORM_UNICODE_3_2) {
-        FilteredNormalizer2 fn2(*n2, *uniset_getUnicode32Instance(*pErrorCode));
-        return unorm2_quickCheck(
-            reinterpret_cast<const UNormalizer2 *>(static_cast<Normalizer2 *>(&fn2)),
-            src, srcLength, pErrorCode);
-    } else {
-        return unorm2_quickCheck((const UNormalizer2 *)n2, src, srcLength, pErrorCode);
+U_CAPI UNormalization_Check_نتيجو U_EXPORT2
+unorm_تيز_Check_With_Options(ثابت char16_t *src, int32_t src_ڊيگهائي,
+                            UNormalization_گهڻائي گهڻائي, int32_t options,
+                            UError_ڪوڊ *p_Error_ڪوڊ) {
+    ثابت Normalizer2 *n2=Normalizer2Factory::getInstance(گهڻائي, *p_Error_ڪوڊ);
+    إذا(options&UNORM_UNICODE_3_2) {
+        FilteredNormalizer2 fn2(*n2, *uniset_getUnicode32Instance(*p_Error_ڪوڊ));
+        أرجع unorm2_تيز_Check(
+            reinterpret_cast<ثابت UNormalizer2 *>(static_cast<Normalizer2 *>(&fn2)),
+            src, src_ڊيگهائي, p_Error_ڪوڊ);
+    } وإلا {
+        أرجع unorm2_تيز_Check((ثابت UNormalizer2 *)n2, src, src_ڊيگهائي, p_Error_ڪوڊ);
     }
 }
 
 U_CAPI UBool U_EXPORT2
-unorm_isNormalized(const char16_t *src, int32_t srcLength,
-                   UNormalizationMode mode,
-                   UErrorCode *pErrorCode) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
-    return unorm2_isNormalized((const UNormalizer2 *)n2, src, srcLength, pErrorCode);
+unorm_isNormalized(ثابت char16_t *src, int32_t src_ڊيگهائي,
+                   UNormalization_گهڻائي گهڻائي,
+                   UError_ڪوڊ *p_Error_ڪوڊ) {
+    ثابت Normalizer2 *n2=Normalizer2Factory::getInstance(گهڻائي, *p_Error_ڪوڊ);
+    أرجع unorm2_isNormalized((ثابت UNormalizer2 *)n2, src, src_ڊيگهائي, p_Error_ڪوڊ);
 }
 
 U_CAPI UBool U_EXPORT2
-unorm_isNormalizedWithOptions(const char16_t *src, int32_t srcLength,
-                              UNormalizationMode mode, int32_t options,
-                              UErrorCode *pErrorCode) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
-    if(options&UNORM_UNICODE_3_2) {
-        FilteredNormalizer2 fn2(*n2, *uniset_getUnicode32Instance(*pErrorCode));
-        return unorm2_isNormalized(
-            reinterpret_cast<const UNormalizer2 *>(static_cast<Normalizer2 *>(&fn2)),
-            src, srcLength, pErrorCode);
-    } else {
-        return unorm2_isNormalized((const UNormalizer2 *)n2, src, srcLength, pErrorCode);
+unorm_isNormalizedWithOptions(ثابت char16_t *src, int32_t src_ڊيگهائي,
+                              UNormalization_گهڻائي گهڻائي, int32_t options,
+                              UError_ڪوڊ *p_Error_ڪوڊ) {
+    ثابت Normalizer2 *n2=Normalizer2Factory::getInstance(گهڻائي, *p_Error_ڪوڊ);
+    إذا(options&UNORM_UNICODE_3_2) {
+        FilteredNormalizer2 fn2(*n2, *uniset_getUnicode32Instance(*p_Error_ڪوڊ));
+        أرجع unorm2_isNormalized(
+            reinterpret_cast<ثابت UNormalizer2 *>(static_cast<Normalizer2 *>(&fn2)),
+            src, src_ڊيگهائي, p_Error_ڪوڊ);
+    } وإلا {
+        أرجع unorm2_isNormalized((ثابت UNormalizer2 *)n2, src, src_ڊيگهائي, p_Error_ڪوڊ);
     }
 }
 
@@ -94,187 +94,187 @@ unorm_isNormalizedWithOptions(const char16_t *src, int32_t srcLength,
 
 /** Public API for normalizing. */
 U_CAPI int32_t U_EXPORT2
-unorm_normalize(const char16_t *src, int32_t srcLength,
-                UNormalizationMode mode, int32_t options,
-                char16_t *dest, int32_t destCapacity,
-                UErrorCode *pErrorCode) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
-    if(options&UNORM_UNICODE_3_2) {
-        FilteredNormalizer2 fn2(*n2, *uniset_getUnicode32Instance(*pErrorCode));
-        return unorm2_normalize(
-            reinterpret_cast<const UNormalizer2 *>(static_cast<Normalizer2 *>(&fn2)),
-            src, srcLength, dest, destCapacity, pErrorCode);
-    } else {
-        return unorm2_normalize((const UNormalizer2 *)n2,
-            src, srcLength, dest, destCapacity, pErrorCode);
+unorm_normalize(ثابت char16_t *src, int32_t src_ڊيگهائي,
+                UNormalization_گهڻائي گهڻائي, int32_t options,
+                char16_t *dest, int32_t dest_صلاحيت,
+                UError_ڪوڊ *p_Error_ڪوڊ) {
+    ثابت Normalizer2 *n2=Normalizer2Factory::getInstance(گهڻائي, *p_Error_ڪوڊ);
+    إذا(options&UNORM_UNICODE_3_2) {
+        FilteredNormalizer2 fn2(*n2, *uniset_getUnicode32Instance(*p_Error_ڪوڊ));
+        أرجع unorm2_normalize(
+            reinterpret_cast<ثابت UNormalizer2 *>(static_cast<Normalizer2 *>(&fn2)),
+            src, src_ڊيگهائي, dest, dest_صلاحيت, p_Error_ڪوڊ);
+    } وإلا {
+        أرجع unorm2_normalize((ثابت UNormalizer2 *)n2,
+            src, src_ڊيگهائي, dest, dest_صلاحيت, p_Error_ڪوڊ);
     }
 }
 
 
 /* iteration functions ------------------------------------------------------ */
 
-static int32_t
+ساكن int32_t
 _iterate(UCharIterator *src, UBool forward,
-              char16_t *dest, int32_t destCapacity,
-              const Normalizer2 *n2,
-              UBool doNormalize, UBool *pNeededToNormalize,
-              UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+              char16_t *dest, int32_t dest_صلاحيت,
+              ثابت Normalizer2 *n2,
+              UBool doNormalize, UBool *p_Needed_منزل_Normalize,
+              UError_ڪوڊ *p_Error_ڪوڊ) {
+    إذا(U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع 0;
     }
-    if(destCapacity<0 || (dest==nullptr && destCapacity>0) || src==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
-    }
-
-    if(pNeededToNormalize!=nullptr) {
-        *pNeededToNormalize=false;
-    }
-    if(!(forward ? src->hasNext(src) : src->hasPrevious(src))) {
-        return u_terminateUChars(dest, destCapacity, 0, pErrorCode);
+    إذا(dest_صلاحيت<0 || (dest==خالي_اشارو && dest_صلاحيت>0) || src==خالي_اشارو) {
+        *p_Error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+        أرجع 0;
     }
 
-    UnicodeString buffer;
+    إذا(p_Needed_منزل_Normalize!=خالي_اشارو) {
+        *p_Needed_منزل_Normalize=خطأ;
+    }
+    إذا(!(forward ? src->has_ايندڙ(src) : src->has_اڳيون(src))) {
+        أرجع u_terminateUChars(dest, dest_صلاحيت, 0, p_Error_ڪوڊ);
+    }
+
+    UnicodeString بفر;
     UChar32 c;
-    if(forward) {
+    إذا(forward) {
         /* get one character and ignore its properties */
-        buffer.append(uiter_next32(src));
+        بفر.append(uiter_next32(src));
         /* get all following characters until we see a boundary */
-        while((c=uiter_next32(src))>=0) {
-            if(n2->hasBoundaryBefore(c)) {
+        طالما((c=uiter_next32(src))>=0) {
+            إذا(n2->hasBoundaryBefore(c)) {
                 /* back out the latest movement to stop at the boundary */
-                src->move(src, -U16_LENGTH(c), UITER_CURRENT);
-                break;
-            } else {
-                buffer.append(c);
+                src->move(src, -U16_ڊيگهائي(c), UITER_CURRENT);
+                اكسر;
+            } وإلا {
+                بفر.append(c);
             }
         }
-    } else {
-        while((c=uiter_previous32(src))>=0) {
+    } وإلا {
+        طالما((c=uiter_previous32(src))>=0) {
             /* always write this character to the front of the buffer */
-            buffer.insert(0, c);
+            بفر.insert(0, c);
             /* stop if this just-copied character is a boundary */
-            if(n2->hasBoundaryBefore(c)) {
-                break;
+            إذا(n2->hasBoundaryBefore(c)) {
+                اكسر;
             }
         }
     }
 
-    UnicodeString destString(dest, 0, destCapacity);
-    if(buffer.length()>0 && doNormalize) {
-        n2->normalize(buffer, destString, *pErrorCode).extract(dest, destCapacity, *pErrorCode);
-        if(pNeededToNormalize!=nullptr && U_SUCCESS(*pErrorCode)) {
-            *pNeededToNormalize= destString!=buffer;
+    UnicodeString destString(dest, 0, dest_صلاحيت);
+    إذا(بفر.length()>0 && doNormalize) {
+        n2->normalize(بفر, destString, *p_Error_ڪوڊ).extract(dest, dest_صلاحيت, *p_Error_ڪوڊ);
+        إذا(p_Needed_منزل_Normalize!=خالي_اشارو && U_SUCCESS(*p_Error_ڪوڊ)) {
+            *p_Needed_منزل_Normalize= destString!=بفر;
         }
-        return destString.length();
-    } else {
+        أرجع destString.length();
+    } وإلا {
         /* just copy the source characters */
-        return buffer.extract(dest, destCapacity, *pErrorCode);
+        أرجع بفر.extract(dest, dest_صلاحيت, *p_Error_ڪوڊ);
     }
 }
 
-static int32_t
+ساكن int32_t
 unorm_iterate(UCharIterator *src, UBool forward,
-              char16_t *dest, int32_t destCapacity,
-              UNormalizationMode mode, int32_t options,
-              UBool doNormalize, UBool *pNeededToNormalize,
-              UErrorCode *pErrorCode) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
-    if(options&UNORM_UNICODE_3_2) {
-        const UnicodeSet *uni32 = uniset_getUnicode32Instance(*pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            return 0;
+              char16_t *dest, int32_t dest_صلاحيت,
+              UNormalization_گهڻائي گهڻائي, int32_t options,
+              UBool doNormalize, UBool *p_Needed_منزل_Normalize,
+              UError_ڪوڊ *p_Error_ڪوڊ) {
+    ثابت Normalizer2 *n2=Normalizer2Factory::getInstance(گهڻائي, *p_Error_ڪوڊ);
+    إذا(options&UNORM_UNICODE_3_2) {
+        ثابت Unicode_سيٽ *uni32 = uniset_getUnicode32Instance(*p_Error_ڪوڊ);
+        إذا(U_FAILURE(*p_Error_ڪوڊ)) {
+            أرجع 0;
         }
         FilteredNormalizer2 fn2(*n2, *uni32);
-        return _iterate(src, forward, dest, destCapacity,
-            &fn2, doNormalize, pNeededToNormalize, pErrorCode);
+        أرجع _iterate(src, forward, dest, dest_صلاحيت,
+            &fn2, doNormalize, p_Needed_منزل_Normalize, p_Error_ڪوڊ);
     }
-    return _iterate(src, forward, dest, destCapacity,
-            n2, doNormalize, pNeededToNormalize, pErrorCode);
+    أرجع _iterate(src, forward, dest, dest_صلاحيت,
+            n2, doNormalize, p_Needed_منزل_Normalize, p_Error_ڪوڊ);
 }
 
 U_CAPI int32_t U_EXPORT2
-unorm_previous(UCharIterator *src,
-               char16_t *dest, int32_t destCapacity,
-               UNormalizationMode mode, int32_t options,
-               UBool doNormalize, UBool *pNeededToNormalize,
-               UErrorCode *pErrorCode) {
-    return unorm_iterate(src, false,
-                         dest, destCapacity,
-                         mode, options,
-                         doNormalize, pNeededToNormalize,
-                         pErrorCode);
+unorm_اڳيون(UCharIterator *src,
+               char16_t *dest, int32_t dest_صلاحيت,
+               UNormalization_گهڻائي گهڻائي, int32_t options,
+               UBool doNormalize, UBool *p_Needed_منزل_Normalize,
+               UError_ڪوڊ *p_Error_ڪوڊ) {
+    أرجع unorm_iterate(src, خطأ,
+                         dest, dest_صلاحيت,
+                         گهڻائي, options,
+                         doNormalize, p_Needed_منزل_Normalize,
+                         p_Error_ڪوڊ);
 }
 
 U_CAPI int32_t U_EXPORT2
-unorm_next(UCharIterator *src,
-           char16_t *dest, int32_t destCapacity,
-           UNormalizationMode mode, int32_t options,
-           UBool doNormalize, UBool *pNeededToNormalize,
-           UErrorCode *pErrorCode) {
-    return unorm_iterate(src, true,
-                         dest, destCapacity,
-                         mode, options,
-                         doNormalize, pNeededToNormalize,
-                         pErrorCode);
+unorm_ايندڙ(UCharIterator *src,
+           char16_t *dest, int32_t dest_صلاحيت,
+           UNormalization_گهڻائي گهڻائي, int32_t options,
+           UBool doNormalize, UBool *p_Needed_منزل_Normalize,
+           UError_ڪوڊ *p_Error_ڪوڊ) {
+    أرجع unorm_iterate(src, سچ,
+                         dest, dest_صلاحيت,
+                         گهڻائي, options,
+                         doNormalize, p_Needed_منزل_Normalize,
+                         p_Error_ڪوڊ);
 }
 
 /* Concatenation of normalized strings -------------------------------------- */
 
-static int32_t
-_concatenate(const char16_t *left, int32_t leftLength,
-                  const char16_t *right, int32_t rightLength,
-                  char16_t *dest, int32_t destCapacity,
-                  const Normalizer2 *n2,
-                  UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+ساكن int32_t
+_concatenate(ثابت char16_t *کاٻي, int32_t کاٻو_ڊيگهائي,
+                  ثابت char16_t *ساڄي, int32_t ساڄو_ڊيگهائي,
+                  char16_t *dest, int32_t dest_صلاحيت,
+                  ثابت Normalizer2 *n2,
+                  UError_ڪوڊ *p_Error_ڪوڊ) {
+    إذا(U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع 0;
     }
-    if(destCapacity<0 || (dest==nullptr && destCapacity>0) ||
-        left==nullptr || leftLength<-1 || right==nullptr || rightLength<-1) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا(dest_صلاحيت<0 || (dest==خالي_اشارو && dest_صلاحيت>0) ||
+        کاٻي==خالي_اشارو || کاٻو_ڊيگهائي<-1 || ساڄي==خالي_اشارو || ساڄو_ڊيگهائي<-1) {
+        *p_Error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+        أرجع 0;
     }
 
     /* check for overlapping right and destination */
-    if( dest!=nullptr &&
-        ((right>=dest && right<(dest+destCapacity)) ||
-         (rightLength>0 && dest>=right && dest<(right+rightLength)))
+    إذا( dest!=خالي_اشارو &&
+        ((ساڄي>=dest && ساڄي<(dest+dest_صلاحيت)) ||
+         (ساڄو_ڊيگهائي>0 && dest>=ساڄي && dest<(ساڄي+ساڄو_ڊيگهائي)))
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+        أرجع 0;
     }
 
     /* allow left==dest */
     UnicodeString destString;
-    if(left==dest) {
-        destString.setTo(dest, leftLength, destCapacity);
-    } else {
-        destString.setTo(dest, 0, destCapacity);
-        destString.append(left, leftLength);
+    إذا(کاٻي==dest) {
+        destString.سيٽ_منزل(dest, کاٻو_ڊيگهائي, dest_صلاحيت);
+    } وإلا {
+        destString.سيٽ_منزل(dest, 0, dest_صلاحيت);
+        destString.append(کاٻي, کاٻو_ڊيگهائي);
     }
-    return n2->append(destString, UnicodeString(rightLength<0, right, rightLength), *pErrorCode).
-           extract(dest, destCapacity, *pErrorCode);
+    أرجع n2->append(destString, UnicodeString(ساڄو_ڊيگهائي<0, ساڄي, ساڄو_ڊيگهائي), *p_Error_ڪوڊ).
+           extract(dest, dest_صلاحيت, *p_Error_ڪوڊ);
 }
 
 U_CAPI int32_t U_EXPORT2
-unorm_concatenate(const char16_t *left, int32_t leftLength,
-                  const char16_t *right, int32_t rightLength,
-                  char16_t *dest, int32_t destCapacity,
-                  UNormalizationMode mode, int32_t options,
-                  UErrorCode *pErrorCode) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
-    if(options&UNORM_UNICODE_3_2) {
-        const UnicodeSet *uni32 = uniset_getUnicode32Instance(*pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            return 0;
+unorm_concatenate(ثابت char16_t *کاٻي, int32_t کاٻو_ڊيگهائي,
+                  ثابت char16_t *ساڄي, int32_t ساڄو_ڊيگهائي,
+                  char16_t *dest, int32_t dest_صلاحيت,
+                  UNormalization_گهڻائي گهڻائي, int32_t options,
+                  UError_ڪوڊ *p_Error_ڪوڊ) {
+    ثابت Normalizer2 *n2=Normalizer2Factory::getInstance(گهڻائي, *p_Error_ڪوڊ);
+    إذا(options&UNORM_UNICODE_3_2) {
+        ثابت Unicode_سيٽ *uni32 = uniset_getUnicode32Instance(*p_Error_ڪوڊ);
+        إذا(U_FAILURE(*p_Error_ڪوڊ)) {
+            أرجع 0;
         }
         FilteredNormalizer2 fn2(*n2, *uni32);
-        return _concatenate(left, leftLength, right, rightLength,
-            dest, destCapacity, &fn2, pErrorCode);
+        أرجع _concatenate(کاٻي, کاٻو_ڊيگهائي, ساڄي, ساڄو_ڊيگهائي,
+            dest, dest_صلاحيت, &fn2, p_Error_ڪوڊ);
     }
-    return _concatenate(left, leftLength, right, rightLength,
-        dest, destCapacity, n2, pErrorCode);
+    أرجع _concatenate(کاٻي, کاٻو_ڊيگهائي, ساڄي, ساڄو_ڊيگهائي,
+        dest, dest_صلاحيت, n2, p_Error_ڪوڊ);
 }
 
-#endif /* #if !UCONFIG_NO_NORMALIZATION */
+#جيڪڏهن_پورو /* #if !UCONFIG_NO_NORMALIZATION */

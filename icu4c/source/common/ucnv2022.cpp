@@ -28,24 +28,24 @@
 *   10/31/2000  Ram     Implemented offsets logic functions
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/uset.h"
-#include "unicode/ucnv_err.h"
-#include "unicode/ucnv_cb.h"
-#include "unicode/utf16.h"
-#include "ucnv_imp.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "ucnvmbcs.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "uassert.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "unicode/uset.h"
+#ضمن "unicode/ucnv_err.h"
+#ضمن "unicode/ucnv_cb.h"
+#ضمن "unicode/utf16.h"
+#ضمن "ucnv_imp.h"
+#ضمن "ucnv_bld.h"
+#ضمن "ucnv_cnv.h"
+#ضمن "ucnvmbcs.h"
+#ضمن "cstring.h"
+#ضمن "cmemory.h"
+#ضمن "uassert.h"
 
-#ifdef U_ENABLE_GENERIC_ISO_2022
+#جيڪڏهن_وصف_ٿيل U_ENABLE_GENERIC_ISO_2022
 /*
  * I am disabling the generic ISO-2022 converter after proposing to do so on
  * the icu mailing list two days ago.
@@ -75,22 +75,22 @@
  *
  * Markus Scherer 2003-dec-03
  */
-#endif
+#جيڪڏهن_پورو
 
-#if !UCONFIG_ONLY_HTML_CONVERSION
-static const char SHIFT_IN_STR[]  = "\x0F";
+#إذا !UCONFIG_ONLY_HTML_CONVERSION
+ساكن ثابت حرف سرڪايو_اندريون_STR[]  = "\x0F";
 // static const char SHIFT_OUT_STR[] = "\x0E";
-#endif
+#جيڪڏهن_پورو
 
-#define CR      0x0D
-#define LF      0x0A
-#define H_TAB   0x09
-#define V_TAB   0x0B
-#define SPACE   0x20
+#وصف_ڪريو CR      0x0D
+#وصف_ڪريو LF      0x0A
+#وصف_ڪريو H_TAB   0x09
+#وصف_ڪريو V_TAB   0x0B
+#وصف_ڪريو SPACE   0x20
 
-enum {
-    HWKANA_START=0xff61,
-    HWKANA_END=0xff9f
+تعداد {
+    HWKANA_شروعات=0xff61,
+    HWKANA_پڇاڙي=0xff9f
 };
 
 /*
@@ -101,11 +101,11 @@ enum {
  * Do not encode C1 control codes with native bytes 80..9F
  * as bytes 00..1F (C0 control codes).
  */
-enum {
-    GR94_START=0xa1,
-    GR94_END=0xfe,
-    GR96_START=0xa0,
-    GR96_END=0xff
+تعداد {
+    GR94_شروعات=0xa1,
+    GR94_پڇاڙي=0xfe,
+    GR96_شروعات=0xa0,
+    GR96_پڇاڙي=0xff
 };
 
 /*
@@ -114,10 +114,10 @@ enum {
  * The bit mask 0x0800c000 has bits set at bit positions 0xe, 0xf, 0x1b
  * corresponding to SO, SI, and ESC.
  */
-#define IS_2022_CONTROL(c) (((c)<0x20) && (((uint32_t)1<<(c))&0x0800c000)!=0)
+#وصف_ڪريو IS_2022_CONTROL(c) (((c)<0x20) && (((uint32_t)1<<(c))&0x0800c000)!=0)
 
 /* for ISO-2022-JP and -CN implementations */
-typedef enum  {
+تعريفنوع تعداد  {
         /* shared values */
         INVALID_STATE=-1,
         ASCII = 0,
@@ -133,7 +133,7 @@ typedef enum  {
         JISX212 = 5,
         GB2312  =6,
         KSC5601 =7,
-        HWKANA_7BIT=8,    /* Halfwidth Katakana 7 bit */
+        HWKANA_7_ٻٽو_انگ=8,    /* Halfwidth Katakana 7 bit */
 
         /* CN */
         /* the first few enum constants must keep their values because they correspond to myConverterArray[] */
@@ -156,13 +156,13 @@ typedef enum  {
 } StateEnum;
 
 /* is the StateEnum charset value for a DBCS charset? */
-#if UCONFIG_ONLY_HTML_CONVERSION
-#define IS_JP_DBCS(cs) (JISX208==(cs))
-#else
-#define IS_JP_DBCS(cs) (JISX208<=(cs) && (cs)<=KSC5601)
-#endif
+#إذا UCONFIG_ONLY_HTML_CONVERSION
+#وصف_ڪريو IS_JP_DBCS(cs) (JISX208==(cs))
+#وإلا
+#وصف_ڪريو IS_JP_DBCS(cs) (JISX208<=(cs) && (cs)<=KSC5601)
+#جيڪڏهن_پورو
 
-#define CSM(cs) ((uint16_t)1<<(cs))
+#وصف_ڪريو CSM(cs) ((uint16_t)1<<(cs))
 
 /*
  * Each of these charset masks (with index x) contains a bit for a charset in exact correspondence
@@ -173,22 +173,22 @@ typedef enum  {
  *   all versions, not just JIS7 and JIS8.
  * - ICU does not distinguish between different versions of JIS X 0208.
  */
-#if UCONFIG_ONLY_HTML_CONVERSION
-enum { MAX_JA_VERSION=0 };
-#else
-enum { MAX_JA_VERSION=4 };
-#endif
-static const uint16_t jpCharsetMasks[MAX_JA_VERSION+1]={
-    CSM(ASCII)|CSM(JISX201)|CSM(JISX208)|CSM(HWKANA_7BIT),
-#if !UCONFIG_ONLY_HTML_CONVERSION
-    CSM(ASCII)|CSM(JISX201)|CSM(JISX208)|CSM(HWKANA_7BIT)|CSM(JISX212),
-    CSM(ASCII)|CSM(JISX201)|CSM(JISX208)|CSM(HWKANA_7BIT)|CSM(JISX212)|CSM(GB2312)|CSM(KSC5601)|CSM(ISO8859_1)|CSM(ISO8859_7),
-    CSM(ASCII)|CSM(JISX201)|CSM(JISX208)|CSM(HWKANA_7BIT)|CSM(JISX212)|CSM(GB2312)|CSM(KSC5601)|CSM(ISO8859_1)|CSM(ISO8859_7),
-    CSM(ASCII)|CSM(JISX201)|CSM(JISX208)|CSM(HWKANA_7BIT)|CSM(JISX212)|CSM(GB2312)|CSM(KSC5601)|CSM(ISO8859_1)|CSM(ISO8859_7)
-#endif
+#إذا UCONFIG_ONLY_HTML_CONVERSION
+تعداد { MAX_JA_نسخو=0 };
+#وإلا
+تعداد { MAX_JA_نسخو=4 };
+#جيڪڏهن_پورو
+ساكن ثابت uint16_t jpCharsetMasks[MAX_JA_نسخو+1]={
+    CSM(ASCII)|CSM(JISX201)|CSM(JISX208)|CSM(HWKANA_7_ٻٽو_انگ),
+#إذا !UCONFIG_ONLY_HTML_CONVERSION
+    CSM(ASCII)|CSM(JISX201)|CSM(JISX208)|CSM(HWKANA_7_ٻٽو_انگ)|CSM(JISX212),
+    CSM(ASCII)|CSM(JISX201)|CSM(JISX208)|CSM(HWKANA_7_ٻٽو_انگ)|CSM(JISX212)|CSM(GB2312)|CSM(KSC5601)|CSM(ISO8859_1)|CSM(ISO8859_7),
+    CSM(ASCII)|CSM(JISX201)|CSM(JISX208)|CSM(HWKANA_7_ٻٽو_انگ)|CSM(JISX212)|CSM(GB2312)|CSM(KSC5601)|CSM(ISO8859_1)|CSM(ISO8859_7),
+    CSM(ASCII)|CSM(JISX201)|CSM(JISX208)|CSM(HWKANA_7_ٻٽو_انگ)|CSM(JISX212)|CSM(GB2312)|CSM(KSC5601)|CSM(ISO8859_1)|CSM(ISO8859_7)
+#جيڪڏهن_پورو
 };
 
-typedef enum {
+تعريفنوع تعداد {
         ASCII1=0,
         LATIN1,
         SBCS,
@@ -197,50 +197,50 @@ typedef enum {
         HWKANA
 }Cnv2022Type;
 
-typedef struct ISO2022State {
+تعريفنوع بنية ISO2022State {
     int8_t cs[4];       /* charset number for SI (G0)/SO (G1)/SS2 (G2)/SS3 (G3) */
     int8_t g;           /* 0..3 for G0..G3 (SI/SO/SS2/SS3) */
     int8_t prevG;       /* g before single shift (SS2 or SS3) */
 } ISO2022State;
 
-#define UCNV_OPTIONS_VERSION_MASK 0xf
-#define UCNV_2022_MAX_CONVERTERS 10
+#وصف_ڪريو UCNV_OPTIONS_نسخو_نقاب 0xf
+#وصف_ڪريو UCNV_2022_MAX_CONVERTERS 10
 
-typedef struct{
-    UConverterSharedData *myConverterArray[UCNV_2022_MAX_CONVERTERS];
+تعريفنوع بنية{
+    UConverter_Shared_معلومات *myConverterArray[UCNV_2022_MAX_CONVERTERS];
     UConverter *currentConverter;
     Cnv2022Type currentType;
-    ISO2022State toU2022State, fromU2022State;
-    uint32_t key;
-    uint32_t version;
-#ifdef U_ENABLE_GENERIC_ISO_2022
-    UBool isFirstBuffer;
-#endif
-    UBool isEmptySegment;
-    char name[30];
-    char locale[3];
-}UConverterDataISO2022;
+    ISO2022State منزل_U2022_State, fromU2022State;
+    uint32_t ڪنجي;
+    uint32_t نسخو;
+#جيڪڏهن_وصف_ٿيل U_ENABLE_GENERIC_ISO_2022
+    UBool is_پهريون_بفر;
+#جيڪڏهن_پورو
+    UBool is_خالي_جايون_Segment;
+    حرف name[30];
+    حرف locale[3];
+}UConverter_معلومات_ISO2022;
 
 /* Protos */
 /* ISO-2022 ----------------------------------------------------------------- */
 
 /*Forward declaration */
-U_CFUNC void U_CALLCONV
-ucnv_fromUnicode_UTF8(UConverterFromUnicodeArgs * args,
-                      UErrorCode * err);
-U_CFUNC void U_CALLCONV
-ucnv_fromUnicode_UTF8_OFFSETS_LOGIC(UConverterFromUnicodeArgs * args,
-                                    UErrorCode * err);
+U_CFUNC فراغ U_CALLCONV
+ucnv_fromUnicode_UTF8(UConverter_From_Unicode_دليلون * دليلون_2,
+                      UError_ڪوڊ * err);
+U_CFUNC فراغ U_CALLCONV
+ucnv_fromUnicode_UTF8_OFFSETS_LOGIC(UConverter_From_Unicode_دليلون * دليلون_2,
+                                    UError_ڪوڊ * err);
 
-#define ESC_2022 0x1B /*ESC*/
+#وصف_ڪريو ESC_2022 0x1B /*ESC*/
 
-typedef enum
+تعريفنوع تعداد
 {
         INVALID_2022 = -1, /*Doesn't correspond to a valid iso 2022 escape sequence*/
         VALID_NON_TERMINAL_2022 = 0, /*so far corresponds to a valid iso 2022 escape sequence*/
         VALID_TERMINAL_2022 = 1, /*corresponds to a valid iso 2022 escape sequence*/
         VALID_MAYBE_TERMINAL_2022 = 2 /*so far matches one iso 2022 escape sequence, but by adding more characters might match another escape sequence*/
-} UCNV_TableStates_2022;
+} UCNV_جدول_حالتون_2022;
 
 /*
 * The way these state transition arrays work is:
@@ -279,7 +279,7 @@ typedef enum
 
 
 /*Below are the 3 arrays depicting a state transition table*/
-static const int8_t normalize_esq_chars_2022[256] = {
+ساكن ثابت int8_t normalize_esq_chars_2022[256] = {
 /*       0      1       2       3       4      5       6        7       8       9           */
 
          0     ,0      ,0      ,0      ,0      ,0      ,0      ,0      ,0      ,0
@@ -310,7 +310,7 @@ static const int8_t normalize_esq_chars_2022[256] = {
         ,0     ,0      ,0      ,0      ,0      ,0
 };
 
-#ifdef U_ENABLE_GENERIC_ISO_2022
+#جيڪڏهن_وصف_ٿيل U_ENABLE_GENERIC_ISO_2022
 /*
  * When the generic ISO-2022 converter is completely removed, not just disabled
  * per #ifdef, then the following state table and the associated tables that are
@@ -327,10 +327,10 @@ static const int8_t normalize_esq_chars_2022[256] = {
  * It may make sense to restructure the tables, especially by using small search
  * tables for the variants instead of indexing them parallel to the table here.
  */
-#endif
+#جيڪڏهن_پورو
 
-#define MAX_STATES_2022 74
-static const int32_t escSeqStateTable_Key_2022[MAX_STATES_2022] = {
+#وصف_ڪريو MAX_حالتون_2022 74
+ساكن ثابت int32_t esc_Seq_State_جدول_ڪنجي_2022[MAX_حالتون_2022] = {
 /*   0           1           2           3           4           5           6           7           8           9           */
 
      1          ,34         ,36         ,39         ,55         ,57         ,60         ,61         ,1093       ,1096
@@ -343,24 +343,24 @@ static const int32_t escSeqStateTable_Key_2022[MAX_STATES_2022] = {
     ,35947631   ,35947635   ,35947636   ,35947638
 };
 
-#ifdef U_ENABLE_GENERIC_ISO_2022
+#جيڪڏهن_وصف_ٿيل U_ENABLE_GENERIC_ISO_2022
 
-static const char* const escSeqStateTable_Result_2022[MAX_STATES_2022] = {
+ساكن ثابت حرف* ثابت esc_Seq_State_جدول_نتيجو_2022[MAX_حالتون_2022] = {
  /*  0                      1                        2                      3                   4                   5                        6                      7                       8                       9    */
 
-     nullptr                   ,nullptr                   ,nullptr                   ,nullptr               ,nullptr               ,nullptr                   ,nullptr                   ,nullptr                   ,"latin1"               ,"latin1"
+     خالي_اشارو                   ,خالي_اشارو                   ,خالي_اشارو                   ,خالي_اشارو               ,خالي_اشارو               ,خالي_اشارو                   ,خالي_اشارو                   ,خالي_اشارو                   ,"latin1"               ,"latin1"
     ,"latin1"               ,"ibm-865"              ,"ibm-865"              ,"ibm-865"          ,"ibm-865"          ,"ibm-865"              ,"ibm-865"              ,"JISX0201"             ,"JISX0201"             ,"latin1"
-    ,"latin1"               ,nullptr                   ,"JISX-208"             ,"ibm-5478"         ,"JISX-208"         ,nullptr                   ,nullptr                   ,nullptr                   ,nullptr                   ,"UTF8"
-    ,"ISO-8859-1"           ,"ISO-8859-7"           ,"JIS-X-208"            ,nullptr               ,"ibm-955"          ,"ibm-367"              ,"ibm-952"              ,"ibm-949"              ,"JISX-212"             ,"ibm-1383"
+    ,"latin1"               ,خالي_اشارو                   ,"JISX-208"             ,"ibm-5478"         ,"JISX-208"         ,خالي_اشارو                   ,خالي_اشارو                   ,خالي_اشارو                   ,خالي_اشارو                   ,"UTF8"
+    ,"ISO-8859-1"           ,"ISO-8859-7"           ,"JIS-X-208"            ,خالي_اشارو               ,"ibm-955"          ,"ibm-367"              ,"ibm-952"              ,"ibm-949"              ,"JISX-212"             ,"ibm-1383"
     ,"ibm-952"              ,"ibm-964"              ,"ibm-964"              ,"ibm-964"          ,"ibm-964"          ,"ibm-964"              ,"ibm-964"              ,"ibm-5478"         ,"ibm-949"              ,"ISO-IR-165"
     ,"CNS-11643-1992,1"     ,"CNS-11643-1992,2"     ,"CNS-11643-1992,3"     ,"CNS-11643-1992,4" ,"CNS-11643-1992,5" ,"CNS-11643-1992,6"     ,"CNS-11643-1992,7"     ,"UTF16_PlatformEndian" ,"UTF16_PlatformEndian" ,"UTF16_PlatformEndian"
-    ,"UTF16_PlatformEndian" ,"UTF16_PlatformEndian" ,"UTF16_PlatformEndian" ,nullptr               ,"latin1"           ,"ibm-912"              ,"ibm-913"              ,"ibm-914"              ,"ibm-813"              ,"ibm-1089"
+    ,"UTF16_PlatformEndian" ,"UTF16_PlatformEndian" ,"UTF16_PlatformEndian" ,خالي_اشارو               ,"latin1"           ,"ibm-912"              ,"ibm-913"              ,"ibm-914"              ,"ibm-813"              ,"ibm-1089"
     ,"ibm-920"              ,"ibm-915"              ,"ibm-915"              ,"latin1"
 };
 
-#endif
+#جيڪڏهن_پورو
 
-static const int8_t escSeqStateTable_Value_2022[MAX_STATES_2022] = {
+ساكن ثابت int8_t esc_Seq_State_جدول_قدر_2022[MAX_حالتون_2022] = {
 /*          0                           1                         2                             3                           4                           5                               6                        7                          8                           9       */
      VALID_NON_TERMINAL_2022    ,VALID_NON_TERMINAL_2022    ,VALID_NON_TERMINAL_2022    ,VALID_NON_TERMINAL_2022     ,VALID_NON_TERMINAL_2022   ,VALID_TERMINAL_2022        ,VALID_TERMINAL_2022        ,VALID_NON_TERMINAL_2022    ,VALID_TERMINAL_2022        ,VALID_TERMINAL_2022
     ,VALID_MAYBE_TERMINAL_2022  ,VALID_TERMINAL_2022        ,VALID_TERMINAL_2022        ,VALID_TERMINAL_2022        ,VALID_TERMINAL_2022        ,VALID_TERMINAL_2022        ,VALID_TERMINAL_2022        ,VALID_TERMINAL_2022        ,VALID_TERMINAL_2022        ,VALID_TERMINAL_2022
@@ -373,349 +373,349 @@ static const int8_t escSeqStateTable_Value_2022[MAX_STATES_2022] = {
 };
 
 /* Type def for refactoring changeState_2022 code*/
-typedef enum{
-#ifdef U_ENABLE_GENERIC_ISO_2022
+تعريفنوع تعداد{
+#جيڪڏهن_وصف_ٿيل U_ENABLE_GENERIC_ISO_2022
     ISO_2022=0,
-#endif
+#جيڪڏهن_پورو
     ISO_2022_JP=1,
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#إذا !UCONFIG_ONLY_HTML_CONVERSION
     ISO_2022_KR=2,
     ISO_2022_CN=3
-#endif
+#جيڪڏهن_پورو
 } Variant2022;
 
 /*********** ISO 2022 Converter Protos ***********/
-static void U_CALLCONV
-_ISO2022Open(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode);
+ساكن فراغ U_CALLCONV
+_ISO2022Open(UConverter *cnv, UConverter_ڀريو_دليلون *p_دليلون, UError_ڪوڊ *error_ڪوڊ);
 
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
  _ISO2022Close(UConverter *converter);
 
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 _ISO2022Reset(UConverter *converter, UConverterResetChoice choice);
 
 U_CDECL_BEGIN
-static const char * U_CALLCONV
-_ISO2022getName(const UConverter* cnv);
-U_CDECL_END
+ساكن ثابت حرف * U_CALLCONV
+_ISO2022getName(ثابت UConverter* cnv);
+U_CDECL_پڇاڙي
 
-static void  U_CALLCONV
-_ISO_2022_WriteSub(UConverterFromUnicodeArgs *args, int32_t offsetIndex, UErrorCode *err);
+ساكن فراغ  U_CALLCONV
+_ISO_2022_WriteSub(UConverter_From_Unicode_دليلون *دليلون_2, int32_t وٿي_اشاريو, UError_ڪوڊ *err);
 
 U_CDECL_BEGIN
-static UConverter * U_CALLCONV
-_ISO_2022_SafeClone(const UConverter *cnv, void *stackBuffer, int32_t *pBufferSize, UErrorCode *status);
+ساكن UConverter * U_CALLCONV
+ISO_2022_محفوظ_Clone(ثابت UConverter *cnv, فراغ *ڍير_بفر, int32_t *p_بفر_سائيز, UError_ڪوڊ *حالت);
 
-U_CDECL_END
+U_CDECL_پڇاڙي
 
-#ifdef U_ENABLE_GENERIC_ISO_2022
-static void U_CALLCONV
-T_UConverter_toUnicode_ISO_2022_OFFSETS_LOGIC(UConverterToUnicodeArgs* args, UErrorCode* err);
-#endif
+#جيڪڏهن_وصف_ٿيل U_ENABLE_GENERIC_ISO_2022
+ساكن فراغ U_CALLCONV
+T_UConverter_منزل_Unicode_ISO_2022_OFFSETS_LOGIC(UConverter_منزل_Unicode_دليلون* دليلون_2, UError_ڪوڊ* err);
+#جيڪڏهن_پورو
 
-namespace {
+نطاق {
 
 /*const UConverterSharedData _ISO2022Data;*/
-extern const UConverterSharedData _ISO2022JPData;
+خارجي ثابت UConverter_Shared_معلومات _ISO2022JPData;
 
-#if !UCONFIG_ONLY_HTML_CONVERSION
-extern const UConverterSharedData _ISO2022KRData;
-extern const UConverterSharedData _ISO2022CNData;
-#endif
+#إذا !UCONFIG_ONLY_HTML_CONVERSION
+خارجي ثابت UConverter_Shared_معلومات _ISO2022KRData;
+خارجي ثابت UConverter_Shared_معلومات _ISO2022CNData;
+#جيڪڏهن_پورو
 
 }  // namespace
 
 /*************** Converter implementations ******************/
 
 /* The purpose of this function is to get around gcc compiler warnings. */
-static inline void
+ساكن مضمن فراغ
 fromUWriteUInt8(UConverter *cnv,
-                 const char *bytes, int32_t length,
-                 uint8_t **target, const char *targetLimit,
+                 ثابت حرف *بائيٽون, int32_t length,
+                 uint8_t **هدف, ثابت حرف *هدف_حد_بندي,
                  int32_t **offsets,
-                 int32_t sourceIndex,
-                 UErrorCode *pErrorCode)
+                 int32_t ذريعو_اشاريو,
+                 UError_ڪوڊ *p_Error_ڪوڊ)
 {
-    char* targetChars = reinterpret_cast<char*>(*target);
-    ucnv_fromUWriteBytes(cnv, bytes, length, &targetChars, targetLimit,
-                         offsets, sourceIndex, pErrorCode);
-    *target = reinterpret_cast<uint8_t*>(targetChars);
+    حرف* هدف_Chars = reinterpret_cast<حرف*>(*هدف);
+    ucnv_from_UWrite_بائيٽون(cnv, بائيٽون, length, &هدف_Chars, هدف_حد_بندي,
+                         offsets, ذريعو_اشاريو, p_Error_ڪوڊ);
+    *هدف = reinterpret_cast<uint8_t*>(هدف_Chars);
 
 }
 
-static inline void
-setInitialStateToUnicodeKR(UConverter* /*converter*/, UConverterDataISO2022 *myConverterData){
-    if(myConverterData->version == 1) {
-        UConverter *cnv = myConverterData->currentConverter;
+ساكن مضمن فراغ
+سيٽ_Initial_State_منزل_Unicode_KR(UConverter* /*converter*/, UConverter_معلومات_ISO2022 *my_Converter_معلومات){
+    إذا(my_Converter_معلومات->نسخو == 1) {
+        UConverter *cnv = my_Converter_معلومات->currentConverter;
 
-        cnv->toUnicodeStatus=0;     /* offset */
-        cnv->mode=0;                /* state */
-        cnv->toULength=0;           /* byteIndex */
+        cnv->منزل_Unicode_حالت=0;     /*وٿي*/
+        cnv->گهڻائي=0;                /* state */
+        cnv->منزل_ULength=0;           /* byteIndex */
     }
 }
 
-static inline void
-setInitialStateFromUnicodeKR(UConverter* converter,UConverterDataISO2022 *myConverterData){
+ساكن مضمن فراغ
+سيٽ_Initial_State_From_Unicode_KR(UConverter* converter,UConverter_معلومات_ISO2022 *my_Converter_معلومات){
    /* in ISO-2022-KR the designator sequence appears only once
     * in a file so we append it only once
     */
-    if( converter->charErrorBufferLength==0){
+    إذا( converter->char_Error_بفر_ڊيگهائي==0){
 
-        converter->charErrorBufferLength = 4;
-        converter->charErrorBuffer[0] = 0x1b;
-        converter->charErrorBuffer[1] = 0x24;
-        converter->charErrorBuffer[2] = 0x29;
-        converter->charErrorBuffer[3] = 0x43;
+        converter->char_Error_بفر_ڊيگهائي = 4;
+        converter->char_Error_بفر[0] = 0x1b;
+        converter->char_Error_بفر[1] = 0x24;
+        converter->char_Error_بفر[2] = 0x29;
+        converter->char_Error_بفر[3] = 0x43;
     }
-    if(myConverterData->version == 1) {
-        UConverter *cnv = myConverterData->currentConverter;
+    إذا(my_Converter_معلومات->نسخو == 1) {
+        UConverter *cnv = my_Converter_معلومات->currentConverter;
 
         cnv->fromUChar32=0;
-        cnv->fromUnicodeStatus=1;   /* prevLength */
+        cnv->from_Unicode_حالت=1;   /* prevLength */
     }
 }
 
-static void U_CALLCONV
-_ISO2022Open(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
+ساكن فراغ U_CALLCONV
+_ISO2022Open(UConverter *cnv, UConverter_ڀريو_دليلون *p_دليلون, UError_ڪوڊ *error_ڪوڊ){
 
-    char myLocale[7]={' ',' ',' ',' ',' ',' ', '\0'};
+    حرف myLocale[7]={' ',' ',' ',' ',' ',' ', '\0'};
 
-    cnv->extraInfo = uprv_malloc (sizeof (UConverterDataISO2022));
-    if(cnv->extraInfo != nullptr) {
-        UConverterNamePieces stackPieces;
-        UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
-        UConverterDataISO2022* myConverterData = static_cast<UConverterDataISO2022*>(cnv->extraInfo);
-        uint32_t version;
+    cnv->extraInfo = uprv_malloc (حجم (UConverter_معلومات_ISO2022));
+    إذا(cnv->extraInfo != خالي_اشارو) {
+        UConverterNamePieces ڍير_Pieces;
+        UConverter_ڀريو_دليلون ڍير_دليلون=UCNV_ڀريو_دليلون_INITIALIZER;
+        UConverter_معلومات_ISO2022* my_Converter_معلومات = static_cast<UConverter_معلومات_ISO2022*>(cnv->extraInfo);
+        uint32_t نسخو;
 
-        stackArgs.onlyTestIsLoadable = pArgs->onlyTestIsLoadable;
+        ڍير_دليلون.onlyTestIsLoadable = p_دليلون->onlyTestIsLoadable;
 
-        uprv_memset(myConverterData, 0, sizeof(UConverterDataISO2022));
-        myConverterData->currentType = ASCII1;
-        cnv->fromUnicodeStatus =false;
-        if(pArgs->locale){
-            uprv_strncpy(myLocale, pArgs->locale, sizeof(myLocale)-1);
+        uprv_memset(my_Converter_معلومات, 0, حجم(UConverter_معلومات_ISO2022));
+        my_Converter_معلومات->currentType = ASCII1;
+        cnv->from_Unicode_حالت =خطأ;
+        إذا(p_دليلون->locale){
+            uprv_strncpy(myLocale, p_دليلون->locale, حجم(myLocale)-1);
         }
-        version = pArgs->options & UCNV_OPTIONS_VERSION_MASK;
-        myConverterData->version = version;
-        if(myLocale[0]=='j' && (myLocale[1]=='a'|| myLocale[1]=='p') &&
+        نسخو = p_دليلون->options & UCNV_OPTIONS_نسخو_نقاب;
+        my_Converter_معلومات->نسخو = نسخو;
+        إذا(myLocale[0]=='j' && (myLocale[1]=='a'|| myLocale[1]=='p') &&
             (myLocale[2]=='_' || myLocale[2]=='\0'))
         {
             /* open the required converters and cache them */
-            if(version>MAX_JA_VERSION) {
+            إذا(نسخو>MAX_JA_نسخو) {
                 // ICU 55 fails to open a converter for an unsupported version.
                 // Previously, it fell back to version 0, but that would yield
                 // unexpected behavior.
-                *errorCode = U_MISSING_RESOURCE_ERROR;
-                return;
+                *error_ڪوڊ = U_MISSING_RESOURCE_ERROR;
+                أرجع;
             }
-            if(jpCharsetMasks[version]&CSM(ISO8859_7)) {
-                myConverterData->myConverterArray[ISO8859_7] =
-                    ucnv_loadSharedData("ISO8859_7", &stackPieces, &stackArgs, errorCode);
+            إذا(jpCharsetMasks[نسخو]&CSM(ISO8859_7)) {
+                my_Converter_معلومات->myConverterArray[ISO8859_7] =
+                    ucnv_ڀريو_Shared_معلومات("ISO8859_7", &ڍير_Pieces, &ڍير_دليلون, error_ڪوڊ);
             }
-            myConverterData->myConverterArray[JISX208] =
-                ucnv_loadSharedData("Shift-JIS", &stackPieces, &stackArgs, errorCode);
-            if(jpCharsetMasks[version]&CSM(JISX212)) {
-                myConverterData->myConverterArray[JISX212] =
-                    ucnv_loadSharedData("jisx-212", &stackPieces, &stackArgs, errorCode);
+            my_Converter_معلومات->myConverterArray[JISX208] =
+                ucnv_ڀريو_Shared_معلومات("Shift-JIS", &ڍير_Pieces, &ڍير_دليلون, error_ڪوڊ);
+            إذا(jpCharsetMasks[نسخو]&CSM(JISX212)) {
+                my_Converter_معلومات->myConverterArray[JISX212] =
+                    ucnv_ڀريو_Shared_معلومات("jisx-212", &ڍير_Pieces, &ڍير_دليلون, error_ڪوڊ);
             }
-            if(jpCharsetMasks[version]&CSM(GB2312)) {
-                myConverterData->myConverterArray[GB2312] =
-                    ucnv_loadSharedData("ibm-5478", &stackPieces, &stackArgs, errorCode);   /* gb_2312_80-1 */
+            إذا(jpCharsetMasks[نسخو]&CSM(GB2312)) {
+                my_Converter_معلومات->myConverterArray[GB2312] =
+                    ucnv_ڀريو_Shared_معلومات("ibm-5478", &ڍير_Pieces, &ڍير_دليلون, error_ڪوڊ);   /* gb_2312_80-1 */
             }
-            if(jpCharsetMasks[version]&CSM(KSC5601)) {
-                myConverterData->myConverterArray[KSC5601] =
-                    ucnv_loadSharedData("ksc_5601", &stackPieces, &stackArgs, errorCode);
+            إذا(jpCharsetMasks[نسخو]&CSM(KSC5601)) {
+                my_Converter_معلومات->myConverterArray[KSC5601] =
+                    ucnv_ڀريو_Shared_معلومات("ksc_5601", &ڍير_Pieces, &ڍير_دليلون, error_ڪوڊ);
             }
 
             /* set the function pointers to appropriate functions */
-            cnv->sharedData = const_cast<UConverterSharedData*>(&_ISO2022JPData);
-            uprv_strcpy(myConverterData->locale,"ja");
+            cnv->shared_معلومات = const_cast<UConverter_Shared_معلومات*>(&_ISO2022JPData);
+            uprv_strcpy(my_Converter_معلومات->locale,"ja");
 
-            (void)uprv_strcpy(myConverterData->name,"ISO_2022,locale=ja,version=");
-            size_t len = uprv_strlen(myConverterData->name);
-            myConverterData->name[len] = static_cast<char>(myConverterData->version + static_cast<int>('0'));
-            myConverterData->name[len+1]='\0';
+            (فراغ)uprv_strcpy(my_Converter_معلومات->name,"ISO_2022,locale=ja,version=");
+            size_t len = uprv_strlen(my_Converter_معلومات->name);
+            my_Converter_معلومات->name[len] = static_cast<حرف>(my_Converter_معلومات->نسخو + static_cast<صحيح>('0'));
+            my_Converter_معلومات->name[len+1]='\0';
         }
-#if !UCONFIG_ONLY_HTML_CONVERSION
-        else if(myLocale[0]=='k' && (myLocale[1]=='o'|| myLocale[1]=='r') &&
+#إذا !UCONFIG_ONLY_HTML_CONVERSION
+        وإلا إذا(myLocale[0]=='k' && (myLocale[1]=='o'|| myLocale[1]=='r') &&
             (myLocale[2]=='_' || myLocale[2]=='\0'))
         {
-            if(version>1) {
+            إذا(نسخو>1) {
                 // ICU 55 fails to open a converter for an unsupported version.
                 // Previously, it fell back to version 0, but that would yield
                 // unexpected behavior.
-                *errorCode = U_MISSING_RESOURCE_ERROR;
-                return;
+                *error_ڪوڊ = U_MISSING_RESOURCE_ERROR;
+                أرجع;
             }
-            const char *cnvName;
-            if(version==1) {
+            ثابت حرف *cnvName;
+            إذا(نسخو==1) {
                 cnvName="icu-internal-25546";
-            } else {
+            } وإلا {
                 cnvName="ibm-949";
-                myConverterData->version=version=0;
+                my_Converter_معلومات->نسخو=نسخو=0;
             }
-            if(pArgs->onlyTestIsLoadable) {
-                ucnv_canCreateConverter(cnvName, errorCode);  /* errorCode carries result */
+            إذا(p_دليلون->onlyTestIsLoadable) {
+                ucnv_canCreateConverter(cnvName, error_ڪوڊ);  /* errorCode carries result */
                 uprv_free(cnv->extraInfo);
-                cnv->extraInfo=nullptr;
-                return;
-            } else {
-                myConverterData->currentConverter=ucnv_open(cnvName, errorCode);
-                if (U_FAILURE(*errorCode)) {
+                cnv->extraInfo=خالي_اشارو;
+                أرجع;
+            } وإلا {
+                my_Converter_معلومات->currentConverter=ucnv_open(cnvName, error_ڪوڊ);
+                إذا (U_FAILURE(*error_ڪوڊ)) {
                     _ISO2022Close(cnv);
-                    return;
+                    أرجع;
                 }
 
-                if(version==1) {
-                    (void)uprv_strcpy(myConverterData->name,"ISO_2022,locale=ko,version=1");
-                    uprv_memcpy(cnv->subChars, myConverterData->currentConverter->subChars, 4);
-                    cnv->subCharLen = myConverterData->currentConverter->subCharLen;
-                }else{
-                    (void)uprv_strcpy(myConverterData->name,"ISO_2022,locale=ko,version=0");
+                إذا(نسخو==1) {
+                    (فراغ)uprv_strcpy(my_Converter_معلومات->name,"ISO_2022,locale=ko,version=1");
+                    uprv_memcpy(cnv->subChars, my_Converter_معلومات->currentConverter->subChars, 4);
+                    cnv->subCharLen = my_Converter_معلومات->currentConverter->subCharLen;
+                }وإلا{
+                    (فراغ)uprv_strcpy(my_Converter_معلومات->name,"ISO_2022,locale=ko,version=0");
                 }
 
                 /* initialize the state variables */
-                setInitialStateToUnicodeKR(cnv, myConverterData);
-                setInitialStateFromUnicodeKR(cnv, myConverterData);
+                سيٽ_Initial_State_منزل_Unicode_KR(cnv, my_Converter_معلومات);
+                سيٽ_Initial_State_From_Unicode_KR(cnv, my_Converter_معلومات);
 
                 /* set the function pointers to appropriate functions */
-                cnv->sharedData = const_cast<UConverterSharedData*>(&_ISO2022KRData);
-                uprv_strcpy(myConverterData->locale,"ko");
+                cnv->shared_معلومات = const_cast<UConverter_Shared_معلومات*>(&_ISO2022KRData);
+                uprv_strcpy(my_Converter_معلومات->locale,"ko");
             }
         }
-        else if(((myLocale[0]=='z' && myLocale[1]=='h') || (myLocale[0]=='c'&& myLocale[1]=='n'))&&
+        وإلا إذا(((myLocale[0]=='z' && myLocale[1]=='h') || (myLocale[0]=='c'&& myLocale[1]=='n'))&&
             (myLocale[2]=='_' || myLocale[2]=='\0'))
         {
-            if(version>2) {
+            إذا(نسخو>2) {
                 // ICU 55 fails to open a converter for an unsupported version.
                 // Previously, it fell back to version 0, but that would yield
                 // unexpected behavior.
-                *errorCode = U_MISSING_RESOURCE_ERROR;
-                return;
+                *error_ڪوڊ = U_MISSING_RESOURCE_ERROR;
+                أرجع;
             }
 
             /* open the required converters and cache them */
-            myConverterData->myConverterArray[GB2312_1] =
-                ucnv_loadSharedData("ibm-5478", &stackPieces, &stackArgs, errorCode);
-            if(version>=1) {
-                myConverterData->myConverterArray[ISO_IR_165] =
-                    ucnv_loadSharedData("iso-ir-165", &stackPieces, &stackArgs, errorCode);
+            my_Converter_معلومات->myConverterArray[GB2312_1] =
+                ucnv_ڀريو_Shared_معلومات("ibm-5478", &ڍير_Pieces, &ڍير_دليلون, error_ڪوڊ);
+            إذا(نسخو>=1) {
+                my_Converter_معلومات->myConverterArray[ISO_IR_165] =
+                    ucnv_ڀريو_Shared_معلومات("iso-ir-165", &ڍير_Pieces, &ڍير_دليلون, error_ڪوڊ);
             }
-            myConverterData->myConverterArray[CNS_11643] =
-                ucnv_loadSharedData("cns-11643-1992", &stackPieces, &stackArgs, errorCode);
+            my_Converter_معلومات->myConverterArray[CNS_11643] =
+                ucnv_ڀريو_Shared_معلومات("cns-11643-1992", &ڍير_Pieces, &ڍير_دليلون, error_ڪوڊ);
 
 
             /* set the function pointers to appropriate functions */
-            cnv->sharedData = const_cast<UConverterSharedData*>(&_ISO2022CNData);
-            uprv_strcpy(myConverterData->locale,"cn");
+            cnv->shared_معلومات = const_cast<UConverter_Shared_معلومات*>(&_ISO2022CNData);
+            uprv_strcpy(my_Converter_معلومات->locale,"cn");
 
-            if (version==0){
-                myConverterData->version = 0;
-                (void)uprv_strcpy(myConverterData->name,"ISO_2022,locale=zh,version=0");
-            }else if (version==1){
-                myConverterData->version = 1;
-                (void)uprv_strcpy(myConverterData->name,"ISO_2022,locale=zh,version=1");
-            }else {
-                myConverterData->version = 2;
-                (void)uprv_strcpy(myConverterData->name,"ISO_2022,locale=zh,version=2");
+            إذا (نسخو==0){
+                my_Converter_معلومات->نسخو = 0;
+                (فراغ)uprv_strcpy(my_Converter_معلومات->name,"ISO_2022,locale=zh,version=0");
+            }وإلا إذا (نسخو==1){
+                my_Converter_معلومات->نسخو = 1;
+                (فراغ)uprv_strcpy(my_Converter_معلومات->name,"ISO_2022,locale=zh,version=1");
+            }وإلا {
+                my_Converter_معلومات->نسخو = 2;
+                (فراغ)uprv_strcpy(my_Converter_معلومات->name,"ISO_2022,locale=zh,version=2");
             }
         }
-#endif  // !UCONFIG_ONLY_HTML_CONVERSION
-        else{
-#ifdef U_ENABLE_GENERIC_ISO_2022
-            myConverterData->isFirstBuffer = true;
+#جيڪڏهن_پورو  // !UCONFIG_ONLY_HTML_CONVERSION
+        وإلا{
+#جيڪڏهن_وصف_ٿيل U_ENABLE_GENERIC_ISO_2022
+            my_Converter_معلومات->is_پهريون_بفر = سچ;
 
             /* append the UTF-8 escape sequence */
-            cnv->charErrorBufferLength = 3;
-            cnv->charErrorBuffer[0] = 0x1b;
-            cnv->charErrorBuffer[1] = 0x25;
-            cnv->charErrorBuffer[2] = 0x42;
+            cnv->char_Error_بفر_ڊيگهائي = 3;
+            cnv->char_Error_بفر[0] = 0x1b;
+            cnv->char_Error_بفر[1] = 0x25;
+            cnv->char_Error_بفر[2] = 0x42;
 
-            cnv->sharedData=(UConverterSharedData*)&_ISO2022Data;
+            cnv->shared_معلومات=(UConverter_Shared_معلومات*)&ISO2022_معلومات;
             /* initialize the state variables */
-            uprv_strcpy(myConverterData->name,"ISO_2022");
-#else
-            *errorCode = U_MISSING_RESOURCE_ERROR;
+            uprv_strcpy(my_Converter_معلومات->name,"ISO_2022");
+#وإلا
+            *error_ڪوڊ = U_MISSING_RESOURCE_ERROR;
             // Was U_UNSUPPORTED_ERROR but changed in ICU 55 to a more standard
             // data loading error code.
-            return;
-#endif
+            أرجع;
+#جيڪڏهن_پورو
         }
 
-        cnv->maxBytesPerUChar=cnv->sharedData->staticData->maxBytesPerChar;
+        cnv->max_بائيٽون_في_UChar=cnv->shared_معلومات->static_معلومات->max_بائيٽون_في_Char;
 
-        if(U_FAILURE(*errorCode) || pArgs->onlyTestIsLoadable) {
+        إذا(U_FAILURE(*error_ڪوڊ) || p_دليلون->onlyTestIsLoadable) {
             _ISO2022Close(cnv);
         }
-    } else {
-        *errorCode = U_MEMORY_ALLOCATION_ERROR;
+    } وإلا {
+        *error_ڪوڊ = U_يادگيري_ورهاست_ERROR;
     }
 }
 
 
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 _ISO2022Close(UConverter *converter) {
-    UConverterDataISO2022* myData = static_cast<UConverterDataISO2022*>(converter->extraInfo);
-    UConverterSharedData **array = myData->myConverterArray;
+    UConverter_معلومات_ISO2022* my_معلومات = static_cast<UConverter_معلومات_ISO2022*>(converter->extraInfo);
+    UConverter_Shared_معلومات **array = my_معلومات->myConverterArray;
     int32_t i;
 
-    if (converter->extraInfo != nullptr) {
+    إذا (converter->extraInfo != خالي_اشارو) {
         /*close the array of converter pointers and free the memory*/
-        for (i=0; i<UCNV_2022_MAX_CONVERTERS; i++) {
-            if(array[i]!=nullptr) {
-                ucnv_unloadSharedDataIfReady(array[i]);
+        لكل (i=0; i<UCNV_2022_MAX_CONVERTERS; i++) {
+            إذا(array[i]!=خالي_اشارو) {
+                ucnv_unload_Shared_معلومات_If_Ready(array[i]);
             }
         }
 
-        ucnv_close(myData->currentConverter);
+        ucnv_close(my_معلومات->currentConverter);
 
-        if(!converter->isExtraLocal){
+        إذا(!converter->isExtraLocal){
             uprv_free (converter->extraInfo);
-            converter->extraInfo = nullptr;
+            converter->extraInfo = خالي_اشارو;
         }
     }
 }
 
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 _ISO2022Reset(UConverter *converter, UConverterResetChoice choice) {
-    UConverterDataISO2022* myConverterData = static_cast<UConverterDataISO2022*>(converter->extraInfo);
-    if(choice<=UCNV_RESET_TO_UNICODE) {
-        uprv_memset(&myConverterData->toU2022State, 0, sizeof(ISO2022State));
-        myConverterData->key = 0;
-        myConverterData->isEmptySegment = false;
+    UConverter_معلومات_ISO2022* my_Converter_معلومات = static_cast<UConverter_معلومات_ISO2022*>(converter->extraInfo);
+    إذا(choice<=UCNV_RESET_منزل_UNICODE) {
+        uprv_memset(&my_Converter_معلومات->منزل_U2022_State, 0, حجم(ISO2022State));
+        my_Converter_معلومات->ڪنجي = 0;
+        my_Converter_معلومات->is_خالي_جايون_Segment = خطأ;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
-        uprv_memset(&myConverterData->fromU2022State, 0, sizeof(ISO2022State));
+    إذا(choice!=UCNV_RESET_منزل_UNICODE) {
+        uprv_memset(&my_Converter_معلومات->fromU2022State, 0, حجم(ISO2022State));
     }
-#ifdef U_ENABLE_GENERIC_ISO_2022
-    if(myConverterData->locale[0] == 0){
-        if(choice<=UCNV_RESET_TO_UNICODE) {
-            myConverterData->isFirstBuffer = true;
-            myConverterData->key = 0;
-            if (converter->mode == UCNV_SO){
-                ucnv_close (myConverterData->currentConverter);
-                myConverterData->currentConverter=nullptr;
+#جيڪڏهن_وصف_ٿيل U_ENABLE_GENERIC_ISO_2022
+    إذا(my_Converter_معلومات->locale[0] == 0){
+        إذا(choice<=UCNV_RESET_منزل_UNICODE) {
+            my_Converter_معلومات->is_پهريون_بفر = سچ;
+            my_Converter_معلومات->ڪنجي = 0;
+            إذا (converter->گهڻائي == UCNV_SO){
+                ucnv_close (my_Converter_معلومات->currentConverter);
+                my_Converter_معلومات->currentConverter=خالي_اشارو;
             }
-            converter->mode = UCNV_SI;
+            converter->گهڻائي = UCNV_SI;
         }
-        if(choice!=UCNV_RESET_TO_UNICODE) {
+        إذا(choice!=UCNV_RESET_منزل_UNICODE) {
             /* re-append UTF-8 escape sequence */
-            converter->charErrorBufferLength = 3;
-            converter->charErrorBuffer[0] = 0x1b;
-            converter->charErrorBuffer[1] = 0x28;
-            converter->charErrorBuffer[2] = 0x42;
+            converter->char_Error_بفر_ڊيگهائي = 3;
+            converter->char_Error_بفر[0] = 0x1b;
+            converter->char_Error_بفر[1] = 0x28;
+            converter->char_Error_بفر[2] = 0x42;
         }
     }
-    else
-#endif
+    وإلا
+#جيڪڏهن_پورو
     {
         /* reset the state variables */
-        if(myConverterData->locale[0] == 'k'){
-            if(choice<=UCNV_RESET_TO_UNICODE) {
-                setInitialStateToUnicodeKR(converter, myConverterData);
+        إذا(my_Converter_معلومات->locale[0] == 'k'){
+            إذا(choice<=UCNV_RESET_منزل_UNICODE) {
+                سيٽ_Initial_State_منزل_Unicode_KR(converter, my_Converter_معلومات);
             }
-            if(choice!=UCNV_RESET_TO_UNICODE) {
-                setInitialStateFromUnicodeKR(converter, myConverterData);
+            إذا(choice!=UCNV_RESET_منزل_UNICODE) {
+                سيٽ_Initial_State_From_Unicode_KR(converter, my_Converter_معلومات);
             }
         }
     }
@@ -723,16 +723,16 @@ _ISO2022Reset(UConverter *converter, UConverterResetChoice choice) {
 
 U_CDECL_BEGIN
 
-static const char * U_CALLCONV
-_ISO2022getName(const UConverter* cnv){
-    if(cnv->extraInfo){
-        UConverterDataISO2022* myData= (UConverterDataISO2022*)cnv->extraInfo;
-        return myData->name;
+ساكن ثابت حرف * U_CALLCONV
+_ISO2022getName(ثابت UConverter* cnv){
+    إذا(cnv->extraInfo){
+        UConverter_معلومات_ISO2022* my_معلومات= (UConverter_معلومات_ISO2022*)cnv->extraInfo;
+        أرجع my_معلومات->name;
     }
-    return nullptr;
+    أرجع خالي_اشارو;
 }
 
-U_CDECL_END
+U_CDECL_پڇاڙي
 
 
 /*************** to unicode *******************/
@@ -749,10 +749,10 @@ U_CDECL_END
  * <ESC>$A  GB2312
  * <ESC>$(C KSC5601
  */
-static const int8_t nextStateToUnicodeJP[MAX_STATES_2022]= {
+ساكن ثابت int8_t ايندڙ_State_منزل_Unicode_JP[MAX_حالتون_2022]= {
 /*      0                1               2               3               4               5               6               7               8               9    */
     INVALID_STATE   ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,SS2_STATE      ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE
-    ,ASCII          ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,JISX201        ,HWKANA_7BIT    ,JISX201        ,INVALID_STATE
+    ,ASCII          ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,JISX201        ,HWKANA_7_ٻٽو_انگ    ,JISX201        ,INVALID_STATE
     ,INVALID_STATE  ,INVALID_STATE  ,JISX208        ,GB2312         ,JISX208        ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE
     ,ISO8859_1      ,ISO8859_7      ,JISX208        ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,KSC5601        ,JISX212        ,INVALID_STATE
     ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE
@@ -761,9 +761,9 @@ static const int8_t nextStateToUnicodeJP[MAX_STATES_2022]= {
     ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE
 };
 
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#إذا !UCONFIG_ONLY_HTML_CONVERSION
 /*************** to unicode *******************/
-static const int8_t nextStateToUnicodeCN[MAX_STATES_2022]= {
+ساكن ثابت int8_t ايندڙ_State_منزل_Unicode_CN[MAX_حالتون_2022]= {
 /*      0                1               2               3               4               5               6               7               8               9    */
      INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,SS2_STATE      ,SS3_STATE      ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE
     ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE
@@ -774,252 +774,252 @@ static const int8_t nextStateToUnicodeCN[MAX_STATES_2022]= {
     ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE
     ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE
 };
-#endif
+#جيڪڏهن_پورو
 
 
-static UCNV_TableStates_2022
-getKey_2022(char c,int32_t* key,int32_t* offset){
+ساكن UCNV_جدول_حالتون_2022
+get_ڪنجي_2022(حرف c,int32_t* ڪنجي,int32_t* وٿي){
     int32_t togo;
-    int32_t low = 0;
-    int32_t hi = MAX_STATES_2022;
+    int32_t هيٺيون = 0;
+    int32_t hi = MAX_حالتون_2022;
     int32_t oldmid=0;
 
     togo = normalize_esq_chars_2022[static_cast<uint8_t>(c)];
-    if(togo == 0) {
+    إذا(togo == 0) {
         /* not a valid character anywhere in an escape sequence */
-        *key = 0;
-        *offset = 0;
-        return INVALID_2022;
+        *ڪنجي = 0;
+        *وٿي = 0;
+        أرجع INVALID_2022;
     }
-    togo = (*key << 5) + togo;
+    togo = (*ڪنجي << 5) + togo;
 
-    while (hi != low)  /*binary search*/{
+    طالما (hi != هيٺيون)  /*ٻٽي ڳولا*/{
 
-        int32_t mid = (hi+low) >> 1; /*Finds median*/
+        int32_t mid = (hi+هيٺيون) >> 1; /*Finds median*/
 
-        if (mid == oldmid)
-            break;
+        إذا (mid == oldmid)
+            اكسر;
 
-        if (escSeqStateTable_Key_2022[mid] > togo){
+        إذا (esc_Seq_State_جدول_ڪنجي_2022[mid] > togo){
             hi = mid;
         }
-        else if (escSeqStateTable_Key_2022[mid] < togo){
-            low = mid;
+        وإلا إذا (esc_Seq_State_جدول_ڪنجي_2022[mid] < togo){
+            هيٺيون = mid;
         }
-        else /*we found it*/{
-            *key = togo;
-            *offset = mid;
-            return static_cast<UCNV_TableStates_2022>(escSeqStateTable_Value_2022[mid]);
+        وإلا /*we found it*/{
+            *ڪنجي = togo;
+            *وٿي = mid;
+            أرجع static_cast<UCNV_جدول_حالتون_2022>(esc_Seq_State_جدول_قدر_2022[mid]);
         }
         oldmid = mid;
 
     }
 
-    *key = 0;
-    *offset = 0;
-    return INVALID_2022;
+    *ڪنجي = 0;
+    *وٿي = 0;
+    أرجع INVALID_2022;
 }
 
 /*runs through a state machine to determine the escape sequence - codepage correspondence
  */
-static void
+ساكن فراغ
 changeState_2022(UConverter* _this,
-                const char** source,
-                const char* sourceLimit,
+                ثابت حرف** ذريعو,
+                ثابت حرف* ذريعو_حد_بندي,
                 Variant2022 var,
-                UErrorCode* err){
-    UCNV_TableStates_2022 value;
-    UConverterDataISO2022* myData2022 = static_cast<UConverterDataISO2022*>(_this->extraInfo);
-    uint32_t key = myData2022->key;
-    int32_t offset = 0;
-    int8_t initialToULength = _this->toULength;
-    char c;
+                UError_ڪوڊ* err){
+    UCNV_جدول_حالتون_2022 value;
+    UConverter_معلومات_ISO2022* myData2022 = static_cast<UConverter_معلومات_ISO2022*>(_this->extraInfo);
+    uint32_t ڪنجي = myData2022->ڪنجي;
+    int32_t وٿي = 0;
+    int8_t initial_منزل_ULength = _this->منزل_ULength;
+    حرف c;
 
     value = VALID_NON_TERMINAL_2022;
-    while (*source < sourceLimit) {
-        c = *(*source)++;
-        _this->toUBytes[_this->toULength++] = static_cast<uint8_t>(c);
-        value = getKey_2022(c, reinterpret_cast<int32_t*>(&key), &offset);
+    طالما (*ذريعو < ذريعو_حد_بندي) {
+        c = *(*ذريعو)++;
+        _this->منزل_UBytes[_this->منزل_ULength++] = static_cast<uint8_t>(c);
+        value = get_ڪنجي_2022(c, reinterpret_cast<int32_t*>(&ڪنجي), &وٿي);
 
-        switch (value){
+        بدل (value){
 
-        case VALID_NON_TERMINAL_2022 :
+        حالة VALID_NON_TERMINAL_2022 :
             /* continue with the loop */
-            break;
+            اكسر;
 
-        case VALID_TERMINAL_2022:
-            key = 0;
-            goto DONE;
+        حالة VALID_TERMINAL_2022:
+            ڪنجي = 0;
+            اذهب پورو_2;
 
-        case INVALID_2022:
-            goto DONE;
+        حالة INVALID_2022:
+            اذهب پورو_2;
 
-        case VALID_MAYBE_TERMINAL_2022:
-#ifdef U_ENABLE_GENERIC_ISO_2022
+        حالة VALID_MAYBE_TERMINAL_2022:
+#جيڪڏهن_وصف_ٿيل U_ENABLE_GENERIC_ISO_2022
             /* ESC ( B is ambiguous only for ISO_2022 itself */
-            if(var == ISO_2022) {
+            إذا(var == ISO_2022) {
                 /* discard toUBytes[] for ESC ( B because this sequence is correct and complete */
-                _this->toULength = 0;
+                _this->منزل_ULength = 0;
 
                 /* TODO need to indicate that ESC ( B was seen; if failure, then need to replay from source or from MBCS-style replay */
 
                 /* continue with the loop */
                 value = VALID_NON_TERMINAL_2022;
-                break;
-            } else
-#endif
+                اكسر;
+            } وإلا
+#جيڪڏهن_پورو
             {
                 /* not ISO_2022 itself, finish here */
                 value = VALID_TERMINAL_2022;
-                key = 0;
-                goto DONE;
+                ڪنجي = 0;
+                اذهب پورو_2;
             }
         }
     }
 
-DONE:
-    myData2022->key = key;
+پورو_2:
+    myData2022->ڪنجي = ڪنجي;
 
-    if (value == VALID_NON_TERMINAL_2022) {
+    إذا (value == VALID_NON_TERMINAL_2022) {
         /* indicate that the escape sequence is incomplete: key!=0 */
-        return;
-    } else if (value == INVALID_2022 ) {
+        أرجع;
+    } وإلا إذا (value == INVALID_2022 ) {
         *err = U_ILLEGAL_ESCAPE_SEQUENCE;
-    } else /* value == VALID_TERMINAL_2022 */ {
-        switch(var){
-#ifdef U_ENABLE_GENERIC_ISO_2022
-        case ISO_2022:
+    } وإلا /* value == VALID_TERMINAL_2022 */ {
+        بدل(var){
+#جيڪڏهن_وصف_ٿيل U_ENABLE_GENERIC_ISO_2022
+        حالة ISO_2022:
         {
-            const char *chosenConverterName = escSeqStateTable_Result_2022[offset];
-            if(chosenConverterName == nullptr) {
+            ثابت حرف *chosenConverterName = esc_Seq_State_جدول_نتيجو_2022[وٿي];
+            إذا(chosenConverterName == خالي_اشارو) {
                 /* SS2 or SS3 */
                 *err = U_UNSUPPORTED_ESCAPE_SEQUENCE;
-                _this->toUCallbackReason = UCNV_UNASSIGNED;
-                return;
+                _this->منزل_UCallback_Reason = UCNV_UNASSIGNED;
+                أرجع;
             }
 
-            _this->mode = UCNV_SI;
+            _this->گهڻائي = UCNV_SI;
             ucnv_close(myData2022->currentConverter);
             myData2022->currentConverter = myUConverter = ucnv_open(chosenConverterName, err);
-            if(U_SUCCESS(*err)) {
-                myUConverter->fromCharErrorBehaviour = UCNV_TO_U_CALLBACK_STOP;
-                _this->mode = UCNV_SO;
+            إذا(U_SUCCESS(*err)) {
+                myUConverter->fromCharErrorBehaviour = UCNV_منزل_U_CALLBACK_STOP;
+                _this->گهڻائي = UCNV_SO;
             }
-            break;
+            اكسر;
         }
-#endif
-        case ISO_2022_JP:
+#جيڪڏهن_پورو
+        حالة ISO_2022_JP:
             {
-                StateEnum tempState = static_cast<StateEnum>(nextStateToUnicodeJP[offset]);
-                switch(tempState) {
-                case INVALID_STATE:
+                StateEnum عارضي_State = static_cast<StateEnum>(ايندڙ_State_منزل_Unicode_JP[وٿي]);
+                بدل(عارضي_State) {
+                حالة INVALID_STATE:
                     *err = U_UNSUPPORTED_ESCAPE_SEQUENCE;
-                    break;
-                case SS2_STATE:
-                    if(myData2022->toU2022State.cs[2]!=0) {
-                        if(myData2022->toU2022State.g<2) {
-                            myData2022->toU2022State.prevG=myData2022->toU2022State.g;
+                    اكسر;
+                حالة SS2_STATE:
+                    إذا(myData2022->منزل_U2022_State.cs[2]!=0) {
+                        إذا(myData2022->منزل_U2022_State.g<2) {
+                            myData2022->منزل_U2022_State.prevG=myData2022->منزل_U2022_State.g;
                         }
-                        myData2022->toU2022State.g=2;
-                    } else {
+                        myData2022->منزل_U2022_State.g=2;
+                    } وإلا {
                         /* illegal to have SS2 before a matching designator */
                         *err = U_ILLEGAL_ESCAPE_SEQUENCE;
                     }
-                    break;
+                    اكسر;
                 /* case SS3_STATE: not used in ISO-2022-JP-x */
-                case ISO8859_1:
-                case ISO8859_7:
-                    if((jpCharsetMasks[myData2022->version] & CSM(tempState)) == 0) {
+                حالة ISO8859_1:
+                حالة ISO8859_7:
+                    إذا((jpCharsetMasks[myData2022->نسخو] & CSM(عارضي_State)) == 0) {
                         *err = U_UNSUPPORTED_ESCAPE_SEQUENCE;
-                    } else {
+                    } وإلا {
                         /* G2 charset for SS2 */
-                        myData2022->toU2022State.cs[2] = static_cast<int8_t>(tempState);
+                        myData2022->منزل_U2022_State.cs[2] = static_cast<int8_t>(عارضي_State);
                     }
-                    break;
-                default:
-                    if((jpCharsetMasks[myData2022->version] & CSM(tempState)) == 0) {
+                    اكسر;
+                افتراضي:
+                    إذا((jpCharsetMasks[myData2022->نسخو] & CSM(عارضي_State)) == 0) {
                         *err = U_UNSUPPORTED_ESCAPE_SEQUENCE;
-                    } else {
+                    } وإلا {
                         /* G0 charset */
-                        myData2022->toU2022State.cs[0] = static_cast<int8_t>(tempState);
+                        myData2022->منزل_U2022_State.cs[0] = static_cast<int8_t>(عارضي_State);
                     }
-                    break;
+                    اكسر;
                 }
             }
-            break;
-#if !UCONFIG_ONLY_HTML_CONVERSION
-        case ISO_2022_CN:
+            اكسر;
+#إذا !UCONFIG_ONLY_HTML_CONVERSION
+        حالة ISO_2022_CN:
             {
-                StateEnum tempState = static_cast<StateEnum>(nextStateToUnicodeCN[offset]);
-                switch(tempState) {
-                case INVALID_STATE:
+                StateEnum عارضي_State = static_cast<StateEnum>(ايندڙ_State_منزل_Unicode_CN[وٿي]);
+                بدل(عارضي_State) {
+                حالة INVALID_STATE:
                     *err = U_UNSUPPORTED_ESCAPE_SEQUENCE;
-                    break;
-                case SS2_STATE:
-                    if(myData2022->toU2022State.cs[2]!=0) {
-                        if(myData2022->toU2022State.g<2) {
-                            myData2022->toU2022State.prevG=myData2022->toU2022State.g;
+                    اكسر;
+                حالة SS2_STATE:
+                    إذا(myData2022->منزل_U2022_State.cs[2]!=0) {
+                        إذا(myData2022->منزل_U2022_State.g<2) {
+                            myData2022->منزل_U2022_State.prevG=myData2022->منزل_U2022_State.g;
                         }
-                        myData2022->toU2022State.g=2;
-                    } else {
+                        myData2022->منزل_U2022_State.g=2;
+                    } وإلا {
                         /* illegal to have SS2 before a matching designator */
                         *err = U_ILLEGAL_ESCAPE_SEQUENCE;
                     }
-                    break;
-                case SS3_STATE:
-                    if(myData2022->toU2022State.cs[3]!=0) {
-                        if(myData2022->toU2022State.g<2) {
-                            myData2022->toU2022State.prevG=myData2022->toU2022State.g;
+                    اكسر;
+                حالة SS3_STATE:
+                    إذا(myData2022->منزل_U2022_State.cs[3]!=0) {
+                        إذا(myData2022->منزل_U2022_State.g<2) {
+                            myData2022->منزل_U2022_State.prevG=myData2022->منزل_U2022_State.g;
                         }
-                        myData2022->toU2022State.g=3;
-                    } else {
+                        myData2022->منزل_U2022_State.g=3;
+                    } وإلا {
                         /* illegal to have SS3 before a matching designator */
                         *err = U_ILLEGAL_ESCAPE_SEQUENCE;
                     }
-                    break;
-                case ISO_IR_165:
-                    if(myData2022->version==0) {
+                    اكسر;
+                حالة ISO_IR_165:
+                    إذا(myData2022->نسخو==0) {
                         *err = U_UNSUPPORTED_ESCAPE_SEQUENCE;
-                        break;
+                        اكسر;
                     }
                     U_FALLTHROUGH;
-                case GB2312_1:
+                حالة GB2312_1:
                     U_FALLTHROUGH;
-                case CNS_11643_1:
-                    myData2022->toU2022State.cs[1] = static_cast<int8_t>(tempState);
-                    break;
-                case CNS_11643_2:
-                    myData2022->toU2022State.cs[2] = static_cast<int8_t>(tempState);
-                    break;
-                default:
+                حالة CNS_11643_1:
+                    myData2022->منزل_U2022_State.cs[1] = static_cast<int8_t>(عارضي_State);
+                    اكسر;
+                حالة CNS_11643_2:
+                    myData2022->منزل_U2022_State.cs[2] = static_cast<int8_t>(عارضي_State);
+                    اكسر;
+                افتراضي:
                     /* other CNS 11643 planes */
-                    if(myData2022->version==0) {
+                    إذا(myData2022->نسخو==0) {
                         *err = U_UNSUPPORTED_ESCAPE_SEQUENCE;
-                    } else {
-                        myData2022->toU2022State.cs[3] = static_cast<int8_t>(tempState);
+                    } وإلا {
+                        myData2022->منزل_U2022_State.cs[3] = static_cast<int8_t>(عارضي_State);
                     }
-                    break;
+                    اكسر;
                 }
             }
-            break;
-        case ISO_2022_KR:
-            if(offset==0x30){
+            اكسر;
+        حالة ISO_2022_KR:
+            إذا(وٿي==0x30){
                 /* nothing to be done, just accept this one escape sequence */
-            } else {
+            } وإلا {
                 *err = U_UNSUPPORTED_ESCAPE_SEQUENCE;
             }
-            break;
-#endif  // !UCONFIG_ONLY_HTML_CONVERSION
+            اكسر;
+#جيڪڏهن_پورو  // !UCONFIG_ONLY_HTML_CONVERSION
 
-        default:
+        افتراضي:
             *err = U_ILLEGAL_ESCAPE_SEQUENCE;
-            break;
+            اكسر;
         }
     }
-    if(U_SUCCESS(*err)) {
-        _this->toULength = 0;
-    } else if(*err==U_ILLEGAL_ESCAPE_SEQUENCE) {
-        if(_this->toULength>1) {
+    إذا(U_SUCCESS(*err)) {
+        _this->منزل_ULength = 0;
+    } وإلا إذا(*err==U_ILLEGAL_ESCAPE_SEQUENCE) {
+        إذا(_this->منزل_ULength>1) {
             /*
              * Ticket 5691: consistent illegal sequences:
              * - We include at least the first byte (ESC) in the illegal sequence.
@@ -1032,27 +1032,27 @@ DONE:
              *   illegal sequence and back out all other bytes we looked at.
              */
             /* Back out some bytes. */
-            int8_t backOutDistance=_this->toULength-1;
-            int8_t bytesFromThisBuffer=_this->toULength-initialToULength;
-            if(backOutDistance<=bytesFromThisBuffer) {
+            int8_t پٺ_ٻاهريون_مفاصلو=_this->منزل_ULength-1;
+            int8_t بائيٽون_From_This_بفر=_this->منزل_ULength-initial_منزل_ULength;
+            إذا(پٺ_ٻاهريون_مفاصلو<=بائيٽون_From_This_بفر) {
                 /* same as initialToULength<=1 */
-                *source-=backOutDistance;
-            } else {
+                *ذريعو-=پٺ_ٻاهريون_مفاصلو;
+            } وإلا {
                 /* Back out bytes from the previous buffer: Need to replay them. */
-                _this->preToULength = static_cast<int8_t>(bytesFromThisBuffer - backOutDistance);
+                _this->pre_منزل_ULength = static_cast<int8_t>(بائيٽون_From_This_بفر - پٺ_ٻاهريون_مفاصلو);
                 /* same as -(initialToULength-1) */
                 /* preToULength is negative! */
-                uprv_memcpy(_this->preToU, _this->toUBytes+1, -_this->preToULength);
-                *source-=bytesFromThisBuffer;
+                uprv_memcpy(_this->pre_منزل_U, _this->منزل_UBytes+1, -_this->pre_منزل_ULength);
+                *ذريعو-=بائيٽون_From_This_بفر;
             }
-            _this->toULength=1;
+            _this->منزل_ULength=1;
         }
-    } else if(*err==U_UNSUPPORTED_ESCAPE_SEQUENCE) {
-        _this->toUCallbackReason = UCNV_UNASSIGNED;
+    } وإلا إذا(*err==U_UNSUPPORTED_ESCAPE_SEQUENCE) {
+        _this->منزل_UCallback_Reason = UCNV_UNASSIGNED;
     }
 }
 
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#إذا !UCONFIG_ONLY_HTML_CONVERSION
 /*Checks the characters of the buffer against valid 2022 escape sequences
 *if the match we return a pointer to the initial start of the sequence otherwise
 *we return sourceLimit
@@ -1061,24 +1061,24 @@ DONE:
  *to determine the longest possible convertible
  *data stream
  */
-static inline const char*
-getEndOfBuffer_2022(const char** source,
-                   const char* sourceLimit,
+ساكن مضمن ثابت حرف*
+get_پڇاڙي_جو_بفر_2022(ثابت حرف** ذريعو,
+                   ثابت حرف* ذريعو_حد_بندي,
                    UBool /*flush*/){
 
-    const char* mySource = *source;
+    ثابت حرف* my_ذريعو = *ذريعو;
 
-#ifdef U_ENABLE_GENERIC_ISO_2022
-    if (*source >= sourceLimit)
-        return sourceLimit;
+#جيڪڏهن_وصف_ٿيل U_ENABLE_GENERIC_ISO_2022
+    إذا (*ذريعو >= ذريعو_حد_بندي)
+        أرجع ذريعو_حد_بندي;
 
-    do{
+    افعل{
 
-        if (*mySource == ESC_2022){
+        إذا (*my_ذريعو == ESC_2022){
             int8_t i;
-            int32_t key = 0;
-            int32_t offset;
-            UCNV_TableStates_2022 value = VALID_NON_TERMINAL_2022;
+            int32_t ڪنجي = 0;
+            int32_t وٿي;
+            UCNV_جدول_حالتون_2022 value = VALID_NON_TERMINAL_2022;
 
             /* Kludge: I could not
             * figure out the reason for validating an escape sequence
@@ -1086,97 +1086,97 @@ getEndOfBuffer_2022(const char** source,
             * is it possible to have an ESC character in a ISO2022
             * byte stream which is valid in a code page? Is it legal?
             */
-            for (i=0;
-            (mySource+i < sourceLimit)&&(value == VALID_NON_TERMINAL_2022);
+            لكل (i=0;
+            (my_ذريعو+i < ذريعو_حد_بندي)&&(value == VALID_NON_TERMINAL_2022);
             i++) {
-                value =  getKey_2022(*(mySource+i), &key, &offset);
+                value =  get_ڪنجي_2022(*(my_ذريعو+i), &ڪنجي, &وٿي);
             }
-            if (value > 0 || *mySource==ESC_2022)
-                return mySource;
+            إذا (value > 0 || *my_ذريعو==ESC_2022)
+                أرجع my_ذريعو;
 
-            if ((value == VALID_NON_TERMINAL_2022)&&(!flush) )
-                return sourceLimit;
+            إذا ((value == VALID_NON_TERMINAL_2022)&&(!flush) )
+                أرجع ذريعو_حد_بندي;
         }
-    }while (++mySource < sourceLimit);
+    }طالما (++my_ذريعو < ذريعو_حد_بندي);
 
-    return sourceLimit;
-#else
-    while(mySource < sourceLimit && *mySource != ESC_2022) {
-        ++mySource;
+    أرجع ذريعو_حد_بندي;
+#وإلا
+    طالما(my_ذريعو < ذريعو_حد_بندي && *my_ذريعو != ESC_2022) {
+        ++my_ذريعو;
     }
-    return mySource;
-#endif
+    أرجع my_ذريعو;
+#جيڪڏهن_پورو
 }
-#endif
+#جيڪڏهن_پورو
 
 /* This inline function replicates code in _MBCSFromUChar32() function in ucnvmbcs.c
  * any future change in _MBCSFromUChar32() function should be reflected here.
  * @return number of bytes in *value; negative number if fallback; 0 if no mapping
  */
-static inline int32_t
-MBCS_FROM_UCHAR32_ISO2022(UConverterSharedData* sharedData,
+ساكن مضمن int32_t
+MBCS_FROM_UCHAR32_ISO2022(UConverter_Shared_معلومات* shared_معلومات,
                                          UChar32 c,
                                          uint32_t* value,
                                          UBool useFallback,
-                                         int outputType)
+                                         صحيح outputType)
 {
-    const int32_t *cx;
-    const uint16_t *table;
-    uint32_t stage2Entry;
-    uint32_t myValue;
+    ثابت int32_t *cx;
+    ثابت uint16_t *جدول;
+    uint32_t stage2_داخلا;
+    uint32_t my_قدر;
     int32_t length;
-    const uint8_t *p;
+    ثابت uint8_t *p;
     /*
      * TODO(markus): Use and require new, faster MBCS conversion table structures.
      * Use internal version of ucnv_open() that verifies that the new structures are available,
      * else U_INTERNAL_PROGRAM_ERROR.
      */
     /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
-    if(c<0x10000 || (sharedData->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
-        table=sharedData->mbcs.fromUnicodeTable;
-        stage2Entry=MBCS_STAGE_2_FROM_U(table, c);
+    إذا(c<0x10000 || (shared_معلومات->mbcs.unicode_نقاب&UCNV_HAS_SUPPLEMENTARY)) {
+        جدول=shared_معلومات->mbcs.from_Unicode_جدول;
+        stage2_داخلا=MBCS_STAGE_2_FROM_U(جدول, c);
         /* get the bytes and the length for the output */
-        if(outputType==MBCS_OUTPUT_2){
-            myValue=MBCS_VALUE_2_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
-            if(myValue<=0xff) {
+        إذا(outputType==MBCS_OUTPUT_2){
+            my_قدر=MBCS_قدر_2_FROM_STAGE_2(shared_معلومات->mbcs.from_Unicode_بائيٽون, stage2_داخلا, c);
+            إذا(my_قدر<=0xff) {
                 length=1;
-            } else {
+            } وإلا {
                 length=2;
             }
-        } else /* outputType==MBCS_OUTPUT_3 */ {
-            p=MBCS_POINTER_3_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
-            myValue = (static_cast<uint32_t>(*p) << 16) | (static_cast<uint32_t>(p[1]) << 8) | p[2];
-            if(myValue<=0xff) {
+        } وإلا /* outputType==MBCS_OUTPUT_3 */ {
+            p=MBCS_اشارو_3_FROM_STAGE_2(shared_معلومات->mbcs.from_Unicode_بائيٽون, stage2_داخلا, c);
+            my_قدر = (static_cast<uint32_t>(*p) << 16) | (static_cast<uint32_t>(p[1]) << 8) | p[2];
+            إذا(my_قدر<=0xff) {
                 length=1;
-            } else if(myValue<=0xffff) {
+            } وإلا إذا(my_قدر<=0xffff) {
                 length=2;
-            } else {
+            } وإلا {
                 length=3;
             }
         }
         /* is this code point assigned, or do we use fallbacks? */
-        if((stage2Entry&(1<<(16+(c&0xf))))!=0) {
+        إذا((stage2_داخلا&(1<<(16+(c&0xf))))!=0) {
             /* assigned */
-            *value=myValue;
-            return length;
-        } else if(FROM_U_USE_FALLBACK(useFallback, c) && myValue!=0) {
+            *value=my_قدر;
+            أرجع length;
+        } وإلا إذا(FROM_U_USE_FALLBACK(useFallback, c) && my_قدر!=0) {
             /*
              * We allow a 0 byte output if the "assigned" bit is set for this entry.
              * There is no way with this data structure for fallback output
              * to be a zero byte.
              */
-            *value=myValue;
-            return -length;
+            *value=my_قدر;
+            أرجع -length;
         }
     }
 
-    cx=sharedData->mbcs.extIndexes;
-    if(cx!=nullptr) {
-        return ucnv_extSimpleMatchFromU(cx, c, value, useFallback);
+    cx=shared_معلومات->mbcs.extIndexes;
+    إذا(cx!=خالي_اشارو) {
+        أرجع ucnv_ext_Simple_ميلاپ_From_U(cx, c, value, useFallback);
     }
 
     /* unassigned */
-    return 0;
+    أرجع 0;
 }
 
 /* This inline function replicates code in _MBCSSingleFromUChar32() function in ucnvmbcs.c
@@ -1184,30 +1184,30 @@ MBCS_FROM_UCHAR32_ISO2022(UConverterSharedData* sharedData,
  * @param retval pointer to output byte
  * @return 1 roundtrip byte  0 no mapping  -1 fallback byte
  */
-static inline int32_t
-MBCS_SINGLE_FROM_UCHAR32(UConverterSharedData* sharedData,
+ساكن مضمن int32_t
+MBCS_SINGLE_FROM_UCHAR32(UConverter_Shared_معلومات* shared_معلومات,
                                        UChar32 c,
                                        uint32_t* retval,
                                        UBool useFallback)
 {
-    const uint16_t *table;
+    ثابت uint16_t *جدول;
     int32_t value;
     /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
-    if(c>=0x10000 && !(sharedData->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
-        return 0;
+    إذا(c>=0x10000 && !(shared_معلومات->mbcs.unicode_نقاب&UCNV_HAS_SUPPLEMENTARY)) {
+        أرجع 0;
     }
     /* convert the Unicode code point in c into codepage bytes (same as in _MBCSFromUnicodeWithOffsets) */
-    table=sharedData->mbcs.fromUnicodeTable;
+    جدول=shared_معلومات->mbcs.from_Unicode_جدول;
     /* get the byte for the output */
-    value=MBCS_SINGLE_RESULT_FROM_U(table, (uint16_t *)sharedData->mbcs.fromUnicodeBytes, c);
+    value=MBCS_SINGLE_نتيجو_FROM_U(جدول, (uint16_t *)shared_معلومات->mbcs.from_Unicode_بائيٽون, c);
     /* is this code point assigned, or do we use fallbacks? */
     *retval = static_cast<uint32_t>(value & 0xff);
-    if(value>=0xf00) {
-        return 1;  /* roundtrip */
-    } else if(useFallback ? value>=0x800 : value>=0xc00) {
-        return -1;  /* fallback taken */
-    } else {
-        return 0;  /* no mapping */
+    إذا(value>=0xf00) {
+        أرجع 1;  /* roundtrip */
+    } وإلا إذا(useFallback ? value>=0x800 : value>=0xc00) {
+        أرجع -1;  /* fallback taken */
+    } وإلا {
+        أرجع 0;  /* no mapping */
     }
 }
 
@@ -1217,36 +1217,36 @@ MBCS_SINGLE_FROM_UCHAR32(UConverterSharedData* sharedData,
  * to move it to the ISO 2022 range 21..7E.
  * Return 0 if out of range.
  */
-static inline uint32_t
+ساكن مضمن uint32_t
 _2022FromGR94DBCS(uint32_t value) {
-    if (static_cast<uint16_t>(value - 0xa1a1) <= (0xfefe - 0xa1a1) &&
+    إذا (static_cast<uint16_t>(value - 0xa1a1) <= (0xfefe - 0xa1a1) &&
         static_cast<uint8_t>(value - 0xa1) <= (0xfe - 0xa1)
     ) {
-        return value - 0x8080;  /* shift down to 21..7e byte range */
-    } else {
-        return 0;  /* not valid for ISO 2022 */
+        أرجع value - 0x8080;  /* shift down to 21..7e byte range */
+    } وإلا {
+        أرجع 0;  /* not valid for ISO 2022 */
     }
 }
 
-#if 0 /* 5691: Call sites now check for validity. They can just += 0x8080 after that. */
+#إذا 0 /* 5691: Call sites now check for validity. They can just += 0x8080 after that. */
 /*
  * This method does the reverse of _2022FromGR94DBCS(). Given the 2022 code point, it returns the
  * 2 byte value that is in the range A1..FE for each byte. Otherwise it returns the 2022 code point
  * unchanged. 
  */
-static inline uint32_t
+ساكن مضمن uint32_t
 _2022ToGR94DBCS(uint32_t value) {
-    uint32_t returnValue = value + 0x8080;
-    if( (uint16_t)(returnValue - 0xa1a1) <= (0xfefe - 0xa1a1) &&
-        (uint8_t)(returnValue - 0xa1) <= (0xfe - 0xa1)) {
-        return returnValue;
-    } else {
-        return value;
+    uint32_t return_قدر = value + 0x8080;
+    إذا( (uint16_t)(return_قدر - 0xa1a1) <= (0xfefe - 0xa1a1) &&
+        (uint8_t)(return_قدر - 0xa1) <= (0xfe - 0xa1)) {
+        أرجع return_قدر;
+    } وإلا {
+        أرجع value;
     }
 }
-#endif
+#جيڪڏهن_پورو
 
-#ifdef U_ENABLE_GENERIC_ISO_2022
+#جيڪڏهن_وصف_ٿيل U_ENABLE_GENERIC_ISO_2022
 
 /**********************************************************************************
 *  ISO-2022 Converter
@@ -1254,61 +1254,61 @@ _2022ToGR94DBCS(uint32_t value) {
 *
 */
 
-static void U_CALLCONV
-T_UConverter_toUnicode_ISO_2022_OFFSETS_LOGIC(UConverterToUnicodeArgs* args,
-                                                           UErrorCode* err){
-    const char* mySourceLimit, *realSourceLimit;
-    const char* sourceStart;
-    const char16_t* myTargetStart;
+ساكن فراغ U_CALLCONV
+T_UConverter_منزل_Unicode_ISO_2022_OFFSETS_LOGIC(UConverter_منزل_Unicode_دليلون* دليلون_2,
+                                                           UError_ڪوڊ* err){
+    ثابت حرف* my_ذريعو_حد_بندي, *real_ذريعو_حد_بندي;
+    ثابت حرف* ذريعو_شروعات;
+    ثابت char16_t* my_هدف_شروعات;
     UConverter* saveThis;
-    UConverterDataISO2022* myData;
+    UConverter_معلومات_ISO2022* my_معلومات;
     int8_t length;
 
-    saveThis = args->converter;
-    myData=((UConverterDataISO2022*)(saveThis->extraInfo));
+    saveThis = دليلون_2->converter;
+    my_معلومات=((UConverter_معلومات_ISO2022*)(saveThis->extraInfo));
 
-    realSourceLimit = args->sourceLimit;
-    while (args->source < realSourceLimit) {
-        if(myData->key == 0) { /* are we in the middle of an escape sequence? */
+    real_ذريعو_حد_بندي = دليلون_2->ذريعو_حد_بندي;
+    طالما (دليلون_2->ذريعو < real_ذريعو_حد_بندي) {
+        إذا(my_معلومات->ڪنجي == 0) { /* are we in the middle of an escape sequence? */
             /*Find the end of the buffer e.g : Next Escape Seq | end of Buffer*/
-            mySourceLimit = getEndOfBuffer_2022(&(args->source), realSourceLimit, args->flush);
+            my_ذريعو_حد_بندي = get_پڇاڙي_جو_بفر_2022(&(دليلون_2->ذريعو), real_ذريعو_حد_بندي, دليلون_2->flush);
 
-            if(args->source < mySourceLimit) {
-                if(myData->currentConverter==nullptr) {
-                    myData->currentConverter = ucnv_open("ASCII",err);
-                    if(U_FAILURE(*err)){
-                        return;
+            إذا(دليلون_2->ذريعو < my_ذريعو_حد_بندي) {
+                إذا(my_معلومات->currentConverter==خالي_اشارو) {
+                    my_معلومات->currentConverter = ucnv_open("ASCII",err);
+                    إذا(U_FAILURE(*err)){
+                        أرجع;
                     }
 
-                    myData->currentConverter->fromCharErrorBehaviour = UCNV_TO_U_CALLBACK_STOP;
-                    saveThis->mode = UCNV_SO;
+                    my_معلومات->currentConverter->fromCharErrorBehaviour = UCNV_منزل_U_CALLBACK_STOP;
+                    saveThis->گهڻائي = UCNV_SO;
                 }
 
                 /* convert to before the ESC or until the end of the buffer */
-                myData->isFirstBuffer=false;
-                sourceStart = args->source;
-                myTargetStart = args->target;
-                args->converter = myData->currentConverter;
-                ucnv_toUnicode(args->converter,
-                    &args->target,
-                    args->targetLimit,
-                    &args->source,
-                    mySourceLimit,
-                    args->offsets,
-                    (UBool)(args->flush && mySourceLimit == realSourceLimit),
+                my_معلومات->is_پهريون_بفر=خطأ;
+                ذريعو_شروعات = دليلون_2->ذريعو;
+                my_هدف_شروعات = دليلون_2->هدف;
+                دليلون_2->converter = my_معلومات->currentConverter;
+                ucnv_منزل_Unicode(دليلون_2->converter,
+                    &دليلون_2->هدف,
+                    دليلون_2->هدف_حد_بندي,
+                    &دليلون_2->ذريعو,
+                    my_ذريعو_حد_بندي,
+                    دليلون_2->offsets,
+                    (UBool)(دليلون_2->flush && my_ذريعو_حد_بندي == real_ذريعو_حد_بندي),
                     err);
-                args->converter = saveThis;
+                دليلون_2->converter = saveThis;
 
-                if (*err == U_BUFFER_OVERFLOW_ERROR) {
+                إذا (*err == U_بفر_حد_کان_مٿي_ERROR) {
                     /* move the overflow buffer */
-                    length = saveThis->UCharErrorBufferLength = myData->currentConverter->UCharErrorBufferLength;
-                    myData->currentConverter->UCharErrorBufferLength = 0;
-                    if(length > 0) {
-                        uprv_memcpy(saveThis->UCharErrorBuffer,
-                                    myData->currentConverter->UCharErrorBuffer,
+                    length = saveThis->UChar_Error_بفر_ڊيگهائي = my_معلومات->currentConverter->UChar_Error_بفر_ڊيگهائي;
+                    my_معلومات->currentConverter->UChar_Error_بفر_ڊيگهائي = 0;
+                    إذا(length > 0) {
+                        uprv_memcpy(saveThis->UChar_Error_بفر,
+                                    my_معلومات->currentConverter->UChar_Error_بفر,
                                     length*U_SIZEOF_UCHAR);
                     }
-                    return;
+                    أرجع;
                 }
 
                 /*
@@ -1320,68 +1320,68 @@ T_UConverter_toUnicode_ISO_2022_OFFSETS_LOGIC(UConverterToUnicodeArgs* args,
                  *
                  * or else we just stopped at an ESC byte and continue with changeState_2022()
                  */
-                if (U_FAILURE(*err) ||
-                    (args->source == realSourceLimit) ||
-                    (args->offsets != nullptr && (args->target != myTargetStart || args->source != sourceStart) ||
-                    (mySourceLimit < realSourceLimit && myData->currentConverter->toULength > 0))
+                إذا (U_FAILURE(*err) ||
+                    (دليلون_2->ذريعو == real_ذريعو_حد_بندي) ||
+                    (دليلون_2->offsets != خالي_اشارو && (دليلون_2->هدف != my_هدف_شروعات || دليلون_2->ذريعو != ذريعو_شروعات) ||
+                    (my_ذريعو_حد_بندي < real_ذريعو_حد_بندي && my_معلومات->currentConverter->منزل_ULength > 0))
                 ) {
                     /* copy partial or error input for truncated detection and error handling */
-                    if(U_FAILURE(*err)) {
-                        length = saveThis->invalidCharLength = myData->currentConverter->invalidCharLength;
-                        if(length > 0) {
-                            uprv_memcpy(saveThis->invalidCharBuffer, myData->currentConverter->invalidCharBuffer, length);
+                    إذا(U_FAILURE(*err)) {
+                        length = saveThis->invalid_Char_ڊيگهائي = my_معلومات->currentConverter->invalid_Char_ڊيگهائي;
+                        إذا(length > 0) {
+                            uprv_memcpy(saveThis->invalid_Char_بفر, my_معلومات->currentConverter->invalid_Char_بفر, length);
                         }
-                    } else {
-                        length = saveThis->toULength = myData->currentConverter->toULength;
-                        if(length > 0) {
-                            uprv_memcpy(saveThis->toUBytes, myData->currentConverter->toUBytes, length);
-                            if(args->source < mySourceLimit) {
-                                *err = U_TRUNCATED_CHAR_FOUND; /* truncated input before ESC */
+                    } وإلا {
+                        length = saveThis->منزل_ULength = my_معلومات->currentConverter->منزل_ULength;
+                        إذا(length > 0) {
+                            uprv_memcpy(saveThis->منزل_UBytes, my_معلومات->currentConverter->منزل_UBytes, length);
+                            إذا(دليلون_2->ذريعو < my_ذريعو_حد_بندي) {
+                                *err = U_TRUNCATED_CHAR_مليو; /* truncated input before ESC */
                             }
                         }
                     }
-                    return;
+                    أرجع;
                 }
             }
         }
 
-        sourceStart = args->source;
-        changeState_2022(args->converter,
-               &(args->source),
-               realSourceLimit,
+        ذريعو_شروعات = دليلون_2->ذريعو;
+        changeState_2022(دليلون_2->converter,
+               &(دليلون_2->ذريعو),
+               real_ذريعو_حد_بندي,
                ISO_2022,
                err);
-        if (U_FAILURE(*err) || (args->source != sourceStart && args->offsets != nullptr)) {
+        إذا (U_FAILURE(*err) || (دليلون_2->ذريعو != ذريعو_شروعات && دليلون_2->offsets != خالي_اشارو)) {
             /* let the ucnv.c code update its current offset */
-            return;
+            أرجع;
         }
     }
 }
 
-#endif
+#جيڪڏهن_پورو
 
 /*
  * To Unicode Callback helper function
  */
-static void
-toUnicodeCallback(UConverter *cnv,
-                  const uint32_t sourceChar, const uint32_t targetUniChar,
-                  UErrorCode* err){
-    if(sourceChar>0xff){
-        cnv->toUBytes[0] = static_cast<uint8_t>(sourceChar >> 8);
-        cnv->toUBytes[1] = static_cast<uint8_t>(sourceChar);
-        cnv->toULength = 2;
+ساكن فراغ
+منزل_Unicode_Callback(UConverter *cnv,
+                  ثابت uint32_t ذريعو_Char, ثابت uint32_t هدف_Uni_Char,
+                  UError_ڪوڊ* err){
+    إذا(ذريعو_Char>0xff){
+        cnv->منزل_UBytes[0] = static_cast<uint8_t>(ذريعو_Char >> 8);
+        cnv->منزل_UBytes[1] = static_cast<uint8_t>(ذريعو_Char);
+        cnv->منزل_ULength = 2;
     }
-    else{
-        cnv->toUBytes[0] = static_cast<char>(sourceChar);
-        cnv->toULength = 1;
+    وإلا{
+        cnv->منزل_UBytes[0] = static_cast<حرف>(ذريعو_Char);
+        cnv->منزل_ULength = 1;
     }
 
-    if(targetUniChar == (missingCharMarker-1/*0xfffe*/)){
-        *err = U_INVALID_CHAR_FOUND;
+    إذا(هدف_Uni_Char == (missingCharMarker-1/*0xfffe*/)){
+        *err = U_INVALID_CHAR_مليو;
     }
-    else{
-        *err = U_ILLEGAL_CHAR_FOUND;
+    وإلا{
+        *err = U_ILLEGAL_CHAR_مليو;
     }
 }
 
@@ -1428,7 +1428,7 @@ toUnicodeCallback(UConverter *cnv,
 */
 
 /* preference order of JP charsets */
-static const StateEnum jpCharsetPref[]={
+ساكن ثابت StateEnum jpCharsetPref[]={
     ASCII,
     JISX201,
     ISO8859_1,
@@ -1437,14 +1437,14 @@ static const StateEnum jpCharsetPref[]={
     JISX212,
     GB2312,
     KSC5601,
-    HWKANA_7BIT
+    HWKANA_7_ٻٽو_انگ
 };
 
 /*
  * The escape sequences must be in order of the enum constants like JISX201  = 3,
  * not in order of jpCharsetPref[]!
  */
-static const char escSeqChars[][6] ={
+ساكن ثابت حرف escSeqChars[][6] ={
     "\x1B\x28\x42",         /* <ESC>(B  ASCII       */
     "\x1B\x2E\x41",         /* <ESC>.A  ISO-8859-1  */
     "\x1B\x2E\x46",         /* <ESC>.F  ISO-8859-7  */
@@ -1456,7 +1456,7 @@ static const char escSeqChars[][6] ={
     "\x1B\x28\x49"          /* <ESC>(I  HWKANA_7BIT */
 
 };
-static  const int8_t escSeqCharsLen[] ={
+ساكن  ثابت int8_t escSeqCharsLen[] ={
     3, /* length of <ESC>(B  ASCII       */
     3, /* length of <ESC>.A  ISO-8859-1  */
     3, /* length of <ESC>.F  ISO-8859-7  */
@@ -1486,32 +1486,32 @@ static  const int8_t escSeqCharsLen[] ={
 */
 
 /* Map 00..7F to Unicode according to JIS X 0201. */
-static inline uint32_t
-jisx201ToU(uint32_t value) {
-    if(value < 0x5c) {
-        return value;
-    } else if(value == 0x5c) {
-        return 0xa5;
-    } else if(value == 0x7e) {
-        return 0x203e;
-    } else /* value <= 0x7f */ {
-        return value;
+ساكن مضمن uint32_t
+jisx201_منزل_U(uint32_t value) {
+    إذا(value < 0x5c) {
+        أرجع value;
+    } وإلا إذا(value == 0x5c) {
+        أرجع 0xa5;
+    } وإلا إذا(value == 0x7e) {
+        أرجع 0x203e;
+    } وإلا /* value <= 0x7f */ {
+        أرجع value;
     }
 }
 
 /* Map Unicode to 00..7F according to JIS X 0201. Return U+FFFE if unmappable. */
-static inline uint32_t
+ساكن مضمن uint32_t
 jisx201FromU(uint32_t value) {
-    if(value<=0x7f) {
-        if(value!=0x5c && value!=0x7e) {
-            return value;
+    إذا(value<=0x7f) {
+        إذا(value!=0x5c && value!=0x7e) {
+            أرجع value;
         }
-    } else if(value==0xa5) {
-        return 0x5c;
-    } else if(value==0x203e) {
-        return 0x7e;
+    } وإلا إذا(value==0xa5) {
+        أرجع 0x5c;
+    } وإلا إذا(value==0x203e) {
+        أرجع 0x7e;
     }
-    return 0xfffe;
+    أرجع 0xfffe;
 }
 
 /*
@@ -1519,35 +1519,35 @@ jisx201FromU(uint32_t value) {
  * to JIS X 0208, and convert it to a pair of 21..7E bytes.
  * Return 0 if the byte pair is out of range.
  */
-static inline uint32_t
+ساكن مضمن uint32_t
 _2022FromSJIS(uint32_t value) {
     uint8_t trail;
 
-    if(value > 0xEFFC) {
-        return 0;  /* beyond JIS X 0208 */
+    إذا(value > 0xEFFC) {
+        أرجع 0;  /* beyond JIS X 0208 */
     }
 
     trail = static_cast<uint8_t>(value);
 
     value &= 0xff00;  /* lead byte */
-    if(value <= 0x9f00) {
+    إذا(value <= 0x9f00) {
         value -= 0x7000;
-    } else /* 0xe000 <= value <= 0xef00 */ {
+    } وإلا /* 0xe000 <= value <= 0xef00 */ {
         value -= 0xb000;
     }
     value <<= 1;
 
-    if(trail <= 0x9e) {
+    إذا(trail <= 0x9e) {
         value -= 0x100;
-        if(trail <= 0x7e) {
+        إذا(trail <= 0x7e) {
             value |= trail - 0x1f;
-        } else {
+        } وإلا {
             value |= trail - 0x20;
         }
-    } else /* trail <= 0xfc */ {
+    } وإلا /* trail <= 0xfc */ {
         value |= trail - 0x7e;
     }
-    return value;
+    أرجع value;
 }
 
 /*
@@ -1557,34 +1557,34 @@ _2022FromSJIS(uint32_t value) {
  * Some invalid byte values already turn into equally invalid Shift-JIS
  * byte values and need not be tested explicitly.
  */
-static inline void
-_2022ToSJIS(uint8_t c1, uint8_t c2, char bytes[2]) {
-    if(c1&1) {
+ساكن مضمن فراغ
+_2022ToSJIS(uint8_t c1, uint8_t c2, حرف بائيٽون[2]) {
+    إذا(c1&1) {
         ++c1;
-        if(c2 <= 0x5f) {
+        إذا(c2 <= 0x5f) {
             c2 += 0x1f;
-        } else if(c2 <= 0x7e) {
+        } وإلا إذا(c2 <= 0x7e) {
             c2 += 0x20;
-        } else {
+        } وإلا {
             c2 = 0;  /* invalid */
         }
-    } else {
-        if (static_cast<uint8_t>(c2 - 0x21) <= ((0x7e) - 0x21)) {
+    } وإلا {
+        إذا (static_cast<uint8_t>(c2 - 0x21) <= ((0x7e) - 0x21)) {
             c2 += 0x7e;
-        } else {
+        } وإلا {
             c2 = 0;  /* invalid */
         }
     }
     c1 >>= 1;
-    if(c1 <= 0x2f) {
+    إذا(c1 <= 0x2f) {
         c1 += 0x70;
-    } else if(c1 <= 0x3f) {
+    } وإلا إذا(c1 <= 0x3f) {
         c1 += 0xb0;
-    } else {
+    } وإلا {
         c1 = 0;  /* invalid */
     }
-    bytes[0] = static_cast<char>(c1);
-    bytes[1] = static_cast<char>(c2);
+    بائيٽون[0] = static_cast<حرف>(c1);
+    بائيٽون[1] = static_cast<حرف>(c2);
 }
 
 /*
@@ -1594,7 +1594,7 @@ _2022ToSJIS(uint8_t c1, uint8_t c2, char bytes[2]) {
  * because Shift-JIS roundtrips half-width Katakana to single bytes.
  * These were the only fallbacks in ICU's jisx-208.ucm file.
  */
-static const uint16_t hwkana_fb[HWKANA_END - HWKANA_START + 1] = {
+ساكن ثابت uint16_t hwkana_fb[HWKANA_پڇاڙي - HWKANA_شروعات + 1] = {
     0x2123,  /* U+FF61 */
     0x2156,
     0x2157,
@@ -1660,119 +1660,119 @@ static const uint16_t hwkana_fb[HWKANA_END - HWKANA_START + 1] = {
     0x212C   /* U+FF9F */
 };
 
-static void U_CALLCONV
-UConverter_fromUnicode_ISO_2022_JP_OFFSETS_LOGIC(UConverterFromUnicodeArgs* args, UErrorCode* err) {
-    UConverter *cnv = args->converter;
-    UConverterDataISO2022 *converterData;
+ساكن فراغ U_CALLCONV
+UConverter_fromUnicode_ISO_2022_JP_OFFSETS_LOGIC(UConverter_From_Unicode_دليلون* دليلون_2, UError_ڪوڊ* err) {
+    UConverter *cnv = دليلون_2->converter;
+    UConverter_معلومات_ISO2022 *converter_معلومات;
     ISO2022State *pFromU2022State;
-    uint8_t* target = reinterpret_cast<uint8_t*>(args->target);
-    const uint8_t* targetLimit = reinterpret_cast<const uint8_t*>(args->targetLimit);
-    const char16_t* source = args->source;
-    const char16_t* sourceLimit = args->sourceLimit;
-    int32_t* offsets = args->offsets;
-    UChar32 sourceChar;
-    char buffer[8];
-    int32_t len, outLen;
+    uint8_t* هدف = reinterpret_cast<uint8_t*>(دليلون_2->هدف);
+    ثابت uint8_t* هدف_حد_بندي = reinterpret_cast<ثابت uint8_t*>(دليلون_2->هدف_حد_بندي);
+    ثابت char16_t* ذريعو = دليلون_2->ذريعو;
+    ثابت char16_t* ذريعو_حد_بندي = دليلون_2->ذريعو_حد_بندي;
+    int32_t* offsets = دليلون_2->offsets;
+    UChar32 ذريعو_Char;
+    حرف بفر[8];
+    int32_t len, ٻاهريون_Len;
     int8_t choices[10];
-    int32_t choiceCount;
-    uint32_t targetValue = 0;
+    int32_t choice_ڳڻپ;
+    uint32_t هدف_قدر = 0;
     UBool useFallback;
 
     int32_t i;
     int8_t cs, g;
 
     /* set up the state */
-    converterData = static_cast<UConverterDataISO2022*>(cnv->extraInfo);
-    pFromU2022State   = &converterData->fromU2022State;
+    converter_معلومات = static_cast<UConverter_معلومات_ISO2022*>(cnv->extraInfo);
+    pFromU2022State   = &converter_معلومات->fromU2022State;
 
-    choiceCount = 0;
+    choice_ڳڻپ = 0;
 
     /* check if the last codepoint of previous buffer was a lead surrogate*/
-    if((sourceChar = cnv->fromUChar32)!=0 && target< targetLimit) {
-        goto getTrail;
+    إذا((ذريعو_Char = cnv->fromUChar32)!=0 && هدف< هدف_حد_بندي) {
+        اذهب getTrail;
     }
 
-    while(source < sourceLimit) {
-        if(target < targetLimit) {
+    طالما(ذريعو < ذريعو_حد_بندي) {
+        إذا(هدف < هدف_حد_بندي) {
 
-            sourceChar  = *(source++);
+            ذريعو_Char  = *(ذريعو++);
             /*check if the char is a First surrogate*/
-            if(U16_IS_SURROGATE(sourceChar)) {
-                if(U16_IS_SURROGATE_LEAD(sourceChar)) {
+            إذا(U16_IS_SURROGATE(ذريعو_Char)) {
+                إذا(U16_IS_SURROGATE_LEAD(ذريعو_Char)) {
 getTrail:
                     /*look ahead to find the trail surrogate*/
-                    if(source < sourceLimit) {
+                    إذا(ذريعو < ذريعو_حد_بندي) {
                         /* test the following code unit */
-                        char16_t trail = *source;
-                        if(U16_IS_TRAIL(trail)) {
-                            source++;
-                            sourceChar=U16_GET_SUPPLEMENTARY(sourceChar, trail);
+                        char16_t trail = *ذريعو;
+                        إذا(U16_IS_TRAIL(trail)) {
+                            ذريعو++;
+                            ذريعو_Char=U16_GET_SUPPLEMENTARY(ذريعو_Char, trail);
                             cnv->fromUChar32=0x00;
                             /* convert this supplementary code point */
                             /* exit this condition tree */
-                        } else {
+                        } وإلا {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
-                            *err=U_ILLEGAL_CHAR_FOUND;
-                            cnv->fromUChar32=sourceChar;
-                            break;
+                            *err=U_ILLEGAL_CHAR_مليو;
+                            cnv->fromUChar32=ذريعو_Char;
+                            اكسر;
                         }
-                    } else {
+                    } وإلا {
                         /* no more input */
-                        cnv->fromUChar32=sourceChar;
-                        break;
+                        cnv->fromUChar32=ذريعو_Char;
+                        اكسر;
                     }
-                } else {
+                } وإلا {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
-                    *err=U_ILLEGAL_CHAR_FOUND;
-                    cnv->fromUChar32=sourceChar;
-                    break;
+                    *err=U_ILLEGAL_CHAR_مليو;
+                    cnv->fromUChar32=ذريعو_Char;
+                    اكسر;
                 }
             }
 
             /* do not convert SO/SI/ESC */
-            if(IS_2022_CONTROL(sourceChar)) {
+            إذا(IS_2022_CONTROL(ذريعو_Char)) {
                 /* callback(illegal) */
-                *err=U_ILLEGAL_CHAR_FOUND;
-                cnv->fromUChar32=sourceChar;
-                break;
+                *err=U_ILLEGAL_CHAR_مليو;
+                cnv->fromUChar32=ذريعو_Char;
+                اكسر;
             }
 
             /* do the conversion */
 
-            if(choiceCount == 0) {
+            إذا(choice_ڳڻپ == 0) {
                 uint16_t csm;
 
                 /*
                  * The csm variable keeps track of which charsets are allowed
                  * and not used yet while building the choices[].
                  */
-                csm = jpCharsetMasks[converterData->version];
-                choiceCount = 0;
+                csm = jpCharsetMasks[converter_معلومات->نسخو];
+                choice_ڳڻپ = 0;
 
                 /* JIS7/8: try single-byte half-width Katakana before JISX208 */
-                if(converterData->version == 3 || converterData->version == 4) {
-                    choices[choiceCount++] = static_cast<int8_t>(HWKANA_7BIT);
+                إذا(converter_معلومات->نسخو == 3 || converter_معلومات->نسخو == 4) {
+                    choices[choice_ڳڻپ++] = static_cast<int8_t>(HWKANA_7_ٻٽو_انگ);
                 }
                 /* Do not try single-byte half-width Katakana for other versions. */
-                csm &= ~CSM(HWKANA_7BIT);
+                csm &= ~CSM(HWKANA_7_ٻٽو_انگ);
 
                 /* try the current G0 charset */
-                choices[choiceCount++] = cs = pFromU2022State->cs[0];
+                choices[choice_ڳڻپ++] = cs = pFromU2022State->cs[0];
                 csm &= ~CSM(cs);
 
                 /* try the current G2 charset */
-                if((cs = pFromU2022State->cs[2]) != 0) {
-                    choices[choiceCount++] = cs;
+                إذا((cs = pFromU2022State->cs[2]) != 0) {
+                    choices[choice_ڳڻپ++] = cs;
                     csm &= ~CSM(cs);
                 }
 
                 /* try all the other possible charsets */
-                for(i = 0; i < UPRV_LENGTHOF(jpCharsetPref); ++i) {
+                لكل(i = 0; i < UPRV_LENGTHOF(jpCharsetPref); ++i) {
                     cs = static_cast<int8_t>(jpCharsetPref[i]);
-                    if(CSM(cs) & csm) {
-                        choices[choiceCount++] = cs;
+                    إذا(CSM(cs) & csm) {
+                        choices[choice_ڳڻپ++] = cs;
                         csm &= ~CSM(cs);
                     }
                 }
@@ -1793,44 +1793,44 @@ getTrail:
              */
             useFallback = cnv->useFallback;
 
-            for(i = 0; i < choiceCount && len <= 0; ++i) {
+            لكل(i = 0; i < choice_ڳڻپ && len <= 0; ++i) {
                 uint32_t value;
                 int32_t len2;
                 int8_t cs0 = choices[i];
-                switch(cs0) {
-                case ASCII:
-                    if(sourceChar <= 0x7f) {
-                        targetValue = static_cast<uint32_t>(sourceChar);
+                بدل(cs0) {
+                حالة ASCII:
+                    إذا(ذريعو_Char <= 0x7f) {
+                        هدف_قدر = static_cast<uint32_t>(ذريعو_Char);
                         len = 1;
                         cs = cs0;
                         g = 0;
                     }
-                    break;
-                case ISO8859_1:
-                    if(GR96_START <= sourceChar && sourceChar <= GR96_END) {
-                        targetValue = static_cast<uint32_t>(sourceChar) - 0x80;
+                    اكسر;
+                حالة ISO8859_1:
+                    إذا(GR96_شروعات <= ذريعو_Char && ذريعو_Char <= GR96_پڇاڙي) {
+                        هدف_قدر = static_cast<uint32_t>(ذريعو_Char) - 0x80;
                         len = 1;
                         cs = cs0;
                         g = 2;
                     }
-                    break;
-                case HWKANA_7BIT:
-                    if (static_cast<uint32_t>(sourceChar - HWKANA_START) <= (HWKANA_END - HWKANA_START)) {
-                        if(converterData->version==3) {
+                    اكسر;
+                حالة HWKANA_7_ٻٽو_انگ:
+                    إذا (static_cast<uint32_t>(ذريعو_Char - HWKANA_شروعات) <= (HWKANA_پڇاڙي - HWKANA_شروعات)) {
+                        إذا(converter_معلومات->نسخو==3) {
                             /* JIS7: use G1 (SO) */
                             /* Shift U+FF61..U+FF9F to bytes 21..5F. */
-                            targetValue = static_cast<uint32_t>(sourceChar - (HWKANA_START - 0x21));
+                            هدف_قدر = static_cast<uint32_t>(ذريعو_Char - (HWKANA_شروعات - 0x21));
                             len = 1;
                             pFromU2022State->cs[1] = cs = cs0; /* do not output an escape sequence */
                             g = 1;
-                        } else if(converterData->version==4) {
+                        } وإلا إذا(converter_معلومات->نسخو==4) {
                             /* JIS8: use 8-bit bytes with any single-byte charset, see escape sequence output below */
                             /* Shift U+FF61..U+FF9F to bytes A1..DF. */
-                            targetValue = static_cast<uint32_t>(sourceChar - (HWKANA_START - 0xa1));
+                            هدف_قدر = static_cast<uint32_t>(ذريعو_Char - (HWKANA_شروعات - 0xa1));
                             len = 1;
 
                             cs = pFromU2022State->cs[0];
-                            if(IS_JP_DBCS(cs)) {
+                            إذا(IS_JP_DBCS(cs)) {
                                 /* switch from a DBCS charset to JISX201 */
                                 cs = static_cast<int8_t>(JISX201);
                             }
@@ -1839,175 +1839,175 @@ getTrail:
                         }
                         /* else do not use HWKANA_7BIT with other versions */
                     }
-                    break;
-                case JISX201:
+                    اكسر;
+                حالة JISX201:
                     /* G0 SBCS */
-                    value = jisx201FromU(sourceChar);
-                    if(value <= 0x7f) {
-                        targetValue = value;
+                    value = jisx201FromU(ذريعو_Char);
+                    إذا(value <= 0x7f) {
+                        هدف_قدر = value;
                         len = 1;
                         cs = cs0;
                         g = 0;
-                        useFallback = false;
+                        useFallback = خطأ;
                     }
-                    break;
-                case JISX208:
+                    اكسر;
+                حالة JISX208:
                     /* G0 DBCS from Shift-JIS table */
                     len2 = MBCS_FROM_UCHAR32_ISO2022(
-                                converterData->myConverterArray[cs0],
-                                sourceChar, &value,
+                                converter_معلومات->myConverterArray[cs0],
+                                ذريعو_Char, &value,
                                 useFallback, MBCS_OUTPUT_2);
-                    if(len2 == 2 || (len2 == -2 && len == 0)) {  /* only accept DBCS: abs(len)==2 */
+                    إذا(len2 == 2 || (len2 == -2 && len == 0)) {  /* only accept DBCS: abs(len)==2 */
                         value = _2022FromSJIS(value);
-                        if(value != 0) {
-                            targetValue = value;
+                        إذا(value != 0) {
+                            هدف_قدر = value;
                             len = len2;
                             cs = cs0;
                             g = 0;
-                            useFallback = false;
+                            useFallback = خطأ;
                         }
-                    } else if(len == 0 && useFallback &&
-                              static_cast<uint32_t>(sourceChar - HWKANA_START) <= (HWKANA_END - HWKANA_START)) {
-                        targetValue = hwkana_fb[sourceChar - HWKANA_START];
+                    } وإلا إذا(len == 0 && useFallback &&
+                              static_cast<uint32_t>(ذريعو_Char - HWKANA_شروعات) <= (HWKANA_پڇاڙي - HWKANA_شروعات)) {
+                        هدف_قدر = hwkana_fb[ذريعو_Char - HWKANA_شروعات];
                         len = -2;
                         cs = cs0;
                         g = 0;
-                        useFallback = false;
+                        useFallback = خطأ;
                     }
-                    break;
-                case ISO8859_7:
+                    اكسر;
+                حالة ISO8859_7:
                     /* G0 SBCS forced to 7-bit output */
                     len2 = MBCS_SINGLE_FROM_UCHAR32(
-                                converterData->myConverterArray[cs0],
-                                sourceChar, &value,
+                                converter_معلومات->myConverterArray[cs0],
+                                ذريعو_Char, &value,
                                 useFallback);
-                    if(len2 != 0 && !(len2 < 0 && len != 0) && GR96_START <= value && value <= GR96_END) {
-                        targetValue = value - 0x80;
+                    إذا(len2 != 0 && !(len2 < 0 && len != 0) && GR96_شروعات <= value && value <= GR96_پڇاڙي) {
+                        هدف_قدر = value - 0x80;
                         len = len2;
                         cs = cs0;
                         g = 2;
-                        useFallback = false;
+                        useFallback = خطأ;
                     }
-                    break;
-                default:
+                    اكسر;
+                افتراضي:
                     /* G0 DBCS */
                     len2 = MBCS_FROM_UCHAR32_ISO2022(
-                                converterData->myConverterArray[cs0],
-                                sourceChar, &value,
+                                converter_معلومات->myConverterArray[cs0],
+                                ذريعو_Char, &value,
                                 useFallback, MBCS_OUTPUT_2);
-                    if(len2 == 2 || (len2 == -2 && len == 0)) {  /* only accept DBCS: abs(len)==2 */
-                        if(cs0 == KSC5601) {
+                    إذا(len2 == 2 || (len2 == -2 && len == 0)) {  /* only accept DBCS: abs(len)==2 */
+                        إذا(cs0 == KSC5601) {
                             /*
                              * Check for valid bytes for the encoding scheme.
                              * This is necessary because the sub-converter (windows-949)
                              * has a broader encoding scheme than is valid for 2022.
                              */
                             value = _2022FromGR94DBCS(value);
-                            if(value == 0) {
-                                break;
+                            إذا(value == 0) {
+                                اكسر;
                             }
                         }
-                        targetValue = value;
+                        هدف_قدر = value;
                         len = len2;
                         cs = cs0;
                         g = 0;
-                        useFallback = false;
+                        useFallback = خطأ;
                     }
-                    break;
+                    اكسر;
                 }
             }
 
-            if(len != 0) {
-                if(len < 0) {
+            إذا(len != 0) {
+                إذا(len < 0) {
                     len = -len;  /* fallback */
                 }
-                outLen = 0; /* count output bytes */
+                ٻاهريون_Len = 0; /* count output bytes */
 
                 /* write SI if necessary (only for JIS7) */
-                if(pFromU2022State->g == 1 && g == 0) {
-                    buffer[outLen++] = UCNV_SI;
+                إذا(pFromU2022State->g == 1 && g == 0) {
+                    بفر[ٻاهريون_Len++] = UCNV_SI;
                     pFromU2022State->g = 0;
                 }
 
                 /* write the designation sequence if necessary */
-                if(cs != pFromU2022State->cs[g]) {
+                إذا(cs != pFromU2022State->cs[g]) {
                     int32_t escLen = escSeqCharsLen[cs];
-                    uprv_memcpy(buffer + outLen, escSeqChars[cs], escLen);
-                    outLen += escLen;
+                    uprv_memcpy(بفر + ٻاهريون_Len, escSeqChars[cs], escLen);
+                    ٻاهريون_Len += escLen;
                     pFromU2022State->cs[g] = cs;
 
                     /* invalidate the choices[] */
-                    choiceCount = 0;
+                    choice_ڳڻپ = 0;
                 }
 
                 /* write the shift sequence if necessary */
-                if(g != pFromU2022State->g) {
-                    switch(g) {
+                إذا(g != pFromU2022State->g) {
+                    بدل(g) {
                     /* case 0 handled before writing escapes */
-                    case 1:
-                        buffer[outLen++] = UCNV_SO;
+                    حالة 1:
+                        بفر[ٻاهريون_Len++] = UCNV_SO;
                         pFromU2022State->g = 1;
-                        break;
-                    default: /* case 2 */
-                        buffer[outLen++] = 0x1b;
-                        buffer[outLen++] = 0x4e;
-                        break;
+                        اكسر;
+                    افتراضي: /* case 2 */
+                        بفر[ٻاهريون_Len++] = 0x1b;
+                        بفر[ٻاهريون_Len++] = 0x4e;
+                        اكسر;
                     /* no case 3: no SS3 in ISO-2022-JP-x */
                     }
                 }
 
                 /* write the output bytes */
-                if(len == 1) {
-                    buffer[outLen++] = static_cast<char>(targetValue);
-                } else /* len == 2 */ {
-                    buffer[outLen++] = static_cast<char>(targetValue >> 8);
-                    buffer[outLen++] = static_cast<char>(targetValue);
+                إذا(len == 1) {
+                    بفر[ٻاهريون_Len++] = static_cast<حرف>(هدف_قدر);
+                } وإلا /* len == 2 */ {
+                    بفر[ٻاهريون_Len++] = static_cast<حرف>(هدف_قدر >> 8);
+                    بفر[ٻاهريون_Len++] = static_cast<حرف>(هدف_قدر);
                 }
-            } else {
+            } وإلا {
                 /*
                  * if we cannot find the character after checking all codepages
                  * then this is an error
                  */
-                *err = U_INVALID_CHAR_FOUND;
-                cnv->fromUChar32=sourceChar;
-                break;
+                *err = U_INVALID_CHAR_مليو;
+                cnv->fromUChar32=ذريعو_Char;
+                اكسر;
             }
 
-            if(sourceChar == CR || sourceChar == LF) {
+            إذا(ذريعو_Char == CR || ذريعو_Char == LF) {
                 /* reset the G2 state at the end of a line (conversion got us into ASCII or JISX201 already) */
                 pFromU2022State->cs[2] = 0;
-                choiceCount = 0;
+                choice_ڳڻپ = 0;
             }
 
             /* output outLen>0 bytes in buffer[] */
-            if(outLen == 1) {
-                *target++ = buffer[0];
-                if(offsets) {
-                    *offsets++ = static_cast<int32_t>(source - args->source - 1); /* -1: known to be ASCII */
+            إذا(ٻاهريون_Len == 1) {
+                *هدف++ = بفر[0];
+                إذا(offsets) {
+                    *offsets++ = static_cast<int32_t>(ذريعو - دليلون_2->ذريعو - 1); /* -1: known to be ASCII */
                 }
-            } else if(outLen == 2 && (target + 2) <= targetLimit) {
-                *target++ = buffer[0];
-                *target++ = buffer[1];
-                if(offsets) {
-                    int32_t sourceIndex = static_cast<int32_t>(source - args->source - U16_LENGTH(sourceChar));
-                    *offsets++ = sourceIndex;
-                    *offsets++ = sourceIndex;
+            } وإلا إذا(ٻاهريون_Len == 2 && (هدف + 2) <= هدف_حد_بندي) {
+                *هدف++ = بفر[0];
+                *هدف++ = بفر[1];
+                إذا(offsets) {
+                    int32_t ذريعو_اشاريو = static_cast<int32_t>(ذريعو - دليلون_2->ذريعو - U16_ڊيگهائي(ذريعو_Char));
+                    *offsets++ = ذريعو_اشاريو;
+                    *offsets++ = ذريعو_اشاريو;
                 }
-            } else {
+            } وإلا {
                 fromUWriteUInt8(
                     cnv,
-                    buffer, outLen,
-                    &target, reinterpret_cast<const char*>(targetLimit),
-                    &offsets, static_cast<int32_t>(source - args->source - U16_LENGTH(sourceChar)),
+                    بفر, ٻاهريون_Len,
+                    &هدف, reinterpret_cast<ثابت حرف*>(هدف_حد_بندي),
+                    &offsets, static_cast<int32_t>(ذريعو - دليلون_2->ذريعو - U16_ڊيگهائي(ذريعو_Char)),
                     err);
-                if(U_FAILURE(*err)) {
-                    break;
+                إذا(U_FAILURE(*err)) {
+                    اكسر;
                 }
             }
         } /* end if(myTargetIndex<myTargetLength) */
-        else{
-            *err =U_BUFFER_OVERFLOW_ERROR;
-            break;
+        وإلا{
+            *err =U_بفر_حد_کان_مٿي_ERROR;
+            اكسر;
         }
 
     }/* end while(mySourceIndex<mySourceLength) */
@@ -2022,23 +2022,23 @@ getTrail:
      *   in SO mode or not in ASCII mode
      *   end of input and no truncated input
      */
-    if( U_SUCCESS(*err) &&
+    إذا( U_SUCCESS(*err) &&
         (pFromU2022State->g!=0 || pFromU2022State->cs[0]!=ASCII) &&
-        args->flush && source>=sourceLimit && cnv->fromUChar32==0
+        دليلون_2->flush && ذريعو>=ذريعو_حد_بندي && cnv->fromUChar32==0
     ) {
-        int32_t sourceIndex;
+        int32_t ذريعو_اشاريو;
 
-        outLen = 0;
+        ٻاهريون_Len = 0;
 
-        if(pFromU2022State->g != 0) {
-            buffer[outLen++] = UCNV_SI;
+        إذا(pFromU2022State->g != 0) {
+            بفر[ٻاهريون_Len++] = UCNV_SI;
             pFromU2022State->g = 0;
         }
 
-        if(pFromU2022State->cs[0] != ASCII) {
+        إذا(pFromU2022State->cs[0] != ASCII) {
             int32_t escLen = escSeqCharsLen[ASCII];
-            uprv_memcpy(buffer + outLen, escSeqChars[ASCII], escLen);
-            outLen += escLen;
+            uprv_memcpy(بفر + ٻاهريون_Len, escSeqChars[ASCII], escLen);
+            ٻاهريون_Len += escLen;
             pFromU2022State->cs[0] = static_cast<int8_t>(ASCII);
         }
 
@@ -2050,192 +2050,192 @@ getTrail:
          * this code gives an incorrect result for the rare case of an unmatched
          * trail surrogate that is alone in the last buffer of the text stream
          */
-        sourceIndex = static_cast<int32_t>(source - args->source);
-        if(sourceIndex>0) {
-            --sourceIndex;
-            if( U16_IS_TRAIL(args->source[sourceIndex]) &&
-                (sourceIndex==0 || U16_IS_LEAD(args->source[sourceIndex-1]))
+        ذريعو_اشاريو = static_cast<int32_t>(ذريعو - دليلون_2->ذريعو);
+        إذا(ذريعو_اشاريو>0) {
+            --ذريعو_اشاريو;
+            إذا( U16_IS_TRAIL(دليلون_2->ذريعو[ذريعو_اشاريو]) &&
+                (ذريعو_اشاريو==0 || U16_IS_LEAD(دليلون_2->ذريعو[ذريعو_اشاريو-1]))
             ) {
-                --sourceIndex;
+                --ذريعو_اشاريو;
             }
-        } else {
-            sourceIndex=-1;
+        } وإلا {
+            ذريعو_اشاريو=-1;
         }
 
         fromUWriteUInt8(
             cnv,
-            buffer, outLen,
-            &target, reinterpret_cast<const char*>(targetLimit),
-            &offsets, sourceIndex,
+            بفر, ٻاهريون_Len,
+            &هدف, reinterpret_cast<ثابت حرف*>(هدف_حد_بندي),
+            &offsets, ذريعو_اشاريو,
             err);
     }
 
     /*save the state and return */
-    args->source = source;
-    args->target = reinterpret_cast<char*>(target);
+    دليلون_2->ذريعو = ذريعو;
+    دليلون_2->هدف = reinterpret_cast<حرف*>(هدف);
 }
 
 /*************** to unicode *******************/
 
-static void U_CALLCONV
-UConverter_toUnicode_ISO_2022_JP_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
-                                               UErrorCode* err){
-    char tempBuf[2];
-    const char* mySource = const_cast<char*>(args->source);
-    char16_t *myTarget = args->target;
-    const char *mySourceLimit = args->sourceLimit;
-    uint32_t targetUniChar = 0x0000;
-    uint32_t mySourceChar = 0x0000;
-    uint32_t tmpSourceChar = 0x0000;
-    UConverterDataISO2022* myData;
-    ISO2022State *pToU2022State;
+ساكن فراغ U_CALLCONV
+UConverter_منزل_Unicode_ISO_2022_JP_OFFSETS_LOGIC(UConverter_منزل_Unicode_دليلون *دليلون_2,
+                                               UError_ڪوڊ* err){
+    حرف عارضي_Buf[2];
+    ثابت حرف* my_ذريعو = const_cast<حرف*>(دليلون_2->ذريعو);
+    char16_t *my_هدف = دليلون_2->هدف;
+    ثابت حرف *my_ذريعو_حد_بندي = دليلون_2->ذريعو_حد_بندي;
+    uint32_t هدف_Uni_Char = 0x0000;
+    uint32_t my_ذريعو_Char = 0x0000;
+    uint32_t tmp_ذريعو_Char = 0x0000;
+    UConverter_معلومات_ISO2022* my_معلومات;
+    ISO2022State *p_منزل_U2022_State;
     StateEnum cs;
 
-    myData = static_cast<UConverterDataISO2022*>(args->converter->extraInfo);
-    pToU2022State = &myData->toU2022State;
+    my_معلومات = static_cast<UConverter_معلومات_ISO2022*>(دليلون_2->converter->extraInfo);
+    p_منزل_U2022_State = &my_معلومات->منزل_U2022_State;
 
-    if(myData->key != 0) {
+    إذا(my_معلومات->ڪنجي != 0) {
         /* continue with a partial escape sequence */
-        goto escape;
-    } else if(args->converter->toULength == 1 && mySource < mySourceLimit && myTarget < args->targetLimit) {
+        اذهب escape;
+    } وإلا إذا(دليلون_2->converter->منزل_ULength == 1 && my_ذريعو < my_ذريعو_حد_بندي && my_هدف < دليلون_2->هدف_حد_بندي) {
         /* continue with a partial double-byte character */
-        mySourceChar = args->converter->toUBytes[0];
-        args->converter->toULength = 0;
-        cs = static_cast<StateEnum>(pToU2022State->cs[pToU2022State->g]);
-        targetUniChar = missingCharMarker;
-        goto getTrailByte;
+        my_ذريعو_Char = دليلون_2->converter->منزل_UBytes[0];
+        دليلون_2->converter->منزل_ULength = 0;
+        cs = static_cast<StateEnum>(p_منزل_U2022_State->cs[p_منزل_U2022_State->g]);
+        هدف_Uni_Char = missingCharMarker;
+        اذهب getTrailByte;
     }
 
-    while(mySource < mySourceLimit){
+    طالما(my_ذريعو < my_ذريعو_حد_بندي){
 
-        targetUniChar =missingCharMarker;
+        هدف_Uni_Char =missingCharMarker;
 
-        if(myTarget < args->targetLimit){
+        إذا(my_هدف < دليلون_2->هدف_حد_بندي){
 
-            mySourceChar = static_cast<unsigned char>(*mySource++);
+            my_ذريعو_Char = static_cast<بنانشان حرف>(*my_ذريعو++);
 
-            switch(mySourceChar) {
-            case UCNV_SI:
-                if(myData->version==3) {
-                    pToU2022State->g=0;
-                    continue;
-                } else {
+            بدل(my_ذريعو_Char) {
+            حالة UCNV_SI:
+                إذا(my_معلومات->نسخو==3) {
+                    p_منزل_U2022_State->g=0;
+                    استمر;
+                } وإلا {
                     /* only JIS7 uses SI/SO, not ISO-2022-JP-x */
-                    myData->isEmptySegment = false;	/* reset this, we have a different error */
-                    break;
+                    my_معلومات->is_خالي_جايون_Segment = خطأ;	/* reset this, we have a different error */
+                    اكسر;
                 }
 
-            case UCNV_SO:
-                if(myData->version==3) {
+            حالة UCNV_SO:
+                إذا(my_معلومات->نسخو==3) {
                     /* JIS7: switch to G1 half-width Katakana */
-                    pToU2022State->cs[1] = static_cast<int8_t>(HWKANA_7BIT);
-                    pToU2022State->g=1;
-                    continue;
-                } else {
+                    p_منزل_U2022_State->cs[1] = static_cast<int8_t>(HWKANA_7_ٻٽو_انگ);
+                    p_منزل_U2022_State->g=1;
+                    استمر;
+                } وإلا {
                     /* only JIS7 uses SI/SO, not ISO-2022-JP-x */
-                    myData->isEmptySegment = false;	/* reset this, we have a different error */
-                    break;
+                    my_معلومات->is_خالي_جايون_Segment = خطأ;	/* reset this, we have a different error */
+                    اكسر;
                 }
 
-            case ESC_2022:
-                mySource--;
+            حالة ESC_2022:
+                my_ذريعو--;
 escape:
                 {
-                    const char * mySourceBefore = mySource;
-                    int8_t toULengthBefore = args->converter->toULength;
+                    ثابت حرف * my_ذريعو_Before = my_ذريعو;
+                    int8_t منزل_ULength_Before = دليلون_2->converter->منزل_ULength;
 
-                    changeState_2022(args->converter,&(mySource),
-                        mySourceLimit, ISO_2022_JP,err);
+                    changeState_2022(دليلون_2->converter,&(my_ذريعو),
+                        my_ذريعو_حد_بندي, ISO_2022_JP,err);
 
                     /* If in ISO-2022-JP only and we successfully completed an escape sequence, but previous segment was empty, create an error */
-                    if(myData->version==0 && myData->key==0 && U_SUCCESS(*err) && myData->isEmptySegment) {
+                    إذا(my_معلومات->نسخو==0 && my_معلومات->ڪنجي==0 && U_SUCCESS(*err) && my_معلومات->is_خالي_جايون_Segment) {
                         *err = U_ILLEGAL_ESCAPE_SEQUENCE;
-                        args->converter->toUCallbackReason = UCNV_IRREGULAR;
-                        args->converter->toULength = static_cast<int8_t>(toULengthBefore + (mySource - mySourceBefore));
+                        دليلون_2->converter->منزل_UCallback_Reason = UCNV_IRREGULAR;
+                        دليلون_2->converter->منزل_ULength = static_cast<int8_t>(منزل_ULength_Before + (my_ذريعو - my_ذريعو_Before));
                     }
                 }
 
                 /* invalid or illegal escape sequence */
-                if(U_FAILURE(*err)){
-                    args->target = myTarget;
-                    args->source = mySource;
-                    myData->isEmptySegment = false;	/* Reset to avoid future spurious errors */
-                    return;
+                إذا(U_FAILURE(*err)){
+                    دليلون_2->هدف = my_هدف;
+                    دليلون_2->ذريعو = my_ذريعو;
+                    my_معلومات->is_خالي_جايون_Segment = خطأ;	/* Reset to avoid future spurious errors */
+                    أرجع;
                 }
                 /* If we successfully completed an escape sequence, we begin a new segment, empty so far */
-                if(myData->key==0) {
-                    myData->isEmptySegment = true;
+                إذا(my_معلومات->ڪنجي==0) {
+                    my_معلومات->is_خالي_جايون_Segment = سچ;
                 }
-                continue;
+                استمر;
 
             /* ISO-2022-JP does not use single-byte (C1) SS2 and SS3 */
 
-            case CR:
-            case LF:
+            حالة CR:
+            حالة LF:
                 /* automatically reset to single-byte mode */
-                if (static_cast<StateEnum>(pToU2022State->cs[0]) != ASCII &&
-                    static_cast<StateEnum>(pToU2022State->cs[0]) != JISX201) {
-                    pToU2022State->cs[0] = static_cast<int8_t>(ASCII);
+                إذا (static_cast<StateEnum>(p_منزل_U2022_State->cs[0]) != ASCII &&
+                    static_cast<StateEnum>(p_منزل_U2022_State->cs[0]) != JISX201) {
+                    p_منزل_U2022_State->cs[0] = static_cast<int8_t>(ASCII);
                 }
-                pToU2022State->cs[2] = 0;
-                pToU2022State->g = 0;
+                p_منزل_U2022_State->cs[2] = 0;
+                p_منزل_U2022_State->g = 0;
                 U_FALLTHROUGH;
-            default:
+            افتراضي:
                 /* convert one or two bytes */
-                myData->isEmptySegment = false;
-                cs = static_cast<StateEnum>(pToU2022State->cs[pToU2022State->g]);
-                if (static_cast<uint8_t>(mySourceChar - 0xa1) <= (0xdf - 0xa1) && myData->version == 4 &&
+                my_معلومات->is_خالي_جايون_Segment = خطأ;
+                cs = static_cast<StateEnum>(p_منزل_U2022_State->cs[p_منزل_U2022_State->g]);
+                إذا (static_cast<uint8_t>(my_ذريعو_Char - 0xa1) <= (0xdf - 0xa1) && my_معلومات->نسخو == 4 &&
                     !IS_JP_DBCS(cs)
                 ) {
                     /* 8-bit halfwidth katakana in any single-byte mode for JIS8 */
-                    targetUniChar = mySourceChar + (HWKANA_START - 0xa1);
+                    هدف_Uni_Char = my_ذريعو_Char + (HWKANA_شروعات - 0xa1);
 
                     /* return from a single-shift state to the previous one */
-                    if(pToU2022State->g >= 2) {
-                        pToU2022State->g=pToU2022State->prevG;
+                    إذا(p_منزل_U2022_State->g >= 2) {
+                        p_منزل_U2022_State->g=p_منزل_U2022_State->prevG;
                     }
-                } else switch(cs) {
-                case ASCII:
-                    if(mySourceChar <= 0x7f) {
-                        targetUniChar = mySourceChar;
+                } وإلا بدل(cs) {
+                حالة ASCII:
+                    إذا(my_ذريعو_Char <= 0x7f) {
+                        هدف_Uni_Char = my_ذريعو_Char;
                     }
-                    break;
-                case ISO8859_1:
-                    if(mySourceChar <= 0x7f) {
-                        targetUniChar = mySourceChar + 0x80;
+                    اكسر;
+                حالة ISO8859_1:
+                    إذا(my_ذريعو_Char <= 0x7f) {
+                        هدف_Uni_Char = my_ذريعو_Char + 0x80;
                     }
                     /* return from a single-shift state to the previous one */
-                    pToU2022State->g=pToU2022State->prevG;
-                    break;
-                case ISO8859_7:
-                    if(mySourceChar <= 0x7f) {
+                    p_منزل_U2022_State->g=p_منزل_U2022_State->prevG;
+                    اكسر;
+                حالة ISO8859_7:
+                    إذا(my_ذريعو_Char <= 0x7f) {
                         /* convert mySourceChar+0x80 to use a normal 8-bit table */
-                        targetUniChar =
-                            _MBCS_SINGLE_SIMPLE_GET_NEXT_BMP(
-                                myData->myConverterArray[cs],
-                                mySourceChar + 0x80);
+                        هدف_Uni_Char =
+                            MBCS_SINGLE_SIMPLE_GET_ايندڙ_BMP(
+                                my_معلومات->myConverterArray[cs],
+                                my_ذريعو_Char + 0x80);
                     }
                     /* return from a single-shift state to the previous one */
-                    pToU2022State->g=pToU2022State->prevG;
-                    break;
-                case JISX201:
-                    if(mySourceChar <= 0x7f) {
-                        targetUniChar = jisx201ToU(mySourceChar);
+                    p_منزل_U2022_State->g=p_منزل_U2022_State->prevG;
+                    اكسر;
+                حالة JISX201:
+                    إذا(my_ذريعو_Char <= 0x7f) {
+                        هدف_Uni_Char = jisx201_منزل_U(my_ذريعو_Char);
                     }
-                    break;
-                case HWKANA_7BIT:
-                    if (static_cast<uint8_t>(mySourceChar - 0x21) <= (0x5f - 0x21)) {
+                    اكسر;
+                حالة HWKANA_7_ٻٽو_انگ:
+                    إذا (static_cast<uint8_t>(my_ذريعو_Char - 0x21) <= (0x5f - 0x21)) {
                         /* 7-bit halfwidth Katakana */
-                        targetUniChar = mySourceChar + (HWKANA_START - 0x21);
+                        هدف_Uni_Char = my_ذريعو_Char + (HWKANA_شروعات - 0x21);
                     }
-                    break;
-                default:
+                    اكسر;
+                افتراضي:
                     /* G0 DBCS */
-                    if(mySource < mySourceLimit) {
-                        int leadIsOk, trailIsOk;
+                    إذا(my_ذريعو < my_ذريعو_حد_بندي) {
+                        صحيح leadIsOk, trailIsOk;
                         uint8_t trailByte;
 getTrailByte:
-                        trailByte = static_cast<uint8_t>(*mySource);
+                        trailByte = static_cast<uint8_t>(*my_ذريعو);
                         /*
                          * Ticket 5691: consistent illegal sequences:
                          * - We include at least the first byte in the illegal sequence.
@@ -2246,82 +2246,82 @@ getTrailByte:
                          * an ESC/SO/SI, we report only the first byte as the illegal sequence.
                          * Otherwise we convert or report the pair of bytes.
                          */
-                        leadIsOk = static_cast<uint8_t>(mySourceChar - 0x21) <= (0x7e - 0x21);
+                        leadIsOk = static_cast<uint8_t>(my_ذريعو_Char - 0x21) <= (0x7e - 0x21);
                         trailIsOk = static_cast<uint8_t>(trailByte - 0x21) <= (0x7e - 0x21);
-                        if (leadIsOk && trailIsOk) {
-                            ++mySource;
-                            tmpSourceChar = (mySourceChar << 8) | trailByte;
-                            if(cs == JISX208) {
-                                _2022ToSJIS(static_cast<uint8_t>(mySourceChar), trailByte, tempBuf);
-                                mySourceChar = tmpSourceChar;
-                            } else {
+                        إذا (leadIsOk && trailIsOk) {
+                            ++my_ذريعو;
+                            tmp_ذريعو_Char = (my_ذريعو_Char << 8) | trailByte;
+                            إذا(cs == JISX208) {
+                                _2022ToSJIS(static_cast<uint8_t>(my_ذريعو_Char), trailByte, عارضي_Buf);
+                                my_ذريعو_Char = tmp_ذريعو_Char;
+                            } وإلا {
                                 /* Copy before we modify tmpSourceChar so toUnicodeCallback() sees the correct bytes. */
-                                mySourceChar = tmpSourceChar;
-                                if (cs == KSC5601) {
-                                    tmpSourceChar += 0x8080;  /* = _2022ToGR94DBCS(tmpSourceChar) */
+                                my_ذريعو_Char = tmp_ذريعو_Char;
+                                إذا (cs == KSC5601) {
+                                    tmp_ذريعو_Char += 0x8080;  /* = _2022ToGR94DBCS(tmpSourceChar) */
                                 }
-                                tempBuf[0] = static_cast<char>(tmpSourceChar >> 8);
-                                tempBuf[1] = static_cast<char>(tmpSourceChar);
+                                عارضي_Buf[0] = static_cast<حرف>(tmp_ذريعو_Char >> 8);
+                                عارضي_Buf[1] = static_cast<حرف>(tmp_ذريعو_Char);
                             }
-                            targetUniChar = ucnv_MBCSSimpleGetNextUChar(myData->myConverterArray[cs], tempBuf, 2, false);
-                        } else if (!(trailIsOk || IS_2022_CONTROL(trailByte))) {
+                            هدف_Uni_Char = ucnv_MBCSSimple_Get_ايندڙ_UChar(my_معلومات->myConverterArray[cs], عارضي_Buf, 2, خطأ);
+                        } وإلا إذا (!(trailIsOk || IS_2022_CONTROL(trailByte))) {
                             /* report a pair of illegal bytes if the second byte is not a DBCS starter */
-                            ++mySource;
+                            ++my_ذريعو;
                             /* add another bit so that the code below writes 2 bytes in case of error */
-                            mySourceChar = 0x10000 | (mySourceChar << 8) | trailByte;
+                            my_ذريعو_Char = 0x10000 | (my_ذريعو_Char << 8) | trailByte;
                         }
-                    } else {
-                        args->converter->toUBytes[0] = static_cast<uint8_t>(mySourceChar);
-                        args->converter->toULength = 1;
-                        goto endloop;
+                    } وإلا {
+                        دليلون_2->converter->منزل_UBytes[0] = static_cast<uint8_t>(my_ذريعو_Char);
+                        دليلون_2->converter->منزل_ULength = 1;
+                        اذهب endloop;
                     }
                 }  /* End of inner switch */
-                break;
+                اكسر;
             }  /* End of outer switch */
-            if(targetUniChar < (missingCharMarker-1/*0xfffe*/)){
-                if(args->offsets){
-                    args->offsets[myTarget - args->target] = static_cast<int32_t>(mySource - args->source - (mySourceChar <= 0xff ? 1 : 2));
+            إذا(هدف_Uni_Char < (missingCharMarker-1/*0xfffe*/)){
+                إذا(دليلون_2->offsets){
+                    دليلون_2->offsets[my_هدف - دليلون_2->هدف] = static_cast<int32_t>(my_ذريعو - دليلون_2->ذريعو - (my_ذريعو_Char <= 0xff ? 1 : 2));
                 }
-                *(myTarget++) = static_cast<char16_t>(targetUniChar);
+                *(my_هدف++) = static_cast<char16_t>(هدف_Uni_Char);
             }
-            else if(targetUniChar > missingCharMarker){
+            وإلا إذا(هدف_Uni_Char > missingCharMarker){
                 /* disassemble the surrogate pair and write to output*/
-                targetUniChar-=0x0010000;
-                *myTarget = static_cast<char16_t>(0xd800 + static_cast<char16_t>(targetUniChar >> 10));
-                if(args->offsets){
-                    args->offsets[myTarget - args->target] = static_cast<int32_t>(mySource - args->source - (mySourceChar <= 0xff ? 1 : 2));
+                هدف_Uni_Char-=0x0010000;
+                *my_هدف = static_cast<char16_t>(0xd800 + static_cast<char16_t>(هدف_Uni_Char >> 10));
+                إذا(دليلون_2->offsets){
+                    دليلون_2->offsets[my_هدف - دليلون_2->هدف] = static_cast<int32_t>(my_ذريعو - دليلون_2->ذريعو - (my_ذريعو_Char <= 0xff ? 1 : 2));
                 }
-                ++myTarget;
-                if(myTarget< args->targetLimit){
-                    *myTarget = static_cast<char16_t>(0xdc00 + static_cast<char16_t>(targetUniChar & 0x3ff));
-                    if(args->offsets){
-                        args->offsets[myTarget - args->target] = static_cast<int32_t>(mySource - args->source - (mySourceChar <= 0xff ? 1 : 2));
+                ++my_هدف;
+                إذا(my_هدف< دليلون_2->هدف_حد_بندي){
+                    *my_هدف = static_cast<char16_t>(0xdc00 + static_cast<char16_t>(هدف_Uni_Char & 0x3ff));
+                    إذا(دليلون_2->offsets){
+                        دليلون_2->offsets[my_هدف - دليلون_2->هدف] = static_cast<int32_t>(my_ذريعو - دليلون_2->ذريعو - (my_ذريعو_Char <= 0xff ? 1 : 2));
                     }
-                    ++myTarget;
-                }else{
-                    args->converter->UCharErrorBuffer[args->converter->UCharErrorBufferLength++]=
-                                    static_cast<char16_t>(0xdc00 + static_cast<char16_t>(targetUniChar & 0x3ff));
+                    ++my_هدف;
+                }وإلا{
+                    دليلون_2->converter->UChar_Error_بفر[دليلون_2->converter->UChar_Error_بفر_ڊيگهائي++]=
+                                    static_cast<char16_t>(0xdc00 + static_cast<char16_t>(هدف_Uni_Char & 0x3ff));
                 }
 
             }
-            else{
+            وإلا{
                 /* Call the callback function*/
-                toUnicodeCallback(args->converter,mySourceChar,targetUniChar,err);
-                break;
+                منزل_Unicode_Callback(دليلون_2->converter,my_ذريعو_Char,هدف_Uni_Char,err);
+                اكسر;
             }
         }
-        else{    /* goes with "if(myTarget < args->targetLimit)"  way up near top of function */
-            *err =U_BUFFER_OVERFLOW_ERROR;
-            break;
+        وإلا{    /* goes with "if(myTarget < args->targetLimit)"  way up near top of function */
+            *err =U_بفر_حد_کان_مٿي_ERROR;
+            اكسر;
         }
     }
 endloop:
-    args->target = myTarget;
-    args->source = mySource;
+    دليلون_2->هدف = my_هدف;
+    دليلون_2->ذريعو = my_ذريعو;
 }
 
 
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#إذا !UCONFIG_ONLY_HTML_CONVERSION
 /***************************************************************
 *   Rules for ISO-2022-KR encoding
 *   i) The KSC5601 designator sequence should appear only once in a file,
@@ -2330,190 +2330,190 @@ endloop:
 *  ii) There are only 2 shifting sequences SO to shift into double byte mode
 *      and SI to shift into single byte mode
 */
-static void U_CALLCONV
-UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(UConverterFromUnicodeArgs* args, UErrorCode* err){
+ساكن فراغ U_CALLCONV
+UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(UConverter_From_Unicode_دليلون* دليلون_2, UError_ڪوڊ* err){
 
-    UConverter* saveConv = args->converter;
-    UConverterDataISO2022* myConverterData = static_cast<UConverterDataISO2022*>(saveConv->extraInfo);
-    args->converter=myConverterData->currentConverter;
+    UConverter* saveConv = دليلون_2->converter;
+    UConverter_معلومات_ISO2022* my_Converter_معلومات = static_cast<UConverter_معلومات_ISO2022*>(saveConv->extraInfo);
+    دليلون_2->converter=my_Converter_معلومات->currentConverter;
 
-    myConverterData->currentConverter->fromUChar32 = saveConv->fromUChar32;
-    ucnv_MBCSFromUnicodeWithOffsets(args,err);
-    saveConv->fromUChar32 = myConverterData->currentConverter->fromUChar32;
+    my_Converter_معلومات->currentConverter->fromUChar32 = saveConv->fromUChar32;
+    ucnv_MBCSFromUnicodeWithOffsets(دليلون_2,err);
+    saveConv->fromUChar32 = my_Converter_معلومات->currentConverter->fromUChar32;
 
-    if(*err == U_BUFFER_OVERFLOW_ERROR) {
-        if(myConverterData->currentConverter->charErrorBufferLength > 0) {
+    إذا(*err == U_بفر_حد_کان_مٿي_ERROR) {
+        إذا(my_Converter_معلومات->currentConverter->char_Error_بفر_ڊيگهائي > 0) {
             uprv_memcpy(
-                saveConv->charErrorBuffer,
-                myConverterData->currentConverter->charErrorBuffer,
-                myConverterData->currentConverter->charErrorBufferLength);
+                saveConv->char_Error_بفر,
+                my_Converter_معلومات->currentConverter->char_Error_بفر,
+                my_Converter_معلومات->currentConverter->char_Error_بفر_ڊيگهائي);
         }
-        saveConv->charErrorBufferLength = myConverterData->currentConverter->charErrorBufferLength;
-        myConverterData->currentConverter->charErrorBufferLength = 0;
+        saveConv->char_Error_بفر_ڊيگهائي = my_Converter_معلومات->currentConverter->char_Error_بفر_ڊيگهائي;
+        my_Converter_معلومات->currentConverter->char_Error_بفر_ڊيگهائي = 0;
     }
-    args->converter=saveConv;
+    دليلون_2->converter=saveConv;
 }
 
-static void U_CALLCONV
-UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC(UConverterFromUnicodeArgs* args, UErrorCode* err){
+ساكن فراغ U_CALLCONV
+UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC(UConverter_From_Unicode_دليلون* دليلون_2, UError_ڪوڊ* err){
 
-    const char16_t *source = args->source;
-    const char16_t *sourceLimit = args->sourceLimit;
-    unsigned char *target = reinterpret_cast<unsigned char*>(args->target);
-    unsigned char *targetLimit = reinterpret_cast<unsigned char*>(const_cast<char*>(args->targetLimit));
-    int32_t* offsets = args->offsets;
-    uint32_t targetByteUnit = 0x0000;
-    UChar32 sourceChar = 0x0000;
-    UBool isTargetByteDBCS;
-    UBool oldIsTargetByteDBCS;
-    UConverterDataISO2022 *converterData;
-    UConverterSharedData* sharedData;
+    ثابت char16_t *ذريعو = دليلون_2->ذريعو;
+    ثابت char16_t *ذريعو_حد_بندي = دليلون_2->ذريعو_حد_بندي;
+    بنانشان حرف *هدف = reinterpret_cast<بنانشان حرف*>(دليلون_2->هدف);
+    بنانشان حرف *هدف_حد_بندي = reinterpret_cast<بنانشان حرف*>(const_cast<حرف*>(دليلون_2->هدف_حد_بندي));
+    int32_t* offsets = دليلون_2->offsets;
+    uint32_t هدف_Byte_Unit = 0x0000;
+    UChar32 ذريعو_Char = 0x0000;
+    UBool is_هدف_Byte_DBCS;
+    UBool old_Is_هدف_Byte_DBCS;
+    UConverter_معلومات_ISO2022 *converter_معلومات;
+    UConverter_Shared_معلومات* shared_معلومات;
     UBool useFallback;
     int32_t length =0;
 
-    converterData = static_cast<UConverterDataISO2022*>(args->converter->extraInfo);
+    converter_معلومات = static_cast<UConverter_معلومات_ISO2022*>(دليلون_2->converter->extraInfo);
     /* if the version is 1 then the user is requesting
      * conversion with ibm-25546 pass the arguments to
      * MBCS converter and return
      */
-    if(converterData->version==1){
-        UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(args,err);
-        return;
+    إذا(converter_معلومات->نسخو==1){
+        UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(دليلون_2,err);
+        أرجع;
     }
 
     /* initialize data */
-    sharedData = converterData->currentConverter->sharedData;
-    useFallback = args->converter->useFallback;
-    isTargetByteDBCS = static_cast<UBool>(args->converter->fromUnicodeStatus);
-    oldIsTargetByteDBCS = isTargetByteDBCS;
+    shared_معلومات = converter_معلومات->currentConverter->shared_معلومات;
+    useFallback = دليلون_2->converter->useFallback;
+    is_هدف_Byte_DBCS = static_cast<UBool>(دليلون_2->converter->from_Unicode_حالت);
+    old_Is_هدف_Byte_DBCS = is_هدف_Byte_DBCS;
 
-    isTargetByteDBCS = static_cast<UBool>(args->converter->fromUnicodeStatus);
-    if((sourceChar = args->converter->fromUChar32)!=0 && target <targetLimit) {
-        goto getTrail;
+    is_هدف_Byte_DBCS = static_cast<UBool>(دليلون_2->converter->from_Unicode_حالت);
+    إذا((ذريعو_Char = دليلون_2->converter->fromUChar32)!=0 && هدف <هدف_حد_بندي) {
+        اذهب getTrail;
     }
-    while(source < sourceLimit){
+    طالما(ذريعو < ذريعو_حد_بندي){
 
-        targetByteUnit = missingCharMarker;
+        هدف_Byte_Unit = missingCharMarker;
 
-        if(target < (unsigned char*) args->targetLimit){
-            sourceChar = *source++;
+        إذا(هدف < (بنانشان حرف*) دليلون_2->هدف_حد_بندي){
+            ذريعو_Char = *ذريعو++;
 
             /* do not convert SO/SI/ESC */
-            if(IS_2022_CONTROL(sourceChar)) {
+            إذا(IS_2022_CONTROL(ذريعو_Char)) {
                 /* callback(illegal) */
-                *err=U_ILLEGAL_CHAR_FOUND;
-                args->converter->fromUChar32=sourceChar;
-                break;
+                *err=U_ILLEGAL_CHAR_مليو;
+                دليلون_2->converter->fromUChar32=ذريعو_Char;
+                اكسر;
             }
 
-            length = MBCS_FROM_UCHAR32_ISO2022(sharedData,sourceChar,&targetByteUnit,useFallback,MBCS_OUTPUT_2);
-            if(length < 0) {
+            length = MBCS_FROM_UCHAR32_ISO2022(shared_معلومات,ذريعو_Char,&هدف_Byte_Unit,useFallback,MBCS_OUTPUT_2);
+            إذا(length < 0) {
                 length = -length;  /* fallback */
             }
             /* only DBCS or SBCS characters are expected*/
             /* DB characters with high bit set to 1 are expected */
-            if( length > 2 || length==0 ||
-                (length == 1 && targetByteUnit > 0x7f) ||
+            إذا( length > 2 || length==0 ||
+                (length == 1 && هدف_Byte_Unit > 0x7f) ||
                 (length == 2 &&
-                    (static_cast<uint16_t>(targetByteUnit - 0xa1a1) > (0xfefe - 0xa1a1) ||
-                    static_cast<uint8_t>(targetByteUnit - 0xa1) > (0xfe - 0xa1)))
+                    (static_cast<uint16_t>(هدف_Byte_Unit - 0xa1a1) > (0xfefe - 0xa1a1) ||
+                    static_cast<uint8_t>(هدف_Byte_Unit - 0xa1) > (0xfe - 0xa1)))
             ) {
-                targetByteUnit=missingCharMarker;
+                هدف_Byte_Unit=missingCharMarker;
             }
-            if (targetByteUnit != missingCharMarker){
+            إذا (هدف_Byte_Unit != missingCharMarker){
 
-                oldIsTargetByteDBCS = isTargetByteDBCS;
-                isTargetByteDBCS = static_cast<UBool>(targetByteUnit > 0x00FF);
+                old_Is_هدف_Byte_DBCS = is_هدف_Byte_DBCS;
+                is_هدف_Byte_DBCS = static_cast<UBool>(هدف_Byte_Unit > 0x00FF);
                   /* append the shift sequence */
-                if (oldIsTargetByteDBCS != isTargetByteDBCS ){
+                إذا (old_Is_هدف_Byte_DBCS != is_هدف_Byte_DBCS ){
 
-                    if (isTargetByteDBCS)
-                        *target++ = UCNV_SO;
-                    else
-                        *target++ = UCNV_SI;
-                    if(offsets)
-                        *(offsets++) = static_cast<int32_t>(source - args->source - 1);
+                    إذا (is_هدف_Byte_DBCS)
+                        *هدف++ = UCNV_SO;
+                    وإلا
+                        *هدف++ = UCNV_SI;
+                    إذا(offsets)
+                        *(offsets++) = static_cast<int32_t>(ذريعو - دليلون_2->ذريعو - 1);
                 }
                 /* write the targetUniChar  to target */
-                if(targetByteUnit <= 0x00FF){
-                    if( target < targetLimit){
-                        *(target++) = static_cast<unsigned char>(targetByteUnit);
-                        if(offsets){
-                            *(offsets++) = static_cast<int32_t>(source - args->source - 1);
+                إذا(هدف_Byte_Unit <= 0x00FF){
+                    إذا( هدف < هدف_حد_بندي){
+                        *(هدف++) = static_cast<بنانشان حرف>(هدف_Byte_Unit);
+                        إذا(offsets){
+                            *(offsets++) = static_cast<int32_t>(ذريعو - دليلون_2->ذريعو - 1);
                         }
 
-                    }else{
-                        args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = static_cast<unsigned char>(targetByteUnit);
-                        *err = U_BUFFER_OVERFLOW_ERROR;
+                    }وإلا{
+                        دليلون_2->converter->char_Error_بفر[دليلون_2->converter->char_Error_بفر_ڊيگهائي++] = static_cast<بنانشان حرف>(هدف_Byte_Unit);
+                        *err = U_بفر_حد_کان_مٿي_ERROR;
                     }
-                }else{
-                    if(target < targetLimit){
-                        *(target++) = static_cast<unsigned char>((targetByteUnit >> 8) - 0x80);
-                        if(offsets){
-                            *(offsets++) = static_cast<int32_t>(source - args->source - 1);
+                }وإلا{
+                    إذا(هدف < هدف_حد_بندي){
+                        *(هدف++) = static_cast<بنانشان حرف>((هدف_Byte_Unit >> 8) - 0x80);
+                        إذا(offsets){
+                            *(offsets++) = static_cast<int32_t>(ذريعو - دليلون_2->ذريعو - 1);
                         }
-                        if(target < targetLimit){
-                            *(target++) = static_cast<unsigned char>(targetByteUnit - 0x80);
-                            if(offsets){
-                                *(offsets++) = static_cast<int32_t>(source - args->source - 1);
+                        إذا(هدف < هدف_حد_بندي){
+                            *(هدف++) = static_cast<بنانشان حرف>(هدف_Byte_Unit - 0x80);
+                            إذا(offsets){
+                                *(offsets++) = static_cast<int32_t>(ذريعو - دليلون_2->ذريعو - 1);
                             }
-                        }else{
-                            args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = static_cast<unsigned char>(targetByteUnit - 0x80);
-                            *err = U_BUFFER_OVERFLOW_ERROR;
+                        }وإلا{
+                            دليلون_2->converter->char_Error_بفر[دليلون_2->converter->char_Error_بفر_ڊيگهائي++] = static_cast<بنانشان حرف>(هدف_Byte_Unit - 0x80);
+                            *err = U_بفر_حد_کان_مٿي_ERROR;
                         }
-                    }else{
-                        args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = static_cast<unsigned char>((targetByteUnit >> 8) - 0x80);
-                        args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = static_cast<unsigned char>(targetByteUnit - 0x80);
-                        *err = U_BUFFER_OVERFLOW_ERROR;
+                    }وإلا{
+                        دليلون_2->converter->char_Error_بفر[دليلون_2->converter->char_Error_بفر_ڊيگهائي++] = static_cast<بنانشان حرف>((هدف_Byte_Unit >> 8) - 0x80);
+                        دليلون_2->converter->char_Error_بفر[دليلون_2->converter->char_Error_بفر_ڊيگهائي++] = static_cast<بنانشان حرف>(هدف_Byte_Unit - 0x80);
+                        *err = U_بفر_حد_کان_مٿي_ERROR;
                     }
                 }
 
             }
-            else{
+            وإلا{
                 /* oops.. the code point is unassingned
                  * set the error and reason
                  */
 
                 /*check if the char is a First surrogate*/
-                if(U16_IS_SURROGATE(sourceChar)) {
-                    if(U16_IS_SURROGATE_LEAD(sourceChar)) {
+                إذا(U16_IS_SURROGATE(ذريعو_Char)) {
+                    إذا(U16_IS_SURROGATE_LEAD(ذريعو_Char)) {
 getTrail:
                         /*look ahead to find the trail surrogate*/
-                        if(source <  sourceLimit) {
+                        إذا(ذريعو <  ذريعو_حد_بندي) {
                             /* test the following code unit */
-                            char16_t trail = *source;
-                            if(U16_IS_TRAIL(trail)) {
-                                source++;
-                                sourceChar=U16_GET_SUPPLEMENTARY(sourceChar, trail);
-                                *err = U_INVALID_CHAR_FOUND;
+                            char16_t trail = *ذريعو;
+                            إذا(U16_IS_TRAIL(trail)) {
+                                ذريعو++;
+                                ذريعو_Char=U16_GET_SUPPLEMENTARY(ذريعو_Char, trail);
+                                *err = U_INVALID_CHAR_مليو;
                                 /* convert this surrogate code point */
                                 /* exit this condition tree */
-                            } else {
+                            } وإلا {
                                 /* this is an unmatched lead code unit (1st surrogate) */
                                 /* callback(illegal) */
-                                *err=U_ILLEGAL_CHAR_FOUND;
+                                *err=U_ILLEGAL_CHAR_مليو;
                             }
-                        } else {
+                        } وإلا {
                             /* no more input */
                             *err = U_ZERO_ERROR;
                         }
-                    } else {
+                    } وإلا {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        *err=U_ILLEGAL_CHAR_FOUND;
+                        *err=U_ILLEGAL_CHAR_مليو;
                     }
-                } else {
+                } وإلا {
                     /* callback(unassigned) for a BMP code point */
-                    *err = U_INVALID_CHAR_FOUND;
+                    *err = U_INVALID_CHAR_مليو;
                 }
 
-                args->converter->fromUChar32=sourceChar;
-                break;
+                دليلون_2->converter->fromUChar32=ذريعو_Char;
+                اكسر;
             }
         } /* end if(myTargetIndex<myTargetLength) */
-        else{
-            *err =U_BUFFER_OVERFLOW_ERROR;
-            break;
+        وإلا{
+            *err =U_بفر_حد_کان_مٿي_ERROR;
+            اكسر;
         }
 
     }/* end while(mySourceIndex<mySourceLength) */
@@ -2528,14 +2528,14 @@ getTrail:
      *   not in ASCII mode
      *   end of input and no truncated input
      */
-    if( U_SUCCESS(*err) &&
-        isTargetByteDBCS &&
-        args->flush && source>=sourceLimit && args->converter->fromUChar32==0
+    إذا( U_SUCCESS(*err) &&
+        is_هدف_Byte_DBCS &&
+        دليلون_2->flush && ذريعو>=ذريعو_حد_بندي && دليلون_2->converter->fromUChar32==0
     ) {
-        int32_t sourceIndex;
+        int32_t ذريعو_اشاريو;
 
         /* we are switching to ASCII */
-        isTargetByteDBCS=false;
+        is_هدف_Byte_DBCS=خطأ;
 
         /* get the source index of the last input character */
         /*
@@ -2545,67 +2545,67 @@ getTrail:
          * this code gives an incorrect result for the rare case of an unmatched
          * trail surrogate that is alone in the last buffer of the text stream
          */
-        sourceIndex = static_cast<int32_t>(source - args->source);
-        if(sourceIndex>0) {
-            --sourceIndex;
-            if( U16_IS_TRAIL(args->source[sourceIndex]) &&
-                (sourceIndex==0 || U16_IS_LEAD(args->source[sourceIndex-1]))
+        ذريعو_اشاريو = static_cast<int32_t>(ذريعو - دليلون_2->ذريعو);
+        إذا(ذريعو_اشاريو>0) {
+            --ذريعو_اشاريو;
+            إذا( U16_IS_TRAIL(دليلون_2->ذريعو[ذريعو_اشاريو]) &&
+                (ذريعو_اشاريو==0 || U16_IS_LEAD(دليلون_2->ذريعو[ذريعو_اشاريو-1]))
             ) {
-                --sourceIndex;
+                --ذريعو_اشاريو;
             }
-        } else {
-            sourceIndex=-1;
+        } وإلا {
+            ذريعو_اشاريو=-1;
         }
 
         fromUWriteUInt8(
-            args->converter,
-            SHIFT_IN_STR, 1,
-            &target, reinterpret_cast<const char*>(targetLimit),
-            &offsets, sourceIndex,
+            دليلون_2->converter,
+            سرڪايو_اندريون_STR, 1,
+            &هدف, reinterpret_cast<ثابت حرف*>(هدف_حد_بندي),
+            &offsets, ذريعو_اشاريو,
             err);
     }
 
     /*save the state and return */
-    args->source = source;
-    args->target = reinterpret_cast<char*>(target);
-    args->converter->fromUnicodeStatus = static_cast<uint32_t>(isTargetByteDBCS);
+    دليلون_2->ذريعو = ذريعو;
+    دليلون_2->هدف = reinterpret_cast<حرف*>(هدف);
+    دليلون_2->converter->from_Unicode_حالت = static_cast<uint32_t>(is_هدف_Byte_DBCS);
 }
 
 /************************ To Unicode ***************************************/
 
-static void U_CALLCONV
-UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(UConverterToUnicodeArgs *args,
-                                                            UErrorCode* err){
-    char const* sourceStart;
-    UConverterDataISO2022* myData = static_cast<UConverterDataISO2022*>(args->converter->extraInfo);
+ساكن فراغ U_CALLCONV
+UConverter_منزل_Unicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(UConverter_منزل_Unicode_دليلون *دليلون_2,
+                                                            UError_ڪوڊ* err){
+    حرف ثابت* ذريعو_شروعات;
+    UConverter_معلومات_ISO2022* my_معلومات = static_cast<UConverter_معلومات_ISO2022*>(دليلون_2->converter->extraInfo);
 
-    UConverterToUnicodeArgs subArgs;
-    int32_t minArgsSize;
+    UConverter_منزل_Unicode_دليلون sub_دليلون;
+    int32_t min_دليلون_سائيز;
 
     /* set up the subconverter arguments */
-    if(args->size<sizeof(UConverterToUnicodeArgs)) {
-        minArgsSize = args->size;
-    } else {
-        minArgsSize = static_cast<int32_t>(sizeof(UConverterToUnicodeArgs));
+    إذا(دليلون_2->size<حجم(UConverter_منزل_Unicode_دليلون)) {
+        min_دليلون_سائيز = دليلون_2->size;
+    } وإلا {
+        min_دليلون_سائيز = static_cast<int32_t>(حجم(UConverter_منزل_Unicode_دليلون));
     }
 
-    uprv_memcpy(&subArgs, args, minArgsSize);
-    subArgs.size = static_cast<uint16_t>(minArgsSize);
-    subArgs.converter = myData->currentConverter;
+    uprv_memcpy(&sub_دليلون, دليلون_2, min_دليلون_سائيز);
+    sub_دليلون.size = static_cast<uint16_t>(min_دليلون_سائيز);
+    sub_دليلون.converter = my_معلومات->currentConverter;
 
     /* remember the original start of the input for offsets */
-    sourceStart = args->source;
+    ذريعو_شروعات = دليلون_2->ذريعو;
 
-    if(myData->key != 0) {
+    إذا(my_معلومات->ڪنجي != 0) {
         /* continue with a partial escape sequence */
-        goto escape;
+        اذهب escape;
     }
 
-    while(U_SUCCESS(*err) && args->source < args->sourceLimit) {
+    طالما(U_SUCCESS(*err) && دليلون_2->ذريعو < دليلون_2->ذريعو_حد_بندي) {
         /*Find the end of the buffer e.g : Next Escape Seq | end of Buffer*/
-        subArgs.source = args->source;
-        subArgs.sourceLimit = getEndOfBuffer_2022(&(args->source), args->sourceLimit, args->flush);
-        if(subArgs.source != subArgs.sourceLimit) {
+        sub_دليلون.ذريعو = دليلون_2->ذريعو;
+        sub_دليلون.ذريعو_حد_بندي = get_پڇاڙي_جو_بفر_2022(&(دليلون_2->ذريعو), دليلون_2->ذريعو_حد_بندي, دليلون_2->flush);
+        إذا(sub_دليلون.ذريعو != sub_دليلون.ذريعو_حد_بندي) {
             /*
              * get the current partial byte sequence
              *
@@ -2613,144 +2613,144 @@ UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(UConverterToUnicodeArgs *args
              * so that the conversion framework, which only sees the public
              * converter, can handle truncated and illegal input etc.
              */
-            if(args->converter->toULength > 0) {
-                uprv_memcpy(subArgs.converter->toUBytes, args->converter->toUBytes, args->converter->toULength);
+            إذا(دليلون_2->converter->منزل_ULength > 0) {
+                uprv_memcpy(sub_دليلون.converter->منزل_UBytes, دليلون_2->converter->منزل_UBytes, دليلون_2->converter->منزل_ULength);
             }
-            subArgs.converter->toULength = args->converter->toULength;
+            sub_دليلون.converter->منزل_ULength = دليلون_2->converter->منزل_ULength;
 
             /*
              * Convert up to the end of the input, or to before the next escape character.
              * Does not handle conversion extensions because the preToU[] state etc.
              * is not copied.
              */
-            ucnv_MBCSToUnicodeWithOffsets(&subArgs, err);
+            ucnv_MBCSToUnicodeWithOffsets(&sub_دليلون, err);
 
-            if(args->offsets != nullptr && sourceStart != args->source) {
+            إذا(دليلون_2->offsets != خالي_اشارو && ذريعو_شروعات != دليلون_2->ذريعو) {
                 /* update offsets to base them on the actual start of the input */
-                int32_t *offsets = args->offsets;
-                char16_t *target = args->target;
-                int32_t delta = static_cast<int32_t>(args->source - sourceStart);
-                while(target < subArgs.target) {
-                    if(*offsets >= 0) {
+                int32_t *offsets = دليلون_2->offsets;
+                char16_t *هدف = دليلون_2->هدف;
+                int32_t delta = static_cast<int32_t>(دليلون_2->ذريعو - ذريعو_شروعات);
+                طالما(هدف < sub_دليلون.هدف) {
+                    إذا(*offsets >= 0) {
                         *offsets += delta;
                     }
                     ++offsets;
-                    ++target;
+                    ++هدف;
                 }
             }
-            args->source = subArgs.source;
-            args->target = subArgs.target;
-            args->offsets = subArgs.offsets;
+            دليلون_2->ذريعو = sub_دليلون.ذريعو;
+            دليلون_2->هدف = sub_دليلون.هدف;
+            دليلون_2->offsets = sub_دليلون.offsets;
 
             /* copy input/error/overflow buffers */
-            if(subArgs.converter->toULength > 0) {
-                uprv_memcpy(args->converter->toUBytes, subArgs.converter->toUBytes, subArgs.converter->toULength);
+            إذا(sub_دليلون.converter->منزل_ULength > 0) {
+                uprv_memcpy(دليلون_2->converter->منزل_UBytes, sub_دليلون.converter->منزل_UBytes, sub_دليلون.converter->منزل_ULength);
             }
-            args->converter->toULength = subArgs.converter->toULength;
+            دليلون_2->converter->منزل_ULength = sub_دليلون.converter->منزل_ULength;
 
-            if(*err == U_BUFFER_OVERFLOW_ERROR) {
-                if(subArgs.converter->UCharErrorBufferLength > 0) {
-                    uprv_memcpy(args->converter->UCharErrorBuffer, subArgs.converter->UCharErrorBuffer,
-                                subArgs.converter->UCharErrorBufferLength);
+            إذا(*err == U_بفر_حد_کان_مٿي_ERROR) {
+                إذا(sub_دليلون.converter->UChar_Error_بفر_ڊيگهائي > 0) {
+                    uprv_memcpy(دليلون_2->converter->UChar_Error_بفر, sub_دليلون.converter->UChar_Error_بفر,
+                                sub_دليلون.converter->UChar_Error_بفر_ڊيگهائي);
                 }
-                args->converter->UCharErrorBufferLength=subArgs.converter->UCharErrorBufferLength;
-                subArgs.converter->UCharErrorBufferLength = 0;
+                دليلون_2->converter->UChar_Error_بفر_ڊيگهائي=sub_دليلون.converter->UChar_Error_بفر_ڊيگهائي;
+                sub_دليلون.converter->UChar_Error_بفر_ڊيگهائي = 0;
             }
         }
 
-        if (U_FAILURE(*err) || (args->source == args->sourceLimit)) {
-            return;
+        إذا (U_FAILURE(*err) || (دليلون_2->ذريعو == دليلون_2->ذريعو_حد_بندي)) {
+            أرجع;
         }
 
 escape:
-        changeState_2022(args->converter,
-               &(args->source),
-               args->sourceLimit,
+        changeState_2022(دليلون_2->converter,
+               &(دليلون_2->ذريعو),
+               دليلون_2->ذريعو_حد_بندي,
                ISO_2022_KR,
                err);
     }
 }
 
-static void U_CALLCONV
-UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
-                                                            UErrorCode* err){
-    char tempBuf[2];
-    const char* mySource = const_cast<char*>(args->source);
-    char16_t *myTarget = args->target;
-    const char *mySourceLimit = args->sourceLimit;
-    UChar32 targetUniChar = 0x0000;
-    char16_t mySourceChar = 0x0000;
-    UConverterDataISO2022* myData;
-    UConverterSharedData* sharedData ;
+ساكن فراغ U_CALLCONV
+UConverter_منزل_Unicode_ISO_2022_KR_OFFSETS_LOGIC(UConverter_منزل_Unicode_دليلون *دليلون_2,
+                                                            UError_ڪوڊ* err){
+    حرف عارضي_Buf[2];
+    ثابت حرف* my_ذريعو = const_cast<حرف*>(دليلون_2->ذريعو);
+    char16_t *my_هدف = دليلون_2->هدف;
+    ثابت حرف *my_ذريعو_حد_بندي = دليلون_2->ذريعو_حد_بندي;
+    UChar32 هدف_Uni_Char = 0x0000;
+    char16_t my_ذريعو_Char = 0x0000;
+    UConverter_معلومات_ISO2022* my_معلومات;
+    UConverter_Shared_معلومات* shared_معلومات ;
     UBool useFallback;
 
-    myData = static_cast<UConverterDataISO2022*>(args->converter->extraInfo);
-    if(myData->version==1){
-        UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(args,err);
-        return;
+    my_معلومات = static_cast<UConverter_معلومات_ISO2022*>(دليلون_2->converter->extraInfo);
+    إذا(my_معلومات->نسخو==1){
+        UConverter_منزل_Unicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(دليلون_2,err);
+        أرجع;
     }
 
     /* initialize state */
-    sharedData = myData->currentConverter->sharedData;
-    useFallback = args->converter->useFallback;
+    shared_معلومات = my_معلومات->currentConverter->shared_معلومات;
+    useFallback = دليلون_2->converter->useFallback;
 
-    if(myData->key != 0) {
+    إذا(my_معلومات->ڪنجي != 0) {
         /* continue with a partial escape sequence */
-        goto escape;
-    } else if(args->converter->toULength == 1 && mySource < mySourceLimit && myTarget < args->targetLimit) {
+        اذهب escape;
+    } وإلا إذا(دليلون_2->converter->منزل_ULength == 1 && my_ذريعو < my_ذريعو_حد_بندي && my_هدف < دليلون_2->هدف_حد_بندي) {
         /* continue with a partial double-byte character */
-        mySourceChar = args->converter->toUBytes[0];
-        args->converter->toULength = 0;
-        goto getTrailByte;
+        my_ذريعو_Char = دليلون_2->converter->منزل_UBytes[0];
+        دليلون_2->converter->منزل_ULength = 0;
+        اذهب getTrailByte;
     }
 
-    while(mySource< mySourceLimit){
+    طالما(my_ذريعو< my_ذريعو_حد_بندي){
 
-        if(myTarget < args->targetLimit){
+        إذا(my_هدف < دليلون_2->هدف_حد_بندي){
 
-            mySourceChar = static_cast<unsigned char>(*mySource++);
+            my_ذريعو_Char = static_cast<بنانشان حرف>(*my_ذريعو++);
 
-            if(mySourceChar==UCNV_SI){
-                myData->toU2022State.g = 0;
-                if (myData->isEmptySegment) {
-                    myData->isEmptySegment = false;	/* we are handling it, reset to avoid future spurious errors */
+            إذا(my_ذريعو_Char==UCNV_SI){
+                my_معلومات->منزل_U2022_State.g = 0;
+                إذا (my_معلومات->is_خالي_جايون_Segment) {
+                    my_معلومات->is_خالي_جايون_Segment = خطأ;	/* we are handling it, reset to avoid future spurious errors */
                     *err = U_ILLEGAL_ESCAPE_SEQUENCE;
-                    args->converter->toUCallbackReason = UCNV_IRREGULAR;
-                    args->converter->toUBytes[0] = static_cast<uint8_t>(mySourceChar);
-                    args->converter->toULength = 1;
-                    args->target = myTarget;
-                    args->source = mySource;
-                    return;
+                    دليلون_2->converter->منزل_UCallback_Reason = UCNV_IRREGULAR;
+                    دليلون_2->converter->منزل_UBytes[0] = static_cast<uint8_t>(my_ذريعو_Char);
+                    دليلون_2->converter->منزل_ULength = 1;
+                    دليلون_2->هدف = my_هدف;
+                    دليلون_2->ذريعو = my_ذريعو;
+                    أرجع;
                 }
                 /*consume the source */
-                continue;
-            }else if(mySourceChar==UCNV_SO){
-                myData->toU2022State.g = 1;
-                myData->isEmptySegment = true;	/* Begin a new segment, empty so far */
+                استمر;
+            }وإلا إذا(my_ذريعو_Char==UCNV_SO){
+                my_معلومات->منزل_U2022_State.g = 1;
+                my_معلومات->is_خالي_جايون_Segment = سچ;	/* Begin a new segment, empty so far */
                 /*consume the source */
-                continue;
-            }else if(mySourceChar==ESC_2022){
-                mySource--;
+                استمر;
+            }وإلا إذا(my_ذريعو_Char==ESC_2022){
+                my_ذريعو--;
 escape:
-                myData->isEmptySegment = false;	/* Any invalid ESC sequences will be detected separately, so just reset this */
-                changeState_2022(args->converter,&(mySource),
-                                mySourceLimit, ISO_2022_KR, err);
-                if(U_FAILURE(*err)){
-                    args->target = myTarget;
-                    args->source = mySource;
-                    return;
+                my_معلومات->is_خالي_جايون_Segment = خطأ;	/* Any invalid ESC sequences will be detected separately, so just reset this */
+                changeState_2022(دليلون_2->converter,&(my_ذريعو),
+                                my_ذريعو_حد_بندي, ISO_2022_KR, err);
+                إذا(U_FAILURE(*err)){
+                    دليلون_2->هدف = my_هدف;
+                    دليلون_2->ذريعو = my_ذريعو;
+                    أرجع;
                 }
-                continue;
+                استمر;
             }
 
-            myData->isEmptySegment = false;	/* Any invalid char errors will be detected separately, so just reset this */
-            if(myData->toU2022State.g == 1) {
-                if(mySource < mySourceLimit) {
-                    int leadIsOk, trailIsOk;
+            my_معلومات->is_خالي_جايون_Segment = خطأ;	/* Any invalid char errors will be detected separately, so just reset this */
+            إذا(my_معلومات->منزل_U2022_State.g == 1) {
+                إذا(my_ذريعو < my_ذريعو_حد_بندي) {
+                    صحيح leadIsOk, trailIsOk;
                     uint8_t trailByte;
 getTrailByte:
-                    targetUniChar = missingCharMarker;
-                    trailByte = static_cast<uint8_t>(*mySource);
+                    هدف_Uni_Char = missingCharMarker;
+                    trailByte = static_cast<uint8_t>(*my_ذريعو);
                     /*
                      * Ticket 5691: consistent illegal sequences:
                      * - We include at least the first byte in the illegal sequence.
@@ -2761,50 +2761,50 @@ getTrailByte:
                      * an ESC/SO/SI, we report only the first byte as the illegal sequence.
                      * Otherwise we convert or report the pair of bytes.
                      */
-                    leadIsOk = static_cast<uint8_t>(mySourceChar - 0x21) <= (0x7e - 0x21);
+                    leadIsOk = static_cast<uint8_t>(my_ذريعو_Char - 0x21) <= (0x7e - 0x21);
                     trailIsOk = static_cast<uint8_t>(trailByte - 0x21) <= (0x7e - 0x21);
-                    if (leadIsOk && trailIsOk) {
-                        ++mySource;
-                        tempBuf[0] = static_cast<char>(mySourceChar + 0x80);
-                        tempBuf[1] = static_cast<char>(trailByte + 0x80);
-                        targetUniChar = ucnv_MBCSSimpleGetNextUChar(sharedData, tempBuf, 2, useFallback);
-                        mySourceChar = (mySourceChar << 8) | trailByte;
-                    } else if (!(trailIsOk || IS_2022_CONTROL(trailByte))) {
+                    إذا (leadIsOk && trailIsOk) {
+                        ++my_ذريعو;
+                        عارضي_Buf[0] = static_cast<حرف>(my_ذريعو_Char + 0x80);
+                        عارضي_Buf[1] = static_cast<حرف>(trailByte + 0x80);
+                        هدف_Uni_Char = ucnv_MBCSSimple_Get_ايندڙ_UChar(shared_معلومات, عارضي_Buf, 2, useFallback);
+                        my_ذريعو_Char = (my_ذريعو_Char << 8) | trailByte;
+                    } وإلا إذا (!(trailIsOk || IS_2022_CONTROL(trailByte))) {
                         /* report a pair of illegal bytes if the second byte is not a DBCS starter */
-                        ++mySource;
+                        ++my_ذريعو;
                         /* add another bit so that the code below writes 2 bytes in case of error */
-                        mySourceChar = static_cast<char16_t>(0x10000 | (mySourceChar << 8) | trailByte);
+                        my_ذريعو_Char = static_cast<char16_t>(0x10000 | (my_ذريعو_Char << 8) | trailByte);
                     }
-                } else {
-                    args->converter->toUBytes[0] = static_cast<uint8_t>(mySourceChar);
-                    args->converter->toULength = 1;
-                    break;
+                } وإلا {
+                    دليلون_2->converter->منزل_UBytes[0] = static_cast<uint8_t>(my_ذريعو_Char);
+                    دليلون_2->converter->منزل_ULength = 1;
+                    اكسر;
                 }
             }
-            else if(mySourceChar <= 0x7f) {
-                targetUniChar = ucnv_MBCSSimpleGetNextUChar(sharedData, mySource - 1, 1, useFallback);
-            } else {
-                targetUniChar = 0xffff;
+            وإلا إذا(my_ذريعو_Char <= 0x7f) {
+                هدف_Uni_Char = ucnv_MBCSSimple_Get_ايندڙ_UChar(shared_معلومات, my_ذريعو - 1, 1, useFallback);
+            } وإلا {
+                هدف_Uni_Char = 0xffff;
             }
-            if(targetUniChar < 0xfffe){
-                if(args->offsets) {
-                    args->offsets[myTarget - args->target] = static_cast<int32_t>(mySource - args->source - (mySourceChar <= 0xff ? 1 : 2));
+            إذا(هدف_Uni_Char < 0xfffe){
+                إذا(دليلون_2->offsets) {
+                    دليلون_2->offsets[my_هدف - دليلون_2->هدف] = static_cast<int32_t>(my_ذريعو - دليلون_2->ذريعو - (my_ذريعو_Char <= 0xff ? 1 : 2));
                 }
-                *(myTarget++) = static_cast<char16_t>(targetUniChar);
+                *(my_هدف++) = static_cast<char16_t>(هدف_Uni_Char);
             }
-            else {
+            وإلا {
                 /* Call the callback function*/
-                toUnicodeCallback(args->converter,mySourceChar,targetUniChar,err);
-                break;
+                منزل_Unicode_Callback(دليلون_2->converter,my_ذريعو_Char,هدف_Uni_Char,err);
+                اكسر;
             }
         }
-        else{
-            *err =U_BUFFER_OVERFLOW_ERROR;
-            break;
+        وإلا{
+            *err =U_بفر_حد_کان_مٿي_ERROR;
+            اكسر;
         }
     }
-    args->target = myTarget;
-    args->source = mySource;
+    دليلون_2->هدف = my_هدف;
+    دليلون_2->ذريعو = my_ذريعو;
 }
 
 /*************************** END ISO2022-KR *********************************/
@@ -2889,19 +2889,19 @@ getTrailByte:
 */
 
 /* The following are defined this way to make the strings truly readonly */
-static const char GB_2312_80_STR[] = "\x1B\x24\x29\x41";
-static const char ISO_IR_165_STR[] = "\x1B\x24\x29\x45";
-static const char CNS_11643_1992_Plane_1_STR[] = "\x1B\x24\x29\x47";
-static const char CNS_11643_1992_Plane_2_STR[] = "\x1B\x24\x2A\x48";
-static const char CNS_11643_1992_Plane_3_STR[] = "\x1B\x24\x2B\x49";
-static const char CNS_11643_1992_Plane_4_STR[] = "\x1B\x24\x2B\x4A";
-static const char CNS_11643_1992_Plane_5_STR[] = "\x1B\x24\x2B\x4B";
-static const char CNS_11643_1992_Plane_6_STR[] = "\x1B\x24\x2B\x4C";
-static const char CNS_11643_1992_Plane_7_STR[] = "\x1B\x24\x2B\x4D";
+ساكن ثابت حرف GB_2312_80_STR[] = "\x1B\x24\x29\x41";
+ساكن ثابت حرف ISO_IR_165_STR[] = "\x1B\x24\x29\x45";
+ساكن ثابت حرف CNS_11643_1992_Plane_1_STR[] = "\x1B\x24\x29\x47";
+ساكن ثابت حرف CNS_11643_1992_Plane_2_STR[] = "\x1B\x24\x2A\x48";
+ساكن ثابت حرف CNS_11643_1992_Plane_3_STR[] = "\x1B\x24\x2B\x49";
+ساكن ثابت حرف CNS_11643_1992_Plane_4_STR[] = "\x1B\x24\x2B\x4A";
+ساكن ثابت حرف CNS_11643_1992_Plane_5_STR[] = "\x1B\x24\x2B\x4B";
+ساكن ثابت حرف CNS_11643_1992_Plane_6_STR[] = "\x1B\x24\x2B\x4C";
+ساكن ثابت حرف CNS_11643_1992_Plane_7_STR[] = "\x1B\x24\x2B\x4D";
 
 /********************** ISO2022-CN Data **************************/
-static const char* const escSeqCharsCN[10] ={
-        SHIFT_IN_STR,                   /* 0 ASCII */
+ساكن ثابت حرف* ثابت escSeqCharsCN[10] ={
+        سرڪايو_اندريون_STR,                   /* 0 ASCII */
         GB_2312_80_STR,                 /* 1 GB2312_1 */
         ISO_IR_165_STR,                 /* 2 ISO_IR_165 */
         CNS_11643_1992_Plane_1_STR,
@@ -2913,147 +2913,147 @@ static const char* const escSeqCharsCN[10] ={
         CNS_11643_1992_Plane_7_STR
 };
 
-static void U_CALLCONV
-UConverter_fromUnicode_ISO_2022_CN_OFFSETS_LOGIC(UConverterFromUnicodeArgs* args, UErrorCode* err){
-    UConverter *cnv = args->converter;
-    UConverterDataISO2022 *converterData;
+ساكن فراغ U_CALLCONV
+UConverter_fromUnicode_ISO_2022_CN_OFFSETS_LOGIC(UConverter_From_Unicode_دليلون* دليلون_2, UError_ڪوڊ* err){
+    UConverter *cnv = دليلون_2->converter;
+    UConverter_معلومات_ISO2022 *converter_معلومات;
     ISO2022State *pFromU2022State;
-    uint8_t* target = reinterpret_cast<uint8_t*>(args->target);
-    const uint8_t* targetLimit = reinterpret_cast<const uint8_t*>(args->targetLimit);
-    const char16_t* source = args->source;
-    const char16_t* sourceLimit = args->sourceLimit;
-    int32_t* offsets = args->offsets;
-    UChar32 sourceChar;
-    char buffer[8];
+    uint8_t* هدف = reinterpret_cast<uint8_t*>(دليلون_2->هدف);
+    ثابت uint8_t* هدف_حد_بندي = reinterpret_cast<ثابت uint8_t*>(دليلون_2->هدف_حد_بندي);
+    ثابت char16_t* ذريعو = دليلون_2->ذريعو;
+    ثابت char16_t* ذريعو_حد_بندي = دليلون_2->ذريعو_حد_بندي;
+    int32_t* offsets = دليلون_2->offsets;
+    UChar32 ذريعو_Char;
+    حرف بفر[8];
     int32_t len;
     int8_t choices[3];
-    int32_t choiceCount;
-    uint32_t targetValue = 0;
+    int32_t choice_ڳڻپ;
+    uint32_t هدف_قدر = 0;
     UBool useFallback;
 
     /* set up the state */
-    converterData = static_cast<UConverterDataISO2022*>(cnv->extraInfo);
-    pFromU2022State   = &converterData->fromU2022State;
+    converter_معلومات = static_cast<UConverter_معلومات_ISO2022*>(cnv->extraInfo);
+    pFromU2022State   = &converter_معلومات->fromU2022State;
 
-    choiceCount = 0;
+    choice_ڳڻپ = 0;
 
     /* check if the last codepoint of previous buffer was a lead surrogate*/
-    if((sourceChar = cnv->fromUChar32)!=0 && target< targetLimit) {
-        goto getTrail;
+    إذا((ذريعو_Char = cnv->fromUChar32)!=0 && هدف< هدف_حد_بندي) {
+        اذهب getTrail;
     }
 
-    while( source < sourceLimit){
-        if(target < targetLimit){
+    طالما( ذريعو < ذريعو_حد_بندي){
+        إذا(هدف < هدف_حد_بندي){
 
-            sourceChar  = *(source++);
+            ذريعو_Char  = *(ذريعو++);
             /*check if the char is a First surrogate*/
-             if(U16_IS_SURROGATE(sourceChar)) {
-                if(U16_IS_SURROGATE_LEAD(sourceChar)) {
+             إذا(U16_IS_SURROGATE(ذريعو_Char)) {
+                إذا(U16_IS_SURROGATE_LEAD(ذريعو_Char)) {
 getTrail:
                     /*look ahead to find the trail surrogate*/
-                    if(source < sourceLimit) {
+                    إذا(ذريعو < ذريعو_حد_بندي) {
                         /* test the following code unit */
-                        char16_t trail = *source;
-                        if(U16_IS_TRAIL(trail)) {
-                            source++;
-                            sourceChar=U16_GET_SUPPLEMENTARY(sourceChar, trail);
+                        char16_t trail = *ذريعو;
+                        إذا(U16_IS_TRAIL(trail)) {
+                            ذريعو++;
+                            ذريعو_Char=U16_GET_SUPPLEMENTARY(ذريعو_Char, trail);
                             cnv->fromUChar32=0x00;
                             /* convert this supplementary code point */
                             /* exit this condition tree */
-                        } else {
+                        } وإلا {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
-                            *err=U_ILLEGAL_CHAR_FOUND;
-                            cnv->fromUChar32=sourceChar;
-                            break;
+                            *err=U_ILLEGAL_CHAR_مليو;
+                            cnv->fromUChar32=ذريعو_Char;
+                            اكسر;
                         }
-                    } else {
+                    } وإلا {
                         /* no more input */
-                        cnv->fromUChar32=sourceChar;
-                        break;
+                        cnv->fromUChar32=ذريعو_Char;
+                        اكسر;
                     }
-                } else {
+                } وإلا {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
-                    *err=U_ILLEGAL_CHAR_FOUND;
-                    cnv->fromUChar32=sourceChar;
-                    break;
+                    *err=U_ILLEGAL_CHAR_مليو;
+                    cnv->fromUChar32=ذريعو_Char;
+                    اكسر;
                 }
             }
 
             /* do the conversion */
-            if(sourceChar <= 0x007f ){
+            إذا(ذريعو_Char <= 0x007f ){
                 /* do not convert SO/SI/ESC */
-                if(IS_2022_CONTROL(sourceChar)) {
+                إذا(IS_2022_CONTROL(ذريعو_Char)) {
                     /* callback(illegal) */
-                    *err=U_ILLEGAL_CHAR_FOUND;
-                    cnv->fromUChar32=sourceChar;
-                    break;
+                    *err=U_ILLEGAL_CHAR_مليو;
+                    cnv->fromUChar32=ذريعو_Char;
+                    اكسر;
                 }
 
                 /* US-ASCII */
-                if(pFromU2022State->g == 0) {
-                    buffer[0] = static_cast<char>(sourceChar);
+                إذا(pFromU2022State->g == 0) {
+                    بفر[0] = static_cast<حرف>(ذريعو_Char);
                     len = 1;
-                } else {
-                    buffer[0] = UCNV_SI;
-                    buffer[1] = static_cast<char>(sourceChar);
+                } وإلا {
+                    بفر[0] = UCNV_SI;
+                    بفر[1] = static_cast<حرف>(ذريعو_Char);
                     len = 2;
                     pFromU2022State->g = 0;
-                    choiceCount = 0;
+                    choice_ڳڻپ = 0;
                 }
-                if(sourceChar == CR || sourceChar == LF) {
+                إذا(ذريعو_Char == CR || ذريعو_Char == LF) {
                     /* reset the state at the end of a line */
-                    uprv_memset(pFromU2022State, 0, sizeof(ISO2022State));
-                    choiceCount = 0;
+                    uprv_memset(pFromU2022State, 0, حجم(ISO2022State));
+                    choice_ڳڻپ = 0;
                 }
             }
-            else{
+            وإلا{
                 /* convert U+0080..U+10ffff */
                 int32_t i;
                 int8_t cs, g;
 
-                if(choiceCount == 0) {
+                إذا(choice_ڳڻپ == 0) {
                     /* try the current SO/G1 converter first */
                     choices[0] = pFromU2022State->cs[1];
 
                     /* default to GB2312_1 if none is designated yet */
-                    if(choices[0] == 0) {
+                    إذا(choices[0] == 0) {
                         choices[0] = GB2312_1;
                     }
 
-                    if(converterData->version == 0) {
+                    إذا(converter_معلومات->نسخو == 0) {
                         /* ISO-2022-CN */
 
                         /* try the other SO/G1 converter; a CNS_11643_1 lookup may result in any plane */
-                        if(choices[0] == GB2312_1) {
+                        إذا(choices[0] == GB2312_1) {
                             choices[1] = static_cast<int8_t>(CNS_11643_1);
-                        } else {
+                        } وإلا {
                             choices[1] = static_cast<int8_t>(GB2312_1);
                         }
 
-                        choiceCount = 2;
-                    } else if (converterData->version == 1) {
+                        choice_ڳڻپ = 2;
+                    } وإلا إذا (converter_معلومات->نسخو == 1) {
                         /* ISO-2022-CN-EXT */
 
                         /* try one of the other converters */
-                        switch(choices[0]) {
-                        case GB2312_1:
+                        بدل(choices[0]) {
+                        حالة GB2312_1:
                             choices[1] = static_cast<int8_t>(CNS_11643_1);
                             choices[2] = static_cast<int8_t>(ISO_IR_165);
-                            break;
-                        case ISO_IR_165:
+                            اكسر;
+                        حالة ISO_IR_165:
                             choices[1] = static_cast<int8_t>(GB2312_1);
                             choices[2] = static_cast<int8_t>(CNS_11643_1);
-                            break;
-                        default: /* CNS_11643_x */
+                            اكسر;
+                        افتراضي: /* CNS_11643_x */
                             choices[1] = static_cast<int8_t>(GB2312_1);
                             choices[2] = static_cast<int8_t>(ISO_IR_165);
-                            break;
+                            اكسر;
                         }
 
-                        choiceCount = 3;
-                    } else {
+                        choice_ڳڻپ = 3;
+                    } وإلا {
                         choices[0] = static_cast<int8_t>(CNS_11643_1);
                         choices[1] = static_cast<int8_t>(GB2312_1);
                     }
@@ -3074,139 +3074,139 @@ getTrail:
                  */
                 useFallback = cnv->useFallback;
 
-                for(i = 0; i < choiceCount && len <= 0; ++i) {
+                لكل(i = 0; i < choice_ڳڻپ && len <= 0; ++i) {
                     int8_t cs0 = choices[i];
-                    if(cs0 > 0) {
+                    إذا(cs0 > 0) {
                         uint32_t value;
                         int32_t len2;
-                        if(cs0 >= CNS_11643_0) {
+                        إذا(cs0 >= CNS_11643_0) {
                             len2 = MBCS_FROM_UCHAR32_ISO2022(
-                                        converterData->myConverterArray[CNS_11643],
-                                        sourceChar,
+                                        converter_معلومات->myConverterArray[CNS_11643],
+                                        ذريعو_Char,
                                         &value,
                                         useFallback,
                                         MBCS_OUTPUT_3);
-                            if(len2 == 3 || (len2 == -3 && len == 0)) {
-                                targetValue = value;
+                            إذا(len2 == 3 || (len2 == -3 && len == 0)) {
+                                هدف_قدر = value;
                                 cs = static_cast<int8_t>(CNS_11643_0 + (value >> 16) - 0x80);
-                                if(len2 >= 0) {
+                                إذا(len2 >= 0) {
                                     len = 2;
-                                } else {
+                                } وإلا {
                                     len = -2;
-                                    useFallback = false;
+                                    useFallback = خطأ;
                                 }
-                                if(cs == CNS_11643_1) {
+                                إذا(cs == CNS_11643_1) {
                                     g = 1;
-                                } else if(cs == CNS_11643_2) {
+                                } وإلا إذا(cs == CNS_11643_2) {
                                     g = 2;
-                                } else /* plane 3..7 */ if(converterData->version == 1) {
+                                } وإلا /* plane 3..7 */ إذا(converter_معلومات->نسخو == 1) {
                                     g = 3;
-                                } else {
+                                } وإلا {
                                     /* ISO-2022-CN (without -EXT) does not support plane 3..7 */
                                     len = 0;
                                 }
                             }
-                        } else {
+                        } وإلا {
                             /* GB2312_1 or ISO-IR-165 */
                             U_ASSERT(cs0<UCNV_2022_MAX_CONVERTERS);
                             len2 = MBCS_FROM_UCHAR32_ISO2022(
-                                        converterData->myConverterArray[cs0],
-                                        sourceChar,
+                                        converter_معلومات->myConverterArray[cs0],
+                                        ذريعو_Char,
                                         &value,
                                         useFallback,
                                         MBCS_OUTPUT_2);
-                            if(len2 == 2 || (len2 == -2 && len == 0)) {
-                                targetValue = value;
+                            إذا(len2 == 2 || (len2 == -2 && len == 0)) {
+                                هدف_قدر = value;
                                 len = len2;
                                 cs = cs0;
                                 g = 1;
-                                useFallback = false;
+                                useFallback = خطأ;
                             }
                         }
                     }
                 }
 
-                if(len != 0) {
+                إذا(len != 0) {
                     len = 0; /* count output bytes; it must have been abs(len) == 2 */
 
                     /* write the designation sequence if necessary */
-                    if(cs != pFromU2022State->cs[g]) {
-                        if(cs < CNS_11643) {
-                            uprv_memcpy(buffer, escSeqCharsCN[cs], 4);
-                        } else {
+                    إذا(cs != pFromU2022State->cs[g]) {
+                        إذا(cs < CNS_11643) {
+                            uprv_memcpy(بفر, escSeqCharsCN[cs], 4);
+                        } وإلا {
                             U_ASSERT(cs >= CNS_11643_1);
-                            uprv_memcpy(buffer, escSeqCharsCN[CNS_11643 + (cs - CNS_11643_1)], 4);
+                            uprv_memcpy(بفر, escSeqCharsCN[CNS_11643 + (cs - CNS_11643_1)], 4);
                         }
                         len = 4;
                         pFromU2022State->cs[g] = cs;
-                        if(g == 1) {
+                        إذا(g == 1) {
                             /* changing the SO/G1 charset invalidates the choices[] */
-                            choiceCount = 0;
+                            choice_ڳڻپ = 0;
                         }
                     }
 
                     /* write the shift sequence if necessary */
-                    if(g != pFromU2022State->g) {
-                        switch(g) {
-                        case 1:
-                            buffer[len++] = UCNV_SO;
+                    إذا(g != pFromU2022State->g) {
+                        بدل(g) {
+                        حالة 1:
+                            بفر[len++] = UCNV_SO;
 
                             /* set the new state only if it is the locking shift SO/G1, not for SS2 or SS3 */
                             pFromU2022State->g = 1;
-                            break;
-                        case 2:
-                            buffer[len++] = 0x1b;
-                            buffer[len++] = 0x4e;
-                            break;
-                        default: /* case 3 */
-                            buffer[len++] = 0x1b;
-                            buffer[len++] = 0x4f;
-                            break;
+                            اكسر;
+                        حالة 2:
+                            بفر[len++] = 0x1b;
+                            بفر[len++] = 0x4e;
+                            اكسر;
+                        افتراضي: /* case 3 */
+                            بفر[len++] = 0x1b;
+                            بفر[len++] = 0x4f;
+                            اكسر;
                         }
                     }
 
                     /* write the two output bytes */
-                    buffer[len++] = static_cast<char>(targetValue >> 8);
-                    buffer[len++] = static_cast<char>(targetValue);
-                } else {
+                    بفر[len++] = static_cast<حرف>(هدف_قدر >> 8);
+                    بفر[len++] = static_cast<حرف>(هدف_قدر);
+                } وإلا {
                     /* if we cannot find the character after checking all codepages
                      * then this is an error
                      */
-                    *err = U_INVALID_CHAR_FOUND;
-                    cnv->fromUChar32=sourceChar;
-                    break;
+                    *err = U_INVALID_CHAR_مليو;
+                    cnv->fromUChar32=ذريعو_Char;
+                    اكسر;
                 }
             }
 
             /* output len>0 bytes in buffer[] */
-            if(len == 1) {
-                *target++ = buffer[0];
-                if(offsets) {
-                    *offsets++ = static_cast<int32_t>(source - args->source - 1); /* -1: known to be ASCII */
+            إذا(len == 1) {
+                *هدف++ = بفر[0];
+                إذا(offsets) {
+                    *offsets++ = static_cast<int32_t>(ذريعو - دليلون_2->ذريعو - 1); /* -1: known to be ASCII */
                 }
-            } else if(len == 2 && (target + 2) <= targetLimit) {
-                *target++ = buffer[0];
-                *target++ = buffer[1];
-                if(offsets) {
-                    int32_t sourceIndex = static_cast<int32_t>(source - args->source - U16_LENGTH(sourceChar));
-                    *offsets++ = sourceIndex;
-                    *offsets++ = sourceIndex;
+            } وإلا إذا(len == 2 && (هدف + 2) <= هدف_حد_بندي) {
+                *هدف++ = بفر[0];
+                *هدف++ = بفر[1];
+                إذا(offsets) {
+                    int32_t ذريعو_اشاريو = static_cast<int32_t>(ذريعو - دليلون_2->ذريعو - U16_ڊيگهائي(ذريعو_Char));
+                    *offsets++ = ذريعو_اشاريو;
+                    *offsets++ = ذريعو_اشاريو;
                 }
-            } else {
+            } وإلا {
                 fromUWriteUInt8(
                     cnv,
-                    buffer, len,
-                    &target, reinterpret_cast<const char*>(targetLimit),
-                    &offsets, static_cast<int32_t>(source - args->source - U16_LENGTH(sourceChar)),
+                    بفر, len,
+                    &هدف, reinterpret_cast<ثابت حرف*>(هدف_حد_بندي),
+                    &offsets, static_cast<int32_t>(ذريعو - دليلون_2->ذريعو - U16_ڊيگهائي(ذريعو_Char)),
                     err);
-                if(U_FAILURE(*err)) {
-                    break;
+                إذا(U_FAILURE(*err)) {
+                    اكسر;
                 }
             }
         } /* end if(myTargetIndex<myTargetLength) */
-        else{
-            *err =U_BUFFER_OVERFLOW_ERROR;
-            break;
+        وإلا{
+            *err =U_بفر_حد_کان_مٿي_ERROR;
+            اكسر;
         }
 
     }/* end while(mySourceIndex<mySourceLength) */
@@ -3221,11 +3221,11 @@ getTrail:
      *   not in ASCII mode
      *   end of input and no truncated input
      */
-    if( U_SUCCESS(*err) &&
+    إذا( U_SUCCESS(*err) &&
         pFromU2022State->g!=0 &&
-        args->flush && source>=sourceLimit && cnv->fromUChar32==0
+        دليلون_2->flush && ذريعو>=ذريعو_حد_بندي && cnv->fromUChar32==0
     ) {
-        int32_t sourceIndex;
+        int32_t ذريعو_اشاريو;
 
         /* we are switching to ASCII */
         pFromU2022State->g=0;
@@ -3238,137 +3238,137 @@ getTrail:
          * this code gives an incorrect result for the rare case of an unmatched
          * trail surrogate that is alone in the last buffer of the text stream
          */
-        sourceIndex = static_cast<int32_t>(source - args->source);
-        if(sourceIndex>0) {
-            --sourceIndex;
-            if( U16_IS_TRAIL(args->source[sourceIndex]) &&
-                (sourceIndex==0 || U16_IS_LEAD(args->source[sourceIndex-1]))
+        ذريعو_اشاريو = static_cast<int32_t>(ذريعو - دليلون_2->ذريعو);
+        إذا(ذريعو_اشاريو>0) {
+            --ذريعو_اشاريو;
+            إذا( U16_IS_TRAIL(دليلون_2->ذريعو[ذريعو_اشاريو]) &&
+                (ذريعو_اشاريو==0 || U16_IS_LEAD(دليلون_2->ذريعو[ذريعو_اشاريو-1]))
             ) {
-                --sourceIndex;
+                --ذريعو_اشاريو;
             }
-        } else {
-            sourceIndex=-1;
+        } وإلا {
+            ذريعو_اشاريو=-1;
         }
 
         fromUWriteUInt8(
             cnv,
-            SHIFT_IN_STR, 1,
-            &target, reinterpret_cast<const char*>(targetLimit),
-            &offsets, sourceIndex,
+            سرڪايو_اندريون_STR, 1,
+            &هدف, reinterpret_cast<ثابت حرف*>(هدف_حد_بندي),
+            &offsets, ذريعو_اشاريو,
             err);
     }
 
     /*save the state and return */
-    args->source = source;
-    args->target = reinterpret_cast<char*>(target);
+    دليلون_2->ذريعو = ذريعو;
+    دليلون_2->هدف = reinterpret_cast<حرف*>(هدف);
 }
 
 
-static void U_CALLCONV
-UConverter_toUnicode_ISO_2022_CN_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
-                                               UErrorCode* err){
-    char tempBuf[3];
-    const char* mySource = const_cast<char*>(args->source);
-    char16_t *myTarget = args->target;
-    const char *mySourceLimit = args->sourceLimit;
-    uint32_t targetUniChar = 0x0000;
-    uint32_t mySourceChar = 0x0000;
-    UConverterDataISO2022* myData;
-    ISO2022State *pToU2022State;
+ساكن فراغ U_CALLCONV
+UConverter_منزل_Unicode_ISO_2022_CN_OFFSETS_LOGIC(UConverter_منزل_Unicode_دليلون *دليلون_2,
+                                               UError_ڪوڊ* err){
+    حرف عارضي_Buf[3];
+    ثابت حرف* my_ذريعو = const_cast<حرف*>(دليلون_2->ذريعو);
+    char16_t *my_هدف = دليلون_2->هدف;
+    ثابت حرف *my_ذريعو_حد_بندي = دليلون_2->ذريعو_حد_بندي;
+    uint32_t هدف_Uni_Char = 0x0000;
+    uint32_t my_ذريعو_Char = 0x0000;
+    UConverter_معلومات_ISO2022* my_معلومات;
+    ISO2022State *p_منزل_U2022_State;
 
-    myData = static_cast<UConverterDataISO2022*>(args->converter->extraInfo);
-    pToU2022State = &myData->toU2022State;
+    my_معلومات = static_cast<UConverter_معلومات_ISO2022*>(دليلون_2->converter->extraInfo);
+    p_منزل_U2022_State = &my_معلومات->منزل_U2022_State;
 
-    if(myData->key != 0) {
+    إذا(my_معلومات->ڪنجي != 0) {
         /* continue with a partial escape sequence */
-        goto escape;
-    } else if(args->converter->toULength == 1 && mySource < mySourceLimit && myTarget < args->targetLimit) {
+        اذهب escape;
+    } وإلا إذا(دليلون_2->converter->منزل_ULength == 1 && my_ذريعو < my_ذريعو_حد_بندي && my_هدف < دليلون_2->هدف_حد_بندي) {
         /* continue with a partial double-byte character */
-        mySourceChar = args->converter->toUBytes[0];
-        args->converter->toULength = 0;
-        targetUniChar = missingCharMarker;
-        goto getTrailByte;
+        my_ذريعو_Char = دليلون_2->converter->منزل_UBytes[0];
+        دليلون_2->converter->منزل_ULength = 0;
+        هدف_Uni_Char = missingCharMarker;
+        اذهب getTrailByte;
     }
 
-    while(mySource < mySourceLimit){
+    طالما(my_ذريعو < my_ذريعو_حد_بندي){
 
-        targetUniChar =missingCharMarker;
+        هدف_Uni_Char =missingCharMarker;
 
-        if(myTarget < args->targetLimit){
+        إذا(my_هدف < دليلون_2->هدف_حد_بندي){
 
-            mySourceChar = static_cast<unsigned char>(*mySource++);
+            my_ذريعو_Char = static_cast<بنانشان حرف>(*my_ذريعو++);
 
-            switch(mySourceChar){
-            case UCNV_SI:
-                pToU2022State->g=0;
-                if (myData->isEmptySegment) {
-                    myData->isEmptySegment = false;	/* we are handling it, reset to avoid future spurious errors */
+            بدل(my_ذريعو_Char){
+            حالة UCNV_SI:
+                p_منزل_U2022_State->g=0;
+                إذا (my_معلومات->is_خالي_جايون_Segment) {
+                    my_معلومات->is_خالي_جايون_Segment = خطأ;	/* we are handling it, reset to avoid future spurious errors */
                     *err = U_ILLEGAL_ESCAPE_SEQUENCE;
-                    args->converter->toUCallbackReason = UCNV_IRREGULAR;
-                    args->converter->toUBytes[0] = static_cast<uint8_t>(mySourceChar);
-                    args->converter->toULength = 1;
-                    args->target = myTarget;
-                    args->source = mySource;
-                    return;
+                    دليلون_2->converter->منزل_UCallback_Reason = UCNV_IRREGULAR;
+                    دليلون_2->converter->منزل_UBytes[0] = static_cast<uint8_t>(my_ذريعو_Char);
+                    دليلون_2->converter->منزل_ULength = 1;
+                    دليلون_2->هدف = my_هدف;
+                    دليلون_2->ذريعو = my_ذريعو;
+                    أرجع;
                 }
-                continue;
+                استمر;
 
-            case UCNV_SO:
-                if(pToU2022State->cs[1] != 0) {
-                    pToU2022State->g=1;
-                    myData->isEmptySegment = true;	/* Begin a new segment, empty so far */
-                    continue;
-                } else {
+            حالة UCNV_SO:
+                إذا(p_منزل_U2022_State->cs[1] != 0) {
+                    p_منزل_U2022_State->g=1;
+                    my_معلومات->is_خالي_جايون_Segment = سچ;	/* Begin a new segment, empty so far */
+                    استمر;
+                } وإلا {
                     /* illegal to have SO before a matching designator */
-                    myData->isEmptySegment = false;	/* Handling a different error, reset this to avoid future spurious errs */
-                    break;
+                    my_معلومات->is_خالي_جايون_Segment = خطأ;	/* Handling a different error, reset this to avoid future spurious errs */
+                    اكسر;
                 }
 
-            case ESC_2022:
-                mySource--;
+            حالة ESC_2022:
+                my_ذريعو--;
 escape:
                 {
-                    const char * mySourceBefore = mySource;
-                    int8_t toULengthBefore = args->converter->toULength;
+                    ثابت حرف * my_ذريعو_Before = my_ذريعو;
+                    int8_t منزل_ULength_Before = دليلون_2->converter->منزل_ULength;
 
-                    changeState_2022(args->converter,&(mySource),
-                        mySourceLimit, ISO_2022_CN,err);
+                    changeState_2022(دليلون_2->converter,&(my_ذريعو),
+                        my_ذريعو_حد_بندي, ISO_2022_CN,err);
 
                     /* After SO there must be at least one character before a designator (designator error handled separately) */
-                    if(myData->key==0 && U_SUCCESS(*err) && myData->isEmptySegment) {
+                    إذا(my_معلومات->ڪنجي==0 && U_SUCCESS(*err) && my_معلومات->is_خالي_جايون_Segment) {
                         *err = U_ILLEGAL_ESCAPE_SEQUENCE;
-                        args->converter->toUCallbackReason = UCNV_IRREGULAR;
-                        args->converter->toULength = static_cast<int8_t>(toULengthBefore + (mySource - mySourceBefore));
+                        دليلون_2->converter->منزل_UCallback_Reason = UCNV_IRREGULAR;
+                        دليلون_2->converter->منزل_ULength = static_cast<int8_t>(منزل_ULength_Before + (my_ذريعو - my_ذريعو_Before));
                     }
                 }
 
                 /* invalid or illegal escape sequence */
-                if(U_FAILURE(*err)){
-                    args->target = myTarget;
-                    args->source = mySource;
-                    myData->isEmptySegment = false;	/* Reset to avoid future spurious errors */
-                    return;
+                إذا(U_FAILURE(*err)){
+                    دليلون_2->هدف = my_هدف;
+                    دليلون_2->ذريعو = my_ذريعو;
+                    my_معلومات->is_خالي_جايون_Segment = خطأ;	/* Reset to avoid future spurious errors */
+                    أرجع;
                 }
-                continue;
+                استمر;
 
             /* ISO-2022-CN does not use single-byte (C1) SS2 and SS3 */
 
-            case CR:
-            case LF:
-                uprv_memset(pToU2022State, 0, sizeof(ISO2022State));
+            حالة CR:
+            حالة LF:
+                uprv_memset(p_منزل_U2022_State, 0, حجم(ISO2022State));
                 U_FALLTHROUGH;
-            default:
+            افتراضي:
                 /* convert one or two bytes */
-                myData->isEmptySegment = false;
-                if(pToU2022State->g != 0) {
-                    if(mySource < mySourceLimit) {
-                        UConverterSharedData *cnv;
-                        StateEnum tempState;
-                        int32_t tempBufLen;
-                        int leadIsOk, trailIsOk;
+                my_معلومات->is_خالي_جايون_Segment = خطأ;
+                إذا(p_منزل_U2022_State->g != 0) {
+                    إذا(my_ذريعو < my_ذريعو_حد_بندي) {
+                        UConverter_Shared_معلومات *cnv;
+                        StateEnum عارضي_State;
+                        int32_t عارضي_Buf_Len;
+                        صحيح leadIsOk, trailIsOk;
                         uint8_t trailByte;
 getTrailByte:
-                        trailByte = static_cast<uint8_t>(*mySource);
+                        trailByte = static_cast<uint8_t>(*my_ذريعو);
                         /*
                          * Ticket 5691: consistent illegal sequences:
                          * - We include at least the first byte in the illegal sequence.
@@ -3379,119 +3379,119 @@ getTrailByte:
                          * an ESC/SO/SI, we report only the first byte as the illegal sequence.
                          * Otherwise we convert or report the pair of bytes.
                          */
-                        leadIsOk = static_cast<uint8_t>(mySourceChar - 0x21) <= (0x7e - 0x21);
+                        leadIsOk = static_cast<uint8_t>(my_ذريعو_Char - 0x21) <= (0x7e - 0x21);
                         trailIsOk = static_cast<uint8_t>(trailByte - 0x21) <= (0x7e - 0x21);
-                        if (leadIsOk && trailIsOk) {
-                            ++mySource;
-                            tempState = static_cast<StateEnum>(pToU2022State->cs[pToU2022State->g]);
-                            if(tempState >= CNS_11643_0) {
-                                cnv = myData->myConverterArray[CNS_11643];
-                                tempBuf[0] = static_cast<char>(0x80 + (tempState - CNS_11643_0));
-                                tempBuf[1] = static_cast<char>(mySourceChar);
-                                tempBuf[2] = static_cast<char>(trailByte);
-                                tempBufLen = 3;
+                        إذا (leadIsOk && trailIsOk) {
+                            ++my_ذريعو;
+                            عارضي_State = static_cast<StateEnum>(p_منزل_U2022_State->cs[p_منزل_U2022_State->g]);
+                            إذا(عارضي_State >= CNS_11643_0) {
+                                cnv = my_معلومات->myConverterArray[CNS_11643];
+                                عارضي_Buf[0] = static_cast<حرف>(0x80 + (عارضي_State - CNS_11643_0));
+                                عارضي_Buf[1] = static_cast<حرف>(my_ذريعو_Char);
+                                عارضي_Buf[2] = static_cast<حرف>(trailByte);
+                                عارضي_Buf_Len = 3;
 
-                            }else{
-                                U_ASSERT(tempState<UCNV_2022_MAX_CONVERTERS);
-                                cnv = myData->myConverterArray[tempState];
-                                tempBuf[0] = static_cast<char>(mySourceChar);
-                                tempBuf[1] = static_cast<char>(trailByte);
-                                tempBufLen = 2;
+                            }وإلا{
+                                U_ASSERT(عارضي_State<UCNV_2022_MAX_CONVERTERS);
+                                cnv = my_معلومات->myConverterArray[عارضي_State];
+                                عارضي_Buf[0] = static_cast<حرف>(my_ذريعو_Char);
+                                عارضي_Buf[1] = static_cast<حرف>(trailByte);
+                                عارضي_Buf_Len = 2;
                             }
-                            targetUniChar = ucnv_MBCSSimpleGetNextUChar(cnv, tempBuf, tempBufLen, false);
-                            mySourceChar = (mySourceChar << 8) | trailByte;
-                        } else if (!(trailIsOk || IS_2022_CONTROL(trailByte))) {
+                            هدف_Uni_Char = ucnv_MBCSSimple_Get_ايندڙ_UChar(cnv, عارضي_Buf, عارضي_Buf_Len, خطأ);
+                            my_ذريعو_Char = (my_ذريعو_Char << 8) | trailByte;
+                        } وإلا إذا (!(trailIsOk || IS_2022_CONTROL(trailByte))) {
                             /* report a pair of illegal bytes if the second byte is not a DBCS starter */
-                            ++mySource;
+                            ++my_ذريعو;
                             /* add another bit so that the code below writes 2 bytes in case of error */
-                            mySourceChar = 0x10000 | (mySourceChar << 8) | trailByte;
+                            my_ذريعو_Char = 0x10000 | (my_ذريعو_Char << 8) | trailByte;
                         }
-                        if(pToU2022State->g>=2) {
+                        إذا(p_منزل_U2022_State->g>=2) {
                             /* return from a single-shift state to the previous one */
-                            pToU2022State->g=pToU2022State->prevG;
+                            p_منزل_U2022_State->g=p_منزل_U2022_State->prevG;
                         }
-                    } else {
-                        args->converter->toUBytes[0] = static_cast<uint8_t>(mySourceChar);
-                        args->converter->toULength = 1;
-                        goto endloop;
+                    } وإلا {
+                        دليلون_2->converter->منزل_UBytes[0] = static_cast<uint8_t>(my_ذريعو_Char);
+                        دليلون_2->converter->منزل_ULength = 1;
+                        اذهب endloop;
                     }
                 }
-                else{
-                    if(mySourceChar <= 0x7f) {
-                        targetUniChar = static_cast<char16_t>(mySourceChar);
+                وإلا{
+                    إذا(my_ذريعو_Char <= 0x7f) {
+                        هدف_Uni_Char = static_cast<char16_t>(my_ذريعو_Char);
                     }
                 }
-                break;
+                اكسر;
             }
-            if(targetUniChar < (missingCharMarker-1/*0xfffe*/)){
-                if(args->offsets){
-                    args->offsets[myTarget - args->target] = static_cast<int32_t>(mySource - args->source - (mySourceChar <= 0xff ? 1 : 2));
+            إذا(هدف_Uni_Char < (missingCharMarker-1/*0xfffe*/)){
+                إذا(دليلون_2->offsets){
+                    دليلون_2->offsets[my_هدف - دليلون_2->هدف] = static_cast<int32_t>(my_ذريعو - دليلون_2->ذريعو - (my_ذريعو_Char <= 0xff ? 1 : 2));
                 }
-                *(myTarget++) = static_cast<char16_t>(targetUniChar);
+                *(my_هدف++) = static_cast<char16_t>(هدف_Uni_Char);
             }
-            else if(targetUniChar > missingCharMarker){
+            وإلا إذا(هدف_Uni_Char > missingCharMarker){
                 /* disassemble the surrogate pair and write to output*/
-                targetUniChar-=0x0010000;
-                *myTarget = static_cast<char16_t>(0xd800 + static_cast<char16_t>(targetUniChar >> 10));
-                if(args->offsets){
-                    args->offsets[myTarget - args->target] = static_cast<int32_t>(mySource - args->source - (mySourceChar <= 0xff ? 1 : 2));
+                هدف_Uni_Char-=0x0010000;
+                *my_هدف = static_cast<char16_t>(0xd800 + static_cast<char16_t>(هدف_Uni_Char >> 10));
+                إذا(دليلون_2->offsets){
+                    دليلون_2->offsets[my_هدف - دليلون_2->هدف] = static_cast<int32_t>(my_ذريعو - دليلون_2->ذريعو - (my_ذريعو_Char <= 0xff ? 1 : 2));
                 }
-                ++myTarget;
-                if(myTarget< args->targetLimit){
-                    *myTarget = static_cast<char16_t>(0xdc00 + static_cast<char16_t>(targetUniChar & 0x3ff));
-                    if(args->offsets){
-                        args->offsets[myTarget - args->target] = static_cast<int32_t>(mySource - args->source - (mySourceChar <= 0xff ? 1 : 2));
+                ++my_هدف;
+                إذا(my_هدف< دليلون_2->هدف_حد_بندي){
+                    *my_هدف = static_cast<char16_t>(0xdc00 + static_cast<char16_t>(هدف_Uni_Char & 0x3ff));
+                    إذا(دليلون_2->offsets){
+                        دليلون_2->offsets[my_هدف - دليلون_2->هدف] = static_cast<int32_t>(my_ذريعو - دليلون_2->ذريعو - (my_ذريعو_Char <= 0xff ? 1 : 2));
                     }
-                    ++myTarget;
-                }else{
-                    args->converter->UCharErrorBuffer[args->converter->UCharErrorBufferLength++]=
-                                    static_cast<char16_t>(0xdc00 + static_cast<char16_t>(targetUniChar & 0x3ff));
+                    ++my_هدف;
+                }وإلا{
+                    دليلون_2->converter->UChar_Error_بفر[دليلون_2->converter->UChar_Error_بفر_ڊيگهائي++]=
+                                    static_cast<char16_t>(0xdc00 + static_cast<char16_t>(هدف_Uni_Char & 0x3ff));
                 }
 
             }
-            else{
+            وإلا{
                 /* Call the callback function*/
-                toUnicodeCallback(args->converter,mySourceChar,targetUniChar,err);
-                break;
+                منزل_Unicode_Callback(دليلون_2->converter,my_ذريعو_Char,هدف_Uni_Char,err);
+                اكسر;
             }
         }
-        else{
-            *err =U_BUFFER_OVERFLOW_ERROR;
-            break;
+        وإلا{
+            *err =U_بفر_حد_کان_مٿي_ERROR;
+            اكسر;
         }
     }
 endloop:
-    args->target = myTarget;
-    args->source = mySource;
+    دليلون_2->هدف = my_هدف;
+    دليلون_2->ذريعو = my_ذريعو;
 }
-#endif /* #if !UCONFIG_ONLY_HTML_CONVERSION */
+#جيڪڏهن_پورو /* #if !UCONFIG_ONLY_HTML_CONVERSION */
 
-static void U_CALLCONV
-_ISO_2022_WriteSub(UConverterFromUnicodeArgs *args, int32_t offsetIndex, UErrorCode *err) {
-    UConverter *cnv = args->converter;
-    UConverterDataISO2022* myConverterData = static_cast<UConverterDataISO2022*>(cnv->extraInfo);
-    ISO2022State *pFromU2022State=&myConverterData->fromU2022State;
-    char *p, *subchar;
-    char buffer[8];
+ساكن فراغ U_CALLCONV
+_ISO_2022_WriteSub(UConverter_From_Unicode_دليلون *دليلون_2, int32_t وٿي_اشاريو, UError_ڪوڊ *err) {
+    UConverter *cnv = دليلون_2->converter;
+    UConverter_معلومات_ISO2022* my_Converter_معلومات = static_cast<UConverter_معلومات_ISO2022*>(cnv->extraInfo);
+    ISO2022State *pFromU2022State=&my_Converter_معلومات->fromU2022State;
+    حرف *p, *subchar;
+    حرف بفر[8];
     int32_t length;
 
-    subchar = reinterpret_cast<char*>(cnv->subChars);
+    subchar = reinterpret_cast<حرف*>(cnv->subChars);
     length=cnv->subCharLen; /* assume length==1 for most variants */
 
-    p = buffer;
-    switch(myConverterData->locale[0]){
-    case 'j':
+    p = بفر;
+    بدل(my_Converter_معلومات->locale[0]){
+    حالة 'j':
         {
             int8_t cs;
 
-            if(pFromU2022State->g == 1) {
+            إذا(pFromU2022State->g == 1) {
                 /* JIS7: switch from G1 to G0 */
                 pFromU2022State->g = 0;
                 *p++ = UCNV_SI;
             }
 
             cs = pFromU2022State->cs[0];
-            if(cs != ASCII && cs != JISX201) {
+            إذا(cs != ASCII && cs != JISX201) {
                 /* not in ASCII or JIS X 0201: switch to ASCII */
                 pFromU2022State->cs[0] = static_cast<int8_t>(ASCII);
                 *p++ = '\x1b';
@@ -3500,179 +3500,179 @@ _ISO_2022_WriteSub(UConverterFromUnicodeArgs *args, int32_t offsetIndex, UErrorC
             }
 
             *p++ = subchar[0];
-            break;
+            اكسر;
         }
-    case 'c':
-        if(pFromU2022State->g != 0) {
+    حالة 'c':
+        إذا(pFromU2022State->g != 0) {
             /* not in ASCII mode: switch to ASCII */
             pFromU2022State->g = 0;
             *p++ = UCNV_SI;
         }
         *p++ = subchar[0];
-        break;
-    case 'k':
-        if(myConverterData->version == 0) {
-            if(length == 1) {
-                if(args->converter->fromUnicodeStatus) {
+        اكسر;
+    حالة 'k':
+        إذا(my_Converter_معلومات->نسخو == 0) {
+            إذا(length == 1) {
+                إذا(دليلون_2->converter->from_Unicode_حالت) {
                     /* in DBCS mode: switch to SBCS */
-                    args->converter->fromUnicodeStatus = 0;
+                    دليلون_2->converter->from_Unicode_حالت = 0;
                     *p++ = UCNV_SI;
                 }
                 *p++ = subchar[0];
-            } else /* length == 2*/ {
-                if(!args->converter->fromUnicodeStatus) {
+            } وإلا /* length == 2*/ {
+                إذا(!دليلون_2->converter->from_Unicode_حالت) {
                     /* in SBCS mode: switch to DBCS */
-                    args->converter->fromUnicodeStatus = 1;
+                    دليلون_2->converter->from_Unicode_حالت = 1;
                     *p++ = UCNV_SO;
                 }
                 *p++ = subchar[0];
                 *p++ = subchar[1];
             }
-            break;
-        } else {
+            اكسر;
+        } وإلا {
             /* save the subconverter's substitution string */
-            uint8_t *currentSubChars = myConverterData->currentConverter->subChars;
-            int8_t currentSubCharLen = myConverterData->currentConverter->subCharLen;
+            uint8_t *currentSubChars = my_Converter_معلومات->currentConverter->subChars;
+            int8_t currentSubCharLen = my_Converter_معلومات->currentConverter->subCharLen;
 
             /* set our substitution string into the subconverter */
-            myConverterData->currentConverter->subChars = reinterpret_cast<uint8_t*>(subchar);
-            myConverterData->currentConverter->subCharLen = static_cast<int8_t>(length);
+            my_Converter_معلومات->currentConverter->subChars = reinterpret_cast<uint8_t*>(subchar);
+            my_Converter_معلومات->currentConverter->subCharLen = static_cast<int8_t>(length);
 
             /* let the subconverter write the subchar, set/retrieve fromUChar32 state */
-            args->converter = myConverterData->currentConverter;
-            myConverterData->currentConverter->fromUChar32 = cnv->fromUChar32;
-            ucnv_cbFromUWriteSub(args, 0, err);
-            cnv->fromUChar32 = myConverterData->currentConverter->fromUChar32;
-            args->converter = cnv;
+            دليلون_2->converter = my_Converter_معلومات->currentConverter;
+            my_Converter_معلومات->currentConverter->fromUChar32 = cnv->fromUChar32;
+            ucnv_cbFromUWriteSub(دليلون_2, 0, err);
+            cnv->fromUChar32 = my_Converter_معلومات->currentConverter->fromUChar32;
+            دليلون_2->converter = cnv;
 
             /* restore the subconverter's substitution string */
-            myConverterData->currentConverter->subChars = currentSubChars;
-            myConverterData->currentConverter->subCharLen = currentSubCharLen;
+            my_Converter_معلومات->currentConverter->subChars = currentSubChars;
+            my_Converter_معلومات->currentConverter->subCharLen = currentSubCharLen;
 
-            if(*err == U_BUFFER_OVERFLOW_ERROR) {
-                if(myConverterData->currentConverter->charErrorBufferLength > 0) {
+            إذا(*err == U_بفر_حد_کان_مٿي_ERROR) {
+                إذا(my_Converter_معلومات->currentConverter->char_Error_بفر_ڊيگهائي > 0) {
                     uprv_memcpy(
-                        cnv->charErrorBuffer,
-                        myConverterData->currentConverter->charErrorBuffer,
-                        myConverterData->currentConverter->charErrorBufferLength);
+                        cnv->char_Error_بفر,
+                        my_Converter_معلومات->currentConverter->char_Error_بفر,
+                        my_Converter_معلومات->currentConverter->char_Error_بفر_ڊيگهائي);
                 }
-                cnv->charErrorBufferLength = myConverterData->currentConverter->charErrorBufferLength;
-                myConverterData->currentConverter->charErrorBufferLength = 0;
+                cnv->char_Error_بفر_ڊيگهائي = my_Converter_معلومات->currentConverter->char_Error_بفر_ڊيگهائي;
+                my_Converter_معلومات->currentConverter->char_Error_بفر_ڊيگهائي = 0;
             }
-            return;
+            أرجع;
         }
-    default:
+    افتراضي:
         /* not expected */
-        break;
+        اكسر;
     }
-    ucnv_cbFromUWriteBytes(args,
-                           buffer, static_cast<int32_t>(p - buffer),
-                           offsetIndex, err);
+    ucnv_cb_From_UWrite_بائيٽون(دليلون_2,
+                           بفر, static_cast<int32_t>(p - بفر),
+                           وٿي_اشاريو, err);
 }
 
 /*
  * Structure for cloning an ISO 2022 converter into a single memory block.
  */
-struct cloneStruct
+بنية cloneStruct
 {
     UConverter cnv;
     UConverter currentConverter;
-    UConverterDataISO2022 mydata;
+    UConverter_معلومات_ISO2022 mydata;
 };
 
 
 U_CDECL_BEGIN
 
-static UConverter * U_CALLCONV
-_ISO_2022_SafeClone(
-            const UConverter *cnv,
-            void *stackBuffer,
-            int32_t *pBufferSize,
-            UErrorCode *status)
+ساكن UConverter * U_CALLCONV
+ISO_2022_محفوظ_Clone(
+            ثابت UConverter *cnv,
+            فراغ *ڍير_بفر,
+            int32_t *p_بفر_سائيز,
+            UError_ڪوڊ *حالت)
 {
-    struct cloneStruct * localClone;
-    UConverterDataISO2022 *cnvData;
+    بنية cloneStruct * localClone;
+    UConverter_معلومات_ISO2022 *cnv_معلومات;
     int32_t i, size;
 
-    if (U_FAILURE(*status)){
-        return nullptr;
+    إذا (U_FAILURE(*حالت)){
+        أرجع خالي_اشارو;
     }
 
-    if (*pBufferSize == 0) { /* 'preflighting' request - set needed size into *pBufferSize */
-        *pBufferSize = (int32_t)sizeof(struct cloneStruct);
-        return nullptr;
+    إذا (*p_بفر_سائيز == 0) { /* 'preflighting' request - set needed size into *pBufferSize */
+        *p_بفر_سائيز = (int32_t)حجم(بنية cloneStruct);
+        أرجع خالي_اشارو;
     }
 
-    cnvData = (UConverterDataISO2022 *)cnv->extraInfo;
-    localClone = (struct cloneStruct *)stackBuffer;
+    cnv_معلومات = (UConverter_معلومات_ISO2022 *)cnv->extraInfo;
+    localClone = (بنية cloneStruct *)ڍير_بفر;
 
     /* ucnv.c/ucnv_safeClone() copied the main UConverter already */
 
-    uprv_memcpy(&localClone->mydata, cnvData, sizeof(UConverterDataISO2022));
+    uprv_memcpy(&localClone->mydata, cnv_معلومات, حجم(UConverter_معلومات_ISO2022));
     localClone->cnv.extraInfo = &localClone->mydata; /* set pointer to extra data */
-    localClone->cnv.isExtraLocal = true;
+    localClone->cnv.isExtraLocal = سچ;
 
     /* share the subconverters */
 
-    if(cnvData->currentConverter != nullptr) {
-        size = (int32_t)sizeof(UConverter);
+    إذا(cnv_معلومات->currentConverter != خالي_اشارو) {
+        size = (int32_t)حجم(UConverter);
         localClone->mydata.currentConverter =
-            ucnv_safeClone(cnvData->currentConverter,
+            ucnv_محفوظ_Clone(cnv_معلومات->currentConverter,
                             &localClone->currentConverter,
-                            &size, status);
-        if(U_FAILURE(*status)) {
-            return nullptr;
+                            &size, حالت);
+        إذا(U_FAILURE(*حالت)) {
+            أرجع خالي_اشارو;
         }
     }
 
-    for(i=0; i<UCNV_2022_MAX_CONVERTERS; ++i) {
-        if(cnvData->myConverterArray[i] != nullptr) {
-            ucnv_incrementRefCount(cnvData->myConverterArray[i]);
+    لكل(i=0; i<UCNV_2022_MAX_CONVERTERS; ++i) {
+        إذا(cnv_معلومات->myConverterArray[i] != خالي_اشارو) {
+            ucnv_increment_Ref_ڳڻپ(cnv_معلومات->myConverterArray[i]);
         }
     }
 
-    return &localClone->cnv;
+    أرجع &localClone->cnv;
 }
 
-U_CDECL_END
+U_CDECL_پڇاڙي
 
-static void U_CALLCONV
-_ISO_2022_GetUnicodeSet(const UConverter *cnv,
-                    const USetAdder *sa,
-                    UConverterUnicodeSet which,
-                    UErrorCode *pErrorCode)
+ساكن فراغ U_CALLCONV
+ISO_2022_Get_Unicode_سيٽ(ثابت UConverter *cnv,
+                    ثابت USetAdder *sa,
+                    UConverter_Unicode_سيٽ which,
+                    UError_ڪوڊ *p_Error_ڪوڊ)
 {
     int32_t i;
-    UConverterDataISO2022* cnvData;
+    UConverter_معلومات_ISO2022* cnv_معلومات;
 
-    if (U_FAILURE(*pErrorCode)) {
-        return;
+    إذا (U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع;
     }
-#ifdef U_ENABLE_GENERIC_ISO_2022
-    if (cnv->sharedData == &_ISO2022Data) {
+#جيڪڏهن_وصف_ٿيل U_ENABLE_GENERIC_ISO_2022
+    إذا (cnv->shared_معلومات == &ISO2022_معلومات) {
         /* We use UTF-8 in this case */
-        sa->addRange(sa->set, 0, 0xd7FF);
-        sa->addRange(sa->set, 0xE000, 0x10FFFF);
-        return;
+        sa->جوڙيو_Range(sa->سيٽ, 0, 0xd7FF);
+        sa->جوڙيو_Range(sa->سيٽ, 0xE000, 0x10FFFF);
+        أرجع;
     }
-#endif
+#جيڪڏهن_پورو
 
-    cnvData = static_cast<UConverterDataISO2022*>(cnv->extraInfo);
+    cnv_معلومات = static_cast<UConverter_معلومات_ISO2022*>(cnv->extraInfo);
 
     /* open a set and initialize it with code points that are algorithmically round-tripped */
-    switch(cnvData->locale[0]){
-    case 'j':
+    بدل(cnv_معلومات->locale[0]){
+    حالة 'j':
         /* include JIS X 0201 which is hardcoded */
-        sa->add(sa->set, 0xa5);
-        sa->add(sa->set, 0x203e);
-        if(jpCharsetMasks[cnvData->version]&CSM(ISO8859_1)) {
+        sa->جوڙيو(sa->سيٽ, 0xa5);
+        sa->جوڙيو(sa->سيٽ, 0x203e);
+        إذا(jpCharsetMasks[cnv_معلومات->نسخو]&CSM(ISO8859_1)) {
             /* include Latin-1 for some variants of JP */
-            sa->addRange(sa->set, 0, 0xff);
-        } else {
+            sa->جوڙيو_Range(sa->سيٽ, 0, 0xff);
+        } وإلا {
             /* include ASCII for JP */
-            sa->addRange(sa->set, 0, 0x7f);
+            sa->جوڙيو_Range(sa->سيٽ, 0, 0x7f);
         }
-        if(cnvData->version==3 || cnvData->version==4 || which==UCNV_ROUNDTRIP_AND_FALLBACK_SET) {
+        إذا(cnv_معلومات->نسخو==3 || cnv_معلومات->نسخو==4 || which==UCNV_ROUNDTRIP_AND_FALLBACK_سيٽ) {
             /*
              * Do not test (jpCharsetMasks[cnvData->version]&CSM(HWKANA_7BIT))!=0
              * because the bit is on for all JP versions although only versions 3 & 4 (JIS7 & JIS8)
@@ -3687,51 +3687,51 @@ _ISO_2022_GetUnicodeSet(const UConverter *cnv,
              * JIS X 0208 has hardcoded fallbacks for them (which map to full-width Katakana).
              */
             /* include half-width Katakana for JP */
-            sa->addRange(sa->set, HWKANA_START, HWKANA_END);
+            sa->جوڙيو_Range(sa->سيٽ, HWKANA_شروعات, HWKANA_پڇاڙي);
         }
-        break;
-#if !UCONFIG_ONLY_HTML_CONVERSION
-    case 'c':
-    case 'z':
+        اكسر;
+#إذا !UCONFIG_ONLY_HTML_CONVERSION
+    حالة 'c':
+    حالة 'z':
         /* include ASCII for CN */
-        sa->addRange(sa->set, 0, 0x7f);
-        break;
-    case 'k':
+        sa->جوڙيو_Range(sa->سيٽ, 0, 0x7f);
+        اكسر;
+    حالة 'k':
         /* there is only one converter for KR, and it is not in the myConverterArray[] */
-        cnvData->currentConverter->sharedData->impl->getUnicodeSet(
-                cnvData->currentConverter, sa, which, pErrorCode);
+        cnv_معلومات->currentConverter->shared_معلومات->impl->get_Unicode_سيٽ(
+                cnv_معلومات->currentConverter, sa, which, p_Error_ڪوڊ);
         /* the loop over myConverterArray[] will simply not find another converter */
-        break;
-#endif
-    default:
-        break;
+        اكسر;
+#جيڪڏهن_پورو
+    افتراضي:
+        اكسر;
     }
 
-#if 0  /* Replaced by ucnv_MBCSGetFilteredUnicodeSetForUnicode() until we implement ucnv_getUnicodeSet() with reverse fallbacks. */
-            if( (cnvData->locale[0]=='c' || cnvData->locale[0]=='z') &&
-                cnvData->version==0 && i==CNS_11643
+#إذا 0  /* Replaced by ucnv_MBCSGetFilteredUnicodeSetForUnicode() until we implement ucnv_getUnicodeSet() with reverse fallbacks. */
+            إذا( (cnv_معلومات->locale[0]=='c' || cnv_معلومات->locale[0]=='z') &&
+                cnv_معلومات->نسخو==0 && i==CNS_11643
             ) {
                 /* special handling for non-EXT ISO-2022-CN: add only code points for CNS planes 1 and 2 */
-                ucnv_MBCSGetUnicodeSetForBytes(
-                        cnvData->myConverterArray[i],
-                        sa, UCNV_ROUNDTRIP_SET,
+                ucnv_MBCSGet_Unicode_سيٽ_For_بائيٽون(
+                        cnv_معلومات->myConverterArray[i],
+                        sa, UCNV_ROUNDTRIP_سيٽ,
                         0, 0x81, 0x82,
-                        pErrorCode);
+                        p_Error_ڪوڊ);
             }
-#endif
+#جيڪڏهن_پورو
 
-    for (i=0; i<UCNV_2022_MAX_CONVERTERS; i++) {
-        UConverterSetFilter filter;
-        if(cnvData->myConverterArray[i]!=nullptr) {
-            if(cnvData->locale[0]=='j' && i==JISX208) {
+    لكل (i=0; i<UCNV_2022_MAX_CONVERTERS; i++) {
+        UConverter_سيٽ_Filter filter;
+        إذا(cnv_معلومات->myConverterArray[i]!=خالي_اشارو) {
+            إذا(cnv_معلومات->locale[0]=='j' && i==JISX208) {
                 /*
                  * Only add code points that map to Shift-JIS codes
                  * corresponding to JIS X 0208.
                  */
-                filter=UCNV_SET_FILTER_SJIS;
-#if !UCONFIG_ONLY_HTML_CONVERSION
-            } else if( (cnvData->locale[0]=='c' || cnvData->locale[0]=='z') &&
-                       cnvData->version==0 && i==CNS_11643) {
+                filter=UCNV_سيٽ_FILTER_SJIS;
+#إذا !UCONFIG_ONLY_HTML_CONVERSION
+            } وإلا إذا( (cnv_معلومات->locale[0]=='c' || cnv_معلومات->locale[0]=='z') &&
+                       cnv_معلومات->نسخو==0 && i==CNS_11643) {
                 /*
                  * Version-specific for CN:
                  * CN version 0 does not map CNS planes 3..7 although
@@ -3739,18 +3739,18 @@ _ISO_2022_GetUnicodeSet(const UConverter *cnv,
                  * CN version 1 (-EXT) does map them all.
                  * The two versions create different Unicode sets.
                  */
-                filter=UCNV_SET_FILTER_2022_CN;
-            } else if(i==KSC5601) {
+                filter=UCNV_سيٽ_FILTER_2022_CN;
+            } وإلا إذا(i==KSC5601) {
                 /*
                  * Some of the KSC 5601 tables (convrtrs.txt has this aliases on multiple tables)
                  * are broader than GR94.
                  */
-                filter=UCNV_SET_FILTER_GR94DBCS;
-#endif
-            } else {
-                filter=UCNV_SET_FILTER_NONE;
+                filter=UCNV_سيٽ_FILTER_GR94_DBCS;
+#جيڪڏهن_پورو
+            } وإلا {
+                filter=UCNV_سيٽ_FILTER_NONE;
             }
-            ucnv_MBCSGetFilteredUnicodeSetForUnicode(cnvData->myConverterArray[i], sa, which, filter, pErrorCode);
+            ucnv_MBCSGet_Filtered_Unicode_سيٽ_For_Unicode(cnv_معلومات->myConverterArray[i], sa, which, filter, p_Error_ڪوڊ);
         }
     }
 
@@ -3759,48 +3759,48 @@ _ISO_2022_GetUnicodeSet(const UConverter *cnv,
      * sub-converters do by themselves.
      * Remove these characters from the set.
      */
-    sa->remove(sa->set, 0x0e);
-    sa->remove(sa->set, 0x0f);
-    sa->remove(sa->set, 0x1b);
+    sa->remove(sa->سيٽ, 0x0e);
+    sa->remove(sa->سيٽ, 0x0f);
+    sa->remove(sa->سيٽ, 0x1b);
 
     /* ISO 2022 converters do not convert C1 controls either */
-    sa->removeRange(sa->set, 0x80, 0x9f);
+    sa->removeRange(sa->سيٽ, 0x80, 0x9f);
 }
 
-static const UConverterImpl _ISO2022Impl={
+ساكن ثابت UConverterImpl _ISO2022Impl={
     UCNV_ISO_2022,
 
-    nullptr,
-    nullptr,
+    خالي_اشارو,
+    خالي_اشارو,
 
     _ISO2022Open,
     _ISO2022Close,
     _ISO2022Reset,
 
-#ifdef U_ENABLE_GENERIC_ISO_2022
-    T_UConverter_toUnicode_ISO_2022_OFFSETS_LOGIC,
-    T_UConverter_toUnicode_ISO_2022_OFFSETS_LOGIC,
+#جيڪڏهن_وصف_ٿيل U_ENABLE_GENERIC_ISO_2022
+    T_UConverter_منزل_Unicode_ISO_2022_OFFSETS_LOGIC,
+    T_UConverter_منزل_Unicode_ISO_2022_OFFSETS_LOGIC,
     ucnv_fromUnicode_UTF8,
     ucnv_fromUnicode_UTF8_OFFSETS_LOGIC,
-#else
-    nullptr,
-    nullptr,
-    nullptr,
-    nullptr,
-#endif
-    nullptr,
+#وإلا
+    خالي_اشارو,
+    خالي_اشارو,
+    خالي_اشارو,
+    خالي_اشارو,
+#جيڪڏهن_پورو
+    خالي_اشارو,
 
-    nullptr,
+    خالي_اشارو,
     _ISO2022getName,
     _ISO_2022_WriteSub,
-    _ISO_2022_SafeClone,
-    _ISO_2022_GetUnicodeSet,
+    ISO_2022_محفوظ_Clone,
+    ISO_2022_Get_Unicode_سيٽ,
 
-    nullptr,
-    nullptr
+    خالي_اشارو,
+    خالي_اشارو
 };
-static const UConverterStaticData _ISO2022StaticData={
-    sizeof(UConverterStaticData),
+ساكن ثابت UConverter_Static_معلومات ISO2022_Static_معلومات={
+    حجم(UConverter_Static_معلومات),
     "ISO_2022",
     2022,
     UCNV_IBM,
@@ -3809,43 +3809,43 @@ static const UConverterStaticData _ISO2022StaticData={
     3, /* max 3 bytes per char16_t from UTF-8 (4 bytes from surrogate _pair_) */
     { 0x1a, 0, 0, 0 },
     1,
-    false,
-    false,
+    خطأ,
+    خطأ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
-const UConverterSharedData _ISO2022Data=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_ISO2022StaticData, &_ISO2022Impl);
+ثابت UConverter_Shared_معلومات ISO2022_معلومات=
+        UCNV_IMMUTABLE_SHARED_معلومات_INITIALIZER(&ISO2022_Static_معلومات, &_ISO2022Impl);
 
 /*************JP****************/
-static const UConverterImpl _ISO2022JPImpl={
+ساكن ثابت UConverterImpl _ISO2022JPImpl={
     UCNV_ISO_2022,
 
-    nullptr,
-    nullptr,
+    خالي_اشارو,
+    خالي_اشارو,
 
     _ISO2022Open,
     _ISO2022Close,
     _ISO2022Reset,
 
-    UConverter_toUnicode_ISO_2022_JP_OFFSETS_LOGIC,
-    UConverter_toUnicode_ISO_2022_JP_OFFSETS_LOGIC,
+    UConverter_منزل_Unicode_ISO_2022_JP_OFFSETS_LOGIC,
+    UConverter_منزل_Unicode_ISO_2022_JP_OFFSETS_LOGIC,
     UConverter_fromUnicode_ISO_2022_JP_OFFSETS_LOGIC,
     UConverter_fromUnicode_ISO_2022_JP_OFFSETS_LOGIC,
-    nullptr,
+    خالي_اشارو,
 
-    nullptr,
+    خالي_اشارو,
     _ISO2022getName,
     _ISO_2022_WriteSub,
-    _ISO_2022_SafeClone,
-    _ISO_2022_GetUnicodeSet,
+    ISO_2022_محفوظ_Clone,
+    ISO_2022_Get_Unicode_سيٽ,
 
-    nullptr,
-    nullptr
+    خالي_اشارو,
+    خالي_اشارو
 };
-static const UConverterStaticData _ISO2022JPStaticData={
-    sizeof(UConverterStaticData),
+ساكن ثابت UConverter_Static_معلومات ISO2022_JPStatic_معلومات={
+    حجم(UConverter_Static_معلومات),
     "ISO_2022_JP",
     0,
     UCNV_IBM,
@@ -3854,49 +3854,49 @@ static const UConverterStaticData _ISO2022JPStaticData={
     6, /* max 6 bytes per char16_t: 4-byte escape sequence + DBCS */
     { 0x1a, 0, 0, 0 },
     1,
-    false,
-    false,
+    خطأ,
+    خطأ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-namespace {
+نطاق {
 
-const UConverterSharedData _ISO2022JPData=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_ISO2022JPStaticData, &_ISO2022JPImpl);
+ثابت UConverter_Shared_معلومات _ISO2022JPData=
+        UCNV_IMMUTABLE_SHARED_معلومات_INITIALIZER(&ISO2022_JPStatic_معلومات, &_ISO2022JPImpl);
 
 }  // namespace
 
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#إذا !UCONFIG_ONLY_HTML_CONVERSION
 /************* KR ***************/
-static const UConverterImpl _ISO2022KRImpl={
+ساكن ثابت UConverterImpl _ISO2022KRImpl={
     UCNV_ISO_2022,
 
-    nullptr,
-    nullptr,
+    خالي_اشارو,
+    خالي_اشارو,
 
     _ISO2022Open,
     _ISO2022Close,
     _ISO2022Reset,
 
-    UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC,
-    UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC,
+    UConverter_منزل_Unicode_ISO_2022_KR_OFFSETS_LOGIC,
+    UConverter_منزل_Unicode_ISO_2022_KR_OFFSETS_LOGIC,
     UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC,
     UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC,
-    nullptr,
+    خالي_اشارو,
 
-    nullptr,
+    خالي_اشارو,
     _ISO2022getName,
     _ISO_2022_WriteSub,
-    _ISO_2022_SafeClone,
-    _ISO_2022_GetUnicodeSet,
+    ISO_2022_محفوظ_Clone,
+    ISO_2022_Get_Unicode_سيٽ,
 
-    nullptr,
-    nullptr
+    خالي_اشارو,
+    خالي_اشارو
 };
-static const UConverterStaticData _ISO2022KRStaticData={
-    sizeof(UConverterStaticData),
+ساكن ثابت UConverter_Static_معلومات ISO2022_KRStatic_معلومات={
+    حجم(UConverter_Static_معلومات),
     "ISO_2022_KR",
     0,
     UCNV_IBM,
@@ -3905,49 +3905,49 @@ static const UConverterStaticData _ISO2022KRStaticData={
     8, /* max 8 bytes per char16_t */
     { 0x1a, 0, 0, 0 },
     1,
-    false,
-    false,
+    خطأ,
+    خطأ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-namespace {
+نطاق {
 
-const UConverterSharedData _ISO2022KRData=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_ISO2022KRStaticData, &_ISO2022KRImpl);
+ثابت UConverter_Shared_معلومات _ISO2022KRData=
+        UCNV_IMMUTABLE_SHARED_معلومات_INITIALIZER(&ISO2022_KRStatic_معلومات, &_ISO2022KRImpl);
 
 }  // namespace
 
 /*************** CN ***************/
-static const UConverterImpl _ISO2022CNImpl={
+ساكن ثابت UConverterImpl _ISO2022CNImpl={
 
     UCNV_ISO_2022,
 
-    nullptr,
-    nullptr,
+    خالي_اشارو,
+    خالي_اشارو,
 
     _ISO2022Open,
     _ISO2022Close,
     _ISO2022Reset,
 
-    UConverter_toUnicode_ISO_2022_CN_OFFSETS_LOGIC,
-    UConverter_toUnicode_ISO_2022_CN_OFFSETS_LOGIC,
+    UConverter_منزل_Unicode_ISO_2022_CN_OFFSETS_LOGIC,
+    UConverter_منزل_Unicode_ISO_2022_CN_OFFSETS_LOGIC,
     UConverter_fromUnicode_ISO_2022_CN_OFFSETS_LOGIC,
     UConverter_fromUnicode_ISO_2022_CN_OFFSETS_LOGIC,
-    nullptr,
+    خالي_اشارو,
 
-    nullptr,
+    خالي_اشارو,
     _ISO2022getName,
     _ISO_2022_WriteSub,
-    _ISO_2022_SafeClone,
-    _ISO_2022_GetUnicodeSet,
+    ISO_2022_محفوظ_Clone,
+    ISO_2022_Get_Unicode_سيٽ,
 
-    nullptr,
-    nullptr
+    خالي_اشارو,
+    خالي_اشارو
 };
-static const UConverterStaticData _ISO2022CNStaticData={
-    sizeof(UConverterStaticData),
+ساكن ثابت UConverter_Static_معلومات ISO2022_CNStatic_معلومات={
+    حجم(UConverter_Static_معلومات),
     "ISO_2022_CN",
     0,
     UCNV_IBM,
@@ -3956,19 +3956,19 @@ static const UConverterStaticData _ISO2022CNStaticData={
     8, /* max 8 bytes per char16_t: 4-byte CNS designator + 2 bytes for SS2/SS3 + DBCS */
     { 0x1a, 0, 0, 0 },
     1,
-    false,
-    false,
+    خطأ,
+    خطأ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-namespace {
+نطاق {
 
-const UConverterSharedData _ISO2022CNData=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_ISO2022CNStaticData, &_ISO2022CNImpl);
+ثابت UConverter_Shared_معلومات _ISO2022CNData=
+        UCNV_IMMUTABLE_SHARED_معلومات_INITIALIZER(&ISO2022_CNStatic_معلومات, &_ISO2022CNImpl);
 
 }  // namespace
-#endif /* #if !UCONFIG_ONLY_HTML_CONVERSION */
+#جيڪڏهن_پورو /* #if !UCONFIG_ONLY_HTML_CONVERSION */
 
-#endif /* #if !UCONFIG_NO_LEGACY_CONVERSION */
+#جيڪڏهن_پورو /* #if !UCONFIG_NO_LEGACY_CONVERSION */

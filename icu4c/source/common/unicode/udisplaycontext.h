@@ -7,12 +7,12 @@
 *****************************************************************************************
 */
 
-#ifndef UDISPLAYCONTEXT_H
-#define UDISPLAYCONTEXT_H
+#جيڪڏهن_وصف_نه_ٿيل UDISPLAYCONTEXT_H
+#وصف_ڪريو UDISPLAYCONTEXT_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#إذا !UCONFIG_NO_FORMATTING
 
 /**
  * \file
@@ -24,7 +24,7 @@
  * Note, the specific numeric values are internal and may change.
  * @stable ICU 51
  */
-enum UDisplayContextType {
+تعداد UDisplayContextType {
     /**
      * Type to retrieve the dialect handling setting, e.g.
      * UDISPCTX_STANDARD_NAMES or UDISPCTX_DIALECT_NAMES.
@@ -43,7 +43,7 @@ enum UDisplayContextType {
      * UDISPCTX_LENGTH_FULL, UDISPCTX_LENGTH_SHORT.
      * @stable ICU 54
      */
-    UDISPCTX_TYPE_DISPLAY_LENGTH = 2,
+    UDISPCTX_TYPE_DISPLAY_ڊيگهائي = 2,
     /**
      * Type to retrieve the substitute handling setting, e.g.
      * UDISPCTX_SUBSTITUTE, UDISPCTX_NO_SUBSTITUTE.
@@ -54,14 +54,14 @@ enum UDisplayContextType {
 /**
 *  @stable ICU 51
 */
-typedef enum UDisplayContextType UDisplayContextType;
+تعريفنوع تعداد UDisplayContextType UDisplayContextType;
 
 /**
  * Display context settings.
  * Note, the specific numeric values are internal and may change.
  * @stable ICU 51
  */
-enum UDisplayContext {
+تعداد UDisplayContext {
     /**
      * ================================
      * DIALECT_HANDLING can be set to one of UDISPCTX_STANDARD_NAMES or
@@ -74,14 +74,14 @@ enum UDisplayContext {
      * e.g. en_GB displays as 'English (United Kingdom)'.
      * @stable ICU 51
      */
-    UDISPCTX_STANDARD_NAMES = (UDISPCTX_TYPE_DIALECT_HANDLING<<8) + 0,
+    UDISPCTX_STANDARD_نالا = (UDISPCTX_TYPE_DIALECT_HANDLING<<8) + 0,
     /**
      * A possible setting for DIALECT_HANDLING:
      * use dialect names, when generating a locale name,
      * e.g. en_GB displays as 'British English'.
      * @stable ICU 51
      */
-    UDISPCTX_DIALECT_NAMES = (UDISPCTX_TYPE_DIALECT_HANDLING<<8) + 1,
+    UDISPCTX_DIALECT_نالا = (UDISPCTX_TYPE_DIALECT_HANDLING<<8) + 1,
     /**
      * ================================
      * CAPITALIZATION can be set to one of UDISPCTX_CAPITALIZATION_NONE,
@@ -101,13 +101,13 @@ enum UDisplayContext {
      * formatted with capitalization appropriate for the middle of a sentence.
      * @stable ICU 51
      */
-    UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE = (UDISPCTX_TYPE_CAPITALIZATION<<8) + 1,
+    UDISPCTX_CAPITALIZATION_FOR_وچ_جو_SENTENCE = (UDISPCTX_TYPE_CAPITALIZATION<<8) + 1,
     /**
      * The capitalization context if a date, date symbol or display name is to be
      * formatted with capitalization appropriate for the beginning of a sentence.
      * @stable ICU 51
      */
-    UDISPCTX_CAPITALIZATION_FOR_BEGINNING_OF_SENTENCE = (UDISPCTX_TYPE_CAPITALIZATION<<8) + 2,
+    UDISPCTX_CAPITALIZATION_FOR_BEGINNING_جو_SENTENCE = (UDISPCTX_TYPE_CAPITALIZATION<<8) + 2,
     /**
      * The capitalization context if a date, date symbol or display name is to be
      * formatted with capitalization appropriate for a user-interface list or menu item.
@@ -133,14 +133,14 @@ enum UDisplayContext {
      * e.g. "United States" for US.
      * @stable ICU 54
      */
-    UDISPCTX_LENGTH_FULL = (UDISPCTX_TYPE_DISPLAY_LENGTH<<8) + 0,
+    UDISPCTX_ڊيگهائي_ڀريل = (UDISPCTX_TYPE_DISPLAY_ڊيگهائي<<8) + 0,
     /**
      * A possible setting for DISPLAY_LENGTH:
      * use short names when generating a locale name,
      * e.g. "U.S." for US.
      * @stable ICU 54
      */
-    UDISPCTX_LENGTH_SHORT = (UDISPCTX_TYPE_DISPLAY_LENGTH<<8) + 1,
+    UDISPCTX_ڊيگهائي_SHORT = (UDISPCTX_TYPE_DISPLAY_ڊيگهائي<<8) + 1,
     /**
      * ================================
      * SUBSTITUTE_HANDLING can be set to one of UDISPCTX_SUBSTITUTE or
@@ -166,8 +166,8 @@ enum UDisplayContext {
 /**
 *  @stable ICU 51
 */
-typedef enum UDisplayContext UDisplayContext;
+تعريفنوع تعداد UDisplayContext UDisplayContext;
 
-#endif /* #if !UCONFIG_NO_FORMATTING */
+#جيڪڏهن_پورو /* #if !UCONFIG_NO_FORMATTING */
 
-#endif
+#جيڪڏهن_پورو

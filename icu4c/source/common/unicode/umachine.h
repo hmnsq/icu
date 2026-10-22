@@ -22,8 +22,8 @@
 *   the UTF-handling macros made this unmaintainable.
 */
 
-#ifndef __UMACHINE_H__
-#define __UMACHINE_H__
+#جيڪڏهن_وصف_نه_ٿيل __UMACHINE_H__
+#وصف_ڪريو __UMACHINE_H__
 
 
 /**
@@ -43,14 +43,14 @@
 /* which are contained in the platform-specific file platform.h             */
 /*==========================================================================*/
 
-#include "unicode/ptypes.h" /* platform.h is included in ptypes.h */
+#ضمن "unicode/ptypes.h" /* platform.h is included in ptypes.h */
 
 /*
  * ANSI C headers:
  * stddef.h defines wchar_t
  */
-#include <stdbool.h>
-#include <stddef.h>
+#ضمن <stdbool.h>
+#ضمن <stddef.h>
 
 /*==========================================================================*/
 /* For C wrappers, we use the symbol U_CAPI.                                */
@@ -76,48 +76,48 @@
  * @stable ICU 2.4
  */
 
-#ifdef __cplusplus
-#   define U_CFUNC extern "C"
-#   define U_CDECL_BEGIN extern "C" {
-#   define U_CDECL_END   }
-#else
-#   define U_CFUNC extern
+#جيڪڏهن_وصف_ٿيل __cplusplus
+#   define U_CFUNC خارجي "C"
+#   define U_CDECL_BEGIN خارجي "C" {
+#   define U_CDECL_پڇاڙي   }
+#وإلا
+#   define U_CFUNC خارجي
 #   define U_CDECL_BEGIN
-#   define U_CDECL_END
-#endif
+#   define U_CDECL_پڇاڙي
+#جيڪڏهن_پورو
 
-#ifndef U_ATTRIBUTE_DEPRECATED
+#جيڪڏهن_وصف_نه_ٿيل U_ATTRIBUTE_DEPRECATED
 /**
  * \def U_ATTRIBUTE_DEPRECATED
  *  This is used for GCC specific attributes
  * @internal
  */
-#if U_GCC_MAJOR_MINOR >= 302
+#إذا U_GCC_MAJOR_MINOR >= 302
 #    define U_ATTRIBUTE_DEPRECATED __attribute__ ((deprecated))
 /**
  * \def U_ATTRIBUTE_DEPRECATED
  * This is used for Visual C++ specific attributes 
  * @internal
  */
-#elif defined(_MSC_VER) && (_MSC_VER >= 1400)
+#وإلاإذا defined(_MSC_VER) && (_MSC_VER >= 1400)
 #    define U_ATTRIBUTE_DEPRECATED __declspec(deprecated)
-#else
+#وإلا
 #    define U_ATTRIBUTE_DEPRECATED
-#endif
-#endif
+#جيڪڏهن_پورو
+#جيڪڏهن_پورو
 
 /** This is used to declare a function as a public ICU C API @stable ICU 2.0*/
-#define U_CAPI U_CFUNC U_EXPORT
+#وصف_ڪريو U_CAPI U_CFUNC U_EXPORT
 /** Obsolete/same as U_CAPI; was used to declare a function as a stable public ICU C API*/
-#define U_STABLE U_CAPI
+#وصف_ڪريو U_STABLE U_CAPI
 /** Obsolete/same as U_CAPI; was used to declare a function as a draft public ICU C API  */
-#define U_DRAFT  U_CAPI
+#وصف_ڪريو U_DRAFT  U_CAPI
 /** This is used to declare a function as a deprecated public ICU C API  */
-#define U_DEPRECATED U_CAPI U_ATTRIBUTE_DEPRECATED
+#وصف_ڪريو U_DEPRECATED U_CAPI U_ATTRIBUTE_DEPRECATED
 /** Obsolete/same as U_CAPI; was used to declare a function as an obsolete public ICU C API  */
-#define U_OBSOLETE U_CAPI
+#وصف_ڪريو U_OBSOLETE U_CAPI
 /** Obsolete/same as U_CAPI; was used to declare a function as an internal ICU C API  */
-#define U_INTERNAL U_CAPI
+#وصف_ڪريو U_اندروني U_CAPI
 
 /**
  * \def U_FORCE_INLINE
@@ -129,17 +129,17 @@
  *
  * @internal
  */
-#ifdef U_FORCE_INLINE
+#جيڪڏهن_وصف_ٿيل U_FORCE_INLINE
     // already defined
-#elif defined(U_IN_DOXYGEN)
-#  define U_FORCE_INLINE inline
-#elif (defined(__clang__) && __clang__) || U_GCC_MAJOR_MINOR != 0
+#وإلاإذا defined(U_اندريون_DOXYGEN)
+#  define U_FORCE_INLINE مضمن
+#وإلاإذا (defined(__clang__) && __clang__) || U_GCC_MAJOR_MINOR != 0
 #  define U_FORCE_INLINE [[gnu::always_inline]]
-#elif defined(U_REAL_MSVC)
+#وإلاإذا defined(U_REAL_MSVC)
 #  define U_FORCE_INLINE __forceinline
-#else
-#  define U_FORCE_INLINE inline
-#endif
+#وإلا
+#  define U_FORCE_INLINE مضمن
+#جيڪڏهن_پورو
 
 // Before ICU 65, function-like, multi-statement ICU macros were just defined as
 // series of statements wrapped in { } blocks and the caller could choose to
@@ -165,65 +165,65 @@
  * Defined as the "do" keyword by default.
  * @internal
  */
-#ifndef UPRV_BLOCK_MACRO_BEGIN
-#define UPRV_BLOCK_MACRO_BEGIN do
-#endif
+#جيڪڏهن_وصف_نه_ٿيل UPRV_بلاڪ_MACRO_BEGIN
+#وصف_ڪريو UPRV_بلاڪ_MACRO_BEGIN افعل
+#جيڪڏهن_پورو
 
 /**
  * \def UPRV_BLOCK_MACRO_END
  * Defined as "while (false)" by default.
  * @internal
  */
-#ifndef UPRV_BLOCK_MACRO_END
-#define UPRV_BLOCK_MACRO_END while (false)
-#endif
+#جيڪڏهن_وصف_نه_ٿيل UPRV_بلاڪ_MACRO_پڇاڙي
+#وصف_ڪريو UPRV_بلاڪ_MACRO_پڇاڙي طالما (false)
+#جيڪڏهن_پورو
 
 /*==========================================================================*/
 /* limits for int32_t etc., like in POSIX inttypes.h                        */
 /*==========================================================================*/
 
-#ifndef INT8_MIN
+#جيڪڏهن_وصف_نه_ٿيل INT8_MIN
 /** The smallest value an 8 bit signed integer can hold @stable ICU 2.0 */
 #   define INT8_MIN        ((int8_t)(-128))
-#endif
-#ifndef INT16_MIN
+#جيڪڏهن_پورو
+#جيڪڏهن_وصف_نه_ٿيل INT16_MIN
 /** The smallest value a 16 bit signed integer can hold @stable ICU 2.0 */
 #   define INT16_MIN       ((int16_t)(-32767-1))
-#endif
-#ifndef INT32_MIN
+#جيڪڏهن_پورو
+#جيڪڏهن_وصف_نه_ٿيل INT32_MIN
 /** The smallest value a 32 bit signed integer can hold @stable ICU 2.0 */
 #   define INT32_MIN       ((int32_t)(-2147483647-1))
-#endif
+#جيڪڏهن_پورو
 
-#ifndef INT8_MAX
+#جيڪڏهن_وصف_نه_ٿيل INT8_MAX
 /** The largest value an 8 bit signed integer can hold @stable ICU 2.0 */
 #   define INT8_MAX        ((int8_t)(127))
-#endif
-#ifndef INT16_MAX
+#جيڪڏهن_پورو
+#جيڪڏهن_وصف_نه_ٿيل INT16_MAX
 /** The largest value a 16 bit signed integer can hold @stable ICU 2.0 */
 #   define INT16_MAX       ((int16_t)(32767))
-#endif
-#ifndef INT32_MAX
+#جيڪڏهن_پورو
+#جيڪڏهن_وصف_نه_ٿيل INT32_MAX
 /** The largest value a 32 bit signed integer can hold @stable ICU 2.0 */
 #   define INT32_MAX       ((int32_t)(2147483647))
-#endif
+#جيڪڏهن_پورو
 
-#ifndef UINT8_MAX
+#جيڪڏهن_وصف_نه_ٿيل UINT8_MAX
 /** The largest value an 8 bit unsigned integer can hold @stable ICU 2.0 */
 #   define UINT8_MAX       ((uint8_t)(255U))
-#endif
-#ifndef UINT16_MAX
+#جيڪڏهن_پورو
+#جيڪڏهن_وصف_نه_ٿيل UINT16_MAX
 /** The largest value a 16 bit unsigned integer can hold @stable ICU 2.0 */
 #   define UINT16_MAX      ((uint16_t)(65535U))
-#endif
-#ifndef UINT32_MAX
+#جيڪڏهن_پورو
+#جيڪڏهن_وصف_نه_ٿيل UINT32_MAX
 /** The largest value a 32 bit unsigned integer can hold @stable ICU 2.0 */
 #   define UINT32_MAX      ((uint32_t)(4294967295U))
-#endif
+#جيڪڏهن_پورو
 
-#if defined(U_INT64_T_UNAVAILABLE)
-# error int64_t is required for decimal format and rule-based number format.
-#else
+#إذا defined(U_INT64_T_UNAVAILABLE)
+# error int64_t is required لكل decimal format and قاعدو-based عدد format.
+#وإلا
 # ifndef INT64_C
 /**
  * Provides a platform independent way to specify a signed 64-bit integer constant.
@@ -252,7 +252,7 @@
 /** The largest value a 64 bit unsigned integer can hold @stable ICU 2.8 */
 #     define U_UINT64_MAX      ((uint64_t)(UINT64_C(18446744073709551615)))
 # endif
-#endif
+#جيڪڏهن_پورو
 
 /*==========================================================================*/
 /* Boolean data type                                                        */
@@ -266,7 +266,7 @@
  *
  * @stable ICU 2.0
  */
-typedef int8_t UBool;
+تعريفنوع int8_t UBool;
 
 /**
  * \def U_DEFINE_FALSE_AND_TRUE
@@ -280,31 +280,31 @@ typedef int8_t UBool;
  *
  * @internal ICU 68
  */
-#ifdef U_DEFINE_FALSE_AND_TRUE
+#جيڪڏهن_وصف_ٿيل U_DEFINE_FALSE_AND_TRUE
     // Use the predefined value.
-#else
+#وإلا
     // Default to avoiding collision with non-macro definitions of FALSE & TRUE.
 #   define U_DEFINE_FALSE_AND_TRUE 0
-#endif
+#جيڪڏهن_پورو
 
-#if U_DEFINE_FALSE_AND_TRUE || defined(U_IN_DOXYGEN)
-#ifndef TRUE
+#إذا U_DEFINE_FALSE_AND_TRUE || defined(U_اندريون_DOXYGEN)
+#جيڪڏهن_وصف_نه_ٿيل TRUE
 /**
  * The TRUE value of a UBool.
  *
  * @deprecated ICU 68 Use standard "true" instead.
  */
 #   define TRUE  1
-#endif
-#ifndef FALSE
+#جيڪڏهن_پورو
+#جيڪڏهن_وصف_نه_ٿيل FALSE
 /**
  * The FALSE value of a UBool.
  *
  * @deprecated ICU 68 Use standard "false" instead.
  */
 #   define FALSE 0
-#endif
-#endif  // U_DEFINE_FALSE_AND_TRUE
+#جيڪڏهن_پورو
+#جيڪڏهن_پورو  // U_DEFINE_FALSE_AND_TRUE
 
 /*==========================================================================*/
 /* Unicode data types                                                       */
@@ -324,19 +324,19 @@ typedef int8_t UBool;
  *
  * @stable ICU 2.0
  */
-#if !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
+#إذا !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
 #   ifdef __STDC_ISO_10646__
-#       if (U_SIZEOF_WCHAR_T==2)
+#       إذا (U_SIZEOF_WCHAR_T==2)
 #           define U_WCHAR_IS_UTF16
 #       elif (U_SIZEOF_WCHAR_T==4)
 #           define  U_WCHAR_IS_UTF32
 #       endif
 #   elif defined __UCS2__
-#       if (U_PF_OS390 <= U_PLATFORM && U_PLATFORM <= U_PF_OS400) && (U_SIZEOF_WCHAR_T==2)
+#       إذا (U_PF_OS390 <= U_PLATFORM && U_PLATFORM <= U_PF_OS400) && (U_SIZEOF_WCHAR_T==2)
 #           define U_WCHAR_IS_UTF16
 #       endif
 #   elif defined(__UCS4__) || (U_PLATFORM == U_PF_OS400 && defined(__UTF32__))
-#       if (U_SIZEOF_WCHAR_T==4)
+#       إذا (U_SIZEOF_WCHAR_T==4)
 #           define U_WCHAR_IS_UTF32
 #       endif
 #   elif U_PLATFORM_IS_DARWIN_BASED || (U_SIZEOF_WCHAR_T==4 && U_PLATFORM_IS_LINUX_BASED)
@@ -344,25 +344,25 @@ typedef int8_t UBool;
 #   elif U_PLATFORM_HAS_WIN32_API
 #       define U_WCHAR_IS_UTF16
 #   endif
-#endif
+#جيڪڏهن_پورو
 
 /* UChar and UChar32 definitions -------------------------------------------- */
 
 /** Number of bytes in a UChar (always 2). @stable ICU 2.0 */
-#define U_SIZEOF_UCHAR 2
+#وصف_ڪريو U_SIZEOF_UCHAR 2
 
 /**
  * \def U_CHAR16_IS_TYPEDEF
  * If 1, then char16_t is a typedef and not a real type (yet)
  * @internal
  */
-#if defined(_MSC_VER) && (_MSC_VER < 1900)
+#إذا defined(_MSC_VER) && (_MSC_VER < 1900)
 // Versions of Visual Studio/MSVC below 2015 do not support char16_t as a real type,
 // and instead use a typedef.  https://msdn.microsoft.com/library/bb531344.aspx
 # define U_CHAR16_IS_TYPEDEF 1
-#else
+#وإلا
 # define U_CHAR16_IS_TYPEDEF 0
-#endif
+#جيڪڏهن_پورو
 
 
 /**
@@ -389,18 +389,18 @@ typedef int8_t UBool;
  * @stable ICU 4.4
  */
 
-#if 1
+#إذا 1
     // #if 1 is normal. UChar defaults to char16_t in C++.
     // For configuration testing of UChar=uint16_t temporarily change this to #if 0.
-#else
+#وإلا
 #   define UCHAR_TYPE uint16_t
-#endif
+#جيڪڏهن_پورو
 
-#if defined(U_ALL_IMPLEMENTATION) || !defined(UCHAR_TYPE)
-    typedef char16_t UChar;
-#else
-    typedef UCHAR_TYPE UChar;
-#endif
+#إذا defined(U_ALL_IMPLEMENTATION) || !defined(UCHAR_TYPE)
+    تعريفنوع char16_t UChar;
+#وإلا
+    تعريفنوع UCHAR_TYPE UChar;
+#جيڪڏهن_پورو
 
 /**
  * \var OldUChar
@@ -421,13 +421,13 @@ typedef int8_t UBool;
  *
  * @stable ICU 59
  */
-#if U_SIZEOF_WCHAR_T==2
-    typedef wchar_t OldUChar;
-#elif defined(__CHAR16_TYPE__)
-    typedef __CHAR16_TYPE__ OldUChar;
-#else
-    typedef uint16_t OldUChar;
-#endif
+#إذا U_SIZEOF_WCHAR_T==2
+    تعريفنوع wchar_t OldUChar;
+#وإلاإذا defined(__CHAR16_TYPE__)
+    تعريفنوع __CHAR16_TYPE__ OldUChar;
+#وإلا
+    تعريفنوع uint16_t OldUChar;
+#جيڪڏهن_پورو
 
 /**
  * Define UChar32 as a type for single Unicode code points.
@@ -446,7 +446,7 @@ typedef int8_t UBool;
  * @see U_SENTINEL
  * @stable ICU 2.4
  */
-typedef int32_t UChar32;
+تعريفنوع int32_t UChar32;
 
 /**
  * This value is intended for sentinel values for APIs that
@@ -466,8 +466,8 @@ typedef int32_t UChar32;
  * @see UChar32
  * @stable ICU 2.4
  */
-#define U_SENTINEL (-1)
+#وصف_ڪريو U_SENTINEL (-1)
 
-#include "unicode/urename.h"
+#ضمن "unicode/urename.h"
 
-#endif
+#جيڪڏهن_پورو

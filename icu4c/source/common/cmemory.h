@@ -23,72 +23,72 @@
 ******************************************************************************
 */
 
-#ifndef CMEMORY_H
-#define CMEMORY_H
+#جيڪڏهن_وصف_نه_ٿيل CMEMORY_H
+#وصف_ڪريو CMEMORY_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#include <limits.h>
-#include <stddef.h>
-#include <string.h>
-#include "unicode/localpointer.h"
-#include "uassert.h"
+#ضمن <limits.h>
+#ضمن <stddef.h>
+#ضمن <string.h>
+#ضمن "unicode/localpointer.h"
+#ضمن "uassert.h"
 
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-#include <stdio.h>
-#endif
+#إذا U_DEBUG && defined(UPRV_MALLOC_ڳڻپ)
+#ضمن <stdio.h>
+#جيڪڏهن_پورو
 
 // uprv_memcpy and uprv_memmove
-#if defined(__clang__)
-#define uprv_memcpy(dst, src, size) UPRV_BLOCK_MACRO_BEGIN { \
+#إذا defined(__clang__)
+#وصف_ڪريو uprv_memcpy(dst, src, سائيز_2) UPRV_بلاڪ_MACRO_BEGIN { \
     /* Suppress warnings about addresses that will never be NULL */ \
     _Pragma("clang diagnostic push") \
     _Pragma("clang diagnostic ignored \"-Waddress\"") \
-    U_ASSERT(dst != NULL); \
-    U_ASSERT(src != NULL); \
+    U_ASSERT(dst != عدم); \
+    U_ASSERT(src != عدم); \
     _Pragma("clang diagnostic pop") \
-    U_STANDARD_CPP_NAMESPACE memcpy(dst, src, size); \
-} UPRV_BLOCK_MACRO_END
-#define uprv_memmove(dst, src, size) UPRV_BLOCK_MACRO_BEGIN { \
+    U_STANDARD_CPP_NAMESPACE يادگيري_نقل(dst, src, سائيز_2); \
+} UPRV_بلاڪ_MACRO_پڇاڙي
+#وصف_ڪريو uprv_memmove(dst, src, سائيز_2) UPRV_بلاڪ_MACRO_BEGIN { \
     /* Suppress warnings about addresses that will never be NULL */ \
     _Pragma("clang diagnostic push") \
     _Pragma("clang diagnostic ignored \"-Waddress\"") \
-    U_ASSERT(dst != NULL); \
-    U_ASSERT(src != NULL); \
+    U_ASSERT(dst != عدم); \
+    U_ASSERT(src != عدم); \
     _Pragma("clang diagnostic pop") \
-    U_STANDARD_CPP_NAMESPACE memmove(dst, src, size); \
-} UPRV_BLOCK_MACRO_END
-#elif defined(__GNUC__)
-#define uprv_memcpy(dst, src, size) UPRV_BLOCK_MACRO_BEGIN { \
+    U_STANDARD_CPP_NAMESPACE memmove(dst, src, سائيز_2); \
+} UPRV_بلاڪ_MACRO_پڇاڙي
+#وإلاإذا defined(__GNUC__)
+#وصف_ڪريو uprv_memcpy(dst, src, سائيز_2) UPRV_بلاڪ_MACRO_BEGIN { \
     /* Suppress warnings about addresses that will never be NULL */ \
     _Pragma("GCC diagnostic push") \
     _Pragma("GCC diagnostic ignored \"-Waddress\"") \
-    U_ASSERT(dst != NULL); \
-    U_ASSERT(src != NULL); \
+    U_ASSERT(dst != عدم); \
+    U_ASSERT(src != عدم); \
     _Pragma("GCC diagnostic pop") \
-    U_STANDARD_CPP_NAMESPACE memcpy(dst, src, size); \
-} UPRV_BLOCK_MACRO_END
-#define uprv_memmove(dst, src, size) UPRV_BLOCK_MACRO_BEGIN { \
+    U_STANDARD_CPP_NAMESPACE يادگيري_نقل(dst, src, سائيز_2); \
+} UPRV_بلاڪ_MACRO_پڇاڙي
+#وصف_ڪريو uprv_memmove(dst, src, سائيز_2) UPRV_بلاڪ_MACRO_BEGIN { \
     /* Suppress warnings about addresses that will never be NULL */ \
     _Pragma("GCC diagnostic push") \
     _Pragma("GCC diagnostic ignored \"-Waddress\"") \
-    U_ASSERT(dst != NULL); \
-    U_ASSERT(src != NULL); \
+    U_ASSERT(dst != عدم); \
+    U_ASSERT(src != عدم); \
     _Pragma("GCC diagnostic pop") \
-    U_STANDARD_CPP_NAMESPACE memmove(dst, src, size); \
-} UPRV_BLOCK_MACRO_END
-#else
-#define uprv_memcpy(dst, src, size) UPRV_BLOCK_MACRO_BEGIN { \
-    U_ASSERT(dst != NULL); \
-    U_ASSERT(src != NULL); \
-    U_STANDARD_CPP_NAMESPACE memcpy(dst, src, size); \
-} UPRV_BLOCK_MACRO_END
-#define uprv_memmove(dst, src, size) UPRV_BLOCK_MACRO_BEGIN { \
-    U_ASSERT(dst != NULL); \
-    U_ASSERT(src != NULL); \
-    U_STANDARD_CPP_NAMESPACE memmove(dst, src, size); \
-} UPRV_BLOCK_MACRO_END
-#endif
+    U_STANDARD_CPP_NAMESPACE memmove(dst, src, سائيز_2); \
+} UPRV_بلاڪ_MACRO_پڇاڙي
+#وإلا
+#وصف_ڪريو uprv_memcpy(dst, src, سائيز_2) UPRV_بلاڪ_MACRO_BEGIN { \
+    U_ASSERT(dst != عدم); \
+    U_ASSERT(src != عدم); \
+    U_STANDARD_CPP_NAMESPACE يادگيري_نقل(dst, src, سائيز_2); \
+} UPRV_بلاڪ_MACRO_پڇاڙي
+#وصف_ڪريو uprv_memmove(dst, src, سائيز_2) UPRV_بلاڪ_MACRO_BEGIN { \
+    U_ASSERT(dst != عدم); \
+    U_ASSERT(src != عدم); \
+    U_STANDARD_CPP_NAMESPACE memmove(dst, src, سائيز_2); \
+} UPRV_بلاڪ_MACRO_پڇاڙي
+#جيڪڏهن_پورو
 
 /**
  * \def UPRV_LENGTHOF
@@ -97,22 +97,22 @@
  * @return The length of the array, in elements
  * @internal
  */
-#define UPRV_LENGTHOF(array) (int32_t)(sizeof(array)/sizeof((array)[0]))
-#define uprv_memset(buffer, mark, size) U_STANDARD_CPP_NAMESPACE memset(buffer, mark, size)
-#define uprv_memcmp(buffer1, buffer2, size) U_STANDARD_CPP_NAMESPACE memcmp(buffer1, buffer2,size)
-#define uprv_memchr(ptr, value, num) U_STANDARD_CPP_NAMESPACE memchr(ptr, value, num)
+#وصف_ڪريو UPRV_LENGTHOF(array) (int32_t)(حجم(array)/حجم((array)[0]))
+#وصف_ڪريو uprv_memset(بفر, mark, سائيز_2) U_STANDARD_CPP_NAMESPACE memset(بفر, mark, سائيز_2)
+#وصف_ڪريو uprv_memcmp(buffer1, buffer2, سائيز_2) U_STANDARD_CPP_NAMESPACE memcmp(buffer1, buffer2,سائيز_2)
+#وصف_ڪريو uprv_memchr(ptr, قدر_2, انگ) U_STANDARD_CPP_NAMESPACE memchr(ptr, قدر_2, انگ)
 
-U_CAPI void * U_EXPORT2
-uprv_malloc(size_t s) U_MALLOC_ATTR U_ALLOC_SIZE_ATTR(1);
+U_CAPI فراغ * U_EXPORT2
+uprv_malloc(size_t s) U_MALLOC_ATTR U_ALLOC_سائيز_ATTR(1);
 
-U_CAPI void * U_EXPORT2
-uprv_realloc(void *mem, size_t size) U_ALLOC_SIZE_ATTR(2);
+U_CAPI فراغ * U_EXPORT2
+uprv_realloc(فراغ *mem, size_t سائيز_2) U_ALLOC_سائيز_ATTR(2);
 
-U_CAPI void U_EXPORT2
-uprv_free(void *mem);
+U_CAPI فراغ U_EXPORT2
+uprv_free(فراغ *mem);
 
-U_CAPI void * U_EXPORT2
-uprv_calloc(size_t num, size_t size) U_MALLOC_ATTR U_ALLOC_SIZE_ATTR2(1,2);
+U_CAPI فراغ * U_EXPORT2
+uprv_calloc(size_t انگ, size_t سائيز_2) U_MALLOC_ATTR U_ALLOC_سائيز_ATTR2(1,2);
 
 /**
  * Get the least significant bits of a pointer (a memory address).
@@ -121,7 +121,7 @@ uprv_calloc(size_t num, size_t size) U_MALLOC_ATTR U_ALLOC_SIZE_ATTR2(1,2);
  *
  * uintptr_t is the most appropriate integer type to cast to.
  */
-#define U_POINTER_MASK_LSB(ptr, mask) ((uintptr_t)(ptr) & (mask))
+#وصف_ڪريو U_اشارو_نقاب_LSB(ptr, نقاب) ((uintptr_t)(ptr) & (نقاب))
 
 /**
  * Create & return an instance of "type" in statically allocated storage.
@@ -142,9 +142,9 @@ uprv_calloc(size_t num, size_t size) U_MALLOC_ATTR U_ALLOC_SIZE_ATTR2(1,2);
  * This is defined as a macro rather than a template function because each invocation
  * must define distinct static storage for the object being returned.
  */
-#define STATIC_NEW(type) [] () { \
-    alignas(type) static char storage[sizeof(type)]; \
-    return new(storage) type();} ()
+#وصف_ڪريو STATIC_NEW(type) [] () { \
+    alignas(type) ساكن حرف storage[حجم(type)]; \
+    أرجع new(storage) type();} ()
 
 /**
   *  Heap clean up function, called from u_cleanup()
@@ -152,7 +152,7 @@ uprv_calloc(size_t num, size_t size) U_MALLOC_ATTR U_ALLOC_SIZE_ATTR2(1,2);
   *    Does NOT deallocate any remaining allocated memory.
   */
 U_CFUNC UBool 
-cmemory_cleanup(void);
+cmemory_cleanup(فراغ);
 
 /**
  * A function called by <TT>uhash_remove</TT>,
@@ -161,21 +161,21 @@ cmemory_cleanup(void);
  * @param obj A key or value stored in a hashtable
  * @see uprv_deleteUObject
  */
-typedef void U_CALLCONV UObjectDeleter(void* obj);
+تعريفنوع فراغ U_CALLCONV UObjectDeleter(فراغ* obj);
 
 /**
  * Deleter for UObject instances.
  * Works for all subclasses of UObject because it has a virtual destructor.
  */
-U_CAPI void U_EXPORT2
-uprv_deleteUObject(void *obj);
+U_CAPI فراغ U_EXPORT2
+uprv_deleteUObject(فراغ *obj);
 
-#ifdef __cplusplus
+#جيڪڏهن_وصف_ٿيل __cplusplus
 
-#include <memory>
-#include <utility>
-#include <type_traits>
-#include "unicode/uobject.h"
+#ضمن <memory>
+#ضمن <utility>
+#ضمن <type_traits>
+#ضمن "unicode/uobject.h"
 
 U_NAMESPACE_BEGIN
 
@@ -190,28 +190,28 @@ U_NAMESPACE_BEGIN
  * @see prv::make_unique
  * @deprecated use prv::make_unique & prv::make_unique_for_overwrite
  */
-template<typename T>
-class LocalMemory : public LocalPointerBase<T> {
-public:
-    using LocalPointerBase<T>::operator*;
-    using LocalPointerBase<T>::operator->;
+سانچو<typename T>
+class Local_يادگيري : عام Local_اشارو_بنياد<T> {
+عام:
+    using Local_اشارو_بنياد<T>::عامل*;
+    using Local_اشارو_بنياد<T>::عامل->;
     /**
      * Constructor takes ownership.
      * @param p simple pointer to an array of T items that is adopted
      */
-    explicit LocalMemory(T *p=nullptr) : LocalPointerBase<T>(p) {}
+    explicit Local_يادگيري(T *p=nullptr) : Local_اشارو_بنياد<T>(p) {}
     /**
      * Move constructor, leaves src with isNull().
      * @param src source smart pointer
      */
-    LocalMemory(LocalMemory<T> &&src) noexcept : LocalPointerBase<T>(src.ptr) {
+    Local_يادگيري(Local_يادگيري<T> &&src) noexcept : Local_اشارو_بنياد<T>(src.ptr) {
         src.ptr=nullptr;
     }
     /**
      * Destructor deletes the memory it owns.
      */
-    ~LocalMemory() {
-        uprv_free(LocalPointerBase<T>::ptr);
+    ~Local_يادگيري() {
+        uprv_free(Local_اشارو_بنياد<T>::ptr);
     }
     /**
      * Move assignment operator, leaves src with isNull().
@@ -219,37 +219,37 @@ public:
      * @param src source smart pointer
      * @return *this
      */
-    LocalMemory<T>& operator=(LocalMemory<T>&& src) noexcept U_LIFETIME_BOUND {
-        uprv_free(LocalPointerBase<T>::ptr);
-        LocalPointerBase<T>::ptr=src.ptr;
+    Local_يادگيري<T>& عامل=(Local_يادگيري<T>&& src) noexcept U_LIFETIME_BOUND {
+        uprv_free(Local_اشارو_بنياد<T>::ptr);
+        Local_اشارو_بنياد<T>::ptr=src.ptr;
         src.ptr=nullptr;
-        return *this;
+        أرجع *this;
     }
     /**
      * Swap pointers.
      * @param other other smart pointer
      */
-    void swap(LocalMemory<T> &other) noexcept {
-        T *temp=LocalPointerBase<T>::ptr;
-        LocalPointerBase<T>::ptr=other.ptr;
-        other.ptr=temp;
+    فراغ مٽا_سٽا(Local_يادگيري<T> &other) noexcept {
+        T *عارضي=Local_اشارو_بنياد<T>::ptr;
+        Local_اشارو_بنياد<T>::ptr=other.ptr;
+        other.ptr=عارضي;
     }
     /**
      * Non-member LocalMemory swap function.
      * @param p1 will get p2's pointer
      * @param p2 will get p1's pointer
      */
-    friend inline void swap(LocalMemory<T> &p1, LocalMemory<T> &p2) noexcept {
-        p1.swap(p2);
+    دوست مضمن فراغ مٽا_سٽا(Local_يادگيري<T> &p1, Local_يادگيري<T> &p2) noexcept {
+        p1.مٽا_سٽا(p2);
     }
     /**
      * Deletes the array it owns,
      * and adopts (takes ownership of) the one passed in.
      * @param p simple pointer to an array of T items that is adopted
      */
-    void adoptInstead(T *p) {
-        uprv_free(LocalPointerBase<T>::ptr);
-        LocalPointerBase<T>::ptr=p;
+    فراغ adoptInstead(T *p) {
+        uprv_free(Local_اشارو_بنياد<T>::ptr);
+        Local_اشارو_بنياد<T>::ptr=p;
     }
     /**
      * Deletes the array it owns, allocates a new one and reset its bytes to 0.
@@ -259,7 +259,7 @@ public:
      * @param newCapacity must be >0
      * @return the allocated array pointer, or nullptr if the allocation failed
      */
-    inline T* allocateInsteadAndReset(int32_t newCapacity = 1) U_LIFETIME_BOUND;
+    مضمن T* allocateInsteadAndReset(int32_t new_صلاحيت = 1) U_LIFETIME_BOUND;
     /**
      * Deletes the array it owns and allocates a new one, copying length T items.
      * Returns the new array pointer.
@@ -271,49 +271,49 @@ public:
      *               which the caller must track because the LocalMemory does not track it
      * @return the allocated array pointer, or nullptr if the allocation failed
      */
-    inline T* allocateInsteadAndCopy(int32_t newCapacity = 1, int32_t length = 0) U_LIFETIME_BOUND;
+    مضمن T* allocateInsteadAndCopy(int32_t new_صلاحيت = 1, int32_t ڊيگهائي = 0) U_LIFETIME_BOUND;
     /**
      * Array item access (writable).
      * No index bounds check.
      * @param i array index
      * @return reference to the array item
      */
-    T& operator[](ptrdiff_t i) const U_LIFETIME_BOUND { return LocalPointerBase<T>::ptr[i]; }
+    T& عامل[](ptrdiff_t i) ثابت U_LIFETIME_BOUND { أرجع Local_اشارو_بنياد<T>::ptr[i]; }
 };
 
-template <typename T>
-inline T* LocalMemory<T>::allocateInsteadAndReset(int32_t newCapacity) U_LIFETIME_BOUND {
-    if(newCapacity>0) {
-        T *p=(T *)uprv_malloc(newCapacity*sizeof(T));
-        if(p!=nullptr) {
-            uprv_memset(p, 0, newCapacity*sizeof(T));
-            uprv_free(LocalPointerBase<T>::ptr);
-            LocalPointerBase<T>::ptr=p;
+سانچو <typename T>
+مضمن T* Local_يادگيري<T>::allocateInsteadAndReset(int32_t new_صلاحيت) U_LIFETIME_BOUND {
+    إذا(new_صلاحيت>0) {
+        T *p=(T *)uprv_malloc(new_صلاحيت*حجم(T));
+        إذا(p!=nullptr) {
+            uprv_memset(p, 0, new_صلاحيت*حجم(T));
+            uprv_free(Local_اشارو_بنياد<T>::ptr);
+            Local_اشارو_بنياد<T>::ptr=p;
         }
-        return p;
-    } else {
-        return nullptr;
+        أرجع p;
+    } وإلا {
+        أرجع nullptr;
     }
 }
 
-template <typename T>
-inline T* LocalMemory<T>::allocateInsteadAndCopy(int32_t newCapacity,
-                                                 int32_t length) U_LIFETIME_BOUND {
-    if(newCapacity>0) {
-        T *p=(T *)uprv_malloc(newCapacity*sizeof(T));
-        if(p!=nullptr) {
-            if(length>0) {
-                if(length>newCapacity) {
-                    length=newCapacity;
+سانچو <typename T>
+مضمن T* Local_يادگيري<T>::allocateInsteadAndCopy(int32_t new_صلاحيت,
+                                                 int32_t ڊيگهائي) U_LIFETIME_BOUND {
+    إذا(new_صلاحيت>0) {
+        T *p=(T *)uprv_malloc(new_صلاحيت*حجم(T));
+        إذا(p!=nullptr) {
+            إذا(ڊيگهائي>0) {
+                إذا(ڊيگهائي>new_صلاحيت) {
+                    ڊيگهائي=new_صلاحيت;
                 }
-                uprv_memcpy(p, LocalPointerBase<T>::ptr, (size_t)length*sizeof(T));
+                uprv_memcpy(p, Local_اشارو_بنياد<T>::ptr, (size_t)ڊيگهائي*حجم(T));
             }
-            uprv_free(LocalPointerBase<T>::ptr);
-            LocalPointerBase<T>::ptr=p;
+            uprv_free(Local_اشارو_بنياد<T>::ptr);
+            Local_اشارو_بنياد<T>::ptr=p;
         }
-        return p;
-    } else {
-        return nullptr;
+        أرجع p;
+    } وإلا {
+        أرجع nullptr;
     }
 }
 
@@ -335,61 +335,61 @@ inline T* LocalMemory<T>::allocateInsteadAndCopy(int32_t newCapacity,
  * - LocalArray in localpointer.h if you know the length ahead of time
  * - MaybeStackVector if you know the length at runtime
  */
-template<typename T, int32_t stackCapacity>
-class MaybeStackArray {
-public:
+سانچو<typename T, int32_t ڍير_صلاحيت>
+class Maybe_ڍير_Array {
+عام:
     // No heap allocation. Use only on the stack.
-    static void* U_EXPORT2 operator new(size_t) noexcept = delete;
-    static void* U_EXPORT2 operator new[](size_t) noexcept = delete;
-    static void* U_EXPORT2 operator new(size_t, void*) noexcept = delete;
+    ساكن فراغ* U_EXPORT2 عامل new(size_t) noexcept = delete;
+    ساكن فراغ* U_EXPORT2 عامل new[](size_t) noexcept = delete;
+    ساكن فراغ* U_EXPORT2 عامل new(size_t, فراغ*) noexcept = delete;
 
     /**
      * Default constructor initializes with internal T[stackCapacity] buffer.
      */
-    MaybeStackArray() : ptr(stackArray), capacity(stackCapacity), needToRelease(false) {}
+    Maybe_ڍير_Array() : ptr(ڍير_Array), صلاحيت(ڍير_صلاحيت), need_منزل_Release(false) {}
     /**
      * Automatically allocates the heap array if the argument is larger than the stack capacity.
      * Intended for use when an approximate capacity is known at compile time but the true
      * capacity is not known until runtime.
      */
-    MaybeStackArray(int32_t newCapacity, UErrorCode status) : MaybeStackArray() {
-        if (U_FAILURE(status)) {
-            return;
+    Maybe_ڍير_Array(int32_t new_صلاحيت, UError_ڪوڊ حالت) : Maybe_ڍير_Array() {
+        إذا (U_FAILURE(حالت)) {
+            أرجع;
         }
-        if (capacity < newCapacity) {
-            if (resize(newCapacity) == nullptr) {
-                status = U_MEMORY_ALLOCATION_ERROR;
+        إذا (صلاحيت < new_صلاحيت) {
+            إذا (resize(new_صلاحيت) == nullptr) {
+                حالت = U_يادگيري_ورهاست_ERROR;
             }
         }
     }
     /**
      * Destructor deletes the array (if owned).
      */
-    ~MaybeStackArray() { releaseArray(); }
+    ~Maybe_ڍير_Array() { releaseArray(); }
     /**
      * Move constructor: transfers ownership or copies the stack array.
      */
-    MaybeStackArray(MaybeStackArray<T, stackCapacity> &&src) noexcept;
+    Maybe_ڍير_Array(Maybe_ڍير_Array<T, ڍير_صلاحيت> &&src) noexcept;
     /**
      * Move assignment: transfers ownership or copies the stack array.
      */
-    MaybeStackArray<T, stackCapacity>&
-    operator=(MaybeStackArray<T, stackCapacity>&& src) noexcept U_LIFETIME_BOUND;
+    Maybe_ڍير_Array<T, ڍير_صلاحيت>&
+    عامل=(Maybe_ڍير_Array<T, ڍير_صلاحيت>&& src) noexcept U_LIFETIME_BOUND;
     /**
      * Returns the array capacity (number of T items).
      * @return array capacity
      */
-    int32_t getCapacity() const { return capacity; }
+    int32_t get_صلاحيت() ثابت { أرجع صلاحيت; }
     /**
      * Access without ownership change.
      * @return the array pointer
      */
-    T* getAlias() const U_LIFETIME_BOUND { return ptr; }
+    T* getAlias() ثابت U_LIFETIME_BOUND { أرجع ptr; }
     /**
      * Returns the array limit. Simple convenience method.
      * @return getAlias()+getCapacity()
      */
-    T* getArrayLimit() const U_LIFETIME_BOUND { return getAlias() + capacity; }
+    T* get_Array_حد_بندي() ثابت U_LIFETIME_BOUND { أرجع getAlias() + صلاحيت; }
     // No "operator T *() const" because that can make
     // expressions like mbs[index] ambiguous for some compilers.
     /**
@@ -398,26 +398,26 @@ public:
      * @param i array index
      * @return reference to the array item
      */
-    const T& operator[](ptrdiff_t i) const U_LIFETIME_BOUND { return ptr[i]; }
+    ثابت T& عامل[](ptrdiff_t i) ثابت U_LIFETIME_BOUND { أرجع ptr[i]; }
     /**
      * Array item access (writable).
      * No index bounds check.
      * @param i array index
      * @return reference to the array item
      */
-    T& operator[](ptrdiff_t i) U_LIFETIME_BOUND { return ptr[i]; }
+    T& عامل[](ptrdiff_t i) U_LIFETIME_BOUND { أرجع ptr[i]; }
     /**
      * Deletes the array (if owned) and aliases another one, no transfer of ownership.
      * If the arguments are illegal, then the current array is unchanged.
      * @param otherArray must not be nullptr
      * @param otherCapacity must be >0
      */
-    void aliasInstead(T *otherArray, int32_t otherCapacity) {
-        if(otherArray!=nullptr && otherCapacity>0) {
+    فراغ aliasInstead(T *otherArray, int32_t other_صلاحيت) {
+        إذا(otherArray!=nullptr && other_صلاحيت>0) {
             releaseArray();
             ptr=otherArray;
-            capacity=otherCapacity;
-            needToRelease=false;
+            صلاحيت=other_صلاحيت;
+            need_منزل_Release=false;
         }
     }
     /**
@@ -430,7 +430,7 @@ public:
      * @param length number of T items to be copied from the old array to the new one
      * @return the allocated array pointer, or nullptr if the allocation failed
      */
-    inline T* resize(int32_t newCapacity, int32_t length = 0) U_LIFETIME_BOUND;
+    مضمن T* resize(int32_t new_صلاحيت, int32_t ڊيگهائي = 0) U_LIFETIME_BOUND;
     /**
      * Gives up ownership of the array if owned, or else clones it,
      * copying length T items; resets itself to the internal stack array.
@@ -441,124 +441,124 @@ public:
      * @return the array pointer;
      *         caller becomes responsible for deleting the array
      */
-    inline T *orphanOrClone(int32_t length, int32_t &resultCapacity);
+    مضمن T *orphanOrClone(int32_t ڊيگهائي, int32_t &نتيجو_صلاحيت);
 
-protected:
+محمي:
     // Resizes the array to the size of src, then copies the contents of src.
-    void copyFrom(const MaybeStackArray &src, UErrorCode &status) {
-        if (U_FAILURE(status)) {
-            return;
+    فراغ copyFrom(ثابت Maybe_ڍير_Array &src, UError_ڪوڊ &حالت) {
+        إذا (U_FAILURE(حالت)) {
+            أرجع;
         }
-        if (this->resize(src.capacity, 0) == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-            return;
+        إذا (this->resize(src.صلاحيت, 0) == nullptr) {
+            حالت = U_يادگيري_ورهاست_ERROR;
+            أرجع;
         }
-        uprv_memcpy(this->ptr, src.ptr, (size_t)capacity * sizeof(T));
+        uprv_memcpy(this->ptr, src.ptr, (size_t)صلاحيت * حجم(T));
     }
 
-private:
+خاص:
     T *ptr;
-    int32_t capacity;
-    UBool needToRelease;
-    T stackArray[stackCapacity];
-    void releaseArray() {
-        if(needToRelease) {
+    int32_t صلاحيت;
+    UBool need_منزل_Release;
+    T ڍير_Array[ڍير_صلاحيت];
+    فراغ releaseArray() {
+        إذا(need_منزل_Release) {
             uprv_free(ptr);
         }
     }
-    void resetToStackArray() {
-        ptr=stackArray;
-        capacity=stackCapacity;
-        needToRelease=false;
+    فراغ reset_منزل_ڍير_Array() {
+        ptr=ڍير_Array;
+        صلاحيت=ڍير_صلاحيت;
+        need_منزل_Release=false;
     }
     /* No comparison operators with other MaybeStackArray's. */
-    bool operator==(const MaybeStackArray & /*other*/) = delete;
-    bool operator!=(const MaybeStackArray & /*other*/) = delete;
+    bool عامل==(ثابت Maybe_ڍير_Array & /*other*/) = delete;
+    bool عامل!=(ثابت Maybe_ڍير_Array & /*other*/) = delete;
     /* No ownership transfer: No copy constructor, no assignment operator. */
-    MaybeStackArray(const MaybeStackArray & /*other*/) = delete;
-    void operator=(const MaybeStackArray & /*other*/) = delete;
+    Maybe_ڍير_Array(ثابت Maybe_ڍير_Array & /*other*/) = delete;
+    فراغ عامل=(ثابت Maybe_ڍير_Array & /*other*/) = delete;
 };
 
-template<typename T, int32_t stackCapacity>
-icu::MaybeStackArray<T, stackCapacity>::MaybeStackArray(
-        MaybeStackArray <T, stackCapacity>&& src) noexcept
-        : ptr(src.ptr), capacity(src.capacity), needToRelease(src.needToRelease) {
-    if (src.ptr == src.stackArray) {
-        ptr = stackArray;
-        uprv_memcpy(stackArray, src.stackArray, sizeof(T) * src.capacity);
-    } else {
-        src.resetToStackArray();  // take ownership away from src
+سانچو<typename T, int32_t ڍير_صلاحيت>
+icu::Maybe_ڍير_Array<T, ڍير_صلاحيت>::Maybe_ڍير_Array(
+        Maybe_ڍير_Array <T, ڍير_صلاحيت>&& src) noexcept
+        : ptr(src.ptr), صلاحيت(src.صلاحيت), need_منزل_Release(src.need_منزل_Release) {
+    إذا (src.ptr == src.ڍير_Array) {
+        ptr = ڍير_Array;
+        uprv_memcpy(ڍير_Array, src.ڍير_Array, حجم(T) * src.صلاحيت);
+    } وإلا {
+        src.reset_منزل_ڍير_Array();  // take ownership away from src
     }
 }
 
-template <typename T, int32_t stackCapacity>
-inline MaybeStackArray<T, stackCapacity>& MaybeStackArray<T, stackCapacity>::operator=(
-    MaybeStackArray<T, stackCapacity>&& src) noexcept U_LIFETIME_BOUND {
+سانچو <typename T, int32_t ڍير_صلاحيت>
+مضمن Maybe_ڍير_Array<T, ڍير_صلاحيت>& Maybe_ڍير_Array<T, ڍير_صلاحيت>::عامل=(
+    Maybe_ڍير_Array<T, ڍير_صلاحيت>&& src) noexcept U_LIFETIME_BOUND {
     releaseArray();  // in case this instance had its own memory allocated
-    capacity = src.capacity;
-    needToRelease = src.needToRelease;
-    if (src.ptr == src.stackArray) {
-        ptr = stackArray;
-        uprv_memcpy(stackArray, src.stackArray, sizeof(T) * src.capacity);
-    } else {
+    صلاحيت = src.صلاحيت;
+    need_منزل_Release = src.need_منزل_Release;
+    إذا (src.ptr == src.ڍير_Array) {
+        ptr = ڍير_Array;
+        uprv_memcpy(ڍير_Array, src.ڍير_Array, حجم(T) * src.صلاحيت);
+    } وإلا {
         ptr = src.ptr;
-        src.resetToStackArray();  // take ownership away from src
+        src.reset_منزل_ڍير_Array();  // take ownership away from src
     }
-    return *this;
+    أرجع *this;
 }
 
-template <typename T, int32_t stackCapacity>
-inline T* MaybeStackArray<T, stackCapacity>::resize(int32_t newCapacity,
-                                                    int32_t length) U_LIFETIME_BOUND {
-    if(newCapacity>0) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-        ::fprintf(::stderr, "MaybeStackArray (resize) alloc %d * %lu\n", newCapacity, sizeof(T));
-#endif
-        T *p=(T *)uprv_malloc(newCapacity*sizeof(T));
-        if(p!=nullptr) {
-            if(length>0) {
-                if(length>capacity) {
-                    length=capacity;
+سانچو <typename T, int32_t ڍير_صلاحيت>
+مضمن T* Maybe_ڍير_Array<T, ڍير_صلاحيت>::resize(int32_t new_صلاحيت,
+                                                    int32_t ڊيگهائي) U_LIFETIME_BOUND {
+    إذا(new_صلاحيت>0) {
+#إذا U_DEBUG && defined(UPRV_MALLOC_ڳڻپ)
+        ::fprintf(::stderr, "MaybeStackArray (resize) alloc %d * %lu\n", new_صلاحيت, حجم(T));
+#جيڪڏهن_پورو
+        T *p=(T *)uprv_malloc(new_صلاحيت*حجم(T));
+        إذا(p!=nullptr) {
+            إذا(ڊيگهائي>0) {
+                إذا(ڊيگهائي>صلاحيت) {
+                    ڊيگهائي=صلاحيت;
                 }
-                if(length>newCapacity) {
-                    length=newCapacity;
+                إذا(ڊيگهائي>new_صلاحيت) {
+                    ڊيگهائي=new_صلاحيت;
                 }
-                uprv_memcpy(p, ptr, (size_t)length*sizeof(T));
+                uprv_memcpy(p, ptr, (size_t)ڊيگهائي*حجم(T));
             }
             releaseArray();
             ptr=p;
-            capacity=newCapacity;
-            needToRelease=true;
+            صلاحيت=new_صلاحيت;
+            need_منزل_Release=true;
         }
-        return p;
-    } else {
-        return nullptr;
+        أرجع p;
+    } وإلا {
+        أرجع nullptr;
     }
 }
 
-template<typename T, int32_t stackCapacity>
-inline T *MaybeStackArray<T, stackCapacity>::orphanOrClone(int32_t length, int32_t &resultCapacity) {
+سانچو<typename T, int32_t ڍير_صلاحيت>
+مضمن T *Maybe_ڍير_Array<T, ڍير_صلاحيت>::orphanOrClone(int32_t ڊيگهائي, int32_t &نتيجو_صلاحيت) {
     T *p;
-    if(needToRelease) {
+    إذا(need_منزل_Release) {
         p=ptr;
-    } else if(length<=0) {
-        return nullptr;
-    } else {
-        if(length>capacity) {
-            length=capacity;
+    } وإلا إذا(ڊيگهائي<=0) {
+        أرجع nullptr;
+    } وإلا {
+        إذا(ڊيگهائي>صلاحيت) {
+            ڊيگهائي=صلاحيت;
         }
-        p=(T *)uprv_malloc(length*sizeof(T));
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-      ::fprintf(::stderr,"MaybeStacArray (orphan) alloc %d * %lu\n", length,sizeof(T));
-#endif
-        if(p==nullptr) {
-            return nullptr;
+        p=(T *)uprv_malloc(ڊيگهائي*حجم(T));
+#إذا U_DEBUG && defined(UPRV_MALLOC_ڳڻپ)
+      ::fprintf(::stderr,"MaybeStacArray (orphan) alloc %d * %lu\n", ڊيگهائي,حجم(T));
+#جيڪڏهن_پورو
+        إذا(p==nullptr) {
+            أرجع nullptr;
         }
-        uprv_memcpy(p, ptr, (size_t)length*sizeof(T));
+        uprv_memcpy(p, ptr, (size_t)ڊيگهائي*حجم(T));
     }
-    resultCapacity=length;
-    resetToStackArray();
-    return p;
+    نتيجو_صلاحيت=ڊيگهائي;
+    reset_منزل_ڍير_Array();
+    أرجع p;
 }
 
 /**
@@ -571,67 +571,67 @@ inline T *MaybeStackArray<T, stackCapacity>::orphanOrClone(int32_t length, int32
  * Unlike LocalMemory and LocalArray, this class never adopts
  * (takes ownership of) another memory block.
  */
-template<typename H, typename T, int32_t stackCapacity>
-class MaybeStackHeaderAndArray {
-public:
+سانچو<typename H, typename T, int32_t ڍير_صلاحيت>
+class Maybe_ڍير_سرو_And_Array {
+عام:
     // No heap allocation. Use only on the stack.
-    static void* U_EXPORT2 operator new(size_t) noexcept = delete;
-    static void* U_EXPORT2 operator new[](size_t) noexcept = delete;
-    static void* U_EXPORT2 operator new(size_t, void*) noexcept = delete;
+    ساكن فراغ* U_EXPORT2 عامل new(size_t) noexcept = delete;
+    ساكن فراغ* U_EXPORT2 عامل new[](size_t) noexcept = delete;
+    ساكن فراغ* U_EXPORT2 عامل new(size_t, فراغ*) noexcept = delete;
 
     /**
      * Default constructor initializes with internal H+T[stackCapacity] buffer.
      */
-    MaybeStackHeaderAndArray() : ptr(&stackHeader), capacity(stackCapacity), needToRelease(false) {}
+    Maybe_ڍير_سرو_And_Array() : ptr(&ڍير_سرو), صلاحيت(ڍير_صلاحيت), need_منزل_Release(false) {}
     /**
      * Destructor deletes the memory (if owned).
      */
-    ~MaybeStackHeaderAndArray() { releaseMemory(); }
+    ~Maybe_ڍير_سرو_And_Array() { release_يادگيري(); }
     /**
      * Returns the array capacity (number of T items).
      * @return array capacity
      */
-    int32_t getCapacity() const { return capacity; }
+    int32_t get_صلاحيت() ثابت { أرجع صلاحيت; }
     /**
      * Access without ownership change.
      * @return the header pointer
      */
-    H* getAlias() const U_LIFETIME_BOUND { return ptr; }
+    H* getAlias() ثابت U_LIFETIME_BOUND { أرجع ptr; }
     /**
      * Returns the array start.
      * @return array start, same address as getAlias()+1
      */
-    T* getArrayStart() const U_LIFETIME_BOUND { return reinterpret_cast<T*>(getAlias() + 1); }
+    T* get_Array_شروعات() ثابت U_LIFETIME_BOUND { أرجع reinterpret_cast<T*>(getAlias() + 1); }
     /**
      * Returns the array limit.
      * @return array limit
      */
-    T* getArrayLimit() const U_LIFETIME_BOUND { return getArrayStart() + capacity; }
+    T* get_Array_حد_بندي() ثابت U_LIFETIME_BOUND { أرجع get_Array_شروعات() + صلاحيت; }
     /**
      * Access without ownership change. Same as getAlias().
      * A class instance can be used directly in expressions that take a T *.
      * @return the header pointer
      */
-    operator H*() const U_LIFETIME_BOUND { return ptr; }
+    عامل H*() ثابت U_LIFETIME_BOUND { أرجع ptr; }
     /**
      * Array item access (writable).
      * No index bounds check.
      * @param i array index
      * @return reference to the array item
      */
-    T& operator[](ptrdiff_t i) U_LIFETIME_BOUND { return getArrayStart()[i]; }
+    T& عامل[](ptrdiff_t i) U_LIFETIME_BOUND { أرجع get_Array_شروعات()[i]; }
     /**
      * Deletes the memory block (if owned) and aliases another one, no transfer of ownership.
      * If the arguments are illegal, then the current memory is unchanged.
      * @param otherArray must not be nullptr
      * @param otherCapacity must be >0
      */
-    void aliasInstead(H *otherMemory, int32_t otherCapacity) {
-        if(otherMemory!=nullptr && otherCapacity>0) {
-            releaseMemory();
-            ptr=otherMemory;
-            capacity=otherCapacity;
-            needToRelease=false;
+    فراغ aliasInstead(H *other_يادگيري, int32_t other_صلاحيت) {
+        إذا(other_يادگيري!=nullptr && other_صلاحيت>0) {
+            release_يادگيري();
+            ptr=other_يادگيري;
+            صلاحيت=other_صلاحيت;
+            need_منزل_Release=false;
         }
     }
     /**
@@ -645,7 +645,7 @@ public:
      * @param length number of T items to be copied from the old array to the new one
      * @return the allocated pointer, or nullptr if the allocation failed
      */
-    inline H* resize(int32_t newCapacity, int32_t length = 0) U_LIFETIME_BOUND;
+    مضمن H* resize(int32_t new_صلاحيت, int32_t ڊيگهائي = 0) U_LIFETIME_BOUND;
     /**
      * Gives up ownership of the memory if owned, or else clones it,
      * copying the header and length T array items; resets itself to the internal memory.
@@ -656,84 +656,84 @@ public:
      * @return the header pointer;
      *         caller becomes responsible for deleting the array
      */
-    inline H *orphanOrClone(int32_t length, int32_t &resultCapacity);
-private:
+    مضمن H *orphanOrClone(int32_t ڊيگهائي, int32_t &نتيجو_صلاحيت);
+خاص:
     H *ptr;
-    int32_t capacity;
-    UBool needToRelease;
+    int32_t صلاحيت;
+    UBool need_منزل_Release;
     // stackHeader must precede stackArray immediately.
-    H stackHeader;
-    T stackArray[stackCapacity];
-    void releaseMemory() {
-        if(needToRelease) {
+    H ڍير_سرو;
+    T ڍير_Array[ڍير_صلاحيت];
+    فراغ release_يادگيري() {
+        إذا(need_منزل_Release) {
             uprv_free(ptr);
         }
     }
     /* No comparison operators with other MaybeStackHeaderAndArray's. */
-    bool operator==(const MaybeStackHeaderAndArray & /*other*/) {return false;}
-    bool operator!=(const MaybeStackHeaderAndArray & /*other*/) {return true;}
+    bool عامل==(ثابت Maybe_ڍير_سرو_And_Array & /*other*/) {أرجع false;}
+    bool عامل!=(ثابت Maybe_ڍير_سرو_And_Array & /*other*/) {أرجع true;}
     /* No ownership transfer: No copy constructor, no assignment operator. */
-    MaybeStackHeaderAndArray(const MaybeStackHeaderAndArray & /*other*/) {}
-    void operator=(const MaybeStackHeaderAndArray & /*other*/) {}
+    Maybe_ڍير_سرو_And_Array(ثابت Maybe_ڍير_سرو_And_Array & /*other*/) {}
+    فراغ عامل=(ثابت Maybe_ڍير_سرو_And_Array & /*other*/) {}
 };
 
-template <typename H, typename T, int32_t stackCapacity>
-inline H* MaybeStackHeaderAndArray<H, T, stackCapacity>::resize(int32_t newCapacity,
-                                                                int32_t length) U_LIFETIME_BOUND {
-    if(newCapacity>=0) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-      ::fprintf(::stderr,"MaybeStackHeaderAndArray alloc %d + %d * %ul\n", sizeof(H),newCapacity,sizeof(T));
-#endif
-        H *p=(H *)uprv_malloc(sizeof(H)+newCapacity*sizeof(T));
-        if(p!=nullptr) {
-            if(length<0) {
-                length=0;
-            } else if(length>0) {
-                if(length>capacity) {
-                    length=capacity;
+سانچو <typename H, typename T, int32_t ڍير_صلاحيت>
+مضمن H* Maybe_ڍير_سرو_And_Array<H, T, ڍير_صلاحيت>::resize(int32_t new_صلاحيت,
+                                                                int32_t ڊيگهائي) U_LIFETIME_BOUND {
+    إذا(new_صلاحيت>=0) {
+#إذا U_DEBUG && defined(UPRV_MALLOC_ڳڻپ)
+      ::fprintf(::stderr,"MaybeStackHeaderAndArray alloc %d + %d * %ul\n", حجم(H),new_صلاحيت,حجم(T));
+#جيڪڏهن_پورو
+        H *p=(H *)uprv_malloc(حجم(H)+new_صلاحيت*حجم(T));
+        إذا(p!=nullptr) {
+            إذا(ڊيگهائي<0) {
+                ڊيگهائي=0;
+            } وإلا إذا(ڊيگهائي>0) {
+                إذا(ڊيگهائي>صلاحيت) {
+                    ڊيگهائي=صلاحيت;
                 }
-                if(length>newCapacity) {
-                    length=newCapacity;
+                إذا(ڊيگهائي>new_صلاحيت) {
+                    ڊيگهائي=new_صلاحيت;
                 }
             }
-            uprv_memcpy(p, ptr, sizeof(H)+(size_t)length*sizeof(T));
-            releaseMemory();
+            uprv_memcpy(p, ptr, حجم(H)+(size_t)ڊيگهائي*حجم(T));
+            release_يادگيري();
             ptr=p;
-            capacity=newCapacity;
-            needToRelease=true;
+            صلاحيت=new_صلاحيت;
+            need_منزل_Release=true;
         }
-        return p;
-    } else {
-        return nullptr;
+        أرجع p;
+    } وإلا {
+        أرجع nullptr;
     }
 }
 
-template<typename H, typename T, int32_t stackCapacity>
-inline H *MaybeStackHeaderAndArray<H, T, stackCapacity>::orphanOrClone(int32_t length,
-                                                                       int32_t &resultCapacity) {
+سانچو<typename H, typename T, int32_t ڍير_صلاحيت>
+مضمن H *Maybe_ڍير_سرو_And_Array<H, T, ڍير_صلاحيت>::orphanOrClone(int32_t ڊيگهائي,
+                                                                       int32_t &نتيجو_صلاحيت) {
     H *p;
-    if(needToRelease) {
+    إذا(need_منزل_Release) {
         p=ptr;
-    } else {
-        if(length<0) {
-            length=0;
-        } else if(length>capacity) {
-            length=capacity;
+    } وإلا {
+        إذا(ڊيگهائي<0) {
+            ڊيگهائي=0;
+        } وإلا إذا(ڊيگهائي>صلاحيت) {
+            ڊيگهائي=صلاحيت;
         }
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-      ::fprintf(::stderr,"MaybeStackHeaderAndArray (orphan) alloc %ul + %d * %lu\n", sizeof(H),length,sizeof(T));
-#endif
-        p=(H *)uprv_malloc(sizeof(H)+length*sizeof(T));
-        if(p==nullptr) {
-            return nullptr;
+#إذا U_DEBUG && defined(UPRV_MALLOC_ڳڻپ)
+      ::fprintf(::stderr,"MaybeStackHeaderAndArray (orphan) alloc %ul + %d * %lu\n", حجم(H),ڊيگهائي,حجم(T));
+#جيڪڏهن_پورو
+        p=(H *)uprv_malloc(حجم(H)+ڊيگهائي*حجم(T));
+        إذا(p==nullptr) {
+            أرجع nullptr;
         }
-        uprv_memcpy(p, ptr, sizeof(H)+(size_t)length*sizeof(T));
+        uprv_memcpy(p, ptr, حجم(H)+(size_t)ڊيگهائي*حجم(T));
     }
-    resultCapacity=length;
-    ptr=&stackHeader;
-    capacity=stackCapacity;
-    needToRelease=false;
-    return p;
+    نتيجو_صلاحيت=ڊيگهائي;
+    ptr=&ڍير_سرو;
+    صلاحيت=ڍير_صلاحيت;
+    need_منزل_Release=false;
+    أرجع p;
 }
 
 /**
@@ -759,35 +759,35 @@ inline H *MaybeStackHeaderAndArray<H, T, stackCapacity>::orphanOrClone(int32_t l
  *
  * It doesn't do anything more than that, and is intentionally kept minimalist.
  */
-template<typename T, int32_t stackCapacity = 8>
-class MemoryPool : public UMemory {
-public:
-    MemoryPool() : fCount(0), fPool() {}
+سانچو<typename T, int32_t ڍير_صلاحيت = 8>
+class يادگيري_Pool : عام UMemory {
+عام:
+    يادگيري_Pool() : f_ڳڻپ(0), fPool() {}
 
-    ~MemoryPool() {
-        for (int32_t i = 0; i < fCount; ++i) {
+    ~يادگيري_Pool() {
+        لكل (int32_t i = 0; i < f_ڳڻپ; ++i) {
             delete fPool[i];
         }
     }
 
-    MemoryPool(const MemoryPool&) = delete;
-    MemoryPool& operator=(const MemoryPool&) = delete;
+    يادگيري_Pool(ثابت يادگيري_Pool&) = delete;
+    يادگيري_Pool& عامل=(ثابت يادگيري_Pool&) = delete;
 
-    MemoryPool(MemoryPool&& other) noexcept : fCount(other.fCount),
+    يادگيري_Pool(يادگيري_Pool&& other) noexcept : f_ڳڻپ(other.f_ڳڻپ),
                                                 fPool(std::move(other.fPool)) {
-        other.fCount = 0;
+        other.f_ڳڻپ = 0;
     }
 
-    MemoryPool& operator=(MemoryPool&& other) noexcept U_LIFETIME_BOUND {
+    يادگيري_Pool& عامل=(يادگيري_Pool&& other) noexcept U_LIFETIME_BOUND {
         // Since `this` may contain instances that need to be deleted, we can't
         // just throw them away and replace them with `other`. The normal way of
         // dealing with this in C++ is to swap `this` and `other`, rather than
         // simply overwrite: the destruction of `other` can then take care of
         // running MemoryPool::~MemoryPool() over the still-to-be-deallocated
         // instances.
-        std::swap(fCount, other.fCount);
-        std::swap(fPool, other.fPool);
-        return *this;
+        std::مٽا_سٽا(f_ڳڻپ, other.f_ڳڻپ);
+        std::مٽا_سٽا(fPool, other.fPool);
+        أرجع *this;
     }
 
     /**
@@ -797,39 +797,39 @@ public:
      * @param args Arguments to be forwarded to the typename T constructor.
      * @return A pointer to the newly created object, or nullptr on error.
      */
-    template <typename... Args>
-    T* create(Args&&... args) U_LIFETIME_BOUND {
-        int32_t capacity = fPool.getCapacity();
-        if (fCount == capacity &&
-            fPool.resize(capacity == stackCapacity ? 4 * capacity : 2 * capacity,
-                         capacity) == nullptr) {
-            return nullptr;
+    سانچو <typename... دليلون>
+    T* create(دليلون&&... دليلون_2) U_LIFETIME_BOUND {
+        int32_t صلاحيت = fPool.get_صلاحيت();
+        إذا (f_ڳڻپ == صلاحيت &&
+            fPool.resize(صلاحيت == ڍير_صلاحيت ? 4 * صلاحيت : 2 * صلاحيت,
+                         صلاحيت) == nullptr) {
+            أرجع nullptr;
         }
-        return fPool[fCount++] = new T(std::forward<Args>(args)...);
+        أرجع fPool[f_ڳڻپ++] = new T(std::forward<دليلون>(دليلون_2)...);
     }
 
-    template <typename... Args>
-    T* createAndCheckErrorCode(UErrorCode& status, Args&&... args) U_LIFETIME_BOUND {
-        if (U_FAILURE(status)) {
-            return nullptr;
+    سانچو <typename... دليلون>
+    T* create_And_Check_Error_ڪوڊ(UError_ڪوڊ& حالت, دليلون&&... دليلون_2) U_LIFETIME_BOUND {
+        إذا (U_FAILURE(حالت)) {
+            أرجع nullptr;
         }
-        T *pointer = this->create(args...);
-        if (U_SUCCESS(status) && pointer == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
+        T *اشارو = this->create(دليلون_2...);
+        إذا (U_SUCCESS(حالت) && اشارو == nullptr) {
+            حالت = U_يادگيري_ورهاست_ERROR;
         }
-        return pointer;
+        أرجع اشارو;
     }
 
     /**
      * @return Number of elements that have been allocated.
      */
-    int32_t count() const {
-        return fCount;
+    int32_t ڳڻپ() ثابت {
+        أرجع f_ڳڻپ;
     }
 
-protected:
-    int32_t fCount;
-    MaybeStackArray<T*, stackCapacity> fPool;
+محمي:
+    int32_t f_ڳڻپ;
+    Maybe_ڍير_Array<T*, ڍير_صلاحيت> fPool;
 };
 
 /**
@@ -852,29 +852,29 @@ protected:
  *         MyType* element = vector[i];
  *     }
  */
-template<typename T, int32_t stackCapacity = 8>
-class MaybeStackVector : protected MemoryPool<T, stackCapacity> {
-public:
-    template <typename... Args>
-    T* emplaceBack(Args&&... args) U_LIFETIME_BOUND {
-        return this->create(args...);
+سانچو<typename T, int32_t ڍير_صلاحيت = 8>
+class Maybe_ڍير_ويڪٽر : محمي يادگيري_Pool<T, ڍير_صلاحيت> {
+عام:
+    سانچو <typename... دليلون>
+    T* emplace_پٺ(دليلون&&... دليلون_2) U_LIFETIME_BOUND {
+        أرجع this->create(دليلون_2...);
     }
 
-    template <typename... Args>
-    T* emplaceBackAndCheckErrorCode(UErrorCode& status, Args&&... args) U_LIFETIME_BOUND {
-        return this->createAndCheckErrorCode(status, args...);
+    سانچو <typename... دليلون>
+    T* emplace_پٺ_And_Check_Error_ڪوڊ(UError_ڪوڊ& حالت, دليلون&&... دليلون_2) U_LIFETIME_BOUND {
+        أرجع this->create_And_Check_Error_ڪوڊ(حالت, دليلون_2...);
     }
 
-    int32_t length() const {
-        return this->fCount;
+    int32_t ڊيگهائي() ثابت {
+        أرجع this->f_ڳڻپ;
     }
 
     T** getAlias() U_LIFETIME_BOUND {
-        return this->fPool.getAlias();
+        أرجع this->fPool.getAlias();
     }
 
-    const T* const* getAlias() const U_LIFETIME_BOUND {
-        return this->fPool.getAlias();
+    ثابت T* ثابت* getAlias() ثابت U_LIFETIME_BOUND {
+        أرجع this->fPool.getAlias();
     }
 
     /**
@@ -883,8 +883,8 @@ public:
      * @param i array index
      * @return reference to the array item
      */
-    const T* operator[](ptrdiff_t i) const U_LIFETIME_BOUND {
-        return this->fPool[i];
+    ثابت T* عامل[](ptrdiff_t i) ثابت U_LIFETIME_BOUND {
+        أرجع this->fPool[i];
     }
 
     /**
@@ -893,24 +893,24 @@ public:
      * @param i array index
      * @return reference to the array item
      */
-    T* operator[](ptrdiff_t i) U_LIFETIME_BOUND {
-        return this->fPool[i];
+    T* عامل[](ptrdiff_t i) U_LIFETIME_BOUND {
+        أرجع this->fPool[i];
     }
 };
 
 namespace prv {
 
-#if U_OVERRIDE_CXX_ALLOCATION
+#إذا U_OVERRIDE_CXX_ورهاست
 
 /**
  * A deleter (as used by std::unique_ptr) that deallocates using `deallocate`.
  * @internal
  */
-template <typename T, void deallocate(void *), typename = void> class Deleter {
-  public:
-    Deleter() = default;
-    void operator()(T *const ptr) const {
-        if constexpr (!std::is_trivially_destructible_v<T>) {
+سانچو <typename T, فراغ deallocate(فراغ *), typename = فراغ> class Deleter {
+  عام:
+    Deleter() = افتراضي;
+    فراغ عامل()(T *ثابت ptr) ثابت {
+        إذا constexpr (!std::is_trivially_destructible_v<T>) {
             ptr->~T();
         }
         deallocate(ptr);
@@ -922,11 +922,11 @@ template <typename T, void deallocate(void *), typename = void> class Deleter {
  * arrays of trivially destructible objects, e.g., int32_t[].
  * @internal
  */
-template <typename T, void deallocate(void *)>
+سانچو <typename T, فراغ deallocate(فراغ *)>
 class Deleter<T[], deallocate, std::enable_if_t<std::is_trivially_destructible_v<T>>> {
-  public:
-    Deleter() = default;
-    void operator()(T *const ptr) const { deallocate(ptr); }
+  عام:
+    Deleter() = افتراضي;
+    فراغ عامل()(T *ثابت ptr) ثابت { deallocate(ptr); }
 };
 
 /**
@@ -934,31 +934,31 @@ class Deleter<T[], deallocate, std::enable_if_t<std::is_trivially_destructible_v
  * arrays of nontrivially destructible objects, e.g., UnicodeString[].
  * @internal
  */
-template <typename T, void deallocate(void *)>
+سانچو <typename T, فراغ deallocate(فراغ *)>
 class Deleter<T[], deallocate, std::enable_if_t<!std::is_trivially_destructible_v<T>>> {
-  public:
-    Deleter(const std::size_t size) : size_(size) {}
-    void operator()(T *const ptr) const {
-        for (std::ptrdiff_t i = static_cast<std::ptrdiff_t>(size_) - 1; i >= 0; --i) {
+  عام:
+    Deleter(ثابت std::size_t سائيز_2) : سائيز(سائيز_2) {}
+    فراغ عامل()(T *ثابت ptr) ثابت {
+        لكل (std::ptrdiff_t i = static_cast<std::ptrdiff_t>(سائيز) - 1; i >= 0; --i) {
             ptr[i]->~T();
         }
         deallocate(ptr);
     }
-  private:
-    const std::size_t size_;
+  خاص:
+    ثابت std::size_t سائيز;
 };
 
 /**
  * An std::unique_ptr that deallocates using uprv_free.
  * @internal
  */
-template <typename T> using unique_ptr = std::unique_ptr<T, Deleter<T, uprv_free>>;
+سانچو <typename T> using unique_ptr = std::unique_ptr<T, Deleter<T, uprv_free>>;
 
-#else
+#وإلا
 
 using std::unique_ptr;
 
-#endif
+#جيڪڏهن_پورو
 
 /**
  * Helper for make_unique<T, Args...>; forwards all but the last of args to the constructor of
@@ -968,26 +968,26 @@ using std::unique_ptr;
  *
  * @internal
  */
-template <typename T, typename... Args, std::size_t... i>
-unique_ptr<T> make_unique_impl(std::tuple<Args...> args,
-                               std::index_sequence<i...> constructor_arg_indices) {
+سانچو <typename T, typename... دليلون, std::size_t... i>
+unique_ptr<T> make_unique_impl(std::tuple<دليلون...> دليلون_2,
+                               std::اشاريو_sequence<i...> constructor_arg_indices) {
     static_assert(std::is_same_v<decltype(constructor_arg_indices),
-                                 std::make_index_sequence<sizeof...(Args) - 1>>);
-    auto &&error = std::get<sizeof...(Args) - 1>(args);
-    static_assert(std::is_same_v<decltype(error), UErrorCode &>);
-    if (U_FAILURE(error)) {
-        return nullptr;
+                                 std::make_اشاريو_sequence<حجم...(دليلون) - 1>>);
+    خودڪار &&error = std::get<حجم...(دليلون) - 1>(دليلون_2);
+    static_assert(std::is_same_v<decltype(error), UError_ڪوڊ &>);
+    إذا (U_FAILURE(error)) {
+        أرجع nullptr;
     }
-#if U_OVERRIDE_CXX_ALLOCATION
-    void *const buffer = uprv_malloc(sizeof(T));
-    if (buffer == nullptr) {
-        error = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+#إذا U_OVERRIDE_CXX_ورهاست
+    فراغ *ثابت بفر = uprv_malloc(حجم(T));
+    إذا (بفر == nullptr) {
+        error = U_يادگيري_ورهاست_ERROR;
+        أرجع nullptr;
     }
-    return unique_ptr<T>(new (buffer) T(std::get<i>(args)...));
-#else
-    return std::make_unique<T>(std::get<i>(args)...);
-#endif
+    أرجع unique_ptr<T>(new (بفر) T(std::get<i>(دليلون_2)...));
+#وإلا
+    أرجع std::make_unique<T>(std::get<i>(دليلون_2)...);
+#جيڪڏهن_پورو
 }
 
 /**
@@ -1008,10 +1008,10 @@ unique_ptr<T> make_unique_impl(std::tuple<Args...> args,
  *
  * @internal
  */
-template <typename T, typename... Args, typename = std::enable_if_t<!std::is_array_v<T>>>
-unique_ptr<T> make_unique(Args &&...args) {
-    return make_unique_impl<T>(std::forward_as_tuple(args...),
-                               std::make_index_sequence<sizeof...(Args) - 1>());
+سانچو <typename T, typename... دليلون, typename = std::enable_if_t<!std::is_array_v<T>>>
+unique_ptr<T> make_unique(دليلون &&...دليلون_2) {
+    أرجع make_unique_impl<T>(std::forward_as_tuple(دليلون_2...),
+                               std::make_اشاريو_sequence<حجم...(دليلون) - 1>());
 }
 
 /**
@@ -1031,37 +1031,37 @@ unique_ptr<T> make_unique(Args &&...args) {
  *
  * @internal
  */
-template <typename T,
+سانچو <typename T,
           // In C++20, this could require is_unbounded_array_v<T>.
           typename = std::enable_if_t<std::is_same_v<std::remove_extent_t<T>[], T>>>
-unique_ptr<T> make_unique(const std::size_t n, UErrorCode &error) {
-    if (U_FAILURE(error)) {
-        return nullptr;
+unique_ptr<T> make_unique(ثابت std::size_t n, UError_ڪوڊ &error) {
+    إذا (U_FAILURE(error)) {
+        أرجع nullptr;
     }
     // In C23/C++26, we could use ckd_mul.
-    constexpr std::size_t maxSize = SIZE_MAX / sizeof(std::remove_extent_t<T>);
-    if (n > maxSize) {
-        error = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    constexpr std::size_t max_سائيز = SIZE_MAX / حجم(std::remove_extent_t<T>);
+    إذا (n > max_سائيز) {
+        error = U_ILLEGAL_دليل_ERROR;
+        أرجع nullptr;
     }
-#if U_OVERRIDE_CXX_ALLOCATION
-    void *const buffer = uprv_malloc(sizeof(std::remove_extent_t<T>) * n);
-    if (buffer == nullptr) {
-        error = U_MEMORY_ALLOCATION_ERROR;
-        if constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
-            return nullptr;
-        } else {
-            return unique_ptr<T>(nullptr, Deleter<T, uprv_free>(0));
+#إذا U_OVERRIDE_CXX_ورهاست
+    فراغ *ثابت بفر = uprv_malloc(حجم(std::remove_extent_t<T>) * n);
+    إذا (بفر == nullptr) {
+        error = U_يادگيري_ورهاست_ERROR;
+        إذا constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
+            أرجع nullptr;
+        } وإلا {
+            أرجع unique_ptr<T>(nullptr, Deleter<T, uprv_free>(0));
         }
     }
-    if constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
-        return unique_ptr<T>(new (buffer) std::remove_extent_t<T>[n]());
-    } else {
-        return unique_ptr<T>(new (buffer) std::remove_extent_t<T>[n](), Deleter<T, uprv_free>(n));
+    إذا constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
+        أرجع unique_ptr<T>(new (بفر) std::remove_extent_t<T>[n]());
+    } وإلا {
+        أرجع unique_ptr<T>(new (بفر) std::remove_extent_t<T>[n](), Deleter<T, uprv_free>(n));
     }
-#else
-    return std::make_unique<T>(n);
-#endif
+#وإلا
+    أرجع std::make_unique<T>(n);
+#جيڪڏهن_پورو
 }
 
 /**
@@ -1083,23 +1083,23 @@ unique_ptr<T> make_unique(const std::size_t n, UErrorCode &error) {
  *
  * @internal
  */
-template <typename T, typename = std::enable_if_t<!std::is_array_v<T>>>
-unique_ptr<T> make_unique_for_overwrite(UErrorCode &error) {
-    if (U_FAILURE(error)) {
-        return nullptr;
+سانچو <typename T, typename = std::enable_if_t<!std::is_array_v<T>>>
+unique_ptr<T> make_unique_for_overwrite(UError_ڪوڊ &error) {
+    إذا (U_FAILURE(error)) {
+        أرجع nullptr;
     }
-#if U_OVERRIDE_CXX_ALLOCATION
-    void *const buffer = uprv_malloc(sizeof(T));
-    if (buffer == nullptr) {
-        error = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+#إذا U_OVERRIDE_CXX_ورهاست
+    فراغ *ثابت بفر = uprv_malloc(حجم(T));
+    إذا (بفر == nullptr) {
+        error = U_يادگيري_ورهاست_ERROR;
+        أرجع nullptr;
     }
-    return unique_ptr<T>(new (buffer) T);
-#elif U_CPLUSPLUS_VERSION >= 20
-    return std::make_unique_for_overwrite<T>();
-#else
-    return unique_ptr<T>(new T);
-#endif
+    أرجع unique_ptr<T>(new (بفر) T);
+#وإلاإذا U_CPLUSPLUS_نسخو >= 20
+    أرجع std::make_unique_for_overwrite<T>();
+#وإلا
+    أرجع unique_ptr<T>(new T);
+#جيڪڏهن_پورو
 }
 
 /**
@@ -1121,44 +1121,44 @@ unique_ptr<T> make_unique_for_overwrite(UErrorCode &error) {
  *
  * @internal
  */
-template <typename T,
+سانچو <typename T,
           // In C++20, this could require is_unbounded_array_v<T>.
           typename = std::enable_if_t<std::is_same_v<std::remove_extent_t<T>[], T>>>
-unique_ptr<T> make_unique_for_overwrite(const std::size_t n, UErrorCode &error) {
-    if (U_FAILURE(error)) {
-        return nullptr;
+unique_ptr<T> make_unique_for_overwrite(ثابت std::size_t n, UError_ڪوڊ &error) {
+    إذا (U_FAILURE(error)) {
+        أرجع nullptr;
     }
     // In C23/C++26, we could use ckd_mul.
-    constexpr std::size_t maxSize = SIZE_MAX / sizeof(std::remove_extent_t<T>);
-    if (n > maxSize) {
-        error = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    constexpr std::size_t max_سائيز = SIZE_MAX / حجم(std::remove_extent_t<T>);
+    إذا (n > max_سائيز) {
+        error = U_ILLEGAL_دليل_ERROR;
+        أرجع nullptr;
     }
-#if U_OVERRIDE_CXX_ALLOCATION
-    void *const buffer = uprv_malloc(sizeof(std::remove_extent_t<T>) * n);
-    if (buffer == nullptr) {
-        error = U_MEMORY_ALLOCATION_ERROR;
-        if constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
-            return nullptr;
-        } else {
-            return unique_ptr<T>(nullptr, Deleter<T, uprv_free>(0));
+#إذا U_OVERRIDE_CXX_ورهاست
+    فراغ *ثابت بفر = uprv_malloc(حجم(std::remove_extent_t<T>) * n);
+    إذا (بفر == nullptr) {
+        error = U_يادگيري_ورهاست_ERROR;
+        إذا constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
+            أرجع nullptr;
+        } وإلا {
+            أرجع unique_ptr<T>(nullptr, Deleter<T, uprv_free>(0));
         }
     }
-    if constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
-        return unique_ptr<T>(new (buffer) std::remove_extent_t<T>[n]);
-    } else {
-        return unique_ptr<T>(new (buffer) std::remove_extent_t<T>[n], Deleter<T, uprv_free>(n));
+    إذا constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
+        أرجع unique_ptr<T>(new (بفر) std::remove_extent_t<T>[n]);
+    } وإلا {
+        أرجع unique_ptr<T>(new (بفر) std::remove_extent_t<T>[n], Deleter<T, uprv_free>(n));
     }
-#elif U_CPLUSPLUS_VERSION >= 20
-    return std::make_unique_for_overwrite<T>(n);
-#else
-    return unique_ptr<T>(new std::remove_extent_t<T>[n]);
-#endif
+#وإلاإذا U_CPLUSPLUS_نسخو >= 20
+    أرجع std::make_unique_for_overwrite<T>(n);
+#وإلا
+    أرجع unique_ptr<T>(new std::remove_extent_t<T>[n]);
+#جيڪڏهن_پورو
 }
 
 }  // namespace prv
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
-#endif  /* __cplusplus */
-#endif  /* CMEMORY_H */
+#جيڪڏهن_پورو  /* __cplusplus */
+#جيڪڏهن_پورو  /* CMEMORY_H */

@@ -5,40 +5,40 @@
  * others. All Rights Reserved.
  */
 
-#include "unicode/unistr.h"
-#include "charstr.h"
-#include "cstring.h"
-#include "pluralmap.h"
+#ضمن "unicode/unistr.h"
+#ضمن "charstr.h"
+#ضمن "cstring.h"
+#ضمن "pluralmap.h"
 
 U_NAMESPACE_BEGIN
 
-static const char * const gPluralForms[] = {
+ساكن ثابت حرف * ثابت gPluralForms[] = {
         "other", "zero", "one", "two", "few", "many"};
 
-PluralMapBase::Category
-PluralMapBase::toCategory(const char *pluralForm) {
-    for (int32_t i = 0; i < UPRV_LENGTHOF(gPluralForms); ++i) {
-        if (uprv_strcmp(pluralForm, gPluralForms[i]) == 0) {
-            return static_cast<Category>(i);
+Plural_Map_بنياد::Category
+Plural_Map_بنياد::منزل_Category(ثابت حرف *pluralForm) {
+    لكل (int32_t i = 0; i < UPRV_LENGTHOF(gPluralForms); ++i) {
+        إذا (uprv_strcmp(pluralForm, gPluralForms[i]) == 0) {
+            أرجع static_cast<Category>(i);
         }
     }
-    return NONE;
+    أرجع NONE;
 }
 
-PluralMapBase::Category
-PluralMapBase::toCategory(const UnicodeString &pluralForm) {
+Plural_Map_بنياد::Category
+Plural_Map_بنياد::منزل_Category(ثابت UnicodeString &pluralForm) {
     CharString cCategory;
-    UErrorCode status = U_ZERO_ERROR;
-    cCategory.appendInvariantChars(pluralForm, status);    
-    return U_FAILURE(status) ? NONE : toCategory(cCategory.data());
+    UError_ڪوڊ حالت = U_ZERO_ERROR;
+    cCategory.appendInvariantChars(pluralForm, حالت);    
+    أرجع U_FAILURE(حالت) ? NONE : منزل_Category(cCategory.معلومات());
 }
 
-const char *PluralMapBase::getCategoryName(Category c) {
-    int32_t index = c;
-    return (index < 0 || index >= UPRV_LENGTHOF(gPluralForms)) ?
-            nullptr : gPluralForms[index];
+ثابت حرف *Plural_Map_بنياد::getCategoryName(Category c) {
+    int32_t اشاريو = c;
+    أرجع (اشاريو < 0 || اشاريو >= UPRV_LENGTHOF(gPluralForms)) ?
+            خالي_اشارو : gPluralForms[اشاريو];
 }
 
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 

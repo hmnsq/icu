@@ -11,395 +11,395 @@
 * created by: Markus W. Scherer
 */
 
-#ifndef __NORM2ALLMODES_H__
-#define __NORM2ALLMODES_H__
+#جيڪڏهن_وصف_نه_ٿيل __NORM2ALLMODES_H__
+#وصف_ڪريو __NORM2ALLMODES_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#إذا !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/edits.h"
-#include "unicode/normalizer2.h"
-#include "unicode/stringoptions.h"
-#include "unicode/unistr.h"
-#include "cpputils.h"
-#include "normalizer2impl.h"
+#ضمن "unicode/edits.h"
+#ضمن "unicode/normalizer2.h"
+#ضمن "unicode/stringoptions.h"
+#ضمن "unicode/unistr.h"
+#ضمن "cpputils.h"
+#ضمن "normalizer2impl.h"
 
 U_NAMESPACE_BEGIN
 
 // Intermediate class:
 // Has Normalizer2Impl and does boilerplate argument checking and setup.
-class Normalizer2WithImpl : public Normalizer2 {
-public:
-    Normalizer2WithImpl(const Normalizer2Impl &ni) : impl(ni) {}
-    virtual ~Normalizer2WithImpl();
+class Normalizer2WithImpl : عام Normalizer2 {
+عام:
+    Normalizer2WithImpl(ثابت Normalizer2Impl &ni) : impl(ni) {}
+    مجازي ~Normalizer2WithImpl();
 
     // normalize
-    virtual UnicodeString&
-    normalize(const UnicodeString& src,
+    مجازي UnicodeString&
+    normalize(ثابت UnicodeString& src,
               UnicodeString& dest U_LIFETIME_BOUND,
-              UErrorCode& errorCode) const override {
-        if(U_FAILURE(errorCode)) {
-            dest.setToBogus();
-            return dest;
+              UError_ڪوڊ& error_ڪوڊ) ثابت override {
+        إذا(U_FAILURE(error_ڪوڊ)) {
+            dest.سيٽ_منزل_Bogus();
+            أرجع dest;
         }
-        const char16_t *sArray=src.getBuffer();
-        if(&dest==&src || sArray==nullptr) {
-            errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            dest.setToBogus();
-            return dest;
+        ثابت char16_t *sArray=src.get_بفر();
+        إذا(&dest==&src || sArray==nullptr) {
+            error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+            dest.سيٽ_منزل_Bogus();
+            أرجع dest;
         }
         dest.remove();
-        ReorderingBuffer buffer(impl, dest);
-        if(buffer.init(src.length(), errorCode)) {
-            normalize(sArray, sArray+src.length(), buffer, errorCode);
+        Reordering_بفر بفر(impl, dest);
+        إذا(بفر.init(src.ڊيگهائي(), error_ڪوڊ)) {
+            normalize(sArray, sArray+src.ڊيگهائي(), بفر, error_ڪوڊ);
         }
-        return dest;
+        أرجع dest;
     }
-    virtual void
-    normalize(const char16_t *src, const char16_t *limit,
-              ReorderingBuffer &buffer, UErrorCode &errorCode) const = 0;
+    مجازي فراغ
+    normalize(ثابت char16_t *src, ثابت char16_t *حد_بندي,
+              Reordering_بفر &بفر, UError_ڪوڊ &error_ڪوڊ) ثابت = 0;
 
     // normalize and append
-    virtual UnicodeString&
-    normalizeSecondAndAppend(UnicodeString& first U_LIFETIME_BOUND,
-                             const UnicodeString& second,
-                             UErrorCode& errorCode) const override {
-        return normalizeSecondAndAppend(first, second, true, errorCode);
+    مجازي UnicodeString&
+    normalize_ٻيو_And_Append(UnicodeString& پهريون U_LIFETIME_BOUND,
+                             ثابت UnicodeString& ٻيو,
+                             UError_ڪوڊ& error_ڪوڊ) ثابت override {
+        أرجع normalize_ٻيو_And_Append(پهريون, ٻيو, true, error_ڪوڊ);
     }
-    virtual UnicodeString&
-    append(UnicodeString& first U_LIFETIME_BOUND,
-           const UnicodeString& second,
-           UErrorCode& errorCode) const override {
-        return normalizeSecondAndAppend(first, second, false, errorCode);
+    مجازي UnicodeString&
+    append(UnicodeString& پهريون U_LIFETIME_BOUND,
+           ثابت UnicodeString& ٻيو,
+           UError_ڪوڊ& error_ڪوڊ) ثابت override {
+        أرجع normalize_ٻيو_And_Append(پهريون, ٻيو, false, error_ڪوڊ);
     }
     UnicodeString&
-    normalizeSecondAndAppend(UnicodeString& first U_LIFETIME_BOUND,
-                             const UnicodeString& second,
+    normalize_ٻيو_And_Append(UnicodeString& پهريون U_LIFETIME_BOUND,
+                             ثابت UnicodeString& ٻيو,
                              UBool doNormalize,
-                             UErrorCode& errorCode) const {
-        uprv_checkCanGetBuffer(first, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return first;
+                             UError_ڪوڊ& error_ڪوڊ) ثابت {
+        uprv_check_Can_Get_بفر(پهريون, error_ڪوڊ);
+        إذا(U_FAILURE(error_ڪوڊ)) {
+            أرجع پهريون;
         }
-        const char16_t *secondArray=second.getBuffer();
-        if(&first==&second || secondArray==nullptr) {
-            errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return first;
+        ثابت char16_t *ٻيو_Array=ٻيو.get_بفر();
+        إذا(&پهريون==&ٻيو || ٻيو_Array==nullptr) {
+            error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+            أرجع پهريون;
         }
-        int32_t firstLength=first.length();
-        UnicodeString safeMiddle;
+        int32_t پهريون_ڊيگهائي=پهريون.ڊيگهائي();
+        UnicodeString محفوظ_وچ;
         {
-            ReorderingBuffer buffer(impl, first);
-            if(buffer.init(firstLength+second.length(), errorCode)) {
-                normalizeAndAppend(secondArray, secondArray+second.length(), doNormalize,
-                                   safeMiddle, buffer, errorCode);
+            Reordering_بفر بفر(impl, پهريون);
+            إذا(بفر.init(پهريون_ڊيگهائي+ٻيو.ڊيگهائي(), error_ڪوڊ)) {
+                normalizeAndAppend(ٻيو_Array, ٻيو_Array+ٻيو.ڊيگهائي(), doNormalize,
+                                   محفوظ_وچ, بفر, error_ڪوڊ);
             }
         }  // The ReorderingBuffer destructor finalizes the first string.
-        if(U_FAILURE(errorCode)) {
+        إذا(U_FAILURE(error_ڪوڊ)) {
             // Restore the modified suffix of the first string.
-            first.replace(firstLength-safeMiddle.length(), 0x7fffffff, safeMiddle);
+            پهريون.replace(پهريون_ڊيگهائي-محفوظ_وچ.ڊيگهائي(), 0x7fffffff, محفوظ_وچ);
         }
-        return first;
+        أرجع پهريون;
     }
-    virtual void
-    normalizeAndAppend(const char16_t *src, const char16_t *limit, UBool doNormalize,
-                       UnicodeString &safeMiddle,
-                       ReorderingBuffer &buffer, UErrorCode &errorCode) const = 0;
-    virtual UBool
-    getDecomposition(UChar32 c, UnicodeString &decomposition) const override {
-        char16_t buffer[4];
-        int32_t length;
-        const char16_t *d=impl.getDecomposition(c, buffer, length);
-        if(d==nullptr) {
-            return false;
+    مجازي فراغ
+    normalizeAndAppend(ثابت char16_t *src, ثابت char16_t *حد_بندي, UBool doNormalize,
+                       UnicodeString &محفوظ_وچ,
+                       Reordering_بفر &بفر, UError_ڪوڊ &error_ڪوڊ) ثابت = 0;
+    مجازي UBool
+    getDecomposition(UChar32 c, UnicodeString &decomposition) ثابت override {
+        char16_t بفر[4];
+        int32_t ڊيگهائي;
+        ثابت char16_t *d=impl.getDecomposition(c, بفر, ڊيگهائي);
+        إذا(d==nullptr) {
+            أرجع false;
         }
-        if(d==buffer) {
-            decomposition.setTo(buffer, length);  // copy the string (Jamos from Hangul syllable c)
-        } else {
-            decomposition.setTo(false, d, length);  // read-only alias
+        إذا(d==بفر) {
+            decomposition.سيٽ_منزل(بفر, ڊيگهائي);  // copy the string (Jamos from Hangul syllable c)
+        } وإلا {
+            decomposition.سيٽ_منزل(false, d, ڊيگهائي);  // read-only alias
         }
-        return true;
+        أرجع true;
     }
-    virtual UBool
-    getRawDecomposition(UChar32 c, UnicodeString &decomposition) const override {
-        char16_t buffer[30];
-        int32_t length;
-        const char16_t *d=impl.getRawDecomposition(c, buffer, length);
-        if(d==nullptr) {
-            return false;
+    مجازي UBool
+    getRawDecomposition(UChar32 c, UnicodeString &decomposition) ثابت override {
+        char16_t بفر[30];
+        int32_t ڊيگهائي;
+        ثابت char16_t *d=impl.getRawDecomposition(c, بفر, ڊيگهائي);
+        إذا(d==nullptr) {
+            أرجع false;
         }
-        if(d==buffer) {
-            decomposition.setTo(buffer, length);  // copy the string (algorithmic decomposition)
-        } else {
-            decomposition.setTo(false, d, length);  // read-only alias
+        إذا(d==بفر) {
+            decomposition.سيٽ_منزل(بفر, ڊيگهائي);  // copy the string (algorithmic decomposition)
+        } وإلا {
+            decomposition.سيٽ_منزل(false, d, ڊيگهائي);  // read-only alias
         }
-        return true;
+        أرجع true;
     }
-    virtual UChar32
-    composePair(UChar32 a, UChar32 b) const override {
-        return impl.composePair(a, b);
+    مجازي UChar32
+    composePair(UChar32 a, UChar32 b) ثابت override {
+        أرجع impl.composePair(a, b);
     }
 
-    virtual uint8_t
-    getCombiningClass(UChar32 c) const override {
-        return impl.getCC(impl.getNorm16(c));
+    مجازي uint8_t
+    getCombiningClass(UChar32 c) ثابت override {
+        أرجع impl.getCC(impl.getNorm16(c));
     }
 
     // quick checks
-    virtual UBool
-    isNormalized(const UnicodeString &s, UErrorCode &errorCode) const override {
-        if(U_FAILURE(errorCode)) {
-            return false;
+    مجازي UBool
+    isNormalized(ثابت UnicodeString &s, UError_ڪوڊ &error_ڪوڊ) ثابت override {
+        إذا(U_FAILURE(error_ڪوڊ)) {
+            أرجع false;
         }
-        const char16_t *sArray=s.getBuffer();
-        if(sArray==nullptr) {
-            errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return false;
+        ثابت char16_t *sArray=s.get_بفر();
+        إذا(sArray==nullptr) {
+            error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+            أرجع false;
         }
-        const char16_t *sLimit=sArray+s.length();
-        return sLimit==spanQuickCheckYes(sArray, sLimit, errorCode);
+        ثابت char16_t *s_حد_بندي=sArray+s.ڊيگهائي();
+        أرجع s_حد_بندي==وسعت_تيز_Check_Yes(sArray, s_حد_بندي, error_ڪوڊ);
     }
-    virtual UNormalizationCheckResult
-    quickCheck(const UnicodeString &s, UErrorCode &errorCode) const override {
-        return Normalizer2WithImpl::isNormalized(s, errorCode) ? UNORM_YES : UNORM_NO;
+    مجازي UNormalization_Check_نتيجو
+    تيز_Check(ثابت UnicodeString &s, UError_ڪوڊ &error_ڪوڊ) ثابت override {
+        أرجع Normalizer2WithImpl::isNormalized(s, error_ڪوڊ) ? UNORM_YES : UNORM_NO;
     }
-    virtual int32_t
-    spanQuickCheckYes(const UnicodeString &s, UErrorCode &errorCode) const override {
-        if(U_FAILURE(errorCode)) {
-            return 0;
+    مجازي int32_t
+    وسعت_تيز_Check_Yes(ثابت UnicodeString &s, UError_ڪوڊ &error_ڪوڊ) ثابت override {
+        إذا(U_FAILURE(error_ڪوڊ)) {
+            أرجع 0;
         }
-        const char16_t *sArray=s.getBuffer();
-        if(sArray==nullptr) {
-            errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+        ثابت char16_t *sArray=s.get_بفر();
+        إذا(sArray==nullptr) {
+            error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+            أرجع 0;
         }
-        return static_cast<int32_t>(spanQuickCheckYes(sArray, sArray + s.length(), errorCode) - sArray);
+        أرجع static_cast<int32_t>(وسعت_تيز_Check_Yes(sArray, sArray + s.ڊيگهائي(), error_ڪوڊ) - sArray);
     }
-    virtual const char16_t*
-    spanQuickCheckYes(const char16_t* src U_LIFETIME_BOUND,
-                      const char16_t* limit,
-                      UErrorCode& errorCode) const = 0;
+    مجازي ثابت char16_t*
+    وسعت_تيز_Check_Yes(ثابت char16_t* src U_LIFETIME_BOUND,
+                      ثابت char16_t* حد_بندي,
+                      UError_ڪوڊ& error_ڪوڊ) ثابت = 0;
 
-    virtual UNormalizationCheckResult getQuickCheck(UChar32) const {
-        return UNORM_YES;
+    مجازي UNormalization_Check_نتيجو get_تيز_Check(UChar32) ثابت {
+        أرجع UNORM_YES;
     }
 
-    const Normalizer2Impl &impl;
+    ثابت Normalizer2Impl &impl;
 };
 
-class DecomposeNormalizer2 : public Normalizer2WithImpl {
-public:
-    DecomposeNormalizer2(const Normalizer2Impl &ni) : Normalizer2WithImpl(ni) {}
-    virtual ~DecomposeNormalizer2();
+class DecomposeNormalizer2 : عام Normalizer2WithImpl {
+عام:
+    DecomposeNormalizer2(ثابت Normalizer2Impl &ni) : Normalizer2WithImpl(ni) {}
+    مجازي ~DecomposeNormalizer2();
 
-private:
-    virtual void
-    normalize(const char16_t *src, const char16_t *limit,
-              ReorderingBuffer &buffer, UErrorCode &errorCode) const override {
-        impl.decompose(src, limit, &buffer, errorCode);
+خاص:
+    مجازي فراغ
+    normalize(ثابت char16_t *src, ثابت char16_t *حد_بندي,
+              Reordering_بفر &بفر, UError_ڪوڊ &error_ڪوڊ) ثابت override {
+        impl.decompose(src, حد_بندي, &بفر, error_ڪوڊ);
     }
     using Normalizer2WithImpl::normalize;  // Avoid warning about hiding base class function.
-    virtual void
-    normalizeAndAppend(const char16_t *src, const char16_t *limit, UBool doNormalize,
-                       UnicodeString &safeMiddle,
-                       ReorderingBuffer &buffer, UErrorCode &errorCode) const override {
-        impl.decomposeAndAppend(src, limit, doNormalize, safeMiddle, buffer, errorCode);
+    مجازي فراغ
+    normalizeAndAppend(ثابت char16_t *src, ثابت char16_t *حد_بندي, UBool doNormalize,
+                       UnicodeString &محفوظ_وچ,
+                       Reordering_بفر &بفر, UError_ڪوڊ &error_ڪوڊ) ثابت override {
+        impl.decomposeAndAppend(src, حد_بندي, doNormalize, محفوظ_وچ, بفر, error_ڪوڊ);
     }
 
-    void
+    فراغ
     normalizeUTF8(uint32_t options, StringPiece src, ByteSink &sink,
-                  Edits *edits, UErrorCode &errorCode) const override {
-        if (U_FAILURE(errorCode)) {
-            return;
+                  Edits *edits, UError_ڪوڊ &error_ڪوڊ) ثابت override {
+        إذا (U_FAILURE(error_ڪوڊ)) {
+            أرجع;
         }
-        if (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
+        إذا (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
             edits->reset();
         }
-        const uint8_t *s = reinterpret_cast<const uint8_t *>(src.data());
-        impl.decomposeUTF8(options, s, s + src.length(), &sink, edits, errorCode);
+        ثابت uint8_t *s = reinterpret_cast<ثابت uint8_t *>(src.معلومات());
+        impl.decomposeUTF8(options, s, s + src.ڊيگهائي(), &sink, edits, error_ڪوڊ);
         sink.Flush();
     }
-    virtual UBool
-    isNormalizedUTF8(StringPiece sp, UErrorCode &errorCode) const override {
-        if(U_FAILURE(errorCode)) {
-            return false;
+    مجازي UBool
+    isNormalizedUTF8(StringPiece sp, UError_ڪوڊ &error_ڪوڊ) ثابت override {
+        إذا(U_FAILURE(error_ڪوڊ)) {
+            أرجع false;
         }
-        const uint8_t *s = reinterpret_cast<const uint8_t *>(sp.data());
-        const uint8_t *sLimit = s + sp.length();
-        return sLimit == impl.decomposeUTF8(0, s, sLimit, nullptr, nullptr, errorCode);
+        ثابت uint8_t *s = reinterpret_cast<ثابت uint8_t *>(sp.معلومات());
+        ثابت uint8_t *s_حد_بندي = s + sp.ڊيگهائي();
+        أرجع s_حد_بندي == impl.decomposeUTF8(0, s, s_حد_بندي, nullptr, nullptr, error_ڪوڊ);
     }
 
-    virtual const char16_t*
-    spanQuickCheckYes(const char16_t* src U_LIFETIME_BOUND,
-                      const char16_t* limit,
-                      UErrorCode& errorCode) const override {
-        return impl.decompose(src, limit, nullptr, errorCode);
+    مجازي ثابت char16_t*
+    وسعت_تيز_Check_Yes(ثابت char16_t* src U_LIFETIME_BOUND,
+                      ثابت char16_t* حد_بندي,
+                      UError_ڪوڊ& error_ڪوڊ) ثابت override {
+        أرجع impl.decompose(src, حد_بندي, nullptr, error_ڪوڊ);
     }
-    using Normalizer2WithImpl::spanQuickCheckYes;  // Avoid warning about hiding base class function.
-    virtual UNormalizationCheckResult getQuickCheck(UChar32 c) const override {
-        return impl.isDecompYes(impl.getNorm16(c)) ? UNORM_YES : UNORM_NO;
+    using Normalizer2WithImpl::وسعت_تيز_Check_Yes;  // Avoid warning about hiding base class function.
+    مجازي UNormalization_Check_نتيجو get_تيز_Check(UChar32 c) ثابت override {
+        أرجع impl.isDecompYes(impl.getNorm16(c)) ? UNORM_YES : UNORM_NO;
     }
-    virtual UBool hasBoundaryBefore(UChar32 c) const override {
-        return impl.hasDecompBoundaryBefore(c);
+    مجازي UBool hasBoundaryBefore(UChar32 c) ثابت override {
+        أرجع impl.hasDecompBoundaryBefore(c);
     }
-    virtual UBool hasBoundaryAfter(UChar32 c) const override {
-        return impl.hasDecompBoundaryAfter(c);
+    مجازي UBool hasBoundaryAfter(UChar32 c) ثابت override {
+        أرجع impl.hasDecompBoundaryAfter(c);
     }
-    virtual UBool isInert(UChar32 c) const override {
-        return impl.isDecompInert(c);
+    مجازي UBool isInert(UChar32 c) ثابت override {
+        أرجع impl.isDecompInert(c);
     }
 };
 
-class ComposeNormalizer2 : public Normalizer2WithImpl {
-public:
-    ComposeNormalizer2(const Normalizer2Impl &ni, UBool fcc) :
+class ComposeNormalizer2 : عام Normalizer2WithImpl {
+عام:
+    ComposeNormalizer2(ثابت Normalizer2Impl &ni, UBool fcc) :
         Normalizer2WithImpl(ni), onlyContiguous(fcc) {}
-    virtual ~ComposeNormalizer2();
+    مجازي ~ComposeNormalizer2();
 
-private:
-    virtual void
-    normalize(const char16_t *src, const char16_t *limit,
-              ReorderingBuffer &buffer, UErrorCode &errorCode) const override {
-        impl.compose(src, limit, onlyContiguous, true, buffer, errorCode);
+خاص:
+    مجازي فراغ
+    normalize(ثابت char16_t *src, ثابت char16_t *حد_بندي,
+              Reordering_بفر &بفر, UError_ڪوڊ &error_ڪوڊ) ثابت override {
+        impl.compose(src, حد_بندي, onlyContiguous, true, بفر, error_ڪوڊ);
     }
     using Normalizer2WithImpl::normalize;  // Avoid warning about hiding base class function.
 
-    void
+    فراغ
     normalizeUTF8(uint32_t options, StringPiece src, ByteSink &sink,
-                  Edits *edits, UErrorCode &errorCode) const override {
-        if (U_FAILURE(errorCode)) {
-            return;
+                  Edits *edits, UError_ڪوڊ &error_ڪوڊ) ثابت override {
+        إذا (U_FAILURE(error_ڪوڊ)) {
+            أرجع;
         }
-        if (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
+        إذا (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
             edits->reset();
         }
-        const uint8_t *s = reinterpret_cast<const uint8_t *>(src.data());
-        impl.composeUTF8(options, onlyContiguous, s, s + src.length(),
-                         &sink, edits, errorCode);
+        ثابت uint8_t *s = reinterpret_cast<ثابت uint8_t *>(src.معلومات());
+        impl.composeUTF8(options, onlyContiguous, s, s + src.ڊيگهائي(),
+                         &sink, edits, error_ڪوڊ);
         sink.Flush();
     }
 
-    virtual void
-    normalizeAndAppend(const char16_t *src, const char16_t *limit, UBool doNormalize,
-                       UnicodeString &safeMiddle,
-                       ReorderingBuffer &buffer, UErrorCode &errorCode) const override {
-        impl.composeAndAppend(src, limit, doNormalize, onlyContiguous, safeMiddle, buffer, errorCode);
+    مجازي فراغ
+    normalizeAndAppend(ثابت char16_t *src, ثابت char16_t *حد_بندي, UBool doNormalize,
+                       UnicodeString &محفوظ_وچ,
+                       Reordering_بفر &بفر, UError_ڪوڊ &error_ڪوڊ) ثابت override {
+        impl.composeAndAppend(src, حد_بندي, doNormalize, onlyContiguous, محفوظ_وچ, بفر, error_ڪوڊ);
     }
 
-    virtual UBool
-    isNormalized(const UnicodeString &s, UErrorCode &errorCode) const override {
-        if(U_FAILURE(errorCode)) {
-            return false;
+    مجازي UBool
+    isNormalized(ثابت UnicodeString &s, UError_ڪوڊ &error_ڪوڊ) ثابت override {
+        إذا(U_FAILURE(error_ڪوڊ)) {
+            أرجع false;
         }
-        const char16_t *sArray=s.getBuffer();
-        if(sArray==nullptr) {
-            errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return false;
+        ثابت char16_t *sArray=s.get_بفر();
+        إذا(sArray==nullptr) {
+            error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+            أرجع false;
         }
-        UnicodeString temp;
-        ReorderingBuffer buffer(impl, temp);
-        if(!buffer.init(5, errorCode)) {  // small destCapacity for substring normalization
-            return false;
+        UnicodeString عارضي;
+        Reordering_بفر بفر(impl, عارضي);
+        إذا(!بفر.init(5, error_ڪوڊ)) {  // small destCapacity for substring normalization
+            أرجع false;
         }
-        return impl.compose(sArray, sArray+s.length(), onlyContiguous, false, buffer, errorCode);
+        أرجع impl.compose(sArray, sArray+s.ڊيگهائي(), onlyContiguous, false, بفر, error_ڪوڊ);
     }
-    virtual UBool
-    isNormalizedUTF8(StringPiece sp, UErrorCode &errorCode) const override {
-        if(U_FAILURE(errorCode)) {
-            return false;
+    مجازي UBool
+    isNormalizedUTF8(StringPiece sp, UError_ڪوڊ &error_ڪوڊ) ثابت override {
+        إذا(U_FAILURE(error_ڪوڊ)) {
+            أرجع false;
         }
-        const uint8_t *s = reinterpret_cast<const uint8_t *>(sp.data());
-        return impl.composeUTF8(0, onlyContiguous, s, s + sp.length(), nullptr, nullptr, errorCode);
+        ثابت uint8_t *s = reinterpret_cast<ثابت uint8_t *>(sp.معلومات());
+        أرجع impl.composeUTF8(0, onlyContiguous, s, s + sp.ڊيگهائي(), nullptr, nullptr, error_ڪوڊ);
     }
-    virtual UNormalizationCheckResult
-    quickCheck(const UnicodeString &s, UErrorCode &errorCode) const override {
-        if(U_FAILURE(errorCode)) {
-            return UNORM_MAYBE;
+    مجازي UNormalization_Check_نتيجو
+    تيز_Check(ثابت UnicodeString &s, UError_ڪوڊ &error_ڪوڊ) ثابت override {
+        إذا(U_FAILURE(error_ڪوڊ)) {
+            أرجع UNORM_MAYBE;
         }
-        const char16_t *sArray=s.getBuffer();
-        if(sArray==nullptr) {
-            errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return UNORM_MAYBE;
+        ثابت char16_t *sArray=s.get_بفر();
+        إذا(sArray==nullptr) {
+            error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+            أرجع UNORM_MAYBE;
         }
-        UNormalizationCheckResult qcResult=UNORM_YES;
-        impl.composeQuickCheck(sArray, sArray+s.length(), onlyContiguous, &qcResult);
-        return qcResult;
+        UNormalization_Check_نتيجو qc_نتيجو=UNORM_YES;
+        impl.compose_تيز_Check(sArray, sArray+s.ڊيگهائي(), onlyContiguous, &qc_نتيجو);
+        أرجع qc_نتيجو;
     }
-    virtual const char16_t*
-    spanQuickCheckYes(const char16_t* src U_LIFETIME_BOUND,
-                      const char16_t* limit,
-                      UErrorCode&) const override {
-        return impl.composeQuickCheck(src, limit, onlyContiguous, nullptr);
+    مجازي ثابت char16_t*
+    وسعت_تيز_Check_Yes(ثابت char16_t* src U_LIFETIME_BOUND,
+                      ثابت char16_t* حد_بندي,
+                      UError_ڪوڊ&) ثابت override {
+        أرجع impl.compose_تيز_Check(src, حد_بندي, onlyContiguous, nullptr);
     }
-    using Normalizer2WithImpl::spanQuickCheckYes;  // Avoid warning about hiding base class function.
-    virtual UNormalizationCheckResult getQuickCheck(UChar32 c) const override {
-        return impl.getCompQuickCheck(impl.getNorm16(c));
+    using Normalizer2WithImpl::وسعت_تيز_Check_Yes;  // Avoid warning about hiding base class function.
+    مجازي UNormalization_Check_نتيجو get_تيز_Check(UChar32 c) ثابت override {
+        أرجع impl.get_Comp_تيز_Check(impl.getNorm16(c));
     }
-    virtual UBool hasBoundaryBefore(UChar32 c) const override {
-        return impl.hasCompBoundaryBefore(c);
+    مجازي UBool hasBoundaryBefore(UChar32 c) ثابت override {
+        أرجع impl.hasCompBoundaryBefore(c);
     }
-    virtual UBool hasBoundaryAfter(UChar32 c) const override {
-        return impl.hasCompBoundaryAfter(c, onlyContiguous);
+    مجازي UBool hasBoundaryAfter(UChar32 c) ثابت override {
+        أرجع impl.hasCompBoundaryAfter(c, onlyContiguous);
     }
-    virtual UBool isInert(UChar32 c) const override {
-        return impl.isCompInert(c, onlyContiguous);
+    مجازي UBool isInert(UChar32 c) ثابت override {
+        أرجع impl.isCompInert(c, onlyContiguous);
     }
 
-    const UBool onlyContiguous;
+    ثابت UBool onlyContiguous;
 };
 
-class FCDNormalizer2 : public Normalizer2WithImpl {
-public:
-    FCDNormalizer2(const Normalizer2Impl &ni) : Normalizer2WithImpl(ni) {}
-    virtual ~FCDNormalizer2();
+class FCDNormalizer2 : عام Normalizer2WithImpl {
+عام:
+    FCDNormalizer2(ثابت Normalizer2Impl &ni) : Normalizer2WithImpl(ni) {}
+    مجازي ~FCDNormalizer2();
 
-private:
-    virtual void
-    normalize(const char16_t *src, const char16_t *limit,
-              ReorderingBuffer &buffer, UErrorCode &errorCode) const override {
-        impl.makeFCD(src, limit, &buffer, errorCode);
+خاص:
+    مجازي فراغ
+    normalize(ثابت char16_t *src, ثابت char16_t *حد_بندي,
+              Reordering_بفر &بفر, UError_ڪوڊ &error_ڪوڊ) ثابت override {
+        impl.makeFCD(src, حد_بندي, &بفر, error_ڪوڊ);
     }
     using Normalizer2WithImpl::normalize;  // Avoid warning about hiding base class function.
-    virtual void
-    normalizeAndAppend(const char16_t *src, const char16_t *limit, UBool doNormalize,
-                       UnicodeString &safeMiddle,
-                       ReorderingBuffer &buffer, UErrorCode &errorCode) const override {
-        impl.makeFCDAndAppend(src, limit, doNormalize, safeMiddle, buffer, errorCode);
+    مجازي فراغ
+    normalizeAndAppend(ثابت char16_t *src, ثابت char16_t *حد_بندي, UBool doNormalize,
+                       UnicodeString &محفوظ_وچ,
+                       Reordering_بفر &بفر, UError_ڪوڊ &error_ڪوڊ) ثابت override {
+        impl.makeFCDAndAppend(src, حد_بندي, doNormalize, محفوظ_وچ, بفر, error_ڪوڊ);
     }
-    virtual const char16_t*
-    spanQuickCheckYes(const char16_t* src U_LIFETIME_BOUND,
-                      const char16_t* limit,
-                      UErrorCode& errorCode) const override {
-        return impl.makeFCD(src, limit, nullptr, errorCode);
+    مجازي ثابت char16_t*
+    وسعت_تيز_Check_Yes(ثابت char16_t* src U_LIFETIME_BOUND,
+                      ثابت char16_t* حد_بندي,
+                      UError_ڪوڊ& error_ڪوڊ) ثابت override {
+        أرجع impl.makeFCD(src, حد_بندي, nullptr, error_ڪوڊ);
     }
-    using Normalizer2WithImpl::spanQuickCheckYes;  // Avoid warning about hiding base class function.
-    virtual UBool hasBoundaryBefore(UChar32 c) const override {
-        return impl.hasFCDBoundaryBefore(c);
+    using Normalizer2WithImpl::وسعت_تيز_Check_Yes;  // Avoid warning about hiding base class function.
+    مجازي UBool hasBoundaryBefore(UChar32 c) ثابت override {
+        أرجع impl.hasFCDBoundaryBefore(c);
     }
-    virtual UBool hasBoundaryAfter(UChar32 c) const override {
-        return impl.hasFCDBoundaryAfter(c);
+    مجازي UBool hasBoundaryAfter(UChar32 c) ثابت override {
+        أرجع impl.hasFCDBoundaryAfter(c);
     }
-    virtual UBool isInert(UChar32 c) const override {
-        return impl.isFCDInert(c);
+    مجازي UBool isInert(UChar32 c) ثابت override {
+        أرجع impl.isFCDInert(c);
     }
 };
 
-struct Norm2AllModes : public UMemory {
+بنية Norm2AllModes : عام UMemory {
     Norm2AllModes(Normalizer2Impl *i)
             : impl(i), comp(*i, false), decomp(*i), fcd(*i), fcc(*i, true) {}
     ~Norm2AllModes();
 
-    static Norm2AllModes *createInstance(Normalizer2Impl *impl, UErrorCode &errorCode);
-    static Norm2AllModes *createNFCInstance(UErrorCode &errorCode);
-    static Norm2AllModes *createInstance(const char *packageName,
-                                         const char *name,
-                                         UErrorCode &errorCode);
+    ساكن Norm2AllModes *createInstance(Normalizer2Impl *impl, UError_ڪوڊ &error_ڪوڊ);
+    ساكن Norm2AllModes *createNFCInstance(UError_ڪوڊ &error_ڪوڊ);
+    ساكن Norm2AllModes *createInstance(ثابت حرف *packageName,
+                                         ثابت حرف *name,
+                                         UError_ڪوڊ &error_ڪوڊ);
 
-    static const Norm2AllModes *getNFCInstance(UErrorCode &errorCode);
-    static const Norm2AllModes *getNFKCInstance(UErrorCode &errorCode);
-    static const Norm2AllModes *getNFKC_CFInstance(UErrorCode &errorCode);
-    static const Norm2AllModes *getNFKC_SCFInstance(UErrorCode &errorCode);
+    ساكن ثابت Norm2AllModes *getNFCInstance(UError_ڪوڊ &error_ڪوڊ);
+    ساكن ثابت Norm2AllModes *getNFKCInstance(UError_ڪوڊ &error_ڪوڊ);
+    ساكن ثابت Norm2AllModes *getNFKC_CFInstance(UError_ڪوڊ &error_ڪوڊ);
+    ساكن ثابت Norm2AllModes *getNFKC_SCFInstance(UError_ڪوڊ &error_ڪوڊ);
 
     Normalizer2Impl *impl;
     ComposeNormalizer2 comp;
@@ -408,7 +408,7 @@ struct Norm2AllModes : public UMemory {
     ComposeNormalizer2 fcc;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
-#endif  // !UCONFIG_NO_NORMALIZATION
-#endif  // __NORM2ALLMODES_H__
+#جيڪڏهن_پورو  // !UCONFIG_NO_NORMALIZATION
+#جيڪڏهن_پورو  // __NORM2ALLMODES_H__

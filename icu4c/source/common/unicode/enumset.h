@@ -14,12 +14,12 @@
  * \brief C++: internal template EnumSet<>
  */
 
-#ifndef ENUMSET_H
-#define ENUMSET_H
+#جيڪڏهن_وصف_نه_ٿيل ENUMSET_H
+#وصف_ڪريو ENUMSET_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -30,41 +30,41 @@ U_NAMESPACE_BEGIN
  * @internal
  * \cond
  */
-template<typename T, uint32_t minValue, uint32_t limitValue>
-class EnumSet {
-public:
-    inline EnumSet() : fBools(0) {}
-    inline EnumSet(const EnumSet<T,minValue,limitValue>& other) : fBools(other.fBools) {}
-    inline ~EnumSet() {}
-#ifndef U_HIDE_INTERNAL_API
-    inline void clear() { fBools=0; }
-    inline void add(T toAdd) { set(toAdd, 1); }
-    inline void remove(T toRemove) { set(toRemove, 0); }
-    inline int32_t contains(T toCheck) const { return get(toCheck); }
-    inline void set(T toSet, int32_t v) { fBools=(fBools&(~flag(toSet)))|(v?(flag(toSet)):0); }
-    inline int32_t get(T toCheck) const { return (fBools & flag(toCheck))?1:0; }
-    inline UBool isValidEnum(T toCheck) const {  return (toCheck>=minValue&&toCheck<limitValue); }
-    inline UBool isValidValue(int32_t v) const { return (v==0||v==1); }
-    inline const EnumSet<T, minValue, limitValue>&
-    operator=(const EnumSet<T, minValue, limitValue>& other) U_LIFETIME_BOUND {
+سانچو<typename T, uint32_t min_قدر, uint32_t حد_بندي_قدر>
+class Enum_سيٽ {
+عام:
+    مضمن Enum_سيٽ() : fBools(0) {}
+    مضمن Enum_سيٽ(ثابت Enum_سيٽ<T,min_قدر,حد_بندي_قدر>& other) : fBools(other.fBools) {}
+    مضمن ~Enum_سيٽ() {}
+#جيڪڏهن_وصف_نه_ٿيل U_HIDE_اندروني_API
+    مضمن فراغ clear() { fBools=0; }
+    مضمن فراغ جوڙيو(T منزل_جوڙيو) { سيٽ(منزل_جوڙيو, 1); }
+    مضمن فراغ remove(T منزل_Remove) { سيٽ(منزل_Remove, 0); }
+    مضمن int32_t شامل_آهي(T منزل_Check) ثابت { أرجع get(منزل_Check); }
+    مضمن فراغ سيٽ(T منزل_سيٽ, int32_t v) { fBools=(fBools&(~flag(منزل_سيٽ)))|(v?(flag(منزل_سيٽ)):0); }
+    مضمن int32_t get(T منزل_Check) ثابت { أرجع (fBools & flag(منزل_Check))?1:0; }
+    مضمن UBool isValidEnum(T منزل_Check) ثابت {  أرجع (منزل_Check>=min_قدر&&منزل_Check<حد_بندي_قدر); }
+    مضمن UBool is_Valid_قدر(int32_t v) ثابت { أرجع (v==0||v==1); }
+    مضمن ثابت Enum_سيٽ<T, min_قدر, حد_بندي_قدر>&
+    عامل=(ثابت Enum_سيٽ<T, min_قدر, حد_بندي_قدر>& other) U_LIFETIME_BOUND {
         fBools = other.fBools;
-        return *this;
+        أرجع *this;
     }
   
-    inline uint32_t getAll() const {
-        return fBools; 
+    مضمن uint32_t getAll() ثابت {
+        أرجع fBools; 
     }
-#endif /* U_HIDE_INTERNAL_API */
+#جيڪڏهن_پورو /* U_HIDE_INTERNAL_API */
 
-private:
-    inline uint32_t flag(T toCheck) const { return (1<<(toCheck-minValue)); }
-private:
+خاص:
+    مضمن uint32_t flag(T منزل_Check) ثابت { أرجع (1<<(منزل_Check-min_قدر)); }
+خاص:
     uint32_t fBools;
 };
 
 /** \endcond */
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
-#endif /* U_SHOW_CPLUSPLUS_API */
-#endif /* ENUMSET_H */
+#جيڪڏهن_پورو /* U_SHOW_CPLUSPLUS_API */
+#جيڪڏهن_پورو /* ENUMSET_H */

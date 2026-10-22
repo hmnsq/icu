@@ -20,14 +20,14 @@
 *   that then do not depend on resource bundle code and this data.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "unicode/uloc.h"
-#include "unicode/ures.h"
-#include "charstr.h"
-#include "cstring.h"
-#include "ulocimp.h"
-#include "uresimp.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/putil.h"
+#ضمن "unicode/uloc.h"
+#ضمن "unicode/ures.h"
+#ضمن "charstr.h"
+#ضمن "cstring.h"
+#ضمن "ulocimp.h"
+#ضمن "uresimp.h"
 
 /*
  * Lookup a resource bundle table item with fallback on the table level.
@@ -42,42 +42,42 @@
  * default locale because that would result in a mix of languages that is
  * unpredictable to the programmer and most likely useless.
  */
-U_CAPI const char16_t * U_EXPORT2
-uloc_getTableStringWithFallback(const char *path, const char *locale,
-                              const char *tableKey, const char *subTableKey,
-                              const char *itemKey,
-                              int32_t *pLength,
-                              UErrorCode *pErrorCode)
+U_CAPI ثابت char16_t * U_EXPORT2
+uloc_get_جدول_String_With_Fallback(ثابت حرف *رستو, ثابت حرف *locale,
+                              ثابت حرف *جدول_ڪنجي, ثابت حرف *sub_جدول_ڪنجي,
+                              ثابت حرف *شي_ڪنجي,
+                              int32_t *p_ڊيگهائي,
+                              UError_ڪوڊ *p_Error_ڪوڊ)
 {
-    if (U_FAILURE(*pErrorCode)) { return nullptr; }
+    إذا (U_FAILURE(*p_Error_ڪوڊ)) { أرجع خالي_اشارو; }
 /*    char localeBuffer[ULOC_FULLNAME_CAPACITY*4];*/
-    const char16_t *item=nullptr;
-    UErrorCode errorCode;
+    ثابت char16_t *شي=خالي_اشارو;
+    UError_ڪوڊ error_ڪوڊ;
 
     /*
      * open the bundle for the current locale
      * this falls back through the locale's chain to root
      */
-    errorCode=U_ZERO_ERROR;
-    icu::LocalUResourceBundlePointer rb(ures_open(path, locale, &errorCode));
+    error_ڪوڊ=U_ZERO_ERROR;
+    icu::Local_UResource_Bundle_اشارو rb(ures_open(رستو, locale, &error_ڪوڊ));
 
-    if(U_FAILURE(errorCode)) {
+    إذا(U_FAILURE(error_ڪوڊ)) {
         /* total failure, not even root could be opened */
-        *pErrorCode=errorCode;
-        return nullptr;
-    } else if(errorCode==U_USING_DEFAULT_WARNING ||
-                (errorCode==U_USING_FALLBACK_WARNING && *pErrorCode!=U_USING_DEFAULT_WARNING)
+        *p_Error_ڪوڊ=error_ڪوڊ;
+        أرجع خالي_اشارو;
+    } وإلا إذا(error_ڪوڊ==U_USING_DEFAULT_WARNING ||
+                (error_ڪوڊ==U_USING_FALLBACK_WARNING && *p_Error_ڪوڊ!=U_USING_DEFAULT_WARNING)
     ) {
         /* set the "strongest" error code (success->fallback->default->failure) */
-        *pErrorCode=errorCode;
+        *p_Error_ڪوڊ=error_ڪوڊ;
     }
 
-    for(;;){
-        icu::StackUResourceBundle table;
-        icu::StackUResourceBundle subTable;
-        ures_getByKeyWithFallback(rb.getAlias(), tableKey, table.getAlias(), &errorCode);
+    لكل(;;){
+        icu::ڍير_UResource_Bundle جدول;
+        icu::ڍير_UResource_Bundle sub_جدول;
+        ures_get_By_ڪنجي_With_Fallback(rb.getAlias(), جدول_ڪنجي, جدول.getAlias(), &error_ڪوڊ);
 
-        if (subTableKey != nullptr) {
+        إذا (sub_جدول_ڪنجي != خالي_اشارو) {
             /*
             ures_getByKeyWithFallback(table.getAlias(), subTableKey, subTable.getAlias(), &errorCode);
             item = ures_getStringByKeyWithFallback(subTable.getAlias(), itemKey, pLength, &errorCode);
@@ -87,131 +87,131 @@ uloc_getTableStringWithFallback(const char *path, const char *locale,
             
             break;*/
             
-            ures_getByKeyWithFallback(table.getAlias(), subTableKey, table.getAlias(), &errorCode);
+            ures_get_By_ڪنجي_With_Fallback(جدول.getAlias(), sub_جدول_ڪنجي, جدول.getAlias(), &error_ڪوڊ);
         }
-        if(U_SUCCESS(errorCode)){
-            item = ures_getStringByKeyWithFallback(table.getAlias(), itemKey, pLength, &errorCode);
-            if(U_FAILURE(errorCode)){
-                const char* replacement = nullptr;
-                *pErrorCode = errorCode; /*save the errorCode*/
-                errorCode = U_ZERO_ERROR;
+        إذا(U_SUCCESS(error_ڪوڊ)){
+            شي = ures_get_String_By_ڪنجي_With_Fallback(جدول.getAlias(), شي_ڪنجي, p_ڊيگهائي, &error_ڪوڊ);
+            إذا(U_FAILURE(error_ڪوڊ)){
+                ثابت حرف* replacement = خالي_اشارو;
+                *p_Error_ڪوڊ = error_ڪوڊ; /*save the errorCode*/
+                error_ڪوڊ = U_ZERO_ERROR;
                 /* may be a deprecated code */
-                if(uprv_strcmp(tableKey, "Countries")==0){
-                    replacement =  uloc_getCurrentCountryID(itemKey);
-                }else if(uprv_strcmp(tableKey, "Languages")==0){
-                    replacement =  uloc_getCurrentLanguageID(itemKey);
+                إذا(uprv_strcmp(جدول_ڪنجي, "Countries")==0){
+                    replacement =  uloc_getCurrentCountryID(شي_ڪنجي);
+                }وإلا إذا(uprv_strcmp(جدول_ڪنجي, "Languages")==0){
+                    replacement =  uloc_getCurrentLanguageID(شي_ڪنجي);
                 }
                 /*pointer comparison is ok since uloc_getCurrentCountryID & uloc_getCurrentLanguageID return the key itself is replacement is not found*/
-                if(replacement!=nullptr && itemKey != replacement){
-                    item = ures_getStringByKeyWithFallback(table.getAlias(), replacement, pLength, &errorCode);
-                    if(U_SUCCESS(errorCode)){
-                        *pErrorCode = errorCode;
-                        break;
+                إذا(replacement!=خالي_اشارو && شي_ڪنجي != replacement){
+                    شي = ures_get_String_By_ڪنجي_With_Fallback(جدول.getAlias(), replacement, p_ڊيگهائي, &error_ڪوڊ);
+                    إذا(U_SUCCESS(error_ڪوڊ)){
+                        *p_Error_ڪوڊ = error_ڪوڊ;
+                        اكسر;
                     }
                 }
-            }else{
-                break;
+            }وإلا{
+                اكسر;
             }
         }
         
-        if(U_FAILURE(errorCode)){    
+        إذا(U_FAILURE(error_ڪوڊ)){    
 
             /* still can't figure out ?.. try the fallback mechanism */
             int32_t len = 0;
-            const char16_t* fallbackLocale =  nullptr;
-            *pErrorCode = errorCode;
-            errorCode = U_ZERO_ERROR;
+            ثابت char16_t* fallbackLocale =  خالي_اشارو;
+            *p_Error_ڪوڊ = error_ڪوڊ;
+            error_ڪوڊ = U_ZERO_ERROR;
 
-            fallbackLocale = ures_getStringByKeyWithFallback(table.getAlias(), "Fallback", &len, &errorCode);
-            if(U_FAILURE(errorCode)){
-               *pErrorCode = errorCode;
-                break;
+            fallbackLocale = ures_get_String_By_ڪنجي_With_Fallback(جدول.getAlias(), "Fallback", &len, &error_ڪوڊ);
+            إذا(U_FAILURE(error_ڪوڊ)){
+               *p_Error_ڪوڊ = error_ڪوڊ;
+                اكسر;
             }
 
             icu::CharString explicitFallbackName;
-            explicitFallbackName.appendInvariantChars(fallbackLocale, len, errorCode);
+            explicitFallbackName.appendInvariantChars(fallbackLocale, len, error_ڪوڊ);
 
             /* guard against recursive fallback */
-            if (explicitFallbackName == locale) {
-                *pErrorCode = U_INTERNAL_PROGRAM_ERROR;
-                break;
+            إذا (explicitFallbackName == locale) {
+                *p_Error_ڪوڊ = U_اندروني_پروگرام_ERROR;
+                اكسر;
             }
-            rb.adoptInstead(ures_open(path, explicitFallbackName.data(), &errorCode));
-            if(U_FAILURE(errorCode)){
-                *pErrorCode = errorCode;
-                break;
+            rb.adoptInstead(ures_open(رستو, explicitFallbackName.معلومات(), &error_ڪوڊ));
+            إذا(U_FAILURE(error_ڪوڊ)){
+                *p_Error_ڪوڊ = error_ڪوڊ;
+                اكسر;
             }
             /* succeeded in opening the fallback bundle .. continue and try to fetch the item */
-        }else{
-            break;
+        }وإلا{
+            اكسر;
         }
     }
 
-    return item;
+    أرجع شي;
 }
 
-namespace {
+نطاق {
 
 ULayoutType
-_uloc_getOrientationHelper(const char* localeId,
-                           const char* key,
-                           UErrorCode& status)
+_uloc_getOrientationHelper(ثابت حرف* localeId,
+                           ثابت حرف* ڪنجي,
+                           UError_ڪوڊ& حالت)
 {
-    ULayoutType result = ULOC_LAYOUT_UNKNOWN;
+    ULayoutType نتيجو = ULOC_LAYOUT_UNKNOWN;
 
-    if (U_FAILURE(status)) { return result; }
+    إذا (U_FAILURE(حالت)) { أرجع نتيجو; }
 
-    if (localeId == nullptr) {
+    إذا (localeId == خالي_اشارو) {
         localeId = uloc_getDefault();
     }
-    icu::CharString localeBuffer = ulocimp_canonicalize(localeId, status);
+    icu::CharString locale_بفر = ulocimp_canonicalize(localeId, حالت);
 
-    if (U_FAILURE(status)) { return result; }
+    إذا (U_FAILURE(حالت)) { أرجع نتيجو; }
 
     int32_t length = 0;
-    const char16_t* const value =
-        uloc_getTableStringWithFallback(
-            nullptr,
-            localeBuffer.data(),
+    ثابت char16_t* ثابت value =
+        uloc_get_جدول_String_With_Fallback(
+            خالي_اشارو,
+            locale_بفر.معلومات(),
             "layout",
-            nullptr,
-            key,
+            خالي_اشارو,
+            ڪنجي,
             &length,
-            &status);
+            &حالت);
 
-    if (U_FAILURE(status)) { return result; }
+    إذا (U_FAILURE(حالت)) { أرجع نتيجو; }
 
-    if (length != 0) {
-        switch(value[0])
+    إذا (length != 0) {
+        بدل(value[0])
         {
-        case 0x0062: /* 'b' */
-            result = ULOC_LAYOUT_BTT;
-            break;
-        case 0x006C: /* 'l' */
-            result = ULOC_LAYOUT_LTR;
-            break;
-        case 0x0072: /* 'r' */
-            result = ULOC_LAYOUT_RTL;
-            break;
-        case 0x0074: /* 't' */
-            result = ULOC_LAYOUT_TTB;
-            break;
-        default:
-            status = U_INTERNAL_PROGRAM_ERROR;
-            break;
+        حالة 0x0062: /* 'b' */
+            نتيجو = ULOC_LAYOUT_BTT;
+            اكسر;
+        حالة 0x006C: /* 'l' */
+            نتيجو = ULOC_LAYOUT_LTR;
+            اكسر;
+        حالة 0x0072: /* 'r' */
+            نتيجو = ULOC_LAYOUT_RTL;
+            اكسر;
+        حالة 0x0074: /* 't' */
+            نتيجو = ULOC_LAYOUT_TTB;
+            اكسر;
+        افتراضي:
+            حالت = U_اندروني_پروگرام_ERROR;
+            اكسر;
         }
     }
 
-    return result;
+    أرجع نتيجو;
 }
 
 }  // namespace
 
 U_CAPI ULayoutType U_EXPORT2
-uloc_getCharacterOrientation(const char* localeId,
-                             UErrorCode *status)
+uloc_getCharacterOrientation(ثابت حرف* localeId,
+                             UError_ڪوڊ *حالت)
 {
-    return _uloc_getOrientationHelper(localeId, "characters", *status);
+    أرجع _uloc_getOrientationHelper(localeId, "characters", *حالت);
 }
 
 /**
@@ -222,8 +222,8 @@ uloc_getCharacterOrientation(const char* localeId,
  * @return an enum indicating the layout orientation for lines.
  */
 U_CAPI ULayoutType U_EXPORT2
-uloc_getLineOrientation(const char* localeId,
-                        UErrorCode *status)
+uloc_get_سٽ_Orientation(ثابت حرف* localeId,
+                        UError_ڪوڊ *حالت)
 {
-    return _uloc_getOrientationHelper(localeId, "lines", *status);
+    أرجع _uloc_getOrientationHelper(localeId, "lines", *حالت);
 }

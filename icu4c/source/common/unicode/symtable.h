@@ -9,14 +9,14 @@
 *   02/04/00    aliu        Creation.
 **********************************************************************
 */
-#ifndef SYMTABLE_H
-#define SYMTABLE_H
+#جيڪڏهن_وصف_نه_ٿيل SYMTABLE_H
+#وصف_ڪريو SYMTABLE_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#ضمن "unicode/uobject.h"
 
 /**
  * \file
@@ -28,7 +28,7 @@ U_NAMESPACE_BEGIN
 
 class ParsePosition;
 class UnicodeFunctor;
-class UnicodeSet;
+class Unicode_سيٽ;
 class UnicodeString;
 
 /**
@@ -56,20 +56,20 @@ class UnicodeString;
  *
  * @stable ICU 2.8
  */
-class U_COMMON_API SymbolTable /* not : public UObject because this is an interface/mixin class */ {
-public:
+class U_COMMON_API نشان_جدول /* not : public UObject because this is an interface/mixin class */ {
+عام:
 
     /**
      * The character preceding a symbol reference name.
      * @stable ICU 2.8
      */
-    enum { SYMBOL_REF = 0x0024 /*$*/ };
+    تعداد { نشان_REF = 0x0024 /*$*/ };
 
     /**
      * Destructor.
      * @stable ICU 2.8
      */
-    virtual ~SymbolTable();
+    مجازي ~نشان_جدول();
 
     /**
      * Lookup the characters associated with this string and return it.
@@ -80,7 +80,7 @@ public:
      * there is no mapping for s.
      * @stable ICU 2.8
      */
-    virtual const UnicodeString* lookup(const UnicodeString& s) const U_LIFETIME_BOUND = 0;
+    مجازي ثابت UnicodeString* lookup(ثابت UnicodeString& s) ثابت U_LIFETIME_BOUND = 0;
 
     /**
      * Returns a pointer to a pre-parsed set associated with the variable with
@@ -88,8 +88,8 @@ public:
      * undefined or string-valued variable).
      * @internal
      */
-    virtual const UnicodeSet* lookupSet(const UnicodeString& /*name*/) const {
-        return nullptr;
+    مجازي ثابت Unicode_سيٽ* lookup_سيٽ(ثابت UnicodeString& /*name*/) ثابت {
+        أرجع nullptr;
     }
 
     /**
@@ -100,7 +100,7 @@ public:
      * character, or nullptr if there is no mapping for ch.
      * @stable ICU 2.8
      */
-    virtual const UnicodeFunctor* lookupMatcher(UChar32 ch) const U_LIFETIME_BOUND = 0;
+    مجازي ثابت UnicodeFunctor* lookupMatcher(UChar32 ch) ثابت U_LIFETIME_BOUND = 0;
 
     /**
      * Parse a symbol reference name from the given string, starting
@@ -119,11 +119,11 @@ public:
      * valid symbolic name at the given position.
      * @stable ICU 2.8
      */
-    virtual UnicodeString parseReference(const UnicodeString& text,
-                                         ParsePosition& pos, int32_t limit) const = 0;
+    مجازي UnicodeString parseReference(ثابت UnicodeString& متن,
+                                         ParsePosition& pos, int32_t حد_بندي) ثابت = 0;
 };
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#جيڪڏهن_پورو /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#جيڪڏهن_پورو

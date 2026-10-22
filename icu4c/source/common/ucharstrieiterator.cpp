@@ -14,22 +14,22 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/unistr.h"
-#include "uvectr32.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/ucharstrie.h"
+#ضمن "unicode/unistr.h"
+#ضمن "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
-UCharsTrie::Iterator::Iterator(ConstChar16Ptr trieUChars U_LIFETIME_BOUND, int32_t maxStringLength,
-                               UErrorCode &errorCode)
+UCharsTrie::Iterator::Iterator(ConstChar16Ptr trieUChars U_LIFETIME_BOUND, int32_t max_String_ڊيگهائي,
+                               UError_ڪوڊ &error_ڪوڊ)
         : uchars_(trieUChars),
           pos_(uchars_), initialPos_(uchars_),
-          remainingMatchLength_(-1), initialRemainingMatchLength_(-1),
-          skipValue_(false),
-          maxLength_(maxStringLength), value_(0), stack_(nullptr) {
-    if(U_FAILURE(errorCode)) {
-        return;
+          بچيل_ميلاپ_ڊيگهائي(-1), initial_بچيل_ميلاپ_ڊيگهائي(-1),
+          skip_قدر_2(خطأ),
+          max_ڊيگهائي(max_String_ڊيگهائي), قدر(0), ڍير(خالي_اشارو) {
+    إذا(U_FAILURE(error_ڪوڊ)) {
+        أرجع;
     }
     // stack_ is a pointer so that it's easy to turn ucharstrie.h into
     // a public API header for which we would want it to depend only on
@@ -37,143 +37,143 @@ UCharsTrie::Iterator::Iterator(ConstChar16Ptr trieUChars U_LIFETIME_BOUND, int32
     // Unlike UCharsTrie itself, its Iterator performs memory allocations anyway
     // via the UnicodeString and UVector32 implementations, so this additional
     // cost is minimal.
-    stack_=new UVector32(errorCode);
-    if(stack_==nullptr) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
+    ڍير=جديد UVector32(error_ڪوڊ);
+    إذا(ڍير==خالي_اشارو) {
+        error_ڪوڊ=U_يادگيري_ورهاست_ERROR;
     }
 }
 
-UCharsTrie::Iterator::Iterator(const UCharsTrie &trie, int32_t maxStringLength,
-                               UErrorCode &errorCode)
+UCharsTrie::Iterator::Iterator(ثابت UCharsTrie &trie, int32_t max_String_ڊيگهائي,
+                               UError_ڪوڊ &error_ڪوڊ)
         : uchars_(trie.uchars_), pos_(trie.pos_), initialPos_(trie.pos_),
-          remainingMatchLength_(trie.remainingMatchLength_),
-          initialRemainingMatchLength_(trie.remainingMatchLength_),
-          skipValue_(false),
-          maxLength_(maxStringLength), value_(0), stack_(nullptr) {
-    if(U_FAILURE(errorCode)) {
-        return;
+          بچيل_ميلاپ_ڊيگهائي(trie.بچيل_ميلاپ_ڊيگهائي),
+          initial_بچيل_ميلاپ_ڊيگهائي(trie.بچيل_ميلاپ_ڊيگهائي),
+          skip_قدر_2(خطأ),
+          max_ڊيگهائي(max_String_ڊيگهائي), قدر(0), ڍير(خالي_اشارو) {
+    إذا(U_FAILURE(error_ڪوڊ)) {
+        أرجع;
     }
-    stack_=new UVector32(errorCode);
-    if(U_FAILURE(errorCode)) {
-        return;
+    ڍير=جديد UVector32(error_ڪوڊ);
+    إذا(U_FAILURE(error_ڪوڊ)) {
+        أرجع;
     }
-    if(stack_==nullptr) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+    إذا(ڍير==خالي_اشارو) {
+        error_ڪوڊ=U_يادگيري_ورهاست_ERROR;
+        أرجع;
     }
-    int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    if(length>=0) {
+    int32_t length=بچيل_ميلاپ_ڊيگهائي;  // Actual remaining match length minus 1.
+    إذا(length>=0) {
         // Pending linear-match node, append remaining UChars to str_.
         ++length;
-        if(maxLength_>0 && length>maxLength_) {
-            length=maxLength_;  // This will leave remainingMatchLength>=0 as a signal.
+        إذا(max_ڊيگهائي>0 && length>max_ڊيگهائي) {
+            length=max_ڊيگهائي;  // This will leave remainingMatchLength>=0 as a signal.
         }
         str_.append(pos_, length);
         pos_+=length;
-        remainingMatchLength_-=length;
+        بچيل_ميلاپ_ڊيگهائي-=length;
     }
 }
 
 UCharsTrie::Iterator::~Iterator() {
-    delete stack_;
+    ميٽيو ڍير;
 }
 
 UCharsTrie::Iterator&
 UCharsTrie::Iterator::reset() U_LIFETIME_BOUND {
     pos_=initialPos_;
-    remainingMatchLength_=initialRemainingMatchLength_;
-    skipValue_=false;
-    int32_t length=remainingMatchLength_+1;  // Remaining match length.
-    if(maxLength_>0 && length>maxLength_) {
-        length=maxLength_;
+    بچيل_ميلاپ_ڊيگهائي=initial_بچيل_ميلاپ_ڊيگهائي;
+    skip_قدر_2=خطأ;
+    int32_t length=بچيل_ميلاپ_ڊيگهائي+1;  // Remaining match length.
+    إذا(max_ڊيگهائي>0 && length>max_ڊيگهائي) {
+        length=max_ڊيگهائي;
     }
     str_.truncate(length);
     pos_+=length;
-    remainingMatchLength_-=length;
-    stack_->setSize(0);
-    return *this;
+    بچيل_ميلاپ_ڊيگهائي-=length;
+    ڍير->سيٽ_سائيز(0);
+    أرجع *هذا;
 }
 
 UBool
-UCharsTrie::Iterator::hasNext() const { return pos_!=nullptr || !stack_->isEmpty(); }
+UCharsTrie::Iterator::has_ايندڙ() ثابت { أرجع pos_!=خالي_اشارو || !ڍير->is_خالي_جايون(); }
 
 UBool
-UCharsTrie::Iterator::next(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+UCharsTrie::Iterator::next(UError_ڪوڊ &error_ڪوڊ) {
+    إذا(U_FAILURE(error_ڪوڊ)) {
+        أرجع خطأ;
     }
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        if(stack_->isEmpty()) {
-            return false;
+    ثابت char16_t *pos=pos_;
+    إذا(pos==خالي_اشارو) {
+        إذا(ڍير->is_خالي_جايون()) {
+            أرجع خطأ;
         }
         // Pop the state off the stack and continue with the next outbound edge of
         // the branch node.
-        int32_t stackSize=stack_->size();
-        int32_t length=stack_->elementAti(stackSize-1);
-        pos=uchars_+stack_->elementAti(stackSize-2);
-        stack_->setSize(stackSize-2);
+        int32_t ڍير_سائيز=ڍير->size();
+        int32_t length=ڍير->elementAti(ڍير_سائيز-1);
+        pos=uchars_+ڍير->elementAti(ڍير_سائيز-2);
+        ڍير->سيٽ_سائيز(ڍير_سائيز-2);
         str_.truncate(length&0xffff);
         length = static_cast<int32_t>(static_cast<uint32_t>(length) >> 16);
-        if(length>1) {
-            pos=branchNext(pos, length, errorCode);
-            if(pos==nullptr) {
-                return true;  // Reached a final value.
+        إذا(length>1) {
+            pos=branch_ايندڙ(pos, length, error_ڪوڊ);
+            إذا(pos==خالي_اشارو) {
+                أرجع سچ;  // Reached a final value.
             }
-        } else {
+        } وإلا {
             str_.append(*pos++);
         }
     }
-    if(remainingMatchLength_>=0) {
+    إذا(بچيل_ميلاپ_ڊيگهائي>=0) {
         // We only get here if we started in a pending linear-match node
         // with more than maxLength remaining units.
-        return truncateAndStop();
+        أرجع truncateAndStop();
     }
-    for(;;) {
-        int32_t node=*pos++;
-        if(node>=kMinValueLead) {
-            if(skipValue_) {
-                pos=skipNodeValue(pos, node);
-                node&=kNodeTypeMask;
-                skipValue_=false;
-            } else {
+    لكل(;;) {
+        int32_t ڳنڍ=*pos++;
+        إذا(ڳنڍ>=k_Min_قدر_Lead) {
+            إذا(skip_قدر_2) {
+                pos=skip_ڳنڍ_قدر(pos, ڳنڍ);
+                ڳنڍ&=k_ڳنڍ_Type_نقاب;
+                skip_قدر_2=خطأ;
+            } وإلا {
                 // Deliver value for the string so far.
-                UBool isFinal = static_cast<UBool>(node >> 15);
-                if(isFinal) {
-                    value_=readValue(pos, node&0x7fff);
-                } else {
-                    value_=readNodeValue(pos, node);
+                UBool isFinal = static_cast<UBool>(ڳنڍ >> 15);
+                إذا(isFinal) {
+                    قدر=read_قدر(pos, ڳنڍ&0x7fff);
+                } وإلا {
+                    قدر=read_ڳنڍ_قدر(pos, ڳنڍ);
                 }
-                if(isFinal || (maxLength_>0 && str_.length()==maxLength_)) {
-                    pos_=nullptr;
-                } else {
+                إذا(isFinal || (max_ڊيگهائي>0 && str_.length()==max_ڊيگهائي)) {
+                    pos_=خالي_اشارو;
+                } وإلا {
                     // We cannot skip the value right here because it shares its
                     // lead unit with a match node which we have to evaluate
                     // next time.
                     // Instead, keep pos_ on the node lead unit itself.
                     pos_=pos-1;
-                    skipValue_=true;
+                    skip_قدر_2=سچ;
                 }
-                return true;
+                أرجع سچ;
             }
         }
-        if(maxLength_>0 && str_.length()==maxLength_) {
-            return truncateAndStop();
+        إذا(max_ڊيگهائي>0 && str_.length()==max_ڊيگهائي) {
+            أرجع truncateAndStop();
         }
-        if(node<kMinLinearMatch) {
-            if(node==0) {
-                node=*pos++;
+        إذا(ڳنڍ<k_Min_لڪيري_ميلاپ) {
+            إذا(ڳنڍ==0) {
+                ڳنڍ=*pos++;
             }
-            pos=branchNext(pos, node+1, errorCode);
-            if(pos==nullptr) {
-                return true;  // Reached a final value.
+            pos=branch_ايندڙ(pos, ڳنڍ+1, error_ڪوڊ);
+            إذا(pos==خالي_اشارو) {
+                أرجع سچ;  // Reached a final value.
             }
-        } else {
+        } وإلا {
             // Linear-match node, append length units to str_.
-            int32_t length=node-kMinLinearMatch+1;
-            if(maxLength_>0 && str_.length()+length>maxLength_) {
-                str_.append(pos, maxLength_-str_.length());
-                return truncateAndStop();
+            int32_t length=ڳنڍ-k_Min_لڪيري_ميلاپ+1;
+            إذا(max_ڊيگهائي>0 && str_.length()+length>max_ڊيگهائي) {
+                str_.append(pos, max_ڊيگهائي-str_.length());
+                أرجع truncateAndStop();
             }
             str_.append(pos, length);
             pos+=length;
@@ -182,15 +182,15 @@ UCharsTrie::Iterator::next(UErrorCode &errorCode) {
 }
 
 // Branch node, needs to take the first outbound edge and push state for the rest.
-const char16_t*
-UCharsTrie::Iterator::branchNext(const char16_t* pos U_LIFETIME_BOUND,
+ثابت char16_t*
+UCharsTrie::Iterator::branch_ايندڙ(ثابت char16_t* pos U_LIFETIME_BOUND,
                                  int32_t length,
-                                 UErrorCode& errorCode) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+                                 UError_ڪوڊ& error_ڪوڊ) {
+    طالما(length>k_Max_Branch_لڪيري_Sub_ڳنڍ_ڊيگهائي) {
         ++pos;  // ignore the comparison unit
         // Push state for the greater-or-equal edge.
-        stack_->addElement(static_cast<int32_t>(skipDelta(pos) - uchars_), errorCode);
-        stack_->addElement(((length-(length>>1))<<16)|str_.length(), errorCode);
+        ڍير->جوڙيو_Element(static_cast<int32_t>(skipDelta(pos) - uchars_), error_ڪوڊ);
+        ڍير->جوڙيو_Element(((length-(length>>1))<<16)|str_.length(), error_ڪوڊ);
         // Follow the less-than edge.
         length>>=1;
         pos=jumpByDelta(pos);
@@ -198,20 +198,20 @@ UCharsTrie::Iterator::branchNext(const char16_t* pos U_LIFETIME_BOUND,
     // List of key-value pairs where values are either final values or jump deltas.
     // Read the first (key, value) pair.
     char16_t trieUnit=*pos++;
-    int32_t node=*pos++;
-    UBool isFinal = static_cast<UBool>(node >> 15);
-    int32_t value=readValue(pos, node&=0x7fff);
-    pos=skipValue(pos, node);
-    stack_->addElement(static_cast<int32_t>(pos - uchars_), errorCode);
-    stack_->addElement(((length-1)<<16)|str_.length(), errorCode);
+    int32_t ڳنڍ=*pos++;
+    UBool isFinal = static_cast<UBool>(ڳنڍ >> 15);
+    int32_t value=read_قدر(pos, ڳنڍ&=0x7fff);
+    pos=skip_قدر(pos, ڳنڍ);
+    ڍير->جوڙيو_Element(static_cast<int32_t>(pos - uchars_), error_ڪوڊ);
+    ڍير->جوڙيو_Element(((length-1)<<16)|str_.length(), error_ڪوڊ);
     str_.append(trieUnit);
-    if(isFinal) {
-        pos_=nullptr;
-        value_=value;
-        return nullptr;
-    } else {
-        return pos+value;
+    إذا(isFinal) {
+        pos_=خالي_اشارو;
+        قدر=value;
+        أرجع خالي_اشارو;
+    } وإلا {
+        أرجع pos+value;
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي

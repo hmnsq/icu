@@ -20,11 +20,11 @@
 ********************************************************************************
 */
 
-#ifndef ULOC_H
-#define ULOC_H
+#جيڪڏهن_وصف_نه_ٿيل ULOC_H
+#وصف_ڪريو ULOC_H
 
-#include "unicode/utypes.h"
-#include "unicode/uenum.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uenum.h"
 
 /**
  * \file
@@ -200,126 +200,126 @@
  */
 
 /** Useful constant for this language. @stable ICU 2.0 */
-#define ULOC_CHINESE            "zh"
+#وصف_ڪريو ULOC_CHINESE            "zh"
 /** Useful constant for this language. @stable ICU 2.0 */
-#define ULOC_ENGLISH            "en"
+#وصف_ڪريو ULOC_ENGLISH            "en"
 /** Useful constant for this language. @stable ICU 2.0 */
-#define ULOC_FRENCH             "fr"
+#وصف_ڪريو ULOC_FRENCH             "fr"
 /** Useful constant for this language. @stable ICU 2.0 */
-#define ULOC_GERMAN             "de"
+#وصف_ڪريو ULOC_GERMAN             "de"
 /** Useful constant for this language. @stable ICU 2.0 */
-#define ULOC_ITALIAN            "it"
+#وصف_ڪريو ULOC_ITALIAN            "it"
 /** Useful constant for this language. @stable ICU 2.0 */
-#define ULOC_JAPANESE           "ja"
+#وصف_ڪريو ULOC_JAPANESE           "ja"
 /** Useful constant for this language. @stable ICU 2.0 */
-#define ULOC_KOREAN             "ko"
+#وصف_ڪريو ULOC_KOREAN             "ko"
 /** Useful constant for this language. @stable ICU 2.0 */
-#define ULOC_SIMPLIFIED_CHINESE "zh_CN"
+#وصف_ڪريو ULOC_SIMPLIFIED_CHINESE "zh_CN"
 /** Useful constant for this language. @stable ICU 2.0 */
-#define ULOC_TRADITIONAL_CHINESE "zh_TW"
+#وصف_ڪريو ULOC_TRADITIONAL_CHINESE "zh_TW"
 
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_CANADA         "en_CA"
+#وصف_ڪريو ULOC_CANADA         "en_CA"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_CANADA_FRENCH  "fr_CA"
+#وصف_ڪريو ULOC_CANADA_FRENCH  "fr_CA"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_CHINA          "zh_CN"
+#وصف_ڪريو ULOC_CHINA          "zh_CN"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_PRC            "zh_CN"
+#وصف_ڪريو ULOC_PRC            "zh_CN"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_FRANCE         "fr_FR"
+#وصف_ڪريو ULOC_FRANCE         "fr_FR"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_GERMANY        "de_DE"
+#وصف_ڪريو ULOC_GERMANY        "de_DE"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_ITALY          "it_IT"
+#وصف_ڪريو ULOC_ITALY          "it_IT"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_JAPAN          "ja_JP"
+#وصف_ڪريو ULOC_JAPAN          "ja_JP"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_KOREA          "ko_KR"
+#وصف_ڪريو ULOC_KOREA          "ko_KR"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_TAIWAN         "zh_TW"
+#وصف_ڪريو ULOC_TAIWAN         "zh_TW"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_UK             "en_GB"
+#وصف_ڪريو ULOC_UK             "en_GB"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_US             "en_US"
+#وصف_ڪريو ULOC_US             "en_US"
 
 /**
  * Useful constant for the maximum size of the language part of a locale ID.
  * (including the terminating NULL).
  * @stable ICU 2.0
  */
-#define ULOC_LANG_CAPACITY 12
+#وصف_ڪريو ULOC_LANG_صلاحيت 12
 
 /**
  * Useful constant for the maximum size of the country part of a locale ID
  * (including the terminating NULL).
  * @stable ICU 2.0
  */
-#define ULOC_COUNTRY_CAPACITY 4
+#وصف_ڪريو ULOC_COUNTRY_صلاحيت 4
 /**
  * Useful constant for the maximum size of the whole locale ID
  * (including the terminating NULL and all keywords).
  * @stable ICU 2.0
  */
-#define ULOC_FULLNAME_CAPACITY 157
+#وصف_ڪريو ULOC_FULLNAME_صلاحيت 157
 
 /**
  * Useful constant for the maximum size of the script part of a locale ID
  * (including the terminating NULL).
  * @stable ICU 2.8
  */
-#define ULOC_SCRIPT_CAPACITY 6
+#وصف_ڪريو ULOC_SCRIPT_صلاحيت 6
 
 /**
  * Useful constant for the maximum size of keywords in a locale
  * @stable ICU 2.8
  */
-#define ULOC_KEYWORDS_CAPACITY 96
+#وصف_ڪريو ULOC_KEYWORDS_صلاحيت 96
 
 /**
  * Useful constant for the maximum total size of keywords and their values in a locale
  * @stable ICU 2.8
  */
-#define ULOC_KEYWORD_AND_VALUES_CAPACITY 100
+#وصف_ڪريو ULOC_KEYWORD_AND_قدرون_صلاحيت 100
 
 /**
  * Invariant character separating keywords from the locale string
  * @stable ICU 2.8
  */
-#define ULOC_KEYWORD_SEPARATOR '@'
+#وصف_ڪريو ULOC_KEYWORD_SEPARATOR '@'
 
 /**
   * Unicode code point for '@' separating keywords from the locale string.
   * @see ULOC_KEYWORD_SEPARATOR
   * @stable ICU 4.6
   */
-#define ULOC_KEYWORD_SEPARATOR_UNICODE 0x40
+#وصف_ڪريو ULOC_KEYWORD_SEPARATOR_UNICODE 0x40
 
 /**
  * Invariant character for assigning value to a keyword
  * @stable ICU 2.8
  */
-#define ULOC_KEYWORD_ASSIGN '='
+#وصف_ڪريو ULOC_KEYWORD_سونپيو '='
 
 /**
   * Unicode code point for '=' for assigning value to a keyword.
   * @see ULOC_KEYWORD_ASSIGN
   * @stable ICU 4.6 
   */
-#define ULOC_KEYWORD_ASSIGN_UNICODE 0x3D
+#وصف_ڪريو ULOC_KEYWORD_سونپيو_UNICODE 0x3D
 
 /**
  * Invariant character separating keywords
  * @stable ICU 2.8
  */
-#define ULOC_KEYWORD_ITEM_SEPARATOR ';'
+#وصف_ڪريو ULOC_KEYWORD_شي_SEPARATOR ';'
 
 /**
   * Unicode code point for ';' separating keywords
   * @see ULOC_KEYWORD_ITEM_SEPARATOR
   * @stable ICU 4.6
   */
-#define ULOC_KEYWORD_ITEM_SEPARATOR_UNICODE 0x3B
+#وصف_ڪريو ULOC_KEYWORD_شي_SEPARATOR_UNICODE 0x3B
 
 /**
  * Constants for *_getLocale()
@@ -335,7 +335,7 @@
  * for that locale (although it may be empty).
  * @stable ICU 2.1
  */
-typedef enum {
+تعريفنوع تعداد {
   /** This is locale the data actually comes from 
    * @stable ICU 2.1
    */
@@ -345,7 +345,7 @@ typedef enum {
    */
   ULOC_VALID_LOCALE    = 1,
 
-#ifndef U_HIDE_DEPRECATED_API
+#جيڪڏهن_وصف_نه_ٿيل U_HIDE_DEPRECATED_API
   /** This is the requested locale
    *  @deprecated ICU 2.8 
    */
@@ -355,11 +355,11 @@ typedef enum {
      * One more than the highest normal ULocDataLocaleType value.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    ULOC_DATA_LOCALE_TYPE_LIMIT = 3
-#endif  // U_HIDE_DEPRECATED_API
-} ULocDataLocaleType;
+    ULOC_معلومات_LOCALE_TYPE_حد_بندي = 3
+#جيڪڏهن_پورو  // U_HIDE_DEPRECATED_API
+} ULoc_معلومات_Locale_Type;
 
-#ifndef U_HIDE_SYSTEM_API
+#جيڪڏهن_وصف_نه_ٿيل U_HIDE_SYSTEM_API
 /**
  * Gets ICU's default locale.  
  * The returned string is a snapshot in time, and will remain valid
@@ -371,8 +371,8 @@ typedef enum {
  * @system
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
-uloc_getDefault(void);
+U_CAPI ثابت حرف* U_EXPORT2
+uloc_getDefault(فراغ);
 
 /**
  * Sets ICU's default locale.  
@@ -391,10 +391,10 @@ uloc_getDefault(void);
  * @system
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-uloc_setDefault(const char* localeID,
-        UErrorCode*       status);
-#endif  /* U_HIDE_SYSTEM_API */
+U_CAPI فراغ U_EXPORT2
+uloc_سيٽ_Default(ثابت حرف* localeID,
+        UError_ڪوڊ*       حالت);
+#جيڪڏهن_پورو  /* U_HIDE_SYSTEM_API */
 
 /**
  * Gets the language code for the specified locale.
@@ -412,10 +412,10 @@ uloc_setDefault(const char* localeID,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getLanguage(const char*    localeID,
-         char* language,
-         int32_t languageCapacity,
-         UErrorCode* err);
+uloc_getLanguage(ثابت حرف*    localeID,
+         حرف* language,
+         int32_t language_صلاحيت,
+         UError_ڪوڊ* err);
 
 /**
  * Gets the script code for the specified locale.
@@ -433,10 +433,10 @@ uloc_getLanguage(const char*    localeID,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getScript(const char*    localeID,
-         char* script,
-         int32_t scriptCapacity,
-         UErrorCode* err);
+uloc_getScript(ثابت حرف*    localeID,
+         حرف* script,
+         int32_t script_صلاحيت,
+         UError_ڪوڊ* err);
 
 /**
  * Gets the  country code for the specified locale.
@@ -454,10 +454,10 @@ uloc_getScript(const char*    localeID,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getCountry(const char*    localeID,
-        char* country,
-        int32_t countryCapacity,
-        UErrorCode* err);
+uloc_getCountry(ثابت حرف*    localeID,
+        حرف* country,
+        int32_t country_صلاحيت,
+        UError_ڪوڊ* err);
 
 /**
  * Gets the variant code for the specified locale.
@@ -475,10 +475,10 @@ uloc_getCountry(const char*    localeID,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getVariant(const char*    localeID,
-        char* variant,
-        int32_t variantCapacity,
-        UErrorCode* err);
+uloc_getVariant(ثابت حرف*    localeID,
+        حرف* variant,
+        int32_t variant_صلاحيت,
+        UError_ڪوڊ* err);
 
 
 /**
@@ -502,10 +502,10 @@ uloc_getVariant(const char*    localeID,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getName(const char*    localeID,
-         char* name,
-         int32_t nameCapacity,
-         UErrorCode* err);
+uloc_getName(ثابت حرف*    localeID,
+         حرف* name,
+         int32_t name_صلاحيت,
+         UError_ڪوڊ* err);
 
 /**
  * Gets the full name for the specified locale.
@@ -525,10 +525,10 @@ uloc_getName(const char*    localeID,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_canonicalize(const char*    localeID,
-         char* name,
-         int32_t nameCapacity,
-         UErrorCode* err);
+uloc_canonicalize(ثابت حرف*    localeID,
+         حرف* name,
+         int32_t name_صلاحيت,
+         UError_ڪوڊ* err);
 
 /**
  * Gets the ISO language code for the specified locale.
@@ -537,8 +537,8 @@ uloc_canonicalize(const char*    localeID,
  * @return language the ISO language code for localeID
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
-uloc_getISO3Language(const char* localeID);
+U_CAPI ثابت حرف* U_EXPORT2
+uloc_getISO3Language(ثابت حرف* localeID);
 
 
 /**
@@ -548,8 +548,8 @@ uloc_getISO3Language(const char* localeID);
  * @return country the ISO country code for localeID
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
-uloc_getISO3Country(const char* localeID);
+U_CAPI ثابت حرف* U_EXPORT2
+uloc_getISO3Country(ثابت حرف* localeID);
 
 /**
  * Gets the Win32 LCID value for the specified locale.
@@ -563,7 +563,7 @@ uloc_getISO3Country(const char* localeID);
  * @stable ICU 2.0
  */
 U_CAPI uint32_t U_EXPORT2
-uloc_getLCID(const char* localeID);
+uloc_getLCID(ثابت حرف* localeID);
 
 /**
  * Gets the language name suitable for display for the specified locale.
@@ -587,11 +587,11 @@ uloc_getLCID(const char* localeID);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayLanguage(const char* locale,
-            const char* displayLocale,
+uloc_getDisplayLanguage(ثابت حرف* locale,
+            ثابت حرف* displayLocale,
             UChar* language,
-            int32_t languageCapacity,
-            UErrorCode* status);
+            int32_t language_صلاحيت,
+            UError_ڪوڊ* حالت);
 
 /**
  * Gets the script name suitable for display for the specified locale.
@@ -616,11 +616,11 @@ uloc_getDisplayLanguage(const char* locale,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayScript(const char* locale,
-            const char* displayLocale,
+uloc_getDisplayScript(ثابت حرف* locale,
+            ثابت حرف* displayLocale,
             UChar* script,
-            int32_t scriptCapacity,
-            UErrorCode* status);
+            int32_t script_صلاحيت,
+            UError_ڪوڊ* حالت);
 
 /**
  * Gets the country name suitable for display for the specified locale.
@@ -648,11 +648,11 @@ uloc_getDisplayScript(const char* locale,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayCountry(const char* locale,
-                       const char* displayLocale,
+uloc_getDisplayCountry(ثابت حرف* locale,
+                       ثابت حرف* displayLocale,
                        UChar* country,
-                       int32_t countryCapacity,
-                       UErrorCode* status);
+                       int32_t country_صلاحيت,
+                       UError_ڪوڊ* حالت);
 
 
 /**
@@ -678,11 +678,11 @@ uloc_getDisplayCountry(const char* locale,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayVariant(const char* locale,
-                       const char* displayLocale,
+uloc_getDisplayVariant(ثابت حرف* locale,
+                       ثابت حرف* displayLocale,
                        UChar* variant,
-                       int32_t variantCapacity,
-                       UErrorCode* status);
+                       int32_t variant_صلاحيت,
+                       UError_ڪوڊ* حالت);
 
 /**
  * Gets the keyword name suitable for display for the specified locale. E.g:
@@ -727,11 +727,11 @@ uloc_getDisplayVariant(const char* locale,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayKeyword(const char* keyword,
-                       const char* displayLocale,
+uloc_getDisplayKeyword(ثابت حرف* keyword,
+                       ثابت حرف* displayLocale,
                        UChar* dest,
-                       int32_t destCapacity,
-                       UErrorCode* status);
+                       int32_t dest_صلاحيت,
+                       UError_ڪوڊ* حالت);
 /**
  * Gets the value of the keyword suitable for display for the specified locale.
  * E.g: for the locale string de_DE\@collation=PHONEBOOK, this API gets the display
@@ -755,12 +755,12 @@ uloc_getDisplayKeyword(const char* keyword,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayKeywordValue(   const char* locale,
-                               const char* keyword,
-                               const char* displayLocale,
+uloc_get_Display_Keyword_قدر(   ثابت حرف* locale,
+                               ثابت حرف* keyword,
+                               ثابت حرف* displayLocale,
                                UChar* dest,
-                               int32_t destCapacity,
-                               UErrorCode* status);
+                               int32_t dest_صلاحيت,
+                               UError_ڪوڊ* حالت);
 /**
  * Gets the full name suitable for display for the specified locale.
  *
@@ -778,11 +778,11 @@ uloc_getDisplayKeywordValue(   const char* locale,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayName(const char* localeID,
-            const char* inLocaleID,
-            UChar* result,
-            int32_t maxResultSize,
-            UErrorCode* err);
+uloc_getDisplayName(ثابت حرف* localeID,
+            ثابت حرف* اندريون_Locale_ID,
+            UChar* نتيجو,
+            int32_t max_نتيجو_سائيز,
+            UError_ڪوڊ* err);
 
 
 /**
@@ -801,8 +801,8 @@ uloc_getDisplayName(const char* localeID,
  * @return a specified locale name of all available locales
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
-uloc_getAvailable(int32_t n);
+U_CAPI ثابت حرف* U_EXPORT2
+uloc_get_موجود(int32_t n);
 
 /**
  * Gets the size of the all available locale list.
@@ -810,21 +810,21 @@ uloc_getAvailable(int32_t n);
  * @return the size of the locale list
  * @stable ICU 2.0
  */
-U_CAPI int32_t U_EXPORT2 uloc_countAvailable(void);
+U_CAPI int32_t U_EXPORT2 uloc_ڳڻپ_موجود(فراغ);
 
 /**
  * Types for uloc_getAvailableByType and uloc_countAvailableByType.
  *
  * @stable ICU 65
  */
-typedef enum ULocAvailableType {
+تعريفنوع تعداد ULoc_موجود_Type {
   /**
    * Locales that return data when passed to ICU APIs,
    * but not including legacy or alias locales.
    *
    * @stable ICU 65
    */
-  ULOC_AVAILABLE_DEFAULT,
+  ULOC_موجود_DEFAULT,
 
   /**
    * Legacy or alias locales that return data when passed to ICU APIs.
@@ -842,7 +842,7 @@ typedef enum ULocAvailableType {
    *
    * @stable ICU 65
    */
-  ULOC_AVAILABLE_ONLY_LEGACY_ALIASES,
+  ULOC_موجود_ONLY_LEGACY_ALIASES,
 
   /**
    * The union of the locales in ULOC_AVAILABLE_DEFAULT and
@@ -850,15 +850,15 @@ typedef enum ULocAvailableType {
    *
    * @stable ICU 65
    */
-  ULOC_AVAILABLE_WITH_LEGACY_ALIASES,
+  ULOC_موجود_WITH_LEGACY_ALIASES,
 
-#ifndef U_HIDE_INTERNAL_API
+#جيڪڏهن_وصف_نه_ٿيل U_HIDE_اندروني_API
   /**
    * @internal
    */
-  ULOC_AVAILABLE_COUNT
-#endif  /* U_HIDE_INTERNAL_API */
-} ULocAvailableType;
+  ULOC_موجود_ڳڻپ
+#جيڪڏهن_پورو  /* U_HIDE_INTERNAL_API */
+} ULoc_موجود_Type;
 
 /**
  * Gets a list of available locales according to the type argument, allowing
@@ -872,7 +872,7 @@ typedef enum ULocAvailableType {
  * @stable ICU 65
  */
 U_CAPI UEnumeration* U_EXPORT2
-uloc_openAvailableByType(ULocAvailableType type, UErrorCode* status);
+uloc_open_موجود_By_Type(ULoc_موجود_Type type, UError_ڪوڊ* حالت);
 
 /**
  *
@@ -885,8 +885,8 @@ uloc_openAvailableByType(ULocAvailableType type, UErrorCode* status);
  * @return a list of all available language codes
  * @stable ICU 2.0
  */
-U_CAPI const char* const* U_EXPORT2
-uloc_getISOLanguages(void);
+U_CAPI ثابت حرف* ثابت* U_EXPORT2
+uloc_getISOLanguages(فراغ);
 
 /**
  *
@@ -897,8 +897,8 @@ uloc_getISOLanguages(void);
  * @return a list of all available country codes
  * @stable ICU 2.0
  */
-U_CAPI const char* const* U_EXPORT2
-uloc_getISOCountries(void);
+U_CAPI ثابت حرف* ثابت* U_EXPORT2
+uloc_getISOCountries(فراغ);
 
 /**
  * Truncate the locale ID string to get the parent locale ID.
@@ -914,10 +914,10 @@ uloc_getISOCountries(void);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getParent(const char*    localeID,
-                 char* parent,
-                 int32_t parentCapacity,
-                 UErrorCode* err);
+uloc_get_والد(ثابت حرف*    localeID,
+                 حرف* والد,
+                 int32_t والد_صلاحيت,
+                 UError_ڪوڊ* err);
 
 
 
@@ -945,10 +945,10 @@ uloc_getParent(const char*    localeID,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getBaseName(const char*    localeID,
-         char* name,
-         int32_t nameCapacity,
-         UErrorCode* err);
+uloc_get_بنياد_Name(ثابت حرف*    localeID,
+         حرف* name,
+         int32_t name_صلاحيت,
+         UError_ڪوڊ* err);
 
 /**
  * Gets an enumeration of keywords for the specified locale. Enumeration
@@ -960,8 +960,8 @@ uloc_getBaseName(const char*    localeID,
  * @stable ICU 2.8
  */
 U_CAPI UEnumeration* U_EXPORT2
-uloc_openKeywords(const char* localeID,
-                        UErrorCode* status);
+uloc_openKeywords(ثابت حرف* localeID,
+                        UError_ڪوڊ* حالت);
 
 /**
  * Get the value for a keyword. Locale name does not need to be normalized.
@@ -977,10 +977,10 @@ uloc_openKeywords(const char* localeID,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getKeywordValue(const char* localeID,
-                     const char* keywordName,
-                     char* buffer, int32_t bufferCapacity,
-                     UErrorCode* status);
+uloc_get_Keyword_قدر(ثابت حرف* localeID,
+                     ثابت حرف* keywordName,
+                     حرف* بفر, int32_t بفر_صلاحيت,
+                     UError_ڪوڊ* حالت);
 
 
 /**
@@ -1014,10 +1014,10 @@ uloc_getKeywordValue(const char* localeID,
  * @stable ICU 3.2
  */
 U_CAPI int32_t U_EXPORT2
-uloc_setKeywordValue(const char* keywordName,
-                     const char* keywordValue,
-                     char* buffer, int32_t bufferCapacity,
-                     UErrorCode* status);
+uloc_سيٽ_Keyword_قدر(ثابت حرف* keywordName,
+                     ثابت حرف* keyword_قدر,
+                     حرف* بفر, int32_t بفر_صلاحيت,
+                     UError_ڪوڊ* حالت);
 
 /**
  * Returns whether the locale's script is written right-to-left.
@@ -1034,14 +1034,14 @@ uloc_setKeywordValue(const char* keywordName,
  * @stable ICU 54
  */
 U_CAPI UBool U_EXPORT2
-uloc_isRightToLeft(const char *locale);
+uloc_is_ساڄو_منزل_کاٻو(ثابت حرف *locale);
 
 /**
  * enums for the  return value for the character and line orientation
  * functions.
  * @stable ICU 4.0
  */
-typedef enum {
+تعريفنوع تعداد {
   ULOC_LAYOUT_LTR   = 0,  /* left-to-right. */
   ULOC_LAYOUT_RTL    = 1,  /* right-to-left. */
   ULOC_LAYOUT_TTB    = 2,  /* top-to-bottom. */
@@ -1058,8 +1058,8 @@ typedef enum {
  * @stable ICU 4.0
  */
 U_CAPI ULayoutType U_EXPORT2
-uloc_getCharacterOrientation(const char* localeId,
-                             UErrorCode *status);
+uloc_getCharacterOrientation(ثابت حرف* localeId,
+                             UError_ڪوڊ *حالت);
 
 /**
  * Get the layout line orientation for the specified locale.
@@ -1070,8 +1070,8 @@ uloc_getCharacterOrientation(const char* localeId,
  * @stable ICU 4.0
  */
 U_CAPI ULayoutType U_EXPORT2
-uloc_getLineOrientation(const char* localeId,
-                        UErrorCode *status);
+uloc_get_سٽ_Orientation(ثابت حرف* localeId,
+                        UError_ڪوڊ *حالت);
 
 /**
  * Output values which uloc_acceptLanguage() writes to the 'outResult' parameter.
@@ -1080,7 +1080,7 @@ uloc_getLineOrientation(const char* localeId,
  * @see uloc_acceptLanguage
  * @stable ICU 3.2
  */
-typedef enum {
+تعريفنوع تعداد {
     /**
      * No exact match was found.
      * @stable ICU 3.2
@@ -1097,7 +1097,7 @@ typedef enum {
      * @stable ICU 3.2
      */
     ULOC_ACCEPT_FALLBACK = 2   /*  */
-} UAcceptResult;
+} UAccept_نتيجو;
 
 /**
  * Based on a HTTP header from a web browser and a list of available locales,
@@ -1117,11 +1117,11 @@ typedef enum {
  * @stable ICU 3.2
  */
 U_CAPI int32_t U_EXPORT2
-uloc_acceptLanguageFromHTTP(char *result, int32_t resultAvailable,
-                            UAcceptResult *outResult,
-                            const char *httpAcceptLanguage,
-                            UEnumeration* availableLocales,
-                            UErrorCode *status);
+uloc_acceptLanguageFromHTTP(حرف *نتيجو, int32_t نتيجو_موجود,
+                            UAccept_نتيجو *ٻاهريون_نتيجو,
+                            ثابت حرف *httpAcceptLanguage,
+                            UEnumeration* موجود_Locales,
+                            UError_ڪوڊ *حالت);
 
 /**
  * Based on a list of available locales,
@@ -1142,11 +1142,11 @@ uloc_acceptLanguageFromHTTP(char *result, int32_t resultAvailable,
  * @stable ICU 3.2
  */
 U_CAPI int32_t U_EXPORT2
-uloc_acceptLanguage(char *result, int32_t resultAvailable, 
-                    UAcceptResult *outResult, const char **acceptList,
-                    int32_t acceptListCount,
-                    UEnumeration* availableLocales,
-                    UErrorCode *status);
+uloc_acceptLanguage(حرف *نتيجو, int32_t نتيجو_موجود, 
+                    UAccept_نتيجو *ٻاهريون_نتيجو, ثابت حرف **acceptList,
+                    int32_t accept_List_ڳڻپ,
+                    UEnumeration* موجود_Locales,
+                    UError_ڪوڊ *حالت);
 
 
 /**
@@ -1162,8 +1162,8 @@ uloc_acceptLanguage(char *result, int32_t resultAvailable,
  * @stable ICU 3.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getLocaleForLCID(uint32_t hostID, char *locale, int32_t localeCapacity,
-                    UErrorCode *status);
+uloc_getLocaleForLCID(uint32_t hostID, حرف *locale, int32_t locale_صلاحيت,
+                    UError_ڪوڊ *حالت);
 
 
 /**
@@ -1201,10 +1201,10 @@ uloc_getLocaleForLCID(uint32_t hostID, char *locale, int32_t localeCapacity,
  * @stable ICU 4.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_addLikelySubtags(const char*    localeID,
-         char* maximizedLocaleID,
+uloc_جوڙيو_Likely_Subtags_2(ثابت حرف*    localeID,
+         حرف* maximizedLocaleID,
          int32_t maximizedLocaleIDCapacity,
-         UErrorCode* err);
+         UError_ڪوڊ* err);
 
 
 /**
@@ -1241,10 +1241,10 @@ uloc_addLikelySubtags(const char*    localeID,
  * @stable ICU 4.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_minimizeSubtags(const char*    localeID,
-         char* minimizedLocaleID,
+uloc_minimizeSubtags(ثابت حرف*    localeID,
+         حرف* minimizedLocaleID,
          int32_t minimizedLocaleIDCapacity,
-         UErrorCode* err);
+         UError_ڪوڊ* err);
 
 /**
  * Returns a locale ID for the specified BCP47 language tag string.
@@ -1274,11 +1274,11 @@ uloc_minimizeSubtags(const char*    localeID,
  * @stable ICU 4.2
  */
 U_CAPI int32_t U_EXPORT2
-uloc_forLanguageTag(const char* langtag,
-                    char* localeID,
+uloc_for_Language_ٽيگ(ثابت حرف* langtag,
+                    حرف* localeID,
                     int32_t localeIDCapacity,
-                    int32_t* parsedLength,
-                    UErrorCode* err);
+                    int32_t* parsed_ڊيگهائي,
+                    UError_ڪوڊ* err);
 
 /**
  * Returns a well-formed language tag for this locale ID. 
@@ -1302,11 +1302,11 @@ uloc_forLanguageTag(const char* langtag,
  * @stable ICU 4.2
  */
 U_CAPI int32_t U_EXPORT2
-uloc_toLanguageTag(const char* localeID,
-                   char* langtag,
-                   int32_t langtagCapacity,
+uloc_منزل_Language_ٽيگ(ثابت حرف* localeID,
+                   حرف* langtag,
+                   int32_t langtag_صلاحيت,
                    UBool strict,
-                   UErrorCode* err);
+                   UError_ڪوڊ* err);
 
 /**
  * Converts the specified keyword (legacy key, or BCP 47 Unicode locale
@@ -1329,8 +1329,8 @@ uloc_toLanguageTag(const char* localeID,
  * @see uloc_toLegacyKey
  * @stable ICU 54
  */
-U_CAPI const char* U_EXPORT2
-uloc_toUnicodeLocaleKey(const char* keyword U_LIFETIME_BOUND);
+U_CAPI ثابت حرف* U_EXPORT2
+uloc_منزل_Unicode_Locale_ڪنجي(ثابت حرف* keyword U_LIFETIME_BOUND);
 
 /**
  * Converts the specified keyword value (legacy type, or BCP 47
@@ -1360,8 +1360,8 @@ uloc_toUnicodeLocaleKey(const char* keyword U_LIFETIME_BOUND);
  * @see uloc_toLegacyType
  * @stable ICU 54
  */
-U_CAPI const char* U_EXPORT2
-uloc_toUnicodeLocaleType(const char* keyword, const char* value U_LIFETIME_BOUND);
+U_CAPI ثابت حرف* U_EXPORT2
+uloc_منزل_Unicode_Locale_Type(ثابت حرف* keyword, ثابت حرف* قدر_2 U_LIFETIME_BOUND);
 
 /**
  * Converts the specified keyword (BCP 47 Unicode locale extension key, or
@@ -1375,8 +1375,8 @@ uloc_toUnicodeLocaleType(const char* keyword, const char* value U_LIFETIME_BOUND
  * @see toUnicodeLocaleKey
  * @stable ICU 54
  */
-U_CAPI const char* U_EXPORT2
-uloc_toLegacyKey(const char* keyword U_LIFETIME_BOUND);
+U_CAPI ثابت حرف* U_EXPORT2
+uloc_منزل_Legacy_ڪنجي(ثابت حرف* keyword U_LIFETIME_BOUND);
 
 /**
  * Converts the specified keyword value (BCP 47 Unicode locale extension type,
@@ -1404,7 +1404,7 @@ uloc_toLegacyKey(const char* keyword U_LIFETIME_BOUND);
  * @see toUnicodeLocaleType
  * @stable ICU 54
  */
-U_CAPI const char* U_EXPORT2
-uloc_toLegacyType(const char* keyword, const char* value U_LIFETIME_BOUND);
+U_CAPI ثابت حرف* U_EXPORT2
+uloc_منزل_Legacy_Type(ثابت حرف* keyword, ثابت حرف* قدر_2 U_LIFETIME_BOUND);
 
-#endif /*_ULOC*/
+#جيڪڏهن_پورو /*_ULOC*/

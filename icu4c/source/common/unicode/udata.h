@@ -16,14 +16,14 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UDATA_H__
-#define __UDATA_H__
+#جيڪڏهن_وصف_نه_ٿيل __UDATA_H__
+#وصف_ڪريو __UDATA_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
+#ضمن "unicode/localpointer.h"
+#جيڪڏهن_پورو   // U_SHOW_CPLUSPLUS_API
 
 U_CDECL_BEGIN
 
@@ -42,38 +42,38 @@ U_CDECL_BEGIN
  * See the User Guide Data Management chapter.
  */
  
-#ifndef U_HIDE_INTERNAL_API
+#جيڪڏهن_وصف_نه_ٿيل U_HIDE_اندروني_API
 /**
  * Character used to separate package names from tree names 
  * @internal ICU 3.0
  */
-#define U_TREE_SEPARATOR '-'
+#وصف_ڪريو U_وڻ_SEPARATOR '-'
 
 /**
  * String used to separate package names from tree names 
  * @internal ICU 3.0
  */
-#define U_TREE_SEPARATOR_STRING "-"
+#وصف_ڪريو U_وڻ_SEPARATOR_STRING "-"
 
 /**
  * Character used to separate parts of entry names
  * @internal ICU 3.0
  */
-#define U_TREE_ENTRY_SEP_CHAR '/'
+#وصف_ڪريو U_وڻ_داخلا_SEP_CHAR '/'
 
 /**
  * String used to separate parts of entry names
  * @internal ICU 3.0
  */
-#define U_TREE_ENTRY_SEP_STRING "/"
+#وصف_ڪريو U_وڻ_داخلا_SEP_STRING "/"
 
 /**
  * Alias for standard ICU data 
  * @internal ICU 3.0
  */
-#define U_ICUDATA_ALIAS "ICUDATA"
+#وصف_ڪريو U_ICUDATA_ALIAS "ICUDATA"
 
-#endif /* U_HIDE_INTERNAL_API */
+#جيڪڏهن_پورو /* U_HIDE_INTERNAL_API */
 
 /**
  * UDataInfo contains the properties about the requested data.
@@ -113,14 +113,14 @@ U_CDECL_BEGIN
  *
  * @stable ICU 2.0
  */
-typedef struct {
+تعريفنوع بنية {
     /** sizeof(UDataInfo)
      *  @stable ICU 2.0 */
-    uint16_t size;
+    uint16_t سائيز_2;
 
     /** unused, set to 0 
      *  @stable ICU 2.0*/
-    uint16_t reservedWord;
+    uint16_t reserved_لفظ;
 
     /* platform data properties */
     /** 0 for little-endian machine, 1 for big-endian
@@ -141,15 +141,15 @@ typedef struct {
 
     /** data format identifier 
      *  @stable ICU 2.0*/
-    uint8_t dataFormat[4];
+    uint8_t معلومات_Format[4];
 
     /** versions: [0] major [1] minor [2] milli [3] micro 
      *  @stable ICU 2.0*/
-    uint8_t formatVersion[4];
+    uint8_t format_نسخو[4];
 
     /** versions: [0] major [1] minor [2] milli [3] micro 
      *  @stable ICU 2.0*/
-    uint8_t dataVersion[4];
+    uint8_t معلومات_نسخو[4];
 } UDataInfo;
 
 /* API for reading data -----------------------------------------------------*/
@@ -158,7 +158,7 @@ typedef struct {
  * Forward declaration of the data memory type.
  * @stable ICU 2.0
  */
-typedef struct UDataMemory UDataMemory;
+تعريفنوع بنية UData_يادگيري UData_يادگيري;
 
 /**
  * Callback function for udata_openChoice().
@@ -173,10 +173,10 @@ typedef struct UDataMemory UDataMemory;
  * @return true if the current data memory is acceptable
  * @stable ICU 2.0
  */
-typedef UBool U_CALLCONV
-UDataMemoryIsAcceptable(void *context,
-                        const char *type, const char *name,
-                        const UDataInfo *pInfo);
+تعريفنوع UBool U_CALLCONV
+UData_يادگيري_Is_Acceptable(فراغ *context,
+                        ثابت حرف *type, ثابت حرف *name,
+                        ثابت UDataInfo *pInfo);
 
 
 /**
@@ -200,9 +200,9 @@ UDataMemoryIsAcceptable(void *context,
  * @see udata_openChoice
  * @stable ICU 2.0
  */
-U_CAPI UDataMemory * U_EXPORT2
-udata_open(const char *path, const char *type, const char *name,
-           UErrorCode *pErrorCode);
+U_CAPI UData_يادگيري * U_EXPORT2
+udata_open(ثابت حرف *رستو, ثابت حرف *type, ثابت حرف *name,
+           UError_ڪوڊ *p_Error_ڪوڊ);
 
 /**
  * Data loading function.
@@ -252,10 +252,10 @@ udata_open(const char *path, const char *type, const char *name,
  *         to get a pointer to the actual data.
  * @stable ICU 2.0
  */
-U_CAPI UDataMemory * U_EXPORT2
-udata_openChoice(const char *path, const char *type, const char *name,
-                 UDataMemoryIsAcceptable *isAcceptable, void *context,
-                 UErrorCode *pErrorCode);
+U_CAPI UData_يادگيري * U_EXPORT2
+udata_openChoice(ثابت حرف *رستو, ثابت حرف *type, ثابت حرف *name,
+                 UData_يادگيري_Is_Acceptable *isAcceptable, فراغ *context,
+                 UError_ڪوڊ *p_Error_ڪوڊ);
 
 /**
  * Close the data memory.
@@ -264,8 +264,8 @@ udata_openChoice(const char *path, const char *type, const char *name,
  * @param pData The pointer to data memory object
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-udata_close(UDataMemory *pData);
+U_CAPI فراغ U_EXPORT2
+udata_close(UData_يادگيري *p_معلومات);
 
 /**
  * Get the pointer to the actual data inside the data memory.
@@ -276,8 +276,8 @@ udata_close(UDataMemory *pData);
  * @param pData The pointer to data memory object
  * @stable ICU 2.0
  */
-U_CAPI const void* U_EXPORT2
-udata_getMemory(UDataMemory* pData U_LIFETIME_BOUND);
+U_CAPI ثابت فراغ* U_EXPORT2
+udata_get_يادگيري(UData_يادگيري* p_معلومات U_LIFETIME_BOUND);
 
 /**
  * Get the information from the data memory header.
@@ -297,8 +297,8 @@ udata_getMemory(UDataMemory* pData U_LIFETIME_BOUND);
  * adjusted and only part of the structure will be filled.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-udata_getInfo(UDataMemory *pData, UDataInfo *pInfo);
+U_CAPI فراغ U_EXPORT2
+udata_getInfo(UData_يادگيري *p_معلومات, UDataInfo *pInfo);
 
 /**
  * This function bypasses the normal ICU data loading process and
@@ -343,8 +343,8 @@ udata_getInfo(UDataMemory *pData, UDataInfo *pInfo);
  * @param err outgoing error status <code>U_USING_DEFAULT_WARNING, U_UNSUPPORTED_ERROR</code>
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-udata_setCommonData(const void *data, UErrorCode *err);
+U_CAPI فراغ U_EXPORT2
+udata_سيٽ_Common_معلومات(ثابت فراغ *معلومات, UError_ڪوڊ *err);
 
 
 /**
@@ -374,33 +374,33 @@ udata_setCommonData(const void *data, UErrorCode *err);
  * @see udata_setCommonData
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-udata_setAppData(const char *packageName, const void *data, UErrorCode *err);
+U_CAPI فراغ U_EXPORT2
+udata_سيٽ_App_معلومات(ثابت حرف *packageName, ثابت فراغ *معلومات, UError_ڪوڊ *err);
 
 /**
  * Possible settings for udata_setFileAccess()
  * @see udata_setFileAccess
  * @stable ICU 3.4
  */
-typedef enum UDataFileAccess {
+تعريفنوع تعداد UDataFileAccess {
     /** ICU looks for data in single files first, then in packages. (default) @stable ICU 3.4 */
-    UDATA_FILES_FIRST,
+    UDATA_FILES_پهريون,
     /** An alias for the default access mode. @stable ICU 3.4 */
-    UDATA_DEFAULT_ACCESS = UDATA_FILES_FIRST,
+    UDATA_DEFAULT_ACCESS = UDATA_FILES_پهريون,
     /** ICU only loads data from packages, not from single files. @stable ICU 3.4 */
     UDATA_ONLY_PACKAGES,
     /** ICU loads data from packages first, and only from single files
         if the data cannot be found in a package. @stable ICU 3.4 */
-    UDATA_PACKAGES_FIRST,
+    UDATA_PACKAGES_پهريون,
     /** ICU does not access the file system for data loading. @stable ICU 3.4 */
     UDATA_NO_FILES,
-#ifndef U_HIDE_DEPRECATED_API
+#جيڪڏهن_وصف_نه_ٿيل U_HIDE_DEPRECATED_API
     /**
      * Number of real UDataFileAccess values.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UDATA_FILE_ACCESS_COUNT
-#endif  // U_HIDE_DEPRECATED_API
+    UDATA_FILE_ACCESS_ڳڻپ
+#جيڪڏهن_پورو  // U_HIDE_DEPRECATED_API
 } UDataFileAccess;
 
 /**
@@ -413,12 +413,12 @@ typedef enum UDataFileAccess {
  * @see UDataFileAccess
  * @stable ICU 3.4 
  */
-U_CAPI void U_EXPORT2
-udata_setFileAccess(UDataFileAccess access, UErrorCode *status);
+U_CAPI فراغ U_EXPORT2
+udata_سيٽ_File_Access(UDataFileAccess access, UError_ڪوڊ *حالت);
 
-U_CDECL_END
+U_CDECL_پڇاڙي
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -431,10 +431,10 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 4.4
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalUDataMemoryPointer, UDataMemory, udata_close);
+U_DEFINE_LOCAL_OPEN_اشارو(Local_UData_يادگيري_اشارو, UData_يادگيري, udata_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
-#endif  // U_SHOW_CPLUSPLUS_API
+#جيڪڏهن_پورو  // U_SHOW_CPLUSPLUS_API
 
-#endif
+#جيڪڏهن_پورو

@@ -7,264 +7,264 @@
 ******************************************************************************
 */
 
-#include "ulist.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uenumimp.h"
+#ضمن "ulist.h"
+#ضمن "cmemory.h"
+#ضمن "cstring.h"
+#ضمن "uenumimp.h"
 
-typedef struct UListNode UListNode;
-struct UListNode {
-    void *data;
+تعريفنوع بنية UList_ڳنڍ UList_ڳنڍ;
+بنية UList_ڳنڍ {
+    فراغ *معلومات;
     
-    UListNode *next;
-    UListNode *previous;
+    UList_ڳنڍ *next;
+    UList_ڳنڍ *اڳيون;
     
     /* When data is created with uprv_malloc, needs to be freed during deleteList function. */
     UBool forceDelete;
 };
 
-struct UList {
-    UListNode *curr;
-    UListNode *head;
-    UListNode *tail;
+بنية UList {
+    UList_ڳنڍ *curr;
+    UList_ڳنڍ *سر;
+    UList_ڳنڍ *پڇ;
     
     int32_t size;
 };
 
-static void ulist_addFirstItem(UList *list, UListNode *newItem);
+ساكن فراغ ulist_جوڙيو_پهريون_شي(UList *list, UList_ڳنڍ *new_شي);
 
-U_CAPI UList *U_EXPORT2 ulist_createEmptyList(UErrorCode *status) {
-    UList *newList = nullptr;
+U_CAPI UList *U_EXPORT2 ulist_create_خالي_جايون_List(UError_ڪوڊ *حالت) {
+    UList *newList = خالي_اشارو;
     
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    إذا (U_FAILURE(*حالت)) {
+        أرجع خالي_اشارو;
     }
     
-    newList = (UList *)uprv_malloc(sizeof(UList));
-    if (newList == nullptr) {
-        *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    newList = (UList *)uprv_malloc(حجم(UList));
+    إذا (newList == خالي_اشارو) {
+        *حالت = U_يادگيري_ورهاست_ERROR;
+        أرجع خالي_اشارو;
     }
     
-    newList->curr = nullptr;
-    newList->head = nullptr;
-    newList->tail = nullptr;
+    newList->curr = خالي_اشارو;
+    newList->سر = خالي_اشارو;
+    newList->پڇ = خالي_اشارو;
     newList->size = 0;
     
-    return newList;
+    أرجع newList;
 }
 
 /*
  * Function called by addItemEndList or addItemBeginList when the first item is added to the list.
  * This function properly sets the pointers for the first item added.
  */
-static void ulist_addFirstItem(UList *list, UListNode *newItem) {
-    newItem->next = nullptr;
-    newItem->previous = nullptr;
-    list->head = newItem;
-    list->tail = newItem;
+ساكن فراغ ulist_جوڙيو_پهريون_شي(UList *list, UList_ڳنڍ *new_شي) {
+    new_شي->next = خالي_اشارو;
+    new_شي->اڳيون = خالي_اشارو;
+    list->سر = new_شي;
+    list->پڇ = new_شي;
 }
 
-static void ulist_removeItem(UList *list, UListNode *p) {
-    if (p->previous == nullptr) {
+ساكن فراغ ulist_remove_شي(UList *list, UList_ڳنڍ *p) {
+    إذا (p->اڳيون == خالي_اشارو) {
         // p is the list head.
-        list->head = p->next;
-    } else {
-        p->previous->next = p->next;
+        list->سر = p->next;
+    } وإلا {
+        p->اڳيون->next = p->next;
     }
-    if (p->next == nullptr) {
+    إذا (p->next == خالي_اشارو) {
         // p is the list tail.
-        list->tail = p->previous;
-    } else {
-        p->next->previous = p->previous;
+        list->پڇ = p->اڳيون;
+    } وإلا {
+        p->next->اڳيون = p->اڳيون;
     }
-    if (p == list->curr) {
+    إذا (p == list->curr) {
         list->curr = p->next;
     }
     --list->size;
-    if (p->forceDelete) {
-        uprv_free(p->data);
+    إذا (p->forceDelete) {
+        uprv_free(p->معلومات);
     }
     uprv_free(p);
 }
 
-U_CAPI void U_EXPORT2 ulist_addItemEndList(UList *list, const void *data, UBool forceDelete, UErrorCode *status) {
-    UListNode *newItem = nullptr;
+U_CAPI فراغ U_EXPORT2 ulist_جوڙيو_شي_پڇاڙي_List(UList *list, ثابت فراغ *معلومات, UBool forceDelete, UError_ڪوڊ *حالت) {
+    UList_ڳنڍ *new_شي = خالي_اشارو;
     
-    if (U_FAILURE(*status) || list == nullptr || data == nullptr) {
-        if (forceDelete) {
-            uprv_free((void *)data);
+    إذا (U_FAILURE(*حالت) || list == خالي_اشارو || معلومات == خالي_اشارو) {
+        إذا (forceDelete) {
+            uprv_free((فراغ *)معلومات);
         }
-        return;
+        أرجع;
     }
     
-    newItem = (UListNode *)uprv_malloc(sizeof(UListNode));
-    if (newItem == nullptr) {
-        if (forceDelete) {
-            uprv_free((void *)data);
+    new_شي = (UList_ڳنڍ *)uprv_malloc(حجم(UList_ڳنڍ));
+    إذا (new_شي == خالي_اشارو) {
+        إذا (forceDelete) {
+            uprv_free((فراغ *)معلومات);
         }
-        *status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        *حالت = U_يادگيري_ورهاست_ERROR;
+        أرجع;
     }
-    newItem->data = (void *)(data);
-    newItem->forceDelete = forceDelete;
+    new_شي->معلومات = (فراغ *)(معلومات);
+    new_شي->forceDelete = forceDelete;
     
-    if (list->size == 0) {
-        ulist_addFirstItem(list, newItem);
-    } else {
-        newItem->next = nullptr;
-        newItem->previous = list->tail;
-        list->tail->next = newItem;
-        list->tail = newItem;
+    إذا (list->size == 0) {
+        ulist_جوڙيو_پهريون_شي(list, new_شي);
+    } وإلا {
+        new_شي->next = خالي_اشارو;
+        new_شي->اڳيون = list->پڇ;
+        list->پڇ->next = new_شي;
+        list->پڇ = new_شي;
     }
     
     list->size++;
 }
 
-U_CAPI void U_EXPORT2 ulist_addItemBeginList(UList *list, const void *data, UBool forceDelete, UErrorCode *status) {
-    UListNode *newItem = nullptr;
+U_CAPI فراغ U_EXPORT2 ulist_جوڙيو_شي_Begin_List(UList *list, ثابت فراغ *معلومات, UBool forceDelete, UError_ڪوڊ *حالت) {
+    UList_ڳنڍ *new_شي = خالي_اشارو;
     
-    if (U_FAILURE(*status) || list == nullptr || data == nullptr) {
-        if (forceDelete) {
-            uprv_free((void *)data);
+    إذا (U_FAILURE(*حالت) || list == خالي_اشارو || معلومات == خالي_اشارو) {
+        إذا (forceDelete) {
+            uprv_free((فراغ *)معلومات);
         }
-        return;
+        أرجع;
     }
     
-    newItem = (UListNode *)uprv_malloc(sizeof(UListNode));
-    if (newItem == nullptr) {
-        if (forceDelete) {
-            uprv_free((void *)data);
+    new_شي = (UList_ڳنڍ *)uprv_malloc(حجم(UList_ڳنڍ));
+    إذا (new_شي == خالي_اشارو) {
+        إذا (forceDelete) {
+            uprv_free((فراغ *)معلومات);
         }
-        *status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        *حالت = U_يادگيري_ورهاست_ERROR;
+        أرجع;
     }
-    newItem->data = (void *)(data);
-    newItem->forceDelete = forceDelete;
+    new_شي->معلومات = (فراغ *)(معلومات);
+    new_شي->forceDelete = forceDelete;
     
-    if (list->size == 0) {
-        ulist_addFirstItem(list, newItem);
-    } else {
-        newItem->previous = nullptr;
-        newItem->next = list->head;
-        list->head->previous = newItem;
-        list->head = newItem;
+    إذا (list->size == 0) {
+        ulist_جوڙيو_پهريون_شي(list, new_شي);
+    } وإلا {
+        new_شي->اڳيون = خالي_اشارو;
+        new_شي->next = list->سر;
+        list->سر->اڳيون = new_شي;
+        list->سر = new_شي;
     }
     
     list->size++;
 }
 
-U_CAPI UBool U_EXPORT2 ulist_containsString(const UList *list, const char *data, int32_t length) {
-    if (list != nullptr) {
-        const UListNode *pointer;
-        for (pointer = list->head; pointer != nullptr; pointer = pointer->next) {
-            if (length == (int32_t)uprv_strlen((const char *)pointer->data)) {
-                if (uprv_memcmp(data, pointer->data, length) == 0) {
-                    return true;
+U_CAPI UBool U_EXPORT2 ulist_شامل_آهي_String(ثابت UList *list, ثابت حرف *معلومات, int32_t length) {
+    إذا (list != خالي_اشارو) {
+        ثابت UList_ڳنڍ *اشارو;
+        لكل (اشارو = list->سر; اشارو != خالي_اشارو; اشارو = اشارو->next) {
+            إذا (length == (int32_t)uprv_strlen((ثابت حرف *)اشارو->معلومات)) {
+                إذا (uprv_memcmp(معلومات, اشارو->معلومات, length) == 0) {
+                    أرجع سچ;
                 }
             }
         }
     }
-    return false;
+    أرجع خطأ;
 }
 
-U_CAPI UBool U_EXPORT2 ulist_removeString(UList *list, const char *data) {
-    if (list != nullptr) {
-        UListNode *pointer;
-        for (pointer = list->head; pointer != nullptr; pointer = pointer->next) {
-            if (uprv_strcmp(data, (const char *)pointer->data) == 0) {
-                ulist_removeItem(list, pointer);
+U_CAPI UBool U_EXPORT2 ulist_removeString(UList *list, ثابت حرف *معلومات) {
+    إذا (list != خالي_اشارو) {
+        UList_ڳنڍ *اشارو;
+        لكل (اشارو = list->سر; اشارو != خالي_اشارو; اشارو = اشارو->next) {
+            إذا (uprv_strcmp(معلومات, (ثابت حرف *)اشارو->معلومات) == 0) {
+                ulist_remove_شي(list, اشارو);
                 // Remove only the first occurrence, like Java LinkedList.remove(Object).
-                return true;
+                أرجع سچ;
             }
         }
     }
-    return false;
+    أرجع خطأ;
 }
 
-U_CAPI void *U_EXPORT2 ulist_getNext(UList *list) {
-    UListNode *curr = nullptr;
+U_CAPI فراغ *U_EXPORT2 ulist_get_ايندڙ(UList *list) {
+    UList_ڳنڍ *curr = خالي_اشارو;
     
-    if (list == nullptr || list->curr == nullptr) {
-        return nullptr;
+    إذا (list == خالي_اشارو || list->curr == خالي_اشارو) {
+        أرجع خالي_اشارو;
     }
     
     curr = list->curr;
     list->curr = curr->next;
     
-    return curr->data;
+    أرجع curr->معلومات;
 }
 
-U_CAPI int32_t U_EXPORT2 ulist_getListSize(const UList *list) {
-    if (list != nullptr) {
-        return list->size;
+U_CAPI int32_t U_EXPORT2 ulist_get_List_سائيز(ثابت UList *list) {
+    إذا (list != خالي_اشارو) {
+        أرجع list->size;
     }
     
-    return -1;
+    أرجع -1;
 }
 
-U_CAPI void U_EXPORT2 ulist_resetList(UList *list) {
-    if (list != nullptr) {
-        list->curr = list->head;
+U_CAPI فراغ U_EXPORT2 ulist_resetList(UList *list) {
+    إذا (list != خالي_اشارو) {
+        list->curr = list->سر;
     }
 }
 
-U_CAPI void U_EXPORT2 ulist_deleteList(UList *list) {
-    UListNode *listHead = nullptr;
+U_CAPI فراغ U_EXPORT2 ulist_deleteList(UList *list) {
+    UList_ڳنڍ *list_سر = خالي_اشارو;
 
-    if (list != nullptr) {
-        listHead = list->head;
-        while (listHead != nullptr) {
-            UListNode *listPointer = listHead->next;
+    إذا (list != خالي_اشارو) {
+        list_سر = list->سر;
+        طالما (list_سر != خالي_اشارو) {
+            UList_ڳنڍ *list_اشارو = list_سر->next;
 
-            if (listHead->forceDelete) {
-                uprv_free(listHead->data);
+            إذا (list_سر->forceDelete) {
+                uprv_free(list_سر->معلومات);
             }
 
-            uprv_free(listHead);
-            listHead = listPointer;
+            uprv_free(list_سر);
+            list_سر = list_اشارو;
         }
         uprv_free(list);
-        list = nullptr;
+        list = خالي_اشارو;
     }
 }
 
-U_CAPI void U_EXPORT2 ulist_close_keyword_values_iterator(UEnumeration *en) {
-    if (en != nullptr) {
+U_CAPI فراغ U_EXPORT2 ulist_close_keyword_قدرون_iterator(UEnumeration *en) {
+    إذا (en != خالي_اشارو) {
         ulist_deleteList((UList *)(en->context));
         uprv_free(en);
     }
 }
 
-U_CAPI int32_t U_EXPORT2 ulist_count_keyword_values(UEnumeration *en, UErrorCode *status) {
-    if (U_FAILURE(*status)) {
-        return -1;
+U_CAPI int32_t U_EXPORT2 ulist_ڳڻپ_keyword_قدرون(UEnumeration *en, UError_ڪوڊ *حالت) {
+    إذا (U_FAILURE(*حالت)) {
+        أرجع -1;
     }
     
-    return ulist_getListSize((UList *)(en->context));
+    أرجع ulist_get_List_سائيز((UList *)(en->context));
 }
 
-U_CAPI const char * U_EXPORT2 ulist_next_keyword_value(UEnumeration *en, int32_t *resultLength, UErrorCode *status) {
-    const char *s;
-    if (U_FAILURE(*status)) {
-        return nullptr;
+U_CAPI ثابت حرف * U_EXPORT2 ulist_ايندڙ_keyword_قدر(UEnumeration *en, int32_t *نتيجو_ڊيگهائي, UError_ڪوڊ *حالت) {
+    ثابت حرف *s;
+    إذا (U_FAILURE(*حالت)) {
+        أرجع خالي_اشارو;
     }
 
-    s = (const char *)ulist_getNext((UList *)(en->context));
-    if (s != nullptr && resultLength != nullptr) {
-        *resultLength = static_cast<int32_t>(uprv_strlen(s));
+    s = (ثابت حرف *)ulist_get_ايندڙ((UList *)(en->context));
+    إذا (s != خالي_اشارو && نتيجو_ڊيگهائي != خالي_اشارو) {
+        *نتيجو_ڊيگهائي = static_cast<int32_t>(uprv_strlen(s));
     }
-    return s;
+    أرجع s;
 }
 
-U_CAPI void U_EXPORT2 ulist_reset_keyword_values_iterator(UEnumeration *en, UErrorCode *status) {
-    if (U_FAILURE(*status)) {
-        return ;
+U_CAPI فراغ U_EXPORT2 ulist_reset_keyword_قدرون_iterator(UEnumeration *en, UError_ڪوڊ *حالت) {
+    إذا (U_FAILURE(*حالت)) {
+        أرجع ;
     }
     
     ulist_resetList((UList *)(en->context));
 }
 
 U_CAPI UList * U_EXPORT2 ulist_getListFromEnum(UEnumeration *en) {
-    return (UList *)(en->context);
+    أرجع (UList *)(en->context);
 }

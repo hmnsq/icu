@@ -15,47 +15,47 @@
 ******************************************************************************
 */
 
-#include "unicode/uscript.h"
-#include "usc_impl.h"
-#include "cmemory.h"
+#ضمن "unicode/uscript.h"
+#ضمن "usc_impl.h"
+#ضمن "cmemory.h"
 
-#define PAREN_STACK_DEPTH 32
+#وصف_ڪريو PAREN_ڍير_اونهائي 32
 
-#define MOD(sp) ((sp) % PAREN_STACK_DEPTH)
-#define LIMIT_INC(sp) (((sp) < PAREN_STACK_DEPTH)? (sp) + 1 : PAREN_STACK_DEPTH)
-#define INC(sp,count) (MOD((sp) + (count)))
-#define INC1(sp) (INC(sp, 1))
-#define DEC(sp,count) (MOD((sp) + PAREN_STACK_DEPTH - (count)))
-#define DEC1(sp) (DEC(sp, 1))
-#define STACK_IS_EMPTY(scriptRun) ((scriptRun)->pushCount <= 0)
-#define STACK_IS_NOT_EMPTY(scriptRun) (! STACK_IS_EMPTY(scriptRun))
-#define TOP(scriptRun) ((scriptRun)->parenStack[(scriptRun)->parenSP])
-#define SYNC_FIXUP(scriptRun) ((scriptRun)->fixupCount = 0)
+#وصف_ڪريو MOD(sp) ((sp) % PAREN_ڍير_اونهائي)
+#وصف_ڪريو حد_بندي_INC(sp) (((sp) < PAREN_ڍير_اونهائي)? (sp) + 1 : PAREN_ڍير_اونهائي)
+#وصف_ڪريو INC(sp,count) (MOD((sp) + (count)))
+#وصف_ڪريو INC1(sp) (INC(sp, 1))
+#وصف_ڪريو DEC(sp,count) (MOD((sp) + PAREN_ڍير_اونهائي - (count)))
+#وصف_ڪريو DEC1(sp) (DEC(sp, 1))
+#وصف_ڪريو ڍير_IS_خالي_جايون(script_لاڳيتو) ((script_لاڳيتو)->ڌڪو_ڳڻپ <= 0)
+#وصف_ڪريو ڍير_IS_NOT_خالي_جايون(script_لاڳيتو) (! ڍير_IS_خالي_جايون(script_لاڳيتو))
+#وصف_ڪريو چوٽي_2(script_لاڳيتو) ((script_لاڳيتو)->paren_ڍير[(script_لاڳيتو)->parenSP])
+#وصف_ڪريو SYNC_FIXUP(script_لاڳيتو) ((script_لاڳيتو)->fixup_ڳڻپ = 0)
 
-struct ParenStackEntry
+بنية Paren_ڍير_داخلا
 {
-    int32_t pairIndex;
-    UScriptCode scriptCode;
+    int32_t pair_اشاريو;
+    UScript_ڪوڊ script_ڪوڊ;
 };
 
-struct UScriptRun
+بنية UScript_لاڳيتو
 {
-    int32_t textLength;
-    const char16_t *textArray;
+    int32_t متن_ڊيگهائي;
+    ثابت char16_t *متن_Array;
 
-    int32_t scriptStart;
-    int32_t scriptLimit;
-    UScriptCode scriptCode;
+    int32_t script_شروعات;
+    int32_t script_حد_بندي;
+    UScript_ڪوڊ script_ڪوڊ;
 
-    struct ParenStackEntry parenStack[PAREN_STACK_DEPTH];
+    بنية Paren_ڍير_داخلا paren_ڍير[PAREN_ڍير_اونهائي];
     int32_t parenSP;
-    int32_t pushCount;
-    int32_t fixupCount;
+    int32_t ڌڪو_ڳڻپ;
+    int32_t fixup_ڳڻپ;
 };
 
-static int8_t highBit(int32_t value);
+ساكن int8_t مٿاهون_ٻٽو_انگ(int32_t value);
 
-static const UChar32 pairedChars[] = {
+ساكن ثابت UChar32 pairedChars[] = {
     0x0028, 0x0029, /* ascii paired punctuation */
     0x003c, 0x003e,
     0x005b, 0x005d,
@@ -75,223 +75,223 @@ static const UChar32 pairedChars[] = {
     0x301a, 0x301b
 };
 
-static void push(UScriptRun *scriptRun, int32_t pairIndex, UScriptCode scriptCode)
+ساكن فراغ push(UScript_لاڳيتو *script_لاڳيتو, int32_t pair_اشاريو, UScript_ڪوڊ script_ڪوڊ)
 {
-    scriptRun->pushCount  = LIMIT_INC(scriptRun->pushCount);
-    scriptRun->fixupCount = LIMIT_INC(scriptRun->fixupCount);
+    script_لاڳيتو->ڌڪو_ڳڻپ  = حد_بندي_INC(script_لاڳيتو->ڌڪو_ڳڻپ);
+    script_لاڳيتو->fixup_ڳڻپ = حد_بندي_INC(script_لاڳيتو->fixup_ڳڻپ);
     
-    scriptRun->parenSP = INC1(scriptRun->parenSP);
-    scriptRun->parenStack[scriptRun->parenSP].pairIndex  = pairIndex;
-    scriptRun->parenStack[scriptRun->parenSP].scriptCode = scriptCode;
+    script_لاڳيتو->parenSP = INC1(script_لاڳيتو->parenSP);
+    script_لاڳيتو->paren_ڍير[script_لاڳيتو->parenSP].pair_اشاريو  = pair_اشاريو;
+    script_لاڳيتو->paren_ڍير[script_لاڳيتو->parenSP].script_ڪوڊ = script_ڪوڊ;
 }
 
-static void pop(UScriptRun *scriptRun)
+ساكن فراغ pop(UScript_لاڳيتو *script_لاڳيتو)
 {
-    if (STACK_IS_EMPTY(scriptRun)) {
-        return;
+    إذا (ڍير_IS_خالي_جايون(script_لاڳيتو)) {
+        أرجع;
     }
     
-    if (scriptRun->fixupCount > 0) {
-        scriptRun->fixupCount -= 1;
+    إذا (script_لاڳيتو->fixup_ڳڻپ > 0) {
+        script_لاڳيتو->fixup_ڳڻپ -= 1;
     }
     
-    scriptRun->pushCount -= 1;
-    scriptRun->parenSP = DEC1(scriptRun->parenSP);
+    script_لاڳيتو->ڌڪو_ڳڻپ -= 1;
+    script_لاڳيتو->parenSP = DEC1(script_لاڳيتو->parenSP);
     
     /* If the stack is now empty, reset the stack
        pointers to their initial values.
      */
-    if (STACK_IS_EMPTY(scriptRun)) {
-        scriptRun->parenSP = -1;
+    إذا (ڍير_IS_خالي_جايون(script_لاڳيتو)) {
+        script_لاڳيتو->parenSP = -1;
     }
 }
 
-static void fixup(UScriptRun *scriptRun, UScriptCode scriptCode)
+ساكن فراغ fixup(UScript_لاڳيتو *script_لاڳيتو, UScript_ڪوڊ script_ڪوڊ)
 {
-    int32_t fixupSP = DEC(scriptRun->parenSP, scriptRun->fixupCount);
+    int32_t fixupSP = DEC(script_لاڳيتو->parenSP, script_لاڳيتو->fixup_ڳڻپ);
     
-    while (scriptRun->fixupCount-- > 0) {
+    طالما (script_لاڳيتو->fixup_ڳڻپ-- > 0) {
         fixupSP = INC1(fixupSP);
-        scriptRun->parenStack[fixupSP].scriptCode = scriptCode;
+        script_لاڳيتو->paren_ڍير[fixupSP].script_ڪوڊ = script_ڪوڊ;
     }
 }
 
-static int8_t
-highBit(int32_t value)
+ساكن int8_t
+مٿاهون_ٻٽو_انگ(int32_t value)
 {
     int8_t bit = 0;
 
-    if (value <= 0) {
-        return -32;
+    إذا (value <= 0) {
+        أرجع -32;
     }
 
-    if (value >= 1 << 16) {
+    إذا (value >= 1 << 16) {
         value >>= 16;
         bit += 16;
     }
 
-    if (value >= 1 << 8) {
+    إذا (value >= 1 << 8) {
         value >>= 8;
         bit += 8;
     }
 
-    if (value >= 1 << 4) {
+    إذا (value >= 1 << 4) {
         value >>= 4;
         bit += 4;
     }
 
-    if (value >= 1 << 2) {
+    إذا (value >= 1 << 2) {
         value >>= 2;
         bit += 2;
     }
 
-    if (value >= 1 << 1) {
+    إذا (value >= 1 << 1) {
         //value >>= 1;
         bit += 1;
     }
 
-    return bit;
+    أرجع bit;
 }
 
-static int32_t
-getPairIndex(UChar32 ch)
+ساكن int32_t
+get_Pair_اشاريو(UChar32 ch)
 {
-    int32_t pairedCharCount = UPRV_LENGTHOF(pairedChars);
-    int32_t pairedCharPower = 1 << highBit(pairedCharCount);
-    int32_t pairedCharExtra = pairedCharCount - pairedCharPower;
+    int32_t paired_Char_ڳڻپ = UPRV_LENGTHOF(pairedChars);
+    int32_t pairedCharPower = 1 << مٿاهون_ٻٽو_انگ(paired_Char_ڳڻپ);
+    int32_t pairedCharExtra = paired_Char_ڳڻپ - pairedCharPower;
 
     int32_t probe = pairedCharPower;
-    int32_t pairIndex = 0;
+    int32_t pair_اشاريو = 0;
 
-    if (ch >= pairedChars[pairedCharExtra]) {
-        pairIndex = pairedCharExtra;
+    إذا (ch >= pairedChars[pairedCharExtra]) {
+        pair_اشاريو = pairedCharExtra;
     }
 
-    while (probe > (1 << 0)) {
+    طالما (probe > (1 << 0)) {
         probe >>= 1;
 
-        if (ch >= pairedChars[pairIndex + probe]) {
-            pairIndex += probe;
+        إذا (ch >= pairedChars[pair_اشاريو + probe]) {
+            pair_اشاريو += probe;
         }
     }
 
-    if (pairedChars[pairIndex] != ch) {
-        pairIndex = -1;
+    إذا (pairedChars[pair_اشاريو] != ch) {
+        pair_اشاريو = -1;
     }
 
-    return pairIndex;
+    أرجع pair_اشاريو;
 }
 
-static UBool
-sameScript(UScriptCode scriptOne, UScriptCode scriptTwo)
+ساكن UBool
+sameScript(UScript_ڪوڊ scriptOne, UScript_ڪوڊ scriptTwo)
 {
-    return scriptOne <= USCRIPT_INHERITED || scriptTwo <= USCRIPT_INHERITED || scriptOne == scriptTwo;
+    أرجع scriptOne <= USCRIPT_INHERITED || scriptTwo <= USCRIPT_INHERITED || scriptOne == scriptTwo;
 }
 
-U_CAPI UScriptRun * U_EXPORT2
-uscript_openRun(const char16_t *src, int32_t length, UErrorCode *pErrorCode)
+U_CAPI UScript_لاڳيتو * U_EXPORT2
+uscript_open_لاڳيتو(ثابت char16_t *src, int32_t length, UError_ڪوڊ *p_Error_ڪوڊ)
 {
-    UScriptRun *result = nullptr;
+    UScript_لاڳيتو *نتيجو = خالي_اشارو;
 
-    if (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    إذا (p_Error_ڪوڊ == خالي_اشارو || U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع خالي_اشارو;
     }
 
-    result = (UScriptRun *)uprv_malloc(sizeof (UScriptRun));
+    نتيجو = (UScript_لاڳيتو *)uprv_malloc(حجم (UScript_لاڳيتو));
 
-    if (result == nullptr) {
-        *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    إذا (نتيجو == خالي_اشارو) {
+        *p_Error_ڪوڊ = U_يادگيري_ورهاست_ERROR;
+        أرجع خالي_اشارو;
     }
 
-    uscript_setRunText(result, src, length, pErrorCode);
+    uscript_سيٽ_لاڳيتو_متن(نتيجو, src, length, p_Error_ڪوڊ);
 
     /* Release the UScriptRun if uscript_setRunText() returns an error */
-    if (U_FAILURE(*pErrorCode)) {
-        uprv_free(result);
-        result = nullptr;
+    إذا (U_FAILURE(*p_Error_ڪوڊ)) {
+        uprv_free(نتيجو);
+        نتيجو = خالي_اشارو;
     }
 
-    return result;
+    أرجع نتيجو;
 }
 
-U_CAPI void U_EXPORT2
-uscript_closeRun(UScriptRun *scriptRun)
+U_CAPI فراغ U_EXPORT2
+uscript_close_لاڳيتو(UScript_لاڳيتو *script_لاڳيتو)
 {
-    if (scriptRun != nullptr) {
-        uprv_free(scriptRun);
-    }
-}
-
-U_CAPI void U_EXPORT2
-uscript_resetRun(UScriptRun *scriptRun)
-{
-    if (scriptRun != nullptr) {
-        scriptRun->scriptStart = 0;
-        scriptRun->scriptLimit = 0;
-        scriptRun->scriptCode  = USCRIPT_INVALID_CODE;
-        scriptRun->parenSP     = -1;
-        scriptRun->pushCount   =  0;
-        scriptRun->fixupCount  =  0;
+    إذا (script_لاڳيتو != خالي_اشارو) {
+        uprv_free(script_لاڳيتو);
     }
 }
 
-U_CAPI void U_EXPORT2
-uscript_setRunText(UScriptRun *scriptRun, const char16_t *src, int32_t length, UErrorCode *pErrorCode)
+U_CAPI فراغ U_EXPORT2
+uscript_reset_لاڳيتو(UScript_لاڳيتو *script_لاڳيتو)
 {
-    if (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    إذا (script_لاڳيتو != خالي_اشارو) {
+        script_لاڳيتو->script_شروعات = 0;
+        script_لاڳيتو->script_حد_بندي = 0;
+        script_لاڳيتو->script_ڪوڊ  = USCRIPT_INVALID_ڪوڊ;
+        script_لاڳيتو->parenSP     = -1;
+        script_لاڳيتو->ڌڪو_ڳڻپ   =  0;
+        script_لاڳيتو->fixup_ڳڻپ  =  0;
+    }
+}
+
+U_CAPI فراغ U_EXPORT2
+uscript_سيٽ_لاڳيتو_متن(UScript_لاڳيتو *script_لاڳيتو, ثابت char16_t *src, int32_t length, UError_ڪوڊ *p_Error_ڪوڊ)
+{
+    إذا (p_Error_ڪوڊ == خالي_اشارو || U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع;
     }
 
-    if (scriptRun == nullptr || length < 0 || ((src == nullptr) != (length == 0))) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    إذا (script_لاڳيتو == خالي_اشارو || length < 0 || ((src == خالي_اشارو) != (length == 0))) {
+        *p_Error_ڪوڊ = U_ILLEGAL_دليل_ERROR;
+        أرجع;
     }
 
-    scriptRun->textArray  = src;
-    scriptRun->textLength = length;
+    script_لاڳيتو->متن_Array  = src;
+    script_لاڳيتو->متن_ڊيگهائي = length;
 
-    uscript_resetRun(scriptRun);
+    uscript_reset_لاڳيتو(script_لاڳيتو);
 }
 
 U_CAPI UBool U_EXPORT2
-uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, UScriptCode *pRunScript)
+uscript_ايندڙ_لاڳيتو(UScript_لاڳيتو *script_لاڳيتو, int32_t *p_لاڳيتو_شروعات, int32_t *p_لاڳيتو_حد_بندي, UScript_ڪوڊ *p_لاڳيتو_Script)
 {
-    UErrorCode error = U_ZERO_ERROR;
+    UError_ڪوڊ error = U_ZERO_ERROR;
 
     /* if we've fallen off the end of the text, we're done */
-    if (scriptRun == nullptr || scriptRun->scriptLimit >= scriptRun->textLength) {
-        return false;
+    إذا (script_لاڳيتو == خالي_اشارو || script_لاڳيتو->script_حد_بندي >= script_لاڳيتو->متن_ڊيگهائي) {
+        أرجع خطأ;
     }
     
-    SYNC_FIXUP(scriptRun);
-    scriptRun->scriptCode = USCRIPT_COMMON;
+    SYNC_FIXUP(script_لاڳيتو);
+    script_لاڳيتو->script_ڪوڊ = USCRIPT_COMMON;
 
-    for (scriptRun->scriptStart = scriptRun->scriptLimit; scriptRun->scriptLimit < scriptRun->textLength; scriptRun->scriptLimit += 1) {
-        char16_t high = scriptRun->textArray[scriptRun->scriptLimit];
-        UChar32  ch   = high;
-        UScriptCode sc;
-        int32_t pairIndex;
+    لكل (script_لاڳيتو->script_شروعات = script_لاڳيتو->script_حد_بندي; script_لاڳيتو->script_حد_بندي < script_لاڳيتو->متن_ڊيگهائي; script_لاڳيتو->script_حد_بندي += 1) {
+        char16_t مٿاهون = script_لاڳيتو->متن_Array[script_لاڳيتو->script_حد_بندي];
+        UChar32  ch   = مٿاهون;
+        UScript_ڪوڊ sc;
+        int32_t pair_اشاريو;
 
         /*
          * if the character is a high surrogate and it's not the last one
          * in the text, see if it's followed by a low surrogate
          */
-        if (high >= 0xD800 && high <= 0xDBFF && scriptRun->scriptLimit < scriptRun->textLength - 1) {
-            char16_t low = scriptRun->textArray[scriptRun->scriptLimit + 1];
+        إذا (مٿاهون >= 0xD800 && مٿاهون <= 0xDBFF && script_لاڳيتو->script_حد_بندي < script_لاڳيتو->متن_ڊيگهائي - 1) {
+            char16_t هيٺيون = script_لاڳيتو->متن_Array[script_لاڳيتو->script_حد_بندي + 1];
 
             /*
              * if it is followed by a low surrogate,
              * consume it and form the full character
              */
-            if (low >= 0xDC00 && low <= 0xDFFF) {
-                ch = (high - 0xD800) * 0x0400 + low - 0xDC00 + 0x10000;
-                scriptRun->scriptLimit += 1;
+            إذا (هيٺيون >= 0xDC00 && هيٺيون <= 0xDFFF) {
+                ch = (مٿاهون - 0xD800) * 0x0400 + هيٺيون - 0xDC00 + 0x10000;
+                script_لاڳيتو->script_حد_بندي += 1;
             }
         }
 
         sc = uscript_getScript(ch, &error);
-        pairIndex = getPairIndex(ch);
+        pair_اشاريو = get_Pair_اشاريو(ch);
 
         /*
          * Paired character handling:
@@ -301,61 +301,61 @@ uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, U
          * stack, and use that script code. Any non-matching open
          * characters above it on the stack will be poped.
          */
-        if (pairIndex >= 0) {
-            if ((pairIndex & 1) == 0) {
-                push(scriptRun, pairIndex, scriptRun->scriptCode);
-            } else {
-                int32_t pi = pairIndex & ~1;
+        إذا (pair_اشاريو >= 0) {
+            إذا ((pair_اشاريو & 1) == 0) {
+                push(script_لاڳيتو, pair_اشاريو, script_لاڳيتو->script_ڪوڊ);
+            } وإلا {
+                int32_t pi = pair_اشاريو & ~1;
 
-                while (STACK_IS_NOT_EMPTY(scriptRun) && TOP(scriptRun).pairIndex != pi) {
-                    pop(scriptRun);
+                طالما (ڍير_IS_NOT_خالي_جايون(script_لاڳيتو) && چوٽي_2(script_لاڳيتو).pair_اشاريو != pi) {
+                    pop(script_لاڳيتو);
                 }
 
-                if (STACK_IS_NOT_EMPTY(scriptRun)) {
-                    sc = TOP(scriptRun).scriptCode;
+                إذا (ڍير_IS_NOT_خالي_جايون(script_لاڳيتو)) {
+                    sc = چوٽي_2(script_لاڳيتو).script_ڪوڊ;
                 }
             }
         }
 
-        if (sameScript(scriptRun->scriptCode, sc)) {
-            if (scriptRun->scriptCode <= USCRIPT_INHERITED && sc > USCRIPT_INHERITED) {
-                scriptRun->scriptCode = sc;
+        إذا (sameScript(script_لاڳيتو->script_ڪوڊ, sc)) {
+            إذا (script_لاڳيتو->script_ڪوڊ <= USCRIPT_INHERITED && sc > USCRIPT_INHERITED) {
+                script_لاڳيتو->script_ڪوڊ = sc;
 
-                fixup(scriptRun, scriptRun->scriptCode);
+                fixup(script_لاڳيتو, script_لاڳيتو->script_ڪوڊ);
             }
 
             /*
              * if this character is a close paired character,
              * pop the matching open character from the stack
              */
-            if (pairIndex >= 0 && (pairIndex & 1) != 0) {
-                pop(scriptRun);
+            إذا (pair_اشاريو >= 0 && (pair_اشاريو & 1) != 0) {
+                pop(script_لاڳيتو);
             }
-        } else {
+        } وإلا {
             /*
              * if the run broke on a surrogate pair,
              * end it before the high surrogate
              */
-            if (ch >= 0x10000) {
-                scriptRun->scriptLimit -= 1;
+            إذا (ch >= 0x10000) {
+                script_لاڳيتو->script_حد_بندي -= 1;
             }
 
-            break;
+            اكسر;
         }
     }
 
 
-    if (pRunStart != nullptr) {
-        *pRunStart = scriptRun->scriptStart;
+    إذا (p_لاڳيتو_شروعات != خالي_اشارو) {
+        *p_لاڳيتو_شروعات = script_لاڳيتو->script_شروعات;
     }
 
-    if (pRunLimit != nullptr) {
-        *pRunLimit = scriptRun->scriptLimit;
+    إذا (p_لاڳيتو_حد_بندي != خالي_اشارو) {
+        *p_لاڳيتو_حد_بندي = script_لاڳيتو->script_حد_بندي;
     }
 
-    if (pRunScript != nullptr) {
-        *pRunScript = scriptRun->scriptCode;
+    إذا (p_لاڳيتو_Script != خالي_اشارو) {
+        *p_لاڳيتو_Script = script_لاڳيتو->script_ڪوڊ;
     }
 
-    return true;
+    أرجع سچ;
 }

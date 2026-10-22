@@ -7,33 +7,33 @@
 ******************************************************************************
 */
 
-#ifndef UBRK_H
-#define UBRK_H
+#جيڪڏهن_وصف_نه_ٿيل UBRK_H
+#وصف_ڪريو UBRK_H
 
-#include "unicode/utypes.h"
-#include "unicode/uloc.h"
-#include "unicode/utext.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uloc.h"
+#ضمن "unicode/utext.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
+#ضمن "unicode/localpointer.h"
+#جيڪڏهن_پورو   // U_SHOW_CPLUSPLUS_API
 
 /**
  * A text-break iterator.
  *  For usage in C programs.
  */
-#ifndef UBRK_TYPEDEF_UBREAK_ITERATOR
+#جيڪڏهن_وصف_نه_ٿيل UBRK_TYPEDEF_UBREAK_ITERATOR
 #   define UBRK_TYPEDEF_UBREAK_ITERATOR
     /**
      *  Opaque type representing an ICU Break iterator object.
      *  @stable ICU 2.0
      */
-    typedef struct UBreakIterator UBreakIterator;
-#endif
+    تعريفنوع بنية UBreakIterator UBreakIterator;
+#جيڪڏهن_پورو
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#إذا !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/parseerr.h"
+#ضمن "unicode/parseerr.h"
 
 /**
  * \file
@@ -99,17 +99,17 @@
  */
 
 /** The possible types of text boundaries.  @stable ICU 2.0 */
-typedef enum UBreakIteratorType {
+تعريفنوع تعداد UBreakIteratorType {
   /** Character breaks  @stable ICU 2.0 */
   UBRK_CHARACTER = 0,
   /** Word breaks @stable ICU 2.0 */
-  UBRK_WORD = 1,
+  UBRK_لفظ = 1,
   /** Line breaks @stable ICU 2.0 */
-  UBRK_LINE = 2,
+  UBRK_سٽ = 2,
   /** Sentence breaks @stable ICU 2.0 */
   UBRK_SENTENCE = 3,
 
-#ifndef U_HIDE_DEPRECATED_API
+#جيڪڏهن_وصف_نه_ٿيل U_HIDE_DEPRECATED_API
   /**
    * Title Case breaks
    * The iterator created using this type locates title boundaries as described for
@@ -123,14 +123,14 @@ typedef enum UBreakIteratorType {
      * One more than the highest normal UBreakIteratorType value.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UBRK_COUNT = 5
-#endif  // U_HIDE_DEPRECATED_API
+    UBRK_ڳڻپ = 5
+#جيڪڏهن_پورو  // U_HIDE_DEPRECATED_API
 } UBreakIteratorType;
 
 /** Value indicating all text boundaries have been returned.
  *  @stable ICU 2.0
  */
-#define UBRK_DONE ((int32_t) -1)
+#وصف_ڪريو UBRK_پورو ((int32_t) -1)
 
 
 /**
@@ -144,29 +144,29 @@ typedef enum UBreakIteratorType {
  *
  * @stable ICU 2.2
 */
-typedef enum UWordBreak {
+تعريفنوع تعداد UWordBreak {
     /** Tag value for "words" that do not fit into any of other categories.
      *  Includes spaces and most punctuation. */
-    UBRK_WORD_NONE           = 0,
+    UBRK_لفظ_NONE           = 0,
     /** Upper bound for tags for uncategorized words. */
-    UBRK_WORD_NONE_LIMIT     = 100,
+    UBRK_لفظ_NONE_حد_بندي     = 100,
     /** Tag value for words that appear to be numbers, lower limit.    */
-    UBRK_WORD_NUMBER         = 100,
+    UBRK_لفظ_عدد         = 100,
     /** Tag value for words that appear to be numbers, upper limit.    */
-    UBRK_WORD_NUMBER_LIMIT   = 200,
+    UBRK_لفظ_عدد_حد_بندي   = 200,
     /** Tag value for words that contain letters, excluding
      *  hiragana, katakana or ideographic characters, lower limit.    */
-    UBRK_WORD_LETTER         = 200,
+    UBRK_لفظ_LETTER         = 200,
     /** Tag value for words containing letters, upper limit  */
-    UBRK_WORD_LETTER_LIMIT   = 300,
+    UBRK_لفظ_LETTER_حد_بندي   = 300,
     /** Tag value for words containing kana characters, lower limit */
-    UBRK_WORD_KANA           = 300,
+    UBRK_لفظ_KANA           = 300,
     /** Tag value for words containing kana characters, upper limit */
-    UBRK_WORD_KANA_LIMIT     = 400,
+    UBRK_لفظ_KANA_حد_بندي     = 400,
     /** Tag value for words containing ideographic characters, lower limit */
-    UBRK_WORD_IDEO           = 400,
+    UBRK_لفظ_IDEO           = 400,
     /** Tag value for words containing ideographic characters, upper limit */
-    UBRK_WORD_IDEO_LIMIT     = 500
+    UBRK_لفظ_IDEO_حد_بندي     = 500
 } UWordBreak;
 
 /**
@@ -180,17 +180,17 @@ typedef enum UWordBreak {
  *
  * @stable ICU 2.8
 */
-typedef enum ULineBreakTag {
+تعريفنوع تعداد ULine_Break_ٽيگ {
     /** Tag value for soft line breaks, positions at which a line break
       *  is acceptable but not required                */
-    UBRK_LINE_SOFT            = 0,
+    UBRK_سٽ_SOFT            = 0,
     /** Upper bound for soft line breaks.              */
-    UBRK_LINE_SOFT_LIMIT      = 100,
+    UBRK_سٽ_SOFT_حد_بندي      = 100,
     /** Tag value for a hard, or mandatory line break  */
-    UBRK_LINE_HARD            = 100,
+    UBRK_سٽ_HARD            = 100,
     /** Upper bound for hard line breaks.              */
-    UBRK_LINE_HARD_LIMIT      = 200
-} ULineBreakTag;
+    UBRK_سٽ_HARD_حد_بندي      = 200
+} ULine_Break_ٽيگ;
 
 
 
@@ -205,23 +205,23 @@ typedef enum ULineBreakTag {
  *
  * @stable ICU 2.8
 */
-typedef enum USentenceBreakTag {
+تعريفنوع تعداد USentence_Break_ٽيگ {
     /** Tag value for for sentences  ending with a sentence terminator
       * ('.', '?', '!', etc.) character, possibly followed by a
       * hard separator (CR, LF, PS, etc.)
       */
-    UBRK_SENTENCE_TERM       = 0,
+    UBRK_SENTENCE_رڪن       = 0,
     /** Upper bound for tags for sentences ended by sentence terminators.    */
-    UBRK_SENTENCE_TERM_LIMIT = 100,
+    UBRK_SENTENCE_رڪن_حد_بندي = 100,
     /** Tag value for for sentences that do not contain an ending
       * sentence terminator ('.', '?', '!', etc.) character, but
       * are ended only by a hard separator (CR, LF, PS, etc.) or end of input.
       */
     UBRK_SENTENCE_SEP        = 100,
     /** Upper bound for tags for sentences ended by a separator.              */
-    UBRK_SENTENCE_SEP_LIMIT  = 200
+    UBRK_SENTENCE_SEP_حد_بندي  = 200
     /** Tag value for a hard, or mandatory line break  */
-} USentenceBreakTag;
+} USentence_Break_ٽيگ;
 
 
 /**
@@ -243,10 +243,10 @@ typedef enum USentenceBreakTag {
  */
 U_CAPI UBreakIterator* U_EXPORT2
 ubrk_open(UBreakIteratorType type,
-      const char *locale,
-      const UChar *text,
-      int32_t textLength,
-      UErrorCode *status);
+      ثابت حرف *locale,
+      ثابت UChar *متن,
+      int32_t متن_ڊيگهائي,
+      UError_ڪوڊ *حالت);
 
 /**
  * Open a new UBreakIterator for locating text boundaries using specified breaking rules.
@@ -264,12 +264,12 @@ ubrk_open(UBreakIteratorType type,
  * @stable ICU 2.2
  */
 U_CAPI UBreakIterator* U_EXPORT2
-ubrk_openRules(const UChar     *rules,
-               int32_t         rulesLength,
-               const UChar     *text,
-               int32_t          textLength,
+ubrk_open_قاعدا(ثابت UChar     *قاعدا,
+               int32_t         قاعدا_ڊيگهائي,
+               ثابت UChar     *متن,
+               int32_t          متن_ڊيگهائي,
                UParseError     *parseErr,
-               UErrorCode      *status);
+               UError_ڪوڊ      *حالت);
 
 /**
  * Open a new UBreakIterator for locating text boundaries using precompiled binary rules.
@@ -292,11 +292,11 @@ ubrk_openRules(const UChar     *rules,
  * @stable ICU 59
  */
 U_CAPI UBreakIterator* U_EXPORT2
-ubrk_openBinaryRules(const uint8_t *binaryRules, int32_t rulesLength,
-                     const UChar *  text, int32_t textLength,
-                     UErrorCode *   status);
+ubrk_open_ٻٽو_قاعدا(ثابت uint8_t *ٻٽو_قاعدا, int32_t قاعدا_ڊيگهائي,
+                     ثابت UChar *  متن, int32_t متن_ڊيگهائي,
+                     UError_ڪوڊ *   حالت);
 
-#ifndef U_HIDE_DEPRECATED_API
+#جيڪڏهن_وصف_نه_ٿيل U_HIDE_DEPRECATED_API
 
 /**
  * Thread safe cloning operation
@@ -318,13 +318,13 @@ ubrk_openBinaryRules(const uint8_t *binaryRules, int32_t rulesLength,
  * @deprecated ICU 69 Use ubrk_clone() instead.
  */
 U_DEPRECATED UBreakIterator * U_EXPORT2
-ubrk_safeClone(
-          const UBreakIterator *bi,
-          void *stackBuffer,
-          int32_t *pBufferSize,
-          UErrorCode *status);
+ubrk_محفوظ_Clone(
+          ثابت UBreakIterator *bi,
+          فراغ *ڍير_بفر,
+          int32_t *p_بفر_سائيز,
+          UError_ڪوڊ *حالت);
 
-#endif /* U_HIDE_DEPRECATED_API */
+#جيڪڏهن_پورو /* U_HIDE_DEPRECATED_API */
 
 /**
  * Thread safe cloning operation.
@@ -334,18 +334,18 @@ ubrk_safeClone(
  * @stable ICU 69
  */
 U_CAPI UBreakIterator * U_EXPORT2
-ubrk_clone(const UBreakIterator *bi,
-           UErrorCode *status);
+ubrk_clone(ثابت UBreakIterator *bi,
+           UError_ڪوڊ *حالت);
 
-#ifndef U_HIDE_DEPRECATED_API
+#جيڪڏهن_وصف_نه_ٿيل U_HIDE_DEPRECATED_API
 
 /**
   * A recommended size (in bytes) for the memory buffer to be passed to ubrk_saveClone().
   * @deprecated ICU 52. Do not rely on ubrk_safeClone() cloning into any provided buffer.
   */
-#define U_BRK_SAFECLONE_BUFFERSIZE 1
+#وصف_ڪريو U_BRK_SAFECLONE_BUFFERSIZE 1
 
-#endif /* U_HIDE_DEPRECATED_API */
+#جيڪڏهن_پورو /* U_HIDE_DEPRECATED_API */
 
 /**
 * Close a UBreakIterator.
@@ -353,10 +353,10 @@ ubrk_clone(const UBreakIterator *bi,
 * @param bi The break iterator to close.
  * @stable ICU 2.0
 */
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 ubrk_close(UBreakIterator *bi);
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -369,11 +369,11 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 4.4
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalUBreakIteratorPointer, UBreakIterator, ubrk_close);
+U_DEFINE_LOCAL_OPEN_اشارو(Local_UBreak_Iterator_اشارو, UBreakIterator, ubrk_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
-#endif
+#جيڪڏهن_پورو
 
 /**
  * Sets an existing iterator to point to a new piece of text.
@@ -387,11 +387,11 @@ U_NAMESPACE_END
  * @param status The error code
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ubrk_setText(UBreakIterator* bi,
-             const UChar*    text,
-             int32_t         textLength,
-             UErrorCode*     status);
+U_CAPI فراغ U_EXPORT2
+ubrk_سيٽ_متن(UBreakIterator* bi,
+             ثابت UChar*    متن,
+             int32_t         متن_ڊيگهائي,
+             UError_ڪوڊ*     حالت);
 
 
 /**
@@ -411,10 +411,10 @@ ubrk_setText(UBreakIterator* bi,
  * @param status The error code
  * @stable ICU 3.4
  */
-U_CAPI void U_EXPORT2
-ubrk_setUText(UBreakIterator* bi,
-             UText*          text,
-             UErrorCode*     status);
+U_CAPI فراغ U_EXPORT2
+ubrk_سيٽ_UText(UBreakIterator* bi,
+             UText*          متن,
+             UError_ڪوڊ*     حالت);
 
 
 
@@ -427,7 +427,7 @@ ubrk_setUText(UBreakIterator* bi,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ubrk_current(const UBreakIterator *bi);
+ubrk_current(ثابت UBreakIterator *bi);
 
 /**
  * Advance the iterator to the boundary following the current boundary.
@@ -439,7 +439,7 @@ ubrk_current(const UBreakIterator *bi);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ubrk_next(UBreakIterator *bi);
+ubrk_ايندڙ(UBreakIterator *bi);
 
 /**
  * Set the iterator position to the boundary preceding the current boundary.
@@ -451,7 +451,7 @@ ubrk_next(UBreakIterator *bi);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ubrk_previous(UBreakIterator *bi);
+ubrk_اڳيون(UBreakIterator *bi);
 
 /**
  * Set the iterator position to zero, the start of the text being scanned.
@@ -461,7 +461,7 @@ ubrk_previous(UBreakIterator *bi);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ubrk_first(UBreakIterator *bi);
+ubrk_پهريون(UBreakIterator *bi);
 
 /**
  * Set the iterator position to the index immediately <EM>beyond</EM> the last character in the text being scanned.
@@ -473,7 +473,7 @@ ubrk_first(UBreakIterator *bi);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ubrk_last(UBreakIterator *bi);
+ubrk_آخري(UBreakIterator *bi);
 
 /**
  * Set the iterator position to the first boundary preceding the specified offset.
@@ -486,7 +486,7 @@ ubrk_last(UBreakIterator *bi);
  */
 U_CAPI int32_t U_EXPORT2
 ubrk_preceding(UBreakIterator *bi,
-           int32_t offset);
+           int32_t وٿي);
 
 /**
  * Advance the iterator to the first boundary following the specified offset.
@@ -499,7 +499,7 @@ ubrk_preceding(UBreakIterator *bi,
  */
 U_CAPI int32_t U_EXPORT2
 ubrk_following(UBreakIterator *bi,
-           int32_t offset);
+           int32_t وٿي);
 
 /**
 * Get a locale for which text breaking information is available.
@@ -510,8 +510,8 @@ ubrk_following(UBreakIterator *bi,
 * @see ubrk_countAvailable
 * @stable ICU 2.0
 */
-U_CAPI const char* U_EXPORT2
-ubrk_getAvailable(int32_t index);
+U_CAPI ثابت حرف* U_EXPORT2
+ubrk_get_موجود(int32_t اشاريو);
 
 /**
 * Determine how many locales have text breaking information available.
@@ -522,7 +522,7 @@ ubrk_getAvailable(int32_t index);
 * @stable ICU 2.0
 */
 U_CAPI int32_t U_EXPORT2
-ubrk_countAvailable(void);
+ubrk_ڳڻپ_موجود(فراغ);
 
 
 /**
@@ -535,7 +535,7 @@ ubrk_countAvailable(void);
 * @stable ICU 2.0
 */
 U_CAPI  UBool U_EXPORT2
-ubrk_isBoundary(UBreakIterator *bi, int32_t offset);
+ubrk_isBoundary(UBreakIterator *bi, int32_t وٿي);
 
 /**
  * Return the status from the break rule that determined the most recently
@@ -547,7 +547,7 @@ ubrk_isBoundary(UBreakIterator *bi, int32_t offset);
  * @stable ICU 2.2
  */
 U_CAPI  int32_t U_EXPORT2
-ubrk_getRuleStatus(UBreakIterator *bi);
+ubrk_get_قاعدو_حالت(UBreakIterator *bi);
 
 /**
  * Get the statuses from the break rules that determined the most recently
@@ -567,7 +567,7 @@ ubrk_getRuleStatus(UBreakIterator *bi);
  * @stable ICU 3.0
  */
 U_CAPI  int32_t U_EXPORT2
-ubrk_getRuleStatusVec(UBreakIterator *bi, int32_t *fillInVec, int32_t capacity, UErrorCode *status);
+ubrk_get_قاعدو_حالت_Vec(UBreakIterator *bi, int32_t *fill_اندريون_Vec, int32_t صلاحيت, UError_ڪوڊ *حالت);
 
 /**
  * Return the locale of the break iterator. You can choose between the valid and
@@ -578,9 +578,9 @@ ubrk_getRuleStatusVec(UBreakIterator *bi, int32_t *fillInVec, int32_t capacity, 
  * @return locale string
  * @stable ICU 2.8
  */
-U_CAPI const char* U_EXPORT2
-ubrk_getLocaleByType(const UBreakIterator* bi U_LIFETIME_BOUND,
-                     ULocDataLocaleType type, UErrorCode* status);
+U_CAPI ثابت حرف* U_EXPORT2
+ubrk_getLocaleByType(ثابت UBreakIterator* bi U_LIFETIME_BOUND,
+                     ULoc_معلومات_Locale_Type type, UError_ڪوڊ* حالت);
 
 /**
   *  Set the subject text string upon which the break iterator is operating
@@ -607,10 +607,10 @@ ubrk_getLocaleByType(const UBreakIterator* bi U_LIFETIME_BOUND,
   *
   * @stable ICU 49
   */
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 ubrk_refreshUText(UBreakIterator *bi,
-                       UText          *text,
-                       UErrorCode     *status);
+                       UText          *متن,
+                       UError_ڪوڊ     *حالت);
 
 
 /**
@@ -639,10 +639,10 @@ ubrk_refreshUText(UBreakIterator *bi,
  * @stable ICU 59
  */
 U_CAPI int32_t U_EXPORT2
-ubrk_getBinaryRules(UBreakIterator *bi,
-                    uint8_t *       binaryRules, int32_t rulesCapacity,
-                    UErrorCode *    status);
+ubrk_get_ٻٽو_قاعدا(UBreakIterator *bi,
+                    uint8_t *       ٻٽو_قاعدا, int32_t قاعدا_صلاحيت,
+                    UError_ڪوڊ *    حالت);
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#جيڪڏهن_پورو /* #if !UCONFIG_NO_BREAK_ITERATION */
 
-#endif
+#جيڪڏهن_پورو

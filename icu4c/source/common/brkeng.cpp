@@ -7,33 +7,33 @@
  ************************************************************************************
  */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#إذا !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/uchar.h"
-#include "unicode/uniset.h"
-#include "unicode/chariter.h"
-#include "unicode/ures.h"
-#include "unicode/udata.h"
-#include "unicode/putil.h"
-#include "unicode/ustring.h"
-#include "unicode/uscript.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/bytestrie.h"
-#include "unicode/rbbi.h"
+#ضمن "unicode/uchar.h"
+#ضمن "unicode/uniset.h"
+#ضمن "unicode/chariter.h"
+#ضمن "unicode/ures.h"
+#ضمن "unicode/udata.h"
+#ضمن "unicode/putil.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/uscript.h"
+#ضمن "unicode/ucharstrie.h"
+#ضمن "unicode/bytestrie.h"
+#ضمن "unicode/rbbi.h"
 
-#include "brkeng.h"
-#include "cmemory.h"
-#include "dictbe.h"
-#include "lstmbe.h"
-#include "charstr.h"
-#include "dictionarydata.h"
-#include "mutex.h"
-#include "uvector.h"
-#include "umutex.h"
-#include "uresimp.h"
-#include "ubrkimpl.h"
+#ضمن "brkeng.h"
+#ضمن "cmemory.h"
+#ضمن "dictbe.h"
+#ضمن "lstmbe.h"
+#ضمن "charstr.h"
+#ضمن "dictionarydata.h"
+#ضمن "mutex.h"
+#ضمن "uvector.h"
+#ضمن "umutex.h"
+#ضمن "uresimp.h"
+#ضمن "ubrkimpl.h"
 
 U_NAMESPACE_BEGIN
 
@@ -61,51 +61,51 @@ LanguageBreakFactory::~LanguageBreakFactory() {
  ******************************************************************
  */
 
-UnhandledEngine::UnhandledEngine(UErrorCode &status) : fHandled(nullptr) {
-    (void)status;
+UnhandledEngine::UnhandledEngine(UError_ڪوڊ &حالت) : fHandled(خالي_اشارو) {
+    (فراغ)حالت;
 }
 
 UnhandledEngine::~UnhandledEngine() {
-    delete fHandled;
-    fHandled = nullptr;
+    ميٽيو fHandled;
+    fHandled = خالي_اشارو;
 }
 
 UBool
-UnhandledEngine::handles(UChar32 c, const char* locale) const {
-    (void)locale; // Unused
-    return fHandled && fHandled->contains(c);
+UnhandledEngine::handles(UChar32 c, ثابت حرف* locale) ثابت {
+    (فراغ)locale; //اڻ_استعمال_ٿيل
+    أرجع fHandled && fHandled->شامل_آهي(c);
 }
 
 int32_t
-UnhandledEngine::findBreaks( UText *text,
-                             int32_t startPos,
-                             int32_t endPos,
+UnhandledEngine::ڳوليو_Breaks( UText *متن,
+                             int32_t شروعات_Pos,
+                             int32_t پڇاڙي_Pos,
                              UVector32 &/*foundBreaks*/,
                              UBool /* isPhraseBreaking */,
-                             UErrorCode &status) const {
-    if (U_FAILURE(status)) return 0;
-    utext_setNativeIndex(text, startPos);
-    UChar32 c = utext_current32(text);
-    while (static_cast<int32_t>(utext_getNativeIndex(text)) < endPos && fHandled->contains(c)) {
-        utext_next32(text);            // TODO:  recast loop to work with post-increment operations.
-        c = utext_current32(text);
+                             UError_ڪوڊ &حالت) ثابت {
+    إذا (U_FAILURE(حالت)) أرجع 0;
+    utext_سيٽ_Native_اشاريو(متن, شروعات_Pos);
+    UChar32 c = utext_current32(متن);
+    طالما (static_cast<int32_t>(utext_get_Native_اشاريو(متن)) < پڇاڙي_Pos && fHandled->شامل_آهي(c)) {
+        utext_next32(متن);            // TODO:  recast loop to work with post-increment operations.
+        c = utext_current32(متن);
     }
-    return 0;
+    أرجع 0;
 }
 
-void
+فراغ
 UnhandledEngine::handleCharacter(UChar32 c) {
-    if (fHandled == nullptr) {
-        fHandled = new UnicodeSet();
-        if (fHandled == nullptr) {
-            return;
+    إذا (fHandled == خالي_اشارو) {
+        fHandled = جديد Unicode_سيٽ();
+        إذا (fHandled == خالي_اشارو) {
+            أرجع;
         }
     }
-    if (!fHandled->contains(c)) {
-        UErrorCode status = U_ZERO_ERROR;
+    إذا (!fHandled->شامل_آهي(c)) {
+        UError_ڪوڊ حالت = U_ZERO_ERROR;
         // Apply the entire script of the character.
-        int32_t script = u_getIntPropertyValue(c, UCHAR_SCRIPT);
-        fHandled->applyIntPropertyValue(UCHAR_SCRIPT, script, status);
+        int32_t script = u_get_Int_Property_قدر(c, UCHAR_SCRIPT);
+        fHandled->apply_Int_Property_قدر(UCHAR_SCRIPT, script, حالت);
     }
 }
 
@@ -113,255 +113,255 @@ UnhandledEngine::handleCharacter(UChar32 c) {
  ******************************************************************
  */
 
-ICULanguageBreakFactory::ICULanguageBreakFactory(UErrorCode &/*status*/) {
-    fEngines = nullptr;
+ICULanguageBreakFactory::ICULanguageBreakFactory(UError_ڪوڊ &/*حالت*/) {
+    fEngines = خالي_اشارو;
 }
 
 ICULanguageBreakFactory::~ICULanguageBreakFactory() {
-    delete fEngines;
+    ميٽيو fEngines;
 }
 
-void ICULanguageBreakFactory::ensureEngines(UErrorCode& status) {
-    static UMutex gBreakEngineMutex;
+فراغ ICULanguageBreakFactory::ensureEngines(UError_ڪوڊ& حالت) {
+    ساكن UMutex gBreakEngineMutex;
     Mutex m(&gBreakEngineMutex);
-    if (fEngines == nullptr) {
-        LocalPointer<UStack>  engines(new UStack(uprv_deleteUObject, nullptr, status), status);
-        if (U_SUCCESS(status)) {
+    إذا (fEngines == خالي_اشارو) {
+        Local_اشارو<UStack>  engines(جديد UStack(uprv_deleteUObject, خالي_اشارو, حالت), حالت);
+        إذا (U_SUCCESS(حالت)) {
             fEngines = engines.orphan();
         }
     }
 }
 
-const LanguageBreakEngine *
-ICULanguageBreakFactory::getEngineFor(UChar32 c, const char* locale) {
-    const LanguageBreakEngine *lbe = nullptr;
-    UErrorCode  status = U_ZERO_ERROR;
-    ensureEngines(status);
-    if (U_FAILURE(status) ) {
+ثابت LanguageBreakEngine *
+ICULanguageBreakFactory::getEngineFor(UChar32 c, ثابت حرف* locale) {
+    ثابت LanguageBreakEngine *lbe = خالي_اشارو;
+    UError_ڪوڊ  حالت = U_ZERO_ERROR;
+    ensureEngines(حالت);
+    إذا (U_FAILURE(حالت) ) {
         // Note: no way to return error code to caller.
-        return nullptr;
+        أرجع خالي_اشارو;
     }
 
-    static UMutex gBreakEngineMutex;
+    ساكن UMutex gBreakEngineMutex;
     Mutex m(&gBreakEngineMutex);
     int32_t i = fEngines->size();
-    while (--i >= 0) {
-        lbe = static_cast<const LanguageBreakEngine*>(fEngines->elementAt(i));
-        if (lbe != nullptr && lbe->handles(c, locale)) {
-            return lbe;
+    طالما (--i >= 0) {
+        lbe = static_cast<ثابت LanguageBreakEngine*>(fEngines->elementAt(i));
+        إذا (lbe != خالي_اشارو && lbe->handles(c, locale)) {
+            أرجع lbe;
         }
     }
 
     // We didn't find an engine. Create one.
-    lbe = loadEngineFor(c, locale);
-    if (lbe != nullptr) {
-        fEngines->push((void *)lbe, status);
+    lbe = ڀريو_Engine_For(c, locale);
+    إذا (lbe != خالي_اشارو) {
+        fEngines->push((فراغ *)lbe, حالت);
     }
-    return U_SUCCESS(status) ? lbe : nullptr;
+    أرجع U_SUCCESS(حالت) ? lbe : خالي_اشارو;
 }
 
-const LanguageBreakEngine *
-ICULanguageBreakFactory::loadEngineFor(UChar32 c, const char*) {
-    UErrorCode status = U_ZERO_ERROR;
-    UScriptCode code = uscript_getScript(c, &status);
-    if (U_SUCCESS(status)) {
-        const LanguageBreakEngine *engine = nullptr;
+ثابت LanguageBreakEngine *
+ICULanguageBreakFactory::ڀريو_Engine_For(UChar32 c, ثابت حرف*) {
+    UError_ڪوڊ حالت = U_ZERO_ERROR;
+    UScript_ڪوڊ ڪوڊ = uscript_getScript(c, &حالت);
+    إذا (U_SUCCESS(حالت)) {
+        ثابت LanguageBreakEngine *engine = خالي_اشارو;
         // Try to use LSTM first
-        const LSTMData *data = CreateLSTMDataForScript(code, status);
-        if (U_SUCCESS(status)) {
-            if (data != nullptr) {
-                engine = CreateLSTMBreakEngine(code, data, status);
-                if (U_SUCCESS(status) && engine != nullptr) {
-                    return engine;
+        ثابت LSTMData *معلومات = CreateLSTMDataForScript(ڪوڊ, حالت);
+        إذا (U_SUCCESS(حالت)) {
+            إذا (معلومات != خالي_اشارو) {
+                engine = CreateLSTMBreakEngine(ڪوڊ, معلومات, حالت);
+                إذا (U_SUCCESS(حالت) && engine != خالي_اشارو) {
+                    أرجع engine;
                 }
-                if (engine != nullptr) {
-                    delete engine;
-                    engine = nullptr;
-                } else {
-                    DeleteLSTMData(data);
+                إذا (engine != خالي_اشارو) {
+                    ميٽيو engine;
+                    engine = خالي_اشارو;
+                } وإلا {
+                    DeleteLSTMData(معلومات);
                 }
             }
         }
-        status = U_ZERO_ERROR;  // fallback to dictionary based
-        DictionaryMatcher *m = loadDictionaryMatcherFor(code);
-        if (m != nullptr) {
-            switch(code) {
-            case USCRIPT_THAI:
-                engine = new ThaiBreakEngine(m, status);
-                break;
-            case USCRIPT_LAO:
-                engine = new LaoBreakEngine(m, status);
-                break;
-            case USCRIPT_MYANMAR:
-                engine = new BurmeseBreakEngine(m, status);
-                break;
-            case USCRIPT_KHMER:
-                engine = new KhmerBreakEngine(m, status);
-                break;
+        حالت = U_ZERO_ERROR;  // fallback to dictionary based
+        DictionaryMatcher *m = ڀريو_Dictionary_Matcher_For(ڪوڊ);
+        إذا (m != خالي_اشارو) {
+            بدل(ڪوڊ) {
+            حالة USCRIPT_THAI:
+                engine = جديد ThaiBreakEngine(m, حالت);
+                اكسر;
+            حالة USCRIPT_LAO:
+                engine = جديد LaoBreakEngine(m, حالت);
+                اكسر;
+            حالة USCRIPT_MYANMAR:
+                engine = جديد BurmeseBreakEngine(m, حالت);
+                اكسر;
+            حالة USCRIPT_KHMER:
+                engine = جديد KhmerBreakEngine(m, حالت);
+                اكسر;
 
-#if !UCONFIG_NO_NORMALIZATION
+#إذا !UCONFIG_NO_NORMALIZATION
                 // CJK not available w/o normalization
-            case USCRIPT_HANGUL:
-                engine = new CjkBreakEngine(m, kKorean, status);
-                break;
+            حالة USCRIPT_HANGUL:
+                engine = جديد CjkBreakEngine(m, kKorean, حالت);
+                اكسر;
 
             // use same BreakEngine and dictionary for both Chinese and Japanese
-            case USCRIPT_HIRAGANA:
-            case USCRIPT_KATAKANA:
-            case USCRIPT_HAN:
-                engine = new CjkBreakEngine(m, kChineseJapanese, status);
-                break;
-#if 0
+            حالة USCRIPT_HIRAGANA:
+            حالة USCRIPT_KATAKANA:
+            حالة USCRIPT_HAN:
+                engine = جديد CjkBreakEngine(m, kChineseJapanese, حالت);
+                اكسر;
+#إذا 0
             // TODO: Have to get some characters with script=common handled
             // by CjkBreakEngine (e.g. U+309B). Simply subjecting
             // them to CjkBreakEngine does not work. The engine has to
             // special-case them.
-            case USCRIPT_COMMON:
+            حالة USCRIPT_COMMON:
             {
-                UBlockCode block = ublock_getCode(code);
-                if (block == UBLOCK_HIRAGANA || block == UBLOCK_KATAKANA)
-                   engine = new CjkBreakEngine(dict, kChineseJapanese, status);
-                break;
+                UBlock_ڪوڊ بلاڪ = ublock_get_ڪوڊ(ڪوڊ);
+                إذا (بلاڪ == UBLOCK_HIRAGANA || بلاڪ == UBLOCK_KATAKANA)
+                   engine = جديد CjkBreakEngine(dict, kChineseJapanese, حالت);
+                اكسر;
             }
-#endif
-#endif
+#جيڪڏهن_پورو
+#جيڪڏهن_پورو
 
-            default:
-                break;
+            افتراضي:
+                اكسر;
             }
-            if (engine == nullptr) {
-                delete m;
+            إذا (engine == خالي_اشارو) {
+                ميٽيو m;
             }
-            else if (U_FAILURE(status)) {
-                delete engine;
-                engine = nullptr;
+            وإلا إذا (U_FAILURE(حالت)) {
+                ميٽيو engine;
+                engine = خالي_اشارو;
             }
-            return engine;
+            أرجع engine;
         }
     }
-    return nullptr;
+    أرجع خالي_اشارو;
 }
 
 DictionaryMatcher *
-ICULanguageBreakFactory::loadDictionaryMatcherFor(UScriptCode script) { 
-    UErrorCode status = U_ZERO_ERROR;
+ICULanguageBreakFactory::ڀريو_Dictionary_Matcher_For(UScript_ڪوڊ script) { 
+    UError_ڪوڊ حالت = U_ZERO_ERROR;
     // open root from brkitr tree.
-    UResourceBundle *b = ures_open(U_ICUDATA_BRKITR, "", &status);
-    b = ures_getByKeyWithFallback(b, "dictionaries", b, &status);
+    UResourceBundle *b = ures_open(U_ICUDATA_BRKITR, "", &حالت);
+    b = ures_get_By_ڪنجي_With_Fallback(b, "dictionaries", b, &حالت);
     int32_t dictnlength = 0;
-    const char16_t *dictfname =
-        ures_getStringByKeyWithFallback(b, uscript_getShortName(script), &dictnlength, &status);
-    if (U_FAILURE(status)) {
+    ثابت char16_t *dictfname =
+        ures_get_String_By_ڪنجي_With_Fallback(b, uscript_getShortName(script), &dictnlength, &حالت);
+    إذا (U_FAILURE(حالت)) {
         ures_close(b);
-        return nullptr;
+        أرجع خالي_اشارو;
     }
     CharString dictnbuf;
     CharString ext;
-    const char16_t *extStart = u_memrchr(dictfname, 0x002e, dictnlength);  // last dot
-    if (extStart != nullptr) {
-        int32_t len = static_cast<int32_t>(extStart - dictfname);
-        ext.appendInvariantChars(UnicodeString(false, extStart + 1, dictnlength - len - 1), status);
+    ثابت char16_t *ext_شروعات = u_memrchr(dictfname, 0x002e, dictnlength);  // last dot
+    إذا (ext_شروعات != خالي_اشارو) {
+        int32_t len = static_cast<int32_t>(ext_شروعات - dictfname);
+        ext.appendInvariantChars(UnicodeString(خطأ, ext_شروعات + 1, dictnlength - len - 1), حالت);
         dictnlength = len;
     }
-    dictnbuf.appendInvariantChars(UnicodeString(false, dictfname, dictnlength), status);
+    dictnbuf.appendInvariantChars(UnicodeString(خطأ, dictfname, dictnlength), حالت);
     ures_close(b);
 
-    UDataMemory *file = udata_open(U_ICUDATA_BRKITR, ext.data(), dictnbuf.data(), &status);
-    if (U_SUCCESS(status)) {
+    UData_يادگيري *file = udata_open(U_ICUDATA_BRKITR, ext.معلومات(), dictnbuf.معلومات(), &حالت);
+    إذا (U_SUCCESS(حالت)) {
         // build trie
-        const uint8_t* data = static_cast<const uint8_t*>(udata_getMemory(file));
-        const int32_t* indexes = reinterpret_cast<const int32_t*>(data);
-        const int32_t offset = indexes[DictionaryData::IX_STRING_TRIE_OFFSET];
-        const int32_t trieType = indexes[DictionaryData::IX_TRIE_TYPE] & DictionaryData::TRIE_TYPE_MASK;
-        DictionaryMatcher *m = nullptr;
-        if (trieType == DictionaryData::TRIE_TYPE_BYTES) {
-            const int32_t transform = indexes[DictionaryData::IX_TRANSFORM];
-            const char* characters = reinterpret_cast<const char*>(data + offset);
-            m = new BytesDictionaryMatcher(characters, transform, file);
+        ثابت uint8_t* معلومات = static_cast<ثابت uint8_t*>(udata_get_يادگيري(file));
+        ثابت int32_t* indexes = reinterpret_cast<ثابت int32_t*>(معلومات);
+        ثابت int32_t وٿي = indexes[Dictionary_معلومات::IX_STRING_TRIE_وٿي];
+        ثابت int32_t trieType = indexes[Dictionary_معلومات::IX_TRIE_TYPE] & Dictionary_معلومات::TRIE_TYPE_نقاب;
+        DictionaryMatcher *m = خالي_اشارو;
+        إذا (trieType == Dictionary_معلومات::TRIE_TYPE_بائيٽون) {
+            ثابت int32_t transform = indexes[Dictionary_معلومات::IX_TRANSFORM];
+            ثابت حرف* characters = reinterpret_cast<ثابت حرف*>(معلومات + وٿي);
+            m = جديد بائيٽون_Dictionary_Matcher(characters, transform, file);
         }
-        else if (trieType == DictionaryData::TRIE_TYPE_UCHARS) {
-            const char16_t* characters = reinterpret_cast<const char16_t*>(data + offset);
-            m = new UCharsDictionaryMatcher(characters, file);
+        وإلا إذا (trieType == Dictionary_معلومات::TRIE_TYPE_UCHARS) {
+            ثابت char16_t* characters = reinterpret_cast<ثابت char16_t*>(معلومات + وٿي);
+            m = جديد UCharsDictionaryMatcher(characters, file);
         }
-        if (m == nullptr) {
+        إذا (m == خالي_اشارو) {
             // no matcher exists to take ownership - either we are an invalid 
             // type or memory allocation failed
             udata_close(file);
         }
-        return m;
-    } else if (dictfname != nullptr) {
+        أرجع m;
+    } وإلا إذا (dictfname != خالي_اشارو) {
         // we don't have a dictionary matcher.
         // returning nullptr here will cause us to fail to find a dictionary break engine, as expected
-        status = U_ZERO_ERROR;
-        return nullptr;
+        حالت = U_ZERO_ERROR;
+        أرجع خالي_اشارو;
     }
-    return nullptr;
+    أرجع خالي_اشارو;
 }
 
 
-void ICULanguageBreakFactory::addExternalEngine(
-        ExternalBreakEngine* external, UErrorCode& status) {
-    LocalPointer<ExternalBreakEngine> engine(external, status);
-    ensureEngines(status);
-    LocalPointer<BreakEngineWrapper> wrapper(
-        new BreakEngineWrapper(engine.orphan(), status), status);
-    static UMutex gBreakEngineMutex;
+فراغ ICULanguageBreakFactory::جوڙيو_External_Engine(
+        ExternalBreakEngine* external, UError_ڪوڊ& حالت) {
+    Local_اشارو<ExternalBreakEngine> engine(external, حالت);
+    ensureEngines(حالت);
+    Local_اشارو<BreakEngineWrapper> wrapper(
+        جديد BreakEngineWrapper(engine.orphan(), حالت), حالت);
+    ساكن UMutex gBreakEngineMutex;
     Mutex m(&gBreakEngineMutex);
-    fEngines->push(wrapper.getAlias(), status);
+    fEngines->push(wrapper.getAlias(), حالت);
     wrapper.orphan();
 }
 
 BreakEngineWrapper::BreakEngineWrapper(
-    ExternalBreakEngine* engine, UErrorCode &status) : delegate(engine, status) {
+    ExternalBreakEngine* engine, UError_ڪوڊ &حالت) : delegate(engine, حالت) {
 }
 
 BreakEngineWrapper::~BreakEngineWrapper() {
 }
 
-UBool BreakEngineWrapper::handles(UChar32 c, const char* locale) const {
-    return delegate->isFor(c, locale);
+UBool BreakEngineWrapper::handles(UChar32 c, ثابت حرف* locale) ثابت {
+    أرجع delegate->isFor(c, locale);
 }
 
-int32_t BreakEngineWrapper::findBreaks(
-    UText *text,
-    int32_t startPos,
-    int32_t endPos,
-    UVector32 &foundBreaks,
+int32_t BreakEngineWrapper::ڳوليو_Breaks(
+    UText *متن,
+    int32_t شروعات_Pos,
+    int32_t پڇاڙي_Pos,
+    UVector32 &مليو_Breaks,
     UBool /* isPhraseBreaking */,
-    UErrorCode &status) const {
-    if (U_FAILURE(status)) return 0;
-    int32_t result = 0;
+    UError_ڪوڊ &حالت) ثابت {
+    إذا (U_FAILURE(حالت)) أرجع 0;
+    int32_t نتيجو = 0;
 
     // Find the span of characters included in the set.
     //   The span to break begins at the current position in the text, and
     //   extends towards the start or end of the text, depending on 'reverse'.
 
-    utext_setNativeIndex(text, startPos);
-    int32_t start = static_cast<int32_t>(utext_getNativeIndex(text));
+    utext_سيٽ_Native_اشاريو(متن, شروعات_Pos);
+    int32_t شروعات = static_cast<int32_t>(utext_get_Native_اشاريو(متن));
     int32_t current;
-    int32_t rangeStart;
-    int32_t rangeEnd;
-    UChar32 c = utext_current32(text);
-    while ((current = static_cast<int32_t>(utext_getNativeIndex(text))) < endPos && delegate->handles(c)) {
-        utext_next32(text);         // TODO:  recast loop for postincrement
-        c = utext_current32(text);
+    int32_t range_شروعات;
+    int32_t range_پڇاڙي;
+    UChar32 c = utext_current32(متن);
+    طالما ((current = static_cast<int32_t>(utext_get_Native_اشاريو(متن))) < پڇاڙي_Pos && delegate->handles(c)) {
+        utext_next32(متن);         // TODO:  recast loop for postincrement
+        c = utext_current32(متن);
     }
-    rangeStart = start;
-    rangeEnd = current;
-    int32_t beforeSize = foundBreaks.size();
-    int32_t additionalCapacity = rangeEnd - rangeStart + 1;
+    range_شروعات = شروعات;
+    range_پڇاڙي = current;
+    int32_t before_سائيز = مليو_Breaks.size();
+    int32_t additional_صلاحيت = range_پڇاڙي - range_شروعات + 1;
     // enlarge to contains (rangeEnd-rangeStart+1) more items
-    foundBreaks.ensureCapacity(beforeSize+additionalCapacity, status);
-    if (U_FAILURE(status)) return 0;
-    foundBreaks.setSize(beforeSize + beforeSize+additionalCapacity);
-    result = delegate->fillBreaks(text, rangeStart, rangeEnd, foundBreaks.getBuffer()+beforeSize,
-                                  additionalCapacity, status);
-    if (U_FAILURE(status)) return 0;
-    foundBreaks.setSize(beforeSize + result);
-    utext_setNativeIndex(text, current);
-    return result;
+    مليو_Breaks.ensure_صلاحيت(before_سائيز+additional_صلاحيت, حالت);
+    إذا (U_FAILURE(حالت)) أرجع 0;
+    مليو_Breaks.سيٽ_سائيز(before_سائيز + before_سائيز+additional_صلاحيت);
+    نتيجو = delegate->fillBreaks(متن, range_شروعات, range_پڇاڙي, مليو_Breaks.get_بفر()+before_سائيز,
+                                  additional_صلاحيت, حالت);
+    إذا (U_FAILURE(حالت)) أرجع 0;
+    مليو_Breaks.سيٽ_سائيز(before_سائيز + نتيجو);
+    utext_سيٽ_Native_اشاريو(متن, current);
+    أرجع نتيجو;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#جيڪڏهن_پورو /* #if !UCONFIG_NO_BREAK_ITERATION */

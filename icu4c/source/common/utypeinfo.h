@@ -9,8 +9,8 @@
 ******************************************************************************
 */
 
-#ifndef __UTYPEINFO_H__
-#define __UTYPEINFO_H__
+#جيڪڏهن_وصف_نه_ٿيل __UTYPEINFO_H__
+#وصف_ڪريو __UTYPEINFO_H__
 
 // Windows header <typeinfo> does not define 'exception' in 'std' namespace.
 // Therefore, a project using ICU cannot be compiled with _HAS_EXCEPTIONS
@@ -20,13 +20,13 @@
 // instead of <typeinfo>.
 // Visual Studio 10 emits warning 4275 with this change. If you compile
 // with exception disabled, you have to suppress warning 4275.
-#if defined(_MSC_VER) && _HAS_EXCEPTIONS == 0
-#include <exception>
+#إذا defined(_MSC_VER) && _HAS_EXCEPTIONS == 0
+#ضمن <exception>
 using std::exception;
-#endif
-#if defined(__GLIBCXX__)
+#جيڪڏهن_پورو
+#إذا defined(__GLIBCXX__)
 namespace std { class type_info; } // WORKAROUND: http://llvm.org/bugs/show_bug.cgi?id=13364
-#endif
-#include <typeinfo>  // for 'typeid' to work
+#جيڪڏهن_پورو
+#ضمن <typeinfo>  // for 'typeid' to work
 
-#endif
+#جيڪڏهن_پورو

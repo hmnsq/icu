@@ -48,15 +48,15 @@
 ******************************************************************************
 */
 
-#include "unicode/utypes.h"
-#include "unicode/resbund.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/resbund.h"
 
-#include "cmemory.h"
-#include "mutex.h"
-#include "uassert.h"
-#include "umutex.h"
+#ضمن "cmemory.h"
+#ضمن "mutex.h"
+#ضمن "uassert.h"
+#ضمن "umutex.h"
 
-#include "uresimp.h"
+#ضمن "uresimp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -176,224 +176,224 @@ U_NAMESPACE_BEGIN
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ResourceBundle)
 
-ResourceBundle::ResourceBundle(UErrorCode &err)
-                                :UObject(), fLocale(nullptr)
+ResourceBundle::ResourceBundle(UError_ڪوڊ &err)
+                                :UObject(), fLocale(خالي_اشارو)
 {
-    fResource = ures_open(nullptr, Locale::getDefault().getName(), &err);
+    fResource = ures_open(خالي_اشارو, Locale::getDefault().getName(), &err);
 }
 
-ResourceBundle::ResourceBundle(const ResourceBundle &other)
-                              :UObject(other), fLocale(nullptr)
+ResourceBundle::ResourceBundle(ثابت ResourceBundle &other)
+                              :UObject(other), fLocale(خالي_اشارو)
 {
-    UErrorCode status = U_ZERO_ERROR;
+    UError_ڪوڊ حالت = U_ZERO_ERROR;
 
-    if (other.fResource) {
-        fResource = ures_copyResb(nullptr, other.fResource, &status);
-    } else {
+    إذا (other.fResource) {
+        fResource = ures_copyResb(خالي_اشارو, other.fResource, &حالت);
+    } وإلا {
         /* Copying a bad resource bundle */
-        fResource = nullptr;
+        fResource = خالي_اشارو;
     }
 }
 
-ResourceBundle::ResourceBundle(UResourceBundle *res, UErrorCode& err)
-                               :UObject(), fLocale(nullptr)
+ResourceBundle::ResourceBundle(UResourceBundle *res, UError_ڪوڊ& err)
+                               :UObject(), fLocale(خالي_اشارو)
 {
-    if (res) {
-        fResource = ures_copyResb(nullptr, res, &err);
-    } else {
+    إذا (res) {
+        fResource = ures_copyResb(خالي_اشارو, res, &err);
+    } وإلا {
         /* Copying a bad resource bundle */
-        fResource = nullptr;
+        fResource = خالي_اشارو;
     }
 }
 
-ResourceBundle::ResourceBundle(const char* path, const Locale& locale, UErrorCode& err) 
-                               :UObject(), fLocale(nullptr)
+ResourceBundle::ResourceBundle(ثابت حرف* رستو, ثابت Locale& locale, UError_ڪوڊ& err) 
+                               :UObject(), fLocale(خالي_اشارو)
 {
-    fResource = ures_open(path, locale.getName(), &err);
+    fResource = ures_open(رستو, locale.getName(), &err);
 }
 
 
-ResourceBundle& ResourceBundle::operator=(const ResourceBundle& other) U_LIFETIME_BOUND
+ResourceBundle& ResourceBundle::عامل=(ثابت ResourceBundle& other) U_LIFETIME_BOUND
 {
-    if(this == &other) {
-        return *this;
+    إذا(هذا == &other) {
+        أرجع *هذا;
     }
-    if (fResource != nullptr) {
+    إذا (fResource != خالي_اشارو) {
         ures_close(fResource);
-        fResource = nullptr;
+        fResource = خالي_اشارو;
     }
-    if (fLocale != nullptr) {
-        delete fLocale;
-        fLocale = nullptr;
+    إذا (fLocale != خالي_اشارو) {
+        ميٽيو fLocale;
+        fLocale = خالي_اشارو;
     }
-    UErrorCode status = U_ZERO_ERROR;
-    if (other.fResource) {
-        fResource = ures_copyResb(nullptr, other.fResource, &status);
-    } else {
+    UError_ڪوڊ حالت = U_ZERO_ERROR;
+    إذا (other.fResource) {
+        fResource = ures_copyResb(خالي_اشارو, other.fResource, &حالت);
+    } وإلا {
         /* Copying a bad resource bundle */
-        fResource = nullptr;
+        fResource = خالي_اشارو;
     }
-    return *this;
+    أرجع *هذا;
 }
 
 ResourceBundle::~ResourceBundle()
 {
-    if (fResource != nullptr) {
+    إذا (fResource != خالي_اشارو) {
         ures_close(fResource);
     }
-    delete fLocale;
+    ميٽيو fLocale;
 }
 
 ResourceBundle *
-ResourceBundle::clone() const {
-    return new ResourceBundle(*this);
+ResourceBundle::clone() ثابت {
+    أرجع جديد ResourceBundle(*هذا);
 }
 
-UnicodeString ResourceBundle::getString(UErrorCode& status) const U_LIFETIME_BOUND {
+UnicodeString ResourceBundle::getString(UError_ڪوڊ& حالت) ثابت U_LIFETIME_BOUND {
     int32_t len = 0;
-    const char16_t *r = ures_getString(fResource, &len, &status);
-    return UnicodeString(true, r, len);
+    ثابت char16_t *r = ures_getString(fResource, &len, &حالت);
+    أرجع UnicodeString(سچ, r, len);
 }
 
-const uint8_t* ResourceBundle::getBinary(int32_t& len, UErrorCode& status) const U_LIFETIME_BOUND {
-    return ures_getBinary(fResource, &len, &status);
+ثابت uint8_t* ResourceBundle::get_ٻٽو(int32_t& len, UError_ڪوڊ& حالت) ثابت U_LIFETIME_BOUND {
+    أرجع ures_get_ٻٽو(fResource, &len, &حالت);
 }
 
-const int32_t* ResourceBundle::getIntVector(int32_t& len,
-                                            UErrorCode& status) const U_LIFETIME_BOUND {
-    return ures_getIntVector(fResource, &len, &status);
+ثابت int32_t* ResourceBundle::get_Int_ويڪٽر(int32_t& len,
+                                            UError_ڪوڊ& حالت) ثابت U_LIFETIME_BOUND {
+    أرجع ures_get_Int_ويڪٽر(fResource, &len, &حالت);
 }
 
-uint32_t ResourceBundle::getUInt(UErrorCode& status) const {
-    return ures_getUInt(fResource, &status);
+uint32_t ResourceBundle::getUInt(UError_ڪوڊ& حالت) ثابت {
+    أرجع ures_getUInt(fResource, &حالت);
 }
 
-int32_t ResourceBundle::getInt(UErrorCode& status) const {
-    return ures_getInt(fResource, &status);
+int32_t ResourceBundle::getInt(UError_ڪوڊ& حالت) ثابت {
+    أرجع ures_getInt(fResource, &حالت);
 }
 
-const char* ResourceBundle::getName() const U_LIFETIME_BOUND {
-    return ures_getName(fResource);
+ثابت حرف* ResourceBundle::getName() ثابت U_LIFETIME_BOUND {
+    أرجع ures_getName(fResource);
 }
 
-const char* ResourceBundle::getKey() const U_LIFETIME_BOUND {
-    return ures_getKey(fResource);
+ثابت حرف* ResourceBundle::get_ڪنجي() ثابت U_LIFETIME_BOUND {
+    أرجع ures_get_ڪنجي(fResource);
 }
 
-UResType ResourceBundle::getType() const {
-    return ures_getType(fResource);
+UResType ResourceBundle::getType() ثابت {
+    أرجع ures_getType(fResource);
 }
 
-int32_t ResourceBundle::getSize() const {
-    return ures_getSize(fResource);
+int32_t ResourceBundle::get_سائيز() ثابت {
+    أرجع ures_get_سائيز(fResource);
 }
 
-UBool ResourceBundle::hasNext() const {
-    return ures_hasNext(fResource);
+UBool ResourceBundle::has_ايندڙ() ثابت {
+    أرجع ures_has_ايندڙ(fResource);
 }
 
-void ResourceBundle::resetIterator() {
+فراغ ResourceBundle::resetIterator() {
     ures_resetIterator(fResource);
 }
 
-ResourceBundle ResourceBundle::getNext(UErrorCode& status) {
+ResourceBundle ResourceBundle::get_ايندڙ(UError_ڪوڊ& حالت) {
     UResourceBundle r;
 
-    ures_initStackObject(&r);
-    ures_getNextResource(fResource, &r, &status);
-    ResourceBundle res(&r, status);
-    if (U_SUCCESS(status)) {
+    ures_init_ڍير_Object(&r);
+    ures_get_ايندڙ_Resource(fResource, &r, &حالت);
+    ResourceBundle res(&r, حالت);
+    إذا (U_SUCCESS(حالت)) {
         ures_close(&r);
     }
-    return res;
+    أرجع res;
 }
 
-UnicodeString ResourceBundle::getNextString(UErrorCode& status) U_LIFETIME_BOUND {
+UnicodeString ResourceBundle::get_ايندڙ_String(UError_ڪوڊ& حالت) U_LIFETIME_BOUND {
     int32_t len = 0;
-    const char16_t* r = ures_getNextString(fResource, &len, nullptr, &status);
-    return UnicodeString(true, r, len);
+    ثابت char16_t* r = ures_get_ايندڙ_String(fResource, &len, خالي_اشارو, &حالت);
+    أرجع UnicodeString(سچ, r, len);
 }
 
-UnicodeString ResourceBundle::getNextString(const char** key, UErrorCode& status) U_LIFETIME_BOUND {
+UnicodeString ResourceBundle::get_ايندڙ_String(ثابت حرف** ڪنجي, UError_ڪوڊ& حالت) U_LIFETIME_BOUND {
     int32_t len = 0;
-    const char16_t* r = ures_getNextString(fResource, &len, key, &status);
-    return UnicodeString(true, r, len);
+    ثابت char16_t* r = ures_get_ايندڙ_String(fResource, &len, ڪنجي, &حالت);
+    أرجع UnicodeString(سچ, r, len);
 }
 
-ResourceBundle ResourceBundle::get(int32_t indexR, UErrorCode& status) const {
+ResourceBundle ResourceBundle::get(int32_t اشاريو_R, UError_ڪوڊ& حالت) ثابت {
     UResourceBundle r;
 
-    ures_initStackObject(&r);
-    ures_getByIndex(fResource, indexR, &r, &status);
-    ResourceBundle res(&r, status);
-    if (U_SUCCESS(status)) {
+    ures_init_ڍير_Object(&r);
+    ures_get_By_اشاريو(fResource, اشاريو_R, &r, &حالت);
+    ResourceBundle res(&r, حالت);
+    إذا (U_SUCCESS(حالت)) {
         ures_close(&r);
     }
-    return res;
+    أرجع res;
 }
 
-UnicodeString ResourceBundle::getStringEx(int32_t indexS,
-                                          UErrorCode& status) const U_LIFETIME_BOUND {
+UnicodeString ResourceBundle::getStringEx(int32_t اشاريو_S,
+                                          UError_ڪوڊ& حالت) ثابت U_LIFETIME_BOUND {
     int32_t len = 0;
-    const char16_t* r = ures_getStringByIndex(fResource, indexS, &len, &status);
-    return UnicodeString(true, r, len);
+    ثابت char16_t* r = ures_get_String_By_اشاريو(fResource, اشاريو_S, &len, &حالت);
+    أرجع UnicodeString(سچ, r, len);
 }
 
-ResourceBundle ResourceBundle::get(const char* key, UErrorCode& status) const {
+ResourceBundle ResourceBundle::get(ثابت حرف* ڪنجي, UError_ڪوڊ& حالت) ثابت {
     UResourceBundle r;
 
-    ures_initStackObject(&r);
-    ures_getByKey(fResource, key, &r, &status);
-    ResourceBundle res(&r, status);
-    if (U_SUCCESS(status)) {
+    ures_init_ڍير_Object(&r);
+    ures_get_By_ڪنجي(fResource, ڪنجي, &r, &حالت);
+    ResourceBundle res(&r, حالت);
+    إذا (U_SUCCESS(حالت)) {
         ures_close(&r);
     }
-    return res;
+    أرجع res;
 }
 
-ResourceBundle ResourceBundle::getWithFallback(const char* key, UErrorCode& status){
+ResourceBundle ResourceBundle::getWithFallback(ثابت حرف* ڪنجي, UError_ڪوڊ& حالت){
     UResourceBundle r;
-    ures_initStackObject(&r);
-    ures_getByKeyWithFallback(fResource, key, &r, &status);
-    ResourceBundle res(&r, status);
-    if(U_SUCCESS(status)){
+    ures_init_ڍير_Object(&r);
+    ures_get_By_ڪنجي_With_Fallback(fResource, ڪنجي, &r, &حالت);
+    ResourceBundle res(&r, حالت);
+    إذا(U_SUCCESS(حالت)){
         ures_close(&r);
     }
-    return res;
+    أرجع res;
 }
 
-UnicodeString ResourceBundle::getStringEx(const char* key,
-                                          UErrorCode& status) const U_LIFETIME_BOUND {
+UnicodeString ResourceBundle::getStringEx(ثابت حرف* ڪنجي,
+                                          UError_ڪوڊ& حالت) ثابت U_LIFETIME_BOUND {
     int32_t len = 0;
-    const char16_t* r = ures_getStringByKey(fResource, key, &len, &status);
-    return UnicodeString(true, r, len);
+    ثابت char16_t* r = ures_get_String_By_ڪنجي(fResource, ڪنجي, &len, &حالت);
+    أرجع UnicodeString(سچ, r, len);
 }
 
-const char* ResourceBundle::getVersionNumber() const U_LIFETIME_BOUND {
-    return ures_getVersionNumberInternal(fResource);
+ثابت حرف* ResourceBundle::get_نسخو_عدد() ثابت U_LIFETIME_BOUND {
+    أرجع ures_get_نسخو_عدد_اندروني(fResource);
 }
 
-void ResourceBundle::getVersion(UVersionInfo versionInfo) const {
-    ures_getVersion(fResource, versionInfo);
+فراغ ResourceBundle::get_نسخو(UVersionInfo نسخو_Info) ثابت {
+    ures_get_نسخو(fResource, نسخو_Info);
 }
 
-const Locale& ResourceBundle::getLocale() const U_LIFETIME_BOUND {
-    static UMutex gLocaleLock;
-    Mutex lock(&gLocaleLock);
-    if (fLocale != nullptr) {
-        return *fLocale;
+ثابت Locale& ResourceBundle::getLocale() ثابت U_LIFETIME_BOUND {
+    ساكن UMutex g_Locale_تالو;
+    Mutex تالو(&g_Locale_تالو);
+    إذا (fLocale != خالي_اشارو) {
+        أرجع *fLocale;
     }
-    UErrorCode status = U_ZERO_ERROR;
-    const char *localeName = ures_getLocaleInternal(fResource, &status);
-    ResourceBundle *ncThis = const_cast<ResourceBundle *>(this);
-    ncThis->fLocale = new Locale(localeName);
-    return ncThis->fLocale != nullptr ? *ncThis->fLocale : Locale::getDefault();
+    UError_ڪوڊ حالت = U_ZERO_ERROR;
+    ثابت حرف *localeName = ures_get_Locale_اندروني(fResource, &حالت);
+    ResourceBundle *ncThis = const_cast<ResourceBundle *>(هذا);
+    ncThis->fLocale = جديد Locale(localeName);
+    أرجع ncThis->fLocale != خالي_اشارو ? *ncThis->fLocale : Locale::getDefault();
 }
 
-Locale ResourceBundle::getLocale(ULocDataLocaleType type, UErrorCode &status) const
+Locale ResourceBundle::getLocale(ULoc_معلومات_Locale_Type type, UError_ڪوڊ &حالت) ثابت
 {
-  return ures_getLocaleByType(fResource, type, &status);
+  أرجع ures_getLocaleByType(fResource, type, &حالت);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 //eof

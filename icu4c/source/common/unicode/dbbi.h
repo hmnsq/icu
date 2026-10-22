@@ -10,16 +10,16 @@
 **********************************************************************
 */
 
-#ifndef DBBI_H
-#define DBBI_H
+#جيڪڏهن_وصف_نه_ٿيل DBBI_H
+#وصف_ڪريو DBBI_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#include "unicode/rbbi.h"
+#ضمن "unicode/rbbi.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#إذا !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * \file
@@ -28,21 +28,21 @@
  
 U_NAMESPACE_BEGIN
 
-#ifndef U_HIDE_DEPRECATED_API
+#جيڪڏهن_وصف_نه_ٿيل U_HIDE_DEPRECATED_API
 /**
  * An obsolete subclass of RuleBasedBreakIterator. Handling of dictionary-
  * based break iteration has been folded into the base class. This class
  * is deprecated as of ICU 3.6.
  * @deprecated ICU 3.6
  */
-typedef RuleBasedBreakIterator DictionaryBasedBreakIterator;
+تعريفنوع قاعدو_Based_Break_Iterator DictionaryBasedBreakIterator;
 
-#endif  /* U_HIDE_DEPRECATED_API */
+#جيڪڏهن_پورو  /* U_HIDE_DEPRECATED_API */
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#جيڪڏهن_پورو /* #if !UCONFIG_NO_BREAK_ITERATION */
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#جيڪڏهن_پورو /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#جيڪڏهن_پورو

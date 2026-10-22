@@ -19,22 +19,22 @@
  * \brief C++ API: Builder for icu::BytesTrie
  */
 
-#ifndef __BYTESTRIEBUILDER_H__
-#define __BYTESTRIEBUILDER_H__
+#جيڪڏهن_وصف_نه_ٿيل __BYTESTRIEBUILDER_H__
+#وصف_ڪريو __BYTESTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#include "unicode/bytestrie.h"
-#include "unicode/stringpiece.h"
-#include "unicode/stringtriebuilder.h"
+#ضمن "unicode/bytestrie.h"
+#ضمن "unicode/stringpiece.h"
+#ضمن "unicode/stringtriebuilder.h"
 
-class BytesTrieTest;
+class بائيٽون_Trie_Test;
 
 U_NAMESPACE_BEGIN
 
-class BytesTrieElement;
+class بائيٽون_Trie_Element;
 class CharString;
 /**
  * Builder class for BytesTrie.
@@ -42,20 +42,20 @@ class CharString;
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API BytesTrieBuilder : public StringTrieBuilder {
-public:
+class U_COMMON_API بائيٽون_Trie_Builder : عام StringTrieBuilder {
+عام:
     /**
      * Constructs an empty builder.
      * @param errorCode Standard ICU error code.
      * @stable ICU 4.8
      */
-    BytesTrieBuilder(UErrorCode &errorCode);
+    بائيٽون_Trie_Builder(UError_ڪوڊ &error_ڪوڊ);
 
     /**
      * Destructor.
      * @stable ICU 4.8
      */
-    virtual ~BytesTrieBuilder();
+    مجازي ~بائيٽون_Trie_Builder();
 
     /**
      * Adds a (byte sequence, value) pair.
@@ -71,7 +71,7 @@ public:
      * @return *this
      * @stable ICU 4.8
      */
-    BytesTrieBuilder& add(StringPiece s, int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND;
+    بائيٽون_Trie_Builder& جوڙيو(StringPiece s, int32_t قدر_2, UError_ڪوڊ& error_ڪوڊ) U_LIFETIME_BOUND;
 
     /**
      * Builds a BytesTrie for the add()ed data.
@@ -91,7 +91,7 @@ public:
      * @return A new BytesTrie for the add()ed data.
      * @stable ICU 4.8
      */
-    BytesTrie *build(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
+    بائيٽون_Trie *build(UStringTrieBuildOption buildOption, UError_ڪوڊ &error_ڪوڊ);
 
     /**
      * Builds a BytesTrie for the add()ed data and byte-serializes it.
@@ -117,7 +117,7 @@ public:
      * @stable ICU 4.8
      */
     StringPiece buildStringPiece(UStringTrieBuildOption buildOption,
-                                 UErrorCode& errorCode) U_LIFETIME_BOUND;
+                                 UError_ڪوڊ& error_ڪوڊ) U_LIFETIME_BOUND;
 
     /**
      * Removes all (byte sequence, value) pairs.
@@ -125,67 +125,67 @@ public:
      * @return *this
      * @stable ICU 4.8
      */
-    BytesTrieBuilder& clear() U_LIFETIME_BOUND;
+    بائيٽون_Trie_Builder& clear() U_LIFETIME_BOUND;
 
-private:
-    friend class ::BytesTrieTest;
+خاص:
+    دوست class ::بائيٽون_Trie_Test;
 
-    BytesTrieBuilder(const BytesTrieBuilder &other) = delete;  // no copy constructor
-    BytesTrieBuilder &operator=(const BytesTrieBuilder &other) = delete;  // no assignment operator
+    بائيٽون_Trie_Builder(ثابت بائيٽون_Trie_Builder &other) = delete;  // no copy constructor
+    بائيٽون_Trie_Builder &عامل=(ثابت بائيٽون_Trie_Builder &other) = delete;  // no assignment operator
 
-    void buildBytes(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
+    فراغ build_بائيٽون(UStringTrieBuildOption buildOption, UError_ڪوڊ &error_ڪوڊ);
 
-    virtual int32_t getElementStringLength(int32_t i) const override;
-    virtual char16_t getElementUnit(int32_t i, int32_t byteIndex) const override;
-    virtual int32_t getElementValue(int32_t i) const override;
+    مجازي int32_t get_Element_String_ڊيگهائي(int32_t i) ثابت override;
+    مجازي char16_t getElementUnit(int32_t i, int32_t byte_اشاريو) ثابت override;
+    مجازي int32_t get_Element_قدر(int32_t i) ثابت override;
 
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t byteIndex) const override;
+    مجازي int32_t get_حد_بندي_جو_لڪيري_ميلاپ(int32_t پهريون, int32_t آخري, int32_t byte_اشاريو) ثابت override;
 
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t byteIndex) const override;
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t byteIndex, int32_t count) const override;
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t byteIndex, char16_t byte) const override;
+    مجازي int32_t ڳڻپ_Element_Units(int32_t شروعات, int32_t حد_بندي, int32_t byte_اشاريو) ثابت override;
+    مجازي int32_t skipElementsBySomeUnits(int32_t i, int32_t byte_اشاريو, int32_t ڳڻپ) ثابت override;
+    مجازي int32_t اشاريو_جو_Element_With_ايندڙ_Unit(int32_t i, int32_t byte_اشاريو, char16_t byte) ثابت override;
 
-    virtual UBool matchNodesCanHaveValues() const override { return false; }
+    مجازي UBool ميلاپ_Nodes_Can_Have_قدرون() ثابت override { أرجع false; }
 
-    virtual int32_t getMaxBranchLinearSubNodeLength() const override { return BytesTrie::kMaxBranchLinearSubNodeLength; }
-    virtual int32_t getMinLinearMatch() const override { return BytesTrie::kMinLinearMatch; }
-    virtual int32_t getMaxLinearMatchLength() const override { return BytesTrie::kMaxLinearMatchLength; }
+    مجازي int32_t get_Max_Branch_لڪيري_Sub_ڳنڍ_ڊيگهائي() ثابت override { أرجع بائيٽون_Trie::k_Max_Branch_لڪيري_Sub_ڳنڍ_ڊيگهائي; }
+    مجازي int32_t get_Min_لڪيري_ميلاپ() ثابت override { أرجع بائيٽون_Trie::k_Min_لڪيري_ميلاپ; }
+    مجازي int32_t get_Max_لڪيري_ميلاپ_ڊيگهائي() ثابت override { أرجع بائيٽون_Trie::k_Max_لڪيري_ميلاپ_ڊيگهائي; }
 
-    class BTLinearMatchNode : public LinearMatchNode {
-    public:
-        BTLinearMatchNode(const char *units, int32_t len, Node *nextNode);
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    private:
-        const char *s;
+    class BTLinear_ميلاپ_ڳنڍ : عام لڪيري_ميلاپ_ڳنڍ {
+    عام:
+        BTLinear_ميلاپ_ڳنڍ(ثابت حرف *units, int32_t len, ڳنڍ_2 *ايندڙ_ڳنڍ);
+        مجازي bool عامل==(ثابت ڳنڍ_2 &other) ثابت override;
+        مجازي فراغ اكتب(StringTrieBuilder &builder) override;
+    خاص:
+        ثابت حرف *s;
     };
     
-    virtual Node *createLinearMatchNode(int32_t i, int32_t byteIndex, int32_t length,
-                                        Node *nextNode) const override;
+    مجازي ڳنڍ_2 *create_لڪيري_ميلاپ_ڳنڍ(int32_t i, int32_t byte_اشاريو, int32_t ڊيگهائي,
+                                        ڳنڍ_2 *ايندڙ_ڳنڍ) ثابت override;
 
-    UBool ensureCapacity(int32_t length);
-    virtual int32_t write(int32_t byte) override;
-    int32_t write(const char *b, int32_t length);
-    virtual int32_t writeElementUnits(int32_t i, int32_t byteIndex, int32_t length) override;
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) override;
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) override;
-    virtual int32_t writeDeltaTo(int32_t jumpTarget) override;
-    static int32_t internalEncodeDelta(int32_t i, char intBytes[]);
+    UBool ensure_صلاحيت(int32_t ڊيگهائي);
+    مجازي int32_t اكتب(int32_t byte) override;
+    int32_t اكتب(ثابت حرف *b, int32_t ڊيگهائي);
+    مجازي int32_t writeElementUnits(int32_t i, int32_t byte_اشاريو, int32_t ڊيگهائي) override;
+    مجازي int32_t write_قدر_And_Final(int32_t i, UBool isFinal) override;
+    مجازي int32_t write_قدر_And_Type(UBool has_قدر, int32_t قدر_2, int32_t ڳنڍ) override;
+    مجازي int32_t write_Delta_منزل(int32_t jump_هدف) override;
+    ساكن int32_t اندروني_Encode_Delta(int32_t i, حرف int_بائيٽون[]);
 
-    CharString *strings;  // Pointer not object so we need not #include internal charstr.h.
-    BytesTrieElement *elements;
-    int32_t elementsCapacity;
-    int32_t elementsLength;
+    CharString *لڙيون;  // Pointer not object so we need not #include internal charstr.h.
+    بائيٽون_Trie_Element *elements;
+    int32_t elements_صلاحيت;
+    int32_t elements_ڊيگهائي;
 
     // Byte serialization of the trie.
     // Grows from the back: bytesLength measures from the end of the buffer!
-    char *bytes;
-    int32_t bytesCapacity;
-    int32_t bytesLength;
+    حرف *بائيٽون;
+    int32_t بائيٽون_صلاحيت;
+    int32_t بائيٽون_ڊيگهائي;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#جيڪڏهن_پورو /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __BYTESTRIEBUILDER_H__
+#جيڪڏهن_پورو  // __BYTESTRIEBUILDER_H__

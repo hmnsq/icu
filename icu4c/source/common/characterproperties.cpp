@@ -4,49 +4,49 @@
 // characterproperties.cpp
 // created: 2018sep03 Markus W. Scherer
 
-#include "unicode/utypes.h"
-#include "unicode/localpointer.h"
-#include "unicode/uchar.h"
-#include "unicode/ucpmap.h"
-#include "unicode/ucptrie.h"
-#include "unicode/umutablecptrie.h"
-#include "unicode/uniset.h"
-#include "unicode/uscript.h"
-#include "unicode/uset.h"
-#include "cmemory.h"
-#include "emojiprops.h"
-#include "mutex.h"
-#include "normalizer2impl.h"
-#include "uassert.h"
-#include "ubidi_props.h"
-#include "ucase.h"
-#include "ucln_cmn.h"
-#include "umutex.h"
-#include "uprops.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/localpointer.h"
+#ضمن "unicode/uchar.h"
+#ضمن "unicode/ucpmap.h"
+#ضمن "unicode/ucptrie.h"
+#ضمن "unicode/umutablecptrie.h"
+#ضمن "unicode/uniset.h"
+#ضمن "unicode/uscript.h"
+#ضمن "unicode/uset.h"
+#ضمن "cmemory.h"
+#ضمن "emojiprops.h"
+#ضمن "mutex.h"
+#ضمن "normalizer2impl.h"
+#ضمن "uassert.h"
+#ضمن "ubidi_props.h"
+#ضمن "ucase.h"
+#ضمن "ucln_cmn.h"
+#ضمن "umutex.h"
+#ضمن "uprops.h"
 
-using icu::LocalPointer;
-#if !UCONFIG_NO_NORMALIZATION
-using icu::Normalizer2Factory;
-using icu::Normalizer2Impl;
-#endif
-using icu::UInitOnce;
-using icu::UnicodeSet;
+استعمال icu::Local_اشارو;
+#إذا !UCONFIG_NO_NORMALIZATION
+استعمال icu::Normalizer2Factory;
+استعمال icu::Normalizer2Impl;
+#جيڪڏهن_پورو
+استعمال icu::UInitOnce;
+استعمال icu::Unicode_سيٽ;
 
-namespace {
+نطاق {
 
 UBool U_CALLCONV characterproperties_cleanup();
 
-constexpr int32_t NUM_INCLUSIONS = UPROPS_SRC_COUNT + (UCHAR_INT_LIMIT - UCHAR_INT_START);
+constexpr int32_t انگ_INCLUSIONS = UPROPS_SRC_ڳڻپ + (UCHAR_INT_حد_بندي - UCHAR_INT_شروعات);
 
-struct Inclusion {
-    UnicodeSet  *fSet = nullptr;
+بنية Inclusion {
+    Unicode_سيٽ  *f_سيٽ = خالي_اشارو;
     UInitOnce    fInitOnce {};
 };
-Inclusion gInclusions[NUM_INCLUSIONS]; // cached getInclusions()
+Inclusion gInclusions[انگ_INCLUSIONS]; // cached getInclusions()
 
-UnicodeSet *sets[UCHAR_BINARY_LIMIT] = {};
+Unicode_سيٽ *sets[UCHAR_ٻٽو_حد_بندي] = {};
 
-UCPMap *maps[UCHAR_INT_LIMIT - UCHAR_INT_START] = {};
+UCPMap *maps[UCHAR_INT_حد_بندي - UCHAR_INT_شروعات] = {};
 
 icu::UMutex cpMutex;
 
@@ -56,376 +56,376 @@ icu::UMutex cpMutex;
 
 // USetAdder implementation
 // Does not use uset.h to reduce code dependencies
-void U_CALLCONV
-_set_add(USet *set, UChar32 c) {
-    reinterpret_cast<UnicodeSet*>(set)->add(c);
+فراغ U_CALLCONV
+سيٽ_جوڙيو(USet *سيٽ, UChar32 c) {
+    reinterpret_cast<Unicode_سيٽ*>(سيٽ)->جوڙيو(c);
 }
 
-void U_CALLCONV
-_set_addRange(USet *set, UChar32 start, UChar32 end) {
-    reinterpret_cast<UnicodeSet*>(set)->add(start, end);
+فراغ U_CALLCONV
+سيٽ_جوڙيو_Range(USet *سيٽ, UChar32 شروعات, UChar32 پڇاڙي) {
+    reinterpret_cast<Unicode_سيٽ*>(سيٽ)->جوڙيو(شروعات, پڇاڙي);
 }
 
-void U_CALLCONV
-_set_addString(USet *set, const char16_t *str, int32_t length) {
-    reinterpret_cast<UnicodeSet*>(set)->add(icu::UnicodeString(static_cast<UBool>(length < 0), str, length));
+فراغ U_CALLCONV
+سيٽ_جوڙيو_String(USet *سيٽ, ثابت char16_t *str, int32_t length) {
+    reinterpret_cast<Unicode_سيٽ*>(سيٽ)->جوڙيو(icu::UnicodeString(static_cast<UBool>(length < 0), str, length));
 }
 
 UBool U_CALLCONV characterproperties_cleanup() {
-    for (Inclusion &in: gInclusions) {
-        delete in.fSet;
-        in.fSet = nullptr;
+    لكل (Inclusion &in: gInclusions) {
+        ميٽيو in.f_سيٽ;
+        in.f_سيٽ = خالي_اشارو;
         in.fInitOnce.reset();
     }
-    for (int32_t i = 0; i < UPRV_LENGTHOF(sets); ++i) {
-        delete sets[i];
-        sets[i] = nullptr;
+    لكل (int32_t i = 0; i < UPRV_LENGTHOF(sets); ++i) {
+        ميٽيو sets[i];
+        sets[i] = خالي_اشارو;
     }
-    for (int32_t i = 0; i < UPRV_LENGTHOF(maps); ++i) {
+    لكل (int32_t i = 0; i < UPRV_LENGTHOF(maps); ++i) {
         ucptrie_close(reinterpret_cast<UCPTrie *>(maps[i]));
-        maps[i] = nullptr;
+        maps[i] = خالي_اشارو;
     }
-    return true;
+    أرجع سچ;
 }
 
-void U_CALLCONV initInclusion(UPropertySource src, UErrorCode &errorCode) {
+فراغ U_CALLCONV initInclusion(UProperty_ذريعو src, UError_ڪوڊ &error_ڪوڊ) {
     // This function is invoked only via umtx_initOnce().
-    U_ASSERT(0 <= src && src < UPROPS_SRC_COUNT);
-    if (src == UPROPS_SRC_NONE) {
-        errorCode = U_INTERNAL_PROGRAM_ERROR;
-        return;
+    U_ASSERT(0 <= src && src < UPROPS_SRC_ڳڻپ);
+    إذا (src == UPROPS_SRC_NONE) {
+        error_ڪوڊ = U_اندروني_پروگرام_ERROR;
+        أرجع;
     }
-    U_ASSERT(gInclusions[src].fSet == nullptr);
+    U_ASSERT(gInclusions[src].f_سيٽ == خالي_اشارو);
 
-    LocalPointer<UnicodeSet> incl(new UnicodeSet());
-    if (incl.isNull()) {
-        errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    Local_اشارو<Unicode_سيٽ> incl(جديد Unicode_سيٽ());
+    إذا (incl.isNull()) {
+        error_ڪوڊ = U_يادگيري_ورهاست_ERROR;
+        أرجع;
     }
     USetAdder sa = {
         reinterpret_cast<USet*>(incl.getAlias()),
-        _set_add,
-        _set_addRange,
-        _set_addString,
-        nullptr, // don't need remove()
-        nullptr // don't need removeRange()
+        سيٽ_جوڙيو,
+        سيٽ_جوڙيو_Range,
+        سيٽ_جوڙيو_String,
+        خالي_اشارو, // don't need remove()
+        خالي_اشارو // don't need removeRange()
     };
 
-    switch(src) {
-    case UPROPS_SRC_CHAR:
-        uchar_addPropertyStarts(&sa, &errorCode);
-        break;
-    case UPROPS_SRC_PROPSVEC:
-        upropsvec_addPropertyStarts(&sa, &errorCode);
-        break;
-    case UPROPS_SRC_CHAR_AND_PROPSVEC:
-        uchar_addPropertyStarts(&sa, &errorCode);
-        upropsvec_addPropertyStarts(&sa, &errorCode);
-        break;
-#if !UCONFIG_NO_NORMALIZATION
-    case UPROPS_SRC_CASE_AND_NORM: {
-        const Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
-        if(U_SUCCESS(errorCode)) {
-            impl->addPropertyStarts(&sa, errorCode);
+    بدل(src) {
+    حالة UPROPS_SRC_CHAR:
+        uchar_جوڙيو_Property_Starts(&sa, &error_ڪوڊ);
+        اكسر;
+    حالة UPROPS_SRC_PROPSVEC:
+        upropsvec_جوڙيو_Property_Starts(&sa, &error_ڪوڊ);
+        اكسر;
+    حالة UPROPS_SRC_CHAR_AND_PROPSVEC:
+        uchar_جوڙيو_Property_Starts(&sa, &error_ڪوڊ);
+        upropsvec_جوڙيو_Property_Starts(&sa, &error_ڪوڊ);
+        اكسر;
+#إذا !UCONFIG_NO_NORMALIZATION
+    حالة UPROPS_SRC_CASE_AND_NORM: {
+        ثابت Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(error_ڪوڊ);
+        إذا(U_SUCCESS(error_ڪوڊ)) {
+            impl->جوڙيو_Property_Starts(&sa, error_ڪوڊ);
         }
-        ucase_addPropertyStarts(&sa, &errorCode);
-        break;
+        ucase_جوڙيو_Property_Starts(&sa, &error_ڪوڊ);
+        اكسر;
     }
-    case UPROPS_SRC_NFC: {
-        const Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
-        if(U_SUCCESS(errorCode)) {
-            impl->addPropertyStarts(&sa, errorCode);
+    حالة UPROPS_SRC_NFC: {
+        ثابت Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(error_ڪوڊ);
+        إذا(U_SUCCESS(error_ڪوڊ)) {
+            impl->جوڙيو_Property_Starts(&sa, error_ڪوڊ);
         }
-        break;
+        اكسر;
     }
-    case UPROPS_SRC_NFKC: {
-        const Normalizer2Impl *impl=Normalizer2Factory::getNFKCImpl(errorCode);
-        if(U_SUCCESS(errorCode)) {
-            impl->addPropertyStarts(&sa, errorCode);
+    حالة UPROPS_SRC_NFKC: {
+        ثابت Normalizer2Impl *impl=Normalizer2Factory::getNFKCImpl(error_ڪوڊ);
+        إذا(U_SUCCESS(error_ڪوڊ)) {
+            impl->جوڙيو_Property_Starts(&sa, error_ڪوڊ);
         }
-        break;
+        اكسر;
     }
-    case UPROPS_SRC_NFKC_CF: {
-        const Normalizer2Impl *impl=Normalizer2Factory::getNFKC_CFImpl(errorCode);
-        if(U_SUCCESS(errorCode)) {
-            impl->addPropertyStarts(&sa, errorCode);
+    حالة UPROPS_SRC_NFKC_CF: {
+        ثابت Normalizer2Impl *impl=Normalizer2Factory::getNFKC_CFImpl(error_ڪوڊ);
+        إذا(U_SUCCESS(error_ڪوڊ)) {
+            impl->جوڙيو_Property_Starts(&sa, error_ڪوڊ);
         }
-        break;
+        اكسر;
     }
-    case UPROPS_SRC_NFC_CANON_ITER: {
-        const Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
-        if(U_SUCCESS(errorCode)) {
-            impl->addCanonIterPropertyStarts(&sa, errorCode);
+    حالة UPROPS_SRC_NFC_CANON_ITER: {
+        ثابت Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(error_ڪوڊ);
+        إذا(U_SUCCESS(error_ڪوڊ)) {
+            impl->جوڙيو_Canon_Iter_Property_Starts(&sa, error_ڪوڊ);
         }
-        break;
+        اكسر;
     }
-#endif
-    case UPROPS_SRC_CASE:
-        ucase_addPropertyStarts(&sa, &errorCode);
-        break;
-    case UPROPS_SRC_BIDI:
-        ubidi_addPropertyStarts(&sa, &errorCode);
-        break;
-    case UPROPS_SRC_INPC:
-    case UPROPS_SRC_INSC:
-    case UPROPS_SRC_VO:
-        uprops_addPropertyStarts(src, &sa, &errorCode);
-        break;
-    case UPROPS_SRC_EMOJI: {
-        const icu::EmojiProps *ep = icu::EmojiProps::getSingleton(errorCode);
-        if (U_SUCCESS(errorCode)) {
-            ep->addPropertyStarts(&sa, errorCode);
+#جيڪڏهن_پورو
+    حالة UPROPS_SRC_CASE:
+        ucase_جوڙيو_Property_Starts(&sa, &error_ڪوڊ);
+        اكسر;
+    حالة UPROPS_SRC_BIDI:
+        ubidi_جوڙيو_Property_Starts(&sa, &error_ڪوڊ);
+        اكسر;
+    حالة UPROPS_SRC_INPC:
+    حالة UPROPS_SRC_INSC:
+    حالة UPROPS_SRC_VO:
+        uprops_جوڙيو_Property_Starts(src, &sa, &error_ڪوڊ);
+        اكسر;
+    حالة UPROPS_SRC_EMOJI: {
+        ثابت icu::EmojiProps *ep = icu::EmojiProps::getSingleton(error_ڪوڊ);
+        إذا (U_SUCCESS(error_ڪوڊ)) {
+            ep->جوڙيو_Property_Starts(&sa, error_ڪوڊ);
         }
-        break;
+        اكسر;
     }
-    case UPROPS_SRC_IDSU:
+    حالة UPROPS_SRC_IDSU:
         // New in Unicode 15.1 for just two characters.
-        sa.add(sa.set, 0x2FFE);
-        sa.add(sa.set, 0x2FFF + 1);
-        break;
-    case UPROPS_SRC_ID_COMPAT_MATH:
-    case UPROPS_SRC_MCM:
-        uprops_addPropertyStarts(src, &sa, &errorCode);
-        break;
-    case UPROPS_SRC_BLOCK:
-        ublock_addPropertyStarts(&sa, errorCode);
-        break;
-    default:
-        errorCode = U_INTERNAL_PROGRAM_ERROR;
-        break;
+        sa.جوڙيو(sa.سيٽ, 0x2FFE);
+        sa.جوڙيو(sa.سيٽ, 0x2FFF + 1);
+        اكسر;
+    حالة UPROPS_SRC_ID_COMPAT_MATH:
+    حالة UPROPS_SRC_MCM:
+        uprops_جوڙيو_Property_Starts(src, &sa, &error_ڪوڊ);
+        اكسر;
+    حالة UPROPS_SRC_بلاڪ:
+        ublock_جوڙيو_Property_Starts(&sa, error_ڪوڊ);
+        اكسر;
+    افتراضي:
+        error_ڪوڊ = U_اندروني_پروگرام_ERROR;
+        اكسر;
     }
 
-    if (U_FAILURE(errorCode)) {
-        return;
+    إذا (U_FAILURE(error_ڪوڊ)) {
+        أرجع;
     }
-    if (incl->isBogus()) {
-        errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    إذا (incl->isBogus()) {
+        error_ڪوڊ = U_يادگيري_ورهاست_ERROR;
+        أرجع;
     }
     // Compact for caching.
     incl->compact();
-    gInclusions[src].fSet = incl.orphan();
-    ucln_common_registerCleanup(UCLN_COMMON_CHARACTERPROPERTIES, characterproperties_cleanup);
+    gInclusions[src].f_سيٽ = incl.orphan();
+    ucln_common_رجسٽر_Cleanup(UCLN_COMMON_CHARACTERPROPERTIES, characterproperties_cleanup);
 }
 
-const UnicodeSet *getInclusionsForSource(UPropertySource src, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    if (src < 0 || UPROPS_SRC_COUNT <= src) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+ثابت Unicode_سيٽ *get_Inclusions_For_ذريعو(UProperty_ذريعو src, UError_ڪوڊ &error_ڪوڊ) {
+    إذا (U_FAILURE(error_ڪوڊ)) { أرجع خالي_اشارو; }
+    إذا (src < 0 || UPROPS_SRC_ڳڻپ <= src) {
+        error_ڪوڊ = U_ILLEGAL_دليل_ERROR;
+        أرجع خالي_اشارو;
     }
     Inclusion &i = gInclusions[src];
-    umtx_initOnce(i.fInitOnce, &initInclusion, src, errorCode);
-    return i.fSet;
+    umtx_initOnce(i.fInitOnce, &initInclusion, src, error_ڪوڊ);
+    أرجع i.f_سيٽ;
 }
 
-void U_CALLCONV initIntPropInclusion(UProperty prop, UErrorCode &errorCode) {
+فراغ U_CALLCONV initIntPropInclusion(UProperty prop, UError_ڪوڊ &error_ڪوڊ) {
     // This function is invoked only via umtx_initOnce().
-    U_ASSERT(UCHAR_INT_START <= prop && prop < UCHAR_INT_LIMIT);
-    int32_t inclIndex = UPROPS_SRC_COUNT + (prop - UCHAR_INT_START);
-    U_ASSERT(gInclusions[inclIndex].fSet == nullptr);
-    UPropertySource src = uprops_getSource(prop);
-    const UnicodeSet *incl = getInclusionsForSource(src, errorCode);
-    if (U_FAILURE(errorCode)) {
-        return;
+    U_ASSERT(UCHAR_INT_شروعات <= prop && prop < UCHAR_INT_حد_بندي);
+    int32_t incl_اشاريو = UPROPS_SRC_ڳڻپ + (prop - UCHAR_INT_شروعات);
+    U_ASSERT(gInclusions[incl_اشاريو].f_سيٽ == خالي_اشارو);
+    UProperty_ذريعو src = uprops_get_ذريعو(prop);
+    ثابت Unicode_سيٽ *incl = get_Inclusions_For_ذريعو(src, error_ڪوڊ);
+    إذا (U_FAILURE(error_ڪوڊ)) {
+        أرجع;
     }
 
-    LocalPointer<UnicodeSet> intPropIncl(new UnicodeSet(0, 0));
-    if (intPropIncl.isNull()) {
-        errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    Local_اشارو<Unicode_سيٽ> intPropIncl(جديد Unicode_سيٽ(0, 0));
+    إذا (intPropIncl.isNull()) {
+        error_ڪوڊ = U_يادگيري_ورهاست_ERROR;
+        أرجع;
     }
-    int32_t numRanges = incl->getRangeCount();
-    int32_t prevValue = 0;
-    for (int32_t i = 0; i < numRanges; ++i) {
-        UChar32 rangeEnd = incl->getRangeEnd(i);
-        for (UChar32 c = incl->getRangeStart(i); c <= rangeEnd; ++c) {
+    int32_t انگ_Ranges = incl->get_Range_ڳڻپ();
+    int32_t prev_قدر = 0;
+    لكل (int32_t i = 0; i < انگ_Ranges; ++i) {
+        UChar32 range_پڇاڙي = incl->get_Range_پڇاڙي(i);
+        لكل (UChar32 c = incl->get_Range_شروعات(i); c <= range_پڇاڙي; ++c) {
             // TODO: Get a UCharacterProperty.IntProperty to avoid the property dispatch.
-            int32_t value = u_getIntPropertyValue(c, prop);
-            if (value != prevValue) {
-                intPropIncl->add(c);
-                prevValue = value;
+            int32_t value = u_get_Int_Property_قدر(c, prop);
+            إذا (value != prev_قدر) {
+                intPropIncl->جوڙيو(c);
+                prev_قدر = value;
             }
         }
     }
 
-    if (intPropIncl->isBogus()) {
-        errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    إذا (intPropIncl->isBogus()) {
+        error_ڪوڊ = U_يادگيري_ورهاست_ERROR;
+        أرجع;
     }
     // Compact for caching.
     intPropIncl->compact();
-    gInclusions[inclIndex].fSet = intPropIncl.orphan();
-    ucln_common_registerCleanup(UCLN_COMMON_CHARACTERPROPERTIES, characterproperties_cleanup);
+    gInclusions[incl_اشاريو].f_سيٽ = intPropIncl.orphan();
+    ucln_common_رجسٽر_Cleanup(UCLN_COMMON_CHARACTERPROPERTIES, characterproperties_cleanup);
 }
 
 }  // namespace
 
 U_NAMESPACE_BEGIN
 
-const UnicodeSet *CharacterProperties::getInclusionsForProperty(
-        UProperty prop, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    if (UCHAR_INT_START <= prop && prop < UCHAR_INT_LIMIT) {
-        int32_t inclIndex = UPROPS_SRC_COUNT + (prop - UCHAR_INT_START);
-        Inclusion &i = gInclusions[inclIndex];
-        umtx_initOnce(i.fInitOnce, &initIntPropInclusion, prop, errorCode);
-        return i.fSet;
-    } else {
-        UPropertySource src = uprops_getSource(prop);
-        return getInclusionsForSource(src, errorCode);
+ثابت Unicode_سيٽ *CharacterProperties::getInclusionsForProperty(
+        UProperty prop, UError_ڪوڊ &error_ڪوڊ) {
+    إذا (U_FAILURE(error_ڪوڊ)) { أرجع خالي_اشارو; }
+    إذا (UCHAR_INT_شروعات <= prop && prop < UCHAR_INT_حد_بندي) {
+        int32_t incl_اشاريو = UPROPS_SRC_ڳڻپ + (prop - UCHAR_INT_شروعات);
+        Inclusion &i = gInclusions[incl_اشاريو];
+        umtx_initOnce(i.fInitOnce, &initIntPropInclusion, prop, error_ڪوڊ);
+        أرجع i.f_سيٽ;
+    } وإلا {
+        UProperty_ذريعو src = uprops_get_ذريعو(prop);
+        أرجع get_Inclusions_For_ذريعو(src, error_ڪوڊ);
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
-namespace {
+نطاق {
 
-UnicodeSet *makeSet(UProperty property, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    LocalPointer<UnicodeSet> set(new UnicodeSet());
-    if (set.isNull()) {
-        errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+Unicode_سيٽ *make_سيٽ(UProperty property, UError_ڪوڊ &error_ڪوڊ) {
+    إذا (U_FAILURE(error_ڪوڊ)) { أرجع خالي_اشارو; }
+    Local_اشارو<Unicode_سيٽ> سيٽ(جديد Unicode_سيٽ());
+    إذا (سيٽ.isNull()) {
+        error_ڪوڊ = U_يادگيري_ورهاست_ERROR;
+        أرجع خالي_اشارو;
     }
-    if (UCHAR_BASIC_EMOJI <= property && property <= UCHAR_RGI_EMOJI) {
+    إذا (UCHAR_BASIC_EMOJI <= property && property <= UCHAR_RGI_EMOJI) {
         // property of strings
-        const icu::EmojiProps *ep = icu::EmojiProps::getSingleton(errorCode);
-        if (U_FAILURE(errorCode)) { return nullptr; }
+        ثابت icu::EmojiProps *ep = icu::EmojiProps::getSingleton(error_ڪوڊ);
+        إذا (U_FAILURE(error_ڪوڊ)) { أرجع خالي_اشارو; }
         USetAdder sa = {
-            reinterpret_cast<USet*>(set.getAlias()),
-            _set_add,
-            _set_addRange,
-            _set_addString,
-            nullptr, // don't need remove()
-            nullptr // don't need removeRange()
+            reinterpret_cast<USet*>(سيٽ.getAlias()),
+            سيٽ_جوڙيو,
+            سيٽ_جوڙيو_Range,
+            سيٽ_جوڙيو_String,
+            خالي_اشارو, // don't need remove()
+            خالي_اشارو // don't need removeRange()
         };
-        ep->addStrings(&sa, property, errorCode);
-        if (property != UCHAR_BASIC_EMOJI && property != UCHAR_RGI_EMOJI) {
+        ep->جوڙيو_لڙيون(&sa, property, error_ڪوڊ);
+        إذا (property != UCHAR_BASIC_EMOJI && property != UCHAR_RGI_EMOJI) {
             // property of _only_ strings
-            set->freeze();
-            return set.orphan();
+            سيٽ->freeze();
+            أرجع سيٽ.orphan();
         }
     }
 
-    const UnicodeSet *inclusions =
-        icu::CharacterProperties::getInclusionsForProperty(property, errorCode);
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    int32_t numRanges = inclusions->getRangeCount();
-    UChar32 startHasProperty = -1;
+    ثابت Unicode_سيٽ *inclusions =
+        icu::CharacterProperties::getInclusionsForProperty(property, error_ڪوڊ);
+    إذا (U_FAILURE(error_ڪوڊ)) { أرجع خالي_اشارو; }
+    int32_t انگ_Ranges = inclusions->get_Range_ڳڻپ();
+    UChar32 شروعات_Has_Property = -1;
 
-    for (int32_t i = 0; i < numRanges; ++i) {
-        UChar32 rangeEnd = inclusions->getRangeEnd(i);
-        for (UChar32 c = inclusions->getRangeStart(i); c <= rangeEnd; ++c) {
+    لكل (int32_t i = 0; i < انگ_Ranges; ++i) {
+        UChar32 range_پڇاڙي = inclusions->get_Range_پڇاڙي(i);
+        لكل (UChar32 c = inclusions->get_Range_شروعات(i); c <= range_پڇاڙي; ++c) {
             // TODO: Get a UCharacterProperty.BinaryProperty to avoid the property dispatch.
-            if (u_hasBinaryProperty(c, property)) {
-                if (startHasProperty < 0) {
+            إذا (u_has_ٻٽو_Property(c, property)) {
+                إذا (شروعات_Has_Property < 0) {
                     // Transition from false to true.
-                    startHasProperty = c;
+                    شروعات_Has_Property = c;
                 }
-            } else if (startHasProperty >= 0) {
+            } وإلا إذا (شروعات_Has_Property >= 0) {
                 // Transition from true to false.
-                set->add(startHasProperty, c - 1);
-                startHasProperty = -1;
+                سيٽ->جوڙيو(شروعات_Has_Property, c - 1);
+                شروعات_Has_Property = -1;
             }
         }
     }
-    if (startHasProperty >= 0) {
-        set->add(startHasProperty, 0x10FFFF);
+    إذا (شروعات_Has_Property >= 0) {
+        سيٽ->جوڙيو(شروعات_Has_Property, 0x10FFFF);
     }
-    set->freeze();
-    return set.orphan();
+    سيٽ->freeze();
+    أرجع سيٽ.orphan();
 }
 
-UCPMap *makeMap(UProperty property, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    uint32_t nullValue = property == UCHAR_SCRIPT ? USCRIPT_UNKNOWN : 0;
-    icu::LocalUMutableCPTriePointer mutableTrie(
-        umutablecptrie_open(nullValue, nullValue, &errorCode));
-    const UnicodeSet *inclusions =
-        icu::CharacterProperties::getInclusionsForProperty(property, errorCode);
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    int32_t numRanges = inclusions->getRangeCount();
-    UChar32 start = 0;
-    uint32_t value = nullValue;
+UCPMap *makeMap(UProperty property, UError_ڪوڊ &error_ڪوڊ) {
+    إذا (U_FAILURE(error_ڪوڊ)) { أرجع خالي_اشارو; }
+    uint32_t null_قدر = property == UCHAR_SCRIPT ? USCRIPT_UNKNOWN : 0;
+    icu::Local_UMutable_CPTrie_اشارو mutableTrie(
+        umutablecptrie_open(null_قدر, null_قدر, &error_ڪوڊ));
+    ثابت Unicode_سيٽ *inclusions =
+        icu::CharacterProperties::getInclusionsForProperty(property, error_ڪوڊ);
+    إذا (U_FAILURE(error_ڪوڊ)) { أرجع خالي_اشارو; }
+    int32_t انگ_Ranges = inclusions->get_Range_ڳڻپ();
+    UChar32 شروعات = 0;
+    uint32_t value = null_قدر;
 
-    for (int32_t i = 0; i < numRanges; ++i) {
-        UChar32 rangeEnd = inclusions->getRangeEnd(i);
-        for (UChar32 c = inclusions->getRangeStart(i); c <= rangeEnd; ++c) {
+    لكل (int32_t i = 0; i < انگ_Ranges; ++i) {
+        UChar32 range_پڇاڙي = inclusions->get_Range_پڇاڙي(i);
+        لكل (UChar32 c = inclusions->get_Range_شروعات(i); c <= range_پڇاڙي; ++c) {
             // TODO: Get a UCharacterProperty.IntProperty to avoid the property dispatch.
-            uint32_t nextValue = u_getIntPropertyValue(c, property);
-            if (value != nextValue) {
-                if (value != nullValue) {
-                    umutablecptrie_setRange(mutableTrie.getAlias(), start, c - 1, value, &errorCode);
+            uint32_t ايندڙ_قدر = u_get_Int_Property_قدر(c, property);
+            إذا (value != ايندڙ_قدر) {
+                إذا (value != null_قدر) {
+                    umutablecptrie_سيٽ_Range(mutableTrie.getAlias(), شروعات, c - 1, value, &error_ڪوڊ);
                 }
-                start = c;
-                value = nextValue;
+                شروعات = c;
+                value = ايندڙ_قدر;
             }
         }
     }
-    if (value != 0) {
-        umutablecptrie_setRange(mutableTrie.getAlias(), start, 0x10FFFF, value, &errorCode);
+    إذا (value != 0) {
+        umutablecptrie_سيٽ_Range(mutableTrie.getAlias(), شروعات, 0x10FFFF, value, &error_ڪوڊ);
     }
 
     UCPTrieType type;
-    if (property == UCHAR_BIDI_CLASS || property == UCHAR_GENERAL_CATEGORY) {
+    إذا (property == UCHAR_BIDI_CLASS || property == UCHAR_GENERAL_CATEGORY) {
         type = UCPTRIE_TYPE_FAST;
-    } else {
+    } وإلا {
         type = UCPTRIE_TYPE_SMALL;
     }
-    UCPTrieValueWidth valueWidth;
+    UCPTrie_قدر_ويڪر قدر_ويڪر;
     // TODO: UCharacterProperty.IntProperty
-    int32_t max = u_getIntPropertyMaxValue(property);
-    if (max <= 0xff) {
-        valueWidth = UCPTRIE_VALUE_BITS_8;
-    } else if (max <= 0xffff) {
-        valueWidth = UCPTRIE_VALUE_BITS_16;
-    } else {
-        valueWidth = UCPTRIE_VALUE_BITS_32;
+    int32_t max = u_get_Int_Property_Max_قدر(property);
+    إذا (max <= 0xff) {
+        قدر_ويڪر = UCPTRIE_قدر_بٽ_8;
+    } وإلا إذا (max <= 0xffff) {
+        قدر_ويڪر = UCPTRIE_قدر_بٽ_16;
+    } وإلا {
+        قدر_ويڪر = UCPTRIE_قدر_بٽ_32;
     }
-    return reinterpret_cast<UCPMap *>(
-        umutablecptrie_buildImmutable(mutableTrie.getAlias(), type, valueWidth, &errorCode));
+    أرجع reinterpret_cast<UCPMap *>(
+        umutablecptrie_buildImmutable(mutableTrie.getAlias(), type, قدر_ويڪر, &error_ڪوڊ));
 }
 
 }  // namespace
 
 U_NAMESPACE_BEGIN
 
-const UnicodeSet *CharacterProperties::getBinaryPropertySet(UProperty property, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    if (property < 0 || UCHAR_BINARY_LIMIT <= property) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+ثابت Unicode_سيٽ *CharacterProperties::get_ٻٽو_Property_سيٽ(UProperty property, UError_ڪوڊ &error_ڪوڊ) {
+    إذا (U_FAILURE(error_ڪوڊ)) { أرجع خالي_اشارو; }
+    إذا (property < 0 || UCHAR_ٻٽو_حد_بندي <= property) {
+        error_ڪوڊ = U_ILLEGAL_دليل_ERROR;
+        أرجع خالي_اشارو;
     }
     Mutex m(&cpMutex);
-    UnicodeSet *set = sets[property];
-    if (set == nullptr) {
-        sets[property] = set = makeSet(property, errorCode);
+    Unicode_سيٽ *سيٽ = sets[property];
+    إذا (سيٽ == خالي_اشارو) {
+        sets[property] = سيٽ = make_سيٽ(property, error_ڪوڊ);
     }
-    return set;
+    أرجع سيٽ;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
 U_NAMESPACE_USE
 
-U_CAPI const USet * U_EXPORT2
-u_getBinaryPropertySet(UProperty property, UErrorCode *pErrorCode) {
-    const UnicodeSet *set = CharacterProperties::getBinaryPropertySet(property, *pErrorCode);
-    return U_SUCCESS(*pErrorCode) ? set->toUSet() : nullptr;
+U_CAPI ثابت USet * U_EXPORT2
+u_get_ٻٽو_Property_سيٽ(UProperty property, UError_ڪوڊ *p_Error_ڪوڊ) {
+    ثابت Unicode_سيٽ *سيٽ = CharacterProperties::get_ٻٽو_Property_سيٽ(property, *p_Error_ڪوڊ);
+    أرجع U_SUCCESS(*p_Error_ڪوڊ) ? سيٽ->منزل_USet() : خالي_اشارو;
 }
 
-U_CAPI const UCPMap * U_EXPORT2
-u_getIntPropertyMap(UProperty property, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) { return nullptr; }
-    if (property < UCHAR_INT_START || UCHAR_INT_LIMIT <= property) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+U_CAPI ثابت UCPMap * U_EXPORT2
+u_getIntPropertyMap(UProperty property, UError_ڪوڊ *p_Error_ڪوڊ) {
+    إذا (U_FAILURE(*p_Error_ڪوڊ)) { أرجع خالي_اشارو; }
+    إذا (property < UCHAR_INT_شروعات || UCHAR_INT_حد_بندي <= property) {
+        *p_Error_ڪوڊ = U_ILLEGAL_دليل_ERROR;
+        أرجع خالي_اشارو;
     }
     Mutex m(&cpMutex);
-    UCPMap *map = maps[property - UCHAR_INT_START];
-    if (map == nullptr) {
-        maps[property - UCHAR_INT_START] = map = makeMap(property, *pErrorCode);
+    UCPMap *map = maps[property - UCHAR_INT_شروعات];
+    إذا (map == خالي_اشارو) {
+        maps[property - UCHAR_INT_شروعات] = map = makeMap(property, *p_Error_ڪوڊ);
     }
-    return map;
+    أرجع map;
 }

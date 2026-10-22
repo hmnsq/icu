@@ -16,37 +16,37 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#إذا !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/edits.h"
-#include "unicode/normalizer2.h"
-#include "unicode/stringoptions.h"
-#include "unicode/uniset.h"
-#include "unicode/unistr.h"
-#include "unicode/unorm.h"
-#include "cpputils.h"
+#ضمن "unicode/edits.h"
+#ضمن "unicode/normalizer2.h"
+#ضمن "unicode/stringoptions.h"
+#ضمن "unicode/uniset.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/unorm.h"
+#ضمن "cpputils.h"
 
 U_NAMESPACE_BEGIN
 
 FilteredNormalizer2::~FilteredNormalizer2() {}
 
 UnicodeString&
-FilteredNormalizer2::normalize(const UnicodeString& src,
+FilteredNormalizer2::normalize(ثابت UnicodeString& src,
                                UnicodeString& dest U_LIFETIME_BOUND,
-                               UErrorCode& errorCode) const {
-    uprv_checkCanGetBuffer(src, errorCode);
-    if(U_FAILURE(errorCode)) {
-        dest.setToBogus();
-        return dest;
+                               UError_ڪوڊ& error_ڪوڊ) ثابت {
+    uprv_check_Can_Get_بفر(src, error_ڪوڊ);
+    إذا(U_FAILURE(error_ڪوڊ)) {
+        dest.سيٽ_منزل_Bogus();
+        أرجع dest;
     }
-    if(&dest==&src) {
-        errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return dest;
+    إذا(&dest==&src) {
+        error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+        أرجع dest;
     }
     dest.remove();
-    return normalize(src, dest, USET_SPAN_SIMPLE, errorCode);
+    أرجع normalize(src, dest, USET_وسعت_SIMPLE, error_ڪوڊ);
 }
 
 // Internal: No argument checking, and appends to dest.
@@ -57,309 +57,309 @@ FilteredNormalizer2::normalize(const UnicodeString& src,
 // and USET_SPAN_NOT_CONTAINED should be passed in if we continue after
 // an in-filter prefix.
 UnicodeString&
-FilteredNormalizer2::normalize(const UnicodeString& src,
+FilteredNormalizer2::normalize(ثابت UnicodeString& src,
                                UnicodeString& dest U_LIFETIME_BOUND,
-                               USetSpanCondition spanCondition,
-                               UErrorCode& errorCode) const {
-    UnicodeString tempDest;  // Don't throw away destination buffer between iterations.
-    for(int32_t prevSpanLimit=0; prevSpanLimit<src.length();) {
-        int32_t spanLimit=set.span(src, prevSpanLimit, spanCondition);
-        int32_t spanLength=spanLimit-prevSpanLimit;
-        if(spanCondition==USET_SPAN_NOT_CONTAINED) {
-            if(spanLength!=0) {
-                dest.append(src, prevSpanLimit, spanLength);
+                               USet_وسعت_Condition وسعت_Condition,
+                               UError_ڪوڊ& error_ڪوڊ) ثابت {
+    UnicodeString عارضي_Dest;  // Don't throw away destination buffer between iterations.
+    لكل(int32_t prev_وسعت_حد_بندي=0; prev_وسعت_حد_بندي<src.length();) {
+        int32_t وسعت_حد_بندي=سيٽ.وسعت(src, prev_وسعت_حد_بندي, وسعت_Condition);
+        int32_t وسعت_ڊيگهائي=وسعت_حد_بندي-prev_وسعت_حد_بندي;
+        إذا(وسعت_Condition==USET_وسعت_NOT_CONTAINED) {
+            إذا(وسعت_ڊيگهائي!=0) {
+                dest.append(src, prev_وسعت_حد_بندي, وسعت_ڊيگهائي);
             }
-            spanCondition=USET_SPAN_SIMPLE;
-        } else {
-            if(spanLength!=0) {
+            وسعت_Condition=USET_وسعت_SIMPLE;
+        } وإلا {
+            إذا(وسعت_ڊيگهائي!=0) {
                 // Not norm2.normalizeSecondAndAppend() because we do not want
                 // to modify the non-filter part of dest.
-                dest.append(norm2.normalize(src.tempSubStringBetween(prevSpanLimit, spanLimit),
-                                            tempDest, errorCode));
-                if(U_FAILURE(errorCode)) {
-                    break;
+                dest.append(norm2.normalize(src.عارضي_Sub_String_Between(prev_وسعت_حد_بندي, وسعت_حد_بندي),
+                                            عارضي_Dest, error_ڪوڊ));
+                إذا(U_FAILURE(error_ڪوڊ)) {
+                    اكسر;
                 }
             }
-            spanCondition=USET_SPAN_NOT_CONTAINED;
+            وسعت_Condition=USET_وسعت_NOT_CONTAINED;
         }
-        prevSpanLimit=spanLimit;
+        prev_وسعت_حد_بندي=وسعت_حد_بندي;
     }
-    return dest;
+    أرجع dest;
 }
 
-void
+فراغ
 FilteredNormalizer2::normalizeUTF8(uint32_t options, StringPiece src, ByteSink &sink,
-                                   Edits *edits, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) {
-        return;
+                                   Edits *edits, UError_ڪوڊ &error_ڪوڊ) ثابت {
+    إذا (U_FAILURE(error_ڪوڊ)) {
+        أرجع;
     }
-    if (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
+    إذا (edits != خالي_اشارو && (options & U_EDITS_NO_RESET) == 0) {
         edits->reset();
     }
     options |= U_EDITS_NO_RESET;  // Do not reset for each span.
-    normalizeUTF8(options, src.data(), src.length(), sink, edits, USET_SPAN_SIMPLE, errorCode);
+    normalizeUTF8(options, src.معلومات(), src.length(), sink, edits, USET_وسعت_SIMPLE, error_ڪوڊ);
 }
 
-void
-FilteredNormalizer2::normalizeUTF8(uint32_t options, const char *src, int32_t length,
+فراغ
+FilteredNormalizer2::normalizeUTF8(uint32_t options, ثابت حرف *src, int32_t length,
                                    ByteSink &sink, Edits *edits,
-                                   USetSpanCondition spanCondition,
-                                   UErrorCode &errorCode) const {
-    while (length > 0) {
-        int32_t spanLength = set.spanUTF8(src, length, spanCondition);
-        if (spanCondition == USET_SPAN_NOT_CONTAINED) {
-            if (spanLength != 0) {
-                if (edits != nullptr) {
-                    edits->addUnchanged(spanLength);
+                                   USet_وسعت_Condition وسعت_Condition,
+                                   UError_ڪوڊ &error_ڪوڊ) ثابت {
+    طالما (length > 0) {
+        int32_t وسعت_ڊيگهائي = سيٽ.وسعت_UTF8(src, length, وسعت_Condition);
+        إذا (وسعت_Condition == USET_وسعت_NOT_CONTAINED) {
+            إذا (وسعت_ڊيگهائي != 0) {
+                إذا (edits != خالي_اشارو) {
+                    edits->جوڙيو_Unchanged(وسعت_ڊيگهائي);
                 }
-                if ((options & U_OMIT_UNCHANGED_TEXT) == 0) {
-                    sink.Append(src, spanLength);
+                إذا ((options & U_OMIT_UNCHANGED_متن) == 0) {
+                    sink.Append(src, وسعت_ڊيگهائي);
                 }
             }
-            spanCondition = USET_SPAN_SIMPLE;
-        } else {
-            if (spanLength != 0) {
+            وسعت_Condition = USET_وسعت_SIMPLE;
+        } وإلا {
+            إذا (وسعت_ڊيگهائي != 0) {
                 // Not norm2.normalizeSecondAndAppend() because we do not want
                 // to modify the non-filter part of dest.
-                norm2.normalizeUTF8(options, StringPiece(src, spanLength), sink, edits, errorCode);
-                if (U_FAILURE(errorCode)) {
-                    break;
+                norm2.normalizeUTF8(options, StringPiece(src, وسعت_ڊيگهائي), sink, edits, error_ڪوڊ);
+                إذا (U_FAILURE(error_ڪوڊ)) {
+                    اكسر;
                 }
             }
-            spanCondition = USET_SPAN_NOT_CONTAINED;
+            وسعت_Condition = USET_وسعت_NOT_CONTAINED;
         }
-        src += spanLength;
-        length -= spanLength;
+        src += وسعت_ڊيگهائي;
+        length -= وسعت_ڊيگهائي;
     }
 }
 
 UnicodeString&
-FilteredNormalizer2::normalizeSecondAndAppend(UnicodeString& first U_LIFETIME_BOUND,
-                                              const UnicodeString& second,
-                                              UErrorCode& errorCode) const {
-    return normalizeSecondAndAppend(first, second, true, errorCode);
+FilteredNormalizer2::normalize_ٻيو_And_Append(UnicodeString& first U_LIFETIME_BOUND,
+                                              ثابت UnicodeString& ٻيو,
+                                              UError_ڪوڊ& error_ڪوڊ) ثابت {
+    أرجع normalize_ٻيو_And_Append(first, ٻيو, سچ, error_ڪوڊ);
 }
 
 UnicodeString&
 FilteredNormalizer2::append(UnicodeString& first U_LIFETIME_BOUND,
-                            const UnicodeString& second,
-                            UErrorCode& errorCode) const {
-    return normalizeSecondAndAppend(first, second, false, errorCode);
+                            ثابت UnicodeString& ٻيو,
+                            UError_ڪوڊ& error_ڪوڊ) ثابت {
+    أرجع normalize_ٻيو_And_Append(first, ٻيو, خطأ, error_ڪوڊ);
 }
 
 UnicodeString&
-FilteredNormalizer2::normalizeSecondAndAppend(UnicodeString& first U_LIFETIME_BOUND,
-                                              const UnicodeString& second,
+FilteredNormalizer2::normalize_ٻيو_And_Append(UnicodeString& first U_LIFETIME_BOUND,
+                                              ثابت UnicodeString& ٻيو,
                                               UBool doNormalize,
-                                              UErrorCode& errorCode) const {
-    uprv_checkCanGetBuffer(first, errorCode);
-    uprv_checkCanGetBuffer(second, errorCode);
-    if(U_FAILURE(errorCode)) {
-        return first;
+                                              UError_ڪوڊ& error_ڪوڊ) ثابت {
+    uprv_check_Can_Get_بفر(first, error_ڪوڊ);
+    uprv_check_Can_Get_بفر(ٻيو, error_ڪوڊ);
+    إذا(U_FAILURE(error_ڪوڊ)) {
+        أرجع first;
     }
-    if(&first==&second) {
-        errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return first;
+    إذا(&first==&ٻيو) {
+        error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+        أرجع first;
     }
-    if(first.isEmpty()) {
-        if(doNormalize) {
-            return normalize(second, first, errorCode);
-        } else {
-            return first=second;
+    إذا(first.is_خالي_جايون()) {
+        إذا(doNormalize) {
+            أرجع normalize(ٻيو, first, error_ڪوڊ);
+        } وإلا {
+            أرجع first=ٻيو;
         }
     }
     // merge the in-filter suffix of the first string with the in-filter prefix of the second
-    int32_t prefixLimit=set.span(second, 0, USET_SPAN_SIMPLE);
-    if(prefixLimit!=0) {
-        UnicodeString prefix(second.tempSubString(0, prefixLimit));
-        int32_t suffixStart=set.spanBack(first, INT32_MAX, USET_SPAN_SIMPLE);
-        if(suffixStart==0) {
-            if(doNormalize) {
-                norm2.normalizeSecondAndAppend(first, prefix, errorCode);
-            } else {
-                norm2.append(first, prefix, errorCode);
+    int32_t اڳياڙي_حد_بندي=سيٽ.وسعت(ٻيو, 0, USET_وسعت_SIMPLE);
+    إذا(اڳياڙي_حد_بندي!=0) {
+        UnicodeString اڳياڙي(ٻيو.عارضي_Sub_String(0, اڳياڙي_حد_بندي));
+        int32_t suffix_شروعات=سيٽ.وسعت_پٺ(first, INT32_MAX, USET_وسعت_SIMPLE);
+        إذا(suffix_شروعات==0) {
+            إذا(doNormalize) {
+                norm2.normalize_ٻيو_And_Append(first, اڳياڙي, error_ڪوڊ);
+            } وإلا {
+                norm2.append(first, اڳياڙي, error_ڪوڊ);
             }
-        } else {
-            UnicodeString middle(first, suffixStart, INT32_MAX);
-            if(doNormalize) {
-                norm2.normalizeSecondAndAppend(middle, prefix, errorCode);
-            } else {
-                norm2.append(middle, prefix, errorCode);
+        } وإلا {
+            UnicodeString وچ(first, suffix_شروعات, INT32_MAX);
+            إذا(doNormalize) {
+                norm2.normalize_ٻيو_And_Append(وچ, اڳياڙي, error_ڪوڊ);
+            } وإلا {
+                norm2.append(وچ, اڳياڙي, error_ڪوڊ);
             }
-            first.replace(suffixStart, INT32_MAX, middle);
+            first.replace(suffix_شروعات, INT32_MAX, وچ);
         }
     }
-    if(prefixLimit<second.length()) {
-        UnicodeString rest(second.tempSubString(prefixLimit, INT32_MAX));
-        if(doNormalize) {
-            normalize(rest, first, USET_SPAN_NOT_CONTAINED, errorCode);
-        } else {
+    إذا(اڳياڙي_حد_بندي<ٻيو.length()) {
+        UnicodeString rest(ٻيو.عارضي_Sub_String(اڳياڙي_حد_بندي, INT32_MAX));
+        إذا(doNormalize) {
+            normalize(rest, first, USET_وسعت_NOT_CONTAINED, error_ڪوڊ);
+        } وإلا {
             first.append(rest);
         }
     }
-    return first;
+    أرجع first;
 }
 
 UBool
-FilteredNormalizer2::getDecomposition(UChar32 c, UnicodeString &decomposition) const {
-    return set.contains(c) && norm2.getDecomposition(c, decomposition);
+FilteredNormalizer2::getDecomposition(UChar32 c, UnicodeString &decomposition) ثابت {
+    أرجع سيٽ.شامل_آهي(c) && norm2.getDecomposition(c, decomposition);
 }
 
 UBool
-FilteredNormalizer2::getRawDecomposition(UChar32 c, UnicodeString &decomposition) const {
-    return set.contains(c) && norm2.getRawDecomposition(c, decomposition);
+FilteredNormalizer2::getRawDecomposition(UChar32 c, UnicodeString &decomposition) ثابت {
+    أرجع سيٽ.شامل_آهي(c) && norm2.getRawDecomposition(c, decomposition);
 }
 
 UChar32
-FilteredNormalizer2::composePair(UChar32 a, UChar32 b) const {
-    return (set.contains(a) && set.contains(b)) ? norm2.composePair(a, b) : U_SENTINEL;
+FilteredNormalizer2::composePair(UChar32 a, UChar32 b) ثابت {
+    أرجع (سيٽ.شامل_آهي(a) && سيٽ.شامل_آهي(b)) ? norm2.composePair(a, b) : U_SENTINEL;
 }
 
 uint8_t
-FilteredNormalizer2::getCombiningClass(UChar32 c) const {
-    return set.contains(c) ? norm2.getCombiningClass(c) : 0;
+FilteredNormalizer2::getCombiningClass(UChar32 c) ثابت {
+    أرجع سيٽ.شامل_آهي(c) ? norm2.getCombiningClass(c) : 0;
 }
 
 UBool
-FilteredNormalizer2::isNormalized(const UnicodeString &s, UErrorCode &errorCode) const {
-    uprv_checkCanGetBuffer(s, errorCode);
-    if(U_FAILURE(errorCode)) {
-        return false;
+FilteredNormalizer2::isNormalized(ثابت UnicodeString &s, UError_ڪوڊ &error_ڪوڊ) ثابت {
+    uprv_check_Can_Get_بفر(s, error_ڪوڊ);
+    إذا(U_FAILURE(error_ڪوڊ)) {
+        أرجع خطأ;
     }
-    USetSpanCondition spanCondition=USET_SPAN_SIMPLE;
-    for(int32_t prevSpanLimit=0; prevSpanLimit<s.length();) {
-        int32_t spanLimit=set.span(s, prevSpanLimit, spanCondition);
-        if(spanCondition==USET_SPAN_NOT_CONTAINED) {
-            spanCondition=USET_SPAN_SIMPLE;
-        } else {
-            if( !norm2.isNormalized(s.tempSubStringBetween(prevSpanLimit, spanLimit), errorCode) ||
-                U_FAILURE(errorCode)
+    USet_وسعت_Condition وسعت_Condition=USET_وسعت_SIMPLE;
+    لكل(int32_t prev_وسعت_حد_بندي=0; prev_وسعت_حد_بندي<s.length();) {
+        int32_t وسعت_حد_بندي=سيٽ.وسعت(s, prev_وسعت_حد_بندي, وسعت_Condition);
+        إذا(وسعت_Condition==USET_وسعت_NOT_CONTAINED) {
+            وسعت_Condition=USET_وسعت_SIMPLE;
+        } وإلا {
+            إذا( !norm2.isNormalized(s.عارضي_Sub_String_Between(prev_وسعت_حد_بندي, وسعت_حد_بندي), error_ڪوڊ) ||
+                U_FAILURE(error_ڪوڊ)
             ) {
-                return false;
+                أرجع خطأ;
             }
-            spanCondition=USET_SPAN_NOT_CONTAINED;
+            وسعت_Condition=USET_وسعت_NOT_CONTAINED;
         }
-        prevSpanLimit=spanLimit;
+        prev_وسعت_حد_بندي=وسعت_حد_بندي;
     }
-    return true;
+    أرجع سچ;
 }
 
 UBool
-FilteredNormalizer2::isNormalizedUTF8(StringPiece sp, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return false;
+FilteredNormalizer2::isNormalizedUTF8(StringPiece sp, UError_ڪوڊ &error_ڪوڊ) ثابت {
+    إذا(U_FAILURE(error_ڪوڊ)) {
+        أرجع خطأ;
     }
-    const char *s = sp.data();
+    ثابت حرف *s = sp.معلومات();
     int32_t length = sp.length();
-    USetSpanCondition spanCondition = USET_SPAN_SIMPLE;
-    while (length > 0) {
-        int32_t spanLength = set.spanUTF8(s, length, spanCondition);
-        if (spanCondition == USET_SPAN_NOT_CONTAINED) {
-            spanCondition = USET_SPAN_SIMPLE;
-        } else {
-            if (!norm2.isNormalizedUTF8(StringPiece(s, spanLength), errorCode) ||
-                    U_FAILURE(errorCode)) {
-                return false;
+    USet_وسعت_Condition وسعت_Condition = USET_وسعت_SIMPLE;
+    طالما (length > 0) {
+        int32_t وسعت_ڊيگهائي = سيٽ.وسعت_UTF8(s, length, وسعت_Condition);
+        إذا (وسعت_Condition == USET_وسعت_NOT_CONTAINED) {
+            وسعت_Condition = USET_وسعت_SIMPLE;
+        } وإلا {
+            إذا (!norm2.isNormalizedUTF8(StringPiece(s, وسعت_ڊيگهائي), error_ڪوڊ) ||
+                    U_FAILURE(error_ڪوڊ)) {
+                أرجع خطأ;
             }
-            spanCondition = USET_SPAN_NOT_CONTAINED;
+            وسعت_Condition = USET_وسعت_NOT_CONTAINED;
         }
-        s += spanLength;
-        length -= spanLength;
+        s += وسعت_ڊيگهائي;
+        length -= وسعت_ڊيگهائي;
     }
-    return true;
+    أرجع سچ;
 }
 
-UNormalizationCheckResult
-FilteredNormalizer2::quickCheck(const UnicodeString &s, UErrorCode &errorCode) const {
-    uprv_checkCanGetBuffer(s, errorCode);
-    if(U_FAILURE(errorCode)) {
-        return UNORM_MAYBE;
+UNormalization_Check_نتيجو
+FilteredNormalizer2::تيز_Check(ثابت UnicodeString &s, UError_ڪوڊ &error_ڪوڊ) ثابت {
+    uprv_check_Can_Get_بفر(s, error_ڪوڊ);
+    إذا(U_FAILURE(error_ڪوڊ)) {
+        أرجع UNORM_MAYBE;
     }
-    UNormalizationCheckResult result=UNORM_YES;
-    USetSpanCondition spanCondition=USET_SPAN_SIMPLE;
-    for(int32_t prevSpanLimit=0; prevSpanLimit<s.length();) {
-        int32_t spanLimit=set.span(s, prevSpanLimit, spanCondition);
-        if(spanCondition==USET_SPAN_NOT_CONTAINED) {
-            spanCondition=USET_SPAN_SIMPLE;
-        } else {
-            UNormalizationCheckResult qcResult=
-                norm2.quickCheck(s.tempSubStringBetween(prevSpanLimit, spanLimit), errorCode);
-            if(U_FAILURE(errorCode) || qcResult==UNORM_NO) {
-                return qcResult;
-            } else if(qcResult==UNORM_MAYBE) {
-                result=qcResult;
+    UNormalization_Check_نتيجو نتيجو=UNORM_YES;
+    USet_وسعت_Condition وسعت_Condition=USET_وسعت_SIMPLE;
+    لكل(int32_t prev_وسعت_حد_بندي=0; prev_وسعت_حد_بندي<s.length();) {
+        int32_t وسعت_حد_بندي=سيٽ.وسعت(s, prev_وسعت_حد_بندي, وسعت_Condition);
+        إذا(وسعت_Condition==USET_وسعت_NOT_CONTAINED) {
+            وسعت_Condition=USET_وسعت_SIMPLE;
+        } وإلا {
+            UNormalization_Check_نتيجو qc_نتيجو=
+                norm2.تيز_Check(s.عارضي_Sub_String_Between(prev_وسعت_حد_بندي, وسعت_حد_بندي), error_ڪوڊ);
+            إذا(U_FAILURE(error_ڪوڊ) || qc_نتيجو==UNORM_NO) {
+                أرجع qc_نتيجو;
+            } وإلا إذا(qc_نتيجو==UNORM_MAYBE) {
+                نتيجو=qc_نتيجو;
             }
-            spanCondition=USET_SPAN_NOT_CONTAINED;
+            وسعت_Condition=USET_وسعت_NOT_CONTAINED;
         }
-        prevSpanLimit=spanLimit;
+        prev_وسعت_حد_بندي=وسعت_حد_بندي;
     }
-    return result;
+    أرجع نتيجو;
 }
 
 int32_t
-FilteredNormalizer2::spanQuickCheckYes(const UnicodeString &s, UErrorCode &errorCode) const {
-    uprv_checkCanGetBuffer(s, errorCode);
-    if(U_FAILURE(errorCode)) {
-        return 0;
+FilteredNormalizer2::وسعت_تيز_Check_Yes(ثابت UnicodeString &s, UError_ڪوڊ &error_ڪوڊ) ثابت {
+    uprv_check_Can_Get_بفر(s, error_ڪوڊ);
+    إذا(U_FAILURE(error_ڪوڊ)) {
+        أرجع 0;
     }
-    USetSpanCondition spanCondition=USET_SPAN_SIMPLE;
-    for(int32_t prevSpanLimit=0; prevSpanLimit<s.length();) {
-        int32_t spanLimit=set.span(s, prevSpanLimit, spanCondition);
-        if(spanCondition==USET_SPAN_NOT_CONTAINED) {
-            spanCondition=USET_SPAN_SIMPLE;
-        } else {
-            int32_t yesLimit=
-                prevSpanLimit+
-                norm2.spanQuickCheckYes(
-                    s.tempSubStringBetween(prevSpanLimit, spanLimit), errorCode);
-            if(U_FAILURE(errorCode) || yesLimit<spanLimit) {
-                return yesLimit;
+    USet_وسعت_Condition وسعت_Condition=USET_وسعت_SIMPLE;
+    لكل(int32_t prev_وسعت_حد_بندي=0; prev_وسعت_حد_بندي<s.length();) {
+        int32_t وسعت_حد_بندي=سيٽ.وسعت(s, prev_وسعت_حد_بندي, وسعت_Condition);
+        إذا(وسعت_Condition==USET_وسعت_NOT_CONTAINED) {
+            وسعت_Condition=USET_وسعت_SIMPLE;
+        } وإلا {
+            int32_t yes_حد_بندي=
+                prev_وسعت_حد_بندي+
+                norm2.وسعت_تيز_Check_Yes(
+                    s.عارضي_Sub_String_Between(prev_وسعت_حد_بندي, وسعت_حد_بندي), error_ڪوڊ);
+            إذا(U_FAILURE(error_ڪوڊ) || yes_حد_بندي<وسعت_حد_بندي) {
+                أرجع yes_حد_بندي;
             }
-            spanCondition=USET_SPAN_NOT_CONTAINED;
+            وسعت_Condition=USET_وسعت_NOT_CONTAINED;
         }
-        prevSpanLimit=spanLimit;
+        prev_وسعت_حد_بندي=وسعت_حد_بندي;
     }
-    return s.length();
+    أرجع s.length();
 }
 
 UBool
-FilteredNormalizer2::hasBoundaryBefore(UChar32 c) const {
-    return !set.contains(c) || norm2.hasBoundaryBefore(c);
+FilteredNormalizer2::hasBoundaryBefore(UChar32 c) ثابت {
+    أرجع !سيٽ.شامل_آهي(c) || norm2.hasBoundaryBefore(c);
 }
 
 UBool
-FilteredNormalizer2::hasBoundaryAfter(UChar32 c) const {
-    return !set.contains(c) || norm2.hasBoundaryAfter(c);
+FilteredNormalizer2::hasBoundaryAfter(UChar32 c) ثابت {
+    أرجع !سيٽ.شامل_آهي(c) || norm2.hasBoundaryAfter(c);
 }
 
 UBool
-FilteredNormalizer2::isInert(UChar32 c) const {
-    return !set.contains(c) || norm2.isInert(c);
+FilteredNormalizer2::isInert(UChar32 c) ثابت {
+    أرجع !سيٽ.شامل_آهي(c) || norm2.isInert(c);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
 // C API ------------------------------------------------------------------- ***
 
 U_NAMESPACE_USE
 
 U_CAPI UNormalizer2* U_EXPORT2
-unorm2_openFiltered(const UNormalizer2* norm2 U_LIFETIME_BOUND,
-                    const USet* filterSet U_LIFETIME_BOUND,
-                    UErrorCode* pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+unorm2_openFiltered(ثابت UNormalizer2* norm2 U_LIFETIME_BOUND,
+                    ثابت USet* filter_سيٽ U_LIFETIME_BOUND,
+                    UError_ڪوڊ* p_Error_ڪوڊ) {
+    إذا(U_FAILURE(*p_Error_ڪوڊ)) {
+        أرجع خالي_اشارو;
     }
-    if(filterSet==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    إذا(filter_سيٽ==خالي_اشارو) {
+        *p_Error_ڪوڊ=U_ILLEGAL_دليل_ERROR;
+        أرجع خالي_اشارو;
     }
-    Normalizer2 *fn2=new FilteredNormalizer2(*(Normalizer2 *)norm2,
-                                             *UnicodeSet::fromUSet(filterSet));
-    if(fn2==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
+    Normalizer2 *fn2=جديد FilteredNormalizer2(*(Normalizer2 *)norm2,
+                                             *Unicode_سيٽ::fromUSet(filter_سيٽ));
+    إذا(fn2==خالي_اشارو) {
+        *p_Error_ڪوڊ=U_يادگيري_ورهاست_ERROR;
     }
-    return (UNormalizer2 *)fn2;
+    أرجع (UNormalizer2 *)fn2;
 }
 
-#endif  // !UCONFIG_NO_NORMALIZATION
+#جيڪڏهن_پورو  // !UCONFIG_NO_NORMALIZATION

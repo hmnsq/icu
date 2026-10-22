@@ -4,48 +4,48 @@
 // locdistance.h
 // created: 2019may08 Markus W. Scherer
 
-#ifndef __LOCDISTANCE_H__
-#define __LOCDISTANCE_H__
+#جيڪڏهن_وصف_نه_ٿيل __LOCDISTANCE_H__
+#وصف_ڪريو __LOCDISTANCE_H__
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/localematcher.h"
-#include "unicode/locid.h"
-#include "unicode/uobject.h"
-#include "lsr.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/bytestrie.h"
+#ضمن "unicode/localematcher.h"
+#ضمن "unicode/locid.h"
+#ضمن "unicode/uobject.h"
+#ضمن "lsr.h"
 
 U_NAMESPACE_BEGIN
 
-struct LocaleDistanceData;
+بنية Locale_مفاصلو_معلومات;
 
 /**
  * Offline-built data for LocaleMatcher.
  * Mostly but not only the data for mapping locales to their maximized forms.
  */
-class LocaleDistance final : public UMemory {
-public:
-    static const LocaleDistance *getSingleton(UErrorCode &errorCode);
+class Locale_مفاصلو final : عام UMemory {
+عام:
+    ساكن ثابت Locale_مفاصلو *getSingleton(UError_ڪوڊ &error_ڪوڊ);
 
-    static int32_t shiftDistance(int32_t distance) {
-        return distance << DISTANCE_SHIFT;
+    ساكن int32_t سرڪايو_مفاصلو(int32_t مفاصلو) {
+        أرجع مفاصلو << مفاصلو_سرڪايو;
     }
 
-    static int32_t getShiftedDistance(int32_t indexAndDistance) {
-        return indexAndDistance & DISTANCE_MASK;
+    ساكن int32_t get_Shifted_مفاصلو(int32_t اشاريو_And_مفاصلو) {
+        أرجع اشاريو_And_مفاصلو & مفاصلو_نقاب;
     }
 
-    static double getDistanceDouble(int32_t indexAndDistance) {
-        double shiftedDistance = getShiftedDistance(indexAndDistance);
-        return shiftedDistance / (1 << DISTANCE_SHIFT);
+    ساكن مزدوج get_مفاصلو_Double(int32_t اشاريو_And_مفاصلو) {
+        مزدوج shifted_مفاصلو = get_Shifted_مفاصلو(اشاريو_And_مفاصلو);
+        أرجع shifted_مفاصلو / (1 << مفاصلو_سرڪايو);
     }
 
-    static int32_t getDistanceFloor(int32_t indexAndDistance) {
-        return (indexAndDistance & DISTANCE_MASK) >> DISTANCE_SHIFT;
+    ساكن int32_t get_مفاصلو_Floor(int32_t اشاريو_And_مفاصلو) {
+        أرجع (اشاريو_And_مفاصلو & مفاصلو_نقاب) >> مفاصلو_سرڪايو;
     }
 
-    static int32_t getIndex(int32_t indexAndDistance) {
+    ساكن int32_t get_اشاريو(int32_t اشاريو_And_مفاصلو) {
         // assert indexAndDistance >= 0;
-        return indexAndDistance >> INDEX_SHIFT;
+        أرجع اشاريو_And_مفاصلو >> اشاريو_سرڪايو;
     }
 
     /**
@@ -56,96 +56,96 @@ public:
      * (negative if none has a distance below the threshold),
      * and its distance (0..ABOVE_THRESHOLD) in the low bits.
      */
-    int32_t getBestIndexAndDistance(const LSR &desired,
-                                    const LSR **supportedLSRs, int32_t supportedLSRsLength,
-                                    int32_t shiftedThreshold,
-                                    ULocMatchFavorSubtag favorSubtag,
-                                    ULocMatchDirection direction) const;
+    int32_t get_بهترين_اشاريو_And_مفاصلو(ثابت LSR &desired,
+                                    ثابت LSR **supportedLSRs, int32_t supported_LSRs_ڊيگهائي,
+                                    int32_t shifted_حد,
+                                    ULoc_ميلاپ_Favor_Subtag favorSubtag,
+                                    ULoc_ميلاپ_Direction direction) ثابت;
 
-    bool isParadigmLSR(const LSR &lsr) const;
+    bool isParadigmLSR(ثابت LSR &lsr) ثابت;
 
-    int32_t getDefaultScriptDistance() const {
-        return defaultScriptDistance;
+    int32_t get_Default_Script_مفاصلو() ثابت {
+        أرجع default_Script_مفاصلو;
     }
 
-    int32_t getDefaultDemotionPerDesiredLocale() const {
-        return defaultDemotionPerDesiredLocale;
+    int32_t get_Default_Demotion_في_Desired_Locale() ثابت {
+        أرجع default_Demotion_في_Desired_Locale;
     }
 
-private:
+خاص:
     // The distance is shifted left to gain some fraction bits.
-    static constexpr int32_t DISTANCE_SHIFT = 3;
-    static constexpr int32_t DISTANCE_FRACTION_MASK = 7;
+    ساكن constexpr int32_t مفاصلو_سرڪايو = 3;
+    ساكن constexpr int32_t مفاصلو_FRACTION_نقاب = 7;
     // 7 bits for 0..100
-    static constexpr int32_t DISTANCE_INT_SHIFT = 7;
-    static constexpr int32_t INDEX_SHIFT = DISTANCE_INT_SHIFT + DISTANCE_SHIFT;
-    static constexpr int32_t DISTANCE_MASK = 0x3ff;
+    ساكن constexpr int32_t مفاصلو_INT_سرڪايو = 7;
+    ساكن constexpr int32_t اشاريو_سرڪايو = مفاصلو_INT_سرڪايو + مفاصلو_سرڪايو;
+    ساكن constexpr int32_t مفاصلو_نقاب = 0x3ff;
     // tic constexpr int32_t MAX_INDEX = 0x1fffff;  // avoids sign bit
-    static constexpr int32_t INDEX_NEG_1 = 0xfffffc00;
+    ساكن constexpr int32_t اشاريو_NEG_1 = 0xfffffc00;
 
-    LocaleDistance(const LocaleDistanceData &data, const LikelySubtags &likely);
-    LocaleDistance(const LocaleDistance &other) = delete;
-    LocaleDistance &operator=(const LocaleDistance &other) = delete;
+    Locale_مفاصلو(ثابت Locale_مفاصلو_معلومات &معلومات, ثابت LikelySubtags &likely);
+    Locale_مفاصلو(ثابت Locale_مفاصلو &other) = delete;
+    Locale_مفاصلو &عامل=(ثابت Locale_مفاصلو &other) = delete;
 
-    static void initLocaleDistance(UErrorCode &errorCode);
+    ساكن فراغ init_Locale_مفاصلو(UError_ڪوڊ &error_ڪوڊ);
 
-    bool isMatch(const LSR &desired, const LSR &supported,
-                 int32_t shiftedThreshold, ULocMatchFavorSubtag favorSubtag) const {
-        const LSR *pSupp = &supported;
-        return getBestIndexAndDistance(
+    bool is_ميلاپ(ثابت LSR &desired, ثابت LSR &supported,
+                 int32_t shifted_حد, ULoc_ميلاپ_Favor_Subtag favorSubtag) ثابت {
+        ثابت LSR *pSupp = &supported;
+        أرجع get_بهترين_اشاريو_And_مفاصلو(
             desired, &pSupp, 1,
-            shiftedThreshold, favorSubtag, ULOCMATCH_DIRECTION_WITH_ONE_WAY) >= 0;
+            shifted_حد, favorSubtag, ULOCMATCH_DIRECTION_WITH_ONE_WAY) >= 0;
     }
 
-    static int32_t getDesSuppScriptDistance(BytesTrie &iter, uint64_t startState,
-                                            const char *desired, const char *supported);
+    ساكن int32_t get_Des_Supp_Script_مفاصلو(بائيٽون_Trie &iter, uint64_t شروعات_State,
+                                            ثابت حرف *desired, ثابت حرف *supported);
 
-    static int32_t getRegionPartitionsDistance(
-        BytesTrie &iter, uint64_t startState,
-        const char *desiredPartitions, const char *supportedPartitions,
-        int32_t threshold);
+    ساكن int32_t get_Region_Partitions_مفاصلو(
+        بائيٽون_Trie &iter, uint64_t شروعات_State,
+        ثابت حرف *desiredPartitions, ثابت حرف *supportedPartitions,
+        int32_t حد);
 
-    static int32_t getFallbackRegionDistance(BytesTrie &iter, uint64_t startState);
+    ساكن int32_t get_Fallback_Region_مفاصلو(بائيٽون_Trie &iter, uint64_t شروعات_State);
 
-    static int32_t trieNext(BytesTrie &iter, const char *s, bool wantValue);
+    ساكن int32_t trie_ايندڙ(بائيٽون_Trie &iter, ثابت حرف *s, bool want_قدر);
 
-    const char *partitionsForRegion(const LSR &lsr) const {
+    ثابت حرف *partitionsForRegion(ثابت LSR &lsr) ثابت {
         // ill-formed region -> one non-matching string
-        int32_t pIndex = regionToPartitionsIndex[lsr.regionIndex];
-        return partitionArrays[pIndex];
+        int32_t p_اشاريو = region_منزل_Partitions_اشاريو[lsr.region_اشاريو];
+        أرجع حصا_ڪريو_Arrays[p_اشاريو];
     }
 
-    int32_t getDefaultRegionDistance() const {
-        return defaultRegionDistance;
+    int32_t get_Default_Region_مفاصلو() ثابت {
+        أرجع default_Region_مفاصلو;
     }
 
-    const LikelySubtags &likelySubtags;
+    ثابت LikelySubtags &likelySubtags;
 
     // The trie maps each dlang+slang+dscript+sscript+dregion+sregion
     // (encoded in ASCII with bit 7 set on the last character of each subtag) to a distance.
     // There is also a trie value for each subsequence of whole subtags.
     // One '*' is used for a (desired, supported) pair of "und", "Zzzz"/"", or "ZZ"/"".
-    BytesTrie trie;
+    بائيٽون_Trie trie;
 
     /**
      * Maps each region to zero or more single-character partitions.
      */
-    const uint8_t *regionToPartitionsIndex;
-    const char **partitionArrays;
+    ثابت uint8_t *region_منزل_Partitions_اشاريو;
+    ثابت حرف **حصا_ڪريو_Arrays;
 
     /**
      * Used to get the paradigm region for a cluster, if there is one.
      */
-    const LSR *paradigmLSRs;
-    int32_t paradigmLSRsLength;
+    ثابت LSR *paradigmLSRs;
+    int32_t paradigm_LSRs_ڊيگهائي;
 
-    int32_t defaultLanguageDistance;
-    int32_t defaultScriptDistance;
-    int32_t defaultRegionDistance;
-    int32_t minRegionDistance;
-    int32_t defaultDemotionPerDesiredLocale;
+    int32_t default_Language_مفاصلو;
+    int32_t default_Script_مفاصلو;
+    int32_t default_Region_مفاصلو;
+    int32_t min_Region_مفاصلو;
+    int32_t default_Demotion_في_Desired_Locale;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
-#endif  // __LOCDISTANCE_H__
+#جيڪڏهن_پورو  // __LOCDISTANCE_H__

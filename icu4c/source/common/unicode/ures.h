@@ -22,16 +22,16 @@
 ******************************************************************************
 */
 
-#ifndef URES_H
-#define URES_H
+#جيڪڏهن_وصف_نه_ٿيل URES_H
+#وصف_ڪريو URES_H
 
-#include "unicode/char16ptr.h"
-#include "unicode/utypes.h"
-#include "unicode/uloc.h"
+#ضمن "unicode/char16ptr.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uloc.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
+#ضمن "unicode/localpointer.h"
+#جيڪڏهن_پورو   // U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
@@ -55,19 +55,19 @@
  * UResourceBundle is an opaque type for handles for resource bundles in C APIs.
  * @stable ICU 2.0
  */
-struct UResourceBundle;
+بنية UResourceBundle;
 
 /**
  * @stable ICU 2.0
  */
-typedef struct UResourceBundle UResourceBundle;
+تعريفنوع بنية UResourceBundle UResourceBundle;
 
 /**
  * Numeric constants for types of resource items.
  * @see ures_getType
  * @stable ICU 2.0
  */
-typedef enum {
+تعريفنوع تعداد {
     /** Resource type constant for "no resource". @stable ICU 2.6 */
     URES_NONE=-1,
 
@@ -75,10 +75,10 @@ typedef enum {
     URES_STRING=0,
 
     /** Resource type constant for binary data. @stable ICU 2.6 */
-    URES_BINARY=1,
+    URES_ٻٽو=1,
 
     /** Resource type constant for tables of key-value pairs. @stable ICU 2.6 */
-    URES_TABLE=2,
+    URES_جدول=2,
 
     /**
      * Resource type constant for aliases;
@@ -106,16 +106,16 @@ typedef enum {
      * @see ures_getIntVector
      * @stable ICU 2.6
      */
-    URES_INT_VECTOR = 14,
-#ifndef U_HIDE_DEPRECATED_API
+    URES_INT_ويڪٽر = 14,
+#جيڪڏهن_وصف_نه_ٿيل U_HIDE_DEPRECATED_API
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
     RES_NONE=URES_NONE,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
     RES_STRING=URES_STRING,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
-    RES_BINARY=URES_BINARY,
+    RES_ٻٽو=URES_ٻٽو,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
-    RES_TABLE=URES_TABLE,
+    RES_جدول=URES_جدول,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
     RES_ALIAS=URES_ALIAS,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
@@ -123,7 +123,7 @@ typedef enum {
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
     RES_ARRAY=URES_ARRAY,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
-    RES_INT_VECTOR=URES_INT_VECTOR,
+    RES_INT_ويڪٽر=URES_INT_ويڪٽر,
     /** @deprecated ICU 2.6 Not used. */
     RES_RESERVED=15,
 
@@ -131,8 +131,8 @@ typedef enum {
      * One more than the highest normal UResType value.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    URES_LIMIT = 16
-#endif  // U_HIDE_DEPRECATED_API
+    URES_حد_بندي = 16
+#جيڪڏهن_پورو  // U_HIDE_DEPRECATED_API
 } UResType;
 
 /*
@@ -168,9 +168,9 @@ typedef enum {
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle*  U_EXPORT2
-ures_open(const char*    packageName,
-          const char*  locale,
-          UErrorCode*     status);
+ures_open(ثابت حرف*    packageName,
+          ثابت حرف*  locale,
+          UError_ڪوڊ*     حالت);
 
 
 /** This function does not care what kind of localeID is passed in. It simply opens a bundle with
@@ -191,9 +191,9 @@ ures_open(const char*    packageName,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_openDirect(const char* packageName,
-                const char* locale,
-                UErrorCode* status);
+ures_open_سڌو(ثابت حرف* packageName,
+                ثابت حرف* locale,
+                UError_ڪوڊ* حالت);
 
 /**
  * Same as ures_open() but takes a const UChar *path.
@@ -214,11 +214,11 @@ ures_openDirect(const char* packageName,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_openU(const UChar* packageName,
-           const char* locale,
-           UErrorCode* status);
+ures_openU(ثابت UChar* packageName,
+           ثابت حرف* locale,
+           UError_ڪوڊ* حالت);
 
-#ifndef U_HIDE_DEPRECATED_API
+#جيڪڏهن_وصف_نه_ٿيل U_HIDE_DEPRECATED_API
 /**
  * Returns the number of strings/arrays in resource bundles.
  * Better to use ures_getSize, as this function will be deprecated.
@@ -236,10 +236,10 @@ ures_openU(const UChar* packageName,
  * @deprecated ICU 2.8 User ures_getSize instead
  */
 U_DEPRECATED int32_t U_EXPORT2
-ures_countArrayItems(const UResourceBundle* resourceBundle,
-                     const char* resourceKey,
-                     UErrorCode* err);
-#endif  /* U_HIDE_DEPRECATED_API */
+ures_ڳڻپ_Array_شيون(ثابت UResourceBundle* resourceBundle,
+                     ثابت حرف* resource_ڪنجي,
+                     UError_ڪوڊ* err);
+#جيڪڏهن_پورو  /* U_HIDE_DEPRECATED_API */
 
 /**
  * Close a resource bundle, all pointers returned from the various ures_getXXX calls
@@ -249,10 +249,10 @@ ures_countArrayItems(const UResourceBundle* resourceBundle,
  * @see ures_open
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 ures_close(UResourceBundle* resourceBundle);
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -265,13 +265,13 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 4.4
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalUResourceBundlePointer, UResourceBundle, ures_close);
+U_DEFINE_LOCAL_OPEN_اشارو(Local_UResource_Bundle_اشارو, UResourceBundle, ures_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
-#endif
+#جيڪڏهن_پورو
 
-#ifndef U_HIDE_DEPRECATED_API
+#جيڪڏهن_وصف_نه_ٿيل U_HIDE_DEPRECATED_API
 /**
  * Return the version number associated with this ResourceBundle as a string. Please
  * use ures_getVersion as this function is going to be deprecated.
@@ -282,9 +282,9 @@ U_NAMESPACE_END
  * @see ures_getVersion
  * @deprecated ICU 2.8 Use ures_getVersion instead.
  */
-U_DEPRECATED const char* U_EXPORT2
-ures_getVersionNumber(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
-#endif  /* U_HIDE_DEPRECATED_API */
+U_DEPRECATED ثابت حرف* U_EXPORT2
+ures_get_نسخو_عدد(ثابت UResourceBundle* resourceBundle U_LIFETIME_BOUND);
+#جيڪڏهن_پورو  /* U_HIDE_DEPRECATED_API */
 
 /**
  * Return the version number associated with this ResourceBundle as an
@@ -295,11 +295,11 @@ ures_getVersionNumber(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
  *                    as specified in the resource bundle or its parent.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ures_getVersion(const UResourceBundle* resB,
-                UVersionInfo versionInfo);
+U_CAPI فراغ U_EXPORT2
+ures_get_نسخو(ثابت UResourceBundle* resB,
+                UVersionInfo نسخو_Info);
 
-#ifndef U_HIDE_DEPRECATED_API
+#جيڪڏهن_وصف_نه_ٿيل U_HIDE_DEPRECATED_API
 /**
  * Return the name of the Locale associated with this ResourceBundle. This API allows
  * you to query for the real locale of the resource. For example, if you requested
@@ -312,9 +312,9 @@ ures_getVersion(const UResourceBundle* resB,
  * @return  A Locale name
  * @deprecated ICU 2.8 Use ures_getLocaleByType instead.
  */
-U_DEPRECATED const char* U_EXPORT2
-ures_getLocale(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCode* status);
-#endif  /* U_HIDE_DEPRECATED_API */
+U_DEPRECATED ثابت حرف* U_EXPORT2
+ures_getLocale(ثابت UResourceBundle* resourceBundle U_LIFETIME_BOUND, UError_ڪوڊ* حالت);
+#جيڪڏهن_پورو  /* U_HIDE_DEPRECATED_API */
 
 /**
  * Return the name of the Locale associated with this ResourceBundle.
@@ -328,13 +328,13 @@ ures_getLocale(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCod
  * @return  A Locale name
  * @stable ICU 2.8
  */
-U_CAPI const char* U_EXPORT2
-ures_getLocaleByType(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
-                     ULocDataLocaleType type,
-                     UErrorCode* status);
+U_CAPI ثابت حرف* U_EXPORT2
+ures_getLocaleByType(ثابت UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+                     ULoc_معلومات_Locale_Type type,
+                     UError_ڪوڊ* حالت);
 
 
-#ifndef U_HIDE_INTERNAL_API
+#جيڪڏهن_وصف_نه_ٿيل U_HIDE_اندروني_API
 /**
  * Same as ures_open() but uses the fill-in parameter instead of allocating a new bundle.
  *
@@ -351,12 +351,12 @@ ures_getLocaleByType(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @param status The error code.
  * @internal
  */
-U_CAPI void U_EXPORT2
-ures_openFillIn(UResourceBundle *r,
-                const char* packageName,
-                const char* localeID,
-                UErrorCode* status);
-#endif  /* U_HIDE_INTERNAL_API */
+U_CAPI فراغ U_EXPORT2
+ures_open_Fill_اندريون(UResourceBundle *r,
+                ثابت حرف* packageName,
+                ثابت حرف* localeID,
+                UError_ڪوڊ* حالت);
+#جيڪڏهن_پورو  /* U_HIDE_INTERNAL_API */
 
 /**
  * Returns a string from a string resource type
@@ -375,10 +375,10 @@ ures_openFillIn(UResourceBundle *r,
  * @see ures_getUInt
  * @stable ICU 2.0
  */
-U_CAPI const UChar* U_EXPORT2
-ures_getString(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI ثابت UChar* U_EXPORT2
+ures_getString(ثابت UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                int32_t* len,
-               UErrorCode* status);
+               UError_ڪوڊ* حالت);
 
 /**
  * Returns a UTF-8 string from a string resource.
@@ -427,12 +427,12 @@ ures_getString(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @see u_strToUTF8
  * @stable ICU 3.6
  */
-U_CAPI const char* U_EXPORT2
-ures_getUTF8String(const UResourceBundle* resB,
-                   char* dest U_LIFETIME_BOUND,
-                   int32_t* length,
+U_CAPI ثابت حرف* U_EXPORT2
+ures_getUTF8String(ثابت UResourceBundle* resB,
+                   حرف* dest U_LIFETIME_BOUND,
+                   int32_t* ڊيگهائي,
                    UBool forceCopy,
-                   UErrorCode* status);
+                   UError_ڪوڊ* حالت);
 
 /**
  * Returns a binary data from a binary resource.
@@ -451,10 +451,10 @@ ures_getUTF8String(const UResourceBundle* resB,
  * @see ures_getUInt
  * @stable ICU 2.0
  */
-U_CAPI const uint8_t* U_EXPORT2
-ures_getBinary(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI ثابت uint8_t* U_EXPORT2
+ures_get_ٻٽو(ثابت UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                int32_t* len,
-               UErrorCode* status);
+               UError_ڪوڊ* حالت);
 
 /**
  * Returns a 32 bit integer array from a resource.
@@ -473,10 +473,10 @@ ures_getBinary(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @see ures_getUInt
  * @stable ICU 2.0
  */
-U_CAPI const int32_t* U_EXPORT2
-ures_getIntVector(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI ثابت int32_t* U_EXPORT2
+ures_get_Int_ويڪٽر(ثابت UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                   int32_t* len,
-                  UErrorCode* status);
+                  UError_ڪوڊ* حالت);
 
 /**
  * Returns an unsigned integer from a resource.
@@ -495,8 +495,8 @@ ures_getIntVector(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @stable ICU 2.0
  */
 U_CAPI uint32_t U_EXPORT2
-ures_getUInt(const UResourceBundle* resourceBundle,
-             UErrorCode *status);
+ures_getUInt(ثابت UResourceBundle* resourceBundle,
+             UError_ڪوڊ *حالت);
 
 /**
  * Returns a signed integer from a resource.
@@ -515,8 +515,8 @@ ures_getUInt(const UResourceBundle* resourceBundle,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ures_getInt(const UResourceBundle* resourceBundle,
-            UErrorCode *status);
+ures_getInt(ثابت UResourceBundle* resourceBundle,
+            UError_ڪوڊ *حالت);
 
 /**
  * Returns the size of a resource. Size for scalar types is always 1,
@@ -529,7 +529,7 @@ ures_getInt(const UResourceBundle* resourceBundle,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ures_getSize(const UResourceBundle *resourceBundle);
+ures_get_سائيز(ثابت UResourceBundle *resourceBundle);
 
 /**
  * Returns the type of a resource. Available types are defined in enum UResType
@@ -540,7 +540,7 @@ ures_getSize(const UResourceBundle *resourceBundle);
  * @stable ICU 2.0
  */
 U_CAPI UResType U_EXPORT2
-ures_getType(const UResourceBundle *resourceBundle);
+ures_getType(ثابت UResourceBundle *resourceBundle);
 
 /**
  * Returns the key associated with a given resource. Not all the resources have a key - only
@@ -550,8 +550,8 @@ ures_getType(const UResourceBundle *resourceBundle);
  * @return a key associated to this resource, or NULL if it doesn't have a key
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
-ures_getKey(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
+U_CAPI ثابت حرف* U_EXPORT2
+ures_get_ڪنجي(ثابت UResourceBundle* resourceBundle U_LIFETIME_BOUND);
 
 /* ITERATION API
     This API provides means for iterating through a resource
@@ -563,7 +563,7 @@ ures_getKey(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
  * @param resourceBundle a resource
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 ures_resetIterator(UResourceBundle *resourceBundle);
 
 /**
@@ -574,7 +574,7 @@ ures_resetIterator(UResourceBundle *resourceBundle);
  * @stable ICU 2.0
  */
 U_CAPI UBool U_EXPORT2
-ures_hasNext(const UResourceBundle *resourceBundle);
+ures_has_ايندڙ(ثابت UResourceBundle *resourceBundle);
 
 /**
  * Returns the next resource in a given resource or NULL if there are no more resources
@@ -589,9 +589,9 @@ ures_hasNext(const UResourceBundle *resourceBundle);
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getNextResource(UResourceBundle* resourceBundle,
-                     UResourceBundle* fillIn U_LIFETIME_BOUND,
-                     UErrorCode* status);
+ures_get_ايندڙ_Resource(UResourceBundle* resourceBundle,
+                     UResourceBundle* fill_اندريون U_LIFETIME_BOUND,
+                     UError_ڪوڊ* حالت);
 
 /**
  * Returns the next string in a given resource or NULL if there are no more resources
@@ -605,11 +605,11 @@ ures_getNextResource(UResourceBundle* resourceBundle,
  * @return a pointer to a zero-terminated UChar array which lives in a memory mapped/DLL file.
  * @stable ICU 2.0
  */
-U_CAPI const UChar* U_EXPORT2
-ures_getNextString(UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI ثابت UChar* U_EXPORT2
+ures_get_ايندڙ_String(UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                    int32_t* len,
-                   const char** key,
-                   UErrorCode* status);
+                   ثابت حرف** ڪنجي,
+                   UError_ڪوڊ* حالت);
 
 /**
  * Returns the resource in a given resource at the specified index. Features a fill-in parameter.
@@ -624,10 +624,10 @@ ures_getNextString(UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByIndex(const UResourceBundle* resourceBundle,
-                int32_t indexR,
-                UResourceBundle* fillIn U_LIFETIME_BOUND,
-                UErrorCode* status);
+ures_get_By_اشاريو(ثابت UResourceBundle* resourceBundle,
+                int32_t اشاريو_R,
+                UResourceBundle* fill_اندريون U_LIFETIME_BOUND,
+                UError_ڪوڊ* حالت);
 
 /**
  * Returns the string in a given resource at the specified index.
@@ -640,11 +640,11 @@ ures_getByIndex(const UResourceBundle* resourceBundle,
  * @return                  a pointer to a zero-terminated UChar array which lives in a memory mapped/DLL file.
  * @stable ICU 2.0
  */
-U_CAPI const UChar* U_EXPORT2
-ures_getStringByIndex(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
-                      int32_t indexS,
+U_CAPI ثابت UChar* U_EXPORT2
+ures_get_String_By_اشاريو(ثابت UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+                      int32_t اشاريو_S,
                       int32_t* len,
-                      UErrorCode* status);
+                      UError_ڪوڊ* حالت);
 
 /**
  * Returns a UTF-8 string from a resource at the specified index.
@@ -694,13 +694,13 @@ ures_getStringByIndex(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @see u_strToUTF8
  * @stable ICU 3.6
  */
-U_CAPI const char* U_EXPORT2
-ures_getUTF8StringByIndex(const UResourceBundle* resB,
-                          int32_t stringIndex,
-                          char* dest U_LIFETIME_BOUND,
-                          int32_t* pLength,
+U_CAPI ثابت حرف* U_EXPORT2
+ures_get_UTF8_String_By_اشاريو(ثابت UResourceBundle* resB,
+                          int32_t string_اشاريو,
+                          حرف* dest U_LIFETIME_BOUND,
+                          int32_t* p_ڊيگهائي,
                           UBool forceCopy,
-                          UErrorCode* status);
+                          UError_ڪوڊ* حالت);
 
 /**
  * Returns a resource in a given resource that has a given key. This procedure works only with table
@@ -715,10 +715,10 @@ ures_getUTF8StringByIndex(const UResourceBundle* resB,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByKey(const UResourceBundle* resourceBundle,
-              const char* key,
-              UResourceBundle* fillIn U_LIFETIME_BOUND,
-              UErrorCode* status);
+ures_get_By_ڪنجي(ثابت UResourceBundle* resourceBundle,
+              ثابت حرف* ڪنجي,
+              UResourceBundle* fill_اندريون U_LIFETIME_BOUND,
+              UError_ڪوڊ* حالت);
 
 /**
  * Returns a string in a given resource that has a given key. This procedure works only with table
@@ -732,11 +732,11 @@ ures_getByKey(const UResourceBundle* resourceBundle,
  * @return                  a pointer to a zero-terminated UChar array which lives in a memory mapped/DLL file.
  * @stable ICU 2.0
  */
-U_CAPI const UChar* U_EXPORT2
-ures_getStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
-                    const char* key,
+U_CAPI ثابت UChar* U_EXPORT2
+ures_get_String_By_ڪنجي(ثابت UResourceBundle* resB U_LIFETIME_BOUND,
+                    ثابت حرف* ڪنجي,
                     int32_t* len,
-                    UErrorCode* status);
+                    UError_ڪوڊ* حالت);
 
 /**
  * Returns a UTF-8 string from a resource and a key.
@@ -788,16 +788,16 @@ ures_getStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
  * @see u_strToUTF8
  * @stable ICU 3.6
  */
-U_CAPI const char* U_EXPORT2
-ures_getUTF8StringByKey(const UResourceBundle* resB,
-                        const char* key,
-                        char* dest U_LIFETIME_BOUND,
-                        int32_t* pLength,
+U_CAPI ثابت حرف* U_EXPORT2
+ures_get_UTF8_String_By_ڪنجي(ثابت UResourceBundle* resB,
+                        ثابت حرف* ڪنجي,
+                        حرف* dest U_LIFETIME_BOUND,
+                        int32_t* p_ڊيگهائي,
                         UBool forceCopy,
-                        UErrorCode* status);
+                        UError_ڪوڊ* حالت);
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/unistr.h"
+#إذا U_SHOW_CPLUSPLUS_API
+#ضمن "unicode/unistr.h"
 
 U_NAMESPACE_BEGIN
 /**
@@ -811,17 +811,17 @@ U_NAMESPACE_BEGIN
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
-ures_getUnicodeString(const UResourceBundle* resB U_LIFETIME_BOUND, UErrorCode* status) {
-    UnicodeString result;
+مضمن UnicodeString
+ures_getUnicodeString(ثابت UResourceBundle* resB U_LIFETIME_BOUND, UError_ڪوڊ* حالت) {
+    UnicodeString نتيجو;
     int32_t len = 0;
-    const char16_t *r = ConstChar16Ptr(ures_getString(resB, &len, status));
-    if(U_SUCCESS(*status)) {
-        result.setTo(true, r, len);
-    } else {
-        result.setToBogus();
+    ثابت char16_t *r = ConstChar16Ptr(ures_getString(resB, &len, حالت));
+    إذا(U_SUCCESS(*حالت)) {
+        نتيجو.سيٽ_منزل(true, r, len);
+    } وإلا {
+        نتيجو.سيٽ_منزل_Bogus();
     }
-    return result;
+    أرجع نتيجو;
 }
 
 /**
@@ -836,19 +836,19 @@ ures_getUnicodeString(const UResourceBundle* resB U_LIFETIME_BOUND, UErrorCode* 
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
-ures_getNextUnicodeString(UResourceBundle* resB U_LIFETIME_BOUND,
-                          const char** key,
-                          UErrorCode* status) {
-    UnicodeString result;
+مضمن UnicodeString
+ures_get_ايندڙ_Unicode_String(UResourceBundle* resB U_LIFETIME_BOUND,
+                          ثابت حرف** ڪنجي,
+                          UError_ڪوڊ* حالت) {
+    UnicodeString نتيجو;
     int32_t len = 0;
-    const char16_t* r = ConstChar16Ptr(ures_getNextString(resB, &len, key, status));
-    if(U_SUCCESS(*status)) {
-        result.setTo(true, r, len);
-    } else {
-        result.setToBogus();
+    ثابت char16_t* r = ConstChar16Ptr(ures_get_ايندڙ_String(resB, &len, ڪنجي, حالت));
+    إذا(U_SUCCESS(*حالت)) {
+        نتيجو.سيٽ_منزل(true, r, len);
+    } وإلا {
+        نتيجو.سيٽ_منزل_Bogus();
     }
-    return result;
+    أرجع نتيجو;
 }
 
 /**
@@ -860,19 +860,19 @@ ures_getNextUnicodeString(UResourceBundle* resB U_LIFETIME_BOUND,
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
-ures_getUnicodeStringByIndex(const UResourceBundle* resB U_LIFETIME_BOUND,
-                             int32_t indexS,
-                             UErrorCode* status) {
-    UnicodeString result;
+مضمن UnicodeString
+ures_get_Unicode_String_By_اشاريو(ثابت UResourceBundle* resB U_LIFETIME_BOUND,
+                             int32_t اشاريو_S,
+                             UError_ڪوڊ* حالت) {
+    UnicodeString نتيجو;
     int32_t len = 0;
-    const char16_t* r = ConstChar16Ptr(ures_getStringByIndex(resB, indexS, &len, status));
-    if(U_SUCCESS(*status)) {
-        result.setTo(true, r, len);
-    } else {
-        result.setToBogus();
+    ثابت char16_t* r = ConstChar16Ptr(ures_get_String_By_اشاريو(resB, اشاريو_S, &len, حالت));
+    إذا(U_SUCCESS(*حالت)) {
+        نتيجو.سيٽ_منزل(true, r, len);
+    } وإلا {
+        نتيجو.سيٽ_منزل_Bogus();
     }
-    return result;
+    أرجع نتيجو;
 }
 
 /**
@@ -885,24 +885,24 @@ ures_getUnicodeStringByIndex(const UResourceBundle* resB U_LIFETIME_BOUND,
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
-ures_getUnicodeStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
-                           const char* key,
-                           UErrorCode* status) {
-    UnicodeString result;
+مضمن UnicodeString
+ures_get_Unicode_String_By_ڪنجي(ثابت UResourceBundle* resB U_LIFETIME_BOUND,
+                           ثابت حرف* ڪنجي,
+                           UError_ڪوڊ* حالت) {
+    UnicodeString نتيجو;
     int32_t len = 0;
-    const char16_t* r = ConstChar16Ptr(ures_getStringByKey(resB, key, &len, status));
-    if(U_SUCCESS(*status)) {
-        result.setTo(true, r, len);
-    } else {
-        result.setToBogus();
+    ثابت char16_t* r = ConstChar16Ptr(ures_get_String_By_ڪنجي(resB, ڪنجي, &len, حالت));
+    إذا(U_SUCCESS(*حالت)) {
+        نتيجو.سيٽ_منزل(true, r, len);
+    } وإلا {
+        نتيجو.سيٽ_منزل_Bogus();
     }
-    return result;
+    أرجع نتيجو;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پڇاڙي
 
-#endif
+#جيڪڏهن_پورو
 
 /**
  * Create a string enumerator, owned by the caller, of all locales located within
@@ -913,8 +913,8 @@ U_NAMESPACE_END
  * @stable ICU 3.2
  */
 U_CAPI UEnumeration* U_EXPORT2
-ures_openAvailableLocales(const char *packageName, UErrorCode *status);
+ures_open_موجود_Locales(ثابت حرف *packageName, UError_ڪوڊ *حالت);
 
 
-#endif /*_URES*/
+#جيڪڏهن_پورو /*_URES*/
 /*eof*/
