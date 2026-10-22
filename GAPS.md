@@ -1,0 +1,622 @@
+# What is still missing
+
+76 languages. Each line says in how many languages it is missing.
+
+## Files in languages BURP cannot read yet
+
+- `.pl`: 1 files
+
+## Keywords with no word in a language's table
+
+- shraeni:flush: 75
+- shraeni:get: 75
+- shraeni:clear: 75
+- shraeni:put: 75
+- shraeni:dec: 75
+- shraeni:hex: 75
+- shraeni:__FILE__: 75
+- shraeni:uppercase: 75
+- shraeni:size_t: 71
+- shraeni:stderr: 71
+- shraeni:fprintf: 71
+- guru:size_t: 71
+- shraeni:remove: 71
+- shraeni:wchar_t: 71
+- guru:wchar_t: 71
+- shraeni:getenv: 71
+- guru:remove: 71
+- shraeni:offsetof: 71
+- shraeni:fclose: 71
+- shraeni:va_arg: 71
+- shraeni:close: 71
+- guru:ptrdiff_t: 71
+- shraeni:fflush: 71
+- shraeni:fseek: 71
+- shraeni:FILE: 71
+- shraeni:va_list: 71
+- shraeni:stdout: 71
+- guru:fprintf: 71
+- guru:stderr: 71
+- shraeni:fopen: 71
+- shraeni:time_t: 71
+- shraeni:ftell: 71
+- shraeni:va_start: 71
+- shraeni:va_end: 71
+- guru:va_list: 71
+- guru:memmove: 71
+- shraeni:floor: 71
+- shraeni:ceil: 71
+- shraeni:SEEK_END: 71
+- shraeni:SEEK_SET: 71
+- shraeni:fread: 71
+- shraeni:memcmp: 71
+- guru:close: 71
+- shraeni:strchr: 71
+- shraeni:time: 71
+- shraeni:tm: 71
+- shraeni:mktime: 71
+- shraeni:DIR: 71
+- shraeni:opendir: 71
+- shraeni:closedir: 71
+- shraeni:setlocale: 71
+- guru:memcmp: 71
+- guru:memchr: 71
+- guru:strchr: 71
+- guru:strrchr: 71
+- guru:strncpy: 71
+- guru:strncat: 71
+- guru:strtod: 71
+- guru:strtoul: 71
+- guru:strtol: 71
+- shraeni:memmove: 71
+- shraeni:fgets: 71
+- shraeni:fabs: 71
+- shraeni:fmod: 71
+- shraeni:DBL_MANT_DIG: 71
+- shraeni:localtime: 71
+- shraeni:gmtime: 71
+- shraeni:readdir: 71
+- shraeni:strncpy: 71
+- guru:realloc: 71
+- guru:abort: 71
+- guru:atexit: 71
+- shraeni:ptrdiff_t: 71
+- shraeni:atol: 71
+- shraeni:ferror: 71
+- guru:asm: 71
+- guru:DBL_MAX: 71
+- shraeni:open: 70
+- shraeni:strcmp: 70
+- shraeni:qsort: 70
+- shraeni:memset: 70
+- shraeni:wait: 70
+- guru:memset: 70
+- guru:strcpy: 70
+- guru:strcmp: 70
+- guru:strcat: 70
+- shraeni:strcpy: 70
+- shraeni:strcat: 70
+- guru:puts: 70
+- guru:open: 70
+- shraeni:puts: 70
+- shraeni:nullptr: 67
+- shraeni:typename: 67
+- shraeni:using: 67
+- shraeni:exp: 67
+- guru:exp: 67
+- shraeni:log: 67
+- shraeni:explicit: 67
+- guru:#define: 66
+- guru:#endif: 66
+- shraeni:#endif: 66
+- shraeni:#define: 66
+- guru:#ifndef: 66
+- shraeni:delete: 66
+- shraeni:#ifdef: 66
+- guru:#ifdef: 66
+- shraeni:left: 66
+- shraeni:right: 66
+- shraeni:#ifndef: 66
+- shraeni:#pragma: 66
+- shraeni:cout: 66
+- shraeni:#undef: 66
+- guru:#undef: 66
+- shraeni:#error: 66
+- guru:#error: 66
+- shraeni:endl: 66
+- guru:operator: 62
+- guru:template: 62
+- shraeni:unsigned: 62
+- shraeni:printf: 62
+- shraeni:operator: 62
+- guru:friend: 62
+- shraeni:auto: 62
+- shraeni:long: 62
+- guru:auto: 62
+- shraeni:template: 62
+- shraeni:isspace: 62
+- shraeni:strlen: 62
+- shraeni:putchar: 62
+- guru:memcpy: 62
+- shraeni:pow: 62
+- shraeni:friend: 62
+- guru:signed: 62
+- shraeni:exit: 62
+- shraeni:memcpy: 62
+- shraeni:abs: 62
+- guru:strlen: 62
+- guru:strstr: 62
+- guru:strncmp: 62
+- shraeni:sscanf: 62
+- guru:malloc: 62
+- guru:printf: 62
+- shraeni:short: 62
+- guru:virtual: 40
+- shraeni:virtual: 40
+- shraeni:true: 38
+- shraeni:false: 26
+- shraeni:bool: 26
+- shraeni:namespace: 26
+- shraeni:const: 25
+- guru:const: 25
+- shraeni:void: 25
+- shraeni:static: 25
+- guru:void: 25
+- guru:static: 25
+- shraeni:this: 25
+- guru:public: 25
+- shraeni:continue: 25
+- shraeni:goto: 25
+- guru:typedef: 25
+- shraeni:new: 25
+- shraeni:switch: 25
+- shraeni:default: 25
+- shraeni:do: 25
+- guru:private: 25
+- guru:#elif: 25
+- shraeni:public: 25
+- shraeni:typedef: 25
+- shraeni:class: 25
+- guru:default: 25
+- guru:NULL: 25
+- shraeni:write: 25
+- shraeni:private: 25
+- shraeni:#elif: 25
+- shraeni:float: 25
+- guru:write: 25
+- shraeni:extern: 25
+- guru:extern: 25
+- guru:continue: 25
+- guru:assert: 25
+- guru:switch: 25
+- guru:float: 25
+- guru:free: 25
+- guru:do: 25
+- shraeni:for: 9
+- guru:for: 9
+- shraeni:char: 9
+- shraeni:break: 9
+- shraeni:case: 9
+- guru:char: 9
+- guru:inline: 9
+- shraeni:sizeof: 9
+- guru:enum: 9
+- guru:struct: 9
+- shraeni:inline: 9
+- shraeni:struct: 9
+- guru:sizeof: 9
+- shraeni:double: 9
+- shraeni:enum: 9
+- guru:protected: 9
+
+## Names with no dictionary entry (the most common first)
+
+- `c`: 76
+- `i`: 76
+- `s`: 76
+- `UnicodeString`: 76
+- `U_EXPORT2`: 76
+- `U_CAPI`: 76
+- `UBool`: 76
+- `UChar32`: 76
+- `src`: 76
+- `U_FAILURE`: 76
+- `p`: 76
+- `cnv`: 76
+- `U_LIFETIME_BOUND`: 76
+- `dest`: 76
+- `trie`: 76
+- `err`: 76
+- `len`: 76
+- `pos`: 76
+- `offsets`: 76
+- `ut`: 76
+- `pBiDi`: 76
+- `n`: 76
+- `options`: 76
+- `iter`: 76
+- `converter`: 76
+- `b`: 76
+- `Locale`: 76
+- `ch`: 76
+- `j`: 76
+- `locale`: 76
+- `ds`: 76
+- `U_CALLCONV`: 76
+- `context`: 76
+- `U_SUCCESS`: 76
+- `icu`: 76
+- `U_ASSERT`: 76
+- `T`: 76
+- `sink`: 76
+- `U_COMMON_API`: 76
+- `localeID`: 76
+- `std`: 76
+- `U_ZERO_ERROR`: 76
+- `override`: 76
+- `UChar`: 76
+- `state`: 76
+- `defined`: 76
+- `define`: 76
+- `CharString`: 76
+- `resB`: 76
+- `other`: 76
+- `UConverter`: 76
+- `r`: 76
+- `ec`: 76
+- `sa`: 76
+- `norm16`: 76
+- `ZERO`: 76
+- `c2`: 76
+- `t`: 76
+- `getAlias`: 76
+- `list`: 76
+- `U_NAMESPACE_BEGIN`: 76
+- `str`: 76
+- `info`: 76
+- `RBBINode`: 76
+- `UCURR_COMMON`: 76
+- `uprv_free`: 76
+- `hash`: 76
+- `script`: 76
+- `idx`: 76
+- `UResourceBundle`: 76
+- `edits`: 76
+- `a`: 76
+- `pInfo`: 76
+- `HAS_VOWEL`: 76
+- `x`: 76
+- `UnitIter`: 76
+- `U_CFUNC`: 76
+- `delta`: 76
+- `uprv_memcpy`: 76
+- `UText`: 76
+- `UVector`: 76
+- `region`: 76
+- `StringPiece`: 76
+- `res`: 76
+- `props`: 76
+- `USet`: 76
+- `level`: 76
+- `uprv_malloc`: 76
+- `uprv_strlen`: 76
+- `ptr`: 76
+- `elements`: 76
+- `impl`: 76
+- `CP32`: 76
+- `ByteSink`: 76
+- `UCURR_NON_DEPRECATED`: 76
+- `BreakIterator`: 76
+- `language`: 76
+- `k`: 76
+- `HAS_ACCENT`: 76
+- `uprv_strcmp`: 76
+- `codepoint`: 76
+- `cp`: 76
+- `s1`: 76
+- `trail`: 76
+- `buf`: 76
+- `e`: 76
+- `diff`: 76
+- `pDest`: 76
+- `c1`: 76
+- `s2`: 76
+- `UEnumeration`: 76
+- `indexes`: 76
+- `id`: 76
+- `LSR`: 76
+- `extraInfo`: 76
+- `en`: 76
+- `cs`: 76
+- `Edits`: 76
+- `lead`: 76
+- `d`: 76
+- `ILCID_POSIX_MAP`: 76
+- `flags`: 76
+- `fRB`: 76
+- `UObject`: 76
+- `dst`: 76
+- `parseError`: 76
+- `t1`: 76
+- `U16_IS_TRAIL`: 76
+- `runs`: 76
+- `charAt`: 76
+- `srcChars`: 76
+- `newTrie`: 76
+- `isBogus`: 76
+- `U_FORCE_INLINE`: 76
+- `map`: 76
+- `v`: 76
+- `UVector32`: 76
+- `UHashtable`: 76
+- `scsu`: 76
+- `fUnion`: 76
+- `INVALID_STATE`: 76
+- `q`: 76
+- `rb`: 76
+- `UCURR_DEPRECATED`: 76
+- `mbcs`: 76
+- `overlap`: 76
+- `RBBIDebugPrintf`: 76
+- `Normalizer2`: 76
+- `begin`: 76
+- `l`: 76
+- `builder`: 76
+- `Normalizer2Impl`: 76
+- `b1`: 76
+- `fromUChar32`: 76
+- `UProperty`: 76
+- `U_PLATFORM`: 76
+- `UBiDi`: 76
+- `p_`: 76
+- `fFields`: 76
+- `EXCLUSION`: 76
+- `Hashtable`: 76
+- `U_CDECL_BEGIN`: 76
+- `variant`: 76
+- `UPRV_LENGTHOF`: 76
+- `pv`: 76
+- `UBiDiLevel`: 76
+- `alias`: 76
+- `elementAt`: 76
+- `plug`: 76
+- `U_SHOW_CPLUSPLUS_API`: 76
+- `CharacterIterator`: 76
+- `that`: 76
+- `Resource`: 76
+- `UMemory`: 76
+- `m`: 76
+- `loc`: 76
+- `Append`: 76
+- `prop`: 76
+- `U_SENTINEL`: 76
+- `utf8`: 76
+- `UHashTok`: 76
+- `useFallback`: 76
+- `pSrc`: 76
+- `units_`: 76
+- `label`: 76
+- `U16_IS_LEAD`: 76
+- `action`: 76
+- `UCharIterator`: 76
+- `dir`: 76
+- `U_FALLTHROUGH`: 76
+- `uprv_memset`: 76
+- `Iterator`: 76
+- `orphan`: 76
+- `getName`: 76
+- `ByteSinkUtil`: 76
+- `UTrie2`: 76
+- `bd`: 76
+- `b2`: 76
+- `U16_GET_SUPPLEMENTARY`: 76
+- `o`: 76
+- `ix`: 76
+- `dirProp`: 76
+- `ILCID_POSIX_ELEMENT_ARRAY`: 76
+- `ConstChar16Ptr`: 76
+- `DIRPROP_FLAG`: 76
+- `keyword`: 76
+- `Norm2AllModes`: 76
+- `uchar`: 76
+- `csc`: 76
+- `g`: 76
+- `UDataSwapper`: 76
+- `dirProps`: 76
+- `fmt`: 76
+- `columns`: 76
+- `caseLocale`: 76
+- `pos_`: 76
+- `nameChoice`: 76
+- `pe`: 76
+- `LocaleMatcher`: 76
+- `langtag`: 76
+- `ResourceBundle`: 76
+- `elementAti`: 76
+- `type`: 76
+- `length8`: 76
+- `length16`: 76
+- `p1`: 76
+- `t2`: 76
+- `prv`: 76
+- `UCharsTrie`: 76
+- `norm2`: 76
+- `fType`: 76
+- `UCharCharacterIterator`: 76
+- `pTransform`: 76
+- `lexer`: 76
+- `U_HIDE_DEPRECATED_API`: 76
+- `UHashElement`: 76
+- `UClassID`: 76
+- `onlyContiguous`: 76
+- `obj`: 76
+- `HAS_YPOGEGRAMMENI`: 76
+- `UCONFIG_NO_BREAK_ITERATION`: 76
+- `allModes`: 76
+- `bi`: 76
+- `state_`: 76
+- `UCPTrie`: 76
+- `UElement`: 76
+- `UNormalizer2`: 76
+- `lib`: 76
+- `p0`: 76
+- `filter`: 76
+- `tempbuffer`: 76
+- `val`: 76
+- `USetAdder`: 76
+- `name`: 76
+- `sel`: 76
+- `keyholder`: 76
+- `data32`: 76
+- `ICUService`: 76
+- `StringTrieBuilder`: 76
+- `U_INVALID_FORMAT_ERROR`: 76
+- `keywords`: 76
+- `u_strlen`: 76
+- `readUInt32`: 76
+- `rlRange`: 76
+- `UBreakIterator`: 76
+- `start32`: 76
+- `uprv_strchr`: 76
+- `direction`: 76
+- `sd`: 76
+- `Normalizer`: 76
+- `subchar`: 76
+- `StringClass`: 76
+- `Sentinel`: 76
+- `f`: 76
+- `U_CHARSET_FAMILY`: 76
+- `chars`: 76
+- `RTL`: 76
+- `VALID_TERMINAL_2022`: 76
+- `i2`: 76
+- `U_EXPORT`: 76
+- `lang`: 76
+- `uset`: 76
+- `RBBIStateDescriptor`: 76
+- `cur`: 76
+- `UTFIterator`: 76
+- `posixID`: 76
+- `mid`: 76
+- `cx`: 76
+- `uniChar`: 76
+- `u8b`: 76
+- `enable_if_t`: 76
+- `U_NAMESPACE_USE`: 76
+- `displayLocale`: 76
+- `ILCID_POSIX_SUBTABLE`: 76
+- `replacement`: 76
+- `cc`: 76
+- `mapping`: 76
+- `y`: 76
+- `fBI`: 76
+- `IDNAInfo`: 76
+
+## Comments with no translation
+
+- * @stable ICU 2.0: 76
+- * @internal: 76
+- namespace: 76
+- U_HIDE_DEPRECATED_API: 76
+- callback(illegal): 76
+- U_SHOW_CPLUSPLUS_API: 76
+- * @stable ICU 2.2: 76
+- * @stable ICU 63: 76
+- * @stable ICU 76: 76
+- * @stable ICU 3.6: 76
+- Use the predefined value.: 76
+- * @stable ICU 54: 76
+- U_HIDE_INTERNAL_API: 76
+- * @stable ICU 4.0: 76
+- which: 76
+- prop: 76
+- target is full: 76
+- set up the local pointers: 76
+- write back the updated pointers: 76
+- * @stable ICU 3.4: 76
+- * @stable ICU 58: 76
+- * @stable ICU 4.4: 76
+- * @deprecated ICU 2.4. Obsolete, see utf_old.h.: 76
+- * Mask constant for a UCharCategory. @stable ICU 2.1: 76
+- *< @stable ICU 54: 76
+- this is an unmatched trail code unit (2nd surrogate): 76
+- reserved: 76
+- * @stable ICU 2.6: 76
+- * @stable ICU 4.6: 76
+- #if !UCONFIG_NO_BREAK_ITERATION: 76
+- * Useful constant for this country/region. @stable ICU 2.0: 76
+- eof: 76
+- forbid copying of this class: 76
+- will never occur: 76
+- conversion loop: 76
+- output BMP code point: 76
+- no more input: 76
+- * @stable ICU 62: 76
+- * Useful constant for this language. @stable ICU 2.0: 76
+- test the following code unit: 76
+- set the converter state back into UConverter: 76
+- each branch falls through to the next one: 76
+- * @stable ICU 70: 76
+- context: 76
+- target overflow: 76
+- * @stable ICU 49: 76
+- set=: 76
+- exit this condition tree: 76
+- this is an unmatched lead code unit (1st surrogate): 76
+- sourceIndex=-1 if the current character began in the previous buffer: 76
+- * @stable ICU 75: 76
+- * C++ iterator boilerplate @internal: 76
+- * @stable ICU 78: 76
+- __cplusplus: 76
+- normal end of conversion: prepare for a new character: 76
+- * @stable ICU 64: 76
+- * @stable ICU 66: 76
+- precomputedSet=: 76
+- argument checking: 76
+- not defined: 76
+- Not uninitialized: 76
+- nothing to do: 76
+- L ,     R ,    EN ,    AN ,    ON ,     S ,     B , Res: 76
+- get the converter state from UConverter: 76
+- *< @stable ICU 60: 76
+- * @stable ICU 3.8: 76
+- *
+   * <p>Virtual destructor.</p>: 76
+- U_HIDE_DRAFT_API: 76
+- is this code point assigned, or do we use fallbacks?: 76
+- pErrorCode: 76
+- * @stable ICU 56: 76
+- * @stable ICU 60: 76
+- *< @stable ICU 79: 76
+- * @stable ICU 4.8: 76
+- Reached the end of the string.: 76
+- Reached the start of the string.: 76
+- Terminate the buffer: 76
+- type: 76
+- name: 76
+- udata_swapDataHeader checks the arguments: 76
+- check data format and format version: 76
+- * Hey, Emacs, please set the following:
+ *
+ * Local Variables:
+ * indent-tabs-mode: nil
+ * End:
+ *: 76
+- 0 : init: 76
+- BMP-only codepages are stored without stage 1 entries for supplementary code points: 76
+- handle U+0080..U+07FF inline: 76
+- not mappable or buffer overflow: 76
+- reset error: 76
+- terminate: 76
+- * @stable ICU 72: 76
+- * @stable ICU 79: 76
+- return nullptr;: 76
+- args check: 76
+- Rule Set:: 76
+- UCONFIG_NO_SERVICE: 76
+- test for nullptr: 76
+- #if !UCONFIG_NO_NORMALIZATION: 76
+- other: 76
+- If we're already at the end of the range, we're done: 76
+- !UCONFIG_NO_NORMALIZATION: 76
+- created: 2019may08 Markus W. Scherer: 76
