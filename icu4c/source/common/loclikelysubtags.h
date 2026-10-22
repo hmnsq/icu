@@ -7,49 +7,49 @@
 #ifndef __LOCLIKELYSUBTAGS_H__
 #define __LOCLIKELYSUBTAGS_H__
 
-#include <utility>
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/locid.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
-#include "unicode/ures.h"
-#include "charstrmap.h"
-#include "lsr.h"
+#अन्तर्भाव <utility>
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/bytestrie.h"
+#अन्तर्भाव "unicode/locid.h"
+#अन्तर्भाव "unicode/stringpiece.h"
+#अन्तर्भाव "unicode/uobject.h"
+#अन्तर्भाव "unicode/ures.h"
+#अन्तर्भाव "charstrmap.h"
+#अन्तर्भाव "lsr.h"
 
 U_NAMESPACE_BEGIN
 
-struct LikelySubtagsData;
+संरचना LikelySubtagsData;
 
-struct LocaleDistanceData {
-    LocaleDistanceData() = default;
+संरचना LocaleDistanceData {
+    LocaleDistanceData() = स्वभाव;
     LocaleDistanceData(LocaleDistanceData &&data);
     ~LocaleDistanceData();
 
-    const uint8_t *distanceTrieBytes = nullptr;
-    const uint8_t *regionToPartitions = nullptr;
-    const char **partitions = nullptr;
-    const LSR *paradigms = nullptr;
+    ध्रुव uint8_t *distanceTrieBytes = nullptr;
+    ध्रुव uint8_t *regionToPartitions = nullptr;
+    ध्रुव वर्ण **partitions = nullptr;
+    ध्रुव LSR *paradigms = nullptr;
     int32_t paradigmsLength = 0;
-    const int32_t *distances = nullptr;
+    ध्रुव int32_t *distances = nullptr;
 
-private:
-    LocaleDistanceData &operator=(const LocaleDistanceData &) = delete;
+गुप्त:
+    LocaleDistanceData &operator=(ध्रुव LocaleDistanceData &) = delete;
 };
 
-class LikelySubtags final : public UMemory {
-public:
+class LikelySubtags final : सार्वजनिक UMemory {
+सार्वजनिक:
     ~LikelySubtags();
 
-    static constexpr int32_t SKIP_SCRIPT = 1;
+    स्थिर constexpr int32_t SKIP_SCRIPT = 1;
 
     // VisibleForTesting
-    static const LikelySubtags *getSingleton(UErrorCode &errorCode);
+    स्थिर ध्रुव LikelySubtags *getSingleton(UErrorCode &errorCode);
 
     // VisibleForTesting
-    LSR makeMaximizedLsrFrom(const Locale &locale,
-                             bool returnInputIfUnmatch,
-                             UErrorCode &errorCode) const;
+    LSR makeMaximizedLsrFrom(ध्रुव Locale &locale,
+                             bool return_निवेश_If_Unmatch,
+                             UErrorCode &errorCode) ध्रुव;
 
     /**
      * Tests whether lsr is "more likely" than other.
@@ -61,42 +61,42 @@ public:
      * with bit 0 set if lsr is "more likely".
      * The initial value of likelyInfo must be negative.
      */
-    int32_t compareLikely(const LSR &lsr, const LSR &other, int32_t likelyInfo) const;
+    int32_t compareLikely(ध्रुव LSR &lsr, ध्रुव LSR &other, int32_t likelyInfo) ध्रुव;
 
     LSR minimizeSubtags(StringPiece language, StringPiece script, StringPiece region,
                         bool favorScript,
-                        UErrorCode &errorCode) const;
+                        UErrorCode &errorCode) ध्रुव;
 
     // visible for LocaleDistance
-    const LocaleDistanceData& getDistanceData() const U_LIFETIME_BOUND { return distanceData; }
+    ध्रुव LocaleDistanceData& getDistanceData() ध्रुव U_LIFETIME_BOUND { प्रत्यागम distanceData; }
 
-private:
+गुप्त:
     LikelySubtags(LikelySubtagsData &data);
-    LikelySubtags(const LikelySubtags &other) = delete;
-    LikelySubtags &operator=(const LikelySubtags &other) = delete;
+    LikelySubtags(ध्रुव LikelySubtags &other) = delete;
+    LikelySubtags &operator=(ध्रुव LikelySubtags &other) = delete;
 
-    static void initLikelySubtags(UErrorCode &errorCode);
+    स्थिर शून्य initLikelySubtags(UErrorCode &errorCode);
 
-    LSR makeMaximizedLsr(const char *language, const char *script, const char *region,
-                         const char *variant,
-                         bool returnInputIfUnmatch,
-                         UErrorCode &errorCode) const;
+    LSR makeMaximizedLsr(ध्रुव वर्ण *language, ध्रुव वर्ण *script, ध्रुव वर्ण *region,
+                         ध्रुव वर्ण *variant,
+                         bool return_निवेश_If_Unmatch,
+                         UErrorCode &errorCode) ध्रुव;
 
     /**
      * Raw access to addLikelySubtags. Input must be in canonical format, eg "en", not "eng" or "EN".
      */
-    LSR maximize(const char *language, const char *script, const char *region,
-                 bool returnInputIfUnmatch,
-                 UErrorCode &errorCode) const;
+    LSR maximize(ध्रुव वर्ण *language, ध्रुव वर्ण *script, ध्रुव वर्ण *region,
+                 bool return_निवेश_If_Unmatch,
+                 UErrorCode &errorCode) ध्रुव;
     LSR maximize(StringPiece language, StringPiece script, StringPiece region,
-                 bool returnInputIfUnmatch,
-                 UErrorCode &errorCode) const;
+                 bool return_निवेश_If_Unmatch,
+                 UErrorCode &errorCode) ध्रुव;
 
-    int32_t getLikelyIndex(const char *language, const char *script) const;
-    bool isMacroregion(StringPiece& region, UErrorCode &errorCode) const;
+    int32_t getLikelyIndex(ध्रुव वर्ण *language, ध्रुव वर्ण *script) ध्रुव;
+    bool isMacroregion(StringPiece& region, UErrorCode &errorCode) ध्रुव;
 
-    static int32_t trieNext(BytesTrie &iter, const char *s, int32_t i);
-    static int32_t trieNext(BytesTrie &iter, StringPiece s, int32_t i);
+    स्थिर int32_t trieNext(BytesTrie &iter, ध्रुव वर्ण *s, int32_t i);
+    स्थिर int32_t trieNext(BytesTrie &iter, StringPiece s, int32_t i);
 
     UResourceBundle *langInfoBundle;
     // We could store the strings by value, except that if there were few enough strings,
@@ -114,8 +114,8 @@ private:
     uint64_t trieUndZzzzState;
     int32_t defaultLsrIndex;
     uint64_t trieFirstLetterStates[26];
-    const LSR *lsrs;
-#if U_DEBUG
+    ध्रुव LSR *lsrs;
+#यदि U_DEBUG
     int32_t lsrsLength;
 #endif
 

@@ -4,22 +4,22 @@
 // emojiprops.cpp
 // created: 2021sep04 Markus W. Scherer
 
-#include "unicode/utypes.h"
-#include "unicode/uchar.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/ucptrie.h"
-#include "unicode/udata.h"
-#include "unicode/ustringtrie.h"
-#include "unicode/utf16.h"
-#include "emojiprops.h"
-#include "ucln.h"
-#include "ucln_cmn.h"
-#include "umutex.h"
-#include "uset_imp.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/uchar.h"
+#अन्तर्भाव "unicode/ucharstrie.h"
+#अन्तर्भाव "unicode/ucptrie.h"
+#अन्तर्भाव "unicode/udata.h"
+#अन्तर्भाव "unicode/ustringtrie.h"
+#अन्तर्भाव "unicode/utf16.h"
+#अन्तर्भाव "emojiprops.h"
+#अन्तर्भाव "ucln.h"
+#अन्तर्भाव "ucln_cmn.h"
+#अन्तर्भाव "umutex.h"
+#अन्तर्भाव "uset_imp.h"
 
 U_NAMESPACE_BEGIN
 
-namespace {
+नामाकाश {
 
 EmojiProps *singleton = nullptr;
 icu::UInitOnce emojiInitOnce {};
@@ -28,15 +28,15 @@ UBool U_CALLCONV emojiprops_cleanup() {
     delete singleton;
     singleton = nullptr;
     emojiInitOnce.reset();
-    return true;
+    प्रत्यागम सत्य;
 }
 
-void U_CALLCONV initSingleton(UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return; }
-    singleton = new EmojiProps(errorCode);
-    if (singleton == nullptr) {
+शून्य U_CALLCONV initSingleton(UErrorCode &errorCode) {
+    यदि (U_FAILURE(errorCode)) { प्रत्यागम; }
+    singleton = नूतन EmojiProps(errorCode);
+    यदि (singleton == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-    } else if (U_FAILURE(errorCode)) {
+    } अन्यथा यदि (U_FAILURE(errorCode)) {
         delete singleton;
         singleton = nullptr;
     }
@@ -46,8 +46,8 @@ void U_CALLCONV initSingleton(UErrorCode &errorCode) {
 // TODO: turn this into a shared helper function
 // Requires the major version to match, and then requires at least the minor version.
 UBool udata_isAcceptableMajorMinor(
-        const UDataInfo &info, const char16_t *dataFormat, uint8_t major, uint8_t minor) {
-    return
+        ध्रुव UDataInfo &info, ध्रुव char16_t *dataFormat, uint8_t major, uint8_t minor) {
+    प्रत्यागम
         info.size >= 20 &&
         info.isBigEndian == U_IS_BIG_ENDIAN &&
         info.charsetFamily == U_CHARSET_FAMILY &&
@@ -66,55 +66,55 @@ EmojiProps::~EmojiProps() {
     ucptrie_close(cpTrie);
 }
 
-const EmojiProps *
+ध्रुव EmojiProps *
 EmojiProps::getSingleton(UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
+    यदि (U_FAILURE(errorCode)) { प्रत्यागम nullptr; }
     umtx_initOnce(emojiInitOnce, &initSingleton, errorCode);
-    return singleton;
+    प्रत्यागम singleton;
 }
 
 UBool U_CALLCONV
-EmojiProps::isAcceptable(void * /*context*/, const char * /*type*/, const char * /*name*/,
-                         const UDataInfo *pInfo) {
-    return udata_isAcceptableMajorMinor(*pInfo, u"Emoj", 1, 0);
+EmojiProps::isAcceptable(शून्य * /*context*/, ध्रुव वर्ण * /*type*/, ध्रुव वर्ण * /*name*/,
+                         ध्रुव UDataInfo *pInfo) {
+    प्रत्यागम udata_isAcceptableMajorMinor(*pInfo, u"Emoj", 1, 0);
 }
 
-void
+शून्य
 EmojiProps::load(UErrorCode &errorCode) {
-    memory = udata_openChoice(nullptr, "icu", "uemoji", isAcceptable, this, &errorCode);
-    if (U_FAILURE(errorCode)) { return; }
-    const uint8_t* inBytes = static_cast<const uint8_t*>(udata_getMemory(memory));
-    const int32_t* inIndexes = reinterpret_cast<const int32_t*>(inBytes);
+    memory = udata_openChoice(nullptr, "icu", "uemoji", isAcceptable, एतत्, &errorCode);
+    यदि (U_FAILURE(errorCode)) { प्रत्यागम; }
+    ध्रुव uint8_t* inBytes = static_cast<ध्रुव uint8_t*>(udata_getMemory(memory));
+    ध्रुव int32_t* inIndexes = reinterpret_cast<ध्रुव int32_t*>(inBytes);
     int32_t indexesLength = inIndexes[IX_CPTRIE_OFFSET] / 4;
-    if (indexesLength <= IX_RGI_EMOJI_ZWJ_SEQUENCE_TRIE_OFFSET) {
+    यदि (indexesLength <= IX_RGI_EMOJI_ZWJ_SEQUENCE_TRIE_OFFSET) {
         errorCode = U_INVALID_FORMAT_ERROR;  // Not enough indexes.
-        return;
+        प्रत्यागम;
     }
 
     int32_t i = IX_CPTRIE_OFFSET;
     int32_t offset = inIndexes[i++];
     int32_t nextOffset = inIndexes[i];
-    cpTrie = ucptrie_openFromBinary(UCPTRIE_TYPE_FAST, UCPTRIE_VALUE_BITS_8,
+    cpTrie = ucptrie_open_From_द्विआधारी(UCPTRIE_TYPE_FAST, UCPTRIE_मूल्य_BITS_8,
                                     inBytes + offset, nextOffset - offset, nullptr, &errorCode);
-    if (U_FAILURE(errorCode)) {
-        return;
+    यदि (U_FAILURE(errorCode)) {
+        प्रत्यागम;
     }
 
-    for (i = IX_BASIC_EMOJI_TRIE_OFFSET; i <= IX_RGI_EMOJI_ZWJ_SEQUENCE_TRIE_OFFSET; ++i) {
+    प्रति (i = IX_BASIC_EMOJI_TRIE_OFFSET; i <= IX_RGI_EMOJI_ZWJ_SEQUENCE_TRIE_OFFSET; ++i) {
         offset = inIndexes[i];
         nextOffset = inIndexes[i + 1];
         // Set/leave nullptr if there is no UCharsTrie.
-        const char16_t* p = nextOffset > offset ? reinterpret_cast<const char16_t*>(inBytes + offset) : nullptr;
+        ध्रुव char16_t* p = nextOffset > offset ? reinterpret_cast<ध्रुव char16_t*>(inBytes + offset) : nullptr;
         stringTries[getStringTrieIndex(i)] = p;
     }
 }
 
-void
-EmojiProps::addPropertyStarts(const USetAdder *sa, UErrorCode & /*errorCode*/) const {
+शून्य
+EmojiProps::addPropertyStarts(ध्रुव USetAdder *sa, UErrorCode & /*errorCode*/) ध्रुव {
     // Add the start code point of each same-value range of the trie.
     UChar32 start = 0, end;
     uint32_t value;
-    while ((end = ucptrie_getRange(cpTrie, start, UCPMAP_RANGE_NORMAL, 0,
+    यावत् ((end = ucptrie_getRange(cpTrie, start, UCPMAP_RANGE_NORMAL, 0,
                                    nullptr, nullptr, &value)) >= 0) {
         sa->add(sa->set, start);
         start = end + 1;
@@ -122,19 +122,19 @@ EmojiProps::addPropertyStarts(const USetAdder *sa, UErrorCode & /*errorCode*/) c
 }
 
 UBool
-EmojiProps::hasBinaryProperty(UChar32 c, UProperty which) {
+EmojiProps::has_द्विआधारी_Property(UChar32 c, UProperty which) {
     UErrorCode errorCode = U_ZERO_ERROR;
-    const EmojiProps *ep = getSingleton(errorCode);
-    return U_SUCCESS(errorCode) && ep->hasBinaryPropertyImpl(c, which);
+    ध्रुव EmojiProps *ep = getSingleton(errorCode);
+    प्रत्यागम U_SUCCESS(errorCode) && ep->has_द्विआधारी_Property_Impl(c, which);
 }
 
 UBool
-EmojiProps::hasBinaryPropertyImpl(UChar32 c, UProperty which) const {
-    if (which < UCHAR_EMOJI || UCHAR_RGI_EMOJI < which) {
-        return false;
+EmojiProps::has_द्विआधारी_Property_Impl(UChar32 c, UProperty which) ध्रुव {
+    यदि (which < UCHAR_EMOJI || UCHAR_RGI_EMOJI < which) {
+        प्रत्यागम असत्य;
     }
     // Note: UCHAR_REGIONAL_INDICATOR is a single, hardcoded range implemented elsewhere.
-    static constexpr int8_t bitFlags[] = {
+    स्थिर constexpr int8_t bitFlags[] = {
         BIT_EMOJI,                  // UCHAR_EMOJI=57
         BIT_EMOJI_PRESENTATION,     // UCHAR_EMOJI_PRESENTATION=58
         BIT_EMOJI_MODIFIER,         // UCHAR_EMOJI_MODIFIER=59
@@ -152,65 +152,65 @@ EmojiProps::hasBinaryPropertyImpl(UChar32 c, UProperty which) const {
         BIT_BASIC_EMOJI,            // UCHAR_RGI_EMOJI=71
     };
     int32_t bit = bitFlags[which - UCHAR_EMOJI];
-    if (bit < 0) {
-        return false;  // not a property that we support in this function
+    यदि (bit < 0) {
+        प्रत्यागम असत्य;  // not a property that we support in this function
     }
     uint8_t bits = UCPTRIE_FAST_GET(cpTrie, UCPTRIE_8, c);
-    return (bits >> bit) & 1;
+    प्रत्यागम (bits >> bit) & 1;
 }
 
 UBool
-EmojiProps::hasBinaryProperty(const char16_t *s, int32_t length, UProperty which) {
+EmojiProps::has_द्विआधारी_Property(ध्रुव char16_t *s, int32_t length, UProperty which) {
     UErrorCode errorCode = U_ZERO_ERROR;
-    const EmojiProps *ep = getSingleton(errorCode);
-    return U_SUCCESS(errorCode) && ep->hasBinaryPropertyImpl(s, length, which);
+    ध्रुव EmojiProps *ep = getSingleton(errorCode);
+    प्रत्यागम U_SUCCESS(errorCode) && ep->has_द्विआधारी_Property_Impl(s, length, which);
 }
 
 UBool
-EmojiProps::hasBinaryPropertyImpl(const char16_t *s, int32_t length, UProperty which) const {
-    if (s == nullptr && length != 0) { return false; }
-    if (length <= 0 && (length == 0 || *s == 0)) { return false; }  // empty string
+EmojiProps::has_द्विआधारी_Property_Impl(ध्रुव char16_t *s, int32_t length, UProperty which) ध्रुव {
+    यदि (s == nullptr && length != 0) { प्रत्यागम असत्य; }
+    यदि (length <= 0 && (length == 0 || *s == 0)) { प्रत्यागम असत्य; }  // empty string
     // The caller should have delegated single code points to hasBinaryProperty(c, which).
-    if (which < UCHAR_BASIC_EMOJI || UCHAR_RGI_EMOJI < which) {
-        return false;
+    यदि (which < UCHAR_BASIC_EMOJI || UCHAR_RGI_EMOJI < which) {
+        प्रत्यागम असत्य;
     }
     UProperty firstProp = which, lastProp = which;
-    if (which == UCHAR_RGI_EMOJI) {
+    यदि (which == UCHAR_RGI_EMOJI) {
         // RGI_Emoji is the union of the other emoji properties of strings.
         firstProp = UCHAR_BASIC_EMOJI;
         lastProp = UCHAR_RGI_EMOJI_ZWJ_SEQUENCE;
     }
-    for (int32_t prop = firstProp; prop <= lastProp; ++prop) {
-        const char16_t *trieUChars = stringTries[prop - UCHAR_BASIC_EMOJI];
-        if (trieUChars != nullptr) {
+    प्रति (int32_t prop = firstProp; prop <= lastProp; ++prop) {
+        ध्रुव char16_t *trieUChars = stringTries[prop - UCHAR_BASIC_EMOJI];
+        यदि (trieUChars != nullptr) {
             UCharsTrie trie(trieUChars);
             UStringTrieResult result = trie.next(s, length);
-            if (USTRINGTRIE_HAS_VALUE(result)) {
-                return true;
+            यदि (USTRINGTRIE_HAS_मूल्य(result)) {
+                प्रत्यागम सत्य;
             }
         }
     }
-    return false;
+    प्रत्यागम असत्य;
 }
 
-void
-EmojiProps::addStrings(const USetAdder *sa, UProperty which, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return; }
-    if (which < UCHAR_BASIC_EMOJI || UCHAR_RGI_EMOJI < which) {
-        return;
+शून्य
+EmojiProps::addStrings(ध्रुव USetAdder *sa, UProperty which, UErrorCode &errorCode) ध्रुव {
+    यदि (U_FAILURE(errorCode)) { प्रत्यागम; }
+    यदि (which < UCHAR_BASIC_EMOJI || UCHAR_RGI_EMOJI < which) {
+        प्रत्यागम;
     }
     UProperty firstProp = which, lastProp = which;
-    if (which == UCHAR_RGI_EMOJI) {
+    यदि (which == UCHAR_RGI_EMOJI) {
         // RGI_Emoji is the union of the other emoji properties of strings.
         firstProp = UCHAR_BASIC_EMOJI;
         lastProp = UCHAR_RGI_EMOJI_ZWJ_SEQUENCE;
     }
-    for (int32_t prop = firstProp; prop <= lastProp; ++prop) {
-        const char16_t *trieUChars = stringTries[prop - UCHAR_BASIC_EMOJI];
-        if (trieUChars != nullptr) {
+    प्रति (int32_t prop = firstProp; prop <= lastProp; ++prop) {
+        ध्रुव char16_t *trieUChars = stringTries[prop - UCHAR_BASIC_EMOJI];
+        यदि (trieUChars != nullptr) {
             UCharsTrie::Iterator iter(trieUChars, 0, errorCode);
-            while (iter.next(errorCode)) {
-                const UnicodeString &s = iter.getString();
+            यावत् (iter.next(errorCode)) {
+                ध्रुव UnicodeString &s = iter.getString();
                 sa->addString(sa->set, s.getBuffer(), s.length());
             }
         }
