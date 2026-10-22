@@ -6,11 +6,11 @@
 * Corporation and others.  All Rights Reserved.
 **********************************************************************
 */
-#ifndef _UCURR_H_
-#define _UCURR_H_
+#यदि_अपरिभाषितम् _UCURR_H_
+#परिभाषय _UCURR_H_
 
-#include "unicode/utypes.h"
-#include "unicode/uenum.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/uenum.h"
 
 /**
  * \file 
@@ -32,13 +32,13 @@
  * @since ICU 2.2
  */
 
-#if !UCONFIG_NO_FORMATTING
+#यदि !UCONFIG_NO_FORMATTING
 
 /**
  * Currency Usage used for Decimal Format
  * @stable ICU 54
  */
-enum UCurrencyUsage {
+गणना UCurrencyUsage {
     /**
      * a setting to specify currency usage which determines currency digit
      * and rounding for standard usage, for example: "50.00 NT$"
@@ -52,16 +52,16 @@ enum UCurrencyUsage {
      * @stable ICU 54
      */
     UCURR_USAGE_CASH=1,
-#ifndef U_HIDE_DEPRECATED_API
+#यदि_अपरिभाषितम् U_HIDE_DEPRECATED_API
     /**
      * One higher than the last enum UCurrencyUsage constant.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UCURR_USAGE_COUNT=2
-#endif  // U_HIDE_DEPRECATED_API
+    UCURR_USAGE_गणनम्=2
+#यदि_अन्तः  // U_HIDE_DEPRECATED_API
 };
 /** Currency Usage used for Decimal Format */
-typedef enum UCurrencyUsage UCurrencyUsage; 
+प्रकारनिर्देश गणना UCurrencyUsage UCurrencyUsage; 
 
 /**
  * Finds a currency code for the given locale.
@@ -79,10 +79,10 @@ typedef enum UCurrencyUsage UCurrencyUsage;
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-ucurr_forLocale(const char* locale,
+ucurr_forLocale(ध्रुव वर्ण* locale,
                 UChar* buff,
-                int32_t buffCapacity,
-                UErrorCode* ec);
+                int32_t buff_क्षमता,
+                UError_संहिता* ec);
 
 /**
  * Selector constants for ucurr_getName().
@@ -90,13 +90,13 @@ ucurr_forLocale(const char* locale,
  * @see ucurr_getName
  * @stable ICU 2.6
  */
-typedef enum UCurrNameStyle {
+प्रकारनिर्देश गणना UCurrNameStyle {
     /**
      * Selector for ucurr_getName indicating a symbolic name for a
      * currency, such as "$" for USD.
      * @stable ICU 2.6
      */
-    UCURR_SYMBOL_NAME,
+    UCURR_चिह्नम्_NAME,
 
     /**
      * Selector for ucurr_getName indicating the long name for a
@@ -113,7 +113,7 @@ typedef enum UCurrNameStyle {
      *
      * @stable ICU 61
      */
-    UCURR_NARROW_SYMBOL_NAME,
+    UCURR_NARROW_चिह्नम्_NAME,
 
     /**
      * Selector for getName() indicating the formal currency symbol.
@@ -123,7 +123,7 @@ typedef enum UCurrNameStyle {
      *
      * @stable ICU 68
      */
-    UCURR_FORMAL_SYMBOL_NAME,
+    UCURR_FORMAL_चिह्नम्_NAME,
 
     /**
      * Selector for getName() indicating the variant currency symbol.
@@ -132,15 +132,15 @@ typedef enum UCurrNameStyle {
      *
      * @stable ICU 68
      */
-    UCURR_VARIANT_SYMBOL_NAME
+    UCURR_VARIANT_चिह्नम्_NAME
     
 } UCurrNameStyle;
 
-#if !UCONFIG_NO_SERVICE
+#यदि !UCONFIG_NO_SERVICE
 /**
  * @stable ICU 2.6
  */
-typedef const void* UCurrRegistryKey;
+प्रकारनिर्देश ध्रुव शून्य* UCurr_Registry_कुञ्चिका;
 
 /**
  * Register an (existing) ISO 4217 currency code for the given locale.
@@ -153,10 +153,10 @@ typedef const void* UCurrRegistryKey;
  * if there was an error.
  * @stable ICU 2.6
  */
-U_CAPI UCurrRegistryKey U_EXPORT2
-ucurr_register(const UChar* isoCode, 
-                   const char* locale,  
-                   UErrorCode* status);
+U_CAPI UCurr_Registry_कुञ्चिका U_EXPORT2
+ucurr_पञ्जिकाकोशः(ध्रुव UChar* iso_संहिता, 
+                   ध्रुव वर्ण* locale,  
+                   UError_संहिता* स्थितिः);
 /**
  * Unregister the previously-registered currency definitions using the
  * URegistryKey returned from ucurr_register.  Key becomes invalid after
@@ -169,8 +169,8 @@ ucurr_register(const UChar* isoCode,
  * @stable ICU 2.6
  */
 U_CAPI UBool U_EXPORT2
-ucurr_unregister(UCurrRegistryKey key, UErrorCode* status);
-#endif /* UCONFIG_NO_SERVICE */
+ucurr_unregister(UCurr_Registry_कुञ्चिका कुञ्चिका, UError_संहिता* स्थितिः);
+#यदि_अन्तः /* UCONFIG_NO_SERVICE */
 
 /**
  * Returns the display name for the given currency in the
@@ -189,13 +189,13 @@ ucurr_unregister(UCurrRegistryKey key, UErrorCode* status);
  * returned.
  * @stable ICU 2.6
  */
-U_CAPI const UChar* U_EXPORT2
-ucurr_getName(const UChar* currency U_LIFETIME_BOUND,
-              const char* locale,
+U_CAPI ध्रुव UChar* U_EXPORT2
+ucurr_getName(ध्रुव UChar* currency U_LIFETIME_BOUND,
+              ध्रुव वर्ण* locale,
               UCurrNameStyle nameStyle,
               UBool* isChoiceFormat,
               int32_t* len,
-              UErrorCode* ec);
+              UError_संहिता* ec);
 
 /**
  * Returns the plural name for the given currency in the
@@ -214,13 +214,13 @@ ucurr_getName(const UChar* currency U_LIFETIME_BOUND,
  * returned.
  * @stable ICU 4.2
  */
-U_CAPI const UChar* U_EXPORT2
-ucurr_getPluralName(const UChar* currency U_LIFETIME_BOUND,
-                    const char* locale,
+U_CAPI ध्रुव UChar* U_EXPORT2
+ucurr_getPluralName(ध्रुव UChar* currency U_LIFETIME_BOUND,
+                    ध्रुव वर्ण* locale,
                     UBool* isChoiceFormat,
-                    const char* pluralCount,
+                    ध्रुव वर्ण* plural_गणनम्,
                     int32_t* len,
-                    UErrorCode* ec);
+                    UError_संहिता* ec);
 
 /**
  * Returns the number of the number of fraction digits that should
@@ -240,8 +240,8 @@ ucurr_getPluralName(const UChar* currency U_LIFETIME_BOUND,
  * @stable ICU 3.0
  */
 U_CAPI int32_t U_EXPORT2
-ucurr_getDefaultFractionDigits(const UChar* currency,
-                               UErrorCode* ec);
+ucurr_getDefaultFractionDigits(ध्रुव UChar* currency,
+                               UError_संहिता* ec);
 
 /**
  * Returns the number of the number of fraction digits that should
@@ -261,9 +261,9 @@ ucurr_getDefaultFractionDigits(const UChar* currency,
  * @stable ICU 54
  */
 U_CAPI int32_t U_EXPORT2
-ucurr_getDefaultFractionDigitsForUsage(const UChar* currency, 
-                                       const UCurrencyUsage usage,
-                                       UErrorCode* ec);
+ucurr_getDefaultFractionDigitsForUsage(ध्रुव UChar* currency, 
+                                       ध्रुव UCurrencyUsage usage,
+                                       UError_संहिता* ec);
 
 /**
  * Returns the rounding increment for the given currency, or 0.0 if no
@@ -275,9 +275,9 @@ ucurr_getDefaultFractionDigitsForUsage(const UChar* currency,
  * or 0.0 if there is an error
  * @stable ICU 3.0
  */
-U_CAPI double U_EXPORT2
-ucurr_getRoundingIncrement(const UChar* currency,
-                           UErrorCode* ec);
+U_CAPI द्विगुण U_EXPORT2
+ucurr_getRoundingIncrement(ध्रुव UChar* currency,
+                           UError_संहिता* ec);
 
 /**
  * Returns the rounding increment for the given currency, or 0.0 if no
@@ -289,10 +289,10 @@ ucurr_getRoundingIncrement(const UChar* currency,
  * or 0.0 if there is an error
  * @stable ICU 54
  */
-U_CAPI double U_EXPORT2
-ucurr_getRoundingIncrementForUsage(const UChar* currency,
-                                   const UCurrencyUsage usage,
-                                   UErrorCode* ec);
+U_CAPI द्विगुण U_EXPORT2
+ucurr_getRoundingIncrementForUsage(ध्रुव UChar* currency,
+                                   ध्रुव UCurrencyUsage usage,
+                                   UError_संहिता* ec);
 
 /**
  * Selector constants for ucurr_openCurrencies().
@@ -300,7 +300,7 @@ ucurr_getRoundingIncrementForUsage(const UChar* currency,
  * @see ucurr_openCurrencies
  * @stable ICU 3.2
  */
-typedef enum UCurrCurrencyType {
+प्रकारनिर्देश गणना UCurrCurrencyType {
     /**
      * Select all ISO-4217 currency codes.
      * @stable ICU 3.2
@@ -347,7 +347,7 @@ typedef enum UCurrCurrencyType {
  * @stable ICU 3.2
  */
 U_CAPI UEnumeration * U_EXPORT2
-ucurr_openISOCurrencies(uint32_t currType, UErrorCode *pErrorCode);
+ucurr_openISOCurrencies(uint32_t currType, UError_संहिता *p_Error_संहिता);
 
 /**
   * Queries if the given ISO 4217 3-letter code is available on the specified date range. 
@@ -376,10 +376,10 @@ ucurr_openISOCurrencies(uint32_t currType, UErrorCode *pErrorCode);
   * @stable ICU 4.8 
   */ 
 U_CAPI UBool U_EXPORT2
-ucurr_isAvailable(const UChar* isoCode, 
+ucurr_is_उपलब्धम्(ध्रुव UChar* iso_संहिता, 
              UDate from, 
-             UDate to, 
-             UErrorCode* errorCode);
+             UDate गन्तव्यम्, 
+             UError_संहिता* error_संहिता);
 
 /** 
  * Finds the number of valid currency codes for the
@@ -396,9 +396,9 @@ ucurr_isAvailable(const UChar* isoCode,
  * @stable ICU 4.0
  */
 U_CAPI int32_t U_EXPORT2
-ucurr_countCurrencies(const char* locale, 
+ucurr_गणनम्_Currencies(ध्रुव वर्ण* locale, 
                  UDate date, 
-                 UErrorCode* ec); 
+                 UError_संहिता* ec); 
 
 /** 
  * Finds a currency code for the given locale and date 
@@ -420,12 +420,12 @@ ucurr_countCurrencies(const char* locale,
  * @stable ICU 4.0 
  */ 
 U_CAPI int32_t U_EXPORT2 
-ucurr_forLocaleAndDate(const char* locale, 
+ucurr_forLocaleAndDate(ध्रुव वर्ण* locale, 
                 UDate date, 
-                int32_t index,
+                int32_t सूचकांक,
                 UChar* buff, 
-                int32_t buffCapacity, 
-                UErrorCode* ec); 
+                int32_t buff_क्षमता, 
+                UError_संहिता* ec); 
 
 /**
  * Given a key and a locale, returns an array of string values in a preferred
@@ -444,10 +444,10 @@ ucurr_forLocaleAndDate(const char* locale,
  * @stable ICU 4.2
  */
 U_CAPI UEnumeration* U_EXPORT2
-ucurr_getKeywordValuesForLocale(const char* key,
-                                const char* locale,
-                                UBool commonlyUsed,
-                                UErrorCode* status);
+ucurr_get_Keyword_मानानि_For_Locale(ध्रुव वर्ण* कुञ्चिका,
+                                ध्रुव वर्ण* locale,
+                                UBool commonly_प्रयुक्तम्,
+                                UError_संहिता* स्थितिः);
 
 /**
  * Returns the ISO 4217 numeric code for the currency.
@@ -459,7 +459,7 @@ ucurr_getKeywordValuesForLocale(const char* key,
  * @stable ICU 49
  */
 U_CAPI int32_t U_EXPORT2
-ucurr_getNumericCode(const UChar* currency);
+ucurr_get_Numeric_संहिता(ध्रुव UChar* currency);
 
 /**
  * The number of digits to be used when formatting
@@ -469,8 +469,8 @@ ucurr_getNumericCode(const UChar* currency);
  * @internal ICU 79 technology preview
  * @deprecated This API is for technology preview only.
  */
-#define U_CURR_DEFAULT_DIGITS 2
+#परिभाषय U_CURR_DEFAULT_DIGITS 2
 
-#endif /* #if !UCONFIG_NO_FORMATTING */
+#यदि_अन्तः /* #if !UCONFIG_NO_FORMATTING */
 
-#endif
+#यदि_अन्तः

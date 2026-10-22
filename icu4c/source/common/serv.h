@@ -7,12 +7,12 @@
  *******************************************************************************
  */
 
-#ifndef ICUSERV_H
-#define ICUSERV_H
+#यदि_अपरिभाषितम् ICUSERV_H
+#परिभाषय ICUSERV_H
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if UCONFIG_NO_SERVICE
+#यदि UCONFIG_NO_SERVICE
 
 U_NAMESPACE_BEGIN
 
@@ -22,23 +22,23 @@ U_NAMESPACE_BEGIN
  */
 class ICUService;
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#else
+#अन्यथा
 
-#include "unicode/unistr.h"
-#include "unicode/locid.h"
-#include "unicode/umisc.h"
+#अन्तर्भाव "unicode/unistr.h"
+#अन्तर्भाव "unicode/locid.h"
+#अन्तर्भाव "unicode/umisc.h"
 
-#include "hash.h"
-#include "uvector.h"
-#include "servnotf.h"
+#अन्तर्भाव "hash.h"
+#अन्तर्भाव "uvector.h"
+#अन्तर्भाव "servnotf.h"
 
 class ICUServiceTest;
 
 U_NAMESPACE_BEGIN
 
-class ICUServiceKey;
+class ICUService_कुञ्चिका;
 class ICUServiceFactory;
 class SimpleFactory;
 class ServiceListener;
@@ -69,33 +69,33 @@ class DNCache;
  * <p>The default implementation of ICUServiceKey has no fallbacks and
  * has no custom descriptors.</p> 
  */
-class U_COMMON_API ICUServiceKey : public UObject {
- private: 
-  const UnicodeString _id;
+class U_COMMON_API ICUService_कुञ्चिका : सार्वजनिक UObject {
+ गुप्त: 
+  ध्रुव UnicodeString _id;
 
- protected:
-  static const char16_t PREFIX_DELIMITER;
+ रक्षित:
+  स्थिर ध्रुव char16_t उपसर्गः_DELIMITER;
 
- public:
+ सार्वजनिक:
 
   /**
    * <p>Construct a key from an id.</p>
    *
    * @param id the ID from which to construct the key.
    */
-  ICUServiceKey(const UnicodeString& id);
+  ICUService_कुञ्चिका(ध्रुव UnicodeString& id);
 
   /**
    * <p>Virtual destructor.</p>
    */
-  virtual ~ICUServiceKey();
+  आभास ~ICUService_कुञ्चिका();
 
  /**
   * <p>Return the original ID used to construct this key.</p>
   *
   * @return the ID used to construct this key.
   */
-  virtual const UnicodeString& getID() const;
+  आभास ध्रुव UnicodeString& getID() ध्रुव;
 
  /**
   * <p>Return the canonical version of the original ID.  This implementation
@@ -104,7 +104,7 @@ class U_COMMON_API ICUServiceKey : public UObject {
   * @param result the output parameter to which the id will be appended.
   * @return the modified result.
   */
-  virtual UnicodeString& canonicalID(UnicodeString& result) const;
+  आभास UnicodeString& canonicalID(UnicodeString& परिणाम) ध्रुव;
 
  /**
   * <p>Return the (canonical) current ID.  This implementation appends
@@ -113,7 +113,7 @@ class U_COMMON_API ICUServiceKey : public UObject {
   * @param result the output parameter to which the current id will be appended.
   * @return the modified result.  
   */
-  virtual UnicodeString& currentID(UnicodeString& result) const;
+  आभास UnicodeString& currentID(UnicodeString& परिणाम) ध्रुव;
 
  /**
   * <p>Return the current descriptor.  This implementation appends
@@ -129,7 +129,7 @@ class U_COMMON_API ICUServiceKey : public UObject {
   * @param result the output parameter to which the current id will be appended.
   * @return the modified result.  
   */
-  virtual UnicodeString& currentDescriptor(UnicodeString& result) const;
+  आभास UnicodeString& currentDescriptor(UnicodeString& परिणाम) ध्रुव;
 
  /**
   * <p>If the key has a fallback, modify the key and return true,
@@ -140,7 +140,7 @@ class U_COMMON_API ICUServiceKey : public UObject {
   *
   * @return true if the ICUServiceKey changed to a valid fallback value.
   */
-  virtual UBool fallback();
+  आभास UBool fallback();
 
  /**
   * <p>Return true if a key created from id matches, or would eventually
@@ -149,7 +149,7 @@ class U_COMMON_API ICUServiceKey : public UObject {
   * @param id the id to test.
   * @return true if this ICUServiceKey's canonical ID is a fallback of id.
   */
-  virtual UBool isFallbackOf(const UnicodeString& id) const;
+  आभास UBool is_Fallback_सम्बन्धि(ध्रुव UnicodeString& id) ध्रुव;
 
  /**
   * <p>Return the prefix.  This implementation leaves result unchanged.
@@ -158,7 +158,7 @@ class U_COMMON_API ICUServiceKey : public UObject {
   * @param result the output parameter to which the prefix will be appended.
   * @return the modified result.
   */
-  virtual UnicodeString& prefix(UnicodeString& result) const;
+  आभास UnicodeString& उपसर्गः(UnicodeString& परिणाम) ध्रुव;
 
  /**
   * <p>A utility to parse the prefix out of a descriptor string.  Only
@@ -169,7 +169,7 @@ class U_COMMON_API ICUServiceKey : public UObject {
   * on exit is the prefix of that descriptor.
   * @return the modified result.
   */
-  static UnicodeString& parsePrefix(UnicodeString& result);
+  स्थिर UnicodeString& parse_उपसर्गः(UnicodeString& परिणाम);
 
   /**
   * <p>A utility to parse the suffix out of a descriptor string.  Only
@@ -180,24 +180,24 @@ class U_COMMON_API ICUServiceKey : public UObject {
   * on exit is the suffix of that descriptor.
   * @return the modified result.
   */
-  static UnicodeString& parseSuffix(UnicodeString& result);
+  स्थिर UnicodeString& parseSuffix(UnicodeString& परिणाम);
 
-public:
+सार्वजनिक:
   /**
    * UObject RTTI boilerplate.
    */
-  static UClassID U_EXPORT2 getStaticClassID();
+  स्थिर UClassID U_EXPORT2 getStaticClassID();
 
   /**
    * UObject RTTI boilerplate.
    */
-  virtual UClassID getDynamicClassID() const override;
+  आभास UClassID getDynamicClassID() ध्रुव override;
 
-#ifdef SERVICE_DEBUG
- public:
-  virtual UnicodeString& debug(UnicodeString& result) const;
-  virtual UnicodeString& debugClass(UnicodeString& result) const;
-#endif
+#यदि_परिभाषितम् SERVICE_DEBUG
+ सार्वजनिक:
+  आभास UnicodeString& debug(UnicodeString& परिणाम) ध्रुव;
+  आभास UnicodeString& debugClass(UnicodeString& परिणाम) ध्रुव;
+#यदि_अन्तः
 
 };
 
@@ -211,9 +211,9 @@ public:
   * updates id->factory mappings, and returns the display name for
   * a supported id.</p>
   */
-class U_COMMON_API ICUServiceFactory : public UObject {
- public:
-    virtual ~ICUServiceFactory();
+class U_COMMON_API ICUServiceFactory : सार्वजनिक UObject {
+ सार्वजनिक:
+    आभास ~ICUServiceFactory();
 
     /**
      * <p>Create a service object from the key, if this factory
@@ -232,7 +232,7 @@ class U_COMMON_API ICUServiceFactory : public UObject {
      * @param status the error code status.
      * @return the service object, or nullptr if the factory does not support the key.
      */
-    virtual UObject* create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const = 0;
+    आभास UObject* create(ध्रुव ICUService_कुञ्चिका& कुञ्चिका, ध्रुव ICUService* service, UError_संहिता& स्थितिः) ध्रुव = 0;
 
     /**
      * <p>Update result to reflect the IDs (not descriptors) that this
@@ -250,7 +250,7 @@ class U_COMMON_API ICUServiceFactory : public UObject {
      * @param result the mapping table to update.
      * @param status the error code status.
      */
-    virtual void updateVisibleIDs(Hashtable& result, UErrorCode& status) const = 0;
+    आभास शून्य updateVisibleIDs(Hashtable& परिणाम, UError_संहिता& स्थितिः) ध्रुव = 0;
 
     /**
      * <p>Return, in result, the display name of the id in the provided locale.
@@ -265,7 +265,7 @@ class U_COMMON_API ICUServiceFactory : public UObject {
      * @param result output parameter to hold the display name.
      * @return result.
      */
-    virtual UnicodeString& getDisplayName(const UnicodeString& id, const Locale& locale, UnicodeString& result) const = 0;
+    आभास UnicodeString& getDisplayName(ध्रुव UnicodeString& id, ध्रुव Locale& locale, UnicodeString& परिणाम) ध्रुव = 0;
 };
 
 /*
@@ -282,13 +282,13 @@ class U_COMMON_API ICUServiceFactory : public UObject {
   * for its ID if visible is false.  No localization of display
   * names is performed.</p>
   */
-class U_COMMON_API SimpleFactory : public ICUServiceFactory {
- protected:
+class U_COMMON_API SimpleFactory : सार्वजनिक ICUServiceFactory {
+ रक्षित:
   UObject* _instance;
-  const UnicodeString _id;
-  const UBool _visible;
+  ध्रुव UnicodeString _id;
+  ध्रुव UBool _visible;
 
- public:
+ सार्वजनिक:
   /**
    * <p>Construct a SimpleFactory that maps a single ID to a single 
    * service instance.  If visible is true, the ID will be visible.
@@ -299,12 +299,12 @@ class U_COMMON_API SimpleFactory : public ICUServiceFactory {
    * @param id the ID to assign to this service instance.
    * @param visible if true, the ID will be visible.
    */
-  SimpleFactory(UObject* instanceToAdopt, const UnicodeString& id, UBool visible = true);
+  SimpleFactory(UObject* instance_गन्तव्यम्_Adopt, ध्रुव UnicodeString& id, UBool visible = true);
 
   /**
    * <p>Destructor.</p>
    */
-  virtual ~SimpleFactory();
+  आभास ~SimpleFactory();
 
   /**
    * <p>This implementation returns a clone of the service instance if the factory's ID is equal to
@@ -315,7 +315,7 @@ class U_COMMON_API SimpleFactory : public ICUServiceFactory {
    * @param status the error code status.
    * @return the service object, or nullptr if the factory does not support the key.
    */
-  virtual UObject* create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const override;
+  आभास UObject* create(ध्रुव ICUService_कुञ्चिका& कुञ्चिका, ध्रुव ICUService* service, UError_संहिता& स्थितिः) ध्रुव override;
 
   /**
    * <p>This implementation adds a mapping from ID -> this to result if visible is true, 
@@ -324,7 +324,7 @@ class U_COMMON_API SimpleFactory : public ICUServiceFactory {
    * @param result the mapping table to update.
    * @param status the error code status.
    */
-  virtual void updateVisibleIDs(Hashtable& result, UErrorCode& status) const override;
+  आभास शून्य updateVisibleIDs(Hashtable& परिणाम, UError_संहिता& स्थितिः) ध्रुव override;
 
   /**
    * <p>This implementation returns the factory ID if it equals id and visible is true,
@@ -336,24 +336,24 @@ class U_COMMON_API SimpleFactory : public ICUServiceFactory {
    * @param result output parameter to hold the display name.
    * @return result.
    */
-  virtual UnicodeString& getDisplayName(const UnicodeString& id, const Locale& locale, UnicodeString& result) const override;
+  आभास UnicodeString& getDisplayName(ध्रुव UnicodeString& id, ध्रुव Locale& locale, UnicodeString& परिणाम) ध्रुव override;
 
-public:
+सार्वजनिक:
  /**
   * UObject RTTI boilerplate.
   */
-  static UClassID U_EXPORT2 getStaticClassID();
+  स्थिर UClassID U_EXPORT2 getStaticClassID();
 
  /**
   * UObject RTTI boilerplate.
   */
-  virtual UClassID getDynamicClassID() const override;
+  आभास UClassID getDynamicClassID() ध्रुव override;
 
-#ifdef SERVICE_DEBUG
- public:
-  virtual UnicodeString& debug(UnicodeString& toAppendTo) const;
-  virtual UnicodeString& debugClass(UnicodeString& toAppendTo) const;
-#endif
+#यदि_परिभाषितम् SERVICE_DEBUG
+ सार्वजनिक:
+  आभास UnicodeString& debug(UnicodeString& गन्तव्यम्_Append_गन्तव्यम्) ध्रुव;
+  आभास UnicodeString& debugClass(UnicodeString& गन्तव्यम्_Append_गन्तव्यम्) ध्रुव;
+#यदि_अन्तः
 
 };
 
@@ -368,9 +368,9 @@ public:
  * different listener interfaces that extend EventListener, and modify
  * acceptsListener and notifyListener as appropriate.</p>
  */
-class U_COMMON_API ServiceListener : public EventListener {
-public:
-    virtual ~ServiceListener();
+class U_COMMON_API ServiceListener : सार्वजनिक EventListener {
+सार्वजनिक:
+    आभास ~ServiceListener();
 
     /**
      * <p>This method is called when the service changes. At the time of the
@@ -379,18 +379,18 @@ public:
      * 
      * @param service the service that changed.
      */
-    virtual void serviceChanged(const ICUService& service) const = 0;
+    आभास शून्य service_परिवर्तितम्(ध्रुव ICUService& service) ध्रुव = 0;
     
-public:
+सार्वजनिक:
     /**
      * UObject RTTI boilerplate.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    स्थिर UClassID U_EXPORT2 getStaticClassID();
     
     /**
      * UObject RTTI boilerplate.
      */
-    virtual UClassID getDynamicClassID() const override;
+    आभास UClassID getDynamicClassID() ध्रुव override;
     
 };
 
@@ -402,17 +402,17 @@ public:
  * <p>A StringPair holds a displayName/ID pair.  ICUService uses it
  * as the array elements returned by getDisplayNames.
  */
-class U_COMMON_API StringPair : public UMemory {
-public:
+class U_COMMON_API StringPair : सार्वजनिक UMemory {
+सार्वजनिक:
   /**
    * <p>The display name of the pair.</p>
    */
-  const UnicodeString displayName;
+  ध्रुव UnicodeString displayName;
 
   /**
    * <p>The ID of the pair.</p>
    */
-  const UnicodeString id;
+  ध्रुव UnicodeString id;
 
   /**
    * <p>Creates a string pair from a displayName and an ID.</p>
@@ -422,18 +422,18 @@ public:
    * @param status the error code status.
    * @return a StringPair if the creation was successful, otherwise nullptr.
    */
-  static StringPair* create(const UnicodeString& displayName, 
-                            const UnicodeString& id,
-                            UErrorCode& status);
+  स्थिर StringPair* create(ध्रुव UnicodeString& displayName, 
+                            ध्रुव UnicodeString& id,
+                            UError_संहिता& स्थितिः);
 
   /**
    * <p>Return true if either string of the pair is bogus.</p>
    * @return true if either string of the pair is bogus.
    */
-  UBool isBogus() const;
+  UBool isBogus() ध्रुव;
 
-private:
-  StringPair(const UnicodeString& displayName, const UnicodeString& id);
+गुप्त:
+  StringPair(ध्रुव UnicodeString& displayName, ध्रुव UnicodeString& id);
 };
 
 /*******************************************************************
@@ -523,14 +523,14 @@ private:
  * strategy.  Most clients will wish to subclass it instead of
  * ICUService.</p> 
  */
-class U_COMMON_API ICUService : public ICUNotifier {
- protected: 
+class U_COMMON_API ICUService : सार्वजनिक ICUNotifier {
+ रक्षित: 
     /**
      * Name useful for debugging.
      */
-    const UnicodeString name;
+    ध्रुव UnicodeString name;
 
- private:
+ गुप्त:
 
     /**
      * Timestamp so iterators can be fail-fast.
@@ -560,7 +560,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
     /**
      * Constructor.
      */
- public:
+ सार्वजनिक:
     /**
      * <p>Construct a new ICUService.</p>
      */
@@ -571,12 +571,12 @@ class U_COMMON_API ICUService : public ICUNotifier {
      *
      * @param name a name to use in debugging.
      */
-    ICUService(const UnicodeString& name);
+    ICUService(ध्रुव UnicodeString& name);
 
     /**
      * <p>Destructor.</p>
      */
-    virtual ~ICUService();
+    आभास ~ICUService();
 
     /**
      * <p>Return the name of this service. This will be the empty string if none was assigned.
@@ -585,7 +585,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param result an output parameter to contain the name of this service.
      * @return the name of this service.
      */
-    UnicodeString& getName(UnicodeString& result) const;
+    UnicodeString& getName(UnicodeString& परिणाम) ध्रुव;
 
     /**
      * <p>Convenience override for get(ICUServiceKey&, UnicodeString*). This uses
@@ -595,7 +595,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the service instance, or nullptr.
      */
-    UObject* get(const UnicodeString& descriptor, UErrorCode& status) const;
+    UObject* get(ध्रुव UnicodeString& descriptor, UError_संहिता& स्थितिः) ध्रुव;
 
     /**
      * <p>Convenience override for get(ICUServiceKey&, UnicodeString*).  This uses
@@ -606,7 +606,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the service instance, or nullptr.
      */
-    UObject* get(const UnicodeString& descriptor, UnicodeString* actualReturn, UErrorCode& status) const;
+    UObject* get(ध्रुव UnicodeString& descriptor, UnicodeString* actualReturn, UError_संहिता& स्थितिः) ध्रुव;
 
     /**
      * <p>Convenience override for get(ICUServiceKey&, UnicodeString*).</p>
@@ -615,7 +615,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the service instance, or nullptr.
      */
-    UObject* getKey(ICUServiceKey& key, UErrorCode& status) const;
+    UObject* get_कुञ्चिका(ICUService_कुञ्चिका& कुञ्चिका, UError_संहिता& स्थितिः) ध्रुव;
 
     /**
      * <p>Given a key, return a service object, and, if actualReturn
@@ -639,7 +639,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the service instance, or nullptr.
      */
-    virtual UObject* getKey(ICUServiceKey& key, UnicodeString* actualReturn, UErrorCode& status) const;
+    आभास UObject* get_कुञ्चिका(ICUService_कुञ्चिका& कुञ्चिका, UnicodeString* actualReturn, UError_संहिता& स्थितिः) ध्रुव;
 
     /**
      * <p>This version of getKey is only called by ICUServiceFactories within the scope
@@ -653,7 +653,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the service instance, or nullptr.
      */
-    UObject* getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUServiceFactory* factory, UErrorCode& status) const;
+    UObject* get_कुञ्चिका(ICUService_कुञ्चिका& कुञ्चिका, UnicodeString* actualReturn, ध्रुव ICUServiceFactory* factory, UError_संहिता& स्थितिः) ध्रुव;
 
     /**
      * <p>Convenience override for getVisibleIDs(String) that passes null
@@ -663,7 +663,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the result vector.
      */
-    UVector& getVisibleIDs(UVector& result, UErrorCode& status) const;
+    UVector& getVisibleIDs(UVector& परिणाम, UError_संहिता& स्थितिः) ध्रुव;
 
     /**
      * <p>Return a snapshot of the visible IDs for this service.  This
@@ -685,7 +685,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the result vector.
      */
-    UVector& getVisibleIDs(UVector& result, const UnicodeString* matchID, UErrorCode& status) const;
+    UVector& getVisibleIDs(UVector& परिणाम, ध्रुव UnicodeString* मेलनम्_ID, UError_संहिता& स्थितिः) ध्रुव;
 
     /**
      * <p>Convenience override for getDisplayName(const UnicodeString&, const Locale&, UnicodeString&) that
@@ -695,7 +695,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param result an output parameter to hold the display name.
      * @return the modified result.
      */
-    UnicodeString& getDisplayName(const UnicodeString& id, UnicodeString& result) const;
+    UnicodeString& getDisplayName(ध्रुव UnicodeString& id, UnicodeString& परिणाम) ध्रुव;
 
     /**
      * <p>Given a visible ID, return the display name in the requested locale.
@@ -707,7 +707,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param locale the locale in which to localize the ID.
      * @return the modified result.
      */
-    UnicodeString& getDisplayName(const UnicodeString& id, UnicodeString& result, const Locale& locale) const;
+    UnicodeString& getDisplayName(ध्रुव UnicodeString& id, UnicodeString& परिणाम, ध्रुव Locale& locale) ध्रुव;
 
     /**
      * <p>Convenience override of getDisplayNames(const Locale&, const UnicodeString*) that 
@@ -718,7 +718,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the modified result vector.
      */
-    UVector& getDisplayNames(UVector& result, UErrorCode& status) const;
+    UVector& get_Display_नामानि(UVector& परिणाम, UError_संहिता& स्थितिः) ध्रुव;
 
     /**
      * <p>Convenience override of getDisplayNames(const Locale&, const UnicodeString*) that 
@@ -729,7 +729,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the modified result vector.
      */
-    UVector& getDisplayNames(UVector& result, const Locale& locale, UErrorCode& status) const;
+    UVector& get_Display_नामानि(UVector& परिणाम, ध्रुव Locale& locale, UError_संहिता& स्थितिः) ध्रुव;
 
     /**
      * <p>Return a snapshot of the mapping from display names to visible
@@ -754,10 +754,10 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param matchID an ID used to filter the result, or nullptr if all IDs are desired.
      * @param status the error code status.
      * @return the result vector.  */
-    UVector& getDisplayNames(UVector& result,
-                             const Locale& locale, 
-                             const UnicodeString* matchID, 
-                             UErrorCode& status) const;
+    UVector& get_Display_नामानि(UVector& परिणाम,
+                             ध्रुव Locale& locale, 
+                             ध्रुव UnicodeString* मेलनम्_ID, 
+                             UError_संहिता& स्थितिः) ध्रुव;
 
     /**
      * <p>A convenience override of registerInstance(UObject*, const UnicodeString&, UBool)
@@ -769,7 +769,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @return a registry key that can be passed to unregister to unregister
      * (and discard) this instance.
      */
-    URegistryKey registerInstance(UObject* objToAdopt, const UnicodeString& id, UErrorCode& status);
+    URegistry_कुञ्चिका पञ्जिकाकोशः_Instance(UObject* obj_गन्तव्यम्_Adopt, ध्रुव UnicodeString& id, UError_संहिता& स्थितिः);
 
     /**
      * <p>Register a service instance with the provided ID.  The ID will be 
@@ -789,7 +789,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @return a registry key that can be passed to unregister() to unregister
      * (and discard) this instance.
      */
-    virtual URegistryKey registerInstance(UObject* objToAdopt, const UnicodeString& id, UBool visible, UErrorCode& status);
+    आभास URegistry_कुञ्चिका पञ्जिकाकोशः_Instance(UObject* obj_गन्तव्यम्_Adopt, ध्रुव UnicodeString& id, UBool visible, UError_संहिता& स्थितिः);
 
     /**
      * <p>Register an ICUServiceFactory.  Returns a registry key that
@@ -807,7 +807,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @return a registry key that can be passed to unregister to unregister
      * (and discard) this factory.
      */
-    virtual URegistryKey registerFactory(ICUServiceFactory* factoryToAdopt, UErrorCode& status);
+    आभास URegistry_कुञ्चिका पञ्जिकाकोशः_Factory(ICUServiceFactory* factory_गन्तव्यम्_Adopt, UError_संहिता& स्थितिः);
 
     /**
      * <p>Unregister a factory using a registry key returned by
@@ -822,7 +822,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.  
      * @return true if the call successfully unregistered the factory.
      */
-    virtual UBool unregister(URegistryKey rkey, UErrorCode& status);
+    आभास UBool unregister(URegistry_कुञ्चिका rkey, UError_संहिता& स्थितिः);
 
     /**
      * </p>Reset the service to the default factories.  The factory
@@ -830,7 +830,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      *
      * <p>This issues a serviceChanged notification to registered listeners.</p>
      */
-    virtual void reset();
+    आभास शून्य reset();
 
     /**
      * <p>Return true if the service is in its default state.</p>
@@ -838,7 +838,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * <p>The default implementation returns true if there are no 
      * factories registered.</p>
      */
-    virtual UBool isDefault() const;
+    आभास UBool isDefault() ध्रुव;
 
     /**
      * <p>Create a key from an ID.  If ID is nullptr, returns nullptr.</p>
@@ -851,7 +851,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the ICUServiceKey corresponding to ID, or nullptr.
      */
-    virtual ICUServiceKey* createKey(const UnicodeString* id, UErrorCode& status) const;
+    आभास ICUService_कुञ्चिका* create_कुञ्चिका(ध्रुव UnicodeString* id, UError_संहिता& स्थितिः) ध्रुव;
 
     /**
      * <p>Clone object so that caller can own the copy.  In ICU2.4, UObject doesn't define
@@ -861,14 +861,14 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param instance the service instance to clone.
      * @return a clone of the passed-in instance, or nullptr if cloning was unsuccessful.
      */
-    virtual UObject* cloneInstance(UObject* instance) const = 0;
+    आभास UObject* cloneInstance(UObject* instance) ध्रुव = 0;
 
 
     /************************************************************************
      * Subclassing API
      */
 
- protected:
+ रक्षित:
 
     /**
      * <p>Create a factory that wraps a single service object.  Called by registerInstance.</p>
@@ -881,7 +881,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return an instance of ICUServiceFactory that maps this instance to the provided ID.
      */
-    virtual ICUServiceFactory* createSimpleFactory(UObject* instanceToAdopt, const UnicodeString& id, UBool visible, UErrorCode& status);
+    आभास ICUServiceFactory* createSimpleFactory(UObject* instance_गन्तव्यम्_Adopt, ध्रुव UnicodeString& id, UBool visible, UError_संहिता& स्थितिः);
 
     /**
      * <p>Reinitialize the factory list to its default state.  After this call, isDefault()
@@ -895,7 +895,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * directly, since it must only be called while holding write
      * access to the factory list.</p>
      */
-    virtual void reInitializeFactories();
+    आभास शून्य reInitializeFactories();
 
     /**
      * <p>Default handler for this service if no factory in the factory list
@@ -908,7 +908,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the service instance, or nullptr.
      */
-    virtual UObject* handleDefault(const ICUServiceKey& key, UnicodeString* actualReturn, UErrorCode& status) const;
+    आभास UObject* handleDefault(ध्रुव ICUService_कुञ्चिका& कुञ्चिका, UnicodeString* actualReturn, UError_संहिता& स्थितिः) ध्रुव;
 
     /**
      * <p>Clear caches maintained by this service.</p>
@@ -918,7 +918,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * should generally not call this method directly, as it must only
      * be called while synchronized on the factory lock.</p>
      */
-    virtual void clearCaches();
+    आभास शून्य clearCaches();
 
     /**
      * <p>Return true if the listener is accepted.</p>
@@ -930,7 +930,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param l the listener to test.
      * @return true if the service accepts the listener.
      */
-    virtual UBool acceptsListener(const EventListener& l) const override;
+    आभास UBool acceptsListener(ध्रुव EventListener& l) ध्रुव override;
 
     /**
      * <p>Notify the listener of a service change.</p>
@@ -941,7 +941,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      *
      * @param l the listener to notify.
      */
-    virtual void notifyListener(EventListener& l) const override;
+    आभास शून्य notifyListener(EventListener& l) ध्रुव override;
 
     /************************************************************************
      * Utilities for subclasses.
@@ -955,7 +955,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * the resolution of IDs also changes, requiring the cache to be
      * flushed, but not the visible IDs themselves.</p>
      */
-    void clearServiceCache();
+    शून्य clearServiceCache();
 
     /**
      * <p>Return a map from visible IDs to factories.
@@ -965,32 +965,32 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @return a Hashtable containing mappings from visible
      * IDs to factories.
      */
-    const Hashtable* getVisibleIDMap(UErrorCode& status) const;
+    ध्रुव Hashtable* getVisibleIDMap(UError_संहिता& स्थितिः) ध्रुव;
 
     /**
      * <p>Allow subclasses to read the time stamp.</p>
      *
      * @return the timestamp.
      */
-    int32_t getTimestamp() const;
+    int32_t getTimestamp() ध्रुव;
 
     /**
      * <p>Return the number of registered factories.</p>
      *
      * @return the number of factories registered at the time of the call.
      */
-    int32_t countFactories() const;
+    int32_t गणनम्_Factories() ध्रुव;
 
-private:
+गुप्त:
 
-    friend class ::ICUServiceTest; // give tests access to countFactories.
+    मित्रम् class ::ICUServiceTest; // give tests access to countFactories.
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
     /* UCONFIG_NO_SERVICE */
-#endif
+#यदि_अन्तः
 
     /* ICUSERV_H */
-#endif
+#यदि_अन्तः
 

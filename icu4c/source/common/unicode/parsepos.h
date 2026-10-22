@@ -15,14 +15,14 @@
 *******************************************************************************
 */
 
-#ifndef PARSEPOS_H
-#define PARSEPOS_H
+#यदि_अपरिभाषितम् PARSEPOS_H
+#परिभाषय PARSEPOS_H
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#अन्तर्भाव "unicode/uobject.h"
 
  
 U_NAMESPACE_BEGIN
@@ -49,16 +49,16 @@ U_NAMESPACE_BEGIN
  * @see         java.text.Format
  */
 
-class U_COMMON_API ParsePosition : public UObject {
-public:
+class U_COMMON_API ParsePosition : सार्वजनिक UObject {
+सार्वजनिक:
     /**
      * Default constructor, the index starts with 0 as default.
      * @stable ICU 2.0
      */
     ParsePosition()
         : UObject(),
-        index(0),
-        errorIndex(-1)
+        सूचकांक(0),
+        error_सूचकांक(-1)
       {}
 
     /**
@@ -66,10 +66,10 @@ public:
      * @param newIndex the new text offset.
      * @stable ICU 2.0
      */
-    ParsePosition(int32_t newIndex)
+    ParsePosition(int32_t new_सूचकांक)
         : UObject(),
-        index(newIndex),
-        errorIndex(-1)
+        सूचकांक(new_सूचकांक),
+        error_सूचकांक(-1)
       {}
 
     /**
@@ -77,37 +77,37 @@ public:
      * @param copy the object to be copied from.
      * @stable ICU 2.0
      */
-    ParsePosition(const ParsePosition& copy)
+    ParsePosition(ध्रुव ParsePosition& copy)
         : UObject(copy),
-        index(copy.index),
-        errorIndex(copy.errorIndex)
+        सूचकांक(copy.सूचकांक),
+        error_सूचकांक(copy.error_सूचकांक)
       {}
 
     /**
      * Destructor
      * @stable ICU 2.0
      */
-    virtual ~ParsePosition();
+    आभास ~ParsePosition();
 
     /**
      * Assignment operator
      * @stable ICU 2.0
      */
-    inline ParsePosition& operator=(const ParsePosition& copy) U_LIFETIME_BOUND;
+    अन्तःस्थ ParsePosition& संक्रियकः=(ध्रुव ParsePosition& copy) U_LIFETIME_BOUND;
 
     /**
      * Equality operator.
      * @return true if the two parse positions are equal, false otherwise.
      * @stable ICU 2.0
      */
-    inline bool               operator==(const ParsePosition& that) const;
+    अन्तःस्थ bool               संक्रियकः==(ध्रुव ParsePosition& that) ध्रुव;
 
     /**
      * Equality operator.
      * @return true if the two parse positions are not equal, false otherwise.
      * @stable ICU 2.0
      */
-    inline bool               operator!=(const ParsePosition& that) const;
+    अन्तःस्थ bool               संक्रियकः!=(ध्रुव ParsePosition& that) ध्रुव;
 
     /**
      * Clone this object.
@@ -120,7 +120,7 @@ public:
      * @see getDynamicClassID
      * @stable ICU 2.8
      */
-    ParsePosition *clone() const;
+    ParsePosition *clone() ध्रुव;
 
     /**
      * Retrieve the current parse position.  On input to a parse method, this
@@ -129,14 +129,14 @@ public:
      * @return the current index.
      * @stable ICU 2.0
      */
-    inline int32_t getIndex() const;
+    अन्तःस्थ int32_t get_सूचकांक() ध्रुव;
 
     /**
      * Set the current parse position.
      * @param index the new index.
      * @stable ICU 2.0
      */
-    inline void setIndex(int32_t index);
+    अन्तःस्थ शून्य समुच्चयः_सूचकांक(int32_t सूचकांक);
 
     /**
      * Set the index at which a parse error occurred.  Formatters
@@ -145,93 +145,93 @@ public:
      * set.
      * @stable ICU 2.0
      */
-    inline void setErrorIndex(int32_t ei);
+    अन्तःस्थ शून्य समुच्चयः_Error_सूचकांक(int32_t ei);
 
     /**
      * Retrieve the index at which an error occurred, or -1 if the
      * error index has not been set.
      * @stable ICU 2.0
      */
-    inline int32_t getErrorIndex() const;
+    अन्तःस्थ int32_t get_Error_सूचकांक() ध्रुव;
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      *
      * @stable ICU 2.2
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    स्थिर UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      *
      * @stable ICU 2.2
      */
-    virtual UClassID getDynamicClassID() const override;
+    आभास UClassID getDynamicClassID() ध्रुव override;
 
-private:
+गुप्त:
     /**
      * Input: the place you start parsing.
      * <br>Output: position where the parse stopped.
      * This is designed to be used serially,
      * with each call setting index up for the next one.
      */
-    int32_t index;
+    int32_t सूचकांक;
 
     /**
      * The index at which a parse error occurred.
      */
-    int32_t errorIndex;
+    int32_t error_सूचकांक;
 
 };
 
-inline ParsePosition&
-ParsePosition::operator=(const ParsePosition& copy) U_LIFETIME_BOUND
+अन्तःस्थ ParsePosition&
+ParsePosition::संक्रियकः=(ध्रुव ParsePosition& copy) U_LIFETIME_BOUND
 {
-  index = copy.index;
-  errorIndex = copy.errorIndex;
-  return *this;
+  सूचकांक = copy.सूचकांक;
+  error_सूचकांक = copy.error_सूचकांक;
+  प्रत्यागम *this;
 }
 
-inline bool
-ParsePosition::operator==(const ParsePosition& copy) const
+अन्तःस्थ bool
+ParsePosition::संक्रियकः==(ध्रुव ParsePosition& copy) ध्रुव
 {
-  if(index != copy.index || errorIndex != copy.errorIndex)
-  return false;
-  else
-  return true;
+  यदि(सूचकांक != copy.सूचकांक || error_सूचकांक != copy.error_सूचकांक)
+  प्रत्यागम false;
+  अन्यथा
+  प्रत्यागम true;
 }
 
-inline bool
-ParsePosition::operator!=(const ParsePosition& copy) const
+अन्तःस्थ bool
+ParsePosition::संक्रियकः!=(ध्रुव ParsePosition& copy) ध्रुव
 {
-  return !operator==(copy);
+  प्रत्यागम !संक्रियकः==(copy);
 }
 
-inline int32_t
-ParsePosition::getIndex() const
+अन्तःस्थ int32_t
+ParsePosition::get_सूचकांक() ध्रुव
 {
-  return index;
+  प्रत्यागम सूचकांक;
 }
 
-inline void
-ParsePosition::setIndex(int32_t offset)
+अन्तःस्थ शून्य
+ParsePosition::समुच्चयः_सूचकांक(int32_t विस्थापनम्)
 {
-  this->index = offset;
+  this->सूचकांक = विस्थापनम्;
 }
 
-inline int32_t
-ParsePosition::getErrorIndex() const
+अन्तःस्थ int32_t
+ParsePosition::get_Error_सूचकांक() ध्रुव
 {
-  return errorIndex;
+  प्रत्यागम error_सूचकांक;
 }
 
-inline void
-ParsePosition::setErrorIndex(int32_t ei)
+अन्तःस्थ शून्य
+ParsePosition::समुच्चयः_Error_सूचकांक(int32_t ei)
 {
-  this->errorIndex = ei;
+  this->error_सूचकांक = ei;
 }
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#यदि_अन्तः /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#यदि_अन्तः

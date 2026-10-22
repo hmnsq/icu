@@ -12,7 +12,7 @@
 
 
 
-#include "unicode/dtintrv.h"
+#अन्तर्भाव "unicode/dtintrv.h"
 
 
 U_NAMESPACE_BEGIN
@@ -22,42 +22,42 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(DateInterval)
 //DateInterval::DateInterval(){}
 
 
-DateInterval::DateInterval(UDate from, UDate to)
+DateInterval::DateInterval(UDate from, UDate गन्तव्यम्)
 :   fromDate(from),
-    toDate(to)
+    गन्तव्यम्_Date(गन्तव्यम्)
 {}
 
 
 DateInterval::~DateInterval(){}
 
 
-DateInterval::DateInterval(const DateInterval& other)
+DateInterval::DateInterval(ध्रुव DateInterval& other)
 : UObject(other) {
-    *this = other;
+    *एतत् = other;
 }   
 
 
 DateInterval&
-DateInterval::operator=(const DateInterval& other) U_LIFETIME_BOUND {
-    if ( this != &other ) {
+DateInterval::संक्रियकः=(ध्रुव DateInterval& other) U_LIFETIME_BOUND {
+    यदि ( एतत् != &other ) {
         fromDate = other.fromDate;
-        toDate = other.toDate;
+        गन्तव्यम्_Date = other.गन्तव्यम्_Date;
     }
-    return *this;
+    प्रत्यागम *एतत्;
 }
 
 
 DateInterval* 
-DateInterval::clone() const {
-    return new DateInterval(*this);
+DateInterval::clone() ध्रुव {
+    प्रत्यागम नूतन DateInterval(*एतत्);
 }
 
 
-bool
-DateInterval::operator==(const DateInterval& other) const { 
-    return ( fromDate == other.fromDate && toDate == other.toDate );
+तार्किक
+DateInterval::संक्रियकः==(ध्रुव DateInterval& other) ध्रुव { 
+    प्रत्यागम ( fromDate == other.fromDate && गन्तव्यम्_Date == other.गन्तव्यम्_Date );
 }
 
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 

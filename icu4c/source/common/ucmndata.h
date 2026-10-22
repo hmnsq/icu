@@ -24,40 +24,40 @@
  *                 are not intended to be used directly by applications.
  */
 
-#ifndef __UCMNDATA_H__
-#define __UCMNDATA_H__
+#यदि_अपरिभाषितम् __UCMNDATA_H__
+#परिभाषय __UCMNDATA_H__
 
-#include "unicode/udata.h"
-#include "umapfile.h"
+#अन्तर्भाव "unicode/udata.h"
+#अन्तर्भाव "umapfile.h"
 
 
-#define COMMON_DATA_NAME U_ICUDATA_NAME
+#परिभाषय COMMON_दत्त_NAME U_ICUDATA_NAME
 
-typedef struct  {
-    uint16_t    headerSize;
+प्रकारनिर्देश संरचना  {
+    uint16_t    शीर्षकम्_आकार;
     uint8_t     magic1;
     uint8_t     magic2;
-} MappedData;
+} Mapped_दत्त;
 
 
-typedef struct  {
-    MappedData  dataHeader;
+प्रकारनिर्देश संरचना  {
+    Mapped_दत्त  दत्त_शीर्षकम्_2;
     UDataInfo   info;
-} DataHeader;
+} दत्त_शीर्षकम्;
 
-typedef struct {
-    uint32_t nameOffset;
-    uint32_t dataOffset;
-} UDataOffsetTOCEntry;
+प्रकारनिर्देश संरचना {
+    uint32_t name_विस्थापनम्;
+    uint32_t दत्त_विस्थापनम्;
+} UData_विस्थापनम्_TOCEntry;
 
-typedef struct {
-    uint32_t count;
+प्रकारनिर्देश संरचना {
+    uint32_t गणनम्;
     /**
      * Variable-length array declared with length 1 to disable bounds checkers.
      * The actual array length is in the count field.
      */
-    UDataOffsetTOCEntry entry[1];
-} UDataOffsetTOC;
+    UData_विस्थापनम्_TOCEntry प्रविष्टिः[1];
+} UData_विस्थापनम्_TOC;
 
 /**
  * Get the header size from a const DataHeader *udh.
@@ -66,7 +66,7 @@ typedef struct {
  * @internal
  */
 U_CFUNC uint16_t
-udata_getHeaderSize(const DataHeader *udh);
+udata_get_शीर्षकम्_आकार(ध्रुव दत्त_शीर्षकम् *udh);
 
 /**
  * Get the UDataInfo.size from a const UDataInfo *info.
@@ -75,7 +75,7 @@ udata_getHeaderSize(const DataHeader *udh);
  * @internal
  */
 U_CFUNC uint16_t
-udata_getInfoSize(const UDataInfo *info);
+udata_get_Info_आकार(ध्रुव UDataInfo *info);
 
 U_CDECL_BEGIN
 /*
@@ -85,21 +85,21 @@ U_CDECL_BEGIN
  *          (I sure do wish this was written in C++, not C)
  */
 
-typedef const DataHeader *
-(U_CALLCONV * LookupFn)(const UDataMemory *pData,
-                        const char *tocEntryName,
-                        int32_t *pLength,
-                        UErrorCode *pErrorCode);
+प्रकारनिर्देश ध्रुव दत्त_शीर्षकम् *
+(U_CALLCONV * LookupFn)(ध्रुव UData_स्मृतिः *p_दत्त,
+                        ध्रुव वर्ण *toc_प्रविष्टिः_Name,
+                        int32_t *p_दीर्घता,
+                        UError_संहिता *p_Error_संहिता);
 
-typedef uint32_t
-(U_CALLCONV * NumEntriesFn)(const UDataMemory *pData);
+प्रकारनिर्देश uint32_t
+(U_CALLCONV * अङ्कः_Entries_Fn)(ध्रुव UData_स्मृतिः *p_दत्त);
 
-U_CDECL_END
+U_CDECL_अन्तः
 
-typedef struct {
+प्रकारनिर्देश संरचना {
     LookupFn      Lookup;
-    NumEntriesFn  NumEntries; 
-} commonDataFuncs;
+    अङ्कः_Entries_Fn  अङ्कः_Entries; 
+} common_दत्त_Funcs;
 
 
 /*
@@ -112,6 +112,6 @@ typedef struct {
  *     otherwise
  *         set an errorcode.
  */
-U_CFUNC void udata_checkCommonData(UDataMemory *pData, UErrorCode *pErrorCode);
+U_CFUNC शून्य udata_check_Common_दत्त(UData_स्मृतिः *p_दत्त, UError_संहिता *p_Error_संहिता);
 
-#endif
+#यदि_अन्तः

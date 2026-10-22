@@ -16,82 +16,82 @@
  *   created by: Ram Viswanadha
  */
 
-#ifndef SPRPIMPL_H
-#define SPRPIMPL_H
+#यदि_अपरिभाषितम् SPRPIMPL_H
+#परिभाषय SPRPIMPL_H
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#यदि !UCONFIG_NO_IDNA
 
-#include "unicode/ustring.h"
-#include "unicode/parseerr.h"
-#include "unicode/usprep.h"
-#include "unicode/udata.h"
-#include "utrie.h"
-#include "udataswp.h"
-#include "ubidi_props.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "unicode/parseerr.h"
+#अन्तर्भाव "unicode/usprep.h"
+#अन्तर्भाव "unicode/udata.h"
+#अन्तर्भाव "utrie.h"
+#अन्तर्भाव "udataswp.h"
+#अन्तर्भाव "ubidi_props.h"
 
-#define _SPREP_DATA_TYPE "spp"
+#परिभाषय SPREP_दत्त_TYPE "spp"
 
-enum UStringPrepType{
+गणना UStringPrepType{
     USPREP_UNASSIGNED           = 0x0000 ,
     USPREP_MAP                  = 0x0001 ,
     USPREP_PROHIBITED           = 0x0002 , 
     USPREP_DELETE               = 0x0003 ,
-    USPREP_TYPE_LIMIT           = 0x0004  
+    USPREP_TYPE_सीमा           = 0x0004  
 };
 
-typedef enum UStringPrepType UStringPrepType;
+प्रकारनिर्देश गणना UStringPrepType UStringPrepType;
 
-#ifdef USPREP_TYPE_NAMES_ARRAY
-static const char* usprepTypeNames[] ={
+#यदि_परिभाषितम् USPREP_TYPE_नामानि_ARRAY
+स्थिर ध्रुव वर्ण* usprep_Type_नामानि[] ={
     "UNASSIGNED" ,          
     "MAP" , 
     "PROHIBITED" ,        
     "DELETE",
     "TYPE_LIMIT" 
 };
-#endif
+#यदि_अन्तः
 
-enum{
+गणना{
     _SPREP_NORMALIZATION_ON = 0x0001,
     _SPREP_CHECK_BIDI_ON    = 0x0002
 };
 
-enum{
-    _SPREP_TYPE_THRESHOLD       = 0xFFF0,
-    _SPREP_MAX_INDEX_VALUE      = 0x3FBF,   /*16139*/ 
-    _SPREP_MAX_INDEX_TOP_LENGTH = 0x0003
+गणना{
+    SPREP_TYPE_देहली       = 0xFFF0,
+    SPREP_MAX_सूचकांक_मानम्      = 0x3FBF,   /*16139*/ 
+    SPREP_MAX_सूचकांक_शिखरम्_दीर्घता = 0x0003
 };
 
 /* indexes[] value names */
-enum {
-    _SPREP_INDEX_TRIE_SIZE                  = 0, /* number of bytes in StringPrep trie */
-    _SPREP_INDEX_MAPPING_DATA_SIZE          = 1, /* The array that contains the mapping   */
-    _SPREP_NORM_CORRECTNS_LAST_UNI_VERSION  = 2, /* The index of Unicode version of last entry in NormalizationCorrections.txt */ 
-    _SPREP_ONE_UCHAR_MAPPING_INDEX_START    = 3, /* The starting index of 1 UChar mapping index in the mapping data array */
-    _SPREP_TWO_UCHARS_MAPPING_INDEX_START   = 4, /* The starting index of 2 UChars mapping index in the mapping data array */
-    _SPREP_THREE_UCHARS_MAPPING_INDEX_START = 5, /* The starting index of 3 UChars mapping index in the mapping data array */
-    _SPREP_FOUR_UCHARS_MAPPING_INDEX_START  = 6, /* The starting index of 4 UChars mapping index in the mapping data array */
+गणना {
+    SPREP_सूचकांक_TRIE_आकार                  = 0, /* number of bytes in StringPrep trie */
+    SPREP_सूचकांक_MAPPING_दत्त_आकार          = 1, /* The array that contains the mapping   */
+    SPREP_NORM_CORRECTNS_चरमः_UNI_संस्करणम्  = 2, /* The index of Unicode version of last entry in NormalizationCorrections.txt */ 
+    SPREP_ONE_UCHAR_MAPPING_सूचकांक_START    = 3, /* The starting index of 1 UChar mapping index in the mapping data array */
+    SPREP_TWO_UCHARS_MAPPING_सूचकांक_START   = 4, /* The starting index of 2 UChars mapping index in the mapping data array */
+    SPREP_THREE_UCHARS_MAPPING_सूचकांक_START = 5, /* The starting index of 3 UChars mapping index in the mapping data array */
+    SPREP_FOUR_UCHARS_MAPPING_सूचकांक_START  = 6, /* The starting index of 4 UChars mapping index in the mapping data array */
     _SPREP_OPTIONS                          = 7, /* Bit set of options to turn on in the profile */
-    _SPREP_INDEX_TOP=16                          /* changing this requires a new formatVersion */
+    SPREP_सूचकांक_शिखरम्=16                          /* changing this requires a new formatVersion */
 };
 
-typedef struct UStringPrepKey UStringPrepKey;
+प्रकारनिर्देश संरचना UString_Prep_कुञ्चिका UString_Prep_कुञ्चिका;
 
 
-struct UStringPrepKey{
-    char* name;
-    char* path;
+संरचना UString_Prep_कुञ्चिका{
+    वर्ण* name;
+    वर्ण* मार्गः;
 };
 
-struct UStringPrepProfile{
-    int32_t indexes[_SPREP_INDEX_TOP];
+संरचना UStringPrepProfile{
+    int32_t indexes[SPREP_सूचकांक_शिखरम्];
     UTrie sprepTrie;
-    const uint16_t* mappingData;
-    UDataMemory* sprepData;
-    int32_t refCount;
-    UBool isDataLoaded;
+    ध्रुव uint16_t* mapping_दत्त;
+    UData_स्मृतिः* sprep_दत्त;
+    int32_t ref_गणनम्;
+    UBool is_दत्त_Loaded;
     UBool doNFKC;
     UBool checkBiDi;
 };
@@ -100,10 +100,10 @@ struct UStringPrepProfile{
  * Helper function for populating the UParseError struct
  * @internal
  */
-U_CAPI void U_EXPORT2
-uprv_syntaxError(const UChar* rules, 
+U_CAPI शून्य U_EXPORT2
+uprv_syntaxError(ध्रुव UChar* नियमाः, 
                  int32_t pos,
-                 int32_t rulesLen,
+                 int32_t नियमाः_Len,
                  UParseError* parseError);
 
 
@@ -112,13 +112,13 @@ uprv_syntaxError(const UChar* rules,
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-usprep_swap(const UDataSwapper *ds,
-            const void *inData, int32_t length, void *outData,
-            UErrorCode *pErrorCode);
+usprep_swap(ध्रुव UDataSwapper *ds,
+            ध्रुव शून्य *अन्तर्_दत्त, int32_t दीर्घता, शून्य *बहिर्गमनम्_दत्त,
+            UError_संहिता *p_Error_संहिता);
 
-#endif /* #if !UCONFIG_NO_IDNA */
+#यदि_अन्तः /* #if !UCONFIG_NO_IDNA */
 
-#endif
+#यदि_अन्तः
 
 /*
  * Hey, Emacs, please set the following:

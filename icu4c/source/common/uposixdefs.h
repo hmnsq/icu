@@ -17,8 +17,8 @@
 *   *Important*: #include this file before any other header files!
 */
 
-#ifndef __UPOSIXDEFS_H__
-#define __UPOSIXDEFS_H__
+#यदि_अपरिभाषितम् __UPOSIXDEFS_H__
+#परिभाषय __UPOSIXDEFS_H__
 
 /*
  * Define _XOPEN_SOURCE for access to POSIX functions.
@@ -31,9 +31,9 @@
  * no header defined by IEEE Std 1003.1-2001 shall be included prior to
  * the definition of the feature test macro."
  */
-#ifdef _XOPEN_SOURCE
+#यदि_परिभाषितम् _XOPEN_SOURCE
     /* Use the predefined value. */
-#else
+#अन्यथा
     /*
      * Version 6.0:
      * The Open Group Base Specifications Issue 6 (IEEE Std 1003.1, 2004 Edition)
@@ -45,7 +45,7 @@
      * In C++ source code (e.g., putil.cpp), __STDC_VERSION__ is not defined at all.
      */
 #   define _XOPEN_SOURCE 600
-#endif
+#यदि_अन्तः
 
 /*
  * Make sure things like realpath and such functions work.
@@ -54,9 +54,9 @@
  *
  * z/OS needs this definition for timeval and to get usleep.
  */
-#if !defined(_XOPEN_SOURCE_EXTENDED) && defined(__TOS_MVS__)
+#यदि !defined(_XOPEN_SOURCE_EXTENDED) && defined(__TOS_MVS__)
 #   define _XOPEN_SOURCE_EXTENDED 1
-#endif
+#यदि_अन्तः
 
 /**
  * Solaris says:
@@ -64,19 +64,19 @@
  *   than a c99 or later compiler."
  * Apparently C++11 is not "or later". Work around this.
  */
-#if defined(__cplusplus) && (defined(sun) || defined(__sun)) && !defined (_STDC_C99)
+#यदि defined(__cplusplus) && (defined(sun) || defined(__sun)) && !defined (_STDC_C99)
 #   define _STDC_C99
-#endif
+#यदि_अन्तः
 
-#if !defined _POSIX_C_SOURCE && \
+#यदि !defined _POSIX_C_SOURCE && \
     defined(__APPLE__) && defined(__MACH__) && !defined(__clang__)
 // Needed to prevent EOWNERDEAD issues with GCC on Mac
-#define _POSIX_C_SOURCE 200809L
-#endif
+#परिभाषय _POSIX_C_SOURCE 200809L
+#यदि_अन्तः
 
 /* Prevent _XOPEN_SOURCE from breaking build on macOS when aligned_alloc exists. */
-#if defined(__APPLE__) && !defined(_DARWIN_C_SOURCE)
+#यदि defined(__APPLE__) && !defined(_DARWIN_C_SOURCE)
 #   define _DARWIN_C_SOURCE
-#endif
+#यदि_अन्तः
 
-#endif  /* __UPOSIXDEFS_H__ */
+#यदि_अन्तः  /* __UPOSIXDEFS_H__ */

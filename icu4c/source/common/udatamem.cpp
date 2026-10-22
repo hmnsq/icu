@@ -19,49 +19,49 @@
  *
  *----------------------------------------------------------------------------------*/
 
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "unicode/udata.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "unicode/udata.h"
 
-#include "udatamem.h"
+#अन्तर्भाव "udatamem.h"
 
-U_CFUNC void UDataMemory_init(UDataMemory *This) {
-    uprv_memset(This, 0, sizeof(UDataMemory));
+U_CFUNC शून्य UData_स्मृतिः_init(UData_स्मृतिः *This) {
+    uprv_memset(This, 0, परिमाण(UData_स्मृतिः));
     This->length=-1;
 }
 
 
-U_CFUNC void UDatamemory_assign(UDataMemory *dest, UDataMemory *source) {
+U_CFUNC शून्य UDatamemory_नियोजय(UData_स्मृतिः *dest, UData_स्मृतिः *source) {
     /* UDataMemory Assignment.  Destination UDataMemory must be initialized first.  */
     UBool mallocedFlag = dest->heapAllocated;
-    uprv_memcpy(dest, source, sizeof(UDataMemory));
+    uprv_memcpy(dest, source, परिमाण(UData_स्मृतिः));
     dest->heapAllocated = mallocedFlag;
 }
 
-U_CFUNC UDataMemory *UDataMemory_createNewInstance(UErrorCode *pErr) {
-    UDataMemory *This;
+U_CFUNC UData_स्मृतिः *UData_स्मृतिः_create_New_Instance(UError_संहिता *pErr) {
+    UData_स्मृतिः *This;
 
-    if (U_FAILURE(*pErr)) {
-        return nullptr;
+    यदि (U_FAILURE(*pErr)) {
+        प्रत्यागम शून्यसूचकः;
     }
-    This = (UDataMemory *)uprv_malloc(sizeof(UDataMemory));
-    if (This == nullptr) {
-        *pErr = U_MEMORY_ALLOCATION_ERROR; }
-    else {
-        UDataMemory_init(This);
-        This->heapAllocated = true;
+    This = (UData_स्मृतिः *)uprv_malloc(परिमाण(UData_स्मृतिः));
+    यदि (This == शून्यसूचकः) {
+        *pErr = U_स्मृतिः_आवण्टनम्_ERROR; }
+    अन्यथा {
+        UData_स्मृतिः_init(This);
+        This->heapAllocated = सत्य;
     }
-    return This;
+    प्रत्यागम This;
 }
 
-U_CFUNC const DataHeader*
-UDataMemory_normalizeDataPointer(const void* p U_LIFETIME_BOUND) {
+U_CFUNC ध्रुव दत्त_शीर्षकम्*
+UData_स्मृतिः_normalize_दत्त_Pointer(ध्रुव शून्य* p U_LIFETIME_BOUND) {
     /* allow the data to be optionally prepended with an alignment-forcing double value */
-    const DataHeader *pdh = (const DataHeader *)p;
-    if(pdh==nullptr || (pdh->dataHeader.magic1==0xda && pdh->dataHeader.magic2==0x27)) {
-        return pdh;
-    } else {
-#if U_PLATFORM == U_PF_OS400
+    ध्रुव दत्त_शीर्षकम् *pdh = (ध्रुव दत्त_शीर्षकम् *)p;
+    यदि(pdh==शून्यसूचकः || (pdh->दत्त_शीर्षकम्_2.magic1==0xda && pdh->दत्त_शीर्षकम्_2.magic2==0x27)) {
+        प्रत्यागम pdh;
+    } अन्यथा {
+#यदि U_PLATFORM == U_PF_OS400
         /*
         TODO: Fix this once the compiler implements this feature. Keep in sync with genccode.c
 
@@ -74,37 +74,37 @@ UDataMemory_normalizeDataPointer(const void* p U_LIFETIME_BOUND) {
         magic numbers we must skip the initial double.
         [grhoten 4/24/2003]
         */
-        return (const DataHeader *)*((const void **)p+1);
-#else
-        return (const DataHeader *)((const double *)p+1);
-#endif
+        प्रत्यागम (ध्रुव दत्त_शीर्षकम् *)*((ध्रुव शून्य **)p+1);
+#अन्यथा
+        प्रत्यागम (ध्रुव दत्त_शीर्षकम् *)((ध्रुव द्विगुण *)p+1);
+#यदि_अन्तः
     }
 }
 
 
-U_CFUNC void UDataMemory_setData (UDataMemory *This, const void *dataAddr) {
-    This->pHeader = UDataMemory_normalizeDataPointer(dataAddr);
+U_CFUNC शून्य UData_स्मृतिः_समुच्चयः_दत्त (UData_स्मृतिः *This, ध्रुव शून्य *दत्त_Addr) {
+    This->p_शीर्षकम् = UData_स्मृतिः_normalize_दत्त_Pointer(दत्त_Addr);
 }
 
 
-U_CAPI void U_EXPORT2
-udata_close(UDataMemory *pData) {
-    if(pData!=nullptr) {
-        uprv_unmapFile(pData);
-        if(pData->heapAllocated ) {
-            uprv_free(pData);
-        } else {
-            UDataMemory_init(pData);
+U_CAPI शून्य U_EXPORT2
+udata_close(UData_स्मृतिः *p_दत्त) {
+    यदि(p_दत्त!=शून्यसूचकः) {
+        uprv_unmapFile(p_दत्त);
+        यदि(p_दत्त->heapAllocated ) {
+            uprv_free(p_दत्त);
+        } अन्यथा {
+            UData_स्मृतिः_init(p_दत्त);
         }
     }
 }
 
-U_CAPI const void* U_EXPORT2
-udata_getMemory(UDataMemory* pData U_LIFETIME_BOUND) {
-    if(pData!=nullptr && pData->pHeader!=nullptr) {
-        return (char *)(pData->pHeader)+udata_getHeaderSize(pData->pHeader);
-    } else {
-        return nullptr;
+U_CAPI ध्रुव शून्य* U_EXPORT2
+udata_get_स्मृतिः(UData_स्मृतिः* p_दत्त U_LIFETIME_BOUND) {
+    यदि(p_दत्त!=शून्यसूचकः && p_दत्त->p_शीर्षकम्!=शून्यसूचकः) {
+        प्रत्यागम (वर्ण *)(p_दत्त->p_शीर्षकम्)+udata_get_शीर्षकम्_आकार(p_दत्त->p_शीर्षकम्);
+    } अन्यथा {
+        प्रत्यागम शून्यसूचकः;
     }
 }
 
@@ -129,15 +129,15 @@ udata_getMemory(UDataMemory* pData U_LIFETIME_BOUND) {
  * @internal Currently used only in cintltst/udatatst.c
  */
 U_CAPI int32_t U_EXPORT2
-udata_getLength(const UDataMemory *pData) {
-    if(pData!=nullptr && pData->pHeader!=nullptr && pData->length>=0) {
+udata_get_दीर्घता(ध्रुव UData_स्मृतिः *p_दत्त) {
+    यदि(p_दत्त!=शून्यसूचकः && p_दत्त->p_शीर्षकम्!=शून्यसूचकः && p_दत्त->length>=0) {
         /*
          * subtract the header size,
          * return only the size of the actual data starting at udata_getMemory()
          */
-        return pData->length-udata_getHeaderSize(pData->pHeader);
-    } else {
-        return -1;
+        प्रत्यागम p_दत्त->length-udata_get_शीर्षकम्_आकार(p_दत्त->p_शीर्षकम्);
+    } अन्यथा {
+        प्रत्यागम -1;
     }
 }
 
@@ -146,15 +146,15 @@ udata_getLength(const UDataMemory *pData) {
  * Used in cintltst/udatatst.c
  * @internal
  */
-U_CAPI const void* U_EXPORT2
-udata_getRawMemory(const UDataMemory* pData U_LIFETIME_BOUND) {
-    if(pData!=nullptr && pData->pHeader!=nullptr) {
-        return pData->pHeader;
-    } else {
-        return nullptr;
+U_CAPI ध्रुव शून्य* U_EXPORT2
+udata_get_Raw_स्मृतिः(ध्रुव UData_स्मृतिः* p_दत्त U_LIFETIME_BOUND) {
+    यदि(p_दत्त!=शून्यसूचकः && p_दत्त->p_शीर्षकम्!=शून्यसूचकः) {
+        प्रत्यागम p_दत्त->p_शीर्षकम्;
+    } अन्यथा {
+        प्रत्यागम शून्यसूचकः;
     }
 }
 
-U_CFUNC UBool UDataMemory_isLoaded(const UDataMemory *This) {
-    return This->pHeader != nullptr;
+U_CFUNC UBool UData_स्मृतिः_is_Loaded(ध्रुव UData_स्मृतिः *This) {
+    प्रत्यागम This->p_शीर्षकम् != शून्यसूचकः;
 }

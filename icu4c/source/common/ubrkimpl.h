@@ -7,9 +7,9 @@
 **********************************************************************
 */
 
-#ifndef UBRKIMPL_H
-#define UBRKIMPL_H
+#यदि_अपरिभाषितम् UBRKIMPL_H
+#परिभाषय UBRKIMPL_H
 
-#define U_ICUDATA_BRKITR U_ICUDATA_NAME U_TREE_SEPARATOR_STRING "brkitr"
+#परिभाषय U_ICUDATA_BRKITR U_ICUDATA_NAME U_वृक्षः_SEPARATOR_STRING "brkitr"
 
-#endif /*UBRKIMPL_H*/
+#यदि_अन्तः /*UBRKIMPL_H*/

@@ -20,170 +20,170 @@
 *   Unicode code points (0..0x10ffff).
 */
 
-#ifdef UTRIE_DEBUG
+#यदि_परिभाषितम् UTRIE_DEBUG
 #   include <stdio.h>
-#endif
+#यदि_अन्तः
 
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "utrie.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "utrie.h"
 
 /* miscellaneous ------------------------------------------------------------ */
 
-#undef ABS
-#define ABS(x) ((x)>=0 ? (x) : -(x))
+#अपरिभाषय ABS
+#परिभाषय ABS(x) ((x)>=0 ? (x) : -(x))
 
-static inline UBool
-equal_uint32(const uint32_t *s, const uint32_t *t, int32_t length) {
-    while(length>0 && *s==*t) {
+स्थिर अन्तःस्थ UBool
+equal_uint32(ध्रुव uint32_t *s, ध्रुव uint32_t *t, int32_t length) {
+    यावत्(length>0 && *s==*t) {
         ++s;
         ++t;
         --length;
     }
-    return length == 0;
+    प्रत्यागम length == 0;
 }
 
 /* Building a trie ----------------------------------------------------------*/
 
 U_CAPI UNewTrie * U_EXPORT2
-utrie_open(UNewTrie *fillIn,
-           uint32_t *aliasData, int32_t maxDataLength,
-           uint32_t initialValue, uint32_t leadUnitValue,
-           UBool latin1Linear) {
+utrie_open(UNewTrie *fill_अन्तर्,
+           uint32_t *alias_दत्त, int32_t max_दत्त_दीर्घता,
+           uint32_t initial_मानम्, uint32_t lead_Unit_मानम्,
+           UBool latin1_रैखिकम्) {
     UNewTrie *trie;
     int32_t i, j;
 
-    if( maxDataLength<UTRIE_DATA_BLOCK_LENGTH ||
-        (latin1Linear && maxDataLength<1024)
+    यदि( max_दत्त_दीर्घता<UTRIE_दत्त_खण्डम्_दीर्घता ||
+        (latin1_रैखिकम् && max_दत्त_दीर्घता<1024)
     ) {
-        return nullptr;
+        प्रत्यागम शून्यसूचकः;
     }
 
-    if(fillIn!=nullptr) {
-        trie=fillIn;
-    } else {
-        trie=(UNewTrie *)uprv_malloc(sizeof(UNewTrie));
-        if(trie==nullptr) {
-            return nullptr;
+    यदि(fill_अन्तर्!=शून्यसूचकः) {
+        trie=fill_अन्तर्;
+    } अन्यथा {
+        trie=(UNewTrie *)uprv_malloc(परिमाण(UNewTrie));
+        यदि(trie==शून्यसूचकः) {
+            प्रत्यागम शून्यसूचकः;
         }
     }
-    uprv_memset(trie, 0, sizeof(UNewTrie));
-    trie->isAllocated = fillIn == nullptr;
+    uprv_memset(trie, 0, परिमाण(UNewTrie));
+    trie->isAllocated = fill_अन्तर् == शून्यसूचकः;
 
-    if(aliasData!=nullptr) {
-        trie->data=aliasData;
-        trie->isDataAllocated=false;
-    } else {
-        trie->data=(uint32_t *)uprv_malloc(maxDataLength*4);
-        if(trie->data==nullptr) {
+    यदि(alias_दत्त!=शून्यसूचकः) {
+        trie->दत्त=alias_दत्त;
+        trie->is_दत्त_Allocated=असत्य;
+    } अन्यथा {
+        trie->दत्त=(uint32_t *)uprv_malloc(max_दत्त_दीर्घता*4);
+        यदि(trie->दत्त==शून्यसूचकः) {
             uprv_free(trie);
-            return nullptr;
+            प्रत्यागम शून्यसूचकः;
         }
-        trie->isDataAllocated=true;
+        trie->is_दत्त_Allocated=सत्य;
     }
 
     /* preallocate and reset the first data block (block index 0) */
-    j=UTRIE_DATA_BLOCK_LENGTH;
+    j=UTRIE_दत्त_खण्डम्_दीर्घता;
 
-    if(latin1Linear) {
+    यदि(latin1_रैखिकम्) {
         /* preallocate and reset the first block (number 0) and Latin-1 (U+0000..U+00ff) after that */
         /* made sure above that maxDataLength>=1024 */
 
         /* set indexes to point to consecutive data blocks */
         i=0;
-        do {
+        कुरु {
             /* do this at least for trie->index[0] even if that block is only partly used for Latin-1 */
-            trie->index[i++]=j;
-            j+=UTRIE_DATA_BLOCK_LENGTH;
-        } while(i<(256>>UTRIE_SHIFT));
+            trie->सूचकांक[i++]=j;
+            j+=UTRIE_दत्त_खण्डम्_दीर्घता;
+        } यावत्(i<(256>>UTRIE_सरणम्));
     }
 
     /* reset the initially allocated blocks to the initial value */
-    trie->dataLength=j;
-    while(j>0) {
-        trie->data[--j]=initialValue;
+    trie->दत्त_दीर्घता=j;
+    यावत्(j>0) {
+        trie->दत्त[--j]=initial_मानम्;
     }
 
-    trie->leadUnitValue=leadUnitValue;
-    trie->indexLength=UTRIE_MAX_INDEX_LENGTH;
-    trie->dataCapacity=maxDataLength;
-    trie->isLatin1Linear=latin1Linear;
-    trie->isCompacted=false;
-    return trie;
+    trie->lead_Unit_मानम्=lead_Unit_मानम्;
+    trie->सूचकांक_दीर्घता=UTRIE_MAX_सूचकांक_दीर्घता;
+    trie->दत्त_क्षमता=max_दत्त_दीर्घता;
+    trie->is_Latin1_रैखिकम्=latin1_रैखिकम्;
+    trie->isCompacted=असत्य;
+    प्रत्यागम trie;
 }
 
 U_CAPI UNewTrie * U_EXPORT2
-utrie_clone(UNewTrie *fillIn, const UNewTrie *other, uint32_t *aliasData, int32_t aliasDataCapacity) {
+utrie_clone(UNewTrie *fill_अन्तर्, ध्रुव UNewTrie *other, uint32_t *alias_दत्त, int32_t alias_दत्त_क्षमता) {
     UNewTrie *trie;
-    UBool isDataAllocated;
+    UBool is_दत्त_Allocated;
 
     /* do not clone if other is not valid or already compacted */
-    if(other==nullptr || other->data==nullptr || other->isCompacted) {
-        return nullptr;
+    यदि(other==शून्यसूचकः || other->दत्त==शून्यसूचकः || other->isCompacted) {
+        प्रत्यागम शून्यसूचकः;
     }
 
     /* clone data */
-    if(aliasData!=nullptr && aliasDataCapacity>=other->dataCapacity) {
-        isDataAllocated=false;
-    } else {
-        aliasDataCapacity=other->dataCapacity;
-        aliasData=(uint32_t *)uprv_malloc(other->dataCapacity*4);
-        if(aliasData==nullptr) {
-            return nullptr;
+    यदि(alias_दत्त!=शून्यसूचकः && alias_दत्त_क्षमता>=other->दत्त_क्षमता) {
+        is_दत्त_Allocated=असत्य;
+    } अन्यथा {
+        alias_दत्त_क्षमता=other->दत्त_क्षमता;
+        alias_दत्त=(uint32_t *)uprv_malloc(other->दत्त_क्षमता*4);
+        यदि(alias_दत्त==शून्यसूचकः) {
+            प्रत्यागम शून्यसूचकः;
         }
-        isDataAllocated=true;
+        is_दत्त_Allocated=सत्य;
     }
 
-    trie=utrie_open(fillIn, aliasData, aliasDataCapacity,
-                    other->data[0], other->leadUnitValue,
-                    other->isLatin1Linear);
-    if(trie==nullptr) {
-        uprv_free(aliasData);
-    } else {
-        uprv_memcpy(trie->index, other->index, sizeof(trie->index));
-        uprv_memcpy(trie->data, other->data, (size_t)other->dataLength*4);
-        trie->dataLength=other->dataLength;
-        trie->isDataAllocated=isDataAllocated;
+    trie=utrie_open(fill_अन्तर्, alias_दत्त, alias_दत्त_क्षमता,
+                    other->दत्त[0], other->lead_Unit_मानम्,
+                    other->is_Latin1_रैखिकम्);
+    यदि(trie==शून्यसूचकः) {
+        uprv_free(alias_दत्त);
+    } अन्यथा {
+        uprv_memcpy(trie->सूचकांक, other->सूचकांक, परिमाण(trie->सूचकांक));
+        uprv_memcpy(trie->दत्त, other->दत्त, (size_t)other->दत्त_दीर्घता*4);
+        trie->दत्त_दीर्घता=other->दत्त_दीर्घता;
+        trie->is_दत्त_Allocated=is_दत्त_Allocated;
     }
 
-    return trie;
+    प्रत्यागम trie;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 utrie_close(UNewTrie *trie) {
-    if(trie!=nullptr) {
-        if(trie->isDataAllocated) {
-            uprv_free(trie->data);
-            trie->data=nullptr;
+    यदि(trie!=शून्यसूचकः) {
+        यदि(trie->is_दत्त_Allocated) {
+            uprv_free(trie->दत्त);
+            trie->दत्त=शून्यसूचकः;
         }
-        if(trie->isAllocated) {
+        यदि(trie->isAllocated) {
             uprv_free(trie);
         }
     }
 }
 
 U_CAPI uint32_t * U_EXPORT2
-utrie_getData(UNewTrie *trie, int32_t *pLength) {
-    if(trie==nullptr || pLength==nullptr) {
-        return nullptr;
+utrie_get_दत्त(UNewTrie *trie, int32_t *p_दीर्घता) {
+    यदि(trie==शून्यसूचकः || p_दीर्घता==शून्यसूचकः) {
+        प्रत्यागम शून्यसूचकः;
     }
 
-    *pLength=trie->dataLength;
-    return trie->data;
+    *p_दीर्घता=trie->दत्त_दीर्घता;
+    प्रत्यागम trie->दत्त;
 }
 
-static int32_t
-utrie_allocDataBlock(UNewTrie *trie) {
-    int32_t newBlock, newTop;
+स्थिर int32_t
+utrie_alloc_दत्त_खण्डम्(UNewTrie *trie) {
+    int32_t new_खण्डम्, new_शिखरम्;
 
-    newBlock=trie->dataLength;
-    newTop=newBlock+UTRIE_DATA_BLOCK_LENGTH;
-    if(newTop>trie->dataCapacity) {
+    new_खण्डम्=trie->दत्त_दीर्घता;
+    new_शिखरम्=new_खण्डम्+UTRIE_दत्त_खण्डम्_दीर्घता;
+    यदि(new_शिखरम्>trie->दत्त_क्षमता) {
         /* out of memory in the data array */
-        return -1;
+        प्रत्यागम -1;
     }
-    trie->dataLength=newTop;
-    return newBlock;
+    trie->दत्त_दीर्घता=new_शिखरम्;
+    प्रत्यागम new_खण्डम्;
 }
 
 /**
@@ -192,27 +192,27 @@ utrie_allocDataBlock(UNewTrie *trie) {
  * @return -1 if no new data block available (out of memory in data array)
  * @internal
  */
-static int32_t
-utrie_getDataBlock(UNewTrie *trie, UChar32 c) {
-    int32_t indexValue, newBlock;
+स्थिर int32_t
+utrie_get_दत्त_खण्डम्(UNewTrie *trie, UChar32 c) {
+    int32_t सूचकांक_मानम्, new_खण्डम्;
 
-    c>>=UTRIE_SHIFT;
-    indexValue=trie->index[c];
-    if(indexValue>0) {
-        return indexValue;
+    c>>=UTRIE_सरणम्;
+    सूचकांक_मानम्=trie->सूचकांक[c];
+    यदि(सूचकांक_मानम्>0) {
+        प्रत्यागम सूचकांक_मानम्;
     }
 
     /* allocate a new data block */
-    newBlock=utrie_allocDataBlock(trie);
-    if(newBlock<0) {
+    new_खण्डम्=utrie_alloc_दत्त_खण्डम्(trie);
+    यदि(new_खण्डम्<0) {
         /* out of memory in the data array */
-        return -1;
+        प्रत्यागम -1;
     }
-    trie->index[c]=newBlock;
+    trie->सूचकांक[c]=new_खण्डम्;
 
     /* copy-on-write for a block from a setRange() */
-    uprv_memcpy(trie->data+newBlock, trie->data-indexValue, 4*UTRIE_DATA_BLOCK_LENGTH);
-    return newBlock;
+    uprv_memcpy(trie->दत्त+new_खण्डम्, trie->दत्त-सूचकांक_मानम्, 4*UTRIE_दत्त_खण्डम्_दीर्घता);
+    प्रत्यागम new_खण्डम्;
 }
 
 /**
@@ -220,175 +220,175 @@ utrie_getDataBlock(UNewTrie *trie, UChar32 c) {
  */
 U_CAPI UBool U_EXPORT2
 utrie_set32(UNewTrie *trie, UChar32 c, uint32_t value) {
-    int32_t block;
+    int32_t खण्डम्;
 
     /* valid, uncompacted trie and valid c? */
-    if(trie==nullptr || trie->isCompacted || (uint32_t)c>0x10ffff) {
-        return false;
+    यदि(trie==शून्यसूचकः || trie->isCompacted || (uint32_t)c>0x10ffff) {
+        प्रत्यागम असत्य;
     }
 
-    block=utrie_getDataBlock(trie, c);
-    if(block<0) {
-        return false;
+    खण्डम्=utrie_get_दत्त_खण्डम्(trie, c);
+    यदि(खण्डम्<0) {
+        प्रत्यागम असत्य;
     }
 
-    trie->data[block+(c&UTRIE_MASK)]=value;
-    return true;
+    trie->दत्त[खण्डम्+(c&UTRIE_आवरणम्)]=value;
+    प्रत्यागम सत्य;
 }
 
 U_CAPI uint32_t U_EXPORT2
-utrie_get32(UNewTrie *trie, UChar32 c, UBool *pInBlockZero) {
-    int32_t block;
+utrie_get32(UNewTrie *trie, UChar32 c, UBool *p_अन्तर्_खण्डम्_Zero) {
+    int32_t खण्डम्;
 
     /* valid, uncompacted trie and valid c? */
-    if(trie==nullptr || trie->isCompacted || (uint32_t)c>0x10ffff) {
-        if(pInBlockZero!=nullptr) {
-            *pInBlockZero=true;
+    यदि(trie==शून्यसूचकः || trie->isCompacted || (uint32_t)c>0x10ffff) {
+        यदि(p_अन्तर्_खण्डम्_Zero!=शून्यसूचकः) {
+            *p_अन्तर्_खण्डम्_Zero=सत्य;
         }
-        return 0;
+        प्रत्यागम 0;
     }
 
-    block=trie->index[c>>UTRIE_SHIFT];
-    if(pInBlockZero!=nullptr) {
-        *pInBlockZero = block == 0;
+    खण्डम्=trie->सूचकांक[c>>UTRIE_सरणम्];
+    यदि(p_अन्तर्_खण्डम्_Zero!=शून्यसूचकः) {
+        *p_अन्तर्_खण्डम्_Zero = खण्डम् == 0;
     }
 
-    return trie->data[ABS(block)+(c&UTRIE_MASK)];
+    प्रत्यागम trie->दत्त[ABS(खण्डम्)+(c&UTRIE_आवरणम्)];
 }
 
 /**
  * @internal
  */
-static void
-utrie_fillBlock(uint32_t *block, UChar32 start, UChar32 limit,
-                uint32_t value, uint32_t initialValue, UBool overwrite) {
-    uint32_t *pLimit;
+स्थिर शून्य
+utrie_fill_खण्डम्(uint32_t *खण्डम्, UChar32 start, UChar32 सीमा,
+                uint32_t value, uint32_t initial_मानम्, UBool overwrite) {
+    uint32_t *p_सीमा;
 
-    pLimit=block+limit;
-    block+=start;
-    if(overwrite) {
-        while(block<pLimit) {
-            *block++=value;
+    p_सीमा=खण्डम्+सीमा;
+    खण्डम्+=start;
+    यदि(overwrite) {
+        यावत्(खण्डम्<p_सीमा) {
+            *खण्डम्++=value;
         }
-    } else {
-        while(block<pLimit) {
-            if(*block==initialValue) {
-                *block=value;
+    } अन्यथा {
+        यावत्(खण्डम्<p_सीमा) {
+            यदि(*खण्डम्==initial_मानम्) {
+                *खण्डम्=value;
             }
-            ++block;
+            ++खण्डम्;
         }
     }
 }
 
 U_CAPI UBool U_EXPORT2
-utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t value, UBool overwrite) {
+utrie_समुच्चयः_Range32(UNewTrie *trie, UChar32 start, UChar32 सीमा, uint32_t value, UBool overwrite) {
     /*
      * repeat value in [start..limit[
      * mark index values for repeat-data blocks by setting bit 31 of the index values
      * fill around existing values if any, if(overwrite)
      */
-    uint32_t initialValue;
-    int32_t block, rest, repeatBlock;
+    uint32_t initial_मानम्;
+    int32_t खण्डम्, rest, repeat_खण्डम्;
 
     /* valid, uncompacted trie and valid indexes? */
-    if( trie==nullptr || trie->isCompacted ||
-        (uint32_t)start>0x10ffff || (uint32_t)limit>0x110000 || start>limit
+    यदि( trie==शून्यसूचकः || trie->isCompacted ||
+        (uint32_t)start>0x10ffff || (uint32_t)सीमा>0x110000 || start>सीमा
     ) {
-        return false;
+        प्रत्यागम असत्य;
     }
-    if(start==limit) {
-        return true; /* nothing to do */
+    यदि(start==सीमा) {
+        प्रत्यागम सत्य; /* nothing to do */
     }
 
-    initialValue=trie->data[0];
-    if(start&UTRIE_MASK) {
-        UChar32 nextStart;
+    initial_मानम्=trie->दत्त[0];
+    यदि(start&UTRIE_आवरणम्) {
+        UChar32 अग्र_Start;
 
         /* set partial block at [start..following block boundary[ */
-        block=utrie_getDataBlock(trie, start);
-        if(block<0) {
-            return false;
+        खण्डम्=utrie_get_दत्त_खण्डम्(trie, start);
+        यदि(खण्डम्<0) {
+            प्रत्यागम असत्य;
         }
 
-        nextStart=(start+UTRIE_DATA_BLOCK_LENGTH)&~UTRIE_MASK;
-        if(nextStart<=limit) {
-            utrie_fillBlock(trie->data+block, start&UTRIE_MASK, UTRIE_DATA_BLOCK_LENGTH,
-                            value, initialValue, overwrite);
-            start=nextStart;
-        } else {
-            utrie_fillBlock(trie->data+block, start&UTRIE_MASK, limit&UTRIE_MASK,
-                            value, initialValue, overwrite);
-            return true;
+        अग्र_Start=(start+UTRIE_दत्त_खण्डम्_दीर्घता)&~UTRIE_आवरणम्;
+        यदि(अग्र_Start<=सीमा) {
+            utrie_fill_खण्डम्(trie->दत्त+खण्डम्, start&UTRIE_आवरणम्, UTRIE_दत्त_खण्डम्_दीर्घता,
+                            value, initial_मानम्, overwrite);
+            start=अग्र_Start;
+        } अन्यथा {
+            utrie_fill_खण्डम्(trie->दत्त+खण्डम्, start&UTRIE_आवरणम्, सीमा&UTRIE_आवरणम्,
+                            value, initial_मानम्, overwrite);
+            प्रत्यागम सत्य;
         }
     }
 
     /* number of positions in the last, partial block */
-    rest=limit&UTRIE_MASK;
+    rest=सीमा&UTRIE_आवरणम्;
 
     /* round down limit to a block boundary */
-    limit&=~UTRIE_MASK;
+    सीमा&=~UTRIE_आवरणम्;
 
     /* iterate over all-value blocks */
-    if(value==initialValue) {
-        repeatBlock=0;
-    } else {
-        repeatBlock=-1;
+    यदि(value==initial_मानम्) {
+        repeat_खण्डम्=0;
+    } अन्यथा {
+        repeat_खण्डम्=-1;
     }
-    while(start<limit) {
+    यावत्(start<सीमा) {
         /* get index value */
-        block=trie->index[start>>UTRIE_SHIFT];
-        if(block>0) {
+        खण्डम्=trie->सूचकांक[start>>UTRIE_सरणम्];
+        यदि(खण्डम्>0) {
             /* already allocated, fill in value */
-            utrie_fillBlock(trie->data+block, 0, UTRIE_DATA_BLOCK_LENGTH, value, initialValue, overwrite);
-        } else if(trie->data[-block]!=value && (block==0 || overwrite)) {
+            utrie_fill_खण्डम्(trie->दत्त+खण्डम्, 0, UTRIE_दत्त_खण्डम्_दीर्घता, value, initial_मानम्, overwrite);
+        } अन्यथा यदि(trie->दत्त[-खण्डम्]!=value && (खण्डम्==0 || overwrite)) {
             /* set the repeatBlock instead of the current block 0 or range block */
-            if(repeatBlock>=0) {
-                trie->index[start>>UTRIE_SHIFT]=-repeatBlock;
-            } else {
+            यदि(repeat_खण्डम्>=0) {
+                trie->सूचकांक[start>>UTRIE_सरणम्]=-repeat_खण्डम्;
+            } अन्यथा {
                 /* create and set and fill the repeatBlock */
-                repeatBlock=utrie_getDataBlock(trie, start);
-                if(repeatBlock<0) {
-                    return false;
+                repeat_खण्डम्=utrie_get_दत्त_खण्डम्(trie, start);
+                यदि(repeat_खण्डम्<0) {
+                    प्रत्यागम असत्य;
                 }
 
                 /* set the negative block number to indicate that it is a repeat block */
-                trie->index[start>>UTRIE_SHIFT]=-repeatBlock;
-                utrie_fillBlock(trie->data+repeatBlock, 0, UTRIE_DATA_BLOCK_LENGTH, value, initialValue, true);
+                trie->सूचकांक[start>>UTRIE_सरणम्]=-repeat_खण्डम्;
+                utrie_fill_खण्डम्(trie->दत्त+repeat_खण्डम्, 0, UTRIE_दत्त_खण्डम्_दीर्घता, value, initial_मानम्, सत्य);
             }
         }
 
-        start+=UTRIE_DATA_BLOCK_LENGTH;
+        start+=UTRIE_दत्त_खण्डम्_दीर्घता;
     }
 
-    if(rest>0) {
+    यदि(rest>0) {
         /* set partial block at [last block boundary..limit[ */
-        block=utrie_getDataBlock(trie, start);
-        if(block<0) {
-            return false;
+        खण्डम्=utrie_get_दत्त_खण्डम्(trie, start);
+        यदि(खण्डम्<0) {
+            प्रत्यागम असत्य;
         }
 
-        utrie_fillBlock(trie->data+block, 0, rest, value, initialValue, overwrite);
+        utrie_fill_खण्डम्(trie->दत्त+खण्डम्, 0, rest, value, initial_मानम्, overwrite);
     }
 
-    return true;
+    प्रत्यागम सत्य;
 }
 
-static int32_t
-_findSameIndexBlock(const int32_t *idx, int32_t indexLength,
-                    int32_t otherBlock) {
-    int32_t block, i;
+स्थिर int32_t
+find_Same_सूचकांक_खण्डम्(ध्रुव int32_t *idx, int32_t सूचकांक_दीर्घता,
+                    int32_t other_खण्डम्) {
+    int32_t खण्डम्, i;
 
-    for(block=UTRIE_BMP_INDEX_LENGTH; block<indexLength; block+=UTRIE_SURROGATE_BLOCK_COUNT) {
-        for(i=0; i<UTRIE_SURROGATE_BLOCK_COUNT; ++i) {
-            if(idx[block+i]!=idx[otherBlock+i]) {
-                break;
+    प्रति(खण्डम्=UTRIE_BMP_सूचकांक_दीर्घता; खण्डम्<सूचकांक_दीर्घता; खण्डम्+=UTRIE_SURROGATE_खण्डम्_गणनम्) {
+        प्रति(i=0; i<UTRIE_SURROGATE_खण्डम्_गणनम्; ++i) {
+            यदि(idx[खण्डम्+i]!=idx[other_खण्डम्+i]) {
+                भङ्ग;
             }
         }
-        if(i==UTRIE_SURROGATE_BLOCK_COUNT) {
-            return block;
+        यदि(i==UTRIE_SURROGATE_खण्डम्_गणनम्) {
+            प्रत्यागम खण्डम्;
         }
     }
-    return indexLength;
+    प्रत्यागम सूचकांक_दीर्घता;
 }
 
 /*
@@ -401,21 +401,21 @@ _findSameIndexBlock(const int32_t *idx, int32_t indexLength,
  * to just after the BMP area, where they can be retrieved for
  * code point lookups.
  */
-static void
-utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *pErrorCode) {
-    int32_t leadIndexes[UTRIE_SURROGATE_BLOCK_COUNT];
+स्थिर शून्य
+utrie_fold(UNewTrie *trie, UNew_Trie_Get_Folded_मानम् *get_Folded_मानम्, UError_संहिता *p_Error_संहिता) {
+    int32_t leadIndexes[UTRIE_SURROGATE_खण्डम्_गणनम्];
     int32_t *idx;
     uint32_t value;
     UChar32 c;
-    int32_t indexLength, block;
-#ifdef UTRIE_DEBUG
-    int countLeadCUWithData=0;
-#endif
+    int32_t सूचकांक_दीर्घता, खण्डम्;
+#यदि_परिभाषितम् UTRIE_DEBUG
+    पूर्णाङ्क गणनम्_Lead_CUWith_दत्त=0;
+#यदि_अन्तः
 
-    idx=trie->index;
+    idx=trie->सूचकांक;
 
     /* copy the lead surrogate indexes into a temporary array */
-    uprv_memcpy(leadIndexes, idx+(0xd800>>UTRIE_SHIFT), 4*UTRIE_SURROGATE_BLOCK_COUNT);
+    uprv_memcpy(leadIndexes, idx+(0xd800>>UTRIE_सरणम्), 4*UTRIE_SURROGATE_खण्डम्_गणनम्);
 
     /*
      * set all values for lead surrogate code *units* to leadUnitValue
@@ -427,21 +427,21 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
      * the above saved the indexes for surrogate code *points*
      * fill the indexes with simplified code from utrie_setRange32()
      */
-    if(trie->leadUnitValue==trie->data[0]) {
-        block=0; /* leadUnitValue==initialValue, use all-initial-value block */
-    } else {
+    यदि(trie->lead_Unit_मानम्==trie->दत्त[0]) {
+        खण्डम्=0; /* leadUnitValue==initialValue, use all-initial-value block */
+    } अन्यथा {
         /* create and fill the repeatBlock */
-        block=utrie_allocDataBlock(trie);
-        if(block<0) {
+        खण्डम्=utrie_alloc_दत्त_खण्डम्(trie);
+        यदि(खण्डम्<0) {
             /* data table overflow */
-            *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            *p_Error_संहिता=U_स्मृतिः_आवण्टनम्_ERROR;
+            प्रत्यागम;
         }
-        utrie_fillBlock(trie->data+block, 0, UTRIE_DATA_BLOCK_LENGTH, trie->leadUnitValue, trie->data[0], true);
-        block=-block; /* negative block number to indicate that it is a repeat block */
+        utrie_fill_खण्डम्(trie->दत्त+खण्डम्, 0, UTRIE_दत्त_खण्डम्_दीर्घता, trie->lead_Unit_मानम्, trie->दत्त[0], सत्य);
+        खण्डम्=-खण्डम्; /* negative block number to indicate that it is a repeat block */
     }
-    for(c=(0xd800>>UTRIE_SHIFT); c<(0xdc00>>UTRIE_SHIFT); ++c) {
-        trie->index[c]=block;
+    प्रति(c=(0xd800>>UTRIE_सरणम्); c<(0xdc00>>UTRIE_सरणम्); ++c) {
+        trie->सूचकांक[c]=खण्डम्;
     }
 
     /*
@@ -451,54 +451,54 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
      * Later all folded index blocks are moved up one to insert the copied
      * lead surrogate indexes.
      */
-    indexLength=UTRIE_BMP_INDEX_LENGTH;
+    सूचकांक_दीर्घता=UTRIE_BMP_सूचकांक_दीर्घता;
 
     /* search for any index (stage 1) entries for supplementary code points */
-    for(c=0x10000; c<0x110000;) {
-        if(idx[c>>UTRIE_SHIFT]!=0) {
+    प्रति(c=0x10000; c<0x110000;) {
+        यदि(idx[c>>UTRIE_सरणम्]!=0) {
             /* there is data, treat the full block for a lead surrogate */
             c&=~0x3ff;
 
-#ifdef UTRIE_DEBUG
-            ++countLeadCUWithData;
+#यदि_परिभाषितम् UTRIE_DEBUG
+            ++गणनम्_Lead_CUWith_दत्त;
             /* printf("supplementary data for lead surrogate U+%04lx\n", (long)(0xd7c0+(c>>10))); */
-#endif
+#यदि_अन्तः
 
             /* is there an identical index block? */
-            block=_findSameIndexBlock(idx, indexLength, c>>UTRIE_SHIFT);
+            खण्डम्=find_Same_सूचकांक_खण्डम्(idx, सूचकांक_दीर्घता, c>>UTRIE_सरणम्);
 
             /*
              * get a folded value for [c..c+0x400[ and,
              * if different from the value for the lead surrogate code point,
              * set it for the lead surrogate code unit
              */
-            value=getFoldedValue(trie, c, block+UTRIE_SURROGATE_BLOCK_COUNT);
-            if(value!=utrie_get32(trie, U16_LEAD(c), nullptr)) {
-                if(!utrie_set32(trie, U16_LEAD(c), value)) {
+            value=get_Folded_मानम्(trie, c, खण्डम्+UTRIE_SURROGATE_खण्डम्_गणनम्);
+            यदि(value!=utrie_get32(trie, U16_LEAD(c), शून्यसूचकः)) {
+                यदि(!utrie_set32(trie, U16_LEAD(c), value)) {
                     /* data table overflow */
-                    *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                    return;
+                    *p_Error_संहिता=U_स्मृतिः_आवण्टनम्_ERROR;
+                    प्रत्यागम;
                 }
 
                 /* if we did not find an identical index block... */
-                if(block==indexLength) {
+                यदि(खण्डम्==सूचकांक_दीर्घता) {
                     /* move the actual index (stage 1) entries from the supplementary position to the new one */
-                    uprv_memmove(idx+indexLength,
-                                 idx+(c>>UTRIE_SHIFT),
-                                 4*UTRIE_SURROGATE_BLOCK_COUNT);
-                    indexLength+=UTRIE_SURROGATE_BLOCK_COUNT;
+                    uprv_memmove(idx+सूचकांक_दीर्घता,
+                                 idx+(c>>UTRIE_सरणम्),
+                                 4*UTRIE_SURROGATE_खण्डम्_गणनम्);
+                    सूचकांक_दीर्घता+=UTRIE_SURROGATE_खण्डम्_गणनम्;
                 }
             }
             c+=0x400;
-        } else {
-            c+=UTRIE_DATA_BLOCK_LENGTH;
+        } अन्यथा {
+            c+=UTRIE_दत्त_खण्डम्_दीर्घता;
         }
     }
-#ifdef UTRIE_DEBUG
-    if(countLeadCUWithData>0) {
-        printf("supplementary data for %d lead surrogates\n", countLeadCUWithData);
+#यदि_परिभाषितम् UTRIE_DEBUG
+    यदि(गणनम्_Lead_CUWith_दत्त>0) {
+        प्रारूप_लिख("supplementary data for %d lead surrogates\n", गणनम्_Lead_CUWith_दत्त);
     }
-#endif
+#यदि_अन्तः
 
     /*
      * index array overflow?
@@ -509,29 +509,29 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
      * In fact, it can only ever become n==1024 with completely unfoldable data and
      * the additional block of duplicated values for lead surrogates.
      */
-    if(indexLength>=UTRIE_MAX_INDEX_LENGTH) {
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+    यदि(सूचकांक_दीर्घता>=UTRIE_MAX_सूचकांक_दीर्घता) {
+        *p_Error_संहिता=U_सूचकांक_OUTOFBOUNDS_ERROR;
+        प्रत्यागम;
     }
 
     /*
      * make space for the lead surrogate index block and
      * insert it between the BMP indexes and the folded ones
      */
-    uprv_memmove(idx+UTRIE_BMP_INDEX_LENGTH+UTRIE_SURROGATE_BLOCK_COUNT,
-                 idx+UTRIE_BMP_INDEX_LENGTH,
-                 4*(indexLength-UTRIE_BMP_INDEX_LENGTH));
-    uprv_memcpy(idx+UTRIE_BMP_INDEX_LENGTH,
+    uprv_memmove(idx+UTRIE_BMP_सूचकांक_दीर्घता+UTRIE_SURROGATE_खण्डम्_गणनम्,
+                 idx+UTRIE_BMP_सूचकांक_दीर्घता,
+                 4*(सूचकांक_दीर्घता-UTRIE_BMP_सूचकांक_दीर्घता));
+    uprv_memcpy(idx+UTRIE_BMP_सूचकांक_दीर्घता,
                 leadIndexes,
-                4*UTRIE_SURROGATE_BLOCK_COUNT);
-    indexLength+=UTRIE_SURROGATE_BLOCK_COUNT;
+                4*UTRIE_SURROGATE_खण्डम्_गणनम्);
+    सूचकांक_दीर्घता+=UTRIE_SURROGATE_खण्डम्_गणनम्;
 
-#ifdef UTRIE_DEBUG
-    printf("trie index count: BMP %ld  all Unicode %ld  folded %ld\n",
-           UTRIE_BMP_INDEX_LENGTH, (long)UTRIE_MAX_INDEX_LENGTH, indexLength);
-#endif
+#यदि_परिभाषितम् UTRIE_DEBUG
+    प्रारूप_लिख("trie index count: BMP %ld  all Unicode %ld  folded %ld\n",
+           UTRIE_BMP_सूचकांक_दीर्घता, (दीर्घ)UTRIE_MAX_सूचकांक_दीर्घता, सूचकांक_दीर्घता);
+#यदि_अन्तः
 
-    trie->indexLength=indexLength;
+    trie->सूचकांक_दीर्घता=सूचकांक_दीर्घता;
 }
 
 /*
@@ -542,36 +542,36 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
  * - 0 if it is used
  * - -1 if it is not used
  */
-static void
-_findUnusedBlocks(UNewTrie *trie) {
+स्थिर शून्य
+find_अप्रयुक्तम्_खण्डानि(UNewTrie *trie) {
     int32_t i;
 
     /* fill the entire map with "not used" */
-    uprv_memset(trie->map, 0xff, (UTRIE_MAX_BUILD_TIME_DATA_LENGTH>>UTRIE_SHIFT)*4);
+    uprv_memset(trie->map, 0xff, (UTRIE_MAX_BUILD_TIME_दत्त_दीर्घता>>UTRIE_सरणम्)*4);
 
     /* mark each block that _is_ used with 0 */
-    for(i=0; i<trie->indexLength; ++i) {
-        trie->map[ABS(trie->index[i])>>UTRIE_SHIFT]=0;
+    प्रति(i=0; i<trie->सूचकांक_दीर्घता; ++i) {
+        trie->map[ABS(trie->सूचकांक[i])>>UTRIE_सरणम्]=0;
     }
 
     /* never move the all-initial-value block 0 */
     trie->map[0]=0;
 }
 
-static int32_t
-_findSameDataBlock(const uint32_t *data, int32_t dataLength,
-                   int32_t otherBlock, int32_t step) {
-    int32_t block;
+स्थिर int32_t
+find_Same_दत्त_खण्डम्(ध्रुव uint32_t *दत्त, int32_t दत्त_दीर्घता,
+                   int32_t other_खण्डम्, int32_t चरणः) {
+    int32_t खण्डम्;
 
     /* ensure that we do not even partially get past dataLength */
-    dataLength-=UTRIE_DATA_BLOCK_LENGTH;
+    दत्त_दीर्घता-=UTRIE_दत्त_खण्डम्_दीर्घता;
 
-    for(block=0; block<=dataLength; block+=step) {
-        if(equal_uint32(data+block, data+otherBlock, UTRIE_DATA_BLOCK_LENGTH)) {
-            return block;
+    प्रति(खण्डम्=0; खण्डम्<=दत्त_दीर्घता; खण्डम्+=चरणः) {
+        यदि(equal_uint32(दत्त+खण्डम्, दत्त+other_खण्डम्, UTRIE_दत्त_खण्डम्_दीर्घता)) {
+            प्रत्यागम खण्डम्;
         }
     }
-    return -1;
+    प्रत्यागम -1;
 }
 
 /*
@@ -586,37 +586,37 @@ _findSameDataBlock(const uint32_t *data, int32_t dataLength,
  * It does not
  * - try to move and overlap blocks that are not already adjacent
  */
-static void
-utrie_compact(UNewTrie *trie, UBool overlap, UErrorCode *pErrorCode) {
+स्थिर शून्य
+utrie_compact(UNewTrie *trie, UBool overlap, UError_संहिता *p_Error_संहिता) {
     int32_t i, start, newStart, overlapStart;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    यदि(p_Error_संहिता==शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम;
     }
 
     /* valid, uncompacted trie? */
-    if(trie==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    यदि(trie==शून्यसूचकः) {
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
-    if(trie->isCompacted) {
-        return; /* nothing left to do */
+    यदि(trie->isCompacted) {
+        प्रत्यागम; /* nothing left to do */
     }
 
     /* compaction */
 
     /* initialize the index map with "block is used/unused" flags */
-    _findUnusedBlocks(trie);
+    find_अप्रयुक्तम्_खण्डानि(trie);
 
     /* if Latin-1 is preallocated and linear, then do not compact Latin-1 data */
-    if(trie->isLatin1Linear && UTRIE_SHIFT<=8) {
-        overlapStart=UTRIE_DATA_BLOCK_LENGTH+256;
-    } else {
-        overlapStart=UTRIE_DATA_BLOCK_LENGTH;
+    यदि(trie->is_Latin1_रैखिकम् && UTRIE_सरणम्<=8) {
+        overlapStart=UTRIE_दत्त_खण्डम्_दीर्घता+256;
+    } अन्यथा {
+        overlapStart=UTRIE_दत्त_खण्डम्_दीर्घता;
     }
 
-    newStart=UTRIE_DATA_BLOCK_LENGTH;
-    for(start=newStart; start<trie->dataLength;) {
+    newStart=UTRIE_दत्त_खण्डम्_दीर्घता;
+    प्रति(start=newStart; start<trie->दत्त_दीर्घता;) {
         /*
          * start: index of first entry of current block
          * newStart: index where the current block is to be moved
@@ -624,74 +624,74 @@ utrie_compact(UNewTrie *trie, UBool overlap, UErrorCode *pErrorCode) {
          */
 
         /* skip blocks that are not used */
-        if(trie->map[start>>UTRIE_SHIFT]<0) {
+        यदि(trie->map[start>>UTRIE_सरणम्]<0) {
             /* advance start to the next block */
-            start+=UTRIE_DATA_BLOCK_LENGTH;
+            start+=UTRIE_दत्त_खण्डम्_दीर्घता;
 
             /* leave newStart with the previous block! */
-            continue;
+            अनुवर्त;
         }
 
         /* search for an identical block */
-        if( start>=overlapStart &&
-            (i=_findSameDataBlock(trie->data, newStart, start,
-                            overlap ? UTRIE_DATA_GRANULARITY : UTRIE_DATA_BLOCK_LENGTH))
+        यदि( start>=overlapStart &&
+            (i=find_Same_दत्त_खण्डम्(trie->दत्त, newStart, start,
+                            overlap ? UTRIE_दत्त_GRANULARITY : UTRIE_दत्त_खण्डम्_दीर्घता))
              >=0
         ) {
             /* found an identical block, set the other block's index value for the current block */
-            trie->map[start>>UTRIE_SHIFT]=i;
+            trie->map[start>>UTRIE_सरणम्]=i;
 
             /* advance start to the next block */
-            start+=UTRIE_DATA_BLOCK_LENGTH;
+            start+=UTRIE_दत्त_खण्डम्_दीर्घता;
 
             /* leave newStart with the previous block! */
-            continue;
+            अनुवर्त;
         }
 
         /* see if the beginning of this block can be overlapped with the end of the previous block */
-        if(overlap && start>=overlapStart) {
+        यदि(overlap && start>=overlapStart) {
             /* look for maximum overlap (modulo granularity) with the previous, adjacent block */
-            for(i=UTRIE_DATA_BLOCK_LENGTH-UTRIE_DATA_GRANULARITY;
-                i>0 && !equal_uint32(trie->data+(newStart-i), trie->data+start, i);
-                i-=UTRIE_DATA_GRANULARITY) {}
-        } else {
+            प्रति(i=UTRIE_दत्त_खण्डम्_दीर्घता-UTRIE_दत्त_GRANULARITY;
+                i>0 && !equal_uint32(trie->दत्त+(newStart-i), trie->दत्त+start, i);
+                i-=UTRIE_दत्त_GRANULARITY) {}
+        } अन्यथा {
             i=0;
         }
 
-        if(i>0) {
+        यदि(i>0) {
             /* some overlap */
-            trie->map[start>>UTRIE_SHIFT]=newStart-i;
+            trie->map[start>>UTRIE_सरणम्]=newStart-i;
 
             /* move the non-overlapping indexes to their new positions */
             start+=i;
-            for(i=UTRIE_DATA_BLOCK_LENGTH-i; i>0; --i) {
-                trie->data[newStart++]=trie->data[start++];
+            प्रति(i=UTRIE_दत्त_खण्डम्_दीर्घता-i; i>0; --i) {
+                trie->दत्त[newStart++]=trie->दत्त[start++];
             }
-        } else if(newStart<start) {
+        } अन्यथा यदि(newStart<start) {
             /* no overlap, just move the indexes to their new positions */
-            trie->map[start>>UTRIE_SHIFT]=newStart;
-            for(i=UTRIE_DATA_BLOCK_LENGTH; i>0; --i) {
-                trie->data[newStart++]=trie->data[start++];
+            trie->map[start>>UTRIE_सरणम्]=newStart;
+            प्रति(i=UTRIE_दत्त_खण्डम्_दीर्घता; i>0; --i) {
+                trie->दत्त[newStart++]=trie->दत्त[start++];
             }
-        } else /* no overlap && newStart==start */ {
-            trie->map[start>>UTRIE_SHIFT]=start;
-            newStart+=UTRIE_DATA_BLOCK_LENGTH;
+        } अन्यथा /* no overlap && newStart==start */ {
+            trie->map[start>>UTRIE_सरणम्]=start;
+            newStart+=UTRIE_दत्त_खण्डम्_दीर्घता;
             start=newStart;
         }
     }
 
     /* now adjust the index (stage 1) table */
-    for(i=0; i<trie->indexLength; ++i) {
-        trie->index[i]=trie->map[ABS(trie->index[i])>>UTRIE_SHIFT];
+    प्रति(i=0; i<trie->सूचकांक_दीर्घता; ++i) {
+        trie->सूचकांक[i]=trie->map[ABS(trie->सूचकांक[i])>>UTRIE_सरणम्];
     }
 
-#ifdef UTRIE_DEBUG
+#यदि_परिभाषितम् UTRIE_DEBUG
     /* we saved some space */
-    printf("compacting trie: count of 32-bit words %lu->%lu\n",
-            (long)trie->dataLength, (long)newStart);
-#endif
+    प्रारूप_लिख("compacting trie: count of 32-bit words %lu->%lu\n",
+            (दीर्घ)trie->दत्त_दीर्घता, (दीर्घ)newStart);
+#यदि_अन्तः
 
-    trie->dataLength=newStart;
+    trie->दत्त_दीर्घता=newStart;
 }
 
 /* serialization ------------------------------------------------------------ */
@@ -717,422 +717,422 @@ utrie_compact(UNewTrie *trie, UBool overlap, UErrorCode *pErrorCode) {
  * data file formats, and we would probably not make it smaller because of
  * the then even larger BMP index length even for empty tries.
  */
-static uint32_t U_CALLCONV
-defaultGetFoldedValue(UNewTrie *trie, UChar32 start, int32_t offset) {
-    uint32_t value, initialValue;
-    UChar32 limit;
-    UBool inBlockZero;
+स्थिर uint32_t U_CALLCONV
+default_Get_Folded_मानम्(UNewTrie *trie, UChar32 start, int32_t विस्थापनम्) {
+    uint32_t value, initial_मानम्;
+    UChar32 सीमा;
+    UBool अन्तर्_खण्डम्_Zero;
 
-    initialValue=trie->data[0];
-    limit=start+0x400;
-    while(start<limit) {
-        value=utrie_get32(trie, start, &inBlockZero);
-        if(inBlockZero) {
-            start+=UTRIE_DATA_BLOCK_LENGTH;
-        } else if(value!=initialValue) {
-            return static_cast<uint32_t>(offset);
-        } else {
+    initial_मानम्=trie->दत्त[0];
+    सीमा=start+0x400;
+    यावत्(start<सीमा) {
+        value=utrie_get32(trie, start, &अन्तर्_खण्डम्_Zero);
+        यदि(अन्तर्_खण्डम्_Zero) {
+            start+=UTRIE_दत्त_खण्डम्_दीर्घता;
+        } अन्यथा यदि(value!=initial_मानम्) {
+            प्रत्यागम static_cast<uint32_t>(विस्थापनम्);
+        } अन्यथा {
             ++start;
         }
     }
-    return 0;
+    प्रत्यागम 0;
 }
 
 U_CAPI int32_t U_EXPORT2
-utrie_serialize(UNewTrie *trie, void *dt, int32_t capacity,
-                UNewTrieGetFoldedValue *getFoldedValue,
-                UBool reduceTo16Bits,
-                UErrorCode *pErrorCode) {
-    UTrieHeader *header;
+utrie_serialize(UNewTrie *trie, शून्य *dt, int32_t capacity,
+                UNew_Trie_Get_Folded_मानम् *get_Folded_मानम्,
+                UBool reduce_To16_द्वयङ्काः,
+                UError_संहिता *p_Error_संहिता) {
+    UTrie_शीर्षकम् *शीर्षकम्;
     uint32_t *p;
     uint16_t *dest16;
     int32_t i, length;
-    uint8_t* data = nullptr;
+    uint8_t* दत्त = शून्यसूचकः;
 
     /* argument check */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    यदि(p_Error_संहिता==शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम 0;
     }
 
-    if(trie==nullptr || capacity<0 || (capacity>0 && dt==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    यदि(trie==शून्यसूचकः || capacity<0 || (capacity>0 && dt==शून्यसूचकः)) {
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0;
     }
-    if(getFoldedValue==nullptr) {
-        getFoldedValue=defaultGetFoldedValue;
+    यदि(get_Folded_मानम्==शून्यसूचकः) {
+        get_Folded_मानम्=default_Get_Folded_मानम्;
     }
 
-    data = (uint8_t*)dt;
+    दत्त = (uint8_t*)dt;
     /* fold and compact if necessary, also checks that indexLength is within limits */
-    if(!trie->isCompacted) {
+    यदि(!trie->isCompacted) {
         /* compact once without overlap to improve folding */
-        utrie_compact(trie, false, pErrorCode);
+        utrie_compact(trie, असत्य, p_Error_संहिता);
 
         /* fold the supplementary part of the index array */
-        utrie_fold(trie, getFoldedValue, pErrorCode);
+        utrie_fold(trie, get_Folded_मानम्, p_Error_संहिता);
 
         /* compact again with overlap for minimum data array length */
-        utrie_compact(trie, true, pErrorCode);
+        utrie_compact(trie, सत्य, p_Error_संहिता);
 
-        trie->isCompacted=true;
-        if(U_FAILURE(*pErrorCode)) {
-            return 0;
+        trie->isCompacted=सत्य;
+        यदि(U_FAILURE(*p_Error_संहिता)) {
+            प्रत्यागम 0;
         }
     }
 
     /* is dataLength within limits? */
-    if( (reduceTo16Bits ? (trie->dataLength+trie->indexLength) : trie->dataLength) >= UTRIE_MAX_DATA_LENGTH) {
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
+    यदि( (reduce_To16_द्वयङ्काः ? (trie->दत्त_दीर्घता+trie->सूचकांक_दीर्घता) : trie->दत्त_दीर्घता) >= UTRIE_MAX_दत्त_दीर्घता) {
+        *p_Error_संहिता=U_सूचकांक_OUTOFBOUNDS_ERROR;
     }
 
-    length=sizeof(UTrieHeader)+2*trie->indexLength;
-    if(reduceTo16Bits) {
-        length+=2*trie->dataLength;
-    } else {
-        length+=4*trie->dataLength;
+    length=परिमाण(UTrie_शीर्षकम्)+2*trie->सूचकांक_दीर्घता;
+    यदि(reduce_To16_द्वयङ्काः) {
+        length+=2*trie->दत्त_दीर्घता;
+    } अन्यथा {
+        length+=4*trie->दत्त_दीर्घता;
     }
 
-    if(length>capacity) {
-        return length; /* preflighting */
+    यदि(length>capacity) {
+        प्रत्यागम length; /* preflighting */
     }
 
-#ifdef UTRIE_DEBUG
-    printf("**UTrieLengths(serialize)** index:%6ld  data:%6ld  serialized:%6ld\n",
-           (long)trie->indexLength, (long)trie->dataLength, (long)length);
-#endif
+#यदि_परिभाषितम् UTRIE_DEBUG
+    प्रारूप_लिख("**UTrieLengths(serialize)** index:%6ld  data:%6ld  serialized:%6ld\n",
+           (दीर्घ)trie->सूचकांक_दीर्घता, (दीर्घ)trie->दत्त_दीर्घता, (दीर्घ)length);
+#यदि_अन्तः
 
     /* set the header fields */
-    header=(UTrieHeader *)data;
-    data+=sizeof(UTrieHeader);
+    शीर्षकम्=(UTrie_शीर्षकम् *)दत्त;
+    दत्त+=परिमाण(UTrie_शीर्षकम्);
 
-    header->signature=0x54726965; /* "Trie" */
-    header->options=UTRIE_SHIFT | (UTRIE_INDEX_SHIFT<<UTRIE_OPTIONS_INDEX_SHIFT);
+    शीर्षकम्->signature=0x54726965; /* "Trie" */
+    शीर्षकम्->options=UTRIE_सरणम् | (UTRIE_सूचकांक_सरणम्<<UTRIE_OPTIONS_सूचकांक_सरणम्);
 
-    if(!reduceTo16Bits) {
-        header->options|=UTRIE_OPTIONS_DATA_IS_32_BIT;
+    यदि(!reduce_To16_द्वयङ्काः) {
+        शीर्षकम्->options|=UTRIE_OPTIONS_दत्त_IS_32_BIT;
     }
-    if(trie->isLatin1Linear) {
-        header->options|=UTRIE_OPTIONS_LATIN1_IS_LINEAR;
+    यदि(trie->is_Latin1_रैखिकम्) {
+        शीर्षकम्->options|=UTRIE_OPTIONS_LATIN1_IS_रैखिकम्;
     }
 
-    header->indexLength=trie->indexLength;
-    header->dataLength=trie->dataLength;
+    शीर्षकम्->सूचकांक_दीर्घता=trie->सूचकांक_दीर्घता;
+    शीर्षकम्->दत्त_दीर्घता=trie->दत्त_दीर्घता;
 
     /* write the index (stage 1) array and the 16/32-bit data (stage 2) array */
-    if(reduceTo16Bits) {
+    यदि(reduce_To16_द्वयङ्काः) {
         /* write 16-bit index values shifted right by UTRIE_INDEX_SHIFT, after adding indexLength */
-        p=(uint32_t *)trie->index;
-        dest16=(uint16_t *)data;
-        for(i=trie->indexLength; i>0; --i) {
-            *dest16++=(uint16_t)((*p++ + trie->indexLength)>>UTRIE_INDEX_SHIFT);
+        p=(uint32_t *)trie->सूचकांक;
+        dest16=(uint16_t *)दत्त;
+        प्रति(i=trie->सूचकांक_दीर्घता; i>0; --i) {
+            *dest16++=(uint16_t)((*p++ + trie->सूचकांक_दीर्घता)>>UTRIE_सूचकांक_सरणम्);
         }
 
         /* write 16-bit data values */
-        p=trie->data;
-        for(i=trie->dataLength; i>0; --i) {
+        p=trie->दत्त;
+        प्रति(i=trie->दत्त_दीर्घता; i>0; --i) {
             *dest16++=(uint16_t)*p++;
         }
-    } else {
+    } अन्यथा {
         /* write 16-bit index values shifted right by UTRIE_INDEX_SHIFT */
-        p=(uint32_t *)trie->index;
-        dest16=(uint16_t *)data;
-        for(i=trie->indexLength; i>0; --i) {
-            *dest16++=(uint16_t)(*p++ >> UTRIE_INDEX_SHIFT);
+        p=(uint32_t *)trie->सूचकांक;
+        dest16=(uint16_t *)दत्त;
+        प्रति(i=trie->सूचकांक_दीर्घता; i>0; --i) {
+            *dest16++=(uint16_t)(*p++ >> UTRIE_सूचकांक_सरणम्);
         }
 
         /* write 32-bit data values */
-        uprv_memcpy(dest16, trie->data, 4*(size_t)trie->dataLength);
+        uprv_memcpy(dest16, trie->दत्त, 4*(size_t)trie->दत्त_दीर्घता);
     }
 
-    return length;
+    प्रत्यागम length;
 }
 
 /* inverse to defaultGetFoldedValue() */
 U_CAPI int32_t U_EXPORT2
-utrie_defaultGetFoldingOffset(uint32_t data) {
-    return (int32_t)data;
+utrie_default_Get_Folding_विस्थापनम्(uint32_t दत्त) {
+    प्रत्यागम (int32_t)दत्त;
 }
 
 U_CAPI int32_t U_EXPORT2
-utrie_unserialize(UTrie *trie, const void *data, int32_t length, UErrorCode *pErrorCode) {
-    const UTrieHeader *header;
-    const uint16_t *p16;
+utrie_unserialize(UTrie *trie, ध्रुव शून्य *दत्त, int32_t length, UError_संहिता *p_Error_संहिता) {
+    ध्रुव UTrie_शीर्षकम् *शीर्षकम्;
+    ध्रुव uint16_t *p16;
     uint32_t options;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return -1;
+    यदि(p_Error_संहिता==शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम -1;
     }
 
     /* enough data for a trie header? */
-    if(length<(int32_t)sizeof(UTrieHeader)) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return -1;
+    यदि(length<(int32_t)परिमाण(UTrie_शीर्षकम्)) {
+        *p_Error_संहिता=U_INVALID_FORMAT_ERROR;
+        प्रत्यागम -1;
     }
 
     /* check the signature */
-    header=(const UTrieHeader *)data;
-    if(header->signature!=0x54726965) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return -1;
+    शीर्षकम्=(ध्रुव UTrie_शीर्षकम् *)दत्त;
+    यदि(शीर्षकम्->signature!=0x54726965) {
+        *p_Error_संहिता=U_INVALID_FORMAT_ERROR;
+        प्रत्यागम -1;
     }
 
     /* get the options and check the shift values */
-    options=header->options;
-    if( (options&UTRIE_OPTIONS_SHIFT_MASK)!=UTRIE_SHIFT ||
-        ((options>>UTRIE_OPTIONS_INDEX_SHIFT)&UTRIE_OPTIONS_SHIFT_MASK)!=UTRIE_INDEX_SHIFT
+    options=शीर्षकम्->options;
+    यदि( (options&UTRIE_OPTIONS_सरणम्_आवरणम्)!=UTRIE_सरणम् ||
+        ((options>>UTRIE_OPTIONS_सूचकांक_सरणम्)&UTRIE_OPTIONS_सरणम्_आवरणम्)!=UTRIE_सूचकांक_सरणम्
     ) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return -1;
+        *p_Error_संहिता=U_INVALID_FORMAT_ERROR;
+        प्रत्यागम -1;
     }
-    trie->isLatin1Linear = (options & UTRIE_OPTIONS_LATIN1_IS_LINEAR) != 0;
+    trie->is_Latin1_रैखिकम् = (options & UTRIE_OPTIONS_LATIN1_IS_रैखिकम्) != 0;
 
     /* get the length values */
-    trie->indexLength=header->indexLength;
-    trie->dataLength=header->dataLength;
+    trie->सूचकांक_दीर्घता=शीर्षकम्->सूचकांक_दीर्घता;
+    trie->दत्त_दीर्घता=शीर्षकम्->दत्त_दीर्घता;
 
-    length-=(int32_t)sizeof(UTrieHeader);
+    length-=(int32_t)परिमाण(UTrie_शीर्षकम्);
 
     /* enough data for the index? */
-    if(length<2*trie->indexLength) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return -1;
+    यदि(length<2*trie->सूचकांक_दीर्घता) {
+        *p_Error_संहिता=U_INVALID_FORMAT_ERROR;
+        प्रत्यागम -1;
     }
-    p16=(const uint16_t *)(header+1);
-    trie->index=p16;
-    p16+=trie->indexLength;
-    length-=2*trie->indexLength;
+    p16=(ध्रुव uint16_t *)(शीर्षकम्+1);
+    trie->सूचकांक=p16;
+    p16+=trie->सूचकांक_दीर्घता;
+    length-=2*trie->सूचकांक_दीर्घता;
 
     /* get the data */
-    if(options&UTRIE_OPTIONS_DATA_IS_32_BIT) {
-        if(length<4*trie->dataLength) {
-            *pErrorCode=U_INVALID_FORMAT_ERROR;
-            return -1;
+    यदि(options&UTRIE_OPTIONS_दत्त_IS_32_BIT) {
+        यदि(length<4*trie->दत्त_दीर्घता) {
+            *p_Error_संहिता=U_INVALID_FORMAT_ERROR;
+            प्रत्यागम -1;
         }
-        trie->data32=(const uint32_t *)p16;
-        trie->initialValue=trie->data32[0];
-        length=(int32_t)sizeof(UTrieHeader)+2*trie->indexLength+4*trie->dataLength;
-    } else {
-        if(length<2*trie->dataLength) {
-            *pErrorCode=U_INVALID_FORMAT_ERROR;
-            return -1;
+        trie->data32=(ध्रुव uint32_t *)p16;
+        trie->initial_मानम्=trie->data32[0];
+        length=(int32_t)परिमाण(UTrie_शीर्षकम्)+2*trie->सूचकांक_दीर्घता+4*trie->दत्त_दीर्घता;
+    } अन्यथा {
+        यदि(length<2*trie->दत्त_दीर्घता) {
+            *p_Error_संहिता=U_INVALID_FORMAT_ERROR;
+            प्रत्यागम -1;
         }
 
         /* the "data16" data is used via the index pointer */
-        trie->data32=nullptr;
-        trie->initialValue=trie->index[trie->indexLength];
-        length=(int32_t)sizeof(UTrieHeader)+2*trie->indexLength+2*trie->dataLength;
+        trie->data32=शून्यसूचकः;
+        trie->initial_मानम्=trie->सूचकांक[trie->सूचकांक_दीर्घता];
+        length=(int32_t)परिमाण(UTrie_शीर्षकम्)+2*trie->सूचकांक_दीर्घता+2*trie->दत्त_दीर्घता;
     }
 
-    trie->getFoldingOffset=utrie_defaultGetFoldingOffset;
+    trie->get_Folding_विस्थापनम्=utrie_default_Get_Folding_विस्थापनम्;
 
-    return length;
+    प्रत्यागम length;
 }
 
 U_CAPI int32_t U_EXPORT2
 utrie_unserializeDummy(UTrie *trie,
-                       void *data, int32_t length,
-                       uint32_t initialValue, uint32_t leadUnitValue,
+                       शून्य *दत्त, int32_t length,
+                       uint32_t initial_मानम्, uint32_t lead_Unit_मानम्,
                        UBool make16BitTrie,
-                       UErrorCode *pErrorCode) {
+                       UError_संहिता *p_Error_संहिता) {
     uint16_t *p16;
-    int32_t actualLength, latin1Length, i, limit;
-    uint16_t block;
+    int32_t actual_दीर्घता, latin1_दीर्घता, i, सीमा;
+    uint16_t खण्डम्;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return -1;
+    यदि(p_Error_संहिता==शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम -1;
     }
 
     /* calculate the actual size of the dummy trie data */
 
     /* max(Latin-1, block 0) */
-    latin1Length= 256; /*UTRIE_SHIFT<=8 ? 256 : UTRIE_DATA_BLOCK_LENGTH;*/
+    latin1_दीर्घता= 256; /*UTRIE_SHIFT<=8 ? 256 : UTRIE_DATA_BLOCK_LENGTH;*/
 
-    trie->indexLength=UTRIE_BMP_INDEX_LENGTH+UTRIE_SURROGATE_BLOCK_COUNT;
-    trie->dataLength=latin1Length;
-    if(leadUnitValue!=initialValue) {
-        trie->dataLength+=UTRIE_DATA_BLOCK_LENGTH;
+    trie->सूचकांक_दीर्घता=UTRIE_BMP_सूचकांक_दीर्घता+UTRIE_SURROGATE_खण्डम्_गणनम्;
+    trie->दत्त_दीर्घता=latin1_दीर्घता;
+    यदि(lead_Unit_मानम्!=initial_मानम्) {
+        trie->दत्त_दीर्घता+=UTRIE_दत्त_खण्डम्_दीर्घता;
     }
 
-    actualLength=trie->indexLength*2;
-    if(make16BitTrie) {
-        actualLength+=trie->dataLength*2;
-    } else {
-        actualLength+=trie->dataLength*4;
+    actual_दीर्घता=trie->सूचकांक_दीर्घता*2;
+    यदि(make16BitTrie) {
+        actual_दीर्घता+=trie->दत्त_दीर्घता*2;
+    } अन्यथा {
+        actual_दीर्घता+=trie->दत्त_दीर्घता*4;
     }
 
     /* enough space for the dummy trie? */
-    if(length<actualLength) {
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-        return actualLength;
+    यदि(length<actual_दीर्घता) {
+        *p_Error_संहिता=U_बफर_अतिप्रवाहः_ERROR;
+        प्रत्यागम actual_दीर्घता;
     }
 
-    trie->isLatin1Linear=true;
-    trie->initialValue=initialValue;
+    trie->is_Latin1_रैखिकम्=सत्य;
+    trie->initial_मानम्=initial_मानम्;
 
     /* fill the index and data arrays */
-    p16=(uint16_t *)data;
-    trie->index=p16;
+    p16=(uint16_t *)दत्त;
+    trie->सूचकांक=p16;
 
-    if(make16BitTrie) {
+    यदि(make16BitTrie) {
         /* indexes to block 0 */
-        block=(uint16_t)(trie->indexLength>>UTRIE_INDEX_SHIFT);
-        limit=trie->indexLength;
-        for(i=0; i<limit; ++i) {
-            p16[i]=block;
+        खण्डम्=(uint16_t)(trie->सूचकांक_दीर्घता>>UTRIE_सूचकांक_सरणम्);
+        सीमा=trie->सूचकांक_दीर्घता;
+        प्रति(i=0; i<सीमा; ++i) {
+            p16[i]=खण्डम्;
         }
 
-        if(leadUnitValue!=initialValue) {
+        यदि(lead_Unit_मानम्!=initial_मानम्) {
             /* indexes for lead surrogate code units to the block after Latin-1 */
-            block+=(uint16_t)(latin1Length>>UTRIE_INDEX_SHIFT);
-            i=0xd800>>UTRIE_SHIFT;
-            limit=0xdc00>>UTRIE_SHIFT;
-            for(; i<limit; ++i) {
-                p16[i]=block;
+            खण्डम्+=(uint16_t)(latin1_दीर्घता>>UTRIE_सूचकांक_सरणम्);
+            i=0xd800>>UTRIE_सरणम्;
+            सीमा=0xdc00>>UTRIE_सरणम्;
+            प्रति(; i<सीमा; ++i) {
+                p16[i]=खण्डम्;
             }
         }
 
-        trie->data32=nullptr;
+        trie->data32=शून्यसूचकः;
 
         /* Latin-1 data */
-        p16+=trie->indexLength;
-        for(i=0; i<latin1Length; ++i) {
-            p16[i]=(uint16_t)initialValue;
+        p16+=trie->सूचकांक_दीर्घता;
+        प्रति(i=0; i<latin1_दीर्घता; ++i) {
+            p16[i]=(uint16_t)initial_मानम्;
         }
 
         /* data for lead surrogate code units */
-        if(leadUnitValue!=initialValue) {
-            limit=latin1Length+UTRIE_DATA_BLOCK_LENGTH;
-            for(/* i=latin1Length */; i<limit; ++i) {
-                p16[i]=(uint16_t)leadUnitValue;
+        यदि(lead_Unit_मानम्!=initial_मानम्) {
+            सीमा=latin1_दीर्घता+UTRIE_दत्त_खण्डम्_दीर्घता;
+            प्रति(/* i=latin1Length */; i<सीमा; ++i) {
+                p16[i]=(uint16_t)lead_Unit_मानम्;
             }
         }
-    } else {
+    } अन्यथा {
         uint32_t *p32;
 
         /* indexes to block 0 */
-        uprv_memset(p16, 0, trie->indexLength*2);
+        uprv_memset(p16, 0, trie->सूचकांक_दीर्घता*2);
 
-        if(leadUnitValue!=initialValue) {
+        यदि(lead_Unit_मानम्!=initial_मानम्) {
             /* indexes for lead surrogate code units to the block after Latin-1 */
-            block=(uint16_t)(latin1Length>>UTRIE_INDEX_SHIFT);
-            i=0xd800>>UTRIE_SHIFT;
-            limit=0xdc00>>UTRIE_SHIFT;
-            for(; i<limit; ++i) {
-                p16[i]=block;
+            खण्डम्=(uint16_t)(latin1_दीर्घता>>UTRIE_सूचकांक_सरणम्);
+            i=0xd800>>UTRIE_सरणम्;
+            सीमा=0xdc00>>UTRIE_सरणम्;
+            प्रति(; i<सीमा; ++i) {
+                p16[i]=खण्डम्;
             }
         }
 
-        trie->data32=p32=(uint32_t *)(p16+trie->indexLength);
+        trie->data32=p32=(uint32_t *)(p16+trie->सूचकांक_दीर्घता);
 
         /* Latin-1 data */
-        for(i=0; i<latin1Length; ++i) {
-            p32[i]=initialValue;
+        प्रति(i=0; i<latin1_दीर्घता; ++i) {
+            p32[i]=initial_मानम्;
         }
 
         /* data for lead surrogate code units */
-        if(leadUnitValue!=initialValue) {
-            limit=latin1Length+UTRIE_DATA_BLOCK_LENGTH;
-            for(/* i=latin1Length */; i<limit; ++i) {
-                p32[i]=leadUnitValue;
+        यदि(lead_Unit_मानम्!=initial_मानम्) {
+            सीमा=latin1_दीर्घता+UTRIE_दत्त_खण्डम्_दीर्घता;
+            प्रति(/* i=latin1Length */; i<सीमा; ++i) {
+                p32[i]=lead_Unit_मानम्;
             }
         }
     }
 
-    trie->getFoldingOffset=utrie_defaultGetFoldingOffset;
+    trie->get_Folding_विस्थापनम्=utrie_default_Get_Folding_विस्थापनम्;
 
-    return actualLength;
+    प्रत्यागम actual_दीर्घता;
 }
 
 /* enumeration -------------------------------------------------------------- */
 
 /* default UTrieEnumValue() returns the input value itself */
-static uint32_t U_CALLCONV
-enumSameValue(const void * /*context*/, uint32_t value) {
-    return value;
+स्थिर uint32_t U_CALLCONV
+enum_Same_मानम्(ध्रुव शून्य * /*context*/, uint32_t value) {
+    प्रत्यागम value;
 }
 
 /**
  * Enumerate all ranges of code points with the same relevant values.
  * The values are transformed from the raw trie entries by the enumValue function.
  */
-U_CAPI void U_EXPORT2
-utrie_enum(const UTrie *trie,
-           UTrieEnumValue *enumValue, UTrieEnumRange *enumRange, const void *context) {
-    const uint32_t *data32;
-    const uint16_t *idx;
+U_CAPI शून्य U_EXPORT2
+utrie_enum(ध्रुव UTrie *trie,
+           UTrie_Enum_मानम् *enum_मानम्, UTrieEnumRange *enumRange, ध्रुव शून्य *context) {
+    ध्रुव uint32_t *data32;
+    ध्रुव uint16_t *idx;
 
-    uint32_t value, prevValue, initialValue;
-    UChar32 c, prev;
-    int32_t l, i, j, block, prevBlock, nullBlock, offset;
+    uint32_t value, पूर्व_मानम्, initial_मानम्;
+    UChar32 c, पूर्व;
+    int32_t l, i, j, खण्डम्, पूर्व_खण्डम्, null_खण्डम्, विस्थापनम्;
 
     /* check arguments */
-    if(trie==nullptr || trie->index==nullptr || enumRange==nullptr) {
-        return;
+    यदि(trie==शून्यसूचकः || trie->सूचकांक==शून्यसूचकः || enumRange==शून्यसूचकः) {
+        प्रत्यागम;
     }
-    if(enumValue==nullptr) {
-        enumValue=enumSameValue;
+    यदि(enum_मानम्==शून्यसूचकः) {
+        enum_मानम्=enum_Same_मानम्;
     }
 
-    idx=trie->index;
+    idx=trie->सूचकांक;
     data32=trie->data32;
 
     /* get the enumeration value that corresponds to an initial-value trie data entry */
-    initialValue=enumValue(context, trie->initialValue);
+    initial_मानम्=enum_मानम्(context, trie->initial_मानम्);
 
-    if(data32==nullptr) {
-        nullBlock=trie->indexLength;
-    } else {
-        nullBlock=0;
+    यदि(data32==शून्यसूचकः) {
+        null_खण्डम्=trie->सूचकांक_दीर्घता;
+    } अन्यथा {
+        null_खण्डम्=0;
     }
 
     /* set variables for previous range */
-    prevBlock=nullBlock;
-    prev=0;
-    prevValue=initialValue;
+    पूर्व_खण्डम्=null_खण्डम्;
+    पूर्व=0;
+    पूर्व_मानम्=initial_मानम्;
 
     /* enumerate BMP - the main loop enumerates data blocks */
-    for(i=0, c=0; c<=0xffff; ++i) {
-        if(c==0xd800) {
+    प्रति(i=0, c=0; c<=0xffff; ++i) {
+        यदि(c==0xd800) {
             /* skip lead surrogate code _units_, go to lead surr. code _points_ */
-            i=UTRIE_BMP_INDEX_LENGTH;
-        } else if(c==0xdc00) {
+            i=UTRIE_BMP_सूचकांक_दीर्घता;
+        } अन्यथा यदि(c==0xdc00) {
             /* go back to regular BMP code points */
-            i=c>>UTRIE_SHIFT;
+            i=c>>UTRIE_सरणम्;
         }
 
-        block=idx[i]<<UTRIE_INDEX_SHIFT;
-        if(block==prevBlock) {
+        खण्डम्=idx[i]<<UTRIE_सूचकांक_सरणम्;
+        यदि(खण्डम्==पूर्व_खण्डम्) {
             /* the block is the same as the previous one, and filled with value */
-            c+=UTRIE_DATA_BLOCK_LENGTH;
-        } else if(block==nullBlock) {
+            c+=UTRIE_दत्त_खण्डम्_दीर्घता;
+        } अन्यथा यदि(खण्डम्==null_खण्डम्) {
             /* this is the all-initial-value block */
-            if(prevValue!=initialValue) {
-                if(prev<c) {
-                    if(!enumRange(context, prev, c, prevValue)) {
-                        return;
+            यदि(पूर्व_मानम्!=initial_मानम्) {
+                यदि(पूर्व<c) {
+                    यदि(!enumRange(context, पूर्व, c, पूर्व_मानम्)) {
+                        प्रत्यागम;
                     }
                 }
-                prevBlock=nullBlock;
-                prev=c;
-                prevValue=initialValue;
+                पूर्व_खण्डम्=null_खण्डम्;
+                पूर्व=c;
+                पूर्व_मानम्=initial_मानम्;
             }
-            c+=UTRIE_DATA_BLOCK_LENGTH;
-        } else {
-            prevBlock=block;
-            for(j=0; j<UTRIE_DATA_BLOCK_LENGTH; ++j) {
-                value=enumValue(context, data32!=nullptr ? data32[block+j] : idx[block+j]);
-                if(value!=prevValue) {
-                    if(prev<c) {
-                        if(!enumRange(context, prev, c, prevValue)) {
-                            return;
+            c+=UTRIE_दत्त_खण्डम्_दीर्घता;
+        } अन्यथा {
+            पूर्व_खण्डम्=खण्डम्;
+            प्रति(j=0; j<UTRIE_दत्त_खण्डम्_दीर्घता; ++j) {
+                value=enum_मानम्(context, data32!=शून्यसूचकः ? data32[खण्डम्+j] : idx[खण्डम्+j]);
+                यदि(value!=पूर्व_मानम्) {
+                    यदि(पूर्व<c) {
+                        यदि(!enumRange(context, पूर्व, c, पूर्व_मानम्)) {
+                            प्रत्यागम;
                         }
                     }
-                    if(j>0) {
+                    यदि(j>0) {
                         /* the block is not filled with all the same value */
-                        prevBlock=-1;
+                        पूर्व_खण्डम्=-1;
                     }
-                    prev=c;
-                    prevValue=value;
+                    पूर्व=c;
+                    पूर्व_मानम्=value;
                 }
                 ++c;
             }
@@ -1140,95 +1140,95 @@ utrie_enum(const UTrie *trie,
     }
 
     /* enumerate supplementary code points */
-    for(l=0xd800; l<0xdc00;) {
+    प्रति(l=0xd800; l<0xdc00;) {
         /* lead surrogate access */
-        offset=idx[l>>UTRIE_SHIFT]<<UTRIE_INDEX_SHIFT;
-        if(offset==nullBlock) {
+        विस्थापनम्=idx[l>>UTRIE_सरणम्]<<UTRIE_सूचकांक_सरणम्;
+        यदि(विस्थापनम्==null_खण्डम्) {
             /* no entries for a whole block of lead surrogates */
-            if(prevValue!=initialValue) {
-                if(prev<c) {
-                    if(!enumRange(context, prev, c, prevValue)) {
-                        return;
+            यदि(पूर्व_मानम्!=initial_मानम्) {
+                यदि(पूर्व<c) {
+                    यदि(!enumRange(context, पूर्व, c, पूर्व_मानम्)) {
+                        प्रत्यागम;
                     }
                 }
-                prevBlock=nullBlock;
-                prev=c;
-                prevValue=initialValue;
+                पूर्व_खण्डम्=null_खण्डम्;
+                पूर्व=c;
+                पूर्व_मानम्=initial_मानम्;
             }
 
-            l+=UTRIE_DATA_BLOCK_LENGTH;
-            c+=UTRIE_DATA_BLOCK_LENGTH<<10;
-            continue;
+            l+=UTRIE_दत्त_खण्डम्_दीर्घता;
+            c+=UTRIE_दत्त_खण्डम्_दीर्घता<<10;
+            अनुवर्त;
         }
 
-        value= data32!=nullptr ? data32[offset+(l&UTRIE_MASK)] : idx[offset+(l&UTRIE_MASK)];
+        value= data32!=शून्यसूचकः ? data32[विस्थापनम्+(l&UTRIE_आवरणम्)] : idx[विस्थापनम्+(l&UTRIE_आवरणम्)];
 
         /* enumerate trail surrogates for this lead surrogate */
-        offset=trie->getFoldingOffset(value);
-        if(offset<=0) {
+        विस्थापनम्=trie->get_Folding_विस्थापनम्(value);
+        यदि(विस्थापनम्<=0) {
             /* no data for this lead surrogate */
-            if(prevValue!=initialValue) {
-                if(prev<c) {
-                    if(!enumRange(context, prev, c, prevValue)) {
-                        return;
+            यदि(पूर्व_मानम्!=initial_मानम्) {
+                यदि(पूर्व<c) {
+                    यदि(!enumRange(context, पूर्व, c, पूर्व_मानम्)) {
+                        प्रत्यागम;
                     }
                 }
-                prevBlock=nullBlock;
-                prev=c;
-                prevValue=initialValue;
+                पूर्व_खण्डम्=null_खण्डम्;
+                पूर्व=c;
+                पूर्व_मानम्=initial_मानम्;
             }
 
             /* nothing else to do for the supplementary code points for this lead surrogate */
             c+=0x400;
-        } else {
+        } अन्यथा {
             /* enumerate code points for this lead surrogate */
-            i=offset;
-            offset+=UTRIE_SURROGATE_BLOCK_COUNT;
-            do {
+            i=विस्थापनम्;
+            विस्थापनम्+=UTRIE_SURROGATE_खण्डम्_गणनम्;
+            कुरु {
                 /* copy of most of the body of the BMP loop */
-                block=idx[i]<<UTRIE_INDEX_SHIFT;
-                if(block==prevBlock) {
+                खण्डम्=idx[i]<<UTRIE_सूचकांक_सरणम्;
+                यदि(खण्डम्==पूर्व_खण्डम्) {
                     /* the block is the same as the previous one, and filled with value */
-                    c+=UTRIE_DATA_BLOCK_LENGTH;
-                } else if(block==nullBlock) {
+                    c+=UTRIE_दत्त_खण्डम्_दीर्घता;
+                } अन्यथा यदि(खण्डम्==null_खण्डम्) {
                     /* this is the all-initial-value block */
-                    if(prevValue!=initialValue) {
-                        if(prev<c) {
-                            if(!enumRange(context, prev, c, prevValue)) {
-                                return;
+                    यदि(पूर्व_मानम्!=initial_मानम्) {
+                        यदि(पूर्व<c) {
+                            यदि(!enumRange(context, पूर्व, c, पूर्व_मानम्)) {
+                                प्रत्यागम;
                             }
                         }
-                        prevBlock=nullBlock;
-                        prev=c;
-                        prevValue=initialValue;
+                        पूर्व_खण्डम्=null_खण्डम्;
+                        पूर्व=c;
+                        पूर्व_मानम्=initial_मानम्;
                     }
-                    c+=UTRIE_DATA_BLOCK_LENGTH;
-                } else {
-                    prevBlock=block;
-                    for(j=0; j<UTRIE_DATA_BLOCK_LENGTH; ++j) {
-                        value=enumValue(context, data32!=nullptr ? data32[block+j] : idx[block+j]);
-                        if(value!=prevValue) {
-                            if(prev<c) {
-                                if(!enumRange(context, prev, c, prevValue)) {
-                                    return;
+                    c+=UTRIE_दत्त_खण्डम्_दीर्घता;
+                } अन्यथा {
+                    पूर्व_खण्डम्=खण्डम्;
+                    प्रति(j=0; j<UTRIE_दत्त_खण्डम्_दीर्घता; ++j) {
+                        value=enum_मानम्(context, data32!=शून्यसूचकः ? data32[खण्डम्+j] : idx[खण्डम्+j]);
+                        यदि(value!=पूर्व_मानम्) {
+                            यदि(पूर्व<c) {
+                                यदि(!enumRange(context, पूर्व, c, पूर्व_मानम्)) {
+                                    प्रत्यागम;
                                 }
                             }
-                            if(j>0) {
+                            यदि(j>0) {
                                 /* the block is not filled with all the same value */
-                                prevBlock=-1;
+                                पूर्व_खण्डम्=-1;
                             }
-                            prev=c;
-                            prevValue=value;
+                            पूर्व=c;
+                            पूर्व_मानम्=value;
                         }
                         ++c;
                     }
                 }
-            } while(++i<offset);
+            } यावत्(++i<विस्थापनम्);
         }
 
         ++l;
     }
 
     /* deliver last range */
-    enumRange(context, prev, c, prevValue);
+    enumRange(context, पूर्व, c, पूर्व_मानम्);
 }

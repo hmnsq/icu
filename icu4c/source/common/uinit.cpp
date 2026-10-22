@@ -14,34 +14,34 @@
 *   created by: George Rhoten
 */
 
-#include "unicode/utypes.h"
-#include "unicode/icuplug.h"
-#include "unicode/uclean.h"
-#include "cmemory.h"
-#include "icuplugimp.h"
-#include "ucln_cmn.h"
-#include "ucnv_io.h"
-#include "umutex.h"
-#include "utracimp.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/icuplug.h"
+#अन्तर्भाव "unicode/uclean.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "icuplugimp.h"
+#अन्तर्भाव "ucln_cmn.h"
+#अन्तर्भाव "ucnv_io.h"
+#अन्तर्भाव "umutex.h"
+#अन्तर्भाव "utracimp.h"
 
 U_NAMESPACE_BEGIN
 
-static UInitOnce gICUInitOnce {};
+स्थिर UInitOnce gICUInitOnce {};
 
-static UBool U_CALLCONV uinit_cleanup() {
+स्थिर UBool U_CALLCONV uinit_cleanup() {
     gICUInitOnce.reset();
-    return true;
+    प्रत्यागम सत्य;
 }
 
-static void U_CALLCONV
-initData(UErrorCode &status)
+स्थिर शून्य U_CALLCONV
+init_दत्त(UError_संहिता &स्थितिः)
 {
-#if UCONFIG_ENABLE_PLUGINS
+#यदि UCONFIG_ENABLE_PLUGINS
     /* initialize plugins */
-    uplug_init(&status);
-#endif
+    uplug_init(&स्थितिः);
+#यदि_अन्तः
 
-#if !UCONFIG_NO_CONVERSION
+#यदि !UCONFIG_NO_CONVERSION
     /*
      * 2005-may-02
      *
@@ -54,21 +54,21 @@ initData(UErrorCode &status)
      * for errors there, to make sure that the actual items they need are
      * available.
      */
-    ucnv_io_countKnownConverters(&status);
-#endif
-    ucln_common_registerCleanup(UCLN_COMMON_UINIT, uinit_cleanup);
+    ucnv_io_गणनम्_ज्ञातम्_Converters(&स्थितिः);
+#यदि_अन्तः
+    ucln_common_पञ्जिकाकोशः_Cleanup(UCLN_COMMON_UINIT, uinit_cleanup);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
 U_NAMESPACE_USE
 
 /*
  * ICU Initialization Function. Need not be called.
  */
-U_CAPI void U_EXPORT2
-u_init(UErrorCode *status) {
-    UTRACE_ENTRY_OC(UTRACE_U_INIT);
-    umtx_initOnce(gICUInitOnce, &initData, *status);
-    UTRACE_EXIT_STATUS(*status);
+U_CAPI शून्य U_EXPORT2
+u_init(UError_संहिता *स्थितिः) {
+    UTRACE_प्रविष्टिः_OC(UTRACE_U_INIT);
+    umtx_initOnce(gICUInitOnce, &init_दत्त, *स्थितिः);
+    UTRACE_EXIT_स्थितिः(*स्थितिः);
 }

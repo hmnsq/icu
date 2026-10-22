@@ -11,14 +11,14 @@
 * File: cstr.h
 */
 
-#ifndef CSTR_H
-#define CSTR_H
+#यदि_अपरिभाषितम् CSTR_H
+#परिभाषय CSTR_H
 
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/unistr.h"
+#अन्तर्भाव "unicode/uobject.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#include "charstr.h"
+#अन्तर्भाव "charstr.h"
 
 /**
  * ICU-internal class CStr, a small helper class to facilitate passing UnicodeStrings
@@ -43,18 +43,18 @@
 
 U_NAMESPACE_BEGIN
 
-class U_COMMON_API_CLASS CStr : public UMemory {
-  public:
-    U_COMMON_API CStr(const UnicodeString &in);
+class U_COMMON_API_CLASS CStr : सार्वजनिक UMemory {
+  सार्वजनिक:
+    U_COMMON_API CStr(ध्रुव UnicodeString &अन्तर्);
     U_COMMON_API ~CStr();
-    U_COMMON_API const char * operator ()() const;
+    U_COMMON_API ध्रुव वर्ण * संक्रियकः ()() ध्रुव;
 
-  private:
+  गुप्त:
     CharString s;
-    CStr(const CStr &other) = delete;               //  Forbid copying of this class.
-    CStr &operator =(const CStr &other) = delete;   //  Forbid assignment.
+    CStr(ध्रुव CStr &other) = delete;               //  Forbid copying of this class.
+    CStr &संक्रियकः =(ध्रुव CStr &other) = delete;   //  Forbid assignment.
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif
+#यदि_अन्तः

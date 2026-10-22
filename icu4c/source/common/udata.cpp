@@ -16,31 +16,31 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"  /* U_PLATFORM etc. */
+#अन्तर्भाव "unicode/utypes.h"  /* U_PLATFORM etc. */
 
-#ifdef __GNUC__
+#यदि_परिभाषितम् __GNUC__
 /* if gcc
 #define ATTRIBUTE_WEAK __attribute__ ((weak))
 might have to #include some other header
 */
-#endif
+#यदि_अन्तः
 
-#include "unicode/putil.h"
-#include "unicode/udata.h"
-#include "unicode/uversion.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "mutex.h"
-#include "putilimp.h"
-#include "restrace.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
-#include "ucmndata.h"
-#include "udatamem.h"
-#include "uhash.h"
-#include "umapfile.h"
-#include "umutex.h"
+#अन्तर्भाव "unicode/putil.h"
+#अन्तर्भाव "unicode/udata.h"
+#अन्तर्भाव "unicode/uversion.h"
+#अन्तर्भाव "charstr.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "mutex.h"
+#अन्तर्भाव "putilimp.h"
+#अन्तर्भाव "restrace.h"
+#अन्तर्भाव "uassert.h"
+#अन्तर्भाव "ucln_cmn.h"
+#अन्तर्भाव "ucmndata.h"
+#अन्तर्भाव "udatamem.h"
+#अन्तर्भाव "uhash.h"
+#अन्तर्भाव "umapfile.h"
+#अन्तर्भाव "umutex.h"
 
 /***********************************************************************
 *
@@ -71,16 +71,16 @@ might have to #include some other header
 /* If you are excruciatingly bored turn this on .. */
 /* #define UDATA_DEBUG 1 */
 
-#if defined(UDATA_DEBUG)
+#यदि defined(UDATA_DEBUG)
 #   include <stdio.h>
-#endif
+#यदि_अन्तः
 
 U_NAMESPACE_USE
 
 /*
  *  Forward declarations
  */
-static UDataMemory *udata_findCachedData(const char *path, UErrorCode &err);
+स्थिर UData_स्मृतिः *udata_find_Cached_दत्त(ध्रुव वर्ण *मार्गः, UError_संहिता &err);
 
 /***********************************************************************
 *
@@ -104,150 +104,150 @@ static UDataMemory *udata_findCachedData(const char *path, UErrorCode &err);
  * that they really need, reducing the size of binaries that take advantage
  * of this.
  */
-static UDataMemory *gCommonICUDataArray[10] = { nullptr };   // Access protected by icu global mutex.
+स्थिर UData_स्मृतिः *gCommonICUDataArray[10] = { शून्यसूचकः };   // Access protected by icu global mutex.
 
-static u_atomic_int32_t gHaveTriedToLoadCommonData {0};  //  See extendICUData().
+स्थिर u_atomic_int32_t g_Have_Tried_गन्तव्यम्_आरोपय_Common_दत्त {0};  //  See extendICUData().
 
-static UHashtable  *gCommonDataCache = nullptr;  /* Global hash table of opened ICU data files.  */
-static icu::UInitOnce gCommonDataCacheInitOnce {};
+स्थिर UHashtable  *g_Common_दत्त_Cache = शून्यसूचकः;  /* Global hash table of opened ICU data files.  */
+स्थिर icu::UInitOnce g_Common_दत्त_Cache_Init_Once {};
 
-#if !defined(ICU_DATA_DIR_WINDOWS)
-static UDataFileAccess  gDataFileAccess = UDATA_DEFAULT_ACCESS;  // Access not synchronized.
+#यदि !defined(ICU_दत्त_DIR_WINDOWS)
+स्थिर UDataFileAccess  g_दत्त_File_Access = UDATA_DEFAULT_ACCESS;  // Access not synchronized.
                                                                  // Modifying is documented as thread-unsafe.
-#else
+#अन्यथा
 // If we are using the Windows data directory, then look in one spot only.
-static UDataFileAccess  gDataFileAccess = UDATA_NO_FILES;
-#endif
+स्थिर UDataFileAccess  g_दत्त_File_Access = UDATA_NO_FILES;
+#यदि_अन्तः
 
-static UBool U_CALLCONV
+स्थिर UBool U_CALLCONV
 udata_cleanup()
 {
     int32_t i;
 
-    if (gCommonDataCache) {             /* Delete the cache of user data mappings.  */
-        uhash_close(gCommonDataCache);  /*   Table owns the contents, and will delete them. */
-        gCommonDataCache = nullptr;        /*   Cleanup is not thread safe.                */
+    यदि (g_Common_दत्त_Cache) {             /* Delete the cache of user data mappings.  */
+        uhash_close(g_Common_दत्त_Cache);  /*   Table owns the contents, and will delete them. */
+        g_Common_दत्त_Cache = शून्यसूचकः;        /*   Cleanup is not thread safe.                */
     }
-    gCommonDataCacheInitOnce.reset();
+    g_Common_दत्त_Cache_Init_Once.reset();
 
-    for (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray) && gCommonICUDataArray[i] != nullptr; ++i) {
+    प्रति (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray) && gCommonICUDataArray[i] != शून्यसूचकः; ++i) {
         udata_close(gCommonICUDataArray[i]);
-        gCommonICUDataArray[i] = nullptr;
+        gCommonICUDataArray[i] = शून्यसूचकः;
     }
-    gHaveTriedToLoadCommonData = 0;
+    g_Have_Tried_गन्तव्यम्_आरोपय_Common_दत्त = 0;
 
-    return true;                   /* Everything was cleaned up */
+    प्रत्यागम सत्य;                   /* Everything was cleaned up */
 }
 
-static UBool U_CALLCONV
-findCommonICUDataByName(const char *inBasename, UErrorCode &err)
+स्थिर UBool U_CALLCONV
+findCommonICUDataByName(ध्रुव वर्ण *अन्तर्_Basename, UError_संहिता &err)
 {
-    UBool found = false;
+    UBool प्राप्तम् = असत्य;
     int32_t i;
 
-    UDataMemory  *pData = udata_findCachedData(inBasename, err);
-    if (U_FAILURE(err) || pData == nullptr)
-        return false;
+    UData_स्मृतिः  *p_दत्त = udata_find_Cached_दत्त(अन्तर्_Basename, err);
+    यदि (U_FAILURE(err) || p_दत्त == शून्यसूचकः)
+        प्रत्यागम असत्य;
 
     {
-        Mutex lock;
-        for (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray); ++i) {
-            if ((gCommonICUDataArray[i] != nullptr) && (gCommonICUDataArray[i]->pHeader == pData->pHeader)) {
+        Mutex तालकम्;
+        प्रति (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray); ++i) {
+            यदि ((gCommonICUDataArray[i] != शून्यसूचकः) && (gCommonICUDataArray[i]->p_शीर्षकम् == p_दत्त->p_शीर्षकम्)) {
                 /* The data pointer is already in the array. */
-                found = true;
-                break;
+                प्राप्तम् = सत्य;
+                भङ्ग;
             }
         }
     }
-    return found;
+    प्रत्यागम प्राप्तम्;
 }
 
 
 /*
  * setCommonICUData.   Set a UDataMemory to be the global ICU Data
  */
-static UBool
-setCommonICUData(UDataMemory *pData,     /*  The new common data.  Belongs to caller, we copy it. */
+स्थिर UBool
+समुच्चयः_Common_ICUData(UData_स्मृतिः *p_दत्त,     /*  The new common data.  Belongs to caller, we copy it. */
                  UBool       warn,       /*  If true, set USING_DEFAULT warning if ICUData was    */
                                          /*    changed by another thread before we got to it.     */
-                 UErrorCode *pErr)
+                 UError_संहिता *pErr)
 {
-    UDataMemory  *newCommonData = UDataMemory_createNewInstance(pErr);
+    UData_स्मृतिः  *new_Common_दत्त = UData_स्मृतिः_create_New_Instance(pErr);
     int32_t i;
-    UBool didUpdate = false;
-    if (U_FAILURE(*pErr)) {
-        return false;
+    UBool didUpdate = असत्य;
+    यदि (U_FAILURE(*pErr)) {
+        प्रत्यागम असत्य;
     }
 
     /*  For the assignment, other threads must cleanly see either the old            */
     /*    or the new, not some partially initialized new.  The old can not be        */
     /*    deleted - someone may still have a pointer to it lying around in           */
     /*    their locals.                                                              */
-    UDatamemory_assign(newCommonData, pData);
-    umtx_lock(nullptr);
-    for (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray); ++i) {
-        if (gCommonICUDataArray[i] == nullptr) {
-            gCommonICUDataArray[i] = newCommonData;
-            didUpdate = true;
-            break;
-        } else if (gCommonICUDataArray[i]->pHeader == pData->pHeader) {
+    UDatamemory_नियोजय(new_Common_दत्त, p_दत्त);
+    umtx_तालकम्(शून्यसूचकः);
+    प्रति (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray); ++i) {
+        यदि (gCommonICUDataArray[i] == शून्यसूचकः) {
+            gCommonICUDataArray[i] = new_Common_दत्त;
+            didUpdate = सत्य;
+            भङ्ग;
+        } अन्यथा यदि (gCommonICUDataArray[i]->p_शीर्षकम् == p_दत्त->p_शीर्षकम्) {
             /* The same data pointer is already in the array. */
-            break;
+            भङ्ग;
         }
     }
-    umtx_unlock(nullptr);
+    umtx_unlock(शून्यसूचकः);
 
-    if (i == UPRV_LENGTHOF(gCommonICUDataArray) && warn) {
+    यदि (i == UPRV_LENGTHOF(gCommonICUDataArray) && warn) {
         *pErr = U_USING_DEFAULT_WARNING;
     }
-    if (didUpdate) {
-        ucln_common_registerCleanup(UCLN_COMMON_UDATA, udata_cleanup);
-    } else {
-        uprv_free(newCommonData);
+    यदि (didUpdate) {
+        ucln_common_पञ्जिकाकोशः_Cleanup(UCLN_COMMON_UDATA, udata_cleanup);
+    } अन्यथा {
+        uprv_free(new_Common_दत्त);
     }
-    return didUpdate;
+    प्रत्यागम didUpdate;
 }
 
-#if !defined(ICU_DATA_DIR_WINDOWS)
+#यदि !defined(ICU_दत्त_DIR_WINDOWS)
 
-static UBool
-setCommonICUDataPointer(const void *pData, UBool /*warn*/, UErrorCode *pErrorCode) {
-    UDataMemory tData;
-    UDataMemory_init(&tData);
-    UDataMemory_setData(&tData, pData);
-    udata_checkCommonData(&tData, pErrorCode);
-    return setCommonICUData(&tData, false, pErrorCode);
+स्थिर UBool
+समुच्चयः_Common_ICUData_Pointer(ध्रुव शून्य *p_दत्त, UBool /*warn*/, UError_संहिता *p_Error_संहिता) {
+    UData_स्मृतिः t_दत्त;
+    UData_स्मृतिः_init(&t_दत्त);
+    UData_स्मृतिः_समुच्चयः_दत्त(&t_दत्त, p_दत्त);
+    udata_check_Common_दत्त(&t_दत्त, p_Error_संहिता);
+    प्रत्यागम समुच्चयः_Common_ICUData(&t_दत्त, असत्य, p_Error_संहिता);
 }
 
-#endif
+#यदि_अन्तः
 
-static const char *
-findBasename(const char *path) {
-    const char *basename=uprv_strrchr(path, U_FILE_SEP_CHAR);
-    if(basename==nullptr) {
-        return path;
-    } else {
-        return basename+1;
+स्थिर ध्रुव वर्ण *
+findBasename(ध्रुव वर्ण *मार्गः) {
+    ध्रुव वर्ण *basename=uprv_strrchr(मार्गः, U_FILE_SEP_CHAR);
+    यदि(basename==शून्यसूचकः) {
+        प्रत्यागम मार्गः;
+    } अन्यथा {
+        प्रत्यागम basename+1;
     }
 }
 
-#ifdef UDATA_DEBUG
-static const char *
-packageNameFromPath(const char *path)
+#यदि_परिभाषितम् UDATA_DEBUG
+स्थिर ध्रुव वर्ण *
+package_Name_From_मार्गः(ध्रुव वर्ण *मार्गः)
 {
-    if((path == nullptr) || (*path == 0)) {
-        return U_ICUDATA_NAME;
+    यदि((मार्गः == शून्यसूचकः) || (*मार्गः == 0)) {
+        प्रत्यागम U_ICUDATA_NAME;
     }
 
-    path = findBasename(path);
+    मार्गः = findBasename(मार्गः);
 
-    if((path == nullptr) || (*path == 0)) {
-        return U_ICUDATA_NAME;
+    यदि((मार्गः == शून्यसूचकः) || (*मार्गः == 0)) {
+        प्रत्यागम U_ICUDATA_NAME;
     }
 
-    return path;
+    प्रत्यागम मार्गः;
 }
-#endif
+#यदि_अन्तः
 
 /*----------------------------------------------------------------------*
  *                                                                      *
@@ -261,10 +261,10 @@ packageNameFromPath(const char *path)
  *                                                                      *
  *----------------------------------------------------------------------*/
 
-typedef struct DataCacheElement {
-    char          *name;
-    UDataMemory   *item;
-} DataCacheElement;
+प्रकारनिर्देश संरचना दत्त_Cache_Element {
+    वर्ण          *name;
+    UData_स्मृतिः   *item;
+} दत्त_Cache_Element;
 
 
 
@@ -273,130 +273,130 @@ typedef struct DataCacheElement {
  *         udata cleanup function closes the hash table; hash table in turn calls back to
  *         here for each entry.
  */
-static void U_CALLCONV DataCacheElement_deleter(void *pDCEl) {
-    DataCacheElement* p = static_cast<DataCacheElement*>(pDCEl);
+स्थिर शून्य U_CALLCONV दत्त_Cache_Element_deleter(शून्य *pDCEl) {
+    दत्त_Cache_Element* p = static_cast<दत्त_Cache_Element*>(pDCEl);
     udata_close(p->item);              /* unmaps storage */
     uprv_free(p->name);                /* delete the hash key string. */
     uprv_free(pDCEl);                  /* delete 'this'          */
 }
 
-static void U_CALLCONV udata_initHashTable(UErrorCode &err) {
-    U_ASSERT(gCommonDataCache == nullptr);
-    gCommonDataCache = uhash_open(uhash_hashChars, uhash_compareChars, nullptr, &err);
-    if (U_FAILURE(err)) {
-       return;
+स्थिर शून्य U_CALLCONV udata_init_Hash_सारणी(UError_संहिता &err) {
+    U_ASSERT(g_Common_दत्त_Cache == शून्यसूचकः);
+    g_Common_दत्त_Cache = uhash_open(uhash_hashChars, uhash_compareChars, शून्यसूचकः, &err);
+    यदि (U_FAILURE(err)) {
+       प्रत्यागम;
     }
-    U_ASSERT(gCommonDataCache != nullptr);
-    uhash_setValueDeleter(gCommonDataCache, DataCacheElement_deleter);
-    ucln_common_registerCleanup(UCLN_COMMON_UDATA, udata_cleanup);
+    U_ASSERT(g_Common_दत्त_Cache != शून्यसूचकः);
+    uhash_समुच्चयः_मानम्_Deleter(g_Common_दत्त_Cache, दत्त_Cache_Element_deleter);
+    ucln_common_पञ्जिकाकोशः_Cleanup(UCLN_COMMON_UDATA, udata_cleanup);
 }
 
  /*   udata_getCacheHashTable()
   *     Get the hash table used to store the data cache entries.
   *     Lazy create it if it doesn't yet exist.
   */
-static UHashtable *udata_getHashTable(UErrorCode &err) {
-    umtx_initOnce(gCommonDataCacheInitOnce, &udata_initHashTable, err);
-    return gCommonDataCache;
+स्थिर UHashtable *udata_get_Hash_सारणी(UError_संहिता &err) {
+    umtx_initOnce(g_Common_दत्त_Cache_Init_Once, &udata_init_Hash_सारणी, err);
+    प्रत्यागम g_Common_दत्त_Cache;
 }
 
 
 
-static UDataMemory *udata_findCachedData(const char *path, UErrorCode &err)
+स्थिर UData_स्मृतिः *udata_find_Cached_दत्त(ध्रुव वर्ण *मार्गः, UError_संहिता &err)
 {
     UHashtable        *htable;
-    UDataMemory       *retVal = nullptr;
-    DataCacheElement  *el;
-    const char        *baseName;
+    UData_स्मृतिः       *retVal = शून्यसूचकः;
+    दत्त_Cache_Element  *el;
+    ध्रुव वर्ण        *आधारः_Name;
 
-    htable = udata_getHashTable(err);
-    if (U_FAILURE(err)) {
-        return nullptr;
+    htable = udata_get_Hash_सारणी(err);
+    यदि (U_FAILURE(err)) {
+        प्रत्यागम शून्यसूचकः;
     }
 
-    baseName = findBasename(path);   /* Cache remembers only the base name, not the full path. */
-    umtx_lock(nullptr);
-    el = static_cast<DataCacheElement*>(uhash_get(htable, baseName));
-    umtx_unlock(nullptr);
-    if (el != nullptr) {
+    आधारः_Name = findBasename(मार्गः);   /* Cache remembers only the base name, not the full path. */
+    umtx_तालकम्(शून्यसूचकः);
+    el = static_cast<दत्त_Cache_Element*>(uhash_get(htable, आधारः_Name));
+    umtx_unlock(शून्यसूचकः);
+    यदि (el != शून्यसूचकः) {
         retVal = el->item;
     }
-#ifdef UDATA_DEBUG
-    fprintf(stderr, "Cache: [%s] -> %p\n", baseName, (void*) retVal);
-#endif
-    return retVal;
+#यदि_परिभाषितम् UDATA_DEBUG
+    fprintf(stderr, "Cache: [%s] -> %p\n", आधारः_Name, (शून्य*) retVal);
+#यदि_अन्तः
+    प्रत्यागम retVal;
 }
 
 
-static UDataMemory *udata_cacheDataItem(const char *path, UDataMemory *item, UErrorCode *pErr) {
-    DataCacheElement *newElement;
-    const char       *baseName;
+स्थिर UData_स्मृतिः *udata_cache_दत्त_Item(ध्रुव वर्ण *मार्गः, UData_स्मृतिः *item, UError_संहिता *pErr) {
+    दत्त_Cache_Element *newElement;
+    ध्रुव वर्ण       *आधारः_Name;
     int32_t           nameLen;
     UHashtable       *htable;
-    DataCacheElement *oldValue = nullptr;
-    UErrorCode        subErr = U_ZERO_ERROR;
+    दत्त_Cache_Element *old_मानम् = शून्यसूचकः;
+    UError_संहिता        subErr = U_ZERO_ERROR;
 
-    htable = udata_getHashTable(*pErr);
-    if (U_FAILURE(*pErr)) {
-        return nullptr;
+    htable = udata_get_Hash_सारणी(*pErr);
+    यदि (U_FAILURE(*pErr)) {
+        प्रत्यागम शून्यसूचकः;
     }
 
     /* Create a new DataCacheElement - the thingy we store in the hash table -
      * and copy the supplied path and UDataMemoryItems into it.
      */
-    newElement = static_cast<DataCacheElement*>(uprv_malloc(sizeof(DataCacheElement)));
-    if (newElement == nullptr) {
-        *pErr = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    newElement = static_cast<दत्त_Cache_Element*>(uprv_malloc(परिमाण(दत्त_Cache_Element)));
+    यदि (newElement == शून्यसूचकः) {
+        *pErr = U_स्मृतिः_आवण्टनम्_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
-    newElement->item = UDataMemory_createNewInstance(pErr);
-    if (U_FAILURE(*pErr)) {
+    newElement->item = UData_स्मृतिः_create_New_Instance(pErr);
+    यदि (U_FAILURE(*pErr)) {
         uprv_free(newElement);
-        return nullptr;
+        प्रत्यागम शून्यसूचकः;
     }
-    UDatamemory_assign(newElement->item, item);
+    UDatamemory_नियोजय(newElement->item, item);
 
-    baseName = findBasename(path);
-    nameLen = static_cast<int32_t>(uprv_strlen(baseName));
-    newElement->name = static_cast<char*>(uprv_malloc(nameLen + 1));
-    if (newElement->name == nullptr) {
-        *pErr = U_MEMORY_ALLOCATION_ERROR;
+    आधारः_Name = findBasename(मार्गः);
+    nameLen = static_cast<int32_t>(uprv_strlen(आधारः_Name));
+    newElement->name = static_cast<वर्ण*>(uprv_malloc(nameLen + 1));
+    यदि (newElement->name == शून्यसूचकः) {
+        *pErr = U_स्मृतिः_आवण्टनम्_ERROR;
         uprv_free(newElement->item);
         uprv_free(newElement);
-        return nullptr;
+        प्रत्यागम शून्यसूचकः;
     }
-    uprv_strcpy(newElement->name, baseName);
+    uprv_strcpy(newElement->name, आधारः_Name);
 
     /* Stick the new DataCacheElement into the hash table.
     */
-    umtx_lock(nullptr);
-    oldValue = static_cast<DataCacheElement*>(uhash_get(htable, path));
-    if (oldValue != nullptr) {
+    umtx_तालकम्(शून्यसूचकः);
+    old_मानम् = static_cast<दत्त_Cache_Element*>(uhash_get(htable, मार्गः));
+    यदि (old_मानम् != शून्यसूचकः) {
         subErr = U_USING_DEFAULT_WARNING;
     }
-    else {
+    अन्यथा {
         uhash_put(
             htable,
             newElement->name,               /* Key   */
             newElement,                     /* Value */
             &subErr);
     }
-    umtx_unlock(nullptr);
+    umtx_unlock(शून्यसूचकः);
 
-#ifdef UDATA_DEBUG
+#यदि_परिभाषितम् UDATA_DEBUG
     fprintf(stderr, "Cache: [%s] <<< %p : %s. vFunc=%p\n", newElement->name, 
-    (void*) newElement->item, u_errorName(subErr), (void*) newElement->item->vFuncs);
-#endif
+    (शून्य*) newElement->item, u_errorName(subErr), (शून्य*) newElement->item->vFuncs);
+#यदि_अन्तः
 
-    if (subErr == U_USING_DEFAULT_WARNING || U_FAILURE(subErr)) {
+    यदि (subErr == U_USING_DEFAULT_WARNING || U_FAILURE(subErr)) {
         *pErr = subErr; /* copy sub err unto fillin ONLY if something happens. */
         uprv_free(newElement->name);
         uprv_free(newElement->item);
         uprv_free(newElement);
-        return oldValue ? oldValue->item : nullptr;
+        प्रत्यागम old_मानम् ? old_मानम्->item : शून्यसूचकः;
     }
 
-    return newElement->item;
+    प्रत्यागम newElement->item;
 }
 
 /*----------------------------------------------------------------------*==============
@@ -408,28 +408,28 @@ static UDataMemory *udata_cacheDataItem(const char *path, UDataMemory *item, UEr
 
 U_NAMESPACE_BEGIN
 
-class UDataPathIterator
+वर्ग UData_मार्गः_Iterator
 {
-public:
-    UDataPathIterator(const char *path, const char *pkg,
-                      const char *item, const char *suffix, UBool doCheckLastFour,
-                      UErrorCode *pErrorCode);
-    const char *next(UErrorCode *pErrorCode);
+सार्वजनिक:
+    UData_मार्गः_Iterator(ध्रुव वर्ण *मार्गः, ध्रुव वर्ण *pkg,
+                      ध्रुव वर्ण *item, ध्रुव वर्ण *suffix, UBool do_Check_चरमः_Four,
+                      UError_संहिता *p_Error_संहिता);
+    ध्रुव वर्ण *next(UError_संहिता *p_Error_संहिता);
 
-private:
-    const char *path;                              /* working path (u_icudata_Dir) */
-    const char *nextPath;                          /* path following this one */
-    const char *basename;                          /* item's basename (icudt22e_mt.res)*/
+गुप्त:
+    ध्रुव वर्ण *मार्गः;                              /* working path (u_icudata_Dir) */
+    ध्रुव वर्ण *अग्र_मार्गः;                          /* path following this one */
+    ध्रुव वर्ण *basename;                          /* item's basename (icudt22e_mt.res)*/
 
     StringPiece suffix;                            /* item suffix (can be null) */
 
     uint32_t    basenameLen;                       /* length of basename */
 
-    CharString  itemPath;                          /* path passed in with item name */
-    CharString  pathBuffer;                        /* output path for this it'ion */
+    CharString  item_मार्गः;                          /* path passed in with item name */
+    CharString  मार्गः_बफर;                        /* output path for this it'ion */
     CharString  packageStub;                       /* example:  "/icudt28b". Will ignore that leaf in set paths. */
 
-    UBool       checkLastFour;                     /* if true then allow paths such as '/foo/myapp.dat'
+    UBool       check_चरमः_Four;                     /* if true then allow paths such as '/foo/myapp.dat'
                                                     * to match, checks last 4 chars of suffix with
                                                     * last 4 of path, then previous chars. */
 };
@@ -445,26 +445,26 @@ private:
  *  Note: inSuffix may also be the 'item' being searched for as well, (ex: "ibm-5348_P100-1997.cnv"), in which case 
  *        the 'item' parameter is often the same as pkg. (Though sometimes might have a tree part as well, ex: "icudt62l-curr").
  */
-UDataPathIterator::UDataPathIterator(const char *inPath, const char *pkg,
-                                     const char *item, const char *inSuffix, UBool doCheckLastFour,
-                                     UErrorCode *pErrorCode)
+UData_मार्गः_Iterator::UData_मार्गः_Iterator(ध्रुव वर्ण *अन्तर्_मार्गः, ध्रुव वर्ण *pkg,
+                                     ध्रुव वर्ण *item, ध्रुव वर्ण *अन्तर्_Suffix, UBool do_Check_चरमः_Four,
+                                     UError_संहिता *p_Error_संहिता)
 {
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "SUFFIX1=%s PATH=%s\n", inSuffix, inPath);
-#endif
+#यदि_परिभाषितम् UDATA_DEBUG
+        fprintf(stderr, "SUFFIX1=%s PATH=%s\n", अन्तर्_Suffix, अन्तर्_मार्गः);
+#यदि_अन्तः
     /** Path **/
-    if(inPath == nullptr) {
-        path = u_getDataDirectory();
-    } else {
-        path = inPath;
+    यदि(अन्तर्_मार्गः == शून्यसूचकः) {
+        मार्गः = u_get_दत्त_Directory();
+    } अन्यथा {
+        मार्गः = अन्तर्_मार्गः;
     }
 
     /** Package **/
-    if(pkg != nullptr) {
-      packageStub.append(U_FILE_SEP_CHAR, *pErrorCode).append(pkg, *pErrorCode);
-#ifdef UDATA_DEBUG
-      fprintf(stderr, "STUB=%s [%d]\n", packageStub.data(), packageStub.length());
-#endif
+    यदि(pkg != शून्यसूचकः) {
+      packageStub.append(U_FILE_SEP_CHAR, *p_Error_संहिता).append(pkg, *p_Error_संहिता);
+#यदि_परिभाषितम् UDATA_DEBUG
+      fprintf(stderr, "STUB=%s [%d]\n", packageStub.दत्त(), packageStub.length());
+#यदि_अन्तः
     }
 
     /** Item **/
@@ -472,37 +472,37 @@ UDataPathIterator::UDataPathIterator(const char *inPath, const char *pkg,
     basenameLen = static_cast<int32_t>(uprv_strlen(basename));
 
     /** Item path **/
-    if(basename == item) {
-        nextPath = path;
-    } else {
-        itemPath.append(item, static_cast<int32_t>(basename - item), *pErrorCode);
-        nextPath = itemPath.data();
+    यदि(basename == item) {
+        अग्र_मार्गः = मार्गः;
+    } अन्यथा {
+        item_मार्गः.append(item, static_cast<int32_t>(basename - item), *p_Error_संहिता);
+        अग्र_मार्गः = item_मार्गः.दत्त();
     }
-#ifdef UDATA_DEBUG
-    fprintf(stderr, "SUFFIX=%s [%p]\n", inSuffix, (void*) inSuffix);
-#endif
+#यदि_परिभाषितम् UDATA_DEBUG
+    fprintf(stderr, "SUFFIX=%s [%p]\n", अन्तर्_Suffix, (शून्य*) अन्तर्_Suffix);
+#यदि_अन्तः
 
     /** Suffix  **/
-    if(inSuffix != nullptr) {
-        suffix = inSuffix;
-    } else {
+    यदि(अन्तर्_Suffix != शून्यसूचकः) {
+        suffix = अन्तर्_Suffix;
+    } अन्यथा {
         suffix = "";
     }
 
-    checkLastFour = doCheckLastFour;
+    check_चरमः_Four = do_Check_चरमः_Four;
 
     /* pathBuffer will hold the output path strings returned by this iterator */
 
-#ifdef UDATA_DEBUG
+#यदि_परिभाषितम् UDATA_DEBUG
     fprintf(stderr, "0: init %s -> [path=%s], [base=%s], [suff=%s], [itempath=%s], [nextpath=%s], [checklast4=%s]\n",
             item,
-            path,
+            मार्गः,
             basename,
-            suffix.data(),
-            itemPath.data(),
-            nextPath,
-            checkLastFour?"true":"false");
-#endif
+            suffix.दत्त(),
+            item_मार्गः.दत्त(),
+            अग्र_मार्गः,
+            check_चरमः_Four?"true":"false");
+#यदि_अन्तः
 }
 
 /**
@@ -512,124 +512,124 @@ UDataPathIterator::UDataPathIterator(const char *inPath, const char *pkg,
  * @param len  If set, pointer to the length of the returned path, for convenience. 
  * @return Pointer to the next path segment, or nullptr if there are no more.
  */
-const char *UDataPathIterator::next(UErrorCode *pErrorCode)
+ध्रुव वर्ण *UData_मार्गः_Iterator::next(UError_संहिता *p_Error_संहिता)
 {
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    यदि(U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम शून्यसूचकः;
     }
 
-    const char *currentPath = nullptr;
-    int32_t     pathLen = 0;
-    const char *pathBasename;
+    ध्रुव वर्ण *current_मार्गः = शून्यसूचकः;
+    int32_t     मार्गः_Len = 0;
+    ध्रुव वर्ण *मार्गः_Basename;
 
-    do
+    कुरु
     {
-        if( nextPath == nullptr ) {
-            break;
+        यदि( अग्र_मार्गः == शून्यसूचकः ) {
+            भङ्ग;
         }
-        currentPath = nextPath;
+        current_मार्गः = अग्र_मार्गः;
 
-        if(nextPath == itemPath.data()) { /* we were processing item's path. */
-            nextPath = path; /* start with regular path next tm. */
-            pathLen = static_cast<int32_t>(uprv_strlen(currentPath));
-        } else {
+        यदि(अग्र_मार्गः == item_मार्गः.दत्त()) { /* we were processing item's path. */
+            अग्र_मार्गः = मार्गः; /* start with regular path next tm. */
+            मार्गः_Len = static_cast<int32_t>(uprv_strlen(current_मार्गः));
+        } अन्यथा {
             /* fix up next for next time */
-            nextPath = uprv_strchr(currentPath, U_PATH_SEP_CHAR);
-            if(nextPath == nullptr) {
+            अग्र_मार्गः = uprv_strchr(current_मार्गः, U_मार्गः_SEP_CHAR);
+            यदि(अग्र_मार्गः == शून्यसूचकः) {
                 /* segment: entire path */
-                pathLen = static_cast<int32_t>(uprv_strlen(currentPath));
-            } else {
+                मार्गः_Len = static_cast<int32_t>(uprv_strlen(current_मार्गः));
+            } अन्यथा {
                 /* segment: until next segment */
-                pathLen = static_cast<int32_t>(nextPath - currentPath);
+                मार्गः_Len = static_cast<int32_t>(अग्र_मार्गः - current_मार्गः);
                 /* skip divider */
-                nextPath ++;
+                अग्र_मार्गः ++;
             }
         }
 
-        if(pathLen == 0) {
-            continue;
+        यदि(मार्गः_Len == 0) {
+            अनुवर्त;
         }
 
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "rest of path (IDD) = %s\n", currentPath);
+#यदि_परिभाषितम् UDATA_DEBUG
+        fprintf(stderr, "rest of path (IDD) = %s\n", current_मार्गः);
         fprintf(stderr, "                     ");
         { 
             int32_t qqq;
-            for(qqq=0;qqq<pathLen;qqq++)
+            प्रति(qqq=0;qqq<मार्गः_Len;qqq++)
             {
                 fprintf(stderr, " ");
             }
 
             fprintf(stderr, "^\n");
         }
-#endif
-        pathBuffer.clear().append(currentPath, pathLen, *pErrorCode);
+#यदि_अन्तः
+        मार्गः_बफर.clear().append(current_मार्गः, मार्गः_Len, *p_Error_संहिता);
 
         /* check for .dat files */
-        pathBasename = findBasename(pathBuffer.data());
+        मार्गः_Basename = findBasename(मार्गः_बफर.दत्त());
 
-        if(checkLastFour && 
-           (pathLen>=4) &&
-           uprv_strncmp(pathBuffer.data() +(pathLen-4), suffix.data(), 4)==0 && /* suffix matches */
-           uprv_strncmp(findBasename(pathBuffer.data()), basename, basenameLen)==0  && /* base matches */
-           uprv_strlen(pathBasename)==(basenameLen+4)) { /* base+suffix = full len */
+        यदि(check_चरमः_Four && 
+           (मार्गः_Len>=4) &&
+           uprv_strncmp(मार्गः_बफर.दत्त() +(मार्गः_Len-4), suffix.दत्त(), 4)==0 && /* suffix matches */
+           uprv_strncmp(findBasename(मार्गः_बफर.दत्त()), basename, basenameLen)==0  && /* base matches */
+           uprv_strlen(मार्गः_Basename)==(basenameLen+4)) { /* base+suffix = full len */
 
-#ifdef UDATA_DEBUG
-            fprintf(stderr, "Have %s file on the path: %s\n", suffix.data(), pathBuffer.data());
-#endif
+#यदि_परिभाषितम् UDATA_DEBUG
+            fprintf(stderr, "Have %s file on the path: %s\n", suffix.दत्त(), मार्गः_बफर.दत्त());
+#यदि_अन्तः
             /* do nothing */
         }
-        else 
+        अन्यथा 
         {       /* regular dir path */
-            if(pathBuffer[pathLen-1] != U_FILE_SEP_CHAR) {
-                if((pathLen>=4) &&
-                   uprv_strncmp(pathBuffer.data()+(pathLen-4), ".dat", 4) == 0)
+            यदि(मार्गः_बफर[मार्गः_Len-1] != U_FILE_SEP_CHAR) {
+                यदि((मार्गः_Len>=4) &&
+                   uprv_strncmp(मार्गः_बफर.दत्त()+(मार्गः_Len-4), ".dat", 4) == 0)
                 {
-#ifdef UDATA_DEBUG
-                    fprintf(stderr, "skipping non-directory .dat file %s\n", pathBuffer.data());
-#endif
-                    continue;
+#यदि_परिभाषितम् UDATA_DEBUG
+                    fprintf(stderr, "skipping non-directory .dat file %s\n", मार्गः_बफर.दत्त());
+#यदि_अन्तः
+                    अनुवर्त;
                 }
 
                 /* Check if it is a directory with the same name as our package */
-                if(!packageStub.isEmpty() &&
-                   (pathLen > packageStub.length()) &&
-                   !uprv_strcmp(pathBuffer.data() + pathLen - packageStub.length(), packageStub.data())) {
-#ifdef UDATA_DEBUG
-                  fprintf(stderr, "Found stub %s (will add package %s of len %d)\n", packageStub.data(), basename, basenameLen);
-#endif
-                  pathBuffer.truncate(pathLen - packageStub.length());
+                यदि(!packageStub.is_रिक्तानि() &&
+                   (मार्गः_Len > packageStub.length()) &&
+                   !uprv_strcmp(मार्गः_बफर.दत्त() + मार्गः_Len - packageStub.length(), packageStub.दत्त())) {
+#यदि_परिभाषितम् UDATA_DEBUG
+                  fprintf(stderr, "Found stub %s (will add package %s of len %d)\n", packageStub.दत्त(), basename, basenameLen);
+#यदि_अन्तः
+                  मार्गः_बफर.truncate(मार्गः_Len - packageStub.length());
                 }
-                pathBuffer.append(U_FILE_SEP_CHAR, *pErrorCode);
+                मार्गः_बफर.append(U_FILE_SEP_CHAR, *p_Error_संहिता);
             }
 
             /* + basename */
-            pathBuffer.append(packageStub.data()+1, packageStub.length()-1, *pErrorCode);
+            मार्गः_बफर.append(packageStub.दत्त()+1, packageStub.length()-1, *p_Error_संहिता);
 
-            if (!suffix.empty())  /* tack on suffix */
+            यदि (!suffix.empty())  /* tack on suffix */
             {
-                if (suffix.length() > 4) {
+                यदि (suffix.length() > 4) {
                     // If the suffix is actually an item ("ibm-5348_P100-1997.cnv") and not an extension (".res")
                     // then we need to ensure that the path ends with a separator.
-                    pathBuffer.ensureEndsWithFileSeparator(*pErrorCode);
+                    मार्गः_बफर.ensure_अन्ताः_With_File_Separator(*p_Error_संहिता);
                 }
-                pathBuffer.append(suffix, *pErrorCode);
+                मार्गः_बफर.append(suffix, *p_Error_संहिता);
             }
         }
 
-#ifdef UDATA_DEBUG
-        fprintf(stderr, " -->  %s\n", pathBuffer.data());
-#endif
+#यदि_परिभाषितम् UDATA_DEBUG
+        fprintf(stderr, " -->  %s\n", मार्गः_बफर.दत्त());
+#यदि_अन्तः
 
-        return pathBuffer.data();
+        प्रत्यागम मार्गः_बफर.दत्त();
 
-    } while(path);
+    } यावत्(मार्गः);
 
     /* fell way off the end */
-    return nullptr;
+    प्रत्यागम शून्यसूचकः;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
 /* ==================================================================================*/
 
@@ -641,10 +641,10 @@ U_NAMESPACE_END
  *      our common data.                                                *
  *                                                                      *
  *----------------------------------------------------------------------*/
-#if !defined(ICU_DATA_DIR_WINDOWS)
+#यदि !defined(ICU_दत्त_DIR_WINDOWS)
 // When using the Windows system data, we expect only a single data file.
-extern "C" const DataHeader U_DATA_API U_ICUDATA_ENTRY_POINT;
-#endif
+बाह्य "C" ध्रुव दत्त_शीर्षकम् U_दत्त_API U_ICUDATA_प्रविष्टिः_POINT;
+#यदि_अन्तः
 
 /*
  * This would be a good place for weak-linkage declarations of
@@ -666,42 +666,42 @@ extern const void *uprv_getICUData_conversion() ATTRIBUTE_WEAK;
  *                       just return the cached UDataMem object.        *
  *                                                                      *
  *----------------------------------------------------------------------*/
-static UDataMemory *
-openCommonData(const char *path,          /*  Path from OpenChoice?          */
-               int32_t commonDataIndex,   /*  ICU Data (index >= 0) if path == nullptr */
-               UErrorCode *pErrorCode)
+स्थिर UData_स्मृतिः *
+open_Common_दत्त(ध्रुव वर्ण *मार्गः,          /*  Path from OpenChoice?          */
+               int32_t common_दत्त_सूचकांक,   /*  ICU Data (index >= 0) if path == nullptr */
+               UError_संहिता *p_Error_संहिता)
 {
-    UDataMemory tData;
-    const char *pathBuffer;
-    const char *inBasename;
+    UData_स्मृतिः t_दत्त;
+    ध्रुव वर्ण *मार्गः_बफर;
+    ध्रुव वर्ण *अन्तर्_Basename;
 
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    यदि (U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम शून्यसूचकः;
     }
 
-    UDataMemory_init(&tData);
+    UData_स्मृतिः_init(&t_दत्त);
 
     /* ??????? TODO revisit this */ 
-    if (commonDataIndex >= 0) {
+    यदि (common_दत्त_सूचकांक >= 0) {
         /* "mini-cache" for common ICU data */
-        if(commonDataIndex >= UPRV_LENGTHOF(gCommonICUDataArray)) {
-            return nullptr;
+        यदि(common_दत्त_सूचकांक >= UPRV_LENGTHOF(gCommonICUDataArray)) {
+            प्रत्यागम शून्यसूचकः;
         }
         {
-            Mutex lock;
-            if(gCommonICUDataArray[commonDataIndex] != nullptr) {
-                return gCommonICUDataArray[commonDataIndex];
+            Mutex तालकम्;
+            यदि(gCommonICUDataArray[common_दत्त_सूचकांक] != शून्यसूचकः) {
+                प्रत्यागम gCommonICUDataArray[common_दत्त_सूचकांक];
             }
-#if !defined(ICU_DATA_DIR_WINDOWS)
+#यदि !defined(ICU_दत्त_DIR_WINDOWS)
 // When using the Windows system data, we expect only a single data file.
             int32_t i;
-            for(i = 0; i < commonDataIndex; ++i) {
-                if(gCommonICUDataArray[i]->pHeader == &U_ICUDATA_ENTRY_POINT) {
+            प्रति(i = 0; i < common_दत्त_सूचकांक; ++i) {
+                यदि(gCommonICUDataArray[i]->p_शीर्षकम् == &U_ICUDATA_प्रविष्टिः_POINT) {
                     /* The linked-in data is already in the list. */
-                    return nullptr;
+                    प्रत्यागम शून्यसूचकः;
                 }
             }
-#endif
+#यदि_अन्तः
         }
 
         /* Add the linked-in data to the list. */
@@ -717,14 +717,14 @@ openCommonData(const char *path,          /*  Path from OpenChoice?          */
             setCommonICUDataPointer(uprv_getICUData_conversion(), false, pErrorCode);
         }
         */
-#if !defined(ICU_DATA_DIR_WINDOWS)
+#यदि !defined(ICU_दत्त_DIR_WINDOWS)
 // When using the Windows system data, we expect only a single data file.
-        setCommonICUDataPointer(&U_ICUDATA_ENTRY_POINT, false, pErrorCode);
+        समुच्चयः_Common_ICUData_Pointer(&U_ICUDATA_प्रविष्टिः_POINT, असत्य, p_Error_संहिता);
         {
-            Mutex lock;
-            return gCommonICUDataArray[commonDataIndex];
+            Mutex तालकम्;
+            प्रत्यागम gCommonICUDataArray[common_दत्त_सूचकांक];
         }
-#endif
+#यदि_अन्तः
     }
 
 
@@ -732,68 +732,68 @@ openCommonData(const char *path,          /*  Path from OpenChoice?          */
 
     /* Find the base name portion of the supplied path.   */
     /*   inBasename will be left pointing somewhere within the original path string.      */
-    inBasename = findBasename(path);
-#ifdef UDATA_DEBUG
-    fprintf(stderr, "inBasename = %s\n", inBasename);
-#endif
+    अन्तर्_Basename = findBasename(मार्गः);
+#यदि_परिभाषितम् UDATA_DEBUG
+    fprintf(stderr, "inBasename = %s\n", अन्तर्_Basename);
+#यदि_अन्तः
 
-    if(*inBasename==0) {
+    यदि(*अन्तर्_Basename==0) {
         /* no basename.     This will happen if the original path was a directory name,   */
         /*    like  "a/b/c/".   (Fallback to separate files will still work.)             */
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "ocd: no basename in %s, bailing.\n", path);
-#endif
-        if (U_SUCCESS(*pErrorCode)) {
-            *pErrorCode=U_FILE_ACCESS_ERROR;
+#यदि_परिभाषितम् UDATA_DEBUG
+        fprintf(stderr, "ocd: no basename in %s, bailing.\n", मार्गः);
+#यदि_अन्तः
+        यदि (U_SUCCESS(*p_Error_संहिता)) {
+            *p_Error_संहिता=U_FILE_ACCESS_ERROR;
         }
-        return nullptr;
+        प्रत्यागम शून्यसूचकः;
     }
 
    /* Is the requested common data file already open and cached?                     */
    /*   Note that the cache is keyed by the base name only.  The rest of the path,   */
    /*     if any, is not considered.                                                 */
-    UDataMemory  *dataToReturn = udata_findCachedData(inBasename, *pErrorCode);
-    if (dataToReturn != nullptr || U_FAILURE(*pErrorCode)) {
-        return dataToReturn;
+    UData_स्मृतिः  *दत्त_गन्तव्यम्_Return = udata_find_Cached_दत्त(अन्तर्_Basename, *p_Error_संहिता);
+    यदि (दत्त_गन्तव्यम्_Return != शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम दत्त_गन्तव्यम्_Return;
     }
 
     /* Requested item is not in the cache.
      * Hunt it down, trying all the path locations
      */
 
-    UDataPathIterator iter(u_getDataDirectory(), inBasename, path, ".dat", true, pErrorCode);
+    UData_मार्गः_Iterator iter(u_get_दत्त_Directory(), अन्तर्_Basename, मार्गः, ".dat", सत्य, p_Error_संहिता);
 
-    while ((UDataMemory_isLoaded(&tData)==false) && (pathBuffer = iter.next(pErrorCode)) != nullptr)
+    यावत् ((UData_स्मृतिः_is_Loaded(&t_दत्त)==असत्य) && (मार्गः_बफर = iter.next(p_Error_संहिता)) != शून्यसूचकः)
     {
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "ocd: trying path %s - ", pathBuffer);
-#endif
-        uprv_mapFile(&tData, pathBuffer, pErrorCode);
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "%s\n", UDataMemory_isLoaded(&tData)?"LOADED":"not loaded");
-#endif
+#यदि_परिभाषितम् UDATA_DEBUG
+        fprintf(stderr, "ocd: trying path %s - ", मार्गः_बफर);
+#यदि_अन्तः
+        uprv_mapFile(&t_दत्त, मार्गः_बफर, p_Error_संहिता);
+#यदि_परिभाषितम् UDATA_DEBUG
+        fprintf(stderr, "%s\n", UData_स्मृतिः_is_Loaded(&t_दत्त)?"LOADED":"not loaded");
+#यदि_अन्तः
     }
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    यदि (U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम शून्यसूचकः;
     }
 
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    यदि (U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम शून्यसूचकः;
     }
-    if (!UDataMemory_isLoaded(&tData)) {
+    यदि (!UData_स्मृतिः_is_Loaded(&t_दत्त)) {
         /* no common data */
-        *pErrorCode=U_FILE_ACCESS_ERROR;
-        return nullptr;
+        *p_Error_संहिता=U_FILE_ACCESS_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
 
     /* we have mapped a file, check its header */
-    udata_checkCommonData(&tData, pErrorCode);
+    udata_check_Common_दत्त(&t_दत्त, p_Error_संहिता);
 
 
     /* Cache the UDataMemory struct for this .dat file,
      *   so we won't need to hunt it down and map it again next time
      *   something is needed from it.                */
-    return udata_cacheDataItem(inBasename, &tData, pErrorCode);
+    प्रत्यागम udata_cache_दत्त_Item(अन्तर्_Basename, &t_दत्त, p_Error_संहिता);
 }
 
 
@@ -807,11 +807,11 @@ openCommonData(const char *path,          /*  Path from OpenChoice?          */
  *                   return true if new data is loaded, false otherwise.*
  *                                                                      *
  *----------------------------------------------------------------------*/
-static UBool extendICUData(UErrorCode *pErr)
+स्थिर UBool extendICUData(UError_संहिता *pErr)
 {
-    UDataMemory   *pData;
-    UDataMemory   copyPData;
-    UBool         didUpdate = false;
+    UData_स्मृतिः   *p_दत्त;
+    UData_स्मृतिः   copyPData;
+    UBool         didUpdate = असत्य;
 
     /*
      * There is a chance for a race condition here.
@@ -823,36 +823,36 @@ static UBool extendICUData(UErrorCode *pErr)
      * In this case, use a mutex to prevent the race.
      * Use a specific mutex to avoid nested locks of the global mutex.
      */
-#if MAP_IMPLEMENTATION==MAP_STDIO
-    static UMutex extendICUDataMutex;
-    umtx_lock(&extendICUDataMutex);
-#endif
-    if(!umtx_loadAcquire(gHaveTriedToLoadCommonData)) {
+#यदि MAP_IMPLEMENTATION==MAP_STDIO
+    स्थिर UMutex extendICUDataMutex;
+    umtx_तालकम्(&extendICUDataMutex);
+#यदि_अन्तः
+    यदि(!umtx_आरोपय_Acquire(g_Have_Tried_गन्तव्यम्_आरोपय_Common_दत्त)) {
         /* See if we can explicitly open a .dat file for the ICUData. */
-        pData = openCommonData(
+        p_दत्त = open_Common_दत्त(
                    U_ICUDATA_NAME,            /*  "icudt20l" , for example.          */
                    -1,                        /*  Pretend we're not opening ICUData  */
                    pErr);
 
         /* How about if there is no pData, eh... */
 
-       UDataMemory_init(&copyPData);
-       if(pData != nullptr) {
-          UDatamemory_assign(&copyPData, pData);
-          copyPData.map = nullptr;     /* The mapping for this data is owned by the hash table */
-          copyPData.mapAddr = nullptr; /*   which will unmap it when ICU is shut down.         */
+       UData_स्मृतिः_init(&copyPData);
+       यदि(p_दत्त != शून्यसूचकः) {
+          UDatamemory_नियोजय(&copyPData, p_दत्त);
+          copyPData.map = शून्यसूचकः;     /* The mapping for this data is owned by the hash table */
+          copyPData.mapAddr = शून्यसूचकः; /*   which will unmap it when ICU is shut down.         */
                                        /* CommonICUData is also unmapped when ICU is shut down.*/
                                        /* To avoid unmapping the data twice, zero out the map  */
                                        /*   fields in the UDataMemory that we're assigning     */
                                        /*   to CommonICUData.                                  */
 
           didUpdate = /* no longer using this result */
-              setCommonICUData(&copyPData,/*  The new common data.                                */
-                       false,             /*  No warnings if write didn't happen                  */
+              समुच्चयः_Common_ICUData(&copyPData,/*  The new common data.                                */
+                       असत्य,             /*  No warnings if write didn't happen                  */
                        pErr);             /*  setCommonICUData honors errors; NOP if error set    */
         }
 
-        umtx_storeRelease(gHaveTriedToLoadCommonData, 1);
+        umtx_storeRelease(g_Have_Tried_गन्तव्यम्_आरोपय_Common_दत्त, 1);
     }
 
     didUpdate = findCommonICUDataByName(U_ICUDATA_NAME, *pErr);  /* Return 'true' when a racing writes out the extended                 */
@@ -860,10 +860,10 @@ static UBool extendICUData(UErrorCode *pErr)
                                                           /* extended data can be examined.                                             */
                                                           /* Also handles a race through here before gHaveTriedToLoadCommonData is set. */
 
-#if MAP_IMPLEMENTATION==MAP_STDIO
+#यदि MAP_IMPLEMENTATION==MAP_STDIO
     umtx_unlock(&extendICUDataMutex);
-#endif
-    return didUpdate;               /* Return true if ICUData pointer was updated.   */
+#यदि_अन्तः
+    प्रत्यागम didUpdate;               /* Return true if ICUData pointer was updated.   */
                                     /*   (Could potentially have been done by another thread racing */
                                     /*   us through here, but that's fine, we still return true    */
                                     /*   so that current thread will also examine extended data.   */
@@ -874,28 +874,28 @@ static UBool extendICUData(UErrorCode *pErr)
  *   udata_setCommonData                                                *
  *                                                                      *
  *----------------------------------------------------------------------*/
-U_CAPI void U_EXPORT2
-udata_setCommonData(const void *data, UErrorCode *pErrorCode) {
-    UDataMemory dataMemory;
+U_CAPI शून्य U_EXPORT2
+udata_समुच्चयः_Common_दत्त(ध्रुव शून्य *दत्त, UError_संहिता *p_Error_संहिता) {
+    UData_स्मृतिः दत्त_स्मृतिः;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    यदि(p_Error_संहिता==शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम;
     }
 
-    if(data==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    यदि(दत्त==शून्यसूचकः) {
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
 
     /* set the data pointer and test for validity */
-    UDataMemory_init(&dataMemory);
-    UDataMemory_setData(&dataMemory, data);
-    udata_checkCommonData(&dataMemory, pErrorCode);
-    if (U_FAILURE(*pErrorCode)) {return;}
+    UData_स्मृतिः_init(&दत्त_स्मृतिः);
+    UData_स्मृतिः_समुच्चयः_दत्त(&दत्त_स्मृतिः, दत्त);
+    udata_check_Common_दत्त(&दत्त_स्मृतिः, p_Error_संहिता);
+    यदि (U_FAILURE(*p_Error_संहिता)) {प्रत्यागम;}
 
     /* we have good data */
     /* Set it up as the ICU Common Data.  */
-    setCommonICUData(&dataMemory, true, pErrorCode);
+    समुच्चयः_Common_ICUData(&दत्त_स्मृतिः, सत्य, p_Error_संहिता);
 }
 
 /*---------------------------------------------------------------------------
@@ -903,23 +903,23 @@ udata_setCommonData(const void *data, UErrorCode *pErrorCode) {
  *  udata_setAppData
  *
  *---------------------------------------------------------------------------- */
-U_CAPI void U_EXPORT2
-udata_setAppData(const char *path, const void *data, UErrorCode *err)
+U_CAPI शून्य U_EXPORT2
+udata_समुच्चयः_App_दत्त(ध्रुव वर्ण *मार्गः, ध्रुव शून्य *दत्त, UError_संहिता *err)
 {
-    UDataMemory     udm;
+    UData_स्मृतिः     udm;
 
-    if(err==nullptr || U_FAILURE(*err)) {
-        return;
+    यदि(err==शून्यसूचकः || U_FAILURE(*err)) {
+        प्रत्यागम;
     }
-    if(data==nullptr) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    यदि(दत्त==शून्यसूचकः) {
+        *err=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
 
-    UDataMemory_init(&udm);
-    UDataMemory_setData(&udm, data);
-    udata_checkCommonData(&udm, err);
-    udata_cacheDataItem(path, &udm, err);
+    UData_स्मृतिः_init(&udm);
+    UData_स्मृतिः_समुच्चयः_दत्त(&udm, दत्त);
+    udata_check_Common_दत्त(&udm, err);
+    udata_cache_दत्त_Item(मार्गः, &udm, err);
 }
 
 /*----------------------------------------------------------------------------*
@@ -933,119 +933,119 @@ udata_setAppData(const char *path, const void *data, UErrorCode *err)
  *                    Return nullptr on any sort of failure.                     *
  *                                                                            *
  *----------------------------------------------------------------------------*/
-static UDataMemory *
-checkDataItem
+स्थिर UData_स्मृतिः *
+check_दत्त_Item
 (
- const DataHeader         *pHeader,         /* The data item to be checked.                */
- UDataMemoryIsAcceptable  *isAcceptable,    /* App's call-back function                    */
- void                     *context,         /*   pass-thru param for above.                */
- const char               *type,            /*   pass-thru param for above.                */
- const char               *name,            /*   pass-thru param for above.                */
- UErrorCode               *nonFatalErr,     /* Error code if this data was not acceptable  */
+ ध्रुव दत्त_शीर्षकम्         *p_शीर्षकम्,         /* The data item to be checked.                */
+ UData_स्मृतिः_Is_Acceptable  *isAcceptable,    /* App's call-back function                    */
+ शून्य                     *context,         /*   pass-thru param for above.                */
+ ध्रुव वर्ण               *type,            /*   pass-thru param for above.                */
+ ध्रुव वर्ण               *name,            /*   pass-thru param for above.                */
+ UError_संहिता               *nonFatalErr,     /* Error code if this data was not acceptable  */
                                             /*   but openChoice should continue with       */
                                             /*   trying to get data from fallback path.    */
- UErrorCode               *fatalErr         /* Bad error, caller should return immediately */
+ UError_संहिता               *fatalErr         /* Bad error, caller should return immediately */
  )
 {
-    UDataMemory  *rDataMem = nullptr;          /* the new UDataMemory, to be returned.        */
+    UData_स्मृतिः  *r_दत्त_Mem = शून्यसूचकः;          /* the new UDataMemory, to be returned.        */
 
-    if (U_FAILURE(*fatalErr)) {
-        return nullptr;
+    यदि (U_FAILURE(*fatalErr)) {
+        प्रत्यागम शून्यसूचकः;
     }
 
-    if(pHeader->dataHeader.magic1==0xda &&
-        pHeader->dataHeader.magic2==0x27 &&
-        (isAcceptable==nullptr || isAcceptable(context, type, name, &pHeader->info))
+    यदि(p_शीर्षकम्->दत्त_शीर्षकम्_2.magic1==0xda &&
+        p_शीर्षकम्->दत्त_शीर्षकम्_2.magic2==0x27 &&
+        (isAcceptable==शून्यसूचकः || isAcceptable(context, type, name, &p_शीर्षकम्->info))
     ) {
-        rDataMem=UDataMemory_createNewInstance(fatalErr);
-        if (U_FAILURE(*fatalErr)) {
-            return nullptr;
+        r_दत्त_Mem=UData_स्मृतिः_create_New_Instance(fatalErr);
+        यदि (U_FAILURE(*fatalErr)) {
+            प्रत्यागम शून्यसूचकः;
         }
-        rDataMem->pHeader = pHeader;
-    } else {
+        r_दत्त_Mem->p_शीर्षकम् = p_शीर्षकम्;
+    } अन्यथा {
         /* the data is not acceptable, look further */
         /* If we eventually find something good, this errorcode will be */
         /*    cleared out.                                              */
         *nonFatalErr=U_INVALID_FORMAT_ERROR;
     }
-    return rDataMem;
+    प्रत्यागम r_दत्त_Mem;
 }
 
 /**
  * @return 0 if not loaded, 1 if loaded or err 
  */
-static UDataMemory *doLoadFromIndividualFiles(const char *pkgName, 
-        const char *dataPath, const char *tocEntryPathSuffix,
+स्थिर UData_स्मृतिः *do_आरोपय_From_Individual_Files(ध्रुव वर्ण *pkgName, 
+        ध्रुव वर्ण *दत्त_मार्गः, ध्रुव वर्ण *toc_प्रविष्टिः_मार्गः_Suffix,
             /* following arguments are the same as doOpenChoice itself */
-            const char *path, const char *type, const char *name,
-             UDataMemoryIsAcceptable *isAcceptable, void *context,
-             UErrorCode *subErrorCode,
-             UErrorCode *pErrorCode)
+            ध्रुव वर्ण *मार्गः, ध्रुव वर्ण *type, ध्रुव वर्ण *name,
+             UData_स्मृतिः_Is_Acceptable *isAcceptable, शून्य *context,
+             UError_संहिता *sub_Error_संहिता,
+             UError_संहिता *p_Error_संहिता)
 {
-    const char         *pathBuffer;
-    UDataMemory         dataMemory;
-    UDataMemory *pEntryData;
+    ध्रुव वर्ण         *मार्गः_बफर;
+    UData_स्मृतिः         दत्त_स्मृतिः;
+    UData_स्मृतिः *p_प्रविष्टिः_दत्त;
 
     /* look in ind. files: package\nam.typ  ========================= */
     /* init path iterator for individual files */
-    UDataPathIterator iter(dataPath, pkgName, path, tocEntryPathSuffix, false, pErrorCode);
+    UData_मार्गः_Iterator iter(दत्त_मार्गः, pkgName, मार्गः, toc_प्रविष्टिः_मार्गः_Suffix, असत्य, p_Error_संहिता);
 
-    while ((pathBuffer = iter.next(pErrorCode)) != nullptr)
+    यावत् ((मार्गः_बफर = iter.next(p_Error_संहिता)) != शून्यसूचकः)
     {
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "UDATA: trying individual file %s\n", pathBuffer);
-#endif
-        if (uprv_mapFile(&dataMemory, pathBuffer, pErrorCode))
+#यदि_परिभाषितम् UDATA_DEBUG
+        fprintf(stderr, "UDATA: trying individual file %s\n", मार्गः_बफर);
+#यदि_अन्तः
+        यदि (uprv_mapFile(&दत्त_स्मृतिः, मार्गः_बफर, p_Error_संहिता))
         {
-            pEntryData = checkDataItem(dataMemory.pHeader, isAcceptable, context, type, name, subErrorCode, pErrorCode);
-            if (pEntryData != nullptr) {
+            p_प्रविष्टिः_दत्त = check_दत्त_Item(दत्त_स्मृतिः.p_शीर्षकम्, isAcceptable, context, type, name, sub_Error_संहिता, p_Error_संहिता);
+            यदि (p_प्रविष्टिः_दत्त != शून्यसूचकः) {
                 /* Data is good.
                 *  Hand off ownership of the backing memory to the user's UDataMemory.
                 *  and return it.   */
-                pEntryData->mapAddr = dataMemory.mapAddr;
-                pEntryData->map     = dataMemory.map;
-                pEntryData->length  = dataMemory.length;
+                p_प्रविष्टिः_दत्त->mapAddr = दत्त_स्मृतिः.mapAddr;
+                p_प्रविष्टिः_दत्त->map     = दत्त_स्मृतिः.map;
+                p_प्रविष्टिः_दत्त->length  = दत्त_स्मृतिः.length;
 
-#ifdef UDATA_DEBUG
-                fprintf(stderr, "** Mapped file: %s\n", pathBuffer);
-#endif
-                return pEntryData;
+#यदि_परिभाषितम् UDATA_DEBUG
+                fprintf(stderr, "** Mapped file: %s\n", मार्गः_बफर);
+#यदि_अन्तः
+                प्रत्यागम p_प्रविष्टिः_दत्त;
             }
 
             /* the data is not acceptable, or some error occurred.  Either way, unmap the memory */
-            udata_close(&dataMemory);
+            udata_close(&दत्त_स्मृतिः);
 
             /* If we had a nasty error, bail out completely.  */
-            if (U_FAILURE(*pErrorCode)) {
-                return nullptr;
+            यदि (U_FAILURE(*p_Error_संहिता)) {
+                प्रत्यागम शून्यसूचकः;
             }
 
             /* Otherwise remember that we found data but didn't like it for some reason  */
-            *subErrorCode=U_INVALID_FORMAT_ERROR;
+            *sub_Error_संहिता=U_INVALID_FORMAT_ERROR;
         }
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "%s\n", UDataMemory_isLoaded(&dataMemory)?"LOADED":"not loaded");
-#endif
+#यदि_परिभाषितम् UDATA_DEBUG
+        fprintf(stderr, "%s\n", UData_स्मृतिः_is_Loaded(&दत्त_स्मृतिः)?"LOADED":"not loaded");
+#यदि_अन्तः
     }
-    return nullptr;
+    प्रत्यागम शून्यसूचकः;
 }
 
 /**
  * @return 0 if not loaded, 1 if loaded or err 
  */
-static UDataMemory *doLoadFromCommonData(UBool isICUData, const char * /*pkgName*/, 
-        const char * /*dataPath*/, const char * /*tocEntryPathSuffix*/, const char *tocEntryName,
+स्थिर UData_स्मृतिः *do_आरोपय_From_Common_दत्त(UBool isICUData, ध्रुव वर्ण * /*pkgName*/, 
+        ध्रुव वर्ण * /*dataPath*/, ध्रुव वर्ण * /*tocEntryPathSuffix*/, ध्रुव वर्ण *toc_प्रविष्टिः_Name,
             /* following arguments are the same as doOpenChoice itself */
-            const char *path, const char *type, const char *name,
-             UDataMemoryIsAcceptable *isAcceptable, void *context,
-             UErrorCode *subErrorCode,
-             UErrorCode *pErrorCode)
+            ध्रुव वर्ण *मार्गः, ध्रुव वर्ण *type, ध्रुव वर्ण *name,
+             UData_स्मृतिः_Is_Acceptable *isAcceptable, शून्य *context,
+             UError_संहिता *sub_Error_संहिता,
+             UError_संहिता *p_Error_संहिता)
 {
-    UDataMemory        *pEntryData;
-    const DataHeader   *pHeader;
-    UDataMemory        *pCommonData;
-    int32_t            commonDataIndex;
-    UBool              checkedExtendedICUData = false;
+    UData_स्मृतिः        *p_प्रविष्टिः_दत्त;
+    ध्रुव दत्त_शीर्षकम्   *p_शीर्षकम्;
+    UData_स्मृतिः        *p_Common_दत्त;
+    int32_t            common_दत्त_सूचकांक;
+    UBool              checkedExtendedICUData = असत्य;
     /* try to get common data.  The loop is for platforms such as the 390 that do
      *  not initially load the full set of ICU data.  If the lookup of an ICU data item
      *  fails, the full (but slower to load) set is loaded, the and the loop repeats,
@@ -1055,49 +1055,49 @@ static UDataMemory *doLoadFromCommonData(UBool isICUData, const char * /*pkgName
      *  The loop also handles the fallback to a .dat file if the application linked
      *   to the stub data library rather than a real library.
      */
-    for (commonDataIndex = isICUData ? 0 : -1;;) {
-        pCommonData=openCommonData(path, commonDataIndex, subErrorCode); /** search for pkg **/
+    प्रति (common_दत्त_सूचकांक = isICUData ? 0 : -1;;) {
+        p_Common_दत्त=open_Common_दत्त(मार्गः, common_दत्त_सूचकांक, sub_Error_संहिता); /** search for pkg **/
 
-        if(U_SUCCESS(*subErrorCode) && pCommonData!=nullptr) {
+        यदि(U_SUCCESS(*sub_Error_संहिता) && p_Common_दत्त!=शून्यसूचकः) {
             int32_t length;
 
             /* look up the data piece in the common data */
-            pHeader=pCommonData->vFuncs->Lookup(pCommonData, tocEntryName, &length, subErrorCode);
-#ifdef UDATA_DEBUG
-            fprintf(stderr, "%s: pHeader=%p - %s\n", tocEntryName, (void*) pHeader, u_errorName(*subErrorCode));
-#endif
+            p_शीर्षकम्=p_Common_दत्त->vFuncs->Lookup(p_Common_दत्त, toc_प्रविष्टिः_Name, &length, sub_Error_संहिता);
+#यदि_परिभाषितम् UDATA_DEBUG
+            fprintf(stderr, "%s: pHeader=%p - %s\n", toc_प्रविष्टिः_Name, (शून्य*) p_शीर्षकम्, u_errorName(*sub_Error_संहिता));
+#यदि_अन्तः
 
-            if(pHeader!=nullptr) {
-                pEntryData = checkDataItem(pHeader, isAcceptable, context, type, name, subErrorCode, pErrorCode);
-#ifdef UDATA_DEBUG
-                fprintf(stderr, "pEntryData=%p\n", (void*) pEntryData);
-#endif
-                if (U_FAILURE(*pErrorCode)) {
-                    return nullptr;
+            यदि(p_शीर्षकम्!=शून्यसूचकः) {
+                p_प्रविष्टिः_दत्त = check_दत्त_Item(p_शीर्षकम्, isAcceptable, context, type, name, sub_Error_संहिता, p_Error_संहिता);
+#यदि_परिभाषितम् UDATA_DEBUG
+                fprintf(stderr, "pEntryData=%p\n", (शून्य*) p_प्रविष्टिः_दत्त);
+#यदि_अन्तः
+                यदि (U_FAILURE(*p_Error_संहिता)) {
+                    प्रत्यागम शून्यसूचकः;
                 }
-                if (pEntryData != nullptr) {
-                    pEntryData->length = length;
-                    return pEntryData;
+                यदि (p_प्रविष्टिः_दत्त != शून्यसूचकः) {
+                    p_प्रविष्टिः_दत्त->length = length;
+                    प्रत्यागम p_प्रविष्टिः_दत्त;
                 }
             }
         }
         // If we failed due to being out-of-memory, then stop early and report the error.
-        if (*subErrorCode == U_MEMORY_ALLOCATION_ERROR) {
-            *pErrorCode = *subErrorCode;
-            return nullptr;
+        यदि (*sub_Error_संहिता == U_स्मृतिः_आवण्टनम्_ERROR) {
+            *p_Error_संहिता = *sub_Error_संहिता;
+            प्रत्यागम शून्यसूचकः;
         }
         /* Data wasn't found.  If we were looking for an ICUData item and there is
          * more data available, load it and try again,
          * otherwise break out of this loop. */
-        if (!isICUData) {
-            return nullptr;
-        } else if (pCommonData != nullptr) {
-            ++commonDataIndex;  /* try the next data package */
-        } else if ((!checkedExtendedICUData) && extendICUData(subErrorCode)) {
-            checkedExtendedICUData = true;
+        यदि (!isICUData) {
+            प्रत्यागम शून्यसूचकः;
+        } अन्यथा यदि (p_Common_दत्त != शून्यसूचकः) {
+            ++common_दत्त_सूचकांक;  /* try the next data package */
+        } अन्यथा यदि ((!checkedExtendedICUData) && extendICUData(sub_Error_संहिता)) {
+            checkedExtendedICUData = सत्य;
             /* try this data package slot again: it changed from nullptr to non-nullptr */
-        } else {
-            return nullptr;
+        } अन्यथा {
+            प्रत्यागम शून्यसूचकः;
         }
     }
 }
@@ -1105,8 +1105,8 @@ static UDataMemory *doLoadFromCommonData(UBool isICUData, const char * /*pkgName
 /*
  * Identify the Time Zone resources that are subject to special override data loading.
  */
-static UBool isTimeZoneFile(const char *name, const char *type) {
-    return ((uprv_strcmp(type, "res") == 0) &&
+स्थिर UBool isTimeZoneFile(ध्रुव वर्ण *name, ध्रुव वर्ण *type) {
+    प्रत्यागम ((uprv_strcmp(type, "res") == 0) &&
             (uprv_strcmp(name, "zoneinfo64") == 0 ||
              uprv_strcmp(name, "timezoneTypes") == 0 ||
              uprv_strcmp(name, "windowsZones") == 0 ||
@@ -1145,104 +1145,104 @@ static UBool isTimeZoneFile(const char *name, const char *type) {
  * main data loading functions                                                *
  *                                                                            *
  *----------------------------------------------------------------------------*/
-static UDataMemory *
-doOpenChoice(const char *path, const char *type, const char *name,
-             UDataMemoryIsAcceptable *isAcceptable, void *context,
-             UErrorCode *pErrorCode)
+स्थिर UData_स्मृतिः *
+doOpenChoice(ध्रुव वर्ण *मार्गः, ध्रुव वर्ण *type, ध्रुव वर्ण *name,
+             UData_स्मृतिः_Is_Acceptable *isAcceptable, शून्य *context,
+             UError_संहिता *p_Error_संहिता)
 {
-    UDataMemory         *retVal = nullptr;
+    UData_स्मृतिः         *retVal = शून्यसूचकः;
 
-    const char         *dataPath;
+    ध्रुव वर्ण         *दत्त_मार्गः;
 
-    int32_t             tocEntrySuffixIndex;
-    const char         *tocEntryPathSuffix;
-    UErrorCode          subErrorCode=U_ZERO_ERROR;
-    const char         *treeChar;
+    int32_t             toc_प्रविष्टिः_Suffix_सूचकांक;
+    ध्रुव वर्ण         *toc_प्रविष्टिः_मार्गः_Suffix;
+    UError_संहिता          sub_Error_संहिता=U_ZERO_ERROR;
+    ध्रुव वर्ण         *वृक्षः_Char;
 
-    UBool               isICUData = false;
+    UBool               isICUData = असत्य;
 
 
-    FileTracer::traceOpen(path, type, name);
+    FileTracer::traceOpen(मार्गः, type, name);
 
 
     /* Is this path ICU data? */
-    if(path == nullptr ||
-       !strcmp(path, U_ICUDATA_ALIAS) ||  /* "ICUDATA" */
-       !uprv_strncmp(path, U_ICUDATA_NAME U_TREE_SEPARATOR_STRING, /* "icudt26e-" */
-                     uprv_strlen(U_ICUDATA_NAME U_TREE_SEPARATOR_STRING)) ||  
-       !uprv_strncmp(path, U_ICUDATA_ALIAS U_TREE_SEPARATOR_STRING, /* "ICUDATA-" */
-                     uprv_strlen(U_ICUDATA_ALIAS U_TREE_SEPARATOR_STRING))) {
-      isICUData = true;
+    यदि(मार्गः == शून्यसूचकः ||
+       !वाक्यं_तुलय(मार्गः, U_ICUDATA_ALIAS) ||  /* "ICUDATA" */
+       !uprv_strncmp(मार्गः, U_ICUDATA_NAME U_वृक्षः_SEPARATOR_STRING, /* "icudt26e-" */
+                     uprv_strlen(U_ICUDATA_NAME U_वृक्षः_SEPARATOR_STRING)) ||  
+       !uprv_strncmp(मार्गः, U_ICUDATA_ALIAS U_वृक्षः_SEPARATOR_STRING, /* "ICUDATA-" */
+                     uprv_strlen(U_ICUDATA_ALIAS U_वृक्षः_SEPARATOR_STRING))) {
+      isICUData = सत्य;
     }
 
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)  /* Windows:  try "foo\bar" and "foo/bar" */
+#यदि (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)  /* Windows:  try "foo\bar" and "foo/bar" */
     /* remap from alternate path char to the main one */
-    CharString altSepPath;
-    if(path) {
-        if(uprv_strchr(path,U_FILE_ALT_SEP_CHAR) != nullptr) {
-            altSepPath.append(path, *pErrorCode);
-            char *p;
-            while ((p = uprv_strchr(altSepPath.data(), U_FILE_ALT_SEP_CHAR)) != nullptr) {
+    CharString alt_Sep_मार्गः;
+    यदि(मार्गः) {
+        यदि(uprv_strchr(मार्गः,U_FILE_ALT_SEP_CHAR) != शून्यसूचकः) {
+            alt_Sep_मार्गः.append(मार्गः, *p_Error_संहिता);
+            वर्ण *p;
+            यावत् ((p = uprv_strchr(alt_Sep_मार्गः.दत्त(), U_FILE_ALT_SEP_CHAR)) != शून्यसूचकः) {
                 *p = U_FILE_SEP_CHAR;
             }
-#if defined (UDATA_DEBUG)
-            fprintf(stderr, "Changed path from [%s] to [%s]\n", path, altSepPath.data());
-#endif
-            path = altSepPath.data();
+#यदि defined (UDATA_DEBUG)
+            fprintf(stderr, "Changed path from [%s] to [%s]\n", मार्गः, alt_Sep_मार्गः.दत्त());
+#यदि_अन्तः
+            मार्गः = alt_Sep_मार्गः.दत्त();
         }
     }
-#endif
+#यदि_अन्तः
 
-    CharString tocEntryName; /* entry name in tree format. ex:  'icudt28b/coll/ar.res' */
-    CharString tocEntryPath; /* entry name in path format. ex:  'icudt28b\\coll\\ar.res' */
+    CharString toc_प्रविष्टिः_Name; /* entry name in tree format. ex:  'icudt28b/coll/ar.res' */
+    CharString toc_प्रविष्टिः_मार्गः; /* entry name in path format. ex:  'icudt28b\\coll\\ar.res' */
 
     CharString pkgName;
-    CharString treeName;
+    CharString वृक्षः_Name;
 
     /* ======= Set up strings */
-    if(path==nullptr) {
-        pkgName.append(U_ICUDATA_NAME, *pErrorCode);
-    } else {
-        const char *pkg;
-        const char *first;
-        pkg = uprv_strrchr(path, U_FILE_SEP_CHAR);
-        first = uprv_strchr(path, U_FILE_SEP_CHAR);
-        if(uprv_pathIsAbsolute(path) || (pkg != first)) { /* more than one slash in the path- not a tree name */
+    यदि(मार्गः==शून्यसूचकः) {
+        pkgName.append(U_ICUDATA_NAME, *p_Error_संहिता);
+    } अन्यथा {
+        ध्रुव वर्ण *pkg;
+        ध्रुव वर्ण *first;
+        pkg = uprv_strrchr(मार्गः, U_FILE_SEP_CHAR);
+        first = uprv_strchr(मार्गः, U_FILE_SEP_CHAR);
+        यदि(uprv_मार्गः_Is_Absolute(मार्गः) || (pkg != first)) { /* more than one slash in the path- not a tree name */
             /* see if this is an /absolute/path/to/package  path */
-            if(pkg) {
-                pkgName.append(pkg+1, *pErrorCode);
-            } else {
-                pkgName.append(path, *pErrorCode);
+            यदि(pkg) {
+                pkgName.append(pkg+1, *p_Error_संहिता);
+            } अन्यथा {
+                pkgName.append(मार्गः, *p_Error_संहिता);
             }
-        } else {
-            treeChar = uprv_strchr(path, U_TREE_SEPARATOR);
-            if(treeChar) { 
-                treeName.append(treeChar+1, *pErrorCode); /* following '-' */
-                if(isICUData) {
-                    pkgName.append(U_ICUDATA_NAME, *pErrorCode);
-                } else {
-                    pkgName.append(path, static_cast<int32_t>(treeChar - path), *pErrorCode);
-                    if (first == nullptr) {
+        } अन्यथा {
+            वृक्षः_Char = uprv_strchr(मार्गः, U_वृक्षः_SEPARATOR);
+            यदि(वृक्षः_Char) { 
+                वृक्षः_Name.append(वृक्षः_Char+1, *p_Error_संहिता); /* following '-' */
+                यदि(isICUData) {
+                    pkgName.append(U_ICUDATA_NAME, *p_Error_संहिता);
+                } अन्यथा {
+                    pkgName.append(मार्गः, static_cast<int32_t>(वृक्षः_Char - मार्गः), *p_Error_संहिता);
+                    यदि (first == शून्यसूचकः) {
                         /*
                         This user data has no path, but there is a tree name.
                         Look up the correct path from the data cache later.
                         */
-                        path = pkgName.data();
+                        मार्गः = pkgName.दत्त();
                     }
                 }
-            } else {
-                if(isICUData) {
-                    pkgName.append(U_ICUDATA_NAME, *pErrorCode);
-                } else {
-                    pkgName.append(path, *pErrorCode);
+            } अन्यथा {
+                यदि(isICUData) {
+                    pkgName.append(U_ICUDATA_NAME, *p_Error_संहिता);
+                } अन्यथा {
+                    pkgName.append(मार्गः, *p_Error_संहिता);
                 }
             }
         }
     }
 
-#ifdef UDATA_DEBUG
-    fprintf(stderr, " P=%s T=%s\n", pkgName.data(), treeName.data());
-#endif
+#यदि_परिभाषितम् UDATA_DEBUG
+    fprintf(stderr, " P=%s T=%s\n", pkgName.दत्त(), वृक्षः_Name.दत्त());
+#यदि_अन्तः
 
     /* setting up the entry name and file name 
      * Make up a full name by appending the type to the supplied
@@ -1250,201 +1250,201 @@ doOpenChoice(const char *path, const char *type, const char *name,
      */
 
     /* prepend the package */
-    tocEntryName.append(pkgName, *pErrorCode);
-    tocEntryPath.append(pkgName, *pErrorCode);
-    tocEntrySuffixIndex = tocEntryName.length();
+    toc_प्रविष्टिः_Name.append(pkgName, *p_Error_संहिता);
+    toc_प्रविष्टिः_मार्गः.append(pkgName, *p_Error_संहिता);
+    toc_प्रविष्टिः_Suffix_सूचकांक = toc_प्रविष्टिः_Name.length();
 
-    if(!treeName.isEmpty()) {
-        tocEntryName.append(U_TREE_ENTRY_SEP_CHAR, *pErrorCode).append(treeName, *pErrorCode);
-        tocEntryPath.append(U_FILE_SEP_CHAR, *pErrorCode).append(treeName, *pErrorCode);
+    यदि(!वृक्षः_Name.is_रिक्तानि()) {
+        toc_प्रविष्टिः_Name.append(U_वृक्षः_प्रविष्टिः_SEP_CHAR, *p_Error_संहिता).append(वृक्षः_Name, *p_Error_संहिता);
+        toc_प्रविष्टिः_मार्गः.append(U_FILE_SEP_CHAR, *p_Error_संहिता).append(वृक्षः_Name, *p_Error_संहिता);
     }
 
-    tocEntryName.append(U_TREE_ENTRY_SEP_CHAR, *pErrorCode).append(name, *pErrorCode);
-    tocEntryPath.append(U_FILE_SEP_CHAR, *pErrorCode).append(name, *pErrorCode);
-    if(type!=nullptr && *type!=0) {
-        tocEntryName.append(".", *pErrorCode).append(type, *pErrorCode);
-        tocEntryPath.append(".", *pErrorCode).append(type, *pErrorCode);
+    toc_प्रविष्टिः_Name.append(U_वृक्षः_प्रविष्टिः_SEP_CHAR, *p_Error_संहिता).append(name, *p_Error_संहिता);
+    toc_प्रविष्टिः_मार्गः.append(U_FILE_SEP_CHAR, *p_Error_संहिता).append(name, *p_Error_संहिता);
+    यदि(type!=शून्यसूचकः && *type!=0) {
+        toc_प्रविष्टिः_Name.append(".", *p_Error_संहिता).append(type, *p_Error_संहिता);
+        toc_प्रविष्टिः_मार्गः.append(".", *p_Error_संहिता).append(type, *p_Error_संहिता);
     }
     // The +1 is for the U_FILE_SEP_CHAR that is always appended above.
-    tocEntryPathSuffix = tocEntryPath.data() + tocEntrySuffixIndex + 1; /* suffix starts here */
+    toc_प्रविष्टिः_मार्गः_Suffix = toc_प्रविष्टिः_मार्गः.दत्त() + toc_प्रविष्टिः_Suffix_सूचकांक + 1; /* suffix starts here */
 
-#ifdef UDATA_DEBUG
-    fprintf(stderr, " tocEntryName = %s\n", tocEntryName.data());
-    fprintf(stderr, " tocEntryPath = %s\n", tocEntryPath.data());
-#endif
+#यदि_परिभाषितम् UDATA_DEBUG
+    fprintf(stderr, " tocEntryName = %s\n", toc_प्रविष्टिः_Name.दत्त());
+    fprintf(stderr, " tocEntryPath = %s\n", toc_प्रविष्टिः_मार्गः.दत्त());
+#यदि_अन्तः
 
-#if !defined(ICU_DATA_DIR_WINDOWS)
-    if(path == nullptr) {
-        path = COMMON_DATA_NAME; /* "icudt26e" */
+#यदि !defined(ICU_दत्त_DIR_WINDOWS)
+    यदि(मार्गः == शून्यसूचकः) {
+        मार्गः = COMMON_दत्त_NAME; /* "icudt26e" */
     }
-#else
+#अन्यथा
     // When using the Windows system data, we expects only a single data file.
-    path = COMMON_DATA_NAME; /* "icudt26e" */
-#endif
+    मार्गः = COMMON_दत्त_NAME; /* "icudt26e" */
+#यदि_अन्तः
 
     /************************ Begin loop looking for ind. files ***************/
-#ifdef UDATA_DEBUG
-    fprintf(stderr, "IND: inBasename = %s, pkg=%s\n", "(n/a)", packageNameFromPath(path));
-#endif
+#यदि_परिभाषितम् UDATA_DEBUG
+    fprintf(stderr, "IND: inBasename = %s, pkg=%s\n", "(n/a)", package_Name_From_मार्गः(मार्गः));
+#यदि_अन्तः
 
     /* End of dealing with a null basename */
-    dataPath = u_getDataDirectory();
+    दत्त_मार्गः = u_get_दत्त_Directory();
 
     /****    Time zone individual files override  */
-    if (isICUData && type != nullptr && isTimeZoneFile(name, type)) {
-        const char *tzFilesDir = u_getTimeZoneFilesDirectory(pErrorCode);
-        if (tzFilesDir[0] != 0) {
-#ifdef UDATA_DEBUG
+    यदि (isICUData && type != शून्यसूचकः && isTimeZoneFile(name, type)) {
+        ध्रुव वर्ण *tzFilesDir = u_getTimeZoneFilesDirectory(p_Error_संहिता);
+        यदि (tzFilesDir[0] != 0) {
+#यदि_परिभाषितम् UDATA_DEBUG
             fprintf(stderr, "Trying Time Zone Files directory = %s\n", tzFilesDir);
-#endif
-            retVal = doLoadFromIndividualFiles(/* pkgName.data() */ "", tzFilesDir, tocEntryPathSuffix,
-                            /* path */ "", type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-            if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-                return retVal;
+#यदि_अन्तः
+            retVal = do_आरोपय_From_Individual_Files(/* pkgName.data() */ "", tzFilesDir, toc_प्रविष्टिः_मार्गः_Suffix,
+                            /*मार्गः*/ "", type, name, isAcceptable, context, &sub_Error_संहिता, p_Error_संहिता);
+            यदि((retVal != शून्यसूचकः) || U_FAILURE(*p_Error_संहिता)) {
+                प्रत्यागम retVal;
             }
         }
     }
 
     /****    COMMON PACKAGE  - only if packages are first. */
-    if(gDataFileAccess == UDATA_PACKAGES_FIRST) {
-#ifdef UDATA_DEBUG
+    यदि(g_दत्त_File_Access == UDATA_PACKAGES_FIRST) {
+#यदि_परिभाषितम् UDATA_DEBUG
         fprintf(stderr, "Trying packages (UDATA_PACKAGES_FIRST)\n");
-#endif
+#यदि_अन्तः
         /* #2 */
-        retVal = doLoadFromCommonData(isICUData, 
-                            pkgName.data(), dataPath, tocEntryPathSuffix, tocEntryName.data(),
-                            path, type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-        if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-            return retVal;
+        retVal = do_आरोपय_From_Common_दत्त(isICUData, 
+                            pkgName.दत्त(), दत्त_मार्गः, toc_प्रविष्टिः_मार्गः_Suffix, toc_प्रविष्टिः_Name.दत्त(),
+                            मार्गः, type, name, isAcceptable, context, &sub_Error_संहिता, p_Error_संहिता);
+        यदि((retVal != शून्यसूचकः) || U_FAILURE(*p_Error_संहिता)) {
+            प्रत्यागम retVal;
         }
     }
 
     /****    INDIVIDUAL FILES  */
-    if((gDataFileAccess==UDATA_PACKAGES_FIRST) ||
-       (gDataFileAccess==UDATA_FILES_FIRST)) {
-#ifdef UDATA_DEBUG
+    यदि((g_दत्त_File_Access==UDATA_PACKAGES_FIRST) ||
+       (g_दत्त_File_Access==UDATA_FILES_FIRST)) {
+#यदि_परिभाषितम् UDATA_DEBUG
         fprintf(stderr, "Trying individual files\n");
-#endif
+#यदि_अन्तः
         /* Check to make sure that there is a dataPath to iterate over */
-        if ((dataPath && *dataPath) || !isICUData) {
-            retVal = doLoadFromIndividualFiles(pkgName.data(), dataPath, tocEntryPathSuffix,
-                            path, type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-            if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-                return retVal;
+        यदि ((दत्त_मार्गः && *दत्त_मार्गः) || !isICUData) {
+            retVal = do_आरोपय_From_Individual_Files(pkgName.दत्त(), दत्त_मार्गः, toc_प्रविष्टिः_मार्गः_Suffix,
+                            मार्गः, type, name, isAcceptable, context, &sub_Error_संहिता, p_Error_संहिता);
+            यदि((retVal != शून्यसूचकः) || U_FAILURE(*p_Error_संहिता)) {
+                प्रत्यागम retVal;
             }
         }
     }
 
     /****    COMMON PACKAGE  */
-    if((gDataFileAccess==UDATA_ONLY_PACKAGES) || 
-       (gDataFileAccess==UDATA_FILES_FIRST)) {
-#ifdef UDATA_DEBUG
+    यदि((g_दत्त_File_Access==UDATA_ONLY_PACKAGES) || 
+       (g_दत्त_File_Access==UDATA_FILES_FIRST)) {
+#यदि_परिभाषितम् UDATA_DEBUG
         fprintf(stderr, "Trying packages (UDATA_ONLY_PACKAGES || UDATA_FILES_FIRST)\n");
-#endif
-        retVal = doLoadFromCommonData(isICUData,
-                            pkgName.data(), dataPath, tocEntryPathSuffix, tocEntryName.data(),
-                            path, type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-        if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-            return retVal;
+#यदि_अन्तः
+        retVal = do_आरोपय_From_Common_दत्त(isICUData,
+                            pkgName.दत्त(), दत्त_मार्गः, toc_प्रविष्टिः_मार्गः_Suffix, toc_प्रविष्टिः_Name.दत्त(),
+                            मार्गः, type, name, isAcceptable, context, &sub_Error_संहिता, p_Error_संहिता);
+        यदि((retVal != शून्यसूचकः) || U_FAILURE(*p_Error_संहिता)) {
+            प्रत्यागम retVal;
         }
     }
     
     /* Load from DLL.  If we haven't attempted package load, we also haven't had any chance to
         try a DLL (static or setCommonData/etc)  load.
          If we ever have a "UDATA_ONLY_FILES", add it to the or list here.  */  
-    if(gDataFileAccess==UDATA_NO_FILES) {
-#ifdef UDATA_DEBUG
+    यदि(g_दत्त_File_Access==UDATA_NO_FILES) {
+#यदि_परिभाषितम् UDATA_DEBUG
         fprintf(stderr, "Trying common data (UDATA_NO_FILES)\n");
-#endif
-        retVal = doLoadFromCommonData(isICUData,
-                            pkgName.data(), "", tocEntryPathSuffix, tocEntryName.data(),
-                            path, type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-        if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-            return retVal;
+#यदि_अन्तः
+        retVal = do_आरोपय_From_Common_दत्त(isICUData,
+                            pkgName.दत्त(), "", toc_प्रविष्टिः_मार्गः_Suffix, toc_प्रविष्टिः_Name.दत्त(),
+                            मार्गः, type, name, isAcceptable, context, &sub_Error_संहिता, p_Error_संहिता);
+        यदि((retVal != शून्यसूचकः) || U_FAILURE(*p_Error_संहिता)) {
+            प्रत्यागम retVal;
         }
     }
 
     /* data not found */
-    if(U_SUCCESS(*pErrorCode)) {
-        if(U_SUCCESS(subErrorCode)) {
+    यदि(U_SUCCESS(*p_Error_संहिता)) {
+        यदि(U_SUCCESS(sub_Error_संहिता)) {
             /* file not found */
-            *pErrorCode=U_FILE_ACCESS_ERROR;
-        } else {
+            *p_Error_संहिता=U_FILE_ACCESS_ERROR;
+        } अन्यथा {
             /* entry point not found or rejected */
-            *pErrorCode=subErrorCode;
+            *p_Error_संहिता=sub_Error_संहिता;
         }
     }
-    return retVal;
+    प्रत्यागम retVal;
 }
 
 
 
 /* API ---------------------------------------------------------------------- */
 
-U_CAPI UDataMemory * U_EXPORT2
-udata_open(const char *path, const char *type, const char *name,
-           UErrorCode *pErrorCode) {
-#ifdef UDATA_DEBUG
-  fprintf(stderr, "udata_open(): Opening: %s : %s . %s\n", (path?path:"nullptr"), name, type);
+U_CAPI UData_स्मृतिः * U_EXPORT2
+udata_open(ध्रुव वर्ण *मार्गः, ध्रुव वर्ण *type, ध्रुव वर्ण *name,
+           UError_संहिता *p_Error_संहिता) {
+#यदि_परिभाषितम् UDATA_DEBUG
+  fprintf(stderr, "udata_open(): Opening: %s : %s . %s\n", (मार्गः?मार्गः:"nullptr"), name, type);
     fflush(stderr);
-#endif
+#यदि_अन्तः
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
-    } else if(name==nullptr || *name==0) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
-    } else {
-        return doOpenChoice(path, type, name, nullptr, nullptr, pErrorCode);
+    यदि(p_Error_संहिता==शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम शून्यसूचकः;
+    } अन्यथा यदि(name==शून्यसूचकः || *name==0) {
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम शून्यसूचकः;
+    } अन्यथा {
+        प्रत्यागम doOpenChoice(मार्गः, type, name, शून्यसूचकः, शून्यसूचकः, p_Error_संहिता);
     }
 }
 
 
 
-U_CAPI UDataMemory * U_EXPORT2
-udata_openChoice(const char *path, const char *type, const char *name,
-                 UDataMemoryIsAcceptable *isAcceptable, void *context,
-                 UErrorCode *pErrorCode) {
-#ifdef UDATA_DEBUG
-  fprintf(stderr, "udata_openChoice(): Opening: %s : %s . %s\n", (path?path:"nullptr"), name, type);
-#endif
+U_CAPI UData_स्मृतिः * U_EXPORT2
+udata_openChoice(ध्रुव वर्ण *मार्गः, ध्रुव वर्ण *type, ध्रुव वर्ण *name,
+                 UData_स्मृतिः_Is_Acceptable *isAcceptable, शून्य *context,
+                 UError_संहिता *p_Error_संहिता) {
+#यदि_परिभाषितम् UDATA_DEBUG
+  fprintf(stderr, "udata_openChoice(): Opening: %s : %s . %s\n", (मार्गः?मार्गः:"nullptr"), name, type);
+#यदि_अन्तः
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
-    } else if(name==nullptr || *name==0 || isAcceptable==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
-    } else {
-        return doOpenChoice(path, type, name, isAcceptable, context, pErrorCode);
+    यदि(p_Error_संहिता==शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम शून्यसूचकः;
+    } अन्यथा यदि(name==शून्यसूचकः || *name==0 || isAcceptable==शून्यसूचकः) {
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम शून्यसूचकः;
+    } अन्यथा {
+        प्रत्यागम doOpenChoice(मार्गः, type, name, isAcceptable, context, p_Error_संहिता);
     }
 }
 
 
 
-U_CAPI void U_EXPORT2
-udata_getInfo(UDataMemory *pData, UDataInfo *pInfo) {
-    if(pInfo!=nullptr) {
-        if(pData!=nullptr && pData->pHeader!=nullptr) {
-            const UDataInfo *info=&pData->pHeader->info;
-            uint16_t dataInfoSize=udata_getInfoSize(info);
-            if(pInfo->size>dataInfoSize) {
-                pInfo->size=dataInfoSize;
+U_CAPI शून्य U_EXPORT2
+udata_getInfo(UData_स्मृतिः *p_दत्त, UDataInfo *pInfo) {
+    यदि(pInfo!=शून्यसूचकः) {
+        यदि(p_दत्त!=शून्यसूचकः && p_दत्त->p_शीर्षकम्!=शून्यसूचकः) {
+            ध्रुव UDataInfo *info=&p_दत्त->p_शीर्षकम्->info;
+            uint16_t दत्त_Info_आकार=udata_get_Info_आकार(info);
+            यदि(pInfo->size>दत्त_Info_आकार) {
+                pInfo->size=दत्त_Info_आकार;
             }
-            uprv_memcpy((uint16_t *)pInfo+1, (const uint16_t *)info+1, pInfo->size-2);
-            if(info->isBigEndian!=U_IS_BIG_ENDIAN) {
+            uprv_memcpy((uint16_t *)pInfo+1, (ध्रुव uint16_t *)info+1, pInfo->size-2);
+            यदि(info->isBigEndian!=U_IS_BIG_ENDIAN) {
                 /* opposite endianness */
                 uint16_t x=info->reservedWord;
                 pInfo->reservedWord=(uint16_t)((x<<8)|(x>>8));
             }
-        } else {
+        } अन्यथा {
             pInfo->size=0;
         }
     }
 }
 
 
-U_CAPI void U_EXPORT2 udata_setFileAccess(UDataFileAccess access, UErrorCode * /*status*/)
+U_CAPI शून्य U_EXPORT2 udata_समुच्चयः_File_Access(UDataFileAccess access, UError_संहिता * /*स्थितिः*/)
 {
     // Note: this function is documented as not thread safe.
-    gDataFileAccess = access;
+    g_दत्त_File_Access = access;
 }

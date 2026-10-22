@@ -4,10 +4,10 @@
 // ucpmap.h
 // created: 2018sep03 Markus W. Scherer
 
-#ifndef __UCPMAP_H__
-#define __UCPMAP_H__
+#यदि_अपरिभाषितम् __UCPMAP_H__
+#परिभाषय __UCPMAP_H__
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
 U_CDECL_BEGIN
 
@@ -27,7 +27,7 @@ U_CDECL_BEGIN
  * @see UMutableCPTrie
  * @stable ICU 63
  */
-typedef struct UCPMap UCPMap;
+प्रकारनिर्देश संरचना UCPMap UCPMap;
 
 /**
  * Selectors for how ucpmap_getRange() etc. should report value ranges overlapping with surrogates.
@@ -38,13 +38,13 @@ typedef struct UCPMap UCPMap;
  * @see umutablecptrie_getRange
  * @stable ICU 63
  */
-enum UCPMapRangeOption {
+गणना UCPMapRangeOption {
     /**
      * ucpmap_getRange() enumerates all same-value ranges as stored in the map.
      * Most users should use this option.
      * @stable ICU 63
      */
-    UCPMAP_RANGE_NORMAL,
+    UCPMAP_RANGE_प्रसामान्यम्,
     /**
      * ucpmap_getRange() enumerates all same-value ranges as stored in the map,
      * except that lead surrogates (U+D800..U+DBFF) are treated as having the
@@ -78,9 +78,9 @@ enum UCPMapRangeOption {
      */
     UCPMAP_RANGE_FIXED_ALL_SURROGATES
 };
-#ifndef U_IN_DOXYGEN
-typedef enum UCPMapRangeOption UCPMapRangeOption;
-#endif
+#यदि_अपरिभाषितम् U_अन्तर्_DOXYGEN
+प्रकारनिर्देश गणना UCPMapRangeOption UCPMapRangeOption;
+#यदि_अन्तः
 
 /**
  * Returns the value for a code point as stored in the map, with range checking.
@@ -93,7 +93,7 @@ typedef enum UCPMapRangeOption UCPMapRangeOption;
  * @stable ICU 63
  */
 U_CAPI uint32_t U_EXPORT2
-ucpmap_get(const UCPMap *map, UChar32 c);
+ucpmap_get(ध्रुव UCPMap *map, UChar32 c);
 
 /**
  * Callback function type: Modifies a map value.
@@ -109,8 +109,8 @@ ucpmap_get(const UCPMap *map, UChar32 c);
  * @return the modified value
  * @stable ICU 63
  */
-typedef uint32_t U_CALLCONV
-UCPMapValueFilter(const void *context, uint32_t value);
+प्रकारनिर्देश uint32_t U_CALLCONV
+UCPMap_मानम्_Filter(ध्रुव शून्य *context, uint32_t मानम्_2);
 
 /**
  * Returns the last code point such that all those from start to there have the same value.
@@ -149,10 +149,10 @@ UCPMapValueFilter(const void *context, uint32_t value);
  * @stable ICU 63
  */
 U_CAPI UChar32 U_EXPORT2
-ucpmap_getRange(const UCPMap *map, UChar32 start,
-                UCPMapRangeOption option, uint32_t surrogateValue,
-                UCPMapValueFilter *filter, const void *context, uint32_t *pValue);
+ucpmap_getRange(ध्रुव UCPMap *map, UChar32 start,
+                UCPMapRangeOption option, uint32_t surrogate_मानम्,
+                UCPMap_मानम्_Filter *filter, ध्रुव शून्य *context, uint32_t *p_मानम्);
 
-U_CDECL_END
+U_CDECL_अन्तः
 
-#endif
+#यदि_अन्तः

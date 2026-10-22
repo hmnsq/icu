@@ -30,39 +30,39 @@
      l = lang, C = ctry, M = charmap, V = variant
 */
 
-#include <algorithm>
-#include <optional>
-#include <string_view>
+#अन्तर्भाव <algorithm>
+#अन्तर्भाव <optional>
+#अन्तर्भाव <string_view>
 
-#include "unicode/bytestream.h"
-#include "unicode/errorcode.h"
-#include "unicode/stringpiece.h"
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "unicode/uloc.h"
+#अन्तर्भाव "unicode/bytestream.h"
+#अन्तर्भाव "unicode/errorcode.h"
+#अन्तर्भाव "unicode/stringpiece.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "unicode/uloc.h"
 
-#include "bytesinkutil.h"
-#include "putilimp.h"
-#include "ustr_imp.h"
-#include "ulocimp.h"
-#include "umutex.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "locmap.h"
-#include "uarrsort.h"
-#include "uenumimp.h"
-#include "uassert.h"
-#include "charstr.h"
+#अन्तर्भाव "bytesinkutil.h"
+#अन्तर्भाव "putilimp.h"
+#अन्तर्भाव "ustr_imp.h"
+#अन्तर्भाव "ulocimp.h"
+#अन्तर्भाव "umutex.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "locmap.h"
+#अन्तर्भाव "uarrsort.h"
+#अन्तर्भाव "uenumimp.h"
+#अन्तर्भाव "uassert.h"
+#अन्तर्भाव "charstr.h"
 
 U_NAMESPACE_USE
 
 /* ### Declarations **************************************************/
 
 /* Locale stuff from locid.cpp */
-U_CFUNC void locale_set_default(const char *id);
-U_CFUNC const char *locale_get_default();
+U_CFUNC शून्य locale_समुच्चयः_default(ध्रुव वर्ण *id);
+U_CFUNC ध्रुव वर्ण *locale_get_default();
 
-namespace {
+नामाकाश {
 
 /* ### Data tables **************************************************/
 
@@ -100,7 +100,7 @@ namespace {
 /* Generated using org.unicode.cldr.icu.GenerateISO639LanguageTables */
 /* ISO639 table version is 20150505 */
 /* Subsequent hand addition of selected languages */
-constexpr const char* LANGUAGES[] = {
+constexpr ध्रुव वर्ण* LANGUAGES[] = {
     "aa", "ab", "ace", "ach", "ada", "ady", "ae", "aeb", "af", "afh", "agq", "ain", "ak", "akk",
     "akz", "ale", "aln", "alt", "am", "an", "ang", "anp", "ar", "arc", "arn", "aro", "arp",
     "arq", "ars", "arw", "ary", "arz", "as", "asa", "ase", "ast", "av", "avk", "awa", "ay",
@@ -150,16 +150,16 @@ constexpr const char* LANGUAGES[] = {
     "wo", "wuu", "xal", "xh", "xmf", "xnr", "xog", "yao", "yap", "yav", "ybb", "yi", "yo",
     "ypk", "yrl", "yue", "za", "zap", "zbl", "zea", "zen", "zgh", "zh", "znd", "zu", "zun",
     "zxx", "zza",
-nullptr,
+शून्यसूचकः,
     "in",  "iw",  "ji",  "jw",  "mo",  "sh",  "swc", "tl",  /* obsolete language codes */
-nullptr
+शून्यसूचकः
 };
 
-constexpr const char* DEPRECATED_LANGUAGES[]={
-    "in", "iw", "ji", "jw", "mo", nullptr, nullptr
+constexpr ध्रुव वर्ण* DEPRECATED_LANGUAGES[]={
+    "in", "iw", "ji", "jw", "mo", शून्यसूचकः, शून्यसूचकः
 };
-constexpr const char* REPLACEMENT_LANGUAGES[]={
-    "id", "he", "yi", "jv", "ro", nullptr, nullptr
+constexpr ध्रुव वर्ण* REPLACEMENT_LANGUAGES[]={
+    "id", "he", "yi", "jv", "ro", शून्यसूचकः, शून्यसूचकः
 };
 
 /**
@@ -181,7 +181,7 @@ constexpr const char* REPLACEMENT_LANGUAGES[]={
 /* Generated using org.unicode.cldr.icu.GenerateISO639LanguageTables */
 /* ISO639 table version is 20150505 */
 /* Subsequent hand addition of selected languages */
-constexpr const char* LANGUAGES_3[] = {
+constexpr ध्रुव वर्ण* LANGUAGES_3[] = {
     "aar", "abk", "ace", "ach", "ada", "ady", "ave", "aeb", "afr", "afh", "agq", "ain", "aka",
     "akk", "akz", "ale", "aln", "alt", "amh", "arg", "ang", "anp", "ara", "arc", "arn", "aro",
     "arp", "arq", "ars", "arw", "ary", "arz", "asm", "asa", "ase", "ast", "ava", "avk", "awa",
@@ -232,10 +232,10 @@ constexpr const char* LANGUAGES_3[] = {
     "wak", "wal", "war", "was", "wbp", "wen", "wol", "wuu", "xal", "xho", "xmf", "xnr", "xog",
     "yao", "yap", "yav", "ybb", "yid", "yor", "ypk", "yrl", "yue", "zha", "zap", "zbl", "zea",
     "zen", "zgh", "zho", "znd", "zul", "zun", "zxx", "zza",
-nullptr,
+शून्यसूचकः,
 /*  "in",  "iw",  "ji",  "jw",  "mo",  "sh",  "swc", "tl",  */
     "ind", "heb", "yid", "jaw", "mol", "srp", "swc", "tgl",
-nullptr
+शून्यसूचकः
 };
 
 /**
@@ -262,7 +262,7 @@ nullptr
  * RO(ROM) is now RO(ROU) according to
  * http://www.iso.org/iso/en/prods-services/iso3166ma/03updates-on-iso-3166/nlv3e-rou.html
  */
-constexpr const char* COUNTRIES[] = {
+constexpr ध्रुव वर्ण* COUNTRIES[] = {
     "AD",  "AE",  "AF",  "AG",  "AI",  "AL",  "AM",
     "AO",  "AQ",  "AR",  "AS",  "AT",  "AU",  "AW",  "AX",  "AZ",
     "BA",  "BB",  "BD",  "BE",  "BF",  "BG",  "BH",  "BI",
@@ -293,17 +293,17 @@ constexpr const char* COUNTRIES[] = {
     "TW",  "TZ",  "UA",  "UG",  "UM",  "US",  "UY",  "UZ",
     "VA",  "VC",  "VE",  "VG",  "VI",  "VN",  "VU",  "WF",
     "WS",  "XK",  "YE",  "YT",  "ZA",  "ZM",  "ZW",
-nullptr,
+शून्यसूचकः,
     "AN",  "BU", "CS", "FX", "RO", "SU", "TP", "YD", "YU", "ZR",   /* obsolete country codes */
-nullptr
+शून्यसूचकः
 };
 
-constexpr const char* DEPRECATED_COUNTRIES[] = {
-    "AN", "BU", "CS", "DD", "DY", "FX", "HV", "NH", "RH", "SU", "TP", "UK", "VD", "YD", "YU", "ZR", nullptr, nullptr /* deprecated country list */
+constexpr ध्रुव वर्ण* DEPRECATED_COUNTRIES[] = {
+    "AN", "BU", "CS", "DD", "DY", "FX", "HV", "NH", "RH", "SU", "TP", "UK", "VD", "YD", "YU", "ZR", शून्यसूचकः, शून्यसूचकः /* deprecated country list */
 };
-constexpr const char* REPLACEMENT_COUNTRIES[] = {
+constexpr ध्रुव वर्ण* REPLACEMENT_COUNTRIES[] = {
 /*  "AN", "BU", "CS", "DD", "DY", "FX", "HV", "NH", "RH", "SU", "TP", "UK", "VD", "YD", "YU", "ZR" */
-    "CW", "MM", "RS", "DE", "BJ", "FR", "BF", "VU", "ZW", "RU", "TL", "GB", "VN", "YE", "RS", "CD", nullptr, nullptr  /* replacement country codes */
+    "CW", "MM", "RS", "DE", "BJ", "FR", "BF", "VU", "ZW", "RU", "TL", "GB", "VN", "YE", "RS", "CD", शून्यसूचकः, शून्यसूचकः  /* replacement country codes */
 };
 
 /**
@@ -319,7 +319,7 @@ constexpr const char* REPLACEMENT_COUNTRIES[] = {
  * second list, and another nullptr entry.  The two lists correspond to
  * the two lists in COUNTRIES.
  */
-constexpr const char* COUNTRIES_3[] = {
+constexpr ध्रुव वर्ण* COUNTRIES_3[] = {
 /*  "AD",  "AE",  "AF",  "AG",  "AI",  "AL",  "AM",      */
     "AND", "ARE", "AFG", "ATG", "AIA", "ALB", "ARM",
 /*  "AO",  "AQ",  "AR",  "AS",  "AT",  "AU",  "AW",  "AX",  "AZ",     */
@@ -380,15 +380,15 @@ constexpr const char* COUNTRIES_3[] = {
     "VAT", "VCT", "VEN", "VGB", "VIR", "VNM", "VUT", "WLF",
 /*  "WS",  "XK",  "YE",  "YT",  "ZA",  "ZM",  "ZW",          */
     "WSM", "XKK", "YEM", "MYT", "ZAF", "ZMB", "ZWE",
-nullptr,
+शून्यसूचकः,
 /*  "AN",  "BU",  "CS",  "FX",  "RO", "SU",  "TP",  "YD",  "YU",  "ZR" */
     "ANT", "BUR", "SCG", "FXX", "ROM", "SUN", "TMP", "YMD", "YUG", "ZAR",
-nullptr
+शून्यसूचकः
 };
 
-typedef struct CanonicalizationMap {
-    const char *id;          /* input ID */
-    const char *canonicalID; /* canonicalized output ID */
+प्रकारनिर्देश संरचना CanonicalizationMap {
+    ध्रुव वर्ण *id;          /* input ID */
+    ध्रुव वर्ण *canonicalID; /* canonicalized output ID */
 } CanonicalizationMap;
 
 /**
@@ -411,243 +411,243 @@ constexpr CanonicalizationMap CANONICALIZE_MAP[] = {
 
 /* ### BCP47 Conversion *******************************************/
 /* Gets the size of the shortest subtag in the given localeID. */
-int32_t getShortestSubtagLength(std::string_view localeID) {
+int32_t get_ह्रस्वतमम्_Subtag_दीर्घता(std::string_view localeID) {
     int32_t localeIDLength = static_cast<int32_t>(localeID.length());
     int32_t length = localeIDLength;
-    int32_t tmpLength = 0;
+    int32_t tmp_दीर्घता = 0;
     int32_t i;
-    bool reset = true;
+    तार्किक reset = सत्य;
 
-    for (i = 0; i < localeIDLength; i++) {
-        if (localeID[i] != '_' && localeID[i] != '-') {
-            if (reset) {
-                tmpLength = 0;
-                reset = false;
+    प्रति (i = 0; i < localeIDLength; i++) {
+        यदि (localeID[i] != '_' && localeID[i] != '-') {
+            यदि (reset) {
+                tmp_दीर्घता = 0;
+                reset = असत्य;
             }
-            tmpLength++;
-        } else {
-            if (tmpLength != 0 && tmpLength < length) {
-                length = tmpLength;
+            tmp_दीर्घता++;
+        } अन्यथा {
+            यदि (tmp_दीर्घता != 0 && tmp_दीर्घता < length) {
+                length = tmp_दीर्घता;
             }
-            reset = true;
+            reset = सत्य;
         }
     }
 
-    return length;
+    प्रत्यागम length;
 }
 /* Test if the locale id has BCP47 u extension and does not have '@' */
-inline bool _hasBCP47Extension(std::string_view id) {
-    return id.find('@') == std::string_view::npos && getShortestSubtagLength(id) == 1;
+अन्तःस्थ तार्किक _hasBCP47Extension(std::string_view id) {
+    प्रत्यागम id.find('@') == std::string_view::npos && get_ह्रस्वतमम्_Subtag_दीर्घता(id) == 1;
 }
 
 /* ### Keywords **************************************************/
-inline bool UPRV_ISDIGIT(char c) { return c >= '0' && c <= '9'; }
-inline bool UPRV_ISALPHANUM(char c) { return uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
+अन्तःस्थ तार्किक UPRV_ISDIGIT(वर्ण c) { प्रत्यागम c >= '0' && c <= '9'; }
+अन्तःस्थ तार्किक UPRV_ISALPHANUM(वर्ण c) { प्रत्यागम uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
 /* Punctuation/symbols allowed in legacy key values */
-inline bool UPRV_OK_VALUE_PUNCTUATION(char c) { return c == '_' || c == '-' || c == '+' || c == '/'; }
+अन्तःस्थ तार्किक UPRV_OK_मानम्_PUNCTUATION(वर्ण c) { प्रत्यागम c == '_' || c == '-' || c == '+' || c == '/'; }
 
 }  // namespace
 
-#define ULOC_KEYWORD_BUFFER_LEN 25
-#define ULOC_MAX_NO_KEYWORDS 25
+#परिभाषय ULOC_KEYWORD_बफर_LEN 25
+#परिभाषय ULOC_MAX_NO_KEYWORDS 25
 
-U_CAPI const char* U_EXPORT2
+U_CAPI ध्रुव वर्ण* U_EXPORT2
 locale_getKeywordsStart(std::string_view localeID U_LIFETIME_BOUND) {
-    if (size_t pos = localeID.find('@'); pos != std::string_view::npos) {
-        return localeID.data() + pos;
+    यदि (size_t pos = localeID.find('@'); pos != std::string_view::npos) {
+        प्रत्यागम localeID.दत्त() + pos;
     }
-#if (U_CHARSET_FAMILY == U_EBCDIC_FAMILY)
-    else {
+#यदि (U_CHARSET_FAMILY == U_EBCDIC_FAMILY)
+    अन्यथा {
         /* We do this because the @ sign is variant, and the @ sign used on one
         EBCDIC machine won't be compiled the same way on other EBCDIC based
         machines. */
-        static const uint8_t ebcdicSigns[] = { 0x7C, 0x44, 0x66, 0x80, 0xAC, 0xAE, 0xAF, 0xB5, 0xEC, 0xEF, 0x00 };
-        const uint8_t *charToFind = ebcdicSigns;
-        while(*charToFind) {
-            if (size_t pos = localeID.find(*charToFind); pos != std::string_view::npos) {
-                return localeID.data() + pos;
+        स्थिर ध्रुव uint8_t ebcdicSigns[] = { 0x7C, 0x44, 0x66, 0x80, 0xAC, 0xAE, 0xAF, 0xB5, 0xEC, 0xEF, 0x00 };
+        ध्रुव uint8_t *char_गन्तव्यम्_Find = ebcdicSigns;
+        यावत्(*char_गन्तव्यम्_Find) {
+            यदि (size_t pos = localeID.find(*char_गन्तव्यम्_Find); pos != std::string_view::npos) {
+                प्रत्यागम localeID.दत्त() + pos;
             }
-            charToFind++;
+            char_गन्तव्यम्_Find++;
         }
     }
-#endif
-    return nullptr;
+#यदि_अन्तः
+    प्रत्यागम शून्यसूचकः;
 }
 
-namespace {
+नामाकाश {
 
 /**
  * @param keywordName incoming name to be canonicalized
  * @param status return status (keyword too long)
  * @return the keyword name
  */
-CharString locale_canonKeywordName(std::string_view keywordName, UErrorCode& status)
+CharString locale_canonKeywordName(std::string_view keywordName, UError_संहिता& स्थितिः)
 {
-  if (U_FAILURE(status)) { return {}; }
-  CharString result;
+  यदि (U_FAILURE(स्थितिः)) { प्रत्यागम {}; }
+  CharString परिणाम;
 
-  for (char c : keywordName) {
-    if (!UPRV_ISALPHANUM(c)) {
-      status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
-      return {};
+  प्रति (वर्ण c : keywordName) {
+    यदि (!UPRV_ISALPHANUM(c)) {
+      स्थितिः = U_ILLEGAL_तर्कः_ERROR; /* malformed keyword name */
+      प्रत्यागम {};
     }
-    result.append(uprv_tolower(c), status);
+    परिणाम.append(uprv_tolower(c), स्थितिः);
   }
-  if (result.isEmpty()) {
-    status = U_ILLEGAL_ARGUMENT_ERROR; /* empty keyword name */
-    return {};
+  यदि (परिणाम.is_रिक्तानि()) {
+    स्थितिः = U_ILLEGAL_तर्कः_ERROR; /* empty keyword name */
+    प्रत्यागम {};
   }
 
-  return result;
+  प्रत्यागम परिणाम;
 }
 
-typedef struct {
-    char keyword[ULOC_KEYWORD_BUFFER_LEN];
+प्रकारनिर्देश संरचना {
+    वर्ण keyword[ULOC_KEYWORD_बफर_LEN];
     int32_t keywordLen;
-    const char *valueStart;
-    int32_t valueLen;
+    ध्रुव वर्ण *मानम्_Start;
+    int32_t मानम्_Len;
 } KeywordStruct;
 
 int32_t U_CALLCONV
-compareKeywordStructs(const void * /*context*/, const void *left, const void *right) {
-    const char* leftString = static_cast<const KeywordStruct*>(left)->keyword;
-    const char* rightString = static_cast<const KeywordStruct*>(right)->keyword;
-    return uprv_strcmp(leftString, rightString);
+compareKeywordStructs(ध्रुव शून्य * /*context*/, ध्रुव शून्य *वामतः, ध्रुव शून्य *दक्षिणतः) {
+    ध्रुव वर्ण* वामः_String = static_cast<ध्रुव KeywordStruct*>(वामतः)->keyword;
+    ध्रुव वर्ण* दक्षिणः_String = static_cast<ध्रुव KeywordStruct*>(दक्षिणतः)->keyword;
+    प्रत्यागम uprv_strcmp(वामः_String, दक्षिणः_String);
 }
 
 }  // namespace
 
 U_EXPORT CharString
 ulocimp_getKeywords(std::string_view localeID,
-                    char prev,
-                    bool valuesToo,
-                    UErrorCode& status)
+                    वर्ण पूर्व,
+                    तार्किक मानानि_Too,
+                    UError_संहिता& स्थितिः)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
+    प्रत्यागम ByteSinkUtil::द्वारा_Byte_Sink_गन्तव्यम्_Char_String(
+        [&](ByteSink& sink, UError_संहिता& स्थितिः) {
             ulocimp_getKeywords(localeID,
-                                prev,
+                                पूर्व,
                                 sink,
-                                valuesToo,
-                                status);
+                                मानानि_Too,
+                                स्थितिः);
         },
-        status);
+        स्थितिः);
 }
 
-U_EXPORT void
+U_EXPORT शून्य
 ulocimp_getKeywords(std::string_view localeID,
-                    char prev,
+                    वर्ण पूर्व,
                     ByteSink& sink,
-                    bool valuesToo,
-                    UErrorCode& status)
+                    तार्किक मानानि_Too,
+                    UError_संहिता& स्थितिः)
 {
-    if (U_FAILURE(status)) { return; }
+    यदि (U_FAILURE(स्थितिः)) { प्रत्यागम; }
 
     KeywordStruct keywordList[ULOC_MAX_NO_KEYWORDS];
 
     int32_t maxKeywords = ULOC_MAX_NO_KEYWORDS;
-    int32_t numKeywords = 0;
+    int32_t अङ्कः_Keywords = 0;
     size_t equalSign = std::string_view::npos;
     size_t semicolon = std::string_view::npos;
     int32_t i = 0, j, n;
 
-    if(prev == '@') { /* start of keyword definition */
+    यदि(पूर्व == '@') { /* start of keyword definition */
         /* we will grab pairs, trim spaces, lowercase keywords, sort and return */
-        do {
-            bool duplicate = false;
+        कुरु {
+            तार्किक duplicate = असत्य;
             /* skip leading spaces */
-            while (!localeID.empty() && localeID.front() == ' ') {
-                localeID.remove_prefix(1);
+            यावत् (!localeID.empty() && localeID.front() == ' ') {
+                localeID.remove_उपसर्गः(1);
             }
-            if (localeID.empty()) { /* handle trailing "; " */
-                break;
+            यदि (localeID.empty()) { /* handle trailing "; " */
+                भङ्ग;
             }
-            if(numKeywords == maxKeywords) {
-                status = U_INTERNAL_PROGRAM_ERROR;
-                return;
+            यदि(अङ्कः_Keywords == maxKeywords) {
+                स्थितिः = U_आन्तरिकम्_क्रमादेशः_ERROR;
+                प्रत्यागम;
             }
             equalSign = localeID.find('=');
             semicolon = localeID.find(';');
             /* lack of '=' [foo@currency] is illegal */
             /* ';' before '=' [foo@currency;collation=pinyin] is illegal */
-            if (equalSign == std::string_view::npos ||
+            यदि (equalSign == std::string_view::npos ||
                 (semicolon != std::string_view::npos && semicolon < equalSign)) {
-                status = U_INVALID_FORMAT_ERROR;
-                return;
+                स्थितिः = U_INVALID_FORMAT_ERROR;
+                प्रत्यागम;
             }
             /* zero-length keyword is an error. */
-            if (equalSign == 0) {
-                status = U_INVALID_FORMAT_ERROR;
-                return;
+            यदि (equalSign == 0) {
+                स्थितिः = U_INVALID_FORMAT_ERROR;
+                प्रत्यागम;
             }
             /* need to normalize both keyword and keyword name */
-            if (equalSign >= ULOC_KEYWORD_BUFFER_LEN) {
+            यदि (equalSign >= ULOC_KEYWORD_बफर_LEN) {
                 /* keyword name too long for internal buffer */
-                status = U_INTERNAL_PROGRAM_ERROR;
-                return;
+                स्थितिः = U_आन्तरिकम्_क्रमादेशः_ERROR;
+                प्रत्यागम;
             }
-            for (i = 0, n = 0; static_cast<size_t>(i) < equalSign; ++i) {
-                if (localeID[i] != ' ') {
-                    keywordList[numKeywords].keyword[n++] = uprv_tolower(localeID[i]);
+            प्रति (i = 0, n = 0; static_cast<size_t>(i) < equalSign; ++i) {
+                यदि (localeID[i] != ' ') {
+                    keywordList[अङ्कः_Keywords].keyword[n++] = uprv_tolower(localeID[i]);
                 }
             }
 
-            keywordList[numKeywords].keyword[n] = 0;
-            keywordList[numKeywords].keywordLen = n;
+            keywordList[अङ्कः_Keywords].keyword[n] = 0;
+            keywordList[अङ्कः_Keywords].keywordLen = n;
             /* now grab the value part. First we skip the '=' */
             equalSign++;
             /* then we leading spaces */
-            while (equalSign < localeID.length() && localeID[equalSign] == ' ') {
+            यावत् (equalSign < localeID.length() && localeID[equalSign] == ' ') {
                 equalSign++;
             }
 
             /* Premature end or zero-length value */
-            if (equalSign == localeID.length() || equalSign == semicolon) {
-                status = U_INVALID_FORMAT_ERROR;
-                return;
+            यदि (equalSign == localeID.length() || equalSign == semicolon) {
+                स्थितिः = U_INVALID_FORMAT_ERROR;
+                प्रत्यागम;
             }
 
-            keywordList[numKeywords].valueStart = localeID.data() + equalSign;
+            keywordList[अङ्कः_Keywords].मानम्_Start = localeID.दत्त() + equalSign;
 
             std::string_view value = localeID;
-            if (semicolon != std::string_view::npos) {
+            यदि (semicolon != std::string_view::npos) {
                 value.remove_suffix(value.length() - semicolon);
-                localeID.remove_prefix(semicolon + 1);
-            } else {
+                localeID.remove_उपसर्गः(semicolon + 1);
+            } अन्यथा {
                 localeID = {};
             }
-            value.remove_prefix(equalSign);
-            if (size_t last = value.find_last_not_of(' '); last != std::string_view::npos) {
-                value.remove_suffix(value.length() - last - 1);
+            value.remove_उपसर्गः(equalSign);
+            यदि (size_t चरमः = value.find_last_not_of(' '); चरमः != std::string_view::npos) {
+                value.remove_suffix(value.length() - चरमः - 1);
             }
-            keywordList[numKeywords].valueLen = static_cast<int32_t>(value.length());
+            keywordList[अङ्कः_Keywords].मानम्_Len = static_cast<int32_t>(value.length());
 
             /* If this is a duplicate keyword, then ignore it */
-            for (j=0; j<numKeywords; ++j) {
-                if (uprv_strcmp(keywordList[j].keyword, keywordList[numKeywords].keyword) == 0) {
-                    duplicate = true;
-                    break;
+            प्रति (j=0; j<अङ्कः_Keywords; ++j) {
+                यदि (uprv_strcmp(keywordList[j].keyword, keywordList[अङ्कः_Keywords].keyword) == 0) {
+                    duplicate = सत्य;
+                    भङ्ग;
                 }
             }
-            if (!duplicate) {
-                ++numKeywords;
+            यदि (!duplicate) {
+                ++अङ्कः_Keywords;
             }
-        } while (!localeID.empty());
+        } यावत् (!localeID.empty());
 
         /* now we have a list of keywords */
         /* we need to sort it */
-        uprv_sortArray(keywordList, numKeywords, sizeof(KeywordStruct), compareKeywordStructs, nullptr, false, &status);
+        uprv_क्रमय_Array(keywordList, अङ्कः_Keywords, परिमाण(KeywordStruct), compareKeywordStructs, शून्यसूचकः, असत्य, &स्थितिः);
 
         /* Now construct the keyword part */
-        for(i = 0; i < numKeywords; i++) {
+        प्रति(i = 0; i < अङ्कः_Keywords; i++) {
             sink.Append(keywordList[i].keyword, keywordList[i].keywordLen);
-            if(valuesToo) {
+            यदि(मानानि_Too) {
                 sink.Append("=", 1);
-                sink.Append(keywordList[i].valueStart, keywordList[i].valueLen);
-                if(i < numKeywords - 1) {
+                sink.Append(keywordList[i].मानम्_Start, keywordList[i].मानम्_Len);
+                यदि(i < अङ्कः_Keywords - 1) {
                     sink.Append(";", 1);
                 }
-            } else {
+            } अन्यथा {
                 sink.Append("\0", 1);
             }
         }
@@ -655,180 +655,180 @@ ulocimp_getKeywords(std::string_view localeID,
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getKeywordValue(const char* localeID,
-                     const char* keywordName,
-                     char* buffer, int32_t bufferCapacity,
-                     UErrorCode* status)
+uloc_get_Keyword_मानम्(ध्रुव वर्ण* localeID,
+                     ध्रुव वर्ण* keywordName,
+                     वर्ण* बफर, int32_t बफर_क्षमता,
+                     UError_संहिता* स्थितिः)
 {
-    if (U_FAILURE(*status)) { return 0; }
-    if (keywordName == nullptr || *keywordName == '\0') {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    यदि (U_FAILURE(*स्थितिः)) { प्रत्यागम 0; }
+    यदि (keywordName == शून्यसूचकः || *keywordName == '\0') {
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0;
     }
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        buffer, bufferCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getKeywordValue(localeID, keywordName, sink, status);
+    प्रत्यागम ByteSinkUtil::द्वारा_Byte_Sink_गन्तव्यम्_Terminated_Chars(
+        बफर, बफर_क्षमता,
+        [&](ByteSink& sink, UError_संहिता& स्थितिः) {
+            ulocimp_get_Keyword_मानम्(localeID, keywordName, sink, स्थितिः);
         },
-        *status);
+        *स्थितिः);
 }
 
 U_EXPORT CharString
-ulocimp_getKeywordValue(const char* localeID,
+ulocimp_get_Keyword_मानम्(ध्रुव वर्ण* localeID,
                         std::string_view keywordName,
-                        UErrorCode& status)
+                        UError_संहिता& स्थितिः)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getKeywordValue(localeID, keywordName, sink, status);
+    प्रत्यागम ByteSinkUtil::द्वारा_Byte_Sink_गन्तव्यम्_Char_String(
+        [&](ByteSink& sink, UError_संहिता& स्थितिः) {
+            ulocimp_get_Keyword_मानम्(localeID, keywordName, sink, स्थितिः);
         },
-        status);
+        स्थितिः);
 }
 
-U_EXPORT void
-ulocimp_getKeywordValue(const char* localeID,
+U_EXPORT शून्य
+ulocimp_get_Keyword_मानम्(ध्रुव वर्ण* localeID,
                         std::string_view keywordName,
                         icu::ByteSink& sink,
-                        UErrorCode& status)
+                        UError_संहिता& स्थितिः)
 {
-    if (U_FAILURE(status)) { return; }
+    यदि (U_FAILURE(स्थितिः)) { प्रत्यागम; }
 
-    if (localeID == nullptr || keywordName.empty()) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    यदि (localeID == शून्यसूचकः || keywordName.empty()) {
+        स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
 
-    const char* startSearchHere = nullptr;
-    const char* nextSeparator = nullptr;
+    ध्रुव वर्ण* start_अन्वेषणम्_अत्र = शून्यसूचकः;
+    ध्रुव वर्ण* अग्र_Separator = शून्यसूचकः;
 
-    CharString tempBuffer;
-    const char* tmpLocaleID;
+    CharString अस्थायी_बफर;
+    ध्रुव वर्ण* tmpLocaleID;
 
-    CharString canonKeywordName = locale_canonKeywordName(keywordName, status);
-    if (U_FAILURE(status)) {
-      return;
+    CharString canonKeywordName = locale_canonKeywordName(keywordName, स्थितिः);
+    यदि (U_FAILURE(स्थितिः)) {
+      प्रत्यागम;
     }
 
-    if (localeID != nullptr && _hasBCP47Extension(localeID)) {
-        tempBuffer = ulocimp_forLanguageTag(localeID, -1, nullptr, status);
-        tmpLocaleID = U_SUCCESS(status) && !tempBuffer.isEmpty() ? tempBuffer.data() : localeID;
-    } else {
+    यदि (localeID != शून्यसूचकः && _hasBCP47Extension(localeID)) {
+        अस्थायी_बफर = ulocimp_for_Language_चिह्नकम्(localeID, -1, शून्यसूचकः, स्थितिः);
+        tmpLocaleID = U_SUCCESS(स्थितिः) && !अस्थायी_बफर.is_रिक्तानि() ? अस्थायी_बफर.दत्त() : localeID;
+    } अन्यथा {
         tmpLocaleID=localeID;
     }
 
-    startSearchHere = locale_getKeywordsStart(tmpLocaleID);
-    if(startSearchHere == nullptr) {
+    start_अन्वेषणम्_अत्र = locale_getKeywordsStart(tmpLocaleID);
+    यदि(start_अन्वेषणम्_अत्र == शून्यसूचकः) {
         /* no keywords, return at once */
-        return;
+        प्रत्यागम;
     }
 
     /* find the first keyword */
-    while(startSearchHere) {
-        const char* keyValueTail;
+    यावत्(start_अन्वेषणम्_अत्र) {
+        ध्रुव वर्ण* कुञ्चिका_मानम्_पुच्छ;
 
-        startSearchHere++; /* skip @ or ; */
-        nextSeparator = uprv_strchr(startSearchHere, '=');
-        if(!nextSeparator) {
-            status = U_ILLEGAL_ARGUMENT_ERROR; /* key must have =value */
-            return;
+        start_अन्वेषणम्_अत्र++; /* skip @ or ; */
+        अग्र_Separator = uprv_strchr(start_अन्वेषणम्_अत्र, '=');
+        यदि(!अग्र_Separator) {
+            स्थितिः = U_ILLEGAL_तर्कः_ERROR; /* key must have =value */
+            प्रत्यागम;
         }
         /* strip leading & trailing spaces (TC decided to tolerate these) */
-        while(*startSearchHere == ' ') {
-            startSearchHere++;
+        यावत्(*start_अन्वेषणम्_अत्र == ' ') {
+            start_अन्वेषणम्_अत्र++;
         }
-        keyValueTail = nextSeparator;
-        while (keyValueTail > startSearchHere && *(keyValueTail-1) == ' ') {
-            keyValueTail--;
+        कुञ्चिका_मानम्_पुच्छ = अग्र_Separator;
+        यावत् (कुञ्चिका_मानम्_पुच्छ > start_अन्वेषणम्_अत्र && *(कुञ्चिका_मानम्_पुच्छ-1) == ' ') {
+            कुञ्चिका_मानम्_पुच्छ--;
         }
         /* now keyValueTail points to first char after the keyName */
         /* copy & normalize keyName from locale */
-        if (startSearchHere == keyValueTail) {
-            status = U_ILLEGAL_ARGUMENT_ERROR; /* empty keyword name in passed-in locale */
-            return;
+        यदि (start_अन्वेषणम्_अत्र == कुञ्चिका_मानम्_पुच्छ) {
+            स्थितिः = U_ILLEGAL_तर्कः_ERROR; /* empty keyword name in passed-in locale */
+            प्रत्यागम;
         }
         CharString localeKeywordName;
-        while (startSearchHere < keyValueTail) {
-          if (!UPRV_ISALPHANUM(*startSearchHere)) {
-            status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
-            return;
+        यावत् (start_अन्वेषणम्_अत्र < कुञ्चिका_मानम्_पुच्छ) {
+          यदि (!UPRV_ISALPHANUM(*start_अन्वेषणम्_अत्र)) {
+            स्थितिः = U_ILLEGAL_तर्कः_ERROR; /* malformed keyword name */
+            प्रत्यागम;
           }
-          localeKeywordName.append(uprv_tolower(*startSearchHere++), status);
+          localeKeywordName.append(uprv_tolower(*start_अन्वेषणम्_अत्र++), स्थितिः);
         }
-        if (U_FAILURE(status)) {
-            return;
+        यदि (U_FAILURE(स्थितिः)) {
+            प्रत्यागम;
         }
 
-        startSearchHere = uprv_strchr(nextSeparator, ';');
+        start_अन्वेषणम्_अत्र = uprv_strchr(अग्र_Separator, ';');
 
-        if (canonKeywordName == localeKeywordName) {
+        यदि (canonKeywordName == localeKeywordName) {
              /* current entry matches the keyword. */
-           nextSeparator++; /* skip '=' */
+           अग्र_Separator++; /* skip '=' */
             /* First strip leading & trailing spaces (TC decided to tolerate these) */
-            while(*nextSeparator == ' ') {
-              nextSeparator++;
+            यावत्(*अग्र_Separator == ' ') {
+              अग्र_Separator++;
             }
-            keyValueTail = (startSearchHere)? startSearchHere: nextSeparator + uprv_strlen(nextSeparator);
-            while(keyValueTail > nextSeparator && *(keyValueTail-1) == ' ') {
-              keyValueTail--;
+            कुञ्चिका_मानम्_पुच्छ = (start_अन्वेषणम्_अत्र)? start_अन्वेषणम्_अत्र: अग्र_Separator + uprv_strlen(अग्र_Separator);
+            यावत्(कुञ्चिका_मानम्_पुच्छ > अग्र_Separator && *(कुञ्चिका_मानम्_पुच्छ-1) == ' ') {
+              कुञ्चिका_मानम्_पुच्छ--;
             }
             /* Now copy the value, but check well-formedness */
-            if (nextSeparator == keyValueTail) {
-              status = U_ILLEGAL_ARGUMENT_ERROR; /* empty key value name in passed-in locale */
-              return;
+            यदि (अग्र_Separator == कुञ्चिका_मानम्_पुच्छ) {
+              स्थितिः = U_ILLEGAL_तर्कः_ERROR; /* empty key value name in passed-in locale */
+              प्रत्यागम;
             }
-            while (nextSeparator < keyValueTail) {
-              if (!UPRV_ISALPHANUM(*nextSeparator) && !UPRV_OK_VALUE_PUNCTUATION(*nextSeparator)) {
-                status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed key value */
-                return;
+            यावत् (अग्र_Separator < कुञ्चिका_मानम्_पुच्छ) {
+              यदि (!UPRV_ISALPHANUM(*अग्र_Separator) && !UPRV_OK_मानम्_PUNCTUATION(*अग्र_Separator)) {
+                स्थितिः = U_ILLEGAL_तर्कः_ERROR; /* malformed key value */
+                प्रत्यागम;
               }
               /* Should we lowercase value to return here? Tests expect as-is. */
-              sink.Append(nextSeparator++, 1);
+              sink.Append(अग्र_Separator++, 1);
             }
-            return;
+            प्रत्यागम;
         }
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_setKeywordValue(const char* keywordName,
-                     const char* keywordValue,
-                     char* buffer, int32_t bufferCapacity,
-                     UErrorCode* status)
+uloc_समुच्चयः_Keyword_मानम्(ध्रुव वर्ण* keywordName,
+                     ध्रुव वर्ण* keyword_मानम्,
+                     वर्ण* बफर, int32_t बफर_क्षमता,
+                     UError_संहिता* स्थितिः)
 {
-    if (U_FAILURE(*status)) { return 0; }
+    यदि (U_FAILURE(*स्थितिः)) { प्रत्यागम 0; }
 
-    if (keywordName == nullptr || *keywordName == 0) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    यदि (keywordName == शून्यसूचकः || *keywordName == 0) {
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0;
     }
 
-    if (bufferCapacity <= 1) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    यदि (बफर_क्षमता <= 1) {
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0;
     }
 
-    int32_t bufLen = (int32_t)uprv_strlen(buffer);
-    if(bufferCapacity<bufLen) {
+    int32_t bufLen = (int32_t)uprv_strlen(बफर);
+    यदि(बफर_क्षमता<bufLen) {
         /* The capacity is less than the length?! Is this NUL terminated? */
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0;
     }
 
-    char* keywords = const_cast<char*>(
-        locale_getKeywordsStart({buffer, static_cast<std::string_view::size_type>(bufLen)}));
-    int32_t baseLen = keywords == nullptr ? bufLen : keywords - buffer;
+    वर्ण* keywords = const_cast<वर्ण*>(
+        locale_getKeywordsStart({बफर, static_cast<std::string_view::size_type>(bufLen)}));
+    int32_t आधारः_Len = keywords == शून्यसूचकः ? bufLen : keywords - बफर;
     // Remove -1 from the capacity so that this function can guarantee NUL termination.
-    CheckedArrayByteSink sink(keywords == nullptr ? buffer + bufLen : keywords,
-                              bufferCapacity - baseLen - 1);
-    int32_t reslen = ulocimp_setKeywordValue(
-        keywords == nullptr ? std::string_view() : keywords,
+    CheckedArrayByteSink sink(keywords == शून्यसूचकः ? बफर + bufLen : keywords,
+                              बफर_क्षमता - आधारः_Len - 1);
+    int32_t reslen = ulocimp_समुच्चयः_Keyword_मानम्(
+        keywords == शून्यसूचकः ? std::string_view() : keywords,
         keywordName,
-        keywordValue == nullptr ? std::string_view() : keywordValue,
+        keyword_मानम् == शून्यसूचकः ? std::string_view() : keyword_मानम्,
         sink,
-        *status);
+        *स्थितिः);
 
-    if (U_FAILURE(*status)) {
-        return *status == U_BUFFER_OVERFLOW_ERROR ? reslen + baseLen : 0;
+    यदि (U_FAILURE(*स्थितिः)) {
+        प्रत्यागम *स्थितिः == U_बफर_अतिप्रवाहः_ERROR ? reslen + आधारः_Len : 0;
     }
 
     // See the documentation for this function, it's guaranteed to never
@@ -836,187 +836,187 @@ uloc_setKeywordValue(const char* keywordName,
     // In this case, nothing has been written to the sink, so it cannot have Overflowed().
     U_ASSERT(!sink.Overflowed());
     U_ASSERT(reslen >= 0);
-    return u_terminateChars(buffer, bufferCapacity, reslen + baseLen, status);
+    प्रत्यागम u_terminateChars(बफर, बफर_क्षमता, reslen + आधारः_Len, स्थितिः);
 }
 
-U_EXPORT void
-ulocimp_setKeywordValue(std::string_view keywordName,
-                        std::string_view keywordValue,
+U_EXPORT शून्य
+ulocimp_समुच्चयः_Keyword_मानम्(std::string_view keywordName,
+                        std::string_view keyword_मानम्,
                         CharString& localeID,
-                        UErrorCode& status)
+                        UError_संहिता& स्थितिः)
 {
-    if (U_FAILURE(status)) { return; }
+    यदि (U_FAILURE(स्थितिः)) { प्रत्यागम; }
     std::string_view keywords;
-    if (const char* start = locale_getKeywordsStart(localeID.toStringPiece()); start != nullptr) {
+    यदि (ध्रुव वर्ण* start = locale_getKeywordsStart(localeID.गन्तव्यम्_String_Piece()); start != शून्यसूचकः) {
         // This is safe because CharString::truncate() doesn't actually erase any
         // data, but simply sets the position for where new data will be written.
-        int32_t size = start - localeID.data();
-        keywords = localeID.toStringPiece();
-        keywords.remove_prefix(size);
+        int32_t size = start - localeID.दत्त();
+        keywords = localeID.गन्तव्यम्_String_Piece();
+        keywords.remove_उपसर्गः(size);
         localeID.truncate(size);
     }
     CharStringByteSink sink(&localeID);
-    ulocimp_setKeywordValue(keywords, keywordName, keywordValue, sink, status);
+    ulocimp_समुच्चयः_Keyword_मानम्(keywords, keywordName, keyword_मानम्, sink, स्थितिः);
 }
 
 U_EXPORT int32_t
-ulocimp_setKeywordValue(std::string_view keywords,
+ulocimp_समुच्चयः_Keyword_मानम्(std::string_view keywords,
                         std::string_view keywordName,
-                        std::string_view keywordValue,
+                        std::string_view keyword_मानम्,
                         ByteSink& sink,
-                        UErrorCode& status)
+                        UError_संहिता& स्थितिः)
 {
-    if (U_FAILURE(status)) { return 0; }
+    यदि (U_FAILURE(स्थितिः)) { प्रत्यागम 0; }
 
     /* TODO: sorting. removal. */
     int32_t needLen = 0;
     int32_t rc;
-    CharString updatedKeysAndValues;
-    bool handledInputKeyAndValue = false;
-    char keyValuePrefix = '@';
+    CharString updated_कुञ्चिकाः_And_मानानि;
+    तार्किक handled_निवेशः_कुञ्चिका_And_मानम् = असत्य;
+    वर्ण कुञ्चिका_मानम्_उपसर्गः = '@';
 
-    if (status == U_STRING_NOT_TERMINATED_WARNING) {
-        status = U_ZERO_ERROR;
+    यदि (स्थितिः == U_STRING_NOT_TERMINATED_WARNING) {
+        स्थितिः = U_ZERO_ERROR;
     }
-    if (keywordName.empty()) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    यदि (keywordName.empty()) {
+        स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0;
     }
-    CharString canonKeywordName = locale_canonKeywordName(keywordName, status);
-    if (U_FAILURE(status)) {
-        return 0;
+    CharString canonKeywordName = locale_canonKeywordName(keywordName, स्थितिः);
+    यदि (U_FAILURE(स्थितिः)) {
+        प्रत्यागम 0;
     }
 
-    CharString canonKeywordValue;
-    for (char c : keywordValue) {
-        if (!UPRV_ISALPHANUM(c) && !UPRV_OK_VALUE_PUNCTUATION(c)) {
-            status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed key value */
-            return 0;
+    CharString canon_Keyword_मानम्;
+    प्रति (वर्ण c : keyword_मानम्) {
+        यदि (!UPRV_ISALPHANUM(c) && !UPRV_OK_मानम्_PUNCTUATION(c)) {
+            स्थितिः = U_ILLEGAL_तर्कः_ERROR; /* malformed key value */
+            प्रत्यागम 0;
         }
         /* Should we force lowercase in value to set? */
-        canonKeywordValue.append(c, status);
+        canon_Keyword_मानम्.append(c, स्थितिः);
     }
-    if (U_FAILURE(status)) {
-        return 0;
+    यदि (U_FAILURE(स्थितिः)) {
+        प्रत्यागम 0;
     }
 
-    if (keywords.size() <= 1) {
-        if (canonKeywordValue.isEmpty()) { /* no keywords = nothing to remove */
-            U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
-            return 0;
+    यदि (keywords.size() <= 1) {
+        यदि (canon_Keyword_मानम्.is_रिक्तानि()) { /* no keywords = nothing to remove */
+            U_ASSERT(स्थितिः != U_STRING_NOT_TERMINATED_WARNING);
+            प्रत्यागम 0;
         }
 
-        needLen = 1 + canonKeywordName.length() + 1 + canonKeywordValue.length();
+        needLen = 1 + canonKeywordName.length() + 1 + canon_Keyword_मानम्.length();
         int32_t capacity = 0;
-        char* buffer = sink.GetAppendBuffer(
-                needLen, needLen, nullptr, needLen, &capacity);
-        if (capacity < needLen || buffer == nullptr) {
-            status = U_BUFFER_OVERFLOW_ERROR;
-            return needLen; /* no change */
+        वर्ण* बफर = sink.Get_Append_बफर(
+                needLen, needLen, शून्यसूचकः, needLen, &capacity);
+        यदि (capacity < needLen || बफर == शून्यसूचकः) {
+            स्थितिः = U_बफर_अतिप्रवाहः_ERROR;
+            प्रत्यागम needLen; /* no change */
         }
-        char* it = buffer;
+        वर्ण* it = बफर;
 
         *it++ = '@';
-        uprv_memcpy(it, canonKeywordName.data(), canonKeywordName.length());
+        uprv_memcpy(it, canonKeywordName.दत्त(), canonKeywordName.length());
         it += canonKeywordName.length();
         *it++ = '=';
-        uprv_memcpy(it, canonKeywordValue.data(), canonKeywordValue.length());
-        sink.Append(buffer, needLen);
-        U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
-        return needLen;
+        uprv_memcpy(it, canon_Keyword_मानम्.दत्त(), canon_Keyword_मानम्.length());
+        sink.Append(बफर, needLen);
+        U_ASSERT(स्थितिः != U_STRING_NOT_TERMINATED_WARNING);
+        प्रत्यागम needLen;
     } /* end shortcut - no @ */
 
     /* search for keyword */
-    for (size_t keywordStart = 0; keywordStart != std::string_view::npos;) {
+    प्रति (size_t keywordStart = 0; keywordStart != std::string_view::npos;) {
         keywordStart++; /* skip @ or ; */
-        size_t nextEqualsign = keywords.find('=', keywordStart);
-        if (nextEqualsign == std::string_view::npos) {
-            status = U_ILLEGAL_ARGUMENT_ERROR; /* key must have =value */
-            return 0;
+        size_t अग्र_Equalsign = keywords.find('=', keywordStart);
+        यदि (अग्र_Equalsign == std::string_view::npos) {
+            स्थितिः = U_ILLEGAL_तर्कः_ERROR; /* key must have =value */
+            प्रत्यागम 0;
         }
         /* strip leading & trailing spaces (TC decided to tolerate these) */
-        while (keywordStart < keywords.size() && keywords[keywordStart] == ' ') {
+        यावत् (keywordStart < keywords.size() && keywords[keywordStart] == ' ') {
             keywordStart++;
         }
-        size_t keyValueTail = nextEqualsign;
-        while (keyValueTail > keywordStart && keywords[keyValueTail - 1] == ' ') {
-            keyValueTail--;
+        size_t कुञ्चिका_मानम्_पुच्छ = अग्र_Equalsign;
+        यावत् (कुञ्चिका_मानम्_पुच्छ > keywordStart && keywords[कुञ्चिका_मानम्_पुच्छ - 1] == ' ') {
+            कुञ्चिका_मानम्_पुच्छ--;
         }
         /* now keyValueTail points to first char after the keyName */
         /* copy & normalize keyName from locale */
-        if (keywordStart == keyValueTail) {
-            status = U_ILLEGAL_ARGUMENT_ERROR; /* empty keyword name in passed-in locale */
-            return 0;
+        यदि (keywordStart == कुञ्चिका_मानम्_पुच्छ) {
+            स्थितिः = U_ILLEGAL_तर्कः_ERROR; /* empty keyword name in passed-in locale */
+            प्रत्यागम 0;
         }
         CharString localeKeywordName;
-        while (keywordStart < keyValueTail) {
-            if (!UPRV_ISALPHANUM(keywords[keywordStart])) {
-                status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
-                return 0;
+        यावत् (keywordStart < कुञ्चिका_मानम्_पुच्छ) {
+            यदि (!UPRV_ISALPHANUM(keywords[keywordStart])) {
+                स्थितिः = U_ILLEGAL_तर्कः_ERROR; /* malformed keyword name */
+                प्रत्यागम 0;
             }
-            localeKeywordName.append(uprv_tolower(keywords[keywordStart++]), status);
+            localeKeywordName.append(uprv_tolower(keywords[keywordStart++]), स्थितिः);
         }
-        if (U_FAILURE(status)) {
-            return 0;
+        यदि (U_FAILURE(स्थितिः)) {
+            प्रत्यागम 0;
         }
 
-        size_t nextSeparator = keywords.find(';', nextEqualsign);
+        size_t अग्र_Separator = keywords.find(';', अग्र_Equalsign);
 
         /* start processing the value part */
-        nextEqualsign++; /* skip '=' */
+        अग्र_Equalsign++; /* skip '=' */
         /* First strip leading & trailing spaces (TC decided to tolerate these) */
-        while (nextEqualsign < keywords.size() && keywords[nextEqualsign] == ' ') {
-            nextEqualsign++;
+        यावत् (अग्र_Equalsign < keywords.size() && keywords[अग्र_Equalsign] == ' ') {
+            अग्र_Equalsign++;
         }
-        keyValueTail = nextSeparator == std::string_view::npos ? keywords.size() : nextSeparator;
-        while (keyValueTail > nextEqualsign && keywords[keyValueTail - 1] == ' ') {
-            keyValueTail--;
+        कुञ्चिका_मानम्_पुच्छ = अग्र_Separator == std::string_view::npos ? keywords.size() : अग्र_Separator;
+        यावत् (कुञ्चिका_मानम्_पुच्छ > अग्र_Equalsign && keywords[कुञ्चिका_मानम्_पुच्छ - 1] == ' ') {
+            कुञ्चिका_मानम्_पुच्छ--;
         }
-        if (nextEqualsign == keyValueTail) {
-            status = U_ILLEGAL_ARGUMENT_ERROR; /* empty key value in passed-in locale */
-            return 0;
+        यदि (अग्र_Equalsign == कुञ्चिका_मानम्_पुच्छ) {
+            स्थितिः = U_ILLEGAL_तर्कः_ERROR; /* empty key value in passed-in locale */
+            प्रत्यागम 0;
         }
 
-        rc = uprv_strcmp(canonKeywordName.data(), localeKeywordName.data());
-        if(rc == 0) {
+        rc = uprv_strcmp(canonKeywordName.दत्त(), localeKeywordName.दत्त());
+        यदि(rc == 0) {
             /* Current entry matches the input keyword. Update the entry */
-            if (!canonKeywordValue.isEmpty()) { /* updating a value */
-                updatedKeysAndValues.append(keyValuePrefix, status);
-                keyValuePrefix = ';'; /* for any subsequent key-value pair */
-                updatedKeysAndValues.append(canonKeywordName, status);
-                updatedKeysAndValues.append('=', status);
-                updatedKeysAndValues.append(canonKeywordValue, status);
+            यदि (!canon_Keyword_मानम्.is_रिक्तानि()) { /* updating a value */
+                updated_कुञ्चिकाः_And_मानानि.append(कुञ्चिका_मानम्_उपसर्गः, स्थितिः);
+                कुञ्चिका_मानम्_उपसर्गः = ';'; /* for any subsequent key-value pair */
+                updated_कुञ्चिकाः_And_मानानि.append(canonKeywordName, स्थितिः);
+                updated_कुञ्चिकाः_And_मानानि.append('=', स्थितिः);
+                updated_कुञ्चिकाः_And_मानानि.append(canon_Keyword_मानम्, स्थितिः);
             } /* else removing this entry, don't emit anything */
-            handledInputKeyAndValue = true;
-        } else {
+            handled_निवेशः_कुञ्चिका_And_मानम् = सत्य;
+        } अन्यथा {
            /* input keyword sorts earlier than current entry, add before current entry */
-            if (rc < 0 && !canonKeywordValue.isEmpty() && !handledInputKeyAndValue) {
+            यदि (rc < 0 && !canon_Keyword_मानम्.is_रिक्तानि() && !handled_निवेशः_कुञ्चिका_And_मानम्) {
                 /* insert new entry at this location */
-                updatedKeysAndValues.append(keyValuePrefix, status);
-                keyValuePrefix = ';'; /* for any subsequent key-value pair */
-                updatedKeysAndValues.append(canonKeywordName, status);
-                updatedKeysAndValues.append('=', status);
-                updatedKeysAndValues.append(canonKeywordValue, status);
-                handledInputKeyAndValue = true;
+                updated_कुञ्चिकाः_And_मानानि.append(कुञ्चिका_मानम्_उपसर्गः, स्थितिः);
+                कुञ्चिका_मानम्_उपसर्गः = ';'; /* for any subsequent key-value pair */
+                updated_कुञ्चिकाः_And_मानानि.append(canonKeywordName, स्थितिः);
+                updated_कुञ्चिकाः_And_मानानि.append('=', स्थितिः);
+                updated_कुञ्चिकाः_And_मानानि.append(canon_Keyword_मानम्, स्थितिः);
+                handled_निवेशः_कुञ्चिका_And_मानम् = सत्य;
             }
             /* copy the current entry */
-            updatedKeysAndValues.append(keyValuePrefix, status);
-            keyValuePrefix = ';'; /* for any subsequent key-value pair */
-            updatedKeysAndValues.append(localeKeywordName, status);
-            updatedKeysAndValues.append('=', status);
-            updatedKeysAndValues.append(keywords.data() + nextEqualsign,
-                                        static_cast<int32_t>(keyValueTail - nextEqualsign), status);
+            updated_कुञ्चिकाः_And_मानानि.append(कुञ्चिका_मानम्_उपसर्गः, स्थितिः);
+            कुञ्चिका_मानम्_उपसर्गः = ';'; /* for any subsequent key-value pair */
+            updated_कुञ्चिकाः_And_मानानि.append(localeKeywordName, स्थितिः);
+            updated_कुञ्चिकाः_And_मानानि.append('=', स्थितिः);
+            updated_कुञ्चिकाः_And_मानानि.append(keywords.दत्त() + अग्र_Equalsign,
+                                        static_cast<int32_t>(कुञ्चिका_मानम्_पुच्छ - अग्र_Equalsign), स्थितिः);
         }
-        if (nextSeparator == std::string_view::npos && !canonKeywordValue.isEmpty() && !handledInputKeyAndValue) {
+        यदि (अग्र_Separator == std::string_view::npos && !canon_Keyword_मानम्.is_रिक्तानि() && !handled_निवेशः_कुञ्चिका_And_मानम्) {
             /* append new entry at the end, it sorts later than existing entries */
-            updatedKeysAndValues.append(keyValuePrefix, status);
+            updated_कुञ्चिकाः_And_मानानि.append(कुञ्चिका_मानम्_उपसर्गः, स्थितिः);
             /* skip keyValuePrefix update, no subsequent key-value pair */
-            updatedKeysAndValues.append(canonKeywordName, status);
-            updatedKeysAndValues.append('=', status);
-            updatedKeysAndValues.append(canonKeywordValue, status);
-            handledInputKeyAndValue = true;
+            updated_कुञ्चिकाः_And_मानानि.append(canonKeywordName, स्थितिः);
+            updated_कुञ्चिकाः_And_मानानि.append('=', स्थितिः);
+            updated_कुञ्चिकाः_And_मानानि.append(canon_Keyword_मानम्, स्थितिः);
+            handled_निवेशः_कुञ्चिका_And_मानम् = सत्य;
         }
-        keywordStart = nextSeparator;
+        keywordStart = अग्र_Separator;
     } /* end loop searching */
 
     /* Any error from updatedKeysAndValues.append above would be internal and not due to
@@ -1027,68 +1027,68 @@ ulocimp_setKeywordValue(std::string_view keywords,
      * error return but the passed-in locale is unmodified and the original bufLen is
      * returned.
      */
-    if (!handledInputKeyAndValue || U_FAILURE(status)) {
+    यदि (!handled_निवेशः_कुञ्चिका_And_मानम् || U_FAILURE(स्थितिः)) {
         /* if input key/value specified removal of a keyword not present in locale, or
          * there was an error in CharString.append, leave original locale alone. */
-        U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
+        U_ASSERT(स्थितिः != U_STRING_NOT_TERMINATED_WARNING);
         // The sink is expected to be a buffer which already contains the full
         // locale string, so when it isn't going to be modified there's no need
         // to actually write any data to it, as the data is already there. Only
         // the first character needs to be overwritten (changing '\0' to '@').
         needLen = static_cast<int32_t>(keywords.size());
         int32_t capacity = 0;
-        char* buffer = sink.GetAppendBuffer(
-                needLen, needLen, nullptr, needLen, &capacity);
-        if (capacity < needLen || buffer == nullptr) {
-            status = U_BUFFER_OVERFLOW_ERROR;
-        } else {
-            *buffer = '@';
-            sink.Append(buffer, needLen);
+        वर्ण* बफर = sink.Get_Append_बफर(
+                needLen, needLen, शून्यसूचकः, needLen, &capacity);
+        यदि (capacity < needLen || बफर == शून्यसूचकः) {
+            स्थितिः = U_बफर_अतिप्रवाहः_ERROR;
+        } अन्यथा {
+            *बफर = '@';
+            sink.Append(बफर, needLen);
         }
-        return needLen;
+        प्रत्यागम needLen;
     }
 
-    needLen = updatedKeysAndValues.length();
+    needLen = updated_कुञ्चिकाः_And_मानानि.length();
     // Check to see can we fit the updatedKeysAndValues, if not, return
     // U_BUFFER_OVERFLOW_ERROR without copy updatedKeysAndValues into it.
     // We do this because this API function does not behave like most others:
     // It promises never to set a U_STRING_NOT_TERMINATED_WARNING.
     // When the contents fits but without the terminating NUL, in this case we need to not change
     // the buffer contents and return with a buffer overflow error.
-    if (needLen > 0) {
+    यदि (needLen > 0) {
         int32_t capacity = 0;
-        char* buffer = sink.GetAppendBuffer(
-                needLen, needLen, nullptr, needLen, &capacity);
-        if (capacity < needLen || buffer == nullptr) {
-            status = U_BUFFER_OVERFLOW_ERROR;
-            return needLen;
+        वर्ण* बफर = sink.Get_Append_बफर(
+                needLen, needLen, शून्यसूचकः, needLen, &capacity);
+        यदि (capacity < needLen || बफर == शून्यसूचकः) {
+            स्थितिः = U_बफर_अतिप्रवाहः_ERROR;
+            प्रत्यागम needLen;
         }
-        uprv_memcpy(buffer, updatedKeysAndValues.data(), needLen);
-        sink.Append(buffer, needLen);
+        uprv_memcpy(बफर, updated_कुञ्चिकाः_And_मानानि.दत्त(), needLen);
+        sink.Append(बफर, needLen);
     }
-    U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
-    return needLen;
+    U_ASSERT(स्थितिः != U_STRING_NOT_TERMINATED_WARNING);
+    प्रत्यागम needLen;
 }
 
 /* ### ID parsing implementation **************************************************/
 
-namespace {
+नामाकाश {
 
-inline bool _isPrefixLetter(char a) { return a == 'x' || a == 'X' || a == 'i' || a == 'I'; }
+अन्तःस्थ तार्किक is_उपसर्गः_Letter(वर्ण a) { प्रत्यागम a == 'x' || a == 'X' || a == 'i' || a == 'I'; }
 
 /*returns true if one of the special prefixes is here (s=string)
   'x-' or 'i-' */
-inline bool _isIDPrefix(std::string_view s) {
-    return s.size() >= 2 && _isPrefixLetter(s[0]) && _isIDSeparator(s[1]);
+अन्तःस्थ तार्किक _isIDPrefix(std::string_view s) {
+    प्रत्यागम s.size() >= 2 && is_उपसर्गः_Letter(s[0]) && _isIDSeparator(s[1]);
 }
 
 /* Dot terminates it because of POSIX form  where dot precedes the codepage
  * except for variant
  */
-inline bool _isTerminator(char a) { return a == '.' || a == '@'; }
+अन्तःस्थ तार्किक _isTerminator(वर्ण a) { प्रत्यागम a == '.' || a == '@'; }
 
-inline bool _isBCP47Extension(std::string_view p) {
-    return p.size() >= 3 &&
+अन्तःस्थ तार्किक _isBCP47Extension(std::string_view p) {
+    प्रत्यागम p.size() >= 3 &&
            p[0] == '-' &&
            (p[1] == 't' || p[1] == 'T' ||
             p[1] == 'u' || p[1] == 'U' ||
@@ -1103,38 +1103,38 @@ inline bool _isBCP47Extension(std::string_view p) {
  * The 'list' param should be LANGUAGES, LANGUAGES_3, COUNTRIES, or
  * COUNTRIES_3.
  */
-std::optional<int16_t> _findIndex(const char* const* list, const char* key)
+std::optional<int16_t> find_सूचकांक_2(ध्रुव वर्ण* ध्रुव* list, ध्रुव वर्ण* कुञ्चिका)
 {
-    const char* const* anchor = list;
+    ध्रुव वर्ण* ध्रुव* anchor = list;
     int32_t pass = 0;
 
     /* Make two passes through two nullptr-terminated arrays at 'list' */
-    while (pass++ < 2) {
-        while (*list) {
-            if (uprv_strcmp(key, *list) == 0) {
-                return static_cast<int16_t>(list - anchor);
+    यावत् (pass++ < 2) {
+        यावत् (*list) {
+            यदि (uprv_strcmp(कुञ्चिका, *list) == 0) {
+                प्रत्यागम static_cast<int16_t>(list - anchor);
             }
             list++;
         }
         ++list;     /* skip final nullptr *CWB*/
     }
-    return std::nullopt;
+    प्रत्यागम std::nullopt;
 }
 
 }  // namespace
 
-U_CFUNC const char*
-uloc_getCurrentCountryID(const char* oldID U_LIFETIME_BOUND) {
-    std::optional<int16_t> offset = _findIndex(DEPRECATED_COUNTRIES, oldID);
-    return offset.has_value() ? REPLACEMENT_COUNTRIES[*offset] : oldID;
+U_CFUNC ध्रुव वर्ण*
+uloc_getCurrentCountryID(ध्रुव वर्ण* oldID U_LIFETIME_BOUND) {
+    std::optional<int16_t> विस्थापनम् = find_सूचकांक_2(DEPRECATED_COUNTRIES, oldID);
+    प्रत्यागम विस्थापनम्.has_value() ? REPLACEMENT_COUNTRIES[*विस्थापनम्] : oldID;
 }
-U_CFUNC const char*
-uloc_getCurrentLanguageID(const char* oldID U_LIFETIME_BOUND) {
-    std::optional<int16_t> offset = _findIndex(DEPRECATED_LANGUAGES, oldID);
-    return offset.has_value() ? REPLACEMENT_LANGUAGES[*offset] : oldID;
+U_CFUNC ध्रुव वर्ण*
+uloc_getCurrentLanguageID(ध्रुव वर्ण* oldID U_LIFETIME_BOUND) {
+    std::optional<int16_t> विस्थापनम् = find_सूचकांक_2(DEPRECATED_LANGUAGES, oldID);
+    प्रत्यागम विस्थापनम्.has_value() ? REPLACEMENT_LANGUAGES[*विस्थापनम्] : oldID;
 }
 
-namespace {
+नामाकाश {
 
 /*
  * the internal functions _getLanguage(), _getScript(), _getRegion(), _getVariant()
@@ -1145,130 +1145,130 @@ namespace {
  * TODO try to use this in Locale
  */
 
-size_t _getLanguage(std::string_view localeID, ByteSink* sink, UErrorCode& status) {
+size_t _getLanguage(std::string_view localeID, ByteSink* sink, UError_संहिता& स्थितिः) {
     size_t skip = 0;
-    if (localeID.size() == 4 && uprv_strnicmp(localeID.data(), "root", 4) == 0) {
+    यदि (localeID.size() == 4 && uprv_strnicmp(localeID.दत्त(), "root", 4) == 0) {
         skip = 4;
-        localeID.remove_prefix(skip);
-    } else if (localeID.size() >= 3 && uprv_strnicmp(localeID.data(), "und", 3) == 0 &&
+        localeID.remove_उपसर्गः(skip);
+    } अन्यथा यदि (localeID.size() >= 3 && uprv_strnicmp(localeID.दत्त(), "und", 3) == 0 &&
                (localeID.size() == 3 ||
                 localeID[3] == '-' ||
                 localeID[3] == '_' ||
                 localeID[3] == '@')) {
         skip = 3;
-        localeID.remove_prefix(skip);
+        localeID.remove_उपसर्गः(skip);
     }
 
-    constexpr int32_t MAXLEN = ULOC_LANG_CAPACITY - 1;  // Minus NUL.
+    constexpr int32_t MAXLEN = ULOC_LANG_क्षमता - 1;  // Minus NUL.
 
     /* if it starts with i- or x- then copy that prefix */
     size_t len = _isIDPrefix(localeID) ? 2 : 0;
-    while (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len])) {
-        if (len == MAXLEN) {
-            status = U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+    यावत् (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len])) {
+        यदि (len == MAXLEN) {
+            स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+            प्रत्यागम 0;
         }
         len++;
     }
 
-    if (sink == nullptr || len == 0) { return skip + len; }
+    यदि (sink == शून्यसूचकः || len == 0) { प्रत्यागम skip + len; }
 
-    int32_t minCapacity = uprv_max(static_cast<int32_t>(len), 4);  // Minimum 3 letters plus NUL.
-    char scratch[MAXLEN];
+    int32_t min_क्षमता = uprv_max(static_cast<int32_t>(len), 4);  // Minimum 3 letters plus NUL.
+    वर्ण scratch[MAXLEN];
     int32_t capacity = 0;
-    char* buffer = sink->GetAppendBuffer(
-            minCapacity, minCapacity, scratch, UPRV_LENGTHOF(scratch), &capacity);
+    वर्ण* बफर = sink->Get_Append_बफर(
+            min_क्षमता, min_क्षमता, scratch, UPRV_LENGTHOF(scratch), &capacity);
 
-    for (size_t i = 0; i < len; ++i) {
-        buffer[i] = uprv_tolower(localeID[i]);
+    प्रति (size_t i = 0; i < len; ++i) {
+        बफर[i] = uprv_tolower(localeID[i]);
     }
-    if (localeID.size() >= 2 && _isIDSeparator(localeID[1])) {
-        buffer[1] = '-';
+    यदि (localeID.size() >= 2 && _isIDSeparator(localeID[1])) {
+        बफर[1] = '-';
     }
 
-    if (len == 3) {
+    यदि (len == 3) {
         /* convert 3 character code to 2 character code if possible *CWB*/
         U_ASSERT(capacity >= 4);
-        buffer[3] = '\0';
-        std::optional<int16_t> offset = _findIndex(LANGUAGES_3, buffer);
-        if (offset.has_value()) {
-            const char* const alias = LANGUAGES[*offset];
+        बफर[3] = '\0';
+        std::optional<int16_t> विस्थापनम् = find_सूचकांक_2(LANGUAGES_3, बफर);
+        यदि (विस्थापनम्.has_value()) {
+            ध्रुव वर्ण* ध्रुव alias = LANGUAGES[*विस्थापनम्];
             sink->Append(alias, static_cast<int32_t>(uprv_strlen(alias)));
-            return skip + len;
+            प्रत्यागम skip + len;
         }
     }
 
-    sink->Append(buffer, static_cast<int32_t>(len));
-    return skip + len;
+    sink->Append(बफर, static_cast<int32_t>(len));
+    प्रत्यागम skip + len;
 }
 
 size_t _getScript(std::string_view localeID, ByteSink* sink) {
-    constexpr int32_t LENGTH = 4;
+    constexpr int32_t दीर्घता_3 = 4;
 
     size_t len = 0;
-    while (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len]) &&
+    यावत् (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len]) &&
             uprv_isASCIILetter(localeID[len])) {
-        if (len == LENGTH) { return 0; }
+        यदि (len == दीर्घता_3) { प्रत्यागम 0; }
         len++;
     }
-    if (len != LENGTH) { return 0; }
+    यदि (len != दीर्घता_3) { प्रत्यागम 0; }
 
-    if (sink == nullptr) { return len; }
+    यदि (sink == शून्यसूचकः) { प्रत्यागम len; }
 
-    char scratch[LENGTH];
+    वर्ण scratch[दीर्घता_3];
     int32_t capacity = 0;
-    char* buffer = sink->GetAppendBuffer(
-            LENGTH, LENGTH, scratch, UPRV_LENGTHOF(scratch), &capacity);
+    वर्ण* बफर = sink->Get_Append_बफर(
+            दीर्घता_3, दीर्घता_3, scratch, UPRV_LENGTHOF(scratch), &capacity);
 
-    buffer[0] = uprv_toupper(localeID[0]);
-    for (int32_t i = 1; i < LENGTH; ++i) {
-        buffer[i] = uprv_tolower(localeID[i]);
+    बफर[0] = uprv_toupper(localeID[0]);
+    प्रति (int32_t i = 1; i < दीर्घता_3; ++i) {
+        बफर[i] = uprv_tolower(localeID[i]);
     }
 
-    sink->Append(buffer, LENGTH);
-    return len;
+    sink->Append(बफर, दीर्घता_3);
+    प्रत्यागम len;
 }
 
 size_t _getRegion(std::string_view localeID, ByteSink* sink) {
     constexpr int32_t MINLEN = 2;
-    constexpr int32_t MAXLEN = ULOC_COUNTRY_CAPACITY - 1;  // Minus NUL.
+    constexpr int32_t MAXLEN = ULOC_COUNTRY_क्षमता - 1;  // Minus NUL.
 
     size_t len = 0;
-    while (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len])) {
-        if (len == MAXLEN) { return 0; }
+    यावत् (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len])) {
+        यदि (len == MAXLEN) { प्रत्यागम 0; }
         len++;
     }
-    if (len < MINLEN) { return 0; }
+    यदि (len < MINLEN) { प्रत्यागम 0; }
 
-    if (sink == nullptr) { return len; }
+    यदि (sink == शून्यसूचकः) { प्रत्यागम len; }
 
-    char scratch[ULOC_COUNTRY_CAPACITY];
+    वर्ण scratch[ULOC_COUNTRY_क्षमता];
     int32_t capacity = 0;
-    char* buffer = sink->GetAppendBuffer(
-            ULOC_COUNTRY_CAPACITY,
-            ULOC_COUNTRY_CAPACITY,
+    वर्ण* बफर = sink->Get_Append_बफर(
+            ULOC_COUNTRY_क्षमता,
+            ULOC_COUNTRY_क्षमता,
             scratch,
             UPRV_LENGTHOF(scratch),
             &capacity);
 
-    for (size_t i = 0; i < len; ++i) {
-        buffer[i] = uprv_toupper(localeID[i]);
+    प्रति (size_t i = 0; i < len; ++i) {
+        बफर[i] = uprv_toupper(localeID[i]);
     }
 
-    if (len == 3) {
+    यदि (len == 3) {
         /* convert 3 character code to 2 character code if possible *CWB*/
         U_ASSERT(capacity >= 4);
-        buffer[3] = '\0';
-        std::optional<int16_t> offset = _findIndex(COUNTRIES_3, buffer);
-        if (offset.has_value()) {
-            const char* const alias = COUNTRIES[*offset];
+        बफर[3] = '\0';
+        std::optional<int16_t> विस्थापनम् = find_सूचकांक_2(COUNTRIES_3, बफर);
+        यदि (विस्थापनम्.has_value()) {
+            ध्रुव वर्ण* ध्रुव alias = COUNTRIES[*विस्थापनम्];
             sink->Append(alias, static_cast<int32_t>(uprv_strlen(alias)));
-            return len;
+            प्रत्यागम len;
         }
     }
 
-    sink->Append(buffer, static_cast<int32_t>(len));
-    return len;
+    sink->Append(बफर, static_cast<int32_t>(len));
+    प्रत्यागम len;
 }
 
 /**
@@ -1277,11 +1277,11 @@ size_t _getRegion(std::string_view localeID, ByteSink* sink) {
  */
 size_t
 _getVariant(std::string_view localeID,
-            char prev,
+            वर्ण पूर्व,
             ByteSink* sink,
-            bool needSeparator,
-            UErrorCode& status) {
-    if (U_FAILURE(status) || localeID.empty()) return 0;
+            तार्किक needSeparator,
+            UError_संहिता& स्थितिः) {
+    यदि (U_FAILURE(स्थितिः) || localeID.empty()) प्रत्यागम 0;
 
     // Reasonable upper limit for variants
     // There are no strict limitation of the syntax of variant in the legacy
@@ -1291,396 +1291,396 @@ _getVariant(std::string_view localeID,
     // 179 would allow 20 unicode_variant_subtag with sep in the
     // unicode_locale_id
     // 8*20 + 1*(20-1) = 179
-    constexpr int32_t MAX_VARIANTS_LENGTH = 179;
+    constexpr int32_t MAX_VARIANTS_दीर्घता = 179;
 
     /* get one or more variant tags and separate them with '_' */
-    size_t index = 0;
-    if (_isIDSeparator(prev)) {
+    size_t सूचकांक = 0;
+    यदि (_isIDSeparator(पूर्व)) {
         /* get a variant string after a '-' or '_' */
-        for (std::string_view sub = localeID;;) {
+        प्रति (std::string_view sub = localeID;;) {
             size_t next = sub.find_first_of(".@_-");
             // For historical reasons, a trailing separator is included in the variant.
-            bool finished = next == std::string_view::npos || next + 1 == sub.length();
-            size_t limit = finished ? sub.length() : next;
-            index += limit;
-            if (index > MAX_VARIANTS_LENGTH) {
-                status = U_ILLEGAL_ARGUMENT_ERROR;
-                return 0;
+            तार्किक परिसमाप्तम् = next == std::string_view::npos || next + 1 == sub.length();
+            size_t सीमा = परिसमाप्तम् ? sub.length() : next;
+            सूचकांक += सीमा;
+            यदि (सूचकांक > MAX_VARIANTS_दीर्घता) {
+                स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+                प्रत्यागम 0;
             }
 
-            if (sink != nullptr) {
-                if (needSeparator) {
+            यदि (sink != शून्यसूचकः) {
+                यदि (needSeparator) {
                     sink->Append("_", 1);
-                } else {
-                    needSeparator = true;
+                } अन्यथा {
+                    needSeparator = सत्य;
                 }
 
-                int32_t length = static_cast<int32_t>(limit);
-                int32_t minCapacity = uprv_min(length, MAX_VARIANTS_LENGTH);
-                char scratch[MAX_VARIANTS_LENGTH];
+                int32_t length = static_cast<int32_t>(सीमा);
+                int32_t min_क्षमता = uprv_min(length, MAX_VARIANTS_दीर्घता);
+                वर्ण scratch[MAX_VARIANTS_दीर्घता];
                 int32_t capacity = 0;
-                char* buffer = sink->GetAppendBuffer(
-                        minCapacity, minCapacity, scratch, UPRV_LENGTHOF(scratch), &capacity);
+                वर्ण* बफर = sink->Get_Append_बफर(
+                        min_क्षमता, min_क्षमता, scratch, UPRV_LENGTHOF(scratch), &capacity);
 
-                for (size_t i = 0; i < limit; ++i) {
-                    buffer[i] = uprv_toupper(sub[i]);
+                प्रति (size_t i = 0; i < सीमा; ++i) {
+                    बफर[i] = uprv_toupper(sub[i]);
                 }
-                sink->Append(buffer, length);
+                sink->Append(बफर, length);
             }
 
-            if (finished) { return index; }
-            sub.remove_prefix(next);
-            if (_isTerminator(sub.front()) || _isBCP47Extension(sub)) { return index; }
-            sub.remove_prefix(1);
-            index++;
+            यदि (परिसमाप्तम्) { प्रत्यागम सूचकांक; }
+            sub.remove_उपसर्गः(next);
+            यदि (_isTerminator(sub.front()) || _isBCP47Extension(sub)) { प्रत्यागम सूचकांक; }
+            sub.remove_उपसर्गः(1);
+            सूचकांक++;
         }
     }
 
     size_t skip = 0;
     /* if there is no variant tag after a '-' or '_' then look for '@' */
-    if (prev == '@') {
+    यदि (पूर्व == '@') {
         /* keep localeID */
-    } else if (const char* p = locale_getKeywordsStart(localeID); p != nullptr) {
-        skip = 1 + p - localeID.data(); /* point after the '@' */
-        localeID.remove_prefix(skip);
-    } else {
-        return 0;
+    } अन्यथा यदि (ध्रुव वर्ण* p = locale_getKeywordsStart(localeID); p != शून्यसूचकः) {
+        skip = 1 + p - localeID.दत्त(); /* point after the '@' */
+        localeID.remove_उपसर्गः(skip);
+    } अन्यथा {
+        प्रत्यागम 0;
     }
-    for (; index < localeID.size() && !_isTerminator(localeID[index]); index++) {
-        if (index >= MAX_VARIANTS_LENGTH) { // same as length > MAX_VARIANTS_LENGTH
-            status = U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+    प्रति (; सूचकांक < localeID.size() && !_isTerminator(localeID[सूचकांक]); सूचकांक++) {
+        यदि (सूचकांक >= MAX_VARIANTS_दीर्घता) { // same as length > MAX_VARIANTS_LENGTH
+            स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+            प्रत्यागम 0;
         }
-        if (needSeparator) {
-            if (sink != nullptr) {
+        यदि (needSeparator) {
+            यदि (sink != शून्यसूचकः) {
                 sink->Append("_", 1);
             }
-            needSeparator = false;
+            needSeparator = असत्य;
         }
-        if (sink != nullptr) {
-            char c = uprv_toupper(localeID[index]);
-            if (c == '-' || c == ',') c = '_';
+        यदि (sink != शून्यसूचकः) {
+            वर्ण c = uprv_toupper(localeID[सूचकांक]);
+            यदि (c == '-' || c == ',') c = '_';
             sink->Append(&c, 1);
         }
     }
-    return skip + index;
+    प्रत्यागम skip + सूचकांक;
 }
 
 }  // namespace
 
 U_EXPORT CharString
-ulocimp_getLanguage(std::string_view localeID, UErrorCode& status) {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
+ulocimp_getLanguage(std::string_view localeID, UError_संहिता& स्थितिः) {
+    प्रत्यागम ByteSinkUtil::द्वारा_Byte_Sink_गन्तव्यम्_Char_String(
+        [&](ByteSink& sink, UError_संहिता& स्थितिः) {
             ulocimp_getSubtags(
                     localeID,
                     &sink,
-                    nullptr,
-                    nullptr,
-                    nullptr,
-                    nullptr,
-                    status);
+                    शून्यसूचकः,
+                    शून्यसूचकः,
+                    शून्यसूचकः,
+                    शून्यसूचकः,
+                    स्थितिः);
         },
-        status);
+        स्थितिः);
 }
 
 U_EXPORT CharString
-ulocimp_getScript(std::string_view localeID, UErrorCode& status) {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
+ulocimp_getScript(std::string_view localeID, UError_संहिता& स्थितिः) {
+    प्रत्यागम ByteSinkUtil::द्वारा_Byte_Sink_गन्तव्यम्_Char_String(
+        [&](ByteSink& sink, UError_संहिता& स्थितिः) {
             ulocimp_getSubtags(
                     localeID,
-                    nullptr,
+                    शून्यसूचकः,
                     &sink,
-                    nullptr,
-                    nullptr,
-                    nullptr,
-                    status);
+                    शून्यसूचकः,
+                    शून्यसूचकः,
+                    शून्यसूचकः,
+                    स्थितिः);
         },
-        status);
+        स्थितिः);
 }
 
 U_EXPORT CharString
-ulocimp_getRegion(std::string_view localeID, UErrorCode& status) {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
+ulocimp_getRegion(std::string_view localeID, UError_संहिता& स्थितिः) {
+    प्रत्यागम ByteSinkUtil::द्वारा_Byte_Sink_गन्तव्यम्_Char_String(
+        [&](ByteSink& sink, UError_संहिता& स्थितिः) {
             ulocimp_getSubtags(
                     localeID,
-                    nullptr,
-                    nullptr,
+                    शून्यसूचकः,
+                    शून्यसूचकः,
                     &sink,
-                    nullptr,
-                    nullptr,
-                    status);
+                    शून्यसूचकः,
+                    शून्यसूचकः,
+                    स्थितिः);
         },
-        status);
+        स्थितिः);
 }
 
 U_EXPORT CharString
-ulocimp_getVariant(std::string_view localeID, UErrorCode& status) {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
+ulocimp_getVariant(std::string_view localeID, UError_संहिता& स्थितिः) {
+    प्रत्यागम ByteSinkUtil::द्वारा_Byte_Sink_गन्तव्यम्_Char_String(
+        [&](ByteSink& sink, UError_संहिता& स्थितिः) {
             ulocimp_getSubtags(
                     localeID,
-                    nullptr,
-                    nullptr,
-                    nullptr,
+                    शून्यसूचकः,
+                    शून्यसूचकः,
+                    शून्यसूचकः,
                     &sink,
-                    nullptr,
-                    status);
+                    शून्यसूचकः,
+                    स्थितिः);
         },
-        status);
+        स्थितिः);
 }
 
-U_EXPORT void
+U_EXPORT शून्य
 ulocimp_getSubtags(
         std::string_view localeID,
         CharString* language,
         CharString* script,
         CharString* region,
         CharString* variant,
-        const char** pEnd,
-        UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+        ध्रुव वर्ण** p_अन्तः,
+        UError_संहिता& स्थितिः) {
+    यदि (U_FAILURE(स्थितिः)) { प्रत्यागम; }
 
     std::optional<CharStringByteSink> languageSink;
     std::optional<CharStringByteSink> scriptSink;
     std::optional<CharStringByteSink> regionSink;
     std::optional<CharStringByteSink> variantSink;
 
-    if (language != nullptr) { languageSink.emplace(language); }
-    if (script != nullptr) { scriptSink.emplace(script); }
-    if (region != nullptr) { regionSink.emplace(region); }
-    if (variant != nullptr) { variantSink.emplace(variant); }
+    यदि (language != शून्यसूचकः) { languageSink.emplace(language); }
+    यदि (script != शून्यसूचकः) { scriptSink.emplace(script); }
+    यदि (region != शून्यसूचकः) { regionSink.emplace(region); }
+    यदि (variant != शून्यसूचकः) { variantSink.emplace(variant); }
 
     ulocimp_getSubtags(
             localeID,
-            languageSink.has_value() ? &*languageSink : nullptr,
-            scriptSink.has_value() ? &*scriptSink : nullptr,
-            regionSink.has_value() ? &*regionSink : nullptr,
-            variantSink.has_value() ? &*variantSink : nullptr,
-            pEnd,
-            status);
+            languageSink.has_value() ? &*languageSink : शून्यसूचकः,
+            scriptSink.has_value() ? &*scriptSink : शून्यसूचकः,
+            regionSink.has_value() ? &*regionSink : शून्यसूचकः,
+            variantSink.has_value() ? &*variantSink : शून्यसूचकः,
+            p_अन्तः,
+            स्थितिः);
 }
 
-U_EXPORT void
+U_EXPORT शून्य
 ulocimp_getSubtags(
         std::string_view localeID,
         ByteSink* language,
         ByteSink* script,
         ByteSink* region,
         ByteSink* variant,
-        const char** pEnd,
-        UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+        ध्रुव वर्ण** p_अन्तः,
+        UError_संहिता& स्थितिः) {
+    यदि (U_FAILURE(स्थितिः)) { प्रत्यागम; }
 
-    if (pEnd != nullptr) {
-        *pEnd = localeID.data();
-    } else if (language == nullptr &&
-               script == nullptr &&
-               region == nullptr &&
-               variant == nullptr) {
-        return;
+    यदि (p_अन्तः != शून्यसूचकः) {
+        *p_अन्तः = localeID.दत्त();
+    } अन्यथा यदि (language == शून्यसूचकः &&
+               script == शून्यसूचकः &&
+               region == शून्यसूचकः &&
+               variant == शून्यसूचकः) {
+        प्रत्यागम;
     }
 
-    if (localeID.empty()) { return; }
+    यदि (localeID.empty()) { प्रत्यागम; }
 
-    bool hasRegion = false;
+    तार्किक hasRegion = असत्य;
 
     {
-        size_t len = _getLanguage(localeID, language, status);
-        if (U_FAILURE(status)) { return; }
-        if (len > 0) {
-            localeID.remove_prefix(len);
+        size_t len = _getLanguage(localeID, language, स्थितिः);
+        यदि (U_FAILURE(स्थितिः)) { प्रत्यागम; }
+        यदि (len > 0) {
+            localeID.remove_उपसर्गः(len);
         }
     }
 
-    if (pEnd != nullptr) {
-        *pEnd = localeID.data();
-    } else if (script == nullptr &&
-               region == nullptr &&
-               variant == nullptr) {
-        return;
+    यदि (p_अन्तः != शून्यसूचकः) {
+        *p_अन्तः = localeID.दत्त();
+    } अन्यथा यदि (script == शून्यसूचकः &&
+               region == शून्यसूचकः &&
+               variant == शून्यसूचकः) {
+        प्रत्यागम;
     }
 
-    if (localeID.empty()) { return; }
+    यदि (localeID.empty()) { प्रत्यागम; }
 
-    if (_isIDSeparator(localeID.front())) {
+    यदि (_isIDSeparator(localeID.front())) {
         std::string_view sub = localeID;
-        sub.remove_prefix(1);
+        sub.remove_उपसर्गः(1);
         size_t len = _getScript(sub, script);
-        if (len > 0) {
-            localeID.remove_prefix(len + 1);
-            if (pEnd != nullptr) { *pEnd = localeID.data(); }
+        यदि (len > 0) {
+            localeID.remove_उपसर्गः(len + 1);
+            यदि (p_अन्तः != शून्यसूचकः) { *p_अन्तः = localeID.दत्त(); }
         }
     }
 
-    if ((region == nullptr && variant == nullptr && pEnd == nullptr) || localeID.empty()) { return; }
+    यदि ((region == शून्यसूचकः && variant == शून्यसूचकः && p_अन्तः == शून्यसूचकः) || localeID.empty()) { प्रत्यागम; }
 
-    if (_isIDSeparator(localeID.front())) {
+    यदि (_isIDSeparator(localeID.front())) {
         std::string_view sub = localeID;
-        sub.remove_prefix(1);
+        sub.remove_उपसर्गः(1);
         size_t len = _getRegion(sub, region);
-        if (len > 0) {
-            hasRegion = true;
-            localeID.remove_prefix(len + 1);
-            if (pEnd != nullptr) { *pEnd = localeID.data(); }
+        यदि (len > 0) {
+            hasRegion = सत्य;
+            localeID.remove_उपसर्गः(len + 1);
+            यदि (p_अन्तः != शून्यसूचकः) { *p_अन्तः = localeID.दत्त(); }
         }
     }
 
-    if ((variant == nullptr && pEnd == nullptr) || localeID.empty()) { return; }
+    यदि ((variant == शून्यसूचकः && p_अन्तः == शून्यसूचकः) || localeID.empty()) { प्रत्यागम; }
 
-    bool hasVariant = false;
+    तार्किक hasVariant = असत्य;
 
-    if (_isIDSeparator(localeID.front()) && !_isBCP47Extension(localeID)) {
+    यदि (_isIDSeparator(localeID.front()) && !_isBCP47Extension(localeID)) {
         std::string_view sub = localeID;
         /* If there was no country ID, skip a possible extra IDSeparator */
         size_t skip = !hasRegion && localeID.size() > 1 && _isIDSeparator(localeID[1]) ? 2 : 1;
-        sub.remove_prefix(skip);
-        size_t len = _getVariant(sub, localeID[0], variant, false, status);
-        if (U_FAILURE(status)) { return; }
-        if (len > 0) {
-            hasVariant = true;
-            localeID.remove_prefix(skip + len);
-            if (pEnd != nullptr) { *pEnd = localeID.data(); }
+        sub.remove_उपसर्गः(skip);
+        size_t len = _getVariant(sub, localeID[0], variant, असत्य, स्थितिः);
+        यदि (U_FAILURE(स्थितिः)) { प्रत्यागम; }
+        यदि (len > 0) {
+            hasVariant = सत्य;
+            localeID.remove_उपसर्गः(skip + len);
+            यदि (p_अन्तः != शून्यसूचकः) { *p_अन्तः = localeID.दत्त(); }
         }
     }
 
-    if ((variant == nullptr && pEnd == nullptr) || localeID.empty()) { return; }
+    यदि ((variant == शून्यसूचकः && p_अन्तः == शून्यसूचकः) || localeID.empty()) { प्रत्यागम; }
 
-    if (_isBCP47Extension(localeID)) {
-        localeID.remove_prefix(2);
-        constexpr char vaposix[] = "-va-posix";
-        constexpr size_t length = sizeof vaposix - 1;
-        for (size_t next;; localeID.remove_prefix(next)) {
+    यदि (_isBCP47Extension(localeID)) {
+        localeID.remove_उपसर्गः(2);
+        constexpr वर्ण vaposix[] = "-va-posix";
+        constexpr size_t length = परिमाण vaposix - 1;
+        प्रति (size_t next;; localeID.remove_उपसर्गः(next)) {
             next = localeID.find('-', 1);
-            if (next == std::string_view::npos) { break; }
+            यदि (next == std::string_view::npos) { भङ्ग; }
             next = localeID.find('-', next + 1);
-            bool finished = next == std::string_view::npos;
+            तार्किक परिसमाप्तम् = next == std::string_view::npos;
             std::string_view sub = localeID;
-            if (!finished) { sub.remove_suffix(sub.length() - next); }
+            यदि (!परिसमाप्तम्) { sub.remove_suffix(sub.length() - next); }
 
-            if (sub.length() == length && uprv_strnicmp(sub.data(), vaposix, length) == 0) {
-                if (variant != nullptr) {
-                    if (hasVariant) { variant->Append("_", 1); }
-                    constexpr char posix[] = "POSIX";
-                    variant->Append(posix, sizeof posix - 1);
+            यदि (sub.length() == length && uprv_strnicmp(sub.दत्त(), vaposix, length) == 0) {
+                यदि (variant != शून्यसूचकः) {
+                    यदि (hasVariant) { variant->Append("_", 1); }
+                    constexpr वर्ण posix[] = "POSIX";
+                    variant->Append(posix, परिमाण posix - 1);
                 }
-                if (pEnd != nullptr) { *pEnd = localeID.data() + length; }
+                यदि (p_अन्तः != शून्यसूचकः) { *p_अन्तः = localeID.दत्त() + length; }
             }
 
-            if (finished) { break; }
+            यदि (परिसमाप्तम्) { भङ्ग; }
         }
     }
 }
 
 /* Keyword enumeration */
 
-typedef struct UKeywordsContext {
-    char* keywords;
-    char* current;
+प्रकारनिर्देश संरचना UKeywordsContext {
+    वर्ण* keywords;
+    वर्ण* current;
 } UKeywordsContext;
 
 U_CDECL_BEGIN
 
-static void U_CALLCONV
+स्थिर शून्य U_CALLCONV
 uloc_kw_closeKeywords(UEnumeration *enumerator) {
     uprv_free(((UKeywordsContext *)enumerator->context)->keywords);
     uprv_free(enumerator->context);
     uprv_free(enumerator);
 }
 
-static int32_t U_CALLCONV
-uloc_kw_countKeywords(UEnumeration *en, UErrorCode * /*status*/) {
-    char *kw = ((UKeywordsContext *)en->context)->keywords;
-    int32_t result = 0;
-    while(*kw) {
-        result++;
+स्थिर int32_t U_CALLCONV
+uloc_kw_गणनम्_Keywords(UEnumeration *en, UError_संहिता * /*स्थितिः*/) {
+    वर्ण *kw = ((UKeywordsContext *)en->context)->keywords;
+    int32_t परिणाम = 0;
+    यावत्(*kw) {
+        परिणाम++;
         kw += uprv_strlen(kw)+1;
     }
-    return result;
+    प्रत्यागम परिणाम;
 }
 
-static const char * U_CALLCONV
-uloc_kw_nextKeyword(UEnumeration* en,
-                    int32_t* resultLength,
-                    UErrorCode* /*status*/) {
-    const char* result = ((UKeywordsContext *)en->context)->current;
+स्थिर ध्रुव वर्ण * U_CALLCONV
+uloc_kw_अग्र_Keyword(UEnumeration* en,
+                    int32_t* परिणाम_दीर्घता,
+                    UError_संहिता* /*स्थितिः*/) {
+    ध्रुव वर्ण* परिणाम = ((UKeywordsContext *)en->context)->current;
     int32_t len = 0;
-    if(*result) {
+    यदि(*परिणाम) {
         len = (int32_t)uprv_strlen(((UKeywordsContext *)en->context)->current);
         ((UKeywordsContext *)en->context)->current += len+1;
-    } else {
-        result = nullptr;
+    } अन्यथा {
+        परिणाम = शून्यसूचकः;
     }
-    if (resultLength) {
-        *resultLength = len;
+    यदि (परिणाम_दीर्घता) {
+        *परिणाम_दीर्घता = len;
     }
-    return result;
+    प्रत्यागम परिणाम;
 }
 
-static void U_CALLCONV
+स्थिर शून्य U_CALLCONV
 uloc_kw_resetKeywords(UEnumeration* en,
-                      UErrorCode* /*status*/) {
+                      UError_संहिता* /*स्थितिः*/) {
     ((UKeywordsContext *)en->context)->current = ((UKeywordsContext *)en->context)->keywords;
 }
 
-U_CDECL_END
+U_CDECL_अन्तः
 
 
-static const UEnumeration gKeywordsEnum = {
-    nullptr,
-    nullptr,
+स्थिर ध्रुव UEnumeration gKeywordsEnum = {
+    शून्यसूचकः,
+    शून्यसूचकः,
     uloc_kw_closeKeywords,
-    uloc_kw_countKeywords,
+    uloc_kw_गणनम्_Keywords,
     uenum_unextDefault,
-    uloc_kw_nextKeyword,
+    uloc_kw_अग्र_Keyword,
     uloc_kw_resetKeywords
 };
 
 U_CAPI UEnumeration* U_EXPORT2
-uloc_openKeywordList(const char *keywordList, int32_t keywordListSize, UErrorCode* status)
+uloc_openKeywordList(ध्रुव वर्ण *keywordList, int32_t keyword_List_आकार, UError_संहिता* स्थितिः)
 {
-    if (U_FAILURE(*status)) { return nullptr; }
+    यदि (U_FAILURE(*स्थितिः)) { प्रत्यागम शून्यसूचकः; }
 
-    LocalMemory<UKeywordsContext> myContext;
-    LocalMemory<UEnumeration> result;
+    Local_स्मृतिः<UKeywordsContext> myContext;
+    Local_स्मृतिः<UEnumeration> परिणाम;
 
-    myContext.adoptInstead(static_cast<UKeywordsContext *>(uprv_malloc(sizeof(UKeywordsContext))));
-    result.adoptInstead(static_cast<UEnumeration *>(uprv_malloc(sizeof(UEnumeration))));
-    if (myContext.isNull() || result.isNull()) {
-        *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    myContext.adoptInstead(static_cast<UKeywordsContext *>(uprv_malloc(परिमाण(UKeywordsContext))));
+    परिणाम.adoptInstead(static_cast<UEnumeration *>(uprv_malloc(परिमाण(UEnumeration))));
+    यदि (myContext.isNull() || परिणाम.isNull()) {
+        *स्थितिः = U_स्मृतिः_आवण्टनम्_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
-    uprv_memcpy(result.getAlias(), &gKeywordsEnum, sizeof(UEnumeration));
-    myContext->keywords = static_cast<char *>(uprv_malloc(keywordListSize+1));
-    if (myContext->keywords == nullptr) {
-        *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    uprv_memcpy(परिणाम.getAlias(), &gKeywordsEnum, परिमाण(UEnumeration));
+    myContext->keywords = static_cast<वर्ण *>(uprv_malloc(keyword_List_आकार+1));
+    यदि (myContext->keywords == शून्यसूचकः) {
+        *स्थितिः = U_स्मृतिः_आवण्टनम्_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
-    uprv_memcpy(myContext->keywords, keywordList, keywordListSize);
-    myContext->keywords[keywordListSize] = 0;
+    uprv_memcpy(myContext->keywords, keywordList, keyword_List_आकार);
+    myContext->keywords[keyword_List_आकार] = 0;
     myContext->current = myContext->keywords;
-    result->context = myContext.orphan();
-    return result.orphan();
+    परिणाम->context = myContext.orphan();
+    प्रत्यागम परिणाम.orphan();
 }
 
 U_CAPI UEnumeration* U_EXPORT2
-uloc_openKeywords(const char* localeID,
-                        UErrorCode* status)
+uloc_openKeywords(ध्रुव वर्ण* localeID,
+                        UError_संहिता* स्थितिः)
 {
-    if(status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    यदि(स्थितिः==शून्यसूचकः || U_FAILURE(*स्थितिः)) {
+        प्रत्यागम शून्यसूचकः;
     }
 
-    CharString tempBuffer;
-    const char* tmpLocaleID;
+    CharString अस्थायी_बफर;
+    ध्रुव वर्ण* tmpLocaleID;
 
-    if (localeID != nullptr && _hasBCP47Extension(localeID)) {
-        tempBuffer = ulocimp_forLanguageTag(localeID, -1, nullptr, *status);
-        tmpLocaleID = U_SUCCESS(*status) && !tempBuffer.isEmpty() ? tempBuffer.data() : localeID;
-    } else {
-        if (localeID==nullptr) {
+    यदि (localeID != शून्यसूचकः && _hasBCP47Extension(localeID)) {
+        अस्थायी_बफर = ulocimp_for_Language_चिह्नकम्(localeID, -1, शून्यसूचकः, *स्थितिः);
+        tmpLocaleID = U_SUCCESS(*स्थितिः) && !अस्थायी_बफर.is_रिक्तानि() ? अस्थायी_बफर.दत्त() : localeID;
+    } अन्यथा {
+        यदि (localeID==शून्यसूचकः) {
             localeID=uloc_getDefault();
         }
         tmpLocaleID=localeID;
@@ -1688,38 +1688,38 @@ uloc_openKeywords(const char* localeID,
 
     ulocimp_getSubtags(
             tmpLocaleID,
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr,
+            शून्यसूचकः,
+            शून्यसूचकः,
+            शून्यसूचकः,
+            शून्यसूचकः,
             &tmpLocaleID,
-            *status);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+            *स्थितिः);
+    यदि (U_FAILURE(*स्थितिः)) {
+        प्रत्यागम शून्यसूचकः;
     }
 
     /* keywords are located after '@' */
-    if((tmpLocaleID = locale_getKeywordsStart(tmpLocaleID)) != nullptr) {
-        CharString keywords = ulocimp_getKeywords(tmpLocaleID + 1, '@', false, *status);
-        if (U_FAILURE(*status)) {
-            return nullptr;
+    यदि((tmpLocaleID = locale_getKeywordsStart(tmpLocaleID)) != शून्यसूचकः) {
+        CharString keywords = ulocimp_getKeywords(tmpLocaleID + 1, '@', असत्य, *स्थितिः);
+        यदि (U_FAILURE(*स्थितिः)) {
+            प्रत्यागम शून्यसूचकः;
         }
-        return uloc_openKeywordList(keywords.data(), keywords.length(), status);
+        प्रत्यागम uloc_openKeywordList(keywords.दत्त(), keywords.length(), स्थितिः);
     }
-    return nullptr;
+    प्रत्यागम शून्यसूचकः;
 }
 
 
 /* bit-flags for 'options' parameter of _canonicalize */
-#define _ULOC_STRIP_KEYWORDS 0x2
-#define _ULOC_CANONICALIZE   0x1
+#परिभाषय _ULOC_STRIP_KEYWORDS 0x2
+#परिभाषय _ULOC_CANONICALIZE   0x1
 
-namespace {
+नामाकाश {
 
-inline bool OPTION_SET(uint32_t options, uint32_t mask) { return (options & mask) != 0; }
+अन्तःस्थ तार्किक OPTION_समुच्चयः(uint32_t options, uint32_t mask) { प्रत्यागम (options & mask) != 0; }
 
-constexpr char i_default[] = {'i', '-', 'd', 'e', 'f', 'a', 'u', 'l', 't'};
-constexpr int32_t I_DEFAULT_LENGTH = UPRV_LENGTHOF(i_default);
+constexpr वर्ण i_default[] = {'i', '-', 'd', 'e', 'f', 'a', 'u', 'l', 't'};
+constexpr int32_t I_DEFAULT_दीर्घता = UPRV_LENGTHOF(i_default);
 
 /**
  * Canonicalize the given localeID, to level 1 or to level 2,
@@ -1728,102 +1728,102 @@ constexpr int32_t I_DEFAULT_LENGTH = UPRV_LENGTHOF(i_default);
  *
  * This is the code underlying uloc_getName and uloc_canonicalize.
  */
-void
+शून्य
 _canonicalize(std::string_view localeID,
               ByteSink& sink,
               uint32_t options,
-              UErrorCode& err) {
-    if (U_FAILURE(err)) {
-        return;
+              UError_संहिता& err) {
+    यदि (U_FAILURE(err)) {
+        प्रत्यागम;
     }
 
-    int32_t j, fieldCount=0;
-    CharString tempBuffer;  // if localeID has a BCP47 extension, tmpLocaleID points to this
+    int32_t j, क्षेत्रम्_गणनम्=0;
+    CharString अस्थायी_बफर;  // if localeID has a BCP47 extension, tmpLocaleID points to this
     CharString localeIDWithHyphens;  // if localeID has a BPC47 extension and have _, tmpLocaleID points to this
     std::string_view origLocaleID;
     std::string_view tmpLocaleID;
-    size_t keywordAssign = std::string_view::npos;
+    size_t keyword_नियोजय = std::string_view::npos;
     size_t separatorIndicator = std::string_view::npos;
 
-    if (_hasBCP47Extension(localeID)) {
+    यदि (_hasBCP47Extension(localeID)) {
         std::string_view localeIDPtr = localeID;
 
         // convert all underbars to hyphens, unless the "BCP47 extension" comes at the beginning of the string
-        if (localeID.size() >= 2 && localeID.find('_') != std::string_view::npos && localeID[1] != '-' && localeID[1] != '_') {
+        यदि (localeID.size() >= 2 && localeID.find('_') != std::string_view::npos && localeID[1] != '-' && localeID[1] != '_') {
             localeIDWithHyphens.append(localeID, err);
-            if (U_SUCCESS(err)) {
-                for (char* p = localeIDWithHyphens.data(); *p != '\0'; ++p) {
-                    if (*p == '_') {
+            यदि (U_SUCCESS(err)) {
+                प्रति (वर्ण* p = localeIDWithHyphens.दत्त(); *p != '\0'; ++p) {
+                    यदि (*p == '_') {
                         *p = '-';
                     }
                 }
-                localeIDPtr = localeIDWithHyphens.toStringPiece();
+                localeIDPtr = localeIDWithHyphens.गन्तव्यम्_String_Piece();
             }
         }
 
-        tempBuffer = ulocimp_forLanguageTag(localeIDPtr.data(), static_cast<int32_t>(localeIDPtr.size()), nullptr, err);
-        tmpLocaleID = U_SUCCESS(err) && !tempBuffer.isEmpty() ? static_cast<std::string_view>(tempBuffer.toStringPiece()) : localeIDPtr;
-    } else {
+        अस्थायी_बफर = ulocimp_for_Language_चिह्नकम्(localeIDPtr.दत्त(), static_cast<int32_t>(localeIDPtr.size()), शून्यसूचकः, err);
+        tmpLocaleID = U_SUCCESS(err) && !अस्थायी_बफर.is_रिक्तानि() ? static_cast<std::string_view>(अस्थायी_बफर.गन्तव्यम्_String_Piece()) : localeIDPtr;
+    } अन्यथा {
         tmpLocaleID=localeID;
     }
 
     origLocaleID=tmpLocaleID;
 
     /* get all pieces, one after another, and separate with '_' */
-    CharString tag;
+    CharString चिह्नकम्;
     CharString script;
     CharString country;
     CharString variant;
-    const char* end = nullptr;
+    ध्रुव वर्ण* अन्तः = शून्यसूचकः;
     ulocimp_getSubtags(
             tmpLocaleID,
-            &tag,
+            &चिह्नकम्,
             &script,
             &country,
             &variant,
-            &end,
+            &अन्तः,
             err);
-    if (U_FAILURE(err)) {
-        return;
+    यदि (U_FAILURE(err)) {
+        प्रत्यागम;
     }
-    U_ASSERT(end != nullptr);
-    if (end > tmpLocaleID.data()) {
-        tmpLocaleID.remove_prefix(end - tmpLocaleID.data());
+    U_ASSERT(अन्तः != शून्यसूचकः);
+    यदि (अन्तः > tmpLocaleID.दत्त()) {
+        tmpLocaleID.remove_उपसर्गः(अन्तः - tmpLocaleID.दत्त());
     }
 
-    if (tag.length() == I_DEFAULT_LENGTH && origLocaleID.length() >= I_DEFAULT_LENGTH &&
-            uprv_strncmp(origLocaleID.data(), i_default, I_DEFAULT_LENGTH) == 0) {
-        tag.clear();
-        tag.append(uloc_getDefault(), err);
-    } else {
-        if (!script.isEmpty()) {
-            ++fieldCount;
-            tag.append('_', err);
-            tag.append(script, err);
+    यदि (चिह्नकम्.length() == I_DEFAULT_दीर्घता && origLocaleID.length() >= I_DEFAULT_दीर्घता &&
+            uprv_strncmp(origLocaleID.दत्त(), i_default, I_DEFAULT_दीर्घता) == 0) {
+        चिह्नकम्.clear();
+        चिह्नकम्.append(uloc_getDefault(), err);
+    } अन्यथा {
+        यदि (!script.is_रिक्तानि()) {
+            ++क्षेत्रम्_गणनम्;
+            चिह्नकम्.append('_', err);
+            चिह्नकम्.append(script, err);
         }
-        if (!country.isEmpty()) {
-            ++fieldCount;
-            tag.append('_', err);
-            tag.append(country, err);
+        यदि (!country.is_रिक्तानि()) {
+            ++क्षेत्रम्_गणनम्;
+            चिह्नकम्.append('_', err);
+            चिह्नकम्.append(country, err);
         }
-        if (!variant.isEmpty()) {
-            ++fieldCount;
-            if (country.isEmpty()) {
-                tag.append('_', err);
+        यदि (!variant.is_रिक्तानि()) {
+            ++क्षेत्रम्_गणनम्;
+            यदि (country.is_रिक्तानि()) {
+                चिह्नकम्.append('_', err);
             }
-            tag.append('_', err);
-            tag.append(variant, err);
+            चिह्नकम्.append('_', err);
+            चिह्नकम्.append(variant, err);
         }
     }
 
     /* Copy POSIX-style charset specifier, if any [mr.utf8] */
-    if (!OPTION_SET(options, _ULOC_CANONICALIZE) && !tmpLocaleID.empty() && tmpLocaleID.front() == '.') {
-        tag.append('.', err);
-        tmpLocaleID.remove_prefix(1);
+    यदि (!OPTION_समुच्चयः(options, _ULOC_CANONICALIZE) && !tmpLocaleID.empty() && tmpLocaleID.front() == '.') {
+        चिह्नकम्.append('.', err);
+        tmpLocaleID.remove_उपसर्गः(1);
         size_t length;
-        if (size_t atPos = tmpLocaleID.find('@'); atPos != std::string_view::npos) {
+        यदि (size_t atPos = tmpLocaleID.find('@'); atPos != std::string_view::npos) {
             length = atPos;
-        } else {
+        } अन्यथा {
             length = tmpLocaleID.length();
         }
         // The longest charset name we found in IANA charset registry
@@ -1831,77 +1831,77 @@ _canonicalize(std::string_view localeID,
         // "Extended_UNIX_Code_Packed_Format_for_Japanese" in length 45.
         // we therefore restrict the length here to be 64 which is a power of 2
         // number that is longer than 45.
-        constexpr size_t kMaxCharsetLength = 64;
-        if (length > kMaxCharsetLength) {
-           err = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
-           return;
+        constexpr size_t k_Max_Charset_दीर्घता = 64;
+        यदि (length > k_Max_Charset_दीर्घता) {
+           err = U_ILLEGAL_तर्कः_ERROR; /* malformed keyword name */
+           प्रत्यागम;
         }
-        if (length > 0) {
-            tag.append(tmpLocaleID.data(), static_cast<int32_t>(length), err);
-            tmpLocaleID.remove_prefix(length);
+        यदि (length > 0) {
+            चिह्नकम्.append(tmpLocaleID.दत्त(), static_cast<int32_t>(length), err);
+            tmpLocaleID.remove_उपसर्गः(length);
         }
     }
 
     /* Scan ahead to next '@' and determine if it is followed by '=' and/or ';'
        After this, tmpLocaleID either starts at '@' or is empty. */
-    if (const char* start = locale_getKeywordsStart(tmpLocaleID); start != nullptr) {
-        if (start > tmpLocaleID.data()) {
-            tmpLocaleID.remove_prefix(start - tmpLocaleID.data());
+    यदि (ध्रुव वर्ण* start = locale_getKeywordsStart(tmpLocaleID); start != शून्यसूचकः) {
+        यदि (start > tmpLocaleID.दत्त()) {
+            tmpLocaleID.remove_उपसर्गः(start - tmpLocaleID.दत्त());
         }
-        keywordAssign = tmpLocaleID.find('=');
+        keyword_नियोजय = tmpLocaleID.find('=');
         separatorIndicator = tmpLocaleID.find(';');
-    } else {
+    } अन्यथा {
         tmpLocaleID = {};
     }
 
     /* Copy POSIX-style variant, if any [mr@FOO] */
-    if (!OPTION_SET(options, _ULOC_CANONICALIZE) &&
-        !tmpLocaleID.empty() && keywordAssign == std::string_view::npos) {
-        tag.append(tmpLocaleID, err);
+    यदि (!OPTION_समुच्चयः(options, _ULOC_CANONICALIZE) &&
+        !tmpLocaleID.empty() && keyword_नियोजय == std::string_view::npos) {
+        चिह्नकम्.append(tmpLocaleID, err);
         tmpLocaleID = {};
     }
 
-    if (OPTION_SET(options, _ULOC_CANONICALIZE)) {
+    यदि (OPTION_समुच्चयः(options, _ULOC_CANONICALIZE)) {
         /* Handle @FOO variant if @ is present and not followed by = */
-        if (!tmpLocaleID.empty() && keywordAssign == std::string_view::npos) {
+        यदि (!tmpLocaleID.empty() && keyword_नियोजय == std::string_view::npos) {
             /* Add missing '_' if needed */
-            if (fieldCount < 2 || (fieldCount < 3 && !script.isEmpty())) {
-                do {
-                    tag.append('_', err);
-                    ++fieldCount;
-                } while(fieldCount<2);
+            यदि (क्षेत्रम्_गणनम् < 2 || (क्षेत्रम्_गणनम् < 3 && !script.is_रिक्तानि())) {
+                कुरु {
+                    चिह्नकम्.append('_', err);
+                    ++क्षेत्रम्_गणनम्;
+                } यावत्(क्षेत्रम्_गणनम्<2);
             }
 
-            CharStringByteSink s(&tag);
+            CharStringByteSink s(&चिह्नकम्);
             std::string_view sub = tmpLocaleID;
-            sub.remove_prefix(1);
-            _getVariant(sub, '@', &s, !variant.isEmpty(), err);
-            if (U_FAILURE(err)) { return; }
+            sub.remove_उपसर्गः(1);
+            _getVariant(sub, '@', &s, !variant.is_रिक्तानि(), err);
+            यदि (U_FAILURE(err)) { प्रत्यागम; }
         }
 
         /* Look up the ID in the canonicalization map */
-        for (j=0; j<UPRV_LENGTHOF(CANONICALIZE_MAP); j++) {
+        प्रति (j=0; j<UPRV_LENGTHOF(CANONICALIZE_MAP); j++) {
             StringPiece id(CANONICALIZE_MAP[j].id);
-            if (tag == id) {
-                if (id.empty() && !tmpLocaleID.empty()) {
-                    break; /* Don't remap "" if keywords present */
+            यदि (चिह्नकम् == id) {
+                यदि (id.empty() && !tmpLocaleID.empty()) {
+                    भङ्ग; /* Don't remap "" if keywords present */
                 }
-                tag.clear();
-                tag.append(CANONICALIZE_MAP[j].canonicalID, err);
-                break;
+                चिह्नकम्.clear();
+                चिह्नकम्.append(CANONICALIZE_MAP[j].canonicalID, err);
+                भङ्ग;
             }
         }
     }
 
-    sink.Append(tag.data(), tag.length());
+    sink.Append(चिह्नकम्.दत्त(), चिह्नकम्.length());
 
-    if (!OPTION_SET(options, _ULOC_STRIP_KEYWORDS)) {
-        if (!tmpLocaleID.empty() && keywordAssign != std::string_view::npos &&
-            (separatorIndicator == std::string_view::npos || separatorIndicator > keywordAssign)) {
+    यदि (!OPTION_समुच्चयः(options, _ULOC_STRIP_KEYWORDS)) {
+        यदि (!tmpLocaleID.empty() && keyword_नियोजय != std::string_view::npos &&
+            (separatorIndicator == std::string_view::npos || separatorIndicator > keyword_नियोजय)) {
             sink.Append("@", 1);
-            ++fieldCount;
-            tmpLocaleID.remove_prefix(1);
-            ulocimp_getKeywords(tmpLocaleID, '@', sink, true, err);
+            ++क्षेत्रम्_गणनम्;
+            tmpLocaleID.remove_उपसर्गः(1);
+            ulocimp_getKeywords(tmpLocaleID, '@', sink, सत्य, err);
         }
     }
 }
@@ -1911,52 +1911,52 @@ _canonicalize(std::string_view localeID,
 /* ### ID parsing API **************************************************/
 
 U_CAPI int32_t  U_EXPORT2
-uloc_getParent(const char*    localeID,
-               char* parent,
-               int32_t parentCapacity,
-               UErrorCode* err)
+uloc_getParent(ध्रुव वर्ण*    localeID,
+               वर्ण* parent,
+               int32_t parent_क्षमता,
+               UError_संहिता* err)
 {
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        parent, parentCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getParent(localeID, sink, status);
+    प्रत्यागम ByteSinkUtil::द्वारा_Byte_Sink_गन्तव्यम्_Terminated_Chars(
+        parent, parent_क्षमता,
+        [&](ByteSink& sink, UError_संहिता& स्थितिः) {
+            ulocimp_getParent(localeID, sink, स्थितिः);
         },
         *err);
 }
 
 U_EXPORT CharString
-ulocimp_getParent(const char* localeID,
-                  UErrorCode& err)
+ulocimp_getParent(ध्रुव वर्ण* localeID,
+                  UError_संहिता& err)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getParent(localeID, sink, status);
+    प्रत्यागम ByteSinkUtil::द्वारा_Byte_Sink_गन्तव्यम्_Char_String(
+        [&](ByteSink& sink, UError_संहिता& स्थितिः) {
+            ulocimp_getParent(localeID, sink, स्थितिः);
         },
         err);
 }
 
-U_EXPORT void
-ulocimp_getParent(const char* localeID,
+U_EXPORT शून्य
+ulocimp_getParent(ध्रुव वर्ण* localeID,
                   icu::ByteSink& sink,
-                  UErrorCode& err)
+                  UError_संहिता& err)
 {
-    if (U_FAILURE(err)) { return; }
+    यदि (U_FAILURE(err)) { प्रत्यागम; }
 
-    const char *lastUnderscore;
+    ध्रुव वर्ण *चरमः_Underscore;
     int32_t i;
 
-    if (localeID == nullptr)
+    यदि (localeID == शून्यसूचकः)
         localeID = uloc_getDefault();
 
-    lastUnderscore=uprv_strrchr(localeID, '_');
-    if(lastUnderscore!=nullptr) {
-        i = static_cast<int32_t>(lastUnderscore - localeID);
-    } else {
+    चरमः_Underscore=uprv_strrchr(localeID, '_');
+    यदि(चरमः_Underscore!=शून्यसूचकः) {
+        i = static_cast<int32_t>(चरमः_Underscore - localeID);
+    } अन्यथा {
         i=0;
     }
 
-    if (i > 0) {
-        if (uprv_strnicmp(localeID, "und_", 4) == 0) {
+    यदि (i > 0) {
+        यदि (uprv_strnicmp(localeID, "und_", 4) == 0) {
             localeID += 3;
             i -= 3;
         }
@@ -1965,317 +1965,317 @@ ulocimp_getParent(const char* localeID,
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getLanguage(const char*    localeID,
-         char* language,
-         int32_t languageCapacity,
-         UErrorCode* err)
+uloc_getLanguage(ध्रुव वर्ण*    localeID,
+         वर्ण* language,
+         int32_t language_क्षमता,
+         UError_संहिता* err)
 {
-    if (localeID == nullptr) {
+    यदि (localeID == शून्यसूचकः) {
         localeID = uloc_getDefault();
     }
 
     /* uloc_getLanguage will return a 2 character iso-639 code if one exists. *CWB*/
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        language, languageCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
+    प्रत्यागम ByteSinkUtil::द्वारा_Byte_Sink_गन्तव्यम्_Terminated_Chars(
+        language, language_क्षमता,
+        [&](ByteSink& sink, UError_संहिता& स्थितिः) {
             ulocimp_getSubtags(
                     localeID,
                     &sink,
-                    nullptr,
-                    nullptr,
-                    nullptr,
-                    nullptr,
-                    status);
+                    शून्यसूचकः,
+                    शून्यसूचकः,
+                    शून्यसूचकः,
+                    शून्यसूचकः,
+                    स्थितिः);
         },
         *err);
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getScript(const char*    localeID,
-         char* script,
-         int32_t scriptCapacity,
-         UErrorCode* err)
+uloc_getScript(ध्रुव वर्ण*    localeID,
+         वर्ण* script,
+         int32_t script_क्षमता,
+         UError_संहिता* err)
 {
-    if (localeID == nullptr) {
+    यदि (localeID == शून्यसूचकः) {
         localeID = uloc_getDefault();
     }
 
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        script, scriptCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
+    प्रत्यागम ByteSinkUtil::द्वारा_Byte_Sink_गन्तव्यम्_Terminated_Chars(
+        script, script_क्षमता,
+        [&](ByteSink& sink, UError_संहिता& स्थितिः) {
             ulocimp_getSubtags(
                     localeID,
-                    nullptr,
+                    शून्यसूचकः,
                     &sink,
-                    nullptr,
-                    nullptr,
-                    nullptr,
-                    status);
+                    शून्यसूचकः,
+                    शून्यसूचकः,
+                    शून्यसूचकः,
+                    स्थितिः);
         },
         *err);
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_getCountry(const char* localeID,
-            char* country,
-            int32_t countryCapacity,
-            UErrorCode* err)
+uloc_getCountry(ध्रुव वर्ण* localeID,
+            वर्ण* country,
+            int32_t country_क्षमता,
+            UError_संहिता* err)
 {
-    if (localeID == nullptr) {
+    यदि (localeID == शून्यसूचकः) {
         localeID = uloc_getDefault();
     }
 
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        country, countryCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
+    प्रत्यागम ByteSinkUtil::द्वारा_Byte_Sink_गन्तव्यम्_Terminated_Chars(
+        country, country_क्षमता,
+        [&](ByteSink& sink, UError_संहिता& स्थितिः) {
             ulocimp_getSubtags(
                     localeID,
-                    nullptr,
-                    nullptr,
+                    शून्यसूचकः,
+                    शून्यसूचकः,
                     &sink,
-                    nullptr,
-                    nullptr,
-                    status);
+                    शून्यसूचकः,
+                    शून्यसूचकः,
+                    स्थितिः);
         },
         *err);
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_getVariant(const char* localeID,
-                char* variant,
-                int32_t variantCapacity,
-                UErrorCode* err)
+uloc_getVariant(ध्रुव वर्ण* localeID,
+                वर्ण* variant,
+                int32_t variant_क्षमता,
+                UError_संहिता* err)
 {
-    if (localeID == nullptr) {
+    यदि (localeID == शून्यसूचकः) {
         localeID = uloc_getDefault();
     }
 
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        variant, variantCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
+    प्रत्यागम ByteSinkUtil::द्वारा_Byte_Sink_गन्तव्यम्_Terminated_Chars(
+        variant, variant_क्षमता,
+        [&](ByteSink& sink, UError_संहिता& स्थितिः) {
             ulocimp_getSubtags(
                     localeID,
-                    nullptr,
-                    nullptr,
-                    nullptr,
+                    शून्यसूचकः,
+                    शून्यसूचकः,
+                    शून्यसूचकः,
                     &sink,
-                    nullptr,
-                    status);
+                    शून्यसूचकः,
+                    स्थितिः);
         },
         *err);
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_getName(const char* localeID,
-             char* name,
-             int32_t nameCapacity,
-             UErrorCode* err)
+uloc_getName(ध्रुव वर्ण* localeID,
+             वर्ण* name,
+             int32_t name_क्षमता,
+             UError_संहिता* err)
 {
-    if (localeID == nullptr) {
+    यदि (localeID == शून्यसूचकः) {
         localeID = uloc_getDefault();
     }
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        name, nameCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getName(localeID, sink, status);
+    प्रत्यागम ByteSinkUtil::द्वारा_Byte_Sink_गन्तव्यम्_Terminated_Chars(
+        name, name_क्षमता,
+        [&](ByteSink& sink, UError_संहिता& स्थितिः) {
+            ulocimp_getName(localeID, sink, स्थितिः);
         },
         *err);
 }
 
 U_EXPORT CharString
 ulocimp_getName(std::string_view localeID,
-                UErrorCode& err)
+                UError_संहिता& err)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getName(localeID, sink, status);
+    प्रत्यागम ByteSinkUtil::द्वारा_Byte_Sink_गन्तव्यम्_Char_String(
+        [&](ByteSink& sink, UError_संहिता& स्थितिः) {
+            ulocimp_getName(localeID, sink, स्थितिः);
         },
         err);
 }
 
-U_EXPORT void
+U_EXPORT शून्य
 ulocimp_getName(std::string_view localeID,
                 ByteSink& sink,
-                UErrorCode& err)
+                UError_संहिता& err)
 {
     _canonicalize(localeID, sink, 0, err);
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_getBaseName(const char* localeID,
-                 char* name,
-                 int32_t nameCapacity,
-                 UErrorCode* err)
+uloc_get_आधारः_Name(ध्रुव वर्ण* localeID,
+                 वर्ण* name,
+                 int32_t name_क्षमता,
+                 UError_संहिता* err)
 {
-    if (localeID == nullptr) {
+    यदि (localeID == शून्यसूचकः) {
         localeID = uloc_getDefault();
     }
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        name, nameCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getBaseName(localeID, sink, status);
+    प्रत्यागम ByteSinkUtil::द्वारा_Byte_Sink_गन्तव्यम्_Terminated_Chars(
+        name, name_क्षमता,
+        [&](ByteSink& sink, UError_संहिता& स्थितिः) {
+            ulocimp_get_आधारः_Name(localeID, sink, स्थितिः);
         },
         *err);
 }
 
 U_EXPORT CharString
-ulocimp_getBaseName(std::string_view localeID,
-                    UErrorCode& err)
+ulocimp_get_आधारः_Name(std::string_view localeID,
+                    UError_संहिता& err)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getBaseName(localeID, sink, status);
+    प्रत्यागम ByteSinkUtil::द्वारा_Byte_Sink_गन्तव्यम्_Char_String(
+        [&](ByteSink& sink, UError_संहिता& स्थितिः) {
+            ulocimp_get_आधारः_Name(localeID, sink, स्थितिः);
         },
         err);
 }
 
-U_EXPORT void
-ulocimp_getBaseName(std::string_view localeID,
+U_EXPORT शून्य
+ulocimp_get_आधारः_Name(std::string_view localeID,
                     ByteSink& sink,
-                    UErrorCode& err)
+                    UError_संहिता& err)
 {
     _canonicalize(localeID, sink, _ULOC_STRIP_KEYWORDS, err);
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_canonicalize(const char* localeID,
-                  char* name,
-                  int32_t nameCapacity,
-                  UErrorCode* err)
+uloc_canonicalize(ध्रुव वर्ण* localeID,
+                  वर्ण* name,
+                  int32_t name_क्षमता,
+                  UError_संहिता* err)
 {
-    if (localeID == nullptr) {
+    यदि (localeID == शून्यसूचकः) {
         localeID = uloc_getDefault();
     }
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        name, nameCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_canonicalize(localeID, sink, status);
+    प्रत्यागम ByteSinkUtil::द्वारा_Byte_Sink_गन्तव्यम्_Terminated_Chars(
+        name, name_क्षमता,
+        [&](ByteSink& sink, UError_संहिता& स्थितिः) {
+            ulocimp_canonicalize(localeID, sink, स्थितिः);
         },
         *err);
 }
 
 U_EXPORT CharString
 ulocimp_canonicalize(std::string_view localeID,
-                     UErrorCode& err)
+                     UError_संहिता& err)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_canonicalize(localeID, sink, status);
+    प्रत्यागम ByteSinkUtil::द्वारा_Byte_Sink_गन्तव्यम्_Char_String(
+        [&](ByteSink& sink, UError_संहिता& स्थितिः) {
+            ulocimp_canonicalize(localeID, sink, स्थितिः);
         },
         err);
 }
 
-U_EXPORT void
+U_EXPORT शून्य
 ulocimp_canonicalize(std::string_view localeID,
                      ByteSink& sink,
-                     UErrorCode& err)
+                     UError_संहिता& err)
 {
     _canonicalize(localeID, sink, _ULOC_CANONICALIZE, err);
 }
 
-U_CAPI const char*  U_EXPORT2
-uloc_getISO3Language(const char* localeID)
+U_CAPI ध्रुव वर्ण*  U_EXPORT2
+uloc_getISO3Language(ध्रुव वर्ण* localeID)
 {
-    UErrorCode err = U_ZERO_ERROR;
+    UError_संहिता err = U_ZERO_ERROR;
 
-    if (localeID == nullptr)
+    यदि (localeID == शून्यसूचकः)
     {
         localeID = uloc_getDefault();
     }
     CharString lang = ulocimp_getLanguage(localeID, err);
-    if (U_FAILURE(err))
-        return "";
-    std::optional<int16_t> offset = _findIndex(LANGUAGES, lang.data());
-    return offset.has_value() ? LANGUAGES_3[*offset] : "";
+    यदि (U_FAILURE(err))
+        प्रत्यागम "";
+    std::optional<int16_t> विस्थापनम् = find_सूचकांक_2(LANGUAGES, lang.दत्त());
+    प्रत्यागम विस्थापनम्.has_value() ? LANGUAGES_3[*विस्थापनम्] : "";
 }
 
-U_CAPI const char*  U_EXPORT2
-uloc_getISO3Country(const char* localeID)
+U_CAPI ध्रुव वर्ण*  U_EXPORT2
+uloc_getISO3Country(ध्रुव वर्ण* localeID)
 {
-    UErrorCode err = U_ZERO_ERROR;
+    UError_संहिता err = U_ZERO_ERROR;
 
-    if (localeID == nullptr)
+    यदि (localeID == शून्यसूचकः)
     {
         localeID = uloc_getDefault();
     }
     CharString cntry = ulocimp_getRegion(localeID, err);
-    if (U_FAILURE(err))
-        return "";
-    std::optional<int16_t> offset = _findIndex(COUNTRIES, cntry.data());
-    return offset.has_value() ? COUNTRIES_3[*offset] : "";
+    यदि (U_FAILURE(err))
+        प्रत्यागम "";
+    std::optional<int16_t> विस्थापनम् = find_सूचकांक_2(COUNTRIES, cntry.दत्त());
+    प्रत्यागम विस्थापनम्.has_value() ? COUNTRIES_3[*विस्थापनम्] : "";
 }
 
 U_CAPI uint32_t  U_EXPORT2
-uloc_getLCID(const char* localeID)
+uloc_getLCID(ध्रुव वर्ण* localeID)
 {
-    UErrorCode status = U_ZERO_ERROR;
+    UError_संहिता स्थितिः = U_ZERO_ERROR;
     uint32_t   lcid = 0;
 
     /* Check for incomplete id. */
-    if (!localeID || uprv_strlen(localeID) < 2) {
-        return 0;
+    यदि (!localeID || uprv_strlen(localeID) < 2) {
+        प्रत्यागम 0;
     }
 
     // First, attempt Windows platform lookup if available, but fall
     // through to catch any special cases (ICU vs Windows name differences).
-    lcid = uprv_convertToLCIDPlatform(localeID, &status);
-    if (U_FAILURE(status)) {
-        return 0;
+    lcid = uprv_convert_गन्तव्यम्_LCIDPlatform(localeID, &स्थितिः);
+    यदि (U_FAILURE(स्थितिः)) {
+        प्रत्यागम 0;
     }
-    if (lcid > 0) {
+    यदि (lcid > 0) {
         // Windows found an LCID, return that
-        return lcid;
+        प्रत्यागम lcid;
     }
 
-    CharString langID = ulocimp_getLanguage(localeID, status);
-    if (U_FAILURE(status)) {
-        return 0;
+    CharString langID = ulocimp_getLanguage(localeID, स्थितिः);
+    यदि (U_FAILURE(स्थितिः)) {
+        प्रत्यागम 0;
     }
 
-    if (uprv_strchr(localeID, '@')) {
+    यदि (uprv_strchr(localeID, '@')) {
         // uprv_convertToLCID does not support keywords other than collation.
         // Remove all keywords except collation.
-        CharString collVal = ulocimp_getKeywordValue(localeID, "collation", status);
-        if (U_SUCCESS(status) && !collVal.isEmpty()) {
-            CharString tmpLocaleID = ulocimp_getBaseName(localeID, status);
-            ulocimp_setKeywordValue("collation", collVal.toStringPiece(), tmpLocaleID, status);
-            if (U_SUCCESS(status)) {
-                return uprv_convertToLCID(langID.data(), tmpLocaleID.data(), &status);
+        CharString collVal = ulocimp_get_Keyword_मानम्(localeID, "collation", स्थितिः);
+        यदि (U_SUCCESS(स्थितिः) && !collVal.is_रिक्तानि()) {
+            CharString tmpLocaleID = ulocimp_get_आधारः_Name(localeID, स्थितिः);
+            ulocimp_समुच्चयः_Keyword_मानम्("collation", collVal.गन्तव्यम्_String_Piece(), tmpLocaleID, स्थितिः);
+            यदि (U_SUCCESS(स्थितिः)) {
+                प्रत्यागम uprv_convert_गन्तव्यम्_LCID(langID.दत्त(), tmpLocaleID.दत्त(), &स्थितिः);
             }
         }
 
         // fall through - all keywords are simply ignored
-        status = U_ZERO_ERROR;
+        स्थितिः = U_ZERO_ERROR;
     }
 
-    return uprv_convertToLCID(langID.data(), localeID, &status);
+    प्रत्यागम uprv_convert_गन्तव्यम्_LCID(langID.दत्त(), localeID, &स्थितिः);
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getLocaleForLCID(uint32_t hostid, char *locale, int32_t localeCapacity,
-                UErrorCode *status)
+uloc_getLocaleForLCID(uint32_t hostid, वर्ण *locale, int32_t locale_क्षमता,
+                UError_संहिता *स्थितिः)
 {
-    return uprv_convertToPosix(hostid, locale, localeCapacity, status);
+    प्रत्यागम uprv_convert_गन्तव्यम्_Posix(hostid, locale, locale_क्षमता, स्थितिः);
 }
 
 /* ### Default locale **************************************************/
 
-U_CAPI const char*  U_EXPORT2
+U_CAPI ध्रुव वर्ण*  U_EXPORT2
 uloc_getDefault()
 {
-    return locale_get_default();
+    प्रत्यागम locale_get_default();
 }
 
-U_CAPI void  U_EXPORT2
-uloc_setDefault(const char*   newDefaultLocale,
-             UErrorCode* err)
+U_CAPI शून्य  U_EXPORT2
+uloc_समुच्चयः_Default(ध्रुव वर्ण*   newDefaultLocale,
+             UError_संहिता* err)
 {
-    if (U_FAILURE(*err))
-        return;
+    यदि (U_FAILURE(*err))
+        प्रत्यागम;
     /* the error code isn't currently used for anything by this function*/
 
     /* propagate change to C++ */
-    locale_set_default(newDefaultLocale);
+    locale_समुच्चयः_default(newDefaultLocale);
 }
 
 /**
@@ -2284,10 +2284,10 @@ uloc_setDefault(const char*   newDefaultLocale,
  * by ICU-- do not delete them, and do not write through them.  The array is
  * terminated with a null pointer.
  */
-U_CAPI const char* const*  U_EXPORT2
+U_CAPI ध्रुव वर्ण* ध्रुव*  U_EXPORT2
 uloc_getISOLanguages()
 {
-    return LANGUAGES;
+    प्रत्यागम LANGUAGES;
 }
 
 /**
@@ -2296,95 +2296,95 @@ uloc_getISOLanguages()
  * owned by ICU-- do not delete them, and do not write through them.  The array is
  * terminated with a null pointer.
  */
-U_CAPI const char* const*  U_EXPORT2
+U_CAPI ध्रुव वर्ण* ध्रुव*  U_EXPORT2
 uloc_getISOCountries()
 {
-    return COUNTRIES;
+    प्रत्यागम COUNTRIES;
 }
 
-U_CAPI const char* U_EXPORT2
-uloc_toUnicodeLocaleKey(const char* keyword U_LIFETIME_BOUND)
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+uloc_गन्तव्यम्_Unicode_Locale_कुञ्चिका(ध्रुव वर्ण* keyword U_LIFETIME_BOUND)
 {
-    if (keyword == nullptr || *keyword == '\0') { return nullptr; }
-    std::optional<std::string_view> result = ulocimp_toBcpKeyWithFallback(keyword);
-    return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
+    यदि (keyword == शून्यसूचकः || *keyword == '\0') { प्रत्यागम शून्यसूचकः; }
+    std::optional<std::string_view> परिणाम = ulocimp_गन्तव्यम्_Bcp_कुञ्चिका_With_Fallback(keyword);
+    प्रत्यागम परिणाम.has_value() ? परिणाम->दत्त() : शून्यसूचकः;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toBcpKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND)
+ulocimp_गन्तव्यम्_Bcp_कुञ्चिका_With_Fallback(std::string_view keyword U_LIFETIME_BOUND)
 {
-    std::optional<std::string_view> bcpKey = ulocimp_toBcpKey(keyword);
-    if (!bcpKey.has_value() &&
-        ultag_isUnicodeLocaleKey(keyword.data(), static_cast<int32_t>(keyword.size()))) {
+    std::optional<std::string_view> bcp_कुञ्चिका = ulocimp_गन्तव्यम्_Bcp_कुञ्चिका(keyword);
+    यदि (!bcp_कुञ्चिका.has_value() &&
+        ultag_is_Unicode_Locale_कुञ्चिका(keyword.दत्त(), static_cast<int32_t>(keyword.size()))) {
         // unknown keyword, but syntax is fine..
-        return keyword;
+        प्रत्यागम keyword;
     }
-    return bcpKey;
+    प्रत्यागम bcp_कुञ्चिका;
 }
 
-U_CAPI const char* U_EXPORT2
-uloc_toUnicodeLocaleType(const char* keyword, const char* value U_LIFETIME_BOUND)
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+uloc_गन्तव्यम्_Unicode_Locale_Type(ध्रुव वर्ण* keyword, ध्रुव वर्ण* value U_LIFETIME_BOUND)
 {
-    if (keyword == nullptr || *keyword == '\0' ||
-        value == nullptr || *value == '\0') { return nullptr; }
-    std::optional<std::string_view> result = ulocimp_toBcpTypeWithFallback(keyword, value);
-    return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
+    यदि (keyword == शून्यसूचकः || *keyword == '\0' ||
+        value == शून्यसूचकः || *value == '\0') { प्रत्यागम शून्यसूचकः; }
+    std::optional<std::string_view> परिणाम = ulocimp_गन्तव्यम्_Bcp_Type_With_Fallback(keyword, value);
+    प्रत्यागम परिणाम.has_value() ? परिणाम->दत्त() : शून्यसूचकः;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toBcpTypeWithFallback(std::string_view keyword, std::string_view value U_LIFETIME_BOUND)
+ulocimp_गन्तव्यम्_Bcp_Type_With_Fallback(std::string_view keyword, std::string_view value U_LIFETIME_BOUND)
 {
-    std::optional<std::string_view> bcpType = ulocimp_toBcpType(keyword, value);
-    if (!bcpType.has_value() &&
-        ultag_isUnicodeLocaleType(value.data(), static_cast<int32_t>(value.size()))) {
+    std::optional<std::string_view> bcpType = ulocimp_गन्तव्यम्_Bcp_Type(keyword, value);
+    यदि (!bcpType.has_value() &&
+        ultag_isUnicodeLocaleType(value.दत्त(), static_cast<int32_t>(value.size()))) {
         // unknown keyword, but syntax is fine..
-        return value;
+        प्रत्यागम value;
     }
-    return bcpType;
+    प्रत्यागम bcpType;
 }
 
-namespace {
+नामाकाश {
 
-bool
-isWellFormedLegacyKey(std::string_view key)
+तार्किक
+is_Well_Formed_Legacy_कुञ्चिका(std::string_view कुञ्चिका)
 {
-    return std::all_of(key.begin(), key.end(), UPRV_ISALPHANUM);
+    प्रत्यागम std::all_of(कुञ्चिका.begin(), कुञ्चिका.अन्तः(), UPRV_ISALPHANUM);
 }
 
-bool
+तार्किक
 isWellFormedLegacyType(std::string_view legacyType)
 {
-    int32_t alphaNumLen = 0;
-    for (char c : legacyType) {
-        if (c == '_' || c == '/' || c == '-') {
-            if (alphaNumLen == 0) {
-                return false;
+    int32_t alpha_अङ्कः_Len = 0;
+    प्रति (वर्ण c : legacyType) {
+        यदि (c == '_' || c == '/' || c == '-') {
+            यदि (alpha_अङ्कः_Len == 0) {
+                प्रत्यागम असत्य;
             }
-            alphaNumLen = 0;
-        } else if (UPRV_ISALPHANUM(c)) {
-            alphaNumLen++;
-        } else {
-            return false;
+            alpha_अङ्कः_Len = 0;
+        } अन्यथा यदि (UPRV_ISALPHANUM(c)) {
+            alpha_अङ्कः_Len++;
+        } अन्यथा {
+            प्रत्यागम असत्य;
         }
     }
-    return alphaNumLen != 0;
+    प्रत्यागम alpha_अङ्कः_Len != 0;
 }
 
 }  // namespace
 
-U_CAPI const char* U_EXPORT2
-uloc_toLegacyKey(const char* keyword U_LIFETIME_BOUND)
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+uloc_गन्तव्यम्_Legacy_कुञ्चिका(ध्रुव वर्ण* keyword U_LIFETIME_BOUND)
 {
-    if (keyword == nullptr || *keyword == '\0') { return nullptr; }
-    std::optional<std::string_view> result = ulocimp_toLegacyKeyWithFallback(keyword);
-    return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
+    यदि (keyword == शून्यसूचकः || *keyword == '\0') { प्रत्यागम शून्यसूचकः; }
+    std::optional<std::string_view> परिणाम = ulocimp_गन्तव्यम्_Legacy_कुञ्चिका_With_Fallback(keyword);
+    प्रत्यागम परिणाम.has_value() ? परिणाम->दत्त() : शून्यसूचकः;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toLegacyKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND)
+ulocimp_गन्तव्यम्_Legacy_कुञ्चिका_With_Fallback(std::string_view keyword U_LIFETIME_BOUND)
 {
-    std::optional<std::string_view> legacyKey = ulocimp_toLegacyKey(keyword);
-    if (!legacyKey.has_value() && isWellFormedLegacyKey(keyword)) {
+    std::optional<std::string_view> legacy_कुञ्चिका_2 = ulocimp_गन्तव्यम्_Legacy_कुञ्चिका(keyword);
+    यदि (!legacy_कुञ्चिका_2.has_value() && is_Well_Formed_Legacy_कुञ्चिका(keyword)) {
         // Checks if the specified locale key is well-formed with the legacy locale syntax.
         //
         // Note:
@@ -2392,25 +2392,25 @@ ulocimp_toLegacyKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND)
         //  * http://www.unicode.org/reports/tr35/#Unicode_locale_identifier and
         //  * http://www.unicode.org/reports/tr35/#Old_Locale_Extension_Syntax
         //  Keys can only consist of [0-9a-zA-Z].
-        return keyword;
+        प्रत्यागम keyword;
     }
-    return legacyKey;
+    प्रत्यागम legacy_कुञ्चिका_2;
 }
 
-U_CAPI const char* U_EXPORT2
-uloc_toLegacyType(const char* keyword, const char* value U_LIFETIME_BOUND)
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+uloc_गन्तव्यम्_Legacy_Type(ध्रुव वर्ण* keyword, ध्रुव वर्ण* value U_LIFETIME_BOUND)
 {
-    if (keyword == nullptr || *keyword == '\0' ||
-        value == nullptr || *value == '\0') { return nullptr; }
-    std::optional<std::string_view> result = ulocimp_toLegacyTypeWithFallback(keyword, value);
-    return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
+    यदि (keyword == शून्यसूचकः || *keyword == '\0' ||
+        value == शून्यसूचकः || *value == '\0') { प्रत्यागम शून्यसूचकः; }
+    std::optional<std::string_view> परिणाम = ulocimp_गन्तव्यम्_Legacy_Type_With_Fallback(keyword, value);
+    प्रत्यागम परिणाम.has_value() ? परिणाम->दत्त() : शून्यसूचकः;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toLegacyTypeWithFallback(std::string_view keyword, std::string_view value U_LIFETIME_BOUND)
+ulocimp_गन्तव्यम्_Legacy_Type_With_Fallback(std::string_view keyword, std::string_view value U_LIFETIME_BOUND)
 {
-    std::optional<std::string_view> legacyType = ulocimp_toLegacyType(keyword, value);
-    if (!legacyType.has_value() && isWellFormedLegacyType(value)) {
+    std::optional<std::string_view> legacyType = ulocimp_गन्तव्यम्_Legacy_Type(keyword, value);
+    यदि (!legacyType.has_value() && isWellFormedLegacyType(value)) {
         // Checks if the specified locale type is well-formed with the legacy locale syntax.
         //
         // Note:
@@ -2419,9 +2419,9 @@ ulocimp_toLegacyTypeWithFallback(std::string_view keyword, std::string_view valu
         //  * http://www.unicode.org/reports/tr35/#Old_Locale_Extension_Syntax
         //  Values (types) can only consist of [0-9a-zA-Z], plus for legacy values
         //  we allow [/_-+] in the middle (e.g. "Etc/GMT+1", "Asia/Tel_Aviv")
-        return value;
+        प्रत्यागम value;
     }
-    return legacyType;
+    प्रत्यागम legacyType;
 }
 
 /*eof*/

@@ -14,22 +14,22 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __MESSAGEPATTERN_H__
-#define __MESSAGEPATTERN_H__
+#यदि_अपरिभाषितम् __MESSAGEPATTERN_H__
+#परिभाषय __MESSAGEPATTERN_H__
 
 /**
  * \file
  * \brief C++ API: MessagePattern class: Parses and represents ICU MessageFormat patterns.
  */
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
 
-#if !UCONFIG_NO_FORMATTING
+#यदि !UCONFIG_NO_FORMATTING
 
-#include "unicode/parseerr.h"
-#include "unicode/unistr.h"
+#अन्तर्भाव "unicode/parseerr.h"
+#अन्तर्भाव "unicode/unistr.h"
 
 /**
  * Mode for when an apostrophe starts quoted literal text for MessageFormat output.
@@ -67,7 +67,7 @@
  * @stable ICU 4.8
  * @see UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_MODE
  */
-enum UMessagePatternApostropheMode {
+गणना UMessage_आदर्शः_Apostrophe_बहुलकम् {
     /**
      * A literal apostrophe is represented by
      * either a single or a double apostrophe pattern character.
@@ -93,13 +93,13 @@ enum UMessagePatternApostropheMode {
 /**
  * @stable ICU 4.8
  */
-typedef enum UMessagePatternApostropheMode UMessagePatternApostropheMode;
+प्रकारनिर्देश गणना UMessage_आदर्शः_Apostrophe_बहुलकम् UMessage_आदर्शः_Apostrophe_बहुलकम्;
 
 /**
  * MessagePattern::Part type constants.
  * @stable ICU 4.8
  */
-enum UMessagePatternPartType {
+गणना UMessage_आदर्शः_Part_Type {
     /**
      * Start of a message pattern (main or nested).
      * The length is 0 for the top-level message
@@ -109,7 +109,7 @@ enum UMessagePatternPartType {
      * There is always a later MSG_LIMIT part.
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_MSG_START,
+    UMSGPAT_PART_TYPE_सन्देशः_START,
     /**
      * End of a message pattern (main or nested).
      * The length is 0 for the top-level message and
@@ -118,7 +118,7 @@ enum UMessagePatternPartType {
      * The value indicates the nesting level, starting with 0 for the main message.
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_MSG_LIMIT,
+    UMSGPAT_PART_TYPE_सन्देशः_सीमा,
     /**
      * Indicates a substring of the pattern string which is to be skipped when formatting.
      * For example, an apostrophe that begins or ends quoted text
@@ -133,7 +133,7 @@ enum UMessagePatternPartType {
      * The value is the character code of the insertion character. (U+0027=APOSTROPHE)
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_INSERT_CHAR,
+    UMSGPAT_PART_TYPE_निवेशय_CHAR,
     /**
      * Indicates a syntactic (non-escaped) # symbol in a plural variant.
      * When formatting, replace this part's substring with the
@@ -141,7 +141,7 @@ enum UMessagePatternPartType {
      * The value is undefined and currently always 0.
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_REPLACE_NUMBER,
+    UMSGPAT_PART_TYPE_REPLACE_सङ्ख्या,
     /**
      * Start of an argument.
      * The length is 1 for the '{'.
@@ -159,12 +159,12 @@ enum UMessagePatternPartType {
      * The value is the ordinal value of the ArgType. Use getArgType().
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_ARG_LIMIT,
+    UMSGPAT_PART_TYPE_ARG_सीमा,
     /**
      * The argument number, provided by the value.
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_ARG_NUMBER,
+    UMSGPAT_PART_TYPE_ARG_सङ्ख्या,
     /**
      * The argument name.
      * The value is undefined and currently always 0.
@@ -208,7 +208,7 @@ enum UMessagePatternPartType {
 /**
  * @stable ICU 4.8
  */
-typedef enum UMessagePatternPartType UMessagePatternPartType;
+प्रकारनिर्देश गणना UMessage_आदर्शः_Part_Type UMessage_आदर्शः_Part_Type;
 
 /**
  * Argument type constants.
@@ -218,7 +218,7 @@ typedef enum UMessagePatternPartType UMessagePatternPartType;
  * with a nesting level one greater than the surrounding message.
  * @stable ICU 4.8
  */
-enum UMessagePatternArgType {
+गणना UMessage_आदर्शः_Arg_Type {
     /**
      * The argument has no specified type.
      * @stable ICU 4.8
@@ -261,7 +261,7 @@ enum UMessagePatternArgType {
 /**
  * @stable ICU 4.8
  */
-typedef enum UMessagePatternArgType UMessagePatternArgType;
+प्रकारनिर्देश गणना UMessage_आदर्शः_Arg_Type UMessage_आदर्शः_Arg_Type;
 
 /**
  * \def UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE
@@ -269,16 +269,16 @@ typedef enum UMessagePatternArgType UMessagePatternArgType;
  * for example UMSGPAT_ARG_TYPE_PLURAL and UMSGPAT_ARG_TYPE_SELECTORDINAL.
  * @stable ICU 50
  */
-#define UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) \
+#परिभाषय UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) \
     ((argType)==UMSGPAT_ARG_TYPE_PLURAL || (argType)==UMSGPAT_ARG_TYPE_SELECTORDINAL)
 
-enum {
+गणना {
     /**
      * Return value from MessagePattern.validateArgumentName() for when
      * the string is a valid "pattern identifier" but not a number.
      * @stable ICU 4.8
      */
-    UMSGPAT_ARG_NAME_NOT_NUMBER=-1,
+    UMSGPAT_ARG_NAME_NOT_सङ्ख्या=-1,
 
     /**
      * Return value from MessagePattern.validateArgumentName() for when
@@ -296,12 +296,12 @@ enum {
  * @see MessagePattern.getNumericValue()
  * @stable ICU 4.8
  */
-#define UMSGPAT_NO_NUMERIC_VALUE ((double)(-123456789))
+#परिभाषय UMSGPAT_NO_NUMERIC_मानम् ((द्विगुण)(-123456789))
 
 U_NAMESPACE_BEGIN
 
-class MessagePatternDoubleList;
-class MessagePatternPartsList;
+class सन्देशः_आदर्शः_Double_List;
+class सन्देशः_आदर्शः_Parts_List;
 
 /**
  * Parses and represents ICU MessageFormat patterns.
@@ -359,8 +359,8 @@ class MessagePatternPartsList;
  *
  * @stable ICU 4.8
  */
-class U_COMMON_API MessagePattern : public UObject {
-public:
+class U_COMMON_API सन्देशः_आदर्शः : सार्वजनिक UObject {
+सार्वजनिक:
     /**
      * Constructs an empty MessagePattern with default UMessagePatternApostropheMode.
      * @param errorCode Standard ICU error code. Its input value must
@@ -369,7 +369,7 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 4.8
      */
-    MessagePattern(UErrorCode &errorCode);
+    सन्देशः_आदर्शः(UError_संहिता &error_संहिता);
 
     /**
      * Constructs an empty MessagePattern.
@@ -380,7 +380,7 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 4.8
      */
-    MessagePattern(UMessagePatternApostropheMode mode, UErrorCode &errorCode);
+    सन्देशः_आदर्शः(UMessage_आदर्शः_Apostrophe_बहुलकम् बहुलकम्, UError_संहिता &error_संहिता);
 
     /**
      * Constructs a MessagePattern with default UMessagePatternApostropheMode and
@@ -400,14 +400,14 @@ public:
      * @throws NumberFormatException if a number could not be parsed
      * @stable ICU 4.8
      */
-    MessagePattern(const UnicodeString &pattern, UParseError *parseError, UErrorCode &errorCode);
+    सन्देशः_आदर्शः(ध्रुव UnicodeString &आदर्शः, UParseError *parseError, UError_संहिता &error_संहिता);
 
     /**
      * Copy constructor.
      * @param other Object to copy.
      * @stable ICU 4.8
      */
-    MessagePattern(const MessagePattern &other);
+    सन्देशः_आदर्शः(ध्रुव सन्देशः_आदर्शः &other);
 
     /**
      * Assignment operator.
@@ -415,13 +415,13 @@ public:
      * @return *this=other
      * @stable ICU 4.8
      */
-    MessagePattern& operator=(const MessagePattern& other) U_LIFETIME_BOUND;
+    सन्देशः_आदर्शः& संक्रियकः=(ध्रुव सन्देशः_आदर्शः& other) U_LIFETIME_BOUND;
 
     /**
      * Destructor.
      * @stable ICU 4.8
      */
-    virtual ~MessagePattern();
+    आभास ~सन्देशः_आदर्शः();
 
     /**
      * Parses a MessageFormat pattern string.
@@ -440,9 +440,9 @@ public:
      * @throws NumberFormatException if a number could not be parsed
      * @stable ICU 4.8
      */
-    MessagePattern& parse(const UnicodeString& pattern,
+    सन्देशः_आदर्शः& parse(ध्रुव UnicodeString& आदर्शः,
                           UParseError* parseError,
-                          UErrorCode& errorCode) U_LIFETIME_BOUND;
+                          UError_संहिता& error_संहिता) U_LIFETIME_BOUND;
 
     /**
      * Parses a ChoiceFormat pattern string.
@@ -461,9 +461,9 @@ public:
      * @throws NumberFormatException if a number could not be parsed
      * @stable ICU 4.8
      */
-    MessagePattern& parseChoiceStyle(const UnicodeString& pattern,
+    सन्देशः_आदर्शः& parseChoiceStyle(ध्रुव UnicodeString& आदर्शः,
                                      UParseError* parseError,
-                                     UErrorCode& errorCode) U_LIFETIME_BOUND;
+                                     UError_संहिता& error_संहिता) U_LIFETIME_BOUND;
 
     /**
      * Parses a PluralFormat pattern string.
@@ -482,9 +482,9 @@ public:
      * @throws NumberFormatException if a number could not be parsed
      * @stable ICU 4.8
      */
-    MessagePattern& parsePluralStyle(const UnicodeString& pattern,
+    सन्देशः_आदर्शः& parsePluralStyle(ध्रुव UnicodeString& आदर्शः,
                                      UParseError* parseError,
-                                     UErrorCode& errorCode) U_LIFETIME_BOUND;
+                                     UError_संहिता& error_संहिता) U_LIFETIME_BOUND;
 
     /**
      * Parses a SelectFormat pattern string.
@@ -503,16 +503,16 @@ public:
      * @throws NumberFormatException if a number could not be parsed
      * @stable ICU 4.8
      */
-    MessagePattern& parseSelectStyle(const UnicodeString& pattern,
+    सन्देशः_आदर्शः& parseSelectStyle(ध्रुव UnicodeString& आदर्शः,
                                      UParseError* parseError,
-                                     UErrorCode& errorCode) U_LIFETIME_BOUND;
+                                     UError_संहिता& error_संहिता) U_LIFETIME_BOUND;
 
     /**
      * Clears this MessagePattern.
      * countParts() will return 0.
      * @stable ICU 4.8
      */
-    void clear();
+    शून्य clear();
 
     /**
      * Clears this MessagePattern and sets the UMessagePatternApostropheMode.
@@ -520,9 +520,9 @@ public:
      * @param mode The new UMessagePatternApostropheMode.
      * @stable ICU 4.8
      */
-    void clearPatternAndSetApostropheMode(UMessagePatternApostropheMode mode) {
+    शून्य clear_आदर्शः_And_समुच्चयः_Apostrophe_बहुलकम्(UMessage_आदर्शः_Apostrophe_बहुलकम् बहुलकम्) {
         clear();
-        aposMode=mode;
+        apos_बहुलकम्=बहुलकम्;
     }
 
     /**
@@ -530,29 +530,29 @@ public:
      * @return true if this object is equivalent to the other one.
      * @stable ICU 4.8
      */
-    bool operator==(const MessagePattern &other) const;
+    bool संक्रियकः==(ध्रुव सन्देशः_आदर्शः &other) ध्रुव;
 
     /**
      * @param other another object to compare with.
      * @return false if this object is equivalent to the other one.
      * @stable ICU 4.8
      */
-    inline bool operator!=(const MessagePattern &other) const {
-        return !operator==(other);
+    अन्तःस्थ bool संक्रियकः!=(ध्रुव सन्देशः_आदर्शः &other) ध्रुव {
+        प्रत्यागम !संक्रियकः==(other);
     }
 
     /**
      * @return A hash code for this object.
      * @stable ICU 4.8
      */
-    int32_t hashCode() const;
+    int32_t hash_संहिता() ध्रुव;
 
     /**
      * @return this instance's UMessagePatternApostropheMode.
      * @stable ICU 4.8
      */
-    UMessagePatternApostropheMode getApostropheMode() const {
-        return aposMode;
+    UMessage_आदर्शः_Apostrophe_बहुलकम् get_Apostrophe_बहुलकम्() ध्रुव {
+        प्रत्यागम apos_बहुलकम्;
     }
 
     // Java has package-private jdkAposMode() here.
@@ -562,8 +562,8 @@ public:
      * @return the parsed pattern string (null if none was parsed).
      * @stable ICU 4.8
      */
-    const UnicodeString& getPatternString() const U_LIFETIME_BOUND {
-        return msg;
+    ध्रुव UnicodeString& get_आदर्शः_String() ध्रुव U_LIFETIME_BOUND {
+        प्रत्यागम सन्देशः;
     }
 
     /**
@@ -571,8 +571,8 @@ public:
      * @return true if the parsed pattern has at least one named argument.
      * @stable ICU 4.8
      */
-    UBool hasNamedArguments() const {
-        return hasArgNames;
+    UBool hasNamedArguments() ध्रुव {
+        प्रत्यागम has_Arg_नामानि;
     }
 
     /**
@@ -580,8 +580,8 @@ public:
      * @return true if the parsed pattern has at least one numbered argument.
      * @stable ICU 4.8
      */
-    UBool hasNumberedArguments() const {
-        return hasArgNumbers;
+    UBool hasNumberedArguments() ध्रुव {
+        प्रत्यागम hasArgNumbers;
     }
 
     /**
@@ -595,7 +595,7 @@ public:
      *         ARG_NAME_NOT_VALID (-2) if it is neither.
      * @stable ICU 4.8
      */
-    static int32_t validateArgumentName(const UnicodeString &name);
+    स्थिर int32_t validate_तर्कः_Name(ध्रुव UnicodeString &name);
 
     /**
      * Returns a version of the parsed pattern string where each ASCII apostrophe
@@ -607,7 +607,7 @@ public:
      * @see MessageFormat.autoQuoteApostrophe()
      * @stable ICU 4.8
      */
-    UnicodeString autoQuoteApostropheDeep() const;
+    UnicodeString autoQuoteApostropheDeep() ध्रुव;
 
     class Part;
 
@@ -617,8 +617,8 @@ public:
      * @return the number of pattern parts.
      * @stable ICU 4.8
      */
-    int32_t countParts() const {
-        return partsLength;
+    int32_t गणनम्_Parts() ध्रुव {
+        प्रत्यागम parts_दीर्घता;
     }
 
     /**
@@ -627,8 +627,8 @@ public:
      * @return the i-th pattern "part".
      * @stable ICU 4.8
      */
-    const Part& getPart(int32_t i) const U_LIFETIME_BOUND {
-        return parts[i];
+    ध्रुव Part& getPart(int32_t i) ध्रुव U_LIFETIME_BOUND {
+        प्रत्यागम parts[i];
     }
 
     /**
@@ -638,8 +638,8 @@ public:
      * @return The UMessagePatternPartType of the i-th Part.
      * @stable ICU 4.8
      */
-    UMessagePatternPartType getPartType(int32_t i) const {
-        return getPart(i).type;
+    UMessage_आदर्शः_Part_Type getPartType(int32_t i) ध्रुव {
+        प्रत्यागम getPart(i).type;
     }
 
     /**
@@ -649,8 +649,8 @@ public:
      * @return The pattern index of this Part.
      * @stable ICU 4.8
      */
-    int32_t getPatternIndex(int32_t partIndex) const {
-        return getPart(partIndex).index;
+    int32_t get_आदर्शः_सूचकांक(int32_t part_सूचकांक) ध्रुव {
+        प्रत्यागम getPart(part_सूचकांक).सूचकांक;
     }
 
     /**
@@ -660,8 +660,8 @@ public:
      * @return the substring associated with part.
      * @stable ICU 4.8
      */
-    UnicodeString getSubstring(const Part& part) const U_LIFETIME_BOUND {
-        return msg.tempSubString(part.index, part.length);
+    UnicodeString getSubstring(ध्रुव Part& part) ध्रुव U_LIFETIME_BOUND {
+        प्रत्यागम सन्देशः.अस्थायी_Sub_String(part.सूचकांक, part.दीर्घता);
     }
 
     /**
@@ -671,8 +671,8 @@ public:
      * @return true if getSubstring(part).equals(s).
      * @stable ICU 4.8
      */
-    UBool partSubstringMatches(const Part &part, const UnicodeString &s) const {
-        return 0==msg.compare(part.index, part.length, s);
+    UBool partSubstringMatches(ध्रुव Part &part, ध्रुव UnicodeString &s) ध्रुव {
+        प्रत्यागम 0==सन्देशः.compare(part.सूचकांक, part.दीर्घता, s);
     }
 
     /**
@@ -681,7 +681,7 @@ public:
      * @return the part's numeric value, or UMSGPAT_NO_NUMERIC_VALUE if this is not a numeric part.
      * @stable ICU 4.8
      */
-    double getNumericValue(const Part &part) const;
+    द्विगुण get_Numeric_मानम्(ध्रुव Part &part) ध्रुव;
 
     /**
      * Returns the "offset:" value of a PluralFormat argument, or 0 if none is specified.
@@ -689,7 +689,7 @@ public:
      * @return the "offset:" value.
      * @stable ICU 4.8
      */
-    double getPluralOffset(int32_t pluralStart) const;
+    द्विगुण get_Plural_विस्थापनम्(int32_t pluralStart) ध्रुव;
 
     /**
      * Returns the index of the ARG|MSG_LIMIT part corresponding to the ARG|MSG_START at start.
@@ -699,12 +699,12 @@ public:
      *         or start itself if getPartType(msgStart)!=ARG|MSG_START.
      * @stable ICU 4.8
      */
-    int32_t getLimitPartIndex(int32_t start) const {
-        int32_t limit=getPart(start).limitPartIndex;
-        if(limit<start) {
-            return start;
+    int32_t get_सीमा_Part_सूचकांक(int32_t start) ध्रुव {
+        int32_t सीमा=getPart(start).सीमा_Part_सूचकांक;
+        यदि(सीमा<start) {
+            प्रत्यागम start;
         }
-        return limit;
+        प्रत्यागम सीमा;
     }
 
     /**
@@ -714,8 +714,8 @@ public:
      * and for syntax elements of "complex" arguments.
      * @stable ICU 4.8
      */
-    class Part : public UMemory {
-    public:
+    class Part : सार्वजनिक UMemory {
+    सार्वजनिक:
         /**
          * Default constructor, do not use.
          * @internal
@@ -727,8 +727,8 @@ public:
          * @return the part type.
          * @stable ICU 4.8
          */
-        UMessagePatternPartType getType() const {
-            return type;
+        UMessage_आदर्शः_Part_Type getType() ध्रुव {
+            प्रत्यागम type;
         }
 
         /**
@@ -736,8 +736,8 @@ public:
          * @return this part's pattern string index.
          * @stable ICU 4.8
          */
-        int32_t getIndex() const {
-            return index;
+        int32_t get_सूचकांक() ध्रुव {
+            प्रत्यागम सूचकांक;
         }
 
         /**
@@ -746,8 +746,8 @@ public:
          * @return this part's pattern substring length.
          * @stable ICU 4.8
          */
-        int32_t getLength() const {
-            return length;
+        int32_t get_दीर्घता() ध्रुव {
+            प्रत्यागम दीर्घता;
         }
 
         /**
@@ -756,8 +756,8 @@ public:
          * @return this part's pattern string limit index, same as getIndex()+getLength().
          * @stable ICU 4.8
          */
-        int32_t getLimit() const {
-            return index+length;
+        int32_t get_सीमा() ध्रुव {
+            प्रत्यागम सूचकांक+दीर्घता;
         }
 
         /**
@@ -766,8 +766,8 @@ public:
          * @return the part value.
          * @stable ICU 4.8
          */
-        int32_t getValue() const {
-            return value;
+        int32_t get_मानम्() ध्रुव {
+            प्रत्यागम मानम्_2;
         }
 
         /**
@@ -776,12 +776,12 @@ public:
          * @return the argument type for this part.
          * @stable ICU 4.8
          */
-        UMessagePatternArgType getArgType() const {
-            UMessagePatternPartType msgType=getType();
-            if(msgType ==UMSGPAT_PART_TYPE_ARG_START || msgType ==UMSGPAT_PART_TYPE_ARG_LIMIT) {
-                return static_cast<UMessagePatternArgType>(value);
-            } else {
-                return UMSGPAT_ARG_TYPE_NONE;
+        UMessage_आदर्शः_Arg_Type getArgType() ध्रुव {
+            UMessage_आदर्शः_Part_Type सन्देशः_Type=getType();
+            यदि(सन्देशः_Type ==UMSGPAT_PART_TYPE_ARG_START || सन्देशः_Type ==UMSGPAT_PART_TYPE_ARG_सीमा) {
+                प्रत्यागम static_cast<UMessage_आदर्शः_Arg_Type>(मानम्_2);
+            } अन्यथा {
+                प्रत्यागम UMSGPAT_ARG_TYPE_NONE;
             }
         }
 
@@ -792,8 +792,8 @@ public:
          * @return true if the Part type has a numeric value.
          * @stable ICU 4.8
          */
-        static UBool hasNumericValue(UMessagePatternPartType type) {
-            return type==UMSGPAT_PART_TYPE_ARG_INT || type==UMSGPAT_PART_TYPE_ARG_DOUBLE;
+        स्थिर UBool has_Numeric_मानम्(UMessage_आदर्शः_Part_Type type) {
+            प्रत्यागम type==UMSGPAT_PART_TYPE_ARG_INT || type==UMSGPAT_PART_TYPE_ARG_DOUBLE;
         }
 
         /**
@@ -801,60 +801,60 @@ public:
          * @return true if this object is equivalent to the other one.
          * @stable ICU 4.8
          */
-        bool operator==(const Part &other) const;
+        bool संक्रियकः==(ध्रुव Part &other) ध्रुव;
 
         /**
          * @param other another object to compare with.
          * @return false if this object is equivalent to the other one.
          * @stable ICU 4.8
          */
-        inline bool operator!=(const Part &other) const {
-            return !operator==(other);
+        अन्तःस्थ bool संक्रियकः!=(ध्रुव Part &other) ध्रुव {
+            प्रत्यागम !संक्रियकः==(other);
         }
 
         /**
          * @return A hash code for this object.
          * @stable ICU 4.8
          */
-        int32_t hashCode() const {
-            return ((type*37+index)*37+length)*37+value;
+        int32_t hash_संहिता() ध्रुव {
+            प्रत्यागम ((type*37+सूचकांक)*37+दीर्घता)*37+मानम्_2;
         }
 
-    private:
-        friend class MessagePattern;
+    गुप्त:
+        मित्रम् class सन्देशः_आदर्शः;
 
-        static const int32_t MAX_LENGTH=0xffff;
-        static const int32_t MAX_VALUE=0x7fff;
-        static const int32_t MAX_NESTED_LEVELS=0x03ff;
+        स्थिर ध्रुव int32_t MAX_दीर्घता=0xffff;
+        स्थिर ध्रुव int32_t MAX_मानम्=0x7fff;
+        स्थिर ध्रुव int32_t MAX_NESTED_स्तराः=0x03ff;
 
         // Some fields are not final because they are modified during pattern parsing.
         // After pattern parsing, the parts are effectively immutable.
-        UMessagePatternPartType type;
-        int32_t index;
-        uint16_t length;
-        int16_t value;
-        int32_t limitPartIndex;
+        UMessage_आदर्शः_Part_Type type;
+        int32_t सूचकांक;
+        uint16_t दीर्घता;
+        int16_t मानम्_2;
+        int32_t सीमा_Part_सूचकांक;
     };
 
-private:
-    void preParse(const UnicodeString &pattern, UParseError *parseError, UErrorCode &errorCode);
+गुप्त:
+    शून्य preParse(ध्रुव UnicodeString &आदर्शः, UParseError *parseError, UError_संहिता &error_संहिता);
 
-    void postParse();
+    शून्य postParse();
 
-    int32_t parseMessage(int32_t index, int32_t msgStartLength,
-                         int32_t nestingLevel, UMessagePatternArgType parentType,
-                         UParseError *parseError, UErrorCode &errorCode);
+    int32_t parse_सन्देशः(int32_t सूचकांक, int32_t सन्देशः_Start_दीर्घता,
+                         int32_t nestingLevel, UMessage_आदर्शः_Arg_Type parentType,
+                         UParseError *parseError, UError_संहिता &error_संहिता);
 
-    int32_t parseArg(int32_t index, int32_t argStartLength, int32_t nestingLevel,
-                     UParseError *parseError, UErrorCode &errorCode);
+    int32_t parseArg(int32_t सूचकांक, int32_t arg_Start_दीर्घता, int32_t nestingLevel,
+                     UParseError *parseError, UError_संहिता &error_संहिता);
 
-    int32_t parseSimpleStyle(int32_t index, UParseError *parseError, UErrorCode &errorCode);
+    int32_t parseSimpleStyle(int32_t सूचकांक, UParseError *parseError, UError_संहिता &error_संहिता);
 
-    int32_t parseChoiceStyle(int32_t index, int32_t nestingLevel,
-                             UParseError *parseError, UErrorCode &errorCode);
+    int32_t parseChoiceStyle(int32_t सूचकांक, int32_t nestingLevel,
+                             UParseError *parseError, UError_संहिता &error_संहिता);
 
-    int32_t parsePluralOrSelectStyle(UMessagePatternArgType argType, int32_t index, int32_t nestingLevel,
-                                     UParseError *parseError, UErrorCode &errorCode);
+    int32_t parsePluralOrSelectStyle(UMessage_आदर्शः_Arg_Type argType, int32_t सूचकांक, int32_t nestingLevel,
+                                     UParseError *parseError, UError_संहिता &error_संहिता);
 
     /**
      * Validates and parses an argument name or argument number string.
@@ -864,10 +864,10 @@ private:
      *         ARG_NAME_NOT_VALID (-2) if it is neither.
      * @see #validateArgumentName(String)
      */
-    static int32_t parseArgNumber(const UnicodeString &s, int32_t start, int32_t limit);
+    स्थिर int32_t parse_Arg_सङ्ख्या(ध्रुव UnicodeString &s, int32_t start, int32_t सीमा);
 
-    int32_t parseArgNumber(int32_t start, int32_t limit) {
-        return parseArgNumber(msg, start, limit);
+    int32_t parse_Arg_सङ्ख्या(int32_t start, int32_t सीमा) {
+        प्रत्यागम parse_Arg_सङ्ख्या(सन्देशः, start, सीमा);
     }
 
     /**
@@ -878,77 +878,77 @@ private:
      * @param parseError
      * @param errorCode
      */
-    void parseDouble(int32_t start, int32_t limit, UBool allowInfinity,
-                     UParseError *parseError, UErrorCode &errorCode);
+    शून्य parseDouble(int32_t start, int32_t सीमा, UBool allowInfinity,
+                     UParseError *parseError, UError_संहिता &error_संहिता);
 
     // Java has package-private appendReducedApostrophes() here.
     // In C++, this is declared in the MessageImpl class.
 
-    int32_t skipWhiteSpace(int32_t index);
+    int32_t skipWhiteSpace(int32_t सूचकांक);
 
-    int32_t skipIdentifier(int32_t index);
+    int32_t skipIdentifier(int32_t सूचकांक);
 
     /**
      * Skips a sequence of characters that could occur in a double value.
      * Does not fully parse or validate the value.
      */
-    int32_t skipDouble(int32_t index);
+    int32_t skipDouble(int32_t सूचकांक);
 
-    static UBool isArgTypeChar(UChar32 c);
+    स्थिर UBool isArgTypeChar(UChar32 c);
 
-    UBool isChoice(int32_t index);
+    UBool isChoice(int32_t सूचकांक);
 
-    UBool isPlural(int32_t index);
+    UBool isPlural(int32_t सूचकांक);
 
-    UBool isSelect(int32_t index);
+    UBool isSelect(int32_t सूचकांक);
 
-    UBool isOrdinal(int32_t index);
+    UBool isOrdinal(int32_t सूचकांक);
 
     /**
      * @return true if we are inside a MessageFormat (sub-)pattern,
      *         as opposed to inside a top-level choice/plural/select pattern.
      */
-    UBool inMessageFormatPattern(int32_t nestingLevel);
+    UBool अन्तर्_सन्देशः_Format_आदर्शः(int32_t nestingLevel);
 
     /**
      * @return true if we are in a MessageFormat sub-pattern
      *         of a top-level ChoiceFormat pattern.
      */
-    UBool inTopLevelChoiceMessage(int32_t nestingLevel, UMessagePatternArgType parentType);
+    UBool अन्तर्_शिखरम्_Level_Choice_सन्देशः(int32_t nestingLevel, UMessage_आदर्शः_Arg_Type parentType);
 
-    void addPart(UMessagePatternPartType type, int32_t index, int32_t length,
-                 int32_t value, UErrorCode &errorCode);
+    शून्य सङ्कलय_Part(UMessage_आदर्शः_Part_Type type, int32_t सूचकांक, int32_t दीर्घता,
+                 int32_t मानम्_2, UError_संहिता &error_संहिता);
 
-    void addLimitPart(int32_t start,
-                      UMessagePatternPartType type, int32_t index, int32_t length,
-                      int32_t value, UErrorCode &errorCode);
+    शून्य सङ्कलय_सीमा_Part(int32_t start,
+                      UMessage_आदर्शः_Part_Type type, int32_t सूचकांक, int32_t दीर्घता,
+                      int32_t मानम्_2, UError_संहिता &error_संहिता);
 
-    void addArgDoublePart(double numericValue, int32_t start, int32_t length, UErrorCode &errorCode);
+    शून्य सङ्कलय_Arg_Double_Part(द्विगुण numeric_मानम्, int32_t start, int32_t दीर्घता, UError_संहिता &error_संहिता);
 
-    void setParseError(UParseError *parseError, int32_t index);
+    शून्य समुच्चयः_Parse_Error(UParseError *parseError, int32_t सूचकांक);
 
-    UBool init(UErrorCode &errorCode);
-    UBool copyStorage(const MessagePattern &other, UErrorCode &errorCode);
+    UBool init(UError_संहिता &error_संहिता);
+    UBool copyStorage(ध्रुव सन्देशः_आदर्शः &other, UError_संहिता &error_संहिता);
 
-    UMessagePatternApostropheMode aposMode;
-    UnicodeString msg;
+    UMessage_आदर्शः_Apostrophe_बहुलकम् apos_बहुलकम्;
+    UnicodeString सन्देशः;
     // ArrayList<Part> parts=new ArrayList<Part>();
-    MessagePatternPartsList *partsList;
+    सन्देशः_आदर्शः_Parts_List *partsList;
     Part *parts;
-    int32_t partsLength;
+    int32_t parts_दीर्घता;
     // ArrayList<Double> numericValues;
-    MessagePatternDoubleList *numericValuesList;
-    double *numericValues;
-    int32_t numericValuesLength;
-    UBool hasArgNames;
+    सन्देशः_आदर्शः_Double_List *numeric_मानानि_List;
+    द्विगुण *numeric_मानानि;
+    int32_t numeric_मानानि_दीर्घता;
+    UBool has_Arg_नामानि;
     UBool hasArgNumbers;
     UBool needsAutoQuoting;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif  // !UCONFIG_NO_FORMATTING
+#यदि_अन्तः  // !UCONFIG_NO_FORMATTING
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#यदि_अन्तः /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __MESSAGEPATTERN_H__
+#यदि_अन्तः  // __MESSAGEPATTERN_H__

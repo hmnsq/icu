@@ -17,121 +17,121 @@
 *   were moved here to break dependency cycles among parts of the common library.
 */
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#यदि !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/brkiter.h"
-#include "unicode/ubrk.h"
-#include "unicode/casemap.h"
-#include "unicode/ucasemap.h"
-#include "cmemory.h"
-#include "ucase.h"
-#include "ucasemap_imp.h"
+#अन्तर्भाव "unicode/brkiter.h"
+#अन्तर्भाव "unicode/ubrk.h"
+#अन्तर्भाव "unicode/casemap.h"
+#अन्तर्भाव "unicode/ucasemap.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "ucase.h"
+#अन्तर्भाव "ucasemap_imp.h"
 
 U_NAMESPACE_BEGIN
 
-void CaseMap::utf8ToTitle(
-        const char *locale, uint32_t options, BreakIterator *iter,
+शून्य CaseMap::utf8_गन्तव्यम्_Title(
+        ध्रुव वर्ण *locale, uint32_t options, BreakIterator *iter,
         StringPiece src, ByteSink &sink, Edits *edits,
-        UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return;
+        UError_संहिता &error_संहिता) {
+    यदि (U_FAILURE(error_संहिता)) {
+        प्रत्यागम;
     }
     UText utext = UTEXT_INITIALIZER;
-    utext_openUTF8(&utext, src.data(), src.length(), &errorCode);
+    utext_openUTF8(&utext, src.दत्त(), src.length(), &error_संहिता);
     LocalPointer<BreakIterator> ownedIter;
-    iter = ustrcase_getTitleBreakIterator(nullptr, locale, options, iter, ownedIter, errorCode);
-    if (iter == nullptr) {
+    iter = ustrcase_getTitleBreakIterator(शून्यसूचकः, locale, options, iter, ownedIter, error_संहिता);
+    यदि (iter == शून्यसूचकः) {
         utext_close(&utext);
-        return;
+        प्रत्यागम;
     }
-    iter->setText(&utext, errorCode);
+    iter->समुच्चयः_Text(&utext, error_संहिता);
     ucasemap_mapUTF8(
         ustrcase_getCaseLocale(locale), options, iter,
-        src.data(), src.length(),
-        ucasemap_internalUTF8ToTitle, sink, edits, errorCode);
+        src.दत्त(), src.length(),
+        ucasemap_आन्तरिकम्_UTF8_गन्तव्यम्_Title, sink, edits, error_संहिता);
     utext_close(&utext);
 }
 
-int32_t CaseMap::utf8ToTitle(
-        const char *locale, uint32_t options, BreakIterator *iter,
-        const char *src, int32_t srcLength,
-        char *dest, int32_t destCapacity, Edits *edits,
-        UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return 0;
+int32_t CaseMap::utf8_गन्तव्यम्_Title(
+        ध्रुव वर्ण *locale, uint32_t options, BreakIterator *iter,
+        ध्रुव वर्ण *src, int32_t src_दीर्घता,
+        वर्ण *dest, int32_t dest_क्षमता, Edits *edits,
+        UError_संहिता &error_संहिता) {
+    यदि (U_FAILURE(error_संहिता)) {
+        प्रत्यागम 0;
     }
     UText utext=UTEXT_INITIALIZER;
-    utext_openUTF8(&utext, src, srcLength, &errorCode);
+    utext_openUTF8(&utext, src, src_दीर्घता, &error_संहिता);
     LocalPointer<BreakIterator> ownedIter;
-    iter = ustrcase_getTitleBreakIterator(nullptr, locale, options, iter, ownedIter, errorCode);
-    if(iter==nullptr) {
+    iter = ustrcase_getTitleBreakIterator(शून्यसूचकः, locale, options, iter, ownedIter, error_संहिता);
+    यदि(iter==शून्यसूचकः) {
         utext_close(&utext);
-        return 0;
+        प्रत्यागम 0;
     }
-    iter->setText(&utext, errorCode);
+    iter->समुच्चयः_Text(&utext, error_संहिता);
     int32_t length=ucasemap_mapUTF8(
         ustrcase_getCaseLocale(locale), options, iter,
-        dest, destCapacity,
-        src, srcLength,
-        ucasemap_internalUTF8ToTitle, edits, errorCode);
+        dest, dest_क्षमता,
+        src, src_दीर्घता,
+        ucasemap_आन्तरिकम्_UTF8_गन्तव्यम्_Title, edits, error_संहिता);
     utext_close(&utext);
-    return length;
+    प्रत्यागम length;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
 U_NAMESPACE_USE
 
-U_CAPI const UBreakIterator* U_EXPORT2
-ucasemap_getBreakIterator(const UCaseMap* csm U_LIFETIME_BOUND) {
-    auto *impl = reinterpret_cast<const UCaseMapImpl *>(csm);
-    return reinterpret_cast<UBreakIterator *>(impl->iter);
+U_CAPI ध्रुव UBreakIterator* U_EXPORT2
+ucasemap_getBreakIterator(ध्रुव UCaseMap* csm U_LIFETIME_BOUND) {
+    स्वचालित *impl = reinterpret_cast<ध्रुव UCaseMapImpl *>(csm);
+    प्रत्यागम reinterpret_cast<UBreakIterator *>(impl->iter);
 }
 
-U_CAPI void U_EXPORT2
-ucasemap_setBreakIterator(UCaseMap *csm, UBreakIterator *iterToAdopt, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+U_CAPI शून्य U_EXPORT2
+ucasemap_समुच्चयः_Break_Iterator(UCaseMap *csm, UBreakIterator *iter_गन्तव्यम्_Adopt, UError_संहिता *p_Error_संहिता) {
+    यदि(U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम;
     }
-    auto *impl = reinterpret_cast<UCaseMapImpl *>(csm);
-    delete impl->iter;
-    impl->iter=reinterpret_cast<BreakIterator *>(iterToAdopt);
+    स्वचालित *impl = reinterpret_cast<UCaseMapImpl *>(csm);
+    विलोपय impl->iter;
+    impl->iter=reinterpret_cast<BreakIterator *>(iter_गन्तव्यम्_Adopt);
 }
 
 U_CAPI int32_t U_EXPORT2
-ucasemap_utf8ToTitle(UCaseMap *csm,
-                     char *dest, int32_t destCapacity,
-                     const char *src, int32_t srcLength,
-                     UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return 0;
+ucasemap_utf8_गन्तव्यम्_Title(UCaseMap *csm,
+                     वर्ण *dest, int32_t dest_क्षमता,
+                     ध्रुव वर्ण *src, int32_t src_दीर्घता,
+                     UError_संहिता *p_Error_संहिता) {
+    यदि (U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम 0;
     }
     UText utext=UTEXT_INITIALIZER;
-    utext_openUTF8(&utext, src, srcLength, pErrorCode);
-    if (U_FAILURE(*pErrorCode)) {
-        return 0;
+    utext_openUTF8(&utext, src, src_दीर्घता, p_Error_संहिता);
+    यदि (U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम 0;
     }
-    auto *impl = reinterpret_cast<UCaseMapImpl *>(csm);
-    if(impl->iter==nullptr) {
+    स्वचालित *impl = reinterpret_cast<UCaseMapImpl *>(csm);
+    यदि(impl->iter==शून्यसूचकः) {
         LocalPointer<BreakIterator> ownedIter;
         BreakIterator *iter = ustrcase_getTitleBreakIterator(
-            nullptr, impl->locale, impl->options, nullptr, ownedIter, *pErrorCode);
-        if (iter == nullptr) {
+            शून्यसूचकः, impl->locale, impl->options, शून्यसूचकः, ownedIter, *p_Error_संहिता);
+        यदि (iter == शून्यसूचकः) {
             utext_close(&utext);
-            return 0;
+            प्रत्यागम 0;
         }
         impl->iter = ownedIter.orphan();
     }
-    impl->iter->setText(&utext, *pErrorCode);
+    impl->iter->समुच्चयः_Text(&utext, *p_Error_संहिता);
     int32_t length=ucasemap_mapUTF8(
             impl->caseLocale, impl->options, impl->iter,
-            dest, destCapacity,
-            src, srcLength,
-            ucasemap_internalUTF8ToTitle, nullptr, *pErrorCode);
+            dest, dest_क्षमता,
+            src, src_दीर्घता,
+            ucasemap_आन्तरिकम्_UTF8_गन्तव्यम्_Title, शून्यसूचकः, *p_Error_संहिता);
     utext_close(&utext);
-    return length;
+    प्रत्यागम length;
 }
 
-#endif  // !UCONFIG_NO_BREAK_ITERATION
+#यदि_अन्तः  // !UCONFIG_NO_BREAK_ITERATION

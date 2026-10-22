@@ -11,18 +11,18 @@
 **********************************************************************
 */
 
-#ifndef RBBITBLB_H
-#define RBBITBLB_H
+#यदि_अपरिभाषितम् RBBITBLB_H
+#परिभाषय RBBITBLB_H
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#यदि !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/uobject.h"
-#include "unicode/rbbi.h"
-#include "rbbidata.h"
-#include "rbbirb.h"
-#include "rbbinode.h"
+#अन्तर्भाव "unicode/uobject.h"
+#अन्तर्भाव "unicode/rbbi.h"
+#अन्तर्भाव "rbbidata.h"
+#अन्तर्भाव "rbbirb.h"
+#अन्तर्भाव "rbbinode.h"
 
 
 U_NAMESPACE_BEGIN
@@ -40,22 +40,22 @@ class UVector32;
 //                         There is no user-visible public API here.
 //
 
-class RBBITableBuilder : public UMemory {
-public:
-    RBBITableBuilder(RBBIRuleBuilder *rb, RBBINode **rootNode, UErrorCode &status);
+class RBBITableBuilder : सार्वजनिक UMemory {
+सार्वजनिक:
+    RBBITableBuilder(RBBIRuleBuilder *rb, RBBINode **मूलम्_ग्रन्थिः, UError_संहिता &स्थितिः);
     ~RBBITableBuilder();
 
-    void     buildForwardTable();
+    शून्य     build_Forward_सारणी();
 
     /** Return the runtime size in bytes of the built state table.  */
-    int32_t  getTableSize() const;
+    int32_t  get_सारणी_आकार() ध्रुव;
 
     /** Fill in the runtime state table. Sufficient memory must exist at the specified location.
      */
-    void     exportTable(void *where);
+    शून्य     export_सारणी(शून्य *where);
 
     /** Use 8 bits to encode the forward table */
-    bool     use8BitsForTable() const;
+    bool     use8_द्वयङ्काः_For_सारणी() ध्रुव;
 
     /**
      *  Find duplicate (redundant) character classes. Begin looking with categories.first.
@@ -71,48 +71,48 @@ public:
     /** Remove a column from the state table. Used when two character categories
      *  have been found equivalent, and merged together, to eliminate the unneeded table column.
      */
-    void     removeColumn(int32_t column);
+    शून्य     removeColumn(int32_t column);
 
     /**
      * Check for, and remove duplicate states (table rows).
      * @return the number of states removed.
      */
-    int32_t  removeDuplicateStates();
+    int32_t  remove_Duplicate_अवस्थाः();
 
     /**
      * Minimizes the number of slots used by the lookaheads.
      * This must be called before `removeDuplicateStates`: by merging lookaheads, it removes
      * distinctions between states that would be preserved by `removeDuplicateStates`.
      */
-    void minimizeLookaheads();
+    शून्य minimizeLookaheads();
 
     /** Build the safe reverse table from the already-constructed forward table. */
-    void     buildSafeReverseTable(UErrorCode &status);
+    शून्य     build_Safe_Reverse_सारणी(UError_संहिता &स्थितिः);
 
     /** Return the runtime size in bytes of the built safe reverse state table. */
-    int32_t  getSafeTableSize() const;
+    int32_t  get_Safe_सारणी_आकार() ध्रुव;
 
     /** Fill in the runtime safe state table. Sufficient memory must exist at the specified location.
      */
-    void     exportSafeTable(void *where);
+    शून्य     export_Safe_सारणी(शून्य *where);
 
     /** Use 8 bits to encode the safe reverse table */
-    bool     use8BitsForSafeTable() const;
+    bool     use8_द्वयङ्काः_For_Safe_सारणी() ध्रुव;
 
-private:
-    void     calcNullable(RBBINode *n);
-    void     calcFirstPos(RBBINode *n);
-    void     calcLastPos(RBBINode  *n);
-    void     calcFollowPos(RBBINode *n);
-    void     calcChainedFollowPos(RBBINode *n, RBBINode *endMarkNode);
-    void     bofFixup();
-    void     buildStateTable();
-    void     mapLookAheadRules();
-    void     flagAcceptingStates();
-    void     flagLookAheadStates();
-    void     flagTaggedStates();
-    void     mergeRuleStatusVals();
-    void     minimizeStates();
+गुप्त:
+    शून्य     calcNullable(RBBINode *n);
+    शून्य     calcFirstPos(RBBINode *n);
+    शून्य     calc_चरमः_Pos(RBBINode  *n);
+    शून्य     calcFollowPos(RBBINode *n);
+    शून्य     calcChainedFollowPos(RBBINode *n, RBBINode *अन्तः_Mark_ग्रन्थिः);
+    शून्य     bofFixup();
+    शून्य     build_State_सारणी();
+    शून्य     map_Look_Ahead_नियमाः();
+    शून्य     flag_Accepting_अवस्थाः();
+    शून्य     flag_Look_Ahead_अवस्थाः();
+    शून्य     flag_Tagged_अवस्थाः();
+    शून्य     merge_नियमः_स्थितिः_Vals();
+    शून्य     minimize_अवस्थाः();
 
     /**
      * Merge redundant state table columns, eliminating character classes with identical behavior.
@@ -120,50 +120,50 @@ private:
      */
     int32_t  mergeColumns();
 
-    void     addRuleRootNodes(UVector *dest, RBBINode *node);
+    शून्य     सङ्कलय_नियमः_मूलम्_Nodes(UVector *dest, RBBINode *ग्रन्थिः);
 
     /** Find the next duplicate state in the safe reverse table. An iterator function.
      *  @param states in/out parameter, specifies where to start looking for duplicates,
      *                and returns the first pair of duplicates found, if any.
      *  @return true if a duplicate pair of states was found.
      */
-    bool findDuplicateSafeState(IntPair *states);
+    bool findDuplicateSafeState(IntPair *अवस्थाः);
 
     /** Remove a duplicate state from the safe table.
      * @param duplStates The duplicate states. The first is kept, the second is removed.
      *                   All references to the second in the state table are retargeted
      *                   to the first.
      */
-    void removeSafeState(IntPair duplStates);
+    शून्य removeSafeState(IntPair dupl_अवस्थाः);
 
     // Set functions for UVector.
     //   TODO:  make a USet subclass of UVector
 
-    void     setAdd(UVector *dest, UVector *source);
-    UBool    setEquals(UVector *a, UVector *b);
+    शून्य     समुच्चयः_सङ्कलय_2(UVector *dest, UVector *source);
+    UBool    समुच्चयः_Equals(UVector *a, UVector *b);
 
-    void     sortedAdd(UVector **dest, int32_t val);
+    शून्य     sorted_सङ्कलय(UVector **dest, int32_t val);
 
-public:
-#ifdef RBBI_DEBUG
-    void     printSet(UVector *s);
-    void     printPosSets(RBBINode *n /* = nullptr */);
-    void     printStates();
-    void     printRuleStatusTable();
-    void     printReverseTable();
-#else
-    #define  printSet(s)
-    #define  printPosSets(n)
-    #define  printStates()
-    #define  printRuleStatusTable()
-    #define  printReverseTable()
-#endif
+सार्वजनिक:
+#यदि_परिभाषितम् RBBI_DEBUG
+    शून्य     print_समुच्चयः(UVector *s);
+    शून्य     printPosSets(RBBINode *n /* = nullptr */);
+    शून्य     print_अवस्थाः();
+    शून्य     print_नियमः_स्थितिः_सारणी();
+    शून्य     print_Reverse_सारणी();
+#अन्यथा
+    #परिभाषय  print_समुच्चयः(s)
+    #परिभाषय  printPosSets(n)
+    #परिभाषय  print_अवस्थाः()
+    #परिभाषय  print_नियमः_स्थितिः_सारणी()
+    #परिभाषय  print_Reverse_सारणी()
+#यदि_अन्तः
 
-private:
+गुप्त:
     RBBIRuleBuilder  *fRB;
-    RBBINode         *&fTree;              // The root node of the parse tree to build a
+    RBBINode         *&f_वृक्षः;              // The root node of the parse tree to build a
                                            //   table for.
-    UErrorCode       *fStatus;
+    UError_संहिता       *f_स्थितिः;
 
     /** State Descriptors, UVector<RBBIStateDescriptor> */
     UVector          *fDStates;            //  D states (Aho's terminology)
@@ -171,32 +171,32 @@ private:
                                            //  Contents are RBBIStateDescriptor pointers.
 
     /** Synthesized safe table, UVector of UnicodeString, one string per table row.   */
-    UVector          *fSafeTable;
+    UVector          *f_Safe_सारणी;
 
     /** Map from rule number (fVal in look ahead nodes) to sequential lookahead index. */
-    UVector32        *fLookAheadRuleMap = nullptr;
+    UVector32        *f_Look_Ahead_नियमः_Map = nullptr;
 
     /* Counter used when assigning lookahead rule numbers.
      * Contains the last look-ahead number already in use.
      * The first look-ahead number is 2; Number 1 (ACCEPTING_UNCONDITIONAL) is reserved
      * for non-lookahead accepting states. See the declarations of RBBIStateTableRowT.   */
-    int32_t          fLASlotsInUse = ACCEPTING_UNCONDITIONAL;
+    int32_t          f_LASlots_अन्तर्_Use = ACCEPTING_UNCONDITIONAL;
 
 
-    RBBITableBuilder(const RBBITableBuilder &other) = delete; // forbid copying of this class
-    RBBITableBuilder &operator=(const RBBITableBuilder &other) = delete; // forbid copying of this class
+    RBBITableBuilder(ध्रुव RBBITableBuilder &other) = delete; // forbid copying of this class
+    RBBITableBuilder &संक्रियकः=(ध्रुव RBBITableBuilder &other) = delete; // forbid copying of this class
 };
 
 //
 //  RBBIStateDescriptor - The DFA is constructed as a set of these descriptors,
 //                        one for each state.
-class RBBIStateDescriptor : public UMemory {
-public:
+class RBBIStateDescriptor : सार्वजनिक UMemory {
+सार्वजनिक:
     UBool            fMarked;
     uint32_t         fAccepting;
     uint32_t         fLookAhead;
-    UVector          *fTagVals;
-    int32_t          fTagsIdx;
+    UVector          *f_चिह्नकम्_Vals;
+    int32_t          f_चिह्नकानि_Idx;
     UVector          *fPositions;          // Set of parse tree positions associated
                                            //   with this state.  Unordered (it's a set).
                                            //   UVector contents are RBBINode *
@@ -206,18 +206,18 @@ public:
                                            //   contents is int index of dest state
                                            //   in RBBITableBuilder.fDStates
 
-    RBBIStateDescriptor(int maxInputSymbol,  UErrorCode *fStatus);
+    RBBIStateDescriptor(पूर्णाङ्क max_निवेशः_चिह्नम्,  UError_संहिता *f_स्थितिः);
     ~RBBIStateDescriptor();
 
-private:
-    RBBIStateDescriptor(const RBBIStateDescriptor &other) = delete; // forbid copying of this class
-    RBBIStateDescriptor &operator=(const RBBIStateDescriptor &other) = delete; // forbid copying of this class
+गुप्त:
+    RBBIStateDescriptor(ध्रुव RBBIStateDescriptor &other) = delete; // forbid copying of this class
+    RBBIStateDescriptor &संक्रियकः=(ध्रुव RBBIStateDescriptor &other) = delete; // forbid copying of this class
 };
 
 
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#यदि_अन्तः /* #if !UCONFIG_NO_BREAK_ITERATION */
 
-#endif
+#यदि_अन्तः

@@ -14,13 +14,13 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/appendable.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/uobject.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "uassert.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/appendable.h"
+#अन्तर्भाव "unicode/ucharstrie.h"
+#अन्तर्भाव "unicode/uobject.h"
+#अन्तर्भाव "unicode/utf16.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "uassert.h"
 
 U_NAMESPACE_BEGIN
 
@@ -28,50 +28,50 @@ UCharsTrie::~UCharsTrie() {
     uprv_free(ownedArray_);
 }
 
-UStringTrieResult
-UCharsTrie::current() const {
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
-    } else {
-        int32_t node;
-        return (remainingMatchLength_<0 && (node=*pos)>=kMinValueLead) ?
-                valueResult(node) : USTRINGTRIE_NO_VALUE;
+UString_Trie_परिणाम
+UCharsTrie::current() ध्रुव {
+    ध्रुव char16_t *pos=pos_;
+    यदि(pos==शून्यसूचकः) {
+        प्रत्यागम USTRINGTRIE_NO_मेलनम्;
+    } अन्यथा {
+        int32_t ग्रन्थिः;
+        प्रत्यागम (remaining_मेलनम्_दीर्घता<0 && (ग्रन्थिः=*pos)>=k_Min_मानम्_Lead) ?
+                मानम्_परिणाम(ग्रन्थिः) : USTRINGTRIE_NO_मानम्;
     }
 }
 
-UStringTrieResult
-UCharsTrie::firstForCodePoint(UChar32 cp) {
-    return cp<=0xffff ?
+UString_Trie_परिणाम
+UCharsTrie::first_For_संहिता_Point(UChar32 cp) {
+    प्रत्यागम cp<=0xffff ?
         first(cp) :
-        (USTRINGTRIE_HAS_NEXT(first(U16_LEAD(cp))) ?
+        (USTRINGTRIE_HAS_अग्र(first(U16_LEAD(cp))) ?
             next(U16_TRAIL(cp)) :
-            USTRINGTRIE_NO_MATCH);
+            USTRINGTRIE_NO_मेलनम्);
 }
 
-UStringTrieResult
-UCharsTrie::nextForCodePoint(UChar32 cp) {
-    return cp<=0xffff ?
+UString_Trie_परिणाम
+UCharsTrie::अग्र_For_संहिता_Point(UChar32 cp) {
+    प्रत्यागम cp<=0xffff ?
         next(cp) :
-        (USTRINGTRIE_HAS_NEXT(next(U16_LEAD(cp))) ?
+        (USTRINGTRIE_HAS_अग्र(next(U16_LEAD(cp))) ?
             next(U16_TRAIL(cp)) :
-            USTRINGTRIE_NO_MATCH);
+            USTRINGTRIE_NO_मेलनम्);
 }
 
-UStringTrieResult
-UCharsTrie::branchNext(const char16_t *pos, int32_t length, int32_t uchar) {
+UString_Trie_परिणाम
+UCharsTrie::branch_अग्र(ध्रुव char16_t *pos, int32_t length, int32_t uchar) {
     // Branch according to the current unit.
-    if(length==0) {
+    यदि(length==0) {
         length=*pos++;
     }
     ++length;
     // The length of the branch is the number of units to select from.
     // The data structure encodes a binary search.
-    while(length>kMaxBranchLinearSubNodeLength) {
-        if(uchar<*pos++) {
+    यावत्(length>k_Max_Branch_रैखिकम्_Sub_ग्रन्थिः_दीर्घता) {
+        यदि(uchar<*pos++) {
             length>>=1;
             pos=jumpByDelta(pos);
-        } else {
+        } अन्यथा {
             length=length-(length>>1);
             pos=skipDelta(pos);
         }
@@ -79,338 +79,338 @@ UCharsTrie::branchNext(const char16_t *pos, int32_t length, int32_t uchar) {
     // Drop down to linear search for the last few units.
     // length>=2 because the loop body above sees length>kMaxBranchLinearSubNodeLength>=3
     // and divides length by 2.
-    do {
-        if(uchar==*pos++) {
-            UStringTrieResult result;
-            int32_t node=*pos;
-            if(node&kValueIsFinal) {
+    कुरु {
+        यदि(uchar==*pos++) {
+            UString_Trie_परिणाम परिणाम;
+            int32_t ग्रन्थिः=*pos;
+            यदि(ग्रन्थिः&k_मानम्_Is_Final) {
                 // Leave the final value for getValue() to read.
-                result=USTRINGTRIE_FINAL_VALUE;
-            } else {
+                परिणाम=USTRINGTRIE_FINAL_मानम्;
+            } अन्यथा {
                 // Use the non-final value as the jump delta.
                 ++pos;
                 // int32_t delta=readValue(pos, node);
                 int32_t delta;
-                if(node<kMinTwoUnitValueLead) {
-                    delta=node;
-                } else if(node<kThreeUnitValueLead) {
-                    delta=((node-kMinTwoUnitValueLead)<<16)|*pos++;
-                } else {
+                यदि(ग्रन्थिः<k_Min_Two_Unit_मानम्_Lead) {
+                    delta=ग्रन्थिः;
+                } अन्यथा यदि(ग्रन्थिः<k_Three_Unit_मानम्_Lead) {
+                    delta=((ग्रन्थिः-k_Min_Two_Unit_मानम्_Lead)<<16)|*pos++;
+                } अन्यथा {
                     delta=(pos[0]<<16)|pos[1];
                     pos+=2;
                 }
                 // end readValue()
                 pos+=delta;
-                node=*pos;
-                result= node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
+                ग्रन्थिः=*pos;
+                परिणाम= ग्रन्थिः>=k_Min_मानम्_Lead ? मानम्_परिणाम(ग्रन्थिः) : USTRINGTRIE_NO_मानम्;
             }
             pos_=pos;
-            return result;
+            प्रत्यागम परिणाम;
         }
         --length;
-        pos=skipValue(pos);
-    } while(length>1);
-    if(uchar==*pos++) {
+        pos=skip_मानम्(pos);
+    } यावत्(length>1);
+    यदि(uchar==*pos++) {
         pos_=pos;
-        int32_t node=*pos;
-        return node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
-    } else {
+        int32_t ग्रन्थिः=*pos;
+        प्रत्यागम ग्रन्थिः>=k_Min_मानम्_Lead ? मानम्_परिणाम(ग्रन्थिः) : USTRINGTRIE_NO_मानम्;
+    } अन्यथा {
         stop();
-        return USTRINGTRIE_NO_MATCH;
+        प्रत्यागम USTRINGTRIE_NO_मेलनम्;
     }
 }
 
-UStringTrieResult
-UCharsTrie::nextImpl(const char16_t *pos, int32_t uchar) {
-    int32_t node=*pos++;
-    for(;;) {
-        if(node<kMinLinearMatch) {
-            return branchNext(pos, node, uchar);
-        } else if(node<kMinValueLead) {
+UString_Trie_परिणाम
+UCharsTrie::अग्र_Impl(ध्रुव char16_t *pos, int32_t uchar) {
+    int32_t ग्रन्थिः=*pos++;
+    प्रति(;;) {
+        यदि(ग्रन्थिः<k_Min_रैखिकम्_मेलनम्) {
+            प्रत्यागम branch_अग्र(pos, ग्रन्थिः, uchar);
+        } अन्यथा यदि(ग्रन्थिः<k_Min_मानम्_Lead) {
             // Match the first of length+1 units.
-            int32_t length=node-kMinLinearMatch;  // Actual match length minus 1.
-            if(uchar==*pos++) {
-                remainingMatchLength_=--length;
+            int32_t length=ग्रन्थिः-k_Min_रैखिकम्_मेलनम्;  // Actual match length minus 1.
+            यदि(uchar==*pos++) {
+                remaining_मेलनम्_दीर्घता=--length;
                 pos_=pos;
-                return (length<0 && (node=*pos)>=kMinValueLead) ?
-                        valueResult(node) : USTRINGTRIE_NO_VALUE;
-            } else {
+                प्रत्यागम (length<0 && (ग्रन्थिः=*pos)>=k_Min_मानम्_Lead) ?
+                        मानम्_परिणाम(ग्रन्थिः) : USTRINGTRIE_NO_मानम्;
+            } अन्यथा {
                 // No match.
-                break;
+                भङ्ग;
             }
-        } else if(node&kValueIsFinal) {
+        } अन्यथा यदि(ग्रन्थिः&k_मानम्_Is_Final) {
             // No further matching units.
-            break;
-        } else {
+            भङ्ग;
+        } अन्यथा {
             // Skip intermediate value.
-            pos=skipNodeValue(pos, node);
-            node&=kNodeTypeMask;
+            pos=skip_ग्रन्थिः_मानम्(pos, ग्रन्थिः);
+            ग्रन्थिः&=k_ग्रन्थिः_Type_आवरणम्;
         }
     }
     stop();
-    return USTRINGTRIE_NO_MATCH;
+    प्रत्यागम USTRINGTRIE_NO_मेलनम्;
 }
 
-UStringTrieResult
+UString_Trie_परिणाम
 UCharsTrie::next(int32_t uchar) {
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    ध्रुव char16_t *pos=pos_;
+    यदि(pos==शून्यसूचकः) {
+        प्रत्यागम USTRINGTRIE_NO_मेलनम्;
     }
-    int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    if(length>=0) {
+    int32_t length=remaining_मेलनम्_दीर्घता;  // Actual remaining match length minus 1.
+    यदि(length>=0) {
         // Remaining part of a linear-match node.
-        if(uchar==*pos++) {
-            remainingMatchLength_=--length;
+        यदि(uchar==*pos++) {
+            remaining_मेलनम्_दीर्घता=--length;
             pos_=pos;
-            int32_t node;
-            return (length<0 && (node=*pos)>=kMinValueLead) ?
-                    valueResult(node) : USTRINGTRIE_NO_VALUE;
-        } else {
+            int32_t ग्रन्थिः;
+            प्रत्यागम (length<0 && (ग्रन्थिः=*pos)>=k_Min_मानम्_Lead) ?
+                    मानम्_परिणाम(ग्रन्थिः) : USTRINGTRIE_NO_मानम्;
+        } अन्यथा {
             stop();
-            return USTRINGTRIE_NO_MATCH;
+            प्रत्यागम USTRINGTRIE_NO_मेलनम्;
         }
     }
-    return nextImpl(pos, uchar);
+    प्रत्यागम अग्र_Impl(pos, uchar);
 }
 
-UStringTrieResult
-UCharsTrie::next(ConstChar16Ptr ptr, int32_t sLength) {
-    const char16_t *s=ptr;
-    if(sLength<0 ? *s==0 : sLength==0) {
+UString_Trie_परिणाम
+UCharsTrie::next(ConstChar16Ptr ptr, int32_t s_दीर्घता) {
+    ध्रुव char16_t *s=ptr;
+    यदि(s_दीर्घता<0 ? *s==0 : s_दीर्घता==0) {
         // Empty input.
-        return current();
+        प्रत्यागम current();
     }
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    ध्रुव char16_t *pos=pos_;
+    यदि(pos==शून्यसूचकः) {
+        प्रत्यागम USTRINGTRIE_NO_मेलनम्;
     }
-    int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    for(;;) {
+    int32_t length=remaining_मेलनम्_दीर्घता;  // Actual remaining match length minus 1.
+    प्रति(;;) {
         // Fetch the next input unit, if there is one.
         // Continue a linear-match node without rechecking sLength<0.
         int32_t uchar;
-        if(sLength<0) {
-            for(;;) {
-                if((uchar=*s++)==0) {
-                    remainingMatchLength_=length;
+        यदि(s_दीर्घता<0) {
+            प्रति(;;) {
+                यदि((uchar=*s++)==0) {
+                    remaining_मेलनम्_दीर्घता=length;
                     pos_=pos;
-                    int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
-                            valueResult(node) : USTRINGTRIE_NO_VALUE;
+                    int32_t ग्रन्थिः;
+                    प्रत्यागम (length<0 && (ग्रन्थिः=*pos)>=k_Min_मानम्_Lead) ?
+                            मानम्_परिणाम(ग्रन्थिः) : USTRINGTRIE_NO_मानम्;
                 }
-                if(length<0) {
-                    remainingMatchLength_=length;
-                    break;
+                यदि(length<0) {
+                    remaining_मेलनम्_दीर्घता=length;
+                    भङ्ग;
                 }
-                if(uchar!=*pos) {
+                यदि(uchar!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    प्रत्यागम USTRINGTRIE_NO_मेलनम्;
                 }
                 ++pos;
                 --length;
             }
-        } else {
-            for(;;) {
-                if(sLength==0) {
-                    remainingMatchLength_=length;
+        } अन्यथा {
+            प्रति(;;) {
+                यदि(s_दीर्घता==0) {
+                    remaining_मेलनम्_दीर्घता=length;
                     pos_=pos;
-                    int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
-                            valueResult(node) : USTRINGTRIE_NO_VALUE;
+                    int32_t ग्रन्थिः;
+                    प्रत्यागम (length<0 && (ग्रन्थिः=*pos)>=k_Min_मानम्_Lead) ?
+                            मानम्_परिणाम(ग्रन्थिः) : USTRINGTRIE_NO_मानम्;
                 }
                 uchar=*s++;
-                --sLength;
-                if(length<0) {
-                    remainingMatchLength_=length;
-                    break;
+                --s_दीर्घता;
+                यदि(length<0) {
+                    remaining_मेलनम्_दीर्घता=length;
+                    भङ्ग;
                 }
-                if(uchar!=*pos) {
+                यदि(uchar!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    प्रत्यागम USTRINGTRIE_NO_मेलनम्;
                 }
                 ++pos;
                 --length;
             }
         }
-        int32_t node=*pos++;
-        for(;;) {
-            if(node<kMinLinearMatch) {
-                UStringTrieResult result=branchNext(pos, node, uchar);
-                if(result==USTRINGTRIE_NO_MATCH) {
-                    return USTRINGTRIE_NO_MATCH;
+        int32_t ग्रन्थिः=*pos++;
+        प्रति(;;) {
+            यदि(ग्रन्थिः<k_Min_रैखिकम्_मेलनम्) {
+                UString_Trie_परिणाम परिणाम=branch_अग्र(pos, ग्रन्थिः, uchar);
+                यदि(परिणाम==USTRINGTRIE_NO_मेलनम्) {
+                    प्रत्यागम USTRINGTRIE_NO_मेलनम्;
                 }
                 // Fetch the next input unit, if there is one.
-                if(sLength<0) {
-                    if((uchar=*s++)==0) {
-                        return result;
+                यदि(s_दीर्घता<0) {
+                    यदि((uchar=*s++)==0) {
+                        प्रत्यागम परिणाम;
                     }
-                } else {
-                    if(sLength==0) {
-                        return result;
+                } अन्यथा {
+                    यदि(s_दीर्घता==0) {
+                        प्रत्यागम परिणाम;
                     }
                     uchar=*s++;
-                    --sLength;
+                    --s_दीर्घता;
                 }
-                if(result==USTRINGTRIE_FINAL_VALUE) {
+                यदि(परिणाम==USTRINGTRIE_FINAL_मानम्) {
                     // No further matching units.
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    प्रत्यागम USTRINGTRIE_NO_मेलनम्;
                 }
                 pos=pos_;  // branchNext() advanced pos and wrote it to pos_ .
-                node=*pos++;
-            } else if(node<kMinValueLead) {
+                ग्रन्थिः=*pos++;
+            } अन्यथा यदि(ग्रन्थिः<k_Min_मानम्_Lead) {
                 // Match length+1 units.
-                length=node-kMinLinearMatch;  // Actual match length minus 1.
-                if(uchar!=*pos) {
+                length=ग्रन्थिः-k_Min_रैखिकम्_मेलनम्;  // Actual match length minus 1.
+                यदि(uchar!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    प्रत्यागम USTRINGTRIE_NO_मेलनम्;
                 }
                 ++pos;
                 --length;
-                break;
-            } else if(node&kValueIsFinal) {
+                भङ्ग;
+            } अन्यथा यदि(ग्रन्थिः&k_मानम्_Is_Final) {
                 // No further matching units.
                 stop();
-                return USTRINGTRIE_NO_MATCH;
-            } else {
+                प्रत्यागम USTRINGTRIE_NO_मेलनम्;
+            } अन्यथा {
                 // Skip intermediate value.
-                pos=skipNodeValue(pos, node);
-                node&=kNodeTypeMask;
+                pos=skip_ग्रन्थिः_मानम्(pos, ग्रन्थिः);
+                ग्रन्थिः&=k_ग्रन्थिः_Type_आवरणम्;
             }
         }
     }
 }
 
-const char16_t*
-UCharsTrie::findUniqueValueFromBranch(const char16_t* pos U_LIFETIME_BOUND,
+ध्रुव char16_t*
+UCharsTrie::find_Unique_मानम्_From_Branch(ध्रुव char16_t* pos U_LIFETIME_BOUND,
                                       int32_t length,
-                                      UBool haveUniqueValue,
-                                      int32_t& uniqueValue) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+                                      UBool have_Unique_मानम्,
+                                      int32_t& unique_मानम्) {
+    यावत्(length>k_Max_Branch_रैखिकम्_Sub_ग्रन्थिः_दीर्घता) {
         ++pos;  // ignore the comparison unit
-        if(nullptr==findUniqueValueFromBranch(jumpByDelta(pos), length>>1, haveUniqueValue, uniqueValue)) {
-            return nullptr;
+        यदि(शून्यसूचकः==find_Unique_मानम्_From_Branch(jumpByDelta(pos), length>>1, have_Unique_मानम्, unique_मानम्)) {
+            प्रत्यागम शून्यसूचकः;
         }
         length=length-(length>>1);
         pos=skipDelta(pos);
     }
-    do {
+    कुरु {
         ++pos;  // ignore a comparison unit
         // handle its value
-        int32_t node=*pos++;
-        UBool isFinal = static_cast<UBool>(node >> 15);
-        node&=0x7fff;
-        int32_t value=readValue(pos, node);
-        pos=skipValue(pos, node);
-        if(isFinal) {
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return nullptr;
+        int32_t ग्रन्थिः=*pos++;
+        UBool isFinal = static_cast<UBool>(ग्रन्थिः >> 15);
+        ग्रन्थिः&=0x7fff;
+        int32_t value=read_मानम्(pos, ग्रन्थिः);
+        pos=skip_मानम्(pos, ग्रन्थिः);
+        यदि(isFinal) {
+            यदि(have_Unique_मानम्) {
+                यदि(value!=unique_मानम्) {
+                    प्रत्यागम शून्यसूचकः;
                 }
-            } else {
-                uniqueValue=value;
-                haveUniqueValue=true;
+            } अन्यथा {
+                unique_मानम्=value;
+                have_Unique_मानम्=सत्य;
             }
-        } else {
-            if(!findUniqueValue(pos+value, haveUniqueValue, uniqueValue)) {
-                return nullptr;
+        } अन्यथा {
+            यदि(!find_Unique_मानम्(pos+value, have_Unique_मानम्, unique_मानम्)) {
+                प्रत्यागम शून्यसूचकः;
             }
-            haveUniqueValue=true;
+            have_Unique_मानम्=सत्य;
         }
-    } while(--length>1);
-    return pos+1;  // ignore the last comparison unit
+    } यावत्(--length>1);
+    प्रत्यागम pos+1;  // ignore the last comparison unit
 }
 
 UBool
-UCharsTrie::findUniqueValue(const char16_t *pos, UBool haveUniqueValue, int32_t &uniqueValue) {
-    int32_t node=*pos++;
-    for(;;) {
-        if(node<kMinLinearMatch) {
-            if(node==0) {
-                node=*pos++;
+UCharsTrie::find_Unique_मानम्(ध्रुव char16_t *pos, UBool have_Unique_मानम्, int32_t &unique_मानम्) {
+    int32_t ग्रन्थिः=*pos++;
+    प्रति(;;) {
+        यदि(ग्रन्थिः<k_Min_रैखिकम्_मेलनम्) {
+            यदि(ग्रन्थिः==0) {
+                ग्रन्थिः=*pos++;
             }
-            pos=findUniqueValueFromBranch(pos, node+1, haveUniqueValue, uniqueValue);
-            if(pos==nullptr) {
-                return false;
+            pos=find_Unique_मानम्_From_Branch(pos, ग्रन्थिः+1, have_Unique_मानम्, unique_मानम्);
+            यदि(pos==शून्यसूचकः) {
+                प्रत्यागम असत्य;
             }
-            haveUniqueValue=true;
-            node=*pos++;
-        } else if(node<kMinValueLead) {
+            have_Unique_मानम्=सत्य;
+            ग्रन्थिः=*pos++;
+        } अन्यथा यदि(ग्रन्थिः<k_Min_मानम्_Lead) {
             // linear-match node
-            pos+=node-kMinLinearMatch+1;  // Ignore the match units.
-            node=*pos++;
-        } else {
-            UBool isFinal = static_cast<UBool>(node >> 15);
+            pos+=ग्रन्थिः-k_Min_रैखिकम्_मेलनम्+1;  // Ignore the match units.
+            ग्रन्थिः=*pos++;
+        } अन्यथा {
+            UBool isFinal = static_cast<UBool>(ग्रन्थिः >> 15);
             int32_t value;
-            if(isFinal) {
-                value=readValue(pos, node&0x7fff);
-            } else {
-                value=readNodeValue(pos, node);
+            यदि(isFinal) {
+                value=read_मानम्(pos, ग्रन्थिः&0x7fff);
+            } अन्यथा {
+                value=read_ग्रन्थिः_मानम्(pos, ग्रन्थिः);
             }
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return false;
+            यदि(have_Unique_मानम्) {
+                यदि(value!=unique_मानम्) {
+                    प्रत्यागम असत्य;
                 }
-            } else {
-                uniqueValue=value;
-                haveUniqueValue=true;
+            } अन्यथा {
+                unique_मानम्=value;
+                have_Unique_मानम्=सत्य;
             }
-            if(isFinal) {
-                return true;
+            यदि(isFinal) {
+                प्रत्यागम सत्य;
             }
-            pos=skipNodeValue(pos, node);
-            node&=kNodeTypeMask;
+            pos=skip_ग्रन्थिः_मानम्(pos, ग्रन्थिः);
+            ग्रन्थिः&=k_ग्रन्थिः_Type_आवरणम्;
         }
     }
 }
 
 int32_t
-UCharsTrie::getNextUChars(Appendable &out) const {
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return 0;
+UCharsTrie::get_अग्र_UChars(Appendable &out) ध्रुव {
+    ध्रुव char16_t *pos=pos_;
+    यदि(pos==शून्यसूचकः) {
+        प्रत्यागम 0;
     }
-    if(remainingMatchLength_>=0) {
-        out.appendCodeUnit(*pos);  // Next unit of a pending linear-match node.
-        return 1;
+    यदि(remaining_मेलनम्_दीर्घता>=0) {
+        out.append_संहिता_Unit(*pos);  // Next unit of a pending linear-match node.
+        प्रत्यागम 1;
     }
-    int32_t node=*pos++;
-    if(node>=kMinValueLead) {
-        if(node&kValueIsFinal) {
-            return 0;
-        } else {
-            pos=skipNodeValue(pos, node);
-            node&=kNodeTypeMask;
+    int32_t ग्रन्थिः=*pos++;
+    यदि(ग्रन्थिः>=k_Min_मानम्_Lead) {
+        यदि(ग्रन्थिः&k_मानम्_Is_Final) {
+            प्रत्यागम 0;
+        } अन्यथा {
+            pos=skip_ग्रन्थिः_मानम्(pos, ग्रन्थिः);
+            ग्रन्थिः&=k_ग्रन्थिः_Type_आवरणम्;
         }
     }
-    if(node<kMinLinearMatch) {
-        if(node==0) {
-            node=*pos++;
+    यदि(ग्रन्थिः<k_Min_रैखिकम्_मेलनम्) {
+        यदि(ग्रन्थिः==0) {
+            ग्रन्थिः=*pos++;
         }
-        out.reserveAppendCapacity(++node);
-        getNextBranchUChars(pos, node, out);
-        return node;
-    } else {
+        out.reserve_Append_क्षमता(++ग्रन्थिः);
+        get_अग्र_Branch_UChars(pos, ग्रन्थिः, out);
+        प्रत्यागम ग्रन्थिः;
+    } अन्यथा {
         // First unit of the linear-match node.
-        out.appendCodeUnit(*pos);
-        return 1;
+        out.append_संहिता_Unit(*pos);
+        प्रत्यागम 1;
     }
 }
 
-void
-UCharsTrie::getNextBranchUChars(const char16_t *pos, int32_t length, Appendable &out) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+शून्य
+UCharsTrie::get_अग्र_Branch_UChars(ध्रुव char16_t *pos, int32_t length, Appendable &out) {
+    यावत्(length>k_Max_Branch_रैखिकम्_Sub_ग्रन्थिः_दीर्घता) {
         ++pos;  // ignore the comparison unit
-        getNextBranchUChars(jumpByDelta(pos), length>>1, out);
+        get_अग्र_Branch_UChars(jumpByDelta(pos), length>>1, out);
         length=length-(length>>1);
         pos=skipDelta(pos);
     }
-    do {
-        out.appendCodeUnit(*pos++);
-        pos=skipValue(pos);
-    } while(--length>1);
-    out.appendCodeUnit(*pos);
+    कुरु {
+        out.append_संहिता_Unit(*pos++);
+        pos=skip_मानम्(pos);
+    } यावत्(--length>1);
+    out.append_संहिता_Unit(*pos);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः

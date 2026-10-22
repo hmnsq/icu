@@ -18,12 +18,12 @@
 */
 
 
-#ifndef ICUPLUGIMP_H
-#define ICUPLUGIMP_H
+#यदि_अपरिभाषितम् ICUPLUGIMP_H
+#परिभाषय ICUPLUGIMP_H
 
-#include "unicode/icuplug.h"
+#अन्तर्भाव "unicode/icuplug.h"
 
-#if UCONFIG_ENABLE_PLUGINS
+#यदि UCONFIG_ENABLE_PLUGINS
 
 /*========================*/
 /** @{ Library Manipulation  
@@ -36,8 +36,8 @@
  * @return the library pointer, or NULL
  * @internal internal use only
  */
-U_CAPI void * U_EXPORT2
-uplug_openLibrary(const char *libName, UErrorCode *status);
+U_CAPI शून्य * U_EXPORT2
+uplug_openLibrary(ध्रुव वर्ण *libName, UError_संहिता *स्थितिः);
 
 /**
  * Close a library, if its reference count is 0
@@ -45,8 +45,8 @@ uplug_openLibrary(const char *libName, UErrorCode *status);
  * @param status error code
  * @internal internal use only
  */
-U_CAPI void U_EXPORT2
-uplug_closeLibrary(void *lib, UErrorCode *status);
+U_CAPI शून्य U_EXPORT2
+uplug_closeLibrary(शून्य *lib, UError_संहिता *स्थितिः);
 
 /**
  * Get a library's name, or NULL if not found.
@@ -55,8 +55,8 @@ uplug_closeLibrary(void *lib, UErrorCode *status);
  * @return the library name, or NULL if not found.
  * @internal internal use only
  */
-U_CAPI  char * U_EXPORT2
-uplug_findLibrary(void *lib, UErrorCode *status);
+U_CAPI  वर्ण * U_EXPORT2
+uplug_findLibrary(शून्य *lib, UError_संहिता *स्थितिः);
 
 /** @} */
 
@@ -69,25 +69,25 @@ uplug_findLibrary(void *lib, UErrorCode *status);
  * @param status error result
  * @internal - Internal use only.
  */
-U_CAPI void U_EXPORT2
-uplug_init(UErrorCode *status);
+U_CAPI शून्य U_EXPORT2
+uplug_init(UError_संहिता *स्थितिः);
 
 /**
  * Get raw plug N
  * @internal - Internal use only
  */ 
-U_CAPI UPlugData* U_EXPORT2
-uplug_getPlugInternal(int32_t n);
+U_CAPI UPlug_दत्त* U_EXPORT2
+uplug_get_Plug_आन्तरिकम्(int32_t n);
 
 /**
  * Get the name of the plugin file. 
  * @internal - Internal use only.
  */
-U_CAPI const char* U_EXPORT2
-uplug_getPluginFile(void);
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+uplug_getPluginFile(शून्य);
 
 /** @} */
 
-#endif
+#यदि_अन्तः
 
-#endif
+#यदि_अन्तः

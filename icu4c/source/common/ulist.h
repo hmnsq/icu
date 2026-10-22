@@ -7,44 +7,44 @@
 ******************************************************************************
 */
 
-#ifndef ULIST_H
-#define ULIST_H
+#यदि_अपरिभाषितम् ULIST_H
+#परिभाषय ULIST_H
 
-#include "unicode/utypes.h"
-#include "unicode/uenum.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/uenum.h"
 
-struct UList;
-typedef struct UList UList;
+संरचना UList;
+प्रकारनिर्देश संरचना UList UList;
 
-U_CAPI UList * U_EXPORT2 ulist_createEmptyList(UErrorCode *status);
+U_CAPI UList * U_EXPORT2 ulist_create_रिक्तानि_List(UError_संहिता *स्थितिः);
 
-U_CAPI void U_EXPORT2 ulist_addItemEndList(UList *list, const void *data, UBool forceDelete, UErrorCode *status);
+U_CAPI शून्य U_EXPORT2 ulist_सङ्कलय_Item_अन्तः_List(UList *list, ध्रुव शून्य *दत्त, UBool forceDelete, UError_संहिता *स्थितिः);
 
-U_CAPI void U_EXPORT2 ulist_addItemBeginList(UList *list, const void *data, UBool forceDelete, UErrorCode *status);
+U_CAPI शून्य U_EXPORT2 ulist_सङ्कलय_Item_Begin_List(UList *list, ध्रुव शून्य *दत्त, UBool forceDelete, UError_संहिता *स्थितिः);
 
-U_CAPI UBool U_EXPORT2 ulist_containsString(const UList *list, const char *data, int32_t length);
+U_CAPI UBool U_EXPORT2 ulist_अन्तर्भवति_String(ध्रुव UList *list, ध्रुव वर्ण *दत्त, int32_t दीर्घता);
 
-U_CAPI UBool U_EXPORT2 ulist_removeString(UList *list, const char *data);
+U_CAPI UBool U_EXPORT2 ulist_removeString(UList *list, ध्रुव वर्ण *दत्त);
 
-U_CAPI void *U_EXPORT2 ulist_getNext(UList *list);
+U_CAPI शून्य *U_EXPORT2 ulist_get_अग्र(UList *list);
 
-U_CAPI int32_t U_EXPORT2 ulist_getListSize(const UList *list);
+U_CAPI int32_t U_EXPORT2 ulist_get_List_आकार(ध्रुव UList *list);
 
-U_CAPI void U_EXPORT2 ulist_resetList(UList *list);
+U_CAPI शून्य U_EXPORT2 ulist_resetList(UList *list);
 
-U_CAPI void U_EXPORT2 ulist_deleteList(UList *list);
+U_CAPI शून्य U_EXPORT2 ulist_deleteList(UList *list);
 
 /*
  * The following are for use when creating UEnumeration object backed by UList.
  */
-U_CAPI void U_EXPORT2 ulist_close_keyword_values_iterator(UEnumeration *en);
+U_CAPI शून्य U_EXPORT2 ulist_close_keyword_मानानि_iterator(UEnumeration *en);
 
-U_CAPI int32_t U_EXPORT2 ulist_count_keyword_values(UEnumeration *en, UErrorCode *status);
+U_CAPI int32_t U_EXPORT2 ulist_गणनम्_keyword_मानानि(UEnumeration *en, UError_संहिता *स्थितिः);
 
-U_CAPI const char * U_EXPORT2 ulist_next_keyword_value(UEnumeration* en, int32_t *resultLength, UErrorCode* status);
+U_CAPI ध्रुव वर्ण * U_EXPORT2 ulist_अग्र_keyword_मानम्(UEnumeration* en, int32_t *परिणाम_दीर्घता, UError_संहिता* स्थितिः);
 
-U_CAPI void U_EXPORT2 ulist_reset_keyword_values_iterator(UEnumeration* en, UErrorCode* status);
+U_CAPI शून्य U_EXPORT2 ulist_reset_keyword_मानानि_iterator(UEnumeration* en, UError_संहिता* स्थितिः);
 
 U_CAPI UList * U_EXPORT2 ulist_getListFromEnum(UEnumeration *en);
 
-#endif
+#यदि_अन्तः

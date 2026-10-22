@@ -7,21 +7,21 @@
 ******************************************************************************
 * sharedobject.cpp
 */
-#include "sharedobject.h"
-#include "mutex.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "unifiedcache.h"
+#अन्तर्भाव "sharedobject.h"
+#अन्तर्भाव "mutex.h"
+#अन्तर्भाव "uassert.h"
+#अन्तर्भाव "umutex.h"
+#अन्तर्भाव "unifiedcache.h"
 
 U_NAMESPACE_BEGIN
 
 SharedObject::~SharedObject() {}
 
-UnifiedCacheBase::~UnifiedCacheBase() {}
+Unified_Cache_आधारः::~Unified_Cache_आधारः() {}
 
-void
-SharedObject::addRef() const {
-    umtx_atomic_inc(&hardRefCount);
+शून्य
+SharedObject::सङ्कलय_Ref() ध्रुव {
+    umtx_atomic_inc(&hard_Ref_गणनम्);
 }
 
 // removeRef Decrement the reference count and delete if it is zero.
@@ -32,31 +32,31 @@ SharedObject::addRef() const {
 //           a cache eviction cycle concurrently.
 //           NO ACCESS TO *this PERMITTED AFTER REFERENCE COUNT == 0 for cached objects.
 //           THE OBJECT MAY ALREADY BE GONE.
-void
-SharedObject::removeRef() const {
-    const UnifiedCacheBase *cache = this->cachePtr;
-    int32_t updatedRefCount = umtx_atomic_dec(&hardRefCount);
-    U_ASSERT(updatedRefCount >= 0);
-    if (updatedRefCount == 0) {
-        if (cache) {
+शून्य
+SharedObject::removeRef() ध्रुव {
+    ध्रुव Unified_Cache_आधारः *cache = एतत्->cachePtr;
+    int32_t updated_Ref_गणनम् = umtx_atomic_dec(&hard_Ref_गणनम्);
+    U_ASSERT(updated_Ref_गणनम् >= 0);
+    यदि (updated_Ref_गणनम् == 0) {
+        यदि (cache) {
             cache->handleUnreferencedObject();
-        } else {
-            delete this;
+        } अन्यथा {
+            विलोपय एतत्;
         }
     }
 }
 
 
 int32_t
-SharedObject::getRefCount() const {
-    return umtx_loadAcquire(hardRefCount);
+SharedObject::get_Ref_गणनम्() ध्रुव {
+    प्रत्यागम umtx_आरोपय_Acquire(hard_Ref_गणनम्);
 }
 
-void
-SharedObject::deleteIfZeroRefCount() const {
-    if (this->cachePtr == nullptr && getRefCount() == 0) {
-        delete this;
+शून्य
+SharedObject::delete_If_Zero_Ref_गणनम्() ध्रुव {
+    यदि (एतत्->cachePtr == शून्यसूचकः && get_Ref_गणनम्() == 0) {
+        विलोपय एतत्;
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः

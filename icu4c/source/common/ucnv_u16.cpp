@@ -16,18 +16,18 @@
 *   UTF-16 converter implementation. Used to be in ucnv_utf.c.
 */
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#यदि !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/uversion.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "cmemory.h"
+#अन्तर्भाव "unicode/ucnv.h"
+#अन्तर्भाव "unicode/uversion.h"
+#अन्तर्भाव "ucnv_bld.h"
+#अन्तर्भाव "ucnv_cnv.h"
+#अन्तर्भाव "cmemory.h"
 
-enum {
-    UCNV_NEED_TO_WRITE_BOM=1
+गणना {
+    UCNV_NEED_गन्तव्यम्_WRITE_BOM=1
 };
 
 U_CDECL_BEGIN
@@ -35,64 +35,64 @@ U_CDECL_BEGIN
  * The UTF-16 toUnicode implementation is also used for the Java-specific
  * "with BOM" variants of UTF-16BE and UTF-16LE.
  */
-static void  U_CALLCONV
-_UTF16ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                           UErrorCode *pErrorCode);
+स्थिर शून्य  U_CALLCONV
+UTF16_गन्तव्यम्_Unicode_With_Offsets(UConverter_गन्तव्यम्_Unicode_तर्काः *p_तर्काः,
+                           UError_संहिता *p_Error_संहिता);
 
 /* UTF-16BE ----------------------------------------------------------------- */
 
-#if U_IS_BIG_ENDIAN
+#यदि U_IS_BIG_ENDIAN
 #   define _UTF16PEFromUnicodeWithOffsets   _UTF16BEFromUnicodeWithOffsets
-#else
+#अन्यथा
 #   define _UTF16PEFromUnicodeWithOffsets   _UTF16LEFromUnicodeWithOffsets
-#endif
+#यदि_अन्तः
 
 
-static void  U_CALLCONV
-_UTF16BEFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                               UErrorCode *pErrorCode) {
+स्थिर शून्य  U_CALLCONV
+_UTF16BEFromUnicodeWithOffsets(UConverter_From_Unicode_तर्काः *p_तर्काः,
+                               UError_संहिता *p_Error_संहिता) {
     UConverter *cnv;
-    const char16_t *source;
-    char *target;
+    ध्रुव char16_t *source;
+    वर्ण *target;
     int32_t *offsets;
 
-    uint32_t targetCapacity, length, sourceIndex;
+    uint32_t target_क्षमता, length, source_सूचकांक;
     char16_t c, trail;
-    char overflow[4];
+    वर्ण अतिप्रवाहः[4];
 
-    source=pArgs->source;
-    length=(int32_t)(pArgs->sourceLimit-source);
-    if(length<=0) {
+    source=p_तर्काः->source;
+    length=(int32_t)(p_तर्काः->source_सीमा-source);
+    यदि(length<=0) {
         /* no input, nothing to do */
-        return;
+        प्रत्यागम;
     }
 
-    cnv=pArgs->converter;
+    cnv=p_तर्काः->converter;
 
     /* write the BOM if necessary */
-    if(cnv->fromUnicodeStatus==UCNV_NEED_TO_WRITE_BOM) {
-        static const char bom[]={ (char)0xfeu, (char)0xffu };
-        ucnv_fromUWriteBytes(cnv,
+    यदि(cnv->from_Unicode_स्थितिः==UCNV_NEED_गन्तव्यम्_WRITE_BOM) {
+        स्थिर ध्रुव वर्ण bom[]={ (वर्ण)0xfeu, (वर्ण)0xffu };
+        ucnv_from_UWrite_अष्टकानि(cnv,
                              bom, 2,
-                             &pArgs->target, pArgs->targetLimit,
-                             &pArgs->offsets, -1,
-                             pErrorCode);
-        cnv->fromUnicodeStatus=0;
+                             &p_तर्काः->target, p_तर्काः->target_सीमा,
+                             &p_तर्काः->offsets, -1,
+                             p_Error_संहिता);
+        cnv->from_Unicode_स्थितिः=0;
     }
 
-    target=pArgs->target;
-    if(target >= pArgs->targetLimit) {
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-        return;
+    target=p_तर्काः->target;
+    यदि(target >= p_तर्काः->target_सीमा) {
+        *p_Error_संहिता=U_बफर_अतिप्रवाहः_ERROR;
+        प्रत्यागम;
     }
 
-    targetCapacity=(uint32_t)(pArgs->targetLimit-target);
-    offsets=pArgs->offsets;
-    sourceIndex=0;
+    target_क्षमता=(uint32_t)(p_तर्काः->target_सीमा-target);
+    offsets=p_तर्काः->offsets;
+    source_सूचकांक=0;
 
     /* c!=0 indicates in several places outside the main loops that a surrogate was found */
 
-    if((c=(char16_t)cnv->fromUChar32)!=0 && U16_IS_TRAIL(trail=*source) && targetCapacity>=4) {
+    यदि((c=(char16_t)cnv->fromUChar32)!=0 && U16_IS_TRAIL(trail=*source) && target_क्षमता>=4) {
         /* the last buffer ended with a lead surrogate, output the surrogate pair */
         ++source;
         --length;
@@ -101,36 +101,36 @@ _UTF16BEFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
         target[2]=(uint8_t)(trail>>8);
         target[3]=(uint8_t)trail;
         target+=4;
-        targetCapacity-=4;
-        if(offsets!=nullptr) {
+        target_क्षमता-=4;
+        यदि(offsets!=शून्यसूचकः) {
             *offsets++=-1;
             *offsets++=-1;
             *offsets++=-1;
             *offsets++=-1;
         }
-        sourceIndex=1;
+        source_सूचकांक=1;
         cnv->fromUChar32=c=0;
     }
 
-    if(c==0) {
+    यदि(c==0) {
         /* copy an even number of bytes for complete UChars */
         uint32_t count=2*length;
-        if(count>targetCapacity) {
-            count=targetCapacity&~1;
+        यदि(count>target_क्षमता) {
+            count=target_क्षमता&~1;
         }
         /* count is even */
-        targetCapacity-=count;
+        target_क्षमता-=count;
         count>>=1;
         length-=count;
 
-        if(offsets==nullptr) {
-            while(count>0) {
+        यदि(offsets==शून्यसूचकः) {
+            यावत्(count>0) {
                 c=*source++;
-                if(U16_IS_SINGLE(c)) {
+                यदि(U16_IS_SINGLE(c)) {
                     target[0]=(uint8_t)(c>>8);
                     target[1]=(uint8_t)c;
                     target+=2;
-                } else if(U16_IS_SURROGATE_LEAD(c) && count>=2 && U16_IS_TRAIL(trail=*source)) {
+                } अन्यथा यदि(U16_IS_SURROGATE_LEAD(c) && count>=2 && U16_IS_TRAIL(trail=*source)) {
                     ++source;
                     --count;
                     target[0]=(uint8_t)(c>>8);
@@ -138,21 +138,21 @@ _UTF16BEFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                     target[2]=(uint8_t)(trail>>8);
                     target[3]=(uint8_t)trail;
                     target+=4;
-                } else {
-                    break;
+                } अन्यथा {
+                    भङ्ग;
                 }
                 --count;
             }
-        } else {
-            while(count>0) {
+        } अन्यथा {
+            यावत्(count>0) {
                 c=*source++;
-                if(U16_IS_SINGLE(c)) {
+                यदि(U16_IS_SINGLE(c)) {
                     target[0]=(uint8_t)(c>>8);
                     target[1]=(uint8_t)c;
                     target+=2;
-                    *offsets++=sourceIndex;
-                    *offsets++=sourceIndex++;
-                } else if(U16_IS_SURROGATE_LEAD(c) && count>=2 && U16_IS_TRAIL(trail=*source)) {
+                    *offsets++=source_सूचकांक;
+                    *offsets++=source_सूचकांक++;
+                } अन्यथा यदि(U16_IS_SURROGATE_LEAD(c) && count>=2 && U16_IS_TRAIL(trail=*source)) {
                     ++source;
                     --count;
                     target[0]=(uint8_t)(c>>8);
@@ -160,361 +160,361 @@ _UTF16BEFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                     target[2]=(uint8_t)(trail>>8);
                     target[3]=(uint8_t)trail;
                     target+=4;
-                    *offsets++=sourceIndex;
-                    *offsets++=sourceIndex;
-                    *offsets++=sourceIndex;
-                    *offsets++=sourceIndex;
-                    sourceIndex+=2;
-                } else {
-                    break;
+                    *offsets++=source_सूचकांक;
+                    *offsets++=source_सूचकांक;
+                    *offsets++=source_सूचकांक;
+                    *offsets++=source_सूचकांक;
+                    source_सूचकांक+=2;
+                } अन्यथा {
+                    भङ्ग;
                 }
                 --count;
             }
         }
 
-        if(count==0) {
+        यदि(count==0) {
             /* done with the loop for complete UChars */
-            if(length>0 && targetCapacity>0) {
+            यदि(length>0 && target_क्षमता>0) {
                 /*
                  * there is more input and some target capacity -
                  * it must be targetCapacity==1 because otherwise
                  * the above would have copied more;
                  * prepare for overflow output
                  */
-                if(U16_IS_SINGLE(c=*source++)) {
-                    overflow[0]=(char)(c>>8);
-                    overflow[1]=(char)c;
+                यदि(U16_IS_SINGLE(c=*source++)) {
+                    अतिप्रवाहः[0]=(वर्ण)(c>>8);
+                    अतिप्रवाहः[1]=(वर्ण)c;
                     length=2; /* 2 bytes to output */
                     c=0;
                 /* } else { keep c for surrogate handling, length will be set there */
                 }
-            } else {
+            } अन्यथा {
                 length=0;
                 c=0;
             }
-        } else {
+        } अन्यथा {
             /* keep c for surrogate handling, length will be set there */
-            targetCapacity+=2*count;
+            target_क्षमता+=2*count;
         }
-    } else {
+    } अन्यथा {
         length=0; /* from here on, length counts the bytes in overflow[] */
     }
     
-    if(c!=0) {
+    यदि(c!=0) {
         /*
          * c is a surrogate, and
          * - source or target too short
          * - or the surrogate is unmatched
          */
         length=0;
-        if(U16_IS_SURROGATE_LEAD(c)) {
-            if(source<pArgs->sourceLimit) {
-                if(U16_IS_TRAIL(trail=*source)) {
+        यदि(U16_IS_SURROGATE_LEAD(c)) {
+            यदि(source<p_तर्काः->source_सीमा) {
+                यदि(U16_IS_TRAIL(trail=*source)) {
                     /* output the surrogate pair, will overflow (see conditions comment above) */
                     ++source;
-                    overflow[0]=(char)(c>>8);
-                    overflow[1]=(char)c;
-                    overflow[2]=(char)(trail>>8);
-                    overflow[3]=(char)trail;
+                    अतिप्रवाहः[0]=(वर्ण)(c>>8);
+                    अतिप्रवाहः[1]=(वर्ण)c;
+                    अतिप्रवाहः[2]=(वर्ण)(trail>>8);
+                    अतिप्रवाहः[3]=(वर्ण)trail;
                     length=4; /* 4 bytes to output */
                     c=0;
-                } else {
+                } अन्यथा {
                     /* unmatched lead surrogate */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                    *p_Error_संहिता=U_ILLEGAL_CHAR_प्राप्तम्;
                 }
-            } else {
+            } अन्यथा {
                 /* see if the trail surrogate is in the next buffer */
             }
-        } else {
+        } अन्यथा {
             /* unmatched trail surrogate */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+            *p_Error_संहिता=U_ILLEGAL_CHAR_प्राप्तम्;
         }
         cnv->fromUChar32=c;
     }
 
-    if(length>0) {
+    यदि(length>0) {
         /* output length bytes with overflow (length>targetCapacity>0) */
-        ucnv_fromUWriteBytes(cnv,
-                             overflow, length,
-                             &target, pArgs->targetLimit,
-                             &offsets, sourceIndex,
-                             pErrorCode);
-        targetCapacity = static_cast<uint32_t>(pArgs->targetLimit - target);
+        ucnv_from_UWrite_अष्टकानि(cnv,
+                             अतिप्रवाहः, length,
+                             &target, p_तर्काः->target_सीमा,
+                             &offsets, source_सूचकांक,
+                             p_Error_संहिता);
+        target_क्षमता = static_cast<uint32_t>(p_तर्काः->target_सीमा - target);
     }
 
-    if(U_SUCCESS(*pErrorCode) && source<pArgs->sourceLimit && targetCapacity==0) {
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+    यदि(U_SUCCESS(*p_Error_संहिता) && source<p_तर्काः->source_सीमा && target_क्षमता==0) {
+        *p_Error_संहिता=U_बफर_अतिप्रवाहः_ERROR;
     }
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target = target;
-    pArgs->offsets=offsets;
+    p_तर्काः->source=source;
+    p_तर्काः->target = target;
+    p_तर्काः->offsets=offsets;
 }
 
-static void  U_CALLCONV
-_UTF16BEToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                             UErrorCode *pErrorCode) {
+स्थिर शून्य  U_CALLCONV
+_UTF16BEToUnicodeWithOffsets(UConverter_गन्तव्यम्_Unicode_तर्काः *p_तर्काः,
+                             UError_संहिता *p_Error_संहिता) {
     UConverter *cnv;
-    const uint8_t *source;
+    ध्रुव uint8_t *source;
     char16_t *target;
     int32_t *offsets;
 
-    uint32_t targetCapacity, length, count, sourceIndex;
+    uint32_t target_क्षमता, length, count, source_सूचकांक;
     char16_t c, trail;
 
-    if(pArgs->converter->mode<8) {
-        _UTF16ToUnicodeWithOffsets(pArgs, pErrorCode);
-        return;
+    यदि(p_तर्काः->converter->बहुलकम्<8) {
+        UTF16_गन्तव्यम्_Unicode_With_Offsets(p_तर्काः, p_Error_संहिता);
+        प्रत्यागम;
     }
 
-    cnv=pArgs->converter;
-    source=(const uint8_t *)pArgs->source;
-    length=(int32_t)((const uint8_t *)pArgs->sourceLimit-source);
-    if(length<=0 && cnv->toUnicodeStatus==0) {
+    cnv=p_तर्काः->converter;
+    source=(ध्रुव uint8_t *)p_तर्काः->source;
+    length=(int32_t)((ध्रुव uint8_t *)p_तर्काः->source_सीमा-source);
+    यदि(length<=0 && cnv->गन्तव्यम्_Unicode_स्थितिः==0) {
         /* no input, nothing to do */
-        return;
+        प्रत्यागम;
     }
 
-    target=pArgs->target;
-    if(target >= pArgs->targetLimit) {
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-        return;
+    target=p_तर्काः->target;
+    यदि(target >= p_तर्काः->target_सीमा) {
+        *p_Error_संहिता=U_बफर_अतिप्रवाहः_ERROR;
+        प्रत्यागम;
     }
 
-    targetCapacity=(uint32_t)(pArgs->targetLimit-target);
-    offsets=pArgs->offsets;
-    sourceIndex=0;
+    target_क्षमता=(uint32_t)(p_तर्काः->target_सीमा-target);
+    offsets=p_तर्काः->offsets;
+    source_सूचकांक=0;
     c=0;
 
     /* complete a partial char16_t or pair from the last call */
-    if(cnv->toUnicodeStatus!=0) {
+    यदि(cnv->गन्तव्यम्_Unicode_स्थितिः!=0) {
         /*
          * special case: single byte from a previous buffer,
          * where the byte turned out not to belong to a trail surrogate
          * and the preceding, unmatched lead surrogate was put into toUBytes[]
          * for error handling
          */
-        cnv->toUBytes[0]=(uint8_t)cnv->toUnicodeStatus;
-        cnv->toULength=1;
-        cnv->toUnicodeStatus=0;
+        cnv->गन्तव्यम्_UBytes[0]=(uint8_t)cnv->गन्तव्यम्_Unicode_स्थितिः;
+        cnv->गन्तव्यम्_ULength=1;
+        cnv->गन्तव्यम्_Unicode_स्थितिः=0;
     }
-    if((count=cnv->toULength)!=0) {
-        uint8_t *p=cnv->toUBytes;
-        do {
+    यदि((count=cnv->गन्तव्यम्_ULength)!=0) {
+        uint8_t *p=cnv->गन्तव्यम्_UBytes;
+        कुरु {
             p[count++]=*source++;
-            ++sourceIndex;
+            ++source_सूचकांक;
             --length;
-            if(count==2) {
+            यदि(count==2) {
                 c=((char16_t)p[0]<<8)|p[1];
-                if(U16_IS_SINGLE(c)) {
+                यदि(U16_IS_SINGLE(c)) {
                     /* output the BMP code point */
                     *target++=c;
-                    if(offsets!=nullptr) {
+                    यदि(offsets!=शून्यसूचकः) {
                         *offsets++=-1;
                     }
-                    --targetCapacity;
+                    --target_क्षमता;
                     count=0;
                     c=0;
-                    break;
-                } else if(U16_IS_SURROGATE_LEAD(c)) {
+                    भङ्ग;
+                } अन्यथा यदि(U16_IS_SURROGATE_LEAD(c)) {
                     /* continue collecting bytes for the trail surrogate */
                     c=0; /* avoid unnecessary surrogate handling below */
-                } else {
+                } अन्यथा {
                     /* fall through to error handling for an unmatched trail surrogate */
-                    break;
+                    भङ्ग;
                 }
-            } else if(count==4) {
+            } अन्यथा यदि(count==4) {
                 c=((char16_t)p[0]<<8)|p[1];
                 trail=((char16_t)p[2]<<8)|p[3];
-                if(U16_IS_TRAIL(trail)) {
+                यदि(U16_IS_TRAIL(trail)) {
                     /* output the surrogate pair */
                     *target++=c;
-                    if(targetCapacity>=2) {
+                    यदि(target_क्षमता>=2) {
                         *target++=trail;
-                        if(offsets!=nullptr) {
+                        यदि(offsets!=शून्यसूचकः) {
                             *offsets++=-1;
                             *offsets++=-1;
                         }
-                        targetCapacity-=2;
-                    } else /* targetCapacity==1 */ {
-                        targetCapacity=0;
-                        cnv->UCharErrorBuffer[0]=trail;
-                        cnv->UCharErrorBufferLength=1;
-                        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                        target_क्षमता-=2;
+                    } अन्यथा /* targetCapacity==1 */ {
+                        target_क्षमता=0;
+                        cnv->UChar_Error_बफर[0]=trail;
+                        cnv->UChar_Error_बफर_दीर्घता=1;
+                        *p_Error_संहिता=U_बफर_अतिप्रवाहः_ERROR;
                     }
                     count=0;
                     c=0;
-                    break;
-                } else {
+                    भङ्ग;
+                } अन्यथा {
                     /* unmatched lead surrogate, handle here for consistent toUBytes[] */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                    *p_Error_संहिता=U_ILLEGAL_CHAR_प्राप्तम्;
 
                     /* back out reading the code unit after it */
-                    if(((const uint8_t *)pArgs->source-source)>=2) {
+                    यदि(((ध्रुव uint8_t *)p_तर्काः->source-source)>=2) {
                         source-=2;
-                    } else {
+                    } अन्यथा {
                         /*
                          * if the trail unit's first byte was in a previous buffer, then
                          * we need to put it into a special place because toUBytes[] will be
                          * used for the lead unit's bytes
                          */
-                        cnv->toUnicodeStatus=0x100|p[2];
+                        cnv->गन्तव्यम्_Unicode_स्थितिः=0x100|p[2];
                         --source;
                     }
-                    cnv->toULength=2;
+                    cnv->गन्तव्यम्_ULength=2;
 
                     /* write back the updated pointers */
-                    pArgs->source=(const char *)source;
-                    pArgs->target=target;
-                    pArgs->offsets=offsets;
-                    return;
+                    p_तर्काः->source=(ध्रुव वर्ण *)source;
+                    p_तर्काः->target=target;
+                    p_तर्काः->offsets=offsets;
+                    प्रत्यागम;
                 }
             }
-        } while(length>0);
-        cnv->toULength=(int8_t)count;
+        } यावत्(length>0);
+        cnv->गन्तव्यम्_ULength=(int8_t)count;
     }
 
     /* copy an even number of bytes for complete UChars */
-    count=2*targetCapacity;
-    if(count>length) {
+    count=2*target_क्षमता;
+    यदि(count>length) {
         count=length&~1;
     }
-    if(c==0 && count>0) {
+    यदि(c==0 && count>0) {
         length-=count;
         count>>=1;
-        targetCapacity-=count;
-        if(offsets==nullptr) {
-            do {
+        target_क्षमता-=count;
+        यदि(offsets==शून्यसूचकः) {
+            कुरु {
                 c=((char16_t)source[0]<<8)|source[1];
                 source+=2;
-                if(U16_IS_SINGLE(c)) {
+                यदि(U16_IS_SINGLE(c)) {
                     *target++=c;
-                } else if(U16_IS_SURROGATE_LEAD(c) && count>=2 &&
+                } अन्यथा यदि(U16_IS_SURROGATE_LEAD(c) && count>=2 &&
                           U16_IS_TRAIL(trail=((char16_t)source[0]<<8)|source[1])
                 ) {
                     source+=2;
                     --count;
                     *target++=c;
                     *target++=trail;
-                } else {
-                    break;
+                } अन्यथा {
+                    भङ्ग;
                 }
-            } while(--count>0);
-        } else {
-            do {
+            } यावत्(--count>0);
+        } अन्यथा {
+            कुरु {
                 c=((char16_t)source[0]<<8)|source[1];
                 source+=2;
-                if(U16_IS_SINGLE(c)) {
+                यदि(U16_IS_SINGLE(c)) {
                     *target++=c;
-                    *offsets++=sourceIndex;
-                    sourceIndex+=2;
-                } else if(U16_IS_SURROGATE_LEAD(c) && count>=2 &&
+                    *offsets++=source_सूचकांक;
+                    source_सूचकांक+=2;
+                } अन्यथा यदि(U16_IS_SURROGATE_LEAD(c) && count>=2 &&
                           U16_IS_TRAIL(trail=((char16_t)source[0]<<8)|source[1])
                 ) {
                     source+=2;
                     --count;
                     *target++=c;
                     *target++=trail;
-                    *offsets++=sourceIndex;
-                    *offsets++=sourceIndex;
-                    sourceIndex+=4;
-                } else {
-                    break;
+                    *offsets++=source_सूचकांक;
+                    *offsets++=source_सूचकांक;
+                    source_सूचकांक+=4;
+                } अन्यथा {
+                    भङ्ग;
                 }
-            } while(--count>0);
+            } यावत्(--count>0);
         }
 
-        if(count==0) {
+        यदि(count==0) {
             /* done with the loop for complete UChars */
             c=0;
-        } else {
+        } अन्यथा {
             /* keep c for surrogate handling, trail will be set there */
             length+=2*(count-1); /* one more byte pair was consumed than count decremented */
-            targetCapacity+=count;
+            target_क्षमता+=count;
         }
     }
 
-    if(c!=0) {
+    यदि(c!=0) {
         /*
          * c is a surrogate, and
          * - source or target too short
          * - or the surrogate is unmatched
          */
-        cnv->toUBytes[0]=(uint8_t)(c>>8);
-        cnv->toUBytes[1]=(uint8_t)c;
-        cnv->toULength=2;
+        cnv->गन्तव्यम्_UBytes[0]=(uint8_t)(c>>8);
+        cnv->गन्तव्यम्_UBytes[1]=(uint8_t)c;
+        cnv->गन्तव्यम्_ULength=2;
 
-        if(U16_IS_SURROGATE_LEAD(c)) {
-            if(length>=2) {
-                if(U16_IS_TRAIL(trail=((char16_t)source[0]<<8)|source[1])) {
+        यदि(U16_IS_SURROGATE_LEAD(c)) {
+            यदि(length>=2) {
+                यदि(U16_IS_TRAIL(trail=((char16_t)source[0]<<8)|source[1])) {
                     /* output the surrogate pair, will overflow (see conditions comment above) */
                     source+=2;
                     length-=2;
                     *target++=c;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    यदि(offsets!=शून्यसूचकः) {
+                        *offsets++=source_सूचकांक;
                     }
-                    cnv->UCharErrorBuffer[0]=trail;
-                    cnv->UCharErrorBufferLength=1;
-                    cnv->toULength=0;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                } else {
+                    cnv->UChar_Error_बफर[0]=trail;
+                    cnv->UChar_Error_बफर_दीर्घता=1;
+                    cnv->गन्तव्यम्_ULength=0;
+                    *p_Error_संहिता=U_बफर_अतिप्रवाहः_ERROR;
+                } अन्यथा {
                     /* unmatched lead surrogate */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                    *p_Error_संहिता=U_ILLEGAL_CHAR_प्राप्तम्;
                 }
-            } else {
+            } अन्यथा {
                 /* see if the trail surrogate is in the next buffer */
             }
-        } else {
+        } अन्यथा {
             /* unmatched trail surrogate */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+            *p_Error_संहिता=U_ILLEGAL_CHAR_प्राप्तम्;
         }
     }
 
-    if(U_SUCCESS(*pErrorCode)) {
+    यदि(U_SUCCESS(*p_Error_संहिता)) {
         /* check for a remaining source byte */
-        if(length>0) {
-            if(targetCapacity==0) {
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            } else {
+        यदि(length>0) {
+            यदि(target_क्षमता==0) {
+                *p_Error_संहिता=U_बफर_अतिप्रवाहः_ERROR;
+            } अन्यथा {
                 /* it must be length==1 because otherwise the above would have copied more */
-                cnv->toUBytes[cnv->toULength++]=*source++;
+                cnv->गन्तव्यम्_UBytes[cnv->गन्तव्यम्_ULength++]=*source++;
             }
         }
     }
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_तर्काः->source=(ध्रुव वर्ण *)source;
+    p_तर्काः->target=target;
+    p_तर्काः->offsets=offsets;
 }
 
-static UChar32  U_CALLCONV
-_UTF16BEGetNextUChar(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
-    const uint8_t *s, *sourceLimit;
+स्थिर UChar32  U_CALLCONV
+UTF16_BEGet_अग्र_UChar(UConverter_गन्तव्यम्_Unicode_तर्काः *p_तर्काः, UError_संहिता *err) {
+    ध्रुव uint8_t *s, *source_सीमा;
     UChar32 c;
 
-    if(pArgs->converter->mode<8) {
-        return UCNV_GET_NEXT_UCHAR_USE_TO_U;
+    यदि(p_तर्काः->converter->बहुलकम्<8) {
+        प्रत्यागम UCNV_GET_अग्र_UCHAR_USE_गन्तव्यम्_U;
     }
 
-    s=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
+    s=(ध्रुव uint8_t *)p_तर्काः->source;
+    source_सीमा=(ध्रुव uint8_t *)p_तर्काः->source_सीमा;
 
-    if(s>=sourceLimit) {
+    यदि(s>=source_सीमा) {
         /* no input */
-        *err=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0xffff;
+        *err=U_सूचकांक_OUTOFBOUNDS_ERROR;
+        प्रत्यागम 0xffff;
     }
 
-    if(s+2>sourceLimit) {
+    यदि(s+2>source_सीमा) {
         /* only one byte: truncated char16_t */
-        pArgs->converter->toUBytes[0]=*s++;
-        pArgs->converter->toULength=1;
-        pArgs->source=(const char *)s;
-        *err = U_TRUNCATED_CHAR_FOUND;
-        return 0xffff;
+        p_तर्काः->converter->गन्तव्यम्_UBytes[0]=*s++;
+        p_तर्काः->converter->गन्तव्यम्_ULength=1;
+        p_तर्काः->source=(ध्रुव वर्ण *)s;
+        *err = U_TRUNCATED_CHAR_प्राप्तम्;
+        प्रत्यागम 0xffff;
     }
 
     /* get one char16_t */
@@ -522,178 +522,178 @@ _UTF16BEGetNextUChar(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
     s+=2;
 
     /* check for a surrogate pair */
-    if(U_IS_SURROGATE(c)) {
-        if(U16_IS_SURROGATE_LEAD(c)) {
-            if(s+2<=sourceLimit) {
+    यदि(U_IS_SURROGATE(c)) {
+        यदि(U16_IS_SURROGATE_LEAD(c)) {
+            यदि(s+2<=source_सीमा) {
                 char16_t trail;
 
                 /* get a second char16_t and see if it is a trail surrogate */
                 trail=((char16_t)*s<<8)|s[1];
-                if(U16_IS_TRAIL(trail)) {
+                यदि(U16_IS_TRAIL(trail)) {
                     c=U16_GET_SUPPLEMENTARY(c, trail);
                     s+=2;
-                } else {
+                } अन्यथा {
                     /* unmatched lead surrogate */
                     c=-2;
                 }
-            } else {
+            } अन्यथा {
                 /* too few (2 or 3) bytes for a surrogate pair: truncated code point */
-                uint8_t *bytes=pArgs->converter->toUBytes;
+                uint8_t *अष्टकानि=p_तर्काः->converter->गन्तव्यम्_UBytes;
                 s-=2;
-                pArgs->converter->toULength=(int8_t)(sourceLimit-s);
-                do {
-                    *bytes++=*s++;
-                } while(s<sourceLimit);
+                p_तर्काः->converter->गन्तव्यम्_ULength=(int8_t)(source_सीमा-s);
+                कुरु {
+                    *अष्टकानि++=*s++;
+                } यावत्(s<source_सीमा);
 
                 c=0xffff;
-                *err=U_TRUNCATED_CHAR_FOUND;
+                *err=U_TRUNCATED_CHAR_प्राप्तम्;
             }
-        } else {
+        } अन्यथा {
             /* unmatched trail surrogate */
             c=-2;
         }
 
-        if(c<0) {
+        यदि(c<0) {
             /* write the unmatched surrogate */
-            uint8_t *bytes=pArgs->converter->toUBytes;
-            pArgs->converter->toULength=2;
-            *bytes=*(s-2);
-            bytes[1]=*(s-1);
+            uint8_t *अष्टकानि=p_तर्काः->converter->गन्तव्यम्_UBytes;
+            p_तर्काः->converter->गन्तव्यम्_ULength=2;
+            *अष्टकानि=*(s-2);
+            अष्टकानि[1]=*(s-1);
 
             c=0xffff;
-            *err=U_ILLEGAL_CHAR_FOUND;
+            *err=U_ILLEGAL_CHAR_प्राप्तम्;
         }
     }
 
-    pArgs->source=(const char *)s;
-    return c;
+    p_तर्काः->source=(ध्रुव वर्ण *)s;
+    प्रत्यागम c;
 } 
 
-static void  U_CALLCONV
+स्थिर शून्य  U_CALLCONV
 _UTF16BEReset(UConverter *cnv, UConverterResetChoice choice) {
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    यदि(choice<=UCNV_RESET_गन्तव्यम्_UNICODE) {
         /* reset toUnicode state */
-        if(UCNV_GET_VERSION(cnv)==0) {
-            cnv->mode=8; /* no BOM handling */
-        } else {
-            cnv->mode=0; /* Java-specific "UnicodeBig" requires BE BOM or no BOM */
+        यदि(UCNV_GET_संस्करणम्(cnv)==0) {
+            cnv->बहुलकम्=8; /* no BOM handling */
+        } अन्यथा {
+            cnv->बहुलकम्=0; /* Java-specific "UnicodeBig" requires BE BOM or no BOM */
         }
     }
-    if(choice!=UCNV_RESET_TO_UNICODE && UCNV_GET_VERSION(cnv)==1) {
+    यदि(choice!=UCNV_RESET_गन्तव्यम्_UNICODE && UCNV_GET_संस्करणम्(cnv)==1) {
         /* reset fromUnicode for "UnicodeBig": prepare to output the UTF-16BE BOM */
-        cnv->fromUnicodeStatus=UCNV_NEED_TO_WRITE_BOM;
+        cnv->from_Unicode_स्थितिः=UCNV_NEED_गन्तव्यम्_WRITE_BOM;
     }
 }
 
-static void  U_CALLCONV
+स्थिर शून्य  U_CALLCONV
 _UTF16BEOpen(UConverter *cnv,
-             UConverterLoadArgs *pArgs,
-             UErrorCode *pErrorCode) {
-    (void)pArgs;
-    if(UCNV_GET_VERSION(cnv)<=1) {
+             UConverter_आरोपय_तर्काः *p_तर्काः,
+             UError_संहिता *p_Error_संहिता) {
+    (शून्य)p_तर्काः;
+    यदि(UCNV_GET_संस्करणम्(cnv)<=1) {
         _UTF16BEReset(cnv, UCNV_RESET_BOTH);
-    } else {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
+    } अन्यथा {
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
     }
 }
 
-static const char *  U_CALLCONV
-_UTF16BEGetName(const UConverter *cnv) {
-    if(UCNV_GET_VERSION(cnv)==0) {
-        return "UTF-16BE";
-    } else {
-        return "UTF-16BE,version=1";
+स्थिर ध्रुव वर्ण *  U_CALLCONV
+_UTF16BEGetName(ध्रुव UConverter *cnv) {
+    यदि(UCNV_GET_संस्करणम्(cnv)==0) {
+        प्रत्यागम "UTF-16BE";
+    } अन्यथा {
+        प्रत्यागम "UTF-16BE,version=1";
     }
 }
-U_CDECL_END
+U_CDECL_अन्तः
 
-static const UConverterImpl _UTF16BEImpl={
+स्थिर ध्रुव UConverterImpl _UTF16BEImpl={
     UCNV_UTF16_BigEndian,
 
-    nullptr,
-    nullptr,
+    शून्यसूचकः,
+    शून्यसूचकः,
 
     _UTF16BEOpen,
-    nullptr,
+    शून्यसूचकः,
     _UTF16BEReset,
 
     _UTF16BEToUnicodeWithOffsets,
     _UTF16BEToUnicodeWithOffsets,
     _UTF16BEFromUnicodeWithOffsets,
     _UTF16BEFromUnicodeWithOffsets,
-    _UTF16BEGetNextUChar,
+    UTF16_BEGet_अग्र_UChar,
 
-    nullptr,
+    शून्यसूचकः,
     _UTF16BEGetName,
-    nullptr,
-    nullptr,
-    ucnv_getNonSurrogateUnicodeSet,
+    शून्यसूचकः,
+    शून्यसूचकः,
+    ucnv_get_Non_Surrogate_Unicode_समुच्चयः,
 
-    nullptr,
-    nullptr
+    शून्यसूचकः,
+    शून्यसूचकः
 };
 
-static const UConverterStaticData _UTF16BEStaticData={
-    sizeof(UConverterStaticData),
+स्थिर ध्रुव UConverter_Static_दत्त UTF16_BEStatic_दत्त={
+    परिमाण(UConverter_Static_दत्त),
     "UTF-16BE",
     1200, UCNV_IBM, UCNV_UTF16_BigEndian, 2, 2,
-    { 0xff, 0xfd, 0, 0 },2,false,false,
+    { 0xff, 0xfd, 0, 0 },2,असत्य,असत्य,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
 
-const UConverterSharedData _UTF16BEData=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF16BEStaticData, &_UTF16BEImpl);
+ध्रुव UConverter_Shared_दत्त _UTF16BEData=
+        UCNV_IMMUTABLE_SHARED_दत्त_INITIALIZER(&UTF16_BEStatic_दत्त, &_UTF16BEImpl);
 
 /* UTF-16LE ----------------------------------------------------------------- */
 U_CDECL_BEGIN
-static void  U_CALLCONV
-_UTF16LEFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                               UErrorCode *pErrorCode) {
+स्थिर शून्य  U_CALLCONV
+_UTF16LEFromUnicodeWithOffsets(UConverter_From_Unicode_तर्काः *p_तर्काः,
+                               UError_संहिता *p_Error_संहिता) {
     UConverter *cnv;
-    const char16_t *source;
-    char *target;
+    ध्रुव char16_t *source;
+    वर्ण *target;
     int32_t *offsets;
 
-    uint32_t targetCapacity, length, sourceIndex;
+    uint32_t target_क्षमता, length, source_सूचकांक;
     char16_t c, trail;
-    char overflow[4];
+    वर्ण अतिप्रवाहः[4];
 
-    source=pArgs->source;
-    length=(int32_t)(pArgs->sourceLimit-source);
-    if(length<=0) {
+    source=p_तर्काः->source;
+    length=(int32_t)(p_तर्काः->source_सीमा-source);
+    यदि(length<=0) {
         /* no input, nothing to do */
-        return;
+        प्रत्यागम;
     }
 
-    cnv=pArgs->converter;
+    cnv=p_तर्काः->converter;
 
     /* write the BOM if necessary */
-    if(cnv->fromUnicodeStatus==UCNV_NEED_TO_WRITE_BOM) {
-        static const char bom[]={ (char)0xffu, (char)0xfeu };
-        ucnv_fromUWriteBytes(cnv,
+    यदि(cnv->from_Unicode_स्थितिः==UCNV_NEED_गन्तव्यम्_WRITE_BOM) {
+        स्थिर ध्रुव वर्ण bom[]={ (वर्ण)0xffu, (वर्ण)0xfeu };
+        ucnv_from_UWrite_अष्टकानि(cnv,
                              bom, 2,
-                             &pArgs->target, pArgs->targetLimit,
-                             &pArgs->offsets, -1,
-                             pErrorCode);
-        cnv->fromUnicodeStatus=0;
+                             &p_तर्काः->target, p_तर्काः->target_सीमा,
+                             &p_तर्काः->offsets, -1,
+                             p_Error_संहिता);
+        cnv->from_Unicode_स्थितिः=0;
     }
 
-    target=pArgs->target;
-    if(target >= pArgs->targetLimit) {
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-        return;
+    target=p_तर्काः->target;
+    यदि(target >= p_तर्काः->target_सीमा) {
+        *p_Error_संहिता=U_बफर_अतिप्रवाहः_ERROR;
+        प्रत्यागम;
     }
 
-    targetCapacity=(uint32_t)(pArgs->targetLimit-pArgs->target);
-    offsets=pArgs->offsets;
-    sourceIndex=0;
+    target_क्षमता=(uint32_t)(p_तर्काः->target_सीमा-p_तर्काः->target);
+    offsets=p_तर्काः->offsets;
+    source_सूचकांक=0;
 
     /* c!=0 indicates in several places outside the main loops that a surrogate was found */
 
-    if((c=(char16_t)cnv->fromUChar32)!=0 && U16_IS_TRAIL(trail=*source) && targetCapacity>=4) {
+    यदि((c=(char16_t)cnv->fromUChar32)!=0 && U16_IS_TRAIL(trail=*source) && target_क्षमता>=4) {
         /* the last buffer ended with a lead surrogate, output the surrogate pair */
         ++source;
         --length;
@@ -702,36 +702,36 @@ _UTF16LEFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
         target[2]=(uint8_t)trail;
         target[3]=(uint8_t)(trail>>8);
         target+=4;
-        targetCapacity-=4;
-        if(offsets!=nullptr) {
+        target_क्षमता-=4;
+        यदि(offsets!=शून्यसूचकः) {
             *offsets++=-1;
             *offsets++=-1;
             *offsets++=-1;
             *offsets++=-1;
         }
-        sourceIndex=1;
+        source_सूचकांक=1;
         cnv->fromUChar32=c=0;
     }
 
-    if(c==0) {
+    यदि(c==0) {
         /* copy an even number of bytes for complete UChars */
         uint32_t count=2*length;
-        if(count>targetCapacity) {
-            count=targetCapacity&~1;
+        यदि(count>target_क्षमता) {
+            count=target_क्षमता&~1;
         }
         /* count is even */
-        targetCapacity-=count;
+        target_क्षमता-=count;
         count>>=1;
         length-=count;
 
-        if(offsets==nullptr) {
-            while(count>0) {
+        यदि(offsets==शून्यसूचकः) {
+            यावत्(count>0) {
                 c=*source++;
-                if(U16_IS_SINGLE(c)) {
+                यदि(U16_IS_SINGLE(c)) {
                     target[0]=(uint8_t)c;
                     target[1]=(uint8_t)(c>>8);
                     target+=2;
-                } else if(U16_IS_SURROGATE_LEAD(c) && count>=2 && U16_IS_TRAIL(trail=*source)) {
+                } अन्यथा यदि(U16_IS_SURROGATE_LEAD(c) && count>=2 && U16_IS_TRAIL(trail=*source)) {
                     ++source;
                     --count;
                     target[0]=(uint8_t)c;
@@ -739,21 +739,21 @@ _UTF16LEFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                     target[2]=(uint8_t)trail;
                     target[3]=(uint8_t)(trail>>8);
                     target+=4;
-                } else {
-                    break;
+                } अन्यथा {
+                    भङ्ग;
                 }
                 --count;
             }
-        } else {
-            while(count>0) {
+        } अन्यथा {
+            यावत्(count>0) {
                 c=*source++;
-                if(U16_IS_SINGLE(c)) {
+                यदि(U16_IS_SINGLE(c)) {
                     target[0]=(uint8_t)c;
                     target[1]=(uint8_t)(c>>8);
                     target+=2;
-                    *offsets++=sourceIndex;
-                    *offsets++=sourceIndex++;
-                } else if(U16_IS_SURROGATE_LEAD(c) && count>=2 && U16_IS_TRAIL(trail=*source)) {
+                    *offsets++=source_सूचकांक;
+                    *offsets++=source_सूचकांक++;
+                } अन्यथा यदि(U16_IS_SURROGATE_LEAD(c) && count>=2 && U16_IS_TRAIL(trail=*source)) {
                     ++source;
                     --count;
                     target[0]=(uint8_t)c;
@@ -761,361 +761,361 @@ _UTF16LEFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                     target[2]=(uint8_t)trail;
                     target[3]=(uint8_t)(trail>>8);
                     target+=4;
-                    *offsets++=sourceIndex;
-                    *offsets++=sourceIndex;
-                    *offsets++=sourceIndex;
-                    *offsets++=sourceIndex;
-                    sourceIndex+=2;
-                } else {
-                    break;
+                    *offsets++=source_सूचकांक;
+                    *offsets++=source_सूचकांक;
+                    *offsets++=source_सूचकांक;
+                    *offsets++=source_सूचकांक;
+                    source_सूचकांक+=2;
+                } अन्यथा {
+                    भङ्ग;
                 }
                 --count;
             }
         }
 
-        if(count==0) {
+        यदि(count==0) {
             /* done with the loop for complete UChars */
-            if(length>0 && targetCapacity>0) {
+            यदि(length>0 && target_क्षमता>0) {
                 /*
                  * there is more input and some target capacity -
                  * it must be targetCapacity==1 because otherwise
                  * the above would have copied more;
                  * prepare for overflow output
                  */
-                if(U16_IS_SINGLE(c=*source++)) {
-                    overflow[0]=(char)c;
-                    overflow[1]=(char)(c>>8);
+                यदि(U16_IS_SINGLE(c=*source++)) {
+                    अतिप्रवाहः[0]=(वर्ण)c;
+                    अतिप्रवाहः[1]=(वर्ण)(c>>8);
                     length=2; /* 2 bytes to output */
                     c=0;
                 /* } else { keep c for surrogate handling, length will be set there */
                 }
-            } else {
+            } अन्यथा {
                 length=0;
                 c=0;
             }
-        } else {
+        } अन्यथा {
             /* keep c for surrogate handling, length will be set there */
-            targetCapacity+=2*count;
+            target_क्षमता+=2*count;
         }
-    } else {
+    } अन्यथा {
         length=0; /* from here on, length counts the bytes in overflow[] */
     }
     
-    if(c!=0) {
+    यदि(c!=0) {
         /*
          * c is a surrogate, and
          * - source or target too short
          * - or the surrogate is unmatched
          */
         length=0;
-        if(U16_IS_SURROGATE_LEAD(c)) {
-            if(source<pArgs->sourceLimit) {
-                if(U16_IS_TRAIL(trail=*source)) {
+        यदि(U16_IS_SURROGATE_LEAD(c)) {
+            यदि(source<p_तर्काः->source_सीमा) {
+                यदि(U16_IS_TRAIL(trail=*source)) {
                     /* output the surrogate pair, will overflow (see conditions comment above) */
                     ++source;
-                    overflow[0]=(char)c;
-                    overflow[1]=(char)(c>>8);
-                    overflow[2]=(char)trail;
-                    overflow[3]=(char)(trail>>8);
+                    अतिप्रवाहः[0]=(वर्ण)c;
+                    अतिप्रवाहः[1]=(वर्ण)(c>>8);
+                    अतिप्रवाहः[2]=(वर्ण)trail;
+                    अतिप्रवाहः[3]=(वर्ण)(trail>>8);
                     length=4; /* 4 bytes to output */
                     c=0;
-                } else {
+                } अन्यथा {
                     /* unmatched lead surrogate */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                    *p_Error_संहिता=U_ILLEGAL_CHAR_प्राप्तम्;
                 }
-            } else {
+            } अन्यथा {
                 /* see if the trail surrogate is in the next buffer */
             }
-        } else {
+        } अन्यथा {
             /* unmatched trail surrogate */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+            *p_Error_संहिता=U_ILLEGAL_CHAR_प्राप्तम्;
         }
         cnv->fromUChar32=c;
     }
 
-    if(length>0) {
+    यदि(length>0) {
         /* output length bytes with overflow (length>targetCapacity>0) */
-        ucnv_fromUWriteBytes(cnv,
-                             overflow, length,
-                             &target, pArgs->targetLimit,
-                             &offsets, sourceIndex,
-                             pErrorCode);
-        targetCapacity = static_cast<uint32_t>(pArgs->targetLimit - target);
+        ucnv_from_UWrite_अष्टकानि(cnv,
+                             अतिप्रवाहः, length,
+                             &target, p_तर्काः->target_सीमा,
+                             &offsets, source_सूचकांक,
+                             p_Error_संहिता);
+        target_क्षमता = static_cast<uint32_t>(p_तर्काः->target_सीमा - target);
     }
 
-    if(U_SUCCESS(*pErrorCode) && source<pArgs->sourceLimit && targetCapacity==0) {
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+    यदि(U_SUCCESS(*p_Error_संहिता) && source<p_तर्काः->source_सीमा && target_क्षमता==0) {
+        *p_Error_संहिता=U_बफर_अतिप्रवाहः_ERROR;
     }
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_तर्काः->source=source;
+    p_तर्काः->target=target;
+    p_तर्काः->offsets=offsets;
 }
 
-static void  U_CALLCONV
-_UTF16LEToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                             UErrorCode *pErrorCode) {
+स्थिर शून्य  U_CALLCONV
+_UTF16LEToUnicodeWithOffsets(UConverter_गन्तव्यम्_Unicode_तर्काः *p_तर्काः,
+                             UError_संहिता *p_Error_संहिता) {
     UConverter *cnv;
-    const uint8_t *source;
+    ध्रुव uint8_t *source;
     char16_t *target;
     int32_t *offsets;
 
-    uint32_t targetCapacity, length, count, sourceIndex;
+    uint32_t target_क्षमता, length, count, source_सूचकांक;
     char16_t c, trail;
 
-    if(pArgs->converter->mode<8) {
-        _UTF16ToUnicodeWithOffsets(pArgs, pErrorCode);
-        return;
+    यदि(p_तर्काः->converter->बहुलकम्<8) {
+        UTF16_गन्तव्यम्_Unicode_With_Offsets(p_तर्काः, p_Error_संहिता);
+        प्रत्यागम;
     }
 
-    cnv=pArgs->converter;
-    source=(const uint8_t *)pArgs->source;
-    length=(int32_t)((const uint8_t *)pArgs->sourceLimit-source);
-    if(length<=0 && cnv->toUnicodeStatus==0) {
+    cnv=p_तर्काः->converter;
+    source=(ध्रुव uint8_t *)p_तर्काः->source;
+    length=(int32_t)((ध्रुव uint8_t *)p_तर्काः->source_सीमा-source);
+    यदि(length<=0 && cnv->गन्तव्यम्_Unicode_स्थितिः==0) {
         /* no input, nothing to do */
-        return;
+        प्रत्यागम;
     }
 
-    target=pArgs->target;
-    if(target >= pArgs->targetLimit) {
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-        return;
+    target=p_तर्काः->target;
+    यदि(target >= p_तर्काः->target_सीमा) {
+        *p_Error_संहिता=U_बफर_अतिप्रवाहः_ERROR;
+        प्रत्यागम;
     }
 
-    targetCapacity=(uint32_t)(pArgs->targetLimit-pArgs->target);
-    offsets=pArgs->offsets;
-    sourceIndex=0;
+    target_क्षमता=(uint32_t)(p_तर्काः->target_सीमा-p_तर्काः->target);
+    offsets=p_तर्काः->offsets;
+    source_सूचकांक=0;
     c=0;
 
     /* complete a partial char16_t or pair from the last call */
-    if(cnv->toUnicodeStatus!=0) {
+    यदि(cnv->गन्तव्यम्_Unicode_स्थितिः!=0) {
         /*
          * special case: single byte from a previous buffer,
          * where the byte turned out not to belong to a trail surrogate
          * and the preceding, unmatched lead surrogate was put into toUBytes[]
          * for error handling
          */
-        cnv->toUBytes[0]=(uint8_t)cnv->toUnicodeStatus;
-        cnv->toULength=1;
-        cnv->toUnicodeStatus=0;
+        cnv->गन्तव्यम्_UBytes[0]=(uint8_t)cnv->गन्तव्यम्_Unicode_स्थितिः;
+        cnv->गन्तव्यम्_ULength=1;
+        cnv->गन्तव्यम्_Unicode_स्थितिः=0;
     }
-    if((count=cnv->toULength)!=0) {
-        uint8_t *p=cnv->toUBytes;
-        do {
+    यदि((count=cnv->गन्तव्यम्_ULength)!=0) {
+        uint8_t *p=cnv->गन्तव्यम्_UBytes;
+        कुरु {
             p[count++]=*source++;
-            ++sourceIndex;
+            ++source_सूचकांक;
             --length;
-            if(count==2) {
+            यदि(count==2) {
                 c=((char16_t)p[1]<<8)|p[0];
-                if(U16_IS_SINGLE(c)) {
+                यदि(U16_IS_SINGLE(c)) {
                     /* output the BMP code point */
                     *target++=c;
-                    if(offsets!=nullptr) {
+                    यदि(offsets!=शून्यसूचकः) {
                         *offsets++=-1;
                     }
-                    --targetCapacity;
+                    --target_क्षमता;
                     count=0;
                     c=0;
-                    break;
-                } else if(U16_IS_SURROGATE_LEAD(c)) {
+                    भङ्ग;
+                } अन्यथा यदि(U16_IS_SURROGATE_LEAD(c)) {
                     /* continue collecting bytes for the trail surrogate */
                     c=0; /* avoid unnecessary surrogate handling below */
-                } else {
+                } अन्यथा {
                     /* fall through to error handling for an unmatched trail surrogate */
-                    break;
+                    भङ्ग;
                 }
-            } else if(count==4) {
+            } अन्यथा यदि(count==4) {
                 c=((char16_t)p[1]<<8)|p[0];
                 trail=((char16_t)p[3]<<8)|p[2];
-                if(U16_IS_TRAIL(trail)) {
+                यदि(U16_IS_TRAIL(trail)) {
                     /* output the surrogate pair */
                     *target++=c;
-                    if(targetCapacity>=2) {
+                    यदि(target_क्षमता>=2) {
                         *target++=trail;
-                        if(offsets!=nullptr) {
+                        यदि(offsets!=शून्यसूचकः) {
                             *offsets++=-1;
                             *offsets++=-1;
                         }
-                        targetCapacity-=2;
-                    } else /* targetCapacity==1 */ {
-                        targetCapacity=0;
-                        cnv->UCharErrorBuffer[0]=trail;
-                        cnv->UCharErrorBufferLength=1;
-                        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                        target_क्षमता-=2;
+                    } अन्यथा /* targetCapacity==1 */ {
+                        target_क्षमता=0;
+                        cnv->UChar_Error_बफर[0]=trail;
+                        cnv->UChar_Error_बफर_दीर्घता=1;
+                        *p_Error_संहिता=U_बफर_अतिप्रवाहः_ERROR;
                     }
                     count=0;
                     c=0;
-                    break;
-                } else {
+                    भङ्ग;
+                } अन्यथा {
                     /* unmatched lead surrogate, handle here for consistent toUBytes[] */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                    *p_Error_संहिता=U_ILLEGAL_CHAR_प्राप्तम्;
 
                     /* back out reading the code unit after it */
-                    if(((const uint8_t *)pArgs->source-source)>=2) {
+                    यदि(((ध्रुव uint8_t *)p_तर्काः->source-source)>=2) {
                         source-=2;
-                    } else {
+                    } अन्यथा {
                         /*
                          * if the trail unit's first byte was in a previous buffer, then
                          * we need to put it into a special place because toUBytes[] will be
                          * used for the lead unit's bytes
                          */
-                        cnv->toUnicodeStatus=0x100|p[2];
+                        cnv->गन्तव्यम्_Unicode_स्थितिः=0x100|p[2];
                         --source;
                     }
-                    cnv->toULength=2;
+                    cnv->गन्तव्यम्_ULength=2;
 
                     /* write back the updated pointers */
-                    pArgs->source=(const char *)source;
-                    pArgs->target=target;
-                    pArgs->offsets=offsets;
-                    return;
+                    p_तर्काः->source=(ध्रुव वर्ण *)source;
+                    p_तर्काः->target=target;
+                    p_तर्काः->offsets=offsets;
+                    प्रत्यागम;
                 }
             }
-        } while(length>0);
-        cnv->toULength=(int8_t)count;
+        } यावत्(length>0);
+        cnv->गन्तव्यम्_ULength=(int8_t)count;
     }
 
     /* copy an even number of bytes for complete UChars */
-    count=2*targetCapacity;
-    if(count>length) {
+    count=2*target_क्षमता;
+    यदि(count>length) {
         count=length&~1;
     }
-    if(c==0 && count>0) {
+    यदि(c==0 && count>0) {
         length-=count;
         count>>=1;
-        targetCapacity-=count;
-        if(offsets==nullptr) {
-            do {
+        target_क्षमता-=count;
+        यदि(offsets==शून्यसूचकः) {
+            कुरु {
                 c=((char16_t)source[1]<<8)|source[0];
                 source+=2;
-                if(U16_IS_SINGLE(c)) {
+                यदि(U16_IS_SINGLE(c)) {
                     *target++=c;
-                } else if(U16_IS_SURROGATE_LEAD(c) && count>=2 &&
+                } अन्यथा यदि(U16_IS_SURROGATE_LEAD(c) && count>=2 &&
                           U16_IS_TRAIL(trail=((char16_t)source[1]<<8)|source[0])
                 ) {
                     source+=2;
                     --count;
                     *target++=c;
                     *target++=trail;
-                } else {
-                    break;
+                } अन्यथा {
+                    भङ्ग;
                 }
-            } while(--count>0);
-        } else {
-            do {
+            } यावत्(--count>0);
+        } अन्यथा {
+            कुरु {
                 c=((char16_t)source[1]<<8)|source[0];
                 source+=2;
-                if(U16_IS_SINGLE(c)) {
+                यदि(U16_IS_SINGLE(c)) {
                     *target++=c;
-                    *offsets++=sourceIndex;
-                    sourceIndex+=2;
-                } else if(U16_IS_SURROGATE_LEAD(c) && count>=2 &&
+                    *offsets++=source_सूचकांक;
+                    source_सूचकांक+=2;
+                } अन्यथा यदि(U16_IS_SURROGATE_LEAD(c) && count>=2 &&
                           U16_IS_TRAIL(trail=((char16_t)source[1]<<8)|source[0])
                 ) {
                     source+=2;
                     --count;
                     *target++=c;
                     *target++=trail;
-                    *offsets++=sourceIndex;
-                    *offsets++=sourceIndex;
-                    sourceIndex+=4;
-                } else {
-                    break;
+                    *offsets++=source_सूचकांक;
+                    *offsets++=source_सूचकांक;
+                    source_सूचकांक+=4;
+                } अन्यथा {
+                    भङ्ग;
                 }
-            } while(--count>0);
+            } यावत्(--count>0);
         }
 
-        if(count==0) {
+        यदि(count==0) {
             /* done with the loop for complete UChars */
             c=0;
-        } else {
+        } अन्यथा {
             /* keep c for surrogate handling, trail will be set there */
             length+=2*(count-1); /* one more byte pair was consumed than count decremented */
-            targetCapacity+=count;
+            target_क्षमता+=count;
         }
     }
 
-    if(c!=0) {
+    यदि(c!=0) {
         /*
          * c is a surrogate, and
          * - source or target too short
          * - or the surrogate is unmatched
          */
-        cnv->toUBytes[0]=(uint8_t)c;
-        cnv->toUBytes[1]=(uint8_t)(c>>8);
-        cnv->toULength=2;
+        cnv->गन्तव्यम्_UBytes[0]=(uint8_t)c;
+        cnv->गन्तव्यम्_UBytes[1]=(uint8_t)(c>>8);
+        cnv->गन्तव्यम्_ULength=2;
 
-        if(U16_IS_SURROGATE_LEAD(c)) {
-            if(length>=2) {
-                if(U16_IS_TRAIL(trail=((char16_t)source[1]<<8)|source[0])) {
+        यदि(U16_IS_SURROGATE_LEAD(c)) {
+            यदि(length>=2) {
+                यदि(U16_IS_TRAIL(trail=((char16_t)source[1]<<8)|source[0])) {
                     /* output the surrogate pair, will overflow (see conditions comment above) */
                     source+=2;
                     length-=2;
                     *target++=c;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    यदि(offsets!=शून्यसूचकः) {
+                        *offsets++=source_सूचकांक;
                     }
-                    cnv->UCharErrorBuffer[0]=trail;
-                    cnv->UCharErrorBufferLength=1;
-                    cnv->toULength=0;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                } else {
+                    cnv->UChar_Error_बफर[0]=trail;
+                    cnv->UChar_Error_बफर_दीर्घता=1;
+                    cnv->गन्तव्यम्_ULength=0;
+                    *p_Error_संहिता=U_बफर_अतिप्रवाहः_ERROR;
+                } अन्यथा {
                     /* unmatched lead surrogate */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                    *p_Error_संहिता=U_ILLEGAL_CHAR_प्राप्तम्;
                 }
-            } else {
+            } अन्यथा {
                 /* see if the trail surrogate is in the next buffer */
             }
-        } else {
+        } अन्यथा {
             /* unmatched trail surrogate */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+            *p_Error_संहिता=U_ILLEGAL_CHAR_प्राप्तम्;
         }
     }
 
-    if(U_SUCCESS(*pErrorCode)) {
+    यदि(U_SUCCESS(*p_Error_संहिता)) {
         /* check for a remaining source byte */
-        if(length>0) {
-            if(targetCapacity==0) {
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            } else {
+        यदि(length>0) {
+            यदि(target_क्षमता==0) {
+                *p_Error_संहिता=U_बफर_अतिप्रवाहः_ERROR;
+            } अन्यथा {
                 /* it must be length==1 because otherwise the above would have copied more */
-                cnv->toUBytes[cnv->toULength++]=*source++;
+                cnv->गन्तव्यम्_UBytes[cnv->गन्तव्यम्_ULength++]=*source++;
             }
         }
     }
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_तर्काः->source=(ध्रुव वर्ण *)source;
+    p_तर्काः->target=target;
+    p_तर्काः->offsets=offsets;
 }
 
-static UChar32  U_CALLCONV
-_UTF16LEGetNextUChar(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
-    const uint8_t *s, *sourceLimit;
+स्थिर UChar32  U_CALLCONV
+UTF16_LEGet_अग्र_UChar(UConverter_गन्तव्यम्_Unicode_तर्काः *p_तर्काः, UError_संहिता *err) {
+    ध्रुव uint8_t *s, *source_सीमा;
     UChar32 c;
 
-    if(pArgs->converter->mode<8) {
-        return UCNV_GET_NEXT_UCHAR_USE_TO_U;
+    यदि(p_तर्काः->converter->बहुलकम्<8) {
+        प्रत्यागम UCNV_GET_अग्र_UCHAR_USE_गन्तव्यम्_U;
     }
 
-    s=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
+    s=(ध्रुव uint8_t *)p_तर्काः->source;
+    source_सीमा=(ध्रुव uint8_t *)p_तर्काः->source_सीमा;
 
-    if(s>=sourceLimit) {
+    यदि(s>=source_सीमा) {
         /* no input */
-        *err=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0xffff;
+        *err=U_सूचकांक_OUTOFBOUNDS_ERROR;
+        प्रत्यागम 0xffff;
     }
 
-    if(s+2>sourceLimit) {
+    यदि(s+2>source_सीमा) {
         /* only one byte: truncated char16_t */
-        pArgs->converter->toUBytes[0]=*s++;
-        pArgs->converter->toULength=1;
-        pArgs->source=(const char *)s;
-        *err = U_TRUNCATED_CHAR_FOUND;
-        return 0xffff;
+        p_तर्काः->converter->गन्तव्यम्_UBytes[0]=*s++;
+        p_तर्काः->converter->गन्तव्यम्_ULength=1;
+        p_तर्काः->source=(ध्रुव वर्ण *)s;
+        *err = U_TRUNCATED_CHAR_प्राप्तम्;
+        प्रत्यागम 0xffff;
     }
 
     /* get one char16_t */
@@ -1123,131 +1123,131 @@ _UTF16LEGetNextUChar(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
     s+=2;
 
     /* check for a surrogate pair */
-    if(U_IS_SURROGATE(c)) {
-        if(U16_IS_SURROGATE_LEAD(c)) {
-            if(s+2<=sourceLimit) {
+    यदि(U_IS_SURROGATE(c)) {
+        यदि(U16_IS_SURROGATE_LEAD(c)) {
+            यदि(s+2<=source_सीमा) {
                 char16_t trail;
 
                 /* get a second char16_t and see if it is a trail surrogate */
                 trail=((char16_t)s[1]<<8)|*s;
-                if(U16_IS_TRAIL(trail)) {
+                यदि(U16_IS_TRAIL(trail)) {
                     c=U16_GET_SUPPLEMENTARY(c, trail);
                     s+=2;
-                } else {
+                } अन्यथा {
                     /* unmatched lead surrogate */
                     c=-2;
                 }
-            } else {
+            } अन्यथा {
                 /* too few (2 or 3) bytes for a surrogate pair: truncated code point */
-                uint8_t *bytes=pArgs->converter->toUBytes;
+                uint8_t *अष्टकानि=p_तर्काः->converter->गन्तव्यम्_UBytes;
                 s-=2;
-                pArgs->converter->toULength=(int8_t)(sourceLimit-s);
-                do {
-                    *bytes++=*s++;
-                } while(s<sourceLimit);
+                p_तर्काः->converter->गन्तव्यम्_ULength=(int8_t)(source_सीमा-s);
+                कुरु {
+                    *अष्टकानि++=*s++;
+                } यावत्(s<source_सीमा);
 
                 c=0xffff;
-                *err=U_TRUNCATED_CHAR_FOUND;
+                *err=U_TRUNCATED_CHAR_प्राप्तम्;
             }
-        } else {
+        } अन्यथा {
             /* unmatched trail surrogate */
             c=-2;
         }
 
-        if(c<0) {
+        यदि(c<0) {
             /* write the unmatched surrogate */
-            uint8_t *bytes=pArgs->converter->toUBytes;
-            pArgs->converter->toULength=2;
-            *bytes=*(s-2);
-            bytes[1]=*(s-1);
+            uint8_t *अष्टकानि=p_तर्काः->converter->गन्तव्यम्_UBytes;
+            p_तर्काः->converter->गन्तव्यम्_ULength=2;
+            *अष्टकानि=*(s-2);
+            अष्टकानि[1]=*(s-1);
 
             c=0xffff;
-            *err=U_ILLEGAL_CHAR_FOUND;
+            *err=U_ILLEGAL_CHAR_प्राप्तम्;
         }
     }
 
-    pArgs->source=(const char *)s;
-    return c;
+    p_तर्काः->source=(ध्रुव वर्ण *)s;
+    प्रत्यागम c;
 } 
 
-static void  U_CALLCONV
+स्थिर शून्य  U_CALLCONV
 _UTF16LEReset(UConverter *cnv, UConverterResetChoice choice) {
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    यदि(choice<=UCNV_RESET_गन्तव्यम्_UNICODE) {
         /* reset toUnicode state */
-        if(UCNV_GET_VERSION(cnv)==0) {
-            cnv->mode=8; /* no BOM handling */
-        } else {
-            cnv->mode=0; /* Java-specific "UnicodeLittle" requires LE BOM or no BOM */
+        यदि(UCNV_GET_संस्करणम्(cnv)==0) {
+            cnv->बहुलकम्=8; /* no BOM handling */
+        } अन्यथा {
+            cnv->बहुलकम्=0; /* Java-specific "UnicodeLittle" requires LE BOM or no BOM */
         }
     }
-    if(choice!=UCNV_RESET_TO_UNICODE && UCNV_GET_VERSION(cnv)==1) {
+    यदि(choice!=UCNV_RESET_गन्तव्यम्_UNICODE && UCNV_GET_संस्करणम्(cnv)==1) {
         /* reset fromUnicode for "UnicodeLittle": prepare to output the UTF-16LE BOM */
-        cnv->fromUnicodeStatus=UCNV_NEED_TO_WRITE_BOM;
+        cnv->from_Unicode_स्थितिः=UCNV_NEED_गन्तव्यम्_WRITE_BOM;
     }
 }
 
-static void  U_CALLCONV
+स्थिर शून्य  U_CALLCONV
 _UTF16LEOpen(UConverter *cnv,
-             UConverterLoadArgs *pArgs,
-             UErrorCode *pErrorCode) {
-    (void)pArgs;
-    if(UCNV_GET_VERSION(cnv)<=1) {
+             UConverter_आरोपय_तर्काः *p_तर्काः,
+             UError_संहिता *p_Error_संहिता) {
+    (शून्य)p_तर्काः;
+    यदि(UCNV_GET_संस्करणम्(cnv)<=1) {
         _UTF16LEReset(cnv, UCNV_RESET_BOTH);
-    } else {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
+    } अन्यथा {
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
     }
 }
 
-static const char *  U_CALLCONV
-_UTF16LEGetName(const UConverter *cnv) {
-    if(UCNV_GET_VERSION(cnv)==0) {
-        return "UTF-16LE";
-    } else {
-        return "UTF-16LE,version=1";
+स्थिर ध्रुव वर्ण *  U_CALLCONV
+_UTF16LEGetName(ध्रुव UConverter *cnv) {
+    यदि(UCNV_GET_संस्करणम्(cnv)==0) {
+        प्रत्यागम "UTF-16LE";
+    } अन्यथा {
+        प्रत्यागम "UTF-16LE,version=1";
     }
 }
-U_CDECL_END
+U_CDECL_अन्तः
 
-static const UConverterImpl _UTF16LEImpl={
+स्थिर ध्रुव UConverterImpl _UTF16LEImpl={
     UCNV_UTF16_LittleEndian,
 
-    nullptr,
-    nullptr,
+    शून्यसूचकः,
+    शून्यसूचकः,
 
     _UTF16LEOpen,
-    nullptr,
+    शून्यसूचकः,
     _UTF16LEReset,
 
     _UTF16LEToUnicodeWithOffsets,
     _UTF16LEToUnicodeWithOffsets,
     _UTF16LEFromUnicodeWithOffsets,
     _UTF16LEFromUnicodeWithOffsets,
-    _UTF16LEGetNextUChar,
+    UTF16_LEGet_अग्र_UChar,
 
-    nullptr,
+    शून्यसूचकः,
     _UTF16LEGetName,
-    nullptr,
-    nullptr,
-    ucnv_getNonSurrogateUnicodeSet,
+    शून्यसूचकः,
+    शून्यसूचकः,
+    ucnv_get_Non_Surrogate_Unicode_समुच्चयः,
 
-    nullptr,
-    nullptr
+    शून्यसूचकः,
+    शून्यसूचकः
 };
 
 
-static const UConverterStaticData _UTF16LEStaticData={
-    sizeof(UConverterStaticData),
+स्थिर ध्रुव UConverter_Static_दत्त UTF16_LEStatic_दत्त={
+    परिमाण(UConverter_Static_दत्त),
     "UTF-16LE",
     1202, UCNV_IBM, UCNV_UTF16_LittleEndian, 2, 2,
-    { 0xfd, 0xff, 0, 0 },2,false,false,
+    { 0xfd, 0xff, 0, 0 },2,असत्य,असत्य,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
 
-const UConverterSharedData _UTF16LEData=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF16LEStaticData, &_UTF16LEImpl);
+ध्रुव UConverter_Shared_दत्त _UTF16LEData=
+        UCNV_IMMUTABLE_SHARED_दत्त_INITIALIZER(&UTF16_LEStatic_दत्त, &_UTF16LEImpl);
 
 /* UTF-16 (Detect BOM) ------------------------------------------------------ */
 
@@ -1275,95 +1275,95 @@ const UConverterSharedData _UTF16LEData=
  *   UTF-16LE,version=1 (Java "UnicodeLittle" encoding) treat a reverse BOM as an error.
  */
 U_CDECL_BEGIN
-static void  U_CALLCONV
+स्थिर शून्य  U_CALLCONV
 _UTF16Reset(UConverter *cnv, UConverterResetChoice choice) {
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    यदि(choice<=UCNV_RESET_गन्तव्यम्_UNICODE) {
         /* reset toUnicode: state=0 */
-        cnv->mode=0;
+        cnv->बहुलकम्=0;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
+    यदि(choice!=UCNV_RESET_गन्तव्यम्_UNICODE) {
         /* reset fromUnicode: prepare to output the UTF-16PE BOM */
-        cnv->fromUnicodeStatus=UCNV_NEED_TO_WRITE_BOM;
+        cnv->from_Unicode_स्थितिः=UCNV_NEED_गन्तव्यम्_WRITE_BOM;
     }
 }
-U_CDECL_END
-extern const UConverterSharedData _UTF16v2Data;
+U_CDECL_अन्तः
+बाह्य ध्रुव UConverter_Shared_दत्त UTF16v2_दत्त;
 U_CDECL_BEGIN
-static void U_CALLCONV
+स्थिर शून्य U_CALLCONV
 _UTF16Open(UConverter *cnv,
-           UConverterLoadArgs *pArgs,
-           UErrorCode *pErrorCode) {
-    if(UCNV_GET_VERSION(cnv)<=2) {
-        if(UCNV_GET_VERSION(cnv)==2 && !pArgs->onlyTestIsLoadable) {
+           UConverter_आरोपय_तर्काः *p_तर्काः,
+           UError_संहिता *p_Error_संहिता) {
+    यदि(UCNV_GET_संस्करणम्(cnv)<=2) {
+        यदि(UCNV_GET_संस्करणम्(cnv)==2 && !p_तर्काः->onlyTestIsLoadable) {
             /*
              * Switch implementation, and switch the staticData that's different
              * and was copied into the UConverter.
              * (See ucnv_createConverterFromSharedData() in ucnv_bld.c.)
              * UTF-16,version=2 fromUnicode() always writes a big-endian byte stream.
              */
-            cnv->sharedData=(UConverterSharedData*)&_UTF16v2Data;
-            uprv_memcpy(cnv->subChars, _UTF16v2Data.staticData->subChar, UCNV_MAX_SUBCHAR_LEN);
+            cnv->shared_दत्त=(UConverter_Shared_दत्त*)&UTF16v2_दत्त;
+            uprv_memcpy(cnv->subChars, UTF16v2_दत्त.static_दत्त->subChar, UCNV_MAX_SUBCHAR_LEN);
         }
         _UTF16Reset(cnv, UCNV_RESET_BOTH);
-    } else {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
+    } अन्यथा {
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
     }
 }
 
-static const char *  U_CALLCONV
-_UTF16GetName(const UConverter *cnv) {
-    if(UCNV_GET_VERSION(cnv)==0) {
-        return "UTF-16";
-    } else if(UCNV_GET_VERSION(cnv)==1) {
-        return "UTF-16,version=1";
-    } else {
-        return "UTF-16,version=2";
+स्थिर ध्रुव वर्ण *  U_CALLCONV
+_UTF16GetName(ध्रुव UConverter *cnv) {
+    यदि(UCNV_GET_संस्करणम्(cnv)==0) {
+        प्रत्यागम "UTF-16";
+    } अन्यथा यदि(UCNV_GET_संस्करणम्(cnv)==1) {
+        प्रत्यागम "UTF-16,version=1";
+    } अन्यथा {
+        प्रत्यागम "UTF-16,version=2";
     }
 }
-U_CDECL_END
-extern const UConverterSharedData _UTF16Data;
+U_CDECL_अन्तः
+बाह्य ध्रुव UConverter_Shared_दत्त UTF16_दत्त;
 
-static inline bool IS_UTF16BE(const UConverter *cnv) {
-    return ((cnv)->sharedData == &_UTF16BEData);
+स्थिर अन्तःस्थ तार्किक IS_UTF16BE(ध्रुव UConverter *cnv) {
+    प्रत्यागम ((cnv)->shared_दत्त == &_UTF16BEData);
 }
 
-static inline bool IS_UTF16LE(const UConverter *cnv) {
-    return ((cnv)->sharedData == &_UTF16LEData);
+स्थिर अन्तःस्थ तार्किक IS_UTF16LE(ध्रुव UConverter *cnv) {
+    प्रत्यागम ((cnv)->shared_दत्त == &_UTF16LEData);
 }
 
-static inline bool IS_UTF16(const UConverter *cnv) {
-    return ((cnv)->sharedData==&_UTF16Data) || ((cnv)->sharedData == &_UTF16v2Data);
+स्थिर अन्तःस्थ तार्किक IS_UTF16(ध्रुव UConverter *cnv) {
+    प्रत्यागम ((cnv)->shared_दत्त==&UTF16_दत्त) || ((cnv)->shared_दत्त == &UTF16v2_दत्त);
 }
 
 U_CDECL_BEGIN
-static void U_CALLCONV
-_UTF16ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                           UErrorCode *pErrorCode) {
-    UConverter *cnv=pArgs->converter;
-    const char *source=pArgs->source;
-    const char *sourceLimit=pArgs->sourceLimit;
-    int32_t *offsets=pArgs->offsets;
+स्थिर शून्य U_CALLCONV
+UTF16_गन्तव्यम्_Unicode_With_Offsets(UConverter_गन्तव्यम्_Unicode_तर्काः *p_तर्काः,
+                           UError_संहिता *p_Error_संहिता) {
+    UConverter *cnv=p_तर्काः->converter;
+    ध्रुव वर्ण *source=p_तर्काः->source;
+    ध्रुव वर्ण *source_सीमा=p_तर्काः->source_सीमा;
+    int32_t *offsets=p_तर्काः->offsets;
 
-    int32_t state, offsetDelta;
+    int32_t state, विस्थापनम्_Delta;
     uint8_t b;
 
-    state=cnv->mode;
+    state=cnv->बहुलकम्;
 
     /*
      * If we detect a BOM in this buffer, then we must add the BOM size to the
      * offsets because the actual converter function will not see and count the BOM.
      * offsetDelta will have the number of the BOM bytes that are in the current buffer.
      */
-    offsetDelta=0;
+    विस्थापनम्_Delta=0;
 
-    while(source<sourceLimit && U_SUCCESS(*pErrorCode)) {
-        switch(state) {
-        case 0:
-            cnv->toUBytes[0]=(uint8_t)*source++;
-            cnv->toULength=1;
+    यावत्(source<source_सीमा && U_SUCCESS(*p_Error_संहिता)) {
+        विकल्प(state) {
+        पक्ष 0:
+            cnv->गन्तव्यम्_UBytes[0]=(uint8_t)*source++;
+            cnv->गन्तव्यम्_ULength=1;
             state=1;
-            break;
-        case 1:
+            भङ्ग;
+        पक्ष 1:
             /*
              * Only inside this switch case can the state variable
              * temporarily take two additional values:
@@ -1371,41 +1371,41 @@ _UTF16ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
              * 7: BOM error, continue with LE
              */
             b=*source;
-            if(cnv->toUBytes[0]==0xfe && b==0xff) {
-                if(IS_UTF16LE(cnv)) {
+            यदि(cnv->गन्तव्यम्_UBytes[0]==0xfe && b==0xff) {
+                यदि(IS_UTF16LE(cnv)) {
                     state=7; /* illegal reverse BOM for Java "UnicodeLittle" */
-                } else {
+                } अन्यथा {
                     state=8; /* detect UTF-16BE */
                 }
-            } else if(cnv->toUBytes[0]==0xff && b==0xfe) {
-                if(IS_UTF16BE(cnv)) {
+            } अन्यथा यदि(cnv->गन्तव्यम्_UBytes[0]==0xff && b==0xfe) {
+                यदि(IS_UTF16BE(cnv)) {
                     state=6; /* illegal reverse BOM for Java "UnicodeBig" */
-                } else {
+                } अन्यथा {
                     state=9; /* detect UTF-16LE */
                 }
-            } else if((IS_UTF16(cnv) && UCNV_GET_VERSION(cnv)==1)) {
+            } अन्यथा यदि((IS_UTF16(cnv) && UCNV_GET_संस्करणम्(cnv)==1)) {
                 state=6; /* illegal missing BOM for Java "Unicode" */
             }
-            if(state>=8) {
+            यदि(state>=8) {
                 /* BOM detected, consume it */
                 ++source;
-                cnv->toULength=0;
-                offsetDelta=(int32_t)(source-pArgs->source);
-            } else if(state<6) {
+                cnv->गन्तव्यम्_ULength=0;
+                विस्थापनम्_Delta=(int32_t)(source-p_तर्काः->source);
+            } अन्यथा यदि(state<6) {
                 /* ok: no BOM, and not a reverse BOM */
-                if(source!=pArgs->source) {
+                यदि(source!=p_तर्काः->source) {
                     /* reset the source for a correct first offset */
-                    source=pArgs->source;
-                    cnv->toULength=0;
+                    source=p_तर्काः->source;
+                    cnv->गन्तव्यम्_ULength=0;
                 }
-                if(IS_UTF16LE(cnv)) {
+                यदि(IS_UTF16LE(cnv)) {
                     /* Make Java "UnicodeLittle" default to LE. */
                     state=9;
-                } else {
+                } अन्यथा {
                     /* Make standard UTF-16 and Java "UnicodeBig" default to BE. */
                     state=8;
                 }
-            } else {
+            } अन्यथा {
                 /*
                  * error: missing BOM, or reverse BOM
                  * UTF-16,version=1: Java-specific "Unicode" requires a BOM.
@@ -1413,167 +1413,167 @@ _UTF16ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
                  * UTF-16LE,version=1: Java-specific "UnicodeLittle" requires an LE BOM or no BOM.
                  */
                 /* report the non-BOM or reverse BOM as an illegal sequence */
-                cnv->toUBytes[1]=b;
-                cnv->toULength=2;
-                pArgs->source=source+1;
+                cnv->गन्तव्यम्_UBytes[1]=b;
+                cnv->गन्तव्यम्_ULength=2;
+                p_तर्काः->source=source+1;
                 /* continue with conversion if the callback resets the error */
                 /*
                  * Make Java "Unicode" default to BE like standard UTF-16.
                  * Make Java "UnicodeBig" and "UnicodeLittle" default
                  * to their normal endiannesses.
                  */
-                cnv->mode=state+2;
-                *pErrorCode=U_ILLEGAL_ESCAPE_SEQUENCE;
-                return;
+                cnv->बहुलकम्=state+2;
+                *p_Error_संहिता=U_ILLEGAL_ESCAPE_SEQUENCE;
+                प्रत्यागम;
             }
             /* convert the rest of the stream */
-            cnv->mode=state;
-            continue;
-        case 8:
+            cnv->बहुलकम्=state;
+            अनुवर्त;
+        पक्ष 8:
             /* call UTF-16BE */
-            pArgs->source=source;
-            _UTF16BEToUnicodeWithOffsets(pArgs, pErrorCode);
-            source=pArgs->source;
-            break;
-        case 9:
+            p_तर्काः->source=source;
+            _UTF16BEToUnicodeWithOffsets(p_तर्काः, p_Error_संहिता);
+            source=p_तर्काः->source;
+            भङ्ग;
+        पक्ष 9:
             /* call UTF-16LE */
-            pArgs->source=source;
-            _UTF16LEToUnicodeWithOffsets(pArgs, pErrorCode);
-            source=pArgs->source;
-            break;
-        default:
-            break; /* does not occur */
+            p_तर्काः->source=source;
+            _UTF16LEToUnicodeWithOffsets(p_तर्काः, p_Error_संहिता);
+            source=p_तर्काः->source;
+            भङ्ग;
+        स्वभाव:
+            भङ्ग; /* does not occur */
         }
     }
 
     /* add BOM size to offsets - see comment at offsetDelta declaration */
-    if(offsets!=nullptr && offsetDelta!=0) {
-        int32_t *offsetsLimit=pArgs->offsets;
-        while(offsets<offsetsLimit) {
-            *offsets++ += offsetDelta;
+    यदि(offsets!=शून्यसूचकः && विस्थापनम्_Delta!=0) {
+        int32_t *offsets_सीमा=p_तर्काः->offsets;
+        यावत्(offsets<offsets_सीमा) {
+            *offsets++ += विस्थापनम्_Delta;
         }
     }
 
-    pArgs->source=source;
+    p_तर्काः->source=source;
 
-    if(source==sourceLimit && pArgs->flush) {
+    यदि(source==source_सीमा && p_तर्काः->flush) {
         /* handle truncated input */
-        switch(state) {
-        case 0:
-            break; /* no input at all, nothing to do */
-        case 8:
-            _UTF16BEToUnicodeWithOffsets(pArgs, pErrorCode);
-            break;
-        case 9:
-            _UTF16LEToUnicodeWithOffsets(pArgs, pErrorCode);
-            break;
-        default:
+        विकल्प(state) {
+        पक्ष 0:
+            भङ्ग; /* no input at all, nothing to do */
+        पक्ष 8:
+            _UTF16BEToUnicodeWithOffsets(p_तर्काः, p_Error_संहिता);
+            भङ्ग;
+        पक्ष 9:
+            _UTF16LEToUnicodeWithOffsets(p_तर्काः, p_Error_संहिता);
+            भङ्ग;
+        स्वभाव:
             /* 0<state<8: framework will report truncation, nothing to do here */
-            break;
+            भङ्ग;
         }
     }
 
-    cnv->mode=state;
+    cnv->बहुलकम्=state;
 }
 
-static UChar32 U_CALLCONV
-_UTF16GetNextUChar(UConverterToUnicodeArgs *pArgs,
-                   UErrorCode *pErrorCode) {
-    switch(pArgs->converter->mode) {
-    case 8:
-        return _UTF16BEGetNextUChar(pArgs, pErrorCode);
-    case 9:
-        return _UTF16LEGetNextUChar(pArgs, pErrorCode);
-    default:
-        return UCNV_GET_NEXT_UCHAR_USE_TO_U;
+स्थिर UChar32 U_CALLCONV
+UTF16_Get_अग्र_UChar(UConverter_गन्तव्यम्_Unicode_तर्काः *p_तर्काः,
+                   UError_संहिता *p_Error_संहिता) {
+    विकल्प(p_तर्काः->converter->बहुलकम्) {
+    पक्ष 8:
+        प्रत्यागम UTF16_BEGet_अग्र_UChar(p_तर्काः, p_Error_संहिता);
+    पक्ष 9:
+        प्रत्यागम UTF16_LEGet_अग्र_UChar(p_तर्काः, p_Error_संहिता);
+    स्वभाव:
+        प्रत्यागम UCNV_GET_अग्र_UCHAR_USE_गन्तव्यम्_U;
     }
 }
-U_CDECL_END
+U_CDECL_अन्तः
 
-static const UConverterImpl _UTF16Impl = {
+स्थिर ध्रुव UConverterImpl _UTF16Impl = {
     UCNV_UTF16,
 
-    nullptr,
-    nullptr,
+    शून्यसूचकः,
+    शून्यसूचकः,
 
     _UTF16Open,
-    nullptr,
+    शून्यसूचकः,
     _UTF16Reset,
 
-    _UTF16ToUnicodeWithOffsets,
-    _UTF16ToUnicodeWithOffsets,
+    UTF16_गन्तव्यम्_Unicode_With_Offsets,
+    UTF16_गन्तव्यम्_Unicode_With_Offsets,
     _UTF16PEFromUnicodeWithOffsets,
     _UTF16PEFromUnicodeWithOffsets,
-    _UTF16GetNextUChar,
+    UTF16_Get_अग्र_UChar,
 
-    nullptr, /* ### TODO implement getStarters for all Unicode encodings?! */
+    शून्यसूचकः, /* ### TODO implement getStarters for all Unicode encodings?! */
     _UTF16GetName,
-    nullptr,
-    nullptr,
-    ucnv_getNonSurrogateUnicodeSet,
+    शून्यसूचकः,
+    शून्यसूचकः,
+    ucnv_get_Non_Surrogate_Unicode_समुच्चयः,
 
-    nullptr,
-    nullptr
+    शून्यसूचकः,
+    शून्यसूचकः
 };
 
-static const UConverterStaticData _UTF16StaticData = {
-    sizeof(UConverterStaticData),
+स्थिर ध्रुव UConverter_Static_दत्त UTF16_Static_दत्त = {
+    परिमाण(UConverter_Static_दत्त),
     "UTF-16",
     1204, /* CCSID for BOM sensitive UTF-16 */
     UCNV_IBM, UCNV_UTF16, 2, 2,
-#if U_IS_BIG_ENDIAN
+#यदि U_IS_BIG_ENDIAN
     { 0xff, 0xfd, 0, 0 }, 2,
-#else
+#अन्यथा
     { 0xfd, 0xff, 0, 0 }, 2,
-#endif
-    false, false,
+#यदि_अन्तः
+    असत्य, असत्य,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _UTF16Data =
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF16StaticData, &_UTF16Impl);
+ध्रुव UConverter_Shared_दत्त UTF16_दत्त =
+        UCNV_IMMUTABLE_SHARED_दत्त_INITIALIZER(&UTF16_Static_दत्त, &_UTF16Impl);
 
-static const UConverterImpl _UTF16v2Impl = {
+स्थिर ध्रुव UConverterImpl _UTF16v2Impl = {
     UCNV_UTF16,
 
-    nullptr,
-    nullptr,
+    शून्यसूचकः,
+    शून्यसूचकः,
 
     _UTF16Open,
-    nullptr,
+    शून्यसूचकः,
     _UTF16Reset,
 
-    _UTF16ToUnicodeWithOffsets,
-    _UTF16ToUnicodeWithOffsets,
+    UTF16_गन्तव्यम्_Unicode_With_Offsets,
+    UTF16_गन्तव्यम्_Unicode_With_Offsets,
     _UTF16BEFromUnicodeWithOffsets,
     _UTF16BEFromUnicodeWithOffsets,
-    _UTF16GetNextUChar,
+    UTF16_Get_अग्र_UChar,
 
-    nullptr, /* ### TODO implement getStarters for all Unicode encodings?! */
+    शून्यसूचकः, /* ### TODO implement getStarters for all Unicode encodings?! */
     _UTF16GetName,
-    nullptr,
-    nullptr,
-    ucnv_getNonSurrogateUnicodeSet,
+    शून्यसूचकः,
+    शून्यसूचकः,
+    ucnv_get_Non_Surrogate_Unicode_समुच्चयः,
 
-    nullptr,
-    nullptr
+    शून्यसूचकः,
+    शून्यसूचकः
 };
 
-static const UConverterStaticData _UTF16v2StaticData = {
-    sizeof(UConverterStaticData),
+स्थिर ध्रुव UConverter_Static_दत्त UTF16v2_Static_दत्त = {
+    परिमाण(UConverter_Static_दत्त),
     "UTF-16,version=2",
     1204, /* CCSID for BOM sensitive UTF-16 */
     UCNV_IBM, UCNV_UTF16, 2, 2,
     { 0xff, 0xfd, 0, 0 }, 2,
-    false, false,
+    असत्य, असत्य,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _UTF16v2Data =
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF16v2StaticData, &_UTF16v2Impl);
+ध्रुव UConverter_Shared_दत्त UTF16v2_दत्त =
+        UCNV_IMMUTABLE_SHARED_दत्त_INITIALIZER(&UTF16v2_Static_दत्त, &_UTF16v2Impl);
 
-#endif
+#यदि_अन्तः

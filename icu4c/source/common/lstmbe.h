@@ -1,26 +1,26 @@
 // © 2021 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#ifndef LSTMBE_H
-#define LSTMBE_H
+#यदि_अपरिभाषितम् LSTMBE_H
+#परिभाषय LSTMBE_H
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#यदि !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/uniset.h"
-#include "unicode/ures.h"
-#include "unicode/utext.h"
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/uniset.h"
+#अन्तर्भाव "unicode/ures.h"
+#अन्तर्भाव "unicode/utext.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#include "brkeng.h"
-#include "dictbe.h"
-#include "uvectr32.h"
+#अन्तर्भाव "brkeng.h"
+#अन्तर्भाव "dictbe.h"
+#अन्तर्भाव "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
 class Vectorizer;
-struct LSTMData;
+संरचना LSTMData;
 
 /*******************************************************************
  * LSTMBreakEngine
@@ -33,21 +33,21 @@ struct LSTMData;
  * <p>After it is constructed a LSTMBreakEngine may be shared between
  * threads without synchronization.</p>
  */
-class LSTMBreakEngine : public DictionaryBreakEngine {
-public:
+class LSTMBreakEngine : सार्वजनिक DictionaryBreakEngine {
+सार्वजनिक:
     /**
      * <p>Constructor.</p>
      */
-    LSTMBreakEngine(const LSTMData* data, const UnicodeSet& set, UErrorCode &status);
+    LSTMBreakEngine(ध्रुव LSTMData* दत्त, ध्रुव Unicode_समुच्चयः& समुच्चयः, UError_संहिता &स्थितिः);
 
     /**
      * <p>Virtual destructor.</p>
      */
-    virtual ~LSTMBreakEngine();
+    आभास ~LSTMBreakEngine();
 
-    virtual const char16_t* name() const;
+    आभास ध्रुव char16_t* name() ध्रुव;
 
-protected:
+रक्षित:
     /**
      * <p>Divide up a range of known dictionary characters handled by this break engine.</p>
      *
@@ -58,31 +58,31 @@ protected:
      * @param status Information on any errors encountered.
      * @return The number of breaks found
      */
-     virtual int32_t divideUpDictionaryRange(UText *text,
+     आभास int32_t divide_ऊर्ध्वम्_Dictionary_Range(UText *text,
                                              int32_t rangeStart,
-                                             int32_t rangeEnd,
-                                             UVector32 &foundBreaks,
+                                             int32_t range_अन्तः,
+                                             UVector32 &प्राप्तम्_Breaks,
                                              UBool isPhraseBreaking,
-                                             UErrorCode& status) const override;
-private:
-    const LSTMData* fData;
-    const Vectorizer* fVectorizer;
+                                             UError_संहिता& स्थितिः) ध्रुव override;
+गुप्त:
+    ध्रुव LSTMData* f_दत्त;
+    ध्रुव Vectorizer* fVectorizer;
 };
 
-U_CAPI const LanguageBreakEngine* U_EXPORT2 CreateLSTMBreakEngine(
-    UScriptCode script, const LSTMData* data, UErrorCode& status);
+U_CAPI ध्रुव LanguageBreakEngine* U_EXPORT2 CreateLSTMBreakEngine(
+    UScript_संहिता script, ध्रुव LSTMData* दत्त, UError_संहिता& स्थितिः);
 
-U_CAPI const LSTMData* U_EXPORT2 CreateLSTMData(
-    UResourceBundle* rb, UErrorCode& status);
+U_CAPI ध्रुव LSTMData* U_EXPORT2 CreateLSTMData(
+    UResourceBundle* rb, UError_संहिता& स्थितिः);
 
-U_CAPI const LSTMData* U_EXPORT2 CreateLSTMDataForScript(
-    UScriptCode script, UErrorCode& status);
+U_CAPI ध्रुव LSTMData* U_EXPORT2 CreateLSTMDataForScript(
+    UScript_संहिता script, UError_संहिता& स्थितिः);
 
-U_CAPI void U_EXPORT2 DeleteLSTMData(const LSTMData* data);
-U_CAPI const char16_t* U_EXPORT2 LSTMDataName(const LSTMData* data);
+U_CAPI शून्य U_EXPORT2 DeleteLSTMData(ध्रुव LSTMData* दत्त);
+U_CAPI ध्रुव char16_t* U_EXPORT2 LSTMDataName(ध्रुव LSTMData* दत्त);
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#यदि_अन्तः /* #if !UCONFIG_NO_BREAK_ITERATION */
 
-#endif  /* LSTMBE_H */
+#यदि_अन्तः  /* LSTMBE_H */

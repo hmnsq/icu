@@ -15,14 +15,14 @@
 *   06/24/02    weiv        Added support for resource sharing
 */
 
-#ifndef __RESDATA_H__
-#define __RESDATA_H__
+#यदि_अपरिभाषितम् __RESDATA_H__
+#परिभाषय __RESDATA_H__
 
-#include "unicode/utypes.h"
-#include "unicode/udata.h"
-#include "unicode/ures.h"
-#include "putilimp.h"
-#include "udataswp.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/udata.h"
+#अन्तर्भाव "unicode/ures.h"
+#अन्तर्भाव "putilimp.h"
+#अन्तर्भाव "udataswp.h"
 
 /**
  * Numeric constants for internal-only types of resource items.
@@ -30,9 +30,9 @@
  * because they are used together.
  * Internal types are never returned by ures_getType().
  */
-typedef enum {
+प्रकारनिर्देश गणना {
     /** Include a negative value so that the compiler uses the same int type as for UResType. */
-    URES_INTERNAL_NONE=-1,
+    URES_आन्तरिकम्_NONE=-1,
 
     /** Resource type constant for tables with 32-bit count, key offsets and values. */
     URES_TABLE32=4,
@@ -53,42 +53,42 @@ typedef enum {
     URES_ARRAY16=9
 
     /* Resource type 15 is not defined but effectively used by RES_BOGUS=0xffffffff. */
-} UResInternalType;
+} URes_आन्तरिकम्_Type;
 
 /*
  * A Resource is a 32-bit value that has 2 bit fields:
  * 31..28   4-bit type, see enum below
  * 27..0    28-bit four-byte-offset or value according to the type
  */
-typedef uint32_t Resource;
+प्रकारनिर्देश uint32_t Resource;
 
-#define RES_BOGUS 0xffffffff
-#define RES_MAX_OFFSET 0x0fffffff
+#परिभाषय RES_BOGUS 0xffffffff
+#परिभाषय RES_MAX_विस्थापनम् 0x0fffffff
 
-#define RES_GET_TYPE(res) ((int32_t)((res)>>28UL))
-#define RES_GET_OFFSET(res) ((res)&0x0fffffff)
-#define RES_GET_POINTER(pRoot, res) ((pRoot)+RES_GET_OFFSET(res))
+#परिभाषय RES_GET_TYPE(res) ((int32_t)((res)>>28UL))
+#परिभाषय RES_GET_विस्थापनम्(res) ((res)&0x0fffffff)
+#परिभाषय RES_GET_POINTER(p_मूलम्, res) ((p_मूलम्)+RES_GET_विस्थापनम्(res))
 
 /* get signed and unsigned integer values directly from the Resource handle
  * NOTE: For proper logging, please use the res_getInt() constexpr
  */
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
+#यदि U_SIGNED_दक्षिणः_सरणम्_IS_ARITHMETIC
 #   define RES_GET_INT_NO_TRACE(res) (((int32_t)((res)<<4L))>>4L)
-#else
+#अन्यथा
 #   define RES_GET_INT_NO_TRACE(res) (int32_t)(((res)&0x08000000) ? (res)|0xf0000000 : (res)&0x07ffffff)
-#endif
+#यदि_अन्तः
 
-#define RES_GET_UINT_NO_TRACE(res) ((res)&0x0fffffff)
+#परिभाषय RES_GET_UINT_NO_TRACE(res) ((res)&0x0fffffff)
 
-#define URES_IS_ARRAY(type) ((int32_t)(type)==URES_ARRAY || (int32_t)(type)==URES_ARRAY16)
-#define URES_IS_TABLE(type) ((int32_t)(type)==URES_TABLE || (int32_t)(type)==URES_TABLE16 || (int32_t)(type)==URES_TABLE32)
-#define URES_IS_CONTAINER(type) (URES_IS_TABLE(type) || URES_IS_ARRAY(type))
+#परिभाषय URES_IS_ARRAY(type) ((int32_t)(type)==URES_ARRAY || (int32_t)(type)==URES_ARRAY16)
+#परिभाषय URES_IS_सारणी(type) ((int32_t)(type)==URES_सारणी || (int32_t)(type)==URES_TABLE16 || (int32_t)(type)==URES_TABLE32)
+#परिभाषय URES_IS_CONTAINER(type) (URES_IS_सारणी(type) || URES_IS_ARRAY(type))
 
-#define URES_MAKE_RESOURCE(type, offset) (((Resource)(type)<<28)|(Resource)(offset))
-#define URES_MAKE_EMPTY_RESOURCE(type) ((Resource)(type)<<28)
+#परिभाषय URES_MAKE_RESOURCE(type, विस्थापनम्) (((Resource)(type)<<28)|(Resource)(विस्थापनम्))
+#परिभाषय URES_MAKE_रिक्तानि_RESOURCE(type) ((Resource)(type)<<28)
 
 /* indexes[] value names; indexes are generally 32-bit (Resource) indexes */
-enum {
+गणना {
     /**
      * [0] contains the length of indexes[]
      * which is at most URES_INDEX_TOP of the latest format version
@@ -101,21 +101,21 @@ enum {
      * formatVersion>=3:
      *        bits 31..8 poolStringIndexLimit bits 23..0
      */
-    URES_INDEX_LENGTH,
+    URES_सूचकांक_दीर्घता,
     /**
      * [1] contains the top of the key strings,
      *     same as the bottom of resources or UTF-16 strings, rounded up
      */
-    URES_INDEX_KEYS_TOP,
+    URES_सूचकांक_कुञ्चिकाः_शिखरम्,
     /** [2] contains the top of all resources */
-    URES_INDEX_RESOURCES_TOP,
+    URES_सूचकांक_RESOURCES_शिखरम्,
     /**
      * [3] contains the top of the bundle,
      *     in case it were ever different from [2]
      */
-    URES_INDEX_BUNDLE_TOP,
+    URES_सूचकांक_BUNDLE_शिखरम्,
     /** [4] max. length of any table */
-    URES_INDEX_MAX_TABLE_LENGTH,
+    URES_सूचकांक_MAX_सारणी_दीर्घता,
     /**
      * [5] attributes bit set, see URES_ATT_* (new in formatVersion 1.2)
      *
@@ -123,15 +123,15 @@ enum {
      *   bits 31..16 poolStringIndex16Limit
      *   bits 15..12 poolStringIndexLimit bits 27..24
      */
-    URES_INDEX_ATTRIBUTES,
+    URES_सूचकांक_गुणाः,
     /**
      * [6] top of the 16-bit units (UTF-16 string v2 UChars, URES_TABLE16, URES_ARRAY16),
      *     rounded up (new in formatVersion 2.0, ICU 4.4)
      */
-    URES_INDEX_16BIT_TOP,
+    URES_सूचकांक_16_BIT_शिखरम्,
     /** [7] checksum of the pool bundle (new in formatVersion 2.0, ICU 4.4) */
-    URES_INDEX_POOL_CHECKSUM,
-    URES_INDEX_TOP
+    URES_सूचकांक_POOL_CHECKSUM,
+    URES_सूचकांक_शिखरम्
 };
 
 /*
@@ -145,7 +145,7 @@ enum {
  * reliably. Dependency checking should ignore such bundles, and loading should
  * use fallbacks.
  */
-#define URES_ATT_NO_FALLBACK 1
+#परिभाषय URES_ATT_NO_FALLBACK 1
 
 /*
  * Attributes for bundles that are, or use, a pool bundle.
@@ -153,8 +153,8 @@ enum {
  * to reduce their total size.
  * New in formatVersion 2 (ICU 4.4).
  */
-#define URES_ATT_IS_POOL_BUNDLE 2
-#define URES_ATT_USES_POOL_BUNDLE 4
+#परिभाषय URES_ATT_IS_POOL_BUNDLE 2
+#परिभाषय URES_ATT_उपयुङ्क्ते_POOL_BUNDLE 4
 
 /*
  * File format for .res resource bundle files
@@ -383,49 +383,49 @@ enum {
 /*
  * Structure for a single, memory-mapped ResourceBundle.
  */
-typedef struct ResourceData {
-    UDataMemory *data;
-    const int32_t *pRoot;
-    const uint16_t *p16BitUnits;
-    const char *poolBundleKeys;
-    Resource rootRes;
-    int32_t localKeyLimit;
-    const uint16_t *poolBundleStrings;
-    int32_t poolStringIndexLimit;
-    int32_t poolStringIndex16Limit;
+प्रकारनिर्देश संरचना Resource_दत्त {
+    UData_स्मृतिः *दत्त;
+    ध्रुव int32_t *p_मूलम्;
+    ध्रुव uint16_t *p16BitUnits;
+    ध्रुव वर्ण *pool_Bundle_कुञ्चिकाः;
+    Resource मूलम्_Res;
+    int32_t local_कुञ्चिका_सीमा;
+    ध्रुव uint16_t *pool_Bundle_वाक्यानि;
+    int32_t pool_String_सूचकांक_सीमा;
+    int32_t pool_String_Index16_सीमा;
     UBool noFallback; /* see URES_ATT_NO_FALLBACK */
     UBool isPoolBundle;
-    UBool usesPoolBundle;
+    UBool उपयुङ्क्ते_Pool_Bundle;
     UBool useNativeStrcmp;
-} ResourceData;
+} Resource_दत्त;
 
-struct UResourceDataEntry;   // forward declared for ResoureDataValue below; actually defined in uresimp.h
+संरचना UResource_दत्त_प्रविष्टिः;   // forward declared for ResoureDataValue below; actually defined in uresimp.h
 
 /*
  * Read a resource bundle from memory.
  */
-U_CAPI void U_EXPORT2
-res_read(ResourceData *pResData,
-         const UDataInfo *pInfo, const void *inBytes, int32_t length,
-         UErrorCode *errorCode);
+U_CAPI शून्य U_EXPORT2
+res_read(Resource_दत्त *p_Res_दत्त,
+         ध्रुव UDataInfo *pInfo, ध्रुव शून्य *अन्तर्_अष्टकानि, int32_t दीर्घता,
+         UError_संहिता *error_संहिता);
 
 /*
  * Load a resource bundle file.
  * The ResourceData structure must be allocated externally.
  */
-U_CFUNC void
-res_load(ResourceData *pResData,
-         const char *path, const char *name, UErrorCode *errorCode);
+U_CFUNC शून्य
+res_आरोपय(Resource_दत्त *p_Res_दत्त,
+         ध्रुव वर्ण *मार्गः, ध्रुव वर्ण *name, UError_संहिता *error_संहिता);
 
 /*
  * Release a resource bundle file.
  * This does not release the ResourceData structure itself.
  */
-U_CFUNC void
-res_unload(ResourceData *pResData);
+U_CFUNC शून्य
+res_unload(Resource_दत्त *p_Res_दत्त);
 
 U_CAPI UResType U_EXPORT2
-res_getPublicType(Resource res);
+res_get_लौकिकम्_Type(Resource res);
 
 ///////////////////////////////////////////////////////////////////////////
 // To enable tracing, use the inline versions of the res_get* functions. //
@@ -436,32 +436,32 @@ res_getPublicType(Resource res);
  * and set its length in *pLength.
  * Returns NULL if not found.
  */
-U_CAPI const UChar * U_EXPORT2
-res_getStringNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength);
+U_CAPI ध्रुव UChar * U_EXPORT2
+res_getStringNoTrace(ध्रुव Resource_दत्त *p_Res_दत्त, Resource res, int32_t *p_दीर्घता);
 
-U_CAPI const uint8_t * U_EXPORT2
-res_getBinaryNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength);
+U_CAPI ध्रुव uint8_t * U_EXPORT2
+res_get_द्विमान_No_Trace(ध्रुव Resource_दत्त *p_Res_दत्त, Resource res, int32_t *p_दीर्घता);
 
-U_CAPI const int32_t * U_EXPORT2
-res_getIntVectorNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength);
+U_CAPI ध्रुव int32_t * U_EXPORT2
+res_get_Int_सदिशम्_No_Trace(ध्रुव Resource_दत्त *p_Res_दत्त, Resource res, int32_t *p_दीर्घता);
 
-U_CAPI const UChar * U_EXPORT2
-res_getAlias(const ResourceData *pResData, Resource res, int32_t *pLength);
+U_CAPI ध्रुव UChar * U_EXPORT2
+res_getAlias(ध्रुव Resource_दत्त *p_Res_दत्त, Resource res, int32_t *p_दीर्घता);
 
 U_CAPI Resource U_EXPORT2
-res_getResource(const ResourceData *pResData, const char *key);
+res_getResource(ध्रुव Resource_दत्त *p_Res_दत्त, ध्रुव वर्ण *कुञ्चिका);
 
 U_CAPI int32_t U_EXPORT2
-res_countArrayItems(const ResourceData *pResData, Resource res);
+res_गणनम्_Array_वस्तूनि(ध्रुव Resource_दत्त *p_Res_दत्त, Resource res);
 
 U_CAPI Resource U_EXPORT2
-res_getArrayItem(const ResourceData *pResData, Resource array, int32_t indexS);
+res_getArrayItem(ध्रुव Resource_दत्त *p_Res_दत्त, Resource array, int32_t सूचकांक_S);
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByIndex(const ResourceData *pResData, Resource table, int32_t indexS, const char ** key);
+res_get_सारणी_Item_By_सूचकांक(ध्रुव Resource_दत्त *p_Res_दत्त, Resource सारणी, int32_t सूचकांक_S, ध्रुव वर्ण ** कुञ्चिका);
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByKey(const ResourceData *pResData, Resource table, int32_t *indexS, const char* * key);
+res_get_सारणी_Item_By_कुञ्चिका(ध्रुव Resource_दत्त *p_Res_दत्त, Resource सारणी, int32_t *सूचकांक_S, ध्रुव वर्ण* * कुञ्चिका);
 
 /**
  * Iterates over the path and stops when a scalar resource is found.
@@ -472,103 +472,103 @@ res_getTableItemByKey(const ResourceData *pResData, Resource table, int32_t *ind
  * @param path input: "CollationElements/Sequence" or "zoneStrings/3/2" etc.;
  *             output: points to the part that has not yet been processed
  */
-U_CFUNC Resource res_findResource(const ResourceData *pResData, Resource r,
-                                  char** path, const char** key);
+U_CFUNC Resource res_findResource(ध्रुव Resource_दत्त *p_Res_दत्त, Resource r,
+                                  वर्ण** मार्गः, ध्रुव वर्ण** कुञ्चिका);
 
-#ifdef __cplusplus
+#यदि_परिभाषितम् __cplusplus
 
-#include "resource.h"
-#include "restrace.h"
+#अन्तर्भाव "resource.h"
+#अन्तर्भाव "restrace.h"
 
 U_NAMESPACE_BEGIN
 
-inline const char16_t* res_getString(const ResourceTracer& traceInfo,
-        const ResourceData *pResData, Resource res, int32_t *pLength) {
+अन्तःस्थ ध्रुव char16_t* res_getString(ध्रुव ResourceTracer& traceInfo,
+        ध्रुव Resource_दत्त *p_Res_दत्त, Resource res, int32_t *p_दीर्घता) {
     traceInfo.trace("string");
-    return res_getStringNoTrace(pResData, res, pLength);
+    प्रत्यागम res_getStringNoTrace(p_Res_दत्त, res, p_दीर्घता);
 }
 
-inline const uint8_t* res_getBinary(const ResourceTracer& traceInfo,
-        const ResourceData *pResData, Resource res, int32_t *pLength) {
+अन्तःस्थ ध्रुव uint8_t* res_get_द्विमान(ध्रुव ResourceTracer& traceInfo,
+        ध्रुव Resource_दत्त *p_Res_दत्त, Resource res, int32_t *p_दीर्घता) {
     traceInfo.trace("binary");
-    return res_getBinaryNoTrace(pResData, res, pLength);
+    प्रत्यागम res_get_द्विमान_No_Trace(p_Res_दत्त, res, p_दीर्घता);
 }
 
-inline const int32_t* res_getIntVector(const ResourceTracer& traceInfo,
-        const ResourceData *pResData, Resource res, int32_t *pLength) {
+अन्तःस्थ ध्रुव int32_t* res_get_Int_सदिशम्(ध्रुव ResourceTracer& traceInfo,
+        ध्रुव Resource_दत्त *p_Res_दत्त, Resource res, int32_t *p_दीर्घता) {
     traceInfo.trace("intvector");
-    return res_getIntVectorNoTrace(pResData, res, pLength);
+    प्रत्यागम res_get_Int_सदिशम्_No_Trace(p_Res_दत्त, res, p_दीर्घता);
 }
 
-inline int32_t res_getInt(const ResourceTracer& traceInfo, Resource res) {
+अन्तःस्थ int32_t res_getInt(ध्रुव ResourceTracer& traceInfo, Resource res) {
     traceInfo.trace("int");
-    return RES_GET_INT_NO_TRACE(res);
+    प्रत्यागम RES_GET_INT_NO_TRACE(res);
 }
 
-inline uint32_t res_getUInt(const ResourceTracer& traceInfo, Resource res) {
+अन्तःस्थ uint32_t res_getUInt(ध्रुव ResourceTracer& traceInfo, Resource res) {
     traceInfo.trace("uint");
-    return RES_GET_UINT_NO_TRACE(res);
+    प्रत्यागम RES_GET_UINT_NO_TRACE(res);
 }
 
-class ResourceDataValue : public ResourceValue {
-public:
-    ResourceDataValue() :
-        pResData(nullptr),
-        validLocaleDataEntry(nullptr),
+class Resource_दत्त_मानम् : सार्वजनिक Resource_मानम् {
+सार्वजनिक:
+    Resource_दत्त_मानम्() :
+        p_Res_दत्त(nullptr),
+        valid_Locale_दत्त_प्रविष्टिः(nullptr),
         res(static_cast<Resource>(URES_NONE)),
         fTraceInfo() {}
-    virtual ~ResourceDataValue();
+    आभास ~Resource_दत्त_मानम्();
 
-    void setData(const ResourceData &data) {
-        pResData = &data;
+    शून्य समुच्चयः_दत्त(ध्रुव Resource_दत्त &दत्त) {
+        p_Res_दत्त = &दत्त;
     }
     
-    void setValidLocaleDataEntry(UResourceDataEntry *entry) {
-        validLocaleDataEntry = entry;
+    शून्य समुच्चयः_Valid_Locale_दत्त_प्रविष्टिः(UResource_दत्त_प्रविष्टिः *प्रविष्टिः) {
+        valid_Locale_दत्त_प्रविष्टिः = प्रविष्टिः;
     }
 
-    void setResource(Resource r, ResourceTracer&& traceInfo) {
+    शून्य समुच्चयः_Resource(Resource r, ResourceTracer&& traceInfo) {
         res = r;
         fTraceInfo = traceInfo;
     }
 
-    const ResourceData &getData() const { return *pResData; }
-    UResourceDataEntry *getValidLocaleDataEntry() const { return validLocaleDataEntry; }
-    Resource getResource() const { return res; }
-    virtual UResType getType() const override;
-    virtual const char16_t *getString(int32_t &length, UErrorCode &errorCode) const override;
-    virtual const char16_t *getAliasString(int32_t &length, UErrorCode &errorCode) const override;
-    virtual int32_t getInt(UErrorCode &errorCode) const override;
-    virtual uint32_t getUInt(UErrorCode &errorCode) const override;
-    virtual const int32_t *getIntVector(int32_t &length, UErrorCode &errorCode) const override;
-    virtual const uint8_t *getBinary(int32_t &length, UErrorCode &errorCode) const override;
-    virtual ResourceArray getArray(UErrorCode &errorCode) const override;
-    virtual ResourceTable getTable(UErrorCode &errorCode) const override;
-    virtual UBool isNoInheritanceMarker() const override;
-    virtual int32_t getStringArray(UnicodeString *dest, int32_t capacity,
-                                   UErrorCode &errorCode) const override;
-    virtual int32_t getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
-                                                  UErrorCode &errorCode) const override;
-    virtual UnicodeString getStringOrFirstOfArray(UErrorCode &errorCode) const override;
+    ध्रुव Resource_दत्त &get_दत्त() ध्रुव { प्रत्यागम *p_Res_दत्त; }
+    UResource_दत्त_प्रविष्टिः *get_Valid_Locale_दत्त_प्रविष्टिः() ध्रुव { प्रत्यागम valid_Locale_दत्त_प्रविष्टिः; }
+    Resource getResource() ध्रुव { प्रत्यागम res; }
+    आभास UResType getType() ध्रुव override;
+    आभास ध्रुव char16_t *getString(int32_t &दीर्घता, UError_संहिता &error_संहिता) ध्रुव override;
+    आभास ध्रुव char16_t *getAliasString(int32_t &दीर्घता, UError_संहिता &error_संहिता) ध्रुव override;
+    आभास int32_t getInt(UError_संहिता &error_संहिता) ध्रुव override;
+    आभास uint32_t getUInt(UError_संहिता &error_संहिता) ध्रुव override;
+    आभास ध्रुव int32_t *get_Int_सदिशम्(int32_t &दीर्घता, UError_संहिता &error_संहिता) ध्रुव override;
+    आभास ध्रुव uint8_t *get_द्विमान(int32_t &दीर्घता, UError_संहिता &error_संहिता) ध्रुव override;
+    आभास ResourceArray getArray(UError_संहिता &error_संहिता) ध्रुव override;
+    आभास Resource_सारणी get_सारणी(UError_संहिता &error_संहिता) ध्रुव override;
+    आभास UBool isNoInheritanceMarker() ध्रुव override;
+    आभास int32_t getStringArray(UnicodeString *dest, int32_t क्षमता,
+                                   UError_संहिता &error_संहिता) ध्रुव override;
+    आभास int32_t getStringArrayOrStringAsArray(UnicodeString *dest, int32_t क्षमता,
+                                                  UError_संहिता &error_संहिता) ध्रुव override;
+    आभास UnicodeString get_String_Or_First_सम्बन्धि_Array(UError_संहिता &error_संहिता) ध्रुव override;
 
-private:
-    const ResourceData *pResData;
-    UResourceDataEntry *validLocaleDataEntry;
+गुप्त:
+    ध्रुव Resource_दत्त *p_Res_दत्त;
+    UResource_दत्त_प्रविष्टिः *valid_Locale_दत्त_प्रविष्टिः;
     Resource res;
     ResourceTracer fTraceInfo;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif  /* __cplusplus */
+#यदि_अन्तः  /* __cplusplus */
 
 /**
  * Swap an ICU resource bundle. See udataswp.h.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ures_swap(const UDataSwapper *ds,
-          const void *inData, int32_t length, void *outData,
-          UErrorCode *pErrorCode);
+ures_swap(ध्रुव UDataSwapper *ds,
+          ध्रुव शून्य *अन्तर्_दत्त, int32_t दीर्घता, शून्य *बहिर्गमनम्_दत्त,
+          UError_संहिता *p_Error_संहिता);
 
-#endif
+#यदि_अन्तः

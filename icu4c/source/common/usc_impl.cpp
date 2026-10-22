@@ -15,47 +15,47 @@
 ******************************************************************************
 */
 
-#include "unicode/uscript.h"
-#include "usc_impl.h"
-#include "cmemory.h"
+#अन्तर्भाव "unicode/uscript.h"
+#अन्तर्भाव "usc_impl.h"
+#अन्तर्भाव "cmemory.h"
 
-#define PAREN_STACK_DEPTH 32
+#परिभाषय PAREN_राशिः_गभीरता 32
 
-#define MOD(sp) ((sp) % PAREN_STACK_DEPTH)
-#define LIMIT_INC(sp) (((sp) < PAREN_STACK_DEPTH)? (sp) + 1 : PAREN_STACK_DEPTH)
-#define INC(sp,count) (MOD((sp) + (count)))
-#define INC1(sp) (INC(sp, 1))
-#define DEC(sp,count) (MOD((sp) + PAREN_STACK_DEPTH - (count)))
-#define DEC1(sp) (DEC(sp, 1))
-#define STACK_IS_EMPTY(scriptRun) ((scriptRun)->pushCount <= 0)
-#define STACK_IS_NOT_EMPTY(scriptRun) (! STACK_IS_EMPTY(scriptRun))
-#define TOP(scriptRun) ((scriptRun)->parenStack[(scriptRun)->parenSP])
-#define SYNC_FIXUP(scriptRun) ((scriptRun)->fixupCount = 0)
+#परिभाषय MOD(sp) ((sp) % PAREN_राशिः_गभीरता)
+#परिभाषय सीमा_INC(sp) (((sp) < PAREN_राशिः_गभीरता)? (sp) + 1 : PAREN_राशिः_गभीरता)
+#परिभाषय INC(sp,count) (MOD((sp) + (count)))
+#परिभाषय INC1(sp) (INC(sp, 1))
+#परिभाषय DEC(sp,count) (MOD((sp) + PAREN_राशिः_गभीरता - (count)))
+#परिभाषय DEC1(sp) (DEC(sp, 1))
+#परिभाषय राशिः_IS_रिक्तानि(script_सततम्) ((script_सततम्)->प्रक्षिप_गणनम् <= 0)
+#परिभाषय राशिः_IS_NOT_रिक्तानि(script_सततम्) (! राशिः_IS_रिक्तानि(script_सततम्))
+#परिभाषय शिखरम्_2(script_सततम्) ((script_सततम्)->paren_राशिः[(script_सततम्)->parenSP])
+#परिभाषय SYNC_FIXUP(script_सततम्) ((script_सततम्)->fixup_गणनम् = 0)
 
-struct ParenStackEntry
+संरचना Paren_राशिः_प्रविष्टिः
 {
-    int32_t pairIndex;
-    UScriptCode scriptCode;
+    int32_t pair_सूचकांक;
+    UScript_संहिता script_संहिता;
 };
 
-struct UScriptRun
+संरचना UScript_सततम्
 {
-    int32_t textLength;
-    const char16_t *textArray;
+    int32_t text_दीर्घता;
+    ध्रुव char16_t *textArray;
 
     int32_t scriptStart;
-    int32_t scriptLimit;
-    UScriptCode scriptCode;
+    int32_t script_सीमा;
+    UScript_संहिता script_संहिता;
 
-    struct ParenStackEntry parenStack[PAREN_STACK_DEPTH];
+    संरचना Paren_राशिः_प्रविष्टिः paren_राशिः[PAREN_राशिः_गभीरता];
     int32_t parenSP;
-    int32_t pushCount;
-    int32_t fixupCount;
+    int32_t प्रक्षिप_गणनम्;
+    int32_t fixup_गणनम्;
 };
 
-static int8_t highBit(int32_t value);
+स्थिर int8_t उच्चः_Bit(int32_t value);
 
-static const UChar32 pairedChars[] = {
+स्थिर ध्रुव UChar32 pairedChars[] = {
     0x0028, 0x0029, /* ascii paired punctuation */
     0x003c, 0x003e,
     0x005b, 0x005d,
@@ -75,223 +75,223 @@ static const UChar32 pairedChars[] = {
     0x301a, 0x301b
 };
 
-static void push(UScriptRun *scriptRun, int32_t pairIndex, UScriptCode scriptCode)
+स्थिर शून्य push(UScript_सततम् *script_सततम्, int32_t pair_सूचकांक, UScript_संहिता script_संहिता)
 {
-    scriptRun->pushCount  = LIMIT_INC(scriptRun->pushCount);
-    scriptRun->fixupCount = LIMIT_INC(scriptRun->fixupCount);
+    script_सततम्->प्रक्षिप_गणनम्  = सीमा_INC(script_सततम्->प्रक्षिप_गणनम्);
+    script_सततम्->fixup_गणनम् = सीमा_INC(script_सततम्->fixup_गणनम्);
     
-    scriptRun->parenSP = INC1(scriptRun->parenSP);
-    scriptRun->parenStack[scriptRun->parenSP].pairIndex  = pairIndex;
-    scriptRun->parenStack[scriptRun->parenSP].scriptCode = scriptCode;
+    script_सततम्->parenSP = INC1(script_सततम्->parenSP);
+    script_सततम्->paren_राशिः[script_सततम्->parenSP].pair_सूचकांक  = pair_सूचकांक;
+    script_सततम्->paren_राशिः[script_सततम्->parenSP].script_संहिता = script_संहिता;
 }
 
-static void pop(UScriptRun *scriptRun)
+स्थिर शून्य pop(UScript_सततम् *script_सततम्)
 {
-    if (STACK_IS_EMPTY(scriptRun)) {
-        return;
+    यदि (राशिः_IS_रिक्तानि(script_सततम्)) {
+        प्रत्यागम;
     }
     
-    if (scriptRun->fixupCount > 0) {
-        scriptRun->fixupCount -= 1;
+    यदि (script_सततम्->fixup_गणनम् > 0) {
+        script_सततम्->fixup_गणनम् -= 1;
     }
     
-    scriptRun->pushCount -= 1;
-    scriptRun->parenSP = DEC1(scriptRun->parenSP);
+    script_सततम्->प्रक्षिप_गणनम् -= 1;
+    script_सततम्->parenSP = DEC1(script_सततम्->parenSP);
     
     /* If the stack is now empty, reset the stack
        pointers to their initial values.
      */
-    if (STACK_IS_EMPTY(scriptRun)) {
-        scriptRun->parenSP = -1;
+    यदि (राशिः_IS_रिक्तानि(script_सततम्)) {
+        script_सततम्->parenSP = -1;
     }
 }
 
-static void fixup(UScriptRun *scriptRun, UScriptCode scriptCode)
+स्थिर शून्य fixup(UScript_सततम् *script_सततम्, UScript_संहिता script_संहिता)
 {
-    int32_t fixupSP = DEC(scriptRun->parenSP, scriptRun->fixupCount);
+    int32_t fixupSP = DEC(script_सततम्->parenSP, script_सततम्->fixup_गणनम्);
     
-    while (scriptRun->fixupCount-- > 0) {
+    यावत् (script_सततम्->fixup_गणनम्-- > 0) {
         fixupSP = INC1(fixupSP);
-        scriptRun->parenStack[fixupSP].scriptCode = scriptCode;
+        script_सततम्->paren_राशिः[fixupSP].script_संहिता = script_संहिता;
     }
 }
 
-static int8_t
-highBit(int32_t value)
+स्थिर int8_t
+उच्चः_Bit(int32_t value)
 {
     int8_t bit = 0;
 
-    if (value <= 0) {
-        return -32;
+    यदि (value <= 0) {
+        प्रत्यागम -32;
     }
 
-    if (value >= 1 << 16) {
+    यदि (value >= 1 << 16) {
         value >>= 16;
         bit += 16;
     }
 
-    if (value >= 1 << 8) {
+    यदि (value >= 1 << 8) {
         value >>= 8;
         bit += 8;
     }
 
-    if (value >= 1 << 4) {
+    यदि (value >= 1 << 4) {
         value >>= 4;
         bit += 4;
     }
 
-    if (value >= 1 << 2) {
+    यदि (value >= 1 << 2) {
         value >>= 2;
         bit += 2;
     }
 
-    if (value >= 1 << 1) {
+    यदि (value >= 1 << 1) {
         //value >>= 1;
         bit += 1;
     }
 
-    return bit;
+    प्रत्यागम bit;
 }
 
-static int32_t
-getPairIndex(UChar32 ch)
+स्थिर int32_t
+get_Pair_सूचकांक(UChar32 ch)
 {
-    int32_t pairedCharCount = UPRV_LENGTHOF(pairedChars);
-    int32_t pairedCharPower = 1 << highBit(pairedCharCount);
-    int32_t pairedCharExtra = pairedCharCount - pairedCharPower;
+    int32_t paired_Char_गणनम् = UPRV_LENGTHOF(pairedChars);
+    int32_t pairedCharPower = 1 << उच्चः_Bit(paired_Char_गणनम्);
+    int32_t pairedCharExtra = paired_Char_गणनम् - pairedCharPower;
 
     int32_t probe = pairedCharPower;
-    int32_t pairIndex = 0;
+    int32_t pair_सूचकांक = 0;
 
-    if (ch >= pairedChars[pairedCharExtra]) {
-        pairIndex = pairedCharExtra;
+    यदि (ch >= pairedChars[pairedCharExtra]) {
+        pair_सूचकांक = pairedCharExtra;
     }
 
-    while (probe > (1 << 0)) {
+    यावत् (probe > (1 << 0)) {
         probe >>= 1;
 
-        if (ch >= pairedChars[pairIndex + probe]) {
-            pairIndex += probe;
+        यदि (ch >= pairedChars[pair_सूचकांक + probe]) {
+            pair_सूचकांक += probe;
         }
     }
 
-    if (pairedChars[pairIndex] != ch) {
-        pairIndex = -1;
+    यदि (pairedChars[pair_सूचकांक] != ch) {
+        pair_सूचकांक = -1;
     }
 
-    return pairIndex;
+    प्रत्यागम pair_सूचकांक;
 }
 
-static UBool
-sameScript(UScriptCode scriptOne, UScriptCode scriptTwo)
+स्थिर UBool
+sameScript(UScript_संहिता scriptOne, UScript_संहिता scriptTwo)
 {
-    return scriptOne <= USCRIPT_INHERITED || scriptTwo <= USCRIPT_INHERITED || scriptOne == scriptTwo;
+    प्रत्यागम scriptOne <= USCRIPT_INHERITED || scriptTwo <= USCRIPT_INHERITED || scriptOne == scriptTwo;
 }
 
-U_CAPI UScriptRun * U_EXPORT2
-uscript_openRun(const char16_t *src, int32_t length, UErrorCode *pErrorCode)
+U_CAPI UScript_सततम् * U_EXPORT2
+uscript_open_सततम्(ध्रुव char16_t *src, int32_t length, UError_संहिता *p_Error_संहिता)
 {
-    UScriptRun *result = nullptr;
+    UScript_सततम् *परिणाम = शून्यसूचकः;
 
-    if (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    यदि (p_Error_संहिता == शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम शून्यसूचकः;
     }
 
-    result = (UScriptRun *)uprv_malloc(sizeof (UScriptRun));
+    परिणाम = (UScript_सततम् *)uprv_malloc(परिमाण (UScript_सततम्));
 
-    if (result == nullptr) {
-        *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    यदि (परिणाम == शून्यसूचकः) {
+        *p_Error_संहिता = U_स्मृतिः_आवण्टनम्_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
 
-    uscript_setRunText(result, src, length, pErrorCode);
+    uscript_समुच्चयः_सततम्_Text(परिणाम, src, length, p_Error_संहिता);
 
     /* Release the UScriptRun if uscript_setRunText() returns an error */
-    if (U_FAILURE(*pErrorCode)) {
-        uprv_free(result);
-        result = nullptr;
+    यदि (U_FAILURE(*p_Error_संहिता)) {
+        uprv_free(परिणाम);
+        परिणाम = शून्यसूचकः;
     }
 
-    return result;
+    प्रत्यागम परिणाम;
 }
 
-U_CAPI void U_EXPORT2
-uscript_closeRun(UScriptRun *scriptRun)
+U_CAPI शून्य U_EXPORT2
+uscript_close_सततम्(UScript_सततम् *script_सततम्)
 {
-    if (scriptRun != nullptr) {
-        uprv_free(scriptRun);
-    }
-}
-
-U_CAPI void U_EXPORT2
-uscript_resetRun(UScriptRun *scriptRun)
-{
-    if (scriptRun != nullptr) {
-        scriptRun->scriptStart = 0;
-        scriptRun->scriptLimit = 0;
-        scriptRun->scriptCode  = USCRIPT_INVALID_CODE;
-        scriptRun->parenSP     = -1;
-        scriptRun->pushCount   =  0;
-        scriptRun->fixupCount  =  0;
+    यदि (script_सततम् != शून्यसूचकः) {
+        uprv_free(script_सततम्);
     }
 }
 
-U_CAPI void U_EXPORT2
-uscript_setRunText(UScriptRun *scriptRun, const char16_t *src, int32_t length, UErrorCode *pErrorCode)
+U_CAPI शून्य U_EXPORT2
+uscript_reset_सततम्(UScript_सततम् *script_सततम्)
 {
-    if (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    यदि (script_सततम् != शून्यसूचकः) {
+        script_सततम्->scriptStart = 0;
+        script_सततम्->script_सीमा = 0;
+        script_सततम्->script_संहिता  = USCRIPT_INVALID_संहिता;
+        script_सततम्->parenSP     = -1;
+        script_सततम्->प्रक्षिप_गणनम्   =  0;
+        script_सततम्->fixup_गणनम्  =  0;
+    }
+}
+
+U_CAPI शून्य U_EXPORT2
+uscript_समुच्चयः_सततम्_Text(UScript_सततम् *script_सततम्, ध्रुव char16_t *src, int32_t length, UError_संहिता *p_Error_संहिता)
+{
+    यदि (p_Error_संहिता == शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम;
     }
 
-    if (scriptRun == nullptr || length < 0 || ((src == nullptr) != (length == 0))) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    यदि (script_सततम् == शून्यसूचकः || length < 0 || ((src == शून्यसूचकः) != (length == 0))) {
+        *p_Error_संहिता = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
 
-    scriptRun->textArray  = src;
-    scriptRun->textLength = length;
+    script_सततम्->textArray  = src;
+    script_सततम्->text_दीर्घता = length;
 
-    uscript_resetRun(scriptRun);
+    uscript_reset_सततम्(script_सततम्);
 }
 
 U_CAPI UBool U_EXPORT2
-uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, UScriptCode *pRunScript)
+uscript_अग्र_सततम्(UScript_सततम् *script_सततम्, int32_t *p_सततम्_Start, int32_t *p_सततम्_सीमा, UScript_संहिता *p_सततम्_Script)
 {
-    UErrorCode error = U_ZERO_ERROR;
+    UError_संहिता error = U_ZERO_ERROR;
 
     /* if we've fallen off the end of the text, we're done */
-    if (scriptRun == nullptr || scriptRun->scriptLimit >= scriptRun->textLength) {
-        return false;
+    यदि (script_सततम् == शून्यसूचकः || script_सततम्->script_सीमा >= script_सततम्->text_दीर्घता) {
+        प्रत्यागम असत्य;
     }
     
-    SYNC_FIXUP(scriptRun);
-    scriptRun->scriptCode = USCRIPT_COMMON;
+    SYNC_FIXUP(script_सततम्);
+    script_सततम्->script_संहिता = USCRIPT_COMMON;
 
-    for (scriptRun->scriptStart = scriptRun->scriptLimit; scriptRun->scriptLimit < scriptRun->textLength; scriptRun->scriptLimit += 1) {
-        char16_t high = scriptRun->textArray[scriptRun->scriptLimit];
-        UChar32  ch   = high;
-        UScriptCode sc;
-        int32_t pairIndex;
+    प्रति (script_सततम्->scriptStart = script_सततम्->script_सीमा; script_सततम्->script_सीमा < script_सततम्->text_दीर्घता; script_सततम्->script_सीमा += 1) {
+        char16_t उच्चः = script_सततम्->textArray[script_सततम्->script_सीमा];
+        UChar32  ch   = उच्चः;
+        UScript_संहिता sc;
+        int32_t pair_सूचकांक;
 
         /*
          * if the character is a high surrogate and it's not the last one
          * in the text, see if it's followed by a low surrogate
          */
-        if (high >= 0xD800 && high <= 0xDBFF && scriptRun->scriptLimit < scriptRun->textLength - 1) {
-            char16_t low = scriptRun->textArray[scriptRun->scriptLimit + 1];
+        यदि (उच्चः >= 0xD800 && उच्चः <= 0xDBFF && script_सततम्->script_सीमा < script_सततम्->text_दीर्घता - 1) {
+            char16_t नीचः = script_सततम्->textArray[script_सततम्->script_सीमा + 1];
 
             /*
              * if it is followed by a low surrogate,
              * consume it and form the full character
              */
-            if (low >= 0xDC00 && low <= 0xDFFF) {
-                ch = (high - 0xD800) * 0x0400 + low - 0xDC00 + 0x10000;
-                scriptRun->scriptLimit += 1;
+            यदि (नीचः >= 0xDC00 && नीचः <= 0xDFFF) {
+                ch = (उच्चः - 0xD800) * 0x0400 + नीचः - 0xDC00 + 0x10000;
+                script_सततम्->script_सीमा += 1;
             }
         }
 
         sc = uscript_getScript(ch, &error);
-        pairIndex = getPairIndex(ch);
+        pair_सूचकांक = get_Pair_सूचकांक(ch);
 
         /*
          * Paired character handling:
@@ -301,61 +301,61 @@ uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, U
          * stack, and use that script code. Any non-matching open
          * characters above it on the stack will be poped.
          */
-        if (pairIndex >= 0) {
-            if ((pairIndex & 1) == 0) {
-                push(scriptRun, pairIndex, scriptRun->scriptCode);
-            } else {
-                int32_t pi = pairIndex & ~1;
+        यदि (pair_सूचकांक >= 0) {
+            यदि ((pair_सूचकांक & 1) == 0) {
+                push(script_सततम्, pair_सूचकांक, script_सततम्->script_संहिता);
+            } अन्यथा {
+                int32_t pi = pair_सूचकांक & ~1;
 
-                while (STACK_IS_NOT_EMPTY(scriptRun) && TOP(scriptRun).pairIndex != pi) {
-                    pop(scriptRun);
+                यावत् (राशिः_IS_NOT_रिक्तानि(script_सततम्) && शिखरम्_2(script_सततम्).pair_सूचकांक != pi) {
+                    pop(script_सततम्);
                 }
 
-                if (STACK_IS_NOT_EMPTY(scriptRun)) {
-                    sc = TOP(scriptRun).scriptCode;
+                यदि (राशिः_IS_NOT_रिक्तानि(script_सततम्)) {
+                    sc = शिखरम्_2(script_सततम्).script_संहिता;
                 }
             }
         }
 
-        if (sameScript(scriptRun->scriptCode, sc)) {
-            if (scriptRun->scriptCode <= USCRIPT_INHERITED && sc > USCRIPT_INHERITED) {
-                scriptRun->scriptCode = sc;
+        यदि (sameScript(script_सततम्->script_संहिता, sc)) {
+            यदि (script_सततम्->script_संहिता <= USCRIPT_INHERITED && sc > USCRIPT_INHERITED) {
+                script_सततम्->script_संहिता = sc;
 
-                fixup(scriptRun, scriptRun->scriptCode);
+                fixup(script_सततम्, script_सततम्->script_संहिता);
             }
 
             /*
              * if this character is a close paired character,
              * pop the matching open character from the stack
              */
-            if (pairIndex >= 0 && (pairIndex & 1) != 0) {
-                pop(scriptRun);
+            यदि (pair_सूचकांक >= 0 && (pair_सूचकांक & 1) != 0) {
+                pop(script_सततम्);
             }
-        } else {
+        } अन्यथा {
             /*
              * if the run broke on a surrogate pair,
              * end it before the high surrogate
              */
-            if (ch >= 0x10000) {
-                scriptRun->scriptLimit -= 1;
+            यदि (ch >= 0x10000) {
+                script_सततम्->script_सीमा -= 1;
             }
 
-            break;
+            भङ्ग;
         }
     }
 
 
-    if (pRunStart != nullptr) {
-        *pRunStart = scriptRun->scriptStart;
+    यदि (p_सततम्_Start != शून्यसूचकः) {
+        *p_सततम्_Start = script_सततम्->scriptStart;
     }
 
-    if (pRunLimit != nullptr) {
-        *pRunLimit = scriptRun->scriptLimit;
+    यदि (p_सततम्_सीमा != शून्यसूचकः) {
+        *p_सततम्_सीमा = script_सततम्->script_सीमा;
     }
 
-    if (pRunScript != nullptr) {
-        *pRunScript = scriptRun->scriptCode;
+    यदि (p_सततम्_Script != शून्यसूचकः) {
+        *p_सततम्_Script = script_सततम्->script_संहिता;
     }
 
-    return true;
+    प्रत्यागम सत्य;
 }

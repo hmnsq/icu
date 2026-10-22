@@ -1,15 +1,15 @@
 // © 2025 and later: Unicode, Inc. and others.
 // License & terms of use: https://www.unicode.org/copyright.html
 
-#ifndef FIXEDSTRING_H
-#define FIXEDSTRING_H
+#यदि_अपरिभाषितम् FIXEDSTRING_H
+#परिभाषय FIXEDSTRING_H
 
-#include <string_view>
-#include <utility>
+#अन्तर्भाव <string_view>
+#अन्तर्भाव <utility>
 
-#include "unicode/uobject.h"
-#include "unicode/utypes.h"
-#include "cmemory.h"
+#अन्तर्भाव "unicode/uobject.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
@@ -26,79 +26,79 @@ class UnicodeString;
  * This class wants to be convenient but is also deliberately minimalist.
  * Please do not add methods if they only add minor convenience.
  */
-class FixedString : public UMemory {
-public:
-    FixedString() = default;
-    ~FixedString() { operator delete[](ptr); }
+class FixedString : सार्वजनिक UMemory {
+सार्वजनिक:
+    FixedString() = स्वभाव;
+    ~FixedString() { संक्रियकः delete[](ptr); }
 
-    FixedString(const FixedString& other) : FixedString(other.data()) {}
+    FixedString(ध्रुव FixedString& other) : FixedString(other.दत्त()) {}
 
     FixedString(std::string_view init) {
-        size_t size = init.size();
-        if (size > 0 && reserve(size + 1)) {
-            uprv_memcpy(ptr, init.data(), size);
-            ptr[size] = '\0';
+        size_t आकार_2 = init.आकार_2();
+        यदि (आकार_2 > 0 && reserve(आकार_2 + 1)) {
+            uprv_memcpy(ptr, init.दत्त(), आकार_2);
+            ptr[आकार_2] = '\0';
         }
     }
 
-    FixedString& operator=(const FixedString& other) {
-        *this = other.data();
-        return *this;
+    FixedString& संक्रियकः=(ध्रुव FixedString& other) {
+        *this = other.दत्त();
+        प्रत्यागम *this;
     }
 
-    FixedString& operator=(std::string_view init) {
-        if (init.empty()) {
-            operator delete[](ptr);
+    FixedString& संक्रियकः=(std::string_view init) {
+        यदि (init.रिक्तानि()) {
+            संक्रियकः delete[](ptr);
             ptr = nullptr;
-        } else {
-            size_t size = init.size();
-            if (reserve(size + 1)) {
-                uprv_memcpy(ptr, init.data(), size);
-                ptr[size] = '\0';
+        } अन्यथा {
+            size_t आकार_2 = init.आकार_2();
+            यदि (reserve(आकार_2 + 1)) {
+                uprv_memcpy(ptr, init.दत्त(), आकार_2);
+                ptr[आकार_2] = '\0';
             }
         }
-        return *this;
+        प्रत्यागम *this;
     }
 
     FixedString(FixedString&& other) noexcept : ptr(std::exchange(other.ptr, nullptr)) {}
 
-    FixedString& operator=(FixedString&& other) noexcept {
-        operator delete[](ptr);
+    FixedString& संक्रियकः=(FixedString&& other) noexcept {
+        संक्रियकः delete[](ptr);
         ptr = other.ptr;
         other.ptr = nullptr;
-        return *this;
+        प्रत्यागम *this;
     }
 
-    void clear() {
-        operator delete[](ptr);
+    शून्य clear() {
+        संक्रियकः delete[](ptr);
         ptr = nullptr;
     }
 
-    const char* data() const {
-        return isEmpty() ? "" : ptr;
+    ध्रुव वर्ण* दत्त() ध्रुव {
+        प्रत्यागम is_रिक्तानि() ? "" : ptr;
     }
 
-    char* getAlias() {
-        return ptr;
+    वर्ण* getAlias() {
+        प्रत्यागम ptr;
     }
 
-    bool isEmpty() const {
-        return ptr == nullptr;
+    bool is_रिक्तानि() ध्रुव {
+        प्रत्यागम ptr == nullptr;
     }
 
     /** Allocate storage for a new string, without initializing it. */
-    bool reserve(size_t size) {
-        operator delete[](ptr);
-        ptr = static_cast<char*>(operator new[](size));
-        return ptr != nullptr;
+    bool reserve(size_t आकार_2) {
+        संक्रियकः delete[](ptr);
+        ptr = static_cast<वर्ण*>(संक्रियकः new[](आकार_2));
+        प्रत्यागम ptr != nullptr;
     }
 
-private:
-    char* ptr = nullptr;
+गुप्त:
+    वर्ण* ptr = nullptr;
 };
 
-U_COMMON_API void copyInvariantChars(const UnicodeString& src, FixedString& dst, UErrorCode& status);
+U_COMMON_API शून्य copyInvariantChars(ध्रुव UnicodeString& src, FixedString& dst, UError_संहिता& स्थितिः);
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif
+#यदि_अन्तः

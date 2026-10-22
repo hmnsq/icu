@@ -16,31 +16,31 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "unicode/uchar.h"
-#include "unicode/udata.h"
-#include "unicode/utf.h"
-#include "unicode/utf16.h"
-#include "uassert.h"
-#include "ustr_imp.h"
-#include "umutex.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "ucln_cmn.h"
-#include "udataswp.h"
-#include "uprops.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/putil.h"
+#अन्तर्भाव "unicode/uchar.h"
+#अन्तर्भाव "unicode/udata.h"
+#अन्तर्भाव "unicode/utf.h"
+#अन्तर्भाव "unicode/utf16.h"
+#अन्तर्भाव "uassert.h"
+#अन्तर्भाव "ustr_imp.h"
+#अन्तर्भाव "umutex.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "ucln_cmn.h"
+#अन्तर्भाव "udataswp.h"
+#अन्तर्भाव "uprops.h"
 
 U_NAMESPACE_BEGIN
 
 /* prototypes ------------------------------------------------------------- */
 
-static const char DATA_NAME[] = "unames";
-static const char DATA_TYPE[] = "icu";
+स्थिर ध्रुव वर्ण दत्त_NAME[] = "unames";
+स्थिर ध्रुव वर्ण दत्त_TYPE[] = "icu";
 
-#define GROUP_SHIFT 5
-#define LINES_PER_GROUP (1L<<GROUP_SHIFT)
-#define GROUP_MASK (LINES_PER_GROUP-1)
+#परिभाषय गणः_सरणम् 5
+#परिभाषय पङ्क्तयः_प्रत्येकम्_गणः (1L<<गणः_सरणम्)
+#परिभाषय गणः_आवरणम् (पङ्क्तयः_प्रत्येकम्_गणः-1)
 
 /*
  * This struct was replaced by explicitly accessing equivalent
@@ -58,11 +58,11 @@ typedef struct {
              offsetHigh, offsetLow; / * avoid padding * /
 } Group;
  */
-enum {
-    GROUP_MSB,
-    GROUP_OFFSET_HIGH,
-    GROUP_OFFSET_LOW,
-    GROUP_LENGTH
+गणना {
+    गणः_MSB,
+    गणः_विस्थापनम्_उच्चः,
+    गणः_विस्थापनम्_नीचः,
+    गणः_दीर्घता
 };
 
 /*
@@ -70,22 +70,22 @@ enum {
  * @param group (const uint16_t *) pointer to a Group triple of uint16_t
  * @return group offset (int32_t)
  */
-#define GET_GROUP_OFFSET(group) ((int32_t)(group)[GROUP_OFFSET_HIGH]<<16|(group)[GROUP_OFFSET_LOW])
+#परिभाषय GET_गणः_विस्थापनम्(गणः) ((int32_t)(गणः)[गणः_विस्थापनम्_उच्चः]<<16|(गणः)[गणः_विस्थापनम्_नीचः])
 
-#define NEXT_GROUP(group) ((group)+GROUP_LENGTH)
-#define PREV_GROUP(group) ((group)-GROUP_LENGTH)
+#परिभाषय अग्र_गणः(गणः) ((गणः)+गणः_दीर्घता)
+#परिभाषय पूर्व_गणः(गणः) ((गणः)-गणः_दीर्घता)
 
-typedef struct {
-    uint32_t start, end;
+प्रकारनिर्देश संरचना {
+    uint32_t start, अन्तः;
     uint8_t type, variant;
     uint16_t size;
 } AlgorithmicRange;
 
-typedef struct {
-    uint32_t tokenStringOffset, groupsOffset, groupStringOffset, algNamesOffset;
-} UCharNames;
+प्रकारनिर्देश संरचना {
+    uint32_t token_String_विस्थापनम्, groups_विस्थापनम्, गणः_String_विस्थापनम्, alg_नामानि_विस्थापनम्;
+} UChar_नामानि;
 
-namespace {
+नामाकाश {
 // For a character name `name`, a query string `query` matches `name` under UAX44-LM2 if and only if
 // the following returns true:
 //     auto matcher = CharacterNameQuery(query).matcher();
@@ -100,41 +100,41 @@ namespace {
 // class will match name="ZANABAZAR SQUARE LETTER -A" with query="Zanabazar-square_letter_-A".
 // `Matcher::consistentWith` is not retryable: once it returns false, the `Matcher` should not be
 // used again.
-class CharacterNameQuery {
-  public:
-    class Matcher {
-      public:
+वर्ग CharacterNameQuery {
+  सार्वजनिक:
+    वर्ग Matcher {
+      सार्वजनिक:
         // `query` must outlive the constructed object.
-        Matcher(const CharacterNameQuery& query)
+        Matcher(ध्रुव CharacterNameQuery& query)
             : query(query), skeletonIterator(query.skeleton.begin()) {}
 
-        bool consistentWith(char c) {
+        तार्किक consistentWith(वर्ण c) {
             // Instead of constructing a skeleton from the name as in the constructor of
             // CharacterNameQuery, we check character-by-character if the skeleton we would
             // construct from the name would be consistent with `query->skeleton`.
             // We require that this be called with characters from an actual character name, so we
             // need not worry about case or underscores here.
 
-            if (skeletonIterator == query.skeleton.end()) {
-                return false;
+            यदि (skeletonIterator == query.skeleton.अन्तः()) {
+                प्रत्यागम असत्य;
             }
-            if (c == ' ') {
+            यदि (c == ' ') {
                 // The last hyphen was word-final; check that there is a corresponding significant
                 // hyphen in the skeleton.  A hyphen in a character name cannot be both word-final
                 // and word-initial by rule R3 in
                 // https://unicode.org/versions/Unicode17.0.0/core-spec/chapter-4/#G135165, so we do
                 // not have to worry about checking the skeleton for the same significant hyphen
                 // twice.
-                if (lastChar == '-') {
-                    if (*skeletonIterator++ != lastChar) {
-                        return false;
+                यदि (चरमः_Char == '-') {
+                    यदि (*skeletonIterator++ != चरमः_Char) {
+                        प्रत्यागम असत्य;
                     }
                 }
-                lastChar = c;
-                return true;
-            } else if (c == '-') {
-                if (lastChar == ' ' ||
-                    (query.is1180 && skeletonIterator == query.skeleton.end() - 2)) {
+                चरमः_Char = c;
+                प्रत्यागम सत्य;
+            } अन्यथा यदि (c == '-') {
+                यदि (चरमः_Char == ' ' ||
+                    (query.is1180 && skeletonIterator == query.skeleton.अन्तः() - 2)) {
                     // If lastChar == ' ', this is a word-initial hyphen, so we know it is
                     // significant.  Check that we are expecting it.
                     // If we are looking for U+1180 and we matched everything but the trailing -E,
@@ -148,48 +148,48 @@ class CharacterNameQuery {
                     // comparison would fail on - vs. U.
                     // Here, while feeding HANGUL JUNGSEONG O-U character-by-character, we assume
                     // its skeleton would be HANGULJUNGSEONGO-, and fail on E vs. U.
-                    if (*skeletonIterator++ != c) {
-                        return false;
+                    यदि (*skeletonIterator++ != c) {
+                        प्रत्यागम असत्य;
                     }
                 }
                 // If lastChar is not ' ', we do not know whether this hyphen is word-final, so we
                 // cannot check against the skeleton.
-                lastChar = c;
-                return true;
-            } else {
-                if (*skeletonIterator++ != c) {
-                    return false;
+                चरमः_Char = c;
+                प्रत्यागम सत्य;
+            } अन्यथा {
+                यदि (*skeletonIterator++ != c) {
+                    प्रत्यागम असत्य;
                 }
-                lastChar = c;
-                return true;
+                चरमः_Char = c;
+                प्रत्यागम सत्य;
             }
         }
 
-        bool consistentWith(const std::string_view substring) {
-            for (const char c : substring) {
-                if (!consistentWith(c)) {
-                    return false;
+        तार्किक consistentWith(ध्रुव std::string_view substring) {
+            प्रति (ध्रुव वर्ण c : substring) {
+                यदि (!consistentWith(c)) {
+                    प्रत्यागम असत्य;
                 }
             }
-            return true;
+            प्रत्यागम सत्य;
         }
 
-        bool matches() {
+        तार्किक matches() {
             // If a character name could end with a HYPHEN-MINUS, that HYPHEN-MINUS would be
             // significant: we would need to check that if lastChar == '-',
             // *skeletonIterator == '-', and then advance skeletonIterator.
             // However, this is disallowed by rule R3 in
             // https://unicode.org/versions/Unicode17.0.0/core-spec/chapter-4/#G135165.
-            U_ASSERT(lastChar != '-');
-            return skeletonIterator == query.skeleton.end();
+            U_ASSERT(चरमः_Char != '-');
+            प्रत्यागम skeletonIterator == query.skeleton.अन्तः();
         }
 
-        std::string_view remainingSignificantCharacters() const {
-            return query.skeleton.substr(skeletonIterator - query.skeleton.begin());
+        std::string_view remainingSignificantCharacters() ध्रुव {
+            प्रत्यागम query.skeleton.substr(skeletonIterator - query.skeleton.begin());
         }
 
-      private:
-        const CharacterNameQuery& query;
+      गुप्त:
+        ध्रुव CharacterNameQuery& query;
         std::string_view::const_iterator skeletonIterator;
         // Initialized to ' ' so that a leading hyphen is treated like a hyphen that follows a
         // space (non-medial and thus not ignorable).  There are in fact no leading hyphens in
@@ -198,79 +198,79 @@ class CharacterNameQuery {
         // we do not read the value of this variable before writing to it because the first call to
         // consistentWith never has c=' ' either by R4, but it seems cleanest to initialize lastChar
         // nonetheless.
-        char lastChar = ' ';
+        वर्ण चरमः_Char = ' ';
     };
 
-    explicit CharacterNameQuery(std::string_view query) {
+    स्पष्ट CharacterNameQuery(std::string_view query) {
         // Construct a skeleton obtained by
         // 1. removing medial hyphens (except the one in the name of U+1180);
         // 2. removing spaces and underscores;
         // 3. uppercasing,
         // as described in https://www.unicode.org/reports/tr44/#UAX44-LM2.
         // We do all three in a single pass.
-        char *skeletonLimit = skeletonData;
-        for (std::size_t i = 0; i < query.length(); ++i) {
-            U_ASSERT(skeletonLimit < skeletonData + sizeof(skeletonData));
-            if (skeletonLimit >= skeletonData + sizeof(skeletonData)) {
+        वर्ण *skeleton_सीमा = skeleton_दत्त;
+        प्रति (std::size_t i = 0; i < query.length(); ++i) {
+            U_ASSERT(skeleton_सीमा < skeleton_दत्त + परिमाण(skeleton_दत्त));
+            यदि (skeleton_सीमा >= skeleton_दत्त + परिमाण(skeleton_दत्त)) {
                 // The caller should limit the query length appropriately; if they do not, assert,
                 // and if assertions are disabled, query for the empty string (which will quickly
                 // find nothing).
-                skeletonLimit = skeletonData;
-                break;
+                skeleton_सीमा = skeleton_दत्त;
+                भङ्ग;
             }
-            if (query[i] == ' ' || query[i] == '_') {
-                continue;
+            यदि (query[i] == ' ' || query[i] == '_') {
+                अनुवर्त;
             }
-            if (query[i] == '-') {
-                bool isMedial;
-                bool is1180MedialHyphen = false;
-                if (i == 0 || i == query.length() - 1) {
-                    isMedial = false;
-                } else {
+            यदि (query[i] == '-') {
+                तार्किक isMedial;
+                तार्किक is1180MedialHyphen = असत्य;
+                यदि (i == 0 || i == query.length() - 1) {
+                    isMedial = असत्य;
+                } अन्यथा {
                     isMedial = isASCIILetterOrDigit(query[i - 1]) && isASCIILetterOrDigit(query[i + 1]);
                 }
                 // A medial hyphen is the hyphen in the name of U+1180 HANGUL JUNGSEONG O-E if what
                 // comes before skeletonizes to HANGULJUNGSEONGO and what comes after skeletonizes
                 // to E.
-                if (isMedial && uprv_toupper(query[i + 1]) == 'E' &&
-                    std::string_view(skeletonData, skeletonLimit - skeletonData) == "HANGULJUNGSEONGO") {
-                    is1180MedialHyphen = true;
+                यदि (isMedial && uprv_toupper(query[i + 1]) == 'E' &&
+                    std::string_view(skeleton_दत्त, skeleton_सीमा - skeleton_दत्त) == "HANGULJUNGSEONGO") {
+                    is1180MedialHyphen = सत्य;
                     // If there is anything significant after the E, the part of the name after the
                     // hyphen does not skeletonize to E, and thus this is not U+1180.
                     // There can be no hyphens there: if there is one, it is either non-medial, or
                     // there is another letter beyond the E.  The insignificant characters are thus
                     // only spaces and underscores.
-                    for (std::size_t j = i + 2; j < query.length(); ++j) {
-                        if (query[j] != ' ' && query[j] != '_') {
-                            is1180MedialHyphen = false;
+                    प्रति (std::size_t j = i + 2; j < query.length(); ++j) {
+                        यदि (query[j] != ' ' && query[j] != '_') {
+                            is1180MedialHyphen = असत्य;
                         }
                     }
                 }
-                if (!isMedial || is1180MedialHyphen) {
-                    *skeletonLimit++ = query[i];
+                यदि (!isMedial || is1180MedialHyphen) {
+                    *skeleton_सीमा++ = query[i];
                 }
-            } else {
-                *skeletonLimit++ = uprv_toupper(query[i]);
+            } अन्यथा {
+                *skeleton_सीमा++ = uprv_toupper(query[i]);
             }
         }
-        skeleton = std::string_view(skeletonData, skeletonLimit - skeletonData);
+        skeleton = std::string_view(skeleton_दत्त, skeleton_सीमा - skeleton_दत्त);
         // This can be true even if we never went through the is1180MedialHyphen path, e.g., if the
         // query was "HANGUL JUNGSEONG O -E".
         is1180 = skeleton == "HANGULJUNGSEONGO-E";
     }
 
-    Matcher matcher() const {
-        return Matcher(*this);
+    Matcher matcher() ध्रुव {
+        प्रत्यागम Matcher(*एतत्);
     }
 
-private:
-    static bool isASCIILetterOrDigit(const char c) {
-        return uprv_isASCIILetter(c) || (c >= '0' && c <= '9');
+गुप्त:
+    स्थिर तार्किक isASCIILetterOrDigit(ध्रुव वर्ण c) {
+        प्रत्यागम uprv_isASCIILetter(c) || (c >= '0' && c <= '9');
     }
 
-    char skeletonData[120];
+    वर्ण skeleton_दत्त[120];
     std::string_view skeleton;
-    bool is1180;
+    तार्किक is1180;
 };
 } // namespace
 
@@ -283,37 +283,37 @@ private:
  * @param names (const UCharNames *) pointer to the UCharNames indexes
  * @return (const uint16_t *) pointer to the groups table
  */
-#define GET_GROUPS(names) (const uint16_t *)((const char *)names+names->groupsOffset)
+#परिभाषय GET_GROUPS(नामानि) (ध्रुव uint16_t *)((ध्रुव वर्ण *)नामानि+नामानि->groups_विस्थापनम्)
 
-typedef struct {
-    const CharacterNameQuery *otherName;
-    UChar32 code;
+प्रकारनिर्देश संरचना {
+    ध्रुव CharacterNameQuery *otherName;
+    UChar32 संहिता;
 } FindName;
 
-#define DO_FIND_NAME nullptr
+#परिभाषय DO_FIND_NAME शून्यसूचकः
 
-static UDataMemory *uCharNamesData=nullptr;
-static UCharNames *uCharNames=nullptr;
-static icu::UInitOnce gCharNamesInitOnce {};
+स्थिर UData_स्मृतिः *u_Char_नामानि_दत्त=शून्यसूचकः;
+स्थिर UChar_नामानि *u_Char_नामानि=शून्यसूचकः;
+स्थिर icu::UInitOnce g_Char_नामानि_Init_Once {};
 
 /*
  * Maximum length of character names (regular & 1.0).
  */
-static int32_t gMaxNameLength=0;
+स्थिर int32_t g_Max_Name_दीर्घता=0;
 
 /*
  * Set of chars used in character names (regular & 1.0).
  * Chars are platform-dependent (can be EBCDIC).
  */
-static uint32_t gNameSet[8]={ 0 };
+स्थिर uint32_t g_Name_समुच्चयः[8]={ 0 };
 
-#define U_NONCHARACTER_CODE_POINT U_CHAR_CATEGORY_COUNT
-#define U_LEAD_SURROGATE U_CHAR_CATEGORY_COUNT + 1
-#define U_TRAIL_SURROGATE U_CHAR_CATEGORY_COUNT + 2
+#परिभाषय U_NONCHARACTER_संहिता_POINT U_CHAR_CATEGORY_गणनम्
+#परिभाषय U_LEAD_SURROGATE U_CHAR_CATEGORY_गणनम् + 1
+#परिभाषय U_TRAIL_SURROGATE U_CHAR_CATEGORY_गणनम् + 2
 
-#define U_CHAR_EXTENDED_CATEGORY_COUNT (U_CHAR_CATEGORY_COUNT + 3)
+#परिभाषय U_CHAR_EXTENDED_CATEGORY_गणनम् (U_CHAR_CATEGORY_गणनम् + 3)
 
-static const char * const charCatNames[U_CHAR_EXTENDED_CATEGORY_COUNT] = {
+स्थिर ध्रुव वर्ण * ध्रुव char_Cat_नामानि[U_CHAR_EXTENDED_CATEGORY_गणनम्] = {
     "unassigned",
     "uppercase letter",
     "lowercase letter",
@@ -351,65 +351,65 @@ static const char * const charCatNames[U_CHAR_EXTENDED_CATEGORY_COUNT] = {
 
 /* implementation ----------------------------------------------------------- */
 
-static UBool U_CALLCONV unames_cleanup()
+स्थिर UBool U_CALLCONV unames_cleanup()
 {
-    if(uCharNamesData) {
-        udata_close(uCharNamesData);
-        uCharNamesData = nullptr;
+    यदि(u_Char_नामानि_दत्त) {
+        udata_close(u_Char_नामानि_दत्त);
+        u_Char_नामानि_दत्त = शून्यसूचकः;
     }
-    if(uCharNames) {
-        uCharNames = nullptr;
+    यदि(u_Char_नामानि) {
+        u_Char_नामानि = शून्यसूचकः;
     }
-    gCharNamesInitOnce.reset();
-    gMaxNameLength=0;
-    return true;
+    g_Char_नामानि_Init_Once.reset();
+    g_Max_Name_दीर्घता=0;
+    प्रत्यागम सत्य;
 }
 
-static UBool U_CALLCONV
-isAcceptable(void * /*context*/,
-             const char * /*type*/, const char * /*name*/,
-             const UDataInfo *pInfo) {
-    return
+स्थिर UBool U_CALLCONV
+isAcceptable(शून्य * /*context*/,
+             ध्रुव वर्ण * /*type*/, ध्रुव वर्ण * /*name*/,
+             ध्रुव UDataInfo *pInfo) {
+    प्रत्यागम
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
-        pInfo->dataFormat[0]==0x75 &&   /* dataFormat="unam" */
-        pInfo->dataFormat[1]==0x6e &&
-        pInfo->dataFormat[2]==0x61 &&
-        pInfo->dataFormat[3]==0x6d &&
-        pInfo->formatVersion[0]==1;
+        pInfo->दत्त_Format[0]==0x75 &&   /* dataFormat="unam" */
+        pInfo->दत्त_Format[1]==0x6e &&
+        pInfo->दत्त_Format[2]==0x61 &&
+        pInfo->दत्त_Format[3]==0x6d &&
+        pInfo->format_संस्करणम्[0]==1;
 }
 
-static void U_CALLCONV
-loadCharNames(UErrorCode &status) {
-    U_ASSERT(uCharNamesData == nullptr);
-    U_ASSERT(uCharNames == nullptr);
+स्थिर शून्य U_CALLCONV
+आरोपय_Char_नामानि(UError_संहिता &स्थितिः) {
+    U_ASSERT(u_Char_नामानि_दत्त == शून्यसूचकः);
+    U_ASSERT(u_Char_नामानि == शून्यसूचकः);
 
-    uCharNamesData = udata_openChoice(nullptr, DATA_TYPE, DATA_NAME, isAcceptable, nullptr, &status);
-    if(U_FAILURE(status)) {
-        uCharNamesData = nullptr;
-    } else {
-        uCharNames = (UCharNames *)udata_getMemory(uCharNamesData);
+    u_Char_नामानि_दत्त = udata_openChoice(शून्यसूचकः, दत्त_TYPE, दत्त_NAME, isAcceptable, शून्यसूचकः, &स्थितिः);
+    यदि(U_FAILURE(स्थितिः)) {
+        u_Char_नामानि_दत्त = शून्यसूचकः;
+    } अन्यथा {
+        u_Char_नामानि = (UChar_नामानि *)udata_get_स्मृतिः(u_Char_नामानि_दत्त);
     }
-    ucln_common_registerCleanup(UCLN_COMMON_UNAMES, unames_cleanup);
+    ucln_common_पञ्जिकाकोशः_Cleanup(UCLN_COMMON_UNAMES, unames_cleanup);
 }
 
 
-static UBool
-isDataLoaded(UErrorCode *pErrorCode) {
-    umtx_initOnce(gCharNamesInitOnce, &loadCharNames, *pErrorCode);
-    return U_SUCCESS(*pErrorCode);
+स्थिर UBool
+is_दत्त_Loaded(UError_संहिता *p_Error_संहिता) {
+    umtx_initOnce(g_Char_नामानि_Init_Once, &आरोपय_Char_नामानि, *p_Error_संहिता);
+    प्रत्यागम U_SUCCESS(*p_Error_संहिता);
 }
 
-#define WRITE_CHAR(buffer, bufferLength, bufferPos, c) UPRV_BLOCK_MACRO_BEGIN { \
-    if((bufferLength)>0) { \
-        *(buffer)++=c; \
-        --(bufferLength); \
+#परिभाषय WRITE_CHAR(बफर, बफर_दीर्घता, बफर_Pos, c) UPRV_खण्डम्_MACRO_BEGIN { \
+    यदि((बफर_दीर्घता)>0) { \
+        *(बफर)++=c; \
+        --(बफर_दीर्घता); \
     } \
-    ++(bufferPos); \
-} UPRV_BLOCK_MACRO_END
+    ++(बफर_Pos); \
+} UPRV_खण्डम्_MACRO_अन्तः
 
-#define U_ISO_COMMENT U_CHAR_NAME_CHOICE_COUNT
+#परिभाषय U_ISO_COMMENT U_CHAR_NAME_CHOICE_गणनम्
 
 /*
  * Important: expandName() and compareName() are almost the same -
@@ -423,84 +423,84 @@ isDataLoaded(UErrorCode *pErrorCode) {
  * So, it will be token[';']==-1 if we store U1.0 names/ISO comments/aliases
  * although we know that it will never be part of a name.
  */
-static uint16_t
-expandName(UCharNames *names,
-           const uint8_t *name, uint16_t nameLength, UCharNameChoice nameChoice,
-           char *buffer, uint16_t bufferLength) {
-    uint16_t* tokens = reinterpret_cast<uint16_t*>(names) + 8;
-    uint16_t token, tokenCount=*tokens++, bufferPos=0;
-    uint8_t* tokenStrings = reinterpret_cast<uint8_t*>(names) + names->tokenStringOffset;
+स्थिर uint16_t
+expandName(UChar_नामानि *नामानि,
+           ध्रुव uint8_t *name, uint16_t name_दीर्घता, UCharNameChoice nameChoice,
+           वर्ण *बफर, uint16_t बफर_दीर्घता) {
+    uint16_t* tokens = reinterpret_cast<uint16_t*>(नामानि) + 8;
+    uint16_t token, token_गणनम्=*tokens++, बफर_Pos=0;
+    uint8_t* token_वाक्यानि = reinterpret_cast<uint8_t*>(नामानि) + नामानि->token_String_विस्थापनम्;
     uint8_t c;
 
-    if(nameChoice!=U_UNICODE_CHAR_NAME && nameChoice!=U_EXTENDED_CHAR_NAME) {
+    यदि(nameChoice!=U_UNICODE_CHAR_NAME && nameChoice!=U_EXTENDED_CHAR_NAME) {
         /*
          * skip the modern name if it is not requested _and_
          * if the semicolon byte value is a character, not a token number
          */
-        if (static_cast<uint8_t>(';') >= tokenCount || tokens[static_cast<uint8_t>(';')] == static_cast<uint16_t>(-1)) {
-            int fieldIndex= nameChoice==U_ISO_COMMENT ? 2 : nameChoice;
-            do {
-                while(nameLength>0) {
-                    --nameLength;
-                    if(*name++==';') {
-                        break;
+        यदि (static_cast<uint8_t>(';') >= token_गणनम् || tokens[static_cast<uint8_t>(';')] == static_cast<uint16_t>(-1)) {
+            पूर्णाङ्क क्षेत्रम्_सूचकांक= nameChoice==U_ISO_COMMENT ? 2 : nameChoice;
+            कुरु {
+                यावत्(name_दीर्घता>0) {
+                    --name_दीर्घता;
+                    यदि(*name++==';') {
+                        भङ्ग;
                     }
                 }
-            } while(--fieldIndex>0);
-        } else {
+            } यावत्(--क्षेत्रम्_सूचकांक>0);
+        } अन्यथा {
             /*
              * the semicolon byte value is a token number, therefore
              * only modern names are stored in unames.dat and there is no
              * such requested alternate name here
              */
-            nameLength=0;
+            name_दीर्घता=0;
         }
     }
 
     /* write each letter directly, and write a token word per token */
-    while(nameLength>0) {
-        --nameLength;
+    यावत्(name_दीर्घता>0) {
+        --name_दीर्घता;
         c=*name++;
 
-        if(c>=tokenCount) {
-            if(c!=';') {
+        यदि(c>=token_गणनम्) {
+            यदि(c!=';') {
                 /* implicit letter */
-                WRITE_CHAR(buffer, bufferLength, bufferPos, c);
-            } else {
-                /* finished */
-                break;
+                WRITE_CHAR(बफर, बफर_दीर्घता, बफर_Pos, c);
+            } अन्यथा {
+                /*परिसमाप्तम्*/
+                भङ्ग;
             }
-        } else {
+        } अन्यथा {
             token=tokens[c];
-            if (token == static_cast<uint16_t>(-2)) {
+            यदि (token == static_cast<uint16_t>(-2)) {
                 /* this is a lead byte for a double-byte token */
                 token=tokens[c<<8|*name++];
-                --nameLength;
+                --name_दीर्घता;
             }
-            if (token == static_cast<uint16_t>(-1)) {
-                if(c!=';') {
+            यदि (token == static_cast<uint16_t>(-1)) {
+                यदि(c!=';') {
                     /* explicit letter */
-                    WRITE_CHAR(buffer, bufferLength, bufferPos, c);
-                } else {
-                    /* finished */
-                    break;
+                    WRITE_CHAR(बफर, बफर_दीर्घता, बफर_Pos, c);
+                } अन्यथा {
+                    /*परिसमाप्तम्*/
+                    भङ्ग;
                 }
-            } else {
+            } अन्यथा {
                 /* write token word */
-                uint8_t *tokenString=tokenStrings+token;
-                while((c=*tokenString++)!=0) {
-                    WRITE_CHAR(buffer, bufferLength, bufferPos, c);
+                uint8_t *tokenString=token_वाक्यानि+token;
+                यावत्((c=*tokenString++)!=0) {
+                    WRITE_CHAR(बफर, बफर_दीर्घता, बफर_Pos, c);
                 }
             }
         }
     }
 
     /* zero-terminate */
-    if(bufferLength>0) {
-        *buffer=0;
+    यदि(बफर_दीर्घता>0) {
+        *बफर=0;
     }
 
-    return bufferPos;
+    प्रत्यागम बफर_Pos;
 }
 
 /*
@@ -508,138 +508,138 @@ expandName(UCharNames *names,
  * the currently expanded name to an input name.
  * It returns the match/no match result as soon as possible.
  */
-static UBool
-compareName(UCharNames *names,
-            const uint8_t *name, uint16_t nameLength, UCharNameChoice nameChoice,
-            const CharacterNameQuery& otherName) {
-    uint16_t* tokens = reinterpret_cast<uint16_t*>(names) + 8;
-    uint16_t token, tokenCount=*tokens++;
-    uint8_t* tokenStrings = reinterpret_cast<uint8_t*>(names) + names->tokenStringOffset;
+स्थिर UBool
+compareName(UChar_नामानि *नामानि,
+            ध्रुव uint8_t *name, uint16_t name_दीर्घता, UCharNameChoice nameChoice,
+            ध्रुव CharacterNameQuery& otherName) {
+    uint16_t* tokens = reinterpret_cast<uint16_t*>(नामानि) + 8;
+    uint16_t token, token_गणनम्=*tokens++;
+    uint8_t* token_वाक्यानि = reinterpret_cast<uint8_t*>(नामानि) + नामानि->token_String_विस्थापनम्;
     uint8_t c;
-    auto matcher = otherName.matcher();
+    स्वचालित matcher = otherName.matcher();
 
-    if(nameChoice!=U_UNICODE_CHAR_NAME && nameChoice!=U_EXTENDED_CHAR_NAME) {
+    यदि(nameChoice!=U_UNICODE_CHAR_NAME && nameChoice!=U_EXTENDED_CHAR_NAME) {
         /*
          * skip the modern name if it is not requested _and_
          * if the semicolon byte value is a character, not a token number
          */
-        if (static_cast<uint8_t>(';') >= tokenCount || tokens[static_cast<uint8_t>(';')] == static_cast<uint16_t>(-1)) {
-            int fieldIndex= nameChoice==U_ISO_COMMENT ? 2 : nameChoice;
-            do {
-                while(nameLength>0) {
-                    --nameLength;
-                    if(*name++==';') {
-                        break;
+        यदि (static_cast<uint8_t>(';') >= token_गणनम् || tokens[static_cast<uint8_t>(';')] == static_cast<uint16_t>(-1)) {
+            पूर्णाङ्क क्षेत्रम्_सूचकांक= nameChoice==U_ISO_COMMENT ? 2 : nameChoice;
+            कुरु {
+                यावत्(name_दीर्घता>0) {
+                    --name_दीर्घता;
+                    यदि(*name++==';') {
+                        भङ्ग;
                     }
                 }
-            } while(--fieldIndex>0);
-        } else {
+            } यावत्(--क्षेत्रम्_सूचकांक>0);
+        } अन्यथा {
             /*
              * the semicolon byte value is a token number, therefore
              * only modern names are stored in unames.dat and there is no
              * such requested alternate name here
              */
-            nameLength=0;
+            name_दीर्घता=0;
         }
     }
 
     /* compare each letter directly, and compare a token word per token */
-    while(nameLength>0) {
-        --nameLength;
+    यावत्(name_दीर्घता>0) {
+        --name_दीर्घता;
         c=*name++;
 
-        if(c>=tokenCount) {
-            if(c!=';') {
+        यदि(c>=token_गणनम्) {
+            यदि(c!=';') {
                 /* implicit letter */
-                if (!matcher.consistentWith(c)) {
-                    return false;
+                यदि (!matcher.consistentWith(c)) {
+                    प्रत्यागम असत्य;
                 }
-            } else {
-                /* finished */
-                break;
+            } अन्यथा {
+                /*परिसमाप्तम्*/
+                भङ्ग;
             }
-        } else {
+        } अन्यथा {
             token=tokens[c];
-            if (token == static_cast<uint16_t>(-2)) {
+            यदि (token == static_cast<uint16_t>(-2)) {
                 /* this is a lead byte for a double-byte token */
                 token=tokens[c<<8|*name++];
-                --nameLength;
+                --name_दीर्घता;
             }
-            if (token == static_cast<uint16_t>(-1)) {
-                if(c!=';') {
+            यदि (token == static_cast<uint16_t>(-1)) {
+                यदि(c!=';') {
                     /* explicit letter */
-                    if (!matcher.consistentWith(c)) {
-                        return false;
+                    यदि (!matcher.consistentWith(c)) {
+                        प्रत्यागम असत्य;
                     }
-                } else {
-                    /* finished */
-                    break;
+                } अन्यथा {
+                    /*परिसमाप्तम्*/
+                    भङ्ग;
                 }
-            } else {
+            } अन्यथा {
                 /* write token word */
-                if (!matcher.consistentWith(reinterpret_cast<const char *>(tokenStrings + token))) {
-                    return false;
+                यदि (!matcher.consistentWith(reinterpret_cast<ध्रुव वर्ण *>(token_वाक्यानि + token))) {
+                    प्रत्यागम असत्य;
                 }
             }
         }
     }
 
     /* complete match? */
-    return matcher.matches();
+    प्रत्यागम matcher.matches();
 }
 
-static uint8_t getCharCat(UChar32 cp) {
+स्थिर uint8_t getCharCat(UChar32 cp) {
     uint8_t cat;
 
-    if (U_IS_UNICODE_NONCHAR(cp)) {
-        return U_NONCHARACTER_CODE_POINT;
+    यदि (U_IS_UNICODE_NONCHAR(cp)) {
+        प्रत्यागम U_NONCHARACTER_संहिता_POINT;
     }
 
-    if ((cat = u_charType(cp)) == U_SURROGATE) {
+    यदि ((cat = u_charType(cp)) == U_SURROGATE) {
         cat = U_IS_LEAD(cp) ? U_LEAD_SURROGATE : U_TRAIL_SURROGATE;
     }
 
-    return cat;
+    प्रत्यागम cat;
 }
 
-static const char *getCharCatName(UChar32 cp) {
+स्थिर ध्रुव वर्ण *getCharCatName(UChar32 cp) {
     uint8_t cat = getCharCat(cp);
 
     /* Return unknown if the table of names above is not up to
        date. */
 
-    if (cat >= UPRV_LENGTHOF(charCatNames)) {
-        return "unknown";
-    } else {
-        return charCatNames[cat];
+    यदि (cat >= UPRV_LENGTHOF(char_Cat_नामानि)) {
+        प्रत्यागम "unknown";
+    } अन्यथा {
+        प्रत्यागम char_Cat_नामानि[cat];
     }
 }
 
-static uint16_t getExtName(uint32_t code, char *buffer, uint16_t bufferLength) {
-    const char *catname = getCharCatName(code);
+स्थिर uint16_t getExtName(uint32_t संहिता, वर्ण *बफर, uint16_t बफर_दीर्घता) {
+    ध्रुव वर्ण *catname = getCharCatName(संहिता);
     uint16_t length = 0;
 
     UChar32 cp;
-    int ndigits, i;
+    पूर्णाङ्क ndigits, i;
     
-    WRITE_CHAR(buffer, bufferLength, length, '<');
-    while (catname[length - 1]) {
-        WRITE_CHAR(buffer, bufferLength, length, catname[length - 1]);
+    WRITE_CHAR(बफर, बफर_दीर्घता, length, '<');
+    यावत् (catname[length - 1]) {
+        WRITE_CHAR(बफर, बफर_दीर्घता, length, catname[length - 1]);
     }
-    WRITE_CHAR(buffer, bufferLength, length, '-');
-    for (cp = code, ndigits = 0; cp; ++ndigits, cp >>= 4)
+    WRITE_CHAR(बफर, बफर_दीर्घता, length, '-');
+    प्रति (cp = संहिता, ndigits = 0; cp; ++ndigits, cp >>= 4)
         ;
-    if (ndigits < 4)
+    यदि (ndigits < 4)
         ndigits = 4;
-    for (cp = code, i = ndigits; (cp || i > 0) && bufferLength; cp >>= 4, bufferLength--) {
+    प्रति (cp = संहिता, i = ndigits; (cp || i > 0) && बफर_दीर्घता; cp >>= 4, बफर_दीर्घता--) {
         uint8_t v = static_cast<uint8_t>(cp & 0xf);
-        buffer[--i] = (v < 10 ? '0' + v : 'A' + v - 10);
+        बफर[--i] = (v < 10 ? '0' + v : 'A' + v - 10);
     }
-    buffer += ndigits;
+    बफर += ndigits;
     length += static_cast<uint16_t>(ndigits);
-    WRITE_CHAR(buffer, bufferLength, length, '>');
+    WRITE_CHAR(बफर, बफर_दीर्घता, length, '>');
 
-    return length;
+    प्रत्यागम length;
 }
 
 /*
@@ -649,26 +649,26 @@ static uint16_t getExtName(uint32_t code, char *buffer, uint16_t bufferLength) {
  * or else is the highest group before "code".
  * If the lowest group is after "code", then that one is returned.
  */
-static const uint16_t *
-getGroup(UCharNames *names, uint32_t code) {
-    const uint16_t *groups=GET_GROUPS(names);
-    uint16_t groupMSB = static_cast<uint16_t>(code >> GROUP_SHIFT),
+स्थिर ध्रुव uint16_t *
+get_गणः(UChar_नामानि *नामानि, uint32_t संहिता) {
+    ध्रुव uint16_t *groups=GET_GROUPS(नामानि);
+    uint16_t गणः_MSB_2 = static_cast<uint16_t>(संहिता >> गणः_सरणम्),
              start=0,
-             limit=*groups++,
+             सीमा=*groups++,
              number;
 
     /* binary search for the group of names that contains the one for code */
-    while(start<limit-1) {
-        number = static_cast<uint16_t>((start + limit) / 2);
-        if(groupMSB<groups[number*GROUP_LENGTH+GROUP_MSB]) {
-            limit=number;
-        } else {
+    यावत्(start<सीमा-1) {
+        number = static_cast<uint16_t>((start + सीमा) / 2);
+        यदि(गणः_MSB_2<groups[number*गणः_दीर्घता+गणः_MSB]) {
+            सीमा=number;
+        } अन्यथा {
             start=number;
         }
     }
 
     /* return this regardless of whether it is an exact match */
-    return groups+start*GROUP_LENGTH;
+    प्रत्यागम groups+start*गणः_दीर्घता;
 }
 
 /*
@@ -681,83 +681,83 @@ getGroup(UCharNames *names, uint32_t code) {
  * The offsets and lengths arrays must be at least 33 (one more) long because
  * there is no check here at the end if the last nibble is still used.
  */
-static const uint8_t *
-expandGroupLengths(const uint8_t *s,
-                   uint16_t offsets[LINES_PER_GROUP+1], uint16_t lengths[LINES_PER_GROUP+1]) {
+स्थिर ध्रुव uint8_t *
+expand_गणः_Lengths(ध्रुव uint8_t *s,
+                   uint16_t offsets[पङ्क्तयः_प्रत्येकम्_गणः+1], uint16_t lengths[पङ्क्तयः_प्रत्येकम्_गणः+1]) {
     /* read the lengths of the 32 strings in this group and get each string's offset */
-    uint16_t i=0, offset=0, length=0;
-    uint8_t lengthByte;
+    uint16_t i=0, विस्थापनम्=0, length=0;
+    uint8_t दीर्घता_Byte;
 
     /* all 32 lengths must be read to get the offset of the first group string */
-    while(i<LINES_PER_GROUP) {
-        lengthByte=*s++;
+    यावत्(i<पङ्क्तयः_प्रत्येकम्_गणः) {
+        दीर्घता_Byte=*s++;
 
         /* read even nibble - MSBs of lengthByte */
-        if(length>=12) {
+        यदि(length>=12) {
             /* double-nibble length spread across two bytes */
-            length = static_cast<uint16_t>(((length & 0x3) << 4 | lengthByte >> 4) + 12);
-            lengthByte&=0xf;
-        } else if((lengthByte /* &0xf0 */)>=0xc0) {
+            length = static_cast<uint16_t>(((length & 0x3) << 4 | दीर्घता_Byte >> 4) + 12);
+            दीर्घता_Byte&=0xf;
+        } अन्यथा यदि((दीर्घता_Byte /* &0xf0 */)>=0xc0) {
             /* double-nibble length spread across this one byte */
-            length = static_cast<uint16_t>((lengthByte & 0x3f) + 12);
-        } else {
+            length = static_cast<uint16_t>((दीर्घता_Byte & 0x3f) + 12);
+        } अन्यथा {
             /* single-nibble length in MSBs */
-            length = static_cast<uint16_t>(lengthByte >> 4);
-            lengthByte&=0xf;
+            length = static_cast<uint16_t>(दीर्घता_Byte >> 4);
+            दीर्घता_Byte&=0xf;
         }
 
-        *offsets++=offset;
+        *offsets++=विस्थापनम्;
         *lengths++=length;
 
-        offset+=length;
+        विस्थापनम्+=length;
         ++i;
 
         /* read odd nibble - LSBs of lengthByte */
-        if((lengthByte&0xf0)==0) {
+        यदि((दीर्घता_Byte&0xf0)==0) {
             /* this nibble was not consumed for a double-nibble length above */
-            length=lengthByte;
-            if(length<12) {
+            length=दीर्घता_Byte;
+            यदि(length<12) {
                 /* single-nibble length in LSBs */
-                *offsets++=offset;
+                *offsets++=विस्थापनम्;
                 *lengths++=length;
 
-                offset+=length;
+                विस्थापनम्+=length;
                 ++i;
             }
-        } else {
+        } अन्यथा {
             length=0;   /* prevent double-nibble detection in the next iteration */
         }
     }
 
     /* now, s is at the first group string */
-    return s;
+    प्रत्यागम s;
 }
 
-static uint16_t
-expandGroupName(UCharNames *names, const uint16_t *group,
-                uint16_t lineNumber, UCharNameChoice nameChoice,
-                char *buffer, uint16_t bufferLength) {
-    uint16_t offsets[LINES_PER_GROUP+2], lengths[LINES_PER_GROUP+2];
-    const uint8_t* s = reinterpret_cast<uint8_t*>(names) + names->groupStringOffset + GET_GROUP_OFFSET(group);
-    s=expandGroupLengths(s, offsets, lengths);
-    return expandName(names, s+offsets[lineNumber], lengths[lineNumber], nameChoice,
-                      buffer, bufferLength);
+स्थिर uint16_t
+expand_गणः_Name(UChar_नामानि *नामानि, ध्रुव uint16_t *गणः,
+                uint16_t पङ्क्तिः_सङ्ख्या, UCharNameChoice nameChoice,
+                वर्ण *बफर, uint16_t बफर_दीर्घता) {
+    uint16_t offsets[पङ्क्तयः_प्रत्येकम्_गणः+2], lengths[पङ्क्तयः_प्रत्येकम्_गणः+2];
+    ध्रुव uint8_t* s = reinterpret_cast<uint8_t*>(नामानि) + नामानि->गणः_String_विस्थापनम् + GET_गणः_विस्थापनम्(गणः);
+    s=expand_गणः_Lengths(s, offsets, lengths);
+    प्रत्यागम expandName(नामानि, s+offsets[पङ्क्तिः_सङ्ख्या], lengths[पङ्क्तिः_सङ्ख्या], nameChoice,
+                      बफर, बफर_दीर्घता);
 }
 
-static uint16_t
-getName(UCharNames *names, uint32_t code, UCharNameChoice nameChoice,
-        char *buffer, uint16_t bufferLength) {
-    const uint16_t *group=getGroup(names, code);
-    if (static_cast<uint16_t>(code >> GROUP_SHIFT) == group[GROUP_MSB]) {
-        return expandGroupName(names, group, static_cast<uint16_t>(code & GROUP_MASK), nameChoice,
-                               buffer, bufferLength);
-    } else {
+स्थिर uint16_t
+getName(UChar_नामानि *नामानि, uint32_t संहिता, UCharNameChoice nameChoice,
+        वर्ण *बफर, uint16_t बफर_दीर्घता) {
+    ध्रुव uint16_t *गणः=get_गणः(नामानि, संहिता);
+    यदि (static_cast<uint16_t>(संहिता >> गणः_सरणम्) == गणः[गणः_MSB]) {
+        प्रत्यागम expand_गणः_Name(नामानि, गणः, static_cast<uint16_t>(संहिता & गणः_आवरणम्), nameChoice,
+                               बफर, बफर_दीर्घता);
+    } अन्यथा {
         /* group not found */
         /* zero-terminate */
-        if(bufferLength>0) {
-            *buffer=0;
+        यदि(बफर_दीर्घता>0) {
+            *बफर=0;
         }
-        return 0;
+        प्रत्यागम 0;
     }
 }
 
@@ -765,43 +765,43 @@ getName(UCharNames *names, uint32_t code, UCharNameChoice nameChoice,
  * enumGroupNames() enumerates all the names in a 32-group
  * and either calls the enumerator function or finds a given input name.
  */
-static UBool
-enumGroupNames(UCharNames *names, const uint16_t *group,
-               UChar32 start, UChar32 end,
-               UEnumCharNamesFn *fn, void *context,
+स्थिर UBool
+enum_गणः_नामानि(UChar_नामानि *नामानि, ध्रुव uint16_t *गणः,
+               UChar32 start, UChar32 अन्तः,
+               UEnum_Char_नामानि_Fn *fn, शून्य *context,
                UCharNameChoice nameChoice) {
-    uint16_t offsets[LINES_PER_GROUP+2], lengths[LINES_PER_GROUP+2];
-    const uint8_t* s = reinterpret_cast<uint8_t*>(names) + names->groupStringOffset + GET_GROUP_OFFSET(group);
+    uint16_t offsets[पङ्क्तयः_प्रत्येकम्_गणः+2], lengths[पङ्क्तयः_प्रत्येकम्_गणः+2];
+    ध्रुव uint8_t* s = reinterpret_cast<uint8_t*>(नामानि) + नामानि->गणः_String_विस्थापनम् + GET_गणः_विस्थापनम्(गणः);
 
-    s=expandGroupLengths(s, offsets, lengths);
-    if(fn!=DO_FIND_NAME) {
-        char buffer[200];
+    s=expand_गणः_Lengths(s, offsets, lengths);
+    यदि(fn!=DO_FIND_NAME) {
+        वर्ण बफर[200];
         uint16_t length;
 
-        while(start<=end) {
-            length=expandName(names, s+offsets[start&GROUP_MASK], lengths[start&GROUP_MASK], nameChoice, buffer, sizeof(buffer));
-            if (!length && nameChoice == U_EXTENDED_CHAR_NAME) {
-                buffer[length = getExtName(start, buffer, sizeof(buffer))] = 0;
+        यावत्(start<=अन्तः) {
+            length=expandName(नामानि, s+offsets[start&गणः_आवरणम्], lengths[start&गणः_आवरणम्], nameChoice, बफर, परिमाण(बफर));
+            यदि (!length && nameChoice == U_EXTENDED_CHAR_NAME) {
+                बफर[length = getExtName(start, बफर, परिमाण(बफर))] = 0;
             }
             /* here, we assume that the buffer is large enough */
-            if(length>0) {
-                if(!fn(context, start, nameChoice, buffer, length)) {
-                    return false;
+            यदि(length>0) {
+                यदि(!fn(context, start, nameChoice, बफर, length)) {
+                    प्रत्यागम असत्य;
                 }
             }
             ++start;
         }
-    } else {
-        const CharacterNameQuery& otherName = *static_cast<FindName*>(context)->otherName;
-        while(start<=end) {
-            if(compareName(names, s+offsets[start&GROUP_MASK], lengths[start&GROUP_MASK], nameChoice, otherName)) {
-                static_cast<FindName*>(context)->code = start;
-                return false;
+    } अन्यथा {
+        ध्रुव CharacterNameQuery& otherName = *static_cast<FindName*>(context)->otherName;
+        यावत्(start<=अन्तः) {
+            यदि(compareName(नामानि, s+offsets[start&गणः_आवरणम्], lengths[start&गणः_आवरणम्], nameChoice, otherName)) {
+                static_cast<FindName*>(context)->संहिता = start;
+                प्रत्यागम असत्य;
             }
             ++start;
         }
     }
-    return true;
+    प्रत्यागम सत्य;
 }
 
 /*
@@ -810,144 +810,144 @@ enumGroupNames(UCharNames *names, const uint16_t *group,
  * with the dummy DO_FIND_NAME, because u_charFromName() does a check
  * for extended names by itself.
  */ 
-static UBool
-enumExtNames(UChar32 start, UChar32 end,
-             UEnumCharNamesFn *fn, void *context)
+स्थिर UBool
+enum_Ext_नामानि(UChar32 start, UChar32 अन्तः,
+             UEnum_Char_नामानि_Fn *fn, शून्य *context)
 {
-    if(fn!=DO_FIND_NAME) {
-        char buffer[200];
+    यदि(fn!=DO_FIND_NAME) {
+        वर्ण बफर[200];
         uint16_t length;
         
-        while(start<=end) {
-            buffer[length = getExtName(start, buffer, sizeof(buffer))] = 0;
+        यावत्(start<=अन्तः) {
+            बफर[length = getExtName(start, बफर, परिमाण(बफर))] = 0;
             /* here, we assume that the buffer is large enough */
-            if(length>0) {
-                if(!fn(context, start, U_EXTENDED_CHAR_NAME, buffer, length)) {
-                    return false;
+            यदि(length>0) {
+                यदि(!fn(context, start, U_EXTENDED_CHAR_NAME, बफर, length)) {
+                    प्रत्यागम असत्य;
                 }
             }
             ++start;
         }
     }
 
-    return true;
+    प्रत्यागम सत्य;
 }
 
-static UBool
-enumNames(UCharNames *names,
-          UChar32 start, UChar32 limit,
-          UEnumCharNamesFn *fn, void *context,
+स्थिर UBool
+enum_नामानि(UChar_नामानि *नामानि,
+          UChar32 start, UChar32 सीमा,
+          UEnum_Char_नामानि_Fn *fn, शून्य *context,
           UCharNameChoice nameChoice) {
-    uint16_t startGroupMSB, endGroupMSB, groupCount;
-    const uint16_t *group, *groupLimit;
+    uint16_t start_गणः_MSB, अन्तः_गणः_MSB, गणः_गणनम्;
+    ध्रुव uint16_t *गणः, *गणः_सीमा;
 
-    startGroupMSB = static_cast<uint16_t>(start >> GROUP_SHIFT);
-    endGroupMSB = static_cast<uint16_t>((limit - 1) >> GROUP_SHIFT);
+    start_गणः_MSB = static_cast<uint16_t>(start >> गणः_सरणम्);
+    अन्तः_गणः_MSB = static_cast<uint16_t>((सीमा - 1) >> गणः_सरणम्);
 
     /* find the group that contains start, or the highest before it */
-    group=getGroup(names, start);
+    गणः=get_गणः(नामानि, start);
 
-    if(startGroupMSB<group[GROUP_MSB] && nameChoice==U_EXTENDED_CHAR_NAME) {
+    यदि(start_गणः_MSB<गणः[गणः_MSB] && nameChoice==U_EXTENDED_CHAR_NAME) {
         /* enumerate synthetic names between start and the group start */
-        UChar32 extLimit = static_cast<UChar32>(group[GROUP_MSB]) << GROUP_SHIFT;
-        if(extLimit>limit) {
-            extLimit=limit;
+        UChar32 ext_सीमा = static_cast<UChar32>(गणः[गणः_MSB]) << गणः_सरणम्;
+        यदि(ext_सीमा>सीमा) {
+            ext_सीमा=सीमा;
         }
-        if(!enumExtNames(start, extLimit-1, fn, context)) {
-            return false;
+        यदि(!enum_Ext_नामानि(start, ext_सीमा-1, fn, context)) {
+            प्रत्यागम असत्य;
         }
-        start=extLimit;
+        start=ext_सीमा;
     }
 
-    if(startGroupMSB==endGroupMSB) {
-        if(startGroupMSB==group[GROUP_MSB]) {
+    यदि(start_गणः_MSB==अन्तः_गणः_MSB) {
+        यदि(start_गणः_MSB==गणः[गणः_MSB]) {
             /* if start and limit-1 are in the same group, then enumerate only in that one */
-            return enumGroupNames(names, group, start, limit-1, fn, context, nameChoice);
+            प्रत्यागम enum_गणः_नामानि(नामानि, गणः, start, सीमा-1, fn, context, nameChoice);
         }
-    } else {
-        const uint16_t *groups=GET_GROUPS(names);
-        groupCount=*groups++;
-        groupLimit=groups+groupCount*GROUP_LENGTH;
+    } अन्यथा {
+        ध्रुव uint16_t *groups=GET_GROUPS(नामानि);
+        गणः_गणनम्=*groups++;
+        गणः_सीमा=groups+गणः_गणनम्*गणः_दीर्घता;
 
-        if(startGroupMSB==group[GROUP_MSB]) {
+        यदि(start_गणः_MSB==गणः[गणः_MSB]) {
             /* enumerate characters in the partial start group */
-            if((start&GROUP_MASK)!=0) {
-                if(!enumGroupNames(names, group,
-                                   start, (static_cast<UChar32>(startGroupMSB) << GROUP_SHIFT) + LINES_PER_GROUP - 1,
+            यदि((start&गणः_आवरणम्)!=0) {
+                यदि(!enum_गणः_नामानि(नामानि, गणः,
+                                   start, (static_cast<UChar32>(start_गणः_MSB) << गणः_सरणम्) + पङ्क्तयः_प्रत्येकम्_गणः - 1,
                                    fn, context, nameChoice)) {
-                    return false;
+                    प्रत्यागम असत्य;
                 }
-                group=NEXT_GROUP(group); /* continue with the next group */
+                गणः=अग्र_गणः(गणः); /* continue with the next group */
             }
-        } else if(startGroupMSB>group[GROUP_MSB]) {
+        } अन्यथा यदि(start_गणः_MSB>गणः[गणः_MSB]) {
             /* make sure that we start enumerating with the first group after start */
-            const uint16_t *nextGroup=NEXT_GROUP(group);
-            if (nextGroup < groupLimit && nextGroup[GROUP_MSB] > startGroupMSB && nameChoice == U_EXTENDED_CHAR_NAME) {
-                UChar32 end = nextGroup[GROUP_MSB] << GROUP_SHIFT;
-                if (end > limit) {
-                    end = limit;
+            ध्रुव uint16_t *अग्र_गणः_2=अग्र_गणः(गणः);
+            यदि (अग्र_गणः_2 < गणः_सीमा && अग्र_गणः_2[गणः_MSB] > start_गणः_MSB && nameChoice == U_EXTENDED_CHAR_NAME) {
+                UChar32 अन्तः = अग्र_गणः_2[गणः_MSB] << गणः_सरणम्;
+                यदि (अन्तः > सीमा) {
+                    अन्तः = सीमा;
                 }
-                if (!enumExtNames(start, end - 1, fn, context)) {
-                    return false;
+                यदि (!enum_Ext_नामानि(start, अन्तः - 1, fn, context)) {
+                    प्रत्यागम असत्य;
                 }
             }
-            group=nextGroup;
+            गणः=अग्र_गणः_2;
         }
 
         /* enumerate entire groups between the start- and end-groups */
-        while(group<groupLimit && group[GROUP_MSB]<endGroupMSB) {
-            const uint16_t *nextGroup;
-            start = static_cast<UChar32>(group[GROUP_MSB]) << GROUP_SHIFT;
-            if(!enumGroupNames(names, group, start, start+LINES_PER_GROUP-1, fn, context, nameChoice)) {
-                return false;
+        यावत्(गणः<गणः_सीमा && गणः[गणः_MSB]<अन्तः_गणः_MSB) {
+            ध्रुव uint16_t *अग्र_गणः_2;
+            start = static_cast<UChar32>(गणः[गणः_MSB]) << गणः_सरणम्;
+            यदि(!enum_गणः_नामानि(नामानि, गणः, start, start+पङ्क्तयः_प्रत्येकम्_गणः-1, fn, context, nameChoice)) {
+                प्रत्यागम असत्य;
             }
-            nextGroup=NEXT_GROUP(group);
-            if (nextGroup < groupLimit && nextGroup[GROUP_MSB] > group[GROUP_MSB] + 1 && nameChoice == U_EXTENDED_CHAR_NAME) {
-                UChar32 end = nextGroup[GROUP_MSB] << GROUP_SHIFT;
-                if (end > limit) {
-                    end = limit;
+            अग्र_गणः_2=अग्र_गणः(गणः);
+            यदि (अग्र_गणः_2 < गणः_सीमा && अग्र_गणः_2[गणः_MSB] > गणः[गणः_MSB] + 1 && nameChoice == U_EXTENDED_CHAR_NAME) {
+                UChar32 अन्तः = अग्र_गणः_2[गणः_MSB] << गणः_सरणम्;
+                यदि (अन्तः > सीमा) {
+                    अन्तः = सीमा;
                 }
-                if (!enumExtNames((group[GROUP_MSB] + 1) << GROUP_SHIFT, end - 1, fn, context)) {
-                    return false;
+                यदि (!enum_Ext_नामानि((गणः[गणः_MSB] + 1) << गणः_सरणम्, अन्तः - 1, fn, context)) {
+                    प्रत्यागम असत्य;
                 }
             }
-            group=nextGroup;
+            गणः=अग्र_गणः_2;
         }
 
         /* enumerate within the end group (group[GROUP_MSB]==endGroupMSB) */
-        if(group<groupLimit && group[GROUP_MSB]==endGroupMSB) {
-            return enumGroupNames(names, group, (limit-1)&~GROUP_MASK, limit-1, fn, context, nameChoice);
-        } else if (nameChoice == U_EXTENDED_CHAR_NAME && group == groupLimit) {
-            UChar32 next = (PREV_GROUP(group)[GROUP_MSB] + 1) << GROUP_SHIFT;
-            if (next > start) {
+        यदि(गणः<गणः_सीमा && गणः[गणः_MSB]==अन्तः_गणः_MSB) {
+            प्रत्यागम enum_गणः_नामानि(नामानि, गणः, (सीमा-1)&~गणः_आवरणम्, सीमा-1, fn, context, nameChoice);
+        } अन्यथा यदि (nameChoice == U_EXTENDED_CHAR_NAME && गणः == गणः_सीमा) {
+            UChar32 next = (पूर्व_गणः(गणः)[गणः_MSB] + 1) << गणः_सरणम्;
+            यदि (next > start) {
                 start = next;
             }
-        } else {
-            return true;
+        } अन्यथा {
+            प्रत्यागम सत्य;
         }
     }
 
     /* we have not found a group, which means everything is made of
        extended names. */
-    if (nameChoice == U_EXTENDED_CHAR_NAME) {
-        if (limit > UCHAR_MAX_VALUE + 1) {
-            limit = UCHAR_MAX_VALUE + 1;
+    यदि (nameChoice == U_EXTENDED_CHAR_NAME) {
+        यदि (सीमा > UCHAR_MAX_मानम् + 1) {
+            सीमा = UCHAR_MAX_मानम् + 1;
         }
-        return enumExtNames(start, limit - 1, fn, context);
+        प्रत्यागम enum_Ext_नामानि(start, सीमा - 1, fn, context);
     }
     
-    return true;
+    प्रत्यागम सत्य;
 }
 
-static uint16_t
-writeFactorSuffix(const uint16_t *factors, uint16_t count,
-                  const char *s, /* suffix elements */
-                  uint32_t code,
+स्थिर uint16_t
+write_गुणकः_Suffix(ध्रुव uint16_t *factors, uint16_t count,
+                  ध्रुव वर्ण *s, /* suffix elements */
+                  uint32_t संहिता,
                   uint16_t indexes[8], /* output fields from here */
-                  const char *elementBases[8], const char *elements[8],
-                  char *buffer, uint16_t bufferLength) {
-    uint16_t i, factor, bufferPos=0;
-    char c;
+                  ध्रुव वर्ण *elementBases[8], ध्रुव वर्ण *elements[8],
+                  वर्ण *बफर, uint16_t बफर_दीर्घता) {
+    uint16_t i, गुणकः, बफर_Pos=0;
+    वर्ण c;
 
     /* write elements according to the factors */
 
@@ -958,59 +958,59 @@ writeFactorSuffix(const uint16_t *factors, uint16_t count,
      * note that for fewer operations, count is decremented here
      */
     --count;
-    for(i=count; i>0; --i) {
-        factor=factors[i];
-        indexes[i] = static_cast<uint16_t>(code % factor);
-        code/=factor;
+    प्रति(i=count; i>0; --i) {
+        गुणकः=factors[i];
+        indexes[i] = static_cast<uint16_t>(संहिता % गुणकः);
+        संहिता/=गुणकः;
     }
     /*
      * we don't need to calculate the last modulus because start<=code<=end
      * guarantees here that code<=factors[0]
      */
-    indexes[0] = static_cast<uint16_t>(code);
+    indexes[0] = static_cast<uint16_t>(संहिता);
 
     /* write each element */
-    for(;;) {
-        if(elementBases!=nullptr) {
+    प्रति(;;) {
+        यदि(elementBases!=शून्यसूचकः) {
             *elementBases++=s;
         }
 
         /* skip indexes[i] strings */
-        factor=indexes[i];
-        while(factor>0) {
-            while(*s++!=0) {}
-            --factor;
+        गुणकः=indexes[i];
+        यावत्(गुणकः>0) {
+            यावत्(*s++!=0) {}
+            --गुणकः;
         }
-        if(elements!=nullptr) {
+        यदि(elements!=शून्यसूचकः) {
             *elements++=s;
         }
 
         /* write element */
-        while((c=*s++)!=0) {
-            WRITE_CHAR(buffer, bufferLength, bufferPos, c);
+        यावत्((c=*s++)!=0) {
+            WRITE_CHAR(बफर, बफर_दीर्घता, बफर_Pos, c);
         }
 
         /* we do not need to perform the rest of this loop for i==count - break here */
-        if(i>=count) {
-            break;
+        यदि(i>=count) {
+            भङ्ग;
         }
 
         /* skip the rest of the strings for this factors[i] */
-        factor = static_cast<uint16_t>(factors[i] - indexes[i] - 1);
-        while(factor>0) {
-            while(*s++!=0) {}
-            --factor;
+        गुणकः = static_cast<uint16_t>(factors[i] - indexes[i] - 1);
+        यावत्(गुणकः>0) {
+            यावत्(*s++!=0) {}
+            --गुणकः;
         }
 
         ++i;
     }
 
     /* zero-terminate */
-    if(bufferLength>0) {
-        *buffer=0;
+    यदि(बफर_दीर्घता>0) {
+        *बफर=0;
     }
 
-    return bufferPos;
+    प्रत्यागम बफर_Pos;
 }
 
 /*
@@ -1018,194 +1018,194 @@ writeFactorSuffix(const uint16_t *factors, uint16_t count,
  * Parts of findAlgName() are almost the same as some of getAlgName().
  * Fixes must be applied to both.
  */
-static uint16_t
-getAlgName(AlgorithmicRange *range, uint32_t code, UCharNameChoice nameChoice,
-        char *buffer, uint16_t bufferLength) {
-    uint16_t bufferPos=0;
+स्थिर uint16_t
+getAlgName(AlgorithmicRange *range, uint32_t संहिता, UCharNameChoice nameChoice,
+        वर्ण *बफर, uint16_t बफर_दीर्घता) {
+    uint16_t बफर_Pos=0;
 
     /* Only the normative character name can be algorithmic. */
-    if(nameChoice!=U_UNICODE_CHAR_NAME && nameChoice!=U_EXTENDED_CHAR_NAME) {
+    यदि(nameChoice!=U_UNICODE_CHAR_NAME && nameChoice!=U_EXTENDED_CHAR_NAME) {
         /* zero-terminate */
-        if(bufferLength>0) {
-            *buffer=0;
+        यदि(बफर_दीर्घता>0) {
+            *बफर=0;
         }
-        return 0;
+        प्रत्यागम 0;
     }
 
-    switch(range->type) {
-    case 0: {
+    विकल्प(range->type) {
+    पक्ष 0: {
         /* name = prefix hex-digits */
-        const char* s = reinterpret_cast<const char*>(range + 1);
-        char c;
+        ध्रुव वर्ण* s = reinterpret_cast<ध्रुव वर्ण*>(range + 1);
+        वर्ण c;
 
         uint16_t i, count;
 
         /* copy prefix */
-        while((c=*s++)!=0) {
-            WRITE_CHAR(buffer, bufferLength, bufferPos, c);
+        यावत्((c=*s++)!=0) {
+            WRITE_CHAR(बफर, बफर_दीर्घता, बफर_Pos, c);
         }
 
         /* write hexadecimal code point value */
         count=range->variant;
 
         /* zero-terminate */
-        if(count<bufferLength) {
-            buffer[count]=0;
+        यदि(count<बफर_दीर्घता) {
+            बफर[count]=0;
         }
 
-        for(i=count; i>0;) {
-            if(--i<bufferLength) {
-                c = static_cast<char>(code & 0xf);
-                if(c<10) {
+        प्रति(i=count; i>0;) {
+            यदि(--i<बफर_दीर्घता) {
+                c = static_cast<वर्ण>(संहिता & 0xf);
+                यदि(c<10) {
                     c+='0';
-                } else {
+                } अन्यथा {
                     c+='A'-10;
                 }
-                buffer[i]=c;
+                बफर[i]=c;
             }
-            code>>=4;
+            संहिता>>=4;
         }
 
-        bufferPos+=count;
-        break;
+        बफर_Pos+=count;
+        भङ्ग;
     }
-    case 1: {
+    पक्ष 1: {
         /* name = prefix factorized-elements */
         uint16_t indexes[8];
-        const uint16_t* factors = reinterpret_cast<const uint16_t*>(range + 1);
+        ध्रुव uint16_t* factors = reinterpret_cast<ध्रुव uint16_t*>(range + 1);
         uint16_t count=range->variant;
-        const char* s = reinterpret_cast<const char*>(factors + count);
-        char c;
+        ध्रुव वर्ण* s = reinterpret_cast<ध्रुव वर्ण*>(factors + count);
+        वर्ण c;
 
         /* copy prefix */
-        while((c=*s++)!=0) {
-            WRITE_CHAR(buffer, bufferLength, bufferPos, c);
+        यावत्((c=*s++)!=0) {
+            WRITE_CHAR(बफर, बफर_दीर्घता, बफर_Pos, c);
         }
 
-        bufferPos+=writeFactorSuffix(factors, count,
-                                     s, code-range->start, indexes, nullptr, nullptr, buffer, bufferLength);
-        break;
+        बफर_Pos+=write_गुणकः_Suffix(factors, count,
+                                     s, संहिता-range->start, indexes, शून्यसूचकः, शून्यसूचकः, बफर, बफर_दीर्घता);
+        भङ्ग;
     }
-    default:
+    स्वभाव:
         /* undefined type */
         /* zero-terminate */
-        if(bufferLength>0) {
-            *buffer=0;
+        यदि(बफर_दीर्घता>0) {
+            *बफर=0;
         }
-        break;
+        भङ्ग;
     }
 
-    return bufferPos;
+    प्रत्यागम बफर_Pos;
 }
 
 /*
  * Important: enumAlgNames() and findAlgName() are almost the same.
  * Any fix must be applied to both.
  */
-static UBool
-enumAlgNames(AlgorithmicRange *range,
-             UChar32 start, UChar32 limit,
-             UEnumCharNamesFn *fn, void *context,
+स्थिर UBool
+enum_Alg_नामानि(AlgorithmicRange *range,
+             UChar32 start, UChar32 सीमा,
+             UEnum_Char_नामानि_Fn *fn, शून्य *context,
              UCharNameChoice nameChoice) {
-    char buffer[200];
+    वर्ण बफर[200];
     uint16_t length;
 
-    if(nameChoice!=U_UNICODE_CHAR_NAME && nameChoice!=U_EXTENDED_CHAR_NAME) {
-        return true;
+    यदि(nameChoice!=U_UNICODE_CHAR_NAME && nameChoice!=U_EXTENDED_CHAR_NAME) {
+        प्रत्यागम सत्य;
     }
 
-    switch(range->type) {
-    case 0: {
-        char *s, *end;
-        char c;
+    विकल्प(range->type) {
+    पक्ष 0: {
+        वर्ण *s, *अन्तः;
+        वर्ण c;
 
         /* get the full name of the start character */
-        length = getAlgName(range, static_cast<uint32_t>(start), nameChoice, buffer, sizeof(buffer));
-        if(length<=0) {
-            return true;
+        length = getAlgName(range, static_cast<uint32_t>(start), nameChoice, बफर, परिमाण(बफर));
+        यदि(length<=0) {
+            प्रत्यागम सत्य;
         }
 
         /* call the enumerator function with this first character */
-        if(!fn(context, start, nameChoice, buffer, length)) {
-            return false;
+        यदि(!fn(context, start, nameChoice, बफर, length)) {
+            प्रत्यागम असत्य;
         }
 
         /* go to the end of the name; all these names have the same length */
-        end=buffer;
-        while(*end!=0) {
-            ++end;
+        अन्तः=बफर;
+        यावत्(*अन्तः!=0) {
+            ++अन्तः;
         }
 
         /* enumerate the rest of the names */
-        while(++start<limit) {
+        यावत्(++start<सीमा) {
             /* increment the hexadecimal number on a character-basis */
-            s=end;
-            for (;;) {
+            s=अन्तः;
+            प्रति (;;) {
                 c=*--s;
-                if(('0'<=c && c<'9') || ('A'<=c && c<'F')) {
-                    *s = static_cast<char>(c + 1);
-                    break;
-                } else if(c=='9') {
+                यदि(('0'<=c && c<'9') || ('A'<=c && c<'F')) {
+                    *s = static_cast<वर्ण>(c + 1);
+                    भङ्ग;
+                } अन्यथा यदि(c=='9') {
                     *s='A';
-                    break;
-                } else if(c=='F') {
+                    भङ्ग;
+                } अन्यथा यदि(c=='F') {
                     *s='0';
                 }
             }
 
-            if(!fn(context, start, nameChoice, buffer, length)) {
-                return false;
+            यदि(!fn(context, start, nameChoice, बफर, length)) {
+                प्रत्यागम असत्य;
             }
         }
-        break;
+        भङ्ग;
     }
-    case 1: {
+    पक्ष 1: {
         uint16_t indexes[8];
-        const char *elementBases[8], *elements[8];
-        const uint16_t* factors = reinterpret_cast<const uint16_t*>(range + 1);
+        ध्रुव वर्ण *elementBases[8], *elements[8];
+        ध्रुव uint16_t* factors = reinterpret_cast<ध्रुव uint16_t*>(range + 1);
         uint16_t count=range->variant;
-        const char* s = reinterpret_cast<const char*>(factors + count);
-        char *suffix, *t;
-        uint16_t prefixLength, i, idx;
+        ध्रुव वर्ण* s = reinterpret_cast<ध्रुव वर्ण*>(factors + count);
+        वर्ण *suffix, *t;
+        uint16_t उपसर्गः_दीर्घता, i, idx;
 
-        char c;
+        वर्ण c;
 
         /* name = prefix factorized-elements */
 
         /* copy prefix */
-        suffix=buffer;
-        prefixLength=0;
-        while((c=*s++)!=0) {
+        suffix=बफर;
+        उपसर्गः_दीर्घता=0;
+        यावत्((c=*s++)!=0) {
             *suffix++=c;
-            ++prefixLength;
+            ++उपसर्गः_दीर्घता;
         }
 
         /* append the suffix of the start character */
-        length = static_cast<uint16_t>(prefixLength + writeFactorSuffix(factors, count,
+        length = static_cast<uint16_t>(उपसर्गः_दीर्घता + write_गुणकः_Suffix(factors, count,
                                               s, static_cast<uint32_t>(start) - range->start,
                                               indexes, elementBases, elements,
-                                              suffix, static_cast<uint16_t>(sizeof(buffer) - prefixLength)));
+                                              suffix, static_cast<uint16_t>(परिमाण(बफर) - उपसर्गः_दीर्घता)));
 
         /* call the enumerator function with this first character */
-        if(!fn(context, start, nameChoice, buffer, length)) {
-            return false;
+        यदि(!fn(context, start, nameChoice, बफर, length)) {
+            प्रत्यागम असत्य;
         }
 
         /* enumerate the rest of the names */
-        while(++start<limit) {
+        यावत्(++start<सीमा) {
             /* increment the indexes in lexical order bound by the factors */
             i=count;
-            for (;;) {
+            प्रति (;;) {
                 idx = static_cast<uint16_t>(indexes[--i] + 1);
-                if(idx<factors[i]) {
+                यदि(idx<factors[i]) {
                     /* skip one index and its element string */
                     indexes[i]=idx;
                     s=elements[i];
-                    while(*s++!=0) {
+                    यावत्(*s++!=0) {
                     }
                     elements[i]=s;
-                    break;
-                } else {
+                    भङ्ग;
+                } अन्यथा {
                     /* reset this index to 0 and its element string to the first one */
                     indexes[i]=0;
                     elements[i]=elementBases[i];
@@ -1214,10 +1214,10 @@ enumAlgNames(AlgorithmicRange *range,
 
             /* to make matters a little easier, just append all elements to the suffix */
             t=suffix;
-            length=prefixLength;
-            for(i=0; i<count; ++i) {
+            length=उपसर्गः_दीर्घता;
+            प्रति(i=0; i<count; ++i) {
                 s=elements[i];
-                while((c=*s++)!=0) {
+                यावत्((c=*s++)!=0) {
                     *t++=c;
                     ++length;
                 }
@@ -1225,18 +1225,18 @@ enumAlgNames(AlgorithmicRange *range,
             /* zero-terminate */
             *t=0;
 
-            if(!fn(context, start, nameChoice, buffer, length)) {
-                return false;
+            यदि(!fn(context, start, nameChoice, बफर, length)) {
+                प्रत्यागम असत्य;
             }
         }
-        break;
+        भङ्ग;
     }
-    default:
+    स्वभाव:
         /* undefined type */
-        break;
+        भङ्ग;
     }
 
-    return true;
+    प्रत्यागम सत्य;
 }
 
 /*
@@ -1244,92 +1244,92 @@ enumAlgNames(AlgorithmicRange *range,
  * returns the code point for a name if it fits into the range.
  * It returns 0xffff otherwise.
  */
-static UChar32
+स्थिर UChar32
 findAlgName(AlgorithmicRange *range, UCharNameChoice nameChoice, CharacterNameQuery& query) {
-    UChar32 code;
-    auto matcher = query.matcher();
+    UChar32 संहिता;
+    स्वचालित matcher = query.matcher();
 
-    if(nameChoice!=U_UNICODE_CHAR_NAME && nameChoice!=U_EXTENDED_CHAR_NAME) {
-        return 0xffff;
+    यदि(nameChoice!=U_UNICODE_CHAR_NAME && nameChoice!=U_EXTENDED_CHAR_NAME) {
+        प्रत्यागम 0xffff;
     }
 
-    switch(range->type) {
-    case 0: {
+    विकल्प(range->type) {
+    पक्ष 0: {
         /* name = prefix hex-digits */
-        const char* s = reinterpret_cast<const char*>(range + 1);
+        ध्रुव वर्ण* s = reinterpret_cast<ध्रुव वर्ण*>(range + 1);
 
         /* compare prefix */
-        if (!matcher.consistentWith(s)) {
-            return 0xffff;
+        यदि (!matcher.consistentWith(s)) {
+            प्रत्यागम 0xffff;
         }
 
         /* read hexadecimal code point value */
-        code=0;
-        for(char c : matcher.remainingSignificantCharacters()) {
-            if('0'<=c && c<='9') {
-                code=(code<<4)|(c-'0');
-            } else if('A'<=c && c<='F') {
-                code=(code<<4)|(c-'A'+10);
-            } else {
-                return 0xffff;
+        संहिता=0;
+        प्रति(वर्ण c : matcher.remainingSignificantCharacters()) {
+            यदि('0'<=c && c<='9') {
+                संहिता=(संहिता<<4)|(c-'0');
+            } अन्यथा यदि('A'<=c && c<='F') {
+                संहिता=(संहिता<<4)|(c-'A'+10);
+            } अन्यथा {
+                प्रत्यागम 0xffff;
             }
         }
 
         /* does it fit into the range? */
-        if (range->start <= static_cast<uint32_t>(code) && static_cast<uint32_t>(code) <= range->end) {
-            return code;
+        यदि (range->start <= static_cast<uint32_t>(संहिता) && static_cast<uint32_t>(संहिता) <= range->अन्तः) {
+            प्रत्यागम संहिता;
         }
-        break;
+        भङ्ग;
     }
-    case 1: {
-        char buffer[64];
+    पक्ष 1: {
+        वर्ण बफर[64];
         uint16_t indexes[8];
-        const char *elementBases[8], *elements[8];
-        const uint16_t* factors = reinterpret_cast<const uint16_t*>(range + 1);
+        ध्रुव वर्ण *elementBases[8], *elements[8];
+        ध्रुव uint16_t* factors = reinterpret_cast<ध्रुव uint16_t*>(range + 1);
         uint16_t count=range->variant;
-        const char *s = reinterpret_cast<const char*>(factors + count);
-        UChar32 start, limit;
+        ध्रुव वर्ण *s = reinterpret_cast<ध्रुव वर्ण*>(factors + count);
+        UChar32 start, सीमा;
         uint16_t i, idx;
 
         /* name = prefix factorized-elements */
 
         /* compare prefix */
-        std::string_view prefix = s;
-        if (!matcher.consistentWith(prefix)) {
-            return 0xffff;
+        std::string_view उपसर्गः = s;
+        यदि (!matcher.consistentWith(उपसर्गः)) {
+            प्रत्यागम 0xffff;
         }
 
-        s += prefix.length() + 1;
+        s += उपसर्गः.length() + 1;
 
         start = static_cast<UChar32>(range->start);
-        limit = static_cast<UChar32>(range->end + 1);
+        सीमा = static_cast<UChar32>(range->अन्तः + 1);
         
         // This implementation assumes that the suffix does not contain SPACEs nor HYPHEN-MINUSes,
         // which is the case in practice for the names of Hangul syllables.
         std::string_view querySuffix = matcher.remainingSignificantCharacters();
         /* initialize the suffix elements for enumeration; indexes should all be set to 0 */
-        writeFactorSuffix(factors, count, s, 0,
-                          indexes, elementBases, elements, buffer, sizeof(buffer));
+        write_गुणकः_Suffix(factors, count, s, 0,
+                          indexes, elementBases, elements, बफर, परिमाण(बफर));
 
         /* compare the first suffix */
-        if(querySuffix == buffer) {
-            return start;
+        यदि(querySuffix == बफर) {
+            प्रत्यागम start;
         }
 
         /* enumerate and compare the rest of the suffixes */
-        while(++start<limit) {
+        यावत्(++start<सीमा) {
             /* increment the indexes in lexical order bound by the factors */
             i=count;
-            for (;;) {
+            प्रति (;;) {
                 idx = static_cast<uint16_t>(indexes[--i] + 1);
-                if(idx<factors[i]) {
+                यदि(idx<factors[i]) {
                     /* skip one index and its element string */
                     indexes[i]=idx;
                     s=elements[i];
-                    while(*s++!=0) {}
+                    यावत्(*s++!=0) {}
                     elements[i]=s;
-                    break;
-                } else {
+                    भङ्ग;
+                } अन्यथा {
                     /* reset this index to 0 and its element string to the first one */
                     indexes[i]=0;
                     elements[i]=elementBases[i];
@@ -1337,114 +1337,114 @@ findAlgName(AlgorithmicRange *range, UCharNameChoice nameChoice, CharacterNameQu
             }
 
             /* to make matters a little easier, just compare all elements of the suffix */
-            auto it = querySuffix.begin();
-            for(i=0; i<count; ++i) {
+            स्वचालित it = querySuffix.begin();
+            प्रति(i=0; i<count; ++i) {
                 s=elements[i];
-                char c;
-                while((c=*s++)!=0) {
-                    if(it == querySuffix.end() || c!=*it++) {
+                वर्ण c;
+                यावत्((c=*s++)!=0) {
+                    यदि(it == querySuffix.अन्तः() || c!=*it++) {
                         s=""; /* does not match */
                         i=99;
                     }
                 }
             }
-            if(i<99 && it == querySuffix.end()) {
-                return start;
+            यदि(i<99 && it == querySuffix.अन्तः()) {
+                प्रत्यागम start;
             }
         }
-        break;
+        भङ्ग;
     }
-    default:
+    स्वभाव:
         /* undefined type */
-        break;
+        भङ्ग;
     }
 
-    return 0xffff;
+    प्रत्यागम 0xffff;
 }
 
 /* sets of name characters, maximum name lengths ---------------------------- */
 
-#define SET_ADD(set, c) ((set)[(uint8_t)c>>5]|=((uint32_t)1<<((uint8_t)c&0x1f)))
-#define SET_CONTAINS(set, c) (((set)[(uint8_t)c>>5]&((uint32_t)1<<((uint8_t)c&0x1f)))!=0)
+#परिभाषय समुच्चयः_सङ्कलय_3(समुच्चयः, c) ((समुच्चयः)[(uint8_t)c>>5]|=((uint32_t)1<<((uint8_t)c&0x1f)))
+#परिभाषय समुच्चयः_अन्तर्भवति(समुच्चयः, c) (((समुच्चयः)[(uint8_t)c>>5]&((uint32_t)1<<((uint8_t)c&0x1f)))!=0)
 
-static int32_t
-calcStringSetLength(uint32_t set[8], const char *s) {
+स्थिर int32_t
+calc_String_समुच्चयः_दीर्घता(uint32_t समुच्चयः[8], ध्रुव वर्ण *s) {
     int32_t length=0;
-    char c;
+    वर्ण c;
 
-    while((c=*s++)!=0) {
-        SET_ADD(set, c);
+    यावत्((c=*s++)!=0) {
+        समुच्चयः_सङ्कलय_3(समुच्चयः, c);
         ++length;
     }
-    return length;
+    प्रत्यागम length;
 }
 
-static int32_t
-calcAlgNameSetsLengths(int32_t maxNameLength) {
+स्थिर int32_t
+calcAlgNameSetsLengths(int32_t max_Name_दीर्घता) {
     AlgorithmicRange *range;
     uint32_t *p;
-    uint32_t rangeCount;
+    uint32_t range_गणनम्;
     int32_t length;
 
     /* enumerate algorithmic ranges */
-    p = reinterpret_cast<uint32_t*>(reinterpret_cast<uint8_t*>(uCharNames) + uCharNames->algNamesOffset);
-    rangeCount=*p;
+    p = reinterpret_cast<uint32_t*>(reinterpret_cast<uint8_t*>(u_Char_नामानि) + u_Char_नामानि->alg_नामानि_विस्थापनम्);
+    range_गणनम्=*p;
     range = reinterpret_cast<AlgorithmicRange*>(p + 1);
-    while(rangeCount>0) {
-        switch(range->type) {
-        case 0:
+    यावत्(range_गणनम्>0) {
+        विकल्प(range->type) {
+        पक्ष 0:
             /* name = prefix + (range->variant times) hex-digits */
-            /* prefix */
-            length = calcStringSetLength(gNameSet, reinterpret_cast<const char*>(range + 1)) + range->variant;
-            if(length>maxNameLength) {
-                maxNameLength=length;
+            /*उपसर्गः*/
+            length = calc_String_समुच्चयः_दीर्घता(g_Name_समुच्चयः, reinterpret_cast<ध्रुव वर्ण*>(range + 1)) + range->variant;
+            यदि(length>max_Name_दीर्घता) {
+                max_Name_दीर्घता=length;
             }
-            break;
-        case 1: {
+            भङ्ग;
+        पक्ष 1: {
             /* name = prefix factorized-elements */
-            const uint16_t* factors = reinterpret_cast<const uint16_t*>(range + 1);
-            const char *s;
-            int32_t i, count=range->variant, factor, factorLength, maxFactorLength;
+            ध्रुव uint16_t* factors = reinterpret_cast<ध्रुव uint16_t*>(range + 1);
+            ध्रुव वर्ण *s;
+            int32_t i, count=range->variant, गुणकः, गुणकः_दीर्घता, max_गुणकः_दीर्घता;
 
             /* prefix length */
-            s = reinterpret_cast<const char*>(factors + count);
-            length=calcStringSetLength(gNameSet, s);
+            s = reinterpret_cast<ध्रुव वर्ण*>(factors + count);
+            length=calc_String_समुच्चयः_दीर्घता(g_Name_समुच्चयः, s);
             s+=length+1; /* start of factor suffixes */
 
             /* get the set and maximum factor suffix length for each factor */
-            for(i=0; i<count; ++i) {
-                maxFactorLength=0;
-                for(factor=factors[i]; factor>0; --factor) {
-                    factorLength=calcStringSetLength(gNameSet, s);
-                    s+=factorLength+1;
-                    if(factorLength>maxFactorLength) {
-                        maxFactorLength=factorLength;
+            प्रति(i=0; i<count; ++i) {
+                max_गुणकः_दीर्घता=0;
+                प्रति(गुणकः=factors[i]; गुणकः>0; --गुणकः) {
+                    गुणकः_दीर्घता=calc_String_समुच्चयः_दीर्घता(g_Name_समुच्चयः, s);
+                    s+=गुणकः_दीर्घता+1;
+                    यदि(गुणकः_दीर्घता>max_गुणकः_दीर्घता) {
+                        max_गुणकः_दीर्घता=गुणकः_दीर्घता;
                     }
                 }
-                length+=maxFactorLength;
+                length+=max_गुणकः_दीर्घता;
             }
 
-            if(length>maxNameLength) {
-                maxNameLength=length;
+            यदि(length>max_Name_दीर्घता) {
+                max_Name_दीर्घता=length;
             }
-            break;
+            भङ्ग;
         }
-        default:
+        स्वभाव:
             /* unknown type */
-            break;
+            भङ्ग;
         }
 
         range = reinterpret_cast<AlgorithmicRange*>(reinterpret_cast<uint8_t*>(range) + range->size);
-        --rangeCount;
+        --range_गणनम्;
     }
-    return maxNameLength;
+    प्रत्यागम max_Name_दीर्घता;
 }
 
-static int32_t
-calcExtNameSetsLengths(int32_t maxNameLength) {
+स्थिर int32_t
+calcExtNameSetsLengths(int32_t max_Name_दीर्घता) {
     int32_t i, length;
 
-    for(i=0; i<UPRV_LENGTHOF(charCatNames); ++i) {
+    प्रति(i=0; i<UPRV_LENGTHOF(char_Cat_नामानि); ++i) {
         /*
          * for each category, count the length of the category name
          * plus 9=
@@ -1452,275 +1452,275 @@ calcExtNameSetsLengths(int32_t maxNameLength) {
          * 1 for -
          * 6 for most hex digits per code point
          */
-        length=9+calcStringSetLength(gNameSet, charCatNames[i]);
-        if(length>maxNameLength) {
-            maxNameLength=length;
+        length=9+calc_String_समुच्चयः_दीर्घता(g_Name_समुच्चयः, char_Cat_नामानि[i]);
+        यदि(length>max_Name_दीर्घता) {
+            max_Name_दीर्घता=length;
         }
     }
-    return maxNameLength;
+    प्रत्यागम max_Name_दीर्घता;
 }
 
-static int32_t
-calcNameSetLength(const uint16_t *tokens, uint16_t tokenCount, const uint8_t *tokenStrings, int8_t *tokenLengths,
-                  uint32_t set[8],
-                  const uint8_t **pLine, const uint8_t *lineLimit) {
-    const uint8_t *line=*pLine;
-    int32_t length=0, tokenLength;
+स्थिर int32_t
+calc_Name_समुच्चयः_दीर्घता(ध्रुव uint16_t *tokens, uint16_t token_गणनम्, ध्रुव uint8_t *token_वाक्यानि, int8_t *tokenLengths,
+                  uint32_t समुच्चयः[8],
+                  ध्रुव uint8_t **p_पङ्क्तिः, ध्रुव uint8_t *पङ्क्तिः_सीमा) {
+    ध्रुव uint8_t *पङ्क्तिः=*p_पङ्क्तिः;
+    int32_t length=0, token_दीर्घता;
     uint16_t c, token;
 
-    while (line != lineLimit && (c = *line++) != static_cast<uint8_t>(';')) {
-        if(c>=tokenCount) {
+    यावत् (पङ्क्तिः != पङ्क्तिः_सीमा && (c = *पङ्क्तिः++) != static_cast<uint8_t>(';')) {
+        यदि(c>=token_गणनम्) {
             /* implicit letter */
-            SET_ADD(set, c);
+            समुच्चयः_सङ्कलय_3(समुच्चयः, c);
             ++length;
-        } else {
+        } अन्यथा {
             token=tokens[c];
-            if (token == static_cast<uint16_t>(-2)) {
+            यदि (token == static_cast<uint16_t>(-2)) {
                 /* this is a lead byte for a double-byte token */
-                c=c<<8|*line++;
+                c=c<<8|*पङ्क्तिः++;
                 token=tokens[c];
             }
-            if (token == static_cast<uint16_t>(-1)) {
+            यदि (token == static_cast<uint16_t>(-1)) {
                 /* explicit letter */
-                SET_ADD(set, c);
+                समुच्चयः_सङ्कलय_3(समुच्चयः, c);
                 ++length;
-            } else {
+            } अन्यथा {
                 /* count token word */
-                if(tokenLengths!=nullptr) {
+                यदि(tokenLengths!=शून्यसूचकः) {
                     /* use cached token length */
-                    tokenLength=tokenLengths[c];
-                    if(tokenLength==0) {
-                        tokenLength = calcStringSetLength(set, reinterpret_cast<const char*>(tokenStrings) + token);
-                        tokenLengths[c] = static_cast<int8_t>(tokenLength);
+                    token_दीर्घता=tokenLengths[c];
+                    यदि(token_दीर्घता==0) {
+                        token_दीर्घता = calc_String_समुच्चयः_दीर्घता(समुच्चयः, reinterpret_cast<ध्रुव वर्ण*>(token_वाक्यानि) + token);
+                        tokenLengths[c] = static_cast<int8_t>(token_दीर्घता);
                     }
-                } else {
-                    tokenLength = calcStringSetLength(set, reinterpret_cast<const char*>(tokenStrings) + token);
+                } अन्यथा {
+                    token_दीर्घता = calc_String_समुच्चयः_दीर्घता(समुच्चयः, reinterpret_cast<ध्रुव वर्ण*>(token_वाक्यानि) + token);
                 }
-                length+=tokenLength;
+                length+=token_दीर्घता;
             }
         }
     }
 
-    *pLine=line;
-    return length;
+    *p_पङ्क्तिः=पङ्क्तिः;
+    प्रत्यागम length;
 }
 
-static void
-calcGroupNameSetsLengths(int32_t maxNameLength) {
-    uint16_t offsets[LINES_PER_GROUP+2], lengths[LINES_PER_GROUP+2];
+स्थिर शून्य
+calc_गणः_Name_Sets_Lengths(int32_t max_Name_दीर्घता) {
+    uint16_t offsets[पङ्क्तयः_प्रत्येकम्_गणः+2], lengths[पङ्क्तयः_प्रत्येकम्_गणः+2];
 
-    uint16_t* tokens = reinterpret_cast<uint16_t*>(uCharNames) + 8;
-    uint16_t tokenCount=*tokens++;
-    uint8_t* tokenStrings = reinterpret_cast<uint8_t*>(uCharNames) + uCharNames->tokenStringOffset;
+    uint16_t* tokens = reinterpret_cast<uint16_t*>(u_Char_नामानि) + 8;
+    uint16_t token_गणनम्=*tokens++;
+    uint8_t* token_वाक्यानि = reinterpret_cast<uint8_t*>(u_Char_नामानि) + u_Char_नामानि->token_String_विस्थापनम्;
 
     int8_t *tokenLengths;
 
-    const uint16_t *group;
-    const uint8_t *s, *line, *lineLimit;
+    ध्रुव uint16_t *गणः;
+    ध्रुव uint8_t *s, *पङ्क्तिः, *पङ्क्तिः_सीमा;
 
-    int32_t groupCount, lineNumber, length;
+    int32_t गणः_गणनम्, पङ्क्तिः_सङ्ख्या, length;
 
-    tokenLengths = static_cast<int8_t*>(uprv_malloc(tokenCount));
-    if(tokenLengths!=nullptr) {
-        uprv_memset(tokenLengths, 0, tokenCount);
+    tokenLengths = static_cast<int8_t*>(uprv_malloc(token_गणनम्));
+    यदि(tokenLengths!=शून्यसूचकः) {
+        uprv_memset(tokenLengths, 0, token_गणनम्);
     }
 
-    group=GET_GROUPS(uCharNames);
-    groupCount=*group++;
+    गणः=GET_GROUPS(u_Char_नामानि);
+    गणः_गणनम्=*गणः++;
 
     /* enumerate all groups */
-    while(groupCount>0) {
-        s = reinterpret_cast<uint8_t*>(uCharNames) + uCharNames->groupStringOffset + GET_GROUP_OFFSET(group);
-        s=expandGroupLengths(s, offsets, lengths);
+    यावत्(गणः_गणनम्>0) {
+        s = reinterpret_cast<uint8_t*>(u_Char_नामानि) + u_Char_नामानि->गणः_String_विस्थापनम् + GET_गणः_विस्थापनम्(गणः);
+        s=expand_गणः_Lengths(s, offsets, lengths);
 
         /* enumerate all lines in each group */
-        for(lineNumber=0; lineNumber<LINES_PER_GROUP; ++lineNumber) {
-            line=s+offsets[lineNumber];
-            length=lengths[lineNumber];
-            if(length==0) {
-                continue;
+        प्रति(पङ्क्तिः_सङ्ख्या=0; पङ्क्तिः_सङ्ख्या<पङ्क्तयः_प्रत्येकम्_गणः; ++पङ्क्तिः_सङ्ख्या) {
+            पङ्क्तिः=s+offsets[पङ्क्तिः_सङ्ख्या];
+            length=lengths[पङ्क्तिः_सङ्ख्या];
+            यदि(length==0) {
+                अनुवर्त;
             }
 
-            lineLimit=line+length;
+            पङ्क्तिः_सीमा=पङ्क्तिः+length;
 
             /* read regular name */
-            length=calcNameSetLength(tokens, tokenCount, tokenStrings, tokenLengths, gNameSet, &line, lineLimit);
-            if(length>maxNameLength) {
-                maxNameLength=length;
+            length=calc_Name_समुच्चयः_दीर्घता(tokens, token_गणनम्, token_वाक्यानि, tokenLengths, g_Name_समुच्चयः, &पङ्क्तिः, पङ्क्तिः_सीमा);
+            यदि(length>max_Name_दीर्घता) {
+                max_Name_दीर्घता=length;
             }
-            if(line==lineLimit) {
-                continue;
+            यदि(पङ्क्तिः==पङ्क्तिः_सीमा) {
+                अनुवर्त;
             }
 
             /* read Unicode 1.0 name */
-            length=calcNameSetLength(tokens, tokenCount, tokenStrings, tokenLengths, gNameSet, &line, lineLimit);
-            if(length>maxNameLength) {
-                maxNameLength=length;
+            length=calc_Name_समुच्चयः_दीर्घता(tokens, token_गणनम्, token_वाक्यानि, tokenLengths, g_Name_समुच्चयः, &पङ्क्तिः, पङ्क्तिः_सीमा);
+            यदि(length>max_Name_दीर्घता) {
+                max_Name_दीर्घता=length;
             }
-            if(line==lineLimit) {
-                continue;
+            यदि(पङ्क्तिः==पङ्क्तिः_सीमा) {
+                अनुवर्त;
             }
 
             /* read ISO comment */
             /*length=calcNameSetLength(tokens, tokenCount, tokenStrings, tokenLengths, gISOCommentSet, &line, lineLimit);*/
         }
 
-        group=NEXT_GROUP(group);
-        --groupCount;
+        गणः=अग्र_गणः(गणः);
+        --गणः_गणनम्;
     }
 
-    if(tokenLengths!=nullptr) {
+    यदि(tokenLengths!=शून्यसूचकः) {
         uprv_free(tokenLengths);
     }
 
     /* set gMax... - name length last for threading */
-    gMaxNameLength=maxNameLength;
+    g_Max_Name_दीर्घता=max_Name_दीर्घता;
 }
 
-static UBool
-calcNameSetsLengths(UErrorCode *pErrorCode) {
-    static const char extChars[]="0123456789ABCDEF<>-";
-    int32_t i, maxNameLength;
+स्थिर UBool
+calcNameSetsLengths(UError_संहिता *p_Error_संहिता) {
+    स्थिर ध्रुव वर्ण extChars[]="0123456789ABCDEF<>-";
+    int32_t i, max_Name_दीर्घता;
 
-    if(gMaxNameLength!=0) {
-        return true;
+    यदि(g_Max_Name_दीर्घता!=0) {
+        प्रत्यागम सत्य;
     }
 
-    if(!isDataLoaded(pErrorCode)) {
-        return false;
+    यदि(!is_दत्त_Loaded(p_Error_संहिता)) {
+        प्रत्यागम असत्य;
     }
 
     /* set hex digits, used in various names, and <>-, used in extended names */
-    for (i = 0; i < static_cast<int32_t>(sizeof(extChars)) - 1; ++i) {
-        SET_ADD(gNameSet, extChars[i]);
+    प्रति (i = 0; i < static_cast<int32_t>(परिमाण(extChars)) - 1; ++i) {
+        समुच्चयः_सङ्कलय_3(g_Name_समुच्चयः, extChars[i]);
     }
 
     /* set sets and lengths from algorithmic names */
-    maxNameLength=calcAlgNameSetsLengths(0);
+    max_Name_दीर्घता=calcAlgNameSetsLengths(0);
 
     /* set sets and lengths from extended names */
-    maxNameLength=calcExtNameSetsLengths(maxNameLength);
+    max_Name_दीर्घता=calcExtNameSetsLengths(max_Name_दीर्घता);
 
     /* set sets and lengths from group names, set global maximum values */
-    calcGroupNameSetsLengths(maxNameLength);
+    calc_गणः_Name_Sets_Lengths(max_Name_दीर्घता);
 
-    return true;
+    प्रत्यागम सत्य;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
 /* public API --------------------------------------------------------------- */
 
 U_NAMESPACE_USE
 
 U_CAPI int32_t U_EXPORT2
-u_charName(UChar32 code, UCharNameChoice nameChoice,
-           char *buffer, int32_t bufferLength,
-           UErrorCode *pErrorCode) {
+u_charName(UChar32 संहिता, UCharNameChoice nameChoice,
+           वर्ण *बफर, int32_t बफर_दीर्घता,
+           UError_संहिता *p_Error_संहिता) {
      AlgorithmicRange *algRange;
     uint32_t *p;
     uint32_t i;
     int32_t length;
 
     /* check the argument values */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
-    } else if(nameChoice>=U_CHAR_NAME_CHOICE_COUNT ||
-              bufferLength<0 || (bufferLength>0 && buffer==nullptr)
+    यदि(p_Error_संहिता==शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम 0;
+    } अन्यथा यदि(nameChoice>=U_CHAR_NAME_CHOICE_गणनम् ||
+              बफर_दीर्घता<0 || (बफर_दीर्घता>0 && बफर==शून्यसूचकः)
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0;
     }
 
-    if((uint32_t)code>UCHAR_MAX_VALUE || !isDataLoaded(pErrorCode)) {
-        return u_terminateChars(buffer, bufferLength, 0, pErrorCode);
+    यदि((uint32_t)संहिता>UCHAR_MAX_मानम् || !is_दत्त_Loaded(p_Error_संहिता)) {
+        प्रत्यागम u_terminateChars(बफर, बफर_दीर्घता, 0, p_Error_संहिता);
     }
 
     length=0;
 
     /* try algorithmic names first */
-    p=(uint32_t *)((uint8_t *)uCharNames+uCharNames->algNamesOffset);
+    p=(uint32_t *)((uint8_t *)u_Char_नामानि+u_Char_नामानि->alg_नामानि_विस्थापनम्);
     i=*p;
     algRange=(AlgorithmicRange *)(p+1);
-    while(i>0) {
-        if(algRange->start<=(uint32_t)code && (uint32_t)code<=algRange->end) {
-            length=getAlgName(algRange, (uint32_t)code, nameChoice, buffer, (uint16_t)bufferLength);
-            break;
+    यावत्(i>0) {
+        यदि(algRange->start<=(uint32_t)संहिता && (uint32_t)संहिता<=algRange->अन्तः) {
+            length=getAlgName(algRange, (uint32_t)संहिता, nameChoice, बफर, (uint16_t)बफर_दीर्घता);
+            भङ्ग;
         }
         algRange=(AlgorithmicRange *)((uint8_t *)algRange+algRange->size);
         --i;
     }
 
-    if(i==0) {
-        if (nameChoice == U_EXTENDED_CHAR_NAME) {
-            length = getName(uCharNames, (uint32_t )code, U_EXTENDED_CHAR_NAME, buffer, (uint16_t) bufferLength);
-            if (!length) {
+    यदि(i==0) {
+        यदि (nameChoice == U_EXTENDED_CHAR_NAME) {
+            length = getName(u_Char_नामानि, (uint32_t )संहिता, U_EXTENDED_CHAR_NAME, बफर, (uint16_t) बफर_दीर्घता);
+            यदि (!length) {
                 /* extended character name */
-                length = getExtName((uint32_t) code, buffer, (uint16_t) bufferLength);
+                length = getExtName((uint32_t) संहिता, बफर, (uint16_t) बफर_दीर्घता);
             }
-        } else {
+        } अन्यथा {
             /* normal character name */
-            length=getName(uCharNames, (uint32_t)code, nameChoice, buffer, (uint16_t)bufferLength);
+            length=getName(u_Char_नामानि, (uint32_t)संहिता, nameChoice, बफर, (uint16_t)बफर_दीर्घता);
         }
     }
 
-    return u_terminateChars(buffer, bufferLength, length, pErrorCode);
+    प्रत्यागम u_terminateChars(बफर, बफर_दीर्घता, length, p_Error_संहिता);
 }
 
 U_CAPI int32_t U_EXPORT2
 u_getISOComment(UChar32 /*c*/,
-                char *dest, int32_t destCapacity,
-                UErrorCode *pErrorCode) {
+                वर्ण *dest, int32_t dest_क्षमता,
+                UError_संहिता *p_Error_संहिता) {
     /* check the argument values */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
-    } else if(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    यदि(p_Error_संहिता==शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम 0;
+    } अन्यथा यदि(dest_क्षमता<0 || (dest_क्षमता>0 && dest==शून्यसूचकः)) {
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0;
     }
 
-    return u_terminateChars(dest, destCapacity, 0, pErrorCode);
+    प्रत्यागम u_terminateChars(dest, dest_क्षमता, 0, p_Error_संहिता);
 }
 
 U_CAPI UChar32 U_EXPORT2
 u_charFromName(UCharNameChoice nameChoice,
-               const char *const name,
-               UErrorCode *pErrorCode) {
-    char lower[120] = {0};
+               ध्रुव वर्ण *ध्रुव name,
+               UError_संहिता *p_Error_संहिता) {
+    वर्ण अधस्तनम्[120] = {0};
     FindName findName;
     AlgorithmicRange *algRange;
     uint32_t *p;
     uint32_t i;
     UChar32 cp = 0;
-    char c0;
-    static constexpr UChar32 error = 0xffff;     /* Undefined, but use this for backwards compatibility. */
+    वर्ण c0;
+    स्थिर constexpr UChar32 error = 0xffff;     /* Undefined, but use this for backwards compatibility. */
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return error;
+    यदि(p_Error_संहिता==शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम error;
     }
 
-    if(nameChoice>=U_CHAR_NAME_CHOICE_COUNT || name==nullptr || *name==0) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return error;
+    यदि(nameChoice>=U_CHAR_NAME_CHOICE_गणनम् || name==शून्यसूचकः || *name==0) {
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम error;
     }
 
-    if(!isDataLoaded(pErrorCode)) {
-        return error;
+    यदि(!is_दत्त_Loaded(p_Error_संहिता)) {
+        प्रत्यागम error;
     }
 
     /* construct the lowercase of the name first */
-    const char* nameChar = name;
-    for(i=0; i<sizeof(lower); ++i) {
-        if((c0=*nameChar++)!=0) {
-            lower[i]=uprv_tolower(c0);
-        } else {
-            break;
+    ध्रुव वर्ण* nameChar = name;
+    प्रति(i=0; i<परिमाण(अधस्तनम्); ++i) {
+        यदि((c0=*nameChar++)!=0) {
+            अधस्तनम्[i]=uprv_tolower(c0);
+        } अन्यथा {
+            भङ्ग;
         }
     }
-    if(i==sizeof(lower)) {
+    यदि(i==परिमाण(अधस्तनम्)) {
         /* name too long, there is no such character */
-        *pErrorCode = U_ILLEGAL_CHAR_FOUND;
-        return error;
+        *p_Error_संहिता = U_ILLEGAL_CHAR_प्राप्तम्;
+        प्रत्यागम error;
     }
     // i==strlen(name)==strlen(lower)
 
@@ -1728,32 +1728,32 @@ u_charFromName(UCharNameChoice nameChoice,
     // The ICU extended names are not consistent with the UAX44 code point labels, e.g.,
     // "unassigned" vs. UAX44 "reserved", "private use area" vs. UAX44 "private-use", so we do not
     // apply UAX44-LM2 matching to them.
-    if (lower[0] == '<') {
-        if (nameChoice == U_EXTENDED_CHAR_NAME && lower[--i] == '>') {
+    यदि (अधस्तनम्[0] == '<') {
+        यदि (nameChoice == U_EXTENDED_CHAR_NAME && अधस्तनम्[--i] == '>') {
             // Parse a string like "<category-HHHH>" where HHHH is a hex code point.
-            uint32_t limit = i;
-            while (i >= 3 && lower[--i] != '-') {}
+            uint32_t सीमा = i;
+            यावत् (i >= 3 && अधस्तनम्[--i] != '-') {}
 
             // There should be 1 to 8 hex digits.
-            int32_t hexLength = limit - (i + 1);
-            if (i >= 2 && lower[i] == '-' && 1 <= hexLength && hexLength <= 8) {
+            int32_t hex_दीर्घता = सीमा - (i + 1);
+            यदि (i >= 2 && अधस्तनम्[i] == '-' && 1 <= hex_दीर्घता && hex_दीर्घता <= 8) {
                 uint32_t cIdx;
 
-                lower[i] = 0;
+                अधस्तनम्[i] = 0;
 
-                for (++i; i < limit; ++i) {
-                    if (lower[i] >= '0' && lower[i] <= '9') {
-                        cp = (cp << 4) + lower[i] - '0';
-                    } else if (lower[i] >= 'a' && lower[i] <= 'f') {
-                        cp = (cp << 4) + lower[i] - 'a' + 10;
-                    } else {
-                        *pErrorCode = U_ILLEGAL_CHAR_FOUND;
-                        return error;
+                प्रति (++i; i < सीमा; ++i) {
+                    यदि (अधस्तनम्[i] >= '0' && अधस्तनम्[i] <= '9') {
+                        cp = (cp << 4) + अधस्तनम्[i] - '0';
+                    } अन्यथा यदि (अधस्तनम्[i] >= 'a' && अधस्तनम्[i] <= 'f') {
+                        cp = (cp << 4) + अधस्तनम्[i] - 'a' + 10;
+                    } अन्यथा {
+                        *p_Error_संहिता = U_ILLEGAL_CHAR_प्राप्तम्;
+                        प्रत्यागम error;
                     }
                     // Prevent signed-integer overflow and out-of-range code points.
-                    if (cp > UCHAR_MAX_VALUE) {
-                        *pErrorCode = U_ILLEGAL_CHAR_FOUND;
-                        return error;
+                    यदि (cp > UCHAR_MAX_मानम्) {
+                        *p_Error_संहिता = U_ILLEGAL_CHAR_प्राप्तम्;
+                        प्रत्यागम error;
                     }
                 }
 
@@ -1761,32 +1761,32 @@ u_charFromName(UCharNameChoice nameChoice,
                    We could use a binary search, or a trie, if
                    we really wanted to. */
                 uint8_t cat = getCharCat(cp);
-                for (lower[i] = 0, cIdx = 0; cIdx < UPRV_LENGTHOF(charCatNames); ++cIdx) {
+                प्रति (अधस्तनम्[i] = 0, cIdx = 0; cIdx < UPRV_LENGTHOF(char_Cat_नामानि); ++cIdx) {
 
-                    if (!uprv_strcmp(lower + 1, charCatNames[cIdx])) {
-                        if (cat == cIdx) {
-                            return cp;
+                    यदि (!uprv_strcmp(अधस्तनम् + 1, char_Cat_नामानि[cIdx])) {
+                        यदि (cat == cIdx) {
+                            प्रत्यागम cp;
                         }
-                        break;
+                        भङ्ग;
                     }
                 }
             }
         }
 
-        *pErrorCode = U_ILLEGAL_CHAR_FOUND;
-        return error;
+        *p_Error_संहिता = U_ILLEGAL_CHAR_प्राप्तम्;
+        प्रत्यागम error;
     }
 
     // From now on we do UAX44 matching.
     CharacterNameQuery query(name);
 
     /* try algorithmic names now */
-    p=(uint32_t *)((uint8_t *)uCharNames+uCharNames->algNamesOffset);
+    p=(uint32_t *)((uint8_t *)u_Char_नामानि+u_Char_नामानि->alg_नामानि_विस्थापनम्);
     i=*p;
     algRange=(AlgorithmicRange *)(p+1);
-    while(i>0) {
-        if((cp=findAlgName(algRange, nameChoice, query))!=0xffff) {
-            return cp;
+    यावत्(i>0) {
+        यदि((cp=findAlgName(algRange, nameChoice, query))!=0xffff) {
+            प्रत्यागम cp;
         }
         algRange=(AlgorithmicRange *)((uint8_t *)algRange+algRange->size);
         --i;
@@ -1794,89 +1794,89 @@ u_charFromName(UCharNameChoice nameChoice,
 
     /* normal character name */
     findName.otherName=&query;
-    findName.code=error;
-    enumNames(uCharNames, 0, UCHAR_MAX_VALUE + 1, DO_FIND_NAME, &findName, nameChoice);
-    if (findName.code == error) {
-         *pErrorCode = U_ILLEGAL_CHAR_FOUND;
+    findName.संहिता=error;
+    enum_नामानि(u_Char_नामानि, 0, UCHAR_MAX_मानम् + 1, DO_FIND_NAME, &findName, nameChoice);
+    यदि (findName.संहिता == error) {
+         *p_Error_संहिता = U_ILLEGAL_CHAR_प्राप्तम्;
     }
-    return findName.code;
+    प्रत्यागम findName.संहिता;
 }
 
-U_CAPI void U_EXPORT2
-u_enumCharNames(UChar32 start, UChar32 limit,
-                UEnumCharNamesFn *fn,
-                void *context,
+U_CAPI शून्य U_EXPORT2
+u_enum_Char_नामानि(UChar32 start, UChar32 सीमा,
+                UEnum_Char_नामानि_Fn *fn,
+                शून्य *context,
                 UCharNameChoice nameChoice,
-                UErrorCode *pErrorCode) {
+                UError_संहिता *p_Error_संहिता) {
     AlgorithmicRange *algRange;
     uint32_t *p;
     uint32_t i;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    यदि(p_Error_संहिता==शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम;
     }
 
-    if(nameChoice>=U_CHAR_NAME_CHOICE_COUNT || fn==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    यदि(nameChoice>=U_CHAR_NAME_CHOICE_गणनम् || fn==शून्यसूचकः) {
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
 
-    if((uint32_t) limit > UCHAR_MAX_VALUE + 1) {
-        limit = UCHAR_MAX_VALUE + 1;
+    यदि((uint32_t) सीमा > UCHAR_MAX_मानम् + 1) {
+        सीमा = UCHAR_MAX_मानम् + 1;
     }
-    if((uint32_t)start>=(uint32_t)limit) {
-        return;
+    यदि((uint32_t)start>=(uint32_t)सीमा) {
+        प्रत्यागम;
     }
 
-    if(!isDataLoaded(pErrorCode)) {
-        return;
+    यदि(!is_दत्त_Loaded(p_Error_संहिता)) {
+        प्रत्यागम;
     }
 
     /* interleave the data-driven ones with the algorithmic ones */
     /* iterate over all algorithmic ranges; assume that they are in ascending order */
-    p=(uint32_t *)((uint8_t *)uCharNames+uCharNames->algNamesOffset);
+    p=(uint32_t *)((uint8_t *)u_Char_नामानि+u_Char_नामानि->alg_नामानि_विस्थापनम्);
     i=*p;
     algRange=(AlgorithmicRange *)(p+1);
-    while(i>0) {
+    यावत्(i>0) {
         /* enumerate the character names before the current algorithmic range */
         /* here: start<limit */
-        if((uint32_t)start<algRange->start) {
-            if((uint32_t)limit<=algRange->start) {
-                enumNames(uCharNames, start, limit, fn, context, nameChoice);
-                return;
+        यदि((uint32_t)start<algRange->start) {
+            यदि((uint32_t)सीमा<=algRange->start) {
+                enum_नामानि(u_Char_नामानि, start, सीमा, fn, context, nameChoice);
+                प्रत्यागम;
             }
-            if(!enumNames(uCharNames, start, (UChar32)algRange->start, fn, context, nameChoice)) {
-                return;
+            यदि(!enum_नामानि(u_Char_नामानि, start, (UChar32)algRange->start, fn, context, nameChoice)) {
+                प्रत्यागम;
             }
             start=(UChar32)algRange->start;
         }
         /* enumerate the character names in the current algorithmic range */
         /* here: algRange->start<=start<limit */
-        if((uint32_t)start<=algRange->end) {
-            if((uint32_t)limit<=(algRange->end+1)) {
-                enumAlgNames(algRange, start, limit, fn, context, nameChoice);
-                return;
+        यदि((uint32_t)start<=algRange->अन्तः) {
+            यदि((uint32_t)सीमा<=(algRange->अन्तः+1)) {
+                enum_Alg_नामानि(algRange, start, सीमा, fn, context, nameChoice);
+                प्रत्यागम;
             }
-            if(!enumAlgNames(algRange, start, (UChar32)algRange->end+1, fn, context, nameChoice)) {
-                return;
+            यदि(!enum_Alg_नामानि(algRange, start, (UChar32)algRange->अन्तः+1, fn, context, nameChoice)) {
+                प्रत्यागम;
             }
-            start=(UChar32)algRange->end+1;
+            start=(UChar32)algRange->अन्तः+1;
         }
         /* continue to the next algorithmic range (here: start<limit) */
         algRange=(AlgorithmicRange *)((uint8_t *)algRange+algRange->size);
         --i;
     }
     /* enumerate the character names after the last algorithmic range */
-    enumNames(uCharNames, start, limit, fn, context, nameChoice);
+    enum_नामानि(u_Char_नामानि, start, सीमा, fn, context, nameChoice);
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_getMaxCharNameLength() {
-    UErrorCode errorCode=U_ZERO_ERROR;
-    if(calcNameSetsLengths(&errorCode)) {
-        return gMaxNameLength;
-    } else {
-        return 0;
+uprv_get_Max_Char_Name_दीर्घता() {
+    UError_संहिता error_संहिता=U_ZERO_ERROR;
+    यदि(calcNameSetsLengths(&error_संहिता)) {
+        प्रत्यागम g_Max_Name_दीर्घता;
+    } अन्यथा {
+        प्रत्यागम 0;
     }
 }
 
@@ -1885,35 +1885,35 @@ uprv_getMaxCharNameLength() {
  * @param cset Set of 256 bit flags corresponding to a set of chars.
  * @param uset USet to receive characters. Existing contents are deleted.
  */
-static void
-charSetToUSet(uint32_t cset[8], const USetAdder *sa) {
+स्थिर शून्य
+char_समुच्चयः_गन्तव्यम्_USet(uint32_t cset[8], ध्रुव USetAdder *sa) {
     char16_t us[256];
-    char cs[256];
+    वर्ण cs[256];
 
     int32_t i, length;
-    UErrorCode errorCode;
+    UError_संहिता error_संहिता;
 
-    errorCode=U_ZERO_ERROR;
+    error_संहिता=U_ZERO_ERROR;
 
-    if(!calcNameSetsLengths(&errorCode)) {
-        return;
+    यदि(!calcNameSetsLengths(&error_संहिता)) {
+        प्रत्यागम;
     }
 
     /* build a char string with all chars that are used in character names */
     length=0;
-    for(i=0; i<256; ++i) {
-        if(SET_CONTAINS(cset, i)) {
-            cs[length++] = static_cast<char>(i);
+    प्रति(i=0; i<256; ++i) {
+        यदि(समुच्चयः_अन्तर्भवति(cset, i)) {
+            cs[length++] = static_cast<वर्ण>(i);
         }
     }
 
     /* convert the char string to a char16_t string */
-    u_charsToUChars(cs, us, length);
+    u_chars_गन्तव्यम्_UChars(cs, us, length);
 
     /* add each char16_t to the USet */
-    for(i=0; i<length; ++i) {
-        if(us[i]!=0 || cs[i]==0) { /* non-invariant chars become (char16_t)0 */
-            sa->add(sa->set, us[i]);
+    प्रति(i=0; i<length; ++i) {
+        यदि(us[i]!=0 || cs[i]==0) { /* non-invariant chars become (char16_t)0 */
+            sa->सङ्कलय(sa->समुच्चयः, us[i]);
         }
     }
 }
@@ -1922,9 +1922,9 @@ charSetToUSet(uint32_t cset[8], const USetAdder *sa) {
  * Fills set with characters that are used in Unicode character names.
  * @param set USet to receive characters.
  */
-U_CAPI void U_EXPORT2
-uprv_getCharNameCharacters(const USetAdder *sa) {
-    charSetToUSet(gNameSet, sa);
+U_CAPI शून्य U_EXPORT2
+uprv_getCharNameCharacters(ध्रुव USetAdder *sa) {
+    char_समुच्चयः_गन्तव्यम्_USet(g_Name_समुच्चयः, sa);
 }
 
 /* data swapping ------------------------------------------------------------ */
@@ -1940,56 +1940,56 @@ uprv_getCharNameCharacters(const USetAdder *sa) {
  * Use it once for single-/lead-byte tokens and once more for all trail byte
  * tokens. (';' is an unused trail byte marked with -1.)
  */
-static void
-makeTokenMap(const UDataSwapper *ds,
-             int16_t tokens[], uint16_t tokenCount,
+स्थिर शून्य
+makeTokenMap(ध्रुव UDataSwapper *ds,
+             int16_t tokens[], uint16_t token_गणनम्,
              uint8_t map[256],
-             UErrorCode *pErrorCode) {
-    UBool usedOutChar[256];
+             UError_संहिता *p_Error_संहिता) {
+    UBool प्रयुक्तम्_बहिर्गमनम्_Char[256];
     uint16_t i, j;
     uint8_t c1, c2;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    यदि(U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम;
     }
 
-    if(ds->inCharset==ds->outCharset) {
+    यदि(ds->अन्तर्_Charset==ds->बहिर्गमनम्_Charset) {
         /* Same charset family: identity permutation */
-        for(i=0; i<256; ++i) {
+        प्रति(i=0; i<256; ++i) {
             map[i] = static_cast<uint8_t>(i);
         }
-    } else {
+    } अन्यथा {
         uprv_memset(map, 0, 256);
-        uprv_memset(usedOutChar, 0, 256);
+        uprv_memset(प्रयुक्तम्_बहिर्गमनम्_Char, 0, 256);
 
-        if(tokenCount>256) {
-            tokenCount=256;
+        यदि(token_गणनम्>256) {
+            token_गणनम्=256;
         }
 
         /* set the direct bytes (byte 0 always maps to itself) */
-        for(i=1; i<tokenCount; ++i) {
-            if(tokens[i]==-1) {
+        प्रति(i=1; i<token_गणनम्; ++i) {
+            यदि(tokens[i]==-1) {
                 /* convert the direct byte character */
                 c1 = static_cast<uint8_t>(i);
-                ds->swapInvChars(ds, &c1, 1, &c2, pErrorCode);
-                if(U_FAILURE(*pErrorCode)) {
+                ds->swapInvChars(ds, &c1, 1, &c2, p_Error_संहिता);
+                यदि(U_FAILURE(*p_Error_संहिता)) {
                     udata_printError(ds, "unames/makeTokenMap() finds variant character 0x%02x used (input charset family %d)\n",
-                                     i, ds->inCharset);
-                    return;
+                                     i, ds->अन्तर्_Charset);
+                    प्रत्यागम;
                 }
 
                 /* enter the converted character into the map and mark it used */
                 map[c1]=c2;
-                usedOutChar[c2]=true;
+                प्रयुक्तम्_बहिर्गमनम्_Char[c2]=सत्य;
             }
         }
 
         /* set the mappings for the rest of the permutation */
-        for(i=j=1; i<tokenCount; ++i) {
+        प्रति(i=j=1; i<token_गणनम्; ++i) {
             /* set mappings that were not set for direct bytes */
-            if(map[i]==0) {
+            यदि(map[i]==0) {
                 /* set an output byte value that was not used as an output byte above */
-                while(usedOutChar[j]) {
+                यावत्(प्रयुक्तम्_बहिर्गमनम्_Char[j]) {
                     ++j;
                 }
                 map[i] = static_cast<uint8_t>(j++);
@@ -2004,202 +2004,202 @@ makeTokenMap(const UDataSwapper *ds,
 }
 
 U_CAPI int32_t U_EXPORT2
-uchar_swapNames(const UDataSwapper *ds,
-                const void *inData, int32_t length, void *outData,
-                UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
-    int32_t headerSize;
+uchar_swap_नामानि(ध्रुव UDataSwapper *ds,
+                ध्रुव शून्य *अन्तर्_दत्त, int32_t length, शून्य *बहिर्गमनम्_दत्त,
+                UError_संहिता *p_Error_संहिता) {
+    ध्रुव UDataInfo *pInfo;
+    int32_t शीर्षकम्_आकार;
 
-    const uint8_t *inBytes;
-    uint8_t *outBytes;
+    ध्रुव uint8_t *अन्तर्_अष्टकानि;
+    uint8_t *बहिर्गमनम्_अष्टकानि;
 
-    uint32_t tokenStringOffset, groupsOffset, groupStringOffset, algNamesOffset,
-             offset, i, count, stringsCount;
+    uint32_t token_String_विस्थापनम्, groups_विस्थापनम्, गणः_String_विस्थापनम्, alg_नामानि_विस्थापनम्,
+             विस्थापनम्, i, count, वाक्यानि_गणनम्;
 
-    const AlgorithmicRange *inRange;
-    AlgorithmicRange *outRange;
+    ध्रुव AlgorithmicRange *अन्तर्_Range;
+    AlgorithmicRange *बहिर्गमनम्_Range;
 
     /* udata_swapDataHeader checks the arguments */
-    headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    शीर्षकम्_आकार=udata_swap_दत्त_शीर्षकम्(ds, अन्तर्_दत्त, length, बहिर्गमनम्_दत्त, p_Error_संहिता);
+    यदि(p_Error_संहिता==शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
-        pInfo->dataFormat[0]==0x75 &&   /* dataFormat="unam" */
-        pInfo->dataFormat[1]==0x6e &&
-        pInfo->dataFormat[2]==0x61 &&
-        pInfo->dataFormat[3]==0x6d &&
-        pInfo->formatVersion[0]==1
+    pInfo=(ध्रुव UDataInfo *)((ध्रुव वर्ण *)अन्तर्_दत्त+4);
+    यदि(!(
+        pInfo->दत्त_Format[0]==0x75 &&   /* dataFormat="unam" */
+        pInfo->दत्त_Format[1]==0x6e &&
+        pInfo->दत्त_Format[2]==0x61 &&
+        pInfo->दत्त_Format[3]==0x6d &&
+        pInfo->format_संस्करणम्[0]==1
     )) {
         udata_printError(ds, "uchar_swapNames(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized as unames.icu\n",
-                         pInfo->dataFormat[0], pInfo->dataFormat[1],
-                         pInfo->dataFormat[2], pInfo->dataFormat[3],
-                         pInfo->formatVersion[0]);
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+                         pInfo->दत्त_Format[0], pInfo->दत्त_Format[1],
+                         pInfo->दत्त_Format[2], pInfo->दत्त_Format[3],
+                         pInfo->format_संस्करणम्[0]);
+        *p_Error_संहिता=U_UNSUPPORTED_ERROR;
+        प्रत्यागम 0;
     }
 
-    inBytes=(const uint8_t *)inData+headerSize;
-    outBytes=(outData == nullptr) ? nullptr : (uint8_t *)outData+headerSize;
-    if(length<0) {
-        algNamesOffset=ds->readUInt32(((const uint32_t *)inBytes)[3]);
-    } else {
-        length-=headerSize;
-        if( length<20 ||
-            (uint32_t)length<(algNamesOffset=ds->readUInt32(((const uint32_t *)inBytes)[3]))
+    अन्तर्_अष्टकानि=(ध्रुव uint8_t *)अन्तर्_दत्त+शीर्षकम्_आकार;
+    बहिर्गमनम्_अष्टकानि=(बहिर्गमनम्_दत्त == शून्यसूचकः) ? शून्यसूचकः : (uint8_t *)बहिर्गमनम्_दत्त+शीर्षकम्_आकार;
+    यदि(length<0) {
+        alg_नामानि_विस्थापनम्=ds->readUInt32(((ध्रुव uint32_t *)अन्तर्_अष्टकानि)[3]);
+    } अन्यथा {
+        length-=शीर्षकम्_आकार;
+        यदि( length<20 ||
+            (uint32_t)length<(alg_नामानि_विस्थापनम्=ds->readUInt32(((ध्रुव uint32_t *)अन्तर्_अष्टकानि)[3]))
         ) {
             udata_printError(ds, "uchar_swapNames(): too few bytes (%d after header) for unames.icu\n",
                              length);
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *p_Error_संहिता=U_सूचकांक_OUTOFBOUNDS_ERROR;
+            प्रत्यागम 0;
         }
     }
 
-    if(length<0) {
+    यदि(length<0) {
         /* preflighting: iterate through algorithmic ranges */
-        offset=algNamesOffset;
-        count=ds->readUInt32(*((const uint32_t *)(inBytes+offset)));
-        offset+=4;
+        विस्थापनम्=alg_नामानि_विस्थापनम्;
+        count=ds->readUInt32(*((ध्रुव uint32_t *)(अन्तर्_अष्टकानि+विस्थापनम्)));
+        विस्थापनम्+=4;
 
-        for(i=0; i<count; ++i) {
-            inRange=(const AlgorithmicRange *)(inBytes+offset);
-            offset+=ds->readUInt16(inRange->size);
+        प्रति(i=0; i<count; ++i) {
+            अन्तर्_Range=(ध्रुव AlgorithmicRange *)(अन्तर्_अष्टकानि+विस्थापनम्);
+            विस्थापनम्+=ds->readUInt16(अन्तर्_Range->size);
         }
-    } else {
+    } अन्यथा {
         /* swap data */
-        const uint16_t *p;
-        uint16_t *q, *temp;
+        ध्रुव uint16_t *p;
+        uint16_t *q, *अस्थायी;
 
         int16_t tokens[512];
-        uint16_t tokenCount;
+        uint16_t token_गणनम्;
 
         uint8_t map[256], trailMap[256];
 
         /* copy the data for inaccessible bytes */
-        if(inBytes!=outBytes) {
-            uprv_memcpy(outBytes, inBytes, length);
+        यदि(अन्तर्_अष्टकानि!=बहिर्गमनम्_अष्टकानि) {
+            uprv_memcpy(बहिर्गमनम्_अष्टकानि, अन्तर्_अष्टकानि, length);
         }
 
         /* the initial 4 offsets first */
-        tokenStringOffset=ds->readUInt32(((const uint32_t *)inBytes)[0]);
-        groupsOffset=ds->readUInt32(((const uint32_t *)inBytes)[1]);
-        groupStringOffset=ds->readUInt32(((const uint32_t *)inBytes)[2]);
-        ds->swapArray32(ds, inBytes, 16, outBytes, pErrorCode);
+        token_String_विस्थापनम्=ds->readUInt32(((ध्रुव uint32_t *)अन्तर्_अष्टकानि)[0]);
+        groups_विस्थापनम्=ds->readUInt32(((ध्रुव uint32_t *)अन्तर्_अष्टकानि)[1]);
+        गणः_String_विस्थापनम्=ds->readUInt32(((ध्रुव uint32_t *)अन्तर्_अष्टकानि)[2]);
+        ds->swapArray32(ds, अन्तर्_अष्टकानि, 16, बहिर्गमनम्_अष्टकानि, p_Error_संहिता);
 
         /*
          * now the tokens table
          * it needs to be permutated along with the compressed name strings
          */
-        p=(const uint16_t *)(inBytes+16);
-        q=(uint16_t *)(outBytes+16);
+        p=(ध्रुव uint16_t *)(अन्तर्_अष्टकानि+16);
+        q=(uint16_t *)(बहिर्गमनम्_अष्टकानि+16);
 
         /* read and swap the tokenCount */
-        tokenCount=ds->readUInt16(*p);
-        ds->swapArray16(ds, p, 2, q, pErrorCode);
+        token_गणनम्=ds->readUInt16(*p);
+        ds->swapArray16(ds, p, 2, q, p_Error_संहिता);
         ++p;
         ++q;
 
         /* read the first 512 tokens and make the token maps */
-        if(tokenCount<=512) {
-            count=tokenCount;
-        } else {
+        यदि(token_गणनम्<=512) {
+            count=token_गणनम्;
+        } अन्यथा {
             count=512;
         }
-        for(i=0; i<count; ++i) {
+        प्रति(i=0; i<count; ++i) {
             tokens[i]=udata_readInt16(ds, p[i]);
         }
-        for(; i<512; ++i) {
+        प्रति(; i<512; ++i) {
             tokens[i]=0; /* fill the rest of the tokens array if tokenCount<512 */
         }
-        makeTokenMap(ds, tokens, tokenCount, map, pErrorCode);
-        makeTokenMap(ds, tokens+256, (uint16_t)(tokenCount>256 ? tokenCount-256 : 0), trailMap, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            return 0;
+        makeTokenMap(ds, tokens, token_गणनम्, map, p_Error_संहिता);
+        makeTokenMap(ds, tokens+256, (uint16_t)(token_गणनम्>256 ? token_गणनम्-256 : 0), trailMap, p_Error_संहिता);
+        यदि(U_FAILURE(*p_Error_संहिता)) {
+            प्रत्यागम 0;
         }
 
         /*
          * swap and permutate the tokens
          * go through a temporary array to support in-place swapping
          */
-        temp=(uint16_t *)uprv_malloc(tokenCount*2);
-        if(temp==nullptr) {
+        अस्थायी=(uint16_t *)uprv_malloc(token_गणनम्*2);
+        यदि(अस्थायी==शून्यसूचकः) {
             udata_printError(ds, "out of memory swapping %u unames.icu tokens\n",
-                             tokenCount);
-            *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-            return 0;
+                             token_गणनम्);
+            *p_Error_संहिता=U_स्मृतिः_आवण्टनम्_ERROR;
+            प्रत्यागम 0;
         }
 
         /* swap and permutate single-/lead-byte tokens */
-        for(i=0; i<tokenCount && i<256; ++i) {
-            ds->swapArray16(ds, p+i, 2, temp+map[i], pErrorCode);
+        प्रति(i=0; i<token_गणनम् && i<256; ++i) {
+            ds->swapArray16(ds, p+i, 2, अस्थायी+map[i], p_Error_संहिता);
         }
 
         /* swap and permutate trail-byte tokens */
-        for(; i<tokenCount; ++i) {
-            ds->swapArray16(ds, p+i, 2, temp+(i&0xffffff00)+trailMap[i&0xff], pErrorCode);
+        प्रति(; i<token_गणनम्; ++i) {
+            ds->swapArray16(ds, p+i, 2, अस्थायी+(i&0xffffff00)+trailMap[i&0xff], p_Error_संहिता);
         }
 
         /* copy the result into the output and free the temporary array */
-        uprv_memcpy(q, temp, tokenCount*2);
-        uprv_free(temp);
+        uprv_memcpy(q, अस्थायी, token_गणनम्*2);
+        uprv_free(अस्थायी);
 
         /*
          * swap the token strings but not a possible padding byte after
          * the terminating NUL of the last string
          */
-        udata_swapInvStringBlock(ds, inBytes+tokenStringOffset, (int32_t)(groupsOffset-tokenStringOffset),
-                                    outBytes+tokenStringOffset, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
+        udata_swap_Inv_String_खण्डम्(ds, अन्तर्_अष्टकानि+token_String_विस्थापनम्, (int32_t)(groups_विस्थापनम्-token_String_विस्थापनम्),
+                                    बहिर्गमनम्_अष्टकानि+token_String_विस्थापनम्, p_Error_संहिता);
+        यदि(U_FAILURE(*p_Error_संहिता)) {
             udata_printError(ds, "uchar_swapNames(token strings) failed\n");
-            return 0;
+            प्रत्यागम 0;
         }
 
         /* swap the group table */
-        count=ds->readUInt16(*((const uint16_t *)(inBytes+groupsOffset)));
-        ds->swapArray16(ds, inBytes+groupsOffset, (int32_t)((1+count*3)*2),
-                           outBytes+groupsOffset, pErrorCode);
+        count=ds->readUInt16(*((ध्रुव uint16_t *)(अन्तर्_अष्टकानि+groups_विस्थापनम्)));
+        ds->swapArray16(ds, अन्तर्_अष्टकानि+groups_विस्थापनम्, (int32_t)((1+count*3)*2),
+                           बहिर्गमनम्_अष्टकानि+groups_विस्थापनम्, p_Error_संहिता);
 
         /*
          * swap the group strings
          * swap the string bytes but not the nibble-encoded string lengths
          */
-        if(ds->inCharset!=ds->outCharset) {
-            uint16_t offsets[LINES_PER_GROUP+1], lengths[LINES_PER_GROUP+1];
+        यदि(ds->अन्तर्_Charset!=ds->बहिर्गमनम्_Charset) {
+            uint16_t offsets[पङ्क्तयः_प्रत्येकम्_गणः+1], lengths[पङ्क्तयः_प्रत्येकम्_गणः+1];
 
-            const uint8_t *inStrings, *nextInStrings;
-            uint8_t *outStrings;
+            ध्रुव uint8_t *अन्तर्_वाक्यानि, *अग्र_अन्तर्_वाक्यानि;
+            uint8_t *बहिर्गमनम्_वाक्यानि;
 
             uint8_t c;
 
-            inStrings=inBytes+groupStringOffset;
-            outStrings=outBytes+groupStringOffset;
+            अन्तर्_वाक्यानि=अन्तर्_अष्टकानि+गणः_String_विस्थापनम्;
+            बहिर्गमनम्_वाक्यानि=बहिर्गमनम्_अष्टकानि+गणः_String_विस्थापनम्;
 
-            stringsCount=algNamesOffset-groupStringOffset;
+            वाक्यानि_गणनम्=alg_नामानि_विस्थापनम्-गणः_String_विस्थापनम्;
 
             /* iterate through string groups until only a few padding bytes are left */
-            while(stringsCount>32) {
-                nextInStrings=expandGroupLengths(inStrings, offsets, lengths);
+            यावत्(वाक्यानि_गणनम्>32) {
+                अग्र_अन्तर्_वाक्यानि=expand_गणः_Lengths(अन्तर्_वाक्यानि, offsets, lengths);
 
                 /* move past the length bytes */
-                stringsCount-=(uint32_t)(nextInStrings-inStrings);
-                outStrings+=nextInStrings-inStrings;
-                inStrings=nextInStrings;
+                वाक्यानि_गणनम्-=(uint32_t)(अग्र_अन्तर्_वाक्यानि-अन्तर्_वाक्यानि);
+                बहिर्गमनम्_वाक्यानि+=अग्र_अन्तर्_वाक्यानि-अन्तर्_वाक्यानि;
+                अन्तर्_वाक्यानि=अग्र_अन्तर्_वाक्यानि;
 
                 count=offsets[31]+lengths[31]; /* total number of string bytes in this group */
-                stringsCount-=count;
+                वाक्यानि_गणनम्-=count;
 
                 /* swap the string bytes using map[] and trailMap[] */
-                while(count>0) {
-                    c=*inStrings++;
-                    *outStrings++=map[c];
-                    if(tokens[c]!=-2) {
+                यावत्(count>0) {
+                    c=*अन्तर्_वाक्यानि++;
+                    *बहिर्गमनम्_वाक्यानि++=map[c];
+                    यदि(tokens[c]!=-2) {
                         --count;
-                    } else {
+                    } अन्यथा {
                         /* token lead byte: swap the trail byte, too */
-                        *outStrings++=trailMap[*inStrings++];
+                        *बहिर्गमनम्_वाक्यानि++=trailMap[*अन्तर्_वाक्यानि++];
                         count-=2;
                     }
                 }
@@ -2207,66 +2207,66 @@ uchar_swapNames(const UDataSwapper *ds,
         }
 
         /* swap the algorithmic ranges */
-        offset=algNamesOffset;
-        count=ds->readUInt32(*((const uint32_t *)(inBytes+offset)));
-        ds->swapArray32(ds, inBytes+offset, 4, outBytes+offset, pErrorCode);
-        offset+=4;
+        विस्थापनम्=alg_नामानि_विस्थापनम्;
+        count=ds->readUInt32(*((ध्रुव uint32_t *)(अन्तर्_अष्टकानि+विस्थापनम्)));
+        ds->swapArray32(ds, अन्तर्_अष्टकानि+विस्थापनम्, 4, बहिर्गमनम्_अष्टकानि+विस्थापनम्, p_Error_संहिता);
+        विस्थापनम्+=4;
 
-        for(i=0; i<count; ++i) {
-            if(offset>(uint32_t)length) {
+        प्रति(i=0; i<count; ++i) {
+            यदि(विस्थापनम्>(uint32_t)length) {
                 udata_printError(ds, "uchar_swapNames(): too few bytes (%d after header) for unames.icu algorithmic range %u\n",
                                  length, i);
-                *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                return 0;
+                *p_Error_संहिता=U_सूचकांक_OUTOFBOUNDS_ERROR;
+                प्रत्यागम 0;
             }
 
-            inRange=(const AlgorithmicRange *)(inBytes+offset);
-            outRange=(AlgorithmicRange *)(outBytes+offset);
-            offset+=ds->readUInt16(inRange->size);
+            अन्तर्_Range=(ध्रुव AlgorithmicRange *)(अन्तर्_अष्टकानि+विस्थापनम्);
+            बहिर्गमनम्_Range=(AlgorithmicRange *)(बहिर्गमनम्_अष्टकानि+विस्थापनम्);
+            विस्थापनम्+=ds->readUInt16(अन्तर्_Range->size);
 
-            ds->swapArray32(ds, inRange, 8, outRange, pErrorCode);
-            ds->swapArray16(ds, &inRange->size, 2, &outRange->size, pErrorCode);
-            switch(inRange->type) {
-            case 0:
+            ds->swapArray32(ds, अन्तर्_Range, 8, बहिर्गमनम्_Range, p_Error_संहिता);
+            ds->swapArray16(ds, &अन्तर्_Range->size, 2, &बहिर्गमनम्_Range->size, p_Error_संहिता);
+            विकल्प(अन्तर्_Range->type) {
+            पक्ष 0:
                 /* swap prefix string */
-                ds->swapInvChars(ds, inRange+1, (int32_t)uprv_strlen((const char *)(inRange+1)),
-                                    outRange+1, pErrorCode);
-                if(U_FAILURE(*pErrorCode)) {
+                ds->swapInvChars(ds, अन्तर्_Range+1, (int32_t)uprv_strlen((ध्रुव वर्ण *)(अन्तर्_Range+1)),
+                                    बहिर्गमनम्_Range+1, p_Error_संहिता);
+                यदि(U_FAILURE(*p_Error_संहिता)) {
                     udata_printError(ds, "uchar_swapNames(prefix string of algorithmic range %u) failed\n",
                                      i);
-                    return 0;
+                    प्रत्यागम 0;
                 }
-                break;
-            case 1:
+                भङ्ग;
+            पक्ष 1:
                 {
                     /* swap factors and the prefix and factor strings */
-                    uint32_t factorsCount;
+                    uint32_t factors_गणनम्;
 
-                    factorsCount=inRange->variant;
-                    p=(const uint16_t *)(inRange+1);
-                    q=(uint16_t *)(outRange+1);
-                    ds->swapArray16(ds, p, (int32_t)(factorsCount*2), q, pErrorCode);
+                    factors_गणनम्=अन्तर्_Range->variant;
+                    p=(ध्रुव uint16_t *)(अन्तर्_Range+1);
+                    q=(uint16_t *)(बहिर्गमनम्_Range+1);
+                    ds->swapArray16(ds, p, (int32_t)(factors_गणनम्*2), q, p_Error_संहिता);
 
                     /* swap the strings, up to the last terminating NUL */
-                    p+=factorsCount;
-                    q+=factorsCount;
-                    stringsCount=(uint32_t)((inBytes+offset)-(const uint8_t *)p);
-                    while(stringsCount>0 && ((const uint8_t *)p)[stringsCount-1]!=0) {
-                        --stringsCount;
+                    p+=factors_गणनम्;
+                    q+=factors_गणनम्;
+                    वाक्यानि_गणनम्=(uint32_t)((अन्तर्_अष्टकानि+विस्थापनम्)-(ध्रुव uint8_t *)p);
+                    यावत्(वाक्यानि_गणनम्>0 && ((ध्रुव uint8_t *)p)[वाक्यानि_गणनम्-1]!=0) {
+                        --वाक्यानि_गणनम्;
                     }
-                    ds->swapInvChars(ds, p, (int32_t)stringsCount, q, pErrorCode);
+                    ds->swapInvChars(ds, p, (int32_t)वाक्यानि_गणनम्, q, p_Error_संहिता);
                 }
-                break;
-            default:
+                भङ्ग;
+            स्वभाव:
                 udata_printError(ds, "uchar_swapNames(): unknown type %u of algorithmic range %u\n",
-                                 inRange->type, i);
-                *pErrorCode=U_UNSUPPORTED_ERROR;
-                return 0;
+                                 अन्तर्_Range->type, i);
+                *p_Error_संहिता=U_UNSUPPORTED_ERROR;
+                प्रत्यागम 0;
             }
         }
     }
 
-    return headerSize+(int32_t)offset;
+    प्रत्यागम शीर्षकम्_आकार+(int32_t)विस्थापनम्;
 }
 
 /*

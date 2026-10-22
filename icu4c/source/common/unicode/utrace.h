@@ -19,11 +19,11 @@
 *
 */
 
-#ifndef __UTRACE_H__
-#define __UTRACE_H__
+#यदि_अपरिभाषितम् __UTRACE_H__
+#परिभाषय __UTRACE_H__
 
-#include <stdarg.h>
-#include "unicode/utypes.h"
+#अन्तर्भाव <stdarg.h>
+#अन्तर्भाव "unicode/utypes.h"
 
 /**
  * \file
@@ -43,7 +43,7 @@ U_CDECL_BEGIN
  * @see utrace_setLevel
  * @stable ICU 2.8
  */
-typedef enum UTraceLevel {
+प्रकारनिर्देश गणना UTraceLevel {
     /** Disable all tracing  @stable ICU 2.8*/
     UTRACE_OFF=-1,
     /** Trace error conditions only  @stable ICU 2.8*/
@@ -62,18 +62,18 @@ typedef enum UTraceLevel {
  *  These are the ICU functions that will be traced when tracing is enabled.
  *  @stable ICU 2.8
  */
-typedef enum UTraceFunctionNumber {
+प्रकारनिर्देश गणना UTrace_Function_सङ्ख्या {
     UTRACE_FUNCTION_START=0,
     UTRACE_U_INIT=UTRACE_FUNCTION_START,
     UTRACE_U_CLEANUP,
 
-#ifndef U_HIDE_DEPRECATED_API
+#यदि_अपरिभाषितम् U_HIDE_DEPRECATED_API
     /**
      * One more than the highest normal collation trace location.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UTRACE_FUNCTION_LIMIT,
-#endif  // U_HIDE_DEPRECATED_API
+    UTRACE_FUNCTION_सीमा,
+#यदि_अन्तः  // U_HIDE_DEPRECATED_API
 
     UTRACE_CONVERSION_START=0x1000,
     UTRACE_UCNV_OPEN=UTRACE_CONVERSION_START,
@@ -82,16 +82,16 @@ typedef enum UTraceFunctionNumber {
     UTRACE_UCNV_CLONE,
     UTRACE_UCNV_CLOSE,
     UTRACE_UCNV_FLUSH_CACHE,
-    UTRACE_UCNV_LOAD,
+    UTRACE_UCNV_आरोपय,
     UTRACE_UCNV_UNLOAD,
 
-#ifndef U_HIDE_DEPRECATED_API
+#यदि_अपरिभाषितम् U_HIDE_DEPRECATED_API
     /**
      * One more than the highest normal collation trace location.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UTRACE_CONVERSION_LIMIT,
-#endif  // U_HIDE_DEPRECATED_API
+    UTRACE_CONVERSION_सीमा,
+#यदि_अन्तः  // U_HIDE_DEPRECATED_API
 
     UTRACE_COLLATION_START=0x2000,
     UTRACE_UCOL_OPEN=UTRACE_COLLATION_START,
@@ -104,13 +104,13 @@ typedef enum UTraceFunctionNumber {
     UTRACE_UCOL_OPEN_FROM_SHORT_STRING,
     UTRACE_UCOL_STRCOLLUTF8, /**< @stable ICU 50 */
 
-#ifndef U_HIDE_DEPRECATED_API
+#यदि_अपरिभाषितम् U_HIDE_DEPRECATED_API
     /**
      * One more than the highest normal collation trace location.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UTRACE_COLLATION_LIMIT,
-#endif  // U_HIDE_DEPRECATED_API
+    UTRACE_COLLATION_सीमा,
+#यदि_अन्तः  // U_HIDE_DEPRECATED_API
 
     /**
      * The lowest resource/data location.
@@ -150,7 +150,7 @@ typedef enum UTraceFunctionNumber {
      *
      * @stable ICU 65
      */
-    UTRACE_UDATA_DATA_FILE,
+    UTRACE_UDATA_दत्त_FILE,
 
     /**
      * Indicates that a *.res file was opened.
@@ -165,13 +165,13 @@ typedef enum UTraceFunctionNumber {
      */
     UTRACE_UDATA_RES_FILE,
 
-#ifndef U_HIDE_INTERNAL_API
+#यदि_अपरिभाषितम् U_HIDE_आन्तरिकम्_API
     /**
      * One more than the highest normal resource/data trace location.
      * @internal The numeric value may change over time, see ICU ticket #12420.
      */
-    UTRACE_RES_DATA_LIMIT,
-#endif  // U_HIDE_INTERNAL_API
+    UTRACE_RES_दत्त_सीमा,
+#यदि_अन्तः  // U_HIDE_INTERNAL_API
 
     /**
      * The lowest break iterator location.
@@ -201,7 +201,7 @@ typedef enum UTraceFunctionNumber {
      *
      * @stable ICU 67
      */
-    UTRACE_UBRK_CREATE_LINE,
+    UTRACE_UBRK_CREATE_पङ्क्तिः,
 
     /**
      * Indicates that a sentence instance of break iterator was created.
@@ -227,23 +227,23 @@ typedef enum UTraceFunctionNumber {
      */
     UTRACE_UBRK_CREATE_BREAK_ENGINE,
 
-#ifndef U_HIDE_INTERNAL_API
+#यदि_अपरिभाषितम् U_HIDE_आन्तरिकम्_API
     /**
      * One more than the highest normal break iterator trace location.
      * @internal The numeric value may change over time, see ICU ticket #12420.
      */
-    UTRACE_UBRK_LIMIT,
-#endif  // U_HIDE_INTERNAL_API
+    UTRACE_UBRK_सीमा,
+#यदि_अन्तः  // U_HIDE_INTERNAL_API
 
-} UTraceFunctionNumber;
+} UTrace_Function_सङ्ख्या;
 
 /**
  * Setter for the trace level.
  * @param traceLevel A UTraceLevel value.
  * @stable ICU 2.8
  */
-U_CAPI void U_EXPORT2
-utrace_setLevel(int32_t traceLevel);
+U_CAPI शून्य U_EXPORT2
+utrace_समुच्चयः_Level(int32_t traceLevel);
 
 /**
  * Getter for the trace level.
@@ -251,7 +251,7 @@ utrace_setLevel(int32_t traceLevel);
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-utrace_getLevel(void);
+utrace_getLevel(शून्य);
 
 /* Trace function pointers types  ----------------------------- */
 
@@ -261,8 +261,8 @@ utrace_getLevel(void);
   *  @param fnNumber Enum value indicating the ICU function being entered.
   *  @stable ICU 2.8
   */
-typedef void U_CALLCONV
-UTraceEntry(const void *context, int32_t fnNumber);
+प्रकारनिर्देश शून्य U_CALLCONV
+UTrace_प्रविष्टिः(ध्रुव शून्य *context, int32_t fn_सङ्ख्या);
 
 /**
   *  Type signature for the trace function to be called when exiting from a function.
@@ -277,9 +277,9 @@ UTraceEntry(const void *context, int32_t fnNumber);
   *  @see   utrace_vformat
   *  @stable ICU 2.8
   */
-typedef void U_CALLCONV
-UTraceExit(const void *context, int32_t fnNumber, 
-           const char *fmt, va_list args);
+प्रकारनिर्देश शून्य U_CALLCONV
+UTraceExit(ध्रुव शून्य *context, int32_t fn_सङ्ख्या, 
+           ध्रुव वर्ण *fmt, va_list तर्काः_2);
 
 /**
   *  Type signature for the trace function to be called from within an ICU function
@@ -292,9 +292,9 @@ UTraceExit(const void *context, int32_t fnNumber,
   *  @param args     The data being traced, passed as variable args.
   *  @stable ICU 2.8
   */
-typedef void U_CALLCONV
-UTraceData(const void *context, int32_t fnNumber, int32_t level,
-           const char *fmt, va_list args);
+प्रकारनिर्देश शून्य U_CALLCONV
+UTrace_दत्त(ध्रुव शून्य *context, int32_t fn_सङ्ख्या, int32_t level,
+           ध्रुव वर्ण *fmt, va_list तर्काः_2);
 
 /**
   *  Set ICU Tracing functions.  Installs application-provided tracing
@@ -324,9 +324,9 @@ UTraceData(const void *context, int32_t fnNumber, int32_t level,
   *
   *  @stable ICU 2.8
   */
-U_CAPI void U_EXPORT2
-utrace_setFunctions(const void *context,
-                    UTraceEntry *e, UTraceExit *x, UTraceData *d);
+U_CAPI शून्य U_EXPORT2
+utrace_समुच्चयः_Functions(ध्रुव शून्य *context,
+                    UTrace_प्रविष्टिः *e, UTraceExit *x, UTrace_दत्त *d);
 
 /**
   * Get the currently installed ICU tracing functions.   Note that a null function
@@ -338,9 +338,9 @@ utrace_setFunctions(const void *context,
   * @param d        The currently installed UTraceData function.
   * @stable ICU 2.8
   */
-U_CAPI void U_EXPORT2
-utrace_getFunctions(const void **context,
-                    UTraceEntry **e, UTraceExit **x, UTraceData **d);
+U_CAPI शून्य U_EXPORT2
+utrace_getFunctions(ध्रुव शून्य **context,
+                    UTrace_प्रविष्टिः **e, UTraceExit **x, UTrace_दत्त **d);
 
 
 
@@ -461,8 +461,8 @@ utrace_getFunctions(const void **context,
   *  @stable ICU 2.8
   */
 U_CAPI int32_t U_EXPORT2
-utrace_vformat(char *outBuf, int32_t capacity,
-              int32_t indent, const char *fmt,  va_list args);
+utrace_vformat(वर्ण *बहिर्गमनम्_Buf, int32_t क्षमता,
+              int32_t indent, ध्रुव वर्ण *fmt,  va_list तर्काः_2);
 
 /**
   *  Trace output Formatter.  An application's UTraceData tracing functions may call
@@ -482,8 +482,8 @@ utrace_vformat(char *outBuf, int32_t capacity,
   *  @stable ICU 2.8
   */
 U_CAPI int32_t U_EXPORT2
-utrace_format(char *outBuf, int32_t capacity,
-              int32_t indent, const char *fmt,  ...);
+utrace_format(वर्ण *बहिर्गमनम्_Buf, int32_t क्षमता,
+              int32_t indent, ध्रुव वर्ण *fmt,  ...);
 
 
 
@@ -498,9 +498,9 @@ utrace_format(char *outBuf, int32_t capacity,
  * @see UTraceFunctionNumber
  * @stable ICU 2.8
  */
-U_CAPI const char * U_EXPORT2
-utrace_functionName(int32_t fnNumber);
+U_CAPI ध्रुव वर्ण * U_EXPORT2
+utrace_functionName(int32_t fn_सङ्ख्या);
 
-U_CDECL_END
+U_CDECL_अन्तः
 
-#endif
+#यदि_अन्तः

@@ -19,56 +19,56 @@
 *   stored in uprops.icu.
 */
 
-#ifndef __UPROPS_H__
-#define __UPROPS_H__
+#यदि_अपरिभाषितम् __UPROPS_H__
+#परिभाषय __UPROPS_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
-#include "uset_imp.h"
-#include "udataswp.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/uset.h"
+#अन्तर्भाव "uset_imp.h"
+#अन्तर्भाव "udataswp.h"
 
 /* indexes[] entries */
-enum {
-    UPROPS_PROPS32_INDEX,
-    UPROPS_EXCEPTIONS_INDEX,
-    UPROPS_EXCEPTIONS_TOP_INDEX,
+गणना {
+    UPROPS_PROPS32_सूचकांक,
+    UPROPS_EXCEPTIONS_सूचकांक,
+    UPROPS_EXCEPTIONS_शिखरम्_सूचकांक,
 
-    UPROPS_ADDITIONAL_TRIE_INDEX,
-    UPROPS_ADDITIONAL_VECTORS_INDEX,
-    UPROPS_ADDITIONAL_VECTORS_COLUMNS_INDEX,
+    UPROPS_ADDITIONAL_TRIE_सूचकांक,
+    UPROPS_ADDITIONAL_VECTORS_सूचकांक,
+    UPROPS_ADDITIONAL_VECTORS_COLUMNS_सूचकांक,
 
-    UPROPS_SCRIPT_EXTENSIONS_INDEX,
+    UPROPS_SCRIPT_EXTENSIONS_सूचकांक,
 
-    UPROPS_BLOCK_TRIE_INDEX,
-    UPROPS_RESERVED_INDEX_8,
+    UPROPS_खण्डम्_TRIE_सूचकांक,
+    UPROPS_RESERVED_सूचकांक_8,
 
     /** size of the data file (number of 32-bit units after the header) */
-    UPROPS_DATA_TOP_INDEX,
+    UPROPS_दत्त_शिखरम्_सूचकांक,
 
     /** maximum values for code values in vector word 0 */
-    UPROPS_MAX_VALUES_INDEX=10,
+    UPROPS_MAX_मानानि_सूचकांक=10,
     /** maximum values for code values in vector word 2 */
-    UPROPS_MAX_VALUES_2_INDEX,
+    UPROPS_MAX_मानानि_2_सूचकांक,
     /** maximum values for other code values */
-    UPROPS_MAX_VALUES_OTHER_INDEX,
+    UPROPS_MAX_मानानि_OTHER_सूचकांक,
 
-    UPROPS_INDEX_COUNT=16
+    UPROPS_सूचकांक_गणनम्=16
 };
 
 /* definitions for the main properties words */
-enum {
+गणना {
     /* general category shift==0                                0 (5 bits) */
     /* reserved                                                 5 (1 bit) */
-    UPROPS_NUMERIC_TYPE_VALUE_SHIFT=6                       /*  6 (10 bits) */
+    UPROPS_NUMERIC_TYPE_मानम्_सरणम्=6                       /*  6 (10 bits) */
 };
 
-#define GET_CATEGORY(props) ((props)&0x1f)
-#define CAT_MASK(props) U_MASK(GET_CATEGORY(props))
+#परिभाषय GET_CATEGORY(props) ((props)&0x1f)
+#परिभाषय CAT_आवरणम्(props) U_आवरणम्(GET_CATEGORY(props))
 
-#define GET_NUMERIC_TYPE_VALUE(props) ((props)>>UPROPS_NUMERIC_TYPE_VALUE_SHIFT)
+#परिभाषय GET_NUMERIC_TYPE_मानम्(props) ((props)>>UPROPS_NUMERIC_TYPE_मानम्_सरणम्)
 
 /* constants for the storage form of numeric types and values */
-enum {
+गणना {
     /** No numeric value. */
     UPROPS_NTV_NONE=0,
     /** Decimal digits: nv=0..9 */
@@ -110,21 +110,21 @@ enum {
     UPROPS_NTV_MAX_SMALL_INT=UPROPS_NTV_FRACTION_START-UPROPS_NTV_NUMERIC_START-1
 };
 
-#define UPROPS_NTV_GET_TYPE(ntv) \
+#परिभाषय UPROPS_NTV_GET_TYPE(ntv) \
     ((ntv==UPROPS_NTV_NONE) ? U_NT_NONE : \
     (ntv<UPROPS_NTV_DIGIT_START) ?  U_NT_DECIMAL : \
     (ntv<UPROPS_NTV_NUMERIC_START) ? U_NT_DIGIT : \
     U_NT_NUMERIC)
 
 /* number of properties vector words */
-#define UPROPS_VECTOR_WORDS     3
+#परिभाषय UPROPS_सदिशम्_शब्दाः     3
 
-#ifdef __cplusplus
+#यदि_परिभाषितम् __cplusplus
 
 namespace {
 
 // Properties in vector word 0
-// Bits
+//द्वयङ्काः
 // 31..26   Age major version (major=0..63)
 // 25..24   Age minor version (minor=0..3)
 // 23..17   reserved
@@ -150,26 +150,26 @@ namespace {
 // new characters are similar to old ones.)
 // See https://github.com/unicode-org/icu/pull/3025 for details.
 
-inline constexpr uint32_t UPROPS_AGE_MASK = 0xff000000;
-inline constexpr int32_t UPROPS_AGE_SHIFT = 24;
+अन्तःस्थ constexpr uint32_t UPROPS_AGE_आवरणम् = 0xff000000;
+अन्तःस्थ constexpr int32_t UPROPS_AGE_सरणम् = 24;
 
-inline constexpr uint8_t UPROPS_AGE_MAJOR_MAX = 63;
-inline constexpr uint8_t UPROPS_AGE_MINOR_MAX = 3;
+अन्तःस्थ constexpr uint8_t UPROPS_AGE_MAJOR_MAX = 63;
+अन्तःस्थ constexpr uint8_t UPROPS_AGE_MINOR_MAX = 3;
 
-inline constexpr uint32_t UPROPS_EA_MASK = 0x00007000;
-inline constexpr int32_t UPROPS_EA_SHIFT = 12;
+अन्तःस्थ constexpr uint32_t UPROPS_EA_आवरणम् = 0x00007000;
+अन्तःस्थ constexpr int32_t UPROPS_EA_सरणम् = 12;
 
-inline constexpr uint32_t UPROPS_INCB_MASK = 0x00018000;
-inline constexpr int32_t UPROPS_INCB_SHIFT = 15;
+अन्तःस्थ constexpr uint32_t UPROPS_INCB_आवरणम् = 0x00018000;
+अन्तःस्थ constexpr int32_t UPROPS_INCB_सरणम् = 15;
 
 /** Script_Extensions: mask includes Script */
-inline constexpr uint32_t UPROPS_SCRIPT_X_MASK = 0x00000fff;
+अन्तःस्थ constexpr uint32_t UPROPS_SCRIPT_X_आवरणम् = 0x00000fff;
 
 // UPROPS_SCRIPT_X_WITH_COMMON must be the lowest value that involves Script_Extensions.
-inline constexpr uint32_t UPROPS_SCRIPT_X_WITH_OTHER = 0xc00;
-inline constexpr uint32_t UPROPS_SCRIPT_X_WITH_INHERITED = 0x800;
-inline constexpr uint32_t UPROPS_SCRIPT_X_WITH_COMMON = 0x400;
-inline constexpr int32_t UPROPS_MAX_SCRIPT = 0x3ff;
+अन्तःस्थ constexpr uint32_t UPROPS_SCRIPT_X_WITH_OTHER = 0xc00;
+अन्तःस्थ constexpr uint32_t UPROPS_SCRIPT_X_WITH_INHERITED = 0x800;
+अन्तःस्थ constexpr uint32_t UPROPS_SCRIPT_X_WITH_COMMON = 0x400;
+अन्तःस्थ constexpr int32_t UPROPS_MAX_SCRIPT = 0x3ff;
 
 /*
  * Properties in vector word 1
@@ -182,7 +182,7 @@ inline constexpr int32_t UPROPS_MAX_SCRIPT = 0x3ff;
  *
  * ICU 2.6/uprops format version 3.2 stores full properties instead of "Other_".
  */
-enum {
+गणना {
     UPROPS_WHITE_SPACE,
     UPROPS_DASH,
     UPROPS_HYPHEN,
@@ -195,27 +195,27 @@ enum {
     UPROPS_IDEOGRAPHIC,
     UPROPS_DIACRITIC,
     UPROPS_EXTENDER,
-    UPROPS_NONCHARACTER_CODE_POINT,
+    UPROPS_NONCHARACTER_संहिता_POINT,
     UPROPS_GRAPHEME_EXTEND,
     UPROPS_GRAPHEME_LINK,
-    UPROPS_IDS_BINARY_OPERATOR,
+    UPROPS_IDS_द्विमान_OPERATOR,
     UPROPS_IDS_TRINARY_OPERATOR,
     UPROPS_RADICAL,
     UPROPS_UNIFIED_IDEOGRAPH,
-    UPROPS_DEFAULT_IGNORABLE_CODE_POINT,
+    UPROPS_DEFAULT_IGNORABLE_संहिता_POINT,
     UPROPS_DEPRECATED,
-    UPROPS_LOGICAL_ORDER_EXCEPTION,
+    UPROPS_LOGICAL_क्रमः_EXCEPTION,
     UPROPS_XID_START,
     UPROPS_XID_CONTINUE,
     UPROPS_ID_START,                            /* ICU 2.6, uprops format version 3.2 */
     UPROPS_ID_CONTINUE,
-    UPROPS_GRAPHEME_BASE,
-    UPROPS_S_TERM,                              /* new in ICU 3.0 and Unicode 4.0.1 */
+    UPROPS_GRAPHEME_आधारः,
+    UPROPS_S_पदांशः,                              /* new in ICU 3.0 and Unicode 4.0.1 */
     UPROPS_VARIATION_SELECTOR,
-    UPROPS_PATTERN_SYNTAX,                      /* new in ICU 3.4 and Unicode 4.1 */
-    UPROPS_PATTERN_WHITE_SPACE,
+    UPROPS_आदर्शः_SYNTAX,                      /* new in ICU 3.4 and Unicode 4.1 */
+    UPROPS_आदर्शः_WHITE_SPACE,
     UPROPS_PREPENDED_CONCATENATION_MARK,        // new in ICU 60 and Unicode 10
-    UPROPS_BINARY_1_TOP                         /* ==32 - full! */
+    UPROPS_द्विमान_1_शिखरम्                         /* ==32 - full! */
 };
 
 /*
@@ -242,10 +242,10 @@ enum {
 // We do not store separate data for Identifier_Status:
 // We can derive that from the encoded Identifier_Type via a simple range check.
 
-inline constexpr uint32_t UPROPS_2_ID_TYPE_MASK = 0xfc000000;
-inline constexpr int32_t UPROPS_2_ID_TYPE_SHIFT = 26;
+अन्तःस्थ constexpr uint32_t UPROPS_2_ID_TYPE_आवरणम् = 0xfc000000;
+अन्तःस्थ constexpr int32_t UPROPS_2_ID_TYPE_सरणम् = 26;
 
-enum {
+गणना {
     // A high bit for use in idTypeToEncoded[] but not used in the data
     UPROPS_ID_TYPE_BIT = 0x80,
 
@@ -276,7 +276,7 @@ enum {
  * When UPROPS_ID_TYPE_BIT is set, then use "&" to test whether the value bit is set.
  * When UPROPS_ID_TYPE_BIT is not set, then compare ("==") the array value with the data value.
  */
-inline constexpr uint8_t uprops_idTypeToEncoded[] = {
+अन्तःस्थ constexpr uint8_t uprops_id_Type_गन्तव्यम्_Encoded[] = {
     UPROPS_ID_TYPE_NOT_CHARACTER,
     UPROPS_ID_TYPE_DEPRECATED,
     UPROPS_ID_TYPE_DEFAULT_IGNORABLE,
@@ -293,32 +293,32 @@ inline constexpr uint8_t uprops_idTypeToEncoded[] = {
 
 }  // namespace
 
-#endif  // __cplusplus
+#यदि_अन्तः  // __cplusplus
 
-#define UPROPS_LB_MASK          0x03f00000
-#define UPROPS_LB_SHIFT         20
+#परिभाषय UPROPS_LB_आवरणम्          0x03f00000
+#परिभाषय UPROPS_LB_सरणम्         20
 
-#define UPROPS_SB_MASK          0x000f8000
-#define UPROPS_SB_SHIFT         15
+#परिभाषय UPROPS_SB_आवरणम्          0x000f8000
+#परिभाषय UPROPS_SB_सरणम्         15
 
-#define UPROPS_WB_MASK          0x00007c00
-#define UPROPS_WB_SHIFT         10
+#परिभाषय UPROPS_WB_आवरणम्          0x00007c00
+#परिभाषय UPROPS_WB_सरणम्         10
 
-#define UPROPS_GCB_MASK         0x000003e0
-#define UPROPS_GCB_SHIFT        5
+#परिभाषय UPROPS_GCB_आवरणम्         0x000003e0
+#परिभाषय UPROPS_GCB_सरणम्        5
 
-#define UPROPS_DT_MASK          0x0000001f
+#परिभाषय UPROPS_DT_आवरणम्          0x0000001f
 
-#ifdef __cplusplus
+#यदि_परिभाषितम् __cplusplus
 
 namespace {
 
 // Bits 9..0 in UPROPS_MAX_VALUES_OTHER_INDEX
-inline constexpr uint32_t UPROPS_MAX_BLOCK = 0x3ff;
+अन्तःस्थ constexpr uint32_t UPROPS_MAX_खण्डम् = 0x3ff;
 
 }  // namespace
 
-#endif  // __cplusplus
+#यदि_अन्तः  // __cplusplus
 
 /**
  * Gets the main properties value for a code point.
@@ -349,7 +349,7 @@ u_getUnicodeProperties(UChar32 c, int32_t column);
  * @internal
  */
 U_CFUNC int32_t
-uprv_getMaxValues(int32_t column);
+uprv_get_Max_मानानि(int32_t column);
 
 /**
  * Checks if c is alphabetic, or a decimal digit; implements UCHAR_POSIX_ALNUM.
@@ -377,7 +377,7 @@ U_CFUNC UBool
 u_isprintPOSIX(UChar32 c);
 
 /** Some code points. @internal */
-enum {
+गणना {
     TAB     =0x0009,
     LF      =0x000a,
     FF      =0x000c,
@@ -400,7 +400,7 @@ enum {
  * @return 0 if no character names available.
  */
 U_CAPI int32_t U_EXPORT2
-uprv_getMaxCharNameLength(void);
+uprv_get_Max_Char_Name_दीर्घता(शून्य);
 
 /**
  * Fills set with characters that are used in Unicode character names.
@@ -408,15 +408,15 @@ uprv_getMaxCharNameLength(void);
  * Just empties the set if no character names are available.
  * @param sa USetAdder to receive characters.
  */
-U_CAPI void U_EXPORT2
-uprv_getCharNameCharacters(const USetAdder *sa);
+U_CAPI शून्य U_EXPORT2
+uprv_getCharNameCharacters(ध्रुव USetAdder *sa);
 
 /**
  * Constants for which data and implementation files provide which properties.
  * Used by UnicodeSet for service-specific property enumeration.
  * @internal
  */
-enum UPropertySource {
+गणना UPropertySource {
     /** No source, not a supported property. */
     UPROPS_SRC_NONE,
     /** From uchar.c/uprops.icu main trie */
@@ -424,7 +424,7 @@ enum UPropertySource {
     /** From uchar.c/uprops.icu properties vectors trie */
     UPROPS_SRC_PROPSVEC,
     /** From unames.c/unames.icu */
-    UPROPS_SRC_NAMES,
+    UPROPS_SRC_नामानि,
     /** From ucase.c/ucase.icu */
     UPROPS_SRC_CASE,
     /** From ubidi_props.c/ubidi.icu */
@@ -448,12 +448,12 @@ enum UPropertySource {
     UPROPS_SRC_EMOJI,
     UPROPS_SRC_IDSU,
     UPROPS_SRC_ID_COMPAT_MATH,
-    UPROPS_SRC_BLOCK,
+    UPROPS_SRC_खण्डम्,
     UPROPS_SRC_MCM,
     /** One more than the highest UPropertySource (UPROPS_SRC_) constant. */
-    UPROPS_SRC_COUNT
+    UPROPS_SRC_गणनम्
 };
-typedef enum UPropertySource UPropertySource;
+प्रकारनिर्देश गणना UPropertySource UPropertySource;
 
 /**
  * @see UPropertySource
@@ -467,26 +467,26 @@ uprops_getSource(UProperty which);
  * start of each range of same properties to the set.
  * @internal
  */
-U_CFUNC void U_EXPORT2
-uchar_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode);
+U_CFUNC शून्य U_EXPORT2
+uchar_सङ्कलय_Property_Starts(ध्रुव USetAdder *sa, UError_संहिता *p_Error_संहिता);
 
 /**
  * Enumerate uprops.icu's properties vectors trie and add the
  * start of each range of same properties to the set.
  * @internal
  */
-U_CFUNC void U_EXPORT2
-upropsvec_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode);
+U_CFUNC शून्य U_EXPORT2
+upropsvec_सङ्कलय_Property_Starts(ध्रुव USetAdder *sa, UError_संहिता *p_Error_संहिता);
 
-U_CFUNC void U_EXPORT2
-uprops_addPropertyStarts(UPropertySource src, const USetAdder *sa, UErrorCode *pErrorCode);
+U_CFUNC शून्य U_EXPORT2
+uprops_सङ्कलय_Property_Starts(UPropertySource src, ध्रुव USetAdder *sa, UError_संहिता *p_Error_संहिता);
 
-#ifdef __cplusplus
+#यदि_परिभाषितम् __cplusplus
 
-U_CFUNC void U_EXPORT2
-ublock_addPropertyStarts(const USetAdder *sa, UErrorCode &errorCode);
+U_CFUNC शून्य U_EXPORT2
+ublock_सङ्कलय_Property_Starts(ध्रुव USetAdder *sa, UError_संहिता &error_संहिता);
 
-#endif  // __cplusplus
+#यदि_अन्तः  // __cplusplus
 
 /**
  * Return a set of characters for property enumeration.
@@ -501,8 +501,8 @@ uprv_getInclusions(const USetAdder *sa, UErrorCode *pErrorCode);
 */
 
 /** @internal for icuexportdata */
-U_CAPI void U_EXPORT2
-uprv_addScriptExtensionsCodePoints(const USetAdder *sa, UErrorCode *pErrorCode);
+U_CAPI शून्य U_EXPORT2
+uprv_सङ्कलय_Script_Extensions_संहिता_Points(ध्रुव USetAdder *sa, UError_संहिता *p_Error_संहिता);
 
 // TODO: Move this into a different header file (udataswp.h? new unames.h?) so that uprops.h
 // need not be C-compatible any more.
@@ -511,29 +511,29 @@ uprv_addScriptExtensionsCodePoints(const USetAdder *sa, UErrorCode *pErrorCode);
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uchar_swapNames(const UDataSwapper *ds,
-                const void *inData, int32_t length, void *outData,
-                UErrorCode *pErrorCode);
+uchar_swap_नामानि(ध्रुव UDataSwapper *ds,
+                ध्रुव शून्य *अन्तर्_दत्त, int32_t दीर्घता, शून्य *बहिर्गमनम्_दत्त,
+                UError_संहिता *p_Error_संहिता);
 
-#ifdef __cplusplus
+#यदि_परिभाषितम् __cplusplus
 
 U_NAMESPACE_BEGIN
 
-class UnicodeSet;
+class Unicode_समुच्चयः;
 
 class CharacterProperties {
-public:
+सार्वजनिक:
     CharacterProperties() = delete;
-    static const UnicodeSet *getInclusionsForProperty(UProperty prop, UErrorCode &errorCode);
-    static const UnicodeSet *getBinaryPropertySet(UProperty property, UErrorCode &errorCode);
+    स्थिर ध्रुव Unicode_समुच्चयः *getInclusionsForProperty(UProperty prop, UError_संहिता &error_संहिता);
+    स्थिर ध्रुव Unicode_समुच्चयः *get_द्विमान_Property_समुच्चयः(UProperty property, UError_संहिता &error_संहिता);
 };
 
 // implemented in uniset_props.cpp
-U_CFUNC UnicodeSet *
-uniset_getUnicode32Instance(UErrorCode &errorCode);
+U_CFUNC Unicode_समुच्चयः *
+uniset_getUnicode32Instance(UError_संहिता &error_संहिता);
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif
+#यदि_अन्तः
 
-#endif
+#यदि_अन्तः

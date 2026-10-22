@@ -7,33 +7,33 @@
 ******************************************************************************
 */
 
-#ifndef UBRK_H
-#define UBRK_H
+#यदि_अपरिभाषितम् UBRK_H
+#परिभाषय UBRK_H
 
-#include "unicode/utypes.h"
-#include "unicode/uloc.h"
-#include "unicode/utext.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/uloc.h"
+#अन्तर्भाव "unicode/utext.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
+#अन्तर्भाव "unicode/localpointer.h"
+#यदि_अन्तः   // U_SHOW_CPLUSPLUS_API
 
 /**
  * A text-break iterator.
  *  For usage in C programs.
  */
-#ifndef UBRK_TYPEDEF_UBREAK_ITERATOR
+#यदि_अपरिभाषितम् UBRK_TYPEDEF_UBREAK_ITERATOR
 #   define UBRK_TYPEDEF_UBREAK_ITERATOR
     /**
      *  Opaque type representing an ICU Break iterator object.
      *  @stable ICU 2.0
      */
-    typedef struct UBreakIterator UBreakIterator;
-#endif
+    प्रकारनिर्देश संरचना UBreakIterator UBreakIterator;
+#यदि_अन्तः
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#यदि !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/parseerr.h"
+#अन्तर्भाव "unicode/parseerr.h"
 
 /**
  * \file
@@ -99,17 +99,17 @@
  */
 
 /** The possible types of text boundaries.  @stable ICU 2.0 */
-typedef enum UBreakIteratorType {
+प्रकारनिर्देश गणना UBreakIteratorType {
   /** Character breaks  @stable ICU 2.0 */
   UBRK_CHARACTER = 0,
   /** Word breaks @stable ICU 2.0 */
   UBRK_WORD = 1,
   /** Line breaks @stable ICU 2.0 */
-  UBRK_LINE = 2,
+  UBRK_पङ्क्तिः = 2,
   /** Sentence breaks @stable ICU 2.0 */
   UBRK_SENTENCE = 3,
 
-#ifndef U_HIDE_DEPRECATED_API
+#यदि_अपरिभाषितम् U_HIDE_DEPRECATED_API
   /**
    * Title Case breaks
    * The iterator created using this type locates title boundaries as described for
@@ -123,14 +123,14 @@ typedef enum UBreakIteratorType {
      * One more than the highest normal UBreakIteratorType value.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UBRK_COUNT = 5
-#endif  // U_HIDE_DEPRECATED_API
+    UBRK_गणनम् = 5
+#यदि_अन्तः  // U_HIDE_DEPRECATED_API
 } UBreakIteratorType;
 
 /** Value indicating all text boundaries have been returned.
  *  @stable ICU 2.0
  */
-#define UBRK_DONE ((int32_t) -1)
+#परिभाषय UBRK_समाप्तम् ((int32_t) -1)
 
 
 /**
@@ -144,29 +144,29 @@ typedef enum UBreakIteratorType {
  *
  * @stable ICU 2.2
 */
-typedef enum UWordBreak {
+प्रकारनिर्देश गणना UWordBreak {
     /** Tag value for "words" that do not fit into any of other categories.
      *  Includes spaces and most punctuation. */
     UBRK_WORD_NONE           = 0,
     /** Upper bound for tags for uncategorized words. */
-    UBRK_WORD_NONE_LIMIT     = 100,
+    UBRK_WORD_NONE_सीमा     = 100,
     /** Tag value for words that appear to be numbers, lower limit.    */
-    UBRK_WORD_NUMBER         = 100,
+    UBRK_WORD_सङ्ख्या         = 100,
     /** Tag value for words that appear to be numbers, upper limit.    */
-    UBRK_WORD_NUMBER_LIMIT   = 200,
+    UBRK_WORD_सङ्ख्या_सीमा   = 200,
     /** Tag value for words that contain letters, excluding
      *  hiragana, katakana or ideographic characters, lower limit.    */
     UBRK_WORD_LETTER         = 200,
     /** Tag value for words containing letters, upper limit  */
-    UBRK_WORD_LETTER_LIMIT   = 300,
+    UBRK_WORD_LETTER_सीमा   = 300,
     /** Tag value for words containing kana characters, lower limit */
     UBRK_WORD_KANA           = 300,
     /** Tag value for words containing kana characters, upper limit */
-    UBRK_WORD_KANA_LIMIT     = 400,
+    UBRK_WORD_KANA_सीमा     = 400,
     /** Tag value for words containing ideographic characters, lower limit */
     UBRK_WORD_IDEO           = 400,
     /** Tag value for words containing ideographic characters, upper limit */
-    UBRK_WORD_IDEO_LIMIT     = 500
+    UBRK_WORD_IDEO_सीमा     = 500
 } UWordBreak;
 
 /**
@@ -180,17 +180,17 @@ typedef enum UWordBreak {
  *
  * @stable ICU 2.8
 */
-typedef enum ULineBreakTag {
+प्रकारनिर्देश गणना ULine_Break_चिह्नकम् {
     /** Tag value for soft line breaks, positions at which a line break
       *  is acceptable but not required                */
-    UBRK_LINE_SOFT            = 0,
+    UBRK_पङ्क्तिः_SOFT            = 0,
     /** Upper bound for soft line breaks.              */
-    UBRK_LINE_SOFT_LIMIT      = 100,
+    UBRK_पङ्क्तिः_SOFT_सीमा      = 100,
     /** Tag value for a hard, or mandatory line break  */
-    UBRK_LINE_HARD            = 100,
+    UBRK_पङ्क्तिः_HARD            = 100,
     /** Upper bound for hard line breaks.              */
-    UBRK_LINE_HARD_LIMIT      = 200
-} ULineBreakTag;
+    UBRK_पङ्क्तिः_HARD_सीमा      = 200
+} ULine_Break_चिह्नकम्;
 
 
 
@@ -205,23 +205,23 @@ typedef enum ULineBreakTag {
  *
  * @stable ICU 2.8
 */
-typedef enum USentenceBreakTag {
+प्रकारनिर्देश गणना USentence_Break_चिह्नकम् {
     /** Tag value for for sentences  ending with a sentence terminator
       * ('.', '?', '!', etc.) character, possibly followed by a
       * hard separator (CR, LF, PS, etc.)
       */
-    UBRK_SENTENCE_TERM       = 0,
+    UBRK_SENTENCE_पदांशः       = 0,
     /** Upper bound for tags for sentences ended by sentence terminators.    */
-    UBRK_SENTENCE_TERM_LIMIT = 100,
+    UBRK_SENTENCE_पदांशः_सीमा = 100,
     /** Tag value for for sentences that do not contain an ending
       * sentence terminator ('.', '?', '!', etc.) character, but
       * are ended only by a hard separator (CR, LF, PS, etc.) or end of input.
       */
     UBRK_SENTENCE_SEP        = 100,
     /** Upper bound for tags for sentences ended by a separator.              */
-    UBRK_SENTENCE_SEP_LIMIT  = 200
+    UBRK_SENTENCE_SEP_सीमा  = 200
     /** Tag value for a hard, or mandatory line break  */
-} USentenceBreakTag;
+} USentence_Break_चिह्नकम्;
 
 
 /**
@@ -243,10 +243,10 @@ typedef enum USentenceBreakTag {
  */
 U_CAPI UBreakIterator* U_EXPORT2
 ubrk_open(UBreakIteratorType type,
-      const char *locale,
-      const UChar *text,
-      int32_t textLength,
-      UErrorCode *status);
+      ध्रुव वर्ण *locale,
+      ध्रुव UChar *text,
+      int32_t text_दीर्घता,
+      UError_संहिता *स्थितिः);
 
 /**
  * Open a new UBreakIterator for locating text boundaries using specified breaking rules.
@@ -264,12 +264,12 @@ ubrk_open(UBreakIteratorType type,
  * @stable ICU 2.2
  */
 U_CAPI UBreakIterator* U_EXPORT2
-ubrk_openRules(const UChar     *rules,
-               int32_t         rulesLength,
-               const UChar     *text,
-               int32_t          textLength,
+ubrk_open_नियमाः(ध्रुव UChar     *नियमाः,
+               int32_t         नियमाः_दीर्घता,
+               ध्रुव UChar     *text,
+               int32_t          text_दीर्घता,
                UParseError     *parseErr,
-               UErrorCode      *status);
+               UError_संहिता      *स्थितिः);
 
 /**
  * Open a new UBreakIterator for locating text boundaries using precompiled binary rules.
@@ -292,11 +292,11 @@ ubrk_openRules(const UChar     *rules,
  * @stable ICU 59
  */
 U_CAPI UBreakIterator* U_EXPORT2
-ubrk_openBinaryRules(const uint8_t *binaryRules, int32_t rulesLength,
-                     const UChar *  text, int32_t textLength,
-                     UErrorCode *   status);
+ubrk_open_द्विमान_नियमाः(ध्रुव uint8_t *द्विमान_नियमाः, int32_t नियमाः_दीर्घता,
+                     ध्रुव UChar *  text, int32_t text_दीर्घता,
+                     UError_संहिता *   स्थितिः);
 
-#ifndef U_HIDE_DEPRECATED_API
+#यदि_अपरिभाषितम् U_HIDE_DEPRECATED_API
 
 /**
  * Thread safe cloning operation
@@ -319,12 +319,12 @@ ubrk_openBinaryRules(const uint8_t *binaryRules, int32_t rulesLength,
  */
 U_DEPRECATED UBreakIterator * U_EXPORT2
 ubrk_safeClone(
-          const UBreakIterator *bi,
-          void *stackBuffer,
-          int32_t *pBufferSize,
-          UErrorCode *status);
+          ध्रुव UBreakIterator *bi,
+          शून्य *राशिः_बफर,
+          int32_t *p_बफर_आकार,
+          UError_संहिता *स्थितिः);
 
-#endif /* U_HIDE_DEPRECATED_API */
+#यदि_अन्तः /* U_HIDE_DEPRECATED_API */
 
 /**
  * Thread safe cloning operation.
@@ -334,18 +334,18 @@ ubrk_safeClone(
  * @stable ICU 69
  */
 U_CAPI UBreakIterator * U_EXPORT2
-ubrk_clone(const UBreakIterator *bi,
-           UErrorCode *status);
+ubrk_clone(ध्रुव UBreakIterator *bi,
+           UError_संहिता *स्थितिः);
 
-#ifndef U_HIDE_DEPRECATED_API
+#यदि_अपरिभाषितम् U_HIDE_DEPRECATED_API
 
 /**
   * A recommended size (in bytes) for the memory buffer to be passed to ubrk_saveClone().
   * @deprecated ICU 52. Do not rely on ubrk_safeClone() cloning into any provided buffer.
   */
-#define U_BRK_SAFECLONE_BUFFERSIZE 1
+#परिभाषय U_BRK_SAFECLONE_BUFFERSIZE 1
 
-#endif /* U_HIDE_DEPRECATED_API */
+#यदि_अन्तः /* U_HIDE_DEPRECATED_API */
 
 /**
 * Close a UBreakIterator.
@@ -353,10 +353,10 @@ ubrk_clone(const UBreakIterator *bi,
 * @param bi The break iterator to close.
  * @stable ICU 2.0
 */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ubrk_close(UBreakIterator *bi);
 
-#if U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -371,9 +371,9 @@ U_NAMESPACE_BEGIN
  */
 U_DEFINE_LOCAL_OPEN_POINTER(LocalUBreakIteratorPointer, UBreakIterator, ubrk_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif
+#यदि_अन्तः
 
 /**
  * Sets an existing iterator to point to a new piece of text.
@@ -387,11 +387,11 @@ U_NAMESPACE_END
  * @param status The error code
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ubrk_setText(UBreakIterator* bi,
-             const UChar*    text,
-             int32_t         textLength,
-             UErrorCode*     status);
+U_CAPI शून्य U_EXPORT2
+ubrk_समुच्चयः_Text(UBreakIterator* bi,
+             ध्रुव UChar*    text,
+             int32_t         text_दीर्घता,
+             UError_संहिता*     स्थितिः);
 
 
 /**
@@ -411,10 +411,10 @@ ubrk_setText(UBreakIterator* bi,
  * @param status The error code
  * @stable ICU 3.4
  */
-U_CAPI void U_EXPORT2
-ubrk_setUText(UBreakIterator* bi,
+U_CAPI शून्य U_EXPORT2
+ubrk_समुच्चयः_UText(UBreakIterator* bi,
              UText*          text,
-             UErrorCode*     status);
+             UError_संहिता*     स्थितिः);
 
 
 
@@ -427,7 +427,7 @@ ubrk_setUText(UBreakIterator* bi,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ubrk_current(const UBreakIterator *bi);
+ubrk_current(ध्रुव UBreakIterator *bi);
 
 /**
  * Advance the iterator to the boundary following the current boundary.
@@ -439,7 +439,7 @@ ubrk_current(const UBreakIterator *bi);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ubrk_next(UBreakIterator *bi);
+ubrk_अग्र(UBreakIterator *bi);
 
 /**
  * Set the iterator position to the boundary preceding the current boundary.
@@ -473,7 +473,7 @@ ubrk_first(UBreakIterator *bi);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ubrk_last(UBreakIterator *bi);
+ubrk_चरमः(UBreakIterator *bi);
 
 /**
  * Set the iterator position to the first boundary preceding the specified offset.
@@ -486,7 +486,7 @@ ubrk_last(UBreakIterator *bi);
  */
 U_CAPI int32_t U_EXPORT2
 ubrk_preceding(UBreakIterator *bi,
-           int32_t offset);
+           int32_t विस्थापनम्);
 
 /**
  * Advance the iterator to the first boundary following the specified offset.
@@ -499,7 +499,7 @@ ubrk_preceding(UBreakIterator *bi,
  */
 U_CAPI int32_t U_EXPORT2
 ubrk_following(UBreakIterator *bi,
-           int32_t offset);
+           int32_t विस्थापनम्);
 
 /**
 * Get a locale for which text breaking information is available.
@@ -510,8 +510,8 @@ ubrk_following(UBreakIterator *bi,
 * @see ubrk_countAvailable
 * @stable ICU 2.0
 */
-U_CAPI const char* U_EXPORT2
-ubrk_getAvailable(int32_t index);
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+ubrk_get_उपलब्धम्(int32_t सूचकांक);
 
 /**
 * Determine how many locales have text breaking information available.
@@ -522,7 +522,7 @@ ubrk_getAvailable(int32_t index);
 * @stable ICU 2.0
 */
 U_CAPI int32_t U_EXPORT2
-ubrk_countAvailable(void);
+ubrk_गणनम्_उपलब्धम्(शून्य);
 
 
 /**
@@ -535,7 +535,7 @@ ubrk_countAvailable(void);
 * @stable ICU 2.0
 */
 U_CAPI  UBool U_EXPORT2
-ubrk_isBoundary(UBreakIterator *bi, int32_t offset);
+ubrk_isBoundary(UBreakIterator *bi, int32_t विस्थापनम्);
 
 /**
  * Return the status from the break rule that determined the most recently
@@ -547,7 +547,7 @@ ubrk_isBoundary(UBreakIterator *bi, int32_t offset);
  * @stable ICU 2.2
  */
 U_CAPI  int32_t U_EXPORT2
-ubrk_getRuleStatus(UBreakIterator *bi);
+ubrk_get_नियमः_स्थितिः(UBreakIterator *bi);
 
 /**
  * Get the statuses from the break rules that determined the most recently
@@ -567,7 +567,7 @@ ubrk_getRuleStatus(UBreakIterator *bi);
  * @stable ICU 3.0
  */
 U_CAPI  int32_t U_EXPORT2
-ubrk_getRuleStatusVec(UBreakIterator *bi, int32_t *fillInVec, int32_t capacity, UErrorCode *status);
+ubrk_get_नियमः_स्थितिः_Vec(UBreakIterator *bi, int32_t *fill_अन्तर्_Vec, int32_t क्षमता, UError_संहिता *स्थितिः);
 
 /**
  * Return the locale of the break iterator. You can choose between the valid and
@@ -578,9 +578,9 @@ ubrk_getRuleStatusVec(UBreakIterator *bi, int32_t *fillInVec, int32_t capacity, 
  * @return locale string
  * @stable ICU 2.8
  */
-U_CAPI const char* U_EXPORT2
-ubrk_getLocaleByType(const UBreakIterator* bi U_LIFETIME_BOUND,
-                     ULocDataLocaleType type, UErrorCode* status);
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+ubrk_getLocaleByType(ध्रुव UBreakIterator* bi U_LIFETIME_BOUND,
+                     ULoc_दत्त_Locale_Type type, UError_संहिता* स्थितिः);
 
 /**
   *  Set the subject text string upon which the break iterator is operating
@@ -607,10 +607,10 @@ ubrk_getLocaleByType(const UBreakIterator* bi U_LIFETIME_BOUND,
   *
   * @stable ICU 49
   */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ubrk_refreshUText(UBreakIterator *bi,
                        UText          *text,
-                       UErrorCode     *status);
+                       UError_संहिता     *स्थितिः);
 
 
 /**
@@ -639,10 +639,10 @@ ubrk_refreshUText(UBreakIterator *bi,
  * @stable ICU 59
  */
 U_CAPI int32_t U_EXPORT2
-ubrk_getBinaryRules(UBreakIterator *bi,
-                    uint8_t *       binaryRules, int32_t rulesCapacity,
-                    UErrorCode *    status);
+ubrk_get_द्विमान_नियमाः(UBreakIterator *bi,
+                    uint8_t *       द्विमान_नियमाः, int32_t नियमाः_क्षमता,
+                    UError_संहिता *    स्थितिः);
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#यदि_अन्तः /* #if !UCONFIG_NO_BREAK_ITERATION */
 
-#endif
+#यदि_अन्तः

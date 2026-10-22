@@ -18,15 +18,15 @@
 *   Conversion extensions
 */
 
-#ifndef __UCNV_EXT_H__
-#define __UCNV_EXT_H__
+#यदि_अपरिभाषितम् __UCNV_EXT_H__
+#परिभाषय __UCNV_EXT_H__
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#यदि !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "ucnv_cnv.h"
+#अन्तर्भाव "unicode/ucnv.h"
+#अन्तर्भाव "ucnv_cnv.h"
 
 /*
  * See icuhtml/design/conversion/conversion_extensions.html
@@ -308,85 +308,85 @@
  *   Contains fromUnicode mapping results, stored as sequences of chars.
  *   Indexes and lengths stored in the fromUTableValues[].
  */
-enum {
-    UCNV_EXT_INDEXES_LENGTH,            /* 0 */
+गणना {
+    UCNV_EXT_INDEXES_दीर्घता,            /* 0 */
 
-    UCNV_EXT_TO_U_INDEX,                /* 1 */
-    UCNV_EXT_TO_U_LENGTH,
-    UCNV_EXT_TO_U_UCHARS_INDEX,
-    UCNV_EXT_TO_U_UCHARS_LENGTH,
+    UCNV_EXT_गन्तव्यम्_U_सूचकांक,                /* 1 */
+    UCNV_EXT_गन्तव्यम्_U_दीर्घता,
+    UCNV_EXT_गन्तव्यम्_U_UCHARS_सूचकांक,
+    UCNV_EXT_गन्तव्यम्_U_UCHARS_दीर्घता,
 
-    UCNV_EXT_FROM_U_UCHARS_INDEX,       /* 5 */
-    UCNV_EXT_FROM_U_VALUES_INDEX,
-    UCNV_EXT_FROM_U_LENGTH,
-    UCNV_EXT_FROM_U_BYTES_INDEX,
-    UCNV_EXT_FROM_U_BYTES_LENGTH,
+    UCNV_EXT_FROM_U_UCHARS_सूचकांक,       /* 5 */
+    UCNV_EXT_FROM_U_मानानि_सूचकांक,
+    UCNV_EXT_FROM_U_दीर्घता,
+    UCNV_EXT_FROM_U_अष्टकानि_सूचकांक,
+    UCNV_EXT_FROM_U_अष्टकानि_दीर्घता,
 
-    UCNV_EXT_FROM_U_STAGE_12_INDEX,     /* 10 */
-    UCNV_EXT_FROM_U_STAGE_1_LENGTH,
-    UCNV_EXT_FROM_U_STAGE_12_LENGTH,
-    UCNV_EXT_FROM_U_STAGE_3_INDEX,
-    UCNV_EXT_FROM_U_STAGE_3_LENGTH,
-    UCNV_EXT_FROM_U_STAGE_3B_INDEX,
-    UCNV_EXT_FROM_U_STAGE_3B_LENGTH,
+    UCNV_EXT_FROM_U_STAGE_12_सूचकांक,     /* 10 */
+    UCNV_EXT_FROM_U_STAGE_1_दीर्घता,
+    UCNV_EXT_FROM_U_STAGE_12_दीर्घता,
+    UCNV_EXT_FROM_U_STAGE_3_सूचकांक,
+    UCNV_EXT_FROM_U_STAGE_3_दीर्घता,
+    UCNV_EXT_FROM_U_STAGE_3_B_सूचकांक,
+    UCNV_EXT_FROM_U_STAGE_3_B_दीर्घता,
 
-    UCNV_EXT_COUNT_BYTES,               /* 17 */
-    UCNV_EXT_COUNT_UCHARS,
+    UCNV_EXT_गणनम्_अष्टकानि,               /* 17 */
+    UCNV_EXT_गणनम्_UCHARS,
     UCNV_EXT_FLAGS,
 
-    UCNV_EXT_RESERVED_INDEX,            /* 20, moves with additional indexes */
+    UCNV_EXT_RESERVED_सूचकांक,            /* 20, moves with additional indexes */
 
-    UCNV_EXT_SIZE=31,
-    UCNV_EXT_INDEXES_MIN_LENGTH=32
+    UCNV_EXT_आकार=31,
+    UCNV_EXT_INDEXES_MIN_दीर्घता=32
 };
 
 /* get the pointer to an extension array from indexes[index] */
-#define UCNV_EXT_ARRAY(indexes, index, itemType) \
-    ((const itemType *)((const char *)(indexes)+(indexes)[index]))
+#परिभाषय UCNV_EXT_ARRAY(indexes, सूचकांक, itemType) \
+    ((ध्रुव itemType *)((ध्रुव वर्ण *)(indexes)+(indexes)[सूचकांक]))
 
-#define UCNV_GET_MAX_BYTES_PER_UCHAR(indexes) \
-    ((indexes)[UCNV_EXT_COUNT_BYTES]&0xff)
+#परिभाषय UCNV_GET_MAX_अष्टकानि_प्रत्येकम्_UCHAR(indexes) \
+    ((indexes)[UCNV_EXT_गणनम्_अष्टकानि]&0xff)
 
 /* internal API ------------------------------------------------------------- */
 
 U_CFUNC UBool
-ucnv_extInitialMatchToU(UConverter *cnv, const int32_t *cx,
-                        int32_t firstLength,
-                        const char **src, const char *srcLimit,
-                        UChar **target, const UChar *targetLimit,
-                        int32_t **offsets, int32_t srcIndex,
+ucnv_ext_Initial_मेलनम्_गन्तव्यम्_U(UConverter *cnv, ध्रुव int32_t *cx,
+                        int32_t first_दीर्घता,
+                        ध्रुव वर्ण **src, ध्रुव वर्ण *src_सीमा,
+                        UChar **target, ध्रुव UChar *target_सीमा,
+                        int32_t **offsets, int32_t src_सूचकांक,
                         UBool flush,
-                        UErrorCode *pErrorCode);
+                        UError_संहिता *p_Error_संहिता);
 
 U_CFUNC UChar32
-ucnv_extSimpleMatchToU(const int32_t *cx,
-                       const char *source, int32_t length,
+ucnv_ext_Simple_मेलनम्_गन्तव्यम्_U(ध्रुव int32_t *cx,
+                       ध्रुव वर्ण *source, int32_t दीर्घता,
                        UBool useFallback);
 
-U_CFUNC void
-ucnv_extContinueMatchToU(UConverter *cnv,
-                         UConverterToUnicodeArgs *pArgs, int32_t srcIndex,
-                         UErrorCode *pErrorCode);
+U_CFUNC शून्य
+ucnv_ext_Continue_मेलनम्_गन्तव्यम्_U(UConverter *cnv,
+                         UConverter_गन्तव्यम्_Unicode_तर्काः *p_तर्काः, int32_t src_सूचकांक,
+                         UError_संहिता *p_Error_संहिता);
 
 
 U_CFUNC UBool
-ucnv_extInitialMatchFromU(UConverter *cnv, const int32_t *cx,
+ucnv_ext_Initial_मेलनम्_From_U(UConverter *cnv, ध्रुव int32_t *cx,
                           UChar32 cp,
-                          const UChar **src, const UChar *srcLimit,
-                          char **target, const char *targetLimit,
-                          int32_t **offsets, int32_t srcIndex,
+                          ध्रुव UChar **src, ध्रुव UChar *src_सीमा,
+                          वर्ण **target, ध्रुव वर्ण *target_सीमा,
+                          int32_t **offsets, int32_t src_सूचकांक,
                           UBool flush,
-                          UErrorCode *pErrorCode);
+                          UError_संहिता *p_Error_संहिता);
 
 U_CFUNC int32_t
-ucnv_extSimpleMatchFromU(const int32_t *cx,
-                         UChar32 cp, uint32_t *pValue,
+ucnv_ext_Simple_मेलनम्_From_U(ध्रुव int32_t *cx,
+                         UChar32 cp, uint32_t *p_मानम्,
                          UBool useFallback);
 
-U_CFUNC void
-ucnv_extContinueMatchFromU(UConverter *cnv,
-                           UConverterFromUnicodeArgs *pArgs, int32_t srcIndex,
-                           UErrorCode *pErrorCode);
+U_CFUNC शून्य
+ucnv_ext_Continue_मेलनम्_From_U(UConverter *cnv,
+                           UConverter_From_Unicode_तर्काः *p_तर्काः, int32_t src_सूचकांक,
+                           UError_संहिता *p_Error_संहिता);
 
 /*
  * Add code points and strings to the set according to the extension mappings.
@@ -397,85 +397,85 @@ ucnv_extContinueMatchFromU(UConverter *cnv,
  * For example, the Shift-JIS filter only works for 2-byte results and tests
  * that those 2 bytes are in the JIS X 0208 range of Shift-JIS.
  */
-U_CFUNC void
-ucnv_extGetUnicodeSet(const UConverterSharedData *sharedData,
-                      const USetAdder *sa,
-                      UConverterUnicodeSet which,
-                      UConverterSetFilter filter,
-                      UErrorCode *pErrorCode);
+U_CFUNC शून्य
+ucnv_ext_Get_Unicode_समुच्चयः(ध्रुव UConverter_Shared_दत्त *shared_दत्त,
+                      ध्रुव USetAdder *sa,
+                      UConverter_Unicode_समुच्चयः which,
+                      UConverter_समुच्चयः_Filter filter,
+                      UError_संहिता *p_Error_संहिता);
 
 /* toUnicode helpers -------------------------------------------------------- */
 
-#define UCNV_EXT_TO_U_BYTE_SHIFT 24
-#define UCNV_EXT_TO_U_VALUE_MASK 0xffffff
-#define UCNV_EXT_TO_U_MIN_CODE_POINT 0x1f0000
-#define UCNV_EXT_TO_U_MAX_CODE_POINT 0x2fffff
-#define UCNV_EXT_TO_U_ROUNDTRIP_FLAG ((uint32_t)1<<23)
-#define UCNV_EXT_TO_U_INDEX_MASK 0x3ffff
-#define UCNV_EXT_TO_U_LENGTH_SHIFT 18
-#define UCNV_EXT_TO_U_LENGTH_OFFSET 12
+#परिभाषय UCNV_EXT_गन्तव्यम्_U_BYTE_सरणम् 24
+#परिभाषय UCNV_EXT_गन्तव्यम्_U_मानम्_आवरणम् 0xffffff
+#परिभाषय UCNV_EXT_गन्तव्यम्_U_MIN_संहिता_POINT 0x1f0000
+#परिभाषय UCNV_EXT_गन्तव्यम्_U_MAX_संहिता_POINT 0x2fffff
+#परिभाषय UCNV_EXT_गन्तव्यम्_U_ROUNDTRIP_FLAG ((uint32_t)1<<23)
+#परिभाषय UCNV_EXT_गन्तव्यम्_U_सूचकांक_आवरणम् 0x3ffff
+#परिभाषय UCNV_EXT_गन्तव्यम्_U_दीर्घता_सरणम् 18
+#परिभाषय UCNV_EXT_गन्तव्यम्_U_दीर्घता_विस्थापनम् 12
 
 /* maximum number of indexed UChars */
-#define UCNV_EXT_MAX_UCHARS 19
+#परिभाषय UCNV_EXT_MAX_UCHARS 19
 
-#define UCNV_EXT_TO_U_MAKE_WORD(byte, value) (((uint32_t)(byte)<<UCNV_EXT_TO_U_BYTE_SHIFT)|(value))
+#परिभाषय UCNV_EXT_गन्तव्यम्_U_MAKE_WORD(byte, मानम्_2) (((uint32_t)(byte)<<UCNV_EXT_गन्तव्यम्_U_BYTE_सरणम्)|(मानम्_2))
 
-#define UCNV_EXT_TO_U_GET_BYTE(word) ((word)>>UCNV_EXT_TO_U_BYTE_SHIFT)
-#define UCNV_EXT_TO_U_GET_VALUE(word) ((word)&UCNV_EXT_TO_U_VALUE_MASK)
+#परिभाषय UCNV_EXT_गन्तव्यम्_U_GET_BYTE(word) ((word)>>UCNV_EXT_गन्तव्यम्_U_BYTE_सरणम्)
+#परिभाषय UCNV_EXT_गन्तव्यम्_U_GET_मानम्(word) ((word)&UCNV_EXT_गन्तव्यम्_U_मानम्_आवरणम्)
 
-#define UCNV_EXT_TO_U_IS_PARTIAL(value) ((value)<UCNV_EXT_TO_U_MIN_CODE_POINT)
-#define UCNV_EXT_TO_U_GET_PARTIAL_INDEX(value) (value)
+#परिभाषय UCNV_EXT_गन्तव्यम्_U_IS_PARTIAL(मानम्_2) ((मानम्_2)<UCNV_EXT_गन्तव्यम्_U_MIN_संहिता_POINT)
+#परिभाषय UCNV_EXT_गन्तव्यम्_U_GET_PARTIAL_सूचकांक(मानम्_2) (मानम्_2)
 
-#define UCNV_EXT_TO_U_IS_ROUNDTRIP(value) (((value)&UCNV_EXT_TO_U_ROUNDTRIP_FLAG)!=0)
-#define UCNV_EXT_TO_U_MASK_ROUNDTRIP(value) ((value)&~UCNV_EXT_TO_U_ROUNDTRIP_FLAG)
+#परिभाषय UCNV_EXT_गन्तव्यम्_U_IS_ROUNDTRIP(मानम्_2) (((मानम्_2)&UCNV_EXT_गन्तव्यम्_U_ROUNDTRIP_FLAG)!=0)
+#परिभाषय UCNV_EXT_गन्तव्यम्_U_आवरणम्_ROUNDTRIP(मानम्_2) ((मानम्_2)&~UCNV_EXT_गन्तव्यम्_U_ROUNDTRIP_FLAG)
 
 /* use after masking off the roundtrip flag */
-#define UCNV_EXT_TO_U_IS_CODE_POINT(value) ((value)<=UCNV_EXT_TO_U_MAX_CODE_POINT)
-#define UCNV_EXT_TO_U_GET_CODE_POINT(value) ((value)-UCNV_EXT_TO_U_MIN_CODE_POINT)
+#परिभाषय UCNV_EXT_गन्तव्यम्_U_IS_संहिता_POINT(मानम्_2) ((मानम्_2)<=UCNV_EXT_गन्तव्यम्_U_MAX_संहिता_POINT)
+#परिभाषय UCNV_EXT_गन्तव्यम्_U_GET_संहिता_POINT(मानम्_2) ((मानम्_2)-UCNV_EXT_गन्तव्यम्_U_MIN_संहिता_POINT)
 
-#define UCNV_EXT_TO_U_GET_INDEX(value) ((value)&UCNV_EXT_TO_U_INDEX_MASK)
-#define UCNV_EXT_TO_U_GET_LENGTH(value) (((value)>>UCNV_EXT_TO_U_LENGTH_SHIFT)-UCNV_EXT_TO_U_LENGTH_OFFSET)
+#परिभाषय UCNV_EXT_गन्तव्यम्_U_GET_सूचकांक(मानम्_2) ((मानम्_2)&UCNV_EXT_गन्तव्यम्_U_सूचकांक_आवरणम्)
+#परिभाषय UCNV_EXT_गन्तव्यम्_U_GET_दीर्घता(मानम्_2) (((मानम्_2)>>UCNV_EXT_गन्तव्यम्_U_दीर्घता_सरणम्)-UCNV_EXT_गन्तव्यम्_U_दीर्घता_विस्थापनम्)
 
 /* fromUnicode helpers ------------------------------------------------------ */
 
 /* most trie constants are shared with ucnvmbcs.h */
 
 /* see similar utrie.h UTRIE_INDEX_SHIFT and UTRIE_DATA_GRANULARITY */
-#define UCNV_EXT_STAGE_2_LEFT_SHIFT 2
-#define UCNV_EXT_STAGE_3_GRANULARITY 4
+#परिभाषय UCNV_EXT_STAGE_2_वामः_सरणम् 2
+#परिभाषय UCNV_EXT_STAGE_3_GRANULARITY 4
 
 /* trie access, returns the stage 3 value=index to stage 3b; s1Index=c>>10 */
-#define UCNV_EXT_FROM_U(stage12, stage3, s1Index, c) \
-    (stage3)[ ((int32_t)(stage12)[ (stage12)[s1Index] +(((c)>>4)&0x3f) ]<<UCNV_EXT_STAGE_2_LEFT_SHIFT) +((c)&0xf) ]
+#परिभाषय UCNV_EXT_FROM_U(stage12, stage3, s1_सूचकांक, c) \
+    (stage3)[ ((int32_t)(stage12)[ (stage12)[s1_सूचकांक] +(((c)>>4)&0x3f) ]<<UCNV_EXT_STAGE_2_वामः_सरणम्) +((c)&0xf) ]
 
-#define UCNV_EXT_FROM_U_LENGTH_SHIFT 24
-#define UCNV_EXT_FROM_U_ROUNDTRIP_FLAG ((uint32_t)1<<31)
-#define UCNV_EXT_FROM_U_GOOD_ONE_WAY_FLAG 0x40000000
-#define UCNV_EXT_FROM_U_STATUS_MASK 0xc0000000
-#define UCNV_EXT_FROM_U_RESERVED_MASK 0x20000000
-#define UCNV_EXT_FROM_U_DATA_MASK 0xffffff
+#परिभाषय UCNV_EXT_FROM_U_दीर्घता_सरणम् 24
+#परिभाषय UCNV_EXT_FROM_U_ROUNDTRIP_FLAG ((uint32_t)1<<31)
+#परिभाषय UCNV_EXT_FROM_U_GOOD_ONE_WAY_FLAG 0x40000000
+#परिभाषय UCNV_EXT_FROM_U_स्थितिः_आवरणम् 0xc0000000
+#परिभाषय UCNV_EXT_FROM_U_RESERVED_आवरणम् 0x20000000
+#परिभाषय UCNV_EXT_FROM_U_दत्त_आवरणम् 0xffffff
 
 /* special value for "no mapping" to <subchar1> (impossible roundtrip to 0 bytes, value 01) */
-#define UCNV_EXT_FROM_U_SUBCHAR1 0x80000001
+#परिभाषय UCNV_EXT_FROM_U_SUBCHAR1 0x80000001
 
 /* at most 3 bytes in the lower part of the value */
-#define UCNV_EXT_FROM_U_MAX_DIRECT_LENGTH 3
+#परिभाषय UCNV_EXT_FROM_U_MAX_प्रत्यक्षम्_दीर्घता 3
 
 /* maximum number of indexed bytes */
-#define UCNV_EXT_MAX_BYTES 0x1f
+#परिभाषय UCNV_EXT_MAX_अष्टकानि 0x1f
 
-#define UCNV_EXT_FROM_U_IS_PARTIAL(value) (((value)>>UCNV_EXT_FROM_U_LENGTH_SHIFT)==0)
-#define UCNV_EXT_FROM_U_GET_PARTIAL_INDEX(value) (value)
+#परिभाषय UCNV_EXT_FROM_U_IS_PARTIAL(मानम्_2) (((मानम्_2)>>UCNV_EXT_FROM_U_दीर्घता_सरणम्)==0)
+#परिभाषय UCNV_EXT_FROM_U_GET_PARTIAL_सूचकांक(मानम्_2) (मानम्_2)
 
-#define UCNV_EXT_FROM_U_IS_ROUNDTRIP(value) (((value)&UCNV_EXT_FROM_U_ROUNDTRIP_FLAG)!=0)
-#define UCNV_EXT_FROM_U_MASK_ROUNDTRIP(value) ((value)&~UCNV_EXT_FROM_U_ROUNDTRIP_FLAG)
+#परिभाषय UCNV_EXT_FROM_U_IS_ROUNDTRIP(मानम्_2) (((मानम्_2)&UCNV_EXT_FROM_U_ROUNDTRIP_FLAG)!=0)
+#परिभाषय UCNV_EXT_FROM_U_आवरणम्_ROUNDTRIP(मानम्_2) ((मानम्_2)&~UCNV_EXT_FROM_U_ROUNDTRIP_FLAG)
 
 /* get length; masks away all other bits */
-#define UCNV_EXT_FROM_U_GET_LENGTH(value) (int32_t)(((value)>>UCNV_EXT_FROM_U_LENGTH_SHIFT)&UCNV_EXT_MAX_BYTES)
+#परिभाषय UCNV_EXT_FROM_U_GET_दीर्घता(मानम्_2) (int32_t)(((मानम्_2)>>UCNV_EXT_FROM_U_दीर्घता_सरणम्)&UCNV_EXT_MAX_अष्टकानि)
 
 /* get bytes or bytes index */
-#define UCNV_EXT_FROM_U_GET_DATA(value) ((value)&UCNV_EXT_FROM_U_DATA_MASK)
+#परिभाषय UCNV_EXT_FROM_U_GET_दत्त(मानम्_2) ((मानम्_2)&UCNV_EXT_FROM_U_दत्त_आवरणम्)
 
-#endif
+#यदि_अन्तः
 
-#endif
+#यदि_अन्तः

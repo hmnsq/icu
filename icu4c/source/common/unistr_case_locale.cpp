@@ -17,11 +17,11 @@
 *   were moved here to break dependency cycles among parts of the common library.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/locid.h"
-#include "unicode/ucasemap.h"
-#include "unicode/unistr.h"
-#include "ucasemap_imp.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/locid.h"
+#अन्तर्भाव "unicode/ucasemap.h"
+#अन्तर्भाव "unicode/unistr.h"
+#अन्तर्भाव "ucasemap_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -30,27 +30,27 @@ U_NAMESPACE_BEGIN
 //========================================
 
 UnicodeString&
-UnicodeString::toLower() U_LIFETIME_BOUND {
-  return caseMap(ustrcase_getCaseLocale(nullptr), 0,
-                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalToLower);
+UnicodeString::गन्तव्यम्_अधस्तनम्() U_LIFETIME_BOUND {
+  प्रत्यागम caseMap(ustrcase_getCaseLocale(शून्यसूचकः), 0,
+                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_आन्तरिकम्_गन्तव्यम्_अधस्तनम्);
 }
 
 UnicodeString&
-UnicodeString::toLower(const Locale& locale) U_LIFETIME_BOUND {
-  return caseMap(ustrcase_getCaseLocale(locale.getBaseName()), 0,
-                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalToLower);
+UnicodeString::गन्तव्यम्_अधस्तनम्(ध्रुव Locale& locale) U_LIFETIME_BOUND {
+  प्रत्यागम caseMap(ustrcase_getCaseLocale(locale.get_आधारः_Name()), 0,
+                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_आन्तरिकम्_गन्तव्यम्_अधस्तनम्);
 }
 
 UnicodeString&
-UnicodeString::toUpper() U_LIFETIME_BOUND {
-  return caseMap(ustrcase_getCaseLocale(nullptr), 0,
-                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalToUpper);
+UnicodeString::गन्तव्यम्_ऊर्ध्वस्थम्() U_LIFETIME_BOUND {
+  प्रत्यागम caseMap(ustrcase_getCaseLocale(शून्यसूचकः), 0,
+                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_आन्तरिकम्_गन्तव्यम्_ऊर्ध्वस्थम्);
 }
 
 UnicodeString&
-UnicodeString::toUpper(const Locale& locale) U_LIFETIME_BOUND {
-  return caseMap(ustrcase_getCaseLocale(locale.getBaseName()), 0,
-                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalToUpper);
+UnicodeString::गन्तव्यम्_ऊर्ध्वस्थम्(ध्रुव Locale& locale) U_LIFETIME_BOUND {
+  प्रत्यागम caseMap(ustrcase_getCaseLocale(locale.get_आधारः_Name()), 0,
+                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_आन्तरिकम्_गन्तव्यम्_ऊर्ध्वस्थम्);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः

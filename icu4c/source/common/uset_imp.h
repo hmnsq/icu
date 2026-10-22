@@ -18,54 +18,54 @@
 *   Internal USet definitions.
 */
 
-#ifndef __USET_IMP_H__
-#define __USET_IMP_H__
+#यदि_अपरिभाषितम् __USET_IMP_H__
+#परिभाषय __USET_IMP_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/uset.h"
 
 U_CDECL_BEGIN
 
-typedef void U_CALLCONV
-USetAdd(USet *set, UChar32 c);
+प्रकारनिर्देश शून्य U_CALLCONV
+USet_सङ्कलय(USet *समुच्चयः, UChar32 c);
 
-typedef void U_CALLCONV
-USetAddRange(USet *set, UChar32 start, UChar32 end);
+प्रकारनिर्देश शून्य U_CALLCONV
+USet_सङ्कलय_Range(USet *समुच्चयः, UChar32 start, UChar32 अन्तः);
 
-typedef void U_CALLCONV
-USetAddString(USet *set, const UChar *str, int32_t length);
+प्रकारनिर्देश शून्य U_CALLCONV
+USet_सङ्कलय_String(USet *समुच्चयः, ध्रुव UChar *str, int32_t दीर्घता);
 
-typedef void U_CALLCONV
-USetRemove(USet *set, UChar32 c);
+प्रकारनिर्देश शून्य U_CALLCONV
+USetRemove(USet *समुच्चयः, UChar32 c);
 
-typedef void U_CALLCONV
-USetRemoveRange(USet *set, UChar32 start, UChar32 end);
+प्रकारनिर्देश शून्य U_CALLCONV
+USetRemoveRange(USet *समुच्चयः, UChar32 start, UChar32 अन्तः);
 
 /**
  * Interface for adding items to a USet, to keep low-level code from
  * statically depending on the USet implementation.
  * Calls will look like sa->add(sa->set, c);
  */
-struct USetAdder {
-    USet *set;
-    USetAdd *add;
-    USetAddRange *addRange;
-    USetAddString *addString;
+संरचना USetAdder {
+    USet *समुच्चयः;
+    USet_सङ्कलय *सङ्कलय;
+    USet_सङ्कलय_Range *सङ्कलय_Range;
+    USet_सङ्कलय_String *सङ्कलय_String;
     USetRemove *remove;
     USetRemoveRange *removeRange;
 };
-typedef struct USetAdder USetAdder;
+प्रकारनिर्देश संरचना USetAdder USetAdder;
 
-U_CDECL_END
+U_CDECL_अन्तः
 
-#ifdef __cplusplus
+#यदि_परिभाषितम् __cplusplus
 
 namespace {
 
-constexpr int32_t USET_CASE_MASK = USET_CASE_INSENSITIVE | USET_ADD_CASE_MAPPINGS;
+constexpr int32_t USET_CASE_आवरणम् = USET_CASE_INSENSITIVE | USET_सङ्कलय_CASE_MAPPINGS;
 
 }  // namespace
 
-#endif  // __cplusplus
+#यदि_अन्तः  // __cplusplus
 
-#endif
+#यदि_अन्तः

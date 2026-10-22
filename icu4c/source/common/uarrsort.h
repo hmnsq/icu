@@ -18,10 +18,10 @@
 *   Internal function for sorting arrays.
 */
 
-#ifndef __UARRSORT_H__
-#define __UARRSORT_H__
+#यदि_अपरिभाषितम् __UARRSORT_H__
+#परिभाषय __UARRSORT_H__
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
 U_CDECL_BEGIN
 /**
@@ -38,9 +38,9 @@ U_CDECL_BEGIN
  *
  * @internal
  */
-typedef int32_t U_CALLCONV
-UComparator(const void *context, const void *left, const void *right);
-U_CDECL_END
+प्रकारनिर्देश int32_t U_CALLCONV
+UComparator(ध्रुव शून्य *context, ध्रुव शून्य *वामः, ध्रुव शून्य *दक्षिणः);
+U_CDECL_अन्तः
 
 /**
  * Array sorting function.
@@ -57,31 +57,31 @@ U_CDECL_END
  *
  * @internal
  */
-U_CAPI void U_EXPORT2
-uprv_sortArray(void *array, int32_t length, int32_t itemSize,
-               UComparator *cmp, const void *context,
-               UBool sortStable, UErrorCode *pErrorCode);
+U_CAPI शून्य U_EXPORT2
+uprv_क्रमय_Array(शून्य *array, int32_t दीर्घता, int32_t item_आकार,
+               UComparator *cmp, ध्रुव शून्य *context,
+               UBool क्रमय_Stable, UError_संहिता *p_Error_संहिता);
 
 /**
  * Convenience UComparator implementation for uint16_t arrays.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_uint16Comparator(const void *context, const void *left, const void *right);
+uprv_uint16Comparator(ध्रुव शून्य *context, ध्रुव शून्य *वामः, ध्रुव शून्य *दक्षिणः);
 
 /**
  * Convenience UComparator implementation for int32_t arrays.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_int32Comparator(const void *context, const void *left, const void *right);
+uprv_int32Comparator(ध्रुव शून्य *context, ध्रुव शून्य *वामः, ध्रुव शून्य *दक्षिणः);
 
 /**
  * Convenience UComparator implementation for uint32_t arrays.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_uint32Comparator(const void *context, const void *left, const void *right);
+uprv_uint32Comparator(ध्रुव शून्य *context, ध्रुव शून्य *वामः, ध्रुव शून्य *दक्षिणः);
 
 /**
  * Much like Java Collections.binarySearch(list, key, comparator).
@@ -97,7 +97,7 @@ uprv_uint32Comparator(const void *context, const void *left, const void *right);
  *         or the index<0 for inserting the item at ~index in sorted order
  */
 U_CAPI int32_t U_EXPORT2
-uprv_stableBinarySearch(char *array, int32_t length, void *item, int32_t itemSize,
-                        UComparator *cmp, const void *context);
+uprv_stable_द्विमान_अन्वेषणम्(वर्ण *array, int32_t दीर्घता, शून्य *item, int32_t item_आकार,
+                        UComparator *cmp, ध्रुव शून्य *context);
 
-#endif
+#यदि_अन्तः

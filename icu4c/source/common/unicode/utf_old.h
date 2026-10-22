@@ -139,12 +139,12 @@
  * Deprecated ICU 2.4. Use the macros in utf.h, utf16.h, utf8.h instead.
  */
 
-#ifndef __UTF_OLD_H__
-#define __UTF_OLD_H__
+#यदि_अपरिभाषितम् __UTF_OLD_H__
+#परिभाषय __UTF_OLD_H__
 
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
+#अन्तर्भाव "unicode/utf.h"
+#अन्तर्भाव "unicode/utf8.h"
+#अन्तर्भाव "unicode/utf16.h"
 
 /**
  * \def U_HIDE_OBSOLETE_UTF_OLD_H
@@ -157,15 +157,15 @@
  *
  * @internal
  */
-#ifndef U_HIDE_OBSOLETE_UTF_OLD_H
+#यदि_अपरिभाषितम् U_HIDE_OBSOLETE_UTF_OLD_H
 #   define U_HIDE_OBSOLETE_UTF_OLD_H 0
-#endif
+#यदि_अन्तः
 
-#if !defined(U_HIDE_DEPRECATED_API) && !U_HIDE_OBSOLETE_UTF_OLD_H
+#यदि !defined(U_HIDE_DEPRECATED_API) && !U_HIDE_OBSOLETE_UTF_OLD_H
 
 /* Formerly utf.h, part 1 --------------------------------------------------- */
 
-#ifdef U_USE_UTF_DEPRECATES
+#यदि_परिभाषितम् U_USE_UTF_DEPRECATES
 /**
  * Unicode string and array offset and index type.
  * ICU always counts Unicode code units (UChars) for
@@ -173,11 +173,11 @@
  *
  * @obsolete ICU 2.6. Use int32_t directly instead since this API will be removed in that release.
  */
-typedef int32_t UTextOffset;
-#endif
+प्रकारनिर्देश int32_t UText_विस्थापनम्;
+#यदि_अन्तः
 
 /** Number of bits in a Unicode string code unit - ICU uses 16-bit Unicode. @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF_SIZE 16
+#परिभाषय UTF_आकार 16
 
 /**
  * The default choice for general Unicode string macros is to use the ..._SAFE macro implementations
@@ -185,11 +185,11 @@ typedef int32_t UTextOffset;
  *
  * @deprecated ICU 2.4. Obsolete, see utf_old.h.
  */
-#define UTF_SAFE
+#परिभाषय UTF_SAFE
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#undef UTF_UNSAFE
+#अपरिभाषय UTF_UNSAFE
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#undef UTF_STRICT
+#अपरिभाषय UTF_STRICT
 
 /**
  * UTF8_ERROR_VALUE_1 and UTF8_ERROR_VALUE_2 are special error values for UTF-8,
@@ -205,14 +205,14 @@ typedef int32_t UTextOffset;
  *
  * @deprecated ICU 2.4. Obsolete, see utf_old.h.
  */
-#define UTF8_ERROR_VALUE_1 0x15
+#परिभाषय UTF8_ERROR_मानम्_1 0x15
 
 /**
  * See documentation on UTF8_ERROR_VALUE_1 for details.
  *
  * @deprecated ICU 2.4. Obsolete, see utf_old.h.
  */
-#define UTF8_ERROR_VALUE_2 0x9f
+#परिभाषय UTF8_ERROR_मानम्_2 0x9f
 
 /**
  * Error value for all UTFs. This code point value will be set by macros with error
@@ -220,7 +220,7 @@ typedef int32_t UTextOffset;
  *
  * @deprecated ICU 2.4. Obsolete, see utf_old.h.
  */
-#define UTF_ERROR_VALUE 0xffff
+#परिभाषय UTF_ERROR_मानम् 0xffff
 
 /**
  * Is a given 32-bit code an error value
@@ -228,30 +228,30 @@ typedef int32_t UTextOffset;
  *
  * @deprecated ICU 2.4. Obsolete, see utf_old.h.
  */
-#define UTF_IS_ERROR(c) \
-    (((c)&0xfffe)==0xfffe || (c)==UTF8_ERROR_VALUE_1 || (c)==UTF8_ERROR_VALUE_2)
+#परिभाषय UTF_IS_ERROR(c) \
+    (((c)&0xfffe)==0xfffe || (c)==UTF8_ERROR_मानम्_1 || (c)==UTF8_ERROR_मानम्_2)
 
 /**
  * This is a combined macro: Is c a valid Unicode value _and_ not an error code?
  *
  * @deprecated ICU 2.4. Obsolete, see utf_old.h.
  */
-#define UTF_IS_VALID(c) \
+#परिभाषय UTF_IS_VALID(c) \
     (UTF_IS_UNICODE_CHAR(c) && \
-     (c)!=UTF8_ERROR_VALUE_1 && (c)!=UTF8_ERROR_VALUE_2)
+     (c)!=UTF8_ERROR_मानम्_1 && (c)!=UTF8_ERROR_मानम्_2)
 
 /**
  * Is this code unit or code point a surrogate (U+d800..U+dfff)?
  * @deprecated ICU 2.4. Renamed to U_IS_SURROGATE and U16_IS_SURROGATE, see utf_old.h.
  */
-#define UTF_IS_SURROGATE(uchar) (((uchar)&0xfffff800)==0xd800)
+#परिभाषय UTF_IS_SURROGATE(uchar) (((uchar)&0xfffff800)==0xd800)
 
 /**
  * Is a given 32-bit code point a Unicode noncharacter?
  *
  * @deprecated ICU 2.4. Renamed to U_IS_UNICODE_NONCHAR, see utf_old.h.
  */
-#define UTF_IS_UNICODE_NONCHAR(c) \
+#परिभाषय UTF_IS_UNICODE_NONCHAR(c) \
     ((c)>=0xfdd0 && \
      ((uint32_t)(c)<=0xfdef || ((c)&0xfffe)==0xfffe) && \
      (uint32_t)(c)<=0x10ffff)
@@ -271,7 +271,7 @@ typedef int32_t UTextOffset;
  *
  * @deprecated ICU 2.4. Renamed to U_IS_UNICODE_CHAR, see utf_old.h.
  */
-#define UTF_IS_UNICODE_CHAR(c) \
+#परिभाषय UTF_IS_UNICODE_CHAR(c) \
     ((uint32_t)(c)<0xd800 || \
         ((uint32_t)(c)>0xdfff && \
          (uint32_t)(c)<=0x10ffff && \
@@ -290,35 +290,35 @@ typedef int32_t UTextOffset;
 * public macros would fail to compile).
 * @internal
 */
-#ifdef U_UTF8_IMPL
+#यदि_परिभाषितम् U_UTF8_IMPL
 // No forward declaration if compiling utf_impl.cpp, which defines utf8_countTrailBytes.
-#elif defined(U_STATIC_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION)
-U_CAPI const uint8_t utf8_countTrailBytes[];
-#else
-U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
-#endif 
+#नोचेद्यदि defined(U_STATIC_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION)
+U_CAPI ध्रुव uint8_t utf8_गणनम्_Trail_अष्टकानि[];
+#अन्यथा
+U_CFUNC U_IMPORT ध्रुव uint8_t utf8_गणनम्_Trail_अष्टकानि[];
+#यदि_अन्तः 
 
 /**
  * Count the trail bytes for a UTF-8 lead byte.
  * @deprecated ICU 2.4. Renamed to U8_COUNT_TRAIL_BYTES, see utf_old.h.
  */
-#define UTF8_COUNT_TRAIL_BYTES(leadByte) (utf8_countTrailBytes[(uint8_t)leadByte])
+#परिभाषय UTF8_गणनम्_TRAIL_अष्टकानि(leadByte) (utf8_गणनम्_Trail_अष्टकानि[(uint8_t)leadByte])
 
 /**
  * Mask a UTF-8 lead byte, leave only the lower bits that form part of the code point value.
  * @deprecated ICU 2.4. Renamed to U8_MASK_LEAD_BYTE, see utf_old.h.
  */
-#define UTF8_MASK_LEAD_BYTE(leadByte, countTrailBytes) ((leadByte)&=(1<<(6-(countTrailBytes)))-1)
+#परिभाषय UTF8_आवरणम्_LEAD_BYTE(leadByte, गणनम्_Trail_अष्टकानि) ((leadByte)&=(1<<(6-(गणनम्_Trail_अष्टकानि)))-1)
 
 /** Is this this code point a single code unit (byte)? @deprecated ICU 2.4. Renamed to U8_IS_SINGLE, see utf_old.h. */
-#define UTF8_IS_SINGLE(uchar) (((uchar)&0x80)==0)
+#परिभाषय UTF8_IS_SINGLE(uchar) (((uchar)&0x80)==0)
 /** Is this this code unit the lead code unit (byte) of a code point? @deprecated ICU 2.4. Renamed to U8_IS_LEAD, see utf_old.h. */
-#define UTF8_IS_LEAD(uchar) ((uint8_t)((uchar)-0xc0)<0x3e)
+#परिभाषय UTF8_IS_LEAD(uchar) ((uint8_t)((uchar)-0xc0)<0x3e)
 /** Is this this code unit a trailing code unit (byte) of a code point? @deprecated ICU 2.4. Renamed to U8_IS_TRAIL, see utf_old.h. */
-#define UTF8_IS_TRAIL(uchar) (((uchar)&0xc0)==0x80)
+#परिभाषय UTF8_IS_TRAIL(uchar) (((uchar)&0xc0)==0x80)
 
 /** Does this scalar Unicode value need multiple code units for storage? @deprecated ICU 2.4. Use U8_LENGTH or test ((uint32_t)(c)>0x7f) instead, see utf_old.h. */
-#define UTF8_NEED_MULTIPLE_UCHAR(c) ((uint32_t)(c)>0x7f)
+#परिभाषय UTF8_NEED_गुणजः_UCHAR(c) ((uint32_t)(c)>0x7f)
 
 /**
  * Given the lead character, how many bytes are taken by this code point.
@@ -333,15 +333,15 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
  *
  * @deprecated ICU 2.4. Use U8_LENGTH instead, see utf.h.
  */
-#if 1
-#   define UTF8_CHAR_LENGTH(c) \
+#यदि 1
+#   define UTF8_CHAR_दीर्घता(c) \
         ((uint32_t)(c)<=0x7f ? 1 : \
             ((uint32_t)(c)<=0x7ff ? 2 : \
                 ((uint32_t)((c)-0x10000)>0xfffff ? 3 : 4) \
             ) \
         )
-#else
-#   define UTF8_CHAR_LENGTH(c) \
+#अन्यथा
+#   define UTF8_CHAR_दीर्घता(c) \
         ((uint32_t)(c)<=0x7f ? 1 : \
             ((uint32_t)(c)<=0x7ff ? 2 : \
                 ((uint32_t)(c)<=0xffff ? 3 : \
@@ -353,61 +353,61 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
                 ) \
             ) \
         )
-#endif
+#यदि_अन्तः
 
 /** The maximum number of bytes per code point. @deprecated ICU 2.4. Renamed to U8_MAX_LENGTH, see utf_old.h. */
-#define UTF8_MAX_CHAR_LENGTH 4
+#परिभाषय UTF8_MAX_CHAR_दीर्घता 4
 
 /** Average number of code units compared to UTF-16. @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF8_ARRAY_SIZE(size) ((5*(size))/2)
+#परिभाषय UTF8_ARRAY_आकार(आकार_2) ((5*(आकार_2))/2)
 
 /** @deprecated ICU 2.4. Renamed to U8_GET_UNSAFE, see utf_old.h. */
-#define UTF8_GET_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
-    int32_t _utf8_get_char_unsafe_index=(int32_t)(i); \
-    UTF8_SET_CHAR_START_UNSAFE(s, _utf8_get_char_unsafe_index); \
-    UTF8_NEXT_CHAR_UNSAFE(s, _utf8_get_char_unsafe_index, c); \
-} UPRV_BLOCK_MACRO_END
+#परिभाषय UTF8_GET_CHAR_UNSAFE(s, i, c) UPRV_खण्डम्_MACRO_BEGIN { \
+    int32_t utf8_get_char_unsafe_सूचकांक=(int32_t)(i); \
+    UTF8_समुच्चयः_CHAR_START_UNSAFE(s, utf8_get_char_unsafe_सूचकांक); \
+    UTF8_अग्र_CHAR_UNSAFE(s, utf8_get_char_unsafe_सूचकांक, c); \
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Use U8_GET instead, see utf_old.h. */
-#define UTF8_GET_CHAR_SAFE(s, start, i, length, c, strict) UPRV_BLOCK_MACRO_BEGIN { \
-    int32_t _utf8_get_char_safe_index=(int32_t)(i); \
-    UTF8_SET_CHAR_START_SAFE(s, start, _utf8_get_char_safe_index); \
-    UTF8_NEXT_CHAR_SAFE(s, _utf8_get_char_safe_index, length, c, strict); \
-} UPRV_BLOCK_MACRO_END
+#परिभाषय UTF8_GET_CHAR_SAFE(s, start, i, दीर्घता, c, strict) UPRV_खण्डम्_MACRO_BEGIN { \
+    int32_t utf8_get_char_safe_सूचकांक=(int32_t)(i); \
+    UTF8_समुच्चयः_CHAR_START_SAFE(s, start, utf8_get_char_safe_सूचकांक); \
+    UTF8_अग्र_CHAR_SAFE(s, utf8_get_char_safe_सूचकांक, दीर्घता, c, strict); \
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Renamed to U8_NEXT_UNSAFE, see utf_old.h. */
-#define UTF8_NEXT_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF8_अग्र_CHAR_UNSAFE(s, i, c) UPRV_खण्डम्_MACRO_BEGIN { \
     (c)=(s)[(i)++]; \
-    if((uint8_t)((c)-0xc0)<0x35) { \
-        uint8_t __count=UTF8_COUNT_TRAIL_BYTES(c); \
-        UTF8_MASK_LEAD_BYTE(c, __count); \
-        switch(__count) { \
+    यदि((uint8_t)((c)-0xc0)<0x35) { \
+        uint8_t __count=UTF8_गणनम्_TRAIL_अष्टकानि(c); \
+        UTF8_आवरणम्_LEAD_BYTE(c, __count); \
+        विकल्प(__count) { \
         /* each following branch falls through to the next one */ \
-        case 3: \
+        पक्ष 3: \
             (c)=((c)<<6)|((s)[(i)++]&0x3f); \
             U_FALLTHROUGH; \
-        case 2: \
+        पक्ष 2: \
             (c)=((c)<<6)|((s)[(i)++]&0x3f); \
             U_FALLTHROUGH; \
-        case 1: \
+        पक्ष 1: \
             (c)=((c)<<6)|((s)[(i)++]&0x3f); \
         /* no other branches to optimize switch() */ \
-            break; \
+            भङ्ग; \
         } \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Renamed to U8_APPEND_UNSAFE, see utf_old.h. */
-#define UTF8_APPEND_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
-    if((uint32_t)(c)<=0x7f) { \
+#परिभाषय UTF8_APPEND_CHAR_UNSAFE(s, i, c) UPRV_खण्डम्_MACRO_BEGIN { \
+    यदि((uint32_t)(c)<=0x7f) { \
         (s)[(i)++]=(uint8_t)(c); \
-    } else { \
-        if((uint32_t)(c)<=0x7ff) { \
+    } अन्यथा { \
+        यदि((uint32_t)(c)<=0x7ff) { \
             (s)[(i)++]=(uint8_t)(((c)>>6)|0xc0); \
-        } else { \
-            if((uint32_t)(c)<=0xffff) { \
+        } अन्यथा { \
+            यदि((uint32_t)(c)<=0xffff) { \
                 (s)[(i)++]=(uint8_t)(((c)>>12)|0xe0); \
-            } else { \
+            } अन्यथा { \
                 (s)[(i)++]=(uint8_t)(((c)>>18)|0xf0); \
                 (s)[(i)++]=(uint8_t)((((c)>>12)&0x3f)|0x80); \
             } \
@@ -415,171 +415,171 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
         } \
         (s)[(i)++]=(uint8_t)(((c)&0x3f)|0x80); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Renamed to U8_FWD_1_UNSAFE, see utf_old.h. */
-#define UTF8_FWD_1_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    (i)+=1+UTF8_COUNT_TRAIL_BYTES((s)[i]); \
-} UPRV_BLOCK_MACRO_END
+#परिभाषय UTF8_FWD_1_UNSAFE(s, i) UPRV_खण्डम्_MACRO_BEGIN { \
+    (i)+=1+UTF8_गणनम्_TRAIL_अष्टकानि((s)[i]); \
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Renamed to U8_FWD_N_UNSAFE, see utf_old.h. */
-#define UTF8_FWD_N_UNSAFE(s, i, n) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF8_FWD_N_UNSAFE(s, i, n) UPRV_खण्डम्_MACRO_BEGIN { \
     int32_t __N=(n); \
-    while(__N>0) { \
+    यावत्(__N>0) { \
         UTF8_FWD_1_UNSAFE(s, i); \
         --__N; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Renamed to U8_SET_CP_START_UNSAFE, see utf_old.h. */
-#define UTF8_SET_CHAR_START_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    while(UTF8_IS_TRAIL((s)[i])) { --(i); } \
-} UPRV_BLOCK_MACRO_END
+#परिभाषय UTF8_समुच्चयः_CHAR_START_UNSAFE(s, i) UPRV_खण्डम्_MACRO_BEGIN { \
+    यावत्(UTF8_IS_TRAIL((s)[i])) { --(i); } \
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Use U8_NEXT instead, see utf_old.h. */
-#define UTF8_NEXT_CHAR_SAFE(s, i, length, c, strict) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF8_अग्र_CHAR_SAFE(s, i, दीर्घता, c, strict) UPRV_खण्डम्_MACRO_BEGIN { \
     (c)=(s)[(i)++]; \
-    if((c)>=0x80) { \
-        if(UTF8_IS_LEAD(c)) { \
-            (c)=utf8_nextCharSafeBody(s, &(i), (int32_t)(length), c, strict); \
-        } else { \
-            (c)=UTF8_ERROR_VALUE_1; \
+    यदि((c)>=0x80) { \
+        यदि(UTF8_IS_LEAD(c)) { \
+            (c)=utf8_अग्र_Char_Safe_Body(s, &(i), (int32_t)(दीर्घता), c, strict); \
+        } अन्यथा { \
+            (c)=UTF8_ERROR_मानम्_1; \
         } \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Use U8_APPEND instead, see utf_old.h. */
-#define UTF8_APPEND_CHAR_SAFE(s, i, length, c)  UPRV_BLOCK_MACRO_BEGIN { \
-    if((uint32_t)(c)<=0x7f) { \
+#परिभाषय UTF8_APPEND_CHAR_SAFE(s, i, दीर्घता, c)  UPRV_खण्डम्_MACRO_BEGIN { \
+    यदि((uint32_t)(c)<=0x7f) { \
         (s)[(i)++]=(uint8_t)(c); \
-    } else { \
-        (i)=utf8_appendCharSafeBody(s, (int32_t)(i), (int32_t)(length), c, NULL); \
+    } अन्यथा { \
+        (i)=utf8_appendCharSafeBody(s, (int32_t)(i), (int32_t)(दीर्घता), c, रिक्त); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Renamed to U8_FWD_1, see utf_old.h. */
-#define UTF8_FWD_1_SAFE(s, i, length) U8_FWD_1(s, i, length)
+#परिभाषय UTF8_FWD_1_SAFE(s, i, दीर्घता) U8_FWD_1(s, i, दीर्घता)
 
 /** @deprecated ICU 2.4. Renamed to U8_FWD_N, see utf_old.h. */
-#define UTF8_FWD_N_SAFE(s, i, length, n) U8_FWD_N(s, i, length, n)
+#परिभाषय UTF8_FWD_N_SAFE(s, i, दीर्घता, n) U8_FWD_N(s, i, दीर्घता, n)
 
 /** @deprecated ICU 2.4. Renamed to U8_SET_CP_START, see utf_old.h. */
-#define UTF8_SET_CHAR_START_SAFE(s, start, i) U8_SET_CP_START(s, start, i)
+#परिभाषय UTF8_समुच्चयः_CHAR_START_SAFE(s, start, i) U8_समुच्चयः_CP_START(s, start, i)
 
 /** @deprecated ICU 2.4. Renamed to U8_PREV_UNSAFE, see utf_old.h. */
-#define UTF8_PREV_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF8_पूर्व_CHAR_UNSAFE(s, i, c) UPRV_खण्डम्_MACRO_BEGIN { \
     (c)=(s)[--(i)]; \
-    if(UTF8_IS_TRAIL(c)) { \
+    यदि(UTF8_IS_TRAIL(c)) { \
         uint8_t __b, __count=1, __shift=6; \
 \
         /* c is a trail byte */ \
         (c)&=0x3f; \
-        for(;;) { \
+        प्रति(;;) { \
             __b=(s)[--(i)]; \
-            if(__b>=0xc0) { \
-                UTF8_MASK_LEAD_BYTE(__b, __count); \
+            यदि(__b>=0xc0) { \
+                UTF8_आवरणम्_LEAD_BYTE(__b, __count); \
                 (c)|=(UChar32)__b<<__shift; \
-                break; \
-            } else { \
+                भङ्ग; \
+            } अन्यथा { \
                 (c)|=(UChar32)(__b&0x3f)<<__shift; \
                 ++__count; \
                 __shift+=6; \
             } \
         } \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Renamed to U8_BACK_1_UNSAFE, see utf_old.h. */
-#define UTF8_BACK_1_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    while(UTF8_IS_TRAIL((s)[--(i)])) {} \
-} UPRV_BLOCK_MACRO_END
+#परिभाषय UTF8_पृष्ठभागः_1_UNSAFE(s, i) UPRV_खण्डम्_MACRO_BEGIN { \
+    यावत्(UTF8_IS_TRAIL((s)[--(i)])) {} \
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Renamed to U8_BACK_N_UNSAFE, see utf_old.h. */
-#define UTF8_BACK_N_UNSAFE(s, i, n) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF8_पृष्ठभागः_N_UNSAFE(s, i, n) UPRV_खण्डम्_MACRO_BEGIN { \
     int32_t __N=(n); \
-    while(__N>0) { \
-        UTF8_BACK_1_UNSAFE(s, i); \
+    यावत्(__N>0) { \
+        UTF8_पृष्ठभागः_1_UNSAFE(s, i); \
         --__N; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Renamed to U8_SET_CP_LIMIT_UNSAFE, see utf_old.h. */
-#define UTF8_SET_CHAR_LIMIT_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    UTF8_BACK_1_UNSAFE(s, i); \
+#परिभाषय UTF8_समुच्चयः_CHAR_सीमा_UNSAFE(s, i) UPRV_खण्डम्_MACRO_BEGIN { \
+    UTF8_पृष्ठभागः_1_UNSAFE(s, i); \
     UTF8_FWD_1_UNSAFE(s, i); \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Use U8_PREV instead, see utf_old.h. */
-#define UTF8_PREV_CHAR_SAFE(s, start, i, c, strict) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF8_पूर्व_CHAR_SAFE(s, start, i, c, strict) UPRV_खण्डम्_MACRO_BEGIN { \
     (c)=(s)[--(i)]; \
-    if((c)>=0x80) { \
-        if((c)<=0xbf) { \
-            (c)=utf8_prevCharSafeBody(s, start, &(i), c, strict); \
-        } else { \
-            (c)=UTF8_ERROR_VALUE_1; \
+    यदि((c)>=0x80) { \
+        यदि((c)<=0xbf) { \
+            (c)=utf8_पूर्व_Char_Safe_Body(s, start, &(i), c, strict); \
+        } अन्यथा { \
+            (c)=UTF8_ERROR_मानम्_1; \
         } \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Renamed to U8_BACK_1, see utf_old.h. */
-#define UTF8_BACK_1_SAFE(s, start, i) U8_BACK_1(s, start, i)
+#परिभाषय UTF8_पृष्ठभागः_1_SAFE(s, start, i) U8_पृष्ठभागः_1(s, start, i)
 
 /** @deprecated ICU 2.4. Renamed to U8_BACK_N, see utf_old.h. */
-#define UTF8_BACK_N_SAFE(s, start, i, n) U8_BACK_N(s, start, i, n)
+#परिभाषय UTF8_पृष्ठभागः_N_SAFE(s, start, i, n) U8_पृष्ठभागः_N(s, start, i, n)
 
 /** @deprecated ICU 2.4. Renamed to U8_SET_CP_LIMIT, see utf_old.h. */
-#define UTF8_SET_CHAR_LIMIT_SAFE(s, start, i, length) U8_SET_CP_LIMIT(s, start, i, length)
+#परिभाषय UTF8_समुच्चयः_CHAR_सीमा_SAFE(s, start, i, दीर्घता) U8_समुच्चयः_CP_सीमा(s, start, i, दीर्घता)
 
 /* Formerly utf16.h --------------------------------------------------------- */
 
 /** Is uchar a first/lead surrogate? @deprecated ICU 2.4. Renamed to U_IS_LEAD and U16_IS_LEAD, see utf_old.h. */
-#define UTF_IS_FIRST_SURROGATE(uchar) (((uchar)&0xfffffc00)==0xd800)
+#परिभाषय UTF_IS_FIRST_SURROGATE(uchar) (((uchar)&0xfffffc00)==0xd800)
 
 /** Is uchar a second/trail surrogate? @deprecated ICU 2.4. Renamed to U_IS_TRAIL and U16_IS_TRAIL, see utf_old.h. */
-#define UTF_IS_SECOND_SURROGATE(uchar) (((uchar)&0xfffffc00)==0xdc00)
+#परिभाषय UTF_IS_SECOND_SURROGATE(uchar) (((uchar)&0xfffffc00)==0xdc00)
 
 /** Assuming c is a surrogate, is it a first/lead surrogate? @deprecated ICU 2.4. Renamed to U_IS_SURROGATE_LEAD and U16_IS_SURROGATE_LEAD, see utf_old.h. */
-#define UTF_IS_SURROGATE_FIRST(c) (((c)&0x400)==0)
+#परिभाषय UTF_IS_SURROGATE_FIRST(c) (((c)&0x400)==0)
 
 /** Helper constant for UTF16_GET_PAIR_VALUE. @deprecated ICU 2.4. Renamed to U16_SURROGATE_OFFSET, see utf_old.h. */
-#define UTF_SURROGATE_OFFSET ((0xd800<<10UL)+0xdc00-0x10000)
+#परिभाषय UTF_SURROGATE_विस्थापनम् ((0xd800<<10UL)+0xdc00-0x10000)
 
 /** Get the UTF-32 value from the surrogate code units. @deprecated ICU 2.4. Renamed to U16_GET_SUPPLEMENTARY, see utf_old.h. */
-#define UTF16_GET_PAIR_VALUE(first, second) \
-    (((first)<<10UL)+(second)-UTF_SURROGATE_OFFSET)
+#परिभाषय UTF16_GET_PAIR_मानम्(first, second) \
+    (((first)<<10UL)+(second)-UTF_SURROGATE_विस्थापनम्)
 
 /** @deprecated ICU 2.4. Renamed to U16_LEAD, see utf_old.h. */
-#define UTF_FIRST_SURROGATE(supplementary) (UChar)(((supplementary)>>10)+0xd7c0)
+#परिभाषय UTF_FIRST_SURROGATE(supplementary) (UChar)(((supplementary)>>10)+0xd7c0)
 
 /** @deprecated ICU 2.4. Renamed to U16_TRAIL, see utf_old.h. */
-#define UTF_SECOND_SURROGATE(supplementary) (UChar)(((supplementary)&0x3ff)|0xdc00)
+#परिभाषय UTF_SECOND_SURROGATE(supplementary) (UChar)(((supplementary)&0x3ff)|0xdc00)
 
 /** @deprecated ICU 2.4. Renamed to U16_LEAD, see utf_old.h. */
-#define UTF16_LEAD(supplementary) UTF_FIRST_SURROGATE(supplementary)
+#परिभाषय UTF16_LEAD(supplementary) UTF_FIRST_SURROGATE(supplementary)
 
 /** @deprecated ICU 2.4. Renamed to U16_TRAIL, see utf_old.h. */
-#define UTF16_TRAIL(supplementary) UTF_SECOND_SURROGATE(supplementary)
+#परिभाषय UTF16_TRAIL(supplementary) UTF_SECOND_SURROGATE(supplementary)
 
 /** @deprecated ICU 2.4. Renamed to U16_IS_SINGLE, see utf_old.h. */
-#define UTF16_IS_SINGLE(uchar) !UTF_IS_SURROGATE(uchar)
+#परिभाषय UTF16_IS_SINGLE(uchar) !UTF_IS_SURROGATE(uchar)
 
 /** @deprecated ICU 2.4. Renamed to U16_IS_LEAD, see utf_old.h. */
-#define UTF16_IS_LEAD(uchar) UTF_IS_FIRST_SURROGATE(uchar)
+#परिभाषय UTF16_IS_LEAD(uchar) UTF_IS_FIRST_SURROGATE(uchar)
 
 /** @deprecated ICU 2.4. Renamed to U16_IS_TRAIL, see utf_old.h. */
-#define UTF16_IS_TRAIL(uchar) UTF_IS_SECOND_SURROGATE(uchar)
+#परिभाषय UTF16_IS_TRAIL(uchar) UTF_IS_SECOND_SURROGATE(uchar)
 
 /** Does this scalar Unicode value need multiple code units for storage? @deprecated ICU 2.4. Use U16_LENGTH or test ((uint32_t)(c)>0xffff) instead, see utf_old.h. */
-#define UTF16_NEED_MULTIPLE_UCHAR(c) ((uint32_t)(c)>0xffff)
+#परिभाषय UTF16_NEED_गुणजः_UCHAR(c) ((uint32_t)(c)>0xffff)
 
 /** @deprecated ICU 2.4. Renamed to U16_LENGTH, see utf_old.h. */
-#define UTF16_CHAR_LENGTH(c) ((uint32_t)(c)<=0xffff ? 1 : 2)
+#परिभाषय UTF16_CHAR_दीर्घता(c) ((uint32_t)(c)<=0xffff ? 1 : 2)
 
 /** @deprecated ICU 2.4. Renamed to U16_MAX_LENGTH, see utf_old.h. */
-#define UTF16_MAX_CHAR_LENGTH 2
+#परिभाषय UTF16_MAX_CHAR_दीर्घता 2
 
 /** Average number of code units compared to UTF-16. @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF16_ARRAY_SIZE(size) (size)
+#परिभाषय UTF16_ARRAY_आकार(आकार_2) (आकार_2)
 
 /**
  * Get a single code point from an offset that points to any
@@ -592,187 +592,187 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
  * UTF16_PREV_CHAR[_UNSAFE]() is more efficient for that.
  * @deprecated ICU 2.4. Renamed to U16_GET_UNSAFE, see utf_old.h.
  */
-#define UTF16_GET_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF16_GET_CHAR_UNSAFE(s, i, c) UPRV_खण्डम्_MACRO_BEGIN { \
     (c)=(s)[i]; \
-    if(UTF_IS_SURROGATE(c)) { \
-        if(UTF_IS_SURROGATE_FIRST(c)) { \
-            (c)=UTF16_GET_PAIR_VALUE((c), (s)[(i)+1]); \
-        } else { \
-            (c)=UTF16_GET_PAIR_VALUE((s)[(i)-1], (c)); \
+    यदि(UTF_IS_SURROGATE(c)) { \
+        यदि(UTF_IS_SURROGATE_FIRST(c)) { \
+            (c)=UTF16_GET_PAIR_मानम्((c), (s)[(i)+1]); \
+        } अन्यथा { \
+            (c)=UTF16_GET_PAIR_मानम्((s)[(i)-1], (c)); \
         } \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Use U16_GET instead, see utf_old.h. */
-#define UTF16_GET_CHAR_SAFE(s, start, i, length, c, strict) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF16_GET_CHAR_SAFE(s, start, i, दीर्घता, c, strict) UPRV_खण्डम्_MACRO_BEGIN { \
     (c)=(s)[i]; \
-    if(UTF_IS_SURROGATE(c)) { \
+    यदि(UTF_IS_SURROGATE(c)) { \
         uint16_t __c2; \
-        if(UTF_IS_SURROGATE_FIRST(c)) { \
-            if((i)+1<(length) && UTF_IS_SECOND_SURROGATE(__c2=(s)[(i)+1])) { \
-                (c)=UTF16_GET_PAIR_VALUE((c), __c2); \
+        यदि(UTF_IS_SURROGATE_FIRST(c)) { \
+            यदि((i)+1<(दीर्घता) && UTF_IS_SECOND_SURROGATE(__c2=(s)[(i)+1])) { \
+                (c)=UTF16_GET_PAIR_मानम्((c), __c2); \
                 /* strict: ((c)&0xfffe)==0xfffe is caught by UTF_IS_ERROR() and UTF_IS_UNICODE_CHAR() */ \
-            } else if(strict) {\
+            } अन्यथा यदि(strict) {\
                 /* unmatched first surrogate */ \
-                (c)=UTF_ERROR_VALUE; \
+                (c)=UTF_ERROR_मानम्; \
             } \
-        } else { \
-            if((i)-1>=(start) && UTF_IS_FIRST_SURROGATE(__c2=(s)[(i)-1])) { \
-                (c)=UTF16_GET_PAIR_VALUE(__c2, (c)); \
+        } अन्यथा { \
+            यदि((i)-1>=(start) && UTF_IS_FIRST_SURROGATE(__c2=(s)[(i)-1])) { \
+                (c)=UTF16_GET_PAIR_मानम्(__c2, (c)); \
                 /* strict: ((c)&0xfffe)==0xfffe is caught by UTF_IS_ERROR() and UTF_IS_UNICODE_CHAR() */ \
-            } else if(strict) {\
+            } अन्यथा यदि(strict) {\
                 /* unmatched second surrogate */ \
-                (c)=UTF_ERROR_VALUE; \
+                (c)=UTF_ERROR_मानम्; \
             } \
         } \
-    } else if((strict) && !UTF_IS_UNICODE_CHAR(c)) { \
-        (c)=UTF_ERROR_VALUE; \
+    } अन्यथा यदि((strict) && !UTF_IS_UNICODE_CHAR(c)) { \
+        (c)=UTF_ERROR_मानम्; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Renamed to U16_NEXT_UNSAFE, see utf_old.h. */
-#define UTF16_NEXT_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF16_अग्र_CHAR_UNSAFE(s, i, c) UPRV_खण्डम्_MACRO_BEGIN { \
     (c)=(s)[(i)++]; \
-    if(UTF_IS_FIRST_SURROGATE(c)) { \
-        (c)=UTF16_GET_PAIR_VALUE((c), (s)[(i)++]); \
+    यदि(UTF_IS_FIRST_SURROGATE(c)) { \
+        (c)=UTF16_GET_PAIR_मानम्((c), (s)[(i)++]); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Renamed to U16_APPEND_UNSAFE, see utf_old.h. */
-#define UTF16_APPEND_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
-    if((uint32_t)(c)<=0xffff) { \
+#परिभाषय UTF16_APPEND_CHAR_UNSAFE(s, i, c) UPRV_खण्डम्_MACRO_BEGIN { \
+    यदि((uint32_t)(c)<=0xffff) { \
         (s)[(i)++]=(uint16_t)(c); \
-    } else { \
+    } अन्यथा { \
         (s)[(i)++]=(uint16_t)(((c)>>10)+0xd7c0); \
         (s)[(i)++]=(uint16_t)(((c)&0x3ff)|0xdc00); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Renamed to U16_FWD_1_UNSAFE, see utf_old.h. */
-#define UTF16_FWD_1_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(UTF_IS_FIRST_SURROGATE((s)[(i)++])) { \
+#परिभाषय UTF16_FWD_1_UNSAFE(s, i) UPRV_खण्डम्_MACRO_BEGIN { \
+    यदि(UTF_IS_FIRST_SURROGATE((s)[(i)++])) { \
         ++(i); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Renamed to U16_FWD_N_UNSAFE, see utf_old.h. */
-#define UTF16_FWD_N_UNSAFE(s, i, n) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF16_FWD_N_UNSAFE(s, i, n) UPRV_खण्डम्_MACRO_BEGIN { \
     int32_t __N=(n); \
-    while(__N>0) { \
+    यावत्(__N>0) { \
         UTF16_FWD_1_UNSAFE(s, i); \
         --__N; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Renamed to U16_SET_CP_START_UNSAFE, see utf_old.h. */
-#define UTF16_SET_CHAR_START_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(UTF_IS_SECOND_SURROGATE((s)[i])) { \
+#परिभाषय UTF16_समुच्चयः_CHAR_START_UNSAFE(s, i) UPRV_खण्डम्_MACRO_BEGIN { \
+    यदि(UTF_IS_SECOND_SURROGATE((s)[i])) { \
         --(i); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Use U16_NEXT instead, see utf_old.h. */
-#define UTF16_NEXT_CHAR_SAFE(s, i, length, c, strict) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF16_अग्र_CHAR_SAFE(s, i, दीर्घता, c, strict) UPRV_खण्डम्_MACRO_BEGIN { \
     (c)=(s)[(i)++]; \
-    if(UTF_IS_FIRST_SURROGATE(c)) { \
+    यदि(UTF_IS_FIRST_SURROGATE(c)) { \
         uint16_t __c2; \
-        if((i)<(length) && UTF_IS_SECOND_SURROGATE(__c2=(s)[(i)])) { \
+        यदि((i)<(दीर्घता) && UTF_IS_SECOND_SURROGATE(__c2=(s)[(i)])) { \
             ++(i); \
-            (c)=UTF16_GET_PAIR_VALUE((c), __c2); \
+            (c)=UTF16_GET_PAIR_मानम्((c), __c2); \
             /* strict: ((c)&0xfffe)==0xfffe is caught by UTF_IS_ERROR() and UTF_IS_UNICODE_CHAR() */ \
-        } else if(strict) {\
+        } अन्यथा यदि(strict) {\
             /* unmatched first surrogate */ \
-            (c)=UTF_ERROR_VALUE; \
+            (c)=UTF_ERROR_मानम्; \
         } \
-    } else if((strict) && !UTF_IS_UNICODE_CHAR(c)) { \
+    } अन्यथा यदि((strict) && !UTF_IS_UNICODE_CHAR(c)) { \
         /* unmatched second surrogate or other non-character */ \
-        (c)=UTF_ERROR_VALUE; \
+        (c)=UTF_ERROR_मानम्; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Use U16_APPEND instead, see utf_old.h. */
-#define UTF16_APPEND_CHAR_SAFE(s, i, length, c) UPRV_BLOCK_MACRO_BEGIN { \
-    if((uint32_t)(c)<=0xffff) { \
+#परिभाषय UTF16_APPEND_CHAR_SAFE(s, i, दीर्घता, c) UPRV_खण्डम्_MACRO_BEGIN { \
+    यदि((uint32_t)(c)<=0xffff) { \
         (s)[(i)++]=(uint16_t)(c); \
-    } else if((uint32_t)(c)<=0x10ffff) { \
-        if((i)+1<(length)) { \
+    } अन्यथा यदि((uint32_t)(c)<=0x10ffff) { \
+        यदि((i)+1<(दीर्घता)) { \
             (s)[(i)++]=(uint16_t)(((c)>>10)+0xd7c0); \
             (s)[(i)++]=(uint16_t)(((c)&0x3ff)|0xdc00); \
-        } else /* not enough space */ { \
-            (s)[(i)++]=UTF_ERROR_VALUE; \
+        } अन्यथा /* not enough space */ { \
+            (s)[(i)++]=UTF_ERROR_मानम्; \
         } \
-    } else /* c>0x10ffff, write error value */ { \
-        (s)[(i)++]=UTF_ERROR_VALUE; \
+    } अन्यथा /* c>0x10ffff, write error value */ { \
+        (s)[(i)++]=UTF_ERROR_मानम्; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Renamed to U16_FWD_1, see utf_old.h. */
-#define UTF16_FWD_1_SAFE(s, i, length) U16_FWD_1(s, i, length)
+#परिभाषय UTF16_FWD_1_SAFE(s, i, दीर्घता) U16_FWD_1(s, i, दीर्घता)
 
 /** @deprecated ICU 2.4. Renamed to U16_FWD_N, see utf_old.h. */
-#define UTF16_FWD_N_SAFE(s, i, length, n) U16_FWD_N(s, i, length, n)
+#परिभाषय UTF16_FWD_N_SAFE(s, i, दीर्घता, n) U16_FWD_N(s, i, दीर्घता, n)
 
 /** @deprecated ICU 2.4. Renamed to U16_SET_CP_START, see utf_old.h. */
-#define UTF16_SET_CHAR_START_SAFE(s, start, i) U16_SET_CP_START(s, start, i)
+#परिभाषय UTF16_समुच्चयः_CHAR_START_SAFE(s, start, i) U16_समुच्चयः_CP_START(s, start, i)
 
 /** @deprecated ICU 2.4. Renamed to U16_PREV_UNSAFE, see utf_old.h. */
-#define UTF16_PREV_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF16_पूर्व_CHAR_UNSAFE(s, i, c) UPRV_खण्डम्_MACRO_BEGIN { \
     (c)=(s)[--(i)]; \
-    if(UTF_IS_SECOND_SURROGATE(c)) { \
-        (c)=UTF16_GET_PAIR_VALUE((s)[--(i)], (c)); \
+    यदि(UTF_IS_SECOND_SURROGATE(c)) { \
+        (c)=UTF16_GET_PAIR_मानम्((s)[--(i)], (c)); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Renamed to U16_BACK_1_UNSAFE, see utf_old.h. */
-#define UTF16_BACK_1_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(UTF_IS_SECOND_SURROGATE((s)[--(i)])) { \
+#परिभाषय UTF16_पृष्ठभागः_1_UNSAFE(s, i) UPRV_खण्डम्_MACRO_BEGIN { \
+    यदि(UTF_IS_SECOND_SURROGATE((s)[--(i)])) { \
         --(i); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Renamed to U16_BACK_N_UNSAFE, see utf_old.h. */
-#define UTF16_BACK_N_UNSAFE(s, i, n) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF16_पृष्ठभागः_N_UNSAFE(s, i, n) UPRV_खण्डम्_MACRO_BEGIN { \
     int32_t __N=(n); \
-    while(__N>0) { \
-        UTF16_BACK_1_UNSAFE(s, i); \
+    यावत्(__N>0) { \
+        UTF16_पृष्ठभागः_1_UNSAFE(s, i); \
         --__N; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Renamed to U16_SET_CP_LIMIT_UNSAFE, see utf_old.h. */
-#define UTF16_SET_CHAR_LIMIT_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(UTF_IS_FIRST_SURROGATE((s)[(i)-1])) { \
+#परिभाषय UTF16_समुच्चयः_CHAR_सीमा_UNSAFE(s, i) UPRV_खण्डम्_MACRO_BEGIN { \
+    यदि(UTF_IS_FIRST_SURROGATE((s)[(i)-1])) { \
         ++(i); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Use U16_PREV instead, see utf_old.h. */
-#define UTF16_PREV_CHAR_SAFE(s, start, i, c, strict) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF16_पूर्व_CHAR_SAFE(s, start, i, c, strict) UPRV_खण्डम्_MACRO_BEGIN { \
     (c)=(s)[--(i)]; \
-    if(UTF_IS_SECOND_SURROGATE(c)) { \
+    यदि(UTF_IS_SECOND_SURROGATE(c)) { \
         uint16_t __c2; \
-        if((i)>(start) && UTF_IS_FIRST_SURROGATE(__c2=(s)[(i)-1])) { \
+        यदि((i)>(start) && UTF_IS_FIRST_SURROGATE(__c2=(s)[(i)-1])) { \
             --(i); \
-            (c)=UTF16_GET_PAIR_VALUE(__c2, (c)); \
+            (c)=UTF16_GET_PAIR_मानम्(__c2, (c)); \
             /* strict: ((c)&0xfffe)==0xfffe is caught by UTF_IS_ERROR() and UTF_IS_UNICODE_CHAR() */ \
-        } else if(strict) {\
+        } अन्यथा यदि(strict) {\
             /* unmatched second surrogate */ \
-            (c)=UTF_ERROR_VALUE; \
+            (c)=UTF_ERROR_मानम्; \
         } \
-    } else if((strict) && !UTF_IS_UNICODE_CHAR(c)) { \
+    } अन्यथा यदि((strict) && !UTF_IS_UNICODE_CHAR(c)) { \
         /* unmatched first surrogate or other non-character */ \
-        (c)=UTF_ERROR_VALUE; \
+        (c)=UTF_ERROR_मानम्; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Renamed to U16_BACK_1, see utf_old.h. */
-#define UTF16_BACK_1_SAFE(s, start, i) U16_BACK_1(s, start, i)
+#परिभाषय UTF16_पृष्ठभागः_1_SAFE(s, start, i) U16_पृष्ठभागः_1(s, start, i)
 
 /** @deprecated ICU 2.4. Renamed to U16_BACK_N, see utf_old.h. */
-#define UTF16_BACK_N_SAFE(s, start, i, n) U16_BACK_N(s, start, i, n)
+#परिभाषय UTF16_पृष्ठभागः_N_SAFE(s, start, i, n) U16_पृष्ठभागः_N(s, start, i, n)
 
 /** @deprecated ICU 2.4. Renamed to U16_SET_CP_LIMIT, see utf_old.h. */
-#define UTF16_SET_CHAR_LIMIT_SAFE(s, start, i, length) U16_SET_CP_LIMIT(s, start, i, length)
+#परिभाषय UTF16_समुच्चयः_CHAR_सीमा_SAFE(s, start, i, दीर्घता) U16_समुच्चयः_CP_सीमा(s, start, i, दीर्घता)
 
 /* Formerly utf32.h --------------------------------------------------------- */
 
@@ -792,7 +792,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 /* internal definitions ----------------------------------------------------- */
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_IS_SAFE(c, strict) \
+#परिभाषय UTF32_IS_SAFE(c, strict) \
     (!(strict) ? \
         (uint32_t)(c)<=0x10ffff : \
         UTF_IS_UNICODE_CHAR(c))
@@ -808,143 +808,143 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 /* classes of code unit values */
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_IS_SINGLE(uchar) 1
+#परिभाषय UTF32_IS_SINGLE(uchar) 1
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_IS_LEAD(uchar) 0
+#परिभाषय UTF32_IS_LEAD(uchar) 0
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_IS_TRAIL(uchar) 0
+#परिभाषय UTF32_IS_TRAIL(uchar) 0
 
 /* number of code units per code point */
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_NEED_MULTIPLE_UCHAR(c) 0
+#परिभाषय UTF32_NEED_गुणजः_UCHAR(c) 0
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_CHAR_LENGTH(c) 1
+#परिभाषय UTF32_CHAR_दीर्घता(c) 1
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_MAX_CHAR_LENGTH 1
+#परिभाषय UTF32_MAX_CHAR_दीर्घता 1
 
 /* average number of code units compared to UTF-16 */
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_ARRAY_SIZE(size) (size)
+#परिभाषय UTF32_ARRAY_आकार(आकार_2) (आकार_2)
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_GET_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF32_GET_CHAR_UNSAFE(s, i, c) UPRV_खण्डम्_MACRO_BEGIN { \
     (c)=(s)[i]; \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_GET_CHAR_SAFE(s, start, i, length, c, strict) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF32_GET_CHAR_SAFE(s, start, i, दीर्घता, c, strict) UPRV_खण्डम्_MACRO_BEGIN { \
     (c)=(s)[i]; \
-    if(!UTF32_IS_SAFE(c, strict)) { \
-        (c)=UTF_ERROR_VALUE; \
+    यदि(!UTF32_IS_SAFE(c, strict)) { \
+        (c)=UTF_ERROR_मानम्; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /* definitions with forward iteration --------------------------------------- */
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_NEXT_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF32_अग्र_CHAR_UNSAFE(s, i, c) UPRV_खण्डम्_MACRO_BEGIN { \
     (c)=(s)[(i)++]; \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_APPEND_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF32_APPEND_CHAR_UNSAFE(s, i, c) UPRV_खण्डम्_MACRO_BEGIN { \
     (s)[(i)++]=(c); \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_FWD_1_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF32_FWD_1_UNSAFE(s, i) UPRV_खण्डम्_MACRO_BEGIN { \
     ++(i); \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_FWD_N_UNSAFE(s, i, n) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF32_FWD_N_UNSAFE(s, i, n) UPRV_खण्डम्_MACRO_BEGIN { \
     (i)+=(n); \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_SET_CHAR_START_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-} UPRV_BLOCK_MACRO_END
+#परिभाषय UTF32_समुच्चयः_CHAR_START_UNSAFE(s, i) UPRV_खण्डम्_MACRO_BEGIN { \
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_NEXT_CHAR_SAFE(s, i, length, c, strict) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF32_अग्र_CHAR_SAFE(s, i, दीर्घता, c, strict) UPRV_खण्डम्_MACRO_BEGIN { \
     (c)=(s)[(i)++]; \
-    if(!UTF32_IS_SAFE(c, strict)) { \
-        (c)=UTF_ERROR_VALUE; \
+    यदि(!UTF32_IS_SAFE(c, strict)) { \
+        (c)=UTF_ERROR_मानम्; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_APPEND_CHAR_SAFE(s, i, length, c) UPRV_BLOCK_MACRO_BEGIN { \
-    if((uint32_t)(c)<=0x10ffff) { \
+#परिभाषय UTF32_APPEND_CHAR_SAFE(s, i, दीर्घता, c) UPRV_खण्डम्_MACRO_BEGIN { \
+    यदि((uint32_t)(c)<=0x10ffff) { \
         (s)[(i)++]=(c); \
-    } else /* c>0x10ffff, write 0xfffd */ { \
+    } अन्यथा /* c>0x10ffff, write 0xfffd */ { \
         (s)[(i)++]=0xfffd; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_FWD_1_SAFE(s, i, length) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF32_FWD_1_SAFE(s, i, दीर्घता) UPRV_खण्डम्_MACRO_BEGIN { \
     ++(i); \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_FWD_N_SAFE(s, i, length, n) UPRV_BLOCK_MACRO_BEGIN { \
-    if(((i)+=(n))>(length)) { \
-        (i)=(length); \
+#परिभाषय UTF32_FWD_N_SAFE(s, i, दीर्घता, n) UPRV_खण्डम्_MACRO_BEGIN { \
+    यदि(((i)+=(n))>(दीर्घता)) { \
+        (i)=(दीर्घता); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_SET_CHAR_START_SAFE(s, start, i) UPRV_BLOCK_MACRO_BEGIN { \
-} UPRV_BLOCK_MACRO_END
+#परिभाषय UTF32_समुच्चयः_CHAR_START_SAFE(s, start, i) UPRV_खण्डम्_MACRO_BEGIN { \
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /* definitions with backward iteration -------------------------------------- */
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_PREV_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF32_पूर्व_CHAR_UNSAFE(s, i, c) UPRV_खण्डम्_MACRO_BEGIN { \
     (c)=(s)[--(i)]; \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_BACK_1_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF32_पृष्ठभागः_1_UNSAFE(s, i) UPRV_खण्डम्_MACRO_BEGIN { \
     --(i); \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_BACK_N_UNSAFE(s, i, n) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF32_पृष्ठभागः_N_UNSAFE(s, i, n) UPRV_खण्डम्_MACRO_BEGIN { \
     (i)-=(n); \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_SET_CHAR_LIMIT_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-} UPRV_BLOCK_MACRO_END
+#परिभाषय UTF32_समुच्चयः_CHAR_सीमा_UNSAFE(s, i) UPRV_खण्डम्_MACRO_BEGIN { \
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_PREV_CHAR_SAFE(s, start, i, c, strict) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF32_पूर्व_CHAR_SAFE(s, start, i, c, strict) UPRV_खण्डम्_MACRO_BEGIN { \
     (c)=(s)[--(i)]; \
-    if(!UTF32_IS_SAFE(c, strict)) { \
-        (c)=UTF_ERROR_VALUE; \
+    यदि(!UTF32_IS_SAFE(c, strict)) { \
+        (c)=UTF_ERROR_मानम्; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_BACK_1_SAFE(s, start, i) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF32_पृष्ठभागः_1_SAFE(s, start, i) UPRV_खण्डम्_MACRO_BEGIN { \
     --(i); \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_BACK_N_SAFE(s, start, i, n) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय UTF32_पृष्ठभागः_N_SAFE(s, start, i, n) UPRV_खण्डम्_MACRO_BEGIN { \
     (i)-=(n); \
-    if((i)<(start)) { \
+    यदि((i)<(start)) { \
         (i)=(start); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
-#define UTF32_SET_CHAR_LIMIT_SAFE(s, i, length) UPRV_BLOCK_MACRO_BEGIN { \
-} UPRV_BLOCK_MACRO_END
+#परिभाषय UTF32_समुच्चयः_CHAR_सीमा_SAFE(s, i, दीर्घता) UPRV_खण्डम्_MACRO_BEGIN { \
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /* Formerly utf.h, part 2 --------------------------------------------------- */
 
@@ -953,76 +953,76 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
  *
  * @deprecated ICU 2.4. Obsolete, see utf_old.h.
  */
-#define UTF_ARRAY_SIZE(size) UTF16_ARRAY_SIZE(size)
+#परिभाषय UTF_ARRAY_आकार(आकार_2) UTF16_ARRAY_आकार(आकार_2)
 
 /** @deprecated ICU 2.4. Renamed to U16_GET_UNSAFE, see utf_old.h. */
-#define UTF_GET_CHAR_UNSAFE(s, i, c)                 UTF16_GET_CHAR_UNSAFE(s, i, c)
+#परिभाषय UTF_GET_CHAR_UNSAFE(s, i, c)                 UTF16_GET_CHAR_UNSAFE(s, i, c)
 
 /** @deprecated ICU 2.4. Use U16_GET instead, see utf_old.h. */
-#define UTF_GET_CHAR_SAFE(s, start, i, length, c, strict) UTF16_GET_CHAR_SAFE(s, start, i, length, c, strict)
+#परिभाषय UTF_GET_CHAR_SAFE(s, start, i, दीर्घता, c, strict) UTF16_GET_CHAR_SAFE(s, start, i, दीर्घता, c, strict)
 
 
 /** @deprecated ICU 2.4. Renamed to U16_NEXT_UNSAFE, see utf_old.h. */
-#define UTF_NEXT_CHAR_UNSAFE(s, i, c)                UTF16_NEXT_CHAR_UNSAFE(s, i, c)
+#परिभाषय UTF_अग्र_CHAR_UNSAFE(s, i, c)                UTF16_अग्र_CHAR_UNSAFE(s, i, c)
 
 /** @deprecated ICU 2.4. Use U16_NEXT instead, see utf_old.h. */
-#define UTF_NEXT_CHAR_SAFE(s, i, length, c, strict)  UTF16_NEXT_CHAR_SAFE(s, i, length, c, strict)
+#परिभाषय UTF_अग्र_CHAR_SAFE(s, i, दीर्घता, c, strict)  UTF16_अग्र_CHAR_SAFE(s, i, दीर्घता, c, strict)
 
 
 /** @deprecated ICU 2.4. Renamed to U16_APPEND_UNSAFE, see utf_old.h. */
-#define UTF_APPEND_CHAR_UNSAFE(s, i, c)              UTF16_APPEND_CHAR_UNSAFE(s, i, c)
+#परिभाषय UTF_APPEND_CHAR_UNSAFE(s, i, c)              UTF16_APPEND_CHAR_UNSAFE(s, i, c)
 
 /** @deprecated ICU 2.4. Use U16_APPEND instead, see utf_old.h. */
-#define UTF_APPEND_CHAR_SAFE(s, i, length, c)        UTF16_APPEND_CHAR_SAFE(s, i, length, c)
+#परिभाषय UTF_APPEND_CHAR_SAFE(s, i, दीर्घता, c)        UTF16_APPEND_CHAR_SAFE(s, i, दीर्घता, c)
 
 
 /** @deprecated ICU 2.4. Renamed to U16_FWD_1_UNSAFE, see utf_old.h. */
-#define UTF_FWD_1_UNSAFE(s, i)                       UTF16_FWD_1_UNSAFE(s, i)
+#परिभाषय UTF_FWD_1_UNSAFE(s, i)                       UTF16_FWD_1_UNSAFE(s, i)
 
 /** @deprecated ICU 2.4. Renamed to U16_FWD_1, see utf_old.h. */
-#define UTF_FWD_1_SAFE(s, i, length)                 UTF16_FWD_1_SAFE(s, i, length)
+#परिभाषय UTF_FWD_1_SAFE(s, i, दीर्घता)                 UTF16_FWD_1_SAFE(s, i, दीर्घता)
 
 
 /** @deprecated ICU 2.4. Renamed to U16_FWD_N_UNSAFE, see utf_old.h. */
-#define UTF_FWD_N_UNSAFE(s, i, n)                    UTF16_FWD_N_UNSAFE(s, i, n)
+#परिभाषय UTF_FWD_N_UNSAFE(s, i, n)                    UTF16_FWD_N_UNSAFE(s, i, n)
 
 /** @deprecated ICU 2.4. Renamed to U16_FWD_N, see utf_old.h. */
-#define UTF_FWD_N_SAFE(s, i, length, n)              UTF16_FWD_N_SAFE(s, i, length, n)
+#परिभाषय UTF_FWD_N_SAFE(s, i, दीर्घता, n)              UTF16_FWD_N_SAFE(s, i, दीर्घता, n)
 
 
 /** @deprecated ICU 2.4. Renamed to U16_SET_CP_START_UNSAFE, see utf_old.h. */
-#define UTF_SET_CHAR_START_UNSAFE(s, i)              UTF16_SET_CHAR_START_UNSAFE(s, i)
+#परिभाषय UTF_समुच्चयः_CHAR_START_UNSAFE(s, i)              UTF16_समुच्चयः_CHAR_START_UNSAFE(s, i)
 
 /** @deprecated ICU 2.4. Renamed to U16_SET_CP_START, see utf_old.h. */
-#define UTF_SET_CHAR_START_SAFE(s, start, i)         UTF16_SET_CHAR_START_SAFE(s, start, i)
+#परिभाषय UTF_समुच्चयः_CHAR_START_SAFE(s, start, i)         UTF16_समुच्चयः_CHAR_START_SAFE(s, start, i)
 
 
 /** @deprecated ICU 2.4. Renamed to U16_PREV_UNSAFE, see utf_old.h. */
-#define UTF_PREV_CHAR_UNSAFE(s, i, c)                UTF16_PREV_CHAR_UNSAFE(s, i, c)
+#परिभाषय UTF_पूर्व_CHAR_UNSAFE(s, i, c)                UTF16_पूर्व_CHAR_UNSAFE(s, i, c)
 
 /** @deprecated ICU 2.4. Use U16_PREV instead, see utf_old.h. */
-#define UTF_PREV_CHAR_SAFE(s, start, i, c, strict)   UTF16_PREV_CHAR_SAFE(s, start, i, c, strict)
+#परिभाषय UTF_पूर्व_CHAR_SAFE(s, start, i, c, strict)   UTF16_पूर्व_CHAR_SAFE(s, start, i, c, strict)
 
 
 /** @deprecated ICU 2.4. Renamed to U16_BACK_1_UNSAFE, see utf_old.h. */
-#define UTF_BACK_1_UNSAFE(s, i)                      UTF16_BACK_1_UNSAFE(s, i)
+#परिभाषय UTF_पृष्ठभागः_1_UNSAFE(s, i)                      UTF16_पृष्ठभागः_1_UNSAFE(s, i)
 
 /** @deprecated ICU 2.4. Renamed to U16_BACK_1, see utf_old.h. */
-#define UTF_BACK_1_SAFE(s, start, i)                 UTF16_BACK_1_SAFE(s, start, i)
+#परिभाषय UTF_पृष्ठभागः_1_SAFE(s, start, i)                 UTF16_पृष्ठभागः_1_SAFE(s, start, i)
 
 
 /** @deprecated ICU 2.4. Renamed to U16_BACK_N_UNSAFE, see utf_old.h. */
-#define UTF_BACK_N_UNSAFE(s, i, n)                   UTF16_BACK_N_UNSAFE(s, i, n)
+#परिभाषय UTF_पृष्ठभागः_N_UNSAFE(s, i, n)                   UTF16_पृष्ठभागः_N_UNSAFE(s, i, n)
 
 /** @deprecated ICU 2.4. Renamed to U16_BACK_N, see utf_old.h. */
-#define UTF_BACK_N_SAFE(s, start, i, n)              UTF16_BACK_N_SAFE(s, start, i, n)
+#परिभाषय UTF_पृष्ठभागः_N_SAFE(s, start, i, n)              UTF16_पृष्ठभागः_N_SAFE(s, start, i, n)
 
 
 /** @deprecated ICU 2.4. Renamed to U16_SET_CP_LIMIT_UNSAFE, see utf_old.h. */
-#define UTF_SET_CHAR_LIMIT_UNSAFE(s, i)              UTF16_SET_CHAR_LIMIT_UNSAFE(s, i)
+#परिभाषय UTF_समुच्चयः_CHAR_सीमा_UNSAFE(s, i)              UTF16_समुच्चयः_CHAR_सीमा_UNSAFE(s, i)
 
 /** @deprecated ICU 2.4. Renamed to U16_SET_CP_LIMIT, see utf_old.h. */
-#define UTF_SET_CHAR_LIMIT_SAFE(s, start, i, length) UTF16_SET_CHAR_LIMIT_SAFE(s, start, i, length)
+#परिभाषय UTF_समुच्चयः_CHAR_सीमा_SAFE(s, start, i, दीर्घता) UTF16_समुच्चयः_CHAR_सीमा_SAFE(s, start, i, दीर्घता)
 
 /* Define default macros (UTF-16 "safe") ------------------------------------ */
 
@@ -1031,42 +1031,42 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
  * Same as UTF16_IS_SINGLE.
  * @deprecated ICU 2.4. Renamed to U_IS_SINGLE and U16_IS_SINGLE, see utf_old.h.
  */
-#define UTF_IS_SINGLE(uchar) U16_IS_SINGLE(uchar)
+#परिभाषय UTF_IS_SINGLE(uchar) U16_IS_SINGLE(uchar)
 
 /**
  * Is this code unit the first one of several (a lead surrogate)?
  * Same as UTF16_IS_LEAD.
  * @deprecated ICU 2.4. Renamed to U_IS_LEAD and U16_IS_LEAD, see utf_old.h.
  */
-#define UTF_IS_LEAD(uchar) U16_IS_LEAD(uchar)
+#परिभाषय UTF_IS_LEAD(uchar) U16_IS_LEAD(uchar)
 
 /**
  * Is this code unit one of several but not the first one (a trail surrogate)?
  * Same as UTF16_IS_TRAIL.
  * @deprecated ICU 2.4. Renamed to U_IS_TRAIL and U16_IS_TRAIL, see utf_old.h.
  */
-#define UTF_IS_TRAIL(uchar) U16_IS_TRAIL(uchar)
+#परिभाषय UTF_IS_TRAIL(uchar) U16_IS_TRAIL(uchar)
 
 /**
  * Does this code point require multiple code units (is it a supplementary code point)?
  * Same as UTF16_NEED_MULTIPLE_UCHAR.
  * @deprecated ICU 2.4. Use U16_LENGTH or test ((uint32_t)(c)>0xffff) instead.
  */
-#define UTF_NEED_MULTIPLE_UCHAR(c) UTF16_NEED_MULTIPLE_UCHAR(c)
+#परिभाषय UTF_NEED_गुणजः_UCHAR(c) UTF16_NEED_गुणजः_UCHAR(c)
 
 /**
  * How many code units are used to encode this code point (1 or 2)?
  * Same as UTF16_CHAR_LENGTH.
  * @deprecated ICU 2.4. Renamed to U16_LENGTH, see utf_old.h.
  */
-#define UTF_CHAR_LENGTH(c) U16_LENGTH(c)
+#परिभाषय UTF_CHAR_दीर्घता(c) U16_दीर्घता(c)
 
 /**
  * How many code units are used at most for any Unicode code point (2)?
  * Same as UTF16_MAX_CHAR_LENGTH.
  * @deprecated ICU 2.4. Renamed to U16_MAX_LENGTH, see utf_old.h.
  */
-#define UTF_MAX_CHAR_LENGTH U16_MAX_LENGTH
+#परिभाषय UTF_MAX_CHAR_दीर्घता U16_MAX_दीर्घता
 
 /**
  * Set c to the code point that contains the code unit i.
@@ -1077,7 +1077,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
  *
  * @deprecated ICU 2.4. Renamed to U16_GET, see utf_old.h.
  */
-#define UTF_GET_CHAR(s, start, i, length, c) U16_GET(s, start, i, length, c)
+#परिभाषय UTF_GET_CHAR(s, start, i, दीर्घता, c) U16_GET(s, start, i, दीर्घता, c)
 
 /**
  * Set c to the code point that starts at code unit i
@@ -1090,7 +1090,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
  *
  * @deprecated ICU 2.4. Renamed to U16_NEXT, see utf_old.h.
  */
-#define UTF_NEXT_CHAR(s, i, length, c) U16_NEXT(s, i, length, c)
+#परिभाषय UTF_अग्र_CHAR(s, i, दीर्घता, c) U16_अग्र(s, i, दीर्घता, c)
 
 /**
  * Append the code units of code point c to the string at index i
@@ -1103,7 +1103,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
  *
  * @deprecated ICU 2.4. Use U16_APPEND instead, see utf_old.h.
  */
-#define UTF_APPEND_CHAR(s, i, length, c) UTF16_APPEND_CHAR_SAFE(s, i, length, c)
+#परिभाषय UTF_APPEND_CHAR(s, i, दीर्घता, c) UTF16_APPEND_CHAR_SAFE(s, i, दीर्घता, c)
 
 /**
  * Advance i to beyond the code units of the code point that begins at i.
@@ -1114,7 +1114,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
  *
  * @deprecated ICU 2.4. Renamed to U16_FWD_1, see utf_old.h.
  */
-#define UTF_FWD_1(s, i, length) U16_FWD_1(s, i, length)
+#परिभाषय UTF_FWD_1(s, i, दीर्घता) U16_FWD_1(s, i, दीर्घता)
 
 /**
  * Advance i to beyond the code units of the n code points where the first one begins at i.
@@ -1125,7 +1125,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
  *
  * @deprecated ICU 2.4. Renamed to U16_FWD_N, see utf_old.h.
  */
-#define UTF_FWD_N(s, i, length, n) U16_FWD_N(s, i, length, n)
+#परिभाषय UTF_FWD_N(s, i, दीर्घता, n) U16_FWD_N(s, i, दीर्घता, n)
 
 /**
  * Take the random-access index i and adjust it so that it points to the beginning
@@ -1141,7 +1141,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
  *
  * @deprecated ICU 2.4. Renamed to U16_SET_CP_START, see utf_old.h.
  */
-#define UTF_SET_CHAR_START(s, start, i) U16_SET_CP_START(s, start, i)
+#परिभाषय UTF_समुच्चयः_CHAR_START(s, start, i) U16_समुच्चयः_CP_START(s, start, i)
 
 /**
  * Set c to the code point that has code units before i
@@ -1154,7 +1154,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
  *
  * @deprecated ICU 2.4. Renamed to U16_PREV, see utf_old.h.
  */
-#define UTF_PREV_CHAR(s, start, i, c) U16_PREV(s, start, i, c)
+#परिभाषय UTF_पूर्व_CHAR(s, start, i, c) U16_पूर्व(s, start, i, c)
 
 /**
  * Move i backward (towards the beginning of the string)
@@ -1167,7 +1167,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
  *
  * @deprecated ICU 2.4. Renamed to U16_BACK_1, see utf_old.h.
  */
-#define UTF_BACK_1(s, start, i) U16_BACK_1(s, start, i)
+#परिभाषय UTF_पृष्ठभागः_1(s, start, i) U16_पृष्ठभागः_1(s, start, i)
 
 /**
  * Move i backward (towards the beginning of the string)
@@ -1180,7 +1180,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
  *
  * @deprecated ICU 2.4. Renamed to U16_BACK_N, see utf_old.h.
  */
-#define UTF_BACK_N(s, start, i, n) U16_BACK_N(s, start, i, n)
+#परिभाषय UTF_पृष्ठभागः_N(s, start, i, n) U16_पृष्ठभागः_N(s, start, i, n)
 
 /**
  * Take the random-access index i and adjust it so that it points beyond
@@ -1196,8 +1196,8 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
  *
  * @deprecated ICU 2.4. Renamed to U16_SET_CP_LIMIT, see utf_old.h.
  */
-#define UTF_SET_CHAR_LIMIT(s, start, i, length) U16_SET_CP_LIMIT(s, start, i, length)
+#परिभाषय UTF_समुच्चयः_CHAR_सीमा(s, start, i, दीर्घता) U16_समुच्चयः_CP_सीमा(s, start, i, दीर्घता)
 
-#endif  // !U_HIDE_DEPRECATED_API && !U_HIDE_OBSOLETE_UTF_OLD_H
+#यदि_अन्तः  // !U_HIDE_DEPRECATED_API && !U_HIDE_OBSOLETE_UTF_OLD_H
 
-#endif
+#यदि_अन्तः

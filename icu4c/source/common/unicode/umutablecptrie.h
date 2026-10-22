@@ -4,18 +4,18 @@
 // umutablecptrie.h (split out of ucptrie.h)
 // created: 2018jan24 Markus W. Scherer
 
-#ifndef __UMUTABLECPTRIE_H__
-#define __UMUTABLECPTRIE_H__
+#यदि_अपरिभाषितम् __UMUTABLECPTRIE_H__
+#परिभाषय __UMUTABLECPTRIE_H__
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#include "unicode/ucpmap.h"
-#include "unicode/ucptrie.h"
-#include "unicode/utf8.h"
+#अन्तर्भाव "unicode/ucpmap.h"
+#अन्तर्भाव "unicode/ucptrie.h"
+#अन्तर्भाव "unicode/utf8.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
+#अन्तर्भाव "unicode/localpointer.h"
+#यदि_अन्तः   // U_SHOW_CPLUSPLUS_API
 
 U_CDECL_BEGIN
 
@@ -46,7 +46,7 @@ U_CDECL_BEGIN
  * @see umutablecptrie_buildImmutable
  * @stable ICU 63
  */
-typedef struct UMutableCPTrie UMutableCPTrie;
+प्रकारनिर्देश संरचना UMutableCPTrie UMutableCPTrie;
 
 /**
  * Creates a mutable trie that initially maps each Unicode code point to the same value.
@@ -62,7 +62,7 @@ typedef struct UMutableCPTrie UMutableCPTrie;
  * @stable ICU 63
  */
 U_CAPI UMutableCPTrie * U_EXPORT2
-umutablecptrie_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode);
+umutablecptrie_open(uint32_t initial_मानम्, uint32_t error_मानम्, UError_संहिता *p_Error_संहिता);
 
 /**
  * Clones a mutable trie.
@@ -74,7 +74,7 @@ umutablecptrie_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErr
  * @stable ICU 63
  */
 U_CAPI UMutableCPTrie * U_EXPORT2
-umutablecptrie_clone(const UMutableCPTrie *other, UErrorCode *pErrorCode);
+umutablecptrie_clone(ध्रुव UMutableCPTrie *other, UError_संहिता *p_Error_संहिता);
 
 /**
  * Closes a mutable trie and releases associated memory.
@@ -82,7 +82,7 @@ umutablecptrie_clone(const UMutableCPTrie *other, UErrorCode *pErrorCode);
  * @param trie the trie
  * @stable ICU 63
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 umutablecptrie_close(UMutableCPTrie *trie);
 
 /**
@@ -95,7 +95,7 @@ umutablecptrie_close(UMutableCPTrie *trie);
  * @stable ICU 63
  */
 U_CAPI UMutableCPTrie * U_EXPORT2
-umutablecptrie_fromUCPMap(const UCPMap *map, UErrorCode *pErrorCode);
+umutablecptrie_fromUCPMap(ध्रुव UCPMap *map, UError_संहिता *p_Error_संहिता);
 
 /**
  * Creates a mutable trie with the same contents as the immutable one.
@@ -107,7 +107,7 @@ umutablecptrie_fromUCPMap(const UCPMap *map, UErrorCode *pErrorCode);
  * @stable ICU 63
  */
 U_CAPI UMutableCPTrie * U_EXPORT2
-umutablecptrie_fromUCPTrie(const UCPTrie *trie, UErrorCode *pErrorCode);
+umutablecptrie_fromUCPTrie(ध्रुव UCPTrie *trie, UError_संहिता *p_Error_संहिता);
 
 /**
  * Returns the value for a code point as stored in the trie.
@@ -118,7 +118,7 @@ umutablecptrie_fromUCPTrie(const UCPTrie *trie, UErrorCode *pErrorCode);
  * @stable ICU 63
  */
 U_CAPI uint32_t U_EXPORT2
-umutablecptrie_get(const UMutableCPTrie *trie, UChar32 c);
+umutablecptrie_get(ध्रुव UMutableCPTrie *trie, UChar32 c);
 
 /**
  * Returns the last code point such that all those from start to there have the same value.
@@ -150,9 +150,9 @@ umutablecptrie_get(const UMutableCPTrie *trie, UChar32 c);
  * @stable ICU 63
  */
 U_CAPI UChar32 U_EXPORT2
-umutablecptrie_getRange(const UMutableCPTrie *trie, UChar32 start,
-                        UCPMapRangeOption option, uint32_t surrogateValue,
-                        UCPMapValueFilter *filter, const void *context, uint32_t *pValue);
+umutablecptrie_getRange(ध्रुव UMutableCPTrie *trie, UChar32 start,
+                        UCPMapRangeOption option, uint32_t surrogate_मानम्,
+                        UCPMap_मानम्_Filter *filter, ध्रुव शून्य *context, uint32_t *p_मानम्);
 
 /**
  * Sets a value for a code point.
@@ -163,8 +163,8 @@ umutablecptrie_getRange(const UMutableCPTrie *trie, UChar32 start,
  * @param pErrorCode an in/out ICU UErrorCode
  * @stable ICU 63
  */
-U_CAPI void U_EXPORT2
-umutablecptrie_set(UMutableCPTrie *trie, UChar32 c, uint32_t value, UErrorCode *pErrorCode);
+U_CAPI शून्य U_EXPORT2
+umutablecptrie_समुच्चयः(UMutableCPTrie *trie, UChar32 c, uint32_t मानम्_2, UError_संहिता *p_Error_संहिता);
 
 /**
  * Sets a value for each code point [start..end].
@@ -177,10 +177,10 @@ umutablecptrie_set(UMutableCPTrie *trie, UChar32 c, uint32_t value, UErrorCode *
  * @param pErrorCode an in/out ICU UErrorCode
  * @stable ICU 63
  */
-U_CAPI void U_EXPORT2
-umutablecptrie_setRange(UMutableCPTrie *trie,
-                        UChar32 start, UChar32 end,
-                        uint32_t value, UErrorCode *pErrorCode);
+U_CAPI शून्य U_EXPORT2
+umutablecptrie_समुच्चयः_Range(UMutableCPTrie *trie,
+                        UChar32 start, UChar32 अन्तः,
+                        uint32_t मानम्_2, UError_संहिता *p_Error_संहिता);
 
 /**
  * Compacts the data and builds an immutable UCPTrie according to the parameters.
@@ -213,12 +213,12 @@ umutablecptrie_setRange(UMutableCPTrie *trie,
  * @stable ICU 63
  */
 U_CAPI UCPTrie * U_EXPORT2
-umutablecptrie_buildImmutable(UMutableCPTrie *trie, UCPTrieType type, UCPTrieValueWidth valueWidth,
-                              UErrorCode *pErrorCode);
+umutablecptrie_buildImmutable(UMutableCPTrie *trie, UCPTrieType type, UCPTrie_मानम्_विस्तारः मानम्_विस्तारः,
+                              UError_संहिता *p_Error_संहिता);
 
-U_CDECL_END
+U_CDECL_अन्तः
 
-#if U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -233,8 +233,8 @@ U_NAMESPACE_BEGIN
  */
 U_DEFINE_LOCAL_OPEN_POINTER(LocalUMutableCPTriePointer, UMutableCPTrie, umutablecptrie_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif
+#यदि_अन्तः
 
-#endif
+#यदि_अन्तः

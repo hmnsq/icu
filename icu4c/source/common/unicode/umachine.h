@@ -22,8 +22,8 @@
 *   the UTF-handling macros made this unmaintainable.
 */
 
-#ifndef __UMACHINE_H__
-#define __UMACHINE_H__
+#यदि_अपरिभाषितम् __UMACHINE_H__
+#परिभाषय __UMACHINE_H__
 
 
 /**
@@ -43,14 +43,14 @@
 /* which are contained in the platform-specific file platform.h             */
 /*==========================================================================*/
 
-#include "unicode/ptypes.h" /* platform.h is included in ptypes.h */
+#अन्तर्भाव "unicode/ptypes.h" /* platform.h is included in ptypes.h */
 
 /*
  * ANSI C headers:
  * stddef.h defines wchar_t
  */
-#include <stdbool.h>
-#include <stddef.h>
+#अन्तर्भाव <stdbool.h>
+#अन्तर्भाव <stddef.h>
 
 /*==========================================================================*/
 /* For C wrappers, we use the symbol U_CAPI.                                */
@@ -76,48 +76,48 @@
  * @stable ICU 2.4
  */
 
-#ifdef __cplusplus
-#   define U_CFUNC extern "C"
-#   define U_CDECL_BEGIN extern "C" {
-#   define U_CDECL_END   }
-#else
-#   define U_CFUNC extern
+#यदि_परिभाषितम् __cplusplus
+#   define U_CFUNC बाह्य "C"
+#   define U_CDECL_BEGIN बाह्य "C" {
+#   define U_CDECL_अन्तः   }
+#अन्यथा
+#   define U_CFUNC बाह्य
 #   define U_CDECL_BEGIN
-#   define U_CDECL_END
-#endif
+#   define U_CDECL_अन्तः
+#यदि_अन्तः
 
-#ifndef U_ATTRIBUTE_DEPRECATED
+#यदि_अपरिभाषितम् U_ATTRIBUTE_DEPRECATED
 /**
  * \def U_ATTRIBUTE_DEPRECATED
  *  This is used for GCC specific attributes
  * @internal
  */
-#if U_GCC_MAJOR_MINOR >= 302
+#यदि U_GCC_MAJOR_MINOR >= 302
 #    define U_ATTRIBUTE_DEPRECATED __attribute__ ((deprecated))
 /**
  * \def U_ATTRIBUTE_DEPRECATED
  * This is used for Visual C++ specific attributes 
  * @internal
  */
-#elif defined(_MSC_VER) && (_MSC_VER >= 1400)
+#नोचेद्यदि defined(_MSC_VER) && (_MSC_VER >= 1400)
 #    define U_ATTRIBUTE_DEPRECATED __declspec(deprecated)
-#else
+#अन्यथा
 #    define U_ATTRIBUTE_DEPRECATED
-#endif
-#endif
+#यदि_अन्तः
+#यदि_अन्तः
 
 /** This is used to declare a function as a public ICU C API @stable ICU 2.0*/
-#define U_CAPI U_CFUNC U_EXPORT
+#परिभाषय U_CAPI U_CFUNC U_EXPORT
 /** Obsolete/same as U_CAPI; was used to declare a function as a stable public ICU C API*/
-#define U_STABLE U_CAPI
+#परिभाषय U_STABLE U_CAPI
 /** Obsolete/same as U_CAPI; was used to declare a function as a draft public ICU C API  */
-#define U_DRAFT  U_CAPI
+#परिभाषय U_DRAFT  U_CAPI
 /** This is used to declare a function as a deprecated public ICU C API  */
-#define U_DEPRECATED U_CAPI U_ATTRIBUTE_DEPRECATED
+#परिभाषय U_DEPRECATED U_CAPI U_ATTRIBUTE_DEPRECATED
 /** Obsolete/same as U_CAPI; was used to declare a function as an obsolete public ICU C API  */
-#define U_OBSOLETE U_CAPI
+#परिभाषय U_OBSOLETE U_CAPI
 /** Obsolete/same as U_CAPI; was used to declare a function as an internal ICU C API  */
-#define U_INTERNAL U_CAPI
+#परिभाषय U_आन्तरिकम् U_CAPI
 
 /**
  * \def U_FORCE_INLINE
@@ -129,17 +129,17 @@
  *
  * @internal
  */
-#ifdef U_FORCE_INLINE
+#यदि_परिभाषितम् U_FORCE_INLINE
     // already defined
-#elif defined(U_IN_DOXYGEN)
-#  define U_FORCE_INLINE inline
-#elif (defined(__clang__) && __clang__) || U_GCC_MAJOR_MINOR != 0
+#नोचेद्यदि defined(U_अन्तर्_DOXYGEN)
+#  define U_FORCE_INLINE अन्तःस्थ
+#नोचेद्यदि (defined(__clang__) && __clang__) || U_GCC_MAJOR_MINOR != 0
 #  define U_FORCE_INLINE [[gnu::always_inline]]
-#elif defined(U_REAL_MSVC)
+#नोचेद्यदि defined(U_REAL_MSVC)
 #  define U_FORCE_INLINE __forceinline
-#else
-#  define U_FORCE_INLINE inline
-#endif
+#अन्यथा
+#  define U_FORCE_INLINE अन्तःस्थ
+#यदि_अन्तः
 
 // Before ICU 65, function-like, multi-statement ICU macros were just defined as
 // series of statements wrapped in { } blocks and the caller could choose to
@@ -165,65 +165,65 @@
  * Defined as the "do" keyword by default.
  * @internal
  */
-#ifndef UPRV_BLOCK_MACRO_BEGIN
-#define UPRV_BLOCK_MACRO_BEGIN do
-#endif
+#यदि_अपरिभाषितम् UPRV_खण्डम्_MACRO_BEGIN
+#परिभाषय UPRV_खण्डम्_MACRO_BEGIN कुरु
+#यदि_अन्तः
 
 /**
  * \def UPRV_BLOCK_MACRO_END
  * Defined as "while (false)" by default.
  * @internal
  */
-#ifndef UPRV_BLOCK_MACRO_END
-#define UPRV_BLOCK_MACRO_END while (false)
-#endif
+#यदि_अपरिभाषितम् UPRV_खण्डम्_MACRO_अन्तः
+#परिभाषय UPRV_खण्डम्_MACRO_अन्तः यावत् (false)
+#यदि_अन्तः
 
 /*==========================================================================*/
 /* limits for int32_t etc., like in POSIX inttypes.h                        */
 /*==========================================================================*/
 
-#ifndef INT8_MIN
+#यदि_अपरिभाषितम् INT8_MIN
 /** The smallest value an 8 bit signed integer can hold @stable ICU 2.0 */
 #   define INT8_MIN        ((int8_t)(-128))
-#endif
-#ifndef INT16_MIN
+#यदि_अन्तः
+#यदि_अपरिभाषितम् INT16_MIN
 /** The smallest value a 16 bit signed integer can hold @stable ICU 2.0 */
 #   define INT16_MIN       ((int16_t)(-32767-1))
-#endif
-#ifndef INT32_MIN
+#यदि_अन्तः
+#यदि_अपरिभाषितम् INT32_MIN
 /** The smallest value a 32 bit signed integer can hold @stable ICU 2.0 */
 #   define INT32_MIN       ((int32_t)(-2147483647-1))
-#endif
+#यदि_अन्तः
 
-#ifndef INT8_MAX
+#यदि_अपरिभाषितम् INT8_MAX
 /** The largest value an 8 bit signed integer can hold @stable ICU 2.0 */
 #   define INT8_MAX        ((int8_t)(127))
-#endif
-#ifndef INT16_MAX
+#यदि_अन्तः
+#यदि_अपरिभाषितम् INT16_MAX
 /** The largest value a 16 bit signed integer can hold @stable ICU 2.0 */
 #   define INT16_MAX       ((int16_t)(32767))
-#endif
-#ifndef INT32_MAX
+#यदि_अन्तः
+#यदि_अपरिभाषितम् INT32_MAX
 /** The largest value a 32 bit signed integer can hold @stable ICU 2.0 */
 #   define INT32_MAX       ((int32_t)(2147483647))
-#endif
+#यदि_अन्तः
 
-#ifndef UINT8_MAX
+#यदि_अपरिभाषितम् UINT8_MAX
 /** The largest value an 8 bit unsigned integer can hold @stable ICU 2.0 */
 #   define UINT8_MAX       ((uint8_t)(255U))
-#endif
-#ifndef UINT16_MAX
+#यदि_अन्तः
+#यदि_अपरिभाषितम् UINT16_MAX
 /** The largest value a 16 bit unsigned integer can hold @stable ICU 2.0 */
 #   define UINT16_MAX      ((uint16_t)(65535U))
-#endif
-#ifndef UINT32_MAX
+#यदि_अन्तः
+#यदि_अपरिभाषितम् UINT32_MAX
 /** The largest value a 32 bit unsigned integer can hold @stable ICU 2.0 */
 #   define UINT32_MAX      ((uint32_t)(4294967295U))
-#endif
+#यदि_अन्तः
 
-#if defined(U_INT64_T_UNAVAILABLE)
-# error int64_t is required for decimal format and rule-based number format.
-#else
+#यदि defined(U_INT64_T_UNAVAILABLE)
+# error int64_t is required प्रति decimal format and नियमः-based सङ्ख्या format.
+#अन्यथा
 # ifndef INT64_C
 /**
  * Provides a platform independent way to specify a signed 64-bit integer constant.
@@ -252,7 +252,7 @@
 /** The largest value a 64 bit unsigned integer can hold @stable ICU 2.8 */
 #     define U_UINT64_MAX      ((uint64_t)(UINT64_C(18446744073709551615)))
 # endif
-#endif
+#यदि_अन्तः
 
 /*==========================================================================*/
 /* Boolean data type                                                        */
@@ -266,7 +266,7 @@
  *
  * @stable ICU 2.0
  */
-typedef int8_t UBool;
+प्रकारनिर्देश int8_t UBool;
 
 /**
  * \def U_DEFINE_FALSE_AND_TRUE
@@ -280,31 +280,31 @@ typedef int8_t UBool;
  *
  * @internal ICU 68
  */
-#ifdef U_DEFINE_FALSE_AND_TRUE
+#यदि_परिभाषितम् U_DEFINE_FALSE_AND_TRUE
     // Use the predefined value.
-#else
+#अन्यथा
     // Default to avoiding collision with non-macro definitions of FALSE & TRUE.
 #   define U_DEFINE_FALSE_AND_TRUE 0
-#endif
+#यदि_अन्तः
 
-#if U_DEFINE_FALSE_AND_TRUE || defined(U_IN_DOXYGEN)
-#ifndef TRUE
+#यदि U_DEFINE_FALSE_AND_TRUE || defined(U_अन्तर्_DOXYGEN)
+#यदि_अपरिभाषितम् TRUE
 /**
  * The TRUE value of a UBool.
  *
  * @deprecated ICU 68 Use standard "true" instead.
  */
 #   define TRUE  1
-#endif
-#ifndef FALSE
+#यदि_अन्तः
+#यदि_अपरिभाषितम् FALSE
 /**
  * The FALSE value of a UBool.
  *
  * @deprecated ICU 68 Use standard "false" instead.
  */
 #   define FALSE 0
-#endif
-#endif  // U_DEFINE_FALSE_AND_TRUE
+#यदि_अन्तः
+#यदि_अन्तः  // U_DEFINE_FALSE_AND_TRUE
 
 /*==========================================================================*/
 /* Unicode data types                                                       */
@@ -324,19 +324,19 @@ typedef int8_t UBool;
  *
  * @stable ICU 2.0
  */
-#if !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
+#यदि !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
 #   ifdef __STDC_ISO_10646__
-#       if (U_SIZEOF_WCHAR_T==2)
+#       यदि (U_SIZEOF_WCHAR_T==2)
 #           define U_WCHAR_IS_UTF16
 #       elif (U_SIZEOF_WCHAR_T==4)
 #           define  U_WCHAR_IS_UTF32
 #       endif
 #   elif defined __UCS2__
-#       if (U_PF_OS390 <= U_PLATFORM && U_PLATFORM <= U_PF_OS400) && (U_SIZEOF_WCHAR_T==2)
+#       यदि (U_PF_OS390 <= U_PLATFORM && U_PLATFORM <= U_PF_OS400) && (U_SIZEOF_WCHAR_T==2)
 #           define U_WCHAR_IS_UTF16
 #       endif
 #   elif defined(__UCS4__) || (U_PLATFORM == U_PF_OS400 && defined(__UTF32__))
-#       if (U_SIZEOF_WCHAR_T==4)
+#       यदि (U_SIZEOF_WCHAR_T==4)
 #           define U_WCHAR_IS_UTF32
 #       endif
 #   elif U_PLATFORM_IS_DARWIN_BASED || (U_SIZEOF_WCHAR_T==4 && U_PLATFORM_IS_LINUX_BASED)
@@ -344,25 +344,25 @@ typedef int8_t UBool;
 #   elif U_PLATFORM_HAS_WIN32_API
 #       define U_WCHAR_IS_UTF16
 #   endif
-#endif
+#यदि_अन्तः
 
 /* UChar and UChar32 definitions -------------------------------------------- */
 
 /** Number of bytes in a UChar (always 2). @stable ICU 2.0 */
-#define U_SIZEOF_UCHAR 2
+#परिभाषय U_SIZEOF_UCHAR 2
 
 /**
  * \def U_CHAR16_IS_TYPEDEF
  * If 1, then char16_t is a typedef and not a real type (yet)
  * @internal
  */
-#if defined(_MSC_VER) && (_MSC_VER < 1900)
+#यदि defined(_MSC_VER) && (_MSC_VER < 1900)
 // Versions of Visual Studio/MSVC below 2015 do not support char16_t as a real type,
 // and instead use a typedef.  https://msdn.microsoft.com/library/bb531344.aspx
 # define U_CHAR16_IS_TYPEDEF 1
-#else
+#अन्यथा
 # define U_CHAR16_IS_TYPEDEF 0
-#endif
+#यदि_अन्तः
 
 
 /**
@@ -389,18 +389,18 @@ typedef int8_t UBool;
  * @stable ICU 4.4
  */
 
-#if 1
+#यदि 1
     // #if 1 is normal. UChar defaults to char16_t in C++.
     // For configuration testing of UChar=uint16_t temporarily change this to #if 0.
-#else
+#अन्यथा
 #   define UCHAR_TYPE uint16_t
-#endif
+#यदि_अन्तः
 
-#if defined(U_ALL_IMPLEMENTATION) || !defined(UCHAR_TYPE)
-    typedef char16_t UChar;
-#else
-    typedef UCHAR_TYPE UChar;
-#endif
+#यदि defined(U_ALL_IMPLEMENTATION) || !defined(UCHAR_TYPE)
+    प्रकारनिर्देश char16_t UChar;
+#अन्यथा
+    प्रकारनिर्देश UCHAR_TYPE UChar;
+#यदि_अन्तः
 
 /**
  * \var OldUChar
@@ -421,13 +421,13 @@ typedef int8_t UBool;
  *
  * @stable ICU 59
  */
-#if U_SIZEOF_WCHAR_T==2
-    typedef wchar_t OldUChar;
-#elif defined(__CHAR16_TYPE__)
-    typedef __CHAR16_TYPE__ OldUChar;
-#else
-    typedef uint16_t OldUChar;
-#endif
+#यदि U_SIZEOF_WCHAR_T==2
+    प्रकारनिर्देश wchar_t OldUChar;
+#नोचेद्यदि defined(__CHAR16_TYPE__)
+    प्रकारनिर्देश __CHAR16_TYPE__ OldUChar;
+#अन्यथा
+    प्रकारनिर्देश uint16_t OldUChar;
+#यदि_अन्तः
 
 /**
  * Define UChar32 as a type for single Unicode code points.
@@ -446,7 +446,7 @@ typedef int8_t UBool;
  * @see U_SENTINEL
  * @stable ICU 2.4
  */
-typedef int32_t UChar32;
+प्रकारनिर्देश int32_t UChar32;
 
 /**
  * This value is intended for sentinel values for APIs that
@@ -466,8 +466,8 @@ typedef int32_t UChar32;
  * @see UChar32
  * @stable ICU 2.4
  */
-#define U_SENTINEL (-1)
+#परिभाषय U_SENTINEL (-1)
 
-#include "unicode/urename.h"
+#अन्तर्भाव "unicode/urename.h"
 
-#endif
+#यदि_अन्तः

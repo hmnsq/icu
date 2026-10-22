@@ -20,44 +20,44 @@
  *
  */
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#यदि !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv_cb.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "cmemory.h"
+#अन्तर्भाव "unicode/ucnv_cb.h"
+#अन्तर्भाव "ucnv_bld.h"
+#अन्तर्भाव "ucnv_cnv.h"
+#अन्तर्भाव "cmemory.h"
 
 /* need to update the offsets when the target moves. */
 /* Note: Recursion may occur in the cb functions, be sure to update the offsets correctly
 if you don't use ucnv_cbXXX functions.  Make sure you don't use the same callback within
 the same call stack if the complexity arises. */
-U_CAPI void  U_EXPORT2
-ucnv_cbFromUWriteBytes (UConverterFromUnicodeArgs *args,
-                       const char* source,
+U_CAPI शून्य  U_EXPORT2
+ucnv_cb_From_UWrite_अष्टकानि (UConverter_From_Unicode_तर्काः *तर्काः_2,
+                       ध्रुव वर्ण* source,
                        int32_t length,
-                       int32_t offsetIndex,
-                       UErrorCode * err)
+                       int32_t विस्थापनम्_सूचकांक,
+                       UError_संहिता * err)
 {
-    if(U_FAILURE(*err)) {
-        return;
+    यदि(U_FAILURE(*err)) {
+        प्रत्यागम;
     }
 
-    ucnv_fromUWriteBytes(
-        args->converter,
+    ucnv_from_UWrite_अष्टकानि(
+        तर्काः_2->converter,
         source, length,
-        &args->target, args->targetLimit,
-        &args->offsets, offsetIndex,
+        &तर्काः_2->target, तर्काः_2->target_सीमा,
+        &तर्काः_2->offsets, विस्थापनम्_सूचकांक,
         err);
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
-                             const char16_t** source,
-                             const char16_t*  sourceLimit,
-                             int32_t offsetIndex,
-                             UErrorCode * err)
+U_CAPI शून्य  U_EXPORT2
+ucnv_cbFromUWriteUChars(UConverter_From_Unicode_तर्काः *तर्काः_2,
+                             ध्रुव char16_t** source,
+                             ध्रुव char16_t*  source_सीमा,
+                             int32_t विस्थापनम्_सूचकांक,
+                             UError_संहिता * err)
 {
     /*
     This is a fun one.  Recursion can occur - we're basically going to
@@ -71,29 +71,29 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
     into this.
     */
 
-    char *oldTarget;
+    वर्ण *oldTarget;
 
-    if(U_FAILURE(*err))
+    यदि(U_FAILURE(*err))
     {
-        return;
+        प्रत्यागम;
     }
 
-    oldTarget = args->target;
+    oldTarget = तर्काः_2->target;
 
-    ucnv_fromUnicode(args->converter,
-        &args->target,
-        args->targetLimit,
+    ucnv_fromUnicode(तर्काः_2->converter,
+        &तर्काः_2->target,
+        तर्काः_2->target_सीमा,
         source,
-        sourceLimit,
-        nullptr, /* no offsets */
-        false, /* no flush */
+        source_सीमा,
+        शून्यसूचकः, /* no offsets */
+        असत्य, /* no flush */
         err);
 
-    if(args->offsets)
+    यदि(तर्काः_2->offsets)
     {
-        while (args->target != oldTarget)  /* if it moved at all.. */
+        यावत् (तर्काः_2->target != oldTarget)  /* if it moved at all.. */
         {
-            *(args->offsets)++ = offsetIndex;
+            *(तर्काः_2->offsets)++ = विस्थापनम्_सूचकांक;
             oldTarget++;
         }
     }
@@ -102,30 +102,30 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
     Note, if you did something like used a Stop subcallback, things would get interesting.
     In fact, here's where we want to return the partially consumed in-source!
     */
-    if(*err == U_BUFFER_OVERFLOW_ERROR)
+    यदि(*err == U_बफर_अतिप्रवाहः_ERROR)
     /* && (*source < sourceLimit && args->target >= args->targetLimit)
     -- S. Hrcek */
     {
         /* Overflowed the target.  Now, we'll write into the charErrorBuffer.
         It's a fixed size. If we overflow it... Hmm */
-        char *newTarget;
-        const char *newTargetLimit;
-        UErrorCode err2 = U_ZERO_ERROR;
+        वर्ण *newTarget;
+        ध्रुव वर्ण *new_Target_सीमा;
+        UError_संहिता err2 = U_ZERO_ERROR;
 
         int8_t errBuffLen;
 
-        errBuffLen  = args->converter->charErrorBufferLength;
+        errBuffLen  = तर्काः_2->converter->char_Error_बफर_दीर्घता;
 
         /* start the new target at the first free slot in the errbuff.. */
-        newTarget = (char *)(args->converter->charErrorBuffer + errBuffLen);
+        newTarget = (वर्ण *)(तर्काः_2->converter->char_Error_बफर + errBuffLen);
 
-        newTargetLimit = (char *)(args->converter->charErrorBuffer +
-            sizeof(args->converter->charErrorBuffer));
+        new_Target_सीमा = (वर्ण *)(तर्काः_2->converter->char_Error_बफर +
+            परिमाण(तर्काः_2->converter->char_Error_बफर));
 
-        if(newTarget >= newTargetLimit)
+        यदि(newTarget >= new_Target_सीमा)
         {
-            *err = U_INTERNAL_PROGRAM_ERROR;
-            return;
+            *err = U_आन्तरिकम्_क्रमादेशः_ERROR;
+            प्रत्यागम;
         }
 
         /* We're going to tell the converter that the errbuff len is empty.
@@ -133,31 +133,31 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
         itself.  If the errbuff is needed by the converter this time,
         we're hosed - we're out of space! */
 
-        args->converter->charErrorBufferLength = 0;
+        तर्काः_2->converter->char_Error_बफर_दीर्घता = 0;
 
-        ucnv_fromUnicode(args->converter,
+        ucnv_fromUnicode(तर्काः_2->converter,
                          &newTarget,
-                         newTargetLimit,
+                         new_Target_सीमा,
                          source,
-                         sourceLimit,
-                         nullptr,
-                         false,
+                         source_सीमा,
+                         शून्यसूचकः,
+                         असत्य,
                          &err2);
 
         /* We can go ahead and overwrite the  length here. We know just how
         to recalculate it. */
 
-        args->converter->charErrorBufferLength = (int8_t)(
-            newTarget - (char*)args->converter->charErrorBuffer);
+        तर्काः_2->converter->char_Error_बफर_दीर्घता = (int8_t)(
+            newTarget - (वर्ण*)तर्काः_2->converter->char_Error_बफर);
 
-        if((newTarget >= newTargetLimit) || (err2 == U_BUFFER_OVERFLOW_ERROR))
+        यदि((newTarget >= new_Target_सीमा) || (err2 == U_बफर_अतिप्रवाहः_ERROR))
         {
             /* now we're REALLY in trouble.
             Internal program error - callback shouldn't have written this much
             data!
             */
-            *err = U_INTERNAL_PROGRAM_ERROR;
-            return;
+            *err = U_आन्तरिकम्_क्रमादेशः_ERROR;
+            प्रत्यागम;
         }
         /*else {*/
             /* sub errs could be invalid/truncated/illegal chars or w/e.
@@ -173,25 +173,25 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
     }
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
-                           int32_t offsetIndex,
-                           UErrorCode * err)
+U_CAPI शून्य  U_EXPORT2
+ucnv_cbFromUWriteSub (UConverter_From_Unicode_तर्काः *तर्काः_2,
+                           int32_t विस्थापनम्_सूचकांक,
+                           UError_संहिता * err)
 {
     UConverter *converter;
     int32_t length;
 
-    if(U_FAILURE(*err)) {
-        return;
+    यदि(U_FAILURE(*err)) {
+        प्रत्यागम;
     }
-    converter = args->converter;
+    converter = तर्काः_2->converter;
     length = converter->subCharLen;
 
-    if(length == 0) {
-        return;
+    यदि(length == 0) {
+        प्रत्यागम;
     }
 
-    if(length < 0) {
+    यदि(length < 0) {
         /*
          * Write/convert the substitution string. Its real length is -length.
          * Unlike the escape callback, we need not change the converter's
@@ -200,62 +200,62 @@ ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
          * and will not recurse.
          * At worst we should get a U_BUFFER_OVERFLOW_ERROR.
          */
-        const char16_t *source = (const char16_t *)converter->subChars;
-        ucnv_cbFromUWriteUChars(args, &source, source - length, offsetIndex, err);
-        return;
+        ध्रुव char16_t *source = (ध्रुव char16_t *)converter->subChars;
+        ucnv_cbFromUWriteUChars(तर्काः_2, &source, source - length, विस्थापनम्_सूचकांक, err);
+        प्रत्यागम;
     }
 
-    if(converter->sharedData->impl->writeSub!=nullptr) {
-        converter->sharedData->impl->writeSub(args, offsetIndex, err);
+    यदि(converter->shared_दत्त->impl->writeSub!=शून्यसूचकः) {
+        converter->shared_दत्त->impl->writeSub(तर्काः_2, विस्थापनम्_सूचकांक, err);
     }
-    else if(converter->subChar1!=0 && (uint16_t)converter->invalidUCharBuffer[0]<=(uint16_t)0xffu) {
+    अन्यथा यदि(converter->subChar1!=0 && (uint16_t)converter->invalid_UChar_बफर[0]<=(uint16_t)0xffu) {
         /*
         TODO: Is this untestable because the MBCS converter has a writeSub function to call
         and the other converters don't use subChar1?
         */
-        ucnv_cbFromUWriteBytes(args,
-                               (const char *)&converter->subChar1, 1,
-                               offsetIndex, err);
+        ucnv_cb_From_UWrite_अष्टकानि(तर्काः_2,
+                               (ध्रुव वर्ण *)&converter->subChar1, 1,
+                               विस्थापनम्_सूचकांक, err);
     }
-    else {
-        ucnv_cbFromUWriteBytes(args,
-                               (const char *)converter->subChars, length,
-                               offsetIndex, err);
+    अन्यथा {
+        ucnv_cb_From_UWrite_अष्टकानि(तर्काः_2,
+                               (ध्रुव वर्ण *)converter->subChars, length,
+                               विस्थापनम्_सूचकांक, err);
     }
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_cbToUWriteUChars (UConverterToUnicodeArgs *args,
-                            const char16_t* source,
+U_CAPI शून्य  U_EXPORT2
+ucnv_cb_गन्तव्यम्_UWrite_UChars (UConverter_गन्तव्यम्_Unicode_तर्काः *तर्काः_2,
+                            ध्रुव char16_t* source,
                             int32_t length,
-                            int32_t offsetIndex,
-                            UErrorCode * err)
+                            int32_t विस्थापनम्_सूचकांक,
+                            UError_संहिता * err)
 {
-    if(U_FAILURE(*err)) {
-        return;
+    यदि(U_FAILURE(*err)) {
+        प्रत्यागम;
     }
 
-    ucnv_toUWriteUChars(
-        args->converter,
+    ucnv_गन्तव्यम्_UWrite_UChars(
+        तर्काः_2->converter,
         source, length,
-        &args->target, args->targetLimit,
-        &args->offsets, offsetIndex,
+        &तर्काः_2->target, तर्काः_2->target_सीमा,
+        &तर्काः_2->offsets, विस्थापनम्_सूचकांक,
         err);
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_cbToUWriteSub (UConverterToUnicodeArgs *args,
-                         int32_t offsetIndex,
-                       UErrorCode * err)
+U_CAPI शून्य  U_EXPORT2
+ucnv_cb_गन्तव्यम्_UWrite_Sub (UConverter_गन्तव्यम्_Unicode_तर्काः *तर्काः_2,
+                         int32_t विस्थापनम्_सूचकांक,
+                       UError_संहिता * err)
 {
-    static const char16_t kSubstituteChar1 = 0x1A, kSubstituteChar = 0xFFFD;
+    स्थिर ध्रुव char16_t kSubstituteChar1 = 0x1A, kSubstituteChar = 0xFFFD;
 
     /* could optimize this case, just one uchar */
-    if(args->converter->invalidCharLength == 1 && args->converter->subChar1 != 0) {
-        ucnv_cbToUWriteUChars(args, &kSubstituteChar1, 1, offsetIndex, err);
-    } else {
-        ucnv_cbToUWriteUChars(args, &kSubstituteChar, 1, offsetIndex, err);
+    यदि(तर्काः_2->converter->invalid_Char_दीर्घता == 1 && तर्काः_2->converter->subChar1 != 0) {
+        ucnv_cb_गन्तव्यम्_UWrite_UChars(तर्काः_2, &kSubstituteChar1, 1, विस्थापनम्_सूचकांक, err);
+    } अन्यथा {
+        ucnv_cb_गन्तव्यम्_UWrite_UChars(तर्काः_2, &kSubstituteChar, 1, विस्थापनम्_सूचकांक, err);
     }
 }
 
-#endif
+#यदि_अन्तः

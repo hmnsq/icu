@@ -7,8 +7,8 @@
 **********************************************************************
 */
 
-#include "cstring.h"
-#include "ustrfmt.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "ustrfmt.h"
 
 
 /***
@@ -27,33 +27,33 @@
  *        null
  */
 U_CAPI int32_t U_EXPORT2
-uprv_itou (char16_t * buffer, int32_t capacity,
+uprv_itou (char16_t * बफर, int32_t capacity,
            uint32_t i, uint32_t radix, int32_t minwidth)
 {
     int32_t length = 0;
-    int digit;
+    पूर्णाङ्क digit;
     int32_t j;
-    char16_t temp;
+    char16_t अस्थायी;
 
-    do{
-        digit = (int)(i % radix);
-        buffer[length++]=(char16_t)(digit<=9?(0x0030+digit):(0x0030+digit+7));
+    कुरु{
+        digit = (पूर्णाङ्क)(i % radix);
+        बफर[length++]=(char16_t)(digit<=9?(0x0030+digit):(0x0030+digit+7));
         i=i/radix;
-    } while(i && length<capacity);
+    } यावत्(i && length<capacity);
 
-    while (length < minwidth){
-        buffer[length++] = (char16_t) 0x0030;/*zero padding */
+    यावत् (length < minwidth){
+        बफर[length++] = (char16_t) 0x0030;/*zero padding */
     }
     /* null terminate the buffer */
-    if(length<capacity){
-        buffer[length] = (char16_t) 0x0000;
+    यदि(length<capacity){
+        बफर[length] = (char16_t) 0x0000;
     }
 
     /* Reverses the string */
-    for (j = 0; j < (length / 2); j++){
-        temp = buffer[(length-1) - j];
-        buffer[(length-1) - j] = buffer[j];
-        buffer[j] = temp;
+    प्रति (j = 0; j < (length / 2); j++){
+        अस्थायी = बफर[(length-1) - j];
+        बफर[(length-1) - j] = बफर[j];
+        बफर[j] = अस्थायी;
     }
-    return length;
+    प्रत्यागम length;
 }

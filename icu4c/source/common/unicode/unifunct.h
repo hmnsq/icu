@@ -9,14 +9,14 @@
 *   01/14/2002  aliu        Creation.
 **********************************************************************
 */
-#ifndef UNIFUNCT_H
-#define UNIFUNCT_H
+#यदि_अपरिभाषितम् UNIFUNCT_H
+#परिभाषय UNIFUNCT_H
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#अन्तर्भाव "unicode/uobject.h"
 
 /**
  * \file 
@@ -27,7 +27,7 @@ U_NAMESPACE_BEGIN
 
 class UnicodeMatcher;
 class UnicodeReplacer;
-class TransliterationRuleData;
+class Transliteration_नियमः_दत्त;
 
 /**
  * <code>UnicodeFunctor</code> is an abstract base class for objects
@@ -35,15 +35,15 @@ class TransliterationRuleData;
  * @author Alan Liu
  * @stable ICU 2.4
  */
-class U_COMMON_API UnicodeFunctor : public UObject {
+class U_COMMON_API UnicodeFunctor : सार्वजनिक UObject {
 
-public:
+सार्वजनिक:
 
     /**
      * Destructor
      * @stable ICU 2.4
      */
-    virtual ~UnicodeFunctor();
+    आभास ~UnicodeFunctor();
 
     /**
      * Return a copy of this object.  All UnicodeFunctor objects
@@ -51,7 +51,7 @@ public:
      * UnicodeFunctor to implement cloning.
      * @stable ICU 2.4
      */
-    virtual UnicodeFunctor* clone() const = 0;
+    आभास UnicodeFunctor* clone() ध्रुव = 0;
 
     /**
      * Cast 'this' to a UnicodeMatcher* pointer and return the
@@ -63,7 +63,7 @@ public:
      * UnicodeFunctor.
      * @stable ICU 2.4
      */
-    virtual UnicodeMatcher* toMatcher() const U_LIFETIME_BOUND;
+    आभास UnicodeMatcher* गन्तव्यम्_Matcher() ध्रुव U_LIFETIME_BOUND;
 
     /**
      * Cast 'this' to a UnicodeReplacer* pointer and return the
@@ -75,7 +75,7 @@ public:
      * UnicodeFunctor.
      * @stable ICU 2.4
      */
-    virtual UnicodeReplacer* toReplacer() const U_LIFETIME_BOUND;
+    आभास UnicodeReplacer* गन्तव्यम्_Replacer() ध्रुव U_LIFETIME_BOUND;
 
     /**
      * Return the class ID for this class.  This is useful only for
@@ -83,7 +83,7 @@ public:
      * @return          The class ID for all objects of this class.
      * @stable ICU 2.0
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    स्थिर UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * Returns a unique class ID <b>polymorphically</b>.  This method
@@ -100,7 +100,7 @@ public:
      * different class IDs.
      * @stable ICU 2.4
      */
-    virtual UClassID getDynamicClassID() const override = 0;
+    आभास UClassID getDynamicClassID() ध्रुव override = 0;
 
     /**
      * Set the data object associated with this functor.  The data
@@ -110,9 +110,9 @@ public:
      * changed to pass data object pointers through the API.
      * @internal ICU 2.1
      */
-    virtual void setData(const TransliterationRuleData*) = 0;
+    आभास शून्य समुच्चयः_दत्त(ध्रुव Transliteration_नियमः_दत्त*) = 0;
 
-protected:
+रक्षित:
 
     /**
      * Since this class has pure virtual functions,
@@ -125,8 +125,8 @@ protected:
 
 /*inline UnicodeFunctor::UnicodeFunctor() {}*/
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#यदि_अन्तः /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#यदि_अन्तः

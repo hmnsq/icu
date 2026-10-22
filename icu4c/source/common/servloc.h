@@ -8,12 +8,12 @@
  *
  *******************************************************************************
  */
-#ifndef ICULSERV_H
-#define ICULSERV_H
+#यदि_अपरिभाषितम् ICULSERV_H
+#परिभाषय ICULSERV_H
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if UCONFIG_NO_SERVICE
+#यदि UCONFIG_NO_SERVICE
 
 U_NAMESPACE_BEGIN
 
@@ -23,27 +23,27 @@ U_NAMESPACE_BEGIN
  */
 class ICULocaleService;
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#else
+#अन्यथा
 
-#include "unicode/unistr.h"
-#include "unicode/locid.h"
-#include "unicode/strenum.h"
+#अन्तर्भाव "unicode/unistr.h"
+#अन्तर्भाव "unicode/locid.h"
+#अन्तर्भाव "unicode/strenum.h"
 
-#include "hash.h"
-#include "uvector.h"
+#अन्तर्भाव "hash.h"
+#अन्तर्भाव "uvector.h"
 
-#include "serv.h"
-#include "locutil.h"
+#अन्तर्भाव "serv.h"
+#अन्तर्भाव "locutil.h"
 
 U_NAMESPACE_BEGIN
 
 class ICULocaleService;
 
-class LocaleKey;
-class LocaleKeyFactory;
-class SimpleLocaleKeyFactory;
+class Locale_कुञ्चिका;
+class Locale_कुञ्चिका_Factory;
+class Simple_Locale_कुञ्चिका_Factory;
 class ServiceListener;
 
 /*
@@ -63,80 +63,80 @@ class ServiceListener;
  * is in upper case, with no trailing underscores.</p> 
  */
 
-class U_COMMON_API LocaleKey : public ICUServiceKey {
-  private: 
-    int32_t _kind;
+class U_COMMON_API Locale_कुञ्चिका : सार्वजनिक ICUService_कुञ्चिका {
+  गुप्त: 
+    int32_t विधा_2;
     UnicodeString _primaryID;
     UnicodeString _fallbackID;
     UnicodeString _currentID;
 
-  public:
-    enum {
-        KIND_ANY = -1
+  सार्वजनिक:
+    गणना {
+        विधा_ANY = -1
     };
 
     /**
      * Create a LocaleKey with canonical primary and fallback IDs.
      */
-    static LocaleKey* createWithCanonicalFallback(const UnicodeString* primaryID, 
-                                                  const UnicodeString* canonicalFallbackID,
-                                                  UErrorCode& status);
+    स्थिर Locale_कुञ्चिका* createWithCanonicalFallback(ध्रुव UnicodeString* primaryID, 
+                                                  ध्रुव UnicodeString* canonicalFallbackID,
+                                                  UError_संहिता& स्थितिः);
 
     /**
      * Create a LocaleKey with canonical primary and fallback IDs.
      */
-    static LocaleKey* createWithCanonicalFallback(const UnicodeString* primaryID, 
-                                                  const UnicodeString* canonicalFallbackID, 
-                                                  int32_t kind,
-                                                  UErrorCode& status);
+    स्थिर Locale_कुञ्चिका* createWithCanonicalFallback(ध्रुव UnicodeString* primaryID, 
+                                                  ध्रुव UnicodeString* canonicalFallbackID, 
+                                                  int32_t विधा,
+                                                  UError_संहिता& स्थितिः);
 
-  protected:
+  रक्षित:
     /**
      * PrimaryID is the user's requested locale string,
      * canonicalPrimaryID is this string in canonical form,
      * fallbackID is the current default locale's string in
      * canonical form.
      */
-    LocaleKey(const UnicodeString& primaryID, 
-              const UnicodeString& canonicalPrimaryID, 
-              const UnicodeString* canonicalFallbackID, 
-              int32_t kind);
+    Locale_कुञ्चिका(ध्रुव UnicodeString& primaryID, 
+              ध्रुव UnicodeString& canonicalPrimaryID, 
+              ध्रुव UnicodeString* canonicalFallbackID, 
+              int32_t विधा);
 
- public:
+ सार्वजनिक:
     /**
      * Append the prefix associated with the kind, or nothing if the kind is KIND_ANY.
      */
-    virtual UnicodeString& prefix(UnicodeString& result) const override;
+    आभास UnicodeString& उपसर्गः(UnicodeString& परिणाम) ध्रुव override;
 
     /**
      * Return the kind code associated with this key.
      */
-    virtual int32_t kind() const;
+    आभास int32_t विधा() ध्रुव;
 
     /**
      * Return the canonicalID.
      */
-    virtual UnicodeString& canonicalID(UnicodeString& result) const override;
+    आभास UnicodeString& canonicalID(UnicodeString& परिणाम) ध्रुव override;
 
     /**
      * Return the currentID.
      */
-    virtual UnicodeString& currentID(UnicodeString& result) const override;
+    आभास UnicodeString& currentID(UnicodeString& परिणाम) ध्रुव override;
 
     /**
      * Return the (canonical) current descriptor, or null if no current id.
      */
-    virtual UnicodeString& currentDescriptor(UnicodeString& result) const override;
+    आभास UnicodeString& currentDescriptor(UnicodeString& परिणाम) ध्रुव override;
 
     /**
      * Convenience method to return the locale corresponding to the (canonical) original ID.
      */
-    virtual Locale& canonicalLocale(Locale& result) const;
+    आभास Locale& canonicalLocale(Locale& परिणाम) ध्रुव;
 
     /**
      * Convenience method to return the locale corresponding to the (canonical) current ID.
      */
-    virtual Locale& currentLocale(Locale& result) const;
+    आभास Locale& currentLocale(Locale& परिणाम) ध्रुव;
 
     /**
      * If the key has a fallback, modify the key and return true,
@@ -147,32 +147,32 @@ class U_COMMON_API LocaleKey : public ICUServiceKey {
      * unless the primary id was the empty string, in which case
      * there is no fallback.  
      */
-    virtual UBool fallback() override;
+    आभास UBool fallback() override;
 
     /**
      * Return true if a key created from id matches, or would eventually
      * fallback to match, the canonical ID of this key.  
      */
-    virtual UBool isFallbackOf(const UnicodeString& id) const override;
+    आभास UBool is_Fallback_सम्बन्धि(ध्रुव UnicodeString& id) ध्रुव override;
     
- public:
+ सार्वजनिक:
     /**
      * UObject boilerplate.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    स्थिर UClassID U_EXPORT2 getStaticClassID();
 
-    virtual UClassID getDynamicClassID() const override;
+    आभास UClassID getDynamicClassID() ध्रुव override;
 
     /**
      * Destructor.
      */
-    virtual ~LocaleKey();
+    आभास ~Locale_कुञ्चिका();
 
-#ifdef SERVICE_DEBUG
- public:
-    virtual UnicodeString& debug(UnicodeString& result) const;
-    virtual UnicodeString& debugClass(UnicodeString& result) const;
-#endif
+#यदि_परिभाषितम् SERVICE_DEBUG
+ सार्वजनिक:
+    आभास UnicodeString& debug(UnicodeString& परिणाम) ध्रुव;
+    आभास UnicodeString& debugClass(UnicodeString& परिणाम) ध्रुव;
+#यदि_अन्तः
 
 };
 
@@ -194,13 +194,13 @@ class U_COMMON_API LocaleKey : public ICUServiceKey {
  * <p>Localization of visible ids is handled
  * by the handling factory, regardless of kind.
  */
-class U_COMMON_API LocaleKeyFactory : public ICUServiceFactory {
-protected:
-    const UnicodeString _name;
-    const int32_t _coverage;
+class U_COMMON_API Locale_कुञ्चिका_Factory : सार्वजनिक ICUServiceFactory {
+रक्षित:
+    ध्रुव UnicodeString _name;
+    ध्रुव int32_t _coverage;
 
-public:
-    enum {
+सार्वजनिक:
+    गणना {
         /**
          * Coverage value indicating that the factory makes
          * its locales visible, and does not cover more specific 
@@ -219,48 +219,48 @@ public:
     /**
      * Destructor.
      */
-    virtual ~LocaleKeyFactory();
+    आभास ~Locale_कुञ्चिका_Factory();
 
-protected:
+रक्षित:
     /**
      * Constructor used by subclasses.
      */
-    LocaleKeyFactory(int32_t coverage);
+    Locale_कुञ्चिका_Factory(int32_t coverage);
 
     /**
      * Constructor used by subclasses.
      */
-    LocaleKeyFactory(int32_t coverage, const UnicodeString& name);
+    Locale_कुञ्चिका_Factory(int32_t coverage, ध्रुव UnicodeString& name);
 
     /**
      * Implement superclass abstract method.  This checks the currentID of
      * the key against the supported IDs, and passes the canonicalLocale and
      * kind off to handleCreate (which subclasses must implement).
      */
-public:
-    virtual UObject* create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const override;
+सार्वजनिक:
+    आभास UObject* create(ध्रुव ICUService_कुञ्चिका& कुञ्चिका, ध्रुव ICUService* service, UError_संहिता& स्थितिः) ध्रुव override;
 
-protected:
-    virtual UBool handlesKey(const ICUServiceKey& key, UErrorCode& status) const;
+रक्षित:
+    आभास UBool handles_कुञ्चिका(ध्रुव ICUService_कुञ्चिका& कुञ्चिका, UError_संहिता& स्थितिः) ध्रुव;
 
-public:
+सार्वजनिक:
     /**
      * Override of superclass method.  This adjusts the result based
      * on the coverage rule for this factory.
      */
-    virtual void updateVisibleIDs(Hashtable& result, UErrorCode& status) const override;
+    आभास शून्य updateVisibleIDs(Hashtable& परिणाम, UError_संहिता& स्थितिः) ध्रुव override;
 
     /**
      * Return a localized name for the locale represented by id.
      */
-    virtual UnicodeString& getDisplayName(const UnicodeString& id, const Locale& locale, UnicodeString& result) const override;
+    आभास UnicodeString& getDisplayName(ध्रुव UnicodeString& id, ध्रुव Locale& locale, UnicodeString& परिणाम) ध्रुव override;
 
-protected:
+रक्षित:
     /**
      * Utility method used by create(ICUServiceKey, ICUService).  Subclasses can implement
      * this instead of create.  The default returns nullptr.
      */
-    virtual UObject* handleCreate(const Locale& loc, int32_t kind, const ICUService* service, UErrorCode& status) const;
+    आभास UObject* handleCreate(ध्रुव Locale& loc, int32_t विधा, ध्रुव ICUService* service, UError_संहिता& स्थितिः) ध्रुव;
 
    /**
      * Return true if this id is one the factory supports (visible or 
@@ -273,21 +273,21 @@ protected:
      * otherwise).  This can be called often and might need to be
      * cached if it is expensive to create.
      */
-    virtual const Hashtable* getSupportedIDs(UErrorCode& status) const;
+    आभास ध्रुव Hashtable* getSupportedIDs(UError_संहिता& स्थितिः) ध्रुव;
 
-public:
+सार्वजनिक:
     /**
      * UObject boilerplate.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    स्थिर UClassID U_EXPORT2 getStaticClassID();
 
-    virtual UClassID getDynamicClassID() const override;
+    आभास UClassID getDynamicClassID() ध्रुव override;
 
-#ifdef SERVICE_DEBUG
- public:
-    virtual UnicodeString& debug(UnicodeString& result) const;
-    virtual UnicodeString& debugClass(UnicodeString& result) const;
-#endif
+#यदि_परिभाषितम् SERVICE_DEBUG
+ सार्वजनिक:
+    आभास UnicodeString& debug(UnicodeString& परिणाम) ध्रुव;
+    आभास UnicodeString& debugClass(UnicodeString& परिणाम) ध्रुव;
+#यदि_अन्तः
 
 };
 
@@ -299,59 +299,59 @@ public:
  * A LocaleKeyFactory that just returns a single object for a kind/locale.
  */
 
-class U_COMMON_API SimpleLocaleKeyFactory : public LocaleKeyFactory {
- private:
+class U_COMMON_API Simple_Locale_कुञ्चिका_Factory : सार्वजनिक Locale_कुञ्चिका_Factory {
+ गुप्त:
     UObject* _obj;
     UnicodeString _id;
-    const int32_t _kind;
+    ध्रुव int32_t विधा_2;
 
- public:
-    SimpleLocaleKeyFactory(UObject* objToAdopt, 
-                           const UnicodeString& locale, 
-                           int32_t kind, 
+ सार्वजनिक:
+    Simple_Locale_कुञ्चिका_Factory(UObject* obj_गन्तव्यम्_Adopt, 
+                           ध्रुव UnicodeString& locale, 
+                           int32_t विधा, 
                            int32_t coverage);
 
-    SimpleLocaleKeyFactory(UObject* objToAdopt, 
-                           const Locale& locale, 
-                           int32_t kind, 
+    Simple_Locale_कुञ्चिका_Factory(UObject* obj_गन्तव्यम्_Adopt, 
+                           ध्रुव Locale& locale, 
+                           int32_t विधा, 
                            int32_t coverage);
 
     /**
      * Destructor.
      */
-    virtual ~SimpleLocaleKeyFactory();
+    आभास ~Simple_Locale_कुञ्चिका_Factory();
 
     /**
      * Override of superclass method.  Returns the service object if kind/locale match.  Service is not used.
      */
-    virtual UObject* create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const override;
+    आभास UObject* create(ध्रुव ICUService_कुञ्चिका& कुञ्चिका, ध्रुव ICUService* service, UError_संहिता& स्थितिः) ध्रुव override;
 
     /**
      * Override of superclass method.  This adjusts the result based
      * on the coverage rule for this factory.
      */
-    virtual void updateVisibleIDs(Hashtable& result, UErrorCode& status) const override;
+    आभास शून्य updateVisibleIDs(Hashtable& परिणाम, UError_संहिता& स्थितिः) ध्रुव override;
 
- protected:
+ रक्षित:
     /**
      * Return true if this id is equal to the locale name.
      */
     //virtual UBool isSupportedID(const UnicodeString& id, UErrorCode& status) const;
 
 
-public:
+सार्वजनिक:
     /**
      * UObject boilerplate.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    स्थिर UClassID U_EXPORT2 getStaticClassID();
 
-    virtual UClassID getDynamicClassID() const override;
+    आभास UClassID getDynamicClassID() ध्रुव override;
 
-#ifdef SERVICE_DEBUG
- public:
-    virtual UnicodeString& debug(UnicodeString& result) const;
-    virtual UnicodeString& debugClass(UnicodeString& result) const;
-#endif
+#यदि_परिभाषितम् SERVICE_DEBUG
+ सार्वजनिक:
+    आभास UnicodeString& debug(UnicodeString& परिणाम) ध्रुव;
+    आभास UnicodeString& debugClass(UnicodeString& परिणाम) ध्रुव;
+#यदि_अन्तः
 
 };
 
@@ -366,12 +366,12 @@ public:
  * IDs.  Subclasses then override handleCreate to create the actual service
  * object.  The default implementation returns a resource bundle.
  */
-class U_COMMON_API ICUResourceBundleFactory : public LocaleKeyFactory 
+class U_COMMON_API ICUResourceBundleFactory : सार्वजनिक Locale_कुञ्चिका_Factory 
 {
- protected:
+ रक्षित:
     UnicodeString _bundleName;
 
- public:
+ सार्वजनिक:
     /**
      * Convenience constructor that uses the main ICU bundle name.
      */
@@ -383,38 +383,38 @@ class U_COMMON_API ICUResourceBundleFactory : public LocaleKeyFactory
      * ures_openAvailableLocales, such as U_ICUDATA or U_ICUDATA_COLL.
      * The empty string is equivalent to U_ICUDATA.
      */
-    ICUResourceBundleFactory(const UnicodeString& bundleName);
+    ICUResourceBundleFactory(ध्रुव UnicodeString& bundleName);
 
     /**
      * Destructor
      */
-    virtual ~ICUResourceBundleFactory();
+    आभास ~ICUResourceBundleFactory();
 
-protected:
+रक्षित:
     /**
      * Return the supported IDs.  This is the set of all locale names in ICULocaleData.
      */
-    virtual const Hashtable* getSupportedIDs(UErrorCode& status) const override;
+    आभास ध्रुव Hashtable* getSupportedIDs(UError_संहिता& स्थितिः) ध्रुव override;
 
     /**
      * Create the service.  The default implementation returns the resource bundle
      * for the locale, ignoring kind, and service.
      */
-    virtual UObject* handleCreate(const Locale& loc, int32_t kind, const ICUService* service, UErrorCode& status) const override;
+    आभास UObject* handleCreate(ध्रुव Locale& loc, int32_t विधा, ध्रुव ICUService* service, UError_संहिता& स्थितिः) ध्रुव override;
 
-public:
+सार्वजनिक:
     /**
      * UObject boilerplate.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
-    virtual UClassID getDynamicClassID() const override;
+    स्थिर UClassID U_EXPORT2 getStaticClassID();
+    आभास UClassID getDynamicClassID() ध्रुव override;
 
 
-#ifdef SERVICE_DEBUG
- public:
-    virtual UnicodeString& debug(UnicodeString& result) const;
-    virtual UnicodeString& debugClass(UnicodeString& result) const;
-#endif
+#यदि_परिभाषितम् SERVICE_DEBUG
+ सार्वजनिक:
+    आभास UnicodeString& debug(UnicodeString& परिणाम) ध्रुव;
+    आभास UnicodeString& debugClass(UnicodeString& परिणाम) ध्रुव;
+#यदि_अन्तः
 
 };
 
@@ -422,13 +422,13 @@ public:
  ******************************************************************
  */
 
-class U_COMMON_API_CLASS ICULocaleService : public ICUService
+class U_COMMON_API_CLASS ICULocaleService : सार्वजनिक ICUService
 {
- private:
+ गुप्त:
   Locale fallbackLocale;
   UnicodeString fallbackLocaleName;
 
- public:
+ सार्वजनिक:
   /**
    * Construct an ICULocaleService.
    */
@@ -437,44 +437,44 @@ class U_COMMON_API_CLASS ICULocaleService : public ICUService
   /**
    * Construct an ICULocaleService with a name (useful for debugging).
    */
-  U_COMMON_API ICULocaleService(const UnicodeString& name);
+  U_COMMON_API ICULocaleService(ध्रुव UnicodeString& name);
 
   /**
    * Destructor.
    */
-  U_COMMON_API virtual ~ICULocaleService();
+  U_COMMON_API आभास ~ICULocaleService();
 
-#if 0
+#यदि 0
   // redeclare because of overload resolution rules?
   // no, causes ambiguities since both UnicodeString and Locale have constructors that take a const char*
   // need some compiler flag to remove warnings 
-  UObject* get(const UnicodeString& descriptor, UErrorCode& status) const {
-    return ICUService::get(descriptor, status);
+  UObject* get(ध्रुव UnicodeString& descriptor, UError_संहिता& स्थितिः) ध्रुव {
+    प्रत्यागम ICUService::get(descriptor, स्थितिः);
   }
 
-  UObject* get(const UnicodeString& descriptor, UnicodeString* actualReturn, UErrorCode& status) const {
-    return ICUService::get(descriptor, actualReturn, status);
+  UObject* get(ध्रुव UnicodeString& descriptor, UnicodeString* actualReturn, UError_संहिता& स्थितिः) ध्रुव {
+    प्रत्यागम ICUService::get(descriptor, actualReturn, स्थितिः);
   }
-#endif
+#यदि_अन्तः
 
   /**
    * Convenience override for callers using locales.  This calls
    * get(Locale, int, Locale[]) with KIND_ANY for kind and null for
    * actualReturn.
    */
-  U_COMMON_API UObject* get(const Locale& locale, UErrorCode& status) const;
+  U_COMMON_API UObject* get(ध्रुव Locale& locale, UError_संहिता& स्थितिः) ध्रुव;
 
   /**
    * Convenience override for callers using locales.  This calls
    * get(Locale, int, Locale[]) with a null actualReturn.
    */
-  U_COMMON_API UObject* get(const Locale& locale, int32_t kind, UErrorCode& status) const;
+  U_COMMON_API UObject* get(ध्रुव Locale& locale, int32_t विधा, UError_संहिता& स्थितिः) ध्रुव;
 
   /**
    * Convenience override for callers using locales. This calls
    * get(Locale, String, Locale[]) with a null kind.
    */
-  U_COMMON_API UObject* get(const Locale& locale, Locale* actualReturn, UErrorCode& status) const;
+  U_COMMON_API UObject* get(ध्रुव Locale& locale, Locale* actualReturn, UError_संहिता& स्थितिः) ध्रुव;
                    
   /**
    * Convenience override for callers using locales.  This uses
@@ -482,27 +482,27 @@ class U_COMMON_API_CLASS ICULocaleService : public ICUService
    * if actualReturn is not null, returns the actualResult from
    * getKey (stripping any prefix) into a Locale.  
    */
-  U_COMMON_API UObject* get(const Locale& locale, int32_t kind, Locale* actualReturn, UErrorCode& status) const;
+  U_COMMON_API UObject* get(ध्रुव Locale& locale, int32_t विधा, Locale* actualReturn, UError_संहिता& स्थितिः) ध्रुव;
 
   /**
    * Convenience override for callers using locales.  This calls
    * registerObject(Object, Locale, int32_t kind, int coverage)
    * passing KIND_ANY for the kind, and VISIBLE for the coverage.
    */
-  U_COMMON_API virtual URegistryKey registerInstance(UObject* objToAdopt, const Locale& locale, UErrorCode& status);
+  U_COMMON_API आभास URegistry_कुञ्चिका पञ्जिकाकोशः_Instance(UObject* obj_गन्तव्यम्_Adopt, ध्रुव Locale& locale, UError_संहिता& स्थितिः);
 
   /**
    * Convenience function for callers using locales.  This calls
    * registerObject(Object, Locale, int kind, int coverage)
    * passing VISIBLE for the coverage.
    */
-  U_COMMON_API virtual URegistryKey registerInstance(UObject* objToAdopt, const Locale& locale, int32_t kind, UErrorCode& status);
+  U_COMMON_API आभास URegistry_कुञ्चिका पञ्जिकाकोशः_Instance(UObject* obj_गन्तव्यम्_Adopt, ध्रुव Locale& locale, int32_t विधा, UError_संहिता& स्थितिः);
 
   /**
    * Convenience function for callers using locales.  This  instantiates
    * a SimpleLocaleKeyFactory, and registers the factory.
    */
-  U_COMMON_API virtual URegistryKey registerInstance(UObject* objToAdopt, const Locale& locale, int32_t kind, int32_t coverage, UErrorCode& status);
+  U_COMMON_API आभास URegistry_कुञ्चिका पञ्जिकाकोशः_Instance(UObject* obj_गन्तव्यम्_Adopt, ध्रुव Locale& locale, int32_t विधा, int32_t coverage, UError_संहिता& स्थितिः);
 
 
   /**
@@ -512,40 +512,40 @@ class U_COMMON_API_CLASS ICULocaleService : public ICUService
    * We really need a flag that is understood by all compilers that will suppress the warning about
    * hidden overrides.
    */
-  U_COMMON_API virtual URegistryKey registerInstance(UObject* objToAdopt, const UnicodeString& locale, UBool visible, UErrorCode& status) override;
+  U_COMMON_API आभास URegistry_कुञ्चिका पञ्जिकाकोशः_Instance(UObject* obj_गन्तव्यम्_Adopt, ध्रुव UnicodeString& locale, UBool visible, UError_संहिता& स्थितिः) override;
 
   /**
    * Convenience method for callers using locales.  This returns the standard
    * service ID enumeration.
    */
-  U_COMMON_API virtual StringEnumeration* getAvailableLocales() const U_LIFETIME_BOUND;
+  U_COMMON_API आभास StringEnumeration* get_उपलब्धम्_Locales() ध्रुव U_LIFETIME_BOUND;
 
- protected:
+ रक्षित:
 
   /**
    * Return the name of the current fallback locale.  If it has changed since this was
    * last accessed, the service cache is cleared.
    */
-  U_COMMON_API const UnicodeString& validateFallbackLocale() const;
+  U_COMMON_API ध्रुव UnicodeString& validateFallbackLocale() ध्रुव;
 
   /**
    * Override superclass createKey method.
    */
-  U_COMMON_API virtual ICUServiceKey* createKey(const UnicodeString* id, UErrorCode& status) const override;
+  U_COMMON_API आभास ICUService_कुञ्चिका* create_कुञ्चिका(ध्रुव UnicodeString* id, UError_संहिता& स्थितिः) ध्रुव override;
 
   /**
    * Additional createKey that takes a kind.
    */
-  U_COMMON_API virtual ICUServiceKey* createKey(const UnicodeString* id, int32_t kind, UErrorCode& status) const;
+  U_COMMON_API आभास ICUService_कुञ्चिका* create_कुञ्चिका(ध्रुव UnicodeString* id, int32_t विधा, UError_संहिता& स्थितिः) ध्रुव;
 
-  friend class ServiceEnumeration;
+  मित्रम् class ServiceEnumeration;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
     /* UCONFIG_NO_SERVICE */
-#endif
+#यदि_अन्तः
 
     /* ICULSERV_H */
-#endif
+#यदि_अन्तः
 

@@ -4,82 +4,82 @@
 // lsr.h
 // created: 2019may08 Markus W. Scherer
 
-#ifndef __LSR_H__
-#define __LSR_H__
+#यदि_अपरिभाषितम् __LSR_H__
+#परिभाषय __LSR_H__
 
-#include "unicode/stringpiece.h"
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "cstring.h"
+#अन्तर्भाव "unicode/stringpiece.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/uobject.h"
+#अन्तर्भाव "cstring.h"
 
 U_NAMESPACE_BEGIN
 
-struct LSR final : public UMemory {
-    static constexpr int32_t REGION_INDEX_LIMIT = 1001 + 26 * 26;
+संरचना LSR final : सार्वजनिक UMemory {
+    स्थिर constexpr int32_t REGION_सूचकांक_सीमा = 1001 + 26 * 26;
 
-    static constexpr int32_t EXPLICIT_LSR = 7;
-    static constexpr int32_t EXPLICIT_LANGUAGE = 4;
-    static constexpr int32_t EXPLICIT_SCRIPT = 2;
-    static constexpr int32_t EXPLICIT_REGION = 1;
-    static constexpr int32_t IMPLICIT_LSR = 0;
-    static constexpr int32_t DONT_CARE_FLAGS = 0;
+    स्थिर constexpr int32_t EXPLICIT_LSR = 7;
+    स्थिर constexpr int32_t EXPLICIT_LANGUAGE = 4;
+    स्थिर constexpr int32_t EXPLICIT_SCRIPT = 2;
+    स्थिर constexpr int32_t EXPLICIT_REGION = 1;
+    स्थिर constexpr int32_t IMPLICIT_LSR = 0;
+    स्थिर constexpr int32_t DONT_CARE_FLAGS = 0;
 
-    const char *language;
-    const char *script;
-    const char *region;
-    char *owned = nullptr;
+    ध्रुव वर्ण *language;
+    ध्रुव वर्ण *script;
+    ध्रुव वर्ण *region;
+    वर्ण *owned = nullptr;
     /** Index for region, 0 if ill-formed. @see indexForRegion */
-    int32_t regionIndex = 0;
+    int32_t region_सूचकांक = 0;
     int32_t flags = 0;
     /** Only set for LSRs that will be used in a hash table. */
-    int32_t hashCode = 0;
+    int32_t hash_संहिता = 0;
 
     LSR() : language("und"), script(""), region("") {}
 
     /** Constructor which aliases all subtag pointers. */
-    LSR(const char *lang, const char *scr, const char *r, int32_t f) :
+    LSR(ध्रुव वर्ण *lang, ध्रुव वर्ण *scr, ध्रुव वर्ण *r, int32_t f) :
             language(lang),  script(scr), region(r),
-            regionIndex(indexForRegion(region)), flags(f) {}
+            region_सूचकांक(सूचकांक_For_Region(region)), flags(f) {}
     /**
      * Constructor which prepends the prefix to the language and script,
      * copies those into owned memory, and aliases the region.
      */
-    LSR(char prefix, const char *lang, const char *scr, const char *r, int32_t f,
-        UErrorCode &errorCode);
+    LSR(वर्ण उपसर्गः, ध्रुव वर्ण *lang, ध्रुव वर्ण *scr, ध्रुव वर्ण *r, int32_t f,
+        UError_संहिता &error_संहिता);
     LSR(StringPiece lang, StringPiece scr, StringPiece r, int32_t f,
-        UErrorCode &errorCode);
+        UError_संहिता &error_संहिता);
     LSR(LSR &&other) noexcept;
-    LSR(const LSR &other) = delete;
-    inline ~LSR() {
+    LSR(ध्रुव LSR &other) = delete;
+    अन्तःस्थ ~LSR() {
         // Pure inline code for almost all instances.
-        if (owned != nullptr) {
+        यदि (owned != nullptr) {
             deleteOwned();
         }
     }
 
-    LSR &operator=(LSR &&other) noexcept;
-    LSR &operator=(const LSR &other) = delete;
+    LSR &संक्रियकः=(LSR &&other) noexcept;
+    LSR &संक्रियकः=(ध्रुव LSR &other) = delete;
 
     /**
      * Returns a positive index (>0) for a well-formed region code.
      * Do not rely on a particular region->index mapping; it may change.
      * Returns 0 for ill-formed strings.
      */
-    static int32_t indexForRegion(const char *region);
+    स्थिर int32_t सूचकांक_For_Region(ध्रुव वर्ण *region);
 
-    UBool isEquivalentTo(const LSR &other) const;
-    bool operator==(const LSR &other) const;
+    UBool is_Equivalent_गन्तव्यम्(ध्रुव LSR &other) ध्रुव;
+    bool संक्रियकः==(ध्रुव LSR &other) ध्रुव;
 
-    inline bool operator!=(const LSR &other) const {
-        return !operator==(other);
+    अन्तःस्थ bool संक्रियकः!=(ध्रुव LSR &other) ध्रुव {
+        प्रत्यागम !संक्रियकः==(other);
     }
 
-    LSR &setHashCode();
+    LSR &समुच्चयः_Hash_संहिता();
 
-private:
-    void deleteOwned();
+गुप्त:
+    शून्य deleteOwned();
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif  // __LSR_H__
+#यदि_अन्तः  // __LSR_H__

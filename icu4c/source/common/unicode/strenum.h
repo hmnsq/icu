@@ -9,15 +9,15 @@
 *******************************************************************************
 */
 
-#ifndef STRENUM_H
-#define STRENUM_H
+#यदि_अपरिभाषितम् STRENUM_H
+#परिभाषय STRENUM_H
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
-#include "unicode/unistr.h"
+#अन्तर्भाव "unicode/uobject.h"
+#अन्तर्भाव "unicode/unistr.h"
 
 /**
  * \file 
@@ -58,13 +58,13 @@ U_NAMESPACE_BEGIN
  *
  * @stable ICU 2.4 
  */
-class U_COMMON_API StringEnumeration : public UObject { 
-public:
+class U_COMMON_API StringEnumeration : सार्वजनिक UObject { 
+सार्वजनिक:
     /**
      * Destructor.
      * @stable ICU 2.4
      */
-    virtual ~StringEnumeration();
+    आभास ~StringEnumeration();
 
     /**
      * Clone this object, an instance of a subclass of StringEnumeration.
@@ -78,7 +78,7 @@ public:
      * @see getDynamicClassID
      * @stable ICU 2.8
      */
-    virtual StringEnumeration *clone() const;
+    आभास StringEnumeration *clone() ध्रुव;
 
     /**
      * <p>Return the number of elements that the iterator traverses.  If
@@ -97,7 +97,7 @@ public:
      * @return number of elements in the iterator.
      *
      * @stable ICU 2.4 */
-    virtual int32_t count(UErrorCode& status) const = 0;
+    आभास int32_t गणनम्(UError_संहिता& स्थितिः) ध्रुव = 0;
 
     /**
      * <p>Returns the next element as a NUL-terminated char*.  If there
@@ -129,7 +129,7 @@ public:
      *
      * @stable ICU 2.4 
      */
-    virtual const char* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND;
+    आभास ध्रुव वर्ण* अग्र(int32_t* परिणाम_दीर्घता, UError_संहिता& स्थितिः) U_LIFETIME_BOUND;
 
     /**
      * <p>Returns the next element as a NUL-terminated char16_t*.  If there
@@ -154,7 +154,7 @@ public:
      *
      * @stable ICU 2.4 
      */
-    virtual const char16_t* unext(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND;
+    आभास ध्रुव char16_t* unext(int32_t* परिणाम_दीर्घता, UError_संहिता& स्थितिः) U_LIFETIME_BOUND;
 
     /**
      * <p>Returns the next element a UnicodeString*.  If there are no
@@ -176,7 +176,7 @@ public:
      *
      * @stable ICU 2.4 
      */
-    virtual const UnicodeString* snext(UErrorCode& status) U_LIFETIME_BOUND;
+    आभास ध्रुव UnicodeString* snext(UError_संहिता& स्थितिः) U_LIFETIME_BOUND;
 
     /**
      * <p>Resets the iterator.  This re-establishes sync with the
@@ -190,7 +190,7 @@ public:
      *
      * @stable ICU 2.4 
      */
-    virtual void reset(UErrorCode& status) = 0;
+    आभास शून्य reset(UError_संहिता& स्थितिः) = 0;
 
     /**
      * Compares this enumeration to other to check if both are equal
@@ -199,7 +199,7 @@ public:
      * @return true if the enumerations are equal. false if not.
      * @stable ICU 3.6 
      */
-    virtual bool operator==(const StringEnumeration& that)const;
+    आभास bool संक्रियकः==(ध्रुव StringEnumeration& that)ध्रुव;
     /**
      * Compares this enumeration to other to check if both are not equal
      *
@@ -207,9 +207,9 @@ public:
      * @return true if the enumerations are equal. false if not.
      * @stable ICU 3.6 
      */
-    virtual bool operator!=(const StringEnumeration& that)const;
+    आभास bool संक्रियकः!=(ध्रुव StringEnumeration& that)ध्रुव;
 
-protected:
+रक्षित:
     /**
      * UnicodeString field for use with default implementations and subclasses.
      * @stable ICU 2.8
@@ -219,18 +219,18 @@ protected:
      * char * default buffer for use with default implementations and subclasses.
      * @stable ICU 2.8
      */
-    char charsBuffer[32];
+    वर्ण chars_बफर[32];
     /**
      * char * buffer for use with default implementations and subclasses.
      * Allocated in constructor and in ensureCharsCapacity().
      * @stable ICU 2.8
      */
-    char *chars;
+    वर्ण *chars;
     /**
      * Capacity of chars, for use with default implementations and subclasses.
      * @stable ICU 2.8
      */
-    int32_t charsCapacity;
+    int32_t chars_क्षमता;
 
     /**
      * Default constructor for use with default implementations and subclasses.
@@ -246,7 +246,7 @@ protected:
      * @param status ICU in/out error code.
      * @stable ICU 2.8
      */
-    void ensureCharsCapacity(int32_t capacity, UErrorCode &status);
+    शून्य ensure_Chars_क्षमता(int32_t क्षमता, UError_संहिता &स्थितिः);
 
     /**
      * Converts s to Unicode and sets unistr to the result.
@@ -270,12 +270,12 @@ protected:
      * @return A pointer to unistr.
      * @stable ICU 2.8
      */
-    UnicodeString* setChars(const char* s, int32_t length, UErrorCode& status) U_LIFETIME_BOUND;
+    UnicodeString* समुच्चयः_Chars(ध्रुव वर्ण* s, int32_t दीर्घता, UError_संहिता& स्थितिः) U_LIFETIME_BOUND;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#यदि_अन्तः /* U_SHOW_CPLUSPLUS_API */
 
 /* STRENUM_H */
-#endif
+#यदि_अन्तः

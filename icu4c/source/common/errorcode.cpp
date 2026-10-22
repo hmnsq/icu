@@ -16,27 +16,27 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/errorcode.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/errorcode.h"
 
 U_NAMESPACE_BEGIN
 
-ErrorCode::~ErrorCode() {}
+Error_संहिता::~Error_संहिता() {}
 
-UErrorCode ErrorCode::reset() {
-    UErrorCode code = errorCode;
-    errorCode = U_ZERO_ERROR;
-    return code;
+UError_संहिता Error_संहिता::reset() {
+    UError_संहिता संहिता = error_संहिता;
+    error_संहिता = U_ZERO_ERROR;
+    प्रत्यागम संहिता;
 }
 
-void ErrorCode::assertSuccess() const {
-    if(isFailure()) {
+शून्य Error_संहिता::assertSuccess() ध्रुव {
+    यदि(isFailure()) {
         handleFailure();
     }
 }
 
-const char* ErrorCode::errorName() const {
-  return u_errorName(errorCode);
+ध्रुव वर्ण* Error_संहिता::errorName() ध्रुव {
+  प्रत्यागम u_errorName(error_संहिता);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः

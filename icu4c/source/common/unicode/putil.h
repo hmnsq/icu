@@ -23,10 +23,10 @@
 ******************************************************************************
 */
 
-#ifndef PUTIL_H
-#define PUTIL_H
+#यदि_अपरिभाषितम् PUTIL_H
+#परिभाषय PUTIL_H
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
  /**
   * \file
   * \brief C API: Platform Utilities
@@ -66,7 +66,7 @@
  *   
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2 u_getDataDirectory(void);
+U_CAPI ध्रुव वर्ण* U_EXPORT2 u_get_दत्त_Directory(शून्य);
 
 
 /** 
@@ -88,9 +88,9 @@ U_CAPI const char* U_EXPORT2 u_getDataDirectory(void);
  * @see u_init
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 u_setDataDirectory(const char *directory);
+U_CAPI शून्य U_EXPORT2 u_समुच्चयः_दत्त_Directory(ध्रुव वर्ण *directory);
 
-#ifndef U_HIDE_INTERNAL_API
+#यदि_अपरिभाषितम् U_HIDE_आन्तरिकम्_API
 /**
   * Return the time zone files override directory, or an empty string if
   * no directory was specified. Certain time zone resources will be preferentially
@@ -99,7 +99,7 @@ U_CAPI void U_EXPORT2 u_setDataDirectory(const char *directory);
   * @return the time zone data override directory.
   * @internal
   */ 
-U_CAPI const char * U_EXPORT2 u_getTimeZoneFilesDirectory(UErrorCode *status);
+U_CAPI ध्रुव वर्ण * U_EXPORT2 u_getTimeZoneFilesDirectory(UError_संहिता *स्थितिः);
 
 /**
   * Set the time zone files override directory.
@@ -109,8 +109,8 @@ U_CAPI const char * U_EXPORT2 u_getTimeZoneFilesDirectory(UErrorCode *status);
   *   will access the time zone data.
   * @internal
   */
-U_CAPI void U_EXPORT2 u_setTimeZoneFilesDirectory(const char *path, UErrorCode *status);
-#endif  /* U_HIDE_INTERNAL_API */
+U_CAPI शून्य U_EXPORT2 u_समुच्चयः_Time_Zone_Files_Directory(ध्रुव वर्ण *मार्गः, UError_संहिता *स्थितिः);
+#यदि_अन्तः  /* U_HIDE_INTERNAL_API */
 
 
 /**
@@ -119,21 +119,21 @@ U_CAPI void U_EXPORT2 u_setTimeZoneFilesDirectory(const char *path, UErrorCode *
  * Example: '/' and ':' on Unix, '\\' and ';' on Windows.
  * @stable ICU 2.0
  */
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#यदि U_PLATFORM_उपयुङ्क्ते_ONLY_WIN32_API
 #   define U_FILE_SEP_CHAR '\\'
 #   define U_FILE_ALT_SEP_CHAR '/'
-#   define U_PATH_SEP_CHAR ';'
+#   define U_मार्गः_SEP_CHAR ';'
 #   define U_FILE_SEP_STRING "\\"
 #   define U_FILE_ALT_SEP_STRING "/"
-#   define U_PATH_SEP_STRING ";"
-#else
+#   define U_मार्गः_SEP_STRING ";"
+#अन्यथा
 #   define U_FILE_SEP_CHAR '/'
 #   define U_FILE_ALT_SEP_CHAR '/'
-#   define U_PATH_SEP_CHAR ':'
+#   define U_मार्गः_SEP_CHAR ':'
 #   define U_FILE_SEP_STRING "/"
 #   define U_FILE_ALT_SEP_STRING "/"
-#   define U_PATH_SEP_STRING ":"
-#endif
+#   define U_मार्गः_SEP_STRING ":"
+#यदि_अन्तः
 
 /** @} */
 
@@ -155,8 +155,8 @@ U_CAPI void U_EXPORT2 u_setTimeZoneFilesDirectory(const char *path, UErrorCode *
  * @see U_CHARSET_FAMILY
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-u_charsToUChars(const char *cs, UChar *us, int32_t length);
+U_CAPI शून्य U_EXPORT2
+u_chars_गन्तव्यम्_UChars(ध्रुव वर्ण *cs, UChar *us, int32_t दीर्घता);
 
 /**
  * Convert UChar characters to char characters.
@@ -177,7 +177,7 @@ u_charsToUChars(const char *cs, UChar *us, int32_t length);
  * @see U_CHARSET_FAMILY
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-u_UCharsToChars(const UChar *us, char *cs, int32_t length);
+U_CAPI शून्य U_EXPORT2
+u_UChars_गन्तव्यम्_Chars(ध्रुव UChar *us, वर्ण *cs, int32_t दीर्घता);
 
-#endif
+#यदि_अन्तः

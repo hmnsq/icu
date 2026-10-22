@@ -26,33 +26,33 @@
  * <p>This is a C wrapper around the C++ UnicodeSet class.</p>
  */
 
-#ifndef __USET_H__
-#define __USET_H__
+#यदि_अपरिभाषितम् __USET_H__
+#परिभाषय __USET_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uchar.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/uchar.h"
 
-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
-#include <string>
-#include <string_view>
-#include "unicode/char16ptr.h"
-#include "unicode/localpointer.h"
-#include "unicode/utf16.h"
-#endif
+#यदि U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_शीर्षकम्_API
+#अन्तर्भाव <string>
+#अन्तर्भाव <string_view>
+#अन्तर्भाव "unicode/char16ptr.h"
+#अन्तर्भाव "unicode/localpointer.h"
+#अन्तर्भाव "unicode/utf16.h"
+#यदि_अन्तः
 
-#ifndef USET_DEFINED
+#यदि_अपरिभाषितम् USET_DEFINED
 
-#ifndef U_IN_DOXYGEN
-#define USET_DEFINED
-#endif
+#यदि_अपरिभाषितम् U_अन्तर्_DOXYGEN
+#परिभाषय USET_DEFINED
+#यदि_अन्तः
 /**
  * USet is the C API type corresponding to C++ class UnicodeSet.
  * Use the uset_* API to manipulate.  Create with
  * uset_open*, and destroy with uset_close.
  * @stable ICU 2.4
  */
-typedef struct USet USet;
-#endif
+प्रकारनिर्देश संरचना USet USet;
+#यदि_अन्तः
 
 /**
  * Bitmask values to be passed to uset_openPatternOptions() or
@@ -65,7 +65,7 @@ typedef struct USet USet;
  *
  * @stable ICU 2.4
  */
-enum {
+गणना {
     /**
      * Ignore white space within patterns unless quoted or escaped.
      * @stable ICU 2.4
@@ -111,7 +111,7 @@ enum {
      *
      * @stable ICU 3.2
      */
-    USET_ADD_CASE_MAPPINGS = 4,
+    USET_सङ्कलय_CASE_MAPPINGS = 4,
 
     /**
      * Enable case insensitive matching.
@@ -183,7 +183,7 @@ enum {
  *
  * @stable ICU 3.8
  */
-typedef enum USetSpanCondition {
+प्रकारनिर्देश गणना USet_विस्तृतिः_Condition {
     /**
      * Continues a span() while there is no set element at the current position.
      * Increments by one code point at a time.
@@ -196,7 +196,7 @@ typedef enum USetSpanCondition {
      *
      * @stable ICU 3.8
      */
-    USET_SPAN_NOT_CONTAINED = 0,
+    USET_विस्तृतिः_NOT_CONTAINED = 0,
     /**
      * Spans the longest substring that is a concatenation of set elements (characters or strings).
      * (For characters only, this is like while contains(current)==true).
@@ -211,7 +211,7 @@ typedef enum USetSpanCondition {
      *
      * @stable ICU 3.8
      */
-    USET_SPAN_CONTAINED = 1,
+    USET_विस्तृतिः_CONTAINED = 1,
     /**
      * Continues a span() while there is a set element at the current position.
      * Increments by the longest matching element at each position.
@@ -231,24 +231,24 @@ typedef enum USetSpanCondition {
      *
      * @stable ICU 3.8
      */
-    USET_SPAN_SIMPLE = 2,
-#ifndef U_HIDE_DEPRECATED_API
+    USET_विस्तृतिः_SIMPLE = 2,
+#यदि_अपरिभाषितम् U_HIDE_DEPRECATED_API
     /**
      * One more than the last span condition.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    USET_SPAN_CONDITION_COUNT
-#endif  // U_HIDE_DEPRECATED_API
-} USetSpanCondition;
+    USET_विस्तृतिः_CONDITION_गणनम्
+#यदि_अन्तः  // U_HIDE_DEPRECATED_API
+} USet_विस्तृतिः_Condition;
 
-enum {
+गणना {
     /**
      * Capacity of USerializedSet::staticArray.
      * Enough for any single-code point set.
      * Also provides padding for nice sizeof(USerializedSet).
      * @stable ICU 2.4
      */
-    USET_SERIALIZED_STATIC_ARRAY_CAPACITY=8
+    USET_SERIALIZED_STATIC_ARRAY_क्षमता=8
 };
 
 /**
@@ -256,28 +256,28 @@ enum {
  * possible directly on a serialized set.  See below.
  * @stable ICU 2.4
  */
-typedef struct USerializedSet {
+प्रकारनिर्देश संरचना USerialized_समुच्चयः {
     /**
      * The serialized Unicode Set.
      * @stable ICU 2.4
      */
-    const uint16_t *array;
+    ध्रुव uint16_t *array;
     /**
      * The length of the array that contains BMP characters.
      * @stable ICU 2.4
      */
-    int32_t bmpLength;
+    int32_t bmp_दीर्घता;
     /**
      * The total length of the array.
      * @stable ICU 2.4
      */
-    int32_t length;
+    int32_t दीर्घता;
     /**
      * A small buffer for the array to reduce memory allocations.
      * @stable ICU 2.4
      */
-    uint16_t staticArray[USET_SERIALIZED_STATIC_ARRAY_CAPACITY];
-} USerializedSet;
+    uint16_t staticArray[USET_SERIALIZED_STATIC_ARRAY_क्षमता];
+} USerialized_समुच्चयः;
 
 /*********************************************************************
  * USet API
@@ -291,7 +291,7 @@ typedef struct USerializedSet {
  * @stable ICU 4.2
  */
 U_CAPI USet* U_EXPORT2
-uset_openEmpty(void);
+uset_open_रिक्तानि(शून्य);
 
 /**
  * Creates a USet object that contains the range of characters
@@ -304,7 +304,7 @@ uset_openEmpty(void);
  * @stable ICU 2.4
  */
 U_CAPI USet* U_EXPORT2
-uset_open(UChar32 start, UChar32 end);
+uset_open(UChar32 start, UChar32 अन्तः);
 
 /**
  * Creates a set from the given pattern.  See the UnicodeSet class
@@ -316,8 +316,8 @@ uset_open(UChar32 start, UChar32 end);
  * @stable ICU 2.4
  */
 U_CAPI USet* U_EXPORT2
-uset_openPattern(const UChar* pattern, int32_t patternLength,
-                 UErrorCode* ec);
+uset_open_आदर्शः(ध्रुव UChar* आदर्शः, int32_t आदर्शः_दीर्घता,
+                 UError_संहिता* ec);
 
 /**
  * Creates a set from the given pattern.  See the UnicodeSet class
@@ -333,9 +333,9 @@ uset_openPattern(const UChar* pattern, int32_t patternLength,
  * @stable ICU 2.4
  */
 U_CAPI USet* U_EXPORT2
-uset_openPatternOptions(const UChar* pattern, int32_t patternLength,
+uset_open_आदर्शः_Options(ध्रुव UChar* आदर्शः, int32_t आदर्शः_दीर्घता,
                  uint32_t options,
-                 UErrorCode* ec);
+                 UError_संहिता* ec);
 
 /**
  * Disposes of the storage used by a USet object.  This function should
@@ -343,10 +343,10 @@ uset_openPatternOptions(const UChar* pattern, int32_t patternLength,
  * @param set the object to dispose of
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
-uset_close(USet* set);
+U_CAPI शून्य U_EXPORT2
+uset_close(USet* समुच्चयः);
 
-#if U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -361,9 +361,9 @@ U_NAMESPACE_BEGIN
  */
 U_DEFINE_LOCAL_OPEN_POINTER(LocalUSetPointer, USet, uset_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif
+#यदि_अन्तः
 
 /**
  * Returns a copy of this object.
@@ -375,7 +375,7 @@ U_NAMESPACE_END
  * @stable ICU 3.8
  */
 U_CAPI USet * U_EXPORT2
-uset_clone(const USet *set);
+uset_clone(ध्रुव USet *समुच्चयः);
 
 /**
  * Determines whether the set has been frozen (made immutable) or not.
@@ -387,7 +387,7 @@ uset_clone(const USet *set);
  * @stable ICU 3.8
  */
 U_CAPI UBool U_EXPORT2
-uset_isFrozen(const USet *set);
+uset_isFrozen(ध्रुव USet *समुच्चयः);
 
 /**
  * Freeze the set (make it immutable).
@@ -402,8 +402,8 @@ uset_isFrozen(const USet *set);
  * @see uset_cloneAsThawed
  * @stable ICU 3.8
  */
-U_CAPI void U_EXPORT2
-uset_freeze(USet *set);
+U_CAPI शून्य U_EXPORT2
+uset_freeze(USet *समुच्चयः);
 
 /**
  * Clone the set and make the clone mutable.
@@ -416,7 +416,7 @@ uset_freeze(USet *set);
  * @stable ICU 3.8
  */
 U_CAPI USet * U_EXPORT2
-uset_cloneAsThawed(const USet *set);
+uset_cloneAsThawed(ध्रुव USet *समुच्चयः);
 
 /**
  * Causes the USet object to represent the range <code>start - end</code>.
@@ -427,9 +427,9 @@ uset_cloneAsThawed(const USet *set);
  * @param end last character in the set, inclusive
  * @stable ICU 3.2
  */
-U_CAPI void U_EXPORT2
-uset_set(USet* set,
-         UChar32 start, UChar32 end);
+U_CAPI शून्य U_EXPORT2
+uset_समुच्चयः(USet* समुच्चयः,
+         UChar32 start, UChar32 अन्तः);
 
 /**
  * Modifies the set to represent the set specified by the given
@@ -456,10 +456,10 @@ uset_set(USet* set,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2 
-uset_applyPattern(USet *set,
-                  const UChar *pattern, int32_t patternLength,
+uset_apply_आदर्शः(USet *समुच्चयः,
+                  ध्रुव UChar *आदर्शः, int32_t आदर्शः_दीर्घता,
                   uint32_t options,
-                  UErrorCode *status);
+                  UError_संहिता *स्थितिः);
 
 /**
  * Modifies the set to contain those code points which have the given value
@@ -483,9 +483,9 @@ uset_applyPattern(USet *set,
  *
  * @stable ICU 3.2
  */
-U_CAPI void U_EXPORT2
-uset_applyIntPropertyValue(USet* set,
-                           UProperty prop, int32_t value, UErrorCode* ec);
+U_CAPI शून्य U_EXPORT2
+uset_apply_Int_Property_मानम्(USet* समुच्चयः,
+                           UProperty prop, int32_t मानम्_2, UError_संहिता* ec);
 
 /**
  * Modifies the set to contain those code points which have the
@@ -522,11 +522,11 @@ uset_applyIntPropertyValue(USet* set,
  *
  * @stable ICU 3.2
  */
-U_CAPI void U_EXPORT2
-uset_applyPropertyAlias(USet* set,
-                        const UChar *prop, int32_t propLength,
-                        const UChar *value, int32_t valueLength,
-                        UErrorCode* ec);
+U_CAPI शून्य U_EXPORT2
+uset_applyPropertyAlias(USet* समुच्चयः,
+                        ध्रुव UChar *prop, int32_t prop_दीर्घता,
+                        ध्रुव UChar *मानम्_2, int32_t मानम्_दीर्घता,
+                        UError_संहिता* ec);
 
 /**
  * Return true if the given position, in the given pattern, appears
@@ -538,7 +538,7 @@ uset_applyPropertyAlias(USet* set,
  * @stable ICU 3.2
  */
 U_CAPI UBool U_EXPORT2
-uset_resemblesPattern(const UChar *pattern, int32_t patternLength,
+uset_resembles_आदर्शः(ध्रुव UChar *आदर्शः, int32_t आदर्शः_दीर्घता,
                       int32_t pos);
 
 /**
@@ -557,10 +557,10 @@ uset_resemblesPattern(const UChar *pattern, int32_t patternLength,
  * @stable ICU 2.4
  */
 U_CAPI int32_t U_EXPORT2
-uset_toPattern(const USet* set,
-               UChar* result, int32_t resultCapacity,
+uset_गन्तव्यम्_आदर्शः(ध्रुव USet* समुच्चयः,
+               UChar* परिणाम, int32_t परिणाम_क्षमता,
                UBool escapeUnprintable,
-               UErrorCode* ec);
+               UError_संहिता* ec);
 
 /**
  * Adds the given character to the given USet.  After this call,
@@ -570,8 +570,8 @@ uset_toPattern(const USet* set,
  * @param c the character to add
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
-uset_add(USet* set, UChar32 c);
+U_CAPI शून्य U_EXPORT2
+uset_सङ्कलय(USet* समुच्चयः, UChar32 c);
 
 /**
  * Adds all of the elements in the specified set to this set if
@@ -585,8 +585,8 @@ uset_add(USet* set, UChar32 c);
  * @param additionalSet the source set whose elements are to be added to this set.
  * @stable ICU 2.6
  */
-U_CAPI void U_EXPORT2
-uset_addAll(USet* set, const USet *additionalSet);
+U_CAPI शून्य U_EXPORT2
+uset_सङ्कलय_All(USet* समुच्चयः, ध्रुव USet *additional_समुच्चयः);
 
 /**
  * Adds the given range of characters to the given USet.  After this call,
@@ -597,8 +597,8 @@ uset_addAll(USet* set, const USet *additionalSet);
  * @param end the last character of the range to add, inclusive
  * @stable ICU 2.2
  */
-U_CAPI void U_EXPORT2
-uset_addRange(USet* set, UChar32 start, UChar32 end);
+U_CAPI शून्य U_EXPORT2
+uset_सङ्कलय_Range(USet* समुच्चयः, UChar32 start, UChar32 अन्तः);
 
 /**
  * Adds the given string to the given USet.  After this call,
@@ -609,8 +609,8 @@ uset_addRange(USet* set, UChar32 start, UChar32 end);
  * @param strLen the length of the string or -1 if null terminated.
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
-uset_addString(USet* set, const UChar* str, int32_t strLen);
+U_CAPI शून्य U_EXPORT2
+uset_सङ्कलय_String(USet* समुच्चयः, ध्रुव UChar* str, int32_t strLen);
 
 /**
  * Adds each of the characters in this string to the set. Note: "ch" => {"c", "h"}
@@ -621,8 +621,8 @@ uset_addString(USet* set, const UChar* str, int32_t strLen);
  * @param strLen the length of the string or -1 if null terminated.
  * @stable ICU 3.4
  */
-U_CAPI void U_EXPORT2
-uset_addAllCodePoints(USet* set, const UChar *str, int32_t strLen);
+U_CAPI शून्य U_EXPORT2
+uset_सङ्कलय_All_संहिता_Points(USet* समुच्चयः, ध्रुव UChar *str, int32_t strLen);
 
 /**
  * Removes the given character from the given USet.  After this call,
@@ -632,8 +632,8 @@ uset_addAllCodePoints(USet* set, const UChar *str, int32_t strLen);
  * @param c the character to remove
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
-uset_remove(USet* set, UChar32 c);
+U_CAPI शून्य U_EXPORT2
+uset_remove(USet* समुच्चयः, UChar32 c);
 
 /**
  * Removes the given range of characters from the given USet.  After this call,
@@ -644,8 +644,8 @@ uset_remove(USet* set, UChar32 c);
  * @param end the last character of the range to remove, inclusive
  * @stable ICU 2.2
  */
-U_CAPI void U_EXPORT2
-uset_removeRange(USet* set, UChar32 start, UChar32 end);
+U_CAPI शून्य U_EXPORT2
+uset_removeRange(USet* समुच्चयः, UChar32 start, UChar32 अन्तः);
 
 /**
  * Removes the given string to the given USet.  After this call,
@@ -656,8 +656,8 @@ uset_removeRange(USet* set, UChar32 start, UChar32 end);
  * @param strLen the length of the string or -1 if null terminated.
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
-uset_removeString(USet* set, const UChar* str, int32_t strLen);
+U_CAPI शून्य U_EXPORT2
+uset_removeString(USet* समुच्चयः, ध्रुव UChar* str, int32_t strLen);
 
 /**
  * Removes EACH of the characters in this string. Note: "ch" == {"c", "h"}
@@ -668,8 +668,8 @@ uset_removeString(USet* set, const UChar* str, int32_t strLen);
  * @param length the length of the string, or -1 if NUL-terminated
  * @stable ICU 69
  */
-U_CAPI void U_EXPORT2
-uset_removeAllCodePoints(USet *set, const UChar *str, int32_t length);
+U_CAPI शून्य U_EXPORT2
+uset_remove_All_संहिता_Points(USet *समुच्चयः, ध्रुव UChar *str, int32_t दीर्घता);
 
 /**
  * Removes from this set all of its elements that are contained in the
@@ -682,8 +682,8 @@ uset_removeAllCodePoints(USet *set, const UChar *str, int32_t length);
  * removed from this set
  * @stable ICU 3.2
  */
-U_CAPI void U_EXPORT2
-uset_removeAll(USet* set, const USet* removeSet);
+U_CAPI शून्य U_EXPORT2
+uset_removeAll(USet* समुच्चयः, ध्रुव USet* remove_समुच्चयः);
 
 /**
  * Retain only the elements in this set that are contained in the
@@ -697,8 +697,8 @@ uset_removeAll(USet* set, const USet* removeSet);
  * @param end last character, inclusive, of range
  * @stable ICU 3.2
  */
-U_CAPI void U_EXPORT2
-uset_retain(USet* set, UChar32 start, UChar32 end);
+U_CAPI शून्य U_EXPORT2
+uset_retain(USet* समुच्चयः, UChar32 start, UChar32 अन्तः);
 
 /**
  * Retains only the specified string from this set if it is present.
@@ -711,8 +711,8 @@ uset_retain(USet* set, UChar32 start, UChar32 end);
  * @param length the length of the string, or -1 if NUL-terminated
  * @stable ICU 69
  */
-U_CAPI void U_EXPORT2
-uset_retainString(USet *set, const UChar *str, int32_t length);
+U_CAPI शून्य U_EXPORT2
+uset_retainString(USet *समुच्चयः, ध्रुव UChar *str, int32_t दीर्घता);
 
 /**
  * Retains EACH of the characters in this string. Note: "ch" == {"c", "h"}
@@ -723,8 +723,8 @@ uset_retainString(USet *set, const UChar *str, int32_t length);
  * @param length the length of the string, or -1 if NUL-terminated
  * @stable ICU 69
  */
-U_CAPI void U_EXPORT2
-uset_retainAllCodePoints(USet *set, const UChar *str, int32_t length);
+U_CAPI शून्य U_EXPORT2
+uset_retain_All_संहिता_Points(USet *समुच्चयः, ध्रुव UChar *str, int32_t दीर्घता);
 
 /**
  * Retains only the elements in this set that are contained in the
@@ -738,8 +738,8 @@ uset_retainAllCodePoints(USet *set, const UChar *str, int32_t length);
  * @param retain set that defines which elements this set will retain
  * @stable ICU 3.2
  */
-U_CAPI void U_EXPORT2
-uset_retainAll(USet* set, const USet* retain);
+U_CAPI शून्य U_EXPORT2
+uset_retainAll(USet* समुच्चयः, ध्रुव USet* retain);
 
 /**
  * Reallocate this objects internal structures to take up the least
@@ -749,8 +749,8 @@ uset_retainAll(USet* set, const USet* retain);
  * @param set the object on which to perform the compact
  * @stable ICU 3.2
  */
-U_CAPI void U_EXPORT2
-uset_compact(USet* set);
+U_CAPI शून्य U_EXPORT2
+uset_compact(USet* समुच्चयः);
 
 /**
  * This is equivalent to
@@ -765,8 +765,8 @@ uset_compact(USet* set);
  * @param set the set
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
-uset_complement(USet* set);
+U_CAPI शून्य U_EXPORT2
+uset_complement(USet* समुच्चयः);
 
 /**
  * Complements the specified range in this set.  Any character in
@@ -781,8 +781,8 @@ uset_complement(USet* set);
  * @param end last character, inclusive, of range
  * @stable ICU 69
  */
-U_CAPI void U_EXPORT2
-uset_complementRange(USet *set, UChar32 start, UChar32 end);
+U_CAPI शून्य U_EXPORT2
+uset_complementRange(USet *समुच्चयः, UChar32 start, UChar32 अन्तः);
 
 /**
  * Complements the specified string in this set.
@@ -794,8 +794,8 @@ uset_complementRange(USet *set, UChar32 start, UChar32 end);
  * @param length the length of the string, or -1 if NUL-terminated
  * @stable ICU 69
  */
-U_CAPI void U_EXPORT2
-uset_complementString(USet *set, const UChar *str, int32_t length);
+U_CAPI शून्य U_EXPORT2
+uset_complementString(USet *समुच्चयः, ध्रुव UChar *str, int32_t दीर्घता);
 
 /**
  * Complements EACH of the characters in this string. Note: "ch" == {"c", "h"}
@@ -806,8 +806,8 @@ uset_complementString(USet *set, const UChar *str, int32_t length);
  * @param length the length of the string, or -1 if NUL-terminated
  * @stable ICU 69
  */
-U_CAPI void U_EXPORT2
-uset_complementAllCodePoints(USet *set, const UChar *str, int32_t length);
+U_CAPI शून्य U_EXPORT2
+uset_complement_All_संहिता_Points(USet *समुच्चयः, ध्रुव UChar *str, int32_t दीर्घता);
 
 /**
  * Complements in this set all elements contained in the specified
@@ -820,8 +820,8 @@ uset_complementAllCodePoints(USet *set, const UChar *str, int32_t length);
  * from this set.
  * @stable ICU 3.2
  */
-U_CAPI void U_EXPORT2
-uset_complementAll(USet* set, const USet* complement);
+U_CAPI शून्य U_EXPORT2
+uset_complementAll(USet* समुच्चयः, ध्रुव USet* complement);
 
 /**
  * Removes all of the elements from this set.  This set will be
@@ -830,8 +830,8 @@ uset_complementAll(USet* set, const USet* complement);
  * @param set the set
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
-uset_clear(USet* set);
+U_CAPI शून्य U_EXPORT2
+uset_clear(USet* समुच्चयः);
 
 /**
  * Close this set over the given attribute.  For the attribute
@@ -861,8 +861,8 @@ uset_clear(USet* set);
  * Unrelated options bits are ignored.
  * @stable ICU 4.2
  */
-U_CAPI void U_EXPORT2
-uset_closeOver(USet* set, int32_t attributes);
+U_CAPI शून्य U_EXPORT2
+uset_closeOver(USet* समुच्चयः, int32_t गुणाः);
 
 /**
  * Remove all strings from this set.
@@ -870,8 +870,8 @@ uset_closeOver(USet* set, int32_t attributes);
  * @param set the set
  * @stable ICU 4.2
  */
-U_CAPI void U_EXPORT2
-uset_removeAllStrings(USet* set);
+U_CAPI शून्य U_EXPORT2
+uset_remove_All_वाक्यानि(USet* समुच्चयः);
 
 /**
  * Returns true if the given USet contains no characters and no
@@ -881,7 +881,7 @@ uset_removeAllStrings(USet* set);
  * @stable ICU 2.4
  */
 U_CAPI UBool U_EXPORT2
-uset_isEmpty(const USet* set);
+uset_is_रिक्तानि(ध्रुव USet* समुच्चयः);
 
 /**
  * @param set the set
@@ -889,7 +889,7 @@ uset_isEmpty(const USet* set);
  * @stable ICU 70
  */
 U_CAPI UBool U_EXPORT2
-uset_hasStrings(const USet *set);
+uset_has_वाक्यानि(ध्रुव USet *समुच्चयः);
 
 /**
  * Returns true if the given USet contains the given character.
@@ -900,7 +900,7 @@ uset_hasStrings(const USet *set);
  * @stable ICU 2.4
  */
 U_CAPI UBool U_EXPORT2
-uset_contains(const USet* set, UChar32 c);
+uset_अन्तर्भवति(ध्रुव USet* समुच्चयः, UChar32 c);
 
 /**
  * Returns true if the given USet contains all characters c
@@ -912,7 +912,7 @@ uset_contains(const USet* set, UChar32 c);
  * @stable ICU 2.2
  */
 U_CAPI UBool U_EXPORT2
-uset_containsRange(const USet* set, UChar32 start, UChar32 end);
+uset_अन्तर्भवति_Range(ध्रुव USet* समुच्चयः, UChar32 start, UChar32 अन्तः);
 
 /**
  * Returns true if the given USet contains the given string.
@@ -923,7 +923,7 @@ uset_containsRange(const USet* set, UChar32 start, UChar32 end);
  * @stable ICU 2.4
  */
 U_CAPI UBool U_EXPORT2
-uset_containsString(const USet* set, const UChar* str, int32_t strLen);
+uset_अन्तर्भवति_String(ध्रुव USet* समुच्चयः, ध्रुव UChar* str, int32_t strLen);
 
 /**
  * Returns the index of the given character within this set, where
@@ -936,7 +936,7 @@ uset_containsString(const USet* set, const UChar* str, int32_t strLen);
  * @stable ICU 3.2
  */
 U_CAPI int32_t U_EXPORT2
-uset_indexOf(const USet* set, UChar32 c);
+uset_सूचकांक_सम्बन्धि(ध्रुव USet* समुच्चयः, UChar32 c);
 
 /**
  * Returns the character at the given index within this set, where
@@ -954,7 +954,7 @@ uset_indexOf(const USet* set, UChar32 c);
  * @stable ICU 3.2
  */
 U_CAPI UChar32 U_EXPORT2
-uset_charAt(const USet* set, int32_t charIndex);
+uset_charAt(ध्रुव USet* समुच्चयः, int32_t char_सूचकांक);
 
 /**
  * Returns the number of characters and strings contained in this set.
@@ -972,7 +972,7 @@ uset_charAt(const USet* set, int32_t charIndex);
  * @see uset_getItemCount
  */
 U_CAPI int32_t U_EXPORT2
-uset_size(const USet* set);
+uset_आकार(ध्रुव USet* समुच्चयः);
 
 /**
  * @param set the set
@@ -984,7 +984,7 @@ uset_size(const USet* set);
  * @see uset_size
  */
 U_CAPI int32_t U_EXPORT2
-uset_getRangeCount(const USet *set);
+uset_get_Range_गणनम्(ध्रुव USet *समुच्चयः);
 
 /**
  * @param set the set
@@ -995,7 +995,7 @@ uset_getRangeCount(const USet *set);
  * @see uset_size
  */
 U_CAPI int32_t U_EXPORT2
-uset_getStringCount(const USet *set);
+uset_get_String_गणनम्(ध्रुव USet *समुच्चयः);
 
 /**
  * Returns the index-th string (empty or multi-character) in the set.
@@ -1009,8 +1009,8 @@ uset_getStringCount(const USet *set);
  * @stable ICU 76
  * @see uset_getStringCount
  */
-U_CAPI const UChar* U_EXPORT2
-uset_getString(const USet* set U_LIFETIME_BOUND, int32_t index, int32_t* pLength);
+U_CAPI ध्रुव UChar* U_EXPORT2
+uset_getString(ध्रुव USet* समुच्चयः U_LIFETIME_BOUND, int32_t सूचकांक, int32_t* p_दीर्घता);
 
 /**
  * Returns the number of items in this set.  An item is either a range
@@ -1023,7 +1023,7 @@ uset_getString(const USet* set U_LIFETIME_BOUND, int32_t index, int32_t* pLength
  * @see uset_getStringCount
  */
 U_CAPI int32_t U_EXPORT2
-uset_getItemCount(const USet* set);
+uset_get_Item_गणनम्(ध्रुव USet* समुच्चयः);
 
 /**
  * Returns an item of this set.  An item is either a range of
@@ -1056,10 +1056,10 @@ uset_getItemCount(const USet* set);
  * @see uset_getString
  */
 U_CAPI int32_t U_EXPORT2
-uset_getItem(const USet* set, int32_t itemIndex,
-             UChar32* start, UChar32* end,
-             UChar* str, int32_t strCapacity,
-             UErrorCode* ec);
+uset_getItem(ध्रुव USet* समुच्चयः, int32_t item_सूचकांक,
+             UChar32* start, UChar32* अन्तः,
+             UChar* str, int32_t str_क्षमता,
+             UError_संहिता* ec);
 
 /**
  * Returns true if set1 contains all the characters and strings
@@ -1070,7 +1070,7 @@ uset_getItem(const USet* set, int32_t itemIndex,
  * @stable ICU 3.2
  */
 U_CAPI UBool U_EXPORT2
-uset_containsAll(const USet* set1, const USet* set2);
+uset_अन्तर्भवति_All(ध्रुव USet* set1, ध्रुव USet* set2);
 
 /**
  * Returns true if this set contains all the characters
@@ -1083,7 +1083,7 @@ uset_containsAll(const USet* set1, const USet* set2);
  * @stable ICU 3.4
  */
 U_CAPI UBool U_EXPORT2
-uset_containsAllCodePoints(const USet* set, const UChar *str, int32_t strLen);
+uset_अन्तर्भवति_All_संहिता_Points(ध्रुव USet* समुच्चयः, ध्रुव UChar *str, int32_t strLen);
 
 /**
  * Returns true if set1 contains none of the characters and strings
@@ -1094,7 +1094,7 @@ uset_containsAllCodePoints(const USet* set, const UChar *str, int32_t strLen);
  * @stable ICU 3.2
  */
 U_CAPI UBool U_EXPORT2
-uset_containsNone(const USet* set1, const USet* set2);
+uset_अन्तर्भवति_None(ध्रुव USet* set1, ध्रुव USet* set2);
 
 /**
  * Returns true if set1 contains some of the characters and strings
@@ -1105,7 +1105,7 @@ uset_containsNone(const USet* set1, const USet* set2);
  * @stable ICU 3.2
  */
 U_CAPI UBool U_EXPORT2
-uset_containsSome(const USet* set1, const USet* set2);
+uset_अन्तर्भवति_Some(ध्रुव USet* set1, ध्रुव USet* set2);
 
 /**
  * Returns the length of the initial substring of the input string which
@@ -1127,7 +1127,7 @@ uset_containsSome(const USet* set1, const USet* set2);
  * @see USetSpanCondition
  */
 U_CAPI int32_t U_EXPORT2
-uset_span(const USet *set, const UChar *s, int32_t length, USetSpanCondition spanCondition);
+uset_विस्तृतिः(ध्रुव USet *समुच्चयः, ध्रुव UChar *s, int32_t दीर्घता, USet_विस्तृतिः_Condition विस्तृतिः_Condition);
 
 /**
  * Returns the start of the trailing substring of the input string which
@@ -1148,7 +1148,7 @@ uset_span(const USet *set, const UChar *s, int32_t length, USetSpanCondition spa
  * @see USetSpanCondition
  */
 U_CAPI int32_t U_EXPORT2
-uset_spanBack(const USet *set, const UChar *s, int32_t length, USetSpanCondition spanCondition);
+uset_विस्तृतिः_पृष्ठभागः(ध्रुव USet *समुच्चयः, ध्रुव UChar *s, int32_t दीर्घता, USet_विस्तृतिः_Condition विस्तृतिः_Condition);
 
 /**
  * Returns the length of the initial substring of the input string which
@@ -1170,7 +1170,7 @@ uset_spanBack(const USet *set, const UChar *s, int32_t length, USetSpanCondition
  * @see USetSpanCondition
  */
 U_CAPI int32_t U_EXPORT2
-uset_spanUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition spanCondition);
+uset_विस्तृतिः_UTF8(ध्रुव USet *समुच्चयः, ध्रुव वर्ण *s, int32_t दीर्घता, USet_विस्तृतिः_Condition विस्तृतिः_Condition);
 
 /**
  * Returns the start of the trailing substring of the input string which
@@ -1191,7 +1191,7 @@ uset_spanUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition 
  * @see USetSpanCondition
  */
 U_CAPI int32_t U_EXPORT2
-uset_spanBackUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition spanCondition);
+uset_विस्तृतिः_पृष्ठभागः_UTF8(ध्रुव USet *समुच्चयः, ध्रुव वर्ण *s, int32_t दीर्घता, USet_विस्तृतिः_Condition विस्तृतिः_Condition);
 
 /**
  * Returns true if set1 contains all of the characters and strings
@@ -1202,7 +1202,7 @@ uset_spanBackUTF8(const USet *set, const char *s, int32_t length, USetSpanCondit
  * @stable ICU 3.2
  */
 U_CAPI UBool U_EXPORT2
-uset_equals(const USet* set1, const USet* set2);
+uset_equals(ध्रुव USet* set1, ध्रुव USet* set2);
 
 /*********************************************************************
  * Serialized set API
@@ -1258,7 +1258,7 @@ uset_equals(const USet* set1, const USet* set2);
  * @stable ICU 2.4
  */
 U_CAPI int32_t U_EXPORT2
-uset_serialize(const USet* set, uint16_t* dest, int32_t destCapacity, UErrorCode* pErrorCode);
+uset_serialize(ध्रुव USet* समुच्चयः, uint16_t* dest, int32_t dest_क्षमता, UError_संहिता* p_Error_संहिता);
 
 /**
  * Given a serialized array, fill in the given serialized set object.
@@ -1269,7 +1269,7 @@ uset_serialize(const USet* set, uint16_t* dest, int32_t destCapacity, UErrorCode
  * @stable ICU 2.4
  */
 U_CAPI UBool U_EXPORT2
-uset_getSerializedSet(USerializedSet* fillSet, const uint16_t* src, int32_t srcLength);
+uset_get_Serialized_समुच्चयः(USerialized_समुच्चयः* fill_समुच्चयः, ध्रुव uint16_t* src, int32_t src_दीर्घता);
 
 /**
  * Set the USerializedSet to contain the given character (and nothing
@@ -1278,8 +1278,8 @@ uset_getSerializedSet(USerializedSet* fillSet, const uint16_t* src, int32_t srcL
  * @param c The codepoint to set
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
-uset_setSerializedToOne(USerializedSet* fillSet, UChar32 c);
+U_CAPI शून्य U_EXPORT2
+uset_समुच्चयः_Serialized_गन्तव्यम्_One(USerialized_समुच्चयः* fill_समुच्चयः, UChar32 c);
 
 /**
  * Returns true if the given USerializedSet contains the given
@@ -1290,7 +1290,7 @@ uset_setSerializedToOne(USerializedSet* fillSet, UChar32 c);
  * @stable ICU 2.4
  */
 U_CAPI UBool U_EXPORT2
-uset_serializedContains(const USerializedSet* set, UChar32 c);
+uset_serialized_अन्तर्भवति(ध्रुव USerialized_समुच्चयः* समुच्चयः, UChar32 c);
 
 /**
  * Returns the number of disjoint ranges of characters contained in
@@ -1302,7 +1302,7 @@ uset_serializedContains(const USerializedSet* set, UChar32 c);
  * @stable ICU 2.4
  */
 U_CAPI int32_t U_EXPORT2
-uset_getSerializedRangeCount(const USerializedSet* set);
+uset_get_Serialized_Range_गणनम्(ध्रुव USerialized_समुच्चयः* समुच्चयः);
 
 /**
  * Returns a range of characters contained in the given serialized
@@ -1318,12 +1318,12 @@ uset_getSerializedRangeCount(const USerializedSet* set);
  * @stable ICU 2.4
  */
 U_CAPI UBool U_EXPORT2
-uset_getSerializedRange(const USerializedSet* set, int32_t rangeIndex,
-                        UChar32* pStart, UChar32* pEnd);
+uset_getSerializedRange(ध्रुव USerialized_समुच्चयः* समुच्चयः, int32_t range_सूचकांक,
+                        UChar32* pStart, UChar32* p_अन्तः);
 
-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+#यदि U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_शीर्षकम्_API
 
-namespace U_HEADER_ONLY_NAMESPACE {
+namespace U_शीर्षकम्_ONLY_NAMESPACE {
 
 // Note: Not U_COMMON_API, and not a subclass of UMemory, because this is a header-only class,
 // not intended to be used via export from the ICU DLL.
@@ -1332,74 +1332,74 @@ namespace U_HEADER_ONLY_NAMESPACE {
  * Iterator returned by USetCodePoints.
  * @stable ICU 76
  */
-class USetCodePointIterator {
-public:
+class USet_संहिता_Point_Iterator {
+सार्वजनिक:
     /** @stable ICU 76 */
-    USetCodePointIterator(const USetCodePointIterator &other) = default;
+    USet_संहिता_Point_Iterator(ध्रुव USet_संहिता_Point_Iterator &other) = स्वभाव;
 
     /** @stable ICU 76 */
-    bool operator==(const USetCodePointIterator &other) const {
+    bool संक्रियकः==(ध्रुव USet_संहिता_Point_Iterator &other) ध्रुव {
         // No need to compare rangeCount & end given private constructor
         // and assuming we don't compare iterators across the set being modified.
         // And comparing rangeIndex is redundant with comparing c.
         // We might even skip comparing uset.
         // Unless we want operator==() to be "correct" for more than iteration.
-        return uset == other.uset && c == other.c;
+        प्रत्यागम uset == other.uset && c == other.c;
     }
 
     /** @stable ICU 76 */
-    bool operator!=(const USetCodePointIterator &other) const { return !operator==(other); }
+    bool संक्रियकः!=(ध्रुव USet_संहिता_Point_Iterator &other) ध्रुव { प्रत्यागम !संक्रियकः==(other); }
 
     /** @stable ICU 76 */
-    UChar32 operator*() const { return c; }
+    UChar32 संक्रियकः*() ध्रुव { प्रत्यागम c; }
 
     /**
      * Pre-increment.
      * @stable ICU 76
      */
-    USetCodePointIterator& operator++() U_LIFETIME_BOUND {
-        if (c < end) {
+    USet_संहिता_Point_Iterator& संक्रियकः++() U_LIFETIME_BOUND {
+        यदि (c < अन्तः) {
             ++c;
-        } else if (rangeIndex < rangeCount) {
-            UErrorCode errorCode = U_ZERO_ERROR;
-            int32_t result = uset_getItem(uset, rangeIndex, &c, &end, nullptr, 0, &errorCode);
-            if (U_SUCCESS(errorCode) && result == 0) {
-                ++rangeIndex;
-            } else {
-                c = end = U_SENTINEL;
+        } अन्यथा यदि (range_सूचकांक < range_गणनम्) {
+            UError_संहिता error_संहिता = U_ZERO_ERROR;
+            int32_t परिणाम = uset_getItem(uset, range_सूचकांक, &c, &अन्तः, nullptr, 0, &error_संहिता);
+            यदि (U_SUCCESS(error_संहिता) && परिणाम == 0) {
+                ++range_सूचकांक;
+            } अन्यथा {
+                c = अन्तः = U_SENTINEL;
             }
-        } else {
-            c = end = U_SENTINEL;
+        } अन्यथा {
+            c = अन्तः = U_SENTINEL;
         }
-        return *this;
+        प्रत्यागम *this;
     }
 
     /**
      * Post-increment.
      * @stable ICU 76
      */
-    USetCodePointIterator operator++(int) {
-        USetCodePointIterator result(*this);
-        operator++();
-        return result;
+    USet_संहिता_Point_Iterator संक्रियकः++(पूर्णाङ्क) {
+        USet_संहिता_Point_Iterator परिणाम(*this);
+        संक्रियकः++();
+        प्रत्यागम परिणाम;
     }
 
-private:
-    friend class USetCodePoints;
+गुप्त:
+    मित्रम् class USet_संहिता_Points;
 
-    USetCodePointIterator(const USet* pUset U_LIFETIME_BOUND,
-                          int32_t nRangeIndex,
-                          int32_t nRangeCount)
-            : uset(pUset), rangeIndex(nRangeIndex), rangeCount(nRangeCount),
-                c(U_SENTINEL), end(U_SENTINEL) {
+    USet_संहिता_Point_Iterator(ध्रुव USet* pUset U_LIFETIME_BOUND,
+                          int32_t n_Range_सूचकांक,
+                          int32_t n_Range_गणनम्)
+            : uset(pUset), range_सूचकांक(n_Range_सूचकांक), range_गणनम्(n_Range_गणनम्),
+                c(U_SENTINEL), अन्तः(U_SENTINEL) {
         // Fetch the first range.
-        operator++();
+        संक्रियकः++();
     }
 
-    const USet *uset;
-    int32_t rangeIndex;
-    int32_t rangeCount;
-    UChar32 c, end;
+    ध्रुव USet *uset;
+    int32_t range_सूचकांक;
+    int32_t range_गणनम्;
+    UChar32 c, अन्तः;
 };
 
 /**
@@ -1420,31 +1420,31 @@ private:
  * @see USetStrings
  * @see USetElements
  */
-class USetCodePoints {
-public:
+class USet_संहिता_Points {
+सार्वजनिक:
     /**
      * Constructs a C++ "range" object over the code points of the USet.
      * @stable ICU 76
      */
-    USetCodePoints(const USet* pUset U_LIFETIME_BOUND)
-            : uset(pUset), rangeCount(uset_getRangeCount(pUset)) {}
+    USet_संहिता_Points(ध्रुव USet* pUset U_LIFETIME_BOUND)
+            : uset(pUset), range_गणनम्(uset_get_Range_गणनम्(pUset)) {}
 
     /** @stable ICU 76 */
-    USetCodePoints(const USetCodePoints &other) = default;
+    USet_संहिता_Points(ध्रुव USet_संहिता_Points &other) = स्वभाव;
 
     /** @stable ICU 76 */
-    USetCodePointIterator begin() const {
-        return USetCodePointIterator(uset, 0, rangeCount);
+    USet_संहिता_Point_Iterator begin() ध्रुव {
+        प्रत्यागम USet_संहिता_Point_Iterator(uset, 0, range_गणनम्);
     }
 
     /** @stable ICU 76 */
-    USetCodePointIterator end() const {
-        return USetCodePointIterator(uset, rangeCount, rangeCount);
+    USet_संहिता_Point_Iterator अन्तः() ध्रुव {
+        प्रत्यागम USet_संहिता_Point_Iterator(uset, range_गणनम्, range_गणनम्);
     }
 
-private:
-    const USet *uset;
-    int32_t rangeCount;
+गुप्त:
+    ध्रुव USet *uset;
+    int32_t range_गणनम्;
 };
 
 /**
@@ -1454,35 +1454,35 @@ private:
  * (end() returns an iterator corresponding to rangeEnd+1.)
  * @stable ICU 76
  */
-struct CodePointRange {
+संरचना संहिता_Point_Range {
     /** @stable ICU 76 */
-    struct iterator {
+    संरचना iterator {
         /** @stable ICU 76 */
         iterator(UChar32 aC) : c(aC) {}
 
         /** @stable ICU 76 */
-        bool operator==(const iterator &other) const { return c == other.c; }
+        bool संक्रियकः==(ध्रुव iterator &other) ध्रुव { प्रत्यागम c == other.c; }
         /** @stable ICU 76 */
-        bool operator!=(const iterator &other) const { return !operator==(other); }
+        bool संक्रियकः!=(ध्रुव iterator &other) ध्रुव { प्रत्यागम !संक्रियकः==(other); }
 
         /** @stable ICU 76 */
-        UChar32 operator*() const { return c; }
+        UChar32 संक्रियकः*() ध्रुव { प्रत्यागम c; }
 
         /**
          * Pre-increment.
          * @stable ICU 76
          */
-        iterator& operator++() U_LIFETIME_BOUND {
+        iterator& संक्रियकः++() U_LIFETIME_BOUND {
             ++c;
-            return *this;
+            प्रत्यागम *this;
         }
 
         /**
          * Post-increment.
          * @stable ICU 76
          */
-        iterator operator++(int) {
-            return c++;
+        iterator संक्रियकः++(पूर्णाङ्क) {
+            प्रत्यागम c++;
         }
 
         /**
@@ -1493,15 +1493,15 @@ struct CodePointRange {
     };
 
     /** @stable ICU 76 */
-    CodePointRange(UChar32 start, UChar32 end) : rangeStart(start), rangeEnd(end) {}
+    संहिता_Point_Range(UChar32 start, UChar32 अन्तः) : rangeStart(start), range_अन्तः(अन्तः) {}
     /** @stable ICU 76 */
-    CodePointRange(const CodePointRange &other) = default;
+    संहिता_Point_Range(ध्रुव संहिता_Point_Range &other) = स्वभाव;
     /** @stable ICU 76 */
-    size_t size() const { return (rangeEnd + 1) - rangeStart; }
+    size_t आकार_2() ध्रुव { प्रत्यागम (range_अन्तः + 1) - rangeStart; }
     /** @stable ICU 76 */
-    iterator begin() const { return rangeStart; }
+    iterator begin() ध्रुव { प्रत्यागम rangeStart; }
     /** @stable ICU 76 */
-    iterator end() const { return rangeEnd + 1; }
+    iterator अन्तः() ध्रुव { प्रत्यागम range_अन्तः + 1; }
 
     /**
      * Start of a USet/UnicodeSet range of code points.
@@ -1512,7 +1512,7 @@ struct CodePointRange {
      * Inclusive end of a USet/UnicodeSet range of code points.
      * @stable ICU 76
      */
-    UChar32 rangeEnd;
+    UChar32 range_अन्तः;
 };
 
 /**
@@ -1520,63 +1520,63 @@ struct CodePointRange {
  * @stable ICU 76
  */
 class USetRangeIterator {
-public:
+सार्वजनिक:
     /** @stable ICU 76 */
-    USetRangeIterator(const USetRangeIterator &other) = default;
+    USetRangeIterator(ध्रुव USetRangeIterator &other) = स्वभाव;
 
     /** @stable ICU 76 */
-    bool operator==(const USetRangeIterator &other) const {
+    bool संक्रियकः==(ध्रुव USetRangeIterator &other) ध्रुव {
         // No need to compare rangeCount given private constructor
         // and assuming we don't compare iterators across the set being modified.
         // We might even skip comparing uset.
         // Unless we want operator==() to be "correct" for more than iteration.
-        return uset == other.uset && rangeIndex == other.rangeIndex;
+        प्रत्यागम uset == other.uset && range_सूचकांक == other.range_सूचकांक;
     }
 
     /** @stable ICU 76 */
-    bool operator!=(const USetRangeIterator &other) const { return !operator==(other); }
+    bool संक्रियकः!=(ध्रुव USetRangeIterator &other) ध्रुव { प्रत्यागम !संक्रियकः==(other); }
 
     /** @stable ICU 76 */
-    CodePointRange operator*() const {
-        if (rangeIndex < rangeCount) {
-            UChar32 start, end;
-            UErrorCode errorCode = U_ZERO_ERROR;
-            int32_t result = uset_getItem(uset, rangeIndex, &start, &end, nullptr, 0, &errorCode);
-            if (U_SUCCESS(errorCode) && result == 0) {
-                return CodePointRange(start, end);
+    संहिता_Point_Range संक्रियकः*() ध्रुव {
+        यदि (range_सूचकांक < range_गणनम्) {
+            UChar32 start, अन्तः;
+            UError_संहिता error_संहिता = U_ZERO_ERROR;
+            int32_t परिणाम = uset_getItem(uset, range_सूचकांक, &start, &अन्तः, nullptr, 0, &error_संहिता);
+            यदि (U_SUCCESS(error_संहिता) && परिणाम == 0) {
+                प्रत्यागम संहिता_Point_Range(start, अन्तः);
             }
         }
-        return CodePointRange(U_SENTINEL, U_SENTINEL);
+        प्रत्यागम संहिता_Point_Range(U_SENTINEL, U_SENTINEL);
     }
 
     /**
      * Pre-increment.
      * @stable ICU 76
      */
-    USetRangeIterator& operator++() U_LIFETIME_BOUND {
-        ++rangeIndex;
-        return *this;
+    USetRangeIterator& संक्रियकः++() U_LIFETIME_BOUND {
+        ++range_सूचकांक;
+        प्रत्यागम *this;
     }
 
     /**
      * Post-increment.
      * @stable ICU 76
      */
-    USetRangeIterator operator++(int) {
-        USetRangeIterator result(*this);
-        ++rangeIndex;
-        return result;
+    USetRangeIterator संक्रियकः++(पूर्णाङ्क) {
+        USetRangeIterator परिणाम(*this);
+        ++range_सूचकांक;
+        प्रत्यागम परिणाम;
     }
 
-private:
-    friend class USetRanges;
+गुप्त:
+    मित्रम् class USetRanges;
 
-    USetRangeIterator(const USet* pUset U_LIFETIME_BOUND, int32_t nRangeIndex, int32_t nRangeCount)
-            : uset(pUset), rangeIndex(nRangeIndex), rangeCount(nRangeCount) {}
+    USetRangeIterator(ध्रुव USet* pUset U_LIFETIME_BOUND, int32_t n_Range_सूचकांक, int32_t n_Range_गणनम्)
+            : uset(pUset), range_सूचकांक(n_Range_सूचकांक), range_गणनम्(n_Range_गणनम्) {}
 
-    const USet *uset;
-    int32_t rangeIndex;
-    int32_t rangeCount;
+    ध्रुव USet *uset;
+    int32_t range_सूचकांक;
+    int32_t range_गणनम्;
 };
 
 /**
@@ -1603,30 +1603,30 @@ private:
  * @see USetElements
  */
 class USetRanges {
-public:
+सार्वजनिक:
     /**
      * Constructs a C++ "range" object over the code point ranges of the USet.
      * @stable ICU 76
      */
-    USetRanges(const USet* pUset U_LIFETIME_BOUND)
-            : uset(pUset), rangeCount(uset_getRangeCount(pUset)) {}
+    USetRanges(ध्रुव USet* pUset U_LIFETIME_BOUND)
+            : uset(pUset), range_गणनम्(uset_get_Range_गणनम्(pUset)) {}
 
     /** @stable ICU 76 */
-    USetRanges(const USetRanges &other) = default;
+    USetRanges(ध्रुव USetRanges &other) = स्वभाव;
 
     /** @stable ICU 76 */
-    USetRangeIterator begin() const {
-        return USetRangeIterator(uset, 0, rangeCount);
+    USetRangeIterator begin() ध्रुव {
+        प्रत्यागम USetRangeIterator(uset, 0, range_गणनम्);
     }
 
     /** @stable ICU 76 */
-    USetRangeIterator end() const {
-        return USetRangeIterator(uset, rangeCount, rangeCount);
+    USetRangeIterator अन्तः() ध्रुव {
+        प्रत्यागम USetRangeIterator(uset, range_गणनम्, range_गणनम्);
     }
 
-private:
-    const USet *uset;
-    int32_t rangeCount;
+गुप्त:
+    ध्रुव USet *uset;
+    int32_t range_गणनम्;
 };
 
 /**
@@ -1634,61 +1634,61 @@ private:
  * @stable ICU 76
  */
 class USetStringIterator {
-public:
+सार्वजनिक:
     /** @stable ICU 76 */
-    USetStringIterator(const USetStringIterator &other) = default;
+    USetStringIterator(ध्रुव USetStringIterator &other) = स्वभाव;
 
     /** @stable ICU 76 */
-    bool operator==(const USetStringIterator &other) const {
+    bool संक्रियकः==(ध्रुव USetStringIterator &other) ध्रुव {
         // No need to compare count given private constructor
         // and assuming we don't compare iterators across the set being modified.
         // We might even skip comparing uset.
         // Unless we want operator==() to be "correct" for more than iteration.
-        return uset == other.uset && index == other.index;
+        प्रत्यागम uset == other.uset && सूचकांक == other.सूचकांक;
     }
 
     /** @stable ICU 76 */
-    bool operator!=(const USetStringIterator &other) const { return !operator==(other); }
+    bool संक्रियकः!=(ध्रुव USetStringIterator &other) ध्रुव { प्रत्यागम !संक्रियकः==(other); }
 
     /** @stable ICU 76 */
-    std::u16string_view operator*() const {
-        if (index < count) {
-            int32_t length;
-            const UChar *uchars = uset_getString(uset, index, &length);
+    std::u16string_view संक्रियकः*() ध्रुव {
+        यदि (सूचकांक < गणनम्) {
+            int32_t दीर्घता;
+            ध्रुव UChar *uchars = uset_getString(uset, सूचकांक, &दीर्घता);
             // assert uchars != nullptr;
-            return {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(length)};
+            प्रत्यागम {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(दीर्घता)};
         }
-        return {};
+        प्रत्यागम {};
     }
 
     /**
      * Pre-increment.
      * @stable ICU 76
      */
-    USetStringIterator& operator++() U_LIFETIME_BOUND {
-        ++index;
-        return *this;
+    USetStringIterator& संक्रियकः++() U_LIFETIME_BOUND {
+        ++सूचकांक;
+        प्रत्यागम *this;
     }
 
     /**
      * Post-increment.
      * @stable ICU 76
      */
-    USetStringIterator operator++(int) {
-        USetStringIterator result(*this);
-        ++index;
-        return result;
+    USetStringIterator संक्रियकः++(पूर्णाङ्क) {
+        USetStringIterator परिणाम(*this);
+        ++सूचकांक;
+        प्रत्यागम परिणाम;
     }
 
-private:
-    friend class USetStrings;
+गुप्त:
+    मित्रम् class USet_वाक्यानि;
 
-    USetStringIterator(const USet* pUset U_LIFETIME_BOUND, int32_t nIndex, int32_t nCount)
-            : uset(pUset), index(nIndex), count(nCount) {}
+    USetStringIterator(ध्रुव USet* pUset U_LIFETIME_BOUND, int32_t n_सूचकांक, int32_t n_गणनम्)
+            : uset(pUset), सूचकांक(n_सूचकांक), गणनम्(n_गणनम्) {}
 
-    const USet *uset;
-    int32_t index;
-    int32_t count;
+    ध्रुव USet *uset;
+    int32_t सूचकांक;
+    int32_t गणनम्;
 };
 
 /**
@@ -1713,31 +1713,31 @@ private:
  * @see USetRanges
  * @see USetElements
  */
-class USetStrings {
-public:
+class USet_वाक्यानि {
+सार्वजनिक:
     /**
      * Constructs a C++ "range" object over the strings of the USet.
      * @stable ICU 76
      */
-    USetStrings(const USet* pUset U_LIFETIME_BOUND)
-            : uset(pUset), count(uset_getStringCount(pUset)) {}
+    USet_वाक्यानि(ध्रुव USet* pUset U_LIFETIME_BOUND)
+            : uset(pUset), गणनम्(uset_get_String_गणनम्(pUset)) {}
 
     /** @stable ICU 76 */
-    USetStrings(const USetStrings &other) = default;
+    USet_वाक्यानि(ध्रुव USet_वाक्यानि &other) = स्वभाव;
 
     /** @stable ICU 76 */
-    USetStringIterator begin() const {
-        return USetStringIterator(uset, 0, count);
+    USetStringIterator begin() ध्रुव {
+        प्रत्यागम USetStringIterator(uset, 0, गणनम्);
     }
 
     /** @stable ICU 76 */
-    USetStringIterator end() const {
-        return USetStringIterator(uset, count, count);
+    USetStringIterator अन्तः() ध्रुव {
+        प्रत्यागम USetStringIterator(uset, गणनम्, गणनम्);
     }
 
-private:
-    const USet *uset;
-    int32_t count;
+गुप्त:
+    ध्रुव USet *uset;
+    int32_t गणनम्;
 };
 
 /**
@@ -1745,35 +1745,35 @@ private:
  * @stable ICU 77
  */
 class USetElementIterator {
-public:
+सार्वजनिक:
     /** @stable ICU 77 */
-    USetElementIterator(const USetElementIterator &other) = default;
+    USetElementIterator(ध्रुव USetElementIterator &other) = स्वभाव;
 
     /** @stable ICU 77 */
-    bool operator==(const USetElementIterator &other) const {
+    bool संक्रियकः==(ध्रुव USetElementIterator &other) ध्रुव {
         // No need to compare rangeCount & end given private constructor
         // and assuming we don't compare iterators across the set being modified.
         // We might even skip comparing uset.
         // Unless we want operator==() to be "correct" for more than iteration.
-        return uset == other.uset && c == other.c && index == other.index;
+        प्रत्यागम uset == other.uset && c == other.c && सूचकांक == other.सूचकांक;
     }
 
     /** @stable ICU 77 */
-    bool operator!=(const USetElementIterator &other) const { return !operator==(other); }
+    bool संक्रियकः!=(ध्रुव USetElementIterator &other) ध्रुव { प्रत्यागम !संक्रियकः==(other); }
 
     /** @stable ICU 77 */
-    std::u16string operator*() const {
-        if (c >= 0) {
-            return c <= 0xffff ?
+    std::u16string संक्रियकः*() ध्रुव {
+        यदि (c >= 0) {
+            प्रत्यागम c <= 0xffff ?
                 std::u16string({static_cast<char16_t>(c)}) :
                 std::u16string({U16_LEAD(c), U16_TRAIL(c)});
-        } else if (index < totalCount) {
-            int32_t length;
-            const UChar *uchars = uset_getString(uset, index - rangeCount, &length);
+        } अन्यथा यदि (सूचकांक < योग_गणनम्) {
+            int32_t दीर्घता;
+            ध्रुव UChar *uchars = uset_getString(uset, सूचकांक - range_गणनम्, &दीर्घता);
             // assert uchars != nullptr;
-            return {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(length)};
-        } else {
-            return {};
+            प्रत्यागम {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(दीर्घता)};
+        } अन्यथा {
+            प्रत्यागम {};
         }
     }
 
@@ -1781,57 +1781,57 @@ public:
      * Pre-increment.
      * @stable ICU 77
      */
-    USetElementIterator& operator++() U_LIFETIME_BOUND {
-        if (c < end) {
+    USetElementIterator& संक्रियकः++() U_LIFETIME_BOUND {
+        यदि (c < अन्तः) {
             ++c;
-        } else if (index < rangeCount) {
-            UErrorCode errorCode = U_ZERO_ERROR;
-            int32_t result = uset_getItem(uset, index, &c, &end, nullptr, 0, &errorCode);
-            if (U_SUCCESS(errorCode) && result == 0) {
-                ++index;
-            } else {
-                c = end = U_SENTINEL;
+        } अन्यथा यदि (सूचकांक < range_गणनम्) {
+            UError_संहिता error_संहिता = U_ZERO_ERROR;
+            int32_t परिणाम = uset_getItem(uset, सूचकांक, &c, &अन्तः, nullptr, 0, &error_संहिता);
+            यदि (U_SUCCESS(error_संहिता) && परिणाम == 0) {
+                ++सूचकांक;
+            } अन्यथा {
+                c = अन्तः = U_SENTINEL;
             }
-        } else if (c >= 0) {
+        } अन्यथा यदि (c >= 0) {
             // assert index == rangeCount;
             // Switch from the last range to the first string.
-            c = end = U_SENTINEL;
-        } else {
-            ++index;
+            c = अन्तः = U_SENTINEL;
+        } अन्यथा {
+            ++सूचकांक;
         }
-        return *this;
+        प्रत्यागम *this;
     }
 
     /**
      * Post-increment.
      * @stable ICU 77
      */
-    USetElementIterator operator++(int) {
-        USetElementIterator result(*this);
-        operator++();
-        return result;
+    USetElementIterator संक्रियकः++(पूर्णाङ्क) {
+        USetElementIterator परिणाम(*this);
+        संक्रियकः++();
+        प्रत्यागम परिणाम;
     }
 
-private:
-    friend class USetElements;
+गुप्त:
+    मित्रम् class USetElements;
 
-    USetElementIterator(const USet* pUset U_LIFETIME_BOUND,
-                        int32_t nIndex,
-                        int32_t nRangeCount,
-                        int32_t nTotalCount)
-            : uset(pUset), index(nIndex), rangeCount(nRangeCount), totalCount(nTotalCount),
-                c(U_SENTINEL), end(U_SENTINEL) {
-        if (index < rangeCount) {
+    USetElementIterator(ध्रुव USet* pUset U_LIFETIME_BOUND,
+                        int32_t n_सूचकांक,
+                        int32_t n_Range_गणनम्,
+                        int32_t n_योग_गणनम्)
+            : uset(pUset), सूचकांक(n_सूचकांक), range_गणनम्(n_Range_गणनम्), योग_गणनम्(n_योग_गणनम्),
+                c(U_SENTINEL), अन्तः(U_SENTINEL) {
+        यदि (सूचकांक < range_गणनम्) {
             // Fetch the first range.
-            operator++();
+            संक्रियकः++();
         }
         // Otherwise don't move beyond the (index - rangeCount)-th string.
     }
 
-    const USet *uset;
-    int32_t index;
+    ध्रुव USet *uset;
+    int32_t सूचकांक;
     /** Number of UnicodeSet/USet code point ranges. */
-    int32_t rangeCount;
+    int32_t range_गणनम्;
     /**
      * Number of code point ranges plus number of strings.
      * index starts from 0, counts ranges while less than rangeCount,
@@ -1841,8 +1841,8 @@ private:
      * smaller than the number of elements returned by this iterator
      * because we return each code point of each range.
      */
-    int32_t totalCount;
-    UChar32 c, end;
+    int32_t योग_गणनम्;
+    UChar32 c, अन्तः;
 };
 
 /**
@@ -1873,35 +1873,35 @@ private:
  * @see USetStrings
  */
 class USetElements {
-public:
+सार्वजनिक:
     /**
      * Constructs a C++ "range" object over all of the elements of the USet.
      * @stable ICU 77
      */
-    USetElements(const USet* pUset U_LIFETIME_BOUND)
-        : uset(pUset), rangeCount(uset_getRangeCount(pUset)),
-            stringCount(uset_getStringCount(pUset)) {}
+    USetElements(ध्रुव USet* pUset U_LIFETIME_BOUND)
+        : uset(pUset), range_गणनम्(uset_get_Range_गणनम्(pUset)),
+            string_गणनम्(uset_get_String_गणनम्(pUset)) {}
 
     /** @stable ICU 77 */
-    USetElements(const USetElements &other) = default;
+    USetElements(ध्रुव USetElements &other) = स्वभाव;
 
     /** @stable ICU 77 */
-    USetElementIterator begin() const {
-        return USetElementIterator(uset, 0, rangeCount, rangeCount + stringCount);
+    USetElementIterator begin() ध्रुव {
+        प्रत्यागम USetElementIterator(uset, 0, range_गणनम्, range_गणनम् + string_गणनम्);
     }
 
     /** @stable ICU 77 */
-    USetElementIterator end() const {
-        return USetElementIterator(uset, rangeCount + stringCount, rangeCount, rangeCount + stringCount);
+    USetElementIterator अन्तः() ध्रुव {
+        प्रत्यागम USetElementIterator(uset, range_गणनम् + string_गणनम्, range_गणनम्, range_गणनम् + string_गणनम्);
     }
 
-private:
-    const USet *uset;
-    int32_t rangeCount, stringCount;
+गुप्त:
+    ध्रुव USet *uset;
+    int32_t range_गणनम्, string_गणनम्;
 };
 
 }  // namespace U_HEADER_ONLY_NAMESPACE
 
-#endif  // U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+#यदि_अन्तः  // U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
 
-#endif  // __USET_H__
+#यदि_अन्तः  // __USET_H__

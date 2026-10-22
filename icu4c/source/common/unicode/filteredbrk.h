@@ -7,16 +7,16 @@
 ********************************************************************************
 */
 
-#ifndef FILTEREDBRK_H
-#define FILTEREDBRK_H
+#यदि_अपरिभाषितम् FILTEREDBRK_H
+#परिभाषय FILTEREDBRK_H
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
 
-#include "unicode/brkiter.h"
+#अन्तर्भाव "unicode/brkiter.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION && !UCONFIG_NO_FILTERED_BREAK_ITERATION
+#यदि !UCONFIG_NO_BREAK_ITERATION && !UCONFIG_NO_FILTERED_BREAK_ITERATION
 
 U_NAMESPACE_BEGIN
 
@@ -36,13 +36,13 @@ U_NAMESPACE_BEGIN
  *
  * @stable ICU 56
  */
-class U_COMMON_API FilteredBreakIteratorBuilder : public UObject {
- public:
+class U_COMMON_API FilteredBreakIteratorBuilder : सार्वजनिक UObject {
+ सार्वजनिक:
   /**
    *  destructor.
    * @stable ICU 56
    */
-  virtual ~FilteredBreakIteratorBuilder();
+  आभास ~FilteredBreakIteratorBuilder();
 
   /**
    * Construct a FilteredBreakIteratorBuilder based on rules in a locale.
@@ -56,9 +56,9 @@ class U_COMMON_API FilteredBreakIteratorBuilder : public UObject {
    * @return the new builder
    * @stable ICU 56
    */
-  static FilteredBreakIteratorBuilder *createInstance(const Locale& where, UErrorCode& status);
+  स्थिर FilteredBreakIteratorBuilder *createInstance(ध्रुव Locale& where, UError_संहिता& स्थितिः);
 
-#ifndef U_HIDE_DEPRECATED_API
+#यदि_अपरिभाषितम् U_HIDE_DEPRECATED_API
   /**
    * This function has been deprecated in favor of createEmptyInstance, which has
    * identical behavior.
@@ -67,8 +67,8 @@ class U_COMMON_API FilteredBreakIteratorBuilder : public UObject {
    * @deprecated ICU 60 use createEmptyInstance instead
    * @see createEmptyInstance()
    */
-  static FilteredBreakIteratorBuilder *createInstance(UErrorCode &status);
-#endif  /* U_HIDE_DEPRECATED_API */
+  स्थिर FilteredBreakIteratorBuilder *createInstance(UError_संहिता &स्थितिः);
+#यदि_अन्तः  /* U_HIDE_DEPRECATED_API */
 
   /**
    * Construct an empty FilteredBreakIteratorBuilder.
@@ -77,7 +77,7 @@ class U_COMMON_API FilteredBreakIteratorBuilder : public UObject {
    * @return the new builder
    * @stable ICU 60
    */
-  static FilteredBreakIteratorBuilder *createEmptyInstance(UErrorCode &status);
+  स्थिर FilteredBreakIteratorBuilder *create_रिक्तानि_Instance(UError_संहिता &स्थितिः);
 
   /**
    * Suppress a certain string from being the end of a segment.
@@ -89,7 +89,7 @@ class U_COMMON_API FilteredBreakIteratorBuilder : public UObject {
    * false if the call was a no-op because the string was already being suppressed.
    * @stable ICU 56
    */
-  virtual UBool suppressBreakAfter(const UnicodeString& string, UErrorCode& status) = 0;
+  आभास UBool suppressBreakAfter(ध्रुव UnicodeString& string, UError_संहिता& स्थितिः) = 0;
 
   /**
    * Stop suppressing a certain string from being the end of the segment.
@@ -102,9 +102,9 @@ class U_COMMON_API FilteredBreakIteratorBuilder : public UObject {
    * false if the call was a no-op because the string was not being suppressed.
    * @stable ICU 56
    */
-  virtual UBool unsuppressBreakAfter(const UnicodeString& string, UErrorCode& status) = 0;
+  आभास UBool unsuppressBreakAfter(ध्रुव UnicodeString& string, UError_संहिता& स्थितिः) = 0;
 
-#ifndef U_FORCE_HIDE_DEPRECATED_API
+#यदि_अपरिभाषितम् U_FORCE_HIDE_DEPRECATED_API
   /**
    * This function has been deprecated in favor of wrapIteratorWithFilter()
    * The behavior is identical.
@@ -114,8 +114,8 @@ class U_COMMON_API FilteredBreakIteratorBuilder : public UObject {
    * @deprecated ICU 60 use wrapIteratorWithFilter() instead
    * @see wrapBreakIteratorWithFilter()
    */
-  virtual BreakIterator *build(BreakIterator* adoptBreakIterator, UErrorCode& status) = 0;
-#endif  // U_FORCE_HIDE_DEPRECATED_API
+  आभास BreakIterator *build(BreakIterator* adoptBreakIterator, UError_संहिता& स्थितिः) = 0;
+#यदि_अन्तः  // U_FORCE_HIDE_DEPRECATED_API
 
   /**
    * Wrap (adopt) an existing break iterator in a new filtered instance.
@@ -130,11 +130,11 @@ class U_COMMON_API FilteredBreakIteratorBuilder : public UObject {
    * @return the new BreakIterator, owned by the caller.
    * @stable ICU 60
    */
-  inline BreakIterator *wrapIteratorWithFilter(BreakIterator* adoptBreakIterator, UErrorCode& status) {
-    return build(adoptBreakIterator, status);
+  अन्तःस्थ BreakIterator *wrapIteratorWithFilter(BreakIterator* adoptBreakIterator, UError_संहिता& स्थितिः) {
+    प्रत्यागम build(adoptBreakIterator, स्थितिः);
   }
 
- protected:
+ रक्षित:
   /**
    * For subclass use
    * @stable ICU 56
@@ -143,10 +143,10 @@ class U_COMMON_API FilteredBreakIteratorBuilder : public UObject {
 };
 
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif // #if !UCONFIG_NO_BREAK_ITERATION && !UCONFIG_NO_FILTERED_BREAK_ITERATION
+#यदि_अन्तः // #if !UCONFIG_NO_BREAK_ITERATION && !UCONFIG_NO_FILTERED_BREAK_ITERATION
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#यदि_अन्तः /* U_SHOW_CPLUSPLUS_API */
 
-#endif // #ifndef FILTEREDBRK_H
+#यदि_अन्तः // #ifndef FILTEREDBRK_H

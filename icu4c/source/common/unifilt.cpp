@@ -10,9 +10,9 @@
 **********************************************************************
 */
 
-#include "unicode/unifilt.h"
-#include "unicode/rep.h"
-#include "unicode/utf16.h"
+#अन्तर्भाव "unicode/unifilt.h"
+#अन्तर्भाव "unicode/rep.h"
+#अन्तर्भाव "unicode/utf16.h"
 
 U_NAMESPACE_BEGIN
 UOBJECT_DEFINE_ABSTRACT_RTTI_IMPLEMENTATION(UnicodeFilter)
@@ -28,44 +28,44 @@ UnicodeFilter::~UnicodeFilter() {}
  * UnicodeFunctor API.
  *   Note that UnicodeMatcher is a base class of UnicodeFilter.
  */
-UnicodeMatcher* UnicodeFilter::toMatcher() const U_LIFETIME_BOUND {
-  return const_cast<UnicodeFilter *>(this);
+UnicodeMatcher* UnicodeFilter::गन्तव्यम्_Matcher() ध्रुव U_LIFETIME_BOUND {
+  प्रत्यागम const_cast<UnicodeFilter *>(एतत्);
 }
 
-void UnicodeFilter::setData(const TransliterationRuleData*) {}
+शून्य UnicodeFilter::समुच्चयः_दत्त(ध्रुव Transliteration_नियमः_दत्त*) {}
 
 /**
  * Default implementation of UnicodeMatcher::matches() for Unicode
  * filters.  Matches a single code point at offset (either one or
  * two 16-bit code units).
  */
-UMatchDegree UnicodeFilter::matches(const Replaceable& text,
-                                    int32_t& offset,
-                                    int32_t limit,
+UMatchDegree UnicodeFilter::matches(ध्रुव Replaceable& text,
+                                    int32_t& विस्थापनम्,
+                                    int32_t सीमा,
                                     UBool incremental) {
     UChar32 c;
-    if (offset < limit &&
-        contains(c = text.char32At(offset))) {
-        offset += U16_LENGTH(c);
-        return U_MATCH;
+    यदि (विस्थापनम् < सीमा &&
+        अन्तर्भवति(c = text.char32At(विस्थापनम्))) {
+        विस्थापनम् += U16_दीर्घता(c);
+        प्रत्यागम U_मेलनम्;
     }
-    if (offset > limit &&
-        contains(c = text.char32At(offset))) {
+    यदि (विस्थापनम् > सीमा &&
+        अन्तर्भवति(c = text.char32At(विस्थापनम्))) {
         // Backup offset by 1, unless the preceding character is a
         // surrogate pair -- then backup by 2 (keep offset pointing at
         // the lead surrogate).
-        --offset;
-        if (offset >= 0) {
-            offset -= U16_LENGTH(text.char32At(offset)) - 1;
+        --विस्थापनम्;
+        यदि (विस्थापनम् >= 0) {
+            विस्थापनम् -= U16_दीर्घता(text.char32At(विस्थापनम्)) - 1;
         }
-        return U_MATCH;
+        प्रत्यागम U_मेलनम्;
     }
-    if (incremental && offset == limit) {
-        return U_PARTIAL_MATCH;
+    यदि (incremental && विस्थापनम् == सीमा) {
+        प्रत्यागम U_PARTIAL_मेलनम्;
     }
-    return U_MISMATCH;
+    प्रत्यागम U_MISMATCH;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
 //eof

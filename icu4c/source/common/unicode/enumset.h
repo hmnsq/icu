@@ -14,12 +14,12 @@
  * \brief C++: internal template EnumSet<>
  */
 
-#ifndef ENUMSET_H
-#define ENUMSET_H
+#यदि_अपरिभाषितम् ENUMSET_H
+#परिभाषय ENUMSET_H
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -30,41 +30,41 @@ U_NAMESPACE_BEGIN
  * @internal
  * \cond
  */
-template<typename T, uint32_t minValue, uint32_t limitValue>
-class EnumSet {
-public:
-    inline EnumSet() : fBools(0) {}
-    inline EnumSet(const EnumSet<T,minValue,limitValue>& other) : fBools(other.fBools) {}
-    inline ~EnumSet() {}
-#ifndef U_HIDE_INTERNAL_API
-    inline void clear() { fBools=0; }
-    inline void add(T toAdd) { set(toAdd, 1); }
-    inline void remove(T toRemove) { set(toRemove, 0); }
-    inline int32_t contains(T toCheck) const { return get(toCheck); }
-    inline void set(T toSet, int32_t v) { fBools=(fBools&(~flag(toSet)))|(v?(flag(toSet)):0); }
-    inline int32_t get(T toCheck) const { return (fBools & flag(toCheck))?1:0; }
-    inline UBool isValidEnum(T toCheck) const {  return (toCheck>=minValue&&toCheck<limitValue); }
-    inline UBool isValidValue(int32_t v) const { return (v==0||v==1); }
-    inline const EnumSet<T, minValue, limitValue>&
-    operator=(const EnumSet<T, minValue, limitValue>& other) U_LIFETIME_BOUND {
+प्रतिरूपम्<typename T, uint32_t min_मानम्, uint32_t सीमा_मानम्>
+class Enum_समुच्चयः {
+सार्वजनिक:
+    अन्तःस्थ Enum_समुच्चयः() : fBools(0) {}
+    अन्तःस्थ Enum_समुच्चयः(ध्रुव Enum_समुच्चयः<T,min_मानम्,सीमा_मानम्>& other) : fBools(other.fBools) {}
+    अन्तःस्थ ~Enum_समुच्चयः() {}
+#यदि_अपरिभाषितम् U_HIDE_आन्तरिकम्_API
+    अन्तःस्थ शून्य clear() { fBools=0; }
+    अन्तःस्थ शून्य सङ्कलय(T गन्तव्यम्_सङ्कलय) { समुच्चयः(गन्तव्यम्_सङ्कलय, 1); }
+    अन्तःस्थ शून्य remove(T गन्तव्यम्_Remove) { समुच्चयः(गन्तव्यम्_Remove, 0); }
+    अन्तःस्थ int32_t अन्तर्भवति(T गन्तव्यम्_Check) ध्रुव { प्रत्यागम get(गन्तव्यम्_Check); }
+    अन्तःस्थ शून्य समुच्चयः(T गन्तव्यम्_समुच्चयः, int32_t v) { fBools=(fBools&(~flag(गन्तव्यम्_समुच्चयः)))|(v?(flag(गन्तव्यम्_समुच्चयः)):0); }
+    अन्तःस्थ int32_t get(T गन्तव्यम्_Check) ध्रुव { प्रत्यागम (fBools & flag(गन्तव्यम्_Check))?1:0; }
+    अन्तःस्थ UBool isValidEnum(T गन्तव्यम्_Check) ध्रुव {  प्रत्यागम (गन्तव्यम्_Check>=min_मानम्&&गन्तव्यम्_Check<सीमा_मानम्); }
+    अन्तःस्थ UBool is_Valid_मानम्(int32_t v) ध्रुव { प्रत्यागम (v==0||v==1); }
+    अन्तःस्थ ध्रुव Enum_समुच्चयः<T, min_मानम्, सीमा_मानम्>&
+    संक्रियकः=(ध्रुव Enum_समुच्चयः<T, min_मानम्, सीमा_मानम्>& other) U_LIFETIME_BOUND {
         fBools = other.fBools;
-        return *this;
+        प्रत्यागम *this;
     }
   
-    inline uint32_t getAll() const {
-        return fBools; 
+    अन्तःस्थ uint32_t getAll() ध्रुव {
+        प्रत्यागम fBools; 
     }
-#endif /* U_HIDE_INTERNAL_API */
+#यदि_अन्तः /* U_HIDE_INTERNAL_API */
 
-private:
-    inline uint32_t flag(T toCheck) const { return (1<<(toCheck-minValue)); }
-private:
+गुप्त:
+    अन्तःस्थ uint32_t flag(T गन्तव्यम्_Check) ध्रुव { प्रत्यागम (1<<(गन्तव्यम्_Check-min_मानम्)); }
+गुप्त:
     uint32_t fBools;
 };
 
 /** \endcond */
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif /* U_SHOW_CPLUSPLUS_API */
-#endif /* ENUMSET_H */
+#यदि_अन्तः /* U_SHOW_CPLUSPLUS_API */
+#यदि_अन्तः /* ENUMSET_H */

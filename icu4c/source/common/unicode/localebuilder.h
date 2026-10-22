@@ -1,16 +1,16 @@
 // © 2018 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
-#ifndef __LOCALEBUILDER_H__
-#define __LOCALEBUILDER_H__
+#यदि_अपरिभाषितम् __LOCALEBUILDER_H__
+#परिभाषय __LOCALEBUILDER_H__
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
 
-#include "unicode/locid.h"
-#include "unicode/localematcher.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
+#अन्तर्भाव "unicode/locid.h"
+#अन्तर्भाव "unicode/localematcher.h"
+#अन्तर्भाव "unicode/stringpiece.h"
+#अन्तर्भाव "unicode/uobject.h"
 
 /**
  * \file
@@ -58,8 +58,8 @@ class FixedString;
  *
  * @stable ICU 64
  */
-class U_COMMON_API LocaleBuilder : public UObject {
-public:
+class U_COMMON_API LocaleBuilder : सार्वजनिक UObject {
+सार्वजनिक:
     /**
      * Constructs an empty LocaleBuilder. The default value of all
      * fields, extensions, and private use information is the
@@ -73,7 +73,7 @@ public:
      * Destructor
      * @stable ICU 64
      */
-    virtual ~LocaleBuilder();
+    आभास ~LocaleBuilder();
 
     /**
      * Resets the <code>LocaleBuilder</code> to match the provided
@@ -87,7 +87,7 @@ public:
      *
      * @stable ICU 64
      */
-    LocaleBuilder& setLocale(const Locale& locale) U_LIFETIME_BOUND;
+    LocaleBuilder& समुच्चयः_Locale(ध्रुव Locale& locale) U_LIFETIME_BOUND;
 
     /**
      * Resets the LocaleBuilder to match the provided IETF BCP 47 language tag.
@@ -104,7 +104,7 @@ public:
      * @return This builder.
      * @stable ICU 64
      */
-    LocaleBuilder& setLanguageTag(StringPiece tag) U_LIFETIME_BOUND;
+    LocaleBuilder& समुच्चयः_Language_चिह्नकम्(StringPiece चिह्नकम्) U_LIFETIME_BOUND;
 
     /**
      * Sets the language.  If <code>language</code> is the empty string, the
@@ -119,7 +119,7 @@ public:
      * @return This builder.
      * @stable ICU 64
      */
-    LocaleBuilder& setLanguage(StringPiece language) U_LIFETIME_BOUND;
+    LocaleBuilder& समुच्चयः_Language(StringPiece language) U_LIFETIME_BOUND;
 
     /**
      * Sets the script. If <code>script</code> is the empty string, the script in
@@ -135,7 +135,7 @@ public:
      * @return This builder.
      * @stable ICU 64
      */
-    LocaleBuilder& setScript(StringPiece script) U_LIFETIME_BOUND;
+    LocaleBuilder& समुच्चयः_Script(StringPiece script) U_LIFETIME_BOUND;
 
     /**
      * Sets the region.  If region is the empty string, the region in this
@@ -154,7 +154,7 @@ public:
      * @return This builder.
      * @stable ICU 64
      */
-    LocaleBuilder& setRegion(StringPiece region) U_LIFETIME_BOUND;
+    LocaleBuilder& समुच्चयः_Region(StringPiece region) U_LIFETIME_BOUND;
 
     /**
      * Sets the variant.  If variant is the empty string, the variant in this
@@ -175,7 +175,7 @@ public:
      * @return This builder.
      * @stable ICU 64
      */
-    LocaleBuilder& setVariant(StringPiece variant) U_LIFETIME_BOUND;
+    LocaleBuilder& समुच्चयः_Variant(StringPiece variant) U_LIFETIME_BOUND;
 
     /**
      * Sets the extension for the given key. If the value is the empty string,
@@ -196,7 +196,7 @@ public:
      * @return This builder.
      * @stable ICU 64
      */
-    LocaleBuilder& setExtension(char key, StringPiece value) U_LIFETIME_BOUND;
+    LocaleBuilder& समुच्चयः_Extension(वर्ण कुञ्चिका, StringPiece मानम्_2) U_LIFETIME_BOUND;
 
     /**
      * Sets the Unicode locale keyword type for the given key. If the type
@@ -216,7 +216,7 @@ public:
      * @return This builder.
      * @stable ICU 64
      */
-    LocaleBuilder& setUnicodeLocaleKeyword(StringPiece key, StringPiece type) U_LIFETIME_BOUND;
+    LocaleBuilder& समुच्चयः_Unicode_Locale_Keyword(StringPiece कुञ्चिका, StringPiece type) U_LIFETIME_BOUND;
 
     /**
      * Adds a unicode locale attribute, if not already present, otherwise
@@ -228,7 +228,7 @@ public:
      * @return This builder.
      * @stable ICU 64
      */
-    LocaleBuilder& addUnicodeLocaleAttribute(StringPiece attribute) U_LIFETIME_BOUND;
+    LocaleBuilder& सङ्कलय_Unicode_Locale_Attribute(StringPiece attribute) U_LIFETIME_BOUND;
 
     /**
      * Removes a unicode locale attribute, if present, otherwise has no
@@ -274,7 +274,7 @@ public:
      * @return a new Locale
      * @stable ICU 64
      */
-    Locale build(UErrorCode& status);
+    Locale build(UError_संहिता& स्थितिः);
 
     /**
      * Sets the UErrorCode if an error occurred while recording sets.
@@ -285,24 +285,24 @@ public:
      * @return true if U_FAILURE(outErrorCode)
      * @stable ICU 65
      */
-    UBool copyErrorTo(UErrorCode &outErrorCode) const;
+    UBool copy_Error_गन्तव्यम्(UError_संहिता &बहिर्गमनम्_Error_संहिता) ध्रुव;
 
-private:
-    friend class LocaleMatcher::Result;
+गुप्त:
+    मित्रम् class LocaleMatcher::परिणाम_2;
 
-    void copyExtensionsFrom(const Locale& src, UErrorCode& errorCode);
+    शून्य copyExtensionsFrom(ध्रुव Locale& src, UError_संहिता& error_संहिता);
 
-    UErrorCode status_;
-    char language_[9];
-    char script_[5];
-    char region_[4];
+    UError_संहिता स्थितिः_2;
+    वर्ण language_[9];
+    वर्ण script_[5];
+    वर्ण region_[4];
     FixedString *variant_;  // Pointer not object so we need not #include internal fixedstring.h.
     icu::Locale *extensions_;  // Pointer not object. Storage for all other fields.
 
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#यदि_अन्तः /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __LOCALEBUILDER_H__
+#यदि_अन्तः  // __LOCALEBUILDER_H__

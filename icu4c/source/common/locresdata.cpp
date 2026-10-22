@@ -20,14 +20,14 @@
 *   that then do not depend on resource bundle code and this data.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "unicode/uloc.h"
-#include "unicode/ures.h"
-#include "charstr.h"
-#include "cstring.h"
-#include "ulocimp.h"
-#include "uresimp.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/putil.h"
+#अन्तर्भाव "unicode/uloc.h"
+#अन्तर्भाव "unicode/ures.h"
+#अन्तर्भाव "charstr.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "ulocimp.h"
+#अन्तर्भाव "uresimp.h"
 
 /*
  * Lookup a resource bundle table item with fallback on the table level.
@@ -42,42 +42,42 @@
  * default locale because that would result in a mix of languages that is
  * unpredictable to the programmer and most likely useless.
  */
-U_CAPI const char16_t * U_EXPORT2
-uloc_getTableStringWithFallback(const char *path, const char *locale,
-                              const char *tableKey, const char *subTableKey,
-                              const char *itemKey,
-                              int32_t *pLength,
-                              UErrorCode *pErrorCode)
+U_CAPI ध्रुव char16_t * U_EXPORT2
+uloc_get_सारणी_String_With_Fallback(ध्रुव वर्ण *मार्गः, ध्रुव वर्ण *locale,
+                              ध्रुव वर्ण *सारणी_कुञ्चिका, ध्रुव वर्ण *sub_सारणी_कुञ्चिका,
+                              ध्रुव वर्ण *item_कुञ्चिका,
+                              int32_t *p_दीर्घता,
+                              UError_संहिता *p_Error_संहिता)
 {
-    if (U_FAILURE(*pErrorCode)) { return nullptr; }
+    यदि (U_FAILURE(*p_Error_संहिता)) { प्रत्यागम शून्यसूचकः; }
 /*    char localeBuffer[ULOC_FULLNAME_CAPACITY*4];*/
-    const char16_t *item=nullptr;
-    UErrorCode errorCode;
+    ध्रुव char16_t *item=शून्यसूचकः;
+    UError_संहिता error_संहिता;
 
     /*
      * open the bundle for the current locale
      * this falls back through the locale's chain to root
      */
-    errorCode=U_ZERO_ERROR;
-    icu::LocalUResourceBundlePointer rb(ures_open(path, locale, &errorCode));
+    error_संहिता=U_ZERO_ERROR;
+    icu::LocalUResourceBundlePointer rb(ures_open(मार्गः, locale, &error_संहिता));
 
-    if(U_FAILURE(errorCode)) {
+    यदि(U_FAILURE(error_संहिता)) {
         /* total failure, not even root could be opened */
-        *pErrorCode=errorCode;
-        return nullptr;
-    } else if(errorCode==U_USING_DEFAULT_WARNING ||
-                (errorCode==U_USING_FALLBACK_WARNING && *pErrorCode!=U_USING_DEFAULT_WARNING)
+        *p_Error_संहिता=error_संहिता;
+        प्रत्यागम शून्यसूचकः;
+    } अन्यथा यदि(error_संहिता==U_USING_DEFAULT_WARNING ||
+                (error_संहिता==U_USING_FALLBACK_WARNING && *p_Error_संहिता!=U_USING_DEFAULT_WARNING)
     ) {
         /* set the "strongest" error code (success->fallback->default->failure) */
-        *pErrorCode=errorCode;
+        *p_Error_संहिता=error_संहिता;
     }
 
-    for(;;){
-        icu::StackUResourceBundle table;
-        icu::StackUResourceBundle subTable;
-        ures_getByKeyWithFallback(rb.getAlias(), tableKey, table.getAlias(), &errorCode);
+    प्रति(;;){
+        icu::राशिः_UResource_Bundle सारणी;
+        icu::राशिः_UResource_Bundle sub_सारणी;
+        ures_get_By_कुञ्चिका_With_Fallback(rb.getAlias(), सारणी_कुञ्चिका, सारणी.getAlias(), &error_संहिता);
 
-        if (subTableKey != nullptr) {
+        यदि (sub_सारणी_कुञ्चिका != शून्यसूचकः) {
             /*
             ures_getByKeyWithFallback(table.getAlias(), subTableKey, subTable.getAlias(), &errorCode);
             item = ures_getStringByKeyWithFallback(subTable.getAlias(), itemKey, pLength, &errorCode);
@@ -87,131 +87,131 @@ uloc_getTableStringWithFallback(const char *path, const char *locale,
             
             break;*/
             
-            ures_getByKeyWithFallback(table.getAlias(), subTableKey, table.getAlias(), &errorCode);
+            ures_get_By_कुञ्चिका_With_Fallback(सारणी.getAlias(), sub_सारणी_कुञ्चिका, सारणी.getAlias(), &error_संहिता);
         }
-        if(U_SUCCESS(errorCode)){
-            item = ures_getStringByKeyWithFallback(table.getAlias(), itemKey, pLength, &errorCode);
-            if(U_FAILURE(errorCode)){
-                const char* replacement = nullptr;
-                *pErrorCode = errorCode; /*save the errorCode*/
-                errorCode = U_ZERO_ERROR;
+        यदि(U_SUCCESS(error_संहिता)){
+            item = ures_get_String_By_कुञ्चिका_With_Fallback(सारणी.getAlias(), item_कुञ्चिका, p_दीर्घता, &error_संहिता);
+            यदि(U_FAILURE(error_संहिता)){
+                ध्रुव वर्ण* replacement = शून्यसूचकः;
+                *p_Error_संहिता = error_संहिता; /*save the errorCode*/
+                error_संहिता = U_ZERO_ERROR;
                 /* may be a deprecated code */
-                if(uprv_strcmp(tableKey, "Countries")==0){
-                    replacement =  uloc_getCurrentCountryID(itemKey);
-                }else if(uprv_strcmp(tableKey, "Languages")==0){
-                    replacement =  uloc_getCurrentLanguageID(itemKey);
+                यदि(uprv_strcmp(सारणी_कुञ्चिका, "Countries")==0){
+                    replacement =  uloc_getCurrentCountryID(item_कुञ्चिका);
+                }अन्यथा यदि(uprv_strcmp(सारणी_कुञ्चिका, "Languages")==0){
+                    replacement =  uloc_getCurrentLanguageID(item_कुञ्चिका);
                 }
                 /*pointer comparison is ok since uloc_getCurrentCountryID & uloc_getCurrentLanguageID return the key itself is replacement is not found*/
-                if(replacement!=nullptr && itemKey != replacement){
-                    item = ures_getStringByKeyWithFallback(table.getAlias(), replacement, pLength, &errorCode);
-                    if(U_SUCCESS(errorCode)){
-                        *pErrorCode = errorCode;
-                        break;
+                यदि(replacement!=शून्यसूचकः && item_कुञ्चिका != replacement){
+                    item = ures_get_String_By_कुञ्चिका_With_Fallback(सारणी.getAlias(), replacement, p_दीर्घता, &error_संहिता);
+                    यदि(U_SUCCESS(error_संहिता)){
+                        *p_Error_संहिता = error_संहिता;
+                        भङ्ग;
                     }
                 }
-            }else{
-                break;
+            }अन्यथा{
+                भङ्ग;
             }
         }
         
-        if(U_FAILURE(errorCode)){    
+        यदि(U_FAILURE(error_संहिता)){    
 
             /* still can't figure out ?.. try the fallback mechanism */
             int32_t len = 0;
-            const char16_t* fallbackLocale =  nullptr;
-            *pErrorCode = errorCode;
-            errorCode = U_ZERO_ERROR;
+            ध्रुव char16_t* fallbackLocale =  शून्यसूचकः;
+            *p_Error_संहिता = error_संहिता;
+            error_संहिता = U_ZERO_ERROR;
 
-            fallbackLocale = ures_getStringByKeyWithFallback(table.getAlias(), "Fallback", &len, &errorCode);
-            if(U_FAILURE(errorCode)){
-               *pErrorCode = errorCode;
-                break;
+            fallbackLocale = ures_get_String_By_कुञ्चिका_With_Fallback(सारणी.getAlias(), "Fallback", &len, &error_संहिता);
+            यदि(U_FAILURE(error_संहिता)){
+               *p_Error_संहिता = error_संहिता;
+                भङ्ग;
             }
 
             icu::CharString explicitFallbackName;
-            explicitFallbackName.appendInvariantChars(fallbackLocale, len, errorCode);
+            explicitFallbackName.appendInvariantChars(fallbackLocale, len, error_संहिता);
 
             /* guard against recursive fallback */
-            if (explicitFallbackName == locale) {
-                *pErrorCode = U_INTERNAL_PROGRAM_ERROR;
-                break;
+            यदि (explicitFallbackName == locale) {
+                *p_Error_संहिता = U_आन्तरिकम्_क्रमादेशः_ERROR;
+                भङ्ग;
             }
-            rb.adoptInstead(ures_open(path, explicitFallbackName.data(), &errorCode));
-            if(U_FAILURE(errorCode)){
-                *pErrorCode = errorCode;
-                break;
+            rb.adoptInstead(ures_open(मार्गः, explicitFallbackName.दत्त(), &error_संहिता));
+            यदि(U_FAILURE(error_संहिता)){
+                *p_Error_संहिता = error_संहिता;
+                भङ्ग;
             }
             /* succeeded in opening the fallback bundle .. continue and try to fetch the item */
-        }else{
-            break;
+        }अन्यथा{
+            भङ्ग;
         }
     }
 
-    return item;
+    प्रत्यागम item;
 }
 
-namespace {
+नामाकाश {
 
 ULayoutType
-_uloc_getOrientationHelper(const char* localeId,
-                           const char* key,
-                           UErrorCode& status)
+_uloc_getOrientationHelper(ध्रुव वर्ण* localeId,
+                           ध्रुव वर्ण* कुञ्चिका,
+                           UError_संहिता& स्थितिः)
 {
-    ULayoutType result = ULOC_LAYOUT_UNKNOWN;
+    ULayoutType परिणाम = ULOC_LAYOUT_UNKNOWN;
 
-    if (U_FAILURE(status)) { return result; }
+    यदि (U_FAILURE(स्थितिः)) { प्रत्यागम परिणाम; }
 
-    if (localeId == nullptr) {
+    यदि (localeId == शून्यसूचकः) {
         localeId = uloc_getDefault();
     }
-    icu::CharString localeBuffer = ulocimp_canonicalize(localeId, status);
+    icu::CharString locale_बफर = ulocimp_canonicalize(localeId, स्थितिः);
 
-    if (U_FAILURE(status)) { return result; }
+    यदि (U_FAILURE(स्थितिः)) { प्रत्यागम परिणाम; }
 
     int32_t length = 0;
-    const char16_t* const value =
-        uloc_getTableStringWithFallback(
-            nullptr,
-            localeBuffer.data(),
+    ध्रुव char16_t* ध्रुव value =
+        uloc_get_सारणी_String_With_Fallback(
+            शून्यसूचकः,
+            locale_बफर.दत्त(),
             "layout",
-            nullptr,
-            key,
+            शून्यसूचकः,
+            कुञ्चिका,
             &length,
-            &status);
+            &स्थितिः);
 
-    if (U_FAILURE(status)) { return result; }
+    यदि (U_FAILURE(स्थितिः)) { प्रत्यागम परिणाम; }
 
-    if (length != 0) {
-        switch(value[0])
+    यदि (length != 0) {
+        विकल्प(value[0])
         {
-        case 0x0062: /* 'b' */
-            result = ULOC_LAYOUT_BTT;
-            break;
-        case 0x006C: /* 'l' */
-            result = ULOC_LAYOUT_LTR;
-            break;
-        case 0x0072: /* 'r' */
-            result = ULOC_LAYOUT_RTL;
-            break;
-        case 0x0074: /* 't' */
-            result = ULOC_LAYOUT_TTB;
-            break;
-        default:
-            status = U_INTERNAL_PROGRAM_ERROR;
-            break;
+        पक्ष 0x0062: /* 'b' */
+            परिणाम = ULOC_LAYOUT_BTT;
+            भङ्ग;
+        पक्ष 0x006C: /* 'l' */
+            परिणाम = ULOC_LAYOUT_LTR;
+            भङ्ग;
+        पक्ष 0x0072: /* 'r' */
+            परिणाम = ULOC_LAYOUT_RTL;
+            भङ्ग;
+        पक्ष 0x0074: /* 't' */
+            परिणाम = ULOC_LAYOUT_TTB;
+            भङ्ग;
+        स्वभाव:
+            स्थितिः = U_आन्तरिकम्_क्रमादेशः_ERROR;
+            भङ्ग;
         }
     }
 
-    return result;
+    प्रत्यागम परिणाम;
 }
 
 }  // namespace
 
 U_CAPI ULayoutType U_EXPORT2
-uloc_getCharacterOrientation(const char* localeId,
-                             UErrorCode *status)
+uloc_getCharacterOrientation(ध्रुव वर्ण* localeId,
+                             UError_संहिता *स्थितिः)
 {
-    return _uloc_getOrientationHelper(localeId, "characters", *status);
+    प्रत्यागम _uloc_getOrientationHelper(localeId, "characters", *स्थितिः);
 }
 
 /**
@@ -222,8 +222,8 @@ uloc_getCharacterOrientation(const char* localeId,
  * @return an enum indicating the layout orientation for lines.
  */
 U_CAPI ULayoutType U_EXPORT2
-uloc_getLineOrientation(const char* localeId,
-                        UErrorCode *status)
+uloc_get_पङ्क्तिः_Orientation(ध्रुव वर्ण* localeId,
+                        UError_संहिता *स्थितिः)
 {
-    return _uloc_getOrientationHelper(localeId, "lines", *status);
+    प्रत्यागम _uloc_getOrientationHelper(localeId, "lines", *स्थितिः);
 }

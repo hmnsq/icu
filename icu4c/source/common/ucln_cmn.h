@@ -14,33 +14,33 @@
 *   created by: George Rhoten
 */
 
-#ifndef __UCLN_CMN_H__
-#define __UCLN_CMN_H__
+#यदि_अपरिभाषितम् __UCLN_CMN_H__
+#परिभाषय __UCLN_CMN_H__
 
-#include "unicode/utypes.h"
-#include "ucln.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "ucln.h"
 
 /* These are the cleanup functions for various APIs. */
 /* @return true if cleanup complete successfully.*/
-U_CFUNC UBool utrace_cleanup(void);
+U_CFUNC UBool utrace_cleanup(शून्य);
 
-U_CFUNC UBool ucln_lib_cleanup(void);
+U_CFUNC UBool ucln_lib_cleanup(शून्य);
 
 /*
 Please keep the order of enums declared in same order
 as the cleanup functions are suppose to be called. */
-typedef enum ECleanupCommonType {
+प्रकारनिर्देश गणना ECleanupCommonType {
     UCLN_COMMON_START = -1,
     UCLN_COMMON_NUMPARSE_UNISETS,
     UCLN_COMMON_USPREP,
     UCLN_COMMON_BREAKITERATOR,
     UCLN_COMMON_RBBI,
     UCLN_COMMON_SERVICE,
-    UCLN_COMMON_LOCALE_KEY_TYPE,
+    UCLN_COMMON_LOCALE_कुञ्चिका_TYPE,
     UCLN_COMMON_LOCALE,
     UCLN_COMMON_LOCALE_ALIAS,
-    UCLN_COMMON_LOCALE_KNOWN_CANONICALIZED,
-    UCLN_COMMON_LOCALE_AVAILABLE,
+    UCLN_COMMON_LOCALE_ज्ञातम्_CANONICALIZED,
+    UCLN_COMMON_LOCALE_उपलब्धम्,
     UCLN_COMMON_LIKELY_SUBTAGS,
     UCLN_COMMON_LOCALE_DISTANCE,
     UCLN_COMMON_ULOC,
@@ -66,13 +66,13 @@ typedef enum ECleanupCommonType {
     UCLN_COMMON_UNIFIED_CACHE,
     UCLN_COMMON_URES,
     UCLN_COMMON_MUTEX,    // Mutexes should be the last to be cleaned up.
-    UCLN_COMMON_COUNT /* This must be last */
+    UCLN_COMMON_गणनम् /* This must be last */
 } ECleanupCommonType;
 
 /* Main library cleanup registration function. */
 /* See common/ucln.h for details on adding a cleanup function. */
 /* Note: the global mutex must not be held when calling this function. */
-U_CFUNC void U_EXPORT2 ucln_common_registerCleanup(ECleanupCommonType type,
+U_CFUNC शून्य U_EXPORT2 ucln_common_पञ्जिकाकोशः_Cleanup(ECleanupCommonType type,
                                                    cleanupFunc *func);
 
-#endif
+#यदि_अन्तः

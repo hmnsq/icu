@@ -4,158 +4,158 @@
 // bytesinkutil.cpp
 // created: 2017sep14 Markus W. Scherer
 
-#include "unicode/utypes.h"
-#include "unicode/bytestream.h"
-#include "unicode/edits.h"
-#include "unicode/stringoptions.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "bytesinkutil.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "uassert.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/bytestream.h"
+#अन्तर्भाव "unicode/edits.h"
+#अन्तर्भाव "unicode/stringoptions.h"
+#अन्तर्भाव "unicode/utf8.h"
+#अन्तर्भाव "unicode/utf16.h"
+#अन्तर्भाव "bytesinkutil.h"
+#अन्तर्भाव "charstr.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "uassert.h"
 
 U_NAMESPACE_BEGIN
 
 UBool
-ByteSinkUtil::appendChange(int32_t length, const char16_t *s16, int32_t s16Length,
-                           ByteSink &sink, Edits *edits, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    char scratch[200];
-    int32_t s8Length = 0;
-    for (int32_t i = 0; i < s16Length;) {
+ByteSinkUtil::appendChange(int32_t length, ध्रुव char16_t *s16, int32_t s16_दीर्घता,
+                           ByteSink &sink, Edits *edits, UError_संहिता &error_संहिता) {
+    यदि (U_FAILURE(error_संहिता)) { प्रत्यागम असत्य; }
+    वर्ण scratch[200];
+    int32_t s8_दीर्घता = 0;
+    प्रति (int32_t i = 0; i < s16_दीर्घता;) {
         int32_t capacity;
-        int32_t desiredCapacity = s16Length - i;
-        if (desiredCapacity < (INT32_MAX / 3)) {
-            desiredCapacity *= 3;  // max 3 UTF-8 bytes per UTF-16 code unit
-        } else if (desiredCapacity < (INT32_MAX / 2)) {
-            desiredCapacity *= 2;
-        } else {
-            desiredCapacity = INT32_MAX;
+        int32_t desired_क्षमता = s16_दीर्घता - i;
+        यदि (desired_क्षमता < (INT32_MAX / 3)) {
+            desired_क्षमता *= 3;  // max 3 UTF-8 bytes per UTF-16 code unit
+        } अन्यथा यदि (desired_क्षमता < (INT32_MAX / 2)) {
+            desired_क्षमता *= 2;
+        } अन्यथा {
+            desired_क्षमता = INT32_MAX;
         }
-        char *buffer = sink.GetAppendBuffer(U8_MAX_LENGTH, desiredCapacity,
+        वर्ण *बफर = sink.Get_Append_बफर(U8_MAX_दीर्घता, desired_क्षमता,
                                             scratch, UPRV_LENGTHOF(scratch), &capacity);
-        capacity -= U8_MAX_LENGTH - 1;
+        capacity -= U8_MAX_दीर्घता - 1;
         int32_t j = 0;
-        for (; i < s16Length && j < capacity;) {
+        प्रति (; i < s16_दीर्घता && j < capacity;) {
             UChar32 c;
-            U16_NEXT_UNSAFE(s16, i, c);
-            U8_APPEND_UNSAFE(buffer, j, c);
+            U16_अग्र_UNSAFE(s16, i, c);
+            U8_APPEND_UNSAFE(बफर, j, c);
         }
-        if (j > (INT32_MAX - s8Length)) {
-            errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return false;
+        यदि (j > (INT32_MAX - s8_दीर्घता)) {
+            error_संहिता = U_सूचकांक_OUTOFBOUNDS_ERROR;
+            प्रत्यागम असत्य;
         }
-        sink.Append(buffer, j);
-        s8Length += j;
+        sink.Append(बफर, j);
+        s8_दीर्घता += j;
     }
-    if (edits != nullptr) {
-        edits->addReplace(length, s8Length);
+    यदि (edits != शून्यसूचकः) {
+        edits->सङ्कलय_Replace(length, s8_दीर्घता);
     }
-    return true;
+    प्रत्यागम सत्य;
 }
 
 UBool
-ByteSinkUtil::appendChange(const uint8_t *s, const uint8_t *limit,
-                           const char16_t *s16, int32_t s16Length,
-                           ByteSink &sink, Edits *edits, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    if ((limit - s) > INT32_MAX) {
-        errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-        return false;
+ByteSinkUtil::appendChange(ध्रुव uint8_t *s, ध्रुव uint8_t *सीमा,
+                           ध्रुव char16_t *s16, int32_t s16_दीर्घता,
+                           ByteSink &sink, Edits *edits, UError_संहिता &error_संहिता) {
+    यदि (U_FAILURE(error_संहिता)) { प्रत्यागम असत्य; }
+    यदि ((सीमा - s) > INT32_MAX) {
+        error_संहिता = U_सूचकांक_OUTOFBOUNDS_ERROR;
+        प्रत्यागम असत्य;
     }
-    return appendChange(static_cast<int32_t>(limit - s), s16, s16Length, sink, edits, errorCode);
+    प्रत्यागम appendChange(static_cast<int32_t>(सीमा - s), s16, s16_दीर्घता, sink, edits, error_संहिता);
 }
 
-void
-ByteSinkUtil::appendCodePoint(int32_t length, UChar32 c, ByteSink &sink, Edits *edits) {
-    char s8[U8_MAX_LENGTH];
-    int32_t s8Length = 0;
-    U8_APPEND_UNSAFE(s8, s8Length, c);
-    if (edits != nullptr) {
-        edits->addReplace(length, s8Length);
+शून्य
+ByteSinkUtil::append_संहिता_Point(int32_t length, UChar32 c, ByteSink &sink, Edits *edits) {
+    वर्ण s8[U8_MAX_दीर्घता];
+    int32_t s8_दीर्घता = 0;
+    U8_APPEND_UNSAFE(s8, s8_दीर्घता, c);
+    यदि (edits != शून्यसूचकः) {
+        edits->सङ्कलय_Replace(length, s8_दीर्घता);
     }
-    sink.Append(s8, s8Length);
+    sink.Append(s8, s8_दीर्घता);
 }
 
-namespace {
+नामाकाश {
 
 // See unicode/utf8.h U8_APPEND_UNSAFE().
-inline uint8_t getTwoByteLead(UChar32 c) { return static_cast<uint8_t>((c >> 6) | 0xc0); }
-inline uint8_t getTwoByteTrail(UChar32 c) { return static_cast<uint8_t>((c & 0x3f) | 0x80); }
+अन्तःस्थ uint8_t getTwoByteLead(UChar32 c) { प्रत्यागम static_cast<uint8_t>((c >> 6) | 0xc0); }
+अन्तःस्थ uint8_t getTwoByteTrail(UChar32 c) { प्रत्यागम static_cast<uint8_t>((c & 0x3f) | 0x80); }
 
 }  // namespace
 
-void
-ByteSinkUtil::appendTwoBytes(UChar32 c, ByteSink &sink) {
+शून्य
+ByteSinkUtil::append_Two_अष्टकानि(UChar32 c, ByteSink &sink) {
     U_ASSERT(0x80 <= c && c <= 0x7ff);  // 2-byte UTF-8
-    char s8[2] = {static_cast<char>(getTwoByteLead(c)), static_cast<char>(getTwoByteTrail(c))};
+    वर्ण s8[2] = {static_cast<वर्ण>(getTwoByteLead(c)), static_cast<वर्ण>(getTwoByteTrail(c))};
     sink.Append(s8, 2);
 }
 
-void
-ByteSinkUtil::appendNonEmptyUnchanged(const uint8_t *s, int32_t length,
+शून्य
+ByteSinkUtil::append_Non_रिक्तानि_Unchanged(ध्रुव uint8_t *s, int32_t length,
                                       ByteSink &sink, uint32_t options, Edits *edits) {
     U_ASSERT(length > 0);
-    if (edits != nullptr) {
-        edits->addUnchanged(length);
+    यदि (edits != शून्यसूचकः) {
+        edits->सङ्कलय_Unchanged(length);
     }
-    if ((options & U_OMIT_UNCHANGED_TEXT) == 0) {
-        sink.Append(reinterpret_cast<const char *>(s), length);
+    यदि ((options & U_OMIT_UNCHANGED_TEXT) == 0) {
+        sink.Append(reinterpret_cast<ध्रुव वर्ण *>(s), length);
     }
 }
 
 UBool
-ByteSinkUtil::appendUnchanged(const uint8_t *s, const uint8_t *limit,
+ByteSinkUtil::appendUnchanged(ध्रुव uint8_t *s, ध्रुव uint8_t *सीमा,
                               ByteSink &sink, uint32_t options, Edits *edits,
-                              UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    if ((limit - s) > INT32_MAX) {
-        errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-        return false;
+                              UError_संहिता &error_संहिता) {
+    यदि (U_FAILURE(error_संहिता)) { प्रत्यागम असत्य; }
+    यदि ((सीमा - s) > INT32_MAX) {
+        error_संहिता = U_सूचकांक_OUTOFBOUNDS_ERROR;
+        प्रत्यागम असत्य;
     }
-    int32_t length = static_cast<int32_t>(limit - s);
-    if (length > 0) {
-        appendNonEmptyUnchanged(s, length, sink, options, edits);
+    int32_t length = static_cast<int32_t>(सीमा - s);
+    यदि (length > 0) {
+        append_Non_रिक्तानि_Unchanged(s, length, sink, options, edits);
     }
-    return true;
+    प्रत्यागम सत्य;
 }
 
 CharStringByteSink::CharStringByteSink(CharString* dest) : dest_(*dest) {
 }
 
-CharStringByteSink::~CharStringByteSink() = default;
+CharStringByteSink::~CharStringByteSink() = स्वभाव;
 
-void
-CharStringByteSink::Append(const char* bytes, int32_t n) {
-    UErrorCode status = U_ZERO_ERROR;
-    dest_.append(bytes, n, status);
+शून्य
+CharStringByteSink::Append(ध्रुव वर्ण* अष्टकानि, int32_t n) {
+    UError_संहिता स्थितिः = U_ZERO_ERROR;
+    dest_.append(अष्टकानि, n, स्थितिः);
     // Any errors are silently ignored.
 }
 
-char*
-CharStringByteSink::GetAppendBuffer(int32_t min_capacity,
-                                    int32_t desired_capacity_hint,
-                                    char* scratch U_LIFETIME_BOUND,
-                                    int32_t scratch_capacity,
-                                    int32_t* result_capacity) U_LIFETIME_BOUND {
-    if (min_capacity < 1 || scratch_capacity < min_capacity) {
-        *result_capacity = 0;
-        return nullptr;
+वर्ण*
+CharStringByteSink::Get_Append_बफर(int32_t min_क्षमता_2,
+                                    int32_t desired_क्षमता_hint,
+                                    वर्ण* scratch U_LIFETIME_BOUND,
+                                    int32_t scratch_क्षमता_2,
+                                    int32_t* परिणाम_क्षमता_2) U_LIFETIME_BOUND {
+    यदि (min_क्षमता_2 < 1 || scratch_क्षमता_2 < min_क्षमता_2) {
+        *परिणाम_क्षमता_2 = 0;
+        प्रत्यागम शून्यसूचकः;
     }
 
-    UErrorCode status = U_ZERO_ERROR;
-    char* result = dest_.getAppendBuffer(
-            min_capacity,
-            desired_capacity_hint,
-            *result_capacity,
-            status);
-    if (U_SUCCESS(status)) {
-        return result;
+    UError_संहिता स्थितिः = U_ZERO_ERROR;
+    वर्ण* परिणाम = dest_.get_Append_बफर(
+            min_क्षमता_2,
+            desired_क्षमता_hint,
+            *परिणाम_क्षमता_2,
+            स्थितिः);
+    यदि (U_SUCCESS(स्थितिः)) {
+        प्रत्यागम परिणाम;
     }
 
-    *result_capacity = scratch_capacity;
-    return scratch;
+    *परिणाम_क्षमता_2 = scratch_क्षमता_2;
+    प्रत्यागम scratch;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः

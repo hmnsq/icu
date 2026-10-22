@@ -3,21 +3,21 @@
 
 // file: rbbi_cache.cpp
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#यदि !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/ubrk.h"
-#include "unicode/rbbi.h"
+#अन्तर्भाव "unicode/ubrk.h"
+#अन्तर्भाव "unicode/rbbi.h"
 
-#include "rbbi_cache.h"
+#अन्तर्भाव "rbbi_cache.h"
 
-#include "brkeng.h"
-#include "cmemory.h"
-#include "rbbidata.h"
-#include "rbbirb.h"
-#include "uassert.h"
-#include "uvectr32.h"
+#अन्तर्भाव "brkeng.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "rbbidata.h"
+#अन्तर्भाव "rbbirb.h"
+#अन्तर्भाव "uassert.h"
+#अन्तर्भाव "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
@@ -25,160 +25,160 @@ U_NAMESPACE_BEGIN
  * DictionaryCache implementation
  */
 
-RuleBasedBreakIterator::DictionaryCache::DictionaryCache(RuleBasedBreakIterator *bi, UErrorCode &status) :
-        fBI(bi), fBreaks(status), fPositionInCache(-1),
-        fStart(0), fLimit(0), fFirstRuleStatusIndex(0), fOtherRuleStatusIndex(0) {
+नियमः_Based_Break_Iterator::DictionaryCache::DictionaryCache(नियमः_Based_Break_Iterator *bi, UError_संहिता &स्थितिः) :
+        fBI(bi), fBreaks(स्थितिः), f_Position_अन्तर्_Cache(-1),
+        fStart(0), f_सीमा(0), f_First_नियमः_स्थितिः_सूचकांक(0), f_Other_नियमः_स्थितिः_सूचकांक(0) {
 }
 
-RuleBasedBreakIterator::DictionaryCache::~DictionaryCache() {
+नियमः_Based_Break_Iterator::DictionaryCache::~DictionaryCache() {
 }
 
-void RuleBasedBreakIterator::DictionaryCache::reset() {
-    fPositionInCache = -1;
+शून्य नियमः_Based_Break_Iterator::DictionaryCache::reset() {
+    f_Position_अन्तर्_Cache = -1;
     fStart = 0;
-    fLimit = 0;
-    fFirstRuleStatusIndex = 0;
-    fOtherRuleStatusIndex = 0;
+    f_सीमा = 0;
+    f_First_नियमः_स्थितिः_सूचकांक = 0;
+    f_Other_नियमः_स्थितिः_सूचकांक = 0;
     fBreaks.removeAllElements();
-    int32_t maxStatus = 0;
-    for (int32_t i = 0; i < fBI->fData->fStatusMaxIdx; ++i) {
-        maxStatus = std::max(maxStatus, fBI->fData->fRuleStatusTable[i]);
+    int32_t max_स्थितिः = 0;
+    प्रति (int32_t i = 0; i < fBI->f_दत्त->f_स्थितिः_Max_Idx; ++i) {
+        max_स्थितिः = std::max(max_स्थितिः, fBI->f_दत्त->f_नियमः_स्थितिः_सारणी[i]);
     }
-    isWordLike = maxStatus > 100;
+    isWordLike = max_स्थितिः > 100;
 }
 
-UBool RuleBasedBreakIterator::DictionaryCache::following(int32_t fromPos, int32_t *result, int32_t *statusIndex) {
-    if (fromPos >= fLimit || fromPos < fStart) {
-        fPositionInCache = -1;
-        return false;
+UBool नियमः_Based_Break_Iterator::DictionaryCache::following(int32_t fromPos, int32_t *परिणाम, int32_t *स्थितिः_सूचकांक) {
+    यदि (fromPos >= f_सीमा || fromPos < fStart) {
+        f_Position_अन्तर्_Cache = -1;
+        प्रत्यागम असत्य;
     }
 
     // Sequential iteration, move from previous boundary to the following
 
     int32_t r = 0;
-    if (fPositionInCache >= 0 && fPositionInCache < fBreaks.size() && fBreaks.elementAti(fPositionInCache) == fromPos) {
-        ++fPositionInCache;
-        if (fPositionInCache >= fBreaks.size()) {
-            fPositionInCache = -1;
-            return false;
+    यदि (f_Position_अन्तर्_Cache >= 0 && f_Position_अन्तर्_Cache < fBreaks.size() && fBreaks.elementAti(f_Position_अन्तर्_Cache) == fromPos) {
+        ++f_Position_अन्तर्_Cache;
+        यदि (f_Position_अन्तर्_Cache >= fBreaks.size()) {
+            f_Position_अन्तर्_Cache = -1;
+            प्रत्यागम असत्य;
         }
-        r = fBreaks.elementAti(fPositionInCache);
+        r = fBreaks.elementAti(f_Position_अन्तर्_Cache);
         U_ASSERT(r > fromPos);
-        *result = r;
-        *statusIndex = isWordLike || r == fLimit ? fOtherRuleStatusIndex : 0;
-        return true;
+        *परिणाम = r;
+        *स्थितिः_सूचकांक = isWordLike || r == f_सीमा ? f_Other_नियमः_स्थितिः_सूचकांक : 0;
+        प्रत्यागम सत्य;
     }
 
     // Random indexing. Linear search for the boundary following the given position.
 
-    for (fPositionInCache = 0; fPositionInCache < fBreaks.size(); ++fPositionInCache) {
-        r= fBreaks.elementAti(fPositionInCache);
-        if (r > fromPos) {
-            *result = r;
-            *statusIndex = isWordLike || r == fLimit ? fOtherRuleStatusIndex : 0;
-            return true;
+    प्रति (f_Position_अन्तर्_Cache = 0; f_Position_अन्तर्_Cache < fBreaks.size(); ++f_Position_अन्तर्_Cache) {
+        r= fBreaks.elementAti(f_Position_अन्तर्_Cache);
+        यदि (r > fromPos) {
+            *परिणाम = r;
+            *स्थितिः_सूचकांक = isWordLike || r == f_सीमा ? f_Other_नियमः_स्थितिः_सूचकांक : 0;
+            प्रत्यागम सत्य;
         }
     }
     UPRV_UNREACHABLE_EXIT;
 }
 
 
-UBool RuleBasedBreakIterator::DictionaryCache::preceding(int32_t fromPos, int32_t *result, int32_t *statusIndex) {
-    if (fromPos <= fStart || fromPos > fLimit) {
-        fPositionInCache = -1;
-        return false;
+UBool नियमः_Based_Break_Iterator::DictionaryCache::preceding(int32_t fromPos, int32_t *परिणाम, int32_t *स्थितिः_सूचकांक) {
+    यदि (fromPos <= fStart || fromPos > f_सीमा) {
+        f_Position_अन्तर्_Cache = -1;
+        प्रत्यागम असत्य;
     }
 
-    if (fromPos == fLimit) {
-        fPositionInCache = fBreaks.size() - 1;
-        if (fPositionInCache >= 0) {
-            U_ASSERT(fBreaks.elementAti(fPositionInCache) == fromPos);
+    यदि (fromPos == f_सीमा) {
+        f_Position_अन्तर्_Cache = fBreaks.size() - 1;
+        यदि (f_Position_अन्तर्_Cache >= 0) {
+            U_ASSERT(fBreaks.elementAti(f_Position_अन्तर्_Cache) == fromPos);
         }
     }
 
     int32_t r;
-    if (fPositionInCache > 0 && fPositionInCache < fBreaks.size() && fBreaks.elementAti(fPositionInCache) == fromPos) {
-        --fPositionInCache;
-        r = fBreaks.elementAti(fPositionInCache);
+    यदि (f_Position_अन्तर्_Cache > 0 && f_Position_अन्तर्_Cache < fBreaks.size() && fBreaks.elementAti(f_Position_अन्तर्_Cache) == fromPos) {
+        --f_Position_अन्तर्_Cache;
+        r = fBreaks.elementAti(f_Position_अन्तर्_Cache);
         U_ASSERT(r < fromPos);
-        *result = r;
-        *statusIndex = (r == fStart) ? fFirstRuleStatusIndex
-                       : isWordLike  ? fOtherRuleStatusIndex
+        *परिणाम = r;
+        *स्थितिः_सूचकांक = (r == fStart) ? f_First_नियमः_स्थितिः_सूचकांक
+                       : isWordLike  ? f_Other_नियमः_स्थितिः_सूचकांक
                                      : 0;
-        return true;
+        प्रत्यागम सत्य;
     }
 
-    if (fPositionInCache == 0) {
-        fPositionInCache = -1;
-        return false;
+    यदि (f_Position_अन्तर्_Cache == 0) {
+        f_Position_अन्तर्_Cache = -1;
+        प्रत्यागम असत्य;
     }
 
-    for (fPositionInCache = fBreaks.size()-1; fPositionInCache >= 0; --fPositionInCache) {
-        r = fBreaks.elementAti(fPositionInCache);
-        if (r < fromPos) {
-            *result = r;
-            *statusIndex = (r == fStart) ? fFirstRuleStatusIndex
-                           : isWordLike  ? fOtherRuleStatusIndex
+    प्रति (f_Position_अन्तर्_Cache = fBreaks.size()-1; f_Position_अन्तर्_Cache >= 0; --f_Position_अन्तर्_Cache) {
+        r = fBreaks.elementAti(f_Position_अन्तर्_Cache);
+        यदि (r < fromPos) {
+            *परिणाम = r;
+            *स्थितिः_सूचकांक = (r == fStart) ? f_First_नियमः_स्थितिः_सूचकांक
+                           : isWordLike  ? f_Other_नियमः_स्थितिः_सूचकांक
                                          : 0;
-            return true;
+            प्रत्यागम सत्य;
         }
     }
     UPRV_UNREACHABLE_EXIT;
 }
 
-void RuleBasedBreakIterator::DictionaryCache::populateDictionary(int32_t startPos, int32_t endPos,
-                                       int32_t firstRuleStatus, int32_t otherRuleStatus) {
-    if ((endPos - startPos) <= 1) {
-        return;
+शून्य नियमः_Based_Break_Iterator::DictionaryCache::populateDictionary(int32_t startPos, int32_t अन्तः_Pos,
+                                       int32_t first_नियमः_स्थितिः, int32_t other_नियमः_स्थितिः) {
+    यदि ((अन्तः_Pos - startPos) <= 1) {
+        प्रत्यागम;
     }
 
     reset();
-    fFirstRuleStatusIndex = firstRuleStatus;
-    fOtherRuleStatusIndex = otherRuleStatus;
+    f_First_नियमः_स्थितिः_सूचकांक = first_नियमः_स्थितिः;
+    f_Other_नियमः_स्थितिः_सूचकांक = other_नियमः_स्थितिः;
 
     int32_t rangeStart = startPos;
-    int32_t rangeEnd = endPos;
+    int32_t range_अन्तः = अन्तः_Pos;
 
     uint16_t    category;
     int32_t     current;
-    UErrorCode  status = U_ZERO_ERROR;
-    int32_t     foundBreakCount = 0;
+    UError_संहिता  स्थितिः = U_ZERO_ERROR;
+    int32_t     प्राप्तम्_Break_गणनम् = 0;
     UText      *text = &fBI->fText;
 
     // Loop through the text, looking for ranges of dictionary characters.
     // For each span, find the appropriate break engine, and ask it to find
     // any breaks within the span.
 
-    utext_setNativeIndex(text, rangeStart);
+    utext_समुच्चयः_Native_सूचकांक(text, rangeStart);
     UChar32     c = utext_current32(text);
-    category = ucptrie_get(fBI->fData->fTrie, c);
-    uint32_t dictStart = fBI->fData->fForwardTable->fDictCategoriesStart;
+    category = ucptrie_get(fBI->f_दत्त->fTrie, c);
+    uint32_t dictStart = fBI->f_दत्त->f_Forward_सारणी->fDictCategoriesStart;
 
-    while(U_SUCCESS(status)) {
-        while ((current = static_cast<int32_t>(UTEXT_GETNATIVEINDEX(text))) < rangeEnd
+    यावत्(U_SUCCESS(स्थितिः)) {
+        यावत् ((current = static_cast<int32_t>(UTEXT_GETNATIVEINDEX(text))) < range_अन्तः
                 && (category < dictStart)) {
             utext_next32(text);           // TODO: cleaner loop structure.
             c = utext_current32(text);
-            category = ucptrie_get(fBI->fData->fTrie, c);
+            category = ucptrie_get(fBI->f_दत्त->fTrie, c);
         }
-        if (current >= rangeEnd) {
-            break;
+        यदि (current >= range_अन्तः) {
+            भङ्ग;
         }
 
         // We now have a dictionary character. Get the appropriate language object
         // to deal with it.
-        const LanguageBreakEngine *lbe = fBI->getLanguageBreakEngine(
-            c, fBI->getLocaleID(ULOC_REQUESTED_LOCALE, status));
+        ध्रुव LanguageBreakEngine *lbe = fBI->getLanguageBreakEngine(
+            c, fBI->getLocaleID(ULOC_REQUESTED_LOCALE, स्थितिः));
 
         // Ask the language object if there are any breaks. It will add them to the cache and
         // leave the text pointer on the other side of its range, ready to search for the next one.
-        if (lbe != nullptr) {
-            foundBreakCount += lbe->findBreaks(text, current, rangeEnd, fBreaks, fBI->fIsPhraseBreaking, status);
+        यदि (lbe != शून्यसूचकः) {
+            प्राप्तम्_Break_गणनम् += lbe->findBreaks(text, current, range_अन्तः, fBreaks, fBI->fIsPhraseBreaking, स्थितिः);
         }
 
         // Reload the loop variables for the next go-round
         c = utext_current32(text);
-        category = ucptrie_get(fBI->fData->fTrie, c);
+        category = ucptrie_get(fBI->f_दत्त->fTrie, c);
     }
 
     // If we found breaks, ensure that the first and last entries are
@@ -186,23 +186,23 @@ void RuleBasedBreakIterator::DictionaryCache::populateDictionary(int32_t startPo
     // cache iteration position to the first entry.
 
     // printf("foundBreakCount = %d\n", foundBreakCount);
-    if (foundBreakCount > 0) {
-        U_ASSERT(foundBreakCount == fBreaks.size());
-        if (startPos < fBreaks.elementAti(0)) {
+    यदि (प्राप्तम्_Break_गणनम् > 0) {
+        U_ASSERT(प्राप्तम्_Break_गणनम् == fBreaks.size());
+        यदि (startPos < fBreaks.elementAti(0)) {
             // The dictionary did not place a boundary at the start of the segment of text.
             // Add one now. This should not commonly happen, but it would be easy for interactions
             // of the rules for dictionary segments and the break engine implementations to
             // inadvertently cause it. Cover it here, just in case.
-            fBreaks.insertElementAt(startPos, 0, status);
+            fBreaks.निवेशय_Element_At(startPos, 0, स्थितिः);
         }
-        if (endPos > fBreaks.peeki()) {
-            fBreaks.push(endPos, status);
+        यदि (अन्तः_Pos > fBreaks.peeki()) {
+            fBreaks.push(अन्तः_Pos, स्थितिः);
         }
-        fPositionInCache = 0;
+        f_Position_अन्तर्_Cache = 0;
         // Note: Dictionary matching may extend beyond the original limit.
         fStart = fBreaks.elementAti(0);
-        fLimit = fBreaks.peeki();
-    } else {
+        f_सीमा = fBreaks.peeki();
+    } अन्यथा {
         // there were no language-based breaks, even though the segment contained
         // dictionary characters. Subsequent attempts to fetch boundaries from the dictionary cache
         // for this range will fail, and the calling code will fall back to the rule based boundaries.
@@ -214,58 +214,58 @@ void RuleBasedBreakIterator::DictionaryCache::populateDictionary(int32_t startPo
  *   BreakCache implementation
  */
 
-RuleBasedBreakIterator::BreakCache::BreakCache(RuleBasedBreakIterator *bi, UErrorCode &status) :
-        fBI(bi), fSideBuffer(status) {
+नियमः_Based_Break_Iterator::BreakCache::BreakCache(नियमः_Based_Break_Iterator *bi, UError_संहिता &स्थितिः) :
+        fBI(bi), f_Side_बफर(स्थितिः) {
     reset();
 }
 
 
-RuleBasedBreakIterator::BreakCache::~BreakCache() {
+नियमः_Based_Break_Iterator::BreakCache::~BreakCache() {
 }
 
 
-void RuleBasedBreakIterator::BreakCache::reset(int32_t pos, int32_t ruleStatus) {
+शून्य नियमः_Based_Break_Iterator::BreakCache::reset(int32_t pos, int32_t नियमः_स्थितिः) {
     fStartBufIdx = 0;
-    fEndBufIdx = 0;
+    f_अन्तः_Buf_Idx = 0;
     fTextIdx = pos;
     fBufIdx = 0;
     fBoundaries[0] = pos;
-    fStatuses[0] = static_cast<uint16_t>(ruleStatus);
+    fStatuses[0] = static_cast<uint16_t>(नियमः_स्थितिः);
 }
 
 
-int32_t  RuleBasedBreakIterator::BreakCache::current() {
+int32_t  नियमः_Based_Break_Iterator::BreakCache::current() {
     fBI->fPosition = fTextIdx;
-    fBI->fRuleStatusIndex = fStatuses[fBufIdx];
-    fBI->fDone = false;
-    return fTextIdx;
+    fBI->f_नियमः_स्थितिः_सूचकांक = fStatuses[fBufIdx];
+    fBI->f_समाप्तम् = असत्य;
+    प्रत्यागम fTextIdx;
 }
 
 
-void RuleBasedBreakIterator::BreakCache::following(int32_t startPos, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+शून्य नियमः_Based_Break_Iterator::BreakCache::following(int32_t startPos, UError_संहिता &स्थितिः) {
+    यदि (U_FAILURE(स्थितिः)) {
+        प्रत्यागम;
     }
-    if (startPos == fTextIdx || seek(startPos) || populateNear(startPos, status)) {
+    यदि (startPos == fTextIdx || seek(startPos) || populateNear(startPos, स्थितिः)) {
         // startPos is in the cache. Do a next() from that position.
         // TODO: an awkward set of interactions with bi->fDone
         //       seek() does not clear it; it can't because of interactions with populateNear().
         //       next() does not clear it in the fast-path case, where everything matters. Maybe it should.
         //       So clear it here, for the case where seek() succeeded on an iterator that had previously run off the end.
-        fBI->fDone = false;
+        fBI->f_समाप्तम् = असत्य;
         next();
     }
 }
 
 
-void RuleBasedBreakIterator::BreakCache::preceding(int32_t startPos, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+शून्य नियमः_Based_Break_Iterator::BreakCache::preceding(int32_t startPos, UError_संहिता &स्थितिः) {
+    यदि (U_FAILURE(स्थितिः)) {
+        प्रत्यागम;
     }
-    if (startPos == fTextIdx || seek(startPos) || populateNear(startPos, status)) {
-        if (startPos == fTextIdx) {
-            previous(status);
-        } else {
+    यदि (startPos == fTextIdx || seek(startPos) || populateNear(startPos, स्थितिः)) {
+        यदि (startPos == fTextIdx) {
+            previous(स्थितिः);
+        } अन्यथा {
             // seek() leaves the BreakCache positioned at the preceding boundary
             //        if the requested position is between two boundaries.
             // current() pushes the BreakCache position out to the BreakIterator itself.
@@ -280,72 +280,72 @@ void RuleBasedBreakIterator::BreakCache::preceding(int32_t startPos, UErrorCode 
  * Out-of-line code for BreakCache::next().
  * Cache does not already contain the boundary
  */
-void RuleBasedBreakIterator::BreakCache::nextOL() {
-    fBI->fDone = !populateFollowing();
+शून्य नियमः_Based_Break_Iterator::BreakCache::अग्र_OL() {
+    fBI->f_समाप्तम् = !populateFollowing();
     fBI->fPosition = fTextIdx;
-    fBI->fRuleStatusIndex = fStatuses[fBufIdx];
+    fBI->f_नियमः_स्थितिः_सूचकांक = fStatuses[fBufIdx];
 }
 
 
-void RuleBasedBreakIterator::BreakCache::previous(UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+शून्य नियमः_Based_Break_Iterator::BreakCache::previous(UError_संहिता &स्थितिः) {
+    यदि (U_FAILURE(स्थितिः)) {
+        प्रत्यागम;
     }
     int32_t initialBufIdx = fBufIdx;
-    if (fBufIdx == fStartBufIdx) {
+    यदि (fBufIdx == fStartBufIdx) {
         // At start of cache. Prepend to it.
-        populatePreceding(status);
-    } else {
+        populatePreceding(स्थितिः);
+    } अन्यथा {
         // Cache already holds the next boundary
-        fBufIdx = modChunkSize(fBufIdx - 1);
+        fBufIdx = mod_Chunk_आकार(fBufIdx - 1);
         fTextIdx = fBoundaries[fBufIdx];
     }
-    fBI->fDone = (fBufIdx == initialBufIdx);
+    fBI->f_समाप्तम् = (fBufIdx == initialBufIdx);
     fBI->fPosition = fTextIdx;
-    fBI->fRuleStatusIndex = fStatuses[fBufIdx];
+    fBI->f_नियमः_स्थितिः_सूचकांक = fStatuses[fBufIdx];
 }
 
 
-UBool RuleBasedBreakIterator::BreakCache::seek(int32_t pos) {
-    if (pos < fBoundaries[fStartBufIdx] || pos > fBoundaries[fEndBufIdx]) {
-        return false;
+UBool नियमः_Based_Break_Iterator::BreakCache::seek(int32_t pos) {
+    यदि (pos < fBoundaries[fStartBufIdx] || pos > fBoundaries[f_अन्तः_Buf_Idx]) {
+        प्रत्यागम असत्य;
     }
-    if (pos == fBoundaries[fStartBufIdx]) {
+    यदि (pos == fBoundaries[fStartBufIdx]) {
         // Common case: seek(0), from BreakIterator::first()
         fBufIdx = fStartBufIdx;
         fTextIdx = fBoundaries[fBufIdx];
-        return true;
+        प्रत्यागम सत्य;
     }
-    if (pos == fBoundaries[fEndBufIdx]) {
-        fBufIdx = fEndBufIdx;
+    यदि (pos == fBoundaries[f_अन्तः_Buf_Idx]) {
+        fBufIdx = f_अन्तः_Buf_Idx;
         fTextIdx = fBoundaries[fBufIdx];
-        return true;
+        प्रत्यागम सत्य;
     }
 
     int32_t min = fStartBufIdx;
-    int32_t max = fEndBufIdx;
-    while (min != max) {
-        int32_t probe = (min + max + (min>max ? CACHE_SIZE : 0)) / 2;
-        probe = modChunkSize(probe);
-        if (fBoundaries[probe] > pos) {
+    int32_t max = f_अन्तः_Buf_Idx;
+    यावत् (min != max) {
+        int32_t probe = (min + max + (min>max ? CACHE_आकार : 0)) / 2;
+        probe = mod_Chunk_आकार(probe);
+        यदि (fBoundaries[probe] > pos) {
             max = probe;
-        } else {
-            min = modChunkSize(probe + 1);
+        } अन्यथा {
+            min = mod_Chunk_आकार(probe + 1);
         }
     }
     U_ASSERT(fBoundaries[max] > pos);
-    fBufIdx = modChunkSize(max - 1);
+    fBufIdx = mod_Chunk_आकार(max - 1);
     fTextIdx = fBoundaries[fBufIdx];
     U_ASSERT(fTextIdx <= pos);
-    return true;
+    प्रत्यागम सत्य;
 }
 
 
-UBool RuleBasedBreakIterator::BreakCache::populateNear(int32_t position, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+UBool नियमः_Based_Break_Iterator::BreakCache::populateNear(int32_t position, UError_संहिता &स्थितिः) {
+    यदि (U_FAILURE(स्थितिः)) {
+        प्रत्यागम असत्य;
     }
-    U_ASSERT(position < fBoundaries[fStartBufIdx] || position > fBoundaries[fEndBufIdx]);
+    U_ASSERT(position < fBoundaries[fStartBufIdx] || position > fBoundaries[f_अन्तः_Buf_Idx]);
 
     // Add boundaries to the cache near the specified position.
     // The given position need not be a boundary itself.
@@ -365,30 +365,30 @@ UBool RuleBasedBreakIterator::BreakCache::populateNear(int32_t position, UErrorC
     // Threshold for a text position to be considered near to existing cache contents.
     // TODO: See issue ICU-22024 "perf tuning of Cache needed."
     //       This value is subject to change. See the ticket for more details.
-    static constexpr int32_t CACHE_NEAR = 15;
+    स्थिर constexpr int32_t CACHE_NEAR = 15;
 
     int32_t aBoundary = -1;
-    int32_t ruleStatusIndex = 0;
-    bool retainCache = false;
-    if ((position > fBoundaries[fStartBufIdx] - CACHE_NEAR) && position < (fBoundaries[fEndBufIdx] + CACHE_NEAR)) {
+    int32_t नियमः_स्थितिः_सूचकांक = 0;
+    तार्किक retainCache = असत्य;
+    यदि ((position > fBoundaries[fStartBufIdx] - CACHE_NEAR) && position < (fBoundaries[f_अन्तः_Buf_Idx] + CACHE_NEAR)) {
         // Requested position is near the existing cache. Retain it.
-        retainCache = true;
-    } else if (position <= CACHE_NEAR) {
+        retainCache = सत्य;
+    } अन्यथा यदि (position <= CACHE_NEAR) {
         // Requested position is near the start of the text. Fill cache from start, skipping
         // the need to find a safe point.
-        retainCache = false;
+        retainCache = असत्य;
         aBoundary = 0;
-    } else {
+    } अन्यथा {
         // Requested position is not near the existing cache.
         // Find a safe point to refill the cache from.
         int32_t backupPos = fBI->handleSafePrevious(position);
 
-        if (fBoundaries[fEndBufIdx] < position && fBoundaries[fEndBufIdx] >= (backupPos - CACHE_NEAR)) {
+        यदि (fBoundaries[f_अन्तः_Buf_Idx] < position && fBoundaries[f_अन्तः_Buf_Idx] >= (backupPos - CACHE_NEAR)) {
             // The requested position is beyond the end of the existing cache, but the
             // reverse rules produced a position near or before the cached region.
             // Retain the existing cache, and fill from the end of it.
-            retainCache = true;
-        } else if (backupPos < CACHE_NEAR) {
+            retainCache = सत्य;
+        } अन्यथा यदि (backupPos < CACHE_NEAR) {
             // The safe reverse rules moved us to near the start of text.
             // Take that (index 0) as the backup boundary, avoiding the complication
             // (in the following block) of moving forward from the safe point to a known boundary.
@@ -396,7 +396,7 @@ UBool RuleBasedBreakIterator::BreakCache::populateNear(int32_t position, UErrorC
             // Retain the cache if it begins not too far from the requested position.
             aBoundary = 0;
             retainCache = (fBoundaries[fStartBufIdx] <= (position + CACHE_NEAR));
-        } else {
+        } अन्यथा {
             // The safe reverse rules produced a position that is neither near the existing
             // cache, nor near the start of text.
             // Advance to the boundary following.
@@ -404,101 +404,101 @@ UBool RuleBasedBreakIterator::BreakCache::populateNear(int32_t position, UErrorC
             // that are safe. If advancing from the safe point moves forwards by less than
             // two code points, we need to advance one more time to ensure that the boundary
             // is good, including a correct rules status value.
-            retainCache = false;
+            retainCache = असत्य;
             fBI->fPosition = backupPos;
-            aBoundary = fBI->handleNext();
-            if (aBoundary != UBRK_DONE && aBoundary <= backupPos + 4) {
+            aBoundary = fBI->handle_अग्र();
+            यदि (aBoundary != UBRK_समाप्तम् && aBoundary <= backupPos + 4) {
                 // +4 is a quick test for possibly having advanced only one codepoint.
                 // Four being the length of the longest potential code point, a supplementary in UTF-8
-                utext_setNativeIndex(&fBI->fText, aBoundary);
-                if (backupPos == utext_getPreviousNativeIndex(&fBI->fText)) {
+                utext_समुच्चयः_Native_सूचकांक(&fBI->fText, aBoundary);
+                यदि (backupPos == utext_get_Previous_Native_सूचकांक(&fBI->fText)) {
                     // The initial handleNext() only advanced by a single code point. Go again.
-                    aBoundary = fBI->handleNext();   // Safe rules identify safe pairs.
+                    aBoundary = fBI->handle_अग्र();   // Safe rules identify safe pairs.
                 }
             }
-            if (aBoundary == UBRK_DONE) {
+            यदि (aBoundary == UBRK_समाप्तम्) {
                 // Note (Andy Heninger): I don't think this condition can occur, but it's hard
                 // to prove that it can't. We ran off the end of the string looking a boundary
                 // following a safe point; choose the end of the string as that boundary.
-                aBoundary = utext_nativeLength(&fBI->fText);
+                aBoundary = utext_native_दीर्घता(&fBI->fText);
             }
-            ruleStatusIndex = fBI->fRuleStatusIndex;
+            नियमः_स्थितिः_सूचकांक = fBI->f_नियमः_स्थितिः_सूचकांक;
         }
     }
 
-    if (!retainCache) {
+    यदि (!retainCache) {
         U_ASSERT(aBoundary != -1);
-        reset(aBoundary, ruleStatusIndex);        // Reset cache to hold aBoundary as a single starting point.
+        reset(aBoundary, नियमः_स्थितिः_सूचकांक);        // Reset cache to hold aBoundary as a single starting point.
     }
 
     // Fill in boundaries between existing cache content and the new requested position.
 
-    if (fBoundaries[fEndBufIdx] < position) {
+    यदि (fBoundaries[f_अन्तः_Buf_Idx] < position) {
         // The last position in the cache precedes the requested position.
         // Add following position(s) to the cache.
-        while (fBoundaries[fEndBufIdx] < position) {
-            if (!populateFollowing()) {
+        यावत् (fBoundaries[f_अन्तः_Buf_Idx] < position) {
+            यदि (!populateFollowing()) {
                 UPRV_UNREACHABLE_EXIT;
             }
         }
-        fBufIdx = fEndBufIdx;                      // Set iterator position to the end of the buffer.
+        fBufIdx = f_अन्तः_Buf_Idx;                      // Set iterator position to the end of the buffer.
         fTextIdx = fBoundaries[fBufIdx];           // Required because populateFollowing may add extra boundaries.
-        while (fTextIdx > position) {              // Move backwards to a position at or preceding the requested pos.
-            previous(status);
+        यावत् (fTextIdx > position) {              // Move backwards to a position at or preceding the requested pos.
+            previous(स्थितिः);
         }
-        return true;
+        प्रत्यागम सत्य;
     }
 
-    if (fBoundaries[fStartBufIdx] > position) {
+    यदि (fBoundaries[fStartBufIdx] > position) {
         // The first position in the cache is beyond the requested position.
         // back up more until we get a boundary <= the requested position.
-        while (fBoundaries[fStartBufIdx] > position) {
-            populatePreceding(status);
+        यावत् (fBoundaries[fStartBufIdx] > position) {
+            populatePreceding(स्थितिः);
         }
         fBufIdx = fStartBufIdx;                    // Set iterator position to the start of the buffer.
         fTextIdx = fBoundaries[fBufIdx];           // Required because populatePreceding may add extra boundaries.
-        while (fTextIdx < position) {              // Move forwards to a position at or following the requested pos.
+        यावत् (fTextIdx < position) {              // Move forwards to a position at or following the requested pos.
             next();
         }
-        if (fTextIdx > position) {
+        यदि (fTextIdx > position) {
             // If position is not itself a boundary, the next() loop above will overshoot.
             // Back up one, leaving cache position at the boundary preceding the requested position.
-            previous(status);
+            previous(स्थितिः);
         }
-        return true;
+        प्रत्यागम सत्य;
     }
 
     U_ASSERT(fTextIdx == position);
-    return true;
+    प्रत्यागम सत्य;
 }
 
 
 
-UBool RuleBasedBreakIterator::BreakCache::populateFollowing() {
-    int32_t fromPosition = fBoundaries[fEndBufIdx];
-    int32_t fromRuleStatusIdx = fStatuses[fEndBufIdx];
+UBool नियमः_Based_Break_Iterator::BreakCache::populateFollowing() {
+    int32_t fromPosition = fBoundaries[f_अन्तः_Buf_Idx];
+    int32_t from_नियमः_स्थितिः_Idx = fStatuses[f_अन्तः_Buf_Idx];
     int32_t pos = 0;
-    int32_t ruleStatusIdx = 0;
+    int32_t नियमः_स्थितिः_Idx = 0;
 
-    if (fBI->fDictionaryCache->following(fromPosition, &pos, &ruleStatusIdx)) {
-        addFollowing(pos, ruleStatusIdx, UpdateCachePosition);
-        return true;
+    यदि (fBI->fDictionaryCache->following(fromPosition, &pos, &नियमः_स्थितिः_Idx)) {
+        सङ्कलय_Following(pos, नियमः_स्थितिः_Idx, UpdateCachePosition);
+        प्रत्यागम सत्य;
     }
 
     fBI->fPosition = fromPosition;
-    pos = fBI->handleNext();
-    if (pos == UBRK_DONE) {
-        return false;
+    pos = fBI->handle_अग्र();
+    यदि (pos == UBRK_समाप्तम्) {
+        प्रत्यागम असत्य;
     }
 
-    ruleStatusIdx = fBI->fRuleStatusIndex;
-    if (fBI->fDictionaryCharCount > 0) {
+    नियमः_स्थितिः_Idx = fBI->f_नियमः_स्थितिः_सूचकांक;
+    यदि (fBI->f_Dictionary_Char_गणनम् > 0) {
         // The text segment obtained from the rules includes dictionary characters.
         // Subdivide it, with subdivided results going into the dictionary cache.
-        fBI->fDictionaryCache->populateDictionary(fromPosition, pos, fromRuleStatusIdx, ruleStatusIdx);
-        if (fBI->fDictionaryCache->following(fromPosition, &pos, &ruleStatusIdx)) {
-            addFollowing(pos, ruleStatusIdx, UpdateCachePosition);
-            return true;
+        fBI->fDictionaryCache->populateDictionary(fromPosition, pos, from_नियमः_स्थितिः_Idx, नियमः_स्थितिः_Idx);
+        यदि (fBI->fDictionaryCache->following(fromPosition, &pos, &नियमः_स्थितिः_Idx)) {
+            सङ्कलय_Following(pos, नियमः_स्थितिः_Idx, UpdateCachePosition);
+            प्रत्यागम सत्य;
             // TODO: may want to move a sizable chunk of dictionary cache to break cache at this point.
             //       But be careful with interactions with populateNear().
         }
@@ -508,55 +508,55 @@ UBool RuleBasedBreakIterator::BreakCache::populateFollowing() {
     // Or, it did contain dictionary chars, but the dictionary segmenter didn't handle them,
     //    meaning that we didn't take the return, above.
     // Add its end point to the cache.
-    addFollowing(pos, ruleStatusIdx, UpdateCachePosition);
+    सङ्कलय_Following(pos, नियमः_स्थितिः_Idx, UpdateCachePosition);
 
     // Add several non-dictionary boundaries at this point, to optimize straight forward iteration.
     //    (subsequent calls to BreakIterator::next() will take the fast path, getting cached results.
     //
-    for (int count=0; count<6; ++count) {
-        pos = fBI->handleNext();
-        if (pos == UBRK_DONE || fBI->fDictionaryCharCount > 0) {
-            break;
+    प्रति (पूर्णाङ्क count=0; count<6; ++count) {
+        pos = fBI->handle_अग्र();
+        यदि (pos == UBRK_समाप्तम् || fBI->f_Dictionary_Char_गणनम् > 0) {
+            भङ्ग;
         }
-        addFollowing(pos, fBI->fRuleStatusIndex, RetainCachePosition);
+        सङ्कलय_Following(pos, fBI->f_नियमः_स्थितिः_सूचकांक, RetainCachePosition);
     }
 
-    return true;
+    प्रत्यागम सत्य;
 }
 
 
-UBool RuleBasedBreakIterator::BreakCache::populatePreceding(UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+UBool नियमः_Based_Break_Iterator::BreakCache::populatePreceding(UError_संहिता &स्थितिः) {
+    यदि (U_FAILURE(स्थितिः)) {
+        प्रत्यागम असत्य;
     }
 
     int32_t fromPosition = fBoundaries[fStartBufIdx];
-    if (fromPosition == 0) {
-        return false;
+    यदि (fromPosition == 0) {
+        प्रत्यागम असत्य;
     }
 
     int32_t position = 0;
-    int32_t positionStatusIdx = 0;
+    int32_t position_स्थितिः_Idx = 0;
 
-    if (fBI->fDictionaryCache->preceding(fromPosition, &position, &positionStatusIdx)) {
-        addPreceding(position, positionStatusIdx, UpdateCachePosition);
-        return true;
+    यदि (fBI->fDictionaryCache->preceding(fromPosition, &position, &position_स्थितिः_Idx)) {
+        सङ्कलय_Preceding(position, position_स्थितिः_Idx, UpdateCachePosition);
+        प्रत्यागम सत्य;
     }
 
     int32_t backupPosition = fromPosition;
 
     // Find a boundary somewhere preceding the first already-cached boundary
-    do {
+    कुरु {
         backupPosition = backupPosition - 30;
-        if (backupPosition <= 0) {
+        यदि (backupPosition <= 0) {
             backupPosition = 0;
-        } else {
+        } अन्यथा {
             backupPosition = fBI->handleSafePrevious(backupPosition);
         }
-        if (backupPosition == UBRK_DONE || backupPosition == 0) {
+        यदि (backupPosition == UBRK_समाप्तम् || backupPosition == 0) {
             position = 0;
-            positionStatusIdx = 0;
-        } else {
+            position_स्थितिः_Idx = 0;
+        } अन्यथा {
             // Advance to the boundary following the backup position.
             // There is a complication: the safe reverse rules identify pairs of code points
             // that are safe. If advancing from the safe point moves forwards by less than
@@ -564,144 +564,144 @@ UBool RuleBasedBreakIterator::BreakCache::populatePreceding(UErrorCode &status) 
             // is good, including a correct rules status value.
             //
             fBI->fPosition = backupPosition;
-            position = fBI->handleNext();
-            if (position <= backupPosition + 4) {
+            position = fBI->handle_अग्र();
+            यदि (position <= backupPosition + 4) {
                 // +4 is a quick test for possibly having advanced only one codepoint.
                 // Four being the length of the longest potential code point, a supplementary in UTF-8
-                utext_setNativeIndex(&fBI->fText, position);
-                if (backupPosition == utext_getPreviousNativeIndex(&fBI->fText)) {
+                utext_समुच्चयः_Native_सूचकांक(&fBI->fText, position);
+                यदि (backupPosition == utext_get_Previous_Native_सूचकांक(&fBI->fText)) {
                     // The initial handleNext() only advanced by a single code point. Go again.
-                    position = fBI->handleNext();   // Safe rules identify safe pairs.
+                    position = fBI->handle_अग्र();   // Safe rules identify safe pairs.
                 }
             }
-            positionStatusIdx = fBI->fRuleStatusIndex;
+            position_स्थितिः_Idx = fBI->f_नियमः_स्थितिः_सूचकांक;
         }
-    } while (position >= fromPosition);
+    } यावत् (position >= fromPosition);
 
     // Find boundaries between the one we just located and the first already-cached boundary
     // Put them in a side buffer, because we don't yet know where they will fall in the circular cache buffer..
 
-    fSideBuffer.removeAllElements();
-    fSideBuffer.addElement(position, status);
-    fSideBuffer.addElement(positionStatusIdx, status);
+    f_Side_बफर.removeAllElements();
+    f_Side_बफर.सङ्कलय_Element(position, स्थितिः);
+    f_Side_बफर.सङ्कलय_Element(position_स्थितिः_Idx, स्थितिः);
 
-    do {
-        int32_t prevPosition = fBI->fPosition = position;
-        int32_t prevStatusIdx = positionStatusIdx;
-        position = fBI->handleNext();
-        positionStatusIdx = fBI->fRuleStatusIndex;
-        if (position == UBRK_DONE) {
-            break;
+    कुरु {
+        int32_t पूर्व_Position = fBI->fPosition = position;
+        int32_t पूर्व_स्थितिः_Idx = position_स्थितिः_Idx;
+        position = fBI->handle_अग्र();
+        position_स्थितिः_Idx = fBI->f_नियमः_स्थितिः_सूचकांक;
+        यदि (position == UBRK_समाप्तम्) {
+            भङ्ग;
         }
 
-        UBool segmentHandledByDictionary = false;
-        if (fBI->fDictionaryCharCount != 0) {
+        UBool segmentHandledByDictionary = असत्य;
+        यदि (fBI->f_Dictionary_Char_गणनम् != 0) {
             // Segment from the rules includes dictionary characters.
             // Subdivide it, with subdivided results going into the dictionary cache.
-            int32_t dictSegEndPosition = position;
-            fBI->fDictionaryCache->populateDictionary(prevPosition, dictSegEndPosition, prevStatusIdx, positionStatusIdx);
-            while (fBI->fDictionaryCache->following(prevPosition, &position, &positionStatusIdx)) {
-                segmentHandledByDictionary = true;
-                U_ASSERT(position > prevPosition);
-                if (position >= fromPosition) {
-                    break;
+            int32_t dict_Seg_अन्तः_Position = position;
+            fBI->fDictionaryCache->populateDictionary(पूर्व_Position, dict_Seg_अन्तः_Position, पूर्व_स्थितिः_Idx, position_स्थितिः_Idx);
+            यावत् (fBI->fDictionaryCache->following(पूर्व_Position, &position, &position_स्थितिः_Idx)) {
+                segmentHandledByDictionary = सत्य;
+                U_ASSERT(position > पूर्व_Position);
+                यदि (position >= fromPosition) {
+                    भङ्ग;
                 }
-                U_ASSERT(position <= dictSegEndPosition);
-                fSideBuffer.addElement(position, status);
-                fSideBuffer.addElement(positionStatusIdx, status);
-                prevPosition = position;
+                U_ASSERT(position <= dict_Seg_अन्तः_Position);
+                f_Side_बफर.सङ्कलय_Element(position, स्थितिः);
+                f_Side_बफर.सङ्कलय_Element(position_स्थितिः_Idx, स्थितिः);
+                पूर्व_Position = position;
             }
-            U_ASSERT(position==dictSegEndPosition || position>=fromPosition);
+            U_ASSERT(position==dict_Seg_अन्तः_Position || position>=fromPosition);
         }
 
-        if (!segmentHandledByDictionary && position < fromPosition) {
-            fSideBuffer.addElement(position, status);
-            fSideBuffer.addElement(positionStatusIdx, status);
+        यदि (!segmentHandledByDictionary && position < fromPosition) {
+            f_Side_बफर.सङ्कलय_Element(position, स्थितिः);
+            f_Side_बफर.सङ्कलय_Element(position_स्थितिः_Idx, स्थितिः);
         }
-    } while (position < fromPosition);
+    } यावत् (position < fromPosition);
 
     // Move boundaries from the side buffer to the main circular buffer.
-    UBool success = false;
-    if (!fSideBuffer.isEmpty()) {
-        positionStatusIdx = fSideBuffer.popi();
-        position = fSideBuffer.popi();
-        addPreceding(position, positionStatusIdx, UpdateCachePosition);
-        success = true;
+    UBool success = असत्य;
+    यदि (!f_Side_बफर.is_रिक्तानि()) {
+        position_स्थितिः_Idx = f_Side_बफर.popi();
+        position = f_Side_बफर.popi();
+        सङ्कलय_Preceding(position, position_स्थितिः_Idx, UpdateCachePosition);
+        success = सत्य;
     }
 
-    while (!fSideBuffer.isEmpty()) {
-        positionStatusIdx = fSideBuffer.popi();
-        position = fSideBuffer.popi();
-        if (!addPreceding(position, positionStatusIdx, RetainCachePosition)) {
+    यावत् (!f_Side_बफर.is_रिक्तानि()) {
+        position_स्थितिः_Idx = f_Side_बफर.popi();
+        position = f_Side_बफर.popi();
+        यदि (!सङ्कलय_Preceding(position, position_स्थितिः_Idx, RetainCachePosition)) {
             // No space in circular buffer to hold a new preceding result while
             // also retaining the current cache (iteration) position.
             // Bailing out is safe; the cache will refill again if needed.
-            break;
+            भङ्ग;
         }
     }
 
-    return success;
+    प्रत्यागम success;
 }
 
 
-void RuleBasedBreakIterator::BreakCache::addFollowing(int32_t position, int32_t ruleStatusIdx, UpdatePositionValues update) {
-    U_ASSERT(position > fBoundaries[fEndBufIdx]);
-    U_ASSERT(ruleStatusIdx <= UINT16_MAX);
-    int32_t nextIdx = modChunkSize(fEndBufIdx + 1);
-    if (nextIdx == fStartBufIdx) {
-        fStartBufIdx = modChunkSize(fStartBufIdx + 6);    // TODO: experiment. Probably revert to 1.
+शून्य नियमः_Based_Break_Iterator::BreakCache::सङ्कलय_Following(int32_t position, int32_t नियमः_स्थितिः_Idx, Update_Position_मानानि update) {
+    U_ASSERT(position > fBoundaries[f_अन्तः_Buf_Idx]);
+    U_ASSERT(नियमः_स्थितिः_Idx <= UINT16_MAX);
+    int32_t अग्र_Idx = mod_Chunk_आकार(f_अन्तः_Buf_Idx + 1);
+    यदि (अग्र_Idx == fStartBufIdx) {
+        fStartBufIdx = mod_Chunk_आकार(fStartBufIdx + 6);    // TODO: experiment. Probably revert to 1.
     }
-    fBoundaries[nextIdx] = position;
-    fStatuses[nextIdx] = static_cast<uint16_t>(ruleStatusIdx);
-    fEndBufIdx = nextIdx;
-    if (update == UpdateCachePosition) {
+    fBoundaries[अग्र_Idx] = position;
+    fStatuses[अग्र_Idx] = static_cast<uint16_t>(नियमः_स्थितिः_Idx);
+    f_अन्तः_Buf_Idx = अग्र_Idx;
+    यदि (update == UpdateCachePosition) {
         // Set current position to the newly added boundary.
-        fBufIdx = nextIdx;
+        fBufIdx = अग्र_Idx;
         fTextIdx = position;
-    } else {
+    } अन्यथा {
         // Retaining the original cache position.
         // Check if the added boundary wraps around the buffer, and would over-write the original position.
         // It's the responsibility of callers of this function to not add too many.
-        U_ASSERT(nextIdx != fBufIdx);
+        U_ASSERT(अग्र_Idx != fBufIdx);
     }
 }
 
-bool RuleBasedBreakIterator::BreakCache::addPreceding(int32_t position, int32_t ruleStatusIdx, UpdatePositionValues update) {
+तार्किक नियमः_Based_Break_Iterator::BreakCache::सङ्कलय_Preceding(int32_t position, int32_t नियमः_स्थितिः_Idx, Update_Position_मानानि update) {
     U_ASSERT(position < fBoundaries[fStartBufIdx]);
-    U_ASSERT(ruleStatusIdx <= UINT16_MAX);
-    int32_t nextIdx = modChunkSize(fStartBufIdx - 1);
-    if (nextIdx == fEndBufIdx) {
-        if (fBufIdx == fEndBufIdx && update == RetainCachePosition) {
+    U_ASSERT(नियमः_स्थितिः_Idx <= UINT16_MAX);
+    int32_t अग्र_Idx = mod_Chunk_आकार(fStartBufIdx - 1);
+    यदि (अग्र_Idx == f_अन्तः_Buf_Idx) {
+        यदि (fBufIdx == f_अन्तः_Buf_Idx && update == RetainCachePosition) {
             // Failure. The insertion of the new boundary would claim the buffer position that is the
             // current iteration position. And we also want to retain the current iteration position.
             // (The buffer is already completely full of entries that precede the iteration position.)
-            return false;
+            प्रत्यागम असत्य;
         }
-        fEndBufIdx = modChunkSize(fEndBufIdx - 1);
+        f_अन्तः_Buf_Idx = mod_Chunk_आकार(f_अन्तः_Buf_Idx - 1);
     }
-    fBoundaries[nextIdx] = position;
-    fStatuses[nextIdx] = static_cast<uint16_t>(ruleStatusIdx);
-    fStartBufIdx = nextIdx;
-    if (update == UpdateCachePosition) {
-        fBufIdx = nextIdx;
+    fBoundaries[अग्र_Idx] = position;
+    fStatuses[अग्र_Idx] = static_cast<uint16_t>(नियमः_स्थितिः_Idx);
+    fStartBufIdx = अग्र_Idx;
+    यदि (update == UpdateCachePosition) {
+        fBufIdx = अग्र_Idx;
         fTextIdx = position;
     }
-    return true;
+    प्रत्यागम सत्य;
 }
 
 
-void RuleBasedBreakIterator::BreakCache::dumpCache() {
-#ifdef RBBI_DEBUG
+शून्य नियमः_Based_Break_Iterator::BreakCache::dumpCache() {
+#यदि_परिभाषितम् RBBI_DEBUG
     RBBIDebugPrintf("fTextIdx:%d   fBufIdx:%d\n", fTextIdx, fBufIdx);
-    for (int32_t i=fStartBufIdx; ; i=modChunkSize(i+1)) {
+    प्रति (int32_t i=fStartBufIdx; ; i=mod_Chunk_आकार(i+1)) {
         RBBIDebugPrintf("%d  %d\n", i, fBoundaries[i]);
-        if (i == fEndBufIdx) {
-            break;
+        यदि (i == f_अन्तः_Buf_Idx) {
+            भङ्ग;
         }
     }
-#endif
+#यदि_अन्तः
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif // #if !UCONFIG_NO_BREAK_ITERATION
+#यदि_अन्तः // #if !UCONFIG_NO_BREAK_ITERATION

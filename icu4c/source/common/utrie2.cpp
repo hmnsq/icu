@@ -24,363 +24,363 @@
 *   This file contains only the runtime and enumeration code, for read-only access.
 *   See utrie2_builder.c for the builder code.
 */
-#include "unicode/utypes.h"
-#ifdef UCPTRIE_DEBUG
-#include "unicode/umutablecptrie.h"
-#endif
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "utrie2.h"
-#include "utrie2_impl.h"
-#include "uassert.h"
+#अन्तर्भाव "unicode/utypes.h"
+#यदि_परिभाषितम् UCPTRIE_DEBUG
+#अन्तर्भाव "unicode/umutablecptrie.h"
+#यदि_अन्तः
+#अन्तर्भाव "unicode/utf.h"
+#अन्तर्भाव "unicode/utf8.h"
+#अन्तर्भाव "unicode/utf16.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "utrie2.h"
+#अन्तर्भाव "utrie2_impl.h"
+#अन्तर्भाव "uassert.h"
 
 /* Public UTrie2 API implementation ----------------------------------------- */
 
-static uint32_t
-get32(const UNewTrie2 *trie, UChar32 c, UBool fromLSCP) {
-    int32_t i2, block;
+स्थिर uint32_t
+get32(ध्रुव UNewTrie2 *trie, UChar32 c, UBool fromLSCP) {
+    int32_t i2, खण्डम्;
 
-    if(c>=trie->highStart && (!U_IS_LEAD(c) || fromLSCP)) {
-        return trie->data[trie->dataLength-UTRIE2_DATA_GRANULARITY];
+    यदि(c>=trie->उच्चः_Start && (!U_IS_LEAD(c) || fromLSCP)) {
+        प्रत्यागम trie->दत्त[trie->दत्त_दीर्घता-UTRIE2_दत्त_GRANULARITY];
     }
 
-    if(U_IS_LEAD(c) && fromLSCP) {
-        i2=(UTRIE2_LSCP_INDEX_2_OFFSET-(0xd800>>UTRIE2_SHIFT_2))+
-            (c>>UTRIE2_SHIFT_2);
-    } else {
-        i2=trie->index1[c>>UTRIE2_SHIFT_1]+
-            ((c>>UTRIE2_SHIFT_2)&UTRIE2_INDEX_2_MASK);
+    यदि(U_IS_LEAD(c) && fromLSCP) {
+        i2=(UTRIE2_LSCP_सूचकांक_2_विस्थापनम्-(0xd800>>UTRIE2_सरणम्_2))+
+            (c>>UTRIE2_सरणम्_2);
+    } अन्यथा {
+        i2=trie->index1[c>>UTRIE2_सरणम्_1]+
+            ((c>>UTRIE2_सरणम्_2)&UTRIE2_सूचकांक_2_आवरणम्);
     }
-    block=trie->index2[i2];
-    return trie->data[block+(c&UTRIE2_DATA_MASK)];
+    खण्डम्=trie->index2[i2];
+    प्रत्यागम trie->दत्त[खण्डम्+(c&UTRIE2_दत्त_आवरणम्)];
 }
 
 U_CAPI uint32_t U_EXPORT2
-utrie2_get32(const UTrie2 *trie, UChar32 c) {
-    if(trie->data16!=nullptr) {
-        return UTRIE2_GET16(trie, c);
-    } else if(trie->data32!=nullptr) {
-        return UTRIE2_GET32(trie, c);
-    } else if((uint32_t)c>0x10ffff) {
-        return trie->errorValue;
-    } else {
-        return get32(trie->newTrie, c, true);
+utrie2_get32(ध्रुव UTrie2 *trie, UChar32 c) {
+    यदि(trie->data16!=शून्यसूचकः) {
+        प्रत्यागम UTRIE2_GET16(trie, c);
+    } अन्यथा यदि(trie->data32!=शून्यसूचकः) {
+        प्रत्यागम UTRIE2_GET32(trie, c);
+    } अन्यथा यदि((uint32_t)c>0x10ffff) {
+        प्रत्यागम trie->error_मानम्;
+    } अन्यथा {
+        प्रत्यागम get32(trie->newTrie, c, सत्य);
     }
 }
 
 U_CAPI uint32_t U_EXPORT2
-utrie2_get32FromLeadSurrogateCodeUnit(const UTrie2 *trie, UChar32 c) {
-    if(!U_IS_LEAD(c)) {
-        return trie->errorValue;
+utrie2_get32_From_Lead_Surrogate_संहिता_Unit(ध्रुव UTrie2 *trie, UChar32 c) {
+    यदि(!U_IS_LEAD(c)) {
+        प्रत्यागम trie->error_मानम्;
     }
-    if(trie->data16!=nullptr) {
-        return UTRIE2_GET16_FROM_U16_SINGLE_LEAD(trie, c);
-    } else if(trie->data32!=nullptr) {
-        return UTRIE2_GET32_FROM_U16_SINGLE_LEAD(trie, c);
-    } else {
-        return get32(trie->newTrie, c, false);
+    यदि(trie->data16!=शून्यसूचकः) {
+        प्रत्यागम UTRIE2_GET16_FROM_U16_SINGLE_LEAD(trie, c);
+    } अन्यथा यदि(trie->data32!=शून्यसूचकः) {
+        प्रत्यागम UTRIE2_GET32_FROM_U16_SINGLE_LEAD(trie, c);
+    } अन्यथा {
+        प्रत्यागम get32(trie->newTrie, c, असत्य);
     }
 }
 
-static inline int32_t
-u8Index(const UTrie2 *trie, UChar32 c, int32_t i) {
+स्थिर अन्तःस्थ int32_t
+u8_सूचकांक(ध्रुव UTrie2 *trie, UChar32 c, int32_t i) {
     int32_t idx=
-        _UTRIE2_INDEX_FROM_CP(
+        UTRIE2_सूचकांक_FROM_CP(
             trie,
-            trie->data32==nullptr ? trie->indexLength : 0,
+            trie->data32==शून्यसूचकः ? trie->सूचकांक_दीर्घता : 0,
             c);
-    return (idx<<3)|i;
+    प्रत्यागम (idx<<3)|i;
 }
 
 U_CAPI int32_t U_EXPORT2
-utrie2_internalU8NextIndex(const UTrie2 *trie, UChar32 c,
-                           const uint8_t *src, const uint8_t *limit) {
+utrie2_आन्तरिकम्_U8_अग्र_सूचकांक(ध्रुव UTrie2 *trie, UChar32 c,
+                           ध्रुव uint8_t *src, ध्रुव uint8_t *सीमा) {
     int32_t i, length;
     i=0;
     /* support 64-bit pointers by avoiding cast of arbitrary difference */
-    if((limit-src)<=7) {
-        length=(int32_t)(limit-src);
-    } else {
+    यदि((सीमा-src)<=7) {
+        length=(int32_t)(सीमा-src);
+    } अन्यथा {
         length=7;
     }
-    c=utf8_nextCharSafeBody(src, &i, length, c, -1);
-    return u8Index(trie, c, i);
+    c=utf8_अग्र_Char_Safe_Body(src, &i, length, c, -1);
+    प्रत्यागम u8_सूचकांक(trie, c, i);
 }
 
 U_CAPI int32_t U_EXPORT2
-utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
-                           const uint8_t *start, const uint8_t *src) {
+utrie2_आन्तरिकम्_U8_पूर्व_सूचकांक(ध्रुव UTrie2 *trie, UChar32 c,
+                           ध्रुव uint8_t *start, ध्रुव uint8_t *src) {
     int32_t i, length;
     /* support 64-bit pointers by avoiding cast of arbitrary difference */
-    if((src-start)<=7) {
+    यदि((src-start)<=7) {
         i=length=(int32_t)(src-start);
-    } else {
+    } अन्यथा {
         i=length=7;
         start=src-7;
     }
-    c=utf8_prevCharSafeBody(start, 0, &i, c, -1);
+    c=utf8_पूर्व_Char_Safe_Body(start, 0, &i, c, -1);
     i=length-i;  /* number of bytes read backward from src */
-    return u8Index(trie, c, i);
+    प्रत्यागम u8_सूचकांक(trie, c, i);
 }
 
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_openFromSerialized(UTrie2ValueBits valueBits,
-                          const void *data, int32_t length, int32_t *pActualLength,
-                          UErrorCode *pErrorCode) {
-    const UTrie2Header *header;
-    const uint16_t *p16;
-    int32_t actualLength;
+utrie2_openFromSerialized(UTrie2_मानम्_द्वयङ्काः मानम्_द्वयङ्काः,
+                          ध्रुव शून्य *दत्त, int32_t length, int32_t *p_Actual_दीर्घता,
+                          UError_संहिता *p_Error_संहिता) {
+    ध्रुव UTrie2_शीर्षकम् *शीर्षकम्;
+    ध्रुव uint16_t *p16;
+    int32_t actual_दीर्घता;
 
-    UTrie2 tempTrie;
+    UTrie2 अस्थायी_Trie;
     UTrie2 *trie;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    यदि(U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम शून्यसूचकः;
     }
 
-    if( length<=0 || (U_POINTER_MASK_LSB(data, 3)!=0) ||
-        valueBits<0 || UTRIE2_COUNT_VALUE_BITS<=valueBits
+    यदि( length<=0 || (U_POINTER_आवरणम्_LSB(दत्त, 3)!=0) ||
+        मानम्_द्वयङ्काः<0 || UTRIE2_गणनम्_मानम्_द्वयङ्काः<=मानम्_द्वयङ्काः
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
 
     /* enough data for a trie header? */
-    if(length<(int32_t)sizeof(UTrie2Header)) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return nullptr;
+    यदि(length<(int32_t)परिमाण(UTrie2_शीर्षकम्)) {
+        *p_Error_संहिता=U_INVALID_FORMAT_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
 
     /* check the signature */
-    header=(const UTrie2Header *)data;
-    if(header->signature!=UTRIE2_SIG) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return nullptr;
+    शीर्षकम्=(ध्रुव UTrie2_शीर्षकम् *)दत्त;
+    यदि(शीर्षकम्->signature!=UTRIE2_SIG) {
+        *p_Error_संहिता=U_INVALID_FORMAT_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
 
     /* get the options */
-    if(valueBits!=(UTrie2ValueBits)(header->options&UTRIE2_OPTIONS_VALUE_BITS_MASK)) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return nullptr;
+    यदि(मानम्_द्वयङ्काः!=(UTrie2_मानम्_द्वयङ्काः)(शीर्षकम्->options&UTRIE2_OPTIONS_मानम्_द्वयङ्काः_आवरणम्)) {
+        *p_Error_संहिता=U_INVALID_FORMAT_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
 
     /* get the length values and offsets */
-    uprv_memset(&tempTrie, 0, sizeof(tempTrie));
-    tempTrie.indexLength=header->indexLength;
-    tempTrie.dataLength=header->shiftedDataLength<<UTRIE2_INDEX_SHIFT;
-    tempTrie.index2NullOffset=header->index2NullOffset;
-    tempTrie.dataNullOffset=header->dataNullOffset;
+    uprv_memset(&अस्थायी_Trie, 0, परिमाण(अस्थायी_Trie));
+    अस्थायी_Trie.सूचकांक_दीर्घता=शीर्षकम्->सूचकांक_दीर्घता;
+    अस्थायी_Trie.दत्त_दीर्घता=शीर्षकम्->shifted_दत्त_दीर्घता<<UTRIE2_सूचकांक_सरणम्;
+    अस्थायी_Trie.index2_Null_विस्थापनम्=शीर्षकम्->index2_Null_विस्थापनम्;
+    अस्थायी_Trie.दत्त_Null_विस्थापनम्=शीर्षकम्->दत्त_Null_विस्थापनम्;
 
-    tempTrie.highStart=header->shiftedHighStart<<UTRIE2_SHIFT_1;
-    tempTrie.highValueIndex=tempTrie.dataLength-UTRIE2_DATA_GRANULARITY;
-    if(valueBits==UTRIE2_16_VALUE_BITS) {
-        tempTrie.highValueIndex+=tempTrie.indexLength;
+    अस्थायी_Trie.उच्चः_Start=शीर्षकम्->shifted_उच्चः_Start<<UTRIE2_सरणम्_1;
+    अस्थायी_Trie.उच्चः_मानम्_सूचकांक=अस्थायी_Trie.दत्त_दीर्घता-UTRIE2_दत्त_GRANULARITY;
+    यदि(मानम्_द्वयङ्काः==UTRIE2_16_मानम्_द्वयङ्काः) {
+        अस्थायी_Trie.उच्चः_मानम्_सूचकांक+=अस्थायी_Trie.सूचकांक_दीर्घता;
     }
 
     /* calculate the actual length */
-    actualLength=(int32_t)sizeof(UTrie2Header)+tempTrie.indexLength*2;
-    if(valueBits==UTRIE2_16_VALUE_BITS) {
-        actualLength+=tempTrie.dataLength*2;
-    } else {
-        actualLength+=tempTrie.dataLength*4;
+    actual_दीर्घता=(int32_t)परिमाण(UTrie2_शीर्षकम्)+अस्थायी_Trie.सूचकांक_दीर्घता*2;
+    यदि(मानम्_द्वयङ्काः==UTRIE2_16_मानम्_द्वयङ्काः) {
+        actual_दीर्घता+=अस्थायी_Trie.दत्त_दीर्घता*2;
+    } अन्यथा {
+        actual_दीर्घता+=अस्थायी_Trie.दत्त_दीर्घता*4;
     }
-    if(length<actualLength) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;  /* not enough bytes */
-        return nullptr;
+    यदि(length<actual_दीर्घता) {
+        *p_Error_संहिता=U_INVALID_FORMAT_ERROR;  /* not enough bytes */
+        प्रत्यागम शून्यसूचकः;
     }
 
     /* allocate the trie */
-    trie=(UTrie2 *)uprv_malloc(sizeof(UTrie2));
-    if(trie==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    trie=(UTrie2 *)uprv_malloc(परिमाण(UTrie2));
+    यदि(trie==शून्यसूचकः) {
+        *p_Error_संहिता=U_स्मृतिः_आवण्टनम्_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
-    uprv_memcpy(trie, &tempTrie, sizeof(tempTrie));
-    trie->memory=(uint32_t *)data;
-    trie->length=actualLength;
-    trie->isMemoryOwned=false;
-#ifdef UTRIE2_DEBUG
+    uprv_memcpy(trie, &अस्थायी_Trie, परिमाण(अस्थायी_Trie));
+    trie->स्मृतिः=(uint32_t *)दत्त;
+    trie->length=actual_दीर्घता;
+    trie->is_स्मृतिः_Owned=असत्य;
+#यदि_परिभाषितम् UTRIE2_DEBUG
     trie->name="fromSerialized";
-#endif
+#यदि_अन्तः
 
     /* set the pointers to its index and data arrays */
-    p16=(const uint16_t *)(header+1);
-    trie->index=p16;
-    p16+=trie->indexLength;
+    p16=(ध्रुव uint16_t *)(शीर्षकम्+1);
+    trie->सूचकांक=p16;
+    p16+=trie->सूचकांक_दीर्घता;
 
     /* get the data */
-    switch(valueBits) {
-    case UTRIE2_16_VALUE_BITS:
+    विकल्प(मानम्_द्वयङ्काः) {
+    पक्ष UTRIE2_16_मानम्_द्वयङ्काः:
         trie->data16=p16;
-        trie->data32=nullptr;
-        trie->initialValue=trie->index[trie->dataNullOffset];
-        trie->errorValue=trie->data16[UTRIE2_BAD_UTF8_DATA_OFFSET];
-        break;
-    case UTRIE2_32_VALUE_BITS:
-        trie->data16=nullptr;
-        trie->data32=(const uint32_t *)p16;
-        trie->initialValue=trie->data32[trie->dataNullOffset];
-        trie->errorValue=trie->data32[UTRIE2_BAD_UTF8_DATA_OFFSET];
-        break;
-    default:
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return nullptr;
+        trie->data32=शून्यसूचकः;
+        trie->initial_मानम्=trie->सूचकांक[trie->दत्त_Null_विस्थापनम्];
+        trie->error_मानम्=trie->data16[UTRIE2_BAD_UTF8_दत्त_विस्थापनम्];
+        भङ्ग;
+    पक्ष UTRIE2_32_मानम्_द्वयङ्काः:
+        trie->data16=शून्यसूचकः;
+        trie->data32=(ध्रुव uint32_t *)p16;
+        trie->initial_मानम्=trie->data32[trie->दत्त_Null_विस्थापनम्];
+        trie->error_मानम्=trie->data32[UTRIE2_BAD_UTF8_दत्त_विस्थापनम्];
+        भङ्ग;
+    स्वभाव:
+        *p_Error_संहिता=U_INVALID_FORMAT_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
 
-    if(pActualLength!=nullptr) {
-        *pActualLength=actualLength;
+    यदि(p_Actual_दीर्घता!=शून्यसूचकः) {
+        *p_Actual_दीर्घता=actual_दीर्घता;
     }
-    return trie;
+    प्रत्यागम trie;
 }
 
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_openDummy(UTrie2ValueBits valueBits,
-                 uint32_t initialValue, uint32_t errorValue,
-                 UErrorCode *pErrorCode) {
+utrie2_openDummy(UTrie2_मानम्_द्वयङ्काः मानम्_द्वयङ्काः,
+                 uint32_t initial_मानम्, uint32_t error_मानम्,
+                 UError_संहिता *p_Error_संहिता) {
     UTrie2 *trie;
-    UTrie2Header *header;
+    UTrie2_शीर्षकम् *शीर्षकम्;
     uint32_t *p;
     uint16_t *dest16;
-    int32_t indexLength, dataLength, length, i;
-    int32_t dataMove;  /* >0 if the data is moved to the end of the index array */
+    int32_t सूचकांक_दीर्घता, दत्त_दीर्घता, length, i;
+    int32_t दत्त_Move;  /* >0 if the data is moved to the end of the index array */
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    यदि(U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम शून्यसूचकः;
     }
 
-    if(valueBits<0 || UTRIE2_COUNT_VALUE_BITS<=valueBits) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    यदि(मानम्_द्वयङ्काः<0 || UTRIE2_गणनम्_मानम्_द्वयङ्काः<=मानम्_द्वयङ्काः) {
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
 
     /* calculate the total length of the dummy trie data */
-    indexLength=UTRIE2_INDEX_1_OFFSET;
-    dataLength=UTRIE2_DATA_START_OFFSET+UTRIE2_DATA_GRANULARITY;
-    length=(int32_t)sizeof(UTrie2Header)+indexLength*2;
-    if(valueBits==UTRIE2_16_VALUE_BITS) {
-        length+=dataLength*2;
-    } else {
-        length+=dataLength*4;
+    सूचकांक_दीर्घता=UTRIE2_सूचकांक_1_विस्थापनम्;
+    दत्त_दीर्घता=UTRIE2_दत्त_START_विस्थापनम्+UTRIE2_दत्त_GRANULARITY;
+    length=(int32_t)परिमाण(UTrie2_शीर्षकम्)+सूचकांक_दीर्घता*2;
+    यदि(मानम्_द्वयङ्काः==UTRIE2_16_मानम्_द्वयङ्काः) {
+        length+=दत्त_दीर्घता*2;
+    } अन्यथा {
+        length+=दत्त_दीर्घता*4;
     }
 
     /* allocate the trie */
-    trie=(UTrie2 *)uprv_malloc(sizeof(UTrie2));
-    if(trie==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    trie=(UTrie2 *)uprv_malloc(परिमाण(UTrie2));
+    यदि(trie==शून्यसूचकः) {
+        *p_Error_संहिता=U_स्मृतिः_आवण्टनम्_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
-    uprv_memset(trie, 0, sizeof(UTrie2));
-    trie->memory=uprv_malloc(length);
-    if(trie->memory==nullptr) {
+    uprv_memset(trie, 0, परिमाण(UTrie2));
+    trie->स्मृतिः=uprv_malloc(length);
+    यदि(trie->स्मृतिः==शून्यसूचकः) {
         uprv_free(trie);
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        *p_Error_संहिता=U_स्मृतिः_आवण्टनम्_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
     trie->length=length;
-    trie->isMemoryOwned=true;
+    trie->is_स्मृतिः_Owned=सत्य;
 
     /* set the UTrie2 fields */
-    if(valueBits==UTRIE2_16_VALUE_BITS) {
-        dataMove=indexLength;
-    } else {
-        dataMove=0;
+    यदि(मानम्_द्वयङ्काः==UTRIE2_16_मानम्_द्वयङ्काः) {
+        दत्त_Move=सूचकांक_दीर्घता;
+    } अन्यथा {
+        दत्त_Move=0;
     }
 
-    trie->indexLength=indexLength;
-    trie->dataLength=dataLength;
-    trie->index2NullOffset=UTRIE2_INDEX_2_OFFSET;
-    trie->dataNullOffset=(uint16_t)dataMove;
-    trie->initialValue=initialValue;
-    trie->errorValue=errorValue;
-    trie->highStart=0;
-    trie->highValueIndex=dataMove+UTRIE2_DATA_START_OFFSET;
-#ifdef UTRIE2_DEBUG
+    trie->सूचकांक_दीर्घता=सूचकांक_दीर्घता;
+    trie->दत्त_दीर्घता=दत्त_दीर्घता;
+    trie->index2_Null_विस्थापनम्=UTRIE2_सूचकांक_2_विस्थापनम्;
+    trie->दत्त_Null_विस्थापनम्=(uint16_t)दत्त_Move;
+    trie->initial_मानम्=initial_मानम्;
+    trie->error_मानम्=error_मानम्;
+    trie->उच्चः_Start=0;
+    trie->उच्चः_मानम्_सूचकांक=दत्त_Move+UTRIE2_दत्त_START_विस्थापनम्;
+#यदि_परिभाषितम् UTRIE2_DEBUG
     trie->name="dummy";
-#endif
+#यदि_अन्तः
 
     /* set the header fields */
-    header=(UTrie2Header *)trie->memory;
+    शीर्षकम्=(UTrie2_शीर्षकम् *)trie->स्मृतिः;
 
-    header->signature=UTRIE2_SIG; /* "Tri2" */
-    header->options=(uint16_t)valueBits;
+    शीर्षकम्->signature=UTRIE2_SIG; /* "Tri2" */
+    शीर्षकम्->options=(uint16_t)मानम्_द्वयङ्काः;
 
-    header->indexLength=(uint16_t)indexLength;
-    header->shiftedDataLength=(uint16_t)(dataLength>>UTRIE2_INDEX_SHIFT);
-    header->index2NullOffset=(uint16_t)UTRIE2_INDEX_2_OFFSET;
-    header->dataNullOffset=(uint16_t)dataMove;
-    header->shiftedHighStart=0;
+    शीर्षकम्->सूचकांक_दीर्घता=(uint16_t)सूचकांक_दीर्घता;
+    शीर्षकम्->shifted_दत्त_दीर्घता=(uint16_t)(दत्त_दीर्घता>>UTRIE2_सूचकांक_सरणम्);
+    शीर्षकम्->index2_Null_विस्थापनम्=(uint16_t)UTRIE2_सूचकांक_2_विस्थापनम्;
+    शीर्षकम्->दत्त_Null_विस्थापनम्=(uint16_t)दत्त_Move;
+    शीर्षकम्->shifted_उच्चः_Start=0;
 
     /* fill the index and data arrays */
-    dest16=(uint16_t *)(header+1);
-    trie->index=dest16;
+    dest16=(uint16_t *)(शीर्षकम्+1);
+    trie->सूचकांक=dest16;
 
     /* write the index-2 array values shifted right by UTRIE2_INDEX_SHIFT */
-    for(i=0; i<UTRIE2_INDEX_2_BMP_LENGTH; ++i) {
-        *dest16++=(uint16_t)(dataMove>>UTRIE2_INDEX_SHIFT);  /* null data block */
+    प्रति(i=0; i<UTRIE2_सूचकांक_2_BMP_दीर्घता; ++i) {
+        *dest16++=(uint16_t)(दत्त_Move>>UTRIE2_सूचकांक_सरणम्);  /* null data block */
     }
 
     /* write UTF-8 2-byte index-2 values, not right-shifted */
-    for(i=0; i<(0xc2-0xc0); ++i) {                                  /* C0..C1 */
-        *dest16++=(uint16_t)(dataMove+UTRIE2_BAD_UTF8_DATA_OFFSET);
+    प्रति(i=0; i<(0xc2-0xc0); ++i) {                                  /* C0..C1 */
+        *dest16++=(uint16_t)(दत्त_Move+UTRIE2_BAD_UTF8_दत्त_विस्थापनम्);
     }
-    for(; i<(0xe0-0xc0); ++i) {                                     /* C2..DF */
-        *dest16++=(uint16_t)dataMove;
+    प्रति(; i<(0xe0-0xc0); ++i) {                                     /* C2..DF */
+        *dest16++=(uint16_t)दत्त_Move;
     }
 
     /* write the 16/32-bit data array */
-    switch(valueBits) {
-    case UTRIE2_16_VALUE_BITS:
+    विकल्प(मानम्_द्वयङ्काः) {
+    पक्ष UTRIE2_16_मानम्_द्वयङ्काः:
         /* write 16-bit data values */
         trie->data16=dest16;
-        trie->data32=nullptr;
-        for(i=0; i<0x80; ++i) {
-            *dest16++=(uint16_t)initialValue;
+        trie->data32=शून्यसूचकः;
+        प्रति(i=0; i<0x80; ++i) {
+            *dest16++=(uint16_t)initial_मानम्;
         }
-        for(; i<0xc0; ++i) {
-            *dest16++=(uint16_t)errorValue;
+        प्रति(; i<0xc0; ++i) {
+            *dest16++=(uint16_t)error_मानम्;
         }
         /* highValue and reserved values */
-        for(i=0; i<UTRIE2_DATA_GRANULARITY; ++i) {
-            *dest16++=(uint16_t)initialValue;
+        प्रति(i=0; i<UTRIE2_दत्त_GRANULARITY; ++i) {
+            *dest16++=(uint16_t)initial_मानम्;
         }
-        break;
-    case UTRIE2_32_VALUE_BITS:
+        भङ्ग;
+    पक्ष UTRIE2_32_मानम्_द्वयङ्काः:
         /* write 32-bit data values */
         p=(uint32_t *)dest16;
-        trie->data16=nullptr;
+        trie->data16=शून्यसूचकः;
         trie->data32=p;
-        for(i=0; i<0x80; ++i) {
-            *p++=initialValue;
+        प्रति(i=0; i<0x80; ++i) {
+            *p++=initial_मानम्;
         }
-        for(; i<0xc0; ++i) {
-            *p++=errorValue;
+        प्रति(; i<0xc0; ++i) {
+            *p++=error_मानम्;
         }
         /* highValue and reserved values */
-        for(i=0; i<UTRIE2_DATA_GRANULARITY; ++i) {
-            *p++=initialValue;
+        प्रति(i=0; i<UTRIE2_दत्त_GRANULARITY; ++i) {
+            *p++=initial_मानम्;
         }
-        break;
-    default:
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        भङ्ग;
+    स्वभाव:
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
 
-    return trie;
+    प्रत्यागम trie;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 utrie2_close(UTrie2 *trie) {
-    if(trie!=nullptr) {
-        if(trie->isMemoryOwned) {
-            uprv_free(trie->memory);
+    यदि(trie!=शून्यसूचकः) {
+        यदि(trie->is_स्मृतिः_Owned) {
+            uprv_free(trie->स्मृतिः);
         }
-        if(trie->newTrie!=nullptr) {
-            uprv_free(trie->newTrie->data);
-#ifdef UCPTRIE_DEBUG
+        यदि(trie->newTrie!=शून्यसूचकः) {
+            uprv_free(trie->newTrie->दत्त);
+#यदि_परिभाषितम् UCPTRIE_DEBUG
             umutablecptrie_close(trie->newTrie->t3);
-#endif
+#यदि_अन्तः
             uprv_free(trie->newTrie);
         }
         uprv_free(trie);
@@ -388,42 +388,42 @@ utrie2_close(UTrie2 *trie) {
 }
 
 U_CAPI UBool U_EXPORT2
-utrie2_isFrozen(const UTrie2 *trie) {
-    return trie->newTrie==nullptr;
+utrie2_isFrozen(ध्रुव UTrie2 *trie) {
+    प्रत्यागम trie->newTrie==शून्यसूचकः;
 }
 
 U_CAPI int32_t U_EXPORT2
-utrie2_serialize(const UTrie2 *trie,
-                 void *data, int32_t capacity,
-                 UErrorCode *pErrorCode) {
+utrie2_serialize(ध्रुव UTrie2 *trie,
+                 शून्य *दत्त, int32_t capacity,
+                 UError_संहिता *p_Error_संहिता) {
     /* argument check */
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    यदि(U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम 0;
     }
 
-    if( trie==nullptr || trie->memory==nullptr || trie->newTrie!=nullptr ||
-        capacity<0 || (capacity>0 && (data==nullptr || (U_POINTER_MASK_LSB(data, 3)!=0)))
+    यदि( trie==शून्यसूचकः || trie->स्मृतिः==शून्यसूचकः || trie->newTrie!=शून्यसूचकः ||
+        capacity<0 || (capacity>0 && (दत्त==शून्यसूचकः || (U_POINTER_आवरणम्_LSB(दत्त, 3)!=0)))
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0;
     }
 
-    if(capacity>=trie->length) {
-        uprv_memcpy(data, trie->memory, trie->length);
-    } else {
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+    यदि(capacity>=trie->length) {
+        uprv_memcpy(दत्त, trie->स्मृतिः, trie->length);
+    } अन्यथा {
+        *p_Error_संहिता=U_बफर_अतिप्रवाहः_ERROR;
     }
-    return trie->length;
+    प्रत्यागम trie->length;
 }
 
 /* enumeration -------------------------------------------------------------- */
 
-#define MIN_VALUE(a, b) ((a)<(b) ? (a) : (b))
+#परिभाषय MIN_मानम्(a, b) ((a)<(b) ? (a) : (b))
 
 /* default UTrie2EnumValue() returns the input value itself */
-static uint32_t U_CALLCONV
-enumSameValue(const void * /*context*/, uint32_t value) {
-    return value;
+स्थिर uint32_t U_CALLCONV
+enum_Same_मानम्(ध्रुव शून्य * /*context*/, uint32_t value) {
+    प्रत्यागम value;
 }
 
 /**
@@ -439,148 +439,148 @@ enumSameValue(const void * /*context*/, uint32_t value) {
  * - Handle the null block specially because we know a priori that it is filled
  *   with a single value.
  */
-static void
-enumEitherTrie(const UTrie2 *trie,
-               UChar32 start, UChar32 limit,
-               UTrie2EnumValue *enumValue, UTrie2EnumRange *enumRange, const void *context) {
-    const uint32_t *data32;
-    const uint16_t *idx;
+स्थिर शून्य
+enumEitherTrie(ध्रुव UTrie2 *trie,
+               UChar32 start, UChar32 सीमा,
+               UTrie2_Enum_मानम् *enum_मानम्, UTrie2EnumRange *enumRange, ध्रुव शून्य *context) {
+    ध्रुव uint32_t *data32;
+    ध्रुव uint16_t *idx;
 
-    uint32_t value, prevValue, initialValue;
-    UChar32 c, prev, highStart;
-    int32_t j, i2Block, prevI2Block, index2NullOffset, block, prevBlock, nullBlock;
+    uint32_t value, पूर्व_मानम्, initial_मानम्;
+    UChar32 c, पूर्व, उच्चः_Start;
+    int32_t j, i2_खण्डम्, पूर्व_I2_खण्डम्, index2_Null_विस्थापनम्, खण्डम्, पूर्व_खण्डम्, null_खण्डम्;
 
-    if(enumRange==nullptr) {
-        return;
+    यदि(enumRange==शून्यसूचकः) {
+        प्रत्यागम;
     }
-    if(enumValue==nullptr) {
-        enumValue=enumSameValue;
+    यदि(enum_मानम्==शून्यसूचकः) {
+        enum_मानम्=enum_Same_मानम्;
     }
 
-    if(trie->newTrie==nullptr) {
+    यदि(trie->newTrie==शून्यसूचकः) {
         /* frozen trie */
-        idx=trie->index;
-        U_ASSERT(idx!=nullptr); /* the following code assumes trie->newTrie is not nullptr when idx is nullptr */
+        idx=trie->सूचकांक;
+        U_ASSERT(idx!=शून्यसूचकः); /* the following code assumes trie->newTrie is not nullptr when idx is nullptr */
         data32=trie->data32;
 
-        index2NullOffset=trie->index2NullOffset;
-        nullBlock=trie->dataNullOffset;
-    } else {
+        index2_Null_विस्थापनम्=trie->index2_Null_विस्थापनम्;
+        null_खण्डम्=trie->दत्त_Null_विस्थापनम्;
+    } अन्यथा {
         /* unfrozen, mutable trie */
-        idx=nullptr;
-        data32=trie->newTrie->data;
-        U_ASSERT(data32!=nullptr); /* the following code assumes idx is not nullptr when data32 is nullptr */
+        idx=शून्यसूचकः;
+        data32=trie->newTrie->दत्त;
+        U_ASSERT(data32!=शून्यसूचकः); /* the following code assumes idx is not nullptr when data32 is nullptr */
 
-        index2NullOffset=trie->newTrie->index2NullOffset;
-        nullBlock=trie->newTrie->dataNullOffset;
+        index2_Null_विस्थापनम्=trie->newTrie->index2_Null_विस्थापनम्;
+        null_खण्डम्=trie->newTrie->दत्त_Null_विस्थापनम्;
     }
 
-    highStart=trie->highStart;
+    उच्चः_Start=trie->उच्चः_Start;
 
     /* get the enumeration value that corresponds to an initial-value trie data entry */
-    initialValue=enumValue(context, trie->initialValue);
+    initial_मानम्=enum_मानम्(context, trie->initial_मानम्);
 
     /* set variables for previous range */
-    prevI2Block=-1;
-    prevBlock=-1;
-    prev=start;
-    prevValue=0;
+    पूर्व_I2_खण्डम्=-1;
+    पूर्व_खण्डम्=-1;
+    पूर्व=start;
+    पूर्व_मानम्=0;
 
     /* enumerate index-2 blocks */
-    for(c=start; c<limit && c<highStart;) {
+    प्रति(c=start; c<सीमा && c<उच्चः_Start;) {
         /* Code point limit for iterating inside this i2Block. */
-        UChar32 tempLimit=c+UTRIE2_CP_PER_INDEX_1_ENTRY;
-        if(limit<tempLimit) {
-            tempLimit=limit;
+        UChar32 अस्थायी_सीमा=c+UTRIE2_CP_प्रत्येकम्_सूचकांक_1_प्रविष्टिः;
+        यदि(सीमा<अस्थायी_सीमा) {
+            अस्थायी_सीमा=सीमा;
         }
-        if(c<=0xffff) {
-            if(!U_IS_SURROGATE(c)) {
-                i2Block=c>>UTRIE2_SHIFT_2;
-            } else if(U_IS_SURROGATE_LEAD(c)) {
+        यदि(c<=0xffff) {
+            यदि(!U_IS_SURROGATE(c)) {
+                i2_खण्डम्=c>>UTRIE2_सरणम्_2;
+            } अन्यथा यदि(U_IS_SURROGATE_LEAD(c)) {
                 /*
                  * Enumerate values for lead surrogate code points, not code units:
                  * This special block has half the normal length.
                  */
-                i2Block=UTRIE2_LSCP_INDEX_2_OFFSET;
-                tempLimit=MIN_VALUE(0xdc00, limit);
-            } else {
+                i2_खण्डम्=UTRIE2_LSCP_सूचकांक_2_विस्थापनम्;
+                अस्थायी_सीमा=MIN_मानम्(0xdc00, सीमा);
+            } अन्यथा {
                 /*
                  * Switch back to the normal part of the index-2 table.
                  * Enumerate the second half of the surrogates block.
                  */
-                i2Block=0xd800>>UTRIE2_SHIFT_2;
-                tempLimit=MIN_VALUE(0xe000, limit);
+                i2_खण्डम्=0xd800>>UTRIE2_सरणम्_2;
+                अस्थायी_सीमा=MIN_मानम्(0xe000, सीमा);
             }
-        } else {
+        } अन्यथा {
             /* supplementary code points */
-            if(idx!=nullptr) {
-                i2Block=idx[(UTRIE2_INDEX_1_OFFSET-UTRIE2_OMITTED_BMP_INDEX_1_LENGTH)+
-                              (c>>UTRIE2_SHIFT_1)];
-            } else {
-                i2Block=trie->newTrie->index1[c>>UTRIE2_SHIFT_1];
+            यदि(idx!=शून्यसूचकः) {
+                i2_खण्डम्=idx[(UTRIE2_सूचकांक_1_विस्थापनम्-UTRIE2_OMITTED_BMP_सूचकांक_1_दीर्घता)+
+                              (c>>UTRIE2_सरणम्_1)];
+            } अन्यथा {
+                i2_खण्डम्=trie->newTrie->index1[c>>UTRIE2_सरणम्_1];
             }
-            if(i2Block==prevI2Block && (c-prev)>=UTRIE2_CP_PER_INDEX_1_ENTRY) {
+            यदि(i2_खण्डम्==पूर्व_I2_खण्डम् && (c-पूर्व)>=UTRIE2_CP_प्रत्येकम्_सूचकांक_1_प्रविष्टिः) {
                 /*
                  * The index-2 block is the same as the previous one, and filled with prevValue.
                  * Only possible for supplementary code points because the linear-BMP index-2
                  * table creates unique i2Block values.
                  */
-                c+=UTRIE2_CP_PER_INDEX_1_ENTRY;
-                continue;
+                c+=UTRIE2_CP_प्रत्येकम्_सूचकांक_1_प्रविष्टिः;
+                अनुवर्त;
             }
         }
-        prevI2Block=i2Block;
-        if(i2Block==index2NullOffset) {
+        पूर्व_I2_खण्डम्=i2_खण्डम्;
+        यदि(i2_खण्डम्==index2_Null_विस्थापनम्) {
             /* this is the null index-2 block */
-            if(prevValue!=initialValue) {
-                if(prev<c && !enumRange(context, prev, c-1, prevValue)) {
-                    return;
+            यदि(पूर्व_मानम्!=initial_मानम्) {
+                यदि(पूर्व<c && !enumRange(context, पूर्व, c-1, पूर्व_मानम्)) {
+                    प्रत्यागम;
                 }
-                prevBlock=nullBlock;
-                prev=c;
-                prevValue=initialValue;
+                पूर्व_खण्डम्=null_खण्डम्;
+                पूर्व=c;
+                पूर्व_मानम्=initial_मानम्;
             }
-            c+=UTRIE2_CP_PER_INDEX_1_ENTRY;
-        } else {
+            c+=UTRIE2_CP_प्रत्येकम्_सूचकांक_1_प्रविष्टिः;
+        } अन्यथा {
             /* enumerate data blocks for one index-2 block */
-            int32_t i2, i2Limit;
-            i2=(c>>UTRIE2_SHIFT_2)&UTRIE2_INDEX_2_MASK;
-            if((c>>UTRIE2_SHIFT_1)==(tempLimit>>UTRIE2_SHIFT_1)) {
-                i2Limit=(tempLimit>>UTRIE2_SHIFT_2)&UTRIE2_INDEX_2_MASK;
-            } else {
-                i2Limit=UTRIE2_INDEX_2_BLOCK_LENGTH;
+            int32_t i2, i2_सीमा;
+            i2=(c>>UTRIE2_सरणम्_2)&UTRIE2_सूचकांक_2_आवरणम्;
+            यदि((c>>UTRIE2_सरणम्_1)==(अस्थायी_सीमा>>UTRIE2_सरणम्_1)) {
+                i2_सीमा=(अस्थायी_सीमा>>UTRIE2_सरणम्_2)&UTRIE2_सूचकांक_2_आवरणम्;
+            } अन्यथा {
+                i2_सीमा=UTRIE2_सूचकांक_2_खण्डम्_दीर्घता;
             }
-            for(; i2<i2Limit; ++i2) {
-                if(idx!=nullptr) {
-                    block = static_cast<int32_t>(idx[i2Block + i2]) << UTRIE2_INDEX_SHIFT;
-                } else {
-                    block=trie->newTrie->index2[i2Block+i2];
+            प्रति(; i2<i2_सीमा; ++i2) {
+                यदि(idx!=शून्यसूचकः) {
+                    खण्डम् = static_cast<int32_t>(idx[i2_खण्डम् + i2]) << UTRIE2_सूचकांक_सरणम्;
+                } अन्यथा {
+                    खण्डम्=trie->newTrie->index2[i2_खण्डम्+i2];
                 }
-                if(block==prevBlock && (c-prev)>=UTRIE2_DATA_BLOCK_LENGTH) {
+                यदि(खण्डम्==पूर्व_खण्डम् && (c-पूर्व)>=UTRIE2_दत्त_खण्डम्_दीर्घता) {
                     /* the block is the same as the previous one, and filled with prevValue */
-                    c+=UTRIE2_DATA_BLOCK_LENGTH;
-                    continue;
+                    c+=UTRIE2_दत्त_खण्डम्_दीर्घता;
+                    अनुवर्त;
                 }
-                prevBlock=block;
-                if(block==nullBlock) {
+                पूर्व_खण्डम्=खण्डम्;
+                यदि(खण्डम्==null_खण्डम्) {
                     /* this is the null data block */
-                    if(prevValue!=initialValue) {
-                        if(prev<c && !enumRange(context, prev, c-1, prevValue)) {
-                            return;
+                    यदि(पूर्व_मानम्!=initial_मानम्) {
+                        यदि(पूर्व<c && !enumRange(context, पूर्व, c-1, पूर्व_मानम्)) {
+                            प्रत्यागम;
                         }
-                        prev=c;
-                        prevValue=initialValue;
+                        पूर्व=c;
+                        पूर्व_मानम्=initial_मानम्;
                     }
-                    c+=UTRIE2_DATA_BLOCK_LENGTH;
-                } else {
-                    for(j=0; j<UTRIE2_DATA_BLOCK_LENGTH; ++j) {
-                        value=enumValue(context, data32!=nullptr ? data32[block+j] : idx[block+j]);
-                        if(value!=prevValue) {
-                            if(prev<c && !enumRange(context, prev, c-1, prevValue)) {
-                                return;
+                    c+=UTRIE2_दत्त_खण्डम्_दीर्घता;
+                } अन्यथा {
+                    प्रति(j=0; j<UTRIE2_दत्त_खण्डम्_दीर्घता; ++j) {
+                        value=enum_मानम्(context, data32!=शून्यसूचकः ? data32[खण्डम्+j] : idx[खण्डम्+j]);
+                        यदि(value!=पूर्व_मानम्) {
+                            यदि(पूर्व<c && !enumRange(context, पूर्व, c-1, पूर्व_मानम्)) {
+                                प्रत्यागम;
                             }
-                            prev=c;
-                            prevValue=value;
+                            पूर्व=c;
+                            पूर्व_मानम्=value;
                         }
                         ++c;
                     }
@@ -589,49 +589,49 @@ enumEitherTrie(const UTrie2 *trie,
         }
     }
 
-    if(c>limit) {
-        c=limit;  /* could be higher if in the index2NullOffset */
-    } else if(c<limit) {
+    यदि(c>सीमा) {
+        c=सीमा;  /* could be higher if in the index2NullOffset */
+    } अन्यथा यदि(c<सीमा) {
         /* c==highStart<limit */
-        uint32_t highValue;
-        if(idx!=nullptr) {
-            highValue=
-                data32!=nullptr ?
-                    data32[trie->highValueIndex] :
-                    idx[trie->highValueIndex];
-        } else {
-            highValue=trie->newTrie->data[trie->newTrie->dataLength-UTRIE2_DATA_GRANULARITY];
+        uint32_t उच्चः_मानम्;
+        यदि(idx!=शून्यसूचकः) {
+            उच्चः_मानम्=
+                data32!=शून्यसूचकः ?
+                    data32[trie->उच्चः_मानम्_सूचकांक] :
+                    idx[trie->उच्चः_मानम्_सूचकांक];
+        } अन्यथा {
+            उच्चः_मानम्=trie->newTrie->दत्त[trie->newTrie->दत्त_दीर्घता-UTRIE2_दत्त_GRANULARITY];
         }
-        value=enumValue(context, highValue);
-        if(value!=prevValue) {
-            if(prev<c && !enumRange(context, prev, c-1, prevValue)) {
-                return;
+        value=enum_मानम्(context, उच्चः_मानम्);
+        यदि(value!=पूर्व_मानम्) {
+            यदि(पूर्व<c && !enumRange(context, पूर्व, c-1, पूर्व_मानम्)) {
+                प्रत्यागम;
             }
-            prev=c;
-            prevValue=value;
+            पूर्व=c;
+            पूर्व_मानम्=value;
         }
-        c=limit;
+        c=सीमा;
     }
 
     /* deliver last range */
-    enumRange(context, prev, c-1, prevValue);
+    enumRange(context, पूर्व, c-1, पूर्व_मानम्);
 }
 
-U_CAPI void U_EXPORT2
-utrie2_enum(const UTrie2 *trie,
-            UTrie2EnumValue *enumValue, UTrie2EnumRange *enumRange, const void *context) {
-    enumEitherTrie(trie, 0, 0x110000, enumValue, enumRange, context);
+U_CAPI शून्य U_EXPORT2
+utrie2_enum(ध्रुव UTrie2 *trie,
+            UTrie2_Enum_मानम् *enum_मानम्, UTrie2EnumRange *enumRange, ध्रुव शून्य *context) {
+    enumEitherTrie(trie, 0, 0x110000, enum_मानम्, enumRange, context);
 }
 
-U_CAPI void U_EXPORT2
-utrie2_enumForLeadSurrogate(const UTrie2 *trie, UChar32 lead,
-                            UTrie2EnumValue *enumValue, UTrie2EnumRange *enumRange,
-                            const void *context) {
-    if(!U16_IS_LEAD(lead)) {
-        return;
+U_CAPI शून्य U_EXPORT2
+utrie2_enumForLeadSurrogate(ध्रुव UTrie2 *trie, UChar32 lead,
+                            UTrie2_Enum_मानम् *enum_मानम्, UTrie2EnumRange *enumRange,
+                            ध्रुव शून्य *context) {
+    यदि(!U16_IS_LEAD(lead)) {
+        प्रत्यागम;
     }
     lead=(lead-0xd7c0)<<10;   /* start code point */
-    enumEitherTrie(trie, lead, lead+0x400, enumValue, enumRange, context);
+    enumEitherTrie(trie, lead, lead+0x400, enum_मानम्, enumRange, context);
 }
 
 /* C++ convenience wrappers ------------------------------------------------- */
@@ -639,25 +639,25 @@ utrie2_enumForLeadSurrogate(const UTrie2 *trie, UChar32 lead,
 U_NAMESPACE_BEGIN
 
 uint16_t BackwardUTrie2StringIterator::previous16() {
-    codePointLimit=codePointStart;
-    if(start>=codePointStart) {
-        codePoint=U_SENTINEL;
-        return static_cast<uint16_t>(trie->errorValue);
+    संहिता_Point_सीमा=संहिता_Point_Start;
+    यदि(start>=संहिता_Point_Start) {
+        संहिता_Point=U_SENTINEL;
+        प्रत्यागम static_cast<uint16_t>(trie->error_मानम्);
     }
-    uint16_t result;
-    UTRIE2_U16_PREV16(trie, start, codePointStart, codePoint, result);
-    return result;
+    uint16_t परिणाम;
+    UTRIE2_U16_PREV16(trie, start, संहिता_Point_Start, संहिता_Point, परिणाम);
+    प्रत्यागम परिणाम;
 }
 
 uint16_t ForwardUTrie2StringIterator::next16() {
-    codePointStart=codePointLimit;
-    if(codePointLimit==limit) {
-        codePoint=U_SENTINEL;
-        return static_cast<uint16_t>(trie->errorValue);
+    संहिता_Point_Start=संहिता_Point_सीमा;
+    यदि(संहिता_Point_सीमा==सीमा) {
+        संहिता_Point=U_SENTINEL;
+        प्रत्यागम static_cast<uint16_t>(trie->error_मानम्);
     }
-    uint16_t result;
-    UTRIE2_U16_NEXT16(trie, codePointLimit, limit, codePoint, result);
-    return result;
+    uint16_t परिणाम;
+    UTRIE2_U16_NEXT16(trie, संहिता_Point_सीमा, सीमा, संहिता_Point, परिणाम);
+    प्रत्यागम परिणाम;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः

@@ -17,11 +17,11 @@
 */
 
 
-#ifndef __UCLN_IMP_H__
-#define __UCLN_IMP_H__
+#यदि_अपरिभाषितम् __UCLN_IMP_H__
+#परिभाषय __UCLN_IMP_H__
 
-#include "ucln.h"
-#include <stdlib.h>
+#अन्तर्भाव "ucln.h"
+#अन्तर्भाव <stdlib.h>
 
 /**
  * Auto cleanup of ICU libraries
@@ -39,7 +39,7 @@
  * For option 3, follow option 1 and also define UCLN_AUTO_LOCAL (see below for more information)
  */
 
-#if !UCLN_NO_AUTO_CLEANUP
+#यदि !UCLN_NO_AUTO_CLEANUP
 
 /*
  * The following declarations are for when UCLN_AUTO_LOCAL or UCLN_AUTO_ATEXIT
@@ -57,62 +57,62 @@
  */
 /*static void ucln_unRegisterAutomaticCleanup();*/
 
-#ifdef UCLN_TYPE_IS_COMMON
-#   define UCLN_CLEAN_ME_UP u_cleanup()
-#else
-#   define UCLN_CLEAN_ME_UP ucln_cleanupOne(UCLN_TYPE)
-#endif
+#यदि_परिभाषितम् UCLN_TYPE_IS_COMMON
+#   define UCLN_CLEAN_ME_ऊर्ध्वम् u_cleanup()
+#अन्यथा
+#   define UCLN_CLEAN_ME_ऊर्ध्वम् ucln_cleanupOne(UCLN_TYPE)
+#यदि_अन्तः
 
 /* ------------ automatic cleanup: registration. Choose ONE ------- */
-#if defined(UCLN_AUTO_LOCAL)
+#यदि defined(UCLN_AUTO_LOCAL)
 /* To use:
  *  1. define UCLN_AUTO_LOCAL,
  *  2. create ucln_local_hook.c containing implementations of
  *           static void ucln_registerAutomaticCleanup()
  *           static void ucln_unRegisterAutomaticCleanup()
  */
-#include "ucln_local_hook.c"
+#अन्तर्भाव "ucln_local_hook.c"
 
-#elif defined(UCLN_AUTO_ATEXIT)
+#नोचेद्यदि defined(UCLN_AUTO_ATEXIT)
 /*
  * Use the ANSI C 'atexit' function. Note that this mechanism does not
  * guarantee the order of cleanup relative to other users of ICU!
  */
-static UBool gAutoCleanRegistered = false;
+स्थिर UBool gAutoCleanRegistered = false;
 
-static void ucln_atexit_handler()
+स्थिर शून्य ucln_atexit_handler()
 {
-    UCLN_CLEAN_ME_UP;
+    UCLN_CLEAN_ME_ऊर्ध्वम्;
 }
 
-static void ucln_registerAutomaticCleanup()
+स्थिर शून्य ucln_पञ्जिकाकोशः_Automatic_Cleanup()
 {
-    if(!gAutoCleanRegistered) {
+    यदि(!gAutoCleanRegistered) {
         gAutoCleanRegistered = true;
         atexit(&ucln_atexit_handler);
     }
 }
 
-static void ucln_unRegisterAutomaticCleanup () {
+स्थिर शून्य ucln_un_पञ्जिकाकोशः_Automatic_Cleanup () {
 }
 /* ------------end of automatic cleanup: registration. ------- */
 
-#elif defined (UCLN_FINI)
+#नोचेद्यदि defined (UCLN_FINI)
 /**
  * If UCLN_FINI is defined, it is the (versioned, etc) name of a cleanup
  * entrypoint. Add a stub to call ucln_cleanupOne
  * Used on AIX, Solaris, and HP-UX
  */
-U_CAPI void U_EXPORT2 UCLN_FINI (void);
+U_CAPI शून्य U_EXPORT2 UCLN_FINI (शून्य);
 
-U_CAPI void U_EXPORT2 UCLN_FINI ()
+U_CAPI शून्य U_EXPORT2 UCLN_FINI ()
 {
     /* This function must be defined, if UCLN_FINI is defined, else link error. */
-     UCLN_CLEAN_ME_UP;
+     UCLN_CLEAN_ME_ऊर्ध्वम्;
 }
 
 /* Windows: DllMain */
-#elif U_PLATFORM_HAS_WIN32_API
+#नोचेद्यदि U_PLATFORM_HAS_WIN32_API
 /* 
  * ICU's own DllMain.
  */
@@ -121,9 +121,9 @@ U_CAPI void U_EXPORT2 UCLN_FINI ()
 /* READ READ READ READ!    Are you getting compilation errors from windows.h?
           Any source file which includes this (ucln_imp.h) header MUST 
           be defined with language extensions ON. */
-#ifndef WIN32_LEAN_AND_MEAN
-#   define WIN32_LEAN_AND_MEAN
-#endif
+#यदि_अपरिभाषितम् WIN32_LEAN_AND_माध्यम्
+#   define WIN32_LEAN_AND_माध्यम्
+#यदि_अन्तः
 #   define VC_EXTRALEAN
 #   define NOUSER
 #   define NOSERVICE
@@ -135,48 +135,48 @@ U_CAPI void U_EXPORT2 UCLN_FINI ()
  */
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
-    BOOL status = true;
+    BOOL स्थितिः = true;
 
-    switch(fdwReason) {
-        case DLL_PROCESS_ATTACH:
+    विकल्प(fdwReason) {
+        पक्ष DLL_PROCESS_ATTACH:
              /* ICU does not trap process attach, but must pass these through properly. */
             /* ICU specific process attach could go here */
-            break;
+            भङ्ग;
 
-        case DLL_PROCESS_DETACH:
+        पक्ष DLL_PROCESS_DETACH:
             /* Here is the one we actually care about. */
 
-            UCLN_CLEAN_ME_UP;
+            UCLN_CLEAN_ME_ऊर्ध्वम्;
 
-            break;
+            भङ्ग;
 
-        case DLL_THREAD_ATTACH:
+        पक्ष DLL_THREAD_ATTACH:
             /* ICU does not trap thread attach, but must pass these through properly. */
             /* ICU specific thread attach could go here */
-            break;
+            भङ्ग;
 
-        case DLL_THREAD_DETACH:
+        पक्ष DLL_THREAD_DETACH:
             /* ICU does not trap thread detach, but must pass these through properly. */
             /* ICU specific thread detach could go here */
-            break;
+            भङ्ग;
 
     }
-    return status;
+    प्रत्यागम स्थितिः;
 }
 
-#elif defined(__GNUC__)
+#नोचेद्यदि defined(__GNUC__)
 /* GCC - use __attribute((destructor)) */
-static void ucln_destructor()   __attribute__((destructor)) ;
+स्थिर शून्य ucln_destructor()   __attribute__((destructor)) ;
 
-static void ucln_destructor() 
+स्थिर शून्य ucln_destructor() 
 {
-    UCLN_CLEAN_ME_UP;
+    UCLN_CLEAN_ME_ऊर्ध्वम्;
 }
 
-#endif
+#यदि_अन्तः
 
-#endif /* UCLN_NO_AUTO_CLEANUP */
+#यदि_अन्तः /* UCLN_NO_AUTO_CLEANUP */
 
-#else
-#error This file can only be included once.
-#endif
+#अन्यथा
+#दोषः This file can only be included once.
+#यदि_अन्तः

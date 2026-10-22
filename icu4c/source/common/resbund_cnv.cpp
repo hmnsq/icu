@@ -18,40 +18,40 @@
 *   Character conversion functions moved here from resbund.cpp
 */
 
-#include "unicode/utypes.h"
-#include "unicode/resbund.h"
-#include "uinvchar.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/resbund.h"
+#अन्तर्भाव "uinvchar.h"
 
 U_NAMESPACE_BEGIN
 
-ResourceBundle::ResourceBundle( const UnicodeString&    path,
-                                const Locale&           locale,
-                                UErrorCode&              error)
-                                :UObject(), fLocale(nullptr)
+ResourceBundle::ResourceBundle( ध्रुव UnicodeString&    मार्गः,
+                                ध्रुव Locale&           locale,
+                                UError_संहिता&              error)
+                                :UObject(), fLocale(शून्यसूचकः)
 {
-    constructForLocale(path, locale, error);
+    constructForLocale(मार्गः, locale, error);
 }
 
-ResourceBundle::ResourceBundle( const UnicodeString&    path,
-                                UErrorCode&              error)
-                                :UObject(), fLocale(nullptr)
+ResourceBundle::ResourceBundle( ध्रुव UnicodeString&    मार्गः,
+                                UError_संहिता&              error)
+                                :UObject(), fLocale(शून्यसूचकः)
 {
-    constructForLocale(path, Locale::getDefault(), error);
+    constructForLocale(मार्गः, Locale::getDefault(), error);
 }
 
-void 
-ResourceBundle::constructForLocale(const UnicodeString& path,
-                                   const Locale& locale,
-                                   UErrorCode& error)
+शून्य 
+ResourceBundle::constructForLocale(ध्रुव UnicodeString& मार्गः,
+                                   ध्रुव Locale& locale,
+                                   UError_संहिता& error)
 {
-    if (path.isEmpty()) {
-        fResource = ures_open(nullptr, locale.getName(), &error);
+    यदि (मार्गः.is_रिक्तानि()) {
+        fResource = ures_open(शून्यसूचकः, locale.getName(), &error);
     }
-    else {
-        UnicodeString nullTerminatedPath(path);
-        nullTerminatedPath.append(static_cast<char16_t>(0));
-        fResource = ures_openU(nullTerminatedPath.getBuffer(), locale.getName(), &error);
+    अन्यथा {
+        UnicodeString null_Terminated_मार्गः(मार्गः);
+        null_Terminated_मार्गः.append(static_cast<char16_t>(0));
+        fResource = ures_openU(null_Terminated_मार्गः.get_बफर(), locale.getName(), &error);
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः

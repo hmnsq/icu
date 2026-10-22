@@ -18,61 +18,61 @@
 *   Character conversion functions moved here from uresbund.c
 */
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "unicode/ustring.h"
-#include "unicode/ucnv.h"
-#include "unicode/ures.h"
-#include "uinvchar.h"
-#include "ustr_cnv.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/putil.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "unicode/ucnv.h"
+#अन्तर्भाव "unicode/ures.h"
+#अन्तर्भाव "uinvchar.h"
+#अन्तर्भाव "ustr_cnv.h"
 
 U_CAPI UResourceBundle * U_EXPORT2
-ures_openU(const char16_t *myPath,
-           const char *localeID, 
-           UErrorCode *status)
+ures_openU(ध्रुव char16_t *my_मार्गः,
+           ध्रुव वर्ण *localeID, 
+           UError_संहिता *स्थितिः)
 {
-    char pathBuffer[1024];
+    वर्ण मार्गः_बफर[1024];
     int32_t length;
-    char *path = pathBuffer;
+    वर्ण *मार्गः = मार्गः_बफर;
 
-    if(status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    यदि(स्थितिः==शून्यसूचकः || U_FAILURE(*स्थितिः)) {
+        प्रत्यागम शून्यसूचकः;
     }
-    if(myPath==nullptr) {
-        path = nullptr;
+    यदि(my_मार्गः==शून्यसूचकः) {
+        मार्गः = शून्यसूचकः;
     }
-    else {
-        length=u_strlen(myPath);
-        if(length>=(int32_t)sizeof(pathBuffer)) {
-            *status=U_ILLEGAL_ARGUMENT_ERROR;
-            return nullptr;
-        } else if(uprv_isInvariantUString(myPath, length)) {
+    अन्यथा {
+        length=u_strlen(my_मार्गः);
+        यदि(length>=(int32_t)परिमाण(मार्गः_बफर)) {
+            *स्थितिः=U_ILLEGAL_तर्कः_ERROR;
+            प्रत्यागम शून्यसूचकः;
+        } अन्यथा यदि(uprv_isInvariantUString(my_मार्गः, length)) {
             /*
              * the invariant converter is sufficient for package and tree names
              * and is more efficient
              */
-            u_UCharsToChars(myPath, path, length+1); /* length+1 to include the NUL */
-        } else {
-#if !UCONFIG_NO_CONVERSION
+            u_UChars_गन्तव्यम्_Chars(my_मार्गः, मार्गः, length+1); /* length+1 to include the NUL */
+        } अन्यथा {
+#यदि !UCONFIG_NO_CONVERSION
             /* use the default converter to support variant-character paths */
-            UConverter *cnv=u_getDefaultConverter(status);
-            length=ucnv_fromUChars(cnv, path, (int32_t)sizeof(pathBuffer), myPath, length, status);
+            UConverter *cnv=u_getDefaultConverter(स्थितिः);
+            length=ucnv_fromUChars(cnv, मार्गः, (int32_t)परिमाण(मार्गः_बफर), my_मार्गः, length, स्थितिः);
             u_releaseDefaultConverter(cnv);
-            if(U_FAILURE(*status)) {
-                return nullptr;
+            यदि(U_FAILURE(*स्थितिः)) {
+                प्रत्यागम शून्यसूचकः;
             }
-            if(length>=(int32_t)sizeof(pathBuffer)) {
+            यदि(length>=(int32_t)परिमाण(मार्गः_बफर)) {
                 /* not NUL-terminated - path too long */
-                *status=U_ILLEGAL_ARGUMENT_ERROR;
-                return nullptr;
+                *स्थितिः=U_ILLEGAL_तर्कः_ERROR;
+                प्रत्यागम शून्यसूचकः;
             }
-#else
+#अन्यथा
             /* the default converter is not available */
-            *status=U_UNSUPPORTED_ERROR;
-            return nullptr;
-#endif
+            *स्थितिः=U_UNSUPPORTED_ERROR;
+            प्रत्यागम शून्यसूचकः;
+#यदि_अन्तः
         }
     }
 
-    return ures_open(path, localeID, status);
+    प्रत्यागम ures_open(मार्गः, localeID, स्थितिः);
 }

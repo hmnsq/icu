@@ -10,13 +10,13 @@
 ******************************************************************************
 */
 
-#ifndef HASH_H
-#define HASH_H
+#यदि_अपरिभाषितम् HASH_H
+#परिभाषय HASH_H
 
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
-#include "cmemory.h"
-#include "uhash.h"
+#अन्तर्भाव "unicode/unistr.h"
+#अन्तर्भाव "unicode/uobject.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "uhash.h"
 
 U_NAMESPACE_BEGIN
 
@@ -27,21 +27,21 @@ U_NAMESPACE_BEGIN
  *
  * Hashtable is an INTERNAL CLASS.
  */
-class U_COMMON_API Hashtable : public UMemory {
+class U_COMMON_API Hashtable : सार्वजनिक UMemory {
     UHashtable* hash;
     UHashtable hashObj;
 
-    inline void init(UHashFunction *keyHash, UKeyComparator *keyComp, UValueComparator *valueComp, UErrorCode& status);
+    अन्तःस्थ शून्य init(UHashFunction *कुञ्चिका_Hash, UKeyComparator *कुञ्चिका_Comp, UValueComparator *मानम्_Comp, UError_संहिता& स्थितिः);
 
-    inline void initSize(UHashFunction *keyHash, UKeyComparator *keyComp, UValueComparator *valueComp, int32_t size, UErrorCode& status);
+    अन्तःस्थ शून्य init_आकार(UHashFunction *कुञ्चिका_Hash, UKeyComparator *कुञ्चिका_Comp, UValueComparator *मानम्_Comp, int32_t आकार_2, UError_संहिता& स्थितिः);
 
-public:
+सार्वजनिक:
     /**
      * Construct a hashtable
      * @param ignoreKeyCase If true, keys are case insensitive.
      * @param status Error code
     */
-    inline Hashtable(UBool ignoreKeyCase, UErrorCode& status);
+    अन्तःस्थ Hashtable(UBool ignore_कुञ्चिका_Case, UError_संहिता& स्थितिः);
 
     /**
      * Construct a hashtable
@@ -49,7 +49,7 @@ public:
      * @param size initial size allocation
      * @param status Error code
     */
-    inline Hashtable(UBool ignoreKeyCase, int32_t size, UErrorCode& status);
+    अन्तःस्थ Hashtable(UBool ignore_कुञ्चिका_Case, int32_t आकार_2, UError_संहिता& स्थितिः);
 
     /**
      * Construct a hashtable
@@ -57,211 +57,211 @@ public:
      * @param valueComp Comparator for comparing the values
      * @param status Error code
     */
-    inline Hashtable(UKeyComparator *keyComp, UValueComparator *valueComp, UErrorCode& status);
+    अन्तःस्थ Hashtable(UKeyComparator *कुञ्चिका_Comp, UValueComparator *मानम्_Comp, UError_संहिता& स्थितिः);
 
     /**
      * Construct a hashtable
      * @param status Error code
     */
-    inline Hashtable(UErrorCode& status);
+    अन्तःस्थ Hashtable(UError_संहिता& स्थितिः);
 
     /**
      * Construct a hashtable, _disregarding any error_.  Use this constructor
      * with caution.
      */
-    inline Hashtable();
+    अन्तःस्थ Hashtable();
 
     /**
      * Non-virtual destructor; make this virtual if Hashtable is subclassed
      * in the future.
      */
-    inline ~Hashtable();
+    अन्तःस्थ ~Hashtable();
 
-    inline UObjectDeleter *setValueDeleter(UObjectDeleter *fn);
+    अन्तःस्थ UObjectDeleter *समुच्चयः_मानम्_Deleter(UObjectDeleter *fn);
 
-    inline int32_t count() const;
+    अन्तःस्थ int32_t गणनम्() ध्रुव;
 
-    inline void* put(const UnicodeString& key, void* value, UErrorCode& status);
+    अन्तःस्थ शून्य* put(ध्रुव UnicodeString& कुञ्चिका, शून्य* मानम्_2, UError_संहिता& स्थितिः);
 
-    inline int32_t puti(const UnicodeString& key, int32_t value, UErrorCode& status);
+    अन्तःस्थ int32_t puti(ध्रुव UnicodeString& कुञ्चिका, int32_t मानम्_2, UError_संहिता& स्थितिः);
 
-    inline int32_t putiAllowZero(const UnicodeString& key, int32_t value, UErrorCode& status);
+    अन्तःस्थ int32_t putiAllowZero(ध्रुव UnicodeString& कुञ्चिका, int32_t मानम्_2, UError_संहिता& स्थितिः);
 
-    inline void* get(const UnicodeString& key) const;
+    अन्तःस्थ शून्य* get(ध्रुव UnicodeString& कुञ्चिका) ध्रुव;
 
-    inline int32_t geti(const UnicodeString& key) const;
+    अन्तःस्थ int32_t geti(ध्रुव UnicodeString& कुञ्चिका) ध्रुव;
 
-    inline int32_t getiAndFound(const UnicodeString& key, UBool &found) const;
+    अन्तःस्थ int32_t geti_And_प्राप्तम्(ध्रुव UnicodeString& कुञ्चिका, UBool &प्राप्तम्) ध्रुव;
 
-    inline void* remove(const UnicodeString& key);
+    अन्तःस्थ शून्य* remove(ध्रुव UnicodeString& कुञ्चिका);
 
-    inline int32_t removei(const UnicodeString& key);
+    अन्तःस्थ int32_t removei(ध्रुव UnicodeString& कुञ्चिका);
 
-    inline void removeAll();
+    अन्तःस्थ शून्य removeAll();
 
-    inline UBool containsKey(const UnicodeString& key) const;
+    अन्तःस्थ UBool अन्तर्भवति_कुञ्चिका(ध्रुव UnicodeString& कुञ्चिका) ध्रुव;
 
-    inline const UHashElement* find(const UnicodeString& key) const;
+    अन्तःस्थ ध्रुव UHashElement* find(ध्रुव UnicodeString& कुञ्चिका) ध्रुव;
 
     /**
      * @param pos - must be UHASH_FIRST on first call, and untouched afterwards.
      * @see uhash_nextElement
      */
-    inline const UHashElement* nextElement(int32_t& pos) const;
+    अन्तःस्थ ध्रुव UHashElement* अग्र_Element(int32_t& pos) ध्रुव;
 
-    inline UKeyComparator* setKeyComparator(UKeyComparator*keyComp);
+    अन्तःस्थ UKeyComparator* समुच्चयः_कुञ्चिका_Comparator(UKeyComparator*कुञ्चिका_Comp);
 
-    inline UValueComparator* setValueComparator(UValueComparator* valueComp);
+    अन्तःस्थ UValueComparator* समुच्चयः_मानम्_Comparator(UValueComparator* मानम्_Comp);
 
-    inline UBool equals(const Hashtable& that) const;
-private:
-    Hashtable(const Hashtable &other) = delete; // forbid copying of this class
-    Hashtable &operator=(const Hashtable &other) = delete; // forbid copying of this class
+    अन्तःस्थ UBool equals(ध्रुव Hashtable& that) ध्रुव;
+गुप्त:
+    Hashtable(ध्रुव Hashtable &other) = delete; // forbid copying of this class
+    Hashtable &संक्रियकः=(ध्रुव Hashtable &other) = delete; // forbid copying of this class
 };
 
 /*********************************************************************
  * Implementation
  ********************************************************************/
 
-inline void Hashtable::init(UHashFunction *keyHash, UKeyComparator *keyComp,
-                            UValueComparator *valueComp, UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+अन्तःस्थ शून्य Hashtable::init(UHashFunction *कुञ्चिका_Hash, UKeyComparator *कुञ्चिका_Comp,
+                            UValueComparator *मानम्_Comp, UError_संहिता& स्थितिः) {
+    यदि (U_FAILURE(स्थितिः)) {
+        प्रत्यागम;
     }
-    uhash_init(&hashObj, keyHash, keyComp, valueComp, &status);
-    if (U_SUCCESS(status)) {
+    uhash_init(&hashObj, कुञ्चिका_Hash, कुञ्चिका_Comp, मानम्_Comp, &स्थितिः);
+    यदि (U_SUCCESS(स्थितिः)) {
         hash = &hashObj;
-        uhash_setKeyDeleter(hash, uprv_deleteUObject);
+        uhash_समुच्चयः_कुञ्चिका_Deleter(hash, uprv_deleteUObject);
     }
 }
 
-inline void Hashtable::initSize(UHashFunction *keyHash, UKeyComparator *keyComp,
-                                UValueComparator *valueComp, int32_t size, UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+अन्तःस्थ शून्य Hashtable::init_आकार(UHashFunction *कुञ्चिका_Hash, UKeyComparator *कुञ्चिका_Comp,
+                                UValueComparator *मानम्_Comp, int32_t आकार_2, UError_संहिता& स्थितिः) {
+    यदि (U_FAILURE(स्थितिः)) {
+        प्रत्यागम;
     }
-    uhash_initSize(&hashObj, keyHash, keyComp, valueComp, size, &status);
-    if (U_SUCCESS(status)) {
+    uhash_init_आकार(&hashObj, कुञ्चिका_Hash, कुञ्चिका_Comp, मानम्_Comp, आकार_2, &स्थितिः);
+    यदि (U_SUCCESS(स्थितिः)) {
         hash = &hashObj;
-        uhash_setKeyDeleter(hash, uprv_deleteUObject);
+        uhash_समुच्चयः_कुञ्चिका_Deleter(hash, uprv_deleteUObject);
     }
 }
 
-inline Hashtable::Hashtable(UKeyComparator *keyComp, UValueComparator *valueComp,
-                 UErrorCode& status) : hash(nullptr) {
-    init( uhash_hashUnicodeString, keyComp, valueComp, status);
+अन्तःस्थ Hashtable::Hashtable(UKeyComparator *कुञ्चिका_Comp, UValueComparator *मानम्_Comp,
+                 UError_संहिता& स्थितिः) : hash(nullptr) {
+    init( uhash_hashUnicodeString, कुञ्चिका_Comp, मानम्_Comp, स्थितिः);
 }
 
-inline Hashtable::Hashtable(UBool ignoreKeyCase, UErrorCode& status)
+अन्तःस्थ Hashtable::Hashtable(UBool ignore_कुञ्चिका_Case, UError_संहिता& स्थितिः)
  : hash(nullptr)
 {
-    init(ignoreKeyCase ? uhash_hashCaselessUnicodeString
+    init(ignore_कुञ्चिका_Case ? uhash_hashCaselessUnicodeString
                         : uhash_hashUnicodeString,
-            ignoreKeyCase ? uhash_compareCaselessUnicodeString
+            ignore_कुञ्चिका_Case ? uhash_compareCaselessUnicodeString
                         : uhash_compareUnicodeString,
             nullptr,
-            status);
+            स्थितिः);
 }
 
-inline Hashtable::Hashtable(UBool ignoreKeyCase, int32_t size, UErrorCode& status)
+अन्तःस्थ Hashtable::Hashtable(UBool ignore_कुञ्चिका_Case, int32_t आकार_2, UError_संहिता& स्थितिः)
  : hash(nullptr)
 {
-    initSize(ignoreKeyCase ? uhash_hashCaselessUnicodeString
+    init_आकार(ignore_कुञ्चिका_Case ? uhash_hashCaselessUnicodeString
                         : uhash_hashUnicodeString,
-            ignoreKeyCase ? uhash_compareCaselessUnicodeString
+            ignore_कुञ्चिका_Case ? uhash_compareCaselessUnicodeString
                         : uhash_compareUnicodeString,
-            nullptr, size,
-            status);
+            nullptr, आकार_2,
+            स्थितिः);
 }
 
-inline Hashtable::Hashtable(UErrorCode& status)
+अन्तःस्थ Hashtable::Hashtable(UError_संहिता& स्थितिः)
  : hash(nullptr)
 {
-    init(uhash_hashUnicodeString, uhash_compareUnicodeString, nullptr, status);
+    init(uhash_hashUnicodeString, uhash_compareUnicodeString, nullptr, स्थितिः);
 }
 
-inline Hashtable::Hashtable()
+अन्तःस्थ Hashtable::Hashtable()
  : hash(nullptr)
 {
-    UErrorCode status = U_ZERO_ERROR;
-    init(uhash_hashUnicodeString, uhash_compareUnicodeString, nullptr, status);
+    UError_संहिता स्थितिः = U_ZERO_ERROR;
+    init(uhash_hashUnicodeString, uhash_compareUnicodeString, nullptr, स्थितिः);
 }
 
-inline Hashtable::~Hashtable() {
-    if (hash != nullptr) {
+अन्तःस्थ Hashtable::~Hashtable() {
+    यदि (hash != nullptr) {
         uhash_close(hash);
     }
 }
 
-inline UObjectDeleter *Hashtable::setValueDeleter(UObjectDeleter *fn) {
-    return uhash_setValueDeleter(hash, fn);
+अन्तःस्थ UObjectDeleter *Hashtable::समुच्चयः_मानम्_Deleter(UObjectDeleter *fn) {
+    प्रत्यागम uhash_समुच्चयः_मानम्_Deleter(hash, fn);
 }
 
-inline int32_t Hashtable::count() const {
-    return uhash_count(hash);
+अन्तःस्थ int32_t Hashtable::गणनम्() ध्रुव {
+    प्रत्यागम uhash_गणनम्(hash);
 }
 
-inline void* Hashtable::put(const UnicodeString& key, void* value, UErrorCode& status) {
-    return uhash_put(hash, new UnicodeString(key), value, &status);
+अन्तःस्थ शून्य* Hashtable::put(ध्रुव UnicodeString& कुञ्चिका, शून्य* मानम्_2, UError_संहिता& स्थितिः) {
+    प्रत्यागम uhash_put(hash, new UnicodeString(कुञ्चिका), मानम्_2, &स्थितिः);
 }
 
-inline int32_t Hashtable::puti(const UnicodeString& key, int32_t value, UErrorCode& status) {
-    return uhash_puti(hash, new UnicodeString(key), value, &status);
+अन्तःस्थ int32_t Hashtable::puti(ध्रुव UnicodeString& कुञ्चिका, int32_t मानम्_2, UError_संहिता& स्थितिः) {
+    प्रत्यागम uhash_puti(hash, new UnicodeString(कुञ्चिका), मानम्_2, &स्थितिः);
 }
 
-inline int32_t Hashtable::putiAllowZero(const UnicodeString& key, int32_t value,
-                                        UErrorCode& status) {
-    return uhash_putiAllowZero(hash, new UnicodeString(key), value, &status);
+अन्तःस्थ int32_t Hashtable::putiAllowZero(ध्रुव UnicodeString& कुञ्चिका, int32_t मानम्_2,
+                                        UError_संहिता& स्थितिः) {
+    प्रत्यागम uhash_putiAllowZero(hash, new UnicodeString(कुञ्चिका), मानम्_2, &स्थितिः);
 }
 
-inline void* Hashtable::get(const UnicodeString& key) const {
-    return uhash_get(hash, &key);
+अन्तःस्थ शून्य* Hashtable::get(ध्रुव UnicodeString& कुञ्चिका) ध्रुव {
+    प्रत्यागम uhash_get(hash, &कुञ्चिका);
 }
 
-inline int32_t Hashtable::geti(const UnicodeString& key) const {
-    return uhash_geti(hash, &key);
+अन्तःस्थ int32_t Hashtable::geti(ध्रुव UnicodeString& कुञ्चिका) ध्रुव {
+    प्रत्यागम uhash_geti(hash, &कुञ्चिका);
 }
 
-inline int32_t Hashtable::getiAndFound(const UnicodeString& key, UBool &found) const {
-    return uhash_getiAndFound(hash, &key, &found);
+अन्तःस्थ int32_t Hashtable::geti_And_प्राप्तम्(ध्रुव UnicodeString& कुञ्चिका, UBool &प्राप्तम्) ध्रुव {
+    प्रत्यागम uhash_geti_And_प्राप्तम्(hash, &कुञ्चिका, &प्राप्तम्);
 }
 
-inline void* Hashtable::remove(const UnicodeString& key) {
-    return uhash_remove(hash, &key);
+अन्तःस्थ शून्य* Hashtable::remove(ध्रुव UnicodeString& कुञ्चिका) {
+    प्रत्यागम uhash_remove(hash, &कुञ्चिका);
 }
 
-inline int32_t Hashtable::removei(const UnicodeString& key) {
-    return uhash_removei(hash, &key);
+अन्तःस्थ int32_t Hashtable::removei(ध्रुव UnicodeString& कुञ्चिका) {
+    प्रत्यागम uhash_removei(hash, &कुञ्चिका);
 }
 
-inline UBool Hashtable::containsKey(const UnicodeString& key) const {
-    return uhash_containsKey(hash, &key);
+अन्तःस्थ UBool Hashtable::अन्तर्भवति_कुञ्चिका(ध्रुव UnicodeString& कुञ्चिका) ध्रुव {
+    प्रत्यागम uhash_अन्तर्भवति_कुञ्चिका(hash, &कुञ्चिका);
 }
 
-inline const UHashElement* Hashtable::find(const UnicodeString& key) const {
-    return uhash_find(hash, &key);
+अन्तःस्थ ध्रुव UHashElement* Hashtable::find(ध्रुव UnicodeString& कुञ्चिका) ध्रुव {
+    प्रत्यागम uhash_find(hash, &कुञ्चिका);
 }
 
-inline const UHashElement* Hashtable::nextElement(int32_t& pos) const {
-    return uhash_nextElement(hash, &pos);
+अन्तःस्थ ध्रुव UHashElement* Hashtable::अग्र_Element(int32_t& pos) ध्रुव {
+    प्रत्यागम uhash_अग्र_Element(hash, &pos);
 }
 
-inline void Hashtable::removeAll() {
+अन्तःस्थ शून्य Hashtable::removeAll() {
     uhash_removeAll(hash);
 }
 
-inline UKeyComparator* Hashtable::setKeyComparator(UKeyComparator*keyComp){
-    return uhash_setKeyComparator(hash, keyComp);
+अन्तःस्थ UKeyComparator* Hashtable::समुच्चयः_कुञ्चिका_Comparator(UKeyComparator*कुञ्चिका_Comp){
+    प्रत्यागम uhash_समुच्चयः_कुञ्चिका_Comparator(hash, कुञ्चिका_Comp);
 }
 
-inline UValueComparator* Hashtable::setValueComparator(UValueComparator* valueComp){
-    return uhash_setValueComparator(hash, valueComp);
+अन्तःस्थ UValueComparator* Hashtable::समुच्चयः_मानम्_Comparator(UValueComparator* मानम्_Comp){
+    प्रत्यागम uhash_समुच्चयः_मानम्_Comparator(hash, मानम्_Comp);
 }
 
-inline UBool Hashtable::equals(const Hashtable& that)const{
-   return uhash_equals(hash, that.hash);
+अन्तःस्थ UBool Hashtable::equals(ध्रुव Hashtable& that)ध्रुव{
+   प्रत्यागम uhash_equals(hash, that.hash);
 }
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif
+#यदि_अन्तः
 

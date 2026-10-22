@@ -10,20 +10,20 @@
 ******************************************************************************
 */
 
-#ifndef __UNIFIED_CACHE_H__
-#define __UNIFIED_CACHE_H__
+#यदि_अपरिभाषितम् __UNIFIED_CACHE_H__
+#परिभाषय __UNIFIED_CACHE_H__
 
-#include "utypeinfo.h"  // for 'typeid' to work
+#अन्तर्भाव "utypeinfo.h"  // for 'typeid' to work
 
-#include "unicode/uobject.h"
-#include "unicode/locid.h"
-#include "sharedobject.h"
-#include "unicode/unistr.h"
-#include "cstring.h"
-#include "ustr_imp.h"
+#अन्तर्भाव "unicode/uobject.h"
+#अन्तर्भाव "unicode/locid.h"
+#अन्तर्भाव "sharedobject.h"
+#अन्तर्भाव "unicode/unistr.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "ustr_imp.h"
 
-struct UHashtable;
-struct UHashElement;
+संरचना UHashtable;
+संरचना UHashElement;
 
 U_NAMESPACE_BEGIN
 
@@ -32,26 +32,26 @@ class UnifiedCache;
 /**
  * A base class for all cache keys.
  */
-class U_COMMON_API CacheKeyBase : public UObject {
- public:
-   CacheKeyBase() : fCreationStatus(U_ZERO_ERROR), fIsPrimary(false) {}
+class U_COMMON_API Cache_कुञ्चिका_आधारः : सार्वजनिक UObject {
+ सार्वजनिक:
+   Cache_कुञ्चिका_आधारः() : f_Creation_स्थितिः(U_ZERO_ERROR), fIsPrimary(false) {}
 
    /**
     * Copy constructor. Needed to support cloning.
     */
-   CacheKeyBase(const CacheKeyBase &other) 
-           : UObject(other), fCreationStatus(other.fCreationStatus), fIsPrimary(false) { }
-   virtual ~CacheKeyBase();
+   Cache_कुञ्चिका_आधारः(ध्रुव Cache_कुञ्चिका_आधारः &other) 
+           : UObject(other), f_Creation_स्थितिः(other.f_Creation_स्थितिः), fIsPrimary(false) { }
+   आभास ~Cache_कुञ्चिका_आधारः();
 
    /**
     * Returns the hash code for this object.
     */
-   virtual int32_t hashCode() const = 0;
+   आभास int32_t hash_संहिता() ध्रुव = 0;
 
    /**
     * Clones this object polymorphically. Caller owns returned value.
     */
-   virtual CacheKeyBase *clone() const = 0;
+   आभास Cache_कुञ्चिका_आधारः *clone() ध्रुव = 0;
 
    /**
     * Create a new object for this key. Called by cache on cache miss.
@@ -66,32 +66,32 @@ class U_COMMON_API CacheKeyBase : public UObject {
     *                        In addition, implementations may return a
     *                        non nullptr object and set a warning status.
     */
-   virtual const SharedObject *createObject(
-           const void *creationContext, UErrorCode &status) const = 0;
+   आभास ध्रुव SharedObject *createObject(
+           ध्रुव शून्य *creationContext, UError_संहिता &स्थितिः) ध्रुव = 0;
 
    /**
     * Writes a description of this key to buffer and returns buffer. Written
     * description is nullptr terminated.
     */
-   virtual char *writeDescription(char *buffer, int32_t bufSize) const = 0;
+   आभास वर्ण *writeDescription(वर्ण *बफर, int32_t buf_आकार) ध्रुव = 0;
 
-   friend inline bool operator==(const CacheKeyBase& lhs,
-                                 const CacheKeyBase& rhs) {
-       return lhs.equals(rhs);
+   मित्रम् अन्तःस्थ bool संक्रियकः==(ध्रुव Cache_कुञ्चिका_आधारः& lhs,
+                                 ध्रुव Cache_कुञ्चिका_आधारः& rhs) {
+       प्रत्यागम lhs.equals(rhs);
    }
 
-   friend inline bool operator!=(const CacheKeyBase& lhs,
-                                 const CacheKeyBase& rhs) {
-       return !lhs.equals(rhs);
+   मित्रम् अन्तःस्थ bool संक्रियकः!=(ध्रुव Cache_कुञ्चिका_आधारः& lhs,
+                                 ध्रुव Cache_कुञ्चिका_आधारः& rhs) {
+       प्रत्यागम !lhs.equals(rhs);
    }
 
- protected:
-   virtual bool equals(const CacheKeyBase& other) const = 0;
+ रक्षित:
+   आभास bool equals(ध्रुव Cache_कुञ्चिका_आधारः& other) ध्रुव = 0;
 
- private:
-   mutable UErrorCode fCreationStatus;
+ गुप्त:
+   mutable UError_संहिता f_Creation_स्थितिः;
    mutable UBool fIsPrimary;
-   friend class UnifiedCache;
+   मित्रम् class UnifiedCache;
 };
 
 
@@ -100,34 +100,34 @@ class U_COMMON_API CacheKeyBase : public UObject {
  * Templated version of CacheKeyBase. 
  * A key of type LocaleCacheKey<T> maps to a value of type T.
  */
-template<typename T>
-class CacheKey : public CacheKeyBase {
- public:
-   virtual ~CacheKey() { }
+प्रतिरूपम्<typename T>
+class Cache_कुञ्चिका : सार्वजनिक Cache_कुञ्चिका_आधारः {
+ सार्वजनिक:
+   आभास ~Cache_कुञ्चिका() { }
    /**
     * The template parameter, T, determines the hash code returned.
     */
-   virtual int32_t hashCode() const override {
-       const char *s = typeid(T).name();
-       return ustr_hashCharsN(s, static_cast<int32_t>(uprv_strlen(s)));
+   आभास int32_t hash_संहिता() ध्रुव override {
+       ध्रुव वर्ण *s = typeid(T).name();
+       प्रत्यागम ustr_hashCharsN(s, static_cast<int32_t>(uprv_strlen(s)));
    }
 
    /**
     * Use the value type, T,  as the description.
     */
-   virtual char *writeDescription(char *buffer, int32_t bufLen) const override {
-       const char *s = typeid(T).name();
-       uprv_strncpy(buffer, s, bufLen);
-       buffer[bufLen - 1] = 0;
-       return buffer;
+   आभास वर्ण *writeDescription(वर्ण *बफर, int32_t bufLen) ध्रुव override {
+       ध्रुव वर्ण *s = typeid(T).name();
+       uprv_strncpy(बफर, s, bufLen);
+       बफर[bufLen - 1] = 0;
+       प्रत्यागम बफर;
    }
 
- protected:
+ रक्षित:
    /**
     * Two objects are equal if they are of the same type.
     */
-   virtual bool equals(const CacheKeyBase &other) const override {
-       return this == &other || typeid(*this) == typeid(other);
+   आभास bool equals(ध्रुव Cache_कुञ्चिका_आधारः &other) ध्रुव override {
+       प्रत्यागम this == &other || typeid(*this) == typeid(other);
    }
 };
 
@@ -135,42 +135,42 @@ class CacheKey : public CacheKeyBase {
  * Cache key based on locale.
  * A key of type LocaleCacheKey<T> maps to a value of type T.
  */
-template<typename T>
-class LocaleCacheKey : public CacheKey<T> {
- protected:
+प्रतिरूपम्<typename T>
+class Locale_Cache_कुञ्चिका : सार्वजनिक Cache_कुञ्चिका<T> {
+ रक्षित:
    Locale   fLoc;
-   virtual bool equals(const CacheKeyBase &other) const override {
-       if (!CacheKey<T>::equals(other)) {
-           return false;
+   आभास bool equals(ध्रुव Cache_कुञ्चिका_आधारः &other) ध्रुव override {
+       यदि (!Cache_कुञ्चिका<T>::equals(other)) {
+           प्रत्यागम false;
        }
        // We know this and other are of same class because equals() on
        // CacheKey returned true.
-       return operator==(static_cast<const LocaleCacheKey<T> &>(other));
+       प्रत्यागम संक्रियकः==(static_cast<ध्रुव Locale_Cache_कुञ्चिका<T> &>(other));
    }
- public:
-   LocaleCacheKey(const Locale &loc) : fLoc(loc) {}
-   LocaleCacheKey(const LocaleCacheKey<T> &other)
-           : CacheKey<T>(other), fLoc(other.fLoc) { }
-   virtual ~LocaleCacheKey() { }
-   virtual int32_t hashCode() const override {
-       return (int32_t)(37u * (uint32_t)CacheKey<T>::hashCode() + (uint32_t)fLoc.hashCode());
+ सार्वजनिक:
+   Locale_Cache_कुञ्चिका(ध्रुव Locale &loc) : fLoc(loc) {}
+   Locale_Cache_कुञ्चिका(ध्रुव Locale_Cache_कुञ्चिका<T> &other)
+           : Cache_कुञ्चिका<T>(other), fLoc(other.fLoc) { }
+   आभास ~Locale_Cache_कुञ्चिका() { }
+   आभास int32_t hash_संहिता() ध्रुव override {
+       प्रत्यागम (int32_t)(37u * (uint32_t)Cache_कुञ्चिका<T>::hash_संहिता() + (uint32_t)fLoc.hash_संहिता());
    }
-   inline bool operator == (const LocaleCacheKey<T> &other) const {
-       return fLoc == other.fLoc;
+   अन्तःस्थ bool संक्रियकः == (ध्रुव Locale_Cache_कुञ्चिका<T> &other) ध्रुव {
+       प्रत्यागम fLoc == other.fLoc;
    }
-   virtual CacheKeyBase *clone() const override {
-       return new LocaleCacheKey<T>(*this);
+   आभास Cache_कुञ्चिका_आधारः *clone() ध्रुव override {
+       प्रत्यागम new Locale_Cache_कुञ्चिका<T>(*this);
    }
-   virtual const T *createObject(
-           const void *creationContext, UErrorCode &status) const override;
+   आभास ध्रुव T *createObject(
+           ध्रुव शून्य *creationContext, UError_संहिता &स्थितिः) ध्रुव override;
    /**
     * Use the locale id as the description.
     */
-   virtual char *writeDescription(char *buffer, int32_t bufLen) const override {
-       const char *s = fLoc.getName();
-       uprv_strncpy(buffer, s, bufLen);
-       buffer[bufLen - 1] = 0;
-       return buffer;
+   आभास वर्ण *writeDescription(वर्ण *बफर, int32_t bufLen) ध्रुव override {
+       ध्रुव वर्ण *s = fLoc.getName();
+       uprv_strncpy(बफर, s, bufLen);
+       बफर[bufLen - 1] = 0;
+       प्रत्यागम बफर;
    }
 
 };
@@ -180,30 +180,30 @@ class LocaleCacheKey : public CacheKey<T> {
  * Design doc here:
  * https://docs.google.com/document/d/1RwGQJs4N4tawNbf809iYDRCvXoMKqDJihxzYt1ysmd8/edit?usp=sharing
  */
-class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
- public:
+class U_COMMON_API UnifiedCache : सार्वजनिक Unified_Cache_आधारः {
+ सार्वजनिक:
    /**
     * @internal
     * Do not call directly. Instead use UnifiedCache::getInstance() as
     * there should be only one UnifiedCache in an application.
     */
-   UnifiedCache(UErrorCode &status);
+   UnifiedCache(UError_संहिता &स्थितिः);
 
    /**
     * Return a pointer to the global cache instance.
     */
-   static UnifiedCache *getInstance(UErrorCode &status);
+   स्थिर UnifiedCache *getInstance(UError_संहिता &स्थितिः);
 
    /**
     * Fetches a value from the cache by key. Equivalent to
     * get(key, nullptr, ptr, status);
     */
-   template<typename T>
-   void get(
-           const CacheKey<T>& key,
-           const T *&ptr,
-           UErrorCode &status) const {
-       get(key, nullptr, ptr, status);
+   प्रतिरूपम्<typename T>
+   शून्य get(
+           ध्रुव Cache_कुञ्चिका<T>& कुञ्चिका,
+           ध्रुव T *&ptr,
+           UError_संहिता &स्थितिः) ध्रुव {
+       get(कुञ्चिका, nullptr, ptr, स्थितिः);
    }
 
    /**
@@ -220,37 +220,37 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * @param status          Any error returned here. May be set to a
     *                        warning value even if ptr is set.
     */
-   template<typename T>
-   void get(
-           const CacheKey<T>& key,
-           const void *creationContext,
-           const T *&ptr,
-           UErrorCode &status) const {
-       if (U_FAILURE(status)) {
-           return;
+   प्रतिरूपम्<typename T>
+   शून्य get(
+           ध्रुव Cache_कुञ्चिका<T>& कुञ्चिका,
+           ध्रुव शून्य *creationContext,
+           ध्रुव T *&ptr,
+           UError_संहिता &स्थितिः) ध्रुव {
+       यदि (U_FAILURE(स्थितिः)) {
+           प्रत्यागम;
        }
-       UErrorCode creationStatus = U_ZERO_ERROR;
-       const SharedObject *value = nullptr;
-       _get(key, value, creationContext, creationStatus);
-       const T *tvalue = (const T *) value;
-       if (U_SUCCESS(creationStatus)) {
+       UError_संहिता creation_स्थितिः = U_ZERO_ERROR;
+       ध्रुव SharedObject *मानम्_2 = nullptr;
+       _get(कुञ्चिका, मानम्_2, creationContext, creation_स्थितिः);
+       ध्रुव T *tvalue = (ध्रुव T *) मानम्_2;
+       यदि (U_SUCCESS(creation_स्थितिः)) {
            SharedObject::copyPtr(tvalue, ptr);
        }
        SharedObject::clearPtr(tvalue);
        // Take care not to overwrite a warning status passed in with
        // another warning or U_ZERO_ERROR.
-       if (status == U_ZERO_ERROR || U_FAILURE(creationStatus)) {
-           status = creationStatus;
+       यदि (स्थितिः == U_ZERO_ERROR || U_FAILURE(creation_स्थितिः)) {
+           स्थितिः = creation_स्थितिः;
        }
    }
 
-#ifdef UNIFIED_CACHE_DEBUG
+#यदि_परिभाषितम् UNIFIED_CACHE_DEBUG
    /**
     * Dumps the contents of this cache to standard error. Used for testing of
     * cache only.
     */
-   void dumpContents() const;
-#endif
+   शून्य dumpContents() ध्रुव;
+#यदि_अन्तः
 
    /**
     * Convenience method to get a value of type T from cache for a
@@ -264,33 +264,33 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * @param status Any error returned here. May be set to a
     *               warning value even if ptr is set.
     */
-   template<typename T>
-   static void getByLocale(
-           const Locale &loc, const T *&ptr, UErrorCode &status) {
-       const UnifiedCache *cache = getInstance(status);
-       if (U_FAILURE(status)) {
-           return;
+   प्रतिरूपम्<typename T>
+   स्थिर शून्य getByLocale(
+           ध्रुव Locale &loc, ध्रुव T *&ptr, UError_संहिता &स्थितिः) {
+       ध्रुव UnifiedCache *cache = getInstance(स्थितिः);
+       यदि (U_FAILURE(स्थितिः)) {
+           प्रत्यागम;
        }
-       cache->get(LocaleCacheKey<T>(loc), ptr, status);
+       cache->get(Locale_Cache_कुञ्चिका<T>(loc), ptr, स्थितिः);
    }
 
-#ifdef UNIFIED_CACHE_DEBUG
+#यदि_परिभाषितम् UNIFIED_CACHE_DEBUG
    /**
     * Dumps the cache contents to stderr. For testing only.
     */
-   static void dump();
-#endif
+   स्थिर शून्य dump();
+#यदि_अन्तः
 
    /**
     * Returns the number of keys in this cache. For testing only.
     */
-   int32_t keyCount() const;
+   int32_t कुञ्चिका_गणनम्() ध्रुव;
 
    /**
     * Removes any values from cache that are not referenced outside
     * the cache.
     */
-   void flush() const;
+   शून्य flush() ध्रुव;
 
    /**
     * Configures at what point eviction of unused entries will begin.
@@ -324,8 +324,8 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * If the parameters passed are negative, setEvctionPolicy sets status to
     * U_ILLEGAL_ARGUMENT_ERROR.
     */
-   void setEvictionPolicy(
-           int32_t count, int32_t percentageOfInUseItems, UErrorCode &status);
+   शून्य समुच्चयः_Eviction_Policy(
+           int32_t गणनम्, int32_t percentage_सम्बन्धि_अन्तर्_Use_वस्तूनि, UError_संहिता &स्थितिः);
 
 
    /**
@@ -333,29 +333,29 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * of this cache. This only includes auto evicted entries, not
     * entries evicted because of a call to flush().
     */
-   int64_t autoEvictedCount() const;
+   int64_t auto_Evicted_गणनम्() ध्रुव;
 
    /**
     * Returns the unused entry count in this cache. For testing only,
     * Regular clients will not need this.
     */
-   int32_t unusedCount() const;
+   int32_t अप्रयुक्तम्_गणनम्() ध्रुव;
 
-   virtual void handleUnreferencedObject() const override;
-   virtual ~UnifiedCache();
+   आभास शून्य handleUnreferencedObject() ध्रुव override;
+   आभास ~UnifiedCache();
    
- private:
+ गुप्त:
    UHashtable *fHashtable;
    mutable int32_t fEvictPos;
-   mutable int32_t fNumValuesTotal;
-   mutable int32_t fNumValuesInUse;
-   int32_t fMaxUnused;
-   int32_t fMaxPercentageOfInUse;
-   mutable int64_t fAutoEvictedCount;
-   SharedObject *fNoValue;
+   mutable int32_t f_अङ्कः_मानानि_योग;
+   mutable int32_t f_अङ्कः_मानानि_अन्तर्_Use;
+   int32_t f_Max_अप्रयुक्तम्;
+   int32_t f_Max_Percentage_सम्बन्धि_अन्तर्_Use;
+   mutable int64_t f_Auto_Evicted_गणनम्;
+   SharedObject *f_No_मानम्;
    
-   UnifiedCache(const UnifiedCache &other) = delete;
-   UnifiedCache &operator=(const UnifiedCache &other) = delete;
+   UnifiedCache(ध्रुव UnifiedCache &other) = delete;
+   UnifiedCache &संक्रियकः=(ध्रुव UnifiedCache &other) = delete;
    
    /**
     * Flushes the contents of the cache. If cache values hold references to other
@@ -372,7 +372,7 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     *                     _flush is not thread safe when all is true.
     *   @return true if any value in cache was flushed or false otherwise.
     */
-   UBool _flush(UBool all) const;
+   UBool _flush(UBool all) ध्रुव;
    
    /**
     * Gets value out of cache.
@@ -385,11 +385,11 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * fNoValue is stored in cache, and value is set to nullptr. Caller must call
     * removeRef on value if non nullptr.
     */
-   void _get(
-           const CacheKeyBase &key,
-           const SharedObject *&value,
-           const void *creationContext,
-           UErrorCode &status) const;
+   शून्य _get(
+           ध्रुव Cache_कुञ्चिका_आधारः &कुञ्चिका,
+           ध्रुव SharedObject *&मानम्_2,
+           ध्रुव शून्य *creationContext,
+           UError_संहिता &स्थितिः) ध्रुव;
 
     /**
      * Attempts to fetch value and status for key from cache.
@@ -403,9 +403,9 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
      * returned, caller must call removeRef() on value.
      */
     UBool _poll(
-            const CacheKeyBase &key,
-            const SharedObject *&value,
-            UErrorCode &status) const;
+            ध्रुव Cache_कुञ्चिका_आधारः &कुञ्चिका,
+            ध्रुव SharedObject *&मानम्_2,
+            UError_संहिता &स्थितिः) ध्रुव;
     
     /**
      * Places a new value and creationStatus in the cache for the given key.
@@ -413,11 +413,11 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
      * On exit, value and creation status placed under key. Soft reference added
      * to value on successful add. On error sets status.
      */
-    void _putNew(
-        const CacheKeyBase &key,
-        const SharedObject *value,
-        const UErrorCode creationStatus,
-        UErrorCode &status) const;
+    शून्य _putNew(
+        ध्रुव Cache_कुञ्चिका_आधारः &कुञ्चिका,
+        ध्रुव SharedObject *मानम्_2,
+        ध्रुव UError_संहिता creation_स्थितिः,
+        UError_संहिता &स्थितिः) ध्रुव;
            
     /**
      * Places value and status at key if there is no value at key or if cache
@@ -432,17 +432,17 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
      * unchanged in which case they are placed in the cache on a best-effort basis.
      * Caller must call removeRef() on value.
      */
-   void _putIfAbsentAndGet(
-           const CacheKeyBase &key,
-           const SharedObject *&value,
-           UErrorCode &status) const;
+   शून्य _putIfAbsentAndGet(
+           ध्रुव Cache_कुञ्चिका_आधारः &कुञ्चिका,
+           ध्रुव SharedObject *&मानम्_2,
+           UError_संहिता &स्थितिः) ध्रुव;
 
     /**
      * Returns the next element in the cache round robin style.
      * Returns nullptr if the cache is empty.
      * On entry, gCacheMutex must be held.
      */
-    const UHashElement *_nextElement() const;
+    ध्रुव UHashElement *अग्र_Element_2() ध्रुव;
    
    /**
     * Return the number of cache items that would need to be evicted
@@ -452,7 +452,7 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * 
     * On entry, gCacheMutex must be held.
     */
-   int32_t _computeCountOfItemsToEvict() const;
+   int32_t compute_गणनम्_सम्बन्धि_वस्तूनि_गन्तव्यम्_Evict() ध्रुव;
    
    /**
     * Run an eviction slice.
@@ -460,7 +460,7 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * _runEvictionSlice runs a slice of the evict pipeline by examining the next
     * 10 entries in the cache round robin style evicting them if they are eligible.
     */
-   void _runEvictionSlice() const;
+   शून्य सततम्_Eviction_खण्डिका() ध्रुव;
  
    /**
     * Register a primary cache entry. A primary key is the first key to create
@@ -473,7 +473,7 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * entry, and value registered with cache so that subsequent calls to
     * addRef() and removeRef() on it correctly interact with the cache.
     */
-   void _registerPrimary(const CacheKeyBase *theKey, const SharedObject *value) const;
+   शून्य पञ्जिकाकोशः_Primary(ध्रुव Cache_कुञ्चिका_आधारः *the_कुञ्चिका, ध्रुव SharedObject *मानम्_2) ध्रुव;
         
    /**
     * Store a value and creation error status in given hash entry.
@@ -483,17 +483,17 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * entry. Soft reference removed from previous stored value. Waiting
     * threads notified.
     */
-   void _put(
-           const UHashElement *element,
-           const SharedObject *value,
-           const UErrorCode status) const;
+   शून्य _put(
+           ध्रुव UHashElement *element,
+           ध्रुव SharedObject *मानम्_2,
+           ध्रुव UError_संहिता स्थितिः) ध्रुव;
     /**
      * Remove a soft reference, and delete the SharedObject if no references remain.
      * To be used from within the UnifiedCache implementation only.
      * gCacheMutex must be held by caller.
      * @param value the SharedObject to be acted on.
      */
-   void removeSoftRef(const SharedObject *value) const;
+   शून्य removeSoftRef(ध्रुव SharedObject *मानम्_2) ध्रुव;
    
    /**
     * Increment the hard reference count of the given SharedObject.
@@ -503,7 +503,7 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * @param value The SharedObject to be referenced.
     * @return the hard reference count after the addition.
     */
-   int32_t addHardRef(const SharedObject *value) const;
+   int32_t सङ्कलय_Hard_Ref(ध्रुव SharedObject *मानम्_2) ध्रुव;
    
   /**
     * Decrement the hard reference count of the given SharedObject.
@@ -513,12 +513,12 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * @param value The SharedObject to be referenced.
     * @return the hard reference count after the removal.
     */
-   int32_t removeHardRef(const SharedObject *value) const;
+   int32_t removeHardRef(ध्रुव SharedObject *मानम्_2) ध्रुव;
 
    
-#ifdef UNIFIED_CACHE_DEBUG
-   void _dumpContents() const;
-#endif
+#यदि_परिभाषितम् UNIFIED_CACHE_DEBUG
+   शून्य _dumpContents() ध्रुव;
+#यदि_अन्तः
    
    /**
     *  Fetch value and error code from a particular hash entry.
@@ -529,28 +529,28 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     *  If hash entry is in progress, value will be set to gNoValue and status will
     *  be set to U_ZERO_ERROR.
     */
-   void _fetch(const UHashElement *element, const SharedObject *&value,
-                       UErrorCode &status) const;
+   शून्य _fetch(ध्रुव UHashElement *element, ध्रुव SharedObject *&मानम्_2,
+                       UError_संहिता &स्थितिः) ध्रुव;
                        
     /**
      * Determine if given hash entry is in progress.
      * On entry, gCacheMutex must be held.
      */
-   UBool _inProgress(const UHashElement *element) const;
+   UBool अन्तर्_प्रगतिः(ध्रुव UHashElement *element) ध्रुव;
    
    /**
     * Determine if given hash entry is in progress.
     * On entry, gCacheMutex must be held.
     */
-   UBool _inProgress(const SharedObject *theValue, UErrorCode creationStatus) const;
+   UBool अन्तर्_प्रगतिः(ध्रुव SharedObject *the_मानम्, UError_संहिता creation_स्थितिः) ध्रुव;
    
    /**
     * Determine if given hash entry is eligible for eviction.
     * On entry, gCacheMutex must be held.
     */
-   UBool _isEvictable(const UHashElement *element) const;
+   UBool _isEvictable(ध्रुव UHashElement *element) ध्रुव;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif
+#यदि_अन्तः

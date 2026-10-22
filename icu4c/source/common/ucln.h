@@ -16,10 +16,10 @@
 *   created by: George Rhoten
 */
 
-#ifndef __UCLN_H__
-#define __UCLN_H__
+#यदि_अपरिभाषितम् __UCLN_H__
+#परिभाषय __UCLN_H__
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
 /** These are the functions used to register a library's memory cleanup
  * functions.  Each library should define a single library register function
@@ -52,7 +52,7 @@
 /**
  * Data Type for cleanup function selector. These roughly correspond to libraries.
  */
-typedef enum ECleanupLibraryType {
+प्रकारनिर्देश गणना ECleanupLibraryType {
     UCLN_START = -1,
     UCLN_UPLUG,     /* ICU plugins */
     UCLN_CUSTOM,    /* Custom is for anyone else. */
@@ -69,16 +69,16 @@ typedef enum ECleanupLibraryType {
  * Data type for cleanup function pointer
  */
 U_CDECL_BEGIN
-typedef UBool U_CALLCONV cleanupFunc(void);
-typedef void U_CALLCONV initFunc(UErrorCode *);
-U_CDECL_END
+प्रकारनिर्देश UBool U_CALLCONV cleanupFunc(शून्य);
+प्रकारनिर्देश शून्य U_CALLCONV initFunc(UError_संहिता *);
+U_CDECL_अन्तः
 
 /**
  * Register a cleanup function
  * @param type which library to register for.
  * @param func the function pointer
  */
-U_CAPI void U_EXPORT2 ucln_registerCleanup(ECleanupLibraryType type,
+U_CAPI शून्य U_EXPORT2 ucln_पञ्जिकाकोशः_Cleanup(ECleanupLibraryType type,
                                            cleanupFunc *func);
 
 /**
@@ -86,6 +86,6 @@ U_CAPI void U_EXPORT2 ucln_registerCleanup(ECleanupLibraryType type,
  * Not thread safe.
  * @param type which library to cleanup
  */
-U_CAPI void U_EXPORT2 ucln_cleanupOne(ECleanupLibraryType type);
+U_CAPI शून्य U_EXPORT2 ucln_cleanupOne(ECleanupLibraryType type);
 
-#endif
+#यदि_अन्तः

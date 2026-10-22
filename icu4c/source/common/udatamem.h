@@ -18,44 +18,44 @@
  *                  a UDataMemory * is returned.
  *
  *----------------------------------------------------------------------------------*/
-#ifndef __UDATAMEM_H__
-#define __UDATAMEM_H__
+#यदि_अपरिभाषितम् __UDATAMEM_H__
+#परिभाषय __UDATAMEM_H__
 
-#include "unicode/udata.h"
-#include "ucmndata.h"
+#अन्तर्भाव "unicode/udata.h"
+#अन्तर्भाव "ucmndata.h"
 
-struct UDataMemory {
-    const commonDataFuncs  *vFuncs;      /* Function Pointers for accessing TOC             */
+संरचना UData_स्मृतिः {
+    ध्रुव common_दत्त_Funcs  *vFuncs;      /* Function Pointers for accessing TOC             */
 
-    const DataHeader *pHeader;     /* Header of the memory being described by this    */
+    ध्रुव दत्त_शीर्षकम् *p_शीर्षकम्;     /* Header of the memory being described by this    */
                                    /*   UDataMemory object.                           */
-    const void       *toc;         /* For common memory, table of contents for        */
+    ध्रुव शून्य       *toc;         /* For common memory, table of contents for        */
                                    /*   the pieces within.                            */
     UBool             heapAllocated;  /* True if this UDataMemory Object is on the    */
                                    /*  heap and thus needs to be deleted when closed. */
 
-    void             *mapAddr;     /* For mapped or allocated memory, the start addr. */
+    शून्य             *mapAddr;     /* For mapped or allocated memory, the start addr. */
                                    /* Only non-null if a close operation should unmap */
                                    /*  the associated data.                           */
-    void             *map;         /* Handle, or other data, OS dependent.            */
+    शून्य             *map;         /* Handle, or other data, OS dependent.            */
                                    /* Only non-null if a close operation should unmap */
                                    /*  the associated data, and additional info       */
                                    /*   beyond the mapAddr is needed to do that.      */
-    int32_t           length;      /* Length of the data in bytes; -1 if unknown.     */
+    int32_t           दीर्घता;      /* Length of the data in bytes; -1 if unknown.     */
 };
 
-U_CAPI  UDataMemory* U_EXPORT2 UDataMemory_createNewInstance(UErrorCode *pErr);
-U_CFUNC void         UDatamemory_assign  (UDataMemory *dest, UDataMemory *source);
-U_CFUNC void         UDataMemory_init    (UDataMemory *This);
-U_CFUNC UBool        UDataMemory_isLoaded(const UDataMemory *This);
-U_CFUNC void         UDataMemory_setData (UDataMemory *This, const void *dataAddr);
+U_CAPI  UData_स्मृतिः* U_EXPORT2 UData_स्मृतिः_create_New_Instance(UError_संहिता *pErr);
+U_CFUNC शून्य         UDatamemory_नियोजय  (UData_स्मृतिः *dest, UData_स्मृतिः *source);
+U_CFUNC शून्य         UData_स्मृतिः_init    (UData_स्मृतिः *This);
+U_CFUNC UBool        UData_स्मृतिः_is_Loaded(ध्रुव UData_स्मृतिः *This);
+U_CFUNC शून्य         UData_स्मृतिः_समुच्चयः_दत्त (UData_स्मृतिः *This, ध्रुव शून्य *दत्त_Addr);
 
-U_CFUNC const DataHeader* UDataMemory_normalizeDataPointer(const void* p U_LIFETIME_BOUND);
+U_CFUNC ध्रुव दत्त_शीर्षकम्* UData_स्मृतिः_normalize_दत्त_Pointer(ध्रुव शून्य* p U_LIFETIME_BOUND);
 
 U_CAPI int32_t U_EXPORT2
-udata_getLength(const UDataMemory *pData);
+udata_get_दीर्घता(ध्रुव UData_स्मृतिः *p_दत्त);
 
-U_CAPI const void* U_EXPORT2
-udata_getRawMemory(const UDataMemory* pData U_LIFETIME_BOUND);
+U_CAPI ध्रुव शून्य* U_EXPORT2
+udata_get_Raw_स्मृतिः(ध्रुव UData_स्मृतिः* p_दत्त U_LIFETIME_BOUND);
 
-#endif
+#यदि_अन्तः

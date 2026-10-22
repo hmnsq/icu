@@ -10,17 +10,17 @@
 ***************************************************************************
 */
 
-#ifndef UNICODESET_H
-#define UNICODESET_H
+#यदि_अपरिभाषितम् UNICODESET_H
+#परिभाषय UNICODESET_H
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
 
-#include "unicode/ucpmap.h"
-#include "unicode/unifilt.h"
-#include "unicode/unistr.h"
-#include "unicode/uset.h"
+#अन्तर्भाव "unicode/ucpmap.h"
+#अन्तर्भाव "unicode/unifilt.h"
+#अन्तर्भाव "unicode/unistr.h"
+#अन्तर्भाव "unicode/uset.h"
 
 /**
  * \file
@@ -33,10 +33,10 @@ U_NAMESPACE_BEGIN
 class BMPSet;
 class ParsePosition;
 class RBBIRuleScanner;
-class SymbolTable;
-class UnicodeSetStringSpan;
+class चिह्नम्_सारणी;
+class Unicode_समुच्चयः_String_विस्तृतिः;
 class UVector;
-class RuleCharacterIterator;
+class नियमः_Character_Iterator;
 
 /**
  * A mutable set of Unicode characters and multicharacter strings. Objects of this class represent
@@ -172,24 +172,24 @@ class RuleCharacterIterator;
  * @author Alan Liu
  * @stable ICU 2.0
  */
-class U_COMMON_API UnicodeSet final : public UnicodeFilter {
-private:
+class U_COMMON_API Unicode_समुच्चयः final : सार्वजनिक UnicodeFilter {
+गुप्त:
     /**
      * Enough for sets with few ranges.
      * For example, White_Space has 10 ranges, list length 21.
      */
-    static constexpr int32_t INITIAL_CAPACITY = 25;
+    स्थिर constexpr int32_t INITIAL_क्षमता = 25;
     // fFlags constant
-    static constexpr uint8_t kIsBogus = 1;  // This set is bogus (i.e. not valid)
+    स्थिर constexpr uint8_t kIsBogus = 1;  // This set is bogus (i.e. not valid)
 
-    UChar32* list = stackList; // MUST be terminated with HIGH
-    int32_t capacity = INITIAL_CAPACITY; // capacity of list
+    UChar32* list = राशिः_List; // MUST be terminated with HIGH
+    int32_t क्षमता = INITIAL_क्षमता; // capacity of list
     int32_t len = 1; // length of list used; 1 <= len <= capacity
     uint8_t fFlags = 0;         // Bit flag (see constants above)
 
-    BMPSet *bmpSet = nullptr; // The set is frozen iff either bmpSet or stringSpan is not nullptr.
-    UChar32* buffer = nullptr; // internal buffer, may be nullptr
-    int32_t bufferCapacity = 0; // capacity of buffer
+    BMPSet *bmp_समुच्चयः = nullptr; // The set is frozen iff either bmpSet or stringSpan is not nullptr.
+    UChar32* बफर = nullptr; // internal buffer, may be nullptr
+    int32_t बफर_क्षमता = 0; // capacity of buffer
 
     /**
      * The pattern representation of this set.  This may not be the
@@ -203,17 +203,17 @@ private:
     char16_t *pat = nullptr;
     int32_t patLen = 0;
 
-    UVector* strings_ = nullptr; // maintained in sorted order
-    UnicodeSetStringSpan *stringSpan = nullptr;
+    UVector* वाक्यानि_2 = nullptr; // maintained in sorted order
+    Unicode_समुच्चयः_String_विस्तृतिः *string_विस्तृतिः = nullptr;
 
     /**
      * Initial list array.
      * Avoids some heap allocations, and list is never nullptr.
      * Increases the object size a bit.
      */
-    UChar32 stackList[INITIAL_CAPACITY];
+    UChar32 राशिः_List[INITIAL_क्षमता];
 
-public:
+सार्वजनिक:
     /**
      * Determine if this object contains a valid set.
      * A bogus set has no value. It is different from an empty set.
@@ -223,7 +223,7 @@ public:
      * @see setToBogus()
      * @stable ICU 4.0
      */
-    inline UBool isBogus() const;
+    अन्तःस्थ UBool isBogus() ध्रुव;
 
     /**
      * Make this UnicodeSet object invalid.
@@ -241,35 +241,35 @@ public:
      * @see isBogus()
      * @stable ICU 4.0
      */
-    void setToBogus();
+    शून्य समुच्चयः_गन्तव्यम्_Bogus();
 
-public:
+सार्वजनिक:
 
-    enum {
+    गणना {
         /**
          * Minimum value that can be stored in a UnicodeSet.
          * @stable ICU 2.4
          */
-        MIN_VALUE = 0,
+        MIN_मानम् = 0,
 
         /**
          * Maximum value that can be stored in a UnicodeSet.
          * @stable ICU 2.4
          */
-        MAX_VALUE = 0x10ffff
+        MAX_मानम् = 0x10ffff
     };
 
     //----------------------------------------------------------------
     // Constructors &c
     //----------------------------------------------------------------
 
-public:
+सार्वजनिक:
 
     /**
      * Constructs an empty set.
      * @stable ICU 2.0
      */
-    UnicodeSet();
+    Unicode_समुच्चयः();
 
     /**
      * Constructs a set containing the given range. If <code>end <
@@ -279,13 +279,13 @@ public:
      * @param end last character, inclusive, of range
      * @stable ICU 2.4
      */
-    UnicodeSet(UChar32 start, UChar32 end);
+    Unicode_समुच्चयः(UChar32 start, UChar32 अन्तः);
 
-#ifndef U_HIDE_INTERNAL_API
+#यदि_अपरिभाषितम् U_HIDE_आन्तरिकम्_API
     /**
      * @internal
      */
-    enum ESerialization {
+    गणना ESerialization {
       kSerialized  /* result of serialize() */
     };
 
@@ -299,9 +299,9 @@ public:
      *
      * @internal
      */
-    UnicodeSet(const uint16_t buffer[], int32_t bufferLen,
-               ESerialization serialization, UErrorCode &status);
-#endif  /* U_HIDE_INTERNAL_API */
+    Unicode_समुच्चयः(ध्रुव uint16_t बफर[], int32_t बफर_Len,
+               ESerialization serialization, UError_संहिता &स्थितिः);
+#यदि_अन्तः  /* U_HIDE_INTERNAL_API */
 
     /**
      * Constructs a set from the given pattern.  See the class
@@ -311,10 +311,10 @@ public:
      * contains a syntax error.
      * @stable ICU 2.0
      */
-    UnicodeSet(const UnicodeString& pattern,
-               UErrorCode& status);
+    Unicode_समुच्चयः(ध्रुव UnicodeString& आदर्शः,
+               UError_संहिता& स्थितिः);
 
-#ifndef U_HIDE_INTERNAL_API
+#यदि_अपरिभाषितम् U_HIDE_आन्तरिकम्_API
     /**
      * Constructs a set from the given pattern.  See the class
      * description for the syntax of the pattern language.
@@ -329,11 +329,11 @@ public:
      * contains a syntax error.
      * @internal
      */
-    UnicodeSet(const UnicodeString& pattern,
+    Unicode_समुच्चयः(ध्रुव UnicodeString& आदर्शः,
                uint32_t options,
-               const SymbolTable* symbols,
-               UErrorCode& status);
-#endif  /* U_HIDE_INTERNAL_API */
+               ध्रुव चिह्नम्_सारणी* symbols,
+               UError_संहिता& स्थितिः);
+#यदि_अन्तः  /* U_HIDE_INTERNAL_API */
 
     /**
      * Constructs a set from the given pattern.  See the class description
@@ -350,29 +350,29 @@ public:
      * @param status input-output error code
      * @stable ICU 2.8
      */
-    UnicodeSet(const UnicodeString& pattern, ParsePosition& pos,
+    Unicode_समुच्चयः(ध्रुव UnicodeString& आदर्शः, ParsePosition& pos,
                uint32_t options,
-               const SymbolTable* symbols,
-               UErrorCode& status);
+               ध्रुव चिह्नम्_सारणी* symbols,
+               UError_संहिता& स्थितिः);
 
     /**
      * Constructs a set that is identical to the given UnicodeSet.
      * @stable ICU 2.0
      */
-    UnicodeSet(const UnicodeSet& o);
+    Unicode_समुच्चयः(ध्रुव Unicode_समुच्चयः& o);
 
     /**
      * Destructs the set.
      * @stable ICU 2.0
      */
-    virtual ~UnicodeSet();
+    आभास ~Unicode_समुच्चयः();
 
     /**
      * Assigns this object to be a copy of another.
      * A frozen set will not be modified.
      * @stable ICU 2.0
      */
-    UnicodeSet& operator=(const UnicodeSet& o) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& संक्रियकः=(ध्रुव Unicode_समुच्चयः& o) U_LIFETIME_BOUND;
 
     /**
      * Compares the specified object with this set for equality.  Returns
@@ -385,14 +385,14 @@ public:
      * @return <tt>true</tt> if the specified set is equal to this set.
      * @stable ICU 2.0
      */
-    bool operator==(const UnicodeSet& o) const;
+    bool संक्रियकः==(ध्रुव Unicode_समुच्चयः& o) ध्रुव;
 
     /**
      * Compares the specified object with this set for equality.  Returns
      * <tt>true</tt> if the specified set is not equal to this set.
      * @stable ICU 2.0
      */
-    inline bool operator!=(const UnicodeSet& o) const;
+    अन्तःस्थ bool संक्रियकः!=(ध्रुव Unicode_समुच्चयः& o) ध्रुव;
 
     /**
      * Returns a copy of this object.  All UnicodeFunctor objects have
@@ -403,7 +403,7 @@ public:
      * @see cloneAsThawed
      * @stable ICU 2.0
      */
-    virtual UnicodeSet* clone() const override;
+    आभास Unicode_समुच्चयः* clone() ध्रुव override;
 
     /**
      * Returns the hash code value for this set.
@@ -412,7 +412,7 @@ public:
      * @see Object#hashCode()
      * @stable ICU 2.0
      */
-    int32_t hashCode() const;
+    int32_t hash_संहिता() ध्रुव;
 
     /**
      * Get a UnicodeSet pointer from a USet
@@ -422,7 +422,7 @@ public:
      *
      * @stable ICU 4.2
      */
-    inline static UnicodeSet* fromUSet(USet* uset U_LIFETIME_BOUND);
+    अन्तःस्थ स्थिर Unicode_समुच्चयः* fromUSet(USet* uset U_LIFETIME_BOUND);
 
     /**
      * Get a UnicodeSet pointer from a const USet
@@ -432,7 +432,7 @@ public:
      *
      * @stable ICU 4.2
      */
-    inline static const UnicodeSet* fromUSet(const USet* uset U_LIFETIME_BOUND);
+    अन्तःस्थ स्थिर ध्रुव Unicode_समुच्चयः* fromUSet(ध्रुव USet* uset U_LIFETIME_BOUND);
 
     /**
      * Produce a USet * pointer for this UnicodeSet.
@@ -441,7 +441,7 @@ public:
      * @return a USet pointer for this UnicodeSet
      * @stable ICU 4.2
      */
-    inline USet* toUSet() U_LIFETIME_BOUND;
+    अन्तःस्थ USet* गन्तव्यम्_USet() U_LIFETIME_BOUND;
 
     /**
      * Produce a const USet * pointer for this UnicodeSet.
@@ -450,7 +450,7 @@ public:
      * @return a const USet pointer for this UnicodeSet
      * @stable ICU 4.2
      */
-    inline const USet* toUSet() const U_LIFETIME_BOUND;
+    अन्तःस्थ ध्रुव USet* गन्तव्यम्_USet() ध्रुव U_LIFETIME_BOUND;
 
 
     //----------------------------------------------------------------
@@ -465,7 +465,7 @@ public:
      * @see cloneAsThawed
      * @stable ICU 3.8
      */
-    inline UBool isFrozen() const;
+    अन्तःस्थ UBool isFrozen() ध्रुव;
 
     /**
      * Freeze the set (make it immutable).
@@ -480,7 +480,7 @@ public:
      * @see cloneAsThawed
      * @stable ICU 3.8
      */
-    UnicodeSet* freeze() U_LIFETIME_BOUND;
+    Unicode_समुच्चयः* freeze() U_LIFETIME_BOUND;
 
     /**
      * Clone the set and make the clone mutable.
@@ -490,7 +490,7 @@ public:
      * @see isFrozen
      * @stable ICU 3.8
      */
-    UnicodeSet *cloneAsThawed() const;
+    Unicode_समुच्चयः *cloneAsThawed() ध्रुव;
 
     //----------------------------------------------------------------
     // Public API
@@ -505,14 +505,14 @@ public:
      * @param end last character in the set, inclusive
      * @stable ICU 2.4
      */
-    UnicodeSet& set(UChar32 start, UChar32 end) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& समुच्चयः(UChar32 start, UChar32 अन्तः) U_LIFETIME_BOUND;
 
     /**
      * Return true if the given position, in the given pattern, appears
      * to be the start of a UnicodeSet pattern.
      * @stable ICU 2.4
      */
-    static UBool resemblesPattern(const UnicodeString& pattern,
+    स्थिर UBool resembles_आदर्शः(ध्रुव UnicodeString& आदर्शः,
                                   int32_t pos);
 
     /**
@@ -527,9 +527,9 @@ public:
      * @return a reference to this
      * @stable ICU 2.0
      */
-    UnicodeSet& applyPattern(const UnicodeString& pattern, UErrorCode& status) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& apply_आदर्शः(ध्रुव UnicodeString& आदर्शः, UError_संहिता& स्थितिः) U_LIFETIME_BOUND;
 
-#ifndef U_HIDE_INTERNAL_API
+#यदि_अपरिभाषितम् U_HIDE_आन्तरिकम्_API
     /**
      * Modifies this set to represent the set specified by the given
      * pattern, optionally ignoring Unicode Pattern_White_Space characters.
@@ -548,11 +548,11 @@ public:
      * @return a reference to this
      * @internal
      */
-    UnicodeSet& applyPattern(const UnicodeString& pattern,
+    Unicode_समुच्चयः& apply_आदर्शः(ध्रुव UnicodeString& आदर्शः,
                              uint32_t options,
-                             const SymbolTable* symbols,
-                             UErrorCode& status) U_LIFETIME_BOUND;
-#endif  /* U_HIDE_INTERNAL_API */
+                             ध्रुव चिह्नम्_सारणी* symbols,
+                             UError_संहिता& स्थितिः) U_LIFETIME_BOUND;
+#यदि_अन्तः  /* U_HIDE_INTERNAL_API */
 
     /**
      * Parses the given pattern, starting at the given position.  The
@@ -587,11 +587,11 @@ public:
      * @return a reference to this
      * @stable ICU 2.8
      */
-    UnicodeSet& applyPattern(const UnicodeString& pattern,
+    Unicode_समुच्चयः& apply_आदर्शः(ध्रुव UnicodeString& आदर्शः,
                              ParsePosition& pos,
                              uint32_t options,
-                             const SymbolTable* symbols,
-                             UErrorCode& status) U_LIFETIME_BOUND;
+                             ध्रुव चिह्नम्_सारणी* symbols,
+                             UError_संहिता& स्थितिः) U_LIFETIME_BOUND;
 
     /**
      * Returns a string representation of this set.  If the result of
@@ -606,8 +606,8 @@ public:
      * U+000A, U+0020..U+007E.
      * @stable ICU 2.0
      */
-    virtual UnicodeString& toPattern(UnicodeString& result U_LIFETIME_BOUND,
-                                     UBool escapeUnprintable = false) const override;
+    आभास UnicodeString& गन्तव्यम्_आदर्शः(UnicodeString& परिणाम U_LIFETIME_BOUND,
+                                     UBool escapeUnprintable = false) ध्रुव override;
 
     /**
      * Modifies this set to contain those code points which have the given value
@@ -631,9 +631,9 @@ public:
      *
      * @stable ICU 2.4
      */
-    UnicodeSet& applyIntPropertyValue(UProperty prop,
-                                      int32_t value,
-                                      UErrorCode& ec) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& apply_Int_Property_मानम्(UProperty prop,
+                                      int32_t मानम्_2,
+                                      UError_संहिता& ec) U_LIFETIME_BOUND;
 
     /**
      * Modifies this set to contain those code points which have the
@@ -664,9 +664,9 @@ public:
      *
      * @stable ICU 2.4
      */
-    UnicodeSet& applyPropertyAlias(const UnicodeString& prop,
-                                   const UnicodeString& value,
-                                   UErrorCode& ec) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& applyPropertyAlias(ध्रुव UnicodeString& prop,
+                                   ध्रुव UnicodeString& मानम्_2,
+                                   UError_संहिता& ec) U_LIFETIME_BOUND;
 
     /**
      * Returns the number of elements in this set (its cardinality).
@@ -680,7 +680,7 @@ public:
      * @stable ICU 2.0
      * @see getRangeCount
      */
-    int32_t size() const;
+    int32_t आकार_2() ध्रुव;
 
     /**
      * Returns <tt>true</tt> if this set contains no elements.
@@ -688,13 +688,13 @@ public:
      * @return <tt>true</tt> if this set contains no elements.
      * @stable ICU 2.0
      */
-    UBool isEmpty() const;
+    UBool is_रिक्तानि() ध्रुव;
 
     /**
      * @return true if this set contains multi-character strings or the empty string.
      * @stable ICU 70
      */
-    UBool hasStrings() const;
+    UBool has_वाक्यानि() ध्रुव;
 
     /**
      * Returns true if this set contains the given character.
@@ -703,7 +703,7 @@ public:
      * @return true if the test condition is met
      * @stable ICU 2.0
      */
-    virtual UBool contains(UChar32 c) const override;
+    आभास UBool अन्तर्भवति(UChar32 c) ध्रुव override;
 
     /**
      * Returns true if this set contains every character
@@ -713,7 +713,7 @@ public:
      * @return true if the test condition is met
      * @stable ICU 2.0
      */
-    UBool contains(UChar32 start, UChar32 end) const;
+    UBool अन्तर्भवति(UChar32 start, UChar32 अन्तः) ध्रुव;
 
     /**
      * Returns <tt>true</tt> if this set contains the given
@@ -722,7 +722,7 @@ public:
      * @return <tt>true</tt> if this set contains the specified string
      * @stable ICU 2.4
      */
-    UBool contains(const UnicodeString& s) const;
+    UBool अन्तर्भवति(ध्रुव UnicodeString& s) ध्रुव;
 
     /**
      * Returns true if this set contains all the characters and strings
@@ -731,7 +731,7 @@ public:
      * @return true if the test condition is met
      * @stable ICU 2.4
      */
-    UBool containsAll(const UnicodeSet& c) const;
+    UBool अन्तर्भवति_All(ध्रुव Unicode_समुच्चयः& c) ध्रुव;
 
     /**
      * Returns true if this set contains all the characters
@@ -740,7 +740,7 @@ public:
      * @return true if the test condition is met
      * @stable ICU 2.4
      */
-    UBool containsAll(const UnicodeString& s) const;
+    UBool अन्तर्भवति_All(ध्रुव UnicodeString& s) ध्रुव;
 
     /**
      * Returns true if this set contains none of the characters
@@ -750,7 +750,7 @@ public:
      * @return true if the test condition is met
      * @stable ICU 2.4
      */
-    UBool containsNone(UChar32 start, UChar32 end) const;
+    UBool अन्तर्भवति_None(UChar32 start, UChar32 अन्तः) ध्रुव;
 
     /**
      * Returns true if this set contains none of the characters and strings
@@ -759,7 +759,7 @@ public:
      * @return true if the test condition is met
      * @stable ICU 2.4
      */
-    UBool containsNone(const UnicodeSet& c) const;
+    UBool अन्तर्भवति_None(ध्रुव Unicode_समुच्चयः& c) ध्रुव;
 
     /**
      * Returns true if this set contains none of the characters
@@ -768,7 +768,7 @@ public:
      * @return true if the test condition is met
      * @stable ICU 2.4
      */
-    UBool containsNone(const UnicodeString& s) const;
+    UBool अन्तर्भवति_None(ध्रुव UnicodeString& s) ध्रुव;
 
     /**
      * Returns true if this set contains one or more of the characters
@@ -778,7 +778,7 @@ public:
      * @return true if the condition is met
      * @stable ICU 2.4
      */
-    inline UBool containsSome(UChar32 start, UChar32 end) const;
+    अन्तःस्थ UBool अन्तर्भवति_Some(UChar32 start, UChar32 अन्तः) ध्रुव;
 
     /**
      * Returns true if this set contains one or more of the characters
@@ -787,7 +787,7 @@ public:
      * @return true if the condition is met
      * @stable ICU 2.4
      */
-    inline UBool containsSome(const UnicodeSet& s) const;
+    अन्तःस्थ UBool अन्तर्भवति_Some(ध्रुव Unicode_समुच्चयः& s) ध्रुव;
 
     /**
      * Returns true if this set contains one or more of the characters
@@ -796,7 +796,7 @@ public:
      * @return true if the condition is met
      * @stable ICU 2.4
      */
-    inline UBool containsSome(const UnicodeString& s) const;
+    अन्तःस्थ UBool अन्तर्भवति_Some(ध्रुव UnicodeString& s) ध्रुव;
 
     /**
      * Returns the length of the initial substring of the input string which
@@ -816,7 +816,7 @@ public:
      * @stable ICU 3.8
      * @see USetSpanCondition
      */
-    int32_t span(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t विस्तृतिः(ध्रुव char16_t *s, int32_t दीर्घता, USet_विस्तृतिः_Condition विस्तृतिः_Condition) ध्रुव;
 
     /**
      * Returns the end of the substring of the input string according to the USetSpanCondition.
@@ -830,7 +830,7 @@ public:
      * @stable ICU 4.4
      * @see USetSpanCondition
      */
-    inline int32_t span(const UnicodeString &s, int32_t start, USetSpanCondition spanCondition) const;
+    अन्तःस्थ int32_t विस्तृतिः(ध्रुव UnicodeString &s, int32_t start, USet_विस्तृतिः_Condition विस्तृतिः_Condition) ध्रुव;
 
     /**
      * Returns the start of the trailing substring of the input string which
@@ -849,7 +849,7 @@ public:
      * @stable ICU 3.8
      * @see USetSpanCondition
      */
-    int32_t spanBack(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t विस्तृतिः_पृष्ठभागः(ध्रुव char16_t *s, int32_t दीर्घता, USet_विस्तृतिः_Condition विस्तृतिः_Condition) ध्रुव;
 
     /**
      * Returns the start of the substring of the input string according to the USetSpanCondition.
@@ -864,7 +864,7 @@ public:
      * @stable ICU 4.4
      * @see USetSpanCondition
      */
-    inline int32_t spanBack(const UnicodeString &s, int32_t limit, USetSpanCondition spanCondition) const;
+    अन्तःस्थ int32_t विस्तृतिः_पृष्ठभागः(ध्रुव UnicodeString &s, int32_t सीमा, USet_विस्तृतिः_Condition विस्तृतिः_Condition) ध्रुव;
 
     /**
      * Returns the length of the initial substring of the input string which
@@ -884,7 +884,7 @@ public:
      * @stable ICU 3.8
      * @see USetSpanCondition
      */
-    int32_t spanUTF8(const char *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t विस्तृतिः_UTF8(ध्रुव वर्ण *s, int32_t दीर्घता, USet_विस्तृतिः_Condition विस्तृतिः_Condition) ध्रुव;
 
     /**
      * Returns the start of the trailing substring of the input string which
@@ -903,18 +903,18 @@ public:
      * @stable ICU 3.8
      * @see USetSpanCondition
      */
-    int32_t spanBackUTF8(const char *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t विस्तृतिः_पृष्ठभागः_UTF8(ध्रुव वर्ण *s, int32_t दीर्घता, USet_विस्तृतिः_Condition विस्तृतिः_Condition) ध्रुव;
 
     /**
      * Implement UnicodeMatcher::matches()
      * @stable ICU 2.4
      */
-    UMatchDegree matches(const Replaceable& text,
-                         int32_t& offset,
-                         int32_t limit,
+    UMatchDegree matches(ध्रुव Replaceable& text,
+                         int32_t& विस्थापनम्,
+                         int32_t सीमा,
                          UBool incremental) override;
 
-private:
+गुप्त:
     /**
      * Returns the longest match for s in text at the given position.
      * If limit > start then match forward from start+1 to limit
@@ -937,9 +937,9 @@ private:
      * s.length().  If there is a mismatch between s and text, return
      * 0
      */
-    static int32_t matchRest(const Replaceable& text,
-                             int32_t start, int32_t limit,
-                             const UnicodeString& s);
+    स्थिर int32_t मेलनम्_Rest(ध्रुव Replaceable& text,
+                             int32_t start, int32_t सीमा,
+                             ध्रुव UnicodeString& s);
 
     /**
      * Returns the smallest value i such that c < list[i].  Caller
@@ -950,9 +950,9 @@ private:
      * @return the smallest integer i in the range 0..len-1,
      * inclusive, such that c < list[i]
      */
-    int32_t findCodePoint(UChar32 c) const;
+    int32_t find_संहिता_Point(UChar32 c) ध्रुव;
 
-public:
+सार्वजनिक:
 
     /**
      * Implementation of UnicodeMatcher API.  Union the set of all
@@ -961,7 +961,7 @@ public:
      * @param toUnionTo the set into which to union the source characters
      * @stable ICU 2.4
      */
-    virtual void addMatchSetTo(UnicodeSet& toUnionTo) const override;
+    आभास शून्य सङ्कलय_मेलनम्_समुच्चयः_गन्तव्यम्(Unicode_समुच्चयः& गन्तव्यम्_Union_गन्तव्यम्) ध्रुव override;
 
     /**
      * Returns the index of the given character within this set, where
@@ -971,7 +971,7 @@ public:
      * @return an index from 0..size()-1, or -1
      * @stable ICU 2.4
      */
-    int32_t indexOf(UChar32 c) const;
+    int32_t सूचकांक_सम्बन्धि(UChar32 c) ध्रुव;
 
     /**
      * Returns the character at the given index within this set, where
@@ -988,7 +988,7 @@ public:
      * @return the character at the given index, or (UChar32)-1.
      * @stable ICU 2.4
      */
-    UChar32 charAt(int32_t index) const;
+    UChar32 charAt(int32_t सूचकांक) ध्रुव;
 
     /**
      * Returns a C++ "range" for iterating over the code points of this set.
@@ -1007,8 +1007,8 @@ public:
      * @see begin
      * @see end
      */
-    inline U_HEADER_NESTED_NAMESPACE::USetCodePoints codePoints() const U_LIFETIME_BOUND {
-        return U_HEADER_NESTED_NAMESPACE::USetCodePoints(toUSet());
+    अन्तःस्थ U_शीर्षकम्_NESTED_NAMESPACE::USet_संहिता_Points संहिता_Points() ध्रुव U_LIFETIME_BOUND {
+        प्रत्यागम U_शीर्षकम्_NESTED_NAMESPACE::USet_संहिता_Points(गन्तव्यम्_USet());
     }
 
     /**
@@ -1033,8 +1033,8 @@ public:
      * @see begin
      * @see end
      */
-    inline U_HEADER_NESTED_NAMESPACE::USetRanges ranges() const U_LIFETIME_BOUND {
-        return U_HEADER_NESTED_NAMESPACE::USetRanges(toUSet());
+    अन्तःस्थ U_शीर्षकम्_NESTED_NAMESPACE::USetRanges ranges() ध्रुव U_LIFETIME_BOUND {
+        प्रत्यागम U_शीर्षकम्_NESTED_NAMESPACE::USetRanges(गन्तव्यम्_USet());
     }
 
     /**
@@ -1057,8 +1057,8 @@ public:
      * @see begin
      * @see end
      */
-    inline U_HEADER_NESTED_NAMESPACE::USetStrings strings() const U_LIFETIME_BOUND {
-        return U_HEADER_NESTED_NAMESPACE::USetStrings(toUSet());
+    अन्तःस्थ U_शीर्षकम्_NESTED_NAMESPACE::USet_वाक्यानि वाक्यानि() ध्रुव U_LIFETIME_BOUND {
+        प्रत्यागम U_शीर्षकम्_NESTED_NAMESPACE::USet_वाक्यानि(गन्तव्यम्_USet());
     }
 
     /**
@@ -1085,8 +1085,8 @@ public:
      * @see ranges
      * @see strings
      */
-    inline U_HEADER_NESTED_NAMESPACE::USetElementIterator begin() const U_LIFETIME_BOUND {
-        return U_HEADER_NESTED_NAMESPACE::USetElements(toUSet()).begin();
+    अन्तःस्थ U_शीर्षकम्_NESTED_NAMESPACE::USetElementIterator begin() ध्रुव U_LIFETIME_BOUND {
+        प्रत्यागम U_शीर्षकम्_NESTED_NAMESPACE::USetElements(गन्तव्यम्_USet()).begin();
     }
 
     /**
@@ -1097,8 +1097,8 @@ public:
      * @see ranges
      * @see strings
      */
-    inline U_HEADER_NESTED_NAMESPACE::USetElementIterator end() const U_LIFETIME_BOUND {
-        return U_HEADER_NESTED_NAMESPACE::USetElements(toUSet()).end();
+    अन्तःस्थ U_शीर्षकम्_NESTED_NAMESPACE::USetElementIterator अन्तः() ध्रुव U_LIFETIME_BOUND {
+        प्रत्यागम U_शीर्षकम्_NESTED_NAMESPACE::USetElements(गन्तव्यम्_USet()).अन्तः();
     }
 
     /**
@@ -1115,7 +1115,7 @@ public:
      * to this set.
      * @stable ICU 2.0
      */
-    UnicodeSet& add(UChar32 start, UChar32 end) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& सङ्कलय(UChar32 start, UChar32 अन्तः) U_LIFETIME_BOUND;
 
     /**
      * Adds the specified character to this set if it is not already
@@ -1127,7 +1127,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.0
      */
-    UnicodeSet& add(UChar32 c) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& सङ्कलय(UChar32 c) U_LIFETIME_BOUND;
 
     /**
      * Adds the specified multicharacter to this set if it is not already
@@ -1140,19 +1140,19 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.4
      */
-    UnicodeSet& add(const UnicodeString& s) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& सङ्कलय(ध्रुव UnicodeString& s) U_LIFETIME_BOUND;
 
- private:
+ गुप्त:
     /**
      * @return a code point IF the string consists of a single one.
      * otherwise returns -1.
      * @param s string to test
      */
-    static int32_t getSingleCP(const UnicodeString& s);
+    स्थिर int32_t getSingleCP(ध्रुव UnicodeString& s);
 
-    void _add(const UnicodeString& s);
+    शून्य सङ्कलय_2(ध्रुव UnicodeString& s);
 
- public:
+ सार्वजनिक:
     /**
      * Adds each of the characters in this string to the set. Note: "ch" => {"c", "h"}
      * If this set already contains any particular character, it has no effect on that character.
@@ -1161,7 +1161,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.4
      */
-    UnicodeSet& addAll(const UnicodeString& s) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& सङ्कलय_All(ध्रुव UnicodeString& s) U_LIFETIME_BOUND;
 
     /**
      * Retains EACH of the characters in this string. Note: "ch" == {"c", "h"}
@@ -1170,7 +1170,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.4
      */
-    UnicodeSet& retainAll(const UnicodeString& s) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& retainAll(ध्रुव UnicodeString& s) U_LIFETIME_BOUND;
 
     /**
      * Complement EACH of the characters in this string. Note: "ch" == {"c", "h"}
@@ -1179,7 +1179,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.4
      */
-    UnicodeSet& complementAll(const UnicodeString& s) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& complementAll(ध्रुव UnicodeString& s) U_LIFETIME_BOUND;
 
     /**
      * Remove EACH of the characters in this string. Note: "ch" == {"c", "h"}
@@ -1188,7 +1188,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.4
      */
-    UnicodeSet& removeAll(const UnicodeString& s) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& removeAll(ध्रुव UnicodeString& s) U_LIFETIME_BOUND;
 
     /**
      * Makes a set from a multicharacter string. Thus "ch" => {"ch"}
@@ -1198,7 +1198,7 @@ public:
      * The caller owns the return object and is responsible for deleting it.
      * @stable ICU 2.4
      */
-    static UnicodeSet* U_EXPORT2 createFrom(const UnicodeString& s);
+    स्थिर Unicode_समुच्चयः* U_EXPORT2 createFrom(ध्रुव UnicodeString& s);
 
 
     /**
@@ -1208,7 +1208,7 @@ public:
      * The caller owns the return object and is responsible for deleting it.
      * @stable ICU 2.4
      */
-    static UnicodeSet* U_EXPORT2 createFromAll(const UnicodeString& s);
+    स्थिर Unicode_समुच्चयः* U_EXPORT2 createFromAll(ध्रुव UnicodeString& s);
 
     /**
      * Retain only the elements in this set that are contained in the
@@ -1221,7 +1221,7 @@ public:
      * @param end last character, inclusive, of range
      * @stable ICU 2.0
      */
-    UnicodeSet& retain(UChar32 start, UChar32 end) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& retain(UChar32 start, UChar32 अन्तः) U_LIFETIME_BOUND;
 
 
     /**
@@ -1232,7 +1232,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.0
      */
-    UnicodeSet& retain(UChar32 c) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& retain(UChar32 c) U_LIFETIME_BOUND;
 
     /**
      * Retains only the specified string from this set if it is present.
@@ -1244,7 +1244,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 69
      */
-    UnicodeSet& retain(const UnicodeString& s) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& retain(ध्रुव UnicodeString& s) U_LIFETIME_BOUND;
 
     /**
      * Removes the specified range from this set if it is present.
@@ -1259,7 +1259,7 @@ public:
      * from this set.
      * @stable ICU 2.0
      */
-    UnicodeSet& remove(UChar32 start, UChar32 end) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& remove(UChar32 start, UChar32 अन्तः) U_LIFETIME_BOUND;
 
     /**
      * Removes the specified character from this set if it is present.
@@ -1271,7 +1271,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.0
      */
-    UnicodeSet& remove(UChar32 c) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& remove(UChar32 c) U_LIFETIME_BOUND;
 
     /**
      * Removes the specified string from this set if it is present.
@@ -1282,7 +1282,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.4
      */
-    UnicodeSet& remove(const UnicodeString& s) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& remove(ध्रुव UnicodeString& s) U_LIFETIME_BOUND;
 
     /**
      * This is equivalent to
@@ -1296,7 +1296,7 @@ public:
      * A frozen set will not be modified.
      * @stable ICU 2.0
      */
-    UnicodeSet& complement() U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& complement() U_LIFETIME_BOUND;
 
     /**
      * Complements the specified range in this set.  Any character in
@@ -1310,7 +1310,7 @@ public:
      * @param end last character, inclusive, of range
      * @stable ICU 2.0
      */
-    UnicodeSet& complement(UChar32 start, UChar32 end) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& complement(UChar32 start, UChar32 अन्तः) U_LIFETIME_BOUND;
 
     /**
      * Complements the specified character in this set.  The character
@@ -1322,7 +1322,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.0
      */
-    UnicodeSet& complement(UChar32 c) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& complement(UChar32 c) U_LIFETIME_BOUND;
 
     /**
      * Complement the specified string in this set.
@@ -1333,7 +1333,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.4
      */
-    UnicodeSet& complement(const UnicodeString& s) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& complement(ध्रुव UnicodeString& s) U_LIFETIME_BOUND;
 
     /**
      * Adds all of the elements in the specified set to this set if
@@ -1347,7 +1347,7 @@ public:
      * @see #add(UChar32, UChar32)
      * @stable ICU 2.0
      */
-    UnicodeSet& addAll(const UnicodeSet& c) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& सङ्कलय_All(ध्रुव Unicode_समुच्चयः& c) U_LIFETIME_BOUND;
 
     /**
      * Retains only the elements in this set that are contained in the
@@ -1360,7 +1360,7 @@ public:
      * @param c set that defines which elements this set will retain.
      * @stable ICU 2.0
      */
-    UnicodeSet& retainAll(const UnicodeSet& c) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& retainAll(ध्रुव Unicode_समुच्चयः& c) U_LIFETIME_BOUND;
 
     /**
      * Removes from this set all of its elements that are contained in the
@@ -1373,7 +1373,7 @@ public:
      *          this set.
      * @stable ICU 2.0
      */
-    UnicodeSet& removeAll(const UnicodeSet& c) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& removeAll(ध्रुव Unicode_समुच्चयः& c) U_LIFETIME_BOUND;
 
     /**
      * Complements in this set all elements contained in the specified
@@ -1385,7 +1385,7 @@ public:
      *          this set.
      * @stable ICU 2.4
      */
-    UnicodeSet& complementAll(const UnicodeSet& c) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& complementAll(ध्रुव Unicode_समुच्चयः& c) U_LIFETIME_BOUND;
 
     /**
      * Removes all of the elements from this set.  This set will be
@@ -1393,7 +1393,7 @@ public:
      * A frozen set will not be modified.
      * @stable ICU 2.0
      */
-    UnicodeSet& clear() U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& clear() U_LIFETIME_BOUND;
 
     /**
      * Close this set over the given attribute.  For the attribute
@@ -1422,7 +1422,7 @@ public:
      * @return a reference to this set.
      * @stable ICU 4.2
      */
-    UnicodeSet& closeOver(int32_t attribute) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& closeOver(int32_t attribute) U_LIFETIME_BOUND;
 
     /**
      * Remove all strings from this set.
@@ -1430,7 +1430,7 @@ public:
      * @return a reference to this set.
      * @stable ICU 4.2
      */
-    UnicodeSet& removeAllStrings() U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& remove_All_वाक्यानि() U_LIFETIME_BOUND;
 
     /**
      * Iteration method that returns the number of ranges contained in
@@ -1439,7 +1439,7 @@ public:
      * @see #getRangeEnd
      * @stable ICU 2.4
      */
-    int32_t getRangeCount() const;
+    int32_t get_Range_गणनम्() ध्रुव;
 
     /**
      * Iteration method that returns the first character in the
@@ -1448,7 +1448,7 @@ public:
      * @see #getRangeEnd
      * @stable ICU 2.4
      */
-    UChar32 getRangeStart(int32_t index) const;
+    UChar32 getRangeStart(int32_t सूचकांक) ध्रुव;
 
     /**
      * Iteration method that returns the last character in the
@@ -1457,7 +1457,7 @@ public:
      * @see #getRangeEnd
      * @stable ICU 2.4
      */
-    UChar32 getRangeEnd(int32_t index) const;
+    UChar32 get_Range_अन्तः(int32_t सूचकांक) ध्रुव;
 
     /**
      * Serializes this set into an array of 16-bit integers.  Serialization
@@ -1507,7 +1507,7 @@ public:
      * than U_BUFFER_OVERFLOW_ERROR.
      * @stable ICU 2.4
      */
-    int32_t serialize(uint16_t *dest, int32_t destCapacity, UErrorCode& ec) const;
+    int32_t serialize(uint16_t *dest, int32_t dest_क्षमता, UError_संहिता& ec) ध्रुव;
 
     /**
      * Reallocate this objects internal structures to take up the least
@@ -1515,7 +1515,7 @@ public:
      * A frozen set will not be modified.
      * @stable ICU 2.4
      */
-    UnicodeSet& compact() U_LIFETIME_BOUND;
+    Unicode_समुच्चयः& compact() U_LIFETIME_BOUND;
 
     /**
      * Return the class ID for this class.  This is useful only for
@@ -1528,7 +1528,7 @@ public:
      * @return          The class ID for all objects of this class.
      * @stable ICU 2.0
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    स्थिर UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * Implement UnicodeFunctor API.
@@ -1538,56 +1538,56 @@ public:
      * different class IDs.
      * @stable ICU 2.4
      */
-    virtual UClassID getDynamicClassID() const override;
+    आभास UClassID getDynamicClassID() ध्रुव override;
 
-  private:
+  गुप्त:
 
     // Private API for the USet API
 
-    friend class USetAccess;
+    मित्रम् class USetAccess;
 
-    const UnicodeString* getString(int32_t index) const U_LIFETIME_BOUND;
+    ध्रुव UnicodeString* getString(int32_t सूचकांक) ध्रुव U_LIFETIME_BOUND;
 
     //----------------------------------------------------------------
     // RuleBasedTransliterator support
     //----------------------------------------------------------------
 
-private:
+गुप्त:
 
     /**
      * Returns <tt>true</tt> if this set contains any character whose low byte
      * is the given value.  This is used by <tt>RuleBasedTransliterator</tt> for
      * indexing.
      */
-    virtual UBool matchesIndexValue(uint8_t v) const override;
+    आभास UBool matches_सूचकांक_मानम्(uint8_t v) ध्रुव override;
 
-private:
-    friend class RBBIRuleScanner;
+गुप्त:
+    मित्रम् class RBBIRuleScanner;
 
     //----------------------------------------------------------------
     // Implementation: Clone as thawed (see ICU4J Freezable)
     //----------------------------------------------------------------
 
-    UnicodeSet(const UnicodeSet& o, UBool /* asThawed */);
-    UnicodeSet& copyFrom(const UnicodeSet& o, UBool asThawed) U_LIFETIME_BOUND;
+    Unicode_समुच्चयः(ध्रुव Unicode_समुच्चयः& o, UBool /* asThawed */);
+    Unicode_समुच्चयः& copyFrom(ध्रुव Unicode_समुच्चयः& o, UBool asThawed) U_LIFETIME_BOUND;
 
     //----------------------------------------------------------------
     // Implementation: Pattern parsing
     //----------------------------------------------------------------
 
-    void applyPatternIgnoreSpace(const UnicodeString& pattern,
+    शून्य apply_आदर्शः_Ignore_Space(ध्रुव UnicodeString& आदर्शः,
                                  ParsePosition& pos,
-                                 const SymbolTable* symbols,
-                                 UErrorCode& status);
+                                 ध्रुव चिह्नम्_सारणी* symbols,
+                                 UError_संहिता& स्थितिः);
 
-    void applyPattern(const UnicodeString &pattern,
-                      const ParsePosition& parsePosition,
-                      RuleCharacterIterator &chars,
-                      const SymbolTable *symbols,
+    शून्य apply_आदर्शः(ध्रुव UnicodeString &आदर्शः,
+                      ध्रुव ParsePosition& parsePosition,
+                      नियमः_Character_Iterator &chars,
+                      ध्रुव चिह्नम्_सारणी *symbols,
                       UnicodeString &rebuiltPat,
                       uint32_t options,
-                      UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute),
-                      UErrorCode &ec);
+                      Unicode_समुच्चयः &(Unicode_समुच्चयः::*case_संवृतिः)(int32_t attribute),
+                      UError_संहिता &ec);
 
     // Recursive-descent predictive parsing.  These functions parse the syntactic categories
     // matching their name in the base grammar of PD UTR #56 (before the highlighted changes are
@@ -1598,89 +1598,89 @@ private:
 
     class Lexer;
 
-    static UnicodeSet parseUnicodeSet(Lexer &lexer,
+    स्थिर Unicode_समुच्चयः parse_Unicode_समुच्चयः(Lexer &lexer,
                                       UnicodeString &rebuiltPat,
                                       uint32_t options,
-                                      UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute),
-                                      int32_t depth,
-                                      UErrorCode &ec);
+                                      Unicode_समुच्चयः &(Unicode_समुच्चयः::*case_संवृतिः)(int32_t attribute),
+                                      int32_t गभीरता,
+                                      UError_संहिता &ec);
 
-    static UnicodeSet parseContent(Lexer &lexer,
+    स्थिर Unicode_समुच्चयः parseContent(Lexer &lexer,
                                    UnicodeString &rebuiltPat,
                                    uint32_t options,
-                                   UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute),
-                                   int32_t depth,
-                                   bool &containsSetOperation,
-                                   UErrorCode &ec);
+                                   Unicode_समुच्चयः &(Unicode_समुच्चयः::*case_संवृतिः)(int32_t attribute),
+                                   int32_t गभीरता,
+                                   bool &अन्तर्भवति_समुच्चयः_Operation,
+                                   UError_संहिता &ec);
 
-    void parseMutation(Lexer &lexer,
+    शून्य parseMutation(Lexer &lexer,
                        UnicodeString &rebuiltPat,
                        uint32_t options,
-                       UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute),
-                       int32_t depth,
-                       bool &containsSetOperation,
-                       UErrorCode &ec);
+                       Unicode_समुच्चयः &(Unicode_समुच्चयः::*case_संवृतिः)(int32_t attribute),
+                       int32_t गभीरता,
+                       bool &अन्तर्भवति_समुच्चयः_Operation,
+                       UError_संहिता &ec);
 
-    void parseSetOperations(Lexer &lexer,
+    शून्य parse_समुच्चयः_Operations(Lexer &lexer,
                             UnicodeString &rebuiltPat,
                             uint32_t options,
-                            UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute),
-                            int32_t depth,
-                            UErrorCode &ec);
+                            Unicode_समुच्चयः &(Unicode_समुच्चयः::*case_संवृतिः)(int32_t attribute),
+                            int32_t गभीरता,
+                            UError_संहिता &ec);
 
-    static UnicodeSet parseElements(Lexer &lexer,
+    स्थिर Unicode_समुच्चयः parseElements(Lexer &lexer,
                                     UnicodeString &rebuiltPat,
-                                    UErrorCode &ec);
+                                    UError_संहिता &ec);
 
 
-    void closeOverCaseInsensitive(bool simple);
-    void closeOverAddCaseMappings();
+    शून्य closeOverCaseInsensitive(bool simple);
+    शून्य close_Over_सङ्कलय_Case_Mappings();
 
     //----------------------------------------------------------------
     // Implementation: Utility methods
     //----------------------------------------------------------------
 
-    static int32_t nextCapacity(int32_t minCapacity);
+    स्थिर int32_t अग्र_क्षमता(int32_t min_क्षमता);
 
-    bool ensureCapacity(int32_t newLen);
+    bool ensure_क्षमता(int32_t newLen);
 
-    bool ensureBufferCapacity(int32_t newLen);
+    bool ensure_बफर_क्षमता(int32_t newLen);
 
-    void swapBuffers();
+    शून्य swapBuffers();
 
-    UBool allocateStrings(UErrorCode &status);
-    int32_t stringsSize() const;
-    UBool stringsContains(const UnicodeString &s) const;
+    UBool allocate_वाक्यानि(UError_संहिता &स्थितिः);
+    int32_t वाक्यानि_आकार() ध्रुव;
+    UBool वाक्यानि_अन्तर्भवति(ध्रुव UnicodeString &s) ध्रुव;
 
-    UnicodeString& _toPattern(UnicodeString& result U_LIFETIME_BOUND,
-                              UBool escapeUnprintable) const;
+    UnicodeString& गन्तव्यम्_आदर्शः_2(UnicodeString& परिणाम U_LIFETIME_BOUND,
+                              UBool escapeUnprintable) ध्रुव;
 
-    UnicodeString& _generatePattern(UnicodeString& result U_LIFETIME_BOUND,
-                                    UBool escapeUnprintable) const;
+    UnicodeString& generate_आदर्शः(UnicodeString& परिणाम U_LIFETIME_BOUND,
+                                    UBool escapeUnprintable) ध्रुव;
 
-    static void _appendToPat(UnicodeString& buf, const UnicodeString& s, UBool escapeUnprintable);
+    स्थिर शून्य append_गन्तव्यम्_Pat(UnicodeString& buf, ध्रुव UnicodeString& s, UBool escapeUnprintable);
 
-    static void _appendToPat(UnicodeString& buf, UChar32 c, UBool escapeUnprintable);
+    स्थिर शून्य append_गन्तव्यम्_Pat(UnicodeString& buf, UChar32 c, UBool escapeUnprintable);
 
-    static void _appendToPat(UnicodeString &result, UChar32 start, UChar32 end,
+    स्थिर शून्य append_गन्तव्यम्_Pat(UnicodeString &परिणाम, UChar32 start, UChar32 अन्तः,
                              UBool escapeUnprintable);
 
     //----------------------------------------------------------------
     // Implementation: Fundamental operators
     //----------------------------------------------------------------
 
-    void exclusiveOr(const UChar32* other, int32_t otherLen, int8_t polarity);
+    शून्य exclusiveOr(ध्रुव UChar32* other, int32_t otherLen, int8_t polarity);
 
-    void add(const UChar32* other, int32_t otherLen, int8_t polarity);
+    शून्य सङ्कलय(ध्रुव UChar32* other, int32_t otherLen, int8_t polarity);
 
-    void retain(const UChar32* other, int32_t otherLen, int8_t polarity);
+    शून्य retain(ध्रुव UChar32* other, int32_t otherLen, int8_t polarity);
 
     /**
      * Return true if the given position, in the given pattern, appears
      * to be the start of a property set pattern [:foo:], \\p{foo}, or
      * \\P{foo}, or \\N{name}.
      */
-    static UBool resemblesPropertyPattern(const UnicodeString& pattern,
+    स्थिर UBool resembles_Property_आदर्शः(ध्रुव UnicodeString& आदर्शः,
                                           int32_t pos);
 
     /**
@@ -1722,15 +1722,15 @@ private:
      * @param ec status
      * @return a reference to this.
      */
-    UnicodeSet& applyPropertyPattern(const UnicodeString& pattern,
+    Unicode_समुच्चयः& apply_Property_आदर्शः(ध्रुव UnicodeString& आदर्शः,
                                      ParsePosition& ppos,
-                                     UErrorCode& ec) U_LIFETIME_BOUND;
+                                     UError_संहिता& ec) U_LIFETIME_BOUND;
 
     /**
      * A filter that returns true if the given code point should be
      * included in the UnicodeSet being constructed.
      */
-    typedef UBool (*Filter)(UChar32 codePoint, void* context);
+    प्रकारनिर्देश UBool (*Filter)(UChar32 संहिता_Point, शून्य* context);
 
     /**
      * Given a filter, set this UnicodeSet to the code points
@@ -1741,90 +1741,90 @@ private:
      * getInclusions().
      * src is a UPropertySource value.
      */
-    void applyFilter(Filter filter,
-                     void* context,
-                     const UnicodeSet* inclusions,
-                     UErrorCode &status);
+    शून्य applyFilter(Filter filter,
+                     शून्य* context,
+                     ध्रुव Unicode_समुच्चयः* inclusions,
+                     UError_संहिता &स्थितिः);
 
     /**
      * Set the new pattern to cache.
      */
-    void setPattern(const UnicodeString& newPat) {
-        setPattern(newPat.getBuffer(), newPat.length());
+    शून्य समुच्चयः_आदर्शः(ध्रुव UnicodeString& newPat) {
+        समुच्चयः_आदर्शः(newPat.get_बफर(), newPat.दीर्घता());
     }
-    void setPattern(const char16_t *newPat, int32_t newPatLen);
+    शून्य समुच्चयः_आदर्शः(ध्रुव char16_t *newPat, int32_t newPatLen);
     /**
      * Release existing cached pattern.
      */
-    void releasePattern();
+    शून्य release_आदर्शः();
 
-    friend class UnicodeSetIterator;
+    मित्रम् class Unicode_समुच्चयः_Iterator;
 };
 
 
 
-inline bool UnicodeSet::operator!=(const UnicodeSet& o) const {
-    return !operator==(o);
+अन्तःस्थ bool Unicode_समुच्चयः::संक्रियकः!=(ध्रुव Unicode_समुच्चयः& o) ध्रुव {
+    प्रत्यागम !संक्रियकः==(o);
 }
 
-inline UBool UnicodeSet::isFrozen() const {
-    return bmpSet != nullptr || stringSpan != nullptr;
+अन्तःस्थ UBool Unicode_समुच्चयः::isFrozen() ध्रुव {
+    प्रत्यागम bmp_समुच्चयः != nullptr || string_विस्तृतिः != nullptr;
 }
 
-inline UBool UnicodeSet::containsSome(UChar32 start, UChar32 end) const {
-    return !containsNone(start, end);
+अन्तःस्थ UBool Unicode_समुच्चयः::अन्तर्भवति_Some(UChar32 start, UChar32 अन्तः) ध्रुव {
+    प्रत्यागम !अन्तर्भवति_None(start, अन्तः);
 }
 
-inline UBool UnicodeSet::containsSome(const UnicodeSet& s) const {
-    return !containsNone(s);
+अन्तःस्थ UBool Unicode_समुच्चयः::अन्तर्भवति_Some(ध्रुव Unicode_समुच्चयः& s) ध्रुव {
+    प्रत्यागम !अन्तर्भवति_None(s);
 }
 
-inline UBool UnicodeSet::containsSome(const UnicodeString& s) const {
-    return !containsNone(s);
+अन्तःस्थ UBool Unicode_समुच्चयः::अन्तर्भवति_Some(ध्रुव UnicodeString& s) ध्रुव {
+    प्रत्यागम !अन्तर्भवति_None(s);
 }
 
-inline UBool UnicodeSet::isBogus() const {
-    return fFlags & kIsBogus;
+अन्तःस्थ UBool Unicode_समुच्चयः::isBogus() ध्रुव {
+    प्रत्यागम fFlags & kIsBogus;
 }
 
-inline UnicodeSet* UnicodeSet::fromUSet(USet* uset U_LIFETIME_BOUND) {
-    return reinterpret_cast<UnicodeSet *>(uset);
+अन्तःस्थ Unicode_समुच्चयः* Unicode_समुच्चयः::fromUSet(USet* uset U_LIFETIME_BOUND) {
+    प्रत्यागम reinterpret_cast<Unicode_समुच्चयः *>(uset);
 }
 
-inline const UnicodeSet* UnicodeSet::fromUSet(const USet* uset U_LIFETIME_BOUND) {
-    return reinterpret_cast<const UnicodeSet *>(uset);
+अन्तःस्थ ध्रुव Unicode_समुच्चयः* Unicode_समुच्चयः::fromUSet(ध्रुव USet* uset U_LIFETIME_BOUND) {
+    प्रत्यागम reinterpret_cast<ध्रुव Unicode_समुच्चयः *>(uset);
 }
 
-inline USet* UnicodeSet::toUSet() U_LIFETIME_BOUND {
-    return reinterpret_cast<USet*>(this);
+अन्तःस्थ USet* Unicode_समुच्चयः::गन्तव्यम्_USet() U_LIFETIME_BOUND {
+    प्रत्यागम reinterpret_cast<USet*>(this);
 }
 
-inline const USet* UnicodeSet::toUSet() const U_LIFETIME_BOUND {
-    return reinterpret_cast<const USet *>(this);
+अन्तःस्थ ध्रुव USet* Unicode_समुच्चयः::गन्तव्यम्_USet() ध्रुव U_LIFETIME_BOUND {
+    प्रत्यागम reinterpret_cast<ध्रुव USet *>(this);
 }
 
-inline int32_t UnicodeSet::span(const UnicodeString &s, int32_t start, USetSpanCondition spanCondition) const {
-    int32_t sLength=s.length();
-    if(start<0) {
+अन्तःस्थ int32_t Unicode_समुच्चयः::विस्तृतिः(ध्रुव UnicodeString &s, int32_t start, USet_विस्तृतिः_Condition विस्तृतिः_Condition) ध्रुव {
+    int32_t s_दीर्घता=s.दीर्घता();
+    यदि(start<0) {
         start=0;
-    } else if(start>sLength) {
-        start=sLength;
+    } अन्यथा यदि(start>s_दीर्घता) {
+        start=s_दीर्घता;
     }
-    return start+span(s.getBuffer()+start, sLength-start, spanCondition);
+    प्रत्यागम start+विस्तृतिः(s.get_बफर()+start, s_दीर्घता-start, विस्तृतिः_Condition);
 }
 
-inline int32_t UnicodeSet::spanBack(const UnicodeString &s, int32_t limit, USetSpanCondition spanCondition) const {
-    int32_t sLength=s.length();
-    if(limit<0) {
-        limit=0;
-    } else if(limit>sLength) {
-        limit=sLength;
+अन्तःस्थ int32_t Unicode_समुच्चयः::विस्तृतिः_पृष्ठभागः(ध्रुव UnicodeString &s, int32_t सीमा, USet_विस्तृतिः_Condition विस्तृतिः_Condition) ध्रुव {
+    int32_t s_दीर्घता=s.दीर्घता();
+    यदि(सीमा<0) {
+        सीमा=0;
+    } अन्यथा यदि(सीमा>s_दीर्घता) {
+        सीमा=s_दीर्घता;
     }
-    return spanBack(s.getBuffer(), limit, spanCondition);
+    प्रत्यागम विस्तृतिः_पृष्ठभागः(s.get_बफर(), सीमा, विस्तृतिः_Condition);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#यदि_अन्तः /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#यदि_अन्तः

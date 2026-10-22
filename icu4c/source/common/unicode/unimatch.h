@@ -7,30 +7,30 @@
 *   07/18/01    aliu        Creation.
 **********************************************************************
 */
-#ifndef UNIMATCH_H
-#define UNIMATCH_H
+#यदि_अपरिभाषितम् UNIMATCH_H
+#परिभाषय UNIMATCH_H
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
 /**
  * \file 
  * \brief C++ API: Unicode Matcher
  */
 
-#if U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
 class Replaceable;
 class UnicodeString;
-class UnicodeSet;
+class Unicode_समुच्चयः;
 
 /**
  * Constants returned by <code>UnicodeMatcher::matches()</code>
  * indicating the degree of match.
  * @stable ICU 2.4
  */
-enum UMatchDegree {
+गणना UMatchDegree {
     /**
      * Constant returned by <code>matches()</code> indicating a
      * mismatch between the text and this matcher.  The text contains
@@ -50,7 +50,7 @@ enum UMatchDegree {
      * supplied at limit, they might also match.
      * @stable ICU 2.4
      */
-    U_PARTIAL_MATCH,
+    U_PARTIAL_मेलनम्,
     
     /**
      * Constant returned by <code>matches()</code> indicating a
@@ -60,7 +60,7 @@ enum UMatchDegree {
      * characters would not alter the extent of the match.
      * @stable ICU 2.4
      */
-    U_MATCH
+    U_मेलनम्
 };
 
 /**
@@ -70,12 +70,12 @@ enum UMatchDegree {
  */
 class U_COMMON_API UnicodeMatcher /* not : public UObject because this is an interface/mixin class */ {
 
-public:
+सार्वजनिक:
     /**
      * Destructor.
      * @stable ICU 2.4
      */
-    virtual ~UnicodeMatcher();
+    आभास ~UnicodeMatcher();
 
     /**
      * Return a UMatchDegree value indicating the degree of match for
@@ -123,9 +123,9 @@ public:
      * U_PARTIAL_MATCH should never be returned.
      * @stable ICU 2.4
      */
-    virtual UMatchDegree matches(const Replaceable& text,
-                                 int32_t& offset,
-                                 int32_t limit,
+    आभास UMatchDegree matches(ध्रुव Replaceable& text,
+                                 int32_t& विस्थापनम्,
+                                 int32_t सीमा,
                                  UBool incremental) = 0;
 
     /**
@@ -140,8 +140,8 @@ public:
      * U+000A, U+0020..U+007E.
      * @stable ICU 2.4
      */
-    virtual UnicodeString& toPattern(UnicodeString& result U_LIFETIME_BOUND,
-                                     UBool escapeUnprintable = false) const = 0;
+    आभास UnicodeString& गन्तव्यम्_आदर्शः(UnicodeString& परिणाम U_LIFETIME_BOUND,
+                                     UBool escapeUnprintable = false) ध्रुव = 0;
 
     /**
      * Returns true if this matcher will match a character c, where c
@@ -150,7 +150,7 @@ public:
      * indexing.
      * @stable ICU 2.4
      */
-    virtual UBool matchesIndexValue(uint8_t v) const = 0;
+    आभास UBool matches_सूचकांक_मानम्(uint8_t v) ध्रुव = 0;
 
     /**
      * Union the set of all characters that may be matched by this object
@@ -158,11 +158,11 @@ public:
      * @param toUnionTo the set into which to union the source characters
      * @stable ICU 2.4
      */
-    virtual void addMatchSetTo(UnicodeSet& toUnionTo) const = 0;
+    आभास शून्य सङ्कलय_मेलनम्_समुच्चयः_गन्तव्यम्(Unicode_समुच्चयः& गन्तव्यम्_Union_गन्तव्यम्) ध्रुव = 0;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#यदि_अन्तः /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#यदि_अन्तः

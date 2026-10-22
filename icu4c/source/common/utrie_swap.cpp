@@ -4,288 +4,288 @@
 // utrie_swap.cpp
 // created: 2018aug08 Markus W. Scherer
 
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "ucptrie_impl.h"
-#include "udataswp.h"
-#include "utrie.h"
-#include "utrie2_impl.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "ucptrie_impl.h"
+#अन्तर्भाव "udataswp.h"
+#अन्तर्भाव "utrie.h"
+#अन्तर्भाव "utrie2_impl.h"
 
 // These functions for swapping different generations of ICU code point tries are here
 // so that their implementation files need not depend on swapper code,
 // need not depend on each other, and so that other swapper code
 // need not depend on other trie code.
 
-namespace {
+नामाकाश {
 
-constexpr int32_t ASCII_LIMIT = 0x80;
+constexpr int32_t ASCII_सीमा = 0x80;
 
 }  // namespace
 
 U_CAPI int32_t U_EXPORT2
-utrie_swap(const UDataSwapper *ds,
-           const void *inData, int32_t length, void *outData,
-           UErrorCode *pErrorCode) {
-    const UTrieHeader *inTrie;
-    UTrieHeader trie;
+utrie_swap(ध्रुव UDataSwapper *ds,
+           ध्रुव शून्य *अन्तर्_दत्त, int32_t length, शून्य *बहिर्गमनम्_दत्त,
+           UError_संहिता *p_Error_संहिता) {
+    ध्रुव UTrie_शीर्षकम् *अन्तर्_Trie;
+    UTrie_शीर्षकम् trie;
     int32_t size;
-    UBool dataIs32;
+    UBool दत्त_Is32;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    यदि(p_Error_संहिता==शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम 0;
     }
-    if(ds==nullptr || inData==nullptr || (length>=0 && outData==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    यदि(ds==शून्यसूचकः || अन्तर्_दत्त==शून्यसूचकः || (length>=0 && बहिर्गमनम्_दत्त==शून्यसूचकः)) {
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0;
     }
 
     /* setup and swapping */
-    if(length>=0 && (uint32_t)length<sizeof(UTrieHeader)) {
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+    यदि(length>=0 && (uint32_t)length<परिमाण(UTrie_शीर्षकम्)) {
+        *p_Error_संहिता=U_सूचकांक_OUTOFBOUNDS_ERROR;
+        प्रत्यागम 0;
     }
 
-    inTrie=(const UTrieHeader *)inData;
-    trie.signature=ds->readUInt32(inTrie->signature);
-    trie.options=ds->readUInt32(inTrie->options);
-    trie.indexLength=udata_readInt32(ds, inTrie->indexLength);
-    trie.dataLength=udata_readInt32(ds, inTrie->dataLength);
+    अन्तर्_Trie=(ध्रुव UTrie_शीर्षकम् *)अन्तर्_दत्त;
+    trie.signature=ds->readUInt32(अन्तर्_Trie->signature);
+    trie.options=ds->readUInt32(अन्तर्_Trie->options);
+    trie.सूचकांक_दीर्घता=udata_readInt32(ds, अन्तर्_Trie->सूचकांक_दीर्घता);
+    trie.दत्त_दीर्घता=udata_readInt32(ds, अन्तर्_Trie->दत्त_दीर्घता);
 
-    if( trie.signature!=0x54726965 ||
-        (trie.options&UTRIE_OPTIONS_SHIFT_MASK)!=UTRIE_SHIFT ||
-        ((trie.options>>UTRIE_OPTIONS_INDEX_SHIFT)&UTRIE_OPTIONS_SHIFT_MASK)!=UTRIE_INDEX_SHIFT ||
-        trie.indexLength<UTRIE_BMP_INDEX_LENGTH ||
-        (trie.indexLength&(UTRIE_SURROGATE_BLOCK_COUNT-1))!=0 ||
-        trie.dataLength<UTRIE_DATA_BLOCK_LENGTH ||
-        (trie.dataLength&(UTRIE_DATA_GRANULARITY-1))!=0 ||
-        ((trie.options&UTRIE_OPTIONS_LATIN1_IS_LINEAR)!=0 && trie.dataLength<(UTRIE_DATA_BLOCK_LENGTH+0x100))
+    यदि( trie.signature!=0x54726965 ||
+        (trie.options&UTRIE_OPTIONS_सरणम्_आवरणम्)!=UTRIE_सरणम् ||
+        ((trie.options>>UTRIE_OPTIONS_सूचकांक_सरणम्)&UTRIE_OPTIONS_सरणम्_आवरणम्)!=UTRIE_सूचकांक_सरणम् ||
+        trie.सूचकांक_दीर्घता<UTRIE_BMP_सूचकांक_दीर्घता ||
+        (trie.सूचकांक_दीर्घता&(UTRIE_SURROGATE_खण्डम्_गणनम्-1))!=0 ||
+        trie.दत्त_दीर्घता<UTRIE_दत्त_खण्डम्_दीर्घता ||
+        (trie.दत्त_दीर्घता&(UTRIE_दत्त_GRANULARITY-1))!=0 ||
+        ((trie.options&UTRIE_OPTIONS_LATIN1_IS_रैखिकम्)!=0 && trie.दत्त_दीर्घता<(UTRIE_दत्त_खण्डम्_दीर्घता+0x100))
     ) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR; /* not a UTrie */
-        return 0;
+        *p_Error_संहिता=U_INVALID_FORMAT_ERROR; /* not a UTrie */
+        प्रत्यागम 0;
     }
 
-    dataIs32 = (trie.options & UTRIE_OPTIONS_DATA_IS_32_BIT) != 0;
-    size=sizeof(UTrieHeader)+trie.indexLength*2+trie.dataLength*(dataIs32?4:2);
+    दत्त_Is32 = (trie.options & UTRIE_OPTIONS_दत्त_IS_32_BIT) != 0;
+    size=परिमाण(UTrie_शीर्षकम्)+trie.सूचकांक_दीर्घता*2+trie.दत्त_दीर्घता*(दत्त_Is32?4:2);
 
-    if(length>=0) {
-        UTrieHeader *outTrie;
+    यदि(length>=0) {
+        UTrie_शीर्षकम् *बहिर्गमनम्_Trie;
 
-        if(length<size) {
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+        यदि(length<size) {
+            *p_Error_संहिता=U_सूचकांक_OUTOFBOUNDS_ERROR;
+            प्रत्यागम 0;
         }
 
-        outTrie=(UTrieHeader *)outData;
+        बहिर्गमनम्_Trie=(UTrie_शीर्षकम् *)बहिर्गमनम्_दत्त;
 
         /* swap the header */
-        ds->swapArray32(ds, inTrie, sizeof(UTrieHeader), outTrie, pErrorCode);
+        ds->swapArray32(ds, अन्तर्_Trie, परिमाण(UTrie_शीर्षकम्), बहिर्गमनम्_Trie, p_Error_संहिता);
 
         /* swap the index and the data */
-        if(dataIs32) {
-            ds->swapArray16(ds, inTrie+1, trie.indexLength*2, outTrie+1, pErrorCode);
-            ds->swapArray32(ds, (const uint16_t *)(inTrie+1)+trie.indexLength, trie.dataLength*4,
-                                     (uint16_t *)(outTrie+1)+trie.indexLength, pErrorCode);
-        } else {
-            ds->swapArray16(ds, inTrie+1, (trie.indexLength+trie.dataLength)*2, outTrie+1, pErrorCode);
+        यदि(दत्त_Is32) {
+            ds->swapArray16(ds, अन्तर्_Trie+1, trie.सूचकांक_दीर्घता*2, बहिर्गमनम्_Trie+1, p_Error_संहिता);
+            ds->swapArray32(ds, (ध्रुव uint16_t *)(अन्तर्_Trie+1)+trie.सूचकांक_दीर्घता, trie.दत्त_दीर्घता*4,
+                                     (uint16_t *)(बहिर्गमनम्_Trie+1)+trie.सूचकांक_दीर्घता, p_Error_संहिता);
+        } अन्यथा {
+            ds->swapArray16(ds, अन्तर्_Trie+1, (trie.सूचकांक_दीर्घता+trie.दत्त_दीर्घता)*2, बहिर्गमनम्_Trie+1, p_Error_संहिता);
         }
     }
 
-    return size;
+    प्रत्यागम size;
 }
 
 U_CAPI int32_t U_EXPORT2
-utrie2_swap(const UDataSwapper *ds,
-            const void *inData, int32_t length, void *outData,
-            UErrorCode *pErrorCode) {
-    const UTrie2Header *inTrie;
-    UTrie2Header trie;
-    int32_t dataLength, size;
-    UTrie2ValueBits valueBits;
+utrie2_swap(ध्रुव UDataSwapper *ds,
+            ध्रुव शून्य *अन्तर्_दत्त, int32_t length, शून्य *बहिर्गमनम्_दत्त,
+            UError_संहिता *p_Error_संहिता) {
+    ध्रुव UTrie2_शीर्षकम् *अन्तर्_Trie;
+    UTrie2_शीर्षकम् trie;
+    int32_t दत्त_दीर्घता, size;
+    UTrie2_मानम्_द्वयङ्काः मानम्_द्वयङ्काः;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    यदि(U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम 0;
     }
-    if(ds==nullptr || inData==nullptr || (length>=0 && outData==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    यदि(ds==शून्यसूचकः || अन्तर्_दत्त==शून्यसूचकः || (length>=0 && बहिर्गमनम्_दत्त==शून्यसूचकः)) {
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0;
     }
 
     /* setup and swapping */
-    if(length>=0 && length<(int32_t)sizeof(UTrie2Header)) {
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+    यदि(length>=0 && length<(int32_t)परिमाण(UTrie2_शीर्षकम्)) {
+        *p_Error_संहिता=U_सूचकांक_OUTOFBOUNDS_ERROR;
+        प्रत्यागम 0;
     }
 
-    inTrie=(const UTrie2Header *)inData;
-    trie.signature=ds->readUInt32(inTrie->signature);
-    trie.options=ds->readUInt16(inTrie->options);
-    trie.indexLength=ds->readUInt16(inTrie->indexLength);
-    trie.shiftedDataLength=ds->readUInt16(inTrie->shiftedDataLength);
+    अन्तर्_Trie=(ध्रुव UTrie2_शीर्षकम् *)अन्तर्_दत्त;
+    trie.signature=ds->readUInt32(अन्तर्_Trie->signature);
+    trie.options=ds->readUInt16(अन्तर्_Trie->options);
+    trie.सूचकांक_दीर्घता=ds->readUInt16(अन्तर्_Trie->सूचकांक_दीर्घता);
+    trie.shifted_दत्त_दीर्घता=ds->readUInt16(अन्तर्_Trie->shifted_दत्त_दीर्घता);
 
-    valueBits=(UTrie2ValueBits)(trie.options&UTRIE2_OPTIONS_VALUE_BITS_MASK);
-    dataLength=(int32_t)trie.shiftedDataLength<<UTRIE2_INDEX_SHIFT;
+    मानम्_द्वयङ्काः=(UTrie2_मानम्_द्वयङ्काः)(trie.options&UTRIE2_OPTIONS_मानम्_द्वयङ्काः_आवरणम्);
+    दत्त_दीर्घता=(int32_t)trie.shifted_दत्त_दीर्घता<<UTRIE2_सूचकांक_सरणम्;
 
-    if( trie.signature!=UTRIE2_SIG ||
-        valueBits<0 || UTRIE2_COUNT_VALUE_BITS<=valueBits ||
-        trie.indexLength<UTRIE2_INDEX_1_OFFSET ||
-        dataLength<UTRIE2_DATA_START_OFFSET
+    यदि( trie.signature!=UTRIE2_SIG ||
+        मानम्_द्वयङ्काः<0 || UTRIE2_गणनम्_मानम्_द्वयङ्काः<=मानम्_द्वयङ्काः ||
+        trie.सूचकांक_दीर्घता<UTRIE2_सूचकांक_1_विस्थापनम् ||
+        दत्त_दीर्घता<UTRIE2_दत्त_START_विस्थापनम्
     ) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR; /* not a UTrie */
-        return 0;
+        *p_Error_संहिता=U_INVALID_FORMAT_ERROR; /* not a UTrie */
+        प्रत्यागम 0;
     }
 
-    size=sizeof(UTrie2Header)+trie.indexLength*2;
-    switch(valueBits) {
-    case UTRIE2_16_VALUE_BITS:
-        size+=dataLength*2;
-        break;
-    case UTRIE2_32_VALUE_BITS:
-        size+=dataLength*4;
-        break;
-    default:
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return 0;
+    size=परिमाण(UTrie2_शीर्षकम्)+trie.सूचकांक_दीर्घता*2;
+    विकल्प(मानम्_द्वयङ्काः) {
+    पक्ष UTRIE2_16_मानम्_द्वयङ्काः:
+        size+=दत्त_दीर्घता*2;
+        भङ्ग;
+    पक्ष UTRIE2_32_मानम्_द्वयङ्काः:
+        size+=दत्त_दीर्घता*4;
+        भङ्ग;
+    स्वभाव:
+        *p_Error_संहिता=U_INVALID_FORMAT_ERROR;
+        प्रत्यागम 0;
     }
 
-    if(length>=0) {
-        UTrie2Header *outTrie;
+    यदि(length>=0) {
+        UTrie2_शीर्षकम् *बहिर्गमनम्_Trie;
 
-        if(length<size) {
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+        यदि(length<size) {
+            *p_Error_संहिता=U_सूचकांक_OUTOFBOUNDS_ERROR;
+            प्रत्यागम 0;
         }
 
-        outTrie=(UTrie2Header *)outData;
+        बहिर्गमनम्_Trie=(UTrie2_शीर्षकम् *)बहिर्गमनम्_दत्त;
 
         /* swap the header */
-        ds->swapArray32(ds, &inTrie->signature, 4, &outTrie->signature, pErrorCode);
-        ds->swapArray16(ds, &inTrie->options, 12, &outTrie->options, pErrorCode);
+        ds->swapArray32(ds, &अन्तर्_Trie->signature, 4, &बहिर्गमनम्_Trie->signature, p_Error_संहिता);
+        ds->swapArray16(ds, &अन्तर्_Trie->options, 12, &बहिर्गमनम्_Trie->options, p_Error_संहिता);
 
         /* swap the index and the data */
-        switch(valueBits) {
-        case UTRIE2_16_VALUE_BITS:
-            ds->swapArray16(ds, inTrie+1, (trie.indexLength+dataLength)*2, outTrie+1, pErrorCode);
-            break;
-        case UTRIE2_32_VALUE_BITS:
-            ds->swapArray16(ds, inTrie+1, trie.indexLength*2, outTrie+1, pErrorCode);
-            ds->swapArray32(ds, (const uint16_t *)(inTrie+1)+trie.indexLength, dataLength*4,
-                                     (uint16_t *)(outTrie+1)+trie.indexLength, pErrorCode);
-            break;
-        default:
-            *pErrorCode=U_INVALID_FORMAT_ERROR;
-            return 0;
+        विकल्प(मानम्_द्वयङ्काः) {
+        पक्ष UTRIE2_16_मानम्_द्वयङ्काः:
+            ds->swapArray16(ds, अन्तर्_Trie+1, (trie.सूचकांक_दीर्घता+दत्त_दीर्घता)*2, बहिर्गमनम्_Trie+1, p_Error_संहिता);
+            भङ्ग;
+        पक्ष UTRIE2_32_मानम्_द्वयङ्काः:
+            ds->swapArray16(ds, अन्तर्_Trie+1, trie.सूचकांक_दीर्घता*2, बहिर्गमनम्_Trie+1, p_Error_संहिता);
+            ds->swapArray32(ds, (ध्रुव uint16_t *)(अन्तर्_Trie+1)+trie.सूचकांक_दीर्घता, दत्त_दीर्घता*4,
+                                     (uint16_t *)(बहिर्गमनम्_Trie+1)+trie.सूचकांक_दीर्घता, p_Error_संहिता);
+            भङ्ग;
+        स्वभाव:
+            *p_Error_संहिता=U_INVALID_FORMAT_ERROR;
+            प्रत्यागम 0;
         }
     }
 
-    return size;
+    प्रत्यागम size;
 }
 
 U_CAPI int32_t U_EXPORT2
-ucptrie_swap(const UDataSwapper *ds,
-             const void *inData, int32_t length, void *outData,
-             UErrorCode *pErrorCode) {
-    const UCPTrieHeader *inTrie;
-    UCPTrieHeader trie;
-    int32_t dataLength, size;
-    UCPTrieValueWidth valueWidth;
+ucptrie_swap(ध्रुव UDataSwapper *ds,
+             ध्रुव शून्य *अन्तर्_दत्त, int32_t length, शून्य *बहिर्गमनम्_दत्त,
+             UError_संहिता *p_Error_संहिता) {
+    ध्रुव UCPTrie_शीर्षकम् *अन्तर्_Trie;
+    UCPTrie_शीर्षकम् trie;
+    int32_t दत्त_दीर्घता, size;
+    UCPTrie_मानम्_विस्तारः मानम्_विस्तारः;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    यदि(U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम 0;
     }
-    if(ds==nullptr || inData==nullptr || (length>=0 && outData==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    यदि(ds==शून्यसूचकः || अन्तर्_दत्त==शून्यसूचकः || (length>=0 && बहिर्गमनम्_दत्त==शून्यसूचकः)) {
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0;
     }
 
     /* setup and swapping */
-    if(length>=0 && length<(int32_t)sizeof(UCPTrieHeader)) {
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+    यदि(length>=0 && length<(int32_t)परिमाण(UCPTrie_शीर्षकम्)) {
+        *p_Error_संहिता=U_सूचकांक_OUTOFBOUNDS_ERROR;
+        प्रत्यागम 0;
     }
 
-    inTrie=(const UCPTrieHeader *)inData;
-    trie.signature=ds->readUInt32(inTrie->signature);
-    trie.options=ds->readUInt16(inTrie->options);
-    trie.indexLength=ds->readUInt16(inTrie->indexLength);
-    trie.dataLength = ds->readUInt16(inTrie->dataLength);
+    अन्तर्_Trie=(ध्रुव UCPTrie_शीर्षकम् *)अन्तर्_दत्त;
+    trie.signature=ds->readUInt32(अन्तर्_Trie->signature);
+    trie.options=ds->readUInt16(अन्तर्_Trie->options);
+    trie.सूचकांक_दीर्घता=ds->readUInt16(अन्तर्_Trie->सूचकांक_दीर्घता);
+    trie.दत्त_दीर्घता = ds->readUInt16(अन्तर्_Trie->दत्त_दीर्घता);
 
     UCPTrieType type = (UCPTrieType)((trie.options >> 6) & 3);
-    valueWidth = (UCPTrieValueWidth)(trie.options & UCPTRIE_OPTIONS_VALUE_BITS_MASK);
-    dataLength = ((int32_t)(trie.options & UCPTRIE_OPTIONS_DATA_LENGTH_MASK) << 4) | trie.dataLength;
+    मानम्_विस्तारः = (UCPTrie_मानम्_विस्तारः)(trie.options & UCPTRIE_OPTIONS_मानम्_द्वयङ्काः_आवरणम्);
+    दत्त_दीर्घता = ((int32_t)(trie.options & UCPTRIE_OPTIONS_दत्त_दीर्घता_आवरणम्) << 4) | trie.दत्त_दीर्घता;
 
-    int32_t minIndexLength = type == UCPTRIE_TYPE_FAST ?
-        UCPTRIE_BMP_INDEX_LENGTH : UCPTRIE_SMALL_INDEX_LENGTH;
-    if( trie.signature!=UCPTRIE_SIG ||
+    int32_t min_सूचकांक_दीर्घता = type == UCPTRIE_TYPE_FAST ?
+        UCPTRIE_BMP_सूचकांक_दीर्घता : UCPTRIE_SMALL_सूचकांक_दीर्घता;
+    यदि( trie.signature!=UCPTRIE_SIG ||
         type > UCPTRIE_TYPE_SMALL ||
-        (trie.options & UCPTRIE_OPTIONS_RESERVED_MASK) != 0 ||
-        valueWidth > UCPTRIE_VALUE_BITS_8 ||
-        trie.indexLength < minIndexLength ||
-        dataLength < ASCII_LIMIT
+        (trie.options & UCPTRIE_OPTIONS_RESERVED_आवरणम्) != 0 ||
+        मानम्_विस्तारः > UCPTRIE_मानम्_द्वयङ्काः_8 ||
+        trie.सूचकांक_दीर्घता < min_सूचकांक_दीर्घता ||
+        दत्त_दीर्घता < ASCII_सीमा
     ) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR; /* not a UCPTrie */
-        return 0;
+        *p_Error_संहिता=U_INVALID_FORMAT_ERROR; /* not a UCPTrie */
+        प्रत्यागम 0;
     }
 
-    size=sizeof(UCPTrieHeader)+trie.indexLength*2;
-    switch(valueWidth) {
-    case UCPTRIE_VALUE_BITS_16:
-        size+=dataLength*2;
-        break;
-    case UCPTRIE_VALUE_BITS_32:
-        size+=dataLength*4;
-        break;
-    case UCPTRIE_VALUE_BITS_8:
-        size+=dataLength;
-        break;
-    default:
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return 0;
+    size=परिमाण(UCPTrie_शीर्षकम्)+trie.सूचकांक_दीर्घता*2;
+    विकल्प(मानम्_विस्तारः) {
+    पक्ष UCPTRIE_मानम्_द्वयङ्काः_16:
+        size+=दत्त_दीर्घता*2;
+        भङ्ग;
+    पक्ष UCPTRIE_मानम्_द्वयङ्काः_32:
+        size+=दत्त_दीर्घता*4;
+        भङ्ग;
+    पक्ष UCPTRIE_मानम्_द्वयङ्काः_8:
+        size+=दत्त_दीर्घता;
+        भङ्ग;
+    स्वभाव:
+        *p_Error_संहिता=U_INVALID_FORMAT_ERROR;
+        प्रत्यागम 0;
     }
 
-    if(length>=0) {
-        UCPTrieHeader *outTrie;
+    यदि(length>=0) {
+        UCPTrie_शीर्षकम् *बहिर्गमनम्_Trie;
 
-        if(length<size) {
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+        यदि(length<size) {
+            *p_Error_संहिता=U_सूचकांक_OUTOFBOUNDS_ERROR;
+            प्रत्यागम 0;
         }
 
-        outTrie=(UCPTrieHeader *)outData;
+        बहिर्गमनम्_Trie=(UCPTrie_शीर्षकम् *)बहिर्गमनम्_दत्त;
 
         /* swap the header */
-        ds->swapArray32(ds, &inTrie->signature, 4, &outTrie->signature, pErrorCode);
-        ds->swapArray16(ds, &inTrie->options, 12, &outTrie->options, pErrorCode);
+        ds->swapArray32(ds, &अन्तर्_Trie->signature, 4, &बहिर्गमनम्_Trie->signature, p_Error_संहिता);
+        ds->swapArray16(ds, &अन्तर्_Trie->options, 12, &बहिर्गमनम्_Trie->options, p_Error_संहिता);
 
         /* swap the index */
-        const uint16_t *inIndex=reinterpret_cast<const uint16_t *>(inTrie+1);
-        uint16_t *outIndex=reinterpret_cast<uint16_t *>(outTrie+1);
-        ds->swapArray16(ds, inIndex, trie.indexLength*2, outIndex, pErrorCode);
+        ध्रुव uint16_t *अन्तर्_सूचकांक=reinterpret_cast<ध्रुव uint16_t *>(अन्तर्_Trie+1);
+        uint16_t *बहिर्गमनम्_सूचकांक=reinterpret_cast<uint16_t *>(बहिर्गमनम्_Trie+1);
+        ds->swapArray16(ds, अन्तर्_सूचकांक, trie.सूचकांक_दीर्घता*2, बहिर्गमनम्_सूचकांक, p_Error_संहिता);
 
         /* swap the data */
-        const uint16_t *inData=inIndex+trie.indexLength;
-        uint16_t *outData=outIndex+trie.indexLength;
-        switch(valueWidth) {
-        case UCPTRIE_VALUE_BITS_16:
-            ds->swapArray16(ds, inData, dataLength*2, outData, pErrorCode);
-            break;
-        case UCPTRIE_VALUE_BITS_32:
-            ds->swapArray32(ds, inData, dataLength*4, outData, pErrorCode);
-            break;
-        case UCPTRIE_VALUE_BITS_8:
-            if(inTrie!=outTrie) {
-                uprv_memmove(outData, inData, dataLength);
+        ध्रुव uint16_t *अन्तर्_दत्त=अन्तर्_सूचकांक+trie.सूचकांक_दीर्घता;
+        uint16_t *बहिर्गमनम्_दत्त=बहिर्गमनम्_सूचकांक+trie.सूचकांक_दीर्घता;
+        विकल्प(मानम्_विस्तारः) {
+        पक्ष UCPTRIE_मानम्_द्वयङ्काः_16:
+            ds->swapArray16(ds, अन्तर्_दत्त, दत्त_दीर्घता*2, बहिर्गमनम्_दत्त, p_Error_संहिता);
+            भङ्ग;
+        पक्ष UCPTRIE_मानम्_द्वयङ्काः_32:
+            ds->swapArray32(ds, अन्तर्_दत्त, दत्त_दीर्घता*4, बहिर्गमनम्_दत्त, p_Error_संहिता);
+            भङ्ग;
+        पक्ष UCPTRIE_मानम्_द्वयङ्काः_8:
+            यदि(अन्तर्_Trie!=बहिर्गमनम्_Trie) {
+                uprv_memmove(बहिर्गमनम्_दत्त, अन्तर्_दत्त, दत्त_दीर्घता);
             }
-            break;
-        default:
-            *pErrorCode=U_INVALID_FORMAT_ERROR;
-            return 0;
+            भङ्ग;
+        स्वभाव:
+            *p_Error_संहिता=U_INVALID_FORMAT_ERROR;
+            प्रत्यागम 0;
         }
     }
 
-    return size;
+    प्रत्यागम size;
 }
 
-namespace {
+नामाकाश {
 
 /**
  * Gets the trie version from 32-bit-aligned memory containing the serialized form
@@ -300,49 +300,49 @@ namespace {
  *         recognized as a serialized trie
  */
 int32_t
-getVersion(const void *data, int32_t length, UBool anyEndianOk) {
+get_संस्करणम्(ध्रुव शून्य *दत्त, int32_t length, UBool anyEndianOk) {
     uint32_t signature;
-    if(length<16 || data==nullptr || (U_POINTER_MASK_LSB(data, 3)!=0)) {
-        return 0;
+    यदि(length<16 || दत्त==शून्यसूचकः || (U_POINTER_आवरणम्_LSB(दत्त, 3)!=0)) {
+        प्रत्यागम 0;
     }
-    signature = *static_cast<const uint32_t*>(data);
-    if(signature==UCPTRIE_SIG) {
-        return 3;
+    signature = *static_cast<ध्रुव uint32_t*>(दत्त);
+    यदि(signature==UCPTRIE_SIG) {
+        प्रत्यागम 3;
     }
-    if(anyEndianOk && signature==UCPTRIE_OE_SIG) {
-        return 3;
+    यदि(anyEndianOk && signature==UCPTRIE_OE_SIG) {
+        प्रत्यागम 3;
     }
-    if(signature==UTRIE2_SIG) {
-        return 2;
+    यदि(signature==UTRIE2_SIG) {
+        प्रत्यागम 2;
     }
-    if(anyEndianOk && signature==UTRIE2_OE_SIG) {
-        return 2;
+    यदि(anyEndianOk && signature==UTRIE2_OE_SIG) {
+        प्रत्यागम 2;
     }
-    if(signature==UTRIE_SIG) {
-        return 1;
+    यदि(signature==UTRIE_SIG) {
+        प्रत्यागम 1;
     }
-    if(anyEndianOk && signature==UTRIE_OE_SIG) {
-        return 1;
+    यदि(anyEndianOk && signature==UTRIE_OE_SIG) {
+        प्रत्यागम 1;
     }
-    return 0;
+    प्रत्यागम 0;
 }
 
 }  // namespace
 
 U_CAPI int32_t U_EXPORT2
-utrie_swapAnyVersion(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
-                     UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) { return 0; }
-    switch(getVersion(inData, length, true)) {
-    case 1:
-        return utrie_swap(ds, inData, length, outData, pErrorCode);
-    case 2:
-        return utrie2_swap(ds, inData, length, outData, pErrorCode);
-    case 3:
-        return ucptrie_swap(ds, inData, length, outData, pErrorCode);
-    default:
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return 0;
+utrie_swap_Any_संस्करणम्(ध्रुव UDataSwapper *ds,
+                     ध्रुव शून्य *अन्तर्_दत्त, int32_t length, शून्य *बहिर्गमनम्_दत्त,
+                     UError_संहिता *p_Error_संहिता) {
+    यदि(U_FAILURE(*p_Error_संहिता)) { प्रत्यागम 0; }
+    विकल्प(get_संस्करणम्(अन्तर्_दत्त, length, सत्य)) {
+    पक्ष 1:
+        प्रत्यागम utrie_swap(ds, अन्तर्_दत्त, length, बहिर्गमनम्_दत्त, p_Error_संहिता);
+    पक्ष 2:
+        प्रत्यागम utrie2_swap(ds, अन्तर्_दत्त, length, बहिर्गमनम्_दत्त, p_Error_संहिता);
+    पक्ष 3:
+        प्रत्यागम ucptrie_swap(ds, अन्तर्_दत्त, length, बहिर्गमनम्_दत्त, p_Error_संहिता);
+    स्वभाव:
+        *p_Error_संहिता=U_INVALID_FORMAT_ERROR;
+        प्रत्यागम 0;
     }
 }

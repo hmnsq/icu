@@ -21,58 +21,58 @@
 ******************************************************************************
 */
 
-#include "unicode/ures.h"
-#include "unicode/ustring.h"
-#include "unicode/ucnv.h"
-#include "bytesinkutil.h"
-#include "charstr.h"
-#include "uresimp.h"
-#include "ustr_imp.h"
-#include "cwchar.h"
-#include "ucln_cmn.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "mutex.h"
-#include "uhash.h"
-#include "unicode/uenum.h"
-#include "uenumimp.h"
-#include "ulocimp.h"
-#include "umutex.h"
-#include "putilimp.h"
-#include "uassert.h"
-#include "uresdata.h"
+#अन्तर्भाव "unicode/ures.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "unicode/ucnv.h"
+#अन्तर्भाव "bytesinkutil.h"
+#अन्तर्भाव "charstr.h"
+#अन्तर्भाव "uresimp.h"
+#अन्तर्भाव "ustr_imp.h"
+#अन्तर्भाव "cwchar.h"
+#अन्तर्भाव "ucln_cmn.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "mutex.h"
+#अन्तर्भाव "uhash.h"
+#अन्तर्भाव "unicode/uenum.h"
+#अन्तर्भाव "uenumimp.h"
+#अन्तर्भाव "ulocimp.h"
+#अन्तर्भाव "umutex.h"
+#अन्तर्भाव "putilimp.h"
+#अन्तर्भाव "uassert.h"
+#अन्तर्भाव "uresdata.h"
 
-using namespace icu;
+उपयुज्य नामाकाश icu;
 
 /*
 Static cache for already opened resource bundles - mostly for keeping fallback info
 TODO: This cache should probably be removed when the deprecated code is
       completely removed.
 */
-static UHashtable *cache = nullptr;
-static icu::UInitOnce gCacheInitOnce {};
+स्थिर UHashtable *cache = शून्यसूचकः;
+स्थिर icu::UInitOnce gCacheInitOnce {};
 
-static UMutex resbMutex;
+स्थिर UMutex resbMutex;
 
 /* INTERNAL: hashes an entry  */
-static int32_t U_CALLCONV hashEntry(const UHashTok parm) {
-    UResourceDataEntry* b = static_cast<UResourceDataEntry*>(parm.pointer);
+स्थिर int32_t U_CALLCONV hash_प्रविष्टिः(ध्रुव UHashTok parm) {
+    UResource_दत्त_प्रविष्टिः* b = static_cast<UResource_दत्त_प्रविष्टिः*>(parm.pointer);
     UHashTok namekey, pathkey;
     namekey.pointer = b->fName;
-    pathkey.pointer = b->fPath;
-    return uhash_hashChars(namekey)+37u*uhash_hashChars(pathkey);
+    pathkey.pointer = b->f_मार्गः;
+    प्रत्यागम uhash_hashChars(namekey)+37u*uhash_hashChars(pathkey);
 }
 
 /* INTERNAL: compares two entries */
-static UBool U_CALLCONV compareEntries(const UHashTok p1, const UHashTok p2) {
-    UResourceDataEntry* b1 = static_cast<UResourceDataEntry*>(p1.pointer);
-    UResourceDataEntry* b2 = static_cast<UResourceDataEntry*>(p2.pointer);
+स्थिर UBool U_CALLCONV compareEntries(ध्रुव UHashTok p1, ध्रुव UHashTok p2) {
+    UResource_दत्त_प्रविष्टिः* b1 = static_cast<UResource_दत्त_प्रविष्टिः*>(p1.pointer);
+    UResource_दत्त_प्रविष्टिः* b2 = static_cast<UResource_दत्त_प्रविष्टिः*>(p2.pointer);
     UHashTok name1, name2, path1, path2;
     name1.pointer = b1->fName;
     name2.pointer = b2->fName;
-    path1.pointer = b1->fPath;
-    path2.pointer = b2->fPath;
-    return uhash_compareChars(name1, name2) && uhash_compareChars(path1, path2);
+    path1.pointer = b1->f_मार्गः;
+    path2.pointer = b2->f_मार्गः;
+    प्रत्यागम uhash_compareChars(name1, name2) && uhash_compareChars(path1, path2);
 }
 
 
@@ -80,93 +80,93 @@ static UBool U_CALLCONV compareEntries(const UHashTok p1, const UHashTok p2) {
  *  Internal function, gets parts of locale name according 
  *  to the position of '_' character
  */
-static UBool chopLocale(char *name) {
-    char *i = uprv_strrchr(name, '_');
+स्थिर UBool chopLocale(वर्ण *name) {
+    वर्ण *i = uprv_strrchr(name, '_');
 
-    if(i != nullptr) {
+    यदि(i != शून्यसूचकः) {
         *i = '\0';
-        return true;
+        प्रत्यागम सत्य;
     }
 
-    return false;
+    प्रत्यागम असत्य;
 }
 
-static UBool hasVariant(const char* localeID) {
-    UErrorCode err = U_ZERO_ERROR;
-    CheckedArrayByteSink sink(nullptr, 0);
+स्थिर UBool hasVariant(ध्रुव वर्ण* localeID) {
+    UError_संहिता err = U_ZERO_ERROR;
+    CheckedArrayByteSink sink(शून्यसूचकः, 0);
     ulocimp_getSubtags(
             localeID,
-            nullptr,
-            nullptr,
-            nullptr,
+            शून्यसूचकः,
+            शून्यसूचकः,
+            शून्यसूचकः,
             &sink,
-            nullptr,
+            शून्यसूचकः,
             err);
-    return sink.NumberOfBytesAppended() != 0;
+    प्रत्यागम sink.सङ्ख्या_सम्बन्धि_अष्टकानि_Appended() != 0;
 }
 
 // This file contains the tables for doing locale fallback, which are generated
 // by the CLDR-to-ICU process directly from the CLDR data.  This file should only
 // ever be included from here.
-#define INCLUDED_FROM_URESBUND_CPP
-#include "localefallback_data.h"
+#परिभाषय INCLUDED_FROM_URESBUND_CPP
+#अन्तर्भाव "localefallback_data.h"
 
-static const char* performFallbackLookup(const char* key,
-                                         const char* keyStrs,
-                                         const char* valueStrs U_LIFETIME_BOUND,
-                                         const int32_t* lookupTable,
-                                         int32_t lookupTableLength) {
-    const int32_t* bottom = lookupTable;
-    const int32_t* top = lookupTable + lookupTableLength;
+स्थिर ध्रुव वर्ण* performFallbackLookup(ध्रुव वर्ण* कुञ्चिका,
+                                         ध्रुव वर्ण* कुञ्चिका_Strs,
+                                         ध्रुव वर्ण* मानम्_Strs U_LIFETIME_BOUND,
+                                         ध्रुव int32_t* lookup_सारणी,
+                                         int32_t lookup_सारणी_दीर्घता) {
+    ध्रुव int32_t* bottom = lookup_सारणी;
+    ध्रुव int32_t* शिखरम् = lookup_सारणी + lookup_सारणी_दीर्घता;
 
-    while (bottom < top) {
+    यावत् (bottom < शिखरम्) {
         // Effectively, divide by 2 and round down to an even index
-        const int32_t* middle = bottom + (((top - bottom) / 4) * 2);
-        const char* entryKey = &(keyStrs[*middle]);
-        int32_t strcmpResult = uprv_strcmp(key, entryKey);
-        if (strcmpResult == 0) {
-            return &(valueStrs[middle[1]]);
-        } else if (strcmpResult < 0) {
-            top = middle;
-        } else {
-            bottom = middle + 2;
+        ध्रुव int32_t* मध्यः = bottom + (((शिखरम् - bottom) / 4) * 2);
+        ध्रुव वर्ण* प्रविष्टिः_कुञ्चिका = &(कुञ्चिका_Strs[*मध्यः]);
+        int32_t strcmp_परिणाम = uprv_strcmp(कुञ्चिका, प्रविष्टिः_कुञ्चिका);
+        यदि (strcmp_परिणाम == 0) {
+            प्रत्यागम &(मानम्_Strs[मध्यः[1]]);
+        } अन्यथा यदि (strcmp_परिणाम < 0) {
+            शिखरम् = मध्यः;
+        } अन्यथा {
+            bottom = मध्यः + 2;
         }
     }
-    return nullptr;
+    प्रत्यागम शून्यसूचकः;
 }
 
-static CharString getDefaultScript(const CharString& language, const CharString& region) {
-    const char* defaultScript = nullptr;
-    UErrorCode err = U_ZERO_ERROR;
+स्थिर CharString getDefaultScript(ध्रुव CharString& language, ध्रुव CharString& region) {
+    ध्रुव वर्ण* defaultScript = शून्यसूचकः;
+    UError_संहिता err = U_ZERO_ERROR;
     
     // the default script will be "Latn" if we don't find the locale ID in the tables
-    CharString result("Latn", err);
+    CharString परिणाम("Latn", err);
     
     // if we were passed both language and region, make them into a locale ID and look that up in the default
     // script table
-    if (!region.isEmpty()) {
+    यदि (!region.is_रिक्तानि()) {
         CharString localeID;
         localeID.append(language, err).append("_", err).append(region, err);
-        if (U_FAILURE(err)) {
-            return result;
+        यदि (U_FAILURE(err)) {
+            प्रत्यागम परिणाम;
         }
-        defaultScript = performFallbackLookup(localeID.data(), dsLocaleIDChars, scriptCodeChars, defaultScriptTable, UPRV_LENGTHOF(defaultScriptTable));
+        defaultScript = performFallbackLookup(localeID.दत्त(), dsLocaleIDChars, script_संहिता_Chars, default_Script_सारणी, UPRV_LENGTHOF(default_Script_सारणी));
     }
     
     // if we didn't find anything, look up just the language in the default script table
-    if (defaultScript == nullptr) {
-        defaultScript = performFallbackLookup(language.data(), dsLocaleIDChars, scriptCodeChars, defaultScriptTable, UPRV_LENGTHOF(defaultScriptTable));
+    यदि (defaultScript == शून्यसूचकः) {
+        defaultScript = performFallbackLookup(language.दत्त(), dsLocaleIDChars, script_संहिता_Chars, default_Script_सारणी, UPRV_LENGTHOF(default_Script_सारणी));
     }
     
     // if either lookup above succeeded, copy the result from "defaultScript" into "result"; otherwise, return "Latn"
-    if (defaultScript != nullptr) {
-        result.clear();
-        result.append(defaultScript, err);
+    यदि (defaultScript != शून्यसूचकः) {
+        परिणाम.clear();
+        परिणाम.append(defaultScript, err);
     }
-    return result;
+    प्रत्यागम परिणाम;
 }
 
-enum UResOpenType {
+गणना UResOpenType {
     /**
      * Open a resource bundle for the locale;
      * if there is not even a base language bundle, then fall back to the default locale;
@@ -174,7 +174,7 @@ enum UResOpenType {
      *
      * This is the default bundle loading behavior.
      */
-    URES_OPEN_LOCALE_DEFAULT_ROOT,
+    URES_OPEN_LOCALE_DEFAULT_मूलम्,
     // TODO: ICU ticket #11271 "consistent default locale across locale trees"
     // Add an option to look at the main locale tree for whether to
     // fall back to root directly (if the locale has main data) or
@@ -187,16 +187,16 @@ enum UResOpenType {
      * This is used for algorithms that have good pan-Unicode default behavior,
      * such as case mappings, collation, and segmentation (BreakIterator).
      */
-    URES_OPEN_LOCALE_ROOT,
+    URES_OPEN_LOCALE_मूलम्,
     /**
      * Open a resource bundle for the exact bundle name as requested;
      * no fallbacks, do not load parent bundles.
      *
      * This is used for supplemental (non-locale) data.
      */
-    URES_OPEN_DIRECT
+    URES_OPEN_प्रत्यक्षम्
 };
-typedef enum UResOpenType UResOpenType;
+प्रकारनिर्देश गणना UResOpenType UResOpenType;
 
 /**
  *  Internal function, determines the search path for resource bundle files.
@@ -208,22 +208,22 @@ typedef enum UResOpenType UResOpenType;
  *  @param origName The original locale ID the caller of findFirstExisting() requested.  This is the same as `name` on the first call to this function,
  *  but as findFirstExisting() ascends the resource bundle's parent tree, this parameter will continue to be the original locale ID requested.
  */
-static bool getParentLocaleID(char *name, const char *origName, UResOpenType openType) {
+स्थिर तार्किक getParentLocaleID(वर्ण *name, ध्रुव वर्ण *origName, UResOpenType openType) {
     // early out if the locale ID has a variant code or ends with _
     size_t nameLen = uprv_strlen(name);
-    if (!nameLen || name[nameLen - 1] == '_' || hasVariant(name)) {
-        return chopLocale(name);
+    यदि (!nameLen || name[nameLen - 1] == '_' || hasVariant(name)) {
+        प्रत्यागम chopLocale(name);
     }
     
-    UErrorCode err = U_ZERO_ERROR;
+    UError_संहिता err = U_ZERO_ERROR;
     CharString language;
     CharString script;
     CharString region;
-    ulocimp_getSubtags(name, &language, &script, &region, nullptr, nullptr, err);
+    ulocimp_getSubtags(name, &language, &script, &region, शून्यसूचकः, शून्यसूचकः, err);
 
-    if (U_FAILURE(err)) {
+    यदि (U_FAILURE(err)) {
         // hopefully this never happens...
-        return chopLocale(name);
+        प्रत्यागम chopLocale(name);
     }
     
     // if the open type is URES_OPEN_LOCALE_DEFAULT_ROOT, first look the locale ID up in the parent locale table;
@@ -231,11 +231,11 @@ static bool getParentLocaleID(char *name, const char *origName, UResOpenType ope
     // falling back through the system default locale, we also want to do straight truncation fallback instead
     // of looking things up in the parent locale table-- see https://www.unicode.org/reports/tr35/tr35.html#Parent_Locales:
     // "Collation data, however, is an exception...")
-    if (openType == URES_OPEN_LOCALE_DEFAULT_ROOT) {
-        const char* parentID = performFallbackLookup(name, parentLocaleChars, parentLocaleChars, parentLocaleTable, UPRV_LENGTHOF(parentLocaleTable));
-        if (parentID != nullptr) {
+    यदि (openType == URES_OPEN_LOCALE_DEFAULT_मूलम्) {
+        ध्रुव वर्ण* parentID = performFallbackLookup(name, parentLocaleChars, parentLocaleChars, parent_Locale_सारणी, UPRV_LENGTHOF(parent_Locale_सारणी));
+        यदि (parentID != शून्यसूचकः) {
             uprv_strcpy(name, parentID);
-            return true;
+            प्रत्यागम सत्य;
         }
     }
 
@@ -243,49 +243,49 @@ static bool getParentLocaleID(char *name, const char *origName, UResOpenType ope
 
     // if it's not in the parent locale table, figure out the fallback script algorithmically
     // (see CLDR-15265 for an explanation of the algorithm)
-    if (!script.isEmpty() && !region.isEmpty()) {
+    यदि (!script.is_रिक्तानि() && !region.is_रिक्तानि()) {
         // if "name" has both script and region, is the script the default script?
         // - if so, remove it and keep the region
         // - if not, remove the region and keep the script
-        if (getDefaultScript(language, region) == script) {
+        यदि (getDefaultScript(language, region) == script) {
             workingLocale.append(language, err).append("_", err).append(region, err);
-        } else {
+        } अन्यथा {
             workingLocale.append(language, err).append("_", err).append(script, err);
         }
-    } else if (!region.isEmpty()) {
+    } अन्यथा यदि (!region.is_रिक्तानि()) {
         // if "name" has region but not script, did the original locale ID specify a script?
         // - if yes, replace the region with the script from the original locale ID
         // - if no, replace the region with the default script for that language and region
-        UErrorCode err = U_ZERO_ERROR;
+        UError_संहिता err = U_ZERO_ERROR;
         CharString origNameLanguage;
         CharString origNameScript;
-        ulocimp_getSubtags(origName, &origNameLanguage, &origNameScript, nullptr, nullptr, nullptr, err);
-        if (!origNameScript.isEmpty()) {
+        ulocimp_getSubtags(origName, &origNameLanguage, &origNameScript, शून्यसूचकः, शून्यसूचकः, शून्यसूचकः, err);
+        यदि (!origNameScript.is_रिक्तानि()) {
             workingLocale.append(language, err).append("_", err).append(origNameScript, err);
-        } else {
+        } अन्यथा {
             workingLocale.append(language, err).append("_", err).append(getDefaultScript(language, region), err);
         }
-    } else if (!script.isEmpty()) {
+    } अन्यथा यदि (!script.is_रिक्तानि()) {
         // if "name" has script but not region (and our open type if URES_OPEN_LOCALE_DEFAULT_ROOT), is the script
         // the default script for the language?
         // - if so, remove it from the locale ID
         // - if not, return false to continue up the chain
         // (we don't do this for other open types for the same reason we don't look things up in the parent
         // locale table for other open types-- see the reference to UTS #35 above)
-        if (openType != URES_OPEN_LOCALE_DEFAULT_ROOT || getDefaultScript(language, CharString()) == script) {
+        यदि (openType != URES_OPEN_LOCALE_DEFAULT_मूलम् || getDefaultScript(language, CharString()) == script) {
             workingLocale.append(language, err);
-        } else {
-            return false;
+        } अन्यथा {
+            प्रत्यागम असत्य;
         }
-    } else {
+    } अन्यथा {
         // if "name" just contains a language code, return false so the calling code falls back to "root"
-        return false;
+        प्रत्यागम असत्य;
     }
-    if (U_SUCCESS(err) && !workingLocale.isEmpty()) {
-        uprv_strcpy(name, workingLocale.data());
-        return true;
-    } else {
-        return false;
+    यदि (U_SUCCESS(err) && !workingLocale.is_रिक्तानि()) {
+        uprv_strcpy(name, workingLocale.दत्त());
+        प्रत्यागम सत्य;
+    } अन्यथा {
+        प्रत्यागम असत्य;
     }
 }
 
@@ -294,19 +294,19 @@ static bool getParentLocaleID(char *name, const char *origName, UResOpenType ope
  *  Some code had assumed that locale IDs with '_' could not have a non-root parent.
  *  We may want a better way of doing this.
  */
-static UBool mayHaveParent(char *name) {
-    return (name[0] != 0 && uprv_strstr("nb nn",name) != nullptr);
+स्थिर UBool mayHaveParent(वर्ण *name) {
+    प्रत्यागम (name[0] != 0 && uprv_strstr("nb nn",name) != शून्यसूचकः);
 }
 
 /**
  *  Internal function
  */
-static void entryIncrease(UResourceDataEntry *entry) {
-    Mutex lock(&resbMutex);
-    entry->fCountExisting++;
-    while(entry->fParent != nullptr) {
-      entry = entry->fParent;
-      entry->fCountExisting++;
+स्थिर शून्य प्रविष्टिः_Increase(UResource_दत्त_प्रविष्टिः *प्रविष्टिः) {
+    Mutex तालकम्(&resbMutex);
+    प्रविष्टिः->f_गणनम्_Existing++;
+    यावत्(प्रविष्टिः->fParent != शून्यसूचकः) {
+      प्रविष्टिः = प्रविष्टिः->fParent;
+      प्रविष्टिः->f_गणनम्_Existing++;
     }
 }
 
@@ -314,95 +314,95 @@ static void entryIncrease(UResourceDataEntry *entry) {
  *  Internal function. Tries to find a resource in given Resource
  *  Bundle, as well as in its parents
  */
-static UResourceDataEntry *getFallbackData(
-        const UResourceBundle *resBundle,
-        const char **resTag, Resource *res, UErrorCode *status) {
-    UResourceDataEntry *dataEntry = resBundle->fData;
-    int32_t indexR = -1;
+स्थिर UResource_दत्त_प्रविष्टिः *get_Fallback_दत्त(
+        ध्रुव UResourceBundle *resBundle,
+        ध्रुव वर्ण **res_चिह्नकम्, Resource *res, UError_संहिता *स्थितिः) {
+    UResource_दत्त_प्रविष्टिः *दत्त_प्रविष्टिः = resBundle->f_दत्त;
+    int32_t सूचकांक_R = -1;
     int32_t i = 0;
     *res = RES_BOGUS;
-    if(dataEntry == nullptr) {
-        *status = U_MISSING_RESOURCE_ERROR;
-        return nullptr;
+    यदि(दत्त_प्रविष्टिः == शून्यसूचकः) {
+        *स्थितिः = U_MISSING_RESOURCE_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
-    if(dataEntry->fBogus == U_ZERO_ERROR) { /* if this resource is real, */
-        *res = res_getTableItemByKey(&(dataEntry->fData), dataEntry->fData.rootRes, &indexR, resTag); /* try to get data from there */
+    यदि(दत्त_प्रविष्टिः->fBogus == U_ZERO_ERROR) { /* if this resource is real, */
+        *res = res_get_सारणी_Item_By_कुञ्चिका(&(दत्त_प्रविष्टिः->f_दत्त), दत्त_प्रविष्टिः->f_दत्त.मूलम्_Res, &सूचकांक_R, res_चिह्नकम्); /* try to get data from there */
         i++;
     }
-    if(resBundle->fHasFallback) {
+    यदि(resBundle->fHasFallback) {
         // Otherwise, we'll look in parents.
-        while(*res == RES_BOGUS && dataEntry->fParent != nullptr) {
-            dataEntry = dataEntry->fParent;
-            if(dataEntry->fBogus == U_ZERO_ERROR) {
+        यावत्(*res == RES_BOGUS && दत्त_प्रविष्टिः->fParent != शून्यसूचकः) {
+            दत्त_प्रविष्टिः = दत्त_प्रविष्टिः->fParent;
+            यदि(दत्त_प्रविष्टिः->fBogus == U_ZERO_ERROR) {
                 i++;
-                *res = res_getTableItemByKey(&(dataEntry->fData), dataEntry->fData.rootRes, &indexR, resTag);
+                *res = res_get_सारणी_Item_By_कुञ्चिका(&(दत्त_प्रविष्टिः->f_दत्त), दत्त_प्रविष्टिः->f_दत्त.मूलम्_Res, &सूचकांक_R, res_चिह्नकम्);
             }
         }
     }
 
-    if(*res == RES_BOGUS) {
+    यदि(*res == RES_BOGUS) {
         // If the resource is not found, we need to give an error.
-        *status = U_MISSING_RESOURCE_ERROR;
-        return nullptr;
+        *स्थितिः = U_MISSING_RESOURCE_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
     // If the resource is found in parents, we need to adjust the error.
-    if(i>1) {
-        if(uprv_strcmp(dataEntry->fName, uloc_getDefault())==0 || uprv_strcmp(dataEntry->fName, kRootLocaleName)==0) {
-            *status = U_USING_DEFAULT_WARNING;
-        } else {
-            *status = U_USING_FALLBACK_WARNING;
+    यदि(i>1) {
+        यदि(uprv_strcmp(दत्त_प्रविष्टिः->fName, uloc_getDefault())==0 || uprv_strcmp(दत्त_प्रविष्टिः->fName, k_मूलम्_Locale_Name)==0) {
+            *स्थितिः = U_USING_DEFAULT_WARNING;
+        } अन्यथा {
+            *स्थितिः = U_USING_FALLBACK_WARNING;
         }
     }
-    return dataEntry;
+    प्रत्यागम दत्त_प्रविष्टिः;
 }
 
-static void
-free_entry(UResourceDataEntry *entry) {
-    UResourceDataEntry *alias;
-    res_unload(&(entry->fData));
-    if(entry->fName != nullptr && entry->fName != entry->fNameBuffer) {
-        uprv_free(entry->fName);
+स्थिर शून्य
+free_प्रविष्टिः(UResource_दत्त_प्रविष्टिः *प्रविष्टिः) {
+    UResource_दत्त_प्रविष्टिः *alias;
+    res_unload(&(प्रविष्टिः->f_दत्त));
+    यदि(प्रविष्टिः->fName != शून्यसूचकः && प्रविष्टिः->fName != प्रविष्टिः->f_Name_बफर) {
+        uprv_free(प्रविष्टिः->fName);
     }
-    if(entry->fPath != nullptr) {
-        uprv_free(entry->fPath);
+    यदि(प्रविष्टिः->f_मार्गः != शून्यसूचकः) {
+        uprv_free(प्रविष्टिः->f_मार्गः);
     }
-    if(entry->fPool != nullptr) {
-        --entry->fPool->fCountExisting;
+    यदि(प्रविष्टिः->fPool != शून्यसूचकः) {
+        --प्रविष्टिः->fPool->f_गणनम्_Existing;
     }
-    alias = entry->fAlias;
-    if(alias != nullptr) {
-        while(alias->fAlias != nullptr) {
+    alias = प्रविष्टिः->fAlias;
+    यदि(alias != शून्यसूचकः) {
+        यावत्(alias->fAlias != शून्यसूचकः) {
             alias = alias->fAlias;
         }
-        --alias->fCountExisting;
+        --alias->f_गणनम्_Existing;
     }
-    uprv_free(entry);
+    uprv_free(प्रविष्टिः);
 }
 
 /* Works just like ucnv_flushCache() */
-static int32_t ures_flushCache()
+स्थिर int32_t ures_flushCache()
 {
-    UResourceDataEntry *resB;
+    UResource_दत्त_प्रविष्टिः *resB;
     int32_t pos;
-    int32_t rbDeletedNum = 0;
-    const UHashElement *e;
-    UBool deletedMore;
+    int32_t rb_Deleted_अङ्कः = 0;
+    ध्रुव UHashElement *e;
+    UBool deleted_अधिकम्;
 
     /*if shared data hasn't even been lazy evaluated yet
     * return 0
     */
-    Mutex lock(&resbMutex);
-    if (cache == nullptr) {
-        return 0;
+    Mutex तालकम्(&resbMutex);
+    यदि (cache == शून्यसूचकः) {
+        प्रत्यागम 0;
     }
 
-    do {
-        deletedMore = false;
+    कुरु {
+        deleted_अधिकम् = असत्य;
         /*creates an enumeration to iterate through every element in the table */
         pos = UHASH_FIRST;
-        while ((e = uhash_nextElement(cache, &pos)) != nullptr)
+        यावत् ((e = uhash_अग्र_Element(cache, &pos)) != शून्यसूचकः)
         {
-            resB = static_cast<UResourceDataEntry*>(e->value.pointer);
+            resB = static_cast<UResource_दत्त_प्रविष्टिः*>(e->value.pointer);
             /* Deletes only if reference counter == 0
              * Don't worry about the children of this node.
              * Those will eventually get deleted too, if not already.
@@ -412,500 +412,500 @@ static int32_t ures_flushCache()
             /* 04/05/2002 [weiv] fCountExisting should now be accurate. If it's not zero, that means that    */
             /* some resource bundles are still open somewhere. */
 
-            if (resB->fCountExisting == 0) {
-                rbDeletedNum++;
-                deletedMore = true;
+            यदि (resB->f_गणनम्_Existing == 0) {
+                rb_Deleted_अङ्कः++;
+                deleted_अधिकम् = सत्य;
                 uhash_removeElement(cache, e);
-                free_entry(resB);
+                free_प्रविष्टिः(resB);
             }
         }
         /*
          * Do it again to catch bundles (aliases, pool bundle) whose fCountExisting
          * got decremented by free_entry().
          */
-    } while(deletedMore);
+    } यावत्(deleted_अधिकम्);
 
-    return rbDeletedNum;
+    प्रत्यागम rb_Deleted_अङ्कः;
 }
 
-#ifdef URES_DEBUG
-#include <stdio.h>
+#यदि_परिभाषितम् URES_DEBUG
+#अन्तर्भाव <stdio.h>
 
 U_CAPI UBool U_EXPORT2 ures_dumpCacheContents() {
-  UBool cacheNotEmpty = false;
+  UBool cache_Not_रिक्तानि = असत्य;
   int32_t pos = UHASH_FIRST;
-  const UHashElement *e;
-  UResourceDataEntry *resB;
+  ध्रुव UHashElement *e;
+  UResource_दत्त_प्रविष्टिः *resB;
   
-    Mutex lock(&resbMutex);
-    if (cache == nullptr) {
+    Mutex तालकम्(&resbMutex);
+    यदि (cache == शून्यसूचकः) {
       fprintf(stderr,"%s:%d: RB Cache is nullptr.\n", __FILE__, __LINE__);
-      return false;
+      प्रत्यागम असत्य;
     }
 
-    while ((e = uhash_nextElement(cache, &pos)) != nullptr) {
-      cacheNotEmpty=true;
-      resB = (UResourceDataEntry *) e->value.pointer;
+    यावत् ((e = uhash_अग्र_Element(cache, &pos)) != शून्यसूचकः) {
+      cache_Not_रिक्तानि=सत्य;
+      resB = (UResource_दत्त_प्रविष्टिः *) e->value.pointer;
       fprintf(stderr,"%s:%d: RB Cache: Entry @0x%p, refcount %d, name %s:%s.  Pool 0x%p, alias 0x%p, parent 0x%p\n",
               __FILE__, __LINE__,
-              (void*)resB, resB->fCountExisting,
+              (शून्य*)resB, resB->f_गणनम्_Existing,
               resB->fName?resB->fName:"nullptr",
-              resB->fPath?resB->fPath:"nullptr",
-              (void*)resB->fPool,
-              (void*)resB->fAlias,
-              (void*)resB->fParent);       
+              resB->f_मार्गः?resB->f_मार्गः:"nullptr",
+              (शून्य*)resB->fPool,
+              (शून्य*)resB->fAlias,
+              (शून्य*)resB->fParent);       
     }
     
-    fprintf(stderr,"%s:%d: RB Cache still contains %d items.\n", __FILE__, __LINE__, uhash_count(cache));
-    return cacheNotEmpty;
+    fprintf(stderr,"%s:%d: RB Cache still contains %d items.\n", __FILE__, __LINE__, uhash_गणनम्(cache));
+    प्रत्यागम cache_Not_रिक्तानि;
 }
 
-#endif
+#यदि_अन्तः
 
-static UBool U_CALLCONV ures_cleanup()
+स्थिर UBool U_CALLCONV ures_cleanup()
 {
-    if (cache != nullptr) {
+    यदि (cache != शून्यसूचकः) {
         ures_flushCache();
         uhash_close(cache);
-        cache = nullptr;
+        cache = शून्यसूचकः;
     }
     gCacheInitOnce.reset();
-    return true;
+    प्रत्यागम सत्य;
 }
 
 /** INTERNAL: Initializes the cache for resources */
-static void U_CALLCONV createCache(UErrorCode &status) {
-    U_ASSERT(cache == nullptr);
-    cache = uhash_open(hashEntry, compareEntries, nullptr, &status);
-    ucln_common_registerCleanup(UCLN_COMMON_URES, ures_cleanup);
+स्थिर शून्य U_CALLCONV createCache(UError_संहिता &स्थितिः) {
+    U_ASSERT(cache == शून्यसूचकः);
+    cache = uhash_open(hash_प्रविष्टिः, compareEntries, शून्यसूचकः, &स्थितिः);
+    ucln_common_पञ्जिकाकोशः_Cleanup(UCLN_COMMON_URES, ures_cleanup);
 }
      
-static void initCache(UErrorCode *status) {
-    umtx_initOnce(gCacheInitOnce, &createCache, *status);
+स्थिर शून्य initCache(UError_संहिता *स्थितिः) {
+    umtx_initOnce(gCacheInitOnce, &createCache, *स्थितिः);
 }
 
 /** INTERNAL: sets the name (locale) of the resource bundle to given name */
 
-static void setEntryName(UResourceDataEntry *res, const char *name, UErrorCode *status) {
+स्थिर शून्य समुच्चयः_प्रविष्टिः_Name(UResource_दत्त_प्रविष्टिः *res, ध्रुव वर्ण *name, UError_संहिता *स्थितिः) {
     int32_t len = static_cast<int32_t>(uprv_strlen(name));
-    if(res->fName != nullptr && res->fName != res->fNameBuffer) {
+    यदि(res->fName != शून्यसूचकः && res->fName != res->f_Name_बफर) {
         uprv_free(res->fName);
     }
-    if (len < static_cast<int32_t>(sizeof(res->fNameBuffer))) {
-        res->fName = res->fNameBuffer;
+    यदि (len < static_cast<int32_t>(परिमाण(res->f_Name_बफर))) {
+        res->fName = res->f_Name_बफर;
     }
-    else {
-        res->fName = static_cast<char*>(uprv_malloc(len + 1));
+    अन्यथा {
+        res->fName = static_cast<वर्ण*>(uprv_malloc(len + 1));
     }
-    if(res->fName == nullptr) {
-        *status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
+    यदि(res->fName == शून्यसूचकः) {
+        *स्थितिः = U_स्मृतिः_आवण्टनम्_ERROR;
+    } अन्यथा {
         uprv_strcpy(res->fName, name);
     }
 }
 
-static UResourceDataEntry *
-getPoolEntry(const char *path, UErrorCode *status);
+स्थिर UResource_दत्त_प्रविष्टिः *
+get_Pool_प्रविष्टिः(ध्रुव वर्ण *मार्गः, UError_संहिता *स्थितिः);
 
 /**
  *  INTERNAL: Inits and opens an entry from a data DLL.
  *    CAUTION:  resbMutex must be locked when calling this function.
  */
-static UResourceDataEntry *init_entry(const char *localeID, const char *path, UErrorCode *status) {
-    UResourceDataEntry *r = nullptr;
-    UResourceDataEntry find;
+स्थिर UResource_दत्त_प्रविष्टिः *init_प्रविष्टिः(ध्रुव वर्ण *localeID, ध्रुव वर्ण *मार्गः, UError_संहिता *स्थितिः) {
+    UResource_दत्त_प्रविष्टिः *r = शून्यसूचकः;
+    UResource_दत्त_प्रविष्टिः find;
     /*int32_t hashValue;*/
-    const char *name;
-    char aliasName[100] = { 0 };
+    ध्रुव वर्ण *name;
+    वर्ण aliasName[100] = { 0 };
     int32_t aliasLen = 0;
     /*UBool isAlias = false;*/
     /*UHashTok hashkey; */
 
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    यदि(U_FAILURE(*स्थितिः)) {
+        प्रत्यागम शून्यसूचकः;
     }
 
     /* here we try to deduce the right locale name */
-    if(localeID == nullptr) { /* if localeID is nullptr, we're trying to open default locale */
+    यदि(localeID == शून्यसूचकः) { /* if localeID is nullptr, we're trying to open default locale */
         name = uloc_getDefault();
-    } else if(*localeID == 0) { /* if localeID is "" then we try to open root locale */
-        name = kRootLocaleName;
-    } else { /* otherwise, we'll open what we're given */
+    } अन्यथा यदि(*localeID == 0) { /* if localeID is "" then we try to open root locale */
+        name = k_मूलम्_Locale_Name;
+    } अन्यथा { /* otherwise, we'll open what we're given */
         name = localeID;
     }
 
-    find.fName = const_cast<char*>(name);
-    find.fPath = const_cast<char*>(path);
+    find.fName = const_cast<वर्ण*>(name);
+    find.f_मार्गः = const_cast<वर्ण*>(मार्गः);
 
     /* calculate the hash value of the entry */
     /*hashkey.pointer = (void *)&find;*/
     /*hashValue = hashEntry(hashkey);*/
 
     /* check to see if we already have this entry */
-    r = static_cast<UResourceDataEntry*>(uhash_get(cache, &find));
-    if(r == nullptr) {
+    r = static_cast<UResource_दत्त_प्रविष्टिः*>(uhash_get(cache, &find));
+    यदि(r == शून्यसूचकः) {
         /* if the entry is not yet in the hash table, we'll try to construct a new one */
-        r = static_cast<UResourceDataEntry*>(uprv_malloc(sizeof(UResourceDataEntry)));
-        if(r == nullptr) {
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+        r = static_cast<UResource_दत्त_प्रविष्टिः*>(uprv_malloc(परिमाण(UResource_दत्त_प्रविष्टिः)));
+        यदि(r == शून्यसूचकः) {
+            *स्थितिः = U_स्मृतिः_आवण्टनम्_ERROR;
+            प्रत्यागम शून्यसूचकः;
         }
 
-        uprv_memset(r, 0, sizeof(UResourceDataEntry));
+        uprv_memset(r, 0, परिमाण(UResource_दत्त_प्रविष्टिः));
         /*r->fHashKey = hashValue;*/
 
-        setEntryName(r, name, status);
-        if (U_FAILURE(*status)) {
+        समुच्चयः_प्रविष्टिः_Name(r, name, स्थितिः);
+        यदि (U_FAILURE(*स्थितिः)) {
             uprv_free(r);
-            return nullptr;
+            प्रत्यागम शून्यसूचकः;
         }
 
-        if(path != nullptr) {
-            r->fPath = uprv_strdup(path);
-            if(r->fPath == nullptr) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
+        यदि(मार्गः != शून्यसूचकः) {
+            r->f_मार्गः = uprv_strdup(मार्गः);
+            यदि(r->f_मार्गः == शून्यसूचकः) {
+                *स्थितिः = U_स्मृतिः_आवण्टनम्_ERROR;
                 uprv_free(r);
-                return nullptr;
+                प्रत्यागम शून्यसूचकः;
             }
         }
 
         /* this is the actual loading */
-        res_load(&(r->fData), r->fPath, r->fName, status);
+        res_आरोपय(&(r->f_दत्त), r->f_मार्गः, r->fName, स्थितिः);
 
-        if (U_FAILURE(*status)) {
+        यदि (U_FAILURE(*स्थितिः)) {
             /* if we failed to load due to an out-of-memory error, exit early. */
-            if (*status == U_MEMORY_ALLOCATION_ERROR) {
+            यदि (*स्थितिः == U_स्मृतिः_आवण्टनम्_ERROR) {
                 uprv_free(r);
-                return nullptr;
+                प्रत्यागम शून्यसूचकः;
             }
             /* we have no such entry in dll, so it will always use fallback */
-            *status = U_USING_FALLBACK_WARNING;
+            *स्थितिः = U_USING_FALLBACK_WARNING;
             r->fBogus = U_USING_FALLBACK_WARNING;
-        } else { /* if we have a regular entry */
+        } अन्यथा { /* if we have a regular entry */
             Resource aliasres;
-            if (r->fData.usesPoolBundle) {
-                r->fPool = getPoolEntry(r->fPath, status);
-                if (U_SUCCESS(*status)) {
-                    const int32_t *poolIndexes = r->fPool->fData.pRoot + 1;
-                    if(r->fData.pRoot[1 + URES_INDEX_POOL_CHECKSUM] == poolIndexes[URES_INDEX_POOL_CHECKSUM]) {
-                        r->fData.poolBundleKeys = reinterpret_cast<const char*>(poolIndexes + (poolIndexes[URES_INDEX_LENGTH] & 0xff));
-                        r->fData.poolBundleStrings = r->fPool->fData.p16BitUnits;
-                    } else {
-                        r->fBogus = *status = U_INVALID_FORMAT_ERROR;
+            यदि (r->f_दत्त.उपयुङ्क्ते_Pool_Bundle) {
+                r->fPool = get_Pool_प्रविष्टिः(r->f_मार्गः, स्थितिः);
+                यदि (U_SUCCESS(*स्थितिः)) {
+                    ध्रुव int32_t *poolIndexes = r->fPool->f_दत्त.p_मूलम् + 1;
+                    यदि(r->f_दत्त.p_मूलम्[1 + URES_सूचकांक_POOL_CHECKSUM] == poolIndexes[URES_सूचकांक_POOL_CHECKSUM]) {
+                        r->f_दत्त.pool_Bundle_कुञ्चिकाः = reinterpret_cast<ध्रुव वर्ण*>(poolIndexes + (poolIndexes[URES_सूचकांक_दीर्घता] & 0xff));
+                        r->f_दत्त.pool_Bundle_वाक्यानि = r->fPool->f_दत्त.p16BitUnits;
+                    } अन्यथा {
+                        r->fBogus = *स्थितिः = U_INVALID_FORMAT_ERROR;
                     }
-                } else {
-                    r->fBogus = *status;
+                } अन्यथा {
+                    r->fBogus = *स्थितिः;
                 }
             }
-            if (U_SUCCESS(*status)) {
+            यदि (U_SUCCESS(*स्थितिः)) {
                 /* handle the alias by trying to get out the %%Alias tag.*/
                 /* We'll try to get alias string from the bundle */
-                aliasres = res_getResource(&(r->fData), "%%ALIAS");
-                if (aliasres != RES_BOGUS) {
+                aliasres = res_getResource(&(r->f_दत्त), "%%ALIAS");
+                यदि (aliasres != RES_BOGUS) {
                     // No tracing: called during initial data loading
-                    const char16_t *alias = res_getStringNoTrace(&(r->fData), aliasres, &aliasLen);
-                    if(alias != nullptr && aliasLen > 0) { /* if there is actual alias - unload and load new data */
-                        u_UCharsToChars(alias, aliasName, aliasLen+1);
-                        r->fAlias = init_entry(aliasName, path, status);
+                    ध्रुव char16_t *alias = res_getStringNoTrace(&(r->f_दत्त), aliasres, &aliasLen);
+                    यदि(alias != शून्यसूचकः && aliasLen > 0) { /* if there is actual alias - unload and load new data */
+                        u_UChars_गन्तव्यम्_Chars(alias, aliasName, aliasLen+1);
+                        r->fAlias = init_प्रविष्टिः(aliasName, मार्गः, स्थितिः);
                     }
                 }
             }
         }
 
         {
-            UResourceDataEntry *oldR = nullptr;
-            if ((oldR = static_cast<UResourceDataEntry*>(uhash_get(cache, r))) == nullptr) { /* if the data is not cached */
+            UResource_दत्त_प्रविष्टिः *oldR = शून्यसूचकः;
+            यदि ((oldR = static_cast<UResource_दत्त_प्रविष्टिः*>(uhash_get(cache, r))) == शून्यसूचकः) { /* if the data is not cached */
                 /* just insert it in the cache */
-                UErrorCode cacheStatus = U_ZERO_ERROR;
-                uhash_put(cache, (void *)r, r, &cacheStatus);
-                if (U_FAILURE(cacheStatus)) {
-                    *status = cacheStatus;
-                    free_entry(r);
-                    r = nullptr;
+                UError_संहिता cache_स्थितिः = U_ZERO_ERROR;
+                uhash_put(cache, (शून्य *)r, r, &cache_स्थितिः);
+                यदि (U_FAILURE(cache_स्थितिः)) {
+                    *स्थितिः = cache_स्थितिः;
+                    free_प्रविष्टिः(r);
+                    r = शून्यसूचकः;
                 }
-            } else {
+            } अन्यथा {
                 /* somebody have already inserted it while we were working, discard newly opened data */
                 /* Also, we could get here IF we opened an alias */
-                free_entry(r);
+                free_प्रविष्टिः(r);
                 r = oldR;
             }
         }
 
     }
-    if(r != nullptr) {
+    यदि(r != शून्यसूचकः) {
         /* return the real bundle */
-        while(r->fAlias != nullptr) {
+        यावत्(r->fAlias != शून्यसूचकः) {
             r = r->fAlias;
         }
-        r->fCountExisting++; /* we increase its reference count */
+        r->f_गणनम्_Existing++; /* we increase its reference count */
         /* if the resource has a warning */
         /* we don't want to overwrite a status with no error */
-        if(r->fBogus != U_ZERO_ERROR && U_SUCCESS(*status)) {
-             *status = r->fBogus; /* set the returning status */
+        यदि(r->fBogus != U_ZERO_ERROR && U_SUCCESS(*स्थितिः)) {
+             *स्थितिः = r->fBogus; /* set the returning status */
         }
     }
-    return r;
+    प्रत्यागम r;
 }
 
-static UResourceDataEntry *
-getPoolEntry(const char *path, UErrorCode *status) {
-    UResourceDataEntry *poolBundle = init_entry(kPoolBundleName, path, status);
-    if( U_SUCCESS(*status) &&
-        (poolBundle == nullptr || poolBundle->fBogus != U_ZERO_ERROR || !poolBundle->fData.isPoolBundle)
+स्थिर UResource_दत्त_प्रविष्टिः *
+get_Pool_प्रविष्टिः(ध्रुव वर्ण *मार्गः, UError_संहिता *स्थितिः) {
+    UResource_दत्त_प्रविष्टिः *poolBundle = init_प्रविष्टिः(kPoolBundleName, मार्गः, स्थितिः);
+    यदि( U_SUCCESS(*स्थितिः) &&
+        (poolBundle == शून्यसूचकः || poolBundle->fBogus != U_ZERO_ERROR || !poolBundle->f_दत्त.isPoolBundle)
     ) {
-        *status = U_INVALID_FORMAT_ERROR;
+        *स्थितिः = U_INVALID_FORMAT_ERROR;
     }
-    return poolBundle;
+    प्रत्यागम poolBundle;
 }
 
 /* INTERNAL: */
 /*   CAUTION:  resbMutex must be locked when calling this function! */
-static UResourceDataEntry *
-findFirstExisting(const char* path, char* name, const char* defaultLocale, UResOpenType openType,
-                  UBool *isRoot, UBool *foundParent, UBool *isDefault, UErrorCode* status) {
-    UResourceDataEntry *r = nullptr;
-    UBool hasRealData = false;
-    *foundParent = true; /* we're starting with a fresh name */
-    char origName[ULOC_FULLNAME_CAPACITY];
+स्थिर UResource_दत्त_प्रविष्टिः *
+findFirstExisting(ध्रुव वर्ण* मार्गः, वर्ण* name, ध्रुव वर्ण* defaultLocale, UResOpenType openType,
+                  UBool *is_मूलम्, UBool *प्राप्तम्_Parent, UBool *isDefault, UError_संहिता* स्थितिः) {
+    UResource_दत्त_प्रविष्टिः *r = शून्यसूचकः;
+    UBool has_Real_दत्त = असत्य;
+    *प्राप्तम्_Parent = सत्य; /* we're starting with a fresh name */
+    वर्ण origName[ULOC_FULLNAME_क्षमता];
 
     uprv_strcpy(origName, name);
-    while(*foundParent && !hasRealData) {
-        r = init_entry(name, path, status);
+    यावत्(*प्राप्तम्_Parent && !has_Real_दत्त) {
+        r = init_प्रविष्टिः(name, मार्गः, स्थितिः);
         /* Null pointer test */
-        if (U_FAILURE(*status)) {
-            return nullptr;
+        यदि (U_FAILURE(*स्थितिः)) {
+            प्रत्यागम शून्यसूचकः;
         }
         *isDefault = static_cast<UBool>(uprv_strncmp(name, defaultLocale, uprv_strlen(name)) == 0);
-        hasRealData = static_cast<UBool>(r->fBogus == U_ZERO_ERROR);
-        if(!hasRealData) {
+        has_Real_दत्त = static_cast<UBool>(r->fBogus == U_ZERO_ERROR);
+        यदि(!has_Real_दत्त) {
             /* this entry is not real. We will discard it. */
             /* However, the parent line for this entry is  */
             /* not to be used - as there might be parent   */
             /* lines in cache from previous openings that  */
             /* are not updated yet. */
-            r->fCountExisting--;
+            r->f_गणनम्_Existing--;
             /*entryCloseInt(r);*/
-            r = nullptr;
-            *status = U_USING_FALLBACK_WARNING;
-        } else {
+            r = शून्यसूचकः;
+            *स्थितिः = U_USING_FALLBACK_WARNING;
+        } अन्यथा {
             uprv_strcpy(name, r->fName); /* this is needed for supporting aliases */
         }
 
-        *isRoot = static_cast<UBool>(uprv_strcmp(name, kRootLocaleName) == 0);
+        *is_मूलम् = static_cast<UBool>(uprv_strcmp(name, k_मूलम्_Locale_Name) == 0);
 
         /*Fallback data stuff*/
-        if (!hasRealData) {
-            *foundParent = getParentLocaleID(name, origName, openType);
-        } else {
+        यदि (!has_Real_दत्त) {
+            *प्राप्तम्_Parent = getParentLocaleID(name, origName, openType);
+        } अन्यथा {
             // we've already found a real resource file; what we return to the caller is the parent
             // locale ID for inheritance, which should come from chopLocale(), not getParentLocaleID()
-            *foundParent = chopLocale(name);
+            *प्राप्तम्_Parent = chopLocale(name);
         }
-        if (*foundParent && *name == '\0') {
+        यदि (*प्राप्तम्_Parent && *name == '\0') {
             uprv_strcpy(name, "und");
         }
     }
-    return r;
+    प्रत्यागम r;
 }
 
-static void ures_setIsStackObject( UResourceBundle* resB, UBool state) {
-    if(state) {
+स्थिर शून्य ures_समुच्चयः_Is_राशिः_Object( UResourceBundle* resB, UBool state) {
+    यदि(state) {
         resB->fMagic1 = 0;
         resB->fMagic2 = 0;
-    } else {
+    } अन्यथा {
         resB->fMagic1 = MAGIC1;
         resB->fMagic2 = MAGIC2;
     }
 }
 
-static UBool ures_isStackObject(const UResourceBundle* resB) {
-  return((resB->fMagic1 == MAGIC1 && resB->fMagic2 == MAGIC2)?false:true);
+स्थिर UBool ures_is_राशिः_Object(ध्रुव UResourceBundle* resB) {
+  प्रत्यागम((resB->fMagic1 == MAGIC1 && resB->fMagic2 == MAGIC2)?असत्य:सत्य);
 }
 
 
-U_CFUNC void ures_initStackObject(UResourceBundle* resB) {
-  uprv_memset(resB, 0, sizeof(UResourceBundle));
-  ures_setIsStackObject(resB, true);
+U_CFUNC शून्य ures_init_राशिः_Object(UResourceBundle* resB) {
+  uprv_memset(resB, 0, परिमाण(UResourceBundle));
+  ures_समुच्चयः_Is_राशिः_Object(resB, सत्य);
 }
 
 U_NAMESPACE_BEGIN
 
-StackUResourceBundle::StackUResourceBundle() {
-    ures_initStackObject(&bundle);
+राशिः_UResource_Bundle::राशिः_UResource_Bundle() {
+    ures_init_राशिः_Object(&bundle);
 }
 
-StackUResourceBundle::~StackUResourceBundle() {
+राशिः_UResource_Bundle::~राशिः_UResource_Bundle() {
     ures_close(&bundle);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-static UBool  // returns U_SUCCESS(*status)
-loadParentsExceptRoot(UResourceDataEntry *&t1,
-                      char name[], int32_t nameCapacity,
-                      UBool usingUSRData, char usrDataPath[], UErrorCode *status) {
-    if (U_FAILURE(*status)) { return false; }
-    UBool checkParent = true;
-    while (checkParent && t1->fParent == nullptr && !t1->fData.noFallback &&
-            res_getResource(&t1->fData,"%%ParentIsRoot") == RES_BOGUS) {
-        Resource parentRes = res_getResource(&t1->fData, "%%Parent");
-        if (parentRes != RES_BOGUS) {  // An explicit parent was found.
+स्थिर UBool  // returns U_SUCCESS(*status)
+आरोपय_Parents_Except_मूलम्(UResource_दत्त_प्रविष्टिः *&t1,
+                      वर्ण name[], int32_t name_क्षमता,
+                      UBool usingUSRData, वर्ण usr_दत्त_मार्गः[], UError_संहिता *स्थितिः) {
+    यदि (U_FAILURE(*स्थितिः)) { प्रत्यागम असत्य; }
+    UBool checkParent = सत्य;
+    यावत् (checkParent && t1->fParent == शून्यसूचकः && !t1->f_दत्त.noFallback &&
+            res_getResource(&t1->f_दत्त,"%%ParentIsRoot") == RES_BOGUS) {
+        Resource parentRes = res_getResource(&t1->f_दत्त, "%%Parent");
+        यदि (parentRes != RES_BOGUS) {  // An explicit parent was found.
             int32_t parentLocaleLen = 0;
             // No tracing: called during initial data loading
-            const char16_t *parentLocaleName = res_getStringNoTrace(&(t1->fData), parentRes, &parentLocaleLen);
-            if(parentLocaleName != nullptr && 0 < parentLocaleLen && parentLocaleLen < nameCapacity) {
-                u_UCharsToChars(parentLocaleName, name, parentLocaleLen + 1);
-                if (uprv_strcmp(name, kRootLocaleName) == 0) {
-                    return true;
+            ध्रुव char16_t *parentLocaleName = res_getStringNoTrace(&(t1->f_दत्त), parentRes, &parentLocaleLen);
+            यदि(parentLocaleName != शून्यसूचकः && 0 < parentLocaleLen && parentLocaleLen < name_क्षमता) {
+                u_UChars_गन्तव्यम्_Chars(parentLocaleName, name, parentLocaleLen + 1);
+                यदि (uprv_strcmp(name, k_मूलम्_Locale_Name) == 0) {
+                    प्रत्यागम सत्य;
                 }
             }
         }
         // Insert regular parents.
-        UErrorCode parentStatus = U_ZERO_ERROR;
-        UResourceDataEntry *t2 = init_entry(name, t1->fPath, &parentStatus);
-        if (U_FAILURE(parentStatus)) {
-            *status = parentStatus;
-            return false;
+        UError_संहिता parent_स्थितिः = U_ZERO_ERROR;
+        UResource_दत्त_प्रविष्टिः *t2 = init_प्रविष्टिः(name, t1->f_मार्गः, &parent_स्थितिः);
+        यदि (U_FAILURE(parent_स्थितिः)) {
+            *स्थितिः = parent_स्थितिः;
+            प्रत्यागम असत्य;
         }
-        UResourceDataEntry *u2 = nullptr;
-        UErrorCode usrStatus = U_ZERO_ERROR;
-        if (usingUSRData) {  // This code inserts user override data into the inheritance chain.
-            u2 = init_entry(name, usrDataPath, &usrStatus);
+        UResource_दत्त_प्रविष्टिः *u2 = शून्यसूचकः;
+        UError_संहिता usr_स्थितिः = U_ZERO_ERROR;
+        यदि (usingUSRData) {  // This code inserts user override data into the inheritance chain.
+            u2 = init_प्रविष्टिः(name, usr_दत्त_मार्गः, &usr_स्थितिः);
             // If we failed due to out-of-memory, report that to the caller and exit early.
-            if (usrStatus == U_MEMORY_ALLOCATION_ERROR) {
-                *status = usrStatus;
-                return false;
+            यदि (usr_स्थितिः == U_स्मृतिः_आवण्टनम्_ERROR) {
+                *स्थितिः = usr_स्थितिः;
+                प्रत्यागम असत्य;
             }
         }
 
-        if (usingUSRData && U_SUCCESS(usrStatus) && u2->fBogus == U_ZERO_ERROR) {
+        यदि (usingUSRData && U_SUCCESS(usr_स्थितिः) && u2->fBogus == U_ZERO_ERROR) {
             t1->fParent = u2;
             u2->fParent = t2;
-        } else {
+        } अन्यथा {
             t1->fParent = t2;
-            if (usingUSRData) {
+            यदि (usingUSRData) {
                 // The USR override data wasn't found, set it to be deleted.
-                u2->fCountExisting = 0;
+                u2->f_गणनम्_Existing = 0;
             }
         }
         t1 = t2;
         checkParent = chopLocale(name) || mayHaveParent(name);
     }
-    return true;
+    प्रत्यागम सत्य;
 }
 
-static UBool  // returns U_SUCCESS(*status)
-insertRootBundle(UResourceDataEntry *&t1, UErrorCode *status) {
-    if (U_FAILURE(*status)) { return false; }
-    UErrorCode parentStatus = U_ZERO_ERROR;
-    UResourceDataEntry *t2 = init_entry(kRootLocaleName, t1->fPath, &parentStatus);
-    if (U_FAILURE(parentStatus)) {
-        *status = parentStatus;
-        return false;
+स्थिर UBool  // returns U_SUCCESS(*status)
+निवेशय_मूलम्_Bundle(UResource_दत्त_प्रविष्टिः *&t1, UError_संहिता *स्थितिः) {
+    यदि (U_FAILURE(*स्थितिः)) { प्रत्यागम असत्य; }
+    UError_संहिता parent_स्थितिः = U_ZERO_ERROR;
+    UResource_दत्त_प्रविष्टिः *t2 = init_प्रविष्टिः(k_मूलम्_Locale_Name, t1->f_मार्गः, &parent_स्थितिः);
+    यदि (U_FAILURE(parent_स्थितिः)) {
+        *स्थितिः = parent_स्थितिः;
+        प्रत्यागम असत्य;
     }
     t1->fParent = t2;
     t1 = t2;
-    return true;
+    प्रत्यागम सत्य;
 }
 
-static UResourceDataEntry *entryOpen(const char* path, const char* localeID,
-                                     UResOpenType openType, UErrorCode* status) {
-    U_ASSERT(openType != URES_OPEN_DIRECT);
-    UErrorCode intStatus = U_ZERO_ERROR;
-    UResourceDataEntry *r = nullptr;
-    UResourceDataEntry *t1 = nullptr;
-    UBool isDefault = false;
-    UBool isRoot = false;
-    UBool hasRealData = false;
-    UBool hasChopped = true;
-    UBool usingUSRData = U_USE_USRDATA && ( path == nullptr || uprv_strncmp(path,U_ICUDATA_NAME,8) == 0);
+स्थिर UResource_दत्त_प्रविष्टिः *प्रविष्टिः_Open(ध्रुव वर्ण* मार्गः, ध्रुव वर्ण* localeID,
+                                     UResOpenType openType, UError_संहिता* स्थितिः) {
+    U_ASSERT(openType != URES_OPEN_प्रत्यक्षम्);
+    UError_संहिता int_स्थितिः = U_ZERO_ERROR;
+    UResource_दत्त_प्रविष्टिः *r = शून्यसूचकः;
+    UResource_दत्त_प्रविष्टिः *t1 = शून्यसूचकः;
+    UBool isDefault = असत्य;
+    UBool is_मूलम् = असत्य;
+    UBool has_Real_दत्त = असत्य;
+    UBool hasChopped = सत्य;
+    UBool usingUSRData = U_USE_USRDATA && ( मार्गः == शून्यसूचकः || uprv_strncmp(मार्गः,U_ICUDATA_NAME,8) == 0);
 
-    char name[ULOC_FULLNAME_CAPACITY];
-    char usrDataPath[96];
+    वर्ण name[ULOC_FULLNAME_क्षमता];
+    वर्ण usr_दत्त_मार्गः[96];
 
-    initCache(status);
+    initCache(स्थितिः);
 
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    यदि(U_FAILURE(*स्थितिः)) {
+        प्रत्यागम शून्यसूचकः;
     }
 
-    uprv_strncpy(name, localeID, sizeof(name) - 1);
-    name[sizeof(name) - 1] = 0;
+    uprv_strncpy(name, localeID, परिमाण(name) - 1);
+    name[परिमाण(name) - 1] = 0;
 
-    if ( usingUSRData ) {
-        if ( path == nullptr ) {
-            uprv_strcpy(usrDataPath, U_USRDATA_NAME);
-        } else {
-            uprv_strncpy(usrDataPath, path, sizeof(usrDataPath) - 1);
-            usrDataPath[0] = 'u';
-            usrDataPath[1] = 's';
-            usrDataPath[2] = 'r';
-            usrDataPath[sizeof(usrDataPath) - 1] = 0;
+    यदि ( usingUSRData ) {
+        यदि ( मार्गः == शून्यसूचकः ) {
+            uprv_strcpy(usr_दत्त_मार्गः, U_USRDATA_NAME);
+        } अन्यथा {
+            uprv_strncpy(usr_दत्त_मार्गः, मार्गः, परिमाण(usr_दत्त_मार्गः) - 1);
+            usr_दत्त_मार्गः[0] = 'u';
+            usr_दत्त_मार्गः[1] = 's';
+            usr_दत्त_मार्गः[2] = 'r';
+            usr_दत्त_मार्गः[परिमाण(usr_दत्त_मार्गः) - 1] = 0;
         }
     }
  
     // Note: We need to query the default locale *before* locking resbMutex.
-    const char *defaultLocale = uloc_getDefault();
+    ध्रुव वर्ण *defaultLocale = uloc_getDefault();
 
-    Mutex lock(&resbMutex);    // Lock resbMutex until the end of this function.
+    Mutex तालकम्(&resbMutex);    // Lock resbMutex until the end of this function.
 
     /* We're going to skip all the locales that do not have any data */
-    r = findFirstExisting(path, name, defaultLocale, openType, &isRoot, &hasChopped, &isDefault, &intStatus);
+    r = findFirstExisting(मार्गः, name, defaultLocale, openType, &is_मूलम्, &hasChopped, &isDefault, &int_स्थितिः);
 
     // If we failed due to out-of-memory, report the failure and exit early.
-    if (intStatus == U_MEMORY_ALLOCATION_ERROR) {
-        *status = intStatus;
-        goto finish;
+    यदि (int_स्थितिः == U_स्मृतिः_आवण्टनम्_ERROR) {
+        *स्थितिः = int_स्थितिः;
+        गच्छ finish;
     }
 
-    if(r != nullptr) { /* if there is one real locale, we can look for parents. */
+    यदि(r != शून्यसूचकः) { /* if there is one real locale, we can look for parents. */
         t1 = r;
-        hasRealData = true;
-        if ( usingUSRData ) {  /* This code inserts user override data into the inheritance chain */
-            UErrorCode usrStatus = U_ZERO_ERROR;
-            UResourceDataEntry *u1 = init_entry(t1->fName, usrDataPath, &usrStatus);
+        has_Real_दत्त = सत्य;
+        यदि ( usingUSRData ) {  /* This code inserts user override data into the inheritance chain */
+            UError_संहिता usr_स्थितिः = U_ZERO_ERROR;
+            UResource_दत्त_प्रविष्टिः *u1 = init_प्रविष्टिः(t1->fName, usr_दत्त_मार्गः, &usr_स्थितिः);
             // If we failed due to out-of-memory, report the failure and exit early.
-            if (intStatus == U_MEMORY_ALLOCATION_ERROR) {
-                *status = intStatus;
-                goto finish;
+            यदि (int_स्थितिः == U_स्मृतिः_आवण्टनम्_ERROR) {
+                *स्थितिः = int_स्थितिः;
+                गच्छ finish;
             }
-            if ( u1 != nullptr ) {
-                if(u1->fBogus == U_ZERO_ERROR) {
+            यदि ( u1 != शून्यसूचकः ) {
+                यदि(u1->fBogus == U_ZERO_ERROR) {
                     u1->fParent = t1;
                     r = u1;
-                } else {
+                } अन्यथा {
                     /* the USR override data wasn't found, set it to be deleted */
-                    u1->fCountExisting = 0;
+                    u1->f_गणनम्_Existing = 0;
                 }
             }
         }
-        if ((hasChopped || mayHaveParent(name)) && !isRoot) {
-            if (!loadParentsExceptRoot(t1, name, UPRV_LENGTHOF(name), usingUSRData, usrDataPath, status)) {
-                goto finish;
+        यदि ((hasChopped || mayHaveParent(name)) && !is_मूलम्) {
+            यदि (!आरोपय_Parents_Except_मूलम्(t1, name, UPRV_LENGTHOF(name), usingUSRData, usr_दत्त_मार्गः, स्थितिः)) {
+                गच्छ finish;
             }
         }
     }
 
     /* we could have reached this point without having any real data */
     /* if that is the case, we need to chain in the default locale   */
-    if(r==nullptr && openType == URES_OPEN_LOCALE_DEFAULT_ROOT && !isDefault && !isRoot) {
+    यदि(r==शून्यसूचकः && openType == URES_OPEN_LOCALE_DEFAULT_मूलम् && !isDefault && !is_मूलम्) {
         /* insert default locale */
         uprv_strcpy(name, defaultLocale);
-        r = findFirstExisting(path, name, defaultLocale, openType, &isRoot, &hasChopped, &isDefault, &intStatus);
+        r = findFirstExisting(मार्गः, name, defaultLocale, openType, &is_मूलम्, &hasChopped, &isDefault, &int_स्थितिः);
         // If we failed due to out-of-memory, report the failure and exit early.
-        if (intStatus == U_MEMORY_ALLOCATION_ERROR) {
-            *status = intStatus;
-            goto finish;
+        यदि (int_स्थितिः == U_स्मृतिः_आवण्टनम्_ERROR) {
+            *स्थितिः = int_स्थितिः;
+            गच्छ finish;
         }
-        intStatus = U_USING_DEFAULT_WARNING;
-        if(r != nullptr) { /* the default locale exists */
+        int_स्थितिः = U_USING_DEFAULT_WARNING;
+        यदि(r != शून्यसूचकः) { /* the default locale exists */
             t1 = r;
-            hasRealData = true;
-            isDefault = true;
+            has_Real_दत्त = सत्य;
+            isDefault = सत्य;
             // TODO: Why not if (usingUSRData) { ... } like in the non-default-locale code path?
-            if ((hasChopped || mayHaveParent(name)) && !isRoot) {
-                if (!loadParentsExceptRoot(t1, name, UPRV_LENGTHOF(name), usingUSRData, usrDataPath, status)) {
-                    goto finish;
+            यदि ((hasChopped || mayHaveParent(name)) && !is_मूलम्) {
+                यदि (!आरोपय_Parents_Except_मूलम्(t1, name, UPRV_LENGTHOF(name), usingUSRData, usr_दत्त_मार्गः, स्थितिः)) {
+                    गच्छ finish;
                 }
             }
         }
@@ -913,46 +913,46 @@ static UResourceDataEntry *entryOpen(const char* path, const char* localeID,
 
     /* we could still have r == nullptr at this point - maybe even default locale is not */
     /* present */
-    if(r == nullptr) {
-        uprv_strcpy(name, kRootLocaleName);
-        r = findFirstExisting(path, name, defaultLocale, openType, &isRoot, &hasChopped, &isDefault, &intStatus);
+    यदि(r == शून्यसूचकः) {
+        uprv_strcpy(name, k_मूलम्_Locale_Name);
+        r = findFirstExisting(मार्गः, name, defaultLocale, openType, &is_मूलम्, &hasChopped, &isDefault, &int_स्थितिः);
         // If we failed due to out-of-memory, report the failure and exit early.
-        if (intStatus == U_MEMORY_ALLOCATION_ERROR) {
-            *status = intStatus;
-            goto finish;
+        यदि (int_स्थितिः == U_स्मृतिः_आवण्टनम्_ERROR) {
+            *स्थितिः = int_स्थितिः;
+            गच्छ finish;
         }
-        if(r != nullptr) {
+        यदि(r != शून्यसूचकः) {
             t1 = r;
-            intStatus = U_USING_DEFAULT_WARNING;
-            hasRealData = true;
-        } else { /* we don't even have the root locale */
-            *status = U_MISSING_RESOURCE_ERROR;
-            goto finish;
+            int_स्थितिः = U_USING_DEFAULT_WARNING;
+            has_Real_दत्त = सत्य;
+        } अन्यथा { /* we don't even have the root locale */
+            *स्थितिः = U_MISSING_RESOURCE_ERROR;
+            गच्छ finish;
         }
-    } else if(!isRoot && uprv_strcmp(t1->fName, kRootLocaleName) != 0 &&
-            t1->fParent == nullptr && !r->fData.noFallback) {
-        if (!insertRootBundle(t1, status)) {
-            goto finish;
+    } अन्यथा यदि(!is_मूलम् && uprv_strcmp(t1->fName, k_मूलम्_Locale_Name) != 0 &&
+            t1->fParent == शून्यसूचकः && !r->f_दत्त.noFallback) {
+        यदि (!निवेशय_मूलम्_Bundle(t1, स्थितिः)) {
+            गच्छ finish;
         }
-        if(!hasRealData) {
+        यदि(!has_Real_दत्त) {
             r->fBogus = U_USING_DEFAULT_WARNING;
         }
     }
 
     // TODO: Does this ever loop?
-    while(r != nullptr && !isRoot && t1->fParent != nullptr) {
-        t1->fParent->fCountExisting++;
+    यावत्(r != शून्यसूचकः && !is_मूलम् && t1->fParent != शून्यसूचकः) {
+        t1->fParent->f_गणनम्_Existing++;
         t1 = t1->fParent;
     }
 
 finish:
-    if(U_SUCCESS(*status)) {
-        if(intStatus != U_ZERO_ERROR) {
-            *status = intStatus;  
+    यदि(U_SUCCESS(*स्थितिः)) {
+        यदि(int_स्थितिः != U_ZERO_ERROR) {
+            *स्थितिः = int_स्थितिः;  
         }
-        return r;
-    } else {
-        return nullptr;
+        प्रत्यागम r;
+    } अन्यथा {
+        प्रत्यागम शून्यसूचकः;
     }
 }
 
@@ -962,62 +962,62 @@ finish:
  * Parent and root locale bundles are loaded if
  * the requested bundle does not have the "nofallback" flag.
  */
-static UResourceDataEntry *
-entryOpenDirect(const char* path, const char* localeID, UErrorCode* status) {
-    initCache(status);
-    if(U_FAILURE(*status)) {
-        return nullptr;
+स्थिर UResource_दत्त_प्रविष्टिः *
+प्रविष्टिः_Open_प्रत्यक्षम्(ध्रुव वर्ण* मार्गः, ध्रुव वर्ण* localeID, UError_संहिता* स्थितिः) {
+    initCache(स्थितिः);
+    यदि(U_FAILURE(*स्थितिः)) {
+        प्रत्यागम शून्यसूचकः;
     }
 
     // Note: We need to query the default locale *before* locking resbMutex.
     // If the localeID is nullptr, then we want to use the default locale.
-    if (localeID == nullptr) {
+    यदि (localeID == शून्यसूचकः) {
         localeID = uloc_getDefault();
-    } else if (*localeID == 0) {
+    } अन्यथा यदि (*localeID == 0) {
         // If the localeID is "", then we want to use the root locale.
-        localeID = kRootLocaleName;
+        localeID = k_मूलम्_Locale_Name;
     }
 
-    Mutex lock(&resbMutex);
+    Mutex तालकम्(&resbMutex);
 
     // findFirstExisting() without fallbacks.
-    UResourceDataEntry *r = init_entry(localeID, path, status);
-    if(U_SUCCESS(*status)) {
-        if(r->fBogus != U_ZERO_ERROR) {
-            r->fCountExisting--;
-            r = nullptr;
+    UResource_दत्त_प्रविष्टिः *r = init_प्रविष्टिः(localeID, मार्गः, स्थितिः);
+    यदि(U_SUCCESS(*स्थितिः)) {
+        यदि(r->fBogus != U_ZERO_ERROR) {
+            r->f_गणनम्_Existing--;
+            r = शून्यसूचकः;
         }
-    } else {
-        r = nullptr;
+    } अन्यथा {
+        r = शून्यसूचकः;
     }
 
     // Some code depends on the ures_openDirect() bundle to have a parent bundle chain,
     // unless it is marked with "nofallback".
-    UResourceDataEntry *t1 = r;
-    if(r != nullptr && uprv_strcmp(localeID, kRootLocaleName) != 0 &&  // not root
-            r->fParent == nullptr && !r->fData.noFallback &&
-            uprv_strlen(localeID) < ULOC_FULLNAME_CAPACITY) {
-        char name[ULOC_FULLNAME_CAPACITY];
+    UResource_दत्त_प्रविष्टिः *t1 = r;
+    यदि(r != शून्यसूचकः && uprv_strcmp(localeID, k_मूलम्_Locale_Name) != 0 &&  // not root
+            r->fParent == शून्यसूचकः && !r->f_दत्त.noFallback &&
+            uprv_strlen(localeID) < ULOC_FULLNAME_क्षमता) {
+        वर्ण name[ULOC_FULLNAME_क्षमता];
         uprv_strcpy(name, localeID);
-        if(!chopLocale(name) || uprv_strcmp(name, kRootLocaleName) == 0 ||
-                loadParentsExceptRoot(t1, name, UPRV_LENGTHOF(name), false, nullptr, status)) {
-            if(uprv_strcmp(t1->fName, kRootLocaleName) != 0 && t1->fParent == nullptr) {
-                insertRootBundle(t1, status);
+        यदि(!chopLocale(name) || uprv_strcmp(name, k_मूलम्_Locale_Name) == 0 ||
+                आरोपय_Parents_Except_मूलम्(t1, name, UPRV_LENGTHOF(name), असत्य, शून्यसूचकः, स्थितिः)) {
+            यदि(uprv_strcmp(t1->fName, k_मूलम्_Locale_Name) != 0 && t1->fParent == शून्यसूचकः) {
+                निवेशय_मूलम्_Bundle(t1, स्थितिः);
             }
         }
-        if(U_FAILURE(*status)) {
-            r = nullptr;
+        यदि(U_FAILURE(*स्थितिः)) {
+            r = शून्यसूचकः;
         }
     }
 
-    if(r != nullptr) {
+    यदि(r != शून्यसूचकः) {
         // TODO: Does this ever loop?
-        while(t1->fParent != nullptr) {
-            t1->fParent->fCountExisting++;
+        यावत्(t1->fParent != शून्यसूचकः) {
+            t1->fParent->f_गणनम्_Existing++;
             t1 = t1->fParent;
         }
     }
-    return r;
+    प्रत्यागम r;
 }
 
 /**
@@ -1025,12 +1025,12 @@ entryOpenDirect(const char* path, const char* localeID, UErrorCode* status) {
  *     CAUTION:  resbMutex must be locked when calling this function.
  */
 /* INTERNAL: */
-static void entryCloseInt(UResourceDataEntry *resB) {
-    UResourceDataEntry *p = resB;
+स्थिर शून्य प्रविष्टिः_Close_Int(UResource_दत्त_प्रविष्टिः *resB) {
+    UResource_दत्त_प्रविष्टिः *p = resB;
 
-    while(resB != nullptr) {
+    यावत्(resB != शून्यसूचकः) {
         p = resB->fParent;
-        resB->fCountExisting--;
+        resB->f_गणनम्_Existing--;
 
         /* Entries are left in the cache. TODO: add ures_flushCache() to force a flush
          of the cache. */
@@ -1058,9 +1058,9 @@ static void entryCloseInt(UResourceDataEntry *resB) {
  *  API: closes a resource bundle and cleans up.
  */
 
-static void entryClose(UResourceDataEntry *resB) {
-  Mutex lock(&resbMutex);
-  entryCloseInt(resB);
+स्थिर शून्य प्रविष्टिः_Close(UResource_दत्त_प्रविष्टिः *resB) {
+  Mutex तालकम्(&resbMutex);
+  प्रविष्टिः_Close_Int(resB);
 }
 
 /*
@@ -1080,108 +1080,108 @@ U_CFUNC void ures_setResPath(UResourceBundle *resB, const char* toAdd) {
   uprv_strcpy(resB->fResPath, toAdd);
 }
 */
-static void ures_appendResPath(UResourceBundle *resB, const char* toAdd, int32_t lenToAdd, UErrorCode *status) {
-    int32_t resPathLenOrig = resB->fResPathLen;
-    if(resB->fResPath == nullptr) {
-        resB->fResPath = resB->fResBuf;
-        *(resB->fResPath) = 0;
-        resB->fResPathLen = 0;
+स्थिर शून्य ures_append_Res_मार्गः(UResourceBundle *resB, ध्रुव वर्ण* गन्तव्यम्_सङ्कलय, int32_t len_गन्तव्यम्_सङ्कलय, UError_संहिता *स्थितिः) {
+    int32_t res_मार्गः_Len_Orig = resB->f_Res_मार्गः_Len;
+    यदि(resB->f_Res_मार्गः == शून्यसूचकः) {
+        resB->f_Res_मार्गः = resB->fResBuf;
+        *(resB->f_Res_मार्गः) = 0;
+        resB->f_Res_मार्गः_Len = 0;
     } 
-    resB->fResPathLen += lenToAdd;
-    if(RES_BUFSIZE <= resB->fResPathLen+1) {
-        if(resB->fResPath == resB->fResBuf) {
-            resB->fResPath = static_cast<char*>(uprv_malloc((resB->fResPathLen + 1) * sizeof(char)));
+    resB->f_Res_मार्गः_Len += len_गन्तव्यम्_सङ्कलय;
+    यदि(RES_BUFSIZE <= resB->f_Res_मार्गः_Len+1) {
+        यदि(resB->f_Res_मार्गः == resB->fResBuf) {
+            resB->f_Res_मार्गः = static_cast<वर्ण*>(uprv_malloc((resB->f_Res_मार्गः_Len + 1) * परिमाण(वर्ण)));
             /* Check that memory was allocated correctly. */
-            if (resB->fResPath == nullptr) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+            यदि (resB->f_Res_मार्गः == शून्यसूचकः) {
+                *स्थितिः = U_स्मृतिः_आवण्टनम्_ERROR;
+                प्रत्यागम;
             }
-            uprv_strcpy(resB->fResPath, resB->fResBuf);
-        } else {
-            char* temp = static_cast<char*>(uprv_realloc(resB->fResPath, (resB->fResPathLen + 1) * sizeof(char)));
+            uprv_strcpy(resB->f_Res_मार्गः, resB->fResBuf);
+        } अन्यथा {
+            वर्ण* अस्थायी = static_cast<वर्ण*>(uprv_realloc(resB->f_Res_मार्गः, (resB->f_Res_मार्गः_Len + 1) * परिमाण(वर्ण)));
             /* Check that memory was reallocated correctly. */
-            if (temp == nullptr) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+            यदि (अस्थायी == शून्यसूचकः) {
+                *स्थितिः = U_स्मृतिः_आवण्टनम्_ERROR;
+                प्रत्यागम;
             }
-            resB->fResPath = temp;
+            resB->f_Res_मार्गः = अस्थायी;
         }
     }
-    uprv_strcpy(resB->fResPath + resPathLenOrig, toAdd);
+    uprv_strcpy(resB->f_Res_मार्गः + res_मार्गः_Len_Orig, गन्तव्यम्_सङ्कलय);
 }
 
-static void ures_freeResPath(UResourceBundle *resB) {
-    if (resB->fResPath && resB->fResPath != resB->fResBuf) {
-        uprv_free(resB->fResPath);
+स्थिर शून्य ures_free_Res_मार्गः(UResourceBundle *resB) {
+    यदि (resB->f_Res_मार्गः && resB->f_Res_मार्गः != resB->fResBuf) {
+        uprv_free(resB->f_Res_मार्गः);
     }
-    resB->fResPath = nullptr;
-    resB->fResPathLen = 0;
+    resB->f_Res_मार्गः = शून्यसूचकः;
+    resB->f_Res_मार्गः_Len = 0;
 }
 
-static void
+स्थिर शून्य
 ures_closeBundle(UResourceBundle* resB, UBool freeBundleObj)
 {
-    if(resB != nullptr) {
-        if(resB->fData != nullptr) {
-            entryClose(resB->fData);
+    यदि(resB != शून्यसूचकः) {
+        यदि(resB->f_दत्त != शून्यसूचकः) {
+            प्रविष्टिः_Close(resB->f_दत्त);
         }
-        if(resB->fVersion != nullptr) {
-            uprv_free(resB->fVersion);
+        यदि(resB->f_संस्करणम् != शून्यसूचकः) {
+            uprv_free(resB->f_संस्करणम्);
         }
-        ures_freeResPath(resB);
+        ures_free_Res_मार्गः(resB);
 
-        if(ures_isStackObject(resB) == false && freeBundleObj) {
+        यदि(ures_is_राशिः_Object(resB) == असत्य && freeBundleObj) {
             uprv_free(resB);
         }
-#if 0 /*U_DEBUG*/
-        else {
+#यदि 0 /*U_DEBUG*/
+        अन्यथा {
             /* poison the data */
-            uprv_memset(resB, -1, sizeof(UResourceBundle));
+            uprv_memset(resB, -1, परिमाण(UResourceBundle));
         }
-#endif
+#यदि_अन्तः
     }
 }
 
-U_CAPI void  U_EXPORT2
+U_CAPI शून्य  U_EXPORT2
 ures_close(UResourceBundle* resB)
 {
-    ures_closeBundle(resB, true);
+    ures_closeBundle(resB, सत्य);
 }
 
-namespace {
+नामाकाश {
 
-UResourceBundle* init_resb_result(UResourceDataEntry* dataEntry,
+UResourceBundle* init_resb_परिणाम(UResource_दत्त_प्रविष्टिः* दत्त_प्रविष्टिः,
                                   Resource r,
-                                  const char* key,
+                                  ध्रुव वर्ण* कुञ्चिका,
                                   int32_t idx,
-                                  UResourceDataEntry* validLocaleDataEntry,
-                                  const char* containerResPath,
-                                  int32_t recursionDepth,
+                                  UResource_दत्त_प्रविष्टिः* valid_Locale_दत्त_प्रविष्टिः,
+                                  ध्रुव वर्ण* container_Res_मार्गः,
+                                  int32_t recursion_गभीरता,
                                   UResourceBundle* resB U_LIFETIME_BOUND,
-                                  UErrorCode* status);
+                                  UError_संहिता* स्थितिः);
 
 // TODO: Try to refactor further, so that we output a dataEntry + Resource + (optionally) resPath,
 // rather than a UResourceBundle.
 // May need to entryIncrease() the resulting dataEntry.
 UResourceBundle*
-getAliasTargetAsResourceBundle(const ResourceData& resData,
+getAliasTargetAsResourceBundle(ध्रुव Resource_दत्त& res_दत्त,
                                Resource r,
-                               const char* key,
+                               ध्रुव वर्ण* कुञ्चिका,
                                int32_t idx,
-                               UResourceDataEntry* validLocaleDataEntry,
-                               const char* containerResPath,
-                               int32_t recursionDepth,
+                               UResource_दत्त_प्रविष्टिः* valid_Locale_दत्त_प्रविष्टिः,
+                               ध्रुव वर्ण* container_Res_मार्गः,
+                               int32_t recursion_गभीरता,
                                UResourceBundle* resB U_LIFETIME_BOUND,
-                               UErrorCode* status) {
+                               UError_संहिता* स्थितिः) {
     // TODO: When an error occurs: Should we return nullptr vs. resB?
-    if (U_FAILURE(*status)) { return resB; }
+    यदि (U_FAILURE(*स्थितिः)) { प्रत्यागम resB; }
     U_ASSERT(RES_GET_TYPE(r) == URES_ALIAS);
     int32_t len = 0;
-    const char16_t *alias = res_getAlias(&resData, r, &len);
-    if(len <= 0) {
+    ध्रुव char16_t *alias = res_getAlias(&res_दत्त, r, &len);
+    यदि(len <= 0) {
         // bad alias
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return resB;
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम resB;
     }
 
     // Copy the UTF-16 alias string into an invariant-character string.
@@ -1195,82 +1195,82 @@ getAliasTargetAsResourceBundle(const ResourceData& resData,
     //
     // markus 2003oct17
     CharString chAlias;
-    chAlias.appendInvariantChars(alias, len, *status);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    chAlias.appendInvariantChars(alias, len, *स्थितिः);
+    यदि (U_FAILURE(*स्थितिः)) {
+        प्रत्यागम शून्यसूचकः;
     }
 
     // We have an alias, now let's cut it up.
-    const char *path = nullptr, *locale = nullptr, *keyPath = nullptr;
-    if(chAlias[0] == RES_PATH_SEPARATOR) {
+    ध्रुव वर्ण *मार्गः = शून्यसूचकः, *locale = शून्यसूचकः, *कुञ्चिका_मार्गः = शून्यसूचकः;
+    यदि(chAlias[0] == RES_मार्गः_SEPARATOR) {
         // There is a path included.
-        char *chAliasData = chAlias.data();
-        char *sep = chAliasData + 1;
-        path = sep;
-        sep = uprv_strchr(sep, RES_PATH_SEPARATOR);
-        if(sep != nullptr) {
+        वर्ण *ch_Alias_दत्त = chAlias.दत्त();
+        वर्ण *sep = ch_Alias_दत्त + 1;
+        मार्गः = sep;
+        sep = uprv_strchr(sep, RES_मार्गः_SEPARATOR);
+        यदि(sep != शून्यसूचकः) {
             *sep++ = 0;
         }
-        if(uprv_strcmp(path, "LOCALE") == 0) {
+        यदि(uprv_strcmp(मार्गः, "LOCALE") == 0) {
             // This is an XPath alias, starting with "/LOCALE/".
             // It contains the path to a resource which should be looked up
             // starting in the valid locale.
             // TODO: Can/should we forbid a /LOCALE alias without key path?
             //   It seems weird to alias to the same path, just starting from the valid locale.
             //   That will often yield an infinite loop.
-            keyPath = sep;
+            कुञ्चिका_मार्गः = sep;
             // Read from the valid locale which we already have.
-            path = locale = nullptr;
-        } else {
-            if(uprv_strcmp(path, "ICUDATA") == 0) { /* want ICU data */
-                path = nullptr;
+            मार्गः = locale = शून्यसूचकः;
+        } अन्यथा {
+            यदि(uprv_strcmp(मार्गः, "ICUDATA") == 0) { /* want ICU data */
+                मार्गः = शून्यसूचकः;
             }
-            if (sep == nullptr) {
+            यदि (sep == शून्यसूचकः) {
                 // TODO: This ends up using the root bundle. Can/should we forbid this?
                 locale = "";
-            } else {
+            } अन्यथा {
                 locale = sep;
-                sep = uprv_strchr(sep, RES_PATH_SEPARATOR);
-                if(sep != nullptr) {
+                sep = uprv_strchr(sep, RES_मार्गः_SEPARATOR);
+                यदि(sep != शून्यसूचकः) {
                     *sep++ = 0;
                 }
-                keyPath = sep;
+                कुञ्चिका_मार्गः = sep;
             }
         }
-    } else {
+    } अन्यथा {
         // No path, start with a locale.
-        char *sep = chAlias.data();
+        वर्ण *sep = chAlias.दत्त();
         locale = sep;
-        sep = uprv_strchr(sep, RES_PATH_SEPARATOR);
-        if(sep != nullptr) {
+        sep = uprv_strchr(sep, RES_मार्गः_SEPARATOR);
+        यदि(sep != शून्यसूचकः) {
             *sep++ = 0;
         }
-        keyPath = sep;
-        path = validLocaleDataEntry->fPath;
+        कुञ्चिका_मार्गः = sep;
+        मार्गः = valid_Locale_दत्त_प्रविष्टिः->f_मार्गः;
     }
 
     // Got almost everything, let's try to open.
     // First, open the bundle with real data.
     LocalUResourceBundlePointer mainRes;
-    UResourceDataEntry *dataEntry;
-    if (locale == nullptr) {
+    UResource_दत्त_प्रविष्टिः *दत्त_प्रविष्टिः;
+    यदि (locale == शून्यसूचकः) {
         // alias = /LOCALE/keyPath
         // Read from the valid locale which we already have.
-        dataEntry = validLocaleDataEntry;
-    } else {
-        UErrorCode intStatus = U_ZERO_ERROR;
+        दत्त_प्रविष्टिः = valid_Locale_दत्त_प्रविष्टिः;
+    } अन्यथा {
+        UError_संहिता int_स्थितिः = U_ZERO_ERROR;
         // TODO: Shouldn't we use ures_open() for locale data bundles (!noFallback)?
-        mainRes.adoptInstead(ures_openDirect(path, locale, &intStatus));
-        if(U_FAILURE(intStatus)) {
+        mainRes.adoptInstead(ures_open_प्रत्यक्षम्(मार्गः, locale, &int_स्थितिः));
+        यदि(U_FAILURE(int_स्थितिः)) {
             // We failed to open the resource bundle we're aliasing to.
-            *status = intStatus;
-            return resB;
+            *स्थितिः = int_स्थितिः;
+            प्रत्यागम resB;
         }
-        dataEntry = mainRes->fData;
+        दत्त_प्रविष्टिः = mainRes->f_दत्त;
     }
 
-    const char* temp = nullptr;
-    if(keyPath == nullptr) {
+    ध्रुव वर्ण* अस्थायी = शून्यसूचकः;
+    यदि(कुञ्चिका_मार्गः == शून्यसूचकः) {
         // No key path. This means that we are going to to use the corresponding resource from
         // another bundle.
         // TODO: Why the special code path?
@@ -1278,161 +1278,161 @@ getAliasTargetAsResourceBundle(const ResourceData& resData,
         //   as a comment below suggests, and go into the regular code branch?
         // First, we are going to get a corresponding container
         // resource to the one we are searching.
-        r = dataEntry->fData.rootRes;
-        if(containerResPath) {
-            chAlias.clear().append(containerResPath, *status);
-            if (U_FAILURE(*status)) {
-                return nullptr;
+        r = दत्त_प्रविष्टिः->f_दत्त.मूलम्_Res;
+        यदि(container_Res_मार्गः) {
+            chAlias.clear().append(container_Res_मार्गः, *स्थितिः);
+            यदि (U_FAILURE(*स्थितिः)) {
+                प्रत्यागम शून्यसूचकः;
             }
-            char *aKey = chAlias.data();
+            वर्ण *a_कुञ्चिका = chAlias.दत्त();
             // TODO: should res_findResource() return a new dataEntry, too?
-            r = res_findResource(&dataEntry->fData, r, &aKey, &temp);
+            r = res_findResource(&दत्त_प्रविष्टिः->f_दत्त, r, &a_कुञ्चिका, &अस्थायी);
         }
-        if(key) {
+        यदि(कुञ्चिका) {
             // We need to make keyPath from the containerResPath and
             // current key, if there is a key associated.
-            chAlias.clear().append(key, *status);
-            if (U_FAILURE(*status)) {
-                return nullptr;
+            chAlias.clear().append(कुञ्चिका, *स्थितिः);
+            यदि (U_FAILURE(*स्थितिः)) {
+                प्रत्यागम शून्यसूचकः;
             }
-            char *aKey = chAlias.data();
-            r = res_findResource(&dataEntry->fData, r, &aKey, &temp);
-        } else if(idx != -1) {
+            वर्ण *a_कुञ्चिका = chAlias.दत्त();
+            r = res_findResource(&दत्त_प्रविष्टिः->f_दत्त, r, &a_कुञ्चिका, &अस्थायी);
+        } अन्यथा यदि(idx != -1) {
             // If there is no key, but there is an index, try to get by the index.
             // Here we have either a table or an array, so get the element.
             int32_t type = RES_GET_TYPE(r);
-            if(URES_IS_TABLE(type)) {
-                const char *aKey;
-                r = res_getTableItemByIndex(&dataEntry->fData, r, idx, &aKey);
-            } else { /* array */
-                r = res_getArrayItem(&dataEntry->fData, r, idx);
+            यदि(URES_IS_सारणी(type)) {
+                ध्रुव वर्ण *a_कुञ्चिका;
+                r = res_get_सारणी_Item_By_सूचकांक(&दत्त_प्रविष्टिः->f_दत्त, r, idx, &a_कुञ्चिका);
+            } अन्यथा { /* array */
+                r = res_getArrayItem(&दत्त_प्रविष्टिः->f_दत्त, r, idx);
             }
         }
-        if(r != RES_BOGUS) {
-            resB = init_resb_result(
-                dataEntry, r, temp, -1, validLocaleDataEntry, nullptr, recursionDepth+1,
-                resB, status);
-        } else {
-            *status = U_MISSING_RESOURCE_ERROR;
+        यदि(r != RES_BOGUS) {
+            resB = init_resb_परिणाम(
+                दत्त_प्रविष्टिः, r, अस्थायी, -1, valid_Locale_दत्त_प्रविष्टिः, शून्यसूचकः, recursion_गभीरता+1,
+                resB, स्थितिः);
+        } अन्यथा {
+            *स्थितिः = U_MISSING_RESOURCE_ERROR;
         }
-    } else {
+    } अन्यथा {
         // This one is a bit trickier.
         // We start finding keys, but after we resolve one alias, the path might continue.
         // Consider:
         //     aliastest:alias { "testtypes/anotheralias/Sequence" }
         //     anotheralias:alias { "/ICUDATA/sh/CollationElements" }
         // aliastest resource should finally have the sequence, not collation elements.
-        CharString pathBuf(keyPath, *status);
-        if (U_FAILURE(*status)) {
-            return nullptr;
+        CharString मार्गः_Buf(कुञ्चिका_मार्गः, *स्थितिः);
+        यदि (U_FAILURE(*स्थितिः)) {
+            प्रत्यागम शून्यसूचकः;
         }
-        char *myPath = pathBuf.data();
-        containerResPath = nullptr;
+        वर्ण *my_मार्गः = मार्गः_Buf.दत्त();
+        container_Res_मार्गः = शून्यसूचकः;
         // Now we have fallback following here.
-        for(;;) {
-            r = dataEntry->fData.rootRes;
+        प्रति(;;) {
+            r = दत्त_प्रविष्टिः->f_दत्त.मूलम्_Res;
             // TODO: Move  containerResPath = nullptr  to here,
             // consistent with restarting from the rootRes of another bundle?!
 
             // This loop handles 'found' resources over several levels.
-            while(*myPath && U_SUCCESS(*status)) {
-                r = res_findResource(&(dataEntry->fData), r, &myPath, &temp);
-                if(r == RES_BOGUS) {
+            यावत्(*my_मार्गः && U_SUCCESS(*स्थितिः)) {
+                r = res_findResource(&(दत्त_प्रविष्टिः->f_दत्त), r, &my_मार्गः, &अस्थायी);
+                यदि(r == RES_BOGUS) {
                     // No resource found, we don't really want to look anymore on this level.
-                    break;
+                    भङ्ग;
                 }
                 // Found a resource, but it might be an indirection.
-                resB = init_resb_result(
-                    dataEntry, r, temp, -1,
-                    validLocaleDataEntry, containerResPath, recursionDepth+1,
-                    resB, status);
-                if (U_FAILURE(*status)) {
-                    break;
+                resB = init_resb_परिणाम(
+                    दत्त_प्रविष्टिः, r, अस्थायी, -1,
+                    valid_Locale_दत्त_प्रविष्टिः, container_Res_मार्गः, recursion_गभीरता+1,
+                    resB, स्थितिः);
+                यदि (U_FAILURE(*स्थितिः)) {
+                    भङ्ग;
                 }
-                if (temp == nullptr || uprv_strcmp(keyPath, temp) != 0) {
+                यदि (अस्थायी == शून्यसूचकः || uprv_strcmp(कुञ्चिका_मार्गः, अस्थायी) != 0) {
                     // The call to init_resb_result() above will set resB->fKeyPath to be
                     // the same as resB->fKey,
                     // throwing away any additional path elements if we had them --
                     // if the key path wasn't just a single resource ID, clear out
                     // the bundle's key path and re-set it to be equal to keyPath.
-                    ures_freeResPath(resB);
-                    ures_appendResPath(resB, keyPath, static_cast<int32_t>(uprv_strlen(keyPath)), status);
-                    if(resB->fResPath[resB->fResPathLen-1] != RES_PATH_SEPARATOR) {
-                        ures_appendResPath(resB, RES_PATH_SEPARATOR_S, 1, status);
+                    ures_free_Res_मार्गः(resB);
+                    ures_append_Res_मार्गः(resB, कुञ्चिका_मार्गः, static_cast<int32_t>(uprv_strlen(कुञ्चिका_मार्गः)), स्थितिः);
+                    यदि(resB->f_Res_मार्गः[resB->f_Res_मार्गः_Len-1] != RES_मार्गः_SEPARATOR) {
+                        ures_append_Res_मार्गः(resB, RES_मार्गः_SEPARATOR_S, 1, स्थितिः);
                     }
-                    if (U_FAILURE(*status)) {
-                        break;
+                    यदि (U_FAILURE(*स्थितिः)) {
+                        भङ्ग;
                     }
                 }
                 r = resB->fRes; /* switch to a new resource, possibly a new tree */
-                dataEntry = resB->fData;
-                containerResPath = resB->fResPath;
+                दत्त_प्रविष्टिः = resB->f_दत्त;
+                container_Res_मार्गः = resB->f_Res_मार्गः;
             }
-            if (U_FAILURE(*status) || r != RES_BOGUS) {
-                break;
+            यदि (U_FAILURE(*स्थितिः) || r != RES_BOGUS) {
+                भङ्ग;
             }
             // Fall back to the parent bundle, if there is one.
-            dataEntry = dataEntry->fParent;
-            if (dataEntry == nullptr) {
-                *status = U_MISSING_RESOURCE_ERROR;
-                break;
+            दत्त_प्रविष्टिः = दत्त_प्रविष्टिः->fParent;
+            यदि (दत्त_प्रविष्टिः == शून्यसूचकः) {
+                *स्थितिः = U_MISSING_RESOURCE_ERROR;
+                भङ्ग;
             }
             // Copy the same keyPath again.
-            myPath = pathBuf.data();
-            uprv_strcpy(myPath, keyPath);
+            my_मार्गः = मार्गः_Buf.दत्त();
+            uprv_strcpy(my_मार्गः, कुञ्चिका_मार्गः);
         }
     }
-    if(mainRes.getAlias() == resB) {
+    यदि(mainRes.getAlias() == resB) {
         mainRes.orphan();
     }
     ResourceTracer(resB).maybeTrace("getalias");
-    return resB;
+    प्रत्यागम resB;
 }
 
 // Recursive function, should be called only by itself, by its simpler wrapper,
 // or by getAliasTargetAsResourceBundle().
-UResourceBundle* init_resb_result(UResourceDataEntry* dataEntry,
+UResourceBundle* init_resb_परिणाम(UResource_दत्त_प्रविष्टिः* दत्त_प्रविष्टिः,
                                   Resource r,
-                                  const char* key,
+                                  ध्रुव वर्ण* कुञ्चिका,
                                   int32_t idx,
-                                  UResourceDataEntry* validLocaleDataEntry,
-                                  const char* containerResPath,
-                                  int32_t recursionDepth,
+                                  UResource_दत्त_प्रविष्टिः* valid_Locale_दत्त_प्रविष्टिः,
+                                  ध्रुव वर्ण* container_Res_मार्गः,
+                                  int32_t recursion_गभीरता,
                                   UResourceBundle* resB U_LIFETIME_BOUND,
-                                  UErrorCode* status) {
+                                  UError_संहिता* स्थितिः) {
     // TODO: When an error occurs: Should we return nullptr vs. resB?
-    if(status == nullptr || U_FAILURE(*status)) {
-        return resB;
+    यदि(स्थितिः == शून्यसूचकः || U_FAILURE(*स्थितिः)) {
+        प्रत्यागम resB;
     }
-    if (validLocaleDataEntry == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    यदि (valid_Locale_दत्त_प्रविष्टिः == शून्यसूचकः) {
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
-    if(RES_GET_TYPE(r) == URES_ALIAS) {
+    यदि(RES_GET_TYPE(r) == URES_ALIAS) {
         // This is an alias, need to exchange with real data.
-        if(recursionDepth >= URES_MAX_ALIAS_LEVEL) {
-            *status = U_TOO_MANY_ALIASES_ERROR;
-            return resB;
+        यदि(recursion_गभीरता >= URES_MAX_ALIAS_LEVEL) {
+            *स्थितिः = U_TOO_MANY_ALIASES_ERROR;
+            प्रत्यागम resB;
         }
-        return getAliasTargetAsResourceBundle(
-            dataEntry->fData, r, key, idx,
-            validLocaleDataEntry, containerResPath, recursionDepth, resB, status);
+        प्रत्यागम getAliasTargetAsResourceBundle(
+            दत्त_प्रविष्टिः->f_दत्त, r, कुञ्चिका, idx,
+            valid_Locale_दत्त_प्रविष्टिः, container_Res_मार्गः, recursion_गभीरता, resB, स्थितिः);
     }
-    if(resB == nullptr) {
-        resB = static_cast<UResourceBundle*>(uprv_malloc(sizeof(UResourceBundle)));
-        if (resB == nullptr) {
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+    यदि(resB == शून्यसूचकः) {
+        resB = static_cast<UResourceBundle*>(uprv_malloc(परिमाण(UResourceBundle)));
+        यदि (resB == शून्यसूचकः) {
+            *स्थितिः = U_स्मृतिः_आवण्टनम्_ERROR;
+            प्रत्यागम शून्यसूचकः;
         }
-        ures_setIsStackObject(resB, false);
-        resB->fResPath = nullptr;
-        resB->fResPathLen = 0;
-    } else {
-        if(resB->fData != nullptr) {
-            entryClose(resB->fData);
+        ures_समुच्चयः_Is_राशिः_Object(resB, असत्य);
+        resB->f_Res_मार्गः = शून्यसूचकः;
+        resB->f_Res_मार्गः_Len = 0;
+    } अन्यथा {
+        यदि(resB->f_दत्त != शून्यसूचकः) {
+            प्रविष्टिः_Close(resB->f_दत्त);
         }
-        if(resB->fVersion != nullptr) {
-            uprv_free(resB->fVersion);
+        यदि(resB->f_संस्करणम् != शून्यसूचकः) {
+            uprv_free(resB->f_संस्करणम्);
         }
         /* 
         weiv: if stack object was passed in, it doesn't really need to be reinited,
@@ -1445,158 +1445,158 @@ UResourceBundle* init_resb_result(UResourceDataEntry* dataEntry,
         ures_initStackObject(resB);
         }
         */
-        if(containerResPath != resB->fResPath) {
-            ures_freeResPath(resB);
+        यदि(container_Res_मार्गः != resB->f_Res_मार्गः) {
+            ures_free_Res_मार्गः(resB);
         }
     }
-    resB->fData = dataEntry;
-    entryIncrease(resB->fData);
-    resB->fHasFallback = false;
-    resB->fIsTopLevel = false;
-    resB->fIndex = -1;
-    resB->fKey = key; 
-    resB->fValidLocaleDataEntry = validLocaleDataEntry;
-    if(containerResPath != resB->fResPath) {
-        ures_appendResPath(
-            resB, containerResPath, static_cast<int32_t>(uprv_strlen(containerResPath)), status);
+    resB->f_दत्त = दत्त_प्रविष्टिः;
+    प्रविष्टिः_Increase(resB->f_दत्त);
+    resB->fHasFallback = असत्य;
+    resB->f_Is_शिखरम्_Level = असत्य;
+    resB->f_सूचकांक = -1;
+    resB->f_कुञ्चिका = कुञ्चिका; 
+    resB->f_Valid_Locale_दत्त_प्रविष्टिः = valid_Locale_दत्त_प्रविष्टिः;
+    यदि(container_Res_मार्गः != resB->f_Res_मार्गः) {
+        ures_append_Res_मार्गः(
+            resB, container_Res_मार्गः, static_cast<int32_t>(uprv_strlen(container_Res_मार्गः)), स्थितिः);
     }
-    if(key != nullptr) {
-        ures_appendResPath(resB, key, static_cast<int32_t>(uprv_strlen(key)), status);
-        if(resB->fResPathLen > 0 && resB->fResPath[resB->fResPathLen-1] != RES_PATH_SEPARATOR) {
-            ures_appendResPath(resB, RES_PATH_SEPARATOR_S, 1, status);
+    यदि(कुञ्चिका != शून्यसूचकः) {
+        ures_append_Res_मार्गः(resB, कुञ्चिका, static_cast<int32_t>(uprv_strlen(कुञ्चिका)), स्थितिः);
+        यदि(resB->f_Res_मार्गः_Len > 0 && resB->f_Res_मार्गः[resB->f_Res_मार्गः_Len-1] != RES_मार्गः_SEPARATOR) {
+            ures_append_Res_मार्गः(resB, RES_मार्गः_SEPARATOR_S, 1, स्थितिः);
         }
-    } else if(idx >= 0) {
-        char buf[256];
-        int32_t len = T_CString_integerToString(buf, idx, 10);
-        ures_appendResPath(resB, buf, len, status);
-        if(resB->fResPathLen > 0 && resB->fResPath[resB->fResPathLen-1] != RES_PATH_SEPARATOR) {
-            ures_appendResPath(resB, RES_PATH_SEPARATOR_S, 1, status);
+    } अन्यथा यदि(idx >= 0) {
+        वर्ण buf[256];
+        int32_t len = T_CString_integer_गन्तव्यम्_String(buf, idx, 10);
+        ures_append_Res_मार्गः(resB, buf, len, स्थितिः);
+        यदि(resB->f_Res_मार्गः_Len > 0 && resB->f_Res_मार्गः[resB->f_Res_मार्गः_Len-1] != RES_मार्गः_SEPARATOR) {
+            ures_append_Res_मार्गः(resB, RES_मार्गः_SEPARATOR_S, 1, स्थितिः);
         }
     }
     /* Make sure that Purify doesn't complain about uninitialized memory copies. */
     {
-        int32_t usedLen = ((resB->fResBuf == resB->fResPath) ? resB->fResPathLen : 0);
-        uprv_memset(resB->fResBuf + usedLen, 0, sizeof(resB->fResBuf) - usedLen);
+        int32_t प्रयुक्तम्_Len = ((resB->fResBuf == resB->f_Res_मार्गः) ? resB->f_Res_मार्गः_Len : 0);
+        uprv_memset(resB->fResBuf + प्रयुक्तम्_Len, 0, परिमाण(resB->fResBuf) - प्रयुक्तम्_Len);
     }
 
-    resB->fVersion = nullptr;
+    resB->f_संस्करणम् = शून्यसूचकः;
     resB->fRes = r;
-    resB->fSize = res_countArrayItems(&resB->getResData(), resB->fRes);
+    resB->f_आकार = res_गणनम्_Array_वस्तूनि(&resB->get_Res_दत्त(), resB->fRes);
     ResourceTracer(resB).trace("get");
-    return resB;
+    प्रत्यागम resB;
 }
 
-UResourceBundle* init_resb_result(UResourceDataEntry* dataEntry,
+UResourceBundle* init_resb_परिणाम(UResource_दत्त_प्रविष्टिः* दत्त_प्रविष्टिः,
                                   Resource r,
-                                  const char* key,
+                                  ध्रुव वर्ण* कुञ्चिका,
                                   int32_t idx,
                                   // validLocaleDataEntry + containerResPath
-                                  const UResourceBundle* container,
+                                  ध्रुव UResourceBundle* container,
                                   UResourceBundle* resB U_LIFETIME_BOUND,
-                                  UErrorCode* status) {
-    return init_resb_result(
-        dataEntry, r, key, idx,
-        container->fValidLocaleDataEntry, container->fResPath, 0, resB, status);
+                                  UError_संहिता* स्थितिः) {
+    प्रत्यागम init_resb_परिणाम(
+        दत्त_प्रविष्टिः, r, कुञ्चिका, idx,
+        container->f_Valid_Locale_दत्त_प्रविष्टिः, container->f_Res_मार्गः, 0, resB, स्थितिः);
 }
 
 }  // namespace
 
 UResourceBundle* ures_copyResb(UResourceBundle* r U_LIFETIME_BOUND,
-                               const UResourceBundle* original,
-                               UErrorCode* status) {
-    UBool isStackObject;
-    if(U_FAILURE(*status) || r == original) {
-        return r;
+                               ध्रुव UResourceBundle* original,
+                               UError_संहिता* स्थितिः) {
+    UBool is_राशिः_Object;
+    यदि(U_FAILURE(*स्थितिः) || r == original) {
+        प्रत्यागम r;
     }
-    if(original != nullptr) {
-        if(r == nullptr) {
-            isStackObject = false;
-            r = static_cast<UResourceBundle*>(uprv_malloc(sizeof(UResourceBundle)));
+    यदि(original != शून्यसूचकः) {
+        यदि(r == शून्यसूचकः) {
+            is_राशिः_Object = असत्य;
+            r = static_cast<UResourceBundle*>(uprv_malloc(परिमाण(UResourceBundle)));
             /* test for nullptr */
-            if (r == nullptr) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
-                return nullptr;
+            यदि (r == शून्यसूचकः) {
+                *स्थितिः = U_स्मृतिः_आवण्टनम्_ERROR;
+                प्रत्यागम शून्यसूचकः;
             }
-        } else {
-            isStackObject = ures_isStackObject(r);
-            ures_closeBundle(r, false);
+        } अन्यथा {
+            is_राशिः_Object = ures_is_राशिः_Object(r);
+            ures_closeBundle(r, असत्य);
         }
-        uprv_memcpy(r, original, sizeof(UResourceBundle));
-        r->fResPath = nullptr;
-        r->fResPathLen = 0;
-        if(original->fResPath) {
-            ures_appendResPath(r, original->fResPath, original->fResPathLen, status);
+        uprv_memcpy(r, original, परिमाण(UResourceBundle));
+        r->f_Res_मार्गः = शून्यसूचकः;
+        r->f_Res_मार्गः_Len = 0;
+        यदि(original->f_Res_मार्गः) {
+            ures_append_Res_मार्गः(r, original->f_Res_मार्गः, original->f_Res_मार्गः_Len, स्थितिः);
         }
-        ures_setIsStackObject(r, isStackObject);
-        if(r->fData != nullptr) {
-            entryIncrease(r->fData);
+        ures_समुच्चयः_Is_राशिः_Object(r, is_राशिः_Object);
+        यदि(r->f_दत्त != शून्यसूचकः) {
+            प्रविष्टिः_Increase(r->f_दत्त);
         }
     }
-    return r;
+    प्रत्यागम r;
 }
 
 /**
  * Functions to retrieve data from resource bundles.
  */
 
-U_CAPI const char16_t* U_EXPORT2 ures_getString(const UResourceBundle* resB U_LIFETIME_BOUND,
+U_CAPI ध्रुव char16_t* U_EXPORT2 ures_getString(ध्रुव UResourceBundle* resB U_LIFETIME_BOUND,
                                                 int32_t* len,
-                                                UErrorCode* status) {
-    const char16_t *s;
-    if (status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+                                                UError_संहिता* स्थितिः) {
+    ध्रुव char16_t *s;
+    यदि (स्थितिः==शून्यसूचकः || U_FAILURE(*स्थितिः)) {
+        प्रत्यागम शून्यसूचकः;
     }
-    if(resB == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    यदि(resB == शून्यसूचकः) {
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
-    s = res_getString({resB}, &resB->getResData(), resB->fRes, len);
-    if (s == nullptr) {
-        *status = U_RESOURCE_TYPE_MISMATCH;
+    s = res_getString({resB}, &resB->get_Res_दत्त(), resB->fRes, len);
+    यदि (s == शून्यसूचकः) {
+        *स्थितिः = U_RESOURCE_TYPE_MISMATCH;
     }
-    return s;
+    प्रत्यागम s;
 }
 
-static const char*
-ures_toUTF8String(const char16_t* s16,
+स्थिर ध्रुव वर्ण*
+ures_गन्तव्यम्_UTF8_String(ध्रुव char16_t* s16,
                   int32_t length16,
-                  char* dest U_LIFETIME_BOUND,
-                  int32_t* pLength,
+                  वर्ण* dest U_LIFETIME_BOUND,
+                  int32_t* p_दीर्घता,
                   UBool forceCopy,
-                  UErrorCode* status) {
+                  UError_संहिता* स्थितिः) {
     int32_t capacity;
 
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    यदि (U_FAILURE(*स्थितिः)) {
+        प्रत्यागम शून्यसूचकः;
     }
-    if (pLength != nullptr) {
-        capacity = *pLength;
-    } else {
+    यदि (p_दीर्घता != शून्यसूचकः) {
+        capacity = *p_दीर्घता;
+    } अन्यथा {
         capacity = 0;
     }
-    if (capacity < 0 || (capacity > 0 && dest == nullptr)) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    यदि (capacity < 0 || (capacity > 0 && dest == शून्यसूचकः)) {
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
 
-    if (length16 == 0) {
+    यदि (length16 == 0) {
         /* empty string, return as read-only pointer */
-        if (pLength != nullptr) {
-            *pLength = 0;
+        यदि (p_दीर्घता != शून्यसूचकः) {
+            *p_दीर्घता = 0;
         }
-        if (forceCopy) {
-            u_terminateChars(dest, capacity, 0, status);
-            return dest;
-        } else {
-            return "";
+        यदि (forceCopy) {
+            u_terminateChars(dest, capacity, 0, स्थितिः);
+            प्रत्यागम dest;
+        } अन्यथा {
+            प्रत्यागम "";
         }
-    } else {
+    } अन्यथा {
         /* We need to transform the string to the destination buffer. */
-        if (capacity < length16) {
+        यदि (capacity < length16) {
             /* No chance for the string to fit. Pure preflighting. */
-            return u_strToUTF8(nullptr, 0, pLength, s16, length16, status);
+            प्रत्यागम u_str_गन्तव्यम्_UTF8(शून्यसूचकः, 0, p_दीर्घता, s16, length16, स्थितिः);
         }
-        if (!forceCopy && (length16 <= 0x2aaaaaaa)) {
+        यदि (!forceCopy && (length16 <= 0x2aaaaaaa)) {
             /*
              * We know the string will fit into dest because each char16_t turns
              * into at most three UTF-8 bytes. Fill the latter part of dest
@@ -1611,102 +1611,102 @@ ures_toUTF8String(const char16_t* s16,
              * The test above for <= 0x2aaaaaaa prevents overflows.
              * The +1 is for the NUL terminator.
              */
-            int32_t maxLength = 3 * length16 + 1;
-            if (capacity > maxLength) {
-                dest += capacity - maxLength;
-                capacity = maxLength;
+            int32_t max_दीर्घता_2 = 3 * length16 + 1;
+            यदि (capacity > max_दीर्घता_2) {
+                dest += capacity - max_दीर्घता_2;
+                capacity = max_दीर्घता_2;
             }
         }
-        return u_strToUTF8(dest, capacity, pLength, s16, length16, status);
+        प्रत्यागम u_str_गन्तव्यम्_UTF8(dest, capacity, p_दीर्घता, s16, length16, स्थितिः);
     }
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getUTF8String(const UResourceBundle* resB,
-                   char* dest U_LIFETIME_BOUND,
-                   int32_t* pLength,
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+ures_getUTF8String(ध्रुव UResourceBundle* resB,
+                   वर्ण* dest U_LIFETIME_BOUND,
+                   int32_t* p_दीर्घता,
                    UBool forceCopy,
-                   UErrorCode* status) {
+                   UError_संहिता* स्थितिः) {
     int32_t length16;
-    const char16_t *s16 = ures_getString(resB, &length16, status);
-    return ures_toUTF8String(s16, length16, dest, pLength, forceCopy, status);
+    ध्रुव char16_t *s16 = ures_getString(resB, &length16, स्थितिः);
+    प्रत्यागम ures_गन्तव्यम्_UTF8_String(s16, length16, dest, p_दीर्घता, forceCopy, स्थितिः);
 }
 
-U_CAPI const uint8_t* U_EXPORT2
-ures_getBinary(const UResourceBundle* resB U_LIFETIME_BOUND, int32_t* len, UErrorCode* status) {
-  const uint8_t *p;
-  if (status==nullptr || U_FAILURE(*status)) {
-    return nullptr;
+U_CAPI ध्रुव uint8_t* U_EXPORT2
+ures_get_द्विमान(ध्रुव UResourceBundle* resB U_LIFETIME_BOUND, int32_t* len, UError_संहिता* स्थितिः) {
+  ध्रुव uint8_t *p;
+  यदि (स्थितिः==शून्यसूचकः || U_FAILURE(*स्थितिः)) {
+    प्रत्यागम शून्यसूचकः;
   }
-  if(resB == nullptr) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+  यदि(resB == शून्यसूचकः) {
+    *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+    प्रत्यागम शून्यसूचकः;
   }
-  p = res_getBinary({resB}, &resB->getResData(), resB->fRes, len);
-  if (p == nullptr) {
-    *status = U_RESOURCE_TYPE_MISMATCH;
+  p = res_get_द्विमान({resB}, &resB->get_Res_दत्त(), resB->fRes, len);
+  यदि (p == शून्यसूचकः) {
+    *स्थितिः = U_RESOURCE_TYPE_MISMATCH;
   }
-  return p;
+  प्रत्यागम p;
 }
 
-U_CAPI const int32_t* U_EXPORT2
-ures_getIntVector(const UResourceBundle* resB U_LIFETIME_BOUND, int32_t* len, UErrorCode* status) {
-  const int32_t *p;
-  if (status==nullptr || U_FAILURE(*status)) {
-    return nullptr;
+U_CAPI ध्रुव int32_t* U_EXPORT2
+ures_get_Int_सदिशम्(ध्रुव UResourceBundle* resB U_LIFETIME_BOUND, int32_t* len, UError_संहिता* स्थितिः) {
+  ध्रुव int32_t *p;
+  यदि (स्थितिः==शून्यसूचकः || U_FAILURE(*स्थितिः)) {
+    प्रत्यागम शून्यसूचकः;
   }
-  if(resB == nullptr) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+  यदि(resB == शून्यसूचकः) {
+    *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+    प्रत्यागम शून्यसूचकः;
   }
-  p = res_getIntVector({resB}, &resB->getResData(), resB->fRes, len);
-  if (p == nullptr) {
-    *status = U_RESOURCE_TYPE_MISMATCH;
+  p = res_get_Int_सदिशम्({resB}, &resB->get_Res_दत्त(), resB->fRes, len);
+  यदि (p == शून्यसूचकः) {
+    *स्थितिः = U_RESOURCE_TYPE_MISMATCH;
   }
-  return p;
+  प्रत्यागम p;
 }
 
 /* this function returns a signed integer */ 
 /* it performs sign extension */
-U_CAPI int32_t U_EXPORT2 ures_getInt(const UResourceBundle* resB, UErrorCode *status) {
-  if (status==nullptr || U_FAILURE(*status)) {
-    return 0xffffffff;
+U_CAPI int32_t U_EXPORT2 ures_getInt(ध्रुव UResourceBundle* resB, UError_संहिता *स्थितिः) {
+  यदि (स्थितिः==शून्यसूचकः || U_FAILURE(*स्थितिः)) {
+    प्रत्यागम 0xffffffff;
   }
-  if(resB == nullptr) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0xffffffff;
+  यदि(resB == शून्यसूचकः) {
+    *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+    प्रत्यागम 0xffffffff;
   }
-  if(RES_GET_TYPE(resB->fRes) != URES_INT) {
-    *status = U_RESOURCE_TYPE_MISMATCH;
-    return 0xffffffff;
+  यदि(RES_GET_TYPE(resB->fRes) != URES_INT) {
+    *स्थितिः = U_RESOURCE_TYPE_MISMATCH;
+    प्रत्यागम 0xffffffff;
   }
-  return res_getInt({resB}, resB->fRes);
+  प्रत्यागम res_getInt({resB}, resB->fRes);
 }
 
-U_CAPI uint32_t U_EXPORT2 ures_getUInt(const UResourceBundle* resB, UErrorCode *status) {
-  if (status==nullptr || U_FAILURE(*status)) {
-    return 0xffffffff;
+U_CAPI uint32_t U_EXPORT2 ures_getUInt(ध्रुव UResourceBundle* resB, UError_संहिता *स्थितिः) {
+  यदि (स्थितिः==शून्यसूचकः || U_FAILURE(*स्थितिः)) {
+    प्रत्यागम 0xffffffff;
   }
-  if(resB == nullptr) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0xffffffff;
+  यदि(resB == शून्यसूचकः) {
+    *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+    प्रत्यागम 0xffffffff;
   }
-  if(RES_GET_TYPE(resB->fRes) != URES_INT) {
-    *status = U_RESOURCE_TYPE_MISMATCH;
-    return 0xffffffff;
+  यदि(RES_GET_TYPE(resB->fRes) != URES_INT) {
+    *स्थितिः = U_RESOURCE_TYPE_MISMATCH;
+    प्रत्यागम 0xffffffff;
   }
-  return res_getUInt({resB}, resB->fRes);
+  प्रत्यागम res_getUInt({resB}, resB->fRes);
 }
 
-U_CAPI UResType U_EXPORT2 ures_getType(const UResourceBundle *resB) {
-  if(resB == nullptr) {
-    return URES_NONE;
+U_CAPI UResType U_EXPORT2 ures_getType(ध्रुव UResourceBundle *resB) {
+  यदि(resB == शून्यसूचकः) {
+    प्रत्यागम URES_NONE;
   }
-  return res_getPublicType(resB->fRes);
+  प्रत्यागम res_get_लौकिकम्_Type(resB->fRes);
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getKey(const UResourceBundle* resB U_LIFETIME_BOUND) {
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+ures_get_कुञ्चिका(ध्रुव UResourceBundle* resB U_LIFETIME_BOUND) {
   //
   // TODO: Trace ures_getKey? I guess not usually.
   //
@@ -1716,273 +1716,273 @@ ures_getKey(const UResourceBundle* resB U_LIFETIME_BOUND) {
   // However, I believe we have some data (e.g., in res_index) where the key
   // strings are the data. Tracing the enclosing table should suffice.
   //
-  if(resB == nullptr) {
-    return nullptr;
+  यदि(resB == शून्यसूचकः) {
+    प्रत्यागम शून्यसूचकः;
   }
-  return(resB->fKey);
+  प्रत्यागम(resB->f_कुञ्चिका);
 }
 
-U_CAPI int32_t U_EXPORT2 ures_getSize(const UResourceBundle *resB) {
-  if(resB == nullptr) {
-    return 0;
+U_CAPI int32_t U_EXPORT2 ures_get_आकार(ध्रुव UResourceBundle *resB) {
+  यदि(resB == शून्यसूचकः) {
+    प्रत्यागम 0;
   }
   
-  return resB->fSize;
+  प्रत्यागम resB->f_आकार;
 }
 
-static const char16_t*
-ures_getStringWithAlias(const UResourceBundle* resB U_LIFETIME_BOUND,
+स्थिर ध्रुव char16_t*
+ures_getStringWithAlias(ध्रुव UResourceBundle* resB U_LIFETIME_BOUND,
                         Resource r,
-                        int32_t sIndex,
+                        int32_t s_सूचकांक,
                         int32_t* len,
-                        UErrorCode* status) {
-  if(RES_GET_TYPE(r) == URES_ALIAS) {
-    const char16_t* result = nullptr;
-    UResourceBundle *tempRes = ures_getByIndex(resB, sIndex, nullptr, status);
-    result = ures_getString(tempRes, len, status);
-    ures_close(tempRes);
-    return result;
-  } else {
-    return res_getString({resB, sIndex}, &resB->getResData(), r, len); 
+                        UError_संहिता* स्थितिः) {
+  यदि(RES_GET_TYPE(r) == URES_ALIAS) {
+    ध्रुव char16_t* परिणाम = शून्यसूचकः;
+    UResourceBundle *अस्थायी_Res = ures_get_By_सूचकांक(resB, s_सूचकांक, शून्यसूचकः, स्थितिः);
+    परिणाम = ures_getString(अस्थायी_Res, len, स्थितिः);
+    ures_close(अस्थायी_Res);
+    प्रत्यागम परिणाम;
+  } अन्यथा {
+    प्रत्यागम res_getString({resB, s_सूचकांक}, &resB->get_Res_दत्त(), r, len); 
   }
 }
 
-U_CAPI void U_EXPORT2 ures_resetIterator(UResourceBundle *resB){
-  if(resB == nullptr) {
-    return;
+U_CAPI शून्य U_EXPORT2 ures_resetIterator(UResourceBundle *resB){
+  यदि(resB == शून्यसूचकः) {
+    प्रत्यागम;
   }
-  resB->fIndex = -1;
+  resB->f_सूचकांक = -1;
 }
 
-U_CAPI UBool U_EXPORT2 ures_hasNext(const UResourceBundle *resB) {
-  if(resB == nullptr) {
-    return false;
+U_CAPI UBool U_EXPORT2 ures_has_अग्र(ध्रुव UResourceBundle *resB) {
+  यदि(resB == शून्यसूचकः) {
+    प्रत्यागम असत्य;
   }
-  return resB->fIndex < resB->fSize-1;
+  प्रत्यागम resB->f_सूचकांक < resB->f_आकार-1;
 }
 
-U_CAPI const char16_t* U_EXPORT2
-ures_getNextString(UResourceBundle* resB U_LIFETIME_BOUND,
+U_CAPI ध्रुव char16_t* U_EXPORT2
+ures_get_अग्र_String(UResourceBundle* resB U_LIFETIME_BOUND,
                    int32_t* len,
-                   const char** key,
-                   UErrorCode* status) {
+                   ध्रुव वर्ण** कुञ्चिका,
+                   UError_संहिता* स्थितिः) {
   Resource r = RES_BOGUS;
   
-  if (status==nullptr || U_FAILURE(*status)) {
-    return nullptr;
+  यदि (स्थितिः==शून्यसूचकः || U_FAILURE(*स्थितिः)) {
+    प्रत्यागम शून्यसूचकः;
   }
-  if(resB == nullptr) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+  यदि(resB == शून्यसूचकः) {
+    *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+    प्रत्यागम शून्यसूचकः;
   }
   
-  if(resB->fIndex == resB->fSize-1) {
-    *status = U_INDEX_OUTOFBOUNDS_ERROR;
-  } else {
-    resB->fIndex++;
-    switch(RES_GET_TYPE(resB->fRes)) {
-    case URES_STRING:
-    case URES_STRING_V2:
-      return res_getString({resB}, &resB->getResData(), resB->fRes, len);
-    case URES_TABLE:
-    case URES_TABLE16:
-    case URES_TABLE32:
-      r = res_getTableItemByIndex(&resB->getResData(), resB->fRes, resB->fIndex, key);
-      if(r == RES_BOGUS && resB->fHasFallback) {
+  यदि(resB->f_सूचकांक == resB->f_आकार-1) {
+    *स्थितिः = U_सूचकांक_OUTOFBOUNDS_ERROR;
+  } अन्यथा {
+    resB->f_सूचकांक++;
+    विकल्प(RES_GET_TYPE(resB->fRes)) {
+    पक्ष URES_STRING:
+    पक्ष URES_STRING_V2:
+      प्रत्यागम res_getString({resB}, &resB->get_Res_दत्त(), resB->fRes, len);
+    पक्ष URES_सारणी:
+    पक्ष URES_TABLE16:
+    पक्ष URES_TABLE32:
+      r = res_get_सारणी_Item_By_सूचकांक(&resB->get_Res_दत्त(), resB->fRes, resB->f_सूचकांक, कुञ्चिका);
+      यदि(r == RES_BOGUS && resB->fHasFallback) {
         /* TODO: do the fallback */
       }
-      return ures_getStringWithAlias(resB, r, resB->fIndex, len, status);
-    case URES_ARRAY:
-    case URES_ARRAY16:
-      r = res_getArrayItem(&resB->getResData(), resB->fRes, resB->fIndex);
-      if(r == RES_BOGUS && resB->fHasFallback) {
+      प्रत्यागम ures_getStringWithAlias(resB, r, resB->f_सूचकांक, len, स्थितिः);
+    पक्ष URES_ARRAY:
+    पक्ष URES_ARRAY16:
+      r = res_getArrayItem(&resB->get_Res_दत्त(), resB->fRes, resB->f_सूचकांक);
+      यदि(r == RES_BOGUS && resB->fHasFallback) {
         /* TODO: do the fallback */
       }
-      return ures_getStringWithAlias(resB, r, resB->fIndex, len, status);
-    case URES_ALIAS:
-      return ures_getStringWithAlias(resB, resB->fRes, resB->fIndex, len, status);
-    case URES_INT:
-    case URES_BINARY:
-    case URES_INT_VECTOR:
-        *status = U_RESOURCE_TYPE_MISMATCH;
+      प्रत्यागम ures_getStringWithAlias(resB, r, resB->f_सूचकांक, len, स्थितिः);
+    पक्ष URES_ALIAS:
+      प्रत्यागम ures_getStringWithAlias(resB, resB->fRes, resB->f_सूचकांक, len, स्थितिः);
+    पक्ष URES_INT:
+    पक्ष URES_द्विमान:
+    पक्ष URES_INT_सदिशम्:
+        *स्थितिः = U_RESOURCE_TYPE_MISMATCH;
         U_FALLTHROUGH;
-    default:
-      return nullptr;
+    स्वभाव:
+      प्रत्यागम शून्यसूचकः;
     }
   }
 
-  return nullptr;
+  प्रत्यागम शून्यसूचकः;
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getNextResource(UResourceBundle* resB,
-                     UResourceBundle* fillIn U_LIFETIME_BOUND,
-                     UErrorCode* status) {
-    const char *key = nullptr;
+ures_get_अग्र_Resource(UResourceBundle* resB,
+                     UResourceBundle* fill_अन्तर् U_LIFETIME_BOUND,
+                     UError_संहिता* स्थितिः) {
+    ध्रुव वर्ण *कुञ्चिका = शून्यसूचकः;
     Resource r = RES_BOGUS;
 
-    if (status==nullptr || U_FAILURE(*status)) {
+    यदि (स्थितिः==शून्यसूचकः || U_FAILURE(*स्थितिः)) {
             /*return nullptr;*/
-            return fillIn;
+            प्रत्यागम fill_अन्तर्;
     }
-    if(resB == nullptr) {
-            *status = U_ILLEGAL_ARGUMENT_ERROR;
+    यदि(resB == शून्यसूचकः) {
+            *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
             /*return nullptr;*/
-            return fillIn;
+            प्रत्यागम fill_अन्तर्;
     }
 
-    if(resB->fIndex == resB->fSize-1) {
-      *status = U_INDEX_OUTOFBOUNDS_ERROR;
+    यदि(resB->f_सूचकांक == resB->f_आकार-1) {
+      *स्थितिः = U_सूचकांक_OUTOFBOUNDS_ERROR;
       /*return nullptr;*/
-    } else {
-        resB->fIndex++;
-        switch(RES_GET_TYPE(resB->fRes)) {
-        case URES_INT:
-        case URES_BINARY:
-        case URES_STRING:
-        case URES_STRING_V2:
-        case URES_INT_VECTOR:
-            return ures_copyResb(fillIn, resB, status);
-        case URES_TABLE:
-        case URES_TABLE16:
-        case URES_TABLE32:
-            r = res_getTableItemByIndex(&resB->getResData(), resB->fRes, resB->fIndex, &key);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+    } अन्यथा {
+        resB->f_सूचकांक++;
+        विकल्प(RES_GET_TYPE(resB->fRes)) {
+        पक्ष URES_INT:
+        पक्ष URES_द्विमान:
+        पक्ष URES_STRING:
+        पक्ष URES_STRING_V2:
+        पक्ष URES_INT_सदिशम्:
+            प्रत्यागम ures_copyResb(fill_अन्तर्, resB, स्थितिः);
+        पक्ष URES_सारणी:
+        पक्ष URES_TABLE16:
+        पक्ष URES_TABLE32:
+            r = res_get_सारणी_Item_By_सूचकांक(&resB->get_Res_दत्त(), resB->fRes, resB->f_सूचकांक, &कुञ्चिका);
+            यदि(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return init_resb_result(resB->fData, r, key, resB->fIndex, resB, fillIn, status);
-        case URES_ARRAY:
-        case URES_ARRAY16:
-            r = res_getArrayItem(&resB->getResData(), resB->fRes, resB->fIndex);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+            प्रत्यागम init_resb_परिणाम(resB->f_दत्त, r, कुञ्चिका, resB->f_सूचकांक, resB, fill_अन्तर्, स्थितिः);
+        पक्ष URES_ARRAY:
+        पक्ष URES_ARRAY16:
+            r = res_getArrayItem(&resB->get_Res_दत्त(), resB->fRes, resB->f_सूचकांक);
+            यदि(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return init_resb_result(resB->fData, r, key, resB->fIndex, resB, fillIn, status);
-        default:
+            प्रत्यागम init_resb_परिणाम(resB->f_दत्त, r, कुञ्चिका, resB->f_सूचकांक, resB, fill_अन्तर्, स्थितिः);
+        स्वभाव:
             /*return nullptr;*/
-            return fillIn;
+            प्रत्यागम fill_अन्तर्;
         }
     }
     /*return nullptr;*/
-    return fillIn;
+    प्रत्यागम fill_अन्तर्;
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByIndex(const UResourceBundle* resB,
-                int32_t indexR,
-                UResourceBundle* fillIn U_LIFETIME_BOUND,
-                UErrorCode* status) {
-    const char* key = nullptr;
+ures_get_By_सूचकांक(ध्रुव UResourceBundle* resB,
+                int32_t सूचकांक_R,
+                UResourceBundle* fill_अन्तर् U_LIFETIME_BOUND,
+                UError_संहिता* स्थितिः) {
+    ध्रुव वर्ण* कुञ्चिका = शून्यसूचकः;
     Resource r = RES_BOGUS;
 
-    if (status==nullptr || U_FAILURE(*status)) {
+    यदि (स्थितिः==शून्यसूचकः || U_FAILURE(*स्थितिः)) {
         /*return nullptr;*/
-        return fillIn;
+        प्रत्यागम fill_अन्तर्;
     }
-    if(resB == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
+    यदि(resB == शून्यसूचकः) {
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
         /*return nullptr;*/
-        return fillIn;
+        प्रत्यागम fill_अन्तर्;
     }
 
-    if(indexR >= 0 && resB->fSize > indexR) {
-        switch(RES_GET_TYPE(resB->fRes)) {
-        case URES_INT:
-        case URES_BINARY:
-        case URES_STRING:
-        case URES_STRING_V2:
-        case URES_INT_VECTOR:
-            return ures_copyResb(fillIn, resB, status);
-        case URES_TABLE:
-        case URES_TABLE16:
-        case URES_TABLE32:
-            r = res_getTableItemByIndex(&resB->getResData(), resB->fRes, indexR, &key);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+    यदि(सूचकांक_R >= 0 && resB->f_आकार > सूचकांक_R) {
+        विकल्प(RES_GET_TYPE(resB->fRes)) {
+        पक्ष URES_INT:
+        पक्ष URES_द्विमान:
+        पक्ष URES_STRING:
+        पक्ष URES_STRING_V2:
+        पक्ष URES_INT_सदिशम्:
+            प्रत्यागम ures_copyResb(fill_अन्तर्, resB, स्थितिः);
+        पक्ष URES_सारणी:
+        पक्ष URES_TABLE16:
+        पक्ष URES_TABLE32:
+            r = res_get_सारणी_Item_By_सूचकांक(&resB->get_Res_दत्त(), resB->fRes, सूचकांक_R, &कुञ्चिका);
+            यदि(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return init_resb_result(resB->fData, r, key, indexR, resB, fillIn, status);
-        case URES_ARRAY:
-        case URES_ARRAY16:
-            r = res_getArrayItem(&resB->getResData(), resB->fRes, indexR);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+            प्रत्यागम init_resb_परिणाम(resB->f_दत्त, r, कुञ्चिका, सूचकांक_R, resB, fill_अन्तर्, स्थितिः);
+        पक्ष URES_ARRAY:
+        पक्ष URES_ARRAY16:
+            r = res_getArrayItem(&resB->get_Res_दत्त(), resB->fRes, सूचकांक_R);
+            यदि(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return init_resb_result(resB->fData, r, key, indexR, resB, fillIn, status);
-        default:
+            प्रत्यागम init_resb_परिणाम(resB->f_दत्त, r, कुञ्चिका, सूचकांक_R, resB, fill_अन्तर्, स्थितिः);
+        स्वभाव:
             /*return nullptr;*/
-            return fillIn;
+            प्रत्यागम fill_अन्तर्;
         }
-    } else {
-        *status = U_MISSING_RESOURCE_ERROR;
+    } अन्यथा {
+        *स्थितिः = U_MISSING_RESOURCE_ERROR;
     }
     /*return nullptr;*/
-    return fillIn;
+    प्रत्यागम fill_अन्तर्;
 }
 
-U_CAPI const char16_t* U_EXPORT2
-ures_getStringByIndex(const UResourceBundle* resB U_LIFETIME_BOUND,
-                      int32_t indexS,
+U_CAPI ध्रुव char16_t* U_EXPORT2
+ures_get_String_By_सूचकांक(ध्रुव UResourceBundle* resB U_LIFETIME_BOUND,
+                      int32_t सूचकांक_S,
                       int32_t* len,
-                      UErrorCode* status) {
-    const char* key = nullptr;
+                      UError_संहिता* स्थितिः) {
+    ध्रुव वर्ण* कुञ्चिका = शून्यसूचकः;
     Resource r = RES_BOGUS;
 
-    if (status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    यदि (स्थितिः==शून्यसूचकः || U_FAILURE(*स्थितिः)) {
+        प्रत्यागम शून्यसूचकः;
     }
-    if(resB == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    यदि(resB == शून्यसूचकः) {
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
 
-    if(indexS >= 0 && resB->fSize > indexS) {
-        switch(RES_GET_TYPE(resB->fRes)) {
-        case URES_STRING:
-        case URES_STRING_V2:
-            return res_getString({resB}, &resB->getResData(), resB->fRes, len);
-        case URES_TABLE:
-        case URES_TABLE16:
-        case URES_TABLE32:
-            r = res_getTableItemByIndex(&resB->getResData(), resB->fRes, indexS, &key);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+    यदि(सूचकांक_S >= 0 && resB->f_आकार > सूचकांक_S) {
+        विकल्प(RES_GET_TYPE(resB->fRes)) {
+        पक्ष URES_STRING:
+        पक्ष URES_STRING_V2:
+            प्रत्यागम res_getString({resB}, &resB->get_Res_दत्त(), resB->fRes, len);
+        पक्ष URES_सारणी:
+        पक्ष URES_TABLE16:
+        पक्ष URES_TABLE32:
+            r = res_get_सारणी_Item_By_सूचकांक(&resB->get_Res_दत्त(), resB->fRes, सूचकांक_S, &कुञ्चिका);
+            यदि(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return ures_getStringWithAlias(resB, r, indexS, len, status);
-        case URES_ARRAY:
-        case URES_ARRAY16:
-            r = res_getArrayItem(&resB->getResData(), resB->fRes, indexS);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+            प्रत्यागम ures_getStringWithAlias(resB, r, सूचकांक_S, len, स्थितिः);
+        पक्ष URES_ARRAY:
+        पक्ष URES_ARRAY16:
+            r = res_getArrayItem(&resB->get_Res_दत्त(), resB->fRes, सूचकांक_S);
+            यदि(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return ures_getStringWithAlias(resB, r, indexS, len, status);
-        case URES_ALIAS:
-            return ures_getStringWithAlias(resB, resB->fRes, indexS, len, status);
-        case URES_INT:
-        case URES_BINARY:
-        case URES_INT_VECTOR:
-            *status = U_RESOURCE_TYPE_MISMATCH;
-            break;
-        default:
+            प्रत्यागम ures_getStringWithAlias(resB, r, सूचकांक_S, len, स्थितिः);
+        पक्ष URES_ALIAS:
+            प्रत्यागम ures_getStringWithAlias(resB, resB->fRes, सूचकांक_S, len, स्थितिः);
+        पक्ष URES_INT:
+        पक्ष URES_द्विमान:
+        पक्ष URES_INT_सदिशम्:
+            *स्थितिः = U_RESOURCE_TYPE_MISMATCH;
+            भङ्ग;
+        स्वभाव:
           /* must not occur */
-          *status = U_INTERNAL_PROGRAM_ERROR;
-          break;
+          *स्थितिः = U_आन्तरिकम्_क्रमादेशः_ERROR;
+          भङ्ग;
         }
-    } else {
-        *status = U_MISSING_RESOURCE_ERROR;
+    } अन्यथा {
+        *स्थितिः = U_MISSING_RESOURCE_ERROR;
     }
-    return nullptr;
+    प्रत्यागम शून्यसूचकः;
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getUTF8StringByIndex(const UResourceBundle* resB,
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+ures_get_UTF8_String_By_सूचकांक(ध्रुव UResourceBundle* resB,
                           int32_t idx,
-                          char* dest U_LIFETIME_BOUND,
-                          int32_t* pLength,
+                          वर्ण* dest U_LIFETIME_BOUND,
+                          int32_t* p_दीर्घता,
                           UBool forceCopy,
-                          UErrorCode* status) {
+                          UError_संहिता* स्थितिः) {
     int32_t length16;
-    const char16_t *s16 = ures_getStringByIndex(resB, idx, &length16, status);
-    return ures_toUTF8String(s16, length16, dest, pLength, forceCopy, status);
+    ध्रुव char16_t *s16 = ures_get_String_By_सूचकांक(resB, idx, &length16, स्थितिः);
+    प्रत्यागम ures_गन्तव्यम्_UTF8_String(s16, length16, dest, p_दीर्घता, forceCopy, स्थितिः);
 }
 
 /*U_CAPI const char *ures_getResPath(UResourceBundle *resB) {
@@ -1990,155 +1990,155 @@ ures_getUTF8StringByIndex(const UResourceBundle* resB,
 }*/
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_findResource(const char* path, UResourceBundle* fillIn U_LIFETIME_BOUND, UErrorCode* status)
+ures_findResource(ध्रुव वर्ण* मार्गः, UResourceBundle* fill_अन्तर् U_LIFETIME_BOUND, UError_संहिता* स्थितिः)
 {
-  UResourceBundle *first = nullptr; 
-  UResourceBundle *result = fillIn;
-  char *packageName = nullptr;
-  char *pathToResource = nullptr, *save = nullptr;
-  char *locale = nullptr, *localeEnd = nullptr;
+  UResourceBundle *first = शून्यसूचकः; 
+  UResourceBundle *परिणाम = fill_अन्तर्;
+  वर्ण *packageName = शून्यसूचकः;
+  वर्ण *मार्गः_गन्तव्यम्_Resource = शून्यसूचकः, *save = शून्यसूचकः;
+  वर्ण *locale = शून्यसूचकः, *locale_अन्तः = शून्यसूचकः;
   int32_t length;
 
-  if(status == nullptr || U_FAILURE(*status)) {
-    return result;
+  यदि(स्थितिः == शून्यसूचकः || U_FAILURE(*स्थितिः)) {
+    प्रत्यागम परिणाम;
   }
 
-  length = (int32_t)(uprv_strlen(path)+1);
-  save = pathToResource = (char *)uprv_malloc(length*sizeof(char));
+  length = (int32_t)(uprv_strlen(मार्गः)+1);
+  save = मार्गः_गन्तव्यम्_Resource = (वर्ण *)uprv_malloc(length*परिमाण(वर्ण));
   /* test for nullptr */
-  if(pathToResource == nullptr) {
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return result;
+  यदि(मार्गः_गन्तव्यम्_Resource == शून्यसूचकः) {
+    *स्थितिः = U_स्मृतिः_आवण्टनम्_ERROR;
+    प्रत्यागम परिणाम;
   }
-  uprv_memcpy(pathToResource, path, length);
+  uprv_memcpy(मार्गः_गन्तव्यम्_Resource, मार्गः, length);
 
-  locale = pathToResource;
-  if(*pathToResource == RES_PATH_SEPARATOR) { /* there is a path specification */
-    pathToResource++;
-    packageName = pathToResource;
-    pathToResource = uprv_strchr(pathToResource, RES_PATH_SEPARATOR);
-    if(pathToResource == nullptr) {
-      *status = U_ILLEGAL_ARGUMENT_ERROR;
-    } else {
-      *pathToResource = 0;
-      locale = pathToResource+1;
+  locale = मार्गः_गन्तव्यम्_Resource;
+  यदि(*मार्गः_गन्तव्यम्_Resource == RES_मार्गः_SEPARATOR) { /* there is a path specification */
+    मार्गः_गन्तव्यम्_Resource++;
+    packageName = मार्गः_गन्तव्यम्_Resource;
+    मार्गः_गन्तव्यम्_Resource = uprv_strchr(मार्गः_गन्तव्यम्_Resource, RES_मार्गः_SEPARATOR);
+    यदि(मार्गः_गन्तव्यम्_Resource == शून्यसूचकः) {
+      *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+    } अन्यथा {
+      *मार्गः_गन्तव्यम्_Resource = 0;
+      locale = मार्गः_गन्तव्यम्_Resource+1;
     }
   }
 
-  localeEnd = uprv_strchr(locale, RES_PATH_SEPARATOR);
-  if(localeEnd != nullptr) {
-    *localeEnd = 0;
+  locale_अन्तः = uprv_strchr(locale, RES_मार्गः_SEPARATOR);
+  यदि(locale_अन्तः != शून्यसूचकः) {
+    *locale_अन्तः = 0;
   }
 
-  first = ures_open(packageName, locale, status);
+  first = ures_open(packageName, locale, स्थितिः);
 
-  if(U_SUCCESS(*status)) {
-    if(localeEnd) {
-      result = ures_findSubResource(first, localeEnd+1, fillIn, status);
-    } else {
-      result = ures_copyResb(fillIn, first, status);
+  यदि(U_SUCCESS(*स्थितिः)) {
+    यदि(locale_अन्तः) {
+      परिणाम = ures_findSubResource(first, locale_अन्तः+1, fill_अन्तर्, स्थितिः);
+    } अन्यथा {
+      परिणाम = ures_copyResb(fill_अन्तर्, first, स्थितिः);
     }
     ures_close(first);
   }
   uprv_free(save);
-  return result;
+  प्रत्यागम परिणाम;
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_findSubResource(const UResourceBundle* resB,
-                     char* path,
-                     UResourceBundle* fillIn U_LIFETIME_BOUND,
-                     UErrorCode* status)
+ures_findSubResource(ध्रुव UResourceBundle* resB,
+                     वर्ण* मार्गः,
+                     UResourceBundle* fill_अन्तर् U_LIFETIME_BOUND,
+                     UError_संहिता* स्थितिः)
 {
   Resource res = RES_BOGUS;
-  UResourceBundle *result = fillIn;
-  const char *key;
+  UResourceBundle *परिणाम = fill_अन्तर्;
+  ध्रुव वर्ण *कुञ्चिका;
 
-  if(status == nullptr || U_FAILURE(*status)) {
-    return result;
+  यदि(स्थितिः == शून्यसूचकः || U_FAILURE(*स्थितिः)) {
+    प्रत्यागम परिणाम;
   }
 
   /* here we do looping and circular alias checking */
   /* this loop is here because aliasing is resolved on this level, not on res level */
   /* so, when we encounter an alias, it is not an aggregate resource, so we return */
-  do {
-    res = res_findResource(&resB->getResData(), resB->fRes, &path, &key); 
-    if(res != RES_BOGUS) {
-        result = init_resb_result(resB->fData, res, key, -1, resB, fillIn, status);
-        resB = result;
-    } else {
-        *status = U_MISSING_RESOURCE_ERROR;
-        break;
+  कुरु {
+    res = res_findResource(&resB->get_Res_दत्त(), resB->fRes, &मार्गः, &कुञ्चिका); 
+    यदि(res != RES_BOGUS) {
+        परिणाम = init_resb_परिणाम(resB->f_दत्त, res, कुञ्चिका, -1, resB, fill_अन्तर्, स्थितिः);
+        resB = परिणाम;
+    } अन्यथा {
+        *स्थितिः = U_MISSING_RESOURCE_ERROR;
+        भङ्ग;
     }
-  } while(*path); /* there is more stuff in the path */
+  } यावत्(*मार्गः); /* there is more stuff in the path */
 
-  return result;
+  प्रत्यागम परिणाम;
 }
 
-U_CAPI const char16_t* U_EXPORT2
-ures_getStringByKeyWithFallback(const UResourceBundle* resB U_LIFETIME_BOUND,
-                                const char* inKey,
+U_CAPI ध्रुव char16_t* U_EXPORT2
+ures_get_String_By_कुञ्चिका_With_Fallback(ध्रुव UResourceBundle* resB U_LIFETIME_BOUND,
+                                ध्रुव वर्ण* अन्तर्_कुञ्चिका,
                                 int32_t* len,
-                                UErrorCode* status) {
-    UResourceBundle stack;
-    const char16_t* retVal = nullptr;
-    ures_initStackObject(&stack);
-    ures_getByKeyWithFallback(resB, inKey, &stack, status);
+                                UError_संहिता* स्थितिः) {
+    UResourceBundle राशिः_2;
+    ध्रुव char16_t* retVal = शून्यसूचकः;
+    ures_init_राशिः_Object(&राशिः_2);
+    ures_get_By_कुञ्चिका_With_Fallback(resB, अन्तर्_कुञ्चिका, &राशिः_2, स्थितिः);
     int32_t length;
-    retVal = ures_getString(&stack, &length, status);
-    ures_close(&stack);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    retVal = ures_getString(&राशिः_2, &length, स्थितिः);
+    ures_close(&राशिः_2);
+    यदि (U_FAILURE(*स्थितिः)) {
+        प्रत्यागम शून्यसूचकः;
     }
-    if (length == 3 && retVal[0] == EMPTY_SET && retVal[1] == EMPTY_SET && retVal[2] == EMPTY_SET ) {
-        retVal = nullptr;
+    यदि (length == 3 && retVal[0] == रिक्तानि_समुच्चयः && retVal[1] == रिक्तानि_समुच्चयः && retVal[2] == रिक्तानि_समुच्चयः ) {
+        retVal = शून्यसूचकः;
         length = 0;
-        *status = U_MISSING_RESOURCE_ERROR;
+        *स्थितिः = U_MISSING_RESOURCE_ERROR;
     }
-    if (len != nullptr) {
+    यदि (len != शून्यसूचकः) {
         *len = length;
     }
-    return retVal;
+    प्रत्यागम retVal;
 }
 
 /*
   Like res_getTableItemByKey but accepts full paths like "NumberElements/latn/patternsShort".
 */  
-static Resource getTableItemByKeyPath(const ResourceData *pResData, Resource table, const char *key) {
-  Resource resource = table;  /* The current resource */
-  icu::CharString path;
-  UErrorCode errorCode = U_ZERO_ERROR;
-  path.append(key, errorCode);
-  if (U_FAILURE(errorCode)) { return RES_BOGUS; }
-  char *pathPart = path.data();  /* Path from current resource to desired resource */
+स्थिर Resource get_सारणी_Item_By_कुञ्चिका_मार्गः(ध्रुव Resource_दत्त *p_Res_दत्त, Resource सारणी, ध्रुव वर्ण *कुञ्चिका) {
+  Resource resource = सारणी;  /* The current resource */
+  icu::CharString मार्गः;
+  UError_संहिता error_संहिता = U_ZERO_ERROR;
+  मार्गः.append(कुञ्चिका, error_संहिता);
+  यदि (U_FAILURE(error_संहिता)) { प्रत्यागम RES_BOGUS; }
+  वर्ण *मार्गः_Part = मार्गः.दत्त();  /* Path from current resource to desired resource */
   UResType type = static_cast<UResType>(RES_GET_TYPE(resource)); /* the current resource type */
-  while (*pathPart && resource != RES_BOGUS && URES_IS_CONTAINER(type)) {
-    char *nextPathPart = uprv_strchr(pathPart, RES_PATH_SEPARATOR);
-    if (nextPathPart != nullptr) {
-      *nextPathPart = 0;  /* Terminating null for this part of path. */
-      nextPathPart++;
-    } else {
-      nextPathPart = uprv_strchr(pathPart, 0);
+  यावत् (*मार्गः_Part && resource != RES_BOGUS && URES_IS_CONTAINER(type)) {
+    वर्ण *अग्र_मार्गः_Part = uprv_strchr(मार्गः_Part, RES_मार्गः_SEPARATOR);
+    यदि (अग्र_मार्गः_Part != शून्यसूचकः) {
+      *अग्र_मार्गः_Part = 0;  /* Terminating null for this part of path. */
+      अग्र_मार्गः_Part++;
+    } अन्यथा {
+      अग्र_मार्गः_Part = uprv_strchr(मार्गः_Part, 0);
     }
     int32_t t;
-    const char *pathP = pathPart;
-    resource = res_getTableItemByKey(pResData, resource, &t, &pathP);
+    ध्रुव वर्ण *मार्गः_P = मार्गः_Part;
+    resource = res_get_सारणी_Item_By_कुञ्चिका(p_Res_दत्त, resource, &t, &मार्गः_P);
     type = static_cast<UResType>(RES_GET_TYPE(resource));
-    pathPart = nextPathPart; 
+    मार्गः_Part = अग्र_मार्गः_Part; 
   }
-  if (*pathPart) {
-    return RES_BOGUS;
+  यदि (*मार्गः_Part) {
+    प्रत्यागम RES_BOGUS;
   }
-  return resource;
+  प्रत्यागम resource;
 }
 
-static void createPath(const char* origResPath,
-                       int32_t     origResPathLen,
-                       const char* resPath,
-                       int32_t     resPathLen,
-                       const char* inKey,
-                       CharString& path,
-                       UErrorCode* status) {
+स्थिर शून्य create_मार्गः(ध्रुव वर्ण* orig_Res_मार्गः,
+                       int32_t     orig_Res_मार्गः_Len,
+                       ध्रुव वर्ण* res_मार्गः,
+                       int32_t     res_मार्गः_Len,
+                       ध्रुव वर्ण* अन्तर्_कुञ्चिका,
+                       CharString& मार्गः,
+                       UError_संहिता* स्थितिः) {
     // This is a utility function used by ures_getByKeyWithFallback() below.  This function builds a path from
     // resPath and inKey, returning the result in `path`.  Originally, this function just cleared `path` and
     // appended resPath and inKey to it, but that caused problems for horizontal inheritance.
@@ -2151,47 +2151,47 @@ static void createPath(const char* origResPath,
     // deletes a path element from the beginning of inKey.  The remainder of inKey is then appended to
     // resPath to form the result.  (We're not using uprv_strchr() here because resPath and origResPath may
     // not be zero-terminated.)
-    path.clear();
-    const char* key = inKey;
-    if (resPathLen > 0) {
-        path.append(resPath, resPathLen, *status);
-        if (U_SUCCESS(*status)) {
-            const char* resPathLimit = resPath + resPathLen;
-            const char* origResPathLimit = origResPath + origResPathLen;
-            const char* resPathPtr = resPath;
-            const char* origResPathPtr = origResPath;
+    मार्गः.clear();
+    ध्रुव वर्ण* कुञ्चिका = अन्तर्_कुञ्चिका;
+    यदि (res_मार्गः_Len > 0) {
+        मार्गः.append(res_मार्गः, res_मार्गः_Len, *स्थितिः);
+        यदि (U_SUCCESS(*स्थितिः)) {
+            ध्रुव वर्ण* res_मार्गः_सीमा = res_मार्गः + res_मार्गः_Len;
+            ध्रुव वर्ण* orig_Res_मार्गः_सीमा = orig_Res_मार्गः + orig_Res_मार्गः_Len;
+            ध्रुव वर्ण* res_मार्गः_Ptr = res_मार्गः;
+            ध्रुव वर्ण* orig_Res_मार्गः_Ptr = orig_Res_मार्गः;
             
             // Remove from the beginning of resPath the number of segments that are contained in origResPath.
             // If origResPath has MORE segments than resPath, this will leave resPath as the empty string.
-            while (origResPathPtr < origResPathLimit && resPathPtr < resPathLimit) {
-                while (origResPathPtr < origResPathLimit && *origResPathPtr != RES_PATH_SEPARATOR) {
-                    ++origResPathPtr;
+            यावत् (orig_Res_मार्गः_Ptr < orig_Res_मार्गः_सीमा && res_मार्गः_Ptr < res_मार्गः_सीमा) {
+                यावत् (orig_Res_मार्गः_Ptr < orig_Res_मार्गः_सीमा && *orig_Res_मार्गः_Ptr != RES_मार्गः_SEPARATOR) {
+                    ++orig_Res_मार्गः_Ptr;
                 }
-                if (origResPathPtr < origResPathLimit && *origResPathPtr == RES_PATH_SEPARATOR) {
-                    ++origResPathPtr;
+                यदि (orig_Res_मार्गः_Ptr < orig_Res_मार्गः_सीमा && *orig_Res_मार्गः_Ptr == RES_मार्गः_SEPARATOR) {
+                    ++orig_Res_मार्गः_Ptr;
                 }
-                while (resPathPtr < resPathLimit && *resPathPtr != RES_PATH_SEPARATOR) {
-                    ++resPathPtr;
+                यावत् (res_मार्गः_Ptr < res_मार्गः_सीमा && *res_मार्गः_Ptr != RES_मार्गः_SEPARATOR) {
+                    ++res_मार्गः_Ptr;
                 }
-                if (resPathPtr < resPathLimit && *resPathPtr == RES_PATH_SEPARATOR) {
-                    ++resPathPtr;
+                यदि (res_मार्गः_Ptr < res_मार्गः_सीमा && *res_मार्गः_Ptr == RES_मार्गः_SEPARATOR) {
+                    ++res_मार्गः_Ptr;
                 }
             }
             
             // New remove from the beginning of `key` the number of segments remaining in resPath.
             // If resPath has more segments than `key` does, `key` will end up empty.
-            while (resPathPtr < resPathLimit && *key != '\0') {
-                while (resPathPtr < resPathLimit && *resPathPtr != RES_PATH_SEPARATOR) {
-                    ++resPathPtr;
+            यावत् (res_मार्गः_Ptr < res_मार्गः_सीमा && *कुञ्चिका != '\0') {
+                यावत् (res_मार्गः_Ptr < res_मार्गः_सीमा && *res_मार्गः_Ptr != RES_मार्गः_SEPARATOR) {
+                    ++res_मार्गः_Ptr;
                 }
-                if (resPathPtr < resPathLimit && *resPathPtr == RES_PATH_SEPARATOR) {
-                    ++resPathPtr;
+                यदि (res_मार्गः_Ptr < res_मार्गः_सीमा && *res_मार्गः_Ptr == RES_मार्गः_SEPARATOR) {
+                    ++res_मार्गः_Ptr;
                 }
-                while (*key != '\0' && *key != RES_PATH_SEPARATOR) {
-                    ++key;
+                यावत् (*कुञ्चिका != '\0' && *कुञ्चिका != RES_मार्गः_SEPARATOR) {
+                    ++कुञ्चिका;
                 }
-                if (*key == RES_PATH_SEPARATOR) {
-                    ++key;
+                यदि (*कुञ्चिका == RES_मार्गः_SEPARATOR) {
+                    ++कुञ्चिका;
                 }
             }
         }
@@ -2199,132 +2199,132 @@ static void createPath(const char* origResPath,
         // any pieces of `key` that aren't superseded by `resPath`.
         // Or, to put it another way, calculate <#-segments-in-key> - (<#-segments-in-resPath> - <#-segments-in-origResPath>),
         // and append that many segments from the end of `key` to `resPath` to produce the result.
-        path.append(key, *status);
-    } else {
-        path.append(inKey, *status);
+        मार्गः.append(कुञ्चिका, *स्थितिः);
+    } अन्यथा {
+        मार्गः.append(अन्तर्_कुञ्चिका, *स्थितिः);
     }
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByKeyWithFallback(const UResourceBundle* resB,
-                          const char* inKey,
-                          UResourceBundle* fillIn U_LIFETIME_BOUND,
-                          UErrorCode* status) {
-    Resource res = RES_BOGUS, rootRes = RES_BOGUS;
-    UResourceBundle *helper = nullptr;
+ures_get_By_कुञ्चिका_With_Fallback(ध्रुव UResourceBundle* resB,
+                          ध्रुव वर्ण* अन्तर्_कुञ्चिका,
+                          UResourceBundle* fill_अन्तर् U_LIFETIME_BOUND,
+                          UError_संहिता* स्थितिः) {
+    Resource res = RES_BOGUS, मूलम्_Res = RES_BOGUS;
+    UResourceBundle *helper = शून्यसूचकः;
 
-    if (status==nullptr || U_FAILURE(*status)) {
-        return fillIn;
+    यदि (स्थितिः==शून्यसूचकः || U_FAILURE(*स्थितिः)) {
+        प्रत्यागम fill_अन्तर्;
     }
-    if(resB == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return fillIn;
+    यदि(resB == शून्यसूचकः) {
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम fill_अन्तर्;
     }
 
     int32_t type = RES_GET_TYPE(resB->fRes);
-    if(URES_IS_TABLE(type)) {
-        const char* origResPath = resB->fResPath;
-        int32_t origResPathLen = resB->fResPathLen;
-        res = getTableItemByKeyPath(&resB->getResData(), resB->fRes, inKey);
-        const char* key = inKey;
-        bool didRootOnce = false;
-        if(res == RES_BOGUS) {
-            UResourceDataEntry *dataEntry = resB->fData;
-            CharString path;
-            char *myPath = nullptr;
-            const char* resPath = resB->fResPath;
-            int32_t len = resB->fResPathLen;
-            while(res == RES_BOGUS && (dataEntry->fParent != nullptr || !didRootOnce)) { /* Otherwise, we'll look in parents */
-                if (dataEntry->fParent != nullptr) {
-                    dataEntry = dataEntry->fParent;
-                } else {
+    यदि(URES_IS_सारणी(type)) {
+        ध्रुव वर्ण* orig_Res_मार्गः = resB->f_Res_मार्गः;
+        int32_t orig_Res_मार्गः_Len = resB->f_Res_मार्गः_Len;
+        res = get_सारणी_Item_By_कुञ्चिका_मार्गः(&resB->get_Res_दत्त(), resB->fRes, अन्तर्_कुञ्चिका);
+        ध्रुव वर्ण* कुञ्चिका = अन्तर्_कुञ्चिका;
+        तार्किक did_मूलम्_Once = असत्य;
+        यदि(res == RES_BOGUS) {
+            UResource_दत्त_प्रविष्टिः *दत्त_प्रविष्टिः = resB->f_दत्त;
+            CharString मार्गः;
+            वर्ण *my_मार्गः = शून्यसूचकः;
+            ध्रुव वर्ण* res_मार्गः = resB->f_Res_मार्गः;
+            int32_t len = resB->f_Res_मार्गः_Len;
+            यावत्(res == RES_BOGUS && (दत्त_प्रविष्टिः->fParent != शून्यसूचकः || !did_मूलम्_Once)) { /* Otherwise, we'll look in parents */
+                यदि (दत्त_प्रविष्टिः->fParent != शून्यसूचकः) {
+                    दत्त_प्रविष्टिः = दत्त_प्रविष्टिः->fParent;
+                } अन्यथा {
                     // We can't just stop when we get to a bundle whose fParent is nullptr.  That'll work most of the time,
                     // but if the bundle that the caller passed to us was "root" (which happens in getAllItemsWithFallback(),
                     // this function will drop right out without doing anything if "root" doesn't contain the exact key path
                     // specified.  In that case, we need one extra time through this loop to make sure we follow any
                     // applicable aliases at the root level.
-                    didRootOnce = true;
+                    did_मूलम्_Once = सत्य;
                 }
-                rootRes = dataEntry->fData.rootRes;
+                मूलम्_Res = दत्त_प्रविष्टिः->f_दत्त.मूलम्_Res;
 
-                if(dataEntry->fBogus == U_ZERO_ERROR) {
-                    createPath(origResPath, origResPathLen, resPath, len, inKey, path, status);
-                    if (U_FAILURE(*status)) {
+                यदि(दत्त_प्रविष्टिः->fBogus == U_ZERO_ERROR) {
+                    create_मार्गः(orig_Res_मार्गः, orig_Res_मार्गः_Len, res_मार्गः, len, अन्तर्_कुञ्चिका, मार्गः, स्थितिः);
+                    यदि (U_FAILURE(*स्थितिः)) {
                         ures_close(helper);
-                        return fillIn;
+                        प्रत्यागम fill_अन्तर्;
                     }
-                    myPath = path.data();
-                    key = inKey;
-                    do {
-                        res = res_findResource(&(dataEntry->fData), rootRes, &myPath, &key);
-                        if (RES_GET_TYPE(res) == URES_ALIAS && *myPath) {
+                    my_मार्गः = मार्गः.दत्त();
+                    कुञ्चिका = अन्तर्_कुञ्चिका;
+                    कुरु {
+                        res = res_findResource(&(दत्त_प्रविष्टिः->f_दत्त), मूलम्_Res, &my_मार्गः, &कुञ्चिका);
+                        यदि (RES_GET_TYPE(res) == URES_ALIAS && *my_मार्गः) {
                             /* We hit an alias, but we didn't finish following the path. */
-                            helper = init_resb_result(dataEntry, res, nullptr, -1, resB, helper, status);
+                            helper = init_resb_परिणाम(दत्त_प्रविष्टिः, res, शून्यसूचकः, -1, resB, helper, स्थितिः);
                             /*helper = init_resb_result(dataEntry, res, inKey, -1, resB, helper, status);*/
-                            if(helper) {
-                              dataEntry = helper->fData;
-                              rootRes = helper->fRes;
-                              resPath = helper->fResPath;
-                              len = helper->fResPathLen;
+                            यदि(helper) {
+                              दत्त_प्रविष्टिः = helper->f_दत्त;
+                              मूलम्_Res = helper->fRes;
+                              res_मार्गः = helper->f_Res_मार्गः;
+                              len = helper->f_Res_मार्गः_Len;
 
-                            } else {
-                              break;
+                            } अन्यथा {
+                              भङ्ग;
                             }
-                        } else if (res == RES_BOGUS) {
-                            break;
+                        } अन्यथा यदि (res == RES_BOGUS) {
+                            भङ्ग;
                         }
-                    } while(*myPath); /* Continue until the whole path is consumed */
+                    } यावत्(*my_मार्गः); /* Continue until the whole path is consumed */
                 }
             }
             /*dataEntry = getFallbackData(resB, &key, &res, status);*/
-            if(res != RES_BOGUS) {
+            यदि(res != RES_BOGUS) {
               /* check if resB->fResPath gives the right name here */
-                if(uprv_strcmp(dataEntry->fName, uloc_getDefault())==0 || uprv_strcmp(dataEntry->fName, kRootLocaleName)==0) {
-                    *status = U_USING_DEFAULT_WARNING;
-                } else {
-                    *status = U_USING_FALLBACK_WARNING;
+                यदि(uprv_strcmp(दत्त_प्रविष्टिः->fName, uloc_getDefault())==0 || uprv_strcmp(दत्त_प्रविष्टिः->fName, k_मूलम्_Locale_Name)==0) {
+                    *स्थितिः = U_USING_DEFAULT_WARNING;
+                } अन्यथा {
+                    *स्थितिः = U_USING_FALLBACK_WARNING;
                 }
 
-                fillIn = init_resb_result(dataEntry, res, key, -1, resB, fillIn, status);
-                if (resPath != nullptr) {
-                    createPath(origResPath, origResPathLen, resPath, len, inKey, path, status);
-                } else {
-                    const char* separator = nullptr;
-                    if (fillIn->fResPath != nullptr) {
-                        separator = uprv_strchr(fillIn->fResPath, RES_PATH_SEPARATOR);
+                fill_अन्तर् = init_resb_परिणाम(दत्त_प्रविष्टिः, res, कुञ्चिका, -1, resB, fill_अन्तर्, स्थितिः);
+                यदि (res_मार्गः != शून्यसूचकः) {
+                    create_मार्गः(orig_Res_मार्गः, orig_Res_मार्गः_Len, res_मार्गः, len, अन्तर्_कुञ्चिका, मार्गः, स्थितिः);
+                } अन्यथा {
+                    ध्रुव वर्ण* separator = शून्यसूचकः;
+                    यदि (fill_अन्तर्->f_Res_मार्गः != शून्यसूचकः) {
+                        separator = uprv_strchr(fill_अन्तर्->f_Res_मार्गः, RES_मार्गः_SEPARATOR);
                     }
-                    if (separator != nullptr && separator[1] != '\0') {
-                        createPath(origResPath, origResPathLen, fillIn->fResPath,
-                                   static_cast<int32_t>(uprv_strlen(fillIn->fResPath)), inKey, path, status);
-                    } else {
-                        createPath(origResPath, origResPathLen, "", 0, inKey, path, status);
+                    यदि (separator != शून्यसूचकः && separator[1] != '\0') {
+                        create_मार्गः(orig_Res_मार्गः, orig_Res_मार्गः_Len, fill_अन्तर्->f_Res_मार्गः,
+                                   static_cast<int32_t>(uprv_strlen(fill_अन्तर्->f_Res_मार्गः)), अन्तर्_कुञ्चिका, मार्गः, स्थितिः);
+                    } अन्यथा {
+                        create_मार्गः(orig_Res_मार्गः, orig_Res_मार्गः_Len, "", 0, अन्तर्_कुञ्चिका, मार्गः, स्थितिः);
                     }
                 }
-                ures_freeResPath(fillIn);
-                ures_appendResPath(fillIn, path.data(), path.length(), status);
-                if(fillIn->fResPath[fillIn->fResPathLen-1] != RES_PATH_SEPARATOR) {
-                    ures_appendResPath(fillIn, RES_PATH_SEPARATOR_S, 1, status);
+                ures_free_Res_मार्गः(fill_अन्तर्);
+                ures_append_Res_मार्गः(fill_अन्तर्, मार्गः.दत्त(), मार्गः.length(), स्थितिः);
+                यदि(fill_अन्तर्->f_Res_मार्गः[fill_अन्तर्->f_Res_मार्गः_Len-1] != RES_मार्गः_SEPARATOR) {
+                    ures_append_Res_मार्गः(fill_अन्तर्, RES_मार्गः_SEPARATOR_S, 1, स्थितिः);
                 }
-            } else {
-                *status = U_MISSING_RESOURCE_ERROR;
+            } अन्यथा {
+                *स्थितिः = U_MISSING_RESOURCE_ERROR;
             }
-        } else {
-            fillIn = init_resb_result(resB->fData, res, key, -1, resB, fillIn, status);
+        } अन्यथा {
+            fill_अन्तर् = init_resb_परिणाम(resB->f_दत्त, res, कुञ्चिका, -1, resB, fill_अन्तर्, स्थितिः);
         }
     } 
-    else {
-        *status = U_RESOURCE_TYPE_MISMATCH;
+    अन्यथा {
+        *स्थितिः = U_RESOURCE_TYPE_MISMATCH;
     }
     ures_close(helper);
-    return fillIn;
+    प्रत्यागम fill_अन्तर्;
 }
 
-namespace {
+नामाकाश {
 
-void getAllItemsWithFallback(
-        const UResourceBundle *bundle, ResourceDataValue &value,
-        ResourceSink &sink, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return; }
+शून्य get_All_वस्तूनि_With_Fallback(
+        ध्रुव UResourceBundle *bundle, Resource_दत्त_मानम् &value,
+        ResourceSink &sink, UError_संहिता &error_संहिता) {
+    यदि (U_FAILURE(error_संहिता)) { प्रत्यागम; }
     // We recursively enumerate child-first,
     // only storing parent items in the absence of child items.
     // The sink needs to store a placeholder value for the no-fallback/no-inheritance marker
@@ -2335,13 +2335,13 @@ void getAllItemsWithFallback(
     // When the sink sees the no-fallback/no-inheritance marker,
     // then it would remove the parent's item.
     // We would deserialize parent values even though they are overridden in a child bundle.
-    value.setData(bundle->getResData());
-    value.setValidLocaleDataEntry(bundle->fValidLocaleDataEntry);
-    UResourceDataEntry *parentEntry = bundle->fData->fParent;
-    UBool hasParent = parentEntry != nullptr && U_SUCCESS(parentEntry->fBogus);
-    value.setResource(bundle->fRes, ResourceTracer(bundle));
-    sink.put(bundle->fKey, value, !hasParent, errorCode);
-    if (hasParent) {
+    value.समुच्चयः_दत्त(bundle->get_Res_दत्त());
+    value.समुच्चयः_Valid_Locale_दत्त_प्रविष्टिः(bundle->f_Valid_Locale_दत्त_प्रविष्टिः);
+    UResource_दत्त_प्रविष्टिः *parent_प्रविष्टिः = bundle->f_दत्त->fParent;
+    UBool hasParent = parent_प्रविष्टिः != शून्यसूचकः && U_SUCCESS(parent_प्रविष्टिः->fBogus);
+    value.समुच्चयः_Resource(bundle->fRes, ResourceTracer(bundle));
+    sink.put(bundle->f_कुञ्चिका, value, !hasParent, error_संहिता);
+    यदि (hasParent) {
         // We might try to query the sink whether
         // any fallback from the parent bundle is still possible.
 
@@ -2350,121 +2350,121 @@ void getAllItemsWithFallback(
         // TODO: See if we can refactor ures_getByKeyWithFallback()
         // and pull out an inner function that takes and returns a UResourceDataEntry
         // so that we need not create UResourceBundle objects.
-        StackUResourceBundle parentBundle;
+        राशिः_UResource_Bundle parentBundle;
         UResourceBundle &parentRef = parentBundle.ref();
-        parentRef.fData = parentEntry;
-        parentRef.fValidLocaleDataEntry = bundle->fValidLocaleDataEntry;
-        parentRef.fHasFallback = !parentRef.getResData().noFallback;
-        parentRef.fIsTopLevel = true;
-        parentRef.fRes = parentRef.getResData().rootRes;
-        parentRef.fSize = res_countArrayItems(&parentRef.getResData(), parentRef.fRes);
-        parentRef.fIndex = -1;
-        entryIncrease(parentEntry);
+        parentRef.f_दत्त = parent_प्रविष्टिः;
+        parentRef.f_Valid_Locale_दत्त_प्रविष्टिः = bundle->f_Valid_Locale_दत्त_प्रविष्टिः;
+        parentRef.fHasFallback = !parentRef.get_Res_दत्त().noFallback;
+        parentRef.f_Is_शिखरम्_Level = सत्य;
+        parentRef.fRes = parentRef.get_Res_दत्त().मूलम्_Res;
+        parentRef.f_आकार = res_गणनम्_Array_वस्तूनि(&parentRef.get_Res_दत्त(), parentRef.fRes);
+        parentRef.f_सूचकांक = -1;
+        प्रविष्टिः_Increase(parent_प्रविष्टिः);
 
         // Look up the container item in the parent bundle.
-        StackUResourceBundle containerBundle;
-        const UResourceBundle *rb;
-        UErrorCode pathErrorCode = U_ZERO_ERROR;  // Ignore if parents up to root do not have this path.
-        if (bundle->fResPath == nullptr || *bundle->fResPath == 0) {
+        राशिः_UResource_Bundle containerBundle;
+        ध्रुव UResourceBundle *rb;
+        UError_संहिता मार्गः_Error_संहिता = U_ZERO_ERROR;  // Ignore if parents up to root do not have this path.
+        यदि (bundle->f_Res_मार्गः == शून्यसूचकः || *bundle->f_Res_मार्गः == 0) {
             rb = parentBundle.getAlias();
-        } else {
-            rb = ures_getByKeyWithFallback(parentBundle.getAlias(), bundle->fResPath,
-                                           containerBundle.getAlias(), &pathErrorCode);
+        } अन्यथा {
+            rb = ures_get_By_कुञ्चिका_With_Fallback(parentBundle.getAlias(), bundle->f_Res_मार्गः,
+                                           containerBundle.getAlias(), &मार्गः_Error_संहिता);
         }
-        if (U_SUCCESS(pathErrorCode)) {
-            getAllItemsWithFallback(rb, value, sink, errorCode);
+        यदि (U_SUCCESS(मार्गः_Error_संहिता)) {
+            get_All_वस्तूनि_With_Fallback(rb, value, sink, error_संहिता);
         }
     }
 }
 
-struct GetAllChildrenSink : public ResourceSink {
+संरचना GetAllChildrenSink : सार्वजनिक ResourceSink {
     // Destination sink
     ResourceSink& dest;
 
     GetAllChildrenSink(ResourceSink& dest)
         : dest(dest) {}
-    virtual ~GetAllChildrenSink() override;
-    virtual void put(const char *key, ResourceValue &value, UBool isRoot,
-           UErrorCode &errorCode) override {
-        ResourceTable itemsTable = value.getTable(errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        for (int32_t i = 0; itemsTable.getKeyAndValue(i, key, value); ++i) {
-            if (value.getType() == URES_ALIAS) {
-                ResourceDataValue& rdv = static_cast<ResourceDataValue&>(value);
-                StackUResourceBundle stackTempBundle;
-                UResourceBundle* aliasRB = getAliasTargetAsResourceBundle(rdv.getData(), rdv.getResource(), nullptr, -1,
-                                                                          rdv.getValidLocaleDataEntry(), nullptr, 0,
-                                                                          stackTempBundle.getAlias(), &errorCode);
-                if (U_SUCCESS(errorCode)) {
-                    ResourceDataValue aliasedValue;
-                    aliasedValue.setData(aliasRB->getResData());
-                    aliasedValue.setValidLocaleDataEntry(aliasRB->fValidLocaleDataEntry);
-                    aliasedValue.setResource(aliasRB->fRes, ResourceTracer(aliasRB));
+    आभास ~GetAllChildrenSink() override;
+    आभास शून्य put(ध्रुव वर्ण *कुञ्चिका, Resource_मानम् &value, UBool is_मूलम्,
+           UError_संहिता &error_संहिता) override {
+        Resource_सारणी वस्तूनि_सारणी = value.get_सारणी(error_संहिता);
+        यदि (U_FAILURE(error_संहिता)) { प्रत्यागम; }
+        प्रति (int32_t i = 0; वस्तूनि_सारणी.get_कुञ्चिका_And_मानम्(i, कुञ्चिका, value); ++i) {
+            यदि (value.getType() == URES_ALIAS) {
+                Resource_दत्त_मानम्& rdv = static_cast<Resource_दत्त_मानम्&>(value);
+                राशिः_UResource_Bundle राशिः_अस्थायी_Bundle;
+                UResourceBundle* aliasRB = getAliasTargetAsResourceBundle(rdv.get_दत्त(), rdv.getResource(), शून्यसूचकः, -1,
+                                                                          rdv.get_Valid_Locale_दत्त_प्रविष्टिः(), शून्यसूचकः, 0,
+                                                                          राशिः_अस्थायी_Bundle.getAlias(), &error_संहिता);
+                यदि (U_SUCCESS(error_संहिता)) {
+                    Resource_दत्त_मानम् aliased_मानम्;
+                    aliased_मानम्.समुच्चयः_दत्त(aliasRB->get_Res_दत्त());
+                    aliased_मानम्.समुच्चयः_Valid_Locale_दत्त_प्रविष्टिः(aliasRB->f_Valid_Locale_दत्त_प्रविष्टिः);
+                    aliased_मानम्.समुच्चयः_Resource(aliasRB->fRes, ResourceTracer(aliasRB));
                     
-                    if (aliasedValue.getType() != URES_TABLE) {
-                        dest.put(key, aliasedValue, isRoot, errorCode);
-                    } else {
+                    यदि (aliased_मानम्.getType() != URES_सारणी) {
+                        dest.put(कुञ्चिका, aliased_मानम्, is_मूलम्, error_संहिता);
+                    } अन्यथा {
                         // if the resource we're aliasing over to is a table, the sink might iterate over its contents.
                         // If it does, it'll get only the things defined in the actual alias target, not the things
                         // the target inherits from its parent resources.  So we walk the parent chain for the *alias target*,
                         // calling dest.put() for each of the parent tables we could be inheriting from.  This means
                         // that dest.put() has to iterate over the children of multiple tables to get all of the inherited
                         // resource values, but it already has to do that to handle normal vertical inheritance.
-                        UResType aliasedValueType = URES_TABLE;
-                        CharString tablePath;
-                        tablePath.append(aliasRB->fResPath, errorCode);
-                        const char* parentKey = key; // dest.put() changes the key
-                        dest.put(parentKey, aliasedValue, isRoot, errorCode);
-                        UResourceDataEntry* entry = aliasRB->fData;
+                        UResType aliased_मानम्_Type = URES_सारणी;
+                        CharString सारणी_मार्गः;
+                        सारणी_मार्गः.append(aliasRB->f_Res_मार्गः, error_संहिता);
+                        ध्रुव वर्ण* parent_कुञ्चिका = कुञ्चिका; // dest.put() changes the key
+                        dest.put(parent_कुञ्चिका, aliased_मानम्, is_मूलम्, error_संहिता);
+                        UResource_दत्त_प्रविष्टिः* प्रविष्टिः = aliasRB->f_दत्त;
                         Resource res = aliasRB->fRes;
-                        while (aliasedValueType == URES_TABLE && entry->fParent != nullptr) {
-                            CharString localPath;
-                            localPath.copyFrom(tablePath, errorCode);
-                            char* localPathAsCharPtr = localPath.data();
-                            const char* childKey;
-                            entry = entry->fParent;
-                            res = entry->fData.rootRes;
-                            Resource newRes = res_findResource(&entry->fData, res, &localPathAsCharPtr, &childKey);
-                            if (newRes != RES_BOGUS) {
-                                aliasedValue.setData(entry->fData);
+                        यावत् (aliased_मानम्_Type == URES_सारणी && प्रविष्टिः->fParent != शून्यसूचकः) {
+                            CharString local_मार्गः;
+                            local_मार्गः.copyFrom(सारणी_मार्गः, error_संहिता);
+                            वर्ण* local_मार्गः_As_Char_Ptr = local_मार्गः.दत्त();
+                            ध्रुव वर्ण* child_कुञ्चिका;
+                            प्रविष्टिः = प्रविष्टिः->fParent;
+                            res = प्रविष्टिः->f_दत्त.मूलम्_Res;
+                            Resource newRes = res_findResource(&प्रविष्टिः->f_दत्त, res, &local_मार्गः_As_Char_Ptr, &child_कुञ्चिका);
+                            यदि (newRes != RES_BOGUS) {
+                                aliased_मानम्.समुच्चयः_दत्त(प्रविष्टिः->f_दत्त);
                                 // TODO: do I also need to call aliasedValue.setValueLocaleDataEntry() ?
-                                aliasedValue.setResource(newRes, ResourceTracer(aliasRB)); // probably wrong to use aliasRB here
-                                aliasedValueType = aliasedValue.getType();
-                                if (aliasedValueType == URES_ALIAS) {
+                                aliased_मानम्.समुच्चयः_Resource(newRes, ResourceTracer(aliasRB)); // probably wrong to use aliasRB here
+                                aliased_मानम्_Type = aliased_मानम्.getType();
+                                यदि (aliased_मानम्_Type == URES_ALIAS) {
                                     // in a few rare cases, when we get to the root resource bundle, the resource in question
                                     // won't be an actual table, but will instead be an alias to a table.  That is, we have
                                     // two aliases in the inheritance path.  (For some locales, such as Zulu, we see this with
                                     // children of the "fields" resource: "day-narrow" aliases to "day-short", which aliases
                                     // to "day".)  When this happens, we need to make sure we follow all the aliases.
-                                    ResourceDataValue& rdv2 = static_cast<ResourceDataValue&>(aliasedValue);
-                                    aliasRB = getAliasTargetAsResourceBundle(rdv2.getData(), rdv2.getResource(), nullptr, -1,
-                                                                             rdv2.getValidLocaleDataEntry(), nullptr, 0,
-                                                                             stackTempBundle.getAlias(), &errorCode);
-                                    tablePath.clear();
-                                    tablePath.append(aliasRB->fResPath, errorCode);
-                                    entry = aliasRB->fData;
+                                    Resource_दत्त_मानम्& rdv2 = static_cast<Resource_दत्त_मानम्&>(aliased_मानम्);
+                                    aliasRB = getAliasTargetAsResourceBundle(rdv2.get_दत्त(), rdv2.getResource(), शून्यसूचकः, -1,
+                                                                             rdv2.get_Valid_Locale_दत्त_प्रविष्टिः(), शून्यसूचकः, 0,
+                                                                             राशिः_अस्थायी_Bundle.getAlias(), &error_संहिता);
+                                    सारणी_मार्गः.clear();
+                                    सारणी_मार्गः.append(aliasRB->f_Res_मार्गः, error_संहिता);
+                                    प्रविष्टिः = aliasRB->f_दत्त;
                                     res = aliasRB->fRes;
-                                    aliasedValue.setData(entry->fData);
+                                    aliased_मानम्.समुच्चयः_दत्त(प्रविष्टिः->f_दत्त);
                                     // TODO: do I also need to call aliasedValue.setValueLocaleDataEntry() ?
-                                    aliasedValue.setResource(res, ResourceTracer(aliasRB)); // probably wrong to use aliasRB here
-                                    aliasedValueType = aliasedValue.getType();
+                                    aliased_मानम्.समुच्चयः_Resource(res, ResourceTracer(aliasRB)); // probably wrong to use aliasRB here
+                                    aliased_मानम्_Type = aliased_मानम्.getType();
                                 }
-                                if (aliasedValueType == URES_TABLE) {
-                                    dest.put(parentKey, aliasedValue, isRoot, errorCode);
-                                } else {
+                                यदि (aliased_मानम्_Type == URES_सारणी) {
+                                    dest.put(parent_कुञ्चिका, aliased_मानम्, is_मूलम्, error_संहिता);
+                                } अन्यथा {
                                     // once we've followed the alias, the resource we're looking at really should
                                     // be a table
-                                    errorCode = U_INTERNAL_PROGRAM_ERROR;
-                                    return;
+                                    error_संहिता = U_आन्तरिकम्_क्रमादेशः_ERROR;
+                                    प्रत्यागम;
                                 }
                             }
                         }
                     }
                 }
-            } else {
-                dest.put(key, value, isRoot, errorCode);
+            } अन्यथा {
+                dest.put(कुञ्चिका, value, is_मूलम्, error_संहिता);
             }
-            if (U_FAILURE(errorCode)) { return; }
+            यदि (U_FAILURE(error_संहिता)) { प्रत्यागम; }
         }
     }
 };
@@ -2472,11 +2472,11 @@ struct GetAllChildrenSink : public ResourceSink {
 // Virtual destructors must be defined out of line.
 GetAllChildrenSink::~GetAllChildrenSink() {}
 
-U_CAPI void U_EXPORT2
-ures_getAllChildrenWithFallback(const UResourceBundle *bundle, const char *path,
-                                icu::ResourceSink &sink, UErrorCode &errorCode) {
+U_CAPI शून्य U_EXPORT2
+ures_getAllChildrenWithFallback(ध्रुव UResourceBundle *bundle, ध्रुव वर्ण *मार्गः,
+                                icu::ResourceSink &sink, UError_संहिता &error_संहिता) {
     GetAllChildrenSink allChildrenSink(sink);
-    ures_getAllItemsWithFallback(bundle, path, allChildrenSink, errorCode);
+    ures_get_All_वस्तूनि_With_Fallback(bundle, मार्गः, allChildrenSink, error_संहिता);
 }
 
 }  // namespace
@@ -2490,208 +2490,208 @@ ures_getAllChildrenWithFallback(const UResourceBundle *bundle, const char *path,
 // Also requires a UResourceBundle fill-in, so that the value's ResourceTracer
 // can point to a non-local bundle.
 // Without tracing, the child bundle could be a function-local object.
-U_CAPI void U_EXPORT2
-ures_getValueWithFallback(const UResourceBundle *bundle, const char *path,
-                          UResourceBundle *tempFillIn,
-                          ResourceDataValue &value, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return; }
-    if (path == nullptr) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+U_CAPI शून्य U_EXPORT2
+ures_get_मानम्_With_Fallback(ध्रुव UResourceBundle *bundle, ध्रुव वर्ण *मार्गः,
+                          UResourceBundle *अस्थायी_Fill_अन्तर्,
+                          Resource_दत्त_मानम् &value, UError_संहिता &error_संहिता) {
+    यदि (U_FAILURE(error_संहिता)) { प्रत्यागम; }
+    यदि (मार्गः == शून्यसूचकः) {
+        error_संहिता = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
-    const UResourceBundle *rb;
-    if (*path == 0) {
+    ध्रुव UResourceBundle *rb;
+    यदि (*मार्गः == 0) {
         // empty path
         rb = bundle;
-    } else {
-        rb = ures_getByKeyWithFallback(bundle, path, tempFillIn, &errorCode);
-        if (U_FAILURE(errorCode)) {
-            return;
+    } अन्यथा {
+        rb = ures_get_By_कुञ्चिका_With_Fallback(bundle, मार्गः, अस्थायी_Fill_अन्तर्, &error_संहिता);
+        यदि (U_FAILURE(error_संहिता)) {
+            प्रत्यागम;
         }
     }
-    value.setData(rb->getResData());
-    value.setValidLocaleDataEntry(rb->fValidLocaleDataEntry);
-    value.setResource(rb->fRes, ResourceTracer(rb));
+    value.समुच्चयः_दत्त(rb->get_Res_दत्त());
+    value.समुच्चयः_Valid_Locale_दत्त_प्रविष्टिः(rb->f_Valid_Locale_दत्त_प्रविष्टिः);
+    value.समुच्चयः_Resource(rb->fRes, ResourceTracer(rb));
 }
 
-U_CAPI void U_EXPORT2
-ures_getAllItemsWithFallback(const UResourceBundle *bundle, const char *path,
-                             icu::ResourceSink &sink, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return; }
-    if (path == nullptr) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+U_CAPI शून्य U_EXPORT2
+ures_get_All_वस्तूनि_With_Fallback(ध्रुव UResourceBundle *bundle, ध्रुव वर्ण *मार्गः,
+                             icu::ResourceSink &sink, UError_संहिता &error_संहिता) {
+    यदि (U_FAILURE(error_संहिता)) { प्रत्यागम; }
+    यदि (मार्गः == शून्यसूचकः) {
+        error_संहिता = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
-    StackUResourceBundle stackBundle;
-    const UResourceBundle *rb;
-    if (*path == 0) {
+    राशिः_UResource_Bundle राशिः_Bundle;
+    ध्रुव UResourceBundle *rb;
+    यदि (*मार्गः == 0) {
         // empty path
         rb = bundle;
-    } else {
-        rb = ures_getByKeyWithFallback(bundle, path, stackBundle.getAlias(), &errorCode);
-        if (U_FAILURE(errorCode)) {
-            return;
+    } अन्यथा {
+        rb = ures_get_By_कुञ्चिका_With_Fallback(bundle, मार्गः, राशिः_Bundle.getAlias(), &error_संहिता);
+        यदि (U_FAILURE(error_संहिता)) {
+            प्रत्यागम;
         }
     }
     // Get all table items with fallback.
-    ResourceDataValue value;
-    getAllItemsWithFallback(rb, value, sink, errorCode);
+    Resource_दत्त_मानम् value;
+    get_All_वस्तूनि_With_Fallback(rb, value, sink, error_संहिता);
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByKey(const UResourceBundle* resB,
-              const char* inKey,
-              UResourceBundle* fillIn U_LIFETIME_BOUND,
-              UErrorCode* status) {
+ures_get_By_कुञ्चिका(ध्रुव UResourceBundle* resB,
+              ध्रुव वर्ण* अन्तर्_कुञ्चिका,
+              UResourceBundle* fill_अन्तर् U_LIFETIME_BOUND,
+              UError_संहिता* स्थितिः) {
     Resource res = RES_BOGUS;
-    UResourceDataEntry *dataEntry = nullptr;
-    const char *key = inKey;
+    UResource_दत्त_प्रविष्टिः *दत्त_प्रविष्टिः = शून्यसूचकः;
+    ध्रुव वर्ण *कुञ्चिका = अन्तर्_कुञ्चिका;
 
-    if (status==nullptr || U_FAILURE(*status)) {
-        return fillIn;
+    यदि (स्थितिः==शून्यसूचकः || U_FAILURE(*स्थितिः)) {
+        प्रत्यागम fill_अन्तर्;
     }
-    if(resB == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return fillIn;
+    यदि(resB == शून्यसूचकः) {
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम fill_अन्तर्;
     }
 
     int32_t type = RES_GET_TYPE(resB->fRes);
-    if(URES_IS_TABLE(type)) {
+    यदि(URES_IS_सारणी(type)) {
         int32_t t;
-        res = res_getTableItemByKey(&resB->getResData(), resB->fRes, &t, &key);
-        if(res == RES_BOGUS) {
-            key = inKey;
-            if(resB->fHasFallback) {
-                dataEntry = getFallbackData(resB, &key, &res, status);
-                if(U_SUCCESS(*status)) {
+        res = res_get_सारणी_Item_By_कुञ्चिका(&resB->get_Res_दत्त(), resB->fRes, &t, &कुञ्चिका);
+        यदि(res == RES_BOGUS) {
+            कुञ्चिका = अन्तर्_कुञ्चिका;
+            यदि(resB->fHasFallback) {
+                दत्त_प्रविष्टिः = get_Fallback_दत्त(resB, &कुञ्चिका, &res, स्थितिः);
+                यदि(U_SUCCESS(*स्थितिः)) {
                     /* check if resB->fResPath gives the right name here */
-                    return init_resb_result(dataEntry, res, key, -1, resB, fillIn, status);
-                } else {
-                    *status = U_MISSING_RESOURCE_ERROR;
+                    प्रत्यागम init_resb_परिणाम(दत्त_प्रविष्टिः, res, कुञ्चिका, -1, resB, fill_अन्तर्, स्थितिः);
+                } अन्यथा {
+                    *स्थितिः = U_MISSING_RESOURCE_ERROR;
                 }
-            } else {
-                *status = U_MISSING_RESOURCE_ERROR;
+            } अन्यथा {
+                *स्थितिः = U_MISSING_RESOURCE_ERROR;
             }
-        } else {
-            return init_resb_result(resB->fData, res, key, -1, resB, fillIn, status);
+        } अन्यथा {
+            प्रत्यागम init_resb_परिणाम(resB->f_दत्त, res, कुञ्चिका, -1, resB, fill_अन्तर्, स्थितिः);
         }
     } 
-#if 0
+#यदि 0
     /* this is a kind of TODO item. If we have an array with an index table, we could do this. */
     /* not currently */
-    else if(RES_GET_TYPE(resB->fRes) == URES_ARRAY && resB->fHasFallback == true) {
+    अन्यथा यदि(RES_GET_TYPE(resB->fRes) == URES_ARRAY && resB->fHasFallback == सत्य) {
         /* here should go a first attempt to locate the key using index table */
-        dataEntry = getFallbackData(resB, &key, &res, status);
-        if(U_SUCCESS(*status)) {
-            return init_resb_result(dataEntry, res, key, resB, fillIn, status);
-        } else {
-            *status = U_MISSING_RESOURCE_ERROR;
+        दत्त_प्रविष्टिः = get_Fallback_दत्त(resB, &कुञ्चिका, &res, स्थितिः);
+        यदि(U_SUCCESS(*स्थितिः)) {
+            प्रत्यागम init_resb_परिणाम(दत्त_प्रविष्टिः, res, कुञ्चिका, resB, fill_अन्तर्, स्थितिः);
+        } अन्यथा {
+            *स्थितिः = U_MISSING_RESOURCE_ERROR;
         }
     }
-#endif    
-    else {
-        *status = U_RESOURCE_TYPE_MISMATCH;
+#यदि_अन्तः    
+    अन्यथा {
+        *स्थितिः = U_RESOURCE_TYPE_MISMATCH;
     }
-    return fillIn;
+    प्रत्यागम fill_अन्तर्;
 }
 
-U_CAPI const char16_t* U_EXPORT2
-ures_getStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
-                    const char* inKey,
+U_CAPI ध्रुव char16_t* U_EXPORT2
+ures_get_String_By_कुञ्चिका(ध्रुव UResourceBundle* resB U_LIFETIME_BOUND,
+                    ध्रुव वर्ण* अन्तर्_कुञ्चिका,
                     int32_t* len,
-                    UErrorCode* status) {
+                    UError_संहिता* स्थितिः) {
     Resource res = RES_BOGUS;
-    UResourceDataEntry *dataEntry = nullptr;
-    const char* key = inKey;
+    UResource_दत्त_प्रविष्टिः *दत्त_प्रविष्टिः = शून्यसूचकः;
+    ध्रुव वर्ण* कुञ्चिका = अन्तर्_कुञ्चिका;
 
-    if (status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    यदि (स्थितिः==शून्यसूचकः || U_FAILURE(*स्थितिः)) {
+        प्रत्यागम शून्यसूचकः;
     }
-    if(resB == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    यदि(resB == शून्यसूचकः) {
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
 
     int32_t type = RES_GET_TYPE(resB->fRes);
-    if(URES_IS_TABLE(type)) {
+    यदि(URES_IS_सारणी(type)) {
         int32_t t=0;
 
-        res = res_getTableItemByKey(&resB->getResData(), resB->fRes, &t, &key);
+        res = res_get_सारणी_Item_By_कुञ्चिका(&resB->get_Res_दत्त(), resB->fRes, &t, &कुञ्चिका);
 
-        if(res == RES_BOGUS) {
-            key = inKey;
-            if(resB->fHasFallback) {
-                dataEntry = getFallbackData(resB, &key, &res, status);
-                if(U_SUCCESS(*status)) {
-                    switch (RES_GET_TYPE(res)) {
-                    case URES_STRING:
-                    case URES_STRING_V2:
-                        return res_getString({resB, key}, &dataEntry->fData, res, len);
-                    case URES_ALIAS:
+        यदि(res == RES_BOGUS) {
+            कुञ्चिका = अन्तर्_कुञ्चिका;
+            यदि(resB->fHasFallback) {
+                दत्त_प्रविष्टिः = get_Fallback_दत्त(resB, &कुञ्चिका, &res, स्थितिः);
+                यदि(U_SUCCESS(*स्थितिः)) {
+                    विकल्प (RES_GET_TYPE(res)) {
+                    पक्ष URES_STRING:
+                    पक्ष URES_STRING_V2:
+                        प्रत्यागम res_getString({resB, कुञ्चिका}, &दत्त_प्रविष्टिः->f_दत्त, res, len);
+                    पक्ष URES_ALIAS:
                       {
-                        const char16_t* result = nullptr;
-                        UResourceBundle *tempRes = ures_getByKey(resB, inKey, nullptr, status);
-                        result = ures_getString(tempRes, len, status);
-                        ures_close(tempRes);
-                        return result;
+                        ध्रुव char16_t* परिणाम = शून्यसूचकः;
+                        UResourceBundle *अस्थायी_Res = ures_get_By_कुञ्चिका(resB, अन्तर्_कुञ्चिका, शून्यसूचकः, स्थितिः);
+                        परिणाम = ures_getString(अस्थायी_Res, len, स्थितिः);
+                        ures_close(अस्थायी_Res);
+                        प्रत्यागम परिणाम;
                       }
-                    default:
-                        *status = U_RESOURCE_TYPE_MISMATCH;
+                    स्वभाव:
+                        *स्थितिः = U_RESOURCE_TYPE_MISMATCH;
                     }
-                } else {
-                    *status = U_MISSING_RESOURCE_ERROR;
+                } अन्यथा {
+                    *स्थितिः = U_MISSING_RESOURCE_ERROR;
                 }
-            } else {
-                *status = U_MISSING_RESOURCE_ERROR;
+            } अन्यथा {
+                *स्थितिः = U_MISSING_RESOURCE_ERROR;
             }
-        } else {
-            switch (RES_GET_TYPE(res)) {
-            case URES_STRING:
-            case URES_STRING_V2:
-                return res_getString({resB, key}, &resB->getResData(), res, len);
-            case URES_ALIAS:
+        } अन्यथा {
+            विकल्प (RES_GET_TYPE(res)) {
+            पक्ष URES_STRING:
+            पक्ष URES_STRING_V2:
+                प्रत्यागम res_getString({resB, कुञ्चिका}, &resB->get_Res_दत्त(), res, len);
+            पक्ष URES_ALIAS:
               {
-                const char16_t* result = nullptr;
-                UResourceBundle *tempRes = ures_getByKey(resB, inKey, nullptr, status);
-                result = ures_getString(tempRes, len, status);
-                ures_close(tempRes);
-                return result;
+                ध्रुव char16_t* परिणाम = शून्यसूचकः;
+                UResourceBundle *अस्थायी_Res = ures_get_By_कुञ्चिका(resB, अन्तर्_कुञ्चिका, शून्यसूचकः, स्थितिः);
+                परिणाम = ures_getString(अस्थायी_Res, len, स्थितिः);
+                ures_close(अस्थायी_Res);
+                प्रत्यागम परिणाम;
               }
-            default:
-                *status = U_RESOURCE_TYPE_MISMATCH;
+            स्वभाव:
+                *स्थितिः = U_RESOURCE_TYPE_MISMATCH;
             }
         }
     } 
-#if 0 
+#यदि 0 
     /* this is a kind of TODO item. If we have an array with an index table, we could do this. */
     /* not currently */   
-    else if(RES_GET_TYPE(resB->fRes) == URES_ARRAY && resB->fHasFallback == true) {
+    अन्यथा यदि(RES_GET_TYPE(resB->fRes) == URES_ARRAY && resB->fHasFallback == सत्य) {
         /* here should go a first attempt to locate the key using index table */
-        dataEntry = getFallbackData(resB, &key, &res, status);
-        if(U_SUCCESS(*status)) {
+        दत्त_प्रविष्टिः = get_Fallback_दत्त(resB, &कुञ्चिका, &res, स्थितिः);
+        यदि(U_SUCCESS(*स्थितिः)) {
             // TODO: Tracing
-            return res_getString(rd, res, len);
-        } else {
-            *status = U_MISSING_RESOURCE_ERROR;
+            प्रत्यागम res_getString(rd, res, len);
+        } अन्यथा {
+            *स्थितिः = U_MISSING_RESOURCE_ERROR;
         }
     } 
-#endif    
-    else {
-        *status = U_RESOURCE_TYPE_MISMATCH;
+#यदि_अन्तः    
+    अन्यथा {
+        *स्थितिः = U_RESOURCE_TYPE_MISMATCH;
     }
-    return nullptr;
+    प्रत्यागम शून्यसूचकः;
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getUTF8StringByKey(const UResourceBundle* resB,
-                        const char* key,
-                        char* dest U_LIFETIME_BOUND,
-                        int32_t* pLength,
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+ures_get_UTF8_String_By_कुञ्चिका(ध्रुव UResourceBundle* resB,
+                        ध्रुव वर्ण* कुञ्चिका,
+                        वर्ण* dest U_LIFETIME_BOUND,
+                        int32_t* p_दीर्घता,
                         UBool forceCopy,
-                        UErrorCode* status) {
+                        UError_संहिता* स्थितिः) {
     int32_t length16;
-    const char16_t *s16 = ures_getStringByKey(resB, key, &length16, status);
-    return ures_toUTF8String(s16, length16, dest, pLength, forceCopy, status);
+    ध्रुव char16_t *s16 = ures_get_String_By_कुञ्चिका(resB, कुञ्चिका, &length16, स्थितिः);
+    प्रत्यागम ures_गन्तव्यम्_UTF8_String(s16, length16, dest, p_दीर्घता, forceCopy, स्थितिः);
 }
 
 /* TODO: clean from here down */
@@ -2700,139 +2700,139 @@ ures_getUTF8StringByKey(const UResourceBundle* resB,
  *  INTERNAL: Get the name of the first real locale (not placeholder) 
  *  that has resource bundle data.
  */
-U_CAPI const char* U_EXPORT2
-ures_getLocaleInternal(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCode* status)
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+ures_get_Locale_आन्तरिकम्(ध्रुव UResourceBundle* resourceBundle U_LIFETIME_BOUND, UError_संहिता* स्थितिः)
 {
-    if (status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    यदि (स्थितिः==शून्यसूचकः || U_FAILURE(*स्थितिः)) {
+        प्रत्यागम शून्यसूचकः;
     }
-    if (!resourceBundle) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
-    } else {
-      return resourceBundle->fData->fName;
+    यदि (!resourceBundle) {
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम शून्यसूचकः;
+    } अन्यथा {
+      प्रत्यागम resourceBundle->f_दत्त->fName;
     }
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getLocale(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCode* status)
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+ures_getLocale(ध्रुव UResourceBundle* resourceBundle U_LIFETIME_BOUND, UError_संहिता* स्थितिः)
 {
-  return ures_getLocaleInternal(resourceBundle, status);
+  प्रत्यागम ures_get_Locale_आन्तरिकम्(resourceBundle, स्थितिः);
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getLocaleByType(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
-                     ULocDataLocaleType type,
-                     UErrorCode* status) {
-    if (status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+ures_getLocaleByType(ध्रुव UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+                     ULoc_दत्त_Locale_Type type,
+                     UError_संहिता* स्थितिः) {
+    यदि (स्थितिः==शून्यसूचकः || U_FAILURE(*स्थितिः)) {
+        प्रत्यागम शून्यसूचकः;
     }
-    if (!resourceBundle) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
-    } else {
-        switch(type) {
-        case ULOC_ACTUAL_LOCALE:
-            return resourceBundle->fData->fName;
-        case ULOC_VALID_LOCALE:
-            return resourceBundle->fValidLocaleDataEntry->fName;
-        case ULOC_REQUESTED_LOCALE:
-        default:
-            *status = U_ILLEGAL_ARGUMENT_ERROR;
-            return nullptr;
+    यदि (!resourceBundle) {
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम शून्यसूचकः;
+    } अन्यथा {
+        विकल्प(type) {
+        पक्ष ULOC_ACTUAL_LOCALE:
+            प्रत्यागम resourceBundle->f_दत्त->fName;
+        पक्ष ULOC_VALID_LOCALE:
+            प्रत्यागम resourceBundle->f_Valid_Locale_दत्त_प्रविष्टिः->fName;
+        पक्ष ULOC_REQUESTED_LOCALE:
+        स्वभाव:
+            *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+            प्रत्यागम शून्यसूचकः;
         }
     }
 }
 
-U_CFUNC const char*
-ures_getName(const UResourceBundle* resB U_LIFETIME_BOUND) {
-  if(resB == nullptr) {
-    return nullptr;
+U_CFUNC ध्रुव वर्ण*
+ures_getName(ध्रुव UResourceBundle* resB U_LIFETIME_BOUND) {
+  यदि(resB == शून्यसूचकः) {
+    प्रत्यागम शून्यसूचकः;
   }
 
-  return resB->fData->fName;
+  प्रत्यागम resB->f_दत्त->fName;
 }
 
-#ifdef URES_DEBUG
-U_CFUNC const char*
-ures_getPath(const UResourceBundle* resB U_LIFETIME_BOUND) {
-  if(resB == nullptr) {
-    return nullptr;
+#यदि_परिभाषितम् URES_DEBUG
+U_CFUNC ध्रुव वर्ण*
+ures_get_मार्गः(ध्रुव UResourceBundle* resB U_LIFETIME_BOUND) {
+  यदि(resB == शून्यसूचकः) {
+    प्रत्यागम शून्यसूचकः;
   }
 
-  return resB->fData->fPath;
+  प्रत्यागम resB->f_दत्त->f_मार्गः;
 }
-#endif
+#यदि_अन्तः
 
-static UResourceBundle*
+स्थिर UResourceBundle*
 ures_openWithType(UResourceBundle* r U_LIFETIME_BOUND,
-                  const char* path,
-                  const char* localeID,
+                  ध्रुव वर्ण* मार्गः,
+                  ध्रुव वर्ण* localeID,
                   UResOpenType openType,
-                  UErrorCode* status) {
-    if(U_FAILURE(*status)) {
-        return nullptr;
+                  UError_संहिता* स्थितिः) {
+    यदि(U_FAILURE(*स्थितिः)) {
+        प्रत्यागम शून्यसूचकः;
     }
 
-    UResourceDataEntry *entry;
-    if(openType != URES_OPEN_DIRECT) {
-        if (localeID == nullptr) {
+    UResource_दत्त_प्रविष्टिः *प्रविष्टिः;
+    यदि(openType != URES_OPEN_प्रत्यक्षम्) {
+        यदि (localeID == शून्यसूचकः) {
             localeID = uloc_getDefault();
         }
         /* first "canonicalize" the locale ID */
-        CharString canonLocaleID = ulocimp_getBaseName(localeID, *status);
-        if(U_FAILURE(*status)) {
-            *status = U_ILLEGAL_ARGUMENT_ERROR;
-            return nullptr;
+        CharString canonLocaleID = ulocimp_get_आधारः_Name(localeID, *स्थितिः);
+        यदि(U_FAILURE(*स्थितिः)) {
+            *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+            प्रत्यागम शून्यसूचकः;
         }
-        entry = entryOpen(path, canonLocaleID.data(), openType, status);
-    } else {
-        entry = entryOpenDirect(path, localeID, status);
+        प्रविष्टिः = प्रविष्टिः_Open(मार्गः, canonLocaleID.दत्त(), openType, स्थितिः);
+    } अन्यथा {
+        प्रविष्टिः = प्रविष्टिः_Open_प्रत्यक्षम्(मार्गः, localeID, स्थितिः);
     }
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    यदि(U_FAILURE(*स्थितिः)) {
+        प्रत्यागम शून्यसूचकः;
     }
-    if(entry == nullptr) {
-        *status = U_MISSING_RESOURCE_ERROR;
-        return nullptr;
+    यदि(प्रविष्टिः == शून्यसूचकः) {
+        *स्थितिः = U_MISSING_RESOURCE_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
 
-    UBool isStackObject;
-    if(r == nullptr) {
-        r = static_cast<UResourceBundle*>(uprv_malloc(sizeof(UResourceBundle)));
-        if(r == nullptr) {
-            entryClose(entry);
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+    UBool is_राशिः_Object;
+    यदि(r == शून्यसूचकः) {
+        r = static_cast<UResourceBundle*>(uprv_malloc(परिमाण(UResourceBundle)));
+        यदि(r == शून्यसूचकः) {
+            प्रविष्टिः_Close(प्रविष्टिः);
+            *स्थितिः = U_स्मृतिः_आवण्टनम्_ERROR;
+            प्रत्यागम शून्यसूचकः;
         }
-        isStackObject = false;
-    } else {  // fill-in
-        isStackObject = ures_isStackObject(r);
-        ures_closeBundle(r, false);
+        is_राशिः_Object = असत्य;
+    } अन्यथा {  // fill-in
+        is_राशिः_Object = ures_is_राशिः_Object(r);
+        ures_closeBundle(r, असत्य);
     }
-    uprv_memset(r, 0, sizeof(UResourceBundle));
-    ures_setIsStackObject(r, isStackObject);
+    uprv_memset(r, 0, परिमाण(UResourceBundle));
+    ures_समुच्चयः_Is_राशिः_Object(r, is_राशिः_Object);
 
-    r->fValidLocaleDataEntry = r->fData = entry;
-    r->fHasFallback = openType != URES_OPEN_DIRECT && !r->getResData().noFallback;
-    r->fIsTopLevel = true;
-    r->fRes = r->getResData().rootRes;
-    r->fSize = res_countArrayItems(&r->getResData(), r->fRes);
-    r->fIndex = -1;
+    r->f_Valid_Locale_दत्त_प्रविष्टिः = r->f_दत्त = प्रविष्टिः;
+    r->fHasFallback = openType != URES_OPEN_प्रत्यक्षम् && !r->get_Res_दत्त().noFallback;
+    r->f_Is_शिखरम्_Level = सत्य;
+    r->fRes = r->get_Res_दत्त().मूलम्_Res;
+    r->f_आकार = res_गणनम्_Array_वस्तूनि(&r->get_Res_दत्त(), r->fRes);
+    r->f_सूचकांक = -1;
 
     ResourceTracer(r).traceOpen();
 
-    return r;
+    प्रत्यागम r;
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_open(const char* path, const char* localeID, UErrorCode* status) {
-    return ures_openWithType(nullptr, path, localeID, URES_OPEN_LOCALE_DEFAULT_ROOT, status);
+ures_open(ध्रुव वर्ण* मार्गः, ध्रुव वर्ण* localeID, UError_संहिता* स्थितिः) {
+    प्रत्यागम ures_openWithType(शून्यसूचकः, मार्गः, localeID, URES_OPEN_LOCALE_DEFAULT_मूलम्, स्थितिः);
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_openNoDefault(const char* path, const char* localeID, UErrorCode* status) {
-    return ures_openWithType(nullptr, path, localeID, URES_OPEN_LOCALE_ROOT, status);
+ures_openNoDefault(ध्रुव वर्ण* मार्गः, ध्रुव वर्ण* localeID, UError_संहिता* स्थितिः) {
+    प्रत्यागम ures_openWithType(शून्यसूचकः, मार्गः, localeID, URES_OPEN_LOCALE_मूलम्, स्थितिः);
 }
 
 /**
@@ -2840,8 +2840,8 @@ ures_openNoDefault(const char* path, const char* localeID, UErrorCode* status) {
  *  or sought. However, alias substitution will happen!
  */
 U_CAPI UResourceBundle*  U_EXPORT2
-ures_openDirect(const char* path, const char* localeID, UErrorCode* status) {
-    return ures_openWithType(nullptr, path, localeID, URES_OPEN_DIRECT, status);
+ures_open_प्रत्यक्षम्(ध्रुव वर्ण* मार्गः, ध्रुव वर्ण* localeID, UError_संहिता* स्थितिः) {
+    प्रत्यागम ures_openWithType(शून्यसूचकः, मार्गः, localeID, URES_OPEN_प्रत्यक्षम्, स्थितिः);
 }
 
 /**
@@ -2851,26 +2851,26 @@ ures_openDirect(const char* path, const char* localeID, UErrorCode* status) {
  * 
  * Same as ures_open(), but uses the fill-in parameter and does not allocate a new bundle.
  */
-U_CAPI void U_EXPORT2
-ures_openFillIn(UResourceBundle *r, const char* path,
-                const char* localeID, UErrorCode* status) {
-    if(U_SUCCESS(*status) && r == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+U_CAPI शून्य U_EXPORT2
+ures_open_Fill_अन्तर्(UResourceBundle *r, ध्रुव वर्ण* मार्गः,
+                ध्रुव वर्ण* localeID, UError_संहिता* स्थितिः) {
+    यदि(U_SUCCESS(*स्थितिः) && r == शून्यसूचकः) {
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
-    ures_openWithType(r, path, localeID, URES_OPEN_LOCALE_DEFAULT_ROOT, status);
+    ures_openWithType(r, मार्गः, localeID, URES_OPEN_LOCALE_DEFAULT_मूलम्, स्थितिः);
 }
 
 /**
  * Same as ures_openDirect(), but uses the fill-in parameter and does not allocate a new bundle.
  */
-U_CAPI void U_EXPORT2
-ures_openDirectFillIn(UResourceBundle *r, const char* path, const char* localeID, UErrorCode* status) {
-    if(U_SUCCESS(*status) && r == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+U_CAPI शून्य U_EXPORT2
+ures_open_प्रत्यक्षम्_Fill_अन्तर्(UResourceBundle *r, ध्रुव वर्ण* मार्गः, ध्रुव वर्ण* localeID, UError_संहिता* स्थितिः) {
+    यदि(U_SUCCESS(*स्थितिः) && r == शून्यसूचकः) {
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
-    ures_openWithType(r, path, localeID, URES_OPEN_DIRECT, status);
+    ures_openWithType(r, मार्गः, localeID, URES_OPEN_प्रत्यक्षम्, स्थितिः);
 }
 
 /**
@@ -2878,29 +2878,29 @@ ures_openDirectFillIn(UResourceBundle *r, const char* path, const char* localeID
  *  For strings, returns 1.
  */
 U_CAPI int32_t  U_EXPORT2
-ures_countArrayItems(const UResourceBundle* resourceBundle,
-                  const char* resourceKey,
-                  UErrorCode* status)
+ures_गणनम्_Array_वस्तूनि(ध्रुव UResourceBundle* resourceBundle,
+                  ध्रुव वर्ण* resource_कुञ्चिका,
+                  UError_संहिता* स्थितिः)
 {
-    UResourceBundle resData;
-    ures_initStackObject(&resData);
-    if (status==nullptr || U_FAILURE(*status)) {
-        return 0;
+    UResourceBundle res_दत्त;
+    ures_init_राशिः_Object(&res_दत्त);
+    यदि (स्थितिः==शून्यसूचकः || U_FAILURE(*स्थितिः)) {
+        प्रत्यागम 0;
     }
-    if(resourceBundle == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    यदि(resourceBundle == शून्यसूचकः) {
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0;
     }
-    ures_getByKey(resourceBundle, resourceKey, &resData, status);
+    ures_get_By_कुञ्चिका(resourceBundle, resource_कुञ्चिका, &res_दत्त, स्थितिः);
     
-    if(resData.getResData().data != nullptr) {
-        int32_t result = res_countArrayItems(&resData.getResData(), resData.fRes);
-        ures_close(&resData);
-        return result;
-    } else {
-        *status = U_MISSING_RESOURCE_ERROR;
-        ures_close(&resData);
-        return 0;
+    यदि(res_दत्त.get_Res_दत्त().दत्त != शून्यसूचकः) {
+        int32_t परिणाम = res_गणनम्_Array_वस्तूनि(&res_दत्त.get_Res_दत्त(), res_दत्त.fRes);
+        ures_close(&res_दत्त);
+        प्रत्यागम परिणाम;
+    } अन्यथा {
+        *स्थितिः = U_MISSING_RESOURCE_ERROR;
+        ures_close(&res_दत्त);
+        प्रत्यागम 0;
     }
 }
 
@@ -2914,20 +2914,20 @@ ures_countArrayItems(const UResourceBundle* resourceBundle,
  * @see ures_getVersion
  * @internal
  */
-U_CAPI const char* U_EXPORT2
-ures_getVersionNumberInternal(const UResourceBundle* resourceBundle U_LIFETIME_BOUND)
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+ures_get_संस्करणम्_सङ्ख्या_आन्तरिकम्(ध्रुव UResourceBundle* resourceBundle U_LIFETIME_BOUND)
 {
-    if (!resourceBundle) return nullptr;
+    यदि (!resourceBundle) प्रत्यागम शून्यसूचकः;
 
-    if(resourceBundle->fVersion == nullptr) {
+    यदि(resourceBundle->f_संस्करणम् == शून्यसूचकः) {
 
         /* If the version ID has not been built yet, then do so.  Retrieve */
         /* the minor version from the file. */
-        UErrorCode status = U_ZERO_ERROR;
+        UError_संहिता स्थितिः = U_ZERO_ERROR;
         int32_t minor_len = 0;
         int32_t len;
 
-        const char16_t* minor_version = ures_getStringByKey(resourceBundle, kVersionTag, &minor_len, &status);
+        ध्रुव char16_t* minor_संस्करणम् = ures_get_String_By_कुञ्चिका(resourceBundle, k_संस्करणम्_चिह्नकम्, &minor_len, &स्थितिः);
         
         /* Determine the length of of the final version string.  This is */
         /* the length of the major part + the length of the separator */
@@ -2940,51 +2940,51 @@ ures_getVersionNumberInternal(const UResourceBundle* resourceBundle U_LIFETIME_B
         /* + 1 for zero byte */
 
 
-        ((UResourceBundle *)resourceBundle)->fVersion = (char *)uprv_malloc(1 + len); 
+        ((UResourceBundle *)resourceBundle)->f_संस्करणम् = (वर्ण *)uprv_malloc(1 + len); 
         /* Check for null pointer. */
-        if (((UResourceBundle *)resourceBundle)->fVersion == nullptr) {
-            return nullptr;
+        यदि (((UResourceBundle *)resourceBundle)->f_संस्करणम् == शून्यसूचकः) {
+            प्रत्यागम शून्यसूचकः;
         }
        
-        if(minor_len > 0) {
-            u_UCharsToChars(minor_version, resourceBundle->fVersion , minor_len);
-            resourceBundle->fVersion[len] =  '\0';
+        यदि(minor_len > 0) {
+            u_UChars_गन्तव्यम्_Chars(minor_संस्करणम्, resourceBundle->f_संस्करणम् , minor_len);
+            resourceBundle->f_संस्करणम्[len] =  '\0';
         }
-        else {
-            uprv_strcpy(resourceBundle->fVersion, kDefaultMinorVersion);
+        अन्यथा {
+            uprv_strcpy(resourceBundle->f_संस्करणम्, k_Default_Minor_संस्करणम्);
         }
     }
 
-    return resourceBundle->fVersion;
+    प्रत्यागम resourceBundle->f_संस्करणम्;
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getVersionNumber(const UResourceBundle* resourceBundle U_LIFETIME_BOUND)
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+ures_get_संस्करणम्_सङ्ख्या(ध्रुव UResourceBundle* resourceBundle U_LIFETIME_BOUND)
 {
-    return ures_getVersionNumberInternal(resourceBundle);
+    प्रत्यागम ures_get_संस्करणम्_सङ्ख्या_आन्तरिकम्(resourceBundle);
 }
 
-U_CAPI void U_EXPORT2 ures_getVersion(const UResourceBundle* resB, UVersionInfo versionInfo) {
-    if (!resB) return;
+U_CAPI शून्य U_EXPORT2 ures_get_संस्करणम्(ध्रुव UResourceBundle* resB, UVersionInfo संस्करणम्_Info) {
+    यदि (!resB) प्रत्यागम;
 
-    u_versionFromString(versionInfo, ures_getVersionNumberInternal(resB));
+    u_संस्करणम्_From_String(संस्करणम्_Info, ures_get_संस्करणम्_सङ्ख्या_आन्तरिकम्(resB));
 }
 
 /** Tree support functions *******************************/
-#define INDEX_LOCALE_NAME "res_index"
-#define INDEX_TAG         "InstalledLocales"
-#define DEFAULT_TAG       "default"
+#परिभाषय सूचकांक_LOCALE_NAME "res_index"
+#परिभाषय सूचकांक_चिह्नकम्         "InstalledLocales"
+#परिभाषय DEFAULT_चिह्नकम्       "default"
 
-#if defined(URES_TREE_DEBUG)
-#include <stdio.h>
-#endif
+#यदि defined(URES_वृक्षः_DEBUG)
+#अन्तर्भाव <stdio.h>
+#यदि_अन्तः
 
-typedef struct ULocalesContext {
+प्रकारनिर्देश संरचना ULocalesContext {
     UResourceBundle installed;
     UResourceBundle curr;
 } ULocalesContext;
 
-static void U_CALLCONV
+स्थिर शून्य U_CALLCONV
 ures_loc_closeLocales(UEnumeration *enumerator) {
     ULocalesContext* ctx = static_cast<ULocalesContext*>(enumerator->context);
     ures_close(&ctx->curr);
@@ -2993,447 +2993,447 @@ ures_loc_closeLocales(UEnumeration *enumerator) {
     uprv_free(enumerator);
 }
 
-static int32_t U_CALLCONV
-ures_loc_countLocales(UEnumeration *en, UErrorCode * /*status*/) {
+स्थिर int32_t U_CALLCONV
+ures_loc_गणनम्_Locales(UEnumeration *en, UError_संहिता * /*स्थितिः*/) {
     ULocalesContext* ctx = static_cast<ULocalesContext*>(en->context);
-    return ures_getSize(&ctx->installed);
+    प्रत्यागम ures_get_आकार(&ctx->installed);
 }
 
 U_CDECL_BEGIN
 
 
-static const char * U_CALLCONV
-ures_loc_nextLocale(UEnumeration* en,
-                    int32_t* resultLength,
-                    UErrorCode* status) {
+स्थिर ध्रुव वर्ण * U_CALLCONV
+ures_loc_अग्र_Locale(UEnumeration* en,
+                    int32_t* परिणाम_दीर्घता,
+                    UError_संहिता* स्थितिः) {
     ULocalesContext *ctx = (ULocalesContext *)en->context;
     UResourceBundle *res = &(ctx->installed);
-    UResourceBundle *k = nullptr;
-    const char *result = nullptr;
+    UResourceBundle *k = शून्यसूचकः;
+    ध्रुव वर्ण *परिणाम = शून्यसूचकः;
     int32_t len = 0;
-    if (ures_hasNext(res) && (k = ures_getNextResource(res, &ctx->curr, status)) != nullptr) {
-        result = ures_getKey(k);
-        len = (int32_t)uprv_strlen(result);
+    यदि (ures_has_अग्र(res) && (k = ures_get_अग्र_Resource(res, &ctx->curr, स्थितिः)) != शून्यसूचकः) {
+        परिणाम = ures_get_कुञ्चिका(k);
+        len = (int32_t)uprv_strlen(परिणाम);
     }
-    if (resultLength) {
-        *resultLength = len;
+    यदि (परिणाम_दीर्घता) {
+        *परिणाम_दीर्घता = len;
     }
-    return result;
+    प्रत्यागम परिणाम;
 }
 
-static void U_CALLCONV 
+स्थिर शून्य U_CALLCONV 
 ures_loc_resetLocales(UEnumeration* en, 
-                      UErrorCode* /*status*/) {
+                      UError_संहिता* /*स्थितिः*/) {
     UResourceBundle *res = &((ULocalesContext *)en->context)->installed;
     ures_resetIterator(res);
 }
 
-U_CDECL_END
+U_CDECL_अन्तः
 
-static const UEnumeration gLocalesEnum = {
-    nullptr,
-        nullptr,
+स्थिर ध्रुव UEnumeration gLocalesEnum = {
+    शून्यसूचकः,
+        शून्यसूचकः,
         ures_loc_closeLocales,
-        ures_loc_countLocales,
+        ures_loc_गणनम्_Locales,
         uenum_unextDefault,
-        ures_loc_nextLocale,
+        ures_loc_अग्र_Locale,
         ures_loc_resetLocales
 };
 
 
 U_CAPI UEnumeration* U_EXPORT2
-ures_openAvailableLocales(const char *path, UErrorCode *status)
+ures_open_उपलब्धम्_Locales(ध्रुव वर्ण *मार्गः, UError_संहिता *स्थितिः)
 {
-    UResourceBundle *idx = nullptr;
-    UEnumeration *en = nullptr;
-    ULocalesContext *myContext = nullptr;
+    UResourceBundle *idx = शून्यसूचकः;
+    UEnumeration *en = शून्यसूचकः;
+    ULocalesContext *myContext = शून्यसूचकः;
 
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    यदि(U_FAILURE(*स्थितिः)) {
+        प्रत्यागम शून्यसूचकः;
     }
-    myContext = static_cast<ULocalesContext *>(uprv_malloc(sizeof(ULocalesContext)));
-    en =  (UEnumeration *)uprv_malloc(sizeof(UEnumeration));
-    if(!en || !myContext) {
-        *status = U_MEMORY_ALLOCATION_ERROR;
+    myContext = static_cast<ULocalesContext *>(uprv_malloc(परिमाण(ULocalesContext)));
+    en =  (UEnumeration *)uprv_malloc(परिमाण(UEnumeration));
+    यदि(!en || !myContext) {
+        *स्थितिः = U_स्मृतिः_आवण्टनम्_ERROR;
         uprv_free(en);
         uprv_free(myContext);
-        return nullptr;
+        प्रत्यागम शून्यसूचकः;
     }
-    uprv_memcpy(en, &gLocalesEnum, sizeof(UEnumeration));
+    uprv_memcpy(en, &gLocalesEnum, परिमाण(UEnumeration));
 
-    ures_initStackObject(&myContext->installed);
-    ures_initStackObject(&myContext->curr);
-    idx = ures_openDirect(path, INDEX_LOCALE_NAME, status);
-    ures_getByKey(idx, INDEX_TAG, &myContext->installed, status);
-    if(U_SUCCESS(*status)) {
-#if defined(URES_TREE_DEBUG)
+    ures_init_राशिः_Object(&myContext->installed);
+    ures_init_राशिः_Object(&myContext->curr);
+    idx = ures_open_प्रत्यक्षम्(मार्गः, सूचकांक_LOCALE_NAME, स्थितिः);
+    ures_get_By_कुञ्चिका(idx, सूचकांक_चिह्नकम्, &myContext->installed, स्थितिः);
+    यदि(U_SUCCESS(*स्थितिः)) {
+#यदि defined(URES_वृक्षः_DEBUG)
         fprintf(stderr, "Got %s::%s::[%s] : %s\n", 
-            path, INDEX_LOCALE_NAME, INDEX_TAG, ures_getKey(&myContext->installed));
-#endif
+            मार्गः, सूचकांक_LOCALE_NAME, सूचकांक_चिह्नकम्, ures_get_कुञ्चिका(&myContext->installed));
+#यदि_अन्तः
         en->context = myContext;
-    } else {
-#if defined(URES_TREE_DEBUG)
-        fprintf(stderr, "%s open failed - %s\n", path, u_errorName(*status));
-#endif
+    } अन्यथा {
+#यदि defined(URES_वृक्षः_DEBUG)
+        fprintf(stderr, "%s open failed - %s\n", मार्गः, u_errorName(*स्थितिः));
+#यदि_अन्तः
         ures_close(&myContext->installed);
         uprv_free(myContext);
         uprv_free(en);
-        en = nullptr;
+        en = शून्यसूचकः;
     }
     
     ures_close(idx);
     
-    return en;
+    प्रत्यागम en;
 }
 
-static UBool isLocaleInList(UEnumeration *locEnum, const char *locToSearch, UErrorCode *status) {
-    const char *loc;
-    while ((loc = uenum_next(locEnum, nullptr, status)) != nullptr) {
-        if (uprv_strcmp(loc, locToSearch) == 0) {
-            return true;
+स्थिर UBool is_Locale_अन्तर्_List(UEnumeration *locEnum, ध्रुव वर्ण *loc_गन्तव्यम्_अन्वेषणम्, UError_संहिता *स्थितिः) {
+    ध्रुव वर्ण *loc;
+    यावत् ((loc = uenum_अग्र(locEnum, शून्यसूचकः, स्थितिः)) != शून्यसूचकः) {
+        यदि (uprv_strcmp(loc, loc_गन्तव्यम्_अन्वेषणम्) == 0) {
+            प्रत्यागम सत्य;
         }
     }
-    return false;
+    प्रत्यागम असत्य;
 }
 
-static void getParentForFunctionalEquivalent(const char*      localeID,
+स्थिर शून्य getParentForFunctionalEquivalent(ध्रुव वर्ण*      localeID,
                                              UResourceBundle* res,
                                              UResourceBundle* bund1,
                                              CharString&      parent) {
     // Get parent.
     // First check for a parent from %%Parent resource (Note that in resource trees
     // such as collation, data may have different parents than in parentLocales).
-    UErrorCode subStatus = U_ZERO_ERROR;
+    UError_संहिता sub_स्थितिः = U_ZERO_ERROR;
     parent.clear();
-    if (res != nullptr) {
-        ures_getByKey(res, "%%Parent", bund1, &subStatus);
-        if (U_SUCCESS(subStatus)) {
+    यदि (res != शून्यसूचकः) {
+        ures_get_By_कुञ्चिका(res, "%%Parent", bund1, &sub_स्थितिः);
+        यदि (U_SUCCESS(sub_स्थितिः)) {
             int32_t length16;
-            const char16_t* s16 = ures_getString(bund1, &length16, &subStatus);
-            parent.appendInvariantChars(s16, length16, subStatus);
+            ध्रुव char16_t* s16 = ures_getString(bund1, &length16, &sub_स्थितिः);
+            parent.appendInvariantChars(s16, length16, sub_स्थितिः);
         }
     }
     
     // If none there, use normal truncation parent
-    if (U_FAILURE(subStatus) || parent.isEmpty()) {
-        subStatus = U_ZERO_ERROR;
-        parent = ulocimp_getParent(localeID, subStatus);
+    यदि (U_FAILURE(sub_स्थितिः) || parent.is_रिक्तानि()) {
+        sub_स्थितिः = U_ZERO_ERROR;
+        parent = ulocimp_getParent(localeID, sub_स्थितिः);
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ures_getFunctionalEquivalent(char *result, int32_t resultCapacity,
-                             const char *path, const char *resName, const char *keyword, const char *locid,
-                             UBool *isAvailable, UBool omitDefault, UErrorCode *status)
+ures_getFunctionalEquivalent(वर्ण *परिणाम, int32_t परिणाम_क्षमता,
+                             ध्रुव वर्ण *मार्गः, ध्रुव वर्ण *resName, ध्रुव वर्ण *keyword, ध्रुव वर्ण *locid,
+                             UBool *is_उपलब्धम्, UBool omitDefault, UError_संहिता *स्थितिः)
 {
     CharString defVal; /* default value for given locale */
     CharString defLoc; /* default value for given locale */
-    CharString found;
+    CharString प्राप्तम्;
     CharString parent;
-    CharString full;
+    CharString पूर्णम्;
     UResourceBundle bund1, bund2;
-    UResourceBundle *res = nullptr;
-    UErrorCode subStatus = U_ZERO_ERROR;
+    UResourceBundle *res = शून्यसूचकः;
+    UError_संहिता sub_स्थितिः = U_ZERO_ERROR;
     int32_t length = 0;
-    if(U_FAILURE(*status)) return 0;
+    यदि(U_FAILURE(*स्थितिः)) प्रत्यागम 0;
     CharString kwVal;
-    if (keyword != nullptr && *keyword != '\0') {
-        kwVal = ulocimp_getKeywordValue(locid, keyword, subStatus);
-        if (kwVal == DEFAULT_TAG) {
+    यदि (keyword != शून्यसूचकः && *keyword != '\0') {
+        kwVal = ulocimp_get_Keyword_मानम्(locid, keyword, sub_स्थितिः);
+        यदि (kwVal == DEFAULT_चिह्नकम्) {
             kwVal.clear();
         }
     }
-    if (locid == nullptr) {
+    यदि (locid == शून्यसूचकः) {
         locid = uloc_getDefault();
     }
-    CharString base = ulocimp_getBaseName(locid, subStatus);
-#if defined(URES_TREE_DEBUG)
+    CharString आधारः = ulocimp_get_आधारः_Name(locid, sub_स्थितिः);
+#यदि defined(URES_वृक्षः_DEBUG)
     fprintf(stderr, "getFunctionalEquivalent: \"%s\" [%s=%s] in %s - %s\n", 
-            locid, keyword, kwVal.data(), base.data(), u_errorName(subStatus));
-#endif
-    ures_initStackObject(&bund1);
-    ures_initStackObject(&bund2);
+            locid, keyword, kwVal.दत्त(), आधारः.दत्त(), u_errorName(sub_स्थितिः));
+#यदि_अन्तः
+    ures_init_राशिः_Object(&bund1);
+    ures_init_राशिः_Object(&bund2);
 
-    parent.copyFrom(base, subStatus);
-    found.copyFrom(base, subStatus);
+    parent.copyFrom(आधारः, sub_स्थितिः);
+    प्राप्तम्.copyFrom(आधारः, sub_स्थितिः);
 
-    if(isAvailable) {
-        UEnumeration *locEnum = ures_openAvailableLocales(path, &subStatus);
-        *isAvailable = true;
-        if (U_SUCCESS(subStatus)) {
-            *isAvailable = isLocaleInList(locEnum, parent.data(), &subStatus);
+    यदि(is_उपलब्धम्) {
+        UEnumeration *locEnum = ures_open_उपलब्धम्_Locales(मार्गः, &sub_स्थितिः);
+        *is_उपलब्धम् = सत्य;
+        यदि (U_SUCCESS(sub_स्थितिः)) {
+            *is_उपलब्धम् = is_Locale_अन्तर्_List(locEnum, parent.दत्त(), &sub_स्थितिः);
         }
         uenum_close(locEnum);
     }
 
-    if(U_FAILURE(subStatus)) {
-        *status = subStatus;
-        return 0;
+    यदि(U_FAILURE(sub_स्थितिः)) {
+        *स्थितिः = sub_स्थितिः;
+        प्रत्यागम 0;
     }
     
-    do {
-        subStatus = U_ZERO_ERROR;
-        res = ures_open(path, parent.data(), &subStatus);
-        if(((subStatus == U_USING_FALLBACK_WARNING) ||
-            (subStatus == U_USING_DEFAULT_WARNING)) && isAvailable)
+    कुरु {
+        sub_स्थितिः = U_ZERO_ERROR;
+        res = ures_open(मार्गः, parent.दत्त(), &sub_स्थितिः);
+        यदि(((sub_स्थितिः == U_USING_FALLBACK_WARNING) ||
+            (sub_स्थितिः == U_USING_DEFAULT_WARNING)) && is_उपलब्धम्)
         {
-            *isAvailable = false;
+            *is_उपलब्धम् = असत्य;
         }
-        isAvailable = nullptr; /* only want to set this the first time around */
+        is_उपलब्धम् = शून्यसूचकः; /* only want to set this the first time around */
         
-#if defined(URES_TREE_DEBUG)
-        fprintf(stderr, "%s;%s -> %s [%s]\n", path?path:"ICUDATA", parent.data(), u_errorName(subStatus), ures_getLocale(res, &subStatus));
-#endif
-        if(U_FAILURE(subStatus)) {
-            *status = subStatus;
-        } else if(subStatus == U_ZERO_ERROR) {
-            ures_getByKey(res,resName,&bund1, &subStatus);
-            if(subStatus == U_ZERO_ERROR) {
-                const char16_t *defUstr;
+#यदि defined(URES_वृक्षः_DEBUG)
+        fprintf(stderr, "%s;%s -> %s [%s]\n", मार्गः?मार्गः:"ICUDATA", parent.दत्त(), u_errorName(sub_स्थितिः), ures_getLocale(res, &sub_स्थितिः));
+#यदि_अन्तः
+        यदि(U_FAILURE(sub_स्थितिः)) {
+            *स्थितिः = sub_स्थितिः;
+        } अन्यथा यदि(sub_स्थितिः == U_ZERO_ERROR) {
+            ures_get_By_कुञ्चिका(res,resName,&bund1, &sub_स्थितिः);
+            यदि(sub_स्थितिः == U_ZERO_ERROR) {
+                ध्रुव char16_t *defUstr;
                 int32_t defLen;
                 /* look for default item */
-#if defined(URES_TREE_DEBUG)
+#यदि defined(URES_वृक्षः_DEBUG)
                 fprintf(stderr, "%s;%s : loaded default -> %s\n",
-                    path?path:"ICUDATA", parent.data(), u_errorName(subStatus));
-#endif
-                defUstr = ures_getStringByKey(&bund1, DEFAULT_TAG, &defLen, &subStatus);
-                if(U_SUCCESS(subStatus) && defLen) {
-                    defVal.clear().appendInvariantChars(defUstr, defLen, subStatus);
-#if defined(URES_TREE_DEBUG)
+                    मार्गः?मार्गः:"ICUDATA", parent.दत्त(), u_errorName(sub_स्थितिः));
+#यदि_अन्तः
+                defUstr = ures_get_String_By_कुञ्चिका(&bund1, DEFAULT_चिह्नकम्, &defLen, &sub_स्थितिः);
+                यदि(U_SUCCESS(sub_स्थितिः) && defLen) {
+                    defVal.clear().appendInvariantChars(defUstr, defLen, sub_स्थितिः);
+#यदि defined(URES_वृक्षः_DEBUG)
                     fprintf(stderr, "%s;%s -> default %s=%s,  %s\n", 
-                        path?path:"ICUDATA", parent.data(), keyword, defVal.data(), u_errorName(subStatus));
-#endif
-                    defLoc.copyFrom(parent, subStatus);
-                    if(kwVal.isEmpty()) {
-                        kwVal.append(defVal, subStatus);
-#if defined(URES_TREE_DEBUG)
+                        मार्गः?मार्गः:"ICUDATA", parent.दत्त(), keyword, defVal.दत्त(), u_errorName(sub_स्थितिः));
+#यदि_अन्तः
+                    defLoc.copyFrom(parent, sub_स्थितिः);
+                    यदि(kwVal.is_रिक्तानि()) {
+                        kwVal.append(defVal, sub_स्थितिः);
+#यदि defined(URES_वृक्षः_DEBUG)
                         fprintf(stderr, "%s;%s -> kwVal =  %s\n", 
-                            path?path:"ICUDATA", parent.data(), keyword, kwVal.data());
-#endif
+                            मार्गः?मार्गः:"ICUDATA", parent.दत्त(), keyword, kwVal.दत्त());
+#यदि_अन्तः
                     }
                 }
             }
         }
         
-        subStatus = U_ZERO_ERROR;
+        sub_स्थितिः = U_ZERO_ERROR;
 
-        if (res != nullptr) {
-            found.clear().append(ures_getLocaleByType(res, ULOC_VALID_LOCALE, &subStatus), subStatus);
+        यदि (res != शून्यसूचकः) {
+            प्राप्तम्.clear().append(ures_getLocaleByType(res, ULOC_VALID_LOCALE, &sub_स्थितिः), sub_स्थितिः);
         }
 
-        if (found != parent) {
-            parent.copyFrom(found, subStatus);
-        } else {
-            getParentForFunctionalEquivalent(found.data(),res,&bund1,parent);
+        यदि (प्राप्तम् != parent) {
+            parent.copyFrom(प्राप्तम्, sub_स्थितिः);
+        } अन्यथा {
+            getParentForFunctionalEquivalent(प्राप्तम्.दत्त(),res,&bund1,parent);
         }
         ures_close(res);
-    } while(defVal.isEmpty() && !found.isEmpty() && found != "root" && U_SUCCESS(*status));
+    } यावत्(defVal.is_रिक्तानि() && !प्राप्तम्.is_रिक्तानि() && प्राप्तम् != "root" && U_SUCCESS(*स्थितिः));
     
     /* Now, see if we can find the kwVal collator.. start the search over.. */
-    parent.copyFrom(base, subStatus);
-    found.copyFrom(base, subStatus);
+    parent.copyFrom(आधारः, sub_स्थितिः);
+    प्राप्तम्.copyFrom(आधारः, sub_स्थितिः);
 
-    do {
-        res = ures_open(path, parent.data(), &subStatus);
-        if((subStatus == U_USING_FALLBACK_WARNING) && isAvailable) {
-            *isAvailable = false;
+    कुरु {
+        res = ures_open(मार्गः, parent.दत्त(), &sub_स्थितिः);
+        यदि((sub_स्थितिः == U_USING_FALLBACK_WARNING) && is_उपलब्धम्) {
+            *is_उपलब्धम् = असत्य;
         }
-        isAvailable = nullptr; /* only want to set this the first time around */
+        is_उपलब्धम् = शून्यसूचकः; /* only want to set this the first time around */
         
-#if defined(URES_TREE_DEBUG)
+#यदि defined(URES_वृक्षः_DEBUG)
         fprintf(stderr, "%s;%s -> %s (looking for %s)\n", 
-            path?path:"ICUDATA", parent.data(), u_errorName(subStatus), kwVal.data());
-#endif
-        if(U_FAILURE(subStatus)) {
-            *status = subStatus;
-        } else if(subStatus == U_ZERO_ERROR) {
-            ures_getByKey(res,resName,&bund1, &subStatus);
-#if defined(URES_TREE_DEBUG)
-/**/ fprintf(stderr,"@%d [%s] %s\n", __LINE__, resName, u_errorName(subStatus));
-#endif
-            if(subStatus == U_ZERO_ERROR) {
-                ures_getByKey(&bund1, kwVal.data(), &bund2, &subStatus);
-#if defined(URES_TREE_DEBUG)
-/**/ fprintf(stderr,"@%d [%s] %s\n", __LINE__, kwVal.data(), u_errorName(subStatus));
-#endif
-                if(subStatus == U_ZERO_ERROR) {
-#if defined(URES_TREE_DEBUG)
+            मार्गः?मार्गः:"ICUDATA", parent.दत्त(), u_errorName(sub_स्थितिः), kwVal.दत्त());
+#यदि_अन्तः
+        यदि(U_FAILURE(sub_स्थितिः)) {
+            *स्थितिः = sub_स्थितिः;
+        } अन्यथा यदि(sub_स्थितिः == U_ZERO_ERROR) {
+            ures_get_By_कुञ्चिका(res,resName,&bund1, &sub_स्थितिः);
+#यदि defined(URES_वृक्षः_DEBUG)
+/**/ fprintf(stderr,"@%d [%s] %s\n", __LINE__, resName, u_errorName(sub_स्थितिः));
+#यदि_अन्तः
+            यदि(sub_स्थितिः == U_ZERO_ERROR) {
+                ures_get_By_कुञ्चिका(&bund1, kwVal.दत्त(), &bund2, &sub_स्थितिः);
+#यदि defined(URES_वृक्षः_DEBUG)
+/**/ fprintf(stderr,"@%d [%s] %s\n", __LINE__, kwVal.दत्त(), u_errorName(sub_स्थितिः));
+#यदि_अन्तः
+                यदि(sub_स्थितिः == U_ZERO_ERROR) {
+#यदि defined(URES_वृक्षः_DEBUG)
                     fprintf(stderr, "%s;%s -> full0 %s=%s,  %s\n", 
-                        path?path:"ICUDATA", parent.data(), keyword, kwVal.data(), u_errorName(subStatus));
-#endif
-                    if (parent.isEmpty()) {
-                        full.clear().append("root", subStatus);
-                    } else {
-                        full.copyFrom(parent, subStatus);
+                        मार्गः?मार्गः:"ICUDATA", parent.दत्त(), keyword, kwVal.दत्त(), u_errorName(sub_स्थितिः));
+#यदि_अन्तः
+                    यदि (parent.is_रिक्तानि()) {
+                        पूर्णम्.clear().append("root", sub_स्थितिः);
+                    } अन्यथा {
+                        पूर्णम्.copyFrom(parent, sub_स्थितिः);
                     }
                         /* now, recalculate default kw if need be */
-                        if(defLoc.length() > full.length()) {
-                          const char16_t *defUstr;
+                        यदि(defLoc.length() > पूर्णम्.length()) {
+                          ध्रुव char16_t *defUstr;
                           int32_t defLen;
                           /* look for default item */
-#if defined(URES_TREE_DEBUG)
+#यदि defined(URES_वृक्षः_DEBUG)
                             fprintf(stderr, "%s;%s -> recalculating Default0\n", 
-                                    path?path:"ICUDATA", full.data());
-#endif
-                          defUstr = ures_getStringByKey(&bund1, DEFAULT_TAG, &defLen, &subStatus);
-                          if(U_SUCCESS(subStatus) && defLen) {
-                            defVal.clear().appendInvariantChars(defUstr, defLen, subStatus);
-#if defined(URES_TREE_DEBUG)
+                                    मार्गः?मार्गः:"ICUDATA", पूर्णम्.दत्त());
+#यदि_अन्तः
+                          defUstr = ures_get_String_By_कुञ्चिका(&bund1, DEFAULT_चिह्नकम्, &defLen, &sub_स्थितिः);
+                          यदि(U_SUCCESS(sub_स्थितिः) && defLen) {
+                            defVal.clear().appendInvariantChars(defUstr, defLen, sub_स्थितिः);
+#यदि defined(URES_वृक्षः_DEBUG)
                             fprintf(stderr, "%s;%s -> default0 %s=%s,  %s\n", 
-                                    path?path:"ICUDATA", full.data(), keyword, defVal.data(), u_errorName(subStatus));
-#endif
-                            defLoc.copyFrom(full, subStatus);
+                                    मार्गः?मार्गः:"ICUDATA", पूर्णम्.दत्त(), keyword, defVal.दत्त(), u_errorName(sub_स्थितिः));
+#यदि_अन्तः
+                            defLoc.copyFrom(पूर्णम्, sub_स्थितिः);
                           }
                         } /* end of recalculate default KW */
-#if defined(URES_TREE_DEBUG)
-                        else {
-                          fprintf(stderr, "No trim0,  %s <= %s\n", defLoc.data(), full.data());
+#यदि defined(URES_वृक्षः_DEBUG)
+                        अन्यथा {
+                          fprintf(stderr, "No trim0,  %s <= %s\n", defLoc.दत्त(), पूर्णम्.दत्त());
                         }
-#endif
-                } else {
-#if defined(URES_TREE_DEBUG)
+#यदि_अन्तः
+                } अन्यथा {
+#यदि defined(URES_वृक्षः_DEBUG)
                     fprintf(stderr, "err=%s in %s looking for %s\n", 
-                        u_errorName(subStatus), parent.data(), kwVal.data());
-#endif
+                        u_errorName(sub_स्थितिः), parent.दत्त(), kwVal.दत्त());
+#यदि_अन्तः
                 }
             }
         }
         
-        subStatus = U_ZERO_ERROR;
-        UBool haveFound = false;
+        sub_स्थितिः = U_ZERO_ERROR;
+        UBool have_प्राप्तम् = असत्य;
         // At least for collations which may be aliased, we need to use the VALID locale
         // as the parent instead of just truncating, as long as the VALID locale is not
         // root and has a different language than the parent. Use of the VALID locale
         // here is similar to the procedure used at the end of the previous do-while loop
         // for all resource types.
-        if (res != nullptr && uprv_strcmp(resName, "collations") == 0) {
-            const char *validLoc = ures_getLocaleByType(res, ULOC_VALID_LOCALE, &subStatus);
-            if (U_SUCCESS(subStatus) && validLoc != nullptr && validLoc[0] != 0 && uprv_strcmp(validLoc, "root") != 0) {
-                CharString validLang = ulocimp_getLanguage(validLoc, subStatus);
-                CharString parentLang = ulocimp_getLanguage(parent.toStringPiece(), subStatus);
-                if (U_SUCCESS(subStatus) && validLang != parentLang) {
+        यदि (res != शून्यसूचकः && uprv_strcmp(resName, "collations") == 0) {
+            ध्रुव वर्ण *validLoc = ures_getLocaleByType(res, ULOC_VALID_LOCALE, &sub_स्थितिः);
+            यदि (U_SUCCESS(sub_स्थितिः) && validLoc != शून्यसूचकः && validLoc[0] != 0 && uprv_strcmp(validLoc, "root") != 0) {
+                CharString validLang = ulocimp_getLanguage(validLoc, sub_स्थितिः);
+                CharString parentLang = ulocimp_getLanguage(parent.गन्तव्यम्_String_Piece(), sub_स्थितिः);
+                यदि (U_SUCCESS(sub_स्थितिः) && validLang != parentLang) {
                     // validLoc is not root and has a different language than parent, use it instead
-                    found.clear().append(validLoc, subStatus);
-                    haveFound = true;
+                    प्राप्तम्.clear().append(validLoc, sub_स्थितिः);
+                    have_प्राप्तम् = सत्य;
                 }
             }
-            subStatus = U_ZERO_ERROR;
+            sub_स्थितिः = U_ZERO_ERROR;
         }
-        if (!haveFound) {
-            found.copyFrom(parent, subStatus);
+        यदि (!have_प्राप्तम्) {
+            प्राप्तम्.copyFrom(parent, sub_स्थितिः);
         }
 
-        getParentForFunctionalEquivalent(found.data(),res,&bund1,parent);
+        getParentForFunctionalEquivalent(प्राप्तम्.दत्त(),res,&bund1,parent);
         ures_close(res);
-        subStatus = U_ZERO_ERROR;
-    } while(full.isEmpty() && !found.isEmpty() && U_SUCCESS(*status));
+        sub_स्थितिः = U_ZERO_ERROR;
+    } यावत्(पूर्णम्.is_रिक्तानि() && !प्राप्तम्.is_रिक्तानि() && U_SUCCESS(*स्थितिः));
 
-    if(full.isEmpty() && kwVal != defVal) {
-#if defined(URES_TREE_DEBUG)
-        fprintf(stderr, "Failed to locate kw %s - try default %s\n", kwVal.data(), defVal.data());
-#endif
-        kwVal.clear().append(defVal, subStatus);
-        parent.copyFrom(base, subStatus);
-        found.copyFrom(base, subStatus);
+    यदि(पूर्णम्.is_रिक्तानि() && kwVal != defVal) {
+#यदि defined(URES_वृक्षः_DEBUG)
+        fprintf(stderr, "Failed to locate kw %s - try default %s\n", kwVal.दत्त(), defVal.दत्त());
+#यदि_अन्तः
+        kwVal.clear().append(defVal, sub_स्थितिः);
+        parent.copyFrom(आधारः, sub_स्थितिः);
+        प्राप्तम्.copyFrom(आधारः, sub_स्थितिः);
 
-        do { /* search for 'default' named item */
-            res = ures_open(path, parent.data(), &subStatus);
-            if((subStatus == U_USING_FALLBACK_WARNING) && isAvailable) {
-                *isAvailable = false;
+        कुरु { /* search for 'default' named item */
+            res = ures_open(मार्गः, parent.दत्त(), &sub_स्थितिः);
+            यदि((sub_स्थितिः == U_USING_FALLBACK_WARNING) && is_उपलब्धम्) {
+                *is_उपलब्धम् = असत्य;
             }
-            isAvailable = nullptr; /* only want to set this the first time around */
+            is_उपलब्धम् = शून्यसूचकः; /* only want to set this the first time around */
             
-#if defined(URES_TREE_DEBUG)
+#यदि defined(URES_वृक्षः_DEBUG)
             fprintf(stderr, "%s;%s -> %s (looking for default %s)\n",
-                path?path:"ICUDATA", parent.data(), u_errorName(subStatus), kwVal.data());
-#endif
-            if(U_FAILURE(subStatus)) {
-                *status = subStatus;
-            } else if(subStatus == U_ZERO_ERROR) {
-                ures_getByKey(res,resName,&bund1, &subStatus);
-                if(subStatus == U_ZERO_ERROR) {
-                    ures_getByKey(&bund1, kwVal.data(), &bund2, &subStatus);
-                    if(subStatus == U_ZERO_ERROR) {
-#if defined(URES_TREE_DEBUG)
-                        fprintf(stderr, "%s;%s -> full1 %s=%s,  %s\n", path?path:"ICUDATA",
-                            parent.data(), keyword, kwVal.data(), u_errorName(subStatus));
-#endif
-                        if (parent.isEmpty()) {
-                            full.clear().append("root", subStatus);
-                        } else {
-                            full.copyFrom(parent, subStatus);
+                मार्गः?मार्गः:"ICUDATA", parent.दत्त(), u_errorName(sub_स्थितिः), kwVal.दत्त());
+#यदि_अन्तः
+            यदि(U_FAILURE(sub_स्थितिः)) {
+                *स्थितिः = sub_स्थितिः;
+            } अन्यथा यदि(sub_स्थितिः == U_ZERO_ERROR) {
+                ures_get_By_कुञ्चिका(res,resName,&bund1, &sub_स्थितिः);
+                यदि(sub_स्थितिः == U_ZERO_ERROR) {
+                    ures_get_By_कुञ्चिका(&bund1, kwVal.दत्त(), &bund2, &sub_स्थितिः);
+                    यदि(sub_स्थितिः == U_ZERO_ERROR) {
+#यदि defined(URES_वृक्षः_DEBUG)
+                        fprintf(stderr, "%s;%s -> full1 %s=%s,  %s\n", मार्गः?मार्गः:"ICUDATA",
+                            parent.दत्त(), keyword, kwVal.दत्त(), u_errorName(sub_स्थितिः));
+#यदि_अन्तः
+                        यदि (parent.is_रिक्तानि()) {
+                            पूर्णम्.clear().append("root", sub_स्थितिः);
+                        } अन्यथा {
+                            पूर्णम्.copyFrom(parent, sub_स्थितिः);
                         }
                         
                         /* now, recalculate default kw if need be */
-                        if(defLoc.length() > full.length()) {
-                          const char16_t *defUstr;
+                        यदि(defLoc.length() > पूर्णम्.length()) {
+                          ध्रुव char16_t *defUstr;
                           int32_t defLen;
                           /* look for default item */
-#if defined(URES_TREE_DEBUG)
+#यदि defined(URES_वृक्षः_DEBUG)
                             fprintf(stderr, "%s;%s -> recalculating Default1\n", 
-                                    path?path:"ICUDATA", full.data());
-#endif
-                          defUstr = ures_getStringByKey(&bund1, DEFAULT_TAG, &defLen, &subStatus);
-                          if(U_SUCCESS(subStatus) && defLen) {
-                            defVal.clear().appendInvariantChars(defUstr, defLen, subStatus);
-#if defined(URES_TREE_DEBUG)
+                                    मार्गः?मार्गः:"ICUDATA", पूर्णम्.दत्त());
+#यदि_अन्तः
+                          defUstr = ures_get_String_By_कुञ्चिका(&bund1, DEFAULT_चिह्नकम्, &defLen, &sub_स्थितिः);
+                          यदि(U_SUCCESS(sub_स्थितिः) && defLen) {
+                            defVal.clear().appendInvariantChars(defUstr, defLen, sub_स्थितिः);
+#यदि defined(URES_वृक्षः_DEBUG)
                             fprintf(stderr, "%s;%s -> default %s=%s,  %s\n", 
-                                    path?path:"ICUDATA", full.data(), keyword, defVal.data(), u_errorName(subStatus));
-#endif
-                            defLoc.copyFrom(full, subStatus);
+                                    मार्गः?मार्गः:"ICUDATA", पूर्णम्.दत्त(), keyword, defVal.दत्त(), u_errorName(sub_स्थितिः));
+#यदि_अन्तः
+                            defLoc.copyFrom(पूर्णम्, sub_स्थितिः);
                           }
                         } /* end of recalculate default KW */
-#if defined(URES_TREE_DEBUG)
-                        else {
-                          fprintf(stderr, "No trim1,  %s <= %s\n", defLoc.data(), full.data());
+#यदि defined(URES_वृक्षः_DEBUG)
+                        अन्यथा {
+                          fprintf(stderr, "No trim1,  %s <= %s\n", defLoc.दत्त(), पूर्णम्.दत्त());
                         }
-#endif
+#यदि_अन्तः
                     }
                 }
             }
             
-            subStatus = U_ZERO_ERROR;
-            found.copyFrom(parent, subStatus);
-            getParentForFunctionalEquivalent(found.data(),res,&bund1,parent);
+            sub_स्थितिः = U_ZERO_ERROR;
+            प्राप्तम्.copyFrom(parent, sub_स्थितिः);
+            getParentForFunctionalEquivalent(प्राप्तम्.दत्त(),res,&bund1,parent);
             ures_close(res);
-            subStatus = U_ZERO_ERROR;
-        } while(full.isEmpty() && !found.isEmpty() && U_SUCCESS(*status));
+            sub_स्थितिः = U_ZERO_ERROR;
+        } यावत्(पूर्णम्.is_रिक्तानि() && !प्राप्तम्.is_रिक्तानि() && U_SUCCESS(*स्थितिः));
     }
     
-    if(U_SUCCESS(*status)) {
-        if(full.isEmpty()) {
-#if defined(URES_TREE_DEBUG)
-          fprintf(stderr, "Still could not load keyword %s=%s\n", keyword, kwVal.data());
-#endif
-          *status = U_MISSING_RESOURCE_ERROR;
-        } else if(omitDefault) {
-#if defined(URES_TREE_DEBUG)
-          fprintf(stderr,"Trim? full=%s, defLoc=%s, found=%s\n", full.data(), defLoc.data(), found.data());
-#endif        
-          if(defLoc.length() <= full.length()) {
+    यदि(U_SUCCESS(*स्थितिः)) {
+        यदि(पूर्णम्.is_रिक्तानि()) {
+#यदि defined(URES_वृक्षः_DEBUG)
+          fprintf(stderr, "Still could not load keyword %s=%s\n", keyword, kwVal.दत्त());
+#यदि_अन्तः
+          *स्थितिः = U_MISSING_RESOURCE_ERROR;
+        } अन्यथा यदि(omitDefault) {
+#यदि defined(URES_वृक्षः_DEBUG)
+          fprintf(stderr,"Trim? full=%s, defLoc=%s, found=%s\n", पूर्णम्.दत्त(), defLoc.दत्त(), प्राप्तम्.दत्त());
+#यदि_अन्तः        
+          यदि(defLoc.length() <= पूर्णम्.length()) {
             /* found the keyword in a *child* of where the default tag was present. */
-            if(kwVal == defVal) { /* if the requested kw is default, */
+            यदि(kwVal == defVal) { /* if the requested kw is default, */
               /* and the default is in or in an ancestor of the current locale */
-#if defined(URES_TREE_DEBUG)
-              fprintf(stderr, "Removing unneeded var %s=%s\n", keyword, kwVal.data());
-#endif
+#यदि defined(URES_वृक्षः_DEBUG)
+              fprintf(stderr, "Removing unneeded var %s=%s\n", keyword, kwVal.दत्त());
+#यदि_अन्तः
               kwVal.clear();
             }
           }
         }
-        found.copyFrom(full, subStatus);
-        if(!kwVal.isEmpty()) {
-            found
-                .append("@", subStatus)
-                .append(keyword, subStatus)
-                .append("=", subStatus)
-                .append(kwVal, subStatus);
-        } else if(!omitDefault) {
-            found
-                .append("@", subStatus)
-                .append(keyword, subStatus)
-                .append("=", subStatus)
-                .append(defVal, subStatus);
+        प्राप्तम्.copyFrom(पूर्णम्, sub_स्थितिः);
+        यदि(!kwVal.is_रिक्तानि()) {
+            प्राप्तम्
+                .append("@", sub_स्थितिः)
+                .append(keyword, sub_स्थितिः)
+                .append("=", sub_स्थितिः)
+                .append(kwVal, sub_स्थितिः);
+        } अन्यथा यदि(!omitDefault) {
+            प्राप्तम्
+                .append("@", sub_स्थितिः)
+                .append(keyword, sub_स्थितिः)
+                .append("=", sub_स्थितिः)
+                .append(defVal, sub_स्थितिः);
         }
     }
     /* we found the default locale - no need to repeat it.*/
@@ -3441,200 +3441,200 @@ ures_getFunctionalEquivalent(char *result, int32_t resultCapacity,
     ures_close(&bund1);
     ures_close(&bund2);
     
-    length = found.length();
+    length = प्राप्तम्.length();
 
-    if(U_SUCCESS(*status)) {
-        int32_t copyLength = uprv_min(length, resultCapacity);
-        if(copyLength>0) {
-            found.extract(result, copyLength, subStatus);
+    यदि(U_SUCCESS(*स्थितिः)) {
+        int32_t copy_दीर्घता = uprv_min(length, परिणाम_क्षमता);
+        यदि(copy_दीर्घता>0) {
+            प्राप्तम्.extract(परिणाम, copy_दीर्घता, sub_स्थितिः);
         }
-        if(length == 0) {
-          *status = U_MISSING_RESOURCE_ERROR; 
+        यदि(length == 0) {
+          *स्थितिः = U_MISSING_RESOURCE_ERROR; 
         }
-    } else {
+    } अन्यथा {
         length = 0;
-        result[0]=0;
+        परिणाम[0]=0;
     }
-    return u_terminateChars(result, resultCapacity, length, status);
+    प्रत्यागम u_terminateChars(परिणाम, परिणाम_क्षमता, length, स्थितिः);
 }
 
 U_CAPI UEnumeration* U_EXPORT2
-ures_getKeywordValues(const char *path, const char *keyword, UErrorCode *status)
+ures_get_Keyword_मानानि(ध्रुव वर्ण *मार्गः, ध्रुव वर्ण *keyword, UError_संहिता *स्थितिः)
 {
-#define VALUES_BUF_SIZE 2048
-#define VALUES_LIST_SIZE 512
+#परिभाषय मानानि_BUF_आकार 2048
+#परिभाषय मानानि_LIST_आकार 512
     
-    char       valuesBuf[VALUES_BUF_SIZE];
-    int32_t    valuesIndex = 0;
-    const char *valuesList[VALUES_LIST_SIZE];
-    int32_t    valuesCount = 0;
+    वर्ण       मानानि_Buf[मानानि_BUF_आकार];
+    int32_t    मानानि_सूचकांक = 0;
+    ध्रुव वर्ण *मानानि_List[मानानि_LIST_आकार];
+    int32_t    मानानि_गणनम् = 0;
     
-    const char *locale;
+    ध्रुव वर्ण *locale;
     int32_t     locLen;
     
-    UEnumeration *locs = nullptr;
+    UEnumeration *locs = शून्यसूचकः;
     
     UResourceBundle    item;
     UResourceBundle    subItem;
     
-    ures_initStackObject(&item);
-    ures_initStackObject(&subItem);
-    locs = ures_openAvailableLocales(path, status);
+    ures_init_राशिः_Object(&item);
+    ures_init_राशिः_Object(&subItem);
+    locs = ures_open_उपलब्धम्_Locales(मार्गः, स्थितिः);
     
-    if(U_FAILURE(*status)) {
+    यदि(U_FAILURE(*स्थितिः)) {
         ures_close(&item);
         ures_close(&subItem);
-        return nullptr;
+        प्रत्यागम शून्यसूचकः;
     }
     
-    valuesBuf[0]=0;
-    valuesBuf[1]=0;
+    मानानि_Buf[0]=0;
+    मानानि_Buf[1]=0;
 
-    while ((locale = uenum_next(locs, &locLen, status)) != nullptr) {
-        UResourceBundle   *bund = nullptr;
-        UResourceBundle   *subPtr = nullptr;
-        UErrorCode subStatus = U_ZERO_ERROR; /* don't fail if a bundle is unopenable */
-        bund = ures_open(path, locale, &subStatus);
+    यावत् ((locale = uenum_अग्र(locs, &locLen, स्थितिः)) != शून्यसूचकः) {
+        UResourceBundle   *bund = शून्यसूचकः;
+        UResourceBundle   *subPtr = शून्यसूचकः;
+        UError_संहिता sub_स्थितिः = U_ZERO_ERROR; /* don't fail if a bundle is unopenable */
+        bund = ures_open(मार्गः, locale, &sub_स्थितिः);
         
-#if defined(URES_TREE_DEBUG)
-        if(!bund || U_FAILURE(subStatus)) {
+#यदि defined(URES_वृक्षः_DEBUG)
+        यदि(!bund || U_FAILURE(sub_स्थितिः)) {
             fprintf(stderr, "%s-%s values: Can't open %s locale - skipping. (%s)\n", 
-                path?path:"<ICUDATA>", keyword, locale, u_errorName(subStatus));
+                मार्गः?मार्गः:"<ICUDATA>", keyword, locale, u_errorName(sub_स्थितिः));
         }
-#endif
+#यदि_अन्तः
         
-        ures_getByKey(bund, keyword, &item, &subStatus);
+        ures_get_By_कुञ्चिका(bund, keyword, &item, &sub_स्थितिः);
         
-        if(!bund || U_FAILURE(subStatus)) {
-#if defined(URES_TREE_DEBUG)
+        यदि(!bund || U_FAILURE(sub_स्थितिः)) {
+#यदि defined(URES_वृक्षः_DEBUG)
             fprintf(stderr, "%s-%s values: Can't find in %s - skipping. (%s)\n", 
-                path?path:"<ICUDATA>", keyword, locale, u_errorName(subStatus));
-#endif
+                मार्गः?मार्गः:"<ICUDATA>", keyword, locale, u_errorName(sub_स्थितिः));
+#यदि_अन्तः
             ures_close(bund);
-            bund = nullptr;
-            continue;
+            bund = शून्यसूचकः;
+            अनुवर्त;
         }
 
-        while ((subPtr = ures_getNextResource(&item, &subItem, &subStatus)) != nullptr
-            && U_SUCCESS(subStatus)) {
-            const char *k;
+        यावत् ((subPtr = ures_get_अग्र_Resource(&item, &subItem, &sub_स्थितिः)) != शून्यसूचकः
+            && U_SUCCESS(sub_स्थितिः)) {
+            ध्रुव वर्ण *k;
             int32_t i;
-            k = ures_getKey(subPtr);
+            k = ures_get_कुञ्चिका(subPtr);
 
-#if defined(URES_TREE_DEBUG)
+#यदि defined(URES_वृक्षः_DEBUG)
             /* fprintf(stderr, "%s | %s | %s | %s\n", path?path:"<ICUDATA>", keyword, locale, k); */
-#endif
-            if(k == nullptr || *k == 0 ||
-                    uprv_strcmp(k, DEFAULT_TAG) == 0 || uprv_strncmp(k, "private-", 8) == 0) {
+#यदि_अन्तः
+            यदि(k == शून्यसूचकः || *k == 0 ||
+                    uprv_strcmp(k, DEFAULT_चिह्नकम्) == 0 || uprv_strncmp(k, "private-", 8) == 0) {
                 // empty or "default" or unlisted type
-                continue;
+                अनुवर्त;
             }
-            for(i=0; i<valuesCount; i++) {
-                if(!uprv_strcmp(valuesList[i],k)) {
-                    k = nullptr; /* found duplicate */
-                    break;
+            प्रति(i=0; i<मानानि_गणनम्; i++) {
+                यदि(!uprv_strcmp(मानानि_List[i],k)) {
+                    k = शून्यसूचकः; /* found duplicate */
+                    भङ्ग;
                 }
             }
-            if(k != nullptr) {
+            यदि(k != शून्यसूचकः) {
                 int32_t kLen = (int32_t)uprv_strlen(k);
-                if((valuesCount >= (VALUES_LIST_SIZE-1)) ||       /* no more space in list .. */
-                    ((valuesIndex+kLen+1+1) >= VALUES_BUF_SIZE)) { /* no more space in buffer (string + 2 nulls) */
-                    *status = U_ILLEGAL_ARGUMENT_ERROR; /* out of space.. */
-                } else {
-                    uprv_strcpy(valuesBuf+valuesIndex, k);
-                    valuesList[valuesCount++] = valuesBuf+valuesIndex;
-                    valuesIndex += kLen;
-#if defined(URES_TREE_DEBUG)
+                यदि((मानानि_गणनम् >= (मानानि_LIST_आकार-1)) ||       /* no more space in list .. */
+                    ((मानानि_सूचकांक+kLen+1+1) >= मानानि_BUF_आकार)) { /* no more space in buffer (string + 2 nulls) */
+                    *स्थितिः = U_ILLEGAL_तर्कः_ERROR; /* out of space.. */
+                } अन्यथा {
+                    uprv_strcpy(मानानि_Buf+मानानि_सूचकांक, k);
+                    मानानि_List[मानानि_गणनम्++] = मानानि_Buf+मानानि_सूचकांक;
+                    मानानि_सूचकांक += kLen;
+#यदि defined(URES_वृक्षः_DEBUG)
                     fprintf(stderr, "%s | %s | %s | [%s]   (UNIQUE)\n",
-                        path?path:"<ICUDATA>", keyword, locale, k);
-#endif
-                    valuesBuf[valuesIndex++] = 0; /* terminate */
+                        मार्गः?मार्गः:"<ICUDATA>", keyword, locale, k);
+#यदि_अन्तः
+                    मानानि_Buf[मानानि_सूचकांक++] = 0; /* terminate */
                 }
             }
         }
         ures_close(bund);
     }
-    valuesBuf[valuesIndex++] = 0; /* terminate */
+    मानानि_Buf[मानानि_सूचकांक++] = 0; /* terminate */
     
     ures_close(&item);
     ures_close(&subItem);
     uenum_close(locs);
-#if defined(URES_TREE_DEBUG)
-    fprintf(stderr, "%s:  size %d, #%d\n", u_errorName(*status), 
-        valuesIndex, valuesCount);
-#endif
-    return uloc_openKeywordList(valuesBuf, valuesIndex, status);
+#यदि defined(URES_वृक्षः_DEBUG)
+    fprintf(stderr, "%s:  size %d, #%d\n", u_errorName(*स्थितिः), 
+        मानानि_सूचकांक, मानानि_गणनम्);
+#यदि_अन्तः
+    प्रत्यागम uloc_openKeywordList(मानानि_Buf, मानानि_सूचकांक, स्थितिः);
 }
-#if 0
+#यदि 0
 /* This code isn't needed, and given the documentation warnings the implementation is suspect */
 U_CAPI UBool U_EXPORT2
-ures_equal(const UResourceBundle* res1, const UResourceBundle* res2){
-    if(res1==nullptr || res2==nullptr){
-        return res1==res2; /* pointer comparison */
+ures_equal(ध्रुव UResourceBundle* res1, ध्रुव UResourceBundle* res2){
+    यदि(res1==शून्यसूचकः || res2==शून्यसूचकः){
+        प्रत्यागम res1==res2; /* pointer comparison */
     }
-    if(res1->fKey==nullptr||  res2->fKey==nullptr){
-        return (res1->fKey==res2->fKey);
-    }else{
-        if(uprv_strcmp(res1->fKey, res2->fKey)!=0){
-            return false;
+    यदि(res1->f_कुञ्चिका==शून्यसूचकः||  res2->f_कुञ्चिका==शून्यसूचकः){
+        प्रत्यागम (res1->f_कुञ्चिका==res2->f_कुञ्चिका);
+    }अन्यथा{
+        यदि(uprv_strcmp(res1->f_कुञ्चिका, res2->f_कुञ्चिका)!=0){
+            प्रत्यागम असत्य;
         }
     }
-    if(uprv_strcmp(res1->fData->fName, res2->fData->fName)!=0){
-        return false;
+    यदि(uprv_strcmp(res1->f_दत्त->fName, res2->f_दत्त->fName)!=0){
+        प्रत्यागम असत्य;
     }
-    if(res1->fData->fPath == nullptr||  res2->fData->fPath==nullptr){
-        return (res1->fData->fPath == res2->fData->fPath);
-    }else{
-        if(uprv_strcmp(res1->fData->fPath, res2->fData->fPath)!=0){
-            return false;
+    यदि(res1->f_दत्त->f_मार्गः == शून्यसूचकः||  res2->f_दत्त->f_मार्गः==शून्यसूचकः){
+        प्रत्यागम (res1->f_दत्त->f_मार्गः == res2->f_दत्त->f_मार्गः);
+    }अन्यथा{
+        यदि(uprv_strcmp(res1->f_दत्त->f_मार्गः, res2->f_दत्त->f_मार्गः)!=0){
+            प्रत्यागम असत्य;
         }
     }
-    if(uprv_strcmp(res1->fData->fParent->fName, res2->fData->fParent->fName)!=0){
-        return false;
+    यदि(uprv_strcmp(res1->f_दत्त->fParent->fName, res2->f_दत्त->fParent->fName)!=0){
+        प्रत्यागम असत्य;
     }
-    if(uprv_strcmp(res1->fData->fParent->fPath, res2->fData->fParent->fPath)!=0){
-        return false;
+    यदि(uprv_strcmp(res1->f_दत्त->fParent->f_मार्गः, res2->f_दत्त->fParent->f_मार्गः)!=0){
+        प्रत्यागम असत्य;
     }
-    if(uprv_strncmp(res1->fResPath, res2->fResPath, res1->fResPathLen)!=0){
-        return false;
+    यदि(uprv_strncmp(res1->f_Res_मार्गः, res2->f_Res_मार्गः, res1->f_Res_मार्गः_Len)!=0){
+        प्रत्यागम असत्य;
     }
-    if(res1->fRes != res2->fRes){
-        return false;
+    यदि(res1->fRes != res2->fRes){
+        प्रत्यागम असत्य;
     }
-    return true;
+    प्रत्यागम सत्य;
 }
 U_CAPI UResourceBundle* U_EXPORT2
-ures_clone(const UResourceBundle* res, UErrorCode* status){
-    UResourceBundle* bundle = nullptr;
-    UResourceBundle* ret = nullptr;
-    if(U_FAILURE(*status) || res == nullptr){
-        return nullptr;
+ures_clone(ध्रुव UResourceBundle* res, UError_संहिता* स्थितिः){
+    UResourceBundle* bundle = शून्यसूचकः;
+    UResourceBundle* ret = शून्यसूचकः;
+    यदि(U_FAILURE(*स्थितिः) || res == शून्यसूचकः){
+        प्रत्यागम शून्यसूचकः;
     }
-    bundle = ures_open(res->fData->fPath, res->fData->fName, status);
-    if(res->fResPath!=nullptr){
-        ret = ures_findSubResource(bundle, res->fResPath, nullptr, status);
+    bundle = ures_open(res->f_दत्त->f_मार्गः, res->f_दत्त->fName, स्थितिः);
+    यदि(res->f_Res_मार्गः!=शून्यसूचकः){
+        ret = ures_findSubResource(bundle, res->f_Res_मार्गः, शून्यसूचकः, स्थितिः);
         ures_close(bundle);
-    }else{
+    }अन्यथा{
         ret = bundle;
     }
-    return ret;
+    प्रत्यागम ret;
 }
-U_CAPI const UResourceBundle* U_EXPORT2
-ures_getParentBundle(const UResourceBundle* res){
-    if(res==nullptr){
-        return nullptr;
+U_CAPI ध्रुव UResourceBundle* U_EXPORT2
+ures_getParentBundle(ध्रुव UResourceBundle* res){
+    यदि(res==शून्यसूचकः){
+        प्रत्यागम शून्यसूचकः;
     }
-    return res->fParentRes;
+    प्रत्यागम res->fParentRes;
 }
-#endif
+#यदि_अन्तः
 
-U_CAPI void U_EXPORT2
-ures_getVersionByKey(const UResourceBundle* res, const char *key, UVersionInfo ver, UErrorCode *status) {
-  const char16_t *str;
+U_CAPI शून्य U_EXPORT2
+ures_get_संस्करणम्_By_कुञ्चिका(ध्रुव UResourceBundle* res, ध्रुव वर्ण *कुञ्चिका, UVersionInfo ver, UError_संहिता *स्थितिः) {
+  ध्रुव char16_t *str;
   int32_t len;
-  str = ures_getStringByKey(res, key, &len, status);
-  if(U_SUCCESS(*status)) {
-    u_versionFromUString(ver, str);
+  str = ures_get_String_By_कुञ्चिका(res, कुञ्चिका, &len, स्थितिः);
+  यदि(U_SUCCESS(*स्थितिः)) {
+    u_संस्करणम्_From_UString(ver, str);
   } 
 }
 

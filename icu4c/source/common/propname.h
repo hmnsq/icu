@@ -11,14 +11,14 @@
 * 2010nov19 Markus Scherer  Rewrite for formatVersion 2.
 **********************************************************************
 */
-#ifndef PROPNAME_H
-#define PROPNAME_H
+#यदि_अपरिभाषितम् PROPNAME_H
+#परिभाषय PROPNAME_H
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/uchar.h"
-#include "udataswp.h"
-#include "uprops.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/bytestrie.h"
+#अन्तर्भाव "unicode/uchar.h"
+#अन्तर्भाव "udataswp.h"
+#अन्तर्भाव "uprops.h"
 
 /*
  * This header defines the in-memory layout of the property names data
@@ -51,71 +51,71 @@ U_CDECL_BEGIN
  */
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareASCIIPropertyNames(const char *name1, const char *name2);
+uprv_compare_ASCIIProperty_नामानि(ध्रुव वर्ण *name1, ध्रुव वर्ण *name2);
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareEBCDICPropertyNames(const char *name1, const char *name2);
+uprv_compare_EBCDICProperty_नामानि(ध्रुव वर्ण *name1, ध्रुव वर्ण *name2);
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
-#   define uprv_comparePropertyNames uprv_compareASCIIPropertyNames
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-#   define uprv_comparePropertyNames uprv_compareEBCDICPropertyNames
-#else
+#यदि U_CHARSET_FAMILY==U_ASCII_FAMILY
+#   define uprv_compare_Property_नामानि uprv_compare_ASCIIProperty_नामानि
+#नोचेद्यदि U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#   define uprv_compare_Property_नामानि uprv_compare_EBCDICProperty_नामानि
+#अन्यथा
 #   error U_CHARSET_FAMILY is not valid
-#endif
+#यदि_अन्तः
 
-U_CDECL_END
+U_CDECL_अन्तः
 
 /* UDataMemory structure and signatures ------------------------------------- */
 
-#define PNAME_DATA_NAME "pnames"
-#define PNAME_DATA_TYPE "icu"
+#परिभाषय PNAME_दत्त_NAME "pnames"
+#परिभाषय PNAME_दत्त_TYPE "icu"
 
 /* Fields in UDataInfo: */
 
 /* PNAME_SIG[] is encoded as numeric literals for compatibility with the HP compiler */
-#define PNAME_SIG_0 ((uint8_t)0x70) /* p */
-#define PNAME_SIG_1 ((uint8_t)0x6E) /* n */
-#define PNAME_SIG_2 ((uint8_t)0x61) /* a */
-#define PNAME_SIG_3 ((uint8_t)0x6D) /* m */
+#परिभाषय PNAME_SIG_0 ((uint8_t)0x70) /* p */
+#परिभाषय PNAME_SIG_1 ((uint8_t)0x6E) /* n */
+#परिभाषय PNAME_SIG_2 ((uint8_t)0x61) /* a */
+#परिभाषय PNAME_SIG_3 ((uint8_t)0x6D) /* m */
 
 U_NAMESPACE_BEGIN
 
-class PropNameData {
-public:
-    enum {
+class Prop_Name_दत्त {
+सार्वजनिक:
+    गणना {
         // Byte offsets from the start of the data, after the generic header.
-        IX_VALUE_MAPS_OFFSET,
-        IX_BYTE_TRIES_OFFSET,
-        IX_NAME_GROUPS_OFFSET,
-        IX_RESERVED3_OFFSET,
-        IX_RESERVED4_OFFSET,
-        IX_TOTAL_SIZE,
+        IX_मानम्_MAPS_विस्थापनम्,
+        IX_BYTE_TRIES_विस्थापनम्,
+        IX_NAME_GROUPS_विस्थापनम्,
+        IX_RESERVED3_विस्थापनम्,
+        IX_RESERVED4_विस्थापनम्,
+        IX_योग_आकार,
 
         // Other values.
-        IX_MAX_NAME_LENGTH,
+        IX_MAX_NAME_दीर्घता,
         IX_RESERVED7,
-        IX_COUNT
+        IX_गणनम्
     };
 
-    static const char *getPropertyName(int32_t property, int32_t nameChoice);
-    static const char *getPropertyValueName(int32_t property, int32_t value, int32_t nameChoice);
+    स्थिर ध्रुव वर्ण *getPropertyName(int32_t property, int32_t nameChoice);
+    स्थिर ध्रुव वर्ण *get_Property_मानम्_Name(int32_t property, int32_t मानम्_2, int32_t nameChoice);
 
-    static int32_t getPropertyEnum(const char *alias);
-    static int32_t getPropertyValueEnum(int32_t property, const char *alias);
+    स्थिर int32_t getPropertyEnum(ध्रुव वर्ण *alias);
+    स्थिर int32_t get_Property_मानम्_Enum(int32_t property, ध्रुव वर्ण *alias);
 
-private:
-    static int32_t findProperty(int32_t property);
-    static int32_t findPropertyValueNameGroup(int32_t valueMapIndex, int32_t value);
-    static const char *getName(const char *nameGroup, int32_t nameIndex);
-    static UBool containsName(BytesTrie &trie, const char *name);
+गुप्त:
+    स्थिर int32_t findProperty(int32_t property);
+    स्थिर int32_t find_Property_मानम्_Name_गणः(int32_t मानम्_Map_सूचकांक, int32_t मानम्_2);
+    स्थिर ध्रुव वर्ण *getName(ध्रुव वर्ण *name_गणः, int32_t name_सूचकांक);
+    स्थिर UBool अन्तर्भवति_Name(अष्टकानि_Trie &trie, ध्रुव वर्ण *name);
 
-    static int32_t getPropertyOrValueEnum(int32_t bytesTrieOffset, const char *alias);
+    स्थिर int32_t get_Property_Or_मानम्_Enum(int32_t अष्टकानि_Trie_विस्थापनम्, ध्रुव वर्ण *alias);
 
-    static const int32_t indexes[];
-    static const int32_t valueMaps[];
-    static const uint8_t bytesTries[];
-    static const char nameGroups[];
+    स्थिर ध्रुव int32_t indexes[];
+    स्थिर ध्रुव int32_t मानम्_Maps[];
+    स्थिर ध्रुव uint8_t अष्टकानि_Tries[];
+    स्थिर ध्रुव वर्ण nameGroups[];
 };
 
 /*
@@ -207,6 +207,6 @@ private:
  *      in a property's sparse value ranges.
  */
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif
+#यदि_अन्तः

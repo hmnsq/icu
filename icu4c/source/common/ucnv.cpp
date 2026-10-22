@@ -21,37 +21,37 @@
 *   06/20/2000  helena      OS/400 port changes; mostly typecast.
 */
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#यदि !UCONFIG_NO_CONVERSION
 
-#include <memory>
+#अन्तर्भाव <memory>
 
-#include "unicode/ustring.h"
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_err.h"
-#include "unicode/uset.h"
-#include "unicode/utf.h"
-#include "unicode/utf16.h"
-#include "putilimp.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uassert.h"
-#include "utracimp.h"
-#include "ustr_imp.h"
-#include "ucnv_imp.h"
-#include "ucnv_cnv.h"
-#include "ucnv_bld.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "unicode/ucnv.h"
+#अन्तर्भाव "unicode/ucnv_err.h"
+#अन्तर्भाव "unicode/uset.h"
+#अन्तर्भाव "unicode/utf.h"
+#अन्तर्भाव "unicode/utf16.h"
+#अन्तर्भाव "putilimp.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "uassert.h"
+#अन्तर्भाव "utracimp.h"
+#अन्तर्भाव "ustr_imp.h"
+#अन्तर्भाव "ucnv_imp.h"
+#अन्तर्भाव "ucnv_cnv.h"
+#अन्तर्भाव "ucnv_bld.h"
 
 /* size of intermediate and preflighting buffers in ucnv_convert() */
-#define CHUNK_SIZE 1024
+#परिभाषय CHUNK_आकार 1024
 
-typedef struct UAmbiguousConverter {
-    const char *name;
-    const char16_t variant5c;
+प्रकारनिर्देश संरचना UAmbiguousConverter {
+    ध्रुव वर्ण *name;
+    ध्रुव char16_t variant5c;
 } UAmbiguousConverter;
 
-static const UAmbiguousConverter ambiguousConverters[]={
+स्थिर ध्रुव UAmbiguousConverter ambiguousConverters[]={
     { "ibm-897_P100-1995", 0xa5 },
     { "ibm-942_P120-1999", 0xa5 },
     { "ibm-943_P130-1999", 0xa5 },
@@ -70,42 +70,42 @@ static const UAmbiguousConverter ambiguousConverters[]={
 
 /*Calls through createConverter */
 U_CAPI UConverter* U_EXPORT2
-ucnv_open (const char *name,
-                       UErrorCode * err)
+ucnv_open (ध्रुव वर्ण *name,
+                       UError_संहिता * err)
 {
     UConverter *r;
 
-    if (err == nullptr || U_FAILURE (*err)) {
-        return nullptr;
+    यदि (err == शून्यसूचकः || U_FAILURE (*err)) {
+        प्रत्यागम शून्यसूचकः;
     }
 
-    r =  ucnv_createConverter(nullptr, name, err);
-    return r;
+    r =  ucnv_createConverter(शून्यसूचकः, name, err);
+    प्रत्यागम r;
 }
 
 U_CAPI UConverter* U_EXPORT2 
-ucnv_openPackage   (const char *packageName, const char *converterName, UErrorCode * err)
+ucnv_openPackage   (ध्रुव वर्ण *packageName, ध्रुव वर्ण *converterName, UError_संहिता * err)
 {
-    return ucnv_createConverterFromPackage(packageName, converterName,  err);
+    प्रत्यागम ucnv_createConverterFromPackage(packageName, converterName,  err);
 }
 
 /*Extracts the char16_t* to a char* and calls through createConverter */
 U_CAPI UConverter*   U_EXPORT2
-ucnv_openU (const char16_t * name,
-                         UErrorCode * err)
+ucnv_openU (ध्रुव char16_t * name,
+                         UError_संहिता * err)
 {
-    char asciiName[UCNV_MAX_CONVERTER_NAME_LENGTH];
+    वर्ण asciiName[UCNV_MAX_CONVERTER_NAME_दीर्घता];
 
-    if (err == nullptr || U_FAILURE(*err))
-        return nullptr;
-    if (name == nullptr)
-        return ucnv_open (nullptr, err);
-    if (u_strlen(name) >= UCNV_MAX_CONVERTER_NAME_LENGTH)
+    यदि (err == शून्यसूचकः || U_FAILURE(*err))
+        प्रत्यागम शून्यसूचकः;
+    यदि (name == शून्यसूचकः)
+        प्रत्यागम ucnv_open (शून्यसूचकः, err);
+    यदि (u_strlen(name) >= UCNV_MAX_CONVERTER_NAME_दीर्घता)
     {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        *err = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
-    return ucnv_open(u_austrcpy(asciiName, name), err);
+    प्रत्यागम ucnv_open(u_austrcpy(asciiName, name), err);
 }
 
 /* Copy the string that is represented by the UConverterPlatform enum
@@ -113,21 +113,21 @@ ucnv_openU (const char16_t * name,
  * @param platform An enum representing a platform
  * @return the length of the copied string.
  */
-static int32_t
-ucnv_copyPlatformString(char *platformString, UConverterPlatform pltfrm)
+स्थिर int32_t
+ucnv_copyPlatformString(वर्ण *platformString, UConverterPlatform pltfrm)
 {
-    switch (pltfrm)
+    विकल्प (pltfrm)
     {
-    case UCNV_IBM:
+    पक्ष UCNV_IBM:
         uprv_strcpy(platformString, "ibm-");
-        return 4;
-    case UCNV_UNKNOWN:
-        break;
+        प्रत्यागम 4;
+    पक्ष UCNV_UNKNOWN:
+        भङ्ग;
     }
 
     /* default to empty string */
     *platformString = 0;
-    return 0;
+    प्रत्यागम 0;
 }
 
 /*Assumes a $platform-#codepage.$CONVERTER_FILE_EXTENSION scheme and calls
@@ -135,19 +135,19 @@ ucnv_copyPlatformString(char *platformString, UConverterPlatform pltfrm)
 U_CAPI UConverter*   U_EXPORT2
 ucnv_openCCSID (int32_t codepage,
                 UConverterPlatform platform,
-                UErrorCode * err)
+                UError_संहिता * err)
 {
-    char myName[UCNV_MAX_CONVERTER_NAME_LENGTH];
+    वर्ण myName[UCNV_MAX_CONVERTER_NAME_दीर्घता];
     int32_t myNameLen;
 
-    if (err == nullptr || U_FAILURE (*err))
-        return nullptr;
+    यदि (err == शून्यसूचकः || U_FAILURE (*err))
+        प्रत्यागम शून्यसूचकः;
 
     /* ucnv_copyPlatformString could return "ibm-" or "cp" */
     myNameLen = ucnv_copyPlatformString(myName, platform);
-    T_CString_integerToString(myName + myNameLen, codepage, 10);
+    T_CString_integer_गन्तव्यम्_String(myName + myNameLen, codepage, 10);
 
-    return ucnv_createConverter(nullptr, myName, err);
+    प्रत्यागम ucnv_createConverter(शून्यसूचकः, myName, err);
 }
 
 /* Creating a temporary stack-based object that can be used in one thread, 
@@ -155,248 +155,248 @@ and created from a converter that is shared across threads.
 */
 
 U_CAPI UConverter* U_EXPORT2
-ucnv_safeClone(const UConverter* cnv,
-               void* stackBuffer U_LIFETIME_BOUND,
-               int32_t* pBufferSize,
-               UErrorCode* status)
+ucnv_safeClone(ध्रुव UConverter* cnv,
+               शून्य* राशिः_बफर U_LIFETIME_BOUND,
+               int32_t* p_बफर_आकार,
+               UError_संहिता* स्थितिः)
 {
     UConverter *localConverter, *allocatedConverter;
-    int32_t stackBufferSize;
-    int32_t bufferSizeNeeded;
-    UErrorCode cbErr;
-    UConverterToUnicodeArgs toUArgs = {
-        sizeof(UConverterToUnicodeArgs),
-            true,
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr
+    int32_t राशिः_बफर_आकार;
+    int32_t बफर_आकार_Needed;
+    UError_संहिता cbErr;
+    UConverter_गन्तव्यम्_Unicode_तर्काः गन्तव्यम्_UArgs = {
+        परिमाण(UConverter_गन्तव्यम्_Unicode_तर्काः),
+            सत्य,
+            शून्यसूचकः,
+            शून्यसूचकः,
+            शून्यसूचकः,
+            शून्यसूचकः,
+            शून्यसूचकः,
+            शून्यसूचकः
     };
-    UConverterFromUnicodeArgs fromUArgs = {
-        sizeof(UConverterFromUnicodeArgs),
-            true,
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr
+    UConverter_From_Unicode_तर्काः fromUArgs = {
+        परिमाण(UConverter_From_Unicode_तर्काः),
+            सत्य,
+            शून्यसूचकः,
+            शून्यसूचकः,
+            शून्यसूचकः,
+            शून्यसूचकः,
+            शून्यसूचकः,
+            शून्यसूचकः
     };
 
-    UTRACE_ENTRY_OC(UTRACE_UCNV_CLONE);
+    UTRACE_प्रविष्टिः_OC(UTRACE_UCNV_CLONE);
 
-    if (status == nullptr || U_FAILURE(*status)){
-        UTRACE_EXIT_STATUS(status? *status: U_ILLEGAL_ARGUMENT_ERROR);
-        return nullptr;
+    यदि (स्थितिः == शून्यसूचकः || U_FAILURE(*स्थितिः)){
+        UTRACE_EXIT_स्थितिः(स्थितिः? *स्थितिः: U_ILLEGAL_तर्कः_ERROR);
+        प्रत्यागम शून्यसूचकः;
     }
 
-    if (cnv == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        UTRACE_EXIT_STATUS(*status);
-        return nullptr;
+    यदि (cnv == शून्यसूचकः) {
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        UTRACE_EXIT_स्थितिः(*स्थितिः);
+        प्रत्यागम शून्यसूचकः;
     }
 
     UTRACE_DATA3(UTRACE_OPEN_CLOSE, "clone converter %s at %p into stackBuffer %p",
-                                    ucnv_getName(cnv, status), cnv, stackBuffer);
+                                    ucnv_getName(cnv, स्थितिः), cnv, राशिः_बफर);
 
-    if (cnv->sharedData->impl->safeClone != nullptr) {
+    यदि (cnv->shared_दत्त->impl->safeClone != शून्यसूचकः) {
         /* call the custom safeClone function for sizing */
-        bufferSizeNeeded = 0;
-        cnv->sharedData->impl->safeClone(cnv, nullptr, &bufferSizeNeeded, status);
-        if (U_FAILURE(*status)) {
-            UTRACE_EXIT_STATUS(*status);
-            return nullptr;
+        बफर_आकार_Needed = 0;
+        cnv->shared_दत्त->impl->safeClone(cnv, शून्यसूचकः, &बफर_आकार_Needed, स्थितिः);
+        यदि (U_FAILURE(*स्थितिः)) {
+            UTRACE_EXIT_स्थितिः(*स्थितिः);
+            प्रत्यागम शून्यसूचकः;
         }
     }
-    else
+    अन्यथा
     {
         /* inherent sizing */
-        bufferSizeNeeded = sizeof(UConverter);
+        बफर_आकार_Needed = परिमाण(UConverter);
     }
 
-    if (pBufferSize == nullptr) {
-        stackBufferSize = 1;
-        pBufferSize = &stackBufferSize;
-    } else {
-        stackBufferSize = *pBufferSize;
-        if (stackBufferSize <= 0){ /* 'preflighting' request - set needed size into *pBufferSize */
-            *pBufferSize = bufferSizeNeeded;
-            UTRACE_EXIT_VALUE(bufferSizeNeeded);
-            return nullptr;
+    यदि (p_बफर_आकार == शून्यसूचकः) {
+        राशिः_बफर_आकार = 1;
+        p_बफर_आकार = &राशिः_बफर_आकार;
+    } अन्यथा {
+        राशिः_बफर_आकार = *p_बफर_आकार;
+        यदि (राशिः_बफर_आकार <= 0){ /* 'preflighting' request - set needed size into *pBufferSize */
+            *p_बफर_आकार = बफर_आकार_Needed;
+            UTRACE_EXIT_मानम्(बफर_आकार_Needed);
+            प्रत्यागम शून्यसूचकः;
         }
     }
 
     /* Adjust (if necessary) the stackBuffer pointer to be aligned correctly for a UConverter.
      * TODO(Jira ICU-20736) Redo this using std::align() once g++4.9 compatibility is no longer needed.
      */
-    if (stackBuffer) {
-        uintptr_t p = reinterpret_cast<uintptr_t>(stackBuffer);
+    यदि (राशिः_बफर) {
+        uintptr_t p = reinterpret_cast<uintptr_t>(राशिः_बफर);
         uintptr_t aligned_p = (p + alignof(UConverter) - 1) & ~(alignof(UConverter) - 1);
         ptrdiff_t pointerAdjustment = aligned_p - p;
-        if (bufferSizeNeeded + pointerAdjustment <= stackBufferSize) {
-            stackBuffer = reinterpret_cast<void *>(aligned_p);
-            stackBufferSize -= static_cast<int32_t>(pointerAdjustment);
-        } else {
+        यदि (बफर_आकार_Needed + pointerAdjustment <= राशिः_बफर_आकार) {
+            राशिः_बफर = reinterpret_cast<शून्य *>(aligned_p);
+            राशिः_बफर_आकार -= static_cast<int32_t>(pointerAdjustment);
+        } अन्यथा {
             /* prevent using the stack buffer but keep the size > 0 so that we do not just preflight */
-            stackBufferSize = 1;
+            राशिः_बफर_आकार = 1;
         }
     }
 
     /* Now, see if we must allocate any memory */
-    if (stackBufferSize < bufferSizeNeeded || stackBuffer == nullptr)
+    यदि (राशिः_बफर_आकार < बफर_आकार_Needed || राशिः_बफर == शून्यसूचकः)
     {
         /* allocate one here...*/
-        localConverter = allocatedConverter = (UConverter *) uprv_malloc (bufferSizeNeeded);
+        localConverter = allocatedConverter = (UConverter *) uprv_malloc (बफर_आकार_Needed);
 
-        if(localConverter == nullptr) {
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            UTRACE_EXIT_STATUS(*status);
-            return nullptr;
+        यदि(localConverter == शून्यसूचकः) {
+            *स्थितिः = U_स्मृतिः_आवण्टनम्_ERROR;
+            UTRACE_EXIT_स्थितिः(*स्थितिः);
+            प्रत्यागम शून्यसूचकः;
         }
         // If pBufferSize was nullptr as the input, pBufferSize is set to &stackBufferSize in this function.
-        if (pBufferSize != &stackBufferSize) {
-            *status = U_SAFECLONE_ALLOCATED_WARNING;
+        यदि (p_बफर_आकार != &राशिः_बफर_आकार) {
+            *स्थितिः = U_SAFECLONE_ALLOCATED_WARNING;
         }
 
         /* record the fact that memory was allocated */
-        *pBufferSize = bufferSizeNeeded;
-    } else {
+        *p_बफर_आकार = बफर_आकार_Needed;
+    } अन्यथा {
         /* just use the stack buffer */
-        localConverter = (UConverter*) stackBuffer;
-        allocatedConverter = nullptr;
+        localConverter = (UConverter*) राशिः_बफर;
+        allocatedConverter = शून्यसूचकः;
     }
 
-    uprv_memset(localConverter, 0, bufferSizeNeeded);
+    uprv_memset(localConverter, 0, बफर_आकार_Needed);
 
     /* Copy initial state */
-    uprv_memcpy(localConverter, cnv, sizeof(UConverter));
-    localConverter->isCopyLocal = localConverter->isExtraLocal = false;
+    uprv_memcpy(localConverter, cnv, परिमाण(UConverter));
+    localConverter->isCopyLocal = localConverter->isExtraLocal = असत्य;
 
     /* copy the substitution string */
-    if (cnv->subChars == (uint8_t *)cnv->subUChars) {
+    यदि (cnv->subChars == (uint8_t *)cnv->subUChars) {
         localConverter->subChars = (uint8_t *)localConverter->subUChars;
-    } else {
-        localConverter->subChars = (uint8_t *)uprv_malloc(UCNV_ERROR_BUFFER_LENGTH * U_SIZEOF_UCHAR);
-        if (localConverter->subChars == nullptr) {
+    } अन्यथा {
+        localConverter->subChars = (uint8_t *)uprv_malloc(UCNV_ERROR_बफर_दीर्घता * U_SIZEOF_UCHAR);
+        यदि (localConverter->subChars == शून्यसूचकः) {
             uprv_free(allocatedConverter);
-            UTRACE_EXIT_STATUS(*status);
-            return nullptr;
+            UTRACE_EXIT_स्थितिः(*स्थितिः);
+            प्रत्यागम शून्यसूचकः;
         }
-        uprv_memcpy(localConverter->subChars, cnv->subChars, UCNV_ERROR_BUFFER_LENGTH * U_SIZEOF_UCHAR);
+        uprv_memcpy(localConverter->subChars, cnv->subChars, UCNV_ERROR_बफर_दीर्घता * U_SIZEOF_UCHAR);
     }
 
     /* now either call the safeclone fcn or not */
-    if (cnv->sharedData->impl->safeClone != nullptr) {
+    यदि (cnv->shared_दत्त->impl->safeClone != शून्यसूचकः) {
         /* call the custom safeClone function */
-        localConverter = cnv->sharedData->impl->safeClone(cnv, localConverter, pBufferSize, status);
+        localConverter = cnv->shared_दत्त->impl->safeClone(cnv, localConverter, p_बफर_आकार, स्थितिः);
     }
 
-    if(localConverter==nullptr || U_FAILURE(*status)) {
-        if (allocatedConverter != nullptr && allocatedConverter->subChars != (uint8_t *)allocatedConverter->subUChars) {
+    यदि(localConverter==शून्यसूचकः || U_FAILURE(*स्थितिः)) {
+        यदि (allocatedConverter != शून्यसूचकः && allocatedConverter->subChars != (uint8_t *)allocatedConverter->subUChars) {
             uprv_free(allocatedConverter->subChars);
         }
         uprv_free(allocatedConverter);
-        UTRACE_EXIT_STATUS(*status);
-        return nullptr;
+        UTRACE_EXIT_स्थितिः(*स्थितिः);
+        प्रत्यागम शून्यसूचकः;
     }
 
     /* increment refcount of shared data if needed */
-    if (cnv->sharedData->isReferenceCounted) {
-        ucnv_incrementRefCount(cnv->sharedData);
+    यदि (cnv->shared_दत्त->isReferenceCounted) {
+        ucnv_increment_Ref_गणनम्(cnv->shared_दत्त);
     }
 
-    if(localConverter == (UConverter*)stackBuffer) {
+    यदि(localConverter == (UConverter*)राशिः_बफर) {
         /* we're using user provided data - set to not destroy */
-        localConverter->isCopyLocal = true;
+        localConverter->isCopyLocal = सत्य;
     }
 
     /* allow callback functions to handle any memory allocation */
-    toUArgs.converter = fromUArgs.converter = localConverter;
+    गन्तव्यम्_UArgs.converter = fromUArgs.converter = localConverter;
     cbErr = U_ZERO_ERROR;
-    cnv->fromCharErrorBehaviour(cnv->toUContext, &toUArgs, nullptr, 0, UCNV_CLONE, &cbErr);
+    cnv->fromCharErrorBehaviour(cnv->गन्तव्यम्_UContext, &गन्तव्यम्_UArgs, शून्यसूचकः, 0, UCNV_CLONE, &cbErr);
     cbErr = U_ZERO_ERROR;
-    cnv->fromUCharErrorBehaviour(cnv->fromUContext, &fromUArgs, nullptr, 0, 0, UCNV_CLONE, &cbErr);
+    cnv->fromUCharErrorBehaviour(cnv->fromUContext, &fromUArgs, शून्यसूचकः, 0, 0, UCNV_CLONE, &cbErr);
 
-    UTRACE_EXIT_PTR_STATUS(localConverter, *status);
-    return localConverter;
+    UTRACE_EXIT_PTR_स्थितिः(localConverter, *स्थितिः);
+    प्रत्यागम localConverter;
 }
 
 U_CAPI UConverter* U_EXPORT2
-ucnv_clone(const UConverter* cnv, UErrorCode *status)
+ucnv_clone(ध्रुव UConverter* cnv, UError_संहिता *स्थितिः)
 {
-    return ucnv_safeClone(cnv, nullptr, nullptr, status);
+    प्रत्यागम ucnv_safeClone(cnv, शून्यसूचकः, शून्यसूचकः, स्थितिः);
 }
 
 /*Decreases the reference counter in the shared immutable section of the object
  *and frees the mutable part*/
 
-U_CAPI void  U_EXPORT2
+U_CAPI शून्य  U_EXPORT2
 ucnv_close (UConverter * converter)
 {
-    UErrorCode errorCode = U_ZERO_ERROR;
+    UError_संहिता error_संहिता = U_ZERO_ERROR;
 
-    UTRACE_ENTRY_OC(UTRACE_UCNV_CLOSE);
+    UTRACE_प्रविष्टिः_OC(UTRACE_UCNV_CLOSE);
 
-    if (converter == nullptr)
+    यदि (converter == शून्यसूचकः)
     {
         UTRACE_EXIT();
-        return;
+        प्रत्यागम;
     }
 
     UTRACE_DATA3(UTRACE_OPEN_CLOSE, "close converter %s at %p, isCopyLocal=%b",
-        ucnv_getName(converter, &errorCode), converter, converter->isCopyLocal);
+        ucnv_getName(converter, &error_संहिता), converter, converter->isCopyLocal);
 
     /* In order to speed up the close, only call the callbacks when they have been changed.
     This performance check will only work when the callbacks are set within a shared library
     or from user code that statically links this code. */
     /* first, notify the callback functions that the converter is closed */
-    if (converter->fromCharErrorBehaviour != UCNV_TO_U_DEFAULT_CALLBACK) {
-        UConverterToUnicodeArgs toUArgs = {
-            sizeof(UConverterToUnicodeArgs),
-                true,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr
+    यदि (converter->fromCharErrorBehaviour != UCNV_गन्तव्यम्_U_DEFAULT_CALLBACK) {
+        UConverter_गन्तव्यम्_Unicode_तर्काः गन्तव्यम्_UArgs = {
+            परिमाण(UConverter_गन्तव्यम्_Unicode_तर्काः),
+                सत्य,
+                शून्यसूचकः,
+                शून्यसूचकः,
+                शून्यसूचकः,
+                शून्यसूचकः,
+                शून्यसूचकः,
+                शून्यसूचकः
         };
 
-        toUArgs.converter = converter;
-        errorCode = U_ZERO_ERROR;
-        converter->fromCharErrorBehaviour(converter->toUContext, &toUArgs, nullptr, 0, UCNV_CLOSE, &errorCode);
+        गन्तव्यम्_UArgs.converter = converter;
+        error_संहिता = U_ZERO_ERROR;
+        converter->fromCharErrorBehaviour(converter->गन्तव्यम्_UContext, &गन्तव्यम्_UArgs, शून्यसूचकः, 0, UCNV_CLOSE, &error_संहिता);
     }
-    if (converter->fromUCharErrorBehaviour != UCNV_FROM_U_DEFAULT_CALLBACK) {
-        UConverterFromUnicodeArgs fromUArgs = {
-            sizeof(UConverterFromUnicodeArgs),
-                true,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr
+    यदि (converter->fromUCharErrorBehaviour != UCNV_FROM_U_DEFAULT_CALLBACK) {
+        UConverter_From_Unicode_तर्काः fromUArgs = {
+            परिमाण(UConverter_From_Unicode_तर्काः),
+                सत्य,
+                शून्यसूचकः,
+                शून्यसूचकः,
+                शून्यसूचकः,
+                शून्यसूचकः,
+                शून्यसूचकः,
+                शून्यसूचकः
         };
         fromUArgs.converter = converter;
-        errorCode = U_ZERO_ERROR;
-        converter->fromUCharErrorBehaviour(converter->fromUContext, &fromUArgs, nullptr, 0, 0, UCNV_CLOSE, &errorCode);
+        error_संहिता = U_ZERO_ERROR;
+        converter->fromUCharErrorBehaviour(converter->fromUContext, &fromUArgs, शून्यसूचकः, 0, 0, UCNV_CLOSE, &error_संहिता);
     }
 
-    if (converter->sharedData->impl->close != nullptr) {
-        converter->sharedData->impl->close(converter);
+    यदि (converter->shared_दत्त->impl->close != शून्यसूचकः) {
+        converter->shared_दत्त->impl->close(converter);
     }
 
-    if (converter->subChars != (uint8_t *)converter->subUChars) {
+    यदि (converter->subChars != (uint8_t *)converter->subUChars) {
         uprv_free(converter->subChars);
     }
 
-    if (converter->sharedData->isReferenceCounted) {
-        ucnv_unloadSharedDataIfReady(converter->sharedData);
+    यदि (converter->shared_दत्त->isReferenceCounted) {
+        ucnv_unload_Shared_दत्त_If_Ready(converter->shared_दत्त);
     }
 
-    if(!converter->isCopyLocal){
+    यदि(!converter->isCopyLocal){
         uprv_free(converter);
     }
 
@@ -405,66 +405,66 @@ ucnv_close (UConverter * converter)
 
 /*returns a single Name from the list, will return nullptr if out of bounds
  */
-U_CAPI const char*   U_EXPORT2
-ucnv_getAvailableName (int32_t n)
+U_CAPI ध्रुव वर्ण*   U_EXPORT2
+ucnv_get_उपलब्धम्_Name (int32_t n)
 {
-    if (0 <= n && n <= 0xffff) {
-        UErrorCode err = U_ZERO_ERROR;
-        const char *name = ucnv_bld_getAvailableConverter((uint16_t)n, &err);
-        if (U_SUCCESS(err)) {
-            return name;
+    यदि (0 <= n && n <= 0xffff) {
+        UError_संहिता err = U_ZERO_ERROR;
+        ध्रुव वर्ण *name = ucnv_bld_get_उपलब्धम्_Converter((uint16_t)n, &err);
+        यदि (U_SUCCESS(err)) {
+            प्रत्यागम name;
         }
     }
-    return nullptr;
+    प्रत्यागम शून्यसूचकः;
 }
 
 U_CAPI int32_t   U_EXPORT2
-ucnv_countAvailable ()
+ucnv_गणनम्_उपलब्धम् ()
 {
-    UErrorCode err = U_ZERO_ERROR;
-    return ucnv_bld_countAvailableConverters(&err);
+    UError_संहिता err = U_ZERO_ERROR;
+    प्रत्यागम ucnv_bld_गणनम्_उपलब्धम्_Converters(&err);
 }
 
-U_CAPI void    U_EXPORT2
-ucnv_getSubstChars (const UConverter * converter,
-                    char *mySubChar,
+U_CAPI शून्य    U_EXPORT2
+ucnv_getSubstChars (ध्रुव UConverter * converter,
+                    वर्ण *mySubChar,
                     int8_t * len,
-                    UErrorCode * err)
+                    UError_संहिता * err)
 {
-    if (U_FAILURE (*err))
-        return;
+    यदि (U_FAILURE (*err))
+        प्रत्यागम;
 
-    if (converter->subCharLen <= 0) {
+    यदि (converter->subCharLen <= 0) {
         /* Unicode string or empty string from ucnv_setSubstString(). */
         *len = 0;
-        return;
+        प्रत्यागम;
     }
 
-    if (*len < converter->subCharLen) /*not enough space in subChars */
+    यदि (*len < converter->subCharLen) /*not enough space in subChars */
     {
-        *err = U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        *err = U_सूचकांक_OUTOFBOUNDS_ERROR;
+        प्रत्यागम;
     }
 
     uprv_memcpy (mySubChar, converter->subChars, converter->subCharLen);   /*fills in the subchars */
     *len = converter->subCharLen; /*store # of bytes copied to buffer */
 }
 
-U_CAPI void    U_EXPORT2
-ucnv_setSubstChars (UConverter * converter,
-                    const char *mySubChar,
+U_CAPI शून्य    U_EXPORT2
+ucnv_समुच्चयः_Subst_Chars (UConverter * converter,
+                    ध्रुव वर्ण *mySubChar,
                     int8_t len,
-                    UErrorCode * err)
+                    UError_संहिता * err)
 {
-    if (U_FAILURE (*err))
-        return;
+    यदि (U_FAILURE (*err))
+        प्रत्यागम;
     
     /*Makes sure that the subChar is within the codepages char length boundaries */
-    if ((len > converter->sharedData->staticData->maxBytesPerChar)
-     || (len < converter->sharedData->staticData->minBytesPerChar))
+    यदि ((len > converter->shared_दत्त->static_दत्त->max_अष्टकानि_प्रत्येकम्_Char)
+     || (len < converter->shared_दत्त->static_दत्त->min_अष्टकानि_प्रत्येकम्_Char))
     {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *err = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
     
     uprv_memcpy (converter->subChars, mySubChar, len); /*copies the subchars */
@@ -478,54 +478,54 @@ ucnv_setSubstChars (UConverter * converter,
     converter->subChar1 = 0;
 }
 
-U_CAPI void U_EXPORT2
-ucnv_setSubstString(UConverter *cnv,
-                    const char16_t *s,
+U_CAPI शून्य U_EXPORT2
+ucnv_समुच्चयः_Subst_String(UConverter *cnv,
+                    ध्रुव char16_t *s,
                     int32_t length,
-                    UErrorCode *err) {
-    alignas(UConverter) char cloneBuffer[U_CNV_SAFECLONE_BUFFERSIZE];
-    char chars[UCNV_ERROR_BUFFER_LENGTH];
+                    UError_संहिता *err) {
+    alignas(UConverter) वर्ण clone_बफर[U_CNV_SAFECLONE_BUFFERSIZE];
+    वर्ण chars[UCNV_ERROR_बफर_दीर्घता];
 
     UConverter *clone;
     uint8_t *subChars;
-    int32_t cloneSize, length8;
+    int32_t clone_आकार, length8;
 
     /* Let the following functions check all arguments. */
-    cloneSize = sizeof(cloneBuffer);
-    clone = ucnv_safeClone(cnv, cloneBuffer, &cloneSize, err);
-    ucnv_setFromUCallBack(clone, UCNV_FROM_U_CALLBACK_STOP, nullptr, nullptr, nullptr, err);
-    length8 = ucnv_fromUChars(clone, chars, (int32_t)sizeof(chars), s, length, err);
+    clone_आकार = परिमाण(clone_बफर);
+    clone = ucnv_safeClone(cnv, clone_बफर, &clone_आकार, err);
+    ucnv_समुच्चयः_From_UCall_पृष्ठभागः(clone, UCNV_FROM_U_CALLBACK_STOP, शून्यसूचकः, शून्यसूचकः, शून्यसूचकः, err);
+    length8 = ucnv_fromUChars(clone, chars, (int32_t)परिमाण(chars), s, length, err);
     ucnv_close(clone);
-    if (U_FAILURE(*err)) {
-        return;
+    यदि (U_FAILURE(*err)) {
+        प्रत्यागम;
     }
 
-    if (cnv->sharedData->impl->writeSub == nullptr
-#if !UCONFIG_NO_LEGACY_CONVERSION
-        || (cnv->sharedData->staticData->conversionType == UCNV_MBCS &&
+    यदि (cnv->shared_दत्त->impl->writeSub == शून्यसूचकः
+#यदि !UCONFIG_NO_LEGACY_CONVERSION
+        || (cnv->shared_दत्त->static_दत्त->conversionType == UCNV_MBCS &&
          ucnv_MBCSGetType(cnv) != UCNV_EBCDIC_STATEFUL)
-#endif
+#यदि_अन्तः
     ) {
         /* The converter is not stateful. Store the charset bytes as a fixed string. */
         subChars = (uint8_t *)chars;
-    } else {
+    } अन्यथा {
         /*
          * The converter has a non-default writeSub() function, indicating
          * that it is stateful.
          * Store the Unicode string for on-the-fly conversion for correct
          * state handling.
          */
-        if (length > UCNV_ERROR_BUFFER_LENGTH) {
+        यदि (length > UCNV_ERROR_बफर_दीर्घता) {
             /*
              * Should not occur. The converter should output at least one byte
              * per char16_t, which means that ucnv_fromUChars() should catch all
              * overflows.
              */
-            *err = U_BUFFER_OVERFLOW_ERROR;
-            return;
+            *err = U_बफर_अतिप्रवाहः_ERROR;
+            प्रत्यागम;
         }
         subChars = (uint8_t *)s;
-        if (length < 0) {
+        यदि (length < 0) {
             length = u_strlen(s);
         }
         length8 = length * U_SIZEOF_UCHAR;
@@ -535,28 +535,28 @@ ucnv_setSubstString(UConverter *cnv,
      * For storing the substitution string, select either the small buffer inside
      * UConverter or allocate a subChars buffer.
      */
-    if (length8 > UCNV_MAX_SUBCHAR_LEN) {
+    यदि (length8 > UCNV_MAX_SUBCHAR_LEN) {
         /* Use a separate buffer for the string. Outside UConverter to not make it too large. */
-        if (cnv->subChars == (uint8_t *)cnv->subUChars) {
+        यदि (cnv->subChars == (uint8_t *)cnv->subUChars) {
             /* Allocate a new buffer for the string. */
-            cnv->subChars = (uint8_t *)uprv_malloc(UCNV_ERROR_BUFFER_LENGTH * U_SIZEOF_UCHAR);
-            if (cnv->subChars == nullptr) {
+            cnv->subChars = (uint8_t *)uprv_malloc(UCNV_ERROR_बफर_दीर्घता * U_SIZEOF_UCHAR);
+            यदि (cnv->subChars == शून्यसूचकः) {
                 cnv->subChars = (uint8_t *)cnv->subUChars;
-                *err = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                *err = U_स्मृतिः_आवण्टनम्_ERROR;
+                प्रत्यागम;
             }
-            uprv_memset(cnv->subChars, 0, UCNV_ERROR_BUFFER_LENGTH * U_SIZEOF_UCHAR);
+            uprv_memset(cnv->subChars, 0, UCNV_ERROR_बफर_दीर्घता * U_SIZEOF_UCHAR);
         }
     }
 
     /* Copy the substitution string into the UConverter or its subChars buffer. */
-    if (length8 == 0) {
+    यदि (length8 == 0) {
         cnv->subCharLen = 0;
-    } else {
+    } अन्यथा {
         uprv_memcpy(cnv->subChars, subChars, length8);
-        if (subChars == (uint8_t *)chars) {
+        यदि (subChars == (uint8_t *)chars) {
             cnv->subCharLen = (int8_t)length8;
-        } else /* subChars == s */ {
+        } अन्यथा /* subChars == s */ {
             cnv->subCharLen = (int8_t)-length;
         }
     }
@@ -568,212 +568,212 @@ ucnv_setSubstString(UConverter *cnv,
 /*resets the internal states of a converter
  *goal : have the same behaviour than a freshly created converter
  */
-static void _reset(UConverter *converter, UConverterResetChoice choice,
+स्थिर शून्य _reset(UConverter *converter, UConverterResetChoice choice,
                    UBool callCallback) {
-    if(converter == nullptr) {
-        return;
+    यदि(converter == शून्यसूचकः) {
+        प्रत्यागम;
     }
 
-    if(callCallback) {
+    यदि(callCallback) {
         /* first, notify the callback functions that the converter is reset */
-        UErrorCode errorCode;
+        UError_संहिता error_संहिता;
 
-        if(choice<=UCNV_RESET_TO_UNICODE && converter->fromCharErrorBehaviour != UCNV_TO_U_DEFAULT_CALLBACK) {
-            UConverterToUnicodeArgs toUArgs = {
-                sizeof(UConverterToUnicodeArgs),
-                true,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr
+        यदि(choice<=UCNV_RESET_गन्तव्यम्_UNICODE && converter->fromCharErrorBehaviour != UCNV_गन्तव्यम्_U_DEFAULT_CALLBACK) {
+            UConverter_गन्तव्यम्_Unicode_तर्काः गन्तव्यम्_UArgs = {
+                परिमाण(UConverter_गन्तव्यम्_Unicode_तर्काः),
+                सत्य,
+                शून्यसूचकः,
+                शून्यसूचकः,
+                शून्यसूचकः,
+                शून्यसूचकः,
+                शून्यसूचकः,
+                शून्यसूचकः
             };
-            toUArgs.converter = converter;
-            errorCode = U_ZERO_ERROR;
-            converter->fromCharErrorBehaviour(converter->toUContext, &toUArgs, nullptr, 0, UCNV_RESET, &errorCode);
+            गन्तव्यम्_UArgs.converter = converter;
+            error_संहिता = U_ZERO_ERROR;
+            converter->fromCharErrorBehaviour(converter->गन्तव्यम्_UContext, &गन्तव्यम्_UArgs, शून्यसूचकः, 0, UCNV_RESET, &error_संहिता);
         }
-        if(choice!=UCNV_RESET_TO_UNICODE && converter->fromUCharErrorBehaviour != UCNV_FROM_U_DEFAULT_CALLBACK) {
-            UConverterFromUnicodeArgs fromUArgs = {
-                sizeof(UConverterFromUnicodeArgs),
-                true,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr
+        यदि(choice!=UCNV_RESET_गन्तव्यम्_UNICODE && converter->fromUCharErrorBehaviour != UCNV_FROM_U_DEFAULT_CALLBACK) {
+            UConverter_From_Unicode_तर्काः fromUArgs = {
+                परिमाण(UConverter_From_Unicode_तर्काः),
+                सत्य,
+                शून्यसूचकः,
+                शून्यसूचकः,
+                शून्यसूचकः,
+                शून्यसूचकः,
+                शून्यसूचकः,
+                शून्यसूचकः
             };
             fromUArgs.converter = converter;
-            errorCode = U_ZERO_ERROR;
-            converter->fromUCharErrorBehaviour(converter->fromUContext, &fromUArgs, nullptr, 0, 0, UCNV_RESET, &errorCode);
+            error_संहिता = U_ZERO_ERROR;
+            converter->fromUCharErrorBehaviour(converter->fromUContext, &fromUArgs, शून्यसूचकः, 0, 0, UCNV_RESET, &error_संहिता);
         }
     }
 
     /* now reset the converter itself */
-    if(choice<=UCNV_RESET_TO_UNICODE) {
-        converter->toUnicodeStatus = converter->sharedData->toUnicodeStatus;
-        converter->mode = 0;
-        converter->toULength = 0;
-        converter->invalidCharLength = converter->UCharErrorBufferLength = 0;
-        converter->preToULength = 0;
+    यदि(choice<=UCNV_RESET_गन्तव्यम्_UNICODE) {
+        converter->गन्तव्यम्_Unicode_स्थितिः = converter->shared_दत्त->गन्तव्यम्_Unicode_स्थितिः;
+        converter->बहुलकम् = 0;
+        converter->गन्तव्यम्_ULength = 0;
+        converter->invalid_Char_दीर्घता = converter->UChar_Error_बफर_दीर्घता = 0;
+        converter->pre_गन्तव्यम्_ULength = 0;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
-        converter->fromUnicodeStatus = 0;
+    यदि(choice!=UCNV_RESET_गन्तव्यम्_UNICODE) {
+        converter->from_Unicode_स्थितिः = 0;
         converter->fromUChar32 = 0;
-        converter->invalidUCharLength = converter->charErrorBufferLength = 0;
+        converter->invalid_UChar_दीर्घता = converter->char_Error_बफर_दीर्घता = 0;
         converter->preFromUFirstCP = U_SENTINEL;
         converter->preFromULength = 0;
     }
 
-    if (converter->sharedData->impl->reset != nullptr) {
+    यदि (converter->shared_दत्त->impl->reset != शून्यसूचकः) {
         /* call the custom reset function */
-        converter->sharedData->impl->reset(converter, choice);
+        converter->shared_दत्त->impl->reset(converter, choice);
     }
 }
 
-U_CAPI void  U_EXPORT2
+U_CAPI शून्य  U_EXPORT2
 ucnv_reset(UConverter *converter)
 {
-    _reset(converter, UCNV_RESET_BOTH, true);
+    _reset(converter, UCNV_RESET_BOTH, सत्य);
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_resetToUnicode(UConverter *converter)
+U_CAPI शून्य  U_EXPORT2
+ucnv_reset_गन्तव्यम्_Unicode(UConverter *converter)
 {
-    _reset(converter, UCNV_RESET_TO_UNICODE, true);
+    _reset(converter, UCNV_RESET_गन्तव्यम्_UNICODE, सत्य);
 }
 
-U_CAPI void  U_EXPORT2
+U_CAPI शून्य  U_EXPORT2
 ucnv_resetFromUnicode(UConverter *converter)
 {
-    _reset(converter, UCNV_RESET_FROM_UNICODE, true);
+    _reset(converter, UCNV_RESET_FROM_UNICODE, सत्य);
 }
 
 U_CAPI int8_t   U_EXPORT2
-ucnv_getMaxCharSize (const UConverter * converter)
+ucnv_get_Max_Char_आकार (ध्रुव UConverter * converter)
 {
-    return converter->maxBytesPerUChar;
+    प्रत्यागम converter->max_अष्टकानि_प्रत्येकम्_UChar;
 }
 
 
 U_CAPI int8_t   U_EXPORT2
-ucnv_getMinCharSize (const UConverter * converter)
+ucnv_get_Min_Char_आकार (ध्रुव UConverter * converter)
 {
-    return converter->sharedData->staticData->minBytesPerChar;
+    प्रत्यागम converter->shared_दत्त->static_दत्त->min_अष्टकानि_प्रत्येकम्_Char;
 }
 
-U_CAPI const char* U_EXPORT2
-ucnv_getName(const UConverter* converter U_LIFETIME_BOUND, UErrorCode* err)
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+ucnv_getName(ध्रुव UConverter* converter U_LIFETIME_BOUND, UError_संहिता* err)
 {
-    if (U_FAILURE (*err))
-        return nullptr;
-    if(converter->sharedData->impl->getName){
-        const char* temp= converter->sharedData->impl->getName(converter);
-        if(temp)
-            return temp;
+    यदि (U_FAILURE (*err))
+        प्रत्यागम शून्यसूचकः;
+    यदि(converter->shared_दत्त->impl->getName){
+        ध्रुव वर्ण* अस्थायी= converter->shared_दत्त->impl->getName(converter);
+        यदि(अस्थायी)
+            प्रत्यागम अस्थायी;
     }
-    return converter->sharedData->staticData->name;
+    प्रत्यागम converter->shared_दत्त->static_दत्त->name;
 }
 
 U_CAPI int32_t U_EXPORT2
-ucnv_getCCSID(const UConverter * converter,
-              UErrorCode * err)
+ucnv_getCCSID(ध्रुव UConverter * converter,
+              UError_संहिता * err)
 {
     int32_t ccsid;
-    if (U_FAILURE (*err))
-        return -1;
+    यदि (U_FAILURE (*err))
+        प्रत्यागम -1;
 
-    ccsid = converter->sharedData->staticData->codepage;
-    if (ccsid == 0) {
+    ccsid = converter->shared_दत्त->static_दत्त->codepage;
+    यदि (ccsid == 0) {
         /* Rare case. This is for cases like gb18030,
         which doesn't have an IBM canonical name, but does have an IBM alias. */
-        const char *standardName = ucnv_getStandardName(ucnv_getName(converter, err), "IBM", err);
-        if (U_SUCCESS(*err) && standardName) {
-            const char *ccsidStr = uprv_strchr(standardName, '-');
-            if (ccsidStr) {
+        ध्रुव वर्ण *standardName = ucnv_getStandardName(ucnv_getName(converter, err), "IBM", err);
+        यदि (U_SUCCESS(*err) && standardName) {
+            ध्रुव वर्ण *ccsidStr = uprv_strchr(standardName, '-');
+            यदि (ccsidStr) {
                 ccsid = (int32_t)atol(ccsidStr+1);  /* +1 to skip '-' */
             }
         }
     }
-    return ccsid;
+    प्रत्यागम ccsid;
 }
 
 
 U_CAPI UConverterPlatform   U_EXPORT2
-ucnv_getPlatform (const UConverter * converter,
-                                      UErrorCode * err)
+ucnv_getPlatform (ध्रुव UConverter * converter,
+                                      UError_संहिता * err)
 {
-    if (U_FAILURE (*err))
-        return UCNV_UNKNOWN;
+    यदि (U_FAILURE (*err))
+        प्रत्यागम UCNV_UNKNOWN;
 
-    return (UConverterPlatform)converter->sharedData->staticData->platform;
+    प्रत्यागम (UConverterPlatform)converter->shared_दत्त->static_दत्त->platform;
 }
 
-U_CAPI void U_EXPORT2
-    ucnv_getToUCallBack (const UConverter * converter,
-                         UConverterToUCallback *action,
-                         const void **context)
+U_CAPI शून्य U_EXPORT2
+    ucnv_get_गन्तव्यम्_UCall_पृष्ठभागः (ध्रुव UConverter * converter,
+                         UConverter_गन्तव्यम्_UCallback *action,
+                         ध्रुव शून्य **context)
 {
     *action = converter->fromCharErrorBehaviour;
-    *context = converter->toUContext;
+    *context = converter->गन्तव्यम्_UContext;
 }
 
-U_CAPI void U_EXPORT2
-    ucnv_getFromUCallBack (const UConverter * converter,
+U_CAPI शून्य U_EXPORT2
+    ucnv_get_From_UCall_पृष्ठभागः (ध्रुव UConverter * converter,
                            UConverterFromUCallback *action,
-                           const void **context)
+                           ध्रुव शून्य **context)
 {
     *action = converter->fromUCharErrorBehaviour;
     *context = converter->fromUContext;
 }
 
-U_CAPI void    U_EXPORT2
-ucnv_setToUCallBack (UConverter * converter,
-                            UConverterToUCallback newAction,
-                            const void* newContext,
-                            UConverterToUCallback *oldAction,
-                            const void** oldContext,
-                            UErrorCode * err)
+U_CAPI शून्य    U_EXPORT2
+ucnv_समुच्चयः_गन्तव्यम्_UCall_पृष्ठभागः (UConverter * converter,
+                            UConverter_गन्तव्यम्_UCallback newAction,
+                            ध्रुव शून्य* newContext,
+                            UConverter_गन्तव्यम्_UCallback *oldAction,
+                            ध्रुव शून्य** oldContext,
+                            UError_संहिता * err)
 {
-    if (U_FAILURE (*err))
-        return;
-    if (oldAction) *oldAction = converter->fromCharErrorBehaviour;
+    यदि (U_FAILURE (*err))
+        प्रत्यागम;
+    यदि (oldAction) *oldAction = converter->fromCharErrorBehaviour;
     converter->fromCharErrorBehaviour = newAction;
-    if (oldContext) *oldContext = converter->toUContext;
-    converter->toUContext = newContext;
+    यदि (oldContext) *oldContext = converter->गन्तव्यम्_UContext;
+    converter->गन्तव्यम्_UContext = newContext;
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_setFromUCallBack (UConverter * converter,
+U_CAPI शून्य  U_EXPORT2
+ucnv_समुच्चयः_From_UCall_पृष्ठभागः (UConverter * converter,
                             UConverterFromUCallback newAction,
-                            const void* newContext,
+                            ध्रुव शून्य* newContext,
                             UConverterFromUCallback *oldAction,
-                            const void** oldContext,
-                            UErrorCode * err)
+                            ध्रुव शून्य** oldContext,
+                            UError_संहिता * err)
 {
-    if (U_FAILURE (*err))
-        return;
-    if (oldAction) *oldAction = converter->fromUCharErrorBehaviour;
+    यदि (U_FAILURE (*err))
+        प्रत्यागम;
+    यदि (oldAction) *oldAction = converter->fromUCharErrorBehaviour;
     converter->fromUCharErrorBehaviour = newAction;
-    if (oldContext) *oldContext = converter->fromUContext;
+    यदि (oldContext) *oldContext = converter->fromUContext;
     converter->fromUContext = newContext;
 }
 
-static void
+स्थिर शून्य
 _updateOffsets(int32_t *offsets, int32_t length,
-               int32_t sourceIndex, int32_t errorInputLength) {
-    int32_t *limit;
-    int32_t delta, offset;
+               int32_t source_सूचकांक, int32_t error_निवेशः_दीर्घता) {
+    int32_t *सीमा;
+    int32_t delta, विस्थापनम्;
 
-    if(sourceIndex>=0) {
+    यदि(source_सूचकांक>=0) {
         /*
          * adjust each offset by adding the previous sourceIndex
          * minus the length of the input sequence that caused an
          * error, if any
          */
-        delta=sourceIndex-errorInputLength;
-    } else {
+        delta=source_सूचकांक-error_निवेशः_दीर्घता;
+    } अन्यथा {
         /*
          * set each offset to -1 because this conversion function
          * does not handle offsets
@@ -781,25 +781,25 @@ _updateOffsets(int32_t *offsets, int32_t length,
         delta=-1;
     }
 
-    limit=offsets+length;
-    if(delta==0) {
+    सीमा=offsets+length;
+    यदि(delta==0) {
         /* most common case, nothing to do */
-    } else if(delta>0) {
+    } अन्यथा यदि(delta>0) {
         /* add the delta to each offset (but not if the offset is <0) */
-        while(offsets<limit) {
-            offset=*offsets;
-            if(offset>=0) {
-                *offsets=offset+delta;
+        यावत्(offsets<सीमा) {
+            विस्थापनम्=*offsets;
+            यदि(विस्थापनम्>=0) {
+                *offsets=विस्थापनम्+delta;
             }
             ++offsets;
         }
-    } else /* delta<0 */ {
+    } अन्यथा /* delta<0 */ {
         /*
          * set each offset to -1 because this conversion function
          * does not handle offsets
          * or the error input sequence started in a previous buffer
          */
-        while(offsets<limit) {
+        यावत्(offsets<सीमा) {
             *offsets++=-1;
         }
     }
@@ -829,70 +829,70 @@ _updateOffsets(int32_t *offsets, int32_t length,
  * and wrong output, but they will not cause a crash.
  */
 
-static void
-_fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
+स्थिर शून्य
+_fromUnicodeWithCallback(UConverter_From_Unicode_तर्काः *p_तर्काः, UError_संहिता *err) {
     UConverterFromUnicode fromUnicode;
     UConverter *cnv;
-    const char16_t *s;
-    char *t;
+    ध्रुव char16_t *s;
+    वर्ण *t;
     int32_t *offsets;
-    int32_t sourceIndex;
-    int32_t errorInputLength;
-    UBool converterSawEndOfInput, calledCallback;
+    int32_t source_सूचकांक;
+    int32_t error_निवेशः_दीर्घता;
+    UBool converter_Saw_अन्तः_सम्बन्धि_निवेशः, calledCallback;
 
     /* variables for m:n conversion */
     char16_t replay[UCNV_EXT_MAX_UCHARS];
-    const char16_t *realSource, *realSourceLimit;
-    int32_t realSourceIndex;
+    ध्रुव char16_t *realSource, *real_Source_सीमा;
+    int32_t real_Source_सूचकांक;
     UBool realFlush;
 
-    cnv=pArgs->converter;
-    s=pArgs->source;
-    t=pArgs->target;
-    offsets=pArgs->offsets;
+    cnv=p_तर्काः->converter;
+    s=p_तर्काः->source;
+    t=p_तर्काः->target;
+    offsets=p_तर्काः->offsets;
 
     /* get the converter implementation function */
-    sourceIndex=0;
-    if(offsets==nullptr) {
-        fromUnicode=cnv->sharedData->impl->fromUnicode;
-    } else {
-        fromUnicode=cnv->sharedData->impl->fromUnicodeWithOffsets;
-        if(fromUnicode==nullptr) {
+    source_सूचकांक=0;
+    यदि(offsets==शून्यसूचकः) {
+        fromUnicode=cnv->shared_दत्त->impl->fromUnicode;
+    } अन्यथा {
+        fromUnicode=cnv->shared_दत्त->impl->fromUnicodeWithOffsets;
+        यदि(fromUnicode==शून्यसूचकः) {
             /* there is no WithOffsets implementation */
-            fromUnicode=cnv->sharedData->impl->fromUnicode;
+            fromUnicode=cnv->shared_दत्त->impl->fromUnicode;
             /* we will write -1 for each offset */
-            sourceIndex=-1;
+            source_सूचकांक=-1;
         }
     }
 
-    if(cnv->preFromULength>=0) {
+    यदि(cnv->preFromULength>=0) {
         /* normal mode */
-        realSource=nullptr;
+        realSource=शून्यसूचकः;
 
         /* avoid compiler warnings - not otherwise necessary, and the values do not matter */
-        realSourceLimit=nullptr;
-        realFlush=false;
-        realSourceIndex=0;
-    } else {
+        real_Source_सीमा=शून्यसूचकः;
+        realFlush=असत्य;
+        real_Source_सूचकांक=0;
+    } अन्यथा {
         /*
          * Previous m:n conversion stored source units from a partial match
          * and failed to consume all of them.
          * We need to "replay" them from a temporary buffer and convert them first.
          */
-        if (!pArgs->source) {
-            *err=U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+        यदि (!p_तर्काः->source) {
+            *err=U_ILLEGAL_तर्कः_ERROR;
+            प्रत्यागम;
         }
-        realSource=pArgs->source;
-        realSourceLimit=pArgs->sourceLimit;
-        realFlush=pArgs->flush;
-        realSourceIndex=sourceIndex;
+        realSource=p_तर्काः->source;
+        real_Source_सीमा=p_तर्काः->source_सीमा;
+        realFlush=p_तर्काः->flush;
+        real_Source_सूचकांक=source_सूचकांक;
 
         uprv_memcpy(replay, cnv->preFromU, -cnv->preFromULength*U_SIZEOF_UCHAR);
-        pArgs->source=replay;
-        pArgs->sourceLimit=replay-cnv->preFromULength;
-        pArgs->flush=false;
-        sourceIndex=-1;
+        p_तर्काः->source=replay;
+        p_तर्काः->source_सीमा=replay-cnv->preFromULength;
+        p_तर्काः->flush=असत्य;
+        source_सूचकांक=-1;
 
         cnv->preFromULength=0;
     }
@@ -909,10 +909,10 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
      *   }
      * }
      */
-    for(;;) {
-        if(U_SUCCESS(*err)) {
+    प्रति(;;) {
+        यदि(U_SUCCESS(*err)) {
             /* convert */
-            fromUnicode(pArgs, err);
+            fromUnicode(p_तर्काः, err);
 
             /*
              * set a flag for whether the converter
@@ -921,20 +921,20 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
              * need not check cnv->preFromULength==0 because a replay (<0) will cause
              * s<sourceLimit before converterSawEndOfInput is checked
              */
-            converterSawEndOfInput=
+            converter_Saw_अन्तः_सम्बन्धि_निवेशः=
                 static_cast<UBool>(U_SUCCESS(*err) &&
-                        pArgs->flush && pArgs->source==pArgs->sourceLimit &&
+                        p_तर्काः->flush && p_तर्काः->source==p_तर्काः->source_सीमा &&
                         cnv->fromUChar32==0);
-        } else {
+        } अन्यथा {
             /* handle error from ucnv_convertEx() */
-            converterSawEndOfInput=false;
+            converter_Saw_अन्तः_सम्बन्धि_निवेशः=असत्य;
         }
 
         /* no callback called yet for this iteration */
-        calledCallback=false;
+        calledCallback=असत्य;
 
         /* no sourceIndex adjustment for conversion, only for callback output */
-        errorInputLength=0;
+        error_निवेशः_दीर्घता=0;
 
         /*
          * loop for offsets and error handling
@@ -944,12 +944,12 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
          * 2. after the callback
          * 3. after the callback again if there was truncated input
          */
-        for(;;) {
+        प्रति(;;) {
             /* update offsets if we write any */
-            if(offsets!=nullptr) {
-                int32_t length = static_cast<int32_t>(pArgs->target - t);
-                if(length>0) {
-                    _updateOffsets(offsets, length, sourceIndex, errorInputLength);
+            यदि(offsets!=शून्यसूचकः) {
+                int32_t length = static_cast<int32_t>(p_तर्काः->target - t);
+                यदि(length>0) {
+                    _updateOffsets(offsets, length, source_सूचकांक, error_निवेशः_दीर्घता);
 
                     /*
                      * if a converter handles offsets and updates the offsets
@@ -958,73 +958,73 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
                      * however, some converters do not handle offsets at all
                      * (sourceIndex<0) or may not update the offsets pointer
                      */
-                    pArgs->offsets=offsets+=length;
+                    p_तर्काः->offsets=offsets+=length;
                 }
 
-                if(sourceIndex>=0) {
-                    sourceIndex += static_cast<int32_t>(pArgs->source - s);
+                यदि(source_सूचकांक>=0) {
+                    source_सूचकांक += static_cast<int32_t>(p_तर्काः->source - s);
                 }
             }
 
-            if(cnv->preFromULength<0) {
+            यदि(cnv->preFromULength<0) {
                 /*
                  * switch the source to new replay units (cannot occur while replaying)
                  * after offset handling and before end-of-input and callback handling
                  */
-                if(realSource==nullptr) {
-                    realSource=pArgs->source;
-                    realSourceLimit=pArgs->sourceLimit;
-                    realFlush=pArgs->flush;
-                    realSourceIndex=sourceIndex;
+                यदि(realSource==शून्यसूचकः) {
+                    realSource=p_तर्काः->source;
+                    real_Source_सीमा=p_तर्काः->source_सीमा;
+                    realFlush=p_तर्काः->flush;
+                    real_Source_सूचकांक=source_सूचकांक;
 
                     uprv_memcpy(replay, cnv->preFromU, -cnv->preFromULength*U_SIZEOF_UCHAR);
-                    pArgs->source=replay;
-                    pArgs->sourceLimit=replay-cnv->preFromULength;
-                    pArgs->flush=false;
-                    if((sourceIndex+=cnv->preFromULength)<0) {
-                        sourceIndex=-1;
+                    p_तर्काः->source=replay;
+                    p_तर्काः->source_सीमा=replay-cnv->preFromULength;
+                    p_तर्काः->flush=असत्य;
+                    यदि((source_सूचकांक+=cnv->preFromULength)<0) {
+                        source_सूचकांक=-1;
                     }
 
                     cnv->preFromULength=0;
-                } else {
+                } अन्यथा {
                     /* see implementation note before _fromUnicodeWithCallback() */
-                    U_ASSERT(realSource==nullptr);
-                    *err=U_INTERNAL_PROGRAM_ERROR;
+                    U_ASSERT(realSource==शून्यसूचकः);
+                    *err=U_आन्तरिकम्_क्रमादेशः_ERROR;
                 }
             }
 
             /* update pointers */
-            s=pArgs->source;
-            t=pArgs->target;
+            s=p_तर्काः->source;
+            t=p_तर्काः->target;
 
-            if(U_SUCCESS(*err)) {
-                if(s<pArgs->sourceLimit) {
+            यदि(U_SUCCESS(*err)) {
+                यदि(s<p_तर्काः->source_सीमा) {
                     /*
                      * continue with the conversion loop while there is still input left
                      * (continue converting by breaking out of only the inner loop)
                      */
-                    break;
-                } else if(realSource!=nullptr) {
+                    भङ्ग;
+                } अन्यथा यदि(realSource!=शून्यसूचकः) {
                     /* switch back from replaying to the real source and continue */
-                    pArgs->source=realSource;
-                    pArgs->sourceLimit=realSourceLimit;
-                    pArgs->flush=realFlush;
-                    sourceIndex=realSourceIndex;
+                    p_तर्काः->source=realSource;
+                    p_तर्काः->source_सीमा=real_Source_सीमा;
+                    p_तर्काः->flush=realFlush;
+                    source_सूचकांक=real_Source_सूचकांक;
 
-                    realSource=nullptr;
-                    break;
-                } else if(pArgs->flush && cnv->fromUChar32!=0) {
+                    realSource=शून्यसूचकः;
+                    भङ्ग;
+                } अन्यथा यदि(p_तर्काः->flush && cnv->fromUChar32!=0) {
                     /*
                      * the entire input stream is consumed
                      * and there is a partial, truncated input sequence left
                      */
 
                     /* inject an error and continue with callback handling */
-                    *err=U_TRUNCATED_CHAR_FOUND;
-                    calledCallback=false; /* new error condition */
-                } else {
+                    *err=U_TRUNCATED_CHAR_प्राप्तम्;
+                    calledCallback=असत्य; /* new error condition */
+                } अन्यथा {
                     /* input consumed */
-                    if(pArgs->flush) {
+                    यदि(p_तर्काः->flush) {
                         /*
                          * return to the conversion loop once more if the flush
                          * flag is set and the conversion function has not
@@ -1032,28 +1032,28 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
                          *
                          * (continue converting by breaking out of only the inner loop)
                          */
-                        if(!converterSawEndOfInput) {
-                            break;
+                        यदि(!converter_Saw_अन्तः_सम्बन्धि_निवेशः) {
+                            भङ्ग;
                         }
 
                         /* reset the converter without calling the callback function */
-                        _reset(cnv, UCNV_RESET_FROM_UNICODE, false);
+                        _reset(cnv, UCNV_RESET_FROM_UNICODE, असत्य);
                     }
 
                     /* done successfully */
-                    return;
+                    प्रत्यागम;
                 }
             }
 
             /* U_FAILURE(*err) */
             {
-                UErrorCode e;
+                UError_संहिता e;
 
-                if( calledCallback ||
-                    (e=*err)==U_BUFFER_OVERFLOW_ERROR ||
-                    (e!=U_INVALID_CHAR_FOUND &&
-                     e!=U_ILLEGAL_CHAR_FOUND &&
-                     e!=U_TRUNCATED_CHAR_FOUND)
+                यदि( calledCallback ||
+                    (e=*err)==U_बफर_अतिप्रवाहः_ERROR ||
+                    (e!=U_INVALID_CHAR_प्राप्तम् &&
+                     e!=U_ILLEGAL_CHAR_प्राप्तम् &&
+                     e!=U_TRUNCATED_CHAR_प्राप्तम्)
                 ) {
                     /*
                      * the callback did not or cannot resolve the error:
@@ -1067,43 +1067,43 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
                      * copied back into the UConverter
                      * and the real arguments must be restored
                      */
-                    if(realSource!=nullptr) {
+                    यदि(realSource!=शून्यसूचकः) {
                         int32_t length;
 
                         U_ASSERT(cnv->preFromULength==0);
 
-                        length = static_cast<int32_t>(pArgs->sourceLimit - pArgs->source);
-                        if(length>0) {
-                            u_memcpy(cnv->preFromU, pArgs->source, length);
+                        length = static_cast<int32_t>(p_तर्काः->source_सीमा - p_तर्काः->source);
+                        यदि(length>0) {
+                            u_memcpy(cnv->preFromU, p_तर्काः->source, length);
                             cnv->preFromULength = static_cast<int8_t>(-length);
                         }
 
-                        pArgs->source=realSource;
-                        pArgs->sourceLimit=realSourceLimit;
-                        pArgs->flush=realFlush;
+                        p_तर्काः->source=realSource;
+                        p_तर्काः->source_सीमा=real_Source_सीमा;
+                        p_तर्काः->flush=realFlush;
                     }
 
-                    return;
+                    प्रत्यागम;
                 }
             }
 
             /* callback handling */
             {
-                UChar32 codePoint;
+                UChar32 संहिता_Point;
 
                 /* get and write the code point */
-                codePoint=cnv->fromUChar32;
-                errorInputLength=0;
-                U16_APPEND_UNSAFE(cnv->invalidUCharBuffer, errorInputLength, codePoint);
-                cnv->invalidUCharLength = static_cast<int8_t>(errorInputLength);
+                संहिता_Point=cnv->fromUChar32;
+                error_निवेशः_दीर्घता=0;
+                U16_APPEND_UNSAFE(cnv->invalid_UChar_बफर, error_निवेशः_दीर्घता, संहिता_Point);
+                cnv->invalid_UChar_दीर्घता = static_cast<int8_t>(error_निवेशः_दीर्घता);
 
                 /* set the converter state to deal with the next character */
                 cnv->fromUChar32=0;
 
                 /* call the callback function */
-                cnv->fromUCharErrorBehaviour(cnv->fromUContext, pArgs,
-                    cnv->invalidUCharBuffer, errorInputLength, codePoint,
-                    *err==U_INVALID_CHAR_FOUND ? UCNV_UNASSIGNED : UCNV_ILLEGAL,
+                cnv->fromUCharErrorBehaviour(cnv->fromUContext, p_तर्काः,
+                    cnv->invalid_UChar_बफर, error_निवेशः_दीर्घता, संहिता_Point,
+                    *err==U_INVALID_CHAR_प्राप्तम् ? UCNV_UNASSIGNED : UCNV_ILLEGAL,
                     err);
             }
 
@@ -1114,7 +1114,7 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
              * that a callback was called;
              * if the callback did not resolve the error, then we return
              */
-            calledCallback=true;
+            calledCallback=सत्य;
         }
     }
 }
@@ -1124,90 +1124,90 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
  * Call this function if(cnv->charErrorBufferLength>0).
  * @return true if overflow
  */
-static UBool
-ucnv_outputOverflowFromUnicode(UConverter *cnv,
-                               char **target, const char *targetLimit,
+स्थिर UBool
+ucnv_output_अतिप्रवाहः_From_Unicode(UConverter *cnv,
+                               वर्ण **target, ध्रुव वर्ण *target_सीमा,
                                int32_t **pOffsets,
-                               UErrorCode *err) {
+                               UError_संहिता *err) {
     int32_t *offsets;
-    char *overflow, *t;
+    वर्ण *अतिप्रवाहः, *t;
     int32_t i, length;
 
     t=*target;
-    if(pOffsets!=nullptr) {
+    यदि(pOffsets!=शून्यसूचकः) {
         offsets=*pOffsets;
-    } else {
-        offsets=nullptr;
+    } अन्यथा {
+        offsets=शून्यसूचकः;
     }
 
-    overflow = reinterpret_cast<char*>(cnv->charErrorBuffer);
-    length=cnv->charErrorBufferLength;
+    अतिप्रवाहः = reinterpret_cast<वर्ण*>(cnv->char_Error_बफर);
+    length=cnv->char_Error_बफर_दीर्घता;
     i=0;
-    while(i<length) {
-        if(t==targetLimit) {
+    यावत्(i<length) {
+        यदि(t==target_सीमा) {
             /* the overflow buffer contains too much, keep the rest */
             int32_t j=0;
 
-            do {
-                overflow[j++]=overflow[i++];
-            } while(i<length);
+            कुरु {
+                अतिप्रवाहः[j++]=अतिप्रवाहः[i++];
+            } यावत्(i<length);
 
-            cnv->charErrorBufferLength = static_cast<int8_t>(j);
+            cnv->char_Error_बफर_दीर्घता = static_cast<int8_t>(j);
             *target=t;
-            if(offsets!=nullptr) {
+            यदि(offsets!=शून्यसूचकः) {
                 *pOffsets=offsets;
             }
-            *err=U_BUFFER_OVERFLOW_ERROR;
-            return true;
+            *err=U_बफर_अतिप्रवाहः_ERROR;
+            प्रत्यागम सत्य;
         }
 
         /* copy the overflow contents to the target */
-        *t++=overflow[i++];
-        if(offsets!=nullptr) {
+        *t++=अतिप्रवाहः[i++];
+        यदि(offsets!=शून्यसूचकः) {
             *offsets++=-1; /* no source index available for old output */
         }
     }
 
     /* the overflow buffer is completely copied to the target */
-    cnv->charErrorBufferLength=0;
+    cnv->char_Error_बफर_दीर्घता=0;
     *target=t;
-    if(offsets!=nullptr) {
+    यदि(offsets!=शून्यसूचकः) {
         *pOffsets=offsets;
     }
-    return false;
+    प्रत्यागम असत्य;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ucnv_fromUnicode(UConverter *cnv,
-                 char **target, const char *targetLimit,
-                 const char16_t **source, const char16_t *sourceLimit,
+                 वर्ण **target, ध्रुव वर्ण *target_सीमा,
+                 ध्रुव char16_t **source, ध्रुव char16_t *source_सीमा,
                  int32_t *offsets,
                  UBool flush,
-                 UErrorCode *err) {
-    UConverterFromUnicodeArgs args;
-    const char16_t *s;
-    char *t;
+                 UError_संहिता *err) {
+    UConverter_From_Unicode_तर्काः तर्काः_2;
+    ध्रुव char16_t *s;
+    वर्ण *t;
 
     /* check parameters */
-    if(err==nullptr || U_FAILURE(*err)) {
-        return;
+    यदि(err==शून्यसूचकः || U_FAILURE(*err)) {
+        प्रत्यागम;
     }
 
-    if(cnv==nullptr || target==nullptr || source==nullptr) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    यदि(cnv==शून्यसूचकः || target==शून्यसूचकः || source==शून्यसूचकः) {
+        *err=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
 
     s=*source;
     t=*target;
 
-    if ((const void *)U_MAX_PTR(sourceLimit) == (const void *)sourceLimit) {
+    यदि ((ध्रुव शून्य *)U_MAX_PTR(source_सीमा) == (ध्रुव शून्य *)source_सीमा) {
         /*
         Prevent code from going into an infinite loop in case we do hit this
         limit. The limit pointer is expected to be on a char16_t * boundary.
         This also prevents the next argument check from failing.
         */
-        sourceLimit = (const char16_t *)(((const char *)sourceLimit) - 1);
+        source_सीमा = (ध्रुव char16_t *)(((ध्रुव वर्ण *)source_सीमा) - 1);
     }
 
     /*
@@ -1229,27 +1229,27 @@ ucnv_fromUnicode(UConverter *cnv,
      * 3) Make sure that the user didn't incorrectly cast a char16_t * pointer
      * to a char * pointer and provide an incomplete char16_t code unit.
      */
-    if (sourceLimit<s || targetLimit<t ||
-        ((size_t)(sourceLimit-s)>(size_t)0x3fffffff && sourceLimit>s) ||
-        ((size_t)(targetLimit-t)>(size_t)0x7fffffff && targetLimit>t) ||
-        (((const char *)sourceLimit-(const char *)s) & 1) != 0)
+    यदि (source_सीमा<s || target_सीमा<t ||
+        ((size_t)(source_सीमा-s)>(size_t)0x3fffffff && source_सीमा>s) ||
+        ((size_t)(target_सीमा-t)>(size_t)0x7fffffff && target_सीमा>t) ||
+        (((ध्रुव वर्ण *)source_सीमा-(ध्रुव वर्ण *)s) & 1) != 0)
     {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *err=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
     
     /* output the target overflow buffer */
-    if( cnv->charErrorBufferLength>0 &&
-        ucnv_outputOverflowFromUnicode(cnv, target, targetLimit, &offsets, err)
+    यदि( cnv->char_Error_बफर_दीर्घता>0 &&
+        ucnv_output_अतिप्रवाहः_From_Unicode(cnv, target, target_सीमा, &offsets, err)
     ) {
         /* U_BUFFER_OVERFLOW_ERROR */
-        return;
+        प्रत्यागम;
     }
     /* *target may have moved, therefore stop using t */
 
-    if(!flush && s==sourceLimit && cnv->preFromULength>=0) {
+    यदि(!flush && s==source_सीमा && cnv->preFromULength>=0) {
         /* the overflow buffer is emptied and there is no new input: we are done */
-        return;
+        प्रत्यागम;
     }
 
     /*
@@ -1261,89 +1261,89 @@ ucnv_fromUnicode(UConverter *cnv,
      */
 
     /* prepare the converter arguments */
-    args.converter=cnv;
-    args.flush=flush;
-    args.offsets=offsets;
-    args.source=s;
-    args.sourceLimit=sourceLimit;
-    args.target=*target;
-    args.targetLimit=targetLimit;
-    args.size=sizeof(args);
+    तर्काः_2.converter=cnv;
+    तर्काः_2.flush=flush;
+    तर्काः_2.offsets=offsets;
+    तर्काः_2.source=s;
+    तर्काः_2.source_सीमा=source_सीमा;
+    तर्काः_2.target=*target;
+    तर्काः_2.target_सीमा=target_सीमा;
+    तर्काः_2.size=परिमाण(तर्काः_2);
 
-    _fromUnicodeWithCallback(&args, err);
+    _fromUnicodeWithCallback(&तर्काः_2, err);
 
-    *source=args.source;
-    *target=args.target;
+    *source=तर्काः_2.source;
+    *target=तर्काः_2.target;
 }
 
 /* ucnv_toUnicode() --------------------------------------------------------- */
 
-static void
-_toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
-    UConverterToUnicode toUnicode;
+स्थिर शून्य
+गन्तव्यम्_Unicode_With_Callback(UConverter_गन्तव्यम्_Unicode_तर्काः *p_तर्काः, UError_संहिता *err) {
+    UConverter_गन्तव्यम्_Unicode गन्तव्यम्_Unicode;
     UConverter *cnv;
-    const char *s;
+    ध्रुव वर्ण *s;
     char16_t *t;
     int32_t *offsets;
-    int32_t sourceIndex;
-    int32_t errorInputLength;
-    UBool converterSawEndOfInput, calledCallback;
+    int32_t source_सूचकांक;
+    int32_t error_निवेशः_दीर्घता;
+    UBool converter_Saw_अन्तः_सम्बन्धि_निवेशः, calledCallback;
 
     /* variables for m:n conversion */
-    char replay[UCNV_EXT_MAX_BYTES];
-    const char *realSource, *realSourceLimit;
-    int32_t realSourceIndex;
+    वर्ण replay[UCNV_EXT_MAX_अष्टकानि];
+    ध्रुव वर्ण *realSource, *real_Source_सीमा;
+    int32_t real_Source_सूचकांक;
     UBool realFlush;
 
-    cnv=pArgs->converter;
-    s=pArgs->source;
-    t=pArgs->target;
-    offsets=pArgs->offsets;
+    cnv=p_तर्काः->converter;
+    s=p_तर्काः->source;
+    t=p_तर्काः->target;
+    offsets=p_तर्काः->offsets;
 
     /* get the converter implementation function */
-    sourceIndex=0;
-    if(offsets==nullptr) {
-        toUnicode=cnv->sharedData->impl->toUnicode;
-    } else {
-        toUnicode=cnv->sharedData->impl->toUnicodeWithOffsets;
-        if(toUnicode==nullptr) {
+    source_सूचकांक=0;
+    यदि(offsets==शून्यसूचकः) {
+        गन्तव्यम्_Unicode=cnv->shared_दत्त->impl->गन्तव्यम्_Unicode;
+    } अन्यथा {
+        गन्तव्यम्_Unicode=cnv->shared_दत्त->impl->गन्तव्यम्_Unicode_With_Offsets;
+        यदि(गन्तव्यम्_Unicode==शून्यसूचकः) {
             /* there is no WithOffsets implementation */
-            toUnicode=cnv->sharedData->impl->toUnicode;
+            गन्तव्यम्_Unicode=cnv->shared_दत्त->impl->गन्तव्यम्_Unicode;
             /* we will write -1 for each offset */
-            sourceIndex=-1;
+            source_सूचकांक=-1;
         }
     }
 
-    if(cnv->preToULength>=0) {
+    यदि(cnv->pre_गन्तव्यम्_ULength>=0) {
         /* normal mode */
-        realSource=nullptr;
+        realSource=शून्यसूचकः;
 
         /* avoid compiler warnings - not otherwise necessary, and the values do not matter */
-        realSourceLimit=nullptr;
-        realFlush=false;
-        realSourceIndex=0;
-    } else {
+        real_Source_सीमा=शून्यसूचकः;
+        realFlush=असत्य;
+        real_Source_सूचकांक=0;
+    } अन्यथा {
         /*
          * Previous m:n conversion stored source units from a partial match
          * and failed to consume all of them.
          * We need to "replay" them from a temporary buffer and convert them first.
          */
-        if (!pArgs->source) {
-            *err=U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+        यदि (!p_तर्काः->source) {
+            *err=U_ILLEGAL_तर्कः_ERROR;
+            प्रत्यागम;
         }
-        realSource=pArgs->source;
-        realSourceLimit=pArgs->sourceLimit;
-        realFlush=pArgs->flush;
-        realSourceIndex=sourceIndex;
+        realSource=p_तर्काः->source;
+        real_Source_सीमा=p_तर्काः->source_सीमा;
+        realFlush=p_तर्काः->flush;
+        real_Source_सूचकांक=source_सूचकांक;
 
-        uprv_memcpy(replay, cnv->preToU, -cnv->preToULength);
-        pArgs->source=replay;
-        pArgs->sourceLimit=replay-cnv->preToULength;
-        pArgs->flush=false;
-        sourceIndex=-1;
+        uprv_memcpy(replay, cnv->pre_गन्तव्यम्_U, -cnv->pre_गन्तव्यम्_ULength);
+        p_तर्काः->source=replay;
+        p_तर्काः->source_सीमा=replay-cnv->pre_गन्तव्यम्_ULength;
+        p_तर्काः->flush=असत्य;
+        source_सूचकांक=-1;
 
-        cnv->preToULength=0;
+        cnv->pre_गन्तव्यम्_ULength=0;
     }
 
     /*
@@ -1358,10 +1358,10 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
      *   }
      * }
      */
-    for(;;) {
-        if(U_SUCCESS(*err)) {
+    प्रति(;;) {
+        यदि(U_SUCCESS(*err)) {
             /* convert */
-            toUnicode(pArgs, err);
+            गन्तव्यम्_Unicode(p_तर्काः, err);
 
             /*
              * set a flag for whether the converter
@@ -1370,20 +1370,20 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
              * need not check cnv->preToULength==0 because a replay (<0) will cause
              * s<sourceLimit before converterSawEndOfInput is checked
              */
-            converterSawEndOfInput=
+            converter_Saw_अन्तः_सम्बन्धि_निवेशः=
                 static_cast<UBool>(U_SUCCESS(*err) &&
-                        pArgs->flush && pArgs->source==pArgs->sourceLimit &&
-                        cnv->toULength==0);
-        } else {
+                        p_तर्काः->flush && p_तर्काः->source==p_तर्काः->source_सीमा &&
+                        cnv->गन्तव्यम्_ULength==0);
+        } अन्यथा {
             /* handle error from getNextUChar() or ucnv_convertEx() */
-            converterSawEndOfInput=false;
+            converter_Saw_अन्तः_सम्बन्धि_निवेशः=असत्य;
         }
 
         /* no callback called yet for this iteration */
-        calledCallback=false;
+        calledCallback=असत्य;
 
         /* no sourceIndex adjustment for conversion, only for callback output */
-        errorInputLength=0;
+        error_निवेशः_दीर्घता=0;
 
         /*
          * loop for offsets and error handling
@@ -1393,12 +1393,12 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
          * 2. after the callback
          * 3. after the callback again if there was truncated input
          */
-        for(;;) {
+        प्रति(;;) {
             /* update offsets if we write any */
-            if(offsets!=nullptr) {
-                int32_t length = static_cast<int32_t>(pArgs->target - t);
-                if(length>0) {
-                    _updateOffsets(offsets, length, sourceIndex, errorInputLength);
+            यदि(offsets!=शून्यसूचकः) {
+                int32_t length = static_cast<int32_t>(p_तर्काः->target - t);
+                यदि(length>0) {
+                    _updateOffsets(offsets, length, source_सूचकांक, error_निवेशः_दीर्घता);
 
                     /*
                      * if a converter handles offsets and updates the offsets
@@ -1407,73 +1407,73 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
                      * however, some converters do not handle offsets at all
                      * (sourceIndex<0) or may not update the offsets pointer
                      */
-                    pArgs->offsets=offsets+=length;
+                    p_तर्काः->offsets=offsets+=length;
                 }
 
-                if(sourceIndex>=0) {
-                    sourceIndex += static_cast<int32_t>(pArgs->source - s);
+                यदि(source_सूचकांक>=0) {
+                    source_सूचकांक += static_cast<int32_t>(p_तर्काः->source - s);
                 }
             }
 
-            if(cnv->preToULength<0) {
+            यदि(cnv->pre_गन्तव्यम्_ULength<0) {
                 /*
                  * switch the source to new replay units (cannot occur while replaying)
                  * after offset handling and before end-of-input and callback handling
                  */
-                if(realSource==nullptr) {
-                    realSource=pArgs->source;
-                    realSourceLimit=pArgs->sourceLimit;
-                    realFlush=pArgs->flush;
-                    realSourceIndex=sourceIndex;
+                यदि(realSource==शून्यसूचकः) {
+                    realSource=p_तर्काः->source;
+                    real_Source_सीमा=p_तर्काः->source_सीमा;
+                    realFlush=p_तर्काः->flush;
+                    real_Source_सूचकांक=source_सूचकांक;
 
-                    uprv_memcpy(replay, cnv->preToU, -cnv->preToULength);
-                    pArgs->source=replay;
-                    pArgs->sourceLimit=replay-cnv->preToULength;
-                    pArgs->flush=false;
-                    if((sourceIndex+=cnv->preToULength)<0) {
-                        sourceIndex=-1;
+                    uprv_memcpy(replay, cnv->pre_गन्तव्यम्_U, -cnv->pre_गन्तव्यम्_ULength);
+                    p_तर्काः->source=replay;
+                    p_तर्काः->source_सीमा=replay-cnv->pre_गन्तव्यम्_ULength;
+                    p_तर्काः->flush=असत्य;
+                    यदि((source_सूचकांक+=cnv->pre_गन्तव्यम्_ULength)<0) {
+                        source_सूचकांक=-1;
                     }
 
-                    cnv->preToULength=0;
-                } else {
+                    cnv->pre_गन्तव्यम्_ULength=0;
+                } अन्यथा {
                     /* see implementation note before _fromUnicodeWithCallback() */
-                    U_ASSERT(realSource==nullptr);
-                    *err=U_INTERNAL_PROGRAM_ERROR;
+                    U_ASSERT(realSource==शून्यसूचकः);
+                    *err=U_आन्तरिकम्_क्रमादेशः_ERROR;
                 }
             }
 
             /* update pointers */
-            s=pArgs->source;
-            t=pArgs->target;
+            s=p_तर्काः->source;
+            t=p_तर्काः->target;
 
-            if(U_SUCCESS(*err)) {
-                if(s<pArgs->sourceLimit) {
+            यदि(U_SUCCESS(*err)) {
+                यदि(s<p_तर्काः->source_सीमा) {
                     /*
                      * continue with the conversion loop while there is still input left
                      * (continue converting by breaking out of only the inner loop)
                      */
-                    break;
-                } else if(realSource!=nullptr) {
+                    भङ्ग;
+                } अन्यथा यदि(realSource!=शून्यसूचकः) {
                     /* switch back from replaying to the real source and continue */
-                    pArgs->source=realSource;
-                    pArgs->sourceLimit=realSourceLimit;
-                    pArgs->flush=realFlush;
-                    sourceIndex=realSourceIndex;
+                    p_तर्काः->source=realSource;
+                    p_तर्काः->source_सीमा=real_Source_सीमा;
+                    p_तर्काः->flush=realFlush;
+                    source_सूचकांक=real_Source_सूचकांक;
 
-                    realSource=nullptr;
-                    break;
-                } else if(pArgs->flush && cnv->toULength>0) {
+                    realSource=शून्यसूचकः;
+                    भङ्ग;
+                } अन्यथा यदि(p_तर्काः->flush && cnv->गन्तव्यम्_ULength>0) {
                     /*
                      * the entire input stream is consumed
                      * and there is a partial, truncated input sequence left
                      */
 
                     /* inject an error and continue with callback handling */
-                    *err=U_TRUNCATED_CHAR_FOUND;
-                    calledCallback=false; /* new error condition */
-                } else {
+                    *err=U_TRUNCATED_CHAR_प्राप्तम्;
+                    calledCallback=असत्य; /* new error condition */
+                } अन्यथा {
                     /* input consumed */
-                    if(pArgs->flush) {
+                    यदि(p_तर्काः->flush) {
                         /*
                          * return to the conversion loop once more if the flush
                          * flag is set and the conversion function has not
@@ -1481,28 +1481,28 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
                          *
                          * (continue converting by breaking out of only the inner loop)
                          */
-                        if(!converterSawEndOfInput) {
-                            break;
+                        यदि(!converter_Saw_अन्तः_सम्बन्धि_निवेशः) {
+                            भङ्ग;
                         }
 
                         /* reset the converter without calling the callback function */
-                        _reset(cnv, UCNV_RESET_TO_UNICODE, false);
+                        _reset(cnv, UCNV_RESET_गन्तव्यम्_UNICODE, असत्य);
                     }
 
                     /* done successfully */
-                    return;
+                    प्रत्यागम;
                 }
             }
 
             /* U_FAILURE(*err) */
             {
-                UErrorCode e;
+                UError_संहिता e;
 
-                if( calledCallback ||
-                    (e=*err)==U_BUFFER_OVERFLOW_ERROR ||
-                    (e!=U_INVALID_CHAR_FOUND &&
-                     e!=U_ILLEGAL_CHAR_FOUND &&
-                     e!=U_TRUNCATED_CHAR_FOUND &&
+                यदि( calledCallback ||
+                    (e=*err)==U_बफर_अतिप्रवाहः_ERROR ||
+                    (e!=U_INVALID_CHAR_प्राप्तम् &&
+                     e!=U_ILLEGAL_CHAR_प्राप्तम् &&
+                     e!=U_TRUNCATED_CHAR_प्राप्तम् &&
                      e!=U_ILLEGAL_ESCAPE_SEQUENCE &&
                      e!=U_UNSUPPORTED_ESCAPE_SEQUENCE)
                 ) {
@@ -1518,44 +1518,44 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
                      * copied back into the UConverter
                      * and the real arguments must be restored
                      */
-                    if(realSource!=nullptr) {
+                    यदि(realSource!=शून्यसूचकः) {
                         int32_t length;
 
-                        U_ASSERT(cnv->preToULength==0);
+                        U_ASSERT(cnv->pre_गन्तव्यम्_ULength==0);
 
-                        length = static_cast<int32_t>(pArgs->sourceLimit - pArgs->source);
-                        if(length>0) {
-                            uprv_memcpy(cnv->preToU, pArgs->source, length);
-                            cnv->preToULength = static_cast<int8_t>(-length);
+                        length = static_cast<int32_t>(p_तर्काः->source_सीमा - p_तर्काः->source);
+                        यदि(length>0) {
+                            uprv_memcpy(cnv->pre_गन्तव्यम्_U, p_तर्काः->source, length);
+                            cnv->pre_गन्तव्यम्_ULength = static_cast<int8_t>(-length);
                         }
 
-                        pArgs->source=realSource;
-                        pArgs->sourceLimit=realSourceLimit;
-                        pArgs->flush=realFlush;
+                        p_तर्काः->source=realSource;
+                        p_तर्काः->source_सीमा=real_Source_सीमा;
+                        p_तर्काः->flush=realFlush;
                     }
 
-                    return;
+                    प्रत्यागम;
                 }
             }
 
             /* copy toUBytes[] to invalidCharBuffer[] */
-            errorInputLength=cnv->invalidCharLength=cnv->toULength;
-            if(errorInputLength>0) {
-                uprv_memcpy(cnv->invalidCharBuffer, cnv->toUBytes, errorInputLength);
+            error_निवेशः_दीर्घता=cnv->invalid_Char_दीर्घता=cnv->गन्तव्यम्_ULength;
+            यदि(error_निवेशः_दीर्घता>0) {
+                uprv_memcpy(cnv->invalid_Char_बफर, cnv->गन्तव्यम्_UBytes, error_निवेशः_दीर्घता);
             }
 
             /* set the converter state to deal with the next character */
-            cnv->toULength=0;
+            cnv->गन्तव्यम्_ULength=0;
 
             /* call the callback function */
-            if(cnv->toUCallbackReason==UCNV_ILLEGAL && *err==U_INVALID_CHAR_FOUND) {
-                cnv->toUCallbackReason = UCNV_UNASSIGNED;
+            यदि(cnv->गन्तव्यम्_UCallback_Reason==UCNV_ILLEGAL && *err==U_INVALID_CHAR_प्राप्तम्) {
+                cnv->गन्तव्यम्_UCallback_Reason = UCNV_UNASSIGNED;
             }
-            cnv->fromCharErrorBehaviour(cnv->toUContext, pArgs,
-                cnv->invalidCharBuffer, errorInputLength,
-                cnv->toUCallbackReason,
+            cnv->fromCharErrorBehaviour(cnv->गन्तव्यम्_UContext, p_तर्काः,
+                cnv->invalid_Char_बफर, error_निवेशः_दीर्घता,
+                cnv->गन्तव्यम्_UCallback_Reason,
                 err);
-            cnv->toUCallbackReason = UCNV_ILLEGAL; /* reset to default value */
+            cnv->गन्तव्यम्_UCallback_Reason = UCNV_ILLEGAL; /* reset to default value */
 
             /*
              * loop back to the offset handling
@@ -1564,7 +1564,7 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
              * that a callback was called;
              * if the callback did not resolve the error, then we return
              */
-            calledCallback=true;
+            calledCallback=सत्य;
         }
     }
 }
@@ -1574,90 +1574,90 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
  * Call this function if(cnv->UCharErrorBufferLength>0).
  * @return true if overflow
  */
-static UBool
-ucnv_outputOverflowToUnicode(UConverter *cnv,
-                             char16_t **target, const char16_t *targetLimit,
+स्थिर UBool
+ucnv_output_अतिप्रवाहः_गन्तव्यम्_Unicode(UConverter *cnv,
+                             char16_t **target, ध्रुव char16_t *target_सीमा,
                              int32_t **pOffsets,
-                             UErrorCode *err) {
+                             UError_संहिता *err) {
     int32_t *offsets;
-    char16_t *overflow, *t;
+    char16_t *अतिप्रवाहः, *t;
     int32_t i, length;
 
     t=*target;
-    if(pOffsets!=nullptr) {
+    यदि(pOffsets!=शून्यसूचकः) {
         offsets=*pOffsets;
-    } else {
-        offsets=nullptr;
+    } अन्यथा {
+        offsets=शून्यसूचकः;
     }
 
-    overflow=cnv->UCharErrorBuffer;
-    length=cnv->UCharErrorBufferLength;
+    अतिप्रवाहः=cnv->UChar_Error_बफर;
+    length=cnv->UChar_Error_बफर_दीर्घता;
     i=0;
-    while(i<length) {
-        if(t==targetLimit) {
+    यावत्(i<length) {
+        यदि(t==target_सीमा) {
             /* the overflow buffer contains too much, keep the rest */
             int32_t j=0;
 
-            do {
-                overflow[j++]=overflow[i++];
-            } while(i<length);
+            कुरु {
+                अतिप्रवाहः[j++]=अतिप्रवाहः[i++];
+            } यावत्(i<length);
 
-            cnv->UCharErrorBufferLength = static_cast<int8_t>(j);
+            cnv->UChar_Error_बफर_दीर्घता = static_cast<int8_t>(j);
             *target=t;
-            if(offsets!=nullptr) {
+            यदि(offsets!=शून्यसूचकः) {
                 *pOffsets=offsets;
             }
-            *err=U_BUFFER_OVERFLOW_ERROR;
-            return true;
+            *err=U_बफर_अतिप्रवाहः_ERROR;
+            प्रत्यागम सत्य;
         }
 
         /* copy the overflow contents to the target */
-        *t++=overflow[i++];
-        if(offsets!=nullptr) {
+        *t++=अतिप्रवाहः[i++];
+        यदि(offsets!=शून्यसूचकः) {
             *offsets++=-1; /* no source index available for old output */
         }
     }
 
     /* the overflow buffer is completely copied to the target */
-    cnv->UCharErrorBufferLength=0;
+    cnv->UChar_Error_बफर_दीर्घता=0;
     *target=t;
-    if(offsets!=nullptr) {
+    यदि(offsets!=शून्यसूचकः) {
         *pOffsets=offsets;
     }
-    return false;
+    प्रत्यागम असत्य;
 }
 
-U_CAPI void U_EXPORT2
-ucnv_toUnicode(UConverter *cnv,
-               char16_t **target, const char16_t *targetLimit,
-               const char **source, const char *sourceLimit,
+U_CAPI शून्य U_EXPORT2
+ucnv_गन्तव्यम्_Unicode(UConverter *cnv,
+               char16_t **target, ध्रुव char16_t *target_सीमा,
+               ध्रुव वर्ण **source, ध्रुव वर्ण *source_सीमा,
                int32_t *offsets,
                UBool flush,
-               UErrorCode *err) {
-    UConverterToUnicodeArgs args;
-    const char *s;
+               UError_संहिता *err) {
+    UConverter_गन्तव्यम्_Unicode_तर्काः तर्काः_2;
+    ध्रुव वर्ण *s;
     char16_t *t;
 
     /* check parameters */
-    if(err==nullptr || U_FAILURE(*err)) {
-        return;
+    यदि(err==शून्यसूचकः || U_FAILURE(*err)) {
+        प्रत्यागम;
     }
 
-    if(cnv==nullptr || target==nullptr || source==nullptr) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    यदि(cnv==शून्यसूचकः || target==शून्यसूचकः || source==शून्यसूचकः) {
+        *err=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
 
     s=*source;
     t=*target;
 
-    if ((const void *)U_MAX_PTR(targetLimit) == (const void *)targetLimit) {
+    यदि ((ध्रुव शून्य *)U_MAX_PTR(target_सीमा) == (ध्रुव शून्य *)target_सीमा) {
         /*
         Prevent code from going into an infinite loop in case we do hit this
         limit. The limit pointer is expected to be on a char16_t * boundary.
         This also prevents the next argument check from failing.
         */
-        targetLimit = (const char16_t *)(((const char *)targetLimit) - 1);
+        target_सीमा = (ध्रुव char16_t *)(((ध्रुव वर्ण *)target_सीमा) - 1);
     }
 
     /*
@@ -1679,27 +1679,27 @@ ucnv_toUnicode(UConverter *cnv,
      * 3) Make sure that the user didn't incorrectly cast a char16_t * pointer
      * to a char * pointer and provide an incomplete char16_t code unit.
      */
-    if (sourceLimit<s || targetLimit<t ||
-        ((size_t)(sourceLimit-s)>(size_t)0x7fffffff && sourceLimit>s) ||
-        ((size_t)(targetLimit-t)>(size_t)0x3fffffff && targetLimit>t) ||
-        (((const char *)targetLimit-(const char *)t) & 1) != 0
+    यदि (source_सीमा<s || target_सीमा<t ||
+        ((size_t)(source_सीमा-s)>(size_t)0x7fffffff && source_सीमा>s) ||
+        ((size_t)(target_सीमा-t)>(size_t)0x3fffffff && target_सीमा>t) ||
+        (((ध्रुव वर्ण *)target_सीमा-(ध्रुव वर्ण *)t) & 1) != 0
     ) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *err=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
     
     /* output the target overflow buffer */
-    if( cnv->UCharErrorBufferLength>0 &&
-        ucnv_outputOverflowToUnicode(cnv, target, targetLimit, &offsets, err)
+    यदि( cnv->UChar_Error_बफर_दीर्घता>0 &&
+        ucnv_output_अतिप्रवाहः_गन्तव्यम्_Unicode(cnv, target, target_सीमा, &offsets, err)
     ) {
         /* U_BUFFER_OVERFLOW_ERROR */
-        return;
+        प्रत्यागम;
     }
     /* *target may have moved, therefore stop using t */
 
-    if(!flush && s==sourceLimit && cnv->preToULength>=0) {
+    यदि(!flush && s==source_सीमा && cnv->pre_गन्तव्यम्_ULength>=0) {
         /* the overflow buffer is emptied and there is no new input: we are done */
-        return;
+        प्रत्यागम;
     }
 
     /*
@@ -1711,171 +1711,171 @@ ucnv_toUnicode(UConverter *cnv,
      */
 
     /* prepare the converter arguments */
-    args.converter=cnv;
-    args.flush=flush;
-    args.offsets=offsets;
-    args.source=s;
-    args.sourceLimit=sourceLimit;
-    args.target=*target;
-    args.targetLimit=targetLimit;
-    args.size=sizeof(args);
+    तर्काः_2.converter=cnv;
+    तर्काः_2.flush=flush;
+    तर्काः_2.offsets=offsets;
+    तर्काः_2.source=s;
+    तर्काः_2.source_सीमा=source_सीमा;
+    तर्काः_2.target=*target;
+    तर्काः_2.target_सीमा=target_सीमा;
+    तर्काः_2.size=परिमाण(तर्काः_2);
 
-    _toUnicodeWithCallback(&args, err);
+    गन्तव्यम्_Unicode_With_Callback(&तर्काः_2, err);
 
-    *source=args.source;
-    *target=args.target;
+    *source=तर्काः_2.source;
+    *target=तर्काः_2.target;
 }
 
 /* ucnv_to/fromUChars() ----------------------------------------------------- */
 
 U_CAPI int32_t U_EXPORT2
 ucnv_fromUChars(UConverter *cnv,
-                char *dest, int32_t destCapacity,
-                const char16_t *src, int32_t srcLength,
-                UErrorCode *pErrorCode) {
-    const char16_t *srcLimit;
-    char *originalDest, *destLimit;
-    int32_t destLength;
+                वर्ण *dest, int32_t dest_क्षमता,
+                ध्रुव char16_t *src, int32_t src_दीर्घता,
+                UError_संहिता *p_Error_संहिता) {
+    ध्रुव char16_t *src_सीमा;
+    वर्ण *originalDest, *dest_सीमा;
+    int32_t dest_दीर्घता;
 
     /* check arguments */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    यदि(p_Error_संहिता==शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम 0;
     }
 
-    if( cnv==nullptr ||
-        destCapacity<0 || (destCapacity>0 && dest==nullptr) ||
-        srcLength<-1 || (srcLength!=0 && src==nullptr)
+    यदि( cnv==शून्यसूचकः ||
+        dest_क्षमता<0 || (dest_क्षमता>0 && dest==शून्यसूचकः) ||
+        src_दीर्घता<-1 || (src_दीर्घता!=0 && src==शून्यसूचकः)
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0;
     }
 
     /* initialize */
     ucnv_resetFromUnicode(cnv);
     originalDest=dest;
-    if(srcLength==-1) {
-        srcLength=u_strlen(src);
+    यदि(src_दीर्घता==-1) {
+        src_दीर्घता=u_strlen(src);
     }
-    if(srcLength>0) {
-        srcLimit=src+srcLength;
-        destCapacity=pinCapacity(dest, destCapacity);
-        destLimit=dest+destCapacity;
+    यदि(src_दीर्घता>0) {
+        src_सीमा=src+src_दीर्घता;
+        dest_क्षमता=pin_क्षमता(dest, dest_क्षमता);
+        dest_सीमा=dest+dest_क्षमता;
 
         /* perform the conversion */
-        UErrorCode bufferStatus = U_ZERO_ERROR;
-        ucnv_fromUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, true, &bufferStatus);
-        destLength=(int32_t)(dest-originalDest);
+        UError_संहिता बफर_स्थितिः = U_ZERO_ERROR;
+        ucnv_fromUnicode(cnv, &dest, dest_सीमा, &src, src_सीमा, शून्यसूचकः, सत्य, &बफर_स्थितिः);
+        dest_दीर्घता=(int32_t)(dest-originalDest);
 
         /* if an overflow occurs, then get the preflighting length */
-        if(bufferStatus==U_BUFFER_OVERFLOW_ERROR) {
-            char buffer[1024];
+        यदि(बफर_स्थितिः==U_बफर_अतिप्रवाहः_ERROR) {
+            वर्ण बफर[1024];
 
-            destLimit=buffer+sizeof(buffer);
-            do {
-                dest=buffer;
-                bufferStatus=U_ZERO_ERROR;
-                ucnv_fromUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, true, &bufferStatus);
-                destLength+=(int32_t)(dest-buffer);
-            } while(bufferStatus==U_BUFFER_OVERFLOW_ERROR);
+            dest_सीमा=बफर+परिमाण(बफर);
+            कुरु {
+                dest=बफर;
+                बफर_स्थितिः=U_ZERO_ERROR;
+                ucnv_fromUnicode(cnv, &dest, dest_सीमा, &src, src_सीमा, शून्यसूचकः, सत्य, &बफर_स्थितिः);
+                dest_दीर्घता+=(int32_t)(dest-बफर);
+            } यावत्(बफर_स्थितिः==U_बफर_अतिप्रवाहः_ERROR);
         }
-        if (U_FAILURE(bufferStatus)) {
-            *pErrorCode = bufferStatus;
+        यदि (U_FAILURE(बफर_स्थितिः)) {
+            *p_Error_संहिता = बफर_स्थितिः;
         }
-    } else {
-        destLength=0;
+    } अन्यथा {
+        dest_दीर्घता=0;
     }
 
-    return u_terminateChars(originalDest, destCapacity, destLength, pErrorCode);
+    प्रत्यागम u_terminateChars(originalDest, dest_क्षमता, dest_दीर्घता, p_Error_संहिता);
 }
 
 U_CAPI int32_t U_EXPORT2
-ucnv_toUChars(UConverter *cnv,
-              char16_t *dest, int32_t destCapacity,
-              const char *src, int32_t srcLength,
-              UErrorCode *pErrorCode) {
-    const char *srcLimit;
-    char16_t *originalDest, *destLimit;
-    int32_t destLength;
+ucnv_गन्तव्यम्_UChars(UConverter *cnv,
+              char16_t *dest, int32_t dest_क्षमता,
+              ध्रुव वर्ण *src, int32_t src_दीर्घता,
+              UError_संहिता *p_Error_संहिता) {
+    ध्रुव वर्ण *src_सीमा;
+    char16_t *originalDest, *dest_सीमा;
+    int32_t dest_दीर्घता;
 
     /* check arguments */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    यदि(p_Error_संहिता==शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम 0;
     }
 
-    if( cnv==nullptr ||
-        destCapacity<0 || (destCapacity>0 && dest==nullptr) ||
-        srcLength<-1 || (srcLength!=0 && src==nullptr))
+    यदि( cnv==शून्यसूचकः ||
+        dest_क्षमता<0 || (dest_क्षमता>0 && dest==शून्यसूचकः) ||
+        src_दीर्घता<-1 || (src_दीर्घता!=0 && src==शून्यसूचकः))
     {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0;
     }
 
     /* initialize */
-    ucnv_resetToUnicode(cnv);
+    ucnv_reset_गन्तव्यम्_Unicode(cnv);
     originalDest=dest;
-    if(srcLength==-1) {
-        srcLength=(int32_t)uprv_strlen(src);
+    यदि(src_दीर्घता==-1) {
+        src_दीर्घता=(int32_t)uprv_strlen(src);
     }
-    if(srcLength>0) {
-        srcLimit=src+srcLength;
-        destCapacity=pinCapacity(dest, destCapacity);
-        destLimit=dest+destCapacity;
+    यदि(src_दीर्घता>0) {
+        src_सीमा=src+src_दीर्घता;
+        dest_क्षमता=pin_क्षमता(dest, dest_क्षमता);
+        dest_सीमा=dest+dest_क्षमता;
 
         /* perform the conversion */
-        UErrorCode bufferStatus = U_ZERO_ERROR;
-        ucnv_toUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, true, &bufferStatus);
-        destLength=(int32_t)(dest-originalDest);
+        UError_संहिता बफर_स्थितिः = U_ZERO_ERROR;
+        ucnv_गन्तव्यम्_Unicode(cnv, &dest, dest_सीमा, &src, src_सीमा, शून्यसूचकः, सत्य, &बफर_स्थितिः);
+        dest_दीर्घता=(int32_t)(dest-originalDest);
 
         /* if an overflow occurs, then get the preflighting length */
-        if(bufferStatus==U_BUFFER_OVERFLOW_ERROR)
+        यदि(बफर_स्थितिः==U_बफर_अतिप्रवाहः_ERROR)
         {
-            char16_t buffer[1024];
+            char16_t बफर[1024];
 
-            destLimit=buffer+UPRV_LENGTHOF(buffer);
-            do {
-                dest=buffer;
-                bufferStatus=U_ZERO_ERROR;
-                ucnv_toUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, true, &bufferStatus);
-                destLength+=(int32_t)(dest-buffer);
+            dest_सीमा=बफर+UPRV_LENGTHOF(बफर);
+            कुरु {
+                dest=बफर;
+                बफर_स्थितिः=U_ZERO_ERROR;
+                ucnv_गन्तव्यम्_Unicode(cnv, &dest, dest_सीमा, &src, src_सीमा, शून्यसूचकः, सत्य, &बफर_स्थितिः);
+                dest_दीर्घता+=(int32_t)(dest-बफर);
             }
-            while(bufferStatus==U_BUFFER_OVERFLOW_ERROR);
+            यावत्(बफर_स्थितिः==U_बफर_अतिप्रवाहः_ERROR);
         }
-        if (U_FAILURE(bufferStatus)) {
-            *pErrorCode = bufferStatus;
+        यदि (U_FAILURE(बफर_स्थितिः)) {
+            *p_Error_संहिता = बफर_स्थितिः;
         }
-    } else {
-        destLength=0;
+    } अन्यथा {
+        dest_दीर्घता=0;
     }
 
-    return u_terminateUChars(originalDest, destCapacity, destLength, pErrorCode);
+    प्रत्यागम u_terminateUChars(originalDest, dest_क्षमता, dest_दीर्घता, p_Error_संहिता);
 }
 
 /* ucnv_getNextUChar() ------------------------------------------------------ */
 
 U_CAPI UChar32 U_EXPORT2
-ucnv_getNextUChar(UConverter *cnv,
-                  const char **source, const char *sourceLimit,
-                  UErrorCode *err) {
-    UConverterToUnicodeArgs args;
-    char16_t buffer[U16_MAX_LENGTH];
-    const char *s;
+ucnv_get_अग्र_UChar(UConverter *cnv,
+                  ध्रुव वर्ण **source, ध्रुव वर्ण *source_सीमा,
+                  UError_संहिता *err) {
+    UConverter_गन्तव्यम्_Unicode_तर्काः तर्काः_2;
+    char16_t बफर[U16_MAX_दीर्घता];
+    ध्रुव वर्ण *s;
     UChar32 c;
     int32_t i, length;
 
     /* check parameters */
-    if(err==nullptr || U_FAILURE(*err)) {
-        return 0xffff;
+    यदि(err==शून्यसूचकः || U_FAILURE(*err)) {
+        प्रत्यागम 0xffff;
     }
 
-    if(cnv==nullptr || source==nullptr) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0xffff;
+    यदि(cnv==शून्यसूचकः || source==शून्यसूचकः) {
+        *err=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0xffff;
     }
 
     s=*source;
-    if(sourceLimit<s) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0xffff;
+    यदि(source_सीमा<s) {
+        *err=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0xffff;
     }
 
     /*
@@ -1890,30 +1890,30 @@ ucnv_getNextUChar(UConverter *cnv,
      * consumed or the target filled (unless an error occurs).
      * An adjustment would be sourceLimit=t+0x7fffffff; for example.
      */
-    if(((size_t)(sourceLimit-s)>(size_t)0x7fffffff && sourceLimit>s)) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0xffff;
+    यदि(((size_t)(source_सीमा-s)>(size_t)0x7fffffff && source_सीमा>s)) {
+        *err=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0xffff;
     }
 
     c=U_SENTINEL;
 
     /* flush the target overflow buffer */
-    if(cnv->UCharErrorBufferLength>0) {
-        char16_t *overflow;
+    यदि(cnv->UChar_Error_बफर_दीर्घता>0) {
+        char16_t *अतिप्रवाहः;
 
-        overflow=cnv->UCharErrorBuffer;
+        अतिप्रवाहः=cnv->UChar_Error_बफर;
         i=0;
-        length=cnv->UCharErrorBufferLength;
-        U16_NEXT(overflow, i, length, c);
+        length=cnv->UChar_Error_बफर_दीर्घता;
+        U16_अग्र(अतिप्रवाहः, i, length, c);
 
         /* move the remaining overflow contents up to the beginning */
-        if((cnv->UCharErrorBufferLength=(int8_t)(length-i))>0) {
-            uprv_memmove(cnv->UCharErrorBuffer, cnv->UCharErrorBuffer+i,
-                         cnv->UCharErrorBufferLength*U_SIZEOF_UCHAR);
+        यदि((cnv->UChar_Error_बफर_दीर्घता=(int8_t)(length-i))>0) {
+            uprv_memmove(cnv->UChar_Error_बफर, cnv->UChar_Error_बफर+i,
+                         cnv->UChar_Error_बफर_दीर्घता*U_SIZEOF_UCHAR);
         }
 
-        if(!U16_IS_LEAD(c) || i<length) {
-            return c;
+        यदि(!U16_IS_LEAD(c) || i<length) {
+            प्रत्यागम c;
         }
         /*
          * Continue if the overflow buffer contained only a lead surrogate,
@@ -1930,16 +1930,16 @@ ucnv_getNextUChar(UConverter *cnv,
      */
 
     /* prepare the converter arguments */
-    args.converter=cnv;
-    args.flush=true;
-    args.offsets=nullptr;
-    args.source=s;
-    args.sourceLimit=sourceLimit;
-    args.target=buffer;
-    args.targetLimit=buffer+1;
-    args.size=sizeof(args);
+    तर्काः_2.converter=cnv;
+    तर्काः_2.flush=सत्य;
+    तर्काः_2.offsets=शून्यसूचकः;
+    तर्काः_2.source=s;
+    तर्काः_2.source_सीमा=source_सीमा;
+    तर्काः_2.target=बफर;
+    तर्काः_2.target_सीमा=बफर+1;
+    तर्काः_2.size=परिमाण(तर्काः_2);
 
-    if(c<0) {
+    यदि(c<0) {
         /*
          * call the native getNextUChar() implementation if we are
          * at a character boundary (toULength==0)
@@ -1948,15 +1948,15 @@ ucnv_getNextUChar(UConverter *cnv,
          * U_TRUNCATED_CHAR_FOUND for truncated input,
          * in addition to setting toULength/toUBytes[]
          */
-        if(cnv->toULength==0 && cnv->sharedData->impl->getNextUChar!=nullptr) {
-            c=cnv->sharedData->impl->getNextUChar(&args, err);
-            *source=s=args.source;
-            if(*err==U_INDEX_OUTOFBOUNDS_ERROR) {
+        यदि(cnv->गन्तव्यम्_ULength==0 && cnv->shared_दत्त->impl->get_अग्र_UChar!=शून्यसूचकः) {
+            c=cnv->shared_दत्त->impl->get_अग्र_UChar(&तर्काः_2, err);
+            *source=s=तर्काः_2.source;
+            यदि(*err==U_सूचकांक_OUTOFBOUNDS_ERROR) {
                 /* reset the converter without calling the callback function */
-                _reset(cnv, UCNV_RESET_TO_UNICODE, false);
-                return 0xffff; /* no output */
-            } else if(U_SUCCESS(*err) && c>=0) {
-                return c;
+                _reset(cnv, UCNV_RESET_गन्तव्यम्_UNICODE, असत्य);
+                प्रत्यागम 0xffff; /* no output */
+            } अन्यथा यदि(U_SUCCESS(*err) && c>=0) {
+                प्रत्यागम c;
             /*
              * else fall through to use _toUnicode() because
              *   UCNV_GET_NEXT_UCHAR_USE_TO_U: the native function did not want to handle it after all
@@ -1966,64 +1966,64 @@ ucnv_getNextUChar(UConverter *cnv,
         }
 
         /* convert to one char16_t in buffer[0], or handle getNextUChar() errors */
-        _toUnicodeWithCallback(&args, err);
+        गन्तव्यम्_Unicode_With_Callback(&तर्काः_2, err);
 
-        if(*err==U_BUFFER_OVERFLOW_ERROR) {
+        यदि(*err==U_बफर_अतिप्रवाहः_ERROR) {
             *err=U_ZERO_ERROR;
         }
 
         i=0;
-        length=(int32_t)(args.target-buffer);
-    } else {
+        length=(int32_t)(तर्काः_2.target-बफर);
+    } अन्यथा {
         /* write the lead surrogate from the overflow buffer */
-        buffer[0]=(char16_t)c;
-        args.target=buffer+1;
+        बफर[0]=(char16_t)c;
+        तर्काः_2.target=बफर+1;
         i=0;
         length=1;
     }
 
     /* buffer contents starts at i and ends before length */
 
-    if(U_FAILURE(*err)) {
+    यदि(U_FAILURE(*err)) {
         c=0xffff; /* no output */
-    } else if(length==0) {
+    } अन्यथा यदि(length==0) {
         /* no input or only state changes */
-        *err=U_INDEX_OUTOFBOUNDS_ERROR;
+        *err=U_सूचकांक_OUTOFBOUNDS_ERROR;
         /* no need to reset explicitly because _toUnicodeWithCallback() did it */
         c=0xffff; /* no output */
-    } else {
-        c=buffer[0];
+    } अन्यथा {
+        c=बफर[0];
         i=1;
-        if(!U16_IS_LEAD(c)) {
+        यदि(!U16_IS_LEAD(c)) {
             /* consume c=buffer[0], done */
-        } else {
+        } अन्यथा {
             /* got a lead surrogate, see if a trail surrogate follows */
             char16_t c2;
 
-            if(cnv->UCharErrorBufferLength>0) {
+            यदि(cnv->UChar_Error_बफर_दीर्घता>0) {
                 /* got overflow output from the conversion */
-                if(U16_IS_TRAIL(c2=cnv->UCharErrorBuffer[0])) {
+                यदि(U16_IS_TRAIL(c2=cnv->UChar_Error_बफर[0])) {
                     /* got a trail surrogate, too */
                     c=U16_GET_SUPPLEMENTARY(c, c2);
 
                     /* move the remaining overflow contents up to the beginning */
-                    if((--cnv->UCharErrorBufferLength)>0) {
-                        uprv_memmove(cnv->UCharErrorBuffer, cnv->UCharErrorBuffer+1,
-                                     cnv->UCharErrorBufferLength*U_SIZEOF_UCHAR);
+                    यदि((--cnv->UChar_Error_बफर_दीर्घता)>0) {
+                        uprv_memmove(cnv->UChar_Error_बफर, cnv->UChar_Error_बफर+1,
+                                     cnv->UChar_Error_बफर_दीर्घता*U_SIZEOF_UCHAR);
                     }
-                } else {
+                } अन्यथा {
                     /* c is an unpaired lead surrogate, just return it */
                 }
-            } else if(args.source<sourceLimit) {
+            } अन्यथा यदि(तर्काः_2.source<source_सीमा) {
                 /* convert once more, to buffer[1] */
-                args.targetLimit=buffer+2;
-                _toUnicodeWithCallback(&args, err);
-                if(*err==U_BUFFER_OVERFLOW_ERROR) {
+                तर्काः_2.target_सीमा=बफर+2;
+                गन्तव्यम्_Unicode_With_Callback(&तर्काः_2, err);
+                यदि(*err==U_बफर_अतिप्रवाहः_ERROR) {
                     *err=U_ZERO_ERROR;
                 }
 
-                length=(int32_t)(args.target-buffer);
-                if(U_SUCCESS(*err) && length==2 && U16_IS_TRAIL(c2=buffer[1])) {
+                length=(int32_t)(तर्काः_2.target-बफर);
+                यदि(U_SUCCESS(*err) && length==2 && U16_IS_TRAIL(c2=बफर[1])) {
                     /* got a trail surrogate, too */
                     c=U16_GET_SUPPLEMENTARY(c, c2);
                     i=2;
@@ -2036,135 +2036,135 @@ ucnv_getNextUChar(UConverter *cnv,
      * move leftover output from buffer[i..length[
      * into the beginning of the overflow buffer
      */
-    if(i<length) {
+    यदि(i<length) {
         /* move further overflow back */
         int32_t delta=length-i;
-        if((length=cnv->UCharErrorBufferLength)>0) {
-            uprv_memmove(cnv->UCharErrorBuffer+delta, cnv->UCharErrorBuffer,
+        यदि((length=cnv->UChar_Error_बफर_दीर्घता)>0) {
+            uprv_memmove(cnv->UChar_Error_बफर+delta, cnv->UChar_Error_बफर,
                          length*U_SIZEOF_UCHAR);
         }
-        cnv->UCharErrorBufferLength=(int8_t)(length+delta);
+        cnv->UChar_Error_बफर_दीर्घता=(int8_t)(length+delta);
 
-        cnv->UCharErrorBuffer[0]=buffer[i++];
-        if(delta>1) {
-            cnv->UCharErrorBuffer[1]=buffer[i];
+        cnv->UChar_Error_बफर[0]=बफर[i++];
+        यदि(delta>1) {
+            cnv->UChar_Error_बफर[1]=बफर[i];
         }
     }
 
-    *source=args.source;
-    return c;
+    *source=तर्काः_2.source;
+    प्रत्यागम c;
 }
 
 /* ucnv_convert() and siblings ---------------------------------------------- */
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
-               char **target, const char *targetLimit,
-               const char **source, const char *sourceLimit,
+               वर्ण **target, ध्रुव वर्ण *target_सीमा,
+               ध्रुव वर्ण **source, ध्रुव वर्ण *source_सीमा,
                char16_t *pivotStart, char16_t **pivotSource,
-               char16_t **pivotTarget, const char16_t *pivotLimit,
+               char16_t **pivotTarget, ध्रुव char16_t *pivot_सीमा,
                UBool reset, UBool flush,
-               UErrorCode *pErrorCode) {
-    char16_t pivotBuffer[CHUNK_SIZE];
-    const char16_t *myPivotSource;
+               UError_संहिता *p_Error_संहिता) {
+    char16_t pivot_बफर[CHUNK_आकार];
+    ध्रुव char16_t *myPivotSource;
     char16_t *myPivotTarget;
-    const char *s;
-    char *t;
+    ध्रुव वर्ण *s;
+    वर्ण *t;
 
-    UConverterToUnicodeArgs toUArgs;
-    UConverterFromUnicodeArgs fromUArgs;
+    UConverter_गन्तव्यम्_Unicode_तर्काः गन्तव्यम्_UArgs;
+    UConverter_From_Unicode_तर्काः fromUArgs;
     UConverterConvert convert;
 
     /* error checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    यदि(p_Error_संहिता==शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम;
     }
 
-    if( targetCnv==nullptr || sourceCnv==nullptr ||
-        source==nullptr || *source==nullptr ||
-        target==nullptr || *target==nullptr || targetLimit==nullptr
+    यदि( targetCnv==शून्यसूचकः || sourceCnv==शून्यसूचकः ||
+        source==शून्यसूचकः || *source==शून्यसूचकः ||
+        target==शून्यसूचकः || *target==शून्यसूचकः || target_सीमा==शून्यसूचकः
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
 
     s=*source;
     t=*target;
-    if((sourceLimit!=nullptr && sourceLimit<s) || targetLimit<t) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    यदि((source_सीमा!=शून्यसूचकः && source_सीमा<s) || target_सीमा<t) {
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
 
     /*
      * Make sure that the buffer sizes do not exceed the number range for
      * int32_t. See ucnv_toUnicode() for a more detailed comment.
      */
-    if(
-        (sourceLimit!=nullptr && ((size_t)(sourceLimit-s)>(size_t)0x7fffffff && sourceLimit>s)) ||
-        ((size_t)(targetLimit-t)>(size_t)0x7fffffff && targetLimit>t)
+    यदि(
+        (source_सीमा!=शून्यसूचकः && ((size_t)(source_सीमा-s)>(size_t)0x7fffffff && source_सीमा>s)) ||
+        ((size_t)(target_सीमा-t)>(size_t)0x7fffffff && target_सीमा>t)
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
     
-    if(pivotStart==nullptr) {
-        if(!flush) {
+    यदि(pivotStart==शून्यसूचकः) {
+        यदि(!flush) {
             /* streaming conversion requires an explicit pivot buffer */
-            *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+            प्रत्यागम;
         }
 
         /* use the stack pivot buffer */
-        myPivotSource=myPivotTarget=pivotStart=pivotBuffer;
+        myPivotSource=myPivotTarget=pivotStart=pivot_बफर;
         pivotSource=(char16_t **)&myPivotSource;
         pivotTarget=&myPivotTarget;
-        pivotLimit=pivotBuffer+CHUNK_SIZE;
-    } else if(  pivotStart>=pivotLimit ||
-                pivotSource==nullptr || *pivotSource==nullptr ||
-                pivotTarget==nullptr || *pivotTarget==nullptr ||
-                pivotLimit==nullptr
+        pivot_सीमा=pivot_बफर+CHUNK_आकार;
+    } अन्यथा यदि(  pivotStart>=pivot_सीमा ||
+                pivotSource==शून्यसूचकः || *pivotSource==शून्यसूचकः ||
+                pivotTarget==शून्यसूचकः || *pivotTarget==शून्यसूचकः ||
+                pivot_सीमा==शून्यसूचकः
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
 
-    if(sourceLimit==nullptr) {
+    यदि(source_सीमा==शून्यसूचकः) {
         /* get limit of single-byte-NUL-terminated source string */
-        sourceLimit=uprv_strchr(*source, 0);
+        source_सीमा=uprv_strchr(*source, 0);
     }
 
-    if(reset) {
-        ucnv_resetToUnicode(sourceCnv);
+    यदि(reset) {
+        ucnv_reset_गन्तव्यम्_Unicode(sourceCnv);
         ucnv_resetFromUnicode(targetCnv);
         *pivotSource=*pivotTarget=pivotStart;
-    } else if(targetCnv->charErrorBufferLength>0) {
+    } अन्यथा यदि(targetCnv->char_Error_बफर_दीर्घता>0) {
         /* output the targetCnv overflow buffer */
-        if(ucnv_outputOverflowFromUnicode(targetCnv, target, targetLimit, nullptr, pErrorCode)) {
+        यदि(ucnv_output_अतिप्रवाहः_From_Unicode(targetCnv, target, target_सीमा, शून्यसूचकः, p_Error_संहिता)) {
             /* U_BUFFER_OVERFLOW_ERROR */
-            return;
+            प्रत्यागम;
         }
         /* *target has moved, therefore stop using t */
 
-        if( !flush &&
+        यदि( !flush &&
             targetCnv->preFromULength>=0 && *pivotSource==*pivotTarget &&
-            sourceCnv->UCharErrorBufferLength==0 && sourceCnv->preToULength>=0 && s==sourceLimit
+            sourceCnv->UChar_Error_बफर_दीर्घता==0 && sourceCnv->pre_गन्तव्यम्_ULength>=0 && s==source_सीमा
         ) {
             /* the fromUnicode overflow buffer is emptied and there is no new input: we are done */
-            return;
+            प्रत्यागम;
         }
     }
 
     /* Is direct-UTF-8 conversion available? */
-    if( sourceCnv->sharedData->staticData->conversionType==UCNV_UTF8 &&
-        targetCnv->sharedData->impl->fromUTF8!=nullptr
+    यदि( sourceCnv->shared_दत्त->static_दत्त->conversionType==UCNV_UTF8 &&
+        targetCnv->shared_दत्त->impl->fromUTF8!=शून्यसूचकः
     ) {
-        convert=targetCnv->sharedData->impl->fromUTF8;
-    } else if( targetCnv->sharedData->staticData->conversionType==UCNV_UTF8 &&
-               sourceCnv->sharedData->impl->toUTF8!=nullptr
+        convert=targetCnv->shared_दत्त->impl->fromUTF8;
+    } अन्यथा यदि( targetCnv->shared_दत्त->static_दत्त->conversionType==UCNV_UTF8 &&
+               sourceCnv->shared_दत्त->impl->गन्तव्यम्_UTF8!=शून्यसूचकः
     ) {
-        convert=sourceCnv->sharedData->impl->toUTF8;
-    } else {
-        convert=nullptr;
+        convert=sourceCnv->shared_दत्त->impl->गन्तव्यम्_UTF8;
+    } अन्यथा {
+        convert=शून्यसूचकः;
     }
 
     /*
@@ -2186,25 +2186,25 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
      * conversion, with function call overhead outweighing the benefits
      * of direct conversion.
      */
-    if(convert!=nullptr && (pivotLimit-pivotStart)>32) {
-        pivotLimit=pivotStart+32;
+    यदि(convert!=शून्यसूचकः && (pivot_सीमा-pivotStart)>32) {
+        pivot_सीमा=pivotStart+32;
     }
 
     /* prepare the converter arguments */
     fromUArgs.converter=targetCnv;
-    fromUArgs.flush=false;
-    fromUArgs.offsets=nullptr;
+    fromUArgs.flush=असत्य;
+    fromUArgs.offsets=शून्यसूचकः;
     fromUArgs.target=*target;
-    fromUArgs.targetLimit=targetLimit;
-    fromUArgs.size=sizeof(fromUArgs);
+    fromUArgs.target_सीमा=target_सीमा;
+    fromUArgs.size=परिमाण(fromUArgs);
 
-    toUArgs.converter=sourceCnv;
-    toUArgs.flush=flush;
-    toUArgs.offsets=nullptr;
-    toUArgs.source=s;
-    toUArgs.sourceLimit=sourceLimit;
-    toUArgs.targetLimit=pivotLimit;
-    toUArgs.size=sizeof(toUArgs);
+    गन्तव्यम्_UArgs.converter=sourceCnv;
+    गन्तव्यम्_UArgs.flush=flush;
+    गन्तव्यम्_UArgs.offsets=शून्यसूचकः;
+    गन्तव्यम्_UArgs.source=s;
+    गन्तव्यम्_UArgs.source_सीमा=source_सीमा;
+    गन्तव्यम्_UArgs.target_सीमा=pivot_सीमा;
+    गन्तव्यम्_UArgs.size=परिमाण(गन्तव्यम्_UArgs);
 
     /*
      * TODO: Consider separating this function into two functions,
@@ -2213,7 +2213,7 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
      *
      * Otherwise stop using s and t from here on.
      */
-    s=t=nullptr;
+    s=t=शून्यसूचकः;
 
     /*
      * conversion loop
@@ -2226,7 +2226,7 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
      *
      * The targetCnv overflow buffer is flushed out only once before the loop.
      */
-    for(;;) {
+    प्रति(;;) {
         /*
          * if(pivot not empty or error or replay or flush fromUnicode) {
          *   fromUnicode(pivot -> target);
@@ -2235,18 +2235,18 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          * For pivoting conversion; and for direct conversion for
          * error callback handling and flushing the replay buffer.
          */
-        if( *pivotSource<*pivotTarget ||
-            U_FAILURE(*pErrorCode) ||
+        यदि( *pivotSource<*pivotTarget ||
+            U_FAILURE(*p_Error_संहिता) ||
             targetCnv->preFromULength<0 ||
             fromUArgs.flush
         ) {
             fromUArgs.source=*pivotSource;
-            fromUArgs.sourceLimit=*pivotTarget;
-            _fromUnicodeWithCallback(&fromUArgs, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
+            fromUArgs.source_सीमा=*pivotTarget;
+            _fromUnicodeWithCallback(&fromUArgs, p_Error_संहिता);
+            यदि(U_FAILURE(*p_Error_संहिता)) {
                 /* target overflow, or conversion error */
                 *pivotSource=(char16_t *)fromUArgs.source;
-                break;
+                भङ्ग;
             }
 
             /*
@@ -2265,12 +2265,12 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          * }
          */
         /* output the sourceCnv overflow buffer */
-        if(sourceCnv->UCharErrorBufferLength>0) {
-            if(ucnv_outputOverflowToUnicode(sourceCnv, pivotTarget, pivotLimit, nullptr, pErrorCode)) {
+        यदि(sourceCnv->UChar_Error_बफर_दीर्घता>0) {
+            यदि(ucnv_output_अतिप्रवाहः_गन्तव्यम्_Unicode(sourceCnv, pivotTarget, pivot_सीमा, शून्यसूचकः, p_Error_संहिता)) {
                 /* U_BUFFER_OVERFLOW_ERROR */
-                *pErrorCode=U_ZERO_ERROR;
+                *p_Error_संहिता=U_ZERO_ERROR;
             }
-            continue;
+            अनुवर्त;
         }
 
         /*
@@ -2280,12 +2280,12 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          * have been called with the flush flag set if the ucnv_convertEx()
          * caller set it.
          */
-        if( toUArgs.source==sourceLimit &&
-            sourceCnv->preToULength>=0 && sourceCnv->toULength==0 &&
+        यदि( गन्तव्यम्_UArgs.source==source_सीमा &&
+            sourceCnv->pre_गन्तव्यम्_ULength>=0 && sourceCnv->गन्तव्यम्_ULength==0 &&
             (!flush || fromUArgs.flush)
         ) {
             /* done successfully */
-            break;
+            भङ्ग;
         }
 
         /*
@@ -2293,16 +2293,16 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          * but not if continuing a partial match
          * or flushing the toUnicode replay buffer
          */
-        if(convert!=nullptr && targetCnv->preFromUFirstCP<0 && sourceCnv->preToULength==0) {
-            if(*pErrorCode==U_USING_DEFAULT_WARNING) {
+        यदि(convert!=शून्यसूचकः && targetCnv->preFromUFirstCP<0 && sourceCnv->pre_गन्तव्यम्_ULength==0) {
+            यदि(*p_Error_संहिता==U_USING_DEFAULT_WARNING) {
                 /* remove a warning that may be set by this function */
-                *pErrorCode=U_ZERO_ERROR;
+                *p_Error_संहिता=U_ZERO_ERROR;
             }
-            convert(&fromUArgs, &toUArgs, pErrorCode);
-            if(*pErrorCode==U_BUFFER_OVERFLOW_ERROR) {
-                break;
-            } else if(U_FAILURE(*pErrorCode)) {
-                if(sourceCnv->toULength>0) {
+            convert(&fromUArgs, &गन्तव्यम्_UArgs, p_Error_संहिता);
+            यदि(*p_Error_संहिता==U_बफर_अतिप्रवाहः_ERROR) {
+                भङ्ग;
+            } अन्यथा यदि(U_FAILURE(*p_Error_संहिता)) {
+                यदि(sourceCnv->गन्तव्यम्_ULength>0) {
                     /*
                      * Fall through to calling _toUnicodeWithCallback()
                      * for callback handling.
@@ -2312,7 +2312,7 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
                      * which indicates a toUnicode error to the caller
                      * (*pivotSource==pivotStart shows no pivot UChars consumed).
                      */
-                } else {
+                } अन्यथा {
                     /*
                      * Indicate a fromUnicode error to the caller
                      * (*pivotSource>pivotStart shows some pivot UChars consumed).
@@ -2322,37 +2322,37 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
                      * Loop around to calling _fromUnicodeWithCallbacks()
                      * for callback handling.
                      */
-                    continue;
+                    अनुवर्त;
                 }
-            } else if(*pErrorCode==U_USING_DEFAULT_WARNING) {
+            } अन्यथा यदि(*p_Error_संहिता==U_USING_DEFAULT_WARNING) {
                 /*
                  * No error, but the implementation requested to temporarily
                  * fall back to pivoting.
                  */
-                *pErrorCode=U_ZERO_ERROR;
+                *p_Error_संहिता=U_ZERO_ERROR;
             /*
              * The following else branches are almost identical to the end-of-input
              * handling in _toUnicodeWithCallback().
              * Avoid calling it just for the end of input.
              */
-            } else if(flush && sourceCnv->toULength>0) { /* flush==toUArgs.flush */
+            } अन्यथा यदि(flush && sourceCnv->गन्तव्यम्_ULength>0) { /* flush==toUArgs.flush */
                 /*
                  * the entire input stream is consumed
                  * and there is a partial, truncated input sequence left
                  */
 
                 /* inject an error and continue with callback handling */
-                *pErrorCode=U_TRUNCATED_CHAR_FOUND;
-            } else {
+                *p_Error_संहिता=U_TRUNCATED_CHAR_प्राप्तम्;
+            } अन्यथा {
                 /* input consumed */
-                if(flush) {
+                यदि(flush) {
                     /* reset the converters without calling the callback functions */
-                    _reset(sourceCnv, UCNV_RESET_TO_UNICODE, false);
-                    _reset(targetCnv, UCNV_RESET_FROM_UNICODE, false);
+                    _reset(sourceCnv, UCNV_RESET_गन्तव्यम्_UNICODE, असत्य);
+                    _reset(targetCnv, UCNV_RESET_FROM_UNICODE, असत्य);
                 }
 
                 /* done successfully */
-                break;
+                भङ्ग;
             }
         }
         
@@ -2365,16 +2365,16 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          *
          * The pivot buffer is empty and reset.
          */
-        toUArgs.target=pivotStart; /* ==*pivotTarget */
+        गन्तव्यम्_UArgs.target=pivotStart; /* ==*pivotTarget */
         /* toUArgs.targetLimit=pivotLimit; already set before the loop */
-        _toUnicodeWithCallback(&toUArgs, pErrorCode);
-        *pivotTarget=toUArgs.target;
-        if(*pErrorCode==U_BUFFER_OVERFLOW_ERROR) {
+        गन्तव्यम्_Unicode_With_Callback(&गन्तव्यम्_UArgs, p_Error_संहिता);
+        *pivotTarget=गन्तव्यम्_UArgs.target;
+        यदि(*p_Error_संहिता==U_बफर_अतिप्रवाहः_ERROR) {
             /* pivot overflow: continue with the conversion loop */
-            *pErrorCode=U_ZERO_ERROR;
-        } else if(U_FAILURE(*pErrorCode) || (!flush && *pivotTarget==pivotStart)) {
+            *p_Error_संहिता=U_ZERO_ERROR;
+        } अन्यथा यदि(U_FAILURE(*p_Error_संहिता) || (!flush && *pivotTarget==pivotStart)) {
             /* conversion error, or there was nothing left to convert */
-            break;
+            भङ्ग;
         }
         /*
          * else:
@@ -2384,11 +2384,11 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          * Set the fromUnicode flush flag if we flush and if toUnicode has
          * processed the end of the input.
          */
-        if( flush && toUArgs.source==sourceLimit &&
-            sourceCnv->preToULength>=0 &&
-            sourceCnv->UCharErrorBufferLength==0
+        यदि( flush && गन्तव्यम्_UArgs.source==source_सीमा &&
+            sourceCnv->pre_गन्तव्यम्_ULength>=0 &&
+            sourceCnv->UChar_Error_बफर_दीर्घता==0
         ) {
-            fromUArgs.flush=true;
+            fromUArgs.flush=सत्य;
         }
     }
 
@@ -2399,63 +2399,63 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
      * - a conversion error occurred
      */
 
-    *source=toUArgs.source;
+    *source=गन्तव्यम्_UArgs.source;
     *target=fromUArgs.target;
 
     /* terminate the target buffer if possible */
-    if(flush && U_SUCCESS(*pErrorCode)) {
-        if(*target!=targetLimit) {
+    यदि(flush && U_SUCCESS(*p_Error_संहिता)) {
+        यदि(*target!=target_सीमा) {
             **target=0;
-            if(*pErrorCode==U_STRING_NOT_TERMINATED_WARNING) {
-                *pErrorCode=U_ZERO_ERROR;
+            यदि(*p_Error_संहिता==U_STRING_NOT_TERMINATED_WARNING) {
+                *p_Error_संहिता=U_ZERO_ERROR;
             }
-        } else {
-            *pErrorCode=U_STRING_NOT_TERMINATED_WARNING;
+        } अन्यथा {
+            *p_Error_संहिता=U_STRING_NOT_TERMINATED_WARNING;
         }
     }
 }
 
 /* internal implementation of ucnv_convert() etc. with preflighting */
-static int32_t
-ucnv_internalConvert(UConverter *outConverter, UConverter *inConverter,
-                     char *target, int32_t targetCapacity,
-                     const char *source, int32_t sourceLength,
-                     UErrorCode *pErrorCode) {
-    char16_t pivotBuffer[CHUNK_SIZE];
+स्थिर int32_t
+ucnv_आन्तरिकम्_Convert(UConverter *बहिर्गमनम्_Converter, UConverter *अन्तर्_Converter,
+                     वर्ण *target, int32_t target_क्षमता,
+                     ध्रुव वर्ण *source, int32_t source_दीर्घता,
+                     UError_संहिता *p_Error_संहिता) {
+    char16_t pivot_बफर[CHUNK_आकार];
     char16_t *pivot, *pivot2;
 
-    char *myTarget;
-    const char *sourceLimit;
-    const char *targetLimit;
-    int32_t targetLength=0;
+    वर्ण *myTarget;
+    ध्रुव वर्ण *source_सीमा;
+    ध्रुव वर्ण *target_सीमा;
+    int32_t target_दीर्घता=0;
 
     /* set up */
-    if(sourceLength<0) {
-        sourceLimit=uprv_strchr(source, 0);
-    } else {
-        sourceLimit=source+sourceLength;
+    यदि(source_दीर्घता<0) {
+        source_सीमा=uprv_strchr(source, 0);
+    } अन्यथा {
+        source_सीमा=source+source_दीर्घता;
     }
 
     /* if there is no input data, we're done */
-    if(source==sourceLimit) {
-        return u_terminateChars(target, targetCapacity, 0, pErrorCode);
+    यदि(source==source_सीमा) {
+        प्रत्यागम u_terminateChars(target, target_क्षमता, 0, p_Error_संहिता);
     }
 
-    pivot=pivot2=pivotBuffer;
+    pivot=pivot2=pivot_बफर;
     myTarget=target;
-    targetLength=0;
+    target_दीर्घता=0;
 
-    if(targetCapacity>0) {
+    यदि(target_क्षमता>0) {
         /* perform real conversion */
-        targetLimit=target+targetCapacity;
-        ucnv_convertEx(outConverter, inConverter,
-                       &myTarget, targetLimit,
-                       &source, sourceLimit,
-                       pivotBuffer, &pivot, &pivot2, pivotBuffer+CHUNK_SIZE,
-                       false,
-                       true,
-                       pErrorCode);
-        targetLength = static_cast<int32_t>(myTarget - target);
+        target_सीमा=target+target_क्षमता;
+        ucnv_convertEx(बहिर्गमनम्_Converter, अन्तर्_Converter,
+                       &myTarget, target_सीमा,
+                       &source, source_सीमा,
+                       pivot_बफर, &pivot, &pivot2, pivot_बफर+CHUNK_आकार,
+                       असत्य,
+                       सत्य,
+                       p_Error_संहिता);
+        target_दीर्घता = static_cast<int32_t>(myTarget - target);
     }
 
     /*
@@ -2463,375 +2463,375 @@ ucnv_internalConvert(UConverter *outConverter, UConverter *inConverter,
      * to it but continue the conversion in order to store in targetCapacity
      * the number of bytes that was required.
      */
-    if(*pErrorCode==U_BUFFER_OVERFLOW_ERROR || targetCapacity==0)
+    यदि(*p_Error_संहिता==U_बफर_अतिप्रवाहः_ERROR || target_क्षमता==0)
     {
-        char targetBuffer[CHUNK_SIZE];
+        वर्ण target_बफर[CHUNK_आकार];
 
-        targetLimit=targetBuffer+CHUNK_SIZE;
-        do {
-            *pErrorCode=U_ZERO_ERROR;
-            myTarget=targetBuffer;
-            ucnv_convertEx(outConverter, inConverter,
-                           &myTarget, targetLimit,
-                           &source, sourceLimit,
-                           pivotBuffer, &pivot, &pivot2, pivotBuffer+CHUNK_SIZE,
-                           false,
-                           true,
-                           pErrorCode);
-            targetLength += static_cast<int32_t>(myTarget - targetBuffer);
-        } while(*pErrorCode==U_BUFFER_OVERFLOW_ERROR);
+        target_सीमा=target_बफर+CHUNK_आकार;
+        कुरु {
+            *p_Error_संहिता=U_ZERO_ERROR;
+            myTarget=target_बफर;
+            ucnv_convertEx(बहिर्गमनम्_Converter, अन्तर्_Converter,
+                           &myTarget, target_सीमा,
+                           &source, source_सीमा,
+                           pivot_बफर, &pivot, &pivot2, pivot_बफर+CHUNK_आकार,
+                           असत्य,
+                           सत्य,
+                           p_Error_संहिता);
+            target_दीर्घता += static_cast<int32_t>(myTarget - target_बफर);
+        } यावत्(*p_Error_संहिता==U_बफर_अतिप्रवाहः_ERROR);
 
         /* done with preflighting, set warnings and errors as appropriate */
-        return u_terminateChars(target, targetCapacity, targetLength, pErrorCode);
+        प्रत्यागम u_terminateChars(target, target_क्षमता, target_दीर्घता, p_Error_संहिता);
     }
 
     /* no need to call u_terminateChars() because ucnv_convertEx() took care of that */
-    return targetLength;
+    प्रत्यागम target_दीर्घता;
 }
 
 U_CAPI int32_t U_EXPORT2
-ucnv_convert(const char *toConverterName, const char *fromConverterName,
-             char *target, int32_t targetCapacity,
-             const char *source, int32_t sourceLength,
-             UErrorCode *pErrorCode) {
+ucnv_convert(ध्रुव वर्ण *गन्तव्यम्_Converter_Name, ध्रुव वर्ण *fromConverterName,
+             वर्ण *target, int32_t target_क्षमता,
+             ध्रुव वर्ण *source, int32_t source_दीर्घता,
+             UError_संहिता *p_Error_संहिता) {
     UConverter in, out; /* stack-allocated */
-    UConverter *inConverter, *outConverter;
-    int32_t targetLength;
+    UConverter *अन्तर्_Converter, *बहिर्गमनम्_Converter;
+    int32_t target_दीर्घता;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    यदि(p_Error_संहिता==शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम 0;
     }
 
-    if( source==nullptr || sourceLength<-1 ||
-        targetCapacity<0 || (targetCapacity>0 && target==nullptr)
+    यदि( source==शून्यसूचकः || source_दीर्घता<-1 ||
+        target_क्षमता<0 || (target_क्षमता>0 && target==शून्यसूचकः)
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0;
     }
 
     /* if there is no input data, we're done */
-    if(sourceLength==0 || (sourceLength<0 && *source==0)) {
-        return u_terminateChars(target, targetCapacity, 0, pErrorCode);
+    यदि(source_दीर्घता==0 || (source_दीर्घता<0 && *source==0)) {
+        प्रत्यागम u_terminateChars(target, target_क्षमता, 0, p_Error_संहिता);
     }
 
     /* create the converters */
-    inConverter=ucnv_createConverter(&in, fromConverterName, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    अन्तर्_Converter=ucnv_createConverter(&in, fromConverterName, p_Error_संहिता);
+    यदि(U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम 0;
     }
 
-    outConverter=ucnv_createConverter(&out, toConverterName, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        ucnv_close(inConverter);
-        return 0;
+    बहिर्गमनम्_Converter=ucnv_createConverter(&out, गन्तव्यम्_Converter_Name, p_Error_संहिता);
+    यदि(U_FAILURE(*p_Error_संहिता)) {
+        ucnv_close(अन्तर्_Converter);
+        प्रत्यागम 0;
     }
 
-    targetLength=ucnv_internalConvert(outConverter, inConverter,
-                                      target, targetCapacity,
-                                      source, sourceLength,
-                                      pErrorCode);
+    target_दीर्घता=ucnv_आन्तरिकम्_Convert(बहिर्गमनम्_Converter, अन्तर्_Converter,
+                                      target, target_क्षमता,
+                                      source, source_दीर्घता,
+                                      p_Error_संहिता);
 
-    ucnv_close(inConverter);
-    ucnv_close(outConverter);
+    ucnv_close(अन्तर्_Converter);
+    ucnv_close(बहिर्गमनम्_Converter);
 
-    return targetLength;
+    प्रत्यागम target_दीर्घता;
 }
 
 /* @internal */
-static int32_t
-ucnv_convertAlgorithmic(UBool convertToAlgorithmic,
+स्थिर int32_t
+ucnv_convertAlgorithmic(UBool convert_गन्तव्यम्_Algorithmic,
                         UConverterType algorithmicType,
                         UConverter *cnv,
-                        char *target, int32_t targetCapacity,
-                        const char *source, int32_t sourceLength,
-                        UErrorCode *pErrorCode) {
+                        वर्ण *target, int32_t target_क्षमता,
+                        ध्रुव वर्ण *source, int32_t source_दीर्घता,
+                        UError_संहिता *p_Error_संहिता) {
     UConverter algoConverterStatic; /* stack-allocated */
-    UConverter *algoConverter, *to, *from;
-    int32_t targetLength;
+    UConverter *algoConverter, *गन्तव्यम्, *from;
+    int32_t target_दीर्घता;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    यदि(p_Error_संहिता==शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम 0;
     }
 
-    if( cnv==nullptr || source==nullptr || sourceLength<-1 ||
-        targetCapacity<0 || (targetCapacity>0 && target==nullptr)
+    यदि( cnv==शून्यसूचकः || source==शून्यसूचकः || source_दीर्घता<-1 ||
+        target_क्षमता<0 || (target_क्षमता>0 && target==शून्यसूचकः)
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0;
     }
 
     /* if there is no input data, we're done */
-    if(sourceLength==0 || (sourceLength<0 && *source==0)) {
-        return u_terminateChars(target, targetCapacity, 0, pErrorCode);
+    यदि(source_दीर्घता==0 || (source_दीर्घता<0 && *source==0)) {
+        प्रत्यागम u_terminateChars(target, target_क्षमता, 0, p_Error_संहिता);
     }
 
     /* create the algorithmic converter */
     algoConverter=ucnv_createAlgorithmicConverter(&algoConverterStatic, algorithmicType,
-                                                  "", 0, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+                                                  "", 0, p_Error_संहिता);
+    यदि(U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम 0;
     }
 
     /* reset the other converter */
-    if(convertToAlgorithmic) {
+    यदि(convert_गन्तव्यम्_Algorithmic) {
         /* cnv->Unicode->algo */
-        ucnv_resetToUnicode(cnv);
-        to=algoConverter;
+        ucnv_reset_गन्तव्यम्_Unicode(cnv);
+        गन्तव्यम्=algoConverter;
         from=cnv;
-    } else {
+    } अन्यथा {
         /* algo->Unicode->cnv */
         ucnv_resetFromUnicode(cnv);
         from=algoConverter;
-        to=cnv;
+        गन्तव्यम्=cnv;
     }
 
-    targetLength=ucnv_internalConvert(to, from,
-                                      target, targetCapacity,
-                                      source, sourceLength,
-                                      pErrorCode);
+    target_दीर्घता=ucnv_आन्तरिकम्_Convert(गन्तव्यम्, from,
+                                      target, target_क्षमता,
+                                      source, source_दीर्घता,
+                                      p_Error_संहिता);
 
     ucnv_close(algoConverter);
 
-    return targetLength;
+    प्रत्यागम target_दीर्घता;
 }
 
 U_CAPI int32_t U_EXPORT2
-ucnv_toAlgorithmic(UConverterType algorithmicType,
+ucnv_गन्तव्यम्_Algorithmic(UConverterType algorithmicType,
                    UConverter *cnv,
-                   char *target, int32_t targetCapacity,
-                   const char *source, int32_t sourceLength,
-                   UErrorCode *pErrorCode) {
-    return ucnv_convertAlgorithmic(true, algorithmicType, cnv,
-                                   target, targetCapacity,
-                                   source, sourceLength,
-                                   pErrorCode);
+                   वर्ण *target, int32_t target_क्षमता,
+                   ध्रुव वर्ण *source, int32_t source_दीर्घता,
+                   UError_संहिता *p_Error_संहिता) {
+    प्रत्यागम ucnv_convertAlgorithmic(सत्य, algorithmicType, cnv,
+                                   target, target_क्षमता,
+                                   source, source_दीर्घता,
+                                   p_Error_संहिता);
 }
 
 U_CAPI int32_t U_EXPORT2
 ucnv_fromAlgorithmic(UConverter *cnv,
                      UConverterType algorithmicType,
-                     char *target, int32_t targetCapacity,
-                     const char *source, int32_t sourceLength,
-                     UErrorCode *pErrorCode) UPRV_NO_SANITIZE_UNDEFINED {
+                     वर्ण *target, int32_t target_क्षमता,
+                     ध्रुव वर्ण *source, int32_t source_दीर्घता,
+                     UError_संहिता *p_Error_संहिता) UPRV_NO_SANITIZE_UNDEFINED {
 
-    if(algorithmicType<0 || UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES<=algorithmicType) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    यदि(algorithmicType<0 || UCNV_सङ्ख्या_सम्बन्धि_SUPPORTED_CONVERTER_TYPES<=algorithmicType) {
+        *p_Error_संहिता = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0;
     }
-    return ucnv_convertAlgorithmic(false, algorithmicType, cnv,
-                                   target, targetCapacity,
-                                   source, sourceLength,
-                                   pErrorCode);
+    प्रत्यागम ucnv_convertAlgorithmic(असत्य, algorithmicType, cnv,
+                                   target, target_क्षमता,
+                                   source, source_दीर्घता,
+                                   p_Error_संहिता);
 }
 
 U_CAPI UConverterType  U_EXPORT2
-ucnv_getType(const UConverter* converter)
+ucnv_getType(ध्रुव UConverter* converter)
 {
-    int8_t type = converter->sharedData->staticData->conversionType;
-#if !UCONFIG_NO_LEGACY_CONVERSION
-    if(type == UCNV_MBCS) {
-        return ucnv_MBCSGetType(converter);
+    int8_t type = converter->shared_दत्त->static_दत्त->conversionType;
+#यदि !UCONFIG_NO_LEGACY_CONVERSION
+    यदि(type == UCNV_MBCS) {
+        प्रत्यागम ucnv_MBCSGetType(converter);
     }
-#endif
-    return (UConverterType)type;
+#यदि_अन्तः
+    प्रत्यागम (UConverterType)type;
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_getStarters(const UConverter* converter, 
+U_CAPI शून्य  U_EXPORT2
+ucnv_getStarters(ध्रुव UConverter* converter, 
                  UBool starters[256],
-                 UErrorCode* err)
+                 UError_संहिता* err)
 {
-    if (err == nullptr || U_FAILURE(*err)) {
-        return;
+    यदि (err == शून्यसूचकः || U_FAILURE(*err)) {
+        प्रत्यागम;
     }
 
-    if(converter->sharedData->impl->getStarters != nullptr) {
-        converter->sharedData->impl->getStarters(converter, starters, err);
-    } else {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
+    यदि(converter->shared_दत्त->impl->getStarters != शून्यसूचकः) {
+        converter->shared_दत्त->impl->getStarters(converter, starters, err);
+    } अन्यथा {
+        *err = U_ILLEGAL_तर्कः_ERROR;
     }
 }
 
-static const UAmbiguousConverter *ucnv_getAmbiguous(const UConverter *cnv)
+स्थिर ध्रुव UAmbiguousConverter *ucnv_getAmbiguous(ध्रुव UConverter *cnv)
 {
-    UErrorCode errorCode;
-    const char *name;
+    UError_संहिता error_संहिता;
+    ध्रुव वर्ण *name;
     int32_t i;
 
-    if(cnv==nullptr) {
-        return nullptr;
+    यदि(cnv==शून्यसूचकः) {
+        प्रत्यागम शून्यसूचकः;
     }
 
-    errorCode=U_ZERO_ERROR;
-    name=ucnv_getName(cnv, &errorCode);
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+    error_संहिता=U_ZERO_ERROR;
+    name=ucnv_getName(cnv, &error_संहिता);
+    यदि(U_FAILURE(error_संहिता)) {
+        प्रत्यागम शून्यसूचकः;
     }
 
-    for(i=0; i<UPRV_LENGTHOF(ambiguousConverters); ++i)
+    प्रति(i=0; i<UPRV_LENGTHOF(ambiguousConverters); ++i)
     {
-        if(0==uprv_strcmp(name, ambiguousConverters[i].name))
+        यदि(0==uprv_strcmp(name, ambiguousConverters[i].name))
         {
-            return ambiguousConverters+i;
+            प्रत्यागम ambiguousConverters+i;
         }
     }
 
-    return nullptr;
+    प्रत्यागम शून्यसूचकः;
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_fixFileSeparator(const UConverter *cnv, 
+U_CAPI शून्य  U_EXPORT2
+ucnv_fixFileSeparator(ध्रुव UConverter *cnv, 
                       char16_t* source,
-                      int32_t sourceLength) {
-    const UAmbiguousConverter *a;
+                      int32_t source_दीर्घता) {
+    ध्रुव UAmbiguousConverter *a;
     int32_t i;
     char16_t variant5c;
 
-    if(cnv==nullptr || source==nullptr || sourceLength<=0 || (a=ucnv_getAmbiguous(cnv))==nullptr)
+    यदि(cnv==शून्यसूचकः || source==शून्यसूचकः || source_दीर्घता<=0 || (a=ucnv_getAmbiguous(cnv))==शून्यसूचकः)
     {
-        return;
+        प्रत्यागम;
     }
 
     variant5c=a->variant5c;
-    for(i=0; i<sourceLength; ++i) {
-        if(source[i]==variant5c) {
+    प्रति(i=0; i<source_दीर्घता; ++i) {
+        यदि(source[i]==variant5c) {
             source[i]=0x5c;
         }
     }
 }
 
 U_CAPI UBool  U_EXPORT2
-ucnv_isAmbiguous(const UConverter *cnv) {
-    return ucnv_getAmbiguous(cnv)!=nullptr;
+ucnv_isAmbiguous(ध्रुव UConverter *cnv) {
+    प्रत्यागम ucnv_getAmbiguous(cnv)!=शून्यसूचकः;
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_setFallback(UConverter *cnv, UBool usesFallback)
+U_CAPI शून्य  U_EXPORT2
+ucnv_समुच्चयः_Fallback(UConverter *cnv, UBool उपयुङ्क्ते_Fallback)
 {
-    cnv->useFallback = usesFallback;
+    cnv->useFallback = उपयुङ्क्ते_Fallback;
 }
 
 U_CAPI UBool  U_EXPORT2
-ucnv_usesFallback(const UConverter *cnv)
+ucnv_उपयुङ्क्ते_Fallback(ध्रुव UConverter *cnv)
 {
-    return cnv->useFallback;
+    प्रत्यागम cnv->useFallback;
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_getInvalidChars (const UConverter * converter,
-                      char *errBytes,
+U_CAPI शून्य  U_EXPORT2
+ucnv_getInvalidChars (ध्रुव UConverter * converter,
+                      वर्ण *err_अष्टकानि,
                       int8_t * len,
-                      UErrorCode * err)
+                      UError_संहिता * err)
 {
-    if (err == nullptr || U_FAILURE(*err))
+    यदि (err == शून्यसूचकः || U_FAILURE(*err))
     {
-        return;
+        प्रत्यागम;
     }
-    if (len == nullptr || errBytes == nullptr || converter == nullptr)
+    यदि (len == शून्यसूचकः || err_अष्टकानि == शून्यसूचकः || converter == शून्यसूचकः)
     {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *err = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
-    if (*len < converter->invalidCharLength)
+    यदि (*len < converter->invalid_Char_दीर्घता)
     {
-        *err = U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        *err = U_सूचकांक_OUTOFBOUNDS_ERROR;
+        प्रत्यागम;
     }
-    if ((*len = converter->invalidCharLength) > 0)
+    यदि ((*len = converter->invalid_Char_दीर्घता) > 0)
     {
-        uprv_memcpy (errBytes, converter->invalidCharBuffer, *len);
+        uprv_memcpy (err_अष्टकानि, converter->invalid_Char_बफर, *len);
     }
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_getInvalidUChars (const UConverter * converter,
+U_CAPI शून्य  U_EXPORT2
+ucnv_getInvalidUChars (ध्रुव UConverter * converter,
                        char16_t *errChars,
                        int8_t * len,
-                       UErrorCode * err)
+                       UError_संहिता * err)
 {
-    if (err == nullptr || U_FAILURE(*err))
+    यदि (err == शून्यसूचकः || U_FAILURE(*err))
     {
-        return;
+        प्रत्यागम;
     }
-    if (len == nullptr || errChars == nullptr || converter == nullptr)
+    यदि (len == शून्यसूचकः || errChars == शून्यसूचकः || converter == शून्यसूचकः)
     {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *err = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
-    if (*len < converter->invalidUCharLength)
+    यदि (*len < converter->invalid_UChar_दीर्घता)
     {
-        *err = U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        *err = U_सूचकांक_OUTOFBOUNDS_ERROR;
+        प्रत्यागम;
     }
-    if ((*len = converter->invalidUCharLength) > 0)
+    यदि ((*len = converter->invalid_UChar_दीर्घता) > 0)
     {
-        u_memcpy (errChars, converter->invalidUCharBuffer, *len);
+        u_memcpy (errChars, converter->invalid_UChar_बफर, *len);
     }
 }
 
-#define SIG_MAX_LEN 5
+#परिभाषय SIG_MAX_LEN 5
 
-U_CAPI const char* U_EXPORT2
-ucnv_detectUnicodeSignature( const char* source,
-                             int32_t sourceLength,
-                             int32_t* signatureLength,
-                             UErrorCode* pErrorCode) {
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+ucnv_detectUnicodeSignature( ध्रुव वर्ण* source,
+                             int32_t source_दीर्घता,
+                             int32_t* signature_दीर्घता,
+                             UError_संहिता* p_Error_संहिता) {
     int32_t dummy;
 
     /* initial 0xa5 bytes: make sure that if we read <SIG_MAX_LEN
      * bytes we don't misdetect something 
      */
-    char start[SIG_MAX_LEN]={ '\xa5', '\xa5', '\xa5', '\xa5', '\xa5' };
-    int i = 0;
+    वर्ण start[SIG_MAX_LEN]={ '\xa5', '\xa5', '\xa5', '\xa5', '\xa5' };
+    पूर्णाङ्क i = 0;
 
-    if((pErrorCode==nullptr) || U_FAILURE(*pErrorCode)){
-        return nullptr;
+    यदि((p_Error_संहिता==शून्यसूचकः) || U_FAILURE(*p_Error_संहिता)){
+        प्रत्यागम शून्यसूचकः;
     }
     
-    if(source == nullptr || sourceLength < -1){
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    यदि(source == शून्यसूचकः || source_दीर्घता < -1){
+        *p_Error_संहिता = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम शून्यसूचकः;
     }
 
-    if(signatureLength == nullptr) {
-        signatureLength = &dummy;
+    यदि(signature_दीर्घता == शून्यसूचकः) {
+        signature_दीर्घता = &dummy;
     }
 
-    if(sourceLength==-1){
-        sourceLength=(int32_t)uprv_strlen(source);
+    यदि(source_दीर्घता==-1){
+        source_दीर्घता=(int32_t)uprv_strlen(source);
     }
 
     
-    while(i<sourceLength&& i<SIG_MAX_LEN){
+    यावत्(i<source_दीर्घता&& i<SIG_MAX_LEN){
         start[i]=source[i];
         i++;
     }
 
-    if(start[0] == '\xFE' && start[1] == '\xFF') {
-        *signatureLength=2;
-        return  "UTF-16BE";
-    } else if(start[0] == '\xFF' && start[1] == '\xFE') {
-        if(start[2] == '\x00' && start[3] =='\x00') {
-            *signatureLength=4;
-            return "UTF-32LE";
-        } else {
-            *signatureLength=2;
-            return  "UTF-16LE";
+    यदि(start[0] == '\xFE' && start[1] == '\xFF') {
+        *signature_दीर्घता=2;
+        प्रत्यागम  "UTF-16BE";
+    } अन्यथा यदि(start[0] == '\xFF' && start[1] == '\xFE') {
+        यदि(start[2] == '\x00' && start[3] =='\x00') {
+            *signature_दीर्घता=4;
+            प्रत्यागम "UTF-32LE";
+        } अन्यथा {
+            *signature_दीर्घता=2;
+            प्रत्यागम  "UTF-16LE";
         }
-    } else if(start[0] == '\xEF' && start[1] == '\xBB' && start[2] == '\xBF') {
-        *signatureLength=3;
-        return  "UTF-8";
-    } else if(start[0] == '\x00' && start[1] == '\x00' && 
+    } अन्यथा यदि(start[0] == '\xEF' && start[1] == '\xBB' && start[2] == '\xBF') {
+        *signature_दीर्घता=3;
+        प्रत्यागम  "UTF-8";
+    } अन्यथा यदि(start[0] == '\x00' && start[1] == '\x00' && 
               start[2] == '\xFE' && start[3]=='\xFF') {
-        *signatureLength=4;
-        return  "UTF-32BE";
-    } else if(start[0] == '\x0E' && start[1] == '\xFE' && start[2] == '\xFF') {
-        *signatureLength=3;
-        return "SCSU";
-    } else if(start[0] == '\xFB' && start[1] == '\xEE' && start[2] == '\x28') {
-        *signatureLength=3;
-        return "BOCU-1";
-    } else if(start[0] == '\x2B' && start[1] == '\x2F' && start[2] == '\x76') {
+        *signature_दीर्घता=4;
+        प्रत्यागम  "UTF-32BE";
+    } अन्यथा यदि(start[0] == '\x0E' && start[1] == '\xFE' && start[2] == '\xFF') {
+        *signature_दीर्घता=3;
+        प्रत्यागम "SCSU";
+    } अन्यथा यदि(start[0] == '\xFB' && start[1] == '\xEE' && start[2] == '\x28') {
+        *signature_दीर्घता=3;
+        प्रत्यागम "BOCU-1";
+    } अन्यथा यदि(start[0] == '\x2B' && start[1] == '\x2F' && start[2] == '\x76') {
         /*
          * UTF-7: Initial U+FEFF is encoded as +/v8  or  +/v9  or  +/v+  or  +/v/
          * depending on the second UTF-16 code unit.
@@ -2840,93 +2840,93 @@ ucnv_detectUnicodeSignature( const char* source,
          *
          * So far we have +/v
          */
-        if(start[3] == '\x38' && start[4] == '\x2D') {
+        यदि(start[3] == '\x38' && start[4] == '\x2D') {
             /* 5 bytes +/v8- */
-            *signatureLength=5;
-            return "UTF-7";
-        } else if(start[3] == '\x38' || start[3] == '\x39' || start[3] == '\x2B' || start[3] == '\x2F') {
+            *signature_दीर्घता=5;
+            प्रत्यागम "UTF-7";
+        } अन्यथा यदि(start[3] == '\x38' || start[3] == '\x39' || start[3] == '\x2B' || start[3] == '\x2F') {
             /* 4 bytes +/v8  or  +/v9  or  +/v+  or  +/v/ */
-            *signatureLength=4;
-            return "UTF-7";
+            *signature_दीर्घता=4;
+            प्रत्यागम "UTF-7";
         }
-    }else if(start[0]=='\xDD' && start[1]== '\x73'&& start[2]=='\x66' && start[3]=='\x73'){
-        *signatureLength=4;
-        return "UTF-EBCDIC";
+    }अन्यथा यदि(start[0]=='\xDD' && start[1]== '\x73'&& start[2]=='\x66' && start[3]=='\x73'){
+        *signature_दीर्घता=4;
+        प्रत्यागम "UTF-EBCDIC";
     }
 
 
     /* no known Unicode signature byte sequence recognized */
-    *signatureLength=0;
-    return nullptr;
+    *signature_दीर्घता=0;
+    प्रत्यागम शून्यसूचकः;
 }
 
 U_CAPI int32_t U_EXPORT2
-ucnv_fromUCountPending(const UConverter* cnv, UErrorCode* status)
+ucnv_fromUCountPending(ध्रुव UConverter* cnv, UError_संहिता* स्थितिः)
 {
-    if(status == nullptr || U_FAILURE(*status)){
-        return -1;
+    यदि(स्थितिः == शून्यसूचकः || U_FAILURE(*स्थितिः)){
+        प्रत्यागम -1;
     }
-    if(cnv == nullptr){
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return -1;
+    यदि(cnv == शून्यसूचकः){
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम -1;
     }
 
-    if(cnv->preFromUFirstCP >= 0){
-        return U16_LENGTH(cnv->preFromUFirstCP)+cnv->preFromULength ;
-    }else if(cnv->preFromULength < 0){
-        return -cnv->preFromULength ;
-    }else if(cnv->fromUChar32 > 0){
-        return 1;
+    यदि(cnv->preFromUFirstCP >= 0){
+        प्रत्यागम U16_दीर्घता(cnv->preFromUFirstCP)+cnv->preFromULength ;
+    }अन्यथा यदि(cnv->preFromULength < 0){
+        प्रत्यागम -cnv->preFromULength ;
+    }अन्यथा यदि(cnv->fromUChar32 > 0){
+        प्रत्यागम 1;
     }
-    return 0; 
+    प्रत्यागम 0; 
 
 }
 
 U_CAPI int32_t U_EXPORT2
-ucnv_toUCountPending(const UConverter* cnv, UErrorCode* status){
+ucnv_गन्तव्यम्_UCount_Pending(ध्रुव UConverter* cnv, UError_संहिता* स्थितिः){
 
-    if(status == nullptr || U_FAILURE(*status)){
-        return -1;
+    यदि(स्थितिः == शून्यसूचकः || U_FAILURE(*स्थितिः)){
+        प्रत्यागम -1;
     }
-    if(cnv == nullptr){
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return -1;
+    यदि(cnv == शून्यसूचकः){
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम -1;
     }
 
-    if(cnv->preToULength > 0){
-        return cnv->preToULength ;
-    }else if(cnv->preToULength < 0){
-        return -cnv->preToULength;
-    }else if(cnv->toULength > 0){
-        return cnv->toULength;
+    यदि(cnv->pre_गन्तव्यम्_ULength > 0){
+        प्रत्यागम cnv->pre_गन्तव्यम्_ULength ;
+    }अन्यथा यदि(cnv->pre_गन्तव्यम्_ULength < 0){
+        प्रत्यागम -cnv->pre_गन्तव्यम्_ULength;
+    }अन्यथा यदि(cnv->गन्तव्यम्_ULength > 0){
+        प्रत्यागम cnv->गन्तव्यम्_ULength;
     }
-    return 0;
+    प्रत्यागम 0;
 }
 
 U_CAPI UBool U_EXPORT2
-ucnv_isFixedWidth(UConverter *cnv, UErrorCode *status){
-    if (U_FAILURE(*status)) {
-        return false;
+ucnv_is_Fixed_विस्तारः(UConverter *cnv, UError_संहिता *स्थितिः){
+    यदि (U_FAILURE(*स्थितिः)) {
+        प्रत्यागम असत्य;
     }
 
-    if (cnv == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+    यदि (cnv == शून्यसूचकः) {
+        *स्थितिः = U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम असत्य;
     }
 
-    switch (ucnv_getType(cnv)) {
-        case UCNV_SBCS:
-        case UCNV_DBCS:
-        case UCNV_UTF32_BigEndian:
-        case UCNV_UTF32_LittleEndian:
-        case UCNV_UTF32:
-        case UCNV_US_ASCII:
-            return true;
-        default:
-            return false;
+    विकल्प (ucnv_getType(cnv)) {
+        पक्ष UCNV_SBCS:
+        पक्ष UCNV_DBCS:
+        पक्ष UCNV_UTF32_BigEndian:
+        पक्ष UCNV_UTF32_LittleEndian:
+        पक्ष UCNV_UTF32:
+        पक्ष UCNV_US_ASCII:
+            प्रत्यागम सत्य;
+        स्वभाव:
+            प्रत्यागम असत्य;
     }
 }
-#endif
+#यदि_अन्तः
 
 /*
  * Hey, Emacs, please set the following:

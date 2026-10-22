@@ -14,16 +14,16 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UCHARSTRIEBUILDER_H__
-#define __UCHARSTRIEBUILDER_H__
+#यदि_अपरिभाषितम् __UCHARSTRIEBUILDER_H__
+#परिभाषय __UCHARSTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
 
-#include "unicode/stringtriebuilder.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/unistr.h"
+#अन्तर्भाव "unicode/stringtriebuilder.h"
+#अन्तर्भाव "unicode/ucharstrie.h"
+#अन्तर्भाव "unicode/unistr.h"
 
 /**
  * \file
@@ -40,20 +40,20 @@ class UCharsTrieElement;
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API UCharsTrieBuilder : public StringTrieBuilder {
-public:
+class U_COMMON_API UCharsTrieBuilder : सार्वजनिक StringTrieBuilder {
+सार्वजनिक:
     /**
      * Constructs an empty builder.
      * @param errorCode Standard ICU error code.
      * @stable ICU 4.8
      */
-    UCharsTrieBuilder(UErrorCode &errorCode);
+    UCharsTrieBuilder(UError_संहिता &error_संहिता);
 
     /**
      * Destructor.
      * @stable ICU 4.8
      */
-    virtual ~UCharsTrieBuilder();
+    आभास ~UCharsTrieBuilder();
 
     /**
      * Adds a (string, value) pair.
@@ -69,9 +69,9 @@ public:
      * @return *this
      * @stable ICU 4.8
      */
-    UCharsTrieBuilder& add(const UnicodeString& s,
-                           int32_t value,
-                           UErrorCode& errorCode) U_LIFETIME_BOUND;
+    UCharsTrieBuilder& सङ्कलय(ध्रुव UnicodeString& s,
+                           int32_t मानम्_2,
+                           UError_संहिता& error_संहिता) U_LIFETIME_BOUND;
 
     /**
      * Builds a UCharsTrie for the add()ed data.
@@ -91,7 +91,7 @@ public:
      * @return A new UCharsTrie for the add()ed data.
      * @stable ICU 4.8
      */
-    UCharsTrie *build(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
+    UCharsTrie *build(UStringTrieBuildOption buildOption, UError_संहिता &error_संहिता);
 
     /**
      * Builds a UCharsTrie for the add()ed data and char16_t-serializes it.
@@ -119,8 +119,8 @@ public:
      * @stable ICU 4.8
      */
     UnicodeString& buildUnicodeString(UStringTrieBuildOption buildOption,
-                                      UnicodeString& result U_LIFETIME_BOUND,
-                                      UErrorCode& errorCode) U_LIFETIME_BOUND;
+                                      UnicodeString& परिणाम U_LIFETIME_BOUND,
+                                      UError_संहिता& error_संहिता) U_LIFETIME_BOUND;
 
     /**
      * Removes all (string, value) pairs.
@@ -129,68 +129,68 @@ public:
      * @stable ICU 4.8
      */
     UCharsTrieBuilder& clear() U_LIFETIME_BOUND {
-        strings.remove();
-        elementsLength=0;
-        ucharsLength=0;
-        return *this;
+        वाक्यानि.remove();
+        elements_दीर्घता=0;
+        uchars_दीर्घता=0;
+        प्रत्यागम *this;
     }
 
-private:
-    UCharsTrieBuilder(const UCharsTrieBuilder &other) = delete;  // no copy constructor
-    UCharsTrieBuilder &operator=(const UCharsTrieBuilder &other) = delete;  // no assignment operator
+गुप्त:
+    UCharsTrieBuilder(ध्रुव UCharsTrieBuilder &other) = delete;  // no copy constructor
+    UCharsTrieBuilder &संक्रियकः=(ध्रुव UCharsTrieBuilder &other) = delete;  // no assignment operator
 
-    void buildUChars(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
+    शून्य buildUChars(UStringTrieBuildOption buildOption, UError_संहिता &error_संहिता);
 
-    virtual int32_t getElementStringLength(int32_t i) const override;
-    virtual char16_t getElementUnit(int32_t i, int32_t unitIndex) const override;
-    virtual int32_t getElementValue(int32_t i) const override;
+    आभास int32_t get_Element_String_दीर्घता(int32_t i) ध्रुव override;
+    आभास char16_t getElementUnit(int32_t i, int32_t unit_सूचकांक) ध्रुव override;
+    आभास int32_t get_Element_मानम्(int32_t i) ध्रुव override;
 
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) const override;
+    आभास int32_t get_सीमा_सम्बन्धि_रैखिकम्_मेलनम्(int32_t first, int32_t चरमः, int32_t unit_सूचकांक) ध्रुव override;
 
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const override;
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const override;
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const override;
+    आभास int32_t गणनम्_Element_Units(int32_t start, int32_t सीमा, int32_t unit_सूचकांक) ध्रुव override;
+    आभास int32_t skipElementsBySomeUnits(int32_t i, int32_t unit_सूचकांक, int32_t गणनम्) ध्रुव override;
+    आभास int32_t सूचकांक_सम्बन्धि_Element_With_अग्र_Unit(int32_t i, int32_t unit_सूचकांक, char16_t unit) ध्रुव override;
 
-    virtual UBool matchNodesCanHaveValues() const override { return true; }
+    आभास UBool मेलनम्_Nodes_Can_Have_मानानि() ध्रुव override { प्रत्यागम true; }
 
-    virtual int32_t getMaxBranchLinearSubNodeLength() const override { return UCharsTrie::kMaxBranchLinearSubNodeLength; }
-    virtual int32_t getMinLinearMatch() const override { return UCharsTrie::kMinLinearMatch; }
-    virtual int32_t getMaxLinearMatchLength() const override { return UCharsTrie::kMaxLinearMatchLength; }
+    आभास int32_t get_Max_Branch_रैखिकम्_Sub_ग्रन्थिः_दीर्घता() ध्रुव override { प्रत्यागम UCharsTrie::k_Max_Branch_रैखिकम्_Sub_ग्रन्थिः_दीर्घता; }
+    आभास int32_t get_Min_रैखिकम्_मेलनम्() ध्रुव override { प्रत्यागम UCharsTrie::k_Min_रैखिकम्_मेलनम्; }
+    आभास int32_t get_Max_रैखिकम्_मेलनम्_दीर्घता() ध्रुव override { प्रत्यागम UCharsTrie::k_Max_रैखिकम्_मेलनम्_दीर्घता; }
 
-    class UCTLinearMatchNode : public LinearMatchNode {
-    public:
-        UCTLinearMatchNode(const char16_t *units, int32_t len, Node *nextNode);
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    private:
-        const char16_t *s;
+    class UCTLinear_मेलनम्_ग्रन्थिः : सार्वजनिक रैखिकम्_मेलनम्_ग्रन्थिः {
+    सार्वजनिक:
+        UCTLinear_मेलनम्_ग्रन्थिः(ध्रुव char16_t *units, int32_t len, ग्रन्थिः_2 *अग्र_ग्रन्थिः);
+        आभास bool संक्रियकः==(ध्रुव ग्रन्थिः_2 &other) ध्रुव override;
+        आभास शून्य लिख(StringTrieBuilder &builder) override;
+    गुप्त:
+        ध्रुव char16_t *s;
     };
 
-    virtual Node *createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                        Node *nextNode) const override;
+    आभास ग्रन्थिः_2 *create_रैखिकम्_मेलनम्_ग्रन्थिः(int32_t i, int32_t unit_सूचकांक, int32_t दीर्घता,
+                                        ग्रन्थिः_2 *अग्र_ग्रन्थिः) ध्रुव override;
 
-    UBool ensureCapacity(int32_t length);
-    virtual int32_t write(int32_t unit) override;
-    int32_t write(const char16_t *s, int32_t length);
-    virtual int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) override;
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) override;
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) override;
-    virtual int32_t writeDeltaTo(int32_t jumpTarget) override;
+    UBool ensure_क्षमता(int32_t दीर्घता);
+    आभास int32_t लिख(int32_t unit) override;
+    int32_t लिख(ध्रुव char16_t *s, int32_t दीर्घता);
+    आभास int32_t writeElementUnits(int32_t i, int32_t unit_सूचकांक, int32_t दीर्घता) override;
+    आभास int32_t write_मानम्_And_Final(int32_t i, UBool isFinal) override;
+    आभास int32_t write_मानम्_And_Type(UBool has_मानम्, int32_t मानम्_2, int32_t ग्रन्थिः) override;
+    आभास int32_t write_Delta_गन्तव्यम्(int32_t jumpTarget) override;
 
-    UnicodeString strings;
+    UnicodeString वाक्यानि;
     UCharsTrieElement *elements;
-    int32_t elementsCapacity;
-    int32_t elementsLength;
+    int32_t elements_क्षमता;
+    int32_t elements_दीर्घता;
 
     // char16_t serialization of the trie.
     // Grows from the back: ucharsLength measures from the end of the buffer!
     char16_t *uchars;
-    int32_t ucharsCapacity;
-    int32_t ucharsLength;
+    int32_t uchars_क्षमता;
+    int32_t uchars_दीर्घता;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#यदि_अन्तः /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __UCHARSTRIEBUILDER_H__
+#यदि_अन्तः  // __UCHARSTRIEBUILDER_H__

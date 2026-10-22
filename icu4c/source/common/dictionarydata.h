@@ -11,42 +11,42 @@
 * created by: Markus W. Scherer & Maxime Serrano
 */
 
-#ifndef __DICTIONARYDATA_H__
-#define __DICTIONARYDATA_H__
+#यदि_अपरिभाषितम् __DICTIONARYDATA_H__
+#परिभाषय __DICTIONARYDATA_H__
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#यदि !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/utext.h"
-#include "unicode/udata.h"
-#include "udataswp.h"
-#include "unicode/uobject.h"
-#include "unicode/ustringtrie.h"
+#अन्तर्भाव "unicode/utext.h"
+#अन्तर्भाव "unicode/udata.h"
+#अन्तर्भाव "udataswp.h"
+#अन्तर्भाव "unicode/uobject.h"
+#अन्तर्भाव "unicode/ustringtrie.h"
 
 U_NAMESPACE_BEGIN
 
 class UCharsTrie;
-class BytesTrie;
+class अष्टकानि_Trie;
 
-class U_COMMON_API DictionaryData : public UMemory {
-public:
-    static const int32_t TRIE_TYPE_BYTES; // = 0;
-    static const int32_t TRIE_TYPE_UCHARS; // = 1;
-    static const int32_t TRIE_TYPE_MASK; // = 7;
-    static const int32_t TRIE_HAS_VALUES; // = 8;
+class U_COMMON_API Dictionary_दत्त : सार्वजनिक UMemory {
+सार्वजनिक:
+    स्थिर ध्रुव int32_t TRIE_TYPE_अष्टकानि; // = 0;
+    स्थिर ध्रुव int32_t TRIE_TYPE_UCHARS; // = 1;
+    स्थिर ध्रुव int32_t TRIE_TYPE_आवरणम्; // = 7;
+    स्थिर ध्रुव int32_t TRIE_HAS_मानानि; // = 8;
 
-    static const int32_t TRANSFORM_NONE; // = 0;
-    static const int32_t TRANSFORM_TYPE_OFFSET; // = 0x1000000;
-    static const int32_t TRANSFORM_TYPE_MASK; // = 0x7f000000;
-    static const int32_t TRANSFORM_OFFSET_MASK; // = 0x1fffff;
+    स्थिर ध्रुव int32_t TRANSFORM_NONE; // = 0;
+    स्थिर ध्रुव int32_t TRANSFORM_TYPE_विस्थापनम्; // = 0x1000000;
+    स्थिर ध्रुव int32_t TRANSFORM_TYPE_आवरणम्; // = 0x7f000000;
+    स्थिर ध्रुव int32_t TRANSFORM_विस्थापनम्_आवरणम्; // = 0x1fffff;
 
-    enum {
+    गणना {
         // Byte offsets from the start of the data, after the generic header.
-        IX_STRING_TRIE_OFFSET,
-        IX_RESERVED1_OFFSET,
-        IX_RESERVED2_OFFSET,
-        IX_TOTAL_SIZE,
+        IX_STRING_TRIE_विस्थापनम्,
+        IX_RESERVED1_विस्थापनम्,
+        IX_RESERVED2_विस्थापनम्,
+        IX_योग_आकार,
 
         // Trie type: TRIE_HAS_VALUES | TRIE_TYPE_BYTES etc.
         IX_TRIE_TYPE,
@@ -55,7 +55,7 @@ public:
 
         IX_RESERVED6,
         IX_RESERVED7,
-        IX_COUNT
+        IX_गणनम्
     };
 };
 
@@ -66,10 +66,10 @@ public:
  * All implementations of this interface must be thread-safe if they are to be used inside of the
  * dictionary-based break iteration code.
  */
-class U_COMMON_API DictionaryMatcher : public UMemory {
-public:
+class U_COMMON_API DictionaryMatcher : सार्वजनिक UMemory {
+सार्वजनिक:
     DictionaryMatcher() {}
-    virtual ~DictionaryMatcher();
+    आभास ~DictionaryMatcher();
     // this should emulate CompactTrieDictionary::matches()
     /*  @param text      The text in which to look for matching words. Matching begins
      *                   at the current position of the UText.
@@ -90,55 +90,55 @@ public:
      *                   of the longest complete word matched. May be nullptr.
      *  @return          Number of matching words found.
      */
-    virtual int32_t matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const = 0;
+    आभास int32_t matches(UText *text, int32_t max_दीर्घता_2, int32_t सीमा,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *मानानि,
+                            int32_t *उपसर्गः) ध्रुव = 0;
 
     /** @return DictionaryData::TRIE_TYPE_XYZ */
-    virtual int32_t getType() const = 0;
+    आभास int32_t getType() ध्रुव = 0;
 };
 
 // Implementation of the DictionaryMatcher interface for a UCharsTrie dictionary
-class U_COMMON_API UCharsDictionaryMatcher : public DictionaryMatcher {
-public:
+class U_COMMON_API UCharsDictionaryMatcher : सार्वजनिक DictionaryMatcher {
+सार्वजनिक:
     // constructs a new UCharsDictionaryMatcher.
     // The UDataMemory * will be closed on this object's destruction.
-    UCharsDictionaryMatcher(const char16_t *c, UDataMemory *f) : characters(c), file(f) { }
-    virtual ~UCharsDictionaryMatcher();
-    virtual int32_t matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const override;
-    virtual int32_t getType() const override;
-private:
-    const char16_t *characters;
-    UDataMemory *file;
+    UCharsDictionaryMatcher(ध्रुव char16_t *c, UData_स्मृतिः *f) : characters(c), file(f) { }
+    आभास ~UCharsDictionaryMatcher();
+    आभास int32_t matches(UText *text, int32_t max_दीर्घता_2, int32_t सीमा,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *मानानि,
+                            int32_t *उपसर्गः) ध्रुव override;
+    आभास int32_t getType() ध्रुव override;
+गुप्त:
+    ध्रुव char16_t *characters;
+    UData_स्मृतिः *file;
 };
 
 // Implementation of the DictionaryMatcher interface for a BytesTrie dictionary
-class U_COMMON_API BytesDictionaryMatcher : public DictionaryMatcher {
-public:
+class U_COMMON_API अष्टकानि_Dictionary_Matcher : सार्वजनिक DictionaryMatcher {
+सार्वजनिक:
     // constructs a new BytesTrieDictionaryMatcher
     // the transform constant should be the constant read from the file, not a masked version!
     // the UDataMemory * fed in here will be closed on this object's destruction
-    BytesDictionaryMatcher(const char *c, int32_t t, UDataMemory *f)
+    अष्टकानि_Dictionary_Matcher(ध्रुव वर्ण *c, int32_t t, UData_स्मृतिः *f)
             : characters(c), transformConstant(t), file(f) { }
-    virtual ~BytesDictionaryMatcher();
-    virtual int32_t matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const override;
-    virtual int32_t getType() const override;
-private:
-    UChar32 transform(UChar32 c) const;
+    आभास ~अष्टकानि_Dictionary_Matcher();
+    आभास int32_t matches(UText *text, int32_t max_दीर्घता_2, int32_t सीमा,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *मानानि,
+                            int32_t *उपसर्गः) ध्रुव override;
+    आभास int32_t getType() ध्रुव override;
+गुप्त:
+    UChar32 transform(UChar32 c) ध्रुव;
 
-    const char *characters;
+    ध्रुव वर्ण *characters;
     int32_t transformConstant;
-    UDataMemory *file;
+    UData_स्मृतिः *file;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
 U_CAPI int32_t U_EXPORT2
-udict_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *outData, UErrorCode *pErrorCode);
+udict_swap(ध्रुव UDataSwapper *ds, ध्रुव शून्य *अन्तर्_दत्त, int32_t दीर्घता, शून्य *बहिर्गमनम्_दत्त, UError_संहिता *p_Error_संहिता);
 
 /**
  * Format of dictionary .dict data files.
@@ -187,5 +187,5 @@ udict_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *out
  *      or it maps all strings to 0 (TRIE_HAS_VALUES bit not set).
  */
 
-#endif  /* !UCONFIG_NO_BREAK_ITERATION */
-#endif  /* __DICTIONARYDATA_H__ */
+#यदि_अन्तः  /* !UCONFIG_NO_BREAK_ITERATION */
+#यदि_अन्तः  /* __DICTIONARYDATA_H__ */

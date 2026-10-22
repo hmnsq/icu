@@ -16,22 +16,22 @@
 *   06/29/2000  helena      Major rewrite of the callback APIs.
 */
 
-#ifndef UCNV_CNV_H
-#define UCNV_CNV_H
+#यदि_अपरिभाषितम् UCNV_CNV_H
+#परिभाषय UCNV_CNV_H
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#यदि !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_err.h"
-#include "unicode/uset.h"
-#include "uset_imp.h"
+#अन्तर्भाव "unicode/ucnv.h"
+#अन्तर्भाव "unicode/ucnv_err.h"
+#अन्तर्भाव "unicode/uset.h"
+#अन्तर्भाव "uset_imp.h"
 
 U_CDECL_BEGIN
 
 /* this is used in fromUnicode DBCS tables as an "unassigned" marker */
-#define missingCharMarker 0xFFFF
+#परिभाषय missingCharMarker 0xFFFF
 
 /*
  * #define missingUCharMarker 0xfffe
@@ -42,40 +42,40 @@ U_CDECL_BEGIN
  */
 
 /** Forward declaration, see ucnv_bld.h */
-struct UConverterSharedData;
-typedef struct UConverterSharedData UConverterSharedData;
+संरचना UConverter_Shared_दत्त;
+प्रकारनिर्देश संरचना UConverter_Shared_दत्त UConverter_Shared_दत्त;
 
 /* function types for UConverterImpl ---------------------------------------- */
 
 /* struct with arguments for UConverterLoad and ucnv_load() */
-typedef struct {
-    int32_t size;               /* sizeof(UConverterLoadArgs) */
+प्रकारनिर्देश संरचना {
+    int32_t आकार_2;               /* sizeof(UConverterLoadArgs) */
     int32_t nestedLoads;        /* count nested ucnv_load() calls */
     UBool onlyTestIsLoadable;   /* input: don't actually load */
     UBool reserved0;            /* reserved - for good alignment of the pointers */
     int16_t reserved;           /* reserved - for good alignment of the pointers */
     uint32_t options;
-    const char *pkg, *name, *locale;
-} UConverterLoadArgs;
+    ध्रुव वर्ण *pkg, *name, *locale;
+} UConverter_आरोपय_तर्काः;
 
-#define UCNV_LOAD_ARGS_INITIALIZER \
-    { (int32_t)sizeof(UConverterLoadArgs), 0, false, false, 0, 0, NULL, NULL, NULL }
+#परिभाषय UCNV_आरोपय_तर्काः_INITIALIZER \
+    { (int32_t)परिमाण(UConverter_आरोपय_तर्काः), 0, false, false, 0, 0, रिक्त, रिक्त, रिक्त }
 
-typedef void (*UConverterLoad) (UConverterSharedData *sharedData,
-                                UConverterLoadArgs *pArgs,
-                                const uint8_t *raw, UErrorCode *pErrorCode);
-typedef void (*UConverterUnload) (UConverterSharedData *sharedData);
+प्रकारनिर्देश शून्य (*UConverter_आरोपय) (UConverter_Shared_दत्त *shared_दत्त,
+                                UConverter_आरोपय_तर्काः *p_तर्काः,
+                                ध्रुव uint8_t *raw, UError_संहिता *p_Error_संहिता);
+प्रकारनिर्देश शून्य (*UConverterUnload) (UConverter_Shared_दत्त *shared_दत्त);
 
-typedef void (*UConverterOpen) (UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *pErrorCode);
-typedef void (*UConverterClose) (UConverter *cnv);
+प्रकारनिर्देश शून्य (*UConverterOpen) (UConverter *cnv, UConverter_आरोपय_तर्काः *p_तर्काः, UError_संहिता *p_Error_संहिता);
+प्रकारनिर्देश शून्य (*UConverterClose) (UConverter *cnv);
 
-typedef enum UConverterResetChoice {
+प्रकारनिर्देश गणना UConverterResetChoice {
     UCNV_RESET_BOTH,
-    UCNV_RESET_TO_UNICODE,
+    UCNV_RESET_गन्तव्यम्_UNICODE,
     UCNV_RESET_FROM_UNICODE
 } UConverterResetChoice;
 
-typedef void (*UConverterReset) (UConverter *cnv, UConverterResetChoice choice);
+प्रकारनिर्देश शून्य (*UConverterReset) (UConverter *cnv, UConverterResetChoice choice);
 
 /*
  * Converter implementation function(s) for ucnv_toUnicode().
@@ -100,7 +100,7 @@ typedef void (*UConverterReset) (UConverter *cnv, UConverterResetChoice choice);
  * The ucnv.c code will handle the end of the input (reset)
  * (reset, and truncation detection) and callbacks.
  */
-typedef void (*UConverterToUnicode) (UConverterToUnicodeArgs *, UErrorCode *);
+प्रकारनिर्देश शून्य (*UConverter_गन्तव्यम्_Unicode) (UConverter_गन्तव्यम्_Unicode_तर्काः *, UError_संहिता *);
 
 /*
  * Same rules as for UConverterToUnicode.
@@ -108,7 +108,7 @@ typedef void (*UConverterToUnicode) (UConverterToUnicodeArgs *, UErrorCode *);
  * occurs, then the offending input code point must be put into fromUChar32
  * as well.
  */
-typedef void (*UConverterFromUnicode) (UConverterFromUnicodeArgs *, UErrorCode *);
+प्रकारनिर्देश शून्य (*UConverterFromUnicode) (UConverter_From_Unicode_तर्काः *, UError_संहिता *);
 
 /*
  * Converter implementation function for ucnv_convertEx(), for direct conversion
@@ -123,9 +123,9 @@ typedef void (*UConverterFromUnicode) (UConverterFromUnicodeArgs *, UErrorCode *
  * - Continuing a partial match and flushing the toUnicode replay buffer
  *   are handled by pivoting, using the toUnicode and fromUnicode functions.
  */
-typedef void (*UConverterConvert) (UConverterFromUnicodeArgs *pFromUArgs,
-                                   UConverterToUnicodeArgs *pToUArgs,
-                                   UErrorCode *pErrorCode);
+प्रकारनिर्देश शून्य (*UConverterConvert) (UConverter_From_Unicode_तर्काः *pFromUArgs,
+                                   UConverter_गन्तव्यम्_Unicode_तर्काः *p_गन्तव्यम्_UArgs,
+                                   UError_संहिता *p_Error_संहिता);
 
 /*
  * Converter implementation function for ucnv_getNextUChar().
@@ -147,17 +147,17 @@ typedef void (*UConverterConvert) (UConverterFromUnicodeArgs *pFromUArgs,
  * The ucnv.c code will handle the end of the input (reset)
  * (except for truncation detection!) and callbacks.
  */
-typedef UChar32 (*UConverterGetNextUChar) (UConverterToUnicodeArgs *, UErrorCode *);
+प्रकारनिर्देश UChar32 (*UConverter_Get_अग्र_UChar) (UConverter_गन्तव्यम्_Unicode_तर्काः *, UError_संहिता *);
 
-typedef void (*UConverterGetStarters)(const UConverter* converter,
+प्रकारनिर्देश शून्य (*UConverterGetStarters)(ध्रुव UConverter* converter,
                                       UBool starters[256],
-                                      UErrorCode *pErrorCode);
+                                      UError_संहिता *p_Error_संहिता);
 
 /* If this function pointer is null or if the function returns null
  * the name field in static data struct should be returned by 
  * ucnv_getName() API function
  */
-typedef const char * (*UConverterGetName) (const UConverter *cnv);
+प्रकारनिर्देश ध्रुव वर्ण * (*UConverterGetName) (ध्रुव UConverter *cnv);
 
 /**
  * Write the codepage substitution character.
@@ -166,7 +166,7 @@ typedef const char * (*UConverterGetName) (const UConverter *cnv);
  * For stateful converters, it is typically necessary to handle this
  * specifically for the converter in order to properly maintain the state.
  */
-typedef void (*UConverterWriteSub) (UConverterFromUnicodeArgs *pArgs, int32_t offsetIndex, UErrorCode *pErrorCode);
+प्रकारनिर्देश शून्य (*UConverterWriteSub) (UConverter_From_Unicode_तर्काः *p_तर्काः, int32_t विस्थापनम्_सूचकांक, UError_संहिता *p_Error_संहिता);
 
 /**
  * For converter-specific safeClone processing
@@ -177,23 +177,23 @@ typedef void (*UConverterWriteSub) (UConverterFromUnicodeArgs *pArgs, int32_t of
  * the initial state of the converter.  It is not expected to increment the
  * reference counts of the standard data types such as the shared data.
  */
-typedef UConverter * (*UConverterSafeClone) (const UConverter   *cnv, 
-                                             void               *stackBuffer,
-                                             int32_t            *pBufferSize, 
-                                             UErrorCode         *status);
+प्रकारनिर्देश UConverter * (*UConverterSafeClone) (ध्रुव UConverter   *cnv, 
+                                             शून्य               *राशिः_बफर,
+                                             int32_t            *p_बफर_आकार, 
+                                             UError_संहिता         *स्थितिः);
 
 /**
  * Filters for some ucnv_getUnicodeSet() implementation code.
  */
-typedef enum UConverterSetFilter {
-    UCNV_SET_FILTER_NONE,
-    UCNV_SET_FILTER_DBCS_ONLY,
-    UCNV_SET_FILTER_2022_CN,
-    UCNV_SET_FILTER_SJIS,
-    UCNV_SET_FILTER_GR94DBCS,
-    UCNV_SET_FILTER_HZ,
-    UCNV_SET_FILTER_COUNT
-} UConverterSetFilter;
+प्रकारनिर्देश गणना UConverter_समुच्चयः_Filter {
+    UCNV_समुच्चयः_FILTER_NONE,
+    UCNV_समुच्चयः_FILTER_DBCS_ONLY,
+    UCNV_समुच्चयः_FILTER_2022_CN,
+    UCNV_समुच्चयः_FILTER_SJIS,
+    UCNV_समुच्चयः_FILTER_GR94_DBCS,
+    UCNV_समुच्चयः_FILTER_HZ,
+    UCNV_समुच्चयः_FILTER_गणनम्
+} UConverter_समुच्चयः_Filter;
 
 /**
  * Fills the set of Unicode code points that can be converted by an ICU converter.
@@ -206,12 +206,12 @@ typedef enum UConverterSetFilter {
  *
  * For more documentation, see ucnv_getUnicodeSet() in ucnv.h.
  */
-typedef void (*UConverterGetUnicodeSet) (const UConverter *cnv,
-                                         const USetAdder *sa,
-                                         UConverterUnicodeSet which,
-                                         UErrorCode *pErrorCode);
+प्रकारनिर्देश शून्य (*UConverter_Get_Unicode_समुच्चयः) (ध्रुव UConverter *cnv,
+                                         ध्रुव USetAdder *sa,
+                                         UConverter_Unicode_समुच्चयः which,
+                                         UError_संहिता *p_Error_संहिता);
 
-UBool CONVERSION_U_SUCCESS (UErrorCode err);
+UBool CONVERSION_U_SUCCESS (UError_संहिता err);
 
 /**
  * UConverterImpl contains all the data and functions for a converter type.
@@ -229,51 +229,51 @@ UBool CONVERSION_U_SUCCESS (UErrorCode err);
  *
  * When open() fails, then close() will be called, if present.
  */
-struct UConverterImpl {
+संरचना UConverterImpl {
     UConverterType type;
 
-    UConverterLoad load;
+    UConverter_आरोपय आरोपय;
     UConverterUnload unload;
 
-    UConverterOpen open;
+    UConverterOpen उद्घाटय;
     UConverterClose close;
     UConverterReset reset;
 
-    UConverterToUnicode toUnicode;
-    UConverterToUnicode toUnicodeWithOffsets;
+    UConverter_गन्तव्यम्_Unicode गन्तव्यम्_Unicode;
+    UConverter_गन्तव्यम्_Unicode गन्तव्यम्_Unicode_With_Offsets;
     UConverterFromUnicode fromUnicode;
     UConverterFromUnicode fromUnicodeWithOffsets;
-    UConverterGetNextUChar getNextUChar;
+    UConverter_Get_अग्र_UChar get_अग्र_UChar;
 
     UConverterGetStarters getStarters;
     UConverterGetName getName;
     UConverterWriteSub writeSub;
     UConverterSafeClone safeClone;
-    UConverterGetUnicodeSet getUnicodeSet;
+    UConverter_Get_Unicode_समुच्चयः get_Unicode_समुच्चयः;
 
-    UConverterConvert toUTF8;
+    UConverterConvert गन्तव्यम्_UTF8;
     UConverterConvert fromUTF8;
 };
 
-extern const UConverterSharedData
-    _MBCSData, _Latin1Data,
-    _UTF8Data, _UTF16BEData, _UTF16LEData, _UTF32BEData, _UTF32LEData,
-    _ISO2022Data, 
+बाह्य ध्रुव UConverter_Shared_दत्त
+    _MBCSData, Latin1_दत्त,
+    UTF8_दत्त, _UTF16BEData, _UTF16LEData, _UTF32BEData, _UTF32LEData,
+    ISO2022_दत्त, 
     _LMBCSData1,_LMBCSData2, _LMBCSData3, _LMBCSData4, _LMBCSData5, _LMBCSData6,
     _LMBCSData8,_LMBCSData11,_LMBCSData16,_LMBCSData17,_LMBCSData18,_LMBCSData19,
     _HZData,_ISCIIData, _SCSUData, _ASCIIData,
-    _UTF7Data, _Bocu1Data, _UTF16Data, _UTF32Data, _CESU8Data, _IMAPData, _CompoundTextData;
+    UTF7_दत्त, Bocu1_दत्त, UTF16_दत्त, UTF32_दत्त, CESU8_दत्त, _IMAPData, Compound_Text_दत्त;
 
-U_CDECL_END
+U_CDECL_अन्तः
 
 /** Always use fallbacks from codepage to Unicode */
-#define TO_U_USE_FALLBACK(useFallback) true
-#define UCNV_TO_U_USE_FALLBACK(cnv) true
+#परिभाषय गन्तव्यम्_U_USE_FALLBACK(useFallback) true
+#परिभाषय UCNV_गन्तव्यम्_U_USE_FALLBACK(cnv) true
 
 /** Use fallbacks from Unicode to codepage when cnv->useFallback or for private-use code points */
-#define IS_PRIVATE_USE(c) ((uint32_t)((c)-0xe000)<0x1900 || (uint32_t)((c)-0xf0000)<0x20000)
-#define FROM_U_USE_FALLBACK(useFallback, c) ((useFallback) || IS_PRIVATE_USE(c))
-#define UCNV_FROM_U_USE_FALLBACK(cnv, c) FROM_U_USE_FALLBACK((cnv)->useFallback, c)
+#परिभाषय IS_वैयक्तिकम्_USE(c) ((uint32_t)((c)-0xe000)<0x1900 || (uint32_t)((c)-0xf0000)<0x20000)
+#परिभाषय FROM_U_USE_FALLBACK(useFallback, c) ((useFallback) || IS_वैयक्तिकम्_USE(c))
+#परिभाषय UCNV_FROM_U_USE_FALLBACK(cnv, c) FROM_U_USE_FALLBACK((cnv)->useFallback, c)
 
 /**
  * Magic number for ucnv_getNextUChar(), returned by a
@@ -281,43 +281,43 @@ U_CDECL_END
  * instead of the native function.
  * @internal
  */
-#define UCNV_GET_NEXT_UCHAR_USE_TO_U -9
+#परिभाषय UCNV_GET_अग्र_UCHAR_USE_गन्तव्यम्_U -9
 
-U_CFUNC void
-ucnv_getCompleteUnicodeSet(const UConverter *cnv,
-                   const USetAdder *sa,
-                   UConverterUnicodeSet which,
-                   UErrorCode *pErrorCode);
+U_CFUNC शून्य
+ucnv_get_Complete_Unicode_समुच्चयः(ध्रुव UConverter *cnv,
+                   ध्रुव USetAdder *sa,
+                   UConverter_Unicode_समुच्चयः which,
+                   UError_संहिता *p_Error_संहिता);
 
-U_CFUNC void
-ucnv_getNonSurrogateUnicodeSet(const UConverter *cnv,
-                               const USetAdder *sa,
-                               UConverterUnicodeSet which,
-                               UErrorCode *pErrorCode);
+U_CFUNC शून्य
+ucnv_get_Non_Surrogate_Unicode_समुच्चयः(ध्रुव UConverter *cnv,
+                               ध्रुव USetAdder *sa,
+                               UConverter_Unicode_समुच्चयः which,
+                               UError_संहिता *p_Error_संहिता);
 
-U_CFUNC void
-ucnv_fromUWriteBytes(UConverter *cnv,
-                     const char *bytes, int32_t length,
-                     char **target, const char *targetLimit,
+U_CFUNC शून्य
+ucnv_from_UWrite_अष्टकानि(UConverter *cnv,
+                     ध्रुव वर्ण *अष्टकानि, int32_t दीर्घता,
+                     वर्ण **target, ध्रुव वर्ण *target_सीमा,
                      int32_t **offsets,
-                     int32_t sourceIndex,
-                     UErrorCode *pErrorCode);
-U_CFUNC void
-ucnv_toUWriteUChars(UConverter *cnv,
-                    const UChar *uchars, int32_t length,
-                    UChar **target, const UChar *targetLimit,
+                     int32_t source_सूचकांक,
+                     UError_संहिता *p_Error_संहिता);
+U_CFUNC शून्य
+ucnv_गन्तव्यम्_UWrite_UChars(UConverter *cnv,
+                    ध्रुव UChar *uchars, int32_t दीर्घता,
+                    UChar **target, ध्रुव UChar *target_सीमा,
                     int32_t **offsets,
-                    int32_t sourceIndex,
-                    UErrorCode *pErrorCode);
+                    int32_t source_सूचकांक,
+                    UError_संहिता *p_Error_संहिता);
 
-U_CFUNC void
-ucnv_toUWriteCodePoint(UConverter *cnv,
+U_CFUNC शून्य
+ucnv_गन्तव्यम्_UWrite_संहिता_Point(UConverter *cnv,
                        UChar32 c,
-                       UChar **target, const UChar *targetLimit,
+                       UChar **target, ध्रुव UChar *target_सीमा,
                        int32_t **offsets,
-                       int32_t sourceIndex,
-                       UErrorCode *pErrorCode);
+                       int32_t source_सूचकांक,
+                       UError_संहिता *p_Error_संहिता);
 
-#endif
+#यदि_अन्तः
 
-#endif /* UCNV_CNV */
+#यदि_अन्तः /* UCNV_CNV */

@@ -20,51 +20,51 @@
 *   implementation functions on the USet implementation.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
-#include "unicode/ucnv.h"
-#include "ucnv_bld.h"
-#include "uset_imp.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/uset.h"
+#अन्तर्भाव "unicode/ucnv.h"
+#अन्तर्भाव "ucnv_bld.h"
+#अन्तर्भाव "uset_imp.h"
 
-#if !UCONFIG_NO_CONVERSION
+#यदि !UCONFIG_NO_CONVERSION
 
-U_CAPI void U_EXPORT2
-ucnv_getUnicodeSet(const UConverter *cnv,
-                   USet *setFillIn,
-                   UConverterUnicodeSet whichSet,
-                   UErrorCode *pErrorCode) {
+U_CAPI शून्य U_EXPORT2
+ucnv_get_Unicode_समुच्चयः(ध्रुव UConverter *cnv,
+                   USet *समुच्चयः_Fill_अन्तर्,
+                   UConverter_Unicode_समुच्चयः which_समुच्चयः,
+                   UError_संहिता *p_Error_संहिता) {
     /* argument checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    यदि(p_Error_संहिता==शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम;
     }
-    if(cnv==nullptr || setFillIn==nullptr || whichSet<UCNV_ROUNDTRIP_SET || UCNV_SET_COUNT<=whichSet) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    यदि(cnv==शून्यसूचकः || समुच्चयः_Fill_अन्तर्==शून्यसूचकः || which_समुच्चयः<UCNV_ROUNDTRIP_समुच्चयः || UCNV_समुच्चयः_गणनम्<=which_समुच्चयः) {
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम;
     }
 
     /* does this converter support this function? */
-    if(cnv->sharedData->impl->getUnicodeSet==nullptr) {
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return;
+    यदि(cnv->shared_दत्त->impl->get_Unicode_समुच्चयः==शून्यसूचकः) {
+        *p_Error_संहिता=U_UNSUPPORTED_ERROR;
+        प्रत्यागम;
     }
 
     {
         USetAdder sa={
-            nullptr,
-            uset_add,
-            uset_addRange,
-            uset_addString,
+            शून्यसूचकः,
+            uset_सङ्कलय,
+            uset_सङ्कलय_Range,
+            uset_सङ्कलय_String,
             uset_remove,
             uset_removeRange
         };
-        sa.set=setFillIn;
+        sa.समुच्चयः=समुच्चयः_Fill_अन्तर्;
 
         /* empty the set */
-        uset_clear(setFillIn);
+        uset_clear(समुच्चयः_Fill_अन्तर्);
 
         /* call the converter to add the code points it supports */
-        cnv->sharedData->impl->getUnicodeSet(cnv, &sa, whichSet, pErrorCode);
+        cnv->shared_दत्त->impl->get_Unicode_समुच्चयः(cnv, &sa, which_समुच्चयः, p_Error_संहिता);
     }
 }
 
-#endif
+#यदि_अन्तः

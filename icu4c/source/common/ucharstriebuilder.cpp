@@ -14,16 +14,16 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/ucharstriebuilder.h"
-#include "unicode/unistr.h"
-#include "unicode/ustring.h"
-#include "cmemory.h"
-#include "uarrsort.h"
-#include "uassert.h"
-#include "uhash.h"
-#include "ustr_imp.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/ucharstrie.h"
+#अन्तर्भाव "unicode/ucharstriebuilder.h"
+#अन्तर्भाव "unicode/unistr.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "uarrsort.h"
+#अन्तर्भाव "uassert.h"
+#अन्तर्भाव "uhash.h"
+#अन्तर्भाव "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -33,414 +33,414 @@ U_NAMESPACE_BEGIN
  * It might(!) take less memory if we collected the data in a temporary, dynamic trie.
  */
 
-class UCharsTrieElement : public UMemory {
-public:
+वर्ग UCharsTrieElement : सार्वजनिक UMemory {
+सार्वजनिक:
     // Use compiler's default constructor, initializes nothing.
 
-    void setTo(const UnicodeString &s, int32_t val, UnicodeString &strings, UErrorCode &errorCode);
+    शून्य समुच्चयः_गन्तव्यम्(ध्रुव UnicodeString &s, int32_t val, UnicodeString &वाक्यानि, UError_संहिता &error_संहिता);
 
-    UnicodeString getString(const UnicodeString& strings U_LIFETIME_BOUND) const {
-        int32_t length=strings[stringOffset];
-        return strings.tempSubString(stringOffset+1, length);
+    UnicodeString getString(ध्रुव UnicodeString& वाक्यानि U_LIFETIME_BOUND) ध्रुव {
+        int32_t length=वाक्यानि[string_विस्थापनम्];
+        प्रत्यागम वाक्यानि.अस्थायी_Sub_String(string_विस्थापनम्+1, length);
     }
-    int32_t getStringLength(const UnicodeString &strings) const {
-        return strings[stringOffset];
-    }
-
-    char16_t charAt(int32_t index, const UnicodeString &strings) const {
-        return strings[stringOffset+1+index];
+    int32_t get_String_दीर्घता(ध्रुव UnicodeString &वाक्यानि) ध्रुव {
+        प्रत्यागम वाक्यानि[string_विस्थापनम्];
     }
 
-    int32_t getValue() const { return value; }
+    char16_t charAt(int32_t सूचकांक, ध्रुव UnicodeString &वाक्यानि) ध्रुव {
+        प्रत्यागम वाक्यानि[string_विस्थापनम्+1+सूचकांक];
+    }
 
-    int32_t compareStringTo(const UCharsTrieElement &o, const UnicodeString &strings) const;
+    int32_t get_मानम्() ध्रुव { प्रत्यागम value; }
 
-private:
+    int32_t compare_String_गन्तव्यम्(ध्रुव UCharsTrieElement &o, ध्रुव UnicodeString &वाक्यानि) ध्रुव;
+
+गुप्त:
     // The first strings unit contains the string length.
     // (Compared with a stringLength field here, this saves 2 bytes per string.)
-    int32_t stringOffset;
+    int32_t string_विस्थापनम्;
     int32_t value;
 };
 
-void
-UCharsTrieElement::setTo(const UnicodeString &s, int32_t val,
-                         UnicodeString &strings, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+शून्य
+UCharsTrieElement::समुच्चयः_गन्तव्यम्(ध्रुव UnicodeString &s, int32_t val,
+                         UnicodeString &वाक्यानि, UError_संहिता &error_संहिता) {
+    यदि(U_FAILURE(error_संहिता)) {
+        प्रत्यागम;
     }
     int32_t length=s.length();
-    if(length>0xffff) {
+    यदि(length>0xffff) {
         // Too long: We store the length in 1 unit.
-        errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        error_संहिता=U_सूचकांक_OUTOFBOUNDS_ERROR;
+        प्रत्यागम;
     }
-    stringOffset=strings.length();
-    strings.append(static_cast<char16_t>(length));
+    string_विस्थापनम्=वाक्यानि.length();
+    वाक्यानि.append(static_cast<char16_t>(length));
     value=val;
-    strings.append(s);
+    वाक्यानि.append(s);
 }
 
 int32_t
-UCharsTrieElement::compareStringTo(const UCharsTrieElement &other, const UnicodeString &strings) const {
-    return getString(strings).compare(other.getString(strings));
+UCharsTrieElement::compare_String_गन्तव्यम्(ध्रुव UCharsTrieElement &other, ध्रुव UnicodeString &वाक्यानि) ध्रुव {
+    प्रत्यागम getString(वाक्यानि).compare(other.getString(वाक्यानि));
 }
 
-UCharsTrieBuilder::UCharsTrieBuilder(UErrorCode & /*errorCode*/)
-        : elements(nullptr), elementsCapacity(0), elementsLength(0),
-          uchars(nullptr), ucharsCapacity(0), ucharsLength(0) {}
+UCharsTrieBuilder::UCharsTrieBuilder(UError_संहिता & /*errorCode*/)
+        : elements(शून्यसूचकः), elements_क्षमता(0), elements_दीर्घता(0),
+          uchars(शून्यसूचकः), uchars_क्षमता(0), uchars_दीर्घता(0) {}
 
 UCharsTrieBuilder::~UCharsTrieBuilder() {
-    delete[] elements;
+    विलोपय[] elements;
     uprv_free(uchars);
 }
 
 UCharsTrieBuilder&
-UCharsTrieBuilder::add(const UnicodeString& s,
+UCharsTrieBuilder::सङ्कलय(ध्रुव UnicodeString& s,
                        int32_t value,
-                       UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+                       UError_संहिता& error_संहिता) U_LIFETIME_BOUND {
+    यदि(U_FAILURE(error_संहिता)) {
+        प्रत्यागम *एतत्;
     }
-    if(ucharsLength>0) {
+    यदि(uchars_दीर्घता>0) {
         // Cannot add elements after building.
-        errorCode=U_NO_WRITE_PERMISSION;
-        return *this;
+        error_संहिता=U_NO_WRITE_PERMISSION;
+        प्रत्यागम *एतत्;
     }
-    if(elementsLength==elementsCapacity) {
-        int32_t newCapacity;
-        if(elementsCapacity==0) {
-            newCapacity=1024;
-        } else {
-            newCapacity=4*elementsCapacity;
+    यदि(elements_दीर्घता==elements_क्षमता) {
+        int32_t new_क्षमता;
+        यदि(elements_क्षमता==0) {
+            new_क्षमता=1024;
+        } अन्यथा {
+            new_क्षमता=4*elements_क्षमता;
         }
-        UCharsTrieElement *newElements=new UCharsTrieElement[newCapacity];
-        if(newElements==nullptr) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+        UCharsTrieElement *newElements=नूतन UCharsTrieElement[new_क्षमता];
+        यदि(newElements==शून्यसूचकः) {
+            error_संहिता=U_स्मृतिः_आवण्टनम्_ERROR;
+            प्रत्यागम *एतत्;
         }
-        if(elementsLength>0) {
-            uprv_memcpy(newElements, elements, (size_t)elementsLength*sizeof(UCharsTrieElement));
+        यदि(elements_दीर्घता>0) {
+            uprv_memcpy(newElements, elements, (size_t)elements_दीर्घता*परिमाण(UCharsTrieElement));
         }
-        delete[] elements;
+        विलोपय[] elements;
         elements=newElements;
-        elementsCapacity=newCapacity;
+        elements_क्षमता=new_क्षमता;
     }
-    elements[elementsLength++].setTo(s, value, strings, errorCode);
-    if(U_SUCCESS(errorCode) && strings.isBogus()) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
+    elements[elements_दीर्घता++].समुच्चयः_गन्तव्यम्(s, value, वाक्यानि, error_संहिता);
+    यदि(U_SUCCESS(error_संहिता) && वाक्यानि.isBogus()) {
+        error_संहिता=U_स्मृतिः_आवण्टनम्_ERROR;
     }
-    return *this;
+    प्रत्यागम *एतत्;
 }
 
 U_CDECL_BEGIN
 
-static int32_t U_CALLCONV
-compareElementStrings(const void *context, const void *left, const void *right) {
-    const UnicodeString *strings=static_cast<const UnicodeString *>(context);
-    const UCharsTrieElement *leftElement=static_cast<const UCharsTrieElement *>(left);
-    const UCharsTrieElement *rightElement=static_cast<const UCharsTrieElement *>(right);
-    return leftElement->compareStringTo(*rightElement, *strings);
+स्थिर int32_t U_CALLCONV
+compare_Element_वाक्यानि(ध्रुव शून्य *context, ध्रुव शून्य *वामतः, ध्रुव शून्य *दक्षिणतः) {
+    ध्रुव UnicodeString *वाक्यानि=static_cast<ध्रुव UnicodeString *>(context);
+    ध्रुव UCharsTrieElement *वामः_Element=static_cast<ध्रुव UCharsTrieElement *>(वामतः);
+    ध्रुव UCharsTrieElement *दक्षिणः_Element=static_cast<ध्रुव UCharsTrieElement *>(दक्षिणतः);
+    प्रत्यागम वामः_Element->compare_String_गन्तव्यम्(*दक्षिणः_Element, *वाक्यानि);
 }
 
-U_CDECL_END
+U_CDECL_अन्तः
 
 UCharsTrie *
-UCharsTrieBuilder::build(UStringTrieBuildOption buildOption, UErrorCode &errorCode) {
-    buildUChars(buildOption, errorCode);
-    UCharsTrie *newTrie=nullptr;
-    if(U_SUCCESS(errorCode)) {
-        newTrie=new UCharsTrie(uchars, uchars+(ucharsCapacity-ucharsLength));
-        if(newTrie==nullptr) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
-        } else {
-            uchars=nullptr;  // The new trie now owns the array.
-            ucharsCapacity=0;
+UCharsTrieBuilder::build(UStringTrieBuildOption buildOption, UError_संहिता &error_संहिता) {
+    buildUChars(buildOption, error_संहिता);
+    UCharsTrie *newTrie=शून्यसूचकः;
+    यदि(U_SUCCESS(error_संहिता)) {
+        newTrie=नूतन UCharsTrie(uchars, uchars+(uchars_क्षमता-uchars_दीर्घता));
+        यदि(newTrie==शून्यसूचकः) {
+            error_संहिता=U_स्मृतिः_आवण्टनम्_ERROR;
+        } अन्यथा {
+            uchars=शून्यसूचकः;  // The new trie now owns the array.
+            uchars_क्षमता=0;
         }
     }
-    return newTrie;
+    प्रत्यागम newTrie;
 }
 
 UnicodeString&
 UCharsTrieBuilder::buildUnicodeString(UStringTrieBuildOption buildOption,
-                                      UnicodeString& result U_LIFETIME_BOUND,
-                                      UErrorCode& errorCode) U_LIFETIME_BOUND {
-    buildUChars(buildOption, errorCode);
-    if(U_SUCCESS(errorCode)) {
-        result.setTo(false, uchars+(ucharsCapacity-ucharsLength), ucharsLength);
+                                      UnicodeString& परिणाम U_LIFETIME_BOUND,
+                                      UError_संहिता& error_संहिता) U_LIFETIME_BOUND {
+    buildUChars(buildOption, error_संहिता);
+    यदि(U_SUCCESS(error_संहिता)) {
+        परिणाम.समुच्चयः_गन्तव्यम्(असत्य, uchars+(uchars_क्षमता-uchars_दीर्घता), uchars_दीर्घता);
     }
-    return result;
+    प्रत्यागम परिणाम;
 }
 
-void
-UCharsTrieBuilder::buildUChars(UStringTrieBuildOption buildOption, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+शून्य
+UCharsTrieBuilder::buildUChars(UStringTrieBuildOption buildOption, UError_संहिता &error_संहिता) {
+    यदि(U_FAILURE(error_संहिता)) {
+        प्रत्यागम;
     }
-    if(uchars!=nullptr && ucharsLength>0) {
+    यदि(uchars!=शून्यसूचकः && uchars_दीर्घता>0) {
         // Already built.
-        return;
+        प्रत्यागम;
     }
-    if(ucharsLength==0) {
-        if(elementsLength==0) {
-            errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return;
+    यदि(uchars_दीर्घता==0) {
+        यदि(elements_दीर्घता==0) {
+            error_संहिता=U_सूचकांक_OUTOFBOUNDS_ERROR;
+            प्रत्यागम;
         }
-        if(strings.isBogus()) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+        यदि(वाक्यानि.isBogus()) {
+            error_संहिता=U_स्मृतिः_आवण्टनम्_ERROR;
+            प्रत्यागम;
         }
-        uprv_sortArray(elements, elementsLength, static_cast<int32_t>(sizeof(UCharsTrieElement)),
-                      compareElementStrings, &strings,
-                      false,  // need not be a stable sort
-                      &errorCode);
-        if(U_FAILURE(errorCode)) {
-            return;
+        uprv_क्रमय_Array(elements, elements_दीर्घता, static_cast<int32_t>(परिमाण(UCharsTrieElement)),
+                      compare_Element_वाक्यानि, &वाक्यानि,
+                      असत्य,  // need not be a stable sort
+                      &error_संहिता);
+        यदि(U_FAILURE(error_संहिता)) {
+            प्रत्यागम;
         }
         // Duplicate strings are not allowed.
-        UnicodeString prev=elements[0].getString(strings);
-        for(int32_t i=1; i<elementsLength; ++i) {
-            UnicodeString current=elements[i].getString(strings);
-            if(prev==current) {
-                errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-                return;
+        UnicodeString पूर्व=elements[0].getString(वाक्यानि);
+        प्रति(int32_t i=1; i<elements_दीर्घता; ++i) {
+            UnicodeString current=elements[i].getString(वाक्यानि);
+            यदि(पूर्व==current) {
+                error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+                प्रत्यागम;
             }
-            prev.fastCopyFrom(current);
+            पूर्व.fastCopyFrom(current);
         }
     }
     // Create and char16_t-serialize the trie for the elements.
-    ucharsLength=0;
-    int32_t capacity=strings.length();
-    if(capacity<1024) {
+    uchars_दीर्घता=0;
+    int32_t capacity=वाक्यानि.length();
+    यदि(capacity<1024) {
         capacity=1024;
     }
-    if(ucharsCapacity<capacity) {
+    यदि(uchars_क्षमता<capacity) {
         uprv_free(uchars);
         uchars=static_cast<char16_t *>(uprv_malloc(capacity*2));
-        if(uchars==nullptr) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
-            ucharsCapacity=0;
-            return;
+        यदि(uchars==शून्यसूचकः) {
+            error_संहिता=U_स्मृतिः_आवण्टनम्_ERROR;
+            uchars_क्षमता=0;
+            प्रत्यागम;
         }
-        ucharsCapacity=capacity;
+        uchars_क्षमता=capacity;
     }
-    StringTrieBuilder::build(buildOption, elementsLength, errorCode);
-    if(uchars==nullptr) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
+    StringTrieBuilder::build(buildOption, elements_दीर्घता, error_संहिता);
+    यदि(uchars==शून्यसूचकः) {
+        error_संहिता=U_स्मृतिः_आवण्टनम्_ERROR;
     }
 }
 
 int32_t
-UCharsTrieBuilder::getElementStringLength(int32_t i) const {
-    return elements[i].getStringLength(strings);
+UCharsTrieBuilder::get_Element_String_दीर्घता(int32_t i) ध्रुव {
+    प्रत्यागम elements[i].get_String_दीर्घता(वाक्यानि);
 }
 
 char16_t
-UCharsTrieBuilder::getElementUnit(int32_t i, int32_t unitIndex) const {
-    return elements[i].charAt(unitIndex, strings);
+UCharsTrieBuilder::getElementUnit(int32_t i, int32_t unit_सूचकांक) ध्रुव {
+    प्रत्यागम elements[i].charAt(unit_सूचकांक, वाक्यानि);
 }
 
 int32_t
-UCharsTrieBuilder::getElementValue(int32_t i) const {
-    return elements[i].getValue();
+UCharsTrieBuilder::get_Element_मानम्(int32_t i) ध्रुव {
+    प्रत्यागम elements[i].get_मानम्();
 }
 
 int32_t
-UCharsTrieBuilder::getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) const {
-    const UCharsTrieElement &firstElement=elements[first];
-    const UCharsTrieElement &lastElement=elements[last];
-    int32_t minStringLength=firstElement.getStringLength(strings);
-    while(++unitIndex<minStringLength &&
-            firstElement.charAt(unitIndex, strings)==
-            lastElement.charAt(unitIndex, strings)) {}
-    return unitIndex;
+UCharsTrieBuilder::get_सीमा_सम्बन्धि_रैखिकम्_मेलनम्(int32_t first, int32_t चरमः, int32_t unit_सूचकांक) ध्रुव {
+    ध्रुव UCharsTrieElement &firstElement=elements[first];
+    ध्रुव UCharsTrieElement &चरमः_Element=elements[चरमः];
+    int32_t min_String_दीर्घता=firstElement.get_String_दीर्घता(वाक्यानि);
+    यावत्(++unit_सूचकांक<min_String_दीर्घता &&
+            firstElement.charAt(unit_सूचकांक, वाक्यानि)==
+            चरमः_Element.charAt(unit_सूचकांक, वाक्यानि)) {}
+    प्रत्यागम unit_सूचकांक;
 }
 
 int32_t
-UCharsTrieBuilder::countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const {
+UCharsTrieBuilder::गणनम्_Element_Units(int32_t start, int32_t सीमा, int32_t unit_सूचकांक) ध्रुव {
     int32_t length=0;  // Number of different units at unitIndex.
     int32_t i=start;
-    do {
-        char16_t unit=elements[i++].charAt(unitIndex, strings);
-        while(i<limit && unit==elements[i].charAt(unitIndex, strings)) {
+    कुरु {
+        char16_t unit=elements[i++].charAt(unit_सूचकांक, वाक्यानि);
+        यावत्(i<सीमा && unit==elements[i].charAt(unit_सूचकांक, वाक्यानि)) {
             ++i;
         }
         ++length;
-    } while(i<limit);
-    return length;
+    } यावत्(i<सीमा);
+    प्रत्यागम length;
 }
 
 int32_t
-UCharsTrieBuilder::skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const {
-    do {
-        char16_t unit=elements[i++].charAt(unitIndex, strings);
-        while(unit==elements[i].charAt(unitIndex, strings)) {
+UCharsTrieBuilder::skipElementsBySomeUnits(int32_t i, int32_t unit_सूचकांक, int32_t count) ध्रुव {
+    कुरु {
+        char16_t unit=elements[i++].charAt(unit_सूचकांक, वाक्यानि);
+        यावत्(unit==elements[i].charAt(unit_सूचकांक, वाक्यानि)) {
             ++i;
         }
-    } while(--count>0);
-    return i;
+    } यावत्(--count>0);
+    प्रत्यागम i;
 }
 
 int32_t
-UCharsTrieBuilder::indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const {
-    while(unit==elements[i].charAt(unitIndex, strings)) {
+UCharsTrieBuilder::सूचकांक_सम्बन्धि_Element_With_अग्र_Unit(int32_t i, int32_t unit_सूचकांक, char16_t unit) ध्रुव {
+    यावत्(unit==elements[i].charAt(unit_सूचकांक, वाक्यानि)) {
         ++i;
     }
-    return i;
+    प्रत्यागम i;
 }
 
-UCharsTrieBuilder::UCTLinearMatchNode::UCTLinearMatchNode(const char16_t *units, int32_t len, Node *nextNode)
-        : LinearMatchNode(len, nextNode), s(units) {
+UCharsTrieBuilder::UCTLinear_मेलनम्_ग्रन्थिः::UCTLinear_मेलनम्_ग्रन्थिः(ध्रुव char16_t *units, int32_t len, Node *अग्र_ग्रन्थिः)
+        : रैखिकम्_मेलनम्_ग्रन्थिः(len, अग्र_ग्रन्थिः), s(units) {
     hash=hash*37u+ustr_hashUCharsN(units, len);
 }
 
-bool
-UCharsTrieBuilder::UCTLinearMatchNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
+तार्किक
+UCharsTrieBuilder::UCTLinear_मेलनम्_ग्रन्थिः::संक्रियकः==(ध्रुव Node &other) ध्रुव {
+    यदि(एतत्==&other) {
+        प्रत्यागम सत्य;
     }
-    if(!LinearMatchNode::operator==(other)) {
-        return false;
+    यदि(!रैखिकम्_मेलनम्_ग्रन्थिः::संक्रियकः==(other)) {
+        प्रत्यागम असत्य;
     }
-    const UCTLinearMatchNode &o=static_cast<const UCTLinearMatchNode &>(other);
-    return 0==u_memcmp(s, o.s, length);
+    ध्रुव UCTLinear_मेलनम्_ग्रन्थिः &o=static_cast<ध्रुव UCTLinear_मेलनम्_ग्रन्थिः &>(other);
+    प्रत्यागम 0==u_memcmp(s, o.s, length);
 }
 
-void
-UCharsTrieBuilder::UCTLinearMatchNode::write(StringTrieBuilder &builder) {
+शून्य
+UCharsTrieBuilder::UCTLinear_मेलनम्_ग्रन्थिः::लिख(StringTrieBuilder &builder) {
     UCharsTrieBuilder &b=(UCharsTrieBuilder &)builder;
-    next->write(builder);
-    b.write(s, length);
-    offset=b.writeValueAndType(hasValue, value, b.getMinLinearMatch()+length-1);
+    next->लिख(builder);
+    b.लिख(s, length);
+    विस्थापनम्=b.write_मानम्_And_Type(has_मानम्, value, b.get_Min_रैखिकम्_मेलनम्()+length-1);
 }
 
 StringTrieBuilder::Node *
-UCharsTrieBuilder::createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                         Node *nextNode) const {
-    return new UCTLinearMatchNode(
-            elements[i].getString(strings).getBuffer()+unitIndex,
+UCharsTrieBuilder::create_रैखिकम्_मेलनम्_ग्रन्थिः(int32_t i, int32_t unit_सूचकांक, int32_t length,
+                                         Node *अग्र_ग्रन्थिः) ध्रुव {
+    प्रत्यागम नूतन UCTLinear_मेलनम्_ग्रन्थिः(
+            elements[i].getString(वाक्यानि).get_बफर()+unit_सूचकांक,
             length,
-            nextNode);
+            अग्र_ग्रन्थिः);
 }
 
 UBool
-UCharsTrieBuilder::ensureCapacity(int32_t length) {
-    if(uchars==nullptr) {
-        return false;  // previous memory allocation had failed
+UCharsTrieBuilder::ensure_क्षमता(int32_t length) {
+    यदि(uchars==शून्यसूचकः) {
+        प्रत्यागम असत्य;  // previous memory allocation had failed
     }
-    if(length>ucharsCapacity) {
-        int32_t newCapacity=ucharsCapacity;
-        do {
-            newCapacity*=2;
-        } while(newCapacity<=length);
-        char16_t *newUChars=static_cast<char16_t *>(uprv_malloc(newCapacity*2));
-        if(newUChars==nullptr) {
+    यदि(length>uchars_क्षमता) {
+        int32_t new_क्षमता=uchars_क्षमता;
+        कुरु {
+            new_क्षमता*=2;
+        } यावत्(new_क्षमता<=length);
+        char16_t *newUChars=static_cast<char16_t *>(uprv_malloc(new_क्षमता*2));
+        यदि(newUChars==शून्यसूचकः) {
             // unable to allocate memory
             uprv_free(uchars);
-            uchars=nullptr;
-            ucharsCapacity=0;
-            return false;
+            uchars=शून्यसूचकः;
+            uchars_क्षमता=0;
+            प्रत्यागम असत्य;
         }
-        u_memcpy(newUChars+(newCapacity-ucharsLength),
-                 uchars+(ucharsCapacity-ucharsLength), ucharsLength);
+        u_memcpy(newUChars+(new_क्षमता-uchars_दीर्घता),
+                 uchars+(uchars_क्षमता-uchars_दीर्घता), uchars_दीर्घता);
         uprv_free(uchars);
         uchars=newUChars;
-        ucharsCapacity=newCapacity;
+        uchars_क्षमता=new_क्षमता;
     }
-    return true;
+    प्रत्यागम सत्य;
 }
 
 int32_t
-UCharsTrieBuilder::write(int32_t unit) {
-    int32_t newLength=ucharsLength+1;
-    if(ensureCapacity(newLength)) {
-        ucharsLength=newLength;
-        uchars[ucharsCapacity - ucharsLength] = static_cast<char16_t>(unit);
+UCharsTrieBuilder::लिख(int32_t unit) {
+    int32_t new_दीर्घता=uchars_दीर्घता+1;
+    यदि(ensure_क्षमता(new_दीर्घता)) {
+        uchars_दीर्घता=new_दीर्घता;
+        uchars[uchars_क्षमता - uchars_दीर्घता] = static_cast<char16_t>(unit);
     }
-    return ucharsLength;
+    प्रत्यागम uchars_दीर्घता;
 }
 
 int32_t
-UCharsTrieBuilder::write(const char16_t *s, int32_t length) {
-    int32_t newLength=ucharsLength+length;
-    if(ensureCapacity(newLength)) {
-        ucharsLength=newLength;
-        u_memcpy(uchars+(ucharsCapacity-ucharsLength), s, length);
+UCharsTrieBuilder::लिख(ध्रुव char16_t *s, int32_t length) {
+    int32_t new_दीर्घता=uchars_दीर्घता+length;
+    यदि(ensure_क्षमता(new_दीर्घता)) {
+        uchars_दीर्घता=new_दीर्घता;
+        u_memcpy(uchars+(uchars_क्षमता-uchars_दीर्घता), s, length);
     }
-    return ucharsLength;
+    प्रत्यागम uchars_दीर्घता;
 }
 
 int32_t
-UCharsTrieBuilder::writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) {
-    return write(elements[i].getString(strings).getBuffer()+unitIndex, length);
+UCharsTrieBuilder::writeElementUnits(int32_t i, int32_t unit_सूचकांक, int32_t length) {
+    प्रत्यागम लिख(elements[i].getString(वाक्यानि).get_बफर()+unit_सूचकांक, length);
 }
 
 int32_t
-UCharsTrieBuilder::writeValueAndFinal(int32_t i, UBool isFinal) {
-    if(0<=i && i<=UCharsTrie::kMaxOneUnitValue) {
-        return write(i|(isFinal<<15));
+UCharsTrieBuilder::write_मानम्_And_Final(int32_t i, UBool isFinal) {
+    यदि(0<=i && i<=UCharsTrie::k_Max_One_Unit_मानम्) {
+        प्रत्यागम लिख(i|(isFinal<<15));
     }
     char16_t intUnits[3];
     int32_t length;
-    if(i<0 || i>UCharsTrie::kMaxTwoUnitValue) {
-        intUnits[0] = static_cast<char16_t>(UCharsTrie::kThreeUnitValueLead);
+    यदि(i<0 || i>UCharsTrie::k_Max_Two_Unit_मानम्) {
+        intUnits[0] = static_cast<char16_t>(UCharsTrie::k_Three_Unit_मानम्_Lead);
         intUnits[1] = static_cast<char16_t>(static_cast<uint32_t>(i) >> 16);
         intUnits[2] = static_cast<char16_t>(i);
         length=3;
     // } else if(i<=UCharsTrie::kMaxOneUnitValue) {
     //     intUnits[0]=(char16_t)(i);
     //     length=1;
-    } else {
-        intUnits[0] = static_cast<char16_t>(UCharsTrie::kMinTwoUnitValueLead + (i >> 16));
+    } अन्यथा {
+        intUnits[0] = static_cast<char16_t>(UCharsTrie::k_Min_Two_Unit_मानम्_Lead + (i >> 16));
         intUnits[1] = static_cast<char16_t>(i);
         length=2;
     }
     intUnits[0] = static_cast<char16_t>(intUnits[0] | (isFinal << 15));
-    return write(intUnits, length);
+    प्रत्यागम लिख(intUnits, length);
 }
 
 int32_t
-UCharsTrieBuilder::writeValueAndType(UBool hasValue, int32_t value, int32_t node) {
-    if(!hasValue) {
-        return write(node);
+UCharsTrieBuilder::write_मानम्_And_Type(UBool has_मानम्, int32_t value, int32_t ग्रन्थिः) {
+    यदि(!has_मानम्) {
+        प्रत्यागम लिख(ग्रन्थिः);
     }
     char16_t intUnits[3];
     int32_t length;
-    if(value<0 || value>UCharsTrie::kMaxTwoUnitNodeValue) {
-        intUnits[0] = static_cast<char16_t>(UCharsTrie::kThreeUnitNodeValueLead);
+    यदि(value<0 || value>UCharsTrie::k_Max_Two_Unit_ग्रन्थिः_मानम्) {
+        intUnits[0] = static_cast<char16_t>(UCharsTrie::k_Three_Unit_ग्रन्थिः_मानम्_Lead);
         intUnits[1] = static_cast<char16_t>(static_cast<uint32_t>(value) >> 16);
         intUnits[2] = static_cast<char16_t>(value);
         length=3;
-    } else if(value<=UCharsTrie::kMaxOneUnitNodeValue) {
+    } अन्यथा यदि(value<=UCharsTrie::k_Max_One_Unit_ग्रन्थिः_मानम्) {
         intUnits[0] = static_cast<char16_t>((value + 1) << 6);
         length=1;
-    } else {
-        intUnits[0] = static_cast<char16_t>(UCharsTrie::kMinTwoUnitNodeValueLead + ((value >> 10) & 0x7fc0));
+    } अन्यथा {
+        intUnits[0] = static_cast<char16_t>(UCharsTrie::k_Min_Two_Unit_ग्रन्थिः_मानम्_Lead + ((value >> 10) & 0x7fc0));
         intUnits[1] = static_cast<char16_t>(value);
         length=2;
     }
-    intUnits[0] |= static_cast<char16_t>(node);
-    return write(intUnits, length);
+    intUnits[0] |= static_cast<char16_t>(ग्रन्थिः);
+    प्रत्यागम लिख(intUnits, length);
 }
 
 int32_t
-UCharsTrieBuilder::writeDeltaTo(int32_t jumpTarget) {
-    int32_t i=ucharsLength-jumpTarget;
+UCharsTrieBuilder::write_Delta_गन्तव्यम्(int32_t jumpTarget) {
+    int32_t i=uchars_दीर्घता-jumpTarget;
     U_ASSERT(i>=0);
-    if(i<=UCharsTrie::kMaxOneUnitDelta) {
-        return write(i);
+    यदि(i<=UCharsTrie::kMaxOneUnitDelta) {
+        प्रत्यागम लिख(i);
     }
     char16_t intUnits[3];
     int32_t length;
-    if(i<=UCharsTrie::kMaxTwoUnitDelta) {
+    यदि(i<=UCharsTrie::kMaxTwoUnitDelta) {
         intUnits[0] = static_cast<char16_t>(UCharsTrie::kMinTwoUnitDeltaLead + (i >> 16));
         length=1;
-    } else {
+    } अन्यथा {
         intUnits[0] = static_cast<char16_t>(UCharsTrie::kThreeUnitDeltaLead);
         intUnits[1] = static_cast<char16_t>(i >> 16);
         length=2;
     }
     intUnits[length++] = static_cast<char16_t>(i);
-    return write(intUnits, length);
+    प्रत्यागम लिख(intUnits, length);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः

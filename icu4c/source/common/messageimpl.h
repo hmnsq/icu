@@ -14,14 +14,14 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __MESSAGEIMPL_H__
-#define __MESSAGEIMPL_H__
+#यदि_अपरिभाषितम् __MESSAGEIMPL_H__
+#परिभाषय __MESSAGEIMPL_H__
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#यदि !UCONFIG_NO_FORMATTING
 
-#include "unicode/messagepattern.h"
+#अन्तर्भाव "unicode/messagepattern.h"
 
 U_NAMESPACE_BEGIN
 
@@ -30,36 +30,36 @@ U_NAMESPACE_BEGIN
  * In Java, these are package-private methods in MessagePattern itself.
  * In C++, they are declared here and implemented in messagepattern.cpp.
  */
-class U_COMMON_API MessageImpl {
-public:
+class U_COMMON_API सन्देशः_Impl {
+सार्वजनिक:
     /**
      * @return true if getApostropheMode()==UMSGPAT_APOS_DOUBLE_REQUIRED
      */
-    static UBool jdkAposMode(const MessagePattern &msgPattern) {
-        return msgPattern.getApostropheMode()==UMSGPAT_APOS_DOUBLE_REQUIRED;
+    स्थिर UBool jdk_Apos_बहुलकम्(ध्रुव सन्देशः_आदर्शः &सन्देशः_आदर्शः_2) {
+        प्रत्यागम सन्देशः_आदर्शः_2.get_Apostrophe_बहुलकम्()==UMSGPAT_APOS_DOUBLE_REQUIRED;
     }
 
     /**
      * Appends the s[start, limit[ substring to sb, but with only half of the apostrophes
      * according to JDK pattern behavior.
      */
-    static void appendReducedApostrophes(const UnicodeString &s, int32_t start, int32_t limit,
+    स्थिर शून्य appendReducedApostrophes(ध्रुव UnicodeString &s, int32_t start, int32_t सीमा,
                                          UnicodeString &sb);
 
     /**
      * Appends the sub-message to the result string.
      * Omits SKIP_SYNTAX and appends whole arguments using appendReducedApostrophes().
      */
-    static UnicodeString& appendSubMessageWithoutSkipSyntax(const MessagePattern& msgPattern,
-                                                            int32_t msgStart,
-                                                            UnicodeString& result U_LIFETIME_BOUND);
+    स्थिर UnicodeString& append_Sub_सन्देशः_Without_Skip_Syntax(ध्रुव सन्देशः_आदर्शः& सन्देशः_आदर्शः_2,
+                                                            int32_t सन्देशः_Start,
+                                                            UnicodeString& परिणाम U_LIFETIME_BOUND);
 
-private:
-    MessageImpl() = delete;  // no constructor: all static methods
+गुप्त:
+    सन्देशः_Impl() = delete;  // no constructor: all static methods
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif  // !UCONFIG_NO_FORMATTING
+#यदि_अन्तः  // !UCONFIG_NO_FORMATTING
 
-#endif  // __MESSAGEIMPL_H__
+#यदि_अन्तः  // __MESSAGEIMPL_H__

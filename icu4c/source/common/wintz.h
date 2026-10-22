@@ -11,12 +11,12 @@
 ********************************************************************************
 */
 
-#ifndef __WINTZ
-#define __WINTZ
+#यदि_अपरिभाषितम् __WINTZ
+#परिभाषय __WINTZ
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#यदि U_PLATFORM_उपयुङ्क्ते_ONLY_WIN32_API
 
 /**
  * \file 
@@ -25,12 +25,12 @@
 
 U_CDECL_BEGIN
 /* Forward declarations for Windows types... */
-typedef struct _TIME_ZONE_INFORMATION TIME_ZONE_INFORMATION;
-U_CDECL_END
+प्रकारनिर्देश संरचना _TIME_ZONE_INFORMATION TIME_ZONE_INFORMATION;
+U_CDECL_अन्तः
 
-U_CAPI const char* U_EXPORT2
+U_CAPI ध्रुव वर्ण* U_EXPORT2
 uprv_detectWindowsTimeZone();
 
-#endif /* U_PLATFORM_USES_ONLY_WIN32_API  */
+#यदि_अन्तः /* U_PLATFORM_USES_ONLY_WIN32_API  */
 
-#endif /* __WINTZ */
+#यदि_अन्तः /* __WINTZ */

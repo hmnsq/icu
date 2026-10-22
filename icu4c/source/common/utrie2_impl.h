@@ -19,13 +19,13 @@
 *   used by utrie2.c and utrie2_builder.c.
 */
 
-#ifndef __UTRIE2_IMPL_H__
-#define __UTRIE2_IMPL_H__
+#यदि_अपरिभाषितम् __UTRIE2_IMPL_H__
+#परिभाषय __UTRIE2_IMPL_H__
 
-#ifdef UCPTRIE_DEBUG
-#include "unicode/umutablecptrie.h"
-#endif
-#include "utrie2.h"
+#यदि_परिभाषितम् UCPTRIE_DEBUG
+#अन्तर्भाव "unicode/umutablecptrie.h"
+#यदि_अन्तः
+#अन्तर्भाव "utrie2.h"
 
 /* Public UTrie2 API implementation ----------------------------------------- */
 
@@ -36,8 +36,8 @@
 
 // UTrie2 signature values, in platform endianness and opposite endianness.
 // The UTrie2 signature ASCII byte values spell "Tri2".
-#define UTRIE2_SIG      0x54726932
-#define UTRIE2_OE_SIG   0x32697254
+#परिभाषय UTRIE2_SIG      0x54726932
+#परिभाषय UTRIE2_OE_SIG   0x32697254
 
 /**
  * Trie data structure in serialized form:
@@ -47,7 +47,7 @@
  * uint16_t data[header.shiftedDataLength<<2];  -- or uint32_t data[...]
  * @internal
  */
-typedef struct UTrie2Header {
+प्रकारनिर्देश संरचना UTrie2_शीर्षकम् {
     /** "Tri2" in big-endian US-ASCII (0x54726932) */
     uint32_t signature;
 
@@ -59,28 +59,28 @@ typedef struct UTrie2Header {
     uint16_t options;
 
     /** UTRIE2_INDEX_1_OFFSET..UTRIE2_MAX_INDEX_LENGTH */
-    uint16_t indexLength;
+    uint16_t सूचकांक_दीर्घता;
 
     /** (UTRIE2_DATA_START_OFFSET..UTRIE2_MAX_DATA_LENGTH)>>UTRIE2_INDEX_SHIFT */
-    uint16_t shiftedDataLength;
+    uint16_t shifted_दत्त_दीर्घता;
 
     /** Null index and data blocks, not shifted. */
-    uint16_t index2NullOffset, dataNullOffset;
+    uint16_t index2_Null_विस्थापनम्, दत्त_Null_विस्थापनम्;
 
     /**
      * First code point of the single-value range ending with U+10ffff,
      * rounded up and then shifted right by UTRIE2_SHIFT_1.
      */
-    uint16_t shiftedHighStart;
-} UTrie2Header;
+    uint16_t shifted_उच्चः_Start;
+} UTrie2_शीर्षकम्;
 
 /**
  * Constants for use with UTrie2Header.options.
  * @internal
  */
-enum {
+गणना {
     /** Mask to get the UTrie2ValueBits valueBits from options. */
-    UTRIE2_OPTIONS_VALUE_BITS_MASK=0xf
+    UTRIE2_OPTIONS_मानम्_द्वयङ्काः_आवरणम्=0xf
 };
 
 /* Building a trie ---------------------------------------------------------- */
@@ -90,17 +90,17 @@ enum {
  * utrie2_get32() and utrie2_enum().
  */
 
-enum {
+गणना {
     /**
      * At build time, leave a gap in the index-2 table,
      * at least as long as the maximum lengths of the 2-byte UTF-8 index-2 table
      * and the supplementary index-1 table.
      * Round up to UTRIE2_INDEX_2_BLOCK_LENGTH for proper compacting.
      */
-    UNEWTRIE2_INDEX_GAP_OFFSET=UTRIE2_INDEX_2_BMP_LENGTH,
-    UNEWTRIE2_INDEX_GAP_LENGTH=
-        ((UTRIE2_UTF8_2B_INDEX_2_LENGTH+UTRIE2_MAX_INDEX_1_LENGTH)+UTRIE2_INDEX_2_MASK)&
-        ~UTRIE2_INDEX_2_MASK,
+    UNEWTRIE2_सूचकांक_GAP_विस्थापनम्=UTRIE2_सूचकांक_2_BMP_दीर्घता,
+    UNEWTRIE2_सूचकांक_GAP_दीर्घता=
+        ((UTRIE2_UTF8_2_B_सूचकांक_2_दीर्घता+UTRIE2_MAX_सूचकांक_1_दीर्घता)+UTRIE2_सूचकांक_2_आवरणम्)&
+        ~UTRIE2_सूचकांक_2_आवरणम्,
 
     /**
      * Maximum length of the build-time index-2 array.
@@ -109,13 +109,13 @@ enum {
      * plus the build-time index gap,
      * plus the null index-2 block.
      */
-    UNEWTRIE2_MAX_INDEX_2_LENGTH=
-        (0x110000>>UTRIE2_SHIFT_2)+
-        UTRIE2_LSCP_INDEX_2_LENGTH+
-        UNEWTRIE2_INDEX_GAP_LENGTH+
-        UTRIE2_INDEX_2_BLOCK_LENGTH,
+    UNEWTRIE2_MAX_सूचकांक_2_दीर्घता=
+        (0x110000>>UTRIE2_सरणम्_2)+
+        UTRIE2_LSCP_सूचकांक_2_दीर्घता+
+        UNEWTRIE2_सूचकांक_GAP_दीर्घता+
+        UTRIE2_सूचकांक_2_खण्डम्_दीर्घता,
 
-    UNEWTRIE2_INDEX_1_LENGTH=0x110000>>UTRIE2_SHIFT_1
+    UNEWTRIE2_सूचकांक_1_दीर्घता=0x110000>>UTRIE2_सरणम्_1
 };
 
 /**
@@ -123,7 +123,7 @@ enum {
  * One entry per 0x110000 code points, plus the illegal-UTF-8 block and the null block,
  * plus values for the 0x400 surrogate code units.
  */
-#define UNEWTRIE2_MAX_DATA_LENGTH (0x110000+0x40+0x40+0x400)
+#परिभाषय UNEWTRIE2_MAX_दत्त_दीर्घता (0x110000+0x40+0x40+0x400)
 
 /*
  * Build-time trie structure.
@@ -139,19 +139,19 @@ enum {
  * preallocated anyway (unlike the growable data array).
  * Just allocating multiple index-2 blocks as needed.
  */
-struct UNewTrie2 {
-    int32_t index1[UNEWTRIE2_INDEX_1_LENGTH];
-    int32_t index2[UNEWTRIE2_MAX_INDEX_2_LENGTH];
-    uint32_t *data;
-#ifdef UCPTRIE_DEBUG
+संरचना UNewTrie2 {
+    int32_t index1[UNEWTRIE2_सूचकांक_1_दीर्घता];
+    int32_t index2[UNEWTRIE2_MAX_सूचकांक_2_दीर्घता];
+    uint32_t *दत्त;
+#यदि_परिभाषितम् UCPTRIE_DEBUG
     UMutableCPTrie *t3;
-#endif
+#यदि_अन्तः
 
-    uint32_t initialValue, errorValue;
-    int32_t index2Length, dataCapacity, dataLength;
-    int32_t firstFreeBlock;
-    int32_t index2NullOffset, dataNullOffset;
-    UChar32 highStart;
+    uint32_t initial_मानम्, error_मानम्;
+    int32_t index2_दीर्घता, दत्त_क्षमता, दत्त_दीर्घता;
+    int32_t first_Free_खण्डम्;
+    int32_t index2_Null_विस्थापनम्, दत्त_Null_विस्थापनम्;
+    UChar32 उच्चः_Start;
     UBool isCompacted;
 
     /**
@@ -169,7 +169,7 @@ struct UNewTrie2 {
      * Map of adjusted indexes, used in compactData() and compactIndex2().
      * Maps from original indexes to new ones.
      */
-    int32_t map[UNEWTRIE2_MAX_DATA_LENGTH>>UTRIE2_SHIFT_2];
+    int32_t map[UNEWTRIE2_MAX_दत्त_दीर्घता>>UTRIE2_सरणम्_2];
 };
 
-#endif
+#यदि_अन्तः

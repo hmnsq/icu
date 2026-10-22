@@ -20,63 +20,63 @@
 *   09/08/2004  grhoten     split from ucnv.c
 */
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#यदि !UCONFIG_NO_CONVERSION
 
-#include "unicode/ustring.h"
-#include "unicode/ures.h"
-#include "unicode/ucnv.h"
-#include "cstring.h"
-#include "ustr_imp.h"
-#include "ucnv_imp.h"
-#include "putilimp.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "unicode/ures.h"
+#अन्तर्भाव "unicode/ucnv.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "ustr_imp.h"
+#अन्तर्भाव "ucnv_imp.h"
+#अन्तर्भाव "putilimp.h"
 
 U_CAPI int32_t U_EXPORT2
-ucnv_getDisplayName(const UConverter *cnv,
-                    const char *displayLocale,
-                    char16_t *displayName, int32_t displayNameCapacity,
-                    UErrorCode *pErrorCode) {
+ucnv_getDisplayName(ध्रुव UConverter *cnv,
+                    ध्रुव वर्ण *displayLocale,
+                    char16_t *displayName, int32_t display_Name_क्षमता,
+                    UError_संहिता *p_Error_संहिता) {
     UResourceBundle *rb;
-    const char16_t *name;
+    ध्रुव char16_t *name;
     int32_t length;
-    UErrorCode localStatus = U_ZERO_ERROR;
+    UError_संहिता local_स्थितिः = U_ZERO_ERROR;
 
     /* check arguments */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    यदि(p_Error_संहिता==शून्यसूचकः || U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम 0;
     }
 
-    if(cnv==nullptr || displayNameCapacity<0 || (displayNameCapacity>0 && displayName==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    यदि(cnv==शून्यसूचकः || display_Name_क्षमता<0 || (display_Name_क्षमता>0 && displayName==शून्यसूचकः)) {
+        *p_Error_संहिता=U_ILLEGAL_तर्कः_ERROR;
+        प्रत्यागम 0;
     }
 
     /* open the resource bundle and get the display name string */
-    rb=ures_open(nullptr, displayLocale, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    rb=ures_open(शून्यसूचकः, displayLocale, p_Error_संहिता);
+    यदि(U_FAILURE(*p_Error_संहिता)) {
+        प्रत्यागम 0;
     }
 
     /* use the internal name as the key */
-    name=ures_getStringByKey(rb, cnv->sharedData->staticData->name, &length, &localStatus);
+    name=ures_get_String_By_कुञ्चिका(rb, cnv->shared_दत्त->static_दत्त->name, &length, &local_स्थितिः);
     ures_close(rb);
 
-    if(U_SUCCESS(localStatus)) {
+    यदि(U_SUCCESS(local_स्थितिः)) {
         /* copy the string */
-        if (*pErrorCode == U_ZERO_ERROR) {
-            *pErrorCode = localStatus;
+        यदि (*p_Error_संहिता == U_ZERO_ERROR) {
+            *p_Error_संहिता = local_स्थितिः;
         }
-        u_memcpy(displayName, name, uprv_min(length, displayNameCapacity)*U_SIZEOF_UCHAR);
-    } else {
+        u_memcpy(displayName, name, uprv_min(length, display_Name_क्षमता)*U_SIZEOF_UCHAR);
+    } अन्यथा {
         /* convert the internal name into a Unicode string */
-        length=(int32_t)uprv_strlen(cnv->sharedData->staticData->name);
-        u_charsToUChars(cnv->sharedData->staticData->name, displayName, uprv_min(length, displayNameCapacity));
+        length=(int32_t)uprv_strlen(cnv->shared_दत्त->static_दत्त->name);
+        u_chars_गन्तव्यम्_UChars(cnv->shared_दत्त->static_दत्त->name, displayName, uprv_min(length, display_Name_क्षमता));
     }
-    return u_terminateUChars(displayName, displayNameCapacity, length, pErrorCode);
+    प्रत्यागम u_terminateUChars(displayName, display_Name_क्षमता, length, p_Error_संहिता);
 }
 
-#endif
+#यदि_अन्तः
 
 /*
  * Hey, Emacs, please set the following:

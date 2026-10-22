@@ -15,59 +15,59 @@
 ******************************************************************************
 */
 
-#include "unicode/icuplug.h"
+#अन्तर्भाव "unicode/icuplug.h"
 
 
-#if UCONFIG_ENABLE_PLUGINS
+#यदि UCONFIG_ENABLE_PLUGINS
 
 
-#include "icuplugimp.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "putilimp.h"
-#include "ucln.h"
-#include <stdio.h>
-#ifdef __MVS__  /* defined by z/OS compiler */
-#define _POSIX_SOURCE
-#include <cics.h> /* 12 Nov 2011 JAM iscics() function */
-#endif
-#include "charstr.h"
+#अन्तर्भाव "icuplugimp.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "putilimp.h"
+#अन्तर्भाव "ucln.h"
+#अन्तर्भाव <stdio.h>
+#यदि_परिभाषितम् __MVS__  /* defined by z/OS compiler */
+#परिभाषय _POSIX_SOURCE
+#अन्तर्भाव <cics.h> /* 12 Nov 2011 JAM iscics() function */
+#यदि_अन्तः
+#अन्तर्भाव "charstr.h"
 
-using namespace icu;
+उपयुज्य नामाकाश icu;
 
-#ifndef UPLUG_TRACE
-#define UPLUG_TRACE 0
-#endif
+#यदि_अपरिभाषितम् UPLUG_TRACE
+#परिभाषय UPLUG_TRACE 0
+#यदि_अन्तः
 
-#if UPLUG_TRACE
-#include <stdio.h>
-#define DBG(x) fprintf(stderr, "%s:%d: ",__FILE__,__LINE__); fprintf x
-#endif
+#यदि UPLUG_TRACE
+#अन्तर्भाव <stdio.h>
+#परिभाषय DBG(x) fprintf(stderr, "%s:%d: ",__FILE__,__LINE__); fprintf x
+#यदि_अन्तः
 
 /**
  * Internal structure of an ICU plugin. 
  */
 
-struct UPlugData {
+संरचना UPlug_दत्त {
   UPlugEntrypoint  *entrypoint; /**< plugin entrypoint */
-  uint32_t structSize;    /**< initialized to the size of this structure */
+  uint32_t struct_आकार;    /**< initialized to the size of this structure */
   uint32_t token;         /**< must be U_PLUG_TOKEN */
-  void *lib;              /**< plugin library, or nullptr */
-  char libName[UPLUG_NAME_MAX];   /**< library name */
-  char sym[UPLUG_NAME_MAX];        /**< plugin symbol, or nullptr */
-  char config[UPLUG_NAME_MAX];     /**< configuration data */
-  void *context;          /**< user context data */
-  char name[UPLUG_NAME_MAX];   /**< name of plugin */
+  शून्य *lib;              /**< plugin library, or nullptr */
+  वर्ण libName[UPLUG_NAME_MAX];   /**< library name */
+  वर्ण sym[UPLUG_NAME_MAX];        /**< plugin symbol, or nullptr */
+  वर्ण config[UPLUG_NAME_MAX];     /**< configuration data */
+  शून्य *context;          /**< user context data */
+  वर्ण name[UPLUG_NAME_MAX];   /**< name of plugin */
   UPlugLevel  level; /**< level of plugin */
-  UBool   awaitingLoad; /**< true if the plugin is awaiting a load call */
+  UBool   awaiting_आरोपय; /**< true if the plugin is awaiting a load call */
   UBool   dontUnload; /**< true if plugin must stay resident (leak plugin and lib) */
-  UErrorCode pluginStatus; /**< status code of plugin */
+  UError_संहिता plugin_स्थितिः; /**< status code of plugin */
 };
 
 
 
-#define UPLUG_LIBRARY_INITIAL_COUNT 8
-#define UPLUG_PLUGIN_INITIAL_COUNT 12
+#परिभाषय UPLUG_LIBRARY_INITIAL_गणनम् 8
+#परिभाषय UPLUG_PLUGIN_INITIAL_गणनम् 12
 
 /**
  * Remove an item
@@ -77,191 +77,191 @@ struct UPlugData {
  * @param itemToRemove the item number of the member
  * @return the new listsize 
  */
-static int32_t uplug_removeEntryAt(void *list, int32_t listSize, int32_t memberSize, int32_t itemToRemove) {
+स्थिर int32_t uplug_remove_प्रविष्टिः_At(शून्य *list, int32_t list_आकार, int32_t member_आकार, int32_t item_गन्तव्यम्_Remove) {
   uint8_t *bytePtr = (uint8_t *)list;
     
   /* get rid of some bad cases first */
-  if(listSize<1) {
-    return listSize;
+  यदि(list_आकार<1) {
+    प्रत्यागम list_आकार;
   }
     
   /* is there anything to move? */
-  if(listSize > itemToRemove+1) {
-    memmove(bytePtr+(itemToRemove*memberSize), bytePtr+((itemToRemove+1)*memberSize), memberSize);
+  यदि(list_आकार > item_गन्तव्यम्_Remove+1) {
+    memmove(bytePtr+(item_गन्तव्यम्_Remove*member_आकार), bytePtr+((item_गन्तव्यम्_Remove+1)*member_आकार), member_आकार);
   }
     
-  return listSize-1;
+  प्रत्यागम list_आकार-1;
 }
 
 
 
 
-#if U_ENABLE_DYLOAD
+#यदि U_ENABLE_DYLOAD
 /**
  * Library management. Internal. 
  * @internal
  */
-struct UPlugLibrary;
+संरचना UPlugLibrary;
 
 /**
  * Library management. Internal. 
  * @internal
  */
-typedef struct UPlugLibrary {
-  void *lib;                           /**< library ptr */
-  char name[UPLUG_NAME_MAX]; /**< library name */
+प्रकारनिर्देश संरचना UPlugLibrary {
+  शून्य *lib;                           /**< library ptr */
+  वर्ण name[UPLUG_NAME_MAX]; /**< library name */
   uint32_t ref;                        /**< reference count */
 } UPlugLibrary;
 
-static UPlugLibrary   staticLibraryList[UPLUG_LIBRARY_INITIAL_COUNT];
-static UPlugLibrary * libraryList = staticLibraryList;
-static int32_t libraryCount = 0;
-static int32_t libraryMax = UPLUG_LIBRARY_INITIAL_COUNT;
+स्थिर UPlugLibrary   staticLibraryList[UPLUG_LIBRARY_INITIAL_गणनम्];
+स्थिर UPlugLibrary * libraryList = staticLibraryList;
+स्थिर int32_t library_गणनम् = 0;
+स्थिर int32_t libraryMax = UPLUG_LIBRARY_INITIAL_गणनम्;
 
 /**
  * Search for a library. Doesn't lock
  * @param libName libname to search for
  * @return the library's struct
  */
-static int32_t searchForLibraryName(const char *libName) {
+स्थिर int32_t अन्वेषणम्_For_Library_Name(ध्रुव वर्ण *libName) {
   int32_t i;
     
-  for(i=0;i<libraryCount;i++) {
-    if(!uprv_strcmp(libName, libraryList[i].name)) {
-      return i;
+  प्रति(i=0;i<library_गणनम्;i++) {
+    यदि(!uprv_strcmp(libName, libraryList[i].name)) {
+      प्रत्यागम i;
     }
   }
-  return -1;
+  प्रत्यागम -1;
 }
 
-static int32_t searchForLibrary(void *lib) {
+स्थिर int32_t अन्वेषणम्_For_Library(शून्य *lib) {
   int32_t i;
     
-  for(i=0;i<libraryCount;i++) {
-    if(lib==libraryList[i].lib) {
-      return i;
+  प्रति(i=0;i<library_गणनम्;i++) {
+    यदि(lib==libraryList[i].lib) {
+      प्रत्यागम i;
     }
   }
-  return -1;
+  प्रत्यागम -1;
 }
 
-U_CAPI char * U_EXPORT2
-uplug_findLibrary(void *lib, UErrorCode *status) {
+U_CAPI वर्ण * U_EXPORT2
+uplug_findLibrary(शून्य *lib, UError_संहिता *स्थितिः) {
   int32_t libEnt;
-  char *ret = nullptr;
-  if(U_FAILURE(*status)) {
-    return nullptr;
+  वर्ण *ret = शून्यसूचकः;
+  यदि(U_FAILURE(*स्थितिः)) {
+    प्रत्यागम शून्यसूचकः;
   }
-  libEnt = searchForLibrary(lib);
-  if(libEnt!=-1) { 
+  libEnt = अन्वेषणम्_For_Library(lib);
+  यदि(libEnt!=-1) { 
     ret = libraryList[libEnt].name;
-  } else {
-    *status = U_MISSING_RESOURCE_ERROR;
+  } अन्यथा {
+    *स्थितिः = U_MISSING_RESOURCE_ERROR;
   }
-  return ret;
+  प्रत्यागम ret;
 }
 
-U_CAPI void * U_EXPORT2
-uplug_openLibrary(const char *libName, UErrorCode *status) {
-  int32_t libEntry = -1;
-  void *lib = nullptr;
+U_CAPI शून्य * U_EXPORT2
+uplug_openLibrary(ध्रुव वर्ण *libName, UError_संहिता *स्थितिः) {
+  int32_t lib_प्रविष्टिः = -1;
+  शून्य *lib = शून्यसूचकः;
     
-  if(U_FAILURE(*status)) return nullptr;
+  यदि(U_FAILURE(*स्थितिः)) प्रत्यागम शून्यसूचकः;
 
-  libEntry = searchForLibraryName(libName);
-  if(libEntry == -1) {
-    libEntry = libraryCount++;
-    if(libraryCount >= libraryMax) {
+  lib_प्रविष्टिः = अन्वेषणम्_For_Library_Name(libName);
+  यदि(lib_प्रविष्टिः == -1) {
+    lib_प्रविष्टिः = library_गणनम्++;
+    यदि(library_गणनम् >= libraryMax) {
       /* Ran out of library slots. Statically allocated because we can't depend on allocating memory.. */
-      *status = U_MEMORY_ALLOCATION_ERROR;
-#if UPLUG_TRACE
+      *स्थितिः = U_स्मृतिः_आवण्टनम्_ERROR;
+#यदि UPLUG_TRACE
       DBG((stderr, "uplug_openLibrary() - out of library slots (max %d)\n", libraryMax));
-#endif
-      return nullptr;
+#यदि_अन्तः
+      प्रत्यागम शून्यसूचकः;
     }
     /* Some operating systems don't want 
        DL operations from multiple threads. */
-    libraryList[libEntry].lib = uprv_dl_open(libName, status);
-#if UPLUG_TRACE
-    DBG((stderr, "uplug_openLibrary(%s,%s) libEntry %d, lib %p\n", libName, u_errorName(*status), libEntry, lib));
-#endif
+    libraryList[lib_प्रविष्टिः].lib = uprv_dl_open(libName, स्थितिः);
+#यदि UPLUG_TRACE
+    DBG((stderr, "uplug_openLibrary(%s,%s) libEntry %d, lib %p\n", libName, u_errorName(*स्थितिः), lib_प्रविष्टिः, lib));
+#यदि_अन्तः
         
-    if(libraryList[libEntry].lib == nullptr || U_FAILURE(*status)) {
+    यदि(libraryList[lib_प्रविष्टिः].lib == शून्यसूचकः || U_FAILURE(*स्थितिः)) {
       /* cleanup. */
-      libraryList[libEntry].lib = nullptr; /* failure with open */
-      libraryList[libEntry].name[0] = 0;
-#if UPLUG_TRACE
-      DBG((stderr, "uplug_openLibrary(%s,%s) libEntry %d, lib %p\n", libName, u_errorName(*status), libEntry, lib));
-#endif
+      libraryList[lib_प्रविष्टिः].lib = शून्यसूचकः; /* failure with open */
+      libraryList[lib_प्रविष्टिः].name[0] = 0;
+#यदि UPLUG_TRACE
+      DBG((stderr, "uplug_openLibrary(%s,%s) libEntry %d, lib %p\n", libName, u_errorName(*स्थितिः), lib_प्रविष्टिः, lib));
+#यदि_अन्तः
       /* no need to free - just won't increase the count. */
-      libraryCount--;
-    } else { /* is it still there? */
+      library_गणनम्--;
+    } अन्यथा { /* is it still there? */
       /* link it in */
-      uprv_strncpy(libraryList[libEntry].name,libName,UPLUG_NAME_MAX);
-      libraryList[libEntry].ref=1;
-      lib = libraryList[libEntry].lib;
+      uprv_strncpy(libraryList[lib_प्रविष्टिः].name,libName,UPLUG_NAME_MAX);
+      libraryList[lib_प्रविष्टिः].ref=1;
+      lib = libraryList[lib_प्रविष्टिः].lib;
     }
 
-  } else {
-    lib = libraryList[libEntry].lib;
-    libraryList[libEntry].ref++;
+  } अन्यथा {
+    lib = libraryList[lib_प्रविष्टिः].lib;
+    libraryList[lib_प्रविष्टिः].ref++;
   }
-  return lib;
+  प्रत्यागम lib;
 }
 
-U_CAPI void U_EXPORT2
-uplug_closeLibrary(void *lib, UErrorCode *status) {
+U_CAPI शून्य U_EXPORT2
+uplug_closeLibrary(शून्य *lib, UError_संहिता *स्थितिः) {
   int32_t i;
     
-#if UPLUG_TRACE
-  DBG((stderr, "uplug_closeLibrary(%p,%s) list %p\n", lib, u_errorName(*status), (void*)libraryList));
-#endif
-  if(U_FAILURE(*status)) return;
+#यदि UPLUG_TRACE
+  DBG((stderr, "uplug_closeLibrary(%p,%s) list %p\n", lib, u_errorName(*स्थितिः), (शून्य*)libraryList));
+#यदि_अन्तः
+  यदि(U_FAILURE(*स्थितिः)) प्रत्यागम;
     
-  for(i=0;i<libraryCount;i++) {
-    if(lib==libraryList[i].lib) {
-      if(--(libraryList[i].ref) == 0) {
-        uprv_dl_close(libraryList[i].lib, status);
-        libraryCount = uplug_removeEntryAt(libraryList, libraryCount, sizeof(*libraryList), i);
+  प्रति(i=0;i<library_गणनम्;i++) {
+    यदि(lib==libraryList[i].lib) {
+      यदि(--(libraryList[i].ref) == 0) {
+        uprv_dl_close(libraryList[i].lib, स्थितिः);
+        library_गणनम् = uplug_remove_प्रविष्टिः_At(libraryList, library_गणनम्, परिमाण(*libraryList), i);
       }
-      return;
+      प्रत्यागम;
     }
   }
-  *status = U_INTERNAL_PROGRAM_ERROR; /* could not find the entry! */
+  *स्थितिः = U_आन्तरिकम्_क्रमादेशः_ERROR; /* could not find the entry! */
 }
 
-#endif
+#यदि_अन्तः
 
-static UPlugData pluginList[UPLUG_PLUGIN_INITIAL_COUNT];
-static int32_t pluginCount = 0;
+स्थिर UPlug_दत्त pluginList[UPLUG_PLUGIN_INITIAL_गणनम्];
+स्थिर int32_t plugin_गणनम् = 0;
 
 
 
   
-static int32_t uplug_pluginNumber(UPlugData* d) {
-  UPlugData *pastPlug = &pluginList[pluginCount];
-  if(d<=pluginList) {
-    return 0;
-  } else if(d>=pastPlug) {
-    return pluginCount;
-  } else {
-    return (d-pluginList)/sizeof(pluginList[0]);
+स्थिर int32_t uplug_plugin_सङ्ख्या(UPlug_दत्त* d) {
+  UPlug_दत्त *pastPlug = &pluginList[plugin_गणनम्];
+  यदि(d<=pluginList) {
+    प्रत्यागम 0;
+  } अन्यथा यदि(d>=pastPlug) {
+    प्रत्यागम plugin_गणनम्;
+  } अन्यथा {
+    प्रत्यागम (d-pluginList)/परिमाण(pluginList[0]);
   }
 }
 
 
-U_CAPI UPlugData * U_EXPORT2
-uplug_nextPlug(UPlugData *prior) {
-  if(prior==nullptr) {
-    return pluginList;
-  } else {
-    UPlugData *nextPlug = &prior[1];
-    UPlugData *pastPlug = &pluginList[pluginCount];
+U_CAPI UPlug_दत्त * U_EXPORT2
+uplug_अग्र_Plug(UPlug_दत्त *प्राक्) {
+  यदि(प्राक्==शून्यसूचकः) {
+    प्रत्यागम pluginList;
+  } अन्यथा {
+    UPlug_दत्त *अग्र_Plug = &प्राक्[1];
+    UPlug_दत्त *pastPlug = &pluginList[plugin_गणनम्];
     
-    if(nextPlug>=pastPlug) {
-      return nullptr;
-    } else {
-      return nextPlug;
+    यदि(अग्र_Plug>=pastPlug) {
+      प्रत्यागम शून्यसूचकः;
+    } अन्यथा {
+      प्रत्यागम अग्र_Plug;
     }
   }
 }
@@ -271,255 +271,255 @@ uplug_nextPlug(UPlugData *prior) {
 /**
  * Call the plugin with some params
  */
-static void uplug_callPlug(UPlugData *plug, UPlugReason reason, UErrorCode *status) {
+स्थिर शून्य uplug_callPlug(UPlug_दत्त *plug, UPlugReason reason, UError_संहिता *स्थितिः) {
   UPlugTokenReturn token;
-  if(plug==nullptr||U_FAILURE(*status)) {
-    return;
+  यदि(plug==शून्यसूचकः||U_FAILURE(*स्थितिः)) {
+    प्रत्यागम;
   }
-  token = (*(plug->entrypoint))(plug, reason, status);
-  if(token!=UPLUG_TOKEN) {
-    *status = U_INTERNAL_PROGRAM_ERROR;
+  token = (*(plug->entrypoint))(plug, reason, स्थितिः);
+  यदि(token!=UPLUG_TOKEN) {
+    *स्थितिः = U_आन्तरिकम्_क्रमादेशः_ERROR;
   }
 }
 
 
-static void uplug_unloadPlug(UPlugData *plug, UErrorCode *status) {
-  if(plug->awaitingLoad) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
-    *status = U_INTERNAL_PROGRAM_ERROR;
-    return; 
+स्थिर शून्य uplug_unloadPlug(UPlug_दत्त *plug, UError_संहिता *स्थितिः) {
+  यदि(plug->awaiting_आरोपय) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
+    *स्थितिः = U_आन्तरिकम्_क्रमादेशः_ERROR;
+    प्रत्यागम; 
   }
-  if(U_SUCCESS(plug->pluginStatus)) {
+  यदि(U_SUCCESS(plug->plugin_स्थितिः)) {
     /* Don't unload a plug which has a failing load status - means it didn't actually load. */
-    uplug_callPlug(plug, UPLUG_REASON_UNLOAD, status);
+    uplug_callPlug(plug, UPLUG_REASON_UNLOAD, स्थितिः);
   }
 }
 
-static void uplug_queryPlug(UPlugData *plug, UErrorCode *status) {
-  if(!plug->awaitingLoad || !(plug->level == UPLUG_LEVEL_UNKNOWN) ) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
-    *status = U_INTERNAL_PROGRAM_ERROR;
-    return; 
+स्थिर शून्य uplug_queryPlug(UPlug_दत्त *plug, UError_संहिता *स्थितिः) {
+  यदि(!plug->awaiting_आरोपय || !(plug->level == UPLUG_LEVEL_UNKNOWN) ) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
+    *स्थितिः = U_आन्तरिकम्_क्रमादेशः_ERROR;
+    प्रत्यागम; 
   }
   plug->level = UPLUG_LEVEL_INVALID;
-  uplug_callPlug(plug, UPLUG_REASON_QUERY, status);
-  if(U_SUCCESS(*status)) { 
-    if(plug->level == UPLUG_LEVEL_INVALID) {
-      plug->pluginStatus = U_PLUGIN_DIDNT_SET_LEVEL;
-      plug->awaitingLoad = false;
+  uplug_callPlug(plug, UPLUG_REASON_QUERY, स्थितिः);
+  यदि(U_SUCCESS(*स्थितिः)) { 
+    यदि(plug->level == UPLUG_LEVEL_INVALID) {
+      plug->plugin_स्थितिः = U_PLUGIN_DIDNT_समुच्चयः_LEVEL;
+      plug->awaiting_आरोपय = असत्य;
     }
-  } else {
-    plug->pluginStatus = U_INTERNAL_PROGRAM_ERROR;
-    plug->awaitingLoad = false;
+  } अन्यथा {
+    plug->plugin_स्थितिः = U_आन्तरिकम्_क्रमादेशः_ERROR;
+    plug->awaiting_आरोपय = असत्य;
   }
 }
 
 
-static void uplug_loadPlug(UPlugData *plug, UErrorCode *status) {
-  if(U_FAILURE(*status)) {
-    return;
+स्थिर शून्य uplug_आरोपय_Plug(UPlug_दत्त *plug, UError_संहिता *स्थितिः) {
+  यदि(U_FAILURE(*स्थितिः)) {
+    प्रत्यागम;
   }
-  if(!plug->awaitingLoad || (plug->level < UPLUG_LEVEL_LOW) ) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
-    *status = U_INTERNAL_PROGRAM_ERROR;
-    return;
+  यदि(!plug->awaiting_आरोपय || (plug->level < UPLUG_LEVEL_नीचः) ) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
+    *स्थितिः = U_आन्तरिकम्_क्रमादेशः_ERROR;
+    प्रत्यागम;
   }
-  uplug_callPlug(plug, UPLUG_REASON_LOAD, status);
-  plug->awaitingLoad = false;
-  if(!U_SUCCESS(*status)) {
-    plug->pluginStatus = U_INTERNAL_PROGRAM_ERROR;
+  uplug_callPlug(plug, UPLUG_REASON_आरोपय, स्थितिः);
+  plug->awaiting_आरोपय = असत्य;
+  यदि(!U_SUCCESS(*स्थितिः)) {
+    plug->plugin_स्थितिः = U_आन्तरिकम्_क्रमादेशः_ERROR;
   }
 }
 
-static UPlugData *uplug_allocateEmptyPlug(UErrorCode *status)
+स्थिर UPlug_दत्त *uplug_allocate_रिक्तानि_Plug(UError_संहिता *स्थितिः)
 {
-  UPlugData *plug = nullptr;
+  UPlug_दत्त *plug = शून्यसूचकः;
 
-  if(U_FAILURE(*status)) {
-    return nullptr;
+  यदि(U_FAILURE(*स्थितिः)) {
+    प्रत्यागम शून्यसूचकः;
   }
 
-  if(pluginCount == UPLUG_PLUGIN_INITIAL_COUNT) {
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+  यदि(plugin_गणनम् == UPLUG_PLUGIN_INITIAL_गणनम्) {
+    *स्थितिः = U_स्मृतिः_आवण्टनम्_ERROR;
+    प्रत्यागम शून्यसूचकः;
   }
 
-  plug = &pluginList[pluginCount++];
+  plug = &pluginList[plugin_गणनम्++];
 
   plug->token = UPLUG_TOKEN;
-  plug->structSize = sizeof(UPlugData);
+  plug->struct_आकार = परिमाण(UPlug_दत्त);
   plug->name[0]=0;
   plug->level = UPLUG_LEVEL_UNKNOWN; /* initialize to null state */
-  plug->awaitingLoad = true;
-  plug->dontUnload = false;
-  plug->pluginStatus = U_ZERO_ERROR;
+  plug->awaiting_आरोपय = सत्य;
+  plug->dontUnload = असत्य;
+  plug->plugin_स्थितिः = U_ZERO_ERROR;
   plug->libName[0] = 0;
   plug->config[0]=0;
   plug->sym[0]=0;
-  plug->lib=nullptr;
-  plug->entrypoint=nullptr;
+  plug->lib=शून्यसूचकः;
+  plug->entrypoint=शून्यसूचकः;
 
 
-  return plug;
+  प्रत्यागम plug;
 }
 
-static UPlugData *uplug_allocatePlug(UPlugEntrypoint *entrypoint, const char *config, void *lib, const char *symName,
-                                     UErrorCode *status) {
-  UPlugData *plug = uplug_allocateEmptyPlug(status);
-  if(U_FAILURE(*status)) {
-    return nullptr;
+स्थिर UPlug_दत्त *uplug_allocatePlug(UPlugEntrypoint *entrypoint, ध्रुव वर्ण *config, शून्य *lib, ध्रुव वर्ण *symName,
+                                     UError_संहिता *स्थितिः) {
+  UPlug_दत्त *plug = uplug_allocate_रिक्तानि_Plug(स्थितिः);
+  यदि(U_FAILURE(*स्थितिः)) {
+    प्रत्यागम शून्यसूचकः;
   }
 
-  if(config!=nullptr) {
+  यदि(config!=शून्यसूचकः) {
     uprv_strncpy(plug->config, config, UPLUG_NAME_MAX);
-  } else {
+  } अन्यथा {
     plug->config[0] = 0;
   }
     
-  if(symName!=nullptr) {
+  यदि(symName!=शून्यसूचकः) {
     uprv_strncpy(plug->sym, symName, UPLUG_NAME_MAX);
-  } else {
+  } अन्यथा {
     plug->sym[0] = 0;
   }
     
   plug->entrypoint = entrypoint;
   plug->lib = lib;
-  uplug_queryPlug(plug, status);
+  uplug_queryPlug(plug, स्थितिः);
     
-  return plug;
+  प्रत्यागम plug;
 }
 
-static void uplug_deallocatePlug(UPlugData *plug, UErrorCode *status) {
-  UErrorCode subStatus = U_ZERO_ERROR;
-  if(!plug->dontUnload) {
-#if U_ENABLE_DYLOAD
-    uplug_closeLibrary(plug->lib, &subStatus);
-#endif
+स्थिर शून्य uplug_deallocatePlug(UPlug_दत्त *plug, UError_संहिता *स्थितिः) {
+  UError_संहिता sub_स्थितिः = U_ZERO_ERROR;
+  यदि(!plug->dontUnload) {
+#यदि U_ENABLE_DYLOAD
+    uplug_closeLibrary(plug->lib, &sub_स्थितिः);
+#यदि_अन्तः
   }
-  plug->lib = nullptr;
-  if(U_SUCCESS(*status) && U_FAILURE(subStatus)) {
-    *status = subStatus;
+  plug->lib = शून्यसूचकः;
+  यदि(U_SUCCESS(*स्थितिः) && U_FAILURE(sub_स्थितिः)) {
+    *स्थितिः = sub_स्थितिः;
   }
   /* shift plugins up and decrement count. */
-  if(U_SUCCESS(*status)) {
+  यदि(U_SUCCESS(*स्थितिः)) {
     /* all ok- remove. */
-    pluginCount = uplug_removeEntryAt(pluginList, pluginCount, sizeof(plug[0]), uplug_pluginNumber(plug));
-  } else {
+    plugin_गणनम् = uplug_remove_प्रविष्टिः_At(pluginList, plugin_गणनम्, परिमाण(plug[0]), uplug_plugin_सङ्ख्या(plug));
+  } अन्यथा {
     /* not ok- leave as a message. */
-    plug->awaitingLoad=false;
+    plug->awaiting_आरोपय=असत्य;
     plug->entrypoint=0;
-    plug->dontUnload=true;
+    plug->dontUnload=सत्य;
   }
 }
 
-static void uplug_doUnloadPlug(UPlugData *plugToRemove, UErrorCode *status) {
-  if(plugToRemove != nullptr) {
-    uplug_unloadPlug(plugToRemove, status);
-    uplug_deallocatePlug(plugToRemove, status);
+स्थिर शून्य uplug_doUnloadPlug(UPlug_दत्त *plug_गन्तव्यम्_Remove, UError_संहिता *स्थितिः) {
+  यदि(plug_गन्तव्यम्_Remove != शून्यसूचकः) {
+    uplug_unloadPlug(plug_गन्तव्यम्_Remove, स्थितिः);
+    uplug_deallocatePlug(plug_गन्तव्यम्_Remove, स्थितिः);
   }
 }
 
-U_CAPI void U_EXPORT2
-uplug_removePlug(UPlugData *plug, UErrorCode *status)  {
-  UPlugData *cursor = nullptr;
-  UPlugData *plugToRemove = nullptr;
-  if(U_FAILURE(*status)) return;
+U_CAPI शून्य U_EXPORT2
+uplug_removePlug(UPlug_दत्त *plug, UError_संहिता *स्थितिः)  {
+  UPlug_दत्त *cursor = शून्यसूचकः;
+  UPlug_दत्त *plug_गन्तव्यम्_Remove = शून्यसूचकः;
+  यदि(U_FAILURE(*स्थितिः)) प्रत्यागम;
     
-  for(cursor=pluginList;cursor!=nullptr;) {
-    if(cursor==plug) {
-      plugToRemove = plug;
-      cursor=nullptr;
-    } else {
-      cursor = uplug_nextPlug(cursor);
+  प्रति(cursor=pluginList;cursor!=शून्यसूचकः;) {
+    यदि(cursor==plug) {
+      plug_गन्तव्यम्_Remove = plug;
+      cursor=शून्यसूचकः;
+    } अन्यथा {
+      cursor = uplug_अग्र_Plug(cursor);
     }
   }
     
-  uplug_doUnloadPlug(plugToRemove, status);
+  uplug_doUnloadPlug(plug_गन्तव्यम्_Remove, स्थितिः);
 }
 
 
 
 
-U_CAPI void U_EXPORT2 
-uplug_setPlugNoUnload(UPlugData *data, UBool dontUnload)
+U_CAPI शून्य U_EXPORT2 
+uplug_समुच्चयः_Plug_No_Unload(UPlug_दत्त *दत्त, UBool dontUnload)
 {
-  data->dontUnload = dontUnload;
+  दत्त->dontUnload = dontUnload;
 }
 
 
-U_CAPI void U_EXPORT2
-uplug_setPlugLevel(UPlugData *data, UPlugLevel level) {
-  data->level = level;
+U_CAPI शून्य U_EXPORT2
+uplug_समुच्चयः_Plug_Level(UPlug_दत्त *दत्त, UPlugLevel level) {
+  दत्त->level = level;
 }
 
 
 U_CAPI UPlugLevel U_EXPORT2
-uplug_getPlugLevel(UPlugData *data) {
-  return data->level;
+uplug_getPlugLevel(UPlug_दत्त *दत्त) {
+  प्रत्यागम दत्त->level;
 }
 
 
-U_CAPI void U_EXPORT2
-uplug_setPlugName(UPlugData *data, const char *name) {
-  uprv_strncpy(data->name, name, UPLUG_NAME_MAX);
+U_CAPI शून्य U_EXPORT2
+uplug_समुच्चयः_Plug_Name(UPlug_दत्त *दत्त, ध्रुव वर्ण *name) {
+  uprv_strncpy(दत्त->name, name, UPLUG_NAME_MAX);
 }
 
 
-U_CAPI const char* U_EXPORT2
-uplug_getPlugName(UPlugData* data U_LIFETIME_BOUND) {
-  return data->name;
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+uplug_getPlugName(UPlug_दत्त* दत्त U_LIFETIME_BOUND) {
+  प्रत्यागम दत्त->name;
 }
 
 
-U_CAPI const char* U_EXPORT2
-uplug_getSymbolName(UPlugData* data U_LIFETIME_BOUND) {
-  return data->sym;
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+uplug_get_चिह्नम्_Name(UPlug_दत्त* दत्त U_LIFETIME_BOUND) {
+  प्रत्यागम दत्त->sym;
 }
 
-U_CAPI const char* U_EXPORT2
-uplug_getLibraryName(UPlugData* data U_LIFETIME_BOUND, UErrorCode* status) {
-  if(data->libName[0]) {
-    return data->libName;
-  } else {
-#if U_ENABLE_DYLOAD
-    return uplug_findLibrary(data->lib, status);
-#else
-    return nullptr;
-#endif
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+uplug_getLibraryName(UPlug_दत्त* दत्त U_LIFETIME_BOUND, UError_संहिता* स्थितिः) {
+  यदि(दत्त->libName[0]) {
+    प्रत्यागम दत्त->libName;
+  } अन्यथा {
+#यदि U_ENABLE_DYLOAD
+    प्रत्यागम uplug_findLibrary(दत्त->lib, स्थितिः);
+#अन्यथा
+    प्रत्यागम शून्यसूचकः;
+#यदि_अन्तः
   }
 }
 
-U_CAPI void * U_EXPORT2
-uplug_getLibrary(UPlugData *data) {
-  return data->lib;
+U_CAPI शून्य * U_EXPORT2
+uplug_getLibrary(UPlug_दत्त *दत्त) {
+  प्रत्यागम दत्त->lib;
 }
 
-U_CAPI void * U_EXPORT2
-uplug_getContext(UPlugData *data) {
-  return data->context;
+U_CAPI शून्य * U_EXPORT2
+uplug_getContext(UPlug_दत्त *दत्त) {
+  प्रत्यागम दत्त->context;
 }
 
 
-U_CAPI void U_EXPORT2
-uplug_setContext(UPlugData *data, void *context) {
-  data->context = context;
+U_CAPI शून्य U_EXPORT2
+uplug_समुच्चयः_Context(UPlug_दत्त *दत्त, शून्य *context) {
+  दत्त->context = context;
 }
 
-U_CAPI const char* U_EXPORT2
-uplug_getConfiguration(UPlugData* data U_LIFETIME_BOUND) {
-  return data->config;
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+uplug_getConfiguration(UPlug_दत्त* दत्त U_LIFETIME_BOUND) {
+  प्रत्यागम दत्त->config;
 }
 
-U_CAPI UPlugData* U_EXPORT2
-uplug_getPlugInternal(int32_t n) { 
-  if(n <0 || n >= pluginCount) {
-    return nullptr;
-  } else { 
-    return &(pluginList[n]);
+U_CAPI UPlug_दत्त* U_EXPORT2
+uplug_get_Plug_आन्तरिकम्(int32_t n) { 
+  यदि(n <0 || n >= plugin_गणनम्) {
+    प्रत्यागम शून्यसूचकः;
+  } अन्यथा { 
+    प्रत्यागम &(pluginList[n]);
   }
 }
 
 
-U_CAPI UErrorCode U_EXPORT2
-uplug_getPlugLoadStatus(UPlugData *plug) {
-  return plug->pluginStatus;
+U_CAPI UError_संहिता U_EXPORT2
+uplug_get_Plug_आरोपय_स्थितिः(UPlug_दत्त *plug) {
+  प्रत्यागम plug->plugin_स्थितिः;
 }
 
 
@@ -528,226 +528,226 @@ uplug_getPlugLoadStatus(UPlugData *plug) {
 /**
  * Initialize a plugin from an entrypoint and library - but don't load it.
  */
-static UPlugData* uplug_initPlugFromEntrypointAndLibrary(UPlugEntrypoint *entrypoint, const char *config, void *lib, const char *sym,
-                                                         UErrorCode *status) {
-  UPlugData *plug = nullptr;
+स्थिर UPlug_दत्त* uplug_initPlugFromEntrypointAndLibrary(UPlugEntrypoint *entrypoint, ध्रुव वर्ण *config, शून्य *lib, ध्रुव वर्ण *sym,
+                                                         UError_संहिता *स्थितिः) {
+  UPlug_दत्त *plug = शून्यसूचकः;
 
-  plug = uplug_allocatePlug(entrypoint, config, lib, sym, status);
+  plug = uplug_allocatePlug(entrypoint, config, lib, sym, स्थितिः);
 
-  if(U_SUCCESS(*status)) {
-    return plug;
-  } else {
-    uplug_deallocatePlug(plug, status);
-    return nullptr;
+  यदि(U_SUCCESS(*स्थितिः)) {
+    प्रत्यागम plug;
+  } अन्यथा {
+    uplug_deallocatePlug(plug, स्थितिः);
+    प्रत्यागम शून्यसूचकः;
   }
 }
 
-U_CAPI UPlugData* U_EXPORT2
-uplug_loadPlugFromEntrypoint(UPlugEntrypoint *entrypoint, const char *config, UErrorCode *status) {
-  UPlugData* plug = uplug_initPlugFromEntrypointAndLibrary(entrypoint, config, nullptr, nullptr, status);
-  uplug_loadPlug(plug, status);
-  return plug;
+U_CAPI UPlug_दत्त* U_EXPORT2
+uplug_आरोपय_Plug_From_Entrypoint(UPlugEntrypoint *entrypoint, ध्रुव वर्ण *config, UError_संहिता *स्थितिः) {
+  UPlug_दत्त* plug = uplug_initPlugFromEntrypointAndLibrary(entrypoint, config, शून्यसूचकः, शून्यसूचकः, स्थितिः);
+  uplug_आरोपय_Plug(plug, स्थितिः);
+  प्रत्यागम plug;
 }
 
-#if U_ENABLE_DYLOAD
+#यदि U_ENABLE_DYLOAD
 
-static UPlugData* 
-uplug_initErrorPlug(const char *libName, const char *sym, const char *config, const char *nameOrError, UErrorCode loadStatus, UErrorCode *status)
+स्थिर UPlug_दत्त* 
+uplug_initErrorPlug(ध्रुव वर्ण *libName, ध्रुव वर्ण *sym, ध्रुव वर्ण *config, ध्रुव वर्ण *nameOrError, UError_संहिता आरोपय_स्थितिः, UError_संहिता *स्थितिः)
 {
-  UPlugData *plug = uplug_allocateEmptyPlug(status);
-  if(U_FAILURE(*status)) return nullptr;
+  UPlug_दत्त *plug = uplug_allocate_रिक्तानि_Plug(स्थितिः);
+  यदि(U_FAILURE(*स्थितिः)) प्रत्यागम शून्यसूचकः;
 
-  plug->pluginStatus = loadStatus;
-  plug->awaitingLoad = false; /* Won't load. */
-  plug->dontUnload = true; /* cannot unload. */
+  plug->plugin_स्थितिः = आरोपय_स्थितिः;
+  plug->awaiting_आरोपय = असत्य; /* Won't load. */
+  plug->dontUnload = सत्य; /* cannot unload. */
 
-  if(sym!=nullptr) {
+  यदि(sym!=शून्यसूचकः) {
     uprv_strncpy(plug->sym, sym, UPLUG_NAME_MAX);
   }
 
-  if(libName!=nullptr) {
+  यदि(libName!=शून्यसूचकः) {
     uprv_strncpy(plug->libName, libName, UPLUG_NAME_MAX);
   }
 
-  if(nameOrError!=nullptr) {
+  यदि(nameOrError!=शून्यसूचकः) {
     uprv_strncpy(plug->name, nameOrError, UPLUG_NAME_MAX);
   }
 
-  if(config!=nullptr) {
+  यदि(config!=शून्यसूचकः) {
     uprv_strncpy(plug->config, config, UPLUG_NAME_MAX);
   }
 
-  return plug;
+  प्रत्यागम plug;
 }
 
 /**
  * Fetch a plugin from DLL, and then initialize it from a library- but don't load it.
  */
-static UPlugData* 
-uplug_initPlugFromLibrary(const char *libName, const char *sym, const char *config, UErrorCode *status) {
-  void *lib = nullptr;
-  UPlugData *plug = nullptr;
-  if(U_FAILURE(*status)) { return nullptr; }
-  lib = uplug_openLibrary(libName, status);
-  if(lib!=nullptr && U_SUCCESS(*status)) {
-    UPlugEntrypoint *entrypoint = nullptr;
-    entrypoint = (UPlugEntrypoint*)uprv_dlsym_func(lib, sym, status);
+स्थिर UPlug_दत्त* 
+uplug_initPlugFromLibrary(ध्रुव वर्ण *libName, ध्रुव वर्ण *sym, ध्रुव वर्ण *config, UError_संहिता *स्थितिः) {
+  शून्य *lib = शून्यसूचकः;
+  UPlug_दत्त *plug = शून्यसूचकः;
+  यदि(U_FAILURE(*स्थितिः)) { प्रत्यागम शून्यसूचकः; }
+  lib = uplug_openLibrary(libName, स्थितिः);
+  यदि(lib!=शून्यसूचकः && U_SUCCESS(*स्थितिः)) {
+    UPlugEntrypoint *entrypoint = शून्यसूचकः;
+    entrypoint = (UPlugEntrypoint*)uprv_dlsym_func(lib, sym, स्थितिः);
 
-    if(entrypoint!=nullptr&&U_SUCCESS(*status)) {
-      plug = uplug_initPlugFromEntrypointAndLibrary(entrypoint, config, lib, sym, status);
-      if(plug!=nullptr&&U_SUCCESS(*status)) {
+    यदि(entrypoint!=शून्यसूचकः&&U_SUCCESS(*स्थितिः)) {
+      plug = uplug_initPlugFromEntrypointAndLibrary(entrypoint, config, lib, sym, स्थितिः);
+      यदि(plug!=शून्यसूचकः&&U_SUCCESS(*स्थितिः)) {
         plug->lib = lib; /* plug takes ownership of library */
-        lib = nullptr; /* library is now owned by plugin. */
+        lib = शून्यसूचकः; /* library is now owned by plugin. */
       }
-    } else {
-      UErrorCode subStatus = U_ZERO_ERROR;
-      plug = uplug_initErrorPlug(libName,sym,config,"ERROR: Could not load entrypoint",(lib==nullptr)?U_MISSING_RESOURCE_ERROR:*status,&subStatus);
+    } अन्यथा {
+      UError_संहिता sub_स्थितिः = U_ZERO_ERROR;
+      plug = uplug_initErrorPlug(libName,sym,config,"ERROR: Could not load entrypoint",(lib==शून्यसूचकः)?U_MISSING_RESOURCE_ERROR:*स्थितिः,&sub_स्थितिः);
     }
-    if(lib!=nullptr) { /* still need to close the lib */
-      UErrorCode subStatus = U_ZERO_ERROR;
-      uplug_closeLibrary(lib, &subStatus); /* don't care here */
+    यदि(lib!=शून्यसूचकः) { /* still need to close the lib */
+      UError_संहिता sub_स्थितिः = U_ZERO_ERROR;
+      uplug_closeLibrary(lib, &sub_स्थितिः); /* don't care here */
     }
-  } else {
-    UErrorCode subStatus = U_ZERO_ERROR;
-    plug = uplug_initErrorPlug(libName,sym,config,"ERROR: could not load library",(lib==nullptr)?U_MISSING_RESOURCE_ERROR:*status,&subStatus);
+  } अन्यथा {
+    UError_संहिता sub_स्थितिः = U_ZERO_ERROR;
+    plug = uplug_initErrorPlug(libName,sym,config,"ERROR: could not load library",(lib==शून्यसूचकः)?U_MISSING_RESOURCE_ERROR:*स्थितिः,&sub_स्थितिः);
   }
-  return plug;
+  प्रत्यागम plug;
 }
 
-U_CAPI UPlugData* U_EXPORT2
-uplug_loadPlugFromLibrary(const char *libName, const char *sym, const char *config, UErrorCode *status) { 
-  UPlugData *plug = nullptr;
-  if(U_FAILURE(*status)) { return nullptr; }
-  plug = uplug_initPlugFromLibrary(libName, sym, config, status);
-  uplug_loadPlug(plug, status);
+U_CAPI UPlug_दत्त* U_EXPORT2
+uplug_आरोपय_Plug_From_Library(ध्रुव वर्ण *libName, ध्रुव वर्ण *sym, ध्रुव वर्ण *config, UError_संहिता *स्थितिः) { 
+  UPlug_दत्त *plug = शून्यसूचकः;
+  यदि(U_FAILURE(*स्थितिः)) { प्रत्यागम शून्यसूचकः; }
+  plug = uplug_initPlugFromLibrary(libName, sym, config, स्थितिः);
+  uplug_आरोपय_Plug(plug, स्थितिः);
 
-  return plug;
+  प्रत्यागम plug;
 }
 
-#endif
+#यदि_अन्तः
 
-static UPlugLevel gCurrentLevel = UPLUG_LEVEL_LOW;
+स्थिर UPlugLevel gCurrentLevel = UPLUG_LEVEL_नीचः;
 
 U_CAPI UPlugLevel U_EXPORT2 uplug_getCurrentLevel() {
-  return gCurrentLevel;
+  प्रत्यागम gCurrentLevel;
 }
 
-static UBool U_CALLCONV uplug_cleanup()
+स्थिर UBool U_CALLCONV uplug_cleanup()
 {
   int32_t i;
     
-  UPlugData *pluginToRemove;
+  UPlug_दत्त *plugin_गन्तव्यम्_Remove;
   /* cleanup plugs */
-  for(i=0;i<pluginCount;i++) {
-    UErrorCode subStatus = U_ZERO_ERROR;
-    pluginToRemove = &pluginList[i];
+  प्रति(i=0;i<plugin_गणनम्;i++) {
+    UError_संहिता sub_स्थितिः = U_ZERO_ERROR;
+    plugin_गन्तव्यम्_Remove = &pluginList[i];
     /* unload and deallocate */
-    uplug_doUnloadPlug(pluginToRemove, &subStatus);
+    uplug_doUnloadPlug(plugin_गन्तव्यम्_Remove, &sub_स्थितिः);
   }
   /* close other held libs? */
-  gCurrentLevel = UPLUG_LEVEL_LOW;
-  return true;
+  gCurrentLevel = UPLUG_LEVEL_नीचः;
+  प्रत्यागम सत्य;
 }
 
-#if U_ENABLE_DYLOAD
+#यदि U_ENABLE_DYLOAD
 
-static void uplug_loadWaitingPlugs(UErrorCode *status) {
+स्थिर शून्य uplug_आरोपय_प्रतीक्षा_Plugs(UError_संहिता *स्थितिः) {
   int32_t i;
   UPlugLevel currentLevel = uplug_getCurrentLevel();
     
-  if(U_FAILURE(*status)) {
-    return;
+  यदि(U_FAILURE(*स्थितिः)) {
+    प्रत्यागम;
   }
-#if UPLUG_TRACE
+#यदि UPLUG_TRACE
   DBG((stderr,  "uplug_loadWaitingPlugs() Level: %d\n", currentLevel));
-#endif
+#यदि_अन्तः
   /* pass #1: low level plugs */
-  for(i=0;i<pluginCount;i++) {
-    UErrorCode subStatus = U_ZERO_ERROR;
-    UPlugData *pluginToLoad = &pluginList[i];
-    if(pluginToLoad->awaitingLoad) {
-      if(pluginToLoad->level == UPLUG_LEVEL_LOW) {
-        if(currentLevel > UPLUG_LEVEL_LOW) {
-          pluginToLoad->pluginStatus = U_PLUGIN_TOO_HIGH;
-        } else {
+  प्रति(i=0;i<plugin_गणनम्;i++) {
+    UError_संहिता sub_स्थितिः = U_ZERO_ERROR;
+    UPlug_दत्त *plugin_गन्तव्यम्_आरोपय = &pluginList[i];
+    यदि(plugin_गन्तव्यम्_आरोपय->awaiting_आरोपय) {
+      यदि(plugin_गन्तव्यम्_आरोपय->level == UPLUG_LEVEL_नीचः) {
+        यदि(currentLevel > UPLUG_LEVEL_नीचः) {
+          plugin_गन्तव्यम्_आरोपय->plugin_स्थितिः = U_PLUGIN_TOO_उच्चः;
+        } अन्यथा {
           UPlugLevel newLevel;
-          uplug_loadPlug(pluginToLoad, &subStatus);
+          uplug_आरोपय_Plug(plugin_गन्तव्यम्_आरोपय, &sub_स्थितिः);
           newLevel = uplug_getCurrentLevel();
-          if(newLevel > currentLevel) {
-            pluginToLoad->pluginStatus = U_PLUGIN_CHANGED_LEVEL_WARNING;
+          यदि(newLevel > currentLevel) {
+            plugin_गन्तव्यम्_आरोपय->plugin_स्थितिः = U_PLUGIN_परिवर्तितम्_LEVEL_WARNING;
             currentLevel = newLevel;
           }
         }
-        pluginToLoad->awaitingLoad = false;
+        plugin_गन्तव्यम्_आरोपय->awaiting_आरोपय = असत्य;
       } 
     }
   }    
-  for(i=0;i<pluginCount;i++) {
-    UErrorCode subStatus = U_ZERO_ERROR;
-    UPlugData *pluginToLoad = &pluginList[i];
+  प्रति(i=0;i<plugin_गणनम्;i++) {
+    UError_संहिता sub_स्थितिः = U_ZERO_ERROR;
+    UPlug_दत्त *plugin_गन्तव्यम्_आरोपय = &pluginList[i];
         
-    if(pluginToLoad->awaitingLoad) {
-      if(pluginToLoad->level == UPLUG_LEVEL_INVALID) { 
-        pluginToLoad->pluginStatus = U_PLUGIN_DIDNT_SET_LEVEL;
-      } else if(pluginToLoad->level == UPLUG_LEVEL_UNKNOWN) {
-        pluginToLoad->pluginStatus = U_INTERNAL_PROGRAM_ERROR;
-      } else {
-        uplug_loadPlug(pluginToLoad, &subStatus);
+    यदि(plugin_गन्तव्यम्_आरोपय->awaiting_आरोपय) {
+      यदि(plugin_गन्तव्यम्_आरोपय->level == UPLUG_LEVEL_INVALID) { 
+        plugin_गन्तव्यम्_आरोपय->plugin_स्थितिः = U_PLUGIN_DIDNT_समुच्चयः_LEVEL;
+      } अन्यथा यदि(plugin_गन्तव्यम्_आरोपय->level == UPLUG_LEVEL_UNKNOWN) {
+        plugin_गन्तव्यम्_आरोपय->plugin_स्थितिः = U_आन्तरिकम्_क्रमादेशः_ERROR;
+      } अन्यथा {
+        uplug_आरोपय_Plug(plugin_गन्तव्यम्_आरोपय, &sub_स्थितिः);
       }
-      pluginToLoad->awaitingLoad = false;
+      plugin_गन्तव्यम्_आरोपय->awaiting_आरोपय = असत्य;
     }
   }
     
-#if UPLUG_TRACE
+#यदि UPLUG_TRACE
   DBG((stderr,  " Done Loading Plugs. Level: %d\n", (int32_t)uplug_getCurrentLevel()));
-#endif
+#यदि_अन्तः
 }
 
 /* Name of the plugin config file */
-static char plugin_file[2048] = "";
-#endif
+स्थिर वर्ण plugin_file[2048] = "";
+#यदि_अन्तः
 
-U_CAPI const char* U_EXPORT2
+U_CAPI ध्रुव वर्ण* U_EXPORT2
 uplug_getPluginFile() {
-#if U_ENABLE_DYLOAD && !UCONFIG_NO_FILE_IO
-  return plugin_file;
-#else
-  return nullptr;
-#endif
+#यदि U_ENABLE_DYLOAD && !UCONFIG_NO_FILE_IO
+  प्रत्यागम plugin_file;
+#अन्यथा
+  प्रत्यागम शून्यसूचकः;
+#यदि_अन्तः
 }
 
 
 //  uplug_init()  is called first thing from u_init().
 
-U_CAPI void U_EXPORT2
-uplug_init(UErrorCode *status) {
-#if !U_ENABLE_DYLOAD
-  (void)status; /* unused */
-#elif !UCONFIG_NO_FILE_IO
+U_CAPI शून्य U_EXPORT2
+uplug_init(UError_संहिता *स्थितिः) {
+#यदि !U_ENABLE_DYLOAD
+  (शून्य)स्थितिः; /*अप्रयुक्तम्*/
+#नोचेद्यदि !UCONFIG_NO_FILE_IO
   CharString plugin_dir;
-  const char *env = getenv("ICU_PLUGINS");
+  ध्रुव वर्ण *env = getenv("ICU_PLUGINS");
 
-  if(U_FAILURE(*status)) return;
-  if(env != nullptr) {
-    plugin_dir.append(env, -1, *status);
+  यदि(U_FAILURE(*स्थितिः)) प्रत्यागम;
+  यदि(env != शून्यसूचकः) {
+    plugin_dir.append(env, -1, *स्थितिः);
   }
-  if(U_FAILURE(*status)) return;
+  यदि(U_FAILURE(*स्थितिः)) प्रत्यागम;
 
-#if defined(DEFAULT_ICU_PLUGINS) 
-  if(plugin_dir.isEmpty()) {
-    plugin_dir.append(DEFAULT_ICU_PLUGINS, -1, *status);
+#यदि defined(DEFAULT_ICU_PLUGINS) 
+  यदि(plugin_dir.is_रिक्तानि()) {
+    plugin_dir.append(DEFAULT_ICU_PLUGINS, -1, *स्थितिः);
   }
-#endif
+#यदि_अन्तः
 
-#if UPLUG_TRACE
-  DBG((stderr, "ICU_PLUGINS=%s\n", plugin_dir.data()));
-#endif
+#यदि UPLUG_TRACE
+  DBG((stderr, "ICU_PLUGINS=%s\n", plugin_dir.दत्त()));
+#यदि_अन्तः
 
-  if(!plugin_dir.isEmpty()) {
+  यदि(!plugin_dir.is_रिक्तानि()) {
     FILE *f;
         
     CharString pluginFile;
-#ifdef ICU_PLUGINS_DD
+#यदि_परिभाषितम् ICU_PLUGINS_DD
 /* There are potentially a lot of ways to implement a plugin directory on OS390/zOS  */
 /* Keeping in mind that unauthorized file access is logged, monitored, and enforced  */
 /* I've chosen to open a DDNAME if BATCH and leave it alone for (presumably) UNIX    */
@@ -755,130 +755,130 @@ uplug_init(UErrorCode *status) {
 /* SYS1.PARMLIB or setting an environment variable "ICU_PLUGIN_PATH" (?).  The       */
 /* DDNAME can be connected to a file in the HFS if need be.                          */
 
-    pluginFile.append("//DD:ICUPLUG", -1, *status);        /* JAM 20 Oct 2011 */
-#else
-    pluginFile.append(plugin_dir, *status);
-    pluginFile.append(U_FILE_SEP_STRING, -1, *status);
-    pluginFile.append("icuplugins", -1, *status);
-    pluginFile.append(U_ICU_VERSION_SHORT, -1, *status);
-    pluginFile.append(".txt", -1, *status);
-#endif
+    pluginFile.append("//DD:ICUPLUG", -1, *स्थितिः);        /* JAM 20 Oct 2011 */
+#अन्यथा
+    pluginFile.append(plugin_dir, *स्थितिः);
+    pluginFile.append(U_FILE_SEP_STRING, -1, *स्थितिः);
+    pluginFile.append("icuplugins", -1, *स्थितिः);
+    pluginFile.append(U_ICU_संस्करणम्_SHORT, -1, *स्थितिः);
+    pluginFile.append(".txt", -1, *स्थितिः);
+#यदि_अन्तः
 
-#if UPLUG_TRACE
-    DBG((stderr, "status=%s\n", u_errorName(*status)));
-#endif
+#यदि UPLUG_TRACE
+    DBG((stderr, "status=%s\n", u_errorName(*स्थितिः)));
+#यदि_अन्तः
 
-    if(U_FAILURE(*status)) {
-      return;
+    यदि(U_FAILURE(*स्थितिः)) {
+      प्रत्यागम;
     }
-    if((size_t)pluginFile.length() > (sizeof(plugin_file)-1)) {
-      *status = U_BUFFER_OVERFLOW_ERROR;
-#if UPLUG_TRACE
-      DBG((stderr, "status=%s\n", u_errorName(*status)));
-#endif
-      return;
+    यदि((size_t)pluginFile.length() > (परिमाण(plugin_file)-1)) {
+      *स्थितिः = U_बफर_अतिप्रवाहः_ERROR;
+#यदि UPLUG_TRACE
+      DBG((stderr, "status=%s\n", u_errorName(*स्थितिः)));
+#यदि_अन्तः
+      प्रत्यागम;
     }
     
     /* plugin_file is not used for processing - it is only used 
        so that uplug_getPluginFile() works (i.e. icuinfo)
     */
-    pluginFile.extract(plugin_file, sizeof(plugin_file), *status);
+    pluginFile.extract(plugin_file, परिमाण(plugin_file), *स्थितिः);
 
-#if UPLUG_TRACE
-    DBG((stderr, "pluginfile= %s len %d/%d\n", plugin_file, (int)strlen(plugin_file), (int)sizeof(plugin_file)));
-#endif
+#यदि UPLUG_TRACE
+    DBG((stderr, "pluginfile= %s len %d/%d\n", plugin_file, (पूर्णाङ्क)वाक्यदैर्घ्यम्(plugin_file), (पूर्णाङ्क)परिमाण(plugin_file)));
+#यदि_अन्तः
         
-#ifdef __MVS__
-    if (iscics()) /* 12 Nov 2011 JAM */
+#यदि_परिभाषितम् __MVS__
+    यदि (iscics()) /* 12 Nov 2011 JAM */
     {
-        f = nullptr;
+        f = शून्यसूचकः;
     }
-    else
-#endif
+    अन्यथा
+#यदि_अन्तः
     {
-        f = fopen(pluginFile.data(), "r");
+        f = fopen(pluginFile.दत्त(), "r");
     }
 
-    if(f != nullptr) {
-      char linebuf[1024];
-      char *p, *libName=nullptr, *symName=nullptr, *config=nullptr;
-      int32_t line = 0;
+    यदि(f != शून्यसूचकः) {
+      वर्ण linebuf[1024];
+      वर्ण *p, *libName=शून्यसूचकः, *symName=शून्यसूचकः, *config=शून्यसूचकः;
+      int32_t पङ्क्तिः = 0;
             
             
-      while(fgets(linebuf,1023,f)) {
-        line++;
+      यावत्(fgets(linebuf,1023,f)) {
+        पङ्क्तिः++;
 
-        if(!*linebuf || *linebuf=='#') {
-          continue;
-        } else {
+        यदि(!*linebuf || *linebuf=='#') {
+          अनुवर्त;
+        } अन्यथा {
           p = linebuf;
-          while(*p&&isspace((int)*p))
+          यावत्(*p&&रिक्तम्_वा((पूर्णाङ्क)*p))
             p++;
-          if(!*p || *p=='#') continue;
+          यदि(!*p || *p=='#') अनुवर्त;
           libName = p;
-          while(*p&&!isspace((int)*p)) {
+          यावत्(*p&&!रिक्तम्_वा((पूर्णाङ्क)*p)) {
             p++;
           }
-          if(!*p || *p=='#') continue; /* no tab after libname */
+          यदि(!*p || *p=='#') अनुवर्त; /* no tab after libname */
           *p=0; /* end of libname */
           p++;
-          while(*p&&isspace((int)*p)) {
+          यावत्(*p&&रिक्तम्_वा((पूर्णाङ्क)*p)) {
             p++;
           }
-          if(!*p||*p=='#') continue; /* no symname after libname +tab */
+          यदि(!*p||*p=='#') अनुवर्त; /* no symname after libname +tab */
           symName = p;
-          while(*p&&!isspace((int)*p)) {
+          यावत्(*p&&!रिक्तम्_वा((पूर्णाङ्क)*p)) {
             p++;
           }
                     
-          if(*p) { /* has config */
+          यदि(*p) { /* has config */
             *p=0;
             ++p;
-            while(*p&&isspace((int)*p)) {
+            यावत्(*p&&रिक्तम्_वा((पूर्णाङ्क)*p)) {
               p++;
             }
-            if(*p) {
+            यदि(*p) {
               config = p;
             }
           }
                     
           /* chop whitespace at the end of the config */
-          if(config!=nullptr&&*config!=0) {
-            p = config+strlen(config);
-            while(p>config&&isspace((int)*(--p))) {
+          यदि(config!=शून्यसूचकः&&*config!=0) {
+            p = config+वाक्यदैर्घ्यम्(config);
+            यावत्(p>config&&रिक्तम्_वा((पूर्णाङ्क)*(--p))) {
               *p=0;
             }
           }
                 
           /* OK, we're good. */
           { 
-            UErrorCode subStatus = U_ZERO_ERROR;
-            UPlugData *plug = uplug_initPlugFromLibrary(libName, symName, config, &subStatus);
-            if(U_FAILURE(subStatus) && U_SUCCESS(*status)) {
-              *status = subStatus;
+            UError_संहिता sub_स्थितिः = U_ZERO_ERROR;
+            UPlug_दत्त *plug = uplug_initPlugFromLibrary(libName, symName, config, &sub_स्थितिः);
+            यदि(U_FAILURE(sub_स्थितिः) && U_SUCCESS(*स्थितिः)) {
+              *स्थितिः = sub_स्थितिः;
             }
-#if UPLUG_TRACE
+#यदि UPLUG_TRACE
             DBG((stderr, "PLUGIN libName=[%s], sym=[%s], config=[%s]\n", libName, symName, config));
-            DBG((stderr, " -> %p, %s\n", (void*)plug, u_errorName(subStatus)));
-#else
-            (void)plug; /* unused */
-#endif
+            DBG((stderr, " -> %p, %s\n", (शून्य*)plug, u_errorName(sub_स्थितिः)));
+#अन्यथा
+            (शून्य)plug; /*अप्रयुक्तम्*/
+#यदि_अन्तः
           }
         }
       }
       fclose(f);
-    } else {
-#if UPLUG_TRACE
+    } अन्यथा {
+#यदि UPLUG_TRACE
       DBG((stderr, "Can't open plugin file %s\n", plugin_file));
-#endif
+#यदि_अन्तः
     }
   }
-  uplug_loadWaitingPlugs(status);
-#endif /* U_ENABLE_DYLOAD */
-  gCurrentLevel = UPLUG_LEVEL_HIGH;
-  ucln_registerCleanup(UCLN_UPLUG, uplug_cleanup);
+  uplug_आरोपय_प्रतीक्षा_Plugs(स्थितिः);
+#यदि_अन्तः /* U_ENABLE_DYLOAD */
+  gCurrentLevel = UPLUG_LEVEL_उच्चः;
+  ucln_पञ्जिकाकोशः_Cleanup(UCLN_UPLUG, uplug_cleanup);
 }
 
-#endif
+#यदि_अन्तः
 
 

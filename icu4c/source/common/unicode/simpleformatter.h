@@ -8,24 +8,24 @@
 * simpleformatter.h
 */
 
-#ifndef __SIMPLEFORMATTER_H__
-#define __SIMPLEFORMATTER_H__
+#यदि_अपरिभाषितम् __SIMPLEFORMATTER_H__
+#परिभाषय __SIMPLEFORMATTER_H__
 
 /**
  * \file
  * \brief C++ API: Simple formatter, minimal subset of MessageFormat.
  */
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
 
-#include "unicode/unistr.h"
+#अन्तर्भाव "unicode/unistr.h"
 
 U_NAMESPACE_BEGIN
 
 // Forward declaration:
-namespace number::impl {
+namespace सङ्ख्या::impl {
 class SimpleModifier;
 }
 
@@ -57,13 +57,13 @@ class SimpleModifier;
  * @see UMessagePatternApostropheMode
  * @stable ICU 57
  */
-class U_COMMON_API SimpleFormatter final : public UMemory {
-public:
+class U_COMMON_API SimpleFormatter final : सार्वजनिक UMemory {
+सार्वजनिक:
     /**
      * Default constructor.
      * @stable ICU 57
      */
-    SimpleFormatter() : compiledPattern(static_cast<char16_t>(0)) {}
+    SimpleFormatter() : compiled_आदर्शः(static_cast<char16_t>(0)) {}
 
     /**
      * Constructs a formatter from the pattern string.
@@ -74,8 +74,8 @@ public:
      *                  Set to U_ILLEGAL_ARGUMENT_ERROR for bad argument syntax.
      * @stable ICU 57
      */
-    SimpleFormatter(const UnicodeString& pattern, UErrorCode &errorCode) {
-        applyPattern(pattern, errorCode);
+    SimpleFormatter(ध्रुव UnicodeString& आदर्शः, UError_संहिता &error_संहिता) {
+        apply_आदर्शः(आदर्शः, error_संहिता);
     }
 
     /**
@@ -92,23 +92,23 @@ public:
      *                  too few or too many arguments.
      * @stable ICU 57
      */
-    SimpleFormatter(const UnicodeString& pattern, int32_t min, int32_t max,
-                    UErrorCode &errorCode) {
-        applyPatternMinMaxArguments(pattern, min, max, errorCode);
+    SimpleFormatter(ध्रुव UnicodeString& आदर्शः, int32_t min, int32_t max,
+                    UError_संहिता &error_संहिता) {
+        apply_आदर्शः_Min_Max_Arguments(आदर्शः, min, max, error_संहिता);
     }
 
     /**
      * Copy constructor.
      * @stable ICU 57
      */
-    SimpleFormatter(const SimpleFormatter& other)
-            : compiledPattern(other.compiledPattern) {}
+    SimpleFormatter(ध्रुव SimpleFormatter& other)
+            : compiled_आदर्शः(other.compiled_आदर्शः) {}
 
     /**
      * Assignment operator.
      * @stable ICU 57
      */
-    SimpleFormatter& operator=(const SimpleFormatter& other) U_LIFETIME_BOUND;
+    SimpleFormatter& संक्रियकः=(ध्रुव SimpleFormatter& other) U_LIFETIME_BOUND;
 
     /**
      * Destructor.
@@ -126,8 +126,8 @@ public:
      * @return true if U_SUCCESS(errorCode).
      * @stable ICU 57
      */
-    UBool applyPattern(const UnicodeString &pattern, UErrorCode &errorCode) {
-        return applyPatternMinMaxArguments(pattern, 0, INT32_MAX, errorCode);
+    UBool apply_आदर्शः(ध्रुव UnicodeString &आदर्शः, UError_संहिता &error_संहिता) {
+        प्रत्यागम apply_आदर्शः_Min_Max_Arguments(आदर्शः, 0, INT32_MAX, error_संहिता);
     }
 
     /**
@@ -145,15 +145,15 @@ public:
      * @return true if U_SUCCESS(errorCode).
      * @stable ICU 57
      */
-    UBool applyPatternMinMaxArguments(const UnicodeString &pattern,
-                                      int32_t min, int32_t max, UErrorCode &errorCode);
+    UBool apply_आदर्शः_Min_Max_Arguments(ध्रुव UnicodeString &आदर्शः,
+                                      int32_t min, int32_t max, UError_संहिता &error_संहिता);
 
     /**
      * @return The max argument number + 1.
      * @stable ICU 57
      */
-    int32_t getArgumentLimit() const {
-        return getArgumentLimit(compiledPattern.getBuffer(), compiledPattern.length());
+    int32_t get_तर्कः_सीमा() ध्रुव {
+        प्रत्यागम get_तर्कः_सीमा(compiled_आदर्शः.get_बफर(), compiled_आदर्शः.दीर्घता());
     }
 
     /**
@@ -169,9 +169,9 @@ public:
      * @stable ICU 57
      */
     UnicodeString& format(
-            const UnicodeString& value0,
-            UnicodeString& appendTo U_LIFETIME_BOUND,
-            UErrorCode& errorCode) const;
+            ध्रुव UnicodeString& value0,
+            UnicodeString& append_गन्तव्यम् U_LIFETIME_BOUND,
+            UError_संहिता& error_संहिता) ध्रुव;
 
     /**
      * Formats the given values, appending to the appendTo builder.
@@ -187,10 +187,10 @@ public:
      * @stable ICU 57
      */
     UnicodeString& format(
-            const UnicodeString& value0,
-            const UnicodeString& value1,
-            UnicodeString& appendTo U_LIFETIME_BOUND,
-            UErrorCode& errorCode) const;
+            ध्रुव UnicodeString& value0,
+            ध्रुव UnicodeString& value1,
+            UnicodeString& append_गन्तव्यम् U_LIFETIME_BOUND,
+            UError_संहिता& error_संहिता) ध्रुव;
 
     /**
      * Formats the given values, appending to the appendTo builder.
@@ -207,11 +207,11 @@ public:
      * @stable ICU 57
      */
     UnicodeString& format(
-            const UnicodeString& value0,
-            const UnicodeString& value1,
-            const UnicodeString& value2,
-            UnicodeString& appendTo U_LIFETIME_BOUND,
-            UErrorCode& errorCode) const;
+            ध्रुव UnicodeString& value0,
+            ध्रुव UnicodeString& value1,
+            ध्रुव UnicodeString& value2,
+            UnicodeString& append_गन्तव्यम् U_LIFETIME_BOUND,
+            UError_संहिता& error_संहिता) ध्रुव;
 
     /**
      * Formats the given values, appending to the appendTo string.
@@ -233,12 +233,12 @@ public:
      * @stable ICU 57
      */
     UnicodeString& formatAndAppend(
-            const UnicodeString* const* values,
-            int32_t valuesLength,
-            UnicodeString& appendTo U_LIFETIME_BOUND,
+            ध्रुव UnicodeString* ध्रुव* मानानि,
+            int32_t मानानि_दीर्घता,
+            UnicodeString& append_गन्तव्यम् U_LIFETIME_BOUND,
             int32_t* offsets,
-            int32_t offsetsLength,
-            UErrorCode& errorCode) const;
+            int32_t offsets_दीर्घता,
+            UError_संहिता& error_संहिता) ध्रुव;
 
     /**
      * Formats the given values, replacing the contents of the result string.
@@ -262,27 +262,27 @@ public:
      * @stable ICU 57
      */
     UnicodeString& formatAndReplace(
-            const UnicodeString* const* values,
-            int32_t valuesLength,
-            UnicodeString& result U_LIFETIME_BOUND,
+            ध्रुव UnicodeString* ध्रुव* मानानि,
+            int32_t मानानि_दीर्घता,
+            UnicodeString& परिणाम U_LIFETIME_BOUND,
             int32_t* offsets,
-            int32_t offsetsLength,
-            UErrorCode& errorCode) const;
+            int32_t offsets_दीर्घता,
+            UError_संहिता& error_संहिता) ध्रुव;
 
     /**
      * Returns the pattern text with none of the arguments.
      * Like formatting with all-empty string values.
      * @stable ICU 57
      */
-    UnicodeString getTextWithNoArguments() const {
-        return getTextWithNoArguments(
-            compiledPattern.getBuffer(),
-            compiledPattern.length(),
+    UnicodeString getTextWithNoArguments() ध्रुव {
+        प्रत्यागम getTextWithNoArguments(
+            compiled_आदर्शः.get_बफर(),
+            compiled_आदर्शः.दीर्घता(),
             nullptr,
             0);
     }
 
-#ifndef U_HIDE_INTERNAL_API
+#यदि_अपरिभाषितम् U_HIDE_आन्तरिकम्_API
     /**
      * Returns the pattern text with none of the arguments.
      * Like formatting with all-empty string values.
@@ -298,16 +298,16 @@ public:
      *
      * @internal
      */
-    UnicodeString getTextWithNoArguments(int32_t *offsets, int32_t offsetsLength) const {
-        return getTextWithNoArguments(
-            compiledPattern.getBuffer(),
-            compiledPattern.length(),
+    UnicodeString getTextWithNoArguments(int32_t *offsets, int32_t offsets_दीर्घता) ध्रुव {
+        प्रत्यागम getTextWithNoArguments(
+            compiled_आदर्शः.get_बफर(),
+            compiled_आदर्शः.दीर्घता(),
             offsets,
-            offsetsLength);
+            offsets_दीर्घता);
     }
-#endif // U_HIDE_INTERNAL_API
+#यदि_अन्तः // U_HIDE_INTERNAL_API
 
-private:
+गुप्त:
     /**
      * Binary representation of the compiled pattern.
      * Index 0: One more than the highest argument number.
@@ -317,36 +317,36 @@ private:
      * A literal-text segment is stored as its length (at least 1) offset by ARG_NUM_LIMIT,
      * followed by that many chars.
      */
-    UnicodeString compiledPattern;
+    UnicodeString compiled_आदर्शः;
 
-    static inline int32_t getArgumentLimit(const char16_t *compiledPattern,
-                                              int32_t compiledPatternLength) {
-        return compiledPatternLength == 0 ? 0 : compiledPattern[0];
+    स्थिर अन्तःस्थ int32_t get_तर्कः_सीमा(ध्रुव char16_t *compiled_आदर्शः,
+                                              int32_t compiled_आदर्शः_दीर्घता) {
+        प्रत्यागम compiled_आदर्शः_दीर्घता == 0 ? 0 : compiled_आदर्शः[0];
     }
 
-    static UnicodeString getTextWithNoArguments(
-        const char16_t *compiledPattern,
-        int32_t compiledPatternLength,
+    स्थिर UnicodeString getTextWithNoArguments(
+        ध्रुव char16_t *compiled_आदर्शः,
+        int32_t compiled_आदर्शः_दीर्घता,
         int32_t *offsets,
-        int32_t offsetsLength);
+        int32_t offsets_दीर्घता);
 
-    static UnicodeString& format(
-            const char16_t* compiledPattern,
-            int32_t compiledPatternLength,
-            const UnicodeString* const* values,
-            UnicodeString& result U_LIFETIME_BOUND,
-            const UnicodeString* resultCopy,
-            UBool forbidResultAsValue,
+    स्थिर UnicodeString& format(
+            ध्रुव char16_t* compiled_आदर्शः,
+            int32_t compiled_आदर्शः_दीर्घता,
+            ध्रुव UnicodeString* ध्रुव* मानानि,
+            UnicodeString& परिणाम U_LIFETIME_BOUND,
+            ध्रुव UnicodeString* परिणाम_Copy,
+            UBool forbid_परिणाम_As_मानम्,
             int32_t* offsets,
-            int32_t offsetsLength,
-            UErrorCode& errorCode);
+            int32_t offsets_दीर्घता,
+            UError_संहिता& error_संहिता);
 
     // Give access to internals to SimpleModifier for number formatting
-    friend class number::impl::SimpleModifier;
+    मित्रम् class सङ्ख्या::impl::SimpleModifier;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#यदि_अन्तः /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __SIMPLEFORMATTER_H__
+#यदि_अन्तः  // __SIMPLEFORMATTER_H__

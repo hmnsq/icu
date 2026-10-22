@@ -8,22 +8,22 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#यदि !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "uassert.h"
+#अन्तर्भाव "unicode/resbund.h"
+#अन्तर्भाव "uresimp.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "servloc.h"
+#अन्तर्भाव "ustrfmt.h"
+#अन्तर्भाव "uhash.h"
+#अन्तर्भाव "charstr.h"
+#अन्तर्भाव "uassert.h"
 
-#define UNDERSCORE_CHAR ((char16_t)0x005f)
-#define AT_SIGN_CHAR    ((char16_t)64)
-#define PERIOD_CHAR     ((char16_t)46)
+#परिभाषय UNDERSCORE_CHAR ((char16_t)0x005f)
+#परिभाषय AT_SIGN_CHAR    ((char16_t)64)
+#परिभाषय PERIOD_CHAR     ((char16_t)46)
 
 U_NAMESPACE_BEGIN
 
@@ -31,49 +31,49 @@ U_NAMESPACE_BEGIN
  ******************************************************************
  */
 
-SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
-                                               const UnicodeString& locale,
-                                               int32_t kind,
+Simple_Locale_कुञ्चिका_Factory::Simple_Locale_कुञ्चिका_Factory(UObject* obj_गन्तव्यम्_Adopt,
+                                               ध्रुव UnicodeString& locale,
+                                               int32_t विधा,
                                                int32_t coverage)
-  : LocaleKeyFactory(coverage)
-  , _obj(objToAdopt)
+  : Locale_कुञ्चिका_Factory(coverage)
+  , _obj(obj_गन्तव्यम्_Adopt)
   , _id(locale)
-  , _kind(kind)
+  , विधा_2(विधा)
 {
 }
 
-SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
-                                               const Locale& locale,
-                                               int32_t kind,
+Simple_Locale_कुञ्चिका_Factory::Simple_Locale_कुञ्चिका_Factory(UObject* obj_गन्तव्यम्_Adopt,
+                                               ध्रुव Locale& locale,
+                                               int32_t विधा,
                                                int32_t coverage)
-  : LocaleKeyFactory(coverage)
-  , _obj(objToAdopt)
+  : Locale_कुञ्चिका_Factory(coverage)
+  , _obj(obj_गन्तव्यम्_Adopt)
   , _id()
-  , _kind(kind)
+  , विधा_2(विधा)
 {
     LocaleUtility::initNameFromLocale(locale, _id);
 }
 
-SimpleLocaleKeyFactory::~SimpleLocaleKeyFactory()
+Simple_Locale_कुञ्चिका_Factory::~Simple_Locale_कुञ्चिका_Factory()
 {
-  delete _obj;
-  _obj = nullptr;
+  विलोपय _obj;
+  _obj = शून्यसूचकः;
 }
 
 UObject*
-SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const
+Simple_Locale_कुञ्चिका_Factory::create(ध्रुव ICUService_कुञ्चिका& कुञ्चिका, ध्रुव ICUService* service, UError_संहिता& स्थितिः) ध्रुव
 {
-    if (U_SUCCESS(status)) {
-        const LocaleKey& lkey = static_cast<const LocaleKey&>(key);
-        if (_kind == LocaleKey::KIND_ANY || _kind == lkey.kind()) {
-            UnicodeString keyID;
-            lkey.currentID(keyID);
-            if (_id == keyID) {
-                return service->cloneInstance(_obj);
+    यदि (U_SUCCESS(स्थितिः)) {
+        ध्रुव Locale_कुञ्चिका& lkey = static_cast<ध्रुव Locale_कुञ्चिका&>(कुञ्चिका);
+        यदि (विधा_2 == Locale_कुञ्चिका::विधा_ANY || विधा_2 == lkey.विधा()) {
+            UnicodeString कुञ्चिका_ID;
+            lkey.currentID(कुञ्चिका_ID);
+            यदि (_id == कुञ्चिका_ID) {
+                प्रत्यागम service->cloneInstance(_obj);
             }
         }
     }
-    return nullptr;
+    प्रत्यागम शून्यसूचकः;
 }
 
 //UBool
@@ -82,42 +82,42 @@ SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* servi
 //    return id == _id;
 //}
 
-void
-SimpleLocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const
+शून्य
+Simple_Locale_कुञ्चिका_Factory::updateVisibleIDs(Hashtable& परिणाम, UError_संहिता& स्थितिः) ध्रुव
 {
-    if (U_SUCCESS(status)) {
-        if (_coverage & 0x1) {
-            result.remove(_id);
-        } else {
-            result.put(_id, (void*)this, status);
+    यदि (U_SUCCESS(स्थितिः)) {
+        यदि (_coverage & 0x1) {
+            परिणाम.remove(_id);
+        } अन्यथा {
+            परिणाम.put(_id, (शून्य*)एतत्, स्थितिः);
         }
     }
 }
 
-#ifdef SERVICE_DEBUG
+#यदि_परिभाषितम् SERVICE_DEBUG
 UnicodeString&
-SimpleLocaleKeyFactory::debug(UnicodeString& result) const
+Simple_Locale_कुञ्चिका_Factory::debug(UnicodeString& परिणाम) ध्रुव
 {
-    LocaleKeyFactory::debug(result);
-    result.append((UnicodeString)", id: ");
-    result.append(_id);
-    result.append((UnicodeString)", kind: ");
-    result.append(_kind);
-    return result;
+    Locale_कुञ्चिका_Factory::debug(परिणाम);
+    परिणाम.append((UnicodeString)", id: ");
+    परिणाम.append(_id);
+    परिणाम.append((UnicodeString)", kind: ");
+    परिणाम.append(विधा_2);
+    प्रत्यागम परिणाम;
 }
 
 UnicodeString&
-SimpleLocaleKeyFactory::debugClass(UnicodeString& result) const
+Simple_Locale_कुञ्चिका_Factory::debugClass(UnicodeString& परिणाम) ध्रुव
 {
-    return result.append((UnicodeString)"SimpleLocaleKeyFactory");
+    प्रत्यागम परिणाम.append((UnicodeString)"SimpleLocaleKeyFactory");
 }
-#endif
+#यदि_अन्तः
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(SimpleLocaleKeyFactory)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Simple_Locale_कुञ्चिका_Factory)
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
 /* !UCONFIG_NO_SERVICE */
-#endif
+#यदि_अन्तः
 
 

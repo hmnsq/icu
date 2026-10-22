@@ -7,7 +7,7 @@
 **********************************************************************
 */
 
-#include "unicode/parsepos.h"
+#अन्तर्भाव "unicode/parsepos.h"
 
 U_NAMESPACE_BEGIN
 
@@ -16,8 +16,8 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ParsePosition)
 ParsePosition::~ParsePosition() {}
 
 ParsePosition *
-ParsePosition::clone() const {
-    return new ParsePosition(*this);
+ParsePosition::clone() ध्रुव {
+    प्रत्यागम नूतन ParsePosition(*एतत्);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः

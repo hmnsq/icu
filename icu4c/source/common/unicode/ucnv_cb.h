@@ -60,15 +60,15 @@
  *
  */
 
-#ifndef UCNV_CB_H
-#define UCNV_CB_H
+#यदि_अपरिभाषितम् UCNV_CB_H
+#परिभाषय UCNV_CB_H
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#यदि !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_err.h"
+#अन्तर्भाव "unicode/ucnv.h"
+#अन्तर्भाव "unicode/ucnv_err.h"
 
 /**
  * ONLY used by FromU callback functions.
@@ -84,12 +84,12 @@
  * @see ucnv_cbFromUWriteSub
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ucnv_cbFromUWriteBytes (UConverterFromUnicodeArgs *args,
-                        const char* source,
-                        int32_t length,
-                        int32_t offsetIndex,
-                        UErrorCode * err);
+U_CAPI शून्य U_EXPORT2
+ucnv_cb_From_UWrite_अष्टकानि (UConverter_From_Unicode_तर्काः *तर्काः_2,
+                        ध्रुव वर्ण* source,
+                        int32_t दीर्घता,
+                        int32_t विस्थापनम्_सूचकांक,
+                        UError_संहिता * err);
 
 /**
  * ONLY used by FromU callback functions.  
@@ -104,10 +104,10 @@ ucnv_cbFromUWriteBytes (UConverterFromUnicodeArgs *args,
  * @see ucnv_cbFromUWriteBytes
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 
-ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
-                      int32_t offsetIndex,
-                      UErrorCode * err);
+U_CAPI शून्य U_EXPORT2 
+ucnv_cbFromUWriteSub (UConverter_From_Unicode_तर्काः *तर्काः_2,
+                      int32_t विस्थापनम्_सूचकांक,
+                      UError_संहिता * err);
 
 /**
  * ONLY used by fromU callback functions.  
@@ -121,11 +121,11 @@ ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
  * @see ucnv_cbToUWriteSub
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
-                             const UChar** source,
-                             const UChar*  sourceLimit,
-                             int32_t offsetIndex,
-                             UErrorCode * err);
+U_CAPI शून्य U_EXPORT2 ucnv_cbFromUWriteUChars(UConverter_From_Unicode_तर्काः *तर्काः_2,
+                             ध्रुव UChar** source,
+                             ध्रुव UChar*  source_सीमा,
+                             int32_t विस्थापनम्_सूचकांक,
+                             UError_संहिता * err);
 
 /**
  * ONLY used by ToU callback functions.
@@ -140,11 +140,11 @@ U_CAPI void U_EXPORT2 ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
  * @see ucnv_cbToUWriteSub
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 ucnv_cbToUWriteUChars (UConverterToUnicodeArgs *args,
-                                             const UChar* source,
-                                             int32_t length,
-                                             int32_t offsetIndex,
-                                             UErrorCode * err);
+U_CAPI शून्य U_EXPORT2 ucnv_cb_गन्तव्यम्_UWrite_UChars (UConverter_गन्तव्यम्_Unicode_तर्काः *तर्काः_2,
+                                             ध्रुव UChar* source,
+                                             int32_t दीर्घता,
+                                             int32_t विस्थापनम्_सूचकांक,
+                                             UError_संहिता * err);
 
 /**
  * ONLY used by ToU  callback functions.  
@@ -156,9 +156,9 @@ U_CAPI void U_EXPORT2 ucnv_cbToUWriteUChars (UConverterToUnicodeArgs *args,
  * @see ucnv_cbToUWriteUChars
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 ucnv_cbToUWriteSub (UConverterToUnicodeArgs *args,
-                       int32_t offsetIndex,
-                       UErrorCode * err);
-#endif
+U_CAPI शून्य U_EXPORT2 ucnv_cb_गन्तव्यम्_UWrite_Sub (UConverter_गन्तव्यम्_Unicode_तर्काः *तर्काः_2,
+                       int32_t विस्थापनम्_सूचकांक,
+                       UError_संहिता * err);
+#यदि_अन्तः
 
-#endif
+#यदि_अन्तः

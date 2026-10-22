@@ -31,14 +31,14 @@
  * bodies and all macro statements should be terminated with semicolon.
  */
 
-#ifndef __UTF8_H__
-#define __UTF8_H__
+#यदि_अपरिभाषितम् __UTF8_H__
+#परिभाषय __UTF8_H__
 
-#include <stdbool.h>
-#include "unicode/umachine.h"
-#ifndef __UTF_H__
+#अन्तर्भाव <stdbool.h>
+#अन्तर्भाव "unicode/umachine.h"
+#यदि_अपरिभाषितम् __UTF_H__
 #   include "unicode/utf.h"
-#endif
+#यदि_अन्तः
 
 /* internal definitions ----------------------------------------------------- */
 
@@ -53,7 +53,7 @@
  * @param leadByte The first byte of a UTF-8 sequence. Must be 0..0xff.
  * @internal
  */
-#define U8_COUNT_TRAIL_BYTES(leadByte) \
+#परिभाषय U8_गणनम्_TRAIL_अष्टकानि(leadByte) \
     (U8_IS_LEAD(leadByte) ? \
         ((uint8_t)(leadByte)>=0xe0)+((uint8_t)(leadByte)>=0xf0)+1 : 0)
 
@@ -68,7 +68,7 @@
  * @param leadByte The first byte of a UTF-8 sequence. Must be 0..0xff.
  * @internal
  */
-#define U8_COUNT_TRAIL_BYTES_UNSAFE(leadByte) \
+#परिभाषय U8_गणनम्_TRAIL_अष्टकानि_UNSAFE(leadByte) \
     (((uint8_t)(leadByte)>=0xc2)+((uint8_t)(leadByte)>=0xe0)+((uint8_t)(leadByte)>=0xf0))
 
 /**
@@ -78,7 +78,7 @@
  * however it is called by public macros in this file and thus must remain stable.
  * @internal
  */
-#define U8_MASK_LEAD_BYTE(leadByte, countTrailBytes) ((leadByte)&=(1<<(6-(countTrailBytes)))-1)
+#परिभाषय U8_आवरणम्_LEAD_BYTE(leadByte, गणनम्_Trail_अष्टकानि) ((leadByte)&=(1<<(6-(गणनम्_Trail_अष्टकानि)))-1)
 
 /**
  * Internal bit vector for 3-byte UTF-8 validity check, for use in U8_IS_VALID_LEAD3_AND_T1.
@@ -88,14 +88,14 @@
  * @see U8_IS_VALID_LEAD3_AND_T1
  * @internal
  */
-#define U8_LEAD3_T1_BITS "\x20\x30\x30\x30\x30\x30\x30\x30\x30\x30\x30\x30\x30\x10\x30\x30"
+#परिभाषय U8_LEAD3_T1_द्वयङ्काः "\x20\x30\x30\x30\x30\x30\x30\x30\x30\x30\x30\x30\x30\x10\x30\x30"
 
 /**
  * Internal 3-byte UTF-8 validity check.
  * Non-zero if lead byte E0..EF and first trail byte 00..FF start a valid sequence.
  * @internal
  */
-#define U8_IS_VALID_LEAD3_AND_T1(lead, t1) (U8_LEAD3_T1_BITS[(lead)&0xf]&(1<<((uint8_t)(t1)>>5)))
+#परिभाषय U8_IS_VALID_LEAD3_AND_T1(lead, t1) (U8_LEAD3_T1_द्वयङ्काः[(lead)&0xf]&(1<<((uint8_t)(t1)>>5)))
 
 /**
  * Internal bit vector for 4-byte UTF-8 validity check, for use in U8_IS_VALID_LEAD4_AND_T1.
@@ -105,14 +105,14 @@
  * @see U8_IS_VALID_LEAD4_AND_T1
  * @internal
  */
-#define U8_LEAD4_T1_BITS "\x00\x00\x00\x00\x00\x00\x00\x00\x1E\x0F\x0F\x0F\x00\x00\x00\x00"
+#परिभाषय U8_LEAD4_T1_द्वयङ्काः "\x00\x00\x00\x00\x00\x00\x00\x00\x1E\x0F\x0F\x0F\x00\x00\x00\x00"
 
 /**
  * Internal 4-byte UTF-8 validity check.
  * Non-zero if lead byte F0..F4 and first trail byte 00..FF start a valid sequence.
  * @internal
  */
-#define U8_IS_VALID_LEAD4_AND_T1(lead, t1) (U8_LEAD4_T1_BITS[(uint8_t)(t1)>>4]&(1<<((lead)&7)))
+#परिभाषय U8_IS_VALID_LEAD4_AND_T1(lead, t1) (U8_LEAD4_T1_द्वयङ्काः[(uint8_t)(t1)>>4]&(1<<((lead)&7)))
 
 /**
  * Function for handling "next code point" with error-checking.
@@ -124,7 +124,7 @@
  * @internal
  */
 U_CAPI UChar32 U_EXPORT2
-utf8_nextCharSafeBody(const uint8_t *s, int32_t *pi, int32_t length, UChar32 c, int8_t strict);
+utf8_अग्र_Char_Safe_Body(ध्रुव uint8_t *s, int32_t *pi, int32_t दीर्घता, UChar32 c, int8_t strict);
 
 /**
  * Function for handling "append code point" with error-checking.
@@ -136,7 +136,7 @@ utf8_nextCharSafeBody(const uint8_t *s, int32_t *pi, int32_t length, UChar32 c, 
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-utf8_appendCharSafeBody(uint8_t *s, int32_t i, int32_t length, UChar32 c, UBool *pIsError);
+utf8_appendCharSafeBody(uint8_t *s, int32_t i, int32_t दीर्घता, UChar32 c, UBool *pIsError);
 
 /**
  * Function for handling "previous code point" with error-checking.
@@ -148,7 +148,7 @@ utf8_appendCharSafeBody(uint8_t *s, int32_t i, int32_t length, UChar32 c, UBool 
  * @internal
  */
 U_CAPI UChar32 U_EXPORT2
-utf8_prevCharSafeBody(const uint8_t *s, int32_t start, int32_t *pi, UChar32 c, int8_t strict);
+utf8_पूर्व_Char_Safe_Body(ध्रुव uint8_t *s, int32_t start, int32_t *pi, UChar32 c, int8_t strict);
 
 /**
  * Function for handling "skip backward one code point" with error-checking.
@@ -160,7 +160,7 @@ utf8_prevCharSafeBody(const uint8_t *s, int32_t start, int32_t *pi, UChar32 c, i
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
+utf8_back1SafeBody(ध्रुव uint8_t *s, int32_t start, int32_t i);
 
 /* single-code point definitions -------------------------------------------- */
 
@@ -170,7 +170,7 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @return true or false
  * @stable ICU 2.4
  */
-#define U8_IS_SINGLE(c) ((int8_t)(c)>=0)
+#परिभाषय U8_IS_SINGLE(c) ((int8_t)(c)>=0)
 
 /**
  * Is this code unit (byte) a UTF-8 lead byte? (0xC2..0xF4)
@@ -178,7 +178,7 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @return true or false
  * @stable ICU 2.4
  */
-#define U8_IS_LEAD(c) ((uint8_t)((c)-0xc2)<=0x32)
+#परिभाषय U8_IS_LEAD(c) ((uint8_t)((c)-0xc2)<=0x32)
 // 0x32=0xf4-0xc2
 
 /**
@@ -187,7 +187,7 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @return true or false
  * @stable ICU 2.4
  */
-#define U8_IS_TRAIL(c) ((int8_t)(c)<-0x40)
+#परिभाषय U8_IS_TRAIL(c) ((int8_t)(c)<-0x40)
 
 /**
  * How many code units (bytes) are used for the UTF-8 encoding
@@ -196,7 +196,7 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @return 1..4, or 0 if c is a surrogate or not a Unicode code point
  * @stable ICU 2.4
  */
-#define U8_LENGTH(c) \
+#परिभाषय U8_दीर्घता(c) \
     ((uint32_t)(c)<=0x7f ? 1 : \
         ((uint32_t)(c)<=0x7ff ? 2 : \
             ((uint32_t)(c)<=0xd7ff ? 3 : \
@@ -212,9 +212,9 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @return 4
  * @stable ICU 2.4
  */
-#define U8_MAX_LENGTH 4
+#परिभाषय U8_MAX_दीर्घता 4
 
-#ifndef U_HIDE_DRAFT_API
+#यदि_अपरिभाषितम् U_HIDE_DRAFT_API
 
 /**
  * Returns the length of a well-formed UTF-8 byte sequence according to its lead byte.
@@ -225,7 +225,7 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @return 1..4
  * @draft ICU 78
  */
-#define U8_LENGTH_FROM_LEAD_BYTE(leadByte) (U8_COUNT_TRAIL_BYTES(leadByte) + 1)
+#परिभाषय U8_दीर्घता_FROM_LEAD_BYTE(leadByte) (U8_गणनम्_TRAIL_अष्टकानि(leadByte) + 1)
 
 /**
  * Returns the length of a well-formed UTF-8 byte sequence according to its lead byte.
@@ -236,9 +236,9 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @return 1..4
  * @draft ICU 78
  */
-#define U8_LENGTH_FROM_LEAD_BYTE_UNSAFE(leadByte) (U8_COUNT_TRAIL_BYTES_UNSAFE(leadByte) + 1)
+#परिभाषय U8_दीर्घता_FROM_LEAD_BYTE_UNSAFE(leadByte) (U8_गणनम्_TRAIL_अष्टकानि_UNSAFE(leadByte) + 1)
 
-#endif  // U_HIDE_DRAFT_API
+#यदि_अन्तः  // U_HIDE_DRAFT_API
 
 /**
  * Get a code point from a string at a random-access offset,
@@ -256,11 +256,11 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_GET
  * @stable ICU 2.4
  */
-#define U8_GET_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
-    int32_t _u8_get_unsafe_index=(int32_t)(i); \
-    U8_SET_CP_START_UNSAFE(s, _u8_get_unsafe_index); \
-    U8_NEXT_UNSAFE(s, _u8_get_unsafe_index, c); \
-} UPRV_BLOCK_MACRO_END
+#परिभाषय U8_GET_UNSAFE(s, i, c) UPRV_खण्डम्_MACRO_BEGIN { \
+    int32_t u8_get_unsafe_सूचकांक=(int32_t)(i); \
+    U8_समुच्चयः_CP_START_UNSAFE(s, u8_get_unsafe_सूचकांक); \
+    U8_अग्र_UNSAFE(s, u8_get_unsafe_सूचकांक, c); \
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /**
  * Get a code point from a string at a random-access offset,
@@ -283,11 +283,11 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_GET_UNSAFE
  * @stable ICU 2.4
  */
-#define U8_GET(s, start, i, length, c) UPRV_BLOCK_MACRO_BEGIN { \
-    int32_t _u8_get_index=(i); \
-    U8_SET_CP_START(s, start, _u8_get_index); \
-    U8_NEXT(s, _u8_get_index, length, c); \
-} UPRV_BLOCK_MACRO_END
+#परिभाषय U8_GET(s, start, i, दीर्घता, c) UPRV_खण्डम्_MACRO_BEGIN { \
+    int32_t u8_get_सूचकांक=(i); \
+    U8_समुच्चयः_CP_START(s, start, u8_get_सूचकांक); \
+    U8_अग्र(s, u8_get_सूचकांक, दीर्घता, c); \
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /**
  * Get a code point from a string at a random-access offset,
@@ -314,11 +314,11 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_GET
  * @stable ICU 51
  */
-#define U8_GET_OR_FFFD(s, start, i, length, c) UPRV_BLOCK_MACRO_BEGIN { \
-    int32_t _u8_get_index=(i); \
-    U8_SET_CP_START(s, start, _u8_get_index); \
-    U8_NEXT_OR_FFFD(s, _u8_get_index, length, c); \
-} UPRV_BLOCK_MACRO_END
+#परिभाषय U8_GET_OR_FFFD(s, start, i, दीर्घता, c) UPRV_खण्डम्_MACRO_BEGIN { \
+    int32_t u8_get_सूचकांक=(i); \
+    U8_समुच्चयः_CP_START(s, start, u8_get_सूचकांक); \
+    U8_अग्र_OR_FFFD(s, u8_get_सूचकांक, दीर्घता, c); \
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /* definitions with forward iteration --------------------------------------- */
 
@@ -339,21 +339,21 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_NEXT
  * @stable ICU 2.4
  */
-#define U8_NEXT_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय U8_अग्र_UNSAFE(s, i, c) UPRV_खण्डम्_MACRO_BEGIN { \
     (c)=(uint8_t)(s)[(i)++]; \
-    if(!U8_IS_SINGLE(c)) { \
-        if((c)<0xe0) { \
+    यदि(!U8_IS_SINGLE(c)) { \
+        यदि((c)<0xe0) { \
             (c)=(((c)&0x1f)<<6)|((s)[(i)++]&0x3f); \
-        } else if((c)<0xf0) { \
+        } अन्यथा यदि((c)<0xf0) { \
             /* no need for (c&0xf) because the upper bits are truncated after <<12 in the cast to (UChar) */ \
             (c)=(UChar)(((c)<<12)|(((s)[i]&0x3f)<<6)|((s)[(i)+1]&0x3f)); \
             (i)+=2; \
-        } else { \
+        } अन्यथा { \
             (c)=(((c)&7)<<18)|(((s)[i]&0x3f)<<12)|(((s)[(i)+1]&0x3f)<<6)|((s)[(i)+2]&0x3f); \
             (i)+=3; \
         } \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /**
  * Get a code point from a string at a code point boundary offset,
@@ -375,7 +375,7 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_NEXT_UNSAFE
  * @stable ICU 2.4
  */
-#define U8_NEXT(s, i, length, c) U8_INTERNAL_NEXT_OR_SUB(s, i, length, c, U_SENTINEL)
+#परिभाषय U8_अग्र(s, i, दीर्घता, c) U8_आन्तरिकम्_अग्र_OR_SUB(s, i, दीर्घता, c, U_SENTINEL)
 
 /**
  * Get a code point from a string at a code point boundary offset,
@@ -401,36 +401,36 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_NEXT
  * @stable ICU 51
  */
-#define U8_NEXT_OR_FFFD(s, i, length, c) U8_INTERNAL_NEXT_OR_SUB(s, i, length, c, 0xfffd)
+#परिभाषय U8_अग्र_OR_FFFD(s, i, दीर्घता, c) U8_आन्तरिकम्_अग्र_OR_SUB(s, i, दीर्घता, c, 0xfffd)
 
 /** @internal */
-#define U8_INTERNAL_NEXT_OR_SUB(s, i, length, c, sub) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय U8_आन्तरिकम्_अग्र_OR_SUB(s, i, दीर्घता, c, sub) UPRV_खण्डम्_MACRO_BEGIN { \
     (c)=(uint8_t)(s)[(i)++]; \
-    if(!U8_IS_SINGLE(c)) { \
+    यदि(!U8_IS_SINGLE(c)) { \
         uint8_t __t = 0; \
-        if((i)!=(length) && \
+        यदि((i)!=(दीर्घता) && \
             /* fetch/validate/assemble all but last trail byte */ \
             ((c)>=0xe0 ? \
                 ((c)<0xf0 ?  /* U+0800..U+FFFF except surrogates */ \
-                    U8_LEAD3_T1_BITS[(c)&=0xf]&(1<<((__t=(s)[i])>>5)) && \
+                    U8_LEAD3_T1_द्वयङ्काः[(c)&=0xf]&(1<<((__t=(s)[i])>>5)) && \
                     (__t&=0x3f, 1) \
                 :  /* U+10000..U+10FFFF */ \
                     ((c)-=0xf0)<=4 && \
-                    U8_LEAD4_T1_BITS[(__t=(s)[i])>>4]&(1<<(c)) && \
-                    ((c)=((c)<<6)|(__t&0x3f), ++(i)!=(length)) && \
+                    U8_LEAD4_T1_द्वयङ्काः[(__t=(s)[i])>>4]&(1<<(c)) && \
+                    ((c)=((c)<<6)|(__t&0x3f), ++(i)!=(दीर्घता)) && \
                     (__t=(s)[i]-0x80)<=0x3f) && \
                 /* valid second-to-last trail byte */ \
-                ((c)=((c)<<6)|__t, ++(i)!=(length)) \
+                ((c)=((c)<<6)|__t, ++(i)!=(दीर्घता)) \
             :  /* U+0080..U+07FF */ \
                 (c)>=0xc2 && ((c)&=0x1f, 1)) && \
             /* last trail byte */ \
             (__t=(s)[i]-0x80)<=0x3f && \
             ((c)=((c)<<6)|__t, ++(i), 1)) { \
-        } else { \
+        } अन्यथा { \
             (c)=(sub);  /* ill-formed*/ \
         } \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /**
  * Append a code point to a string, overwriting 1 to 4 bytes.
@@ -445,17 +445,17 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_APPEND
  * @stable ICU 2.4
  */
-#define U8_APPEND_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय U8_APPEND_UNSAFE(s, i, c) UPRV_खण्डम्_MACRO_BEGIN { \
     uint32_t __uc=(c); \
-    if(__uc<=0x7f) { \
+    यदि(__uc<=0x7f) { \
         (s)[(i)++]=(uint8_t)__uc; \
-    } else { \
-        if(__uc<=0x7ff) { \
+    } अन्यथा { \
+        यदि(__uc<=0x7ff) { \
             (s)[(i)++]=(uint8_t)((__uc>>6)|0xc0); \
-        } else { \
-            if(__uc<=0xffff) { \
+        } अन्यथा { \
+            यदि(__uc<=0xffff) { \
                 (s)[(i)++]=(uint8_t)((__uc>>12)|0xe0); \
-            } else { \
+            } अन्यथा { \
                 (s)[(i)++]=(uint8_t)((__uc>>18)|0xf0); \
                 (s)[(i)++]=(uint8_t)(((__uc>>12)&0x3f)|0x80); \
             } \
@@ -463,7 +463,7 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
         } \
         (s)[(i)++]=(uint8_t)((__uc&0x3f)|0x80); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /**
  * Append a code point to a string, overwriting 1 to 4 bytes.
@@ -482,26 +482,26 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_APPEND_UNSAFE
  * @stable ICU 2.4
  */
-#define U8_APPEND(s, i, capacity, c, isError) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय U8_APPEND(s, i, क्षमता, c, isError) UPRV_खण्डम्_MACRO_BEGIN { \
     uint32_t __uc=(c); \
-    if(__uc<=0x7f) { \
+    यदि(__uc<=0x7f) { \
         (s)[(i)++]=(uint8_t)__uc; \
-    } else if(__uc<=0x7ff && (i)+1<(capacity)) { \
+    } अन्यथा यदि(__uc<=0x7ff && (i)+1<(क्षमता)) { \
         (s)[(i)++]=(uint8_t)((__uc>>6)|0xc0); \
         (s)[(i)++]=(uint8_t)((__uc&0x3f)|0x80); \
-    } else if((__uc<=0xd7ff || (0xe000<=__uc && __uc<=0xffff)) && (i)+2<(capacity)) { \
+    } अन्यथा यदि((__uc<=0xd7ff || (0xe000<=__uc && __uc<=0xffff)) && (i)+2<(क्षमता)) { \
         (s)[(i)++]=(uint8_t)((__uc>>12)|0xe0); \
         (s)[(i)++]=(uint8_t)(((__uc>>6)&0x3f)|0x80); \
         (s)[(i)++]=(uint8_t)((__uc&0x3f)|0x80); \
-    } else if(0xffff<__uc && __uc<=0x10ffff && (i)+3<(capacity)) { \
+    } अन्यथा यदि(0xffff<__uc && __uc<=0x10ffff && (i)+3<(क्षमता)) { \
         (s)[(i)++]=(uint8_t)((__uc>>18)|0xf0); \
         (s)[(i)++]=(uint8_t)(((__uc>>12)&0x3f)|0x80); \
         (s)[(i)++]=(uint8_t)(((__uc>>6)&0x3f)|0x80); \
         (s)[(i)++]=(uint8_t)((__uc&0x3f)|0x80); \
-    } else { \
+    } अन्यथा { \
         (isError)=true; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /**
  * Advance the string offset from one code point boundary to the next.
@@ -513,9 +513,9 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_FWD_1
  * @stable ICU 2.4
  */
-#define U8_FWD_1_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    (i)+=1+U8_COUNT_TRAIL_BYTES_UNSAFE((s)[i]); \
-} UPRV_BLOCK_MACRO_END
+#परिभाषय U8_FWD_1_UNSAFE(s, i) UPRV_खण्डम्_MACRO_BEGIN { \
+    (i)+=1+U8_गणनम्_TRAIL_अष्टकानि_UNSAFE((s)[i]); \
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /**
  * Advance the string offset from one code point boundary to the next.
@@ -530,28 +530,28 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_FWD_1_UNSAFE
  * @stable ICU 2.4
  */
-#define U8_FWD_1(s, i, length) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय U8_FWD_1(s, i, दीर्घता) UPRV_खण्डम्_MACRO_BEGIN { \
     uint8_t __b=(s)[(i)++]; \
-    if(U8_IS_LEAD(__b) && (i)!=(length)) { \
+    यदि(U8_IS_LEAD(__b) && (i)!=(दीर्घता)) { \
         uint8_t __t1=(s)[i]; \
-        if((0xe0<=__b && __b<0xf0)) { \
-            if(U8_IS_VALID_LEAD3_AND_T1(__b, __t1) && \
-                    ++(i)!=(length) && U8_IS_TRAIL((s)[i])) { \
+        यदि((0xe0<=__b && __b<0xf0)) { \
+            यदि(U8_IS_VALID_LEAD3_AND_T1(__b, __t1) && \
+                    ++(i)!=(दीर्घता) && U8_IS_TRAIL((s)[i])) { \
                 ++(i); \
             } \
-        } else if(__b<0xe0) { \
-            if(U8_IS_TRAIL(__t1)) { \
+        } अन्यथा यदि(__b<0xe0) { \
+            यदि(U8_IS_TRAIL(__t1)) { \
                 ++(i); \
             } \
-        } else /* b>=0xf0 */ { \
-            if(U8_IS_VALID_LEAD4_AND_T1(__b, __t1) && \
-                    ++(i)!=(length) && U8_IS_TRAIL((s)[i]) && \
-                    ++(i)!=(length) && U8_IS_TRAIL((s)[i])) { \
+        } अन्यथा /* b>=0xf0 */ { \
+            यदि(U8_IS_VALID_LEAD4_AND_T1(__b, __t1) && \
+                    ++(i)!=(दीर्घता) && U8_IS_TRAIL((s)[i]) && \
+                    ++(i)!=(दीर्घता) && U8_IS_TRAIL((s)[i])) { \
                 ++(i); \
             } \
         } \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /**
  * Advance the string offset from one code point boundary to the n-th next one,
@@ -565,13 +565,13 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_FWD_N
  * @stable ICU 2.4
  */
-#define U8_FWD_N_UNSAFE(s, i, n) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय U8_FWD_N_UNSAFE(s, i, n) UPRV_खण्डम्_MACRO_BEGIN { \
     int32_t __N=(n); \
-    while(__N>0) { \
+    यावत्(__N>0) { \
         U8_FWD_1_UNSAFE(s, i); \
         --__N; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /**
  * Advance the string offset from one code point boundary to the n-th next one,
@@ -588,13 +588,13 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_FWD_N_UNSAFE
  * @stable ICU 2.4
  */
-#define U8_FWD_N(s, i, length, n) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय U8_FWD_N(s, i, दीर्घता, n) UPRV_खण्डम्_MACRO_BEGIN { \
     int32_t __N=(n); \
-    while(__N>0 && ((i)<(length) || ((length)<0 && (s)[i]!=0))) { \
-        U8_FWD_1(s, i, length); \
+    यावत्(__N>0 && ((i)<(दीर्घता) || ((दीर्घता)<0 && (s)[i]!=0))) { \
+        U8_FWD_1(s, i, दीर्घता); \
         --__N; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /**
  * Adjust a random-access offset to a code point boundary
@@ -609,9 +609,9 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_SET_CP_START
  * @stable ICU 2.4
  */
-#define U8_SET_CP_START_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    while(U8_IS_TRAIL((s)[i])) { --(i); } \
-} UPRV_BLOCK_MACRO_END
+#परिभाषय U8_समुच्चयः_CP_START_UNSAFE(s, i) UPRV_खण्डम्_MACRO_BEGIN { \
+    यावत्(U8_IS_TRAIL((s)[i])) { --(i); } \
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /**
  * Adjust a random-access offset to a code point boundary
@@ -630,11 +630,11 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_TRUNCATE_IF_INCOMPLETE
  * @stable ICU 2.4
  */
-#define U8_SET_CP_START(s, start, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(U8_IS_TRAIL((s)[(i)])) { \
+#परिभाषय U8_समुच्चयः_CP_START(s, start, i) UPRV_खण्डम्_MACRO_BEGIN { \
+    यदि(U8_IS_TRAIL((s)[(i)])) { \
         (i)=utf8_back1SafeBody(s, start, (i)); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /**
  * If the string ends with a UTF-8 byte sequence that is valid so far
@@ -662,29 +662,29 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_SET_CP_START
  * @stable ICU 61
  */
-#define U8_TRUNCATE_IF_INCOMPLETE(s, start, length) UPRV_BLOCK_MACRO_BEGIN { \
-    if((length)>(start)) { \
-        uint8_t __b1=s[(length)-1]; \
-        if(U8_IS_SINGLE(__b1)) { \
+#परिभाषय U8_TRUNCATE_IF_INCOMPLETE(s, start, दीर्घता) UPRV_खण्डम्_MACRO_BEGIN { \
+    यदि((दीर्घता)>(start)) { \
+        uint8_t __b1=s[(दीर्घता)-1]; \
+        यदि(U8_IS_SINGLE(__b1)) { \
             /* common ASCII character */ \
-        } else if(U8_IS_LEAD(__b1)) { \
-            --(length); \
-        } else if(U8_IS_TRAIL(__b1) && ((length)-2)>=(start)) { \
-            uint8_t __b2=s[(length)-2]; \
-            if(0xe0<=__b2 && __b2<=0xf4) { \
-                if(__b2<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(__b2, __b1) : \
+        } अन्यथा यदि(U8_IS_LEAD(__b1)) { \
+            --(दीर्घता); \
+        } अन्यथा यदि(U8_IS_TRAIL(__b1) && ((दीर्घता)-2)>=(start)) { \
+            uint8_t __b2=s[(दीर्घता)-2]; \
+            यदि(0xe0<=__b2 && __b2<=0xf4) { \
+                यदि(__b2<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(__b2, __b1) : \
                         U8_IS_VALID_LEAD4_AND_T1(__b2, __b1)) { \
-                    (length)-=2; \
+                    (दीर्घता)-=2; \
                 } \
-            } else if(U8_IS_TRAIL(__b2) && ((length)-3)>=(start)) { \
-                uint8_t __b3=s[(length)-3]; \
-                if(0xf0<=__b3 && __b3<=0xf4 && U8_IS_VALID_LEAD4_AND_T1(__b3, __b2)) { \
-                    (length)-=3; \
+            } अन्यथा यदि(U8_IS_TRAIL(__b2) && ((दीर्घता)-3)>=(start)) { \
+                uint8_t __b3=s[(दीर्घता)-3]; \
+                यदि(0xf0<=__b3 && __b3<=0xf4 && U8_IS_VALID_LEAD4_AND_T1(__b3, __b2)) { \
+                    (दीर्घता)-=3; \
                 } \
             } \
         } \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /* definitions with backward iteration -------------------------------------- */
 
@@ -707,27 +707,27 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_PREV
  * @stable ICU 2.4
  */
-#define U8_PREV_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय U8_पूर्व_UNSAFE(s, i, c) UPRV_खण्डम्_MACRO_BEGIN { \
     (c)=(uint8_t)(s)[--(i)]; \
-    if(!U8_IS_SINGLE(c)) { \
+    यदि(!U8_IS_SINGLE(c)) { \
         uint8_t __b, __count=1, __shift=6; \
 \
         /* c is a trail byte */ \
         (c)&=0x3f; \
-        for(;;) { \
+        प्रति(;;) { \
             __b=(s)[--(i)]; \
-            if(__b>=0xc0) { \
-                U8_MASK_LEAD_BYTE(__b, __count); \
+            यदि(__b>=0xc0) { \
+                U8_आवरणम्_LEAD_BYTE(__b, __count); \
                 (c)|=(UChar32)__b<<__shift; \
-                break; \
-            } else { \
+                भङ्ग; \
+            } अन्यथा { \
                 (c)|=(UChar32)(__b&0x3f)<<__shift; \
                 ++__count; \
                 __shift+=6; \
             } \
         } \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /**
  * Move the string offset from one code point boundary to the previous one
@@ -749,12 +749,12 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_PREV_UNSAFE
  * @stable ICU 2.4
  */
-#define U8_PREV(s, start, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय U8_पूर्व(s, start, i, c) UPRV_खण्डम्_MACRO_BEGIN { \
     (c)=(uint8_t)(s)[--(i)]; \
-    if(!U8_IS_SINGLE(c)) { \
-        (c)=utf8_prevCharSafeBody((const uint8_t *)s, start, &(i), c, -1); \
+    यदि(!U8_IS_SINGLE(c)) { \
+        (c)=utf8_पूर्व_Char_Safe_Body((ध्रुव uint8_t *)s, start, &(i), c, -1); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /**
  * Move the string offset from one code point boundary to the previous one
@@ -780,12 +780,12 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_PREV
  * @stable ICU 51
  */
-#define U8_PREV_OR_FFFD(s, start, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय U8_पूर्व_OR_FFFD(s, start, i, c) UPRV_खण्डम्_MACRO_BEGIN { \
     (c)=(uint8_t)(s)[--(i)]; \
-    if(!U8_IS_SINGLE(c)) { \
-        (c)=utf8_prevCharSafeBody((const uint8_t *)s, start, &(i), c, -3); \
+    यदि(!U8_IS_SINGLE(c)) { \
+        (c)=utf8_पूर्व_Char_Safe_Body((ध्रुव uint8_t *)s, start, &(i), c, -3); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /**
  * Move the string offset from one code point boundary to the previous one.
@@ -798,9 +798,9 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_BACK_1
  * @stable ICU 2.4
  */
-#define U8_BACK_1_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    while(U8_IS_TRAIL((s)[--(i)])) {} \
-} UPRV_BLOCK_MACRO_END
+#परिभाषय U8_पृष्ठभागः_1_UNSAFE(s, i) UPRV_खण्डम्_MACRO_BEGIN { \
+    यावत्(U8_IS_TRAIL((s)[--(i)])) {} \
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /**
  * Move the string offset from one code point boundary to the previous one.
@@ -814,11 +814,11 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_BACK_1_UNSAFE
  * @stable ICU 2.4
  */
-#define U8_BACK_1(s, start, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(U8_IS_TRAIL((s)[--(i)])) { \
+#परिभाषय U8_पृष्ठभागः_1(s, start, i) UPRV_खण्डम्_MACRO_BEGIN { \
+    यदि(U8_IS_TRAIL((s)[--(i)])) { \
         (i)=utf8_back1SafeBody(s, start, (i)); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /**
  * Move the string offset from one code point boundary to the n-th one before it,
@@ -833,13 +833,13 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_BACK_N
  * @stable ICU 2.4
  */
-#define U8_BACK_N_UNSAFE(s, i, n) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय U8_पृष्ठभागः_N_UNSAFE(s, i, n) UPRV_खण्डम्_MACRO_BEGIN { \
     int32_t __N=(n); \
-    while(__N>0) { \
-        U8_BACK_1_UNSAFE(s, i); \
+    यावत्(__N>0) { \
+        U8_पृष्ठभागः_1_UNSAFE(s, i); \
         --__N; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /**
  * Move the string offset from one code point boundary to the n-th one before it,
@@ -855,13 +855,13 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_BACK_N_UNSAFE
  * @stable ICU 2.4
  */
-#define U8_BACK_N(s, start, i, n) UPRV_BLOCK_MACRO_BEGIN { \
+#परिभाषय U8_पृष्ठभागः_N(s, start, i, n) UPRV_खण्डम्_MACRO_BEGIN { \
     int32_t __N=(n); \
-    while(__N>0 && (i)>(start)) { \
-        U8_BACK_1(s, start, i); \
+    यावत्(__N>0 && (i)>(start)) { \
+        U8_पृष्ठभागः_1(s, start, i); \
         --__N; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /**
  * Adjust a random-access offset to a code point boundary after a code point.
@@ -876,10 +876,10 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_SET_CP_LIMIT
  * @stable ICU 2.4
  */
-#define U8_SET_CP_LIMIT_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    U8_BACK_1_UNSAFE(s, i); \
+#परिभाषय U8_समुच्चयः_CP_सीमा_UNSAFE(s, i) UPRV_खण्डम्_MACRO_BEGIN { \
+    U8_पृष्ठभागः_1_UNSAFE(s, i); \
     U8_FWD_1_UNSAFE(s, i); \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
 /**
  * Adjust a random-access offset to a code point boundary after a code point.
@@ -898,11 +898,11 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @see U8_SET_CP_LIMIT_UNSAFE
  * @stable ICU 2.4
  */
-#define U8_SET_CP_LIMIT(s, start, i, length) UPRV_BLOCK_MACRO_BEGIN { \
-    if((start)<(i) && ((i)<(length) || (length)<0)) { \
-        U8_BACK_1(s, start, i); \
-        U8_FWD_1(s, i, length); \
+#परिभाषय U8_समुच्चयः_CP_सीमा(s, start, i, दीर्घता) UPRV_खण्डम्_MACRO_BEGIN { \
+    यदि((start)<(i) && ((i)<(दीर्घता) || (दीर्घता)<0)) { \
+        U8_पृष्ठभागः_1(s, start, i); \
+        U8_FWD_1(s, i, दीर्घता); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_खण्डम्_MACRO_अन्तः
 
-#endif
+#यदि_अन्तः

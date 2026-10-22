@@ -20,10 +20,10 @@
 *   so that we need not change all of its code and its users.
 */
 
-#ifndef __UELEMENT_H__
-#define __UELEMENT_H__
+#यदि_अपरिभाषितम् __UELEMENT_H__
+#परिभाषय __UELEMENT_H__
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
 U_CDECL_BEGIN
 
@@ -36,11 +36,11 @@ U_CDECL_BEGIN
  * Because a UElement is the size of a native pointer or a 32-bit
  * integer, we pass it around by value.
  */
-union UElement {
-    void*   pointer;
+सङ्घ UElement {
+    शून्य*   pointer;
     int32_t integer;
 };
-typedef union UElement UElement;
+प्रकारनिर्देश सङ्घ UElement UElement;
 
 /**
  * An element-equality (boolean) comparison function.
@@ -48,7 +48,7 @@ typedef union UElement UElement;
  * @param e2 An element (object or integer)
  * @return true if the two elements are equal.
  */
-typedef UBool U_CALLCONV UElementsAreEqual(const UElement e1, const UElement e2);
+प्रकारनिर्देश UBool U_CALLCONV UElementsAreEqual(ध्रुव UElement e1, ध्रुव UElement e2);
 
 /**
  * An element sorting (three-way) comparison function.
@@ -59,7 +59,7 @@ typedef UBool U_CALLCONV UElementsAreEqual(const UElement e1, const UElement e2)
  *                <0 if e1 is < e2, or
  *                >0 if e1 is > e2.
  */
-typedef int32_t U_CALLCONV UElementComparator(UElement e1, UElement e2);
+प्रकारनिर्देश int32_t U_CALLCONV UElementComparator(UElement e1, UElement e2);
 
 /**
  * An element assignment function.  It may copy an integer, copy
@@ -67,9 +67,9 @@ typedef int32_t U_CALLCONV UElementComparator(UElement e1, UElement e2);
  * @param dst The element to be assigned to
  * @param src The element to assign from
  */
-typedef void U_CALLCONV UElementAssigner(UElement *dst, UElement *src);
+प्रकारनिर्देश शून्य U_CALLCONV UElementAssigner(UElement *dst, UElement *src);
 
-U_CDECL_END
+U_CDECL_अन्तः
 
 /**
  * Comparator function for UnicodeString* keys. Implements UElementsAreEqual.
@@ -78,7 +78,7 @@ U_CDECL_END
  * @return true if key1 and key2 are equal, return false otherwise.
  */
 U_CAPI UBool U_EXPORT2 
-uhash_compareUnicodeString(const UElement key1, const UElement key2);
+uhash_compareUnicodeString(ध्रुव UElement key1, ध्रुव UElement key2);
 
 /**
  * Comparator function for UnicodeString* keys (case insensitive).
@@ -89,6 +89,6 @@ uhash_compareUnicodeString(const UElement key1, const UElement key2);
  * @return true if key1 and key2 are equal, return false otherwise.
  */
 U_CAPI UBool U_EXPORT2 
-uhash_compareCaselessUnicodeString(const UElement key1, const UElement key2);
+uhash_compareCaselessUnicodeString(ध्रुव UElement key1, ध्रुव UElement key2);
 
-#endif  /* __UELEMENT_H__ */
+#यदि_अन्तः  /* __UELEMENT_H__ */

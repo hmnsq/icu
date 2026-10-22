@@ -16,8 +16,8 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __STD_STRING_H__
-#define __STD_STRING_H__
+#यदि_अपरिभाषितम् __STD_STRING_H__
+#परिभाषय __STD_STRING_H__
 
 /**
  * \file
@@ -25,17 +25,17 @@
  *                 header and for related definitions.
  */
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
 
 // Workaround for a libstdc++ bug before libstdc++4.6 (2011).
 // https://bugs.llvm.org/show_bug.cgi?id=13364
-#if defined(__GLIBCXX__)
+#यदि defined(__GLIBCXX__)
 namespace std { class type_info; }
-#endif
-#include <string>
+#यदि_अन्तः
+#अन्तर्भाव <string>
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#यदि_अन्तः /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __STD_STRING_H__
+#यदि_अन्तः  // __STD_STRING_H__

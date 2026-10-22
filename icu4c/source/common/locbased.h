@@ -10,11 +10,11 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#ifndef LOCBASED_H
-#define LOCBASED_H
+#यदि_अपरिभाषितम् LOCBASED_H
+#परिभाषय LOCBASED_H
 
-#include "unicode/locid.h"
-#include "unicode/uobject.h"
+#अन्तर्भाव "unicode/locid.h"
+#अन्तर्भाव "unicode/uobject.h"
 
 U_NAMESPACE_BEGIN
 
@@ -25,9 +25,9 @@ U_NAMESPACE_BEGIN
  * services framework.
  * @since ICU 2.8
  */
-class U_COMMON_API LocaleBased : public UMemory {
+class U_COMMON_API LocaleBased : सार्वजनिक UMemory {
 
- public:
+ सार्वजनिक:
 
     /**
      * Return locale meta-data for the service object wrapped by this
@@ -39,11 +39,11 @@ class U_COMMON_API LocaleBased : public UMemory {
      * @param status input-output error code
      * @return the indicated locale
      */
-    static const Locale& getLocale(
-        const Locale& valid U_LIFETIME_BOUND,
-        const Locale& actual U_LIFETIME_BOUND,
-        ULocDataLocaleType type,
-        UErrorCode& status);
+    स्थिर ध्रुव Locale& getLocale(
+        ध्रुव Locale& valid U_LIFETIME_BOUND,
+        ध्रुव Locale& actual U_LIFETIME_BOUND,
+        ULoc_दत्त_Locale_Type type,
+        UError_संहिता& स्थितिः);
 
     /**
      * Return the locale ID for the service object wrapped by this
@@ -55,12 +55,12 @@ class U_COMMON_API LocaleBased : public UMemory {
      * @param status input-output error code
      * @return the indicated locale ID
      */
-    static const char* getLocaleID(
-        const Locale& valid, const Locale& actual,
-        ULocDataLocaleType type, UErrorCode& status);
+    स्थिर ध्रुव वर्ण* getLocaleID(
+        ध्रुव Locale& valid, ध्रुव Locale& actual,
+        ULoc_दत्त_Locale_Type type, UError_संहिता& स्थितिः);
 
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_अन्तः
 
-#endif
+#यदि_अन्तः
