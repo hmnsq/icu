@@ -10,21 +10,21 @@
 **********************************************************************
 */
 
-#include "unicode/unimatch.h"
-#include "unicode/utf16.h"
-#include "patternprops.h"
-#include "util.h"
+#अन्तर्भाव "unicode/unimatch.h"
+#अन्तर्भाव "unicode/utf16.h"
+#अन्तर्भाव "patternprops.h"
+#अन्तर्भाव "util.h"
 
 // Define char16_t constants using hex for EBCDIC compatibility
 
-static const char16_t BACKSLASH  = 0x005C; /*\*/
-static const char16_t UPPER_U    = 0x0055; /*U*/
-static const char16_t LOWER_U    = 0x0075; /*u*/
-static const char16_t APOSTROPHE = 0x0027; // '\''
-static const char16_t SPACE      = 0x0020; // ' '
+स्थिर ध्रुव char16_t BACKSLASH  = 0x005C; /*\*/
+स्थिर ध्रुव char16_t UPPER_U    = 0x0055; /*U*/
+स्थिर ध्रुव char16_t LOWER_U    = 0x0075; /*u*/
+स्थिर ध्रुव char16_t APOSTROPHE = 0x0027; // '\''
+स्थिर ध्रुव char16_t SPACE      = 0x0020; // ' '
 
 // "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-static const char16_t DIGITS[] = {
+स्थिर ध्रुव char16_t DIGITS[] = {
     48,49,50,51,52,53,54,55,56,57,
     65,66,67,68,69,70,71,72,73,74,
     75,76,77,78,79,80,81,82,83,84,
@@ -33,84 +33,84 @@ static const char16_t DIGITS[] = {
 
 U_NAMESPACE_BEGIN
 
-UnicodeString& ICU_Utility::appendNumber(UnicodeString& result, int32_t n,
+UnicodeString& ICU_Utility::append_सङ्ख्या(UnicodeString& result, int32_t n,
                                      int32_t radix, int32_t minDigits) {
-    if (radix < 2 || radix > 36) {
+    जइ (radix < 2 || radix > 36) {
         // Bogus radix
-        return result.append(static_cast<char16_t>(63)/*?*/);
+        प्रत्यागम result.append(static_cast<char16_t>(63)/*?*/);
     }
     // Handle negatives
-    if (n < 0) {
+    जइ (n < 0) {
         n = -n;
         result.append(static_cast<char16_t>(45)/*-*/);
     }
     // First determine the number of digits
     int32_t nn = n;
     int32_t r = 1;
-    while (nn >= radix) {
+    जाव (nn >= radix) {
         nn /= radix;
         r *= radix;
         --minDigits;
     }
     // Now generate the digits
-    while (--minDigits > 0) {
+    जाव (--minDigits > 0) {
         result.append(DIGITS[0]);
     }
-    while (r > 0) {
+    जाव (r > 0) {
         int32_t digit = n / r;
         result.append(DIGITS[digit]);
         n -= digit * r;
         r /= radix;
     }
-    return result;
+    प्रत्यागम result;
 }
 
 UBool ICU_Utility::isUnprintable(UChar32 c) {
-    return !(c >= 0x20 && c <= 0x7E);
+    प्रत्यागम !(c >= 0x20 && c <= 0x7E);
 }
 
 UBool ICU_Utility::shouldAlwaysBeEscaped(UChar32 c) {
-    if (c < 0x20) {
-        return true;  // C0 control codes
-    } else if (c <= 0x7e) {
-        return false;  // printable ASCII
-    } else if (c <= 0x9f) {
-        return true;  // C1 control codes
-    } else if (c < 0xd800) {
-        return false;  // most of the BMP
-    } else if (c <= 0xdfff || (0xfdd0 <= c && c <= 0xfdef) || (c & 0xfffe) == 0xfffe) {
-        return true;  // surrogate or noncharacter code points
-    } else if (c <= 0x10ffff) {
-        return false;  // all else
-    } else {
-        return true;  // not a code point
+    जइ (c < 0x20) {
+        प्रत्यागम सच्च;  // C0 control codes
+    } अण्णहा जइ (c <= 0x7e) {
+        प्रत्यागम मिच्छ;  // printable ASCII
+    } अण्णहा जइ (c <= 0x9f) {
+        प्रत्यागम सच्च;  // C1 control codes
+    } अण्णहा जइ (c < 0xd800) {
+        प्रत्यागम मिच्छ;  // most of the BMP
+    } अण्णहा जइ (c <= 0xdfff || (0xfdd0 <= c && c <= 0xfdef) || (c & 0xfffe) == 0xfffe) {
+        प्रत्यागम सच्च;  // surrogate or noncharacter code points
+    } अण्णहा जइ (c <= 0x10ffff) {
+        प्रत्यागम मिच्छ;  // all else
+    } अण्णहा {
+        प्रत्यागम सच्च;  // not a code point
     }
 }
 
 UBool ICU_Utility::escapeUnprintable(UnicodeString& result, UChar32 c) {
-    if (isUnprintable(c)) {
+    जइ (isUnprintable(c)) {
         escape(result, c);
-        return true;
+        प्रत्यागम सच्च;
     }
-    return false;
+    प्रत्यागम मिच्छ;
 }
 
 UnicodeString &ICU_Utility::escape(UnicodeString& result, UChar32 c) {
     result.append(BACKSLASH);
-    if (c & ~0xFFFF) {
+    जइ (c & ~0xFFFF) {
         result.append(UPPER_U);
         result.append(DIGITS[0xF&(c>>28)]);
         result.append(DIGITS[0xF&(c>>24)]);
         result.append(DIGITS[0xF&(c>>20)]);
         result.append(DIGITS[0xF&(c>>16)]);
-    } else {
+    } अण्णहा {
         result.append(LOWER_U);
     }
     result.append(DIGITS[0xF&(c>>12)]);
     result.append(DIGITS[0xF&(c>>8)]);
     result.append(DIGITS[0xF&(c>>4)]);
     result.append(DIGITS[0xF&c]);
-    return result;
+    प्रत्यागम result;
 }
 
 /**
@@ -146,15 +146,15 @@ int32_t ICU_Utility::quotedIndexOf(const UnicodeString& text,
  * @return the index of the first non-white-space character at or
  * after pos, or str.length(), if there is none.
  */
-int32_t ICU_Utility::skipWhitespace(const UnicodeString& str, int32_t& pos,
+int32_t ICU_Utility::skipWhitespace(ध्रुव UnicodeString& str, int32_t& pos,
                                     UBool advance) {
     int32_t p = pos;
-    const char16_t* s = str.getBuffer();
+    ध्रुव char16_t* s = str.getBuffer();
     p = static_cast<int32_t>(PatternProps::skipWhiteSpace(s + p, str.length() - p) - s);
-    if (advance) {
+    जइ (advance) {
         pos = p;
     }
-    return p;
+    प्रत्यागम p;
 }
 
 /**
@@ -212,16 +212,16 @@ int32_t ICU_Utility::skipWhitespace(const UnicodeString& str, int32_t& pos,
  * @return true if 'ch' is seen preceded by zero or more
  * whitespace characters.
  */
-UBool ICU_Utility::parseChar(const UnicodeString& id, int32_t& pos, char16_t ch) {
+UBool ICU_Utility::parseChar(ध्रुव UnicodeString& id, int32_t& pos, char16_t ch) {
     int32_t start = pos;
-    skipWhitespace(id, pos, true);
-    if (pos == id.length() ||
+    skipWhitespace(id, pos, सच्च);
+    जइ (pos == id.length() ||
         id.charAt(pos) != ch) {
         pos = start;
-        return false;
+        प्रत्यागम मिच्छ;
     }
     ++pos;
-    return true;
+    प्रत्यागम सच्च;
 }
 
 /**
@@ -240,64 +240,64 @@ UBool ICU_Utility::parseChar(const UnicodeString& id, int32_t& pos, char16_t ch)
  * @param limit offset after last character to parse
  * @return index after last parsed character, or -1 on parse failure.
  */
-int32_t ICU_Utility::parsePattern(const UnicodeString& pat,
-                                  const Replaceable& text,
+int32_t ICU_Utility::parsePattern(ध्रुव UnicodeString& pat,
+                                  ध्रुव Replaceable& text,
                                   int32_t index,
                                   int32_t limit) {
     int32_t ipat = 0;
 
     // empty pattern matches immediately
-    if (ipat == pat.length()) {
-        return index;
+    जइ (ipat == pat.length()) {
+        प्रत्यागम index;
     }
 
     UChar32 cpat = pat.char32At(ipat);
 
-    while (index < limit) {
+    जाव (index < limit) {
         UChar32 c = text.char32At(index);
 
         // parse \s*
-        if (cpat == 126 /*~*/) {
-            if (PatternProps::isWhiteSpace(c)) {
+        जइ (cpat == 126 /*~*/) {
+            जइ (PatternProps::isWhiteSpace(c)) {
                 index += U16_LENGTH(c);
-                continue;
-            } else {
-                if (++ipat == pat.length()) {
-                    return index; // success; c unparsed
+                अनुवर्त;
+            } अण्णहा {
+                जइ (++ipat == pat.length()) {
+                    प्रत्यागम index; // success; c unparsed
                 }
                 // fall thru; process c again with next cpat
             }
         }
 
         // parse literal
-        else if (c == cpat) {
+        अण्णहा जइ (c == cpat) {
             index += U16_LENGTH(c);
             ipat += U16_LENGTH(cpat);
-            if (ipat == pat.length()) {
-                return index; // success; c parsed
+            जइ (ipat == pat.length()) {
+                प्रत्यागम index; // success; c parsed
             }
             // fall thru; get next cpat
         }
 
         // match failure of literal
-        else {
-            return -1;
+        अण्णहा {
+            प्रत्यागम -1;
         }
 
         cpat = pat.char32At(ipat);
     }
 
-    return -1; // text ended before end of pat
+    प्रत्यागम -1; // text ended before end of pat
 }
 
-int32_t ICU_Utility::parseAsciiInteger(const UnicodeString& str, int32_t& pos) {
+int32_t ICU_Utility::parseAsciiInteger(ध्रुव UnicodeString& str, int32_t& pos) {
     int32_t result = 0;
     char16_t c;
-    while (pos < str.length() && (c = str.charAt(pos)) >= u'0' && c <= u'9') {
+    जाव (pos < str.length() && (c = str.charAt(pos)) >= u'0' && c <= u'9') {
         result = result * 10 + (c - u'0');
         pos++;
     }
-    return result;
+    प्रत्यागम result;
 }
 
 /**
@@ -318,7 +318,7 @@ int32_t ICU_Utility::parseAsciiInteger(const UnicodeString& str, int32_t& pos) {
  * cleared out by, at the end, calling this method with a literal
  * character.
  */
-void ICU_Utility::appendToRule(UnicodeString& rule,
+शून्य ICU_Utility::appendToRule(UnicodeString& rule,
                                UChar32 c,
                                UBool isLiteral,
                                UBool escapeUnprintable,
@@ -326,9 +326,9 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
     // If we are escaping unprintables, then escape them outside
     // quotes.  \u and \U are not recognized within quotes.  The same
     // logic applies to literals, but literals are never escaped.
-    if (isLiteral ||
+    जइ (isLiteral ||
         (escapeUnprintable && ICU_Utility::isUnprintable(c))) {
-        if (quoteBuf.length() > 0) {
+        जइ (quoteBuf.length() > 0) {
             // We prefer backslash APOSTROPHE to double APOSTROPHE
             // (more readable, less similar to ") so if there are
             // double APOSTROPHEs at the ends, we pull them outside
@@ -336,7 +336,7 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
 
             // If the first thing in the quoteBuf is APOSTROPHE
             // (doubled) then pull it out.
-            while (quoteBuf.length() >= 2 &&
+            जाव (quoteBuf.length() >= 2 &&
                    quoteBuf.charAt(0) == APOSTROPHE &&
                    quoteBuf.charAt(1) == APOSTROPHE) {
                 rule.append(BACKSLASH).append(APOSTROPHE);
@@ -344,42 +344,42 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
             }
             // If the last thing in the quoteBuf is APOSTROPHE
             // (doubled) then remove and count it and add it after.
-            int32_t trailingCount = 0;
-            while (quoteBuf.length() >= 2 &&
+            int32_t trailing_गणनम् = 0;
+            जाव (quoteBuf.length() >= 2 &&
                    quoteBuf.charAt(quoteBuf.length()-2) == APOSTROPHE &&
                    quoteBuf.charAt(quoteBuf.length()-1) == APOSTROPHE) {
                 quoteBuf.truncate(quoteBuf.length()-2);
-                ++trailingCount;
+                ++trailing_गणनम्;
             }
-            if (quoteBuf.length() > 0) {
+            जइ (quoteBuf.length() > 0) {
                 rule.append(APOSTROPHE);
                 rule.append(quoteBuf);
                 rule.append(APOSTROPHE);
                 quoteBuf.truncate(0);
             }
-            while (trailingCount-- > 0) {
+            जाव (trailing_गणनम्-- > 0) {
                 rule.append(BACKSLASH).append(APOSTROPHE);
             }
         }
-        if (c != static_cast<UChar32>(-1)) {
+        जइ (c != static_cast<UChar32>(-1)) {
             /* Since spaces are ignored during parsing, they are
              * emitted only for readability.  We emit one here
              * only if there isn't already one at the end of the
              * rule.
              */
-            if (c == SPACE) {
+            जइ (c == SPACE) {
                 int32_t len = rule.length();
-                if (len > 0 && rule.charAt(len-1) != c) {
+                जइ (len > 0 && rule.charAt(len-1) != c) {
                     rule.append(c);
                 }
-            } else if (!escapeUnprintable || !ICU_Utility::escapeUnprintable(rule, c)) {
+            } अण्णहा जइ (!escapeUnprintable || !ICU_Utility::escapeUnprintable(rule, c)) {
                 rule.append(c);
             }
         }
     }
 
     // Escape ' and '\' and don't begin a quote just for them
-    else if (quoteBuf.length() == 0 &&
+    अण्णहा जइ (quoteBuf.length() == 0 &&
              (c == APOSTROPHE || c == BACKSLASH)) {
         rule.append(BACKSLASH);
         rule.append(c);
@@ -388,7 +388,7 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
     // Specials (printable ascii that isn't [0-9a-zA-Z]) and
     // whitespace need quoting.  Also append stuff to quotes if we are
     // building up a quoted substring already.
-    else if (quoteBuf.length() > 0 ||
+    अण्णहा जइ (quoteBuf.length() > 0 ||
              (c >= 0x0021 && c <= 0x007E &&
               !((c >= 0x0030/*'0'*/ && c <= 0x0039/*'9'*/) ||
                 (c >= 0x0041/*'A'*/ && c <= 0x005A/*'Z'*/) ||
@@ -396,23 +396,23 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
              PatternProps::isWhiteSpace(c)) {
         quoteBuf.append(c);
         // Double ' within a quote
-        if (c == APOSTROPHE) {
+        जइ (c == APOSTROPHE) {
             quoteBuf.append(c);
         }
     }
     
     // Otherwise just append
-    else {
+    अण्णहा {
         rule.append(c);
     }
 }
 
-void ICU_Utility::appendToRule(UnicodeString& rule,
-                               const UnicodeString& text,
+शून्य ICU_Utility::appendToRule(UnicodeString& rule,
+                               ध्रुव UnicodeString& text,
                                UBool isLiteral,
                                UBool escapeUnprintable,
                                UnicodeString& quoteBuf) {
-    for (int32_t i=0; i<text.length(); ++i) {
+    प्रति (int32_t i=0; i<text.length(); ++i) {
         appendToRule(rule, text[i], isLiteral, escapeUnprintable, quoteBuf);
     }
 }
@@ -421,14 +421,14 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
  * Given a matcher reference, which may be null, append its
  * pattern as a literal to the given rule.
  */
-void ICU_Utility::appendToRule(UnicodeString& rule,
-                               const UnicodeMatcher* matcher,
+शून्य ICU_Utility::appendToRule(UnicodeString& rule,
+                               ध्रुव UnicodeMatcher* matcher,
                                UBool escapeUnprintable,
                                UnicodeString& quoteBuf) {
-    if (matcher != nullptr) {
+    जइ (matcher != nullptr) {
         UnicodeString pat;
         appendToRule(rule, matcher->toPattern(pat, escapeUnprintable),
-                     true, escapeUnprintable, quoteBuf);
+                     सच्च, escapeUnprintable, quoteBuf);
     }
 }
 

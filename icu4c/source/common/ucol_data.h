@@ -26,14 +26,14 @@
 #ifndef __UCOL_DATA_H__
 #define __UCOL_DATA_H__
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_COLLATION
+#जइ !UCONFIG_NO_COLLATION
 
 /* let us know whether reserved fields are reset to zero or junked */
 #define UCOL_HEADER_MAGIC 0x20030618
 
-typedef struct {
+प्रकारनिर्देश संरचना {
       int32_t size;
       /* all the offsets are in bytes */
       /* to get the address add to the header address and cast properly */
@@ -74,7 +74,7 @@ typedef struct {
       uint8_t reserved[76];                 /* for future use */
 } UCATableHeader;
 
-typedef struct {
+प्रकारनिर्देश संरचना {
   uint32_t byteSize;
   uint32_t tableSize;
   uint32_t contsSize;

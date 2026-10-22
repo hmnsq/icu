@@ -22,16 +22,16 @@
  * \brief C++ API: Internationalizing Domain Names in Applications (IDNA)
  */
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#जइ U_SHOW_CPLUSPLUS_API
 
-#if !UCONFIG_NO_IDNA
+#जइ !UCONFIG_NO_IDNA
 
-#include "unicode/bytestream.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uidna.h"
-#include "unicode/unistr.h"
+#अन्तर्भाव "unicode/bytestream.h"
+#अन्तर्भाव "unicode/stringpiece.h"
+#अन्तर्भाव "unicode/uidna.h"
+#अन्तर्भाव "unicode/unistr.h"
 
 U_NAMESPACE_BEGIN
 
@@ -49,8 +49,8 @@ class IDNAInfo;
  * and IDNA2003 (functions that do not use a service object).
  * @stable ICU 4.6
  */
-class U_COMMON_API IDNA : public UObject {
-public:
+class U_COMMON_API IDNA : सार्वजनिक UObject {
+सार्वजनिक:
     /**
      * Destructor.
      * @stable ICU 4.6
@@ -93,7 +93,7 @@ public:
      * @return the UTS #46 IDNA instance, if successful
      * @stable ICU 4.6
      */
-    static IDNA *
+    स्थिर IDNA *
     createUTS46Instance(uint32_t options, UErrorCode &errorCode);
 
     /**
@@ -116,11 +116,11 @@ public:
      * @return dest
      * @stable ICU 4.6
      */
-    virtual UnicodeString&
-    labelToASCII(const UnicodeString& label,
+    आभास UnicodeString&
+    labelToASCII(ध्रुव UnicodeString& label,
                  UnicodeString& dest U_LIFETIME_BOUND,
                  IDNAInfo& info,
-                 UErrorCode& errorCode) const = 0;
+                 UErrorCode& errorCode) ध्रुव = 0;
 
     /**
      * Converts a single domain name label into its Unicode form for human-readable display.
@@ -140,11 +140,11 @@ public:
      * @return dest
      * @stable ICU 4.6
      */
-    virtual UnicodeString&
-    labelToUnicode(const UnicodeString& label,
+    आभास UnicodeString&
+    labelToUnicode(ध्रुव UnicodeString& label,
                    UnicodeString& dest U_LIFETIME_BOUND,
                    IDNAInfo& info,
-                   UErrorCode& errorCode) const = 0;
+                   UErrorCode& errorCode) ध्रुव = 0;
 
     /**
      * Converts a whole domain name into its ASCII form for DNS lookup.
@@ -166,11 +166,11 @@ public:
      * @return dest
      * @stable ICU 4.6
      */
-    virtual UnicodeString&
-    nameToASCII(const UnicodeString& name,
+    आभास UnicodeString&
+    nameToASCII(ध्रुव UnicodeString& name,
                 UnicodeString& dest U_LIFETIME_BOUND,
                 IDNAInfo& info,
-                UErrorCode& errorCode) const = 0;
+                UErrorCode& errorCode) ध्रुव = 0;
 
     /**
      * Converts a whole domain name into its Unicode form for human-readable display.
@@ -190,11 +190,11 @@ public:
      * @return dest
      * @stable ICU 4.6
      */
-    virtual UnicodeString&
-    nameToUnicode(const UnicodeString& name,
+    आभास UnicodeString&
+    nameToUnicode(ध्रुव UnicodeString& name,
                   UnicodeString& dest U_LIFETIME_BOUND,
                   IDNAInfo& info,
-                  UErrorCode& errorCode) const = 0;
+                  UErrorCode& errorCode) ध्रुव = 0;
 
     // UTF-8 versions of the processing methods ---------------------------- ***
 
@@ -211,9 +211,9 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 4.6
      */
-    virtual void
+    आभास शून्य
     labelToASCII_UTF8(StringPiece label, ByteSink &dest,
-                      IDNAInfo &info, UErrorCode &errorCode) const;
+                      IDNAInfo &info, UErrorCode &errorCode) ध्रुव;
 
     /**
      * Converts a single domain name label into its Unicode form for human-readable display.
@@ -228,9 +228,9 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 4.6
      */
-    virtual void
+    आभास शून्य
     labelToUnicodeUTF8(StringPiece label, ByteSink &dest,
-                       IDNAInfo &info, UErrorCode &errorCode) const;
+                       IDNAInfo &info, UErrorCode &errorCode) ध्रुव;
 
     /**
      * Converts a whole domain name into its ASCII form for DNS lookup.
@@ -245,9 +245,9 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 4.6
      */
-    virtual void
+    आभास शून्य
     nameToASCII_UTF8(StringPiece name, ByteSink &dest,
-                     IDNAInfo &info, UErrorCode &errorCode) const;
+                     IDNAInfo &info, UErrorCode &errorCode) ध्रुव;
 
     /**
      * Converts a whole domain name into its Unicode form for human-readable display.
@@ -262,9 +262,9 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 4.6
      */
-    virtual void
+    आभास शून्य
     nameToUnicodeUTF8(StringPiece name, ByteSink &dest,
-                      IDNAInfo &info, UErrorCode &errorCode) const;
+                      IDNAInfo &info, UErrorCode &errorCode) ध्रुव;
 };
 
 class UTS46;
@@ -274,8 +274,8 @@ class UTS46;
  * The IDNAInfo class is not suitable for subclassing.
  * @stable ICU 4.6
  */
-class U_COMMON_API IDNAInfo : public UMemory {
-public:
+class U_COMMON_API IDNAInfo : सार्वजनिक UMemory {
+सार्वजनिक:
     /**
      * Constructor for stack allocation.
      * @stable ICU 4.6
@@ -286,14 +286,14 @@ public:
      * @return true if there were processing errors
      * @stable ICU 4.6
      */
-    UBool hasErrors() const { return errors!=0; }
+    UBool hasErrors() ध्रुव { प्रत्यागम errors!=0; }
     /**
      * Returns a bit set indicating IDNA processing errors.
      * See UIDNA_ERROR_... constants in uidna.h.
      * @return bit set of processing errors
      * @stable ICU 4.6
      */
-    uint32_t getErrors() const { return errors; }
+    uint32_t getErrors() ध्रुव { प्रत्यागम errors; }
     /**
      * Returns true if transitional and nontransitional processing produce different results.
      * This is the case when the input label or domain name contains
@@ -307,15 +307,15 @@ public:
      * @return true if transitional and nontransitional processing produce different results
      * @stable ICU 4.6
      */
-    UBool isTransitionalDifferent() const { return isTransDiff; }
+    UBool isTransitionalDifferent() ध्रुव { प्रत्यागम isTransDiff; }
 
-private:
+गुप्त:
     friend class UTS46;
 
-    IDNAInfo(const IDNAInfo &other) = delete;  // no copying
-    IDNAInfo &operator=(const IDNAInfo &other) = delete;  // no copying
+    IDNAInfo(ध्रुव IDNAInfo &other) = delete;  // no copying
+    IDNAInfo &operator=(ध्रुव IDNAInfo &other) = delete;  // no copying
 
-    void reset() {
+    शून्य reset() {
         errors=labelErrors=0;
         isTransDiff=false;
         isBiDi=false;

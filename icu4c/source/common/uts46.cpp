@@ -14,21 +14,21 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#जइ !UCONFIG_NO_IDNA
 
-#include "unicode/bytestream.h"
-#include "unicode/idna.h"
-#include "unicode/normalizer2.h"
-#include "unicode/uscript.h"
-#include "unicode/ustring.h"
-#include "unicode/utf16.h"
-#include "bytesinkutil.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "punycode.h"
-#include "ubidi_props.h"
+#अन्तर्भाव "unicode/bytestream.h"
+#अन्तर्भाव "unicode/idna.h"
+#अन्तर्भाव "unicode/normalizer2.h"
+#अन्तर्भाव "unicode/uscript.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "unicode/utf16.h"
+#अन्तर्भाव "bytesinkutil.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "punycode.h"
+#अन्तर्भाव "ubidi_props.h"
 
 // Note about tests for UIDNA_ERROR_DOMAIN_NAME_TOO_LONG:
 //
@@ -41,69 +41,69 @@
 U_NAMESPACE_BEGIN
 
 // Severe errors which usually result in a U+FFFD replacement character in the result string.
-const uint32_t severeErrors=
+ध्रुव uint32_t severeErrors=
     UIDNA_ERROR_LEADING_COMBINING_MARK|
     UIDNA_ERROR_DISALLOWED|
     UIDNA_ERROR_PUNYCODE|
     UIDNA_ERROR_LABEL_HAS_DOT|
     UIDNA_ERROR_INVALID_ACE_LABEL;
 
-static inline UBool
-isASCIIString(const UnicodeString &dest) {
-    const char16_t *s=dest.getBuffer();
-    const char16_t *limit=s+dest.length();
-    while(s<limit) {
-        if(*s++>0x7f) {
-            return false;
+स्थिर अन्तःस्थ UBool
+isASCIIString(ध्रुव UnicodeString &dest) {
+    ध्रुव char16_t *s=dest.getBuffer();
+    ध्रुव char16_t *limit=s+dest.length();
+    जाव(s<limit) {
+        जइ(*s++>0x7f) {
+            प्रत्यागम मिच्छ;
         }
     }
-    return true;
+    प्रत्यागम सच्च;
 }
 
-static UBool
-isASCIIOkBiDi(const char16_t *s, int32_t length);
+स्थिर UBool
+isASCIIOkBiDi(ध्रुव char16_t *s, int32_t length);
 
-static UBool
-isASCIIOkBiDi(const char *s, int32_t length);
+स्थिर UBool
+isASCIIOkBiDi(ध्रुव वर्ण *s, int32_t length);
 
 // IDNA class default implementations -------------------------------------- ***
 
 IDNA::~IDNA() {}
 
-void
+शून्य
 IDNA::labelToASCII_UTF8(StringPiece label, ByteSink &dest,
-                        IDNAInfo &info, UErrorCode &errorCode) const {
-    if(U_SUCCESS(errorCode)) {
+                        IDNAInfo &info, UErrorCode &errorCode) ध्रुव {
+    जइ(U_SUCCESS(errorCode)) {
         UnicodeString destString;
         labelToASCII(UnicodeString::fromUTF8(label), destString,
                      info, errorCode).toUTF8(dest);
     }
 }
 
-void
+शून्य
 IDNA::labelToUnicodeUTF8(StringPiece label, ByteSink &dest,
-                         IDNAInfo &info, UErrorCode &errorCode) const {
-    if(U_SUCCESS(errorCode)) {
+                         IDNAInfo &info, UErrorCode &errorCode) ध्रुव {
+    जइ(U_SUCCESS(errorCode)) {
         UnicodeString destString;
         labelToUnicode(UnicodeString::fromUTF8(label), destString,
                        info, errorCode).toUTF8(dest);
     }
 }
 
-void
+शून्य
 IDNA::nameToASCII_UTF8(StringPiece name, ByteSink &dest,
-                       IDNAInfo &info, UErrorCode &errorCode) const {
-    if(U_SUCCESS(errorCode)) {
+                       IDNAInfo &info, UErrorCode &errorCode) ध्रुव {
+    जइ(U_SUCCESS(errorCode)) {
         UnicodeString destString;
         nameToASCII(UnicodeString::fromUTF8(name), destString,
                     info, errorCode).toUTF8(dest);
     }
 }
 
-void
+शून्य
 IDNA::nameToUnicodeUTF8(StringPiece name, ByteSink &dest,
-                        IDNAInfo &info, UErrorCode &errorCode) const {
-    if(U_SUCCESS(errorCode)) {
+                        IDNAInfo &info, UErrorCode &errorCode) ध्रुव {
+    जइ(U_SUCCESS(errorCode)) {
         UnicodeString destString;
         nameToUnicode(UnicodeString::fromUTF8(name), destString,
                       info, errorCode).toUTF8(dest);
@@ -112,118 +112,118 @@ IDNA::nameToUnicodeUTF8(StringPiece name, ByteSink &dest,
 
 // UTS46 class declaration ------------------------------------------------- ***
 
-class UTS46 : public IDNA {
-public:
+वर्ग UTS46 : सार्वजनिक IDNA {
+सार्वजनिक:
     UTS46(uint32_t options, UErrorCode &errorCode);
-    virtual ~UTS46();
+    आभास ~UTS46();
 
-    virtual UnicodeString&
-    labelToASCII(const UnicodeString& label,
+    आभास UnicodeString&
+    labelToASCII(ध्रुव UnicodeString& label,
                  UnicodeString& dest U_LIFETIME_BOUND,
                  IDNAInfo& info,
-                 UErrorCode& errorCode) const override;
+                 UErrorCode& errorCode) ध्रुव override;
 
-    virtual UnicodeString&
-    labelToUnicode(const UnicodeString& label,
+    आभास UnicodeString&
+    labelToUnicode(ध्रुव UnicodeString& label,
                    UnicodeString& dest U_LIFETIME_BOUND,
                    IDNAInfo& info,
-                   UErrorCode& errorCode) const override;
+                   UErrorCode& errorCode) ध्रुव override;
 
-    virtual UnicodeString&
-    nameToASCII(const UnicodeString& name,
+    आभास UnicodeString&
+    nameToASCII(ध्रुव UnicodeString& name,
                 UnicodeString& dest U_LIFETIME_BOUND,
                 IDNAInfo& info,
-                UErrorCode& errorCode) const override;
+                UErrorCode& errorCode) ध्रुव override;
 
-    virtual UnicodeString&
-    nameToUnicode(const UnicodeString& name,
+    आभास UnicodeString&
+    nameToUnicode(ध्रुव UnicodeString& name,
                   UnicodeString& dest U_LIFETIME_BOUND,
                   IDNAInfo& info,
-                  UErrorCode& errorCode) const override;
+                  UErrorCode& errorCode) ध्रुव override;
 
-    virtual void
+    आभास शून्य
     labelToASCII_UTF8(StringPiece label, ByteSink &dest,
-                      IDNAInfo &info, UErrorCode &errorCode) const override;
+                      IDNAInfo &info, UErrorCode &errorCode) ध्रुव override;
 
-    virtual void
+    आभास शून्य
     labelToUnicodeUTF8(StringPiece label, ByteSink &dest,
-                       IDNAInfo &info, UErrorCode &errorCode) const override;
+                       IDNAInfo &info, UErrorCode &errorCode) ध्रुव override;
 
-    virtual void
+    आभास शून्य
     nameToASCII_UTF8(StringPiece name, ByteSink &dest,
-                     IDNAInfo &info, UErrorCode &errorCode) const override;
+                     IDNAInfo &info, UErrorCode &errorCode) ध्रुव override;
 
-    virtual void
+    आभास शून्य
     nameToUnicodeUTF8(StringPiece name, ByteSink &dest,
-                      IDNAInfo &info, UErrorCode &errorCode) const override;
+                      IDNAInfo &info, UErrorCode &errorCode) ध्रुव override;
 
-private:
+गुप्त:
     UnicodeString&
-    process(const UnicodeString& src,
+    process(ध्रुव UnicodeString& src,
             UBool isLabel,
             UBool toASCII,
             UnicodeString& dest U_LIFETIME_BOUND,
             IDNAInfo& info,
-            UErrorCode& errorCode) const;
+            UErrorCode& errorCode) ध्रुव;
 
-    void
+    शून्य
     processUTF8(StringPiece src,
                 UBool isLabel, UBool toASCII,
                 ByteSink &dest,
-                IDNAInfo &info, UErrorCode &errorCode) const;
+                IDNAInfo &info, UErrorCode &errorCode) ध्रुव;
 
     UnicodeString&
-    processUnicode(const UnicodeString& src,
+    processUnicode(ध्रुव UnicodeString& src,
                    int32_t labelStart,
                    int32_t mappingStart,
                    UBool isLabel,
                    UBool toASCII,
                    UnicodeString& dest U_LIFETIME_BOUND,
                    IDNAInfo& info,
-                   UErrorCode& errorCode) const;
+                   UErrorCode& errorCode) ध्रुव;
 
     // returns the new dest.length()
     int32_t
     mapDevChars(UnicodeString &dest, int32_t labelStart, int32_t mappingStart,
-                UErrorCode &errorCode) const;
+                UErrorCode &errorCode) ध्रुव;
 
     // returns the new label length
     int32_t
     processLabel(UnicodeString &dest,
                  int32_t labelStart, int32_t labelLength,
                  UBool toASCII,
-                 IDNAInfo &info, UErrorCode &errorCode) const;
+                 IDNAInfo &info, UErrorCode &errorCode) ध्रुव;
     int32_t
     markBadACELabel(UnicodeString &dest,
                     int32_t labelStart, int32_t labelLength,
-                    UBool toASCII, IDNAInfo &info, UErrorCode &errorCode) const;
+                    UBool toASCII, IDNAInfo &info, UErrorCode &errorCode) ध्रुव;
 
-    void
-    checkLabelBiDi(const char16_t *label, int32_t labelLength, IDNAInfo &info) const;
+    शून्य
+    checkLabelBiDi(ध्रुव char16_t *label, int32_t labelLength, IDNAInfo &info) ध्रुव;
 
     UBool
-    isLabelOkContextJ(const char16_t *label, int32_t labelLength) const;
+    isLabelOkContextJ(ध्रुव char16_t *label, int32_t labelLength) ध्रुव;
 
-    void
-    checkLabelContextO(const char16_t *label, int32_t labelLength, IDNAInfo &info) const;
+    शून्य
+    checkLabelContextO(ध्रुव char16_t *label, int32_t labelLength, IDNAInfo &info) ध्रुव;
 
-    const Normalizer2 &uts46Norm2;  // uts46.nrm
+    ध्रुव Normalizer2 &uts46Norm2;  // uts46.nrm
     uint32_t options;
 };
 
 IDNA *
 IDNA::createUTS46Instance(uint32_t options, UErrorCode &errorCode) {
-    if(U_SUCCESS(errorCode)) {
-        IDNA *idna=new UTS46(options, errorCode);
-        if(idna==nullptr) {
+    जइ(U_SUCCESS(errorCode)) {
+        IDNA *idna=नूतन UTS46(options, errorCode);
+        जइ(idna==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-        } else if(U_FAILURE(errorCode)) {
+        } अण्णहा जइ(U_FAILURE(errorCode)) {
             delete idna;
             idna=nullptr;
         }
-        return idna;
-    } else {
-        return nullptr;
+        प्रत्यागम idna;
+    } अण्णहा {
+        प्रत्यागम nullptr;
     }
 }
 
@@ -236,66 +236,66 @@ UTS46::UTS46(uint32_t opt, UErrorCode &errorCode)
 UTS46::~UTS46() {}
 
 UnicodeString&
-UTS46::labelToASCII(const UnicodeString& label,
+UTS46::labelToASCII(ध्रुव UnicodeString& label,
                     UnicodeString& dest U_LIFETIME_BOUND,
                     IDNAInfo& info,
-                    UErrorCode& errorCode) const {
-    return process(label, true, true, dest, info, errorCode);
+                    UErrorCode& errorCode) ध्रुव {
+    प्रत्यागम process(label, सच्च, सच्च, dest, info, errorCode);
 }
 
 UnicodeString&
-UTS46::labelToUnicode(const UnicodeString& label,
+UTS46::labelToUnicode(ध्रुव UnicodeString& label,
                       UnicodeString& dest U_LIFETIME_BOUND,
                       IDNAInfo& info,
-                      UErrorCode& errorCode) const {
-    return process(label, true, false, dest, info, errorCode);
+                      UErrorCode& errorCode) ध्रुव {
+    प्रत्यागम process(label, सच्च, मिच्छ, dest, info, errorCode);
 }
 
 UnicodeString&
-UTS46::nameToASCII(const UnicodeString& name,
+UTS46::nameToASCII(ध्रुव UnicodeString& name,
                    UnicodeString& dest U_LIFETIME_BOUND,
                    IDNAInfo& info,
-                   UErrorCode& errorCode) const {
-    process(name, false, true, dest, info, errorCode);
-    if( dest.length()>=254 && (info.errors&UIDNA_ERROR_DOMAIN_NAME_TOO_LONG)==0 &&
+                   UErrorCode& errorCode) ध्रुव {
+    process(name, मिच्छ, सच्च, dest, info, errorCode);
+    जइ( dest.length()>=254 && (info.errors&UIDNA_ERROR_DOMAIN_NAME_TOO_LONG)==0 &&
         isASCIIString(dest) &&
         (dest.length()>254 || dest[253]!=0x2e)
     ) {
         info.errors|=UIDNA_ERROR_DOMAIN_NAME_TOO_LONG;
     }
-    return dest;
+    प्रत्यागम dest;
 }
 
 UnicodeString&
-UTS46::nameToUnicode(const UnicodeString& name,
+UTS46::nameToUnicode(ध्रुव UnicodeString& name,
                      UnicodeString& dest U_LIFETIME_BOUND,
                      IDNAInfo& info,
-                     UErrorCode& errorCode) const {
-    return process(name, false, false, dest, info, errorCode);
+                     UErrorCode& errorCode) ध्रुव {
+    प्रत्यागम process(name, मिच्छ, मिच्छ, dest, info, errorCode);
 }
 
-void
+शून्य
 UTS46::labelToASCII_UTF8(StringPiece label, ByteSink &dest,
-                         IDNAInfo &info, UErrorCode &errorCode) const {
-    processUTF8(label, true, true, dest, info, errorCode);
+                         IDNAInfo &info, UErrorCode &errorCode) ध्रुव {
+    processUTF8(label, सच्च, सच्च, dest, info, errorCode);
 }
 
-void
+शून्य
 UTS46::labelToUnicodeUTF8(StringPiece label, ByteSink &dest,
-                          IDNAInfo &info, UErrorCode &errorCode) const {
-    processUTF8(label, true, false, dest, info, errorCode);
+                          IDNAInfo &info, UErrorCode &errorCode) ध्रुव {
+    processUTF8(label, सच्च, मिच्छ, dest, info, errorCode);
 }
 
-void
+शून्य
 UTS46::nameToASCII_UTF8(StringPiece name, ByteSink &dest,
-                        IDNAInfo &info, UErrorCode &errorCode) const {
-    processUTF8(name, false, true, dest, info, errorCode);
+                        IDNAInfo &info, UErrorCode &errorCode) ध्रुव {
+    processUTF8(name, मिच्छ, सच्च, dest, info, errorCode);
 }
 
-void
+शून्य
 UTS46::nameToUnicodeUTF8(StringPiece name, ByteSink &dest,
-                         IDNAInfo &info, UErrorCode &errorCode) const {
-    processUTF8(name, false, false, dest, info, errorCode);
+                         IDNAInfo &info, UErrorCode &errorCode) ध्रुव {
+    processUTF8(name, मिच्छ, मिच्छ, dest, info, errorCode);
 }
 
 // UTS #46 data for ASCII characters.
@@ -305,7 +305,7 @@ UTS46::nameToUnicodeUTF8(StringPiece name, ByteSink &dest,
 // using this data.
 // The ASCII fastpath also uses this data.
 // Values: -1=disallowed  0==valid  1==mapped (lowercase)
-static const int8_t asciiData[128]={
+स्थिर ध्रुव int8_t asciiData[128]={
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     // 002D..002E; valid  #  HYPHEN-MINUS..FULL STOP
@@ -321,92 +321,92 @@ static const int8_t asciiData[128]={
 };
 
 UnicodeString&
-UTS46::process(const UnicodeString& src,
+UTS46::process(ध्रुव UnicodeString& src,
                UBool isLabel,
                UBool toASCII,
                UnicodeString& dest U_LIFETIME_BOUND,
                IDNAInfo& info,
-               UErrorCode& errorCode) const {
+               UErrorCode& errorCode) ध्रुव {
     // uts46Norm2.normalize() would do all of this error checking and setup,
     // but with the ASCII fastpath we do not always call it, and do not
     // call it first.
-    if(U_FAILURE(errorCode)) {
+    जइ(U_FAILURE(errorCode)) {
         dest.setToBogus();
-        return dest;
+        प्रत्यागम dest;
     }
-    const char16_t *srcArray=src.getBuffer();
-    if(&dest==&src || srcArray==nullptr) {
+    ध्रुव char16_t *srcArray=src.getBuffer();
+    जइ(&dest==&src || srcArray==nullptr) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
         dest.setToBogus();
-        return dest;
+        प्रत्यागम dest;
     }
     // Arguments are fine, reset output values.
     dest.remove();
     info.reset();
     int32_t srcLength=src.length();
-    if(srcLength==0) {
+    जइ(srcLength==0) {
         info.errors|=UIDNA_ERROR_EMPTY_LABEL;
-        return dest;
+        प्रत्यागम dest;
     }
     char16_t *destArray=dest.getBuffer(srcLength);
-    if(destArray==nullptr) {
+    जइ(destArray==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return dest;
+        प्रत्यागम dest;
     }
     // ASCII fastpath
     UBool disallowNonLDHDot=(options&UIDNA_USE_STD3_RULES)!=0;
     int32_t labelStart=0;
     int32_t i;
-    for(i=0;; ++i) {
-        if(i==srcLength) {
-            if(toASCII) {
-                if((i-labelStart)>63) {
+    प्रति(i=0;; ++i) {
+        जइ(i==srcLength) {
+            जइ(toASCII) {
+                जइ((i-labelStart)>63) {
                     info.labelErrors|=UIDNA_ERROR_LABEL_TOO_LONG;
                 }
                 // There is a trailing dot if labelStart==i.
-                if(!isLabel && i>=254 && (i>254 || labelStart<i)) {
+                जइ(!isLabel && i>=254 && (i>254 || labelStart<i)) {
                     info.errors|=UIDNA_ERROR_DOMAIN_NAME_TOO_LONG;
                 }
             }
             info.errors|=info.labelErrors;
             dest.releaseBuffer(i);
-            return dest;
+            प्रत्यागम dest;
         }
         char16_t c=srcArray[i];
-        if(c>0x7f) {
-            break;
+        जइ(c>0x7f) {
+            भङ्ग;
         }
-        int cData=asciiData[c];
-        if(cData>0) {
+        पूर्णाङ्क cData=asciiData[c];
+        जइ(cData>0) {
             destArray[i]=c+0x20;  // Lowercase an uppercase ASCII letter.
-        } else if(cData<0 && disallowNonLDHDot) {
-            break;  // Replacing with U+FFFD can be complicated for toASCII.
-        } else {
+        } अण्णहा जइ(cData<0 && disallowNonLDHDot) {
+            भङ्ग;  // Replacing with U+FFFD can be complicated for toASCII.
+        } अण्णहा {
             destArray[i]=c;
-            if(c==0x2d) {  // hyphen
-                if(i==(labelStart+3) && srcArray[i-1]==0x2d) {
+            जइ(c==0x2d) {  // hyphen
+                जइ(i==(labelStart+3) && srcArray[i-1]==0x2d) {
                     // "??--..." is Punycode or forbidden.
                     ++i;  // '-' was copied to dest already
-                    break;
+                    भङ्ग;
                 }
-                if(i==labelStart) {
+                जइ(i==labelStart) {
                     // label starts with "-"
                     info.labelErrors|=UIDNA_ERROR_LEADING_HYPHEN;
                 }
-                if((i+1)==srcLength || srcArray[i+1]==0x2e) {
+                जइ((i+1)==srcLength || srcArray[i+1]==0x2e) {
                     // label ends with "-"
                     info.labelErrors|=UIDNA_ERROR_TRAILING_HYPHEN;
                 }
-            } else if(c==0x2e) {  // dot
-                if(isLabel) {
+            } अण्णहा जइ(c==0x2e) {  // dot
+                जइ(isLabel) {
                     // Replacing with U+FFFD can be complicated for toASCII.
                     ++i;  // '.' was copied to dest already
-                    break;
+                    भङ्ग;
                 }
-                if(i==labelStart) {
+                जइ(i==labelStart) {
                     info.labelErrors|=UIDNA_ERROR_EMPTY_LABEL;
                 }
-                if(toASCII && (i-labelStart)>63) {
+                जइ(toASCII && (i-labelStart)>63) {
                     info.labelErrors|=UIDNA_ERROR_LABEL_TOO_LONG;
                 }
                 info.errors|=info.labelErrors;
@@ -418,93 +418,93 @@ UTS46::process(const UnicodeString& src,
     info.errors|=info.labelErrors;
     dest.releaseBuffer(i);
     processUnicode(src, labelStart, i, isLabel, toASCII, dest, info, errorCode);
-    if( info.isBiDi && U_SUCCESS(errorCode) && (info.errors&severeErrors)==0 &&
+    जइ( info.isBiDi && U_SUCCESS(errorCode) && (info.errors&severeErrors)==0 &&
         (!info.isOkBiDi || (labelStart>0 && !isASCIIOkBiDi(dest.getBuffer(), labelStart)))
     ) {
         info.errors|=UIDNA_ERROR_BIDI;
     }
-    return dest;
+    प्रत्यागम dest;
 }
 
-void
+शून्य
 UTS46::processUTF8(StringPiece src,
                    UBool isLabel, UBool toASCII,
                    ByteSink &dest,
-                   IDNAInfo &info, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return;
+                   IDNAInfo &info, UErrorCode &errorCode) ध्रुव {
+    जइ(U_FAILURE(errorCode)) {
+        प्रत्यागम;
     }
-    const char *srcArray=src.data();
+    ध्रुव वर्ण *srcArray=src.data();
     int32_t srcLength=src.length();
-    if(srcArray==nullptr && srcLength!=0) {
+    जइ(srcArray==nullptr && srcLength!=0) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        प्रत्यागम;
     }
     // Arguments are fine, reset output values.
     info.reset();
-    if(srcLength==0) {
+    जइ(srcLength==0) {
         info.errors|=UIDNA_ERROR_EMPTY_LABEL;
         dest.Flush();
-        return;
+        प्रत्यागम;
     }
     UnicodeString destString;
     int32_t labelStart=0;
-    if(srcLength<=256) {  // length of stackArray[]
+    जइ(srcLength<=256) {  // length of stackArray[]
         // ASCII fastpath
-        char stackArray[256];
+        वर्ण राशिः_Array[256];
         int32_t destCapacity;
-        char *destArray=dest.GetAppendBuffer(srcLength, srcLength+20,
-                                             stackArray, UPRV_LENGTHOF(stackArray), &destCapacity);
+        वर्ण *destArray=dest.GetAppendBuffer(srcLength, srcLength+20,
+                                             राशिः_Array, UPRV_LENGTHOF(राशिः_Array), &destCapacity);
         UBool disallowNonLDHDot=(options&UIDNA_USE_STD3_RULES)!=0;
         int32_t i;
-        for(i=0;; ++i) {
-            if(i==srcLength) {
-                if(toASCII) {
-                    if((i-labelStart)>63) {
+        प्रति(i=0;; ++i) {
+            जइ(i==srcLength) {
+                जइ(toASCII) {
+                    जइ((i-labelStart)>63) {
                         info.labelErrors|=UIDNA_ERROR_LABEL_TOO_LONG;
                     }
                     // There is a trailing dot if labelStart==i.
-                    if(!isLabel && i>=254 && (i>254 || labelStart<i)) {
+                    जइ(!isLabel && i>=254 && (i>254 || labelStart<i)) {
                         info.errors|=UIDNA_ERROR_DOMAIN_NAME_TOO_LONG;
                     }
                 }
                 info.errors|=info.labelErrors;
                 dest.Append(destArray, i);
                 dest.Flush();
-                return;
+                प्रत्यागम;
             }
-            char c=srcArray[i];
-            if (static_cast<int8_t>(c) < 0) { // (uint8_t)c>0x7f
-                break;
+            वर्ण c=srcArray[i];
+            जइ (static_cast<int8_t>(c) < 0) { // (uint8_t)c>0x7f
+                भङ्ग;
             }
-            int cData = asciiData[static_cast<int>(c)]; // Cast: gcc warns about indexing with a char.
-            if(cData>0) {
+            पूर्णाङ्क cData = asciiData[static_cast<पूर्णाङ्क>(c)]; // Cast: gcc warns about indexing with a char.
+            जइ(cData>0) {
                 destArray[i]=c+0x20;  // Lowercase an uppercase ASCII letter.
-            } else if(cData<0 && disallowNonLDHDot) {
-                break;  // Replacing with U+FFFD can be complicated for toASCII.
-            } else {
+            } अण्णहा जइ(cData<0 && disallowNonLDHDot) {
+                भङ्ग;  // Replacing with U+FFFD can be complicated for toASCII.
+            } अण्णहा {
                 destArray[i]=c;
-                if(c==0x2d) {  // hyphen
-                    if(i==(labelStart+3) && srcArray[i-1]==0x2d) {
+                जइ(c==0x2d) {  // hyphen
+                    जइ(i==(labelStart+3) && srcArray[i-1]==0x2d) {
                         // "??--..." is Punycode or forbidden.
-                        break;
+                        भङ्ग;
                     }
-                    if(i==labelStart) {
+                    जइ(i==labelStart) {
                         // label starts with "-"
                         info.labelErrors|=UIDNA_ERROR_LEADING_HYPHEN;
                     }
-                    if((i+1)==srcLength || srcArray[i+1]==0x2e) {
+                    जइ((i+1)==srcLength || srcArray[i+1]==0x2e) {
                         // label ends with "-"
                         info.labelErrors|=UIDNA_ERROR_TRAILING_HYPHEN;
                     }
-                } else if(c==0x2e) {  // dot
-                    if(isLabel) {
-                        break;  // Replacing with U+FFFD can be complicated for toASCII.
+                } अण्णहा जइ(c==0x2e) {  // dot
+                    जइ(isLabel) {
+                        भङ्ग;  // Replacing with U+FFFD can be complicated for toASCII.
                     }
-                    if(i==labelStart) {
+                    जइ(i==labelStart) {
                         info.labelErrors|=UIDNA_ERROR_EMPTY_LABEL;
                     }
-                    if(toASCII && (i-labelStart)>63) {
+                    जइ(toASCII && (i-labelStart)>63) {
                         info.labelErrors|=UIDNA_ERROR_LABEL_TOO_LONG;
                     }
                     info.errors|=info.labelErrors;
@@ -522,25 +522,25 @@ UTS46::processUTF8(StringPiece src,
         processUnicode(UnicodeString::fromUTF8(StringPiece(src, labelStart)), 0, mappingStart,
                        isLabel, toASCII,
                        destString, info, errorCode);
-    } else {
+    } अण्णहा {
         // src is too long for the ASCII fastpath implementation.
         processUnicode(UnicodeString::fromUTF8(src), 0, 0,
                        isLabel, toASCII,
                        destString, info, errorCode);
     }
     destString.toUTF8(dest);  // calls dest.Flush()
-    if(toASCII && !isLabel) {
+    जइ(toASCII && !isLabel) {
         // length==labelStart==254 means that there is a trailing dot (ok) and
         // destString is empty (do not index at 253-labelStart).
         int32_t length=labelStart+destString.length();
-        if( length>=254 && isASCIIString(destString) &&
+        जइ( length>=254 && isASCIIString(destString) &&
             (length>254 ||
              (labelStart<254 && destString[253-labelStart]!=0x2e))
         ) {
             info.errors|=UIDNA_ERROR_DOMAIN_NAME_TOO_LONG;
         }
     }
-    if( info.isBiDi && U_SUCCESS(errorCode) && (info.errors&severeErrors)==0 &&
+    जइ( info.isBiDi && U_SUCCESS(errorCode) && (info.errors&severeErrors)==0 &&
         (!info.isOkBiDi || (labelStart>0 && !isASCIIOkBiDi(srcArray, labelStart)))
     ) {
         info.errors|=UIDNA_ERROR_BIDI;
@@ -548,60 +548,60 @@ UTS46::processUTF8(StringPiece src,
 }
 
 UnicodeString&
-UTS46::processUnicode(const UnicodeString& src,
+UTS46::processUnicode(ध्रुव UnicodeString& src,
                       int32_t labelStart,
                       int32_t mappingStart,
                       UBool isLabel,
                       UBool toASCII,
                       UnicodeString& dest U_LIFETIME_BOUND,
                       IDNAInfo& info,
-                      UErrorCode& errorCode) const {
-    if(mappingStart==0) {
+                      UErrorCode& errorCode) ध्रुव {
+    जइ(mappingStart==0) {
         uts46Norm2.normalize(src, dest, errorCode);
-    } else {
+    } अण्णहा {
         uts46Norm2.normalizeSecondAndAppend(dest, src.tempSubString(mappingStart), errorCode);
     }
-    if(U_FAILURE(errorCode)) {
-        return dest;
+    जइ(U_FAILURE(errorCode)) {
+        प्रत्यागम dest;
     }
     UBool doMapDevChars=
         toASCII ? (options&UIDNA_NONTRANSITIONAL_TO_ASCII)==0 :
                   (options&UIDNA_NONTRANSITIONAL_TO_UNICODE)==0;
-    const char16_t *destArray=dest.getBuffer();
+    ध्रुव char16_t *destArray=dest.getBuffer();
     int32_t destLength=dest.length();
     int32_t labelLimit=labelStart;
-    while(labelLimit<destLength) {
+    जाव(labelLimit<destLength) {
         char16_t c=destArray[labelLimit];
-        if(c==0x2e && !isLabel) {
+        जइ(c==0x2e && !isLabel) {
             int32_t labelLength=labelLimit-labelStart;
             int32_t newLength=processLabel(dest, labelStart, labelLength,
                                             toASCII, info, errorCode);
             info.errors|=info.labelErrors;
             info.labelErrors=0;
-            if(U_FAILURE(errorCode)) {
-                return dest;
+            जइ(U_FAILURE(errorCode)) {
+                प्रत्यागम dest;
             }
             destArray=dest.getBuffer();
             destLength+=newLength-labelLength;
             labelLimit=labelStart+=newLength+1;
-            continue;
-        } else if(c<0xdf) {
+            अनुवर्त;
+        } अण्णहा जइ(c<0xdf) {
             // pass
-        } else if(c<=0x200d && (c==0xdf || c==0x3c2 || c>=0x200c)) {
-            info.isTransDiff=true;
-            if(doMapDevChars) {
+        } अण्णहा जइ(c<=0x200d && (c==0xdf || c==0x3c2 || c>=0x200c)) {
+            info.isTransDiff=सच्च;
+            जइ(doMapDevChars) {
                 destLength=mapDevChars(dest, labelStart, labelLimit, errorCode);
-                if(U_FAILURE(errorCode)) {
-                    return dest;
+                जइ(U_FAILURE(errorCode)) {
+                    प्रत्यागम dest;
                 }
                 destArray=dest.getBuffer();
                 // All deviation characters have been mapped, no need to check for them again.
-                doMapDevChars=false;
+                doMapDevChars=मिच्छ;
                 // Do not increment labelLimit in case c was removed.
-                continue;
+                अनुवर्त;
             }
-        } else if(U16_IS_SURROGATE(c)) {
-            if(U16_IS_SURROGATE_LEAD(c) ?
+        } अण्णहा जइ(U16_IS_SURROGATE(c)) {
+            जइ(U16_IS_SURROGATE_LEAD(c) ?
                     (labelLimit+1)==destLength || !U16_IS_TRAIL(destArray[labelLimit+1]) :
                     labelLimit==labelStart || !U16_IS_LEAD(destArray[labelLimit-1])) {
                 // Map an unpaired surrogate to U+FFFD before normalization so that when
@@ -616,44 +616,44 @@ UTS46::processUnicode(const UnicodeString& src,
     // Permit an empty label at the end (0<labelStart==labelLimit==destLength is ok)
     // but not an empty label elsewhere nor a completely empty domain name.
     // processLabel() sets UIDNA_ERROR_EMPTY_LABEL when labelLength==0.
-    if(0==labelStart || labelStart<labelLimit) {
+    जइ(0==labelStart || labelStart<labelLimit) {
         processLabel(dest, labelStart, labelLimit-labelStart,
                       toASCII, info, errorCode);
         info.errors|=info.labelErrors;
     }
-    return dest;
+    प्रत्यागम dest;
 }
 
 int32_t
 UTS46::mapDevChars(UnicodeString &dest, int32_t labelStart, int32_t mappingStart,
-                   UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+                   UErrorCode &errorCode) ध्रुव {
+    जइ(U_FAILURE(errorCode)) {
+        प्रत्यागम 0;
     }
     int32_t length=dest.length();
     char16_t *s=dest.getBuffer(dest[mappingStart]==0xdf ? length+1 : length);
-    if(s==nullptr) {
+    जइ(s==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return length;
+        प्रत्यागम length;
     }
     int32_t capacity=dest.getCapacity();
-    UBool didMapDevChars=false;
+    UBool didMapDevChars=मिच्छ;
     int32_t readIndex=mappingStart, writeIndex=mappingStart;
-    do {
+    करेहि {
         char16_t c=s[readIndex++];
-        switch(c) {
-        case 0xdf:
+        विकल्प(c) {
+        पक्ष 0xdf:
             // Map sharp s to ss.
-            didMapDevChars=true;
+            didMapDevChars=सच्च;
             s[writeIndex++]=0x73;  // Replace sharp s with first s.
             // Insert second s and account for possible buffer reallocation.
-            if(writeIndex==readIndex) {
-                if(length==capacity) {
+            जइ(writeIndex==readIndex) {
+                जइ(length==capacity) {
                     dest.releaseBuffer(length);
                     s=dest.getBuffer(length+1);
-                    if(s==nullptr) {
+                    जइ(s==nullptr) {
                         errorCode=U_MEMORY_ALLOCATION_ERROR;
-                        return length;
+                        प्रत्यागम length;
                     }
                     capacity=dest.getCapacity();
                 }
@@ -662,38 +662,38 @@ UTS46::mapDevChars(UnicodeString &dest, int32_t labelStart, int32_t mappingStart
             }
             s[writeIndex++]=0x73;
             ++length;
-            break;
-        case 0x3c2:  // Map final sigma to nonfinal sigma.
-            didMapDevChars=true;
+            भङ्ग;
+        पक्ष 0x3c2:  // Map final sigma to nonfinal sigma.
+            didMapDevChars=सच्च;
             s[writeIndex++]=0x3c3;
-            break;
-        case 0x200c:  // Ignore/remove ZWNJ.
-        case 0x200d:  // Ignore/remove ZWJ.
-            didMapDevChars=true;
+            भङ्ग;
+        पक्ष 0x200c:  // Ignore/remove ZWNJ.
+        पक्ष 0x200d:  // Ignore/remove ZWJ.
+            didMapDevChars=सच्च;
             --length;
-            break;
-        default:
+            भङ्ग;
+        स्वभाव:
             // Only really necessary if writeIndex was different from readIndex.
             s[writeIndex++]=c;
-            break;
+            भङ्ग;
         }
-    } while(writeIndex<length);
+    } जाव(writeIndex<length);
     dest.releaseBuffer(length);
-    if(didMapDevChars) {
+    जइ(didMapDevChars) {
         // Mapping deviation characters might have resulted in an un-NFC string.
         // We could use either the NFC or the UTS #46 normalizer.
         // By using the UTS #46 normalizer again, we avoid having to load a second .nrm data file.
         UnicodeString normalized;
         uts46Norm2.normalize(dest.tempSubString(labelStart), normalized, errorCode);
-        if(U_SUCCESS(errorCode)) {
+        जइ(U_SUCCESS(errorCode)) {
             dest.replace(labelStart, 0x7fffffff, normalized);
-            if(dest.isBogus()) {
+            जइ(dest.isBogus()) {
                 errorCode=U_MEMORY_ALLOCATION_ERROR;
             }
-            return dest.length();
+            प्रत्यागम dest.length();
         }
     }
-    return length;
+    प्रत्यागम length;
 }
 
 // Replace the label in dest with the label string, if the label was modified.
@@ -701,37 +701,37 @@ UTS46::mapDevChars(UnicodeString &dest, int32_t labelStart, int32_t mappingStart
 // is the new label length, different from label.length().
 // If &label!=&dest then labelLength==label.length().
 // Returns labelLength (= the new label length).
-static int32_t
+स्थिर int32_t
 replaceLabel(UnicodeString &dest, int32_t destLabelStart, int32_t destLabelLength,
-             const UnicodeString &label, int32_t labelLength, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+             ध्रुव UnicodeString &label, int32_t labelLength, UErrorCode &errorCode) {
+    जइ(U_FAILURE(errorCode)) {
+        प्रत्यागम 0;
     }
-    if(&label!=&dest) {
+    जइ(&label!=&dest) {
         dest.replace(destLabelStart, destLabelLength, label);
-        if(dest.isBogus()) {
+        जइ(dest.isBogus()) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return 0;
+            प्रत्यागम 0;
         }
     }
-    return labelLength;
+    प्रत्यागम labelLength;
 }
 
 int32_t
 UTS46::processLabel(UnicodeString &dest,
                     int32_t labelStart, int32_t labelLength,
                     UBool toASCII,
-                    IDNAInfo &info, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+                    IDNAInfo &info, UErrorCode &errorCode) ध्रुव {
+    जइ(U_FAILURE(errorCode)) {
+        प्रत्यागम 0;
     }
     UnicodeString fromPunycode;
     UnicodeString *labelString;
-    const char16_t *label=dest.getBuffer()+labelStart;
+    ध्रुव char16_t *label=dest.getBuffer()+labelStart;
     int32_t destLabelStart=labelStart;
     int32_t destLabelLength=labelLength;
     UBool wasPunycode;
-    if(labelLength>=4 && label[0]==0x78 && label[1]==0x6e && label[2]==0x2d && label[3]==0x2d) {
+    जइ(labelLength>=4 && label[0]==0x78 && label[1]==0x6e && label[2]==0x2d && label[3]==0x2d) {
         // Label starts with "xn--", try to un-Punycode it.
         // In IDNA2008, labels like "xn--" (decodes to an empty string) and
         // "xn--ASCII-" (decodes to just "ASCII") fail the round-trip validation from
@@ -739,27 +739,27 @@ UTS46::processLabel(UnicodeString &dest,
         // They are alternate encodings of the respective ASCII labels.
         // Ignore "xn---" here: It will fail Punycode.decode() which logically comes before
         // the round-trip verification.
-        if(labelLength==4 || (labelLength>5 && label[labelLength-1]==u'-')) {
+        जइ(labelLength==4 || (labelLength>5 && label[labelLength-1]==u'-')) {
             info.labelErrors|=UIDNA_ERROR_INVALID_ACE_LABEL;
-            return markBadACELabel(dest, labelStart, labelLength, toASCII, info, errorCode);
+            प्रत्यागम markBadACELabel(dest, labelStart, labelLength, toASCII, info, errorCode);
         }
-        wasPunycode=true;
+        wasPunycode=सच्च;
         char16_t *unicodeBuffer=fromPunycode.getBuffer(-1);  // capacity==-1: most labels should fit
-        if(unicodeBuffer==nullptr) {
+        जइ(unicodeBuffer==nullptr) {
             // Should never occur if we used capacity==-1 which uses the internal buffer.
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return labelLength;
+            प्रत्यागम labelLength;
         }
         UErrorCode punycodeErrorCode=U_ZERO_ERROR;
         int32_t unicodeLength=u_strFromPunycode(label+4, labelLength-4,
                                                 unicodeBuffer, fromPunycode.getCapacity(),
                                                 nullptr, &punycodeErrorCode);
-        if(punycodeErrorCode==U_BUFFER_OVERFLOW_ERROR) {
+        जइ(punycodeErrorCode==U_BUFFER_OVERFLOW_ERROR) {
             fromPunycode.releaseBuffer(0);
             unicodeBuffer=fromPunycode.getBuffer(unicodeLength);
-            if(unicodeBuffer==nullptr) {
+            जइ(unicodeBuffer==nullptr) {
                 errorCode=U_MEMORY_ALLOCATION_ERROR;
-                return labelLength;
+                प्रत्यागम labelLength;
             }
             punycodeErrorCode=U_ZERO_ERROR;
             unicodeLength=u_strFromPunycode(label+4, labelLength-4,
@@ -767,9 +767,9 @@ UTS46::processLabel(UnicodeString &dest,
                                             nullptr, &punycodeErrorCode);
         }
         fromPunycode.releaseBuffer(unicodeLength);
-        if(U_FAILURE(punycodeErrorCode)) {
+        जइ(U_FAILURE(punycodeErrorCode)) {
             info.labelErrors|=UIDNA_ERROR_PUNYCODE;
-            return markBadACELabel(dest, labelStart, labelLength, toASCII, info, errorCode);
+            प्रत्यागम markBadACELabel(dest, labelStart, labelLength, toASCII, info, errorCode);
         }
         // Check for NFC, and for characters that are not
         // valid or deviation characters according to the normalizer.
@@ -779,42 +779,42 @@ UTS46::processLabel(UnicodeString &dest,
         // In the code further below, if we find non-LDH ASCII and we have UIDNA_USE_STD3_RULES
         // then we will set UIDNA_ERROR_INVALID_ACE_LABEL there too.
         UBool isValid=uts46Norm2.isNormalized(fromPunycode, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return labelLength;
+        जइ(U_FAILURE(errorCode)) {
+            प्रत्यागम labelLength;
         }
         // Unicode 15.1 UTS #46:
         // Added an additional condition in 4.1 Validity Criteria to
         // disallow labels such as xn--xn---epa., which do not round-trip.
         // --> Validity Criteria new criterion 4:
         // If not CheckHyphens, the label must not begin with “xn--”.
-        if(!isValid || fromPunycode.startsWith(UnicodeString::readOnlyAlias(u"xn--"))) {
+        जइ(!isValid || fromPunycode.startsWith(UnicodeString::readOnlyAlias(u"xn--"))) {
             info.labelErrors|=UIDNA_ERROR_INVALID_ACE_LABEL;
-            return markBadACELabel(dest, labelStart, labelLength, toASCII, info, errorCode);
+            प्रत्यागम markBadACELabel(dest, labelStart, labelLength, toASCII, info, errorCode);
         }
         labelString=&fromPunycode;
         label=fromPunycode.getBuffer();
         labelStart=0;
         labelLength=fromPunycode.length();
-    } else {
-        wasPunycode=false;
+    } अण्णहा {
+        wasPunycode=मिच्छ;
         labelString=&dest;
     }
     // Validity check
-    if(labelLength==0) {
+    जइ(labelLength==0) {
         info.labelErrors|=UIDNA_ERROR_EMPTY_LABEL;
-        return replaceLabel(dest, destLabelStart, destLabelLength,
+        प्रत्यागम replaceLabel(dest, destLabelStart, destLabelLength,
                             *labelString, labelLength, errorCode);
     }
     // labelLength>0
-    if(labelLength>=4 && label[2]==0x2d && label[3]==0x2d) {
+    जइ(labelLength>=4 && label[2]==0x2d && label[3]==0x2d) {
         // label starts with "??--"
         info.labelErrors|=UIDNA_ERROR_HYPHEN_3_4;
     }
-    if(label[0]==0x2d) {
+    जइ(label[0]==0x2d) {
         // label starts with "-"
         info.labelErrors|=UIDNA_ERROR_LEADING_HYPHEN;
     }
-    if(label[labelLength-1]==0x2d) {
+    जइ(label[labelLength-1]==0x2d) {
         // label ends with "-"
         info.labelErrors|=UIDNA_ERROR_TRAILING_HYPHEN;
     }
@@ -828,71 +828,71 @@ UTS46::processLabel(UnicodeString &dest,
     // We also check for dots which can come from the input to a single-label function.
     // Ok to cast away const because we own the UnicodeString.
     char16_t* s = const_cast<char16_t*>(label);
-    const char16_t *limit=label+labelLength;
+    ध्रुव char16_t *limit=label+labelLength;
     char16_t oredChars=0;
     // If we enforce STD3 rules, then ASCII characters other than LDH and dot are disallowed.
     UBool disallowNonLDHDot=(options&UIDNA_USE_STD3_RULES)!=0;
-    do {
+    करेहि {
         char16_t c=*s;
-        if(c<=0x7f) {
-            if(c==0x2e) {
+        जइ(c<=0x7f) {
+            जइ(c==0x2e) {
                 info.labelErrors|=UIDNA_ERROR_LABEL_HAS_DOT;
                 *s=0xfffd;
-            } else if(disallowNonLDHDot && asciiData[c]<0) {
+            } अण्णहा जइ(disallowNonLDHDot && asciiData[c]<0) {
                 info.labelErrors|=UIDNA_ERROR_DISALLOWED;
                 *s=0xfffd;
             }
-        } else {
+        } अण्णहा {
             oredChars|=c;
-            if(c==0xfffd) {
+            जइ(c==0xfffd) {
                 info.labelErrors|=UIDNA_ERROR_DISALLOWED;
             }
         }
         ++s;
-    } while(s<limit);
+    } जाव(s<limit);
     // Check for a leading combining mark after other validity checks
     // so that we don't report UIDNA_ERROR_DISALLOWED for the U+FFFD from here.
     UChar32 c;
     int32_t cpLength=0;
     // "Unsafe" is ok because unpaired surrogates were mapped to U+FFFD.
     U16_NEXT_UNSAFE(label, cpLength, c);
-    if((U_GET_GC_MASK(c)&U_GC_M_MASK)!=0) {
+    जइ((U_GET_GC_MASK(c)&U_GC_M_MASK)!=0) {
         info.labelErrors|=UIDNA_ERROR_LEADING_COMBINING_MARK;
         labelString->replace(labelStart, cpLength, static_cast<char16_t>(0xfffd));
         label=labelString->getBuffer()+labelStart;
         labelLength+=1-cpLength;
-        if(labelString==&dest) {
+        जइ(labelString==&dest) {
             destLabelLength=labelLength;
         }
     }
-    if((info.labelErrors&severeErrors)==0) {
+    जइ((info.labelErrors&severeErrors)==0) {
         // Do contextual checks only if we do not have U+FFFD from a severe error
         // because U+FFFD can make these checks fail.
-        if((options&UIDNA_CHECK_BIDI)!=0 && (!info.isBiDi || info.isOkBiDi)) {
+        जइ((options&UIDNA_CHECK_BIDI)!=0 && (!info.isBiDi || info.isOkBiDi)) {
             checkLabelBiDi(label, labelLength, info);
         }
-        if( (options&UIDNA_CHECK_CONTEXTJ)!=0 && (oredChars&0x200c)==0x200c &&
+        जइ( (options&UIDNA_CHECK_CONTEXTJ)!=0 && (oredChars&0x200c)==0x200c &&
             !isLabelOkContextJ(label, labelLength)
         ) {
             info.labelErrors|=UIDNA_ERROR_CONTEXTJ;
         }
-        if((options&UIDNA_CHECK_CONTEXTO)!=0 && oredChars>=0xb7) {
+        जइ((options&UIDNA_CHECK_CONTEXTO)!=0 && oredChars>=0xb7) {
             checkLabelContextO(label, labelLength, info);
         }
-        if(toASCII) {
-            if(wasPunycode) {
+        जइ(toASCII) {
+            जइ(wasPunycode) {
                 // Leave a Punycode label unchanged if it has no severe errors.
-                if(destLabelLength>63) {
+                जइ(destLabelLength>63) {
                     info.labelErrors|=UIDNA_ERROR_LABEL_TOO_LONG;
                 }
-                return destLabelLength;
-            } else if(oredChars>=0x80) {
+                प्रत्यागम destLabelLength;
+            } अण्णहा जइ(oredChars>=0x80) {
                 // Contains non-ASCII characters.
                 UnicodeString punycode;
                 char16_t *buffer=punycode.getBuffer(63);  // 63==maximum DNS label length
-                if(buffer==nullptr) {
+                जइ(buffer==nullptr) {
                     errorCode=U_MEMORY_ALLOCATION_ERROR;
-                    return destLabelLength;
+                    प्रत्यागम destLabelLength;
                 }
                 buffer[0]=0x78;  // Write "xn--".
                 buffer[1]=0x6e;
@@ -902,13 +902,13 @@ UTS46::processLabel(UnicodeString &dest,
                 int32_t punycodeLength=u_strToPunycode(label, labelLength,
                                                       buffer+4, punycode.getCapacity()-4,
                                                       nullptr, &punycodeErrorCode);
-                if(punycodeErrorCode==U_BUFFER_OVERFLOW_ERROR) {
+                जइ(punycodeErrorCode==U_BUFFER_OVERFLOW_ERROR) {
                     punycodeErrorCode=U_ZERO_ERROR;
                     punycode.releaseBuffer(4);
                     buffer=punycode.getBuffer(4+punycodeLength);
-                    if(buffer==nullptr) {
+                    जइ(buffer==nullptr) {
                         errorCode=U_MEMORY_ALLOCATION_ERROR;
-                        return destLabelLength;
+                        प्रत्यागम destLabelLength;
                     }
                     punycodeLength=u_strToPunycode(label, labelLength,
                                                   buffer+4, punycode.getCapacity()-4,
@@ -916,31 +916,31 @@ UTS46::processLabel(UnicodeString &dest,
                 }
                 punycodeLength+=4;
                 punycode.releaseBuffer(punycodeLength);
-                if(U_FAILURE(punycodeErrorCode)) {
+                जइ(U_FAILURE(punycodeErrorCode)) {
                     errorCode = punycodeErrorCode;
-                    return destLabelLength;
+                    प्रत्यागम destLabelLength;
                 }
-                if(punycodeLength>63) {
+                जइ(punycodeLength>63) {
                     info.labelErrors|=UIDNA_ERROR_LABEL_TOO_LONG;
                 }
-                return replaceLabel(dest, destLabelStart, destLabelLength,
+                प्रत्यागम replaceLabel(dest, destLabelStart, destLabelLength,
                                     punycode, punycodeLength, errorCode);
-            } else {
+            } अण्णहा {
                 // all-ASCII label
-                if(labelLength>63) {
+                जइ(labelLength>63) {
                     info.labelErrors|=UIDNA_ERROR_LABEL_TOO_LONG;
                 }
             }
         }
-    } else {
+    } अण्णहा {
         // If a Punycode label has severe errors,
         // then leave it but make sure it does not look valid.
-        if(wasPunycode) {
+        जइ(wasPunycode) {
             info.labelErrors|=UIDNA_ERROR_INVALID_ACE_LABEL;
-            return markBadACELabel(dest, destLabelStart, destLabelLength, toASCII, info, errorCode);
+            प्रत्यागम markBadACELabel(dest, destLabelStart, destLabelLength, toASCII, info, errorCode);
         }
     }
-    return replaceLabel(dest, destLabelStart, destLabelLength,
+    प्रत्यागम replaceLabel(dest, destLabelStart, destLabelLength,
                         *labelString, labelLength, errorCode);
 }
 
@@ -950,77 +950,77 @@ UTS46::processLabel(UnicodeString &dest,
 int32_t
 UTS46::markBadACELabel(UnicodeString &dest,
                        int32_t labelStart, int32_t labelLength,
-                       UBool toASCII, IDNAInfo &info, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+                       UBool toASCII, IDNAInfo &info, UErrorCode &errorCode) ध्रुव {
+    जइ(U_FAILURE(errorCode)) {
+        प्रत्यागम 0;
     }
     UBool disallowNonLDHDot=(options&UIDNA_USE_STD3_RULES)!=0;
-    UBool isASCII=true;
-    UBool onlyLDH=true;
-    const char16_t *label=dest.getBuffer()+labelStart;
-    const char16_t *limit=label+labelLength;
+    UBool isASCII=सच्च;
+    UBool onlyLDH=सच्च;
+    ध्रुव char16_t *label=dest.getBuffer()+labelStart;
+    ध्रुव char16_t *limit=label+labelLength;
     // Start after the initial "xn--".
     // Ok to cast away const because we own the UnicodeString.
-    for(char16_t *s=const_cast<char16_t *>(label+4); s<limit; ++s) {
+    प्रति(char16_t *s=const_cast<char16_t *>(label+4); s<limit; ++s) {
         char16_t c=*s;
-        if(c<=0x7f) {
-            if(c==0x2e) {
+        जइ(c<=0x7f) {
+            जइ(c==0x2e) {
                 info.labelErrors|=UIDNA_ERROR_LABEL_HAS_DOT;
                 *s=0xfffd;
-                isASCII=onlyLDH=false;
-            } else if(asciiData[c]<0) {
-                onlyLDH=false;
-                if(disallowNonLDHDot) {
+                isASCII=onlyLDH=मिच्छ;
+            } अण्णहा जइ(asciiData[c]<0) {
+                onlyLDH=मिच्छ;
+                जइ(disallowNonLDHDot) {
                     *s=0xfffd;
-                    isASCII=false;
+                    isASCII=मिच्छ;
                 }
             }
-        } else {
-            isASCII=onlyLDH=false;
+        } अण्णहा {
+            isASCII=onlyLDH=मिच्छ;
         }
     }
-    if(onlyLDH) {
+    जइ(onlyLDH) {
         dest.insert(labelStart + labelLength, static_cast<char16_t>(0xfffd));
-        if(dest.isBogus()) {
+        जइ(dest.isBogus()) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return 0;
+            प्रत्यागम 0;
         }
         ++labelLength;
-    } else {
-        if(toASCII && isASCII && labelLength>63) {
+    } अण्णहा {
+        जइ(toASCII && isASCII && labelLength>63) {
             info.labelErrors|=UIDNA_ERROR_LABEL_TOO_LONG;
         }
     }
-    return labelLength;
+    प्रत्यागम labelLength;
 }
 
-const uint32_t L_MASK=U_MASK(U_LEFT_TO_RIGHT);
-const uint32_t R_AL_MASK=U_MASK(U_RIGHT_TO_LEFT)|U_MASK(U_RIGHT_TO_LEFT_ARABIC);
-const uint32_t L_R_AL_MASK=L_MASK|R_AL_MASK;
+ध्रुव uint32_t L_MASK=U_MASK(U_वामः_TO_दक्षिणः);
+ध्रुव uint32_t R_AL_MASK=U_MASK(U_दक्षिणः_TO_वामः)|U_MASK(U_दक्षिणः_TO_वामः_ARABIC);
+ध्रुव uint32_t L_R_AL_MASK=L_MASK|R_AL_MASK;
 
-const uint32_t R_AL_AN_MASK=R_AL_MASK|U_MASK(U_ARABIC_NUMBER);
+ध्रुव uint32_t R_AL_AN_MASK=R_AL_MASK|U_MASK(U_ARABIC_सङ्ख्या);
 
-const uint32_t EN_AN_MASK=U_MASK(U_EUROPEAN_NUMBER)|U_MASK(U_ARABIC_NUMBER);
-const uint32_t R_AL_EN_AN_MASK=R_AL_MASK|EN_AN_MASK;
-const uint32_t L_EN_MASK=L_MASK|U_MASK(U_EUROPEAN_NUMBER);
+ध्रुव uint32_t EN_AN_MASK=U_MASK(U_EUROPEAN_सङ्ख्या)|U_MASK(U_ARABIC_सङ्ख्या);
+ध्रुव uint32_t R_AL_EN_AN_MASK=R_AL_MASK|EN_AN_MASK;
+ध्रुव uint32_t L_EN_MASK=L_MASK|U_MASK(U_EUROPEAN_सङ्ख्या);
 
-const uint32_t ES_CS_ET_ON_BN_NSM_MASK=
-    U_MASK(U_EUROPEAN_NUMBER_SEPARATOR)|
-    U_MASK(U_COMMON_NUMBER_SEPARATOR)|
-    U_MASK(U_EUROPEAN_NUMBER_TERMINATOR)|
+ध्रुव uint32_t ES_CS_ET_ON_BN_NSM_MASK=
+    U_MASK(U_EUROPEAN_सङ्ख्या_SEPARATOR)|
+    U_MASK(U_COMMON_सङ्ख्या_SEPARATOR)|
+    U_MASK(U_EUROPEAN_सङ्ख्या_TERMINATOR)|
     U_MASK(U_OTHER_NEUTRAL)|
     U_MASK(U_BOUNDARY_NEUTRAL)|
     U_MASK(U_DIR_NON_SPACING_MARK);
-const uint32_t L_EN_ES_CS_ET_ON_BN_NSM_MASK=L_EN_MASK|ES_CS_ET_ON_BN_NSM_MASK;
-const uint32_t R_AL_AN_EN_ES_CS_ET_ON_BN_NSM_MASK=R_AL_MASK|EN_AN_MASK|ES_CS_ET_ON_BN_NSM_MASK;
+ध्रुव uint32_t L_EN_ES_CS_ET_ON_BN_NSM_MASK=L_EN_MASK|ES_CS_ET_ON_BN_NSM_MASK;
+ध्रुव uint32_t R_AL_AN_EN_ES_CS_ET_ON_BN_NSM_MASK=R_AL_MASK|EN_AN_MASK|ES_CS_ET_ON_BN_NSM_MASK;
 
 // We scan the whole label and check both for whether it contains RTL characters
 // and whether it passes the BiDi Rule.
 // In a BiDi domain name, all labels must pass the BiDi Rule, but we might find
 // that a domain name is a BiDi domain name (has an RTL label) only after
 // processing several earlier labels.
-void
-UTS46::checkLabelBiDi(const char16_t *label, int32_t labelLength, IDNAInfo &info) const {
+शून्य
+UTS46::checkLabelBiDi(ध्रुव char16_t *label, int32_t labelLength, IDNAInfo &info) ध्रुव {
     // IDNA2008 BiDi rule
     // Get the directionality of the first character.
     UChar32 c;
@@ -1030,21 +1030,21 @@ UTS46::checkLabelBiDi(const char16_t *label, int32_t labelLength, IDNAInfo &info
     // 1. The first character must be a character with BIDI property L, R
     // or AL.  If it has the R or AL property, it is an RTL label; if it
     // has the L property, it is an LTR label.
-    if((firstMask&~L_R_AL_MASK)!=0) {
-        info.isOkBiDi=false;
+    जइ((firstMask&~L_R_AL_MASK)!=0) {
+        info.isOkBiDi=मिच्छ;
     }
     // Get the directionality of the last non-NSM character.
     uint32_t lastMask;
-    for(;;) {
-        if(i>=labelLength) {
+    प्रति(;;) {
+        जइ(i>=labelLength) {
             lastMask=firstMask;
-            break;
+            भङ्ग;
         }
         U16_PREV_UNSAFE(label, labelLength, c);
         UCharDirection dir=u_charDirection(c);
-        if(dir!=U_DIR_NON_SPACING_MARK) {
+        जइ(dir!=U_DIR_NON_SPACING_MARK) {
             lastMask=U_MASK(dir);
-            break;
+            भङ्ग;
         }
     }
     // 3. In an RTL label, the end of the label must be a character with
@@ -1053,34 +1053,34 @@ UTS46::checkLabelBiDi(const char16_t *label, int32_t labelLength, IDNAInfo &info
     // 6. In an LTR label, the end of the label must be a character with
     // BIDI property L or EN, followed by zero or more characters with
     // BIDI property NSM.
-    if( (firstMask&L_MASK)!=0 ?
+    जइ( (firstMask&L_MASK)!=0 ?
             (lastMask&~L_EN_MASK)!=0 :
             (lastMask&~R_AL_EN_AN_MASK)!=0
     ) {
-        info.isOkBiDi=false;
+        info.isOkBiDi=मिच्छ;
     }
     // Add the directionalities of the intervening characters.
     uint32_t mask=firstMask|lastMask;
-    while(i<labelLength) {
+    जाव(i<labelLength) {
         U16_NEXT_UNSAFE(label, i, c);
         mask|=U_MASK(u_charDirection(c));
     }
-    if(firstMask&L_MASK) {
+    जइ(firstMask&L_MASK) {
         // 5. In an LTR label, only characters with the BIDI properties L, EN,
         // ES, CS, ET, ON, BN and NSM are allowed.
-        if((mask&~L_EN_ES_CS_ET_ON_BN_NSM_MASK)!=0) {
-            info.isOkBiDi=false;
+        जइ((mask&~L_EN_ES_CS_ET_ON_BN_NSM_MASK)!=0) {
+            info.isOkBiDi=मिच्छ;
         }
-    } else {
+    } अण्णहा {
         // 2. In an RTL label, only characters with the BIDI properties R, AL,
         // AN, EN, ES, CS, ET, ON, BN and NSM are allowed.
-        if((mask&~R_AL_AN_EN_ES_CS_ET_ON_BN_NSM_MASK)!=0) {
-            info.isOkBiDi=false;
+        जइ((mask&~R_AL_AN_EN_ES_CS_ET_ON_BN_NSM_MASK)!=0) {
+            info.isOkBiDi=मिच्छ;
         }
         // 4. In an RTL label, if an EN is present, no AN may be present, and
         // vice versa.
-        if((mask&EN_AN_MASK)==EN_AN_MASK) {
-            info.isOkBiDi=false;
+        जइ((mask&EN_AN_MASK)==EN_AN_MASK) {
+            info.isOkBiDi=मिच्छ;
         }
     }
     // An RTL label is a label that contains at least one character of type
@@ -1089,8 +1089,8 @@ UTS46::checkLabelBiDi(const char16_t *label, int32_t labelLength, IDNAInfo &info
     // label. [...]
     // The following rule, consisting of six conditions, applies to labels
     // in BIDI domain names.
-    if((mask&R_AL_AN_MASK)!=0) {
-        info.isBiDi=true;
+    जइ((mask&R_AL_AN_MASK)!=0) {
+        info.isBiDi=सच्च;
     }
 }
 
@@ -1107,171 +1107,171 @@ UTS46::checkLabelBiDi(const char16_t *label, int32_t labelLength, IDNAInfo &info
 // UTF-16 version, called for mapped ASCII prefix.
 // Cannot contain uppercase A-Z.
 // s[length-1] must be the trailing dot.
-static UBool
-isASCIIOkBiDi(const char16_t *s, int32_t length) {
+स्थिर UBool
+isASCIIOkBiDi(ध्रुव char16_t *s, int32_t length) {
     int32_t labelStart=0;
-    for(int32_t i=0; i<length; ++i) {
+    प्रति(int32_t i=0; i<length; ++i) {
         char16_t c=s[i];
-        if(c==0x2e) {  // dot
-            if(i>labelStart) {
+        जइ(c==0x2e) {  // dot
+            जइ(i>labelStart) {
                 c=s[i-1];
-                if(!(0x61<=c && c<=0x7a) && !(0x30<=c && c<=0x39)) {
+                जइ(!(0x61<=c && c<=0x7a) && !(0x30<=c && c<=0x39)) {
                     // Last character in the label is not an L or EN.
-                    return false;
+                    प्रत्यागम मिच्छ;
                 }
             }
             labelStart=i+1;
-        } else if(i==labelStart) {
-            if(!(0x61<=c && c<=0x7a)) {
+        } अण्णहा जइ(i==labelStart) {
+            जइ(!(0x61<=c && c<=0x7a)) {
                 // First character in the label is not an L.
-                return false;
+                प्रत्यागम मिच्छ;
             }
-        } else {
-            if(c<=0x20 && (c>=0x1c || (9<=c && c<=0xd))) {
+        } अण्णहा {
+            जइ(c<=0x20 && (c>=0x1c || (9<=c && c<=0xd))) {
                 // Intermediate character in the label is a B, S or WS.
-                return false;
+                प्रत्यागम मिच्छ;
             }
         }
     }
-    return true;
+    प्रत्यागम सच्च;
 }
 
 // UTF-8 version, called for source ASCII prefix.
 // Can contain uppercase A-Z.
 // s[length-1] must be the trailing dot.
-static UBool
-isASCIIOkBiDi(const char *s, int32_t length) {
+स्थिर UBool
+isASCIIOkBiDi(ध्रुव वर्ण *s, int32_t length) {
     int32_t labelStart=0;
-    for(int32_t i=0; i<length; ++i) {
-        char c=s[i];
-        if(c==0x2e) {  // dot
-            if(i>labelStart) {
+    प्रति(int32_t i=0; i<length; ++i) {
+        वर्ण c=s[i];
+        जइ(c==0x2e) {  // dot
+            जइ(i>labelStart) {
                 c=s[i-1];
-                if(!(0x61<=c && c<=0x7a) && !(0x41<=c && c<=0x5a) && !(0x30<=c && c<=0x39)) {
+                जइ(!(0x61<=c && c<=0x7a) && !(0x41<=c && c<=0x5a) && !(0x30<=c && c<=0x39)) {
                     // Last character in the label is not an L or EN.
-                    return false;
+                    प्रत्यागम मिच्छ;
                 }
             }
             labelStart=i+1;
-        } else if(i==labelStart) {
-            if(!(0x61<=c && c<=0x7a) && !(0x41<=c && c<=0x5a)) {
+        } अण्णहा जइ(i==labelStart) {
+            जइ(!(0x61<=c && c<=0x7a) && !(0x41<=c && c<=0x5a)) {
                 // First character in the label is not an L.
-                return false;
+                प्रत्यागम मिच्छ;
             }
-        } else {
-            if(c<=0x20 && (c>=0x1c || (9<=c && c<=0xd))) {
+        } अण्णहा {
+            जइ(c<=0x20 && (c>=0x1c || (9<=c && c<=0xd))) {
                 // Intermediate character in the label is a B, S or WS.
-                return false;
+                प्रत्यागम मिच्छ;
             }
         }
     }
-    return true;
+    प्रत्यागम सच्च;
 }
 
 UBool
-UTS46::isLabelOkContextJ(const char16_t *label, int32_t labelLength) const {
+UTS46::isLabelOkContextJ(ध्रुव char16_t *label, int32_t labelLength) ध्रुव {
     // [IDNA2008-Tables]
     // 200C..200D  ; CONTEXTJ    # ZERO WIDTH NON-JOINER..ZERO WIDTH JOINER
-    for(int32_t i=0; i<labelLength; ++i) {
-        if(label[i]==0x200c) {
+    प्रति(int32_t i=0; i<labelLength; ++i) {
+        जइ(label[i]==0x200c) {
             // Appendix A.1. ZERO WIDTH NON-JOINER
             // Rule Set:
             //  False;
             //  If Canonical_Combining_Class(Before(cp)) .eq.  Virama Then True;
             //  If RegExpMatch((Joining_Type:{L,D})(Joining_Type:T)*\u200C
             //     (Joining_Type:T)*(Joining_Type:{R,D})) Then True;
-            if(i==0) {
-                return false;
+            जइ(i==0) {
+                प्रत्यागम मिच्छ;
             }
             UChar32 c;
             int32_t j=i;
             U16_PREV_UNSAFE(label, j, c);
-            if(uts46Norm2.getCombiningClass(c)==9) {
-                continue;
+            जइ(uts46Norm2.getCombiningClass(c)==9) {
+                अनुवर्त;
             }
             // check precontext (Joining_Type:{L,D})(Joining_Type:T)*
-            for(;;) {
+            प्रति(;;) {
                 UJoiningType type=ubidi_getJoiningType(c);
-                if(type==U_JT_TRANSPARENT) {
-                    if(j==0) {
-                        return false;
+                जइ(type==U_JT_TRANSPARENT) {
+                    जइ(j==0) {
+                        प्रत्यागम मिच्छ;
                     }
                     U16_PREV_UNSAFE(label, j, c);
-                } else if(type==U_JT_LEFT_JOINING || type==U_JT_DUAL_JOINING) {
-                    break;  // precontext fulfilled
-                } else {
-                    return false;
+                } अण्णहा जइ(type==U_JT_वामः_JOINING || type==U_JT_DUAL_JOINING) {
+                    भङ्ग;  // precontext fulfilled
+                } अण्णहा {
+                    प्रत्यागम मिच्छ;
                 }
             }
             // check postcontext (Joining_Type:T)*(Joining_Type:{R,D})
-            for(j=i+1;;) {
-                if(j==labelLength) {
-                    return false;
+            प्रति(j=i+1;;) {
+                जइ(j==labelLength) {
+                    प्रत्यागम मिच्छ;
                 }
                 U16_NEXT_UNSAFE(label, j, c);
                 UJoiningType type=ubidi_getJoiningType(c);
-                if(type==U_JT_TRANSPARENT) {
+                जइ(type==U_JT_TRANSPARENT) {
                     // just skip this character
-                } else if(type==U_JT_RIGHT_JOINING || type==U_JT_DUAL_JOINING) {
-                    break;  // postcontext fulfilled
-                } else {
-                    return false;
+                } अण्णहा जइ(type==U_JT_दक्षिणः_JOINING || type==U_JT_DUAL_JOINING) {
+                    भङ्ग;  // postcontext fulfilled
+                } अण्णहा {
+                    प्रत्यागम मिच्छ;
                 }
             }
-        } else if(label[i]==0x200d) {
+        } अण्णहा जइ(label[i]==0x200d) {
             // Appendix A.2. ZERO WIDTH JOINER (U+200D)
             // Rule Set:
             //  False;
             //  If Canonical_Combining_Class(Before(cp)) .eq.  Virama Then True;
-            if(i==0) {
-                return false;
+            जइ(i==0) {
+                प्रत्यागम मिच्छ;
             }
             UChar32 c;
             int32_t j=i;
             U16_PREV_UNSAFE(label, j, c);
-            if(uts46Norm2.getCombiningClass(c)!=9) {
-                return false;
+            जइ(uts46Norm2.getCombiningClass(c)!=9) {
+                प्रत्यागम मिच्छ;
             }
         }
     }
-    return true;
+    प्रत्यागम सच्च;
 }
 
-void
-UTS46::checkLabelContextO(const char16_t *label, int32_t labelLength, IDNAInfo &info) const {
+शून्य
+UTS46::checkLabelContextO(ध्रुव char16_t *label, int32_t labelLength, IDNAInfo &info) ध्रुव {
     int32_t labelEnd=labelLength-1;  // inclusive
     int32_t arabicDigits=0;  // -1 for 066x, +1 for 06Fx
-    for(int32_t i=0; i<=labelEnd; ++i) {
+    प्रति(int32_t i=0; i<=labelEnd; ++i) {
         UChar32 c=label[i];
-        if(c<0xb7) {
+        जइ(c<0xb7) {
             // ASCII fastpath
-        } else if(c<=0x6f9) {
-            if(c==0xb7) {
+        } अण्णहा जइ(c<=0x6f9) {
+            जइ(c==0xb7) {
                 // Appendix A.3. MIDDLE DOT (U+00B7)
                 // Rule Set:
                 //  False;
                 //  If Before(cp) .eq.  U+006C And
                 //     After(cp) .eq.  U+006C Then True;
-                if(!(0<i && label[i-1]==0x6c &&
+                जइ(!(0<i && label[i-1]==0x6c &&
                      i<labelEnd && label[i+1]==0x6c)) {
                     info.labelErrors|=UIDNA_ERROR_CONTEXTO_PUNCTUATION;
                 }
-            } else if(c==0x375) {
+            } अण्णहा जइ(c==0x375) {
                 // Appendix A.4. GREEK LOWER NUMERAL SIGN (KERAIA) (U+0375)
                 // Rule Set:
                 //  False;
                 //  If Script(After(cp)) .eq.  Greek Then True;
                 UScriptCode script=USCRIPT_INVALID_CODE;
-                if(i<labelEnd) {
+                जइ(i<labelEnd) {
                     UErrorCode errorCode=U_ZERO_ERROR;
                     int32_t j=i+1;
                     U16_NEXT(label, j, labelLength, c);
                     script=uscript_getScript(c, &errorCode);
                 }
-                if(script!=USCRIPT_GREEK) {
+                जइ(script!=USCRIPT_GREEK) {
                     info.labelErrors|=UIDNA_ERROR_CONTEXTO_PUNCTUATION;
                 }
-            } else if(c==0x5f3 || c==0x5f4) {
+            } अण्णहा जइ(c==0x5f3 || c==0x5f4) {
                 // Appendix A.5. HEBREW PUNCTUATION GERESH (U+05F3)
                 // Rule Set:
                 //  False;
@@ -1282,16 +1282,16 @@ UTS46::checkLabelContextO(const char16_t *label, int32_t labelLength, IDNAInfo &
                 //  False;
                 //  If Script(Before(cp)) .eq.  Hebrew Then True;
                 UScriptCode script=USCRIPT_INVALID_CODE;
-                if(0<i) {
+                जइ(0<i) {
                     UErrorCode errorCode=U_ZERO_ERROR;
                     int32_t j=i;
                     U16_PREV(label, 0, j, c);
                     script=uscript_getScript(c, &errorCode);
                 }
-                if(script!=USCRIPT_HEBREW) {
+                जइ(script!=USCRIPT_HEBREW) {
                     info.labelErrors|=UIDNA_ERROR_CONTEXTO_PUNCTUATION;
                 }
-            } else if(0x660<=c /* && c<=0x6f9 */) {
+            } अण्णहा जइ(0x660<=c /* && c<=0x6f9 */) {
                 // Appendix A.8. ARABIC-INDIC DIGITS (0660..0669)
                 // Rule Set:
                 //  True;
@@ -1305,19 +1305,19 @@ UTS46::checkLabelContextO(const char16_t *label, int32_t labelLength, IDNAInfo &
                 //  For All Characters:
                 //    If cp .in. 0660..0669 Then False;
                 //  End For;
-                if(c<=0x669) {
-                    if(arabicDigits>0) {
+                जइ(c<=0x669) {
+                    जइ(arabicDigits>0) {
                         info.labelErrors|=UIDNA_ERROR_CONTEXTO_DIGITS;
                     }
                     arabicDigits=-1;
-                } else if(0x6f0<=c) {
-                    if(arabicDigits<0) {
+                } अण्णहा जइ(0x6f0<=c) {
+                    जइ(arabicDigits<0) {
                         info.labelErrors|=UIDNA_ERROR_CONTEXTO_DIGITS;
                     }
                     arabicDigits=1;
                 }
             }
-        } else if(c==0x30fb) {
+        } अण्णहा जइ(c==0x30fb) {
             // Appendix A.7. KATAKANA MIDDLE DOT (U+30FB)
             // Rule Set:
             //  False;
@@ -1325,15 +1325,15 @@ UTS46::checkLabelContextO(const char16_t *label, int32_t labelLength, IDNAInfo &
             //    If Script(cp) .in. {Hiragana, Katakana, Han} Then True;
             //  End For;
             UErrorCode errorCode=U_ZERO_ERROR;
-            for(int j=0;;) {
-                if(j>labelEnd) {
+            प्रति(पूर्णाङ्क j=0;;) {
+                जइ(j>labelEnd) {
                     info.labelErrors|=UIDNA_ERROR_CONTEXTO_PUNCTUATION;
-                    break;
+                    भङ्ग;
                 }
                 U16_NEXT(label, j, labelLength, c);
                 UScriptCode script=uscript_getScript(c, &errorCode);
-                if(script==USCRIPT_HIRAGANA || script==USCRIPT_KATAKANA || script==USCRIPT_HAN) {
-                    break;
+                जइ(script==USCRIPT_HIRAGANA || script==USCRIPT_KATAKANA || script==USCRIPT_HAN) {
+                    भङ्ग;
                 }
             }
         }
@@ -1348,179 +1348,179 @@ U_NAMESPACE_USE
 
 U_CAPI UIDNA * U_EXPORT2
 uidna_openUTS46(uint32_t options, UErrorCode *pErrorCode) {
-    return reinterpret_cast<UIDNA *>(IDNA::createUTS46Instance(options, *pErrorCode));
+    प्रत्यागम reinterpret_cast<UIDNA *>(IDNA::createUTS46Instance(options, *pErrorCode));
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uidna_close(UIDNA *idna) {
     delete reinterpret_cast<IDNA *>(idna);
 }
 
-static UBool
-checkArgs(const void *label, int32_t length,
-          void *dest, int32_t capacity,
+स्थिर UBool
+checkArgs(ध्रुव शून्य *label, int32_t length,
+          शून्य *dest, int32_t capacity,
           UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return false;
+    जइ(U_FAILURE(*pErrorCode)) {
+        प्रत्यागम मिच्छ;
     }
     // sizeof(UIDNAInfo)=16 in the first API version.
-    if(pInfo==nullptr || pInfo->size<16) {
+    जइ(pInfo==nullptr || pInfo->size<16) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        प्रत्यागम मिच्छ;
     }
-    if( (label==nullptr ? length!=0 : length<-1) ||
+    जइ( (label==nullptr ? length!=0 : length<-1) ||
         (dest==nullptr ? capacity!=0 : capacity<0) ||
         (dest==label && label!=nullptr)
     ) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        प्रत्यागम मिच्छ;
     }
     // Set all *pInfo bytes to 0 except for the size field itself.
-    uprv_memset(&pInfo->size+1, 0, pInfo->size-sizeof(pInfo->size));
-    return true;
+    uprv_memset(&pInfo->size+1, 0, pInfo->size-परिमाण(pInfo->size));
+    प्रत्यागम सच्च;
 }
 
-static void
+स्थिर शून्य
 idnaInfoToStruct(IDNAInfo &info, UIDNAInfo *pInfo) {
     pInfo->isTransitionalDifferent=info.isTransitionalDifferent();
     pInfo->errors=info.getErrors();
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_labelToASCII(const UIDNA *idna,
-                   const char16_t *label, int32_t length,
+uidna_labelToASCII(ध्रुव UIDNA *idna,
+                   ध्रुव char16_t *label, int32_t length,
                    char16_t *dest, int32_t capacity,
                    UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(label, length, dest, capacity, pInfo, pErrorCode)) {
-        return 0;
+    जइ(!checkArgs(label, length, dest, capacity, pInfo, pErrorCode)) {
+        प्रत्यागम 0;
     }
     UnicodeString src(length < 0, label, length);
     UnicodeString destString(dest, 0, capacity);
     IDNAInfo info;
-    reinterpret_cast<const IDNA *>(idna)->labelToASCII(src, destString, info, *pErrorCode);
+    reinterpret_cast<ध्रुव IDNA *>(idna)->labelToASCII(src, destString, info, *pErrorCode);
     idnaInfoToStruct(info, pInfo);
-    return destString.extract(dest, capacity, *pErrorCode);
+    प्रत्यागम destString.extract(dest, capacity, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_labelToUnicode(const UIDNA *idna,
-                     const char16_t *label, int32_t length,
+uidna_labelToUnicode(ध्रुव UIDNA *idna,
+                     ध्रुव char16_t *label, int32_t length,
                      char16_t *dest, int32_t capacity,
                      UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(label, length, dest, capacity, pInfo, pErrorCode)) {
-        return 0;
+    जइ(!checkArgs(label, length, dest, capacity, pInfo, pErrorCode)) {
+        प्रत्यागम 0;
     }
     UnicodeString src(length < 0, label, length);
     UnicodeString destString(dest, 0, capacity);
     IDNAInfo info;
-    reinterpret_cast<const IDNA *>(idna)->labelToUnicode(src, destString, info, *pErrorCode);
+    reinterpret_cast<ध्रुव IDNA *>(idna)->labelToUnicode(src, destString, info, *pErrorCode);
     idnaInfoToStruct(info, pInfo);
-    return destString.extract(dest, capacity, *pErrorCode);
+    प्रत्यागम destString.extract(dest, capacity, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_nameToASCII(const UIDNA *idna,
-                  const char16_t *name, int32_t length,
+uidna_nameToASCII(ध्रुव UIDNA *idna,
+                  ध्रुव char16_t *name, int32_t length,
                   char16_t *dest, int32_t capacity,
                   UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(name, length, dest, capacity, pInfo, pErrorCode)) {
-        return 0;
+    जइ(!checkArgs(name, length, dest, capacity, pInfo, pErrorCode)) {
+        प्रत्यागम 0;
     }
     UnicodeString src(length < 0, name, length);
     UnicodeString destString(dest, 0, capacity);
     IDNAInfo info;
-    reinterpret_cast<const IDNA *>(idna)->nameToASCII(src, destString, info, *pErrorCode);
+    reinterpret_cast<ध्रुव IDNA *>(idna)->nameToASCII(src, destString, info, *pErrorCode);
     idnaInfoToStruct(info, pInfo);
-    return destString.extract(dest, capacity, *pErrorCode);
+    प्रत्यागम destString.extract(dest, capacity, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_nameToUnicode(const UIDNA *idna,
-                    const char16_t *name, int32_t length,
+uidna_nameToUnicode(ध्रुव UIDNA *idna,
+                    ध्रुव char16_t *name, int32_t length,
                     char16_t *dest, int32_t capacity,
                     UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(name, length, dest, capacity, pInfo, pErrorCode)) {
-        return 0;
+    जइ(!checkArgs(name, length, dest, capacity, pInfo, pErrorCode)) {
+        प्रत्यागम 0;
     }
     UnicodeString src(length < 0, name, length);
     UnicodeString destString(dest, 0, capacity);
     IDNAInfo info;
-    reinterpret_cast<const IDNA *>(idna)->nameToUnicode(src, destString, info, *pErrorCode);
+    reinterpret_cast<ध्रुव IDNA *>(idna)->nameToUnicode(src, destString, info, *pErrorCode);
     idnaInfoToStruct(info, pInfo);
-    return destString.extract(dest, capacity, *pErrorCode);
+    प्रत्यागम destString.extract(dest, capacity, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_labelToASCII_UTF8(const UIDNA *idna,
-                        const char *label, int32_t length,
-                        char *dest, int32_t capacity,
+uidna_labelToASCII_UTF8(ध्रुव UIDNA *idna,
+                        ध्रुव वर्ण *label, int32_t length,
+                        वर्ण *dest, int32_t capacity,
                         UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(label, length, dest, capacity, pInfo, pErrorCode)) {
-        return 0;
+    जइ(!checkArgs(label, length, dest, capacity, pInfo, pErrorCode)) {
+        प्रत्यागम 0;
     }
     StringPiece src(label, length<0 ? static_cast<int32_t>(uprv_strlen(label)) : length);
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    प्रत्यागम ByteSinkUtil::viaByteSinkToTerminatedChars(
         dest, capacity,
         [&](ByteSink& sink, UErrorCode& status) {
             IDNAInfo info;
-            reinterpret_cast<const IDNA *>(idna)->labelToASCII_UTF8(src, sink, info, status);
+            reinterpret_cast<ध्रुव IDNA *>(idna)->labelToASCII_UTF8(src, sink, info, status);
             idnaInfoToStruct(info, pInfo);
         },
         *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_labelToUnicodeUTF8(const UIDNA *idna,
-                         const char *label, int32_t length,
-                         char *dest, int32_t capacity,
+uidna_labelToUnicodeUTF8(ध्रुव UIDNA *idna,
+                         ध्रुव वर्ण *label, int32_t length,
+                         वर्ण *dest, int32_t capacity,
                          UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(label, length, dest, capacity, pInfo, pErrorCode)) {
-        return 0;
+    जइ(!checkArgs(label, length, dest, capacity, pInfo, pErrorCode)) {
+        प्रत्यागम 0;
     }
     StringPiece src(label, length<0 ? static_cast<int32_t>(uprv_strlen(label)) : length);
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    प्रत्यागम ByteSinkUtil::viaByteSinkToTerminatedChars(
         dest, capacity,
         [&](ByteSink& sink, UErrorCode& status) {
             IDNAInfo info;
-            reinterpret_cast<const IDNA *>(idna)->labelToUnicodeUTF8(src, sink, info, status);
+            reinterpret_cast<ध्रुव IDNA *>(idna)->labelToUnicodeUTF8(src, sink, info, status);
             idnaInfoToStruct(info, pInfo);
         },
         *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_nameToASCII_UTF8(const UIDNA *idna,
-                       const char *name, int32_t length,
-                       char *dest, int32_t capacity,
+uidna_nameToASCII_UTF8(ध्रुव UIDNA *idna,
+                       ध्रुव वर्ण *name, int32_t length,
+                       वर्ण *dest, int32_t capacity,
                        UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(name, length, dest, capacity, pInfo, pErrorCode)) {
-        return 0;
+    जइ(!checkArgs(name, length, dest, capacity, pInfo, pErrorCode)) {
+        प्रत्यागम 0;
     }
     StringPiece src(name, length<0 ? static_cast<int32_t>(uprv_strlen(name)) : length);
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    प्रत्यागम ByteSinkUtil::viaByteSinkToTerminatedChars(
         dest, capacity,
         [&](ByteSink& sink, UErrorCode& status) {
             IDNAInfo info;
-            reinterpret_cast<const IDNA *>(idna)->nameToASCII_UTF8(src, sink, info, status);
+            reinterpret_cast<ध्रुव IDNA *>(idna)->nameToASCII_UTF8(src, sink, info, status);
             idnaInfoToStruct(info, pInfo);
         },
         *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_nameToUnicodeUTF8(const UIDNA *idna,
-                        const char *name, int32_t length,
-                        char *dest, int32_t capacity,
+uidna_nameToUnicodeUTF8(ध्रुव UIDNA *idna,
+                        ध्रुव वर्ण *name, int32_t length,
+                        वर्ण *dest, int32_t capacity,
                         UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(name, length, dest, capacity, pInfo, pErrorCode)) {
-        return 0;
+    जइ(!checkArgs(name, length, dest, capacity, pInfo, pErrorCode)) {
+        प्रत्यागम 0;
     }
     StringPiece src(name, length<0 ? static_cast<int32_t>(uprv_strlen(name)) : length);
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    प्रत्यागम ByteSinkUtil::viaByteSinkToTerminatedChars(
         dest, capacity,
         [&](ByteSink& sink, UErrorCode& status) {
             IDNAInfo info;
-            reinterpret_cast<const IDNA *>(idna)->nameToUnicodeUTF8(src, sink, info, status);
+            reinterpret_cast<ध्रुव IDNA *>(idna)->nameToUnicodeUTF8(src, sink, info, status);
             idnaInfoToStruct(info, pInfo);
         },
         *pErrorCode);

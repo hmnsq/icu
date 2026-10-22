@@ -19,8 +19,8 @@
 #ifndef __UNISETSPAN_H__
 #define __UNISETSPAN_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uniset.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/uniset.h"
 
 U_NAMESPACE_BEGIN
 
@@ -29,14 +29,14 @@ U_NAMESPACE_BEGIN
  * Avoid recursion because of its exponential complexity.
  * Instead, try multiple paths at once and track them with an IndexList.
  */
-class UnicodeSetStringSpan : public UMemory {
-public:
+class UnicodeSetStringSpan : सार्वजनिक UMemory {
+सार्वजनिक:
     /*
      * Which span() variant will be used?
      * The object is either built for one variant and used once,
      * or built for all and may be used many times.
      */
-    enum {
+    गणना {
         FWD             = 0x20,
         BACK            = 0x10,
         UTF16           = 8,
@@ -56,10 +56,10 @@ public:
         BACK_UTF8_NOT_CONTAINED = BACK | UTF8  | NOT_CONTAINED
     };
 
-    UnicodeSetStringSpan(const UnicodeSet &set, const UVector &setStrings, uint32_t which);
+    UnicodeSetStringSpan(ध्रुव UnicodeSet &set, ध्रुव UVector &setStrings, uint32_t which);
 
     // Copy constructor. Assumes which==ALL for a frozen set.
-    UnicodeSetStringSpan(const UnicodeSetStringSpan &otherStringSpan, const UVector &newParentSetStrings);
+    UnicodeSetStringSpan(ध्रुव UnicodeSetStringSpan &otherStringSpan, ध्रुव UVector &newParentSetStrings);
 
     ~UnicodeSetStringSpan();
 
@@ -68,23 +68,23 @@ public:
      * @return true if strings need to be checked (call span() here),
      *         false if not (use a BMPSet for best performance).
      */
-    inline UBool needsStringSpanUTF16();
-    inline UBool needsStringSpanUTF8();
+    अन्तःस्थ UBool needsStringSpanUTF16();
+    अन्तःस्थ UBool needsStringSpanUTF8();
 
     // For fast UnicodeSet::contains(c).
-    inline UBool contains(UChar32 c) const;
+    अन्तःस्थ UBool contains(UChar32 c) ध्रुव;
 
-    int32_t span(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t span(ध्रुव char16_t *s, int32_t length, USetSpanCondition spanCondition) ध्रुव;
 
-    int32_t spanBack(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t spanBack(ध्रुव char16_t *s, int32_t length, USetSpanCondition spanCondition) ध्रुव;
 
-    int32_t spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t spanUTF8(ध्रुव uint8_t *s, int32_t length, USetSpanCondition spanCondition) ध्रुव;
 
-    int32_t spanBackUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t spanBackUTF8(ध्रुव uint8_t *s, int32_t length, USetSpanCondition spanCondition) ध्रुव;
 
-private:
+गुप्त:
     // Special spanLength byte values.
-    enum {
+    गणना {
         // The spanLength is >=0xfe.
         LONG_SPAN=0xfe,
         // All code points in the string are contained in the parent set.
@@ -93,12 +93,12 @@ private:
 
     // Add a starting or ending string character to the spanNotSet
     // so that a character span ends before any string.
-    void addToSpanNotSet(UChar32 c);
+    शून्य addToSpanNotSet(UChar32 c);
 
-    int32_t spanNot(const char16_t *s, int32_t length) const;
-    int32_t spanNotBack(const char16_t *s, int32_t length) const;
-    int32_t spanNotUTF8(const uint8_t *s, int32_t length) const;
-    int32_t spanNotBackUTF8(const uint8_t *s, int32_t length) const;
+    int32_t spanNot(ध्रुव char16_t *s, int32_t length) ध्रुव;
+    int32_t spanNotBack(ध्रुव char16_t *s, int32_t length) ध्रुव;
+    int32_t spanNotUTF8(ध्रुव uint8_t *s, int32_t length) ध्रुव;
+    int32_t spanNotBackUTF8(ध्रुव uint8_t *s, int32_t length) ध्रुव;
 
     // Set for span(). Same as parent but without strings.
     UnicodeSet spanSet;
@@ -108,7 +108,7 @@ private:
     UnicodeSet *pSpanNotSet;
 
     // The strings of the parent set.
-    const UVector &strings;
+    ध्रुव UVector &strings;
 
     // Pointer to the UTF-8 string lengths.
     // Also pointer to further allocated storage for meta data and
@@ -141,15 +141,15 @@ private:
 };
 
 UBool UnicodeSetStringSpan::needsStringSpanUTF16() {
-    return maxLength16 != 0;
+    प्रत्यागम maxLength16 != 0;
 }
 
 UBool UnicodeSetStringSpan::needsStringSpanUTF8() {
-    return maxLength8 != 0;
+    प्रत्यागम maxLength8 != 0;
 }
 
-UBool UnicodeSetStringSpan::contains(UChar32 c) const {
-    return spanSet.contains(c);
+UBool UnicodeSetStringSpan::contains(UChar32 c) ध्रुव {
+    प्रत्यागम spanSet.contains(c);
 }
 
 U_NAMESPACE_END

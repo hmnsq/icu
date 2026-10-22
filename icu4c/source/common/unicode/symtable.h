@@ -12,11 +12,11 @@
 #ifndef SYMTABLE_H
 #define SYMTABLE_H
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#जइ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#अन्तर्भाव "unicode/uobject.h"
 
 /**
  * \file
@@ -56,20 +56,20 @@ class UnicodeString;
  *
  * @stable ICU 2.8
  */
-class U_COMMON_API SymbolTable /* not : public UObject because this is an interface/mixin class */ {
-public:
+class U_COMMON_API चिह्नम्_Table /* not : public UObject because this is an interface/mixin class */ {
+सार्वजनिक:
 
     /**
      * The character preceding a symbol reference name.
      * @stable ICU 2.8
      */
-    enum { SYMBOL_REF = 0x0024 /*$*/ };
+    गणना { चिह्नम्_REF = 0x0024 /*$*/ };
 
     /**
      * Destructor.
      * @stable ICU 2.8
      */
-    virtual ~SymbolTable();
+    आभास ~चिह्नम्_Table();
 
     /**
      * Lookup the characters associated with this string and return it.
@@ -80,7 +80,7 @@ public:
      * there is no mapping for s.
      * @stable ICU 2.8
      */
-    virtual const UnicodeString* lookup(const UnicodeString& s) const U_LIFETIME_BOUND = 0;
+    आभास ध्रुव UnicodeString* lookup(ध्रुव UnicodeString& s) ध्रुव U_LIFETIME_BOUND = 0;
 
     /**
      * Returns a pointer to a pre-parsed set associated with the variable with
@@ -88,8 +88,8 @@ public:
      * undefined or string-valued variable).
      * @internal
      */
-    virtual const UnicodeSet* lookupSet(const UnicodeString& /*name*/) const {
-        return nullptr;
+    आभास ध्रुव UnicodeSet* lookupSet(ध्रुव UnicodeString& /*name*/) ध्रुव {
+        प्रत्यागम nullptr;
     }
 
     /**
@@ -100,7 +100,7 @@ public:
      * character, or nullptr if there is no mapping for ch.
      * @stable ICU 2.8
      */
-    virtual const UnicodeFunctor* lookupMatcher(UChar32 ch) const U_LIFETIME_BOUND = 0;
+    आभास ध्रुव UnicodeFunctor* lookupMatcher(UChar32 ch) ध्रुव U_LIFETIME_BOUND = 0;
 
     /**
      * Parse a symbol reference name from the given string, starting
@@ -119,8 +119,8 @@ public:
      * valid symbolic name at the given position.
      * @stable ICU 2.8
      */
-    virtual UnicodeString parseReference(const UnicodeString& text,
-                                         ParsePosition& pos, int32_t limit) const = 0;
+    आभास UnicodeString parseReference(ध्रुव UnicodeString& text,
+                                         ParsePosition& pos, int32_t limit) ध्रुव = 0;
 };
 U_NAMESPACE_END
 

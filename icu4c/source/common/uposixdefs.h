@@ -33,7 +33,7 @@
  */
 #ifdef _XOPEN_SOURCE
     /* Use the predefined value. */
-#else
+#अण्णहा
     /*
      * Version 6.0:
      * The Open Group Base Specifications Issue 6 (IEEE Std 1003.1, 2004 Edition)
@@ -54,7 +54,7 @@
  *
  * z/OS needs this definition for timeval and to get usleep.
  */
-#if !defined(_XOPEN_SOURCE_EXTENDED) && defined(__TOS_MVS__)
+#जइ !defined(_XOPEN_SOURCE_EXTENDED) && defined(__TOS_MVS__)
 #   define _XOPEN_SOURCE_EXTENDED 1
 #endif
 
@@ -64,18 +64,18 @@
  *   than a c99 or later compiler."
  * Apparently C++11 is not "or later". Work around this.
  */
-#if defined(__cplusplus) && (defined(sun) || defined(__sun)) && !defined (_STDC_C99)
+#जइ defined(__cplusplus) && (defined(sun) || defined(__sun)) && !defined (_STDC_C99)
 #   define _STDC_C99
 #endif
 
-#if !defined _POSIX_C_SOURCE && \
+#जइ !defined _POSIX_C_SOURCE && \
     defined(__APPLE__) && defined(__MACH__) && !defined(__clang__)
 // Needed to prevent EOWNERDEAD issues with GCC on Mac
 #define _POSIX_C_SOURCE 200809L
 #endif
 
 /* Prevent _XOPEN_SOURCE from breaking build on macOS when aligned_alloc exists. */
-#if defined(__APPLE__) && !defined(_DARWIN_C_SOURCE)
+#जइ defined(__APPLE__) && !defined(_DARWIN_C_SOURCE)
 #   define _DARWIN_C_SOURCE
 #endif
 

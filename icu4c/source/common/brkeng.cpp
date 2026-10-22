@@ -7,33 +7,33 @@
  ************************************************************************************
  */
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#जइ !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/uchar.h"
-#include "unicode/uniset.h"
-#include "unicode/chariter.h"
-#include "unicode/ures.h"
-#include "unicode/udata.h"
-#include "unicode/putil.h"
-#include "unicode/ustring.h"
-#include "unicode/uscript.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/bytestrie.h"
-#include "unicode/rbbi.h"
+#अन्तर्भाव "unicode/uchar.h"
+#अन्तर्भाव "unicode/uniset.h"
+#अन्तर्भाव "unicode/chariter.h"
+#अन्तर्भाव "unicode/ures.h"
+#अन्तर्भाव "unicode/udata.h"
+#अन्तर्भाव "unicode/putil.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "unicode/uscript.h"
+#अन्तर्भाव "unicode/ucharstrie.h"
+#अन्तर्भाव "unicode/bytestrie.h"
+#अन्तर्भाव "unicode/rbbi.h"
 
-#include "brkeng.h"
-#include "cmemory.h"
-#include "dictbe.h"
-#include "lstmbe.h"
-#include "charstr.h"
-#include "dictionarydata.h"
-#include "mutex.h"
-#include "uvector.h"
-#include "umutex.h"
-#include "uresimp.h"
-#include "ubrkimpl.h"
+#अन्तर्भाव "brkeng.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "dictbe.h"
+#अन्तर्भाव "lstmbe.h"
+#अन्तर्भाव "charstr.h"
+#अन्तर्भाव "dictionarydata.h"
+#अन्तर्भाव "mutex.h"
+#अन्तर्भाव "uvector.h"
+#अन्तर्भाव "umutex.h"
+#अन्तर्भाव "uresimp.h"
+#अन्तर्भाव "ubrkimpl.h"
 
 U_NAMESPACE_BEGIN
 
@@ -62,7 +62,7 @@ LanguageBreakFactory::~LanguageBreakFactory() {
  */
 
 UnhandledEngine::UnhandledEngine(UErrorCode &status) : fHandled(nullptr) {
-    (void)status;
+    (शून्य)status;
 }
 
 UnhandledEngine::~UnhandledEngine() {
@@ -71,9 +71,9 @@ UnhandledEngine::~UnhandledEngine() {
 }
 
 UBool
-UnhandledEngine::handles(UChar32 c, const char* locale) const {
-    (void)locale; // Unused
-    return fHandled && fHandled->contains(c);
+UnhandledEngine::handles(UChar32 c, ध्रुव वर्ण* locale) ध्रुव {
+    (शून्य)locale; // Unused
+    प्रत्यागम fHandled && fHandled->contains(c);
 }
 
 int32_t
@@ -82,30 +82,30 @@ UnhandledEngine::findBreaks( UText *text,
                              int32_t endPos,
                              UVector32 &/*foundBreaks*/,
                              UBool /* isPhraseBreaking */,
-                             UErrorCode &status) const {
-    if (U_FAILURE(status)) return 0;
+                             UErrorCode &status) ध्रुव {
+    जइ (U_FAILURE(status)) प्रत्यागम 0;
     utext_setNativeIndex(text, startPos);
     UChar32 c = utext_current32(text);
-    while (static_cast<int32_t>(utext_getNativeIndex(text)) < endPos && fHandled->contains(c)) {
+    जाव (static_cast<int32_t>(utext_getNativeIndex(text)) < endPos && fHandled->contains(c)) {
         utext_next32(text);            // TODO:  recast loop to work with post-increment operations.
         c = utext_current32(text);
     }
-    return 0;
+    प्रत्यागम 0;
 }
 
-void
+शून्य
 UnhandledEngine::handleCharacter(UChar32 c) {
-    if (fHandled == nullptr) {
-        fHandled = new UnicodeSet();
-        if (fHandled == nullptr) {
-            return;
+    जइ (fHandled == nullptr) {
+        fHandled = नूतन UnicodeSet();
+        जइ (fHandled == nullptr) {
+            प्रत्यागम;
         }
     }
-    if (!fHandled->contains(c)) {
+    जइ (!fHandled->contains(c)) {
         UErrorCode status = U_ZERO_ERROR;
         // Apply the entire script of the character.
-        int32_t script = u_getIntPropertyValue(c, UCHAR_SCRIPT);
-        fHandled->applyIntPropertyValue(UCHAR_SCRIPT, script, status);
+        int32_t script = u_get_Int_Property_मानम्(c, UCHAR_SCRIPT);
+        fHandled->apply_Int_Property_मानम्(UCHAR_SCRIPT, script, status);
     }
 }
 
@@ -121,125 +121,125 @@ ICULanguageBreakFactory::~ICULanguageBreakFactory() {
     delete fEngines;
 }
 
-void ICULanguageBreakFactory::ensureEngines(UErrorCode& status) {
-    static UMutex gBreakEngineMutex;
+शून्य ICULanguageBreakFactory::ensureEngines(UErrorCode& status) {
+    स्थिर UMutex gBreakEngineMutex;
     Mutex m(&gBreakEngineMutex);
-    if (fEngines == nullptr) {
-        LocalPointer<UStack>  engines(new UStack(uprv_deleteUObject, nullptr, status), status);
-        if (U_SUCCESS(status)) {
+    जइ (fEngines == nullptr) {
+        LocalPointer<UStack>  engines(नूतन UStack(uprv_deleteUObject, nullptr, status), status);
+        जइ (U_SUCCESS(status)) {
             fEngines = engines.orphan();
         }
     }
 }
 
-const LanguageBreakEngine *
-ICULanguageBreakFactory::getEngineFor(UChar32 c, const char* locale) {
-    const LanguageBreakEngine *lbe = nullptr;
+ध्रुव LanguageBreakEngine *
+ICULanguageBreakFactory::getEngineFor(UChar32 c, ध्रुव वर्ण* locale) {
+    ध्रुव LanguageBreakEngine *lbe = nullptr;
     UErrorCode  status = U_ZERO_ERROR;
     ensureEngines(status);
-    if (U_FAILURE(status) ) {
+    जइ (U_FAILURE(status) ) {
         // Note: no way to return error code to caller.
-        return nullptr;
+        प्रत्यागम nullptr;
     }
 
-    static UMutex gBreakEngineMutex;
+    स्थिर UMutex gBreakEngineMutex;
     Mutex m(&gBreakEngineMutex);
     int32_t i = fEngines->size();
-    while (--i >= 0) {
-        lbe = static_cast<const LanguageBreakEngine*>(fEngines->elementAt(i));
-        if (lbe != nullptr && lbe->handles(c, locale)) {
-            return lbe;
+    जाव (--i >= 0) {
+        lbe = static_cast<ध्रुव LanguageBreakEngine*>(fEngines->elementAt(i));
+        जइ (lbe != nullptr && lbe->handles(c, locale)) {
+            प्रत्यागम lbe;
         }
     }
 
     // We didn't find an engine. Create one.
     lbe = loadEngineFor(c, locale);
-    if (lbe != nullptr) {
-        fEngines->push((void *)lbe, status);
+    जइ (lbe != nullptr) {
+        fEngines->push((शून्य *)lbe, status);
     }
-    return U_SUCCESS(status) ? lbe : nullptr;
+    प्रत्यागम U_SUCCESS(status) ? lbe : nullptr;
 }
 
-const LanguageBreakEngine *
-ICULanguageBreakFactory::loadEngineFor(UChar32 c, const char*) {
+ध्रुव LanguageBreakEngine *
+ICULanguageBreakFactory::loadEngineFor(UChar32 c, ध्रुव वर्ण*) {
     UErrorCode status = U_ZERO_ERROR;
     UScriptCode code = uscript_getScript(c, &status);
-    if (U_SUCCESS(status)) {
-        const LanguageBreakEngine *engine = nullptr;
+    जइ (U_SUCCESS(status)) {
+        ध्रुव LanguageBreakEngine *engine = nullptr;
         // Try to use LSTM first
-        const LSTMData *data = CreateLSTMDataForScript(code, status);
-        if (U_SUCCESS(status)) {
-            if (data != nullptr) {
+        ध्रुव LSTMData *data = CreateLSTMDataForScript(code, status);
+        जइ (U_SUCCESS(status)) {
+            जइ (data != nullptr) {
                 engine = CreateLSTMBreakEngine(code, data, status);
-                if (U_SUCCESS(status) && engine != nullptr) {
-                    return engine;
+                जइ (U_SUCCESS(status) && engine != nullptr) {
+                    प्रत्यागम engine;
                 }
-                if (engine != nullptr) {
+                जइ (engine != nullptr) {
                     delete engine;
                     engine = nullptr;
-                } else {
+                } अण्णहा {
                     DeleteLSTMData(data);
                 }
             }
         }
         status = U_ZERO_ERROR;  // fallback to dictionary based
         DictionaryMatcher *m = loadDictionaryMatcherFor(code);
-        if (m != nullptr) {
-            switch(code) {
-            case USCRIPT_THAI:
-                engine = new ThaiBreakEngine(m, status);
-                break;
-            case USCRIPT_LAO:
-                engine = new LaoBreakEngine(m, status);
-                break;
-            case USCRIPT_MYANMAR:
-                engine = new BurmeseBreakEngine(m, status);
-                break;
-            case USCRIPT_KHMER:
-                engine = new KhmerBreakEngine(m, status);
-                break;
+        जइ (m != nullptr) {
+            विकल्प(code) {
+            पक्ष USCRIPT_THAI:
+                engine = नूतन ThaiBreakEngine(m, status);
+                भङ्ग;
+            पक्ष USCRIPT_LAO:
+                engine = नूतन LaoBreakEngine(m, status);
+                भङ्ग;
+            पक्ष USCRIPT_MYANMAR:
+                engine = नूतन BurmeseBreakEngine(m, status);
+                भङ्ग;
+            पक्ष USCRIPT_KHMER:
+                engine = नूतन KhmerBreakEngine(m, status);
+                भङ्ग;
 
-#if !UCONFIG_NO_NORMALIZATION
+#जइ !UCONFIG_NO_NORMALIZATION
                 // CJK not available w/o normalization
-            case USCRIPT_HANGUL:
-                engine = new CjkBreakEngine(m, kKorean, status);
-                break;
+            पक्ष USCRIPT_HANGUL:
+                engine = नूतन CjkBreakEngine(m, kKorean, status);
+                भङ्ग;
 
             // use same BreakEngine and dictionary for both Chinese and Japanese
-            case USCRIPT_HIRAGANA:
-            case USCRIPT_KATAKANA:
-            case USCRIPT_HAN:
-                engine = new CjkBreakEngine(m, kChineseJapanese, status);
-                break;
-#if 0
+            पक्ष USCRIPT_HIRAGANA:
+            पक्ष USCRIPT_KATAKANA:
+            पक्ष USCRIPT_HAN:
+                engine = नूतन CjkBreakEngine(m, kChineseJapanese, status);
+                भङ्ग;
+#जइ 0
             // TODO: Have to get some characters with script=common handled
             // by CjkBreakEngine (e.g. U+309B). Simply subjecting
             // them to CjkBreakEngine does not work. The engine has to
             // special-case them.
-            case USCRIPT_COMMON:
+            पक्ष USCRIPT_COMMON:
             {
                 UBlockCode block = ublock_getCode(code);
-                if (block == UBLOCK_HIRAGANA || block == UBLOCK_KATAKANA)
-                   engine = new CjkBreakEngine(dict, kChineseJapanese, status);
-                break;
+                जइ (block == UBLOCK_HIRAGANA || block == UBLOCK_KATAKANA)
+                   engine = नूतन CjkBreakEngine(dict, kChineseJapanese, status);
+                भङ्ग;
             }
 #endif
 #endif
 
-            default:
-                break;
+            स्वभाव:
+                भङ्ग;
             }
-            if (engine == nullptr) {
+            जइ (engine == nullptr) {
                 delete m;
             }
-            else if (U_FAILURE(status)) {
+            अण्णहा जइ (U_FAILURE(status)) {
                 delete engine;
                 engine = nullptr;
             }
-            return engine;
+            प्रत्यागम engine;
         }
     }
-    return nullptr;
+    प्रत्यागम nullptr;
 }
 
 DictionaryMatcher *
@@ -247,65 +247,65 @@ ICULanguageBreakFactory::loadDictionaryMatcherFor(UScriptCode script) {
     UErrorCode status = U_ZERO_ERROR;
     // open root from brkitr tree.
     UResourceBundle *b = ures_open(U_ICUDATA_BRKITR, "", &status);
-    b = ures_getByKeyWithFallback(b, "dictionaries", b, &status);
+    b = ures_get_By_कुञ्चिका_With_Fallback(b, "dictionaries", b, &status);
     int32_t dictnlength = 0;
-    const char16_t *dictfname =
-        ures_getStringByKeyWithFallback(b, uscript_getShortName(script), &dictnlength, &status);
-    if (U_FAILURE(status)) {
+    ध्रुव char16_t *dictfname =
+        ures_get_String_By_कुञ्चिका_With_Fallback(b, uscript_getShortName(script), &dictnlength, &status);
+    जइ (U_FAILURE(status)) {
         ures_close(b);
-        return nullptr;
+        प्रत्यागम nullptr;
     }
     CharString dictnbuf;
     CharString ext;
-    const char16_t *extStart = u_memrchr(dictfname, 0x002e, dictnlength);  // last dot
-    if (extStart != nullptr) {
+    ध्रुव char16_t *extStart = u_memrchr(dictfname, 0x002e, dictnlength);  // last dot
+    जइ (extStart != nullptr) {
         int32_t len = static_cast<int32_t>(extStart - dictfname);
-        ext.appendInvariantChars(UnicodeString(false, extStart + 1, dictnlength - len - 1), status);
+        ext.appendInvariantChars(UnicodeString(मिच्छ, extStart + 1, dictnlength - len - 1), status);
         dictnlength = len;
     }
-    dictnbuf.appendInvariantChars(UnicodeString(false, dictfname, dictnlength), status);
+    dictnbuf.appendInvariantChars(UnicodeString(मिच्छ, dictfname, dictnlength), status);
     ures_close(b);
 
     UDataMemory *file = udata_open(U_ICUDATA_BRKITR, ext.data(), dictnbuf.data(), &status);
-    if (U_SUCCESS(status)) {
+    जइ (U_SUCCESS(status)) {
         // build trie
-        const uint8_t* data = static_cast<const uint8_t*>(udata_getMemory(file));
-        const int32_t* indexes = reinterpret_cast<const int32_t*>(data);
-        const int32_t offset = indexes[DictionaryData::IX_STRING_TRIE_OFFSET];
-        const int32_t trieType = indexes[DictionaryData::IX_TRIE_TYPE] & DictionaryData::TRIE_TYPE_MASK;
+        ध्रुव uint8_t* data = static_cast<ध्रुव uint8_t*>(udata_getMemory(file));
+        ध्रुव int32_t* indexes = reinterpret_cast<ध्रुव int32_t*>(data);
+        ध्रुव int32_t offset = indexes[DictionaryData::IX_STRING_TRIE_OFFSET];
+        ध्रुव int32_t trieType = indexes[DictionaryData::IX_TRIE_TYPE] & DictionaryData::TRIE_TYPE_MASK;
         DictionaryMatcher *m = nullptr;
-        if (trieType == DictionaryData::TRIE_TYPE_BYTES) {
-            const int32_t transform = indexes[DictionaryData::IX_TRANSFORM];
-            const char* characters = reinterpret_cast<const char*>(data + offset);
-            m = new BytesDictionaryMatcher(characters, transform, file);
+        जइ (trieType == DictionaryData::TRIE_TYPE_BYTES) {
+            ध्रुव int32_t transform = indexes[DictionaryData::IX_TRANSFORM];
+            ध्रुव वर्ण* characters = reinterpret_cast<ध्रुव वर्ण*>(data + offset);
+            m = नूतन BytesDictionaryMatcher(characters, transform, file);
         }
-        else if (trieType == DictionaryData::TRIE_TYPE_UCHARS) {
-            const char16_t* characters = reinterpret_cast<const char16_t*>(data + offset);
-            m = new UCharsDictionaryMatcher(characters, file);
+        अण्णहा जइ (trieType == DictionaryData::TRIE_TYPE_UCHARS) {
+            ध्रुव char16_t* characters = reinterpret_cast<ध्रुव char16_t*>(data + offset);
+            m = नूतन UCharsDictionaryMatcher(characters, file);
         }
-        if (m == nullptr) {
+        जइ (m == nullptr) {
             // no matcher exists to take ownership - either we are an invalid 
             // type or memory allocation failed
             udata_close(file);
         }
-        return m;
-    } else if (dictfname != nullptr) {
+        प्रत्यागम m;
+    } अण्णहा जइ (dictfname != nullptr) {
         // we don't have a dictionary matcher.
         // returning nullptr here will cause us to fail to find a dictionary break engine, as expected
         status = U_ZERO_ERROR;
-        return nullptr;
+        प्रत्यागम nullptr;
     }
-    return nullptr;
+    प्रत्यागम nullptr;
 }
 
 
-void ICULanguageBreakFactory::addExternalEngine(
+शून्य ICULanguageBreakFactory::addExternalEngine(
         ExternalBreakEngine* external, UErrorCode& status) {
     LocalPointer<ExternalBreakEngine> engine(external, status);
     ensureEngines(status);
     LocalPointer<BreakEngineWrapper> wrapper(
-        new BreakEngineWrapper(engine.orphan(), status), status);
-    static UMutex gBreakEngineMutex;
+        नूतन BreakEngineWrapper(engine.orphan(), status), status);
+    स्थिर UMutex gBreakEngineMutex;
     Mutex m(&gBreakEngineMutex);
     fEngines->push(wrapper.getAlias(), status);
     wrapper.orphan();
@@ -318,8 +318,8 @@ BreakEngineWrapper::BreakEngineWrapper(
 BreakEngineWrapper::~BreakEngineWrapper() {
 }
 
-UBool BreakEngineWrapper::handles(UChar32 c, const char* locale) const {
-    return delegate->isFor(c, locale);
+UBool BreakEngineWrapper::handles(UChar32 c, ध्रुव वर्ण* locale) ध्रुव {
+    प्रत्यागम delegate->isFor(c, locale);
 }
 
 int32_t BreakEngineWrapper::findBreaks(
@@ -328,8 +328,8 @@ int32_t BreakEngineWrapper::findBreaks(
     int32_t endPos,
     UVector32 &foundBreaks,
     UBool /* isPhraseBreaking */,
-    UErrorCode &status) const {
-    if (U_FAILURE(status)) return 0;
+    UErrorCode &status) ध्रुव {
+    जइ (U_FAILURE(status)) प्रत्यागम 0;
     int32_t result = 0;
 
     // Find the span of characters included in the set.
@@ -342,7 +342,7 @@ int32_t BreakEngineWrapper::findBreaks(
     int32_t rangeStart;
     int32_t rangeEnd;
     UChar32 c = utext_current32(text);
-    while ((current = static_cast<int32_t>(utext_getNativeIndex(text))) < endPos && delegate->handles(c)) {
+    जाव ((current = static_cast<int32_t>(utext_getNativeIndex(text))) < endPos && delegate->handles(c)) {
         utext_next32(text);         // TODO:  recast loop for postincrement
         c = utext_current32(text);
     }
@@ -352,14 +352,14 @@ int32_t BreakEngineWrapper::findBreaks(
     int32_t additionalCapacity = rangeEnd - rangeStart + 1;
     // enlarge to contains (rangeEnd-rangeStart+1) more items
     foundBreaks.ensureCapacity(beforeSize+additionalCapacity, status);
-    if (U_FAILURE(status)) return 0;
+    जइ (U_FAILURE(status)) प्रत्यागम 0;
     foundBreaks.setSize(beforeSize + beforeSize+additionalCapacity);
     result = delegate->fillBreaks(text, rangeStart, rangeEnd, foundBreaks.getBuffer()+beforeSize,
                                   additionalCapacity, status);
-    if (U_FAILURE(status)) return 0;
+    जइ (U_FAILURE(status)) प्रत्यागम 0;
     foundBreaks.setSize(beforeSize + result);
     utext_setNativeIndex(text, current);
-    return result;
+    प्रत्यागम result;
 }
 
 U_NAMESPACE_END
