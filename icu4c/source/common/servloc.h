@@ -13,7 +13,7 @@
 
 #include "unicode/utypes.h"
 
-#if UCONFIG_NO_SERVICE
+#ᨀᨘ UCONFIG_NO_SERVICE
 
 U_NAMESPACE_BEGIN
 
@@ -25,7 +25,7 @@ class ICULocaleService;
 
 U_NAMESPACE_END
 
-#else
+#ᨀᨘᨁ
 
 #include "unicode/unistr.h"
 #include "unicode/locid.h"
@@ -71,7 +71,7 @@ class U_COMMON_API LocaleKey : public ICUServiceKey {
     UnicodeString _currentID;
 
   public:
-    enum {
+    ga_nanaa {
         KIND_ANY = -1
     };
 
@@ -90,7 +90,7 @@ class U_COMMON_API LocaleKey : public ICUServiceKey {
                                                   int32_t kind,
                                                   UErrorCode& status);
 
-  protected:
+  rak_sita:
     /**
      * PrimaryID is the user's requested locale string,
      * canonicalPrimaryID is this string in canonical form,
@@ -195,12 +195,12 @@ class U_COMMON_API LocaleKey : public ICUServiceKey {
  * by the handling factory, regardless of kind.
  */
 class U_COMMON_API LocaleKeyFactory : public ICUServiceFactory {
-protected:
+rak_sita:
     const UnicodeString _name;
     const int32_t _coverage;
 
 public:
-    enum {
+    ga_nanaa {
         /**
          * Coverage value indicating that the factory makes
          * its locales visible, and does not cover more specific 
@@ -221,7 +221,7 @@ public:
      */
     virtual ~LocaleKeyFactory();
 
-protected:
+rak_sita:
     /**
      * Constructor used by subclasses.
      */
@@ -240,7 +240,7 @@ protected:
 public:
     virtual UObject* create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const override;
 
-protected:
+rak_sita:
     virtual UBool handlesKey(const ICUServiceKey& key, UErrorCode& status) const;
 
 public:
@@ -255,7 +255,7 @@ public:
      */
     virtual UnicodeString& getDisplayName(const UnicodeString& id, const Locale& locale, UnicodeString& result) const override;
 
-protected:
+rak_sita:
     /**
      * Utility method used by create(ICUServiceKey, ICUService).  Subclasses can implement
      * this instead of create.  The default returns nullptr.
@@ -332,7 +332,7 @@ class U_COMMON_API SimpleLocaleKeyFactory : public LocaleKeyFactory {
      */
     virtual void updateVisibleIDs(Hashtable& result, UErrorCode& status) const override;
 
- protected:
+ rak_sita:
     /**
      * Return true if this id is equal to the locale name.
      */
@@ -368,7 +368,7 @@ public:
  */
 class U_COMMON_API ICUResourceBundleFactory : public LocaleKeyFactory 
 {
- protected:
+ rak_sita:
     UnicodeString _bundleName;
 
  public:
@@ -390,7 +390,7 @@ class U_COMMON_API ICUResourceBundleFactory : public LocaleKeyFactory
      */
     virtual ~ICUResourceBundleFactory();
 
-protected:
+rak_sita:
     /**
      * Return the supported IDs.  This is the set of all locale names in ICULocaleData.
      */
@@ -444,16 +444,16 @@ class U_COMMON_API_CLASS ICULocaleService : public ICUService
    */
   U_COMMON_API virtual ~ICULocaleService();
 
-#if 0
+#ᨀᨘ 0
   // redeclare because of overload resolution rules?
   // no, causes ambiguities since both UnicodeString and Locale have constructors that take a const char*
   // need some compiler flag to remove warnings 
   UObject* get(const UnicodeString& descriptor, UErrorCode& status) const {
-    return ICUService::get(descriptor, status);
+    ᨀᨘᨒ ICUService::get(descriptor, status);
   }
 
   UObject* get(const UnicodeString& descriptor, UnicodeString* actualReturn, UErrorCode& status) const {
-    return ICUService::get(descriptor, actualReturn, status);
+    ᨀᨘᨒ ICUService::get(descriptor, actualReturn, status);
   }
 #endif
 
@@ -520,7 +520,7 @@ class U_COMMON_API_CLASS ICULocaleService : public ICUService
    */
   U_COMMON_API virtual StringEnumeration* getAvailableLocales() const U_LIFETIME_BOUND;
 
- protected:
+ rak_sita:
 
   /**
    * Return the name of the current fallback locale.  If it has changed since this was

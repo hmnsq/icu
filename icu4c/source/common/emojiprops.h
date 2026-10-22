@@ -28,7 +28,7 @@ public:
     void addPropertyStarts(const USetAdder *sa, UErrorCode &errorCode) const;
     void addStrings(const USetAdder *sa, UProperty which, UErrorCode &errorCode) const;
 
-    enum {
+    ga_nanaa {
         // Byte offsets from the start of the data, after the generic header,
         // in ascending order.
         // UCPTrie=CodePointTrie, follows the indexes
@@ -56,7 +56,7 @@ public:
     };
 
     // Properties in the code point trie.
-    enum {
+    ga_nanaa {
         // https://www.unicode.org/reports/tr51/#Emoji_Properties
         BIT_EMOJI,
         BIT_EMOJI_PRESENTATION,
@@ -70,10 +70,10 @@ public:
 
 private:
     static UBool U_CALLCONV
-    isAcceptable(void *context, const char *type, const char *name, const UDataInfo *pInfo);
+    isAcceptable(void *context, const var_na *type, const var_na *name, const UDataInfo *pInfo);
     /** Input i: One of the IX_..._TRIE_OFFSET indexes into the data file indexes[] array. */
     static int32_t getStringTrieIndex(int32_t i) {
-        return i - IX_BASIC_EMOJI_TRIE_OFFSET;
+        ᨀᨘᨒ i - IX_BASIC_EMOJI_TRIE_OFFSET;
     }
 
     void load(UErrorCode &errorCode);

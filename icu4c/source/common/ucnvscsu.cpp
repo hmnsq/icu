@@ -23,7 +23,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#ᨀᨘ !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
 #include "unicode/ucnv.h"
 #include "unicode/ucnv_cb.h"
@@ -35,7 +35,7 @@
 /* SCSU definitions --------------------------------------------------------- */
 
 /* SCSU command byte values */
-enum {
+ga_nanaa {
     SQ0=0x01, /* Quote from window pair 0 */
     SQ7=0x08, /* Quote from window pair 7 */
     SDX=0x0B, /* Define a window as extended */
@@ -56,7 +56,7 @@ enum {
     Urs=0xF2  /* reserved */
 };
 
-enum {
+ga_nanaa {
     /*
      * Unicode code points from 3400 to E000 are not adressible by
      * dynamic window, since in these areas no short run alphabets are
@@ -108,7 +108,7 @@ static const uint32_t fixedOffsets[]={
 };
 
 /* state values */
-enum {
+ga_nanaa {
     readCommand,
     quotePairOne,
     quotePairTwo,
@@ -118,7 +118,7 @@ enum {
     defineOne
 };
 
-typedef struct SCSUData {
+typedef sa_nracanaa SCSUData {
     /* dynamic window offsets, initialize to default values from initialDynamicOffsets */
     uint32_t toUDynamicOffsets[8];
     uint32_t fromUDynamicOffsets[8];
@@ -149,7 +149,7 @@ typedef struct SCSUData {
 static const int8_t initialWindowUse[8]={ 7, 0, 3, 2, 4, 5, 6, 1 };
 static const int8_t initialWindowUse_ja[8]={ 3, 2, 4, 1, 0, 7, 5, 6 };
 
-enum {
+ga_nanaa {
     lGeneric, l_ja
 };
 
@@ -159,7 +159,7 @@ static void U_CALLCONV
 _SCSUReset(UConverter *cnv, UConverterResetChoice choice) {
     SCSUData *scsu=(SCSUData *)cnv->extraInfo;
 
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    ᨀᨘ(choice<=UCNV_RESET_TO_UNICODE) {
         /* reset toUnicode */
         uprv_memcpy(scsu->toUDynamicOffsets, initialDynamicOffsets, 32);
 
@@ -170,7 +170,7 @@ _SCSUReset(UConverter *cnv, UConverterResetChoice choice) {
 
         cnv->toULength=0;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
+    ᨀᨘ(choice!=UCNV_RESET_TO_UNICODE) {
         /* reset fromUnicode */
         uprv_memcpy(scsu->fromUDynamicOffsets, initialDynamicOffsets, 32);
 
@@ -179,12 +179,12 @@ _SCSUReset(UConverter *cnv, UConverterResetChoice choice) {
 
         scsu->nextWindowUseIndex=0;
         switch(scsu->locale) {
-        case l_ja:
+        pak_sa l_ja:
             uprv_memcpy(scsu->windowUse, initialWindowUse_ja, 8);
-            break;
+            bha_nga;
         default:
             uprv_memcpy(scsu->windowUse, initialWindowUse, 8);
-            break;
+            bha_nga;
         }
 
         cnv->fromUChar32=0;
@@ -195,19 +195,19 @@ static void U_CALLCONV
 _SCSUOpen(UConverter *cnv,
           UConverterLoadArgs *pArgs,
           UErrorCode *pErrorCode) {
-    const char *locale=pArgs->locale;
-    if(pArgs->onlyTestIsLoadable) {
-        return;
+    const var_na *locale=pArgs->locale;
+    ᨀᨘ(pArgs->onlyTestIsLoadable) {
+        ᨀᨘᨒ;
     }
-    cnv->extraInfo=uprv_malloc(sizeof(SCSUData));
-    if(cnv->extraInfo!=nullptr) {
-        if(locale!=nullptr && locale[0]=='j' && locale[1]=='a' && (locale[2]==0 || locale[2]=='_')) {
+    cnv->extraInfo=uprv_malloc(parimaa_na(SCSUData));
+    ᨀᨘ(cnv->extraInfo!=nullptr) {
+        ᨀᨘ(locale!=nullptr && locale[0]=='j' && locale[1]=='a' && (locale[2]==0 || locale[2]=='_')) {
             ((SCSUData *)cnv->extraInfo)->locale=l_ja;
-        } else {
+        } ᨀᨘᨁ {
             ((SCSUData *)cnv->extraInfo)->locale=lGeneric;
         }
         _SCSUReset(cnv, UCNV_RESET_BOTH);
-    } else {
+    } ᨀᨘᨁ {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
     }
 
@@ -218,8 +218,8 @@ _SCSUOpen(UConverter *cnv,
 
 static void U_CALLCONV
 _SCSUClose(UConverter *cnv) {
-    if(cnv->extraInfo!=nullptr) {
-        if(!cnv->isExtraLocal) {
+    ᨀᨘ(cnv->extraInfo!=nullptr) {
+        ᨀᨘ(!cnv->isExtraLocal) {
             uprv_free(cnv->extraInfo);
         }
         cnv->extraInfo=nullptr;
@@ -285,39 +285,39 @@ _SCSUToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
      * The callback handling is done by returning with an error code.
      * The conversion framework actually calls the callback function.
      */
-    if(isSingleByteMode) {
+    ᨀᨘ(isSingleByteMode) {
         /* fast path for single-byte mode */
-        if(state==readCommand) {
+        ᨀᨘ(state==readCommand) {
 fastSingle:
-            while(source<sourceLimit && target<targetLimit && (b=*source)>=0x20) {
+            ᨀᨛ(source<sourceLimit && target<targetLimit && (b=*source)>=0x20) {
                 ++source;
                 ++nextSourceIndex;
-                if(b<=0x7f) {
+                ᨀᨘ(b<=0x7f) {
                     /* write US-ASCII graphic character or DEL */
                     *target++=(char16_t)b;
-                    if(offsets!=nullptr) {
+                    ᨀᨘ(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
-                } else {
+                } ᨀᨘᨁ {
                     /* write from dynamic window */
                     uint32_t c=scsu->toUDynamicOffsets[dynamicWindow]+(b&0x7f);
-                    if(c<=0xffff) {
+                    ᨀᨘ(c<=0xffff) {
                         *target++=(char16_t)c;
-                        if(offsets!=nullptr) {
+                        ᨀᨘ(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                         }
-                    } else {
+                    } ᨀᨘᨁ {
                         /* output surrogate pair */
                         *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
+                        ᨀᨘ(target<targetLimit) {
                             *target++=(char16_t)(0xdc00|(c&0x3ff));
-                            if(offsets!=nullptr) {
+                            ᨀᨘ(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                                 *offsets++=sourceIndex;
                             }
-                        } else {
+                        } ᨀᨘᨁ {
                             /* target overflow */
-                            if(offsets!=nullptr) {
+                            ᨀᨘ(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                             }
                             cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
@@ -333,47 +333,47 @@ fastSingle:
 
         /* normal state machine for single-byte mode, minus handling for what fastSingle covers */
 singleByteMode:
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+        ᨀᨛ(source<sourceLimit) {
+            ᨀᨘ(target>=targetLimit) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                bha_nga;
             }
             b=*source++;
             ++nextSourceIndex;
             switch(state) {
-            case readCommand:
+            pak_sa readCommand:
                 /* redundant conditions are commented out */
                 /* here: b<0x20 because otherwise we would be in fastSingle */
-                if((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+                ᨀᨘ((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
                     *target++=(char16_t)b;
-                    if(offsets!=nullptr) {
+                    ᨀᨘ(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
                     sourceIndex=nextSourceIndex;
                     goto fastSingle;
-                } else if(SC0<=b) {
-                    if(b<=SC7) {
+                } ᨀᨘᨁ ᨀᨘ(SC0<=b) {
+                    ᨀᨘ(b<=SC7) {
                         dynamicWindow=(int8_t)(b-SC0);
                         sourceIndex=nextSourceIndex;
                         goto fastSingle;
-                    } else /* if(SD0<=b && b<=SD7) */ {
+                    } ᨀᨘᨁ /* if(SD0<=b && b<=SD7) */ {
                         dynamicWindow=(int8_t)(b-SD0);
                         state=defineOne;
                     }
-                } else if(/* SQ0<=b && */ b<=SQ7) {
+                } ᨀᨘᨁ ᨀᨘ(/* SQ0<=b && */ b<=SQ7) {
                     quoteWindow=(int8_t)(b-SQ0);
                     state=quoteOne;
-                } else if(b==SDX) {
+                } ᨀᨘᨁ ᨀᨘ(b==SDX) {
                     state=definePairOne;
-                } else if(b==SQU) {
+                } ᨀᨘᨁ ᨀᨘ(b==SQU) {
                     state=quotePairOne;
-                } else if(b==SCU) {
+                } ᨀᨘᨁ ᨀᨘ(b==SCU) {
                     sourceIndex=nextSourceIndex;
                     isSingleByteMode=false;
                     goto fastUnicode;
-                } else /* Srs */ {
+                } ᨀᨘᨁ /* Srs */ {
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     cnv->toUBytes[0]=b;
@@ -384,48 +384,48 @@ singleByteMode:
                 /* store the first byte of a multibyte sequence in toUBytes[] */
                 cnv->toUBytes[0]=b;
                 cnv->toULength=1;
-                break;
-            case quotePairOne:
+                bha_nga;
+            pak_sa quotePairOne:
                 byteOne=b;
                 cnv->toUBytes[1]=b;
                 cnv->toULength=2;
                 state=quotePairTwo;
-                break;
-            case quotePairTwo:
+                bha_nga;
+            pak_sa quotePairTwo:
                 *target++=(char16_t)((byteOne<<8)|b);
-                if(offsets!=nullptr) {
+                ᨀᨘ(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 sourceIndex=nextSourceIndex;
                 state=readCommand;
                 goto fastSingle;
-            case quoteOne:
-                if(b<0x80) {
+            pak_sa quoteOne:
+                ᨀᨘ(b<0x80) {
                     /* all static offsets are in the BMP */
                     *target++=(char16_t)(staticOffsets[quoteWindow]+b);
-                    if(offsets!=nullptr) {
+                    ᨀᨘ(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
-                } else {
+                } ᨀᨘᨁ {
                     /* write from dynamic window */
                     uint32_t c=scsu->toUDynamicOffsets[quoteWindow]+(b&0x7f);
-                    if(c<=0xffff) {
+                    ᨀᨘ(c<=0xffff) {
                         *target++=(char16_t)c;
-                        if(offsets!=nullptr) {
+                        ᨀᨘ(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                         }
-                    } else {
+                    } ᨀᨘᨁ {
                         /* output surrogate pair */
                         *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
+                        ᨀᨘ(target<targetLimit) {
                             *target++=(char16_t)(0xdc00|(c&0x3ff));
-                            if(offsets!=nullptr) {
+                            ᨀᨘ(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                                 *offsets++=sourceIndex;
                             }
-                        } else {
+                        } ᨀᨘᨁ {
                             /* target overflow */
-                            if(offsets!=nullptr) {
+                            ᨀᨘ(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                             }
                             cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
@@ -438,31 +438,31 @@ singleByteMode:
                 sourceIndex=nextSourceIndex;
                 state=readCommand;
                 goto fastSingle;
-            case definePairOne:
+            pak_sa definePairOne:
                 dynamicWindow=(int8_t)((b>>5)&7);
                 byteOne=(uint8_t)(b&0x1f);
                 cnv->toUBytes[1]=b;
                 cnv->toULength=2;
                 state=definePairTwo;
-                break;
-            case definePairTwo:
+                bha_nga;
+            pak_sa definePairTwo:
                 scsu->toUDynamicOffsets[dynamicWindow]=0x10000+(byteOne<<15UL | b<<7UL);
                 sourceIndex=nextSourceIndex;
                 state=readCommand;
                 goto fastSingle;
-            case defineOne:
-                if(b==0) {
+            pak_sa defineOne:
+                ᨀᨘ(b==0) {
                     /* callback(illegal): Reserved window offset value 0 */
                     cnv->toUBytes[1]=b;
                     cnv->toULength=2;
                     goto endloop;
-                } else if(b<gapThreshold) {
+                } ᨀᨘᨁ ᨀᨘ(b<gapThreshold) {
                     scsu->toUDynamicOffsets[dynamicWindow]=b<<7UL;
-                } else if((uint8_t)(b-gapThreshold)<(reservedStart-gapThreshold)) {
+                } ᨀᨘᨁ ᨀᨘ((uint8_t)(b-gapThreshold)<(reservedStart-gapThreshold)) {
                     scsu->toUDynamicOffsets[dynamicWindow]=(b<<7UL)+gapOffset;
-                } else if(b>=fixedThreshold) {
+                } ᨀᨘᨁ ᨀᨘ(b>=fixedThreshold) {
                     scsu->toUDynamicOffsets[dynamicWindow]=fixedOffsets[b-fixedThreshold];
-                } else {
+                } ᨀᨘᨁ {
                     /* callback(illegal): Reserved window offset value 0xa8..0xf8 */
                     cnv->toUBytes[1]=b;
                     cnv->toULength=2;
@@ -473,13 +473,13 @@ singleByteMode:
                 goto fastSingle;
             }
         }
-    } else {
+    } ᨀᨘᨁ {
         /* fast path for Unicode mode */
-        if(state==readCommand) {
+        ᨀᨘ(state==readCommand) {
 fastUnicode:
-            while(source+1<sourceLimit && target<targetLimit && (uint8_t)((b=*source)-UC0)>(Urs-UC0)) {
+            ᨀᨛ(source+1<sourceLimit && target<targetLimit && (uint8_t)((b=*source)-UC0)>(Urs-UC0)) {
                 *target++=(char16_t)((b<<8)|source[1]);
-                if(offsets!=nullptr) {
+                ᨀᨘ(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 sourceIndex=nextSourceIndex;
@@ -490,60 +490,60 @@ fastUnicode:
 
         /* normal state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+        ᨀᨛ(source<sourceLimit) {
+            ᨀᨘ(target>=targetLimit) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                bha_nga;
             }
             b=*source++;
             ++nextSourceIndex;
             switch(state) {
-            case readCommand:
-                if((uint8_t)(b-UC0)>(Urs-UC0)) {
+            pak_sa readCommand:
+                ᨀᨘ((uint8_t)(b-UC0)>(Urs-UC0)) {
                     byteOne=b;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=quotePairTwo;
-                } else if(/* UC0<=b && */ b<=UC7) {
+                } ᨀᨘᨁ ᨀᨘ(/* UC0<=b && */ b<=UC7) {
                     dynamicWindow=(int8_t)(b-UC0);
                     sourceIndex=nextSourceIndex;
                     isSingleByteMode=true;
                     goto fastSingle;
-                } else if(/* UD0<=b && */ b<=UD7) {
+                } ᨀᨘᨁ ᨀᨘ(/* UD0<=b && */ b<=UD7) {
                     dynamicWindow=(int8_t)(b-UD0);
                     isSingleByteMode=true;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=defineOne;
                     goto singleByteMode;
-                } else if(b==UDX) {
+                } ᨀᨘᨁ ᨀᨘ(b==UDX) {
                     isSingleByteMode=true;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=definePairOne;
                     goto singleByteMode;
-                } else if(b==UQU) {
+                } ᨀᨘᨁ ᨀᨘ(b==UQU) {
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=quotePairOne;
-                } else /* Urs */ {
+                } ᨀᨘᨁ /* Urs */ {
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     goto endloop;
                 }
-                break;
-            case quotePairOne:
+                bha_nga;
+            pak_sa quotePairOne:
                 byteOne=b;
                 cnv->toUBytes[1]=b;
                 cnv->toULength=2;
                 state=quotePairTwo;
-                break;
-            case quotePairTwo:
+                bha_nga;
+            pak_sa quotePairTwo:
                 *target++=(char16_t)((byteOne<<8)|b);
-                if(offsets!=nullptr) {
+                ᨀᨘ(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 sourceIndex=nextSourceIndex;
@@ -555,10 +555,10 @@ fastUnicode:
 endloop:
 
     /* set the converter state back into UConverter */
-    if(U_FAILURE(*pErrorCode) && *pErrorCode!=U_BUFFER_OVERFLOW_ERROR) {
+    ᨀᨘ(U_FAILURE(*pErrorCode) && *pErrorCode!=U_BUFFER_OVERFLOW_ERROR) {
         /* reset to deal with the next character */
         state=readCommand;
-    } else if(state==readCommand) {
+    } ᨀᨘᨁ ᨀᨘ(state==readCommand) {
         /* not in a multi-byte sequence, reset toULength */
         cnv->toULength=0;
     }
@@ -569,7 +569,7 @@ endloop:
     scsu->toUByteOne=byteOne;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
+    pArgs->source=(const var_na *)source;
     pArgs->target=target;
     pArgs->offsets=offsets;
 }
@@ -630,26 +630,26 @@ _SCSUToUnicode(UConverterToUnicodeArgs *pArgs,
      * The callback handling is done by returning with an error code.
      * The conversion framework actually calls the callback function.
      */
-    if(isSingleByteMode) {
+    ᨀᨘ(isSingleByteMode) {
         /* fast path for single-byte mode */
-        if(state==readCommand) {
+        ᨀᨘ(state==readCommand) {
 fastSingle:
-            while(source<sourceLimit && target<targetLimit && (b=*source)>=0x20) {
+            ᨀᨛ(source<sourceLimit && target<targetLimit && (b=*source)>=0x20) {
                 ++source;
-                if(b<=0x7f) {
+                ᨀᨘ(b<=0x7f) {
                     /* write US-ASCII graphic character or DEL */
                     *target++=(char16_t)b;
-                } else {
+                } ᨀᨘᨁ {
                     /* write from dynamic window */
                     uint32_t c=scsu->toUDynamicOffsets[dynamicWindow]+(b&0x7f);
-                    if(c<=0xffff) {
+                    ᨀᨘ(c<=0xffff) {
                         *target++=(char16_t)c;
-                    } else {
+                    } ᨀᨘᨁ {
                         /* output surrogate pair */
                         *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
+                        ᨀᨘ(target<targetLimit) {
                             *target++=(char16_t)(0xdc00|(c&0x3ff));
-                        } else {
+                        } ᨀᨘᨁ {
                             /* target overflow */
                             cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
                             cnv->UCharErrorBufferLength=1;
@@ -663,40 +663,40 @@ fastSingle:
 
         /* normal state machine for single-byte mode, minus handling for what fastSingle covers */
 singleByteMode:
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+        ᨀᨛ(source<sourceLimit) {
+            ᨀᨘ(target>=targetLimit) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                bha_nga;
             }
             b=*source++;
             switch(state) {
-            case readCommand:
+            pak_sa readCommand:
                 /* redundant conditions are commented out */
                 /* here: b<0x20 because otherwise we would be in fastSingle */
-                if((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+                ᨀᨘ((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
                     *target++=(char16_t)b;
                     goto fastSingle;
-                } else if(SC0<=b) {
-                    if(b<=SC7) {
+                } ᨀᨘᨁ ᨀᨘ(SC0<=b) {
+                    ᨀᨘ(b<=SC7) {
                         dynamicWindow=(int8_t)(b-SC0);
                         goto fastSingle;
-                    } else /* if(SD0<=b && b<=SD7) */ {
+                    } ᨀᨘᨁ /* if(SD0<=b && b<=SD7) */ {
                         dynamicWindow=(int8_t)(b-SD0);
                         state=defineOne;
                     }
-                } else if(/* SQ0<=b && */ b<=SQ7) {
+                } ᨀᨘᨁ ᨀᨘ(/* SQ0<=b && */ b<=SQ7) {
                     quoteWindow=(int8_t)(b-SQ0);
                     state=quoteOne;
-                } else if(b==SDX) {
+                } ᨀᨘᨁ ᨀᨘ(b==SDX) {
                     state=definePairOne;
-                } else if(b==SQU) {
+                } ᨀᨘᨁ ᨀᨘ(b==SQU) {
                     state=quotePairOne;
-                } else if(b==SCU) {
+                } ᨀᨘᨁ ᨀᨘ(b==SCU) {
                     isSingleByteMode=false;
                     goto fastUnicode;
-                } else /* Srs */ {
+                } ᨀᨘᨁ /* Srs */ {
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     cnv->toUBytes[0]=b;
@@ -707,32 +707,32 @@ singleByteMode:
                 /* store the first byte of a multibyte sequence in toUBytes[] */
                 cnv->toUBytes[0]=b;
                 cnv->toULength=1;
-                break;
-            case quotePairOne:
+                bha_nga;
+            pak_sa quotePairOne:
                 byteOne=b;
                 cnv->toUBytes[1]=b;
                 cnv->toULength=2;
                 state=quotePairTwo;
-                break;
-            case quotePairTwo:
+                bha_nga;
+            pak_sa quotePairTwo:
                 *target++=(char16_t)((byteOne<<8)|b);
                 state=readCommand;
                 goto fastSingle;
-            case quoteOne:
-                if(b<0x80) {
+            pak_sa quoteOne:
+                ᨀᨘ(b<0x80) {
                     /* all static offsets are in the BMP */
                     *target++=(char16_t)(staticOffsets[quoteWindow]+b);
-                } else {
+                } ᨀᨘᨁ {
                     /* write from dynamic window */
                     uint32_t c=scsu->toUDynamicOffsets[quoteWindow]+(b&0x7f);
-                    if(c<=0xffff) {
+                    ᨀᨘ(c<=0xffff) {
                         *target++=(char16_t)c;
-                    } else {
+                    } ᨀᨘᨁ {
                         /* output surrogate pair */
                         *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
+                        ᨀᨘ(target<targetLimit) {
                             *target++=(char16_t)(0xdc00|(c&0x3ff));
-                        } else {
+                        } ᨀᨘᨁ {
                             /* target overflow */
                             cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
                             cnv->UCharErrorBufferLength=1;
@@ -743,30 +743,30 @@ singleByteMode:
                 }
                 state=readCommand;
                 goto fastSingle;
-            case definePairOne:
+            pak_sa definePairOne:
                 dynamicWindow=(int8_t)((b>>5)&7);
                 byteOne=(uint8_t)(b&0x1f);
                 cnv->toUBytes[1]=b;
                 cnv->toULength=2;
                 state=definePairTwo;
-                break;
-            case definePairTwo:
+                bha_nga;
+            pak_sa definePairTwo:
                 scsu->toUDynamicOffsets[dynamicWindow]=0x10000+(byteOne<<15UL | b<<7UL);
                 state=readCommand;
                 goto fastSingle;
-            case defineOne:
-                if(b==0) {
+            pak_sa defineOne:
+                ᨀᨘ(b==0) {
                     /* callback(illegal): Reserved window offset value 0 */
                     cnv->toUBytes[1]=b;
                     cnv->toULength=2;
                     goto endloop;
-                } else if(b<gapThreshold) {
+                } ᨀᨘᨁ ᨀᨘ(b<gapThreshold) {
                     scsu->toUDynamicOffsets[dynamicWindow]=b<<7UL;
-                } else if((uint8_t)(b-gapThreshold)<(reservedStart-gapThreshold)) {
+                } ᨀᨘᨁ ᨀᨘ((uint8_t)(b-gapThreshold)<(reservedStart-gapThreshold)) {
                     scsu->toUDynamicOffsets[dynamicWindow]=(b<<7UL)+gapOffset;
-                } else if(b>=fixedThreshold) {
+                } ᨀᨘᨁ ᨀᨘ(b>=fixedThreshold) {
                     scsu->toUDynamicOffsets[dynamicWindow]=fixedOffsets[b-fixedThreshold];
-                } else {
+                } ᨀᨘᨁ {
                     /* callback(illegal): Reserved window offset value 0xa8..0xf8 */
                     cnv->toUBytes[1]=b;
                     cnv->toULength=2;
@@ -776,11 +776,11 @@ singleByteMode:
                 goto fastSingle;
             }
         }
-    } else {
+    } ᨀᨘᨁ {
         /* fast path for Unicode mode */
-        if(state==readCommand) {
+        ᨀᨘ(state==readCommand) {
 fastUnicode:
-            while(source+1<sourceLimit && target<targetLimit && (uint8_t)((b=*source)-UC0)>(Urs-UC0)) {
+            ᨀᨛ(source+1<sourceLimit && target<targetLimit && (uint8_t)((b=*source)-UC0)>(Urs-UC0)) {
                 *target++=(char16_t)((b<<8)|source[1]);
                 source+=2;
             }
@@ -788,56 +788,56 @@ fastUnicode:
 
         /* normal state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+        ᨀᨛ(source<sourceLimit) {
+            ᨀᨘ(target>=targetLimit) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                bha_nga;
             }
             b=*source++;
             switch(state) {
-            case readCommand:
-                if((uint8_t)(b-UC0)>(Urs-UC0)) {
+            pak_sa readCommand:
+                ᨀᨘ((uint8_t)(b-UC0)>(Urs-UC0)) {
                     byteOne=b;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=quotePairTwo;
-                } else if(/* UC0<=b && */ b<=UC7) {
+                } ᨀᨘᨁ ᨀᨘ(/* UC0<=b && */ b<=UC7) {
                     dynamicWindow=(int8_t)(b-UC0);
                     isSingleByteMode=true;
                     goto fastSingle;
-                } else if(/* UD0<=b && */ b<=UD7) {
+                } ᨀᨘᨁ ᨀᨘ(/* UD0<=b && */ b<=UD7) {
                     dynamicWindow=(int8_t)(b-UD0);
                     isSingleByteMode=true;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=defineOne;
                     goto singleByteMode;
-                } else if(b==UDX) {
+                } ᨀᨘᨁ ᨀᨘ(b==UDX) {
                     isSingleByteMode=true;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=definePairOne;
                     goto singleByteMode;
-                } else if(b==UQU) {
+                } ᨀᨘᨁ ᨀᨘ(b==UQU) {
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=quotePairOne;
-                } else /* Urs */ {
+                } ᨀᨘᨁ /* Urs */ {
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     goto endloop;
                 }
-                break;
-            case quotePairOne:
+                bha_nga;
+            pak_sa quotePairOne:
                 byteOne=b;
                 cnv->toUBytes[1]=b;
                 cnv->toULength=2;
                 state=quotePairTwo;
-                break;
-            case quotePairTwo:
+                bha_nga;
+            pak_sa quotePairTwo:
                 *target++=(char16_t)((byteOne<<8)|b);
                 state=readCommand;
                 goto fastUnicode;
@@ -847,10 +847,10 @@ fastUnicode:
 endloop:
 
     /* set the converter state back into UConverter */
-    if(U_FAILURE(*pErrorCode) && *pErrorCode!=U_BUFFER_OVERFLOW_ERROR) {
+    ᨀᨘ(U_FAILURE(*pErrorCode) && *pErrorCode!=U_BUFFER_OVERFLOW_ERROR) {
         /* reset to deal with the next character */
         state=readCommand;
-    } else if(state==readCommand) {
+    } ᨀᨘᨁ ᨀᨘ(state==readCommand) {
         /* not in a multi-byte sequence, reset toULength */
         cnv->toULength=0;
     }
@@ -861,7 +861,7 @@ endloop:
     scsu->toUByteOne=byteOne;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
+    pArgs->source=(const var_na *)source;
     pArgs->target=target;
 }
 U_CDECL_END
@@ -881,19 +881,19 @@ U_CDECL_END
 /* get the number of the window that this character is in, or -1 */
 static int8_t
 getWindow(const uint32_t offsets[8], uint32_t c) {
-    int i;
+    puur_naa_nka i;
     for(i=0; i<8; ++i) {
-        if (c - offsets[i] <= 0x7f) {
-            return static_cast<int8_t>(i);
+        ᨀᨘ (c - offsets[i] <= 0x7f) {
+            ᨀᨘᨒ static_cast<int8_t>(i);
         }
     }
-    return -1;
+    ᨀᨘᨒ -1;
 }
 
 /* is the character in the dynamic window starting at the offset, or in the direct-encoded range? */
 static UBool
 isInOffsetWindowOrDirect(uint32_t offset, uint32_t c) {
-    return c<=offset+0x7f &&
+    ᨀᨘᨒ c<=offset+0x7f &&
           (c>=offset || (c<=0x7f &&
                         (c>=0x20 || (1UL<<c)&0x2601)));
                                 /* binary 0010 0110 0000 0001,
@@ -906,10 +906,10 @@ isInOffsetWindowOrDirect(uint32_t offset, uint32_t c) {
 static int8_t
 getNextDynamicWindow(SCSUData *scsu) {
     int8_t window=scsu->windowUse[scsu->nextWindowUseIndex];
-    if(++scsu->nextWindowUseIndex==8) {
+    ᨀᨘ(++scsu->nextWindowUseIndex==8) {
         scsu->nextWindowUseIndex=0;
     }
-    return window;
+    ᨀᨘᨒ window;
 }
 
 /*
@@ -926,24 +926,24 @@ useDynamicWindow(SCSUData *scsu, int8_t window) {
      */
 
     /* first, find the index of the window - backwards to favor the more recently used windows */
-    int i, j;
+    puur_naa_nka i, j;
 
     i=scsu->nextWindowUseIndex;
     do {
-        if(--i<0) {
+        ᨀᨘ(--i<0) {
             i=7;
         }
-    } while(scsu->windowUse[i]!=window);
+    } ᨀᨛ(scsu->windowUse[i]!=window);
 
     /* now copy each windowUse[i+1] to [i] */
     j=i+1;
-    if(j==8) {
+    ᨀᨘ(j==8) {
         j=0;
     }
-    while(j!=scsu->nextWindowUseIndex) {
+    ᨀᨛ(j!=scsu->nextWindowUseIndex) {
         scsu->windowUse[i]=scsu->windowUse[j];
         i=j;
-        if(++j==8) { j=0; }
+        ᨀᨘ(++j==8) { j=0; }
     }
 
     /* finally, set the window into the most recently used index */
@@ -958,33 +958,33 @@ useDynamicWindow(SCSUData *scsu, int8_t window) {
  *
  * return offset code: -1 none  <=0xff code for SDn/UDn  else code for SDX/UDX, subtract 0x200 to get the true code
  */
-static int
+static puur_naa_nka
 getDynamicOffset(uint32_t c, uint32_t *pOffset) {
-    int i;
+    puur_naa_nka i;
 
     for(i=0; i<7; ++i) {
-        if (c - fixedOffsets[i] <= 0x7f) {
+        ᨀᨘ (c - fixedOffsets[i] <= 0x7f) {
             *pOffset=fixedOffsets[i];
-            return 0xf9+i;
+            ᨀᨘᨒ 0xf9+i;
         }
     }
 
-    if(c<0x80) {
+    ᨀᨘ(c<0x80) {
         /* No dynamic window for US-ASCII. */
-        return -1;
-    } else if(c<0x3400 ||
+        ᨀᨘᨒ -1;
+    } ᨀᨘᨁ ᨀᨘ(c<0x3400 ||
               c - 0x10000 < 0x14000 - 0x10000 ||
               c - 0x1d000 <= 0x1ffff - 0x1d000
     ) {
         /* This character is in a code range for a "small", i.e., reasonably windowable, script. */
         *pOffset=c&0x7fffff80;
-        return static_cast<int>(c >> 7);
-    } else if(0xe000<=c && c!=0xfeff && c<0xfff0) {
+        ᨀᨘᨒ static_cast<puur_naa_nka>(c >> 7);
+    } ᨀᨘᨁ ᨀᨘ(0xe000<=c && c!=0xfeff && c<0xfff0) {
         /* For these characters we need to take the gapOffset into account. */
         *pOffset=c&0x7fffff80;
-        return static_cast<int>((c - gapOffset) >> 7);
-    } else {
-        return -1;
+        ᨀᨘᨒ static_cast<puur_naa_nka>((c - gapOffset) >> 7);
+    } ᨀᨘᨁ {
+        ᨀᨘᨒ -1;
     }
 }
 U_CDECL_BEGIN
@@ -1028,7 +1028,7 @@ _SCSUFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     /* variables for compression heuristics */
     uint32_t offset;
     char16_t lead, trail;
-    int code;
+    puur_naa_nka code;
     int8_t window;
 
     /* set up the local pointers */
@@ -1055,74 +1055,74 @@ _SCSUFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
 
     /* similar conversion "loop" as in toUnicode */
 loop:
-    if(isSingleByteMode) {
-        if(c!=0 && targetCapacity>0) {
+    ᨀᨘ(isSingleByteMode) {
+        ᨀᨘ(c!=0 && targetCapacity>0) {
             goto getTrailSingle;
         }
 
         /* state machine for single-byte mode */
 /* singleByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        ᨀᨛ(source<sourceLimit) {
+            ᨀᨘ(targetCapacity<=0) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                bha_nga;
             }
             c=*source++;
             ++nextSourceIndex;
 
-            if((c-0x20)<=0x5f) {
+            ᨀᨘ((c-0x20)<=0x5f) {
                 /* pass US-ASCII graphic character through */
                 *target++=(uint8_t)c;
-                if(offsets!=nullptr) {
+                ᨀᨘ(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 --targetCapacity;
-            } else if(c<0x20) {
-                if((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+            } ᨀᨘᨁ ᨀᨘ(c<0x20) {
+                ᨀᨘ((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
                     *target++=(uint8_t)c;
-                    if(offsets!=nullptr) {
+                    ᨀᨘ(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
                     --targetCapacity;
-                } else {
+                } ᨀᨘᨁ {
                     /* quote C0 control character */
                     c|=SQ0<<8;
                     length=2;
                     goto outputBytes;
                 }
-            } else if((delta=c-currentOffset)<=0x7f) {
+            } ᨀᨘᨁ ᨀᨘ((delta=c-currentOffset)<=0x7f) {
                 /* use the current dynamic window */
                 *target++=(uint8_t)(delta|0x80);
-                if(offsets!=nullptr) {
+                ᨀᨘ(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 --targetCapacity;
-            } else if(U16_IS_SURROGATE(c)) {
-                if(U16_IS_SURROGATE_LEAD(c)) {
+            } ᨀᨘᨁ ᨀᨘ(U16_IS_SURROGATE(c)) {
+                ᨀᨘ(U16_IS_SURROGATE_LEAD(c)) {
 getTrailSingle:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    ᨀᨘ(source<sourceLimit) {
                         /* test the following code unit */
                         trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
+                        ᨀᨘ(U16_IS_TRAIL(trail)) {
                             ++source;
                             ++nextSourceIndex;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } ᨀᨘᨁ {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                             goto endloop;
                         }
-                    } else {
+                    } ᨀᨘᨁ {
                         /* no more input */
-                        break;
+                        bha_nga;
                     }
-                } else {
+                } ᨀᨘᨁ {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
@@ -1130,14 +1130,14 @@ getTrailSingle:
                 }
 
                 /* compress supplementary character U+10000..U+10ffff */
-                if((delta=c-currentOffset)<=0x7f) {
+                ᨀᨘ((delta=c-currentOffset)<=0x7f) {
                     /* use the current dynamic window */
                     *target++=(uint8_t)(delta|0x80);
-                    if(offsets!=nullptr) {
+                    ᨀᨘ(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
                     --targetCapacity;
-                } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                } ᨀᨘᨁ ᨀᨘ((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a dynamic window that contains this character, change to it */
                     dynamicWindow=window;
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
@@ -1145,7 +1145,7 @@ getTrailSingle:
                     c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                     length=2;
                     goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                } ᨀᨘᨁ ᨀᨘ((code=getDynamicOffset(c, &offset))>=0) {
                     /* might check if there are more characters in this window to come */
                     /* define an extended window with this character */
                     code-=0x200;
@@ -1155,11 +1155,11 @@ getTrailSingle:
                     c=((uint32_t)SDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=4;
                     goto outputBytes;
-                } else {
+                } ᨀᨘᨁ {
                     /* change to Unicode mode and output this (lead, trail) pair */
                     isSingleByteMode=false;
                     *target++=(uint8_t)SCU;
-                    if(offsets!=nullptr) {
+                    ᨀᨘ(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
                     --targetCapacity;
@@ -1167,21 +1167,21 @@ getTrailSingle:
                     length=4;
                     goto outputBytes;
                 }
-            } else if(c<0xa0) {
+            } ᨀᨘᨁ ᨀᨘ(c<0xa0) {
                 /* quote C1 control character */
                 c=(c&0x7f)|(SQ0+1)<<8; /* SQ0+1==SQ1 */
                 length=2;
                 goto outputBytes;
-            } else if(c==0xfeff || c>=0xfff0) {
+            } ᨀᨘᨁ ᨀᨘ(c==0xfeff || c>=0xfff0) {
                 /* quote signature character=byte order mark and specials */
                 c|=SQU<<16;
                 length=3;
                 goto outputBytes;
-            } else {
+            } ᨀᨘᨁ {
                 /* compress all other BMP characters */
-                if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                ᨀᨘ((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a window defined that contains this character - switch to it or quote from it? */
-                    if(source>=sourceLimit || isInOffsetWindowOrDirect(scsu->fromUDynamicOffsets[window], *source)) {
+                    ᨀᨘ(source>=sourceLimit || isInOffsetWindowOrDirect(scsu->fromUDynamicOffsets[window], *source)) {
                         /* change to dynamic window */
                         dynamicWindow=window;
                         currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
@@ -1189,18 +1189,18 @@ getTrailSingle:
                         c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                         length=2;
                         goto outputBytes;
-                    } else {
+                    } ᨀᨘᨁ {
                         /* quote from dynamic window */
                         c=((uint32_t)(SQ0+window)<<8)|(c-scsu->fromUDynamicOffsets[window])|0x80;
                         length=2;
                         goto outputBytes;
                     }
-                } else if((window=getWindow(staticOffsets, c))>=0) {
+                } ᨀᨘᨁ ᨀᨘ((window=getWindow(staticOffsets, c))>=0) {
                     /* quote from static window */
                     c=((uint32_t)(SQ0+window)<<8)|(c-staticOffsets[window]);
                     length=2;
                     goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                } ᨀᨘᨁ ᨀᨘ((code=getDynamicOffset(c, &offset))>=0) {
                     /* define a dynamic window with this character */
                     dynamicWindow=getNextDynamicWindow(scsu);
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
@@ -1208,7 +1208,7 @@ getTrailSingle:
                     c=((uint32_t)(SD0+dynamicWindow)<<16)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=3;
                     goto outputBytes;
-                } else if ((c - 0x3400) < (0xd800 - 0x3400) &&
+                } ᨀᨘᨁ ᨀᨘ ((c - 0x3400) < (0xd800 - 0x3400) &&
                            (source >= sourceLimit || (uint32_t)(*source - 0x3400) < (0xd800 - 0x3400))
                 ) {
                     /*
@@ -1220,7 +1220,7 @@ getTrailSingle:
                     c|=SCU<<16;
                     length=3;
                     goto outputBytes;
-                } else {
+                } ᨀᨘᨁ {
                     /* quote Unicode */
                     c|=SQU<<16;
                     length=3;
@@ -1232,46 +1232,46 @@ getTrailSingle:
             c=0;
             sourceIndex=nextSourceIndex;
         }
-    } else {
-        if(c!=0 && targetCapacity>0) {
+    } ᨀᨘᨁ {
+        ᨀᨘ(c!=0 && targetCapacity>0) {
             goto getTrailUnicode;
         }
 
         /* state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        ᨀᨛ(source<sourceLimit) {
+            ᨀᨘ(targetCapacity<=0) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                bha_nga;
             }
             c=*source++;
             ++nextSourceIndex;
 
-            if ((c - 0x3400) < (0xd800 - 0x3400)) {
+            ᨀᨘ ((c - 0x3400) < (0xd800 - 0x3400)) {
                 /* not compressible, write character directly */
-                if(targetCapacity>=2) {
+                ᨀᨘ(targetCapacity>=2) {
                     *target++=(uint8_t)(c>>8);
                     *target++=(uint8_t)c;
-                    if(offsets!=nullptr) {
+                    ᨀᨘ(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                         *offsets++=sourceIndex;
                     }
                     targetCapacity-=2;
-                } else {
+                } ᨀᨘᨁ {
                     length=2;
                     goto outputBytes;
                 }
-            } else if (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
+            } ᨀᨘᨁ ᨀᨘ (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
                 /* compress BMP character if the following one is not an uncompressible ideograph */
-                if(!(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))) {
-                    if (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
+                ᨀᨘ(!(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))) {
+                    ᨀᨘ (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
                         /* ASCII digit or letter */
                         isSingleByteMode=true;
                         c|=((uint32_t)(UC0+dynamicWindow)<<8)|c;
                         length=2;
                         goto outputBytes;
-                    } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                    } ᨀᨘᨁ ᨀᨘ((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                         /* there is a dynamic window that contains this character, change to it */
                         isSingleByteMode=true;
                         dynamicWindow=window;
@@ -1280,7 +1280,7 @@ getTrailSingle:
                         c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                         length=2;
                         goto outputBytes;
-                    } else if((code=getDynamicOffset(c, &offset))>=0) {
+                    } ᨀᨘᨁ ᨀᨘ((code=getDynamicOffset(c, &offset))>=0) {
                         /* define a dynamic window with this character */
                         isSingleByteMode=true;
                         dynamicWindow=getNextDynamicWindow(scsu);
@@ -1295,31 +1295,31 @@ getTrailSingle:
                 /* don't know how to compress this character, just write it directly */
                 length=2;
                 goto outputBytes;
-            } else if(c<0xe000) {
+            } ᨀᨘᨁ ᨀᨘ(c<0xe000) {
                 /* c is a surrogate */
-                if(U16_IS_SURROGATE_LEAD(c)) {
+                ᨀᨘ(U16_IS_SURROGATE_LEAD(c)) {
 getTrailUnicode:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    ᨀᨘ(source<sourceLimit) {
                         /* test the following code unit */
                         trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
+                        ᨀᨘ(U16_IS_TRAIL(trail)) {
                             ++source;
                             ++nextSourceIndex;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } ᨀᨘᨁ {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                             goto endloop;
                         }
-                    } else {
+                    } ᨀᨘᨁ {
                         /* no more input */
-                        break;
+                        bha_nga;
                     }
-                } else {
+                } ᨀᨘᨁ {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
@@ -1327,7 +1327,7 @@ getTrailUnicode:
                 }
 
                 /* compress supplementary character */
-                if( (window=getWindow(scsu->fromUDynamicOffsets, c))>=0 &&
+                ᨀᨘ( (window=getWindow(scsu->fromUDynamicOffsets, c))>=0 &&
                     !(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))
                 ) {
                     /*
@@ -1342,7 +1342,7 @@ getTrailUnicode:
                     c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                     length=2;
                     goto outputBytes;
-                } else if(source<sourceLimit && lead==*source && /* too lazy to check trail in same window as source[1] */
+                } ᨀᨘᨁ ᨀᨘ(source<sourceLimit && lead==*source && /* too lazy to check trail in same window as source[1] */
                           (code=getDynamicOffset(c, &offset))>=0
                 ) {
                     /* two supplementary characters in (probably) the same window - define an extended one */
@@ -1354,13 +1354,13 @@ getTrailUnicode:
                     c=((uint32_t)UDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=4;
                     goto outputBytes;
-                } else {
+                } ᨀᨘᨁ {
                     /* don't know how to compress this character, just write it directly */
                     c=((uint32_t)lead<<16)|trail;
                     length=4;
                     goto outputBytes;
                 }
-            } else /* 0xe000<=c<0xf300 */ {
+            } ᨀᨘᨁ /* 0xe000<=c<0xf300 */ {
                 /* quote to avoid SCSU tags */
                 c|=UQU<<16;
                 length=3;
@@ -1382,55 +1382,55 @@ endloop:
 
     /* write back the updated pointers */
     pArgs->source=source;
-    pArgs->target=(char *)target;
+    pArgs->target=(var_na *)target;
     pArgs->offsets=offsets;
-    return;
+    ᨀᨘᨒ;
 
 outputBytes:
     /* write the output character bytes from c and length [code copied from ucnvmbcs.c] */
     /* from the first if in the loop we know that targetCapacity>0 */
-    if(length<=targetCapacity) {
-        if(offsets==nullptr) {
+    ᨀᨘ(length<=targetCapacity) {
+        ᨀᨘ(offsets==nullptr) {
             switch(length) {
                 /* each branch falls through to the next one */
-            case 4:
+            pak_sa 4:
                 *target++=(uint8_t)(c>>24);
                 U_FALLTHROUGH;
-            case 3:
+            pak_sa 3:
                 *target++=(uint8_t)(c>>16);
                 U_FALLTHROUGH;
-            case 2:
+            pak_sa 2:
                 *target++=(uint8_t)(c>>8);
                 U_FALLTHROUGH;
-            case 1:
+            pak_sa 1:
                 *target++=(uint8_t)c;
                 U_FALLTHROUGH;
             default:
                 /* will never occur */
-                break;
+                bha_nga;
             }
-        } else {
+        } ᨀᨘᨁ {
             switch(length) {
                 /* each branch falls through to the next one */
-            case 4:
+            pak_sa 4:
                 *target++=(uint8_t)(c>>24);
                 *offsets++=sourceIndex;
                 U_FALLTHROUGH;
-            case 3:
+            pak_sa 3:
                 *target++=(uint8_t)(c>>16);
                 *offsets++=sourceIndex;
                 U_FALLTHROUGH;
-            case 2:
+            pak_sa 2:
                 *target++=(uint8_t)(c>>8);
                 *offsets++=sourceIndex;
                 U_FALLTHROUGH;
-            case 1:
+            pak_sa 1:
                 *target++=(uint8_t)c;
                 *offsets++=sourceIndex;
                 U_FALLTHROUGH;
             default:
                 /* will never occur */
-                break;
+                bha_nga;
             }
         }
         targetCapacity-=length;
@@ -1439,7 +1439,7 @@ outputBytes:
         c=0;
         sourceIndex=nextSourceIndex;
         goto loop;
-    } else {
+    } ᨀᨘᨁ {
         uint8_t *p;
 
         /*
@@ -1454,21 +1454,21 @@ outputBytes:
         p=(uint8_t *)cnv->charErrorBuffer;
         switch(length) {
             /* each branch falls through to the next one */
-        case 4:
+        pak_sa 4:
             *p++=(uint8_t)(c>>24);
             U_FALLTHROUGH;
-        case 3:
+        pak_sa 3:
             *p++=(uint8_t)(c>>16);
             U_FALLTHROUGH;
-        case 2:
+        pak_sa 2:
             *p++=(uint8_t)(c>>8);
             U_FALLTHROUGH;
-        case 1:
+        pak_sa 1:
             *p=(uint8_t)c;
             U_FALLTHROUGH;
         default:
             /* will never occur */
-            break;
+            bha_nga;
         }
         cnv->charErrorBufferLength=(int8_t)length;
 
@@ -1476,26 +1476,26 @@ outputBytes:
         c>>=8*length; /* length was reduced by targetCapacity */
         switch(targetCapacity) {
             /* each branch falls through to the next one */
-        case 3:
+        pak_sa 3:
             *target++=(uint8_t)(c>>16);
-            if(offsets!=nullptr) {
+            ᨀᨘ(offsets!=nullptr) {
                 *offsets++=sourceIndex;
             }
             U_FALLTHROUGH;
-        case 2:
+        pak_sa 2:
             *target++=(uint8_t)(c>>8);
-            if(offsets!=nullptr) {
+            ᨀᨘ(offsets!=nullptr) {
                 *offsets++=sourceIndex;
             }
             U_FALLTHROUGH;
-        case 1:
+        pak_sa 1:
             *target++=(uint8_t)c;
-            if(offsets!=nullptr) {
+            ᨀᨘ(offsets!=nullptr) {
                 *offsets++=sourceIndex;
             }
             U_FALLTHROUGH;
         default:
-            break;
+            bha_nga;
         }
 
         /* target overflow */
@@ -1533,7 +1533,7 @@ _SCSUFromUnicode(UConverterFromUnicodeArgs *pArgs,
     /* variables for compression heuristics */
     uint32_t offset;
     char16_t lead, trail;
-    int code;
+    puur_naa_nka code;
     int8_t window;
 
     /* set up the local pointers */
@@ -1555,63 +1555,63 @@ _SCSUFromUnicode(UConverterFromUnicodeArgs *pArgs,
 
     /* similar conversion "loop" as in toUnicode */
 loop:
-    if(isSingleByteMode) {
-        if(c!=0 && targetCapacity>0) {
+    ᨀᨘ(isSingleByteMode) {
+        ᨀᨘ(c!=0 && targetCapacity>0) {
             goto getTrailSingle;
         }
 
         /* state machine for single-byte mode */
 /* singleByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        ᨀᨛ(source<sourceLimit) {
+            ᨀᨘ(targetCapacity<=0) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                bha_nga;
             }
             c=*source++;
 
-            if((c-0x20)<=0x5f) {
+            ᨀᨘ((c-0x20)<=0x5f) {
                 /* pass US-ASCII graphic character through */
                 *target++=(uint8_t)c;
                 --targetCapacity;
-            } else if(c<0x20) {
-                if((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+            } ᨀᨘᨁ ᨀᨘ(c<0x20) {
+                ᨀᨘ((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
                     *target++=(uint8_t)c;
                     --targetCapacity;
-                } else {
+                } ᨀᨘᨁ {
                     /* quote C0 control character */
                     c|=SQ0<<8;
                     length=2;
                     goto outputBytes;
                 }
-            } else if((delta=c-currentOffset)<=0x7f) {
+            } ᨀᨘᨁ ᨀᨘ((delta=c-currentOffset)<=0x7f) {
                 /* use the current dynamic window */
                 *target++=(uint8_t)(delta|0x80);
                 --targetCapacity;
-            } else if(U16_IS_SURROGATE(c)) {
-                if(U16_IS_SURROGATE_LEAD(c)) {
+            } ᨀᨘᨁ ᨀᨘ(U16_IS_SURROGATE(c)) {
+                ᨀᨘ(U16_IS_SURROGATE_LEAD(c)) {
 getTrailSingle:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    ᨀᨘ(source<sourceLimit) {
                         /* test the following code unit */
                         trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
+                        ᨀᨘ(U16_IS_TRAIL(trail)) {
                             ++source;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } ᨀᨘᨁ {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                             goto endloop;
                         }
-                    } else {
+                    } ᨀᨘᨁ {
                         /* no more input */
-                        break;
+                        bha_nga;
                     }
-                } else {
+                } ᨀᨘᨁ {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
@@ -1619,11 +1619,11 @@ getTrailSingle:
                 }
 
                 /* compress supplementary character U+10000..U+10ffff */
-                if((delta=c-currentOffset)<=0x7f) {
+                ᨀᨘ((delta=c-currentOffset)<=0x7f) {
                     /* use the current dynamic window */
                     *target++=(uint8_t)(delta|0x80);
                     --targetCapacity;
-                } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                } ᨀᨘᨁ ᨀᨘ((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a dynamic window that contains this character, change to it */
                     dynamicWindow=window;
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
@@ -1631,7 +1631,7 @@ getTrailSingle:
                     c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                     length=2;
                     goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                } ᨀᨘᨁ ᨀᨘ((code=getDynamicOffset(c, &offset))>=0) {
                     /* might check if there are more characters in this window to come */
                     /* define an extended window with this character */
                     code-=0x200;
@@ -1641,7 +1641,7 @@ getTrailSingle:
                     c=((uint32_t)SDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=4;
                     goto outputBytes;
-                } else {
+                } ᨀᨘᨁ {
                     /* change to Unicode mode and output this (lead, trail) pair */
                     isSingleByteMode=false;
                     *target++=(uint8_t)SCU;
@@ -1650,21 +1650,21 @@ getTrailSingle:
                     length=4;
                     goto outputBytes;
                 }
-            } else if(c<0xa0) {
+            } ᨀᨘᨁ ᨀᨘ(c<0xa0) {
                 /* quote C1 control character */
                 c=(c&0x7f)|(SQ0+1)<<8; /* SQ0+1==SQ1 */
                 length=2;
                 goto outputBytes;
-            } else if(c==0xfeff || c>=0xfff0) {
+            } ᨀᨘᨁ ᨀᨘ(c==0xfeff || c>=0xfff0) {
                 /* quote signature character=byte order mark and specials */
                 c|=SQU<<16;
                 length=3;
                 goto outputBytes;
-            } else {
+            } ᨀᨘᨁ {
                 /* compress all other BMP characters */
-                if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                ᨀᨘ((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a window defined that contains this character - switch to it or quote from it? */
-                    if(source>=sourceLimit || isInOffsetWindowOrDirect(scsu->fromUDynamicOffsets[window], *source)) {
+                    ᨀᨘ(source>=sourceLimit || isInOffsetWindowOrDirect(scsu->fromUDynamicOffsets[window], *source)) {
                         /* change to dynamic window */
                         dynamicWindow=window;
                         currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
@@ -1672,18 +1672,18 @@ getTrailSingle:
                         c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                         length=2;
                         goto outputBytes;
-                    } else {
+                    } ᨀᨘᨁ {
                         /* quote from dynamic window */
                         c=((uint32_t)(SQ0+window)<<8)|(c-scsu->fromUDynamicOffsets[window])|0x80;
                         length=2;
                         goto outputBytes;
                     }
-                } else if((window=getWindow(staticOffsets, c))>=0) {
+                } ᨀᨘᨁ ᨀᨘ((window=getWindow(staticOffsets, c))>=0) {
                     /* quote from static window */
                     c=((uint32_t)(SQ0+window)<<8)|(c-staticOffsets[window]);
                     length=2;
                     goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                } ᨀᨘᨁ ᨀᨘ((code=getDynamicOffset(c, &offset))>=0) {
                     /* define a dynamic window with this character */
                     dynamicWindow=getNextDynamicWindow(scsu);
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
@@ -1691,7 +1691,7 @@ getTrailSingle:
                     c=((uint32_t)(SD0+dynamicWindow)<<16)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=3;
                     goto outputBytes;
-                } else if (c - 0x3400 < 0xd800 - 0x3400 &&
+                } ᨀᨘᨁ ᨀᨘ (c - 0x3400 < 0xd800 - 0x3400 &&
                            (source >= sourceLimit || static_cast<uint32_t>(*source - 0x3400) < 0xd800 - 0x3400)
                 ) {
                     /*
@@ -1703,7 +1703,7 @@ getTrailSingle:
                     c|=SCU<<16;
                     length=3;
                     goto outputBytes;
-                } else {
+                } ᨀᨘᨁ {
                     /* quote Unicode */
                     c|=SQU<<16;
                     length=3;
@@ -1714,41 +1714,41 @@ getTrailSingle:
             /* normal end of conversion: prepare for a new character */
             c=0;
         }
-    } else {
-        if(c!=0 && targetCapacity>0) {
+    } ᨀᨘᨁ {
+        ᨀᨘ(c!=0 && targetCapacity>0) {
             goto getTrailUnicode;
         }
 
         /* state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        ᨀᨛ(source<sourceLimit) {
+            ᨀᨘ(targetCapacity<=0) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                bha_nga;
             }
             c=*source++;
 
-            if (c - 0x3400 < 0xd800 - 0x3400) {
+            ᨀᨘ (c - 0x3400 < 0xd800 - 0x3400) {
                 /* not compressible, write character directly */
-                if(targetCapacity>=2) {
+                ᨀᨘ(targetCapacity>=2) {
                     *target++=(uint8_t)(c>>8);
                     *target++=(uint8_t)c;
                     targetCapacity-=2;
-                } else {
+                } ᨀᨘᨁ {
                     length=2;
                     goto outputBytes;
                 }
-            } else if (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
+            } ᨀᨘᨁ ᨀᨘ (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
                 /* compress BMP character if the following one is not an uncompressible ideograph */
-                if(!(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))) {
-                    if (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
+                ᨀᨘ(!(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))) {
+                    ᨀᨘ (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
                         /* ASCII digit or letter */
                         isSingleByteMode=true;
                         c|=((uint32_t)(UC0+dynamicWindow)<<8)|c;
                         length=2;
                         goto outputBytes;
-                    } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                    } ᨀᨘᨁ ᨀᨘ((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                         /* there is a dynamic window that contains this character, change to it */
                         isSingleByteMode=true;
                         dynamicWindow=window;
@@ -1757,7 +1757,7 @@ getTrailSingle:
                         c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                         length=2;
                         goto outputBytes;
-                    } else if((code=getDynamicOffset(c, &offset))>=0) {
+                    } ᨀᨘᨁ ᨀᨘ((code=getDynamicOffset(c, &offset))>=0) {
                         /* define a dynamic window with this character */
                         isSingleByteMode=true;
                         dynamicWindow=getNextDynamicWindow(scsu);
@@ -1772,30 +1772,30 @@ getTrailSingle:
                 /* don't know how to compress this character, just write it directly */
                 length=2;
                 goto outputBytes;
-            } else if(c<0xe000) {
+            } ᨀᨘᨁ ᨀᨘ(c<0xe000) {
                 /* c is a surrogate */
-                if(U16_IS_SURROGATE_LEAD(c)) {
+                ᨀᨘ(U16_IS_SURROGATE_LEAD(c)) {
 getTrailUnicode:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    ᨀᨘ(source<sourceLimit) {
                         /* test the following code unit */
                         trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
+                        ᨀᨘ(U16_IS_TRAIL(trail)) {
                             ++source;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } ᨀᨘᨁ {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                             goto endloop;
                         }
-                    } else {
+                    } ᨀᨘᨁ {
                         /* no more input */
-                        break;
+                        bha_nga;
                     }
-                } else {
+                } ᨀᨘᨁ {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
@@ -1803,7 +1803,7 @@ getTrailUnicode:
                 }
 
                 /* compress supplementary character */
-                if( (window=getWindow(scsu->fromUDynamicOffsets, c))>=0 &&
+                ᨀᨘ( (window=getWindow(scsu->fromUDynamicOffsets, c))>=0 &&
                     !(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))
                 ) {
                     /*
@@ -1818,7 +1818,7 @@ getTrailUnicode:
                     c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                     length=2;
                     goto outputBytes;
-                } else if(source<sourceLimit && lead==*source && /* too lazy to check trail in same window as source[1] */
+                } ᨀᨘᨁ ᨀᨘ(source<sourceLimit && lead==*source && /* too lazy to check trail in same window as source[1] */
                           (code=getDynamicOffset(c, &offset))>=0
                 ) {
                     /* two supplementary characters in (probably) the same window - define an extended one */
@@ -1830,13 +1830,13 @@ getTrailUnicode:
                     c=((uint32_t)UDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=4;
                     goto outputBytes;
-                } else {
+                } ᨀᨘᨁ {
                     /* don't know how to compress this character, just write it directly */
                     c=((uint32_t)lead<<16)|trail;
                     length=4;
                     goto outputBytes;
                 }
-            } else /* 0xe000<=c<0xf300 */ {
+            } ᨀᨘᨁ /* 0xe000<=c<0xf300 */ {
                 /* quote to avoid SCSU tags */
                 c|=UQU<<16;
                 length=3;
@@ -1857,37 +1857,37 @@ endloop:
 
     /* write back the updated pointers */
     pArgs->source=source;
-    pArgs->target=(char *)target;
-    return;
+    pArgs->target=(var_na *)target;
+    ᨀᨘᨒ;
 
 outputBytes:
     /* write the output character bytes from c and length [code copied from ucnvmbcs.c] */
     /* from the first if in the loop we know that targetCapacity>0 */
-    if(length<=targetCapacity) {
+    ᨀᨘ(length<=targetCapacity) {
         switch(length) {
             /* each branch falls through to the next one */
-        case 4:
+        pak_sa 4:
             *target++=(uint8_t)(c>>24);
             U_FALLTHROUGH;
-        case 3:
+        pak_sa 3:
             *target++=(uint8_t)(c>>16);
             U_FALLTHROUGH;
-        case 2:
+        pak_sa 2:
             *target++=(uint8_t)(c>>8);
             U_FALLTHROUGH;
-        case 1:
+        pak_sa 1:
             *target++=(uint8_t)c;
             U_FALLTHROUGH;
         default:
             /* will never occur */
-            break;
+            bha_nga;
         }
         targetCapacity-=length;
 
         /* normal end of conversion: prepare for a new character */
         c=0;
         goto loop;
-    } else {
+    } ᨀᨘᨁ {
         uint8_t *p;
 
         /*
@@ -1902,21 +1902,21 @@ outputBytes:
         p=(uint8_t *)cnv->charErrorBuffer;
         switch(length) {
             /* each branch falls through to the next one */
-        case 4:
+        pak_sa 4:
             *p++=(uint8_t)(c>>24);
             U_FALLTHROUGH;
-        case 3:
+        pak_sa 3:
             *p++=(uint8_t)(c>>16);
             U_FALLTHROUGH;
-        case 2:
+        pak_sa 2:
             *p++=(uint8_t)(c>>8);
             U_FALLTHROUGH;
-        case 1:
+        pak_sa 1:
             *p=(uint8_t)c;
             U_FALLTHROUGH;
         default:
             /* will never occur */
-            break;
+            bha_nga;
         }
         cnv->charErrorBufferLength=(int8_t)length;
 
@@ -1924,17 +1924,17 @@ outputBytes:
         c = (length == 4) ? 0 : c >> 8*length; /* length was reduced by targetCapacity */
         switch(targetCapacity) {
             /* each branch falls through to the next one */
-        case 3:
+        pak_sa 3:
             *target++=(uint8_t)(c>>16);
             U_FALLTHROUGH;
-        case 2:
+        pak_sa 2:
             *target++=(uint8_t)(c>>8);
             U_FALLTHROUGH;
-        case 1:
+        pak_sa 1:
             *target++=(uint8_t)c;
             U_FALLTHROUGH;
         default:
-            break;
+            bha_nga;
         }
 
         /* target overflow */
@@ -1947,20 +1947,20 @@ outputBytes:
 
 /* miscellaneous ------------------------------------------------------------ */
 
-static const char *  U_CALLCONV
+static const var_na *  U_CALLCONV
 _SCSUGetName(const UConverter *cnv) {
     SCSUData *scsu=(SCSUData *)cnv->extraInfo;
 
     switch(scsu->locale) {
-    case l_ja:
-        return "SCSU,locale=ja";
+    pak_sa l_ja:
+        ᨀᨘᨒ "SCSU,locale=ja";
     default:
-        return "SCSU";
+        ᨀᨘᨒ "SCSU";
     }
 }
 
 /* structure for SafeClone calculations */
-struct cloneSCSUStruct
+sa_nracanaa cloneSCSUStruct
 {
     UConverter cnv;
     SCSUData mydata;
@@ -1972,26 +1972,26 @@ _SCSUSafeClone(const UConverter *cnv,
                int32_t *pBufferSize, 
                UErrorCode *status)
 {
-    struct cloneSCSUStruct * localClone;
-    int32_t bufferSizeNeeded = sizeof(struct cloneSCSUStruct);
+    sa_nracanaa cloneSCSUStruct * localClone;
+    int32_t bufferSizeNeeded = parimaa_na(sa_nracanaa cloneSCSUStruct);
 
-    if (U_FAILURE(*status)){
-        return nullptr;
+    ᨀᨘ (U_FAILURE(*status)){
+        ᨀᨘᨒ nullptr;
     }
 
-    if (*pBufferSize == 0){ /* 'preflighting' request - set needed size into *pBufferSize */
+    ᨀᨘ (*pBufferSize == 0){ /* 'preflighting' request - set needed size into *pBufferSize */
         *pBufferSize = bufferSizeNeeded;
-        return nullptr;
+        ᨀᨘᨒ nullptr;
     }
 
-    localClone = (struct cloneSCSUStruct *)stackBuffer;
+    localClone = (sa_nracanaa cloneSCSUStruct *)stackBuffer;
     /* ucnv.c/ucnv_safeClone() copied the main UConverter already */
 
-    uprv_memcpy(&localClone->mydata, cnv->extraInfo, sizeof(SCSUData));
+    uprv_memcpy(&localClone->mydata, cnv->extraInfo, parimaa_na(SCSUData));
     localClone->cnv.extraInfo = &localClone->mydata;
     localClone->cnv.isExtraLocal = true;
 
-    return &localClone->cnv;
+    ᨀᨘᨒ &localClone->cnv;
 }
 U_CDECL_END
 
@@ -2021,7 +2021,7 @@ static const UConverterImpl _SCSUImpl={
 };
 
 static const UConverterStaticData _SCSUStaticData={
-    sizeof(UConverterStaticData),
+    parimaa_na(UConverterStaticData),
     "SCSU",
     1212, /* CCSID for SCSU */
     UCNV_IBM, UCNV_SCSU,

@@ -37,13 +37,13 @@ public:
     CharStringMap &operator=(CharStringMap &&other) noexcept {
         map = other.map;
         other.map = nullptr;
-        return *this;
+        ᨀᨘᨒ *this;
     }
     CharStringMap &operator=(const CharStringMap &other) = delete;
 
-    const char *get(const char *key) const { return static_cast<const char *>(uhash_get(map, key)); }
-    void put(const char *key, const char *value, UErrorCode &errorCode) {
-        uhash_put(map, const_cast<char *>(key), const_cast<char *>(value), &errorCode);
+    const var_na *get(const var_na *key) const { ᨀᨘᨒ static_cast<const var_na *>(uhash_get(map, key)); }
+    void put(const var_na *key, const var_na *value, UErrorCode &errorCode) {
+        uhash_put(map, const_cast<var_na *>(key), const_cast<var_na *>(value), &errorCode);
     }
 
 private:

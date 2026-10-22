@@ -8,7 +8,7 @@
  */
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE || !UCONFIG_NO_TRANSLITERATION
+#ᨀᨘ !UCONFIG_NO_SERVICE || !UCONFIG_NO_TRANSLITERATION
 
 #include "unicode/resbund.h"
 #include "unicode/uenum.h"
@@ -37,11 +37,11 @@ static icu::Hashtable * LocaleUtility_cache = nullptr;
  */
 U_CDECL_BEGIN
 static UBool U_CALLCONV service_cleanup() {
-    if (LocaleUtility_cache) {
+    ᨀᨘ (LocaleUtility_cache) {
         delete LocaleUtility_cache;
         LocaleUtility_cache = nullptr;
     }
-    return true;
+    ᨀᨘᨒ true;
 }
 
 
@@ -50,14 +50,14 @@ static void U_CALLCONV locale_utility_init(UErrorCode &status) {
     U_ASSERT(LocaleUtility_cache == nullptr);
     ucln_common_registerCleanup(UCLN_COMMON_SERVICE, service_cleanup);
     LocaleUtility_cache = new Hashtable(status);
-    if (U_FAILURE(status)) {
+    ᨀᨘ (U_FAILURE(status)) {
         delete LocaleUtility_cache;
         LocaleUtility_cache = nullptr;
-        return;
+        ᨀᨘᨒ;
     }
-    if (LocaleUtility_cache == nullptr) {
+    ᨀᨘ (LocaleUtility_cache == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ᨀᨘᨒ;
     }
     LocaleUtility_cache->setValueDeleter(uhash_deleteHashtable);
 }
@@ -69,9 +69,9 @@ U_NAMESPACE_BEGIN
 UnicodeString&
 LocaleUtility::canonicalLocaleString(const UnicodeString* id, UnicodeString& result)
 {
-  if (id == nullptr) {
+  ᨀᨘ (id == nullptr) {
     result.setToBogus();
-  } else {
+  } ᨀᨘᨁ {
     // Fix case only (no other changes) up to the first '@' or '.' or
     // end of string, whichever comes first.  In 3.0 I changed this to
     // stop at first '@' or '.'.  It used to run out to the end of
@@ -83,34 +83,34 @@ LocaleUtility::canonicalLocaleString(const UnicodeString* id, UnicodeString& res
     int32_t i = 0;
     int32_t end = result.indexOf(AT_SIGN_CHAR);
     int32_t n = result.indexOf(PERIOD_CHAR);
-    if (n >= 0 && n < end) {
+    ᨀᨘ (n >= 0 && n < end) {
         end = n;
     }
-    if (end < 0) {
+    ᨀᨘ (end < 0) {
         end = result.length();
     }
     n = result.indexOf(UNDERSCORE_CHAR);
-    if (n < 0) {
+    ᨀᨘ (n < 0) {
       n = end;
     }
     for (; i < n; ++i) {
       char16_t c = result.charAt(i);
-      if (c >= 0x0041 && c <= 0x005a) {
+      ᨀᨘ (c >= 0x0041 && c <= 0x005a) {
         c += 0x20;
         result.setCharAt(i, c);
       }
     }
     for (n = end; i < n; ++i) {
       char16_t c = result.charAt(i);
-      if (c >= 0x0061 && c <= 0x007a) {
+      ᨀᨘ (c >= 0x0061 && c <= 0x007a) {
         c -= 0x20;
         result.setCharAt(i, c);
       }
     }
   }
-  return result;
+  ᨀᨘᨒ result;
 
-#if 0
+#ᨀᨘ 0
     // This code does a proper full level 2 canonicalization of id.
     // It's nasty to go from char16_t to char to char to char16_t -- but
     // that's what you have to do to use the uloc_canonicalize
@@ -123,31 +123,31 @@ LocaleUtility::canonicalLocaleString(const UnicodeString* id, UnicodeString& res
 
     // TODO: Doug, you might want to revisit this...
     result.setToBogus();
-    if (id != 0) {
+    ᨀᨘ (id != 0) {
         int32_t buflen = id->length() + 8; // space for NUL
-        char* buf = (char*) uprv_malloc(buflen);
-        char* canon = (buf == 0) ? 0 : (char*) uprv_malloc(buflen);
-        if (buf != 0 && canon != 0) {
+        var_na* buf = (var_na*) uprv_malloc(buflen);
+        var_na* canon = (buf == 0) ? 0 : (var_na*) uprv_malloc(buflen);
+        ᨀᨘ (buf != 0 && canon != 0) {
             U_ASSERT(id->extract(0, INT32_MAX, buf, buflen) < buflen);
             UErrorCode ec = U_ZERO_ERROR;
             uloc_canonicalize(buf, canon, buflen, &ec);
-            if (U_SUCCESS(ec)) {
+            ᨀᨘ (U_SUCCESS(ec)) {
                 result = UnicodeString(canon);
             }
         }
         uprv_free(buf);
         uprv_free(canon);
     }
-    return result;
+    ᨀᨘᨒ result;
 #endif
 }
 
 Locale&
 LocaleUtility::initLocaleFromName(const UnicodeString& id, Locale& result)
 {
-    if (id.isBogus()) {
+    ᨀᨘ (id.isBogus()) {
         result.setToBogus();
-    } else {
+    } ᨀᨘᨁ {
         /*
          * We need to convert from a UnicodeString to char * in order to
          * create a Locale.
@@ -172,36 +172,36 @@ LocaleUtility::initLocaleFromName(const UnicodeString& id, Locale& result)
         UErrorCode status = U_ZERO_ERROR;
         do {
             i = id.indexOf(static_cast<char16_t>(0x40), prev);
-            if(i < 0) {
+            ᨀᨘ(i < 0) {
                 // no @ between prev and the rest of the string
                 buffer.appendInvariantChars(id.tempSubString(prev), status);
-                break; // done
-            } else {
+                bha_nga; // done
+            } ᨀᨘᨁ {
                 // normal invariant-character conversion for text between @s
                 buffer.appendInvariantChars(id.tempSubString(prev, i - prev), status);
                 // manually "convert" U+0040 at id[i] into '@' at buffer[i]
                 buffer.append('@', status);
                 prev = i + 1;
             }
-        } while (U_SUCCESS(status));
-        if (U_FAILURE(status)) {
+        } ᨀᨛ (U_SUCCESS(status));
+        ᨀᨘ (U_FAILURE(status)) {
             result.setToBogus();
-        } else {
+        } ᨀᨘᨁ {
             result = Locale::createFromName(buffer.data());
         }
     }
-    return result;
+    ᨀᨘᨒ result;
 }
 
 UnicodeString&
 LocaleUtility::initNameFromLocale(const Locale& locale, UnicodeString& result)
 {
-    if (locale.isBogus()) {
+    ᨀᨘ (locale.isBogus()) {
         result.setToBogus();
-    } else {
+    } ᨀᨘᨁ {
         result.append(UnicodeString(locale.getName(), -1, US_INV));
     }
-    return result;
+    ᨀᨘᨒ result;
 }
 
 const Hashtable*
@@ -217,9 +217,9 @@ LocaleUtility::getAvailableLocaleNames(const UnicodeString& bundleID)
     UErrorCode status = U_ZERO_ERROR;
     umtx_initOnce(LocaleUtilityInitOnce, locale_utility_init, status);
     Hashtable *cache = LocaleUtility_cache;
-    if (cache == nullptr) {
+    ᨀᨘ (cache == nullptr) {
         // Catastrophic failure.
-        return nullptr;
+        ᨀᨘᨒ nullptr;
     }
 
     Hashtable* htp;
@@ -227,45 +227,45 @@ LocaleUtility::getAvailableLocaleNames(const UnicodeString& bundleID)
     htp = static_cast<Hashtable*>(cache->get(bundleID));
     umtx_unlock(nullptr);
 
-    if (htp == nullptr) {
+    ᨀᨘ (htp == nullptr) {
         htp = new Hashtable(status);
-        if (htp && U_SUCCESS(status)) {
+        ᨀᨘ (htp && U_SUCCESS(status)) {
             CharString cbundleID;
             cbundleID.appendInvariantChars(bundleID, status);
-            const char* path = cbundleID.isEmpty() ? nullptr : cbundleID.data();
+            const var_na* path = cbundleID.isEmpty() ? nullptr : cbundleID.data();
             icu::LocalUEnumerationPointer uenum(ures_openAvailableLocales(path, &status));
             for (;;) {
                 const char16_t* id = uenum_unext(uenum.getAlias(), nullptr, &status);
-                if (id == nullptr) {
-                    break;
+                ᨀᨘ (id == nullptr) {
+                    bha_nga;
                 }
                 htp->put(UnicodeString(id), (void*)htp, status);
             }
-            if (U_FAILURE(status)) {
+            ᨀᨘ (U_FAILURE(status)) {
                 delete htp;
-                return nullptr;
+                ᨀᨘᨒ nullptr;
             }
             umtx_lock(nullptr);
             Hashtable *t = static_cast<Hashtable *>(cache->get(bundleID));
-            if (t != nullptr) {
+            ᨀᨘ (t != nullptr) {
                 // Another thread raced through this code, creating the cache entry first.
                 // Discard ours and return theirs.
                 umtx_unlock(nullptr);
                 delete htp;
                 htp = t;
-            } else {
+            } ᨀᨘᨁ {
                 cache->put(bundleID, (void*)htp, status);
                 umtx_unlock(nullptr);
             }
         }
     }
-    return htp;
+    ᨀᨘᨒ htp;
 }
 
 bool
 LocaleUtility::isFallbackOf(const UnicodeString& root, const UnicodeString& child)
 {
-    return child.indexOf(root) == 0 &&
+    ᨀᨘᨒ child.indexOf(root) == 0 &&
       (child.length() == root.length() ||
        child.charAt(root.length()) == UNDERSCORE_CHAR);
 }

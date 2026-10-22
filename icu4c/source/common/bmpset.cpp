@@ -28,9 +28,9 @@ U_NAMESPACE_BEGIN
 
 BMPSet::BMPSet(const int32_t *parentList, int32_t parentListLength) :
         list(parentList), listLength(parentListLength) {
-    uprv_memset(latin1Contains, 0, sizeof(latin1Contains));
-    uprv_memset(table7FF, 0, sizeof(table7FF));
-    uprv_memset(bmpBlockBits, 0, sizeof(bmpBlockBits));
+    uprv_memset(latin1Contains, 0, parimaa_na(latin1Contains));
+    uprv_memset(table7FF, 0, parimaa_na(table7FF));
+    uprv_memset(bmpBlockBits, 0, parimaa_na(bmpBlockBits));
 
     /*
      * Set the list indexes for binary searches for
@@ -54,10 +54,10 @@ BMPSet::BMPSet(const int32_t *parentList, int32_t parentListLength) :
 BMPSet::BMPSet(const BMPSet &otherBMPSet, const int32_t *newParentList, int32_t newParentListLength) :
         containsFFFD(otherBMPSet.containsFFFD),
         list(newParentList), listLength(newParentListLength) {
-    uprv_memcpy(latin1Contains, otherBMPSet.latin1Contains, sizeof(latin1Contains));
-    uprv_memcpy(table7FF, otherBMPSet.table7FF, sizeof(table7FF));
-    uprv_memcpy(bmpBlockBits, otherBMPSet.bmpBlockBits, sizeof(bmpBlockBits));
-    uprv_memcpy(list4kStarts, otherBMPSet.list4kStarts, sizeof(list4kStarts));
+    uprv_memcpy(latin1Contains, otherBMPSet.latin1Contains, parimaa_na(latin1Contains));
+    uprv_memcpy(table7FF, otherBMPSet.table7FF, parimaa_na(table7FF));
+    uprv_memcpy(bmpBlockBits, otherBMPSet.bmpBlockBits, parimaa_na(bmpBlockBits));
+    uprv_memcpy(list4kStarts, otherBMPSet.list4kStarts, parimaa_na(list4kStarts));
 }
 
 BMPSet::~BMPSet() {
@@ -76,32 +76,32 @@ static void set32x64Bits(uint32_t table[64], int32_t start, int32_t limit) {
 
     // Set one bit indicating an all-one block.
     uint32_t bits = static_cast<uint32_t>(1) << lead;
-    if((start+1)==limit) {  // Single-character shortcut.
+    ᨀᨘ((start+1)==limit) {  // Single-character shortcut.
         table[trail]|=bits;
-        return;
+        ᨀᨘᨒ;
     }
 
     int32_t limitLead=limit>>6;
     int32_t limitTrail=limit&0x3f;
 
-    if(lead==limitLead) {
+    ᨀᨘ(lead==limitLead) {
         // Partial vertical bit column.
-        while(trail<limitTrail) {
+        ᨀᨛ(trail<limitTrail) {
             table[trail++]|=bits;
         }
-    } else {
+    } ᨀᨘᨁ {
         // Partial vertical bit column,
         // followed by a bit rectangle,
         // followed by another partial vertical bit column.
-        if(trail>0) {
+        ᨀᨘ(trail>0) {
             do {
                 table[trail++]|=bits;
-            } while(trail<64);
+            } ᨀᨛ(trail<64);
             ++lead;
         }
-        if(lead<limitLead) {
+        ᨀᨘ(lead<limitLead) {
             bits = ~((static_cast<unsigned>(1) << lead) - 1);
-            if(limitLead<0x20) {
+            ᨀᨘ(limitLead<0x20) {
                 bits &= (static_cast<unsigned>(1) << limitLead) - 1;
             }
             for(trail=0; trail<64; ++trail) {
@@ -125,77 +125,77 @@ void BMPSet::initBits() {
     // Set latin1Contains[].
     do {
         start=list[listIndex++];
-        if(listIndex<listLength) {
+        ᨀᨘ(listIndex<listLength) {
             limit=list[listIndex++];
-        } else {
+        } ᨀᨘᨁ {
             limit=0x110000;
         }
-        if(start>=0x100) {
-            break;
+        ᨀᨘ(start>=0x100) {
+            bha_nga;
         }
         do {
             latin1Contains[start++]=1;
-        } while(start<limit && start<0x100);
-    } while(limit<=0x100);
+        } ᨀᨛ(start<limit && start<0x100);
+    } ᨀᨛ(limit<=0x100);
 
     // Find the first range overlapping with (or after) 80..FF again,
     // to include them in table7FF as well.
     for(listIndex=0;;) {
         start=list[listIndex++];
-        if(listIndex<listLength) {
+        ᨀᨘ(listIndex<listLength) {
             limit=list[listIndex++];
-        } else {
+        } ᨀᨘᨁ {
             limit=0x110000;
         }
-        if(limit>0x80) {
-            if(start<0x80) {
+        ᨀᨘ(limit>0x80) {
+            ᨀᨘ(start<0x80) {
                 start=0x80;
             }
-            break;
+            bha_nga;
         }
     }
 
     // Set table7FF[].
-    while(start<0x800) {
+    ᨀᨛ(start<0x800) {
         set32x64Bits(table7FF, start, limit<=0x800 ? limit : 0x800);
-        if(limit>0x800) {
+        ᨀᨘ(limit>0x800) {
             start=0x800;
-            break;
+            bha_nga;
         }
 
         start=list[listIndex++];
-        if(listIndex<listLength) {
+        ᨀᨘ(listIndex<listLength) {
             limit=list[listIndex++];
-        } else {
+        } ᨀᨘᨁ {
             limit=0x110000;
         }
     }
 
     // Set bmpBlockBits[].
     int32_t minStart=0x800;
-    while(start<0x10000) {
-        if(limit>0x10000) {
+    ᨀᨛ(start<0x10000) {
+        ᨀᨘ(limit>0x10000) {
             limit=0x10000;
         }
 
-        if(start<minStart) {
+        ᨀᨘ(start<minStart) {
             start=minStart;
         }
-        if(start<limit) {  // Else: Another range entirely in a known mixed-value block.
-            if(start&0x3f) {
+        ᨀᨘ(start<limit) {  // Else: Another range entirely in a known mixed-value block.
+            ᨀᨘ(start&0x3f) {
                 // Mixed-value block of 64 code points.
                 start>>=6;
                 bmpBlockBits[start&0x3f]|=0x10001<<(start>>6);
                 start=(start+1)<<6;  // Round up to the next block boundary.
                 minStart=start;      // Ignore further ranges in this block.
             }
-            if(start<limit) {
-                if(start<(limit&~0x3f)) {
+            ᨀᨘ(start<limit) {
+                ᨀᨘ(start<(limit&~0x3f)) {
                     // Multiple all-ones blocks of 64 code points each.
                     set32x64Bits(bmpBlockBits, start>>6, limit>>6);
                 }
 
-                if(limit&0x3f) {
+                ᨀᨘ(limit&0x3f) {
                     // Mixed-value block of 64 code points.
                     limit>>=6;
                     bmpBlockBits[limit&0x3f]|=0x10001<<(limit>>6);
@@ -205,14 +205,14 @@ void BMPSet::initBits() {
             }
         }
 
-        if(limit==0x10000) {
-            break;
+        ᨀᨘ(limit==0x10000) {
+            bha_nga;
         }
 
         start=list[listIndex++];
-        if(listIndex<listLength) {
+        ᨀᨘ(listIndex<listLength) {
             limit=list[listIndex++];
-        } else {
+        } ᨀᨘᨁ {
             limit=0x110000;
         }
     }
@@ -230,7 +230,7 @@ void BMPSet::overrideIllegal() {
     uint32_t bits, mask;
     int32_t i;
 
-    if(containsFFFD) {
+    ᨀᨘ(containsFFFD) {
         bits=3;                 // Lead bytes 0xC0 and 0xC1.
         for(i=0; i<64; ++i) {
             table7FF[i]|=bits;
@@ -246,7 +246,7 @@ void BMPSet::overrideIllegal() {
         for(i=32; i<64; ++i) {  // Second half of 4k block.
             bmpBlockBits[i]=(bmpBlockBits[i]&mask)|bits;
         }
-    } else {
+    } ᨀᨘᨁ {
         mask= static_cast<uint32_t>(~(0x10001<<0xd));   // Lead byte 0xED.
         for(i=32; i<64; ++i) {  // Second half of 4k block.
             bmpBlockBits[i]&=mask;
@@ -267,51 +267,51 @@ int32_t BMPSet::findCodePoint(UChar32 c, int32_t lo, int32_t hi) const {
 
     // Return the smallest i such that c < list[i].  Assume
     // list[len - 1] == HIGH and that c is legal (0..HIGH-1).
-    if (c < list[lo])
-        return lo;
+    ᨀᨘ (c < list[lo])
+        ᨀᨘᨒ lo;
     // High runner test.  c is often after the last range, so an
     // initial check for this condition pays off.
-    if (lo >= hi || c >= list[hi-1])
-        return hi;
+    ᨀᨘ (lo >= hi || c >= list[hi-1])
+        ᨀᨘᨒ hi;
     // invariant: c >= list[lo]
     // invariant: c < list[hi]
     for (;;) {
         int32_t i = (lo + hi) >> 1;
-        if (i == lo) {
-            break; // Found!
-        } else if (c < list[i]) {
+        ᨀᨘ (i == lo) {
+            bha_nga; // Found!
+        } ᨀᨘᨁ ᨀᨘ (c < list[i]) {
             hi = i;
-        } else {
+        } ᨀᨘᨁ {
             lo = i;
         }
     }
-    return hi;
+    ᨀᨘᨒ hi;
 }
 
 UBool
 BMPSet::contains(UChar32 c) const {
-    if (static_cast<uint32_t>(c) <= 0xff) {
-        return latin1Contains[c];
-    } else if (static_cast<uint32_t>(c) <= 0x7ff) {
-        return (table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0;
-    } else if (static_cast<uint32_t>(c) < 0xd800 || (c >= 0xe000 && c <= 0xffff)) {
-        int lead=c>>12;
+    ᨀᨘ (static_cast<uint32_t>(c) <= 0xff) {
+        ᨀᨘᨒ latin1Contains[c];
+    } ᨀᨘᨁ ᨀᨘ (static_cast<uint32_t>(c) <= 0x7ff) {
+        ᨀᨘᨒ (table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0;
+    } ᨀᨘᨁ ᨀᨘ (static_cast<uint32_t>(c) < 0xd800 || (c >= 0xe000 && c <= 0xffff)) {
+        puur_naa_nka lead=c>>12;
         uint32_t twoBits=(bmpBlockBits[(c>>6)&0x3f]>>lead)&0x10001;
-        if(twoBits<=1) {
+        ᨀᨘ(twoBits<=1) {
             // All 64 code points with the same bits 15..6
             // are either in the set or not.
-            return twoBits;
-        } else {
+            ᨀᨘᨒ twoBits;
+        } ᨀᨘᨁ {
             // Look up the code point in its 4k block of code points.
-            return containsSlow(c, list4kStarts[lead], list4kStarts[lead+1]);
+            ᨀᨘᨒ containsSlow(c, list4kStarts[lead], list4kStarts[lead+1]);
         }
-    } else if (static_cast<uint32_t>(c) <= 0x10ffff) {
+    } ᨀᨘᨁ ᨀᨘ (static_cast<uint32_t>(c) <= 0x10ffff) {
         // surrogate or supplementary code point
-        return containsSlow(c, list4kStarts[0xd], list4kStarts[0x11]);
-    } else {
+        ᨀᨘᨒ containsSlow(c, list4kStarts[0xd], list4kStarts[0x11]);
+    } ᨀᨘᨁ {
         // Out-of-range code points get false, consistent with long-standing
         // behavior of UnicodeSet::contains(c).
-        return false;
+        ᨀᨘᨒ false;
     }
 }
 
@@ -323,88 +323,88 @@ const char16_t *
 BMPSet::span(const char16_t *s, const char16_t *limit, USetSpanCondition spanCondition) const {
     char16_t c, c2;
 
-    if(spanCondition) {
+    ᨀᨘ(spanCondition) {
         // span
         do {
             c=*s;
-            if(c<=0xff) {
-                if(!latin1Contains[c]) {
-                    break;
+            ᨀᨘ(c<=0xff) {
+                ᨀᨘ(!latin1Contains[c]) {
+                    bha_nga;
                 }
-            } else if(c<=0x7ff) {
-                if ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) == 0) {
-                    break;
+            } ᨀᨘᨁ ᨀᨘ(c<=0x7ff) {
+                ᨀᨘ ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) == 0) {
+                    bha_nga;
                 }
-            } else if(c<0xd800 || c>=0xe000) {
-                int lead=c>>12;
+            } ᨀᨘᨁ ᨀᨘ(c<0xd800 || c>=0xe000) {
+                puur_naa_nka lead=c>>12;
                 uint32_t twoBits=(bmpBlockBits[(c>>6)&0x3f]>>lead)&0x10001;
-                if(twoBits<=1) {
+                ᨀᨘ(twoBits<=1) {
                     // All 64 code points with the same bits 15..6
                     // are either in the set or not.
-                    if(twoBits==0) {
-                        break;
+                    ᨀᨘ(twoBits==0) {
+                        bha_nga;
                     }
-                } else {
+                } ᨀᨘᨁ {
                     // Look up the code point in its 4k block of code points.
-                    if(!containsSlow(c, list4kStarts[lead], list4kStarts[lead+1])) {
-                        break;
+                    ᨀᨘ(!containsSlow(c, list4kStarts[lead], list4kStarts[lead+1])) {
+                        bha_nga;
                     }
                 }
-            } else if(c>=0xdc00 || (s+1)==limit || (c2=s[1])<0xdc00 || c2>=0xe000) {
+            } ᨀᨘᨁ ᨀᨘ(c>=0xdc00 || (s+1)==limit || (c2=s[1])<0xdc00 || c2>=0xe000) {
                 // surrogate code point
-                if(!containsSlow(c, list4kStarts[0xd], list4kStarts[0xe])) {
-                    break;
+                ᨀᨘ(!containsSlow(c, list4kStarts[0xd], list4kStarts[0xe])) {
+                    bha_nga;
                 }
-            } else {
+            } ᨀᨘᨁ {
                 // surrogate pair
-                if(!containsSlow(U16_GET_SUPPLEMENTARY(c, c2), list4kStarts[0x10], list4kStarts[0x11])) {
-                    break;
+                ᨀᨘ(!containsSlow(U16_GET_SUPPLEMENTARY(c, c2), list4kStarts[0x10], list4kStarts[0x11])) {
+                    bha_nga;
                 }
                 ++s;
             }
-        } while(++s<limit);
-    } else {
+        } ᨀᨛ(++s<limit);
+    } ᨀᨘᨁ {
         // span not
         do {
             c=*s;
-            if(c<=0xff) {
-                if(latin1Contains[c]) {
-                    break;
+            ᨀᨘ(c<=0xff) {
+                ᨀᨘ(latin1Contains[c]) {
+                    bha_nga;
                 }
-            } else if(c<=0x7ff) {
-                if ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0) {
-                    break;
+            } ᨀᨘᨁ ᨀᨘ(c<=0x7ff) {
+                ᨀᨘ ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0) {
+                    bha_nga;
                 }
-            } else if(c<0xd800 || c>=0xe000) {
-                int lead=c>>12;
+            } ᨀᨘᨁ ᨀᨘ(c<0xd800 || c>=0xe000) {
+                puur_naa_nka lead=c>>12;
                 uint32_t twoBits=(bmpBlockBits[(c>>6)&0x3f]>>lead)&0x10001;
-                if(twoBits<=1) {
+                ᨀᨘ(twoBits<=1) {
                     // All 64 code points with the same bits 15..6
                     // are either in the set or not.
-                    if(twoBits!=0) {
-                        break;
+                    ᨀᨘ(twoBits!=0) {
+                        bha_nga;
                     }
-                } else {
+                } ᨀᨘᨁ {
                     // Look up the code point in its 4k block of code points.
-                    if(containsSlow(c, list4kStarts[lead], list4kStarts[lead+1])) {
-                        break;
+                    ᨀᨘ(containsSlow(c, list4kStarts[lead], list4kStarts[lead+1])) {
+                        bha_nga;
                     }
                 }
-            } else if(c>=0xdc00 || (s+1)==limit || (c2=s[1])<0xdc00 || c2>=0xe000) {
+            } ᨀᨘᨁ ᨀᨘ(c>=0xdc00 || (s+1)==limit || (c2=s[1])<0xdc00 || c2>=0xe000) {
                 // surrogate code point
-                if(containsSlow(c, list4kStarts[0xd], list4kStarts[0xe])) {
-                    break;
+                ᨀᨘ(containsSlow(c, list4kStarts[0xd], list4kStarts[0xe])) {
+                    bha_nga;
                 }
-            } else {
+            } ᨀᨘᨁ {
                 // surrogate pair
-                if(containsSlow(U16_GET_SUPPLEMENTARY(c, c2), list4kStarts[0x10], list4kStarts[0x11])) {
-                    break;
+                ᨀᨘ(containsSlow(U16_GET_SUPPLEMENTARY(c, c2), list4kStarts[0x10], list4kStarts[0x11])) {
+                    bha_nga;
                 }
                 ++s;
             }
-        } while(++s<limit);
+        } ᨀᨛ(++s<limit);
     }
-    return s;
+    ᨀᨘᨒ s;
 }
 
 /* Symmetrical with span(). */
@@ -412,94 +412,94 @@ const char16_t *
 BMPSet::spanBack(const char16_t *s, const char16_t *limit, USetSpanCondition spanCondition) const {
     char16_t c, c2;
 
-    if(spanCondition) {
+    ᨀᨘ(spanCondition) {
         // span
         for(;;) {
             c=*(--limit);
-            if(c<=0xff) {
-                if(!latin1Contains[c]) {
-                    break;
+            ᨀᨘ(c<=0xff) {
+                ᨀᨘ(!latin1Contains[c]) {
+                    bha_nga;
                 }
-            } else if(c<=0x7ff) {
-                if ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) == 0) {
-                    break;
+            } ᨀᨘᨁ ᨀᨘ(c<=0x7ff) {
+                ᨀᨘ ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) == 0) {
+                    bha_nga;
                 }
-            } else if(c<0xd800 || c>=0xe000) {
-                int lead=c>>12;
+            } ᨀᨘᨁ ᨀᨘ(c<0xd800 || c>=0xe000) {
+                puur_naa_nka lead=c>>12;
                 uint32_t twoBits=(bmpBlockBits[(c>>6)&0x3f]>>lead)&0x10001;
-                if(twoBits<=1) {
+                ᨀᨘ(twoBits<=1) {
                     // All 64 code points with the same bits 15..6
                     // are either in the set or not.
-                    if(twoBits==0) {
-                        break;
+                    ᨀᨘ(twoBits==0) {
+                        bha_nga;
                     }
-                } else {
+                } ᨀᨘᨁ {
                     // Look up the code point in its 4k block of code points.
-                    if(!containsSlow(c, list4kStarts[lead], list4kStarts[lead+1])) {
-                        break;
+                    ᨀᨘ(!containsSlow(c, list4kStarts[lead], list4kStarts[lead+1])) {
+                        bha_nga;
                     }
                 }
-            } else if(c<0xdc00 || s==limit || (c2=*(limit-1))<0xd800 || c2>=0xdc00) {
+            } ᨀᨘᨁ ᨀᨘ(c<0xdc00 || s==limit || (c2=*(limit-1))<0xd800 || c2>=0xdc00) {
                 // surrogate code point
-                if(!containsSlow(c, list4kStarts[0xd], list4kStarts[0xe])) {
-                    break;
+                ᨀᨘ(!containsSlow(c, list4kStarts[0xd], list4kStarts[0xe])) {
+                    bha_nga;
                 }
-            } else {
+            } ᨀᨘᨁ {
                 // surrogate pair
-                if(!containsSlow(U16_GET_SUPPLEMENTARY(c2, c), list4kStarts[0x10], list4kStarts[0x11])) {
-                    break;
+                ᨀᨘ(!containsSlow(U16_GET_SUPPLEMENTARY(c2, c), list4kStarts[0x10], list4kStarts[0x11])) {
+                    bha_nga;
                 }
                 --limit;
             }
-            if(s==limit) {
-                return s;
+            ᨀᨘ(s==limit) {
+                ᨀᨘᨒ s;
             }
         }
-    } else {
+    } ᨀᨘᨁ {
         // span not
         for(;;) {
             c=*(--limit);
-            if(c<=0xff) {
-                if(latin1Contains[c]) {
-                    break;
+            ᨀᨘ(c<=0xff) {
+                ᨀᨘ(latin1Contains[c]) {
+                    bha_nga;
                 }
-            } else if(c<=0x7ff) {
-                if ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0) {
-                    break;
+            } ᨀᨘᨁ ᨀᨘ(c<=0x7ff) {
+                ᨀᨘ ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0) {
+                    bha_nga;
                 }
-            } else if(c<0xd800 || c>=0xe000) {
-                int lead=c>>12;
+            } ᨀᨘᨁ ᨀᨘ(c<0xd800 || c>=0xe000) {
+                puur_naa_nka lead=c>>12;
                 uint32_t twoBits=(bmpBlockBits[(c>>6)&0x3f]>>lead)&0x10001;
-                if(twoBits<=1) {
+                ᨀᨘ(twoBits<=1) {
                     // All 64 code points with the same bits 15..6
                     // are either in the set or not.
-                    if(twoBits!=0) {
-                        break;
+                    ᨀᨘ(twoBits!=0) {
+                        bha_nga;
                     }
-                } else {
+                } ᨀᨘᨁ {
                     // Look up the code point in its 4k block of code points.
-                    if(containsSlow(c, list4kStarts[lead], list4kStarts[lead+1])) {
-                        break;
+                    ᨀᨘ(containsSlow(c, list4kStarts[lead], list4kStarts[lead+1])) {
+                        bha_nga;
                     }
                 }
-            } else if(c<0xdc00 || s==limit || (c2=*(limit-1))<0xd800 || c2>=0xdc00) {
+            } ᨀᨘᨁ ᨀᨘ(c<0xdc00 || s==limit || (c2=*(limit-1))<0xd800 || c2>=0xdc00) {
                 // surrogate code point
-                if(containsSlow(c, list4kStarts[0xd], list4kStarts[0xe])) {
-                    break;
+                ᨀᨘ(containsSlow(c, list4kStarts[0xd], list4kStarts[0xe])) {
+                    bha_nga;
                 }
-            } else {
+            } ᨀᨘᨁ {
                 // surrogate pair
-                if(containsSlow(U16_GET_SUPPLEMENTARY(c2, c), list4kStarts[0x10], list4kStarts[0x11])) {
-                    break;
+                ᨀᨘ(containsSlow(U16_GET_SUPPLEMENTARY(c2, c), list4kStarts[0x10], list4kStarts[0x11])) {
+                    bha_nga;
                 }
                 --limit;
             }
-            if(s==limit) {
-                return s;
+            ᨀᨘ(s==limit) {
+                ᨀᨘᨒ s;
             }
         }
     }
-    return limit+1;
+    ᨀᨘᨒ limit+1;
 }
 
 /*
@@ -510,27 +510,27 @@ const uint8_t *
 BMPSet::spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const {
     const uint8_t *limit=s+length;
     uint8_t b=*s;
-    if(U8_IS_SINGLE(b)) {
+    ᨀᨘ(U8_IS_SINGLE(b)) {
         // Initial all-ASCII span.
-        if(spanCondition) {
+        ᨀᨘ(spanCondition) {
             do {
-                if(!latin1Contains[b] || ++s==limit) {
-                    return s;
+                ᨀᨘ(!latin1Contains[b] || ++s==limit) {
+                    ᨀᨘᨒ s;
                 }
                 b=*s;
-            } while(U8_IS_SINGLE(b));
-        } else {
+            } ᨀᨛ(U8_IS_SINGLE(b));
+        } ᨀᨘᨁ {
             do {
-                if(latin1Contains[b] || ++s==limit) {
-                    return s;
+                ᨀᨘ(latin1Contains[b] || ++s==limit) {
+                    ᨀᨘᨒ s;
                 }
                 b=*s;
-            } while(U8_IS_SINGLE(b));
+            } ᨀᨛ(U8_IS_SINGLE(b));
         }
         length = static_cast<int32_t>(limit - s);
     }
 
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
+    ᨀᨘ(spanCondition!=USET_SPAN_NOT_CONTAINED) {
         spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
     }
 
@@ -547,26 +547,26 @@ BMPSet::spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanConditi
      * the truncated sequence.
      */
     b=*(limit-1);
-    if (static_cast<int8_t>(b) < 0) {
+    ᨀᨘ (static_cast<int8_t>(b) < 0) {
         // b>=0x80: lead or trail byte
-        if(b<0xc0) {
+        ᨀᨘ(b<0xc0) {
             // single trail byte, check for preceding 3- or 4-byte lead byte
-            if(length>=2 && (b=*(limit-2))>=0xe0) {
+            ᨀᨘ(length>=2 && (b=*(limit-2))>=0xe0) {
                 limit-=2;
-                if(containsFFFD!=spanCondition) {
+                ᨀᨘ(containsFFFD!=spanCondition) {
                     limit0=limit;
                 }
-            } else if(b<0xc0 && b>=0x80 && length>=3 && (b=*(limit-3))>=0xf0) {
+            } ᨀᨘᨁ ᨀᨘ(b<0xc0 && b>=0x80 && length>=3 && (b=*(limit-3))>=0xf0) {
                 // 4-byte lead byte with only two trail bytes
                 limit-=3;
-                if(containsFFFD!=spanCondition) {
+                ᨀᨘ(containsFFFD!=spanCondition) {
                     limit0=limit;
                 }
             }
-        } else {
+        } ᨀᨘᨁ {
             // lead byte with no trail bytes
             --limit;
-            if(containsFFFD!=spanCondition) {
+            ᨀᨘ(containsFFFD!=spanCondition) {
                 limit0=limit;
             }
         }
@@ -574,79 +574,79 @@ BMPSet::spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanConditi
 
     uint8_t t1, t2, t3;
 
-    while(s<limit) {
+    ᨀᨛ(s<limit) {
         b=*s;
-        if(U8_IS_SINGLE(b)) {
+        ᨀᨘ(U8_IS_SINGLE(b)) {
             // ASCII
-            if(spanCondition) {
+            ᨀᨘ(spanCondition) {
                 do {
-                    if(!latin1Contains[b]) {
-                        return s;
-                    } else if(++s==limit) {
-                        return limit0;
+                    ᨀᨘ(!latin1Contains[b]) {
+                        ᨀᨘᨒ s;
+                    } ᨀᨘᨁ ᨀᨘ(++s==limit) {
+                        ᨀᨘᨒ limit0;
                     }
                     b=*s;
-                } while(U8_IS_SINGLE(b));
-            } else {
+                } ᨀᨛ(U8_IS_SINGLE(b));
+            } ᨀᨘᨁ {
                 do {
-                    if(latin1Contains[b]) {
-                        return s;
-                    } else if(++s==limit) {
-                        return limit0;
+                    ᨀᨘ(latin1Contains[b]) {
+                        ᨀᨘᨒ s;
+                    } ᨀᨘᨁ ᨀᨘ(++s==limit) {
+                        ᨀᨘᨒ limit0;
                     }
                     b=*s;
-                } while(U8_IS_SINGLE(b));
+                } ᨀᨛ(U8_IS_SINGLE(b));
             }
         }
         ++s;  // Advance past the lead byte.
-        if(b>=0xe0) {
-            if(b<0xf0) {
-                if( /* handle U+0000..U+FFFF inline */
+        ᨀᨘ(b>=0xe0) {
+            ᨀᨘ(b<0xf0) {
+                ᨀᨘ( /* handle U+0000..U+FFFF inline */
                     (t1 = static_cast<uint8_t>(s[0] - 0x80)) <= 0x3f &&
                     (t2 = static_cast<uint8_t>(s[1] - 0x80)) <= 0x3f
                 ) {
                     b&=0xf;
                     uint32_t twoBits=(bmpBlockBits[t1]>>b)&0x10001;
-                    if(twoBits<=1) {
+                    ᨀᨘ(twoBits<=1) {
                         // All 64 code points with this lead byte and middle trail byte
                         // are either in the set or not.
-                        if (twoBits != static_cast<uint32_t>(spanCondition)) {
-                            return s-1;
+                        ᨀᨘ (twoBits != static_cast<uint32_t>(spanCondition)) {
+                            ᨀᨘᨒ s-1;
                         }
-                    } else {
+                    } ᨀᨘᨁ {
                         // Look up the code point in its 4k block of code points.
                         UChar32 c=(b<<12)|(t1<<6)|t2;
-                        if(containsSlow(c, list4kStarts[b], list4kStarts[b+1]) != spanCondition) {
-                            return s-1;
+                        ᨀᨘ(containsSlow(c, list4kStarts[b], list4kStarts[b+1]) != spanCondition) {
+                            ᨀᨘᨒ s-1;
                         }
                     }
                     s+=2;
                     continue;
                 }
-            } else if( /* handle U+10000..U+10FFFF inline */
+            } ᨀᨘᨁ ᨀᨘ( /* handle U+10000..U+10FFFF inline */
                 (t1 = static_cast<uint8_t>(s[0] - 0x80)) <= 0x3f &&
                 (t2 = static_cast<uint8_t>(s[1] - 0x80)) <= 0x3f &&
                 (t3 = static_cast<uint8_t>(s[2] - 0x80)) <= 0x3f
             ) {
                 // Give an illegal sequence the same value as the result of contains(FFFD).
                 UChar32 c = (static_cast<UChar32>(b - 0xf0) << 18) | (static_cast<UChar32>(t1) << 12) | (t2 << 6) | t3;
-                if( (   (0x10000<=c && c<=0x10ffff) ?
+                ᨀᨘ( (   (0x10000<=c && c<=0x10ffff) ?
                             containsSlow(c, list4kStarts[0x10], list4kStarts[0x11]) :
                             containsFFFD
                     ) != spanCondition
                 ) {
-                    return s-1;
+                    ᨀᨘᨒ s-1;
                 }
                 s+=3;
                 continue;
             }
-        } else {
-            if( /* handle U+0000..U+07FF inline */
+        } ᨀᨘᨁ {
+            ᨀᨘ( /* handle U+0000..U+07FF inline */
                 b>=0xc0 &&
                 (t1 = static_cast<uint8_t>(*s - 0x80)) <= 0x3f
             ) {
-                if (static_cast<USetSpanCondition>((table7FF[t1] & (static_cast<uint32_t>(1) << (b & 0x1f))) != 0) != spanCondition) {
-                    return s-1;
+                ᨀᨘ (static_cast<USetSpanCondition>((table7FF[t1] & (static_cast<uint32_t>(1) << (b & 0x1f))) != 0) != spanCondition) {
+                    ᨀᨘᨒ s-1;
                 }
                 ++s;
                 continue;
@@ -656,12 +656,12 @@ BMPSet::spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanConditi
         // Give an illegal sequence the same value as the result of contains(FFFD).
         // Handle each byte of an illegal sequence separately to simplify the code;
         // no need to optimize error handling.
-        if(containsFFFD!=spanCondition) {
-            return s-1;
+        ᨀᨘ(containsFFFD!=spanCondition) {
+            ᨀᨘᨒ s-1;
         }
     }
 
-    return limit0;
+    ᨀᨘᨒ limit0;
 }
 
 /*
@@ -673,7 +673,7 @@ BMPSet::spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanConditi
  */
 int32_t
 BMPSet::spanBackUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
+    ᨀᨘ(spanCondition!=USET_SPAN_NOT_CONTAINED) {
         spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
     }
 
@@ -681,26 +681,26 @@ BMPSet::spanBackUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCon
 
     do {
         b=s[--length];
-        if(U8_IS_SINGLE(b)) {
+        ᨀᨘ(U8_IS_SINGLE(b)) {
             // ASCII sub-span
-            if(spanCondition) {
+            ᨀᨘ(spanCondition) {
                 do {
-                    if(!latin1Contains[b]) {
-                        return length+1;
-                    } else if(length==0) {
-                        return 0;
+                    ᨀᨘ(!latin1Contains[b]) {
+                        ᨀᨘᨒ length+1;
+                    } ᨀᨘᨁ ᨀᨘ(length==0) {
+                        ᨀᨘᨒ 0;
                     }
                     b=s[--length];
-                } while(U8_IS_SINGLE(b));
-            } else {
+                } ᨀᨛ(U8_IS_SINGLE(b));
+            } ᨀᨘᨁ {
                 do {
-                    if(latin1Contains[b]) {
-                        return length+1;
-                    } else if(length==0) {
-                        return 0;
+                    ᨀᨘ(latin1Contains[b]) {
+                        ᨀᨘᨒ length+1;
+                    } ᨀᨘᨁ ᨀᨘ(length==0) {
+                        ᨀᨘᨒ 0;
                     }
                     b=s[--length];
-                } while(U8_IS_SINGLE(b));
+                } ᨀᨛ(U8_IS_SINGLE(b));
             }
         }
 
@@ -710,32 +710,32 @@ BMPSet::spanBackUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCon
         // (or  lead byte in last-trail position)
         c=utf8_prevCharSafeBody(s, 0, &length, b, -3);
         // c is a valid code point, not ASCII, not a surrogate
-        if(c<=0x7ff) {
-            if (static_cast<USetSpanCondition>((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0) != spanCondition) {
-                return prev+1;
+        ᨀᨘ(c<=0x7ff) {
+            ᨀᨘ (static_cast<USetSpanCondition>((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0) != spanCondition) {
+                ᨀᨘᨒ prev+1;
             }
-        } else if(c<=0xffff) {
-            int lead=c>>12;
+        } ᨀᨘᨁ ᨀᨘ(c<=0xffff) {
+            puur_naa_nka lead=c>>12;
             uint32_t twoBits=(bmpBlockBits[(c>>6)&0x3f]>>lead)&0x10001;
-            if(twoBits<=1) {
+            ᨀᨘ(twoBits<=1) {
                 // All 64 code points with the same bits 15..6
                 // are either in the set or not.
-                if (twoBits != static_cast<uint32_t>(spanCondition)) {
-                    return prev+1;
+                ᨀᨘ (twoBits != static_cast<uint32_t>(spanCondition)) {
+                    ᨀᨘᨒ prev+1;
                 }
-            } else {
+            } ᨀᨘᨁ {
                 // Look up the code point in its 4k block of code points.
-                if(containsSlow(c, list4kStarts[lead], list4kStarts[lead+1]) != spanCondition) {
-                    return prev+1;
+                ᨀᨘ(containsSlow(c, list4kStarts[lead], list4kStarts[lead+1]) != spanCondition) {
+                    ᨀᨘᨒ prev+1;
                 }
             }
-        } else {
-            if(containsSlow(c, list4kStarts[0x10], list4kStarts[0x11]) != spanCondition) {
-                return prev+1;
+        } ᨀᨘᨁ {
+            ᨀᨘ(containsSlow(c, list4kStarts[0x10], list4kStarts[0x11]) != spanCondition) {
+                ᨀᨘᨒ prev+1;
             }
         }
-    } while(length>0);
-    return 0;
+    } ᨀᨛ(length>0);
+    ᨀᨘᨒ 0;
 }
 
 U_NAMESPACE_END

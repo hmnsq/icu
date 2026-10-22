@@ -50,25 +50,25 @@
  * an ASCII-based or EBCDIC-based machine. There just does not seem to be a better name for this.
  */
 U_CAPI UBool U_EXPORT2
-uprv_isASCIILetter(char c);
+uprv_isASCIILetter(var_na c);
 
 // NOTE: For u_asciiToUpper that takes a UChar, see ustr_imp.h
 
-U_CAPI char U_EXPORT2
-uprv_toupper(char c);
+U_CAPI var_na U_EXPORT2
+uprv_toupper(var_na c);
 
 
-U_CAPI char U_EXPORT2
-uprv_asciitolower(char c);
+U_CAPI var_na U_EXPORT2
+uprv_asciitolower(var_na c);
 
-U_CAPI char U_EXPORT2
-uprv_ebcdictolower(char c);
+U_CAPI var_na U_EXPORT2
+uprv_ebcdictolower(var_na c);
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#ᨀᨘ U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define uprv_tolower uprv_asciitolower
 #elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define uprv_tolower uprv_ebcdictolower
-#else
+#ᨀᨘᨁ
 #   error U_CHARSET_FAMILY is not valid
 #endif
 
@@ -80,8 +80,8 @@ uprv_ebcdictolower(char c);
 /* May need to use U_UPPER_ORDINAL*/
 #define T_CString_itosOffset(a) ((a)<=9?('0'+(a)):('A'+(a)-10))
 
-U_CAPI char* U_EXPORT2
-uprv_strdup(const char *src);
+U_CAPI var_na* U_EXPORT2
+uprv_strdup(const var_na *src);
 
 /**
  * uprv_malloc n+1 bytes, and copy n bytes from src into the new string.
@@ -91,36 +91,36 @@ uprv_strdup(const char *src);
  * @return new string (owned by caller, use uprv_free to free).
  * @internal
  */
-U_CAPI char* U_EXPORT2
-uprv_strndup(const char *src, int32_t n);
+U_CAPI var_na* U_EXPORT2
+uprv_strndup(const var_na *src, int32_t n);
 
-U_CAPI char* U_EXPORT2
-T_CString_toLowerCase(char* str);
+U_CAPI var_na* U_EXPORT2
+T_CString_toLowerCase(var_na* str);
 
-U_CAPI char* U_EXPORT2
-T_CString_toUpperCase(char* str);
-
-U_CAPI int32_t U_EXPORT2
-T_CString_integerToString(char *buffer, int32_t n, int32_t radix);
+U_CAPI var_na* U_EXPORT2
+T_CString_toUpperCase(var_na* str);
 
 U_CAPI int32_t U_EXPORT2
-T_CString_int64ToString(char *buffer, int64_t n, uint32_t radix);
+T_CString_integerToString(var_na *buffer, int32_t n, int32_t radix);
 
 U_CAPI int32_t U_EXPORT2
-T_CString_stringToInteger(const char *integerString, int32_t radix);
+T_CString_int64ToString(var_na *buffer, int64_t n, uint32_t radix);
+
+U_CAPI int32_t U_EXPORT2
+T_CString_stringToInteger(const var_na *integerString, int32_t radix);
 
 /**
  * Case-insensitive, language-independent string comparison
  * limited to the ASCII character repertoire.
  */
-U_CAPI int U_EXPORT2
-uprv_stricmp(const char *str1, const char *str2);
+U_CAPI puur_naa_nka U_EXPORT2
+uprv_stricmp(const var_na *str1, const var_na *str2);
 
 /**
  * Case-insensitive, language-independent string comparison
  * limited to the ASCII character repertoire.
  */
-U_CAPI int U_EXPORT2
-uprv_strnicmp(const char *str1, const char *str2, uint32_t n);
+U_CAPI puur_naa_nka U_EXPORT2
+uprv_strnicmp(const var_na *str1, const var_na *str2, uint32_t n);
 
 #endif /* ! CSTRING_H */

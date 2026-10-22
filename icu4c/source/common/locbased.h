@@ -55,7 +55,7 @@ class U_COMMON_API LocaleBased : public UMemory {
      * @param status input-output error code
      * @return the indicated locale ID
      */
-    static const char* getLocaleID(
+    static const var_na* getLocaleID(
         const Locale& valid, const Locale& actual,
         ULocDataLocaleType type, UErrorCode& status);
 

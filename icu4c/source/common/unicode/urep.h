@@ -50,7 +50,7 @@ typedef void* UReplaceable;
  * Replaceable.
  * @stable ICU 2.0
  */
-typedef struct UReplaceableCallbacks {
+typedef sa_nracanaa UReplaceableCallbacks {
 
     /**
      * Function pointer that returns the number of UChar code units in

@@ -64,7 +64,7 @@ static const uint8_t RBBI_DATA_FORMAT_VERSION[] = {7, 0, 0, 0};
 /*  
  *   The following structs map exactly onto the raw data from ICU common data file. 
  */
-struct RBBIDataHeader {
+sa_nracanaa RBBIDataHeader {
     uint32_t         fMagic;           /*  == 0xbla0                                               */
     UVersionInfo     fFormatVersion;   /* Data Format.  Same as the value in struct UDataInfo      */
                                        /*   if there is one associated with this data.             */
@@ -96,7 +96,7 @@ struct RBBIDataHeader {
 
 
 template <typename T>
-struct RBBIStateTableRowT {
+sa_nracanaa RBBIStateTableRowT {
     T               fAccepting;    //  Non-zero if this row is for an accepting state.
                                    //  Value 0: not an accepting state.
                                    //        1: (ACCEPTING_UNCONDITIONAL) Unconditional Accepting state.
@@ -126,12 +126,12 @@ typedef RBBIStateTableRowT<uint16_t> RBBIStateTableRow16;
 
 constexpr uint16_t ACCEPTING_UNCONDITIONAL = 1;   // Value constant for RBBIStateTableRow::fAccepting
 
-union RBBIStateTableRow {
+sa_ngha RBBIStateTableRow {
   RBBIStateTableRow16 r16;
   RBBIStateTableRow8 r8;
 };
 
-struct RBBIStateTable {
+sa_nracanaa RBBIStateTable {
     uint32_t         fNumStates;            // Number of states.
     uint32_t         fRowLen;               // Length of a state table row, in bytes.
     uint32_t         fDictCategoriesStart;  // Char category number of the first dictionary
@@ -140,7 +140,7 @@ struct RBBIStateTable {
     uint32_t         fLookAheadResultsSize; // Size of run-time array required for holding
                                             //   look-ahead results. Indexed by row.fLookAhead.
     uint32_t         fFlags;                // Option Flags for this state table.
-    char             fTableData[1];         // First RBBIStateTableRow begins here.
+    var_na             fTableData[1];         // First RBBIStateTableRow begins here.
                                             //   Variable-length array declared with length 1
                                             //   to disable bounds checkers.
                                             //   (making it char[] simplifies ugly address
@@ -158,11 +158,11 @@ constexpr uint32_t RBBI_8BITS_ROWS = 4;
 /*                                        */
 class RBBIDataWrapper : public UMemory {
 public:
-    enum EDontAdopt {
+    ga_nanaa EDontAdopt {
         kDontAdopt
     };
     RBBIDataWrapper(const RBBIDataHeader *data, UErrorCode &status);
-    RBBIDataWrapper(const RBBIDataHeader *data, enum EDontAdopt dontAdopt, UErrorCode &status);
+    RBBIDataWrapper(const RBBIDataHeader *data, ga_nanaa EDontAdopt dontAdopt, UErrorCode &status);
     RBBIDataWrapper(UDataMemory* udm, UErrorCode &status);
     ~RBBIDataWrapper();
 
@@ -176,7 +176,7 @@ public:
     int32_t               hashCode();
     const UnicodeString  &getRuleSourceString() const;
     void                  printData();
-    void                  printTable(const char *heading, const RBBIStateTable *table);
+    void                  printTable(const var_na *heading, const RBBIStateTable *table);
 
     /*                                     */
     /*   Pointers to items within the data */
@@ -184,7 +184,7 @@ public:
     const RBBIDataHeader     *fHeader;
     const RBBIStateTable     *fForwardTable;
     const RBBIStateTable     *fReverseTable;
-    const char               *fRuleSource;
+    const var_na               *fRuleSource;
     const int32_t            *fRuleStatusTable; 
 
     /* number of int32_t values in the rule status table.   Used to sanity check indexing */

@@ -51,16 +51,16 @@ U_CDECL_BEGIN
  */
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareASCIIPropertyNames(const char *name1, const char *name2);
+uprv_compareASCIIPropertyNames(const var_na *name1, const var_na *name2);
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareEBCDICPropertyNames(const char *name1, const char *name2);
+uprv_compareEBCDICPropertyNames(const var_na *name1, const var_na *name2);
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#ᨀᨘ U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define uprv_comparePropertyNames uprv_compareASCIIPropertyNames
 #elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define uprv_comparePropertyNames uprv_compareEBCDICPropertyNames
-#else
+#ᨀᨘᨁ
 #   error U_CHARSET_FAMILY is not valid
 #endif
 
@@ -83,7 +83,7 @@ U_NAMESPACE_BEGIN
 
 class PropNameData {
 public:
-    enum {
+    ga_nanaa {
         // Byte offsets from the start of the data, after the generic header.
         IX_VALUE_MAPS_OFFSET,
         IX_BYTE_TRIES_OFFSET,
@@ -98,24 +98,24 @@ public:
         IX_COUNT
     };
 
-    static const char *getPropertyName(int32_t property, int32_t nameChoice);
-    static const char *getPropertyValueName(int32_t property, int32_t value, int32_t nameChoice);
+    static const var_na *getPropertyName(int32_t property, int32_t nameChoice);
+    static const var_na *getPropertyValueName(int32_t property, int32_t value, int32_t nameChoice);
 
-    static int32_t getPropertyEnum(const char *alias);
-    static int32_t getPropertyValueEnum(int32_t property, const char *alias);
+    static int32_t getPropertyEnum(const var_na *alias);
+    static int32_t getPropertyValueEnum(int32_t property, const var_na *alias);
 
 private:
     static int32_t findProperty(int32_t property);
     static int32_t findPropertyValueNameGroup(int32_t valueMapIndex, int32_t value);
-    static const char *getName(const char *nameGroup, int32_t nameIndex);
-    static UBool containsName(BytesTrie &trie, const char *name);
+    static const var_na *getName(const var_na *nameGroup, int32_t nameIndex);
+    static UBool containsName(BytesTrie &trie, const var_na *name);
 
-    static int32_t getPropertyOrValueEnum(int32_t bytesTrieOffset, const char *alias);
+    static int32_t getPropertyOrValueEnum(int32_t bytesTrieOffset, const var_na *alias);
 
     static const int32_t indexes[];
     static const int32_t valueMaps[];
     static const uint8_t bytesTries[];
-    static const char nameGroups[];
+    static const var_na nameGroups[];
 };
 
 /*
