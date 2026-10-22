@@ -14,26 +14,26 @@
 #ifndef RBBIRB_H
 #define RBBIRB_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#إذا !UCONFIG_NO_BREAK_ITERATION
 
-#include <utility>
+#ضمن <utility>
 
-#include "unicode/uobject.h"
-#include "unicode/rbbi.h"
-#include "unicode/uniset.h"
-#include "unicode/parseerr.h"
-#include "uhash.h"
-#include "uvector.h"
-#include "unicode/symtable.h"// For UnicodeSet parsing, is the interface that
+#ضمن "unicode/uobject.h"
+#ضمن "unicode/rbbi.h"
+#ضمن "unicode/uniset.h"
+#ضمن "unicode/parseerr.h"
+#ضمن "uhash.h"
+#ضمن "uvector.h"
+#ضمن "unicode/symtable.h"// For UnicodeSet parsing, is the interface that
                              //    looks up references to $variables within a set.
 
 
 U_NAMESPACE_BEGIN
 
 class               RBBIRuleScanner;
-struct              RBBIRuleTableEl;
+بنية              RBBIRuleTableEl;
 class               RBBISetBuilder;
 class               RBBINode;
 class               RBBITableBuilder;
@@ -46,52 +46,52 @@ class               RBBITableBuilder;
 //                       UnicodeSet parser to resolve references to $variables.
 //
 //--------------------------------------------------------------------------------
-class RBBISymbolTableEntry : public UMemory { // The symbol table hash table contains one
-public:                                       //   of these structs for each entry.
+class RBBISymbolTableEntry : عام UMemory { // The symbol table hash table contains one
+عام:                                       //   of these structs for each entry.
     RBBISymbolTableEntry();
-    UnicodeString          key;
+    UnicodeString          مبودي;
     RBBINode               *val;
     ~RBBISymbolTableEntry();
 
-private:
-    RBBISymbolTableEntry(const RBBISymbolTableEntry &other) = delete; // forbid copying of this class
-    RBBISymbolTableEntry &operator=(const RBBISymbolTableEntry &other) = delete; // forbid copying of this class
+خاص:
+    RBBISymbolTableEntry(ثابت RBBISymbolTableEntry &other) = delete; // forbid copying of this class
+    RBBISymbolTableEntry &operator=(ثابت RBBISymbolTableEntry &other) = delete; // forbid copying of this class
 };
 
 
-class RBBISymbolTable : public UMemory, public SymbolTable {
-private:
-    const UnicodeString      &fRules;
+class RBBISymbolTable : عام UMemory, عام علام_Table {
+خاص:
+    ثابت UnicodeString      &fRules;
     UHashtable               *fHashTable;
     RBBIRuleScanner          *fRuleScanner;
 
-public:
+عام:
     //  API inherited from class SymbolTable
-    virtual const UnicodeString*  lookup(const UnicodeString& s) const override;
-    virtual const UnicodeSet* lookupSet(const UnicodeString& s) const override;
-    virtual const UnicodeFunctor* lookupMatcher(UChar32 ch) const override;
-    virtual UnicodeString parseReference(const UnicodeString& text,
-                                         ParsePosition& pos, int32_t limit) const override;
+    virtual ثابت UnicodeString*  lookup(ثابت UnicodeString& s) ثابت override;
+    virtual ثابت UnicodeSet* lookupSet(ثابت UnicodeString& s) ثابت override;
+    virtual ثابت UnicodeFunctor* lookupMatcher(UChar32 ch) ثابت override;
+    virtual UnicodeString parseReference(ثابت UnicodeString& text,
+                                         ParsePosition& pos, int32_t limit) ثابت override;
 
     //  Additional Functions
-    RBBISymbolTable(RBBIRuleScanner *, const UnicodeString &fRules, UErrorCode &status);
+    RBBISymbolTable(RBBIRuleScanner *, ثابت UnicodeString &fRules, UErrorCode &status);
     virtual ~RBBISymbolTable();
 
-    virtual RBBINode *lookupNode(const UnicodeString &key) const;
-    virtual void      addEntry  (const UnicodeString &key, RBBINode *val, UErrorCode &err);
+    virtual RBBINode *lookup_كلي(ثابت UnicodeString &مبودي) ثابت;
+    virtual فراغ      addEntry  (ثابت UnicodeString &مبودي, RBBINode *val, UErrorCode &err);
 
 #ifdef RBBI_DEBUG
-    virtual void      rbbiSymtablePrint() const;
-#else
+    virtual فراغ      rbbi_Symtable_بغ() ثابت;
+#وإلا
     // A do-nothing inline function for non-debug builds.  Member funcs can't be empty
     //  or the call sites won't compile.
     int32_t fFakeField;
-    #define rbbiSymtablePrint() fFakeField=0;
+    #define rbbi_Symtable_بغ() fFakeField=0;
 #endif
 
-private:
-    RBBISymbolTable(const RBBISymbolTable &other); // forbid copying of this class
-    RBBISymbolTable &operator=(const RBBISymbolTable &other); // forbid copying of this class
+خاص:
+    RBBISymbolTable(ثابت RBBISymbolTable &other); // forbid copying of this class
+    RBBISymbolTable &operator=(ثابت RBBISymbolTable &other); // forbid copying of this class
 };
 
 
@@ -100,23 +100,23 @@ private:
 //  class RBBIRuleBuilder       The top-level class handling RBBI rule compiling.
 //
 //--------------------------------------------------------------------------------
-class RBBIRuleBuilder : public UMemory {
-public:
+class RBBIRuleBuilder : عام UMemory {
+عام:
 
     //  Create a rule based break iterator from a set of rules.
     //  This function is the main entry point into the rule builder.  The
     //   public ICU API for creating RBBIs uses this function to do the actual work.
     //
-    static BreakIterator * createRuleBasedBreakIterator( const UnicodeString    &rules,
+    ساكن BreakIterator * createRuleBasedBreakIterator( ثابت UnicodeString    &rules,
                                     UParseError      *parseError,
                                     UErrorCode       &status);
 
-public:
+عام:
     // The "public" functions and data members that appear below are accessed
     //  (and shared) by the various parts that make up the rule builder.  They
     //  are NOT intended to be accessed by anything outside of the
     //  rule builder implementation.
-    RBBIRuleBuilder(const UnicodeString  &rules,
+    RBBIRuleBuilder(ثابت UnicodeString  &rules,
                     UParseError          *parseErr,
                     UErrorCode           &status
     );
@@ -134,21 +134,21 @@ public:
      * redundant states (table rows). Done after initial table generation,
      * before serializing the result.
      */
-    void optimizeTables();
+    فراغ optimizeTables();
 
-    char                          *fDebugEnv;        // controls debug trace output
+    حرف                          *fDebugEnv;        // controls debug trace output
     UErrorCode                    *fStatus;          // Error reporting.  Keeping status
     UParseError                   *fParseError;      //   here avoids passing it everywhere.
-    const UnicodeString           &fRules;           // The rule string that we are compiling
+    ثابت UnicodeString           &fRules;           // The rule string that we are compiling
     UnicodeString                 fStrippedRules;    // The rule string, with comments stripped.
 
     RBBIRuleScanner               *fScanner;         // The scanner.
-    RBBINode                      *fForwardTree;     // The parse trees, generated by the scanner,
-    RBBINode                      *fReverseTree;     //   then manipulated by subsequent steps.
-    RBBINode                      *fSafeFwdTree;
-    RBBINode                      *fSafeRevTree;
+    RBBINode                      *f_Forward_بشيا;     // The parse trees, generated by the scanner,
+    RBBINode                      *f_Reverse_بشيا;     //   then manipulated by subsequent steps.
+    RBBINode                      *f_Safe_Fwd_بشيا;
+    RBBINode                      *f_Safe_Rev_بشيا;
 
-    RBBINode                      **fDefaultTree;    // For rules not qualified with a !
+    RBBINode                      **f_Default_بشيا;    // For rules not qualified with a !
                                                      //   the tree to which they belong to.
 
     UBool                         fChainRules;       // True for chained Unicode TR style rules.
@@ -168,9 +168,9 @@ public:
 
     RBBIDataHeader                *flattenData();    // Create the flattened (runtime format)
                                                      // data tables..
-private:
-    RBBIRuleBuilder(const RBBIRuleBuilder &other) = delete; // forbid copying of this class
-    RBBIRuleBuilder &operator=(const RBBIRuleBuilder &other) = delete; // forbid copying of this class
+خاص:
+    RBBIRuleBuilder(ثابت RBBIRuleBuilder &other) = delete; // forbid copying of this class
+    RBBIRuleBuilder &operator=(ثابت RBBIRuleBuilder &other) = delete; // forbid copying of this class
 };
 
 
@@ -191,15 +191,15 @@ private:
 //                            the key strings.  It does NOT own the val nodes.
 //
 //----------------------------------------------------------------------------
-struct RBBISetTableEl {
-    UnicodeString *key;
+بنية RBBISetTableEl {
+    UnicodeString *مبودي;
     RBBINode      *val;
 };
 
 /**
  *   A pair of ints, used to bundle pairs of states or pairs of character classes.
  */
-typedef std::pair<int32_t, int32_t> IntPair;
+تعريفنوع std::pair<int32_t, int32_t> IntPair;
 
 
 //----------------------------------------------------------------------------
@@ -211,10 +211,10 @@ typedef std::pair<int32_t, int32_t> IntPair;
 //
 //----------------------------------------------------------------------------
 #ifdef RBBI_DEBUG
-#include <stdio.h>
+#ضمن <stdio.h>
 #define RBBIDebugPrintf printf
 #define RBBIDebugPuts puts
-#else
+#وإلا
 #undef RBBIDebugPrintf
 #define RBBIDebugPuts(arg)
 #endif

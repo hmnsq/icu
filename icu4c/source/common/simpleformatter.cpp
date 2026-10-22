@@ -8,14 +8,14 @@
 * simpleformatter.cpp
 */
 
-#include "unicode/utypes.h"
-#include "unicode/simpleformatter.h"
-#include "unicode/unistr.h"
-#include "uassert.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/simpleformatter.h"
+#ضمن "unicode/unistr.h"
+#ضمن "uassert.h"
 
 U_NAMESPACE_BEGIN
 
-namespace {
+نطاق {
 
 /**
  * Argument numbers must be smaller than this limit.
@@ -23,19 +23,19 @@ namespace {
  * This is currently the only unused char value in compiled patterns,
  * except it is the maximum value of the first unit (max arg +1).
  */
-const int32_t ARG_NUM_LIMIT = 0x100;
+ثابت int32_t ARG_لمب_LIMIT = 0x100;
 /**
  * Initial and maximum char/char16_t value set for a text segment.
  * Segment length char values are from ARG_NUM_LIMIT+1 to this value here.
  * Normally 0xffff, but can be as small as ARG_NUM_LIMIT+1 for testing.
  */
-const char16_t SEGMENT_LENGTH_PLACEHOLDER_CHAR = 0xffff;
+ثابت char16_t SEGMENT_LENGTH_PLACEHOLDER_CHAR = 0xffff;
 /**
  * Maximum length of a text segment. Longer segments are split into shorter ones.
  */
-const int32_t MAX_SEGMENT_LENGTH = SEGMENT_LENGTH_PLACEHOLDER_CHAR - ARG_NUM_LIMIT;
+ثابت int32_t MAX_SEGMENT_LENGTH = SEGMENT_LENGTH_PLACEHOLDER_CHAR - ARG_لمب_LIMIT;
 
-enum {
+تعداد {
     APOS = 0x27,
     DIGIT_ZERO = 0x30,
     DIGIT_ONE = 0x31,
@@ -44,183 +44,183 @@ enum {
     CLOSE_BRACE = 0x7d
 };
 
-inline UBool isInvalidArray(const void *array, int32_t length) {
-   return (length < 0 || (array == nullptr && length != 0));
+مضمن UBool isInvalidArray(ثابت فراغ *array, int32_t length) {
+   أرجع (length < 0 || (array == nullptr && length != 0));
 }
 
 }  // namespace
 
-SimpleFormatter& SimpleFormatter::operator=(const SimpleFormatter& other) U_LIFETIME_BOUND {
-    if (this == &other) {
-        return *this;
+SimpleFormatter& SimpleFormatter::operator=(ثابت SimpleFormatter& other) U_LIFETIME_BOUND {
+    إذا (هذا == &other) {
+        أرجع *هذا;
     }
     compiledPattern = other.compiledPattern;
-    return *this;
+    أرجع *هذا;
 }
 
 SimpleFormatter::~SimpleFormatter() {}
 
 UBool SimpleFormatter::applyPatternMinMaxArguments(
-        const UnicodeString &pattern,
+        ثابت UnicodeString &pattern,
         int32_t min, int32_t max,
         UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return false;
+    إذا (U_FAILURE(errorCode)) {
+        أرجع خطأ;
     }
     // Parse consistent with MessagePattern, but
     // - support only simple numbered arguments
     // - build a simple binary structure into the result string
-    const char16_t *patternBuffer = pattern.getBuffer();
+    ثابت char16_t *patternBuffer = pattern.getBuffer();
     int32_t patternLength = pattern.length();
     // Reserve the first char for the number of arguments.
     compiledPattern.setTo(static_cast<char16_t>(0));
     int32_t textLength = 0;
     int32_t maxArg = -1;
-    UBool inQuote = false;
-    for (int32_t i = 0; i < patternLength;) {
+    UBool inQuote = خطأ;
+    لكل (int32_t i = 0; i < patternLength;) {
         char16_t c = patternBuffer[i++];
-        if (c == APOS) {
-            if (i < patternLength && (c = patternBuffer[i]) == APOS) {
+        إذا (c == APOS) {
+            إذا (i < patternLength && (c = patternBuffer[i]) == APOS) {
                 // double apostrophe, skip the second one
                 ++i;
-            } else if (inQuote) {
+            } وإلا إذا (inQuote) {
                 // skip the quote-ending apostrophe
-                inQuote = false;
-                continue;
-            } else if (c == OPEN_BRACE || c == CLOSE_BRACE) {
+                inQuote = خطأ;
+                استمر;
+            } وإلا إذا (c == OPEN_BRACE || c == CLOSE_BRACE) {
                 // Skip the quote-starting apostrophe, find the end of the quoted literal text.
                 ++i;
                 inQuote = true;
-            } else {
+            } وإلا {
                 // The apostrophe is part of literal text.
                 c = APOS;
             }
-        } else if (!inQuote && c == OPEN_BRACE) {
-            if (textLength > 0) {
+        } وإلا إذا (!inQuote && c == OPEN_BRACE) {
+            إذا (textLength > 0) {
                 compiledPattern.setCharAt(compiledPattern.length() - textLength - 1,
-                                          static_cast<char16_t>(ARG_NUM_LIMIT + textLength));
+                                          static_cast<char16_t>(ARG_لمب_LIMIT + textLength));
                 textLength = 0;
             }
-            int32_t argNumber;
-            if ((i + 1) < patternLength &&
-                    0 <= (argNumber = patternBuffer[i] - DIGIT_ZERO) && argNumber <= 9 &&
+            int32_t arg_لمب;
+            إذا ((i + 1) < patternLength &&
+                    0 <= (arg_لمب = patternBuffer[i] - DIGIT_ZERO) && arg_لمب <= 9 &&
                     patternBuffer[i + 1] == CLOSE_BRACE) {
                 i += 2;
-            } else {
+            } وإلا {
                 // Multi-digit argument number (no leading zero) or syntax error.
                 // MessagePattern permits PatternProps.skipWhiteSpace(pattern, index)
                 // around the number, but this class does not.
-                argNumber = -1;
-                if (i < patternLength && DIGIT_ONE <= (c = patternBuffer[i++]) && c <= DIGIT_NINE) {
-                    argNumber = c - DIGIT_ZERO;
-                    while (i < patternLength &&
+                arg_لمب = -1;
+                إذا (i < patternLength && DIGIT_ONE <= (c = patternBuffer[i++]) && c <= DIGIT_NINE) {
+                    arg_لمب = c - DIGIT_ZERO;
+                    طالما (i < patternLength &&
                             DIGIT_ZERO <= (c = patternBuffer[i++]) && c <= DIGIT_NINE) {
-                        argNumber = argNumber * 10 + (c - DIGIT_ZERO);
-                        if (argNumber >= ARG_NUM_LIMIT) {
-                            break;
+                        arg_لمب = arg_لمب * 10 + (c - DIGIT_ZERO);
+                        إذا (arg_لمب >= ARG_لمب_LIMIT) {
+                            اكسر;
                         }
                     }
                 }
-                if (argNumber < 0 || c != CLOSE_BRACE) {
+                إذا (arg_لمب < 0 || c != CLOSE_BRACE) {
                     errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                    return false;
+                    أرجع خطأ;
                 }
             }
-            if (argNumber > maxArg) {
-                maxArg = argNumber;
+            إذا (arg_لمب > maxArg) {
+                maxArg = arg_لمب;
             }
-            compiledPattern.append(static_cast<char16_t>(argNumber));
-            continue;
+            compiledPattern.append(static_cast<char16_t>(arg_لمب));
+            استمر;
         }  // else: c is part of literal text
         // Append c and track the literal-text segment length.
-        if (textLength == 0) {
+        إذا (textLength == 0) {
             // Reserve a char for the length of a new text segment, preset the maximum length.
             compiledPattern.append(SEGMENT_LENGTH_PLACEHOLDER_CHAR);
         }
         compiledPattern.append(c);
-        if (++textLength == MAX_SEGMENT_LENGTH) {
+        إذا (++textLength == MAX_SEGMENT_LENGTH) {
             textLength = 0;
         }
     }
-    if (textLength > 0) {
+    إذا (textLength > 0) {
         compiledPattern.setCharAt(compiledPattern.length() - textLength - 1,
-                                  static_cast<char16_t>(ARG_NUM_LIMIT + textLength));
+                                  static_cast<char16_t>(ARG_لمب_LIMIT + textLength));
     }
-    int32_t argCount = maxArg + 1;
-    if (argCount < min || max < argCount) {
+    int32_t arg_كدي = maxArg + 1;
+    إذا (arg_كدي < min || max < arg_كدي) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        أرجع خطأ;
     }
-    compiledPattern.setCharAt(0, static_cast<char16_t>(argCount));
-    return true;
+    compiledPattern.setCharAt(0, static_cast<char16_t>(arg_كدي));
+    أرجع true;
 }
 
 UnicodeString& SimpleFormatter::format(
-        const UnicodeString& value0,
+        ثابت UnicodeString& value0,
         UnicodeString& appendTo U_LIFETIME_BOUND,
-        UErrorCode& errorCode) const {
-    const UnicodeString *values[] = { &value0 };
-    return formatAndAppend(values, 1, appendTo, nullptr, 0, errorCode);
+        UErrorCode& errorCode) ثابت {
+    ثابت UnicodeString *درجوجي[] = { &value0 };
+    أرجع formatAndAppend(درجوجي, 1, appendTo, nullptr, 0, errorCode);
 }
 
 UnicodeString& SimpleFormatter::format(
-        const UnicodeString& value0,
-        const UnicodeString& value1,
+        ثابت UnicodeString& value0,
+        ثابت UnicodeString& value1,
         UnicodeString& appendTo U_LIFETIME_BOUND,
-        UErrorCode& errorCode) const {
-    const UnicodeString *values[] = { &value0, &value1 };
-    return formatAndAppend(values, 2, appendTo, nullptr, 0, errorCode);
+        UErrorCode& errorCode) ثابت {
+    ثابت UnicodeString *درجوجي[] = { &value0, &value1 };
+    أرجع formatAndAppend(درجوجي, 2, appendTo, nullptr, 0, errorCode);
 }
 
 UnicodeString& SimpleFormatter::format(
-        const UnicodeString& value0,
-        const UnicodeString& value1,
-        const UnicodeString& value2,
+        ثابت UnicodeString& value0,
+        ثابت UnicodeString& value1,
+        ثابت UnicodeString& value2,
         UnicodeString& appendTo U_LIFETIME_BOUND,
-        UErrorCode& errorCode) const {
-    const UnicodeString *values[] = { &value0, &value1, &value2 };
-    return formatAndAppend(values, 3, appendTo, nullptr, 0, errorCode);
+        UErrorCode& errorCode) ثابت {
+    ثابت UnicodeString *درجوجي[] = { &value0, &value1, &value2 };
+    أرجع formatAndAppend(درجوجي, 3, appendTo, nullptr, 0, errorCode);
 }
 
 UnicodeString& SimpleFormatter::formatAndAppend(
-        const UnicodeString* const* values,
-        int32_t valuesLength,
+        ثابت UnicodeString* ثابت* درجوجي,
+        int32_t درجوجي_Length,
         UnicodeString& appendTo U_LIFETIME_BOUND,
         int32_t* offsets,
         int32_t offsetsLength,
-        UErrorCode& errorCode) const {
-    if (U_FAILURE(errorCode)) {
-        return appendTo;
+        UErrorCode& errorCode) ثابت {
+    إذا (U_FAILURE(errorCode)) {
+        أرجع appendTo;
     }
-    if (isInvalidArray(values, valuesLength) || isInvalidArray(offsets, offsetsLength) ||
-            valuesLength < getArgumentLimit()) {
+    إذا (isInvalidArray(درجوجي, درجوجي_Length) || isInvalidArray(offsets, offsetsLength) ||
+            درجوجي_Length < getArgumentLimit()) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return appendTo;
+        أرجع appendTo;
     }
-    return format(compiledPattern.getBuffer(), compiledPattern.length(), values,
+    أرجع format(compiledPattern.getBuffer(), compiledPattern.length(), درجوجي,
                   appendTo, nullptr, true,
                   offsets, offsetsLength, errorCode);
 }
 
 UnicodeString& SimpleFormatter::formatAndReplace(
-        const UnicodeString* const* values,
-        int32_t valuesLength,
+        ثابت UnicodeString* ثابت* درجوجي,
+        int32_t درجوجي_Length,
         UnicodeString& result U_LIFETIME_BOUND,
         int32_t* offsets,
         int32_t offsetsLength,
-        UErrorCode& errorCode) const {
-    if (U_FAILURE(errorCode)) {
-        return result;
+        UErrorCode& errorCode) ثابت {
+    إذا (U_FAILURE(errorCode)) {
+        أرجع result;
     }
-    if (isInvalidArray(values, valuesLength) || isInvalidArray(offsets, offsetsLength)) {
+    إذا (isInvalidArray(درجوجي, درجوجي_Length) || isInvalidArray(offsets, offsetsLength)) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return result;
+        أرجع result;
     }
-    const char16_t *cp = compiledPattern.getBuffer();
+    ثابت char16_t *cp = compiledPattern.getBuffer();
     int32_t cpLength = compiledPattern.length();
-    if (valuesLength < getArgumentLimit(cp, cpLength)) {
+    إذا (درجوجي_Length < getArgumentLimit(cp, cpLength)) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return result;
+        أرجع result;
     }
 
     // If the pattern starts with an argument whose value is the same object
@@ -230,109 +230,109 @@ UnicodeString& SimpleFormatter::formatAndReplace(
     // If any non-initial argument value is the same object as the result,
     // then we first copy its contents and use that instead while formatting.
     UnicodeString resultCopy;
-    if (getArgumentLimit(cp, cpLength) > 0) {
-        for (int32_t i = 1; i < cpLength;) {
+    إذا (getArgumentLimit(cp, cpLength) > 0) {
+        لكل (int32_t i = 1; i < cpLength;) {
             int32_t n = cp[i++];
-            if (n < ARG_NUM_LIMIT) {
-                if (values[n] == &result) {
-                    if (i == 2) {
+            إذا (n < ARG_لمب_LIMIT) {
+                إذا (درجوجي[n] == &result) {
+                    إذا (i == 2) {
                         firstArg = n;
-                    } else if (resultCopy.isEmpty() && !result.isEmpty()) {
+                    } وإلا إذا (resultCopy.isEmpty() && !result.isEmpty()) {
                         resultCopy = result;
                     }
                 }
-            } else {
-                i += n - ARG_NUM_LIMIT;
+            } وإلا {
+                i += n - ARG_لمب_LIMIT;
             }
         }
     }
-    if (firstArg < 0) {
+    إذا (firstArg < 0) {
         result.remove();
     }
-    return format(cp, cpLength, values,
-                  result, &resultCopy, false,
+    أرجع format(cp, cpLength, درجوجي,
+                  result, &resultCopy, خطأ,
                   offsets, offsetsLength, errorCode);
 }
 
 UnicodeString SimpleFormatter::getTextWithNoArguments(
-        const char16_t *compiledPattern,
+        ثابت char16_t *compiledPattern,
         int32_t compiledPatternLength,
         int32_t* offsets,
         int32_t offsetsLength) {
-    for (int32_t i = 0; i < offsetsLength; i++) {
+    لكل (int32_t i = 0; i < offsetsLength; i++) {
         offsets[i] = -1;
     }
     int32_t capacity = compiledPatternLength - 1 -
             getArgumentLimit(compiledPattern, compiledPatternLength);
     UnicodeString sb(capacity, 0, 0);  // Java: StringBuilder
-    for (int32_t i = 1; i < compiledPatternLength;) {
+    لكل (int32_t i = 1; i < compiledPatternLength;) {
         int32_t n = compiledPattern[i++];
-        if (n > ARG_NUM_LIMIT) {
-            n -= ARG_NUM_LIMIT;
+        إذا (n > ARG_لمب_LIMIT) {
+            n -= ARG_لمب_LIMIT;
             sb.append(compiledPattern + i, n);
             i += n;
-        } else if (n < offsetsLength) {
+        } وإلا إذا (n < offsetsLength) {
             // TODO(ICU-20406): This does not distinguish between "{0}{1}" and "{1}{0}".
             // Consider removing this function and replacing it with an iterator interface.
             offsets[n] = sb.length();
         }
     }
-    return sb;
+    أرجع sb;
 }
 
 UnicodeString& SimpleFormatter::format(
-        const char16_t* compiledPattern,
+        ثابت char16_t* compiledPattern,
         int32_t compiledPatternLength,
-        const UnicodeString* const* values,
+        ثابت UnicodeString* ثابت* درجوجي,
         UnicodeString& result U_LIFETIME_BOUND,
-        const UnicodeString* resultCopy,
-        UBool forbidResultAsValue,
+        ثابت UnicodeString* resultCopy,
+        UBool forbid_Result_As_درج,
         int32_t* offsets,
         int32_t offsetsLength,
         UErrorCode& errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return result;
+    إذا (U_FAILURE(errorCode)) {
+        أرجع result;
     }
-    for (int32_t i = 0; i < offsetsLength; i++) {
+    لكل (int32_t i = 0; i < offsetsLength; i++) {
         offsets[i] = -1;
     }
-    for (int32_t i = 1; i < compiledPatternLength;) {
+    لكل (int32_t i = 1; i < compiledPatternLength;) {
         int32_t n = compiledPattern[i++];
-        if (n < ARG_NUM_LIMIT) {
-            const UnicodeString *value = values[n];
-            if (value == nullptr) {
+        إذا (n < ARG_لمب_LIMIT) {
+            ثابت UnicodeString *value = درجوجي[n];
+            إذا (value == nullptr) {
                 errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                return result;
+                أرجع result;
             }
-            if (value == &result) {
-                if (forbidResultAsValue) {
+            إذا (value == &result) {
+                إذا (forbid_Result_As_درج) {
                     errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                    return result;
+                    أرجع result;
                 }
-                if (i == 2) {
+                إذا (i == 2) {
                     // We are appending to result which is also the first value object.
-                    if (n < offsetsLength) {
+                    إذا (n < offsetsLength) {
                         offsets[n] = 0;
                     }
-                } else {
-                    if (n < offsetsLength) {
+                } وإلا {
+                    إذا (n < offsetsLength) {
                         offsets[n] = result.length();
                     }
                     result.append(*resultCopy);
                 }
-            } else {
-                if (n < offsetsLength) {
+            } وإلا {
+                إذا (n < offsetsLength) {
                     offsets[n] = result.length();
                 }
                 result.append(*value);
             }
-        } else {
-            int32_t length = n - ARG_NUM_LIMIT;
+        } وإلا {
+            int32_t length = n - ARG_لمب_LIMIT;
             result.append(compiledPattern + i, length);
             i += length;
         }
     }
-    return result;
+    أرجع result;
 }
 
 U_NAMESPACE_END

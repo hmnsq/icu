@@ -19,13 +19,13 @@
 *   for better modularization.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "udataswp.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "uassert.h"
-#include "uinvchar.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/ustring.h"
+#ضمن "udataswp.h"
+#ضمن "cstring.h"
+#ضمن "cmemory.h"
+#ضمن "uassert.h"
+#ضمن "uinvchar.h"
 
 /* invariant-character handling --------------------------------------------- */
 
@@ -62,7 +62,7 @@
  * These tables do not establish a converter or a codepage.
  */
 
-static const uint8_t asciiFromEbcdic[256]={
+ساكن ثابت uint8_t asciiFromEbcdic[256]={
     0x00, 0x01, 0x02, 0x03, 0x00, 0x09, 0x00, 0x7f, 0x00, 0x00, 0x00, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
     0x10, 0x11, 0x12, 0x13, 0x00, 0x0a, 0x08, 0x00, 0x18, 0x19, 0x00, 0x00, 0x1c, 0x1d, 0x1e, 0x1f,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x0a, 0x17, 0x1b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x06, 0x07,
@@ -84,7 +84,7 @@ static const uint8_t asciiFromEbcdic[256]={
     0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-static const uint8_t ebcdicFromAscii[256]={
+ساكن ثابت uint8_t ebcdicFromAscii[256]={
     0x00, 0x01, 0x02, 0x03, 0x37, 0x2d, 0x2e, 0x2f, 0x16, 0x05, 0x00, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
     0x10, 0x11, 0x12, 0x13, 0x3c, 0x3d, 0x32, 0x26, 0x18, 0x19, 0x3f, 0x27, 0x1c, 0x1d, 0x1e, 0x1f,
     0x40, 0x00, 0x7f, 0x00, 0x00, 0x6c, 0x50, 0x7d, 0x4d, 0x5d, 0x5c, 0x4e, 0x6b, 0x60, 0x4b, 0x61,
@@ -107,7 +107,7 @@ static const uint8_t ebcdicFromAscii[256]={
 };
 
 /* Same as asciiFromEbcdic[] except maps all letters to lowercase. */
-static const uint8_t lowercaseAsciiFromEbcdic[256]={
+ساكن ثابت uint8_t lowercaseAsciiFromEbcdic[256]={
     0x00, 0x01, 0x02, 0x03, 0x00, 0x09, 0x00, 0x7f, 0x00, 0x00, 0x00, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
     0x10, 0x11, 0x12, 0x13, 0x00, 0x0a, 0x08, 0x00, 0x18, 0x19, 0x00, 0x00, 0x1c, 0x1d, 0x1e, 0x1f,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x0a, 0x17, 0x1b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x06, 0x07,
@@ -154,7 +154,7 @@ static const uint8_t lowercaseAsciiFromEbcdic[256]={
  * 7d  '}' <right brace>
  * 7e  '~' <tilde>
  */
-static const uint32_t invariantChars[4]={
+ساكن ثابت uint32_t invariantChars[4]={
     0xfffffbff, /* 00..1f but not 0a */
     0xffffffe5, /* 20..3f but not 21 23 24 */
     0x87fffffe, /* 40..5f but not 40 5b..5e */
@@ -170,19 +170,19 @@ static const uint32_t invariantChars[4]={
 /* test signed types for invariant characters, adds test for positive values */
 #define SCHAR_IS_INVARIANT(c) ((0<=(c)) && UCHAR_IS_INVARIANT(c))
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#إذا U_CHARSET_FAMILY==U_ASCII_FAMILY
 #define CHAR_TO_UCHAR(c) c
 #define UCHAR_TO_CHAR(c) c
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#وإلاإذا U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #define CHAR_TO_UCHAR(u) asciiFromEbcdic[u]
 #define UCHAR_TO_CHAR(u) ebcdicFromAscii[u]
-#else
+#وإلا
 #   error U_CHARSET_FAMILY is not valid
 #endif
 
 
-U_CAPI void U_EXPORT2
-u_charsToUChars(const char *cs, char16_t *us, int32_t length) {
+U_CAPI فراغ U_EXPORT2
+u_charsToUChars(ثابت حرف *cs, char16_t *us, int32_t length) {
     char16_t u;
     uint8_t c;
 
@@ -191,7 +191,7 @@ u_charsToUChars(const char *cs, char16_t *us, int32_t length) {
      * For EBCDIC systems, this works for characters with codes from
      * codepages 37 and 1047 or compatible.
      */
-    while(length>0) {
+    طالما(length>0) {
         c=(uint8_t)(*cs++);
         u=(char16_t)CHAR_TO_UCHAR(c);
         U_ASSERT((u!=0 || c==0)); /* only invariant chars converted? */
@@ -200,41 +200,41 @@ u_charsToUChars(const char *cs, char16_t *us, int32_t length) {
     }
 }
 
-U_CAPI void U_EXPORT2
-u_UCharsToChars(const char16_t *us, char *cs, int32_t length) {
+U_CAPI فراغ U_EXPORT2
+u_UCharsToChars(ثابت char16_t *us, حرف *cs, int32_t length) {
     char16_t u;
 
-    while(length>0) {
+    طالما(length>0) {
         u=*us++;
-        if(!UCHAR_IS_INVARIANT(u)) {
-            U_ASSERT(false); /* Variant characters were used. These are not portable in ICU. */
+        إذا(!UCHAR_IS_INVARIANT(u)) {
+            U_ASSERT(خطأ); /* Variant characters were used. These are not portable in ICU. */
             u=0;
         }
-        *cs++=(char)UCHAR_TO_CHAR(u);
+        *cs++=(حرف)UCHAR_TO_CHAR(u);
         --length;
     }
 }
 
 U_CAPI UBool U_EXPORT2
-uprv_isInvariantString(const char *s, int32_t length) {
+uprv_isInvariantString(ثابت حرف *s, int32_t length) {
     uint8_t c;
 
-    for(;;) {
-        if(length<0) {
+    لكل(;;) {
+        إذا(length<0) {
             /* NUL-terminated */
             c=(uint8_t)*s++;
-            if(c==0) {
-                break;
+            إذا(c==0) {
+                اكسر;
             }
-        } else {
+        } وإلا {
             /* count length */
-            if(length==0) {
-                break;
+            إذا(length==0) {
+                اكسر;
             }
             --length;
             c=(uint8_t)*s++;
-            if(c==0) {
-                continue; /* NUL is invariant */
+            إذا(c==0) {
+                استمر; /* NUL is invariant */
             }
         }
         /* c!=0 now, one branch below checks c==0 for variant characters */
@@ -243,37 +243,37 @@ uprv_isInvariantString(const char *s, int32_t length) {
          * no assertions here because these functions are legitimately called
          * for strings with variant characters
          */
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
-        if(!UCHAR_IS_INVARIANT(c)) {
-            return false; /* found a variant char */
+#إذا U_CHARSET_FAMILY==U_ASCII_FAMILY
+        إذا(!UCHAR_IS_INVARIANT(c)) {
+            أرجع خطأ; /* found a variant char */
         }
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#وإلاإذا U_CHARSET_FAMILY==U_EBCDIC_FAMILY
         c=CHAR_TO_UCHAR(c);
-        if(c==0 || !UCHAR_IS_INVARIANT(c)) {
-            return false; /* found a variant char */
+        إذا(c==0 || !UCHAR_IS_INVARIANT(c)) {
+            أرجع خطأ; /* found a variant char */
         }
-#else
+#وإلا
 #   error U_CHARSET_FAMILY is not valid
 #endif
     }
-    return true;
+    أرجع true;
 }
 
 U_CAPI UBool U_EXPORT2
-uprv_isInvariantUString(const char16_t *s, int32_t length) {
+uprv_isInvariantUString(ثابت char16_t *s, int32_t length) {
     char16_t c;
 
-    for(;;) {
-        if(length<0) {
+    لكل(;;) {
+        إذا(length<0) {
             /* NUL-terminated */
             c=*s++;
-            if(c==0) {
-                break;
+            إذا(c==0) {
+                اكسر;
             }
-        } else {
+        } وإلا {
             /* count length */
-            if(length==0) {
-                break;
+            إذا(length==0) {
+                اكسر;
             }
             --length;
             c=*s++;
@@ -283,345 +283,345 @@ uprv_isInvariantUString(const char16_t *s, int32_t length) {
          * no assertions here because these functions are legitimately called
          * for strings with variant characters
          */
-        if(!UCHAR_IS_INVARIANT(c)) {
-            return false; /* found a variant char */
+        إذا(!UCHAR_IS_INVARIANT(c)) {
+            أرجع خطأ; /* found a variant char */
         }
     }
-    return true;
+    أرجع true;
 }
 
 /* UDataSwapFn implementations used in udataswp.c ------- */
 
 /* convert ASCII to EBCDIC and verify that all characters are invariant */
 U_CAPI int32_t U_EXPORT2
-uprv_ebcdicFromAscii(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
+uprv_ebcdicFromAscii(ثابت UDataSwapper *ds,
+                     ثابت فراغ *inData, int32_t length, فراغ *outData,
                      UErrorCode *pErrorCode) {
-    const uint8_t *s;
+    ثابت uint8_t *s;
     uint8_t *t;
     uint8_t c;
 
     int32_t count;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    إذا(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        أرجع 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
+    إذا(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        أرجع 0;
     }
 
     /* setup and swapping */
-    s=(const uint8_t *)inData;
+    s=(ثابت uint8_t *)inData;
     t=(uint8_t *)outData;
     count=length;
-    while(count>0) {
+    طالما(count>0) {
         c=*s++;
-        if(!UCHAR_IS_INVARIANT(c)) {
-            udata_printError(ds, "uprv_ebcdicFromAscii() string[%d] contains a variant character in position %d\n",
+        إذا(!UCHAR_IS_INVARIANT(c)) {
+            udata_بغ_Error(ds, "uprv_ebcdicFromAscii() string[%d] contains a variant character in position %d\n",
                              length, length-count);
             *pErrorCode=U_INVALID_CHAR_FOUND;
-            return 0;
+            أرجع 0;
         }
         *t++=ebcdicFromAscii[c];
         --count;
     }
 
-    return length;
+    أرجع length;
 }
 
 /* this function only checks and copies ASCII strings without conversion */
 U_CFUNC int32_t
-uprv_copyAscii(const UDataSwapper *ds,
-               const void *inData, int32_t length, void *outData,
+uprv_copyAscii(ثابت UDataSwapper *ds,
+               ثابت فراغ *inData, int32_t length, فراغ *outData,
                UErrorCode *pErrorCode) {
-    const uint8_t *s;
+    ثابت uint8_t *s;
     uint8_t c;
 
     int32_t count;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    إذا(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        أرجع 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
+    إذا(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        أرجع 0;
     }
 
     /* setup and checking */
-    s=(const uint8_t *)inData;
+    s=(ثابت uint8_t *)inData;
     count=length;
-    while(count>0) {
+    طالما(count>0) {
         c=*s++;
-        if(!UCHAR_IS_INVARIANT(c)) {
-            udata_printError(ds, "uprv_copyFromAscii() string[%d] contains a variant character in position %d\n",
+        إذا(!UCHAR_IS_INVARIANT(c)) {
+            udata_بغ_Error(ds, "uprv_copyFromAscii() string[%d] contains a variant character in position %d\n",
                              length, length-count);
             *pErrorCode=U_INVALID_CHAR_FOUND;
-            return 0;
+            أرجع 0;
         }
         --count;
     }
 
-    if(length>0 && inData!=outData) {
+    إذا(length>0 && inData!=outData) {
         uprv_memcpy(outData, inData, length);
     }
 
-    return length;
+    أرجع length;
 }
 
 /* convert EBCDIC to ASCII and verify that all characters are invariant */
 U_CFUNC int32_t
-uprv_asciiFromEbcdic(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
+uprv_asciiFromEbcdic(ثابت UDataSwapper *ds,
+                     ثابت فراغ *inData, int32_t length, فراغ *outData,
                      UErrorCode *pErrorCode) {
-    const uint8_t *s;
+    ثابت uint8_t *s;
     uint8_t *t;
     uint8_t c;
 
     int32_t count;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    إذا(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        أرجع 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 ||  (length>0 && outData==nullptr)) {
+    إذا(ds==nullptr || inData==nullptr || length<0 ||  (length>0 && outData==nullptr)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        أرجع 0;
     }
 
     /* setup and swapping */
-    s=(const uint8_t *)inData;
+    s=(ثابت uint8_t *)inData;
     t=(uint8_t *)outData;
     count=length;
-    while(count>0) {
+    طالما(count>0) {
         c=*s++;
-        if(c!=0 && ((c=asciiFromEbcdic[c])==0 || !UCHAR_IS_INVARIANT(c))) {
-            udata_printError(ds, "uprv_asciiFromEbcdic() string[%d] contains a variant character in position %d\n",
+        إذا(c!=0 && ((c=asciiFromEbcdic[c])==0 || !UCHAR_IS_INVARIANT(c))) {
+            udata_بغ_Error(ds, "uprv_asciiFromEbcdic() string[%d] contains a variant character in position %d\n",
                              length, length-count);
             *pErrorCode=U_INVALID_CHAR_FOUND;
-            return 0;
+            أرجع 0;
         }
         *t++=c;
         --count;
     }
 
-    return length;
+    أرجع length;
 }
 
 /* this function only checks and copies EBCDIC strings without conversion */
 U_CFUNC int32_t
-uprv_copyEbcdic(const UDataSwapper *ds,
-                const void *inData, int32_t length, void *outData,
+uprv_copyEbcdic(ثابت UDataSwapper *ds,
+                ثابت فراغ *inData, int32_t length, فراغ *outData,
                 UErrorCode *pErrorCode) {
-    const uint8_t *s;
+    ثابت uint8_t *s;
     uint8_t c;
 
     int32_t count;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    إذا(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        أرجع 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
+    إذا(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        أرجع 0;
     }
 
     /* setup and checking */
-    s=(const uint8_t *)inData;
+    s=(ثابت uint8_t *)inData;
     count=length;
-    while(count>0) {
+    طالما(count>0) {
         c=*s++;
-        if(c!=0 && ((c=asciiFromEbcdic[c])==0 || !UCHAR_IS_INVARIANT(c))) {
-            udata_printError(ds, "uprv_copyEbcdic() string[%] contains a variant character in position %d\n",
+        إذا(c!=0 && ((c=asciiFromEbcdic[c])==0 || !UCHAR_IS_INVARIANT(c))) {
+            udata_بغ_Error(ds, "uprv_copyEbcdic() string[%] contains a variant character in position %d\n",
                              length, length-count);
             *pErrorCode=U_INVALID_CHAR_FOUND;
-            return 0;
+            أرجع 0;
         }
         --count;
     }
 
-    if(length>0 && inData!=outData) {
+    إذا(length>0 && inData!=outData) {
         uprv_memcpy(outData, inData, length);
     }
 
-    return length;
+    أرجع length;
 }
 
 U_CAPI UBool
-uprv_isEbcdicAtSign(char c) {
-    static const uint8_t ebcdicAtSigns[] = {
+uprv_isEbcdicAtSign(حرف c) {
+    ساكن ثابت uint8_t ebcdicAtSigns[] = {
         0x7C, 0x44, 0x66, 0x80, 0xAC, 0xAE, 0xAF, 0xB5, 0xEC, 0xEF, 0x00 };
-    return c != 0 && uprv_strchr((const char *)ebcdicAtSigns, c) != nullptr;
+    أرجع c != 0 && uprv_strchr((ثابت حرف *)ebcdicAtSigns, c) != nullptr;
 }
 
 /* compare invariant strings; variant characters compare less than others and unlike each other */
 U_CFUNC int32_t
-uprv_compareInvAscii(const UDataSwapper *ds,
-                     const char *outString, int32_t outLength,
-                     const char16_t *localString, int32_t localLength) {
-    (void)ds;
+uprv_compareInvAscii(ثابت UDataSwapper *ds,
+                     ثابت حرف *outString, int32_t outLength,
+                     ثابت char16_t *localString, int32_t localLength) {
+    (فراغ)ds;
     int32_t minLength;
     UChar32 c1, c2;
     uint8_t c;
 
-    if(outString==nullptr || outLength<-1 || localString==nullptr || localLength<-1) {
-        return 0;
+    إذا(outString==nullptr || outLength<-1 || localString==nullptr || localLength<-1) {
+        أرجع 0;
     }
 
-    if(outLength<0) {
+    إذا(outLength<0) {
         outLength=(int32_t)uprv_strlen(outString);
     }
-    if(localLength<0) {
+    إذا(localLength<0) {
         localLength=u_strlen(localString);
     }
 
     minLength= outLength<localLength ? outLength : localLength;
 
-    while(minLength>0) {
+    طالما(minLength>0) {
         c=(uint8_t)*outString++;
-        if(UCHAR_IS_INVARIANT(c)) {
+        إذا(UCHAR_IS_INVARIANT(c)) {
             c1=c;
-        } else {
+        } وإلا {
             c1=-1;
         }
 
         c2=*localString++;
-        if(!UCHAR_IS_INVARIANT(c2)) {
+        إذا(!UCHAR_IS_INVARIANT(c2)) {
             c2=-2;
         }
 
-        if((c1-=c2)!=0) {
-            return c1;
+        إذا((c1-=c2)!=0) {
+            أرجع c1;
         }
 
         --minLength;
     }
 
     /* strings start with same prefix, compare lengths */
-    return outLength-localLength;
+    أرجع outLength-localLength;
 }
 
 U_CFUNC int32_t
-uprv_compareInvEbcdic(const UDataSwapper *ds,
-                      const char *outString, int32_t outLength,
-                      const char16_t *localString, int32_t localLength) {
-    (void)ds;
+uprv_compareInvEbcdic(ثابت UDataSwapper *ds,
+                      ثابت حرف *outString, int32_t outLength,
+                      ثابت char16_t *localString, int32_t localLength) {
+    (فراغ)ds;
     int32_t minLength;
     UChar32 c1, c2;
     uint8_t c;
 
-    if(outString==nullptr || outLength<-1 || localString==nullptr || localLength<-1) {
-        return 0;
+    إذا(outString==nullptr || outLength<-1 || localString==nullptr || localLength<-1) {
+        أرجع 0;
     }
 
-    if(outLength<0) {
+    إذا(outLength<0) {
         outLength=(int32_t)uprv_strlen(outString);
     }
-    if(localLength<0) {
+    إذا(localLength<0) {
         localLength=u_strlen(localString);
     }
 
     minLength= outLength<localLength ? outLength : localLength;
 
-    while(minLength>0) {
+    طالما(minLength>0) {
         c=(uint8_t)*outString++;
-        if(c==0) {
+        إذا(c==0) {
             c1=0;
-        } else if((c1=asciiFromEbcdic[c])!=0 && UCHAR_IS_INVARIANT(c1)) {
+        } وإلا إذا((c1=asciiFromEbcdic[c])!=0 && UCHAR_IS_INVARIANT(c1)) {
             /* c1 is set */
-        } else {
+        } وإلا {
             c1=-1;
         }
 
         c2=*localString++;
-        if(!UCHAR_IS_INVARIANT(c2)) {
+        إذا(!UCHAR_IS_INVARIANT(c2)) {
             c2=-2;
         }
 
-        if((c1-=c2)!=0) {
-            return c1;
+        إذا((c1-=c2)!=0) {
+            أرجع c1;
         }
 
         --minLength;
     }
 
     /* strings start with same prefix, compare lengths */
-    return outLength-localLength;
+    أرجع outLength-localLength;
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareInvEbcdicAsAscii(const char *s1, const char *s2) {
+uprv_compareInvEbcdicAsAscii(ثابت حرف *s1, ثابت حرف *s2) {
     int32_t c1, c2;
 
-    for(;; ++s1, ++s2) {
+    لكل(;; ++s1, ++s2) {
         c1=(uint8_t)*s1;
         c2=(uint8_t)*s2;
-        if(c1!=c2) {
-            if(c1!=0 && ((c1=asciiFromEbcdic[c1])==0 || !UCHAR_IS_INVARIANT(c1))) {
+        إذا(c1!=c2) {
+            إذا(c1!=0 && ((c1=asciiFromEbcdic[c1])==0 || !UCHAR_IS_INVARIANT(c1))) {
                 c1=-(int32_t)(uint8_t)*s1;
             }
-            if(c2!=0 && ((c2=asciiFromEbcdic[c2])==0 || !UCHAR_IS_INVARIANT(c2))) {
+            إذا(c2!=0 && ((c2=asciiFromEbcdic[c2])==0 || !UCHAR_IS_INVARIANT(c2))) {
                 c2=-(int32_t)(uint8_t)*s2;
             }
-            return c1-c2;
-        } else if(c1==0) {
-            return 0;
+            أرجع c1-c2;
+        } وإلا إذا(c1==0) {
+            أرجع 0;
         }
     }
 }
 
-U_CAPI char U_EXPORT2
-uprv_ebcdicToAscii(char c) {
-    return (char)asciiFromEbcdic[(uint8_t)c];
+U_CAPI حرف U_EXPORT2
+uprv_ebcdicToAscii(حرف c) {
+    أرجع (حرف)asciiFromEbcdic[(uint8_t)c];
 }
 
-U_CAPI char U_EXPORT2
-uprv_ebcdicToLowercaseAscii(char c) {
-    return (char)lowercaseAsciiFromEbcdic[(uint8_t)c];
+U_CAPI حرف U_EXPORT2
+uprv_ebcdicToLowercaseAscii(حرف c) {
+    أرجع (حرف)lowercaseAsciiFromEbcdic[(uint8_t)c];
 }
 
 U_CAPI uint8_t* U_EXPORT2
-uprv_aestrncpy(uint8_t *dst, const uint8_t *src, int32_t n)
+uprv_aestrncpy(uint8_t *dst, ثابت uint8_t *src, int32_t n)
 {
   uint8_t *orig_dst = dst;
 
-  if(n==-1) { 
-    n = static_cast<int32_t>(uprv_strlen((const char*)src)+1); /* copy NUL */
+  إذا(n==-1) { 
+    n = static_cast<int32_t>(uprv_strlen((ثابت حرف*)src)+1); /* copy NUL */
   }
   /* copy non-null */
-  while(*src && n>0) {
+  طالما(*src && n>0) {
     *(dst++) = asciiFromEbcdic[*(src++)];
     n--;
   }
   /* pad */
-  while(n>0) {
+  طالما(n>0) {
     *(dst++) = 0;
     n--;
   }
-  return orig_dst;
+  أرجع orig_dst;
 }
 
 U_CAPI uint8_t* U_EXPORT2
-uprv_eastrncpy(uint8_t *dst, const uint8_t *src, int32_t n)
+uprv_eastrncpy(uint8_t *dst, ثابت uint8_t *src, int32_t n)
 {
   uint8_t *orig_dst = dst;
 
-  if(n==-1) { 
-    n = static_cast<int32_t>(uprv_strlen((const char*)src)+1); /* copy NUL */
+  إذا(n==-1) { 
+    n = static_cast<int32_t>(uprv_strlen((ثابت حرف*)src)+1); /* copy NUL */
   }
   /* copy non-null */
-  while(*src && n>0) {
-    char ch = ebcdicFromAscii[*(src++)];
-    if(ch == 0) {
+  طالما(*src && n>0) {
+    حرف ch = ebcdicFromAscii[*(src++)];
+    إذا(ch == 0) {
       ch = ebcdicFromAscii[0x3f]; /* questionmark (subchar) */
     }
     *(dst++) = ch;
     n--;
   }
   /* pad */
-  while(n>0) {
+  طالما(n>0) {
     *(dst++) = 0;
     n--;
   }
-  return orig_dst;
+  أرجع orig_dst;
 }
 

@@ -7,7 +7,7 @@
 #ifndef __STRINGOPTIONS_H__
 #define __STRINGOPTIONS_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
 /**
  * \file
@@ -170,7 +170,7 @@
  * Both input strings are assumed to fulfill FCD conditions.
  * @stable ICU 2.2
  */
-#define UNORM_INPUT_IS_FCD          0x20000
+#define UNORM_شغرو_IS_FCD          0x20000
 
 // Related definitions elsewhere.
 // Options that are not meaningful in the same functions
