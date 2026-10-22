@@ -50,7 +50,7 @@ class U_COMMON_API ICU_Utility /* not : public UObject because all methods are s
     static inline UnicodeString makeBogusString() {
         UnicodeString result;
         result.setToBogus();
-        return result;
+        戻る result;
     }
 
     /**

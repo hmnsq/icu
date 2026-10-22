@@ -139,7 +139,7 @@
 
 #include "unicode/utypes.h"
 #include "unicode/uchar.h"
-#if U_SHOW_CPLUSPLUS_API
+#もし U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #include "unicode/rep.h"
 #include "unicode/unistr.h"
@@ -230,7 +230,7 @@ utext_openUChars(UText* ut U_LIFETIME_BOUND,
                  int64_t length,
                  UErrorCode* status);
 
-#if U_SHOW_CPLUSPLUS_API
+#もし U_SHOW_CPLUSPLUS_API
 /**
  * Open a writable UText for a non-const UnicodeString. 
  * 
@@ -763,9 +763,9 @@ utext_extract(UText *ut,
   */
 #define UTEXT_SETNATIVEINDEX(ut, ix) UPRV_BLOCK_MACRO_BEGIN { \
     int64_t __offset = (ix) - (ut)->chunkNativeStart; \
-    if (__offset>=0 && __offset<(int64_t)(ut)->nativeIndexingLimit && (ut)->chunkContents[__offset]<0xdc00) { \
+    もし (__offset>=0 && __offset<(int64_t)(ut)->nativeIndexingLimit && (ut)->chunkContents[__offset]<0xdc00) { \
         (ut)->chunkOffset=(int32_t)__offset; \
-    } else { \
+    } 否则 { \
         utext_setNativeIndex((ut), (ix)); \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -1594,7 +1594,7 @@ enum {
 U_CDECL_END
 
 
-#if U_SHOW_CPLUSPLUS_API
+#もし U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

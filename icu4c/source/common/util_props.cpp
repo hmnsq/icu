@@ -31,39 +31,39 @@ int32_t ICU_Utility::parseInteger(const UnicodeString& rule, int32_t& pos, int32
     int32_t p = pos;
     int8_t radix = 10;
 
-    if (p < limit && rule.charAt(p) == 48 /*0*/) {
-        if (p+1 < limit && (rule.charAt(p+1) == 0x78 /*x*/ || rule.charAt(p+1) == 0x58 /*X*/)) {
+    もし (p < limit && rule.charAt(p) == 48 /*0*/) {
+        もし (p+1 < limit && (rule.charAt(p+1) == 0x78 /*x*/ || rule.charAt(p+1) == 0x58 /*X*/)) {
             p += 2;
             radix = 16;
         }
-        else {
+        否则 {
             p++;
             count = 1;
             radix = 8;
         }
     }
 
-    while (p < limit) {
+    ながら (p < limit) {
         int32_t d = u_digit(rule.charAt(p++), radix);
-        if (d < 0) {
+        もし (d < 0) {
             --p;
             break;
         }
         ++count;
         int32_t v = (value * radix) + d;
-        if (v <= value) {
+        もし (v <= value) {
             // If there are too many input digits, at some point
             // the value will go negative, e.g., if we have seen
             // "0x8000000" already and there is another '0', when
             // we parse the next 0 the value will go negative.
-            return 0;
+            戻る 0;
         }
         value = v;
     }
-    if (count > 0) {
+    もし (count > 0) {
         pos = p;
     }
-    return value;
+    戻る value;
 }
 
 /**
@@ -90,17 +90,17 @@ int32_t ICU_Utility::parsePattern(const UnicodeString& rule, int32_t pos, int32_
     // TODO Update this to handle surrogates
     int32_t p;
     int32_t intCount = 0; // number of integers parsed
-    for (int32_t i=0; i<pattern.length(); ++i) {
+    ために (int32_t i=0; i<pattern.length(); ++i) {
         char16_t cpat = pattern.charAt(i);
         char16_t c;
         switch (cpat) {
         case 32 /*' '*/:
-            if (pos >= limit) {
-                return -1;
+            もし (pos >= limit) {
+                戻る -1;
             }
             c = rule.charAt(pos++);
-            if (!PatternProps::isWhiteSpace(c)) {
-                return -1;
+            もし (!PatternProps::isWhiteSpace(c)) {
+                戻る -1;
             }
             // FALL THROUGH to skipWhitespace
             U_FALLTHROUGH;
@@ -110,24 +110,24 @@ int32_t ICU_Utility::parsePattern(const UnicodeString& rule, int32_t pos, int32_
         case 35 /*'#'*/:
             p = pos;
             parsedInts[intCount++] = parseInteger(rule, p, limit);
-            if (p == pos) {
+            もし (p == pos) {
                 // Syntax error; failed to parse integer
-                return -1;
+                戻る -1;
             }
             pos = p;
             break;
         default:
-            if (pos >= limit) {
-                return -1;
+            もし (pos >= limit) {
+                戻る -1;
             }
             c = static_cast<char16_t>(u_tolower(rule.charAt(pos++)));
-            if (c != cpat) {
-                return -1;
+            もし (c != cpat) {
+                戻る -1;
             }
             break;
         }
     }
-    return pos;
+    戻る pos;
 }
 
 /**
@@ -146,27 +146,27 @@ int32_t ICU_Utility::parsePattern(const UnicodeString& rule, int32_t pos, int32_
 UnicodeString ICU_Utility::parseUnicodeIdentifier(const UnicodeString& str, int32_t& pos) {
     // assert(pos < str.length());
     UnicodeString buf;
-    int p = pos;
-    while (p < str.length()) {
+    整数 p = pos;
+    ながら (p < str.length()) {
         UChar32 ch = str.char32At(p);
-        if (buf.length() == 0) {
-            if (u_isIDStart(ch)) {
+        もし (buf.length() == 0) {
+            もし (u_isIDStart(ch)) {
                 buf.append(ch);
-            } else {
+            } 否则 {
                 buf.truncate(0);
-                return buf;
+                戻る buf;
             }
-        } else {
-            if (u_isIDPart(ch)) {
+        } 否则 {
+            もし (u_isIDPart(ch)) {
                 buf.append(ch);
-            } else {
+            } 否则 {
                 break;
             }
         }
         p += U16_LENGTH(ch);
     }
     pos = p;
-    return buf;
+    戻る buf;
 }
 
 /**
@@ -192,24 +192,24 @@ int32_t ICU_Utility::parseNumber(const UnicodeString& text,
     // assert(radix <= 36);
     int32_t n = 0;
     int32_t p = pos;
-    while (p < text.length()) {
+    ながら (p < text.length()) {
         UChar32 ch = text.char32At(p);
         int32_t d = u_digit(ch, radix);
-        if (d < 0) {
+        もし (d < 0) {
             break;
         }
         int64_t update = radix*static_cast<int64_t>(n) + d;
-        if (update > INT32_MAX) {
-            return -1;
+        もし (update > INT32_MAX) {
+            戻る -1;
         }
         n = static_cast<int32_t>(update);
         ++p;
     }
-    if (p == pos) {
-        return -1;
+    もし (p == pos) {
+        戻る -1;
     }
     pos = p;
-    return n;
+    戻る n;
 }
 
 U_NAMESPACE_END

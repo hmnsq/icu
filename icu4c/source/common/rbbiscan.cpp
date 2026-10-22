@@ -16,7 +16,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#もし !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/unistr.h"
 #include "unicode/uniset.h"
@@ -114,8 +114,8 @@ RBBIRuleScanner::RBBIRuleScanner(RBBIRuleBuilder *rb)
 
     // Do not check status until after all critical fields are sufficiently initialized
     //   that the destructor can run cleanly.
-    if (U_FAILURE(*rb->fStatus)) {
-        return;
+    もし (U_FAILURE(*rb->fStatus)) {
+        戻る;
     }
 
     //
@@ -135,24 +135,24 @@ RBBIRuleScanner::RBBIRuleScanner(RBBIRuleBuilder *rb)
         = UnicodeSet(UnicodeString(gRuleSet_name_start_char_pattern), *rb->fStatus);
     fRuleSets[kRuleSet_digit_char-128]
         = UnicodeSet(UnicodeString(gRuleSet_digit_char_pattern),      *rb->fStatus);
-    if (*rb->fStatus == U_ILLEGAL_ARGUMENT_ERROR) {
+    もし (*rb->fStatus == U_ILLEGAL_ARGUMENT_ERROR) {
         // This case happens if ICU's data is missing.  UnicodeSet tries to look up property
         //   names from the init string, can't find them, and claims an illegal argument.
         //   Change the error so that the actual problem will be clearer to users.
         *rb->fStatus = U_BRK_INIT_ERROR;
     }
-    if (U_FAILURE(*rb->fStatus)) {
-        return;
+    もし (U_FAILURE(*rb->fStatus)) {
+        戻る;
     }
 
     fSymbolTable = new RBBISymbolTable(this, rb->fRules, *rb->fStatus);
-    if (fSymbolTable == nullptr) {
+    もし (fSymbolTable == nullptr) {
         *rb->fStatus = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        戻る;
     }
     fSetTable    = uhash_open(uhash_hashUnicodeString, uhash_compareUnicodeString, nullptr, rb->fStatus);
-    if (U_FAILURE(*rb->fStatus)) {
-        return;
+    もし (U_FAILURE(*rb->fStatus)) {
+        戻る;
     }
     uhash_setValueDeleter(fSetTable, RBBISetTable_deleter);
 }
@@ -166,7 +166,7 @@ RBBIRuleScanner::RBBIRuleScanner(RBBIRuleBuilder *rb)
 //------------------------------------------------------------------------------
 RBBIRuleScanner::~RBBIRuleScanner() {
     delete fSymbolTable;
-    if (fSetTable != nullptr) {
+    もし (fSetTable != nullptr) {
          uhash_close(fSetTable);
          fSetTable = nullptr;
 
@@ -176,7 +176,7 @@ RBBIRuleScanner::~RBBIRuleScanner() {
     // Node Stack.
     //   Normally has one entry, which is the entire parse tree for the rules.
     //   If errors occurred, there may be additional subtrees left on the stack.
-    while (fNodeStackPtr > 0) {
+    ながら (fNodeStackPtr > 0) {
         delete fNodeStack[fNodeStackPtr];
         fNodeStackPtr--;
     }
@@ -222,7 +222,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
             fixOpStack(RBBINode::precOpCat);
             RBBINode  *operandNode = fNodeStack[fNodeStackPtr--];
             RBBINode  *orNode      = pushNewNode(RBBINode::opOr);
-            if (U_FAILURE(*fRB->fStatus)) {
+            もし (U_FAILURE(*fRB->fStatus)) {
                 break;
             }
             orNode->fLeftChild     = operandNode;
@@ -239,7 +239,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
             fixOpStack(RBBINode::precOpCat);
             RBBINode  *operandNode = fNodeStack[fNodeStackPtr--];
             RBBINode  *catNode     = pushNewNode(RBBINode::opCat);
-            if (U_FAILURE(*fRB->fStatus)) {
+            もし (U_FAILURE(*fRB->fStatus)) {
                 break;
             }
             catNode->fLeftChild    = operandNode;
@@ -289,7 +289,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
 
             // Terminate expression, leaves expression parse tree rooted in TOS node.
             fixOpStack(RBBINode::precStart);
-            if (U_FAILURE(*fRB->fStatus)) {
+            もし (U_FAILURE(*fRB->fStatus)) {
                 break;
             }
 
@@ -309,7 +309,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
 
             // Make a symbol table entry for the $variableRef node.
             fSymbolTable->addEntry(varRefNode->fText, varRefNode, *fRB->fStatus);
-            if (U_FAILURE(*fRB->fStatus)) {
+            もし (U_FAILURE(*fRB->fStatus)) {
                 // This is a round-about way to get the parse position set
                 //  so that duplicate symbols error messages include a line number.
                 UErrorCode t = *fRB->fStatus;
@@ -331,21 +331,21 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
     case doEndOfRule:
         {
         fixOpStack(RBBINode::precStart);      // Terminate expression, leaves expression
-        if (U_FAILURE(*fRB->fStatus)) {       //   parse tree rooted in TOS node.
+        もし (U_FAILURE(*fRB->fStatus)) {       //   parse tree rooted in TOS node.
             break;
         }
 #ifdef RBBI_DEBUG
-        if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "rtree")) {printNodeStack("end of rule");}
+        もし (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "rtree")) {printNodeStack("end of rule");}
 #endif
         U_ASSERT(fNodeStackPtr == 1);
         RBBINode *thisRule = fNodeStack[fNodeStackPtr];
 
         // If this rule includes a look-ahead '/', add a endMark node to the
         //   expression tree.
-        if (fLookAheadRule) {
+        もし (fLookAheadRule) {
             RBBINode  *endNode        = pushNewNode(RBBINode::endMark);
             RBBINode  *catNode        = pushNewNode(RBBINode::opCat);
-            if (U_FAILURE(*fRB->fStatus)) {
+            もし (U_FAILURE(*fRB->fStatus)) {
                 break;
             }
             fNodeStackPtr -= 2;
@@ -366,7 +366,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
 
         // Flag if chaining into this rule is wanted.
         //    
-        if (fRB->fChainRules &&         // If rule chaining is enabled globally via !!chain
+        もし (fRB->fChainRules &&         // If rule chaining is enabled globally via !!chain
                 !fNoChainInRule) {      //     and no '^' chain-in inhibit was on this rule
             thisRule->fChainIn = true;
         }
@@ -382,7 +382,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
         //
         RBBINode **destRules = (fReverseRule? &fRB->fSafeRevTree : fRB->fDefaultTree);
 
-        if (*destRules != nullptr) {
+        もし (*destRules != nullptr) {
             // This is not the first rule encountered.
             // OR previous stuff  (from *destRules)
             // with the current rule expression (on the Node Stack)
@@ -391,7 +391,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
                        thisRule    = fNodeStack[fNodeStackPtr];
             RBBINode  *prevRules   = *destRules;
             RBBINode  *orNode      = pushNewNode(RBBINode::opOr);
-            if (U_FAILURE(*fRB->fStatus)) {
+            もし (U_FAILURE(*fRB->fStatus)) {
                 break;
             }
             orNode->fLeftChild     = prevRules;
@@ -400,7 +400,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
             thisRule->fParent      = orNode;
             *destRules             = orNode;
         }
-        else
+        否则
         {
             // This is the first rule encountered (for this direction).
             // Just move its parse tree from the stack to *destRules.
@@ -435,7 +435,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
         {
             RBBINode  *operandNode = fNodeStack[fNodeStackPtr--];
             RBBINode  *plusNode    = pushNewNode(RBBINode::opPlus);
-            if (U_FAILURE(*fRB->fStatus)) {
+            もし (U_FAILURE(*fRB->fStatus)) {
                 break;
             }
             plusNode->fLeftChild   = operandNode;
@@ -447,7 +447,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
         {
             RBBINode  *operandNode = fNodeStack[fNodeStackPtr--];
             RBBINode  *qNode       = pushNewNode(RBBINode::opQuestion);
-            if (U_FAILURE(*fRB->fStatus)) {
+            もし (U_FAILURE(*fRB->fStatus)) {
                 break;
             }
             qNode->fLeftChild      = operandNode;
@@ -459,7 +459,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
         {
             RBBINode  *operandNode = fNodeStack[fNodeStackPtr--];
             RBBINode  *starNode    = pushNewNode(RBBINode::opStar);
-            if (U_FAILURE(*fRB->fStatus)) {
+            もし (U_FAILURE(*fRB->fStatus)) {
                 break;
             }
             starNode->fLeftChild   = operandNode;
@@ -475,7 +475,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
         // sets that just happen to contain only one character.
         {
             n = pushNewNode(RBBINode::setRef);
-            if (U_FAILURE(*fRB->fStatus)) {
+            もし (U_FAILURE(*fRB->fStatus)) {
                 break;
             }
             findSetFor(UnicodeString(fC.fChar), n);
@@ -489,7 +489,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
         // scanned a ".", meaning match any single character.
         {
             n = pushNewNode(RBBINode::setRef);
-            if (U_FAILURE(*fRB->fStatus)) {
+            もし (U_FAILURE(*fRB->fStatus)) {
                 break;
             }
             findSetFor(UnicodeString(true, kAny, 3), n);
@@ -502,7 +502,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
     case doSlash:
         // Scanned a '/', which identifies a look-ahead break position in a rule.
         n = pushNewNode(RBBINode::lookAhead);
-        if (U_FAILURE(*fRB->fStatus)) {
+        もし (U_FAILURE(*fRB->fStatus)) {
             break;
         }
         n->fVal      = fRuleNum;
@@ -516,7 +516,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
     case doStartTagValue:
         // Scanned a '{', the opening delimiter for a tag value within a rule.
         n = pushNewNode(RBBINode::tag);
-        if (U_FAILURE(*fRB->fStatus)) {
+        もし (U_FAILURE(*fRB->fStatus)) {
             break;
         }
         n->fVal      = 0;
@@ -532,7 +532,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
             U_ASSERT(v < 10);
             int64_t updated = static_cast<int64_t>(n->fVal)*10 + v;
             // Avoid overflow n->fVal
-            if (updated > INT32_MAX) {
+            もし (updated > INT32_MAX) {
                 error(U_BRK_RULE_SYNTAX);
                 break;
             }
@@ -559,23 +559,23 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
     case doOptionEnd:
         {
             UnicodeString opt(fRB->fRules, fOptionStart, fScanIndex-fOptionStart);
-            if (opt == UNICODE_STRING("chain", 5)) {
+            もし (opt == UNICODE_STRING("chain", 5)) {
                 fRB->fChainRules = true;
-            } else if (opt == UNICODE_STRING("forward", 7)) {
+            } 否则 もし (opt == UNICODE_STRING("forward", 7)) {
                 fRB->fDefaultTree   = &fRB->fForwardTree;
-            } else if (opt == UNICODE_STRING("reverse", 7)) {
+            } 否则 もし (opt == UNICODE_STRING("reverse", 7)) {
                 fRB->fDefaultTree   = &fRB->fReverseTree;
-            } else if (opt == UNICODE_STRING("safe_forward", 12)) {
+            } 否则 もし (opt == UNICODE_STRING("safe_forward", 12)) {
                 fRB->fDefaultTree   = &fRB->fSafeFwdTree;
-            } else if (opt == UNICODE_STRING("safe_reverse", 12)) {
+            } 否则 もし (opt == UNICODE_STRING("safe_reverse", 12)) {
                 fRB->fDefaultTree   = &fRB->fSafeRevTree;
-            } else if (opt == UNICODE_STRING("lookAheadHardBreak", 18)) {
+            } 否则 もし (opt == UNICODE_STRING("lookAheadHardBreak", 18)) {
                 fRB->fLookAheadHardBreak = true;
-            } else if (opt == UNICODE_STRING("quoted_literals_only", 20)) {
+            } 否则 もし (opt == UNICODE_STRING("quoted_literals_only", 20)) {
                 fRuleSets[kRuleSet_rule_char-128].clear();
-            } else if (opt == UNICODE_STRING("unquoted_literals",  17)) {
+            } 否则 もし (opt == UNICODE_STRING("unquoted_literals",  17)) {
                 fRuleSets[kRuleSet_rule_char-128].applyPattern(UnicodeString(gRuleSet_rule_char_pattern), *fRB->fStatus);
-            } else {
+            } 否则 {
                 error(U_BRK_UNRECOGNIZED_OPTION);
             }
         }
@@ -587,7 +587,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
 
     case doStartVariableName:
         n = pushNewNode(RBBINode::varRef);
-        if (U_FAILURE(*fRB->fStatus)) {
+        もし (U_FAILURE(*fRB->fStatus)) {
             break;
         }
         n->fFirstPos = fScanIndex;
@@ -595,7 +595,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
 
     case doEndVariableName:
         n = fNodeStack[fNodeStackPtr];
-        if (n==nullptr || n->fType != RBBINode::varRef) {
+        もし (n==nullptr || n->fType != RBBINode::varRef) {
             error(U_BRK_INTERNAL_ERROR);
             break;
         }
@@ -610,7 +610,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
 
     case doCheckVarDef:
         n = fNodeStack[fNodeStackPtr];
-        if (n->fLeftChild == nullptr) {
+        もし (n->fLeftChild == nullptr) {
             error(U_BRK_UNDEFINED_VARIABLE);
             returnVal = false;
         }
@@ -637,7 +637,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
         returnVal = false;
         break;
     }
-    return returnVal && U_SUCCESS(*fRB->fStatus);
+    戻る returnVal && U_SUCCESS(*fRB->fStatus);
 }
 
 
@@ -650,9 +650,9 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
 //
 //------------------------------------------------------------------------------
 void RBBIRuleScanner::error(UErrorCode e) {
-    if (U_SUCCESS(*fRB->fStatus)) {
+    もし (U_SUCCESS(*fRB->fStatus)) {
         *fRB->fStatus = e;
-        if (fRB->fParseError) {
+        もし (fRB->fParseError) {
             fRB->fParseError->line  = fLineNum;
             fRB->fParseError->offset = fCharNum;
             fRB->fParseError->preContext[0] = 0;
@@ -682,15 +682,15 @@ void RBBIRuleScanner::error(UErrorCode e) {
 void RBBIRuleScanner::fixOpStack(RBBINode::OpPrecedence p) {
     RBBINode *n;
     // printNodeStack("entering fixOpStack()");
-    for (;;) {
+    ために (;;) {
         n = fNodeStack[fNodeStackPtr-1];   // an operator node
-        if (n->fPrecedence == 0) {
+        もし (n->fPrecedence == 0) {
             RBBIDebugPuts("RBBIRuleScanner::fixOpStack, bad operator node");
             error(U_BRK_INTERNAL_ERROR);
-            return;
+            戻る;
         }
 
-        if (n->fPrecedence < p || n->fPrecedence <= RBBINode::precLParen) {
+        もし (n->fPrecedence < p || n->fPrecedence <= RBBINode::precLParen) {
             // The most recent operand goes with the current operator,
             //   not with the previously stacked one.
             break;
@@ -704,12 +704,12 @@ void RBBIRuleScanner::fixOpStack(RBBINode::OpPrecedence p) {
         // printNodeStack("looping in fixOpStack()   ");
     }
 
-    if (p <= RBBINode::precLParen) {
+    もし (p <= RBBINode::precLParen) {
         // Scan is at a right paren or end of expression.
         //  The scanned item must match the stack, or else there was an error.
         //  Discard the left paren (or start expr) node from the stack,
             //  leaving the completed (sub)expression as TOS.
-            if (n->fPrecedence != p) {
+            もし (n->fPrecedence != p) {
                 // Right paren encountered matched start of expression node, or
                 // end of expression matched with a left paren node.
                 error(U_BRK_MISMATCHED_PAREN);
@@ -749,27 +749,27 @@ void RBBIRuleScanner::findSetFor(const UnicodeString &s, RBBINode *node, Unicode
     // If so, just use the cached set in the new node.
     //   delete any set provided by the caller, since we own it.
     el = static_cast<RBBISetTableEl*>(uhash_get(fSetTable, &s));
-    if (el != nullptr) {
+    もし (el != nullptr) {
         delete setToAdopt;
         node->fLeftChild = el->val;
         U_ASSERT(node->fLeftChild->fType == RBBINode::uset);
-        return;
+        戻る;
     }
 
     // Haven't seen this set before.
     // If the caller didn't provide us with a prebuilt set,
     //   create a new UnicodeSet now.
-    if (setToAdopt == nullptr) {
-        if (s.compare(kAny, -1) == 0) {
+    もし (setToAdopt == nullptr) {
+        もし (s.compare(kAny, -1) == 0) {
             setToAdopt = new UnicodeSet(0x000000, 0x10ffff);
-        } else {
+        } 否则 {
             UChar32 c;
             c = s.char32At(0);
             setToAdopt = new UnicodeSet(c, c);
         }
-        if (setToAdopt == nullptr) {
+        もし (setToAdopt == nullptr) {
             error(U_MEMORY_ALLOCATION_ERROR);
-            return;
+            戻る;
         }
     }
 
@@ -779,14 +779,14 @@ void RBBIRuleScanner::findSetFor(const UnicodeString &s, RBBINode *node, Unicode
     //
     UErrorCode localStatus = U_ZERO_ERROR;
     RBBINode *usetNode    = new RBBINode(RBBINode::uset, localStatus);
-    if (usetNode == nullptr) {
+    もし (usetNode == nullptr) {
         localStatus = U_MEMORY_ALLOCATION_ERROR;
     }
-    if (U_FAILURE(localStatus)) {
+    もし (U_FAILURE(localStatus)) {
         delete usetNode;
         error(localStatus);
         delete setToAdopt;
-        return;
+        戻る;
     }
     usetNode->fInputSet   = setToAdopt;
     usetNode->fParent     = node;
@@ -805,7 +805,7 @@ void RBBIRuleScanner::findSetFor(const UnicodeString &s, RBBINode *node, Unicode
     //
     el = static_cast<RBBISetTableEl*>(uprv_malloc(sizeof(RBBISetTableEl)));
     UnicodeString *tkey = new UnicodeString(s);
-    if (tkey == nullptr || el == nullptr || setToAdopt == nullptr) {
+    もし (tkey == nullptr || el == nullptr || setToAdopt == nullptr) {
         // Delete to avoid memory leak
         delete tkey;
         tkey = nullptr;
@@ -815,7 +815,7 @@ void RBBIRuleScanner::findSetFor(const UnicodeString &s, RBBINode *node, Unicode
         setToAdopt = nullptr;
 
         error(U_MEMORY_ALLOCATION_ERROR);
-        return;
+        戻る;
     }
     el->key = tkey;
     el->val = usetNode;
@@ -850,15 +850,15 @@ UnicodeString RBBIRuleScanner::stripRules(const UnicodeString &rules) {
     UnicodeString strippedRules;
     int32_t rulesLength = rules.length();
 
-    for (int32_t idx=0; idx<rulesLength; idx = rules.moveIndex32(idx, 1)) {
+    ために (int32_t idx=0; idx<rulesLength; idx = rules.moveIndex32(idx, 1)) {
         UChar32 cp = rules.char32At(idx);
         bool whiteSpace = u_hasBinaryProperty(cp, UCHAR_PATTERN_WHITE_SPACE);
-        if (whiteSpace) {
+        もし (whiteSpace) {
             continue;
         }
         strippedRules.append(cp);
     }
-    return strippedRules;
+    戻る strippedRules;
 }
 
 
@@ -872,17 +872,17 @@ UnicodeString RBBIRuleScanner::stripRules(const UnicodeString &rules) {
 UChar32  RBBIRuleScanner::nextCharLL() {
     UChar32  ch;
 
-    if (fNextIndex >= fRB->fRules.length()) {
-        return static_cast<UChar32>(-1);
+    もし (fNextIndex >= fRB->fRules.length()) {
+        戻る static_cast<UChar32>(-1);
     }
     ch         = fRB->fRules.char32At(fNextIndex);
-    if (U_IS_SURROGATE(ch)) {
+    もし (U_IS_SURROGATE(ch)) {
         error(U_ILLEGAL_CHAR_FOUND);
-        return U_SENTINEL;
+        戻る U_SENTINEL;
     }
     fNextIndex = fRB->fRules.moveIndex32(fNextIndex, 1);
 
-    if (ch == chCR ||
+    もし (ch == chCR ||
         ch == chNEL ||
         ch == chLS   ||
         (ch == chLF && fLastChar != chCR)) {
@@ -890,20 +890,20 @@ UChar32  RBBIRuleScanner::nextCharLL() {
         //  reset the column to 0.
         fLineNum++;
         fCharNum=0;
-        if (fQuoteMode) {
+        もし (fQuoteMode) {
             error(U_BRK_NEW_LINE_IN_QUOTED_STRING);
             fQuoteMode = false;
         }
     }
-    else {
+    否则 {
         // Character is not starting a new line.  Except in the case of a
         //   LF following a CR, increment the column position.
-        if (ch != chLF) {
+        もし (ch != chLF) {
             fCharNum++;
         }
     }
     fLastChar = ch;
-    return ch;
+    戻る ch;
 }
 
 
@@ -927,69 +927,69 @@ void RBBIRuleScanner::nextChar(RBBIRuleChar &c) {
     //  check for '' sequence.
     //  These are recognized in all contexts, whether in quoted text or not.
     //
-    if (c.fChar == chApos) {
-        if (fRB->fRules.char32At(fNextIndex) == chApos) {
+    もし (c.fChar == chApos) {
+        もし (fRB->fRules.char32At(fNextIndex) == chApos) {
             c.fChar    = nextCharLL();        // get nextChar officially so character counts
             c.fEscaped = true;                //   stay correct.
         }
-        else
+        否则
         {
             // Single quote, by itself.
             //   Toggle quoting mode.
             //   Return either '('  or ')', because quotes cause a grouping of the quoted text.
             fQuoteMode = !fQuoteMode;
-            if (fQuoteMode) {
+            もし (fQuoteMode) {
                 c.fChar = chLParen;
-            } else {
+            } 否则 {
                 c.fChar = chRParen;
             }
             c.fEscaped = false;      // The paren that we return is not escaped.
-            return;
+            戻る;
         }
     }
 
-    if (c.fChar == static_cast<UChar32>(-1)) {
-        return;
+    もし (c.fChar == static_cast<UChar32>(-1)) {
+        戻る;
     }
-    if (fQuoteMode) {
+    もし (fQuoteMode) {
         c.fEscaped = true;
     }
-    else
+    否则
     {
         // We are not in a 'quoted region' of the source.
         //
-        if (c.fChar == chPound) {
+        もし (c.fChar == chPound) {
             // Start of a comment.  Consume the rest of it.
             //  The new-line char that terminates the comment is always returned.
             //  It will be treated as white-space, and serves to break up anything
             //    that might otherwise incorrectly clump together with a comment in
             //    the middle (a variable name, for example.)
             int32_t commentStart = fScanIndex;
-            for (;;) {
+            ために (;;) {
                 c.fChar = nextCharLL();
-                if (c.fChar == static_cast<UChar32>(-1) || // EOF
+                もし (c.fChar == static_cast<UChar32>(-1) || // EOF
                     c.fChar == chCR     ||
                     c.fChar == chLF     ||
                     c.fChar == chNEL    ||
                     c.fChar == chLS)       {break;}
             }
-            for (int32_t i=commentStart; i<fNextIndex-1; ++i) {
+            ために (int32_t i=commentStart; i<fNextIndex-1; ++i) {
                 fRB->fStrippedRules.setCharAt(i, u' ');
             }
         }
-        if (c.fChar == static_cast<UChar32>(-1)) {
-            return;
+        もし (c.fChar == static_cast<UChar32>(-1)) {
+            戻る;
         }
 
         //
         //  check for backslash escaped characters.
         //  Use UnicodeString::unescapeAt() to handle them.
         //
-        if (c.fChar == chBackSlash) {
+        もし (c.fChar == chBackSlash) {
             c.fEscaped = true;
             int32_t startX = fNextIndex;
             c.fChar = fRB->fRules.unescapeAt(fNextIndex);
-            if (fNextIndex == startX) {
+            もし (fNextIndex == startX) {
                 error(U_BRK_HEX_DIGITS_EXPECTED);
             }
             fCharNum += fNextIndex-startX;
@@ -1010,8 +1010,8 @@ void RBBIRuleScanner::parse() {
     uint16_t                state;
     const RBBIRuleTableEl  *tableEl;
 
-    if (U_FAILURE(*fRB->fStatus)) {
-        return;
+    もし (U_FAILURE(*fRB->fStatus)) {
+        戻る;
     }
 
     state = 1;
@@ -1024,16 +1024,16 @@ void RBBIRuleScanner::parse() {
     //      - an action to be performed.
     //      - pushing or popping a state to/from the local state return stack.
     //
-    for (;;) {
+    ために (;;) {
         //  Bail out if anything has gone wrong.
         //  RBBI rule file parsing stops on the first error encountered.
-        if (U_FAILURE(*fRB->fStatus)) {
+        もし (U_FAILURE(*fRB->fStatus)) {
             break;
         }
 
         // Quit if state == 0.  This is the normal way to exit the state machine.
         //
-        if (state == 0) {
+        もし (state == 0) {
             break;
         }
 
@@ -1045,45 +1045,45 @@ void RBBIRuleScanner::parse() {
         //
         tableEl = &gRuleParseStateTable[state];
         #ifdef RBBI_DEBUG
-            if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "scan")) {
+            もし (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "scan")) {
                 RBBIDebugPrintf("char, line, col = (\'%c\', %d, %d)    state=%s ",
                     fC.fChar, fLineNum, fCharNum, RBBIRuleStateNames[state]);
             }
         #endif
 
-        for (;;) {
+        ために (;;) {
             #ifdef RBBI_DEBUG
-                if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "scan")) { RBBIDebugPrintf("."); fflush(stdout);}
+                もし (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "scan")) { RBBIDebugPrintf("."); fflush(stdout);}
             #endif
-            if (tableEl->fCharClass < 127 && fC.fEscaped == false &&   tableEl->fCharClass == fC.fChar) {
+            もし (tableEl->fCharClass < 127 && fC.fEscaped == false &&   tableEl->fCharClass == fC.fChar) {
                 // Table row specified an individual character, not a set, and
                 //   the input character is not escaped, and
                 //   the input character matched it.
                 break;
             }
-            if (tableEl->fCharClass == 255) {
+            もし (tableEl->fCharClass == 255) {
                 // Table row specified default, match anything character class.
                 break;
             }
-            if (tableEl->fCharClass == 254 && fC.fEscaped)  {
+            もし (tableEl->fCharClass == 254 && fC.fEscaped)  {
                 // Table row specified "escaped" and the char was escaped.
                 break;
             }
-            if (tableEl->fCharClass == 253 && fC.fEscaped &&
+            もし (tableEl->fCharClass == 253 && fC.fEscaped &&
                 (fC.fChar == 0x50 || fC.fChar == 0x70 ))  {
                 // Table row specified "escaped P" and the char is either 'p' or 'P'.
                 break;
             }
-            if (tableEl->fCharClass == 252 && fC.fChar == static_cast<UChar32>(-1)) {
+            もし (tableEl->fCharClass == 252 && fC.fChar == static_cast<UChar32>(-1)) {
                 // Table row specified eof and we hit eof on the input.
                 break;
             }
 
-            if (tableEl->fCharClass >= 128 && tableEl->fCharClass < 240 &&   // Table specs a char class &&
+            もし (tableEl->fCharClass >= 128 && tableEl->fCharClass < 240 &&   // Table specs a char class &&
                 fC.fEscaped == false &&                                      //   char is not escaped &&
                 fC.fChar != static_cast<UChar32>(-1)) {                      //   char is not EOF
                 U_ASSERT((tableEl->fCharClass-128) < UPRV_LENGTHOF(fRuleSets));
-                if (fRuleSets[tableEl->fCharClass-128].contains(fC.fChar)) {
+                もし (fRuleSets[tableEl->fCharClass-128].contains(fC.fChar)) {
                     // Table row specified a character class, or set of characters,
                     //   and the current char matches it.
                     break;
@@ -1093,22 +1093,22 @@ void RBBIRuleScanner::parse() {
             // No match on this row, advance to the next  row for this state,
             tableEl++;
         }
-        if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "scan")) { RBBIDebugPuts("");}
+        もし (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "scan")) { RBBIDebugPuts("");}
 
         //
         // We've found the row of the state table that matches the current input
         //   character from the rules string.
         // Perform any action specified  by this row in the state table.
-        if (doParseActions(static_cast<int32_t>(tableEl->fAction)) == false) {
+        もし (doParseActions(static_cast<int32_t>(tableEl->fAction)) == false) {
             // Break out of the state machine loop if the
             //   the action signalled some kind of error, or
             //   the action was to exit, occurs on normal end-of-rules-input.
             break;
         }
 
-        if (tableEl->fPushState != 0) {
+        もし (tableEl->fPushState != 0) {
             fStackPtr++;
-            if (fStackPtr >= kStackSize) {
+            もし (fStackPtr >= kStackSize) {
                 error(U_BRK_INTERNAL_ERROR);
                 RBBIDebugPuts("RBBIRuleScanner::parse() - state stack overflow.");
                 fStackPtr--;
@@ -1116,18 +1116,18 @@ void RBBIRuleScanner::parse() {
             fStack[fStackPtr] = tableEl->fPushState;
         }
 
-        if (tableEl->fNextChar) {
+        もし (tableEl->fNextChar) {
             nextChar(fC);
         }
 
         // Get the next state from the table entry, or from the
         //   state stack if the next state was specified as "pop".
-        if (tableEl->fNextState != 255) {
+        もし (tableEl->fNextState != 255) {
             state = tableEl->fNextState;
-        } else {
+        } 否则 {
             state = fStack[fStackPtr];
             fStackPtr--;
-            if (fStackPtr < 0) {
+            もし (fStackPtr < 0) {
                 error(U_BRK_INTERNAL_ERROR);
                 RBBIDebugPuts("RBBIRuleScanner::parse() - state stack underflow.");
                 fStackPtr++;
@@ -1136,15 +1136,15 @@ void RBBIRuleScanner::parse() {
 
     }
 
-    if (U_FAILURE(*fRB->fStatus)) {
-        return;
+    もし (U_FAILURE(*fRB->fStatus)) {
+        戻る;
     }
     
     // If there are no forward rules set an error.
     //
-    if (fRB->fForwardTree == nullptr) {
+    もし (fRB->fForwardTree == nullptr) {
         error(U_BRK_RULE_SYNTAX);
-        return;
+        戻る;
     }
 
     //
@@ -1153,8 +1153,8 @@ void RBBIRuleScanner::parse() {
     // and a list of all UnicodeSets that are referenced.
     //
 #ifdef RBBI_DEBUG
-    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "symbols")) {fSymbolTable->rbbiSymtablePrint();}
-    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "ptree")) {
+    もし (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "symbols")) {fSymbolTable->rbbiSymtablePrint();}
+    もし (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "ptree")) {
         RBBIDebugPrintf("Completed Forward Rules Parse Tree...\n");
         RBBINode::printTree(fRB->fForwardTree, true);
         RBBIDebugPrintf("\nCompleted Reverse Rules Parse Tree...\n");
@@ -1175,9 +1175,9 @@ void RBBIRuleScanner::parse() {
 //------------------------------------------------------------------------------
 #ifdef RBBI_DEBUG
 void RBBIRuleScanner::printNodeStack(const char *title) {
-    int i;
+    整数 i;
     RBBIDebugPrintf("%s.  Dumping node stack...\n", title);
-    for (i=fNodeStackPtr; i>0; i--) {RBBINode::printTree(fNodeStack[i], true);}
+    ために (i=fNodeStackPtr; i>0; i--) {RBBINode::printTree(fNodeStack[i], true);}
 }
 #endif
 
@@ -1191,20 +1191,20 @@ void RBBIRuleScanner::printNodeStack(const char *title) {
 //
 //------------------------------------------------------------------------------
 RBBINode  *RBBIRuleScanner::pushNewNode(RBBINode::NodeType  t) {
-    if (U_FAILURE(*fRB->fStatus)) {
-        return nullptr;
+    もし (U_FAILURE(*fRB->fStatus)) {
+        戻る nullptr;
     }
-    if (fNodeStackPtr >= kStackSize - 1) {
+    もし (fNodeStackPtr >= kStackSize - 1) {
         error(U_BRK_RULE_SYNTAX);
         RBBIDebugPuts("RBBIRuleScanner::pushNewNode - stack overflow.");
-        return nullptr;
+        戻る nullptr;
     }
     fNodeStackPtr++;
     fNodeStack[fNodeStackPtr] = new RBBINode(t, *fRB->fStatus);
-    if (fNodeStack[fNodeStackPtr] == nullptr) {
+    もし (fNodeStack[fNodeStackPtr] == nullptr) {
         *fRB->fStatus = U_MEMORY_ALLOCATION_ERROR;
     }
-    return fNodeStack[fNodeStackPtr];
+    戻る fNodeStack[fNodeStackPtr];
 }
 
 
@@ -1225,30 +1225,30 @@ RBBINode  *RBBIRuleScanner::pushNewNode(RBBINode::NodeType  t) {
 //------------------------------------------------------------------------------
 void RBBIRuleScanner::scanSet() {
     ParsePosition  pos;
-    int            startPos;
-    int            i;
+    整数            startPos;
+    整数            i;
 
-    if (U_FAILURE(*fRB->fStatus)) {
-        return;
+    もし (U_FAILURE(*fRB->fStatus)) {
+        戻る;
     }
 
     pos.setIndex(fScanIndex);
     startPos = fScanIndex;
     UErrorCode localStatus = U_ZERO_ERROR;
     LocalPointer<UnicodeSet> uset(new UnicodeSet(), localStatus);
-    if (U_FAILURE(localStatus)) {
+    もし (U_FAILURE(localStatus)) {
         error(localStatus);
-        return;
+        戻る;
     }
     uset->applyPatternIgnoreSpace(fRB->fRules, pos, fSymbolTable, localStatus);
-    if (U_FAILURE(localStatus)) {
+    もし (U_FAILURE(localStatus)) {
         //  TODO:  Get more accurate position of the error from UnicodeSet's return info.
         //         UnicodeSet appears to not be reporting correctly at this time.
         #ifdef RBBI_DEBUG
             RBBIDebugPrintf("UnicodeSet parse position.ErrorIndex = %d\n", pos.getIndex());
         #endif
         error(localStatus);
-        return;
+        戻る;
     }
 
     // Verify that the set contains at least one code point.
@@ -1258,13 +1258,13 @@ void RBBIRuleScanner::scanSet() {
     // Use tempSet to handle the case that the UnicodeSet contains
     // only string element, such as [{ab}] and treat it as empty set.
     tempSet.removeAllStrings();
-    if (tempSet.isEmpty() && !uset->contains(UnicodeString::readOnlyAlias(u"eof"))) {
+    もし (tempSet.isEmpty() && !uset->contains(UnicodeString::readOnlyAlias(u"eof"))) {
         // This set is empty.
         //  Make it an error, because it almost certainly is not what the user wanted.
         //  Also, avoids having to think about corner cases in the tree manipulation code
         //   that occurs later on.
         error(U_BRK_RULE_EMPTY_SET);
-        return;
+        戻る;
     }
 
 
@@ -1272,19 +1272,19 @@ void RBBIRuleScanner::scanSet() {
     //   Don't just set fScanIndex because the line/char positions maintained
     //   for error reporting would be thrown off.
     i = pos.getIndex();
-    for (;U_SUCCESS(*fRB->fStatus);) {
-        if (fNextIndex >= i) {
+    ために (;U_SUCCESS(*fRB->fStatus);) {
+        もし (fNextIndex >= i) {
             break;
         }
         nextCharLL();
     }
 
-    if (U_SUCCESS(*fRB->fStatus)) {
+    もし (U_SUCCESS(*fRB->fStatus)) {
         RBBINode         *n;
 
         n = pushNewNode(RBBINode::setRef);
-        if (U_FAILURE(*fRB->fStatus)) {
-            return;
+        もし (U_FAILURE(*fRB->fStatus)) {
+            戻る;
         }
         n->fFirstPos = startPos;
         n->fLastPos  = fNextIndex;
@@ -1301,7 +1301,7 @@ void RBBIRuleScanner::scanSet() {
 }
 
 int32_t RBBIRuleScanner::numRules() {
-    return fRuleNum;
+    戻る fRuleNum;
 }
 
 U_NAMESPACE_END

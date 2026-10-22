@@ -32,7 +32,7 @@
  * @since ICU 2.2
  */
 
-#if !UCONFIG_NO_FORMATTING
+#もし !UCONFIG_NO_FORMATTING
 
 /**
  * Currency Usage used for Decimal Format
@@ -136,7 +136,7 @@ typedef enum UCurrNameStyle {
     
 } UCurrNameStyle;
 
-#if !UCONFIG_NO_SERVICE
+#もし !UCONFIG_NO_SERVICE
 /**
  * @stable ICU 2.6
  */

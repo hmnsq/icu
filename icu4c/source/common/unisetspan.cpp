@@ -59,18 +59,18 @@ public:
     OffsetList() : list(staticList), capacity(0), length(0), start(0) {}
 
     ~OffsetList() {
-        if(list!=staticList) {
+        もし(list!=staticList) {
             uprv_free(list);
         }
     }
 
     // Call exactly once if the list is to be used.
     void setMaxLength(int32_t maxLength) {
-        if (maxLength <= static_cast<int32_t>(sizeof(staticList))) {
+        もし (maxLength <= static_cast<int32_t>(sizeof(staticList))) {
             capacity = static_cast<int32_t>(sizeof(staticList));
-        } else {
+        } 否则 {
             UBool* l = static_cast<UBool*>(uprv_malloc(maxLength));
-            if(l!=nullptr) {
+            もし(l!=nullptr) {
                 list=l;
                 capacity=maxLength;
             }
@@ -84,7 +84,7 @@ public:
     }
 
     UBool isEmpty() const {
-        return length == 0;
+        戻る length == 0;
     }
 
     // Reduce all stored offsets by delta, used when the current position
@@ -94,10 +94,10 @@ public:
     // delta=[1..maxLength]
     void shift(int32_t delta) {
         int32_t i=start+delta;
-        if(i>=capacity) {
+        もし(i>=capacity) {
             i-=capacity;
         }
-        if(list[i]) {
+        もし(list[i]) {
             list[i]=false;
             --length;
         }
@@ -108,7 +108,7 @@ public:
     // offset=[1..maxLength]
     void addOffset(int32_t offset) {
         int32_t i=start+offset;
-        if(i>=capacity) {
+        もし(i>=capacity) {
             i-=capacity;
         }
         list[i]=true;
@@ -118,10 +118,10 @@ public:
     // offset=[1..maxLength]
     UBool containsOffset(int32_t offset) const {
         int32_t i=start+offset;
-        if(i>=capacity) {
+        もし(i>=capacity) {
             i-=capacity;
         }
-        return list[i];
+        戻る list[i];
     }
 
     // Find the lowest stored offset from a non-empty list, remove it,
@@ -130,13 +130,13 @@ public:
     int32_t popMinimum() {
         // Look for the next offset in list[start+1..capacity-1].
         int32_t i=start, result;
-        while(++i<capacity) {
-            if(list[i]) {
+        ながら(++i<capacity) {
+            もし(list[i]) {
                 list[i]=false;
                 --length;
                 result=i-start;
                 start=i;
-                return result;
+                戻る result;
             }
         }
         // i==capacity
@@ -145,13 +145,13 @@ public:
         // Since the list is not empty, there will be one.
         result=capacity-start;
         i=0;
-        while(!list[i]) {
+        ながら(!list[i]) {
             ++i;
         }
         list[i]=false;
         --length;
         start=i;
-        return result+=i;
+        戻る result+=i;
     }
 
 private:
@@ -169,12 +169,12 @@ getUTF8Length(const char16_t *s, int32_t length) {
     UErrorCode errorCode=U_ZERO_ERROR;
     int32_t length8=0;
     u_strToUTF8(nullptr, 0, &length8, s, length, &errorCode);
-    if(U_SUCCESS(errorCode) || errorCode==U_BUFFER_OVERFLOW_ERROR) {
-        return length8;
-    } else {
+    もし(U_SUCCESS(errorCode) || errorCode==U_BUFFER_OVERFLOW_ERROR) {
+        戻る length8;
+    } 否则 {
         // The string contains an unpaired surrogate.
         // Ignore this string.
-        return 0;
+        戻る 0;
     }
 }
 
@@ -184,19 +184,19 @@ appendUTF8(const char16_t *s, int32_t length, uint8_t *t, int32_t capacity) {
     UErrorCode errorCode=U_ZERO_ERROR;
     int32_t length8=0;
     u_strToUTF8(reinterpret_cast<char*>(t), capacity, &length8, s, length, &errorCode);
-    if(U_SUCCESS(errorCode)) {
-        return length8;
-    } else {
+    もし(U_SUCCESS(errorCode)) {
+        戻る length8;
+    } 否则 {
         // The string contains an unpaired surrogate.
         // Ignore this string.
-        return 0;
+        戻る 0;
     }
 }
 
 static inline uint8_t
 makeSpanLengthByte(int32_t spanLength) {
     // 0xfe==UnicodeSetStringSpan::LONG_SPAN
-    return spanLength < 0xfe ? static_cast<uint8_t>(spanLength) : static_cast<uint8_t>(0xfe);
+    戻る spanLength < 0xfe ? static_cast<uint8_t>(spanLength) : static_cast<uint8_t>(0xfe);
 }
 
 // Construct for all variants of span(), or only for any one variant.
@@ -210,7 +210,7 @@ UnicodeSetStringSpan::UnicodeSetStringSpan(const UnicodeSet &set,
           maxLength16(0), maxLength8(0),
           all(static_cast<UBool>(which == ALL)) {
     spanSet.retainAll(set);
-    if(which&NOT_CONTAINED) {
+    もし(which&NOT_CONTAINED) {
         // Default to the same sets.
         // addToSpanNotSet() will create a separate set if necessary.
         pSpanNotSet=&spanSet;
@@ -227,39 +227,39 @@ UnicodeSetStringSpan::UnicodeSetStringSpan(const UnicodeSet &set,
 
     int32_t i, spanLength;
     UBool someRelevant=false;
-    for(i=0; i<stringsLength; ++i) {
+    ために(i=0; i<stringsLength; ++i) {
         const UnicodeString& string = *static_cast<const UnicodeString*>(strings.elementAt(i));
         const char16_t *s16=string.getBuffer();
         int32_t length16=string.length();
-        if (length16==0) {
+        もし (length16==0) {
             continue;  // skip the empty string
         }
         UBool thisRelevant;
         spanLength=spanSet.span(s16, length16, USET_SPAN_CONTAINED);
-        if(spanLength<length16) {  // Relevant string.
+        もし(spanLength<length16) {  // Relevant string.
             someRelevant=thisRelevant=true;
-        } else {
+        } 否则 {
             thisRelevant=false;
         }
-        if((which&UTF16) && length16>maxLength16) {
+        もし((which&UTF16) && length16>maxLength16) {
             maxLength16=length16;
         }
-        if((which&UTF8) && (thisRelevant || (which&CONTAINED))) {
+        もし((which&UTF8) && (thisRelevant || (which&CONTAINED))) {
             int32_t length8=getUTF8Length(s16, length16);
             utf8Length+=length8;
-            if(length8>maxLength8) {
+            もし(length8>maxLength8) {
                 maxLength8=length8;
             }
         }
     }
-    if(!someRelevant) {
+    もし(!someRelevant) {
         maxLength16=maxLength8=0;
-        return;
+        戻る;
     }
 
     // Freeze after checking for the need to use strings at all because freezing
     // a set takes some time and memory which are wasted if there are no relevant strings.
-    if(all) {
+    もし(all) {
         spanSet.freeze();
     }
 
@@ -269,39 +269,39 @@ UnicodeSetStringSpan::UnicodeSetStringSpan(const UnicodeSet &set,
 
     // Allocate a block of meta data.
     int32_t allocSize;
-    if(all) {
+    もし(all) {
         // UTF-8 lengths, 4 sets of span lengths, UTF-8 strings.
         allocSize=stringsLength*(4+1+1+1+1)+utf8Length;
-    } else {
+    } 否则 {
         allocSize=stringsLength;  // One set of span lengths.
-        if(which&UTF8) {
+        もし(which&UTF8) {
             // UTF-8 lengths and UTF-8 strings.
             allocSize+=stringsLength*4+utf8Length;
         }
     }
-    if (allocSize <= static_cast<int32_t>(sizeof(staticLengths))) {
+    もし (allocSize <= static_cast<int32_t>(sizeof(staticLengths))) {
         utf8Lengths=staticLengths;
-    } else {
+    } 否则 {
         utf8Lengths = static_cast<int32_t*>(uprv_malloc(allocSize));
-        if(utf8Lengths==nullptr) {
+        もし(utf8Lengths==nullptr) {
             maxLength16=maxLength8=0;  // Prevent usage by making needsStringSpanUTF16/8() return false.
-            return;  // Out of memory.
+            戻る;  // Out of memory.
         }
     }
 
-    if(all) {
+    もし(all) {
         // Store span lengths for all span() variants.
         spanLengths = reinterpret_cast<uint8_t*>(utf8Lengths + stringsLength);
         spanBackLengths=spanLengths+stringsLength;
         spanUTF8Lengths=spanBackLengths+stringsLength;
         spanBackUTF8Lengths=spanUTF8Lengths+stringsLength;
         utf8=spanBackUTF8Lengths+stringsLength;
-    } else {
+    } 否则 {
         // Store span lengths for only one span() variant.
-        if(which&UTF8) {
+        もし(which&UTF8) {
             spanLengths = reinterpret_cast<uint8_t*>(utf8Lengths + stringsLength);
             utf8=spanLengths+stringsLength;
-        } else {
+        } 否则 {
             spanLengths = reinterpret_cast<uint8_t*>(utf8Lengths);
         }
         spanBackLengths=spanUTF8Lengths=spanBackUTF8Lengths=spanLengths;
@@ -310,76 +310,76 @@ UnicodeSetStringSpan::UnicodeSetStringSpan(const UnicodeSet &set,
     // Set the meta data and pSpanNotSet and write the UTF-8 strings.
     int32_t utf8Count=0;  // Count UTF-8 bytes written so far.
 
-    for(i=0; i<stringsLength; ++i) {
+    ために(i=0; i<stringsLength; ++i) {
         const UnicodeString& string = *static_cast<const UnicodeString*>(strings.elementAt(i));
         const char16_t *s16=string.getBuffer();
         int32_t length16=string.length();
         spanLength=spanSet.span(s16, length16, USET_SPAN_CONTAINED);
-        if(spanLength<length16 && length16>0) {  // Relevant string.
-            if(which&UTF16) {
-                if(which&CONTAINED) {
-                    if(which&FWD) {
+        もし(spanLength<length16 && length16>0) {  // Relevant string.
+            もし(which&UTF16) {
+                もし(which&CONTAINED) {
+                    もし(which&FWD) {
                         spanLengths[i]=makeSpanLengthByte(spanLength);
                     }
-                    if(which&BACK) {
+                    もし(which&BACK) {
                         spanLength=length16-spanSet.spanBack(s16, length16, USET_SPAN_CONTAINED);
                         spanBackLengths[i]=makeSpanLengthByte(spanLength);
                     }
-                } else /* not CONTAINED, not all, but NOT_CONTAINED */ {
+                } 否则 /* not CONTAINED, not all, but NOT_CONTAINED */ {
                     spanLengths[i]=spanBackLengths[i]=0;  // Only store a relevant/irrelevant flag.
                 }
             }
-            if(which&UTF8) {
+            もし(which&UTF8) {
                 uint8_t *s8=utf8+utf8Count;
                 int32_t length8=appendUTF8(s16, length16, s8, utf8Length-utf8Count);
                 utf8Count+=utf8Lengths[i]=length8;
-                if(length8==0) {  // Irrelevant for UTF-8 because not representable in UTF-8.
+                もし(length8==0) {  // Irrelevant for UTF-8 because not representable in UTF-8.
                     spanUTF8Lengths[i] = spanBackUTF8Lengths[i] = static_cast<uint8_t>(ALL_CP_CONTAINED);
-                } else {  // Relevant for UTF-8.
-                    if(which&CONTAINED) {
-                        if(which&FWD) {
+                } 否则 {  // Relevant for UTF-8.
+                    もし(which&CONTAINED) {
+                        もし(which&FWD) {
                             spanLength = spanSet.spanUTF8(reinterpret_cast<const char*>(s8), length8, USET_SPAN_CONTAINED);
                             spanUTF8Lengths[i]=makeSpanLengthByte(spanLength);
                         }
-                        if(which&BACK) {
+                        もし(which&BACK) {
                             spanLength = length8 - spanSet.spanBackUTF8(reinterpret_cast<const char*>(s8), length8, USET_SPAN_CONTAINED);
                             spanBackUTF8Lengths[i]=makeSpanLengthByte(spanLength);
                         }
-                    } else /* not CONTAINED, not all, but NOT_CONTAINED */ {
+                    } 否则 /* not CONTAINED, not all, but NOT_CONTAINED */ {
                         spanUTF8Lengths[i]=spanBackUTF8Lengths[i]=0;  // Only store a relevant/irrelevant flag.
                     }
                 }
             }
-            if(which&NOT_CONTAINED) {
+            もし(which&NOT_CONTAINED) {
                 // Add string start and end code points to the spanNotSet so that
                 // a span(while not contained) stops before any string.
                 UChar32 c;
-                if(which&FWD) {
+                もし(which&FWD) {
                     int32_t len=0;
                     U16_NEXT(s16, len, length16, c);
                     addToSpanNotSet(c);
                 }
-                if(which&BACK) {
+                もし(which&BACK) {
                     int32_t len=length16;
                     U16_PREV(s16, 0, len, c);
                     addToSpanNotSet(c);
                 }
             }
-        } else {  // Irrelevant string. (Also the empty string.)
-            if(which&UTF8) {
-                if(which&CONTAINED) {  // Only necessary for LONGEST_MATCH.
+        } 否则 {  // Irrelevant string. (Also the empty string.)
+            もし(which&UTF8) {
+                もし(which&CONTAINED) {  // Only necessary for LONGEST_MATCH.
                     uint8_t *s8=utf8+utf8Count;
                     int32_t length8=appendUTF8(s16, length16, s8, utf8Length-utf8Count);
                     utf8Count+=utf8Lengths[i]=length8;
-                } else {
+                } 否则 {
                     utf8Lengths[i]=0;
                 }
             }
-            if(all) {
+            もし(all) {
                 spanLengths[i]=spanBackLengths[i]=
                     spanUTF8Lengths[i]=spanBackUTF8Lengths[i]=
                         static_cast<uint8_t>(ALL_CP_CONTAINED);
-            } else {
+            } 否则 {
                 // All spanXYZLengths pointers contain the same address.
                 spanLengths[i] = static_cast<uint8_t>(ALL_CP_CONTAINED);
             }
@@ -387,7 +387,7 @@ UnicodeSetStringSpan::UnicodeSetStringSpan(const UnicodeSet &set,
     }
 
     // Finish.
-    if(all) {
+    もし(all) {
         pSpanNotSet->freeze();
     }
 }
@@ -400,9 +400,9 @@ UnicodeSetStringSpan::UnicodeSetStringSpan(const UnicodeSetStringSpan &otherStri
           utf8Length(otherStringSpan.utf8Length),
           maxLength16(otherStringSpan.maxLength16), maxLength8(otherStringSpan.maxLength8),
           all(true) {
-    if(otherStringSpan.pSpanNotSet==&otherStringSpan.spanSet) {
+    もし(otherStringSpan.pSpanNotSet==&otherStringSpan.spanSet) {
         pSpanNotSet=&spanSet;
-    } else {
+    } 否则 {
         pSpanNotSet=otherStringSpan.pSpanNotSet->clone();
     }
 
@@ -410,13 +410,13 @@ UnicodeSetStringSpan::UnicodeSetStringSpan(const UnicodeSetStringSpan &otherStri
     // UTF-8 lengths, 4 sets of span lengths, UTF-8 strings.
     int32_t stringsLength=strings.size();
     int32_t allocSize=stringsLength*(4+1+1+1+1)+utf8Length;
-    if (allocSize <= static_cast<int32_t>(sizeof(staticLengths))) {
+    もし (allocSize <= static_cast<int32_t>(sizeof(staticLengths))) {
         utf8Lengths=staticLengths;
-    } else {
+    } 否则 {
         utf8Lengths = static_cast<int32_t*>(uprv_malloc(allocSize));
-        if(utf8Lengths==nullptr) {
+        もし(utf8Lengths==nullptr) {
             maxLength16=maxLength8=0;  // Prevent usage by making needsStringSpanUTF16/8() return false.
-            return;  // Out of memory.
+            戻る;  // Out of memory.
         }
     }
 
@@ -426,23 +426,23 @@ UnicodeSetStringSpan::UnicodeSetStringSpan(const UnicodeSetStringSpan &otherStri
 }
 
 UnicodeSetStringSpan::~UnicodeSetStringSpan() {
-    if(pSpanNotSet!=nullptr && pSpanNotSet!=&spanSet) {
+    もし(pSpanNotSet!=nullptr && pSpanNotSet!=&spanSet) {
         delete pSpanNotSet;
     }
-    if(utf8Lengths!=nullptr && utf8Lengths!=staticLengths) {
+    もし(utf8Lengths!=nullptr && utf8Lengths!=staticLengths) {
         uprv_free(utf8Lengths);
     }
 }
 
 void UnicodeSetStringSpan::addToSpanNotSet(UChar32 c) {
-    if(pSpanNotSet==nullptr || pSpanNotSet==&spanSet) {
-        if(spanSet.contains(c)) {
-            return;  // Nothing to do.
+    もし(pSpanNotSet==nullptr || pSpanNotSet==&spanSet) {
+        もし(spanSet.contains(c)) {
+            戻る;  // Nothing to do.
         }
         UnicodeSet *newSet=spanSet.cloneAsThawed();
-        if(newSet==nullptr) {
-            return;  // Out of memory.
-        } else {
+        もし(newSet==nullptr) {
+            戻る;  // Out of memory.
+        } 否则 {
             pSpanNotSet=newSet;
         }
     }
@@ -453,21 +453,21 @@ void UnicodeSetStringSpan::addToSpanNotSet(UChar32 c) {
 static inline UBool
 matches16(const char16_t *s, const char16_t *t, int32_t length) {
     do {
-        if(*s++!=*t++) {
-            return false;
+        もし(*s++!=*t++) {
+            戻る false;
         }
-    } while(--length>0);
-    return true;
+    } ながら(--length>0);
+    戻る true;
 }
 
 static inline UBool
 matches8(const uint8_t *s, const uint8_t *t, int32_t length) {
     do {
-        if(*s++!=*t++) {
-            return false;
+        もし(*s++!=*t++) {
+            戻る false;
         }
-    } while(--length>0);
-    return true;
+    } ながら(--length>0);
+    戻る true;
 }
 
 // Compare 16-bit Unicode strings (which may be malformed UTF-16)
@@ -477,7 +477,7 @@ static inline UBool
 matches16CPB(const char16_t *s, int32_t start, int32_t limit, const char16_t *t, int32_t length) {
     s+=start;
     limit-=start;
-    return matches16(s, t, length) &&
+    戻る matches16(s, t, length) &&
            !(0<start && U16_IS_LEAD(s[-1]) && U16_IS_TRAIL(s[0])) &&
            !(length<limit && U16_IS_LEAD(s[length-1]) && U16_IS_TRAIL(s[length]));
 }
@@ -487,43 +487,43 @@ matches16CPB(const char16_t *s, int32_t start, int32_t limit, const char16_t *t,
 static inline int32_t
 spanOne(const UnicodeSet &set, const char16_t *s, int32_t length) {
     char16_t c=*s, c2;
-    if(c>=0xd800 && c<=0xdbff && length>=2 && U16_IS_TRAIL(c2=s[1])) {
-        return set.contains(U16_GET_SUPPLEMENTARY(c, c2)) ? 2 : -2;
+    もし(c>=0xd800 && c<=0xdbff && length>=2 && U16_IS_TRAIL(c2=s[1])) {
+        戻る set.contains(U16_GET_SUPPLEMENTARY(c, c2)) ? 2 : -2;
     }
-    return set.contains(c) ? 1 : -1;
+    戻る set.contains(c) ? 1 : -1;
 }
 
 static inline int32_t
 spanOneBack(const UnicodeSet &set, const char16_t *s, int32_t length) {
     char16_t c=s[length-1], c2;
-    if(c>=0xdc00 && c<=0xdfff && length>=2 && U16_IS_LEAD(c2=s[length-2])) {
-        return set.contains(U16_GET_SUPPLEMENTARY(c2, c)) ? 2 : -2;
+    もし(c>=0xdc00 && c<=0xdfff && length>=2 && U16_IS_LEAD(c2=s[length-2])) {
+        戻る set.contains(U16_GET_SUPPLEMENTARY(c2, c)) ? 2 : -2;
     }
-    return set.contains(c) ? 1 : -1;
+    戻る set.contains(c) ? 1 : -1;
 }
 
 static inline int32_t
 spanOneUTF8(const UnicodeSet &set, const uint8_t *s, int32_t length) {
     UChar32 c=*s;
-    if(U8_IS_SINGLE(c)) {
-        return set.contains(c) ? 1 : -1;
+    もし(U8_IS_SINGLE(c)) {
+        戻る set.contains(c) ? 1 : -1;
     }
     // Take advantage of non-ASCII fastpaths in U8_NEXT_OR_FFFD().
     int32_t i=0;
     U8_NEXT_OR_FFFD(s, i, length, c);
-    return set.contains(c) ? i : -i;
+    戻る set.contains(c) ? i : -i;
 }
 
 static inline int32_t
 spanOneBackUTF8(const UnicodeSet &set, const uint8_t *s, int32_t length) {
     UChar32 c=s[length-1];
-    if(U8_IS_SINGLE(c)) {
-        return set.contains(c) ? 1 : -1;
+    もし(U8_IS_SINGLE(c)) {
+        戻る set.contains(c) ? 1 : -1;
     }
     int32_t i=length-1;
     c=utf8_prevCharSafeBody(s, 0, &i, c, -3);
     length-=i;
-    return set.contains(c) ? length : -length;
+    戻る set.contains(c) ? length : -length;
 }
 
 /*
@@ -635,27 +635,27 @@ spanOneBackUTF8(const UnicodeSet &set, const uint8_t *s, int32_t length) {
  */
 
 int32_t UnicodeSetStringSpan::span(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(spanCondition==USET_SPAN_NOT_CONTAINED) {
-        return spanNot(s, length);
+    もし(spanCondition==USET_SPAN_NOT_CONTAINED) {
+        戻る spanNot(s, length);
     }
     int32_t spanLength=spanSet.span(s, length, USET_SPAN_CONTAINED);
-    if(spanLength==length) {
-        return length;
+    もし(spanLength==length) {
+        戻る length;
     }
 
     // Consider strings; they may overlap with the span.
     OffsetList offsets;
-    if(spanCondition==USET_SPAN_CONTAINED) {
+    もし(spanCondition==USET_SPAN_CONTAINED) {
         // Use offset list to try all possibilities.
         offsets.setMaxLength(maxLength16);
     }
     int32_t pos=spanLength, rest=length-pos;
     int32_t i, stringsLength=strings.size();
-    for(;;) {
-        if(spanCondition==USET_SPAN_CONTAINED) {
-            for(i=0; i<stringsLength; ++i) {
+    ために(;;) {
+        もし(spanCondition==USET_SPAN_CONTAINED) {
+            ために(i=0; i<stringsLength; ++i) {
                 int32_t overlap=spanLengths[i];
-                if(overlap==ALL_CP_CONTAINED) {
+                もし(overlap==ALL_CP_CONTAINED) {
                     continue;  // Irrelevant string. (Also the empty string.)
                 }
                 const UnicodeString& string = *static_cast<const UnicodeString*>(strings.elementAt(i));
@@ -664,36 +664,36 @@ int32_t UnicodeSetStringSpan::span(const char16_t *s, int32_t length, USetSpanCo
                 U_ASSERT(length>0);
 
                 // Try to match this string at pos-overlap..pos.
-                if(overlap>=LONG_SPAN) {
+                もし(overlap>=LONG_SPAN) {
                     overlap=length16;
                     // While contained: No point matching fully inside the code point span.
                     U16_BACK_1(s16, 0, overlap);  // Length of the string minus the last code point.
                 }
-                if(overlap>spanLength) {
+                もし(overlap>spanLength) {
                     overlap=spanLength;
                 }
                 int32_t inc=length16-overlap;  // Keep overlap+inc==length16.
-                for(;;) {
-                    if(inc>rest) {
+                ために(;;) {
+                    もし(inc>rest) {
                         break;
                     }
                     // Try to match if the increment is not listed already.
-                    if(!offsets.containsOffset(inc) && matches16CPB(s, pos-overlap, length, s16, length16)) {
-                        if(inc==rest) {
-                            return length;  // Reached the end of the string.
+                    もし(!offsets.containsOffset(inc) && matches16CPB(s, pos-overlap, length, s16, length16)) {
+                        もし(inc==rest) {
+                            戻る length;  // Reached the end of the string.
                         }
                         offsets.addOffset(inc);
                     }
-                    if(overlap==0) {
+                    もし(overlap==0) {
                         break;
                     }
                     --overlap;
                     ++inc;
                 }
             }
-        } else /* USET_SPAN_SIMPLE */ {
+        } 否则 /* USET_SPAN_SIMPLE */ {
             int32_t maxInc=0, maxOverlap=0;
-            for(i=0; i<stringsLength; ++i) {
+            ために(i=0; i<stringsLength; ++i) {
                 int32_t overlap=spanLengths[i];
                 // For longest match, we do need to try to match even an all-contained string
                 // to find the match from the earliest start.
@@ -701,26 +701,26 @@ int32_t UnicodeSetStringSpan::span(const char16_t *s, int32_t length, USetSpanCo
                 const UnicodeString& string = *static_cast<const UnicodeString*>(strings.elementAt(i));
                 const char16_t *s16=string.getBuffer();
                 int32_t length16=string.length();
-                if (length16==0) {
+                もし (length16==0) {
                     continue;  // skip the empty string
                 }
 
                 // Try to match this string at pos-overlap..pos.
-                if(overlap>=LONG_SPAN) {
+                もし(overlap>=LONG_SPAN) {
                     overlap=length16;
                     // Longest match: Need to match fully inside the code point span
                     // to find the match from the earliest start.
                 }
-                if(overlap>spanLength) {
+                もし(overlap>spanLength) {
                     overlap=spanLength;
                 }
                 int32_t inc=length16-overlap;  // Keep overlap+inc==length16.
-                for(;;) {
-                    if(inc>rest || overlap<maxOverlap) {
+                ために(;;) {
+                    もし(inc>rest || overlap<maxOverlap) {
                         break;
                     }
                     // Try to match if the string is longer or starts earlier.
-                    if( (overlap>maxOverlap || /* redundant overlap==maxOverlap && */ inc>maxInc) &&
+                    もし( (overlap>maxOverlap || /* redundant overlap==maxOverlap && */ inc>maxInc) &&
                         matches16CPB(s, pos-overlap, length, s16, length16)
                     ) {
                         maxInc=inc;  // Longest match from earliest start.
@@ -732,13 +732,13 @@ int32_t UnicodeSetStringSpan::span(const char16_t *s, int32_t length, USetSpanCo
                 }
             }
 
-            if(maxInc!=0 || maxOverlap!=0) {
+            もし(maxInc!=0 || maxOverlap!=0) {
                 // Longest-match algorithm, and there was a string match.
                 // Simply continue after it.
                 pos+=maxInc;
                 rest-=maxInc;
-                if(rest==0) {
-                    return length;  // Reached the end of the string.
+                もし(rest==0) {
+                    戻る length;  // Reached the end of the string.
                 }
                 spanLength=0;  // Match strings from after a string match.
                 continue;
@@ -746,38 +746,38 @@ int32_t UnicodeSetStringSpan::span(const char16_t *s, int32_t length, USetSpanCo
         }
         // Finished trying to match all strings at pos.
 
-        if(spanLength!=0 || pos==0) {
+        もし(spanLength!=0 || pos==0) {
             // The position is after an unlimited code point span (spanLength!=0),
             // not after a string match.
             // The only position where spanLength==0 after a span is pos==0.
             // Otherwise, an unlimited code point span is only tried again when no
             // strings match, and if such a non-initial span fails we stop.
-            if(offsets.isEmpty()) {
-                return pos;  // No strings matched after a span.
+            もし(offsets.isEmpty()) {
+                戻る pos;  // No strings matched after a span.
             }
             // Match strings from after the next string match.
-        } else {
+        } 否则 {
             // The position is after a string match (or a single code point).
-            if(offsets.isEmpty()) {
+            もし(offsets.isEmpty()) {
                 // No more strings matched after a previous string match.
                 // Try another code point span from after the last string match.
                 spanLength=spanSet.span(s+pos, rest, USET_SPAN_CONTAINED);
-                if( spanLength==rest || // Reached the end of the string, or
+                もし( spanLength==rest || // Reached the end of the string, or
                     spanLength==0       // neither strings nor span progressed.
                 ) {
-                    return pos+spanLength;
+                    戻る pos+spanLength;
                 }
                 pos+=spanLength;
                 rest-=spanLength;
                 continue;  // spanLength>0: Match strings from after a span.
-            } else {
+            } 否则 {
                 // Try to match only one code point from after a string match if some
                 // string matched beyond it, so that we try all possible positions
                 // and don't overshoot.
                 spanLength=spanOne(spanSet, s+pos, rest);
-                if(spanLength>0) {
-                    if(spanLength==rest) {
-                        return length;  // Reached the end of the string.
+                もし(spanLength>0) {
+                    もし(spanLength==rest) {
+                        戻る length;  // Reached the end of the string.
                     }
                     // Match strings after this code point.
                     // There cannot be any increments below it because UnicodeSet strings
@@ -799,31 +799,31 @@ int32_t UnicodeSetStringSpan::span(const char16_t *s, int32_t length, USetSpanCo
 }
 
 int32_t UnicodeSetStringSpan::spanBack(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(spanCondition==USET_SPAN_NOT_CONTAINED) {
-        return spanNotBack(s, length);
+    もし(spanCondition==USET_SPAN_NOT_CONTAINED) {
+        戻る spanNotBack(s, length);
     }
     int32_t pos=spanSet.spanBack(s, length, USET_SPAN_CONTAINED);
-    if(pos==0) {
-        return 0;
+    もし(pos==0) {
+        戻る 0;
     }
     int32_t spanLength=length-pos;
 
     // Consider strings; they may overlap with the span.
     OffsetList offsets;
-    if(spanCondition==USET_SPAN_CONTAINED) {
+    もし(spanCondition==USET_SPAN_CONTAINED) {
         // Use offset list to try all possibilities.
         offsets.setMaxLength(maxLength16);
     }
     int32_t i, stringsLength=strings.size();
     uint8_t *spanBackLengths=spanLengths;
-    if(all) {
+    もし(all) {
         spanBackLengths+=stringsLength;
     }
-    for(;;) {
-        if(spanCondition==USET_SPAN_CONTAINED) {
-            for(i=0; i<stringsLength; ++i) {
+    ために(;;) {
+        もし(spanCondition==USET_SPAN_CONTAINED) {
+            ために(i=0; i<stringsLength; ++i) {
                 int32_t overlap=spanBackLengths[i];
-                if(overlap==ALL_CP_CONTAINED) {
+                もし(overlap==ALL_CP_CONTAINED) {
                     continue;  // Irrelevant string. (Also the empty string.)
                 }
                 const UnicodeString& string = *static_cast<const UnicodeString*>(strings.elementAt(i));
@@ -832,38 +832,38 @@ int32_t UnicodeSetStringSpan::spanBack(const char16_t *s, int32_t length, USetSp
                 U_ASSERT(length>0);
 
                 // Try to match this string at pos-(length16-overlap)..pos-length16.
-                if(overlap>=LONG_SPAN) {
+                もし(overlap>=LONG_SPAN) {
                     overlap=length16;
                     // While contained: No point matching fully inside the code point span.
                     int32_t len1=0;
                     U16_FWD_1(s16, len1, overlap);
                     overlap-=len1;  // Length of the string minus the first code point.
                 }
-                if(overlap>spanLength) {
+                もし(overlap>spanLength) {
                     overlap=spanLength;
                 }
                 int32_t dec=length16-overlap;  // Keep dec+overlap==length16.
-                for(;;) {
-                    if(dec>pos) {
+                ために(;;) {
+                    もし(dec>pos) {
                         break;
                     }
                     // Try to match if the decrement is not listed already.
-                    if(!offsets.containsOffset(dec) && matches16CPB(s, pos-dec, length, s16, length16)) {
-                        if(dec==pos) {
-                            return 0;  // Reached the start of the string.
+                    もし(!offsets.containsOffset(dec) && matches16CPB(s, pos-dec, length, s16, length16)) {
+                        もし(dec==pos) {
+                            戻る 0;  // Reached the start of the string.
                         }
                         offsets.addOffset(dec);
                     }
-                    if(overlap==0) {
+                    もし(overlap==0) {
                         break;
                     }
                     --overlap;
                     ++dec;
                 }
             }
-        } else /* USET_SPAN_SIMPLE */ {
+        } 否则 /* USET_SPAN_SIMPLE */ {
             int32_t maxDec=0, maxOverlap=0;
-            for(i=0; i<stringsLength; ++i) {
+            ために(i=0; i<stringsLength; ++i) {
                 int32_t overlap=spanBackLengths[i];
                 // For longest match, we do need to try to match even an all-contained string
                 // to find the match from the latest end.
@@ -871,26 +871,26 @@ int32_t UnicodeSetStringSpan::spanBack(const char16_t *s, int32_t length, USetSp
                 const UnicodeString& string = *static_cast<const UnicodeString*>(strings.elementAt(i));
                 const char16_t *s16=string.getBuffer();
                 int32_t length16=string.length();
-                if (length16==0) {
+                もし (length16==0) {
                     continue;  // skip the empty string
                 }
 
                 // Try to match this string at pos-(length16-overlap)..pos-length16.
-                if(overlap>=LONG_SPAN) {
+                もし(overlap>=LONG_SPAN) {
                     overlap=length16;
                     // Longest match: Need to match fully inside the code point span
                     // to find the match from the latest end.
                 }
-                if(overlap>spanLength) {
+                もし(overlap>spanLength) {
                     overlap=spanLength;
                 }
                 int32_t dec=length16-overlap;  // Keep dec+overlap==length16.
-                for(;;) {
-                    if(dec>pos || overlap<maxOverlap) {
+                ために(;;) {
+                    もし(dec>pos || overlap<maxOverlap) {
                         break;
                     }
                     // Try to match if the string is longer or ends later.
-                    if( (overlap>maxOverlap || /* redundant overlap==maxOverlap && */ dec>maxDec) &&
+                    もし( (overlap>maxOverlap || /* redundant overlap==maxOverlap && */ dec>maxDec) &&
                         matches16CPB(s, pos-dec, length, s16, length16)
                     ) {
                         maxDec=dec;  // Longest match from latest end.
@@ -902,12 +902,12 @@ int32_t UnicodeSetStringSpan::spanBack(const char16_t *s, int32_t length, USetSp
                 }
             }
 
-            if(maxDec!=0 || maxOverlap!=0) {
+            もし(maxDec!=0 || maxOverlap!=0) {
                 // Longest-match algorithm, and there was a string match.
                 // Simply continue before it.
                 pos-=maxDec;
-                if(pos==0) {
-                    return 0;  // Reached the start of the string.
+                もし(pos==0) {
+                    戻る 0;  // Reached the start of the string.
                 }
                 spanLength=0;  // Match strings from before a string match.
                 continue;
@@ -915,38 +915,38 @@ int32_t UnicodeSetStringSpan::spanBack(const char16_t *s, int32_t length, USetSp
         }
         // Finished trying to match all strings at pos.
 
-        if(spanLength!=0 || pos==length) {
+        もし(spanLength!=0 || pos==length) {
             // The position is before an unlimited code point span (spanLength!=0),
             // not before a string match.
             // The only position where spanLength==0 before a span is pos==length.
             // Otherwise, an unlimited code point span is only tried again when no
             // strings match, and if such a non-initial span fails we stop.
-            if(offsets.isEmpty()) {
-                return pos;  // No strings matched before a span.
+            もし(offsets.isEmpty()) {
+                戻る pos;  // No strings matched before a span.
             }
             // Match strings from before the next string match.
-        } else {
+        } 否则 {
             // The position is before a string match (or a single code point).
-            if(offsets.isEmpty()) {
+            もし(offsets.isEmpty()) {
                 // No more strings matched before a previous string match.
                 // Try another code point span from before the last string match.
                 int32_t oldPos=pos;
                 pos=spanSet.spanBack(s, oldPos, USET_SPAN_CONTAINED);
                 spanLength=oldPos-pos;
-                if( pos==0 ||           // Reached the start of the string, or
+                もし( pos==0 ||           // Reached the start of the string, or
                     spanLength==0       // neither strings nor span progressed.
                 ) {
-                    return pos;
+                    戻る pos;
                 }
                 continue;  // spanLength>0: Match strings from before a span.
-            } else {
+            } 否则 {
                 // Try to match only one code point from before a string match if some
                 // string matched beyond it, so that we try all possible positions
                 // and don't overshoot.
                 spanLength=spanOneBack(spanSet, s, pos);
-                if(spanLength>0) {
-                    if(spanLength==pos) {
-                        return 0;  // Reached the start of the string.
+                もし(spanLength>0) {
+                    もし(spanLength==pos) {
+                        戻る 0;  // Reached the start of the string.
                     }
                     // Match strings before this code point.
                     // There cannot be any decrements below it because UnicodeSet strings
@@ -965,67 +965,67 @@ int32_t UnicodeSetStringSpan::spanBack(const char16_t *s, int32_t length, USetSp
 }
 
 int32_t UnicodeSetStringSpan::spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(spanCondition==USET_SPAN_NOT_CONTAINED) {
-        return spanNotUTF8(s, length);
+    もし(spanCondition==USET_SPAN_NOT_CONTAINED) {
+        戻る spanNotUTF8(s, length);
     }
     int32_t spanLength = spanSet.spanUTF8(reinterpret_cast<const char*>(s), length, USET_SPAN_CONTAINED);
-    if(spanLength==length) {
-        return length;
+    もし(spanLength==length) {
+        戻る length;
     }
 
     // Consider strings; they may overlap with the span.
     OffsetList offsets;
-    if(spanCondition==USET_SPAN_CONTAINED) {
+    もし(spanCondition==USET_SPAN_CONTAINED) {
         // Use offset list to try all possibilities.
         offsets.setMaxLength(maxLength8);
     }
     int32_t pos=spanLength, rest=length-pos;
     int32_t i, stringsLength=strings.size();
     uint8_t *spanUTF8Lengths=spanLengths;
-    if(all) {
+    もし(all) {
         spanUTF8Lengths+=2*stringsLength;
     }
-    for(;;) {
+    ために(;;) {
         const uint8_t *s8=utf8;
         int32_t length8;
-        if(spanCondition==USET_SPAN_CONTAINED) {
-            for(i=0; i<stringsLength; ++i) {
+        もし(spanCondition==USET_SPAN_CONTAINED) {
+            ために(i=0; i<stringsLength; ++i) {
                 length8=utf8Lengths[i];
-                if(length8==0) {
+                もし(length8==0) {
                     continue;  // String not representable in UTF-8.
                 }
                 int32_t overlap=spanUTF8Lengths[i];
-                if(overlap==ALL_CP_CONTAINED) {
+                もし(overlap==ALL_CP_CONTAINED) {
                     s8+=length8;
                     continue;  // Irrelevant string.
                 }
 
                 // Try to match this string at pos-overlap..pos.
-                if(overlap>=LONG_SPAN) {
+                もし(overlap>=LONG_SPAN) {
                     overlap=length8;
                     // While contained: No point matching fully inside the code point span.
                     U8_BACK_1(s8, 0, overlap);  // Length of the string minus the last code point.
                 }
-                if(overlap>spanLength) {
+                もし(overlap>spanLength) {
                     overlap=spanLength;
                 }
                 int32_t inc=length8-overlap;  // Keep overlap+inc==length8.
-                for(;;) {
-                    if(inc>rest) {
+                ために(;;) {
+                    もし(inc>rest) {
                         break;
                     }
                     // Try to match if the increment is not listed already.
                     // Match at code point boundaries. (The UTF-8 strings were converted
                     // from UTF-16 and are guaranteed to be well-formed.)
-                    if(!U8_IS_TRAIL(s[pos-overlap]) &&
+                    もし(!U8_IS_TRAIL(s[pos-overlap]) &&
                             !offsets.containsOffset(inc) &&
                             matches8(s+pos-overlap, s8, length8)) {
-                        if(inc==rest) {
-                            return length;  // Reached the end of the string.
+                        もし(inc==rest) {
+                            戻る length;  // Reached the end of the string.
                         }
                         offsets.addOffset(inc);
                     }
-                    if(overlap==0) {
+                    もし(overlap==0) {
                         break;
                     }
                     --overlap;
@@ -1033,11 +1033,11 @@ int32_t UnicodeSetStringSpan::spanUTF8(const uint8_t *s, int32_t length, USetSpa
                 }
                 s8+=length8;
             }
-        } else /* USET_SPAN_SIMPLE */ {
+        } 否则 /* USET_SPAN_SIMPLE */ {
             int32_t maxInc=0, maxOverlap=0;
-            for(i=0; i<stringsLength; ++i) {
+            ために(i=0; i<stringsLength; ++i) {
                 length8=utf8Lengths[i];
-                if(length8==0) {
+                もし(length8==0) {
                     continue;  // String not representable in UTF-8.
                 }
                 int32_t overlap=spanUTF8Lengths[i];
@@ -1045,23 +1045,23 @@ int32_t UnicodeSetStringSpan::spanUTF8(const uint8_t *s, int32_t length, USetSpa
                 // to find the match from the earliest start.
 
                 // Try to match this string at pos-overlap..pos.
-                if(overlap>=LONG_SPAN) {
+                もし(overlap>=LONG_SPAN) {
                     overlap=length8;
                     // Longest match: Need to match fully inside the code point span
                     // to find the match from the earliest start.
                 }
-                if(overlap>spanLength) {
+                もし(overlap>spanLength) {
                     overlap=spanLength;
                 }
                 int32_t inc=length8-overlap;  // Keep overlap+inc==length8.
-                for(;;) {
-                    if(inc>rest || overlap<maxOverlap) {
+                ために(;;) {
+                    もし(inc>rest || overlap<maxOverlap) {
                         break;
                     }
                     // Try to match if the string is longer or starts earlier.
                     // Match at code point boundaries. (The UTF-8 strings were converted
                     // from UTF-16 and are guaranteed to be well-formed.)
-                    if(!U8_IS_TRAIL(s[pos-overlap]) &&
+                    もし(!U8_IS_TRAIL(s[pos-overlap]) &&
                             (overlap>maxOverlap ||
                                 /* redundant overlap==maxOverlap && */ inc>maxInc) &&
                             matches8(s+pos-overlap, s8, length8)) {
@@ -1075,13 +1075,13 @@ int32_t UnicodeSetStringSpan::spanUTF8(const uint8_t *s, int32_t length, USetSpa
                 s8+=length8;
             }
 
-            if(maxInc!=0 || maxOverlap!=0) {
+            もし(maxInc!=0 || maxOverlap!=0) {
                 // Longest-match algorithm, and there was a string match.
                 // Simply continue after it.
                 pos+=maxInc;
                 rest-=maxInc;
-                if(rest==0) {
-                    return length;  // Reached the end of the string.
+                もし(rest==0) {
+                    戻る length;  // Reached the end of the string.
                 }
                 spanLength=0;  // Match strings from after a string match.
                 continue;
@@ -1089,38 +1089,38 @@ int32_t UnicodeSetStringSpan::spanUTF8(const uint8_t *s, int32_t length, USetSpa
         }
         // Finished trying to match all strings at pos.
 
-        if(spanLength!=0 || pos==0) {
+        もし(spanLength!=0 || pos==0) {
             // The position is after an unlimited code point span (spanLength!=0),
             // not after a string match.
             // The only position where spanLength==0 after a span is pos==0.
             // Otherwise, an unlimited code point span is only tried again when no
             // strings match, and if such a non-initial span fails we stop.
-            if(offsets.isEmpty()) {
-                return pos;  // No strings matched after a span.
+            もし(offsets.isEmpty()) {
+                戻る pos;  // No strings matched after a span.
             }
             // Match strings from after the next string match.
-        } else {
+        } 否则 {
             // The position is after a string match (or a single code point).
-            if(offsets.isEmpty()) {
+            もし(offsets.isEmpty()) {
                 // No more strings matched after a previous string match.
                 // Try another code point span from after the last string match.
                 spanLength = spanSet.spanUTF8(reinterpret_cast<const char*>(s) + pos, rest, USET_SPAN_CONTAINED);
-                if( spanLength==rest || // Reached the end of the string, or
+                もし( spanLength==rest || // Reached the end of the string, or
                     spanLength==0       // neither strings nor span progressed.
                 ) {
-                    return pos+spanLength;
+                    戻る pos+spanLength;
                 }
                 pos+=spanLength;
                 rest-=spanLength;
                 continue;  // spanLength>0: Match strings from after a span.
-            } else {
+            } 否则 {
                 // Try to match only one code point from after a string match if some
                 // string matched beyond it, so that we try all possible positions
                 // and don't overshoot.
                 spanLength=spanOneUTF8(spanSet, s+pos, rest);
-                if(spanLength>0) {
-                    if(spanLength==rest) {
-                        return length;  // Reached the end of the string.
+                もし(spanLength>0) {
+                    もし(spanLength==rest) {
+                        戻る length;  // Reached the end of the string.
                     }
                     // Match strings after this code point.
                     // There cannot be any increments below it because UnicodeSet strings
@@ -1142,70 +1142,70 @@ int32_t UnicodeSetStringSpan::spanUTF8(const uint8_t *s, int32_t length, USetSpa
 }
 
 int32_t UnicodeSetStringSpan::spanBackUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(spanCondition==USET_SPAN_NOT_CONTAINED) {
-        return spanNotBackUTF8(s, length);
+    もし(spanCondition==USET_SPAN_NOT_CONTAINED) {
+        戻る spanNotBackUTF8(s, length);
     }
     int32_t pos = spanSet.spanBackUTF8(reinterpret_cast<const char*>(s), length, USET_SPAN_CONTAINED);
-    if(pos==0) {
-        return 0;
+    もし(pos==0) {
+        戻る 0;
     }
     int32_t spanLength=length-pos;
 
     // Consider strings; they may overlap with the span.
     OffsetList offsets;
-    if(spanCondition==USET_SPAN_CONTAINED) {
+    もし(spanCondition==USET_SPAN_CONTAINED) {
         // Use offset list to try all possibilities.
         offsets.setMaxLength(maxLength8);
     }
     int32_t i, stringsLength=strings.size();
     uint8_t *spanBackUTF8Lengths=spanLengths;
-    if(all) {
+    もし(all) {
         spanBackUTF8Lengths+=3*stringsLength;
     }
-    for(;;) {
+    ために(;;) {
         const uint8_t *s8=utf8;
         int32_t length8;
-        if(spanCondition==USET_SPAN_CONTAINED) {
-            for(i=0; i<stringsLength; ++i) {
+        もし(spanCondition==USET_SPAN_CONTAINED) {
+            ために(i=0; i<stringsLength; ++i) {
                 length8=utf8Lengths[i];
-                if(length8==0) {
+                もし(length8==0) {
                     continue;  // String not representable in UTF-8.
                 }
                 int32_t overlap=spanBackUTF8Lengths[i];
-                if(overlap==ALL_CP_CONTAINED) {
+                もし(overlap==ALL_CP_CONTAINED) {
                     s8+=length8;
                     continue;  // Irrelevant string.
                 }
 
                 // Try to match this string at pos-(length8-overlap)..pos-length8.
-                if(overlap>=LONG_SPAN) {
+                もし(overlap>=LONG_SPAN) {
                     overlap=length8;
                     // While contained: No point matching fully inside the code point span.
                     int32_t len1=0;
                     U8_FWD_1(s8, len1, overlap);
                     overlap-=len1;  // Length of the string minus the first code point.
                 }
-                if(overlap>spanLength) {
+                もし(overlap>spanLength) {
                     overlap=spanLength;
                 }
                 int32_t dec=length8-overlap;  // Keep dec+overlap==length8.
-                for(;;) {
-                    if(dec>pos) {
+                ために(;;) {
+                    もし(dec>pos) {
                         break;
                     }
                     // Try to match if the decrement is not listed already.
                     // Match at code point boundaries. (The UTF-8 strings were converted
                     // from UTF-16 and are guaranteed to be well-formed.)
-                    if( !U8_IS_TRAIL(s[pos-dec]) &&
+                    もし( !U8_IS_TRAIL(s[pos-dec]) &&
                         !offsets.containsOffset(dec) &&
                         matches8(s+pos-dec, s8, length8)
                     ) {
-                        if(dec==pos) {
-                            return 0;  // Reached the start of the string.
+                        もし(dec==pos) {
+                            戻る 0;  // Reached the start of the string.
                         }
                         offsets.addOffset(dec);
                     }
-                    if(overlap==0) {
+                    もし(overlap==0) {
                         break;
                     }
                     --overlap;
@@ -1213,11 +1213,11 @@ int32_t UnicodeSetStringSpan::spanBackUTF8(const uint8_t *s, int32_t length, USe
                 }
                 s8+=length8;
             }
-        } else /* USET_SPAN_SIMPLE */ {
+        } 否则 /* USET_SPAN_SIMPLE */ {
             int32_t maxDec=0, maxOverlap=0;
-            for(i=0; i<stringsLength; ++i) {
+            ために(i=0; i<stringsLength; ++i) {
                 length8=utf8Lengths[i];
-                if(length8==0) {
+                もし(length8==0) {
                     continue;  // String not representable in UTF-8.
                 }
                 int32_t overlap=spanBackUTF8Lengths[i];
@@ -1225,23 +1225,23 @@ int32_t UnicodeSetStringSpan::spanBackUTF8(const uint8_t *s, int32_t length, USe
                 // to find the match from the latest end.
 
                 // Try to match this string at pos-(length8-overlap)..pos-length8.
-                if(overlap>=LONG_SPAN) {
+                もし(overlap>=LONG_SPAN) {
                     overlap=length8;
                     // Longest match: Need to match fully inside the code point span
                     // to find the match from the latest end.
                 }
-                if(overlap>spanLength) {
+                もし(overlap>spanLength) {
                     overlap=spanLength;
                 }
                 int32_t dec=length8-overlap;  // Keep dec+overlap==length8.
-                for(;;) {
-                    if(dec>pos || overlap<maxOverlap) {
+                ために(;;) {
+                    もし(dec>pos || overlap<maxOverlap) {
                         break;
                     }
                     // Try to match if the string is longer or ends later.
                     // Match at code point boundaries. (The UTF-8 strings were converted
                     // from UTF-16 and are guaranteed to be well-formed.)
-                    if( !U8_IS_TRAIL(s[pos-dec]) &&
+                    もし( !U8_IS_TRAIL(s[pos-dec]) &&
                         (overlap>maxOverlap || /* redundant overlap==maxOverlap && */ dec>maxDec) &&
                         matches8(s+pos-dec, s8, length8)
                     ) {
@@ -1255,12 +1255,12 @@ int32_t UnicodeSetStringSpan::spanBackUTF8(const uint8_t *s, int32_t length, USe
                 s8+=length8;
             }
 
-            if(maxDec!=0 || maxOverlap!=0) {
+            もし(maxDec!=0 || maxOverlap!=0) {
                 // Longest-match algorithm, and there was a string match.
                 // Simply continue before it.
                 pos-=maxDec;
-                if(pos==0) {
-                    return 0;  // Reached the start of the string.
+                もし(pos==0) {
+                    戻る 0;  // Reached the start of the string.
                 }
                 spanLength=0;  // Match strings from before a string match.
                 continue;
@@ -1268,38 +1268,38 @@ int32_t UnicodeSetStringSpan::spanBackUTF8(const uint8_t *s, int32_t length, USe
         }
         // Finished trying to match all strings at pos.
 
-        if(spanLength!=0 || pos==length) {
+        もし(spanLength!=0 || pos==length) {
             // The position is before an unlimited code point span (spanLength!=0),
             // not before a string match.
             // The only position where spanLength==0 before a span is pos==length.
             // Otherwise, an unlimited code point span is only tried again when no
             // strings match, and if such a non-initial span fails we stop.
-            if(offsets.isEmpty()) {
-                return pos;  // No strings matched before a span.
+            もし(offsets.isEmpty()) {
+                戻る pos;  // No strings matched before a span.
             }
             // Match strings from before the next string match.
-        } else {
+        } 否则 {
             // The position is before a string match (or a single code point).
-            if(offsets.isEmpty()) {
+            もし(offsets.isEmpty()) {
                 // No more strings matched before a previous string match.
                 // Try another code point span from before the last string match.
                 int32_t oldPos=pos;
                 pos = spanSet.spanBackUTF8(reinterpret_cast<const char*>(s), oldPos, USET_SPAN_CONTAINED);
                 spanLength=oldPos-pos;
-                if( pos==0 ||           // Reached the start of the string, or
+                もし( pos==0 ||           // Reached the start of the string, or
                     spanLength==0       // neither strings nor span progressed.
                 ) {
-                    return pos;
+                    戻る pos;
                 }
                 continue;  // spanLength>0: Match strings from before a span.
-            } else {
+            } 否则 {
                 // Try to match only one code point from before a string match if some
                 // string matched beyond it, so that we try all possible positions
                 // and don't overshoot.
                 spanLength=spanOneBackUTF8(spanSet, s, pos);
-                if(spanLength>0) {
-                    if(spanLength==pos) {
-                        return 0;  // Reached the start of the string.
+                もし(spanLength>0) {
+                    もし(spanLength==pos) {
+                        戻る 0;  // Reached the start of the string.
                     }
                     // Match strings before this code point.
                     // There cannot be any decrements below it because UnicodeSet strings
@@ -1353,8 +1353,8 @@ int32_t UnicodeSetStringSpan::spanNot(const char16_t *s, int32_t length) const {
         // Span until we find a code point from the set,
         // or a code point that starts or ends some string.
         i=pSpanNotSet->span(s+pos, rest, USET_SPAN_NOT_CONTAINED);
-        if(i==rest) {
-            return length;  // Reached the end of the string.
+        もし(i==rest) {
+            戻る length;  // Reached the end of the string.
         }
         pos+=i;
         rest-=i;
@@ -1362,21 +1362,21 @@ int32_t UnicodeSetStringSpan::spanNot(const char16_t *s, int32_t length) const {
         // Check whether the current code point is in the original set,
         // without the string starts and ends.
         int32_t cpLength=spanOne(spanSet, s+pos, rest);
-        if(cpLength>0) {
-            return pos;  // There is a set element at pos.
+        もし(cpLength>0) {
+            戻る pos;  // There is a set element at pos.
         }
 
         // Try to match the strings at pos.
-        for(i=0; i<stringsLength; ++i) {
-            if(spanLengths[i]==ALL_CP_CONTAINED) {
+        ために(i=0; i<stringsLength; ++i) {
+            もし(spanLengths[i]==ALL_CP_CONTAINED) {
                 continue;  // Irrelevant string. (Also the empty string.)
             }
             const UnicodeString& string = *static_cast<const UnicodeString*>(strings.elementAt(i));
             const char16_t *s16=string.getBuffer();
             int32_t length16=string.length();
             U_ASSERT(length>0);
-            if(length16<=rest && matches16CPB(s, pos, length, s16, length16)) {
-                return pos;  // There is a set element at pos.
+            もし(length16<=rest && matches16CPB(s, pos, length, s16, length16)) {
+                戻る pos;  // There is a set element at pos.
             }
         }
 
@@ -1385,8 +1385,8 @@ int32_t UnicodeSetStringSpan::spanNot(const char16_t *s, int32_t length) const {
         // cpLength<0
         pos-=cpLength;
         rest+=cpLength;
-    } while(rest!=0);
-    return length;  // Reached the end of the string.
+    } ながら(rest!=0);
+    戻る length;  // Reached the end of the string.
 }
 
 int32_t UnicodeSetStringSpan::spanNotBack(const char16_t *s, int32_t length) const {
@@ -1396,31 +1396,31 @@ int32_t UnicodeSetStringSpan::spanNotBack(const char16_t *s, int32_t length) con
         // Span until we find a code point from the set,
         // or a code point that starts or ends some string.
         pos=pSpanNotSet->spanBack(s, pos, USET_SPAN_NOT_CONTAINED);
-        if(pos==0) {
-            return 0;  // Reached the start of the string.
+        もし(pos==0) {
+            戻る 0;  // Reached the start of the string.
         }
 
         // Check whether the current code point is in the original set,
         // without the string starts and ends.
         int32_t cpLength=spanOneBack(spanSet, s, pos);
-        if(cpLength>0) {
-            return pos;  // There is a set element at pos.
+        もし(cpLength>0) {
+            戻る pos;  // There is a set element at pos.
         }
 
         // Try to match the strings at pos.
-        for(i=0; i<stringsLength; ++i) {
+        ために(i=0; i<stringsLength; ++i) {
             // Use spanLengths rather than a spanBackLengths pointer because
             // it is easier and we only need to know whether the string is irrelevant
             // which is the same in either array.
-            if(spanLengths[i]==ALL_CP_CONTAINED) {
+            もし(spanLengths[i]==ALL_CP_CONTAINED) {
                 continue;  // Irrelevant string. (Also the empty string.)
             }
             const UnicodeString& string = *static_cast<const UnicodeString*>(strings.elementAt(i));
             const char16_t *s16=string.getBuffer();
             int32_t length16=string.length();
             U_ASSERT(length>0);
-            if(length16<=pos && matches16CPB(s, pos-length16, length, s16, length16)) {
-                return pos;  // There is a set element at pos.
+            もし(length16<=pos && matches16CPB(s, pos-length16, length, s16, length16)) {
+                戻る pos;  // There is a set element at pos.
             }
         }
 
@@ -1428,23 +1428,23 @@ int32_t UnicodeSetStringSpan::spanNotBack(const char16_t *s, int32_t length) con
         // not in the original set. Skip this code point and continue.
         // cpLength<0
         pos+=cpLength;
-    } while(pos!=0);
-    return 0;  // Reached the start of the string.
+    } ながら(pos!=0);
+    戻る 0;  // Reached the start of the string.
 }
 
 int32_t UnicodeSetStringSpan::spanNotUTF8(const uint8_t *s, int32_t length) const {
     int32_t pos=0, rest=length;
     int32_t i, stringsLength=strings.size();
     uint8_t *spanUTF8Lengths=spanLengths;
-    if(all) {
+    もし(all) {
         spanUTF8Lengths+=2*stringsLength;
     }
     do {
         // Span until we find a code point from the set,
         // or a code point that starts or ends some string.
         i = pSpanNotSet->spanUTF8(reinterpret_cast<const char*>(s) + pos, rest, USET_SPAN_NOT_CONTAINED);
-        if(i==rest) {
-            return length;  // Reached the end of the string.
+        もし(i==rest) {
+            戻る length;  // Reached the end of the string.
         }
         pos+=i;
         rest-=i;
@@ -1452,18 +1452,18 @@ int32_t UnicodeSetStringSpan::spanNotUTF8(const uint8_t *s, int32_t length) cons
         // Check whether the current code point is in the original set,
         // without the string starts and ends.
         int32_t cpLength=spanOneUTF8(spanSet, s+pos, rest);
-        if(cpLength>0) {
-            return pos;  // There is a set element at pos.
+        もし(cpLength>0) {
+            戻る pos;  // There is a set element at pos.
         }
 
         // Try to match the strings at pos.
         const uint8_t *s8=utf8;
         int32_t length8;
-        for(i=0; i<stringsLength; ++i) {
+        ために(i=0; i<stringsLength; ++i) {
             length8=utf8Lengths[i];
             // ALL_CP_CONTAINED: Irrelevant string.
-            if(length8!=0 && spanUTF8Lengths[i]!=ALL_CP_CONTAINED && length8<=rest && matches8(s+pos, s8, length8)) {
-                return pos;  // There is a set element at pos.
+            もし(length8!=0 && spanUTF8Lengths[i]!=ALL_CP_CONTAINED && length8<=rest && matches8(s+pos, s8, length8)) {
+                戻る pos;  // There is a set element at pos.
             }
             s8+=length8;
         }
@@ -1473,40 +1473,40 @@ int32_t UnicodeSetStringSpan::spanNotUTF8(const uint8_t *s, int32_t length) cons
         // cpLength<0
         pos-=cpLength;
         rest+=cpLength;
-    } while(rest!=0);
-    return length;  // Reached the end of the string.
+    } ながら(rest!=0);
+    戻る length;  // Reached the end of the string.
 }
 
 int32_t UnicodeSetStringSpan::spanNotBackUTF8(const uint8_t *s, int32_t length) const {
     int32_t pos=length;
     int32_t i, stringsLength=strings.size();
     uint8_t *spanBackUTF8Lengths=spanLengths;
-    if(all) {
+    もし(all) {
         spanBackUTF8Lengths+=3*stringsLength;
     }
     do {
         // Span until we find a code point from the set,
         // or a code point that starts or ends some string.
         pos = pSpanNotSet->spanBackUTF8(reinterpret_cast<const char*>(s), pos, USET_SPAN_NOT_CONTAINED);
-        if(pos==0) {
-            return 0;  // Reached the start of the string.
+        もし(pos==0) {
+            戻る 0;  // Reached the start of the string.
         }
 
         // Check whether the current code point is in the original set,
         // without the string starts and ends.
         int32_t cpLength=spanOneBackUTF8(spanSet, s, pos);
-        if(cpLength>0) {
-            return pos;  // There is a set element at pos.
+        もし(cpLength>0) {
+            戻る pos;  // There is a set element at pos.
         }
 
         // Try to match the strings at pos.
         const uint8_t *s8=utf8;
         int32_t length8;
-        for(i=0; i<stringsLength; ++i) {
+        ために(i=0; i<stringsLength; ++i) {
             length8=utf8Lengths[i];
             // ALL_CP_CONTAINED: Irrelevant string.
-            if(length8!=0 && spanBackUTF8Lengths[i]!=ALL_CP_CONTAINED && length8<=pos && matches8(s+pos-length8, s8, length8)) {
-                return pos;  // There is a set element at pos.
+            もし(length8!=0 && spanBackUTF8Lengths[i]!=ALL_CP_CONTAINED && length8<=pos && matches8(s+pos-length8, s8, length8)) {
+                戻る pos;  // There is a set element at pos.
             }
             s8+=length8;
         }
@@ -1515,8 +1515,8 @@ int32_t UnicodeSetStringSpan::spanNotBackUTF8(const uint8_t *s, int32_t length) 
         // not in the original set. Skip this code point and continue.
         // cpLength<0
         pos+=cpLength;
-    } while(pos!=0);
-    return 0;  // Reached the start of the string.
+    } ながら(pos!=0);
+    戻る 0;  // Reached the start of the string.
 }
 
 U_NAMESPACE_END

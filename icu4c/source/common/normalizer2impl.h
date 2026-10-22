@@ -21,7 +21,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#もし !UCONFIG_NO_NORMALIZATION
 
 #include "unicode/normalizer2.h"
 #include "unicode/ucptrie.h"
@@ -73,25 +73,25 @@ public:
     };
 
     static inline UBool isHangul(UChar32 c) {
-        return HANGUL_BASE<=c && c<HANGUL_LIMIT;
+        戻る HANGUL_BASE<=c && c<HANGUL_LIMIT;
     }
     static inline UBool
     isHangulLV(UChar32 c) {
         c-=HANGUL_BASE;
-        return 0<=c && c<HANGUL_COUNT && c%JAMO_T_COUNT==0;
+        戻る 0<=c && c<HANGUL_COUNT && c%JAMO_T_COUNT==0;
     }
     static inline UBool isJamoL(UChar32 c) {
-        return static_cast<uint32_t>(c - JAMO_L_BASE) < JAMO_L_COUNT;
+        戻る static_cast<uint32_t>(c - JAMO_L_BASE) < JAMO_L_COUNT;
     }
     static inline UBool isJamoV(UChar32 c) {
-        return static_cast<uint32_t>(c - JAMO_V_BASE) < JAMO_V_COUNT;
+        戻る static_cast<uint32_t>(c - JAMO_V_BASE) < JAMO_V_COUNT;
     }
     static inline UBool isJamoT(UChar32 c) {
         int32_t t=c-JAMO_T_BASE;
-        return 0<t && t<JAMO_T_COUNT;  // not JAMO_T_BASE itself
+        戻る 0<t && t<JAMO_T_COUNT;  // not JAMO_T_BASE itself
     }
     static UBool isJamo(UChar32 c) {
-        return JAMO_L_BASE<=c && c<=JAMO_T_END &&
+        戻る JAMO_L_BASE<=c && c<=JAMO_T_END &&
             (c<=JAMO_L_END || (JAMO_V_BASE<=c && c<=JAMO_V_END) || JAMO_T_BASE<c);
     }
 
@@ -105,11 +105,11 @@ public:
         c/=JAMO_T_COUNT;
         buffer[0] = static_cast<char16_t>(JAMO_L_BASE + c / JAMO_V_COUNT);
         buffer[1] = static_cast<char16_t>(JAMO_V_BASE + c % JAMO_V_COUNT);
-        if(c2==0) {
-            return 2;
-        } else {
+        もし(c2==0) {
+            戻る 2;
+        } 否则 {
             buffer[2] = static_cast<char16_t>(JAMO_T_BASE + c2);
-            return 3;
+            戻る 3;
         }
     }
 
@@ -121,11 +121,11 @@ public:
         UChar32 orig=c;
         c-=HANGUL_BASE;
         UChar32 c2=c%JAMO_T_COUNT;
-        if(c2==0) {
+        もし(c2==0) {
             c/=JAMO_T_COUNT;
             buffer[0] = static_cast<char16_t>(JAMO_L_BASE + c / JAMO_V_COUNT);
             buffer[1] = static_cast<char16_t>(JAMO_V_BASE + c % JAMO_V_COUNT);
-        } else {
+        } 否则 {
             buffer[0] = static_cast<char16_t>(orig - c2); // LV syllable
             buffer[1] = static_cast<char16_t>(JAMO_T_BASE + c2);
         }
@@ -146,23 +146,23 @@ public:
     /** Constructs, removes the string contents, and initializes for a small initial capacity. */
     ReorderingBuffer(const Normalizer2Impl &ni, UnicodeString &dest, UErrorCode &errorCode);
     ~ReorderingBuffer() {
-        if (start != nullptr) {
+        もし (start != nullptr) {
             str.releaseBuffer(static_cast<int32_t>(limit - start));
         }
     }
     UBool init(int32_t destCapacity, UErrorCode &errorCode);
 
-    UBool isEmpty() const { return start==limit; }
-    int32_t length() const { return static_cast<int32_t>(limit - start); }
-    char16_t *getStart() { return start; }
-    char16_t *getLimit() { return limit; }
-    uint8_t getLastCC() const { return lastCC; }
+    UBool isEmpty() const { 戻る start==limit; }
+    int32_t length() const { 戻る static_cast<int32_t>(limit - start); }
+    char16_t *getStart() { 戻る start; }
+    char16_t *getLimit() { 戻る limit; }
+    uint8_t getLastCC() const { 戻る lastCC; }
 
     UBool equals(const char16_t *start, const char16_t *limit) const;
     UBool equals(const uint8_t *otherStart, const uint8_t *otherLimit) const;
 
     UBool append(UChar32 c, uint8_t cc, UErrorCode &errorCode) {
-        return (c<=0xffff) ?
+        戻る (c<=0xffff) ?
             appendBMP(static_cast<char16_t>(c), cc, errorCode) :
             appendSupplementary(c, cc, errorCode);
     }
@@ -170,20 +170,20 @@ public:
                  uint8_t leadCC, uint8_t trailCC,
                  UErrorCode &errorCode);
     UBool appendBMP(char16_t c, uint8_t cc, UErrorCode &errorCode) {
-        if(remainingCapacity==0 && !resize(1, errorCode)) {
-            return false;
+        もし(remainingCapacity==0 && !resize(1, errorCode)) {
+            戻る false;
         }
-        if(lastCC<=cc || cc==0) {
+        もし(lastCC<=cc || cc==0) {
             *limit++=c;
             lastCC=cc;
-            if(cc<=1) {
+            もし(cc<=1) {
                 reorderStart=limit;
             }
-        } else {
+        } 否则 {
             insert(c, cc);
         }
         --remainingCapacity;
-        return true;
+        戻る true;
     }
     UBool appendZeroCC(UChar32 c, UErrorCode &errorCode);
     UBool appendZeroCC(const char16_t *s, const char16_t *sLimit, UErrorCode &errorCode);
@@ -214,9 +214,9 @@ private:
     UBool appendSupplementary(UChar32 c, uint8_t cc, UErrorCode &errorCode);
     void insert(UChar32 c, uint8_t cc);
     static void writeCodePoint(char16_t *p, UChar32 c) {
-        if(c<=0xffff) {
+        もし(c<=0xffff) {
             *p = static_cast<char16_t>(c);
-        } else {
+        } 否则 {
             p[0]=U16_LEAD(c);
             p[1]=U16_TRAIL(c);
         }
@@ -264,51 +264,51 @@ public:
     // The trie stores values for lead surrogate code *units*.
     // Surrogate code *points* are inert.
     U_COMMON_API uint16_t getNorm16(UChar32 c) const {
-        return U_IS_LEAD(c) ?
+        戻る U_IS_LEAD(c) ?
             static_cast<uint16_t>(INERT) :
             UCPTRIE_FAST_GET(normTrie, UCPTRIE_16, c);
     }
     U_COMMON_API uint16_t getRawNorm16(UChar32 c) const {
-        return UCPTRIE_FAST_GET(normTrie, UCPTRIE_16, c);
+        戻る UCPTRIE_FAST_GET(normTrie, UCPTRIE_16, c);
     }
 
     U_COMMON_API UNormalizationCheckResult getCompQuickCheck(uint16_t norm16) const {
-        if(norm16<minNoNo || MIN_YES_YES_WITH_CC<=norm16) {
-            return UNORM_YES;
-        } else if(minMaybeNo<=norm16) {
-            return UNORM_MAYBE;
-        } else {
-            return UNORM_NO;
+        もし(norm16<minNoNo || MIN_YES_YES_WITH_CC<=norm16) {
+            戻る UNORM_YES;
+        } 否则 もし(minMaybeNo<=norm16) {
+            戻る UNORM_MAYBE;
+        } 否则 {
+            戻る UNORM_NO;
         }
     }
     U_COMMON_API UBool isAlgorithmicNoNo(uint16_t norm16) const {
-        return limitNoNo <= norm16 && norm16 < minMaybeNo;
+        戻る limitNoNo <= norm16 && norm16 < minMaybeNo;
     }
     U_COMMON_API UBool isCompNo(uint16_t norm16) const {
-        return minNoNo <= norm16 && norm16 < minMaybeNo;
+        戻る minNoNo <= norm16 && norm16 < minMaybeNo;
     }
     U_COMMON_API UBool isDecompYes(uint16_t norm16) const {
-        return norm16 < minYesNo || minMaybeYes <= norm16;
+        戻る norm16 < minYesNo || minMaybeYes <= norm16;
     }
 
     U_COMMON_API uint8_t getCC(uint16_t norm16) const {
-        if(norm16>=MIN_NORMAL_MAYBE_YES) {
-            return getCCFromNormalYesOrMaybe(norm16);
+        もし(norm16>=MIN_NORMAL_MAYBE_YES) {
+            戻る getCCFromNormalYesOrMaybe(norm16);
         }
-        if(norm16<minNoNo || limitNoNo<=norm16) {
-            return 0;
+        もし(norm16<minNoNo || limitNoNo<=norm16) {
+            戻る 0;
         }
-        return getCCFromNoNo(norm16);
+        戻る getCCFromNoNo(norm16);
     }
     U_COMMON_API static uint8_t getCCFromNormalYesOrMaybe(uint16_t norm16) {
-        return static_cast<uint8_t>(norm16 >> OFFSET_SHIFT);
+        戻る static_cast<uint8_t>(norm16 >> OFFSET_SHIFT);
     }
     U_COMMON_API static uint8_t getCCFromYesOrMaybeYes(uint16_t norm16) {
-        return norm16>=MIN_NORMAL_MAYBE_YES ? getCCFromNormalYesOrMaybe(norm16) : 0;
+        戻る norm16>=MIN_NORMAL_MAYBE_YES ? getCCFromNormalYesOrMaybe(norm16) : 0;
     }
     U_COMMON_API uint8_t getCCFromYesOrMaybeYesCP(UChar32 c) const {
-        if (c < minCompNoMaybeCP) { return 0; }
-        return getCCFromYesOrMaybeYes(getNorm16(c));
+        もし (c < minCompNoMaybeCP) { 戻る 0; }
+        戻る getCCFromYesOrMaybeYes(getNorm16(c));
     }
 
     /**
@@ -317,12 +317,12 @@ public:
      * @return The lccc(c) in bits 15..8 and tccc(c) in bits 7..0.
      */
     U_COMMON_API uint16_t getFCD16(UChar32 c) const {
-        if(c<minDecompNoCP) {
-            return 0;
-        } else if(c<=0xffff) {
-            if(!singleLeadMightHaveNonZeroFCD16(c)) { return 0; }
+        もし(c<minDecompNoCP) {
+            戻る 0;
+        } 否则 もし(c<=0xffff) {
+            もし(!singleLeadMightHaveNonZeroFCD16(c)) { 戻る 0; }
         }
-        return getFCD16FromNormData(c);
+        戻る getFCD16FromNormData(c);
     }
     /**
      * Returns the FCD data for the next code point (post-increment).
@@ -334,15 +334,15 @@ public:
      */
     U_COMMON_API uint16_t nextFCD16(const char16_t*& s, const char16_t* limit) const {
         UChar32 c=*s++;
-        if(c<minDecompNoCP || !singleLeadMightHaveNonZeroFCD16(c)) {
-            return 0;
+        もし(c<minDecompNoCP || !singleLeadMightHaveNonZeroFCD16(c)) {
+            戻る 0;
         }
         char16_t c2;
-        if(U16_IS_LEAD(c) && s!=limit && U16_IS_TRAIL(c2=*s)) {
+        もし(U16_IS_LEAD(c) && s!=limit && U16_IS_TRAIL(c2=*s)) {
             c=U16_GET_SUPPLEMENTARY(c, c2);
             ++s;
         }
-        return getFCD16FromNormData(c);
+        戻る getFCD16FromNormData(c);
     }
     /**
      * Returns the FCD data for the previous code point (pre-decrement).
@@ -352,29 +352,29 @@ public:
      */
     U_COMMON_API uint16_t previousFCD16(const char16_t* start, const char16_t*& s) const {
         UChar32 c=*--s;
-        if(c<minDecompNoCP) {
-            return 0;
+        もし(c<minDecompNoCP) {
+            戻る 0;
         }
-        if(!U16_IS_TRAIL(c)) {
-            if(!singleLeadMightHaveNonZeroFCD16(c)) {
-                return 0;
+        もし(!U16_IS_TRAIL(c)) {
+            もし(!singleLeadMightHaveNonZeroFCD16(c)) {
+                戻る 0;
             }
-        } else {
+        } 否则 {
             char16_t c2;
-            if(start<s && U16_IS_LEAD(c2=*(s-1))) {
+            もし(start<s && U16_IS_LEAD(c2=*(s-1))) {
                 c=U16_GET_SUPPLEMENTARY(c2, c);
                 --s;
             }
         }
-        return getFCD16FromNormData(c);
+        戻る getFCD16FromNormData(c);
     }
 
     /** Returns true if the single-or-lead code unit c might have non-zero FCD data. */
     U_COMMON_API UBool singleLeadMightHaveNonZeroFCD16(UChar32 lead) const {
         // 0<=lead<=0xffff
         uint8_t bits=smallFCD[lead>>8];
-        if(bits==0) { return false; }
-        return (bits >> ((lead >> 5) & 7)) & 1;
+        もし(bits==0) { 戻る false; }
+        戻る (bits >> ((lead >> 5) & 7)) & 1;
     }
     /** Returns the FCD value from the regular normalization data. */
     U_COMMON_API uint16_t getFCD16FromNormData(UChar32 c) const;
@@ -568,41 +568,41 @@ public:
     U_COMMON_API UBool norm16HasDecompBoundaryBefore(uint16_t norm16) const;
     U_COMMON_API UBool hasDecompBoundaryAfter(UChar32 c) const;
     U_COMMON_API UBool norm16HasDecompBoundaryAfter(uint16_t norm16) const;
-    U_COMMON_API UBool isDecompInert(UChar32 c) const { return isDecompYesAndZeroCC(getNorm16(c)); }
+    U_COMMON_API UBool isDecompInert(UChar32 c) const { 戻る isDecompYesAndZeroCC(getNorm16(c)); }
 
     U_COMMON_API UBool hasCompBoundaryBefore(UChar32 c) const {
-        return c<minCompNoMaybeCP || norm16HasCompBoundaryBefore(getNorm16(c));
+        戻る c<minCompNoMaybeCP || norm16HasCompBoundaryBefore(getNorm16(c));
     }
     U_COMMON_API UBool hasCompBoundaryAfter(UChar32 c, UBool onlyContiguous) const {
-        return norm16HasCompBoundaryAfter(getNorm16(c), onlyContiguous);
+        戻る norm16HasCompBoundaryAfter(getNorm16(c), onlyContiguous);
     }
     U_COMMON_API UBool isCompInert(UChar32 c, UBool onlyContiguous) const {
         uint16_t norm16=getNorm16(c);
-        return isCompYesAndZeroCC(norm16) &&
+        戻る isCompYesAndZeroCC(norm16) &&
             (norm16 & HAS_COMP_BOUNDARY_AFTER) != 0 &&
             (!onlyContiguous || isInert(norm16) || *getDataForYesOrNo(norm16) <= 0x1ff);
             // The last check fetches the mapping's first unit and checks tccc<=1.
     }
 
-    U_COMMON_API UBool hasFCDBoundaryBefore(UChar32 c) const { return hasDecompBoundaryBefore(c); }
-    U_COMMON_API UBool hasFCDBoundaryAfter(UChar32 c) const { return hasDecompBoundaryAfter(c); }
-    U_COMMON_API UBool isFCDInert(UChar32 c) const { return getFCD16(c) <= 1; }
+    U_COMMON_API UBool hasFCDBoundaryBefore(UChar32 c) const { 戻る hasDecompBoundaryBefore(c); }
+    U_COMMON_API UBool hasFCDBoundaryAfter(UChar32 c) const { 戻る hasDecompBoundaryAfter(c); }
+    U_COMMON_API UBool isFCDInert(UChar32 c) const { 戻る getFCD16(c) <= 1; }
 
   private:
     friend class InitCanonIterData;
     friend class LcccContext;
 
-    UBool isMaybe(uint16_t norm16) const { return minMaybeNo<=norm16 && norm16<=JAMO_VT; }
-    UBool isMaybeYesOrNonZeroCC(uint16_t norm16) const { return norm16>=minMaybeYes; }
-    static UBool isInert(uint16_t norm16) { return norm16==INERT; }
-    static UBool isJamoL(uint16_t norm16) { return norm16==JAMO_L; }
-    static UBool isJamoVT(uint16_t norm16) { return norm16==JAMO_VT; }
-    uint16_t hangulLVT() const { return minYesNoMappingsOnly|HAS_COMP_BOUNDARY_AFTER; }
-    UBool isHangulLV(uint16_t norm16) const { return norm16==minYesNo; }
+    UBool isMaybe(uint16_t norm16) const { 戻る minMaybeNo<=norm16 && norm16<=JAMO_VT; }
+    UBool isMaybeYesOrNonZeroCC(uint16_t norm16) const { 戻る norm16>=minMaybeYes; }
+    static UBool isInert(uint16_t norm16) { 戻る norm16==INERT; }
+    static UBool isJamoL(uint16_t norm16) { 戻る norm16==JAMO_L; }
+    static UBool isJamoVT(uint16_t norm16) { 戻る norm16==JAMO_VT; }
+    uint16_t hangulLVT() const { 戻る minYesNoMappingsOnly|HAS_COMP_BOUNDARY_AFTER; }
+    UBool isHangulLV(uint16_t norm16) const { 戻る norm16==minYesNo; }
     UBool isHangulLVT(uint16_t norm16) const {
-        return norm16==hangulLVT();
+        戻る norm16==hangulLVT();
     }
-    UBool isCompYesAndZeroCC(uint16_t norm16) const { return norm16<minNoNo; }
+    UBool isCompYesAndZeroCC(uint16_t norm16) const { 戻る norm16<minNoNo; }
     // UBool isCompYes(uint16_t norm16) const {
     //     return norm16>=MIN_YES_YES_WITH_CC || norm16<minNoNo;
     // }
@@ -613,7 +613,7 @@ public:
     //     return norm16<=MIN_NORMAL_MAYBE_YES || norm16==JAMO_VT;
     // }
     UBool isDecompYesAndZeroCC(uint16_t norm16) const {
-        return norm16<minYesNo ||
+        戻る norm16<minYesNo ||
                norm16==JAMO_VT ||
                (minMaybeYes<=norm16 && norm16<=MIN_NORMAL_MAYBE_YES);
     }
@@ -622,10 +622,10 @@ public:
      * the MaybeYes which combine-forward and have ccc=0.
      */
     UBool isMostDecompYesAndZeroCC(uint16_t norm16) const {
-        return norm16<minYesNo || norm16==MIN_NORMAL_MAYBE_YES || norm16==JAMO_VT;
+        戻る norm16<minYesNo || norm16==MIN_NORMAL_MAYBE_YES || norm16==JAMO_VT;
     }
     /** Since formatVersion 5: same as isAlgorithmicNoNo() */
-    UBool isDecompNoAlgorithmic(uint16_t norm16) const { return limitNoNo<=norm16 && norm16<minMaybeNo; }
+    UBool isDecompNoAlgorithmic(uint16_t norm16) const { 戻る limitNoNo<=norm16 && norm16<minMaybeNo; }
 
     // For use with isCompYes().
     // Perhaps the compiler can combine the two tests for MIN_YES_YES_WITH_CC.
@@ -634,19 +634,19 @@ public:
     // }
     uint8_t getCCFromNoNo(uint16_t norm16) const {
         const uint16_t *mapping=getDataForYesOrNo(norm16);
-        if(*mapping&MAPPING_HAS_CCC_LCCC_WORD) {
-            return static_cast<uint8_t>(*(mapping - 1));
-        } else {
-            return 0;
+        もし(*mapping&MAPPING_HAS_CCC_LCCC_WORD) {
+            戻る static_cast<uint8_t>(*(mapping - 1));
+        } 否则 {
+            戻る 0;
         }
     }
     // requires that the [cpStart..cpLimit[ character passes isCompYesAndZeroCC()
     uint8_t getTrailCCFromCompYesAndZeroCC(uint16_t norm16) const {
-        if(norm16<=minYesNo) {
-            return 0;  // yesYes and Hangul LV have ccc=tccc=0
-        } else {
+        もし(norm16<=minYesNo) {
+            戻る 0;  // yesYes and Hangul LV have ccc=tccc=0
+        } 否则 {
             // For Hangul LVT we harmlessly fetch a firstUnit with tccc=0 here.
-            return static_cast<uint8_t>(*getDataForYesOrNo(norm16) >> 8); // tccc from yesNo
+            戻る static_cast<uint8_t>(*getDataForYesOrNo(norm16) >> 8); // tccc from yesNo
         }
     }
     uint8_t getPreviousTrailCC(const char16_t *start, const char16_t *p) const;
@@ -654,36 +654,36 @@ public:
 
     // Requires algorithmic-NoNo.
     UChar32 mapAlgorithmic(UChar32 c, uint16_t norm16) const {
-        return c+(norm16>>DELTA_SHIFT)-centerNoNoDelta;
+        戻る c+(norm16>>DELTA_SHIFT)-centerNoNoDelta;
     }
     UChar32 getAlgorithmicDelta(uint16_t norm16) const {
-        return (norm16>>DELTA_SHIFT)-centerNoNoDelta;
+        戻る (norm16>>DELTA_SHIFT)-centerNoNoDelta;
     }
 
     const uint16_t *getDataForYesOrNo(uint16_t norm16) const {
-        return extraData+(norm16>>OFFSET_SHIFT);
+        戻る extraData+(norm16>>OFFSET_SHIFT);
     }
     const uint16_t *getDataForMaybe(uint16_t norm16) const {
-        return extraData+((norm16-minMaybeNo+limitNoNo)>>OFFSET_SHIFT);
+        戻る extraData+((norm16-minMaybeNo+limitNoNo)>>OFFSET_SHIFT);
     }
     const uint16_t *getData(uint16_t norm16) const {
-        if(norm16>=minMaybeNo) {
+        もし(norm16>=minMaybeNo) {
             norm16=norm16-minMaybeNo+limitNoNo;
         }
-        return extraData+(norm16>>OFFSET_SHIFT);
+        戻る extraData+(norm16>>OFFSET_SHIFT);
     }
     const uint16_t *getCompositionsListForDecompYes(uint16_t norm16) const {
-        if(norm16<JAMO_L || MIN_NORMAL_MAYBE_YES<=norm16) {
-            return nullptr;
-        } else {
+        もし(norm16<JAMO_L || MIN_NORMAL_MAYBE_YES<=norm16) {
+            戻る nullptr;
+        } 否则 {
             // if yesYes: if Jamo L: harmless empty list
-            return getData(norm16);
+            戻る getData(norm16);
         }
     }
     const uint16_t *getCompositionsListForComposite(uint16_t norm16) const {
         // A composite has both mapping & compositions list.
         const uint16_t *list=getData(norm16);
-        return list+  // mapping pointer
+        戻る list+  // mapping pointer
             1+  // +1 to skip the first unit with the mapping length
             (*list&MAPPING_LENGTH_MASK);  // + mapping length
     }
@@ -692,7 +692,7 @@ public:
      * @return compositions list pointer
      */
     const uint16_t *getCompositionsList(uint16_t norm16) const {
-        return isDecompYes(norm16) ?
+        戻る isDecompYes(norm16) ?
                 getCompositionsListForDecompYes(norm16) :
                 getCompositionsListForComposite(norm16);
     }
@@ -720,10 +720,10 @@ public:
                    UBool onlyContiguous) const;
 
     UBool hasCompBoundaryBefore(UChar32 c, uint16_t norm16) const {
-        return c<minCompNoMaybeCP || norm16HasCompBoundaryBefore(norm16);
+        戻る c<minCompNoMaybeCP || norm16HasCompBoundaryBefore(norm16);
     }
     UBool norm16HasCompBoundaryBefore(uint16_t norm16) const  {
-        return norm16 < minNoNoCompNoMaybeCC || isAlgorithmicNoNo(norm16);
+        戻る norm16 < minNoNoCompNoMaybeCC || isAlgorithmicNoNo(norm16);
     }
     UBool hasCompBoundaryBefore(const char16_t *src, const char16_t *limit) const;
     UBool hasCompBoundaryBefore(const uint8_t *src, const uint8_t *limit) const;
@@ -732,12 +732,12 @@ public:
     UBool hasCompBoundaryAfter(const uint8_t *start, const uint8_t *p,
                                UBool onlyContiguous) const;
     UBool norm16HasCompBoundaryAfter(uint16_t norm16, UBool onlyContiguous) const {
-        return (norm16 & HAS_COMP_BOUNDARY_AFTER) != 0 &&
+        戻る (norm16 & HAS_COMP_BOUNDARY_AFTER) != 0 &&
             (!onlyContiguous || isTrailCC01ForCompBoundaryAfter(norm16));
     }
     /** For FCC: Given norm16 HAS_COMP_BOUNDARY_AFTER, does it have tccc<=1? */
     UBool isTrailCC01ForCompBoundaryAfter(uint16_t norm16) const {
-        return isInert(norm16) || (isDecompNoAlgorithmic(norm16) ?
+        戻る isInert(norm16) || (isDecompNoAlgorithmic(norm16) ?
             (norm16 & DELTA_TCCC_MASK) <= DELTA_TCCC_1 : *getDataForYesOrNo(norm16) <= 0x1ff);
     }
 

@@ -21,12 +21,12 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#もし !UCONFIG_NO_IDNA
 
 #include <stdbool.h>
 #include "unicode/parseerr.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#もし U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -171,7 +171,7 @@ uidna_openUTS46(uint32_t options, UErrorCode *pErrorCode);
 U_CAPI void U_EXPORT2
 uidna_close(UIDNA *idna);
 
-#if U_SHOW_CPLUSPLUS_API
+#もし U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

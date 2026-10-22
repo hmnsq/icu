@@ -213,92 +213,92 @@ public:
 // UVector32 inlines
 
 inline UBool UVector32::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
-        return true;
-    } else {
-        return expandCapacity(minimumCapacity, status);
+    もし ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
+        戻る true;
+    } 否则 {
+        戻る expandCapacity(minimumCapacity, status);
     }
 }
 
 inline int32_t UVector32::elementAti(int32_t index) const {
-    return (index >= 0 && count > 0 && count - index > 0) ? elements[index] : 0;
+    戻る (index >= 0 && count > 0 && count - index > 0) ? elements[index] : 0;
 }
 
 
 inline void UVector32::addElement(int32_t elem, UErrorCode &status) {
-    if (ensureCapacity(count + 1, status)) {
+    もし (ensureCapacity(count + 1, status)) {
         elements[count] = elem;
         count++;
     }
 }
 
 inline int32_t *UVector32::reserveBlock(int32_t size, UErrorCode &status) {
-    if (ensureCapacity(count+size, status) == false) {
-        return nullptr;
+    もし (ensureCapacity(count+size, status) == false) {
+        戻る nullptr;
     }
     int32_t  *rp = elements+count;
     count += size;
-    return rp;
+    戻る rp;
 }
 
 inline int32_t *UVector32::popFrame(int32_t size) {
     U_ASSERT(count >= size);
     count -= size;
-    if (count < 0) {
+    もし (count < 0) {
         count = 0;
     }
-    return elements+count-size;
+    戻る elements+count-size;
 }
 
 
 
 inline int32_t UVector32::size() const {
-    return count;
+    戻る count;
 }
 
 inline UBool UVector32::isEmpty() const {
-    return count == 0;
+    戻る count == 0;
 }
 
 inline UBool UVector32::contains(int32_t obj) const {
-    return indexOf(obj) >= 0;
+    戻る indexOf(obj) >= 0;
 }
 
 inline int32_t UVector32::lastElementi() const {
-    return elementAti(count-1);
+    戻る elementAti(count-1);
 }
 
 inline bool UVector32::operator!=(const UVector32& other) const {
-    return !operator==(other);
+    戻る !operator==(other);
 }
 
 inline int32_t *UVector32::getBuffer() const {
-    return elements;
+    戻る elements;
 }
 
 
 // UStack inlines
 
 inline UBool UVector32::empty() const {
-    return isEmpty();
+    戻る isEmpty();
 }
 
 inline int32_t UVector32::peeki() const {
-    return lastElementi();
+    戻る lastElementi();
 }
 
 inline int32_t UVector32::push(int32_t i, UErrorCode &status) {
     addElement(i, status);
-    return i;
+    戻る i;
 }
 
 inline int32_t UVector32::popi() {
     int32_t result = 0;
-    if (count > 0) {
+    もし (count > 0) {
         count--;
         result = elements[count];
     }
-    return result;
+    戻る result;
 }
 
 U_NAMESPACE_END

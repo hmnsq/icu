@@ -117,114 +117,114 @@ static const uint32_t syntaxOrWhiteSpace2000[]={
 
 UBool
 PatternProps::isSyntax(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return (latin1[c] >> 1) & 1;
-    } else if(c<0x2010) {
-        return false;
-    } else if(c<=0x3030) {
+    もし(c<0) {
+        戻る false;
+    } 否则 もし(c<=0xff) {
+        戻る (latin1[c] >> 1) & 1;
+    } 否则 もし(c<0x2010) {
+        戻る false;
+    } 否则 もし(c<=0x3030) {
         uint32_t bits=syntax2000[index2000[(c-0x2000)>>5]];
-        return (bits >> (c & 0x1f)) & 1;
-    } else if(0xfd3e<=c && c<=0xfe46) {
-        return c<=0xfd3f || 0xfe45<=c;
-    } else {
-        return false;
+        戻る (bits >> (c & 0x1f)) & 1;
+    } 否则 もし(0xfd3e<=c && c<=0xfe46) {
+        戻る c<=0xfd3f || 0xfe45<=c;
+    } 否则 {
+        戻る false;
     }
 }
 
 UBool
 PatternProps::isSyntaxOrWhiteSpace(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return latin1[c] & 1;
-    } else if(c<0x200e) {
-        return false;
-    } else if(c<=0x3030) {
+    もし(c<0) {
+        戻る false;
+    } 否则 もし(c<=0xff) {
+        戻る latin1[c] & 1;
+    } 否则 もし(c<0x200e) {
+        戻る false;
+    } 否则 もし(c<=0x3030) {
         uint32_t bits=syntaxOrWhiteSpace2000[index2000[(c-0x2000)>>5]];
-        return (bits >> (c & 0x1f)) & 1;
-    } else if(0xfd3e<=c && c<=0xfe46) {
-        return c<=0xfd3f || 0xfe45<=c;
-    } else {
-        return false;
+        戻る (bits >> (c & 0x1f)) & 1;
+    } 否则 もし(0xfd3e<=c && c<=0xfe46) {
+        戻る c<=0xfd3f || 0xfe45<=c;
+    } 否则 {
+        戻る false;
     }
 }
 
 UBool
 PatternProps::isWhiteSpace(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return (latin1[c] >> 2) & 1;
-    } else if(0x200e<=c && c<=0x2029) {
-        return c<=0x200f || 0x2028<=c;
-    } else {
-        return false;
+    もし(c<0) {
+        戻る false;
+    } 否则 もし(c<=0xff) {
+        戻る (latin1[c] >> 2) & 1;
+    } 否则 もし(0x200e<=c && c<=0x2029) {
+        戻る c<=0x200f || 0x2028<=c;
+    } 否则 {
+        戻る false;
     }
 }
 
 const char16_t *
 PatternProps::skipWhiteSpace(const char16_t *s, int32_t length) {
-    while(length>0 && isWhiteSpace(*s)) {
+    ながら(length>0 && isWhiteSpace(*s)) {
         ++s;
         --length;
     }
-    return s;
+    戻る s;
 }
 
 int32_t
 PatternProps::skipWhiteSpace(const UnicodeString& s, int32_t start) {
     int32_t i = start;
     int32_t length = s.length();
-    while(i<length && isWhiteSpace(s.charAt(i))) {
+    ながら(i<length && isWhiteSpace(s.charAt(i))) {
         ++i;
     }
-    return i;
+    戻る i;
 }
 
 const char16_t *
 PatternProps::trimWhiteSpace(const char16_t *s, int32_t &length) {
-    if(length<=0 || (!isWhiteSpace(s[0]) && !isWhiteSpace(s[length-1]))) {
-        return s;
+    もし(length<=0 || (!isWhiteSpace(s[0]) && !isWhiteSpace(s[length-1]))) {
+        戻る s;
     }
     int32_t start=0;
     int32_t limit=length;
-    while(start<limit && isWhiteSpace(s[start])) {
+    ながら(start<limit && isWhiteSpace(s[start])) {
         ++start;
     }
-    if(start<limit) {
+    もし(start<limit) {
         // There is non-white space at start; we will not move limit below that,
         // so we need not test start<limit in the loop.
-        while(isWhiteSpace(s[limit-1])) {
+        ながら(isWhiteSpace(s[limit-1])) {
             --limit;
         }
     }
     length=limit-start;
-    return s+start;
+    戻る s+start;
 }
 
 UBool
 PatternProps::isIdentifier(const char16_t *s, int32_t length) {
-    if(length<=0) {
-        return false;
+    もし(length<=0) {
+        戻る false;
     }
     const char16_t *limit=s+length;
     do {
-        if(isSyntaxOrWhiteSpace(*s++)) {
-            return false;
+        もし(isSyntaxOrWhiteSpace(*s++)) {
+            戻る false;
         }
-    } while(s<limit);
-    return true;
+    } ながら(s<limit);
+    戻る true;
 }
 
 const char16_t *
 PatternProps::skipIdentifier(const char16_t *s, int32_t length) {
-    while(length>0 && !isSyntaxOrWhiteSpace(*s)) {
+    ながら(length>0 && !isSyntaxOrWhiteSpace(*s)) {
         ++s;
         --length;
     }
-    return s;
+    戻る s;
 }
 
 U_NAMESPACE_END

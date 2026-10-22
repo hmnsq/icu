@@ -14,7 +14,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#もし U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 #include "unicode/unistr.h"
@@ -187,7 +187,7 @@ protected:
      * @stable ICU 2.0
      */
     ForwardCharacterIterator& operator=(const ForwardCharacterIterator&) U_LIFETIME_BOUND {
-        return *this;
+        戻る *this;
     }
 };
 
@@ -696,37 +696,37 @@ protected:
 
 inline bool
 ForwardCharacterIterator::operator!=(const ForwardCharacterIterator& that) const {
-    return !operator==(that);
+    戻る !operator==(that);
 }
 
 inline int32_t
 CharacterIterator::setToStart() {
-    return move(0, kStart);
+    戻る move(0, kStart);
 }
 
 inline int32_t
 CharacterIterator::setToEnd() {
-    return move(0, kEnd);
+    戻る move(0, kEnd);
 }
 
 inline int32_t
 CharacterIterator::startIndex() const {
-    return begin;
+    戻る begin;
 }
 
 inline int32_t
 CharacterIterator::endIndex() const {
-    return end;
+    戻る end;
 }
 
 inline int32_t
 CharacterIterator::getIndex() const {
-    return pos;
+    戻る pos;
 }
 
 inline int32_t
 CharacterIterator::getLength() const {
-    return textLength;
+    戻る textLength;
 }
 
 U_NAMESPACE_END

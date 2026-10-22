@@ -18,7 +18,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#もし !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
 #include "cmemory.h"
 #include "unicode/ucnv.h"
@@ -39,16 +39,16 @@
 
 
 #define CONCAT_ESCAPE_MACRO(args, targetIndex,targetLength,strToAppend, err, len,sourceIndex) UPRV_BLOCK_MACRO_BEGIN {      \
-    while(len-->0){                                                                                                         \
-        if(targetIndex < targetLength){                                                                                     \
+    ながら(len-->0){                                                                                                         \
+        もし(targetIndex < targetLength){                                                                                     \
             args->target[targetIndex] = (unsigned char) *strToAppend;                                                       \
-            if(args->offsets!=nullptr){                                                                                        \
+            もし(args->offsets!=nullptr){                                                                                        \
                 *(offsets++) = sourceIndex-1;                                                                               \
             }                                                                                                               \
             targetIndex++;                                                                                                  \
         }                                                                                                                   \
-        else{                                                                                                               \
-            args->converter->charErrorBuffer[(int)args->converter->charErrorBufferLength++] = (unsigned char) *strToAppend; \
+        否则{                                                                                                               \
+            args->converter->charErrorBuffer[(整数)args->converter->charErrorBufferLength++] = (unsigned char) *strToAppend; \
             *err =U_BUFFER_OVERFLOW_ERROR;                                                                                  \
         }                                                                                                                   \
         strToAppend++;                                                                                                      \
@@ -71,34 +71,34 @@ U_CDECL_BEGIN
 static void  U_CALLCONV
 _HZOpen(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
     UConverter *gbConverter;
-    if(pArgs->onlyTestIsLoadable) {
+    もし(pArgs->onlyTestIsLoadable) {
         ucnv_canCreateConverter("GBK", errorCode);  /* errorCode carries result */
-        return;
+        戻る;
     }
     gbConverter = ucnv_open("GBK", errorCode);
-    if(U_FAILURE(*errorCode)) {
-        return;
+    もし(U_FAILURE(*errorCode)) {
+        戻る;
     }
     cnv->toUnicodeStatus = 0;
     cnv->fromUnicodeStatus= 0;
     cnv->mode=0;
     cnv->fromUChar32=0x0000;
     cnv->extraInfo = uprv_calloc(1, sizeof(UConverterDataHZ));
-    if(cnv->extraInfo != nullptr){
+    もし(cnv->extraInfo != nullptr){
         ((UConverterDataHZ*)cnv->extraInfo)->gbConverter = gbConverter;
     }
-    else {
+    否则 {
         ucnv_close(gbConverter);
         *errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        戻る;
     }
 }
 
 static void  U_CALLCONV
 _HZClose(UConverter *cnv){
-    if(cnv->extraInfo != nullptr) {
+    もし(cnv->extraInfo != nullptr) {
         ucnv_close (((UConverterDataHZ *) (cnv->extraInfo))->gbConverter);
-        if(!cnv->isExtraLocal) {
+        もし(!cnv->isExtraLocal) {
             uprv_free(cnv->extraInfo);
         }
         cnv->extraInfo = nullptr;
@@ -107,18 +107,18 @@ _HZClose(UConverter *cnv){
 
 static void  U_CALLCONV
 _HZReset(UConverter *cnv, UConverterResetChoice choice){
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    もし(choice<=UCNV_RESET_TO_UNICODE) {
         cnv->toUnicodeStatus = 0;
         cnv->mode=0;
-        if(cnv->extraInfo != nullptr){
+        もし(cnv->extraInfo != nullptr){
             ((UConverterDataHZ*)cnv->extraInfo)->isStateDBCS = false;
             ((UConverterDataHZ*)cnv->extraInfo)->isEmptySegment = false;
         }
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
+    もし(choice!=UCNV_RESET_TO_UNICODE) {
         cnv->fromUnicodeStatus= 0;
         cnv->fromUChar32=0x0000; 
-        if(cnv->extraInfo != nullptr){
+        もし(cnv->extraInfo != nullptr){
             ((UConverterDataHZ*)cnv->extraInfo)->isEscapeAppended = false;
             ((UConverterDataHZ*)cnv->extraInfo)->targetIndex = 0;
             ((UConverterDataHZ*)cnv->extraInfo)->sourceIndex = 0;
@@ -171,13 +171,13 @@ UConverter_toUnicode_HZ_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
         return;
     }*/
     
-    while(mySource< mySourceLimit){
+    ながら(mySource< mySourceLimit){
         
-        if(myTarget < args->targetLimit){
+        もし(myTarget < args->targetLimit){
             
             mySourceChar= (unsigned char) *mySource++;
 
-            if(args->converter->mode == UCNV_TILDE) {
+            もし(args->converter->mode == UCNV_TILDE) {
                 /* second byte after ~ */
                 args->converter->mode=0;
                 switch(mySourceChar) {
@@ -185,7 +185,7 @@ UConverter_toUnicode_HZ_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
                     /* no output for ~\n (line-continuation marker) */
                     continue;
                 case UCNV_TILDE:
-                    if(args->offsets) {
+                    もし(args->offsets) {
                         args->offsets[myTarget - args->target]=(int32_t)(mySource - args->source - 2);
                     }
                     *(myTarget++)=(char16_t)mySourceChar;
@@ -194,7 +194,7 @@ UConverter_toUnicode_HZ_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
                 case UCNV_OPEN_BRACE:
                 case UCNV_CLOSE_BRACE:
                     myData->isStateDBCS = (mySourceChar == UCNV_OPEN_BRACE);
-                    if (myData->isEmptySegment) {
+                    もし (myData->isEmptySegment) {
                         myData->isEmptySegment = false; /* we are handling it, reset to avoid future spurious errors */
                         *err = U_ILLEGAL_ESCAPE_SEQUENCE;
                         args->converter->toUCallbackReason = UCNV_IRREGULAR;
@@ -203,7 +203,7 @@ UConverter_toUnicode_HZ_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
                         args->converter->toULength = 2;
                         args->target = myTarget;
                         args->source = mySource;
-                        return;
+                        戻る;
                     }
                     myData->isEmptySegment = true;
                     continue;
@@ -220,37 +220,37 @@ UConverter_toUnicode_HZ_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
                     myData->isEmptySegment = false; /* different error here, reset this to avoid spurious future error */
                     *err = U_ILLEGAL_ESCAPE_SEQUENCE;
                     args->converter->toUBytes[0] = UCNV_TILDE;
-                    if( myData->isStateDBCS ?
+                    もし( myData->isStateDBCS ?
                             (0x21 <= mySourceChar && mySourceChar <= 0x7e) :
                             mySourceChar <= 0x7f
                     ) {
                         /* The current byte could be the start of a character: Back it out. */
                         args->converter->toULength = 1;
                         --mySource;
-                    } else {
+                    } 否则 {
                         /* Include the current byte in the illegal sequence. */
                         args->converter->toUBytes[1] = static_cast<uint8_t>(mySourceChar);
                         args->converter->toULength = 2;
                     }
                     args->target = myTarget;
                     args->source = mySource;
-                    return;
+                    戻る;
                 }
-            } else if(myData->isStateDBCS) {
-                if(args->converter->toUnicodeStatus == 0x00){
+            } 否则 もし(myData->isStateDBCS) {
+                もし(args->converter->toUnicodeStatus == 0x00){
                     /* lead byte */
-                    if(mySourceChar == UCNV_TILDE) {
+                    もし(mySourceChar == UCNV_TILDE) {
                         args->converter->mode = UCNV_TILDE;
-                    } else {
+                    } 否则 {
                         /* add another bit to distinguish a 0 byte from not having seen a lead byte */
                         args->converter->toUnicodeStatus = (uint32_t) (mySourceChar | 0x100);
                         myData->isEmptySegment = false; /* the segment has something, either valid or will produce a different error, so reset this */
                     }
                     continue;
                 }
-                else{
+                否则{
                     /* trail byte */
-                    int leadIsOk, trailIsOk;
+                    整数 leadIsOk, trailIsOk;
                     uint32_t leadByte = args->converter->toUnicodeStatus & 0xff;
                     targetUniChar = 0xffff;
                     /*
@@ -265,17 +265,17 @@ UConverter_toUnicode_HZ_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
                      */
                     leadIsOk = (uint8_t)(leadByte - 0x21) <= (0x7d - 0x21);
                     trailIsOk = (uint8_t)(mySourceChar - 0x21) <= (0x7e - 0x21);
-                    if (leadIsOk && trailIsOk) {
+                    もし (leadIsOk && trailIsOk) {
                         tempBuf[0] = (char) (leadByte+0x80) ;
                         tempBuf[1] = (char) (mySourceChar+0x80);
                         targetUniChar = ucnv_MBCSSimpleGetNextUChar(myData->gbConverter->sharedData,
                             tempBuf, 2, args->converter->useFallback);
                         mySourceChar= (leadByte << 8) | mySourceChar;
-                    } else if (trailIsOk) {
+                    } 否则 もし (trailIsOk) {
                         /* report a single illegal byte and continue with the following DBCS starter byte */
                         --mySource;
                         mySourceChar = (int32_t)leadByte;
-                    } else {
+                    } 否则 {
                         /* report a pair of illegal bytes if the second byte is not a DBCS starter */
                         /* add another bit so that the code below writes 2 bytes in case of error */
                         mySourceChar= 0x10000 | (leadByte << 8) | mySourceChar;
@@ -283,45 +283,45 @@ UConverter_toUnicode_HZ_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
                     args->converter->toUnicodeStatus =0x00;
                 }
             }
-            else{
-                if(mySourceChar == UCNV_TILDE) {
+            否则{
+                もし(mySourceChar == UCNV_TILDE) {
                     args->converter->mode = UCNV_TILDE;
                     continue;
-                } else if(mySourceChar <= 0x7f) {
+                } 否则 もし(mySourceChar <= 0x7f) {
                     targetUniChar = (char16_t)mySourceChar;  /* ASCII */
                     myData->isEmptySegment = false; /* the segment has something valid */
-                } else {
+                } 否则 {
                     targetUniChar = 0xffff;
                     myData->isEmptySegment = false; /* different error here, reset this to avoid spurious future error */
                 }
             }
-            if(targetUniChar < 0xfffe){
-                if(args->offsets) {
+            もし(targetUniChar < 0xfffe){
+                もし(args->offsets) {
                     args->offsets[myTarget - args->target]=(int32_t)(mySource - args->source - 1-(myData->isStateDBCS));
                 }
 
                 *(myTarget++)=(char16_t)targetUniChar;
             }
-            else /* targetUniChar>=0xfffe */ {
-                if(targetUniChar == 0xfffe){
+            否则 /* targetUniChar>=0xfffe */ {
+                もし(targetUniChar == 0xfffe){
                     *err = U_INVALID_CHAR_FOUND;
                 }
-                else{
+                否则{
                     *err = U_ILLEGAL_CHAR_FOUND;
                 }
-                if(mySourceChar > 0xff){
+                もし(mySourceChar > 0xff){
                     args->converter->toUBytes[0] = (uint8_t)(mySourceChar >> 8);
                     args->converter->toUBytes[1] = (uint8_t)mySourceChar;
                     args->converter->toULength=2;
                 }
-                else{
+                否则{
                     args->converter->toUBytes[0] = (uint8_t)mySourceChar;
                     args->converter->toULength=1;
                 }
                 break;
             }
         }
-        else{
+        否则{
             *err =U_BUFFER_OVERFLOW_ERROR;
             break;
         }
@@ -347,7 +347,7 @@ UConverter_fromUnicode_HZ_OFFSETS_LOGIC (UConverterFromUnicodeArgs * args,
     UConverterDataHZ *myConverterData=(UConverterDataHZ*)args->converter->extraInfo;
     UBool isTargetUCharDBCS = myConverterData->isTargetUCharDBCS;
     UBool oldIsTargetUCharDBCS;
-    int len =0;
+    整数 len =0;
     const char* escSeq=nullptr;
     
     /* Calling code already handles this situation. */
@@ -355,50 +355,50 @@ UConverter_fromUnicode_HZ_OFFSETS_LOGIC (UConverterFromUnicodeArgs * args,
         *err = U_ILLEGAL_ARGUMENT_ERROR;
         return;
     }*/
-    if(args->converter->fromUChar32!=0 && myTargetIndex < targetLength) {
+    もし(args->converter->fromUChar32!=0 && myTargetIndex < targetLength) {
         goto getTrail;
     }
     /*writing the char to the output stream */
-    while (mySourceIndex < mySourceLength){
+    ながら (mySourceIndex < mySourceLength){
         targetUniChar = missingCharMarker;
-        if (myTargetIndex < targetLength){
+        もし (myTargetIndex < targetLength){
             
             mySourceChar = mySource[mySourceIndex++];
             
 
             oldIsTargetUCharDBCS = isTargetUCharDBCS;
-            if(mySourceChar ==UCNV_TILDE){
+            もし(mySourceChar ==UCNV_TILDE){
                 /*concatEscape(args, &myTargetIndex, &targetLength,"\x7E\x7E",err,2,&mySourceIndex);*/
                 len = ESC_LEN;
                 escSeq = TILDE_ESCAPE;
                 CONCAT_ESCAPE_MACRO(args, myTargetIndex, targetLength, escSeq,err,len,mySourceIndex);
                 continue;
-            } else if(mySourceChar <= 0x7f) {
+            } 否则 もし(mySourceChar <= 0x7f) {
                 targetUniChar = mySourceChar;
-            } else {
+            } 否则 {
                 int32_t length= ucnv_MBCSFromUChar32(myConverterData->gbConverter->sharedData,
                     mySourceChar,&targetUniChar,args->converter->useFallback);
                 /* we can only use lead bytes 21..7D and trail bytes 21..7E */
-                if( length == 2 &&
+                もし( length == 2 &&
                     (uint16_t)(targetUniChar - 0xa1a1) <= (0xfdfe - 0xa1a1) &&
                     (uint8_t)(targetUniChar - 0xa1) <= (0xfe - 0xa1)
                 ) {
                     targetUniChar -= 0x8080;
-                } else {
+                } 否则 {
                     targetUniChar = missingCharMarker;
                 }
             }
-            if (targetUniChar != missingCharMarker){
+            もし (targetUniChar != missingCharMarker){
                myConverterData->isTargetUCharDBCS = isTargetUCharDBCS = targetUniChar > 0x00FF;
-                 if(oldIsTargetUCharDBCS != isTargetUCharDBCS || !myConverterData->isEscapeAppended ){
+                 もし(oldIsTargetUCharDBCS != isTargetUCharDBCS || !myConverterData->isEscapeAppended ){
                     /*Shifting from a double byte to single byte mode*/
-                    if(!isTargetUCharDBCS){
+                    もし(!isTargetUCharDBCS){
                         len =ESC_LEN;
                         escSeq = SB_ESCAPE;
                         CONCAT_ESCAPE_MACRO(args, myTargetIndex, targetLength, escSeq,err,len,mySourceIndex);
                         myConverterData->isEscapeAppended = true;
                     }
-                    else{ /* Shifting from a single byte to double byte mode*/
+                    否则{ /* Shifting from a single byte to double byte mode*/
                         len =ESC_LEN;
                         escSeq = DB_ESCAPE;
                         CONCAT_ESCAPE_MACRO(args, myTargetIndex, targetLength, escSeq,err,len,mySourceIndex);
@@ -407,75 +407,75 @@ UConverter_fromUnicode_HZ_OFFSETS_LOGIC (UConverterFromUnicodeArgs * args,
                     }
                 }
             
-                if(isTargetUCharDBCS){
-                    if( myTargetIndex <targetLength){
+                もし(isTargetUCharDBCS){
+                    もし( myTargetIndex <targetLength){
                         myTarget[myTargetIndex++] =(char) (targetUniChar >> 8);
-                        if(offsets){
+                        もし(offsets){
                             *(offsets++) = mySourceIndex-1;
                         }
-                        if(myTargetIndex < targetLength){
+                        もし(myTargetIndex < targetLength){
                             myTarget[myTargetIndex++] =(char) targetUniChar;
-                            if(offsets){
+                            もし(offsets){
                                 *(offsets++) = mySourceIndex-1;
                             }
-                        }else{
+                        }否则{
                             args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = (char) targetUniChar;
                             *err = U_BUFFER_OVERFLOW_ERROR;
                         } 
-                    }else{
+                    }否则{
                         args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =(char) (targetUniChar >> 8);
                         args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = (char) targetUniChar;
                         *err = U_BUFFER_OVERFLOW_ERROR;
                     }
 
-                }else{
-                    if( myTargetIndex <targetLength){
+                }否则{
+                    もし( myTargetIndex <targetLength){
                         myTarget[myTargetIndex++] = (char) (targetUniChar );
-                        if(offsets){
+                        もし(offsets){
                             *(offsets++) = mySourceIndex-1;
                         }
                         
-                    }else{
+                    }否则{
                         args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = (char) targetUniChar;
                         *err = U_BUFFER_OVERFLOW_ERROR;
                     }
                 }
 
             }
-            else{
+            否则{
                 /* oops.. the code point is unassigned */
                 /*Handle surrogates */
                 /*check if the char is a First surrogate*/
-                if(U16_IS_SURROGATE(mySourceChar)) {
-                    if(U16_IS_SURROGATE_LEAD(mySourceChar)) {
+                もし(U16_IS_SURROGATE(mySourceChar)) {
+                    もし(U16_IS_SURROGATE_LEAD(mySourceChar)) {
                         args->converter->fromUChar32=mySourceChar;
 getTrail:
                         /*look ahead to find the trail surrogate*/
-                        if(mySourceIndex <  mySourceLength) {
+                        もし(mySourceIndex <  mySourceLength) {
                             /* test the following code unit */
                             char16_t trail=(char16_t) args->source[mySourceIndex];
-                            if(U16_IS_TRAIL(trail)) {
+                            もし(U16_IS_TRAIL(trail)) {
                                 ++mySourceIndex;
                                 mySourceChar=U16_GET_SUPPLEMENTARY(args->converter->fromUChar32, trail);
                                 args->converter->fromUChar32=0x00;
                                 /* there are no surrogates in GB2312*/
                                 *err = U_INVALID_CHAR_FOUND;
                                 /* exit this condition tree */
-                            } else {
+                            } 否则 {
                                 /* this is an unmatched lead code unit (1st surrogate) */
                                 /* callback(illegal) */
                                 *err=U_ILLEGAL_CHAR_FOUND;
                             }
-                        } else {
+                        } 否则 {
                             /* no more input */
                             *err = U_ZERO_ERROR;
                         }
-                    } else {
+                    } 否则 {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
                         *err=U_ILLEGAL_CHAR_FOUND;
                     }
-                } else {
+                } 否则 {
                     /* callback(unassigned) for a BMP code point */
                     *err = U_INVALID_CHAR_FOUND;
                 }
@@ -484,7 +484,7 @@ getTrail:
                 break;
             }
         }
-        else{
+        否则{
             *err = U_BUFFER_OVERFLOW_ERROR;
             break;
         }
@@ -504,7 +504,7 @@ _HZ_WriteSub(UConverterFromUnicodeArgs *args, int32_t offsetIndex, UErrorCode *e
     char buffer[4];
     p = buffer;
     
-    if( convData->isTargetUCharDBCS){
+    もし( convData->isTargetUCharDBCS){
         *p++= UCNV_TILDE;
         *p++= UCNV_CLOSE_BRACE;
         convData->isTargetUCharDBCS=false;
@@ -536,13 +536,13 @@ _HZ_SafeClone(const UConverter *cnv,
     struct cloneHZStruct * localClone;
     int32_t size, bufferSizeNeeded = sizeof(struct cloneHZStruct);
 
-    if (U_FAILURE(*status)){
-        return nullptr;
+    もし (U_FAILURE(*status)){
+        戻る nullptr;
     }
 
-    if (*pBufferSize == 0){ /* 'preflighting' request - set needed size into *pBufferSize */
+    もし (*pBufferSize == 0){ /* 'preflighting' request - set needed size into *pBufferSize */
         *pBufferSize = bufferSizeNeeded;
-        return nullptr;
+        戻る nullptr;
     }
 
     localClone = (struct cloneHZStruct *)stackBuffer;
@@ -557,7 +557,7 @@ _HZ_SafeClone(const UConverter *cnv,
     ((UConverterDataHZ*)localClone->cnv.extraInfo)->gbConverter =
         ucnv_safeClone(((UConverterDataHZ*)cnv->extraInfo)->gbConverter, &localClone->subCnv, &size, status);
 
-    return &localClone->cnv;
+    戻る &localClone->cnv;
 }
 
 static void U_CALLCONV

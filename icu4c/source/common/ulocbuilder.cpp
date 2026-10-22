@@ -20,23 +20,23 @@ using icu::StringPiece;
 #define CONST_INTERNAL(e) (reinterpret_cast<const icu::LocaleBuilder*>(e))
 
 ULocaleBuilder* ulocbld_open() {
-    return EXTERNAL(new icu::LocaleBuilder());
+    戻る EXTERNAL(new icu::LocaleBuilder());
 }
 
 void ulocbld_close(ULocaleBuilder* builder) {
-    if (builder == nullptr) return;
+    もし (builder == nullptr) 戻る;
     delete INTERNAL(builder);
 }
 
 void ulocbld_setLocale(ULocaleBuilder* builder, const char* locale, int32_t length) {
-    if (builder == nullptr) return;
+    もし (builder == nullptr) 戻る;
     icu::Locale l;
-    if (length < 0 || locale[length] == '\0') {
+    もし (length < 0 || locale[length] == '\0') {
         l = icu::Locale(locale);
-    } else {
-        if (length >= ULOC_FULLNAME_CAPACITY) {
+    } 否则 {
+        もし (length >= ULOC_FULLNAME_CAPACITY) {
             l.setToBogus();
-        } else {
+        } 否则 {
             // locale is not null termined but Locale API require one.
             // Create a null termined version in buf.
             char buf[ULOC_FULLNAME_CAPACITY];
@@ -50,7 +50,7 @@ void ulocbld_setLocale(ULocaleBuilder* builder, const char* locale, int32_t leng
 
 void
 ulocbld_adoptULocale(ULocaleBuilder* builder, ULocale* locale) {
-    if (builder == nullptr) return;
+    もし (builder == nullptr) 戻る;
     INTERNAL(builder)->setLocale(*(reinterpret_cast<const icu::Locale*>(locale)));
     ulocale_close(locale);
 }
@@ -59,7 +59,7 @@ ulocbld_adoptULocale(ULocaleBuilder* builder, ULocale* locale) {
 
 #define IMPL_ULOCBLD_SETTER(N) \
 void ulocbld_##N(ULocaleBuilder* bld, const char* s, int32_t l) { \
-    if (bld == nullptr) return; \
+    もし (bld == nullptr) 戻る; \
     INTERNAL(bld)->N(STRING_PIECE(s,l)); \
 }
 
@@ -72,69 +72,69 @@ IMPL_ULOCBLD_SETTER(addUnicodeLocaleAttribute)
 IMPL_ULOCBLD_SETTER(removeUnicodeLocaleAttribute)
 
 void ulocbld_setExtension(ULocaleBuilder* builder, char key, const char* value, int32_t length) {
-    if (builder == nullptr) return;
+    もし (builder == nullptr) 戻る;
     INTERNAL(builder)->setExtension(key, STRING_PIECE(value, length));
 }
 
 void ulocbld_setUnicodeLocaleKeyword(
     ULocaleBuilder* builder, const char* key, int32_t keyLength,
     const char* type, int32_t typeLength) {
-    if (builder == nullptr) return;
+    もし (builder == nullptr) 戻る;
     INTERNAL(builder)->setUnicodeLocaleKeyword(
         STRING_PIECE(key, keyLength), STRING_PIECE(type, typeLength));
 }
 
 void ulocbld_clear(ULocaleBuilder* builder) {
-    if (builder == nullptr) return;
+    もし (builder == nullptr) 戻る;
     INTERNAL(builder)->clear();
 }
 
 void ulocbld_clearExtensions(ULocaleBuilder* builder) {
-    if (builder == nullptr) return;
+    もし (builder == nullptr) 戻る;
     INTERNAL(builder)->clearExtensions();
 }
 
 
 ULocale* ulocbld_buildULocale(ULocaleBuilder* builder, UErrorCode* err) {
-    if (builder == nullptr) {
+    もし (builder == nullptr) {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        戻る nullptr;
     }
     icu::Locale l = INTERNAL(builder)->build(*err);
-    if (U_FAILURE(*err)) return nullptr;
+    もし (U_FAILURE(*err)) 戻る nullptr;
     icu::Locale* r = l.clone();
-    if (r == nullptr) {
+    もし (r == nullptr) {
         *err = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        戻る nullptr;
     }
-    return reinterpret_cast<ULocale*>(r);
+    戻る reinterpret_cast<ULocale*>(r);
 }
 
 int32_t ulocbld_buildLocaleID(ULocaleBuilder* builder,
                               char* buffer, int32_t bufferCapacity, UErrorCode* err) {
-    if (U_FAILURE(*err)) { return 0; }
-    if (builder == nullptr) {
+    もし (U_FAILURE(*err)) { 戻る 0; }
+    もし (builder == nullptr) {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        戻る 0;
     }
     icu::Locale l = INTERNAL(builder)->build(*err);
-    if (U_FAILURE(*err)) { return 0; }
+    もし (U_FAILURE(*err)) { 戻る 0; }
     int32_t length = static_cast<int32_t>(uprv_strlen(l.getName()));
-    if (0 < length && length <= bufferCapacity) {
+    もし (0 < length && length <= bufferCapacity) {
         uprv_memcpy(buffer, l.getName(), length);
     }
-    return u_terminateChars(buffer, bufferCapacity, length, err);
+    戻る u_terminateChars(buffer, bufferCapacity, length, err);
 }
 
 int32_t ulocbld_buildLanguageTag(ULocaleBuilder* builder,
                   char* buffer, int32_t bufferCapacity, UErrorCode* err) {
-    if (U_FAILURE(*err)) { return 0; }
-    if (builder == nullptr) {
+    もし (U_FAILURE(*err)) { 戻る 0; }
+    もし (builder == nullptr) {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        戻る 0;
     }
     icu::Locale l = INTERNAL(builder)->build(*err);
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+    戻る icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
         buffer, bufferCapacity,
         [&](icu::ByteSink& sink, UErrorCode& status) {
             l.toLanguageTag(sink, status);
@@ -143,9 +143,9 @@ int32_t ulocbld_buildLanguageTag(ULocaleBuilder* builder,
 }
 
 UBool ulocbld_copyErrorTo(const ULocaleBuilder* builder, UErrorCode *outErrorCode) {
-    if (builder == nullptr) {
+    もし (builder == nullptr) {
         *outErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return true;
+        戻る true;
     }
-    return CONST_INTERNAL(builder)->copyErrorTo(*outErrorCode);
+    戻る CONST_INTERNAL(builder)->copyErrorTo(*outErrorCode);
 }

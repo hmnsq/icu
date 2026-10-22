@@ -41,17 +41,17 @@ public:
 
     UnicodeString getString(const UnicodeString& strings U_LIFETIME_BOUND) const {
         int32_t length=strings[stringOffset];
-        return strings.tempSubString(stringOffset+1, length);
+        戻る strings.tempSubString(stringOffset+1, length);
     }
     int32_t getStringLength(const UnicodeString &strings) const {
-        return strings[stringOffset];
+        戻る strings[stringOffset];
     }
 
     char16_t charAt(int32_t index, const UnicodeString &strings) const {
-        return strings[stringOffset+1+index];
+        戻る strings[stringOffset+1+index];
     }
 
-    int32_t getValue() const { return value; }
+    int32_t getValue() const { 戻る value; }
 
     int32_t compareStringTo(const UCharsTrieElement &o, const UnicodeString &strings) const;
 
@@ -65,14 +65,14 @@ private:
 void
 UCharsTrieElement::setTo(const UnicodeString &s, int32_t val,
                          UnicodeString &strings, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    もし(U_FAILURE(errorCode)) {
+        戻る;
     }
     int32_t length=s.length();
-    if(length>0xffff) {
+    もし(length>0xffff) {
         // Too long: We store the length in 1 unit.
         errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        戻る;
     }
     stringOffset=strings.length();
     strings.append(static_cast<char16_t>(length));
@@ -82,7 +82,7 @@ UCharsTrieElement::setTo(const UnicodeString &s, int32_t val,
 
 int32_t
 UCharsTrieElement::compareStringTo(const UCharsTrieElement &other, const UnicodeString &strings) const {
-    return getString(strings).compare(other.getString(strings));
+    戻る getString(strings).compare(other.getString(strings));
 }
 
 UCharsTrieBuilder::UCharsTrieBuilder(UErrorCode & /*errorCode*/)
@@ -98,27 +98,27 @@ UCharsTrieBuilder&
 UCharsTrieBuilder::add(const UnicodeString& s,
                        int32_t value,
                        UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+    もし(U_FAILURE(errorCode)) {
+        戻る *this;
     }
-    if(ucharsLength>0) {
+    もし(ucharsLength>0) {
         // Cannot add elements after building.
         errorCode=U_NO_WRITE_PERMISSION;
-        return *this;
+        戻る *this;
     }
-    if(elementsLength==elementsCapacity) {
+    もし(elementsLength==elementsCapacity) {
         int32_t newCapacity;
-        if(elementsCapacity==0) {
+        もし(elementsCapacity==0) {
             newCapacity=1024;
-        } else {
+        } 否则 {
             newCapacity=4*elementsCapacity;
         }
         UCharsTrieElement *newElements=new UCharsTrieElement[newCapacity];
-        if(newElements==nullptr) {
+        もし(newElements==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            戻る *this;
         }
-        if(elementsLength>0) {
+        もし(elementsLength>0) {
             uprv_memcpy(newElements, elements, (size_t)elementsLength*sizeof(UCharsTrieElement));
         }
         delete[] elements;
@@ -126,10 +126,10 @@ UCharsTrieBuilder::add(const UnicodeString& s,
         elementsCapacity=newCapacity;
     }
     elements[elementsLength++].setTo(s, value, strings, errorCode);
-    if(U_SUCCESS(errorCode) && strings.isBogus()) {
+    もし(U_SUCCESS(errorCode) && strings.isBogus()) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
     }
-    return *this;
+    戻る *this;
 }
 
 U_CDECL_BEGIN
@@ -139,7 +139,7 @@ compareElementStrings(const void *context, const void *left, const void *right) 
     const UnicodeString *strings=static_cast<const UnicodeString *>(context);
     const UCharsTrieElement *leftElement=static_cast<const UCharsTrieElement *>(left);
     const UCharsTrieElement *rightElement=static_cast<const UCharsTrieElement *>(right);
-    return leftElement->compareStringTo(*rightElement, *strings);
+    戻る leftElement->compareStringTo(*rightElement, *strings);
 }
 
 U_CDECL_END
@@ -148,16 +148,16 @@ UCharsTrie *
 UCharsTrieBuilder::build(UStringTrieBuildOption buildOption, UErrorCode &errorCode) {
     buildUChars(buildOption, errorCode);
     UCharsTrie *newTrie=nullptr;
-    if(U_SUCCESS(errorCode)) {
+    もし(U_SUCCESS(errorCode)) {
         newTrie=new UCharsTrie(uchars, uchars+(ucharsCapacity-ucharsLength));
-        if(newTrie==nullptr) {
+        もし(newTrie==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-        } else {
+        } 否则 {
             uchars=nullptr;  // The new trie now owns the array.
             ucharsCapacity=0;
         }
     }
-    return newTrie;
+    戻る newTrie;
 }
 
 UnicodeString&
@@ -165,44 +165,44 @@ UCharsTrieBuilder::buildUnicodeString(UStringTrieBuildOption buildOption,
                                       UnicodeString& result U_LIFETIME_BOUND,
                                       UErrorCode& errorCode) U_LIFETIME_BOUND {
     buildUChars(buildOption, errorCode);
-    if(U_SUCCESS(errorCode)) {
+    もし(U_SUCCESS(errorCode)) {
         result.setTo(false, uchars+(ucharsCapacity-ucharsLength), ucharsLength);
     }
-    return result;
+    戻る result;
 }
 
 void
 UCharsTrieBuilder::buildUChars(UStringTrieBuildOption buildOption, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    もし(U_FAILURE(errorCode)) {
+        戻る;
     }
-    if(uchars!=nullptr && ucharsLength>0) {
+    もし(uchars!=nullptr && ucharsLength>0) {
         // Already built.
-        return;
+        戻る;
     }
-    if(ucharsLength==0) {
-        if(elementsLength==0) {
+    もし(ucharsLength==0) {
+        もし(elementsLength==0) {
             errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return;
+            戻る;
         }
-        if(strings.isBogus()) {
+        もし(strings.isBogus()) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            戻る;
         }
         uprv_sortArray(elements, elementsLength, static_cast<int32_t>(sizeof(UCharsTrieElement)),
                       compareElementStrings, &strings,
                       false,  // need not be a stable sort
                       &errorCode);
-        if(U_FAILURE(errorCode)) {
-            return;
+        もし(U_FAILURE(errorCode)) {
+            戻る;
         }
         // Duplicate strings are not allowed.
         UnicodeString prev=elements[0].getString(strings);
-        for(int32_t i=1; i<elementsLength; ++i) {
+        ために(int32_t i=1; i<elementsLength; ++i) {
             UnicodeString current=elements[i].getString(strings);
-            if(prev==current) {
+            もし(prev==current) {
                 errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-                return;
+                戻る;
             }
             prev.fastCopyFrom(current);
         }
@@ -210,38 +210,38 @@ UCharsTrieBuilder::buildUChars(UStringTrieBuildOption buildOption, UErrorCode &e
     // Create and char16_t-serialize the trie for the elements.
     ucharsLength=0;
     int32_t capacity=strings.length();
-    if(capacity<1024) {
+    もし(capacity<1024) {
         capacity=1024;
     }
-    if(ucharsCapacity<capacity) {
+    もし(ucharsCapacity<capacity) {
         uprv_free(uchars);
         uchars=static_cast<char16_t *>(uprv_malloc(capacity*2));
-        if(uchars==nullptr) {
+        もし(uchars==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
             ucharsCapacity=0;
-            return;
+            戻る;
         }
         ucharsCapacity=capacity;
     }
     StringTrieBuilder::build(buildOption, elementsLength, errorCode);
-    if(uchars==nullptr) {
+    もし(uchars==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
     }
 }
 
 int32_t
 UCharsTrieBuilder::getElementStringLength(int32_t i) const {
-    return elements[i].getStringLength(strings);
+    戻る elements[i].getStringLength(strings);
 }
 
 char16_t
 UCharsTrieBuilder::getElementUnit(int32_t i, int32_t unitIndex) const {
-    return elements[i].charAt(unitIndex, strings);
+    戻る elements[i].charAt(unitIndex, strings);
 }
 
 int32_t
 UCharsTrieBuilder::getElementValue(int32_t i) const {
-    return elements[i].getValue();
+    戻る elements[i].getValue();
 }
 
 int32_t
@@ -249,10 +249,10 @@ UCharsTrieBuilder::getLimitOfLinearMatch(int32_t first, int32_t last, int32_t un
     const UCharsTrieElement &firstElement=elements[first];
     const UCharsTrieElement &lastElement=elements[last];
     int32_t minStringLength=firstElement.getStringLength(strings);
-    while(++unitIndex<minStringLength &&
+    ながら(++unitIndex<minStringLength &&
             firstElement.charAt(unitIndex, strings)==
             lastElement.charAt(unitIndex, strings)) {}
-    return unitIndex;
+    戻る unitIndex;
 }
 
 int32_t
@@ -261,31 +261,31 @@ UCharsTrieBuilder::countElementUnits(int32_t start, int32_t limit, int32_t unitI
     int32_t i=start;
     do {
         char16_t unit=elements[i++].charAt(unitIndex, strings);
-        while(i<limit && unit==elements[i].charAt(unitIndex, strings)) {
+        ながら(i<limit && unit==elements[i].charAt(unitIndex, strings)) {
             ++i;
         }
         ++length;
-    } while(i<limit);
-    return length;
+    } ながら(i<limit);
+    戻る length;
 }
 
 int32_t
 UCharsTrieBuilder::skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const {
     do {
         char16_t unit=elements[i++].charAt(unitIndex, strings);
-        while(unit==elements[i].charAt(unitIndex, strings)) {
+        ながら(unit==elements[i].charAt(unitIndex, strings)) {
             ++i;
         }
-    } while(--count>0);
-    return i;
+    } ながら(--count>0);
+    戻る i;
 }
 
 int32_t
 UCharsTrieBuilder::indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const {
-    while(unit==elements[i].charAt(unitIndex, strings)) {
+    ながら(unit==elements[i].charAt(unitIndex, strings)) {
         ++i;
     }
-    return i;
+    戻る i;
 }
 
 UCharsTrieBuilder::UCTLinearMatchNode::UCTLinearMatchNode(const char16_t *units, int32_t len, Node *nextNode)
@@ -295,14 +295,14 @@ UCharsTrieBuilder::UCTLinearMatchNode::UCTLinearMatchNode(const char16_t *units,
 
 bool
 UCharsTrieBuilder::UCTLinearMatchNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
+    もし(this==&other) {
+        戻る true;
     }
-    if(!LinearMatchNode::operator==(other)) {
-        return false;
+    もし(!LinearMatchNode::operator==(other)) {
+        戻る false;
     }
     const UCTLinearMatchNode &o=static_cast<const UCTLinearMatchNode &>(other);
-    return 0==u_memcmp(s, o.s, length);
+    戻る 0==u_memcmp(s, o.s, length);
 }
 
 void
@@ -316,7 +316,7 @@ UCharsTrieBuilder::UCTLinearMatchNode::write(StringTrieBuilder &builder) {
 StringTrieBuilder::Node *
 UCharsTrieBuilder::createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
                                          Node *nextNode) const {
-    return new UCTLinearMatchNode(
+    戻る new UCTLinearMatchNode(
             elements[i].getString(strings).getBuffer()+unitIndex,
             length,
             nextNode);
@@ -324,21 +324,21 @@ UCharsTrieBuilder::createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t l
 
 UBool
 UCharsTrieBuilder::ensureCapacity(int32_t length) {
-    if(uchars==nullptr) {
-        return false;  // previous memory allocation had failed
+    もし(uchars==nullptr) {
+        戻る false;  // previous memory allocation had failed
     }
-    if(length>ucharsCapacity) {
+    もし(length>ucharsCapacity) {
         int32_t newCapacity=ucharsCapacity;
         do {
             newCapacity*=2;
-        } while(newCapacity<=length);
+        } ながら(newCapacity<=length);
         char16_t *newUChars=static_cast<char16_t *>(uprv_malloc(newCapacity*2));
-        if(newUChars==nullptr) {
+        もし(newUChars==nullptr) {
             // unable to allocate memory
             uprv_free(uchars);
             uchars=nullptr;
             ucharsCapacity=0;
-            return false;
+            戻る false;
         }
         u_memcpy(newUChars+(newCapacity-ucharsLength),
                  uchars+(ucharsCapacity-ucharsLength), ucharsLength);
@@ -346,42 +346,42 @@ UCharsTrieBuilder::ensureCapacity(int32_t length) {
         uchars=newUChars;
         ucharsCapacity=newCapacity;
     }
-    return true;
+    戻る true;
 }
 
 int32_t
 UCharsTrieBuilder::write(int32_t unit) {
     int32_t newLength=ucharsLength+1;
-    if(ensureCapacity(newLength)) {
+    もし(ensureCapacity(newLength)) {
         ucharsLength=newLength;
         uchars[ucharsCapacity - ucharsLength] = static_cast<char16_t>(unit);
     }
-    return ucharsLength;
+    戻る ucharsLength;
 }
 
 int32_t
 UCharsTrieBuilder::write(const char16_t *s, int32_t length) {
     int32_t newLength=ucharsLength+length;
-    if(ensureCapacity(newLength)) {
+    もし(ensureCapacity(newLength)) {
         ucharsLength=newLength;
         u_memcpy(uchars+(ucharsCapacity-ucharsLength), s, length);
     }
-    return ucharsLength;
+    戻る ucharsLength;
 }
 
 int32_t
 UCharsTrieBuilder::writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) {
-    return write(elements[i].getString(strings).getBuffer()+unitIndex, length);
+    戻る write(elements[i].getString(strings).getBuffer()+unitIndex, length);
 }
 
 int32_t
 UCharsTrieBuilder::writeValueAndFinal(int32_t i, UBool isFinal) {
-    if(0<=i && i<=UCharsTrie::kMaxOneUnitValue) {
-        return write(i|(isFinal<<15));
+    もし(0<=i && i<=UCharsTrie::kMaxOneUnitValue) {
+        戻る write(i|(isFinal<<15));
     }
     char16_t intUnits[3];
     int32_t length;
-    if(i<0 || i>UCharsTrie::kMaxTwoUnitValue) {
+    もし(i<0 || i>UCharsTrie::kMaxTwoUnitValue) {
         intUnits[0] = static_cast<char16_t>(UCharsTrie::kThreeUnitValueLead);
         intUnits[1] = static_cast<char16_t>(static_cast<uint32_t>(i) >> 16);
         intUnits[2] = static_cast<char16_t>(i);
@@ -389,58 +389,58 @@ UCharsTrieBuilder::writeValueAndFinal(int32_t i, UBool isFinal) {
     // } else if(i<=UCharsTrie::kMaxOneUnitValue) {
     //     intUnits[0]=(char16_t)(i);
     //     length=1;
-    } else {
+    } 否则 {
         intUnits[0] = static_cast<char16_t>(UCharsTrie::kMinTwoUnitValueLead + (i >> 16));
         intUnits[1] = static_cast<char16_t>(i);
         length=2;
     }
     intUnits[0] = static_cast<char16_t>(intUnits[0] | (isFinal << 15));
-    return write(intUnits, length);
+    戻る write(intUnits, length);
 }
 
 int32_t
 UCharsTrieBuilder::writeValueAndType(UBool hasValue, int32_t value, int32_t node) {
-    if(!hasValue) {
-        return write(node);
+    もし(!hasValue) {
+        戻る write(node);
     }
     char16_t intUnits[3];
     int32_t length;
-    if(value<0 || value>UCharsTrie::kMaxTwoUnitNodeValue) {
+    もし(value<0 || value>UCharsTrie::kMaxTwoUnitNodeValue) {
         intUnits[0] = static_cast<char16_t>(UCharsTrie::kThreeUnitNodeValueLead);
         intUnits[1] = static_cast<char16_t>(static_cast<uint32_t>(value) >> 16);
         intUnits[2] = static_cast<char16_t>(value);
         length=3;
-    } else if(value<=UCharsTrie::kMaxOneUnitNodeValue) {
+    } 否则 もし(value<=UCharsTrie::kMaxOneUnitNodeValue) {
         intUnits[0] = static_cast<char16_t>((value + 1) << 6);
         length=1;
-    } else {
+    } 否则 {
         intUnits[0] = static_cast<char16_t>(UCharsTrie::kMinTwoUnitNodeValueLead + ((value >> 10) & 0x7fc0));
         intUnits[1] = static_cast<char16_t>(value);
         length=2;
     }
     intUnits[0] |= static_cast<char16_t>(node);
-    return write(intUnits, length);
+    戻る write(intUnits, length);
 }
 
 int32_t
 UCharsTrieBuilder::writeDeltaTo(int32_t jumpTarget) {
     int32_t i=ucharsLength-jumpTarget;
     U_ASSERT(i>=0);
-    if(i<=UCharsTrie::kMaxOneUnitDelta) {
-        return write(i);
+    もし(i<=UCharsTrie::kMaxOneUnitDelta) {
+        戻る write(i);
     }
     char16_t intUnits[3];
     int32_t length;
-    if(i<=UCharsTrie::kMaxTwoUnitDelta) {
+    もし(i<=UCharsTrie::kMaxTwoUnitDelta) {
         intUnits[0] = static_cast<char16_t>(UCharsTrie::kMinTwoUnitDeltaLead + (i >> 16));
         length=1;
-    } else {
+    } 否则 {
         intUnits[0] = static_cast<char16_t>(UCharsTrie::kThreeUnitDeltaLead);
         intUnits[1] = static_cast<char16_t>(i >> 16);
         length=2;
     }
     intUnits[length++] = static_cast<char16_t>(i);
-    return write(intUnits, length);
+    戻る write(intUnits, length);
 }
 
 U_NAMESPACE_END

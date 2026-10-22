@@ -15,7 +15,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#もし U_SHOW_CPLUSPLUS_API
 
 #include "unicode/ucpmap.h"
 #include "unicode/unifilt.h"
@@ -1008,7 +1008,7 @@ public:
      * @see end
      */
     inline U_HEADER_NESTED_NAMESPACE::USetCodePoints codePoints() const U_LIFETIME_BOUND {
-        return U_HEADER_NESTED_NAMESPACE::USetCodePoints(toUSet());
+        戻る U_HEADER_NESTED_NAMESPACE::USetCodePoints(toUSet());
     }
 
     /**
@@ -1034,7 +1034,7 @@ public:
      * @see end
      */
     inline U_HEADER_NESTED_NAMESPACE::USetRanges ranges() const U_LIFETIME_BOUND {
-        return U_HEADER_NESTED_NAMESPACE::USetRanges(toUSet());
+        戻る U_HEADER_NESTED_NAMESPACE::USetRanges(toUSet());
     }
 
     /**
@@ -1058,7 +1058,7 @@ public:
      * @see end
      */
     inline U_HEADER_NESTED_NAMESPACE::USetStrings strings() const U_LIFETIME_BOUND {
-        return U_HEADER_NESTED_NAMESPACE::USetStrings(toUSet());
+        戻る U_HEADER_NESTED_NAMESPACE::USetStrings(toUSet());
     }
 
     /**
@@ -1086,7 +1086,7 @@ public:
      * @see strings
      */
     inline U_HEADER_NESTED_NAMESPACE::USetElementIterator begin() const U_LIFETIME_BOUND {
-        return U_HEADER_NESTED_NAMESPACE::USetElements(toUSet()).begin();
+        戻る U_HEADER_NESTED_NAMESPACE::USetElements(toUSet()).begin();
     }
 
     /**
@@ -1098,7 +1098,7 @@ public:
      * @see strings
      */
     inline U_HEADER_NESTED_NAMESPACE::USetElementIterator end() const U_LIFETIME_BOUND {
-        return U_HEADER_NESTED_NAMESPACE::USetElements(toUSet()).end();
+        戻る U_HEADER_NESTED_NAMESPACE::USetElements(toUSet()).end();
     }
 
     /**
@@ -1764,63 +1764,63 @@ private:
 
 
 inline bool UnicodeSet::operator!=(const UnicodeSet& o) const {
-    return !operator==(o);
+    戻る !operator==(o);
 }
 
 inline UBool UnicodeSet::isFrozen() const {
-    return bmpSet != nullptr || stringSpan != nullptr;
+    戻る bmpSet != nullptr || stringSpan != nullptr;
 }
 
 inline UBool UnicodeSet::containsSome(UChar32 start, UChar32 end) const {
-    return !containsNone(start, end);
+    戻る !containsNone(start, end);
 }
 
 inline UBool UnicodeSet::containsSome(const UnicodeSet& s) const {
-    return !containsNone(s);
+    戻る !containsNone(s);
 }
 
 inline UBool UnicodeSet::containsSome(const UnicodeString& s) const {
-    return !containsNone(s);
+    戻る !containsNone(s);
 }
 
 inline UBool UnicodeSet::isBogus() const {
-    return fFlags & kIsBogus;
+    戻る fFlags & kIsBogus;
 }
 
 inline UnicodeSet* UnicodeSet::fromUSet(USet* uset U_LIFETIME_BOUND) {
-    return reinterpret_cast<UnicodeSet *>(uset);
+    戻る reinterpret_cast<UnicodeSet *>(uset);
 }
 
 inline const UnicodeSet* UnicodeSet::fromUSet(const USet* uset U_LIFETIME_BOUND) {
-    return reinterpret_cast<const UnicodeSet *>(uset);
+    戻る reinterpret_cast<const UnicodeSet *>(uset);
 }
 
 inline USet* UnicodeSet::toUSet() U_LIFETIME_BOUND {
-    return reinterpret_cast<USet*>(this);
+    戻る reinterpret_cast<USet*>(this);
 }
 
 inline const USet* UnicodeSet::toUSet() const U_LIFETIME_BOUND {
-    return reinterpret_cast<const USet *>(this);
+    戻る reinterpret_cast<const USet *>(this);
 }
 
 inline int32_t UnicodeSet::span(const UnicodeString &s, int32_t start, USetSpanCondition spanCondition) const {
     int32_t sLength=s.length();
-    if(start<0) {
+    もし(start<0) {
         start=0;
-    } else if(start>sLength) {
+    } 否则 もし(start>sLength) {
         start=sLength;
     }
-    return start+span(s.getBuffer()+start, sLength-start, spanCondition);
+    戻る start+span(s.getBuffer()+start, sLength-start, spanCondition);
 }
 
 inline int32_t UnicodeSet::spanBack(const UnicodeString &s, int32_t limit, USetSpanCondition spanCondition) const {
     int32_t sLength=s.length();
-    if(limit<0) {
+    もし(limit<0) {
         limit=0;
-    } else if(limit>sLength) {
+    } 否则 もし(limit>sLength) {
         limit=sLength;
     }
-    return spanBack(s.getBuffer(), limit, spanCondition);
+    戻る spanBack(s.getBuffer(), limit, spanCondition);
 }
 
 U_NAMESPACE_END

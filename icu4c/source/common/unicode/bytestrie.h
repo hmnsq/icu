@@ -24,7 +24,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#もし U_SHOW_CPLUSPLUS_API
 
 #include "unicode/stringpiece.h"
 #include "unicode/uobject.h"
@@ -96,7 +96,7 @@ public:
     BytesTrie& reset() U_LIFETIME_BOUND {
         pos_=bytes_;
         remainingMatchLength_=-1;
-        return *this;
+        戻る *this;
     }
 
     /**
@@ -108,7 +108,7 @@ public:
      * @stable ICU 65
      */
     uint64_t getState64() const {
-        return (static_cast<uint64_t>(remainingMatchLength_ + 2) << kState64RemainingShift) |
+        戻る (static_cast<uint64_t>(remainingMatchLength_ + 2) << kState64RemainingShift) |
             static_cast<uint64_t>(pos_ - bytes_);
     }
 
@@ -129,7 +129,7 @@ public:
     BytesTrie& resetToState64(uint64_t state) U_LIFETIME_BOUND {
         remainingMatchLength_ = static_cast<int32_t>(state >> kState64RemainingShift) - 2;
         pos_ = bytes_ + (state & kState64PosMask);
-        return *this;
+        戻る *this;
     }
 
     /**
@@ -163,7 +163,7 @@ public:
         state.bytes=bytes_;
         state.pos=pos_;
         state.remainingMatchLength=remainingMatchLength_;
-        return *this;
+        戻る *this;
     }
 
     /**
@@ -177,11 +177,11 @@ public:
      * @stable ICU 4.8
      */
     BytesTrie& resetToState(const State& state) U_LIFETIME_BOUND {
-        if(bytes_==state.bytes && bytes_!=nullptr) {
+        もし(bytes_==state.bytes && bytes_!=nullptr) {
             pos_=state.pos;
             remainingMatchLength_=state.remainingMatchLength;
         }
-        return *this;
+        戻る *this;
     }
 
     /**
@@ -202,10 +202,10 @@ public:
      */
     inline UStringTrieResult first(int32_t inByte) {
         remainingMatchLength_=-1;
-        if(inByte<0) {
+        もし(inByte<0) {
             inByte+=0x100;
         }
-        return nextImpl(bytes_, inByte);
+        戻る nextImpl(bytes_, inByte);
     }
 
     /**
@@ -247,7 +247,7 @@ public:
         const uint8_t *pos=pos_;
         int32_t leadByte=*pos++;
         // U_ASSERT(leadByte>=kMinValueLead);
-        return readValue(pos, leadByte>>1);
+        戻る readValue(pos, leadByte>>1);
     }
 
     /**
@@ -262,7 +262,7 @@ public:
     inline UBool hasUniqueValue(int32_t &uniqueValue) const {
         const uint8_t *pos=pos_;
         // Skip the rest of a pending linear-match node.
-        return pos!=nullptr && findUniqueValue(pos+remainingMatchLength_+1, false, uniqueValue);
+        戻る pos!=nullptr && findUniqueValue(pos+remainingMatchLength_+1, false, uniqueValue);
     }
 
     /**
@@ -353,7 +353,7 @@ public:
          * @return The value for the last successful next().
          * @stable ICU 4.8
          */
-        int32_t getValue() const { return value_; }
+        int32_t getValue() const { 戻る value_; }
 
     private:
         UBool truncateAndStop();
@@ -409,20 +409,20 @@ private:
     static int32_t readValue(const uint8_t *pos, int32_t leadByte);
     static inline const uint8_t* skipValue(const uint8_t* pos U_LIFETIME_BOUND, int32_t leadByte) {
         // U_ASSERT(leadByte>=kMinValueLead);
-        if(leadByte>=(kMinTwoByteValueLead<<1)) {
-            if(leadByte<(kMinThreeByteValueLead<<1)) {
+        もし(leadByte>=(kMinTwoByteValueLead<<1)) {
+            もし(leadByte<(kMinThreeByteValueLead<<1)) {
                 ++pos;
-            } else if(leadByte<(kFourByteValueLead<<1)) {
+            } 否则 もし(leadByte<(kFourByteValueLead<<1)) {
                 pos+=2;
-            } else {
+            } 否则 {
                 pos+=3+((leadByte>>1)&1);
             }
         }
-        return pos;
+        戻る pos;
     }
     static inline const uint8_t* skipValue(const uint8_t* pos U_LIFETIME_BOUND) {
         int32_t leadByte=*pos++;
-        return skipValue(pos, leadByte);
+        戻る skipValue(pos, leadByte);
     }
 
     // Reads a jump delta and jumps.
@@ -430,20 +430,20 @@ private:
 
     static inline const uint8_t* skipDelta(const uint8_t* pos U_LIFETIME_BOUND) {
         int32_t delta=*pos++;
-        if(delta>=kMinTwoByteDeltaLead) {
-            if(delta<kMinThreeByteDeltaLead) {
+        もし(delta>=kMinTwoByteDeltaLead) {
+            もし(delta<kMinThreeByteDeltaLead) {
                 ++pos;
-            } else if(delta<kFourByteDeltaLead) {
+            } 否则 もし(delta<kFourByteDeltaLead) {
                 pos+=2;
-            } else {
+            } 否则 {
                 pos+=3+(delta&1);
             }
         }
-        return pos;
+        戻る pos;
     }
 
     static inline UStringTrieResult valueResult(int32_t node) {
-        return static_cast<UStringTrieResult>(USTRINGTRIE_INTERMEDIATE_VALUE - (node & kValueIsFinal));
+        戻る static_cast<UStringTrieResult>(USTRINGTRIE_INTERMEDIATE_VALUE - (node & kValueIsFinal));
     }
 
     // Handles a branch node for both next(byte) and next(string).
@@ -466,7 +466,7 @@ private:
     // Helper functions for getNextBytes().
     // getNextBytes() when pos is on a branch node.
     static void getNextBranchBytes(const uint8_t *pos, int32_t length, ByteSink &out);
-    static void append(ByteSink &out, int c);
+    static void append(ByteSink &out, 整数 c);
 
     // BytesTrie data structure
     //

@@ -672,7 +672,7 @@ u_strcpy(UChar* dst U_LIFETIME_BOUND, const UChar* src);
 U_CAPI UChar* U_EXPORT2
 u_strncpy(UChar* dst U_LIFETIME_BOUND, const UChar* src, int32_t n);
 
-#if !UCONFIG_NO_CONVERSION
+#もし !UCONFIG_NO_CONVERSION
 
 /**
  * Copy a byte string encoded in the default codepage to a ustring.
@@ -919,7 +919,7 @@ u_memrchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t count);
  *
  * @stable ICU 2.0
  */
-#if defined(U_DECLARE_UTF16)
+#もし defined(U_DECLARE_UTF16)
 #   define U_STRING_DECL(var, cs, length) static const UChar *var=(const UChar *)U_DECLARE_UTF16(cs)
     /**@stable ICU 2.0 */
 #   define U_STRING_INIT(var, cs, length)
@@ -927,7 +927,7 @@ u_memrchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t count);
 #   define U_STRING_DECL(var, cs, length) static const UChar var[(length)+1]=L ## cs
     /**@stable ICU 2.0 */
 #   define U_STRING_INIT(var, cs, length)
-#else
+#否则
 #   define U_STRING_DECL(var, cs, length) static UChar var[(length)+1]
     /**@stable ICU 2.0 */
 #   define U_STRING_INIT(var, cs, length) u_charsToUChars(cs, var, length+1)
@@ -1086,7 +1086,7 @@ u_strToLower(UChar *dest, int32_t destCapacity,
              const char *locale,
              UErrorCode *pErrorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#もし !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * Titlecase a string.
@@ -1165,7 +1165,7 @@ u_strFoldCase(UChar *dest, int32_t destCapacity,
               uint32_t options,
               UErrorCode *pErrorCode);
 
-#if defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION
+#もし defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION
 /**
  * Convert a UTF-16 string to a wchar_t string.
  * If it is known at compile time that wchar_t strings are in UTF-16 or UTF-32, then

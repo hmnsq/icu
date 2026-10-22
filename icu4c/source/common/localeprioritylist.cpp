@@ -22,13 +22,13 @@ namespace {
 
 int32_t hashLocale(const UHashTok token) {
     const auto* locale = static_cast<const Locale*>(token.pointer);
-    return locale->hashCode();
+    戻る locale->hashCode();
 }
 
 UBool compareLocales(const UHashTok t1, const UHashTok t2) {
     const auto* l1 = static_cast<const Locale*>(t1.pointer);
     const auto* l2 = static_cast<const Locale*>(t2.pointer);
-    return *l1 == *l2;
+    戻る *l1 == *l2;
 }
 
 constexpr int32_t WEIGHT_ONE = 1000;
@@ -40,31 +40,31 @@ struct LocaleAndWeight {
 
     int32_t compare(const LocaleAndWeight &other) const {
         int32_t diff = other.weight - weight;  // descending: other-this
-        if (diff != 0) { return diff; }
-        return index - other.index;
+        もし (diff != 0) { 戻る diff; }
+        戻る index - other.index;
     }
 };
 
 int32_t U_CALLCONV
 compareLocaleAndWeight(const void * /*context*/, const void *left, const void *right) {
-    return static_cast<const LocaleAndWeight *>(left)->
+    戻る static_cast<const LocaleAndWeight *>(left)->
         compare(*static_cast<const LocaleAndWeight *>(right));
 }
 
 const char *skipSpaces(const char *p, const char *limit) {
-    while (p < limit && *p == ' ') { ++p; }
-    return p;
+    ながら (p < limit && *p == ' ') { ++p; }
+    戻る p;
 }
 
 int32_t findTagLength(const char *p, const char *limit) {
     // Look for accept-language delimiters.
     // Leave other validation up to the Locale constructor.
     const char *q;
-    for (q = p; q < limit; ++q) {
+    ために (q = p; q < limit; ++q) {
         char c = *q;
-        if (c == ' ' || c == ',' || c == ';') { break; }
+        もし (c == ' ' || c == ',' || c == ';') { break; }
     }
-    return static_cast<int32_t>(q - p);
+    戻る static_cast<int32_t>(q - p);
 }
 
 /**
@@ -75,22 +75,22 @@ int32_t findTagLength(const char *p, const char *limit) {
 int32_t parseWeight(const char *&p, const char *limit) {
     p = skipSpaces(p, limit);
     char c;
-    if (p == limit || ((c = *p) != '0' && c != '1')) { return -1; }
+    もし (p == limit || ((c = *p) != '0' && c != '1')) { 戻る -1; }
     int32_t weight = (c - '0') * 1000;
-    if (++p == limit || *p != '.') { return weight; }
+    もし (++p == limit || *p != '.') { 戻る weight; }
     int32_t multiplier = 100;
-    while (++p != limit && '0' <= (c = *p) && c <= '9') {
+    ながら (++p != limit && '0' <= (c = *p) && c <= '9') {
         c -= '0';
-        if (multiplier > 0) {
+        もし (multiplier > 0) {
             weight += c * multiplier;
             multiplier /= 10;
-        } else if (multiplier == 0) {
+        } 否则 もし (multiplier == 0) {
             // round up
-            if (c >= 5) { ++weight; }
+            もし (c >= 5) { ++weight; }
             multiplier = -1;
         }  // else ignore further fraction digits
     }
-    return weight <= WEIGHT_ONE ? weight : -1;  // bad if > 1.0
+    戻る weight <= WEIGHT_ONE ? weight : -1;  // bad if > 1.0
 }
 
 }  // namespace
@@ -111,55 +111,55 @@ struct LocaleAndWeightArray : public UMemory {
 };
 
 LocalePriorityList::LocalePriorityList(StringPiece s, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return; }
+    もし (U_FAILURE(errorCode)) { 戻る; }
     list = new LocaleAndWeightArray();
-    if (list == nullptr) {
+    もし (list == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        戻る;
     }
     const char *p = s.data();
     const char *limit = p + s.length();
-    while ((p = skipSpaces(p, limit)) != limit) {
-        if (*p == ',') {  // empty range field
+    ながら ((p = skipSpaces(p, limit)) != limit) {
+        もし (*p == ',') {  // empty range field
             ++p;
             continue;
         }
         int32_t tagLength = findTagLength(p, limit);
-        if (tagLength == 0) {
+        もし (tagLength == 0) {
             errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            戻る;
         }
         CharString tag(p, tagLength, errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        もし (U_FAILURE(errorCode)) { 戻る; }
         Locale locale = Locale(tag.data());
-        if (locale.isBogus()) {
+        もし (locale.isBogus()) {
             errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            戻る;
         }
         int32_t weight = WEIGHT_ONE;
-        if ((p = skipSpaces(p + tagLength, limit)) != limit && *p == ';') {
-            if ((p = skipSpaces(p + 1, limit)) == limit || *p != 'q' ||
+        もし ((p = skipSpaces(p + tagLength, limit)) != limit && *p == ';') {
+            もし ((p = skipSpaces(p + 1, limit)) == limit || *p != 'q' ||
                     (p = skipSpaces(p + 1, limit)) == limit || *p != '=' ||
                     (++p, (weight = parseWeight(p, limit)) < 0)) {
                 errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                return;
+                戻る;
             }
             p = skipSpaces(p, limit);
         }
-        if (p != limit && *p != ',') {  // trailing junk
+        もし (p != limit && *p != ',') {  // trailing junk
             errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            戻る;
         }
         add(locale, weight, errorCode);
-        if (p == limit) { break; }
+        もし (p == limit) { break; }
         ++p;
     }
     sort(errorCode);
 }
 
 LocalePriorityList::~LocalePriorityList() {
-    if (list != nullptr) {
-        for (int32_t i = 0; i < listLength; ++i) {
+    もし (list != nullptr) {
+        ために (int32_t i = 0; i < listLength; ++i) {
             delete list->array[i].locale;
         }
         delete list;
@@ -168,28 +168,28 @@ LocalePriorityList::~LocalePriorityList() {
 }
 
 const Locale *LocalePriorityList::localeAt(int32_t i) const {
-    return list->array[i].locale;
+    戻る list->array[i].locale;
 }
 
 Locale *LocalePriorityList::orphanLocaleAt(int32_t i) {
-    if (list == nullptr) { return nullptr; }
+    もし (list == nullptr) { 戻る nullptr; }
     LocaleAndWeight &lw = list->array[i];
     Locale *l = lw.locale;
     lw.locale = nullptr;
-    return l;
+    戻る l;
 }
 
 bool LocalePriorityList::add(const Locale &locale, int32_t weight, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    if (map == nullptr) {
-        if (weight <= 0) { return true; }  // do not add q=0
+    もし (U_FAILURE(errorCode)) { 戻る false; }
+    もし (map == nullptr) {
+        もし (weight <= 0) { 戻る true; }  // do not add q=0
         map = uhash_open(hashLocale, compareLocales, uhash_compareLong, &errorCode);
-        if (U_FAILURE(errorCode)) { return false; }
+        もし (U_FAILURE(errorCode)) { 戻る false; }
     }
     LocalPointer<Locale> clone;
     UBool found = false;
     int32_t index = uhash_getiAndFound(map, &locale, &found);
-    if (found) {
+    もし (found) {
         // Duplicate: Remove the old item and append it anew.
         LocaleAndWeight &lw = list->array[index];
         clone.adoptInstead(lw.locale);
@@ -197,42 +197,42 @@ bool LocalePriorityList::add(const Locale &locale, int32_t weight, UErrorCode &e
         lw.weight = 0;
         ++numRemoved;
     }
-    if (weight <= 0) {  // do not add q=0
-        if (found) {
+    もし (weight <= 0) {  // do not add q=0
+        もし (found) {
             // Not strictly necessary but cleaner.
             uhash_removei(map, &locale);
         }
-        return true;
+        戻る true;
     }
-    if (clone.isNull()) {
+    もし (clone.isNull()) {
         clone.adoptInstead(locale.clone());
-        if (clone.isNull() || (clone->isBogus() && !locale.isBogus())) {
+        もし (clone.isNull() || (clone->isBogus() && !locale.isBogus())) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return false;
+            戻る false;
         }
     }
-    if (listLength == list->array.getCapacity()) {
+    もし (listLength == list->array.getCapacity()) {
         int32_t newCapacity = listLength < 50 ? 100 : 4 * listLength;
-        if (list->array.resize(newCapacity, listLength) == nullptr) {
+        もし (list->array.resize(newCapacity, listLength) == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return false;
+            戻る false;
         }
     }
     uhash_putiAllowZero(map, clone.getAlias(), listLength, &errorCode);
-    if (U_FAILURE(errorCode)) { return false; }
+    もし (U_FAILURE(errorCode)) { 戻る false; }
     LocaleAndWeight &lw = list->array[listLength];
     lw.locale = clone.orphan();
     lw.weight = weight;
     lw.index = listLength++;
-    if (weight < WEIGHT_ONE) { hasWeights = true; }
+    もし (weight < WEIGHT_ONE) { hasWeights = true; }
     U_ASSERT(uhash_count(map) == getLength());
-    return true;
+    戻る true;
 }
 
 void LocalePriorityList::sort(UErrorCode &errorCode) {
     // Sort by descending weights if there is a mix of weights.
     // The comparator forces a stable sort via the item index.
-    if (U_FAILURE(errorCode) || getLength() <= 1 || !hasWeights) { return; }
+    もし (U_FAILURE(errorCode) || getLength() <= 1 || !hasWeights) { 戻る; }
     uprv_sortArray(list->array.getAlias(), listLength, sizeof(LocaleAndWeight),
                    compareLocaleAndWeight, nullptr, false, &errorCode);
 }

@@ -56,7 +56,7 @@ public:
     /**
      * @return The number of items in the array resource.
      */
-    int32_t getSize() const { return length; }
+    int32_t getSize() const { 戻る length; }
     /**
      * @param i Array item index.
      * @param value Output-only, receives the value of the i'th item.
@@ -92,7 +92,7 @@ public:
     /**
      * @return The number of items in the array resource.
      */
-    int32_t getSize() const { return length; }
+    int32_t getSize() const { 戻る length; }
     /**
      * @param i Table item index.
      * @param key Output-only, receives the key of the i'th item.
@@ -141,7 +141,7 @@ public:
     inline UnicodeString getUnicodeString(UErrorCode &errorCode) const {
         int32_t len = 0;
         const char16_t *r = getString(len, errorCode);
-        return UnicodeString(true, r, len);
+        戻る UnicodeString(true, r, len);
     }
 
     /**
@@ -152,7 +152,7 @@ public:
     inline UnicodeString getAliasUnicodeString(UErrorCode &errorCode) const {
         int32_t len = 0;
         const char16_t *r = getAliasString(len, errorCode);
-        return UnicodeString(true, r, len);
+        戻る UnicodeString(true, r, len);
     }
 
     /**

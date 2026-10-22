@@ -12,7 +12,7 @@
 
 #include "unicode/utypes.h"
 
-#if UCONFIG_NO_SERVICE
+#もし UCONFIG_NO_SERVICE
 
 U_NAMESPACE_BEGIN
 
@@ -24,7 +24,7 @@ class ICUService;
 
 U_NAMESPACE_END
 
-#else
+#否则
 
 #include "unicode/unistr.h"
 #include "unicode/locid.h"

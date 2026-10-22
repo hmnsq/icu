@@ -11,7 +11,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#もし U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 #include "unicode/unistr.h"
@@ -178,7 +178,7 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
         range = endRange;
         endElement = -1;
         nextElement = 0;
-        return *this;
+        戻る *this;
     }
 
     /**
@@ -304,15 +304,15 @@ private:
 };
 
 inline UBool UnicodeSetIterator::isString() const {
-    return codepoint < 0;
+    戻る codepoint < 0;
 }
 
 inline UChar32 UnicodeSetIterator::getCodepoint() const {
-    return codepoint;
+    戻る codepoint;
 }
 
 inline UChar32 UnicodeSetIterator::getCodepointEnd() const {
-    return codepointEnd;
+    戻る codepointEnd;
 }
 
 

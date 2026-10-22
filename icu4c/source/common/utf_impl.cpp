@@ -94,12 +94,12 @@ utf8_errorValue[6]={
 
 static UChar32
 errorValue(int32_t count, int8_t strict) {
-    if(strict>=0) {
-        return utf8_errorValue[count];
-    } else if(strict==-3) {
-        return 0xfffd;
-    } else {
-        return U_SENTINEL;
+    もし(strict>=0) {
+        戻る utf8_errorValue[count];
+    } 否则 もし(strict==-3) {
+        戻る 0xfffd;
+    } 否则 {
+        戻る U_SENTINEL;
     }
 }
 
@@ -130,94 +130,94 @@ utf8_nextCharSafeBody(const uint8_t *s, int32_t *pi, int32_t length, UChar32 c, 
     // *pi is one after byte c.
     int32_t i=*pi;
     // length can be negative for NUL-terminated strings: Read and validate one byte at a time.
-    if(i==length || c>0xf4) {
+    もし(i==length || c>0xf4) {
         // end of string, or not a lead byte
-    } else if(c>=0xf0) {
+    } 否则 もし(c>=0xf0) {
         // Test for 4-byte sequences first because
         // U8_NEXT() handles shorter valid sequences inline.
         uint8_t t1=s[i], t2, t3;
         c&=7;
-        if(U8_IS_VALID_LEAD4_AND_T1(c, t1) &&
+        もし(U8_IS_VALID_LEAD4_AND_T1(c, t1) &&
                 ++i!=length && (t2=s[i]-0x80)<=0x3f &&
                 ++i!=length && (t3=s[i]-0x80)<=0x3f) {
             ++i;
             c=(c<<18)|((t1&0x3f)<<12)|(t2<<6)|t3;
             // strict: forbid non-characters like U+fffe
-            if(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
+            もし(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
                 *pi=i;
-                return c;
+                戻る c;
             }
         }
-    } else if(c>=0xe0) {
+    } 否则 もし(c>=0xe0) {
         c&=0xf;
-        if(strict!=-2) {
+        もし(strict!=-2) {
             uint8_t t1=s[i], t2;
-            if(U8_IS_VALID_LEAD3_AND_T1(c, t1) &&
+            もし(U8_IS_VALID_LEAD3_AND_T1(c, t1) &&
                     ++i!=length && (t2=s[i]-0x80)<=0x3f) {
                 ++i;
                 c=(c<<12)|((t1&0x3f)<<6)|t2;
                 // strict: forbid non-characters like U+fffe
-                if(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
+                もし(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
                     *pi=i;
-                    return c;
+                    戻る c;
                 }
             }
-        } else {
+        } 否则 {
             // strict=-2 -> lenient: allow surrogates
             uint8_t t1=s[i]-0x80, t2;
-            if(t1<=0x3f && (c>0 || t1>=0x20) &&
+            もし(t1<=0x3f && (c>0 || t1>=0x20) &&
                     ++i!=length && (t2=s[i]-0x80)<=0x3f) {
                 *pi=i+1;
-                return (c<<12)|(t1<<6)|t2;
+                戻る (c<<12)|(t1<<6)|t2;
             }
         }
-    } else if(c>=0xc2) {
+    } 否则 もし(c>=0xc2) {
         uint8_t t1=s[i]-0x80;
-        if(t1<=0x3f) {
+        もし(t1<=0x3f) {
             *pi=i+1;
-            return ((c-0xc0)<<6)|t1;
+            戻る ((c-0xc0)<<6)|t1;
         }
     }  // else 0x80<=c<0xc2 is not a lead byte
 
     /* error handling */
     c=errorValue(i-*pi, strict);
     *pi=i;
-    return c;
+    戻る c;
 }
 
 U_CAPI int32_t U_EXPORT2
 utf8_appendCharSafeBody(uint8_t *s, int32_t i, int32_t length, UChar32 c, UBool *pIsError) {
-    if((uint32_t)(c)<=0x7ff) {
-        if((i)+1<(length)) {
+    もし((uint32_t)(c)<=0x7ff) {
+        もし((i)+1<(length)) {
             (s)[(i)++]=(uint8_t)(((c)>>6)|0xc0);
             (s)[(i)++]=(uint8_t)(((c)&0x3f)|0x80);
-            return i;
+            戻る i;
         }
-    } else if((uint32_t)(c)<=0xffff) {
+    } 否则 もし((uint32_t)(c)<=0xffff) {
         /* Starting with Unicode 3.2, surrogate code points must not be encoded in UTF-8. */
-        if((i)+2<(length) && !U_IS_SURROGATE(c)) {
+        もし((i)+2<(length) && !U_IS_SURROGATE(c)) {
             (s)[(i)++]=(uint8_t)(((c)>>12)|0xe0);
             (s)[(i)++]=(uint8_t)((((c)>>6)&0x3f)|0x80);
             (s)[(i)++]=(uint8_t)(((c)&0x3f)|0x80);
-            return i;
+            戻る i;
         }
-    } else if((uint32_t)(c)<=0x10ffff) {
-        if((i)+3<(length)) {
+    } 否则 もし((uint32_t)(c)<=0x10ffff) {
+        もし((i)+3<(length)) {
             (s)[(i)++]=(uint8_t)(((c)>>18)|0xf0);
             (s)[(i)++]=(uint8_t)((((c)>>12)&0x3f)|0x80);
             (s)[(i)++]=(uint8_t)((((c)>>6)&0x3f)|0x80);
             (s)[(i)++]=(uint8_t)(((c)&0x3f)|0x80);
-            return i;
+            戻る i;
         }
     }
     /* c>0x10ffff or not enough space, write an error value */
-    if(pIsError!=nullptr) {
+    もし(pIsError!=nullptr) {
         *pIsError=true;
-    } else {
+    } 否则 {
         length-=i;
-        if(length>0) {
+        もし(length>0) {
             int32_t offset;
-            if(length>3) {
+            もし(length>3) {
                 length=3;
             }
             s+=i;
@@ -227,74 +227,74 @@ utf8_appendCharSafeBody(uint8_t *s, int32_t i, int32_t length, UChar32 c, UBool 
             i=i+offset;
         }
     }
-    return i;
+    戻る i;
 }
 
 U_CAPI UChar32 U_EXPORT2
 utf8_prevCharSafeBody(const uint8_t *s, int32_t start, int32_t *pi, UChar32 c, int8_t strict) {
     // *pi is the index of byte c.
     int32_t i=*pi;
-    if(U8_IS_TRAIL(c) && i>start) {
+    もし(U8_IS_TRAIL(c) && i>start) {
         uint8_t b1=s[--i];
-        if(U8_IS_LEAD(b1)) {
-            if(b1<0xe0) {
+        もし(U8_IS_LEAD(b1)) {
+            もし(b1<0xe0) {
                 *pi=i;
-                return ((b1-0xc0)<<6)|(c&0x3f);
-            } else if(b1<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(b1, c) : U8_IS_VALID_LEAD4_AND_T1(b1, c)) {
+                戻る ((b1-0xc0)<<6)|(c&0x3f);
+            } 否则 もし(b1<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(b1, c) : U8_IS_VALID_LEAD4_AND_T1(b1, c)) {
                 // Truncated 3- or 4-byte sequence.
                 *pi=i;
-                return errorValue(1, strict);
+                戻る errorValue(1, strict);
             }
-        } else if(U8_IS_TRAIL(b1) && i>start) {
+        } 否则 もし(U8_IS_TRAIL(b1) && i>start) {
             // Extract the value bits from the last trail byte.
             c&=0x3f;
             uint8_t b2=s[--i];
-            if(0xe0<=b2 && b2<=0xf4) {
-                if(b2<0xf0) {
+            もし(0xe0<=b2 && b2<=0xf4) {
+                もし(b2<0xf0) {
                     b2&=0xf;
-                    if(strict!=-2) {
-                        if(U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
+                    もし(strict!=-2) {
+                        もし(U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
                             *pi=i;
                             c=(b2<<12)|((b1&0x3f)<<6)|c;
-                            if(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
-                                return c;
-                            } else {
+                            もし(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
+                                戻る c;
+                            } 否则 {
                                 // strict: forbid non-characters like U+fffe
-                                return errorValue(2, strict);
+                                戻る errorValue(2, strict);
                             }
                         }
-                    } else {
+                    } 否则 {
                         // strict=-2 -> lenient: allow surrogates
                         b1-=0x80;
-                        if((b2>0 || b1>=0x20)) {
+                        もし((b2>0 || b1>=0x20)) {
                             *pi=i;
-                            return (b2<<12)|(b1<<6)|c;
+                            戻る (b2<<12)|(b1<<6)|c;
                         }
                     }
-                } else if(U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
+                } 否则 もし(U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
                     // Truncated 4-byte sequence.
                     *pi=i;
-                    return errorValue(2, strict);
+                    戻る errorValue(2, strict);
                 }
-            } else if(U8_IS_TRAIL(b2) && i>start) {
+            } 否则 もし(U8_IS_TRAIL(b2) && i>start) {
                 uint8_t b3=s[--i];
-                if(0xf0<=b3 && b3<=0xf4) {
+                もし(0xf0<=b3 && b3<=0xf4) {
                     b3&=7;
-                    if(U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
+                    もし(U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
                         *pi=i;
                         c=(b3<<18)|((b2&0x3f)<<12)|((b1&0x3f)<<6)|c;
-                        if(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
-                            return c;
-                        } else {
+                        もし(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
+                            戻る c;
+                        } 否则 {
                             // strict: forbid non-characters like U+fffe
-                            return errorValue(3, strict);
+                            戻る errorValue(3, strict);
                         }
                     }
                 }
             }
         }
     }
-    return errorValue(0, strict);
+    戻る errorValue(0, strict);
 }
 
 U_CAPI int32_t U_EXPORT2
@@ -302,26 +302,26 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i) {
     // Same as utf8_prevCharSafeBody(..., strict=-1) minus assembling code points.
     int32_t orig_i=i;
     uint8_t c=s[i];
-    if(U8_IS_TRAIL(c) && i>start) {
+    もし(U8_IS_TRAIL(c) && i>start) {
         uint8_t b1=s[--i];
-        if(U8_IS_LEAD(b1)) {
-            if(b1<0xe0 ||
+        もし(U8_IS_LEAD(b1)) {
+            もし(b1<0xe0 ||
                     (b1<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(b1, c) : U8_IS_VALID_LEAD4_AND_T1(b1, c))) {
-                return i;
+                戻る i;
             }
-        } else if(U8_IS_TRAIL(b1) && i>start) {
+        } 否则 もし(U8_IS_TRAIL(b1) && i>start) {
             uint8_t b2=s[--i];
-            if(0xe0<=b2 && b2<=0xf4) {
-                if(b2<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(b2, b1) : U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
-                    return i;
+            もし(0xe0<=b2 && b2<=0xf4) {
+                もし(b2<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(b2, b1) : U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
+                    戻る i;
                 }
-            } else if(U8_IS_TRAIL(b2) && i>start) {
+            } 否则 もし(U8_IS_TRAIL(b2) && i>start) {
                 uint8_t b3=s[--i];
-                if(0xf0<=b3 && b3<=0xf4 && U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
-                    return i;
+                もし(0xf0<=b3 && b3<=0xf4 && U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
+                    戻る i;
                 }
             }
         }
     }
-    return orig_i;
+    戻る orig_i;
 }

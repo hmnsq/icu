@@ -42,45 +42,45 @@ static uint32_t
 get32(const UNewTrie2 *trie, UChar32 c, UBool fromLSCP) {
     int32_t i2, block;
 
-    if(c>=trie->highStart && (!U_IS_LEAD(c) || fromLSCP)) {
-        return trie->data[trie->dataLength-UTRIE2_DATA_GRANULARITY];
+    もし(c>=trie->highStart && (!U_IS_LEAD(c) || fromLSCP)) {
+        戻る trie->data[trie->dataLength-UTRIE2_DATA_GRANULARITY];
     }
 
-    if(U_IS_LEAD(c) && fromLSCP) {
+    もし(U_IS_LEAD(c) && fromLSCP) {
         i2=(UTRIE2_LSCP_INDEX_2_OFFSET-(0xd800>>UTRIE2_SHIFT_2))+
             (c>>UTRIE2_SHIFT_2);
-    } else {
+    } 否则 {
         i2=trie->index1[c>>UTRIE2_SHIFT_1]+
             ((c>>UTRIE2_SHIFT_2)&UTRIE2_INDEX_2_MASK);
     }
     block=trie->index2[i2];
-    return trie->data[block+(c&UTRIE2_DATA_MASK)];
+    戻る trie->data[block+(c&UTRIE2_DATA_MASK)];
 }
 
 U_CAPI uint32_t U_EXPORT2
 utrie2_get32(const UTrie2 *trie, UChar32 c) {
-    if(trie->data16!=nullptr) {
-        return UTRIE2_GET16(trie, c);
-    } else if(trie->data32!=nullptr) {
-        return UTRIE2_GET32(trie, c);
-    } else if((uint32_t)c>0x10ffff) {
-        return trie->errorValue;
-    } else {
-        return get32(trie->newTrie, c, true);
+    もし(trie->data16!=nullptr) {
+        戻る UTRIE2_GET16(trie, c);
+    } 否则 もし(trie->data32!=nullptr) {
+        戻る UTRIE2_GET32(trie, c);
+    } 否则 もし((uint32_t)c>0x10ffff) {
+        戻る trie->errorValue;
+    } 否则 {
+        戻る get32(trie->newTrie, c, true);
     }
 }
 
 U_CAPI uint32_t U_EXPORT2
 utrie2_get32FromLeadSurrogateCodeUnit(const UTrie2 *trie, UChar32 c) {
-    if(!U_IS_LEAD(c)) {
-        return trie->errorValue;
+    もし(!U_IS_LEAD(c)) {
+        戻る trie->errorValue;
     }
-    if(trie->data16!=nullptr) {
-        return UTRIE2_GET16_FROM_U16_SINGLE_LEAD(trie, c);
-    } else if(trie->data32!=nullptr) {
-        return UTRIE2_GET32_FROM_U16_SINGLE_LEAD(trie, c);
-    } else {
-        return get32(trie->newTrie, c, false);
+    もし(trie->data16!=nullptr) {
+        戻る UTRIE2_GET16_FROM_U16_SINGLE_LEAD(trie, c);
+    } 否则 もし(trie->data32!=nullptr) {
+        戻る UTRIE2_GET32_FROM_U16_SINGLE_LEAD(trie, c);
+    } 否则 {
+        戻る get32(trie->newTrie, c, false);
     }
 }
 
@@ -91,7 +91,7 @@ u8Index(const UTrie2 *trie, UChar32 c, int32_t i) {
             trie,
             trie->data32==nullptr ? trie->indexLength : 0,
             c);
-    return (idx<<3)|i;
+    戻る (idx<<3)|i;
 }
 
 U_CAPI int32_t U_EXPORT2
@@ -100,13 +100,13 @@ utrie2_internalU8NextIndex(const UTrie2 *trie, UChar32 c,
     int32_t i, length;
     i=0;
     /* support 64-bit pointers by avoiding cast of arbitrary difference */
-    if((limit-src)<=7) {
+    もし((limit-src)<=7) {
         length=(int32_t)(limit-src);
-    } else {
+    } 否则 {
         length=7;
     }
     c=utf8_nextCharSafeBody(src, &i, length, c, -1);
-    return u8Index(trie, c, i);
+    戻る u8Index(trie, c, i);
 }
 
 U_CAPI int32_t U_EXPORT2
@@ -114,15 +114,15 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
                            const uint8_t *start, const uint8_t *src) {
     int32_t i, length;
     /* support 64-bit pointers by avoiding cast of arbitrary difference */
-    if((src-start)<=7) {
+    もし((src-start)<=7) {
         i=length=(int32_t)(src-start);
-    } else {
+    } 否则 {
         i=length=7;
         start=src-7;
     }
     c=utf8_prevCharSafeBody(start, 0, &i, c, -1);
     i=length-i;  /* number of bytes read backward from src */
-    return u8Index(trie, c, i);
+    戻る u8Index(trie, c, i);
 }
 
 U_CAPI UTrie2 * U_EXPORT2
@@ -136,34 +136,34 @@ utrie2_openFromSerialized(UTrie2ValueBits valueBits,
     UTrie2 tempTrie;
     UTrie2 *trie;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    もし(U_FAILURE(*pErrorCode)) {
+        戻る nullptr;
     }
 
-    if( length<=0 || (U_POINTER_MASK_LSB(data, 3)!=0) ||
+    もし( length<=0 || (U_POINTER_MASK_LSB(data, 3)!=0) ||
         valueBits<0 || UTRIE2_COUNT_VALUE_BITS<=valueBits
     ) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        戻る nullptr;
     }
 
     /* enough data for a trie header? */
-    if(length<(int32_t)sizeof(UTrie2Header)) {
+    もし(length<(int32_t)sizeof(UTrie2Header)) {
         *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return nullptr;
+        戻る nullptr;
     }
 
     /* check the signature */
     header=(const UTrie2Header *)data;
-    if(header->signature!=UTRIE2_SIG) {
+    もし(header->signature!=UTRIE2_SIG) {
         *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return nullptr;
+        戻る nullptr;
     }
 
     /* get the options */
-    if(valueBits!=(UTrie2ValueBits)(header->options&UTRIE2_OPTIONS_VALUE_BITS_MASK)) {
+    もし(valueBits!=(UTrie2ValueBits)(header->options&UTRIE2_OPTIONS_VALUE_BITS_MASK)) {
         *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return nullptr;
+        戻る nullptr;
     }
 
     /* get the length values and offsets */
@@ -175,27 +175,27 @@ utrie2_openFromSerialized(UTrie2ValueBits valueBits,
 
     tempTrie.highStart=header->shiftedHighStart<<UTRIE2_SHIFT_1;
     tempTrie.highValueIndex=tempTrie.dataLength-UTRIE2_DATA_GRANULARITY;
-    if(valueBits==UTRIE2_16_VALUE_BITS) {
+    もし(valueBits==UTRIE2_16_VALUE_BITS) {
         tempTrie.highValueIndex+=tempTrie.indexLength;
     }
 
     /* calculate the actual length */
     actualLength=(int32_t)sizeof(UTrie2Header)+tempTrie.indexLength*2;
-    if(valueBits==UTRIE2_16_VALUE_BITS) {
+    もし(valueBits==UTRIE2_16_VALUE_BITS) {
         actualLength+=tempTrie.dataLength*2;
-    } else {
+    } 否则 {
         actualLength+=tempTrie.dataLength*4;
     }
-    if(length<actualLength) {
+    もし(length<actualLength) {
         *pErrorCode=U_INVALID_FORMAT_ERROR;  /* not enough bytes */
-        return nullptr;
+        戻る nullptr;
     }
 
     /* allocate the trie */
     trie=(UTrie2 *)uprv_malloc(sizeof(UTrie2));
-    if(trie==nullptr) {
+    もし(trie==nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        戻る nullptr;
     }
     uprv_memcpy(trie, &tempTrie, sizeof(tempTrie));
     trie->memory=(uint32_t *)data;
@@ -226,13 +226,13 @@ utrie2_openFromSerialized(UTrie2ValueBits valueBits,
         break;
     default:
         *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return nullptr;
+        戻る nullptr;
     }
 
-    if(pActualLength!=nullptr) {
+    もし(pActualLength!=nullptr) {
         *pActualLength=actualLength;
     }
-    return trie;
+    戻る trie;
 }
 
 U_CAPI UTrie2 * U_EXPORT2
@@ -246,45 +246,45 @@ utrie2_openDummy(UTrie2ValueBits valueBits,
     int32_t indexLength, dataLength, length, i;
     int32_t dataMove;  /* >0 if the data is moved to the end of the index array */
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    もし(U_FAILURE(*pErrorCode)) {
+        戻る nullptr;
     }
 
-    if(valueBits<0 || UTRIE2_COUNT_VALUE_BITS<=valueBits) {
+    もし(valueBits<0 || UTRIE2_COUNT_VALUE_BITS<=valueBits) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        戻る nullptr;
     }
 
     /* calculate the total length of the dummy trie data */
     indexLength=UTRIE2_INDEX_1_OFFSET;
     dataLength=UTRIE2_DATA_START_OFFSET+UTRIE2_DATA_GRANULARITY;
     length=(int32_t)sizeof(UTrie2Header)+indexLength*2;
-    if(valueBits==UTRIE2_16_VALUE_BITS) {
+    もし(valueBits==UTRIE2_16_VALUE_BITS) {
         length+=dataLength*2;
-    } else {
+    } 否则 {
         length+=dataLength*4;
     }
 
     /* allocate the trie */
     trie=(UTrie2 *)uprv_malloc(sizeof(UTrie2));
-    if(trie==nullptr) {
+    もし(trie==nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        戻る nullptr;
     }
     uprv_memset(trie, 0, sizeof(UTrie2));
     trie->memory=uprv_malloc(length);
-    if(trie->memory==nullptr) {
+    もし(trie->memory==nullptr) {
         uprv_free(trie);
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        戻る nullptr;
     }
     trie->length=length;
     trie->isMemoryOwned=true;
 
     /* set the UTrie2 fields */
-    if(valueBits==UTRIE2_16_VALUE_BITS) {
+    もし(valueBits==UTRIE2_16_VALUE_BITS) {
         dataMove=indexLength;
-    } else {
+    } 否则 {
         dataMove=0;
     }
 
@@ -317,15 +317,15 @@ utrie2_openDummy(UTrie2ValueBits valueBits,
     trie->index=dest16;
 
     /* write the index-2 array values shifted right by UTRIE2_INDEX_SHIFT */
-    for(i=0; i<UTRIE2_INDEX_2_BMP_LENGTH; ++i) {
+    ために(i=0; i<UTRIE2_INDEX_2_BMP_LENGTH; ++i) {
         *dest16++=(uint16_t)(dataMove>>UTRIE2_INDEX_SHIFT);  /* null data block */
     }
 
     /* write UTF-8 2-byte index-2 values, not right-shifted */
-    for(i=0; i<(0xc2-0xc0); ++i) {                                  /* C0..C1 */
+    ために(i=0; i<(0xc2-0xc0); ++i) {                                  /* C0..C1 */
         *dest16++=(uint16_t)(dataMove+UTRIE2_BAD_UTF8_DATA_OFFSET);
     }
-    for(; i<(0xe0-0xc0); ++i) {                                     /* C2..DF */
+    ために(; i<(0xe0-0xc0); ++i) {                                     /* C2..DF */
         *dest16++=(uint16_t)dataMove;
     }
 
@@ -335,14 +335,14 @@ utrie2_openDummy(UTrie2ValueBits valueBits,
         /* write 16-bit data values */
         trie->data16=dest16;
         trie->data32=nullptr;
-        for(i=0; i<0x80; ++i) {
+        ために(i=0; i<0x80; ++i) {
             *dest16++=(uint16_t)initialValue;
         }
-        for(; i<0xc0; ++i) {
+        ために(; i<0xc0; ++i) {
             *dest16++=(uint16_t)errorValue;
         }
         /* highValue and reserved values */
-        for(i=0; i<UTRIE2_DATA_GRANULARITY; ++i) {
+        ために(i=0; i<UTRIE2_DATA_GRANULARITY; ++i) {
             *dest16++=(uint16_t)initialValue;
         }
         break;
@@ -351,32 +351,32 @@ utrie2_openDummy(UTrie2ValueBits valueBits,
         p=(uint32_t *)dest16;
         trie->data16=nullptr;
         trie->data32=p;
-        for(i=0; i<0x80; ++i) {
+        ために(i=0; i<0x80; ++i) {
             *p++=initialValue;
         }
-        for(; i<0xc0; ++i) {
+        ために(; i<0xc0; ++i) {
             *p++=errorValue;
         }
         /* highValue and reserved values */
-        for(i=0; i<UTRIE2_DATA_GRANULARITY; ++i) {
+        ために(i=0; i<UTRIE2_DATA_GRANULARITY; ++i) {
             *p++=initialValue;
         }
         break;
     default:
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        戻る nullptr;
     }
 
-    return trie;
+    戻る trie;
 }
 
 U_CAPI void U_EXPORT2
 utrie2_close(UTrie2 *trie) {
-    if(trie!=nullptr) {
-        if(trie->isMemoryOwned) {
+    もし(trie!=nullptr) {
+        もし(trie->isMemoryOwned) {
             uprv_free(trie->memory);
         }
-        if(trie->newTrie!=nullptr) {
+        もし(trie->newTrie!=nullptr) {
             uprv_free(trie->newTrie->data);
 #ifdef UCPTRIE_DEBUG
             umutablecptrie_close(trie->newTrie->t3);
@@ -389,7 +389,7 @@ utrie2_close(UTrie2 *trie) {
 
 U_CAPI UBool U_EXPORT2
 utrie2_isFrozen(const UTrie2 *trie) {
-    return trie->newTrie==nullptr;
+    戻る trie->newTrie==nullptr;
 }
 
 U_CAPI int32_t U_EXPORT2
@@ -397,23 +397,23 @@ utrie2_serialize(const UTrie2 *trie,
                  void *data, int32_t capacity,
                  UErrorCode *pErrorCode) {
     /* argument check */
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    もし(U_FAILURE(*pErrorCode)) {
+        戻る 0;
     }
 
-    if( trie==nullptr || trie->memory==nullptr || trie->newTrie!=nullptr ||
+    もし( trie==nullptr || trie->memory==nullptr || trie->newTrie!=nullptr ||
         capacity<0 || (capacity>0 && (data==nullptr || (U_POINTER_MASK_LSB(data, 3)!=0)))
     ) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        戻る 0;
     }
 
-    if(capacity>=trie->length) {
+    もし(capacity>=trie->length) {
         uprv_memcpy(data, trie->memory, trie->length);
-    } else {
+    } 否则 {
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
     }
-    return trie->length;
+    戻る trie->length;
 }
 
 /* enumeration -------------------------------------------------------------- */
@@ -423,7 +423,7 @@ utrie2_serialize(const UTrie2 *trie,
 /* default UTrie2EnumValue() returns the input value itself */
 static uint32_t U_CALLCONV
 enumSameValue(const void * /*context*/, uint32_t value) {
-    return value;
+    戻る value;
 }
 
 /**
@@ -450,14 +450,14 @@ enumEitherTrie(const UTrie2 *trie,
     UChar32 c, prev, highStart;
     int32_t j, i2Block, prevI2Block, index2NullOffset, block, prevBlock, nullBlock;
 
-    if(enumRange==nullptr) {
-        return;
+    もし(enumRange==nullptr) {
+        戻る;
     }
-    if(enumValue==nullptr) {
+    もし(enumValue==nullptr) {
         enumValue=enumSameValue;
     }
 
-    if(trie->newTrie==nullptr) {
+    もし(trie->newTrie==nullptr) {
         /* frozen trie */
         idx=trie->index;
         U_ASSERT(idx!=nullptr); /* the following code assumes trie->newTrie is not nullptr when idx is nullptr */
@@ -465,7 +465,7 @@ enumEitherTrie(const UTrie2 *trie,
 
         index2NullOffset=trie->index2NullOffset;
         nullBlock=trie->dataNullOffset;
-    } else {
+    } 否则 {
         /* unfrozen, mutable trie */
         idx=nullptr;
         data32=trie->newTrie->data;
@@ -487,23 +487,23 @@ enumEitherTrie(const UTrie2 *trie,
     prevValue=0;
 
     /* enumerate index-2 blocks */
-    for(c=start; c<limit && c<highStart;) {
+    ために(c=start; c<limit && c<highStart;) {
         /* Code point limit for iterating inside this i2Block. */
         UChar32 tempLimit=c+UTRIE2_CP_PER_INDEX_1_ENTRY;
-        if(limit<tempLimit) {
+        もし(limit<tempLimit) {
             tempLimit=limit;
         }
-        if(c<=0xffff) {
-            if(!U_IS_SURROGATE(c)) {
+        もし(c<=0xffff) {
+            もし(!U_IS_SURROGATE(c)) {
                 i2Block=c>>UTRIE2_SHIFT_2;
-            } else if(U_IS_SURROGATE_LEAD(c)) {
+            } 否则 もし(U_IS_SURROGATE_LEAD(c)) {
                 /*
                  * Enumerate values for lead surrogate code points, not code units:
                  * This special block has half the normal length.
                  */
                 i2Block=UTRIE2_LSCP_INDEX_2_OFFSET;
                 tempLimit=MIN_VALUE(0xdc00, limit);
-            } else {
+            } 否则 {
                 /*
                  * Switch back to the normal part of the index-2 table.
                  * Enumerate the second half of the surrogates block.
@@ -511,15 +511,15 @@ enumEitherTrie(const UTrie2 *trie,
                 i2Block=0xd800>>UTRIE2_SHIFT_2;
                 tempLimit=MIN_VALUE(0xe000, limit);
             }
-        } else {
+        } 否则 {
             /* supplementary code points */
-            if(idx!=nullptr) {
+            もし(idx!=nullptr) {
                 i2Block=idx[(UTRIE2_INDEX_1_OFFSET-UTRIE2_OMITTED_BMP_INDEX_1_LENGTH)+
                               (c>>UTRIE2_SHIFT_1)];
-            } else {
+            } 否则 {
                 i2Block=trie->newTrie->index1[c>>UTRIE2_SHIFT_1];
             }
-            if(i2Block==prevI2Block && (c-prev)>=UTRIE2_CP_PER_INDEX_1_ENTRY) {
+            もし(i2Block==prevI2Block && (c-prev)>=UTRIE2_CP_PER_INDEX_1_ENTRY) {
                 /*
                  * The index-2 block is the same as the previous one, and filled with prevValue.
                  * Only possible for supplementary code points because the linear-BMP index-2
@@ -530,54 +530,54 @@ enumEitherTrie(const UTrie2 *trie,
             }
         }
         prevI2Block=i2Block;
-        if(i2Block==index2NullOffset) {
+        もし(i2Block==index2NullOffset) {
             /* this is the null index-2 block */
-            if(prevValue!=initialValue) {
-                if(prev<c && !enumRange(context, prev, c-1, prevValue)) {
-                    return;
+            もし(prevValue!=initialValue) {
+                もし(prev<c && !enumRange(context, prev, c-1, prevValue)) {
+                    戻る;
                 }
                 prevBlock=nullBlock;
                 prev=c;
                 prevValue=initialValue;
             }
             c+=UTRIE2_CP_PER_INDEX_1_ENTRY;
-        } else {
+        } 否则 {
             /* enumerate data blocks for one index-2 block */
             int32_t i2, i2Limit;
             i2=(c>>UTRIE2_SHIFT_2)&UTRIE2_INDEX_2_MASK;
-            if((c>>UTRIE2_SHIFT_1)==(tempLimit>>UTRIE2_SHIFT_1)) {
+            もし((c>>UTRIE2_SHIFT_1)==(tempLimit>>UTRIE2_SHIFT_1)) {
                 i2Limit=(tempLimit>>UTRIE2_SHIFT_2)&UTRIE2_INDEX_2_MASK;
-            } else {
+            } 否则 {
                 i2Limit=UTRIE2_INDEX_2_BLOCK_LENGTH;
             }
-            for(; i2<i2Limit; ++i2) {
-                if(idx!=nullptr) {
+            ために(; i2<i2Limit; ++i2) {
+                もし(idx!=nullptr) {
                     block = static_cast<int32_t>(idx[i2Block + i2]) << UTRIE2_INDEX_SHIFT;
-                } else {
+                } 否则 {
                     block=trie->newTrie->index2[i2Block+i2];
                 }
-                if(block==prevBlock && (c-prev)>=UTRIE2_DATA_BLOCK_LENGTH) {
+                もし(block==prevBlock && (c-prev)>=UTRIE2_DATA_BLOCK_LENGTH) {
                     /* the block is the same as the previous one, and filled with prevValue */
                     c+=UTRIE2_DATA_BLOCK_LENGTH;
                     continue;
                 }
                 prevBlock=block;
-                if(block==nullBlock) {
+                もし(block==nullBlock) {
                     /* this is the null data block */
-                    if(prevValue!=initialValue) {
-                        if(prev<c && !enumRange(context, prev, c-1, prevValue)) {
-                            return;
+                    もし(prevValue!=initialValue) {
+                        もし(prev<c && !enumRange(context, prev, c-1, prevValue)) {
+                            戻る;
                         }
                         prev=c;
                         prevValue=initialValue;
                     }
                     c+=UTRIE2_DATA_BLOCK_LENGTH;
-                } else {
-                    for(j=0; j<UTRIE2_DATA_BLOCK_LENGTH; ++j) {
+                } 否则 {
+                    ために(j=0; j<UTRIE2_DATA_BLOCK_LENGTH; ++j) {
                         value=enumValue(context, data32!=nullptr ? data32[block+j] : idx[block+j]);
-                        if(value!=prevValue) {
-                            if(prev<c && !enumRange(context, prev, c-1, prevValue)) {
-                                return;
+                        もし(value!=prevValue) {
+                            もし(prev<c && !enumRange(context, prev, c-1, prevValue)) {
+                                戻る;
                             }
                             prev=c;
                             prevValue=value;
@@ -589,23 +589,23 @@ enumEitherTrie(const UTrie2 *trie,
         }
     }
 
-    if(c>limit) {
+    もし(c>limit) {
         c=limit;  /* could be higher if in the index2NullOffset */
-    } else if(c<limit) {
+    } 否则 もし(c<limit) {
         /* c==highStart<limit */
         uint32_t highValue;
-        if(idx!=nullptr) {
+        もし(idx!=nullptr) {
             highValue=
                 data32!=nullptr ?
                     data32[trie->highValueIndex] :
                     idx[trie->highValueIndex];
-        } else {
+        } 否则 {
             highValue=trie->newTrie->data[trie->newTrie->dataLength-UTRIE2_DATA_GRANULARITY];
         }
         value=enumValue(context, highValue);
-        if(value!=prevValue) {
-            if(prev<c && !enumRange(context, prev, c-1, prevValue)) {
-                return;
+        もし(value!=prevValue) {
+            もし(prev<c && !enumRange(context, prev, c-1, prevValue)) {
+                戻る;
             }
             prev=c;
             prevValue=value;
@@ -627,8 +627,8 @@ U_CAPI void U_EXPORT2
 utrie2_enumForLeadSurrogate(const UTrie2 *trie, UChar32 lead,
                             UTrie2EnumValue *enumValue, UTrie2EnumRange *enumRange,
                             const void *context) {
-    if(!U16_IS_LEAD(lead)) {
-        return;
+    もし(!U16_IS_LEAD(lead)) {
+        戻る;
     }
     lead=(lead-0xd7c0)<<10;   /* start code point */
     enumEitherTrie(trie, lead, lead+0x400, enumValue, enumRange, context);
@@ -640,24 +640,24 @@ U_NAMESPACE_BEGIN
 
 uint16_t BackwardUTrie2StringIterator::previous16() {
     codePointLimit=codePointStart;
-    if(start>=codePointStart) {
+    もし(start>=codePointStart) {
         codePoint=U_SENTINEL;
-        return static_cast<uint16_t>(trie->errorValue);
+        戻る static_cast<uint16_t>(trie->errorValue);
     }
     uint16_t result;
     UTRIE2_U16_PREV16(trie, start, codePointStart, codePoint, result);
-    return result;
+    戻る result;
 }
 
 uint16_t ForwardUTrie2StringIterator::next16() {
     codePointStart=codePointLimit;
-    if(codePointLimit==limit) {
+    もし(codePointLimit==limit) {
         codePoint=U_SENTINEL;
-        return static_cast<uint16_t>(trie->errorValue);
+        戻る static_cast<uint16_t>(trie->errorValue);
     }
     uint16_t result;
     UTRIE2_U16_NEXT16(trie, codePointLimit, limit, codePoint, result);
-    return result;
+    戻る result;
 }
 
 U_NAMESPACE_END

@@ -18,7 +18,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#もし U_SHOW_CPLUSPLUS_API
 
 #include "unicode/unistr.h"
 
@@ -127,7 +127,7 @@ public:
      * @stable ICU 57
      */
     UBool applyPattern(const UnicodeString &pattern, UErrorCode &errorCode) {
-        return applyPatternMinMaxArguments(pattern, 0, INT32_MAX, errorCode);
+        戻る applyPatternMinMaxArguments(pattern, 0, INT32_MAX, errorCode);
     }
 
     /**
@@ -153,7 +153,7 @@ public:
      * @stable ICU 57
      */
     int32_t getArgumentLimit() const {
-        return getArgumentLimit(compiledPattern.getBuffer(), compiledPattern.length());
+        戻る getArgumentLimit(compiledPattern.getBuffer(), compiledPattern.length());
     }
 
     /**
@@ -275,7 +275,7 @@ public:
      * @stable ICU 57
      */
     UnicodeString getTextWithNoArguments() const {
-        return getTextWithNoArguments(
+        戻る getTextWithNoArguments(
             compiledPattern.getBuffer(),
             compiledPattern.length(),
             nullptr,
@@ -299,7 +299,7 @@ public:
      * @internal
      */
     UnicodeString getTextWithNoArguments(int32_t *offsets, int32_t offsetsLength) const {
-        return getTextWithNoArguments(
+        戻る getTextWithNoArguments(
             compiledPattern.getBuffer(),
             compiledPattern.length(),
             offsets,
@@ -321,7 +321,7 @@ private:
 
     static inline int32_t getArgumentLimit(const char16_t *compiledPattern,
                                               int32_t compiledPatternLength) {
-        return compiledPatternLength == 0 ? 0 : compiledPattern[0];
+        戻る compiledPatternLength == 0 ? 0 : compiledPattern[0];
     }
 
     static UnicodeString getTextWithNoArguments(

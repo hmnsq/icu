@@ -19,7 +19,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#もし !UCONFIG_NO_NORMALIZATION
 
 #include "unicode/uiter.h"
 #include "unicode/unorm2.h"

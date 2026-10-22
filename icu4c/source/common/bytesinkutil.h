@@ -82,9 +82,9 @@ public:
     static UBool appendUnchanged(const uint8_t *s, int32_t length,
                                  ByteSink &sink, uint32_t options, Edits *edits,
                                  UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return false; }
-        if (length > 0) { appendNonEmptyUnchanged(s, length, sink, options, edits); }
-        return true;
+        もし (U_FAILURE(errorCode)) { 戻る false; }
+        もし (length > 0) { appendNonEmptyUnchanged(s, length, sink, options, edits); }
+        戻る true;
     }
 
     static UBool appendUnchanged(const uint8_t *s, const uint8_t *limit,
@@ -110,19 +110,19 @@ public:
     static int32_t viaByteSinkToTerminatedChars(char* buffer, int32_t capacity,
                                                 F&& lambda,
                                                 UErrorCode& status) {
-        if (U_FAILURE(status)) { return 0; }
+        もし (U_FAILURE(status)) { 戻る 0; }
         CheckedArrayByteSink sink(buffer, capacity);
         lambda(sink, status);
-        if (U_FAILURE(status)) { return 0; }
+        もし (U_FAILURE(status)) { 戻る 0; }
 
         int32_t reslen = sink.NumberOfBytesAppended();
 
-        if (sink.Overflowed()) {
+        もし (sink.Overflowed()) {
             status = U_BUFFER_OVERFLOW_ERROR;
-            return reslen;
+            戻る reslen;
         }
 
-        return u_terminateChars(buffer, capacity, reslen, &status);
+        戻る u_terminateChars(buffer, capacity, reslen, &status);
     }
 
     /**
@@ -139,11 +139,11 @@ public:
               typename = std::enable_if_t<
                   std::is_invocable_r_v<void, F, ByteSink&, UErrorCode&>>>
     static CharString viaByteSinkToCharString(F&& lambda, UErrorCode& status) {
-        if (U_FAILURE(status)) { return {}; }
+        もし (U_FAILURE(status)) { 戻る {}; }
         CharString result;
         CharStringByteSink sink(&result);
         lambda(sink, status);
-        return result;
+        戻る result;
     }
 
 private:

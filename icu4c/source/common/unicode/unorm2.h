@@ -34,7 +34,7 @@
 #include "unicode/stringoptions.h"
 #include "unicode/uset.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#もし U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -122,7 +122,7 @@ typedef enum UNormalizationCheckResult {
 struct UNormalizer2;
 typedef struct UNormalizer2 UNormalizer2;  /**< C typedef for struct UNormalizer2. @stable ICU 4.4 */
 
-#if !UCONFIG_NO_NORMALIZATION
+#もし !UCONFIG_NO_NORMALIZATION
 
 /**
  * Returns a UNormalizer2 instance for Unicode NFC normalization.
@@ -270,7 +270,7 @@ unorm2_openFiltered(const UNormalizer2* norm2 U_LIFETIME_BOUND,
 U_CAPI void U_EXPORT2
 unorm2_close(UNormalizer2 *norm2);
 
-#if U_SHOW_CPLUSPLUS_API
+#もし U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

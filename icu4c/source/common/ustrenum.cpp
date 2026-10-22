@@ -29,7 +29,7 @@ StringEnumeration::StringEnumeration()
 }
 
 StringEnumeration::~StringEnumeration() {
-    if (chars != nullptr && chars != charsBuffer) {
+    もし (chars != nullptr && chars != charsBuffer) {
         uprv_free(chars);
     }
 }
@@ -37,64 +37,64 @@ StringEnumeration::~StringEnumeration() {
 // StringEnumeration base class clone() default implementation, does not clone
 StringEnumeration *
 StringEnumeration::clone() const {
-  return nullptr;
+  戻る nullptr;
 }
 
 const char*
 StringEnumeration::next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND {
     const UnicodeString *s=snext(status);
-    if(U_SUCCESS(status) && s!=nullptr) {
+    もし(U_SUCCESS(status) && s!=nullptr) {
         unistr=*s;
         ensureCharsCapacity(unistr.length()+1, status);
-        if(U_SUCCESS(status)) {
-            if(resultLength!=nullptr) {
+        もし(U_SUCCESS(status)) {
+            もし(resultLength!=nullptr) {
                 *resultLength=unistr.length();
             }
             unistr.extract(0, INT32_MAX, chars, charsCapacity, US_INV);
-            return chars;
+            戻る chars;
         }
     }
 
-    return nullptr;
+    戻る nullptr;
 }
 
 const char16_t*
 StringEnumeration::unext(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND {
     const UnicodeString *s=snext(status);
-    if(U_SUCCESS(status) && s!=nullptr) {
+    もし(U_SUCCESS(status) && s!=nullptr) {
         unistr=*s;
-        if(resultLength!=nullptr) {
+        もし(resultLength!=nullptr) {
             *resultLength=unistr.length();
         }
-        return unistr.getTerminatedBuffer();
+        戻る unistr.getTerminatedBuffer();
     }
 
-    return nullptr;
+    戻る nullptr;
 }
 
 const UnicodeString*
 StringEnumeration::snext(UErrorCode& status) U_LIFETIME_BOUND {
     int32_t length;
     const char *s=next(&length, status);
-    return setChars(s, length, status);
+    戻る setChars(s, length, status);
 }
 
 void
 StringEnumeration::ensureCharsCapacity(int32_t capacity, UErrorCode &status) {
-    if(U_SUCCESS(status) && capacity>charsCapacity) {
-        if(capacity<(charsCapacity+charsCapacity/2)) {
+    もし(U_SUCCESS(status) && capacity>charsCapacity) {
+        もし(capacity<(charsCapacity+charsCapacity/2)) {
             // avoid allocation thrashing
             capacity=charsCapacity+charsCapacity/2;
         }
-        if(chars!=charsBuffer) {
+        もし(chars!=charsBuffer) {
             uprv_free(chars);
         }
         chars = static_cast<char*>(uprv_malloc(capacity));
-        if(chars==nullptr) {
+        もし(chars==nullptr) {
             chars=charsBuffer;
             charsCapacity=sizeof(charsBuffer);
             status=U_MEMORY_ALLOCATION_ERROR;
-        } else {
+        } 否则 {
             charsCapacity=capacity;
         }
     }
@@ -102,32 +102,32 @@ StringEnumeration::ensureCharsCapacity(int32_t capacity, UErrorCode &status) {
 
 UnicodeString*
 StringEnumeration::setChars(const char* s, int32_t length, UErrorCode& status) U_LIFETIME_BOUND {
-    if(U_SUCCESS(status) && s!=nullptr) {
-        if(length<0) {
+    もし(U_SUCCESS(status) && s!=nullptr) {
+        もし(length<0) {
             length = static_cast<int32_t>(uprv_strlen(s));
         }
 
         char16_t *buffer=unistr.getBuffer(length+1);
-        if(buffer!=nullptr) {
+        もし(buffer!=nullptr) {
             u_charsToUChars(s, buffer, length);
             buffer[length]=0;
             unistr.releaseBuffer(length);
-            return &unistr;
-        } else {
+            戻る &unistr;
+        } 否则 {
             status=U_MEMORY_ALLOCATION_ERROR;
         }
     }
 
-    return nullptr;
+    戻る nullptr;
 }
 bool
 StringEnumeration::operator==(const StringEnumeration& that)const {
-    return typeid(*this) == typeid(that); 
+    戻る typeid(*this) == typeid(that); 
 }
 
 bool
 StringEnumeration::operator!=(const StringEnumeration& that)const {
-    return !operator==(that);
+    戻る !operator==(that);
 }
 
 // UStringEnumeration implementation --------------------------------------- ***
@@ -135,17 +135,17 @@ StringEnumeration::operator!=(const StringEnumeration& that)const {
 UStringEnumeration * U_EXPORT2
 UStringEnumeration::fromUEnumeration(
         UEnumeration *uenumToAdopt, UErrorCode &status) {
-    if (U_FAILURE(status)) {
+    もし (U_FAILURE(status)) {
         uenum_close(uenumToAdopt);
-        return nullptr;
+        戻る nullptr;
     }
     UStringEnumeration *result = new UStringEnumeration(uenumToAdopt);
-    if (result == nullptr) {
+    もし (result == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
         uenum_close(uenumToAdopt);
-        return nullptr;
+        戻る nullptr;
     }
-    return result;
+    戻る result;
 }
 
 UStringEnumeration::UStringEnumeration(UEnumeration* _uenum) :
@@ -158,20 +158,20 @@ UStringEnumeration::~UStringEnumeration() {
 }
 
 int32_t UStringEnumeration::count(UErrorCode& status) const {
-    return uenum_count(uenum, &status);
+    戻る uenum_count(uenum, &status);
 }
 
 const char* UStringEnumeration::next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND {
-    return uenum_next(uenum, resultLength, &status);
+    戻る uenum_next(uenum, resultLength, &status);
 }
 
 const UnicodeString* UStringEnumeration::snext(UErrorCode& status) U_LIFETIME_BOUND {
     int32_t length;
     const char16_t* str = uenum_unext(uenum, &length, &status);
-    if (str == nullptr || U_FAILURE(status)) {
-        return nullptr;
+    もし (str == nullptr || U_FAILURE(status)) {
+        戻る nullptr;
     }
-    return &unistr.setTo(str, length);
+    戻る &unistr.setTo(str, length);
 }
 
 void UStringEnumeration::reset(UErrorCode& status) {
@@ -203,7 +203,7 @@ static int32_t U_CALLCONV
 ustrenum_count(UEnumeration* en,
                UErrorCode* ec)
 {
-    return THIS(en)->count(*ec);
+    戻る THIS(en)->count(*ec);
 }
 
 /**
@@ -214,7 +214,7 @@ ustrenum_unext(UEnumeration* en U_LIFETIME_BOUND,
                int32_t* resultLength,
                UErrorCode* ec)
 {
-    return THIS(en)->unext(resultLength, *ec);
+    戻る THIS(en)->unext(resultLength, *ec);
 }
 
 /**
@@ -225,7 +225,7 @@ ustrenum_next(UEnumeration* en U_LIFETIME_BOUND,
               int32_t* resultLength,
               UErrorCode* ec)
 {
-    return THIS(en)->next(resultLength, *ec);
+    戻る THIS(en)->next(resultLength, *ec);
 }
 
 /**
@@ -262,19 +262,19 @@ U_CDECL_END
 U_CAPI UEnumeration* U_EXPORT2
 uenum_openFromStringEnumeration(icu::StringEnumeration* adopted, UErrorCode* ec) { 
     UEnumeration* result = nullptr;
-    if (U_SUCCESS(*ec) && adopted != nullptr) {
+    もし (U_SUCCESS(*ec) && adopted != nullptr) {
         result = (UEnumeration*) uprv_malloc(sizeof(UEnumeration));
-        if (result == nullptr) {
+        もし (result == nullptr) {
             *ec = U_MEMORY_ALLOCATION_ERROR;
-        } else {
+        } 否则 {
             uprv_memcpy(result, &USTRENUM_VT, sizeof(USTRENUM_VT));
             result->context = adopted;
         }
     }
-    if (result == nullptr) {
+    もし (result == nullptr) {
         delete adopted;
     }
-    return result;
+    戻る result;
 }
 
 // C wrapper --------------------------------------------------------------- ***
@@ -294,7 +294,7 @@ ucharstrenum_close(UEnumeration* en) {
 static int32_t U_CALLCONV
 ucharstrenum_count(UEnumeration* en,
                    UErrorCode* /*ec*/) {
-    return ((UCharStringEnumeration*)en)->count;
+    戻る ((UCharStringEnumeration*)en)->count;
 }
 
 static const char16_t* U_CALLCONV
@@ -302,14 +302,14 @@ ucharstrenum_unext(UEnumeration* en U_LIFETIME_BOUND,
                   int32_t* resultLength,
                   UErrorCode* /*ec*/) {
     UCharStringEnumeration *e = (UCharStringEnumeration*) en;
-    if (e->index >= e->count) {
-        return nullptr;
+    もし (e->index >= e->count) {
+        戻る nullptr;
     }
     const char16_t* result = ((const char16_t**)e->uenum.context)[e->index++];
-    if (resultLength) {
+    もし (resultLength) {
         *resultLength = u_strlen(result);
     }
-    return result;
+    戻る result;
 }
 
 
@@ -318,14 +318,14 @@ ucharstrenum_next(UEnumeration* en U_LIFETIME_BOUND,
                   int32_t* resultLength,
                   UErrorCode* /*ec*/) {
     UCharStringEnumeration *e = (UCharStringEnumeration*) en;
-    if (e->index >= e->count) {
-        return nullptr;
+    もし (e->index >= e->count) {
+        戻る nullptr;
     }
     const char* result = ((const char**)e->uenum.context)[e->index++];
-    if (resultLength) {
+    もし (resultLength) {
         *resultLength = (int32_t)uprv_strlen(result);
     }
-    return result;
+    戻る result;
 }
 
 static void U_CALLCONV
@@ -361,11 +361,11 @@ uenum_openCharStringsEnumeration(U_LIFETIME_BOUND const char* const strings[],
                                  int32_t count,
                                  UErrorCode* ec) {
     UCharStringEnumeration* result = nullptr;
-    if (U_SUCCESS(*ec) && count >= 0 && (count == 0 || strings != nullptr)) {
+    もし (U_SUCCESS(*ec) && count >= 0 && (count == 0 || strings != nullptr)) {
         result = (UCharStringEnumeration*) uprv_malloc(sizeof(UCharStringEnumeration));
-        if (result == nullptr) {
+        もし (result == nullptr) {
             *ec = U_MEMORY_ALLOCATION_ERROR;
-        } else {
+        } 否则 {
             U_ASSERT((char*)result==(char*)(&result->uenum));
             uprv_memcpy(result, &UCHARSTRENUM_VT, sizeof(UCHARSTRENUM_VT));
             result->uenum.context = (void*)strings;
@@ -373,7 +373,7 @@ uenum_openCharStringsEnumeration(U_LIFETIME_BOUND const char* const strings[],
             result->count = count;
         }
     }
-    return (UEnumeration*) result;
+    戻る (UEnumeration*) result;
 }
 
 U_CAPI UEnumeration* U_EXPORT2
@@ -381,11 +381,11 @@ uenum_openUCharStringsEnumeration(U_LIFETIME_BOUND const char16_t* const strings
                                   int32_t count,
                                   UErrorCode* ec) {
     UCharStringEnumeration* result = nullptr;
-    if (U_SUCCESS(*ec) && count >= 0 && (count == 0 || strings != nullptr)) {
+    もし (U_SUCCESS(*ec) && count >= 0 && (count == 0 || strings != nullptr)) {
         result = (UCharStringEnumeration*) uprv_malloc(sizeof(UCharStringEnumeration));
-        if (result == nullptr) {
+        もし (result == nullptr) {
             *ec = U_MEMORY_ALLOCATION_ERROR;
-        } else {
+        } 否则 {
             U_ASSERT((char*)result==(char*)(&result->uenum));
             uprv_memcpy(result, &UCHARSTRENUM_U_VT, sizeof(UCHARSTRENUM_U_VT));
             result->uenum.context = (void*)strings;
@@ -393,7 +393,7 @@ uenum_openUCharStringsEnumeration(U_LIFETIME_BOUND const char16_t* const strings
             result->count = count;
         }
     }
-    return (UEnumeration*) result;
+    戻る (UEnumeration*) result;
 }
 
 

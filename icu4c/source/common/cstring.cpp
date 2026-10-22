@@ -50,31 +50,31 @@
 
 U_CAPI UBool U_EXPORT2
 uprv_isASCIILetter(char c) {
-#if U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-    return
+#もし U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+    戻る
         ('a'<=c && c<='i') || ('j'<=c && c<='r') || ('s'<=c && c<='z') ||
         ('A'<=c && c<='I') || ('J'<=c && c<='R') || ('S'<=c && c<='Z');
-#else
-    return ('a'<=c && c<='z') || ('A'<=c && c<='Z');
+#否则
+    戻る ('a'<=c && c<='z') || ('A'<=c && c<='Z');
 #endif
 }
 
 U_CAPI char U_EXPORT2
 uprv_toupper(char c) {
-#if U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-    if(('a'<=c && c<='i') || ('j'<=c && c<='r') || ('s'<=c && c<='z')) {
+#もし U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+    もし(('a'<=c && c<='i') || ('j'<=c && c<='r') || ('s'<=c && c<='z')) {
         c=(char)(c+('A'-'a'));
     }
-#else
-    if('a'<=c && c<='z') {
+#否则
+    もし('a'<=c && c<='z') {
         c=(char)(c+('A'-'a'));
     }
 #endif
-    return c;
+    戻る c;
 }
 
 
-#if 0
+#もし 0
 /*
  * Commented out because cstring.h defines uprv_tolower() to be
  * the same as either uprv_asciitolower() or uprv_ebcdictolower()
@@ -86,36 +86,36 @@ uprv_toupper(char c) {
  */
 U_CAPI char U_EXPORT2
 uprv_tolower(char c) {
-#if U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-    if(('A'<=c && c<='I') || ('J'<=c && c<='R') || ('S'<=c && c<='Z')) {
+#もし U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+    もし(('A'<=c && c<='I') || ('J'<=c && c<='R') || ('S'<=c && c<='Z')) {
         c=(char)(c+('a'-'A'));
     }
-#else
-    if('A'<=c && c<='Z') {
+#否则
+    もし('A'<=c && c<='Z') {
         c=(char)(c+('a'-'A'));
     }
 #endif
-    return c;
+    戻る c;
 }
 #endif
 
 U_CAPI char U_EXPORT2
 uprv_asciitolower(char c) {
-    if(0x41<=c && c<=0x5a) {
+    もし(0x41<=c && c<=0x5a) {
         c=(char)(c+0x20);
     }
-    return c;
+    戻る c;
 }
 
 U_CAPI char U_EXPORT2
 uprv_ebcdictolower(char c) {
-    if( (0xc1<=(uint8_t)c && (uint8_t)c<=0xc9) ||
+    もし( (0xc1<=(uint8_t)c && (uint8_t)c<=0xc9) ||
         (0xd1<=(uint8_t)c && (uint8_t)c<=0xd9) ||
         (0xe2<=(uint8_t)c && (uint8_t)c<=0xe9)
     ) {
         c=(char)(c-0x40);
     }
-    return c;
+    戻る c;
 }
 
 
@@ -124,13 +124,13 @@ T_CString_toLowerCase(char* str)
 {
     char* origPtr = str;
 
-    if (str) {
+    もし (str) {
         do
             *str = uprv_tolower(*str);
-        while (*(str++));
+        ながら (*(str++));
     }
 
-    return origPtr;
+    戻る origPtr;
 }
 
 U_CAPI char* U_EXPORT2
@@ -138,13 +138,13 @@ T_CString_toUpperCase(char* str)
 {
     char* origPtr = str;
 
-    if (str) {
+    もし (str) {
         do
             *str = uprv_toupper(*str);
-        while (*(str++));
+        ながら (*(str++));
     }
 
-    return origPtr;
+    戻る origPtr;
 }
 
 /*
@@ -164,7 +164,7 @@ T_CString_integerToString(char* buffer, int32_t v, int32_t radix)
     
     U_ASSERT(radix>=2 && radix<=16);
     uval = (uint32_t) v;
-    if(v<0 && radix == 10) {
+    もし(v<0 && radix == 10) {
         /* Only in base 10 do we conside numbers to be signed. */
         uval = (uint32_t)(-v); 
         buffer[length++] = '-';
@@ -176,12 +176,12 @@ T_CString_integerToString(char* buffer, int32_t v, int32_t radix)
         digit = (uint8_t)(uval % radix);
         tbuf[--tbx] = (char)(T_CString_itosOffset(digit));
         uval  = uval / radix;
-    } while (uval != 0);
+    } ながら (uval != 0);
     
     /* copy converted number into user buffer  */
     uprv_strcpy(buffer+length, tbuf+tbx);
     length += sizeof(tbuf) - tbx -1;
-    return length;
+    戻る length;
 }
 
 
@@ -202,7 +202,7 @@ T_CString_int64ToString(char* buffer, int64_t v, uint32_t radix)
     
     U_ASSERT(radix>=2 && radix<=16);
     uval = (uint64_t) v;
-    if(v<0 && radix == 10) {
+    もし(v<0 && radix == 10) {
         /* Only in base 10 do we conside numbers to be signed. */
         uval = (uint64_t)(-v); 
         buffer[length++] = '-';
@@ -214,12 +214,12 @@ T_CString_int64ToString(char* buffer, int64_t v, uint32_t radix)
         digit = (uint8_t)(uval % radix);
         tbuf[--tbx] = (char)(T_CString_itosOffset(digit));
         uval  = uval / radix;
-    } while (uval != 0);
+    } ながら (uval != 0);
     
     /* copy converted number into user buffer  */
     uprv_strcpy(buffer+length, tbuf+tbx);
     length += sizeof(tbuf) - tbx -1;
-    return length;
+    戻る length;
 }
 
 
@@ -227,41 +227,41 @@ U_CAPI int32_t U_EXPORT2
 T_CString_stringToInteger(const char *integerString, int32_t radix)
 {
     char *end;
-    return uprv_strtoul(integerString, &end, radix);
+    戻る uprv_strtoul(integerString, &end, radix);
 
 }
 
-U_CAPI int U_EXPORT2
+U_CAPI 整数 U_EXPORT2
 uprv_stricmp(const char *str1, const char *str2) {
-    if(str1==nullptr) {
-        if(str2==nullptr) {
-            return 0;
-        } else {
-            return -1;
+    もし(str1==nullptr) {
+        もし(str2==nullptr) {
+            戻る 0;
+        } 否则 {
+            戻る -1;
         }
-    } else if(str2==nullptr) {
-        return 1;
-    } else {
+    } 否则 もし(str2==nullptr) {
+        戻る 1;
+    } 否则 {
         /* compare non-nullptr strings lexically with lowercase */
-        int rc;
+        整数 rc;
         unsigned char c1, c2;
 
-        for(;;) {
+        ために(;;) {
             c1=(unsigned char)*str1;
             c2=(unsigned char)*str2;
-            if(c1==0) {
-                if(c2==0) {
-                    return 0;
-                } else {
-                    return -1;
+            もし(c1==0) {
+                もし(c2==0) {
+                    戻る 0;
+                } 否则 {
+                    戻る -1;
                 }
-            } else if(c2==0) {
-                return 1;
-            } else {
+            } 否则 もし(c2==0) {
+                戻る 1;
+            } 否则 {
                 /* compare non-zero characters with lowercase */
-                rc=(int)(unsigned char)uprv_tolower(c1)-(int)(unsigned char)uprv_tolower(c2);
-                if(rc!=0) {
-                    return rc;
+                rc=(整数)(unsigned char)uprv_tolower(c1)-(整数)(unsigned char)uprv_tolower(c2);
+                もし(rc!=0) {
+                    戻る rc;
                 }
             }
             ++str1;
@@ -270,37 +270,37 @@ uprv_stricmp(const char *str1, const char *str2) {
     }
 }
 
-U_CAPI int U_EXPORT2
+U_CAPI 整数 U_EXPORT2
 uprv_strnicmp(const char *str1, const char *str2, uint32_t n) {
-    if(str1==nullptr) {
-        if(str2==nullptr) {
-            return 0;
-        } else {
-            return -1;
+    もし(str1==nullptr) {
+        もし(str2==nullptr) {
+            戻る 0;
+        } 否则 {
+            戻る -1;
         }
-    } else if(str2==nullptr) {
-        return 1;
-    } else {
+    } 否则 もし(str2==nullptr) {
+        戻る 1;
+    } 否则 {
         /* compare non-nullptr strings lexically with lowercase */
-        int rc;
+        整数 rc;
         unsigned char c1, c2;
 
-        for(; n--;) {
+        ために(; n--;) {
             c1=(unsigned char)*str1;
             c2=(unsigned char)*str2;
-            if(c1==0) {
-                if(c2==0) {
-                    return 0;
-                } else {
-                    return -1;
+            もし(c1==0) {
+                もし(c2==0) {
+                    戻る 0;
+                } 否则 {
+                    戻る -1;
                 }
-            } else if(c2==0) {
-                return 1;
-            } else {
+            } 否则 もし(c2==0) {
+                戻る 1;
+            } 否则 {
                 /* compare non-zero characters with lowercase */
-                rc=(int)(unsigned char)uprv_tolower(c1)-(int)(unsigned char)uprv_tolower(c2);
-                if(rc!=0) {
-                    return rc;
+                rc=(整数)(unsigned char)uprv_tolower(c1)-(整数)(unsigned char)uprv_tolower(c2);
+                もし(rc!=0) {
+                    戻る rc;
                 }
             }
             ++str1;
@@ -308,7 +308,7 @@ uprv_strnicmp(const char *str1, const char *str2, uint32_t n) {
         }
     }
 
-    return 0;
+    戻る 0;
 }
 
 U_CAPI char* U_EXPORT2
@@ -316,26 +316,26 @@ uprv_strdup(const char *src) {
     size_t len = uprv_strlen(src) + 1;
     char *dup = (char *) uprv_malloc(len);
 
-    if (dup) {
+    もし (dup) {
         uprv_memcpy(dup, src, len);
     }
 
-    return dup;
+    戻る dup;
 }
 
 U_CAPI char* U_EXPORT2
 uprv_strndup(const char *src, int32_t n) {
     char *dup;
 
-    if(n < 0) {
+    もし(n < 0) {
         dup = uprv_strdup(src);
-    } else {
+    } 否则 {
         dup = (char*)uprv_malloc(n+1);
-        if (dup) { 
+        もし (dup) { 
             uprv_memcpy(dup, src, n);
             dup[n] = 0;
         }
     }
 
-    return dup;
+    戻る dup;
 }
