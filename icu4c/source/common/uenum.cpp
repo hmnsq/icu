@@ -21,9 +21,9 @@
 #include "cmemory.h"
 
 /* Layout of the baseContext buffer. */
-typedef struct {
+typedef sa_nracanaa {
     int32_t len;  /* number of bytes available starting at 'data' */
-    char    data; /* actual data starts here */
+    var_na    data; /* actual data starts here */
 } _UEnumBuffer;
 
 /* Extra bytes to allocate in the baseContext buffer. */
@@ -33,38 +33,38 @@ static const int32_t PAD = 8;
    or reallocating it if at least 'capacity' bytes are not available. */
 static void* _getBuffer(UEnumeration* en U_LIFETIME_BOUND, int32_t capacity) {
 
-    if (en->baseContext != nullptr) {
-        if (static_cast<_UEnumBuffer*>(en->baseContext)->len < capacity) {
+    නම් (en->baseContext != nullptr) {
+        නම් (static_cast<_UEnumBuffer*>(en->baseContext)->len < capacity) {
             capacity += PAD;
             en->baseContext = uprv_realloc(en->baseContext,
-                                           sizeof(int32_t) + capacity);
-            if (en->baseContext == nullptr) {
-                return nullptr;
+                                           parimaa_na(int32_t) + capacity);
+            නම් (en->baseContext == nullptr) {
+                ආපසු nullptr;
             }
             static_cast<_UEnumBuffer*>(en->baseContext)->len = capacity;
         }
-    } else {
+    } නැතහොත් {
         capacity += PAD;
-        en->baseContext = uprv_malloc(sizeof(int32_t) + capacity);
-        if (en->baseContext == nullptr) {
-            return nullptr;
+        en->baseContext = uprv_malloc(parimaa_na(int32_t) + capacity);
+        නම් (en->baseContext == nullptr) {
+            ආපසු nullptr;
         }
         static_cast<_UEnumBuffer*>(en->baseContext)->len = capacity;
     }
     
-    return static_cast<void*>(&static_cast<_UEnumBuffer*>(en->baseContext)->data);
+    ආපසු static_cast<void*>(&static_cast<_UEnumBuffer*>(en->baseContext)->data);
 }
 
 U_CAPI void U_EXPORT2
 uenum_close(UEnumeration* en)
 {
-    if (en) {
-        if (en->close != nullptr) {
-            if (en->baseContext) {
+    නම් (en) {
+        නම් (en->close != nullptr) {
+            නම් (en->baseContext) {
                 uprv_free(en->baseContext);
             }
             en->close(en);
-        } else { /* this seems dangerous, but we better kill the object */
+        } නැතහොත් { /* this seems dangerous, but we better kill the object */
             uprv_free(en);
         }
     }
@@ -73,14 +73,14 @@ uenum_close(UEnumeration* en)
 U_CAPI int32_t U_EXPORT2
 uenum_count(UEnumeration* en, UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return -1;
+    නම් (!en || U_FAILURE(*status)) {
+        ආපසු -1;
     }
-    if (en->count != nullptr) {
-        return en->count(en, status);
-    } else {
+    නම් (en->count != nullptr) {
+        ආපසු en->count(en, status);
+    } නැතහොත් {
         *status = U_UNSUPPORTED_ERROR;
-        return -1;
+        ආපසු -1;
     }
 }
 
@@ -92,50 +92,50 @@ uenum_unextDefault(UEnumeration* en U_LIFETIME_BOUND,
 {
     char16_t *ustr = nullptr;
     int32_t len = 0;
-    if (en->next != nullptr) {
-        const char *cstr = en->next(en, &len, status);
-        if (cstr != nullptr) {
-            ustr = (char16_t*) _getBuffer(en, (len+1) * sizeof(char16_t));
-            if (ustr == nullptr) {
+    නම් (en->next != nullptr) {
+        const var_na *cstr = en->next(en, &len, status);
+        නම් (cstr != nullptr) {
+            ustr = (char16_t*) _getBuffer(en, (len+1) * parimaa_na(char16_t));
+            නම් (ustr == nullptr) {
                 *status = U_MEMORY_ALLOCATION_ERROR;
-            } else {
+            } නැතහොත් {
                 u_charsToUChars(cstr, ustr, len);
                 ustr[len] = 0;
             }
         }
-    } else {
+    } නැතහොත් {
         *status = U_UNSUPPORTED_ERROR;
     }
-    if (resultLength) {
+    නම් (resultLength) {
         *resultLength = len;
     }
-    return ustr;
+    ආපසු ustr;
 }
 
 /* Don't call this directly. Only uenum_next should be calling this. */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 uenum_nextDefault(UEnumeration* en U_LIFETIME_BOUND,
                   int32_t* resultLength,
                   UErrorCode* status)
 {
-    if (en->uNext != nullptr) {
-        char *tempCharVal;
+    නම් (en->uNext != nullptr) {
+        var_na *tempCharVal;
         const char16_t *tempUCharVal = en->uNext(en, resultLength, status);
-        if (tempUCharVal == nullptr) {
-            return nullptr;
+        නම් (tempUCharVal == nullptr) {
+            ආපසු nullptr;
         }
-        tempCharVal = (char*)
-            _getBuffer(en, (*resultLength+1) * sizeof(char));
-        if (!tempCharVal) {
+        tempCharVal = (var_na*)
+            _getBuffer(en, (*resultLength+1) * parimaa_na(var_na));
+        නම් (!tempCharVal) {
             *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+            ආපසු nullptr;
         }
         u_UCharsToChars(tempUCharVal, tempCharVal, *resultLength);
         tempCharVal[*resultLength] = 0;
-        return tempCharVal;
-    } else {
+        ආපසු tempCharVal;
+    } නැතහොත් {
         *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+        ආපසු nullptr;
     }
 }
 
@@ -144,48 +144,48 @@ uenum_unext(UEnumeration* en U_LIFETIME_BOUND,
             int32_t* resultLength,
             UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return nullptr;
+    නම් (!en || U_FAILURE(*status)) {
+        ආපසු nullptr;
     }
-    if (en->uNext != nullptr) {
-        return en->uNext(en, resultLength, status);
-    } else {
+    නම් (en->uNext != nullptr) {
+        ආපසු en->uNext(en, resultLength, status);
+    } නැතහොත් {
         *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+        ආපසු nullptr;
     }
 }
 
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 uenum_next(UEnumeration* en U_LIFETIME_BOUND,
            int32_t* resultLength,
            UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return nullptr;
+    නම් (!en || U_FAILURE(*status)) {
+        ආපසු nullptr;
     }
-    if (en->next != nullptr) {
-        if (resultLength != nullptr) {
-            return en->next(en, resultLength, status);
+    නම් (en->next != nullptr) {
+        නම් (resultLength != nullptr) {
+            ආපසු en->next(en, resultLength, status);
         }
-        else {
+        නැතහොත් {
             int32_t dummyLength=0;
-            return en->next(en, &dummyLength, status);
+            ආපසු en->next(en, &dummyLength, status);
         }
-    } else {
+    } නැතහොත් {
         *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+        ආපසු nullptr;
     }
 }
 
 U_CAPI void U_EXPORT2
 uenum_reset(UEnumeration* en, UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return;
+    නම් (!en || U_FAILURE(*status)) {
+        ආපසු;
     }
-    if (en->reset != nullptr) {
+    නම් (en->reset != nullptr) {
         en->reset(en, status);
-    } else {
+    } නැතහොත් {
         *status = U_UNSUPPORTED_ERROR;
     }
 }

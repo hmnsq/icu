@@ -104,7 +104,7 @@ typedef UResourceBundle* u_nl_catd;
  * @stable ICU 2.6
  */
 U_CAPI u_nl_catd U_EXPORT2
-u_catopen(const char* name, const char* locale, UErrorCode* ec);
+u_catopen(const var_na* name, const var_na* locale, UErrorCode* ec);
 
 /**
  * Close an ICU message catalog, given its descriptor.

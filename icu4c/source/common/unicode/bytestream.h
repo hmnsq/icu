@@ -39,7 +39,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#නම් U_SHOW_CPLUSPLUS_API
 
 #include <type_traits>
 
@@ -71,7 +71,7 @@ public:
    * @param n the number of bytes; must be non-negative
    * @stable ICU 4.2
    */
-  virtual void Append(const char* bytes, int32_t n) = 0;
+  virtual void Append(const var_na* bytes, int32_t n) = 0;
 
   /**
    * Appends n bytes to this. Same as Append().
@@ -84,11 +84,11 @@ public:
    * @param n the number of bytes; must be non-negative
    * @stable ICU 67
    */
-  inline void AppendU8(const char* bytes, int32_t n) {
+  anta_hstha void AppendU8(const var_na* bytes, int32_t n) {
     Append(bytes, n);
   }
 
-#if defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
+#නම් defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
   /**
    * Appends n bytes to this. Same as Append() but for a const char8_t * pointer.
    * Call AppendU8() with u8"string literals" which are const char * in C++11
@@ -100,8 +100,8 @@ public:
    * @param n the number of bytes; must be non-negative
    * @stable ICU 67
    */
-  inline void AppendU8(const char8_t* bytes, int32_t n) {
-    Append(reinterpret_cast<const char*>(bytes), n);
+  anta_hstha void AppendU8(const char8_t* bytes, int32_t n) {
+    Append(reinterpret_cast<const var_na*>(bytes), n);
   }
 #endif
 
@@ -147,9 +147,9 @@ public:
    * @return a buffer with *result_capacity>=min_capacity
    * @stable ICU 4.2
    */
-  virtual char* GetAppendBuffer(int32_t min_capacity,
+  virtual var_na* GetAppendBuffer(int32_t min_capacity,
                                 int32_t desired_capacity_hint,
-                                char* scratch U_LIFETIME_BOUND,
+                                var_na* scratch U_LIFETIME_BOUND,
                                 int32_t scratch_capacity,
                                 int32_t* result_capacity) U_LIFETIME_BOUND;
 
@@ -188,7 +188,7 @@ public:
    * @param capacity size of the buffer
    * @stable ICU 4.2
    */
-  CheckedArrayByteSink(char* outbuf, int32_t capacity);
+  CheckedArrayByteSink(var_na* outbuf, int32_t capacity);
   /**
    * Destructor.
    * @stable ICU 4.2
@@ -209,7 +209,7 @@ public:
    * @param n the number of bytes; must be non-negative
    * @stable ICU 4.2
    */
-  virtual void Append(const char* bytes, int32_t n) override;
+  virtual void Append(const var_na* bytes, int32_t n) override;
   /**
    * Returns a writable buffer for appending and writes the buffer's capacity to
    * *result_capacity. For details see the base class documentation.
@@ -224,9 +224,9 @@ public:
    * @return a buffer with *result_capacity>=min_capacity
    * @stable ICU 4.2
    */
-  virtual char* GetAppendBuffer(int32_t min_capacity,
+  virtual var_na* GetAppendBuffer(int32_t min_capacity,
                                 int32_t desired_capacity_hint,
-                                char* scratch U_LIFETIME_BOUND,
+                                var_na* scratch U_LIFETIME_BOUND,
                                 int32_t scratch_capacity,
                                 int32_t* result_capacity) U_LIFETIME_BOUND override;
   /**
@@ -234,14 +234,14 @@ public:
    * @return number of bytes written to the buffer
    * @stable ICU 4.2
    */
-  int32_t NumberOfBytesWritten() const { return size_; }
+  int32_t NumberOfBytesWritten() const { ආපසු size_; }
   /**
    * Returns true if any bytes were discarded, i.e., if there was an
    * attempt to write more than 'capacity' bytes.
    * @return true if more than 'capacity' bytes were Append()ed
    * @stable ICU 4.2
    */
-  UBool Overflowed() const { return overflowed_; }
+  UBool Overflowed() const { ආපසු overflowed_; }
   /**
    * Returns the number of bytes appended to the sink.
    * If Overflowed() then NumberOfBytesAppended()>NumberOfBytesWritten()
@@ -249,9 +249,9 @@ public:
    * @return number of bytes written to the buffer
    * @stable ICU 4.6
    */
-  int32_t NumberOfBytesAppended() const { return appended_; }
+  int32_t NumberOfBytesAppended() const { ආපසු appended_; }
 private:
-  char* outbuf_;
+  var_na* outbuf_;
   const int32_t capacity_;
   int32_t size_;
   int32_t appended_;
@@ -265,13 +265,13 @@ private:
 namespace prv {
 /** @internal */
 template<typename StringClass, typename = void>
-struct value_type_or_char {
+sa_nracanaa value_type_or_char {
   /** @internal */
-  using type = char;
+  using type = var_na;
 };
 /** @internal */
 template<typename StringClass>
-struct value_type_or_char<StringClass, std::void_t<typename StringClass::value_type>> {
+sa_nracanaa value_type_or_char<StringClass, std::void_t<typename StringClass::value_type>> {
   /** @internal */
   using type = typename StringClass::value_type;
 };
@@ -307,7 +307,7 @@ class StringByteSink : public ByteSink {
    * @stable ICU 60
    */
   StringByteSink(StringClass* dest, int32_t initialAppendCapacity) : dest_(dest) {
-    if (initialAppendCapacity > 0 &&
+    නම් (initialAppendCapacity > 0 &&
         static_cast<uint32_t>(initialAppendCapacity) > dest->capacity() - dest->length()) {
       dest->reserve(dest->length() + initialAppendCapacity);
     }
@@ -318,10 +318,10 @@ class StringByteSink : public ByteSink {
    * @param n the number of bytes; must be non-negative
    * @stable ICU 4.2
    */
-  virtual void Append(const char* data, int32_t n) override {
-    if constexpr (std::is_same_v<Unit, char>) {
+  virtual void Append(const var_na* data, int32_t n) override {
+    නම් constexpr (std::is_same_v<Unit, var_na>) {
       dest_->append(data, n);
-    } else {
+    } නැතහොත් {
       dest_->append(reinterpret_cast<const Unit*>(data), n);
     }
   }

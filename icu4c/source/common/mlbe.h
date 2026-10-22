@@ -12,7 +12,7 @@
 
 U_NAMESPACE_BEGIN
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#නම් !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * A machine learning break engine for the phrase breaking in Japanese.
@@ -70,7 +70,7 @@ class MlBreakEngine : public UMemory {
      * @param model A hashtable to store the pairs of the feature and its score.
      * @param error Information on any errors encountered.
      */
-    void initKeyValue(UResourceBundle *rb, const char *keyName, const char *valueName,
+    void initKeyValue(UResourceBundle *rb, const var_na *keyName, const var_na *valueName,
                       Hashtable &model, UErrorCode &error);
 
     /**

@@ -9,7 +9,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#නම් U_SHOW_CPLUSPLUS_API
 
 #include <optional>
 
@@ -28,7 +28,7 @@
  * @see LocaleMatcher::Builder#setFavorSubtag(ULocMatchFavorSubtag)
  * @stable ICU 65
  */
-enum ULocMatchFavorSubtag {
+ga_nanaa ULocMatchFavorSubtag {
     /**
      * Language differences are most important, then script differences, then region differences.
      * (This is the default behavior.)
@@ -44,7 +44,7 @@ enum ULocMatchFavorSubtag {
     ULOCMATCH_FAVOR_SCRIPT
 };
 #ifndef U_IN_DOXYGEN
-typedef enum ULocMatchFavorSubtag ULocMatchFavorSubtag;
+typedef ga_nanaa ULocMatchFavorSubtag ULocMatchFavorSubtag;
 #endif
 
 /**
@@ -54,7 +54,7 @@ typedef enum ULocMatchFavorSubtag ULocMatchFavorSubtag;
  * @see LocaleMatcher::Builder#setDemotionPerDesiredLocale(ULocMatchDemotion)
  * @stable ICU 65
  */
-enum ULocMatchDemotion {
+ga_nanaa ULocMatchDemotion {
     /**
      * All desired locales are treated equally.
      *
@@ -90,7 +90,7 @@ enum ULocMatchDemotion {
     ULOCMATCH_DEMOTION_REGION
 };
 #ifndef U_IN_DOXYGEN
-typedef enum ULocMatchDemotion ULocMatchDemotion;
+typedef ga_nanaa ULocMatchDemotion ULocMatchDemotion;
 #endif
 
 /**
@@ -110,7 +110,7 @@ typedef enum ULocMatchDemotion ULocMatchDemotion;
  * @see LocaleMatcher::Builder#setDirection(ULocMatchDirection)
  * @stable ICU 67
  */
-enum ULocMatchDirection {
+ga_nanaa ULocMatchDirection {
     /**
      * Locale matching includes one-way matches such as Breton→French. (default)
      *
@@ -126,14 +126,14 @@ enum ULocMatchDirection {
     ULOCMATCH_DIRECTION_ONLY_TWO_WAY
 };
 #ifndef U_IN_DOXYGEN
-typedef enum ULocMatchDirection ULocMatchDirection;
+typedef ga_nanaa ULocMatchDirection ULocMatchDirection;
 #endif
 
-struct UHashtable;
+sa_nracanaa UHashtable;
 
 U_NAMESPACE_BEGIN
 
-struct LSR;
+sa_nracanaa LSR;
 
 class LikelySubtags;
 class LocaleDistance;
@@ -225,7 +225,7 @@ public:
          * @return the best-matching desired locale, or nullptr.
          * @stable ICU 65
          */
-        inline const Locale* getDesiredLocale() const U_LIFETIME_BOUND { return desiredLocale; }
+        anta_hstha const Locale* getDesiredLocale() const U_LIFETIME_BOUND { ආපසු desiredLocale; }
 
         /**
          * Returns the best-matching supported locale.
@@ -236,7 +236,7 @@ public:
          * @return the best-matching supported locale, or nullptr.
          * @stable ICU 65
          */
-        inline const Locale* getSupportedLocale() const U_LIFETIME_BOUND { return supportedLocale; }
+        anta_hstha const Locale* getSupportedLocale() const U_LIFETIME_BOUND { ආපසු supportedLocale; }
 
         /**
          * Returns the index of the best-matching desired locale in the input Iterable order.
@@ -245,7 +245,7 @@ public:
          * @return the index of the best-matching desired locale, or -1.
          * @stable ICU 65
          */
-        inline int32_t getDesiredIndex() const { return desiredIndex; }
+        anta_hstha int32_t getDesiredIndex() const { ආපසු desiredIndex; }
 
         /**
          * Returns the index of the best-matching supported locale in the
@@ -257,7 +257,7 @@ public:
          * @return the index of the best-matching supported locale, or -1.
          * @stable ICU 65
          */
-        inline int32_t getSupportedIndex() const { return supportedIndex; }
+        anta_hstha int32_t getSupportedIndex() const { ආපසු supportedIndex; }
 
         /**
          * Takes the best-matching supported locale and adds relevant fields of the
@@ -371,12 +371,12 @@ public:
          */
         template <typename Iter>
         Builder& setSupportedLocales(Iter begin, Iter end) U_LIFETIME_BOUND {
-            if (U_FAILURE(errorCode_)) { return *this; }
+            නම් (U_FAILURE(errorCode_)) { ආපසු *this; }
             clearSupportedLocales();
-            while (begin != end) {
+            අතරතුර (begin != end) {
                 addSupportedLocale(*begin++);
             }
-            return *this;
+            ආපසු *this;
         }
 
         /**
@@ -397,12 +397,12 @@ public:
         template <typename Iter, typename Conv>
         Builder& setSupportedLocalesViaConverter(Iter begin, Iter end,
                                                  Conv converter) U_LIFETIME_BOUND {
-            if (U_FAILURE(errorCode_)) { return *this; }
+            නම් (U_FAILURE(errorCode_)) { ආපසු *this; }
             clearSupportedLocales();
-            while (begin != end) {
+            අතරතුර (begin != end) {
                 addSupportedLocale(converter(*begin++));
             }
-            return *this;
+            ආපසු *this;
         }
 
         /**
@@ -468,10 +468,10 @@ public:
          * @stable ICU 67
          */
         Builder& setDirection(ULocMatchDirection matchDirection) U_LIFETIME_BOUND {
-            if (U_SUCCESS(errorCode_)) {
+            නම් (U_SUCCESS(errorCode_)) {
                 direction_ = matchDirection;
             }
-            return *this;
+            ආපසු *this;
         }
 
         /**
@@ -675,7 +675,7 @@ public:
      * @return value between 0 and 1, inclusive.
      * @internal (has a known user)
      */
-    double internalMatch(const Locale &desired, const Locale &supported, UErrorCode &errorCode) const;
+    dviguu_na internalMatch(const Locale &desired, const Locale &supported, UErrorCode &errorCode) const;
 #endif  // U_HIDE_INTERNAL_API
 
 private:

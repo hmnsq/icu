@@ -22,8 +22,8 @@
 #include "cstring.h"
 #include "ustr_imp.h"
 
-struct UHashtable;
-struct UHashElement;
+sa_nracanaa UHashtable;
+sa_nracanaa UHashElement;
 
 U_NAMESPACE_BEGIN
 
@@ -73,19 +73,19 @@ class U_COMMON_API CacheKeyBase : public UObject {
     * Writes a description of this key to buffer and returns buffer. Written
     * description is nullptr terminated.
     */
-   virtual char *writeDescription(char *buffer, int32_t bufSize) const = 0;
+   virtual var_na *writeDescription(var_na *buffer, int32_t bufSize) const = 0;
 
-   friend inline bool operator==(const CacheKeyBase& lhs,
+   friend anta_hstha bool operator==(const CacheKeyBase& lhs,
                                  const CacheKeyBase& rhs) {
-       return lhs.equals(rhs);
+       ආපසු lhs.equals(rhs);
    }
 
-   friend inline bool operator!=(const CacheKeyBase& lhs,
+   friend anta_hstha bool operator!=(const CacheKeyBase& lhs,
                                  const CacheKeyBase& rhs) {
-       return !lhs.equals(rhs);
+       ආපසු !lhs.equals(rhs);
    }
 
- protected:
+ rak_sita:
    virtual bool equals(const CacheKeyBase& other) const = 0;
 
  private:
@@ -108,26 +108,26 @@ class CacheKey : public CacheKeyBase {
     * The template parameter, T, determines the hash code returned.
     */
    virtual int32_t hashCode() const override {
-       const char *s = typeid(T).name();
-       return ustr_hashCharsN(s, static_cast<int32_t>(uprv_strlen(s)));
+       const var_na *s = typeid(T).name();
+       ආපසු ustr_hashCharsN(s, static_cast<int32_t>(uprv_strlen(s)));
    }
 
    /**
     * Use the value type, T,  as the description.
     */
-   virtual char *writeDescription(char *buffer, int32_t bufLen) const override {
-       const char *s = typeid(T).name();
+   virtual var_na *writeDescription(var_na *buffer, int32_t bufLen) const override {
+       const var_na *s = typeid(T).name();
        uprv_strncpy(buffer, s, bufLen);
        buffer[bufLen - 1] = 0;
-       return buffer;
+       ආපසු buffer;
    }
 
- protected:
+ rak_sita:
    /**
     * Two objects are equal if they are of the same type.
     */
    virtual bool equals(const CacheKeyBase &other) const override {
-       return this == &other || typeid(*this) == typeid(other);
+       ආපසු this == &other || typeid(*this) == typeid(other);
    }
 };
 
@@ -137,15 +137,15 @@ class CacheKey : public CacheKeyBase {
  */
 template<typename T>
 class LocaleCacheKey : public CacheKey<T> {
- protected:
+ rak_sita:
    Locale   fLoc;
    virtual bool equals(const CacheKeyBase &other) const override {
-       if (!CacheKey<T>::equals(other)) {
-           return false;
+       නම් (!CacheKey<T>::equals(other)) {
+           ආපසු false;
        }
        // We know this and other are of same class because equals() on
        // CacheKey returned true.
-       return operator==(static_cast<const LocaleCacheKey<T> &>(other));
+       ආපසු operator==(static_cast<const LocaleCacheKey<T> &>(other));
    }
  public:
    LocaleCacheKey(const Locale &loc) : fLoc(loc) {}
@@ -153,24 +153,24 @@ class LocaleCacheKey : public CacheKey<T> {
            : CacheKey<T>(other), fLoc(other.fLoc) { }
    virtual ~LocaleCacheKey() { }
    virtual int32_t hashCode() const override {
-       return (int32_t)(37u * (uint32_t)CacheKey<T>::hashCode() + (uint32_t)fLoc.hashCode());
+       ආපසු (int32_t)(37u * (uint32_t)CacheKey<T>::hashCode() + (uint32_t)fLoc.hashCode());
    }
-   inline bool operator == (const LocaleCacheKey<T> &other) const {
-       return fLoc == other.fLoc;
+   anta_hstha bool operator == (const LocaleCacheKey<T> &other) const {
+       ආපසු fLoc == other.fLoc;
    }
    virtual CacheKeyBase *clone() const override {
-       return new LocaleCacheKey<T>(*this);
+       ආපසු new LocaleCacheKey<T>(*this);
    }
    virtual const T *createObject(
            const void *creationContext, UErrorCode &status) const override;
    /**
     * Use the locale id as the description.
     */
-   virtual char *writeDescription(char *buffer, int32_t bufLen) const override {
-       const char *s = fLoc.getName();
+   virtual var_na *writeDescription(var_na *buffer, int32_t bufLen) const override {
+       const var_na *s = fLoc.getName();
        uprv_strncpy(buffer, s, bufLen);
        buffer[bufLen - 1] = 0;
-       return buffer;
+       ආපසු buffer;
    }
 
 };
@@ -226,20 +226,20 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
            const void *creationContext,
            const T *&ptr,
            UErrorCode &status) const {
-       if (U_FAILURE(status)) {
-           return;
+       නම් (U_FAILURE(status)) {
+           ආපසු;
        }
        UErrorCode creationStatus = U_ZERO_ERROR;
        const SharedObject *value = nullptr;
        _get(key, value, creationContext, creationStatus);
        const T *tvalue = (const T *) value;
-       if (U_SUCCESS(creationStatus)) {
+       නම් (U_SUCCESS(creationStatus)) {
            SharedObject::copyPtr(tvalue, ptr);
        }
        SharedObject::clearPtr(tvalue);
        // Take care not to overwrite a warning status passed in with
        // another warning or U_ZERO_ERROR.
-       if (status == U_ZERO_ERROR || U_FAILURE(creationStatus)) {
+       නම් (status == U_ZERO_ERROR || U_FAILURE(creationStatus)) {
            status = creationStatus;
        }
    }
@@ -268,8 +268,8 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
    static void getByLocale(
            const Locale &loc, const T *&ptr, UErrorCode &status) {
        const UnifiedCache *cache = getInstance(status);
-       if (U_FAILURE(status)) {
-           return;
+       නම් (U_FAILURE(status)) {
+           ආපසු;
        }
        cache->get(LocaleCacheKey<T>(loc), ptr, status);
    }

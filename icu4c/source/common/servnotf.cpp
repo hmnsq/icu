@@ -9,7 +9,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#නම් !UCONFIG_NO_SERVICE
 
 #include "servnotf.h"
 #ifdef NOTIFIER_DEBUG
@@ -40,25 +40,25 @@ ICUNotifier::~ICUNotifier() {
 void 
 ICUNotifier::addListener(const EventListener* l, UErrorCode& status) 
 {
-    if (U_SUCCESS(status)) {
-        if (l == nullptr) {
+    නම් (U_SUCCESS(status)) {
+        නම් (l == nullptr) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            ආපසු;
         }
 
-        if (acceptsListener(*l)) {
+        නම් (acceptsListener(*l)) {
             Mutex lmx(&notifyLock);
-            if (listeners == nullptr) {
+            නම් (listeners == nullptr) {
                 LocalPointer<UVector> lpListeners(new UVector(5, status), status);
-                if (U_FAILURE(status)) {
-                    return;
+                නම් (U_FAILURE(status)) {
+                    ආපසු;
                 }
                 listeners = lpListeners.orphan();
-            } else {
-                for (int i = 0, e = listeners->size(); i < e; ++i) {
+            } නැතහොත් {
+                සඳහා (පූර්ණ_සංඛ්‍යා i = 0, e = listeners->size(); i < e; ++i) {
                     const EventListener* el = static_cast<const EventListener*>(listeners->elementAt(i));
-                    if (l == el) {
-                        return;
+                    නම් (l == el) {
+                        ආපසු;
                     }
                 }
             }
@@ -66,7 +66,7 @@ ICUNotifier::addListener(const EventListener* l, UErrorCode& status)
             listeners->addElement((void*)l, status); // cast away const
         }
 #ifdef NOTIFIER_DEBUG
-        else {
+        නැතහොත් {
             fprintf(stderr, "Listener invalid for this notifier.");
             exit(1);
         }
@@ -77,25 +77,25 @@ ICUNotifier::addListener(const EventListener* l, UErrorCode& status)
 void 
 ICUNotifier::removeListener(const EventListener *l, UErrorCode& status) 
 {
-    if (U_SUCCESS(status)) {
-        if (l == nullptr) {
+    නම් (U_SUCCESS(status)) {
+        නම් (l == nullptr) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            ආපසු;
         }
 
         {
             Mutex lmx(&notifyLock);
-            if (listeners != nullptr) {
+            නම් (listeners != nullptr) {
                 // identity equality check
-                for (int i = 0, e = listeners->size(); i < e; ++i) {
+                සඳහා (පූර්ණ_සංඛ්‍යා i = 0, e = listeners->size(); i < e; ++i) {
                     const EventListener* el = static_cast<const EventListener*>(listeners->elementAt(i));
-                    if (l == el) {
+                    නම් (l == el) {
                         listeners->removeElementAt(i);
-                        if (listeners->size() == 0) {
+                        නම් (listeners->size() == 0) {
                             delete listeners;
                             listeners = nullptr;
                         }
-                        return;
+                        ආපසු;
                     }
                 }
             }
@@ -107,8 +107,8 @@ void
 ICUNotifier::notifyChanged() 
 {
     Mutex lmx(&notifyLock);
-    if (listeners != nullptr) {
-        for (int i = 0, e = listeners->size(); i < e; ++i) {
+    නම් (listeners != nullptr) {
+        සඳහා (පූර්ණ_සංඛ්‍යා i = 0, e = listeners->size(); i < e; ++i) {
             EventListener* el = static_cast<EventListener*>(listeners->elementAt(i));
             notifyListener(*el);
         }

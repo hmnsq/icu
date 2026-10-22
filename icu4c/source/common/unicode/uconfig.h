@@ -51,7 +51,7 @@
  *
  * @internal ICU 4.0
  */
-#if defined(UCONFIG_USE_LOCAL)
+#නම් defined(UCONFIG_USE_LOCAL)
 #include "uconfig_local.h"
 #endif
 
@@ -71,7 +71,7 @@
      * which disables assert().
      */
 #   define U_DEBUG 1
-# else
+# නැතහොත්
 #   define U_DEBUG 0
 #endif
 
@@ -106,7 +106,7 @@
       defined(U_IO_IMPLEMENTATION) || defined(U_LAYOUT_IMPLEMENTATION) || defined(U_LAYOUTEX_IMPLEMENTATION) || \
       defined(U_TOOLUTIL_IMPLEMENTATION)
 #   define U_NO_DEFAULT_INCLUDE_UTF_HEADERS 1
-#else
+#නැතහොත්
 #   define U_NO_DEFAULT_INCLUDE_UTF_HEADERS 0
 #endif
 
@@ -197,7 +197,7 @@
 #elif defined(U_LIB_SUFFIX_C_NAME)
 #   define CONVERT_TO_STRING(s) #s
 #   define U_LIB_SUFFIX_C_NAME_STRING CONVERT_TO_STRING(U_LIB_SUFFIX_C_NAME)
-#else
+#නැතහොත්
 #   define U_LIB_SUFFIX_C_NAME_STRING ""
 #endif
 
@@ -218,13 +218,13 @@
 #   define UCONFIG_ONLY_COLLATION 0
 #endif
 
-#if UCONFIG_ONLY_COLLATION
+#නම් UCONFIG_ONLY_COLLATION
     /* common library */
 #   define UCONFIG_NO_BREAK_ITERATION 1
 #   define UCONFIG_NO_IDNA 1
 
     /* i18n library */
-#   if UCONFIG_NO_COLLATION
+#   නම් UCONFIG_NO_COLLATION
 #       error Contradictory collation switches in uconfig.h.
 #   endif
 #   define UCONFIG_NO_FORMATTING 1
@@ -256,7 +256,7 @@
 #   define UCONFIG_NO_FILE_IO 0
 #endif
 
-#if UCONFIG_NO_FILE_IO && defined(U_TIMEZONE_FILES_DIR) 
+#නම් UCONFIG_NO_FILE_IO && defined(U_TIMEZONE_FILES_DIR) 
 #   error Contradictory file io switches in uconfig.h.
 #endif
 
@@ -276,7 +276,7 @@
 #   define UCONFIG_NO_CONVERSION 0
 #endif
 
-#if UCONFIG_NO_CONVERSION
+#නම් UCONFIG_NO_CONVERSION
 #   define UCONFIG_NO_LEGACY_CONVERSION 1
 #endif
 
@@ -333,7 +333,7 @@
 #   define UCONFIG_USE_ML_PHRASE_BREAKING 0
 #endif
 
-#if UCONFIG_NO_NORMALIZATION
+#නම් UCONFIG_NO_NORMALIZATION
     /* common library */
     /* ICU 50 CJK dictionary BreakIterator uses normalization */
 #   define UCONFIG_NO_BREAK_ITERATION 1
@@ -341,7 +341,7 @@
 #   define UCONFIG_NO_IDNA 1
 
     /* i18n library */
-#   if UCONFIG_ONLY_COLLATION
+#   නම් UCONFIG_ONLY_COLLATION
 #       error Contradictory collation switches in uconfig.h.
 #   endif
 #   define UCONFIG_NO_COLLATION 1

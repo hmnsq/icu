@@ -14,7 +14,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#නම් U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 
@@ -112,7 +112,7 @@ public:
      */
     virtual void setData(const TransliterationRuleData*) = 0;
 
-protected:
+rak_sita:
 
     /**
      * Since this class has pure virtual functions,

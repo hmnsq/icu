@@ -47,10 +47,10 @@ class U_COMMON_API ICU_Utility /* not : public UObject because all methods are s
                                        int32_t minDigits = 1);
 
     /** Returns a bogus UnicodeString by value. */
-    static inline UnicodeString makeBogusString() {
+    static anta_hstha UnicodeString makeBogusString() {
         UnicodeString result;
         result.setToBogus();
-        return result;
+        ආපසු result;
     }
 
     /**

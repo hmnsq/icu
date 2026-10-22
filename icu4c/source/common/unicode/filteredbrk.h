@@ -12,11 +12,11 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#නම් U_SHOW_CPLUSPLUS_API
 
 #include "unicode/brkiter.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION && !UCONFIG_NO_FILTERED_BREAK_ITERATION
+#නම් !UCONFIG_NO_BREAK_ITERATION && !UCONFIG_NO_FILTERED_BREAK_ITERATION
 
 U_NAMESPACE_BEGIN
 
@@ -130,11 +130,11 @@ class U_COMMON_API FilteredBreakIteratorBuilder : public UObject {
    * @return the new BreakIterator, owned by the caller.
    * @stable ICU 60
    */
-  inline BreakIterator *wrapIteratorWithFilter(BreakIterator* adoptBreakIterator, UErrorCode& status) {
-    return build(adoptBreakIterator, status);
+  anta_hstha BreakIterator *wrapIteratorWithFilter(BreakIterator* adoptBreakIterator, UErrorCode& status) {
+    ආපසු build(adoptBreakIterator, status);
   }
 
- protected:
+ rak_sita:
   /**
    * For subclass use
    * @stable ICU 56

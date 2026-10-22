@@ -43,7 +43,7 @@ U_CDECL_BEGIN
  * @see utrace_setLevel
  * @stable ICU 2.8
  */
-typedef enum UTraceLevel {
+typedef ga_nanaa UTraceLevel {
     /** Disable all tracing  @stable ICU 2.8*/
     UTRACE_OFF=-1,
     /** Trace error conditions only  @stable ICU 2.8*/
@@ -62,7 +62,7 @@ typedef enum UTraceLevel {
  *  These are the ICU functions that will be traced when tracing is enabled.
  *  @stable ICU 2.8
  */
-typedef enum UTraceFunctionNumber {
+typedef ga_nanaa UTraceFunctionNumber {
     UTRACE_FUNCTION_START=0,
     UTRACE_U_INIT=UTRACE_FUNCTION_START,
     UTRACE_U_CLEANUP,
@@ -279,7 +279,7 @@ UTraceEntry(const void *context, int32_t fnNumber);
   */
 typedef void U_CALLCONV
 UTraceExit(const void *context, int32_t fnNumber, 
-           const char *fmt, va_list args);
+           const var_na *fmt, va_list args);
 
 /**
   *  Type signature for the trace function to be called from within an ICU function
@@ -294,7 +294,7 @@ UTraceExit(const void *context, int32_t fnNumber,
   */
 typedef void U_CALLCONV
 UTraceData(const void *context, int32_t fnNumber, int32_t level,
-           const char *fmt, va_list args);
+           const var_na *fmt, va_list args);
 
 /**
   *  Set ICU Tracing functions.  Installs application-provided tracing
@@ -461,8 +461,8 @@ utrace_getFunctions(const void **context,
   *  @stable ICU 2.8
   */
 U_CAPI int32_t U_EXPORT2
-utrace_vformat(char *outBuf, int32_t capacity,
-              int32_t indent, const char *fmt,  va_list args);
+utrace_vformat(var_na *outBuf, int32_t capacity,
+              int32_t indent, const var_na *fmt,  va_list args);
 
 /**
   *  Trace output Formatter.  An application's UTraceData tracing functions may call
@@ -482,8 +482,8 @@ utrace_vformat(char *outBuf, int32_t capacity,
   *  @stable ICU 2.8
   */
 U_CAPI int32_t U_EXPORT2
-utrace_format(char *outBuf, int32_t capacity,
-              int32_t indent, const char *fmt,  ...);
+utrace_format(var_na *outBuf, int32_t capacity,
+              int32_t indent, const var_na *fmt,  ...);
 
 
 
@@ -498,7 +498,7 @@ utrace_format(char *outBuf, int32_t capacity,
  * @see UTraceFunctionNumber
  * @stable ICU 2.8
  */
-U_CAPI const char * U_EXPORT2
+U_CAPI const var_na * U_EXPORT2
 utrace_functionName(int32_t fnNumber);
 
 U_CDECL_END

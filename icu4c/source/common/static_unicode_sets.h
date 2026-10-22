@@ -15,7 +15,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#නම් !UCONFIG_NO_FORMATTING
 #ifndef __STATIC_UNICODE_SETS_H__
 #define __STATIC_UNICODE_SETS_H__
 
@@ -25,7 +25,7 @@
 U_NAMESPACE_BEGIN
 namespace unisets {
 
-enum Key {
+ga_nanaa Key {
     // NONE is used to indicate null in chooseFrom().
     // EMPTY is used to get an empty UnicodeSet.
     NONE = -1,
@@ -123,7 +123,7 @@ U_COMMON_API Key chooseFrom(UnicodeString str, Key key1, Key key2);
 // Unused in C++:
 // Key chooseCurrency(UnicodeString str);
 // Used instead:
-static const struct {
+static const sa_nracanaa {
     Key key;
     UChar32 exemplar;
 } kCurrencyEntries[] = {

@@ -10,7 +10,7 @@
  */
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#නම් !UCONFIG_NO_SERVICE
 
 #include "unicode/resbund.h"
 #include "uresimp.h"
@@ -44,42 +44,42 @@ ICULocaleService::~ICULocaleService()
 UObject*
 ICULocaleService::get(const Locale& locale, UErrorCode& status) const
 {
-    return get(locale, LocaleKey::KIND_ANY, nullptr, status);
+    ආපසු get(locale, LocaleKey::KIND_ANY, nullptr, status);
 }
 
 UObject*
 ICULocaleService::get(const Locale& locale, int32_t kind, UErrorCode& status) const
 {
-    return get(locale, kind, nullptr, status);
+    ආපසු get(locale, kind, nullptr, status);
 }
 
 UObject*
 ICULocaleService::get(const Locale& locale, Locale* actualReturn, UErrorCode& status) const
 {
-    return get(locale, LocaleKey::KIND_ANY, actualReturn, status);
+    ආපසු get(locale, LocaleKey::KIND_ANY, actualReturn, status);
 }
 
 UObject*
 ICULocaleService::get(const Locale& locale, int32_t kind, Locale* actualReturn, UErrorCode& status) const
 {
     UObject* result = nullptr;
-    if (U_FAILURE(status)) {
-        return result;
+    නම් (U_FAILURE(status)) {
+        ආපසු result;
     }
 
     UnicodeString locName(locale.getName(), -1, US_INV);
-    if (locName.isBogus()) {
+    නම් (locName.isBogus()) {
         status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
+    } නැතහොත් {
         ICUServiceKey* key = createKey(&locName, kind, status);
-        if (key) {
-            if (actualReturn == nullptr) {
+        නම් (key) {
+            නම් (actualReturn == nullptr) {
                 result = getKey(*key, status);
-            } else {
+            } නැතහොත් {
                 UnicodeString temp;
                 result = getKey(*key, &temp, status);
 
-                if (result != nullptr) {
+                නම් (result != nullptr) {
                     key->parseSuffix(temp);
                     LocaleUtility::initLocaleFromName(temp, *actualReturn);
                 }
@@ -87,7 +87,7 @@ ICULocaleService::get(const Locale& locale, int32_t kind, Locale* actualReturn, 
             delete key;
         }
     }
-    return result;
+    ආපසු result;
 }
 
 
@@ -97,44 +97,44 @@ ICULocaleService::registerInstance(UObject* objToAdopt, const UnicodeString& loc
 {
     Locale loc;
     LocaleUtility::initLocaleFromName(locale, loc);
-    return registerInstance(objToAdopt, loc, LocaleKey::KIND_ANY, 
+    ආපසු registerInstance(objToAdopt, loc, LocaleKey::KIND_ANY, 
         visible ? LocaleKeyFactory::VISIBLE : LocaleKeyFactory::INVISIBLE, status);
 }
 
 URegistryKey
 ICULocaleService::registerInstance(UObject* objToAdopt, const Locale& locale, UErrorCode& status)
 {
-    return registerInstance(objToAdopt, locale, LocaleKey::KIND_ANY, LocaleKeyFactory::VISIBLE, status);
+    ආපසු registerInstance(objToAdopt, locale, LocaleKey::KIND_ANY, LocaleKeyFactory::VISIBLE, status);
 }
 
 URegistryKey
 ICULocaleService::registerInstance(UObject* objToAdopt, const Locale& locale, int32_t kind, UErrorCode& status)
 {
-    return registerInstance(objToAdopt, locale, kind, LocaleKeyFactory::VISIBLE, status);
+    ආපසු registerInstance(objToAdopt, locale, kind, LocaleKeyFactory::VISIBLE, status);
 }
 
 URegistryKey
 ICULocaleService::registerInstance(UObject* objToAdopt, const Locale& locale, int32_t kind, int32_t coverage, UErrorCode& status)
 {
     ICUServiceFactory * factory = new SimpleLocaleKeyFactory(objToAdopt, locale, kind, coverage);
-    if (factory != nullptr) {
-        return registerFactory(factory, status);
+    නම් (factory != nullptr) {
+        ආපසු registerFactory(factory, status);
     }
     delete objToAdopt;
-    return nullptr;
+    ආපසු nullptr;
 }
 
-#if 0
+#නම් 0
 URegistryKey
 ICULocaleService::registerInstance(UObject* objToAdopt, const UnicodeString& locale, UErrorCode& status)
 {
-    return registerInstance(objToAdopt, locale, LocaleKey::KIND_ANY, LocaleKeyFactory::VISIBLE, status);
+    ආපසු registerInstance(objToAdopt, locale, LocaleKey::KIND_ANY, LocaleKeyFactory::VISIBLE, status);
 }
 
 URegistryKey
 ICULocaleService::registerInstance(UObject* objToAdopt, const UnicodeString& locale, UBool visible, UErrorCode& status)
 {
-    return registerInstance(objToAdopt, locale, LocaleKey::KIND_ANY,
+    ආපසු registerInstance(objToAdopt, locale, LocaleKey::KIND_ANY,
                             visible ? LocaleKeyFactory::VISIBLE : LocaleKeyFactory::INVISIBLE,
                             status);
 }
@@ -143,11 +143,11 @@ URegistryKey
 ICULocaleService::registerInstance(UObject* objToAdopt, const UnicodeString& locale, int32_t kind, int32_t coverage, UErrorCode& status)
 {
     ICUServiceFactory * factory = new SimpleLocaleKeyFactory(objToAdopt, locale, kind, coverage);
-    if (factory != nullptr) {
-        return registerFactory(factory, status);
+    නම් (factory != nullptr) {
+        ආපසු registerFactory(factory, status);
     }
     delete objToAdopt;
-    return nullptr;
+    ආපසු nullptr;
 }
 #endif
 
@@ -174,16 +174,16 @@ private:
         , _ids(uprv_deleteUObject, nullptr, status)
         , _pos(0)
     {
-        if(U_SUCCESS(status)) {
+        නම්(U_SUCCESS(status)) {
             int32_t i, length;
 
             length = other._ids.size();
-            for(i = 0; i < length; ++i) {
+            සඳහා(i = 0; i < length; ++i) {
                 LocalPointer<UnicodeString> clonedId(static_cast<UnicodeString*>(other._ids.elementAt(i))->clone(), status);
                 _ids.adoptElement(clonedId.orphan(), status);
             }
 
-            if(U_SUCCESS(status)) {
+            නම්(U_SUCCESS(status)) {
                 _pos = other._pos;
             }
         }
@@ -193,11 +193,11 @@ public:
     static ServiceEnumeration* create(const ICULocaleService* service U_LIFETIME_BOUND) {
         UErrorCode status = U_ZERO_ERROR;
         ServiceEnumeration* result = new ServiceEnumeration(service, status);
-        if (U_SUCCESS(status)) {
-            return result;
+        නම් (U_SUCCESS(status)) {
+            ආපසු result;
         }
         delete result;
-        return nullptr;
+        ආපසු nullptr;
     }
 
     virtual ~ServiceEnumeration();
@@ -205,39 +205,39 @@ public:
     virtual StringEnumeration *clone() const override {
         UErrorCode status = U_ZERO_ERROR;
         ServiceEnumeration *cl = new ServiceEnumeration(*this, status);
-        if(U_FAILURE(status)) {
+        නම්(U_FAILURE(status)) {
             delete cl;
             cl = nullptr;
         }
-        return cl;
+        ආපසු cl;
     }
 
     UBool upToDate(UErrorCode& status) const {
-        if (U_SUCCESS(status)) {
-            if (_timestamp == _service->getTimestamp()) {
-                return true;
+        නම් (U_SUCCESS(status)) {
+            නම් (_timestamp == _service->getTimestamp()) {
+                ආපසු true;
             }
             status = U_ENUM_OUT_OF_SYNC_ERROR;
         }
-        return false;
+        ආපසු false;
     }
 
     virtual int32_t count(UErrorCode& status) const override {
-        return upToDate(status) ? _ids.size() : 0;
+        ආපසු upToDate(status) ? _ids.size() : 0;
     }
 
     virtual const UnicodeString* snext(UErrorCode& status) U_LIFETIME_BOUND override {
-        if (upToDate(status) && (_pos < _ids.size())) {
-            return static_cast<const UnicodeString*>(_ids[_pos++]);
+        නම් (upToDate(status) && (_pos < _ids.size())) {
+            ආපසු static_cast<const UnicodeString*>(_ids[_pos++]);
         }
-        return nullptr;
+        ආපසු nullptr;
     }
 
     virtual void reset(UErrorCode& status) override {
-        if (status == U_ENUM_OUT_OF_SYNC_ERROR) {
+        නම් (status == U_ENUM_OUT_OF_SYNC_ERROR) {
             status = U_ZERO_ERROR;
         }
-        if (U_SUCCESS(status)) {
+        නම් (U_SUCCESS(status)) {
             _timestamp = _service->getTimestamp();
             _pos = 0;
             _service->getVisibleIDs(_ids, status);
@@ -256,7 +256,7 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ServiceEnumeration)
 StringEnumeration*
 ICULocaleService::getAvailableLocales() const U_LIFETIME_BOUND
 {
-    return ServiceEnumeration::create(this);
+    ආපසු ServiceEnumeration::create(this);
 }
 
 const UnicodeString&
@@ -267,25 +267,25 @@ ICULocaleService::validateFallbackLocale() const
     static UMutex llock;
     {
         Mutex mutex(&llock);
-        if (loc != fallbackLocale) {
+        නම් (loc != fallbackLocale) {
             ncThis->fallbackLocale = loc;
             LocaleUtility::initNameFromLocale(loc, ncThis->fallbackLocaleName);
             ncThis->clearServiceCache();
         }
     }
-    return fallbackLocaleName;
+    ආපසු fallbackLocaleName;
 }
 
 ICUServiceKey*
 ICULocaleService::createKey(const UnicodeString* id, UErrorCode& status) const
 {
-    return LocaleKey::createWithCanonicalFallback(id, &validateFallbackLocale(), status);
+    ආපසු LocaleKey::createWithCanonicalFallback(id, &validateFallbackLocale(), status);
 }
 
 ICUServiceKey*
 ICULocaleService::createKey(const UnicodeString* id, int32_t kind, UErrorCode& status) const
 {
-    return LocaleKey::createWithCanonicalFallback(id, &validateFallbackLocale(), kind, status);
+    ආපසු LocaleKey::createWithCanonicalFallback(id, &validateFallbackLocale(), kind, status);
 }
 
 U_NAMESPACE_END

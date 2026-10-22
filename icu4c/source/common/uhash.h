@@ -100,13 +100,13 @@ typedef UElement UHashTok;
 /**
  * This is a single hash element.
  */
-struct UHashElement {
+sa_nracanaa UHashElement {
     /* Reorder these elements to pack nicely if necessary */
     int32_t  hashcode;
     UHashTok value;
     UHashTok key;
 };
-typedef struct UHashElement UHashElement;
+typedef sa_nracanaa UHashElement UHashElement;
 
 /**
  * A hashing function.
@@ -131,7 +131,7 @@ typedef UElementsAreEqual UValueComparator;
  * This specifies whether or not, and how, the hashtable resizes itself.
  * See uhash_setResizePolicy().
  */
-enum UHashResizePolicy {
+ga_nanaa UHashResizePolicy {
     U_GROW,            /* Grow on demand, do not shrink */
     U_GROW_AND_SHRINK, /* Grow and shrink on demand */
     U_FIXED            /* Never change size */
@@ -141,7 +141,7 @@ enum UHashResizePolicy {
  * The UHashtable struct.  Clients should treat this as an opaque data
  * type and manipulate it only through the uhash_... API.
  */
-struct UHashtable {
+sa_nracanaa UHashtable {
 
     /* Main key-value pair storage array */
 
@@ -179,7 +179,7 @@ struct UHashtable {
                                  * length == PRIMES[primeIndex] */
     UBool       allocated; /* Was this UHashtable allocated? */
 };
-typedef struct UHashtable UHashtable;
+typedef sa_nracanaa UHashtable UHashtable;
 
 U_CDECL_END
 
@@ -329,7 +329,7 @@ uhash_setValueDeleter(UHashtable *hash, UObjectDeleter *fn);
  * @param policy The way the hashtable resizes itself, {U_GROW, U_GROW_AND_SHRINK, U_FIXED}
  */
 U_CAPI void U_EXPORT2
-uhash_setResizePolicy(UHashtable *hash, enum UHashResizePolicy policy);
+uhash_setResizePolicy(UHashtable *hash, ga_nanaa UHashResizePolicy policy);
 
 /**
  * Get the number of key-value pairs stored in a UHashtable.
@@ -808,7 +808,7 @@ U_CAPI UBool U_EXPORT2
 uhash_equals(const UHashtable* hash1, const UHashtable* hash2);
 
 
-#if U_SHOW_CPLUSPLUS_API
+#නම් U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

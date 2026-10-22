@@ -22,7 +22,7 @@
 #include "unicode/ubidi.h"
 #include "unicode/uchar.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#නම් U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -68,7 +68,7 @@
  * @see UBIDI_REORDER_RUNS_ONLY
  * @stable ICU 58
  */
-typedef enum {
+typedef ga_nanaa {
     /** 0: Constant indicating a logical order.
       * This is the default for input text.
       * @stable ICU 58
@@ -91,7 +91,7 @@ typedef enum {
  * @see ubidi_writeReverse
  * @stable ICU 58
  */
-typedef enum {
+typedef ga_nanaa {
     /** 0: Constant indicating that character mirroring should not be
       * performed.
       * This is the default.
@@ -112,7 +112,7 @@ typedef enum {
  * information used by the layout transformation engine.
  * @stable ICU 58
  */
-typedef struct UBiDiTransform UBiDiTransform;
+typedef sa_nracanaa UBiDiTransform UBiDiTransform;
 
 /**
  * Performs transformation of text from the bidi layout defined by the input
@@ -304,7 +304,7 @@ ubiditransform_open(UErrorCode *pErrorCode);
 U_CAPI void U_EXPORT2
 ubiditransform_close(UBiDiTransform *pBidiTransform);
 
-#if U_SHOW_CPLUSPLUS_API
+#නම් U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

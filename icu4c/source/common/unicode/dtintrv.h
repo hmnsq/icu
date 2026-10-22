@@ -16,7 +16,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#නම් U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 
@@ -55,14 +55,14 @@ public:
      * @return  the from date in dateInterval.
      * @stable ICU 4.0
      */
-    inline UDate getFromDate() const;
+    anta_hstha UDate getFromDate() const;
 
     /** 
      * Get the to date.
      * @return  the to date in dateInterval.
      * @stable ICU 4.0
      */
-    inline UDate getToDate() const;
+    anta_hstha UDate getToDate() const;
 
 
     /**
@@ -115,7 +115,7 @@ public:
      * @return true if the two DateIntervals are not the same
      * @stable ICU 4.0
      */
-    inline bool operator!=(const DateInterval& other) const;
+    anta_hstha bool operator!=(const DateInterval& other) const;
 
 
     /**
@@ -138,21 +138,21 @@ private:
 } ;// end class DateInterval
 
 
-inline UDate 
+anta_hstha UDate 
 DateInterval::getFromDate() const { 
-    return fromDate; 
+    ආපසු fromDate; 
 }
 
 
-inline UDate 
+anta_hstha UDate 
 DateInterval::getToDate() const { 
-    return toDate; 
+    ආපසු toDate; 
 }
 
 
-inline bool
+anta_hstha bool
 DateInterval::operator!=(const DateInterval& other) const { 
-    return ( !operator==(other) );
+    ආපසු ( !operator==(other) );
 }
 
 

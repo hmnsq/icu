@@ -86,7 +86,7 @@ UEnumUNext(UEnumeration* en,
  * @return next element as char *,
  *         or NULL after all elements haven been enumerated
  */
-typedef const char* U_CALLCONV 
+typedef const var_na* U_CALLCONV 
 UEnumNext(UEnumeration* en,
            int32_t* resultLength,
            UErrorCode* status);
@@ -105,7 +105,7 @@ UEnumReset(UEnumeration* en,
             UErrorCode* status);
 
 
-struct UEnumeration {
+sa_nracanaa UEnumeration {
     /* baseContext. For the base class only. Don't touch! */
     void *baseContext;
 
@@ -147,7 +147,7 @@ uenum_unextDefault(UEnumeration* en U_LIFETIME_BOUND,
  * when a UEnumeration is defined with 'next' pointing to this
  * function.
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 uenum_nextDefault(UEnumeration* en U_LIFETIME_BOUND,
                   int32_t* resultLength,
                   UErrorCode* status);

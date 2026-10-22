@@ -21,7 +21,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#නම් U_SHOW_CPLUSPLUS_API
 
 #include "unicode/platform.h"
 
@@ -117,12 +117,12 @@ public:
 
 /* test versions for debugging shaper heap memory problems */
 #ifdef SHAPER_MEMORY_DEBUG  
-    static void * NewArray(int size, int count);
-    static void * GrowArray(void * array, int newSize );
+    static void * NewArray(පූර්ණ_සංඛ්‍යා size, පූර්ණ_සංඛ්‍යා count);
+    static void * GrowArray(void * array, පූර්ණ_සංඛ්‍යා newSize );
     static void   FreeArray(void * array );
 #endif
 
-#if U_OVERRIDE_CXX_ALLOCATION
+#නම් U_OVERRIDE_CXX_ALLOCATION
     /**
      * Override for ICU4C C++ memory management.
      * simple, non-class types are allocated using the macros in common/cmemory.h
@@ -162,16 +162,16 @@ public:
      * See new().
      * @stable ICU 2.6
      */
-    static inline void * U_EXPORT2 operator new(size_t, void *ptr) noexcept { return ptr; }
+    static anta_hstha void * U_EXPORT2 operator new(size_t, void *ptr) noexcept { ආපසු ptr; }
 
     /**
      * Override for ICU4C C++ memory management for STL.
      * See delete().
      * @stable ICU 2.6
      */
-    static inline void U_EXPORT2 operator delete(void *, void *) noexcept {}
+    static anta_hstha void U_EXPORT2 operator delete(void *, void *) noexcept {}
 
-#if U_HAVE_DEBUG_LOCATION_NEW
+#නම් U_HAVE_DEBUG_LOCATION_NEW
     /**
       * This method overrides the MFC debug version of the operator new
       * 
@@ -179,7 +179,7 @@ public:
       * @param file   The file where the allocation was requested
       * @param line   The line where the allocation was requested 
       */ 
-    static void * U_EXPORT2 operator new(size_t size, const char* file, int line) noexcept;
+    static void * U_EXPORT2 operator new(size_t size, const var_na* file, පූර්ණ_සංඛ්‍යා line) noexcept;
     /**
       * This method provides a matching delete for the MFC debug new
       * 
@@ -187,7 +187,7 @@ public:
       * @param file   The file where the allocation was requested
       * @param line   The line where the allocation was requested 
       */ 
-    static void U_EXPORT2 operator delete(void* p, const char* file, int line) noexcept;
+    static void U_EXPORT2 operator delete(void* p, const var_na* file, පූර්ණ_සංඛ්‍යා line) noexcept;
 #endif /* U_HAVE_DEBUG_LOCATION_NEW */
 #endif /* U_OVERRIDE_CXX_ALLOCATION */
 
@@ -239,7 +239,7 @@ public:
      */
     virtual UClassID getDynamicClassID() const;
 
-protected:
+rak_sita:
     // the following functions are protected to prevent instantiation and
     // direct use of UObject itself
 
@@ -249,7 +249,7 @@ protected:
     // copy constructor
     // inline UObject(const UObject &other) {}
 
-#if 0
+#නම් 0
     // TODO Sometime in the future. Implement operator==().
     // (This comment inserted in 2.2)
     // some or all of the following "boilerplate" functions may be made public
@@ -261,8 +261,8 @@ protected:
     // UObject &operator=(const UObject &other) { return *this; }
 
     // comparison operators
-    virtual inline bool operator==(const UObject &other) const { return this==&other; }
-    inline bool operator!=(const UObject &other) const { return !operator==(other); }
+    virtual anta_hstha bool operator==(const UObject &other) const { ආපසු this==&other; }
+    anta_hstha bool operator!=(const UObject &other) const { ආපසු !operator==(other); }
 
     // clone() commented out from the base class:
     // some compilers do not support co-variant return types
@@ -293,11 +293,11 @@ protected:
  */
 #define UOBJECT_DEFINE_RTTI_IMPLEMENTATION(myClass) \
     UClassID U_EXPORT2 myClass::getStaticClassID() { \
-        static char classID = 0; \
-        return (UClassID)&classID; \
+        static var_na classID = 0; \
+        ආපසු (UClassID)&classID; \
     } \
     UClassID myClass::getDynamicClassID() const \
-    { return myClass::getStaticClassID(); }
+    { ආපසු myClass::getStaticClassID(); }
 
 
 /**
@@ -310,8 +310,8 @@ protected:
  */
 #define UOBJECT_DEFINE_ABSTRACT_RTTI_IMPLEMENTATION(myClass) \
     UClassID U_EXPORT2 myClass::getStaticClassID() { \
-        static char classID = 0; \
-        return (UClassID)&classID; \
+        static var_na classID = 0; \
+        ආපසු (UClassID)&classID; \
     }
 
 #endif  /* U_HIDE_INTERNAL_API */
