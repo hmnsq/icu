@@ -7,58 +7,58 @@
 **********************************************************************
 */
 
-#include <optional>
-#include <string_view>
-#include <utility>
+#ضمن <optional>
+#ضمن <string_view>
+#ضمن <utility>
 
-#include "unicode/bytestream.h"
-#include "unicode/utypes.h"
-#include "unicode/ures.h"
-#include "unicode/localpointer.h"
-#include "unicode/putil.h"
-#include "unicode/uenum.h"
-#include "unicode/uloc.h"
-#include "bytesinkutil.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "putilimp.h"
-#include "uinvchar.h"
-#include "ulocimp.h"
-#include "uassert.h"
+#ضمن "unicode/bytestream.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/ures.h"
+#ضمن "unicode/localpointer.h"
+#ضمن "unicode/putil.h"
+#ضمن "unicode/uenum.h"
+#ضمن "unicode/uloc.h"
+#ضمن "bytesinkutil.h"
+#ضمن "charstr.h"
+#ضمن "cmemory.h"
+#ضمن "cstring.h"
+#ضمن "putilimp.h"
+#ضمن "uinvchar.h"
+#ضمن "ulocimp.h"
+#ضمن "uassert.h"
 
-namespace {
+نطاق {
 
 /* struct holding a single variant */
-typedef struct VariantListEntry : public icu::UMemory {
-    const char              *variant;
-    struct VariantListEntry *next;
+تعريفنوع بنية VariantListEntry : عام icu::UMemory {
+    ثابت حرف              *variant;
+    بنية VariantListEntry *next;
 } VariantListEntry;
 
 /* struct holding a single attribute value */
-struct AttributeListEntry : public icu::UMemory {
-    const char              *attribute;
-    struct AttributeListEntry *next;
+بنية AttributeListEntry : عام icu::UMemory {
+    ثابت حرف              *attribute;
+    بنية AttributeListEntry *next;
 };
 
 /* struct holding a single extension */
-struct ExtensionListEntry : public icu::UMemory {
-    const char                  *key;
-    const char                  *value;
-    struct ExtensionListEntry   *next;
+بنية ExtensionListEntry : عام icu::UMemory {
+    ثابت حرف                  *key;
+    ثابت حرف                  *value;
+    بنية ExtensionListEntry   *next;
 };
 
 #define MAXEXTLANG 3
-typedef struct ULanguageTag {
-    char                *buf;   /* holding parsed subtags */
-    const char          *language;
-    const char          *extlang[MAXEXTLANG];
-    const char          *script;
-    const char          *region;
+تعريفنوع بنية ULanguageTag {
+    حرف                *buf;   /* holding parsed subtags */
+    ثابت حرف          *language;
+    ثابت حرف          *extlang[MAXEXTLANG];
+    ثابت حرف          *script;
+    ثابت حرف          *region;
     VariantListEntry    *variants;
     ExtensionListEntry  *extensions;
-    const char          *privateuse;
-    const char          *legacy;
+    ثابت حرف          *privateuse;
+    ثابت حرف          *legacy;
 } ULanguageTag;
 
 #define MINLEN 2
@@ -72,17 +72,17 @@ typedef struct ULanguageTag {
 #define LOCALE_KEY_TYPE_SEP '='
 
 constexpr auto ISALPHA = uprv_isASCIILetter;
-inline bool ISNUMERIC(char c) { return c >= '0' && c <= '9'; }
+مضمن منطقي ISNUMERIC(حرف c) { ܦܢܐ c >= '0' && c <= '9'; }
 
-constexpr char EMPTY[] = "";
-constexpr char LANG_UND[] = "und";
-constexpr char PRIVATEUSE_KEY[] = "x";
-constexpr char _POSIX[] = "_POSIX";
-constexpr char POSIX_KEY[] = "va";
-constexpr char POSIX_VALUE[] = "posix";
-constexpr char LOCALE_ATTRIBUTE_KEY[] = "attribute";
-constexpr char PRIVUSE_VARIANT_PREFIX[] = "lvariant";
-constexpr char LOCALE_TYPE_YES[] = "yes";
+constexpr حرف EMPTY[] = "";
+constexpr حرف LANG_UND[] = "und";
+constexpr حرف PRIVATEUSE_KEY[] = "x";
+constexpr حرف _POSIX[] = "_POSIX";
+constexpr حرف POSIX_KEY[] = "va";
+constexpr حرف POSIX_VALUE[] = "posix";
+constexpr حرف LOCALE_ATTRIBUTE_KEY[] = "attribute";
+constexpr حرف PRIVUSE_VARIANT_PREFIX[] = "lvariant";
+constexpr حرف LOCALE_TYPE_YES[] = "yes";
 
 #define LANG_UND_LEN 3
 
@@ -106,7 +106,7 @@ constexpr char LOCALE_TYPE_YES[] = "yes";
  values. They may have to be removed for the strict BCP 47 compliance.
 
 */
-constexpr const char* LEGACY[] = {
+constexpr ثابت حرف* LEGACY[] = {
 /*  legacy          preferred */
     "art-lojban",   "jbo",
     "en-gb-oed",    "en-gb-oxendict",
@@ -155,7 +155,7 @@ constexpr const char* LEGACY[] = {
  a variant tag 'hepburn-heploc' has the preferred subtag, 'alaic97'.
 */
 
-constexpr const char* REDUNDANT[] = {
+constexpr ثابت حرف* REDUNDANT[] = {
 //  redundant       preferred
     "sgn-br",       "bzs",
     "sgn-co",       "csn",
@@ -197,7 +197,7 @@ constexpr const char* REDUNDANT[] = {
 
   Make sure that 2-letter language subtags come before 3-letter subtags.
 */
-constexpr char DEPRECATEDLANGS[][4] = {
+constexpr حرف DEPRECATEDLANGS[][4] = {
 /*  deprecated  new */
     "in",       "id",
     "iw",       "he",
@@ -287,7 +287,7 @@ constexpr char DEPRECATEDLANGS[][4] = {
   grep -B1 'Preferred' | \
   awk -n '/Subtag/ {printf("    \"%s\",       ", $2);} /Preferred/ {printf("\"%s\",\n", $2);}'
 */
-constexpr char DEPRECATEDREGIONS[][3] = {
+constexpr حرف DEPRECATEDREGIONS[][3] = {
 /*  deprecated  new */
     "BU",       "MM",
     "DD",       "DE",
@@ -306,52 +306,52 @@ constexpr char DEPRECATEDREGIONS[][3] = {
 */
 
 ULanguageTag*
-ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status);
+ultag_parse(ثابت حرف* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status);
 
-void
+فراغ
 ultag_close(ULanguageTag* langtag);
 
-const char*
-ultag_getLanguage(const ULanguageTag* langtag U_LIFETIME_BOUND);
+ثابت حرف*
+ultag_getLanguage(ثابت ULanguageTag* langtag U_LIFETIME_BOUND);
 
-#if 0
-const char*
-ultag_getJDKLanguage(const ULanguageTag* langtag);
+#ܐܢ 0
+ثابت حرف*
+ultag_getJDKLanguage(ثابت ULanguageTag* langtag);
 #endif
 
-const char*
-ultag_getExtlang(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
+ثابت حرف*
+ultag_getExtlang(ثابت ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
 
 int32_t
-ultag_getExtlangSize(const ULanguageTag* langtag);
+ultag_getExtlangSize(ثابت ULanguageTag* langtag);
 
-const char*
-ultag_getScript(const ULanguageTag* langtag U_LIFETIME_BOUND);
+ثابت حرف*
+ultag_getScript(ثابت ULanguageTag* langtag U_LIFETIME_BOUND);
 
-const char*
-ultag_getRegion(const ULanguageTag* langtag U_LIFETIME_BOUND);
+ثابت حرف*
+ultag_getRegion(ثابت ULanguageTag* langtag U_LIFETIME_BOUND);
 
-const char*
-ultag_getVariant(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
-
-int32_t
-ultag_getVariantsSize(const ULanguageTag* langtag);
-
-const char*
-ultag_getExtensionKey(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
-
-const char*
-ultag_getExtensionValue(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
+ثابت حرف*
+ultag_getVariant(ثابت ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
 
 int32_t
-ultag_getExtensionsSize(const ULanguageTag* langtag);
+ultag_getVariantsSize(ثابت ULanguageTag* langtag);
 
-const char*
-ultag_getPrivateUse(const ULanguageTag* langtag U_LIFETIME_BOUND);
+ثابت حرف*
+ultag_getExtensionKey(ثابت ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
 
-#if 0
-const char*
-ultag_getLegacy(const ULanguageTag* langtag);
+ثابت حرف*
+ultag_getExtensionValue(ثابت ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
+
+int32_t
+ultag_getExtensionsSize(ثابت ULanguageTag* langtag);
+
+ثابت حرف*
+ultag_getPrivateUse(ثابت ULanguageTag* langtag U_LIFETIME_BOUND);
+
+#ܐܢ 0
+ثابت حرف*
+ultag_getLegacy(ثابت ULanguageTag* langtag);
 #endif
 
 }  // namespace
@@ -379,191 +379,191 @@ U_NAMESPACE_END
 * -------------------------------------------------
 */
 
-namespace {
+نطاق {
 
-bool
-_isAlphaString(const char* s, int32_t len) {
+منطقي
+_isAlphaString(ثابت حرف* s, int32_t len) {
     int32_t i;
-    for (i = 0; i < len; i++) {
-        if (!ISALPHA(*(s + i))) {
-            return false;
+    لكل (i = 0; i < len; i++) {
+        ܐܢ (!ISALPHA(*(s + i))) {
+            ܦܢܐ ܕܓܠܐ;
         }
     }
-    return true;
+    ܦܢܐ ܫܪܪܐ;
 }
 
-bool
-_isNumericString(const char* s, int32_t len) {
+منطقي
+_isNumericString(ثابت حرف* s, int32_t len) {
     int32_t i;
-    for (i = 0; i < len; i++) {
-        if (!ISNUMERIC(*(s + i))) {
-            return false;
+    لكل (i = 0; i < len; i++) {
+        ܐܢ (!ISNUMERIC(*(s + i))) {
+            ܦܢܐ ܕܓܠܐ;
         }
     }
-    return true;
+    ܦܢܐ ܫܪܪܐ;
 }
 
-bool
-_isAlphaNumericString(const char* s, int32_t len) {
+منطقي
+_isAlphaNumericString(ثابت حرف* s, int32_t len) {
     int32_t i;
-    for (i = 0; i < len; i++) {
-        if (!ISALPHA(*(s + i)) && !ISNUMERIC(*(s + i))) {
-            return false;
+    لكل (i = 0; i < len; i++) {
+        ܐܢ (!ISALPHA(*(s + i)) && !ISNUMERIC(*(s + i))) {
+            ܦܢܐ ܕܓܠܐ;
         }
     }
-    return true;
+    ܦܢܐ ܫܪܪܐ;
 }
 
-bool
-_isAlphaNumericStringLimitedLength(const char* s, int32_t len, int32_t min, int32_t max) {
-    if (len < 0) {
+منطقي
+_isAlphaNumericStringLimitedLength(ثابت حرف* s, int32_t len, int32_t min, int32_t max) {
+    ܐܢ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len >= min && len <= max && _isAlphaNumericString(s, len)) {
-        return true;
+    ܐܢ (len >= min && len <= max && _isAlphaNumericString(s, len)) {
+        ܦܢܐ ܫܪܪܐ;
     }
-    return false;
+    ܦܢܐ ܕܓܠܐ;
 }
 
 }  // namespace
 
-bool
-ultag_isLanguageSubtag(const char* s, int32_t len) {
+منطقي
+ultag_isLanguageSubtag(ثابت حرف* s, int32_t len) {
     /*
      * unicode_language_subtag = alpha{2,3} | alpha{5,8};
      * NOTE: Per ICUTC 2019/01/23- accepting alpha 4
      * See ICU-20372
      */
-    if (len < 0) {
+    ܐܢ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len >= 2 && len <= 8 && _isAlphaString(s, len)) {
-        return true;
+    ܐܢ (len >= 2 && len <= 8 && _isAlphaString(s, len)) {
+        ܦܢܐ ܫܪܪܐ;
     }
-    return false;
+    ܦܢܐ ܕܓܠܐ;
 }
 
-namespace {
+نطاق {
 
-bool
-_isExtlangSubtag(const char* s, int32_t len) {
+منطقي
+_isExtlangSubtag(ثابت حرف* s, int32_t len) {
     /*
      * extlang       = 3ALPHA              ; selected ISO 639 codes
      *                 *2("-" 3ALPHA)      ; permanently reserved
      */
-    if (len < 0) {
+    ܐܢ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 3 && _isAlphaString(s, len)) {
-        return true;
+    ܐܢ (len == 3 && _isAlphaString(s, len)) {
+        ܦܢܐ ܫܪܪܐ;
     }
-    return false;
+    ܦܢܐ ܕܓܠܐ;
 }
 
 }  // namespace
 
-bool
-ultag_isScriptSubtag(const char* s, int32_t len) {
+منطقي
+ultag_isScriptSubtag(ثابت حرف* s, int32_t len) {
     /*
      * script        = 4ALPHA              ; ISO 15924 code
      */
-    if (len < 0) {
+    ܐܢ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 4 && _isAlphaString(s, len)) {
-        return true;
+    ܐܢ (len == 4 && _isAlphaString(s, len)) {
+        ܦܢܐ ܫܪܪܐ;
     }
-    return false;
+    ܦܢܐ ܕܓܠܐ;
 }
 
-bool
-ultag_isRegionSubtag(const char* s, int32_t len) {
+منطقي
+ultag_isRegionSubtag(ثابت حرف* s, int32_t len) {
     /*
      * region        = 2ALPHA              ; ISO 3166-1 code
      *               / 3DIGIT              ; UN M.49 code
      */
-    if (len < 0) {
+    ܐܢ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 2 && _isAlphaString(s, len)) {
-        return true;
+    ܐܢ (len == 2 && _isAlphaString(s, len)) {
+        ܦܢܐ ܫܪܪܐ;
     }
-    if (len == 3 && _isNumericString(s, len)) {
-        return true;
+    ܐܢ (len == 3 && _isNumericString(s, len)) {
+        ܦܢܐ ܫܪܪܐ;
     }
-    return false;
+    ܦܢܐ ܕܓܠܐ;
 }
 
-namespace {
+نطاق {
 
-bool
-_isVariantSubtag(const char* s, int32_t len) {
+منطقي
+_isVariantSubtag(ثابت حرف* s, int32_t len) {
     /*
      * variant       = 5*8alphanum         ; registered variants
      *               / (DIGIT 3alphanum)
      */
-    if (len < 0) {
+    ܐܢ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (_isAlphaNumericStringLimitedLength(s, len, 5, 8)) {
-        return true;
+    ܐܢ (_isAlphaNumericStringLimitedLength(s, len, 5, 8)) {
+        ܦܢܐ ܫܪܪܐ;
     }
-    if (len == 4 && ISNUMERIC(*s) && _isAlphaNumericString(s + 1, 3)) {
-        return true;
+    ܐܢ (len == 4 && ISNUMERIC(*s) && _isAlphaNumericString(s + 1, 3)) {
+        ܦܢܐ ܫܪܪܐ;
     }
-    return false;
+    ܦܢܐ ܕܓܠܐ;
 }
 
-bool
-_isSepListOf(bool (*test)(const char*, int32_t), const char* s, int32_t len) {
-    const char *p = s;
-    const char *pSubtag = nullptr;
+منطقي
+_isSepListOf(منطقي (*test)(ثابت حرف*, int32_t), ثابت حرف* s, int32_t len) {
+    ثابت حرف *p = s;
+    ثابت حرف *pSubtag = nullptr;
 
-    if (len < 0) {
+    ܐܢ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
 
-    while ((p - s) < len) {
-        if (*p == SEP) {
-            if (pSubtag == nullptr) {
-                return false;
+    ܟܡܐ ((p - s) < len) {
+        ܐܢ (*p == SEP) {
+            ܐܢ (pSubtag == nullptr) {
+                ܦܢܐ ܕܓܠܐ;
             }
-            if (!test(pSubtag, static_cast<int32_t>(p - pSubtag))) {
-                return false;
+            ܐܢ (!test(pSubtag, static_cast<int32_t>(p - pSubtag))) {
+                ܦܢܐ ܕܓܠܐ;
             }
             pSubtag = nullptr;
-        } else if (pSubtag == nullptr) {
+        } ܐܚܪܢܐ ܐܢ (pSubtag == nullptr) {
             pSubtag = p;
         }
         p++;
     }
-    if (pSubtag == nullptr) {
-        return false;
+    ܐܢ (pSubtag == nullptr) {
+        ܦܢܐ ܕܓܠܐ;
     }
-    return test(pSubtag, static_cast<int32_t>(p - pSubtag));
+    ܦܢܐ test(pSubtag, static_cast<int32_t>(p - pSubtag));
 }
 
 }  // namespace
 
-bool
-ultag_isVariantSubtags(const char* s, int32_t len) {
-    return _isSepListOf(&_isVariantSubtag, s, len);
+منطقي
+ultag_isVariantSubtags(ثابت حرف* s, int32_t len) {
+    ܦܢܐ _isSepListOf(&_isVariantSubtag, s, len);
 }
 
-namespace {
+نطاق {
 
 // This is for the ICU-specific "lvariant" handling.
-bool
-_isPrivateuseVariantSubtag(const char* s, int32_t len) {
+منطقي
+_isPrivateuseVariantSubtag(ثابت حرف* s, int32_t len) {
     /*
      * variant       = 1*8alphanum         ; registered variants
      *               / (DIGIT 3alphanum)
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 1, 8);
+    ܦܢܐ _isAlphaNumericStringLimitedLength(s, len , 1, 8);
 }
 
-bool
-_isExtensionSingleton(const char* s, int32_t len) {
+منطقي
+_isExtensionSingleton(ثابت حرف* s, int32_t len) {
     /*
      * extension     = singleton 1*("-" (2*8alphanum))
      *
@@ -573,292 +573,292 @@ _isExtensionSingleton(const char* s, int32_t len) {
      *               / %x61-77             ; a - w
      *               / %x79-7A             ; y - z
      */
-    if (len < 0) {
+    ܐܢ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 1 && (ISALPHA(*s) || ISNUMERIC(*s)) && (uprv_tolower(*s) != PRIVATEUSE)) {
-        return true;
+    ܐܢ (len == 1 && (ISALPHA(*s) || ISNUMERIC(*s)) && (uprv_tolower(*s) != PRIVATEUSE)) {
+        ܦܢܐ ܫܪܪܐ;
     }
-    return false;
+    ܦܢܐ ܕܓܠܐ;
 }
 
-bool
-_isExtensionSubtag(const char* s, int32_t len) {
+منطقي
+_isExtensionSubtag(ثابت حرف* s, int32_t len) {
     /*
      * extension     = singleton 1*("-" (2*8alphanum))
      */
-    return _isAlphaNumericStringLimitedLength(s, len, 2, 8);
+    ܦܢܐ _isAlphaNumericStringLimitedLength(s, len, 2, 8);
 }
 
 }  // namespace
 
-bool
-ultag_isExtensionSubtags(const char* s, int32_t len) {
-    return _isSepListOf(&_isExtensionSubtag, s, len);
+منطقي
+ultag_isExtensionSubtags(ثابت حرف* s, int32_t len) {
+    ܦܢܐ _isSepListOf(&_isExtensionSubtag, s, len);
 }
 
-namespace {
+نطاق {
 
-bool
-_isPrivateuseValueSubtag(const char* s, int32_t len) {
+منطقي
+_isPrivateuseValueSubtag(ثابت حرف* s, int32_t len) {
     /*
      * privateuse    = "x" 1*("-" (1*8alphanum))
      */
-    return _isAlphaNumericStringLimitedLength(s, len, 1, 8);
+    ܦܢܐ _isAlphaNumericStringLimitedLength(s, len, 1, 8);
 }
 
 }  // namespace
 
-bool
-ultag_isPrivateuseValueSubtags(const char* s, int32_t len) {
-    return _isSepListOf(&_isPrivateuseValueSubtag, s, len);
+منطقي
+ultag_isPrivateuseValueSubtags(ثابت حرف* s, int32_t len) {
+    ܦܢܐ _isSepListOf(&_isPrivateuseValueSubtag, s, len);
 }
 
-bool
-ultag_isUnicodeLocaleAttribute(const char* s, int32_t len) {
+منطقي
+ultag_isUnicodeLocaleAttribute(ثابت حرف* s, int32_t len) {
     /*
      * attribute = alphanum{3,8} ;
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 3, 8);
+    ܦܢܐ _isAlphaNumericStringLimitedLength(s, len , 3, 8);
 }
 
-bool
-ultag_isUnicodeLocaleAttributes(const char* s, int32_t len) {
-    return _isSepListOf(&ultag_isUnicodeLocaleAttribute, s, len);
+منطقي
+ultag_isUnicodeLocaleAttributes(ثابت حرف* s, int32_t len) {
+    ܦܢܐ _isSepListOf(&ultag_isUnicodeLocaleAttribute, s, len);
 }
 
-bool
-ultag_isUnicodeLocaleKey(const char* s, int32_t len) {
+منطقي
+ultag_isUnicodeLocaleKey(ثابت حرف* s, int32_t len) {
     /*
      * key = alphanum alpha ;
      */
-    if (len < 0) {
+    ܐܢ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 2 && (ISALPHA(*s) || ISNUMERIC(*s)) && ISALPHA(s[1])) {
-        return true;
+    ܐܢ (len == 2 && (ISALPHA(*s) || ISNUMERIC(*s)) && ISALPHA(s[1])) {
+        ܦܢܐ ܫܪܪܐ;
     }
-    return false;
+    ܦܢܐ ܕܓܠܐ;
 }
 
-bool
-_isUnicodeLocaleTypeSubtag(const char*s, int32_t len) {
+منطقي
+_isUnicodeLocaleTypeSubtag(ثابت حرف*s, int32_t len) {
     /*
      * alphanum{3,8}
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 3, 8);
+    ܦܢܐ _isAlphaNumericStringLimitedLength(s, len , 3, 8);
 }
 
-bool
-ultag_isUnicodeLocaleType(const char*s, int32_t len) {
+منطقي
+ultag_isUnicodeLocaleType(ثابت حرف*s, int32_t len) {
     /*
      * type = alphanum{3,8} (sep alphanum{3,8})* ;
      */
-    return _isSepListOf(&_isUnicodeLocaleTypeSubtag, s, len);
+    ܦܢܐ _isSepListOf(&_isUnicodeLocaleTypeSubtag, s, len);
 }
 
-namespace {
+نطاق {
 
-bool
-_isTKey(const char* s, int32_t len)
+منطقي
+_isTKey(ثابت حرف* s, int32_t len)
 {
     /*
      * tkey = alpha digit ;
      */
-    if (len < 0) {
+    ܐܢ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 2 && ISALPHA(*s) && ISNUMERIC(*(s + 1))) {
-        return true;
+    ܐܢ (len == 2 && ISALPHA(*s) && ISNUMERIC(*(s + 1))) {
+        ܦܢܐ ܫܪܪܐ;
     }
-    return false;
+    ܦܢܐ ܕܓܠܐ;
 }
 
 }  // namespace
 
-const char*
-ultag_getTKeyStart(const char* localeID U_LIFETIME_BOUND) {
-    const char *result = localeID;
-    const char *sep;
-    while((sep = uprv_strchr(result, SEP)) != nullptr) {
-        if (_isTKey(result, static_cast<int32_t>(sep - result))) {
-            return result;
+ثابت حرف*
+ultag_getTKeyStart(ثابت حرف* localeID U_LIFETIME_BOUND) {
+    ثابت حرف *result = localeID;
+    ثابت حرف *sep;
+    ܟܡܐ((sep = uprv_strchr(result, SEP)) != nullptr) {
+        ܐܢ (_isTKey(result, static_cast<int32_t>(sep - result))) {
+            ܦܢܐ result;
         }
         result = ++sep;
     }
-    if (_isTKey(result, -1)) {
-        return result;
+    ܐܢ (_isTKey(result, -1)) {
+        ܦܢܐ result;
     }
-    return nullptr;
+    ܦܢܐ nullptr;
 }
 
-namespace {
+نطاق {
 
-bool
-_isTValue(const char* s, int32_t len)
+منطقي
+_isTValue(ثابت حرف* s, int32_t len)
 {
     /*
      * tvalue = (sep alphanum{3,8})+ ;
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 3, 8);
+    ܦܢܐ _isAlphaNumericStringLimitedLength(s, len , 3, 8);
 }
 
-bool
-_isTransformedExtensionSubtag(int32_t& state, const char* s, int32_t len)
+منطقي
+_isTransformedExtensionSubtag(int32_t& state, ثابت حرف* s, int32_t len)
 {
-    const int32_t kStart = 0;       // Start, wait for unicode_language_subtag, tkey or end
-    const int32_t kGotLanguage = 1; // Got unicode_language_subtag, wait for unicode_script_subtag,
+    ثابت int32_t kStart = 0;       // Start, wait for unicode_language_subtag, tkey or end
+    ثابت int32_t kGotLanguage = 1; // Got unicode_language_subtag, wait for unicode_script_subtag,
                                     // unicode_region_subtag, unicode_variant_subtag, tkey or end
-    const int32_t kGotScript = 2;   // Got unicode_script_subtag, wait for unicode_region_subtag,
+    ثابت int32_t kGotScript = 2;   // Got unicode_script_subtag, wait for unicode_region_subtag,
                                     // unicode_variant_subtag, tkey, or end
-    const int32_t kGotRegion = 3;   // Got unicode_region_subtag, wait for unicode_variant_subtag,
+    ثابت int32_t kGotRegion = 3;   // Got unicode_region_subtag, wait for unicode_variant_subtag,
                                     // tkey, or end.
-    const int32_t kGotVariant = 4;  // Got unicode_variant_subtag, wait for unicode_variant_subtag
+    ثابت int32_t kGotVariant = 4;  // Got unicode_variant_subtag, wait for unicode_variant_subtag
                                     // tkey or end.
-    const int32_t kGotTKey = -1;    // Got tkey, wait for tvalue. ERROR if stop here.
-    const int32_t kGotTValue = 6;   // Got tvalue, wait for tkey, tvalue or end
+    ثابت int32_t kGotTKey = -1;    // Got tkey, wait for tvalue. ERROR if stop here.
+    ثابت int32_t kGotTValue = 6;   // Got tvalue, wait for tkey, tvalue or end
 
 
-    if (len < 0) {
+    ܐܢ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    switch (state) {
-        case kStart:
-            if (ultag_isLanguageSubtag(s, len) && len != 4) {
+    بدل (state) {
+        حالة kStart:
+            ܐܢ (ultag_isLanguageSubtag(s, len) && len != 4) {
                 state = kGotLanguage;
-                return true;
+                ܦܢܐ ܫܪܪܐ;
             }
-            if (_isTKey(s, len)) {
+            ܐܢ (_isTKey(s, len)) {
                 state = kGotTKey;
-                return true;
+                ܦܢܐ ܫܪܪܐ;
             }
-            return false;
-        case kGotLanguage:
-            if (ultag_isScriptSubtag(s, len)) {
+            ܦܢܐ ܕܓܠܐ;
+        حالة kGotLanguage:
+            ܐܢ (ultag_isScriptSubtag(s, len)) {
                 state = kGotScript;
-                return true;
+                ܦܢܐ ܫܪܪܐ;
             }
             U_FALLTHROUGH;
-        case kGotScript:
-            if (ultag_isRegionSubtag(s, len)) {
+        حالة kGotScript:
+            ܐܢ (ultag_isRegionSubtag(s, len)) {
                 state = kGotRegion;
-                return true;
+                ܦܢܐ ܫܪܪܐ;
             }
             U_FALLTHROUGH;
-        case kGotRegion:
+        حالة kGotRegion:
             U_FALLTHROUGH;
-        case kGotVariant:
-            if (_isVariantSubtag(s, len)) {
+        حالة kGotVariant:
+            ܐܢ (_isVariantSubtag(s, len)) {
                 state = kGotVariant;
-                return true;
+                ܦܢܐ ܫܪܪܐ;
             }
-            if (_isTKey(s, len)) {
+            ܐܢ (_isTKey(s, len)) {
                 state = kGotTKey;
-                return true;
+                ܦܢܐ ܫܪܪܐ;
             }
-            return false;
-        case kGotTKey:
-            if (_isTValue(s, len)) {
+            ܦܢܐ ܕܓܠܐ;
+        حالة kGotTKey:
+            ܐܢ (_isTValue(s, len)) {
                 state = kGotTValue;
-                return true;
+                ܦܢܐ ܫܪܪܐ;
             }
-            return false;
-        case kGotTValue:
-            if (_isTKey(s, len)) {
+            ܦܢܐ ܕܓܠܐ;
+        حالة kGotTValue:
+            ܐܢ (_isTKey(s, len)) {
                 state = kGotTKey;
-                return true;
+                ܦܢܐ ܫܪܪܐ;
             }
-            if (_isTValue(s, len)) {
-                return true;
+            ܐܢ (_isTValue(s, len)) {
+                ܦܢܐ ܫܪܪܐ;
             }
-            return false;
+            ܦܢܐ ܕܓܠܐ;
     }
-    return false;
+    ܦܢܐ ܕܓܠܐ;
 }
 
-bool
-_isUnicodeExtensionSubtag(int32_t& state, const char* s, int32_t len)
+منطقي
+_isUnicodeExtensionSubtag(int32_t& state, ثابت حرف* s, int32_t len)
 {
-    const int32_t kStart = 0;         // Start, wait for a key or attribute or end
-    const int32_t kGotKey = 1;        // Got a key, wait for type or key or end
-    const int32_t kGotType = 2;       // Got a type, wait for key or end
+    ثابت int32_t kStart = 0;         // Start, wait for a key or attribute or end
+    ثابت int32_t kGotKey = 1;        // Got a key, wait for type or key or end
+    ثابت int32_t kGotType = 2;       // Got a type, wait for key or end
 
-    switch (state) {
-        case kStart:
-            if (ultag_isUnicodeLocaleKey(s, len)) {
+    بدل (state) {
+        حالة kStart:
+            ܐܢ (ultag_isUnicodeLocaleKey(s, len)) {
                 state = kGotKey;
-                return true;
+                ܦܢܐ ܫܪܪܐ;
             }
-            if (ultag_isUnicodeLocaleAttribute(s, len)) {
-                return true;
+            ܐܢ (ultag_isUnicodeLocaleAttribute(s, len)) {
+                ܦܢܐ ܫܪܪܐ;
             }
-            return false;
-        case kGotKey:
-            if (ultag_isUnicodeLocaleKey(s, len)) {
-                return true;
+            ܦܢܐ ܕܓܠܐ;
+        حالة kGotKey:
+            ܐܢ (ultag_isUnicodeLocaleKey(s, len)) {
+                ܦܢܐ ܫܪܪܐ;
             }
-            if (_isUnicodeLocaleTypeSubtag(s, len)) {
+            ܐܢ (_isUnicodeLocaleTypeSubtag(s, len)) {
                 state = kGotType;
-                return true;
+                ܦܢܐ ܫܪܪܐ;
             }
-            return false;
-        case kGotType:
-            if (ultag_isUnicodeLocaleKey(s, len)) {
+            ܦܢܐ ܕܓܠܐ;
+        حالة kGotType:
+            ܐܢ (ultag_isUnicodeLocaleKey(s, len)) {
                 state = kGotKey;
-                return true;
+                ܦܢܐ ܫܪܪܐ;
             }
-            if (_isUnicodeLocaleTypeSubtag(s, len)) {
-                return true;
+            ܐܢ (_isUnicodeLocaleTypeSubtag(s, len)) {
+                ܦܢܐ ܫܪܪܐ;
             }
-            return false;
+            ܦܢܐ ܕܓܠܐ;
     }
-    return false;
+    ܦܢܐ ܕܓܠܐ;
 }
 
-bool
-_isStatefulSepListOf(bool (*test)(int32_t&, const char*, int32_t), const char* s, int32_t len)
+منطقي
+_isStatefulSepListOf(منطقي (*test)(int32_t&, ثابت حرف*, int32_t), ثابت حرف* s, int32_t len)
 {
     int32_t state = 0;
-    const char* p;
-    const char* start = s;
+    ثابت حرف* p;
+    ثابت حرف* start = s;
     int32_t subtagLen = 0;
 
-    if (len < 0) {
+    ܐܢ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
 
-    for (p = s; len > 0; p++, len--) {
-        if (*p == SEP) {
-            if (!test(state, start, subtagLen)) {
-                return false;
+    لكل (p = s; len > 0; p++, len--) {
+        ܐܢ (*p == SEP) {
+            ܐܢ (!test(state, start, subtagLen)) {
+                ܦܢܐ ܕܓܠܐ;
             }
             subtagLen = 0;
             start = p + 1;
-        } else {
+        } ܐܚܪܢܐ {
             subtagLen++;
         }
     }
 
-    if (test(state, start, subtagLen) && state >= 0) {
-        return true;
+    ܐܢ (test(state, start, subtagLen) && state >= 0) {
+        ܦܢܐ ܫܪܪܐ;
     }
-    return false;
+    ܦܢܐ ܕܓܠܐ;
 }
 
 }  // namespace
 
-bool
-ultag_isTransformedExtensionSubtags(const char* s, int32_t len)
+منطقي
+ultag_isTransformedExtensionSubtags(ثابت حرف* s, int32_t len)
 {
-    return _isStatefulSepListOf(&_isTransformedExtensionSubtag, s, len);
+    ܦܢܐ _isStatefulSepListOf(&_isTransformedExtensionSubtag, s, len);
 }
 
-bool
-ultag_isUnicodeExtensionSubtags(const char* s, int32_t len) {
-    return _isStatefulSepListOf(&_isUnicodeExtensionSubtag, s, len);
+منطقي
+ultag_isUnicodeExtensionSubtags(ثابت حرف* s, int32_t len) {
+    ܦܢܐ _isStatefulSepListOf(&_isUnicodeExtensionSubtag, s, len);
 }
 
-namespace {
+نطاق {
 
 /*
 * -------------------------------------------------
@@ -868,167 +868,167 @@ namespace {
 * -------------------------------------------------
 */
 
-bool
+منطقي
 _addVariantToList(VariantListEntry **first, icu::LocalPointer<VariantListEntry> var) {
-    if (*first == nullptr) {
+    ܐܢ (*first == nullptr) {
         var->next = nullptr;
         *first = var.orphan();
-    } else {
+    } ܐܚܪܢܐ {
         VariantListEntry *prev, *cur;
         int32_t cmp;
 
         /* variants order should be preserved */
         prev = nullptr;
         cur = *first;
-        while (true) {
-            if (cur == nullptr) {
+        ܟܡܐ (ܫܪܪܐ) {
+            ܐܢ (cur == nullptr) {
                 var->next = nullptr;
                 prev->next = var.orphan();
-                break;
+                اكسر;
             }
 
             /* Checking for duplicate variant */
             cmp = uprv_compareInvCharsAsAscii(var->variant, cur->variant);
-            if (cmp == 0) {
+            ܐܢ (cmp == 0) {
                 /* duplicated variant */
-                return false;
+                ܦܢܐ ܕܓܠܐ;
             }
             prev = cur;
             cur = cur->next;
         }
     }
 
-    return true;
+    ܦܢܐ ܫܪܪܐ;
 }
 
-bool
+منطقي
 _addAttributeToList(AttributeListEntry **first, AttributeListEntry *attr) {
-    bool bAdded = true;
+    منطقي bAdded = ܫܪܪܐ;
 
-    if (*first == nullptr) {
+    ܐܢ (*first == nullptr) {
         attr->next = nullptr;
         *first = attr;
-    } else {
+    } ܐܚܪܢܐ {
         AttributeListEntry *prev, *cur;
         int32_t cmp;
 
         /* reorder variants in alphabetical order */
         prev = nullptr;
         cur = *first;
-        while (true) {
-            if (cur == nullptr) {
+        ܟܡܐ (ܫܪܪܐ) {
+            ܐܢ (cur == nullptr) {
                 prev->next = attr;
                 attr->next = nullptr;
-                break;
+                اكسر;
             }
             cmp = uprv_compareInvCharsAsAscii(attr->attribute, cur->attribute);
-            if (cmp < 0) {
-                if (prev == nullptr) {
+            ܐܢ (cmp < 0) {
+                ܐܢ (prev == nullptr) {
                     *first = attr;
-                } else {
+                } ܐܚܪܢܐ {
                     prev->next = attr;
                 }
                 attr->next = cur;
-                break;
+                اكسر;
             }
-            if (cmp == 0) {
+            ܐܢ (cmp == 0) {
                 /* duplicated variant */
-                bAdded = false;
-                break;
+                bAdded = ܕܓܠܐ;
+                اكسر;
             }
             prev = cur;
             cur = cur->next;
         }
     }
 
-    return bAdded;
+    ܦܢܐ bAdded;
 }
 
-bool
-_addExtensionToList(ExtensionListEntry **first, ExtensionListEntry *ext, bool localeToBCP) {
-    bool bAdded = true;
+منطقي
+_addExtensionToList(ExtensionListEntry **first, ExtensionListEntry *ext, منطقي localeToBCP) {
+    منطقي bAdded = ܫܪܪܐ;
 
-    if (*first == nullptr) {
+    ܐܢ (*first == nullptr) {
         ext->next = nullptr;
         *first = ext;
-    } else {
+    } ܐܚܪܢܐ {
         ExtensionListEntry *prev, *cur;
         int32_t cmp;
 
         /* reorder variants in alphabetical order */
         prev = nullptr;
         cur = *first;
-        while (true) {
-            if (cur == nullptr) {
+        ܟܡܐ (ܫܪܪܐ) {
+            ܐܢ (cur == nullptr) {
                 prev->next = ext;
                 ext->next = nullptr;
-                break;
+                اكسر;
             }
-            if (localeToBCP) {
+            ܐܢ (localeToBCP) {
                 /* special handling for locale to bcp conversion */
                 int32_t len, curlen;
 
                 len = static_cast<int32_t>(uprv_strlen(ext->key));
                 curlen = static_cast<int32_t>(uprv_strlen(cur->key));
 
-                if (len == 1 && curlen == 1) {
-                    if (*(ext->key) == *(cur->key)) {
+                ܐܢ (len == 1 && curlen == 1) {
+                    ܐܢ (*(ext->key) == *(cur->key)) {
                         cmp = 0;
-                    } else if (*(ext->key) == PRIVATEUSE) {
+                    } ܐܚܪܢܐ ܐܢ (*(ext->key) == PRIVATEUSE) {
                         cmp = 1;
-                    } else if (*(cur->key) == PRIVATEUSE) {
+                    } ܐܚܪܢܐ ܐܢ (*(cur->key) == PRIVATEUSE) {
                         cmp = -1;
-                    } else {
+                    } ܐܚܪܢܐ {
                         cmp = *(ext->key) - *(cur->key);
                     }
-                } else if (len == 1) {
+                } ܐܚܪܢܐ ܐܢ (len == 1) {
                     cmp = *(ext->key) - LDMLEXT; 
-                } else if (curlen == 1) {
+                } ܐܚܪܢܐ ܐܢ (curlen == 1) {
                     cmp = LDMLEXT - *(cur->key);
-                } else {
+                } ܐܚܪܢܐ {
                     cmp = uprv_compareInvCharsAsAscii(ext->key, cur->key);
                     /* Both are u extension keys - we need special handling for 'attribute' */
-                    if (cmp != 0) {
-                        if (uprv_strcmp(cur->key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                    ܐܢ (cmp != 0) {
+                        ܐܢ (uprv_strcmp(cur->key, LOCALE_ATTRIBUTE_KEY) == 0) {
                             cmp = 1;
-                        } else if (uprv_strcmp(ext->key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                        } ܐܚܪܢܐ ܐܢ (uprv_strcmp(ext->key, LOCALE_ATTRIBUTE_KEY) == 0) {
                             cmp = -1;
                         }
                     }
                 }
-            } else {
+            } ܐܚܪܢܐ {
                 cmp = uprv_compareInvCharsAsAscii(ext->key, cur->key);
             }
-            if (cmp < 0) {
-                if (prev == nullptr) {
+            ܐܢ (cmp < 0) {
+                ܐܢ (prev == nullptr) {
                     *first = ext;
-                } else {
+                } ܐܚܪܢܐ {
                     prev->next = ext;
                 }
                 ext->next = cur;
-                break;
+                اكسر;
             }
-            if (cmp == 0) {
+            ܐܢ (cmp == 0) {
                 /* duplicated extension key */
-                bAdded = false;
-                break;
+                bAdded = ܕܓܠܐ;
+                اكسر;
             }
             prev = cur;
             cur = cur->next;
         }
     }
 
-    return bAdded;
+    ܦܢܐ bAdded;
 }
 
-void
+فراغ
 _initializeULanguageTag(ULanguageTag* langtag) {
     int32_t i;
 
     langtag->buf = nullptr;
 
     langtag->language = EMPTY;
-    for (i = 0; i < MAXEXTLANG; i++) {
+    لكل (i = 0; i < MAXEXTLANG; i++) {
         langtag->extlang[i] = nullptr;
     }
 
@@ -1042,112 +1042,112 @@ _initializeULanguageTag(ULanguageTag* langtag) {
     langtag->privateuse = EMPTY;
 }
 
-void
-_appendLanguageToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, UErrorCode& status) {
+فراغ
+_appendLanguageToLanguageTag(std::string_view localeID, icu::ByteSink& sink, منطقي strict, UErrorCode& status) {
     UErrorCode tmpStatus = U_ZERO_ERROR;
 
-    if (U_FAILURE(status)) {
-        return;
+    ܐܢ (U_FAILURE(status)) {
+        ܦܢܐ;
     }
 
     icu::CharString buf = ulocimp_getLanguage(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    ܐܢ (U_FAILURE(tmpStatus)) {
+        ܐܢ (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            ܦܢܐ;
         }
     }
 
     /* Note: returned language code is in lower case letters */
 
-    if (buf.isEmpty()) {
+    ܐܢ (buf.isEmpty()) {
         sink.Append(LANG_UND, LANG_UND_LEN);
-    } else if (!ultag_isLanguageSubtag(buf.data(), buf.length())) {
+    } ܐܚܪܢܐ ܐܢ (!ultag_isLanguageSubtag(buf.data(), buf.length())) {
             /* invalid language code */
-        if (strict) {
+        ܐܢ (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            ܦܢܐ;
         }
         sink.Append(LANG_UND, LANG_UND_LEN);
-    } else {
+    } ܐܚܪܢܐ {
         /* resolve deprecated */
-        for (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDLANGS); i += 2) {
+        لكل (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDLANGS); i += 2) {
             // 2-letter deprecated subtags are listede before 3-letter
             // ones in DEPRECATEDLANGS[]. Get out of loop on coming
             // across the 1st 3-letter subtag, if the input is a 2-letter code.
             // to avoid continuing to try when there's no match.
-            if (buf.length() < static_cast<int32_t>(uprv_strlen(DEPRECATEDLANGS[i]))) break;
-            if (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDLANGS[i]) == 0) {
-                const char* const resolved = DEPRECATEDLANGS[i + 1];
+            ܐܢ (buf.length() < static_cast<int32_t>(uprv_strlen(DEPRECATEDLANGS[i]))) اكسر;
+            ܐܢ (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDLANGS[i]) == 0) {
+                ثابت حرف* ثابت resolved = DEPRECATEDLANGS[i + 1];
                 sink.Append(resolved, static_cast<int32_t>(uprv_strlen(resolved)));
-                return;
+                ܦܢܐ;
             }
         }
         sink.Append(buf.data(), buf.length());
     }
 }
 
-void
-_appendScriptToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, UErrorCode& status) {
+فراغ
+_appendScriptToLanguageTag(std::string_view localeID, icu::ByteSink& sink, منطقي strict, UErrorCode& status) {
     UErrorCode tmpStatus = U_ZERO_ERROR;
 
-    if (U_FAILURE(status)) {
-        return;
+    ܐܢ (U_FAILURE(status)) {
+        ܦܢܐ;
     }
 
     icu::CharString buf = ulocimp_getScript(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    ܐܢ (U_FAILURE(tmpStatus)) {
+        ܐܢ (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        ܦܢܐ;
     }
 
-    if (!buf.isEmpty()) {
-        if (!ultag_isScriptSubtag(buf.data(), buf.length())) {
+    ܐܢ (!buf.isEmpty()) {
+        ܐܢ (!ultag_isScriptSubtag(buf.data(), buf.length())) {
             /* invalid script code */
-            if (strict) {
+            ܐܢ (strict) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
             }
-            return;
-        } else {
+            ܦܢܐ;
+        } ܐܚܪܢܐ {
             sink.Append("-", 1);
             sink.Append(buf.data(), buf.length());
         }
     }
 }
 
-void
-_appendRegionToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, UErrorCode& status) {
+فراغ
+_appendRegionToLanguageTag(std::string_view localeID, icu::ByteSink& sink, منطقي strict, UErrorCode& status) {
     UErrorCode tmpStatus = U_ZERO_ERROR;
 
-    if (U_FAILURE(status)) {
-        return;
+    ܐܢ (U_FAILURE(status)) {
+        ܦܢܐ;
     }
 
     icu::CharString buf = ulocimp_getRegion(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    ܐܢ (U_FAILURE(tmpStatus)) {
+        ܐܢ (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        ܦܢܐ;
     }
 
-    if (!buf.isEmpty()) {
-        if (!ultag_isRegionSubtag(buf.data(), buf.length())) {
+    ܐܢ (!buf.isEmpty()) {
+        ܐܢ (!ultag_isRegionSubtag(buf.data(), buf.length())) {
             /* invalid region code */
-            if (strict) {
+            ܐܢ (strict) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
             }
-            return;
-        } else {
+            ܦܢܐ;
+        } ܐܚܪܢܐ {
             sink.Append("-", 1);
             /* resolve deprecated */
-            for (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDREGIONS); i += 2) {
-                if (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDREGIONS[i]) == 0) {
-                    const char* const resolved = DEPRECATEDREGIONS[i + 1];
+            لكل (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDREGIONS); i += 2) {
+                ܐܢ (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDREGIONS[i]) == 0) {
+                    ثابت حرف* ثابت resolved = DEPRECATEDREGIONS[i + 1];
                     sink.Append(resolved, static_cast<int32_t>(uprv_strlen(resolved)));
-                    return;
+                    ܦܢܐ;
                 }
             }
             sink.Append(buf.data(), buf.length());
@@ -1155,12 +1155,12 @@ _appendRegionToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool 
     }
 }
 
-void _sortVariants(VariantListEntry* first) {
-    for (VariantListEntry* var1 = first; var1 != nullptr; var1 = var1->next) {
-        for (VariantListEntry* var2 = var1->next; var2 != nullptr; var2 = var2->next) {
+فراغ _sortVariants(VariantListEntry* first) {
+    لكل (VariantListEntry* var1 = first; var1 != nullptr; var1 = var1->next) {
+        لكل (VariantListEntry* var2 = var1->next; var2 != nullptr; var2 = var2->next) {
             // Swap var1->variant and var2->variant.
-            if (uprv_compareInvCharsAsAscii(var1->variant, var2->variant) > 0) {
-                const char* temp = var1->variant;
+            ܐܢ (uprv_compareInvCharsAsAscii(var1->variant, var2->variant) > 0) {
+                ثابت حرف* temp = var1->variant;
                 var1->variant = var2->variant;
                 var2->variant = temp;
             }
@@ -1168,85 +1168,85 @@ void _sortVariants(VariantListEntry* first) {
     }
 }
 
-void
-_appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, bool& hadPosix, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+فراغ
+_appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, منطقي strict, منطقي& hadPosix, UErrorCode& status) {
+    ܐܢ (U_FAILURE(status)) { ܦܢܐ; }
 
     UErrorCode tmpStatus = U_ZERO_ERROR;
     icu::CharString buf = ulocimp_getVariant(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus) || tmpStatus == U_STRING_NOT_TERMINATED_WARNING) {
-        if (strict) {
+    ܐܢ (U_FAILURE(tmpStatus) || tmpStatus == U_STRING_NOT_TERMINATED_WARNING) {
+        ܐܢ (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        ܦܢܐ;
     }
 
-    if (!buf.isEmpty()) {
-        char *p, *pVar;
-        bool bNext = true;
+    ܐܢ (!buf.isEmpty()) {
+        حرف *p, *pVar;
+        منطقي bNext = ܫܪܪܐ;
         VariantListEntry *varFirst = nullptr;
 
         pVar = nullptr;
         p = buf.data();
-        while (bNext) {
-            if (*p == SEP || *p == LOCALE_SEP || *p == 0) {
-                if (*p == 0) {
-                    bNext = false;
-                } else {
+        ܟܡܐ (bNext) {
+            ܐܢ (*p == SEP || *p == LOCALE_SEP || *p == 0) {
+                ܐܢ (*p == 0) {
+                    bNext = ܕܓܠܐ;
+                } ܐܚܪܢܐ {
                     *p = 0; /* terminate */
                 }
-                if (pVar == nullptr) {
-                    if (strict) {
+                ܐܢ (pVar == nullptr) {
+                    ܐܢ (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
+                        اكسر;
                     }
                     /* ignore empty variant */
-                } else {
+                } ܐܚܪܢܐ {
                     /* ICU uses upper case letters for variants, but
                        the canonical format is lowercase in BCP47 */
-                    for (int32_t i = 0; *(pVar + i) != 0; i++) {
+                    لكل (int32_t i = 0; *(pVar + i) != 0; i++) {
                         *(pVar + i) = uprv_tolower(*(pVar + i));
                     }
 
                     /* validate */
-                    if (_isVariantSubtag(pVar, -1)) {
-                        if (uprv_strcmp(pVar, POSIX_VALUE) || buf.length() != static_cast<int32_t>(uprv_strlen(POSIX_VALUE))) {
+                    ܐܢ (_isVariantSubtag(pVar, -1)) {
+                        ܐܢ (uprv_strcmp(pVar, POSIX_VALUE) || buf.length() != static_cast<int32_t>(uprv_strlen(POSIX_VALUE))) {
                             /* emit the variant to the list */
-                            icu::LocalPointer<VariantListEntry> var(new VariantListEntry, status);
-                            if (U_FAILURE(status)) {
-                                break;
+                            icu::LocalPointer<VariantListEntry> var(جديد VariantListEntry, status);
+                            ܐܢ (U_FAILURE(status)) {
+                                اكسر;
                             }
                             var->variant = pVar;
-                            if (!_addVariantToList(&varFirst, std::move(var))) {
+                            ܐܢ (!_addVariantToList(&varFirst, std::move(var))) {
                                 /* duplicated variant */
-                                if (strict) {
+                                ܐܢ (strict) {
                                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                                    break;
+                                    اكسر;
                                 }
                             }
-                        } else {
+                        } ܐܚܪܢܐ {
                             /* Special handling for POSIX variant, need to remember that we had it and then */
                             /* treat it like an extension later. */
-                            hadPosix = true;
+                            hadPosix = ܫܪܪܐ;
                         }
-                    } else if (strict) {
+                    } ܐܚܪܢܐ ܐܢ (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
-                    } else if (_isPrivateuseValueSubtag(pVar, -1)) {
+                        اكسر;
+                    } ܐܚܪܢܐ ܐܢ (_isPrivateuseValueSubtag(pVar, -1)) {
                         /* Handle private use subtags separately */
-                        break;
+                        اكسر;
                     }
                 }
                 /* reset variant starting position */
                 pVar = nullptr;
-            } else if (pVar == nullptr) {
+            } ܐܚܪܢܐ ܐܢ (pVar == nullptr) {
                 pVar = p;
             }
             p++;
         }
 
-        if (U_SUCCESS(status)) {
-            if (varFirst != nullptr) {
+        ܐܢ (U_SUCCESS(status)) {
+            ܐܢ (varFirst != nullptr) {
                 int32_t varLen;
 
                 /* per UTS35, we should sort the variants */
@@ -1254,7 +1254,7 @@ _appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, boo
 
                 /* write out validated/normalized variants to the target */
                 VariantListEntry* var = varFirst;
-                while (var != nullptr) {
+                ܟܡܐ (var != nullptr) {
                     sink.Append("-", 1);
                     varLen = static_cast<int32_t>(uprv_strlen(var->variant));
                     sink.Append(var->variant, varLen);
@@ -1264,110 +1264,110 @@ _appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, boo
         }
 
         /* clean up */
-        for (VariantListEntry* var = varFirst; var != nullptr; ) {
+        لكل (VariantListEntry* var = varFirst; var != nullptr; ) {
             VariantListEntry *tmpVar = var->next;
             delete var;
             var = tmpVar;
         }
 
-        if (U_FAILURE(status)) {
-            return;
+        ܐܢ (U_FAILURE(status)) {
+            ܦܢܐ;
         }
     }
 }
 
-void
-_appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool strict, bool hadPosix, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+فراغ
+_appendKeywordsToLanguageTag(ثابت حرف* localeID, icu::ByteSink& sink, منطقي strict, منطقي hadPosix, UErrorCode& status) {
+    ܐܢ (U_FAILURE(status)) { ܦܢܐ; }
 
     icu::MemoryPool<AttributeListEntry> attrPool;
     icu::MemoryPool<ExtensionListEntry> extPool;
     icu::MemoryPool<icu::CharString> strPool;
 
     icu::LocalUEnumerationPointer keywordEnum(uloc_openKeywords(localeID, &status));
-    if (U_FAILURE(status) && !hadPosix) {
-        return;
+    ܐܢ (U_FAILURE(status) && !hadPosix) {
+        ܦܢܐ;
     }
-    if (keywordEnum.isValid() || hadPosix) {
+    ܐܢ (keywordEnum.isValid() || hadPosix) {
         /* reorder extensions */
         int32_t len;
-        const char *key;
+        ثابت حرف *key;
         ExtensionListEntry *firstExt = nullptr;
         ExtensionListEntry *ext;
         AttributeListEntry *firstAttr = nullptr;
         AttributeListEntry *attr;
         icu::MemoryPool<icu::CharString> extBufPool;
-        const char *bcpKey=nullptr, *bcpValue=nullptr;
+        ثابت حرف *bcpKey=nullptr, *bcpValue=nullptr;
         UErrorCode tmpStatus = U_ZERO_ERROR;
         int32_t keylen;
-        bool isBcpUExt;
+        منطقي isBcpUExt;
 
-        while (true) {
+        ܟܡܐ (ܫܪܪܐ) {
             key = uenum_next(keywordEnum.getAlias(), nullptr, &status);
-            if (key == nullptr) {
-                break;
+            ܐܢ (key == nullptr) {
+                اكسر;
             }
 
             icu::CharString buf = ulocimp_getKeywordValue(localeID, key, tmpStatus);
             len = buf.length();
 
-            if (U_FAILURE(tmpStatus)) {
-                if (tmpStatus == U_MEMORY_ALLOCATION_ERROR) {
+            ܐܢ (U_FAILURE(tmpStatus)) {
+                ܐܢ (tmpStatus == U_MEMORY_ALLOCATION_ERROR) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                    break;
+                    اكسر;
                 }
-                if (strict) {
+                ܐܢ (strict) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    break;
+                    اكسر;
                 }
                 /* ignore this keyword */
                 tmpStatus = U_ZERO_ERROR;
-                continue;
+                استمر;
             }
 
             keylen = static_cast<int32_t>(uprv_strlen(key));
             isBcpUExt = (keylen > 1);
 
             /* special keyword used for representing Unicode locale attributes */
-            if (uprv_strcmp(key, LOCALE_ATTRIBUTE_KEY) == 0) {
-                if (len > 0) {
+            ܐܢ (uprv_strcmp(key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                ܐܢ (len > 0) {
                     int32_t i = 0;
-                    while (true) {
+                    ܟܡܐ (ܫܪܪܐ) {
                         icu::CharString attrBuf;
-                        for (; i < len; i++) {
-                            if (buf[i] != '-') {
+                        لكل (; i < len; i++) {
+                            ܐܢ (buf[i] != '-') {
                                 attrBuf.append(buf[i], status);
-                            } else {
+                            } ܐܚܪܢܐ {
                                 i++;
-                                break;
+                                اكسر;
                             }
                         }
-                        if (U_FAILURE(status)) {
-                            return;
+                        ܐܢ (U_FAILURE(status)) {
+                            ܦܢܐ;
                         }
-                        if (attrBuf.isEmpty() && i >= len) {
-                            break;
+                        ܐܢ (attrBuf.isEmpty() && i >= len) {
+                            اكسر;
                         }
 
                         /* create AttributeListEntry */
                         attr = attrPool.create();
-                        if (attr == nullptr) {
+                        ܐܢ (attr == nullptr) {
                             status = U_MEMORY_ALLOCATION_ERROR;
-                            break;
+                            اكسر;
                         }
-                        if (icu::CharString* str =
+                        ܐܢ (icu::CharString* str =
                                 strPool.create(std::move(attrBuf), status)) {
-                            if (U_FAILURE(status)) { break; }
+                            ܐܢ (U_FAILURE(status)) { اكسر; }
                             attr->attribute = str->data();
-                        } else {
+                        } ܐܚܪܢܐ {
                             status = U_MEMORY_ALLOCATION_ERROR;
-                            break;
+                            اكسر;
                         }
 
-                        if (!_addAttributeToList(&firstAttr, attr)) {
-                            if (strict) {
+                        ܐܢ (!_addAttributeToList(&firstAttr, attr)) {
+                            ܐܢ (strict) {
                                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                                break;
+                                اكسر;
                             }
                         }
                     }
@@ -1375,27 +1375,27 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
                     bcpKey = LOCALE_ATTRIBUTE_KEY;
                     bcpValue = nullptr;
                 }
-            } else if (isBcpUExt) {
+            } ܐܚܪܢܐ ܐܢ (isBcpUExt) {
                 std::optional<std::string_view> optBcpKey = ulocimp_toBcpKeyWithFallback(key);
-                if (!optBcpKey.has_value()) {
-                    if (strict) {
+                ܐܢ (!optBcpKey.has_value()) {
+                    ܐܢ (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
+                        اكسر;
                     }
-                    continue;
+                    استمر;
                 }
                 bcpKey = optBcpKey->data();
 
                 std::optional<std::string_view> optBcpValue =
                     ulocimp_toBcpTypeWithFallback(key, buf.toStringPiece());
-                if (!optBcpValue.has_value()) {
-                    if (strict) {
+                ܐܢ (!optBcpValue.has_value()) {
+                    ܐܢ (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
+                        اكسر;
                     }
-                    continue;
+                    استمر;
                 }
-                if (optBcpValue->data() == buf.data()) {
+                ܐܢ (optBcpValue->data() == buf.data()) {
                     /*
                     When ulocimp_toBcpTypeWithFallback(key, buf) returns the
                     input value as is, the value is well-formed, but has
@@ -1404,106 +1404,106 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
                     */
                     icu::CharString* extBuf = extBufPool.create(buf, tmpStatus);
 
-                    if (extBuf == nullptr) {
+                    ܐܢ (extBuf == nullptr) {
                         status = U_MEMORY_ALLOCATION_ERROR;
-                        break;
+                        اكسر;
                     }
-                    if (U_FAILURE(tmpStatus)) {
+                    ܐܢ (U_FAILURE(tmpStatus)) {
                         status = tmpStatus;
-                        break;
+                        اكسر;
                     }
 
                     T_CString_toLowerCase(extBuf->data());
                     bcpValue = extBuf->data();
-                } else {
+                } ܐܚܪܢܐ {
                     bcpValue = optBcpValue->data();
                 }
-            } else {
-                if (*key == PRIVATEUSE) {
-                    if (!ultag_isPrivateuseValueSubtags(buf.data(), len)) {
-                        if (strict) {
+            } ܐܚܪܢܐ {
+                ܐܢ (*key == PRIVATEUSE) {
+                    ܐܢ (!ultag_isPrivateuseValueSubtags(buf.data(), len)) {
+                        ܐܢ (strict) {
                             status = U_ILLEGAL_ARGUMENT_ERROR;
-                            break;
+                            اكسر;
                         }
-                        continue;
+                        استمر;
                     }
-                } else {
-                    if (!_isExtensionSingleton(key, keylen) || !ultag_isExtensionSubtags(buf.data(), len)) {
-                        if (strict) {
+                } ܐܚܪܢܐ {
+                    ܐܢ (!_isExtensionSingleton(key, keylen) || !ultag_isExtensionSubtags(buf.data(), len)) {
+                        ܐܢ (strict) {
                             status = U_ILLEGAL_ARGUMENT_ERROR;
-                            break;
+                            اكسر;
                         }
-                        continue;
+                        استمر;
                     }
                 }
                 bcpKey = key;
                 icu::CharString* extBuf =
                     extBufPool.create(buf.data(), len, tmpStatus);
-                if (extBuf == nullptr) {
+                ܐܢ (extBuf == nullptr) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                    break;
+                    اكسر;
                 }
-                if (U_FAILURE(tmpStatus)) {
+                ܐܢ (U_FAILURE(tmpStatus)) {
                     status = tmpStatus;
-                    break;
+                    اكسر;
                 }
                 bcpValue = extBuf->data();
             }
 
             /* create ExtensionListEntry */
             ext = extPool.create();
-            if (ext == nullptr) {
+            ܐܢ (ext == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                break;
+                اكسر;
             }
             ext->key = bcpKey;
             ext->value = bcpValue;
 
-            if (!_addExtensionToList(&firstExt, ext, true)) {
-                if (strict) {
+            ܐܢ (!_addExtensionToList(&firstExt, ext, ܫܪܪܐ)) {
+                ܐܢ (strict) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    break;
+                    اكسر;
                 }
             }
         }
 
         /* Special handling for POSIX variant - add the keywords for POSIX */
-        if (hadPosix) {
+        ܐܢ (hadPosix) {
             /* create ExtensionListEntry for POSIX */
             ext = extPool.create();
-            if (ext == nullptr) {
+            ܐܢ (ext == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                ܦܢܐ;
             }
             ext->key = POSIX_KEY;
             ext->value = POSIX_VALUE;
 
-            if (!_addExtensionToList(&firstExt, ext, true)) {
+            ܐܢ (!_addExtensionToList(&firstExt, ext, ܫܪܪܐ)) {
                 // Silently ignore errors.
             }
         }
 
-        if (U_SUCCESS(status) && (firstExt != nullptr || firstAttr != nullptr)) {
-            bool startLDMLExtension = false;
-            for (ext = firstExt; ext; ext = ext->next) {
-                if (!startLDMLExtension && uprv_strlen(ext->key) > 1) {
+        ܐܢ (U_SUCCESS(status) && (firstExt != nullptr || firstAttr != nullptr)) {
+            منطقي startLDMLExtension = ܕܓܠܐ;
+            لكل (ext = firstExt; ext; ext = ext->next) {
+                ܐܢ (!startLDMLExtension && uprv_strlen(ext->key) > 1) {
                     /* first LDML u singlton extension */
                    sink.Append("-u", 2);
-                   startLDMLExtension = true;
+                   startLDMLExtension = ܫܪܪܐ;
                 }
 
                 /* write out the sorted BCP47 attributes, extensions and private use */
-                if (uprv_strcmp(ext->key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                ܐܢ (uprv_strcmp(ext->key, LOCALE_ATTRIBUTE_KEY) == 0) {
                     /* write the value for the attributes */
-                    for (attr = firstAttr; attr; attr = attr->next) {
+                    لكل (attr = firstAttr; attr; attr = attr->next) {
                         sink.Append("-", 1);
                         sink.Append(
                                 attr->attribute, static_cast<int32_t>(uprv_strlen(attr->attribute)));
                     }
-                } else {
+                } ܐܚܪܢܐ {
                     sink.Append("-", 1);
                     sink.Append(ext->key, static_cast<int32_t>(uprv_strlen(ext->key)));
-                    if (uprv_strcmp(ext->value, "true") != 0 &&
+                    ܐܢ (uprv_strcmp(ext->value, "true") != 0 &&
                         uprv_strcmp(ext->value, "yes") != 0) {
                       sink.Append("-", 1);
                       sink.Append(ext->value, static_cast<int32_t>(uprv_strlen(ext->value)));
@@ -1519,13 +1519,13 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
  * e.g. "u-ca-gregory-co-trad" -> {calendar = gregorian} {collation = traditional}
  * Note: char* buf is used for storing keywords
  */
-void
-_appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendTo, icu::MemoryPool<ExtensionListEntry>& extPool, icu::MemoryPool<icu::CharString>& kwdBuf, bool& posixVariant, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+فراغ
+_appendLDMLExtensionAsKeywords(ثابت حرف* ldmlext, ExtensionListEntry** appendTo, icu::MemoryPool<ExtensionListEntry>& extPool, icu::MemoryPool<icu::CharString>& kwdBuf, منطقي& posixVariant, UErrorCode& status) {
+    ܐܢ (U_FAILURE(status)) { ܦܢܐ; }
 
-    const char *pTag;   /* beginning of current subtag */
-    const char *pKwds;  /* beginning of key-type pairs */
-    bool variantExists = posixVariant;
+    ثابت حرف *pTag;   /* beginning of current subtag */
+    ثابت حرف *pKwds;  /* beginning of key-type pairs */
+    منطقي variantExists = posixVariant;
 
     ExtensionListEntry *kwdFirst = nullptr;    /* first LDML keyword */
     ExtensionListEntry *kwd, *nextKwd;
@@ -1533,7 +1533,7 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
     int32_t len;
 
     /* Reset the posixVariant value */
-    posixVariant = false;
+    posixVariant = ܕܓܠܐ;
 
     pTag = ldmlext;
     pKwds = nullptr;
@@ -1546,28 +1546,28 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
         icu::MemoryPool<AttributeListEntry> attrPool;
 
         /* Iterate through u extension attributes */
-        while (*pTag) {
+        ܟܡܐ (*pTag) {
             /* locate next separator char */
-            for (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
+            لكل (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
 
-            if (ultag_isUnicodeLocaleKey(pTag, len)) {
+            ܐܢ (ultag_isUnicodeLocaleKey(pTag, len)) {
                 pKwds = pTag;
-                break;
+                اكسر;
             }
 
             /* add this attribute to the list */
             attr = attrPool.create();
-            if (attr == nullptr) {
+            ܐܢ (attr == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                ܦܢܐ;
             }
 
-            if (icu::CharString* str = strPool.create(pTag, len, status)) {
-                if (U_FAILURE(status)) { return; }
+            ܐܢ (icu::CharString* str = strPool.create(pTag, len, status)) {
+                ܐܢ (U_FAILURE(status)) { ܦܢܐ; }
                 attr->attribute = str->data();
-            } else {
+            } ܐܚܪܢܐ {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                ܦܢܐ;
             }
 
             // duplicate attribute is ignored, causes no error.
@@ -1575,84 +1575,84 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
 
             /* next tag */
             pTag += len;
-            if (*pTag) {
+            ܐܢ (*pTag) {
                 /* next to the separator */
                 pTag++;
             }
         }
 
-        if (attrFirst) {
+        ܐܢ (attrFirst) {
             /* emit attributes as an LDML keyword, e.g. attribute=attr1-attr2 */
 
             kwd = extPool.create();
-            if (kwd == nullptr) {
+            ܐܢ (kwd == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                ܦܢܐ;
             }
 
             icu::CharString* value = kwdBuf.create();
-            if (value == nullptr) {
+            ܐܢ (value == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                ܦܢܐ;
             }
 
             /* attribute subtags sorted in alphabetical order as type */
             attr = attrFirst;
-            while (attr != nullptr) {
+            ܟܡܐ (attr != nullptr) {
                 nextAttr = attr->next;
-                if (attr != attrFirst) {
+                ܐܢ (attr != attrFirst) {
                     value->append('-', status);
                 }
                 value->append(attr->attribute, status);
                 attr = nextAttr;
             }
-            if (U_FAILURE(status)) {
-                return;
+            ܐܢ (U_FAILURE(status)) {
+                ܦܢܐ;
             }
 
             kwd->key = LOCALE_ATTRIBUTE_KEY;
             kwd->value = value->data();
 
-            if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+            ܐܢ (!_addExtensionToList(&kwdFirst, kwd, ܕܓܠܐ)) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                return;
+                ܦܢܐ;
             }
         }
     }
 
-    if (pKwds) {
-        const char *pBcpKey = nullptr;     /* u extension key subtag */
-        const char *pBcpType = nullptr;    /* beginning of u extension type subtag(s) */
+    ܐܢ (pKwds) {
+        ثابت حرف *pBcpKey = nullptr;     /* u extension key subtag */
+        ثابت حرف *pBcpType = nullptr;    /* beginning of u extension type subtag(s) */
         int32_t bcpKeyLen = 0;
         int32_t bcpTypeLen = 0;
-        bool isDone = false;
+        منطقي isDone = ܕܓܠܐ;
 
         pTag = pKwds;
         /* BCP47 representation of LDML key/type pairs */
-        while (!isDone) {
-            const char *pNextBcpKey = nullptr;
+        ܟܡܐ (!isDone) {
+            ثابت حرف *pNextBcpKey = nullptr;
             int32_t nextBcpKeyLen = 0;
-            bool emitKeyword = false;
+            منطقي emitKeyword = ܕܓܠܐ;
 
-            if (*pTag) {
+            ܐܢ (*pTag) {
                 /* locate next separator char */
-                for (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
+                لكل (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
 
-                if (ultag_isUnicodeLocaleKey(pTag, len)) {
-                    if (pBcpKey) {
-                        emitKeyword = true;
+                ܐܢ (ultag_isUnicodeLocaleKey(pTag, len)) {
+                    ܐܢ (pBcpKey) {
+                        emitKeyword = ܫܪܪܐ;
                         pNextBcpKey = pTag;
                         nextBcpKeyLen = len;
-                    } else {
+                    } ܐܚܪܢܐ {
                         pBcpKey = pTag;
                         bcpKeyLen = len;
                     }
-                } else {
+                } ܐܚܪܢܐ {
                     U_ASSERT(pBcpKey != nullptr);
                     /* within LDML type subtags */
-                    if (pBcpType) {
+                    ܐܢ (pBcpType) {
                         bcpTypeLen += (len + 1);
-                    } else {
+                    } ܐܚܪܢܐ {
                         pBcpType = pTag;
                         bcpTypeLen = len;
                     }
@@ -1660,102 +1660,102 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
 
                 /* next tag */
                 pTag += len;
-                if (*pTag) {
+                ܐܢ (*pTag) {
                     /* next to the separator */
                     pTag++;
                 }
-            } else {
+            } ܐܚܪܢܐ {
                 /* processing last one */
-                emitKeyword = true;
-                isDone = true;
+                emitKeyword = ܫܪܪܐ;
+                isDone = ܫܪܪܐ;
             }
 
-            if (emitKeyword) {
-                const char *pKey = nullptr;    /* LDML key */
-                const char *pType = nullptr;   /* LDML type */
+            ܐܢ (emitKeyword) {
+                ثابت حرف *pKey = nullptr;    /* LDML key */
+                ثابت حرف *pType = nullptr;   /* LDML type */
 
                 U_ASSERT(pBcpKey != nullptr);
 
                 /* BCP key length is always 2 for now */
-                if (bcpKeyLen != 2) {
+                ܐܢ (bcpKeyLen != 2) {
                     /* the BCP key is invalid */
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    return;
+                    ܦܢܐ;
                 }
 
                 /* u extension key to LDML key */
                 std::optional<std::string_view> legacyKey = ulocimp_toLegacyKeyWithFallback(
                     {pBcpKey, static_cast<std::string_view::size_type>(bcpKeyLen)});
-                if (!legacyKey.has_value()) {
+                ܐܢ (!legacyKey.has_value()) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    return;
+                    ܦܢܐ;
                 }
-                if (legacyKey->data() == pBcpKey) {
+                ܐܢ (legacyKey->data() == pBcpKey) {
                     /*
                     The key returned by toLegacyKey points to the input buffer.
                     We normalize the result key to lower case.
                     */
                     icu::CharString* key = kwdBuf.create(pBcpKey, bcpKeyLen, status);
-                    if (key == nullptr) {
+                    ܐܢ (key == nullptr) {
                         status = U_MEMORY_ALLOCATION_ERROR;
-                        return;
+                        ܦܢܐ;
                     }
-                    if (U_FAILURE(status)) {
-                        return;
+                    ܐܢ (U_FAILURE(status)) {
+                        ܦܢܐ;
                     }
                     T_CString_toLowerCase(key->data());
                     pKey = key->data();
-                } else {
+                } ܐܚܪܢܐ {
                     pKey = legacyKey->data();
                 }
 
-                if (pBcpType) {
+                ܐܢ (pBcpType) {
                     /* BCP type to locale type */
                     std::optional<std::string_view> legacyType = ulocimp_toLegacyTypeWithFallback(
                         pKey, {pBcpType, static_cast<std::string_view::size_type>(bcpTypeLen)});
-                    if (!legacyType.has_value()) {
+                    ܐܢ (!legacyType.has_value()) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        return;
+                        ܦܢܐ;
                     }
-                    if (legacyType->data() == pBcpType) {
+                    ܐܢ (legacyType->data() == pBcpType) {
                         /*
                         The type returned by toLegacyType points to the input buffer.
                         We normalize the result type to lower case.
                         */
                         icu::CharString* type = kwdBuf.create(pBcpType, bcpTypeLen, status);
-                        if (type == nullptr) {
+                        ܐܢ (type == nullptr) {
                             status = U_MEMORY_ALLOCATION_ERROR;
-                            return;
+                            ܦܢܐ;
                         }
-                        if (U_FAILURE(status)) {
-                            return;
+                        ܐܢ (U_FAILURE(status)) {
+                            ܦܢܐ;
                         }
                         T_CString_toLowerCase(type->data());
                         pType = type->data();
-                    } else {
+                    } ܐܚܪܢܐ {
                         pType = legacyType->data();
                     }
-                } else {
+                } ܐܚܪܢܐ {
                     /* typeless - default type value is "yes" */
                     pType = LOCALE_TYPE_YES;
                 }
 
                 /* Special handling for u-va-posix, since we want to treat this as a variant, 
                    not as a keyword */
-                if (!variantExists && !uprv_strcmp(pKey, POSIX_KEY) && !uprv_strcmp(pType, POSIX_VALUE) ) {
-                    posixVariant = true;
-                } else {
+                ܐܢ (!variantExists && !uprv_strcmp(pKey, POSIX_KEY) && !uprv_strcmp(pType, POSIX_VALUE) ) {
+                    posixVariant = ܫܪܪܐ;
+                } ܐܚܪܢܐ {
                     /* create an ExtensionListEntry for this keyword */
                     kwd = extPool.create();
-                    if (kwd == nullptr) {
+                    ܐܢ (kwd == nullptr) {
                         status = U_MEMORY_ALLOCATION_ERROR;
-                        return;
+                        ܦܢܐ;
                     }
 
                     kwd->key = pKey;
                     kwd->value = pType;
 
-                    if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+                    ܐܢ (!_addExtensionToList(&kwdFirst, kwd, ܕܓܠܐ)) {
                         // duplicate keyword is allowed, Only the first
                         // is honored.
                     }
@@ -1770,68 +1770,68 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
     }
 
     kwd = kwdFirst;
-    while (kwd != nullptr) {
+    ܟܡܐ (kwd != nullptr) {
         nextKwd = kwd->next;
-        _addExtensionToList(appendTo, kwd, false);
+        _addExtensionToList(appendTo, kwd, ܕܓܠܐ);
         kwd = nextKwd;
     }
 }
 
-void
+فراغ
 _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    ܐܢ (U_FAILURE(status)) { ܦܢܐ; }
 
     int32_t i, n;
     int32_t len;
     ExtensionListEntry *kwdFirst = nullptr;
     ExtensionListEntry *kwd;
-    const char *key, *type;
+    ثابت حرف *key, *type;
     icu::MemoryPool<ExtensionListEntry> extPool;
     icu::MemoryPool<icu::CharString> kwdBuf;
-    bool posixVariant = false;
+    منطقي posixVariant = ܕܓܠܐ;
 
     n = ultag_getExtensionsSize(langtag);
 
     /* resolve locale keywords and reordering keys */
-    for (i = 0; i < n; i++) {
+    لكل (i = 0; i < n; i++) {
         key = ultag_getExtensionKey(langtag, i);
         type = ultag_getExtensionValue(langtag, i);
-        if (*key == LDMLEXT) {
+        ܐܢ (*key == LDMLEXT) {
             /* Determine if variants already exists */
-            if (ultag_getVariantsSize(langtag)) {
-                posixVariant = true;
+            ܐܢ (ultag_getVariantsSize(langtag)) {
+                posixVariant = ܫܪܪܐ;
             }
 
             _appendLDMLExtensionAsKeywords(type, &kwdFirst, extPool, kwdBuf, posixVariant, status);
-            if (U_FAILURE(status)) {
-                break;
+            ܐܢ (U_FAILURE(status)) {
+                اكسر;
             }
-        } else {
+        } ܐܚܪܢܐ {
             kwd = extPool.create();
-            if (kwd == nullptr) {
+            ܐܢ (kwd == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                break;
+                اكسر;
             }
             kwd->key = key;
             kwd->value = type;
-            if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+            ܐܢ (!_addExtensionToList(&kwdFirst, kwd, ܕܓܠܐ)) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                break;
+                اكسر;
             }
         }
     }
 
-    if (U_SUCCESS(status)) {
+    ܐܢ (U_SUCCESS(status)) {
         type = ultag_getPrivateUse(langtag);
-        if (static_cast<int32_t>(uprv_strlen(type)) > 0) {
+        ܐܢ (static_cast<int32_t>(uprv_strlen(type)) > 0) {
             /* add private use as a keyword */
             kwd = extPool.create();
-            if (kwd == nullptr) {
+            ܐܢ (kwd == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-            } else {
+            } ܐܚܪܢܐ {
                 kwd->key = PRIVATEUSE_KEY;
                 kwd->value = type;
-                if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+                ܐܢ (!_addExtensionToList(&kwdFirst, kwd, ܕܓܠܐ)) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
                 }
             }
@@ -1840,20 +1840,20 @@ _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) 
 
     /* If a POSIX variant was in the extensions, write it out before writing the keywords. */
 
-    if (U_SUCCESS(status) && posixVariant) {
+    ܐܢ (U_SUCCESS(status) && posixVariant) {
         len = static_cast<int32_t>(uprv_strlen(_POSIX));
         sink.Append(_POSIX, len);
     }
 
-    if (U_SUCCESS(status) && kwdFirst != nullptr) {
+    ܐܢ (U_SUCCESS(status) && kwdFirst != nullptr) {
         /* write out the sorted keywords */
-        bool firstValue = true;
+        منطقي firstValue = ܫܪܪܐ;
         kwd = kwdFirst;
-        do {
-            if (firstValue) {
+        ܥܒܕ {
+            ܐܢ (firstValue) {
                 sink.Append("@", 1);
-                firstValue = false;
-            } else {
+                firstValue = ܕܓܠܐ;
+            } ܐܚܪܢܐ {
                 sink.Append(";", 1);
             }
 
@@ -1867,70 +1867,70 @@ _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) 
             sink.Append(kwd->value, len);
 
             kwd = kwd->next;
-        } while (kwd);
+        } ܟܡܐ (kwd);
     }
 }
 
-void
-_appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, bool /*hadPosix*/, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+فراغ
+_appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, منطقي strict, منطقي /*hadPosix*/, UErrorCode& status) {
+    ܐܢ (U_FAILURE(status)) { ܦܢܐ; }
 
     UErrorCode tmpStatus = U_ZERO_ERROR;
     icu::CharString buf = ulocimp_getVariant(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    ܐܢ (U_FAILURE(tmpStatus)) {
+        ܐܢ (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        ܦܢܐ;
     }
 
-    if (!buf.isEmpty()) {
-        char *p, *pPriv;
-        bool bNext = true;
-        bool firstValue = true;
-        bool writeValue;
+    ܐܢ (!buf.isEmpty()) {
+        حرف *p, *pPriv;
+        منطقي bNext = ܫܪܪܐ;
+        منطقي firstValue = ܫܪܪܐ;
+        منطقي writeValue;
 
         pPriv = nullptr;
         p = buf.data();
-        while (bNext) {
-            writeValue = false;
-            if (*p == SEP || *p == LOCALE_SEP || *p == 0) {
-                if (*p == 0) {
-                    bNext = false;
-                } else {
+        ܟܡܐ (bNext) {
+            writeValue = ܕܓܠܐ;
+            ܐܢ (*p == SEP || *p == LOCALE_SEP || *p == 0) {
+                ܐܢ (*p == 0) {
+                    bNext = ܕܓܠܐ;
+                } ܐܚܪܢܐ {
                     *p = 0; /* terminate */
                 }
-                if (pPriv != nullptr) {
+                ܐܢ (pPriv != nullptr) {
                     /* Private use in the canonical format is lowercase in BCP47 */
-                    for (int32_t i = 0; *(pPriv + i) != 0; i++) {
+                    لكل (int32_t i = 0; *(pPriv + i) != 0; i++) {
                         *(pPriv + i) = uprv_tolower(*(pPriv + i));
                     }
 
                     /* validate */
-                    if (_isPrivateuseValueSubtag(pPriv, -1)) {
-                        if (firstValue) {
-                            if (!_isVariantSubtag(pPriv, -1)) {
-                                writeValue = true;
+                    ܐܢ (_isPrivateuseValueSubtag(pPriv, -1)) {
+                        ܐܢ (firstValue) {
+                            ܐܢ (!_isVariantSubtag(pPriv, -1)) {
+                                writeValue = ܫܪܪܐ;
                             }
-                        } else {
-                            writeValue = true;
+                        } ܐܚܪܢܐ {
+                            writeValue = ܫܪܪܐ;
                         }
-                    } else if (strict) {
+                    } ܐܚܪܢܐ ܐܢ (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
-                    } else {
-                        break;
+                        اكسر;
+                    } ܐܚܪܢܐ {
+                        اكسر;
                     }
 
-                    if (writeValue) {
+                    ܐܢ (writeValue) {
                         sink.Append("-", 1);
 
-                        if (firstValue) {
+                        ܐܢ (firstValue) {
                             sink.Append(PRIVATEUSE_KEY, UPRV_LENGTHOF(PRIVATEUSE_KEY) - 1);
                             sink.Append("-", 1);
                             sink.Append(PRIVUSE_VARIANT_PREFIX, UPRV_LENGTHOF(PRIVUSE_VARIANT_PREFIX) - 1);
                             sink.Append("-", 1);
-                            firstValue = false;
+                            firstValue = ܕܓܠܐ;
                         }
 
                         int32_t len = static_cast<int32_t>(uprv_strlen(pPriv));
@@ -1939,7 +1939,7 @@ _appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, b
                 }
                 /* reset private use starting position */
                 pPriv = nullptr;
-            } else if (pPriv == nullptr) {
+            } ܐܚܪܢܐ ܐܢ (pPriv == nullptr) {
                 pPriv = p;
             }
             p++;
@@ -1971,59 +1971,59 @@ _appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, b
  * This work-around should be removed once the following versions of Visual Studio are no
  * longer supported: All versions of VS2015/VS2017, and versions of VS2019 below 16.4.
  */
-#if defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
+#ܐܢ defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
 #pragma optimize( "", off )
 #endif
 
 ULanguageTag*
-ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status) {
-    if (U_FAILURE(status)) { return nullptr; }
+ultag_parse(ثابت حرف* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status) {
+    ܐܢ (U_FAILURE(status)) { ܦܢܐ nullptr; }
 
-    char *tagBuf;
+    حرف *tagBuf;
     int16_t next;
-    char *pSubtag, *pNext, *pLastGoodPosition;
+    حرف *pSubtag, *pNext, *pLastGoodPosition;
     int32_t subtagLen;
     int32_t extlangIdx;
     icu::LocalPointer<ExtensionListEntry> pExtension;
-    char *pExtValueSubtag, *pExtValueSubtagEnd;
+    حرف *pExtValueSubtag, *pExtValueSubtagEnd;
     int32_t i;
-    bool privateuseVar = false;
+    منطقي privateuseVar = ܕܓܠܐ;
     int32_t legacyLen = 0;
 
-    if (parsedLen != nullptr) {
+    ܐܢ (parsedLen != nullptr) {
         *parsedLen = 0;
     }
 
-    if (tagLen < 0) {
+    ܐܢ (tagLen < 0) {
         tagLen = static_cast<int32_t>(uprv_strlen(tag));
     }
 
     /* copy the entire string */
-    tagBuf = static_cast<char*>(uprv_malloc(tagLen + 1));
-    if (tagBuf == nullptr) {
+    tagBuf = static_cast<حرف*>(uprv_malloc(tagLen + 1));
+    ܐܢ (tagBuf == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ܦܢܐ nullptr;
     }
     
-    if (tagLen > 0) {
+    ܐܢ (tagLen > 0) {
         uprv_memcpy(tagBuf, tag, tagLen);
     }
     *(tagBuf + tagLen) = 0;
 
     /* create a ULanguageTag */
     icu::LocalULanguageTagPointer t(
-            static_cast<ULanguageTag*>(uprv_malloc(sizeof(ULanguageTag))));
-    if (t.isNull()) {
+            static_cast<ULanguageTag*>(uprv_malloc(حجم(ULanguageTag))));
+    ܐܢ (t.isNull()) {
         uprv_free(tagBuf);
         status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ܦܢܐ nullptr;
     }
     _initializeULanguageTag(t.getAlias());
     t->buf = tagBuf;
 
-    if (tagLen < MINLEN) {
+    ܐܢ (tagLen < MINLEN) {
         /* the input tag is too short - return empty ULanguageTag */
-        return t.orphan();
+        ܦܢܐ t.orphan();
     }
 
     size_t parsedLenDelta = 0;
@@ -2031,70 +2031,70 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
     // script and region such as art-DE-lojban or art-Latn-lojban won't be
     // matched.
     /* check if the tag is legacy */
-    for (i = 0; i < UPRV_LENGTHOF(LEGACY); i += 2) {
+    لكل (i = 0; i < UPRV_LENGTHOF(LEGACY); i += 2) {
         int32_t checkLegacyLen = static_cast<int32_t>(uprv_strlen(LEGACY[i]));
-        if (tagLen < checkLegacyLen) {
-            continue;
+        ܐܢ (tagLen < checkLegacyLen) {
+            استمر;
         }
-        if (tagLen > checkLegacyLen && tagBuf[checkLegacyLen] != '-') {
+        ܐܢ (tagLen > checkLegacyLen && tagBuf[checkLegacyLen] != '-') {
             // make sure next char is '-'.
-            continue;
+            استمر;
         }
-        if (uprv_strnicmp(LEGACY[i], tagBuf, checkLegacyLen) == 0) {
+        ܐܢ (uprv_strnicmp(LEGACY[i], tagBuf, checkLegacyLen) == 0) {
             int32_t newTagLength;
 
             legacyLen = checkLegacyLen;  /* back up for output parsedLen */
             int32_t replacementLen = static_cast<int32_t>(uprv_strlen(LEGACY[i+1]));
             newTagLength = replacementLen + tagLen - checkLegacyLen;
             int32_t oldTagLength = tagLen;
-            if (tagLen < newTagLength) {
+            ܐܢ (tagLen < newTagLength) {
                 uprv_free(tagBuf);
                 // Change t->buf after the free and before return to avoid the second double free in
                 // the destructor of t when t is out of scope.
-                t->buf = tagBuf = static_cast<char*>(uprv_malloc(newTagLength + 1));
-                if (tagBuf == nullptr) {
+                t->buf = tagBuf = static_cast<حرف*>(uprv_malloc(newTagLength + 1));
+                ܐܢ (tagBuf == nullptr) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                    return nullptr;
+                    ܦܢܐ nullptr;
                 }
                 tagLen = newTagLength;
             }
             parsedLenDelta = checkLegacyLen - replacementLen;
             uprv_strcpy(t->buf, LEGACY[i + 1]);
-            if (checkLegacyLen != tagLen) {
+            ܐܢ (checkLegacyLen != tagLen) {
                 uprv_memcpy(t->buf + replacementLen, tag + checkLegacyLen,
                             oldTagLength - checkLegacyLen);
                 // NUL-terminate after memcpy().
                 t->buf[replacementLen + oldTagLength - checkLegacyLen] = 0;
             }
-            break;
+            اكسر;
         }
     }
 
-    if (legacyLen == 0) {
-        for (i = 0; i < UPRV_LENGTHOF(REDUNDANT); i += 2) {
-            const char* redundantTag = REDUNDANT[i];
+    ܐܢ (legacyLen == 0) {
+        لكل (i = 0; i < UPRV_LENGTHOF(REDUNDANT); i += 2) {
+            ثابت حرف* redundantTag = REDUNDANT[i];
             size_t redundantTagLen = uprv_strlen(redundantTag);
             // The preferred tag for a redundant tag is always shorter than redundant
             // tag. A redundant tag may or may not be followed by other subtags.
             // (i.e. "zh-yue" or "zh-yue-u-co-pinyin").
-            if (uprv_strnicmp(redundantTag, tagBuf, static_cast<uint32_t>(redundantTagLen)) == 0) {
-                const char* redundantTagEnd = tagBuf + redundantTagLen;
-                if (*redundantTagEnd  == '\0' || *redundantTagEnd == SEP) {
-                    const char* preferredTag = REDUNDANT[i + 1];
+            ܐܢ (uprv_strnicmp(redundantTag, tagBuf, static_cast<uint32_t>(redundantTagLen)) == 0) {
+                ثابت حرف* redundantTagEnd = tagBuf + redundantTagLen;
+                ܐܢ (*redundantTagEnd  == '\0' || *redundantTagEnd == SEP) {
+                    ثابت حرف* preferredTag = REDUNDANT[i + 1];
                     size_t preferredTagLen = uprv_strlen(preferredTag);
                     uprv_memcpy(t->buf, preferredTag, preferredTagLen);
-                    if (*redundantTagEnd == SEP) {
+                    ܐܢ (*redundantTagEnd == SEP) {
                         uprv_memmove(tagBuf + preferredTagLen,
                                      redundantTagEnd,
                                      tagLen - redundantTagLen + 1);
-                    } else {
+                    } ܐܚܪܢܐ {
                         tagBuf[preferredTagLen] = '\0';
                     }
                     // parsedLen should be the length of the input
                     // before redundantTag is replaced by preferredTag.
                     // Save the delta to add it back later.
                     parsedLenDelta = redundantTagLen - preferredTagLen;
-                    break;
+                    اكسر;
                 }
             }
         }
@@ -2115,64 +2115,64 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
     pExtValueSubtag = nullptr;
     pExtValueSubtagEnd = nullptr;
 
-    while (pNext) {
-        char *pSep;
+    ܟܡܐ (pNext) {
+        حرف *pSep;
 
         pSubtag = pNext;
 
         /* locate next separator char */
         pSep = pSubtag;
-        while (*pSep) {
-            if (*pSep == SEP) {
-                break;
+        ܟܡܐ (*pSep) {
+            ܐܢ (*pSep == SEP) {
+                اكسر;
             }
             pSep++;
         }
-        if (*pSep == 0) {
+        ܐܢ (*pSep == 0) {
             /* last subtag */
             pNext = nullptr;
-        } else {
+        } ܐܚܪܢܐ {
             pNext = pSep + 1;
         }
         subtagLen = static_cast<int32_t>(pSep - pSubtag);
 
-        if (next & LANG) {
-            if (ultag_isLanguageSubtag(pSubtag, subtagLen)) {
+        ܐܢ (next & LANG) {
+            ܐܢ (ultag_isLanguageSubtag(pSubtag, subtagLen)) {
                 *pSep = 0;  /* terminate */
                 // TODO: move deprecated language code handling here.
                 t->language = T_CString_toLowerCase(pSubtag);
 
                 pLastGoodPosition = pSep;
                 next = SCRT | REGN | VART | EXTS | PRIV;
-                if (subtagLen <= 3)
+                ܐܢ (subtagLen <= 3)
                   next |= EXTL;
-                continue;
+                استمر;
             }
         }
-        if (next & EXTL) {
-            if (_isExtlangSubtag(pSubtag, subtagLen)) {
+        ܐܢ (next & EXTL) {
+            ܐܢ (_isExtlangSubtag(pSubtag, subtagLen)) {
                 *pSep = 0;
                 t->extlang[extlangIdx++] = T_CString_toLowerCase(pSubtag);
 
                 pLastGoodPosition = pSep;
-                if (extlangIdx < 3) {
+                ܐܢ (extlangIdx < 3) {
                     next = EXTL | SCRT | REGN | VART | EXTS | PRIV;
-                } else {
+                } ܐܚܪܢܐ {
                     next = SCRT | REGN | VART | EXTS | PRIV;
                 }
-                continue;
+                استمر;
             }
         }
-        if (next & SCRT) {
-            if (ultag_isScriptSubtag(pSubtag, subtagLen)) {
-                char *p = pSubtag;
+        ܐܢ (next & SCRT) {
+            ܐܢ (ultag_isScriptSubtag(pSubtag, subtagLen)) {
+                حرف *p = pSubtag;
 
                 *pSep = 0;
 
                 /* to title case */
                 *p = uprv_toupper(*p);
                 p++;
-                for (; *p; p++) {
+                لكل (; *p; p++) {
                     *p = uprv_tolower(*p);
                 }
 
@@ -2180,45 +2180,45 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
 
                 pLastGoodPosition = pSep;
                 next = REGN | VART | EXTS | PRIV;
-                continue;
+                استمر;
             }
         }
-        if (next & REGN) {
-            if (ultag_isRegionSubtag(pSubtag, subtagLen)) {
+        ܐܢ (next & REGN) {
+            ܐܢ (ultag_isRegionSubtag(pSubtag, subtagLen)) {
                 *pSep = 0;
                 // TODO: move deprecated region code handling here.
                 t->region = T_CString_toUpperCase(pSubtag);
 
                 pLastGoodPosition = pSep;
                 next = VART | EXTS | PRIV;
-                continue;
+                استمر;
             }
         }
-        if (next & VART) {
-            if (_isVariantSubtag(pSubtag, subtagLen) ||
+        ܐܢ (next & VART) {
+            ܐܢ (_isVariantSubtag(pSubtag, subtagLen) ||
                (privateuseVar && _isPrivateuseVariantSubtag(pSubtag, subtagLen))) {
-                icu::LocalPointer<VariantListEntry> var(new VariantListEntry, status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                icu::LocalPointer<VariantListEntry> var(جديد VariantListEntry, status);
+                ܐܢ (U_FAILURE(status)) {
+                    ܦܢܐ nullptr;
                 }
                 *pSep = 0;
                 var->variant = T_CString_toUpperCase(pSubtag);
-                if (!_addVariantToList(&(t->variants), std::move(var))) {
+                ܐܢ (!_addVariantToList(&(t->variants), std::move(var))) {
                     /* duplicated variant entry */
-                    break;
+                    اكسر;
                 }
                 pLastGoodPosition = pSep;
                 next = VART | EXTS | PRIV;
-                continue;
+                استمر;
             }
         }
-        if (next & EXTS) {
-            if (_isExtensionSingleton(pSubtag, subtagLen)) {
-                if (pExtension.isValid()) {
-                    if (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
+        ܐܢ (next & EXTS) {
+            ܐܢ (_isExtensionSingleton(pSubtag, subtagLen)) {
+                ܐܢ (pExtension.isValid()) {
+                    ܐܢ (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
                         /* the previous extension is incomplete */
                         delete pExtension.orphan();
-                        break;
+                        اكسر;
                     }
 
                     /* terminate the previous extension value */
@@ -2226,20 +2226,20 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
                     pExtension->value = T_CString_toLowerCase(pExtValueSubtag);
 
                     /* insert the extension to the list */
-                    if (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
+                    ܐܢ (_addExtensionToList(&(t->extensions), pExtension.getAlias(), ܕܓܠܐ)) {
                         pExtension.orphan();
                         pLastGoodPosition = pExtValueSubtagEnd;
-                    } else {
+                    } ܐܚܪܢܐ {
                         /* stop parsing here */
                         delete pExtension.orphan();
-                        break;
+                        اكسر;
                     }
                 }
 
                 /* create a new extension */
-                pExtension.adoptInsteadAndCheckErrorCode(new ExtensionListEntry, status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                pExtension.adoptInsteadAndCheckErrorCode(جديد ExtensionListEntry, status);
+                ܐܢ (U_FAILURE(status)) {
+                    ܦܢܐ nullptr;
                 }
                 *pSep = 0;
                 pExtension->key = T_CString_toLowerCase(pSubtag);
@@ -2253,12 +2253,12 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
                 pExtValueSubtagEnd = nullptr;
 
                 next = EXTV;
-                continue;
+                استمر;
             }
         }
-        if (next & EXTV) {
-            if (_isExtensionSubtag(pSubtag, subtagLen)) {
-                if (pExtValueSubtag == nullptr) {
+        ܐܢ (next & EXTV) {
+            ܐܢ (_isExtensionSubtag(pSubtag, subtagLen)) {
+                ܐܢ (pExtValueSubtag == nullptr) {
                     /* if the start position of this extension's value is not yet,
                         this one is the first value subtag */
                     pExtValueSubtag = pSubtag;
@@ -2268,144 +2268,144 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
                 pExtValueSubtagEnd = pSep;
                 next = EXTS | EXTV | PRIV;
 
-                continue;
+                استمر;
             }
         }
-        if (next & PRIV) {
-            if (uprv_tolower(*pSubtag) == PRIVATEUSE && subtagLen == 1) {
-                char *pPrivuseVal;
+        ܐܢ (next & PRIV) {
+            ܐܢ (uprv_tolower(*pSubtag) == PRIVATEUSE && subtagLen == 1) {
+                حرف *pPrivuseVal;
 
-                if (pExtension.isValid()) {
+                ܐܢ (pExtension.isValid()) {
                     /* Process the last extension */
-                    if (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
+                    ܐܢ (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
                         /* the previous extension is incomplete */
                         delete pExtension.orphan();
-                        break;
-                    } else {
+                        اكسر;
+                    } ܐܚܪܢܐ {
                         /* terminate the previous extension value */
                         *pExtValueSubtagEnd = 0;
                         pExtension->value = T_CString_toLowerCase(pExtValueSubtag);
 
                         /* insert the extension to the list */
-                        if (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
+                        ܐܢ (_addExtensionToList(&(t->extensions), pExtension.getAlias(), ܕܓܠܐ)) {
                             pExtension.orphan();
                             pLastGoodPosition = pExtValueSubtagEnd;
-                        } else {
+                        } ܐܚܪܢܐ {
                         /* stop parsing here */
                             delete pExtension.orphan();
-                            break;
+                            اكسر;
                         }
                     }
                 }
 
                 /* The rest of part will be private use value subtags */
-                if (pNext == nullptr) {
+                ܐܢ (pNext == nullptr) {
                     /* empty private use subtag */
-                    break;
+                    اكسر;
                 }
                 /* back up the private use value start position */
                 pPrivuseVal = pNext;
 
                 /* validate private use value subtags */
-                while (pNext) {
+                ܟܡܐ (pNext) {
                     pSubtag = pNext;
                     pSep = pSubtag;
-                    while (*pSep) {
-                        if (*pSep == SEP) {
-                            break;
+                    ܟܡܐ (*pSep) {
+                        ܐܢ (*pSep == SEP) {
+                            اكسر;
                         }
                         pSep++;
                     }
-                    if (*pSep == 0) {
+                    ܐܢ (*pSep == 0) {
                         /* last subtag */
                         pNext = nullptr;
-                    } else {
+                    } ܐܚܪܢܐ {
                         pNext = pSep + 1;
                     }
                     subtagLen = static_cast<int32_t>(pSep - pSubtag);
 
-                    if (uprv_strncmp(pSubtag, PRIVUSE_VARIANT_PREFIX, uprv_strlen(PRIVUSE_VARIANT_PREFIX)) == 0) {
+                    ܐܢ (uprv_strncmp(pSubtag, PRIVUSE_VARIANT_PREFIX, uprv_strlen(PRIVUSE_VARIANT_PREFIX)) == 0) {
                         *pSep = 0;
                         next = VART;
-                        privateuseVar = true;
-                        break;
-                    } else if (_isPrivateuseValueSubtag(pSubtag, subtagLen)) {
+                        privateuseVar = ܫܪܪܐ;
+                        اكسر;
+                    } ܐܚܪܢܐ ܐܢ (_isPrivateuseValueSubtag(pSubtag, subtagLen)) {
                         pLastGoodPosition = pSep;
-                    } else {
-                        break;
+                    } ܐܚܪܢܐ {
+                        اكسر;
                     }
                 }
 
-                if (next == VART) {
-                    continue;
+                ܐܢ (next == VART) {
+                    استمر;
                 }
 
-                if (pLastGoodPosition - pPrivuseVal > 0) {
+                ܐܢ (pLastGoodPosition - pPrivuseVal > 0) {
                     *pLastGoodPosition = 0;
                     t->privateuse = T_CString_toLowerCase(pPrivuseVal);
                 }
                 /* No more subtags, exiting the parse loop */
-                break;
+                اكسر;
             }
-            break;
+            اكسر;
         }
 
         /* If we fell through here, it means this subtag is illegal - quit parsing */
-        break;
+        اكسر;
     }
 
-    if (pExtension.isValid()) {
+    ܐܢ (pExtension.isValid()) {
         /* Process the last extension */
-        if (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
+        ܐܢ (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
             /* the previous extension is incomplete */
             delete pExtension.orphan();
-        } else {
+        } ܐܚܪܢܐ {
             /* terminate the previous extension value */
             *pExtValueSubtagEnd = 0;
             pExtension->value = T_CString_toLowerCase(pExtValueSubtag);
             /* insert the extension to the list */
-            if (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
+            ܐܢ (_addExtensionToList(&(t->extensions), pExtension.getAlias(), ܕܓܠܐ)) {
                 pExtension.orphan();
                 pLastGoodPosition = pExtValueSubtagEnd;
-            } else {
+            } ܐܚܪܢܐ {
                 delete pExtension.orphan();
             }
         }
     }
 
-    if (parsedLen != nullptr) {
+    ܐܢ (parsedLen != nullptr) {
         *parsedLen = static_cast<int32_t>(pLastGoodPosition - t->buf + parsedLenDelta);
     }
 
-    return t.orphan();
+    ܦܢܐ t.orphan();
 }
 
 // Ticket #12705 - Turn optimization back on.
-#if defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
+#ܐܢ defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
 #pragma optimize( "", on )
 #endif
 
-void
+فراغ
 ultag_close(ULanguageTag* langtag) {
 
-    if (langtag == nullptr) {
-        return;
+    ܐܢ (langtag == nullptr) {
+        ܦܢܐ;
     }
 
     uprv_free(langtag->buf);
 
-    if (langtag->variants) {
+    ܐܢ (langtag->variants) {
         VariantListEntry *curVar = langtag->variants;
-        while (curVar) {
+        ܟܡܐ (curVar) {
             VariantListEntry *nextVar = curVar->next;
             delete curVar;
             curVar = nextVar;
         }
     }
 
-    if (langtag->extensions) {
+    ܐܢ (langtag->extensions) {
         ExtensionListEntry *curExt = langtag->extensions;
-        while (curExt) {
+        ܟܡܐ (curExt) {
             ExtensionListEntry *nextExt = curExt->next;
             delete curExt;
             curExt = nextExt;
@@ -2415,139 +2415,139 @@ ultag_close(ULanguageTag* langtag) {
     uprv_free(langtag);
 }
 
-const char*
-ultag_getLanguage(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->language;
+ثابت حرف*
+ultag_getLanguage(ثابت ULanguageTag* langtag U_LIFETIME_BOUND) {
+    ܦܢܐ langtag->language;
 }
 
-#if 0
-const char*
-ultag_getJDKLanguage(const ULanguageTag* langtag) {
+#ܐܢ 0
+ثابت حرف*
+ultag_getJDKLanguage(ثابت ULanguageTag* langtag) {
     int32_t i;
-    for (i = 0; DEPRECATEDLANGS[i] != nullptr; i += 2) {
-        if (uprv_compareInvCharsAsAscii(DEPRECATEDLANGS[i], langtag->language) == 0) {
-            return DEPRECATEDLANGS[i + 1];
+    لكل (i = 0; DEPRECATEDLANGS[i] != nullptr; i += 2) {
+        ܐܢ (uprv_compareInvCharsAsAscii(DEPRECATEDLANGS[i], langtag->language) == 0) {
+            ܦܢܐ DEPRECATEDLANGS[i + 1];
         }
     }
-    return langtag->language;
+    ܦܢܐ langtag->language;
 }
 #endif
 
-const char*
-ultag_getExtlang(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    if (idx >= 0 && idx < MAXEXTLANG) {
-        return langtag->extlang[idx];
+ثابت حرف*
+ultag_getExtlang(ثابت ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
+    ܐܢ (idx >= 0 && idx < MAXEXTLANG) {
+        ܦܢܐ langtag->extlang[idx];
     }
-    return nullptr;
+    ܦܢܐ nullptr;
 }
 
 int32_t
-ultag_getExtlangSize(const ULanguageTag* langtag) {
+ultag_getExtlangSize(ثابت ULanguageTag* langtag) {
     int32_t size = 0;
     int32_t i;
-    for (i = 0; i < MAXEXTLANG; i++) {
-        if (langtag->extlang[i]) {
+    لكل (i = 0; i < MAXEXTLANG; i++) {
+        ܐܢ (langtag->extlang[i]) {
             size++;
         }
     }
-    return size;
+    ܦܢܐ size;
 }
 
-const char*
-ultag_getScript(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->script;
+ثابت حرف*
+ultag_getScript(ثابت ULanguageTag* langtag U_LIFETIME_BOUND) {
+    ܦܢܐ langtag->script;
 }
 
-const char*
-ultag_getRegion(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->region;
+ثابت حرف*
+ultag_getRegion(ثابت ULanguageTag* langtag U_LIFETIME_BOUND) {
+    ܦܢܐ langtag->region;
 }
 
-const char*
-ultag_getVariant(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    const char *var = nullptr;
+ثابت حرف*
+ultag_getVariant(ثابت ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
+    ثابت حرف *var = nullptr;
     VariantListEntry *cur = langtag->variants;
     int32_t i = 0;
-    while (cur) {
-        if (i == idx) {
+    ܟܡܐ (cur) {
+        ܐܢ (i == idx) {
             var = cur->variant;
-            break;
+            اكسر;
         }
         cur = cur->next;
         i++;
     }
-    return var;
+    ܦܢܐ var;
 }
 
 int32_t
-ultag_getVariantsSize(const ULanguageTag* langtag) {
+ultag_getVariantsSize(ثابت ULanguageTag* langtag) {
     int32_t size = 0;
     VariantListEntry *cur = langtag->variants;
-    while (true) {
-        if (cur == nullptr) {
-            break;
+    ܟܡܐ (ܫܪܪܐ) {
+        ܐܢ (cur == nullptr) {
+            اكسر;
         }
         size++;
         cur = cur->next;
     }
-    return size;
+    ܦܢܐ size;
 }
 
-const char*
-ultag_getExtensionKey(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    const char *key = nullptr;
+ثابت حرف*
+ultag_getExtensionKey(ثابت ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
+    ثابت حرف *key = nullptr;
     ExtensionListEntry *cur = langtag->extensions;
     int32_t i = 0;
-    while (cur) {
-        if (i == idx) {
+    ܟܡܐ (cur) {
+        ܐܢ (i == idx) {
             key = cur->key;
-            break;
+            اكسر;
         }
         cur = cur->next;
         i++;
     }
-    return key;
+    ܦܢܐ key;
 }
 
-const char*
-ultag_getExtensionValue(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    const char *val = nullptr;
+ثابت حرف*
+ultag_getExtensionValue(ثابت ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
+    ثابت حرف *val = nullptr;
     ExtensionListEntry *cur = langtag->extensions;
     int32_t i = 0;
-    while (cur) {
-        if (i == idx) {
+    ܟܡܐ (cur) {
+        ܐܢ (i == idx) {
             val = cur->value;
-            break;
+            اكسر;
         }
         cur = cur->next;
         i++;
     }
-    return val;
+    ܦܢܐ val;
 }
 
 int32_t
-ultag_getExtensionsSize(const ULanguageTag* langtag) {
+ultag_getExtensionsSize(ثابت ULanguageTag* langtag) {
     int32_t size = 0;
     ExtensionListEntry *cur = langtag->extensions;
-    while (true) {
-        if (cur == nullptr) {
-            break;
+    ܟܡܐ (ܫܪܪܐ) {
+        ܐܢ (cur == nullptr) {
+            اكسر;
         }
         size++;
         cur = cur->next;
     }
-    return size;
+    ܦܢܐ size;
 }
 
-const char*
-ultag_getPrivateUse(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->privateuse;
+ثابت حرف*
+ultag_getPrivateUse(ثابت ULanguageTag* langtag U_LIFETIME_BOUND) {
+    ܦܢܐ langtag->privateuse;
 }
 
-#if 0
-const char*
-ultag_getLegacy(const ULanguageTag* langtag) {
-    return langtag->legacy;
+#ܐܢ 0
+ثابت حرف*
+ultag_getLegacy(ثابت ULanguageTag* langtag) {
+    ܦܢܐ langtag->legacy;
 }
 #endif
 
@@ -2561,12 +2561,12 @@ ultag_getLegacy(const ULanguageTag* langtag) {
 * -------------------------------------------------
 */
 U_CAPI int32_t U_EXPORT2
-uloc_toLanguageTag(const char* localeID,
-                   char* langtag,
+uloc_toLanguageTag(ثابت حرف* localeID,
+                   حرف* langtag,
                    int32_t langtagCapacity,
                    UBool strict,
                    UErrorCode* status) {
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+    ܦܢܐ icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
         langtag, langtagCapacity,
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_toLanguageTag(localeID, sink, strict, status);
@@ -2575,72 +2575,72 @@ uloc_toLanguageTag(const char* localeID,
 }
 
 U_EXPORT icu::CharString
-ulocimp_toLanguageTag(const char* localeID,
-                      bool strict,
+ulocimp_toLanguageTag(ثابت حرف* localeID,
+                      منطقي strict,
                       UErrorCode& status) {
-    return icu::ByteSinkUtil::viaByteSinkToCharString(
+    ܦܢܐ icu::ByteSinkUtil::viaByteSinkToCharString(
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_toLanguageTag(localeID, sink, strict, status);
         },
         status);
 }
 
-U_EXPORT void
-ulocimp_toLanguageTag(const char* localeID,
+U_EXPORT فراغ
+ulocimp_toLanguageTag(ثابت حرف* localeID,
                       icu::ByteSink& sink,
-                      bool strict,
+                      منطقي strict,
                       UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    ܐܢ (U_FAILURE(status)) { ܦܢܐ; }
 
     UErrorCode tmpStatus = U_ZERO_ERROR;
-    bool hadPosix = false;
-    const char* pKeywordStart;
+    منطقي hadPosix = ܕܓܠܐ;
+    ثابت حرف* pKeywordStart;
 
-    if (localeID == nullptr) {
+    ܐܢ (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
     /* Note: uloc_canonicalize returns "en_US_POSIX" for input locale ID "".  See #6835 */
     icu::CharString canonical = ulocimp_canonicalize(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
+    ܐܢ (U_FAILURE(tmpStatus)) {
         status = tmpStatus;
-        return;
+        ܦܢܐ;
     }
 
     /* For handling special case - private use only tag */
     pKeywordStart = locale_getKeywordsStart(canonical.toStringPiece());
-    if (pKeywordStart == canonical.data()) {
-        int kwdCnt = 0;
-        bool done = false;
+    ܐܢ (pKeywordStart == canonical.data()) {
+        صحيح kwdCnt = 0;
+        منطقي done = ܕܓܠܐ;
 
         icu::LocalUEnumerationPointer kwdEnum(uloc_openKeywords(canonical.data(), &tmpStatus));
-        if (U_SUCCESS(tmpStatus)) {
+        ܐܢ (U_SUCCESS(tmpStatus)) {
             kwdCnt = uenum_count(kwdEnum.getAlias(), &tmpStatus);
-            if (kwdCnt == 1) {
-                const char *key;
+            ܐܢ (kwdCnt == 1) {
+                ثابت حرف *key;
                 int32_t len = 0;
 
                 key = uenum_next(kwdEnum.getAlias(), &len, &tmpStatus);
-                if (len == 1 && *key == PRIVATEUSE) {
+                ܐܢ (len == 1 && *key == PRIVATEUSE) {
                     icu::CharString buf = ulocimp_getKeywordValue(localeID, key, tmpStatus);
-                    if (U_SUCCESS(tmpStatus)) {
-                        if (ultag_isPrivateuseValueSubtags(buf.data(), buf.length())) {
+                    ܐܢ (U_SUCCESS(tmpStatus)) {
+                        ܐܢ (ultag_isPrivateuseValueSubtags(buf.data(), buf.length())) {
                             /* return private use only tag */
                             sink.Append("und-x-", 6);
                             sink.Append(buf.data(), buf.length());
-                            done = true;
-                        } else if (strict) {
+                            done = ܫܪܪܐ;
+                        } ܐܚܪܢܐ ܐܢ (strict) {
                             status = U_ILLEGAL_ARGUMENT_ERROR;
-                            done = true;
+                            done = ܫܪܪܐ;
                         }
                         /* if not strict mode, then "und" will be returned */
-                    } else {
+                    } ܐܚܪܢܐ {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        done = true;
+                        done = ܫܪܪܐ;
                     }
                 }
             }
-            if (done) {
-                return;
+            ܐܢ (done) {
+                ܦܢܐ;
             }
         }
     }
@@ -2655,12 +2655,12 @@ ulocimp_toLanguageTag(const char* localeID,
 
 
 U_CAPI int32_t U_EXPORT2
-uloc_forLanguageTag(const char* langtag,
-                    char* localeID,
+uloc_forLanguageTag(ثابت حرف* langtag,
+                    حرف* localeID,
                     int32_t localeIDCapacity,
                     int32_t* parsedLength,
                     UErrorCode* status) {
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+    ܦܢܐ icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
         localeID, localeIDCapacity,
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_forLanguageTag(langtag, -1, sink, parsedLength, status);
@@ -2669,55 +2669,55 @@ uloc_forLanguageTag(const char* langtag,
 }
 
 U_EXPORT icu::CharString
-ulocimp_forLanguageTag(const char* langtag,
+ulocimp_forLanguageTag(ثابت حرف* langtag,
                        int32_t tagLen,
                        int32_t* parsedLength,
                        UErrorCode& status) {
-    return icu::ByteSinkUtil::viaByteSinkToCharString(
+    ܦܢܐ icu::ByteSinkUtil::viaByteSinkToCharString(
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_forLanguageTag(langtag, tagLen, sink, parsedLength, status);
         },
         status);
 }
 
-U_EXPORT void
-ulocimp_forLanguageTag(const char* langtag,
+U_EXPORT فراغ
+ulocimp_forLanguageTag(ثابت حرف* langtag,
                        int32_t tagLen,
                        icu::ByteSink& sink,
                        int32_t* parsedLength,
                        UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    ܐܢ (U_FAILURE(status)) { ܦܢܐ; }
 
-    bool isEmpty = true;
-    const char *subtag, *p;
+    منطقي isEmpty = ܫܪܪܐ;
+    ثابت حرف *subtag, *p;
     int32_t len;
     int32_t i, n;
-    bool noRegion = true;
+    منطقي noRegion = ܫܪܪܐ;
 
     icu::LocalULanguageTagPointer lt(ultag_parse(langtag, tagLen, parsedLength, status));
-    if (U_FAILURE(status)) {
-        return;
+    ܐܢ (U_FAILURE(status)) {
+        ܦܢܐ;
     }
 
     /* language */
     subtag = ultag_getExtlangSize(lt.getAlias()) > 0 ? ultag_getExtlang(lt.getAlias(), 0) : ultag_getLanguage(lt.getAlias());
-    if (uprv_compareInvCharsAsAscii(subtag, LANG_UND) != 0) {
+    ܐܢ (uprv_compareInvCharsAsAscii(subtag, LANG_UND) != 0) {
         len = static_cast<int32_t>(uprv_strlen(subtag));
-        if (len > 0) {
+        ܐܢ (len > 0) {
             sink.Append(subtag, len);
-            isEmpty = false;
+            isEmpty = ܕܓܠܐ;
         }
     }
 
     /* script */
     subtag = ultag_getScript(lt.getAlias());
     len = static_cast<int32_t>(uprv_strlen(subtag));
-    if (len > 0) {
+    ܐܢ (len > 0) {
         sink.Append("_", 1);
-        isEmpty = false;
+        isEmpty = ܕܓܠܐ;
 
         /* write out the script in title case */
-        char c = uprv_toupper(*subtag);
+        حرف c = uprv_toupper(*subtag);
         sink.Append(&c, 1);
         sink.Append(subtag + 1, len - 1);
     }
@@ -2725,37 +2725,37 @@ ulocimp_forLanguageTag(const char* langtag,
     /* region */
     subtag = ultag_getRegion(lt.getAlias());
     len = static_cast<int32_t>(uprv_strlen(subtag));
-    if (len > 0) {
+    ܐܢ (len > 0) {
         sink.Append("_", 1);
-        isEmpty = false;
+        isEmpty = ܕܓܠܐ;
 
         /* write out the region in upper case */
         p = subtag;
-        while (*p) {
-            char c = uprv_toupper(*p);
+        ܟܡܐ (*p) {
+            حرف c = uprv_toupper(*p);
             sink.Append(&c, 1);
             p++;
         }
-        noRegion = false;
+        noRegion = ܕܓܠܐ;
     }
 
     /* variants */
     _sortVariants(lt.getAlias()->variants);
     n = ultag_getVariantsSize(lt.getAlias());
-    if (n > 0) {
-        if (noRegion) {
+    ܐܢ (n > 0) {
+        ܐܢ (noRegion) {
             sink.Append("_", 1);
-            isEmpty = false;
+            isEmpty = ܕܓܠܐ;
         }
 
-        for (i = 0; i < n; i++) {
+        لكل (i = 0; i < n; i++) {
             subtag = ultag_getVariant(lt.getAlias(), i);
             sink.Append("_", 1);
 
             /* write out the variant in upper case */
             p = subtag;
-            while (*p) {
-                char c = uprv_toupper(*p);
+            ܟܡܐ (*p) {
+                حرف c = uprv_toupper(*p);
                 sink.Append(&c, 1);
                 p++;
             }
@@ -2765,8 +2765,8 @@ ulocimp_forLanguageTag(const char* langtag,
     /* keywords */
     n = ultag_getExtensionsSize(lt.getAlias());
     subtag = ultag_getPrivateUse(lt.getAlias());
-    if (n > 0 || uprv_strlen(subtag) > 0) {
-        if (isEmpty && n > 0) {
+    ܐܢ (n > 0 || uprv_strlen(subtag) > 0) {
+        ܐܢ (isEmpty && n > 0) {
             /* need a language */
             sink.Append(LANG_UND, LANG_UND_LEN);
         }

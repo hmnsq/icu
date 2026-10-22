@@ -19,8 +19,8 @@
 #ifndef __BMPSET_H__
 #define __BMPSET_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uniset.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uniset.h"
 
 U_NAMESPACE_BEGIN
 
@@ -35,45 +35,45 @@ U_NAMESPACE_BEGIN
  * Supplementary characters: Binary search over
  * the supplementary part of the parent set's inversion list.
  */
-class BMPSet : public UMemory {
-public:
-    BMPSet(const int32_t *parentList, int32_t parentListLength);
-    BMPSet(const BMPSet &otherBMPSet, const int32_t *newParentList, int32_t newParentListLength);
+class BMPSet : عام UMemory {
+عام:
+    BMPSet(ثابت int32_t *parentList, int32_t parentListLength);
+    BMPSet(ثابت BMPSet &otherBMPSet, ثابت int32_t *newParentList, int32_t newParentListLength);
     virtual ~BMPSet();
 
-    virtual UBool contains(UChar32 c) const;
+    virtual UBool contains(UChar32 c) ثابت;
 
     /*
      * Span the initial substring for which each character c has spanCondition==contains(c).
      * It must be s<limit and spanCondition==0 or 1.
      * @return The string pointer which limits the span.
      */
-    const char16_t *span(const char16_t *s, const char16_t *limit, USetSpanCondition spanCondition) const;
+    ثابت char16_t *span(ثابت char16_t *s, ثابت char16_t *limit, USetSpanCondition spanCondition) ثابت;
 
     /*
      * Span the trailing substring for which each character c has spanCondition==contains(c).
      * It must be s<limit and spanCondition==0 or 1.
      * @return The string pointer which starts the span.
      */
-    const char16_t *spanBack(const char16_t *s, const char16_t *limit, USetSpanCondition spanCondition) const;
+    ثابت char16_t *spanBack(ثابت char16_t *s, ثابت char16_t *limit, USetSpanCondition spanCondition) ثابت;
 
     /*
      * Span the initial substring for which each character c has spanCondition==contains(c).
      * It must be length>0 and spanCondition==0 or 1.
      * @return The string pointer which limits the span.
      */
-    const uint8_t *spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    ثابت uint8_t *spanUTF8(ثابت uint8_t *s, int32_t length, USetSpanCondition spanCondition) ثابت;
 
     /*
      * Span the trailing substring for which each character c has spanCondition==contains(c).
      * It must be length>0 and spanCondition==0 or 1.
      * @return The start of the span.
      */
-    int32_t spanBackUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t spanBackUTF8(ثابت uint8_t *s, int32_t length, USetSpanCondition spanCondition) ثابت;
 
-private:
-    void initBits();
-    void overrideIllegal();
+خاص:
+    فراغ initBits();
+    فراغ overrideIllegal();
 
     /**
      * Same as UnicodeSet::findCodePoint(UChar32 c) const except that the
@@ -92,9 +92,9 @@ private:
      * @return the smallest integer i in the range lo..hi,
      *         inclusive, such that c < list[i]
      */
-    int32_t findCodePoint(UChar32 c, int32_t lo, int32_t hi) const;
+    int32_t findCodePoint(UChar32 c, int32_t lo, int32_t hi) ثابت;
 
-    inline UBool containsSlow(UChar32 c, int32_t lo, int32_t hi) const;
+    مضمن UBool containsSlow(UChar32 c, int32_t lo, int32_t hi) ثابت;
 
     /*
      * One byte 0 or 1 per Latin-1 character.
@@ -151,12 +151,12 @@ private:
      * for mixed BMP blocks and for supplementary code points.
      * The list is terminated with list[listLength-1]=0x110000.
      */
-    const int32_t *list;
+    ثابت int32_t *list;
     int32_t listLength;
 };
 
-inline UBool BMPSet::containsSlow(UChar32 c, int32_t lo, int32_t hi) const {
-    return findCodePoint(c, lo, hi) & 1;
+مضمن UBool BMPSet::containsSlow(UChar32 c, int32_t lo, int32_t hi) ثابت {
+    ܦܢܐ findCodePoint(c, lo, hi) & 1;
 }
 
 U_NAMESPACE_END

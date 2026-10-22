@@ -10,39 +10,39 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#include "locbased.h"
-#include "uresimp.h"
+#ضمن "locbased.h"
+#ضمن "uresimp.h"
 
 U_NAMESPACE_BEGIN
 
-const Locale& LocaleBased::getLocale(const Locale& valid U_LIFETIME_BOUND,
-                                     const Locale& actual U_LIFETIME_BOUND,
+ثابت Locale& LocaleBased::getLocale(ثابت Locale& valid U_LIFETIME_BOUND,
+                                     ثابت Locale& actual U_LIFETIME_BOUND,
                                      ULocDataLocaleType type,
                                      UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return Locale::getRoot();
+    ܐܢ (U_FAILURE(status)) {
+        ܦܢܐ Locale::getRoot();
     }
 
-    switch(type) {
-    case ULOC_VALID_LOCALE:
-        return valid;
-    case ULOC_ACTUAL_LOCALE:
-        return actual;
-    default:
+    بدل(type) {
+    حالة ULOC_VALID_LOCALE:
+        ܦܢܐ valid;
+    حالة ULOC_ACTUAL_LOCALE:
+        ܦܢܐ actual;
+    افتراضي:
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return Locale::getRoot();
+        ܦܢܐ Locale::getRoot();
     }
 }
 
-const char* LocaleBased::getLocaleID(const Locale& valid, const Locale& actual,
+ثابت حرف* LocaleBased::getLocaleID(ثابت Locale& valid, ثابت Locale& actual,
                                      ULocDataLocaleType type, UErrorCode& status) {
-    const Locale& locale = getLocale(valid, actual, type, status);
+    ثابت Locale& locale = getLocale(valid, actual, type, status);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ܐܢ (U_FAILURE(status)) {
+        ܦܢܐ nullptr;
     }
 
-    return locale == Locale::getRoot() ? kRootLocaleName : locale.getName();
+    ܦܢܐ locale == Locale::getRoot() ? kRootLocaleName : locale.getName();
 }
 
 U_NAMESPACE_END

@@ -20,107 +20,107 @@
 *
 ******************************************************************************
 */
-#include "unicode/uclean.h"
-#include "cmemory.h"
-#include "putilimp.h"
-#include "uassert.h"
-#include <stdlib.h>
+#ضمن "unicode/uclean.h"
+#ضمن "cmemory.h"
+#ضمن "putilimp.h"
+#ضمن "uassert.h"
+#ضمن <stdlib.h>
 
 /* uprv_malloc(0) returns a pointer to this read-only data. */
-static const int32_t zeroMem[] = {0, 0, 0, 0, 0, 0};
+ساكن ثابت int32_t zeroMem[] = {0, 0, 0, 0, 0, 0};
 
 /* Function Pointers for user-supplied heap functions  */
-static const void     *pContext;
-static UMemAllocFn    *pAlloc;
-static UMemReallocFn  *pRealloc;
-static UMemFreeFn     *pFree;
+ساكن ثابت فراغ     *pContext;
+ساكن UMemAllocFn    *pAlloc;
+ساكن UMemReallocFn  *pRealloc;
+ساكن UMemFreeFn     *pFree;
 
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-#include <stdio.h>
-static int n=0;
-static long b=0; 
+#ܐܢ U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#ضمن <stdio.h>
+ساكن صحيح n=0;
+ساكن long b=0; 
 #endif
 
-U_CAPI void * U_EXPORT2
+U_CAPI فراغ * U_EXPORT2
 uprv_malloc(size_t s) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-#if 1
+#ܐܢ U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#ܐܢ 1
   putchar('>');
   fflush(stdout);
-#else
+#ܐܚܪܢܐ
   fprintf(stderr,"MALLOC\t#%d\t%ul bytes\t%ul total\n", ++n,s,(b+=s)); fflush(stderr);
 #endif
 #endif
-    if (s > 0) {
-        if (pAlloc) {
-            return (*pAlloc)(pContext, s);
-        } else {
-            return uprv_default_malloc(s);
+    ܐܢ (s > 0) {
+        ܐܢ (pAlloc) {
+            ܦܢܐ (*pAlloc)(pContext, s);
+        } ܐܚܪܢܐ {
+            ܦܢܐ uprv_default_malloc(s);
         }
-    } else {
-        return (void *)zeroMem;
+    } ܐܚܪܢܐ {
+        ܦܢܐ (فراغ *)zeroMem;
     }
 }
 
-U_CAPI void * U_EXPORT2
-uprv_realloc(void * buffer, size_t size) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+U_CAPI فراغ * U_EXPORT2
+uprv_realloc(فراغ * buffer, size_t size) {
+#ܐܢ U_DEBUG && defined(UPRV_MALLOC_COUNT)
   putchar('~');
   fflush(stdout);
 #endif
-    if (buffer == zeroMem) {
-        return uprv_malloc(size);
-    } else if (size == 0) {
-        if (pFree) {
+    ܐܢ (buffer == zeroMem) {
+        ܦܢܐ uprv_malloc(size);
+    } ܐܚܪܢܐ ܐܢ (size == 0) {
+        ܐܢ (pFree) {
             (*pFree)(pContext, buffer);
-        } else {
+        } ܐܚܪܢܐ {
             uprv_default_free(buffer);
         }
-        return (void *)zeroMem;
-    } else {
-        if (pRealloc) {
-            return (*pRealloc)(pContext, buffer, size);
-        } else {
-            return uprv_default_realloc(buffer, size);
+        ܦܢܐ (فراغ *)zeroMem;
+    } ܐܚܪܢܐ {
+        ܐܢ (pRealloc) {
+            ܦܢܐ (*pRealloc)(pContext, buffer, size);
+        } ܐܚܪܢܐ {
+            ܦܢܐ uprv_default_realloc(buffer, size);
         }
     }
 }
 
-U_CAPI void U_EXPORT2
-uprv_free(void *buffer) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+U_CAPI فراغ U_EXPORT2
+uprv_free(فراغ *buffer) {
+#ܐܢ U_DEBUG && defined(UPRV_MALLOC_COUNT)
   putchar('<');
   fflush(stdout);
 #endif
-    if (buffer != zeroMem) {
-        if (pFree) {
+    ܐܢ (buffer != zeroMem) {
+        ܐܢ (pFree) {
             (*pFree)(pContext, buffer);
-        } else {
+        } ܐܚܪܢܐ {
             uprv_default_free(buffer);
         }
     }
 }
 
-U_CAPI void * U_EXPORT2
+U_CAPI فراغ * U_EXPORT2
 uprv_calloc(size_t num, size_t size) {
-    void *mem = nullptr;
+    فراغ *mem = nullptr;
     size *= num;
     mem = uprv_malloc(size);
-    if (mem) {
+    ܐܢ (mem) {
         uprv_memset(mem, 0, size);
     }
-    return mem;
+    ܦܢܐ mem;
 }
 
-U_CAPI void U_EXPORT2
-u_setMemoryFunctions(const void *context, UMemAllocFn *a, UMemReallocFn *r, UMemFreeFn *f,  UErrorCode *status)
+U_CAPI فراغ U_EXPORT2
+u_setMemoryFunctions(ثابت فراغ *context, UMemAllocFn *a, UMemReallocFn *r, UMemFreeFn *f,  UErrorCode *status)
 {
-    if (U_FAILURE(*status)) {
-        return;
+    ܐܢ (U_FAILURE(*status)) {
+        ܦܢܐ;
     }
-    if (a==nullptr || r==nullptr || f==nullptr) {
+    ܐܢ (a==nullptr || r==nullptr || f==nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ܦܢܐ;
     }
     pContext  = context;
     pAlloc    = a;
@@ -134,5 +134,5 @@ U_CFUNC UBool cmemory_cleanup() {
     pAlloc     = nullptr;
     pRealloc   = nullptr;
     pFree      = nullptr;
-    return true;
+    ܦܢܐ ܫܪܪܐ;
 }

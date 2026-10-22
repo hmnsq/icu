@@ -21,18 +21,18 @@
 #ifndef __UBIDI_PROPS_H__
 #define __UBIDI_PROPS_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
-#include "putilimp.h"
-#include "uset_imp.h"
-#include "udataswp.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uset.h"
+#ضمن "putilimp.h"
+#ضمن "uset_imp.h"
+#ضمن "udataswp.h"
 
 U_CDECL_BEGIN
 
 /* library API -------------------------------------------------------------- */
 
-U_CFUNC void
-ubidi_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode);
+U_CFUNC فراغ
+ubidi_addPropertyStarts(ثابت USetAdder *sa, UErrorCode *pErrorCode);
 
 /* property access functions */
 
@@ -78,7 +78,7 @@ ubidi_getPairedBracket(UChar32 c);
 #define UBIDI_FMT_3 0x69
 
 /* indexes into indexes[] */
-enum {
+تعداد {
     UBIDI_IX_INDEX_TOP,
     UBIDI_IX_LENGTH,
     UBIDI_IX_TRIE_SIZE,
@@ -95,7 +95,7 @@ enum {
 
 /* definitions for 16-bit bidi/shaping properties word ---------------------- */
 
-enum {
+تعداد {
  /* UBIDI_CLASS_SHIFT=0, */     /* bidi class: 5 bits (4..0) */
     UBIDI_JT_SHIFT=5,           /* joining type: 3 bits (7..5) */
 
@@ -119,13 +119,13 @@ enum {
 #define UBIDI_GET_CLASS(props) ((props)&UBIDI_CLASS_MASK)
 #define UBIDI_GET_FLAG(props, shift) (((props)>>(shift))&1)
 
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
+#ܐܢ U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
 #   define UBIDI_GET_MIRROR_DELTA(props) ((int16_t)(props)>>UBIDI_MIRROR_DELTA_SHIFT)
-#else
+#ܐܚܪܢܐ
 #   define UBIDI_GET_MIRROR_DELTA(props) (int16_t)(((props)&0x8000) ? (((props)>>UBIDI_MIRROR_DELTA_SHIFT)|0xe000) : ((props)>>UBIDI_MIRROR_DELTA_SHIFT))
 #endif
 
-enum {
+تعداد {
     UBIDI_ESC_MIRROR_DELTA=-4,
     UBIDI_MIN_MIRROR_DELTA=-3,
     UBIDI_MAX_MIRROR_DELTA=3
@@ -133,7 +133,7 @@ enum {
 
 /* definitions for 32-bit mirror table entry -------------------------------- */
 
-enum {
+تعداد {
     /* the source Unicode code point takes 21 bits (20..0) */
     UBIDI_MIRROR_INDEX_SHIFT=21,
     UBIDI_MAX_MIRROR_INDEX=0x7ff

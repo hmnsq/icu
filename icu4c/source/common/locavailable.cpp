@@ -19,67 +19,67 @@
 *   that then do not depend on resource bundle code and res_index bundles.
 */
 
-#include "unicode/errorcode.h"
-#include "unicode/utypes.h"
-#include "unicode/locid.h"
-#include "unicode/uloc.h"
-#include "unicode/ures.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "ucln_cmn.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "uresimp.h"
+#ضمن "unicode/errorcode.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/locid.h"
+#ضمن "unicode/uloc.h"
+#ضمن "unicode/ures.h"
+#ضمن "cmemory.h"
+#ضمن "cstring.h"
+#ضمن "ucln_cmn.h"
+#ضمن "uassert.h"
+#ضمن "umutex.h"
+#ضمن "uresimp.h"
 
 // C++ API ----------------------------------------------------------------- ***
 
 U_NAMESPACE_BEGIN
 
-static icu::Locale*  availableLocaleList = nullptr;
-static int32_t  availableLocaleListCount;
-static icu::UInitOnce gInitOnceLocale {};
+ساكن icu::Locale*  availableLocaleList = nullptr;
+ساكن int32_t  availableLocaleListCount;
+ساكن icu::UInitOnce gInitOnceLocale {};
 
-namespace {
+نطاق {
 
 UBool U_CALLCONV locale_available_cleanup()
 {
-    if (availableLocaleList) {
+    ܐܢ (availableLocaleList) {
         delete []availableLocaleList;
         availableLocaleList = nullptr;
     }
     availableLocaleListCount = 0;
     gInitOnceLocale.reset();
 
-    return true;
+    ܦܢܐ ܫܪܪܐ;
 }
 
 }  // namespace
 
-void U_CALLCONV locale_available_init() {
+فراغ U_CALLCONV locale_available_init() {
     // This function is a friend of class Locale.
     // This function is only invoked via umtx_initOnce().
     
     // for now, there is a hardcoded list, so just walk through that list and set it up.
     //  Note: this function is a friend of class Locale.
     availableLocaleListCount = uloc_countAvailable();
-    if(availableLocaleListCount) {
-       availableLocaleList = new Locale[availableLocaleListCount];
+    ܐܢ(availableLocaleListCount) {
+       availableLocaleList = جديد Locale[availableLocaleListCount];
     }
-    if (availableLocaleList == nullptr) {
+    ܐܢ (availableLocaleList == nullptr) {
         availableLocaleListCount= 0;
     }
-    for (int32_t locCount=availableLocaleListCount-1; locCount>=0; --locCount) {
+    لكل (int32_t locCount=availableLocaleListCount-1; locCount>=0; --locCount) {
         availableLocaleList[locCount].setFromPOSIXID(uloc_getAvailable(locCount));
     }
     ucln_common_registerCleanup(UCLN_COMMON_LOCALE_AVAILABLE, locale_available_cleanup);
 }
 
-const Locale* U_EXPORT2
+ثابت Locale* U_EXPORT2
 Locale::getAvailableLocales(int32_t& count)
 {
     umtx_initOnce(gInitOnceLocale, &locale_available_init);
     count = availableLocaleListCount;
-    return availableLocaleList;
+    ܦܢܐ availableLocaleList;
 }
 
 
@@ -91,63 +91,63 @@ U_NAMESPACE_USE
 
 /* ### Constants **************************************************/
 
-namespace {
+نطاق {
 
 // Enough capacity for the two lists in the res_index.res file
-const char** gAvailableLocaleNames[2] = {};
+ثابت حرف** gAvailableLocaleNames[2] = {};
 int32_t gAvailableLocaleCounts[2] = {};
 icu::UInitOnce ginstalledLocalesInitOnce {};
 
-class AvailableLocalesSink : public ResourceSink {
-  public:
-    void put(const char *key, ResourceValue &value, UBool /*noFallback*/, UErrorCode &status) override {
-        if (U_FAILURE(status)) { return; }
+صنف AvailableLocalesSink : عام ResourceSink {
+  عام:
+    فراغ put(ثابت حرف *key, ResourceValue &value, UBool /*noFallback*/, UErrorCode &status) override {
+        ܐܢ (U_FAILURE(status)) { ܦܢܐ; }
         ResourceTable resIndexTable = value.getTable(status);
-        if (U_FAILURE(status)) { return; }
-        for (int32_t i = 0; resIndexTable.getKeyAndValue(i, key, value); ++i) {
+        ܐܢ (U_FAILURE(status)) { ܦܢܐ; }
+        لكل (int32_t i = 0; resIndexTable.getKeyAndValue(i, key, value); ++i) {
             ULocAvailableType type;
-            if (uprv_strcmp(key, "InstalledLocales") == 0) {
+            ܐܢ (uprv_strcmp(key, "InstalledLocales") == 0) {
                 type = ULOC_AVAILABLE_DEFAULT;
-            } else if (uprv_strcmp(key, "AliasLocales") == 0) {
+            } ܐܚܪܢܐ ܐܢ (uprv_strcmp(key, "AliasLocales") == 0) {
                 type = ULOC_AVAILABLE_ONLY_LEGACY_ALIASES;
-            } else {
+            } ܐܚܪܢܐ {
                 // CLDRVersion, etc.
-                continue;
+                استمر;
             }
             ResourceTable availableLocalesTable = value.getTable(status);
-            if (U_FAILURE(status)) {
-                return;
+            ܐܢ (U_FAILURE(status)) {
+                ܦܢܐ;
             }
             gAvailableLocaleCounts[type] = availableLocalesTable.getSize();
-            gAvailableLocaleNames[type] = static_cast<const char**>(
-                uprv_malloc(gAvailableLocaleCounts[type] * sizeof(const char*)));
-            if (gAvailableLocaleNames[type] == nullptr) {
+            gAvailableLocaleNames[type] = static_cast<ثابت حرف**>(
+                uprv_malloc(gAvailableLocaleCounts[type] * حجم(ثابت حرف*)));
+            ܐܢ (gAvailableLocaleNames[type] == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                ܦܢܐ;
             }
-            for (int32_t j = 0; availableLocalesTable.getKeyAndValue(j, key, value); ++j) {
+            لكل (int32_t j = 0; availableLocalesTable.getKeyAndValue(j, key, value); ++j) {
                 gAvailableLocaleNames[type][j] = key;
             }
         }
     }
 };
 
-class AvailableLocalesStringEnumeration : public StringEnumeration {
-  public:
+صنف AvailableLocalesStringEnumeration : عام StringEnumeration {
+  عام:
     AvailableLocalesStringEnumeration(ULocAvailableType type) : fType(type) {
     }
 
-    const char* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND override {
-        if (U_FAILURE(status)) { return nullptr; }
+    ثابت حرف* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND override {
+        ܐܢ (U_FAILURE(status)) { ܦܢܐ nullptr; }
         ULocAvailableType actualType = fType;
         int32_t actualIndex = fIndex++;
 
         // If the "combined" list was requested, resolve that now
-        if (fType == ULOC_AVAILABLE_WITH_LEGACY_ALIASES) {
+        ܐܢ (fType == ULOC_AVAILABLE_WITH_LEGACY_ALIASES) {
             int32_t defaultLocalesCount = gAvailableLocaleCounts[ULOC_AVAILABLE_DEFAULT];
-            if (actualIndex < defaultLocalesCount) {
+            ܐܢ (actualIndex < defaultLocalesCount) {
                 actualType = ULOC_AVAILABLE_DEFAULT;
-            } else {
+            } ܐܚܪܢܐ {
                 actualIndex -= defaultLocalesCount;
                 actualType = ULOC_AVAILABLE_ONLY_LEGACY_ALIASES;
             }
@@ -155,37 +155,37 @@ class AvailableLocalesStringEnumeration : public StringEnumeration {
 
         // Return the requested string
         int32_t count = gAvailableLocaleCounts[actualType];
-        const char* result;
-        if (actualIndex < count) {
+        ثابت حرف* result;
+        ܐܢ (actualIndex < count) {
             result = gAvailableLocaleNames[actualType][actualIndex];
-            if (resultLength != nullptr) {
+            ܐܢ (resultLength != nullptr) {
                 *resultLength = static_cast<int32_t>(uprv_strlen(result));
             }
-        } else {
+        } ܐܚܪܢܐ {
             result = nullptr;
-            if (resultLength != nullptr) {
+            ܐܢ (resultLength != nullptr) {
                 *resultLength = 0;
             }
         }
-        return result;
+        ܦܢܐ result;
     }
 
-    void reset(UErrorCode &status) override {
-        if (U_FAILURE(status)) { return; }
+    فراغ reset(UErrorCode &status) override {
+        ܐܢ (U_FAILURE(status)) { ܦܢܐ; }
         fIndex = 0;
     }
 
-    int32_t count(UErrorCode &status) const override {
-        if (U_FAILURE(status)) { return 0; }
-        if (fType == ULOC_AVAILABLE_WITH_LEGACY_ALIASES) {
-            return gAvailableLocaleCounts[ULOC_AVAILABLE_DEFAULT]
+    int32_t count(UErrorCode &status) ثابت override {
+        ܐܢ (U_FAILURE(status)) { ܦܢܐ 0; }
+        ܐܢ (fType == ULOC_AVAILABLE_WITH_LEGACY_ALIASES) {
+            ܦܢܐ gAvailableLocaleCounts[ULOC_AVAILABLE_DEFAULT]
                 + gAvailableLocaleCounts[ULOC_AVAILABLE_ONLY_LEGACY_ALIASES];
-        } else {
-            return gAvailableLocaleCounts[fType];
+        } ܐܚܪܢܐ {
+            ܦܢܐ gAvailableLocaleCounts[fType];
         }
     }
 
-  private:
+  خاص:
     ULocAvailableType fType;
     int32_t fIndex = 0;
 };
@@ -193,19 +193,19 @@ class AvailableLocalesStringEnumeration : public StringEnumeration {
 /* ### Get available **************************************************/
 
 UBool U_CALLCONV uloc_cleanup() {
-    for (int32_t i = 0; i < UPRV_LENGTHOF(gAvailableLocaleNames); i++) {
+    لكل (int32_t i = 0; i < UPRV_LENGTHOF(gAvailableLocaleNames); i++) {
         uprv_free(gAvailableLocaleNames[i]);
         gAvailableLocaleNames[i] = nullptr;
         gAvailableLocaleCounts[i] = 0;
     }
     ginstalledLocalesInitOnce.reset();
-    return true;
+    ܦܢܐ ܫܪܪܐ;
 }
 
 // Load Installed Locales. This function will be called exactly once
 //   via the initOnce mechanism.
 
-void U_CALLCONV loadInstalledLocales(UErrorCode& status) {
+فراغ U_CALLCONV loadInstalledLocales(UErrorCode& status) {
     ucln_common_registerCleanup(UCLN_COMMON_ULOC, uloc_cleanup);
 
     icu::LocalUResourceBundlePointer rb(ures_openDirect(nullptr, "res_index", &status));
@@ -213,53 +213,53 @@ void U_CALLCONV loadInstalledLocales(UErrorCode& status) {
     ures_getAllItemsWithFallback(rb.getAlias(), "", sink, status);
 }
 
-void _load_installedLocales(UErrorCode& status) {
+فراغ _load_installedLocales(UErrorCode& status) {
     umtx_initOnce(ginstalledLocalesInitOnce, &loadInstalledLocales, status);
 }
 
 } // namespace
 
-U_CAPI const char* U_EXPORT2
+U_CAPI ثابت حرف* U_EXPORT2
 uloc_getAvailable(int32_t offset) {
     icu::ErrorCode status;
     _load_installedLocales(status);
-    if (status.isFailure()) {
-        return nullptr;
+    ܐܢ (status.isFailure()) {
+        ܦܢܐ nullptr;
     }
-    if (offset > gAvailableLocaleCounts[0]) {
+    ܐܢ (offset > gAvailableLocaleCounts[0]) {
         // *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ܦܢܐ nullptr;
     }
-    return gAvailableLocaleNames[0][offset];
+    ܦܢܐ gAvailableLocaleNames[0][offset];
 }
 
 U_CAPI int32_t  U_EXPORT2
 uloc_countAvailable() {
     icu::ErrorCode status;
     _load_installedLocales(status);
-    if (status.isFailure()) {
-        return 0;
+    ܐܢ (status.isFailure()) {
+        ܦܢܐ 0;
     }
-    return gAvailableLocaleCounts[0];
+    ܦܢܐ gAvailableLocaleCounts[0];
 }
 
 U_CAPI UEnumeration* U_EXPORT2
 uloc_openAvailableByType(ULocAvailableType type, UErrorCode* status) {
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    ܐܢ (U_FAILURE(*status)) {
+        ܦܢܐ nullptr;
     }
-    if (type < 0 || type >= ULOC_AVAILABLE_COUNT) {
+    ܐܢ (type < 0 || type >= ULOC_AVAILABLE_COUNT) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ܦܢܐ nullptr;
     }
     _load_installedLocales(*status);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    ܐܢ (U_FAILURE(*status)) {
+        ܦܢܐ nullptr;
     }
     LocalPointer<AvailableLocalesStringEnumeration> result(
-        new AvailableLocalesStringEnumeration(type), *status);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+        جديد AvailableLocalesStringEnumeration(type), *status);
+    ܐܢ (U_FAILURE(*status)) {
+        ܦܢܐ nullptr;
     }
-    return uenum_openFromStringEnumeration(result.orphan(), status);
+    ܦܢܐ uenum_openFromStringEnumeration(result.orphan(), status);
 }

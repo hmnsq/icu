@@ -17,19 +17,19 @@
 #ifndef __UCLN_CMN_H__
 #define __UCLN_CMN_H__
 
-#include "unicode/utypes.h"
-#include "ucln.h"
+#ضمن "unicode/utypes.h"
+#ضمن "ucln.h"
 
 /* These are the cleanup functions for various APIs. */
 /* @return true if cleanup complete successfully.*/
-U_CFUNC UBool utrace_cleanup(void);
+U_CFUNC UBool utrace_cleanup(فراغ);
 
-U_CFUNC UBool ucln_lib_cleanup(void);
+U_CFUNC UBool ucln_lib_cleanup(فراغ);
 
 /*
 Please keep the order of enums declared in same order
 as the cleanup functions are suppose to be called. */
-typedef enum ECleanupCommonType {
+تعريفنوع تعداد ECleanupCommonType {
     UCLN_COMMON_START = -1,
     UCLN_COMMON_NUMPARSE_UNISETS,
     UCLN_COMMON_USPREP,
@@ -72,7 +72,7 @@ typedef enum ECleanupCommonType {
 /* Main library cleanup registration function. */
 /* See common/ucln.h for details on adding a cleanup function. */
 /* Note: the global mutex must not be held when calling this function. */
-U_CFUNC void U_EXPORT2 ucln_common_registerCleanup(ECleanupCommonType type,
+U_CFUNC فراغ U_EXPORT2 ucln_common_registerCleanup(ECleanupCommonType type,
                                                    cleanupFunc *func);
 
 #endif

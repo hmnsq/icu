@@ -24,10 +24,10 @@
 #   define U_UTF8_IMPL
 #endif
 
-#include "unicode/utypes.h"
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "uassert.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/utf.h"
+#ضمن "unicode/utf8.h"
+#ضمن "uassert.h"
 
 /*
  * Table of the number of utf8 trail bytes, indexed by the lead byte.
@@ -55,7 +55,7 @@
  * -finish:
  * (BSR: Bit Scan Reverse, scans for a 1-bit, starting from the MSB)
  */
-U_CAPI const uint8_t
+U_CAPI ثابت uint8_t
 utf8_countTrailBytes[256]={
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -84,7 +84,7 @@ utf8_countTrailBytes[256]={
     3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-static const UChar32
+ساكن ثابت UChar32
 utf8_errorValue[6]={
     // Same values as UTF8_ERROR_VALUE_1, UTF8_ERROR_VALUE_2, UTF_ERROR_VALUE,
     // but without relying on the obsolete unicode/utf_old.h.
@@ -92,14 +92,14 @@ utf8_errorValue[6]={
     0x10ffff
 };
 
-static UChar32
+ساكن UChar32
 errorValue(int32_t count, int8_t strict) {
-    if(strict>=0) {
-        return utf8_errorValue[count];
-    } else if(strict==-3) {
-        return 0xfffd;
-    } else {
-        return U_SENTINEL;
+    ܐܢ(strict>=0) {
+        ܦܢܐ utf8_errorValue[count];
+    } ܐܚܪܢܐ ܐܢ(strict==-3) {
+        ܦܢܐ 0xfffd;
+    } ܐܚܪܢܐ {
+        ܦܢܐ U_SENTINEL;
     }
 }
 
@@ -126,98 +126,98 @@ errorValue(int32_t count, int8_t strict) {
  *     like illegal sequences.
  */
 U_CAPI UChar32 U_EXPORT2
-utf8_nextCharSafeBody(const uint8_t *s, int32_t *pi, int32_t length, UChar32 c, int8_t strict) {
+utf8_nextCharSafeBody(ثابت uint8_t *s, int32_t *pi, int32_t length, UChar32 c, int8_t strict) {
     // *pi is one after byte c.
     int32_t i=*pi;
     // length can be negative for NUL-terminated strings: Read and validate one byte at a time.
-    if(i==length || c>0xf4) {
+    ܐܢ(i==length || c>0xf4) {
         // end of string, or not a lead byte
-    } else if(c>=0xf0) {
+    } ܐܚܪܢܐ ܐܢ(c>=0xf0) {
         // Test for 4-byte sequences first because
         // U8_NEXT() handles shorter valid sequences inline.
         uint8_t t1=s[i], t2, t3;
         c&=7;
-        if(U8_IS_VALID_LEAD4_AND_T1(c, t1) &&
+        ܐܢ(U8_IS_VALID_LEAD4_AND_T1(c, t1) &&
                 ++i!=length && (t2=s[i]-0x80)<=0x3f &&
                 ++i!=length && (t3=s[i]-0x80)<=0x3f) {
             ++i;
             c=(c<<18)|((t1&0x3f)<<12)|(t2<<6)|t3;
             // strict: forbid non-characters like U+fffe
-            if(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
+            ܐܢ(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
                 *pi=i;
-                return c;
+                ܦܢܐ c;
             }
         }
-    } else if(c>=0xe0) {
+    } ܐܚܪܢܐ ܐܢ(c>=0xe0) {
         c&=0xf;
-        if(strict!=-2) {
+        ܐܢ(strict!=-2) {
             uint8_t t1=s[i], t2;
-            if(U8_IS_VALID_LEAD3_AND_T1(c, t1) &&
+            ܐܢ(U8_IS_VALID_LEAD3_AND_T1(c, t1) &&
                     ++i!=length && (t2=s[i]-0x80)<=0x3f) {
                 ++i;
                 c=(c<<12)|((t1&0x3f)<<6)|t2;
                 // strict: forbid non-characters like U+fffe
-                if(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
+                ܐܢ(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
                     *pi=i;
-                    return c;
+                    ܦܢܐ c;
                 }
             }
-        } else {
+        } ܐܚܪܢܐ {
             // strict=-2 -> lenient: allow surrogates
             uint8_t t1=s[i]-0x80, t2;
-            if(t1<=0x3f && (c>0 || t1>=0x20) &&
+            ܐܢ(t1<=0x3f && (c>0 || t1>=0x20) &&
                     ++i!=length && (t2=s[i]-0x80)<=0x3f) {
                 *pi=i+1;
-                return (c<<12)|(t1<<6)|t2;
+                ܦܢܐ (c<<12)|(t1<<6)|t2;
             }
         }
-    } else if(c>=0xc2) {
+    } ܐܚܪܢܐ ܐܢ(c>=0xc2) {
         uint8_t t1=s[i]-0x80;
-        if(t1<=0x3f) {
+        ܐܢ(t1<=0x3f) {
             *pi=i+1;
-            return ((c-0xc0)<<6)|t1;
+            ܦܢܐ ((c-0xc0)<<6)|t1;
         }
     }  // else 0x80<=c<0xc2 is not a lead byte
 
     /* error handling */
     c=errorValue(i-*pi, strict);
     *pi=i;
-    return c;
+    ܦܢܐ c;
 }
 
 U_CAPI int32_t U_EXPORT2
 utf8_appendCharSafeBody(uint8_t *s, int32_t i, int32_t length, UChar32 c, UBool *pIsError) {
-    if((uint32_t)(c)<=0x7ff) {
-        if((i)+1<(length)) {
+    ܐܢ((uint32_t)(c)<=0x7ff) {
+        ܐܢ((i)+1<(length)) {
             (s)[(i)++]=(uint8_t)(((c)>>6)|0xc0);
             (s)[(i)++]=(uint8_t)(((c)&0x3f)|0x80);
-            return i;
+            ܦܢܐ i;
         }
-    } else if((uint32_t)(c)<=0xffff) {
+    } ܐܚܪܢܐ ܐܢ((uint32_t)(c)<=0xffff) {
         /* Starting with Unicode 3.2, surrogate code points must not be encoded in UTF-8. */
-        if((i)+2<(length) && !U_IS_SURROGATE(c)) {
+        ܐܢ((i)+2<(length) && !U_IS_SURROGATE(c)) {
             (s)[(i)++]=(uint8_t)(((c)>>12)|0xe0);
             (s)[(i)++]=(uint8_t)((((c)>>6)&0x3f)|0x80);
             (s)[(i)++]=(uint8_t)(((c)&0x3f)|0x80);
-            return i;
+            ܦܢܐ i;
         }
-    } else if((uint32_t)(c)<=0x10ffff) {
-        if((i)+3<(length)) {
+    } ܐܚܪܢܐ ܐܢ((uint32_t)(c)<=0x10ffff) {
+        ܐܢ((i)+3<(length)) {
             (s)[(i)++]=(uint8_t)(((c)>>18)|0xf0);
             (s)[(i)++]=(uint8_t)((((c)>>12)&0x3f)|0x80);
             (s)[(i)++]=(uint8_t)((((c)>>6)&0x3f)|0x80);
             (s)[(i)++]=(uint8_t)(((c)&0x3f)|0x80);
-            return i;
+            ܦܢܐ i;
         }
     }
     /* c>0x10ffff or not enough space, write an error value */
-    if(pIsError!=nullptr) {
-        *pIsError=true;
-    } else {
+    ܐܢ(pIsError!=nullptr) {
+        *pIsError=ܫܪܪܐ;
+    } ܐܚܪܢܐ {
         length-=i;
-        if(length>0) {
+        ܐܢ(length>0) {
             int32_t offset;
-            if(length>3) {
+            ܐܢ(length>3) {
                 length=3;
             }
             s+=i;
@@ -227,101 +227,101 @@ utf8_appendCharSafeBody(uint8_t *s, int32_t i, int32_t length, UChar32 c, UBool 
             i=i+offset;
         }
     }
-    return i;
+    ܦܢܐ i;
 }
 
 U_CAPI UChar32 U_EXPORT2
-utf8_prevCharSafeBody(const uint8_t *s, int32_t start, int32_t *pi, UChar32 c, int8_t strict) {
+utf8_prevCharSafeBody(ثابت uint8_t *s, int32_t start, int32_t *pi, UChar32 c, int8_t strict) {
     // *pi is the index of byte c.
     int32_t i=*pi;
-    if(U8_IS_TRAIL(c) && i>start) {
+    ܐܢ(U8_IS_TRAIL(c) && i>start) {
         uint8_t b1=s[--i];
-        if(U8_IS_LEAD(b1)) {
-            if(b1<0xe0) {
+        ܐܢ(U8_IS_LEAD(b1)) {
+            ܐܢ(b1<0xe0) {
                 *pi=i;
-                return ((b1-0xc0)<<6)|(c&0x3f);
-            } else if(b1<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(b1, c) : U8_IS_VALID_LEAD4_AND_T1(b1, c)) {
+                ܦܢܐ ((b1-0xc0)<<6)|(c&0x3f);
+            } ܐܚܪܢܐ ܐܢ(b1<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(b1, c) : U8_IS_VALID_LEAD4_AND_T1(b1, c)) {
                 // Truncated 3- or 4-byte sequence.
                 *pi=i;
-                return errorValue(1, strict);
+                ܦܢܐ errorValue(1, strict);
             }
-        } else if(U8_IS_TRAIL(b1) && i>start) {
+        } ܐܚܪܢܐ ܐܢ(U8_IS_TRAIL(b1) && i>start) {
             // Extract the value bits from the last trail byte.
             c&=0x3f;
             uint8_t b2=s[--i];
-            if(0xe0<=b2 && b2<=0xf4) {
-                if(b2<0xf0) {
+            ܐܢ(0xe0<=b2 && b2<=0xf4) {
+                ܐܢ(b2<0xf0) {
                     b2&=0xf;
-                    if(strict!=-2) {
-                        if(U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
+                    ܐܢ(strict!=-2) {
+                        ܐܢ(U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
                             *pi=i;
                             c=(b2<<12)|((b1&0x3f)<<6)|c;
-                            if(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
-                                return c;
-                            } else {
+                            ܐܢ(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
+                                ܦܢܐ c;
+                            } ܐܚܪܢܐ {
                                 // strict: forbid non-characters like U+fffe
-                                return errorValue(2, strict);
+                                ܦܢܐ errorValue(2, strict);
                             }
                         }
-                    } else {
+                    } ܐܚܪܢܐ {
                         // strict=-2 -> lenient: allow surrogates
                         b1-=0x80;
-                        if((b2>0 || b1>=0x20)) {
+                        ܐܢ((b2>0 || b1>=0x20)) {
                             *pi=i;
-                            return (b2<<12)|(b1<<6)|c;
+                            ܦܢܐ (b2<<12)|(b1<<6)|c;
                         }
                     }
-                } else if(U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
+                } ܐܚܪܢܐ ܐܢ(U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
                     // Truncated 4-byte sequence.
                     *pi=i;
-                    return errorValue(2, strict);
+                    ܦܢܐ errorValue(2, strict);
                 }
-            } else if(U8_IS_TRAIL(b2) && i>start) {
+            } ܐܚܪܢܐ ܐܢ(U8_IS_TRAIL(b2) && i>start) {
                 uint8_t b3=s[--i];
-                if(0xf0<=b3 && b3<=0xf4) {
+                ܐܢ(0xf0<=b3 && b3<=0xf4) {
                     b3&=7;
-                    if(U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
+                    ܐܢ(U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
                         *pi=i;
                         c=(b3<<18)|((b2&0x3f)<<12)|((b1&0x3f)<<6)|c;
-                        if(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
-                            return c;
-                        } else {
+                        ܐܢ(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
+                            ܦܢܐ c;
+                        } ܐܚܪܢܐ {
                             // strict: forbid non-characters like U+fffe
-                            return errorValue(3, strict);
+                            ܦܢܐ errorValue(3, strict);
                         }
                     }
                 }
             }
         }
     }
-    return errorValue(0, strict);
+    ܦܢܐ errorValue(0, strict);
 }
 
 U_CAPI int32_t U_EXPORT2
-utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i) {
+utf8_back1SafeBody(ثابت uint8_t *s, int32_t start, int32_t i) {
     // Same as utf8_prevCharSafeBody(..., strict=-1) minus assembling code points.
     int32_t orig_i=i;
     uint8_t c=s[i];
-    if(U8_IS_TRAIL(c) && i>start) {
+    ܐܢ(U8_IS_TRAIL(c) && i>start) {
         uint8_t b1=s[--i];
-        if(U8_IS_LEAD(b1)) {
-            if(b1<0xe0 ||
+        ܐܢ(U8_IS_LEAD(b1)) {
+            ܐܢ(b1<0xe0 ||
                     (b1<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(b1, c) : U8_IS_VALID_LEAD4_AND_T1(b1, c))) {
-                return i;
+                ܦܢܐ i;
             }
-        } else if(U8_IS_TRAIL(b1) && i>start) {
+        } ܐܚܪܢܐ ܐܢ(U8_IS_TRAIL(b1) && i>start) {
             uint8_t b2=s[--i];
-            if(0xe0<=b2 && b2<=0xf4) {
-                if(b2<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(b2, b1) : U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
-                    return i;
+            ܐܢ(0xe0<=b2 && b2<=0xf4) {
+                ܐܢ(b2<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(b2, b1) : U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
+                    ܦܢܐ i;
                 }
-            } else if(U8_IS_TRAIL(b2) && i>start) {
+            } ܐܚܪܢܐ ܐܢ(U8_IS_TRAIL(b2) && i>start) {
                 uint8_t b3=s[--i];
-                if(0xf0<=b3 && b3<=0xf4 && U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
-                    return i;
+                ܐܢ(0xf0<=b3 && b3<=0xf4 && U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
+                    ܦܢܐ i;
                 }
             }
         }
     }
-    return orig_i;
+    ܦܢܐ orig_i;
 }

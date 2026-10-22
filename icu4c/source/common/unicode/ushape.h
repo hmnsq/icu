@@ -19,7 +19,7 @@
 #ifndef __USHAPE_H__
 #define __USHAPE_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
 /**
  * \file
@@ -99,7 +99,7 @@
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_shapeArabic(const UChar *source, int32_t sourceLength,
+u_shapeArabic(ثابت UChar *source, int32_t sourceLength,
               UChar *dest, int32_t destSize,
               uint32_t options,
               UErrorCode *pErrorCode);

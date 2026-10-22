@@ -4,7 +4,7 @@
 #ifndef __CAPI_HELPER_H__
 #define __CAPI_HELPER_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
 U_NAMESPACE_BEGIN
 
@@ -13,21 +13,21 @@ U_NAMESPACE_BEGIN
  */
 template<typename CType, typename CPPType, int32_t kMagic>
 class IcuCApiHelper {
-  public:
+  عام:
     /**
      * Convert from the C type to the C++ type (const version).
      */
-    static const CPPType* validate(const CType* input, UErrorCode& status);
+    ساكن ثابت CPPType* validate(ثابت CType* input, UErrorCode& status);
 
     /**
      * Convert from the C type to the C++ type (non-const version).
      */
-    static CPPType* validate(CType* input, UErrorCode& status);
+    ساكن CPPType* validate(CType* input, UErrorCode& status);
 
     /**
      * Convert from the C++ type to the C type (const version).
      */
-    const CType* exportConstForC() const;
+    ثابت CType* exportConstForC() ثابت;
 
     /**
      * Convert from the C++ type to the C type (non-const version).
@@ -39,7 +39,7 @@ class IcuCApiHelper {
      */
     ~IcuCApiHelper();
 
-  private:
+  خاص:
     /**
      * While the object is valid, fMagic equals kMagic.
      */
@@ -48,41 +48,41 @@ class IcuCApiHelper {
 
 
 template<typename CType, typename CPPType, int32_t kMagic>
-const CPPType*
-IcuCApiHelper<CType, CPPType, kMagic>::validate(const CType* input, UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return nullptr;
+ثابت CPPType*
+IcuCApiHelper<CType, CPPType, kMagic>::validate(ثابت CType* input, UErrorCode& status) {
+    ܐܢ (U_FAILURE(status)) {
+        ܦܢܐ nullptr;
     }
-    if (input == nullptr) {
+    ܐܢ (input == nullptr) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ܦܢܐ nullptr;
     }
-    auto* impl = reinterpret_cast<const CPPType*>(input);
-    if (static_cast<const IcuCApiHelper<CType, CPPType, kMagic>*>(impl)->fMagic != kMagic) {
+    auto* impl = reinterpret_cast<ثابت CPPType*>(input);
+    ܐܢ (static_cast<ثابت IcuCApiHelper<CType, CPPType, kMagic>*>(impl)->fMagic != kMagic) {
         status = U_INVALID_FORMAT_ERROR;
-        return nullptr;
+        ܦܢܐ nullptr;
     }
-    return impl;
+    ܦܢܐ impl;
 }
 
 template<typename CType, typename CPPType, int32_t kMagic>
 CPPType*
 IcuCApiHelper<CType, CPPType, kMagic>::validate(CType* input, UErrorCode& status) {
-    auto* constInput = static_cast<const CType*>(input);
+    auto* constInput = static_cast<ثابت CType*>(input);
     auto* validated = validate(constInput, status);
-    return const_cast<CPPType*>(validated);
+    ܦܢܐ const_cast<CPPType*>(validated);
 }
 
 template<typename CType, typename CPPType, int32_t kMagic>
-const CType*
-IcuCApiHelper<CType, CPPType, kMagic>::exportConstForC() const {
-    return reinterpret_cast<const CType*>(static_cast<const CPPType*>(this));
+ثابت CType*
+IcuCApiHelper<CType, CPPType, kMagic>::exportConstForC() ثابت {
+    ܦܢܐ reinterpret_cast<ثابت CType*>(static_cast<ثابت CPPType*>(this));
 }
 
 template<typename CType, typename CPPType, int32_t kMagic>
 CType*
 IcuCApiHelper<CType, CPPType, kMagic>::exportForC() {
-    return reinterpret_cast<CType*>(static_cast<CPPType*>(this));
+    ܦܢܐ reinterpret_cast<CType*>(static_cast<CPPType*>(this));
 }
 
 template<typename CType, typename CPPType, int32_t kMagic>

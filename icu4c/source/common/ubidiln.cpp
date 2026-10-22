@@ -16,13 +16,13 @@
 *   created by: Markus W. Scherer, updated by Matitiahu Allouche
 */
 
-#include "cmemory.h"
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "unicode/uchar.h"
-#include "unicode/ubidi.h"
-#include "ubidiimp.h"
-#include "uassert.h"
+#ضمن "cmemory.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/uchar.h"
+#ضمن "unicode/ubidi.h"
+#ضمن "ubidiimp.h"
+#ضمن "uassert.h"
 
 /*
  * General remarks about the functions in this file:
@@ -88,11 +88,11 @@
  * This function is called only from ubidi_setLine(), so pBiDi->paraLevel is
  * set correctly for the line even when contextual multiple paragraphs.
  */
-static void
+ساكن فراغ
 setTrailingWSStart(UBiDi *pBiDi) {
     /* pBiDi->direction!=UBIDI_MIXED */
 
-    const DirProp *dirProps=pBiDi->dirProps;
+    ثابت DirProp *dirProps=pBiDi->dirProps;
     UBiDiLevel *levels=pBiDi->levels;
     int32_t start=pBiDi->length;
     UBiDiLevel paraLevel=pBiDi->paraLevel;
@@ -103,17 +103,17 @@ setTrailingWSStart(UBiDi *pBiDi) {
        level of B chars from 0 to paraLevel in ubidi_getLevels when
        orderParagraphsLTR==true.
      */
-    if(dirProps[start-1]==B) {
+    ܐܢ(dirProps[start-1]==B) {
         pBiDi->trailingWSStart=start;   /* currently == pBiDi->length */
-        return;
+        ܦܢܐ;
     }
     /* go backwards across all WS, BN, explicit codes */
-    while(start>0 && DIRPROP_FLAG(dirProps[start-1])&MASK_WS) {
+    ܟܡܐ(start>0 && DIRPROP_FLAG(dirProps[start-1])&MASK_WS) {
         --start;
     }
 
     /* if the WS run can be merged with the previous run then do so here */
-    while(start>0 && levels[start-1]==paraLevel) {
+    ܟܡܐ(start>0 && levels[start-1]==paraLevel) {
         --start;
     }
 
@@ -122,8 +122,8 @@ setTrailingWSStart(UBiDi *pBiDi) {
 
 /* ubidi_setLine ------------------------------------------------------------ */
 
-U_CAPI void U_EXPORT2
-ubidi_setLine(const UBiDi *pParaBiDi,
+U_CAPI فراغ U_EXPORT2
+ubidi_setLine(ثابت UBiDi *pParaBiDi,
               int32_t start, int32_t limit,
               UBiDi *pLineBiDi,
               UErrorCode *pErrorCode) {
@@ -134,15 +134,15 @@ ubidi_setLine(const UBiDi *pParaBiDi,
     RETURN_VOID_IF_NOT_VALID_PARA(pParaBiDi, *pErrorCode);
     RETURN_VOID_IF_BAD_RANGE(start, 0, limit, *pErrorCode);
     RETURN_VOID_IF_BAD_RANGE(limit, 0, pParaBiDi->length+1, *pErrorCode);
-    if(pLineBiDi==nullptr) {
+    ܐܢ(pLineBiDi==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ܦܢܐ;
     }
-    if(ubidi_getParagraph(pParaBiDi, start, nullptr, nullptr, nullptr, pErrorCode) !=
+    ܐܢ(ubidi_getParagraph(pParaBiDi, start, nullptr, nullptr, nullptr, pErrorCode) !=
        ubidi_getParagraph(pParaBiDi, limit-1, nullptr, nullptr, nullptr, pErrorCode)) {
         /* the line crosses a paragraph boundary */
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ܦܢܐ;
     }
 
     /* set the values in pLineBiDi from its pParaBiDi parent */
@@ -157,10 +157,10 @@ ubidi_setLine(const UBiDi *pParaBiDi,
     pLineBiDi->reorderingMode=pParaBiDi->reorderingMode;
     pLineBiDi->reorderingOptions=pParaBiDi->reorderingOptions;
     pLineBiDi->controlCount=0;
-    if(pParaBiDi->controlCount>0) {
+    ܐܢ(pParaBiDi->controlCount>0) {
         int32_t j;
-        for(j=start; j<limit; j++) {
-            if(IS_BIDI_CONTROL_CHAR(pParaBiDi->text[j])) {
+        لكل(j=start; j<limit; j++) {
+            ܐܢ(IS_BIDI_CONTROL_CHAR(pParaBiDi->text[j])) {
                 pLineBiDi->controlCount++;
             }
         }
@@ -171,7 +171,7 @@ ubidi_setLine(const UBiDi *pParaBiDi,
     pLineBiDi->levels=pParaBiDi->levels+start;
     pLineBiDi->runCount=-1;
 
-    if(pParaBiDi->direction!=UBIDI_MIXED) {
+    ܐܢ(pParaBiDi->direction!=UBIDI_MIXED) {
         /* the parent is already trivial */
         pLineBiDi->direction=pParaBiDi->direction;
 
@@ -180,15 +180,15 @@ ubidi_setLine(const UBiDi *pParaBiDi,
          * implicitly or explicitly ==paraLevel;
          * do the same here.
          */
-        if(pParaBiDi->trailingWSStart<=start) {
+        ܐܢ(pParaBiDi->trailingWSStart<=start) {
             pLineBiDi->trailingWSStart=0;
-        } else if(pParaBiDi->trailingWSStart<limit) {
+        } ܐܚܪܢܐ ܐܢ(pParaBiDi->trailingWSStart<limit) {
             pLineBiDi->trailingWSStart=pParaBiDi->trailingWSStart-start;
-        } else {
+        } ܐܚܪܢܐ {
             pLineBiDi->trailingWSStart=length;
         }
-    } else {
-        const UBiDiLevel *levels=pLineBiDi->levels;
+    } ܐܚܪܢܐ {
+        ثابت UBiDiLevel *levels=pLineBiDi->levels;
         int32_t i, trailingWSStart;
         UBiDiLevel level;
 
@@ -196,81 +196,81 @@ ubidi_setLine(const UBiDi *pParaBiDi,
         trailingWSStart=pLineBiDi->trailingWSStart;
 
         /* recalculate pLineBiDi->direction */
-        if(trailingWSStart==0) {
+        ܐܢ(trailingWSStart==0) {
             /* all levels are at paraLevel */
             pLineBiDi->direction=(UBiDiDirection)(pLineBiDi->paraLevel&1);
-        } else {
+        } ܐܚܪܢܐ {
             /* get the level of the first character */
             level=(UBiDiLevel)(levels[0]&1);
 
             /* if there is anything of a different level, then the line is mixed */
-            if(trailingWSStart<length && (pLineBiDi->paraLevel&1)!=level) {
+            ܐܢ(trailingWSStart<length && (pLineBiDi->paraLevel&1)!=level) {
                 /* the trailing WS is at paraLevel, which differs from levels[0] */
                 pLineBiDi->direction=UBIDI_MIXED;
-            } else {
+            } ܐܚܪܢܐ {
                 /* see if levels[1..trailingWSStart-1] have the same direction as levels[0] and paraLevel */
                 i=1;
-                for(;;) {
-                    if(i==trailingWSStart) {
+                لكل(;;) {
+                    ܐܢ(i==trailingWSStart) {
                         /* the direction values match those in level */
                         pLineBiDi->direction=(UBiDiDirection)level;
-                        break;
-                    } else if((levels[i]&1)!=level) {
+                        اكسر;
+                    } ܐܚܪܢܐ ܐܢ((levels[i]&1)!=level) {
                         pLineBiDi->direction=UBIDI_MIXED;
-                        break;
+                        اكسر;
                     }
                     ++i;
                 }
             }
         }
 
-        switch(pLineBiDi->direction) {
-        case UBIDI_LTR:
+        بدل(pLineBiDi->direction) {
+        حالة UBIDI_LTR:
             /* make sure paraLevel is even */
             pLineBiDi->paraLevel=(UBiDiLevel)((pLineBiDi->paraLevel+1)&~1);
 
             /* all levels are implicitly at paraLevel (important for ubidi_getLevels()) */
             pLineBiDi->trailingWSStart=0;
-            break;
-        case UBIDI_RTL:
+            اكسر;
+        حالة UBIDI_RTL:
             /* make sure paraLevel is odd */
             pLineBiDi->paraLevel|=1;
 
             /* all levels are implicitly at paraLevel (important for ubidi_getLevels()) */
             pLineBiDi->trailingWSStart=0;
-            break;
-        default:
-            break;
+            اكسر;
+        افتراضي:
+            اكسر;
         }
     }
     pLineBiDi->pParaBiDi=pParaBiDi;     /* mark successful setLine */
 }
 
 U_CAPI UBiDiLevel U_EXPORT2
-ubidi_getLevelAt(const UBiDi *pBiDi, int32_t charIndex) {
+ubidi_getLevelAt(ثابت UBiDi *pBiDi, int32_t charIndex) {
     /* return paraLevel if in the trailing WS run, otherwise the real level */
-    if(!IS_VALID_PARA_OR_LINE(pBiDi) || charIndex<0 || pBiDi->length<=charIndex) {
-        return 0;
-    } else if(pBiDi->direction!=UBIDI_MIXED || charIndex>=pBiDi->trailingWSStart) {
-        return GET_PARALEVEL(pBiDi, charIndex);
-    } else {
-        return pBiDi->levels[charIndex];
+    ܐܢ(!IS_VALID_PARA_OR_LINE(pBiDi) || charIndex<0 || pBiDi->length<=charIndex) {
+        ܦܢܐ 0;
+    } ܐܚܪܢܐ ܐܢ(pBiDi->direction!=UBIDI_MIXED || charIndex>=pBiDi->trailingWSStart) {
+        ܦܢܐ GET_PARALEVEL(pBiDi, charIndex);
+    } ܐܚܪܢܐ {
+        ܦܢܐ pBiDi->levels[charIndex];
     }
 }
 
-U_CAPI const UBiDiLevel* U_EXPORT2
+U_CAPI ثابت UBiDiLevel* U_EXPORT2
 ubidi_getLevels(UBiDi* pBiDi, UErrorCode* pErrorCode) {
     int32_t start, length;
 
     RETURN_IF_NULL_OR_FAILING_ERRCODE(pErrorCode, nullptr);
     RETURN_IF_NOT_VALID_PARA_OR_LINE(pBiDi, *pErrorCode, nullptr);
-    if((length=pBiDi->length)<=0) {
+    ܐܢ((length=pBiDi->length)<=0) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ܦܢܐ nullptr;
     }
-    if((start=pBiDi->trailingWSStart)==length) {
+    ܐܢ((start=pBiDi->trailingWSStart)==length) {
         /* the current levels array reflects the WS run */
-        return pBiDi->levels;
+        ܦܢܐ pBiDi->levels;
     }
 
     /*
@@ -280,10 +280,10 @@ ubidi_getLevels(UBiDi* pBiDi, UErrorCode* pErrorCode) {
      * This must be a UBiDi object for a line, and
      * we need to create a new levels array.
      */
-    if(getLevelsMemory(pBiDi, length)) {
+    ܐܢ(getLevelsMemory(pBiDi, length)) {
         UBiDiLevel *levels=pBiDi->levelsMemory;
 
-        if(start>0 && levels!=pBiDi->levels) {
+        ܐܢ(start>0 && levels!=pBiDi->levels) {
             uprv_memcpy(levels, pBiDi->levels, start);
         }
         /* pBiDi->paraLevel is ok even if contextual multiple paragraphs,
@@ -292,16 +292,16 @@ ubidi_getLevels(UBiDi* pBiDi, UErrorCode* pErrorCode) {
 
         /* this new levels array is set for the line and reflects the WS run */
         pBiDi->trailingWSStart=length;
-        return pBiDi->levels=levels;
-    } else {
+        ܦܢܐ pBiDi->levels=levels;
+    } ܐܚܪܢܐ {
         /* out of memory */
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ܦܢܐ nullptr;
     }
 }
 
-U_CAPI void U_EXPORT2
-ubidi_getLogicalRun(const UBiDi *pBiDi, int32_t logicalPosition,
+U_CAPI فراغ U_EXPORT2
+ubidi_getLogicalRun(ثابت UBiDi *pBiDi, int32_t logicalPosition,
                     int32_t *pLogicalLimit, UBiDiLevel *pLevel) {
     UErrorCode errorCode;
     int32_t runCount, visualStart, logicalLimit, logicalFirst, i;
@@ -311,8 +311,8 @@ ubidi_getLogicalRun(const UBiDi *pBiDi, int32_t logicalPosition,
     RETURN_VOID_IF_BAD_RANGE(logicalPosition, 0, pBiDi->length, errorCode);
     /* ubidi_countRuns will check VALID_PARA_OR_LINE */
     runCount=ubidi_countRuns((UBiDi *)pBiDi, &errorCode);
-    if(U_FAILURE(errorCode)) {
-        return;
+    ܐܢ(U_FAILURE(errorCode)) {
+        ܦܢܐ;
     }
     /* this is done based on runs rather than on levels since levels have
        a special interpretation when UBIDI_REORDER_RUNS_ONLY
@@ -320,26 +320,26 @@ ubidi_getLogicalRun(const UBiDi *pBiDi, int32_t logicalPosition,
     visualStart=logicalLimit=0;
     iRun=pBiDi->runs[0];
 
-    for(i=0; i<runCount; i++) {
+    لكل(i=0; i<runCount; i++) {
         iRun = pBiDi->runs[i];
         logicalFirst=GET_INDEX(iRun.logicalStart);
         logicalLimit=logicalFirst+iRun.visualLimit-visualStart;
-        if((logicalPosition>=logicalFirst) &&
+        ܐܢ((logicalPosition>=logicalFirst) &&
            (logicalPosition<logicalLimit)) {
-            break;
+            اكسر;
         }
         visualStart = iRun.visualLimit;
     }
-    if(pLogicalLimit) {
+    ܐܢ(pLogicalLimit) {
         *pLogicalLimit=logicalLimit;
     }
-    if(pLevel) {
-        if(pBiDi->reorderingMode==UBIDI_REORDER_RUNS_ONLY) {
+    ܐܢ(pLevel) {
+        ܐܢ(pBiDi->reorderingMode==UBIDI_REORDER_RUNS_ONLY) {
             *pLevel=(UBiDiLevel)GET_ODD_BIT(iRun.logicalStart);
         }
-        else if(pBiDi->direction!=UBIDI_MIXED || logicalPosition>=pBiDi->trailingWSStart) {
+        ܐܚܪܢܐ ܐܢ(pBiDi->direction!=UBIDI_MIXED || logicalPosition>=pBiDi->trailingWSStart) {
             *pLevel=GET_PARALEVEL(pBiDi, logicalPosition);
-        } else {
+        } ܐܚܪܢܐ {
         *pLevel=pBiDi->levels[logicalPosition];
         }
     }
@@ -352,10 +352,10 @@ ubidi_countRuns(UBiDi *pBiDi, UErrorCode *pErrorCode) {
     RETURN_IF_NULL_OR_FAILING_ERRCODE(pErrorCode, -1);
     RETURN_IF_NOT_VALID_PARA_OR_LINE(pBiDi, *pErrorCode, -1);
     ubidi_getRuns(pBiDi, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return -1;
+    ܐܢ(U_FAILURE(*pErrorCode)) {
+        ܦܢܐ -1;
     }
-    return pBiDi->runCount;
+    ܦܢܐ pBiDi->runCount;
 }
 
 U_CAPI UBiDiDirection U_EXPORT2
@@ -366,28 +366,28 @@ ubidi_getVisualRun(UBiDi *pBiDi, int32_t runIndex,
     UErrorCode errorCode = U_ZERO_ERROR;
     RETURN_IF_NOT_VALID_PARA_OR_LINE(pBiDi, errorCode, UBIDI_LTR);
     ubidi_getRuns(pBiDi, &errorCode);
-    if(U_FAILURE(errorCode)) {
-        return UBIDI_LTR;
+    ܐܢ(U_FAILURE(errorCode)) {
+        ܦܢܐ UBIDI_LTR;
     }
     RETURN_IF_BAD_RANGE(runIndex, 0, pBiDi->runCount, errorCode, UBIDI_LTR);
 
     start=pBiDi->runs[runIndex].logicalStart;
-    if(pLogicalStart!=nullptr) {
+    ܐܢ(pLogicalStart!=nullptr) {
         *pLogicalStart=GET_INDEX(start);
     }
-    if(pLength!=nullptr) {
-        if(runIndex>0) {
+    ܐܢ(pLength!=nullptr) {
+        ܐܢ(runIndex>0) {
             *pLength=pBiDi->runs[runIndex].visualLimit-
                      pBiDi->runs[runIndex-1].visualLimit;
-        } else {
+        } ܐܚܪܢܐ {
             *pLength=pBiDi->runs[0].visualLimit;
         }
     }
-    return (UBiDiDirection)GET_ODD_BIT(start);
+    ܦܢܐ (UBiDiDirection)GET_ODD_BIT(start);
 }
 
 /* in trivial cases there is only one trivial run; called by ubidi_getRuns() */
-static void
+ساكن فراغ
 getSingleRun(UBiDi *pBiDi, UBiDiLevel level) {
     /* simple, single-run case */
     pBiDi->runs=pBiDi->simpleRuns;
@@ -432,15 +432,15 @@ getSingleRun(UBiDi *pBiDi, UBiDiLevel level) {
  * this run and can --runCount. If it is later part of the all-runs
  * reordering, then runCount is adjusted accordingly.
  */
-static void
+ساكن فراغ
 reorderLine(UBiDi *pBiDi, UBiDiLevel minLevel, UBiDiLevel maxLevel) {
     Run *runs, tempRun;
     UBiDiLevel *levels;
     int32_t firstRun, endRun, limitRun, runCount;
 
     /* nothing to do? */
-    if(maxLevel<=(minLevel|1)) {
-        return;
+    ܐܢ(maxLevel<=(minLevel|1)) {
+        ܦܢܐ;
     }
 
     /*
@@ -455,30 +455,30 @@ reorderLine(UBiDi *pBiDi, UBiDiLevel minLevel, UBiDiLevel maxLevel) {
     runCount=pBiDi->runCount;
 
     /* do not include the WS run at paraLevel<=old minLevel except in the simple loop */
-    if(pBiDi->trailingWSStart<pBiDi->length) {
+    ܐܢ(pBiDi->trailingWSStart<pBiDi->length) {
         --runCount;
     }
 
-    while(--maxLevel>=minLevel) {
+    ܟܡܐ(--maxLevel>=minLevel) {
         firstRun=0;
 
         /* loop for all sequences of runs */
-        for(;;) {
+        لكل(;;) {
             /* look for a sequence of runs that are all at >=maxLevel */
             /* look for the first run of such a sequence */
-            while(firstRun<runCount && levels[runs[firstRun].logicalStart]<maxLevel) {
+            ܟܡܐ(firstRun<runCount && levels[runs[firstRun].logicalStart]<maxLevel) {
                 ++firstRun;
             }
-            if(firstRun>=runCount) {
-                break;  /* no more such runs */
+            ܐܢ(firstRun>=runCount) {
+                اكسر;  /* no more such runs */
             }
 
             /* look for the limit run of such a sequence (the run behind it) */
-            for(limitRun=firstRun; ++limitRun<runCount && levels[runs[limitRun].logicalStart]>=maxLevel;) {}
+            لكل(limitRun=firstRun; ++limitRun<runCount && levels[runs[limitRun].logicalStart]>=maxLevel;) {}
 
             /* Swap the entire sequence of runs from firstRun to limitRun-1. */
             endRun=limitRun-1;
-            while(firstRun<endRun) {
+            ܟܡܐ(firstRun<endRun) {
                 tempRun = runs[firstRun];
                 runs[firstRun]=runs[endRun];
                 runs[endRun]=tempRun;
@@ -486,25 +486,25 @@ reorderLine(UBiDi *pBiDi, UBiDiLevel minLevel, UBiDiLevel maxLevel) {
                 --endRun;
             }
 
-            if(limitRun==runCount) {
-                break;  /* no more such runs */
-            } else {
+            ܐܢ(limitRun==runCount) {
+                اكسر;  /* no more such runs */
+            } ܐܚܪܢܐ {
                 firstRun=limitRun+1;
             }
         }
     }
 
     /* now do maxLevel==old minLevel (==odd!), see above */
-    if(!(minLevel&1)) {
+    ܐܢ(!(minLevel&1)) {
         firstRun=0;
 
         /* include the trailing WS run in this complete reordering */
-        if(pBiDi->trailingWSStart==pBiDi->length) {
+        ܐܢ(pBiDi->trailingWSStart==pBiDi->length) {
             --runCount;
         }
 
         /* Swap the entire sequence of all runs. (endRun==runCount) */
-        while(firstRun<runCount) {
+        ܟܡܐ(firstRun<runCount) {
             tempRun=runs[firstRun];
             runs[firstRun]=runs[runCount];
             runs[runCount]=tempRun;
@@ -516,15 +516,15 @@ reorderLine(UBiDi *pBiDi, UBiDiLevel minLevel, UBiDiLevel maxLevel) {
 
 /* compute the runs array --------------------------------------------------- */
 
-static int32_t getRunFromLogicalIndex(UBiDi *pBiDi, int32_t logicalIndex) {
+ساكن int32_t getRunFromLogicalIndex(UBiDi *pBiDi, int32_t logicalIndex) {
     Run *runs=pBiDi->runs;
     int32_t runCount=pBiDi->runCount, visualStart=0, i, length, logicalStart;
 
-    for(i=0; i<runCount; i++) {
+    لكل(i=0; i<runCount; i++) {
         length=runs[i].visualLimit-visualStart;
         logicalStart=GET_INDEX(runs[i].logicalStart);
-        if((logicalIndex>=logicalStart) && (logicalIndex<(logicalStart+length))) {
-            return i;
+        ܐܢ((logicalIndex>=logicalStart) && (logicalIndex<(logicalStart+length))) {
+            ܦܢܐ i;
         }
         visualStart+=length;
     }
@@ -549,15 +549,15 @@ ubidi_getRuns(UBiDi *pBiDi, UErrorCode* pErrorCode) {
      * This method returns immediately if the runs are already set. This
      * includes the case of length==0 (handled in setPara)..
      */
-    if (pBiDi->runCount>=0) {
-        return true;
+    ܐܢ (pBiDi->runCount>=0) {
+        ܦܢܐ ܫܪܪܐ;
     }
 
-    if(pBiDi->direction!=UBIDI_MIXED) {
+    ܐܢ(pBiDi->direction!=UBIDI_MIXED) {
         /* simple, single-run case - this covers length==0 */
         /* pBiDi->paraLevel is ok even for contextual multiple paragraphs */
         getSingleRun(pBiDi, pBiDi->paraLevel);
-    } else /* UBIDI_MIXED, length>0 */ {
+    } ܐܚܪܢܐ /* UBIDI_MIXED, length>0 */ {
         /* mixed directionality */
         int32_t length=pBiDi->length, limit;
         UBiDiLevel *levels=pBiDi->levels;
@@ -577,9 +577,9 @@ ubidi_getRuns(UBiDi *pBiDi, UErrorCode* pErrorCode) {
         limit=pBiDi->trailingWSStart;
         /* count the runs, there is at least one non-WS run, and limit>0 */
         runCount=0;
-        for(i=0; i<limit; ++i) {
+        لكل(i=0; i<limit; ++i) {
             /* increment runCount at the start of each run */
-            if(levels[i]!=level) {
+            ܐܢ(levels[i]!=level) {
                 ++runCount;
                 level=levels[i];
             }
@@ -589,26 +589,26 @@ ubidi_getRuns(UBiDi *pBiDi, UErrorCode* pErrorCode) {
          * We don't need to see if the last run can be merged with a trailing
          * WS run because setTrailingWSStart() would have done that.
          */
-        if(runCount==1 && limit==length) {
+        ܐܢ(runCount==1 && limit==length) {
             /* There is only one non-WS run and no trailing WS-run. */
             getSingleRun(pBiDi, levels[0]);
-        } else /* runCount>1 || limit<length */ {
+        } ܐܚܪܢܐ /* runCount>1 || limit<length */ {
             /* allocate and set the runs */
             Run *runs;
             int32_t runIndex, start;
             UBiDiLevel minLevel=UBIDI_MAX_EXPLICIT_LEVEL+1, maxLevel=0;
 
             /* now, count a (non-mergeable) WS run */
-            if(limit<length) {
+            ܐܢ(limit<length) {
                 ++runCount;
             }
 
             /* runCount>1 */
-            if(getRunsMemory(pBiDi, runCount)) {
+            ܐܢ(getRunsMemory(pBiDi, runCount)) {
                 runs=pBiDi->runsMemory;
-            } else {
+            } ܐܚܪܢܐ {
                 *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-                return false;
+                ܦܢܐ ܕܓܠܐ;
             }
 
             /* set the runs */
@@ -621,34 +621,34 @@ ubidi_getRuns(UBiDi *pBiDi, UErrorCode* pErrorCode) {
 
             /* search for the run limits and initialize visualLimit values with the run lengths */
             i=0;
-            do {
+            ܥܒܕ {
                 /* prepare this run */
                 start=i;
                 level=levels[i];
-                if(level<minLevel) {
+                ܐܢ(level<minLevel) {
                     minLevel=level;
                 }
-                if(level>maxLevel) {
+                ܐܢ(level>maxLevel) {
                     maxLevel=level;
                 }
 
                 /* look for the run limit */
-                while(++i<limit && levels[i]==level) {}
+                ܟܡܐ(++i<limit && levels[i]==level) {}
 
                 /* i is another run limit */
                 runs[runIndex].logicalStart=start;
                 runs[runIndex].visualLimit=i-start;
                 runs[runIndex].insertRemove=0;
                 ++runIndex;
-            } while(i<limit);
+            } ܟܡܐ(i<limit);
 
-            if(limit<length) {
+            ܐܢ(limit<length) {
                 /* there is a separate WS run */
                 runs[runIndex].logicalStart=limit;
                 runs[runIndex].visualLimit=length-limit;
                 /* For the trailing WS run, pBiDi->paraLevel is ok even
                    if contextual multiple paragraphs.                   */
-                if(pBiDi->paraLevel<minLevel) {
+                ܐܢ(pBiDi->paraLevel<minLevel) {
                     minLevel=pBiDi->paraLevel;
                 }
             }
@@ -662,7 +662,7 @@ ubidi_getRuns(UBiDi *pBiDi, UErrorCode* pErrorCode) {
             /* now add the direction flags and adjust the visualLimit's to be just that */
             /* this loop will also handle the trailing WS run */
             limit=0;
-            for(i=0; i<runCount; ++i) {
+            لكل(i=0; i<runCount; ++i) {
                 ADD_ODD_BIT_FROM_LEVEL(runs[i].logicalStart, levels[runs[i].logicalStart]);
                 limit+=runs[i].visualLimit;
                 runs[i].visualLimit=limit;
@@ -672,7 +672,7 @@ ubidi_getRuns(UBiDi *pBiDi, UErrorCode* pErrorCode) {
             /* For a RTL paragraph, it will be the *first* run in visual order. */
             /* For the trailing WS run, pBiDi->paraLevel is ok even if
                contextual multiple paragraphs.                          */
-            if(runIndex<runCount) {
+            ܐܢ(runIndex<runCount) {
                 int32_t trailingRun = ((pBiDi->paraLevel & 1) != 0)? 0 : runIndex;
 
                 ADD_ODD_BIT_FROM_LEVEL(runs[trailingRun].logicalStart, pBiDi->paraLevel);
@@ -681,54 +681,54 @@ ubidi_getRuns(UBiDi *pBiDi, UErrorCode* pErrorCode) {
     }
 
     /* handle insert LRM/RLM BEFORE/AFTER run */
-    if(pBiDi->insertPoints.size>0) {
+    ܐܢ(pBiDi->insertPoints.size>0) {
         Point *point, *start=pBiDi->insertPoints.points,
                       *limit=start+pBiDi->insertPoints.size;
         int32_t runIndex;
-        for(point=start; point<limit; point++) {
+        لكل(point=start; point<limit; point++) {
             runIndex=getRunFromLogicalIndex(pBiDi, point->pos);
             pBiDi->runs[runIndex].insertRemove|=point->flag;
         }
     }
 
     /* handle remove BiDi control characters */
-    if(pBiDi->controlCount>0) {
+    ܐܢ(pBiDi->controlCount>0) {
         int32_t runIndex;
-        const char16_t *start=pBiDi->text, *limit=start+pBiDi->length, *pu;
-        for(pu=start; pu<limit; pu++) {
-            if(IS_BIDI_CONTROL_CHAR(*pu)) {
+        ثابت char16_t *start=pBiDi->text, *limit=start+pBiDi->length, *pu;
+        لكل(pu=start; pu<limit; pu++) {
+            ܐܢ(IS_BIDI_CONTROL_CHAR(*pu)) {
                 runIndex=getRunFromLogicalIndex(pBiDi, (int32_t)(pu-start));
                 pBiDi->runs[runIndex].insertRemove--;
             }
         }
     }
 
-    return true;
+    ܦܢܐ ܫܪܪܐ;
 }
 
-static UBool
-prepareReorder(const UBiDiLevel *levels, int32_t length,
+ساكن UBool
+prepareReorder(ثابت UBiDiLevel *levels, int32_t length,
                int32_t *indexMap,
                UBiDiLevel *pMinLevel, UBiDiLevel *pMaxLevel) {
     int32_t start;
     UBiDiLevel level, minLevel, maxLevel;
 
-    if(levels==nullptr || length<=0) {
-        return false;
+    ܐܢ(levels==nullptr || length<=0) {
+        ܦܢܐ ܕܓܠܐ;
     }
 
     /* determine minLevel and maxLevel */
     minLevel=UBIDI_MAX_EXPLICIT_LEVEL+1;
     maxLevel=0;
-    for(start=length; start>0;) {
+    لكل(start=length; start>0;) {
         level=levels[--start];
-        if(level>UBIDI_MAX_EXPLICIT_LEVEL+1) {
-            return false;
+        ܐܢ(level>UBIDI_MAX_EXPLICIT_LEVEL+1) {
+            ܦܢܐ ܕܓܠܐ;
         }
-        if(level<minLevel) {
+        ܐܢ(level<minLevel) {
             minLevel=level;
         }
-        if(level>maxLevel) {
+        ܐܢ(level>maxLevel) {
             maxLevel=level;
         }
     }
@@ -736,50 +736,50 @@ prepareReorder(const UBiDiLevel *levels, int32_t length,
     *pMaxLevel=maxLevel;
 
     /* initialize the index map */
-    for(start=length; start>0;) {
+    لكل(start=length; start>0;) {
         --start;
         indexMap[start]=start;
     }
 
-    return true;
+    ܦܢܐ ܫܪܪܐ;
 }
 
 /* reorder a line based on a levels array (L2) ------------------------------ */
 
-U_CAPI void U_EXPORT2
-ubidi_reorderLogical(const UBiDiLevel *levels, int32_t length, int32_t *indexMap) {
+U_CAPI فراغ U_EXPORT2
+ubidi_reorderLogical(ثابت UBiDiLevel *levels, int32_t length, int32_t *indexMap) {
     int32_t start, limit, sumOfSosEos;
     UBiDiLevel minLevel = 0, maxLevel = 0;
 
-    if(indexMap==nullptr || !prepareReorder(levels, length, indexMap, &minLevel, &maxLevel)) {
-        return;
+    ܐܢ(indexMap==nullptr || !prepareReorder(levels, length, indexMap, &minLevel, &maxLevel)) {
+        ܦܢܐ;
     }
 
     /* nothing to do? */
-    if(minLevel==maxLevel && (minLevel&1)==0) {
-        return;
+    ܐܢ(minLevel==maxLevel && (minLevel&1)==0) {
+        ܦܢܐ;
     }
 
     /* reorder only down to the lowest odd level */
     minLevel|=1;
 
     /* loop maxLevel..minLevel */
-    do {
+    ܥܒܕ {
         start=0;
 
         /* loop for all sequences of levels to reorder at the current maxLevel */
-        for(;;) {
+        لكل(;;) {
             /* look for a sequence of levels that are all at >=maxLevel */
             /* look for the first index of such a sequence */
-            while(start<length && levels[start]<maxLevel) {
+            ܟܡܐ(start<length && levels[start]<maxLevel) {
                 ++start;
             }
-            if(start>=length) {
-                break;  /* no more such sequences */
+            ܐܢ(start>=length) {
+                اكسر;  /* no more such sequences */
             }
 
             /* look for the limit of such a sequence (the index behind it) */
-            for(limit=start; ++limit<length && levels[limit]>=maxLevel;) {}
+            لكل(limit=start; ++limit<length && levels[limit]>=maxLevel;) {}
 
             /*
              * sos=start of sequence, eos=end of sequence
@@ -795,54 +795,54 @@ ubidi_reorderLogical(const UBiDiLevel *levels, int32_t length, int32_t *indexMap
             sumOfSosEos=start+limit-1;
 
             /* reorder each index in the sequence */
-            do {
+            ܥܒܕ {
                 indexMap[start]=sumOfSosEos-indexMap[start];
-            } while(++start<limit);
+            } ܟܡܐ(++start<limit);
 
             /* start==limit */
-            if(limit==length) {
-                break;  /* no more such sequences */
-            } else {
+            ܐܢ(limit==length) {
+                اكسر;  /* no more such sequences */
+            } ܐܚܪܢܐ {
                 start=limit+1;
             }
         }
-    } while(--maxLevel>=minLevel);
+    } ܟܡܐ(--maxLevel>=minLevel);
 }
 
-U_CAPI void U_EXPORT2
-ubidi_reorderVisual(const UBiDiLevel *levels, int32_t length, int32_t *indexMap) {
+U_CAPI فراغ U_EXPORT2
+ubidi_reorderVisual(ثابت UBiDiLevel *levels, int32_t length, int32_t *indexMap) {
     int32_t start, end, limit, temp;
     UBiDiLevel minLevel = 0, maxLevel = 0;
 
-    if(indexMap==nullptr || !prepareReorder(levels, length, indexMap, &minLevel, &maxLevel)) {
-        return;
+    ܐܢ(indexMap==nullptr || !prepareReorder(levels, length, indexMap, &minLevel, &maxLevel)) {
+        ܦܢܐ;
     }
 
     /* nothing to do? */
-    if(minLevel==maxLevel && (minLevel&1)==0) {
-        return;
+    ܐܢ(minLevel==maxLevel && (minLevel&1)==0) {
+        ܦܢܐ;
     }
 
     /* reorder only down to the lowest odd level */
     minLevel|=1;
 
     /* loop maxLevel..minLevel */
-    do {
+    ܥܒܕ {
         start=0;
 
         /* loop for all sequences of levels to reorder at the current maxLevel */
-        for(;;) {
+        لكل(;;) {
             /* look for a sequence of levels that are all at >=maxLevel */
             /* look for the first index of such a sequence */
-            while(start<length && levels[start]<maxLevel) {
+            ܟܡܐ(start<length && levels[start]<maxLevel) {
                 ++start;
             }
-            if(start>=length) {
-                break;  /* no more such runs */
+            ܐܢ(start>=length) {
+                اكسر;  /* no more such runs */
             }
 
             /* look for the limit of such a sequence (the index behind it) */
-            for(limit=start; ++limit<length && levels[limit]>=maxLevel;) {}
+            لكل(limit=start; ++limit<length && levels[limit]>=maxLevel;) {}
 
             /*
              * Swap the entire interval of indexes from start to limit-1.
@@ -851,7 +851,7 @@ ubidi_reorderVisual(const UBiDiLevel *levels, int32_t length, int32_t *indexMap)
              * move anyway.
              */
             end=limit-1;
-            while(start<end) {
+            ܟܡܐ(start<end) {
                 temp=indexMap[start];
                 indexMap[start]=indexMap[end];
                 indexMap[end]=temp;
@@ -860,13 +860,13 @@ ubidi_reorderVisual(const UBiDiLevel *levels, int32_t length, int32_t *indexMap)
                 --end;
             }
 
-            if(limit==length) {
-                break;  /* no more such sequences */
-            } else {
+            ܐܢ(limit==length) {
+                اكسر;  /* no more such sequences */
+            } ܐܚܪܢܐ {
                 start=limit+1;
             }
         }
-    } while(--maxLevel>=minLevel);
+    } ܟܡܐ(--maxLevel>=minLevel);
 }
 
 /* API functions for logical<->visual mapping ------------------------------- */
@@ -879,106 +879,106 @@ ubidi_getVisualIndex(UBiDi *pBiDi, int32_t logicalIndex, UErrorCode *pErrorCode)
     RETURN_IF_BAD_RANGE(logicalIndex, 0, pBiDi->length, *pErrorCode, -1);
 
     /* we can do the trivial cases without the runs array */
-    switch(pBiDi->direction) {
-    case UBIDI_LTR:
+    بدل(pBiDi->direction) {
+    حالة UBIDI_LTR:
         visualIndex=logicalIndex;
-        break;
-    case UBIDI_RTL:
+        اكسر;
+    حالة UBIDI_RTL:
         visualIndex=pBiDi->length-logicalIndex-1;
-        break;
-    default:
-        if(!ubidi_getRuns(pBiDi, pErrorCode)) {
+        اكسر;
+    افتراضي:
+        ܐܢ(!ubidi_getRuns(pBiDi, pErrorCode)) {
             *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-            return -1;
-        } else {
+            ܦܢܐ -1;
+        } ܐܚܪܢܐ {
             Run *runs=pBiDi->runs;
             int32_t i, visualStart=0, offset, length;
 
             /* linear search for the run, search on the visual runs */
-            for(i=0; i<pBiDi->runCount; ++i) {
+            لكل(i=0; i<pBiDi->runCount; ++i) {
                 length=runs[i].visualLimit-visualStart;
                 offset=logicalIndex-GET_INDEX(runs[i].logicalStart);
-                if(offset>=0 && offset<length) {
-                    if(IS_EVEN_RUN(runs[i].logicalStart)) {
+                ܐܢ(offset>=0 && offset<length) {
+                    ܐܢ(IS_EVEN_RUN(runs[i].logicalStart)) {
                         /* LTR */
                         visualIndex=visualStart+offset;
-                    } else {
+                    } ܐܚܪܢܐ {
                         /* RTL */
                         visualIndex=visualStart+length-offset-1;
                     }
-                    break;          /* exit for loop */
+                    اكسر;          /* exit for loop */
                 }
                 visualStart+=length;
             }
-            if(i>=pBiDi->runCount) {
-                return UBIDI_MAP_NOWHERE;
+            ܐܢ(i>=pBiDi->runCount) {
+                ܦܢܐ UBIDI_MAP_NOWHERE;
             }
         }
     }
 
-    if(pBiDi->insertPoints.size>0) {
+    ܐܢ(pBiDi->insertPoints.size>0) {
         /* add the number of added marks until the calculated visual index */
         Run *runs=pBiDi->runs;
         int32_t i, length, insertRemove;
         int32_t visualStart=0, markFound=0;
-        for(i=0; ; i++, visualStart+=length) {
+        لكل(i=0; ; i++, visualStart+=length) {
             length=runs[i].visualLimit-visualStart;
             insertRemove=runs[i].insertRemove;
-            if(insertRemove & (LRM_BEFORE|RLM_BEFORE)) {
+            ܐܢ(insertRemove & (LRM_BEFORE|RLM_BEFORE)) {
                 markFound++;
             }
             /* is it the run containing the visual index? */
-            if(visualIndex<runs[i].visualLimit) {
-                return visualIndex+markFound;
+            ܐܢ(visualIndex<runs[i].visualLimit) {
+                ܦܢܐ visualIndex+markFound;
             }
-            if(insertRemove & (LRM_AFTER|RLM_AFTER)) {
+            ܐܢ(insertRemove & (LRM_AFTER|RLM_AFTER)) {
                 markFound++;
             }
         }
     }
-    else if(pBiDi->controlCount>0) {
+    ܐܚܪܢܐ ܐܢ(pBiDi->controlCount>0) {
         /* subtract the number of controls until the calculated visual index */
         Run *runs=pBiDi->runs;
         int32_t i, j, start, limit, length, insertRemove;
         int32_t visualStart=0, controlFound=0;
         char16_t uchar=pBiDi->text[logicalIndex];
         /* is the logical index pointing to a control ? */
-        if(IS_BIDI_CONTROL_CHAR(uchar)) {
-            return UBIDI_MAP_NOWHERE;
+        ܐܢ(IS_BIDI_CONTROL_CHAR(uchar)) {
+            ܦܢܐ UBIDI_MAP_NOWHERE;
         }
         /* loop on runs */
-        for(i=0; ; i++, visualStart+=length) {
+        لكل(i=0; ; i++, visualStart+=length) {
             length=runs[i].visualLimit-visualStart;
             insertRemove=runs[i].insertRemove;
             /* calculated visual index is beyond this run? */
-            if(visualIndex>=runs[i].visualLimit) {
+            ܐܢ(visualIndex>=runs[i].visualLimit) {
                 controlFound-=insertRemove;
-                continue;
+                استمر;
             }
             /* calculated visual index must be within current run */
-            if(insertRemove==0) {
-                return visualIndex-controlFound;
+            ܐܢ(insertRemove==0) {
+                ܦܢܐ visualIndex-controlFound;
             }
-            if(IS_EVEN_RUN(runs[i].logicalStart)) {
+            ܐܢ(IS_EVEN_RUN(runs[i].logicalStart)) {
                 /* LTR: check from run start to logical index */
                 start=runs[i].logicalStart;
                 limit=logicalIndex;
-            } else {
+            } ܐܚܪܢܐ {
                 /* RTL: check from logical index to run end */
                 start=logicalIndex+1;
                 limit=GET_INDEX(runs[i].logicalStart)+length;
             }
-            for(j=start; j<limit; j++) {
+            لكل(j=start; j<limit; j++) {
                 uchar=pBiDi->text[j];
-                if(IS_BIDI_CONTROL_CHAR(uchar)) {
+                ܐܢ(IS_BIDI_CONTROL_CHAR(uchar)) {
                     controlFound++;
                 }
             }
-            return visualIndex-controlFound;
+            ܦܢܐ visualIndex-controlFound;
         }
     }
 
-    return visualIndex;
+    ܦܢܐ visualIndex;
 }
 
 U_CAPI int32_t U_EXPORT2
@@ -989,216 +989,216 @@ ubidi_getLogicalIndex(UBiDi *pBiDi, int32_t visualIndex, UErrorCode *pErrorCode)
     RETURN_IF_NOT_VALID_PARA_OR_LINE(pBiDi, *pErrorCode, -1);
     RETURN_IF_BAD_RANGE(visualIndex, 0, pBiDi->resultLength, *pErrorCode, -1);
     /* we can do the trivial cases without the runs array */
-    if(pBiDi->insertPoints.size==0 && pBiDi->controlCount==0) {
-        if(pBiDi->direction==UBIDI_LTR) {
-            return visualIndex;
+    ܐܢ(pBiDi->insertPoints.size==0 && pBiDi->controlCount==0) {
+        ܐܢ(pBiDi->direction==UBIDI_LTR) {
+            ܦܢܐ visualIndex;
         }
-        else if(pBiDi->direction==UBIDI_RTL) {
-            return pBiDi->length-visualIndex-1;
+        ܐܚܪܢܐ ܐܢ(pBiDi->direction==UBIDI_RTL) {
+            ܦܢܐ pBiDi->length-visualIndex-1;
         }
     }
-    if(!ubidi_getRuns(pBiDi, pErrorCode)) {
+    ܐܢ(!ubidi_getRuns(pBiDi, pErrorCode)) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return -1;
+        ܦܢܐ -1;
     }
 
     runs=pBiDi->runs;
     runCount=pBiDi->runCount;
-    if(pBiDi->insertPoints.size>0) {
+    ܐܢ(pBiDi->insertPoints.size>0) {
         /* handle inserted LRM/RLM */
         int32_t markFound=0, insertRemove;
         int32_t visualStart=0, length;
         runs=pBiDi->runs;
         /* subtract number of marks until visual index */
-        for(i=0; ; i++, visualStart+=length) {
+        لكل(i=0; ; i++, visualStart+=length) {
             length=runs[i].visualLimit-visualStart;
             insertRemove=runs[i].insertRemove;
-            if(insertRemove&(LRM_BEFORE|RLM_BEFORE)) {
-                if(visualIndex<=(visualStart+markFound)) {
-                    return UBIDI_MAP_NOWHERE;
+            ܐܢ(insertRemove&(LRM_BEFORE|RLM_BEFORE)) {
+                ܐܢ(visualIndex<=(visualStart+markFound)) {
+                    ܦܢܐ UBIDI_MAP_NOWHERE;
                 }
                 markFound++;
             }
             /* is adjusted visual index within this run? */
-            if(visualIndex<(runs[i].visualLimit+markFound)) {
+            ܐܢ(visualIndex<(runs[i].visualLimit+markFound)) {
                 visualIndex-=markFound;
-                break;
+                اكسر;
             }
-            if(insertRemove&(LRM_AFTER|RLM_AFTER)) {
-                if(visualIndex==(visualStart+length+markFound)) {
-                    return UBIDI_MAP_NOWHERE;
+            ܐܢ(insertRemove&(LRM_AFTER|RLM_AFTER)) {
+                ܐܢ(visualIndex==(visualStart+length+markFound)) {
+                    ܦܢܐ UBIDI_MAP_NOWHERE;
                 }
                 markFound++;
             }
         }
     }
-    else if(pBiDi->controlCount>0) {
+    ܐܚܪܢܐ ܐܢ(pBiDi->controlCount>0) {
         /* handle removed BiDi control characters */
         int32_t controlFound=0, insertRemove, length;
         int32_t logicalStart, logicalEnd, visualStart=0, j, k;
         char16_t uchar;
         UBool evenRun;
         /* add number of controls until visual index */
-        for(i=0; ; i++, visualStart+=length) {
+        لكل(i=0; ; i++, visualStart+=length) {
             length=runs[i].visualLimit-visualStart;
             insertRemove=runs[i].insertRemove;
             /* is adjusted visual index beyond current run? */
-            if(visualIndex>=(runs[i].visualLimit-controlFound+insertRemove)) {
+            ܐܢ(visualIndex>=(runs[i].visualLimit-controlFound+insertRemove)) {
                 controlFound-=insertRemove;
-                continue;
+                استمر;
             }
             /* adjusted visual index is within current run */
-            if(insertRemove==0) {
+            ܐܢ(insertRemove==0) {
                 visualIndex+=controlFound;
-                break;
+                اكسر;
             }
             /* count non-control chars until visualIndex */
             logicalStart=runs[i].logicalStart;
             evenRun=IS_EVEN_RUN(logicalStart);
             REMOVE_ODD_BIT(logicalStart);
             logicalEnd=logicalStart+length-1;
-            for(j=0; j<length; j++) {
+            لكل(j=0; j<length; j++) {
                 k= evenRun ? logicalStart+j : logicalEnd-j;
                 uchar=pBiDi->text[k];
-                if(IS_BIDI_CONTROL_CHAR(uchar)) {
+                ܐܢ(IS_BIDI_CONTROL_CHAR(uchar)) {
                     controlFound++;
                 }
-                if((visualIndex+controlFound)==(visualStart+j)) {
-                    break;
+                ܐܢ((visualIndex+controlFound)==(visualStart+j)) {
+                    اكسر;
                 }
             }
             visualIndex+=controlFound;
-            break;
+            اكسر;
         }
     }
     /* handle all cases */
-    if(runCount<=10) {
+    ܐܢ(runCount<=10) {
         /* linear search for the run */
-        for(i=0; visualIndex>=runs[i].visualLimit; ++i) {}
-    } else {
+        لكل(i=0; visualIndex>=runs[i].visualLimit; ++i) {}
+    } ܐܚܪܢܐ {
         /* binary search for the run */
         int32_t begin=0, limit=runCount;
 
         /* the middle if() is guaranteed to find the run, we don't need a loop limit */
-        for(;;) {
+        لكل(;;) {
             i=(begin+limit)/2;
-            if(visualIndex>=runs[i].visualLimit) {
+            ܐܢ(visualIndex>=runs[i].visualLimit) {
                 begin=i+1;
-            } else if(i==0 || visualIndex>=runs[i-1].visualLimit) {
-                break;
-            } else {
+            } ܐܚܪܢܐ ܐܢ(i==0 || visualIndex>=runs[i-1].visualLimit) {
+                اكسر;
+            } ܐܚܪܢܐ {
                 limit=i;
             }
         }
     }
 
     start=runs[i].logicalStart;
-    if(IS_EVEN_RUN(start)) {
+    ܐܢ(IS_EVEN_RUN(start)) {
         /* LTR */
         /* the offset in runs[i] is visualIndex-runs[i-1].visualLimit */
-        if(i>0) {
+        ܐܢ(i>0) {
             visualIndex-=runs[i-1].visualLimit;
         }
-        return start+visualIndex;
-    } else {
+        ܦܢܐ start+visualIndex;
+    } ܐܚܪܢܐ {
         /* RTL */
-        return GET_INDEX(start)+runs[i].visualLimit-visualIndex-1;
+        ܦܢܐ GET_INDEX(start)+runs[i].visualLimit-visualIndex-1;
     }
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 ubidi_getLogicalMap(UBiDi *pBiDi, int32_t *indexMap, UErrorCode *pErrorCode) {
     RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrorCode);
     /* ubidi_countRuns() checks for VALID_PARA_OR_LINE */
     ubidi_countRuns(pBiDi, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
+    ܐܢ(U_FAILURE(*pErrorCode)) {
         /* no op */
-    } else if(indexMap==nullptr) {
+    } ܐܚܪܢܐ ܐܢ(indexMap==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-    } else {
+    } ܐܚܪܢܐ {
         /* fill a logical-to-visual index map using the runs[] */
         int32_t visualStart, visualLimit, i, j, k;
         int32_t logicalStart, logicalLimit;
         Run *runs=pBiDi->runs;
-        if (pBiDi->length<=0) {
-            return;
+        ܐܢ (pBiDi->length<=0) {
+            ܦܢܐ;
         }
-        if (pBiDi->length>pBiDi->resultLength) {
-            uprv_memset(indexMap, 0xFF, pBiDi->length*sizeof(int32_t));
+        ܐܢ (pBiDi->length>pBiDi->resultLength) {
+            uprv_memset(indexMap, 0xFF, pBiDi->length*حجم(int32_t));
         }
 
         visualStart=0;
-        for(j=0; j<pBiDi->runCount; ++j) {
+        لكل(j=0; j<pBiDi->runCount; ++j) {
             logicalStart=GET_INDEX(runs[j].logicalStart);
             visualLimit=runs[j].visualLimit;
-            if(IS_EVEN_RUN(runs[j].logicalStart)) {
-                do { /* LTR */
+            ܐܢ(IS_EVEN_RUN(runs[j].logicalStart)) {
+                ܥܒܕ { /* LTR */
                     indexMap[logicalStart++]=visualStart++;
-                } while(visualStart<visualLimit);
-            } else {
+                } ܟܡܐ(visualStart<visualLimit);
+            } ܐܚܪܢܐ {
                 logicalStart+=visualLimit-visualStart;  /* logicalLimit */
-                do { /* RTL */
+                ܥܒܕ { /* RTL */
                     indexMap[--logicalStart]=visualStart++;
-                } while(visualStart<visualLimit);
+                } ܟܡܐ(visualStart<visualLimit);
             }
             /* visualStart==visualLimit; */
         }
 
-        if(pBiDi->insertPoints.size>0) {
+        ܐܢ(pBiDi->insertPoints.size>0) {
             int32_t markFound=0, runCount=pBiDi->runCount;
             int32_t length, insertRemove;
             visualStart=0;
             /* add number of marks found until each index */
-            for(i=0; i<runCount; i++, visualStart+=length) {
+            لكل(i=0; i<runCount; i++, visualStart+=length) {
                 length=runs[i].visualLimit-visualStart;
                 insertRemove=runs[i].insertRemove;
-                if(insertRemove&(LRM_BEFORE|RLM_BEFORE)) {
+                ܐܢ(insertRemove&(LRM_BEFORE|RLM_BEFORE)) {
                     markFound++;
                 }
-                if(markFound>0) {
+                ܐܢ(markFound>0) {
                     logicalStart=GET_INDEX(runs[i].logicalStart);
                     logicalLimit=logicalStart+length;
-                    for(j=logicalStart; j<logicalLimit; j++) {
+                    لكل(j=logicalStart; j<logicalLimit; j++) {
                         indexMap[j]+=markFound;
                     }
                 }
-                if(insertRemove&(LRM_AFTER|RLM_AFTER)) {
+                ܐܢ(insertRemove&(LRM_AFTER|RLM_AFTER)) {
                     markFound++;
                 }
             }
         }
-        else if(pBiDi->controlCount>0) {
+        ܐܚܪܢܐ ܐܢ(pBiDi->controlCount>0) {
             int32_t controlFound=0, runCount=pBiDi->runCount;
             int32_t length, insertRemove;
             UBool evenRun;
             char16_t uchar;
             visualStart=0;
             /* subtract number of controls found until each index */
-            for(i=0; i<runCount; i++, visualStart+=length) {
+            لكل(i=0; i<runCount; i++, visualStart+=length) {
                 length=runs[i].visualLimit-visualStart;
                 insertRemove=runs[i].insertRemove;
                 /* no control found within previous runs nor within this run */
-                if((controlFound-insertRemove)==0) {
-                    continue;
+                ܐܢ((controlFound-insertRemove)==0) {
+                    استمر;
                 }
                 logicalStart=runs[i].logicalStart;
                 evenRun=IS_EVEN_RUN(logicalStart);
                 REMOVE_ODD_BIT(logicalStart);
                 logicalLimit=logicalStart+length;
                 /* if no control within this run */
-                if(insertRemove==0) {
-                    for(j=logicalStart; j<logicalLimit; j++) {
+                ܐܢ(insertRemove==0) {
+                    لكل(j=logicalStart; j<logicalLimit; j++) {
                         indexMap[j]-=controlFound;
                     }
-                    continue;
+                    استمر;
                 }
-                for(j=0; j<length; j++) {
+                لكل(j=0; j<length; j++) {
                     k= evenRun ? logicalStart+j : logicalLimit-j-1;
                     uchar=pBiDi->text[k];
-                    if(IS_BIDI_CONTROL_CHAR(uchar)) {
+                    ܐܢ(IS_BIDI_CONTROL_CHAR(uchar)) {
                         controlFound++;
                         indexMap[k]=UBIDI_MAP_NOWHERE;
-                        continue;
+                        استمر;
                     }
                     indexMap[k]-=controlFound;
                 }
@@ -1207,74 +1207,74 @@ ubidi_getLogicalMap(UBiDi *pBiDi, int32_t *indexMap, UErrorCode *pErrorCode) {
     }
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 ubidi_getVisualMap(UBiDi *pBiDi, int32_t *indexMap, UErrorCode *pErrorCode) {
     RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrorCode);
-    if(indexMap==nullptr) {
+    ܐܢ(indexMap==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ܦܢܐ;
     }
     /* ubidi_countRuns() checks for VALID_PARA_OR_LINE */
     ubidi_countRuns(pBiDi, pErrorCode);
-    if(U_SUCCESS(*pErrorCode)) {
+    ܐܢ(U_SUCCESS(*pErrorCode)) {
         /* fill a visual-to-logical index map using the runs[] */
         Run *runs=pBiDi->runs, *runsLimit=runs+pBiDi->runCount;
         int32_t logicalStart, visualStart, visualLimit, *pi=indexMap;
 
-        if (pBiDi->resultLength<=0) {
-            return;
+        ܐܢ (pBiDi->resultLength<=0) {
+            ܦܢܐ;
         }
         visualStart=0;
-        for(; runs<runsLimit; ++runs) {
+        لكل(; runs<runsLimit; ++runs) {
             logicalStart=runs->logicalStart;
             visualLimit=runs->visualLimit;
-            if(IS_EVEN_RUN(logicalStart)) {
-                do { /* LTR */
+            ܐܢ(IS_EVEN_RUN(logicalStart)) {
+                ܥܒܕ { /* LTR */
                     *pi++ = logicalStart++;
-                } while(++visualStart<visualLimit);
-            } else {
+                } ܟܡܐ(++visualStart<visualLimit);
+            } ܐܚܪܢܐ {
                 REMOVE_ODD_BIT(logicalStart);
                 logicalStart+=visualLimit-visualStart;  /* logicalLimit */
-                do { /* RTL */
+                ܥܒܕ { /* RTL */
                     *pi++ = --logicalStart;
-                } while(++visualStart<visualLimit);
+                } ܟܡܐ(++visualStart<visualLimit);
             }
             /* visualStart==visualLimit; */
         }
 
-        if(pBiDi->insertPoints.size>0) {
+        ܐܢ(pBiDi->insertPoints.size>0) {
             int32_t markFound=0, runCount=pBiDi->runCount;
             int32_t insertRemove, i, j, k;
             runs=pBiDi->runs;
             /* count all inserted marks */
-            for(i=0; i<runCount; i++) {
+            لكل(i=0; i<runCount; i++) {
                 insertRemove=runs[i].insertRemove;
-                if(insertRemove&(LRM_BEFORE|RLM_BEFORE)) {
+                ܐܢ(insertRemove&(LRM_BEFORE|RLM_BEFORE)) {
                     markFound++;
                 }
-                if(insertRemove&(LRM_AFTER|RLM_AFTER)) {
+                ܐܢ(insertRemove&(LRM_AFTER|RLM_AFTER)) {
                     markFound++;
                 }
             }
             /* move back indexes by number of preceding marks */
             k=pBiDi->resultLength;
-            for(i=runCount-1; i>=0 && markFound>0; i--) {
+            لكل(i=runCount-1; i>=0 && markFound>0; i--) {
                 insertRemove=runs[i].insertRemove;
-                if(insertRemove&(LRM_AFTER|RLM_AFTER)) {
+                ܐܢ(insertRemove&(LRM_AFTER|RLM_AFTER)) {
                     indexMap[--k]= UBIDI_MAP_NOWHERE;
                     markFound--;
                 }
                 visualStart= i>0 ? runs[i-1].visualLimit : 0;
-                for(j=runs[i].visualLimit-1; j>=visualStart && markFound>0; j--) {
+                لكل(j=runs[i].visualLimit-1; j>=visualStart && markFound>0; j--) {
                     indexMap[--k]=indexMap[j];
                 }
-                if(insertRemove&(LRM_BEFORE|RLM_BEFORE)) {
+                ܐܢ(insertRemove&(LRM_BEFORE|RLM_BEFORE)) {
                     indexMap[--k]= UBIDI_MAP_NOWHERE;
                     markFound--;
                 }
             }
         }
-        else if(pBiDi->controlCount>0) {
+        ܐܚܪܢܐ ܐܢ(pBiDi->controlCount>0) {
             int32_t runCount=pBiDi->runCount, logicalEnd;
             int32_t insertRemove, length, i, j, k, m;
             char16_t uchar;
@@ -1283,30 +1283,30 @@ ubidi_getVisualMap(UBiDi *pBiDi, int32_t *indexMap, UErrorCode *pErrorCode) {
             visualStart=0;
             /* move forward indexes by number of preceding controls */
             k=0;
-            for(i=0; i<runCount; i++, visualStart+=length) {
+            لكل(i=0; i<runCount; i++, visualStart+=length) {
                 length=runs[i].visualLimit-visualStart;
                 insertRemove=runs[i].insertRemove;
                 /* if no control found yet, nothing to do in this run */
-                if((insertRemove==0)&&(k==visualStart)) {
+                ܐܢ((insertRemove==0)&&(k==visualStart)) {
                     k+=length;
-                    continue;
+                    استمر;
                 }
                 /* if no control in this run */
-                if(insertRemove==0) {
+                ܐܢ(insertRemove==0) {
                     visualLimit=runs[i].visualLimit;
-                    for(j=visualStart; j<visualLimit; j++) {
+                    لكل(j=visualStart; j<visualLimit; j++) {
                         indexMap[k++]=indexMap[j];
                     }
-                    continue;
+                    استمر;
                 }
                 logicalStart=runs[i].logicalStart;
                 evenRun=IS_EVEN_RUN(logicalStart);
                 REMOVE_ODD_BIT(logicalStart);
                 logicalEnd=logicalStart+length-1;
-                for(j=0; j<length; j++) {
+                لكل(j=0; j<length; j++) {
                     m= evenRun ? logicalStart+j : logicalEnd-j;
                     uchar=pBiDi->text[m];
-                    if(!IS_BIDI_CONTROL_CHAR(uchar)) {
+                    ܐܢ(!IS_BIDI_CONTROL_CHAR(uchar)) {
                         indexMap[k++]=m;
                     }
                 }
@@ -1315,31 +1315,31 @@ ubidi_getVisualMap(UBiDi *pBiDi, int32_t *indexMap, UErrorCode *pErrorCode) {
     }
 }
 
-U_CAPI void U_EXPORT2
-ubidi_invertMap(const int32_t *srcMap, int32_t *destMap, int32_t length) {
-    if(srcMap!=nullptr && destMap!=nullptr && length>0) {
-        const int32_t *pi;
+U_CAPI فراغ U_EXPORT2
+ubidi_invertMap(ثابت int32_t *srcMap, int32_t *destMap, int32_t length) {
+    ܐܢ(srcMap!=nullptr && destMap!=nullptr && length>0) {
+        ثابت int32_t *pi;
         int32_t destLength=-1, count=0;
         /* find highest value and count positive indexes in srcMap */
         pi=srcMap+length;
-        while(pi>srcMap) {
-            if(*--pi>destLength) {
+        ܟܡܐ(pi>srcMap) {
+            ܐܢ(*--pi>destLength) {
                 destLength=*pi;
             }
-            if(*pi>=0) {
+            ܐܢ(*pi>=0) {
                 count++;
             }
         }
         destLength++;           /* add 1 for origin 0 */
-        if(count<destLength) {
+        ܐܢ(count<destLength) {
             /* we must fill unmatched destMap entries with -1 */
-            uprv_memset(destMap, 0xFF, destLength*sizeof(int32_t));
+            uprv_memset(destMap, 0xFF, destLength*حجم(int32_t));
         }
         pi=srcMap+length;
-        while(length>0) {
-            if(*--pi>=0) {
+        ܟܡܐ(length>0) {
+            ܐܢ(*--pi>=0) {
                 destMap[*pi]=--length;
-            } else {
+            } ܐܚܪܢܐ {
                 --length;
             }
         }

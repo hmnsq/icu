@@ -10,11 +10,11 @@
 #ifndef UCHRITER_H
 #define UCHRITER_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ܐܢ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/chariter.h"
+#ضمن "unicode/chariter.h"
 
 /**
  * \file 
@@ -35,8 +35,8 @@ U_NAMESPACE_BEGIN
  * @see ForwardCharacterIterator
  * @stable ICU 2.0
  */
-class U_COMMON_API UCharCharacterIterator : public CharacterIterator {
-public:
+class U_COMMON_API UCharCharacterIterator : عام CharacterIterator {
+عام:
   /**
    * Create an iterator over the char16_t array referred to by "textPtr".
    * The iteration range is 0 to <code>length-1</code>.
@@ -92,7 +92,7 @@ public:
    * @param that The UCharCharacterIterator to be copied
    * @stable ICU 2.0
    */
-  UCharCharacterIterator(const UCharCharacterIterator&  that);
+  UCharCharacterIterator(ثابت UCharCharacterIterator&  that);
 
   /**
    * Destructor.
@@ -108,7 +108,7 @@ public:
    * @return the newly created object
    * @stable ICU 2.0
    */
-  UCharCharacterIterator& operator=(const UCharCharacterIterator& that) U_LIFETIME_BOUND;
+  UCharCharacterIterator& operator=(ثابت UCharCharacterIterator& that) U_LIFETIME_BOUND;
 
   /**
    * Returns true if the iterators iterate over the same range of the
@@ -118,14 +118,14 @@ public:
    * same string and are pointing at the same character.
    * @stable ICU 2.0
    */
-  virtual bool           operator==(const ForwardCharacterIterator& that) const override;
+  virtual bool           operator==(ثابت ForwardCharacterIterator& that) ثابت override;
 
   /**
    * Generates a hash code for this iterator.
    * @return the hash code.
    * @stable ICU 2.0
    */
-  virtual int32_t hashCode() const override;
+  virtual int32_t hashCode() ثابت override;
 
   /**
    * Returns a new UCharCharacterIterator referring to the same
@@ -134,7 +134,7 @@ public:
    * @return the CharacterIterator newly created
    * @stable ICU 2.0
    */
-  virtual UCharCharacterIterator* clone() const override;
+  virtual UCharCharacterIterator* clone() ثابت override;
 
   /**
    * Sets the iterator to refer to the first code unit in its
@@ -222,14 +222,14 @@ public:
    * @return the code unit the iterator currently refers to.
    * @stable ICU 2.0
    */
-  virtual char16_t current() const override;
+  virtual char16_t current() ثابت override;
 
   /**
    * Returns the code point the iterator currently refers to.
    * @return the code point the iterator currently refers to.
    * @stable ICU 2.0
    */
-  virtual UChar32 current32() const override;
+  virtual UChar32 current32() ثابت override;
 
   /**
    * Advances to the next code unit in the iteration range (toward
@@ -346,7 +346,7 @@ public:
    * Sets the iterator to iterate over a new range of text
    * @stable ICU 2.0
    */
-  void setText(ConstChar16Ptr newText, int32_t newTextLength);
+  فراغ setText(ConstChar16Ptr newText, int32_t newTextLength);
 
   /**
    * Copies the char16_t array under iteration into the UnicodeString
@@ -355,23 +355,23 @@ public:
    * @param result Receives a copy of the text under iteration.
    * @stable ICU 2.0
    */
-  virtual void            getText(UnicodeString& result) override;
+  virtual فراغ            getText(UnicodeString& result) override;
 
   /**
    * Return a class ID for this class (not really public)
    * @return a class ID for this class
    * @stable ICU 2.0
    */
-  static UClassID U_EXPORT2 getStaticClassID();
+  ساكن UClassID U_EXPORT2 getStaticClassID();
 
   /**
    * Return a class ID for this object (not really public)
    * @return a class ID for this object.
    * @stable ICU 2.0
    */
-  virtual UClassID getDynamicClassID() const override;
+  virtual UClassID getDynamicClassID() ثابت override;
 
-protected:
+محمي:
   /**
    * Protected constructor
    * @stable ICU 2.0
@@ -381,7 +381,7 @@ protected:
    * Protected member text
    * @stable ICU 2.0
    */
-  const char16_t*            text;
+  ثابت char16_t*            text;
 
 };
 

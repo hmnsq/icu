@@ -14,34 +14,34 @@
 *   created by: George Rhoten
 */
 
-#include "unicode/utypes.h"
-#include "unicode/icuplug.h"
-#include "unicode/uclean.h"
-#include "cmemory.h"
-#include "icuplugimp.h"
-#include "ucln_cmn.h"
-#include "ucnv_io.h"
-#include "umutex.h"
-#include "utracimp.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/icuplug.h"
+#ضمن "unicode/uclean.h"
+#ضمن "cmemory.h"
+#ضمن "icuplugimp.h"
+#ضمن "ucln_cmn.h"
+#ضمن "ucnv_io.h"
+#ضمن "umutex.h"
+#ضمن "utracimp.h"
 
 U_NAMESPACE_BEGIN
 
-static UInitOnce gICUInitOnce {};
+ساكن UInitOnce gICUInitOnce {};
 
-static UBool U_CALLCONV uinit_cleanup() {
+ساكن UBool U_CALLCONV uinit_cleanup() {
     gICUInitOnce.reset();
-    return true;
+    ܦܢܐ ܫܪܪܐ;
 }
 
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 initData(UErrorCode &status)
 {
-#if UCONFIG_ENABLE_PLUGINS
+#ܐܢ UCONFIG_ENABLE_PLUGINS
     /* initialize plugins */
     uplug_init(&status);
 #endif
 
-#if !UCONFIG_NO_CONVERSION
+#ܐܢ !UCONFIG_NO_CONVERSION
     /*
      * 2005-may-02
      *
@@ -66,7 +66,7 @@ U_NAMESPACE_USE
 /*
  * ICU Initialization Function. Need not be called.
  */
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 u_init(UErrorCode *status) {
     UTRACE_ENTRY_OC(UTRACE_U_INIT);
     umtx_initOnce(gICUInitOnce, &initData, *status);

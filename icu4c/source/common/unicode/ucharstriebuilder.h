@@ -17,13 +17,13 @@
 #ifndef __UCHARSTRIEBUILDER_H__
 #define __UCHARSTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ܐܢ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/stringtriebuilder.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/unistr.h"
+#ضمن "unicode/stringtriebuilder.h"
+#ضمن "unicode/ucharstrie.h"
+#ضمن "unicode/unistr.h"
 
 /**
  * \file
@@ -40,8 +40,8 @@ class UCharsTrieElement;
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API UCharsTrieBuilder : public StringTrieBuilder {
-public:
+class U_COMMON_API UCharsTrieBuilder : عام StringTrieBuilder {
+عام:
     /**
      * Constructs an empty builder.
      * @param errorCode Standard ICU error code.
@@ -69,7 +69,7 @@ public:
      * @return *this
      * @stable ICU 4.8
      */
-    UCharsTrieBuilder& add(const UnicodeString& s,
+    UCharsTrieBuilder& add(ثابت UnicodeString& s,
                            int32_t value,
                            UErrorCode& errorCode) U_LIFETIME_BOUND;
 
@@ -132,46 +132,46 @@ public:
         strings.remove();
         elementsLength=0;
         ucharsLength=0;
-        return *this;
+        ܦܢܐ *this;
     }
 
-private:
-    UCharsTrieBuilder(const UCharsTrieBuilder &other) = delete;  // no copy constructor
-    UCharsTrieBuilder &operator=(const UCharsTrieBuilder &other) = delete;  // no assignment operator
+خاص:
+    UCharsTrieBuilder(ثابت UCharsTrieBuilder &other) = delete;  // no copy constructor
+    UCharsTrieBuilder &operator=(ثابت UCharsTrieBuilder &other) = delete;  // no assignment operator
 
-    void buildUChars(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
+    فراغ buildUChars(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
 
-    virtual int32_t getElementStringLength(int32_t i) const override;
-    virtual char16_t getElementUnit(int32_t i, int32_t unitIndex) const override;
-    virtual int32_t getElementValue(int32_t i) const override;
+    virtual int32_t getElementStringLength(int32_t i) ثابت override;
+    virtual char16_t getElementUnit(int32_t i, int32_t unitIndex) ثابت override;
+    virtual int32_t getElementValue(int32_t i) ثابت override;
 
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) const override;
+    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) ثابت override;
 
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const override;
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const override;
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const override;
+    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) ثابت override;
+    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) ثابت override;
+    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) ثابت override;
 
-    virtual UBool matchNodesCanHaveValues() const override { return true; }
+    virtual UBool matchNodesCanHaveValues() ثابت override { ܦܢܐ true; }
 
-    virtual int32_t getMaxBranchLinearSubNodeLength() const override { return UCharsTrie::kMaxBranchLinearSubNodeLength; }
-    virtual int32_t getMinLinearMatch() const override { return UCharsTrie::kMinLinearMatch; }
-    virtual int32_t getMaxLinearMatchLength() const override { return UCharsTrie::kMaxLinearMatchLength; }
+    virtual int32_t getMaxBranchLinearSubNodeLength() ثابت override { ܦܢܐ UCharsTrie::kMaxBranchLinearSubNodeLength; }
+    virtual int32_t getMinLinearMatch() ثابت override { ܦܢܐ UCharsTrie::kMinLinearMatch; }
+    virtual int32_t getMaxLinearMatchLength() ثابت override { ܦܢܐ UCharsTrie::kMaxLinearMatchLength; }
 
-    class UCTLinearMatchNode : public LinearMatchNode {
-    public:
-        UCTLinearMatchNode(const char16_t *units, int32_t len, Node *nextNode);
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    private:
-        const char16_t *s;
+    class UCTLinearMatchNode : عام LinearMatchNode {
+    عام:
+        UCTLinearMatchNode(ثابت char16_t *units, int32_t len, Node *nextNode);
+        virtual bool operator==(ثابت Node &other) ثابت override;
+        virtual فراغ اكتب(StringTrieBuilder &builder) override;
+    خاص:
+        ثابت char16_t *s;
     };
 
     virtual Node *createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                        Node *nextNode) const override;
+                                        Node *nextNode) ثابت override;
 
     UBool ensureCapacity(int32_t length);
-    virtual int32_t write(int32_t unit) override;
-    int32_t write(const char16_t *s, int32_t length);
+    virtual int32_t اكتب(int32_t unit) override;
+    int32_t اكتب(ثابت char16_t *s, int32_t length);
     virtual int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) override;
     virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) override;
     virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) override;

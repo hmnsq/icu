@@ -25,12 +25,12 @@
 #ifndef UCHAR_H
 #define UCHAR_H
 
-#include <stdbool.h>
-#include "unicode/utypes.h"
-#include "unicode/stringoptions.h"
-#include "unicode/ucpmap.h"
+#ضمن <stdbool.h>
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/stringoptions.h"
+#ضمن "unicode/ucpmap.h"
 
-#if !defined(USET_DEFINED) && !defined(U_IN_DOXYGEN)
+#ܐܢ !defined(USET_DEFINED) && !defined(U_IN_DOXYGEN)
 
 #define USET_DEFINED
 
@@ -42,7 +42,7 @@
  * @see ucnv_getUnicodeSet
  * @stable ICU 2.4
  */
-typedef struct USet USet;
+تعريفنوع بنية USet USet;
 
 #endif
 
@@ -193,7 +193,7 @@ U_CDECL_BEGIN
  * @see u_getUnicodeVersion
  * @stable ICU 2.1
  */
-typedef enum UProperty {
+تعريفنوع تعداد UProperty {
     /*
      * Note: UProperty constants are parsed by preparseucd.py.
      * It matches lines like
@@ -823,7 +823,7 @@ typedef enum UProperty {
  * See http://www.unicode.org/Public/UNIDATA/UnicodeData.html .
  * @stable ICU 2.0
  */
-typedef enum UCharCategory
+تعريفنوع تعداد UCharCategory
 {
     /*
      * Note: UCharCategory constants and their API comments are parsed by preparseucd.py.
@@ -1020,7 +1020,7 @@ typedef enum UCharCategory
  * This specifies the language directional property of a character set.
  * @stable ICU 2.0
  */
-typedef enum UCharDirection {
+تعريفنوع تعداد UCharDirection {
     /*
      * Note: UCharDirection constants and their API comments are parsed by preparseucd.py.
      * It matches pairs of lines like
@@ -1091,7 +1091,7 @@ typedef enum UCharDirection {
  * @see UCHAR_BIDI_PAIRED_BRACKET_TYPE
  * @stable ICU 52
  */
-typedef enum UBidiPairedBracketType {
+تعريفنوع تعداد UBidiPairedBracketType {
     /*
      * Note: UBidiPairedBracketType constants are parsed by preparseucd.py.
      * It matches lines like
@@ -1119,7 +1119,7 @@ typedef enum UBidiPairedBracketType {
  * Constants for Unicode blocks, see the Unicode Data file Blocks.txt
  * @stable ICU 2.0
  */
-enum UBlockCode {
+تعداد UBlockCode {
     /*
      * Note: UBlockCode constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2032,7 +2032,7 @@ enum UBlockCode {
 };
 
 /** @stable ICU 2.0 */
-typedef enum UBlockCode UBlockCode;
+تعريفنوع تعداد UBlockCode UBlockCode;
 
 /**
  * East Asian Width constants.
@@ -2041,7 +2041,7 @@ typedef enum UBlockCode UBlockCode;
  * @see u_getIntPropertyValue
  * @stable ICU 2.2
  */
-typedef enum UEastAsianWidth {
+تعريفنوع تعداد UEastAsianWidth {
     /*
      * Note: UEastAsianWidth constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2076,7 +2076,7 @@ typedef enum UEastAsianWidth {
  * @see u_charName
  * @stable ICU 2.0
  */
-typedef enum UCharNameChoice {
+تعريفنوع تعداد UCharNameChoice {
     /** Unicode character name (Name property). @stable ICU 2.0 */
     U_UNICODE_CHAR_NAME,
 #ifndef U_HIDE_DEPRECATED_API
@@ -2113,7 +2113,7 @@ typedef enum UCharNameChoice {
  * @see u_getPropertyValueName()
  * @stable ICU 2.4
  */
-typedef enum UPropertyNameChoice {
+تعريفنوع تعداد UPropertyNameChoice {
     U_SHORT_PROPERTY_NAME,
     U_LONG_PROPERTY_NAME,
 #ifndef U_HIDE_DEPRECATED_API
@@ -2131,7 +2131,7 @@ typedef enum UPropertyNameChoice {
  * @see UCHAR_DECOMPOSITION_TYPE
  * @stable ICU 2.2
  */
-typedef enum UDecompositionType {
+تعريفنوع تعداد UDecompositionType {
     /*
      * Note: UDecompositionType constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2173,7 +2173,7 @@ typedef enum UDecompositionType {
  * @see UCHAR_JOINING_TYPE
  * @stable ICU 2.2
  */
-typedef enum UJoiningType {
+تعريفنوع تعداد UJoiningType {
     /*
      * Note: UJoiningType constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2203,7 +2203,7 @@ typedef enum UJoiningType {
  * @see UCHAR_JOINING_GROUP
  * @stable ICU 2.2
  */
-typedef enum UJoiningGroup {
+تعريفنوع تعداد UJoiningGroup {
     /*
      * Note: UJoiningGroup constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2351,7 +2351,7 @@ typedef enum UJoiningGroup {
  * @see UCHAR_GRAPHEME_CLUSTER_BREAK
  * @stable ICU 3.4
  */
-typedef enum UGraphemeClusterBreak {
+تعريفنوع تعداد UGraphemeClusterBreak {
     /*
      * Note: UGraphemeClusterBreak constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2403,7 +2403,7 @@ typedef enum UGraphemeClusterBreak {
  * @see UCHAR_WORD_BREAK
  * @stable ICU 3.4
  */
-typedef enum UWordBreakValues {
+تعريفنوع تعداد UWordBreakValues {
     /*
      * Note: UWordBreakValues constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2466,7 +2466,7 @@ typedef enum UWordBreakValues {
  * @see UCHAR_SENTENCE_BREAK
  * @stable ICU 3.4
  */
-typedef enum USentenceBreak {
+تعريفنوع تعداد USentenceBreak {
     /*
      * Note: USentenceBreak constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2505,7 +2505,7 @@ typedef enum USentenceBreak {
  * @see UCHAR_LINE_BREAK
  * @stable ICU 2.2
  */
-typedef enum ULineBreak {
+تعريفنوع تعداد ULineBreak {
     /*
      * Note: ULineBreak constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2600,7 +2600,7 @@ typedef enum ULineBreak {
  * @see UCHAR_NUMERIC_TYPE
  * @stable ICU 2.2
  */
-typedef enum UNumericType {
+تعريفنوع تعداد UNumericType {
     /*
      * Note: UNumericType constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2628,7 +2628,7 @@ typedef enum UNumericType {
  * @see UCHAR_HANGUL_SYLLABLE_TYPE
  * @stable ICU 2.6
  */
-typedef enum UHangulSyllableType {
+تعريفنوع تعداد UHangulSyllableType {
     /*
      * Note: UHangulSyllableType constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2658,7 +2658,7 @@ typedef enum UHangulSyllableType {
  * @see UCHAR_INDIC_POSITIONAL_CATEGORY
  * @stable ICU 63
  */
-typedef enum UIndicPositionalCategory {
+تعريفنوع تعداد UIndicPositionalCategory {
     /*
      * Note: UIndicPositionalCategory constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2705,7 +2705,7 @@ typedef enum UIndicPositionalCategory {
  * @see UCHAR_INDIC_SYLLABIC_CATEGORY
  * @stable ICU 63
  */
-typedef enum UIndicSyllabicCategory {
+تعريفنوع تعداد UIndicSyllabicCategory {
     /*
      * Note: UIndicSyllabicCategory constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2794,7 +2794,7 @@ typedef enum UIndicSyllabicCategory {
  * @see UCHAR_INDIC_CONJUNCT_BREAK
  * @stable ICU 76
  */
-typedef enum UIndicConjunctBreak {
+تعريفنوع تعداد UIndicConjunctBreak {
     /*
     * Note: UIndicConjunctBreak constants are parsed by preparseucd.py.
     * It matches lines like
@@ -2826,7 +2826,7 @@ typedef enum UIndicConjunctBreak {
  * @see UCHAR_VERTICAL_ORIENTATION
  * @stable ICU 63
  */
-typedef enum UVerticalOrientation {
+تعريفنوع تعداد UVerticalOrientation {
     /*
      * Note: UVerticalOrientation constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2850,7 +2850,7 @@ typedef enum UVerticalOrientation {
  * @see UCHAR_IDENTIFIER_STATUS
  * @stable ICU 75
  */
-typedef enum UIdentifierStatus {
+تعريفنوع تعداد UIdentifierStatus {
     /*
      * Note: UIdentifierStatus constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2870,7 +2870,7 @@ typedef enum UIdentifierStatus {
  * @see UCHAR_IDENTIFIER_TYPE
  * @stable ICU 75
  */
-typedef enum UIdentifierType {
+تعريفنوع تعداد UIdentifierType {
     /*
      * Note: UIdentifierType constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2958,7 +2958,7 @@ u_hasBinaryProperty(UChar32 c, UProperty which);
  * @stable ICU 70
  */
 U_CAPI UBool U_EXPORT2
-u_stringHasBinaryProperty(const UChar *s, int32_t length, UProperty which);
+u_stringHasBinaryProperty(ثابت UChar *s, int32_t length, UProperty which);
 
 /**
  * Returns a frozen USet for a binary property.
@@ -2975,7 +2975,7 @@ u_stringHasBinaryProperty(const UChar *s, int32_t length, UProperty which);
  * @see UnicodeSet::fromUSet
  * @stable ICU 63
  */
-U_CAPI const USet * U_EXPORT2
+U_CAPI ثابت USet * U_EXPORT2
 u_getBinaryPropertySet(UProperty property, UErrorCode *pErrorCode);
 
 /**
@@ -3150,7 +3150,7 @@ u_getIntPropertyMaxValue(UProperty which);
  * @see u_getIntPropertyValue
  * @stable ICU 63
  */
-U_CAPI const UCPMap * U_EXPORT2
+U_CAPI ثابت UCPMap * U_EXPORT2
 u_getIntPropertyMap(UProperty property, UErrorCode *pErrorCode);
 
 /**
@@ -3175,7 +3175,7 @@ u_getIntPropertyMap(UProperty property, UErrorCode *pErrorCode);
  * @see U_NO_NUMERIC_VALUE
  * @stable ICU 2.2
  */
-U_CAPI double U_EXPORT2
+U_CAPI مزدوج U_EXPORT2
 u_getNumericValue(UChar32 c);
 
 /**
@@ -3185,7 +3185,7 @@ u_getNumericValue(UChar32 c);
  * @see u_getNumericValue
  * @stable ICU 2.2
  */
-#define U_NO_NUMERIC_VALUE ((double)-123456789.)
+#define U_NO_NUMERIC_VALUE ((مزدوج)-123456789.)
 
 /**
  * Determines whether the specified code point has the general category "Ll"
@@ -3714,8 +3714,8 @@ u_charType(UChar32 c);
  * @see UCharCategory
  * @see u_enumCharTypes
  */
-typedef UBool U_CALLCONV
-UCharEnumTypeRange(const void *context, UChar32 start, UChar32 limit, UCharCategory type);
+تعريفنوع UBool U_CALLCONV
+UCharEnumTypeRange(ثابت فراغ *context, UChar32 start, UChar32 limit, UCharCategory type);
 
 /**
  * Enumerate efficiently all code points with their Unicode general categories.
@@ -3736,10 +3736,10 @@ UCharEnumTypeRange(const void *context, UChar32 start, UChar32 limit, UCharCateg
  * @see UCharCategory
  * @see UCharEnumTypeRange
  */
-U_CAPI void U_EXPORT2
-u_enumCharTypes(UCharEnumTypeRange *enumRange, const void *context);
+U_CAPI فراغ U_EXPORT2
+u_enumCharTypes(UCharEnumTypeRange *enumRange, ثابت فراغ *context);
 
-#if !UCONFIG_NO_NORMALIZATION
+#ܐܢ !UCONFIG_NO_NORMALIZATION
 
 /**
  * Returns the combining class of the code point as specified in UnicodeData.txt.
@@ -3825,7 +3825,7 @@ ublock_getCode(UChar32 c);
  */
 U_CAPI int32_t U_EXPORT2
 u_charName(UChar32 code, UCharNameChoice nameChoice,
-           char *buffer, int32_t bufferLength,
+           حرف *buffer, int32_t bufferLength,
            UErrorCode *pErrorCode);
 
 #ifndef U_HIDE_DEPRECATED_API
@@ -3849,7 +3849,7 @@ u_charName(UChar32 code, UCharNameChoice nameChoice,
  */
 U_DEPRECATED int32_t U_EXPORT2
 u_getISOComment(UChar32 c,
-                char *dest, int32_t destCapacity,
+                حرف *dest, int32_t destCapacity,
                 UErrorCode *pErrorCode);
 #endif  /* U_HIDE_DEPRECATED_API */
 
@@ -3875,7 +3875,7 @@ u_getISOComment(UChar32 c,
  */
 U_CAPI UChar32 U_EXPORT2
 u_charFromName(UCharNameChoice nameChoice,
-               const char *name,
+               ثابت حرف *name,
                UErrorCode *pErrorCode);
 
 /**
@@ -3895,10 +3895,10 @@ u_charFromName(UCharNameChoice nameChoice,
  * @see u_enumCharNames
  * @stable ICU 1.7
  */
-typedef UBool U_CALLCONV UEnumCharNamesFn(void *context,
+تعريفنوع UBool U_CALLCONV UEnumCharNamesFn(فراغ *context,
                                UChar32 code,
                                UCharNameChoice nameChoice,
-                               const char *name,
+                               ثابت حرف *name,
                                int32_t length);
 
 /**
@@ -3922,10 +3922,10 @@ typedef UBool U_CALLCONV UEnumCharNamesFn(void *context,
  * @see u_charFromName
  * @stable ICU 1.7
  */
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 u_enumCharNames(UChar32 start, UChar32 limit,
                 UEnumCharNamesFn *fn,
-                void *context,
+                فراغ *context,
                 UCharNameChoice nameChoice,
                 UErrorCode *pErrorCode);
 
@@ -3960,7 +3960,7 @@ u_enumCharNames(UChar32 start, UChar32 limit,
  * @see UPropertyNameChoice
  * @stable ICU 2.4
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI ثابت حرف* U_EXPORT2
 u_getPropertyName(UProperty property,
                   UPropertyNameChoice nameChoice);
 
@@ -3984,7 +3984,7 @@ u_getPropertyName(UProperty property,
  * @stable ICU 2.4
  */
 U_CAPI UProperty U_EXPORT2
-u_getPropertyEnum(const char* alias);
+u_getPropertyEnum(ثابت حرف* alias);
 
 /**
  * Return the Unicode name for a given property value, as given in the
@@ -4033,7 +4033,7 @@ u_getPropertyEnum(const char* alias);
  * @see UPropertyNameChoice
  * @stable ICU 2.4
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI ثابت حرف* U_EXPORT2
 u_getPropertyValueName(UProperty property,
                        int32_t value,
                        UPropertyNameChoice nameChoice);
@@ -4071,7 +4071,7 @@ u_getPropertyValueName(UProperty property,
  */
 U_CAPI int32_t U_EXPORT2
 u_getPropertyValueEnum(UProperty property,
-                       const char* alias);
+                       ثابت حرف* alias);
 
 /**
  * Determines if the specified character is permissible as the first character in an identifier
@@ -4407,7 +4407,7 @@ u_forDigit(int32_t digit, int8_t radix);
  *
  * @stable ICU 2.1
  */
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 u_charAge(UChar32 c, UVersionInfo versionArray);
 
 /**
@@ -4421,10 +4421,10 @@ u_charAge(UChar32 c, UVersionInfo versionArray);
  *                     the Unicode version number
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 u_getUnicodeVersion(UVersionInfo versionArray);
 
-#if !UCONFIG_NO_NORMALIZATION
+#ܐܢ !UCONFIG_NO_NORMALIZATION
 /**
  * Get the FC_NFKC_Closure property string for a character.
  * See Unicode Standard Annex #15 for details, search for "FC_NFKC_Closure"

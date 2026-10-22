@@ -10,9 +10,9 @@
 #ifndef ICUSERV_H
 #define ICUSERV_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if UCONFIG_NO_SERVICE
+#ܐܢ UCONFIG_NO_SERVICE
 
 U_NAMESPACE_BEGIN
 
@@ -24,15 +24,15 @@ class ICUService;
 
 U_NAMESPACE_END
 
-#else
+#ܐܚܪܢܐ
 
-#include "unicode/unistr.h"
-#include "unicode/locid.h"
-#include "unicode/umisc.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/locid.h"
+#ضمن "unicode/umisc.h"
 
-#include "hash.h"
-#include "uvector.h"
-#include "servnotf.h"
+#ضمن "hash.h"
+#ضمن "uvector.h"
+#ضمن "servnotf.h"
 
 class ICUServiceTest;
 
@@ -69,21 +69,21 @@ class DNCache;
  * <p>The default implementation of ICUServiceKey has no fallbacks and
  * has no custom descriptors.</p> 
  */
-class U_COMMON_API ICUServiceKey : public UObject {
- private: 
-  const UnicodeString _id;
+class U_COMMON_API ICUServiceKey : عام UObject {
+ خاص: 
+  ثابت UnicodeString _id;
 
- protected:
-  static const char16_t PREFIX_DELIMITER;
+ محمي:
+  ساكن ثابت char16_t PREFIX_DELIMITER;
 
- public:
+ عام:
 
   /**
    * <p>Construct a key from an id.</p>
    *
    * @param id the ID from which to construct the key.
    */
-  ICUServiceKey(const UnicodeString& id);
+  ICUServiceKey(ثابت UnicodeString& id);
 
   /**
    * <p>Virtual destructor.</p>
@@ -95,7 +95,7 @@ class U_COMMON_API ICUServiceKey : public UObject {
   *
   * @return the ID used to construct this key.
   */
-  virtual const UnicodeString& getID() const;
+  virtual ثابت UnicodeString& getID() ثابت;
 
  /**
   * <p>Return the canonical version of the original ID.  This implementation
@@ -104,7 +104,7 @@ class U_COMMON_API ICUServiceKey : public UObject {
   * @param result the output parameter to which the id will be appended.
   * @return the modified result.
   */
-  virtual UnicodeString& canonicalID(UnicodeString& result) const;
+  virtual UnicodeString& canonicalID(UnicodeString& result) ثابت;
 
  /**
   * <p>Return the (canonical) current ID.  This implementation appends
@@ -113,7 +113,7 @@ class U_COMMON_API ICUServiceKey : public UObject {
   * @param result the output parameter to which the current id will be appended.
   * @return the modified result.  
   */
-  virtual UnicodeString& currentID(UnicodeString& result) const;
+  virtual UnicodeString& currentID(UnicodeString& result) ثابت;
 
  /**
   * <p>Return the current descriptor.  This implementation appends
@@ -129,7 +129,7 @@ class U_COMMON_API ICUServiceKey : public UObject {
   * @param result the output parameter to which the current id will be appended.
   * @return the modified result.  
   */
-  virtual UnicodeString& currentDescriptor(UnicodeString& result) const;
+  virtual UnicodeString& currentDescriptor(UnicodeString& result) ثابت;
 
  /**
   * <p>If the key has a fallback, modify the key and return true,
@@ -149,7 +149,7 @@ class U_COMMON_API ICUServiceKey : public UObject {
   * @param id the id to test.
   * @return true if this ICUServiceKey's canonical ID is a fallback of id.
   */
-  virtual UBool isFallbackOf(const UnicodeString& id) const;
+  virtual UBool isFallbackOf(ثابت UnicodeString& id) ثابت;
 
  /**
   * <p>Return the prefix.  This implementation leaves result unchanged.
@@ -158,7 +158,7 @@ class U_COMMON_API ICUServiceKey : public UObject {
   * @param result the output parameter to which the prefix will be appended.
   * @return the modified result.
   */
-  virtual UnicodeString& prefix(UnicodeString& result) const;
+  virtual UnicodeString& prefix(UnicodeString& result) ثابت;
 
  /**
   * <p>A utility to parse the prefix out of a descriptor string.  Only
@@ -169,7 +169,7 @@ class U_COMMON_API ICUServiceKey : public UObject {
   * on exit is the prefix of that descriptor.
   * @return the modified result.
   */
-  static UnicodeString& parsePrefix(UnicodeString& result);
+  ساكن UnicodeString& parsePrefix(UnicodeString& result);
 
   /**
   * <p>A utility to parse the suffix out of a descriptor string.  Only
@@ -180,23 +180,23 @@ class U_COMMON_API ICUServiceKey : public UObject {
   * on exit is the suffix of that descriptor.
   * @return the modified result.
   */
-  static UnicodeString& parseSuffix(UnicodeString& result);
+  ساكن UnicodeString& parseSuffix(UnicodeString& result);
 
-public:
+عام:
   /**
    * UObject RTTI boilerplate.
    */
-  static UClassID U_EXPORT2 getStaticClassID();
+  ساكن UClassID U_EXPORT2 getStaticClassID();
 
   /**
    * UObject RTTI boilerplate.
    */
-  virtual UClassID getDynamicClassID() const override;
+  virtual UClassID getDynamicClassID() ثابت override;
 
 #ifdef SERVICE_DEBUG
- public:
-  virtual UnicodeString& debug(UnicodeString& result) const;
-  virtual UnicodeString& debugClass(UnicodeString& result) const;
+ عام:
+  virtual UnicodeString& debug(UnicodeString& result) ثابت;
+  virtual UnicodeString& debugClass(UnicodeString& result) ثابت;
 #endif
 
 };
@@ -211,8 +211,8 @@ public:
   * updates id->factory mappings, and returns the display name for
   * a supported id.</p>
   */
-class U_COMMON_API ICUServiceFactory : public UObject {
- public:
+class U_COMMON_API ICUServiceFactory : عام UObject {
+ عام:
     virtual ~ICUServiceFactory();
 
     /**
@@ -232,7 +232,7 @@ class U_COMMON_API ICUServiceFactory : public UObject {
      * @param status the error code status.
      * @return the service object, or nullptr if the factory does not support the key.
      */
-    virtual UObject* create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const = 0;
+    virtual UObject* create(ثابت ICUServiceKey& key, ثابت ICUService* service, UErrorCode& status) ثابت = 0;
 
     /**
      * <p>Update result to reflect the IDs (not descriptors) that this
@@ -250,7 +250,7 @@ class U_COMMON_API ICUServiceFactory : public UObject {
      * @param result the mapping table to update.
      * @param status the error code status.
      */
-    virtual void updateVisibleIDs(Hashtable& result, UErrorCode& status) const = 0;
+    virtual فراغ updateVisibleIDs(Hashtable& result, UErrorCode& status) ثابت = 0;
 
     /**
      * <p>Return, in result, the display name of the id in the provided locale.
@@ -265,7 +265,7 @@ class U_COMMON_API ICUServiceFactory : public UObject {
      * @param result output parameter to hold the display name.
      * @return result.
      */
-    virtual UnicodeString& getDisplayName(const UnicodeString& id, const Locale& locale, UnicodeString& result) const = 0;
+    virtual UnicodeString& getDisplayName(ثابت UnicodeString& id, ثابت Locale& locale, UnicodeString& result) ثابت = 0;
 };
 
 /*
@@ -282,13 +282,13 @@ class U_COMMON_API ICUServiceFactory : public UObject {
   * for its ID if visible is false.  No localization of display
   * names is performed.</p>
   */
-class U_COMMON_API SimpleFactory : public ICUServiceFactory {
- protected:
+class U_COMMON_API SimpleFactory : عام ICUServiceFactory {
+ محمي:
   UObject* _instance;
-  const UnicodeString _id;
-  const UBool _visible;
+  ثابت UnicodeString _id;
+  ثابت UBool _visible;
 
- public:
+ عام:
   /**
    * <p>Construct a SimpleFactory that maps a single ID to a single 
    * service instance.  If visible is true, the ID will be visible.
@@ -299,7 +299,7 @@ class U_COMMON_API SimpleFactory : public ICUServiceFactory {
    * @param id the ID to assign to this service instance.
    * @param visible if true, the ID will be visible.
    */
-  SimpleFactory(UObject* instanceToAdopt, const UnicodeString& id, UBool visible = true);
+  SimpleFactory(UObject* instanceToAdopt, ثابت UnicodeString& id, UBool visible = true);
 
   /**
    * <p>Destructor.</p>
@@ -315,7 +315,7 @@ class U_COMMON_API SimpleFactory : public ICUServiceFactory {
    * @param status the error code status.
    * @return the service object, or nullptr if the factory does not support the key.
    */
-  virtual UObject* create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const override;
+  virtual UObject* create(ثابت ICUServiceKey& key, ثابت ICUService* service, UErrorCode& status) ثابت override;
 
   /**
    * <p>This implementation adds a mapping from ID -> this to result if visible is true, 
@@ -324,7 +324,7 @@ class U_COMMON_API SimpleFactory : public ICUServiceFactory {
    * @param result the mapping table to update.
    * @param status the error code status.
    */
-  virtual void updateVisibleIDs(Hashtable& result, UErrorCode& status) const override;
+  virtual فراغ updateVisibleIDs(Hashtable& result, UErrorCode& status) ثابت override;
 
   /**
    * <p>This implementation returns the factory ID if it equals id and visible is true,
@@ -336,23 +336,23 @@ class U_COMMON_API SimpleFactory : public ICUServiceFactory {
    * @param result output parameter to hold the display name.
    * @return result.
    */
-  virtual UnicodeString& getDisplayName(const UnicodeString& id, const Locale& locale, UnicodeString& result) const override;
+  virtual UnicodeString& getDisplayName(ثابت UnicodeString& id, ثابت Locale& locale, UnicodeString& result) ثابت override;
 
-public:
+عام:
  /**
   * UObject RTTI boilerplate.
   */
-  static UClassID U_EXPORT2 getStaticClassID();
+  ساكن UClassID U_EXPORT2 getStaticClassID();
 
  /**
   * UObject RTTI boilerplate.
   */
-  virtual UClassID getDynamicClassID() const override;
+  virtual UClassID getDynamicClassID() ثابت override;
 
 #ifdef SERVICE_DEBUG
- public:
-  virtual UnicodeString& debug(UnicodeString& toAppendTo) const;
-  virtual UnicodeString& debugClass(UnicodeString& toAppendTo) const;
+ عام:
+  virtual UnicodeString& debug(UnicodeString& toAppendTo) ثابت;
+  virtual UnicodeString& debugClass(UnicodeString& toAppendTo) ثابت;
 #endif
 
 };
@@ -368,8 +368,8 @@ public:
  * different listener interfaces that extend EventListener, and modify
  * acceptsListener and notifyListener as appropriate.</p>
  */
-class U_COMMON_API ServiceListener : public EventListener {
-public:
+class U_COMMON_API ServiceListener : عام EventListener {
+عام:
     virtual ~ServiceListener();
 
     /**
@@ -379,18 +379,18 @@ public:
      * 
      * @param service the service that changed.
      */
-    virtual void serviceChanged(const ICUService& service) const = 0;
+    virtual فراغ serviceChanged(ثابت ICUService& service) ثابت = 0;
     
-public:
+عام:
     /**
      * UObject RTTI boilerplate.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ساكن UClassID U_EXPORT2 getStaticClassID();
     
     /**
      * UObject RTTI boilerplate.
      */
-    virtual UClassID getDynamicClassID() const override;
+    virtual UClassID getDynamicClassID() ثابت override;
     
 };
 
@@ -402,17 +402,17 @@ public:
  * <p>A StringPair holds a displayName/ID pair.  ICUService uses it
  * as the array elements returned by getDisplayNames.
  */
-class U_COMMON_API StringPair : public UMemory {
-public:
+class U_COMMON_API StringPair : عام UMemory {
+عام:
   /**
    * <p>The display name of the pair.</p>
    */
-  const UnicodeString displayName;
+  ثابت UnicodeString displayName;
 
   /**
    * <p>The ID of the pair.</p>
    */
-  const UnicodeString id;
+  ثابت UnicodeString id;
 
   /**
    * <p>Creates a string pair from a displayName and an ID.</p>
@@ -422,18 +422,18 @@ public:
    * @param status the error code status.
    * @return a StringPair if the creation was successful, otherwise nullptr.
    */
-  static StringPair* create(const UnicodeString& displayName, 
-                            const UnicodeString& id,
+  ساكن StringPair* create(ثابت UnicodeString& displayName, 
+                            ثابت UnicodeString& id,
                             UErrorCode& status);
 
   /**
    * <p>Return true if either string of the pair is bogus.</p>
    * @return true if either string of the pair is bogus.
    */
-  UBool isBogus() const;
+  UBool isBogus() ثابت;
 
-private:
-  StringPair(const UnicodeString& displayName, const UnicodeString& id);
+خاص:
+  StringPair(ثابت UnicodeString& displayName, ثابت UnicodeString& id);
 };
 
 /*******************************************************************
@@ -523,14 +523,14 @@ private:
  * strategy.  Most clients will wish to subclass it instead of
  * ICUService.</p> 
  */
-class U_COMMON_API ICUService : public ICUNotifier {
- protected: 
+class U_COMMON_API ICUService : عام ICUNotifier {
+ محمي: 
     /**
      * Name useful for debugging.
      */
-    const UnicodeString name;
+    ثابت UnicodeString name;
 
- private:
+ خاص:
 
     /**
      * Timestamp so iterators can be fail-fast.
@@ -560,7 +560,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
     /**
      * Constructor.
      */
- public:
+ عام:
     /**
      * <p>Construct a new ICUService.</p>
      */
@@ -571,7 +571,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      *
      * @param name a name to use in debugging.
      */
-    ICUService(const UnicodeString& name);
+    ICUService(ثابت UnicodeString& name);
 
     /**
      * <p>Destructor.</p>
@@ -585,7 +585,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param result an output parameter to contain the name of this service.
      * @return the name of this service.
      */
-    UnicodeString& getName(UnicodeString& result) const;
+    UnicodeString& getName(UnicodeString& result) ثابت;
 
     /**
      * <p>Convenience override for get(ICUServiceKey&, UnicodeString*). This uses
@@ -595,7 +595,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the service instance, or nullptr.
      */
-    UObject* get(const UnicodeString& descriptor, UErrorCode& status) const;
+    UObject* get(ثابت UnicodeString& descriptor, UErrorCode& status) ثابت;
 
     /**
      * <p>Convenience override for get(ICUServiceKey&, UnicodeString*).  This uses
@@ -606,7 +606,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the service instance, or nullptr.
      */
-    UObject* get(const UnicodeString& descriptor, UnicodeString* actualReturn, UErrorCode& status) const;
+    UObject* get(ثابت UnicodeString& descriptor, UnicodeString* actualReturn, UErrorCode& status) ثابت;
 
     /**
      * <p>Convenience override for get(ICUServiceKey&, UnicodeString*).</p>
@@ -615,7 +615,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the service instance, or nullptr.
      */
-    UObject* getKey(ICUServiceKey& key, UErrorCode& status) const;
+    UObject* getKey(ICUServiceKey& key, UErrorCode& status) ثابت;
 
     /**
      * <p>Given a key, return a service object, and, if actualReturn
@@ -639,7 +639,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the service instance, or nullptr.
      */
-    virtual UObject* getKey(ICUServiceKey& key, UnicodeString* actualReturn, UErrorCode& status) const;
+    virtual UObject* getKey(ICUServiceKey& key, UnicodeString* actualReturn, UErrorCode& status) ثابت;
 
     /**
      * <p>This version of getKey is only called by ICUServiceFactories within the scope
@@ -653,7 +653,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the service instance, or nullptr.
      */
-    UObject* getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUServiceFactory* factory, UErrorCode& status) const;
+    UObject* getKey(ICUServiceKey& key, UnicodeString* actualReturn, ثابت ICUServiceFactory* factory, UErrorCode& status) ثابت;
 
     /**
      * <p>Convenience override for getVisibleIDs(String) that passes null
@@ -663,7 +663,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the result vector.
      */
-    UVector& getVisibleIDs(UVector& result, UErrorCode& status) const;
+    UVector& getVisibleIDs(UVector& result, UErrorCode& status) ثابت;
 
     /**
      * <p>Return a snapshot of the visible IDs for this service.  This
@@ -685,7 +685,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the result vector.
      */
-    UVector& getVisibleIDs(UVector& result, const UnicodeString* matchID, UErrorCode& status) const;
+    UVector& getVisibleIDs(UVector& result, ثابت UnicodeString* matchID, UErrorCode& status) ثابت;
 
     /**
      * <p>Convenience override for getDisplayName(const UnicodeString&, const Locale&, UnicodeString&) that
@@ -695,7 +695,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param result an output parameter to hold the display name.
      * @return the modified result.
      */
-    UnicodeString& getDisplayName(const UnicodeString& id, UnicodeString& result) const;
+    UnicodeString& getDisplayName(ثابت UnicodeString& id, UnicodeString& result) ثابت;
 
     /**
      * <p>Given a visible ID, return the display name in the requested locale.
@@ -707,7 +707,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param locale the locale in which to localize the ID.
      * @return the modified result.
      */
-    UnicodeString& getDisplayName(const UnicodeString& id, UnicodeString& result, const Locale& locale) const;
+    UnicodeString& getDisplayName(ثابت UnicodeString& id, UnicodeString& result, ثابت Locale& locale) ثابت;
 
     /**
      * <p>Convenience override of getDisplayNames(const Locale&, const UnicodeString*) that 
@@ -718,7 +718,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the modified result vector.
      */
-    UVector& getDisplayNames(UVector& result, UErrorCode& status) const;
+    UVector& getDisplayNames(UVector& result, UErrorCode& status) ثابت;
 
     /**
      * <p>Convenience override of getDisplayNames(const Locale&, const UnicodeString*) that 
@@ -729,7 +729,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the modified result vector.
      */
-    UVector& getDisplayNames(UVector& result, const Locale& locale, UErrorCode& status) const;
+    UVector& getDisplayNames(UVector& result, ثابت Locale& locale, UErrorCode& status) ثابت;
 
     /**
      * <p>Return a snapshot of the mapping from display names to visible
@@ -755,9 +755,9 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the result vector.  */
     UVector& getDisplayNames(UVector& result,
-                             const Locale& locale, 
-                             const UnicodeString* matchID, 
-                             UErrorCode& status) const;
+                             ثابت Locale& locale, 
+                             ثابت UnicodeString* matchID, 
+                             UErrorCode& status) ثابت;
 
     /**
      * <p>A convenience override of registerInstance(UObject*, const UnicodeString&, UBool)
@@ -769,7 +769,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @return a registry key that can be passed to unregister to unregister
      * (and discard) this instance.
      */
-    URegistryKey registerInstance(UObject* objToAdopt, const UnicodeString& id, UErrorCode& status);
+    URegistryKey registerInstance(UObject* objToAdopt, ثابت UnicodeString& id, UErrorCode& status);
 
     /**
      * <p>Register a service instance with the provided ID.  The ID will be 
@@ -789,7 +789,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @return a registry key that can be passed to unregister() to unregister
      * (and discard) this instance.
      */
-    virtual URegistryKey registerInstance(UObject* objToAdopt, const UnicodeString& id, UBool visible, UErrorCode& status);
+    virtual URegistryKey registerInstance(UObject* objToAdopt, ثابت UnicodeString& id, UBool visible, UErrorCode& status);
 
     /**
      * <p>Register an ICUServiceFactory.  Returns a registry key that
@@ -830,7 +830,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      *
      * <p>This issues a serviceChanged notification to registered listeners.</p>
      */
-    virtual void reset();
+    virtual فراغ reset();
 
     /**
      * <p>Return true if the service is in its default state.</p>
@@ -838,7 +838,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * <p>The default implementation returns true if there are no 
      * factories registered.</p>
      */
-    virtual UBool isDefault() const;
+    virtual UBool isDefault() ثابت;
 
     /**
      * <p>Create a key from an ID.  If ID is nullptr, returns nullptr.</p>
@@ -851,7 +851,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the ICUServiceKey corresponding to ID, or nullptr.
      */
-    virtual ICUServiceKey* createKey(const UnicodeString* id, UErrorCode& status) const;
+    virtual ICUServiceKey* createKey(ثابت UnicodeString* id, UErrorCode& status) ثابت;
 
     /**
      * <p>Clone object so that caller can own the copy.  In ICU2.4, UObject doesn't define
@@ -861,14 +861,14 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param instance the service instance to clone.
      * @return a clone of the passed-in instance, or nullptr if cloning was unsuccessful.
      */
-    virtual UObject* cloneInstance(UObject* instance) const = 0;
+    virtual UObject* cloneInstance(UObject* instance) ثابت = 0;
 
 
     /************************************************************************
      * Subclassing API
      */
 
- protected:
+ محمي:
 
     /**
      * <p>Create a factory that wraps a single service object.  Called by registerInstance.</p>
@@ -881,7 +881,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return an instance of ICUServiceFactory that maps this instance to the provided ID.
      */
-    virtual ICUServiceFactory* createSimpleFactory(UObject* instanceToAdopt, const UnicodeString& id, UBool visible, UErrorCode& status);
+    virtual ICUServiceFactory* createSimpleFactory(UObject* instanceToAdopt, ثابت UnicodeString& id, UBool visible, UErrorCode& status);
 
     /**
      * <p>Reinitialize the factory list to its default state.  After this call, isDefault()
@@ -895,7 +895,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * directly, since it must only be called while holding write
      * access to the factory list.</p>
      */
-    virtual void reInitializeFactories();
+    virtual فراغ reInitializeFactories();
 
     /**
      * <p>Default handler for this service if no factory in the factory list
@@ -908,7 +908,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the service instance, or nullptr.
      */
-    virtual UObject* handleDefault(const ICUServiceKey& key, UnicodeString* actualReturn, UErrorCode& status) const;
+    virtual UObject* handleDefault(ثابت ICUServiceKey& key, UnicodeString* actualReturn, UErrorCode& status) ثابت;
 
     /**
      * <p>Clear caches maintained by this service.</p>
@@ -918,7 +918,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * should generally not call this method directly, as it must only
      * be called while synchronized on the factory lock.</p>
      */
-    virtual void clearCaches();
+    virtual فراغ clearCaches();
 
     /**
      * <p>Return true if the listener is accepted.</p>
@@ -930,7 +930,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param l the listener to test.
      * @return true if the service accepts the listener.
      */
-    virtual UBool acceptsListener(const EventListener& l) const override;
+    virtual UBool acceptsListener(ثابت EventListener& l) ثابت override;
 
     /**
      * <p>Notify the listener of a service change.</p>
@@ -941,7 +941,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      *
      * @param l the listener to notify.
      */
-    virtual void notifyListener(EventListener& l) const override;
+    virtual فراغ notifyListener(EventListener& l) ثابت override;
 
     /************************************************************************
      * Utilities for subclasses.
@@ -955,7 +955,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * the resolution of IDs also changes, requiring the cache to be
      * flushed, but not the visible IDs themselves.</p>
      */
-    void clearServiceCache();
+    فراغ clearServiceCache();
 
     /**
      * <p>Return a map from visible IDs to factories.
@@ -965,23 +965,23 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @return a Hashtable containing mappings from visible
      * IDs to factories.
      */
-    const Hashtable* getVisibleIDMap(UErrorCode& status) const;
+    ثابت Hashtable* getVisibleIDMap(UErrorCode& status) ثابت;
 
     /**
      * <p>Allow subclasses to read the time stamp.</p>
      *
      * @return the timestamp.
      */
-    int32_t getTimestamp() const;
+    int32_t getTimestamp() ثابت;
 
     /**
      * <p>Return the number of registered factories.</p>
      *
      * @return the number of factories registered at the time of the call.
      */
-    int32_t countFactories() const;
+    int32_t countFactories() ثابت;
 
-private:
+خاص:
 
     friend class ::ICUServiceTest; // give tests access to countFactories.
 };

@@ -29,23 +29,23 @@
 *******************************************************************************
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ܐܢ !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/udata.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "unicode/udata.h"
 
-#include "umutex.h"
-#include "uarrsort.h"
-#include "uassert.h"
-#include "udataswp.h"
-#include "udatamem.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "ucnv_io.h"
-#include "uenumimp.h"
-#include "ucln_cmn.h"
+#ضمن "umutex.h"
+#ضمن "uarrsort.h"
+#ضمن "uassert.h"
+#ضمن "udataswp.h"
+#ضمن "udatamem.h"
+#ضمن "cstring.h"
+#ضمن "cmemory.h"
+#ضمن "ucnv_io.h"
+#ضمن "uenumimp.h"
+#ضمن "ucln_cmn.h"
 
 /* Format of cnvalias.icu -----------------------------------------------------
  *
@@ -167,18 +167,18 @@
 /**
  * Used by the UEnumeration API
  */
-typedef struct UAliasContext {
+تعريفنوع بنية UAliasContext {
     uint32_t listOffset;
     uint32_t listIdx;
 } UAliasContext;
 
-static const char DATA_NAME[] = "cnvalias";
-static const char DATA_TYPE[] = "icu";
+ساكن ثابت حرف DATA_NAME[] = "cnvalias";
+ساكن ثابت حرف DATA_TYPE[] = "icu";
 
-static UDataMemory *gAliasData=nullptr;
-static icu::UInitOnce gAliasDataInitOnce {};
+ساكن UDataMemory *gAliasData=nullptr;
+ساكن icu::UInitOnce gAliasDataInitOnce {};
 
-enum {
+تعداد {
     tocLengthIndex=0,
     converterListIndex=1,
     tagListIndex=2,
@@ -193,20 +193,20 @@ enum {
     minTocLength=8 /* min. tocLength in the file, does not count the tocLengthIndex! */
 };
 
-static const UConverterAliasOptions defaultTableOptions = {
+ساكن ثابت UConverterAliasOptions defaultTableOptions = {
     UCNV_IO_UNNORMALIZED,
     0 /* containsCnvOptionInfo */
 };
-static UConverterAlias gMainTable;
+ساكن UConverterAlias gMainTable;
 
-#define GET_STRING(idx) (const char *)(gMainTable.stringTable + (idx))
-#define GET_NORMALIZED_STRING(idx) (const char *)(gMainTable.normalizedStringTable + (idx))
+#define GET_STRING(idx) (ثابت حرف *)(gMainTable.stringTable + (idx))
+#define GET_NORMALIZED_STRING(idx) (ثابت حرف *)(gMainTable.normalizedStringTable + (idx))
 
-static UBool U_CALLCONV
-isAcceptable(void * /*context*/,
-             const char * /*type*/, const char * /*name*/,
-             const UDataInfo *pInfo) {
-    return
+ساكن UBool U_CALLCONV
+isAcceptable(فراغ * /*context*/,
+             ثابت حرف * /*type*/, ثابت حرف * /*name*/,
+             ثابت UDataInfo *pInfo) {
+    ܦܢܐ
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
@@ -217,23 +217,23 @@ isAcceptable(void * /*context*/,
         pInfo->formatVersion[0]==3;
 }
 
-static UBool U_CALLCONV ucnv_io_cleanup()
+ساكن UBool U_CALLCONV ucnv_io_cleanup()
 {
-    if (gAliasData) {
+    ܐܢ (gAliasData) {
         udata_close(gAliasData);
         gAliasData = nullptr;
     }
     gAliasDataInitOnce.reset();
 
-    uprv_memset(&gMainTable, 0, sizeof(gMainTable));
+    uprv_memset(&gMainTable, 0, حجم(gMainTable));
 
-    return true;                   /* Everything was cleaned up */
+    ܦܢܐ ܫܪܪܐ;                   /* Everything was cleaned up */
 }
 
-static void U_CALLCONV initAliasData(UErrorCode &errCode) {
+ساكن فراغ U_CALLCONV initAliasData(UErrorCode &errCode) {
     UDataMemory *data;
-    const uint16_t *table;
-    const uint32_t *sectionSizes;
+    ثابت uint16_t *table;
+    ثابت uint32_t *sectionSizes;
     uint32_t tableStart;
     uint32_t currOffset;
     int32_t sizeOfData;
@@ -243,23 +243,23 @@ static void U_CALLCONV initAliasData(UErrorCode &errCode) {
 
     U_ASSERT(gAliasData == nullptr);
     data = udata_openChoice(nullptr, DATA_TYPE, DATA_NAME, isAcceptable, nullptr, &errCode);
-    if (U_FAILURE(errCode)) {
-        return;
+    ܐܢ (U_FAILURE(errCode)) {
+        ܦܢܐ;
     }
 
-    sectionSizes = static_cast<const uint32_t*>(udata_getMemory(data));
+    sectionSizes = static_cast<ثابت uint32_t*>(udata_getMemory(data));
     int32_t dataLength = udata_getLength(data); // This is the length minus the UDataInfo size
     UBool isDataLengthKnown = dataLength >= 0; // Only false when using a pointer table of contents (not files nor a common data archive)
-    if (isDataLengthKnown && dataLength <= int32_t(sizeof(sectionSizes[0]))) {
+    ܐܢ (isDataLengthKnown && dataLength <= int32_t(حجم(sectionSizes[0]))) {
         // We don't even have a TOC!
-        goto invalidFormat;
+        اذهب invalidFormat;
     }
-    table = reinterpret_cast<const uint16_t*>(sectionSizes);
+    table = reinterpret_cast<ثابت uint16_t*>(sectionSizes);
     tableStart = sectionSizes[0];
-    sizeOfTOC = int32_t((tableStart + 1) * sizeof(sectionSizes[0]));
-    if (tableStart < minTocLength || (isDataLengthKnown && dataLength <= sizeOfTOC)) {
+    sizeOfTOC = int32_t((tableStart + 1) * حجم(sectionSizes[0]));
+    ܐܢ (tableStart < minTocLength || (isDataLengthKnown && dataLength <= sizeOfTOC)) {
         // We don't have a whole TOC!
-        goto invalidFormat;
+        اذهب invalidFormat;
     }
     gAliasData = data;
 
@@ -272,21 +272,21 @@ static void U_CALLCONV initAliasData(UErrorCode &errCode) {
     gMainTable.optionTableSize        = sectionSizes[7];
     gMainTable.stringTableSize        = sectionSizes[8];
 
-    if (tableStart > minTocLength) {
+    ܐܢ (tableStart > minTocLength) {
         gMainTable.normalizedStringTableSize = sectionSizes[9];
     }
 
     sizeOfData = sizeOfTOC;
-    for (uint32_t section = 1; section <= tableStart; section++) {
-        sizeOfData += sectionSizes[section] * sizeof(table[0]);
+    لكل (uint32_t section = 1; section <= tableStart; section++) {
+        sizeOfData += sectionSizes[section] * حجم(table[0]);
     }
-    if (isDataLengthKnown && dataLength < sizeOfData) {
+    ܐܢ (isDataLengthKnown && dataLength < sizeOfData) {
         // Truncated file!
-        goto invalidFormat;
+        اذهب invalidFormat;
     }
     // There may be some extra padding at the end, or this is a new file format with extra data that we can't read yet.
 
-    currOffset = (tableStart + 1) * (sizeof(uint32_t)/sizeof(uint16_t));
+    currOffset = (tableStart + 1) * (حجم(uint32_t)/حجم(uint16_t));
     gMainTable.converterList = table + currOffset;
 
     currOffset += gMainTable.converterListSize;
@@ -306,13 +306,13 @@ static void U_CALLCONV initAliasData(UErrorCode &errCode) {
     gMainTable.taggedAliasLists = table + currOffset;
 
     currOffset += gMainTable.taggedAliasListsSize;
-    if (gMainTable.optionTableSize > 0
-        && reinterpret_cast<const UConverterAliasOptions*>(table + currOffset)->stringNormalizationType < UCNV_IO_NORM_TYPE_COUNT)
+    ܐܢ (gMainTable.optionTableSize > 0
+        && reinterpret_cast<ثابت UConverterAliasOptions*>(table + currOffset)->stringNormalizationType < UCNV_IO_NORM_TYPE_COUNT)
     {
         /* Faster table */
-        gMainTable.optionTable = reinterpret_cast<const UConverterAliasOptions*>(table + currOffset);
+        gMainTable.optionTable = reinterpret_cast<ثابت UConverterAliasOptions*>(table + currOffset);
     }
-    else {
+    ܐܚܪܢܐ {
         /* Smaller table, or I can't handle this normalization mode!
         Use the original slower table lookup. */
         gMainTable.optionTable = &defaultTableOptions;
@@ -325,7 +325,7 @@ static void U_CALLCONV initAliasData(UErrorCode &errCode) {
     gMainTable.normalizedStringTable = ((gMainTable.optionTable->stringNormalizationType == UCNV_IO_UNNORMALIZED)
         ? gMainTable.stringTable : (table + currOffset));
 
-    return;
+    ܦܢܐ;
 
 invalidFormat:
     errCode = U_INVALID_FORMAT_ERROR;
@@ -333,36 +333,36 @@ invalidFormat:
 }
 
 
-static UBool
+ساكن UBool
 haveAliasData(UErrorCode *pErrorCode) {
     umtx_initOnce(gAliasDataInitOnce, &initAliasData, *pErrorCode);
-    return U_SUCCESS(*pErrorCode);
+    ܦܢܐ U_SUCCESS(*pErrorCode);
 }
 
-static inline UBool
-isAlias(const char *alias, UErrorCode *pErrorCode) {
-    if(alias==nullptr) {
+ساكن مضمن UBool
+isAlias(ثابت حرف *alias, UErrorCode *pErrorCode) {
+    ܐܢ(alias==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        ܦܢܐ ܕܓܠܐ;
     }
-    return *alias != 0;
+    ܦܢܐ *alias != 0;
 }
 
-static uint32_t getTagNumber(const char *tagname) {
-    if (gMainTable.tagList) {
+ساكن uint32_t getTagNumber(ثابت حرف *tagname) {
+    ܐܢ (gMainTable.tagList) {
         uint32_t tagNum;
-        for (tagNum = 0; tagNum < gMainTable.tagListSize; tagNum++) {
-            if (!uprv_stricmp(GET_STRING(gMainTable.tagList[tagNum]), tagname)) {
-                return tagNum;
+        لكل (tagNum = 0; tagNum < gMainTable.tagListSize; tagNum++) {
+            ܐܢ (!uprv_stricmp(GET_STRING(gMainTable.tagList[tagNum]), tagname)) {
+                ܦܢܐ tagNum;
             }
         }
     }
 
-    return UINT32_MAX;
+    ܦܢܐ UINT32_MAX;
 }
 
 /* character types relevant for ucnv_compareNames() */
-enum {
+تعداد {
     UIGNORE,
     ZERO,
     NONZERO,
@@ -370,7 +370,7 @@ enum {
 };
 
 /* character types for ASCII 00..7F */
-static const uint8_t asciiTypes[128] = {
+ساكن ثابت uint8_t asciiTypes[128] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -384,7 +384,7 @@ static const uint8_t asciiTypes[128] = {
 #define GET_ASCII_TYPE(c) ((int8_t)(c) >= 0 ? asciiTypes[(uint8_t)c] : (uint8_t)UIGNORE)
 
 /* character types for EBCDIC 80..FF */
-static const uint8_t ebcdicTypes[128] = {
+ساكن ثابت uint8_t ebcdicTypes[128] = {
     0,    0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0, 0, 0, 0, 0, 0,
     0,    0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0, 0, 0, 0, 0, 0,
     0,    0,    0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0, 0, 0, 0, 0, 0,
@@ -397,84 +397,84 @@ static const uint8_t ebcdicTypes[128] = {
 
 #define GET_EBCDIC_TYPE(c) ((int8_t)(c) < 0 ? ebcdicTypes[(c)&0x7f] : (uint8_t)UIGNORE)
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#ܐܢ U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define GET_CHAR_TYPE(c) GET_ASCII_TYPE(c)
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#وإلاإذا U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define GET_CHAR_TYPE(c) GET_EBCDIC_TYPE(c)
-#else
+#ܐܚܪܢܐ
 #   error U_CHARSET_FAMILY is not valid
 #endif
 
 
 /* @see ucnv_compareNames */
-U_CAPI char* U_CALLCONV
-ucnv_io_stripASCIIForCompare(char* dst U_LIFETIME_BOUND, const char* name) {
-    char *dstItr = dst;
+U_CAPI حرف* U_CALLCONV
+ucnv_io_stripASCIIForCompare(حرف* dst U_LIFETIME_BOUND, ثابت حرف* name) {
+    حرف *dstItr = dst;
     uint8_t type, nextType;
-    char c1;
-    UBool afterDigit = false;
+    حرف c1;
+    UBool afterDigit = ܕܓܠܐ;
 
-    while ((c1 = *name++) != 0) {
+    ܟܡܐ ((c1 = *name++) != 0) {
         type = GET_ASCII_TYPE(c1);
-        switch (type) {
-        case UIGNORE:
-            afterDigit = false;
-            continue; /* ignore all but letters and digits */
-        case ZERO:
-            if (!afterDigit) {
+        بدل (type) {
+        حالة UIGNORE:
+            afterDigit = ܕܓܠܐ;
+            استمر; /* ignore all but letters and digits */
+        حالة ZERO:
+            ܐܢ (!afterDigit) {
                 nextType = GET_ASCII_TYPE(*name);
-                if (nextType == ZERO || nextType == NONZERO) {
-                    continue; /* ignore leading zero before another digit */
+                ܐܢ (nextType == ZERO || nextType == NONZERO) {
+                    استمر; /* ignore leading zero before another digit */
                 }
             }
-            break;
-        case NONZERO:
-            afterDigit = true;
-            break;
-        default:
-            c1 = (char)type; /* lowercased letter */
-            afterDigit = false;
-            break;
+            اكسر;
+        حالة NONZERO:
+            afterDigit = ܫܪܪܐ;
+            اكسر;
+        افتراضي:
+            c1 = (حرف)type; /* lowercased letter */
+            afterDigit = ܕܓܠܐ;
+            اكسر;
         }
         *dstItr++ = c1;
     }
     *dstItr = 0;
-    return dst;
+    ܦܢܐ dst;
 }
 
-U_CAPI char* U_CALLCONV
-ucnv_io_stripEBCDICForCompare(char* dst U_LIFETIME_BOUND, const char* name) {
-    char *dstItr = dst;
+U_CAPI حرف* U_CALLCONV
+ucnv_io_stripEBCDICForCompare(حرف* dst U_LIFETIME_BOUND, ثابت حرف* name) {
+    حرف *dstItr = dst;
     uint8_t type, nextType;
-    char c1;
-    UBool afterDigit = false;
+    حرف c1;
+    UBool afterDigit = ܕܓܠܐ;
 
-    while ((c1 = *name++) != 0) {
+    ܟܡܐ ((c1 = *name++) != 0) {
         type = GET_EBCDIC_TYPE(c1);
-        switch (type) {
-        case UIGNORE:
-            afterDigit = false;
-            continue; /* ignore all but letters and digits */
-        case ZERO:
-            if (!afterDigit) {
+        بدل (type) {
+        حالة UIGNORE:
+            afterDigit = ܕܓܠܐ;
+            استمر; /* ignore all but letters and digits */
+        حالة ZERO:
+            ܐܢ (!afterDigit) {
                 nextType = GET_EBCDIC_TYPE(*name);
-                if (nextType == ZERO || nextType == NONZERO) {
-                    continue; /* ignore leading zero before another digit */
+                ܐܢ (nextType == ZERO || nextType == NONZERO) {
+                    استمر; /* ignore leading zero before another digit */
                 }
             }
-            break;
-        case NONZERO:
-            afterDigit = true;
-            break;
-        default:
-            c1 = (char)type; /* lowercased letter */
-            afterDigit = false;
-            break;
+            اكسر;
+        حالة NONZERO:
+            afterDigit = ܫܪܪܐ;
+            اكسر;
+        افتراضي:
+            c1 = (حرف)type; /* lowercased letter */
+            afterDigit = ܕܓܠܐ;
+            اكسر;
         }
         *dstItr++ = c1;
     }
     *dstItr = 0;
-    return dst;
+    ܦܢܐ dst;
 }
 
 /**
@@ -498,72 +498,72 @@ ucnv_io_stripEBCDICForCompare(char* dst U_LIFETIME_BOUND, const char* name) {
  *
  * @see ucnv_io_stripForCompare
  */
-U_CAPI int U_EXPORT2
-ucnv_compareNames(const char *name1, const char *name2) {
-    int rc;
+U_CAPI صحيح U_EXPORT2
+ucnv_compareNames(ثابت حرف *name1, ثابت حرف *name2) {
+    صحيح rc;
     uint8_t type, nextType;
-    char c1, c2;
-    UBool afterDigit1 = false, afterDigit2 = false;
+    حرف c1, c2;
+    UBool afterDigit1 = ܕܓܠܐ, afterDigit2 = ܕܓܠܐ;
 
-    for (;;) {
-        while ((c1 = *name1++) != 0) {
+    لكل (;;) {
+        ܟܡܐ ((c1 = *name1++) != 0) {
             type = GET_CHAR_TYPE(c1);
-            switch (type) {
-            case UIGNORE:
-                afterDigit1 = false;
-                continue; /* ignore all but letters and digits */
-            case ZERO:
-                if (!afterDigit1) {
+            بدل (type) {
+            حالة UIGNORE:
+                afterDigit1 = ܕܓܠܐ;
+                استمر; /* ignore all but letters and digits */
+            حالة ZERO:
+                ܐܢ (!afterDigit1) {
                     nextType = GET_CHAR_TYPE(*name1);
-                    if (nextType == ZERO || nextType == NONZERO) {
-                        continue; /* ignore leading zero before another digit */
+                    ܐܢ (nextType == ZERO || nextType == NONZERO) {
+                        استمر; /* ignore leading zero before another digit */
                     }
                 }
-                break;
-            case NONZERO:
-                afterDigit1 = true;
-                break;
-            default:
-                c1 = (char)type; /* lowercased letter */
-                afterDigit1 = false;
-                break;
+                اكسر;
+            حالة NONZERO:
+                afterDigit1 = ܫܪܪܐ;
+                اكسر;
+            افتراضي:
+                c1 = (حرف)type; /* lowercased letter */
+                afterDigit1 = ܕܓܠܐ;
+                اكسر;
             }
-            break; /* deliver c1 */
+            اكسر; /* deliver c1 */
         }
-        while ((c2 = *name2++) != 0) {
+        ܟܡܐ ((c2 = *name2++) != 0) {
             type = GET_CHAR_TYPE(c2);
-            switch (type) {
-            case UIGNORE:
-                afterDigit2 = false;
-                continue; /* ignore all but letters and digits */
-            case ZERO:
-                if (!afterDigit2) {
+            بدل (type) {
+            حالة UIGNORE:
+                afterDigit2 = ܕܓܠܐ;
+                استمر; /* ignore all but letters and digits */
+            حالة ZERO:
+                ܐܢ (!afterDigit2) {
                     nextType = GET_CHAR_TYPE(*name2);
-                    if (nextType == ZERO || nextType == NONZERO) {
-                        continue; /* ignore leading zero before another digit */
+                    ܐܢ (nextType == ZERO || nextType == NONZERO) {
+                        استمر; /* ignore leading zero before another digit */
                     }
                 }
-                break;
-            case NONZERO:
-                afterDigit2 = true;
-                break;
-            default:
-                c2 = (char)type; /* lowercased letter */
-                afterDigit2 = false;
-                break;
+                اكسر;
+            حالة NONZERO:
+                afterDigit2 = ܫܪܪܐ;
+                اكسر;
+            افتراضي:
+                c2 = (حرف)type; /* lowercased letter */
+                afterDigit2 = ܕܓܠܐ;
+                اكسر;
             }
-            break; /* deliver c2 */
+            اكسر; /* deliver c2 */
         }
 
         /* If we reach the ends of both strings then they match */
-        if ((c1|c2)==0) {
-            return 0;
+        ܐܢ ((c1|c2)==0) {
+            ܦܢܐ 0;
         }
 
         /* Case-insensitive comparison */
-        rc = (int)(unsigned char)c1 - (int)(unsigned char)c2;
-        if (rc != 0) {
-            return rc;
+        rc = (صحيح)(unsigned حرف)c1 - (صحيح)(unsigned حرف)c2;
+        ܐܢ (rc != 0) {
+            ܦܢܐ rc;
         }
     }
 }
@@ -572,18 +572,18 @@ ucnv_compareNames(const char *name1, const char *name2) {
  * search for an alias
  * return the converter number index for gConverterList
  */
-static inline uint32_t
-findConverter(const char *alias, UBool *containsOption, UErrorCode *pErrorCode) {
+ساكن مضمن uint32_t
+findConverter(ثابت حرف *alias, UBool *containsOption, UErrorCode *pErrorCode) {
     uint32_t mid, start, limit;
     uint32_t lastMid;
-    int result;
-    int isUnnormalized = (gMainTable.optionTable->stringNormalizationType == UCNV_IO_UNNORMALIZED);
-    char strippedName[UCNV_MAX_CONVERTER_NAME_LENGTH];
+    صحيح result;
+    صحيح isUnnormalized = (gMainTable.optionTable->stringNormalizationType == UCNV_IO_UNNORMALIZED);
+    حرف strippedName[UCNV_MAX_CONVERTER_NAME_LENGTH];
 
-    if (!isUnnormalized) {
-        if (uprv_strlen(alias) >= UCNV_MAX_CONVERTER_NAME_LENGTH) {
+    ܐܢ (!isUnnormalized) {
+        ܐܢ (uprv_strlen(alias) >= UCNV_MAX_CONVERTER_NAME_LENGTH) {
             *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
-            return UINT32_MAX;
+            ܦܢܐ UINT32_MAX;
         }
 
         /* Lower case and remove ignoreable characters. */
@@ -597,66 +597,66 @@ findConverter(const char *alias, UBool *containsOption, UErrorCode *pErrorCode) 
     mid = limit;
     lastMid = UINT32_MAX;
 
-    for (;;) {
+    لكل (;;) {
         mid = (start + limit) / 2;
-        if (lastMid == mid) {   /* Have we moved? */
-            break;  /* We haven't moved, and it wasn't found. */
+        ܐܢ (lastMid == mid) {   /* Have we moved? */
+            اكسر;  /* We haven't moved, and it wasn't found. */
         }
         lastMid = mid;
-        if (isUnnormalized) {
+        ܐܢ (isUnnormalized) {
             result = ucnv_compareNames(alias, GET_STRING(gMainTable.aliasList[mid]));
         }
-        else {
+        ܐܚܪܢܐ {
             result = uprv_strcmp(alias, GET_NORMALIZED_STRING(gMainTable.aliasList[mid]));
         }
 
-        if (result < 0) {
+        ܐܢ (result < 0) {
             limit = mid;
-        } else if (result > 0) {
+        } ܐܚܪܢܐ ܐܢ (result > 0) {
             start = mid;
-        } else {
+        } ܐܚܪܢܐ {
             /* Since the gencnval tool folds duplicates into one entry,
              * this alias in gAliasList is unique, but different standards
              * may map an alias to different converters.
              */
-            if (gMainTable.untaggedConvArray[mid] & UCNV_AMBIGUOUS_ALIAS_MAP_BIT) {
+            ܐܢ (gMainTable.untaggedConvArray[mid] & UCNV_AMBIGUOUS_ALIAS_MAP_BIT) {
                 *pErrorCode = U_AMBIGUOUS_ALIAS_WARNING;
             }
             /* State whether the canonical converter name contains an option.
             This information is contained in this list in order to maintain backward & forward compatibility. */
-            if (containsOption) {
+            ܐܢ (containsOption) {
                 UBool containsCnvOptionInfo = static_cast<UBool>(gMainTable.optionTable->containsCnvOptionInfo);
                 *containsOption = static_cast<UBool>((containsCnvOptionInfo
                     && ((gMainTable.untaggedConvArray[mid] & UCNV_CONTAINS_OPTION_BIT) != 0))
                     || !containsCnvOptionInfo);
             }
-            return gMainTable.untaggedConvArray[mid] & UCNV_CONVERTER_INDEX_MASK;
+            ܦܢܐ gMainTable.untaggedConvArray[mid] & UCNV_CONVERTER_INDEX_MASK;
         }
     }
 
-    return UINT32_MAX;
+    ܦܢܐ UINT32_MAX;
 }
 
 /*
  * Is this alias in this list?
  * alias and listOffset should be non-nullptr.
  */
-static inline UBool
-isAliasInList(const char *alias, uint32_t listOffset) {
-    if (listOffset) {
+ساكن مضمن UBool
+isAliasInList(ثابت حرف *alias, uint32_t listOffset) {
+    ܐܢ (listOffset) {
         uint32_t currAlias;
         uint32_t listCount = gMainTable.taggedAliasLists[listOffset];
         /* +1 to skip listCount */
-        const uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
-        for (currAlias = 0; currAlias < listCount; currAlias++) {
-            if (currList[currAlias]
+        ثابت uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
+        لكل (currAlias = 0; currAlias < listCount; currAlias++) {
+            ܐܢ (currList[currAlias]
                 && ucnv_compareNames(alias, GET_STRING(currList[currAlias]))==0)
             {
-                return true;
+                ܦܢܐ ܫܪܪܐ;
             }
         }
     }
-    return false;
+    ܦܢܐ ܕܓܠܐ;
 }
 
 /*
@@ -665,8 +665,8 @@ isAliasInList(const char *alias, uint32_t listOffset) {
  * return the listOffset for gTaggedAliasLists. If it's 0,
  * the it couldn't be found, but the parameters are valid.
  */
-static uint32_t
-findTaggedAliasListsOffset(const char *alias, const char *standard, UErrorCode *pErrorCode) {
+ساكن uint32_t
+findTaggedAliasListsOffset(ثابت حرف *alias, ثابت حرف *standard, UErrorCode *pErrorCode) {
     uint32_t idx;
     uint32_t listOffset;
     uint32_t convNum;
@@ -675,29 +675,29 @@ findTaggedAliasListsOffset(const char *alias, const char *standard, UErrorCode *
 
     /* Make a quick guess. Hopefully they used a TR22 canonical alias. */
     convNum = findConverter(alias, nullptr, &myErr);
-    if (myErr != U_ZERO_ERROR) {
+    ܐܢ (myErr != U_ZERO_ERROR) {
         *pErrorCode = myErr;
     }
 
-    if (tagNum < (gMainTable.tagListSize - UCNV_NUM_HIDDEN_TAGS) && convNum < gMainTable.converterListSize) {
+    ܐܢ (tagNum < (gMainTable.tagListSize - UCNV_NUM_HIDDEN_TAGS) && convNum < gMainTable.converterListSize) {
         listOffset = gMainTable.taggedAliasArray[tagNum*gMainTable.converterListSize + convNum];
-        if (listOffset && gMainTable.taggedAliasLists[listOffset + 1]) {
-            return listOffset;
+        ܐܢ (listOffset && gMainTable.taggedAliasLists[listOffset + 1]) {
+            ܦܢܐ listOffset;
         }
-        if (myErr == U_AMBIGUOUS_ALIAS_WARNING) {
+        ܐܢ (myErr == U_AMBIGUOUS_ALIAS_WARNING) {
             /* Uh Oh! They used an ambiguous alias.
                We have to search the whole swiss cheese starting
                at the highest standard affinity.
                This may take a while.
             */
-            for (idx = 0; idx < gMainTable.taggedAliasArraySize; idx++) {
+            لكل (idx = 0; idx < gMainTable.taggedAliasArraySize; idx++) {
                 listOffset = gMainTable.taggedAliasArray[idx];
-                if (listOffset && isAliasInList(alias, listOffset)) {
+                ܐܢ (listOffset && isAliasInList(alias, listOffset)) {
                     uint32_t currTagNum = idx/gMainTable.converterListSize;
                     uint32_t currConvNum = (idx - currTagNum*gMainTable.converterListSize);
                     uint32_t tempListOffset = gMainTable.taggedAliasArray[tagNum*gMainTable.converterListSize + currConvNum];
-                    if (tempListOffset && gMainTable.taggedAliasLists[tempListOffset + 1]) {
-                        return tempListOffset;
+                    ܐܢ (tempListOffset && gMainTable.taggedAliasLists[tempListOffset + 1]) {
+                        ܦܢܐ tempListOffset;
                     }
                     /* else keep on looking */
                     /* We could speed this up by starting on the next row
@@ -708,16 +708,16 @@ findTaggedAliasListsOffset(const char *alias, const char *standard, UErrorCode *
             /* The standard doesn't know about the alias */
         }
         /* else no default name */
-        return 0;
+        ܦܢܐ 0;
     }
     /* else converter or tag not found */
 
-    return UINT32_MAX;
+    ܦܢܐ UINT32_MAX;
 }
 
 /* Return the canonical name */
-static uint32_t
-findTaggedConverterNum(const char *alias, const char *standard, UErrorCode *pErrorCode) {
+ساكن uint32_t
+findTaggedConverterNum(ثابت حرف *alias, ثابت حرف *standard, UErrorCode *pErrorCode) {
     uint32_t idx;
     uint32_t listOffset;
     uint32_t convNum;
@@ -726,16 +726,16 @@ findTaggedConverterNum(const char *alias, const char *standard, UErrorCode *pErr
 
     /* Make a quick guess. Hopefully they used a TR22 canonical alias. */
     convNum = findConverter(alias, nullptr, &myErr);
-    if (myErr != U_ZERO_ERROR) {
+    ܐܢ (myErr != U_ZERO_ERROR) {
         *pErrorCode = myErr;
     }
 
-    if (tagNum < (gMainTable.tagListSize - UCNV_NUM_HIDDEN_TAGS) && convNum < gMainTable.converterListSize) {
+    ܐܢ (tagNum < (gMainTable.tagListSize - UCNV_NUM_HIDDEN_TAGS) && convNum < gMainTable.converterListSize) {
         listOffset = gMainTable.taggedAliasArray[tagNum*gMainTable.converterListSize + convNum];
-        if (listOffset && isAliasInList(alias, listOffset)) {
-            return convNum;
+        ܐܢ (listOffset && isAliasInList(alias, listOffset)) {
+            ܦܢܐ convNum;
         }
-        if (myErr == U_AMBIGUOUS_ALIAS_WARNING) {
+        ܐܢ (myErr == U_AMBIGUOUS_ALIAS_WARNING) {
             /* Uh Oh! They used an ambiguous alias.
                We have to search one slice of the swiss cheese.
                We search only in the requested tag, not the whole thing.
@@ -743,10 +743,10 @@ findTaggedConverterNum(const char *alias, const char *standard, UErrorCode *pErr
             */
             uint32_t convStart = (tagNum)*gMainTable.converterListSize;
             uint32_t convLimit = (tagNum+1)*gMainTable.converterListSize;
-            for (idx = convStart; idx < convLimit; idx++) {
+            لكل (idx = convStart; idx < convLimit; idx++) {
                 listOffset = gMainTable.taggedAliasArray[idx];
-                if (listOffset && isAliasInList(alias, listOffset)) {
-                    return idx-convStart;
+                ܐܢ (listOffset && isAliasInList(alias, listOffset)) {
+                    ܦܢܐ idx-convStart;
                 }
             }
             /* The standard doesn't know about the alias */
@@ -755,56 +755,56 @@ findTaggedConverterNum(const char *alias, const char *standard, UErrorCode *pErr
     }
     /* else converter or tag not found */
 
-    return UINT32_MAX;
+    ܦܢܐ UINT32_MAX;
 }
 
-U_CAPI const char *
-ucnv_io_getConverterName(const char *alias, UBool *containsOption, UErrorCode *pErrorCode) {
-    const char *aliasTmp = alias;
+U_CAPI ثابت حرف *
+ucnv_io_getConverterName(ثابت حرف *alias, UBool *containsOption, UErrorCode *pErrorCode) {
+    ثابت حرف *aliasTmp = alias;
     int32_t i = 0;
-    for (i = 0; i < 2; i++) {
-        if (i == 1) {
+    لكل (i = 0; i < 2; i++) {
+        ܐܢ (i == 1) {
             /*
              * After the first unsuccess converter lookup, check to see if
              * the name begins with 'x-'. If it does, strip it off and try
              * again.  This behaviour is similar to how ICU4J does it.
              */
-            if (aliasTmp[0] == 'x' && aliasTmp[1] == '-') {
+            ܐܢ (aliasTmp[0] == 'x' && aliasTmp[1] == '-') {
                 aliasTmp = aliasTmp+2;
-            } else {
-                break;
+            } ܐܚܪܢܐ {
+                اكسر;
             }
         }
-        if(haveAliasData(pErrorCode) && isAlias(aliasTmp, pErrorCode)) {
+        ܐܢ(haveAliasData(pErrorCode) && isAlias(aliasTmp, pErrorCode)) {
             uint32_t convNum = findConverter(aliasTmp, containsOption, pErrorCode);
-            if (convNum < gMainTable.converterListSize) {
-                return GET_STRING(gMainTable.converterList[convNum]);
+            ܐܢ (convNum < gMainTable.converterListSize) {
+                ܦܢܐ GET_STRING(gMainTable.converterList[convNum]);
             }
             /* else converter not found */
-        } else {
-            break;
+        } ܐܚܪܢܐ {
+            اكسر;
         }
     }
 
-    return nullptr;
+    ܦܢܐ nullptr;
 }
 
 U_CDECL_BEGIN
 
 
-static int32_t U_CALLCONV
+ساكن int32_t U_CALLCONV
 ucnv_io_countStandardAliases(UEnumeration *enumerator, UErrorCode * /*pErrorCode*/) {
     int32_t value = 0;
     UAliasContext *myContext = (UAliasContext *)(enumerator->context);
     uint32_t listOffset = myContext->listOffset;
 
-    if (listOffset) {
+    ܐܢ (listOffset) {
         value = gMainTable.taggedAliasLists[listOffset];
     }
-    return value;
+    ܦܢܐ value;
 }
 
-static const char * U_CALLCONV
+ساكن ثابت حرف * U_CALLCONV
 ucnv_io_nextStandardAliases(UEnumeration *enumerator,
                             int32_t* resultLength,
                             UErrorCode * /*pErrorCode*/)
@@ -812,31 +812,31 @@ ucnv_io_nextStandardAliases(UEnumeration *enumerator,
     UAliasContext *myContext = (UAliasContext *)(enumerator->context);
     uint32_t listOffset = myContext->listOffset;
 
-    if (listOffset) {
+    ܐܢ (listOffset) {
         uint32_t listCount = gMainTable.taggedAliasLists[listOffset];
-        const uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
+        ثابت uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
 
-        if (myContext->listIdx < listCount) {
-            const char *myStr = GET_STRING(currList[myContext->listIdx++]);
-            if (resultLength) {
+        ܐܢ (myContext->listIdx < listCount) {
+            ثابت حرف *myStr = GET_STRING(currList[myContext->listIdx++]);
+            ܐܢ (resultLength) {
                 *resultLength = (int32_t)uprv_strlen(myStr);
             }
-            return myStr;
+            ܦܢܐ myStr;
         }
     }
     /* Either we accessed a zero length list, or we enumerated too far. */
-    if (resultLength) {
+    ܐܢ (resultLength) {
         *resultLength = 0;
     }
-    return nullptr;
+    ܦܢܐ nullptr;
 }
 
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 ucnv_io_resetStandardAliases(UEnumeration *enumerator, UErrorCode * /*pErrorCode*/) {
     ((UAliasContext *)(enumerator->context))->listIdx = 0;
 }
 
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 ucnv_io_closeUEnumeration(UEnumeration *enumerator) {
     uprv_free(enumerator->context);
     uprv_free(enumerator);
@@ -845,7 +845,7 @@ ucnv_io_closeUEnumeration(UEnumeration *enumerator) {
 U_CDECL_END
 
 /* Enumerate the aliases for the specified converter and standard tag */
-static const UEnumeration gEnumAliases = {
+ساكن ثابت UEnumeration gEnumAliases = {
     nullptr,
     nullptr,
     ucnv_io_closeUEnumeration,
@@ -856,31 +856,31 @@ static const UEnumeration gEnumAliases = {
 };
 
 U_CAPI UEnumeration * U_EXPORT2
-ucnv_openStandardNames(const char *convName,
-                       const char *standard,
+ucnv_openStandardNames(ثابت حرف *convName,
+                       ثابت حرف *standard,
                        UErrorCode *pErrorCode)
 {
     UEnumeration *myEnum = nullptr;
-    if (haveAliasData(pErrorCode) && isAlias(convName, pErrorCode)) {
+    ܐܢ (haveAliasData(pErrorCode) && isAlias(convName, pErrorCode)) {
         uint32_t listOffset = findTaggedAliasListsOffset(convName, standard, pErrorCode);
 
         /* When listOffset == 0, we want to acknowledge that the
            converter name and standard are okay, but there
            is nothing to enumerate. */
-        if (listOffset < gMainTable.taggedAliasListsSize) {
+        ܐܢ (listOffset < gMainTable.taggedAliasListsSize) {
             UAliasContext *myContext;
 
-            myEnum = static_cast<UEnumeration *>(uprv_malloc(sizeof(UEnumeration)));
-            if (myEnum == nullptr) {
+            myEnum = static_cast<UEnumeration *>(uprv_malloc(حجم(UEnumeration)));
+            ܐܢ (myEnum == nullptr) {
                 *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-                return nullptr;
+                ܦܢܐ nullptr;
             }
-            uprv_memcpy(myEnum, &gEnumAliases, sizeof(UEnumeration));
-            myContext = static_cast<UAliasContext *>(uprv_malloc(sizeof(UAliasContext)));
-            if (myContext == nullptr) {
+            uprv_memcpy(myEnum, &gEnumAliases, حجم(UEnumeration));
+            myContext = static_cast<UAliasContext *>(uprv_malloc(حجم(UAliasContext)));
+            ܐܢ (myContext == nullptr) {
                 *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
                 uprv_free(myEnum);
-                return nullptr;
+                ܦܢܐ nullptr;
             }
             myContext->listOffset = listOffset;
             myContext->listIdx = 0;
@@ -888,42 +888,42 @@ ucnv_openStandardNames(const char *convName,
         }
         /* else converter or tag not found */
     }
-    return myEnum;
+    ܦܢܐ myEnum;
 }
 
-static uint16_t
-ucnv_io_countAliases(const char *alias, UErrorCode *pErrorCode) {
-    if(haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
+ساكن uint16_t
+ucnv_io_countAliases(ثابت حرف *alias, UErrorCode *pErrorCode) {
+    ܐܢ(haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
         uint32_t convNum = findConverter(alias, nullptr, pErrorCode);
-        if (convNum < gMainTable.converterListSize) {
+        ܐܢ (convNum < gMainTable.converterListSize) {
             /* tagListNum - 1 is the ALL tag */
             int32_t listOffset = gMainTable.taggedAliasArray[(gMainTable.tagListSize - 1)*gMainTable.converterListSize + convNum];
 
-            if (listOffset) {
-                return gMainTable.taggedAliasLists[listOffset];
+            ܐܢ (listOffset) {
+                ܦܢܐ gMainTable.taggedAliasLists[listOffset];
             }
             /* else this shouldn't happen. internal program error */
         }
         /* else converter not found */
     }
-    return 0;
+    ܦܢܐ 0;
 }
 
-static uint16_t
-ucnv_io_getAliases(const char *alias, uint16_t start, const char **aliases, UErrorCode *pErrorCode) {
-    if(haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
+ساكن uint16_t
+ucnv_io_getAliases(ثابت حرف *alias, uint16_t start, ثابت حرف **aliases, UErrorCode *pErrorCode) {
+    ܐܢ(haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
         uint32_t currAlias;
         uint32_t convNum = findConverter(alias, nullptr, pErrorCode);
-        if (convNum < gMainTable.converterListSize) {
+        ܐܢ (convNum < gMainTable.converterListSize) {
             /* tagListNum - 1 is the ALL tag */
             int32_t listOffset = gMainTable.taggedAliasArray[(gMainTable.tagListSize - 1)*gMainTable.converterListSize + convNum];
 
-            if (listOffset) {
+            ܐܢ (listOffset) {
                 uint32_t listCount = gMainTable.taggedAliasLists[listOffset];
                 /* +1 to skip listCount */
-                const uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
+                ثابت uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
 
-                for (currAlias = start; currAlias < listCount; currAlias++) {
+                لكل (currAlias = start; currAlias < listCount; currAlias++) {
                     aliases[currAlias] = GET_STRING(currList[currAlias]);
                 }
             }
@@ -931,24 +931,24 @@ ucnv_io_getAliases(const char *alias, uint16_t start, const char **aliases, UErr
         }
         /* else converter not found */
     }
-    return 0;
+    ܦܢܐ 0;
 }
 
-static const char *
-ucnv_io_getAlias(const char *alias, uint16_t n, UErrorCode *pErrorCode) {
-    if(haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
+ساكن ثابت حرف *
+ucnv_io_getAlias(ثابت حرف *alias, uint16_t n, UErrorCode *pErrorCode) {
+    ܐܢ(haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
         uint32_t convNum = findConverter(alias, nullptr, pErrorCode);
-        if (convNum < gMainTable.converterListSize) {
+        ܐܢ (convNum < gMainTable.converterListSize) {
             /* tagListNum - 1 is the ALL tag */
             int32_t listOffset = gMainTable.taggedAliasArray[(gMainTable.tagListSize - 1)*gMainTable.converterListSize + convNum];
 
-            if (listOffset) {
+            ܐܢ (listOffset) {
                 uint32_t listCount = gMainTable.taggedAliasLists[listOffset];
                 /* +1 to skip listCount */
-                const uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
+                ثابت uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
 
-                if (n < listCount)  {
-                    return GET_STRING(currList[n]);
+                ܐܢ (n < listCount)  {
+                    ܦܢܐ GET_STRING(currList[n]);
                 }
                 *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
             }
@@ -956,66 +956,66 @@ ucnv_io_getAlias(const char *alias, uint16_t n, UErrorCode *pErrorCode) {
         }
         /* else converter not found */
     }
-    return nullptr;
+    ܦܢܐ nullptr;
 }
 
-static uint16_t
+ساكن uint16_t
 ucnv_io_countStandards(UErrorCode *pErrorCode) {
-    if (haveAliasData(pErrorCode)) {
+    ܐܢ (haveAliasData(pErrorCode)) {
         /* Don't include the empty list */
-        return static_cast<uint16_t>(gMainTable.tagListSize - UCNV_NUM_HIDDEN_TAGS);
+        ܦܢܐ static_cast<uint16_t>(gMainTable.tagListSize - UCNV_NUM_HIDDEN_TAGS);
     }
 
-    return 0;
+    ܦܢܐ 0;
 }
 
-U_CAPI const char * U_EXPORT2
+U_CAPI ثابت حرف * U_EXPORT2
 ucnv_getStandard(uint16_t n, UErrorCode *pErrorCode) {
-    if (haveAliasData(pErrorCode)) {
-        if (n < gMainTable.tagListSize - UCNV_NUM_HIDDEN_TAGS) {
-            return GET_STRING(gMainTable.tagList[n]);
+    ܐܢ (haveAliasData(pErrorCode)) {
+        ܐܢ (n < gMainTable.tagListSize - UCNV_NUM_HIDDEN_TAGS) {
+            ܦܢܐ GET_STRING(gMainTable.tagList[n]);
         }
         *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
     }
 
-    return nullptr;
+    ܦܢܐ nullptr;
 }
 
-U_CAPI const char * U_EXPORT2
-ucnv_getStandardName(const char *alias, const char *standard, UErrorCode *pErrorCode) {
-    if (haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
+U_CAPI ثابت حرف * U_EXPORT2
+ucnv_getStandardName(ثابت حرف *alias, ثابت حرف *standard, UErrorCode *pErrorCode) {
+    ܐܢ (haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
         uint32_t listOffset = findTaggedAliasListsOffset(alias, standard, pErrorCode);
 
-        if (0 < listOffset && listOffset < gMainTable.taggedAliasListsSize) {
-            const uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
+        ܐܢ (0 < listOffset && listOffset < gMainTable.taggedAliasListsSize) {
+            ثابت uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
 
             /* Get the preferred name from this list */
-            if (currList[0]) {
-                return GET_STRING(currList[0]);
+            ܐܢ (currList[0]) {
+                ܦܢܐ GET_STRING(currList[0]);
             }
             /* else someone screwed up the alias table. */
             /* *pErrorCode = U_INVALID_FORMAT_ERROR */
         }
     }
 
-    return nullptr;
+    ܦܢܐ nullptr;
 }
 
 U_CAPI uint16_t U_EXPORT2
-ucnv_countAliases(const char *alias, UErrorCode *pErrorCode)
+ucnv_countAliases(ثابت حرف *alias, UErrorCode *pErrorCode)
 {
-    return ucnv_io_countAliases(alias, pErrorCode);
+    ܦܢܐ ucnv_io_countAliases(alias, pErrorCode);
 }
 
 
-U_CAPI const char* U_EXPORT2
-ucnv_getAlias(const char *alias, uint16_t n, UErrorCode *pErrorCode)
+U_CAPI ثابت حرف* U_EXPORT2
+ucnv_getAlias(ثابت حرف *alias, uint16_t n, UErrorCode *pErrorCode)
 {
-    return ucnv_io_getAlias(alias, n, pErrorCode);
+    ܦܢܐ ucnv_io_getAlias(alias, n, pErrorCode);
 }
 
-U_CAPI void U_EXPORT2
-ucnv_getAliases(const char *alias, const char **aliases, UErrorCode *pErrorCode)
+U_CAPI فراغ U_EXPORT2
+ucnv_getAliases(ثابت حرف *alias, ثابت حرف **aliases, UErrorCode *pErrorCode)
 {
     ucnv_io_getAliases(alias, 0, aliases, pErrorCode);
 }
@@ -1024,57 +1024,57 @@ U_CAPI uint16_t U_EXPORT2
 ucnv_countStandards()
 {
     UErrorCode err = U_ZERO_ERROR;
-    return ucnv_io_countStandards(&err);
+    ܦܢܐ ucnv_io_countStandards(&err);
 }
 
-U_CAPI const char * U_EXPORT2
-ucnv_getCanonicalName(const char *alias, const char *standard, UErrorCode *pErrorCode) {
-    if (haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
+U_CAPI ثابت حرف * U_EXPORT2
+ucnv_getCanonicalName(ثابت حرف *alias, ثابت حرف *standard, UErrorCode *pErrorCode) {
+    ܐܢ (haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
         uint32_t convNum = findTaggedConverterNum(alias, standard, pErrorCode);
 
-        if (convNum < gMainTable.converterListSize) {
-            return GET_STRING(gMainTable.converterList[convNum]);
+        ܐܢ (convNum < gMainTable.converterListSize) {
+            ܦܢܐ GET_STRING(gMainTable.converterList[convNum]);
         }
     }
 
-    return nullptr;
+    ܦܢܐ nullptr;
 }
 
 U_CDECL_BEGIN
 
 
-static int32_t U_CALLCONV
+ساكن int32_t U_CALLCONV
 ucnv_io_countAllConverters(UEnumeration * /*enumerator*/, UErrorCode * /*pErrorCode*/) {
-    return gMainTable.converterListSize;
+    ܦܢܐ gMainTable.converterListSize;
 }
 
-static const char * U_CALLCONV
+ساكن ثابت حرف * U_CALLCONV
 ucnv_io_nextAllConverters(UEnumeration *enumerator,
                             int32_t* resultLength,
                             UErrorCode * /*pErrorCode*/)
 {
     uint16_t *myContext = (uint16_t *)(enumerator->context);
 
-    if (*myContext < gMainTable.converterListSize) {
-        const char *myStr = GET_STRING(gMainTable.converterList[(*myContext)++]);
-        if (resultLength) {
+    ܐܢ (*myContext < gMainTable.converterListSize) {
+        ثابت حرف *myStr = GET_STRING(gMainTable.converterList[(*myContext)++]);
+        ܐܢ (resultLength) {
             *resultLength = (int32_t)uprv_strlen(myStr);
         }
-        return myStr;
+        ܦܢܐ myStr;
     }
     /* Either we accessed a zero length list, or we enumerated too far. */
-    if (resultLength) {
+    ܐܢ (resultLength) {
         *resultLength = 0;
     }
-    return nullptr;
+    ܦܢܐ nullptr;
 }
 
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 ucnv_io_resetAllConverters(UEnumeration *enumerator, UErrorCode * /*pErrorCode*/) {
     *((uint16_t *)(enumerator->context)) = 0;
 }
 U_CDECL_END
-static const UEnumeration gEnumAllConverters = {
+ساكن ثابت UEnumeration gEnumAllConverters = {
     nullptr,
     nullptr,
     ucnv_io_closeUEnumeration,
@@ -1087,40 +1087,40 @@ static const UEnumeration gEnumAllConverters = {
 U_CAPI UEnumeration * U_EXPORT2
 ucnv_openAllNames(UErrorCode *pErrorCode) {
     UEnumeration *myEnum = nullptr;
-    if (haveAliasData(pErrorCode)) {
+    ܐܢ (haveAliasData(pErrorCode)) {
         uint16_t *myContext;
 
-        myEnum = static_cast<UEnumeration *>(uprv_malloc(sizeof(UEnumeration)));
-        if (myEnum == nullptr) {
+        myEnum = static_cast<UEnumeration *>(uprv_malloc(حجم(UEnumeration)));
+        ܐܢ (myEnum == nullptr) {
             *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+            ܦܢܐ nullptr;
         }
-        uprv_memcpy(myEnum, &gEnumAllConverters, sizeof(UEnumeration));
-        myContext = static_cast<uint16_t *>(uprv_malloc(sizeof(uint16_t)));
-        if (myContext == nullptr) {
+        uprv_memcpy(myEnum, &gEnumAllConverters, حجم(UEnumeration));
+        myContext = static_cast<uint16_t *>(uprv_malloc(حجم(uint16_t)));
+        ܐܢ (myContext == nullptr) {
             *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
             uprv_free(myEnum);
-            return nullptr;
+            ܦܢܐ nullptr;
         }
         *myContext = 0;
         myEnum->context = myContext;
     }
-    return myEnum;
+    ܦܢܐ myEnum;
 }
 
 U_CAPI uint16_t
 ucnv_io_countKnownConverters(UErrorCode *pErrorCode) {
-    if (haveAliasData(pErrorCode)) {
-        return (uint16_t)gMainTable.converterListSize;
+    ܐܢ (haveAliasData(pErrorCode)) {
+        ܦܢܐ (uint16_t)gMainTable.converterListSize;
     }
-    return 0;
+    ܦܢܐ 0;
 }
 
 /* alias table swapping ----------------------------------------------------- */
 
 U_CDECL_BEGIN
 
-typedef char * U_CALLCONV StripForCompareFn(char *dst, const char *name);
+تعريفنوع حرف * U_CALLCONV StripForCompareFn(حرف *dst, ثابت حرف *name);
 U_CDECL_END
 
 
@@ -1131,43 +1131,43 @@ U_CDECL_END
  * after sorting this array by strings, the actual arrays are permutated
  * according to the sorting indexes
  */
-typedef struct TempRow {
+تعريفنوع بنية TempRow {
     uint16_t strIndex, sortIndex;
 } TempRow;
 
-typedef struct TempAliasTable {
-    const char *chars;
+تعريفنوع بنية TempAliasTable {
+    ثابت حرف *chars;
     TempRow *rows;
     uint16_t *resort;
     StripForCompareFn *stripForCompare;
 } TempAliasTable;
 
-enum {
+تعداد {
     STACK_ROW_CAPACITY=500
 };
 
-static int32_t U_CALLCONV
-io_compareRows(const void *context, const void *left, const void *right) {
-    char strippedLeft[UCNV_MAX_CONVERTER_NAME_LENGTH],
+ساكن int32_t U_CALLCONV
+io_compareRows(ثابت فراغ *context, ثابت فراغ *left, ثابت فراغ *right) {
+    حرف strippedLeft[UCNV_MAX_CONVERTER_NAME_LENGTH],
          strippedRight[UCNV_MAX_CONVERTER_NAME_LENGTH];
 
     TempAliasTable *tempTable=(TempAliasTable *)context;
-    const char *chars=tempTable->chars;
+    ثابت حرف *chars=tempTable->chars;
 
-    return static_cast<int32_t>(uprv_strcmp(
-        tempTable->stripForCompare(strippedLeft, chars + 2 * static_cast<const TempRow*>(left)->strIndex),
-        tempTable->stripForCompare(strippedRight, chars + 2 * static_cast<const TempRow*>(right)->strIndex)));
+    ܦܢܐ static_cast<int32_t>(uprv_strcmp(
+        tempTable->stripForCompare(strippedLeft, chars + 2 * static_cast<ثابت TempRow*>(left)->strIndex),
+        tempTable->stripForCompare(strippedRight, chars + 2 * static_cast<ثابت TempRow*>(right)->strIndex)));
 }
 
 U_CAPI int32_t U_EXPORT2
-ucnv_swapAliases(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
+ucnv_swapAliases(ثابت UDataSwapper *ds,
+                 ثابت فراغ *inData, int32_t length, فراغ *outData,
                  UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
+    ثابت UDataInfo *pInfo;
     int32_t headerSize;
 
-    const uint16_t *inTable;
-    const uint32_t *inSectionSizes;
+    ثابت uint16_t *inTable;
+    ثابت uint32_t *inSectionSizes;
     uint32_t toc[offsetsCount];
     uint32_t offsets[offsetsCount]; /* 16-bit-addressed offsets from inTable/outTable */
     uint32_t i, count, tocLength, topOffset;
@@ -1178,13 +1178,13 @@ ucnv_swapAliases(const UDataSwapper *ds,
 
     /* udata_swapDataHeader checks the arguments */
     headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ܐܢ(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        ܦܢܐ 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
+    pInfo=(ثابت UDataInfo *)((ثابت حرف *)inData+4);
+    ܐܢ(!(
         pInfo->dataFormat[0]==0x43 &&   /* dataFormat="CvAl" */
         pInfo->dataFormat[1]==0x76 &&
         pInfo->dataFormat[2]==0x41 &&
@@ -1196,56 +1196,56 @@ ucnv_swapAliases(const UDataSwapper *ds,
                          pInfo->dataFormat[2], pInfo->dataFormat[3],
                          pInfo->formatVersion[0]);
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+        ܦܢܐ 0;
     }
 
     /* an alias table must contain at least the table of contents array */
-    if(length>=0 && (length-headerSize)<4*(1+minTocLength)) {
+    ܐܢ(length>=0 && (length-headerSize)<4*(1+minTocLength)) {
         udata_printError(ds, "ucnv_swapAliases(): too few bytes (%d after header) for an alias table\n",
                          length-headerSize);
         *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        ܦܢܐ 0;
     }
 
-    inSectionSizes=(const uint32_t *)((const char *)inData+headerSize);
-    inTable=(const uint16_t *)inSectionSizes;
-    uprv_memset(toc, 0, sizeof(toc));
+    inSectionSizes=(ثابت uint32_t *)((ثابت حرف *)inData+headerSize);
+    inTable=(ثابت uint16_t *)inSectionSizes;
+    uprv_memset(toc, 0, حجم(toc));
     toc[tocLengthIndex]=tocLength=ds->readUInt32(inSectionSizes[tocLengthIndex]);
-    if(tocLength<minTocLength || offsetsCount<=tocLength) {
+    ܐܢ(tocLength<minTocLength || offsetsCount<=tocLength) {
         udata_printError(ds, "ucnv_swapAliases(): table of contents contains unsupported number of sections (%u sections)\n", tocLength);
         *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return 0;
+        ܦܢܐ 0;
     }
 
     /* read the known part of the table of contents */
-    for(i=converterListIndex; i<=tocLength; ++i) {
+    لكل(i=converterListIndex; i<=tocLength; ++i) {
         toc[i]=ds->readUInt32(inSectionSizes[i]);
     }
 
     /* compute offsets */
-    uprv_memset(offsets, 0, sizeof(offsets));
+    uprv_memset(offsets, 0, حجم(offsets));
     offsets[converterListIndex]=2*(1+tocLength); /* count two 16-bit units per toc entry */
-    for(i=tagListIndex; i<=tocLength; ++i) {
+    لكل(i=tagListIndex; i<=tocLength; ++i) {
         offsets[i]=offsets[i-1]+toc[i-1];
     }
 
     /* compute the overall size of the after-header data, in numbers of 16-bit units */
     topOffset=offsets[i-1]+toc[i-1];
 
-    if(length>=0) {
+    ܐܢ(length>=0) {
         uint16_t *outTable;
-        const uint16_t *p, *p2;
+        ثابت uint16_t *p, *p2;
         uint16_t *q, *q2;
         uint16_t oldIndex;
 
-        if((length-headerSize)<(2*(int32_t)topOffset)) {
+        ܐܢ((length-headerSize)<(2*(int32_t)topOffset)) {
             udata_printError(ds, "ucnv_swapAliases(): too few bytes (%d after header) for an alias table\n",
                              length-headerSize);
             *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            ܦܢܐ 0;
         }
 
-        outTable=(uint16_t *)((char *)outData+headerSize);
+        outTable=(uint16_t *)((حرف *)outData+headerSize);
 
         /* swap the entire table of contents */
         ds->swapArray32(ds, inTable, 4*(1+tocLength), outTable, pErrorCode);
@@ -1253,41 +1253,41 @@ ucnv_swapAliases(const UDataSwapper *ds,
         /* swap unormalized strings & normalized strings */
         ds->swapInvChars(ds, inTable+offsets[stringTableIndex], 2*(int32_t)(toc[stringTableIndex]+toc[normalizedStringTableIndex]),
                              outTable+offsets[stringTableIndex], pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
+        ܐܢ(U_FAILURE(*pErrorCode)) {
             udata_printError(ds, "ucnv_swapAliases().swapInvChars(charset names) failed\n");
-            return 0;
+            ܦܢܐ 0;
         }
 
-        if(ds->inCharset==ds->outCharset) {
+        ܐܢ(ds->inCharset==ds->outCharset) {
             /* no need to sort, just swap all 16-bit values together */
             ds->swapArray16(ds,
                             inTable+offsets[converterListIndex],
                             2*(int32_t)(offsets[stringTableIndex]-offsets[converterListIndex]),
                             outTable+offsets[converterListIndex],
                             pErrorCode);
-        } else {
+        } ܐܚܪܢܐ {
             /* allocate the temporary table for sorting */
             count=toc[aliasListIndex];
 
-            tempTable.chars=(const char *)(outTable+offsets[stringTableIndex]); /* sort by outCharset */
+            tempTable.chars=(ثابت حرف *)(outTable+offsets[stringTableIndex]); /* sort by outCharset */
 
-            if(count<=STACK_ROW_CAPACITY) {
+            ܐܢ(count<=STACK_ROW_CAPACITY) {
                 tempTable.rows=rows;
                 tempTable.resort=resort;
-            } else {
-                tempTable.rows=(TempRow *)uprv_malloc(count*sizeof(TempRow)+count*2);
-                if(tempTable.rows==nullptr) {
+            } ܐܚܪܢܐ {
+                tempTable.rows=(TempRow *)uprv_malloc(count*حجم(TempRow)+count*2);
+                ܐܢ(tempTable.rows==nullptr) {
                     udata_printError(ds, "ucnv_swapAliases(): unable to allocate memory for sorting tables (max length: %u)\n",
                                      count);
                     *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                    return 0;
+                    ܦܢܐ 0;
                 }
                 tempTable.resort=(uint16_t *)(tempTable.rows+count);
             }
 
-            if(ds->outCharset==U_ASCII_FAMILY) {
+            ܐܢ(ds->outCharset==U_ASCII_FAMILY) {
                 tempTable.stripForCompare=ucnv_io_stripASCIIForCompare;
-            } else /* U_EBCDIC_FAMILY */ {
+            } ܐܚܪܢܐ /* U_EBCDIC_FAMILY */ {
                 tempTable.stripForCompare=ucnv_io_stripEBCDICForCompare;
             }
 
@@ -1306,24 +1306,24 @@ ucnv_swapAliases(const UDataSwapper *ds,
             p2=inTable+offsets[untaggedConvArrayIndex];
             q2=outTable+offsets[untaggedConvArrayIndex];
 
-            for(i=0; i<count; ++i) {
+            لكل(i=0; i<count; ++i) {
                 tempTable.rows[i].strIndex=ds->readUInt16(p[i]);
                 tempTable.rows[i].sortIndex=(uint16_t)i;
             }
 
-            uprv_sortArray(tempTable.rows, (int32_t)count, sizeof(TempRow),
+            uprv_sortArray(tempTable.rows, (int32_t)count, حجم(TempRow),
                            io_compareRows, &tempTable,
-                           false, pErrorCode);
+                           ܕܓܠܐ, pErrorCode);
 
-            if(U_SUCCESS(*pErrorCode)) {
+            ܐܢ(U_SUCCESS(*pErrorCode)) {
                 /* copy/swap/permutate items */
-                if(p!=q) {
-                    for(i=0; i<count; ++i) {
+                ܐܢ(p!=q) {
+                    لكل(i=0; i<count; ++i) {
                         oldIndex=tempTable.rows[i].sortIndex;
                         ds->swapArray16(ds, p+oldIndex, 2, q+i, pErrorCode);
                         ds->swapArray16(ds, p2+oldIndex, 2, q2+i, pErrorCode);
                     }
-                } else {
+                } ܐܚܪܢܐ {
                     /*
                      * If we swap in-place, then the permutation must use another
                      * temporary array (tempTable.resort)
@@ -1331,13 +1331,13 @@ ucnv_swapAliases(const UDataSwapper *ds,
                      */
                     uint16_t *r=tempTable.resort;
 
-                    for(i=0; i<count; ++i) {
+                    لكل(i=0; i<count; ++i) {
                         oldIndex=tempTable.rows[i].sortIndex;
                         ds->swapArray16(ds, p+oldIndex, 2, r+i, pErrorCode);
                     }
                     uprv_memcpy(q, r, 2*(size_t)count);
 
-                    for(i=0; i<count; ++i) {
+                    لكل(i=0; i<count; ++i) {
                         oldIndex=tempTable.rows[i].sortIndex;
                         ds->swapArray16(ds, p2+oldIndex, 2, r+i, pErrorCode);
                     }
@@ -1345,14 +1345,14 @@ ucnv_swapAliases(const UDataSwapper *ds,
                 }
             }
 
-            if(tempTable.rows!=rows) {
+            ܐܢ(tempTable.rows!=rows) {
                 uprv_free(tempTable.rows);
             }
 
-            if(U_FAILURE(*pErrorCode)) {
+            ܐܢ(U_FAILURE(*pErrorCode)) {
                 udata_printError(ds, "ucnv_swapAliases().uprv_sortArray(%u items) failed\n",
                                  count);
-                return 0;
+                ܦܢܐ 0;
             }
 
             /* swap remaining 16-bit values */
@@ -1369,7 +1369,7 @@ ucnv_swapAliases(const UDataSwapper *ds,
         }
     }
 
-    return headerSize+2*(int32_t)topOffset;
+    ܦܢܐ headerSize+2*(int32_t)topOffset;
 }
 
 #endif

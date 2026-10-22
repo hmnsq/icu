@@ -18,20 +18,20 @@
 *   Character conversion functions moved here from unistr.cpp
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ܐܢ !UCONFIG_NO_CONVERSION
 
-#include "unicode/putil.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "unicode/ustring.h"
-#include "unicode/unistr.h"
-#include "unicode/ucnv.h"
-#include "ucnv_imp.h"
-#include "putilimp.h"
-#include "ustr_cnv.h"
-#include "ustr_imp.h"
+#ضمن "unicode/putil.h"
+#ضمن "cstring.h"
+#ضمن "cmemory.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "ucnv_imp.h"
+#ضمن "putilimp.h"
+#ضمن "ustr_cnv.h"
+#ضمن "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -39,19 +39,19 @@ U_NAMESPACE_BEGIN
 // Constructors
 //========================================
 
-#if !U_CHARSET_IS_UTF8
+#ܐܢ !U_CHARSET_IS_UTF8
 
-UnicodeString::UnicodeString(const char *codepageData) {
+UnicodeString::UnicodeString(ثابت حرف *codepageData) {
     fUnion.fFields.fLengthAndFlags = kShortString;
-    if(codepageData != 0) {
+    ܐܢ(codepageData != 0) {
         doCodepageCreate(codepageData, (int32_t)uprv_strlen(codepageData), 0);
     }
 }
 
-UnicodeString::UnicodeString(const char *codepageData,
+UnicodeString::UnicodeString(ثابت حرف *codepageData,
                              int32_t dataLength) {
     fUnion.fFields.fLengthAndFlags = kShortString;
-    if(codepageData != 0) {
+    ܐܢ(codepageData != 0) {
         doCodepageCreate(codepageData, dataLength, 0);
     }
 }
@@ -59,44 +59,44 @@ UnicodeString::UnicodeString(const char *codepageData,
 // else see unistr.cpp
 #endif
 
-UnicodeString::UnicodeString(const char *codepageData,
-                             const char *codepage) {
+UnicodeString::UnicodeString(ثابت حرف *codepageData,
+                             ثابت حرف *codepage) {
     fUnion.fFields.fLengthAndFlags = kShortString;
-    if (codepageData != nullptr) {
+    ܐܢ (codepageData != nullptr) {
         doCodepageCreate(codepageData, static_cast<int32_t>(uprv_strlen(codepageData)), codepage);
     }
 }
 
-UnicodeString::UnicodeString(const char *codepageData,
+UnicodeString::UnicodeString(ثابت حرف *codepageData,
                              int32_t dataLength,
-                             const char *codepage) {
+                             ثابت حرف *codepage) {
     fUnion.fFields.fLengthAndFlags = kShortString;
-    if (codepageData != nullptr) {
+    ܐܢ (codepageData != nullptr) {
         doCodepageCreate(codepageData, dataLength, codepage);
     }
 }
 
-UnicodeString::UnicodeString(const char *src, int32_t srcLength,
+UnicodeString::UnicodeString(ثابت حرف *src, int32_t srcLength,
                              UConverter *cnv,
                              UErrorCode &errorCode) {
     fUnion.fFields.fLengthAndFlags = kShortString;
-    if(U_SUCCESS(errorCode)) {
+    ܐܢ(U_SUCCESS(errorCode)) {
         // check arguments
-        if(src==nullptr) {
+        ܐܢ(src==nullptr) {
             // treat as an empty string, do nothing more
-        } else if(srcLength<-1) {
+        } ܐܚܪܢܐ ܐܢ(srcLength<-1) {
             errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        } else {
+        } ܐܚܪܢܐ {
             // get input length
-            if(srcLength==-1) {
+            ܐܢ(srcLength==-1) {
                 srcLength = static_cast<int32_t>(uprv_strlen(src));
             }
-            if(srcLength>0) {
-                if (cnv != nullptr) {
+            ܐܢ(srcLength>0) {
+                ܐܢ (cnv != nullptr) {
                     // use the provided converter
                     ucnv_resetToUnicode(cnv);
                     doCodepageCreate(src, srcLength, cnv, errorCode);
-                } else {
+                } ܐܚܪܢܐ {
                     // use the default converter
                     cnv=u_getDefaultConverter(&errorCode);
                     doCodepageCreate(src, srcLength, cnv, errorCode);
@@ -105,7 +105,7 @@ UnicodeString::UnicodeString(const char *src, int32_t srcLength,
             }
         }
 
-        if(U_FAILURE(errorCode)) {
+        ܐܢ(U_FAILURE(errorCode)) {
             setToBogus();
         }
     }
@@ -115,14 +115,14 @@ UnicodeString::UnicodeString(const char *src, int32_t srcLength,
 // Codeset conversion
 //========================================
 
-#if !U_CHARSET_IS_UTF8
+#ܐܢ !U_CHARSET_IS_UTF8
 
 int32_t
 UnicodeString::extract(int32_t start,
                        int32_t length,
-                       char *target,
-                       uint32_t dstSize) const {
-    return extract(start, length, target, dstSize, 0);
+                       حرف *target,
+                       uint32_t dstSize) ثابت {
+    ܦܢܐ extract(start, length, target, dstSize, 0);
 }
 
 // else see unistr.cpp
@@ -131,13 +131,13 @@ UnicodeString::extract(int32_t start,
 int32_t
 UnicodeString::extract(int32_t start,
                        int32_t length,
-                       char *target,
+                       حرف *target,
                        uint32_t dstSize,
-                       const char *codepage) const
+                       ثابت حرف *codepage) ثابت
 {
     // if the arguments are illegal, then do nothing
-    if (/*dstSize < 0 || */(dstSize > 0 && target == nullptr)) {
-        return 0;
+    ܐܢ (/*dstSize < 0 || */(dstSize > 0 && target == nullptr)) {
+        ܦܢܐ 0;
     }
 
     // pin the indices to legal values
@@ -149,12 +149,12 @@ UnicodeString::extract(int32_t start,
     // as a limit in some functions, it may wrap around and yield a pointer
     // that compares less-than target.
     int32_t capacity;
-    if(dstSize < 0x7fffffff) {
+    ܐܢ(dstSize < 0x7fffffff) {
         // Assume that the capacity is real and a limit pointer won't wrap around.
         capacity = static_cast<int32_t>(dstSize);
-    } else {
+    } ܐܚܪܢܐ {
         // Pin the capacity so that a limit pointer does not wrap around.
-        char* targetLimit = static_cast<char*>(U_MAX_PTR(target));
+        حرف* targetLimit = static_cast<حرف*>(U_MAX_PTR(target));
         // U_MAX_PTR(target) returns a targetLimit that is at most 0x7fffffff
         // greater than target and does not wrap around the top of the address space.
         capacity = static_cast<int32_t>(targetLimit - target);
@@ -165,73 +165,73 @@ UnicodeString::extract(int32_t start,
     UErrorCode status = U_ZERO_ERROR;
 
     // just write the NUL if the string length is 0
-    if(length == 0) {
-        return u_terminateChars(target, capacity, 0, &status);
+    ܐܢ(length == 0) {
+        ܦܢܐ u_terminateChars(target, capacity, 0, &status);
     }
 
     // if the codepage is the default, use our cache
     // if it is an empty string, then use the "invariant character" conversion
-    if (codepage == nullptr) {
-        const char *defaultName = ucnv_getDefaultName();
-        if(UCNV_FAST_IS_UTF8(defaultName)) {
-            return toUTF8(start, length, target, capacity);
+    ܐܢ (codepage == nullptr) {
+        ثابت حرف *defaultName = ucnv_getDefaultName();
+        ܐܢ(UCNV_FAST_IS_UTF8(defaultName)) {
+            ܦܢܐ toUTF8(start, length, target, capacity);
         }
         converter = u_getDefaultConverter(&status);
-    } else if (*codepage == 0) {
+    } ܐܚܪܢܐ ܐܢ (*codepage == 0) {
         // use the "invariant characters" conversion
         int32_t destLength;
-        if(length <= capacity) {
+        ܐܢ(length <= capacity) {
             destLength = length;
-        } else {
+        } ܐܚܪܢܐ {
             destLength = capacity;
         }
         u_UCharsToChars(getArrayStart() + start, target, destLength);
-        return u_terminateChars(target, capacity, length, &status);
-    } else {
+        ܦܢܐ u_terminateChars(target, capacity, length, &status);
+    } ܐܚܪܢܐ {
         converter = ucnv_open(codepage, &status);
     }
 
     length = doExtract(start, length, target, capacity, converter, status);
 
     // close the converter
-    if (codepage == nullptr) {
+    ܐܢ (codepage == nullptr) {
         u_releaseDefaultConverter(converter);
-    } else {
+    } ܐܚܪܢܐ {
         ucnv_close(converter);
     }
 
-    return length;
+    ܦܢܐ length;
 }
 
 int32_t
-UnicodeString::extract(char *dest, int32_t destCapacity,
+UnicodeString::extract(حرف *dest, int32_t destCapacity,
                        UConverter *cnv,
-                       UErrorCode &errorCode) const
+                       UErrorCode &errorCode) ثابت
 {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    ܐܢ(U_FAILURE(errorCode)) {
+        ܦܢܐ 0;
     }
 
-    if (isBogus() || destCapacity < 0 || (destCapacity > 0 && dest == nullptr)) {
+    ܐܢ (isBogus() || destCapacity < 0 || (destCapacity > 0 && dest == nullptr)) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ܦܢܐ 0;
     }
 
     // nothing to do?
-    if(isEmpty()) {
-        return u_terminateChars(dest, destCapacity, 0, &errorCode);
+    ܐܢ(isEmpty()) {
+        ܦܢܐ u_terminateChars(dest, destCapacity, 0, &errorCode);
     }
 
     // get the converter
     UBool isDefaultConverter;
-    if (cnv == nullptr) {
-        isDefaultConverter=true;
+    ܐܢ (cnv == nullptr) {
+        isDefaultConverter=ܫܪܪܐ;
         cnv=u_getDefaultConverter(&errorCode);
-        if(U_FAILURE(errorCode)) {
-            return 0;
+        ܐܢ(U_FAILURE(errorCode)) {
+            ܦܢܐ 0;
         }
-    } else {
-        isDefaultConverter=false;
+    } ܐܚܪܢܐ {
+        isDefaultConverter=ܕܓܠܐ;
         ucnv_resetFromUnicode(cnv);
     }
 
@@ -239,75 +239,75 @@ UnicodeString::extract(char *dest, int32_t destCapacity,
     int32_t len=doExtract(0, length(), dest, destCapacity, cnv, errorCode);
 
     // release the converter
-    if(isDefaultConverter) {
+    ܐܢ(isDefaultConverter) {
         u_releaseDefaultConverter(cnv);
     }
 
-    return len;
+    ܦܢܐ len;
 }
 
 int32_t
 UnicodeString::doExtract(int32_t start, int32_t length,
-                         char *dest, int32_t destCapacity,
+                         حرف *dest, int32_t destCapacity,
                          UConverter *cnv,
-                         UErrorCode &errorCode) const
+                         UErrorCode &errorCode) ثابت
 {
-    if(U_FAILURE(errorCode)) {
-        if(destCapacity!=0) {
+    ܐܢ(U_FAILURE(errorCode)) {
+        ܐܢ(destCapacity!=0) {
             *dest=0;
         }
-        return 0;
+        ܦܢܐ 0;
     }
 
-    const char16_t *src=getArrayStart()+start, *srcLimit=src+length;
-    char *originalDest=dest;
-    const char *destLimit;
+    ثابت char16_t *src=getArrayStart()+start, *srcLimit=src+length;
+    حرف *originalDest=dest;
+    ثابت حرف *destLimit;
 
-    if(destCapacity==0) {
+    ܐܢ(destCapacity==0) {
         destLimit=dest=nullptr;
-    } else if(destCapacity==-1) {
+    } ܐܚܪܢܐ ܐܢ(destCapacity==-1) {
         // Pin the limit to U_MAX_PTR if the "magic" destCapacity is used.
-        destLimit = static_cast<char*>(U_MAX_PTR(dest));
+        destLimit = static_cast<حرف*>(U_MAX_PTR(dest));
         // for NUL-termination, translate into highest int32_t
         destCapacity=0x7fffffff;
-    } else {
+    } ܐܚܪܢܐ {
         destLimit=dest+destCapacity;
     }
 
     // perform the conversion
     UErrorCode bufferStatus = U_ZERO_ERROR;
-    ucnv_fromUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, true, &bufferStatus);
+    ucnv_fromUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, ܫܪܪܐ, &bufferStatus);
     length = static_cast<int32_t>(dest - originalDest);
 
     // if an overflow occurs, then get the preflighting length
-    if(bufferStatus==U_BUFFER_OVERFLOW_ERROR) {
-        char buffer[1024];
+    ܐܢ(bufferStatus==U_BUFFER_OVERFLOW_ERROR) {
+        حرف buffer[1024];
 
-        destLimit=buffer+sizeof(buffer);
-        do {
+        destLimit=buffer+حجم(buffer);
+        ܥܒܕ {
             dest=buffer;
             bufferStatus=U_ZERO_ERROR;
-            ucnv_fromUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, true, &bufferStatus);
+            ucnv_fromUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, ܫܪܪܐ, &bufferStatus);
             length += static_cast<int32_t>(dest - buffer);
-        } while(bufferStatus==U_BUFFER_OVERFLOW_ERROR);
+        } ܟܡܐ(bufferStatus==U_BUFFER_OVERFLOW_ERROR);
     }
-    if (U_FAILURE(bufferStatus)) {
+    ܐܢ (U_FAILURE(bufferStatus)) {
         errorCode = bufferStatus;
     }
 
-    return u_terminateChars(originalDest, destCapacity, length, &errorCode);
+    ܦܢܐ u_terminateChars(originalDest, destCapacity, length, &errorCode);
 }
 
-void
-UnicodeString::doCodepageCreate(const char *codepageData,
+فراغ
+UnicodeString::doCodepageCreate(ثابت حرف *codepageData,
                                 int32_t dataLength,
-                                const char *codepage)
+                                ثابت حرف *codepage)
 {
     // if there's nothing to convert, do nothing
-    if (codepageData == nullptr || dataLength == 0 || dataLength < -1) {
-        return;
+    ܐܢ (codepageData == nullptr || dataLength == 0 || dataLength < -1) {
+        ܦܢܐ;
     }
-    if(dataLength == -1) {
+    ܐܢ(dataLength == -1) {
         dataLength = static_cast<int32_t>(uprv_strlen(codepageData));
     }
 
@@ -317,77 +317,77 @@ UnicodeString::doCodepageCreate(const char *codepageData,
     // if the codepage is the default, use our cache
     // if it is an empty string, then use the "invariant character" conversion
     UConverter *converter;
-    if (codepage == nullptr) {
-        const char *defaultName = ucnv_getDefaultName();
-        if(UCNV_FAST_IS_UTF8(defaultName)) {
+    ܐܢ (codepage == nullptr) {
+        ثابت حرف *defaultName = ucnv_getDefaultName();
+        ܐܢ(UCNV_FAST_IS_UTF8(defaultName)) {
             setToUTF8(StringPiece(codepageData, dataLength));
-            return;
+            ܦܢܐ;
         }
         converter = u_getDefaultConverter(&status);
-    } else if (*codepage == 0) {
+    } ܐܚܪܢܐ ܐܢ (*codepage == 0) {
         // use the "invariant characters" conversion
-        if(cloneArrayIfNeeded(dataLength, dataLength, false)) {
+        ܐܢ(cloneArrayIfNeeded(dataLength, dataLength, ܕܓܠܐ)) {
             u_charsToUChars(codepageData, getArrayStart(), dataLength);
             setLength(dataLength);
-        } else {
+        } ܐܚܪܢܐ {
             setToBogus();
         }
-        return;
-    } else {
+        ܦܢܐ;
+    } ܐܚܪܢܐ {
         converter = ucnv_open(codepage, &status);
     }
 
     // if we failed, set the appropriate flags and return
-    if(U_FAILURE(status)) {
+    ܐܢ(U_FAILURE(status)) {
         setToBogus();
-        return;
+        ܦܢܐ;
     }
 
     // perform the conversion
     doCodepageCreate(codepageData, dataLength, converter, status);
-    if(U_FAILURE(status)) {
+    ܐܢ(U_FAILURE(status)) {
         setToBogus();
     }
 
     // close the converter
-    if (codepage == nullptr) {
+    ܐܢ (codepage == nullptr) {
         u_releaseDefaultConverter(converter);
-    } else {
+    } ܐܚܪܢܐ {
         ucnv_close(converter);
     }
 }
 
-void
-UnicodeString::doCodepageCreate(const char *codepageData,
+فراغ
+UnicodeString::doCodepageCreate(ثابت حرف *codepageData,
                                 int32_t dataLength,
                                 UConverter *converter,
                                 UErrorCode &status)
 {
-    if(U_FAILURE(status)) {
-        return;
+    ܐܢ(U_FAILURE(status)) {
+        ܦܢܐ;
     }
 
     // set up the conversion parameters
-    const char *mySource     = codepageData;
-    const char *mySourceEnd  = mySource + dataLength;
+    ثابت حرف *mySource     = codepageData;
+    ثابت حرف *mySourceEnd  = mySource + dataLength;
     char16_t *array, *myTarget;
 
     // estimate the size needed:
     int32_t arraySize;
-    if(dataLength <= US_STACKBUF_SIZE) {
+    ܐܢ(dataLength <= US_STACKBUF_SIZE) {
         // try to use the stack buffer
         arraySize = US_STACKBUF_SIZE;
-    } else {
+    } ܐܚܪܢܐ {
         // 1.25 char16_t's per source byte should cover most cases
         arraySize = dataLength + (dataLength >> 2);
     }
 
     // we do not care about the current contents
-    UBool doCopyArray = false;
-    for(;;) {
-        if(!cloneArrayIfNeeded(arraySize, arraySize, doCopyArray)) {
+    UBool doCopyArray = ܕܓܠܐ;
+    لكل(;;) {
+        ܐܢ(!cloneArrayIfNeeded(arraySize, arraySize, doCopyArray)) {
             setToBogus();
-            break;
+            اكسر;
         }
 
         // perform the conversion
@@ -395,24 +395,24 @@ UnicodeString::doCodepageCreate(const char *codepageData,
         myTarget = array + length();
         UErrorCode bufferStatus = U_ZERO_ERROR;
         ucnv_toUnicode(converter, &myTarget,  array + getCapacity(),
-            &mySource, mySourceEnd, nullptr, true, &bufferStatus);
+            &mySource, mySourceEnd, nullptr, ܫܪܪܐ, &bufferStatus);
 
         // update the conversion parameters
         setLength(static_cast<int32_t>(myTarget - array));
 
         // allocate more space and copy data, if needed
-        if(bufferStatus == U_BUFFER_OVERFLOW_ERROR) {
+        ܐܢ(bufferStatus == U_BUFFER_OVERFLOW_ERROR) {
             // keep the previous conversion results
-            doCopyArray = true;
+            doCopyArray = ܫܪܪܐ;
 
             // estimate the new size needed, larger than before
             // try 2 char16_t's per remaining source byte
             arraySize = static_cast<int32_t>(length() + 2 * (mySourceEnd - mySource));
-        } else {
-            if (U_FAILURE(bufferStatus)) {
+        } ܐܚܪܢܐ {
+            ܐܢ (U_FAILURE(bufferStatus)) {
                 status = bufferStatus;
             }
-            break;
+            اكسر;
         }
     }
 }
