@@ -16,39 +16,39 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#অন্তর্ভাৱ "unicode/utypes.h"
 
-#if !U_HAVE_WCSCPY
+#যদি !U_HAVE_WCSCPY
 
-#include "cwchar.h"
+#অন্তর্ভাৱ "cwchar.h"
 
-U_CAPI wchar_t *uprv_wcscat(wchar_t *dst, const wchar_t *src) {
+U_CAPI wchar_t *uprv_wcscat(wchar_t *dst, ধ্রুৱ wchar_t *src) {
     wchar_t *start=dst;
-    while(*dst!=0) {
+    যেতিয়ালৈ(*dst!=0) {
         ++dst;
     }
-    while((*dst=*src)!=0) {
+    যেতিয়ালৈ((*dst=*src)!=0) {
         ++dst;
         ++src;
     }
-    return start;
+    ঘূৰাই start;
 }
 
-U_CAPI wchar_t *uprv_wcscpy(wchar_t *dst, const wchar_t *src) {
+U_CAPI wchar_t *uprv_wcscpy(wchar_t *dst, ধ্রুৱ wchar_t *src) {
     wchar_t *start=dst;
-    while((*dst=*src)!=0) {
+    যেতিয়ালৈ((*dst=*src)!=0) {
         ++dst;
         ++src;
     }
-    return start;
+    ঘূৰাই start;
 }
 
-U_CAPI size_t uprv_wcslen(const wchar_t *src) {
-    const wchar_t *start=src;
-    while(*src!=0) {
+U_CAPI size_t uprv_wcslen(ধ্রুৱ wchar_t *src) {
+    ধ্রুৱ wchar_t *start=src;
+    যেতিয়ালৈ(*src!=0) {
         ++src;
     }
-    return src-start;
+    ঘূৰাই src-start;
 }
 
 #endif

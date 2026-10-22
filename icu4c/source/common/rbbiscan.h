@@ -13,17 +13,17 @@
 #ifndef RBBISCAN_H
 #define RBBISCAN_H
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "unicode/rbbi.h"
-#include "unicode/uniset.h"
-#include "unicode/parseerr.h"
-#include "uhash.h"
-#include "uvector.h"
-#include "unicode/symtable.h"// For UnicodeSet parsing, is the interface that
+#অন্তর্ভাৱ "unicode/utypes.h"
+#অন্তর্ভাৱ "unicode/uobject.h"
+#অন্তর্ভাৱ "unicode/rbbi.h"
+#অন্তর্ভাৱ "unicode/uniset.h"
+#অন্তর্ভাৱ "unicode/parseerr.h"
+#অন্তর্ভাৱ "uhash.h"
+#অন্তর্ভাৱ "uvector.h"
+#অন্তর্ভাৱ "unicode/symtable.h"// For UnicodeSet parsing, is the interface that
                           //    looks up references to $variables within a set.
-#include "rbbinode.h"
-#include "rbbirpt.h"
+#অন্তর্ভাৱ "rbbinode.h"
+#অন্তর্ভাৱ "rbbirpt.h"
 
 U_NAMESPACE_BEGIN
 
@@ -42,16 +42,16 @@ class   RBBISymbolTable;
 //
 //--------------------------------------------------------------------------------
 
-class RBBIRuleScanner : public UMemory {
-public:
+class RBBIRuleScanner : সার্ৱজনিক UMemory {
+সার্ৱজনিক:
 
-    enum {
-        kStackSize = 100            // The size of the state stack for
+    গণনা {
+        k_স্তূপ_Size = 100            // The size of the state stack for
     };                              //   rules parsing.  Corresponds roughly
                                     //   to the depth of parentheses nesting
                                     //   that is allowed in the rules.
 
-    struct RBBIRuleChar {
+    সংরচনা RBBIRuleChar {
         UChar32             fChar;
         UBool               fEscaped;
         RBBIRuleChar() : fChar(0), fEscaped(false) {}
@@ -60,40 +60,40 @@ public:
     RBBIRuleScanner(RBBIRuleBuilder  *rb);
 
 
-    virtual    ~RBBIRuleScanner();
+    আভাস    ~RBBIRuleScanner();
 
-    void        nextChar(RBBIRuleChar &c);          // Get the next char from the input stream.
+    শূন্য        nextChar(RBBIRuleChar &c);          // Get the next char from the input stream.
                                                     // Return false if at end.
 
-    UBool       push(const RBBIRuleChar &c);        // Push (unget) one character.
+    UBool       ঠেলো(ধ্রুৱ RBBIRuleChar &c);        // Push (unget) one character.
                                                     //   Only a single character may be pushed.
 
-    void        parse();                            // Parse the rules, generating two parse
+    শূন্য        parse();                            // Parse the rules, generating two parse
                                                     //   trees, one each for the forward and
                                                     //   reverse rules,
                                                     //   and a list of UnicodeSets encountered.
 
-    int32_t     numRules();                         // Return the number of rules that have been seen.
+    int32_t     অঙ্ক_Rules();                         // Return the number of rules that have been seen.
 
     /**
      * Return a rules string without unnecessary
      * characters.
      */
-    static UnicodeString stripRules(const UnicodeString &rules);
-private:
+    স্থির UnicodeString stripRules(ধ্রুৱ UnicodeString &rules);
+গুপ্ত:
 
     UBool       doParseActions(int32_t a);
-    void        error(UErrorCode e);                   // error reporting convenience function.
-    void        fixOpStack(RBBINode::OpPrecedence p);
+    শূন্য        error(UErrorCode e);                   // error reporting convenience function.
+    শূন্য        fix_Op_স্তূপ(RBBINode::OpPrecedence p);
                                                        //   a character.
-    void        findSetFor(const UnicodeString &s, RBBINode *node, UnicodeSet *setToAdopt = nullptr);
+    শূন্য        findSetFor(ধ্রুৱ UnicodeString &s, RBBINode *গ্ৰন্থি, UnicodeSet *setToAdopt = nullptr);
 
     UChar32     nextCharLL();
 #ifdef RBBI_DEBUG
-    void        printNodeStack(const char *title);
+    শূন্য        print_গ্ৰন্থি_স্তূপ(ধ্রুৱ ৱর্ণ *title);
 #endif
-    RBBINode    *pushNewNode(RBBINode::NodeType  t);
-    void        scanSet();
+    RBBINode    *ঠেলো_New_গ্ৰন্থি(RBBINode::গ্ৰন্থি_Type  t);
+    শূন্য        scanSet();
 
 
     RBBIRuleBuilder               *fRB;              // The rule builder that we are part of.
@@ -103,8 +103,8 @@ private:
     int32_t                       fNextIndex;        // Index of the next character, which
                                                      //   is the first character not yet scanned.
     UBool                         fQuoteMode;        // Scan is in a 'quoted region'
-    int32_t                       fLineNum;          // Line number in input file.
-    int32_t                       fCharNum;          // Char position within the line.
+    int32_t                       f_সাৰি_অঙ্ক;          // Line number in input file.
+    int32_t                       f_Char_অঙ্ক;          // Char position within the line.
     UChar32                       fLastChar;         // Previous char, needed to count CR-LF
                                                      //   as a single line, not two.
 
@@ -116,13 +116,13 @@ private:
     RBBIRuleTableEl               **fStateTable;     // State Transition Table for RBBI Rule
                                                      //   parsing.  index by p[state][char-class]
 
-    uint16_t                      fStack[kStackSize];  // State stack, holds state pushes
-    int32_t                       fStackPtr;           //  and pops as specified in the state
+    uint16_t                      f_স্তূপ[k_স্তূপ_Size];  // State stack, holds state pushes
+    int32_t                       f_স্তূপ_Ptr;           //  and pops as specified in the state
                                                        //  transition rules.
 
-    RBBINode                      *fNodeStack[kStackSize]; // Node stack, holds nodes created
+    RBBINode                      *f_গ্ৰন্থি_স্তূপ[k_স্তূপ_Size]; // Node stack, holds nodes created
                                                            //  during the parse of a rule
-    int32_t                        fNodeStackPtr;
+    int32_t                        f_গ্ৰন্থি_স্তূপ_Ptr;
 
 
     UBool                          fReverseRule;     // True if the rule currently being scanned
@@ -134,7 +134,7 @@ private:
 
     UBool                          fNoChainInRule;   // True if the current rule starts with a '^'.
 
-    RBBISymbolTable               *fSymbolTable;     // symbol table, holds definitions of
+    RBBISymbolTable               *f_প্ৰতীক_Table;     // symbol table, holds definitions of
                                                      //   $variable symbols.
 
     UHashtable                    *fSetTable;        // UnicocodeSet hash table, holds indexes to
@@ -148,7 +148,7 @@ private:
                                                      //  perl script that builds the state tables.
                                                      //  See rbbirpt.h.
 
-    int32_t                        fRuleNum;         // Counts each rule as it is scanned.
+    int32_t                        f_Rule_অঙ্ক;         // Counts each rule as it is scanned.
 
     int32_t                        fOptionStart;     // Input index of start of a !!option
                                                      //   keyword, while being scanned.
@@ -158,8 +158,8 @@ private:
     UnicodeSet *gRuleSet_name_char;
     UnicodeSet *gRuleSet_name_start_char;
 
-    RBBIRuleScanner(const RBBIRuleScanner &other) = delete; // forbid copying of this class
-    RBBIRuleScanner &operator=(const RBBIRuleScanner &other) = delete; // forbid copying of this class
+    RBBIRuleScanner(ধ্রুৱ RBBIRuleScanner &other) = delete; // forbid copying of this class
+    RBBIRuleScanner &operator=(ধ্রুৱ RBBIRuleScanner &other) = delete; // forbid copying of this class
 };
 
 U_NAMESPACE_END

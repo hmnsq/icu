@@ -22,41 +22,41 @@
  *
  */
 
-#include "unicode/utypes.h"
-#include "unicode/udata.h"
-#include "cstring.h"
-#include "ucmndata.h"
-#include "udatamem.h"
+#অন্তর্ভাৱ "unicode/utypes.h"
+#অন্তর্ভাৱ "unicode/udata.h"
+#অন্তর্ভাৱ "cstring.h"
+#অন্তর্ভাৱ "ucmndata.h"
+#অন্তর্ভাৱ "udatamem.h"
 
-#if defined(UDATA_DEBUG) || defined(UDATA_DEBUG_DUMP)
+#যদি defined(UDATA_DEBUG) || defined(UDATA_DEBUG_DUMP)
 #   include <stdio.h>
 #endif
 
 U_CFUNC uint16_t
-udata_getHeaderSize(const DataHeader *udh) {
-    if(udh==nullptr) {
-        return 0;
-    } else if(udh->info.isBigEndian==U_IS_BIG_ENDIAN) {
+udata_getHeaderSize(ধ্রুৱ DataHeader *udh) {
+    যদি(udh==nullptr) {
+        ঘূৰাই 0;
+    } অন্যথা যদি(udh->info.isBigEndian==U_IS_BIG_ENDIAN) {
         /* same endianness */
-        return udh->dataHeader.headerSize;
-    } else {
+        ঘূৰাই udh->dataHeader.headerSize;
+    } অন্যথা {
         /* opposite endianness */
         uint16_t x=udh->dataHeader.headerSize;
-        return (uint16_t)((x<<8)|(x>>8));
+        ঘূৰাই (uint16_t)((x<<8)|(x>>8));
     }
 }
 
 U_CFUNC uint16_t
-udata_getInfoSize(const UDataInfo *info) {
-    if(info==nullptr) {
-        return 0;
-    } else if(info->isBigEndian==U_IS_BIG_ENDIAN) {
+udata_getInfoSize(ধ্রুৱ UDataInfo *info) {
+    যদি(info==nullptr) {
+        ঘূৰাই 0;
+    } অন্যথা যদি(info->isBigEndian==U_IS_BIG_ENDIAN) {
         /* same endianness */
-        return info->size;
-    } else {
+        ঘূৰাই info->size;
+    } অন্যথা {
         /* opposite endianness */
         uint16_t x=info->size;
-        return (uint16_t)((x<<8)|(x>>8));
+        ঘূৰাই (uint16_t)((x<<8)|(x>>8));
     }
 }
 
@@ -68,13 +68,13 @@ udata_getInfoSize(const UDataInfo *info) {
  *                  mapping of the data much less likely to work.              *
  *                                                                             *
  *-----------------------------------------------------------------------------*/
-typedef struct {
-    const char       *entryName;
-    const DataHeader *pHeader;
+প্রকারনির্দেশ সংরচনা {
+    ধ্রুৱ ৱর্ণ       *entryName;
+    ধ্রুৱ DataHeader *pHeader;
 } PointerTOCEntry;
 
 
-typedef struct  {
+প্রকারনির্দেশ সংরচনা  {
     uint32_t          count;
     uint32_t          reserved;
     /**
@@ -101,28 +101,28 @@ typedef struct  {
  * Compare strings where we know the shared prefix length,
  * and advance the prefix length as we find that the strings share even more characters.
  */
-static int32_t
-strcmpAfterPrefix(const char *s1, const char *s2, int32_t *pPrefixLength) {
+স্থির int32_t
+strcmpAfterPrefix(ধ্রুৱ ৱর্ণ *s1, ধ্রুৱ ৱর্ণ *s2, int32_t *pPrefixLength) {
     int32_t pl=*pPrefixLength;
     int32_t cmp=0;
     s1+=pl;
     s2+=pl;
-    for(;;) {
+    বাবে(;;) {
         int32_t c1 = static_cast<uint8_t>(*s1++);
         int32_t c2 = static_cast<uint8_t>(*s2++);
         cmp=c1-c2;
-        if(cmp!=0 || c1==0) {  /* different or done */
-            break;
+        যদি(cmp!=0 || c1==0) {  /* different or done */
+            ভঙ্গ;
         }
         ++pl;  /* increment shared same-prefix length */
     }
     *pPrefixLength=pl;
-    return cmp;
+    ঘূৰাই cmp;
 }
 
-static int32_t
-offsetTOCPrefixBinarySearch(const char *s, const char *names,
-                            const UDataOffsetTOCEntry *toc, int32_t count) {
+স্থির int32_t
+offset_TOCPrefix_দ্বিমিক_অনুসন্ধান(ধ্রুৱ ৱর্ণ *s, ধ্রুৱ ৱর্ণ *names,
+                            ধ্রুৱ UDataOffsetTOCEntry *toc, int32_t count) {
     int32_t start=0;
     int32_t limit=count;
     /*
@@ -132,8 +132,8 @@ offsetTOCPrefixBinarySearch(const char *s, const char *names,
      */
     int32_t startPrefixLength=0;
     int32_t limitPrefixLength=0;
-    if(count==0) {
-        return -1;
+    যদি(count==0) {
+        ঘূৰাই -1;
     }
     /*
      * Prime the prefix lengths so that we don't keep prefixLength at 0 until
@@ -141,33 +141,33 @@ offsetTOCPrefixBinarySearch(const char *s, const char *names,
      * At the same time, we find if s is one of the start and (limit-1) names,
      * and if not, exclude them from the actual binary search.
      */
-    if(0==strcmpAfterPrefix(s, names+toc[0].nameOffset, &startPrefixLength)) {
-        return 0;
+    যদি(0==strcmpAfterPrefix(s, names+toc[0].nameOffset, &startPrefixLength)) {
+        ঘূৰাই 0;
     }
     ++start;
     --limit;
-    if(0==strcmpAfterPrefix(s, names+toc[limit].nameOffset, &limitPrefixLength)) {
-        return limit;
+    যদি(0==strcmpAfterPrefix(s, names+toc[limit].nameOffset, &limitPrefixLength)) {
+        ঘূৰাই limit;
     }
-    while(start<limit) {
+    যেতিয়ালৈ(start<limit) {
         int32_t i=(start+limit)/2;
         int32_t prefixLength=MIN(startPrefixLength, limitPrefixLength);
         int32_t cmp=strcmpAfterPrefix(s, names+toc[i].nameOffset, &prefixLength);
-        if(cmp<0) {
+        যদি(cmp<0) {
             limit=i;
             limitPrefixLength=prefixLength;
-        } else if(cmp==0) {
-            return i;
-        } else {
+        } অন্যথা যদি(cmp==0) {
+            ঘূৰাই i;
+        } অন্যথা {
             start=i+1;
             startPrefixLength=prefixLength;
         }
     }
-    return -1;
+    ঘূৰাই -1;
 }
 
-static int32_t
-pointerTOCPrefixBinarySearch(const char *s, const PointerTOCEntry *toc, int32_t count) {
+স্থির int32_t
+pointer_TOCPrefix_দ্বিমিক_অনুসন্ধান(ধ্রুৱ ৱর্ণ *s, ধ্রুৱ PointerTOCEntry *toc, int32_t count) {
     int32_t start=0;
     int32_t limit=count;
     /*
@@ -177,8 +177,8 @@ pointerTOCPrefixBinarySearch(const char *s, const PointerTOCEntry *toc, int32_t 
      */
     int32_t startPrefixLength=0;
     int32_t limitPrefixLength=0;
-    if(count==0) {
-        return -1;
+    যদি(count==0) {
+        ঘূৰাই -1;
     }
     /*
      * Prime the prefix lengths so that we don't keep prefixLength at 0 until
@@ -186,132 +186,132 @@ pointerTOCPrefixBinarySearch(const char *s, const PointerTOCEntry *toc, int32_t 
      * At the same time, we find if s is one of the start and (limit-1) names,
      * and if not, exclude them from the actual binary search.
      */
-    if(0==strcmpAfterPrefix(s, toc[0].entryName, &startPrefixLength)) {
-        return 0;
+    যদি(0==strcmpAfterPrefix(s, toc[0].entryName, &startPrefixLength)) {
+        ঘূৰাই 0;
     }
     ++start;
     --limit;
-    if(0==strcmpAfterPrefix(s, toc[limit].entryName, &limitPrefixLength)) {
-        return limit;
+    যদি(0==strcmpAfterPrefix(s, toc[limit].entryName, &limitPrefixLength)) {
+        ঘূৰাই limit;
     }
-    while(start<limit) {
+    যেতিয়ালৈ(start<limit) {
         int32_t i=(start+limit)/2;
         int32_t prefixLength=MIN(startPrefixLength, limitPrefixLength);
         int32_t cmp=strcmpAfterPrefix(s, toc[i].entryName, &prefixLength);
-        if(cmp<0) {
+        যদি(cmp<0) {
             limit=i;
             limitPrefixLength=prefixLength;
-        } else if(cmp==0) {
-            return i;
-        } else {
+        } অন্যথা যদি(cmp==0) {
+            ঘূৰাই i;
+        } অন্যথা {
             start=i+1;
             startPrefixLength=prefixLength;
         }
     }
-    return -1;
+    ঘূৰাই -1;
 }
 
 U_CDECL_BEGIN
-static uint32_t U_CALLCONV
-offsetTOCEntryCount(const UDataMemory *pData) {
+স্থির uint32_t U_CALLCONV
+offset_TOCEntry_গুনতি(ধ্রুৱ UDataMemory *pData) {
     int32_t          retVal=0;
-    const UDataOffsetTOC *toc = (UDataOffsetTOC *)pData->toc;
-    if (toc != nullptr) {
+    ধ্রুৱ UDataOffsetTOC *toc = (UDataOffsetTOC *)pData->toc;
+    যদি (toc != nullptr) {
         retVal = toc->count;
     }
-    return retVal;
+    ঘূৰাই retVal;
 }
 
-static const DataHeader * U_CALLCONV
-offsetTOCLookupFn(const UDataMemory *pData,
-                  const char *tocEntryName,
+স্থির ধ্রুৱ DataHeader * U_CALLCONV
+offsetTOCLookupFn(ধ্রুৱ UDataMemory *pData,
+                  ধ্রুৱ ৱর্ণ *tocEntryName,
                   int32_t *pLength,
                   UErrorCode *pErrorCode) {
-    (void)pErrorCode;
-    const UDataOffsetTOC  *toc = (UDataOffsetTOC *)pData->toc;
-    if(toc!=nullptr) {
-        const char *base=(const char *)toc;
+    (শূন্য)pErrorCode;
+    ধ্রুৱ UDataOffsetTOC  *toc = (UDataOffsetTOC *)pData->toc;
+    যদি(toc!=nullptr) {
+        ধ্রুৱ ৱর্ণ *base=(ধ্রুৱ ৱর্ণ *)toc;
         int32_t number, count=(int32_t)toc->count;
 
         /* perform a binary search for the data in the common data's table of contents */
-#if defined (UDATA_DEBUG_DUMP)
+#যদি defined (UDATA_DEBUG_DUMP)
         /* list the contents of the TOC each time .. not recommended */
-        for(number=0; number<count; ++number) {
+        বাবে(number=0; number<count; ++number) {
             fprintf(stderr, "\tx%d: %s\n", number, &base[toc->entry[number].nameOffset]);
         }
 #endif
-        number=offsetTOCPrefixBinarySearch(tocEntryName, base, toc->entry, count);
-        if(number>=0) {
+        number=offset_TOCPrefix_দ্বিমিক_অনুসন্ধান(tocEntryName, base, toc->entry, count);
+        যদি(number>=0) {
             /* found it */
-            const UDataOffsetTOCEntry *entry=toc->entry+number;
+            ধ্রুৱ UDataOffsetTOCEntry *entry=toc->entry+number;
 #ifdef UDATA_DEBUG
             fprintf(stderr, "%s: Found.\n", tocEntryName);
 #endif
-            if((number+1) < count) {
+            যদি((number+1) < count) {
                 *pLength = (int32_t)(entry[1].dataOffset - entry->dataOffset);
-            } else {
+            } অন্যথা {
                 *pLength = -1;
             }
-            return (const DataHeader *)(base+entry->dataOffset);
-        } else {
+            ঘূৰাই (ধ্রুৱ DataHeader *)(base+entry->dataOffset);
+        } অন্যথা {
 #ifdef UDATA_DEBUG
             fprintf(stderr, "%s: Not found.\n", tocEntryName);
 #endif
-            return nullptr;
+            ঘূৰাই nullptr;
         }
-    } else {
+    } অন্যথা {
 #ifdef UDATA_DEBUG
         fprintf(stderr, "returning header\n");
 #endif
 
-        return pData->pHeader;
+        ঘূৰাই pData->pHeader;
     }
 }
 
 
-static uint32_t U_CALLCONV pointerTOCEntryCount(const UDataMemory *pData) {
-    const PointerTOC *toc = (PointerTOC *)pData->toc;
-    return toc != nullptr ? toc->count : 0;
+স্থির uint32_t U_CALLCONV pointer_TOCEntry_গুনতি(ধ্রুৱ UDataMemory *pData) {
+    ধ্রুৱ PointerTOC *toc = (PointerTOC *)pData->toc;
+    ঘূৰাই toc != nullptr ? toc->count : 0;
 }
 
-static const DataHeader * U_CALLCONV pointerTOCLookupFn(const UDataMemory *pData,
-                   const char *name,
+স্থির ধ্রুৱ DataHeader * U_CALLCONV pointerTOCLookupFn(ধ্রুৱ UDataMemory *pData,
+                   ধ্রুৱ ৱর্ণ *name,
                    int32_t *pLength,
                    UErrorCode *pErrorCode) {
-    (void)pErrorCode;
-    if(pData->toc!=nullptr) {
-        const PointerTOC *toc = (PointerTOC *)pData->toc;
+    (শূন্য)pErrorCode;
+    যদি(pData->toc!=nullptr) {
+        ধ্রুৱ PointerTOC *toc = (PointerTOC *)pData->toc;
         int32_t number, count=(int32_t)toc->count;
 
-#if defined (UDATA_DEBUG_DUMP)
+#যদি defined (UDATA_DEBUG_DUMP)
         /* list the contents of the TOC each time .. not recommended */
-        for(number=0; number<count; ++number) {
+        বাবে(number=0; number<count; ++number) {
             fprintf(stderr, "\tx%d: %s\n", number, toc->entry[number].entryName);
         }
 #endif
-        number=pointerTOCPrefixBinarySearch(name, toc->entry, count);
-        if(number>=0) {
+        number=pointer_TOCPrefix_দ্বিমিক_অনুসন্ধান(name, toc->entry, count);
+        যদি(number>=0) {
             /* found it */
 #ifdef UDATA_DEBUG
             fprintf(stderr, "%s: Found.\n", toc->entry[number].entryName);
 #endif
             *pLength=-1;
-            return UDataMemory_normalizeDataPointer(toc->entry[number].pHeader);
-        } else {
+            ঘূৰাই UDataMemory_normalizeDataPointer(toc->entry[number].pHeader);
+        } অন্যথা {
 #ifdef UDATA_DEBUG
             fprintf(stderr, "%s: Not found.\n", name);
 #endif
-            return nullptr;
+            ঘূৰাই nullptr;
         }
-    } else {
-        return pData->pHeader;
+    } অন্যথা {
+        ঘূৰাই pData->pHeader;
     }
 }
 U_CDECL_END
 
 
-static const commonDataFuncs CmnDFuncs = {offsetTOCLookupFn,  offsetTOCEntryCount};
-static const commonDataFuncs ToCPFuncs = {pointerTOCLookupFn, pointerTOCEntryCount};
+স্থির ধ্রুৱ commonDataFuncs CmnDFuncs = {offsetTOCLookupFn,  offset_TOCEntry_গুনতি};
+স্থির ধ্রুৱ commonDataFuncs ToCPFuncs = {pointerTOCLookupFn, pointer_TOCEntry_গুনতি};
 
 
 
@@ -323,14 +323,14 @@ static const commonDataFuncs ToCPFuncs = {pointerTOCLookupFn, pointerTOCEntryCou
  *                    and set the appropriate error code.               *
  *                                                                      *
  *----------------------------------------------------------------------*/
-U_CFUNC void udata_checkCommonData(UDataMemory *udm, UErrorCode *err) {
-    if (U_FAILURE(*err)) {
-        return;
+U_CFUNC শূন্য udata_checkCommonData(UDataMemory *udm, UErrorCode *err) {
+    যদি (U_FAILURE(*err)) {
+        ঘূৰাই;
     }
 
-    if(udm==nullptr || udm->pHeader==nullptr) {
+    যদি(udm==nullptr || udm->pHeader==nullptr) {
       *err=U_INVALID_FORMAT_ERROR;
-    } else if(!(udm->pHeader->dataHeader.magic1==0xda &&
+    } অন্যথা যদি(!(udm->pHeader->dataHeader.magic1==0xda &&
         udm->pHeader->dataHeader.magic2==0x27 &&
         udm->pHeader->info.isBigEndian==U_IS_BIG_ENDIAN &&
         udm->pHeader->info.charsetFamily==U_CHARSET_FAMILY)
@@ -338,7 +338,7 @@ U_CFUNC void udata_checkCommonData(UDataMemory *udm, UErrorCode *err) {
         /* header not valid */
         *err=U_INVALID_FORMAT_ERROR;
     }
-    else if (udm->pHeader->info.dataFormat[0]==0x43 &&
+    অন্যথা যদি (udm->pHeader->info.dataFormat[0]==0x43 &&
         udm->pHeader->info.dataFormat[1]==0x6d &&
         udm->pHeader->info.dataFormat[2]==0x6e &&
         udm->pHeader->info.dataFormat[3]==0x44 &&
@@ -346,9 +346,9 @@ U_CFUNC void udata_checkCommonData(UDataMemory *udm, UErrorCode *err) {
         ) {
         /* dataFormat="CmnD" */
         udm->vFuncs = &CmnDFuncs;
-        udm->toc=(const char *)udm->pHeader+udata_getHeaderSize(udm->pHeader);
+        udm->toc=(ধ্রুৱ ৱর্ণ *)udm->pHeader+udata_getHeaderSize(udm->pHeader);
     }
-    else if(udm->pHeader->info.dataFormat[0]==0x54 &&
+    অন্যথা যদি(udm->pHeader->info.dataFormat[0]==0x54 &&
         udm->pHeader->info.dataFormat[1]==0x6f &&
         udm->pHeader->info.dataFormat[2]==0x43 &&
         udm->pHeader->info.dataFormat[3]==0x50 &&
@@ -356,14 +356,14 @@ U_CFUNC void udata_checkCommonData(UDataMemory *udm, UErrorCode *err) {
         ) {
         /* dataFormat="ToCP" */
         udm->vFuncs = &ToCPFuncs;
-        udm->toc=(const char *)udm->pHeader+udata_getHeaderSize(udm->pHeader);
+        udm->toc=(ধ্রুৱ ৱর্ণ *)udm->pHeader+udata_getHeaderSize(udm->pHeader);
     }
-    else {
+    অন্যথা {
         /* dataFormat not recognized */
         *err=U_INVALID_FORMAT_ERROR;
     }
 
-    if (U_FAILURE(*err)) {
+    যদি (U_FAILURE(*err)) {
         /* If the data is no good and we memory-mapped it ourselves,
          *  close the memory mapping so it doesn't leak.  Note that this has
          *  no effect on non-memory mapped data, other than clearing fields in udm.

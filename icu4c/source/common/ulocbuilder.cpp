@@ -1,45 +1,45 @@
 // © 2023 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#include <utility>
+#অন্তর্ভাৱ <utility>
 
-#include "unicode/bytestream.h"
-#include "unicode/localebuilder.h"
-#include "unicode/locid.h"
-#include "unicode/stringpiece.h"
-#include "unicode/ulocbuilder.h"
-#include "unicode/utypes.h"
-#include "bytesinkutil.h"
-#include "cstring.h"
-#include "ustr_imp.h"
+#অন্তর্ভাৱ "unicode/bytestream.h"
+#অন্তর্ভাৱ "unicode/localebuilder.h"
+#অন্তর্ভাৱ "unicode/locid.h"
+#অন্তর্ভাৱ "unicode/stringpiece.h"
+#অন্তর্ভাৱ "unicode/ulocbuilder.h"
+#অন্তর্ভাৱ "unicode/utypes.h"
+#অন্তর্ভাৱ "bytesinkutil.h"
+#অন্তর্ভাৱ "cstring.h"
+#অন্তর্ভাৱ "ustr_imp.h"
 
 using icu::StringPiece;
 
 #define EXTERNAL(i) (reinterpret_cast<ULocaleBuilder*>(i))
 #define INTERNAL(e) (reinterpret_cast<icu::LocaleBuilder*>(e))
-#define CONST_INTERNAL(e) (reinterpret_cast<const icu::LocaleBuilder*>(e))
+#define CONST_INTERNAL(e) (reinterpret_cast<ধ্রুৱ icu::LocaleBuilder*>(e))
 
 ULocaleBuilder* ulocbld_open() {
-    return EXTERNAL(new icu::LocaleBuilder());
+    ঘূৰাই EXTERNAL(নূতন icu::LocaleBuilder());
 }
 
-void ulocbld_close(ULocaleBuilder* builder) {
-    if (builder == nullptr) return;
+শূন্য ulocbld_close(ULocaleBuilder* builder) {
+    যদি (builder == nullptr) ঘূৰাই;
     delete INTERNAL(builder);
 }
 
-void ulocbld_setLocale(ULocaleBuilder* builder, const char* locale, int32_t length) {
-    if (builder == nullptr) return;
+শূন্য ulocbld_setLocale(ULocaleBuilder* builder, ধ্রুৱ ৱর্ণ* locale, int32_t length) {
+    যদি (builder == nullptr) ঘূৰাই;
     icu::Locale l;
-    if (length < 0 || locale[length] == '\0') {
+    যদি (length < 0 || locale[length] == '\0') {
         l = icu::Locale(locale);
-    } else {
-        if (length >= ULOC_FULLNAME_CAPACITY) {
+    } অন্যথা {
+        যদি (length >= ULOC_FULLNAME_CAPACITY) {
             l.setToBogus();
-        } else {
+        } অন্যথা {
             // locale is not null termined but Locale API require one.
             // Create a null termined version in buf.
-            char buf[ULOC_FULLNAME_CAPACITY];
+            ৱর্ণ buf[ULOC_FULLNAME_CAPACITY];
             uprv_memcpy(buf, locale, length);
             buf[length] = '\0';
             l = icu::Locale(buf);
@@ -48,18 +48,18 @@ void ulocbld_setLocale(ULocaleBuilder* builder, const char* locale, int32_t leng
     INTERNAL(builder)->setLocale(l);
 }
 
-void
+শূন্য
 ulocbld_adoptULocale(ULocaleBuilder* builder, ULocale* locale) {
-    if (builder == nullptr) return;
-    INTERNAL(builder)->setLocale(*(reinterpret_cast<const icu::Locale*>(locale)));
+    যদি (builder == nullptr) ঘূৰাই;
+    INTERNAL(builder)->setLocale(*(reinterpret_cast<ধ্রুৱ icu::Locale*>(locale)));
     ulocale_close(locale);
 }
 
 #define STRING_PIECE(s, l) ((l)<0 ? StringPiece(s) : StringPiece((s), (l)))
 
 #define IMPL_ULOCBLD_SETTER(N) \
-void ulocbld_##N(ULocaleBuilder* bld, const char* s, int32_t l) { \
-    if (bld == nullptr) return; \
+শূন্য ulocbld_##N(ULocaleBuilder* bld, ধ্রুৱ ৱর্ণ* s, int32_t l) { \
+    যদি (bld == nullptr) ঘূৰাই; \
     INTERNAL(bld)->N(STRING_PIECE(s,l)); \
 }
 
@@ -71,70 +71,70 @@ IMPL_ULOCBLD_SETTER(setVariant)
 IMPL_ULOCBLD_SETTER(addUnicodeLocaleAttribute)
 IMPL_ULOCBLD_SETTER(removeUnicodeLocaleAttribute)
 
-void ulocbld_setExtension(ULocaleBuilder* builder, char key, const char* value, int32_t length) {
-    if (builder == nullptr) return;
-    INTERNAL(builder)->setExtension(key, STRING_PIECE(value, length));
+শূন্য ulocbld_setExtension(ULocaleBuilder* builder, ৱর্ণ চাবি, ধ্রুৱ ৱর্ণ* value, int32_t length) {
+    যদি (builder == nullptr) ঘূৰাই;
+    INTERNAL(builder)->setExtension(চাবি, STRING_PIECE(value, length));
 }
 
-void ulocbld_setUnicodeLocaleKeyword(
-    ULocaleBuilder* builder, const char* key, int32_t keyLength,
-    const char* type, int32_t typeLength) {
-    if (builder == nullptr) return;
+শূন্য ulocbld_setUnicodeLocaleKeyword(
+    ULocaleBuilder* builder, ধ্রুৱ ৱর্ণ* চাবি, int32_t চাবি_Length,
+    ধ্রুৱ ৱর্ণ* type, int32_t typeLength) {
+    যদি (builder == nullptr) ঘূৰাই;
     INTERNAL(builder)->setUnicodeLocaleKeyword(
-        STRING_PIECE(key, keyLength), STRING_PIECE(type, typeLength));
+        STRING_PIECE(চাবি, চাবি_Length), STRING_PIECE(type, typeLength));
 }
 
-void ulocbld_clear(ULocaleBuilder* builder) {
-    if (builder == nullptr) return;
+শূন্য ulocbld_clear(ULocaleBuilder* builder) {
+    যদি (builder == nullptr) ঘূৰাই;
     INTERNAL(builder)->clear();
 }
 
-void ulocbld_clearExtensions(ULocaleBuilder* builder) {
-    if (builder == nullptr) return;
+শূন্য ulocbld_clearExtensions(ULocaleBuilder* builder) {
+    যদি (builder == nullptr) ঘূৰাই;
     INTERNAL(builder)->clearExtensions();
 }
 
 
 ULocale* ulocbld_buildULocale(ULocaleBuilder* builder, UErrorCode* err) {
-    if (builder == nullptr) {
+    যদি (builder == nullptr) {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ঘূৰাই nullptr;
     }
     icu::Locale l = INTERNAL(builder)->build(*err);
-    if (U_FAILURE(*err)) return nullptr;
+    যদি (U_FAILURE(*err)) ঘূৰাই nullptr;
     icu::Locale* r = l.clone();
-    if (r == nullptr) {
+    যদি (r == nullptr) {
         *err = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ঘূৰাই nullptr;
     }
-    return reinterpret_cast<ULocale*>(r);
+    ঘূৰাই reinterpret_cast<ULocale*>(r);
 }
 
 int32_t ulocbld_buildLocaleID(ULocaleBuilder* builder,
-                              char* buffer, int32_t bufferCapacity, UErrorCode* err) {
-    if (U_FAILURE(*err)) { return 0; }
-    if (builder == nullptr) {
+                              ৱর্ণ* buffer, int32_t bufferCapacity, UErrorCode* err) {
+    যদি (U_FAILURE(*err)) { ঘূৰাই 0; }
+    যদি (builder == nullptr) {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ঘূৰাই 0;
     }
     icu::Locale l = INTERNAL(builder)->build(*err);
-    if (U_FAILURE(*err)) { return 0; }
+    যদি (U_FAILURE(*err)) { ঘূৰাই 0; }
     int32_t length = static_cast<int32_t>(uprv_strlen(l.getName()));
-    if (0 < length && length <= bufferCapacity) {
+    যদি (0 < length && length <= bufferCapacity) {
         uprv_memcpy(buffer, l.getName(), length);
     }
-    return u_terminateChars(buffer, bufferCapacity, length, err);
+    ঘূৰাই u_terminateChars(buffer, bufferCapacity, length, err);
 }
 
 int32_t ulocbld_buildLanguageTag(ULocaleBuilder* builder,
-                  char* buffer, int32_t bufferCapacity, UErrorCode* err) {
-    if (U_FAILURE(*err)) { return 0; }
-    if (builder == nullptr) {
+                  ৱর্ণ* buffer, int32_t bufferCapacity, UErrorCode* err) {
+    যদি (U_FAILURE(*err)) { ঘূৰাই 0; }
+    যদি (builder == nullptr) {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ঘূৰাই 0;
     }
     icu::Locale l = INTERNAL(builder)->build(*err);
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+    ঘূৰাই icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
         buffer, bufferCapacity,
         [&](icu::ByteSink& sink, UErrorCode& status) {
             l.toLanguageTag(sink, status);
@@ -142,10 +142,10 @@ int32_t ulocbld_buildLanguageTag(ULocaleBuilder* builder,
         *err);
 }
 
-UBool ulocbld_copyErrorTo(const ULocaleBuilder* builder, UErrorCode *outErrorCode) {
-    if (builder == nullptr) {
+UBool ulocbld_copyErrorTo(ধ্রুৱ ULocaleBuilder* builder, UErrorCode *outErrorCode) {
+    যদি (builder == nullptr) {
         *outErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return true;
+        ঘূৰাই সঁচা;
     }
-    return CONST_INTERNAL(builder)->copyErrorTo(*outErrorCode);
+    ঘূৰাই CONST_INTERNAL(builder)->copyErrorTo(*outErrorCode);
 }

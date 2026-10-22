@@ -5,37 +5,37 @@
  * others. All Rights Reserved.
  */
 
-#include "unicode/unistr.h"
-#include "charstr.h"
-#include "cstring.h"
-#include "pluralmap.h"
+#অন্তর্ভাৱ "unicode/unistr.h"
+#অন্তর্ভাৱ "charstr.h"
+#অন্তর্ভাৱ "cstring.h"
+#অন্তর্ভাৱ "pluralmap.h"
 
 U_NAMESPACE_BEGIN
 
-static const char * const gPluralForms[] = {
+স্থির ধ্রুৱ ৱর্ণ * ধ্রুৱ gPluralForms[] = {
         "other", "zero", "one", "two", "few", "many"};
 
 PluralMapBase::Category
-PluralMapBase::toCategory(const char *pluralForm) {
-    for (int32_t i = 0; i < UPRV_LENGTHOF(gPluralForms); ++i) {
-        if (uprv_strcmp(pluralForm, gPluralForms[i]) == 0) {
-            return static_cast<Category>(i);
+PluralMapBase::toCategory(ধ্রুৱ ৱর্ণ *pluralForm) {
+    বাবে (int32_t i = 0; i < UPRV_LENGTHOF(gPluralForms); ++i) {
+        যদি (uprv_strcmp(pluralForm, gPluralForms[i]) == 0) {
+            ঘূৰাই static_cast<Category>(i);
         }
     }
-    return NONE;
+    ঘূৰাই NONE;
 }
 
 PluralMapBase::Category
-PluralMapBase::toCategory(const UnicodeString &pluralForm) {
+PluralMapBase::toCategory(ধ্রুৱ UnicodeString &pluralForm) {
     CharString cCategory;
     UErrorCode status = U_ZERO_ERROR;
     cCategory.appendInvariantChars(pluralForm, status);    
-    return U_FAILURE(status) ? NONE : toCategory(cCategory.data());
+    ঘূৰাই U_FAILURE(status) ? NONE : toCategory(cCategory.data());
 }
 
-const char *PluralMapBase::getCategoryName(Category c) {
+ধ্রুৱ ৱর্ণ *PluralMapBase::getCategoryName(Category c) {
     int32_t index = c;
-    return (index < 0 || index >= UPRV_LENGTHOF(gPluralForms)) ?
+    ঘূৰাই (index < 0 || index >= UPRV_LENGTHOF(gPluralForms)) ?
             nullptr : gPluralForms[index];
 }
 

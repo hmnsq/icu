@@ -15,47 +15,47 @@
 ******************************************************************************
 */
 
-#include "unicode/uscript.h"
-#include "usc_impl.h"
-#include "cmemory.h"
+#অন্তর্ভাৱ "unicode/uscript.h"
+#অন্তর্ভাৱ "usc_impl.h"
+#অন্তর্ভাৱ "cmemory.h"
 
-#define PAREN_STACK_DEPTH 32
+#define PAREN_স্তূপ_DEPTH 32
 
-#define MOD(sp) ((sp) % PAREN_STACK_DEPTH)
-#define LIMIT_INC(sp) (((sp) < PAREN_STACK_DEPTH)? (sp) + 1 : PAREN_STACK_DEPTH)
+#define MOD(sp) ((sp) % PAREN_স্তূপ_DEPTH)
+#define LIMIT_INC(sp) (((sp) < PAREN_স্তূপ_DEPTH)? (sp) + 1 : PAREN_স্তূপ_DEPTH)
 #define INC(sp,count) (MOD((sp) + (count)))
 #define INC1(sp) (INC(sp, 1))
-#define DEC(sp,count) (MOD((sp) + PAREN_STACK_DEPTH - (count)))
+#define DEC(sp,count) (MOD((sp) + PAREN_স্তূপ_DEPTH - (count)))
 #define DEC1(sp) (DEC(sp, 1))
-#define STACK_IS_EMPTY(scriptRun) ((scriptRun)->pushCount <= 0)
-#define STACK_IS_NOT_EMPTY(scriptRun) (! STACK_IS_EMPTY(scriptRun))
-#define TOP(scriptRun) ((scriptRun)->parenStack[(scriptRun)->parenSP])
-#define SYNC_FIXUP(scriptRun) ((scriptRun)->fixupCount = 0)
+#define স্তূপ_IS_EMPTY(scriptRun) ((scriptRun)->ঠেলো_গুনতি <= 0)
+#define স্তূপ_IS_NOT_EMPTY(scriptRun) (! স্তূপ_IS_EMPTY(scriptRun))
+#define শীৰ্ষ_2(scriptRun) ((scriptRun)->paren_স্তূপ[(scriptRun)->parenSP])
+#define SYNC_FIXUP(scriptRun) ((scriptRun)->fixup_গুনতি = 0)
 
-struct ParenStackEntry
+সংরচনা Paren_স্তূপ_Entry
 {
     int32_t pairIndex;
     UScriptCode scriptCode;
 };
 
-struct UScriptRun
+সংরচনা UScriptRun
 {
     int32_t textLength;
-    const char16_t *textArray;
+    ধ্রুৱ char16_t *textArray;
 
     int32_t scriptStart;
     int32_t scriptLimit;
     UScriptCode scriptCode;
 
-    struct ParenStackEntry parenStack[PAREN_STACK_DEPTH];
+    সংরচনা Paren_স্তূপ_Entry paren_স্তূপ[PAREN_স্তূপ_DEPTH];
     int32_t parenSP;
-    int32_t pushCount;
-    int32_t fixupCount;
+    int32_t ঠেলো_গুনতি;
+    int32_t fixup_গুনতি;
 };
 
-static int8_t highBit(int32_t value);
+স্থির int8_t উপৰেৰ_Bit(int32_t value);
 
-static const UChar32 pairedChars[] = {
+স্থির ধ্রুৱ UChar32 pairedChars[] = {
     0x0028, 0x0029, /* ascii paired punctuation */
     0x003c, 0x003e,
     0x005b, 0x005d,
@@ -75,177 +75,177 @@ static const UChar32 pairedChars[] = {
     0x301a, 0x301b
 };
 
-static void push(UScriptRun *scriptRun, int32_t pairIndex, UScriptCode scriptCode)
+স্থির শূন্য push(UScriptRun *scriptRun, int32_t pairIndex, UScriptCode scriptCode)
 {
-    scriptRun->pushCount  = LIMIT_INC(scriptRun->pushCount);
-    scriptRun->fixupCount = LIMIT_INC(scriptRun->fixupCount);
+    scriptRun->ঠেলো_গুনতি  = LIMIT_INC(scriptRun->ঠেলো_গুনতি);
+    scriptRun->fixup_গুনতি = LIMIT_INC(scriptRun->fixup_গুনতি);
     
     scriptRun->parenSP = INC1(scriptRun->parenSP);
-    scriptRun->parenStack[scriptRun->parenSP].pairIndex  = pairIndex;
-    scriptRun->parenStack[scriptRun->parenSP].scriptCode = scriptCode;
+    scriptRun->paren_স্তূপ[scriptRun->parenSP].pairIndex  = pairIndex;
+    scriptRun->paren_স্তূপ[scriptRun->parenSP].scriptCode = scriptCode;
 }
 
-static void pop(UScriptRun *scriptRun)
+স্থির শূন্য pop(UScriptRun *scriptRun)
 {
-    if (STACK_IS_EMPTY(scriptRun)) {
-        return;
+    যদি (স্তূপ_IS_EMPTY(scriptRun)) {
+        ঘূৰাই;
     }
     
-    if (scriptRun->fixupCount > 0) {
-        scriptRun->fixupCount -= 1;
+    যদি (scriptRun->fixup_গুনতি > 0) {
+        scriptRun->fixup_গুনতি -= 1;
     }
     
-    scriptRun->pushCount -= 1;
+    scriptRun->ঠেলো_গুনতি -= 1;
     scriptRun->parenSP = DEC1(scriptRun->parenSP);
     
     /* If the stack is now empty, reset the stack
        pointers to their initial values.
      */
-    if (STACK_IS_EMPTY(scriptRun)) {
+    যদি (স্তূপ_IS_EMPTY(scriptRun)) {
         scriptRun->parenSP = -1;
     }
 }
 
-static void fixup(UScriptRun *scriptRun, UScriptCode scriptCode)
+স্থির শূন্য fixup(UScriptRun *scriptRun, UScriptCode scriptCode)
 {
-    int32_t fixupSP = DEC(scriptRun->parenSP, scriptRun->fixupCount);
+    int32_t fixupSP = DEC(scriptRun->parenSP, scriptRun->fixup_গুনতি);
     
-    while (scriptRun->fixupCount-- > 0) {
+    যেতিয়ালৈ (scriptRun->fixup_গুনতি-- > 0) {
         fixupSP = INC1(fixupSP);
-        scriptRun->parenStack[fixupSP].scriptCode = scriptCode;
+        scriptRun->paren_স্তূপ[fixupSP].scriptCode = scriptCode;
     }
 }
 
-static int8_t
-highBit(int32_t value)
+স্থির int8_t
+উপৰেৰ_Bit(int32_t value)
 {
     int8_t bit = 0;
 
-    if (value <= 0) {
-        return -32;
+    যদি (value <= 0) {
+        ঘূৰাই -32;
     }
 
-    if (value >= 1 << 16) {
+    যদি (value >= 1 << 16) {
         value >>= 16;
         bit += 16;
     }
 
-    if (value >= 1 << 8) {
+    যদি (value >= 1 << 8) {
         value >>= 8;
         bit += 8;
     }
 
-    if (value >= 1 << 4) {
+    যদি (value >= 1 << 4) {
         value >>= 4;
         bit += 4;
     }
 
-    if (value >= 1 << 2) {
+    যদি (value >= 1 << 2) {
         value >>= 2;
         bit += 2;
     }
 
-    if (value >= 1 << 1) {
+    যদি (value >= 1 << 1) {
         //value >>= 1;
         bit += 1;
     }
 
-    return bit;
+    ঘূৰাই bit;
 }
 
-static int32_t
+স্থির int32_t
 getPairIndex(UChar32 ch)
 {
-    int32_t pairedCharCount = UPRV_LENGTHOF(pairedChars);
-    int32_t pairedCharPower = 1 << highBit(pairedCharCount);
-    int32_t pairedCharExtra = pairedCharCount - pairedCharPower;
+    int32_t paired_Char_গুনতি = UPRV_LENGTHOF(pairedChars);
+    int32_t pairedCharPower = 1 << উপৰেৰ_Bit(paired_Char_গুনতি);
+    int32_t pairedCharExtra = paired_Char_গুনতি - pairedCharPower;
 
     int32_t probe = pairedCharPower;
     int32_t pairIndex = 0;
 
-    if (ch >= pairedChars[pairedCharExtra]) {
+    যদি (ch >= pairedChars[pairedCharExtra]) {
         pairIndex = pairedCharExtra;
     }
 
-    while (probe > (1 << 0)) {
+    যেতিয়ালৈ (probe > (1 << 0)) {
         probe >>= 1;
 
-        if (ch >= pairedChars[pairIndex + probe]) {
+        যদি (ch >= pairedChars[pairIndex + probe]) {
             pairIndex += probe;
         }
     }
 
-    if (pairedChars[pairIndex] != ch) {
+    যদি (pairedChars[pairIndex] != ch) {
         pairIndex = -1;
     }
 
-    return pairIndex;
+    ঘূৰাই pairIndex;
 }
 
-static UBool
+স্থির UBool
 sameScript(UScriptCode scriptOne, UScriptCode scriptTwo)
 {
-    return scriptOne <= USCRIPT_INHERITED || scriptTwo <= USCRIPT_INHERITED || scriptOne == scriptTwo;
+    ঘূৰাই scriptOne <= USCRIPT_INHERITED || scriptTwo <= USCRIPT_INHERITED || scriptOne == scriptTwo;
 }
 
 U_CAPI UScriptRun * U_EXPORT2
-uscript_openRun(const char16_t *src, int32_t length, UErrorCode *pErrorCode)
+uscript_openRun(ধ্রুৱ char16_t *src, int32_t length, UErrorCode *pErrorCode)
 {
     UScriptRun *result = nullptr;
 
-    if (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    যদি (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) {
+        ঘূৰাই nullptr;
     }
 
-    result = (UScriptRun *)uprv_malloc(sizeof (UScriptRun));
+    result = (UScriptRun *)uprv_malloc(পরিমাণ (UScriptRun));
 
-    if (result == nullptr) {
+    যদি (result == nullptr) {
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ঘূৰাই nullptr;
     }
 
     uscript_setRunText(result, src, length, pErrorCode);
 
     /* Release the UScriptRun if uscript_setRunText() returns an error */
-    if (U_FAILURE(*pErrorCode)) {
+    যদি (U_FAILURE(*pErrorCode)) {
         uprv_free(result);
         result = nullptr;
     }
 
-    return result;
+    ঘূৰাই result;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 uscript_closeRun(UScriptRun *scriptRun)
 {
-    if (scriptRun != nullptr) {
+    যদি (scriptRun != nullptr) {
         uprv_free(scriptRun);
     }
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 uscript_resetRun(UScriptRun *scriptRun)
 {
-    if (scriptRun != nullptr) {
+    যদি (scriptRun != nullptr) {
         scriptRun->scriptStart = 0;
         scriptRun->scriptLimit = 0;
         scriptRun->scriptCode  = USCRIPT_INVALID_CODE;
         scriptRun->parenSP     = -1;
-        scriptRun->pushCount   =  0;
-        scriptRun->fixupCount  =  0;
+        scriptRun->ঠেলো_গুনতি   =  0;
+        scriptRun->fixup_গুনতি  =  0;
     }
 }
 
-U_CAPI void U_EXPORT2
-uscript_setRunText(UScriptRun *scriptRun, const char16_t *src, int32_t length, UErrorCode *pErrorCode)
+U_CAPI শূন্য U_EXPORT2
+uscript_setRunText(UScriptRun *scriptRun, ধ্রুৱ char16_t *src, int32_t length, UErrorCode *pErrorCode)
 {
-    if (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    যদি (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) {
+        ঘূৰাই;
     }
 
-    if (scriptRun == nullptr || length < 0 || ((src == nullptr) != (length == 0))) {
+    যদি (scriptRun == nullptr || length < 0 || ((src == nullptr) != (length == 0))) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ঘূৰাই;
     }
 
     scriptRun->textArray  = src;
@@ -260,16 +260,16 @@ uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, U
     UErrorCode error = U_ZERO_ERROR;
 
     /* if we've fallen off the end of the text, we're done */
-    if (scriptRun == nullptr || scriptRun->scriptLimit >= scriptRun->textLength) {
-        return false;
+    যদি (scriptRun == nullptr || scriptRun->scriptLimit >= scriptRun->textLength) {
+        ঘূৰাই মিছা;
     }
     
     SYNC_FIXUP(scriptRun);
     scriptRun->scriptCode = USCRIPT_COMMON;
 
-    for (scriptRun->scriptStart = scriptRun->scriptLimit; scriptRun->scriptLimit < scriptRun->textLength; scriptRun->scriptLimit += 1) {
-        char16_t high = scriptRun->textArray[scriptRun->scriptLimit];
-        UChar32  ch   = high;
+    বাবে (scriptRun->scriptStart = scriptRun->scriptLimit; scriptRun->scriptLimit < scriptRun->textLength; scriptRun->scriptLimit += 1) {
+        char16_t উপৰেৰ = scriptRun->textArray[scriptRun->scriptLimit];
+        UChar32  ch   = উপৰেৰ;
         UScriptCode sc;
         int32_t pairIndex;
 
@@ -277,15 +277,15 @@ uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, U
          * if the character is a high surrogate and it's not the last one
          * in the text, see if it's followed by a low surrogate
          */
-        if (high >= 0xD800 && high <= 0xDBFF && scriptRun->scriptLimit < scriptRun->textLength - 1) {
-            char16_t low = scriptRun->textArray[scriptRun->scriptLimit + 1];
+        যদি (উপৰেৰ >= 0xD800 && উপৰেৰ <= 0xDBFF && scriptRun->scriptLimit < scriptRun->textLength - 1) {
+            char16_t নিচেৰ = scriptRun->textArray[scriptRun->scriptLimit + 1];
 
             /*
              * if it is followed by a low surrogate,
              * consume it and form the full character
              */
-            if (low >= 0xDC00 && low <= 0xDFFF) {
-                ch = (high - 0xD800) * 0x0400 + low - 0xDC00 + 0x10000;
+            যদি (নিচেৰ >= 0xDC00 && নিচেৰ <= 0xDFFF) {
+                ch = (উপৰেৰ - 0xD800) * 0x0400 + নিচেৰ - 0xDC00 + 0x10000;
                 scriptRun->scriptLimit += 1;
             }
         }
@@ -301,24 +301,24 @@ uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, U
          * stack, and use that script code. Any non-matching open
          * characters above it on the stack will be poped.
          */
-        if (pairIndex >= 0) {
-            if ((pairIndex & 1) == 0) {
+        যদি (pairIndex >= 0) {
+            যদি ((pairIndex & 1) == 0) {
                 push(scriptRun, pairIndex, scriptRun->scriptCode);
-            } else {
+            } অন্যথা {
                 int32_t pi = pairIndex & ~1;
 
-                while (STACK_IS_NOT_EMPTY(scriptRun) && TOP(scriptRun).pairIndex != pi) {
+                যেতিয়ালৈ (স্তূপ_IS_NOT_EMPTY(scriptRun) && শীৰ্ষ_2(scriptRun).pairIndex != pi) {
                     pop(scriptRun);
                 }
 
-                if (STACK_IS_NOT_EMPTY(scriptRun)) {
-                    sc = TOP(scriptRun).scriptCode;
+                যদি (স্তূপ_IS_NOT_EMPTY(scriptRun)) {
+                    sc = শীৰ্ষ_2(scriptRun).scriptCode;
                 }
             }
         }
 
-        if (sameScript(scriptRun->scriptCode, sc)) {
-            if (scriptRun->scriptCode <= USCRIPT_INHERITED && sc > USCRIPT_INHERITED) {
+        যদি (sameScript(scriptRun->scriptCode, sc)) {
+            যদি (scriptRun->scriptCode <= USCRIPT_INHERITED && sc > USCRIPT_INHERITED) {
                 scriptRun->scriptCode = sc;
 
                 fixup(scriptRun, scriptRun->scriptCode);
@@ -328,34 +328,34 @@ uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, U
              * if this character is a close paired character,
              * pop the matching open character from the stack
              */
-            if (pairIndex >= 0 && (pairIndex & 1) != 0) {
+            যদি (pairIndex >= 0 && (pairIndex & 1) != 0) {
                 pop(scriptRun);
             }
-        } else {
+        } অন্যথা {
             /*
              * if the run broke on a surrogate pair,
              * end it before the high surrogate
              */
-            if (ch >= 0x10000) {
+            যদি (ch >= 0x10000) {
                 scriptRun->scriptLimit -= 1;
             }
 
-            break;
+            ভঙ্গ;
         }
     }
 
 
-    if (pRunStart != nullptr) {
+    যদি (pRunStart != nullptr) {
         *pRunStart = scriptRun->scriptStart;
     }
 
-    if (pRunLimit != nullptr) {
+    যদি (pRunLimit != nullptr) {
         *pRunLimit = scriptRun->scriptLimit;
     }
 
-    if (pRunScript != nullptr) {
+    যদি (pRunScript != nullptr) {
         *pRunScript = scriptRun->scriptCode;
     }
 
-    return true;
+    ঘূৰাই সঁচা;
 }

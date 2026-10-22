@@ -17,59 +17,59 @@
 *   06/29/2000  helena      Major rewrite of the callback APIs.
 */
 
-#include "unicode/utypes.h"
+#অন্তর্ভাৱ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#যদি !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv_err.h"
-#include "unicode/ucnv.h"
-#include "unicode/uset.h"
-#include "ucnv_cnv.h"
-#include "ucnv_bld.h"
-#include "cmemory.h"
+#অন্তর্ভাৱ "unicode/ucnv_err.h"
+#অন্তর্ভাৱ "unicode/ucnv.h"
+#অন্তর্ভাৱ "unicode/uset.h"
+#অন্তর্ভাৱ "ucnv_cnv.h"
+#অন্তর্ভাৱ "ucnv_bld.h"
+#অন্তর্ভাৱ "cmemory.h"
 
-U_CFUNC void
-ucnv_getCompleteUnicodeSet(const UConverter *cnv,
-                   const USetAdder *sa,
+U_CFUNC শূন্য
+ucnv_getCompleteUnicodeSet(ধ্রুৱ UConverter *cnv,
+                   ধ্রুৱ USetAdder *sa,
                    UConverterUnicodeSet which,
                    UErrorCode *pErrorCode) {
-    (void)cnv;
-    (void)which;
-    (void)pErrorCode;
+    (শূন্য)cnv;
+    (শূন্য)which;
+    (শূন্য)pErrorCode;
     sa->addRange(sa->set, 0, 0x10ffff);
 }
 
-U_CFUNC void
-ucnv_getNonSurrogateUnicodeSet(const UConverter *cnv,
-                               const USetAdder *sa,
+U_CFUNC শূন্য
+ucnv_getNonSurrogateUnicodeSet(ধ্রুৱ UConverter *cnv,
+                               ধ্রুৱ USetAdder *sa,
                                UConverterUnicodeSet which,
                                UErrorCode *pErrorCode) {
-    (void)cnv;
-    (void)which;
-    (void)pErrorCode;
+    (শূন্য)cnv;
+    (শূন্য)which;
+    (শূন্য)pErrorCode;
     sa->addRange(sa->set, 0, 0xd7ff);
     sa->addRange(sa->set, 0xe000, 0x10ffff);
 }
 
-U_CFUNC void
+U_CFUNC শূন্য
 ucnv_fromUWriteBytes(UConverter *cnv,
-                     const char *bytes, int32_t length,
-                     char **target, const char *targetLimit,
+                     ধ্রুৱ ৱর্ণ *bytes, int32_t length,
+                     ৱর্ণ **target, ধ্রুৱ ৱর্ণ *targetLimit,
                      int32_t **offsets,
                      int32_t sourceIndex,
                      UErrorCode *pErrorCode) {
-    char *t=*target;
+    ৱর্ণ *t=*target;
     int32_t *o;
 
     /* write bytes */
-    if(offsets==nullptr || (o=*offsets)==nullptr) {
-        while(length>0 && t<targetLimit) {
+    যদি(offsets==nullptr || (o=*offsets)==nullptr) {
+        যেতিয়ালৈ(length>0 && t<targetLimit) {
             *t++=*bytes++;
             --length;
         }
-    } else {
+    } অন্যথা {
         /* output with offsets */
-        while(length>0 && t<targetLimit) {
+        যেতিয়ালৈ(length>0 && t<targetLimit) {
             *t++=*bytes++;
             *o++=sourceIndex;
             --length;
@@ -79,22 +79,22 @@ ucnv_fromUWriteBytes(UConverter *cnv,
     *target=t;
 
     /* write overflow */
-    if(length>0) {
-        if(cnv!=nullptr) {
-            t=(char *)cnv->charErrorBuffer;
+    যদি(length>0) {
+        যদি(cnv!=nullptr) {
+            t=(ৱর্ণ *)cnv->charErrorBuffer;
             cnv->charErrorBufferLength=(int8_t)length;
-            do {
+            কৰা {
                 *t++=(uint8_t)*bytes++;
-            } while(--length>0);
+            } যেতিয়ালৈ(--length>0);
         }
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
     }
 }
 
-U_CFUNC void
+U_CFUNC শূন্য
 ucnv_toUWriteUChars(UConverter *cnv,
-                    const char16_t *uchars, int32_t length,
-                    char16_t **target, const char16_t *targetLimit,
+                    ধ্রুৱ char16_t *uchars, int32_t length,
+                    char16_t **target, ধ্রুৱ char16_t *targetLimit,
                     int32_t **offsets,
                     int32_t sourceIndex,
                     UErrorCode *pErrorCode) {
@@ -102,14 +102,14 @@ ucnv_toUWriteUChars(UConverter *cnv,
     int32_t *o;
 
     /* write UChars */
-    if(offsets==nullptr || (o=*offsets)==nullptr) {
-        while(length>0 && t<targetLimit) {
+    যদি(offsets==nullptr || (o=*offsets)==nullptr) {
+        যেতিয়ালৈ(length>0 && t<targetLimit) {
             *t++=*uchars++;
             --length;
         }
-    } else {
+    } অন্যথা {
         /* output with offsets */
-        while(length>0 && t<targetLimit) {
+        যেতিয়ালৈ(length>0 && t<targetLimit) {
             *t++=*uchars++;
             *o++=sourceIndex;
             --length;
@@ -119,22 +119,22 @@ ucnv_toUWriteUChars(UConverter *cnv,
     *target=t;
 
     /* write overflow */
-    if(length>0) {
-        if(cnv!=nullptr) {
+    যদি(length>0) {
+        যদি(cnv!=nullptr) {
             t=cnv->UCharErrorBuffer;
             cnv->UCharErrorBufferLength=(int8_t)length;
-            do {
+            কৰা {
                 *t++=*uchars++;
-            } while(--length>0);
+            } যেতিয়ালৈ(--length>0);
         }
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
     }
 }
 
-U_CFUNC void
+U_CFUNC শূন্য
 ucnv_toUWriteCodePoint(UConverter *cnv,
                        UChar32 c,
-                       char16_t **target, const char16_t *targetLimit,
+                       char16_t **target, ধ্রুৱ char16_t *targetLimit,
                        int32_t **offsets,
                        int32_t sourceIndex,
                        UErrorCode *pErrorCode) {
@@ -143,23 +143,23 @@ ucnv_toUWriteCodePoint(UConverter *cnv,
 
     t=*target;
 
-    if(t<targetLimit) {
-        if(c<=0xffff) {
+    যদি(t<targetLimit) {
+        যদি(c<=0xffff) {
             *t++=(char16_t)c;
             c=U_SENTINEL;
-        } else /* c is a supplementary code point */ {
+        } অন্যথা /* c is a supplementary code point */ {
             *t++=U16_LEAD(c);
             c=U16_TRAIL(c);
-            if(t<targetLimit) {
+            যদি(t<targetLimit) {
                 *t++=(char16_t)c;
                 c=U_SENTINEL;
             }
         }
 
         /* write offsets */
-        if(offsets!=nullptr && (o=*offsets)!=nullptr) {
+        যদি(offsets!=nullptr && (o=*offsets)!=nullptr) {
             *o++=sourceIndex;
-            if((*target+1)<t) {
+            যদি((*target+1)<t) {
                 *o++=sourceIndex;
             }
             *offsets=o;
@@ -169,8 +169,8 @@ ucnv_toUWriteCodePoint(UConverter *cnv,
     *target=t;
 
     /* write overflow from c */
-    if(c>=0) {
-        if(cnv!=nullptr) {
+    যদি(c>=0) {
+        যদি(cnv!=nullptr) {
             int8_t i=0;
             U16_APPEND_UNSAFE(cnv->UCharErrorBuffer, i, c);
             cnv->UCharErrorBufferLength=i;

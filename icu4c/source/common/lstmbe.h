@@ -4,23 +4,23 @@
 #ifndef LSTMBE_H
 #define LSTMBE_H
 
-#include "unicode/utypes.h"
+#অন্তর্ভাৱ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#যদি !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/uniset.h"
-#include "unicode/ures.h"
-#include "unicode/utext.h"
-#include "unicode/utypes.h"
+#অন্তর্ভাৱ "unicode/uniset.h"
+#অন্তর্ভাৱ "unicode/ures.h"
+#অন্তর্ভাৱ "unicode/utext.h"
+#অন্তর্ভাৱ "unicode/utypes.h"
 
-#include "brkeng.h"
-#include "dictbe.h"
-#include "uvectr32.h"
+#অন্তর্ভাৱ "brkeng.h"
+#অন্তর্ভাৱ "dictbe.h"
+#অন্তর্ভাৱ "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
 class Vectorizer;
-struct LSTMData;
+সংরচনা LSTMData;
 
 /*******************************************************************
  * LSTMBreakEngine
@@ -33,21 +33,21 @@ struct LSTMData;
  * <p>After it is constructed a LSTMBreakEngine may be shared between
  * threads without synchronization.</p>
  */
-class LSTMBreakEngine : public DictionaryBreakEngine {
-public:
+class LSTMBreakEngine : সার্ৱজনিক DictionaryBreakEngine {
+সার্ৱজনিক:
     /**
      * <p>Constructor.</p>
      */
-    LSTMBreakEngine(const LSTMData* data, const UnicodeSet& set, UErrorCode &status);
+    LSTMBreakEngine(ধ্রুৱ LSTMData* data, ধ্রুৱ UnicodeSet& set, UErrorCode &status);
 
     /**
      * <p>Virtual destructor.</p>
      */
-    virtual ~LSTMBreakEngine();
+    আভাস ~LSTMBreakEngine();
 
-    virtual const char16_t* name() const;
+    আভাস ধ্রুৱ char16_t* name() ধ্রুৱ;
 
-protected:
+রক্ষিত:
     /**
      * <p>Divide up a range of known dictionary characters handled by this break engine.</p>
      *
@@ -58,28 +58,28 @@ protected:
      * @param status Information on any errors encountered.
      * @return The number of breaks found
      */
-     virtual int32_t divideUpDictionaryRange(UText *text,
+     আভাস int32_t divideUpDictionaryRange(UText *text,
                                              int32_t rangeStart,
                                              int32_t rangeEnd,
                                              UVector32 &foundBreaks,
                                              UBool isPhraseBreaking,
-                                             UErrorCode& status) const override;
-private:
-    const LSTMData* fData;
-    const Vectorizer* fVectorizer;
+                                             UErrorCode& status) ধ্রুৱ override;
+গুপ্ত:
+    ধ্রুৱ LSTMData* fData;
+    ধ্রুৱ Vectorizer* fVectorizer;
 };
 
-U_CAPI const LanguageBreakEngine* U_EXPORT2 CreateLSTMBreakEngine(
-    UScriptCode script, const LSTMData* data, UErrorCode& status);
+U_CAPI ধ্রুৱ LanguageBreakEngine* U_EXPORT2 CreateLSTMBreakEngine(
+    UScriptCode script, ধ্রুৱ LSTMData* data, UErrorCode& status);
 
-U_CAPI const LSTMData* U_EXPORT2 CreateLSTMData(
+U_CAPI ধ্রুৱ LSTMData* U_EXPORT2 CreateLSTMData(
     UResourceBundle* rb, UErrorCode& status);
 
-U_CAPI const LSTMData* U_EXPORT2 CreateLSTMDataForScript(
+U_CAPI ধ্রুৱ LSTMData* U_EXPORT2 CreateLSTMDataForScript(
     UScriptCode script, UErrorCode& status);
 
-U_CAPI void U_EXPORT2 DeleteLSTMData(const LSTMData* data);
-U_CAPI const char16_t* U_EXPORT2 LSTMDataName(const LSTMData* data);
+U_CAPI শূন্য U_EXPORT2 DeleteLSTMData(ধ্রুৱ LSTMData* data);
+U_CAPI ধ্রুৱ char16_t* U_EXPORT2 LSTMDataName(ধ্রুৱ LSTMData* data);
 
 U_NAMESPACE_END
 

@@ -20,32 +20,32 @@
 *   implementation functions on the USet implementation.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
-#include "unicode/ucnv.h"
-#include "ucnv_bld.h"
-#include "uset_imp.h"
+#অন্তর্ভাৱ "unicode/utypes.h"
+#অন্তর্ভাৱ "unicode/uset.h"
+#অন্তর্ভাৱ "unicode/ucnv.h"
+#অন্তর্ভাৱ "ucnv_bld.h"
+#অন্তর্ভাৱ "uset_imp.h"
 
-#if !UCONFIG_NO_CONVERSION
+#যদি !UCONFIG_NO_CONVERSION
 
-U_CAPI void U_EXPORT2
-ucnv_getUnicodeSet(const UConverter *cnv,
+U_CAPI শূন্য U_EXPORT2
+ucnv_getUnicodeSet(ধ্রুৱ UConverter *cnv,
                    USet *setFillIn,
                    UConverterUnicodeSet whichSet,
                    UErrorCode *pErrorCode) {
     /* argument checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    যদি(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        ঘূৰাই;
     }
-    if(cnv==nullptr || setFillIn==nullptr || whichSet<UCNV_ROUNDTRIP_SET || UCNV_SET_COUNT<=whichSet) {
+    যদি(cnv==nullptr || setFillIn==nullptr || whichSet<UCNV_ROUNDTRIP_SET || UCNV_SET_গুনতি<=whichSet) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ঘূৰাই;
     }
 
     /* does this converter support this function? */
-    if(cnv->sharedData->impl->getUnicodeSet==nullptr) {
+    যদি(cnv->sharedData->impl->getUnicodeSet==nullptr) {
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        return;
+        ঘূৰাই;
     }
 
     {

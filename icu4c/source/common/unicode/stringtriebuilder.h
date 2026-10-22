@@ -17,11 +17,11 @@
 #ifndef __STRINGTRIEBUILDER_H__
 #define __STRINGTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#অন্তর্ভাৱ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#যদি U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#অন্তর্ভাৱ "unicode/uobject.h"
 
 /**
  * \file
@@ -30,15 +30,15 @@
 
 // Forward declaration.
 /// \cond
-struct UHashtable;
-typedef struct UHashtable UHashtable;
+সংরচনা UHashtable;
+প্রকারনির্দেশ সংরচনা UHashtable UHashtable;
 /// \endcond
 
 /**
  * Build options for BytesTrieBuilder and CharsTrieBuilder.
  * @stable ICU 4.8
  */
-enum UStringTrieBuildOption {
+গণনা UStringTrieBuildOption {
     /**
      * Builds a trie quickly.
      * @stable ICU 4.8
@@ -65,48 +65,48 @@ U_NAMESPACE_BEGIN
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API StringTrieBuilder : public UObject {
-public:
+class U_COMMON_API StringTrieBuilder : সার্ৱজনিক UObject {
+সার্ৱজনিক:
 #ifndef U_HIDE_INTERNAL_API
     /** @internal */
-    static int32_t hashNode(const void *node);
+    স্থির int32_t hash_গ্ৰন্থি(ধ্রুৱ শূন্য *গ্ৰন্থি);
     /** @internal */
-    static UBool equalNodes(const void *left, const void *right);
+    স্থির UBool equalNodes(ধ্রুৱ শূন্য *বাম, ধ্রুৱ শূন্য *ডান);
 #endif  /* U_HIDE_INTERNAL_API */
 
-protected:
+রক্ষিত:
     // Do not enclose the protected default constructor with #ifndef U_HIDE_INTERNAL_API
     // or else the compiler will create a public default constructor.
     /** @internal */
     StringTrieBuilder();
     /** @internal */
-    virtual ~StringTrieBuilder();
+    আভাস ~StringTrieBuilder();
 
 #ifndef U_HIDE_INTERNAL_API
     /** @internal */
-    void createCompactBuilder(int32_t sizeGuess, UErrorCode &errorCode);
+    শূন্য createCompactBuilder(int32_t sizeGuess, UErrorCode &errorCode);
     /** @internal */
-    void deleteCompactBuilder();
+    শূন্য deleteCompactBuilder();
 
     /** @internal */
-    void build(UStringTrieBuildOption buildOption, int32_t elementsLength, UErrorCode &errorCode);
+    শূন্য build(UStringTrieBuildOption buildOption, int32_t elementsLength, UErrorCode &errorCode);
 
     /** @internal */
-    int32_t writeNode(int32_t start, int32_t limit, int32_t unitIndex);
+    int32_t write_গ্ৰন্থি(int32_t start, int32_t limit, int32_t unitIndex);
     /** @internal */
-    int32_t writeBranchSubNode(int32_t start, int32_t limit, int32_t unitIndex, int32_t length);
+    int32_t write_Branch_Sub_গ্ৰন্থি(int32_t start, int32_t limit, int32_t unitIndex, int32_t length);
 #endif  /* U_HIDE_INTERNAL_API */
 
-    class Node;
+    class গ্ৰন্থি_2;
 
 #ifndef U_HIDE_INTERNAL_API
     /** @internal */
-    Node* makeNode(int32_t start,
+    গ্ৰন্থি_2* make_গ্ৰন্থি(int32_t start,
                    int32_t limit,
                    int32_t unitIndex,
                    UErrorCode& errorCode) U_LIFETIME_BOUND;
     /** @internal */
-    Node* makeBranchSubNode(int32_t start,
+    গ্ৰন্থি_2* make_Branch_Sub_গ্ৰন্থি(int32_t start,
                             int32_t limit,
                             int32_t unitIndex,
                             int32_t length,
@@ -114,44 +114,44 @@ protected:
 #endif  /* U_HIDE_INTERNAL_API */
 
     /** @internal */
-    virtual int32_t getElementStringLength(int32_t i) const = 0;
+    আভাস int32_t getElementStringLength(int32_t i) ধ্রুৱ = 0;
     /** @internal */
-    virtual char16_t getElementUnit(int32_t i, int32_t unitIndex) const = 0;
+    আভাস char16_t getElementUnit(int32_t i, int32_t unitIndex) ধ্রুৱ = 0;
     /** @internal */
-    virtual int32_t getElementValue(int32_t i) const = 0;
+    আভাস int32_t get_Element_মান(int32_t i) ধ্রুৱ = 0;
 
     // Finds the first unit index after this one where
     // the first and last element have different units again.
     /** @internal */
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) const = 0;
+    আভাস int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) ধ্রুৱ = 0;
 
     // Number of different units at unitIndex.
     /** @internal */
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const = 0;
+    আভাস int32_t গুনতি_Element_Units(int32_t start, int32_t limit, int32_t unitIndex) ধ্রুৱ = 0;
     /** @internal */
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const = 0;
+    আভাস int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t গুনতি) ধ্রুৱ = 0;
     /** @internal */
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const = 0;
+    আভাস int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) ধ্রুৱ = 0;
 
     /** @internal */
-    virtual UBool matchNodesCanHaveValues() const = 0;
+    আভাস UBool match_Nodes_Can_Have_মানসমূহ() ধ্রুৱ = 0;
 
     /** @internal */
-    virtual int32_t getMaxBranchLinearSubNodeLength() const = 0;
+    আভাস int32_t get_Max_Branch_Linear_Sub_গ্ৰন্থি_Length() ধ্রুৱ = 0;
     /** @internal */
-    virtual int32_t getMinLinearMatch() const = 0;
+    আভাস int32_t getMinLinearMatch() ধ্রুৱ = 0;
     /** @internal */
-    virtual int32_t getMaxLinearMatchLength() const = 0;
+    আভাস int32_t getMaxLinearMatchLength() ধ্রুৱ = 0;
 
 #ifndef U_HIDE_INTERNAL_API
     // max(BytesTrie::kMaxBranchLinearSubNodeLength, UCharsTrie::kMaxBranchLinearSubNodeLength).
     /** @internal */
-    static const int32_t kMaxBranchLinearSubNodeLength=5;
+    স্থির ধ্রুৱ int32_t k_Max_Branch_Linear_Sub_গ্ৰন্থি_Length=5;
 
     // Maximum number of nested split-branch levels for a branch on all 2^16 possible char16_t units.
     // log2(2^16/kMaxBranchLinearSubNodeLength) rounded up.
     /** @internal */
-    static const int32_t kMaxSplitBranchLevels=14;
+    স্থির ধ্রুৱ int32_t kMaxSplitBranchLevels=14;
 
     /**
      * Makes sure that there is only one unique node registered that is
@@ -163,7 +163,7 @@ protected:
      *         an equivalent node if newNode is a duplicate.
      * @internal
      */
-    Node* registerNode(Node* newNode, UErrorCode& errorCode) U_LIFETIME_BOUND;
+    গ্ৰন্থি_2* register_গ্ৰন্থি(গ্ৰন্থি_2* new_গ্ৰন্থি, UErrorCode& errorCode) U_LIFETIME_BOUND;
     /**
      * Makes sure that there is only one unique FinalValueNode registered
      * with this value.
@@ -174,7 +174,7 @@ protected:
      * @return A FinalValueNode with the given value.
      * @internal
      */
-    Node* registerFinalValue(int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND;
+    গ্ৰন্থি_2* register_Final_মান(int32_t মান_2, UErrorCode& errorCode) U_LIFETIME_BOUND;
 #endif  /* U_HIDE_INTERNAL_API */
 
     /*
@@ -203,15 +203,15 @@ protected:
      * @internal
      * \cond
      */
-    class Node : public UObject {
-    public:
-        Node(int32_t initialHash) : hash(initialHash), offset(0) {}
-        inline int32_t hashCode() const { return hash; }
+    class গ্ৰন্থি_2 : সার্ৱজনিক UObject {
+    সার্ৱজনিক:
+        গ্ৰন্থি_2(int32_t initialHash) : hash(initialHash), offset(0) {}
+        অন্তঃস্থ int32_t hashCode() ধ্রুৱ { ঘূৰাই hash; }
         // Handles node==nullptr.
-        static inline int32_t hashCode(const Node *node) { return node==nullptr ? 0 : node->hashCode(); }
+        স্থির অন্তঃস্থ int32_t hashCode(ধ্রুৱ গ্ৰন্থি_2 *গ্ৰন্থি) { ঘূৰাই গ্ৰন্থি==nullptr ? 0 : গ্ৰন্থি->hashCode(); }
         // Base class operator==() compares the actual class types.
-        virtual bool operator==(const Node &other) const;
-        inline bool operator!=(const Node &other) const { return !operator==(other); }
+        আভাস bool operator==(ধ্রুৱ গ্ৰন্থি_2 &other) ধ্রুৱ;
+        অন্তঃস্থ bool operator!=(ধ্রুৱ গ্ৰন্থি_2 &other) ধ্রুৱ { ঘূৰাই !operator==(other); }
         /**
          * Traverses the Node graph and numbers branch edges, with rightmost edges first.
          * This is to avoid writing a duplicate node twice.
@@ -239,23 +239,23 @@ protected:
          * @return An edge number that is at least the maximum-negative
          *         of the input edge number and the numbers of this node and all of its sub-nodes.
          */
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber);
+        আভাস int32_t mark_ডান_Edges_First(int32_t edge_সংখ্যা);
         // write() must set the offset to a positive value.
-        virtual void write(StringTrieBuilder &builder) = 0;
+        আভাস শূন্য লিখ(StringTrieBuilder &builder) = 0;
         // See markRightEdgesFirst.
-        inline void writeUnlessInsideRightEdge(int32_t firstRight, int32_t lastRight,
+        অন্তঃস্থ শূন্য write_Unless_Inside_ডান_Edge(int32_t first_ডান, int32_t last_ডান,
                                                StringTrieBuilder &builder) {
             // Note: Edge numbers are negative, lastRight<=firstRight.
             // If offset>0 then this node and its sub-nodes have been written already
             // and we need not write them again.
             // If this node is part of the unwritten right branch edge,
             // then we wait until that is written.
-            if(offset<0 && (offset<lastRight || firstRight<offset)) {
-                write(builder);
+            যদি(offset<0 && (offset<last_ডান || first_ডান<offset)) {
+                লিখ(builder);
             }
         }
-        inline int32_t getOffset() const { return offset; }
-    protected:
+        অন্তঃস্থ int32_t getOffset() ধ্রুৱ { ঘূৰাই offset; }
+    রক্ষিত:
         int32_t hash;
         int32_t offset;
     };
@@ -268,13 +268,13 @@ protected:
     // !Node::operator==(other) used inside FinalValueNode::operator==(other)
     // will be false if the typeid's are different.
     /** @internal */
-    class FinalValueNode : public Node {
-    public:
-        FinalValueNode(int32_t v) : Node(0x111111u*37u+v), value(v) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
-        int32_t value;
+    class Final_মান_গ্ৰন্থি : সার্ৱজনিক গ্ৰন্থি_2 {
+    সার্ৱজনিক:
+        Final_মান_গ্ৰন্থি(int32_t v) : গ্ৰন্থি_2(0x111111u*37u+v), মান_2(v) {}
+        আভাস bool operator==(ধ্রুৱ গ্ৰন্থি_2 &other) ধ্রুৱ override;
+        আভাস শূন্য লিখ(StringTrieBuilder &builder) override;
+    রক্ষিত:
+        int32_t মান_2;
     };
 #endif  /* U_HIDE_INTERNAL_API */
 
@@ -283,33 +283,33 @@ protected:
     /**
      * @internal 
      */
-    class ValueNode : public Node {
-    public:
-        ValueNode(int32_t initialHash) : Node(initialHash), hasValue(false), value(0) {}
-        virtual bool operator==(const Node &other) const override;
-        void setValue(int32_t v) {
-            hasValue=true;
-            value=v;
+    class মান_গ্ৰন্থি : সার্ৱজনিক গ্ৰন্থি_2 {
+    সার্ৱজনিক:
+        মান_গ্ৰন্থি(int32_t initialHash) : গ্ৰন্থি_2(initialHash), has_মান(false), মান_2(0) {}
+        আভাস bool operator==(ধ্রুৱ গ্ৰন্থি_2 &other) ধ্রুৱ override;
+        শূন্য set_মান(int32_t v) {
+            has_মান=true;
+            মান_2=v;
             hash=hash*37u+v;
         }
-    protected:
-        UBool hasValue;
-        int32_t value;
+    রক্ষিত:
+        UBool has_মান;
+        int32_t মান_2;
     };
 
 #ifndef U_HIDE_INTERNAL_API
     /** 
      * @internal 
      */
-    class IntermediateValueNode : public ValueNode {
-    public:
-        IntermediateValueNode(int32_t v, Node *nextNode)
-                : ValueNode(0x222222u*37u+hashCode(nextNode)), next(nextNode) { setValue(v); }
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
-        Node *next;
+    class Intermediate_মান_গ্ৰন্থি : সার্ৱজনিক মান_গ্ৰন্থি {
+    সার্ৱজনিক:
+        Intermediate_মান_গ্ৰন্থি(int32_t v, গ্ৰন্থি_2 *next_গ্ৰন্থি)
+                : মান_গ্ৰন্থি(0x222222u*37u+hashCode(next_গ্ৰন্থি)), next(next_গ্ৰন্থি) { set_মান(v); }
+        আভাস bool operator==(ধ্রুৱ গ্ৰন্থি_2 &other) ধ্রুৱ override;
+        আভাস int32_t mark_ডান_Edges_First(int32_t edge_সংখ্যা) override;
+        আভাস শূন্য লিখ(StringTrieBuilder &builder) override;
+    রক্ষিত:
+        গ্ৰন্থি_2 *next;
     };
 #endif  /* U_HIDE_INTERNAL_API */
 
@@ -318,111 +318,111 @@ protected:
     /**
      * @internal 
      */
-    class LinearMatchNode : public ValueNode {
-    public:
-        LinearMatchNode(int32_t len, Node *nextNode)
-                : ValueNode((0x333333u*37u+len)*37u+hashCode(nextNode)),
-                  length(len), next(nextNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-    protected:
+    class Linear_Match_গ্ৰন্থি : সার্ৱজনিক মান_গ্ৰন্থি {
+    সার্ৱজনিক:
+        Linear_Match_গ্ৰন্থি(int32_t len, গ্ৰন্থি_2 *next_গ্ৰন্থি)
+                : মান_গ্ৰন্থি((0x333333u*37u+len)*37u+hashCode(next_গ্ৰন্থি)),
+                  length(len), next(next_গ্ৰন্থি) {}
+        আভাস bool operator==(ধ্রুৱ গ্ৰন্থি_2 &other) ধ্রুৱ override;
+        আভাস int32_t mark_ডান_Edges_First(int32_t edge_সংখ্যা) override;
+    রক্ষিত:
         int32_t length;
-        Node *next;
+        গ্ৰন্থি_2 *next;
     };
 
 #ifndef U_HIDE_INTERNAL_API
     /**
      * @internal 
      */
-    class BranchNode : public Node {
-    public:
-        BranchNode(int32_t initialHash) : Node(initialHash) {}
-    protected:
-        int32_t firstEdgeNumber;
+    class Branch_গ্ৰন্থি : সার্ৱজনিক গ্ৰন্থি_2 {
+    সার্ৱজনিক:
+        Branch_গ্ৰন্থি(int32_t initialHash) : গ্ৰন্থি_2(initialHash) {}
+    রক্ষিত:
+        int32_t first_Edge_সংখ্যা;
     };
 
     /**
      * @internal 
      */
-    class ListBranchNode : public BranchNode {
-    public:
-        ListBranchNode() : BranchNode(0x444444), length(0) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
+    class List_Branch_গ্ৰন্থি : সার্ৱজনিক Branch_গ্ৰন্থি {
+    সার্ৱজনিক:
+        List_Branch_গ্ৰন্থি() : Branch_গ্ৰন্থি(0x444444), length(0) {}
+        আভাস bool operator==(ধ্রুৱ গ্ৰন্থি_2 &other) ধ্রুৱ override;
+        আভাস int32_t mark_ডান_Edges_First(int32_t edge_সংখ্যা) override;
+        আভাস শূন্য লিখ(StringTrieBuilder &builder) override;
         // Adds a unit with a final value.
-        void add(int32_t c, int32_t value) {
+        শূন্য add(int32_t c, int32_t মান_2) {
             units[length] = static_cast<char16_t>(c);
             equal[length]=nullptr;
-            values[length]=value;
+            মানসমূহ[length]=মান_2;
             ++length;
-            hash=(hash*37u+c)*37u+value;
+            hash=(hash*37u+c)*37u+মান_2;
         }
         // Adds a unit which leads to another match node.
-        void add(int32_t c, Node *node) {
+        শূন্য add(int32_t c, গ্ৰন্থি_2 *গ্ৰন্থি) {
             units[length] = static_cast<char16_t>(c);
-            equal[length]=node;
-            values[length]=0;
+            equal[length]=গ্ৰন্থি;
+            মানসমূহ[length]=0;
             ++length;
-            hash=(hash*37u+c)*37u+hashCode(node);
+            hash=(hash*37u+c)*37u+hashCode(গ্ৰন্থি);
         }
-    protected:
-        Node *equal[kMaxBranchLinearSubNodeLength];  // nullptr means "has final value".
+    রক্ষিত:
+        গ্ৰন্থি_2 *equal[k_Max_Branch_Linear_Sub_গ্ৰন্থি_Length];  // nullptr means "has final value".
         int32_t length;
-        int32_t values[kMaxBranchLinearSubNodeLength];
-        char16_t units[kMaxBranchLinearSubNodeLength];
+        int32_t মানসমূহ[k_Max_Branch_Linear_Sub_গ্ৰন্থি_Length];
+        char16_t units[k_Max_Branch_Linear_Sub_গ্ৰন্থি_Length];
     };
 
     /**
      * @internal 
      */
-    class SplitBranchNode : public BranchNode {
-    public:
-        SplitBranchNode(char16_t middleUnit, Node *lessThanNode, Node *greaterOrEqualNode)
-                : BranchNode(((0x555555u*37u+middleUnit)*37u+
-                              hashCode(lessThanNode))*37u+hashCode(greaterOrEqualNode)),
-                  unit(middleUnit), lessThan(lessThanNode), greaterOrEqual(greaterOrEqualNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
+    class Split_Branch_গ্ৰন্থি : সার্ৱজনিক Branch_গ্ৰন্থি {
+    সার্ৱজনিক:
+        Split_Branch_গ্ৰন্থি(char16_t মধ্য_Unit, গ্ৰন্থি_2 *less_Than_গ্ৰন্থি, গ্ৰন্থি_2 *greater_Or_Equal_গ্ৰন্থি)
+                : Branch_গ্ৰন্থি(((0x555555u*37u+মধ্য_Unit)*37u+
+                              hashCode(less_Than_গ্ৰন্থি))*37u+hashCode(greater_Or_Equal_গ্ৰন্থি)),
+                  unit(মধ্য_Unit), lessThan(less_Than_গ্ৰন্থি), greaterOrEqual(greater_Or_Equal_গ্ৰন্থি) {}
+        আভাস bool operator==(ধ্রুৱ গ্ৰন্থি_2 &other) ধ্রুৱ override;
+        আভাস int32_t mark_ডান_Edges_First(int32_t edge_সংখ্যা) override;
+        আভাস শূন্য লিখ(StringTrieBuilder &builder) override;
+    রক্ষিত:
         char16_t unit;
-        Node *lessThan;
-        Node *greaterOrEqual;
+        গ্ৰন্থি_2 *lessThan;
+        গ্ৰন্থি_2 *greaterOrEqual;
     };
 
     // Branch head node, for writing the actual node lead unit.
     /** @internal */
-    class BranchHeadNode : public ValueNode {
-    public:
-        BranchHeadNode(int32_t len, Node *subNode)
-                : ValueNode((0x666666u*37u+len)*37u+hashCode(subNode)),
-                  length(len), next(subNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
+    class Branch_Head_গ্ৰন্থি : সার্ৱজনিক মান_গ্ৰন্থি {
+    সার্ৱজনিক:
+        Branch_Head_গ্ৰন্থি(int32_t len, গ্ৰন্থি_2 *sub_গ্ৰন্থি)
+                : মান_গ্ৰন্থি((0x666666u*37u+len)*37u+hashCode(sub_গ্ৰন্থি)),
+                  length(len), next(sub_গ্ৰন্থি) {}
+        আভাস bool operator==(ধ্রুৱ গ্ৰন্থি_2 &other) ধ্রুৱ override;
+        আভাস int32_t mark_ডান_Edges_First(int32_t edge_সংখ্যা) override;
+        আভাস শূন্য লিখ(StringTrieBuilder &builder) override;
+    রক্ষিত:
         int32_t length;
-        Node *next;  // A branch sub-node.
+        গ্ৰন্থি_2 *next;  // A branch sub-node.
     };
 
 #endif  /* U_HIDE_INTERNAL_API */
     /// \endcond
 
     /** @internal */
-    virtual Node *createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                        Node *nextNode) const = 0;
+    আভাস গ্ৰন্থি_2 *create_Linear_Match_গ্ৰন্থি(int32_t i, int32_t unitIndex, int32_t length,
+                                        গ্ৰন্থি_2 *next_গ্ৰন্থি) ধ্রুৱ = 0;
 
     /** @internal */
-    virtual int32_t write(int32_t unit) = 0;
+    আভাস int32_t লিখ(int32_t unit) = 0;
     /** @internal */
-    virtual int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) = 0;
+    আভাস int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) = 0;
     /** @internal */
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) = 0;
+    আভাস int32_t write_মান_And_Final(int32_t i, UBool isFinal) = 0;
     /** @internal */
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) = 0;
+    আভাস int32_t write_মান_And_Type(UBool has_মান, int32_t মান_2, int32_t গ্ৰন্থি) = 0;
     /** @internal */
-    virtual int32_t writeDeltaTo(int32_t jumpTarget) = 0;
+    আভাস int32_t writeDeltaTo(int32_t jumpTarget) = 0;
 };
 
 U_NAMESPACE_END

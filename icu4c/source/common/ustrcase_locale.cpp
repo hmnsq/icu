@@ -17,25 +17,25 @@
 *   were moved here to break dependency cycles among parts of the common library.
 */
 
-#include "unicode/utypes.h"
-#include "uassert.h"
-#include "unicode/brkiter.h"
-#include "unicode/casemap.h"
-#include "unicode/ucasemap.h"
-#include "unicode/uloc.h"
-#include "unicode/ustring.h"
-#include "ucase.h"
-#include "ucasemap_imp.h"
+#অন্তর্ভাৱ "unicode/utypes.h"
+#অন্তর্ভাৱ "uassert.h"
+#অন্তর্ভাৱ "unicode/brkiter.h"
+#অন্তর্ভাৱ "unicode/casemap.h"
+#অন্তর্ভাৱ "unicode/ucasemap.h"
+#অন্তর্ভাৱ "unicode/uloc.h"
+#অন্তর্ভাৱ "unicode/ustring.h"
+#অন্তর্ভাৱ "ucase.h"
+#অন্তর্ভাৱ "ucasemap_imp.h"
 
 U_CFUNC int32_t
-ustrcase_getCaseLocale(const char *locale) {
-    if (locale == nullptr) {
+ustrcase_getCaseLocale(ধ্রুৱ ৱর্ণ *locale) {
+    যদি (locale == nullptr) {
         locale = uloc_getDefault();
     }
-    if (*locale == 0) {
-        return UCASE_LOC_ROOT;
-    } else {
-        return ucase_getCaseLocale(locale);
+    যদি (*locale == 0) {
+        ঘূৰাই UCASE_LOC_মূল;
+    } অন্যথা {
+        ঘূৰাই ucase_getCaseLocale(locale);
     }
 }
 
@@ -43,10 +43,10 @@ ustrcase_getCaseLocale(const char *locale) {
 
 U_CAPI int32_t U_EXPORT2
 u_strToLower(char16_t *dest, int32_t destCapacity,
-             const char16_t *src, int32_t srcLength,
-             const char *locale,
+             ধ্রুৱ char16_t *src, int32_t srcLength,
+             ধ্রুৱ ৱর্ণ *locale,
              UErrorCode *pErrorCode) {
-    return ustrcase_mapWithOverlap(
+    ঘূৰাই ustrcase_mapWithOverlap(
         ustrcase_getCaseLocale(locale), 0, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
@@ -55,10 +55,10 @@ u_strToLower(char16_t *dest, int32_t destCapacity,
 
 U_CAPI int32_t U_EXPORT2
 u_strToUpper(char16_t *dest, int32_t destCapacity,
-             const char16_t *src, int32_t srcLength,
-             const char *locale,
+             ধ্রুৱ char16_t *src, int32_t srcLength,
+             ধ্রুৱ ৱর্ণ *locale,
              UErrorCode *pErrorCode) {
-    return ustrcase_mapWithOverlap(
+    ঘূৰাই ustrcase_mapWithOverlap(
         ustrcase_getCaseLocale(locale), 0, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
@@ -68,11 +68,11 @@ u_strToUpper(char16_t *dest, int32_t destCapacity,
 U_NAMESPACE_BEGIN
 
 int32_t CaseMap::toLower(
-        const char *locale, uint32_t options,
-        const char16_t *src, int32_t srcLength,
+        ধ্রুৱ ৱর্ণ *locale, uint32_t options,
+        ধ্রুৱ char16_t *src, int32_t srcLength,
         char16_t *dest, int32_t destCapacity, Edits *edits,
         UErrorCode &errorCode) {
-    return ustrcase_map(
+    ঘূৰাই ustrcase_map(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
@@ -80,11 +80,11 @@ int32_t CaseMap::toLower(
 }
 
 int32_t CaseMap::toUpper(
-        const char *locale, uint32_t options,
-        const char16_t *src, int32_t srcLength,
+        ধ্রুৱ ৱর্ণ *locale, uint32_t options,
+        ধ্রুৱ char16_t *src, int32_t srcLength,
         char16_t *dest, int32_t destCapacity, Edits *edits,
         UErrorCode &errorCode) {
-    return ustrcase_map(
+    ঘূৰাই ustrcase_map(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,

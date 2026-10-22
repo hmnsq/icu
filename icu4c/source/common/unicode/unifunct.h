@@ -12,11 +12,11 @@
 #ifndef UNIFUNCT_H
 #define UNIFUNCT_H
 
-#include "unicode/utypes.h"
+#অন্তর্ভাৱ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#যদি U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#অন্তর্ভাৱ "unicode/uobject.h"
 
 /**
  * \file 
@@ -35,15 +35,15 @@ class TransliterationRuleData;
  * @author Alan Liu
  * @stable ICU 2.4
  */
-class U_COMMON_API UnicodeFunctor : public UObject {
+class U_COMMON_API UnicodeFunctor : সার্ৱজনিক UObject {
 
-public:
+সার্ৱজনিক:
 
     /**
      * Destructor
      * @stable ICU 2.4
      */
-    virtual ~UnicodeFunctor();
+    আভাস ~UnicodeFunctor();
 
     /**
      * Return a copy of this object.  All UnicodeFunctor objects
@@ -51,7 +51,7 @@ public:
      * UnicodeFunctor to implement cloning.
      * @stable ICU 2.4
      */
-    virtual UnicodeFunctor* clone() const = 0;
+    আভাস UnicodeFunctor* clone() ধ্রুৱ = 0;
 
     /**
      * Cast 'this' to a UnicodeMatcher* pointer and return the
@@ -63,7 +63,7 @@ public:
      * UnicodeFunctor.
      * @stable ICU 2.4
      */
-    virtual UnicodeMatcher* toMatcher() const U_LIFETIME_BOUND;
+    আভাস UnicodeMatcher* toMatcher() ধ্রুৱ U_LIFETIME_BOUND;
 
     /**
      * Cast 'this' to a UnicodeReplacer* pointer and return the
@@ -75,7 +75,7 @@ public:
      * UnicodeFunctor.
      * @stable ICU 2.4
      */
-    virtual UnicodeReplacer* toReplacer() const U_LIFETIME_BOUND;
+    আভাস UnicodeReplacer* toReplacer() ধ্রুৱ U_LIFETIME_BOUND;
 
     /**
      * Return the class ID for this class.  This is useful only for
@@ -83,7 +83,7 @@ public:
      * @return          The class ID for all objects of this class.
      * @stable ICU 2.0
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    স্থির UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * Returns a unique class ID <b>polymorphically</b>.  This method
@@ -100,7 +100,7 @@ public:
      * different class IDs.
      * @stable ICU 2.4
      */
-    virtual UClassID getDynamicClassID() const override = 0;
+    আভাস UClassID getDynamicClassID() ধ্রুৱ override = 0;
 
     /**
      * Set the data object associated with this functor.  The data
@@ -110,9 +110,9 @@ public:
      * changed to pass data object pointers through the API.
      * @internal ICU 2.1
      */
-    virtual void setData(const TransliterationRuleData*) = 0;
+    আভাস শূন্য setData(ধ্রুৱ TransliterationRuleData*) = 0;
 
-protected:
+রক্ষিত:
 
     /**
      * Since this class has pure virtual functions,

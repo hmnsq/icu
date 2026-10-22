@@ -21,12 +21,12 @@
 #ifndef __UCASEMAP_H__
 #define __UCASEMAP_H__
 
-#include "unicode/utypes.h"
-#include "unicode/stringoptions.h"
-#include "unicode/ustring.h"
+#অন্তর্ভাৱ "unicode/utypes.h"
+#অন্তর্ভাৱ "unicode/stringoptions.h"
+#অন্তর্ভাৱ "unicode/ustring.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
+#যদি U_SHOW_CPLUSPLUS_API
+#অন্তর্ভাৱ "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
 /**
@@ -47,8 +47,8 @@
  * Older functions did not use a service object.
  * @stable ICU 3.4
  */
-struct UCaseMap;
-typedef struct UCaseMap UCaseMap; /**< C typedef for struct UCaseMap. @stable ICU 3.4 */
+সংরচনা UCaseMap;
+প্রকারনির্দেশ সংরচনা UCaseMap UCaseMap; /**< C typedef for struct UCaseMap. @stable ICU 3.4 */
 
 /**
  * Open a UCaseMap service object for a locale and a set of options.
@@ -73,17 +73,17 @@ typedef struct UCaseMap UCaseMap; /**< C typedef for struct UCaseMap. @stable IC
  * @stable ICU 3.4
  */
 U_CAPI UCaseMap * U_EXPORT2
-ucasemap_open(const char *locale, uint32_t options, UErrorCode *pErrorCode);
+ucasemap_open(ধ্রুৱ ৱর্ণ *locale, uint32_t options, UErrorCode *pErrorCode);
 
 /**
  * Close a UCaseMap service object.
  * @param csm Object to be closed.
  * @stable ICU 3.4
  */
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 ucasemap_close(UCaseMap *csm);
 
-#if U_SHOW_CPLUSPLUS_API
+#যদি U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -108,8 +108,8 @@ U_NAMESPACE_END
  * @return locale ID
  * @stable ICU 3.4
  */
-U_CAPI const char* U_EXPORT2
-ucasemap_getLocale(const UCaseMap* csm U_LIFETIME_BOUND);
+U_CAPI ধ্রুৱ ৱর্ণ* U_EXPORT2
+ucasemap_getLocale(ধ্রুৱ UCaseMap* csm U_LIFETIME_BOUND);
 
 /**
  * Get the options bit set that is used for case folding and string comparisons.
@@ -118,7 +118,7 @@ ucasemap_getLocale(const UCaseMap* csm U_LIFETIME_BOUND);
  * @stable ICU 3.4
  */
 U_CAPI uint32_t U_EXPORT2
-ucasemap_getOptions(const UCaseMap *csm);
+ucasemap_getOptions(ধ্রুৱ UCaseMap *csm);
 
 /**
  * Set the locale ID that is used for language-dependent case mappings.
@@ -131,8 +131,8 @@ ucasemap_getOptions(const UCaseMap *csm);
  * @see ucasemap_open
  * @stable ICU 3.4
  */
-U_CAPI void U_EXPORT2
-ucasemap_setLocale(UCaseMap *csm, const char *locale, UErrorCode *pErrorCode);
+U_CAPI শূন্য U_EXPORT2
+ucasemap_setLocale(UCaseMap *csm, ধ্রুৱ ৱর্ণ *locale, UErrorCode *pErrorCode);
 
 /**
  * Set the options bit set that is used for case folding and string comparisons.
@@ -145,10 +145,10 @@ ucasemap_setLocale(UCaseMap *csm, const char *locale, UErrorCode *pErrorCode);
  * @see ucasemap_open
  * @stable ICU 3.4
  */
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 ucasemap_setOptions(UCaseMap *csm, uint32_t options, UErrorCode *pErrorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#যদি !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * Get the break iterator that is used for titlecasing.
@@ -157,8 +157,8 @@ ucasemap_setOptions(UCaseMap *csm, uint32_t options, UErrorCode *pErrorCode);
  * @return titlecasing break iterator
  * @stable ICU 3.8
  */
-U_CAPI const UBreakIterator* U_EXPORT2
-ucasemap_getBreakIterator(const UCaseMap* csm U_LIFETIME_BOUND);
+U_CAPI ধ্রুৱ UBreakIterator* U_EXPORT2
+ucasemap_getBreakIterator(ধ্রুৱ UCaseMap* csm U_LIFETIME_BOUND);
 
 /**
  * Set the break iterator that is used for titlecasing.
@@ -180,7 +180,7 @@ ucasemap_getBreakIterator(const UCaseMap* csm U_LIFETIME_BOUND);
  * @see ucasemap_utf8ToTitle
  * @stable ICU 3.8
  */
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 ucasemap_setBreakIterator(UCaseMap *csm, UBreakIterator *iterToAdopt, UErrorCode *pErrorCode);
 
 /**
@@ -232,7 +232,7 @@ ucasemap_setBreakIterator(UCaseMap *csm, UBreakIterator *iterToAdopt, UErrorCode
 U_CAPI int32_t U_EXPORT2
 ucasemap_toTitle(UCaseMap *csm,
                  UChar *dest, int32_t destCapacity,
-                 const UChar *src, int32_t srcLength,
+                 ধ্রুৱ UChar *src, int32_t srcLength,
                  UErrorCode *pErrorCode);
 
 #endif  // UCONFIG_NO_BREAK_ITERATION
@@ -261,9 +261,9 @@ ucasemap_toTitle(UCaseMap *csm,
  * @stable ICU 3.4
  */
 U_CAPI int32_t U_EXPORT2
-ucasemap_utf8ToLower(const UCaseMap *csm,
-                     char *dest, int32_t destCapacity,
-                     const char *src, int32_t srcLength,
+ucasemap_utf8ToLower(ধ্রুৱ UCaseMap *csm,
+                     ৱর্ণ *dest, int32_t destCapacity,
+                     ধ্রুৱ ৱর্ণ *src, int32_t srcLength,
                      UErrorCode *pErrorCode);
 
 /**
@@ -290,12 +290,12 @@ ucasemap_utf8ToLower(const UCaseMap *csm,
  * @stable ICU 3.4
  */
 U_CAPI int32_t U_EXPORT2
-ucasemap_utf8ToUpper(const UCaseMap *csm,
-                     char *dest, int32_t destCapacity,
-                     const char *src, int32_t srcLength,
+ucasemap_utf8ToUpper(ধ্রুৱ UCaseMap *csm,
+                     ৱর্ণ *dest, int32_t destCapacity,
+                     ধ্রুৱ ৱর্ণ *src, int32_t srcLength,
                      UErrorCode *pErrorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#যদি !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * Titlecase a UTF-8 string.
@@ -343,8 +343,8 @@ ucasemap_utf8ToUpper(const UCaseMap *csm,
  */
 U_CAPI int32_t U_EXPORT2
 ucasemap_utf8ToTitle(UCaseMap *csm,
-                    char *dest, int32_t destCapacity,
-                    const char *src, int32_t srcLength,
+                    ৱর্ণ *dest, int32_t destCapacity,
+                    ধ্রুৱ ৱর্ণ *src, int32_t srcLength,
                     UErrorCode *pErrorCode);
 
 #endif
@@ -380,9 +380,9 @@ ucasemap_utf8ToTitle(UCaseMap *csm,
  * @stable ICU 3.8
  */
 U_CAPI int32_t U_EXPORT2
-ucasemap_utf8FoldCase(const UCaseMap *csm,
-                      char *dest, int32_t destCapacity,
-                      const char *src, int32_t srcLength,
+ucasemap_utf8FoldCase(ধ্রুৱ UCaseMap *csm,
+                      ৱর্ণ *dest, int32_t destCapacity,
+                      ধ্রুৱ ৱর্ণ *src, int32_t srcLength,
                       UErrorCode *pErrorCode);
 
 #endif

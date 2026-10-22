@@ -7,20 +7,20 @@
 ********************************************************************************
 */
 
-#include "unicode/utypes.h"
+#অন্তর্ভাৱ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#যদি !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/ubrk.h"
+#অন্তর্ভাৱ "unicode/ubrk.h"
 
-#include "unicode/brkiter.h"
-#include "unicode/uloc.h"
-#include "unicode/ustring.h"
-#include "unicode/uchriter.h"
-#include "unicode/rbbi.h"
-#include "rbbirb.h"
-#include "uassert.h"
-#include "cmemory.h"
+#অন্তর্ভাৱ "unicode/brkiter.h"
+#অন্তর্ভাৱ "unicode/uloc.h"
+#অন্তর্ভাৱ "unicode/ustring.h"
+#অন্তর্ভাৱ "unicode/uchriter.h"
+#অন্তর্ভাৱ "unicode/rbbi.h"
+#অন্তর্ভাৱ "rbbirb.h"
+#অন্তর্ভাৱ "uassert.h"
+#অন্তর্ভাৱ "cmemory.h"
 
 U_NAMESPACE_USE
 
@@ -32,57 +32,57 @@ U_NAMESPACE_USE
 //------------------------------------------------------------------------------
 U_CAPI UBreakIterator* U_EXPORT2
 ubrk_open(UBreakIteratorType type,
-      const char *locale,
-      const char16_t *text,
+      ধ্রুৱ ৱর্ণ *locale,
+      ধ্রুৱ char16_t *text,
       int32_t textLength,
       UErrorCode *status)
 {
 
-  if (U_FAILURE(*status)) return nullptr;
+  যদি (U_FAILURE(*status)) ঘূৰাই nullptr;
 
   BreakIterator *result = nullptr;
 
-  switch(type) {
+  ৱিকল্প(type) {
 
-  case UBRK_CHARACTER:
+  পক্ষ UBRK_CHARACTER:
     result = BreakIterator::createCharacterInstance(Locale(locale), *status);
-    break;
+    ভঙ্গ;
 
-  case UBRK_WORD:
+  পক্ষ UBRK_WORD:
     result = BreakIterator::createWordInstance(Locale(locale), *status);
-    break;
+    ভঙ্গ;
 
-  case UBRK_LINE:
-    result = BreakIterator::createLineInstance(Locale(locale), *status);
-    break;
+  পক্ষ UBRK_সাৰি:
+    result = BreakIterator::create_সাৰি_Instance(Locale(locale), *status);
+    ভঙ্গ;
 
-  case UBRK_SENTENCE:
+  পক্ষ UBRK_SENTENCE:
     result = BreakIterator::createSentenceInstance(Locale(locale), *status);
-    break;
+    ভঙ্গ;
 
-  case UBRK_TITLE:
+  পক্ষ UBRK_TITLE:
     result = BreakIterator::createTitleInstance(Locale(locale), *status);
-    break;
+    ভঙ্গ;
 
-  default:
+  স্ৱভাৱ:
     *status = U_ILLEGAL_ARGUMENT_ERROR;
   }
 
   // check for allocation error
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  যদি (U_FAILURE(*status)) {
+    ঘূৰাই nullptr;
   }
-  if (result == nullptr) {
+  যদি (result == nullptr) {
     *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    ঘূৰাই nullptr;
   }
 
 
   UBreakIterator *uBI = (UBreakIterator *)result;
-  if (text != nullptr) {
+  যদি (text != nullptr) {
       ubrk_setText(uBI, text, textLength, status);
   }
-  return uBI;
+  ঘূৰাই uBI;
 }
 
 
@@ -94,101 +94,101 @@ ubrk_open(UBreakIteratorType type,
 //
 //------------------------------------------------------------------------------
 U_CAPI UBreakIterator* U_EXPORT2
-ubrk_openRules(  const char16_t     *rules,
+ubrk_openRules(  ধ্রুৱ char16_t     *rules,
                        int32_t       rulesLength,
-                 const char16_t     *text,
+                 ধ্রুৱ char16_t     *text,
                        int32_t       textLength,
                        UParseError  *parseErr,
                        UErrorCode   *status)  {
 
-    if (status == nullptr || U_FAILURE(*status)){
-        return nullptr;
+    যদি (status == nullptr || U_FAILURE(*status)){
+        ঘূৰাই nullptr;
     }
 
     BreakIterator *result = nullptr;
     UnicodeString ruleString(rules, rulesLength);
     result = RBBIRuleBuilder::createRuleBasedBreakIterator(ruleString, parseErr, *status);
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    যদি(U_FAILURE(*status)) {
+        ঘূৰাই nullptr;
     }
 
     UBreakIterator *uBI = (UBreakIterator *)result;
-    if (text != nullptr) {
+    যদি (text != nullptr) {
         ubrk_setText(uBI, text, textLength, status);
     }
-    return uBI;
+    ঘূৰাই uBI;
 }
 
 
 U_CAPI UBreakIterator* U_EXPORT2
-ubrk_openBinaryRules(const uint8_t *binaryRules, int32_t rulesLength,
-                     const char16_t *  text, int32_t textLength,
+ubrk_open_দ্বিমিক_Rules(ধ্রুৱ uint8_t *দ্বিমিক_Rules, int32_t rulesLength,
+                     ধ্রুৱ char16_t *  text, int32_t textLength,
                      UErrorCode *   status)
 {
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    যদি (U_FAILURE(*status)) {
+        ঘূৰাই nullptr;
     }
-    if (rulesLength < 0) {
+    যদি (rulesLength < 0) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ঘূৰাই nullptr;
     }
-    LocalPointer<RuleBasedBreakIterator> lpRBBI(new RuleBasedBreakIterator(binaryRules, rulesLength, *status), *status);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    LocalPointer<RuleBasedBreakIterator> lpRBBI(নূতন RuleBasedBreakIterator(দ্বিমিক_Rules, rulesLength, *status), *status);
+    যদি (U_FAILURE(*status)) {
+        ঘূৰাই nullptr;
     }
     UBreakIterator *uBI = reinterpret_cast<UBreakIterator *>(lpRBBI.orphan());
-    if (text != nullptr) {
+    যদি (text != nullptr) {
         ubrk_setText(uBI, text, textLength, status);
     }
-    return uBI;
+    ঘূৰাই uBI;
 }
 
 
 U_CAPI UBreakIterator * U_EXPORT2
 ubrk_safeClone(
-          const UBreakIterator *bi,
-          void * /*stackBuffer*/,
+          ধ্রুৱ UBreakIterator *bi,
+          শূন্য * /*stackBuffer*/,
           int32_t *pBufferSize,
           UErrorCode *status)
 {
-    if (status == nullptr || U_FAILURE(*status)){
-        return nullptr;
+    যদি (status == nullptr || U_FAILURE(*status)){
+        ঘূৰাই nullptr;
     }
-    if (bi == nullptr) {
+    যদি (bi == nullptr) {
        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ঘূৰাই nullptr;
     }
-    if (pBufferSize != nullptr) {
-        int32_t inputSize = *pBufferSize;
+    যদি (pBufferSize != nullptr) {
+        int32_t প্ৰবেশ_Size = *pBufferSize;
         *pBufferSize = 1;
-        if (inputSize == 0) {
-            return nullptr;  // preflighting for deprecated functionality
+        যদি (প্ৰবেশ_Size == 0) {
+            ঘূৰাই nullptr;  // preflighting for deprecated functionality
         }
     }
     BreakIterator *newBI = ((BreakIterator *)bi)->clone();
-    if (newBI == nullptr) {
+    যদি (newBI == nullptr) {
         *status = U_MEMORY_ALLOCATION_ERROR;
-    } else if (pBufferSize != nullptr) {
+    } অন্যথা যদি (pBufferSize != nullptr) {
         *status = U_SAFECLONE_ALLOCATED_WARNING;
     }
-    return (UBreakIterator *)newBI;
+    ঘূৰাই (UBreakIterator *)newBI;
 }
 
 U_CAPI UBreakIterator * U_EXPORT2
-ubrk_clone(const UBreakIterator *bi, UErrorCode *status) {
-    return ubrk_safeClone(bi, nullptr, nullptr, status);
+ubrk_clone(ধ্রুৱ UBreakIterator *bi, UErrorCode *status) {
+    ঘূৰাই ubrk_safeClone(bi, nullptr, nullptr, status);
 }
 
 
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 ubrk_close(UBreakIterator *bi)
 {
     delete (BreakIterator *)bi;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 ubrk_setText(UBreakIterator* bi,
-             const char16_t*    text,
+             ধ্রুৱ char16_t*    text,
              int32_t         textLength,
              UErrorCode*     status)
 {
@@ -201,7 +201,7 @@ ubrk_setText(UBreakIterator* bi,
 
 
 
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 ubrk_setUText(UBreakIterator *bi,
              UText          *text,
              UErrorCode     *status)
@@ -214,38 +214,38 @@ ubrk_setUText(UBreakIterator *bi,
 
 
 U_CAPI int32_t U_EXPORT2
-ubrk_current(const UBreakIterator *bi)
+ubrk_current(ধ্রুৱ UBreakIterator *bi)
 {
 
-  return ((BreakIterator*)bi)->current();
+  ঘূৰাই ((BreakIterator*)bi)->current();
 }
 
 U_CAPI int32_t U_EXPORT2
 ubrk_next(UBreakIterator *bi)
 {
 
-  return ((BreakIterator*)bi)->next();
+  ঘূৰাই ((BreakIterator*)bi)->next();
 }
 
 U_CAPI int32_t U_EXPORT2
 ubrk_previous(UBreakIterator *bi)
 {
 
-  return ((BreakIterator*)bi)->previous();
+  ঘূৰাই ((BreakIterator*)bi)->previous();
 }
 
 U_CAPI int32_t U_EXPORT2
 ubrk_first(UBreakIterator *bi)
 {
 
-  return ((BreakIterator*)bi)->first();
+  ঘূৰাই ((BreakIterator*)bi)->first();
 }
 
 U_CAPI int32_t U_EXPORT2
 ubrk_last(UBreakIterator *bi)
 {
 
-  return ((BreakIterator*)bi)->last();
+  ঘূৰাই ((BreakIterator*)bi)->last();
 }
 
 U_CAPI int32_t U_EXPORT2
@@ -253,7 +253,7 @@ ubrk_preceding(UBreakIterator *bi,
            int32_t offset)
 {
 
-  return ((BreakIterator*)bi)->preceding(offset);
+  ঘূৰাই ((BreakIterator*)bi)->preceding(offset);
 }
 
 U_CAPI int32_t U_EXPORT2
@@ -261,100 +261,100 @@ ubrk_following(UBreakIterator *bi,
            int32_t offset)
 {
 
-  return ((BreakIterator*)bi)->following(offset);
+  ঘূৰাই ((BreakIterator*)bi)->following(offset);
 }
 
-U_CAPI const char* U_EXPORT2
+U_CAPI ধ্রুৱ ৱর্ণ* U_EXPORT2
 ubrk_getAvailable(int32_t index)
 {
 
-  return uloc_getAvailable(index);
+  ঘূৰাই uloc_getAvailable(index);
 }
 
 U_CAPI int32_t U_EXPORT2
-ubrk_countAvailable()
+ubrk_গুনতি_Available()
 {
 
-  return uloc_countAvailable();
+  ঘূৰাই uloc_গুনতি_Available();
 }
 
 
 U_CAPI  UBool U_EXPORT2
 ubrk_isBoundary(UBreakIterator *bi, int32_t offset)
 {
-    return ((BreakIterator*)bi)->isBoundary(offset);
+    ঘূৰাই ((BreakIterator*)bi)->isBoundary(offset);
 }
 
 
 U_CAPI  int32_t U_EXPORT2
 ubrk_getRuleStatus(UBreakIterator *bi)
 {
-    return ((BreakIterator*)bi)->getRuleStatus();
+    ঘূৰাই ((BreakIterator*)bi)->getRuleStatus();
 }
 
 U_CAPI  int32_t U_EXPORT2
 ubrk_getRuleStatusVec(UBreakIterator *bi, int32_t *fillInVec, int32_t capacity, UErrorCode *status)
 {
-    return ((BreakIterator*)bi)->getRuleStatusVec(fillInVec, capacity, *status);
+    ঘূৰাই ((BreakIterator*)bi)->getRuleStatusVec(fillInVec, capacity, *status);
 }
 
 
-U_CAPI const char* U_EXPORT2
-ubrk_getLocaleByType(const UBreakIterator* bi U_LIFETIME_BOUND,
+U_CAPI ধ্রুৱ ৱর্ণ* U_EXPORT2
+ubrk_getLocaleByType(ধ্রুৱ UBreakIterator* bi U_LIFETIME_BOUND,
                      ULocDataLocaleType type,
                      UErrorCode* status)
 {
-    if (bi == nullptr) {
-        if (U_SUCCESS(*status)) {
+    যদি (bi == nullptr) {
+        যদি (U_SUCCESS(*status)) {
             *status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return nullptr;
+        ঘূৰাই nullptr;
     }
-    return ((BreakIterator*)bi)->getLocaleID(type, *status);
+    ঘূৰাই ((BreakIterator*)bi)->getLocaleID(type, *status);
 }
 
 
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 ubrk_refreshUText(UBreakIterator *bi,
                        UText          *text,
                        UErrorCode     *status)
 {
     BreakIterator *bii = reinterpret_cast<BreakIterator *>(bi);
-    bii->refreshInputText(text, *status);
+    bii->refresh_প্ৰবেশ_Text(text, *status);
 }
 
 U_CAPI int32_t U_EXPORT2
-ubrk_getBinaryRules(UBreakIterator *bi,
-                    uint8_t *       binaryRules, int32_t rulesCapacity,
+ubrk_get_দ্বিমিক_Rules(UBreakIterator *bi,
+                    uint8_t *       দ্বিমিক_Rules, int32_t rulesCapacity,
                     UErrorCode *    status)
 {
-    if (U_FAILURE(*status)) {
-        return 0;
+    যদি (U_FAILURE(*status)) {
+        ঘূৰাই 0;
     }
-    if ((binaryRules == nullptr && rulesCapacity > 0) || rulesCapacity < 0) {
+    যদি ((দ্বিমিক_Rules == nullptr && rulesCapacity > 0) || rulesCapacity < 0) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ঘূৰাই 0;
     }
     RuleBasedBreakIterator* rbbi;
-    if ((rbbi = dynamic_cast<RuleBasedBreakIterator*>(reinterpret_cast<BreakIterator*>(bi))) == nullptr) {
+    যদি ((rbbi = dynamic_cast<RuleBasedBreakIterator*>(reinterpret_cast<BreakIterator*>(bi))) == nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ঘূৰাই 0;
     }
     uint32_t rulesLength;
-    const uint8_t * returnedRules = rbbi->getBinaryRules(rulesLength);
-    if (rulesLength > INT32_MAX) {
+    ধ্রুৱ uint8_t * returnedRules = rbbi->get_দ্বিমিক_Rules(rulesLength);
+    যদি (rulesLength > INT32_MAX) {
         *status = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        ঘূৰাই 0;
     }
-    if (binaryRules != nullptr) { // if not preflighting
+    যদি (দ্বিমিক_Rules != nullptr) { // if not preflighting
         // Here we know rulesLength <= INT32_MAX and rulesCapacity >= 0, can cast safely
-        if ((int32_t)rulesLength > rulesCapacity) {
+        যদি ((int32_t)rulesLength > rulesCapacity) {
             *status = U_BUFFER_OVERFLOW_ERROR;
-        } else {
-            uprv_memcpy(binaryRules, returnedRules, rulesLength);
+        } অন্যথা {
+            uprv_memcpy(দ্বিমিক_Rules, returnedRules, rulesLength);
         }
     }
-    return (int32_t)rulesLength;
+    ঘূৰাই (int32_t)rulesLength;
 }
 
 

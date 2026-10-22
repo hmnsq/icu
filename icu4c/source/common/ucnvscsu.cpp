@@ -21,21 +21,21 @@
 *   will result in callback calls.
 */
 
-#include "unicode/utypes.h"
+#অন্তর্ভাৱ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#যদি !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_cb.h"
-#include "unicode/utf16.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "cmemory.h"
+#অন্তর্ভাৱ "unicode/ucnv.h"
+#অন্তর্ভাৱ "unicode/ucnv_cb.h"
+#অন্তর্ভাৱ "unicode/utf16.h"
+#অন্তর্ভাৱ "ucnv_bld.h"
+#অন্তর্ভাৱ "ucnv_cnv.h"
+#অন্তর্ভাৱ "cmemory.h"
 
 /* SCSU definitions --------------------------------------------------------- */
 
 /* SCSU command byte values */
-enum {
+গণনা {
     SQ0=0x01, /* Quote from window pair 0 */
     SQ7=0x08, /* Quote from window pair 7 */
     SDX=0x0B, /* Define a window as extended */
@@ -56,7 +56,7 @@ enum {
     Urs=0xF2  /* reserved */
 };
 
-enum {
+গণনা {
     /*
      * Unicode code points from 3400 to E000 are not adressible by
      * dynamic window, since in these areas no short run alphabets are
@@ -73,7 +73,7 @@ enum {
 };
 
 /* constant offsets for the 8 static windows */
-static const uint32_t staticOffsets[8]={
+স্থির ধ্রুৱ uint32_t staticOffsets[8]={
     0x0000, /* ASCII for quoted tags */
     0x0080, /* Latin - 1 Supplement (for access to punctuation) */
     0x0100, /* Latin Extended-A */
@@ -85,7 +85,7 @@ static const uint32_t staticOffsets[8]={
 };
 
 /* initial offsets for the 8 dynamic (sliding) windows */
-static const uint32_t initialDynamicOffsets[8]={
+স্থির ধ্রুৱ uint32_t initialDynamicOffsets[8]={
     0x0080, /* Latin-1 */
     0x00C0, /* Latin Extended A */
     0x0400, /* Cyrillic */
@@ -97,7 +97,7 @@ static const uint32_t initialDynamicOffsets[8]={
 };
 
 /* Table of fixed predefined Offsets */
-static const uint32_t fixedOffsets[]={
+স্থির ধ্রুৱ uint32_t fixedOffsets[]={
     /* 0xF9 */ 0x00C0, /* Latin-1 Letters + half of Latin Extended A */
     /* 0xFA */ 0x0250, /* IPA extensions */
     /* 0xFB */ 0x0370, /* Greek */
@@ -108,7 +108,7 @@ static const uint32_t fixedOffsets[]={
 };
 
 /* state values */
-enum {
+গণনা {
     readCommand,
     quotePairOne,
     quotePairTwo,
@@ -118,7 +118,7 @@ enum {
     defineOne
 };
 
-typedef struct SCSUData {
+প্রকারনির্দেশ সংরচনা SCSUData {
     /* dynamic window offsets, initialize to default values from initialDynamicOffsets */
     uint32_t toUDynamicOffsets[8];
     uint32_t fromUDynamicOffsets[8];
@@ -146,68 +146,68 @@ typedef struct SCSUData {
     int8_t windowUse[8];
 } SCSUData;
 
-static const int8_t initialWindowUse[8]={ 7, 0, 3, 2, 4, 5, 6, 1 };
-static const int8_t initialWindowUse_ja[8]={ 3, 2, 4, 1, 0, 7, 5, 6 };
+স্থির ধ্রুৱ int8_t initialWindowUse[8]={ 7, 0, 3, 2, 4, 5, 6, 1 };
+স্থির ধ্রুৱ int8_t initialWindowUse_ja[8]={ 3, 2, 4, 1, 0, 7, 5, 6 };
 
-enum {
+গণনা {
     lGeneric, l_ja
 };
 
 /* SCSU setup functions ----------------------------------------------------- */
 U_CDECL_BEGIN
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _SCSUReset(UConverter *cnv, UConverterResetChoice choice) {
     SCSUData *scsu=(SCSUData *)cnv->extraInfo;
 
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    যদি(choice<=UCNV_RESET_TO_UNICODE) {
         /* reset toUnicode */
         uprv_memcpy(scsu->toUDynamicOffsets, initialDynamicOffsets, 32);
 
-        scsu->toUIsSingleByteMode=true;
+        scsu->toUIsSingleByteMode=সঁচা;
         scsu->toUState=readCommand;
         scsu->toUQuoteWindow=scsu->toUDynamicWindow=0;
         scsu->toUByteOne=0;
 
         cnv->toULength=0;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
+    যদি(choice!=UCNV_RESET_TO_UNICODE) {
         /* reset fromUnicode */
         uprv_memcpy(scsu->fromUDynamicOffsets, initialDynamicOffsets, 32);
 
-        scsu->fromUIsSingleByteMode=true;
+        scsu->fromUIsSingleByteMode=সঁচা;
         scsu->fromUDynamicWindow=0;
 
         scsu->nextWindowUseIndex=0;
-        switch(scsu->locale) {
-        case l_ja:
+        ৱিকল্প(scsu->locale) {
+        পক্ষ l_ja:
             uprv_memcpy(scsu->windowUse, initialWindowUse_ja, 8);
-            break;
-        default:
+            ভঙ্গ;
+        স্ৱভাৱ:
             uprv_memcpy(scsu->windowUse, initialWindowUse, 8);
-            break;
+            ভঙ্গ;
         }
 
         cnv->fromUChar32=0;
     }
 }
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _SCSUOpen(UConverter *cnv,
           UConverterLoadArgs *pArgs,
           UErrorCode *pErrorCode) {
-    const char *locale=pArgs->locale;
-    if(pArgs->onlyTestIsLoadable) {
-        return;
+    ধ্রুৱ ৱর্ণ *locale=pArgs->locale;
+    যদি(pArgs->onlyTestIsLoadable) {
+        ঘূৰাই;
     }
-    cnv->extraInfo=uprv_malloc(sizeof(SCSUData));
-    if(cnv->extraInfo!=nullptr) {
-        if(locale!=nullptr && locale[0]=='j' && locale[1]=='a' && (locale[2]==0 || locale[2]=='_')) {
+    cnv->extraInfo=uprv_malloc(পরিমাণ(SCSUData));
+    যদি(cnv->extraInfo!=nullptr) {
+        যদি(locale!=nullptr && locale[0]=='j' && locale[1]=='a' && (locale[2]==0 || locale[2]=='_')) {
             ((SCSUData *)cnv->extraInfo)->locale=l_ja;
-        } else {
+        } অন্যথা {
             ((SCSUData *)cnv->extraInfo)->locale=lGeneric;
         }
         _SCSUReset(cnv, UCNV_RESET_BOTH);
-    } else {
+    } অন্যথা {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
     }
 
@@ -216,10 +216,10 @@ _SCSUOpen(UConverter *cnv,
     cnv->subCharLen=-1;
 }
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _SCSUClose(UConverter *cnv) {
-    if(cnv->extraInfo!=nullptr) {
-        if(!cnv->isExtraLocal) {
+    যদি(cnv->extraInfo!=nullptr) {
+        যদি(!cnv->isExtraLocal) {
             uprv_free(cnv->extraInfo);
         }
         cnv->extraInfo=nullptr;
@@ -228,14 +228,14 @@ _SCSUClose(UConverter *cnv) {
 
 /* SCSU-to-Unicode conversion functions ------------------------------------- */
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _SCSUToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
                           UErrorCode *pErrorCode) {
     UConverter *cnv;
     SCSUData *scsu;
-    const uint8_t *source, *sourceLimit;
+    ধ্রুৱ uint8_t *source, *sourceLimit;
     char16_t *target;
-    const char16_t *targetLimit;
+    ধ্রুৱ char16_t *targetLimit;
     int32_t *offsets;
     UBool isSingleByteMode;
     uint8_t state, byteOne;
@@ -249,8 +249,8 @@ _SCSUToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     cnv=pArgs->converter;
     scsu=(SCSUData *)cnv->extraInfo;
 
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
+    source=(ধ্রুৱ uint8_t *)pArgs->source;
+    sourceLimit=(ধ্রুৱ uint8_t *)pArgs->sourceLimit;
     target=pArgs->target;
     targetLimit=pArgs->targetLimit;
     offsets=pArgs->offsets;
@@ -285,45 +285,45 @@ _SCSUToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
      * The callback handling is done by returning with an error code.
      * The conversion framework actually calls the callback function.
      */
-    if(isSingleByteMode) {
+    যদি(isSingleByteMode) {
         /* fast path for single-byte mode */
-        if(state==readCommand) {
+        যদি(state==readCommand) {
 fastSingle:
-            while(source<sourceLimit && target<targetLimit && (b=*source)>=0x20) {
+            যেতিয়ালৈ(source<sourceLimit && target<targetLimit && (b=*source)>=0x20) {
                 ++source;
                 ++nextSourceIndex;
-                if(b<=0x7f) {
+                যদি(b<=0x7f) {
                     /* write US-ASCII graphic character or DEL */
                     *target++=(char16_t)b;
-                    if(offsets!=nullptr) {
+                    যদি(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
-                } else {
+                } অন্যথা {
                     /* write from dynamic window */
                     uint32_t c=scsu->toUDynamicOffsets[dynamicWindow]+(b&0x7f);
-                    if(c<=0xffff) {
+                    যদি(c<=0xffff) {
                         *target++=(char16_t)c;
-                        if(offsets!=nullptr) {
+                        যদি(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                         }
-                    } else {
+                    } অন্যথা {
                         /* output surrogate pair */
                         *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
+                        যদি(target<targetLimit) {
                             *target++=(char16_t)(0xdc00|(c&0x3ff));
-                            if(offsets!=nullptr) {
+                            যদি(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                                 *offsets++=sourceIndex;
                             }
-                        } else {
+                        } অন্যথা {
                             /* target overflow */
-                            if(offsets!=nullptr) {
+                            যদি(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                             }
                             cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
                             cnv->UCharErrorBufferLength=1;
                             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                            goto endloop;
+                            গচ্ছ endloop;
                         }
                     }
                 }
@@ -333,153 +333,153 @@ fastSingle:
 
         /* normal state machine for single-byte mode, minus handling for what fastSingle covers */
 singleByteMode:
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+        যেতিয়ালৈ(source<sourceLimit) {
+            যদি(target>=targetLimit) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                ভঙ্গ;
             }
             b=*source++;
             ++nextSourceIndex;
-            switch(state) {
-            case readCommand:
+            ৱিকল্প(state) {
+            পক্ষ readCommand:
                 /* redundant conditions are commented out */
                 /* here: b<0x20 because otherwise we would be in fastSingle */
-                if((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+                যদি((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
                     *target++=(char16_t)b;
-                    if(offsets!=nullptr) {
+                    যদি(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
                     sourceIndex=nextSourceIndex;
-                    goto fastSingle;
-                } else if(SC0<=b) {
-                    if(b<=SC7) {
+                    গচ্ছ fastSingle;
+                } অন্যথা যদি(SC0<=b) {
+                    যদি(b<=SC7) {
                         dynamicWindow=(int8_t)(b-SC0);
                         sourceIndex=nextSourceIndex;
-                        goto fastSingle;
-                    } else /* if(SD0<=b && b<=SD7) */ {
+                        গচ্ছ fastSingle;
+                    } অন্যথা /* if(SD0<=b && b<=SD7) */ {
                         dynamicWindow=(int8_t)(b-SD0);
                         state=defineOne;
                     }
-                } else if(/* SQ0<=b && */ b<=SQ7) {
+                } অন্যথা যদি(/* SQ0<=b && */ b<=SQ7) {
                     quoteWindow=(int8_t)(b-SQ0);
                     state=quoteOne;
-                } else if(b==SDX) {
+                } অন্যথা যদি(b==SDX) {
                     state=definePairOne;
-                } else if(b==SQU) {
+                } অন্যথা যদি(b==SQU) {
                     state=quotePairOne;
-                } else if(b==SCU) {
+                } অন্যথা যদি(b==SCU) {
                     sourceIndex=nextSourceIndex;
-                    isSingleByteMode=false;
-                    goto fastUnicode;
-                } else /* Srs */ {
+                    isSingleByteMode=মিছা;
+                    গচ্ছ fastUnicode;
+                } অন্যথা /* Srs */ {
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
-                    goto endloop;
+                    গচ্ছ endloop;
                 }
 
                 /* store the first byte of a multibyte sequence in toUBytes[] */
                 cnv->toUBytes[0]=b;
                 cnv->toULength=1;
-                break;
-            case quotePairOne:
+                ভঙ্গ;
+            পক্ষ quotePairOne:
                 byteOne=b;
                 cnv->toUBytes[1]=b;
                 cnv->toULength=2;
                 state=quotePairTwo;
-                break;
-            case quotePairTwo:
+                ভঙ্গ;
+            পক্ষ quotePairTwo:
                 *target++=(char16_t)((byteOne<<8)|b);
-                if(offsets!=nullptr) {
+                যদি(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 sourceIndex=nextSourceIndex;
                 state=readCommand;
-                goto fastSingle;
-            case quoteOne:
-                if(b<0x80) {
+                গচ্ছ fastSingle;
+            পক্ষ quoteOne:
+                যদি(b<0x80) {
                     /* all static offsets are in the BMP */
                     *target++=(char16_t)(staticOffsets[quoteWindow]+b);
-                    if(offsets!=nullptr) {
+                    যদি(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
-                } else {
+                } অন্যথা {
                     /* write from dynamic window */
                     uint32_t c=scsu->toUDynamicOffsets[quoteWindow]+(b&0x7f);
-                    if(c<=0xffff) {
+                    যদি(c<=0xffff) {
                         *target++=(char16_t)c;
-                        if(offsets!=nullptr) {
+                        যদি(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                         }
-                    } else {
+                    } অন্যথা {
                         /* output surrogate pair */
                         *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
+                        যদি(target<targetLimit) {
                             *target++=(char16_t)(0xdc00|(c&0x3ff));
-                            if(offsets!=nullptr) {
+                            যদি(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                                 *offsets++=sourceIndex;
                             }
-                        } else {
+                        } অন্যথা {
                             /* target overflow */
-                            if(offsets!=nullptr) {
+                            যদি(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                             }
                             cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
                             cnv->UCharErrorBufferLength=1;
                             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                            goto endloop;
+                            গচ্ছ endloop;
                         }
                     }
                 }
                 sourceIndex=nextSourceIndex;
                 state=readCommand;
-                goto fastSingle;
-            case definePairOne:
+                গচ্ছ fastSingle;
+            পক্ষ definePairOne:
                 dynamicWindow=(int8_t)((b>>5)&7);
                 byteOne=(uint8_t)(b&0x1f);
                 cnv->toUBytes[1]=b;
                 cnv->toULength=2;
                 state=definePairTwo;
-                break;
-            case definePairTwo:
+                ভঙ্গ;
+            পক্ষ definePairTwo:
                 scsu->toUDynamicOffsets[dynamicWindow]=0x10000+(byteOne<<15UL | b<<7UL);
                 sourceIndex=nextSourceIndex;
                 state=readCommand;
-                goto fastSingle;
-            case defineOne:
-                if(b==0) {
+                গচ্ছ fastSingle;
+            পক্ষ defineOne:
+                যদি(b==0) {
                     /* callback(illegal): Reserved window offset value 0 */
                     cnv->toUBytes[1]=b;
                     cnv->toULength=2;
-                    goto endloop;
-                } else if(b<gapThreshold) {
+                    গচ্ছ endloop;
+                } অন্যথা যদি(b<gapThreshold) {
                     scsu->toUDynamicOffsets[dynamicWindow]=b<<7UL;
-                } else if((uint8_t)(b-gapThreshold)<(reservedStart-gapThreshold)) {
+                } অন্যথা যদি((uint8_t)(b-gapThreshold)<(reservedStart-gapThreshold)) {
                     scsu->toUDynamicOffsets[dynamicWindow]=(b<<7UL)+gapOffset;
-                } else if(b>=fixedThreshold) {
+                } অন্যথা যদি(b>=fixedThreshold) {
                     scsu->toUDynamicOffsets[dynamicWindow]=fixedOffsets[b-fixedThreshold];
-                } else {
+                } অন্যথা {
                     /* callback(illegal): Reserved window offset value 0xa8..0xf8 */
                     cnv->toUBytes[1]=b;
                     cnv->toULength=2;
-                    goto endloop;
+                    গচ্ছ endloop;
                 }
                 sourceIndex=nextSourceIndex;
                 state=readCommand;
-                goto fastSingle;
+                গচ্ছ fastSingle;
             }
         }
-    } else {
+    } অন্যথা {
         /* fast path for Unicode mode */
-        if(state==readCommand) {
+        যদি(state==readCommand) {
 fastUnicode:
-            while(source+1<sourceLimit && target<targetLimit && (uint8_t)((b=*source)-UC0)>(Urs-UC0)) {
+            যেতিয়ালৈ(source+1<sourceLimit && target<targetLimit && (uint8_t)((b=*source)-UC0)>(Urs-UC0)) {
                 *target++=(char16_t)((b<<8)|source[1]);
-                if(offsets!=nullptr) {
+                যদি(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 sourceIndex=nextSourceIndex;
@@ -490,75 +490,75 @@ fastUnicode:
 
         /* normal state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+        যেতিয়ালৈ(source<sourceLimit) {
+            যদি(target>=targetLimit) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                ভঙ্গ;
             }
             b=*source++;
             ++nextSourceIndex;
-            switch(state) {
-            case readCommand:
-                if((uint8_t)(b-UC0)>(Urs-UC0)) {
+            ৱিকল্প(state) {
+            পক্ষ readCommand:
+                যদি((uint8_t)(b-UC0)>(Urs-UC0)) {
                     byteOne=b;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=quotePairTwo;
-                } else if(/* UC0<=b && */ b<=UC7) {
+                } অন্যথা যদি(/* UC0<=b && */ b<=UC7) {
                     dynamicWindow=(int8_t)(b-UC0);
                     sourceIndex=nextSourceIndex;
-                    isSingleByteMode=true;
-                    goto fastSingle;
-                } else if(/* UD0<=b && */ b<=UD7) {
+                    isSingleByteMode=সঁচা;
+                    গচ্ছ fastSingle;
+                } অন্যথা যদি(/* UD0<=b && */ b<=UD7) {
                     dynamicWindow=(int8_t)(b-UD0);
-                    isSingleByteMode=true;
+                    isSingleByteMode=সঁচা;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=defineOne;
-                    goto singleByteMode;
-                } else if(b==UDX) {
-                    isSingleByteMode=true;
+                    গচ্ছ singleByteMode;
+                } অন্যথা যদি(b==UDX) {
+                    isSingleByteMode=সঁচা;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=definePairOne;
-                    goto singleByteMode;
-                } else if(b==UQU) {
+                    গচ্ছ singleByteMode;
+                } অন্যথা যদি(b==UQU) {
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=quotePairOne;
-                } else /* Urs */ {
+                } অন্যথা /* Urs */ {
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
-                    goto endloop;
+                    গচ্ছ endloop;
                 }
-                break;
-            case quotePairOne:
+                ভঙ্গ;
+            পক্ষ quotePairOne:
                 byteOne=b;
                 cnv->toUBytes[1]=b;
                 cnv->toULength=2;
                 state=quotePairTwo;
-                break;
-            case quotePairTwo:
+                ভঙ্গ;
+            পক্ষ quotePairTwo:
                 *target++=(char16_t)((byteOne<<8)|b);
-                if(offsets!=nullptr) {
+                যদি(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 sourceIndex=nextSourceIndex;
                 state=readCommand;
-                goto fastUnicode;
+                গচ্ছ fastUnicode;
             }
         }
     }
 endloop:
 
     /* set the converter state back into UConverter */
-    if(U_FAILURE(*pErrorCode) && *pErrorCode!=U_BUFFER_OVERFLOW_ERROR) {
+    যদি(U_FAILURE(*pErrorCode) && *pErrorCode!=U_BUFFER_OVERFLOW_ERROR) {
         /* reset to deal with the next character */
         state=readCommand;
-    } else if(state==readCommand) {
+    } অন্যথা যদি(state==readCommand) {
         /* not in a multi-byte sequence, reset toULength */
         cnv->toULength=0;
     }
@@ -569,7 +569,7 @@ endloop:
     scsu->toUByteOne=byteOne;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
+    pArgs->source=(ধ্রুৱ ৱর্ণ *)source;
     pArgs->target=target;
     pArgs->offsets=offsets;
 }
@@ -581,14 +581,14 @@ endloop:
  * re-copy the original function and remove the variables
  * offsets, sourceIndex, and nextSourceIndex.
  */
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _SCSUToUnicode(UConverterToUnicodeArgs *pArgs,
                UErrorCode *pErrorCode) {
     UConverter *cnv;
     SCSUData *scsu;
-    const uint8_t *source, *sourceLimit;
+    ধ্রুৱ uint8_t *source, *sourceLimit;
     char16_t *target;
-    const char16_t *targetLimit;
+    ধ্রুৱ char16_t *targetLimit;
     UBool isSingleByteMode;
     uint8_t state, byteOne;
     int8_t quoteWindow, dynamicWindow;
@@ -599,8 +599,8 @@ _SCSUToUnicode(UConverterToUnicodeArgs *pArgs,
     cnv=pArgs->converter;
     scsu=(SCSUData *)cnv->extraInfo;
 
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
+    source=(ধ্রুৱ uint8_t *)pArgs->source;
+    sourceLimit=(ধ্রুৱ uint8_t *)pArgs->sourceLimit;
     target=pArgs->target;
     targetLimit=pArgs->targetLimit;
 
@@ -630,31 +630,31 @@ _SCSUToUnicode(UConverterToUnicodeArgs *pArgs,
      * The callback handling is done by returning with an error code.
      * The conversion framework actually calls the callback function.
      */
-    if(isSingleByteMode) {
+    যদি(isSingleByteMode) {
         /* fast path for single-byte mode */
-        if(state==readCommand) {
+        যদি(state==readCommand) {
 fastSingle:
-            while(source<sourceLimit && target<targetLimit && (b=*source)>=0x20) {
+            যেতিয়ালৈ(source<sourceLimit && target<targetLimit && (b=*source)>=0x20) {
                 ++source;
-                if(b<=0x7f) {
+                যদি(b<=0x7f) {
                     /* write US-ASCII graphic character or DEL */
                     *target++=(char16_t)b;
-                } else {
+                } অন্যথা {
                     /* write from dynamic window */
                     uint32_t c=scsu->toUDynamicOffsets[dynamicWindow]+(b&0x7f);
-                    if(c<=0xffff) {
+                    যদি(c<=0xffff) {
                         *target++=(char16_t)c;
-                    } else {
+                    } অন্যথা {
                         /* output surrogate pair */
                         *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
+                        যদি(target<targetLimit) {
                             *target++=(char16_t)(0xdc00|(c&0x3ff));
-                        } else {
+                        } অন্যথা {
                             /* target overflow */
                             cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
                             cnv->UCharErrorBufferLength=1;
                             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                            goto endloop;
+                            গচ্ছ endloop;
                         }
                     }
                 }
@@ -663,124 +663,124 @@ fastSingle:
 
         /* normal state machine for single-byte mode, minus handling for what fastSingle covers */
 singleByteMode:
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+        যেতিয়ালৈ(source<sourceLimit) {
+            যদি(target>=targetLimit) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                ভঙ্গ;
             }
             b=*source++;
-            switch(state) {
-            case readCommand:
+            ৱিকল্প(state) {
+            পক্ষ readCommand:
                 /* redundant conditions are commented out */
                 /* here: b<0x20 because otherwise we would be in fastSingle */
-                if((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+                যদি((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
                     *target++=(char16_t)b;
-                    goto fastSingle;
-                } else if(SC0<=b) {
-                    if(b<=SC7) {
+                    গচ্ছ fastSingle;
+                } অন্যথা যদি(SC0<=b) {
+                    যদি(b<=SC7) {
                         dynamicWindow=(int8_t)(b-SC0);
-                        goto fastSingle;
-                    } else /* if(SD0<=b && b<=SD7) */ {
+                        গচ্ছ fastSingle;
+                    } অন্যথা /* if(SD0<=b && b<=SD7) */ {
                         dynamicWindow=(int8_t)(b-SD0);
                         state=defineOne;
                     }
-                } else if(/* SQ0<=b && */ b<=SQ7) {
+                } অন্যথা যদি(/* SQ0<=b && */ b<=SQ7) {
                     quoteWindow=(int8_t)(b-SQ0);
                     state=quoteOne;
-                } else if(b==SDX) {
+                } অন্যথা যদি(b==SDX) {
                     state=definePairOne;
-                } else if(b==SQU) {
+                } অন্যথা যদি(b==SQU) {
                     state=quotePairOne;
-                } else if(b==SCU) {
-                    isSingleByteMode=false;
-                    goto fastUnicode;
-                } else /* Srs */ {
+                } অন্যথা যদি(b==SCU) {
+                    isSingleByteMode=মিছা;
+                    গচ্ছ fastUnicode;
+                } অন্যথা /* Srs */ {
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
-                    goto endloop;
+                    গচ্ছ endloop;
                 }
 
                 /* store the first byte of a multibyte sequence in toUBytes[] */
                 cnv->toUBytes[0]=b;
                 cnv->toULength=1;
-                break;
-            case quotePairOne:
+                ভঙ্গ;
+            পক্ষ quotePairOne:
                 byteOne=b;
                 cnv->toUBytes[1]=b;
                 cnv->toULength=2;
                 state=quotePairTwo;
-                break;
-            case quotePairTwo:
+                ভঙ্গ;
+            পক্ষ quotePairTwo:
                 *target++=(char16_t)((byteOne<<8)|b);
                 state=readCommand;
-                goto fastSingle;
-            case quoteOne:
-                if(b<0x80) {
+                গচ্ছ fastSingle;
+            পক্ষ quoteOne:
+                যদি(b<0x80) {
                     /* all static offsets are in the BMP */
                     *target++=(char16_t)(staticOffsets[quoteWindow]+b);
-                } else {
+                } অন্যথা {
                     /* write from dynamic window */
                     uint32_t c=scsu->toUDynamicOffsets[quoteWindow]+(b&0x7f);
-                    if(c<=0xffff) {
+                    যদি(c<=0xffff) {
                         *target++=(char16_t)c;
-                    } else {
+                    } অন্যথা {
                         /* output surrogate pair */
                         *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
+                        যদি(target<targetLimit) {
                             *target++=(char16_t)(0xdc00|(c&0x3ff));
-                        } else {
+                        } অন্যথা {
                             /* target overflow */
                             cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
                             cnv->UCharErrorBufferLength=1;
                             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                            goto endloop;
+                            গচ্ছ endloop;
                         }
                     }
                 }
                 state=readCommand;
-                goto fastSingle;
-            case definePairOne:
+                গচ্ছ fastSingle;
+            পক্ষ definePairOne:
                 dynamicWindow=(int8_t)((b>>5)&7);
                 byteOne=(uint8_t)(b&0x1f);
                 cnv->toUBytes[1]=b;
                 cnv->toULength=2;
                 state=definePairTwo;
-                break;
-            case definePairTwo:
+                ভঙ্গ;
+            পক্ষ definePairTwo:
                 scsu->toUDynamicOffsets[dynamicWindow]=0x10000+(byteOne<<15UL | b<<7UL);
                 state=readCommand;
-                goto fastSingle;
-            case defineOne:
-                if(b==0) {
+                গচ্ছ fastSingle;
+            পক্ষ defineOne:
+                যদি(b==0) {
                     /* callback(illegal): Reserved window offset value 0 */
                     cnv->toUBytes[1]=b;
                     cnv->toULength=2;
-                    goto endloop;
-                } else if(b<gapThreshold) {
+                    গচ্ছ endloop;
+                } অন্যথা যদি(b<gapThreshold) {
                     scsu->toUDynamicOffsets[dynamicWindow]=b<<7UL;
-                } else if((uint8_t)(b-gapThreshold)<(reservedStart-gapThreshold)) {
+                } অন্যথা যদি((uint8_t)(b-gapThreshold)<(reservedStart-gapThreshold)) {
                     scsu->toUDynamicOffsets[dynamicWindow]=(b<<7UL)+gapOffset;
-                } else if(b>=fixedThreshold) {
+                } অন্যথা যদি(b>=fixedThreshold) {
                     scsu->toUDynamicOffsets[dynamicWindow]=fixedOffsets[b-fixedThreshold];
-                } else {
+                } অন্যথা {
                     /* callback(illegal): Reserved window offset value 0xa8..0xf8 */
                     cnv->toUBytes[1]=b;
                     cnv->toULength=2;
-                    goto endloop;
+                    গচ্ছ endloop;
                 }
                 state=readCommand;
-                goto fastSingle;
+                গচ্ছ fastSingle;
             }
         }
-    } else {
+    } অন্যথা {
         /* fast path for Unicode mode */
-        if(state==readCommand) {
+        যদি(state==readCommand) {
 fastUnicode:
-            while(source+1<sourceLimit && target<targetLimit && (uint8_t)((b=*source)-UC0)>(Urs-UC0)) {
+            যেতিয়ালৈ(source+1<sourceLimit && target<targetLimit && (uint8_t)((b=*source)-UC0)>(Urs-UC0)) {
                 *target++=(char16_t)((b<<8)|source[1]);
                 source+=2;
             }
@@ -788,69 +788,69 @@ fastUnicode:
 
         /* normal state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+        যেতিয়ালৈ(source<sourceLimit) {
+            যদি(target>=targetLimit) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                ভঙ্গ;
             }
             b=*source++;
-            switch(state) {
-            case readCommand:
-                if((uint8_t)(b-UC0)>(Urs-UC0)) {
+            ৱিকল্প(state) {
+            পক্ষ readCommand:
+                যদি((uint8_t)(b-UC0)>(Urs-UC0)) {
                     byteOne=b;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=quotePairTwo;
-                } else if(/* UC0<=b && */ b<=UC7) {
+                } অন্যথা যদি(/* UC0<=b && */ b<=UC7) {
                     dynamicWindow=(int8_t)(b-UC0);
-                    isSingleByteMode=true;
-                    goto fastSingle;
-                } else if(/* UD0<=b && */ b<=UD7) {
+                    isSingleByteMode=সঁচা;
+                    গচ্ছ fastSingle;
+                } অন্যথা যদি(/* UD0<=b && */ b<=UD7) {
                     dynamicWindow=(int8_t)(b-UD0);
-                    isSingleByteMode=true;
+                    isSingleByteMode=সঁচা;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=defineOne;
-                    goto singleByteMode;
-                } else if(b==UDX) {
-                    isSingleByteMode=true;
+                    গচ্ছ singleByteMode;
+                } অন্যথা যদি(b==UDX) {
+                    isSingleByteMode=সঁচা;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=definePairOne;
-                    goto singleByteMode;
-                } else if(b==UQU) {
+                    গচ্ছ singleByteMode;
+                } অন্যথা যদি(b==UQU) {
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=quotePairOne;
-                } else /* Urs */ {
+                } অন্যথা /* Urs */ {
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
-                    goto endloop;
+                    গচ্ছ endloop;
                 }
-                break;
-            case quotePairOne:
+                ভঙ্গ;
+            পক্ষ quotePairOne:
                 byteOne=b;
                 cnv->toUBytes[1]=b;
                 cnv->toULength=2;
                 state=quotePairTwo;
-                break;
-            case quotePairTwo:
+                ভঙ্গ;
+            পক্ষ quotePairTwo:
                 *target++=(char16_t)((byteOne<<8)|b);
                 state=readCommand;
-                goto fastUnicode;
+                গচ্ছ fastUnicode;
             }
         }
     }
 endloop:
 
     /* set the converter state back into UConverter */
-    if(U_FAILURE(*pErrorCode) && *pErrorCode!=U_BUFFER_OVERFLOW_ERROR) {
+    যদি(U_FAILURE(*pErrorCode) && *pErrorCode!=U_BUFFER_OVERFLOW_ERROR) {
         /* reset to deal with the next character */
         state=readCommand;
-    } else if(state==readCommand) {
+    } অন্যথা যদি(state==readCommand) {
         /* not in a multi-byte sequence, reset toULength */
         cnv->toULength=0;
     }
@@ -861,7 +861,7 @@ endloop:
     scsu->toUByteOne=byteOne;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
+    pArgs->source=(ধ্রুৱ ৱর্ণ *)source;
     pArgs->target=target;
 }
 U_CDECL_END
@@ -879,21 +879,21 @@ U_CDECL_END
  */
 
 /* get the number of the window that this character is in, or -1 */
-static int8_t
-getWindow(const uint32_t offsets[8], uint32_t c) {
-    int i;
-    for(i=0; i<8; ++i) {
-        if (c - offsets[i] <= 0x7f) {
-            return static_cast<int8_t>(i);
+স্থির int8_t
+getWindow(ধ্রুৱ uint32_t offsets[8], uint32_t c) {
+    পূর্ণাঙ্ক i;
+    বাবে(i=0; i<8; ++i) {
+        যদি (c - offsets[i] <= 0x7f) {
+            ঘূৰাই static_cast<int8_t>(i);
         }
     }
-    return -1;
+    ঘূৰাই -1;
 }
 
 /* is the character in the dynamic window starting at the offset, or in the direct-encoded range? */
-static UBool
+স্থির UBool
 isInOffsetWindowOrDirect(uint32_t offset, uint32_t c) {
-    return c<=offset+0x7f &&
+    ঘূৰাই c<=offset+0x7f &&
           (c>=offset || (c<=0x7f &&
                         (c>=0x20 || (1UL<<c)&0x2601)));
                                 /* binary 0010 0110 0000 0001,
@@ -903,13 +903,13 @@ isInOffsetWindowOrDirect(uint32_t offset, uint32_t c) {
 /*
  * getNextDynamicWindow returns the next dynamic window to be redefined
  */
-static int8_t
+স্থির int8_t
 getNextDynamicWindow(SCSUData *scsu) {
     int8_t window=scsu->windowUse[scsu->nextWindowUseIndex];
-    if(++scsu->nextWindowUseIndex==8) {
+    যদি(++scsu->nextWindowUseIndex==8) {
         scsu->nextWindowUseIndex=0;
     }
-    return window;
+    ঘূৰাই window;
 }
 
 /*
@@ -918,7 +918,7 @@ getNextDynamicWindow(SCSUData *scsu) {
  * the next dynamic window to be defined;
  * a subclass may override it and provide its own algorithm.
  */
-static void
+স্থির শূন্য
 useDynamicWindow(SCSUData *scsu, int8_t window) {
     /*
      * move the existing window, which just became the most recently used one,
@@ -926,24 +926,24 @@ useDynamicWindow(SCSUData *scsu, int8_t window) {
      */
 
     /* first, find the index of the window - backwards to favor the more recently used windows */
-    int i, j;
+    পূর্ণাঙ্ক i, j;
 
     i=scsu->nextWindowUseIndex;
-    do {
-        if(--i<0) {
+    কৰা {
+        যদি(--i<0) {
             i=7;
         }
-    } while(scsu->windowUse[i]!=window);
+    } যেতিয়ালৈ(scsu->windowUse[i]!=window);
 
     /* now copy each windowUse[i+1] to [i] */
     j=i+1;
-    if(j==8) {
+    যদি(j==8) {
         j=0;
     }
-    while(j!=scsu->nextWindowUseIndex) {
+    যেতিয়ালৈ(j!=scsu->nextWindowUseIndex) {
         scsu->windowUse[i]=scsu->windowUse[j];
         i=j;
-        if(++j==8) { j=0; }
+        যদি(++j==8) { j=0; }
     }
 
     /* finally, set the window into the most recently used index */
@@ -958,33 +958,33 @@ useDynamicWindow(SCSUData *scsu, int8_t window) {
  *
  * return offset code: -1 none  <=0xff code for SDn/UDn  else code for SDX/UDX, subtract 0x200 to get the true code
  */
-static int
+স্থির পূর্ণাঙ্ক
 getDynamicOffset(uint32_t c, uint32_t *pOffset) {
-    int i;
+    পূর্ণাঙ্ক i;
 
-    for(i=0; i<7; ++i) {
-        if (c - fixedOffsets[i] <= 0x7f) {
+    বাবে(i=0; i<7; ++i) {
+        যদি (c - fixedOffsets[i] <= 0x7f) {
             *pOffset=fixedOffsets[i];
-            return 0xf9+i;
+            ঘূৰাই 0xf9+i;
         }
     }
 
-    if(c<0x80) {
+    যদি(c<0x80) {
         /* No dynamic window for US-ASCII. */
-        return -1;
-    } else if(c<0x3400 ||
+        ঘূৰাই -1;
+    } অন্যথা যদি(c<0x3400 ||
               c - 0x10000 < 0x14000 - 0x10000 ||
               c - 0x1d000 <= 0x1ffff - 0x1d000
     ) {
         /* This character is in a code range for a "small", i.e., reasonably windowable, script. */
         *pOffset=c&0x7fffff80;
-        return static_cast<int>(c >> 7);
-    } else if(0xe000<=c && c!=0xfeff && c<0xfff0) {
+        ঘূৰাই static_cast<পূর্ণাঙ্ক>(c >> 7);
+    } অন্যথা যদি(0xe000<=c && c!=0xfeff && c<0xfff0) {
         /* For these characters we need to take the gapOffset into account. */
         *pOffset=c&0x7fffff80;
-        return static_cast<int>((c - gapOffset) >> 7);
-    } else {
-        return -1;
+        ঘূৰাই static_cast<পূর্ণাঙ্ক>((c - gapOffset) >> 7);
+    } অন্যথা {
+        ঘূৰাই -1;
     }
 }
 U_CDECL_BEGIN
@@ -1005,12 +1005,12 @@ U_CDECL_BEGIN
  *  - Only replace the result after an SDX or SCU?
  */
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _SCSUFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                             UErrorCode *pErrorCode) {
     UConverter *cnv;
     SCSUData *scsu;
-    const char16_t *source, *sourceLimit;
+    ধ্রুৱ char16_t *source, *sourceLimit;
     uint8_t *target;
     int32_t targetCapacity;
     int32_t *offsets;
@@ -1028,7 +1028,7 @@ _SCSUFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     /* variables for compression heuristics */
     uint32_t offset;
     char16_t lead, trail;
-    int code;
+    পূর্ণাঙ্ক code;
     int8_t window;
 
     /* set up the local pointers */
@@ -1055,97 +1055,97 @@ _SCSUFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
 
     /* similar conversion "loop" as in toUnicode */
 loop:
-    if(isSingleByteMode) {
-        if(c!=0 && targetCapacity>0) {
-            goto getTrailSingle;
+    যদি(isSingleByteMode) {
+        যদি(c!=0 && targetCapacity>0) {
+            গচ্ছ getTrailSingle;
         }
 
         /* state machine for single-byte mode */
 /* singleByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        যেতিয়ালৈ(source<sourceLimit) {
+            যদি(targetCapacity<=0) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                ভঙ্গ;
             }
             c=*source++;
             ++nextSourceIndex;
 
-            if((c-0x20)<=0x5f) {
+            যদি((c-0x20)<=0x5f) {
                 /* pass US-ASCII graphic character through */
                 *target++=(uint8_t)c;
-                if(offsets!=nullptr) {
+                যদি(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 --targetCapacity;
-            } else if(c<0x20) {
-                if((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+            } অন্যথা যদি(c<0x20) {
+                যদি((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
                     *target++=(uint8_t)c;
-                    if(offsets!=nullptr) {
+                    যদি(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
                     --targetCapacity;
-                } else {
+                } অন্যথা {
                     /* quote C0 control character */
                     c|=SQ0<<8;
                     length=2;
-                    goto outputBytes;
+                    গচ্ছ outputBytes;
                 }
-            } else if((delta=c-currentOffset)<=0x7f) {
+            } অন্যথা যদি((delta=c-currentOffset)<=0x7f) {
                 /* use the current dynamic window */
                 *target++=(uint8_t)(delta|0x80);
-                if(offsets!=nullptr) {
+                যদি(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 --targetCapacity;
-            } else if(U16_IS_SURROGATE(c)) {
-                if(U16_IS_SURROGATE_LEAD(c)) {
+            } অন্যথা যদি(U16_IS_SURROGATE(c)) {
+                যদি(U16_IS_SURROGATE_LEAD(c)) {
 getTrailSingle:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    যদি(source<sourceLimit) {
                         /* test the following code unit */
                         trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
+                        যদি(U16_IS_TRAIL(trail)) {
                             ++source;
                             ++nextSourceIndex;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } অন্যথা {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            গচ্ছ endloop;
                         }
-                    } else {
+                    } অন্যথা {
                         /* no more input */
-                        break;
+                        ভঙ্গ;
                     }
-                } else {
+                } অন্যথা {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    goto endloop;
+                    গচ্ছ endloop;
                 }
 
                 /* compress supplementary character U+10000..U+10ffff */
-                if((delta=c-currentOffset)<=0x7f) {
+                যদি((delta=c-currentOffset)<=0x7f) {
                     /* use the current dynamic window */
                     *target++=(uint8_t)(delta|0x80);
-                    if(offsets!=nullptr) {
+                    যদি(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
                     --targetCapacity;
-                } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                } অন্যথা যদি((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a dynamic window that contains this character, change to it */
                     dynamicWindow=window;
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
                     useDynamicWindow(scsu, dynamicWindow);
                     c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                     length=2;
-                    goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                    গচ্ছ outputBytes;
+                } অন্যথা যদি((code=getDynamicOffset(c, &offset))>=0) {
                     /* might check if there are more characters in this window to come */
                     /* define an extended window with this character */
                     code-=0x200;
@@ -1154,61 +1154,61 @@ getTrailSingle:
                     useDynamicWindow(scsu, dynamicWindow);
                     c=((uint32_t)SDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=4;
-                    goto outputBytes;
-                } else {
+                    গচ্ছ outputBytes;
+                } অন্যথা {
                     /* change to Unicode mode and output this (lead, trail) pair */
-                    isSingleByteMode=false;
+                    isSingleByteMode=মিছা;
                     *target++=(uint8_t)SCU;
-                    if(offsets!=nullptr) {
+                    যদি(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
                     --targetCapacity;
                     c=((uint32_t)lead<<16)|trail;
                     length=4;
-                    goto outputBytes;
+                    গচ্ছ outputBytes;
                 }
-            } else if(c<0xa0) {
+            } অন্যথা যদি(c<0xa0) {
                 /* quote C1 control character */
                 c=(c&0x7f)|(SQ0+1)<<8; /* SQ0+1==SQ1 */
                 length=2;
-                goto outputBytes;
-            } else if(c==0xfeff || c>=0xfff0) {
+                গচ্ছ outputBytes;
+            } অন্যথা যদি(c==0xfeff || c>=0xfff0) {
                 /* quote signature character=byte order mark and specials */
                 c|=SQU<<16;
                 length=3;
-                goto outputBytes;
-            } else {
+                গচ্ছ outputBytes;
+            } অন্যথা {
                 /* compress all other BMP characters */
-                if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                যদি((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a window defined that contains this character - switch to it or quote from it? */
-                    if(source>=sourceLimit || isInOffsetWindowOrDirect(scsu->fromUDynamicOffsets[window], *source)) {
+                    যদি(source>=sourceLimit || isInOffsetWindowOrDirect(scsu->fromUDynamicOffsets[window], *source)) {
                         /* change to dynamic window */
                         dynamicWindow=window;
                         currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
                         useDynamicWindow(scsu, dynamicWindow);
                         c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                         length=2;
-                        goto outputBytes;
-                    } else {
+                        গচ্ছ outputBytes;
+                    } অন্যথা {
                         /* quote from dynamic window */
                         c=((uint32_t)(SQ0+window)<<8)|(c-scsu->fromUDynamicOffsets[window])|0x80;
                         length=2;
-                        goto outputBytes;
+                        গচ্ছ outputBytes;
                     }
-                } else if((window=getWindow(staticOffsets, c))>=0) {
+                } অন্যথা যদি((window=getWindow(staticOffsets, c))>=0) {
                     /* quote from static window */
                     c=((uint32_t)(SQ0+window)<<8)|(c-staticOffsets[window]);
                     length=2;
-                    goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                    গচ্ছ outputBytes;
+                } অন্যথা যদি((code=getDynamicOffset(c, &offset))>=0) {
                     /* define a dynamic window with this character */
                     dynamicWindow=getNextDynamicWindow(scsu);
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
                     useDynamicWindow(scsu, dynamicWindow);
                     c=((uint32_t)(SD0+dynamicWindow)<<16)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=3;
-                    goto outputBytes;
-                } else if ((c - 0x3400) < (0xd800 - 0x3400) &&
+                    গচ্ছ outputBytes;
+                } অন্যথা যদি ((c - 0x3400) < (0xd800 - 0x3400) &&
                            (source >= sourceLimit || (uint32_t)(*source - 0x3400) < (0xd800 - 0x3400))
                 ) {
                     /*
@@ -1216,15 +1216,15 @@ getTrailSingle:
                      * switch to Unicode mode if this is the last character in the block
                      * or there is at least one more ideograph following immediately
                      */
-                    isSingleByteMode=false;
+                    isSingleByteMode=মিছা;
                     c|=SCU<<16;
                     length=3;
-                    goto outputBytes;
-                } else {
+                    গচ্ছ outputBytes;
+                } অন্যথা {
                     /* quote Unicode */
                     c|=SQU<<16;
                     length=3;
-                    goto outputBytes;
+                    গচ্ছ outputBytes;
                 }
             }
 
@@ -1232,102 +1232,102 @@ getTrailSingle:
             c=0;
             sourceIndex=nextSourceIndex;
         }
-    } else {
-        if(c!=0 && targetCapacity>0) {
-            goto getTrailUnicode;
+    } অন্যথা {
+        যদি(c!=0 && targetCapacity>0) {
+            গচ্ছ getTrailUnicode;
         }
 
         /* state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        যেতিয়ালৈ(source<sourceLimit) {
+            যদি(targetCapacity<=0) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                ভঙ্গ;
             }
             c=*source++;
             ++nextSourceIndex;
 
-            if ((c - 0x3400) < (0xd800 - 0x3400)) {
+            যদি ((c - 0x3400) < (0xd800 - 0x3400)) {
                 /* not compressible, write character directly */
-                if(targetCapacity>=2) {
+                যদি(targetCapacity>=2) {
                     *target++=(uint8_t)(c>>8);
                     *target++=(uint8_t)c;
-                    if(offsets!=nullptr) {
+                    যদি(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                         *offsets++=sourceIndex;
                     }
                     targetCapacity-=2;
-                } else {
+                } অন্যথা {
                     length=2;
-                    goto outputBytes;
+                    গচ্ছ outputBytes;
                 }
-            } else if (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
+            } অন্যথা যদি (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
                 /* compress BMP character if the following one is not an uncompressible ideograph */
-                if(!(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))) {
-                    if (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
+                যদি(!(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))) {
+                    যদি (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
                         /* ASCII digit or letter */
-                        isSingleByteMode=true;
+                        isSingleByteMode=সঁচা;
                         c|=((uint32_t)(UC0+dynamicWindow)<<8)|c;
                         length=2;
-                        goto outputBytes;
-                    } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                        গচ্ছ outputBytes;
+                    } অন্যথা যদি((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                         /* there is a dynamic window that contains this character, change to it */
-                        isSingleByteMode=true;
+                        isSingleByteMode=সঁচা;
                         dynamicWindow=window;
                         currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
                         useDynamicWindow(scsu, dynamicWindow);
                         c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                         length=2;
-                        goto outputBytes;
-                    } else if((code=getDynamicOffset(c, &offset))>=0) {
+                        গচ্ছ outputBytes;
+                    } অন্যথা যদি((code=getDynamicOffset(c, &offset))>=0) {
                         /* define a dynamic window with this character */
-                        isSingleByteMode=true;
+                        isSingleByteMode=সঁচা;
                         dynamicWindow=getNextDynamicWindow(scsu);
                         currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
                         useDynamicWindow(scsu, dynamicWindow);
                         c=((uint32_t)(UD0+dynamicWindow)<<16)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                         length=3;
-                        goto outputBytes;
+                        গচ্ছ outputBytes;
                     }
                 }
 
                 /* don't know how to compress this character, just write it directly */
                 length=2;
-                goto outputBytes;
-            } else if(c<0xe000) {
+                গচ্ছ outputBytes;
+            } অন্যথা যদি(c<0xe000) {
                 /* c is a surrogate */
-                if(U16_IS_SURROGATE_LEAD(c)) {
+                যদি(U16_IS_SURROGATE_LEAD(c)) {
 getTrailUnicode:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    যদি(source<sourceLimit) {
                         /* test the following code unit */
                         trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
+                        যদি(U16_IS_TRAIL(trail)) {
                             ++source;
                             ++nextSourceIndex;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } অন্যথা {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            গচ্ছ endloop;
                         }
-                    } else {
+                    } অন্যথা {
                         /* no more input */
-                        break;
+                        ভঙ্গ;
                     }
-                } else {
+                } অন্যথা {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    goto endloop;
+                    গচ্ছ endloop;
                 }
 
                 /* compress supplementary character */
-                if( (window=getWindow(scsu->fromUDynamicOffsets, c))>=0 &&
+                যদি( (window=getWindow(scsu->fromUDynamicOffsets, c))>=0 &&
                     !(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))
                 ) {
                     /*
@@ -1335,36 +1335,36 @@ getTrailUnicode:
                      * the following character is not uncompressible,
                      * change to the window
                      */
-                    isSingleByteMode=true;
+                    isSingleByteMode=সঁচা;
                     dynamicWindow=window;
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
                     useDynamicWindow(scsu, dynamicWindow);
                     c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                     length=2;
-                    goto outputBytes;
-                } else if(source<sourceLimit && lead==*source && /* too lazy to check trail in same window as source[1] */
+                    গচ্ছ outputBytes;
+                } অন্যথা যদি(source<sourceLimit && lead==*source && /* too lazy to check trail in same window as source[1] */
                           (code=getDynamicOffset(c, &offset))>=0
                 ) {
                     /* two supplementary characters in (probably) the same window - define an extended one */
-                    isSingleByteMode=true;
+                    isSingleByteMode=সঁচা;
                     code-=0x200;
                     dynamicWindow=getNextDynamicWindow(scsu);
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
                     useDynamicWindow(scsu, dynamicWindow);
                     c=((uint32_t)UDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=4;
-                    goto outputBytes;
-                } else {
+                    গচ্ছ outputBytes;
+                } অন্যথা {
                     /* don't know how to compress this character, just write it directly */
                     c=((uint32_t)lead<<16)|trail;
                     length=4;
-                    goto outputBytes;
+                    গচ্ছ outputBytes;
                 }
-            } else /* 0xe000<=c<0xf300 */ {
+            } অন্যথা /* 0xe000<=c<0xf300 */ {
                 /* quote to avoid SCSU tags */
                 c|=UQU<<16;
                 length=3;
-                goto outputBytes;
+                গচ্ছ outputBytes;
             }
 
             /* normal end of conversion: prepare for a new character */
@@ -1382,55 +1382,55 @@ endloop:
 
     /* write back the updated pointers */
     pArgs->source=source;
-    pArgs->target=(char *)target;
+    pArgs->target=(ৱর্ণ *)target;
     pArgs->offsets=offsets;
-    return;
+    ঘূৰাই;
 
 outputBytes:
     /* write the output character bytes from c and length [code copied from ucnvmbcs.c] */
     /* from the first if in the loop we know that targetCapacity>0 */
-    if(length<=targetCapacity) {
-        if(offsets==nullptr) {
-            switch(length) {
+    যদি(length<=targetCapacity) {
+        যদি(offsets==nullptr) {
+            ৱিকল্প(length) {
                 /* each branch falls through to the next one */
-            case 4:
+            পক্ষ 4:
                 *target++=(uint8_t)(c>>24);
                 U_FALLTHROUGH;
-            case 3:
+            পক্ষ 3:
                 *target++=(uint8_t)(c>>16);
                 U_FALLTHROUGH;
-            case 2:
+            পক্ষ 2:
                 *target++=(uint8_t)(c>>8);
                 U_FALLTHROUGH;
-            case 1:
+            পক্ষ 1:
                 *target++=(uint8_t)c;
                 U_FALLTHROUGH;
-            default:
+            স্ৱভাৱ:
                 /* will never occur */
-                break;
+                ভঙ্গ;
             }
-        } else {
-            switch(length) {
+        } অন্যথা {
+            ৱিকল্প(length) {
                 /* each branch falls through to the next one */
-            case 4:
+            পক্ষ 4:
                 *target++=(uint8_t)(c>>24);
                 *offsets++=sourceIndex;
                 U_FALLTHROUGH;
-            case 3:
+            পক্ষ 3:
                 *target++=(uint8_t)(c>>16);
                 *offsets++=sourceIndex;
                 U_FALLTHROUGH;
-            case 2:
+            পক্ষ 2:
                 *target++=(uint8_t)(c>>8);
                 *offsets++=sourceIndex;
                 U_FALLTHROUGH;
-            case 1:
+            পক্ষ 1:
                 *target++=(uint8_t)c;
                 *offsets++=sourceIndex;
                 U_FALLTHROUGH;
-            default:
+            স্ৱভাৱ:
                 /* will never occur */
-                break;
+                ভঙ্গ;
             }
         }
         targetCapacity-=length;
@@ -1438,8 +1438,8 @@ outputBytes:
         /* normal end of conversion: prepare for a new character */
         c=0;
         sourceIndex=nextSourceIndex;
-        goto loop;
-    } else {
+        গচ্ছ loop;
+    } অন্যথা {
         uint8_t *p;
 
         /*
@@ -1452,57 +1452,57 @@ outputBytes:
         /* targetCapacity==0 when SCU+supplementary where SCU used up targetCapacity==1 */
         length-=targetCapacity;
         p=(uint8_t *)cnv->charErrorBuffer;
-        switch(length) {
+        ৱিকল্প(length) {
             /* each branch falls through to the next one */
-        case 4:
+        পক্ষ 4:
             *p++=(uint8_t)(c>>24);
             U_FALLTHROUGH;
-        case 3:
+        পক্ষ 3:
             *p++=(uint8_t)(c>>16);
             U_FALLTHROUGH;
-        case 2:
+        পক্ষ 2:
             *p++=(uint8_t)(c>>8);
             U_FALLTHROUGH;
-        case 1:
+        পক্ষ 1:
             *p=(uint8_t)c;
             U_FALLTHROUGH;
-        default:
+        স্ৱভাৱ:
             /* will never occur */
-            break;
+            ভঙ্গ;
         }
         cnv->charErrorBufferLength=(int8_t)length;
 
         /* now output what fits into the regular target */
         c>>=8*length; /* length was reduced by targetCapacity */
-        switch(targetCapacity) {
+        ৱিকল্প(targetCapacity) {
             /* each branch falls through to the next one */
-        case 3:
+        পক্ষ 3:
             *target++=(uint8_t)(c>>16);
-            if(offsets!=nullptr) {
+            যদি(offsets!=nullptr) {
                 *offsets++=sourceIndex;
             }
             U_FALLTHROUGH;
-        case 2:
+        পক্ষ 2:
             *target++=(uint8_t)(c>>8);
-            if(offsets!=nullptr) {
+            যদি(offsets!=nullptr) {
                 *offsets++=sourceIndex;
             }
             U_FALLTHROUGH;
-        case 1:
+        পক্ষ 1:
             *target++=(uint8_t)c;
-            if(offsets!=nullptr) {
+            যদি(offsets!=nullptr) {
                 *offsets++=sourceIndex;
             }
             U_FALLTHROUGH;
-        default:
-            break;
+        স্ৱভাৱ:
+            ভঙ্গ;
         }
 
         /* target overflow */
         targetCapacity=0;
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
         c=0;
-        goto endloop;
+        গচ্ছ endloop;
     }
 }
 
@@ -1513,12 +1513,12 @@ outputBytes:
  * re-copy the original function and remove the variables
  * offsets, sourceIndex, and nextSourceIndex.
  */
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _SCSUFromUnicode(UConverterFromUnicodeArgs *pArgs,
                  UErrorCode *pErrorCode) {
     UConverter *cnv;
     SCSUData *scsu;
-    const char16_t *source, *sourceLimit;
+    ধ্রুৱ char16_t *source, *sourceLimit;
     uint8_t *target;
     int32_t targetCapacity;
 
@@ -1533,7 +1533,7 @@ _SCSUFromUnicode(UConverterFromUnicodeArgs *pArgs,
     /* variables for compression heuristics */
     uint32_t offset;
     char16_t lead, trail;
-    int code;
+    পূর্ণাঙ্ক code;
     int8_t window;
 
     /* set up the local pointers */
@@ -1555,83 +1555,83 @@ _SCSUFromUnicode(UConverterFromUnicodeArgs *pArgs,
 
     /* similar conversion "loop" as in toUnicode */
 loop:
-    if(isSingleByteMode) {
-        if(c!=0 && targetCapacity>0) {
-            goto getTrailSingle;
+    যদি(isSingleByteMode) {
+        যদি(c!=0 && targetCapacity>0) {
+            গচ্ছ getTrailSingle;
         }
 
         /* state machine for single-byte mode */
 /* singleByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        যেতিয়ালৈ(source<sourceLimit) {
+            যদি(targetCapacity<=0) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                ভঙ্গ;
             }
             c=*source++;
 
-            if((c-0x20)<=0x5f) {
+            যদি((c-0x20)<=0x5f) {
                 /* pass US-ASCII graphic character through */
                 *target++=(uint8_t)c;
                 --targetCapacity;
-            } else if(c<0x20) {
-                if((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+            } অন্যথা যদি(c<0x20) {
+                যদি((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
                     *target++=(uint8_t)c;
                     --targetCapacity;
-                } else {
+                } অন্যথা {
                     /* quote C0 control character */
                     c|=SQ0<<8;
                     length=2;
-                    goto outputBytes;
+                    গচ্ছ outputBytes;
                 }
-            } else if((delta=c-currentOffset)<=0x7f) {
+            } অন্যথা যদি((delta=c-currentOffset)<=0x7f) {
                 /* use the current dynamic window */
                 *target++=(uint8_t)(delta|0x80);
                 --targetCapacity;
-            } else if(U16_IS_SURROGATE(c)) {
-                if(U16_IS_SURROGATE_LEAD(c)) {
+            } অন্যথা যদি(U16_IS_SURROGATE(c)) {
+                যদি(U16_IS_SURROGATE_LEAD(c)) {
 getTrailSingle:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    যদি(source<sourceLimit) {
                         /* test the following code unit */
                         trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
+                        যদি(U16_IS_TRAIL(trail)) {
                             ++source;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } অন্যথা {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            গচ্ছ endloop;
                         }
-                    } else {
+                    } অন্যথা {
                         /* no more input */
-                        break;
+                        ভঙ্গ;
                     }
-                } else {
+                } অন্যথা {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    goto endloop;
+                    গচ্ছ endloop;
                 }
 
                 /* compress supplementary character U+10000..U+10ffff */
-                if((delta=c-currentOffset)<=0x7f) {
+                যদি((delta=c-currentOffset)<=0x7f) {
                     /* use the current dynamic window */
                     *target++=(uint8_t)(delta|0x80);
                     --targetCapacity;
-                } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                } অন্যথা যদি((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a dynamic window that contains this character, change to it */
                     dynamicWindow=window;
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
                     useDynamicWindow(scsu, dynamicWindow);
                     c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                     length=2;
-                    goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                    গচ্ছ outputBytes;
+                } অন্যথা যদি((code=getDynamicOffset(c, &offset))>=0) {
                     /* might check if there are more characters in this window to come */
                     /* define an extended window with this character */
                     code-=0x200;
@@ -1640,58 +1640,58 @@ getTrailSingle:
                     useDynamicWindow(scsu, dynamicWindow);
                     c=((uint32_t)SDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=4;
-                    goto outputBytes;
-                } else {
+                    গচ্ছ outputBytes;
+                } অন্যথা {
                     /* change to Unicode mode and output this (lead, trail) pair */
-                    isSingleByteMode=false;
+                    isSingleByteMode=মিছা;
                     *target++=(uint8_t)SCU;
                     --targetCapacity;
                     c=((uint32_t)lead<<16)|trail;
                     length=4;
-                    goto outputBytes;
+                    গচ্ছ outputBytes;
                 }
-            } else if(c<0xa0) {
+            } অন্যথা যদি(c<0xa0) {
                 /* quote C1 control character */
                 c=(c&0x7f)|(SQ0+1)<<8; /* SQ0+1==SQ1 */
                 length=2;
-                goto outputBytes;
-            } else if(c==0xfeff || c>=0xfff0) {
+                গচ্ছ outputBytes;
+            } অন্যথা যদি(c==0xfeff || c>=0xfff0) {
                 /* quote signature character=byte order mark and specials */
                 c|=SQU<<16;
                 length=3;
-                goto outputBytes;
-            } else {
+                গচ্ছ outputBytes;
+            } অন্যথা {
                 /* compress all other BMP characters */
-                if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                যদি((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a window defined that contains this character - switch to it or quote from it? */
-                    if(source>=sourceLimit || isInOffsetWindowOrDirect(scsu->fromUDynamicOffsets[window], *source)) {
+                    যদি(source>=sourceLimit || isInOffsetWindowOrDirect(scsu->fromUDynamicOffsets[window], *source)) {
                         /* change to dynamic window */
                         dynamicWindow=window;
                         currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
                         useDynamicWindow(scsu, dynamicWindow);
                         c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                         length=2;
-                        goto outputBytes;
-                    } else {
+                        গচ্ছ outputBytes;
+                    } অন্যথা {
                         /* quote from dynamic window */
                         c=((uint32_t)(SQ0+window)<<8)|(c-scsu->fromUDynamicOffsets[window])|0x80;
                         length=2;
-                        goto outputBytes;
+                        গচ্ছ outputBytes;
                     }
-                } else if((window=getWindow(staticOffsets, c))>=0) {
+                } অন্যথা যদি((window=getWindow(staticOffsets, c))>=0) {
                     /* quote from static window */
                     c=((uint32_t)(SQ0+window)<<8)|(c-staticOffsets[window]);
                     length=2;
-                    goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                    গচ্ছ outputBytes;
+                } অন্যথা যদি((code=getDynamicOffset(c, &offset))>=0) {
                     /* define a dynamic window with this character */
                     dynamicWindow=getNextDynamicWindow(scsu);
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
                     useDynamicWindow(scsu, dynamicWindow);
                     c=((uint32_t)(SD0+dynamicWindow)<<16)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=3;
-                    goto outputBytes;
-                } else if (c - 0x3400 < 0xd800 - 0x3400 &&
+                    গচ্ছ outputBytes;
+                } অন্যথা যদি (c - 0x3400 < 0xd800 - 0x3400 &&
                            (source >= sourceLimit || static_cast<uint32_t>(*source - 0x3400) < 0xd800 - 0x3400)
                 ) {
                     /*
@@ -1699,111 +1699,111 @@ getTrailSingle:
                      * switch to Unicode mode if this is the last character in the block
                      * or there is at least one more ideograph following immediately
                      */
-                    isSingleByteMode=false;
+                    isSingleByteMode=মিছা;
                     c|=SCU<<16;
                     length=3;
-                    goto outputBytes;
-                } else {
+                    গচ্ছ outputBytes;
+                } অন্যথা {
                     /* quote Unicode */
                     c|=SQU<<16;
                     length=3;
-                    goto outputBytes;
+                    গচ্ছ outputBytes;
                 }
             }
 
             /* normal end of conversion: prepare for a new character */
             c=0;
         }
-    } else {
-        if(c!=0 && targetCapacity>0) {
-            goto getTrailUnicode;
+    } অন্যথা {
+        যদি(c!=0 && targetCapacity>0) {
+            গচ্ছ getTrailUnicode;
         }
 
         /* state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        যেতিয়ালৈ(source<sourceLimit) {
+            যদি(targetCapacity<=0) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                ভঙ্গ;
             }
             c=*source++;
 
-            if (c - 0x3400 < 0xd800 - 0x3400) {
+            যদি (c - 0x3400 < 0xd800 - 0x3400) {
                 /* not compressible, write character directly */
-                if(targetCapacity>=2) {
+                যদি(targetCapacity>=2) {
                     *target++=(uint8_t)(c>>8);
                     *target++=(uint8_t)c;
                     targetCapacity-=2;
-                } else {
+                } অন্যথা {
                     length=2;
-                    goto outputBytes;
+                    গচ্ছ outputBytes;
                 }
-            } else if (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
+            } অন্যথা যদি (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
                 /* compress BMP character if the following one is not an uncompressible ideograph */
-                if(!(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))) {
-                    if (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
+                যদি(!(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))) {
+                    যদি (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
                         /* ASCII digit or letter */
-                        isSingleByteMode=true;
+                        isSingleByteMode=সঁচা;
                         c|=((uint32_t)(UC0+dynamicWindow)<<8)|c;
                         length=2;
-                        goto outputBytes;
-                    } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                        গচ্ছ outputBytes;
+                    } অন্যথা যদি((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                         /* there is a dynamic window that contains this character, change to it */
-                        isSingleByteMode=true;
+                        isSingleByteMode=সঁচা;
                         dynamicWindow=window;
                         currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
                         useDynamicWindow(scsu, dynamicWindow);
                         c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                         length=2;
-                        goto outputBytes;
-                    } else if((code=getDynamicOffset(c, &offset))>=0) {
+                        গচ্ছ outputBytes;
+                    } অন্যথা যদি((code=getDynamicOffset(c, &offset))>=0) {
                         /* define a dynamic window with this character */
-                        isSingleByteMode=true;
+                        isSingleByteMode=সঁচা;
                         dynamicWindow=getNextDynamicWindow(scsu);
                         currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
                         useDynamicWindow(scsu, dynamicWindow);
                         c=((uint32_t)(UD0+dynamicWindow)<<16)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                         length=3;
-                        goto outputBytes;
+                        গচ্ছ outputBytes;
                     }
                 }
 
                 /* don't know how to compress this character, just write it directly */
                 length=2;
-                goto outputBytes;
-            } else if(c<0xe000) {
+                গচ্ছ outputBytes;
+            } অন্যথা যদি(c<0xe000) {
                 /* c is a surrogate */
-                if(U16_IS_SURROGATE_LEAD(c)) {
+                যদি(U16_IS_SURROGATE_LEAD(c)) {
 getTrailUnicode:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    যদি(source<sourceLimit) {
                         /* test the following code unit */
                         trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
+                        যদি(U16_IS_TRAIL(trail)) {
                             ++source;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } অন্যথা {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            গচ্ছ endloop;
                         }
-                    } else {
+                    } অন্যথা {
                         /* no more input */
-                        break;
+                        ভঙ্গ;
                     }
-                } else {
+                } অন্যথা {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    goto endloop;
+                    গচ্ছ endloop;
                 }
 
                 /* compress supplementary character */
-                if( (window=getWindow(scsu->fromUDynamicOffsets, c))>=0 &&
+                যদি( (window=getWindow(scsu->fromUDynamicOffsets, c))>=0 &&
                     !(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))
                 ) {
                     /*
@@ -1811,36 +1811,36 @@ getTrailUnicode:
                      * the following character is not uncompressible,
                      * change to the window
                      */
-                    isSingleByteMode=true;
+                    isSingleByteMode=সঁচা;
                     dynamicWindow=window;
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
                     useDynamicWindow(scsu, dynamicWindow);
                     c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                     length=2;
-                    goto outputBytes;
-                } else if(source<sourceLimit && lead==*source && /* too lazy to check trail in same window as source[1] */
+                    গচ্ছ outputBytes;
+                } অন্যথা যদি(source<sourceLimit && lead==*source && /* too lazy to check trail in same window as source[1] */
                           (code=getDynamicOffset(c, &offset))>=0
                 ) {
                     /* two supplementary characters in (probably) the same window - define an extended one */
-                    isSingleByteMode=true;
+                    isSingleByteMode=সঁচা;
                     code-=0x200;
                     dynamicWindow=getNextDynamicWindow(scsu);
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
                     useDynamicWindow(scsu, dynamicWindow);
                     c=((uint32_t)UDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=4;
-                    goto outputBytes;
-                } else {
+                    গচ্ছ outputBytes;
+                } অন্যথা {
                     /* don't know how to compress this character, just write it directly */
                     c=((uint32_t)lead<<16)|trail;
                     length=4;
-                    goto outputBytes;
+                    গচ্ছ outputBytes;
                 }
-            } else /* 0xe000<=c<0xf300 */ {
+            } অন্যথা /* 0xe000<=c<0xf300 */ {
                 /* quote to avoid SCSU tags */
                 c|=UQU<<16;
                 length=3;
-                goto outputBytes;
+                গচ্ছ outputBytes;
             }
 
             /* normal end of conversion: prepare for a new character */
@@ -1857,37 +1857,37 @@ endloop:
 
     /* write back the updated pointers */
     pArgs->source=source;
-    pArgs->target=(char *)target;
-    return;
+    pArgs->target=(ৱর্ণ *)target;
+    ঘূৰাই;
 
 outputBytes:
     /* write the output character bytes from c and length [code copied from ucnvmbcs.c] */
     /* from the first if in the loop we know that targetCapacity>0 */
-    if(length<=targetCapacity) {
-        switch(length) {
+    যদি(length<=targetCapacity) {
+        ৱিকল্প(length) {
             /* each branch falls through to the next one */
-        case 4:
+        পক্ষ 4:
             *target++=(uint8_t)(c>>24);
             U_FALLTHROUGH;
-        case 3:
+        পক্ষ 3:
             *target++=(uint8_t)(c>>16);
             U_FALLTHROUGH;
-        case 2:
+        পক্ষ 2:
             *target++=(uint8_t)(c>>8);
             U_FALLTHROUGH;
-        case 1:
+        পক্ষ 1:
             *target++=(uint8_t)c;
             U_FALLTHROUGH;
-        default:
+        স্ৱভাৱ:
             /* will never occur */
-            break;
+            ভঙ্গ;
         }
         targetCapacity-=length;
 
         /* normal end of conversion: prepare for a new character */
         c=0;
-        goto loop;
-    } else {
+        গচ্ছ loop;
+    } অন্যথা {
         uint8_t *p;
 
         /*
@@ -1900,102 +1900,102 @@ outputBytes:
         /* targetCapacity==0 when SCU+supplementary where SCU used up targetCapacity==1 */
         length-=targetCapacity;
         p=(uint8_t *)cnv->charErrorBuffer;
-        switch(length) {
+        ৱিকল্প(length) {
             /* each branch falls through to the next one */
-        case 4:
+        পক্ষ 4:
             *p++=(uint8_t)(c>>24);
             U_FALLTHROUGH;
-        case 3:
+        পক্ষ 3:
             *p++=(uint8_t)(c>>16);
             U_FALLTHROUGH;
-        case 2:
+        পক্ষ 2:
             *p++=(uint8_t)(c>>8);
             U_FALLTHROUGH;
-        case 1:
+        পক্ষ 1:
             *p=(uint8_t)c;
             U_FALLTHROUGH;
-        default:
+        স্ৱভাৱ:
             /* will never occur */
-            break;
+            ভঙ্গ;
         }
         cnv->charErrorBufferLength=(int8_t)length;
 
         /* now output what fits into the regular target */
         c = (length == 4) ? 0 : c >> 8*length; /* length was reduced by targetCapacity */
-        switch(targetCapacity) {
+        ৱিকল্প(targetCapacity) {
             /* each branch falls through to the next one */
-        case 3:
+        পক্ষ 3:
             *target++=(uint8_t)(c>>16);
             U_FALLTHROUGH;
-        case 2:
+        পক্ষ 2:
             *target++=(uint8_t)(c>>8);
             U_FALLTHROUGH;
-        case 1:
+        পক্ষ 1:
             *target++=(uint8_t)c;
             U_FALLTHROUGH;
-        default:
-            break;
+        স্ৱভাৱ:
+            ভঙ্গ;
         }
 
         /* target overflow */
         targetCapacity=0;
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
         c=0;
-        goto endloop;
+        গচ্ছ endloop;
     }
 }
 
 /* miscellaneous ------------------------------------------------------------ */
 
-static const char *  U_CALLCONV
-_SCSUGetName(const UConverter *cnv) {
+স্থির ধ্রুৱ ৱর্ণ *  U_CALLCONV
+_SCSUGetName(ধ্রুৱ UConverter *cnv) {
     SCSUData *scsu=(SCSUData *)cnv->extraInfo;
 
-    switch(scsu->locale) {
-    case l_ja:
-        return "SCSU,locale=ja";
-    default:
-        return "SCSU";
+    ৱিকল্প(scsu->locale) {
+    পক্ষ l_ja:
+        ঘূৰাই "SCSU,locale=ja";
+    স্ৱভাৱ:
+        ঘূৰাই "SCSU";
     }
 }
 
 /* structure for SafeClone calculations */
-struct cloneSCSUStruct
+সংরচনা cloneSCSUStruct
 {
     UConverter cnv;
     SCSUData mydata;
 };
 
-static UConverter *  U_CALLCONV
-_SCSUSafeClone(const UConverter *cnv, 
-               void *stackBuffer, 
+স্থির UConverter *  U_CALLCONV
+_SCSUSafeClone(ধ্রুৱ UConverter *cnv, 
+               শূন্য *স্তূপ_Buffer, 
                int32_t *pBufferSize, 
                UErrorCode *status)
 {
-    struct cloneSCSUStruct * localClone;
-    int32_t bufferSizeNeeded = sizeof(struct cloneSCSUStruct);
+    সংরচনা cloneSCSUStruct * localClone;
+    int32_t bufferSizeNeeded = পরিমাণ(সংরচনা cloneSCSUStruct);
 
-    if (U_FAILURE(*status)){
-        return nullptr;
+    যদি (U_FAILURE(*status)){
+        ঘূৰাই nullptr;
     }
 
-    if (*pBufferSize == 0){ /* 'preflighting' request - set needed size into *pBufferSize */
+    যদি (*pBufferSize == 0){ /* 'preflighting' request - set needed size into *pBufferSize */
         *pBufferSize = bufferSizeNeeded;
-        return nullptr;
+        ঘূৰাই nullptr;
     }
 
-    localClone = (struct cloneSCSUStruct *)stackBuffer;
+    localClone = (সংরচনা cloneSCSUStruct *)স্তূপ_Buffer;
     /* ucnv.c/ucnv_safeClone() copied the main UConverter already */
 
-    uprv_memcpy(&localClone->mydata, cnv->extraInfo, sizeof(SCSUData));
+    uprv_memcpy(&localClone->mydata, cnv->extraInfo, পরিমাণ(SCSUData));
     localClone->cnv.extraInfo = &localClone->mydata;
-    localClone->cnv.isExtraLocal = true;
+    localClone->cnv.isExtraLocal = সঁচা;
 
-    return &localClone->cnv;
+    ঘূৰাই &localClone->cnv;
 }
 U_CDECL_END
 
-static const UConverterImpl _SCSUImpl={
+স্থির ধ্রুৱ UConverterImpl _SCSUImpl={
     UCNV_SCSU,
 
     nullptr,
@@ -2020,8 +2020,8 @@ static const UConverterImpl _SCSUImpl={
     nullptr
 };
 
-static const UConverterStaticData _SCSUStaticData={
-    sizeof(UConverterStaticData),
+স্থির ধ্রুৱ UConverterStaticData _SCSUStaticData={
+    পরিমাণ(UConverterStaticData),
     "SCSU",
     1212, /* CCSID for SCSU */
     UCNV_IBM, UCNV_SCSU,
@@ -2031,13 +2031,13 @@ static const UConverterStaticData _SCSUStaticData={
      * substitution string.
      */
     { 0x0e, 0xff, 0xfd, 0 }, 3,
-    false, false,
+    মিছা, মিছা,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _SCSUData=
+ধ্রুৱ UConverterSharedData _SCSUData=
         UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_SCSUStaticData, &_SCSUImpl);
 
 #endif

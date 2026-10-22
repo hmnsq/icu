@@ -16,11 +16,11 @@
 #ifndef REP_H
 #define REP_H
 
-#include "unicode/utypes.h"
+#অন্তর্ভাৱ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#যদি U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#অন্তর্ভাৱ "unicode/uobject.h"
 
 /**
  * \file 
@@ -74,21 +74,21 @@ class UnicodeString;
  * @author Alan Liu
  * @stable ICU 2.0
  */
-class U_COMMON_API Replaceable : public UObject {
+class U_COMMON_API Replaceable : সার্ৱজনিক UObject {
 
-public:
+সার্ৱজনিক:
     /**
      * Destructor.
      * @stable ICU 2.0
      */
-    virtual ~Replaceable();
+    আভাস ~Replaceable();
 
     /**
      * Returns the number of 16-bit code units in the text.
      * @return number of 16-bit code units in text
      * @stable ICU 1.8
      */ 
-    inline int32_t length() const;
+    অন্তঃস্থ int32_t length() ধ্রুৱ;
 
     /**
      * Returns the 16-bit code unit at the given offset into the text.
@@ -97,7 +97,7 @@ public:
      * @return 16-bit code unit of text at given offset
      * @stable ICU 1.8
      */
-    inline char16_t charAt(int32_t offset) const;
+    অন্তঃস্থ char16_t charAt(int32_t offset) ধ্রুৱ;
 
     /**
      * Returns the 32-bit code point at the given 16-bit offset into
@@ -111,7 +111,7 @@ public:
      * @return 32-bit code point of text at given offset
      * @stable ICU 1.8
      */
-    inline UChar32 char32At(int32_t offset) const;
+    অন্তঃস্থ UChar32 char32At(int32_t offset) ধ্রুৱ;
 
     /**
      * Copies characters in the range [<tt>start</tt>, <tt>limit</tt>) 
@@ -122,9 +122,9 @@ public:
      * @param target UnicodeString into which to copy characters.
      * @stable ICU 2.1
      */
-    virtual void extractBetween(int32_t start,
+    আভাস শূন্য extractBetween(int32_t start,
                                 int32_t limit,
-                                UnicodeString& target) const = 0;
+                                UnicodeString& target) ধ্রুৱ = 0;
 
     /**
      * Replaces a substring of this object with the given text.  If the
@@ -146,9 +146,9 @@ public:
      * to <code>limit - 1</code> 
      * @stable ICU 2.0
      */
-    virtual void handleReplaceBetween(int32_t start,
+    আভাস শূন্য handleReplaceBetween(int32_t start,
                                       int32_t limit,
-                                      const UnicodeString& text) = 0;
+                                      ধ্রুৱ UnicodeString& text) = 0;
     // Note: All other methods in this class take the names of
     // existing UnicodeString methods.  This method is the exception.
     // It is named differently because all replace methods of
@@ -174,7 +174,7 @@ public:
      * dest >= limit</code>.
      * @stable ICU 2.0
      */
-    virtual void copy(int32_t start, int32_t limit, int32_t dest) = 0;
+    আভাস শূন্য copy(int32_t start, int32_t limit, int32_t dest) = 0;
 
     /**
      * Returns true if this object contains metadata.  If a
@@ -185,7 +185,7 @@ public:
      * @return true if this object contains metadata
      * @stable ICU 2.2
      */
-    virtual UBool hasMetaData() const;
+    আভাস UBool hasMetaData() ধ্রুৱ;
 
     /**
      * Clone this object, an instance of a subclass of Replaceable.
@@ -199,15 +199,15 @@ public:
      * @see getDynamicClassID
      * @stable ICU 2.6
      */
-    virtual Replaceable *clone() const;
+    আভাস Replaceable *clone() ধ্রুৱ;
 
-protected:
+রক্ষিত:
 
     /**
      * Default constructor.
      * @stable ICU 2.4
      */
-    inline Replaceable();
+    অন্তঃস্থ Replaceable();
 
     /*
      * Assignment operator not declared. The compiler will provide one
@@ -224,36 +224,36 @@ protected:
      * Virtual version of length().
      * @stable ICU 2.4
      */ 
-    virtual int32_t getLength() const = 0;
+    আভাস int32_t getLength() ধ্রুৱ = 0;
 
     /**
      * Virtual version of charAt().
      * @stable ICU 2.4
      */
-    virtual char16_t getCharAt(int32_t offset) const = 0;
+    আভাস char16_t getCharAt(int32_t offset) ধ্রুৱ = 0;
 
     /**
      * Virtual version of char32At().
      * @stable ICU 2.4
      */
-    virtual UChar32 getChar32At(int32_t offset) const = 0;
+    আভাস UChar32 getChar32At(int32_t offset) ধ্রুৱ = 0;
 };
 
-inline Replaceable::Replaceable() {}
+অন্তঃস্থ Replaceable::Replaceable() {}
 
-inline int32_t
-Replaceable::length() const {
-    return getLength();
+অন্তঃস্থ int32_t
+Replaceable::length() ধ্রুৱ {
+    ঘূৰাই getLength();
 }
 
-inline char16_t
-Replaceable::charAt(int32_t offset) const {
-    return getCharAt(offset);
+অন্তঃস্থ char16_t
+Replaceable::charAt(int32_t offset) ধ্রুৱ {
+    ঘূৰাই getCharAt(offset);
 }
 
-inline UChar32
-Replaceable::char32At(int32_t offset) const {
-    return getChar32At(offset);
+অন্তঃস্থ UChar32
+Replaceable::char32At(int32_t offset) ধ্রুৱ {
+    ঘূৰাই getChar32At(offset);
 }
 
 // There is no rep.cpp, see unistr.cpp for Replaceable function implementations.

@@ -12,12 +12,12 @@
 #ifndef STRENUM_H
 #define STRENUM_H
 
-#include "unicode/utypes.h"
+#অন্তর্ভাৱ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#যদি U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
-#include "unicode/unistr.h"
+#অন্তর্ভাৱ "unicode/uobject.h"
+#অন্তর্ভাৱ "unicode/unistr.h"
 
 /**
  * \file 
@@ -58,13 +58,13 @@ U_NAMESPACE_BEGIN
  *
  * @stable ICU 2.4 
  */
-class U_COMMON_API StringEnumeration : public UObject { 
-public:
+class U_COMMON_API StringEnumeration : সার্ৱজনিক UObject { 
+সার্ৱজনিক:
     /**
      * Destructor.
      * @stable ICU 2.4
      */
-    virtual ~StringEnumeration();
+    আভাস ~StringEnumeration();
 
     /**
      * Clone this object, an instance of a subclass of StringEnumeration.
@@ -78,7 +78,7 @@ public:
      * @see getDynamicClassID
      * @stable ICU 2.8
      */
-    virtual StringEnumeration *clone() const;
+    আভাস StringEnumeration *clone() ধ্রুৱ;
 
     /**
      * <p>Return the number of elements that the iterator traverses.  If
@@ -97,7 +97,7 @@ public:
      * @return number of elements in the iterator.
      *
      * @stable ICU 2.4 */
-    virtual int32_t count(UErrorCode& status) const = 0;
+    আভাস int32_t গুনতি(UErrorCode& status) ধ্রুৱ = 0;
 
     /**
      * <p>Returns the next element as a NUL-terminated char*.  If there
@@ -129,7 +129,7 @@ public:
      *
      * @stable ICU 2.4 
      */
-    virtual const char* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND;
+    আভাস ধ্রুৱ ৱর্ণ* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND;
 
     /**
      * <p>Returns the next element as a NUL-terminated char16_t*.  If there
@@ -154,7 +154,7 @@ public:
      *
      * @stable ICU 2.4 
      */
-    virtual const char16_t* unext(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND;
+    আভাস ধ্রুৱ char16_t* unext(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND;
 
     /**
      * <p>Returns the next element a UnicodeString*.  If there are no
@@ -176,7 +176,7 @@ public:
      *
      * @stable ICU 2.4 
      */
-    virtual const UnicodeString* snext(UErrorCode& status) U_LIFETIME_BOUND;
+    আভাস ধ্রুৱ UnicodeString* snext(UErrorCode& status) U_LIFETIME_BOUND;
 
     /**
      * <p>Resets the iterator.  This re-establishes sync with the
@@ -190,7 +190,7 @@ public:
      *
      * @stable ICU 2.4 
      */
-    virtual void reset(UErrorCode& status) = 0;
+    আভাস শূন্য reset(UErrorCode& status) = 0;
 
     /**
      * Compares this enumeration to other to check if both are equal
@@ -199,7 +199,7 @@ public:
      * @return true if the enumerations are equal. false if not.
      * @stable ICU 3.6 
      */
-    virtual bool operator==(const StringEnumeration& that)const;
+    আভাস bool operator==(ধ্রুৱ StringEnumeration& that)ধ্রুৱ;
     /**
      * Compares this enumeration to other to check if both are not equal
      *
@@ -207,9 +207,9 @@ public:
      * @return true if the enumerations are equal. false if not.
      * @stable ICU 3.6 
      */
-    virtual bool operator!=(const StringEnumeration& that)const;
+    আভাস bool operator!=(ধ্রুৱ StringEnumeration& that)ধ্রুৱ;
 
-protected:
+রক্ষিত:
     /**
      * UnicodeString field for use with default implementations and subclasses.
      * @stable ICU 2.8
@@ -219,13 +219,13 @@ protected:
      * char * default buffer for use with default implementations and subclasses.
      * @stable ICU 2.8
      */
-    char charsBuffer[32];
+    ৱর্ণ charsBuffer[32];
     /**
      * char * buffer for use with default implementations and subclasses.
      * Allocated in constructor and in ensureCharsCapacity().
      * @stable ICU 2.8
      */
-    char *chars;
+    ৱর্ণ *chars;
     /**
      * Capacity of chars, for use with default implementations and subclasses.
      * @stable ICU 2.8
@@ -246,7 +246,7 @@ protected:
      * @param status ICU in/out error code.
      * @stable ICU 2.8
      */
-    void ensureCharsCapacity(int32_t capacity, UErrorCode &status);
+    শূন্য ensureCharsCapacity(int32_t capacity, UErrorCode &status);
 
     /**
      * Converts s to Unicode and sets unistr to the result.
@@ -270,7 +270,7 @@ protected:
      * @return A pointer to unistr.
      * @stable ICU 2.8
      */
-    UnicodeString* setChars(const char* s, int32_t length, UErrorCode& status) U_LIFETIME_BOUND;
+    UnicodeString* setChars(ধ্রুৱ ৱর্ণ* s, int32_t length, UErrorCode& status) U_LIFETIME_BOUND;
 };
 
 U_NAMESPACE_END

@@ -9,22 +9,22 @@
 ******************************************************************************
 */
 
-#include "unicode/utypes.h"
-#include "unicode/icudataver.h"
-#include "unicode/ures.h"
-#include "uresimp.h" /* for ures_getVersionByKey */
+#অন্তর্ভাৱ "unicode/utypes.h"
+#অন্তর্ভাৱ "unicode/icudataver.h"
+#অন্তর্ভাৱ "unicode/ures.h"
+#অন্তর্ভাৱ "uresimp.h" /* for ures_getVersionByKey */
 
-U_CAPI void U_EXPORT2 u_getDataVersion(UVersionInfo dataVersionFillin, UErrorCode *status) {
+U_CAPI শূন্য U_EXPORT2 u_getDataVersion(UVersionInfo dataVersionFillin, UErrorCode *status) {
     UResourceBundle *icudatares = nullptr;
     
-    if (U_FAILURE(*status)) {
-        return;
+    যদি (U_FAILURE(*status)) {
+        ঘূৰাই;
     }
     
-    if (dataVersionFillin != nullptr) {
+    যদি (dataVersionFillin != nullptr) {
         icudatares = ures_openDirect(nullptr, U_ICU_VERSION_BUNDLE , status);
-        if (U_SUCCESS(*status)) {
-            ures_getVersionByKey(icudatares, U_ICU_DATA_KEY, dataVersionFillin, status);
+        যদি (U_SUCCESS(*status)) {
+            ures_get_Version_By_চাবি(icudatares, U_ICU_DATA_চাবি, dataVersionFillin, status);
         }
         ures_close(icudatares);
     }

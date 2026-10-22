@@ -14,11 +14,11 @@
 #ifndef __DTINTRV_H__
 #define __DTINTRV_H__
 
-#include "unicode/utypes.h"
+#অন্তর্ভাৱ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#যদি U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#অন্তর্ভাৱ "unicode/uobject.h"
 
 /**
  * \file
@@ -33,8 +33,8 @@ U_NAMESPACE_BEGIN
  * It is a pair of UDate representing from UDate 1 to UDate 2.
  * @stable ICU 4.0
 **/
-class U_COMMON_API DateInterval : public UObject {
-public:
+class U_COMMON_API DateInterval : সার্ৱজনিক UObject {
+সার্ৱজনিক:
 
     /** 
      * Construct a DateInterval given a from date and a to date.
@@ -48,21 +48,21 @@ public:
      * destructor
      * @stable ICU 4.0
      */
-    virtual ~DateInterval();
+    আভাস ~DateInterval();
  
     /** 
      * Get the from date.
      * @return  the from date in dateInterval.
      * @stable ICU 4.0
      */
-    inline UDate getFromDate() const;
+    অন্তঃস্থ UDate getFromDate() ধ্রুৱ;
 
     /** 
      * Get the to date.
      * @return  the to date in dateInterval.
      * @stable ICU 4.0
      */
-    inline UDate getToDate() const;
+    অন্তঃস্থ UDate getToDate() ধ্রুৱ;
 
 
     /**
@@ -76,7 +76,7 @@ public:
      * @return          The class ID for all objects of this class.
      * @stable ICU 4.0
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    স্থির UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * Returns a unique class ID POLYMORPHICALLY. Pure virtual override. This
@@ -89,33 +89,33 @@ public:
      *                  other classes have different class IDs.
      * @stable ICU 4.0
      */
-    virtual UClassID getDynamicClassID() const override;
+    আভাস UClassID getDynamicClassID() ধ্রুৱ override;
 
     /**
      * Copy constructor.
      * @stable ICU 4.0
      */
-    DateInterval(const DateInterval& other);
+    DateInterval(ধ্রুৱ DateInterval& other);
 
     /**
      * Default assignment operator
      * @stable ICU 4.0
      */
-    DateInterval& operator=(const DateInterval&) U_LIFETIME_BOUND;
+    DateInterval& operator=(ধ্রুৱ DateInterval&) U_LIFETIME_BOUND;
 
     /**
      * Equality operator.
      * @return true if the two DateIntervals are the same
      * @stable ICU 4.0
      */
-    virtual bool operator==(const DateInterval& other) const;
+    আভাস bool operator==(ধ্রুৱ DateInterval& other) ধ্রুৱ;
 
     /**
      * Non-equality operator
      * @return true if the two DateIntervals are not the same
      * @stable ICU 4.0
      */
-    inline bool operator!=(const DateInterval& other) const;
+    অন্তঃস্থ bool operator!=(ধ্রুৱ DateInterval& other) ধ্রুৱ;
 
 
     /**
@@ -124,9 +124,9 @@ public:
      * @return a cloned DateInterval
      * @stable ICU 4.0
      */
-     virtual DateInterval* clone() const;
+     আভাস DateInterval* clone() ধ্রুৱ;
 
-private:
+গুপ্ত:
     /** 
      * Default constructor, not implemented.
      */
@@ -138,21 +138,21 @@ private:
 } ;// end class DateInterval
 
 
-inline UDate 
-DateInterval::getFromDate() const { 
-    return fromDate; 
+অন্তঃস্থ UDate 
+DateInterval::getFromDate() ধ্রুৱ { 
+    ঘূৰাই fromDate; 
 }
 
 
-inline UDate 
-DateInterval::getToDate() const { 
-    return toDate; 
+অন্তঃস্থ UDate 
+DateInterval::getToDate() ধ্রুৱ { 
+    ঘূৰাই toDate; 
 }
 
 
-inline bool
-DateInterval::operator!=(const DateInterval& other) const { 
-    return ( !operator==(other) );
+অন্তঃস্থ bool
+DateInterval::operator!=(ধ্রুৱ DateInterval& other) ধ্রুৱ { 
+    ঘূৰাই ( !operator==(other) );
 }
 
 

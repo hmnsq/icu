@@ -15,10 +15,10 @@
 ******************************************************************************
 */
 
-#include "utypeinfo.h"  // for 'typeid' to work
+#অন্তর্ভাৱ "utypeinfo.h"  // for 'typeid' to work
 
-#include "unicode/chariter.h"
-#include "unicode/schriter.h"
+#অন্তর্ভাৱ "unicode/chariter.h"
+#অন্তর্ভাৱ "unicode/schriter.h"
 
 U_NAMESPACE_BEGIN
 
@@ -31,24 +31,24 @@ StringCharacterIterator::StringCharacterIterator()
   // NEVER DEFAULT CONSTRUCT!
 }
 
-StringCharacterIterator::StringCharacterIterator(const UnicodeString& textStr)
+StringCharacterIterator::StringCharacterIterator(ধ্রুৱ UnicodeString& textStr)
   : UCharCharacterIterator(textStr.getBuffer(), textStr.length()),
     text(textStr)
 {
     // we had set the input parameter's array, now we need to set our copy's array
-    UCharCharacterIterator::text = this->text.getBuffer();
+    UCharCharacterIterator::text = এতত্->text.getBuffer();
 }
 
-StringCharacterIterator::StringCharacterIterator(const UnicodeString& textStr,
+StringCharacterIterator::StringCharacterIterator(ধ্রুৱ UnicodeString& textStr,
                                                  int32_t textPos)
   : UCharCharacterIterator(textStr.getBuffer(), textStr.length(), textPos),
     text(textStr)
 {
     // we had set the input parameter's array, now we need to set our copy's array
-    UCharCharacterIterator::text = this->text.getBuffer();
+    UCharCharacterIterator::text = এতত্->text.getBuffer();
 }
 
-StringCharacterIterator::StringCharacterIterator(const UnicodeString& textStr,
+StringCharacterIterator::StringCharacterIterator(ধ্রুৱ UnicodeString& textStr,
                                                  int32_t textBegin,
                                                  int32_t textEnd,
                                                  int32_t textPos)
@@ -56,63 +56,63 @@ StringCharacterIterator::StringCharacterIterator(const UnicodeString& textStr,
     text(textStr)
 {
     // we had set the input parameter's array, now we need to set our copy's array
-    UCharCharacterIterator::text = this->text.getBuffer();
+    UCharCharacterIterator::text = এতত্->text.getBuffer();
 }
 
-StringCharacterIterator::StringCharacterIterator(const StringCharacterIterator& that)
+StringCharacterIterator::StringCharacterIterator(ধ্রুৱ StringCharacterIterator& that)
   : UCharCharacterIterator(that),
     text(that.text)
 {
     // we had set the input parameter's array, now we need to set our copy's array
-    UCharCharacterIterator::text = this->text.getBuffer();
+    UCharCharacterIterator::text = এতত্->text.getBuffer();
 }
 
 StringCharacterIterator::~StringCharacterIterator() {
 }
 
 StringCharacterIterator&
-StringCharacterIterator::operator=(const StringCharacterIterator& that) U_LIFETIME_BOUND {
+StringCharacterIterator::operator=(ধ্রুৱ StringCharacterIterator& that) U_LIFETIME_BOUND {
     UCharCharacterIterator::operator=(that);
     text = that.text;
     // we had set the input parameter's array, now we need to set our copy's array
-    UCharCharacterIterator::text = this->text.getBuffer();
-    return *this;
+    UCharCharacterIterator::text = এতত্->text.getBuffer();
+    ঘূৰাই *এতত্;
 }
 
-bool
-StringCharacterIterator::operator==(const ForwardCharacterIterator& that) const {
-    if (this == &that) {
-        return true;
+তার্কিক
+StringCharacterIterator::operator==(ধ্রুৱ ForwardCharacterIterator& that) ধ্রুৱ {
+    যদি (এতত্ == &that) {
+        ঘূৰাই সঁচা;
     }
 
     // do not call UCharCharacterIterator::operator==()
     // because that checks for array pointer equality
     // while we compare UnicodeString objects
 
-    if (typeid(*this) != typeid(that)) {
-        return false;
+    যদি (typeid(*এতত্) != typeid(that)) {
+        ঘূৰাই মিছা;
     }
 
-    const StringCharacterIterator&    realThat = static_cast<const StringCharacterIterator&>(that);
+    ধ্রুৱ StringCharacterIterator&    realThat = static_cast<ধ্রুৱ StringCharacterIterator&>(that);
 
-    return text == realThat.text
+    ঘূৰাই text == realThat.text
         && pos == realThat.pos
         && begin == realThat.begin
         && end == realThat.end;
 }
 
 StringCharacterIterator*
-StringCharacterIterator::clone() const {
-    return new StringCharacterIterator(*this);
+StringCharacterIterator::clone() ধ্রুৱ {
+    ঘূৰাই নূতন StringCharacterIterator(*এতত্);
 }
 
-void
-StringCharacterIterator::setText(const UnicodeString& newText) {
+শূন্য
+StringCharacterIterator::setText(ধ্রুৱ UnicodeString& newText) {
     text = newText;
     UCharCharacterIterator::setText(text.getBuffer(), text.length());
 }
 
-void
+শূন্য
 StringCharacterIterator::getText(UnicodeString& result) {
     result = text;
 }

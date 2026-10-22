@@ -21,8 +21,8 @@
 #ifndef _PLATFORM_H
 #define _PLATFORM_H
 
-#include "unicode/uconfig.h"
-#include "unicode/uvernum.h"
+#অন্তর্ভাৱ "unicode/uconfig.h"
+#অন্তর্ভাৱ "unicode/uvernum.h"
 
 /**
  * \file
@@ -152,63 +152,63 @@
 
 #ifdef U_PLATFORM
     /* Use the predefined value. */
-#elif defined(__MINGW32__)
+#নোচেদ্যদি defined(__MINGW32__)
 #   define U_PLATFORM U_PF_MINGW
-#elif defined(__CYGWIN__)
+#নোচেদ্যদি defined(__CYGWIN__)
 #   define U_PLATFORM U_PF_CYGWIN
     /* Cygwin uchar.h doesn't exist until Cygwin 3.5. */
 #   include <cygwin/version.h>
-#elif defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+#নোচেদ্যদি defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 #   define U_PLATFORM U_PF_WINDOWS
-#elif defined(__ANDROID__)
+#নোচেদ্যদি defined(__ANDROID__)
 #   define U_PLATFORM U_PF_ANDROID
     /* Android wchar_t support depends on the API level. */
 #   include <android/api-level.h>
-#elif defined(__pnacl__) || defined(__native_client__)
+#নোচেদ্যদি defined(__pnacl__) || defined(__native_client__)
 #   define U_PLATFORM U_PF_BROWSER_NATIVE_CLIENT
-#elif defined(__Fuchsia__)
+#নোচেদ্যদি defined(__Fuchsia__)
 #   define U_PLATFORM U_PF_FUCHSIA
-#elif defined(linux) || defined(__linux__) || defined(__linux)
+#নোচেদ্যদি defined(linux) || defined(__linux__) || defined(__linux)
 #   define U_PLATFORM U_PF_LINUX
-#elif defined(__APPLE__) && defined(__MACH__)
+#নোচেদ্যদি defined(__APPLE__) && defined(__MACH__)
 #   include <TargetConditionals.h>
-#   if (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) && (defined(TARGET_OS_MACCATALYST) && !TARGET_OS_MACCATALYST)   /* variant of TARGET_OS_MAC */
+#   যদি (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) && (defined(TARGET_OS_MACCATALYST) && !TARGET_OS_MACCATALYST)   /* variant of TARGET_OS_MAC */
 #       define U_PLATFORM U_PF_IPHONE
-#   else
+#   অন্যথা
 #       define U_PLATFORM U_PF_DARWIN
 #   endif
-#elif defined(BSD) || defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__MirBSD__)
-#   if defined(__FreeBSD__)
+#নোচেদ্যদি defined(BSD) || defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__MirBSD__)
+#   যদি defined(__FreeBSD__)
 #       include <sys/endian.h>
 #   endif
 #   define U_PLATFORM U_PF_BSD
-#elif defined(sun) || defined(__sun)
+#নোচেদ্যদি defined(sun) || defined(__sun)
     /* Check defined(__SVR4) || defined(__svr4__) to distinguish Solaris from SunOS? */
 #   define U_PLATFORM U_PF_SOLARIS
-#   if defined(__GNUC__)
+#   যদি defined(__GNUC__)
         /* Solaris/GCC needs this header file to get the proper endianness. Normally, this
          * header file is included with stddef.h but on Solairs/GCC, the GCC version of stddef.h
          *  is included which does not include this header file.
          */
 #       include <sys/isa_defs.h>
 #   endif
-#elif defined(_AIX) || defined(__TOS_AIX__)
+#নোচেদ্যদি defined(_AIX) || defined(__TOS_AIX__)
 #   define U_PLATFORM U_PF_AIX
-#elif defined(_hpux) || defined(hpux) || defined(__hpux)
+#নোচেদ্যদি defined(_hpux) || defined(hpux) || defined(__hpux)
 #   define U_PLATFORM U_PF_HPUX
-#elif defined(sgi) || defined(__sgi)
+#নোচেদ্যদি defined(sgi) || defined(__sgi)
 #   define U_PLATFORM U_PF_IRIX
-#elif defined(__QNX__) || defined(__QNXNTO__)
+#নোচেদ্যদি defined(__QNX__) || defined(__QNXNTO__)
 #   define U_PLATFORM U_PF_QNX
-#elif defined(__TOS_MVS__)
+#নোচেদ্যদি defined(__TOS_MVS__)
 #   define U_PLATFORM U_PF_OS390
-#elif defined(__OS400__) || defined(__TOS_OS400__)
+#নোচেদ্যদি defined(__OS400__) || defined(__TOS_OS400__)
 #   define U_PLATFORM U_PF_OS400
-#elif defined(__HAIKU__)
+#নোচেদ্যদি defined(__HAIKU__)
 #   define U_PLATFORM U_PF_HAIKU
-#elif defined(__EMSCRIPTEN__)
+#নোচেদ্যদি defined(__EMSCRIPTEN__)
 #   define U_PLATFORM U_PF_EMSCRIPTEN
-#else
+#অন্যথা
 #   define U_PLATFORM U_PF_UNKNOWN
 #endif
 
@@ -219,7 +219,7 @@
  * Otherwise undefined.
  * @internal
  */
-#if (defined(_MSC_VER) && !(defined(__clang__) && __clang__)) || defined(U_IN_DOXYGEN)
+#যদি (defined(_MSC_VER) && !(defined(__clang__) && __clang__)) || defined(U_IN_DOXYGEN)
 #   define U_REAL_MSVC
 #endif
 
@@ -246,9 +246,9 @@
  */
 #ifdef U_PLATFORM_USES_ONLY_WIN32_API
     /* Use the predefined value. */
-#elif (U_PF_WINDOWS <= U_PLATFORM && U_PLATFORM <= U_PF_MINGW) || defined(CYGWINMSVC)
+#নোচেদ্যদি (U_PF_WINDOWS <= U_PLATFORM && U_PLATFORM <= U_PF_MINGW) || defined(CYGWINMSVC)
 #   define U_PLATFORM_USES_ONLY_WIN32_API 1
-#else
+#অন্যথা
     /* Cygwin implements POSIX. */
 #   define U_PLATFORM_USES_ONLY_WIN32_API 0
 #endif
@@ -261,9 +261,9 @@
  */
 #ifdef U_PLATFORM_HAS_WIN32_API
     /* Use the predefined value. */
-#elif U_PF_WINDOWS <= U_PLATFORM && U_PLATFORM <= U_PF_CYGWIN
+#নোচেদ্যদি U_PF_WINDOWS <= U_PLATFORM && U_PLATFORM <= U_PF_CYGWIN
 #   define U_PLATFORM_HAS_WIN32_API 1
-#else
+#অন্যথা
 #   define U_PLATFORM_HAS_WIN32_API 0
 #endif
 
@@ -275,7 +275,7 @@
  */
 #ifdef U_PLATFORM_HAS_WINUWP_API
     /* Use the predefined value. */
-#else
+#অন্যথা
 #   define U_PLATFORM_HAS_WINUWP_API 0
 #endif
 
@@ -287,9 +287,9 @@
  */
 #ifdef U_PLATFORM_IMPLEMENTS_POSIX
     /* Use the predefined value. */
-#elif U_PLATFORM_USES_ONLY_WIN32_API
+#নোচেদ্যদি U_PLATFORM_USES_ONLY_WIN32_API
 #   define U_PLATFORM_IMPLEMENTS_POSIX 0
-#else
+#অন্যথা
 #   define U_PLATFORM_IMPLEMENTS_POSIX 1
 #endif
 
@@ -300,9 +300,9 @@
  */
 #ifdef U_PLATFORM_IS_LINUX_BASED
     /* Use the predefined value. */
-#elif U_PF_LINUX <= U_PLATFORM && U_PLATFORM <= 4499
+#নোচেদ্যদি U_PF_LINUX <= U_PLATFORM && U_PLATFORM <= 4499
 #   define U_PLATFORM_IS_LINUX_BASED 1
-#else
+#অন্যথা
 #   define U_PLATFORM_IS_LINUX_BASED 0
 #endif
 
@@ -313,9 +313,9 @@
  */
 #ifdef U_PLATFORM_IS_DARWIN_BASED
     /* Use the predefined value. */
-#elif U_PF_DARWIN <= U_PLATFORM && U_PLATFORM <= U_PF_IPHONE
+#নোচেদ্যদি U_PF_DARWIN <= U_PLATFORM && U_PLATFORM <= U_PF_IPHONE
 #   define U_PLATFORM_IS_DARWIN_BASED 1
-#else
+#অন্যথা
 #   define U_PLATFORM_IS_DARWIN_BASED 0
 #endif
 
@@ -335,7 +335,7 @@
  */
 #ifdef __GNUC__
 #   define U_GCC_MAJOR_MINOR (__GNUC__ * 100 + __GNUC_MINOR__)
-#else
+#অন্যথা
 #   define U_GCC_MAJOR_MINOR 0
 #endif
 
@@ -346,25 +346,25 @@
  */
 #ifdef U_IS_BIG_ENDIAN
     /* Use the predefined value. */
-#elif defined(BYTE_ORDER) && defined(BIG_ENDIAN)
+#নোচেদ্যদি defined(BYTE_ORDER) && defined(BIG_ENDIAN)
 #   define U_IS_BIG_ENDIAN (BYTE_ORDER == BIG_ENDIAN)
-#elif defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__)
+#নোচেদ্যদি defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__)
     /* gcc */
 #   define U_IS_BIG_ENDIAN (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
-#elif defined(__BIG_ENDIAN__) || defined(_BIG_ENDIAN)
+#নোচেদ্যদি defined(__BIG_ENDIAN__) || defined(_BIG_ENDIAN)
 #   define U_IS_BIG_ENDIAN 1
-#elif defined(__LITTLE_ENDIAN__) || defined(_LITTLE_ENDIAN)
+#নোচেদ্যদি defined(__LITTLE_ENDIAN__) || defined(_LITTLE_ENDIAN)
 #   define U_IS_BIG_ENDIAN 0
-#elif U_PLATFORM == U_PF_OS390 || U_PLATFORM == U_PF_OS400 || defined(__s390__) || defined(__s390x__)
+#নোচেদ্যদি U_PLATFORM == U_PF_OS390 || U_PLATFORM == U_PF_OS400 || defined(__s390__) || defined(__s390x__)
     /* These platforms do not appear to predefine any endianness macros. */
 #   define U_IS_BIG_ENDIAN 1
-#elif defined(_PA_RISC1_0) || defined(_PA_RISC1_1) || defined(_PA_RISC2_0)
+#নোচেদ্যদি defined(_PA_RISC1_0) || defined(_PA_RISC1_1) || defined(_PA_RISC2_0)
     /* HPPA do not appear to predefine any endianness macros. */
 #   define U_IS_BIG_ENDIAN 1
-#elif defined(sparc) || defined(__sparc) || defined(__sparc__)
+#নোচেদ্যদি defined(sparc) || defined(__sparc) || defined(__sparc__)
     /* Some sparc based systems (e.g. Linux) do not predefine any endianness macros. */
 #   define U_IS_BIG_ENDIAN 1
-#else
+#অন্যথা
 #   define U_IS_BIG_ENDIAN 0
 #endif
 
@@ -376,39 +376,39 @@
  */
 #ifdef U_HAVE_DEBUG_LOCATION_NEW
     /* Use the predefined value. */
-#elif defined(_MSC_VER)
+#নোচেদ্যদি defined(_MSC_VER)
 #   define U_HAVE_DEBUG_LOCATION_NEW 1
-#else
+#অন্যথা
 #   define U_HAVE_DEBUG_LOCATION_NEW 0
 #endif
 
 /* Compatibility with compilers other than clang: http://clang.llvm.org/docs/LanguageExtensions.html */
 #ifdef __has_attribute
 #   define UPRV_HAS_ATTRIBUTE(x) __has_attribute(x)
-#else
+#অন্যথা
 #   define UPRV_HAS_ATTRIBUTE(x) 0
 #endif
 #ifdef __has_cpp_attribute
 #   define UPRV_HAS_CPP_ATTRIBUTE(x) __has_cpp_attribute(x)
-#else
+#অন্যথা
 #   define UPRV_HAS_CPP_ATTRIBUTE(x) 0
 #endif
 #ifdef __has_declspec_attribute
 #   define UPRV_HAS_DECLSPEC_ATTRIBUTE(x) __has_declspec_attribute(x)
-#else
+#অন্যথা
 #   define UPRV_HAS_DECLSPEC_ATTRIBUTE(x) 0
 #endif
 #ifdef __has_builtin
 #   define UPRV_HAS_BUILTIN(x) __has_builtin(x)
-#else
+#অন্যথা
 #   define UPRV_HAS_BUILTIN(x) 0
 #endif
 #ifdef __has_feature
 #   define UPRV_HAS_FEATURE(x) __has_feature(x)
-#else
+#অন্যথা
 #   define UPRV_HAS_FEATURE(x) 0
 #endif
-#if UPRV_HAS_FEATURE(address_sanitizer) || \
+#যদি UPRV_HAS_FEATURE(address_sanitizer) || \
     UPRV_HAS_FEATURE(memory_sanitizer) || \
     UPRV_HAS_FEATURE(thread_sanitizer) || \
     UPRV_HAS_FEATURE(undefined_sanitizer) || \
@@ -416,25 +416,25 @@
     defined(__SANITIZE_THREAD__) || \
     defined(__SANITIZE_UNDEFINED__)
 #   define UPRV_HAS_SANITIZER 1
-#else
+#অন্যথা
 #   define UPRV_HAS_SANITIZER 0
 #endif
 #ifdef __has_extension
 #   define UPRV_HAS_EXTENSION(x) __has_extension(x)
-#else
+#অন্যথা
 #   define UPRV_HAS_EXTENSION(x) 0
 #endif
 #ifdef __has_warning
 #   define UPRV_HAS_WARNING(x) __has_warning(x)
-#else
+#অন্যথা
 #   define UPRV_HAS_WARNING(x) 0
 #endif
 
 
-#if defined(__clang__)
+#যদি defined(__clang__)
 #define UPRV_NO_SANITIZE_FUNCTION __attribute__((no_sanitize("function")))
 #define UPRV_NO_SANITIZE_UNDEFINED __attribute__((no_sanitize("undefined")))
-#else
+#অন্যথা
 #define UPRV_NO_SANITIZE_FUNCTION
 #define UPRV_NO_SANITIZE_UNDEFINED
 #endif
@@ -444,9 +444,9 @@
  * Attribute to mark functions as malloc-like
  * @internal
  */
-#if defined(__GNUC__) && __GNUC__>=3
+#যদি defined(__GNUC__) && __GNUC__>=3
 #    define U_MALLOC_ATTR __attribute__ ((__malloc__))
-#else
+#অন্যথা
 #    define U_MALLOC_ATTR
 #endif
 
@@ -455,12 +455,12 @@
  * Attribute to specify the size of the allocated buffer for malloc-like functions
  * @internal
  */
-#if (defined(__GNUC__) &&                                            \
+#যদি (defined(__GNUC__) &&                                            \
         (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 3))) || \
         UPRV_HAS_ATTRIBUTE(alloc_size)
 #   define U_ALLOC_SIZE_ATTR(X) __attribute__ ((alloc_size(X)))
 #   define U_ALLOC_SIZE_ATTR2(X,Y) __attribute__ ((alloc_size(X,Y)))
-#else
+#অন্যথা
 #   define U_ALLOC_SIZE_ATTR(X)
 #   define U_ALLOC_SIZE_ATTR2(X,Y)
 #endif
@@ -472,26 +472,26 @@
  * @internal
  */
 #ifdef U_CPLUSPLUS_VERSION
-#   if U_CPLUSPLUS_VERSION != 0 && !defined(__cplusplus)
+#   যদি U_CPLUSPLUS_VERSION != 0 && !defined(__cplusplus)
 #       undef U_CPLUSPLUS_VERSION
 #       define U_CPLUSPLUS_VERSION 0
 #   endif
     /* Otherwise use the predefined value. */
-#elif !defined(__cplusplus)
+#নোচেদ্যদি !defined(__cplusplus)
 #   define U_CPLUSPLUS_VERSION 0
 // The value of _MSVC_LANG for C++23 preview is undocumented, except that it is larger than 202002.
 // As of this writing, it is 202004.
-#elif __cplusplus >= 202302L || (defined(_MSVC_LANG) && _MSVC_LANG > 202002L)
+#নোচেদ্যদি __cplusplus >= 202302L || (defined(_MSVC_LANG) && _MSVC_LANG > 202002L)
 #   define U_CPLUSPLUS_VERSION 23
-#elif __cplusplus >= 202002L || (defined(_MSVC_LANG) && _MSVC_LANG >= 202002L)
+#নোচেদ্যদি __cplusplus >= 202002L || (defined(_MSVC_LANG) && _MSVC_LANG >= 202002L)
 #   define U_CPLUSPLUS_VERSION 20
-#elif __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
+#নোচেদ্যদি __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 #   define U_CPLUSPLUS_VERSION 17
-#elif __cplusplus >= 201402L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201402L)
+#নোচেদ্যদি __cplusplus >= 201402L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201402L)
 #   define U_CPLUSPLUS_VERSION 14
-#elif __cplusplus >= 201103L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201103L)
+#নোচেদ্যদি __cplusplus >= 201103L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201103L)
 #   define U_CPLUSPLUS_VERSION 11
-#else
+#অন্যথা
     // C++98 or C++03
 #   define U_CPLUSPLUS_VERSION 1
 #endif
@@ -502,17 +502,17 @@
  * https://clang.llvm.org/docs/AttributeReference.html#fallthrough
  * @internal
  */
-#if defined(U_FALLTHROUGH)
+#যদি defined(U_FALLTHROUGH)
     // Use the predefined value.
-#elif defined(__clang__)
+#নোচেদ্যদি defined(__clang__)
     // Test for compiler vs. feature separately.
     // Other compilers might choke on the feature test.
-#    if UPRV_HAS_CPP_ATTRIBUTE(clang::fallthrough) || \
+#    যদি UPRV_HAS_CPP_ATTRIBUTE(clang::fallthrough) || \
              (UPRV_HAS_FEATURE(cxx_attributes) &&     \
              UPRV_HAS_WARNING("-Wimplicit-fallthrough"))
 #       define U_FALLTHROUGH [[clang::fallthrough]]
 #   endif
-#elif defined(__GNUC__) && (__GNUC__ >= 7)
+#নোচেদ্যদি defined(__GNUC__) && (__GNUC__ >= 7)
 #   define U_FALLTHROUGH __attribute__((fallthrough))
 #endif
 
@@ -536,13 +536,13 @@
  */
 #ifndef __cplusplus
 // Not for C.
-#elif defined(U_LIFETIME_BOUND)
+#নোচেদ্যদি defined(U_LIFETIME_BOUND)
 // Use the predefined value.
-#elif  UPRV_HAS_CPP_ATTRIBUTE(clang::lifetimebound)
+#নোচেদ্যদি  UPRV_HAS_CPP_ATTRIBUTE(clang::lifetimebound)
 #   define U_LIFETIME_BOUND [[clang::lifetimebound]]
-#elif UPRV_HAS_CPP_ATTRIBUTE(msvc::lifetimebound)
+#নোচেদ্যদি UPRV_HAS_CPP_ATTRIBUTE(msvc::lifetimebound)
 #   define U_LIFETIME_BOUND [[msvc::lifetimebound]]
-#elif UPRV_HAS_ATTRIBUTE(lifetimebound)
+#নোচেদ্যদি UPRV_HAS_ATTRIBUTE(lifetimebound)
 #   define U_LIFETIME_BOUND __attribute__((lifetimebound))
 #endif
 
@@ -613,11 +613,11 @@
  */
 #ifdef U_CHARSET_FAMILY
     /* Use the predefined value. */
-#elif U_PLATFORM == U_PF_OS390 && (!defined(__CHARSET_LIB) || !__CHARSET_LIB)
+#নোচেদ্যদি U_PLATFORM == U_PF_OS390 && (!defined(__CHARSET_LIB) || !__CHARSET_LIB)
 #   define U_CHARSET_FAMILY U_EBCDIC_FAMILY
-#elif U_PLATFORM == U_PF_OS400 && !defined(__UTF32__)
+#নোচেদ্যদি U_PLATFORM == U_PF_OS400 && !defined(__UTF32__)
 #   define U_CHARSET_FAMILY U_EBCDIC_FAMILY
-#else
+#অন্যথা
 #   define U_CHARSET_FAMILY U_ASCII_FAMILY
 #endif
 
@@ -643,10 +643,10 @@
  */
 #ifdef U_CHARSET_IS_UTF8
     /* Use the predefined value. */
-#elif U_PLATFORM_IS_LINUX_BASED || U_PLATFORM_IS_DARWIN_BASED || \
+#নোচেদ্যদি U_PLATFORM_IS_LINUX_BASED || U_PLATFORM_IS_DARWIN_BASED || \
         U_PLATFORM == U_PF_EMSCRIPTEN
 #   define U_CHARSET_IS_UTF8 1
-#else
+#অন্যথা
 #   define U_CHARSET_IS_UTF8 0
 #endif
 
@@ -664,14 +664,14 @@
  */
 #ifdef U_HAVE_WCHAR_H
     /* Use the predefined value. */
-#elif U_PLATFORM == U_PF_ANDROID && __ANDROID_API__ < 9
+#নোচেদ্যদি U_PLATFORM == U_PF_ANDROID && __ANDROID_API__ < 9
     /*
      * Android before Gingerbread (Android 2.3, API level 9) did not support wchar_t.
      * The type and header existed, but the library functions did not work as expected.
      * The size of wchar_t was 1 but L"xyz" string literals had 32-bit units anyway.
      */
 #   define U_HAVE_WCHAR_H 0
-#else
+#অন্যথা
 #   define U_HAVE_WCHAR_H 1
 #endif
 
@@ -683,15 +683,15 @@
  */
 #ifdef U_SIZEOF_WCHAR_T
     /* Use the predefined value. */
-#elif (U_PLATFORM == U_PF_ANDROID && __ANDROID_API__ < 9)
+#নোচেদ্যদি (U_PLATFORM == U_PF_ANDROID && __ANDROID_API__ < 9)
     /*
      * Classic Mac OS and Mac OS X before 10.3 (Panther) did not support wchar_t or wstring.
      * Newer Mac OS X has size 4.
      */
 #   define U_SIZEOF_WCHAR_T 1
-#elif U_PLATFORM_HAS_WIN32_API || U_PLATFORM == U_PF_CYGWIN
+#নোচেদ্যদি U_PLATFORM_HAS_WIN32_API || U_PLATFORM == U_PF_CYGWIN
 #   define U_SIZEOF_WCHAR_T 2
-#elif U_PLATFORM == U_PF_AIX
+#নোচেদ্যদি U_PLATFORM == U_PF_AIX
     /*
      * AIX 6.1 information, section "Wide character data representation":
      * "... the wchar_t datatype is 32-bit in the 64-bit environment and
@@ -702,10 +702,10 @@
      */
 #   ifdef __64BIT__
 #       define U_SIZEOF_WCHAR_T 4
-#   else
+#   অন্যথা
 #       define U_SIZEOF_WCHAR_T 2
 #   endif
-#elif U_PLATFORM == U_PF_OS390
+#নোচেদ্যদি U_PLATFORM == U_PF_OS390
     /*
      * z/OS V1R11 information center, section "LP64 | ILP32":
      * "In 31-bit mode, the size of long and pointers is 4 bytes and the size of wchar_t is 2 bytes.
@@ -713,11 +713,11 @@
      */
 #   ifdef _LP64
 #       define U_SIZEOF_WCHAR_T 4
-#   else
+#   অন্যথা
 #       define U_SIZEOF_WCHAR_T 2
 #   endif
-#elif U_PLATFORM == U_PF_OS400
-#   if defined(__UTF32__)
+#নোচেদ্যদি U_PLATFORM == U_PF_OS400
+#   যদি defined(__UTF32__)
         /*
          * LOCALETYPE(*LOCALEUTF) is specified.
          * Wide-character strings are in UTF-32,
@@ -731,7 +731,7 @@
          * narrow-character strings are in EBCDIC.
          */
 #       define U_SIZEOF_WCHAR_T 2
-#   else
+#   অন্যথা
         /*
          * LOCALETYPE(*CLD) or LOCALETYPE(*LOCALE) is specified.
          * Wide-character strings are in 16-bit EBCDIC,
@@ -739,7 +739,7 @@
          */
 #       define U_SIZEOF_WCHAR_T 2
 #   endif
-#else
+#অন্যথা
 #   define U_SIZEOF_WCHAR_T 4
 #endif
 
@@ -759,18 +759,18 @@
  */
 #ifdef U_HAVE_CHAR16_T
     /* Use the predefined value. */
-#else
+#অন্যথা
     /*
      * Notes:
      * C++11 and C11 require support for UTF-16 literals
      * Doesn't work on Mac C11 (see workaround in ptypes.h)
      * or Cygwin less than 3.5.
      */
-#   if defined(__cplusplus)
+#   যদি defined(__cplusplus)
 #       define U_HAVE_CHAR16_T 1
 #   elif U_PLATFORM_IS_DARWIN_BASED || (U_PLATFORM == U_PF_CYGWIN && CYGWIN_VERSION_DLL_MAJOR < 3005)
 #       define U_HAVE_CHAR16_T 0
-#   else
+#   অন্যথা
         // conformant C11
 #       define U_HAVE_CHAR16_T 1
 #   endif
@@ -787,16 +787,16 @@
  */
 #ifdef U_DECLARE_UTF16
     /* Use the predefined value. */
-#elif U_HAVE_CHAR16_T \
+#নোচেদ্যদি U_HAVE_CHAR16_T \
     || (defined(__xlC__) && defined(__IBM_UTF_LITERAL) && U_SIZEOF_WCHAR_T != 2) \
     || (defined(__HP_aCC) && __HP_aCC >= 035000) \
     || (defined(__HP_cc) && __HP_cc >= 111106) \
     || (defined(U_IN_DOXYGEN))
 #   define U_DECLARE_UTF16(string) u ## string
-#elif U_SIZEOF_WCHAR_T == 2 \
+#নোচেদ্যদি U_SIZEOF_WCHAR_T == 2 \
     && (U_CHARSET_FAMILY == 0 || (U_PF_OS390 <= U_PLATFORM && U_PLATFORM <= U_PF_OS400 && defined(__UCS2__)))
 #   define U_DECLARE_UTF16(string) L ## string
-#else
+#অন্যথা
     /* Leave U_DECLARE_UTF16 undefined. See unistr.h. */
 #endif
 
@@ -808,38 +808,38 @@
 
 #ifdef U_EXPORT
     /* Use the predefined value. */
-#elif defined(U_STATIC_IMPLEMENTATION)
+#নোচেদ্যদি defined(U_STATIC_IMPLEMENTATION)
 #   define U_EXPORT
-#elif defined(_MSC_VER) || (UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllexport__) && \
+#নোচেদ্যদি defined(_MSC_VER) || (UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllexport__) && \
                             UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllimport__))
 #   define U_EXPORT __declspec(dllexport)
-#elif defined(__GNUC__) || defined(__open_xl__)
+#নোচেদ্যদি defined(__GNUC__) || defined(__open_xl__)
 #   define U_EXPORT __attribute__((visibility("default")))
-#elif (defined(__SUNPRO_CC) && __SUNPRO_CC >= 0x550) \
+#নোচেদ্যদি (defined(__SUNPRO_CC) && __SUNPRO_CC >= 0x550) \
    || (defined(__SUNPRO_C) && __SUNPRO_C >= 0x550) 
 #   define U_EXPORT __global
 /*#elif defined(__HP_aCC) || defined(__HP_cc)
 #   define U_EXPORT __declspec(dllexport)*/
-#else
+#অন্যথা
 #   define U_EXPORT
 #endif
 
 /* U_CALLCONV is related to U_EXPORT2 */
 #ifdef U_EXPORT2
     /* Use the predefined value. */
-#elif defined(_MSC_VER)
+#নোচেদ্যদি defined(_MSC_VER)
 #   define U_EXPORT2 __cdecl
-#else
+#অন্যথা
 #   define U_EXPORT2
 #endif
 
 #ifdef U_IMPORT
     /* Use the predefined value. */
-#elif defined(_MSC_VER) || (UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllexport__) && \
+#নোচেদ্যদি defined(_MSC_VER) || (UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllexport__) && \
                             UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllimport__))
     /* Windows needs to export/import data. */
 #   define U_IMPORT __declspec(dllimport)
-#else
+#অন্যথা
 #   define U_IMPORT 
 #endif
 
@@ -852,9 +852,9 @@
  */
 #ifdef U_HIDDEN
     /* Use the predefined value. */
-#elif defined(__GNUC__) || defined(__open_xl__)
+#নোচেদ্যদি defined(__GNUC__) || defined(__open_xl__)
 #   define U_HIDDEN __attribute__((visibility("hidden")))
-#else
+#অন্যথা
 #   define U_HIDDEN 
 #endif
 
@@ -875,9 +875,9 @@
  *
  * @stable ICU 2.0
  */
-#if U_PLATFORM == U_PF_OS390 && defined(__cplusplus)
+#যদি U_PLATFORM == U_PF_OS390 && defined(__cplusplus)
 #    define U_CALLCONV __cdecl
-#else
+#অন্যথা
 #    define U_CALLCONV U_EXPORT2
 #endif
 
@@ -886,9 +886,9 @@
  * Similar to U_CALLCONV, but only used on function pointers.
  * @internal
  */
-#if U_PLATFORM == U_PF_OS390 && defined(__cplusplus)
+#যদি U_PLATFORM == U_PF_OS390 && defined(__cplusplus)
 #    define U_CALLCONV_FPTR U_CALLCONV
-#else
+#অন্যথা
 #    define U_CALLCONV_FPTR
 #endif
 /** @} */

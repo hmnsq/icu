@@ -19,8 +19,8 @@
 #ifndef __BMPSET_H__
 #define __BMPSET_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uniset.h"
+#অন্তর্ভাৱ "unicode/utypes.h"
+#অন্তর্ভাৱ "unicode/uniset.h"
 
 U_NAMESPACE_BEGIN
 
@@ -35,45 +35,45 @@ U_NAMESPACE_BEGIN
  * Supplementary characters: Binary search over
  * the supplementary part of the parent set's inversion list.
  */
-class BMPSet : public UMemory {
-public:
-    BMPSet(const int32_t *parentList, int32_t parentListLength);
-    BMPSet(const BMPSet &otherBMPSet, const int32_t *newParentList, int32_t newParentListLength);
-    virtual ~BMPSet();
+class BMPSet : সার্ৱজনিক UMemory {
+সার্ৱজনিক:
+    BMPSet(ধ্রুৱ int32_t *parentList, int32_t parentListLength);
+    BMPSet(ধ্রুৱ BMPSet &otherBMPSet, ধ্রুৱ int32_t *newParentList, int32_t newParentListLength);
+    আভাস ~BMPSet();
 
-    virtual UBool contains(UChar32 c) const;
+    আভাস UBool contains(UChar32 c) ধ্রুৱ;
 
     /*
      * Span the initial substring for which each character c has spanCondition==contains(c).
      * It must be s<limit and spanCondition==0 or 1.
      * @return The string pointer which limits the span.
      */
-    const char16_t *span(const char16_t *s, const char16_t *limit, USetSpanCondition spanCondition) const;
+    ধ্রুৱ char16_t *span(ধ্রুৱ char16_t *s, ধ্রুৱ char16_t *limit, USetSpanCondition spanCondition) ধ্রুৱ;
 
     /*
      * Span the trailing substring for which each character c has spanCondition==contains(c).
      * It must be s<limit and spanCondition==0 or 1.
      * @return The string pointer which starts the span.
      */
-    const char16_t *spanBack(const char16_t *s, const char16_t *limit, USetSpanCondition spanCondition) const;
+    ধ্রুৱ char16_t *spanBack(ধ্রুৱ char16_t *s, ধ্রুৱ char16_t *limit, USetSpanCondition spanCondition) ধ্রুৱ;
 
     /*
      * Span the initial substring for which each character c has spanCondition==contains(c).
      * It must be length>0 and spanCondition==0 or 1.
      * @return The string pointer which limits the span.
      */
-    const uint8_t *spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    ধ্রুৱ uint8_t *spanUTF8(ধ্রুৱ uint8_t *s, int32_t length, USetSpanCondition spanCondition) ধ্রুৱ;
 
     /*
      * Span the trailing substring for which each character c has spanCondition==contains(c).
      * It must be length>0 and spanCondition==0 or 1.
      * @return The start of the span.
      */
-    int32_t spanBackUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t spanBackUTF8(ধ্রুৱ uint8_t *s, int32_t length, USetSpanCondition spanCondition) ধ্রুৱ;
 
-private:
-    void initBits();
-    void overrideIllegal();
+গুপ্ত:
+    শূন্য initBits();
+    শূন্য overrideIllegal();
 
     /**
      * Same as UnicodeSet::findCodePoint(UChar32 c) const except that the
@@ -92,9 +92,9 @@ private:
      * @return the smallest integer i in the range lo..hi,
      *         inclusive, such that c < list[i]
      */
-    int32_t findCodePoint(UChar32 c, int32_t lo, int32_t hi) const;
+    int32_t findCodePoint(UChar32 c, int32_t lo, int32_t hi) ধ্রুৱ;
 
-    inline UBool containsSlow(UChar32 c, int32_t lo, int32_t hi) const;
+    অন্তঃস্থ UBool containsSlow(UChar32 c, int32_t lo, int32_t hi) ধ্রুৱ;
 
     /*
      * One byte 0 or 1 per Latin-1 character.
@@ -151,12 +151,12 @@ private:
      * for mixed BMP blocks and for supplementary code points.
      * The list is terminated with list[listLength-1]=0x110000.
      */
-    const int32_t *list;
+    ধ্রুৱ int32_t *list;
     int32_t listLength;
 };
 
-inline UBool BMPSet::containsSlow(UChar32 c, int32_t lo, int32_t hi) const {
-    return findCodePoint(c, lo, hi) & 1;
+অন্তঃস্থ UBool BMPSet::containsSlow(UChar32 c, int32_t lo, int32_t hi) ধ্রুৱ {
+    ঘূৰাই findCodePoint(c, lo, hi) & 1;
 }
 
 U_NAMESPACE_END

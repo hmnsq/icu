@@ -14,13 +14,13 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/appendable.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/uobject.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "uassert.h"
+#অন্তর্ভাৱ "unicode/utypes.h"
+#অন্তর্ভাৱ "unicode/appendable.h"
+#অন্তর্ভাৱ "unicode/ucharstrie.h"
+#অন্তর্ভাৱ "unicode/uobject.h"
+#অন্তর্ভাৱ "unicode/utf16.h"
+#অন্তর্ভাৱ "cmemory.h"
+#অন্তর্ভাৱ "uassert.h"
 
 U_NAMESPACE_BEGIN
 
@@ -29,20 +29,20 @@ UCharsTrie::~UCharsTrie() {
 }
 
 UStringTrieResult
-UCharsTrie::current() const {
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
-    } else {
-        int32_t node;
-        return (remainingMatchLength_<0 && (node=*pos)>=kMinValueLead) ?
-                valueResult(node) : USTRINGTRIE_NO_VALUE;
+UCharsTrie::current() ধ্রুৱ {
+    ধ্রুৱ char16_t *pos=pos_;
+    যদি(pos==nullptr) {
+        ঘূৰাই USTRINGTRIE_NO_MATCH;
+    } অন্যথা {
+        int32_t গ্ৰন্থি;
+        ঘূৰাই (remainingMatchLength_<0 && (গ্ৰন্থি=*pos)>=k_Min_মান_Lead) ?
+                মান_Result(গ্ৰন্থি) : USTRINGTRIE_NO_মান;
     }
 }
 
 UStringTrieResult
 UCharsTrie::firstForCodePoint(UChar32 cp) {
-    return cp<=0xffff ?
+    ঘূৰাই cp<=0xffff ?
         first(cp) :
         (USTRINGTRIE_HAS_NEXT(first(U16_LEAD(cp))) ?
             next(U16_TRAIL(cp)) :
@@ -51,7 +51,7 @@ UCharsTrie::firstForCodePoint(UChar32 cp) {
 
 UStringTrieResult
 UCharsTrie::nextForCodePoint(UChar32 cp) {
-    return cp<=0xffff ?
+    ঘূৰাই cp<=0xffff ?
         next(cp) :
         (USTRINGTRIE_HAS_NEXT(next(U16_LEAD(cp))) ?
             next(U16_TRAIL(cp)) :
@@ -59,19 +59,19 @@ UCharsTrie::nextForCodePoint(UChar32 cp) {
 }
 
 UStringTrieResult
-UCharsTrie::branchNext(const char16_t *pos, int32_t length, int32_t uchar) {
+UCharsTrie::branchNext(ধ্রুৱ char16_t *pos, int32_t length, int32_t uchar) {
     // Branch according to the current unit.
-    if(length==0) {
+    যদি(length==0) {
         length=*pos++;
     }
     ++length;
     // The length of the branch is the number of units to select from.
     // The data structure encodes a binary search.
-    while(length>kMaxBranchLinearSubNodeLength) {
-        if(uchar<*pos++) {
+    যেতিয়ালৈ(length>k_Max_Branch_Linear_Sub_গ্ৰন্থি_Length) {
+        যদি(uchar<*pos++) {
             length>>=1;
             pos=jumpByDelta(pos);
-        } else {
+        } অন্যথা {
             length=length-(length>>1);
             pos=skipDelta(pos);
         }
@@ -79,337 +79,337 @@ UCharsTrie::branchNext(const char16_t *pos, int32_t length, int32_t uchar) {
     // Drop down to linear search for the last few units.
     // length>=2 because the loop body above sees length>kMaxBranchLinearSubNodeLength>=3
     // and divides length by 2.
-    do {
-        if(uchar==*pos++) {
+    কৰা {
+        যদি(uchar==*pos++) {
             UStringTrieResult result;
-            int32_t node=*pos;
-            if(node&kValueIsFinal) {
+            int32_t গ্ৰন্থি=*pos;
+            যদি(গ্ৰন্থি&k_মান_Is_Final) {
                 // Leave the final value for getValue() to read.
-                result=USTRINGTRIE_FINAL_VALUE;
-            } else {
+                result=USTRINGTRIE_FINAL_মান;
+            } অন্যথা {
                 // Use the non-final value as the jump delta.
                 ++pos;
                 // int32_t delta=readValue(pos, node);
                 int32_t delta;
-                if(node<kMinTwoUnitValueLead) {
-                    delta=node;
-                } else if(node<kThreeUnitValueLead) {
-                    delta=((node-kMinTwoUnitValueLead)<<16)|*pos++;
-                } else {
+                যদি(গ্ৰন্থি<k_Min_Two_Unit_মান_Lead) {
+                    delta=গ্ৰন্থি;
+                } অন্যথা যদি(গ্ৰন্থি<k_Three_Unit_মান_Lead) {
+                    delta=((গ্ৰন্থি-k_Min_Two_Unit_মান_Lead)<<16)|*pos++;
+                } অন্যথা {
                     delta=(pos[0]<<16)|pos[1];
                     pos+=2;
                 }
                 // end readValue()
                 pos+=delta;
-                node=*pos;
-                result= node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
+                গ্ৰন্থি=*pos;
+                result= গ্ৰন্থি>=k_Min_মান_Lead ? মান_Result(গ্ৰন্থি) : USTRINGTRIE_NO_মান;
             }
             pos_=pos;
-            return result;
+            ঘূৰাই result;
         }
         --length;
-        pos=skipValue(pos);
-    } while(length>1);
-    if(uchar==*pos++) {
+        pos=skip_মান(pos);
+    } যেতিয়ালৈ(length>1);
+    যদি(uchar==*pos++) {
         pos_=pos;
-        int32_t node=*pos;
-        return node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
-    } else {
+        int32_t গ্ৰন্থি=*pos;
+        ঘূৰাই গ্ৰন্থি>=k_Min_মান_Lead ? মান_Result(গ্ৰন্থি) : USTRINGTRIE_NO_মান;
+    } অন্যথা {
         stop();
-        return USTRINGTRIE_NO_MATCH;
+        ঘূৰাই USTRINGTRIE_NO_MATCH;
     }
 }
 
 UStringTrieResult
-UCharsTrie::nextImpl(const char16_t *pos, int32_t uchar) {
-    int32_t node=*pos++;
-    for(;;) {
-        if(node<kMinLinearMatch) {
-            return branchNext(pos, node, uchar);
-        } else if(node<kMinValueLead) {
+UCharsTrie::nextImpl(ধ্রুৱ char16_t *pos, int32_t uchar) {
+    int32_t গ্ৰন্থি=*pos++;
+    বাবে(;;) {
+        যদি(গ্ৰন্থি<kMinLinearMatch) {
+            ঘূৰাই branchNext(pos, গ্ৰন্থি, uchar);
+        } অন্যথা যদি(গ্ৰন্থি<k_Min_মান_Lead) {
             // Match the first of length+1 units.
-            int32_t length=node-kMinLinearMatch;  // Actual match length minus 1.
-            if(uchar==*pos++) {
+            int32_t length=গ্ৰন্থি-kMinLinearMatch;  // Actual match length minus 1.
+            যদি(uchar==*pos++) {
                 remainingMatchLength_=--length;
                 pos_=pos;
-                return (length<0 && (node=*pos)>=kMinValueLead) ?
-                        valueResult(node) : USTRINGTRIE_NO_VALUE;
-            } else {
+                ঘূৰাই (length<0 && (গ্ৰন্থি=*pos)>=k_Min_মান_Lead) ?
+                        মান_Result(গ্ৰন্থি) : USTRINGTRIE_NO_মান;
+            } অন্যথা {
                 // No match.
-                break;
+                ভঙ্গ;
             }
-        } else if(node&kValueIsFinal) {
+        } অন্যথা যদি(গ্ৰন্থি&k_মান_Is_Final) {
             // No further matching units.
-            break;
-        } else {
+            ভঙ্গ;
+        } অন্যথা {
             // Skip intermediate value.
-            pos=skipNodeValue(pos, node);
-            node&=kNodeTypeMask;
+            pos=skip_গ্ৰন্থি_মান(pos, গ্ৰন্থি);
+            গ্ৰন্থি&=k_গ্ৰন্থি_Type_Mask;
         }
     }
     stop();
-    return USTRINGTRIE_NO_MATCH;
+    ঘূৰাই USTRINGTRIE_NO_MATCH;
 }
 
 UStringTrieResult
 UCharsTrie::next(int32_t uchar) {
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    ধ্রুৱ char16_t *pos=pos_;
+    যদি(pos==nullptr) {
+        ঘূৰাই USTRINGTRIE_NO_MATCH;
     }
     int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    if(length>=0) {
+    যদি(length>=0) {
         // Remaining part of a linear-match node.
-        if(uchar==*pos++) {
+        যদি(uchar==*pos++) {
             remainingMatchLength_=--length;
             pos_=pos;
-            int32_t node;
-            return (length<0 && (node=*pos)>=kMinValueLead) ?
-                    valueResult(node) : USTRINGTRIE_NO_VALUE;
-        } else {
+            int32_t গ্ৰন্থি;
+            ঘূৰাই (length<0 && (গ্ৰন্থি=*pos)>=k_Min_মান_Lead) ?
+                    মান_Result(গ্ৰন্থি) : USTRINGTRIE_NO_মান;
+        } অন্যথা {
             stop();
-            return USTRINGTRIE_NO_MATCH;
+            ঘূৰাই USTRINGTRIE_NO_MATCH;
         }
     }
-    return nextImpl(pos, uchar);
+    ঘূৰাই nextImpl(pos, uchar);
 }
 
 UStringTrieResult
 UCharsTrie::next(ConstChar16Ptr ptr, int32_t sLength) {
-    const char16_t *s=ptr;
-    if(sLength<0 ? *s==0 : sLength==0) {
+    ধ্রুৱ char16_t *s=ptr;
+    যদি(sLength<0 ? *s==0 : sLength==0) {
         // Empty input.
-        return current();
+        ঘূৰাই current();
     }
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    ধ্রুৱ char16_t *pos=pos_;
+    যদি(pos==nullptr) {
+        ঘূৰাই USTRINGTRIE_NO_MATCH;
     }
     int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    for(;;) {
+    বাবে(;;) {
         // Fetch the next input unit, if there is one.
         // Continue a linear-match node without rechecking sLength<0.
         int32_t uchar;
-        if(sLength<0) {
-            for(;;) {
-                if((uchar=*s++)==0) {
+        যদি(sLength<0) {
+            বাবে(;;) {
+                যদি((uchar=*s++)==0) {
                     remainingMatchLength_=length;
                     pos_=pos;
-                    int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
-                            valueResult(node) : USTRINGTRIE_NO_VALUE;
+                    int32_t গ্ৰন্থি;
+                    ঘূৰাই (length<0 && (গ্ৰন্থি=*pos)>=k_Min_মান_Lead) ?
+                            মান_Result(গ্ৰন্থি) : USTRINGTRIE_NO_মান;
                 }
-                if(length<0) {
+                যদি(length<0) {
                     remainingMatchLength_=length;
-                    break;
+                    ভঙ্গ;
                 }
-                if(uchar!=*pos) {
+                যদি(uchar!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ঘূৰাই USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
             }
-        } else {
-            for(;;) {
-                if(sLength==0) {
+        } অন্যথা {
+            বাবে(;;) {
+                যদি(sLength==0) {
                     remainingMatchLength_=length;
                     pos_=pos;
-                    int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
-                            valueResult(node) : USTRINGTRIE_NO_VALUE;
+                    int32_t গ্ৰন্থি;
+                    ঘূৰাই (length<0 && (গ্ৰন্থি=*pos)>=k_Min_মান_Lead) ?
+                            মান_Result(গ্ৰন্থি) : USTRINGTRIE_NO_মান;
                 }
                 uchar=*s++;
                 --sLength;
-                if(length<0) {
+                যদি(length<0) {
                     remainingMatchLength_=length;
-                    break;
+                    ভঙ্গ;
                 }
-                if(uchar!=*pos) {
+                যদি(uchar!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ঘূৰাই USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
             }
         }
-        int32_t node=*pos++;
-        for(;;) {
-            if(node<kMinLinearMatch) {
-                UStringTrieResult result=branchNext(pos, node, uchar);
-                if(result==USTRINGTRIE_NO_MATCH) {
-                    return USTRINGTRIE_NO_MATCH;
+        int32_t গ্ৰন্থি=*pos++;
+        বাবে(;;) {
+            যদি(গ্ৰন্থি<kMinLinearMatch) {
+                UStringTrieResult result=branchNext(pos, গ্ৰন্থি, uchar);
+                যদি(result==USTRINGTRIE_NO_MATCH) {
+                    ঘূৰাই USTRINGTRIE_NO_MATCH;
                 }
                 // Fetch the next input unit, if there is one.
-                if(sLength<0) {
-                    if((uchar=*s++)==0) {
-                        return result;
+                যদি(sLength<0) {
+                    যদি((uchar=*s++)==0) {
+                        ঘূৰাই result;
                     }
-                } else {
-                    if(sLength==0) {
-                        return result;
+                } অন্যথা {
+                    যদি(sLength==0) {
+                        ঘূৰাই result;
                     }
                     uchar=*s++;
                     --sLength;
                 }
-                if(result==USTRINGTRIE_FINAL_VALUE) {
+                যদি(result==USTRINGTRIE_FINAL_মান) {
                     // No further matching units.
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ঘূৰাই USTRINGTRIE_NO_MATCH;
                 }
                 pos=pos_;  // branchNext() advanced pos and wrote it to pos_ .
-                node=*pos++;
-            } else if(node<kMinValueLead) {
+                গ্ৰন্থি=*pos++;
+            } অন্যথা যদি(গ্ৰন্থি<k_Min_মান_Lead) {
                 // Match length+1 units.
-                length=node-kMinLinearMatch;  // Actual match length minus 1.
-                if(uchar!=*pos) {
+                length=গ্ৰন্থি-kMinLinearMatch;  // Actual match length minus 1.
+                যদি(uchar!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ঘূৰাই USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
-                break;
-            } else if(node&kValueIsFinal) {
+                ভঙ্গ;
+            } অন্যথা যদি(গ্ৰন্থি&k_মান_Is_Final) {
                 // No further matching units.
                 stop();
-                return USTRINGTRIE_NO_MATCH;
-            } else {
+                ঘূৰাই USTRINGTRIE_NO_MATCH;
+            } অন্যথা {
                 // Skip intermediate value.
-                pos=skipNodeValue(pos, node);
-                node&=kNodeTypeMask;
+                pos=skip_গ্ৰন্থি_মান(pos, গ্ৰন্থি);
+                গ্ৰন্থি&=k_গ্ৰন্থি_Type_Mask;
             }
         }
     }
 }
 
-const char16_t*
-UCharsTrie::findUniqueValueFromBranch(const char16_t* pos U_LIFETIME_BOUND,
+ধ্রুৱ char16_t*
+UCharsTrie::find_Unique_মান_From_Branch(ধ্রুৱ char16_t* pos U_LIFETIME_BOUND,
                                       int32_t length,
-                                      UBool haveUniqueValue,
-                                      int32_t& uniqueValue) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+                                      UBool have_Unique_মান,
+                                      int32_t& unique_মান) {
+    যেতিয়ালৈ(length>k_Max_Branch_Linear_Sub_গ্ৰন্থি_Length) {
         ++pos;  // ignore the comparison unit
-        if(nullptr==findUniqueValueFromBranch(jumpByDelta(pos), length>>1, haveUniqueValue, uniqueValue)) {
-            return nullptr;
+        যদি(nullptr==find_Unique_মান_From_Branch(jumpByDelta(pos), length>>1, have_Unique_মান, unique_মান)) {
+            ঘূৰাই nullptr;
         }
         length=length-(length>>1);
         pos=skipDelta(pos);
     }
-    do {
+    কৰা {
         ++pos;  // ignore a comparison unit
         // handle its value
-        int32_t node=*pos++;
-        UBool isFinal = static_cast<UBool>(node >> 15);
-        node&=0x7fff;
-        int32_t value=readValue(pos, node);
-        pos=skipValue(pos, node);
-        if(isFinal) {
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return nullptr;
+        int32_t গ্ৰন্থি=*pos++;
+        UBool isFinal = static_cast<UBool>(গ্ৰন্থি >> 15);
+        গ্ৰন্থি&=0x7fff;
+        int32_t value=read_মান(pos, গ্ৰন্থি);
+        pos=skip_মান(pos, গ্ৰন্থি);
+        যদি(isFinal) {
+            যদি(have_Unique_মান) {
+                যদি(value!=unique_মান) {
+                    ঘূৰাই nullptr;
                 }
-            } else {
-                uniqueValue=value;
-                haveUniqueValue=true;
+            } অন্যথা {
+                unique_মান=value;
+                have_Unique_মান=সঁচা;
             }
-        } else {
-            if(!findUniqueValue(pos+value, haveUniqueValue, uniqueValue)) {
-                return nullptr;
+        } অন্যথা {
+            যদি(!find_Unique_মান(pos+value, have_Unique_মান, unique_মান)) {
+                ঘূৰাই nullptr;
             }
-            haveUniqueValue=true;
+            have_Unique_মান=সঁচা;
         }
-    } while(--length>1);
-    return pos+1;  // ignore the last comparison unit
+    } যেতিয়ালৈ(--length>1);
+    ঘূৰাই pos+1;  // ignore the last comparison unit
 }
 
 UBool
-UCharsTrie::findUniqueValue(const char16_t *pos, UBool haveUniqueValue, int32_t &uniqueValue) {
-    int32_t node=*pos++;
-    for(;;) {
-        if(node<kMinLinearMatch) {
-            if(node==0) {
-                node=*pos++;
+UCharsTrie::find_Unique_মান(ধ্রুৱ char16_t *pos, UBool have_Unique_মান, int32_t &unique_মান) {
+    int32_t গ্ৰন্থি=*pos++;
+    বাবে(;;) {
+        যদি(গ্ৰন্থি<kMinLinearMatch) {
+            যদি(গ্ৰন্থি==0) {
+                গ্ৰন্থি=*pos++;
             }
-            pos=findUniqueValueFromBranch(pos, node+1, haveUniqueValue, uniqueValue);
-            if(pos==nullptr) {
-                return false;
+            pos=find_Unique_মান_From_Branch(pos, গ্ৰন্থি+1, have_Unique_মান, unique_মান);
+            যদি(pos==nullptr) {
+                ঘূৰাই মিছা;
             }
-            haveUniqueValue=true;
-            node=*pos++;
-        } else if(node<kMinValueLead) {
+            have_Unique_মান=সঁচা;
+            গ্ৰন্থি=*pos++;
+        } অন্যথা যদি(গ্ৰন্থি<k_Min_মান_Lead) {
             // linear-match node
-            pos+=node-kMinLinearMatch+1;  // Ignore the match units.
-            node=*pos++;
-        } else {
-            UBool isFinal = static_cast<UBool>(node >> 15);
+            pos+=গ্ৰন্থি-kMinLinearMatch+1;  // Ignore the match units.
+            গ্ৰন্থি=*pos++;
+        } অন্যথা {
+            UBool isFinal = static_cast<UBool>(গ্ৰন্থি >> 15);
             int32_t value;
-            if(isFinal) {
-                value=readValue(pos, node&0x7fff);
-            } else {
-                value=readNodeValue(pos, node);
+            যদি(isFinal) {
+                value=read_মান(pos, গ্ৰন্থি&0x7fff);
+            } অন্যথা {
+                value=read_গ্ৰন্থি_মান(pos, গ্ৰন্থি);
             }
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return false;
+            যদি(have_Unique_মান) {
+                যদি(value!=unique_মান) {
+                    ঘূৰাই মিছা;
                 }
-            } else {
-                uniqueValue=value;
-                haveUniqueValue=true;
+            } অন্যথা {
+                unique_মান=value;
+                have_Unique_মান=সঁচা;
             }
-            if(isFinal) {
-                return true;
+            যদি(isFinal) {
+                ঘূৰাই সঁচা;
             }
-            pos=skipNodeValue(pos, node);
-            node&=kNodeTypeMask;
+            pos=skip_গ্ৰন্থি_মান(pos, গ্ৰন্থি);
+            গ্ৰন্থি&=k_গ্ৰন্থি_Type_Mask;
         }
     }
 }
 
 int32_t
-UCharsTrie::getNextUChars(Appendable &out) const {
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return 0;
+UCharsTrie::getNextUChars(Appendable &out) ধ্রুৱ {
+    ধ্রুৱ char16_t *pos=pos_;
+    যদি(pos==nullptr) {
+        ঘূৰাই 0;
     }
-    if(remainingMatchLength_>=0) {
+    যদি(remainingMatchLength_>=0) {
         out.appendCodeUnit(*pos);  // Next unit of a pending linear-match node.
-        return 1;
+        ঘূৰাই 1;
     }
-    int32_t node=*pos++;
-    if(node>=kMinValueLead) {
-        if(node&kValueIsFinal) {
-            return 0;
-        } else {
-            pos=skipNodeValue(pos, node);
-            node&=kNodeTypeMask;
+    int32_t গ্ৰন্থি=*pos++;
+    যদি(গ্ৰন্থি>=k_Min_মান_Lead) {
+        যদি(গ্ৰন্থি&k_মান_Is_Final) {
+            ঘূৰাই 0;
+        } অন্যথা {
+            pos=skip_গ্ৰন্থি_মান(pos, গ্ৰন্থি);
+            গ্ৰন্থি&=k_গ্ৰন্থি_Type_Mask;
         }
     }
-    if(node<kMinLinearMatch) {
-        if(node==0) {
-            node=*pos++;
+    যদি(গ্ৰন্থি<kMinLinearMatch) {
+        যদি(গ্ৰন্থি==0) {
+            গ্ৰন্থি=*pos++;
         }
-        out.reserveAppendCapacity(++node);
-        getNextBranchUChars(pos, node, out);
-        return node;
-    } else {
+        out.reserveAppendCapacity(++গ্ৰন্থি);
+        getNextBranchUChars(pos, গ্ৰন্থি, out);
+        ঘূৰাই গ্ৰন্থি;
+    } অন্যথা {
         // First unit of the linear-match node.
         out.appendCodeUnit(*pos);
-        return 1;
+        ঘূৰাই 1;
     }
 }
 
-void
-UCharsTrie::getNextBranchUChars(const char16_t *pos, int32_t length, Appendable &out) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+শূন্য
+UCharsTrie::getNextBranchUChars(ধ্রুৱ char16_t *pos, int32_t length, Appendable &out) {
+    যেতিয়ালৈ(length>k_Max_Branch_Linear_Sub_গ্ৰন্থি_Length) {
         ++pos;  // ignore the comparison unit
         getNextBranchUChars(jumpByDelta(pos), length>>1, out);
         length=length-(length>>1);
         pos=skipDelta(pos);
     }
-    do {
+    কৰা {
         out.appendCodeUnit(*pos++);
-        pos=skipValue(pos);
-    } while(--length>1);
+        pos=skip_মান(pos);
+    } যেতিয়ালৈ(--length>1);
     out.appendCodeUnit(*pos);
 }
 

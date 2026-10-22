@@ -7,13 +7,13 @@
  *******************************************************************************
  */
 
-#include "unicode/utypes.h"
+#অন্তর্ভাৱ "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#যদি !UCONFIG_NO_SERVICE
 
-#include "servnotf.h"
+#অন্তর্ভাৱ "servnotf.h"
 #ifdef NOTIFIER_DEBUG
-#include <stdio.h>
+#অন্তর্ভাৱ <stdio.h>
 #endif
 
 U_NAMESPACE_BEGIN
@@ -21,7 +21,7 @@ U_NAMESPACE_BEGIN
 EventListener::~EventListener() {}
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(EventListener)
 
-static UMutex notifyLock;
+স্থির UMutex notifyLock;
 
 ICUNotifier::ICUNotifier() 
 : listeners(nullptr) 
@@ -37,36 +37,36 @@ ICUNotifier::~ICUNotifier() {
 }
 
 
-void 
-ICUNotifier::addListener(const EventListener* l, UErrorCode& status) 
+শূন্য 
+ICUNotifier::addListener(ধ্রুৱ EventListener* l, UErrorCode& status) 
 {
-    if (U_SUCCESS(status)) {
-        if (l == nullptr) {
+    যদি (U_SUCCESS(status)) {
+        যদি (l == nullptr) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            ঘূৰাই;
         }
 
-        if (acceptsListener(*l)) {
+        যদি (acceptsListener(*l)) {
             Mutex lmx(&notifyLock);
-            if (listeners == nullptr) {
-                LocalPointer<UVector> lpListeners(new UVector(5, status), status);
-                if (U_FAILURE(status)) {
-                    return;
+            যদি (listeners == nullptr) {
+                LocalPointer<UVector> lpListeners(নূতন UVector(5, status), status);
+                যদি (U_FAILURE(status)) {
+                    ঘূৰাই;
                 }
                 listeners = lpListeners.orphan();
-            } else {
-                for (int i = 0, e = listeners->size(); i < e; ++i) {
-                    const EventListener* el = static_cast<const EventListener*>(listeners->elementAt(i));
-                    if (l == el) {
-                        return;
+            } অন্যথা {
+                বাবে (পূর্ণাঙ্ক i = 0, e = listeners->size(); i < e; ++i) {
+                    ধ্রুৱ EventListener* el = static_cast<ধ্রুৱ EventListener*>(listeners->elementAt(i));
+                    যদি (l == el) {
+                        ঘূৰাই;
                     }
                 }
             }
 
-            listeners->addElement((void*)l, status); // cast away const
+            listeners->addElement((শূন্য*)l, status); // cast away const
         }
 #ifdef NOTIFIER_DEBUG
-        else {
+        অন্যথা {
             fprintf(stderr, "Listener invalid for this notifier.");
             exit(1);
         }
@@ -74,28 +74,28 @@ ICUNotifier::addListener(const EventListener* l, UErrorCode& status)
     }
 }
 
-void 
-ICUNotifier::removeListener(const EventListener *l, UErrorCode& status) 
+শূন্য 
+ICUNotifier::removeListener(ধ্রুৱ EventListener *l, UErrorCode& status) 
 {
-    if (U_SUCCESS(status)) {
-        if (l == nullptr) {
+    যদি (U_SUCCESS(status)) {
+        যদি (l == nullptr) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            ঘূৰাই;
         }
 
         {
             Mutex lmx(&notifyLock);
-            if (listeners != nullptr) {
+            যদি (listeners != nullptr) {
                 // identity equality check
-                for (int i = 0, e = listeners->size(); i < e; ++i) {
-                    const EventListener* el = static_cast<const EventListener*>(listeners->elementAt(i));
-                    if (l == el) {
+                বাবে (পূর্ণাঙ্ক i = 0, e = listeners->size(); i < e; ++i) {
+                    ধ্রুৱ EventListener* el = static_cast<ধ্রুৱ EventListener*>(listeners->elementAt(i));
+                    যদি (l == el) {
                         listeners->removeElementAt(i);
-                        if (listeners->size() == 0) {
+                        যদি (listeners->size() == 0) {
                             delete listeners;
                             listeners = nullptr;
                         }
-                        return;
+                        ঘূৰাই;
                     }
                 }
             }
@@ -103,12 +103,12 @@ ICUNotifier::removeListener(const EventListener *l, UErrorCode& status)
     }
 }
 
-void 
+শূন্য 
 ICUNotifier::notifyChanged() 
 {
     Mutex lmx(&notifyLock);
-    if (listeners != nullptr) {
-        for (int i = 0, e = listeners->size(); i < e; ++i) {
+    যদি (listeners != nullptr) {
+        বাবে (পূর্ণাঙ্ক i = 0, e = listeners->size(); i < e; ++i) {
             EventListener* el = static_cast<EventListener*>(listeners->elementAt(i));
             notifyListener(*el);
         }
