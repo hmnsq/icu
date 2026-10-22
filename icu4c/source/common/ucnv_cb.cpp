@@ -20,44 +20,44 @@
  *
  */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv_cb.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "cmemory.h"
+#ضمن "unicode/ucnv_cb.h"
+#ضمن "ucnv_bld.h"
+#ضمن "ucnv_cnv.h"
+#ضمن "cmemory.h"
 
 /* need to update the offsets when the target moves. */
 /* Note: Recursion may occur in the cb functions, be sure to update the offsets correctly
 if you don't use ucnv_cbXXX functions.  Make sure you don't use the same callback within
 the same call stack if the complexity arises. */
-U_CAPI void  U_EXPORT2
-ucnv_cbFromUWriteBytes (UConverterFromUnicodeArgs *args,
-                       const char* source,
+U_CAPI فراغ  U_EXPORT2
+ucnv_cb_From_UWrite_بائٹاں (UConverter_From_Unicode_دلیلاں *دلیلاں_2,
+                       ثابت حرف* سروت,
                        int32_t length,
-                       int32_t offsetIndex,
-                       UErrorCode * err)
+                       int32_t وتھ_اشاریہ,
+                       UError_کوڈ * err)
 {
-    if(U_FAILURE(*err)) {
-        return;
+    إذا(U_FAILURE(*err)) {
+        أرجع;
     }
 
-    ucnv_fromUWriteBytes(
-        args->converter,
-        source, length,
-        &args->target, args->targetLimit,
-        &args->offsets, offsetIndex,
+    ucnv_from_UWrite_بائٹاں(
+        دلیلاں_2->converter,
+        سروت, length,
+        &دلیلاں_2->نشانہ, دلیلاں_2->نشانہ_حد_بندی,
+        &دلیلاں_2->offsets, وتھ_اشاریہ,
         err);
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
-                             const char16_t** source,
-                             const char16_t*  sourceLimit,
-                             int32_t offsetIndex,
-                             UErrorCode * err)
+U_CAPI فراغ  U_EXPORT2
+ucnv_cbFromUWriteUChars(UConverter_From_Unicode_دلیلاں *دلیلاں_2,
+                             ثابت char16_t** سروت,
+                             ثابت char16_t*  سروت_حد_بندی,
+                             int32_t وتھ_اشاریہ,
+                             UError_کوڈ * err)
 {
     /*
     This is a fun one.  Recursion can occur - we're basically going to
@@ -71,30 +71,30 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
     into this.
     */
 
-    char *oldTarget;
+    حرف *old_نشانہ;
 
-    if(U_FAILURE(*err))
+    إذا(U_FAILURE(*err))
     {
-        return;
+        أرجع;
     }
 
-    oldTarget = args->target;
+    old_نشانہ = دلیلاں_2->نشانہ;
 
-    ucnv_fromUnicode(args->converter,
-        &args->target,
-        args->targetLimit,
-        source,
-        sourceLimit,
-        nullptr, /* no offsets */
-        false, /* no flush */
+    ucnv_fromUnicode(دلیلاں_2->converter,
+        &دلیلاں_2->نشانہ,
+        دلیلاں_2->نشانہ_حد_بندی,
+        سروت,
+        سروت_حد_بندی,
+        خالی_سوچک, /* no offsets */
+        خطأ, /* no flush */
         err);
 
-    if(args->offsets)
+    إذا(دلیلاں_2->offsets)
     {
-        while (args->target != oldTarget)  /* if it moved at all.. */
+        طالما (دلیلاں_2->نشانہ != old_نشانہ)  /* if it moved at all.. */
         {
-            *(args->offsets)++ = offsetIndex;
-            oldTarget++;
+            *(دلیلاں_2->offsets)++ = وتھ_اشاریہ;
+            old_نشانہ++;
         }
     }
 
@@ -102,30 +102,30 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
     Note, if you did something like used a Stop subcallback, things would get interesting.
     In fact, here's where we want to return the partially consumed in-source!
     */
-    if(*err == U_BUFFER_OVERFLOW_ERROR)
+    إذا(*err == U_بفر_حد_توں_ودھ_ERROR)
     /* && (*source < sourceLimit && args->target >= args->targetLimit)
     -- S. Hrcek */
     {
         /* Overflowed the target.  Now, we'll write into the charErrorBuffer.
         It's a fixed size. If we overflow it... Hmm */
-        char *newTarget;
-        const char *newTargetLimit;
-        UErrorCode err2 = U_ZERO_ERROR;
+        حرف *new_نشانہ;
+        ثابت حرف *new_نشانہ_حد_بندی;
+        UError_کوڈ err2 = U_ZERO_ERROR;
 
         int8_t errBuffLen;
 
-        errBuffLen  = args->converter->charErrorBufferLength;
+        errBuffLen  = دلیلاں_2->converter->char_Error_بفر_لمائی;
 
         /* start the new target at the first free slot in the errbuff.. */
-        newTarget = (char *)(args->converter->charErrorBuffer + errBuffLen);
+        new_نشانہ = (حرف *)(دلیلاں_2->converter->char_Error_بفر + errBuffLen);
 
-        newTargetLimit = (char *)(args->converter->charErrorBuffer +
-            sizeof(args->converter->charErrorBuffer));
+        new_نشانہ_حد_بندی = (حرف *)(دلیلاں_2->converter->char_Error_بفر +
+            حجم(دلیلاں_2->converter->char_Error_بفر));
 
-        if(newTarget >= newTargetLimit)
+        إذا(new_نشانہ >= new_نشانہ_حد_بندی)
         {
-            *err = U_INTERNAL_PROGRAM_ERROR;
-            return;
+            *err = U_اندرونی_پروگرام_ERROR;
+            أرجع;
         }
 
         /* We're going to tell the converter that the errbuff len is empty.
@@ -133,31 +133,31 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
         itself.  If the errbuff is needed by the converter this time,
         we're hosed - we're out of space! */
 
-        args->converter->charErrorBufferLength = 0;
+        دلیلاں_2->converter->char_Error_بفر_لمائی = 0;
 
-        ucnv_fromUnicode(args->converter,
-                         &newTarget,
-                         newTargetLimit,
-                         source,
-                         sourceLimit,
-                         nullptr,
-                         false,
+        ucnv_fromUnicode(دلیلاں_2->converter,
+                         &new_نشانہ,
+                         new_نشانہ_حد_بندی,
+                         سروت,
+                         سروت_حد_بندی,
+                         خالی_سوچک,
+                         خطأ,
                          &err2);
 
         /* We can go ahead and overwrite the  length here. We know just how
         to recalculate it. */
 
-        args->converter->charErrorBufferLength = (int8_t)(
-            newTarget - (char*)args->converter->charErrorBuffer);
+        دلیلاں_2->converter->char_Error_بفر_لمائی = (int8_t)(
+            new_نشانہ - (حرف*)دلیلاں_2->converter->char_Error_بفر);
 
-        if((newTarget >= newTargetLimit) || (err2 == U_BUFFER_OVERFLOW_ERROR))
+        إذا((new_نشانہ >= new_نشانہ_حد_بندی) || (err2 == U_بفر_حد_توں_ودھ_ERROR))
         {
             /* now we're REALLY in trouble.
             Internal program error - callback shouldn't have written this much
             data!
             */
-            *err = U_INTERNAL_PROGRAM_ERROR;
-            return;
+            *err = U_اندرونی_پروگرام_ERROR;
+            أرجع;
         }
         /*else {*/
             /* sub errs could be invalid/truncated/illegal chars or w/e.
@@ -173,25 +173,25 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
     }
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
-                           int32_t offsetIndex,
-                           UErrorCode * err)
+U_CAPI فراغ  U_EXPORT2
+ucnv_cbFromUWriteSub (UConverter_From_Unicode_دلیلاں *دلیلاں_2,
+                           int32_t وتھ_اشاریہ,
+                           UError_کوڈ * err)
 {
     UConverter *converter;
     int32_t length;
 
-    if(U_FAILURE(*err)) {
-        return;
+    إذا(U_FAILURE(*err)) {
+        أرجع;
     }
-    converter = args->converter;
+    converter = دلیلاں_2->converter;
     length = converter->subCharLen;
 
-    if(length == 0) {
-        return;
+    إذا(length == 0) {
+        أرجع;
     }
 
-    if(length < 0) {
+    إذا(length < 0) {
         /*
          * Write/convert the substitution string. Its real length is -length.
          * Unlike the escape callback, we need not change the converter's
@@ -200,62 +200,62 @@ ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
          * and will not recurse.
          * At worst we should get a U_BUFFER_OVERFLOW_ERROR.
          */
-        const char16_t *source = (const char16_t *)converter->subChars;
-        ucnv_cbFromUWriteUChars(args, &source, source - length, offsetIndex, err);
-        return;
+        ثابت char16_t *سروت = (ثابت char16_t *)converter->subChars;
+        ucnv_cbFromUWriteUChars(دلیلاں_2, &سروت, سروت - length, وتھ_اشاریہ, err);
+        أرجع;
     }
 
-    if(converter->sharedData->impl->writeSub!=nullptr) {
-        converter->sharedData->impl->writeSub(args, offsetIndex, err);
+    إذا(converter->shared_انکڑے->impl->writeSub!=خالی_سوچک) {
+        converter->shared_انکڑے->impl->writeSub(دلیلاں_2, وتھ_اشاریہ, err);
     }
-    else if(converter->subChar1!=0 && (uint16_t)converter->invalidUCharBuffer[0]<=(uint16_t)0xffu) {
+    وإلا إذا(converter->subChar1!=0 && (uint16_t)converter->invalid_UChar_بفر[0]<=(uint16_t)0xffu) {
         /*
         TODO: Is this untestable because the MBCS converter has a writeSub function to call
         and the other converters don't use subChar1?
         */
-        ucnv_cbFromUWriteBytes(args,
-                               (const char *)&converter->subChar1, 1,
-                               offsetIndex, err);
+        ucnv_cb_From_UWrite_بائٹاں(دلیلاں_2,
+                               (ثابت حرف *)&converter->subChar1, 1,
+                               وتھ_اشاریہ, err);
     }
-    else {
-        ucnv_cbFromUWriteBytes(args,
-                               (const char *)converter->subChars, length,
-                               offsetIndex, err);
+    وإلا {
+        ucnv_cb_From_UWrite_بائٹاں(دلیلاں_2,
+                               (ثابت حرف *)converter->subChars, length,
+                               وتھ_اشاریہ, err);
     }
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_cbToUWriteUChars (UConverterToUnicodeArgs *args,
-                            const char16_t* source,
+U_CAPI فراغ  U_EXPORT2
+ucnv_cb_منزل_UWrite_UChars (UConverter_منزل_Unicode_دلیلاں *دلیلاں_2,
+                            ثابت char16_t* سروت,
                             int32_t length,
-                            int32_t offsetIndex,
-                            UErrorCode * err)
+                            int32_t وتھ_اشاریہ,
+                            UError_کوڈ * err)
 {
-    if(U_FAILURE(*err)) {
-        return;
+    إذا(U_FAILURE(*err)) {
+        أرجع;
     }
 
-    ucnv_toUWriteUChars(
-        args->converter,
-        source, length,
-        &args->target, args->targetLimit,
-        &args->offsets, offsetIndex,
+    ucnv_منزل_UWrite_UChars(
+        دلیلاں_2->converter,
+        سروت, length,
+        &دلیلاں_2->نشانہ, دلیلاں_2->نشانہ_حد_بندی,
+        &دلیلاں_2->offsets, وتھ_اشاریہ,
         err);
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_cbToUWriteSub (UConverterToUnicodeArgs *args,
-                         int32_t offsetIndex,
-                       UErrorCode * err)
+U_CAPI فراغ  U_EXPORT2
+ucnv_cb_منزل_UWrite_Sub (UConverter_منزل_Unicode_دلیلاں *دلیلاں_2,
+                         int32_t وتھ_اشاریہ,
+                       UError_کوڈ * err)
 {
-    static const char16_t kSubstituteChar1 = 0x1A, kSubstituteChar = 0xFFFD;
+    ساكن ثابت char16_t kSubstituteChar1 = 0x1A, kSubstituteChar = 0xFFFD;
 
     /* could optimize this case, just one uchar */
-    if(args->converter->invalidCharLength == 1 && args->converter->subChar1 != 0) {
-        ucnv_cbToUWriteUChars(args, &kSubstituteChar1, 1, offsetIndex, err);
-    } else {
-        ucnv_cbToUWriteUChars(args, &kSubstituteChar, 1, offsetIndex, err);
+    إذا(دلیلاں_2->converter->invalid_Char_لمائی == 1 && دلیلاں_2->converter->subChar1 != 0) {
+        ucnv_cb_منزل_UWrite_UChars(دلیلاں_2, &kSubstituteChar1, 1, وتھ_اشاریہ, err);
+    } وإلا {
+        ucnv_cb_منزل_UWrite_UChars(دلیلاں_2, &kSubstituteChar, 1, وتھ_اشاریہ, err);
     }
 }
 
-#endif
+#جے_انت

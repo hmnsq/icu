@@ -16,100 +16,100 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __NORMALIZER2IMPL_H__
-#define __NORMALIZER2IMPL_H__
+#جے_بنا_تعریف __NORMALIZER2IMPL_H__
+#تعریف_کرو __NORMALIZER2IMPL_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#إذا !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/normalizer2.h"
-#include "unicode/ucptrie.h"
-#include "unicode/unistr.h"
-#include "unicode/unorm.h"
-#include "unicode/utf.h"
-#include "unicode/utf16.h"
-#include "mutex.h"
-#include "udataswp.h"
-#include "uset_imp.h"
+#ضمن "unicode/normalizer2.h"
+#ضمن "unicode/ucptrie.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/unorm.h"
+#ضمن "unicode/utf.h"
+#ضمن "unicode/utf16.h"
+#ضمن "mutex.h"
+#ضمن "udataswp.h"
+#ضمن "uset_imp.h"
 
 // When the nfc.nrm data is *not* hardcoded into the common library
 // (with this constant set to 0),
 // then it needs to be built into the data package:
 // Add nfc.nrm to icu4c/source/data/Makefile.in DAT_FILES_SHORT
-#define NORM2_HARDCODE_NFC_DATA 1
+#تعریف_کرو NORM2_HARDCODE_NFC_انکڑے 1
 
 U_NAMESPACE_BEGIN
 
-struct CanonIterData;
+بنية Canon_Iter_انکڑے;
 
 class ByteSink;
 class Edits;
-class InitCanonIterData;
+class Init_Canon_Iter_انکڑے;
 class LcccContext;
 
 class U_COMMON_API Hangul {
-public:
+عام:
     /* Korean Hangul and Jamo constants */
-    enum {
-        JAMO_L_BASE=0x1100,     /* "lead" jamo */
-        JAMO_L_END=0x1112,
-        JAMO_V_BASE=0x1161,     /* "vowel" jamo */
-        JAMO_V_END=0x1175,
-        JAMO_T_BASE=0x11a7,     /* "trail" jamo */
-        JAMO_T_END=0x11c2,
+    تعداد {
+        JAMO_L_ادھار=0x1100,     /* "lead" jamo */
+        JAMO_L_سرا=0x1112,
+        JAMO_V_ادھار=0x1161,     /* "vowel" jamo */
+        JAMO_V_سرا=0x1175,
+        JAMO_T_ادھار=0x11a7,     /* "trail" jamo */
+        JAMO_T_سرا=0x11c2,
 
-        HANGUL_BASE=0xac00,
-        HANGUL_END=0xd7a3,
+        HANGUL_ادھار=0xac00,
+        HANGUL_سرا=0xd7a3,
 
-        JAMO_L_COUNT=19,
-        JAMO_V_COUNT=21,
-        JAMO_T_COUNT=28,
+        JAMO_L_گنتی=19,
+        JAMO_V_گنتی=21,
+        JAMO_T_گنتی=28,
 
-        JAMO_VT_COUNT=JAMO_V_COUNT*JAMO_T_COUNT,
+        JAMO_VT_گنتی=JAMO_V_گنتی*JAMO_T_گنتی,
 
-        HANGUL_COUNT=JAMO_L_COUNT*JAMO_V_COUNT*JAMO_T_COUNT,
-        HANGUL_LIMIT=HANGUL_BASE+HANGUL_COUNT
+        HANGUL_گنتی=JAMO_L_گنتی*JAMO_V_گنتی*JAMO_T_گنتی,
+        HANGUL_حد_بندی=HANGUL_ادھار+HANGUL_گنتی
     };
 
-    static inline UBool isHangul(UChar32 c) {
-        return HANGUL_BASE<=c && c<HANGUL_LIMIT;
+    ساكن مضمن UBool isHangul(UChar32 c) {
+        أرجع HANGUL_ادھار<=c && c<HANGUL_حد_بندی;
     }
-    static inline UBool
+    ساكن مضمن UBool
     isHangulLV(UChar32 c) {
-        c-=HANGUL_BASE;
-        return 0<=c && c<HANGUL_COUNT && c%JAMO_T_COUNT==0;
+        c-=HANGUL_ادھار;
+        أرجع 0<=c && c<HANGUL_گنتی && c%JAMO_T_گنتی==0;
     }
-    static inline UBool isJamoL(UChar32 c) {
-        return static_cast<uint32_t>(c - JAMO_L_BASE) < JAMO_L_COUNT;
+    ساكن مضمن UBool isJamoL(UChar32 c) {
+        أرجع static_cast<uint32_t>(c - JAMO_L_ادھار) < JAMO_L_گنتی;
     }
-    static inline UBool isJamoV(UChar32 c) {
-        return static_cast<uint32_t>(c - JAMO_V_BASE) < JAMO_V_COUNT;
+    ساكن مضمن UBool isJamoV(UChar32 c) {
+        أرجع static_cast<uint32_t>(c - JAMO_V_ادھار) < JAMO_V_گنتی;
     }
-    static inline UBool isJamoT(UChar32 c) {
-        int32_t t=c-JAMO_T_BASE;
-        return 0<t && t<JAMO_T_COUNT;  // not JAMO_T_BASE itself
+    ساكن مضمن UBool isJamoT(UChar32 c) {
+        int32_t t=c-JAMO_T_ادھار;
+        أرجع 0<t && t<JAMO_T_گنتی;  // not JAMO_T_BASE itself
     }
-    static UBool isJamo(UChar32 c) {
-        return JAMO_L_BASE<=c && c<=JAMO_T_END &&
-            (c<=JAMO_L_END || (JAMO_V_BASE<=c && c<=JAMO_V_END) || JAMO_T_BASE<c);
+    ساكن UBool isJamo(UChar32 c) {
+        أرجع JAMO_L_ادھار<=c && c<=JAMO_T_سرا &&
+            (c<=JAMO_L_سرا || (JAMO_V_ادھار<=c && c<=JAMO_V_سرا) || JAMO_T_ادھار<c);
     }
 
     /**
      * Decomposes c, which must be a Hangul syllable, into buffer
      * and returns the length of the decomposition (2 or 3).
      */
-    static inline int32_t decompose(UChar32 c, char16_t buffer[3]) {
-        c-=HANGUL_BASE;
-        UChar32 c2=c%JAMO_T_COUNT;
-        c/=JAMO_T_COUNT;
-        buffer[0] = static_cast<char16_t>(JAMO_L_BASE + c / JAMO_V_COUNT);
-        buffer[1] = static_cast<char16_t>(JAMO_V_BASE + c % JAMO_V_COUNT);
-        if(c2==0) {
-            return 2;
-        } else {
-            buffer[2] = static_cast<char16_t>(JAMO_T_BASE + c2);
-            return 3;
+    ساكن مضمن int32_t decompose(UChar32 c, char16_t بفر[3]) {
+        c-=HANGUL_ادھار;
+        UChar32 c2=c%JAMO_T_گنتی;
+        c/=JAMO_T_گنتی;
+        بفر[0] = static_cast<char16_t>(JAMO_L_ادھار + c / JAMO_V_گنتی);
+        بفر[1] = static_cast<char16_t>(JAMO_V_ادھار + c % JAMO_V_گنتی);
+        إذا(c2==0) {
+            أرجع 2;
+        } وإلا {
+            بفر[2] = static_cast<char16_t>(JAMO_T_ادھار + c2);
+            أرجع 3;
         }
     }
 
@@ -117,87 +117,87 @@ public:
      * Decomposes c, which must be a Hangul syllable, into buffer.
      * This is the raw, not recursive, decomposition. Its length is always 2.
      */
-    static inline void getRawDecomposition(UChar32 c, char16_t buffer[2]) {
+    ساكن مضمن فراغ getRawDecomposition(UChar32 c, char16_t بفر[2]) {
         UChar32 orig=c;
-        c-=HANGUL_BASE;
-        UChar32 c2=c%JAMO_T_COUNT;
-        if(c2==0) {
-            c/=JAMO_T_COUNT;
-            buffer[0] = static_cast<char16_t>(JAMO_L_BASE + c / JAMO_V_COUNT);
-            buffer[1] = static_cast<char16_t>(JAMO_V_BASE + c % JAMO_V_COUNT);
-        } else {
-            buffer[0] = static_cast<char16_t>(orig - c2); // LV syllable
-            buffer[1] = static_cast<char16_t>(JAMO_T_BASE + c2);
+        c-=HANGUL_ادھار;
+        UChar32 c2=c%JAMO_T_گنتی;
+        إذا(c2==0) {
+            c/=JAMO_T_گنتی;
+            بفر[0] = static_cast<char16_t>(JAMO_L_ادھار + c / JAMO_V_گنتی);
+            بفر[1] = static_cast<char16_t>(JAMO_V_ادھار + c % JAMO_V_گنتی);
+        } وإلا {
+            بفر[0] = static_cast<char16_t>(orig - c2); // LV syllable
+            بفر[1] = static_cast<char16_t>(JAMO_T_ادھار + c2);
         }
     }
-private:
+خاص:
     Hangul() = delete;  // no instantiation
 };
 
 class Normalizer2Impl;
 
-class U_COMMON_API ReorderingBuffer : public UMemory {
-public:
+class U_COMMON_API Reordering_بفر : عام UMemory {
+عام:
     /** Constructs only; init() should be called. */
-    ReorderingBuffer(const Normalizer2Impl &ni, UnicodeString &dest) :
+    Reordering_بفر(ثابت Normalizer2Impl &ni, UnicodeString &dest) :
         impl(ni), str(dest),
-        start(nullptr), reorderStart(nullptr), limit(nullptr),
-        remainingCapacity(0), lastCC(0) {}
+        شروع(nullptr), reorder_شروع(nullptr), حد_بندی(nullptr),
+        بچیا_سمرتھا(0), آخری_CC(0) {}
     /** Constructs, removes the string contents, and initializes for a small initial capacity. */
-    ReorderingBuffer(const Normalizer2Impl &ni, UnicodeString &dest, UErrorCode &errorCode);
-    ~ReorderingBuffer() {
-        if (start != nullptr) {
-            str.releaseBuffer(static_cast<int32_t>(limit - start));
+    Reordering_بفر(ثابت Normalizer2Impl &ni, UnicodeString &dest, UError_کوڈ &error_کوڈ);
+    ~Reordering_بفر() {
+        إذا (شروع != nullptr) {
+            str.release_بفر(static_cast<int32_t>(حد_بندی - شروع));
         }
     }
-    UBool init(int32_t destCapacity, UErrorCode &errorCode);
+    UBool init(int32_t dest_سمرتھا, UError_کوڈ &error_کوڈ);
 
-    UBool isEmpty() const { return start==limit; }
-    int32_t length() const { return static_cast<int32_t>(limit - start); }
-    char16_t *getStart() { return start; }
-    char16_t *getLimit() { return limit; }
-    uint8_t getLastCC() const { return lastCC; }
+    UBool is_خالی_تھاواں() ثابت { أرجع شروع==حد_بندی; }
+    int32_t لمائی() ثابت { أرجع static_cast<int32_t>(حد_بندی - شروع); }
+    char16_t *get_شروع() { أرجع شروع; }
+    char16_t *get_حد_بندی() { أرجع حد_بندی; }
+    uint8_t get_آخری_CC() ثابت { أرجع آخری_CC; }
 
-    UBool equals(const char16_t *start, const char16_t *limit) const;
-    UBool equals(const uint8_t *otherStart, const uint8_t *otherLimit) const;
+    UBool equals(ثابت char16_t *شروع, ثابت char16_t *حد_بندی) ثابت;
+    UBool equals(ثابت uint8_t *other_شروع, ثابت uint8_t *other_حد_بندی) ثابت;
 
-    UBool append(UChar32 c, uint8_t cc, UErrorCode &errorCode) {
-        return (c<=0xffff) ?
-            appendBMP(static_cast<char16_t>(c), cc, errorCode) :
-            appendSupplementary(c, cc, errorCode);
+    UBool append(UChar32 c, uint8_t cc, UError_کوڈ &error_کوڈ) {
+        أرجع (c<=0xffff) ?
+            appendBMP(static_cast<char16_t>(c), cc, error_کوڈ) :
+            appendSupplementary(c, cc, error_کوڈ);
     }
-    UBool append(const char16_t *s, int32_t length, UBool isNFD,
+    UBool append(ثابت char16_t *s, int32_t لمائی, UBool isNFD,
                  uint8_t leadCC, uint8_t trailCC,
-                 UErrorCode &errorCode);
-    UBool appendBMP(char16_t c, uint8_t cc, UErrorCode &errorCode) {
-        if(remainingCapacity==0 && !resize(1, errorCode)) {
-            return false;
+                 UError_کوڈ &error_کوڈ);
+    UBool appendBMP(char16_t c, uint8_t cc, UError_کوڈ &error_کوڈ) {
+        إذا(بچیا_سمرتھا==0 && !resize(1, error_کوڈ)) {
+            أرجع false;
         }
-        if(lastCC<=cc || cc==0) {
-            *limit++=c;
-            lastCC=cc;
-            if(cc<=1) {
-                reorderStart=limit;
+        إذا(آخری_CC<=cc || cc==0) {
+            *حد_بندی++=c;
+            آخری_CC=cc;
+            إذا(cc<=1) {
+                reorder_شروع=حد_بندی;
             }
-        } else {
-            insert(c, cc);
+        } وإلا {
+            داخل_کرو(c, cc);
         }
-        --remainingCapacity;
-        return true;
+        --بچیا_سمرتھا;
+        أرجع true;
     }
-    UBool appendZeroCC(UChar32 c, UErrorCode &errorCode);
-    UBool appendZeroCC(const char16_t *s, const char16_t *sLimit, UErrorCode &errorCode);
-    void remove();
-    void removeSuffix(int32_t suffixLength);
-    void setReorderingLimit(char16_t *newLimit) {
-        remainingCapacity += static_cast<int32_t>(limit - newLimit);
-        reorderStart=limit=newLimit;
-        lastCC=0;
+    UBool appendZeroCC(UChar32 c, UError_کوڈ &error_کوڈ);
+    UBool appendZeroCC(ثابت char16_t *s, ثابت char16_t *s_حد_بندی, UError_کوڈ &error_کوڈ);
+    فراغ remove();
+    فراغ removeSuffix(int32_t suffix_لمائی);
+    فراغ سیٹ_Reordering_حد_بندی(char16_t *new_حد_بندی) {
+        بچیا_سمرتھا += static_cast<int32_t>(حد_بندی - new_حد_بندی);
+        reorder_شروع=حد_بندی=new_حد_بندی;
+        آخری_CC=0;
     }
-    void copyReorderableSuffixTo(UnicodeString &s) const {
-        s.setTo(ConstChar16Ptr(reorderStart), static_cast<int32_t>(limit - reorderStart));
+    فراغ copy_Reorderable_Suffix_منزل(UnicodeString &s) ثابت {
+        s.سیٹ_منزل(ConstChar16Ptr(reorder_شروع), static_cast<int32_t>(حد_بندی - reorder_شروع));
     }
-private:
+خاص:
     /*
      * TODO: Revisit whether it makes sense to track reorderStart.
      * It is set to after the last known character with cc<=1,
@@ -211,30 +211,30 @@ private:
      * We probably need it for UNORM_SIMPLE_APPEND.
      */
 
-    UBool appendSupplementary(UChar32 c, uint8_t cc, UErrorCode &errorCode);
-    void insert(UChar32 c, uint8_t cc);
-    static void writeCodePoint(char16_t *p, UChar32 c) {
-        if(c<=0xffff) {
+    UBool appendSupplementary(UChar32 c, uint8_t cc, UError_کوڈ &error_کوڈ);
+    فراغ داخل_کرو(UChar32 c, uint8_t cc);
+    ساكن فراغ write_کوڈ_نقطہ(char16_t *p, UChar32 c) {
+        إذا(c<=0xffff) {
             *p = static_cast<char16_t>(c);
-        } else {
+        } وإلا {
             p[0]=U16_LEAD(c);
             p[1]=U16_TRAIL(c);
         }
     }
-    UBool resize(int32_t appendLength, UErrorCode &errorCode);
+    UBool resize(int32_t append_لمائی, UError_کوڈ &error_کوڈ);
 
-    const Normalizer2Impl &impl;
+    ثابت Normalizer2Impl &impl;
     UnicodeString &str;
-    char16_t *start, *reorderStart, *limit;
-    int32_t remainingCapacity;
-    uint8_t lastCC;
+    char16_t *شروع, *reorder_شروع, *حد_بندی;
+    int32_t بچیا_سمرتھا;
+    uint8_t آخری_CC;
 
     // private backward iterator
-    void setIterator() { codePointStart=limit; }
-    void skipPrevious();  // Requires start<codePointStart.
-    uint8_t previousCC();  // Returns 0 if there is no previous character.
+    فراغ سیٹ_Iterator() { کوڈ_نقطہ_شروع=حد_بندی; }
+    فراغ skip_پچھلا();  // Requires start<codePointStart.
+    uint8_t پچھلا_CC();  // Returns 0 if there is no previous character.
 
-    char16_t *codePointStart, *codePointLimit;
+    char16_t *کوڈ_نقطہ_شروع, *کوڈ_نقطہ_حد_بندی;
 };
 
 /**
@@ -243,72 +243,72 @@ private:
  * this normalizer2impl.h and in the design doc at
  * https://unicode-org.github.io/icu/design/normalization/custom.html
  */
-class U_COMMON_API_CLASS Normalizer2Impl : public UObject {
-public:
-    U_COMMON_API Normalizer2Impl() : normTrie(nullptr), fCanonIterData(nullptr) {}
-    U_COMMON_API virtual ~Normalizer2Impl();
+class U_COMMON_API_CLASS Normalizer2Impl : عام UObject {
+عام:
+    U_COMMON_API Normalizer2Impl() : normTrie(nullptr), f_Canon_Iter_انکڑے(nullptr) {}
+    U_COMMON_API مجازی ~Normalizer2Impl();
 
-    U_COMMON_API void init(const int32_t* inIndexes,
-                           const UCPTrie* inTrie,
-                           const uint16_t* inExtraData,
-                           const uint8_t* inSmallFCD);
+    U_COMMON_API فراغ init(ثابت int32_t* وچ_Indexes,
+                           ثابت UCPTrie* وچ_Trie,
+                           ثابت uint16_t* وچ_Extra_انکڑے,
+                           ثابت uint8_t* وچ_Small_FCD);
 
-    U_COMMON_API void addLcccChars(UnicodeSet& set) const;
-    U_COMMON_API void addPropertyStarts(const USetAdder* sa, UErrorCode& errorCode) const;
-    U_COMMON_API void addCanonIterPropertyStarts(const USetAdder* sa, UErrorCode& errorCode) const;
+    U_COMMON_API فراغ جوڑو_Lccc_Chars(Unicode_سیٹ& سیٹ) ثابت;
+    U_COMMON_API فراغ جوڑو_Property_Starts(ثابت USetAdder* sa, UError_کوڈ& error_کوڈ) ثابت;
+    U_COMMON_API فراغ جوڑو_Canon_Iter_Property_Starts(ثابت USetAdder* sa, UError_کوڈ& error_کوڈ) ثابت;
 
     // low-level properties ------------------------------------------------ ***
 
-    U_COMMON_API UBool ensureCanonIterData(UErrorCode& errorCode) const;
+    U_COMMON_API UBool ensure_Canon_Iter_انکڑے(UError_کوڈ& error_کوڈ) ثابت;
 
     // The trie stores values for lead surrogate code *units*.
     // Surrogate code *points* are inert.
-    U_COMMON_API uint16_t getNorm16(UChar32 c) const {
-        return U_IS_LEAD(c) ?
+    U_COMMON_API uint16_t getNorm16(UChar32 c) ثابت {
+        أرجع U_IS_LEAD(c) ?
             static_cast<uint16_t>(INERT) :
             UCPTRIE_FAST_GET(normTrie, UCPTRIE_16, c);
     }
-    U_COMMON_API uint16_t getRawNorm16(UChar32 c) const {
-        return UCPTRIE_FAST_GET(normTrie, UCPTRIE_16, c);
+    U_COMMON_API uint16_t getRawNorm16(UChar32 c) ثابت {
+        أرجع UCPTRIE_FAST_GET(normTrie, UCPTRIE_16, c);
     }
 
-    U_COMMON_API UNormalizationCheckResult getCompQuickCheck(uint16_t norm16) const {
-        if(norm16<minNoNo || MIN_YES_YES_WITH_CC<=norm16) {
-            return UNORM_YES;
-        } else if(minMaybeNo<=norm16) {
-            return UNORM_MAYBE;
-        } else {
-            return UNORM_NO;
+    U_COMMON_API UNormalization_Check_نتیجہ get_Comp_تیز_Check(uint16_t norm16) ثابت {
+        إذا(norm16<minNoNo || MIN_YES_YES_WITH_CC<=norm16) {
+            أرجع UNORM_YES;
+        } وإلا إذا(minMaybeNo<=norm16) {
+            أرجع UNORM_MAYBE;
+        } وإلا {
+            أرجع UNORM_NO;
         }
     }
-    U_COMMON_API UBool isAlgorithmicNoNo(uint16_t norm16) const {
-        return limitNoNo <= norm16 && norm16 < minMaybeNo;
+    U_COMMON_API UBool isAlgorithmicNoNo(uint16_t norm16) ثابت {
+        أرجع حد_بندی_No_No <= norm16 && norm16 < minMaybeNo;
     }
-    U_COMMON_API UBool isCompNo(uint16_t norm16) const {
-        return minNoNo <= norm16 && norm16 < minMaybeNo;
+    U_COMMON_API UBool isCompNo(uint16_t norm16) ثابت {
+        أرجع minNoNo <= norm16 && norm16 < minMaybeNo;
     }
-    U_COMMON_API UBool isDecompYes(uint16_t norm16) const {
-        return norm16 < minYesNo || minMaybeYes <= norm16;
+    U_COMMON_API UBool isDecompYes(uint16_t norm16) ثابت {
+        أرجع norm16 < minYesNo || minMaybeYes <= norm16;
     }
 
-    U_COMMON_API uint8_t getCC(uint16_t norm16) const {
-        if(norm16>=MIN_NORMAL_MAYBE_YES) {
-            return getCCFromNormalYesOrMaybe(norm16);
+    U_COMMON_API uint8_t getCC(uint16_t norm16) ثابت {
+        إذا(norm16>=MIN_عام_MAYBE_YES) {
+            أرجع get_CCFrom_عام_Yes_Or_Maybe(norm16);
         }
-        if(norm16<minNoNo || limitNoNo<=norm16) {
-            return 0;
+        إذا(norm16<minNoNo || حد_بندی_No_No<=norm16) {
+            أرجع 0;
         }
-        return getCCFromNoNo(norm16);
+        أرجع getCCFromNoNo(norm16);
     }
-    U_COMMON_API static uint8_t getCCFromNormalYesOrMaybe(uint16_t norm16) {
-        return static_cast<uint8_t>(norm16 >> OFFSET_SHIFT);
+    U_COMMON_API ساكن uint8_t get_CCFrom_عام_Yes_Or_Maybe(uint16_t norm16) {
+        أرجع static_cast<uint8_t>(norm16 >> وتھ_کھسکاؤ);
     }
-    U_COMMON_API static uint8_t getCCFromYesOrMaybeYes(uint16_t norm16) {
-        return norm16>=MIN_NORMAL_MAYBE_YES ? getCCFromNormalYesOrMaybe(norm16) : 0;
+    U_COMMON_API ساكن uint8_t getCCFromYesOrMaybeYes(uint16_t norm16) {
+        أرجع norm16>=MIN_عام_MAYBE_YES ? get_CCFrom_عام_Yes_Or_Maybe(norm16) : 0;
     }
-    U_COMMON_API uint8_t getCCFromYesOrMaybeYesCP(UChar32 c) const {
-        if (c < minCompNoMaybeCP) { return 0; }
-        return getCCFromYesOrMaybeYes(getNorm16(c));
+    U_COMMON_API uint8_t getCCFromYesOrMaybeYesCP(UChar32 c) ثابت {
+        إذا (c < minCompNoMaybeCP) { أرجع 0; }
+        أرجع getCCFromYesOrMaybeYes(getNorm16(c));
     }
 
     /**
@@ -316,13 +316,13 @@ public:
      * @param c A Unicode code point.
      * @return The lccc(c) in bits 15..8 and tccc(c) in bits 7..0.
      */
-    U_COMMON_API uint16_t getFCD16(UChar32 c) const {
-        if(c<minDecompNoCP) {
-            return 0;
-        } else if(c<=0xffff) {
-            if(!singleLeadMightHaveNonZeroFCD16(c)) { return 0; }
+    U_COMMON_API uint16_t getFCD16(UChar32 c) ثابت {
+        إذا(c<minDecompNoCP) {
+            أرجع 0;
+        } وإلا إذا(c<=0xffff) {
+            إذا(!singleLeadMightHaveNonZeroFCD16(c)) { أرجع 0; }
         }
-        return getFCD16FromNormData(c);
+        أرجع get_FCD16_From_Norm_انکڑے(c);
     }
     /**
      * Returns the FCD data for the next code point (post-increment).
@@ -332,17 +332,17 @@ public:
      * @param limit The end of the string, or NULL.
      * @return The lccc(c) in bits 15..8 and tccc(c) in bits 7..0.
      */
-    U_COMMON_API uint16_t nextFCD16(const char16_t*& s, const char16_t* limit) const {
+    U_COMMON_API uint16_t اگلا_FCD16(ثابت char16_t*& s, ثابت char16_t* حد_بندی) ثابت {
         UChar32 c=*s++;
-        if(c<minDecompNoCP || !singleLeadMightHaveNonZeroFCD16(c)) {
-            return 0;
+        إذا(c<minDecompNoCP || !singleLeadMightHaveNonZeroFCD16(c)) {
+            أرجع 0;
         }
         char16_t c2;
-        if(U16_IS_LEAD(c) && s!=limit && U16_IS_TRAIL(c2=*s)) {
+        إذا(U16_IS_LEAD(c) && s!=حد_بندی && U16_IS_TRAIL(c2=*s)) {
             c=U16_GET_SUPPLEMENTARY(c, c2);
             ++s;
         }
-        return getFCD16FromNormData(c);
+        أرجع get_FCD16_From_Norm_انکڑے(c);
     }
     /**
      * Returns the FCD data for the previous code point (pre-decrement).
@@ -350,36 +350,36 @@ public:
      * @param s A valid pointer into a string. Requires start<s.
      * @return The lccc(c) in bits 15..8 and tccc(c) in bits 7..0.
      */
-    U_COMMON_API uint16_t previousFCD16(const char16_t* start, const char16_t*& s) const {
+    U_COMMON_API uint16_t پچھلا_FCD16(ثابت char16_t* شروع, ثابت char16_t*& s) ثابت {
         UChar32 c=*--s;
-        if(c<minDecompNoCP) {
-            return 0;
+        إذا(c<minDecompNoCP) {
+            أرجع 0;
         }
-        if(!U16_IS_TRAIL(c)) {
-            if(!singleLeadMightHaveNonZeroFCD16(c)) {
-                return 0;
+        إذا(!U16_IS_TRAIL(c)) {
+            إذا(!singleLeadMightHaveNonZeroFCD16(c)) {
+                أرجع 0;
             }
-        } else {
+        } وإلا {
             char16_t c2;
-            if(start<s && U16_IS_LEAD(c2=*(s-1))) {
+            إذا(شروع<s && U16_IS_LEAD(c2=*(s-1))) {
                 c=U16_GET_SUPPLEMENTARY(c2, c);
                 --s;
             }
         }
-        return getFCD16FromNormData(c);
+        أرجع get_FCD16_From_Norm_انکڑے(c);
     }
 
     /** Returns true if the single-or-lead code unit c might have non-zero FCD data. */
-    U_COMMON_API UBool singleLeadMightHaveNonZeroFCD16(UChar32 lead) const {
+    U_COMMON_API UBool singleLeadMightHaveNonZeroFCD16(UChar32 lead) ثابت {
         // 0<=lead<=0xffff
-        uint8_t bits=smallFCD[lead>>8];
-        if(bits==0) { return false; }
-        return (bits >> ((lead >> 5) & 7)) & 1;
+        uint8_t بٹ=smallFCD[lead>>8];
+        إذا(بٹ==0) { أرجع false; }
+        أرجع (بٹ >> ((lead >> 5) & 7)) & 1;
     }
     /** Returns the FCD value from the regular normalization data. */
-    U_COMMON_API uint16_t getFCD16FromNormData(UChar32 c) const;
+    U_COMMON_API uint16_t get_FCD16_From_Norm_انکڑے(UChar32 c) ثابت;
 
-    U_COMMON_API uint16_t getFCD16FromMaybeOrNonZeroCC(uint16_t norm16) const;
+    U_COMMON_API uint16_t getFCD16FromMaybeOrNonZeroCC(uint16_t norm16) ثابت;
 
     /**
      * Gets the decomposition for one code point.
@@ -388,7 +388,7 @@ public:
      * @param length out-only, takes the length of the decomposition, if any
      * @return pointer to the decomposition, or NULL if none
      */
-    U_COMMON_API const char16_t* getDecomposition(UChar32 c, char16_t buffer[4], int32_t& length) const;
+    U_COMMON_API ثابت char16_t* getDecomposition(UChar32 c, char16_t بفر[4], int32_t& لمائی) ثابت;
 
     /**
      * Gets the raw decomposition for one code point.
@@ -397,48 +397,48 @@ public:
      * @param length out-only, takes the length of the decomposition, if any
      * @return pointer to the decomposition, or NULL if none
      */
-    U_COMMON_API const char16_t* getRawDecomposition(UChar32 c,
-                                                     char16_t buffer[30],
-                                                     int32_t& length) const;
+    U_COMMON_API ثابت char16_t* getRawDecomposition(UChar32 c,
+                                                     char16_t بفر[30],
+                                                     int32_t& لمائی) ثابت;
 
-    U_COMMON_API UChar32 composePair(UChar32 a, UChar32 b) const;
+    U_COMMON_API UChar32 composePair(UChar32 a, UChar32 b) ثابت;
 
-    U_COMMON_API UBool isCanonSegmentStarter(UChar32 c) const;
-    U_COMMON_API UBool getCanonStartSet(UChar32 c, UnicodeSet& set) const;
+    U_COMMON_API UBool isCanonSegmentStarter(UChar32 c) ثابت;
+    U_COMMON_API UBool get_Canon_شروع_سیٹ(UChar32 c, Unicode_سیٹ& سیٹ) ثابت;
 
-    enum {
+    تعداد {
         // Fixed norm16 values.
         MIN_YES_YES_WITH_CC=0xfe02,
         JAMO_VT=0xfe00,
-        MIN_NORMAL_MAYBE_YES=0xfc00,
+        MIN_عام_MAYBE_YES=0xfc00,
         JAMO_L=2,  // offset=1 hasCompBoundaryAfter=false
         INERT=1,  // offset=0 hasCompBoundaryAfter=true
 
         // norm16 bit 0 is comp-boundary-after.
         HAS_COMP_BOUNDARY_AFTER=1,
-        OFFSET_SHIFT=1,
+        وتھ_کھسکاؤ=1,
 
         // For algorithmic one-way mappings, norm16 bits 2..1 indicate the
         // tccc (0, 1, >1) for quick FCC boundary-after tests.
         DELTA_TCCC_0=0,
         DELTA_TCCC_1=2,
         DELTA_TCCC_GT_1=4,
-        DELTA_TCCC_MASK=6,
-        DELTA_SHIFT=3,
+        DELTA_TCCC_نقاب=6,
+        DELTA_کھسکاؤ=3,
 
         MAX_DELTA=0x40
     };
 
-    enum {
+    تعداد {
         // Byte offsets from the start of the data, after the generic header.
-        IX_NORM_TRIE_OFFSET,
-        IX_EXTRA_DATA_OFFSET,
-        IX_SMALL_FCD_OFFSET,
-        IX_RESERVED3_OFFSET,
-        IX_RESERVED4_OFFSET,
-        IX_RESERVED5_OFFSET,
-        IX_RESERVED6_OFFSET,
-        IX_TOTAL_SIZE,
+        IX_NORM_TRIE_وتھ,
+        IX_EXTRA_انکڑے_وتھ,
+        IX_SMALL_FCD_وتھ,
+        IX_RESERVED3_وتھ,
+        IX_RESERVED4_وتھ,
+        IX_RESERVED5_وتھ,
+        IX_RESERVED6_وتھ,
+        IX_کل_ناپ,
 
         // Code point thresholds for quick check codes.
         IX_MIN_DECOMP_NO_CP,
@@ -450,7 +450,7 @@ public:
         IX_MIN_YES_NO,
         /** Mappings are comp-normalized. */
         IX_MIN_NO_NO,
-        IX_LIMIT_NO_NO,
+        IX_حد_بندی_NO_NO,
         IX_MIN_MAYBE_YES,
 
         /** Mappings only in [minYesNoMappingsOnly..minNoNo[. */
@@ -460,7 +460,7 @@ public:
         /** Mappings do not have a comp boundary before. */
         IX_MIN_NO_NO_COMP_NO_MAYBE_CC,
         /** Mappings to the empty string. */
-        IX_MIN_NO_NO_EMPTY,
+        IX_MIN_NO_NO_خالی_تھاواں,
 
         IX_MIN_LCCC_CP,
         IX_RESERVED19,
@@ -470,139 +470,139 @@ public:
         /** Two-way mappings & compositions. */
         IX_MIN_MAYBE_NO_COMBINES_FWD,
 
-        IX_COUNT  // 22
+        IX_گنتی  // 22
     };
 
-    enum {
-        MAPPING_HAS_CCC_LCCC_WORD=0x80,
+    تعداد {
+        MAPPING_HAS_CCC_LCCC_لفظ=0x80,
         MAPPING_HAS_RAW_MAPPING=0x40,
         // unused bit 0x20,
-        MAPPING_LENGTH_MASK=0x1f
+        MAPPING_لمائی_نقاب=0x1f
     };
 
-    enum {
-        COMP_1_LAST_TUPLE=0x8000,
+    تعداد {
+        COMP_1_آخری_TUPLE=0x8000,
         COMP_1_TRIPLE=1,
-        COMP_1_TRAIL_LIMIT=0x3400,
-        COMP_1_TRAIL_MASK=0x7ffe,
-        COMP_1_TRAIL_SHIFT=9,  // 10-1 for the "triple" bit
-        COMP_2_TRAIL_SHIFT=6,
-        COMP_2_TRAIL_MASK=0xffc0
+        COMP_1_TRAIL_حد_بندی=0x3400,
+        COMP_1_TRAIL_نقاب=0x7ffe,
+        COMP_1_TRAIL_کھسکاؤ=9,  // 10-1 for the "triple" bit
+        COMP_2_TRAIL_کھسکاؤ=6,
+        COMP_2_TRAIL_نقاب=0xffc0
     };
 
     // higher-level functionality ------------------------------------------ ***
 
     // NFD without an NFD Normalizer2 instance.
-    U_COMMON_API UnicodeString& decompose(const UnicodeString& src,
+    U_COMMON_API UnicodeString& decompose(ثابت UnicodeString& src,
                                           UnicodeString& dest,
-                                          UErrorCode& errorCode) const;
+                                          UError_کوڈ& error_کوڈ) ثابت;
     /**
      * Decomposes [src, limit[ and writes the result to dest.
      * limit can be NULL if src is NUL-terminated.
      * destLengthEstimate is the initial dest buffer capacity and can be -1.
      */
-    U_COMMON_API void decompose(const char16_t* src,
-                                const char16_t* limit,
+    U_COMMON_API فراغ decompose(ثابت char16_t* src,
+                                ثابت char16_t* حد_بندی,
                                 UnicodeString& dest,
-                                int32_t destLengthEstimate,
-                                UErrorCode& errorCode) const;
+                                int32_t dest_لمائی_Estimate,
+                                UError_کوڈ& error_کوڈ) ثابت;
 
-    U_COMMON_API const char16_t* decompose(const char16_t* src,
-                                           const char16_t* limit,
-                                           ReorderingBuffer* buffer,
-                                           UErrorCode& errorCode) const;
-    U_COMMON_API void decomposeAndAppend(const char16_t* src,
-                                         const char16_t* limit,
+    U_COMMON_API ثابت char16_t* decompose(ثابت char16_t* src,
+                                           ثابت char16_t* حد_بندی,
+                                           Reordering_بفر* بفر,
+                                           UError_کوڈ& error_کوڈ) ثابت;
+    U_COMMON_API فراغ decomposeAndAppend(ثابت char16_t* src,
+                                         ثابت char16_t* حد_بندی,
                                          UBool doDecompose,
-                                         UnicodeString& safeMiddle,
-                                         ReorderingBuffer& buffer,
-                                         UErrorCode& errorCode) const;
+                                         UnicodeString& محفوظ_درمیان,
+                                         Reordering_بفر& بفر,
+                                         UError_کوڈ& error_کوڈ) ثابت;
 
     /** sink==nullptr: isNormalized()/spanQuickCheckYes() */
-    U_COMMON_API const uint8_t* decomposeUTF8(uint32_t options,
-                                              const uint8_t* src,
-                                              const uint8_t* limit,
+    U_COMMON_API ثابت uint8_t* decomposeUTF8(uint32_t options,
+                                              ثابت uint8_t* src,
+                                              ثابت uint8_t* حد_بندی,
                                               ByteSink* sink,
                                               Edits* edits,
-                                              UErrorCode& errorCode) const;
+                                              UError_کوڈ& error_کوڈ) ثابت;
 
-    U_COMMON_API UBool compose(const char16_t* src,
-                               const char16_t* limit,
+    U_COMMON_API UBool compose(ثابت char16_t* src,
+                               ثابت char16_t* حد_بندی,
                                UBool onlyContiguous,
                                UBool doCompose,
-                               ReorderingBuffer& buffer,
-                               UErrorCode& errorCode) const;
-    U_COMMON_API const char16_t* composeQuickCheck(const char16_t* src,
-                                                   const char16_t* limit,
+                               Reordering_بفر& بفر,
+                               UError_کوڈ& error_کوڈ) ثابت;
+    U_COMMON_API ثابت char16_t* compose_تیز_Check(ثابت char16_t* src,
+                                                   ثابت char16_t* حد_بندی,
                                                    UBool onlyContiguous,
-                                                   UNormalizationCheckResult* pQCResult) const;
-    U_COMMON_API void composeAndAppend(const char16_t* src,
-                                       const char16_t* limit,
+                                                   UNormalization_Check_نتیجہ* pQCResult) ثابت;
+    U_COMMON_API فراغ composeAndAppend(ثابت char16_t* src,
+                                       ثابت char16_t* حد_بندی,
                                        UBool doCompose,
                                        UBool onlyContiguous,
-                                       UnicodeString& safeMiddle,
-                                       ReorderingBuffer& buffer,
-                                       UErrorCode& errorCode) const;
+                                       UnicodeString& محفوظ_درمیان,
+                                       Reordering_بفر& بفر,
+                                       UError_کوڈ& error_کوڈ) ثابت;
 
     /** sink==nullptr: isNormalized() */
     U_COMMON_API UBool composeUTF8(uint32_t options,
                                    UBool onlyContiguous,
-                                   const uint8_t* src,
-                                   const uint8_t* limit,
+                                   ثابت uint8_t* src,
+                                   ثابت uint8_t* حد_بندی,
                                    ByteSink* sink,
                                    icu::Edits* edits,
-                                   UErrorCode& errorCode) const;
+                                   UError_کوڈ& error_کوڈ) ثابت;
 
-    U_COMMON_API const char16_t* makeFCD(const char16_t* src,
-                                         const char16_t* limit,
-                                         ReorderingBuffer* buffer,
-                                         UErrorCode& errorCode) const;
-    U_COMMON_API void makeFCDAndAppend(const char16_t* src,
-                                       const char16_t* limit,
+    U_COMMON_API ثابت char16_t* makeFCD(ثابت char16_t* src,
+                                         ثابت char16_t* حد_بندی,
+                                         Reordering_بفر* بفر,
+                                         UError_کوڈ& error_کوڈ) ثابت;
+    U_COMMON_API فراغ makeFCDAndAppend(ثابت char16_t* src,
+                                       ثابت char16_t* حد_بندی,
                                        UBool doMakeFCD,
-                                       UnicodeString& safeMiddle,
-                                       ReorderingBuffer& buffer,
-                                       UErrorCode& errorCode) const;
+                                       UnicodeString& محفوظ_درمیان,
+                                       Reordering_بفر& بفر,
+                                       UError_کوڈ& error_کوڈ) ثابت;
 
-    U_COMMON_API UBool hasDecompBoundaryBefore(UChar32 c) const;
-    U_COMMON_API UBool norm16HasDecompBoundaryBefore(uint16_t norm16) const;
-    U_COMMON_API UBool hasDecompBoundaryAfter(UChar32 c) const;
-    U_COMMON_API UBool norm16HasDecompBoundaryAfter(uint16_t norm16) const;
-    U_COMMON_API UBool isDecompInert(UChar32 c) const { return isDecompYesAndZeroCC(getNorm16(c)); }
+    U_COMMON_API UBool hasDecompBoundaryBefore(UChar32 c) ثابت;
+    U_COMMON_API UBool norm16HasDecompBoundaryBefore(uint16_t norm16) ثابت;
+    U_COMMON_API UBool hasDecompBoundaryAfter(UChar32 c) ثابت;
+    U_COMMON_API UBool norm16HasDecompBoundaryAfter(uint16_t norm16) ثابت;
+    U_COMMON_API UBool isDecompInert(UChar32 c) ثابت { أرجع isDecompYesAndZeroCC(getNorm16(c)); }
 
-    U_COMMON_API UBool hasCompBoundaryBefore(UChar32 c) const {
-        return c<minCompNoMaybeCP || norm16HasCompBoundaryBefore(getNorm16(c));
+    U_COMMON_API UBool hasCompBoundaryBefore(UChar32 c) ثابت {
+        أرجع c<minCompNoMaybeCP || norm16HasCompBoundaryBefore(getNorm16(c));
     }
-    U_COMMON_API UBool hasCompBoundaryAfter(UChar32 c, UBool onlyContiguous) const {
-        return norm16HasCompBoundaryAfter(getNorm16(c), onlyContiguous);
+    U_COMMON_API UBool hasCompBoundaryAfter(UChar32 c, UBool onlyContiguous) ثابت {
+        أرجع norm16HasCompBoundaryAfter(getNorm16(c), onlyContiguous);
     }
-    U_COMMON_API UBool isCompInert(UChar32 c, UBool onlyContiguous) const {
+    U_COMMON_API UBool isCompInert(UChar32 c, UBool onlyContiguous) ثابت {
         uint16_t norm16=getNorm16(c);
-        return isCompYesAndZeroCC(norm16) &&
+        أرجع isCompYesAndZeroCC(norm16) &&
             (norm16 & HAS_COMP_BOUNDARY_AFTER) != 0 &&
-            (!onlyContiguous || isInert(norm16) || *getDataForYesOrNo(norm16) <= 0x1ff);
+            (!onlyContiguous || isInert(norm16) || *get_انکڑے_For_Yes_Or_No(norm16) <= 0x1ff);
             // The last check fetches the mapping's first unit and checks tccc<=1.
     }
 
-    U_COMMON_API UBool hasFCDBoundaryBefore(UChar32 c) const { return hasDecompBoundaryBefore(c); }
-    U_COMMON_API UBool hasFCDBoundaryAfter(UChar32 c) const { return hasDecompBoundaryAfter(c); }
-    U_COMMON_API UBool isFCDInert(UChar32 c) const { return getFCD16(c) <= 1; }
+    U_COMMON_API UBool hasFCDBoundaryBefore(UChar32 c) ثابت { أرجع hasDecompBoundaryBefore(c); }
+    U_COMMON_API UBool hasFCDBoundaryAfter(UChar32 c) ثابت { أرجع hasDecompBoundaryAfter(c); }
+    U_COMMON_API UBool isFCDInert(UChar32 c) ثابت { أرجع getFCD16(c) <= 1; }
 
-  private:
-    friend class InitCanonIterData;
-    friend class LcccContext;
+  خاص:
+    یار class Init_Canon_Iter_انکڑے;
+    یار class LcccContext;
 
-    UBool isMaybe(uint16_t norm16) const { return minMaybeNo<=norm16 && norm16<=JAMO_VT; }
-    UBool isMaybeYesOrNonZeroCC(uint16_t norm16) const { return norm16>=minMaybeYes; }
-    static UBool isInert(uint16_t norm16) { return norm16==INERT; }
-    static UBool isJamoL(uint16_t norm16) { return norm16==JAMO_L; }
-    static UBool isJamoVT(uint16_t norm16) { return norm16==JAMO_VT; }
-    uint16_t hangulLVT() const { return minYesNoMappingsOnly|HAS_COMP_BOUNDARY_AFTER; }
-    UBool isHangulLV(uint16_t norm16) const { return norm16==minYesNo; }
-    UBool isHangulLVT(uint16_t norm16) const {
-        return norm16==hangulLVT();
+    UBool isMaybe(uint16_t norm16) ثابت { أرجع minMaybeNo<=norm16 && norm16<=JAMO_VT; }
+    UBool isMaybeYesOrNonZeroCC(uint16_t norm16) ثابت { أرجع norm16>=minMaybeYes; }
+    ساكن UBool isInert(uint16_t norm16) { أرجع norm16==INERT; }
+    ساكن UBool isJamoL(uint16_t norm16) { أرجع norm16==JAMO_L; }
+    ساكن UBool isJamoVT(uint16_t norm16) { أرجع norm16==JAMO_VT; }
+    uint16_t hangulLVT() ثابت { أرجع minYesNoMappingsOnly|HAS_COMP_BOUNDARY_AFTER; }
+    UBool isHangulLV(uint16_t norm16) ثابت { أرجع norm16==minYesNo; }
+    UBool isHangulLVT(uint16_t norm16) ثابت {
+        أرجع norm16==hangulLVT();
     }
-    UBool isCompYesAndZeroCC(uint16_t norm16) const { return norm16<minNoNo; }
+    UBool isCompYesAndZeroCC(uint16_t norm16) ثابت { أرجع norm16<minNoNo; }
     // UBool isCompYes(uint16_t norm16) const {
     //     return norm16>=MIN_YES_YES_WITH_CC || norm16<minNoNo;
     // }
@@ -612,148 +612,148 @@ public:
     // UBool hasZeroCCFromDecompYes(uint16_t norm16) const {
     //     return norm16<=MIN_NORMAL_MAYBE_YES || norm16==JAMO_VT;
     // }
-    UBool isDecompYesAndZeroCC(uint16_t norm16) const {
-        return norm16<minYesNo ||
+    UBool isDecompYesAndZeroCC(uint16_t norm16) ثابت {
+        أرجع norm16<minYesNo ||
                norm16==JAMO_VT ||
-               (minMaybeYes<=norm16 && norm16<=MIN_NORMAL_MAYBE_YES);
+               (minMaybeYes<=norm16 && norm16<=MIN_عام_MAYBE_YES);
     }
     /**
      * A little faster and simpler than isDecompYesAndZeroCC() but does not include
      * the MaybeYes which combine-forward and have ccc=0.
      */
-    UBool isMostDecompYesAndZeroCC(uint16_t norm16) const {
-        return norm16<minYesNo || norm16==MIN_NORMAL_MAYBE_YES || norm16==JAMO_VT;
+    UBool isMostDecompYesAndZeroCC(uint16_t norm16) ثابت {
+        أرجع norm16<minYesNo || norm16==MIN_عام_MAYBE_YES || norm16==JAMO_VT;
     }
     /** Since formatVersion 5: same as isAlgorithmicNoNo() */
-    UBool isDecompNoAlgorithmic(uint16_t norm16) const { return limitNoNo<=norm16 && norm16<minMaybeNo; }
+    UBool isDecompNoAlgorithmic(uint16_t norm16) ثابت { أرجع حد_بندی_No_No<=norm16 && norm16<minMaybeNo; }
 
     // For use with isCompYes().
     // Perhaps the compiler can combine the two tests for MIN_YES_YES_WITH_CC.
     // static uint8_t getCCFromYes(uint16_t norm16) {
     //     return norm16>=MIN_YES_YES_WITH_CC ? getCCFromNormalYesOrMaybe(norm16) : 0;
     // }
-    uint8_t getCCFromNoNo(uint16_t norm16) const {
-        const uint16_t *mapping=getDataForYesOrNo(norm16);
-        if(*mapping&MAPPING_HAS_CCC_LCCC_WORD) {
-            return static_cast<uint8_t>(*(mapping - 1));
-        } else {
-            return 0;
+    uint8_t getCCFromNoNo(uint16_t norm16) ثابت {
+        ثابت uint16_t *mapping=get_انکڑے_For_Yes_Or_No(norm16);
+        إذا(*mapping&MAPPING_HAS_CCC_LCCC_لفظ) {
+            أرجع static_cast<uint8_t>(*(mapping - 1));
+        } وإلا {
+            أرجع 0;
         }
     }
     // requires that the [cpStart..cpLimit[ character passes isCompYesAndZeroCC()
-    uint8_t getTrailCCFromCompYesAndZeroCC(uint16_t norm16) const {
-        if(norm16<=minYesNo) {
-            return 0;  // yesYes and Hangul LV have ccc=tccc=0
-        } else {
+    uint8_t getTrailCCFromCompYesAndZeroCC(uint16_t norm16) ثابت {
+        إذا(norm16<=minYesNo) {
+            أرجع 0;  // yesYes and Hangul LV have ccc=tccc=0
+        } وإلا {
             // For Hangul LVT we harmlessly fetch a firstUnit with tccc=0 here.
-            return static_cast<uint8_t>(*getDataForYesOrNo(norm16) >> 8); // tccc from yesNo
+            أرجع static_cast<uint8_t>(*get_انکڑے_For_Yes_Or_No(norm16) >> 8); // tccc from yesNo
         }
     }
-    uint8_t getPreviousTrailCC(const char16_t *start, const char16_t *p) const;
-    uint8_t getPreviousTrailCC(const uint8_t *start, const uint8_t *p) const;
+    uint8_t get_پچھلا_Trail_CC(ثابت char16_t *شروع, ثابت char16_t *p) ثابت;
+    uint8_t get_پچھلا_Trail_CC(ثابت uint8_t *شروع, ثابت uint8_t *p) ثابت;
 
     // Requires algorithmic-NoNo.
-    UChar32 mapAlgorithmic(UChar32 c, uint16_t norm16) const {
-        return c+(norm16>>DELTA_SHIFT)-centerNoNoDelta;
+    UChar32 mapAlgorithmic(UChar32 c, uint16_t norm16) ثابت {
+        أرجع c+(norm16>>DELTA_کھسکاؤ)-centerNoNoDelta;
     }
-    UChar32 getAlgorithmicDelta(uint16_t norm16) const {
-        return (norm16>>DELTA_SHIFT)-centerNoNoDelta;
+    UChar32 getAlgorithmicDelta(uint16_t norm16) ثابت {
+        أرجع (norm16>>DELTA_کھسکاؤ)-centerNoNoDelta;
     }
 
-    const uint16_t *getDataForYesOrNo(uint16_t norm16) const {
-        return extraData+(norm16>>OFFSET_SHIFT);
+    ثابت uint16_t *get_انکڑے_For_Yes_Or_No(uint16_t norm16) ثابت {
+        أرجع extra_انکڑے+(norm16>>وتھ_کھسکاؤ);
     }
-    const uint16_t *getDataForMaybe(uint16_t norm16) const {
-        return extraData+((norm16-minMaybeNo+limitNoNo)>>OFFSET_SHIFT);
+    ثابت uint16_t *get_انکڑے_For_Maybe(uint16_t norm16) ثابت {
+        أرجع extra_انکڑے+((norm16-minMaybeNo+حد_بندی_No_No)>>وتھ_کھسکاؤ);
     }
-    const uint16_t *getData(uint16_t norm16) const {
-        if(norm16>=minMaybeNo) {
-            norm16=norm16-minMaybeNo+limitNoNo;
+    ثابت uint16_t *get_انکڑے(uint16_t norm16) ثابت {
+        إذا(norm16>=minMaybeNo) {
+            norm16=norm16-minMaybeNo+حد_بندی_No_No;
         }
-        return extraData+(norm16>>OFFSET_SHIFT);
+        أرجع extra_انکڑے+(norm16>>وتھ_کھسکاؤ);
     }
-    const uint16_t *getCompositionsListForDecompYes(uint16_t norm16) const {
-        if(norm16<JAMO_L || MIN_NORMAL_MAYBE_YES<=norm16) {
-            return nullptr;
-        } else {
+    ثابت uint16_t *getCompositionsListForDecompYes(uint16_t norm16) ثابت {
+        إذا(norm16<JAMO_L || MIN_عام_MAYBE_YES<=norm16) {
+            أرجع nullptr;
+        } وإلا {
             // if yesYes: if Jamo L: harmless empty list
-            return getData(norm16);
+            أرجع get_انکڑے(norm16);
         }
     }
-    const uint16_t *getCompositionsListForComposite(uint16_t norm16) const {
+    ثابت uint16_t *get_Compositions_List_For_مرکب(uint16_t norm16) ثابت {
         // A composite has both mapping & compositions list.
-        const uint16_t *list=getData(norm16);
-        return list+  // mapping pointer
+        ثابت uint16_t *list=get_انکڑے(norm16);
+        أرجع list+  // mapping pointer
             1+  // +1 to skip the first unit with the mapping length
-            (*list&MAPPING_LENGTH_MASK);  // + mapping length
+            (*list&MAPPING_لمائی_نقاب);  // + mapping length
     }
     /**
      * @param c code point must have compositions
      * @return compositions list pointer
      */
-    const uint16_t *getCompositionsList(uint16_t norm16) const {
-        return isDecompYes(norm16) ?
+    ثابت uint16_t *getCompositionsList(uint16_t norm16) ثابت {
+        أرجع isDecompYes(norm16) ?
                 getCompositionsListForDecompYes(norm16) :
-                getCompositionsListForComposite(norm16);
+                get_Compositions_List_For_مرکب(norm16);
     }
 
-    const char16_t *copyLowPrefixFromNulTerminated(const char16_t *src,
-                                                UChar32 minNeedDataCP,
-                                                ReorderingBuffer *buffer,
-                                                UErrorCode &errorCode) const;
+    ثابت char16_t *copy_کم_اگیتر_From_Nul_Terminated(ثابت char16_t *src,
+                                                UChar32 min_Need_انکڑے_CP,
+                                                Reordering_بفر *بفر,
+                                                UError_کوڈ &error_کوڈ) ثابت;
 
-    enum StopAt { STOP_AT_LIMIT, STOP_AT_DECOMP_BOUNDARY, STOP_AT_COMP_BOUNDARY };
+    تعداد StopAt { STOP_AT_حد_بندی, STOP_AT_DECOMP_BOUNDARY, STOP_AT_COMP_BOUNDARY };
 
-    const char16_t *decomposeShort(const char16_t *src, const char16_t *limit,
+    ثابت char16_t *decomposeShort(ثابت char16_t *src, ثابت char16_t *حد_بندی,
                                 UBool stopAtCompBoundary, UBool onlyContiguous,
-                                ReorderingBuffer &buffer, UErrorCode &errorCode) const;
+                                Reordering_بفر &بفر, UError_کوڈ &error_کوڈ) ثابت;
     UBool decompose(UChar32 c, uint16_t norm16,
-                    ReorderingBuffer &buffer, UErrorCode &errorCode) const;
+                    Reordering_بفر &بفر, UError_کوڈ &error_کوڈ) ثابت;
 
-    const uint8_t *decomposeShort(const uint8_t *src, const uint8_t *limit,
+    ثابت uint8_t *decomposeShort(ثابت uint8_t *src, ثابت uint8_t *حد_بندی,
                                   StopAt stopAt, UBool onlyContiguous,
-                                  ReorderingBuffer &buffer, UErrorCode &errorCode) const;
+                                  Reordering_بفر &بفر, UError_کوڈ &error_کوڈ) ثابت;
 
-    static int32_t combine(const uint16_t *list, UChar32 trail);
-    void addComposites(const uint16_t *list, UnicodeSet &set) const;
-    void recompose(ReorderingBuffer &buffer, int32_t recomposeStartIndex,
-                   UBool onlyContiguous) const;
+    ساكن int32_t combine(ثابت uint16_t *list, UChar32 trail);
+    فراغ جوڑو_Composites(ثابت uint16_t *list, Unicode_سیٹ &سیٹ) ثابت;
+    فراغ recompose(Reordering_بفر &بفر, int32_t recompose_شروع_اشاریہ,
+                   UBool onlyContiguous) ثابت;
 
-    UBool hasCompBoundaryBefore(UChar32 c, uint16_t norm16) const {
-        return c<minCompNoMaybeCP || norm16HasCompBoundaryBefore(norm16);
+    UBool hasCompBoundaryBefore(UChar32 c, uint16_t norm16) ثابت {
+        أرجع c<minCompNoMaybeCP || norm16HasCompBoundaryBefore(norm16);
     }
-    UBool norm16HasCompBoundaryBefore(uint16_t norm16) const  {
-        return norm16 < minNoNoCompNoMaybeCC || isAlgorithmicNoNo(norm16);
+    UBool norm16HasCompBoundaryBefore(uint16_t norm16) ثابت  {
+        أرجع norm16 < minNoNoCompNoMaybeCC || isAlgorithmicNoNo(norm16);
     }
-    UBool hasCompBoundaryBefore(const char16_t *src, const char16_t *limit) const;
-    UBool hasCompBoundaryBefore(const uint8_t *src, const uint8_t *limit) const;
-    UBool hasCompBoundaryAfter(const char16_t *start, const char16_t *p,
-                               UBool onlyContiguous) const;
-    UBool hasCompBoundaryAfter(const uint8_t *start, const uint8_t *p,
-                               UBool onlyContiguous) const;
-    UBool norm16HasCompBoundaryAfter(uint16_t norm16, UBool onlyContiguous) const {
-        return (norm16 & HAS_COMP_BOUNDARY_AFTER) != 0 &&
+    UBool hasCompBoundaryBefore(ثابت char16_t *src, ثابت char16_t *حد_بندی) ثابت;
+    UBool hasCompBoundaryBefore(ثابت uint8_t *src, ثابت uint8_t *حد_بندی) ثابت;
+    UBool hasCompBoundaryAfter(ثابت char16_t *شروع, ثابت char16_t *p,
+                               UBool onlyContiguous) ثابت;
+    UBool hasCompBoundaryAfter(ثابت uint8_t *شروع, ثابت uint8_t *p,
+                               UBool onlyContiguous) ثابت;
+    UBool norm16HasCompBoundaryAfter(uint16_t norm16, UBool onlyContiguous) ثابت {
+        أرجع (norm16 & HAS_COMP_BOUNDARY_AFTER) != 0 &&
             (!onlyContiguous || isTrailCC01ForCompBoundaryAfter(norm16));
     }
     /** For FCC: Given norm16 HAS_COMP_BOUNDARY_AFTER, does it have tccc<=1? */
-    UBool isTrailCC01ForCompBoundaryAfter(uint16_t norm16) const {
-        return isInert(norm16) || (isDecompNoAlgorithmic(norm16) ?
-            (norm16 & DELTA_TCCC_MASK) <= DELTA_TCCC_1 : *getDataForYesOrNo(norm16) <= 0x1ff);
+    UBool isTrailCC01ForCompBoundaryAfter(uint16_t norm16) ثابت {
+        أرجع isInert(norm16) || (isDecompNoAlgorithmic(norm16) ?
+            (norm16 & DELTA_TCCC_نقاب) <= DELTA_TCCC_1 : *get_انکڑے_For_Yes_Or_No(norm16) <= 0x1ff);
     }
 
-    const char16_t *findPreviousCompBoundary(const char16_t *start, const char16_t *p,
-                                             UBool onlyContiguous) const;
-    const char16_t *findNextCompBoundary(const char16_t *p, const char16_t *limit,
-                                         UBool onlyContiguous) const;
+    ثابت char16_t *لبھو_پچھلا_Comp_Boundary(ثابت char16_t *شروع, ثابت char16_t *p,
+                                             UBool onlyContiguous) ثابت;
+    ثابت char16_t *لبھو_اگلا_Comp_Boundary(ثابت char16_t *p, ثابت char16_t *حد_بندی,
+                                         UBool onlyContiguous) ثابت;
 
-    const char16_t *findPreviousFCDBoundary(const char16_t *start, const char16_t *p) const;
-    const char16_t *findNextFCDBoundary(const char16_t *p, const char16_t *limit) const;
+    ثابت char16_t *لبھو_پچھلا_FCDBoundary(ثابت char16_t *شروع, ثابت char16_t *p) ثابت;
+    ثابت char16_t *لبھو_اگلا_FCDBoundary(ثابت char16_t *p, ثابت char16_t *حد_بندی) ثابت;
 
-    void makeCanonIterDataFromNorm16(UChar32 start, UChar32 end, const uint16_t norm16,
-                                     CanonIterData &newData, UErrorCode &errorCode) const;
+    فراغ make_Canon_Iter_انکڑے_From_Norm16(UChar32 شروع, UChar32 سرا, ثابت uint16_t norm16,
+                                     Canon_Iter_انکڑے &new_انکڑے, UError_کوڈ &error_کوڈ) ثابت;
 
-    int32_t getCanonValue(UChar32 c) const;
-    const UnicodeSet &getCanonStartSet(int32_t n) const;
+    int32_t get_Canon_قدر(UChar32 c) ثابت;
+    ثابت Unicode_سیٹ &get_Canon_شروع_سیٹ(int32_t n) ثابت;
 
     // UVersionInfo dataVersion;
 
@@ -768,62 +768,62 @@ public:
     uint16_t minNoNo;
     uint16_t minNoNoCompBoundaryBefore;
     uint16_t minNoNoCompNoMaybeCC;
-    uint16_t minNoNoEmpty;
-    uint16_t limitNoNo;
+    uint16_t min_No_No_خالی_تھاواں;
+    uint16_t حد_بندی_No_No;
     uint16_t centerNoNoDelta;
     uint16_t minMaybeNo;
     uint16_t minMaybeNoCombinesFwd;
     uint16_t minMaybeYes;
 
-    const UCPTrie *normTrie;
-    const uint16_t *extraData;  // mappings and/or compositions
-    const uint8_t *smallFCD;  // [0x100] one bit per 32 BMP code points, set if any FCD!=0
+    ثابت UCPTrie *normTrie;
+    ثابت uint16_t *extra_انکڑے;  // mappings and/or compositions
+    ثابت uint8_t *smallFCD;  // [0x100] one bit per 32 BMP code points, set if any FCD!=0
 
-    UInitOnce       fCanonIterDataInitOnce {};
-    CanonIterData  *fCanonIterData;
+    UInitOnce       f_Canon_Iter_انکڑے_Init_Once {};
+    Canon_Iter_انکڑے  *f_Canon_Iter_انکڑے;
 };
 
 // bits in canonIterData
-#define CANON_NOT_SEGMENT_STARTER 0x80000000
-#define CANON_HAS_COMPOSITIONS 0x40000000
-#define CANON_HAS_SET 0x200000
-#define CANON_VALUE_MASK 0x1fffff
+#تعریف_کرو CANON_NOT_SEGMENT_STARTER 0x80000000
+#تعریف_کرو CANON_HAS_COMPOSITIONS 0x40000000
+#تعریف_کرو CANON_HAS_سیٹ 0x200000
+#تعریف_کرو CANON_قدر_نقاب 0x1fffff
 
 /**
  * ICU-internal shortcut for quick access to standard Unicode normalization.
  */
 class U_COMMON_API Normalizer2Factory {
-public:
-    static const Normalizer2 *getFCDInstance(UErrorCode &errorCode);
-    static const Normalizer2 *getFCCInstance(UErrorCode &errorCode);
-    static const Normalizer2 *getNoopInstance(UErrorCode &errorCode);
+عام:
+    ساكن ثابت Normalizer2 *getFCDInstance(UError_کوڈ &error_کوڈ);
+    ساكن ثابت Normalizer2 *getFCCInstance(UError_کوڈ &error_کوڈ);
+    ساكن ثابت Normalizer2 *getNoopInstance(UError_کوڈ &error_کوڈ);
 
-    static const Normalizer2 *getInstance(UNormalizationMode mode, UErrorCode &errorCode);
+    ساكن ثابت Normalizer2 *getInstance(UNormalization_منوال منوال, UError_کوڈ &error_کوڈ);
 
-    static const Normalizer2Impl *getNFCImpl(UErrorCode &errorCode);
-    static const Normalizer2Impl *getNFKCImpl(UErrorCode &errorCode);
-    static const Normalizer2Impl *getNFKC_CFImpl(UErrorCode &errorCode);
+    ساكن ثابت Normalizer2Impl *getNFCImpl(UError_کوڈ &error_کوڈ);
+    ساكن ثابت Normalizer2Impl *getNFKCImpl(UError_کوڈ &error_کوڈ);
+    ساكن ثابت Normalizer2Impl *getNFKC_CFImpl(UError_کوڈ &error_کوڈ);
 
     // Get the Impl instance of the Normalizer2.
     // Must be used only when it is known that norm2 is a Normalizer2WithImpl instance.
-    static const Normalizer2Impl* getImpl(const Normalizer2* norm2 U_LIFETIME_BOUND);
-private:
+    ساكن ثابت Normalizer2Impl* getImpl(ثابت Normalizer2* norm2 U_LIFETIME_BOUND);
+خاص:
     Normalizer2Factory() = delete;  // No instantiation.
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_سرا
 
 U_CAPI int32_t U_EXPORT2
-unorm2_swap(const UDataSwapper *ds,
-            const void *inData, int32_t length, void *outData,
-            UErrorCode *pErrorCode);
+unorm2_وٹاندرا(ثابت UDataSwapper *ds,
+            ثابت فراغ *وچ_انکڑے, int32_t لمائی, فراغ *باہرلا_انکڑے,
+            UError_کوڈ *p_Error_کوڈ);
 
 /**
  * Get the NF*_QC property for a code point, for u_getIntPropertyValue().
  * @internal
  */
-U_CFUNC UNormalizationCheckResult
-unorm_getQuickCheck(UChar32 c, UNormalizationMode mode);
+U_CFUNC UNormalization_Check_نتیجہ
+unorm_get_تیز_Check(UChar32 c, UNormalization_منوال منوال);
 
 /**
  * Gets the 16-bit FCD value (lead & trail CCs) for a code point, for u_getIntPropertyValue().
@@ -1060,5 +1060,5 @@ unorm_getFCD16(UChar32 c);
  * to its end.
  */
 
-#endif  /* !UCONFIG_NO_NORMALIZATION */
-#endif  /* __NORMALIZER2IMPL_H__ */
+#جے_انت  /* !UCONFIG_NO_NORMALIZATION */
+#جے_انت  /* __NORMALIZER2IMPL_H__ */

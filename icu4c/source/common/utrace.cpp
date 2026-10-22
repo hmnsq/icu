@@ -11,85 +11,85 @@
 *   indentation:4
 */
 
-#include "unicode/utrace.h"
-#include "utracimp.h"
-#include "cstring.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
+#ضمن "unicode/utrace.h"
+#ضمن "utracimp.h"
+#ضمن "cstring.h"
+#ضمن "uassert.h"
+#ضمن "ucln_cmn.h"
 
 
-static UTraceEntry     *pTraceEntryFunc = nullptr;
-static UTraceExit      *pTraceExitFunc  = nullptr;
-static UTraceData      *pTraceDataFunc  = nullptr;
-static const void      *gTraceContext   = nullptr;
+ساكن UTrace_اندراج     *p_Trace_اندراج_Func = خالی_سوچک;
+ساكن UTraceExit      *pTraceExitFunc  = خالی_سوچک;
+ساكن UTrace_انکڑے      *p_Trace_انکڑے_Func  = خالی_سوچک;
+ساكن ثابت فراغ      *gTraceContext   = خالی_سوچک;
 
 /**
  * \var utrace_level
  * Trace level variable. Negative for "off".
  */
-static int32_t
+ساكن int32_t
 utrace_level = UTRACE_ERROR;
 
-U_CAPI void U_EXPORT2
-utrace_entry(int32_t fnNumber) {
-    if (pTraceEntryFunc != nullptr) {
-        (*pTraceEntryFunc)(gTraceContext, fnNumber);
+U_CAPI فراغ U_EXPORT2
+utrace_اندراج(int32_t fn_نمبر) {
+    إذا (p_Trace_اندراج_Func != خالی_سوچک) {
+        (*p_Trace_اندراج_Func)(gTraceContext, fn_نمبر);
     }
 }
 
 
-static const char gExitFmt[]             = "Returns.";
-static const char gExitFmtValue[]        = "Returns %d.";
-static const char gExitFmtStatus[]       = "Returns.  Status = %d.";
-static const char gExitFmtValueStatus[]  = "Returns %d.  Status = %d.";
-static const char gExitFmtPtrStatus[]    = "Returns %d.  Status = %p.";
+ساكن ثابت حرف gExitFmt[]             = "Returns.";
+ساكن ثابت حرف g_Exit_Fmt_قدر[]        = "Returns %d.";
+ساكن ثابت حرف g_Exit_Fmt_حالت[]       = "Returns.  Status = %d.";
+ساكن ثابت حرف g_Exit_Fmt_قدر_حالت[]  = "Returns %d.  Status = %d.";
+ساكن ثابت حرف g_Exit_Fmt_Ptr_حالت[]    = "Returns %d.  Status = %p.";
 
-U_CAPI void U_EXPORT2
-utrace_exit(int32_t fnNumber, int32_t returnType, ...) {
-    if (pTraceExitFunc != nullptr) {
-        va_list     args;
-        const char *fmt;
+U_CAPI فراغ U_EXPORT2
+utrace_exit(int32_t fn_نمبر, int32_t returnType, ...) {
+    إذا (pTraceExitFunc != خالی_سوچک) {
+        va_list     دلیلاں_2;
+        ثابت حرف *fmt;
 
-        switch (returnType) {
-        case 0:
+        بدل (returnType) {
+        حالة 0:
             fmt = gExitFmt;
-            break;
-        case UTRACE_EXITV_I32:
-            fmt = gExitFmtValue;
-            break;
-        case UTRACE_EXITV_STATUS:
-            fmt = gExitFmtStatus;
-            break;
-        case UTRACE_EXITV_I32 | UTRACE_EXITV_STATUS:
-            fmt = gExitFmtValueStatus;
-            break;
-        case UTRACE_EXITV_PTR | UTRACE_EXITV_STATUS:
-            fmt = gExitFmtPtrStatus;
-            break;
-        default:
+            اكسر;
+        حالة UTRACE_EXITV_I32:
+            fmt = g_Exit_Fmt_قدر;
+            اكسر;
+        حالة UTRACE_EXITV_حالت:
+            fmt = g_Exit_Fmt_حالت;
+            اكسر;
+        حالة UTRACE_EXITV_I32 | UTRACE_EXITV_حالت:
+            fmt = g_Exit_Fmt_قدر_حالت;
+            اكسر;
+        حالة UTRACE_EXITV_PTR | UTRACE_EXITV_حالت:
+            fmt = g_Exit_Fmt_Ptr_حالت;
+            اكسر;
+        افتراضي:
             UPRV_UNREACHABLE_EXIT;
         }
 
-        va_start(args, returnType);
-        (*pTraceExitFunc)(gTraceContext, fnNumber, fmt, args);
-        va_end(args);
+        va_start(دلیلاں_2, returnType);
+        (*pTraceExitFunc)(gTraceContext, fn_نمبر, fmt, دلیلاں_2);
+        va_end(دلیلاں_2);
     }
 }
  
 
  
-U_CAPI void U_EXPORT2 
-utrace_data(int32_t fnNumber, int32_t level, const char *fmt, ...) {
-    if (pTraceDataFunc != nullptr) {
-           va_list args;
-           va_start(args, fmt ); 
-           (*pTraceDataFunc)(gTraceContext, fnNumber, level, fmt, args);
-           va_end(args);
+U_CAPI فراغ U_EXPORT2 
+utrace_انکڑے(int32_t fn_نمبر, int32_t level, ثابت حرف *fmt, ...) {
+    إذا (p_Trace_انکڑے_Func != خالی_سوچک) {
+           va_list دلیلاں_2;
+           va_start(دلیلاں_2, fmt ); 
+           (*p_Trace_انکڑے_Func)(gTraceContext, fn_نمبر, level, fmt, دلیلاں_2);
+           va_end(دلیلاں_2);
     }
 }
 
 
-static void outputChar(char c, char *outBuf, int32_t *outIx, int32_t capacity, int32_t indent) {
+ساكن فراغ outputChar(حرف c, حرف *باہرلا_Buf, int32_t *باہرلا_Ix, int32_t capacity, int32_t indent) {
     int32_t i;
     /* Check whether a start of line indenting is needed.  Three cases:
      *   1.  At the start of the first line  (output index == 0).
@@ -100,324 +100,324 @@ static void outputChar(char c, char *outBuf, int32_t *outIx, int32_t capacity, i
      *       the preceding char was \n.  Meaning that we may overstimate the
      *       buffer size needed.  No harm done.
      */
-    if (*outIx==0 ||   /* case 1. */
-        (c!='\n' && c!=0 && *outIx < capacity && outBuf[(*outIx)-1]=='\n') ||  /* case 2. */
-        (c=='\n' && *outIx>=capacity))    /* case 3 */
+    إذا (*باہرلا_Ix==0 ||   /* case 1. */
+        (c!='\n' && c!=0 && *باہرلا_Ix < capacity && باہرلا_Buf[(*باہرلا_Ix)-1]=='\n') ||  /* case 2. */
+        (c=='\n' && *باہرلا_Ix>=capacity))    /* case 3 */
     {
         /* At the start of a line.  Indent. */
-        for(i=0; i<indent; i++) {
-            if (*outIx < capacity) {
-                outBuf[*outIx] = ' ';
+        لكل(i=0; i<indent; i++) {
+            إذا (*باہرلا_Ix < capacity) {
+                باہرلا_Buf[*باہرلا_Ix] = ' ';
             }
-            (*outIx)++;
+            (*باہرلا_Ix)++;
         }
     }
 
-    if (*outIx < capacity) {
-        outBuf[*outIx] = c;
+    إذا (*باہرلا_Ix < capacity) {
+        باہرلا_Buf[*باہرلا_Ix] = c;
     }
-    if (c != 0) {
+    إذا (c != 0) {
         /* NULs only appear as end-of-string terminators.  Move them to the output
          *  buffer, but do not update the length of the buffer, so that any
          *  following output will overwrite the NUL. */
-        (*outIx)++;
+        (*باہرلا_Ix)++;
     }
 }
 
-static void outputHexBytes(int64_t val, int32_t charsToOutput,
-                           char *outBuf, int32_t *outIx, int32_t capacity) {
-    static const char gHexChars[] = "0123456789abcdef";
-    int32_t shiftCount;
-    for  (shiftCount=(charsToOutput-1)*4; shiftCount >= 0; shiftCount-=4) {
-        char c = gHexChars[(val >> shiftCount) & 0xf];
-        outputChar(c, outBuf, outIx, capacity, 0);
+ساكن فراغ output_Hex_بائٹاں(int64_t val, int32_t chars_منزل_Output,
+                           حرف *باہرلا_Buf, int32_t *باہرلا_Ix, int32_t capacity) {
+    ساكن ثابت حرف gHexChars[] = "0123456789abcdef";
+    int32_t کھسکاؤ_گنتی;
+    لكل  (کھسکاؤ_گنتی=(chars_منزل_Output-1)*4; کھسکاؤ_گنتی >= 0; کھسکاؤ_گنتی-=4) {
+        حرف c = gHexChars[(val >> کھسکاؤ_گنتی) & 0xf];
+        outputChar(c, باہرلا_Buf, باہرلا_Ix, capacity, 0);
     }
 }
 
 /* Output a pointer value in hex.  Work with any size of pointer   */
-static void outputPtrBytes(void *val, char *outBuf, int32_t *outIx, int32_t capacity) {
+ساكن فراغ output_Ptr_بائٹاں(فراغ *val, حرف *باہرلا_Buf, int32_t *باہرلا_Ix, int32_t capacity) {
     uint32_t  i;
     int32_t  incVal = 1;              /* +1 for big endian, -1 for little endian          */
-    char* p = reinterpret_cast<char*>(&val); /* point to current byte to output in the ptr val  */
+    حرف* p = reinterpret_cast<حرف*>(&val); /* point to current byte to output in the ptr val  */
 
-#if !U_IS_BIG_ENDIAN
+#إذا !U_IS_BIG_ENDIAN
     /* Little Endian.  Move p to most significant end of the value      */
     incVal = -1;
-    p += sizeof(void *) - 1;
-#endif
+    p += حجم(فراغ *) - 1;
+#جے_انت
 
     /* Loop through the bytes of the ptr as it sits in memory, from 
      * most significant to least significant end                    */
-    for (i=0; i<sizeof(void *); i++) {
-        outputHexBytes(*p, 2, outBuf, outIx, capacity);
+    لكل (i=0; i<حجم(فراغ *); i++) {
+        output_Hex_بائٹاں(*p, 2, باہرلا_Buf, باہرلا_Ix, capacity);
         p += incVal;
     }
 }
 
-static void outputString(const char *s, char *outBuf, int32_t *outIx, int32_t capacity, int32_t indent) {
+ساكن فراغ outputString(ثابت حرف *s, حرف *باہرلا_Buf, int32_t *باہرلا_Ix, int32_t capacity, int32_t indent) {
     int32_t i = 0;
-    char    c;
-    if (s==nullptr) {
+    حرف    c;
+    إذا (s==خالی_سوچک) {
         s = "*NULL*";
     }
-    do {
+    افعل {
         c = s[i++];
-        outputChar(c, outBuf, outIx, capacity, indent);
-    } while (c != 0);
+        outputChar(c, باہرلا_Buf, باہرلا_Ix, capacity, indent);
+    } طالما (c != 0);
 }
         
 
 
-static void outputUString(const char16_t *s, int32_t len,
-                          char *outBuf, int32_t *outIx, int32_t capacity, int32_t indent) {
+ساكن فراغ outputUString(ثابت char16_t *s, int32_t len,
+                          حرف *باہرلا_Buf, int32_t *باہرلا_Ix, int32_t capacity, int32_t indent) {
     int32_t i = 0;
     char16_t   c;
-    if (s==nullptr) {
-        outputString(nullptr, outBuf, outIx, capacity, indent);
-        return;
+    إذا (s==خالی_سوچک) {
+        outputString(خالی_سوچک, باہرلا_Buf, باہرلا_Ix, capacity, indent);
+        أرجع;
     }
 
-    for (i=0; i<len || len==-1; i++) {
+    لكل (i=0; i<len || len==-1; i++) {
         c = s[i];
-        outputHexBytes(c, 4, outBuf, outIx, capacity);
-        outputChar(' ', outBuf, outIx, capacity, indent);
-        if (len == -1 && c==0) {
-            break;
+        output_Hex_بائٹاں(c, 4, باہرلا_Buf, باہرلا_Ix, capacity);
+        outputChar(' ', باہرلا_Buf, باہرلا_Ix, capacity, indent);
+        إذا (len == -1 && c==0) {
+            اكسر;
         }
     }
 }
         
 U_CAPI int32_t U_EXPORT2
-utrace_vformat(char *outBuf, int32_t capacity, int32_t indent, const char *fmt, va_list args) {
-    int32_t   outIx  = 0;
+utrace_vformat(حرف *باہرلا_Buf, int32_t capacity, int32_t indent, ثابت حرف *fmt, va_list دلیلاں_2) {
+    int32_t   باہرلا_Ix  = 0;
     int32_t   fmtIx  = 0;
-    char      fmtC;
-    char      c;
+    حرف      fmtC;
+    حرف      c;
     int32_t   intArg;
     int64_t   longArg = 0;
-    char      *ptrArg;
+    حرف      *ptrArg;
 
     /*   Loop runs once for each character in the format string.
      */
-    for (;;) {
+    لكل (;;) {
         fmtC = fmt[fmtIx++];
-        if (fmtC != '%') {
+        إذا (fmtC != '%') {
             /* Literal character, not part of a %sequence.  Just copy it to the output. */
-            outputChar(fmtC, outBuf, &outIx, capacity, indent);
-            if (fmtC == 0) {
+            outputChar(fmtC, باہرلا_Buf, &باہرلا_Ix, capacity, indent);
+            إذا (fmtC == 0) {
                 /* We hit the NUL that terminates the format string.
                  * This is the normal (and only) exit from the loop that
                  * interprets the format
                  */
-                break;
+                اكسر;
             }
-            continue;
+            استمر;
         }
 
         /* We encountered a '%'.  Pick up the following format char */
         fmtC = fmt[fmtIx++];
 
-        switch (fmtC) {
-        case 'c':
+        بدل (fmtC) {
+        حالة 'c':
             /* single 8 bit char   */
-            c = (char)va_arg(args, int32_t);
-            outputChar(c, outBuf, &outIx, capacity, indent);
-            break;
+            c = (حرف)va_arg(دلیلاں_2, int32_t);
+            outputChar(c, باہرلا_Buf, &باہرلا_Ix, capacity, indent);
+            اكسر;
 
-        case 's':
+        حالة 's':
             /* char * string, NUL terminated.  */
-            ptrArg = va_arg(args, char *);
-            outputString((const char *)ptrArg, outBuf, &outIx, capacity, indent);
-            break;
+            ptrArg = va_arg(دلیلاں_2, حرف *);
+            outputString((ثابت حرف *)ptrArg, باہرلا_Buf, &باہرلا_Ix, capacity, indent);
+            اكسر;
 
-        case 'S':
+        حالة 'S':
             /* char16_t * string, with length, len==-1 for NUL terminated. */
-            ptrArg = va_arg(args, char *);             /* Ptr    */
-            intArg = va_arg(args, int32_t);            /* Length */
-            outputUString((const char16_t *)ptrArg, intArg, outBuf, &outIx, capacity, indent);
-            break;
+            ptrArg = va_arg(دلیلاں_2, حرف *);             /* Ptr    */
+            intArg = va_arg(دلیلاں_2, int32_t);            /* Length */
+            outputUString((ثابت char16_t *)ptrArg, intArg, باہرلا_Buf, &باہرلا_Ix, capacity, indent);
+            اكسر;
 
-        case 'b':
+        حالة 'b':
             /*  8 bit int  */
-            intArg = va_arg(args, int);
-            outputHexBytes(intArg, 2, outBuf, &outIx, capacity);
-            break;
+            intArg = va_arg(دلیلاں_2, صحيح);
+            output_Hex_بائٹاں(intArg, 2, باہرلا_Buf, &باہرلا_Ix, capacity);
+            اكسر;
 
-        case 'h':
+        حالة 'h':
             /*  16 bit int  */
-            intArg = va_arg(args, int);
-            outputHexBytes(intArg, 4, outBuf, &outIx, capacity);
-            break;
+            intArg = va_arg(دلیلاں_2, صحيح);
+            output_Hex_بائٹاں(intArg, 4, باہرلا_Buf, &باہرلا_Ix, capacity);
+            اكسر;
 
-        case 'd':
+        حالة 'd':
             /*  32 bit int  */
-            intArg = va_arg(args, int);
-            outputHexBytes(intArg, 8, outBuf, &outIx, capacity);
-            break;
+            intArg = va_arg(دلیلاں_2, صحيح);
+            output_Hex_بائٹاں(intArg, 8, باہرلا_Buf, &باہرلا_Ix, capacity);
+            اكسر;
 
-        case 'l':
+        حالة 'l':
             /*  64 bit long  */
-            longArg = va_arg(args, int64_t);
-            outputHexBytes(longArg, 16, outBuf, &outIx, capacity);
-            break;
+            longArg = va_arg(دلیلاں_2, int64_t);
+            output_Hex_بائٹاں(longArg, 16, باہرلا_Buf, &باہرلا_Ix, capacity);
+            اكسر;
             
-        case 'p':
+        حالة 'p':
             /*  Pointers.   */
-            ptrArg = va_arg(args, char *);
-            outputPtrBytes(ptrArg, outBuf, &outIx, capacity);
-            break;
+            ptrArg = va_arg(دلیلاں_2, حرف *);
+            output_Ptr_بائٹاں(ptrArg, باہرلا_Buf, &باہرلا_Ix, capacity);
+            اكسر;
 
-        case 0:
+        حالة 0:
             /* Single '%' at end of fmt string.  Output as literal '%'.   
              * Back up index into format string so that the terminating NUL will be
              * re-fetched in the outer loop, causing it to terminate.
              */
-            outputChar('%', outBuf, &outIx, capacity, indent);
+            outputChar('%', باہرلا_Buf, &باہرلا_Ix, capacity, indent);
             fmtIx--;
-            break;
+            اكسر;
 
-        case 'v':
+        حالة 'v':
             {
                 /* Vector of values, e.g. %vh */
-                char     vectorType;
-                int32_t  vectorLen;
-                const char   *i8Ptr;
+                حرف     سمتیہ_Type;
+                int32_t  سمتیہ_Len;
+                ثابت حرف   *i8Ptr;
                 int16_t  *i16Ptr;
                 int32_t  *i32Ptr;
                 int64_t  *i64Ptr;
-                void     **ptrPtr;
-                int32_t   charsToOutput = 0;
+                فراغ     **ptrPtr;
+                int32_t   chars_منزل_Output = 0;
                 int32_t   i;
                 
-                vectorType = fmt[fmtIx];    /* b, h, d, l, p, etc. */
-                if (vectorType != 0) {
+                سمتیہ_Type = fmt[fmtIx];    /* b, h, d, l, p, etc. */
+                إذا (سمتیہ_Type != 0) {
                     fmtIx++;
                 }
-                i8Ptr = (const char *)va_arg(args, void*);
+                i8Ptr = (ثابت حرف *)va_arg(دلیلاں_2, فراغ*);
                 i16Ptr = (int16_t *)i8Ptr;
                 i32Ptr = (int32_t *)i8Ptr;
                 i64Ptr = (int64_t *)i8Ptr;
-                ptrPtr = (void **)i8Ptr;
-                vectorLen = va_arg(args, int32_t);
-                if (ptrPtr == nullptr) {
-                    outputString("*NULL* ", outBuf, &outIx, capacity, indent);
-                } else {
-                    for (i=0; i<vectorLen || vectorLen==-1; i++) { 
-                        switch (vectorType) {
-                        case 'b':
-                            charsToOutput = 2;
+                ptrPtr = (فراغ **)i8Ptr;
+                سمتیہ_Len = va_arg(دلیلاں_2, int32_t);
+                إذا (ptrPtr == خالی_سوچک) {
+                    outputString("*NULL* ", باہرلا_Buf, &باہرلا_Ix, capacity, indent);
+                } وإلا {
+                    لكل (i=0; i<سمتیہ_Len || سمتیہ_Len==-1; i++) { 
+                        بدل (سمتیہ_Type) {
+                        حالة 'b':
+                            chars_منزل_Output = 2;
                             longArg = *i8Ptr++;
-                            break;
-                        case 'h':
-                            charsToOutput = 4;
+                            اكسر;
+                        حالة 'h':
+                            chars_منزل_Output = 4;
                             longArg = *i16Ptr++;
-                            break;
-                        case 'd':
-                            charsToOutput = 8;
+                            اكسر;
+                        حالة 'd':
+                            chars_منزل_Output = 8;
                             longArg = *i32Ptr++;
-                            break;
-                        case 'l':
-                            charsToOutput = 16;
+                            اكسر;
+                        حالة 'l':
+                            chars_منزل_Output = 16;
                             longArg = *i64Ptr++;
-                            break;
-                        case 'p':
-                            charsToOutput = 0;
-                            outputPtrBytes(*ptrPtr, outBuf, &outIx, capacity);
-                            longArg = *ptrPtr==nullptr? 0: 1;    /* test for nullptr terminated array. */
+                            اكسر;
+                        حالة 'p':
+                            chars_منزل_Output = 0;
+                            output_Ptr_بائٹاں(*ptrPtr, باہرلا_Buf, &باہرلا_Ix, capacity);
+                            longArg = *ptrPtr==خالی_سوچک? 0: 1;    /* test for nullptr terminated array. */
                             ptrPtr++;
-                            break;
-                        case 'c':
-                            charsToOutput = 0;
-                            outputChar(*i8Ptr, outBuf, &outIx, capacity, indent);
+                            اكسر;
+                        حالة 'c':
+                            chars_منزل_Output = 0;
+                            outputChar(*i8Ptr, باہرلا_Buf, &باہرلا_Ix, capacity, indent);
                             longArg = *i8Ptr;    /* for test for nullptr terminated array. */
                             i8Ptr++;
-                            break;
-                        case 's':
-                            charsToOutput = 0;
-                            outputString((const char *)*ptrPtr, outBuf, &outIx, capacity, indent);
-                            outputChar('\n', outBuf, &outIx, capacity, indent);
-                            longArg = *ptrPtr==nullptr? 0: 1;   /* for test for nullptr term. array. */
+                            اكسر;
+                        حالة 's':
+                            chars_منزل_Output = 0;
+                            outputString((ثابت حرف *)*ptrPtr, باہرلا_Buf, &باہرلا_Ix, capacity, indent);
+                            outputChar('\n', باہرلا_Buf, &باہرلا_Ix, capacity, indent);
+                            longArg = *ptrPtr==خالی_سوچک? 0: 1;   /* for test for nullptr term. array. */
                             ptrPtr++;
-                            break;
+                            اكسر;
 
-                        case 'S':
-                            charsToOutput = 0;
-                            outputUString((const char16_t *)*ptrPtr, -1, outBuf, &outIx, capacity, indent);
-                            outputChar('\n', outBuf, &outIx, capacity, indent);
-                            longArg = *ptrPtr==nullptr? 0: 1;   /* for test for nullptr term. array. */
+                        حالة 'S':
+                            chars_منزل_Output = 0;
+                            outputUString((ثابت char16_t *)*ptrPtr, -1, باہرلا_Buf, &باہرلا_Ix, capacity, indent);
+                            outputChar('\n', باہرلا_Buf, &باہرلا_Ix, capacity, indent);
+                            longArg = *ptrPtr==خالی_سوچک? 0: 1;   /* for test for nullptr term. array. */
                             ptrPtr++;
-                            break;
+                            اكسر;
 
                             
                         }
-                        if (charsToOutput > 0) {
-                            outputHexBytes(longArg, charsToOutput, outBuf, &outIx, capacity);
-                            outputChar(' ', outBuf, &outIx, capacity, indent);
+                        إذا (chars_منزل_Output > 0) {
+                            output_Hex_بائٹاں(longArg, chars_منزل_Output, باہرلا_Buf, &باہرلا_Ix, capacity);
+                            outputChar(' ', باہرلا_Buf, &باہرلا_Ix, capacity, indent);
                         }
-                        if (vectorLen == -1 && longArg == 0) {
-                            break;
+                        إذا (سمتیہ_Len == -1 && longArg == 0) {
+                            اكسر;
                         }
                     }
                 }
-                outputChar('[', outBuf, &outIx, capacity, indent);
-                outputHexBytes(vectorLen, 8, outBuf, &outIx, capacity);
-                outputChar(']', outBuf, &outIx, capacity, indent);
+                outputChar('[', باہرلا_Buf, &باہرلا_Ix, capacity, indent);
+                output_Hex_بائٹاں(سمتیہ_Len, 8, باہرلا_Buf, &باہرلا_Ix, capacity);
+                outputChar(']', باہرلا_Buf, &باہرلا_Ix, capacity, indent);
             }
-            break;
+            اكسر;
 
 
-        default:
+        افتراضي:
             /* %. in format string, where . is some character not in the set
              *    of recognized format chars.  Just output it as if % wasn't there.
              *    (Covers "%%" outputting a single '%')
              */
-             outputChar(fmtC, outBuf, &outIx, capacity, indent);
+             outputChar(fmtC, باہرلا_Buf, &باہرلا_Ix, capacity, indent);
         }
     }
-    outputChar(0, outBuf, &outIx, capacity, indent);  /* Make sure that output is NUL terminated   */
-    return outIx + 1;     /* outIx + 1 because outIx does not increment when outputting final NUL. */
+    outputChar(0, باہرلا_Buf, &باہرلا_Ix, capacity, indent);  /* Make sure that output is NUL terminated   */
+    أرجع باہرلا_Ix + 1;     /* outIx + 1 because outIx does not increment when outputting final NUL. */
 }
 
 
 
 
 U_CAPI int32_t U_EXPORT2
-utrace_format(char *outBuf, int32_t capacity,
-                int32_t indent, const char *fmt,  ...) {
+utrace_format(حرف *باہرلا_Buf, int32_t capacity,
+                int32_t indent, ثابت حرف *fmt,  ...) {
     int32_t retVal;
-    va_list args;
-    va_start(args, fmt ); 
-    retVal = utrace_vformat(outBuf, capacity, indent, fmt, args);
-    va_end(args);
-    return retVal;
+    va_list دلیلاں_2;
+    va_start(دلیلاں_2, fmt ); 
+    retVal = utrace_vformat(باہرلا_Buf, capacity, indent, fmt, دلیلاں_2);
+    va_end(دلیلاں_2);
+    أرجع retVal;
 }
 
 
-U_CAPI void U_EXPORT2
-utrace_setFunctions(const void *context,
-                    UTraceEntry *e, UTraceExit *x, UTraceData *d) {
-    pTraceEntryFunc = e;
+U_CAPI فراغ U_EXPORT2
+utrace_سیٹ_Functions(ثابت فراغ *context,
+                    UTrace_اندراج *e, UTraceExit *x, UTrace_انکڑے *d) {
+    p_Trace_اندراج_Func = e;
     pTraceExitFunc  = x;
-    pTraceDataFunc  = d;
+    p_Trace_انکڑے_Func  = d;
     gTraceContext   = context;
 }
 
 
-U_CAPI void U_EXPORT2
-utrace_getFunctions(const void **context,
-                    UTraceEntry **e, UTraceExit **x, UTraceData **d) {
-    *e = pTraceEntryFunc;
+U_CAPI فراغ U_EXPORT2
+utrace_getFunctions(ثابت فراغ **context,
+                    UTrace_اندراج **e, UTraceExit **x, UTrace_انکڑے **d) {
+    *e = p_Trace_اندراج_Func;
     *x = pTraceExitFunc;
-    *d = pTraceDataFunc;
+    *d = p_Trace_انکڑے_Func;
     *context = gTraceContext;
 }
 
-U_CAPI void U_EXPORT2
-utrace_setLevel(int32_t level) {
-    if (level < UTRACE_OFF) {
+U_CAPI فراغ U_EXPORT2
+utrace_سیٹ_Level(int32_t level) {
+    إذا (level < UTRACE_OFF) {
         level = UTRACE_OFF;
     }
-    if (level > UTRACE_VERBOSE) {
+    إذا (level > UTRACE_VERBOSE) {
         level = UTRACE_VERBOSE;
     }
     utrace_level = level;
@@ -425,31 +425,31 @@ utrace_setLevel(int32_t level) {
 
 U_CAPI int32_t U_EXPORT2
 utrace_getLevel() {
-    return utrace_level;
+    أرجع utrace_level;
 }
 
 
 U_CFUNC UBool 
 utrace_cleanup() {
-    pTraceEntryFunc = nullptr;
-    pTraceExitFunc  = nullptr;
-    pTraceDataFunc  = nullptr;
+    p_Trace_اندراج_Func = خالی_سوچک;
+    pTraceExitFunc  = خالی_سوچک;
+    p_Trace_انکڑے_Func  = خالی_سوچک;
     utrace_level    = UTRACE_OFF;
-    gTraceContext   = nullptr;
-    return true;
+    gTraceContext   = خالی_سوچک;
+    أرجع سچ;
 }
 
 
-static const char * const
+ساكن ثابت حرف * ثابت
 trFnName[] = {
     "u_init",
     "u_cleanup",
-    nullptr
+    خالی_سوچک
 };
 
 
-static const char * const
-trConvNames[] = {
+ساكن ثابت حرف * ثابت
+tr_Conv_ناں[] = {
     "ucnv_open",
     "ucnv_openPackage",
     "ucnv_openAlgorithmic",
@@ -458,12 +458,12 @@ trConvNames[] = {
     "ucnv_flushCache",
     "ucnv_load",
     "ucnv_unload",
-    nullptr
+    خالی_سوچک
 };
 
     
-static const char * const
-trCollNames[] = {
+ساكن ثابت حرف * ثابت
+tr_Coll_ناں[] = {
     "ucol_open",
     "ucol_close",
     "ucol_strcoll",
@@ -473,32 +473,32 @@ trCollNames[] = {
     "ucol_strcollIter",
     "ucol_openFromShortString",
     "ucol_strcollUTF8",
-    nullptr
+    خالی_سوچک
 };
 
 
-static const char* const
-trResDataNames[] = {
+ساكن ثابت حرف* ثابت
+tr_Res_انکڑے_ناں[] = {
     "resc",
     "bundle-open",
     "file-open",
     "res-open",
-    nullptr
+    خالی_سوچک
 };
 
                 
-U_CAPI const char * U_EXPORT2
-utrace_functionName(int32_t fnNumber) {
-    if(UTRACE_FUNCTION_START <= fnNumber && fnNumber < UTRACE_FUNCTION_LIMIT) {
-        return trFnName[fnNumber];
-    } else if(UTRACE_CONVERSION_START <= fnNumber && fnNumber < UTRACE_CONVERSION_LIMIT) {
-        return trConvNames[fnNumber - UTRACE_CONVERSION_START];
-    } else if(UTRACE_COLLATION_START <= fnNumber && fnNumber < UTRACE_COLLATION_LIMIT){
-        return trCollNames[fnNumber - UTRACE_COLLATION_START];
-    } else if(UTRACE_UDATA_START <= fnNumber && fnNumber < UTRACE_RES_DATA_LIMIT){
-        return trResDataNames[fnNumber - UTRACE_UDATA_START];
-    } else {
-        return "[BOGUS Trace Function Number]";
+U_CAPI ثابت حرف * U_EXPORT2
+utrace_functionName(int32_t fn_نمبر) {
+    إذا(UTRACE_FUNCTION_شروع <= fn_نمبر && fn_نمبر < UTRACE_FUNCTION_حد_بندی) {
+        أرجع trFnName[fn_نمبر];
+    } وإلا إذا(UTRACE_CONVERSION_شروع <= fn_نمبر && fn_نمبر < UTRACE_CONVERSION_حد_بندی) {
+        أرجع tr_Conv_ناں[fn_نمبر - UTRACE_CONVERSION_شروع];
+    } وإلا إذا(UTRACE_COLLATION_شروع <= fn_نمبر && fn_نمبر < UTRACE_COLLATION_حد_بندی){
+        أرجع tr_Coll_ناں[fn_نمبر - UTRACE_COLLATION_شروع];
+    } وإلا إذا(UTRACE_UDATA_شروع <= fn_نمبر && fn_نمبر < UTRACE_RES_انکڑے_حد_بندی){
+        أرجع tr_Res_انکڑے_ناں[fn_نمبر - UTRACE_UDATA_شروع];
+    } وإلا {
+        أرجع "[BOGUS Trace Function Number]";
     }
 }
 

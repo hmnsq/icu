@@ -7,44 +7,44 @@
 ******************************************************************************
 */
 
-#ifndef ULIST_H
-#define ULIST_H
+#جے_بنا_تعریف ULIST_H
+#تعریف_کرو ULIST_H
 
-#include "unicode/utypes.h"
-#include "unicode/uenum.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uenum.h"
 
-struct UList;
-typedef struct UList UList;
+بنية UList;
+تعريفنوع بنية UList UList;
 
-U_CAPI UList * U_EXPORT2 ulist_createEmptyList(UErrorCode *status);
+U_CAPI UList * U_EXPORT2 ulist_create_خالی_تھاواں_List(UError_کوڈ *حالت);
 
-U_CAPI void U_EXPORT2 ulist_addItemEndList(UList *list, const void *data, UBool forceDelete, UErrorCode *status);
+U_CAPI فراغ U_EXPORT2 ulist_جوڑو_شے_سرا_List(UList *list, ثابت فراغ *انکڑے, UBool forceDelete, UError_کوڈ *حالت);
 
-U_CAPI void U_EXPORT2 ulist_addItemBeginList(UList *list, const void *data, UBool forceDelete, UErrorCode *status);
+U_CAPI فراغ U_EXPORT2 ulist_جوڑو_شے_Begin_List(UList *list, ثابت فراغ *انکڑے, UBool forceDelete, UError_کوڈ *حالت);
 
-U_CAPI UBool U_EXPORT2 ulist_containsString(const UList *list, const char *data, int32_t length);
+U_CAPI UBool U_EXPORT2 ulist_شامل_اے_String(ثابت UList *list, ثابت حرف *انکڑے, int32_t لمائی);
 
-U_CAPI UBool U_EXPORT2 ulist_removeString(UList *list, const char *data);
+U_CAPI UBool U_EXPORT2 ulist_removeString(UList *list, ثابت حرف *انکڑے);
 
-U_CAPI void *U_EXPORT2 ulist_getNext(UList *list);
+U_CAPI فراغ *U_EXPORT2 ulist_get_اگلا(UList *list);
 
-U_CAPI int32_t U_EXPORT2 ulist_getListSize(const UList *list);
+U_CAPI int32_t U_EXPORT2 ulist_get_List_ناپ(ثابت UList *list);
 
-U_CAPI void U_EXPORT2 ulist_resetList(UList *list);
+U_CAPI فراغ U_EXPORT2 ulist_resetList(UList *list);
 
-U_CAPI void U_EXPORT2 ulist_deleteList(UList *list);
+U_CAPI فراغ U_EXPORT2 ulist_deleteList(UList *list);
 
 /*
  * The following are for use when creating UEnumeration object backed by UList.
  */
-U_CAPI void U_EXPORT2 ulist_close_keyword_values_iterator(UEnumeration *en);
+U_CAPI فراغ U_EXPORT2 ulist_close_keyword_اقدار_iterator(UEnumeration *en);
 
-U_CAPI int32_t U_EXPORT2 ulist_count_keyword_values(UEnumeration *en, UErrorCode *status);
+U_CAPI int32_t U_EXPORT2 ulist_گنتی_keyword_اقدار(UEnumeration *en, UError_کوڈ *حالت);
 
-U_CAPI const char * U_EXPORT2 ulist_next_keyword_value(UEnumeration* en, int32_t *resultLength, UErrorCode* status);
+U_CAPI ثابت حرف * U_EXPORT2 ulist_اگلا_keyword_قدر(UEnumeration* en, int32_t *نتیجہ_لمائی, UError_کوڈ* حالت);
 
-U_CAPI void U_EXPORT2 ulist_reset_keyword_values_iterator(UEnumeration* en, UErrorCode* status);
+U_CAPI فراغ U_EXPORT2 ulist_reset_keyword_اقدار_iterator(UEnumeration* en, UError_کوڈ* حالت);
 
 U_CAPI UList * U_EXPORT2 ulist_getListFromEnum(UEnumeration *en);
 
-#endif
+#جے_انت

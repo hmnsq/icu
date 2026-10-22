@@ -14,22 +14,22 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __MESSAGEPATTERN_H__
-#define __MESSAGEPATTERN_H__
+#جے_بنا_تعریف __MESSAGEPATTERN_H__
+#تعریف_کرو __MESSAGEPATTERN_H__
 
 /**
  * \file
  * \brief C++ API: MessagePattern class: Parses and represents ICU MessageFormat patterns.
  */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#if !UCONFIG_NO_FORMATTING
+#إذا !UCONFIG_NO_FORMATTING
 
-#include "unicode/parseerr.h"
-#include "unicode/unistr.h"
+#ضمن "unicode/parseerr.h"
+#ضمن "unicode/unistr.h"
 
 /**
  * Mode for when an apostrophe starts quoted literal text for MessageFormat output.
@@ -67,7 +67,7 @@
  * @stable ICU 4.8
  * @see UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_MODE
  */
-enum UMessagePatternApostropheMode {
+تعداد UMessage_نمونہ_Apostrophe_منوال {
     /**
      * A literal apostrophe is represented by
      * either a single or a double apostrophe pattern character.
@@ -93,13 +93,13 @@ enum UMessagePatternApostropheMode {
 /**
  * @stable ICU 4.8
  */
-typedef enum UMessagePatternApostropheMode UMessagePatternApostropheMode;
+تعريفنوع تعداد UMessage_نمونہ_Apostrophe_منوال UMessage_نمونہ_Apostrophe_منوال;
 
 /**
  * MessagePattern::Part type constants.
  * @stable ICU 4.8
  */
-enum UMessagePatternPartType {
+تعداد UMessage_نمونہ_Part_Type {
     /**
      * Start of a message pattern (main or nested).
      * The length is 0 for the top-level message
@@ -109,7 +109,7 @@ enum UMessagePatternPartType {
      * There is always a later MSG_LIMIT part.
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_MSG_START,
+    UMSGPAT_PART_TYPE_پیغام_شروع,
     /**
      * End of a message pattern (main or nested).
      * The length is 0 for the top-level message and
@@ -118,7 +118,7 @@ enum UMessagePatternPartType {
      * The value indicates the nesting level, starting with 0 for the main message.
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_MSG_LIMIT,
+    UMSGPAT_PART_TYPE_پیغام_حد_بندی,
     /**
      * Indicates a substring of the pattern string which is to be skipped when formatting.
      * For example, an apostrophe that begins or ends quoted text
@@ -133,7 +133,7 @@ enum UMessagePatternPartType {
      * The value is the character code of the insertion character. (U+0027=APOSTROPHE)
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_INSERT_CHAR,
+    UMSGPAT_PART_TYPE_داخل_کرو_CHAR,
     /**
      * Indicates a syntactic (non-escaped) # symbol in a plural variant.
      * When formatting, replace this part's substring with the
@@ -141,7 +141,7 @@ enum UMessagePatternPartType {
      * The value is undefined and currently always 0.
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_REPLACE_NUMBER,
+    UMSGPAT_PART_TYPE_REPLACE_نمبر,
     /**
      * Start of an argument.
      * The length is 1 for the '{'.
@@ -152,19 +152,19 @@ enum UMessagePatternPartType {
      * and finally an ARG_LIMIT part.
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_ARG_START,
+    UMSGPAT_PART_TYPE_ARG_شروع,
     /**
      * End of an argument.
      * The length is 1 for the '}'.
      * The value is the ordinal value of the ArgType. Use getArgType().
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_ARG_LIMIT,
+    UMSGPAT_PART_TYPE_ARG_حد_بندی,
     /**
      * The argument number, provided by the value.
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_ARG_NUMBER,
+    UMSGPAT_PART_TYPE_ARG_نمبر,
     /**
      * The argument name.
      * The value is undefined and currently always 0.
@@ -208,7 +208,7 @@ enum UMessagePatternPartType {
 /**
  * @stable ICU 4.8
  */
-typedef enum UMessagePatternPartType UMessagePatternPartType;
+تعريفنوع تعداد UMessage_نمونہ_Part_Type UMessage_نمونہ_Part_Type;
 
 /**
  * Argument type constants.
@@ -218,7 +218,7 @@ typedef enum UMessagePatternPartType UMessagePatternPartType;
  * with a nesting level one greater than the surrounding message.
  * @stable ICU 4.8
  */
-enum UMessagePatternArgType {
+تعداد UMessage_نمونہ_Arg_Type {
     /**
      * The argument has no specified type.
      * @stable ICU 4.8
@@ -261,7 +261,7 @@ enum UMessagePatternArgType {
 /**
  * @stable ICU 4.8
  */
-typedef enum UMessagePatternArgType UMessagePatternArgType;
+تعريفنوع تعداد UMessage_نمونہ_Arg_Type UMessage_نمونہ_Arg_Type;
 
 /**
  * \def UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE
@@ -269,16 +269,16 @@ typedef enum UMessagePatternArgType UMessagePatternArgType;
  * for example UMSGPAT_ARG_TYPE_PLURAL and UMSGPAT_ARG_TYPE_SELECTORDINAL.
  * @stable ICU 50
  */
-#define UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) \
+#تعریف_کرو UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) \
     ((argType)==UMSGPAT_ARG_TYPE_PLURAL || (argType)==UMSGPAT_ARG_TYPE_SELECTORDINAL)
 
-enum {
+تعداد {
     /**
      * Return value from MessagePattern.validateArgumentName() for when
      * the string is a valid "pattern identifier" but not a number.
      * @stable ICU 4.8
      */
-    UMSGPAT_ARG_NAME_NOT_NUMBER=-1,
+    UMSGPAT_ARG_NAME_NOT_نمبر=-1,
 
     /**
      * Return value from MessagePattern.validateArgumentName() for when
@@ -296,12 +296,12 @@ enum {
  * @see MessagePattern.getNumericValue()
  * @stable ICU 4.8
  */
-#define UMSGPAT_NO_NUMERIC_VALUE ((double)(-123456789))
+#تعریف_کرو UMSGPAT_NO_NUMERIC_قدر ((مزدوج)(-123456789))
 
 U_NAMESPACE_BEGIN
 
-class MessagePatternDoubleList;
-class MessagePatternPartsList;
+class سنیہا_نمونہ_Double_List;
+class سنیہا_نمونہ_Parts_List;
 
 /**
  * Parses and represents ICU MessageFormat patterns.
@@ -359,8 +359,8 @@ class MessagePatternPartsList;
  *
  * @stable ICU 4.8
  */
-class U_COMMON_API MessagePattern : public UObject {
-public:
+class U_COMMON_API سنیہا_نمونہ : عام UObject {
+عام:
     /**
      * Constructs an empty MessagePattern with default UMessagePatternApostropheMode.
      * @param errorCode Standard ICU error code. Its input value must
@@ -369,7 +369,7 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 4.8
      */
-    MessagePattern(UErrorCode &errorCode);
+    سنیہا_نمونہ(UError_کوڈ &error_کوڈ);
 
     /**
      * Constructs an empty MessagePattern.
@@ -380,7 +380,7 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 4.8
      */
-    MessagePattern(UMessagePatternApostropheMode mode, UErrorCode &errorCode);
+    سنیہا_نمونہ(UMessage_نمونہ_Apostrophe_منوال منوال, UError_کوڈ &error_کوڈ);
 
     /**
      * Constructs a MessagePattern with default UMessagePatternApostropheMode and
@@ -400,14 +400,14 @@ public:
      * @throws NumberFormatException if a number could not be parsed
      * @stable ICU 4.8
      */
-    MessagePattern(const UnicodeString &pattern, UParseError *parseError, UErrorCode &errorCode);
+    سنیہا_نمونہ(ثابت UnicodeString &نمونہ, UParseError *parseError, UError_کوڈ &error_کوڈ);
 
     /**
      * Copy constructor.
      * @param other Object to copy.
      * @stable ICU 4.8
      */
-    MessagePattern(const MessagePattern &other);
+    سنیہا_نمونہ(ثابت سنیہا_نمونہ &other);
 
     /**
      * Assignment operator.
@@ -415,13 +415,13 @@ public:
      * @return *this=other
      * @stable ICU 4.8
      */
-    MessagePattern& operator=(const MessagePattern& other) U_LIFETIME_BOUND;
+    سنیہا_نمونہ& عامل=(ثابت سنیہا_نمونہ& other) U_LIFETIME_BOUND;
 
     /**
      * Destructor.
      * @stable ICU 4.8
      */
-    virtual ~MessagePattern();
+    مجازی ~سنیہا_نمونہ();
 
     /**
      * Parses a MessageFormat pattern string.
@@ -440,9 +440,9 @@ public:
      * @throws NumberFormatException if a number could not be parsed
      * @stable ICU 4.8
      */
-    MessagePattern& parse(const UnicodeString& pattern,
+    سنیہا_نمونہ& parse(ثابت UnicodeString& نمونہ,
                           UParseError* parseError,
-                          UErrorCode& errorCode) U_LIFETIME_BOUND;
+                          UError_کوڈ& error_کوڈ) U_LIFETIME_BOUND;
 
     /**
      * Parses a ChoiceFormat pattern string.
@@ -461,9 +461,9 @@ public:
      * @throws NumberFormatException if a number could not be parsed
      * @stable ICU 4.8
      */
-    MessagePattern& parseChoiceStyle(const UnicodeString& pattern,
+    سنیہا_نمونہ& parseChoiceStyle(ثابت UnicodeString& نمونہ,
                                      UParseError* parseError,
-                                     UErrorCode& errorCode) U_LIFETIME_BOUND;
+                                     UError_کوڈ& error_کوڈ) U_LIFETIME_BOUND;
 
     /**
      * Parses a PluralFormat pattern string.
@@ -482,9 +482,9 @@ public:
      * @throws NumberFormatException if a number could not be parsed
      * @stable ICU 4.8
      */
-    MessagePattern& parsePluralStyle(const UnicodeString& pattern,
+    سنیہا_نمونہ& parsePluralStyle(ثابت UnicodeString& نمونہ,
                                      UParseError* parseError,
-                                     UErrorCode& errorCode) U_LIFETIME_BOUND;
+                                     UError_کوڈ& error_کوڈ) U_LIFETIME_BOUND;
 
     /**
      * Parses a SelectFormat pattern string.
@@ -503,16 +503,16 @@ public:
      * @throws NumberFormatException if a number could not be parsed
      * @stable ICU 4.8
      */
-    MessagePattern& parseSelectStyle(const UnicodeString& pattern,
+    سنیہا_نمونہ& parseSelectStyle(ثابت UnicodeString& نمونہ,
                                      UParseError* parseError,
-                                     UErrorCode& errorCode) U_LIFETIME_BOUND;
+                                     UError_کوڈ& error_کوڈ) U_LIFETIME_BOUND;
 
     /**
      * Clears this MessagePattern.
      * countParts() will return 0.
      * @stable ICU 4.8
      */
-    void clear();
+    فراغ clear();
 
     /**
      * Clears this MessagePattern and sets the UMessagePatternApostropheMode.
@@ -520,9 +520,9 @@ public:
      * @param mode The new UMessagePatternApostropheMode.
      * @stable ICU 4.8
      */
-    void clearPatternAndSetApostropheMode(UMessagePatternApostropheMode mode) {
+    فراغ clear_نمونہ_And_سیٹ_Apostrophe_منوال(UMessage_نمونہ_Apostrophe_منوال منوال) {
         clear();
-        aposMode=mode;
+        apos_منوال=منوال;
     }
 
     /**
@@ -530,29 +530,29 @@ public:
      * @return true if this object is equivalent to the other one.
      * @stable ICU 4.8
      */
-    bool operator==(const MessagePattern &other) const;
+    bool عامل==(ثابت سنیہا_نمونہ &other) ثابت;
 
     /**
      * @param other another object to compare with.
      * @return false if this object is equivalent to the other one.
      * @stable ICU 4.8
      */
-    inline bool operator!=(const MessagePattern &other) const {
-        return !operator==(other);
+    مضمن bool عامل!=(ثابت سنیہا_نمونہ &other) ثابت {
+        أرجع !عامل==(other);
     }
 
     /**
      * @return A hash code for this object.
      * @stable ICU 4.8
      */
-    int32_t hashCode() const;
+    int32_t hash_کوڈ() ثابت;
 
     /**
      * @return this instance's UMessagePatternApostropheMode.
      * @stable ICU 4.8
      */
-    UMessagePatternApostropheMode getApostropheMode() const {
-        return aposMode;
+    UMessage_نمونہ_Apostrophe_منوال get_Apostrophe_منوال() ثابت {
+        أرجع apos_منوال;
     }
 
     // Java has package-private jdkAposMode() here.
@@ -562,8 +562,8 @@ public:
      * @return the parsed pattern string (null if none was parsed).
      * @stable ICU 4.8
      */
-    const UnicodeString& getPatternString() const U_LIFETIME_BOUND {
-        return msg;
+    ثابت UnicodeString& get_نمونہ_String() ثابت U_LIFETIME_BOUND {
+        أرجع پیغام;
     }
 
     /**
@@ -571,8 +571,8 @@ public:
      * @return true if the parsed pattern has at least one named argument.
      * @stable ICU 4.8
      */
-    UBool hasNamedArguments() const {
-        return hasArgNames;
+    UBool hasNamedArguments() ثابت {
+        أرجع has_Arg_ناں;
     }
 
     /**
@@ -580,8 +580,8 @@ public:
      * @return true if the parsed pattern has at least one numbered argument.
      * @stable ICU 4.8
      */
-    UBool hasNumberedArguments() const {
-        return hasArgNumbers;
+    UBool hasNumberedArguments() ثابت {
+        أرجع hasArgNumbers;
     }
 
     /**
@@ -595,7 +595,7 @@ public:
      *         ARG_NAME_NOT_VALID (-2) if it is neither.
      * @stable ICU 4.8
      */
-    static int32_t validateArgumentName(const UnicodeString &name);
+    ساكن int32_t validate_دلیل_Name(ثابت UnicodeString &name);
 
     /**
      * Returns a version of the parsed pattern string where each ASCII apostrophe
@@ -607,7 +607,7 @@ public:
      * @see MessageFormat.autoQuoteApostrophe()
      * @stable ICU 4.8
      */
-    UnicodeString autoQuoteApostropheDeep() const;
+    UnicodeString autoQuoteApostropheDeep() ثابت;
 
     class Part;
 
@@ -617,8 +617,8 @@ public:
      * @return the number of pattern parts.
      * @stable ICU 4.8
      */
-    int32_t countParts() const {
-        return partsLength;
+    int32_t گنتی_Parts() ثابت {
+        أرجع parts_لمائی;
     }
 
     /**
@@ -627,8 +627,8 @@ public:
      * @return the i-th pattern "part".
      * @stable ICU 4.8
      */
-    const Part& getPart(int32_t i) const U_LIFETIME_BOUND {
-        return parts[i];
+    ثابت Part& getPart(int32_t i) ثابت U_LIFETIME_BOUND {
+        أرجع parts[i];
     }
 
     /**
@@ -638,8 +638,8 @@ public:
      * @return The UMessagePatternPartType of the i-th Part.
      * @stable ICU 4.8
      */
-    UMessagePatternPartType getPartType(int32_t i) const {
-        return getPart(i).type;
+    UMessage_نمونہ_Part_Type getPartType(int32_t i) ثابت {
+        أرجع getPart(i).type;
     }
 
     /**
@@ -649,8 +649,8 @@ public:
      * @return The pattern index of this Part.
      * @stable ICU 4.8
      */
-    int32_t getPatternIndex(int32_t partIndex) const {
-        return getPart(partIndex).index;
+    int32_t get_نمونہ_اشاریہ(int32_t part_اشاریہ) ثابت {
+        أرجع getPart(part_اشاریہ).اشاریہ;
     }
 
     /**
@@ -660,8 +660,8 @@ public:
      * @return the substring associated with part.
      * @stable ICU 4.8
      */
-    UnicodeString getSubstring(const Part& part) const U_LIFETIME_BOUND {
-        return msg.tempSubString(part.index, part.length);
+    UnicodeString getSubstring(ثابت Part& part) ثابت U_LIFETIME_BOUND {
+        أرجع پیغام.عارضی_Sub_String(part.اشاریہ, part.لمائی);
     }
 
     /**
@@ -671,8 +671,8 @@ public:
      * @return true if getSubstring(part).equals(s).
      * @stable ICU 4.8
      */
-    UBool partSubstringMatches(const Part &part, const UnicodeString &s) const {
-        return 0==msg.compare(part.index, part.length, s);
+    UBool partSubstringMatches(ثابت Part &part, ثابت UnicodeString &s) ثابت {
+        أرجع 0==پیغام.compare(part.اشاریہ, part.لمائی, s);
     }
 
     /**
@@ -681,7 +681,7 @@ public:
      * @return the part's numeric value, or UMSGPAT_NO_NUMERIC_VALUE if this is not a numeric part.
      * @stable ICU 4.8
      */
-    double getNumericValue(const Part &part) const;
+    مزدوج get_Numeric_قدر(ثابت Part &part) ثابت;
 
     /**
      * Returns the "offset:" value of a PluralFormat argument, or 0 if none is specified.
@@ -689,7 +689,7 @@ public:
      * @return the "offset:" value.
      * @stable ICU 4.8
      */
-    double getPluralOffset(int32_t pluralStart) const;
+    مزدوج get_Plural_وتھ(int32_t plural_شروع) ثابت;
 
     /**
      * Returns the index of the ARG|MSG_LIMIT part corresponding to the ARG|MSG_START at start.
@@ -699,12 +699,12 @@ public:
      *         or start itself if getPartType(msgStart)!=ARG|MSG_START.
      * @stable ICU 4.8
      */
-    int32_t getLimitPartIndex(int32_t start) const {
-        int32_t limit=getPart(start).limitPartIndex;
-        if(limit<start) {
-            return start;
+    int32_t get_حد_بندی_Part_اشاریہ(int32_t شروع) ثابت {
+        int32_t حد_بندی=getPart(شروع).حد_بندی_Part_اشاریہ;
+        إذا(حد_بندی<شروع) {
+            أرجع شروع;
         }
-        return limit;
+        أرجع حد_بندی;
     }
 
     /**
@@ -714,8 +714,8 @@ public:
      * and for syntax elements of "complex" arguments.
      * @stable ICU 4.8
      */
-    class Part : public UMemory {
-    public:
+    class Part : عام UMemory {
+    عام:
         /**
          * Default constructor, do not use.
          * @internal
@@ -727,8 +727,8 @@ public:
          * @return the part type.
          * @stable ICU 4.8
          */
-        UMessagePatternPartType getType() const {
-            return type;
+        UMessage_نمونہ_Part_Type getType() ثابت {
+            أرجع type;
         }
 
         /**
@@ -736,8 +736,8 @@ public:
          * @return this part's pattern string index.
          * @stable ICU 4.8
          */
-        int32_t getIndex() const {
-            return index;
+        int32_t get_اشاریہ() ثابت {
+            أرجع اشاریہ;
         }
 
         /**
@@ -746,8 +746,8 @@ public:
          * @return this part's pattern substring length.
          * @stable ICU 4.8
          */
-        int32_t getLength() const {
-            return length;
+        int32_t get_لمائی() ثابت {
+            أرجع لمائی;
         }
 
         /**
@@ -756,8 +756,8 @@ public:
          * @return this part's pattern string limit index, same as getIndex()+getLength().
          * @stable ICU 4.8
          */
-        int32_t getLimit() const {
-            return index+length;
+        int32_t get_حد_بندی() ثابت {
+            أرجع اشاریہ+لمائی;
         }
 
         /**
@@ -766,8 +766,8 @@ public:
          * @return the part value.
          * @stable ICU 4.8
          */
-        int32_t getValue() const {
-            return value;
+        int32_t get_قدر() ثابت {
+            أرجع قدر_2;
         }
 
         /**
@@ -776,12 +776,12 @@ public:
          * @return the argument type for this part.
          * @stable ICU 4.8
          */
-        UMessagePatternArgType getArgType() const {
-            UMessagePatternPartType msgType=getType();
-            if(msgType ==UMSGPAT_PART_TYPE_ARG_START || msgType ==UMSGPAT_PART_TYPE_ARG_LIMIT) {
-                return static_cast<UMessagePatternArgType>(value);
-            } else {
-                return UMSGPAT_ARG_TYPE_NONE;
+        UMessage_نمونہ_Arg_Type getArgType() ثابت {
+            UMessage_نمونہ_Part_Type پیغام_Type=getType();
+            إذا(پیغام_Type ==UMSGPAT_PART_TYPE_ARG_شروع || پیغام_Type ==UMSGPAT_PART_TYPE_ARG_حد_بندی) {
+                أرجع static_cast<UMessage_نمونہ_Arg_Type>(قدر_2);
+            } وإلا {
+                أرجع UMSGPAT_ARG_TYPE_NONE;
             }
         }
 
@@ -792,8 +792,8 @@ public:
          * @return true if the Part type has a numeric value.
          * @stable ICU 4.8
          */
-        static UBool hasNumericValue(UMessagePatternPartType type) {
-            return type==UMSGPAT_PART_TYPE_ARG_INT || type==UMSGPAT_PART_TYPE_ARG_DOUBLE;
+        ساكن UBool has_Numeric_قدر(UMessage_نمونہ_Part_Type type) {
+            أرجع type==UMSGPAT_PART_TYPE_ARG_INT || type==UMSGPAT_PART_TYPE_ARG_DOUBLE;
         }
 
         /**
@@ -801,60 +801,60 @@ public:
          * @return true if this object is equivalent to the other one.
          * @stable ICU 4.8
          */
-        bool operator==(const Part &other) const;
+        bool عامل==(ثابت Part &other) ثابت;
 
         /**
          * @param other another object to compare with.
          * @return false if this object is equivalent to the other one.
          * @stable ICU 4.8
          */
-        inline bool operator!=(const Part &other) const {
-            return !operator==(other);
+        مضمن bool عامل!=(ثابت Part &other) ثابت {
+            أرجع !عامل==(other);
         }
 
         /**
          * @return A hash code for this object.
          * @stable ICU 4.8
          */
-        int32_t hashCode() const {
-            return ((type*37+index)*37+length)*37+value;
+        int32_t hash_کوڈ() ثابت {
+            أرجع ((type*37+اشاریہ)*37+لمائی)*37+قدر_2;
         }
 
-    private:
-        friend class MessagePattern;
+    خاص:
+        یار class سنیہا_نمونہ;
 
-        static const int32_t MAX_LENGTH=0xffff;
-        static const int32_t MAX_VALUE=0x7fff;
-        static const int32_t MAX_NESTED_LEVELS=0x03ff;
+        ساكن ثابت int32_t MAX_لمائی=0xffff;
+        ساكن ثابت int32_t MAX_قدر=0x7fff;
+        ساكن ثابت int32_t MAX_NESTED_پدھراں=0x03ff;
 
         // Some fields are not final because they are modified during pattern parsing.
         // After pattern parsing, the parts are effectively immutable.
-        UMessagePatternPartType type;
-        int32_t index;
-        uint16_t length;
-        int16_t value;
-        int32_t limitPartIndex;
+        UMessage_نمونہ_Part_Type type;
+        int32_t اشاریہ;
+        uint16_t لمائی;
+        int16_t قدر_2;
+        int32_t حد_بندی_Part_اشاریہ;
     };
 
-private:
-    void preParse(const UnicodeString &pattern, UParseError *parseError, UErrorCode &errorCode);
+خاص:
+    فراغ preParse(ثابت UnicodeString &نمونہ, UParseError *parseError, UError_کوڈ &error_کوڈ);
 
-    void postParse();
+    فراغ postParse();
 
-    int32_t parseMessage(int32_t index, int32_t msgStartLength,
-                         int32_t nestingLevel, UMessagePatternArgType parentType,
-                         UParseError *parseError, UErrorCode &errorCode);
+    int32_t parse_سنیہا(int32_t اشاریہ, int32_t پیغام_شروع_لمائی,
+                         int32_t nestingLevel, UMessage_نمونہ_Arg_Type ماپا_Type,
+                         UParseError *parseError, UError_کوڈ &error_کوڈ);
 
-    int32_t parseArg(int32_t index, int32_t argStartLength, int32_t nestingLevel,
-                     UParseError *parseError, UErrorCode &errorCode);
+    int32_t parseArg(int32_t اشاریہ, int32_t arg_شروع_لمائی, int32_t nestingLevel,
+                     UParseError *parseError, UError_کوڈ &error_کوڈ);
 
-    int32_t parseSimpleStyle(int32_t index, UParseError *parseError, UErrorCode &errorCode);
+    int32_t parseSimpleStyle(int32_t اشاریہ, UParseError *parseError, UError_کوڈ &error_کوڈ);
 
-    int32_t parseChoiceStyle(int32_t index, int32_t nestingLevel,
-                             UParseError *parseError, UErrorCode &errorCode);
+    int32_t parseChoiceStyle(int32_t اشاریہ, int32_t nestingLevel,
+                             UParseError *parseError, UError_کوڈ &error_کوڈ);
 
-    int32_t parsePluralOrSelectStyle(UMessagePatternArgType argType, int32_t index, int32_t nestingLevel,
-                                     UParseError *parseError, UErrorCode &errorCode);
+    int32_t parsePluralOrSelectStyle(UMessage_نمونہ_Arg_Type argType, int32_t اشاریہ, int32_t nestingLevel,
+                                     UParseError *parseError, UError_کوڈ &error_کوڈ);
 
     /**
      * Validates and parses an argument name or argument number string.
@@ -864,10 +864,10 @@ private:
      *         ARG_NAME_NOT_VALID (-2) if it is neither.
      * @see #validateArgumentName(String)
      */
-    static int32_t parseArgNumber(const UnicodeString &s, int32_t start, int32_t limit);
+    ساكن int32_t parse_Arg_نمبر(ثابت UnicodeString &s, int32_t شروع, int32_t حد_بندی);
 
-    int32_t parseArgNumber(int32_t start, int32_t limit) {
-        return parseArgNumber(msg, start, limit);
+    int32_t parse_Arg_نمبر(int32_t شروع, int32_t حد_بندی) {
+        أرجع parse_Arg_نمبر(پیغام, شروع, حد_بندی);
     }
 
     /**
@@ -878,77 +878,77 @@ private:
      * @param parseError
      * @param errorCode
      */
-    void parseDouble(int32_t start, int32_t limit, UBool allowInfinity,
-                     UParseError *parseError, UErrorCode &errorCode);
+    فراغ parseDouble(int32_t شروع, int32_t حد_بندی, UBool allowInfinity,
+                     UParseError *parseError, UError_کوڈ &error_کوڈ);
 
     // Java has package-private appendReducedApostrophes() here.
     // In C++, this is declared in the MessageImpl class.
 
-    int32_t skipWhiteSpace(int32_t index);
+    int32_t skipWhiteSpace(int32_t اشاریہ);
 
-    int32_t skipIdentifier(int32_t index);
+    int32_t skipIdentifier(int32_t اشاریہ);
 
     /**
      * Skips a sequence of characters that could occur in a double value.
      * Does not fully parse or validate the value.
      */
-    int32_t skipDouble(int32_t index);
+    int32_t skipDouble(int32_t اشاریہ);
 
-    static UBool isArgTypeChar(UChar32 c);
+    ساكن UBool isArgTypeChar(UChar32 c);
 
-    UBool isChoice(int32_t index);
+    UBool isChoice(int32_t اشاریہ);
 
-    UBool isPlural(int32_t index);
+    UBool isPlural(int32_t اشاریہ);
 
-    UBool isSelect(int32_t index);
+    UBool isSelect(int32_t اشاریہ);
 
-    UBool isOrdinal(int32_t index);
+    UBool isOrdinal(int32_t اشاریہ);
 
     /**
      * @return true if we are inside a MessageFormat (sub-)pattern,
      *         as opposed to inside a top-level choice/plural/select pattern.
      */
-    UBool inMessageFormatPattern(int32_t nestingLevel);
+    UBool وچ_سنیہا_Format_نمونہ(int32_t nestingLevel);
 
     /**
      * @return true if we are in a MessageFormat sub-pattern
      *         of a top-level ChoiceFormat pattern.
      */
-    UBool inTopLevelChoiceMessage(int32_t nestingLevel, UMessagePatternArgType parentType);
+    UBool وچ_چوٹی_Level_Choice_سنیہا(int32_t nestingLevel, UMessage_نمونہ_Arg_Type ماپا_Type);
 
-    void addPart(UMessagePatternPartType type, int32_t index, int32_t length,
-                 int32_t value, UErrorCode &errorCode);
+    فراغ جوڑو_Part(UMessage_نمونہ_Part_Type type, int32_t اشاریہ, int32_t لمائی,
+                 int32_t قدر_2, UError_کوڈ &error_کوڈ);
 
-    void addLimitPart(int32_t start,
-                      UMessagePatternPartType type, int32_t index, int32_t length,
-                      int32_t value, UErrorCode &errorCode);
+    فراغ جوڑو_حد_بندی_Part(int32_t شروع,
+                      UMessage_نمونہ_Part_Type type, int32_t اشاریہ, int32_t لمائی,
+                      int32_t قدر_2, UError_کوڈ &error_کوڈ);
 
-    void addArgDoublePart(double numericValue, int32_t start, int32_t length, UErrorCode &errorCode);
+    فراغ جوڑو_Arg_Double_Part(مزدوج numeric_قدر, int32_t شروع, int32_t لمائی, UError_کوڈ &error_کوڈ);
 
-    void setParseError(UParseError *parseError, int32_t index);
+    فراغ سیٹ_Parse_Error(UParseError *parseError, int32_t اشاریہ);
 
-    UBool init(UErrorCode &errorCode);
-    UBool copyStorage(const MessagePattern &other, UErrorCode &errorCode);
+    UBool init(UError_کوڈ &error_کوڈ);
+    UBool copyStorage(ثابت سنیہا_نمونہ &other, UError_کوڈ &error_کوڈ);
 
-    UMessagePatternApostropheMode aposMode;
-    UnicodeString msg;
+    UMessage_نمونہ_Apostrophe_منوال apos_منوال;
+    UnicodeString پیغام;
     // ArrayList<Part> parts=new ArrayList<Part>();
-    MessagePatternPartsList *partsList;
+    سنیہا_نمونہ_Parts_List *partsList;
     Part *parts;
-    int32_t partsLength;
+    int32_t parts_لمائی;
     // ArrayList<Double> numericValues;
-    MessagePatternDoubleList *numericValuesList;
-    double *numericValues;
-    int32_t numericValuesLength;
-    UBool hasArgNames;
+    سنیہا_نمونہ_Double_List *numeric_اقدار_List;
+    مزدوج *numeric_اقدار;
+    int32_t numeric_اقدار_لمائی;
+    UBool has_Arg_ناں;
     UBool hasArgNumbers;
     UBool needsAutoQuoting;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_سرا
 
-#endif  // !UCONFIG_NO_FORMATTING
+#جے_انت  // !UCONFIG_NO_FORMATTING
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#جے_انت /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __MESSAGEPATTERN_H__
+#جے_انت  // __MESSAGEPATTERN_H__

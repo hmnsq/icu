@@ -19,25 +19,25 @@
 *   that then do not depend on resource bundle code and likely-subtags data.
 */
 
-#include <string_view>
-#include <utility>
+#ضمن <string_view>
+#ضمن <utility>
 
-#include "unicode/bytestream.h"
-#include "unicode/utypes.h"
-#include "unicode/locid.h"
-#include "unicode/putil.h"
-#include "unicode/uchar.h"
-#include "unicode/uloc.h"
-#include "unicode/ures.h"
-#include "unicode/uscript.h"
-#include "bytesinkutil.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "loclikelysubtags.h"
-#include "ulocimp.h"
+#ضمن "unicode/bytestream.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/locid.h"
+#ضمن "unicode/putil.h"
+#ضمن "unicode/uchar.h"
+#ضمن "unicode/uloc.h"
+#ضمن "unicode/ures.h"
+#ضمن "unicode/uscript.h"
+#ضمن "bytesinkutil.h"
+#ضمن "charstr.h"
+#ضمن "cmemory.h"
+#ضمن "cstring.h"
+#ضمن "loclikelysubtags.h"
+#ضمن "ulocimp.h"
 
-namespace {
+نطاق {
 
 /**
  * Create a tag string from the supplied parameters.  The lang, script and region
@@ -60,212 +60,212 @@ namespace {
  * @param sink The output sink receiving the tag string.
  * @param err A pointer to a UErrorCode for error reporting.
  **/
-void U_CALLCONV
-createTagStringWithAlternates(
-    const char* lang,
-    int32_t langLength,
-    const char* script,
-    int32_t scriptLength,
-    const char* region,
-    int32_t regionLength,
-    const char* variant,
-    int32_t variantLength,
-    const char* trailing,
-    int32_t trailingLength,
+فراغ U_CALLCONV
+create_ٹیگ_String_With_Alternates(
+    ثابت حرف* lang,
+    int32_t lang_لمائی,
+    ثابت حرف* script,
+    int32_t script_لمائی,
+    ثابت حرف* region,
+    int32_t region_لمائی,
+    ثابت حرف* variant,
+    int32_t variant_لمائی,
+    ثابت حرف* trailing,
+    int32_t trailing_لمائی,
     icu::ByteSink& sink,
-    UErrorCode& err) {
-    if (U_FAILURE(err)) {
-        return;
+    UError_کوڈ& err) {
+    إذا (U_FAILURE(err)) {
+        أرجع;
     }
 
-    if (langLength >= ULOC_LANG_CAPACITY ||
-            scriptLength >= ULOC_SCRIPT_CAPACITY ||
-            regionLength >= ULOC_COUNTRY_CAPACITY) {
-        err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    إذا (lang_لمائی >= ULOC_LANG_سمرتھا ||
+            script_لمائی >= ULOC_SCRIPT_سمرتھا ||
+            region_لمائی >= ULOC_COUNTRY_سمرتھا) {
+        err = U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
 
-    if (langLength > 0) {
-        sink.Append(lang, langLength);
+    إذا (lang_لمائی > 0) {
+        sink.Append(lang, lang_لمائی);
     }
 
-    if (scriptLength > 0) {
+    إذا (script_لمائی > 0) {
         sink.Append("_", 1);
-        sink.Append(script, scriptLength);
+        sink.Append(script, script_لمائی);
     }
 
-    if (regionLength > 0) {
+    إذا (region_لمائی > 0) {
         sink.Append("_", 1);
-        sink.Append(region, regionLength);
+        sink.Append(region, region_لمائی);
     }
 
-    if (variantLength > 0) {
-        if (regionLength == 0) {
+    إذا (variant_لمائی > 0) {
+        إذا (region_لمائی == 0) {
             /* extra separator is required */
             sink.Append("_", 1);
         }
         sink.Append("_", 1);
-        sink.Append(variant, variantLength);
+        sink.Append(variant, variant_لمائی);
     }
 
-    if (trailingLength > 0) {
+    إذا (trailing_لمائی > 0) {
         /*
          * Copy the trailing data into the supplied buffer.
          */
-        sink.Append(trailing, trailingLength);
+        sink.Append(trailing, trailing_لمائی);
     }
 }
 
-bool CHECK_TRAILING_VARIANT_SIZE(const char* variant, int32_t variantLength) {
+منطقي CHECK_TRAILING_VARIANT_ناپ(ثابت حرف* variant, int32_t variant_لمائی) {
     int32_t count = 0;
-    for (int32_t i = 0; i < variantLength; i++) {
-        if (_isIDSeparator(variant[i])) {
+    لكل (int32_t i = 0; i < variant_لمائی; i++) {
+        إذا (_isIDSeparator(variant[i])) {
             count = 0;
-        } else if (count == 8) {
-            return false;
-        } else {
+        } وإلا إذا (count == 8) {
+            أرجع خطأ;
+        } وإلا {
             count++;
         }
     }
-    return true;
+    أرجع سچ;
 }
 
-void
-_uloc_addLikelySubtags(const char* localeID,
+فراغ
+uloc_جوڑو_Likely_Subtags(ثابت حرف* localeID,
                        icu::ByteSink& sink,
-                       UErrorCode& err) {
-    if (U_FAILURE(err)) {
-        return;
+                       UError_کوڈ& err) {
+    إذا (U_FAILURE(err)) {
+        أرجع;
     }
 
-    if (localeID == nullptr) {
-        err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    إذا (localeID == خالی_سوچک) {
+        err = U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
 
     icu::CharString lang;
     icu::CharString script;
     icu::CharString region;
     icu::CharString variant;
-    const char* trailing = nullptr;
+    ثابت حرف* trailing = خالی_سوچک;
     ulocimp_getSubtags(localeID, &lang, &script, &region, &variant, &trailing, err);
-    if (U_FAILURE(err)) {
-        return;
+    إذا (U_FAILURE(err)) {
+        أرجع;
     }
 
-    if (!CHECK_TRAILING_VARIANT_SIZE(variant.data(), variant.length())) {
-        err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    إذا (!CHECK_TRAILING_VARIANT_ناپ(variant.انکڑے(), variant.length())) {
+        err = U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
 
-    if (lang.length() == 4) {
-        if (script.isEmpty()) {
+    إذا (lang.length() == 4) {
+        إذا (script.is_خالی_تھاواں()) {
             script = std::move(lang);
             lang.clear();
-        } else {
-            err = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+        } وإلا {
+            err = U_ILLEGAL_دلیل_ERROR;
+            أرجع;
         }
-    } else if (lang.length() > 8) {
-        err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    } وإلا إذا (lang.length() > 8) {
+        err = U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
 
-    int32_t trailingLength = static_cast<int32_t>(uprv_strlen(trailing));
+    int32_t trailing_لمائی = static_cast<int32_t>(uprv_strlen(trailing));
 
-    const icu::LikelySubtags* likelySubtags = icu::LikelySubtags::getSingleton(err);
-    if (U_FAILURE(err)) {
-        return;
+    ثابت icu::LikelySubtags* likelySubtags = icu::LikelySubtags::getSingleton(err);
+    إذا (U_FAILURE(err)) {
+        أرجع;
     }
     // We need to keep l on the stack because lsr may point into internal
     // memory of l.
     icu::Locale l = icu::Locale::createFromName(localeID);
-    if (l.isBogus()) {
-        err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    إذا (l.isBogus()) {
+        err = U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
-    icu::LSR lsr = likelySubtags->makeMaximizedLsrFrom(l, true, err);
-    if (U_FAILURE(err)) {
-        return;
+    icu::LSR lsr = likelySubtags->makeMaximizedLsrFrom(l, سچ, err);
+    إذا (U_FAILURE(err)) {
+        أرجع;
     }
-    const char* language = lsr.language;
-    if (uprv_strcmp(language, "und") == 0) {
+    ثابت حرف* language = lsr.language;
+    إذا (uprv_strcmp(language, "und") == 0) {
         language = "";
     }
-    createTagStringWithAlternates(
+    create_ٹیگ_String_With_Alternates(
         language,
         static_cast<int32_t>(uprv_strlen(language)),
         lsr.script,
         static_cast<int32_t>(uprv_strlen(lsr.script)),
         lsr.region,
         static_cast<int32_t>(uprv_strlen(lsr.region)),
-        variant.data(),
+        variant.انکڑے(),
         variant.length(),
         trailing,
-        trailingLength,
+        trailing_لمائی,
         sink,
         err);
 }
 
-void
-_uloc_minimizeSubtags(const char* localeID,
+فراغ
+_uloc_minimizeSubtags(ثابت حرف* localeID,
                       icu::ByteSink& sink,
-                      bool favorScript,
-                      UErrorCode& err) {
-    if (U_FAILURE(err)) {
-        return;
+                      منطقي favorScript,
+                      UError_کوڈ& err) {
+    إذا (U_FAILURE(err)) {
+        أرجع;
     }
 
-    if (localeID == nullptr) {
-        err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    إذا (localeID == خالی_سوچک) {
+        err = U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
 
     icu::CharString lang;
     icu::CharString script;
     icu::CharString region;
     icu::CharString variant;
-    const char* trailing = nullptr;
+    ثابت حرف* trailing = خالی_سوچک;
     ulocimp_getSubtags(localeID, &lang, &script, &region, &variant, &trailing, err);
-    if (U_FAILURE(err)) {
-        return;
+    إذا (U_FAILURE(err)) {
+        أرجع;
     }
 
-    if (!CHECK_TRAILING_VARIANT_SIZE(variant.data(), variant.length())) {
-        err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    إذا (!CHECK_TRAILING_VARIANT_ناپ(variant.انکڑے(), variant.length())) {
+        err = U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
 
-    int32_t trailingLength = static_cast<int32_t>(uprv_strlen(trailing));
+    int32_t trailing_لمائی = static_cast<int32_t>(uprv_strlen(trailing));
 
-    const icu::LikelySubtags* likelySubtags = icu::LikelySubtags::getSingleton(err);
-    if (U_FAILURE(err)) {
-        return;
+    ثابت icu::LikelySubtags* likelySubtags = icu::LikelySubtags::getSingleton(err);
+    إذا (U_FAILURE(err)) {
+        أرجع;
     }
     icu::LSR lsr = likelySubtags->minimizeSubtags(
-        lang.toStringPiece(),
-        script.toStringPiece(),
-        region.toStringPiece(),
+        lang.منزل_String_Piece(),
+        script.منزل_String_Piece(),
+        region.منزل_String_Piece(),
         favorScript,
         err);
-    if (U_FAILURE(err)) {
-        return;
+    إذا (U_FAILURE(err)) {
+        أرجع;
     }
-    const char* language = lsr.language;
-    if (uprv_strcmp(language, "und") == 0) {
+    ثابت حرف* language = lsr.language;
+    إذا (uprv_strcmp(language, "und") == 0) {
         language = "";
     }
-    createTagStringWithAlternates(
+    create_ٹیگ_String_With_Alternates(
         language,
         static_cast<int32_t>(uprv_strlen(language)),
         lsr.script,
         static_cast<int32_t>(uprv_strlen(lsr.script)),
         lsr.region,
         static_cast<int32_t>(uprv_strlen(lsr.region)),
-        variant.data(),
+        variant.انکڑے(),
         variant.length(),
         trailing,
-        trailingLength,
+        trailing_لمائی,
         sink,
         err);
 }
@@ -273,134 +273,134 @@ _uloc_minimizeSubtags(const char* localeID,
 }  // namespace
 
 U_CAPI int32_t U_EXPORT2
-uloc_addLikelySubtags(const char* localeID,
-                      char* maximizedLocaleID,
+uloc_جوڑو_Likely_Subtags_2(ثابت حرف* localeID,
+                      حرف* maximizedLocaleID,
                       int32_t maximizedLocaleIDCapacity,
-                      UErrorCode* status) {
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+                      UError_کوڈ* حالت) {
+    أرجع icu::ByteSinkUtil::راہیں_Byte_Sink_منزل_Terminated_Chars(
         maximizedLocaleID, maximizedLocaleIDCapacity,
-        [&](icu::ByteSink& sink, UErrorCode& status) {
-            ulocimp_addLikelySubtags(localeID, sink, status);
+        [&](icu::ByteSink& sink, UError_کوڈ& حالت) {
+            ulocimp_جوڑو_Likely_Subtags(localeID, sink, حالت);
         },
-        *status);
+        *حالت);
 }
 
 U_EXPORT icu::CharString
-ulocimp_addLikelySubtags(const char* localeID,
-                         UErrorCode& status) {
-    return icu::ByteSinkUtil::viaByteSinkToCharString(
-        [&](icu::ByteSink& sink, UErrorCode& status) {
-            ulocimp_addLikelySubtags(localeID, sink, status);
+ulocimp_جوڑو_Likely_Subtags(ثابت حرف* localeID,
+                         UError_کوڈ& حالت) {
+    أرجع icu::ByteSinkUtil::راہیں_Byte_Sink_منزل_Char_String(
+        [&](icu::ByteSink& sink, UError_کوڈ& حالت) {
+            ulocimp_جوڑو_Likely_Subtags(localeID, sink, حالت);
         },
-        status);
+        حالت);
 }
 
-U_EXPORT void
-ulocimp_addLikelySubtags(const char* localeID,
+U_EXPORT فراغ
+ulocimp_جوڑو_Likely_Subtags(ثابت حرف* localeID,
                          icu::ByteSink& sink,
-                         UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
-    if (localeID == nullptr) {
+                         UError_کوڈ& حالت) {
+    إذا (U_FAILURE(حالت)) { أرجع; }
+    إذا (localeID == خالی_سوچک) {
         localeID = uloc_getDefault();
     }
-    icu::CharString localeBuffer = ulocimp_canonicalize(localeID, status);
-    _uloc_addLikelySubtags(localeBuffer.data(), sink, status);
+    icu::CharString locale_بفر = ulocimp_canonicalize(localeID, حالت);
+    uloc_جوڑو_Likely_Subtags(locale_بفر.انکڑے(), sink, حالت);
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_minimizeSubtags(const char* localeID,
-                     char* minimizedLocaleID,
+uloc_minimizeSubtags(ثابت حرف* localeID,
+                     حرف* minimizedLocaleID,
                      int32_t minimizedLocaleIDCapacity,
-                     UErrorCode* status) {
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+                     UError_کوڈ* حالت) {
+    أرجع icu::ByteSinkUtil::راہیں_Byte_Sink_منزل_Terminated_Chars(
         minimizedLocaleID, minimizedLocaleIDCapacity,
-        [&](icu::ByteSink& sink, UErrorCode& status) {
-            ulocimp_minimizeSubtags(localeID, sink, false, status);
+        [&](icu::ByteSink& sink, UError_کوڈ& حالت) {
+            ulocimp_minimizeSubtags(localeID, sink, خطأ, حالت);
         },
-        *status);
+        *حالت);
 }
 
 U_EXPORT icu::CharString
-ulocimp_minimizeSubtags(const char* localeID,
-                        bool favorScript,
-                        UErrorCode& status) {
-    return icu::ByteSinkUtil::viaByteSinkToCharString(
-        [&](icu::ByteSink& sink, UErrorCode& status) {
-            ulocimp_minimizeSubtags(localeID, sink, favorScript, status);
+ulocimp_minimizeSubtags(ثابت حرف* localeID,
+                        منطقي favorScript,
+                        UError_کوڈ& حالت) {
+    أرجع icu::ByteSinkUtil::راہیں_Byte_Sink_منزل_Char_String(
+        [&](icu::ByteSink& sink, UError_کوڈ& حالت) {
+            ulocimp_minimizeSubtags(localeID, sink, favorScript, حالت);
         },
-        status);
+        حالت);
 }
 
-U_EXPORT void
-ulocimp_minimizeSubtags(const char* localeID,
+U_EXPORT فراغ
+ulocimp_minimizeSubtags(ثابت حرف* localeID,
                         icu::ByteSink& sink,
-                        bool favorScript,
-                        UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
-    if (localeID == nullptr) {
+                        منطقي favorScript,
+                        UError_کوڈ& حالت) {
+    إذا (U_FAILURE(حالت)) { أرجع; }
+    إذا (localeID == خالی_سوچک) {
         localeID = uloc_getDefault();
     }
-    icu::CharString localeBuffer = ulocimp_canonicalize(localeID, status);
-    _uloc_minimizeSubtags(localeBuffer.data(), sink, favorScript, status);
+    icu::CharString locale_بفر = ulocimp_canonicalize(localeID, حالت);
+    _uloc_minimizeSubtags(locale_بفر.انکڑے(), sink, favorScript, حالت);
 }
 
 // Pairs of (language subtag, + or -) for finding out fast if common languages
 // are LTR (minus) or RTL (plus).
-static const char LANG_DIR_STRING[] =
+ساكن ثابت حرف LANG_DIR_STRING[] =
         "root-en-es-pt-zh-ja-ko-de-fr-it-ar+he+fa+ru-nl-pl-th-tr-";
 
 // Implemented here because this calls ulocimp_addLikelySubtags().
 U_CAPI UBool U_EXPORT2
-uloc_isRightToLeft(const char *locale) {
-    UErrorCode errorCode = U_ZERO_ERROR;
+uloc_is_دایاں_منزل_بایاں(ثابت حرف *locale) {
+    UError_کوڈ error_کوڈ = U_ZERO_ERROR;
     icu::CharString lang;
     icu::CharString script;
     ulocimp_getSubtags(
-        locale == nullptr ? uloc_getDefault() : locale,
-        &lang, &script, nullptr, nullptr, nullptr, errorCode);
-    if (U_FAILURE(errorCode) || script.isEmpty()) {
+        locale == خالی_سوچک ? uloc_getDefault() : locale,
+        &lang, &script, خالی_سوچک, خالی_سوچک, خالی_سوچک, error_کوڈ);
+    إذا (U_FAILURE(error_کوڈ) || script.is_خالی_تھاواں()) {
         // Fastpath: We know the likely scripts and their writing direction
         // for some common languages.
-        if (!lang.isEmpty()) {
-            const char* langPtr = uprv_strstr(LANG_DIR_STRING, lang.data());
-            if (langPtr != nullptr) {
-                switch (langPtr[lang.length()]) {
-                case '-': return false;
-                case '+': return true;
-                default: break;  // partial match of a longer code
+        إذا (!lang.is_خالی_تھاواں()) {
+            ثابت حرف* langPtr = uprv_strstr(LANG_DIR_STRING, lang.انکڑے());
+            إذا (langPtr != خالی_سوچک) {
+                بدل (langPtr[lang.length()]) {
+                حالة '-': أرجع خطأ;
+                حالة '+': أرجع سچ;
+                افتراضي: اكسر;  // partial match of a longer code
                 }
             }
         }
         // Otherwise, find the likely script.
-        errorCode = U_ZERO_ERROR;
-        icu::CharString likely = ulocimp_addLikelySubtags(locale, errorCode);
-        if (U_FAILURE(errorCode)) {
-            return false;
+        error_کوڈ = U_ZERO_ERROR;
+        icu::CharString likely = ulocimp_جوڑو_Likely_Subtags(locale, error_کوڈ);
+        إذا (U_FAILURE(error_کوڈ)) {
+            أرجع خطأ;
         }
-        ulocimp_getSubtags(likely.toStringPiece(), nullptr, &script, nullptr, nullptr, nullptr, errorCode);
-        if (U_FAILURE(errorCode) || script.isEmpty()) {
-            return false;
+        ulocimp_getSubtags(likely.منزل_String_Piece(), خالی_سوچک, &script, خالی_سوچک, خالی_سوچک, خالی_سوچک, error_کوڈ);
+        إذا (U_FAILURE(error_کوڈ) || script.is_خالی_تھاواں()) {
+            أرجع خطأ;
         }
     }
-    UScriptCode scriptCode = (UScriptCode)u_getPropertyValueEnum(UCHAR_SCRIPT, script.data());
-    return uscript_isRightToLeft(scriptCode);
+    UScript_کوڈ script_کوڈ = (UScript_کوڈ)u_get_Property_قدر_Enum(UCHAR_SCRIPT, script.انکڑے());
+    أرجع uscript_is_دایاں_منزل_بایاں(script_کوڈ);
 }
 
 U_NAMESPACE_BEGIN
 
 UBool
-Locale::isRightToLeft() const {
-    return uloc_isRightToLeft(getBaseName());
+Locale::is_دایاں_منزل_بایاں() ثابت {
+    أرجع uloc_is_دایاں_منزل_بایاں(get_ادھار_Name());
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_سرا
 
-namespace {
+نطاق {
 icu::CharString
-GetRegionFromKey(const char* localeID, std::string_view key, UErrorCode& status) {
-    icu::CharString result;
+Get_Region_From_کلید(ثابت حرف* localeID, std::string_view کلید, UError_کوڈ& حالت) {
+    icu::CharString نتیجہ;
     // First check for keyword value
-    icu::CharString kw = ulocimp_getKeywordValue(localeID, key, status);
+    icu::CharString kw = ulocimp_get_Keyword_قدر(localeID, کلید, حالت);
     int32_t len = kw.length();
     // In UTS35
     //   type = alphanum{3,8} (sep alphanum{3,8})* ;
@@ -415,53 +415,53 @@ GetRegionFromKey(const char* localeID, std::string_view key, UErrorCode& status)
     // unicode_subdivision_id = alpha{2} alphanum{1,4}
     //
     // and only need to accept/reject the code based on the alpha{2} and the length.
-    if (U_SUCCESS(status) && len >= 3 && len <= 6 &&
+    إذا (U_SUCCESS(حالت) && len >= 3 && len <= 6 &&
         uprv_isASCIILetter(kw[0]) && uprv_isASCIILetter(kw[1])) {
         // Additional Check
         icu::RegionValidateMap valid;
-        const char region[] = {kw[0], kw[1], '\0'};
-        if (valid.isSet(region)) {
-            result.append(uprv_toupper(kw[0]), status);
-            result.append(uprv_toupper(kw[1]), status);
+        ثابت حرف region[] = {kw[0], kw[1], '\0'};
+        إذا (valid.is_سیٹ(region)) {
+            نتیجہ.append(uprv_toupper(kw[0]), حالت);
+            نتیجہ.append(uprv_toupper(kw[1]), حالت);
         }
     }
-    return result;
+    أرجع نتیجہ;
 }
 }  // namespace
 
 U_EXPORT icu::CharString
-ulocimp_getRegionForSupplementalData(const char *localeID, bool inferRegion,
-                                     UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return {};
+ulocimp_get_Region_For_Supplemental_انکڑے(ثابت حرف *localeID, منطقي inferRegion,
+                                     UError_کوڈ& حالت) {
+    إذا (U_FAILURE(حالت)) {
+        أرجع {};
     }
-    icu::CharString rgBuf = GetRegionFromKey(localeID, "rg", status);
-    if (U_SUCCESS(status) && rgBuf.isEmpty()) {
+    icu::CharString rgBuf = Get_Region_From_کلید(localeID, "rg", حالت);
+    إذا (U_SUCCESS(حالت) && rgBuf.is_خالی_تھاواں()) {
         // No valid rg keyword value, try for unicode_region_subtag
-        rgBuf = ulocimp_getRegion(localeID == nullptr ? uloc_getDefault() : localeID, status);
-        if (U_SUCCESS(status) && rgBuf.isEmpty() && inferRegion) {
+        rgBuf = ulocimp_getRegion(localeID == خالی_سوچک ? uloc_getDefault() : localeID, حالت);
+        إذا (U_SUCCESS(حالت) && rgBuf.is_خالی_تھاواں() && inferRegion) {
             // Second check for sd keyword value
-            rgBuf = GetRegionFromKey(localeID, "sd", status);
-            if (U_SUCCESS(status) && rgBuf.isEmpty()) {
+            rgBuf = Get_Region_From_کلید(localeID, "sd", حالت);
+            إذا (U_SUCCESS(حالت) && rgBuf.is_خالی_تھاواں()) {
                 // no unicode_region_subtag but inferRegion true, try likely subtags
-                UErrorCode rgStatus = U_ZERO_ERROR;
-                icu::CharString locBuf = ulocimp_addLikelySubtags(localeID, rgStatus);
-                if (U_SUCCESS(rgStatus)) {
-                    rgBuf = ulocimp_getRegion(locBuf.toStringPiece(), status);
+                UError_کوڈ rg_حالت = U_ZERO_ERROR;
+                icu::CharString locBuf = ulocimp_جوڑو_Likely_Subtags(localeID, rg_حالت);
+                إذا (U_SUCCESS(rg_حالت)) {
+                    rgBuf = ulocimp_getRegion(locBuf.منزل_String_Piece(), حالت);
                 }
             }
         }
     }
 
-    return rgBuf;
+    أرجع rgBuf;
 }
 
-namespace {
+نطاق {
 
 // The following data is generated by unit test code inside
 // test/intltest/regiontst.cpp from the resource data while
 // the test failed.
-const uint32_t gValidRegionMap[] = {
+ثابت uint32_t gValidRegionMap[] = {
     0xeedf597c, 0xdeddbdef, 0x15943f3f, 0x0e00d580, 
     0xb0095c00, 0x0015fb9f, 0x781c068d, 0x0340400f, 
     0xf42b1d00, 0xfd4f8141, 0x25d7fffc, 0x0100084b, 
@@ -474,22 +474,22 @@ const uint32_t gValidRegionMap[] = {
    //
 U_NAMESPACE_BEGIN
 RegionValidateMap::RegionValidateMap() {
-    uprv_memcpy(map, gValidRegionMap, sizeof(map));
+    uprv_memcpy(map, gValidRegionMap, حجم(map));
 }
 
 RegionValidateMap::~RegionValidateMap() {
 }
 
-bool RegionValidateMap::isSet(const char* region) const {
-    int32_t index = value(region);
-    if (index < 0) {
-        return false;
+منطقي RegionValidateMap::is_سیٹ(ثابت حرف* region) ثابت {
+    int32_t اشاریہ = value(region);
+    إذا (اشاریہ < 0) {
+        أرجع خطأ;
     }
-    return 0 != (map[index / 32] & (1L << (index % 32)));
+    أرجع 0 != (map[اشاریہ / 32] & (1L << (اشاریہ % 32)));
 }
 
-bool RegionValidateMap::equals(const RegionValidateMap& that) const {
-    return uprv_memcmp(map, that.map, sizeof(map)) == 0;
+منطقي RegionValidateMap::equals(ثابت RegionValidateMap& that) ثابت {
+    أرجع uprv_memcmp(map, that.map, حجم(map)) == 0;
 }
 
 // The code transform two letter a-z to a integer valued between -1, 26x26.
@@ -497,13 +497,13 @@ bool RegionValidateMap::equals(const RegionValidateMap& that) const {
 // the rest of value is between 0 and 676 (= 26x26) and used as an index
 // the bigmap in map. The map is an array of 22 int32_t.
 // since 32x21 < 676/32 < 32x22 we store this 676 bits bitmap into 22 int32_t.
-int32_t RegionValidateMap::value(const char* region) const {
-    if (uprv_isASCIILetter(region[0]) && uprv_isASCIILetter(region[1]) &&
+int32_t RegionValidateMap::value(ثابت حرف* region) ثابت {
+    إذا (uprv_isASCIILetter(region[0]) && uprv_isASCIILetter(region[1]) &&
         region[2] == '\0') {
-        return (uprv_toupper(region[0])-'A') * 26 +
+        أرجع (uprv_toupper(region[0])-'A') * 26 +
                (uprv_toupper(region[1])-'A');
     }
-    return -1;
+    أرجع -1;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_سرا

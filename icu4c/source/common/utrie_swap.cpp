@@ -4,288 +4,288 @@
 // utrie_swap.cpp
 // created: 2018aug08 Markus W. Scherer
 
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "ucptrie_impl.h"
-#include "udataswp.h"
-#include "utrie.h"
-#include "utrie2_impl.h"
+#ضمن "unicode/utypes.h"
+#ضمن "cmemory.h"
+#ضمن "ucptrie_impl.h"
+#ضمن "udataswp.h"
+#ضمن "utrie.h"
+#ضمن "utrie2_impl.h"
 
 // These functions for swapping different generations of ICU code point tries are here
 // so that their implementation files need not depend on swapper code,
 // need not depend on each other, and so that other swapper code
 // need not depend on other trie code.
 
-namespace {
+نطاق {
 
-constexpr int32_t ASCII_LIMIT = 0x80;
+constexpr int32_t ASCII_حد_بندی = 0x80;
 
 }  // namespace
 
 U_CAPI int32_t U_EXPORT2
-utrie_swap(const UDataSwapper *ds,
-           const void *inData, int32_t length, void *outData,
-           UErrorCode *pErrorCode) {
-    const UTrieHeader *inTrie;
-    UTrieHeader trie;
+utrie_وٹاندرا(ثابت UDataSwapper *ds,
+           ثابت فراغ *وچ_انکڑے, int32_t length, فراغ *باہرلا_انکڑے,
+           UError_کوڈ *p_Error_کوڈ) {
+    ثابت UTrie_سرخی *وچ_Trie;
+    UTrie_سرخی trie;
     int32_t size;
-    UBool dataIs32;
+    UBool انکڑے_Is32;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    إذا(p_Error_کوڈ==خالی_سوچک || U_FAILURE(*p_Error_کوڈ)) {
+        أرجع 0;
     }
-    if(ds==nullptr || inData==nullptr || (length>=0 && outData==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا(ds==خالی_سوچک || وچ_انکڑے==خالی_سوچک || (length>=0 && باہرلا_انکڑے==خالی_سوچک)) {
+        *p_Error_کوڈ=U_ILLEGAL_دلیل_ERROR;
+        أرجع 0;
     }
 
     /* setup and swapping */
-    if(length>=0 && (uint32_t)length<sizeof(UTrieHeader)) {
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+    إذا(length>=0 && (uint32_t)length<حجم(UTrie_سرخی)) {
+        *p_Error_کوڈ=U_اشاریہ_OUTOFBOUNDS_ERROR;
+        أرجع 0;
     }
 
-    inTrie=(const UTrieHeader *)inData;
-    trie.signature=ds->readUInt32(inTrie->signature);
-    trie.options=ds->readUInt32(inTrie->options);
-    trie.indexLength=udata_readInt32(ds, inTrie->indexLength);
-    trie.dataLength=udata_readInt32(ds, inTrie->dataLength);
+    وچ_Trie=(ثابت UTrie_سرخی *)وچ_انکڑے;
+    trie.signature=ds->readUInt32(وچ_Trie->signature);
+    trie.options=ds->readUInt32(وچ_Trie->options);
+    trie.اشاریہ_لمائی=udata_readInt32(ds, وچ_Trie->اشاریہ_لمائی);
+    trie.انکڑے_لمائی=udata_readInt32(ds, وچ_Trie->انکڑے_لمائی);
 
-    if( trie.signature!=0x54726965 ||
-        (trie.options&UTRIE_OPTIONS_SHIFT_MASK)!=UTRIE_SHIFT ||
-        ((trie.options>>UTRIE_OPTIONS_INDEX_SHIFT)&UTRIE_OPTIONS_SHIFT_MASK)!=UTRIE_INDEX_SHIFT ||
-        trie.indexLength<UTRIE_BMP_INDEX_LENGTH ||
-        (trie.indexLength&(UTRIE_SURROGATE_BLOCK_COUNT-1))!=0 ||
-        trie.dataLength<UTRIE_DATA_BLOCK_LENGTH ||
-        (trie.dataLength&(UTRIE_DATA_GRANULARITY-1))!=0 ||
-        ((trie.options&UTRIE_OPTIONS_LATIN1_IS_LINEAR)!=0 && trie.dataLength<(UTRIE_DATA_BLOCK_LENGTH+0x100))
+    إذا( trie.signature!=0x54726965 ||
+        (trie.options&UTRIE_OPTIONS_کھسکاؤ_نقاب)!=UTRIE_کھسکاؤ ||
+        ((trie.options>>UTRIE_OPTIONS_اشاریہ_کھسکاؤ)&UTRIE_OPTIONS_کھسکاؤ_نقاب)!=UTRIE_اشاریہ_کھسکاؤ ||
+        trie.اشاریہ_لمائی<UTRIE_BMP_اشاریہ_لمائی ||
+        (trie.اشاریہ_لمائی&(UTRIE_SURROGATE_بلاک_گنتی-1))!=0 ||
+        trie.انکڑے_لمائی<UTRIE_انکڑے_بلاک_لمائی ||
+        (trie.انکڑے_لمائی&(UTRIE_انکڑے_GRANULARITY-1))!=0 ||
+        ((trie.options&UTRIE_OPTIONS_LATIN1_IS_خطی)!=0 && trie.انکڑے_لمائی<(UTRIE_انکڑے_بلاک_لمائی+0x100))
     ) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR; /* not a UTrie */
-        return 0;
+        *p_Error_کوڈ=U_INVALID_FORMAT_ERROR; /* not a UTrie */
+        أرجع 0;
     }
 
-    dataIs32 = (trie.options & UTRIE_OPTIONS_DATA_IS_32_BIT) != 0;
-    size=sizeof(UTrieHeader)+trie.indexLength*2+trie.dataLength*(dataIs32?4:2);
+    انکڑے_Is32 = (trie.options & UTRIE_OPTIONS_انکڑے_IS_32_ثنائی_ہندسہ) != 0;
+    size=حجم(UTrie_سرخی)+trie.اشاریہ_لمائی*2+trie.انکڑے_لمائی*(انکڑے_Is32?4:2);
 
-    if(length>=0) {
-        UTrieHeader *outTrie;
+    إذا(length>=0) {
+        UTrie_سرخی *باہرلا_Trie;
 
-        if(length<size) {
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+        إذا(length<size) {
+            *p_Error_کوڈ=U_اشاریہ_OUTOFBOUNDS_ERROR;
+            أرجع 0;
         }
 
-        outTrie=(UTrieHeader *)outData;
+        باہرلا_Trie=(UTrie_سرخی *)باہرلا_انکڑے;
 
         /* swap the header */
-        ds->swapArray32(ds, inTrie, sizeof(UTrieHeader), outTrie, pErrorCode);
+        ds->وٹاندرا_Array32(ds, وچ_Trie, حجم(UTrie_سرخی), باہرلا_Trie, p_Error_کوڈ);
 
         /* swap the index and the data */
-        if(dataIs32) {
-            ds->swapArray16(ds, inTrie+1, trie.indexLength*2, outTrie+1, pErrorCode);
-            ds->swapArray32(ds, (const uint16_t *)(inTrie+1)+trie.indexLength, trie.dataLength*4,
-                                     (uint16_t *)(outTrie+1)+trie.indexLength, pErrorCode);
-        } else {
-            ds->swapArray16(ds, inTrie+1, (trie.indexLength+trie.dataLength)*2, outTrie+1, pErrorCode);
+        إذا(انکڑے_Is32) {
+            ds->وٹاندرا_Array16(ds, وچ_Trie+1, trie.اشاریہ_لمائی*2, باہرلا_Trie+1, p_Error_کوڈ);
+            ds->وٹاندرا_Array32(ds, (ثابت uint16_t *)(وچ_Trie+1)+trie.اشاریہ_لمائی, trie.انکڑے_لمائی*4,
+                                     (uint16_t *)(باہرلا_Trie+1)+trie.اشاریہ_لمائی, p_Error_کوڈ);
+        } وإلا {
+            ds->وٹاندرا_Array16(ds, وچ_Trie+1, (trie.اشاریہ_لمائی+trie.انکڑے_لمائی)*2, باہرلا_Trie+1, p_Error_کوڈ);
         }
     }
 
-    return size;
+    أرجع size;
 }
 
 U_CAPI int32_t U_EXPORT2
-utrie2_swap(const UDataSwapper *ds,
-            const void *inData, int32_t length, void *outData,
-            UErrorCode *pErrorCode) {
-    const UTrie2Header *inTrie;
-    UTrie2Header trie;
-    int32_t dataLength, size;
-    UTrie2ValueBits valueBits;
+utrie2_وٹاندرا(ثابت UDataSwapper *ds,
+            ثابت فراغ *وچ_انکڑے, int32_t length, فراغ *باہرلا_انکڑے,
+            UError_کوڈ *p_Error_کوڈ) {
+    ثابت UTrie2_سرخی *وچ_Trie;
+    UTrie2_سرخی trie;
+    int32_t انکڑے_لمائی, size;
+    UTrie2_قدر_بٹ قدر_بٹ;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    إذا(U_FAILURE(*p_Error_کوڈ)) {
+        أرجع 0;
     }
-    if(ds==nullptr || inData==nullptr || (length>=0 && outData==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا(ds==خالی_سوچک || وچ_انکڑے==خالی_سوچک || (length>=0 && باہرلا_انکڑے==خالی_سوچک)) {
+        *p_Error_کوڈ=U_ILLEGAL_دلیل_ERROR;
+        أرجع 0;
     }
 
     /* setup and swapping */
-    if(length>=0 && length<(int32_t)sizeof(UTrie2Header)) {
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+    إذا(length>=0 && length<(int32_t)حجم(UTrie2_سرخی)) {
+        *p_Error_کوڈ=U_اشاریہ_OUTOFBOUNDS_ERROR;
+        أرجع 0;
     }
 
-    inTrie=(const UTrie2Header *)inData;
-    trie.signature=ds->readUInt32(inTrie->signature);
-    trie.options=ds->readUInt16(inTrie->options);
-    trie.indexLength=ds->readUInt16(inTrie->indexLength);
-    trie.shiftedDataLength=ds->readUInt16(inTrie->shiftedDataLength);
+    وچ_Trie=(ثابت UTrie2_سرخی *)وچ_انکڑے;
+    trie.signature=ds->readUInt32(وچ_Trie->signature);
+    trie.options=ds->readUInt16(وچ_Trie->options);
+    trie.اشاریہ_لمائی=ds->readUInt16(وچ_Trie->اشاریہ_لمائی);
+    trie.shifted_انکڑے_لمائی=ds->readUInt16(وچ_Trie->shifted_انکڑے_لمائی);
 
-    valueBits=(UTrie2ValueBits)(trie.options&UTRIE2_OPTIONS_VALUE_BITS_MASK);
-    dataLength=(int32_t)trie.shiftedDataLength<<UTRIE2_INDEX_SHIFT;
+    قدر_بٹ=(UTrie2_قدر_بٹ)(trie.options&UTRIE2_OPTIONS_قدر_بٹ_نقاب);
+    انکڑے_لمائی=(int32_t)trie.shifted_انکڑے_لمائی<<UTRIE2_اشاریہ_کھسکاؤ;
 
-    if( trie.signature!=UTRIE2_SIG ||
-        valueBits<0 || UTRIE2_COUNT_VALUE_BITS<=valueBits ||
-        trie.indexLength<UTRIE2_INDEX_1_OFFSET ||
-        dataLength<UTRIE2_DATA_START_OFFSET
+    إذا( trie.signature!=UTRIE2_SIG ||
+        قدر_بٹ<0 || UTRIE2_گنتی_قدر_بٹ<=قدر_بٹ ||
+        trie.اشاریہ_لمائی<UTRIE2_اشاریہ_1_وتھ ||
+        انکڑے_لمائی<UTRIE2_انکڑے_شروع_وتھ
     ) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR; /* not a UTrie */
-        return 0;
+        *p_Error_کوڈ=U_INVALID_FORMAT_ERROR; /* not a UTrie */
+        أرجع 0;
     }
 
-    size=sizeof(UTrie2Header)+trie.indexLength*2;
-    switch(valueBits) {
-    case UTRIE2_16_VALUE_BITS:
-        size+=dataLength*2;
-        break;
-    case UTRIE2_32_VALUE_BITS:
-        size+=dataLength*4;
-        break;
-    default:
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return 0;
+    size=حجم(UTrie2_سرخی)+trie.اشاریہ_لمائی*2;
+    بدل(قدر_بٹ) {
+    حالة UTRIE2_16_قدر_بٹ:
+        size+=انکڑے_لمائی*2;
+        اكسر;
+    حالة UTRIE2_32_قدر_بٹ:
+        size+=انکڑے_لمائی*4;
+        اكسر;
+    افتراضي:
+        *p_Error_کوڈ=U_INVALID_FORMAT_ERROR;
+        أرجع 0;
     }
 
-    if(length>=0) {
-        UTrie2Header *outTrie;
+    إذا(length>=0) {
+        UTrie2_سرخی *باہرلا_Trie;
 
-        if(length<size) {
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+        إذا(length<size) {
+            *p_Error_کوڈ=U_اشاریہ_OUTOFBOUNDS_ERROR;
+            أرجع 0;
         }
 
-        outTrie=(UTrie2Header *)outData;
+        باہرلا_Trie=(UTrie2_سرخی *)باہرلا_انکڑے;
 
         /* swap the header */
-        ds->swapArray32(ds, &inTrie->signature, 4, &outTrie->signature, pErrorCode);
-        ds->swapArray16(ds, &inTrie->options, 12, &outTrie->options, pErrorCode);
+        ds->وٹاندرا_Array32(ds, &وچ_Trie->signature, 4, &باہرلا_Trie->signature, p_Error_کوڈ);
+        ds->وٹاندرا_Array16(ds, &وچ_Trie->options, 12, &باہرلا_Trie->options, p_Error_کوڈ);
 
         /* swap the index and the data */
-        switch(valueBits) {
-        case UTRIE2_16_VALUE_BITS:
-            ds->swapArray16(ds, inTrie+1, (trie.indexLength+dataLength)*2, outTrie+1, pErrorCode);
-            break;
-        case UTRIE2_32_VALUE_BITS:
-            ds->swapArray16(ds, inTrie+1, trie.indexLength*2, outTrie+1, pErrorCode);
-            ds->swapArray32(ds, (const uint16_t *)(inTrie+1)+trie.indexLength, dataLength*4,
-                                     (uint16_t *)(outTrie+1)+trie.indexLength, pErrorCode);
-            break;
-        default:
-            *pErrorCode=U_INVALID_FORMAT_ERROR;
-            return 0;
+        بدل(قدر_بٹ) {
+        حالة UTRIE2_16_قدر_بٹ:
+            ds->وٹاندرا_Array16(ds, وچ_Trie+1, (trie.اشاریہ_لمائی+انکڑے_لمائی)*2, باہرلا_Trie+1, p_Error_کوڈ);
+            اكسر;
+        حالة UTRIE2_32_قدر_بٹ:
+            ds->وٹاندرا_Array16(ds, وچ_Trie+1, trie.اشاریہ_لمائی*2, باہرلا_Trie+1, p_Error_کوڈ);
+            ds->وٹاندرا_Array32(ds, (ثابت uint16_t *)(وچ_Trie+1)+trie.اشاریہ_لمائی, انکڑے_لمائی*4,
+                                     (uint16_t *)(باہرلا_Trie+1)+trie.اشاریہ_لمائی, p_Error_کوڈ);
+            اكسر;
+        افتراضي:
+            *p_Error_کوڈ=U_INVALID_FORMAT_ERROR;
+            أرجع 0;
         }
     }
 
-    return size;
+    أرجع size;
 }
 
 U_CAPI int32_t U_EXPORT2
-ucptrie_swap(const UDataSwapper *ds,
-             const void *inData, int32_t length, void *outData,
-             UErrorCode *pErrorCode) {
-    const UCPTrieHeader *inTrie;
-    UCPTrieHeader trie;
-    int32_t dataLength, size;
-    UCPTrieValueWidth valueWidth;
+ucptrie_وٹاندرا(ثابت UDataSwapper *ds,
+             ثابت فراغ *وچ_انکڑے, int32_t length, فراغ *باہرلا_انکڑے,
+             UError_کوڈ *p_Error_کوڈ) {
+    ثابت UCPTrie_سرخی *وچ_Trie;
+    UCPTrie_سرخی trie;
+    int32_t انکڑے_لمائی, size;
+    UCPTrie_قدر_چوڑائی قدر_چوڑائی;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    إذا(U_FAILURE(*p_Error_کوڈ)) {
+        أرجع 0;
     }
-    if(ds==nullptr || inData==nullptr || (length>=0 && outData==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا(ds==خالی_سوچک || وچ_انکڑے==خالی_سوچک || (length>=0 && باہرلا_انکڑے==خالی_سوچک)) {
+        *p_Error_کوڈ=U_ILLEGAL_دلیل_ERROR;
+        أرجع 0;
     }
 
     /* setup and swapping */
-    if(length>=0 && length<(int32_t)sizeof(UCPTrieHeader)) {
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+    إذا(length>=0 && length<(int32_t)حجم(UCPTrie_سرخی)) {
+        *p_Error_کوڈ=U_اشاریہ_OUTOFBOUNDS_ERROR;
+        أرجع 0;
     }
 
-    inTrie=(const UCPTrieHeader *)inData;
-    trie.signature=ds->readUInt32(inTrie->signature);
-    trie.options=ds->readUInt16(inTrie->options);
-    trie.indexLength=ds->readUInt16(inTrie->indexLength);
-    trie.dataLength = ds->readUInt16(inTrie->dataLength);
+    وچ_Trie=(ثابت UCPTrie_سرخی *)وچ_انکڑے;
+    trie.signature=ds->readUInt32(وچ_Trie->signature);
+    trie.options=ds->readUInt16(وچ_Trie->options);
+    trie.اشاریہ_لمائی=ds->readUInt16(وچ_Trie->اشاریہ_لمائی);
+    trie.انکڑے_لمائی = ds->readUInt16(وچ_Trie->انکڑے_لمائی);
 
     UCPTrieType type = (UCPTrieType)((trie.options >> 6) & 3);
-    valueWidth = (UCPTrieValueWidth)(trie.options & UCPTRIE_OPTIONS_VALUE_BITS_MASK);
-    dataLength = ((int32_t)(trie.options & UCPTRIE_OPTIONS_DATA_LENGTH_MASK) << 4) | trie.dataLength;
+    قدر_چوڑائی = (UCPTrie_قدر_چوڑائی)(trie.options & UCPTRIE_OPTIONS_قدر_بٹ_نقاب);
+    انکڑے_لمائی = ((int32_t)(trie.options & UCPTRIE_OPTIONS_انکڑے_لمائی_نقاب) << 4) | trie.انکڑے_لمائی;
 
-    int32_t minIndexLength = type == UCPTRIE_TYPE_FAST ?
-        UCPTRIE_BMP_INDEX_LENGTH : UCPTRIE_SMALL_INDEX_LENGTH;
-    if( trie.signature!=UCPTRIE_SIG ||
+    int32_t min_اشاریہ_لمائی = type == UCPTRIE_TYPE_FAST ?
+        UCPTRIE_BMP_اشاریہ_لمائی : UCPTRIE_SMALL_اشاریہ_لمائی;
+    إذا( trie.signature!=UCPTRIE_SIG ||
         type > UCPTRIE_TYPE_SMALL ||
-        (trie.options & UCPTRIE_OPTIONS_RESERVED_MASK) != 0 ||
-        valueWidth > UCPTRIE_VALUE_BITS_8 ||
-        trie.indexLength < minIndexLength ||
-        dataLength < ASCII_LIMIT
+        (trie.options & UCPTRIE_OPTIONS_RESERVED_نقاب) != 0 ||
+        قدر_چوڑائی > UCPTRIE_قدر_بٹ_8 ||
+        trie.اشاریہ_لمائی < min_اشاریہ_لمائی ||
+        انکڑے_لمائی < ASCII_حد_بندی
     ) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR; /* not a UCPTrie */
-        return 0;
+        *p_Error_کوڈ=U_INVALID_FORMAT_ERROR; /* not a UCPTrie */
+        أرجع 0;
     }
 
-    size=sizeof(UCPTrieHeader)+trie.indexLength*2;
-    switch(valueWidth) {
-    case UCPTRIE_VALUE_BITS_16:
-        size+=dataLength*2;
-        break;
-    case UCPTRIE_VALUE_BITS_32:
-        size+=dataLength*4;
-        break;
-    case UCPTRIE_VALUE_BITS_8:
-        size+=dataLength;
-        break;
-    default:
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return 0;
+    size=حجم(UCPTrie_سرخی)+trie.اشاریہ_لمائی*2;
+    بدل(قدر_چوڑائی) {
+    حالة UCPTRIE_قدر_بٹ_16:
+        size+=انکڑے_لمائی*2;
+        اكسر;
+    حالة UCPTRIE_قدر_بٹ_32:
+        size+=انکڑے_لمائی*4;
+        اكسر;
+    حالة UCPTRIE_قدر_بٹ_8:
+        size+=انکڑے_لمائی;
+        اكسر;
+    افتراضي:
+        *p_Error_کوڈ=U_INVALID_FORMAT_ERROR;
+        أرجع 0;
     }
 
-    if(length>=0) {
-        UCPTrieHeader *outTrie;
+    إذا(length>=0) {
+        UCPTrie_سرخی *باہرلا_Trie;
 
-        if(length<size) {
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+        إذا(length<size) {
+            *p_Error_کوڈ=U_اشاریہ_OUTOFBOUNDS_ERROR;
+            أرجع 0;
         }
 
-        outTrie=(UCPTrieHeader *)outData;
+        باہرلا_Trie=(UCPTrie_سرخی *)باہرلا_انکڑے;
 
         /* swap the header */
-        ds->swapArray32(ds, &inTrie->signature, 4, &outTrie->signature, pErrorCode);
-        ds->swapArray16(ds, &inTrie->options, 12, &outTrie->options, pErrorCode);
+        ds->وٹاندرا_Array32(ds, &وچ_Trie->signature, 4, &باہرلا_Trie->signature, p_Error_کوڈ);
+        ds->وٹاندرا_Array16(ds, &وچ_Trie->options, 12, &باہرلا_Trie->options, p_Error_کوڈ);
 
         /* swap the index */
-        const uint16_t *inIndex=reinterpret_cast<const uint16_t *>(inTrie+1);
-        uint16_t *outIndex=reinterpret_cast<uint16_t *>(outTrie+1);
-        ds->swapArray16(ds, inIndex, trie.indexLength*2, outIndex, pErrorCode);
+        ثابت uint16_t *وچ_اشاریہ=reinterpret_cast<ثابت uint16_t *>(وچ_Trie+1);
+        uint16_t *باہرلا_اشاریہ=reinterpret_cast<uint16_t *>(باہرلا_Trie+1);
+        ds->وٹاندرا_Array16(ds, وچ_اشاریہ, trie.اشاریہ_لمائی*2, باہرلا_اشاریہ, p_Error_کوڈ);
 
         /* swap the data */
-        const uint16_t *inData=inIndex+trie.indexLength;
-        uint16_t *outData=outIndex+trie.indexLength;
-        switch(valueWidth) {
-        case UCPTRIE_VALUE_BITS_16:
-            ds->swapArray16(ds, inData, dataLength*2, outData, pErrorCode);
-            break;
-        case UCPTRIE_VALUE_BITS_32:
-            ds->swapArray32(ds, inData, dataLength*4, outData, pErrorCode);
-            break;
-        case UCPTRIE_VALUE_BITS_8:
-            if(inTrie!=outTrie) {
-                uprv_memmove(outData, inData, dataLength);
+        ثابت uint16_t *وچ_انکڑے=وچ_اشاریہ+trie.اشاریہ_لمائی;
+        uint16_t *باہرلا_انکڑے=باہرلا_اشاریہ+trie.اشاریہ_لمائی;
+        بدل(قدر_چوڑائی) {
+        حالة UCPTRIE_قدر_بٹ_16:
+            ds->وٹاندرا_Array16(ds, وچ_انکڑے, انکڑے_لمائی*2, باہرلا_انکڑے, p_Error_کوڈ);
+            اكسر;
+        حالة UCPTRIE_قدر_بٹ_32:
+            ds->وٹاندرا_Array32(ds, وچ_انکڑے, انکڑے_لمائی*4, باہرلا_انکڑے, p_Error_کوڈ);
+            اكسر;
+        حالة UCPTRIE_قدر_بٹ_8:
+            إذا(وچ_Trie!=باہرلا_Trie) {
+                uprv_memmove(باہرلا_انکڑے, وچ_انکڑے, انکڑے_لمائی);
             }
-            break;
-        default:
-            *pErrorCode=U_INVALID_FORMAT_ERROR;
-            return 0;
+            اكسر;
+        افتراضي:
+            *p_Error_کوڈ=U_INVALID_FORMAT_ERROR;
+            أرجع 0;
         }
     }
 
-    return size;
+    أرجع size;
 }
 
-namespace {
+نطاق {
 
 /**
  * Gets the trie version from 32-bit-aligned memory containing the serialized form
@@ -300,49 +300,49 @@ namespace {
  *         recognized as a serialized trie
  */
 int32_t
-getVersion(const void *data, int32_t length, UBool anyEndianOk) {
+get_نسخہ(ثابت فراغ *انکڑے, int32_t length, UBool anyEndianOk) {
     uint32_t signature;
-    if(length<16 || data==nullptr || (U_POINTER_MASK_LSB(data, 3)!=0)) {
-        return 0;
+    إذا(length<16 || انکڑے==خالی_سوچک || (U_اشارہ_گر_نقاب_LSB(انکڑے, 3)!=0)) {
+        أرجع 0;
     }
-    signature = *static_cast<const uint32_t*>(data);
-    if(signature==UCPTRIE_SIG) {
-        return 3;
+    signature = *static_cast<ثابت uint32_t*>(انکڑے);
+    إذا(signature==UCPTRIE_SIG) {
+        أرجع 3;
     }
-    if(anyEndianOk && signature==UCPTRIE_OE_SIG) {
-        return 3;
+    إذا(anyEndianOk && signature==UCPTRIE_OE_SIG) {
+        أرجع 3;
     }
-    if(signature==UTRIE2_SIG) {
-        return 2;
+    إذا(signature==UTRIE2_SIG) {
+        أرجع 2;
     }
-    if(anyEndianOk && signature==UTRIE2_OE_SIG) {
-        return 2;
+    إذا(anyEndianOk && signature==UTRIE2_OE_SIG) {
+        أرجع 2;
     }
-    if(signature==UTRIE_SIG) {
-        return 1;
+    إذا(signature==UTRIE_SIG) {
+        أرجع 1;
     }
-    if(anyEndianOk && signature==UTRIE_OE_SIG) {
-        return 1;
+    إذا(anyEndianOk && signature==UTRIE_OE_SIG) {
+        أرجع 1;
     }
-    return 0;
+    أرجع 0;
 }
 
 }  // namespace
 
 U_CAPI int32_t U_EXPORT2
-utrie_swapAnyVersion(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
-                     UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) { return 0; }
-    switch(getVersion(inData, length, true)) {
-    case 1:
-        return utrie_swap(ds, inData, length, outData, pErrorCode);
-    case 2:
-        return utrie2_swap(ds, inData, length, outData, pErrorCode);
-    case 3:
-        return ucptrie_swap(ds, inData, length, outData, pErrorCode);
-    default:
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return 0;
+utrie_وٹاندرا_Any_نسخہ(ثابت UDataSwapper *ds,
+                     ثابت فراغ *وچ_انکڑے, int32_t length, فراغ *باہرلا_انکڑے,
+                     UError_کوڈ *p_Error_کوڈ) {
+    إذا(U_FAILURE(*p_Error_کوڈ)) { أرجع 0; }
+    بدل(get_نسخہ(وچ_انکڑے, length, سچ)) {
+    حالة 1:
+        أرجع utrie_وٹاندرا(ds, وچ_انکڑے, length, باہرلا_انکڑے, p_Error_کوڈ);
+    حالة 2:
+        أرجع utrie2_وٹاندرا(ds, وچ_انکڑے, length, باہرلا_انکڑے, p_Error_کوڈ);
+    حالة 3:
+        أرجع ucptrie_وٹاندرا(ds, وچ_انکڑے, length, باہرلا_انکڑے, p_Error_کوڈ);
+    افتراضي:
+        *p_Error_کوڈ=U_INVALID_FORMAT_ERROR;
+        أرجع 0;
     }
 }

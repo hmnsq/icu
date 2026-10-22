@@ -10,13 +10,13 @@
 **********************************************************************
 */
 
-#include "uvectr32.h"
-#include "cmemory.h"
-#include "putilimp.h"
+#ضمن "uvectr32.h"
+#ضمن "cmemory.h"
+#ضمن "putilimp.h"
 
 U_NAMESPACE_BEGIN
 
-#define DEFAULT_CAPACITY 8
+#تعریف_کرو DEFAULT_سمرتھا 8
 
 /*
  * Constants for hinting whether a key is an integer
@@ -26,245 +26,245 @@ U_NAMESPACE_BEGIN
  
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UVector32)
 
-UVector32::UVector32(UErrorCode &status) :
+UVector32::UVector32(UError_کوڈ &حالت) :
     count(0),
     capacity(0),
-    maxCapacity(0),
-    elements(nullptr)
+    max_سمرتھا(0),
+    elements(خالی_سوچک)
 {
-    _init(DEFAULT_CAPACITY, status);
+    _init(DEFAULT_سمرتھا, حالت);
 }
 
-UVector32::UVector32(int32_t initialCapacity, UErrorCode &status) :
+UVector32::UVector32(int32_t initial_سمرتھا, UError_کوڈ &حالت) :
     count(0),
     capacity(0),
-    maxCapacity(0),
-    elements(nullptr)
+    max_سمرتھا(0),
+    elements(خالی_سوچک)
 {
-    _init(initialCapacity, status);
+    _init(initial_سمرتھا, حالت);
 }
 
 
 
-void UVector32::_init(int32_t initialCapacity, UErrorCode &status) {
+فراغ UVector32::_init(int32_t initial_سمرتھا, UError_کوڈ &حالت) {
     // Fix bogus initialCapacity values; avoid malloc(0)
-    if (initialCapacity < 1) {
-        initialCapacity = DEFAULT_CAPACITY;
+    إذا (initial_سمرتھا < 1) {
+        initial_سمرتھا = DEFAULT_سمرتھا;
     }
-    if (maxCapacity>0 && maxCapacity<initialCapacity) {
-        initialCapacity = maxCapacity;
+    إذا (max_سمرتھا>0 && max_سمرتھا<initial_سمرتھا) {
+        initial_سمرتھا = max_سمرتھا;
     }
-    if (initialCapacity > static_cast<int32_t>(INT32_MAX / sizeof(int32_t))) {
-        initialCapacity = uprv_min(DEFAULT_CAPACITY, maxCapacity);
+    إذا (initial_سمرتھا > static_cast<int32_t>(INT32_MAX / حجم(int32_t))) {
+        initial_سمرتھا = uprv_min(DEFAULT_سمرتھا, max_سمرتھا);
     }
-    elements = static_cast<int32_t*>(uprv_malloc(sizeof(int32_t) * initialCapacity));
-    if (elements == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
-        capacity = initialCapacity;
+    elements = static_cast<int32_t*>(uprv_malloc(حجم(int32_t) * initial_سمرتھا));
+    إذا (elements == خالی_سوچک) {
+        حالت = U_حافظہ_ونڈ_ERROR;
+    } وإلا {
+        capacity = initial_سمرتھا;
     }
 }
 
 UVector32::~UVector32() {
     uprv_free(elements);
-    elements = nullptr;
+    elements = خالی_سوچک;
 }
 
 /**
  * Assign this object to another (make this a copy of 'other').
  */
-void UVector32::assign(const UVector32& other, UErrorCode &ec) {
-    if (ensureCapacity(other.count, ec)) {
-        setSize(other.count);
-        for (int32_t i=0; i<other.count; ++i) {
+فراغ UVector32::assign(ثابت UVector32& other, UError_کوڈ &ec) {
+    إذا (ensure_سمرتھا(other.count, ec)) {
+        سیٹ_ناپ(other.count);
+        لكل (int32_t i=0; i<other.count; ++i) {
             elements[i] = other.elements[i];
         }
     }
 }
 
 
-bool UVector32::operator==(const UVector32& other) const {
+منطقي UVector32::عامل==(ثابت UVector32& other) ثابت {
     int32_t i;
-    if (count != other.count) return false;
-    for (i=0; i<count; ++i) {
-        if (elements[i] != other.elements[i]) {
-            return false;
+    إذا (count != other.count) أرجع خطأ;
+    لكل (i=0; i<count; ++i) {
+        إذا (elements[i] != other.elements[i]) {
+            أرجع خطأ;
         }
     }
-    return true;
+    أرجع سچ;
 }
 
 
-void UVector32::setElementAt(int32_t elem, int32_t index) {
-    if (0 <= index && index < count) {
-        elements[index] = elem;
+فراغ UVector32::سیٹ_Element_At(int32_t elem, int32_t اشاریہ) {
+    إذا (0 <= اشاریہ && اشاریہ < count) {
+        elements[اشاریہ] = elem;
     }
     /* else index out of range */
 }
 
-void UVector32::insertElementAt(int32_t elem, int32_t index, UErrorCode &status) {
+فراغ UVector32::داخل_کرو_Element_At(int32_t elem, int32_t اشاریہ, UError_کوڈ &حالت) {
     // must have 0 <= index <= count
-    if (0 <= index && index <= count && ensureCapacity(count + 1, status)) {
-        for (int32_t i=count; i>index; --i) {
+    إذا (0 <= اشاریہ && اشاریہ <= count && ensure_سمرتھا(count + 1, حالت)) {
+        لكل (int32_t i=count; i>اشاریہ; --i) {
             elements[i] = elements[i-1];
         }
-        elements[index] = elem;
+        elements[اشاریہ] = elem;
         ++count;
     }
     /* else index out of range */
 }
 
-UBool UVector32::containsAll(const UVector32& other) const {
-    for (int32_t i=0; i<other.size(); ++i) {
-        if (indexOf(other.elements[i]) < 0) {
-            return false;
+UBool UVector32::شامل_اے_All(ثابت UVector32& other) ثابت {
+    لكل (int32_t i=0; i<other.size(); ++i) {
+        إذا (اشاریہ_دا(other.elements[i]) < 0) {
+            أرجع خطأ;
         }
     }
-    return true;
+    أرجع سچ;
 }
 
-UBool UVector32::containsNone(const UVector32& other) const {
-    for (int32_t i=0; i<other.size(); ++i) {
-        if (indexOf(other.elements[i]) >= 0) {
-            return false;
+UBool UVector32::شامل_اے_None(ثابت UVector32& other) ثابت {
+    لكل (int32_t i=0; i<other.size(); ++i) {
+        إذا (اشاریہ_دا(other.elements[i]) >= 0) {
+            أرجع خطأ;
         }
     }
-    return true;
+    أرجع سچ;
 }
 
-UBool UVector32::removeAll(const UVector32& other) {
-    UBool changed = false;
-    for (int32_t i=0; i<other.size(); ++i) {
-        int32_t j = indexOf(other.elements[i]);
-        if (j >= 0) {
+UBool UVector32::removeAll(ثابت UVector32& other) {
+    UBool بدلیا = خطأ;
+    لكل (int32_t i=0; i<other.size(); ++i) {
+        int32_t j = اشاریہ_دا(other.elements[i]);
+        إذا (j >= 0) {
             removeElementAt(j);
-            changed = true;
+            بدلیا = سچ;
         }
     }
-    return changed;
+    أرجع بدلیا;
 }
 
-UBool UVector32::retainAll(const UVector32& other) {
-    UBool changed = false;
-    for (int32_t j=size()-1; j>=0; --j) {
-        int32_t i = other.indexOf(elements[j]);
-        if (i < 0) {
+UBool UVector32::retainAll(ثابت UVector32& other) {
+    UBool بدلیا = خطأ;
+    لكل (int32_t j=size()-1; j>=0; --j) {
+        int32_t i = other.اشاریہ_دا(elements[j]);
+        إذا (i < 0) {
             removeElementAt(j);
-            changed = true;
+            بدلیا = سچ;
         }
     }
-    return changed;
+    أرجع بدلیا;
 }
 
-void UVector32::removeElementAt(int32_t index) {
-    if (index >= 0) {
-        for (int32_t i=index; i<count-1; ++i) {
+فراغ UVector32::removeElementAt(int32_t اشاریہ) {
+    إذا (اشاریہ >= 0) {
+        لكل (int32_t i=اشاریہ; i<count-1; ++i) {
             elements[i] = elements[i+1];
         }
         --count;
     }
 }
 
-void UVector32::removeAllElements() {
+فراغ UVector32::removeAllElements() {
     count = 0;
 }
 
-UBool   UVector32::equals(const UVector32 &other) const {
-    int      i;
+UBool   UVector32::equals(ثابت UVector32 &other) ثابت {
+    صحيح      i;
 
-    if (this->count != other.count) {
-        return false;
+    إذا (هذا->count != other.count) {
+        أرجع خطأ;
     }
-    for (i=0; i<count; i++) {
-        if (elements[i] != other.elements[i]) {
-            return false;
+    لكل (i=0; i<count; i++) {
+        إذا (elements[i] != other.elements[i]) {
+            أرجع خطأ;
         }
     }
-    return true;
+    أرجع سچ;
 }
 
 
 
 
-int32_t UVector32::indexOf(int32_t key, int32_t startIndex) const {
+int32_t UVector32::اشاریہ_دا(int32_t کلید, int32_t شروع_اشاریہ) ثابت {
     int32_t i;
-    for (i=startIndex; i<count; ++i) {
-        if (key == elements[i]) {
-            return i;
+    لكل (i=شروع_اشاریہ; i<count; ++i) {
+        إذا (کلید == elements[i]) {
+            أرجع i;
         }
     }
-    return -1;
+    أرجع -1;
 }
 
 
-UBool UVector32::expandCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+UBool UVector32::expand_سمرتھا(int32_t minimum_سمرتھا, UError_کوڈ &حالت) {
+    إذا (U_FAILURE(حالت)) {
+        أرجع خطأ;
     }
-    if (minimumCapacity < 0) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+    إذا (minimum_سمرتھا < 0) {
+        حالت = U_ILLEGAL_دلیل_ERROR;
+        أرجع خطأ;
     }
-    if (capacity >= minimumCapacity) {
-        return true;
+    إذا (capacity >= minimum_سمرتھا) {
+        أرجع سچ;
     }
-    if (maxCapacity>0 && minimumCapacity>maxCapacity) {
-        status = U_BUFFER_OVERFLOW_ERROR;
-        return false;
+    إذا (max_سمرتھا>0 && minimum_سمرتھا>max_سمرتھا) {
+        حالت = U_بفر_حد_توں_ودھ_ERROR;
+        أرجع خطأ;
     }
-    if (capacity > (INT32_MAX - 1) / 2) {  // integer overflow check
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+    إذا (capacity > (INT32_MAX - 1) / 2) {  // integer overflow check
+        حالت = U_ILLEGAL_دلیل_ERROR;
+        أرجع خطأ;
     }
     int32_t newCap = capacity * 2;
-    if (newCap < minimumCapacity) {
-        newCap = minimumCapacity;
+    إذا (newCap < minimum_سمرتھا) {
+        newCap = minimum_سمرتھا;
     }
-    if (maxCapacity > 0 && newCap > maxCapacity) {
-        newCap = maxCapacity;
+    إذا (max_سمرتھا > 0 && newCap > max_سمرتھا) {
+        newCap = max_سمرتھا;
     }
-    if (newCap > static_cast<int32_t>(INT32_MAX / sizeof(int32_t))) { // integer overflow check
+    إذا (newCap > static_cast<int32_t>(INT32_MAX / حجم(int32_t))) { // integer overflow check
         // We keep the original memory contents on bad minimumCapacity/maxCapacity.
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        حالت = U_ILLEGAL_دلیل_ERROR;
+        أرجع خطأ;
     }
-    int32_t* newElems = static_cast<int32_t*>(uprv_realloc(elements, sizeof(int32_t) * newCap));
-    if (newElems == nullptr) {
+    int32_t* newElems = static_cast<int32_t*>(uprv_realloc(elements, حجم(int32_t) * newCap));
+    إذا (newElems == خالی_سوچک) {
         // We keep the original contents on the memory failure on realloc.
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        حالت = U_حافظہ_ونڈ_ERROR;
+        أرجع خطأ;
     }
     elements = newElems;
     capacity = newCap;
-    return true;
+    أرجع سچ;
 }
 
-void UVector32::setMaxCapacity(int32_t limit) {
-    U_ASSERT(limit >= 0);
-    if (limit < 0) {
-        limit = 0;
+فراغ UVector32::سیٹ_Max_سمرتھا(int32_t حد_بندی) {
+    U_ASSERT(حد_بندی >= 0);
+    إذا (حد_بندی < 0) {
+        حد_بندی = 0;
     }
-    if (limit > static_cast<int32_t>(INT32_MAX / sizeof(int32_t))) { // integer overflow check for realloc
+    إذا (حد_بندی > static_cast<int32_t>(INT32_MAX / حجم(int32_t))) { // integer overflow check for realloc
         //  Something is very wrong, don't realloc, leave capacity and maxCapacity unchanged
-        return;
+        أرجع;
     }
-    maxCapacity = limit;
-    if (capacity <= maxCapacity || maxCapacity == 0) {
+    max_سمرتھا = حد_بندی;
+    إذا (capacity <= max_سمرتھا || max_سمرتھا == 0) {
         // Current capacity is within the new limit.
-        return;
+        أرجع;
     }
     
     // New maximum capacity is smaller than the current size.
     // Realloc the storage to the new, smaller size.
-    int32_t* newElems = static_cast<int32_t*>(uprv_realloc(elements, sizeof(int32_t) * maxCapacity));
-    if (newElems == nullptr) {
+    int32_t* newElems = static_cast<int32_t*>(uprv_realloc(elements, حجم(int32_t) * max_سمرتھا));
+    إذا (newElems == خالی_سوچک) {
         // Realloc to smaller failed.
         //   Just keep what we had.  No need to call it a failure.
-        return;
+        أرجع;
     }
     elements = newElems;
-    capacity = maxCapacity;
-    if (count > capacity) {
+    capacity = max_سمرتھا;
+    إذا (count > capacity) {
         count = capacity;
     }
 }
@@ -275,21 +275,21 @@ void UVector32::setMaxCapacity(int32_t limit) {
  * newSize.  If newSize is larger, grow the array, filling in new
  * slots with nullptr.
  */
-void UVector32::setSize(int32_t newSize) {
+فراغ UVector32::سیٹ_ناپ(int32_t new_ناپ) {
     int32_t i;
-    if (newSize < 0) {
-        return;
+    إذا (new_ناپ < 0) {
+        أرجع;
     }
-    if (newSize > count) {
-        UErrorCode ec = U_ZERO_ERROR;
-        if (!ensureCapacity(newSize, ec)) {
-            return;
+    إذا (new_ناپ > count) {
+        UError_کوڈ ec = U_ZERO_ERROR;
+        إذا (!ensure_سمرتھا(new_ناپ, ec)) {
+            أرجع;
         }
-        for (i=count; i<newSize; ++i) {
+        لكل (i=count; i<new_ناپ; ++i) {
             elements[i] = 0;
         }
     } 
-    count = newSize;
+    count = new_ناپ;
 }
 
 
@@ -300,26 +300,26 @@ void UVector32::setSize(int32_t newSize) {
  * as defined by 'compare'.  The current elements are assumed to
  * be sorted already.
  */
-void UVector32::sortedInsert(int32_t tok, UErrorCode& ec) {
+فراغ UVector32::sorted_داخل_کرو(int32_t tok, UError_کوڈ& ec) {
     // Perform a binary search for the location to insert tok at.  Tok
     // will be inserted between two elements a and b such that a <=
     // tok && tok < b, where there is a 'virtual' elements[-1] always
     // less than tok and a 'virtual' elements[count] always greater
     // than tok.
     int32_t min = 0, max = count;
-    while (min != max) {
+    طالما (min != max) {
         int32_t probe = (min + max) / 2;
         //int8_t c = (*compare)(elements[probe], tok);
         //if (c > 0) {
-        if (elements[probe] > tok) {
+        إذا (elements[probe] > tok) {
             max = probe;
-        } else {
+        } وإلا {
             // assert(c <= 0);
             min = probe + 1;
         }
     }
-    if (ensureCapacity(count + 1, ec)) {
-        for (int32_t i=count; i>min; --i) {
+    إذا (ensure_سمرتھا(count + 1, ec)) {
+        لكل (int32_t i=count; i>min; --i) {
             elements[i] = elements[i-1];
         }
         elements[min] = tok;
@@ -331,5 +331,5 @@ void UVector32::sortedInsert(int32_t tok, UErrorCode& ec) {
 
 
 
-U_NAMESPACE_END
+U_NAMESPACE_سرا
 

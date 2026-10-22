@@ -17,78 +17,78 @@
 *   were moved here to break dependency cycles among parts of the common library.
 */
 
-#include "unicode/utypes.h"
-#include "uassert.h"
-#include "unicode/brkiter.h"
-#include "unicode/casemap.h"
-#include "unicode/ucasemap.h"
-#include "unicode/uloc.h"
-#include "unicode/ustring.h"
-#include "ucase.h"
-#include "ucasemap_imp.h"
+#ضمن "unicode/utypes.h"
+#ضمن "uassert.h"
+#ضمن "unicode/brkiter.h"
+#ضمن "unicode/casemap.h"
+#ضمن "unicode/ucasemap.h"
+#ضمن "unicode/uloc.h"
+#ضمن "unicode/ustring.h"
+#ضمن "ucase.h"
+#ضمن "ucasemap_imp.h"
 
 U_CFUNC int32_t
-ustrcase_getCaseLocale(const char *locale) {
-    if (locale == nullptr) {
+ustrcase_getCaseLocale(ثابت حرف *locale) {
+    إذا (locale == خالی_سوچک) {
         locale = uloc_getDefault();
     }
-    if (*locale == 0) {
-        return UCASE_LOC_ROOT;
-    } else {
-        return ucase_getCaseLocale(locale);
+    إذا (*locale == 0) {
+        أرجع UCASE_LOC_جڑ;
+    } وإلا {
+        أرجع ucase_getCaseLocale(locale);
     }
 }
 
 /* public API functions */
 
 U_CAPI int32_t U_EXPORT2
-u_strToLower(char16_t *dest, int32_t destCapacity,
-             const char16_t *src, int32_t srcLength,
-             const char *locale,
-             UErrorCode *pErrorCode) {
-    return ustrcase_mapWithOverlap(
+u_str_منزل_ہیٹھلا(char16_t *dest, int32_t dest_سمرتھا,
+             ثابت char16_t *src, int32_t src_لمائی,
+             ثابت حرف *locale,
+             UError_کوڈ *p_Error_کوڈ) {
+    أرجع ustrcase_mapWithOverlap(
         ustrcase_getCaseLocale(locale), 0, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ustrcase_internalToLower, *pErrorCode);
+        dest, dest_سمرتھا,
+        src, src_لمائی,
+        ustrcase_اندرونی_منزل_ہیٹھلا, *p_Error_کوڈ);
 }
 
 U_CAPI int32_t U_EXPORT2
-u_strToUpper(char16_t *dest, int32_t destCapacity,
-             const char16_t *src, int32_t srcLength,
-             const char *locale,
-             UErrorCode *pErrorCode) {
-    return ustrcase_mapWithOverlap(
+u_str_منزل_اتلا(char16_t *dest, int32_t dest_سمرتھا,
+             ثابت char16_t *src, int32_t src_لمائی,
+             ثابت حرف *locale,
+             UError_کوڈ *p_Error_کوڈ) {
+    أرجع ustrcase_mapWithOverlap(
         ustrcase_getCaseLocale(locale), 0, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ustrcase_internalToUpper, *pErrorCode);
+        dest, dest_سمرتھا,
+        src, src_لمائی,
+        ustrcase_اندرونی_منزل_اتلا, *p_Error_کوڈ);
 }
 
 U_NAMESPACE_BEGIN
 
-int32_t CaseMap::toLower(
-        const char *locale, uint32_t options,
-        const char16_t *src, int32_t srcLength,
-        char16_t *dest, int32_t destCapacity, Edits *edits,
-        UErrorCode &errorCode) {
-    return ustrcase_map(
+int32_t CaseMap::منزل_ہیٹھلا(
+        ثابت حرف *locale, uint32_t options,
+        ثابت char16_t *src, int32_t src_لمائی,
+        char16_t *dest, int32_t dest_سمرتھا, Edits *edits,
+        UError_کوڈ &error_کوڈ) {
+    أرجع ustrcase_map(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ustrcase_internalToLower, edits, errorCode);
+        dest, dest_سمرتھا,
+        src, src_لمائی,
+        ustrcase_اندرونی_منزل_ہیٹھلا, edits, error_کوڈ);
 }
 
-int32_t CaseMap::toUpper(
-        const char *locale, uint32_t options,
-        const char16_t *src, int32_t srcLength,
-        char16_t *dest, int32_t destCapacity, Edits *edits,
-        UErrorCode &errorCode) {
-    return ustrcase_map(
+int32_t CaseMap::منزل_اتلا(
+        ثابت حرف *locale, uint32_t options,
+        ثابت char16_t *src, int32_t src_لمائی,
+        char16_t *dest, int32_t dest_سمرتھا, Edits *edits,
+        UError_کوڈ &error_کوڈ) {
+    أرجع ustrcase_map(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ustrcase_internalToUpper, edits, errorCode);
+        dest, dest_سمرتھا,
+        src, src_لمائی,
+        ustrcase_اندرونی_منزل_اتلا, edits, error_کوڈ);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_سرا

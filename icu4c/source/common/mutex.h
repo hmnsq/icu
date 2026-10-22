@@ -19,12 +19,12 @@
 // 04/07/1999  srl               refocused as a thin wrapper
 //
 //----------------------------------------------------------------------------
-#ifndef MUTEX_H
-#define MUTEX_H
+#جے_بنا_تعریف MUTEX_H
+#تعریف_کرو MUTEX_H
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "umutex.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uobject.h"
+#ضمن "umutex.h"
 
 U_NAMESPACE_BEGIN
 
@@ -53,25 +53,25 @@ U_NAMESPACE_BEGIN
   *         compiler!!
   */
 
-class U_COMMON_API Mutex : public UMemory {
-public:
+class U_COMMON_API Mutex : عام UMemory {
+عام:
     Mutex(UMutex *mutex = nullptr) : fMutex(mutex) {
-        umtx_lock(fMutex);
+        umtx_جندرا(fMutex);
     }
     ~Mutex() {
         umtx_unlock(fMutex);
     }
 
-    Mutex(const Mutex &other) = delete; // forbid assigning of this class
-    Mutex &operator=(const Mutex &other) = delete; // forbid copying of this class
-    void *operator new(size_t s) = delete;  // forbid heap allocation. Locals only.
+    Mutex(ثابت Mutex &other) = delete; // forbid assigning of this class
+    Mutex &عامل=(ثابت Mutex &other) = delete; // forbid copying of this class
+    فراغ *عامل new(size_t s) = delete;  // forbid heap allocation. Locals only.
 
-private:
+خاص:
     UMutex   *fMutex;
 };
 
 
-U_NAMESPACE_END
+U_NAMESPACE_سرا
 
-#endif //_MUTEX_
+#جے_انت //_MUTEX_
 //eof

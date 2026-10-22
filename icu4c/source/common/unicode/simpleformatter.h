@@ -8,24 +8,24 @@
 * simpleformatter.h
 */
 
-#ifndef __SIMPLEFORMATTER_H__
-#define __SIMPLEFORMATTER_H__
+#جے_بنا_تعریف __SIMPLEFORMATTER_H__
+#تعریف_کرو __SIMPLEFORMATTER_H__
 
 /**
  * \file
  * \brief C++ API: Simple formatter, minimal subset of MessageFormat.
  */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#include "unicode/unistr.h"
+#ضمن "unicode/unistr.h"
 
 U_NAMESPACE_BEGIN
 
 // Forward declaration:
-namespace number::impl {
+namespace نمبر::impl {
 class SimpleModifier;
 }
 
@@ -57,13 +57,13 @@ class SimpleModifier;
  * @see UMessagePatternApostropheMode
  * @stable ICU 57
  */
-class U_COMMON_API SimpleFormatter final : public UMemory {
-public:
+class U_COMMON_API SimpleFormatter final : عام UMemory {
+عام:
     /**
      * Default constructor.
      * @stable ICU 57
      */
-    SimpleFormatter() : compiledPattern(static_cast<char16_t>(0)) {}
+    SimpleFormatter() : compiled_نمونہ(static_cast<char16_t>(0)) {}
 
     /**
      * Constructs a formatter from the pattern string.
@@ -74,8 +74,8 @@ public:
      *                  Set to U_ILLEGAL_ARGUMENT_ERROR for bad argument syntax.
      * @stable ICU 57
      */
-    SimpleFormatter(const UnicodeString& pattern, UErrorCode &errorCode) {
-        applyPattern(pattern, errorCode);
+    SimpleFormatter(ثابت UnicodeString& نمونہ, UError_کوڈ &error_کوڈ) {
+        apply_نمونہ(نمونہ, error_کوڈ);
     }
 
     /**
@@ -92,23 +92,23 @@ public:
      *                  too few or too many arguments.
      * @stable ICU 57
      */
-    SimpleFormatter(const UnicodeString& pattern, int32_t min, int32_t max,
-                    UErrorCode &errorCode) {
-        applyPatternMinMaxArguments(pattern, min, max, errorCode);
+    SimpleFormatter(ثابت UnicodeString& نمونہ, int32_t min, int32_t max,
+                    UError_کوڈ &error_کوڈ) {
+        apply_نمونہ_Min_Max_Arguments(نمونہ, min, max, error_کوڈ);
     }
 
     /**
      * Copy constructor.
      * @stable ICU 57
      */
-    SimpleFormatter(const SimpleFormatter& other)
-            : compiledPattern(other.compiledPattern) {}
+    SimpleFormatter(ثابت SimpleFormatter& other)
+            : compiled_نمونہ(other.compiled_نمونہ) {}
 
     /**
      * Assignment operator.
      * @stable ICU 57
      */
-    SimpleFormatter& operator=(const SimpleFormatter& other) U_LIFETIME_BOUND;
+    SimpleFormatter& عامل=(ثابت SimpleFormatter& other) U_LIFETIME_BOUND;
 
     /**
      * Destructor.
@@ -126,8 +126,8 @@ public:
      * @return true if U_SUCCESS(errorCode).
      * @stable ICU 57
      */
-    UBool applyPattern(const UnicodeString &pattern, UErrorCode &errorCode) {
-        return applyPatternMinMaxArguments(pattern, 0, INT32_MAX, errorCode);
+    UBool apply_نمونہ(ثابت UnicodeString &نمونہ, UError_کوڈ &error_کوڈ) {
+        أرجع apply_نمونہ_Min_Max_Arguments(نمونہ, 0, INT32_MAX, error_کوڈ);
     }
 
     /**
@@ -145,15 +145,15 @@ public:
      * @return true if U_SUCCESS(errorCode).
      * @stable ICU 57
      */
-    UBool applyPatternMinMaxArguments(const UnicodeString &pattern,
-                                      int32_t min, int32_t max, UErrorCode &errorCode);
+    UBool apply_نمونہ_Min_Max_Arguments(ثابت UnicodeString &نمونہ,
+                                      int32_t min, int32_t max, UError_کوڈ &error_کوڈ);
 
     /**
      * @return The max argument number + 1.
      * @stable ICU 57
      */
-    int32_t getArgumentLimit() const {
-        return getArgumentLimit(compiledPattern.getBuffer(), compiledPattern.length());
+    int32_t get_دلیل_حد_بندی() ثابت {
+        أرجع get_دلیل_حد_بندی(compiled_نمونہ.get_بفر(), compiled_نمونہ.لمائی());
     }
 
     /**
@@ -169,9 +169,9 @@ public:
      * @stable ICU 57
      */
     UnicodeString& format(
-            const UnicodeString& value0,
-            UnicodeString& appendTo U_LIFETIME_BOUND,
-            UErrorCode& errorCode) const;
+            ثابت UnicodeString& value0,
+            UnicodeString& append_منزل U_LIFETIME_BOUND,
+            UError_کوڈ& error_کوڈ) ثابت;
 
     /**
      * Formats the given values, appending to the appendTo builder.
@@ -187,10 +187,10 @@ public:
      * @stable ICU 57
      */
     UnicodeString& format(
-            const UnicodeString& value0,
-            const UnicodeString& value1,
-            UnicodeString& appendTo U_LIFETIME_BOUND,
-            UErrorCode& errorCode) const;
+            ثابت UnicodeString& value0,
+            ثابت UnicodeString& value1,
+            UnicodeString& append_منزل U_LIFETIME_BOUND,
+            UError_کوڈ& error_کوڈ) ثابت;
 
     /**
      * Formats the given values, appending to the appendTo builder.
@@ -207,11 +207,11 @@ public:
      * @stable ICU 57
      */
     UnicodeString& format(
-            const UnicodeString& value0,
-            const UnicodeString& value1,
-            const UnicodeString& value2,
-            UnicodeString& appendTo U_LIFETIME_BOUND,
-            UErrorCode& errorCode) const;
+            ثابت UnicodeString& value0,
+            ثابت UnicodeString& value1,
+            ثابت UnicodeString& value2,
+            UnicodeString& append_منزل U_LIFETIME_BOUND,
+            UError_کوڈ& error_کوڈ) ثابت;
 
     /**
      * Formats the given values, appending to the appendTo string.
@@ -233,12 +233,12 @@ public:
      * @stable ICU 57
      */
     UnicodeString& formatAndAppend(
-            const UnicodeString* const* values,
-            int32_t valuesLength,
-            UnicodeString& appendTo U_LIFETIME_BOUND,
+            ثابت UnicodeString* ثابت* اقدار,
+            int32_t اقدار_لمائی,
+            UnicodeString& append_منزل U_LIFETIME_BOUND,
             int32_t* offsets,
-            int32_t offsetsLength,
-            UErrorCode& errorCode) const;
+            int32_t offsets_لمائی,
+            UError_کوڈ& error_کوڈ) ثابت;
 
     /**
      * Formats the given values, replacing the contents of the result string.
@@ -262,27 +262,27 @@ public:
      * @stable ICU 57
      */
     UnicodeString& formatAndReplace(
-            const UnicodeString* const* values,
-            int32_t valuesLength,
-            UnicodeString& result U_LIFETIME_BOUND,
+            ثابت UnicodeString* ثابت* اقدار,
+            int32_t اقدار_لمائی,
+            UnicodeString& نتیجہ U_LIFETIME_BOUND,
             int32_t* offsets,
-            int32_t offsetsLength,
-            UErrorCode& errorCode) const;
+            int32_t offsets_لمائی,
+            UError_کوڈ& error_کوڈ) ثابت;
 
     /**
      * Returns the pattern text with none of the arguments.
      * Like formatting with all-empty string values.
      * @stable ICU 57
      */
-    UnicodeString getTextWithNoArguments() const {
-        return getTextWithNoArguments(
-            compiledPattern.getBuffer(),
-            compiledPattern.length(),
+    UnicodeString get_متن_With_No_Arguments() ثابت {
+        أرجع get_متن_With_No_Arguments(
+            compiled_نمونہ.get_بفر(),
+            compiled_نمونہ.لمائی(),
             nullptr,
             0);
     }
 
-#ifndef U_HIDE_INTERNAL_API
+#جے_بنا_تعریف U_HIDE_اندرونی_API
     /**
      * Returns the pattern text with none of the arguments.
      * Like formatting with all-empty string values.
@@ -298,16 +298,16 @@ public:
      *
      * @internal
      */
-    UnicodeString getTextWithNoArguments(int32_t *offsets, int32_t offsetsLength) const {
-        return getTextWithNoArguments(
-            compiledPattern.getBuffer(),
-            compiledPattern.length(),
+    UnicodeString get_متن_With_No_Arguments(int32_t *offsets, int32_t offsets_لمائی) ثابت {
+        أرجع get_متن_With_No_Arguments(
+            compiled_نمونہ.get_بفر(),
+            compiled_نمونہ.لمائی(),
             offsets,
-            offsetsLength);
+            offsets_لمائی);
     }
-#endif // U_HIDE_INTERNAL_API
+#جے_انت // U_HIDE_INTERNAL_API
 
-private:
+خاص:
     /**
      * Binary representation of the compiled pattern.
      * Index 0: One more than the highest argument number.
@@ -317,36 +317,36 @@ private:
      * A literal-text segment is stored as its length (at least 1) offset by ARG_NUM_LIMIT,
      * followed by that many chars.
      */
-    UnicodeString compiledPattern;
+    UnicodeString compiled_نمونہ;
 
-    static inline int32_t getArgumentLimit(const char16_t *compiledPattern,
-                                              int32_t compiledPatternLength) {
-        return compiledPatternLength == 0 ? 0 : compiledPattern[0];
+    ساكن مضمن int32_t get_دلیل_حد_بندی(ثابت char16_t *compiled_نمونہ,
+                                              int32_t compiled_نمونہ_لمائی) {
+        أرجع compiled_نمونہ_لمائی == 0 ? 0 : compiled_نمونہ[0];
     }
 
-    static UnicodeString getTextWithNoArguments(
-        const char16_t *compiledPattern,
-        int32_t compiledPatternLength,
+    ساكن UnicodeString get_متن_With_No_Arguments(
+        ثابت char16_t *compiled_نمونہ,
+        int32_t compiled_نمونہ_لمائی,
         int32_t *offsets,
-        int32_t offsetsLength);
+        int32_t offsets_لمائی);
 
-    static UnicodeString& format(
-            const char16_t* compiledPattern,
-            int32_t compiledPatternLength,
-            const UnicodeString* const* values,
-            UnicodeString& result U_LIFETIME_BOUND,
-            const UnicodeString* resultCopy,
-            UBool forbidResultAsValue,
+    ساكن UnicodeString& format(
+            ثابت char16_t* compiled_نمونہ,
+            int32_t compiled_نمونہ_لمائی,
+            ثابت UnicodeString* ثابت* اقدار,
+            UnicodeString& نتیجہ U_LIFETIME_BOUND,
+            ثابت UnicodeString* نتیجہ_Copy,
+            UBool forbid_نتیجہ_As_قدر,
             int32_t* offsets,
-            int32_t offsetsLength,
-            UErrorCode& errorCode);
+            int32_t offsets_لمائی,
+            UError_کوڈ& error_کوڈ);
 
     // Give access to internals to SimpleModifier for number formatting
-    friend class number::impl::SimpleModifier;
+    یار class نمبر::impl::SimpleModifier;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_سرا
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#جے_انت /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __SIMPLEFORMATTER_H__
+#جے_انت  // __SIMPLEFORMATTER_H__

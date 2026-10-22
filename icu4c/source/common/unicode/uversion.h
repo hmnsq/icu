@@ -24,46 +24,46 @@
 /* Main ICU version information                                              */
 /*===========================================================================*/
 
-#ifndef UVERSION_H
-#define UVERSION_H
+#جے_بنا_تعریف UVERSION_H
+#تعریف_کرو UVERSION_H
 
-#include "unicode/umachine.h"
+#ضمن "unicode/umachine.h"
 
 /* Actual version info lives in uvernum.h */
-#include "unicode/uvernum.h"
+#ضمن "unicode/uvernum.h"
 
 /** Maximum length of the copyright string.
  *  @stable ICU 2.4
  */
-#define U_COPYRIGHT_STRING_LENGTH  128
+#تعریف_کرو U_COPYRIGHT_STRING_لمائی  128
 
 /** An ICU version consists of up to 4 numbers from 0..255.
  *  @stable ICU 2.4
  */
-#define U_MAX_VERSION_LENGTH 4
+#تعریف_کرو U_MAX_نسخہ_لمائی 4
 
 /** In a string, ICU version fields are delimited by dots.
  *  @stable ICU 2.4
  */
-#define U_VERSION_DELIMITER '.'
+#تعریف_کرو U_نسخہ_DELIMITER '.'
 
 /** The maximum length of an ICU version string.
  *  @stable ICU 2.4
  */
-#define U_MAX_VERSION_STRING_LENGTH 20
+#تعریف_کرو U_MAX_نسخہ_STRING_لمائی 20
 
 /** The binary form of a version on ICU APIs is an array of 4 uint8_t.
  *  To compare two versions, use memcmp(v1,v2,sizeof(UVersionInfo)).
  *  @stable ICU 2.4
  */
-typedef uint8_t UVersionInfo[U_MAX_VERSION_LENGTH];
+تعريفنوع uint8_t UVersionInfo[U_MAX_نسخہ_لمائی];
 
 /*===========================================================================*/
 /* C++ namespace if supported. Versioned unless versioning is disabled.      */
 /*===========================================================================*/
 
 /* Define C++ namespace symbols. */
-#ifdef __cplusplus
+#جے_تعریف_شدہ __cplusplus
 
 /**
  * \def U_NAMESPACE_BEGIN
@@ -98,30 +98,30 @@ typedef uint8_t UVersionInfo[U_MAX_VERSION_LENGTH];
  * @stable ICU 2.4
  */
 
-#   if U_DISABLE_RENAMING
+#   إذا U_DISABLE_RENAMING
 #       define U_ICU_NAMESPACE icu
         namespace U_ICU_NAMESPACE { }
-#   else
-#       define U_ICU_NAMESPACE U_ICU_ENTRY_POINT_RENAME(icu)
+#   وإلا
+#       define U_ICU_NAMESPACE U_ICU_اندراج_نقطہ_RENAME(icu)
         namespace U_ICU_NAMESPACE { }
         namespace icu = U_ICU_NAMESPACE;
 #   endif
 
 #   define U_NAMESPACE_BEGIN namespace U_ICU_NAMESPACE {
-#   define U_NAMESPACE_END }
+#   define U_NAMESPACE_سرا }
 #   define U_NAMESPACE_USE using namespace U_ICU_NAMESPACE;
 #   define U_NAMESPACE_QUALIFIER U_ICU_NAMESPACE::
 
 #   ifndef U_USING_ICU_NAMESPACE
-#       if defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || \
+#       إذا defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || \
                 defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION) || \
                 defined(U_LAYOUTEX_IMPLEMENTATION) || defined(U_TOOLUTIL_IMPLEMENTATION)
 #           define U_USING_ICU_NAMESPACE 0
-#       else
+#       وإلا
 #           define U_USING_ICU_NAMESPACE 0
 #       endif
 #   endif
-#   if U_USING_ICU_NAMESPACE
+#   إذا U_USING_ICU_NAMESPACE
         U_NAMESPACE_USE
 #   endif
 
@@ -160,27 +160,27 @@ typedef uint8_t UVersionInfo[U_MAX_VERSION_LENGTH];
  */
 
 // The first test is the same as for defining U_EXPORT for Windows.
-#if defined(_MSC_VER) || (UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllexport__) && \
+#إذا defined(_MSC_VER) || (UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllexport__) && \
                           UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllimport__))
-#   define U_HEADER_NESTED_NAMESPACE header
-#   define U_ICU_NAMESPACE_OR_INTERNAL U_ICU_NAMESPACE
-#elif defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || \
+#   define U_سرخی_NESTED_NAMESPACE سرخی
+#   define U_ICU_NAMESPACE_OR_اندرونی U_ICU_NAMESPACE
+#وإلاإذا defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || \
         defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION) || \
         defined(U_LAYOUTEX_IMPLEMENTATION) || defined(U_TOOLUTIL_IMPLEMENTATION)
-#   define U_HEADER_NESTED_NAMESPACE internal
-#   define U_ICU_NAMESPACE_OR_INTERNAL U_ICU_NAMESPACE::internal
-    namespace U_ICU_NAMESPACE_OR_INTERNAL {}
-    using namespace U_ICU_NAMESPACE_OR_INTERNAL;
-#else
-#   define U_HEADER_NESTED_NAMESPACE header
-#   define U_ICU_NAMESPACE_OR_INTERNAL U_ICU_NAMESPACE
-#endif
+#   define U_سرخی_NESTED_NAMESPACE اندرونی_2
+#   define U_ICU_NAMESPACE_OR_اندرونی U_ICU_NAMESPACE::اندرونی_2
+    namespace U_ICU_NAMESPACE_OR_اندرونی {}
+    using namespace U_ICU_NAMESPACE_OR_اندرونی;
+#وإلا
+#   define U_سرخی_NESTED_NAMESPACE سرخی
+#   define U_ICU_NAMESPACE_OR_اندرونی U_ICU_NAMESPACE
+#جے_انت
 
-#define U_HEADER_ONLY_NAMESPACE U_ICU_NAMESPACE::U_HEADER_NESTED_NAMESPACE
+#تعریف_کرو U_سرخی_ONLY_NAMESPACE U_ICU_NAMESPACE::U_سرخی_NESTED_NAMESPACE
 
-namespace U_HEADER_ONLY_NAMESPACE {}
+namespace U_سرخی_ONLY_NAMESPACE {}
 
-#endif /* __cplusplus */
+#جے_انت /* __cplusplus */
 
 /*===========================================================================*/
 /* General version helper functions. Definitions in putil.c                  */
@@ -197,8 +197,8 @@ namespace U_HEADER_ONLY_NAMESPACE {}
  *                      values of up to 255 each.
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
-u_versionFromString(UVersionInfo versionArray, const char *versionString);
+U_CAPI فراغ U_EXPORT2
+u_نسخہ_From_String(UVersionInfo نسخہ_Array, ثابت حرف *نسخہ_String);
 
 /**
  * Parse a Unicode string with dotted-decimal version information and
@@ -211,8 +211,8 @@ u_versionFromString(UVersionInfo versionArray, const char *versionString);
  *                      fields with values of up to 255 each.
  * @stable ICU 4.2
  */
-U_CAPI void U_EXPORT2
-u_versionFromUString(UVersionInfo versionArray, const UChar *versionString);
+U_CAPI فراغ U_EXPORT2
+u_نسخہ_From_UString(UVersionInfo نسخہ_Array, ثابت UChar *نسخہ_String);
 
 
 /**
@@ -227,8 +227,8 @@ u_versionFromUString(UVersionInfo versionArray, const UChar *versionString);
  *                      The buffer size must be at least U_MAX_VERSION_STRING_LENGTH.
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
-u_versionToString(const UVersionInfo versionArray, char *versionString);
+U_CAPI فراغ U_EXPORT2
+u_نسخہ_منزل_String(ثابت UVersionInfo نسخہ_Array, حرف *نسخہ_String);
 
 /**
  * Gets the ICU release version.  The version array stores the version information
@@ -238,6 +238,6 @@ u_versionToString(const UVersionInfo versionArray, char *versionString);
  * @param versionArray the version # information, the result will be filled in
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-u_getVersion(UVersionInfo versionArray);
-#endif
+U_CAPI فراغ U_EXPORT2
+u_get_نسخہ(UVersionInfo نسخہ_Array);
+#جے_انت

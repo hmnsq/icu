@@ -14,83 +14,83 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/bytestream.h"
-#include "unicode/bytestrie.h"
-#include "unicode/uobject.h"
-#include "cmemory.h"
-#include "uassert.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/bytestream.h"
+#ضمن "unicode/bytestrie.h"
+#ضمن "unicode/uobject.h"
+#ضمن "cmemory.h"
+#ضمن "uassert.h"
 
 U_NAMESPACE_BEGIN
 
-BytesTrie::~BytesTrie() {
+بائٹاں_Trie::~بائٹاں_Trie() {
     uprv_free(ownedArray_);
 }
 
 // lead byte already shifted right by 1.
 int32_t
-BytesTrie::readValue(const uint8_t *pos, int32_t leadByte) {
+بائٹاں_Trie::read_قدر(ثابت uint8_t *pos, int32_t leadByte) {
     int32_t value;
-    if(leadByte<kMinTwoByteValueLead) {
-        value=leadByte-kMinOneByteValueLead;
-    } else if(leadByte<kMinThreeByteValueLead) {
-        value=((leadByte-kMinTwoByteValueLead)<<8)|*pos;
-    } else if(leadByte<kFourByteValueLead) {
-        value=((leadByte-kMinThreeByteValueLead)<<16)|(pos[0]<<8)|pos[1];
-    } else if(leadByte==kFourByteValueLead) {
+    إذا(leadByte<k_Min_Two_Byte_قدر_Lead) {
+        value=leadByte-k_Min_One_Byte_قدر_Lead;
+    } وإلا إذا(leadByte<k_Min_Three_Byte_قدر_Lead) {
+        value=((leadByte-k_Min_Two_Byte_قدر_Lead)<<8)|*pos;
+    } وإلا إذا(leadByte<k_Four_Byte_قدر_Lead) {
+        value=((leadByte-k_Min_Three_Byte_قدر_Lead)<<16)|(pos[0]<<8)|pos[1];
+    } وإلا إذا(leadByte==k_Four_Byte_قدر_Lead) {
         value=(pos[0]<<16)|(pos[1]<<8)|pos[2];
-    } else {
+    } وإلا {
         value=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
     }
-    return value;
+    أرجع value;
 }
 
-const uint8_t*
-BytesTrie::jumpByDelta(const uint8_t* pos U_LIFETIME_BOUND) {
+ثابت uint8_t*
+بائٹاں_Trie::jumpByDelta(ثابت uint8_t* pos U_LIFETIME_BOUND) {
     int32_t delta=*pos++;
-    if(delta<kMinTwoByteDeltaLead) {
+    إذا(delta<kMinTwoByteDeltaLead) {
         // nothing to do
-    } else if(delta<kMinThreeByteDeltaLead) {
+    } وإلا إذا(delta<kMinThreeByteDeltaLead) {
         delta=((delta-kMinTwoByteDeltaLead)<<8)|*pos++;
-    } else if(delta<kFourByteDeltaLead) {
+    } وإلا إذا(delta<kFourByteDeltaLead) {
         delta=((delta-kMinThreeByteDeltaLead)<<16)|(pos[0]<<8)|pos[1];
         pos+=2;
-    } else if(delta==kFourByteDeltaLead) {
+    } وإلا إذا(delta==kFourByteDeltaLead) {
         delta=(pos[0]<<16)|(pos[1]<<8)|pos[2];
         pos+=3;
-    } else {
+    } وإلا {
         delta=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
         pos+=4;
     }
-    return pos+delta;
+    أرجع pos+delta;
 }
 
-UStringTrieResult
-BytesTrie::current() const {
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
-    } else {
-        int32_t node;
-        return (remainingMatchLength_<0 && (node=*pos)>=kMinValueLead) ?
-                valueResult(node) : USTRINGTRIE_NO_VALUE;
+UString_Trie_نتیجہ
+بائٹاں_Trie::current() ثابت {
+    ثابت uint8_t *pos=pos_;
+    إذا(pos==خالی_سوچک) {
+        أرجع USTRINGTRIE_NO_میل;
+    } وإلا {
+        int32_t گرہ;
+        أرجع (بچیا_میل_لمائی<0 && (گرہ=*pos)>=k_Min_قدر_Lead) ?
+                قدر_نتیجہ(گرہ) : USTRINGTRIE_NO_قدر;
     }
 }
 
-UStringTrieResult
-BytesTrie::branchNext(const uint8_t *pos, int32_t length, int32_t inByte) {
+UString_Trie_نتیجہ
+بائٹاں_Trie::branch_اگلا(ثابت uint8_t *pos, int32_t length, int32_t وچ_Byte) {
     // Branch according to the current byte.
-    if(length==0) {
+    إذا(length==0) {
         length=*pos++;
     }
     ++length;
     // The length of the branch is the number of bytes to select from.
     // The data structure encodes a binary search.
-    while(length>kMaxBranchLinearSubNodeLength) {
-        if(inByte<*pos++) {
+    طالما(length>k_Max_Branch_خطی_Sub_گرہ_لمائی) {
+        إذا(وچ_Byte<*pos++) {
             length>>=1;
             pos=jumpByDelta(pos);
-        } else {
+        } وإلا {
             length=length-(length>>1);
             pos=skipDelta(pos);
         }
@@ -98,346 +98,346 @@ BytesTrie::branchNext(const uint8_t *pos, int32_t length, int32_t inByte) {
     // Drop down to linear search for the last few bytes.
     // length>=2 because the loop body above sees length>kMaxBranchLinearSubNodeLength>=3
     // and divides length by 2.
-    do {
-        if(inByte==*pos++) {
-            UStringTrieResult result;
-            int32_t node=*pos;
-            U_ASSERT(node>=kMinValueLead);
-            if(node&kValueIsFinal) {
+    افعل {
+        إذا(وچ_Byte==*pos++) {
+            UString_Trie_نتیجہ نتیجہ;
+            int32_t گرہ=*pos;
+            U_ASSERT(گرہ>=k_Min_قدر_Lead);
+            إذا(گرہ&k_قدر_Is_Final) {
                 // Leave the final value for getValue() to read.
-                result=USTRINGTRIE_FINAL_VALUE;
-            } else {
+                نتیجہ=USTRINGTRIE_FINAL_قدر;
+            } وإلا {
                 // Use the non-final value as the jump delta.
                 ++pos;
                 // int32_t delta=readValue(pos, node>>1);
-                node>>=1;
+                گرہ>>=1;
                 int32_t delta;
-                if(node<kMinTwoByteValueLead) {
-                    delta=node-kMinOneByteValueLead;
-                } else if(node<kMinThreeByteValueLead) {
-                    delta=((node-kMinTwoByteValueLead)<<8)|*pos++;
-                } else if(node<kFourByteValueLead) {
-                    delta=((node-kMinThreeByteValueLead)<<16)|(pos[0]<<8)|pos[1];
+                إذا(گرہ<k_Min_Two_Byte_قدر_Lead) {
+                    delta=گرہ-k_Min_One_Byte_قدر_Lead;
+                } وإلا إذا(گرہ<k_Min_Three_Byte_قدر_Lead) {
+                    delta=((گرہ-k_Min_Two_Byte_قدر_Lead)<<8)|*pos++;
+                } وإلا إذا(گرہ<k_Four_Byte_قدر_Lead) {
+                    delta=((گرہ-k_Min_Three_Byte_قدر_Lead)<<16)|(pos[0]<<8)|pos[1];
                     pos+=2;
-                } else if(node==kFourByteValueLead) {
+                } وإلا إذا(گرہ==k_Four_Byte_قدر_Lead) {
                     delta=(pos[0]<<16)|(pos[1]<<8)|pos[2];
                     pos+=3;
-                } else {
+                } وإلا {
                     delta=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
                     pos+=4;
                 }
                 // end readValue()
                 pos+=delta;
-                node=*pos;
-                result= node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
+                گرہ=*pos;
+                نتیجہ= گرہ>=k_Min_قدر_Lead ? قدر_نتیجہ(گرہ) : USTRINGTRIE_NO_قدر;
             }
             pos_=pos;
-            return result;
+            أرجع نتیجہ;
         }
         --length;
-        pos=skipValue(pos);
-    } while(length>1);
-    if(inByte==*pos++) {
+        pos=skip_قدر(pos);
+    } طالما(length>1);
+    إذا(وچ_Byte==*pos++) {
         pos_=pos;
-        int32_t node=*pos;
-        return node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
-    } else {
+        int32_t گرہ=*pos;
+        أرجع گرہ>=k_Min_قدر_Lead ? قدر_نتیجہ(گرہ) : USTRINGTRIE_NO_قدر;
+    } وإلا {
         stop();
-        return USTRINGTRIE_NO_MATCH;
+        أرجع USTRINGTRIE_NO_میل;
     }
 }
 
-UStringTrieResult
-BytesTrie::nextImpl(const uint8_t *pos, int32_t inByte) {
-    for(;;) {
-        int32_t node=*pos++;
-        if(node<kMinLinearMatch) {
-            return branchNext(pos, node, inByte);
-        } else if(node<kMinValueLead) {
+UString_Trie_نتیجہ
+بائٹاں_Trie::اگلا_Impl(ثابت uint8_t *pos, int32_t وچ_Byte) {
+    لكل(;;) {
+        int32_t گرہ=*pos++;
+        إذا(گرہ<k_Min_خطی_میل) {
+            أرجع branch_اگلا(pos, گرہ, وچ_Byte);
+        } وإلا إذا(گرہ<k_Min_قدر_Lead) {
             // Match the first of length+1 bytes.
-            int32_t length=node-kMinLinearMatch;  // Actual match length minus 1.
-            if(inByte==*pos++) {
-                remainingMatchLength_=--length;
+            int32_t length=گرہ-k_Min_خطی_میل;  // Actual match length minus 1.
+            إذا(وچ_Byte==*pos++) {
+                بچیا_میل_لمائی=--length;
                 pos_=pos;
-                return (length<0 && (node=*pos)>=kMinValueLead) ?
-                        valueResult(node) : USTRINGTRIE_NO_VALUE;
-            } else {
+                أرجع (length<0 && (گرہ=*pos)>=k_Min_قدر_Lead) ?
+                        قدر_نتیجہ(گرہ) : USTRINGTRIE_NO_قدر;
+            } وإلا {
                 // No match.
-                break;
+                اكسر;
             }
-        } else if(node&kValueIsFinal) {
+        } وإلا إذا(گرہ&k_قدر_Is_Final) {
             // No further matching bytes.
-            break;
-        } else {
+            اكسر;
+        } وإلا {
             // Skip intermediate value.
-            pos=skipValue(pos, node);
+            pos=skip_قدر(pos, گرہ);
             // The next node must not also be a value node.
-            U_ASSERT(*pos<kMinValueLead);
+            U_ASSERT(*pos<k_Min_قدر_Lead);
         }
     }
     stop();
-    return USTRINGTRIE_NO_MATCH;
+    أرجع USTRINGTRIE_NO_میل;
 }
 
-UStringTrieResult
-BytesTrie::next(int32_t inByte) {
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+UString_Trie_نتیجہ
+بائٹاں_Trie::next(int32_t وچ_Byte) {
+    ثابت uint8_t *pos=pos_;
+    إذا(pos==خالی_سوچک) {
+        أرجع USTRINGTRIE_NO_میل;
     }
-    if(inByte<0) {
-        inByte+=0x100;
+    إذا(وچ_Byte<0) {
+        وچ_Byte+=0x100;
     }
-    int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    if(length>=0) {
+    int32_t length=بچیا_میل_لمائی;  // Actual remaining match length minus 1.
+    إذا(length>=0) {
         // Remaining part of a linear-match node.
-        if(inByte==*pos++) {
-            remainingMatchLength_=--length;
+        إذا(وچ_Byte==*pos++) {
+            بچیا_میل_لمائی=--length;
             pos_=pos;
-            int32_t node;
-            return (length<0 && (node=*pos)>=kMinValueLead) ?
-                    valueResult(node) : USTRINGTRIE_NO_VALUE;
-        } else {
+            int32_t گرہ;
+            أرجع (length<0 && (گرہ=*pos)>=k_Min_قدر_Lead) ?
+                    قدر_نتیجہ(گرہ) : USTRINGTRIE_NO_قدر;
+        } وإلا {
             stop();
-            return USTRINGTRIE_NO_MATCH;
+            أرجع USTRINGTRIE_NO_میل;
         }
     }
-    return nextImpl(pos, inByte);
+    أرجع اگلا_Impl(pos, وچ_Byte);
 }
 
-UStringTrieResult
-BytesTrie::next(const char *s, int32_t sLength) {
-    if(sLength<0 ? *s==0 : sLength==0) {
+UString_Trie_نتیجہ
+بائٹاں_Trie::next(ثابت حرف *s, int32_t s_لمائی) {
+    إذا(s_لمائی<0 ? *s==0 : s_لمائی==0) {
         // Empty input.
-        return current();
+        أرجع current();
     }
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    ثابت uint8_t *pos=pos_;
+    إذا(pos==خالی_سوچک) {
+        أرجع USTRINGTRIE_NO_میل;
     }
-    int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    for(;;) {
+    int32_t length=بچیا_میل_لمائی;  // Actual remaining match length minus 1.
+    لكل(;;) {
         // Fetch the next input byte, if there is one.
         // Continue a linear-match node without rechecking sLength<0.
-        int32_t inByte;
-        if(sLength<0) {
-            for(;;) {
-                if((inByte=*s++)==0) {
-                    remainingMatchLength_=length;
+        int32_t وچ_Byte;
+        إذا(s_لمائی<0) {
+            لكل(;;) {
+                إذا((وچ_Byte=*s++)==0) {
+                    بچیا_میل_لمائی=length;
                     pos_=pos;
-                    int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
-                            valueResult(node) : USTRINGTRIE_NO_VALUE;
+                    int32_t گرہ;
+                    أرجع (length<0 && (گرہ=*pos)>=k_Min_قدر_Lead) ?
+                            قدر_نتیجہ(گرہ) : USTRINGTRIE_NO_قدر;
                 }
-                if(length<0) {
-                    remainingMatchLength_=length;
-                    break;
+                إذا(length<0) {
+                    بچیا_میل_لمائی=length;
+                    اكسر;
                 }
-                if(inByte!=*pos) {
+                إذا(وچ_Byte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    أرجع USTRINGTRIE_NO_میل;
                 }
                 ++pos;
                 --length;
             }
-        } else {
-            for(;;) {
-                if(sLength==0) {
-                    remainingMatchLength_=length;
+        } وإلا {
+            لكل(;;) {
+                إذا(s_لمائی==0) {
+                    بچیا_میل_لمائی=length;
                     pos_=pos;
-                    int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
-                            valueResult(node) : USTRINGTRIE_NO_VALUE;
+                    int32_t گرہ;
+                    أرجع (length<0 && (گرہ=*pos)>=k_Min_قدر_Lead) ?
+                            قدر_نتیجہ(گرہ) : USTRINGTRIE_NO_قدر;
                 }
-                inByte=*s++;
-                --sLength;
-                if(length<0) {
-                    remainingMatchLength_=length;
-                    break;
+                وچ_Byte=*s++;
+                --s_لمائی;
+                إذا(length<0) {
+                    بچیا_میل_لمائی=length;
+                    اكسر;
                 }
-                if(inByte!=*pos) {
+                إذا(وچ_Byte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    أرجع USTRINGTRIE_NO_میل;
                 }
                 ++pos;
                 --length;
             }
         }
-        for(;;) {
-            int32_t node=*pos++;
-            if(node<kMinLinearMatch) {
-                UStringTrieResult result=branchNext(pos, node, inByte);
-                if(result==USTRINGTRIE_NO_MATCH) {
-                    return USTRINGTRIE_NO_MATCH;
+        لكل(;;) {
+            int32_t گرہ=*pos++;
+            إذا(گرہ<k_Min_خطی_میل) {
+                UString_Trie_نتیجہ نتیجہ=branch_اگلا(pos, گرہ, وچ_Byte);
+                إذا(نتیجہ==USTRINGTRIE_NO_میل) {
+                    أرجع USTRINGTRIE_NO_میل;
                 }
                 // Fetch the next input byte, if there is one.
-                if(sLength<0) {
-                    if((inByte=*s++)==0) {
-                        return result;
+                إذا(s_لمائی<0) {
+                    إذا((وچ_Byte=*s++)==0) {
+                        أرجع نتیجہ;
                     }
-                } else {
-                    if(sLength==0) {
-                        return result;
+                } وإلا {
+                    إذا(s_لمائی==0) {
+                        أرجع نتیجہ;
                     }
-                    inByte=*s++;
-                    --sLength;
+                    وچ_Byte=*s++;
+                    --s_لمائی;
                 }
-                if(result==USTRINGTRIE_FINAL_VALUE) {
+                إذا(نتیجہ==USTRINGTRIE_FINAL_قدر) {
                     // No further matching bytes.
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    أرجع USTRINGTRIE_NO_میل;
                 }
                 pos=pos_;  // branchNext() advanced pos and wrote it to pos_ .
-            } else if(node<kMinValueLead) {
+            } وإلا إذا(گرہ<k_Min_قدر_Lead) {
                 // Match length+1 bytes.
-                length=node-kMinLinearMatch;  // Actual match length minus 1.
-                if(inByte!=*pos) {
+                length=گرہ-k_Min_خطی_میل;  // Actual match length minus 1.
+                إذا(وچ_Byte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    أرجع USTRINGTRIE_NO_میل;
                 }
                 ++pos;
                 --length;
-                break;
-            } else if(node&kValueIsFinal) {
+                اكسر;
+            } وإلا إذا(گرہ&k_قدر_Is_Final) {
                 // No further matching bytes.
                 stop();
-                return USTRINGTRIE_NO_MATCH;
-            } else {
+                أرجع USTRINGTRIE_NO_میل;
+            } وإلا {
                 // Skip intermediate value.
-                pos=skipValue(pos, node);
+                pos=skip_قدر(pos, گرہ);
                 // The next node must not also be a value node.
-                U_ASSERT(*pos<kMinValueLead);
+                U_ASSERT(*pos<k_Min_قدر_Lead);
             }
         }
     }
 }
 
-const uint8_t*
-BytesTrie::findUniqueValueFromBranch(const uint8_t* pos U_LIFETIME_BOUND,
+ثابت uint8_t*
+بائٹاں_Trie::لبھو_Unique_قدر_From_Branch(ثابت uint8_t* pos U_LIFETIME_BOUND,
                                      int32_t length,
-                                     UBool haveUniqueValue,
-                                     int32_t& uniqueValue) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+                                     UBool have_Unique_قدر,
+                                     int32_t& unique_قدر) {
+    طالما(length>k_Max_Branch_خطی_Sub_گرہ_لمائی) {
         ++pos;  // ignore the comparison byte
-        if(nullptr==findUniqueValueFromBranch(jumpByDelta(pos), length>>1, haveUniqueValue, uniqueValue)) {
-            return nullptr;
+        إذا(خالی_سوچک==لبھو_Unique_قدر_From_Branch(jumpByDelta(pos), length>>1, have_Unique_قدر, unique_قدر)) {
+            أرجع خالی_سوچک;
         }
         length=length-(length>>1);
         pos=skipDelta(pos);
     }
-    do {
+    افعل {
         ++pos;  // ignore a comparison byte
         // handle its value
-        int32_t node=*pos++;
-        UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
-        int32_t value=readValue(pos, node>>1);
-        pos=skipValue(pos, node);
-        if(isFinal) {
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return nullptr;
+        int32_t گرہ=*pos++;
+        UBool isFinal = static_cast<UBool>(گرہ & k_قدر_Is_Final);
+        int32_t value=read_قدر(pos, گرہ>>1);
+        pos=skip_قدر(pos, گرہ);
+        إذا(isFinal) {
+            إذا(have_Unique_قدر) {
+                إذا(value!=unique_قدر) {
+                    أرجع خالی_سوچک;
                 }
-            } else {
-                uniqueValue=value;
-                haveUniqueValue=true;
+            } وإلا {
+                unique_قدر=value;
+                have_Unique_قدر=سچ;
             }
-        } else {
-            if(!findUniqueValue(pos+value, haveUniqueValue, uniqueValue)) {
-                return nullptr;
+        } وإلا {
+            إذا(!لبھو_Unique_قدر(pos+value, have_Unique_قدر, unique_قدر)) {
+                أرجع خالی_سوچک;
             }
-            haveUniqueValue=true;
+            have_Unique_قدر=سچ;
         }
-    } while(--length>1);
-    return pos+1;  // ignore the last comparison byte
+    } طالما(--length>1);
+    أرجع pos+1;  // ignore the last comparison byte
 }
 
 UBool
-BytesTrie::findUniqueValue(const uint8_t *pos, UBool haveUniqueValue, int32_t &uniqueValue) {
-    for(;;) {
-        int32_t node=*pos++;
-        if(node<kMinLinearMatch) {
-            if(node==0) {
-                node=*pos++;
+بائٹاں_Trie::لبھو_Unique_قدر(ثابت uint8_t *pos, UBool have_Unique_قدر, int32_t &unique_قدر) {
+    لكل(;;) {
+        int32_t گرہ=*pos++;
+        إذا(گرہ<k_Min_خطی_میل) {
+            إذا(گرہ==0) {
+                گرہ=*pos++;
             }
-            pos=findUniqueValueFromBranch(pos, node+1, haveUniqueValue, uniqueValue);
-            if(pos==nullptr) {
-                return false;
+            pos=لبھو_Unique_قدر_From_Branch(pos, گرہ+1, have_Unique_قدر, unique_قدر);
+            إذا(pos==خالی_سوچک) {
+                أرجع خطأ;
             }
-            haveUniqueValue=true;
-        } else if(node<kMinValueLead) {
+            have_Unique_قدر=سچ;
+        } وإلا إذا(گرہ<k_Min_قدر_Lead) {
             // linear-match node
-            pos+=node-kMinLinearMatch+1;  // Ignore the match bytes.
-        } else {
-            UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
-            int32_t value=readValue(pos, node>>1);
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return false;
+            pos+=گرہ-k_Min_خطی_میل+1;  // Ignore the match bytes.
+        } وإلا {
+            UBool isFinal = static_cast<UBool>(گرہ & k_قدر_Is_Final);
+            int32_t value=read_قدر(pos, گرہ>>1);
+            إذا(have_Unique_قدر) {
+                إذا(value!=unique_قدر) {
+                    أرجع خطأ;
                 }
-            } else {
-                uniqueValue=value;
-                haveUniqueValue=true;
+            } وإلا {
+                unique_قدر=value;
+                have_Unique_قدر=سچ;
             }
-            if(isFinal) {
-                return true;
+            إذا(isFinal) {
+                أرجع سچ;
             }
-            pos=skipValue(pos, node);
+            pos=skip_قدر(pos, گرہ);
         }
     }
 }
 
 int32_t
-BytesTrie::getNextBytes(ByteSink &out) const {
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return 0;
+بائٹاں_Trie::get_اگلا_بائٹاں(ByteSink &out) ثابت {
+    ثابت uint8_t *pos=pos_;
+    إذا(pos==خالی_سوچک) {
+        أرجع 0;
     }
-    if(remainingMatchLength_>=0) {
+    إذا(بچیا_میل_لمائی>=0) {
         append(out, *pos);  // Next byte of a pending linear-match node.
-        return 1;
+        أرجع 1;
     }
-    int32_t node=*pos++;
-    if(node>=kMinValueLead) {
-        if(node&kValueIsFinal) {
-            return 0;
-        } else {
-            pos=skipValue(pos, node);
-            node=*pos++;
-            U_ASSERT(node<kMinValueLead);
+    int32_t گرہ=*pos++;
+    إذا(گرہ>=k_Min_قدر_Lead) {
+        إذا(گرہ&k_قدر_Is_Final) {
+            أرجع 0;
+        } وإلا {
+            pos=skip_قدر(pos, گرہ);
+            گرہ=*pos++;
+            U_ASSERT(گرہ<k_Min_قدر_Lead);
         }
     }
-    if(node<kMinLinearMatch) {
-        if(node==0) {
-            node=*pos++;
+    إذا(گرہ<k_Min_خطی_میل) {
+        إذا(گرہ==0) {
+            گرہ=*pos++;
         }
-        getNextBranchBytes(pos, ++node, out);
-        return node;
-    } else {
+        get_اگلا_Branch_بائٹاں(pos, ++گرہ, out);
+        أرجع گرہ;
+    } وإلا {
         // First byte of the linear-match node.
         append(out, *pos);
-        return 1;
+        أرجع 1;
     }
 }
 
-void
-BytesTrie::getNextBranchBytes(const uint8_t *pos, int32_t length, ByteSink &out) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+فراغ
+بائٹاں_Trie::get_اگلا_Branch_بائٹاں(ثابت uint8_t *pos, int32_t length, ByteSink &out) {
+    طالما(length>k_Max_Branch_خطی_Sub_گرہ_لمائی) {
         ++pos;  // ignore the comparison byte
-        getNextBranchBytes(jumpByDelta(pos), length>>1, out);
+        get_اگلا_Branch_بائٹاں(jumpByDelta(pos), length>>1, out);
         length=length-(length>>1);
         pos=skipDelta(pos);
     }
-    do {
+    افعل {
         append(out, *pos++);
-        pos=skipValue(pos);
-    } while(--length>1);
+        pos=skip_قدر(pos);
+    } طالما(--length>1);
     append(out, *pos);
 }
 
-void
-BytesTrie::append(ByteSink &out, int c) {
-    char ch = static_cast<char>(c);
+فراغ
+بائٹاں_Trie::append(ByteSink &out, صحيح c) {
+    حرف ch = static_cast<حرف>(c);
     out.Append(&ch, 1);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_سرا

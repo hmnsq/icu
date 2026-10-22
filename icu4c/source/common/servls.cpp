@@ -8,21 +8,21 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#إذا !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "charstr.h"
-#include "uassert.h"
+#ضمن "unicode/resbund.h"
+#ضمن "uresimp.h"
+#ضمن "cmemory.h"
+#ضمن "servloc.h"
+#ضمن "ustrfmt.h"
+#ضمن "charstr.h"
+#ضمن "uassert.h"
 
-#define UNDERSCORE_CHAR ((char16_t)0x005f)
-#define AT_SIGN_CHAR    ((char16_t)64)
-#define PERIOD_CHAR     ((char16_t)46)
+#تعریف_کرو UNDERSCORE_CHAR ((char16_t)0x005f)
+#تعریف_کرو AT_SIGN_CHAR    ((char16_t)64)
+#تعریف_کرو PERIOD_CHAR     ((char16_t)46)
 
 U_NAMESPACE_BEGIN
 
@@ -31,7 +31,7 @@ ICULocaleService::ICULocaleService()
 {
 }
 
-ICULocaleService::ICULocaleService(const UnicodeString& dname)
+ICULocaleService::ICULocaleService(ثابت UnicodeString& dname)
   : ICUService(dname)
   , fallbackLocale(Locale::getDefault())
 {
@@ -42,211 +42,211 @@ ICULocaleService::~ICULocaleService()
 }
 
 UObject*
-ICULocaleService::get(const Locale& locale, UErrorCode& status) const
+ICULocaleService::get(ثابت Locale& locale, UError_کوڈ& حالت) ثابت
 {
-    return get(locale, LocaleKey::KIND_ANY, nullptr, status);
+    أرجع get(locale, Locale_کلید::قسم_ANY, خالی_سوچک, حالت);
 }
 
 UObject*
-ICULocaleService::get(const Locale& locale, int32_t kind, UErrorCode& status) const
+ICULocaleService::get(ثابت Locale& locale, int32_t قسم, UError_کوڈ& حالت) ثابت
 {
-    return get(locale, kind, nullptr, status);
+    أرجع get(locale, قسم, خالی_سوچک, حالت);
 }
 
 UObject*
-ICULocaleService::get(const Locale& locale, Locale* actualReturn, UErrorCode& status) const
+ICULocaleService::get(ثابت Locale& locale, Locale* actualReturn, UError_کوڈ& حالت) ثابت
 {
-    return get(locale, LocaleKey::KIND_ANY, actualReturn, status);
+    أرجع get(locale, Locale_کلید::قسم_ANY, actualReturn, حالت);
 }
 
 UObject*
-ICULocaleService::get(const Locale& locale, int32_t kind, Locale* actualReturn, UErrorCode& status) const
+ICULocaleService::get(ثابت Locale& locale, int32_t قسم, Locale* actualReturn, UError_کوڈ& حالت) ثابت
 {
-    UObject* result = nullptr;
-    if (U_FAILURE(status)) {
-        return result;
+    UObject* نتیجہ = خالی_سوچک;
+    إذا (U_FAILURE(حالت)) {
+        أرجع نتیجہ;
     }
 
     UnicodeString locName(locale.getName(), -1, US_INV);
-    if (locName.isBogus()) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
-        ICUServiceKey* key = createKey(&locName, kind, status);
-        if (key) {
-            if (actualReturn == nullptr) {
-                result = getKey(*key, status);
-            } else {
-                UnicodeString temp;
-                result = getKey(*key, &temp, status);
+    إذا (locName.isBogus()) {
+        حالت = U_حافظہ_ونڈ_ERROR;
+    } وإلا {
+        ICUService_کلید* کلید = create_کلید(&locName, قسم, حالت);
+        إذا (کلید) {
+            إذا (actualReturn == خالی_سوچک) {
+                نتیجہ = get_کلید(*کلید, حالت);
+            } وإلا {
+                UnicodeString عارضی;
+                نتیجہ = get_کلید(*کلید, &عارضی, حالت);
 
-                if (result != nullptr) {
-                    key->parseSuffix(temp);
-                    LocaleUtility::initLocaleFromName(temp, *actualReturn);
+                إذا (نتیجہ != خالی_سوچک) {
+                    کلید->parseSuffix(عارضی);
+                    LocaleUtility::initLocaleFromName(عارضی, *actualReturn);
                 }
             }
-            delete key;
+            مٹاؤ کلید;
         }
     }
-    return result;
+    أرجع نتیجہ;
 }
 
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const UnicodeString& locale, 
-    UBool visible, UErrorCode& status)
+URegistry_کلید
+ICULocaleService::رجسٹر_Instance(UObject* obj_منزل_Adopt, ثابت UnicodeString& locale, 
+    UBool visible, UError_کوڈ& حالت)
 {
     Locale loc;
     LocaleUtility::initLocaleFromName(locale, loc);
-    return registerInstance(objToAdopt, loc, LocaleKey::KIND_ANY, 
-        visible ? LocaleKeyFactory::VISIBLE : LocaleKeyFactory::INVISIBLE, status);
+    أرجع رجسٹر_Instance(obj_منزل_Adopt, loc, Locale_کلید::قسم_ANY, 
+        visible ? Locale_کلید_Factory::VISIBLE : Locale_کلید_Factory::INVISIBLE, حالت);
 }
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const Locale& locale, UErrorCode& status)
+URegistry_کلید
+ICULocaleService::رجسٹر_Instance(UObject* obj_منزل_Adopt, ثابت Locale& locale, UError_کوڈ& حالت)
 {
-    return registerInstance(objToAdopt, locale, LocaleKey::KIND_ANY, LocaleKeyFactory::VISIBLE, status);
+    أرجع رجسٹر_Instance(obj_منزل_Adopt, locale, Locale_کلید::قسم_ANY, Locale_کلید_Factory::VISIBLE, حالت);
 }
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const Locale& locale, int32_t kind, UErrorCode& status)
+URegistry_کلید
+ICULocaleService::رجسٹر_Instance(UObject* obj_منزل_Adopt, ثابت Locale& locale, int32_t قسم, UError_کوڈ& حالت)
 {
-    return registerInstance(objToAdopt, locale, kind, LocaleKeyFactory::VISIBLE, status);
+    أرجع رجسٹر_Instance(obj_منزل_Adopt, locale, قسم, Locale_کلید_Factory::VISIBLE, حالت);
 }
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const Locale& locale, int32_t kind, int32_t coverage, UErrorCode& status)
+URegistry_کلید
+ICULocaleService::رجسٹر_Instance(UObject* obj_منزل_Adopt, ثابت Locale& locale, int32_t قسم, int32_t coverage, UError_کوڈ& حالت)
 {
-    ICUServiceFactory * factory = new SimpleLocaleKeyFactory(objToAdopt, locale, kind, coverage);
-    if (factory != nullptr) {
-        return registerFactory(factory, status);
+    ICUServiceFactory * factory = جديد Simple_Locale_کلید_Factory(obj_منزل_Adopt, locale, قسم, coverage);
+    إذا (factory != خالی_سوچک) {
+        أرجع رجسٹر_Factory(factory, حالت);
     }
-    delete objToAdopt;
-    return nullptr;
+    مٹاؤ obj_منزل_Adopt;
+    أرجع خالی_سوچک;
 }
 
-#if 0
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const UnicodeString& locale, UErrorCode& status)
+#إذا 0
+URegistry_کلید
+ICULocaleService::رجسٹر_Instance(UObject* obj_منزل_Adopt, ثابت UnicodeString& locale, UError_کوڈ& حالت)
 {
-    return registerInstance(objToAdopt, locale, LocaleKey::KIND_ANY, LocaleKeyFactory::VISIBLE, status);
+    أرجع رجسٹر_Instance(obj_منزل_Adopt, locale, Locale_کلید::قسم_ANY, Locale_کلید_Factory::VISIBLE, حالت);
 }
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const UnicodeString& locale, UBool visible, UErrorCode& status)
+URegistry_کلید
+ICULocaleService::رجسٹر_Instance(UObject* obj_منزل_Adopt, ثابت UnicodeString& locale, UBool visible, UError_کوڈ& حالت)
 {
-    return registerInstance(objToAdopt, locale, LocaleKey::KIND_ANY,
-                            visible ? LocaleKeyFactory::VISIBLE : LocaleKeyFactory::INVISIBLE,
-                            status);
+    أرجع رجسٹر_Instance(obj_منزل_Adopt, locale, Locale_کلید::قسم_ANY,
+                            visible ? Locale_کلید_Factory::VISIBLE : Locale_کلید_Factory::INVISIBLE,
+                            حالت);
 }
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const UnicodeString& locale, int32_t kind, int32_t coverage, UErrorCode& status)
+URegistry_کلید
+ICULocaleService::رجسٹر_Instance(UObject* obj_منزل_Adopt, ثابت UnicodeString& locale, int32_t قسم, int32_t coverage, UError_کوڈ& حالت)
 {
-    ICUServiceFactory * factory = new SimpleLocaleKeyFactory(objToAdopt, locale, kind, coverage);
-    if (factory != nullptr) {
-        return registerFactory(factory, status);
+    ICUServiceFactory * factory = جديد Simple_Locale_کلید_Factory(obj_منزل_Adopt, locale, قسم, coverage);
+    إذا (factory != خالی_سوچک) {
+        أرجع رجسٹر_Factory(factory, حالت);
     }
-    delete objToAdopt;
-    return nullptr;
+    مٹاؤ obj_منزل_Adopt;
+    أرجع خالی_سوچک;
 }
-#endif
+#جے_انت
 
-class ServiceEnumeration : public StringEnumeration {
-private:
-    const ICULocaleService* _service;
+صنف ServiceEnumeration : عام StringEnumeration {
+خاص:
+    ثابت ICULocaleService* _service;
     int32_t _timestamp;
     UVector _ids;
     int32_t _pos;
 
-private:
-    ServiceEnumeration(const ICULocaleService* service U_LIFETIME_BOUND, UErrorCode& status)
+خاص:
+    ServiceEnumeration(ثابت ICULocaleService* service U_LIFETIME_BOUND, UError_کوڈ& حالت)
         : _service(service)
         , _timestamp(service->getTimestamp())
-        , _ids(uprv_deleteUObject, nullptr, status)
+        , _ids(uprv_deleteUObject, خالی_سوچک, حالت)
         , _pos(0)
     {
-        _service->getVisibleIDs(_ids, status);
+        _service->getVisibleIDs(_ids, حالت);
     }
 
-    ServiceEnumeration(const ServiceEnumeration &other, UErrorCode &status)
+    ServiceEnumeration(ثابت ServiceEnumeration &other, UError_کوڈ &حالت)
         : _service(other._service)
         , _timestamp(other._timestamp)
-        , _ids(uprv_deleteUObject, nullptr, status)
+        , _ids(uprv_deleteUObject, خالی_سوچک, حالت)
         , _pos(0)
     {
-        if(U_SUCCESS(status)) {
+        إذا(U_SUCCESS(حالت)) {
             int32_t i, length;
 
             length = other._ids.size();
-            for(i = 0; i < length; ++i) {
-                LocalPointer<UnicodeString> clonedId(static_cast<UnicodeString*>(other._ids.elementAt(i))->clone(), status);
-                _ids.adoptElement(clonedId.orphan(), status);
+            لكل(i = 0; i < length; ++i) {
+                Local_اشارہ_گر<UnicodeString> clonedId(static_cast<UnicodeString*>(other._ids.elementAt(i))->clone(), حالت);
+                _ids.adoptElement(clonedId.orphan(), حالت);
             }
 
-            if(U_SUCCESS(status)) {
+            إذا(U_SUCCESS(حالت)) {
                 _pos = other._pos;
             }
         }
     }
 
-public:
-    static ServiceEnumeration* create(const ICULocaleService* service U_LIFETIME_BOUND) {
-        UErrorCode status = U_ZERO_ERROR;
-        ServiceEnumeration* result = new ServiceEnumeration(service, status);
-        if (U_SUCCESS(status)) {
-            return result;
+عام:
+    ساكن ServiceEnumeration* create(ثابت ICULocaleService* service U_LIFETIME_BOUND) {
+        UError_کوڈ حالت = U_ZERO_ERROR;
+        ServiceEnumeration* نتیجہ = جديد ServiceEnumeration(service, حالت);
+        إذا (U_SUCCESS(حالت)) {
+            أرجع نتیجہ;
         }
-        delete result;
-        return nullptr;
+        مٹاؤ نتیجہ;
+        أرجع خالی_سوچک;
     }
 
-    virtual ~ServiceEnumeration();
+    مجازی ~ServiceEnumeration();
 
-    virtual StringEnumeration *clone() const override {
-        UErrorCode status = U_ZERO_ERROR;
-        ServiceEnumeration *cl = new ServiceEnumeration(*this, status);
-        if(U_FAILURE(status)) {
-            delete cl;
-            cl = nullptr;
+    مجازی StringEnumeration *clone() ثابت override {
+        UError_کوڈ حالت = U_ZERO_ERROR;
+        ServiceEnumeration *cl = جديد ServiceEnumeration(*هذا, حالت);
+        إذا(U_FAILURE(حالت)) {
+            مٹاؤ cl;
+            cl = خالی_سوچک;
         }
-        return cl;
+        أرجع cl;
     }
 
-    UBool upToDate(UErrorCode& status) const {
-        if (U_SUCCESS(status)) {
-            if (_timestamp == _service->getTimestamp()) {
-                return true;
+    UBool اتے_منزل_Date(UError_کوڈ& حالت) ثابت {
+        إذا (U_SUCCESS(حالت)) {
+            إذا (_timestamp == _service->getTimestamp()) {
+                أرجع سچ;
             }
-            status = U_ENUM_OUT_OF_SYNC_ERROR;
+            حالت = U_ENUM_باہرلا_دا_SYNC_ERROR;
         }
-        return false;
+        أرجع خطأ;
     }
 
-    virtual int32_t count(UErrorCode& status) const override {
-        return upToDate(status) ? _ids.size() : 0;
+    مجازی int32_t count(UError_کوڈ& حالت) ثابت override {
+        أرجع اتے_منزل_Date(حالت) ? _ids.size() : 0;
     }
 
-    virtual const UnicodeString* snext(UErrorCode& status) U_LIFETIME_BOUND override {
-        if (upToDate(status) && (_pos < _ids.size())) {
-            return static_cast<const UnicodeString*>(_ids[_pos++]);
+    مجازی ثابت UnicodeString* snext(UError_کوڈ& حالت) U_LIFETIME_BOUND override {
+        إذا (اتے_منزل_Date(حالت) && (_pos < _ids.size())) {
+            أرجع static_cast<ثابت UnicodeString*>(_ids[_pos++]);
         }
-        return nullptr;
+        أرجع خالی_سوچک;
     }
 
-    virtual void reset(UErrorCode& status) override {
-        if (status == U_ENUM_OUT_OF_SYNC_ERROR) {
-            status = U_ZERO_ERROR;
+    مجازی فراغ reset(UError_کوڈ& حالت) override {
+        إذا (حالت == U_ENUM_باہرلا_دا_SYNC_ERROR) {
+            حالت = U_ZERO_ERROR;
         }
-        if (U_SUCCESS(status)) {
+        إذا (U_SUCCESS(حالت)) {
             _timestamp = _service->getTimestamp();
             _pos = 0;
-            _service->getVisibleIDs(_ids, status);
+            _service->getVisibleIDs(_ids, حالت);
         }
     }
 
-public:
-    static UClassID U_EXPORT2 getStaticClassID();
-    virtual UClassID getDynamicClassID() const override;
+عام:
+    ساكن UClassID U_EXPORT2 getStaticClassID();
+    مجازی UClassID getDynamicClassID() ثابت override;
 };
 
 ServiceEnumeration::~ServiceEnumeration() {}
@@ -254,43 +254,43 @@ ServiceEnumeration::~ServiceEnumeration() {}
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ServiceEnumeration)
 
 StringEnumeration*
-ICULocaleService::getAvailableLocales() const U_LIFETIME_BOUND
+ICULocaleService::get_دستیاب_Locales() ثابت U_LIFETIME_BOUND
 {
-    return ServiceEnumeration::create(this);
+    أرجع ServiceEnumeration::create(هذا);
 }
 
-const UnicodeString&
-ICULocaleService::validateFallbackLocale() const
+ثابت UnicodeString&
+ICULocaleService::validateFallbackLocale() ثابت
 {
-    const Locale&     loc    = Locale::getDefault();
-    ICULocaleService* ncThis = const_cast<ICULocaleService*>(this);
-    static UMutex llock;
+    ثابت Locale&     loc    = Locale::getDefault();
+    ICULocaleService* ncThis = const_cast<ICULocaleService*>(هذا);
+    ساكن UMutex llock;
     {
         Mutex mutex(&llock);
-        if (loc != fallbackLocale) {
+        إذا (loc != fallbackLocale) {
             ncThis->fallbackLocale = loc;
             LocaleUtility::initNameFromLocale(loc, ncThis->fallbackLocaleName);
             ncThis->clearServiceCache();
         }
     }
-    return fallbackLocaleName;
+    أرجع fallbackLocaleName;
 }
 
-ICUServiceKey*
-ICULocaleService::createKey(const UnicodeString* id, UErrorCode& status) const
+ICUService_کلید*
+ICULocaleService::create_کلید(ثابت UnicodeString* id, UError_کوڈ& حالت) ثابت
 {
-    return LocaleKey::createWithCanonicalFallback(id, &validateFallbackLocale(), status);
+    أرجع Locale_کلید::createWithCanonicalFallback(id, &validateFallbackLocale(), حالت);
 }
 
-ICUServiceKey*
-ICULocaleService::createKey(const UnicodeString* id, int32_t kind, UErrorCode& status) const
+ICUService_کلید*
+ICULocaleService::create_کلید(ثابت UnicodeString* id, int32_t قسم, UError_کوڈ& حالت) ثابت
 {
-    return LocaleKey::createWithCanonicalFallback(id, &validateFallbackLocale(), kind, status);
+    أرجع Locale_کلید::createWithCanonicalFallback(id, &validateFallbackLocale(), قسم, حالت);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_سرا
 
 /* !UCONFIG_NO_SERVICE */
-#endif
+#جے_انت
 
 

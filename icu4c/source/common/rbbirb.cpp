@@ -11,30 +11,30 @@
 //    RBBI engine.
 //
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#إذا !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/brkiter.h"
-#include "unicode/rbbi.h"
-#include "unicode/ubrk.h"
-#include "unicode/unistr.h"
-#include "unicode/uniset.h"
-#include "unicode/uchar.h"
-#include "unicode/uchriter.h"
-#include "unicode/ustring.h"
-#include "unicode/parsepos.h"
-#include "unicode/parseerr.h"
+#ضمن "unicode/brkiter.h"
+#ضمن "unicode/rbbi.h"
+#ضمن "unicode/ubrk.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/uniset.h"
+#ضمن "unicode/uchar.h"
+#ضمن "unicode/uchriter.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/parsepos.h"
+#ضمن "unicode/parseerr.h"
 
-#include "cmemory.h"
-#include "cstring.h"
-#include "rbbirb.h"
-#include "rbbinode.h"
-#include "rbbiscan.h"
-#include "rbbisetb.h"
-#include "rbbitblb.h"
-#include "rbbidata.h"
-#include "uassert.h"
+#ضمن "cmemory.h"
+#ضمن "cstring.h"
+#ضمن "rbbirb.h"
+#ضمن "rbbinode.h"
+#ضمن "rbbiscan.h"
+#ضمن "rbbisetb.h"
+#ضمن "rbbitblb.h"
+#ضمن "rbbidata.h"
+#ضمن "uassert.h"
 
 
 U_NAMESPACE_BEGIN
@@ -45,50 +45,50 @@ U_NAMESPACE_BEGIN
 //  Constructor.
 //
 //----------------------------------------------------------------------------------------
-RBBIRuleBuilder::RBBIRuleBuilder(const UnicodeString   &rules,
+RBBIRuleBuilder::RBBIRuleBuilder(ثابت UnicodeString   &قاعدے,
                                        UParseError     *parseErr,
-                                       UErrorCode      &status)
- : fRules(rules), fStrippedRules(rules)
+                                       UError_کوڈ      &حالت)
+ : f_قاعدے(قاعدے), f_Stripped_قاعدے(قاعدے)
 {
-    fStatus = &status; // status is checked below
+    f_حالت = &حالت; // status is checked below
     fParseError = parseErr;
-    fDebugEnv   = nullptr;
-#ifdef RBBI_DEBUG
+    fDebugEnv   = خالی_سوچک;
+#جے_تعریف_شدہ RBBI_DEBUG
     fDebugEnv   = getenv("U_RBBIDEBUG");
-#endif
+#جے_انت
 
 
-    fForwardTree        = nullptr;
-    fReverseTree        = nullptr;
-    fSafeFwdTree        = nullptr;
-    fSafeRevTree        = nullptr;
-    fDefaultTree        = &fForwardTree;
-    fForwardTable       = nullptr;
-    fRuleStatusVals     = nullptr;
-    fChainRules         = false;
-    fLookAheadHardBreak = false;
-    fUSetNodes          = nullptr;
-    fRuleStatusVals     = nullptr;
-    fScanner            = nullptr;
-    fSetBuilder         = nullptr;
-    if (parseErr) {
-        uprv_memset(parseErr, 0, sizeof(UParseError));
+    f_Forward_درخت        = خالی_سوچک;
+    f_الٹ_درخت        = خالی_سوچک;
+    f_محفوظ_Fwd_درخت        = خالی_سوچک;
+    f_محفوظ_Rev_درخت        = خالی_سوچک;
+    f_Default_درخت        = &f_Forward_درخت;
+    f_Forward_جدول       = خالی_سوچک;
+    f_قاعدہ_حالت_Vals     = خالی_سوچک;
+    f_Chain_قاعدے         = خطأ;
+    fLookAheadHardBreak = خطأ;
+    fUSetNodes          = خالی_سوچک;
+    f_قاعدہ_حالت_Vals     = خالی_سوچک;
+    fScanner            = خالی_سوچک;
+    f_سیٹ_Builder         = خالی_سوچک;
+    إذا (parseErr) {
+        uprv_memset(parseErr, 0, حجم(UParseError));
     }
 
-    if (U_FAILURE(status)) {
-        return;
+    إذا (U_FAILURE(حالت)) {
+        أرجع;
     }
 
-    fUSetNodes          = new UVector(status); // bcos status gets overwritten here
-    fRuleStatusVals     = new UVector(status);
-    fScanner            = new RBBIRuleScanner(this);
-    fSetBuilder         = new RBBISetBuilder(this);
-    if (U_FAILURE(status)) {
-        return;
+    fUSetNodes          = جديد UVector(حالت); // bcos status gets overwritten here
+    f_قاعدہ_حالت_Vals     = جديد UVector(حالت);
+    fScanner            = جديد RBBIRuleScanner(هذا);
+    f_سیٹ_Builder         = جديد RBBISetBuilder(هذا);
+    إذا (U_FAILURE(حالت)) {
+        أرجع;
     }
-    if (fSetBuilder == nullptr || fScanner == nullptr ||
-        fUSetNodes == nullptr || fRuleStatusVals == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
+    إذا (f_سیٹ_Builder == خالی_سوچک || fScanner == خالی_سوچک ||
+        fUSetNodes == خالی_سوچک || f_قاعدہ_حالت_Vals == خالی_سوچک) {
+        حالت = U_حافظہ_ونڈ_ERROR;
     }
 }
 
@@ -101,24 +101,24 @@ RBBIRuleBuilder::RBBIRuleBuilder(const UnicodeString   &rules,
 //----------------------------------------------------------------------------------------
 RBBIRuleBuilder::~RBBIRuleBuilder() {
 
-    int        i;
-    for (i=0; ; i++) {
+    صحيح        i;
+    لكل (i=0; ; i++) {
         RBBINode* n = static_cast<RBBINode*>(fUSetNodes->elementAt(i));
-        if (n==nullptr) {
-            break;
+        إذا (n==خالی_سوچک) {
+            اكسر;
         }
-        delete n;
+        مٹاؤ n;
     }
 
-    delete fUSetNodes;
-    delete fSetBuilder;
-    delete fForwardTable;
-    delete fForwardTree;
-    delete fReverseTree;
-    delete fSafeFwdTree;
-    delete fSafeRevTree;
-    delete fScanner;
-    delete fRuleStatusVals;
+    مٹاؤ fUSetNodes;
+    مٹاؤ f_سیٹ_Builder;
+    مٹاؤ f_Forward_جدول;
+    مٹاؤ f_Forward_درخت;
+    مٹاؤ f_الٹ_درخت;
+    مٹاؤ f_محفوظ_Fwd_درخت;
+    مٹاؤ f_محفوظ_Rev_درخت;
+    مٹاؤ fScanner;
+    مٹاؤ f_قاعدہ_حالت_Vals;
 }
 
 
@@ -132,104 +132,104 @@ RBBIRuleBuilder::~RBBIRuleBuilder() {
 //                    which is also the format needed by the RBBI runtime engine.
 //
 //----------------------------------------------------------------------------------------
-static int32_t align8(int32_t i) {return (i+7) & 0xfffffff8;}
+ساكن int32_t align8(int32_t i) {أرجع (i+7) & 0xfffffff8;}
 
-RBBIDataHeader *RBBIRuleBuilder::flattenData() {
+RBBIData_سرخی *RBBIRuleBuilder::flatten_انکڑے() {
     int32_t    i;
 
-    if (U_FAILURE(*fStatus)) {
-        return nullptr;
+    إذا (U_FAILURE(*f_حالت)) {
+        أرجع خالی_سوچک;
     }
 
     // Remove whitespace from the rules to make it smaller.
     // The rule parser has already removed comments.
-    fStrippedRules = fScanner->stripRules(fStrippedRules);
+    f_Stripped_قاعدے = fScanner->strip_قاعدے(f_Stripped_قاعدے);
 
     // Calculate the size of each section in the data.
     //   Sizes here are padded up to a multiple of 8 for better memory alignment.
     //   Sections sizes actually stored in the header are for the actual data
     //     without the padding.
     //
-    int32_t headerSize        = align8(sizeof(RBBIDataHeader));
-    int32_t forwardTableSize  = align8(fForwardTable->getTableSize());
-    int32_t reverseTableSize  = align8(fForwardTable->getSafeTableSize());
-    int32_t trieSize          = align8(fSetBuilder->getTrieSize());
-    int32_t statusTableSize   = align8(fRuleStatusVals->size() * sizeof(int32_t));
+    int32_t سرخی_ناپ        = align8(حجم(RBBIData_سرخی));
+    int32_t forward_جدول_ناپ  = align8(f_Forward_جدول->get_جدول_ناپ());
+    int32_t الٹ_جدول_ناپ  = align8(f_Forward_جدول->get_محفوظ_جدول_ناپ());
+    int32_t trie_ناپ          = align8(f_سیٹ_Builder->get_Trie_ناپ());
+    int32_t حالت_جدول_ناپ   = align8(f_قاعدہ_حالت_Vals->size() * حجم(int32_t));
 
-    int32_t rulesLengthInUTF8 = 0;
-    u_strToUTF8WithSub(nullptr, 0, &rulesLengthInUTF8,
-                       fStrippedRules.getBuffer(), fStrippedRules.length(),
-                       0xfffd, nullptr, fStatus);
-    *fStatus = U_ZERO_ERROR;
+    int32_t قاعدے_لمائی_وچ_UTF8 = 0;
+    u_str_منزل_UTF8_With_Sub(خالی_سوچک, 0, &قاعدے_لمائی_وچ_UTF8,
+                       f_Stripped_قاعدے.get_بفر(), f_Stripped_قاعدے.length(),
+                       0xfffd, خالی_سوچک, f_حالت);
+    *f_حالت = U_ZERO_ERROR;
 
-    int32_t rulesSize         = align8((rulesLengthInUTF8+1));
+    int32_t قاعدے_ناپ         = align8((قاعدے_لمائی_وچ_UTF8+1));
 
-    int32_t         totalSize = headerSize
-                                + forwardTableSize
-                                + reverseTableSize
-                                + statusTableSize + trieSize + rulesSize;
+    int32_t         کل_ناپ = سرخی_ناپ
+                                + forward_جدول_ناپ
+                                + الٹ_جدول_ناپ
+                                + حالت_جدول_ناپ + trie_ناپ + قاعدے_ناپ;
 
-#ifdef RBBI_DEBUG
-    if (fDebugEnv && uprv_strstr(fDebugEnv, "size")) {
-        RBBIDebugPrintf("Header Size:        %8d\n", headerSize);
-        RBBIDebugPrintf("Forward Table Size: %8d\n", forwardTableSize);
-        RBBIDebugPrintf("Reverse Table Size: %8d\n", reverseTableSize);
-        RBBIDebugPrintf("Trie Size:          %8d\n", trieSize);
-        RBBIDebugPrintf("Status Table Size:  %8d\n", statusTableSize);
-        RBBIDebugPrintf("Rules Size:         %8d\n", rulesSize);
+#جے_تعریف_شدہ RBBI_DEBUG
+    إذا (fDebugEnv && uprv_strstr(fDebugEnv, "size")) {
+        RBBIDebugPrintf("Header Size:        %8d\n", سرخی_ناپ);
+        RBBIDebugPrintf("Forward Table Size: %8d\n", forward_جدول_ناپ);
+        RBBIDebugPrintf("Reverse Table Size: %8d\n", الٹ_جدول_ناپ);
+        RBBIDebugPrintf("Trie Size:          %8d\n", trie_ناپ);
+        RBBIDebugPrintf("Status Table Size:  %8d\n", حالت_جدول_ناپ);
+        RBBIDebugPrintf("Rules Size:         %8d\n", قاعدے_ناپ);
         RBBIDebugPrintf("-----------------------------\n");
-        RBBIDebugPrintf("Total Size:         %8d\n", totalSize);
+        RBBIDebugPrintf("Total Size:         %8d\n", کل_ناپ);
     }
-#endif
+#جے_انت
 
-    LocalMemory<RBBIDataHeader> data(static_cast<RBBIDataHeader*>(uprv_malloc(totalSize)));
-    if (data.isNull()) {
-        *fStatus = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    Local_حافظہ<RBBIData_سرخی> انکڑے(static_cast<RBBIData_سرخی*>(uprv_malloc(کل_ناپ)));
+    إذا (انکڑے.isNull()) {
+        *f_حالت = U_حافظہ_ونڈ_ERROR;
+        أرجع خالی_سوچک;
     }
-    uprv_memset(data.getAlias(), 0, totalSize);
+    uprv_memset(انکڑے.getAlias(), 0, کل_ناپ);
 
 
-    data->fMagic            = 0xb1a0;
-    data->fFormatVersion[0] = RBBI_DATA_FORMAT_VERSION[0];
-    data->fFormatVersion[1] = RBBI_DATA_FORMAT_VERSION[1];
-    data->fFormatVersion[2] = RBBI_DATA_FORMAT_VERSION[2];
-    data->fFormatVersion[3] = RBBI_DATA_FORMAT_VERSION[3];
-    data->fLength           = totalSize;
-    data->fCatCount         = fSetBuilder->getNumCharCategories();
+    انکڑے->fMagic            = 0xb1a0;
+    انکڑے->f_Format_نسخہ[0] = RBBI_انکڑے_FORMAT_نسخہ[0];
+    انکڑے->f_Format_نسخہ[1] = RBBI_انکڑے_FORMAT_نسخہ[1];
+    انکڑے->f_Format_نسخہ[2] = RBBI_انکڑے_FORMAT_نسخہ[2];
+    انکڑے->f_Format_نسخہ[3] = RBBI_انکڑے_FORMAT_نسخہ[3];
+    انکڑے->f_لمائی           = کل_ناپ;
+    انکڑے->f_Cat_گنتی         = f_سیٹ_Builder->get_عدد_Char_Categories();
 
-    data->fFTable        = headerSize;
-    data->fFTableLen     = forwardTableSize;
+    انکڑے->fFTable        = سرخی_ناپ;
+    انکڑے->fFTableLen     = forward_جدول_ناپ;
 
-    data->fRTable        = data->fFTable  + data->fFTableLen;
-    data->fRTableLen     = reverseTableSize;
+    انکڑے->fRTable        = انکڑے->fFTable  + انکڑے->fFTableLen;
+    انکڑے->fRTableLen     = الٹ_جدول_ناپ;
 
-    data->fTrie          = data->fRTable + data->fRTableLen;
-    data->fTrieLen       = trieSize;
-    data->fStatusTable   = data->fTrie    + data->fTrieLen;
-    data->fStatusTableLen= statusTableSize;
-    data->fRuleSource    = data->fStatusTable + statusTableSize;
-    data->fRuleSourceLen = rulesLengthInUTF8;
+    انکڑے->fTrie          = انکڑے->fRTable + انکڑے->fRTableLen;
+    انکڑے->fTrieLen       = trie_ناپ;
+    انکڑے->f_حالت_جدول   = انکڑے->fTrie    + انکڑے->fTrieLen;
+    انکڑے->f_حالت_جدول_Len= حالت_جدول_ناپ;
+    انکڑے->f_قاعدہ_سروت    = انکڑے->f_حالت_جدول + حالت_جدول_ناپ;
+    انکڑے->f_قاعدہ_سروت_Len = قاعدے_لمائی_وچ_UTF8;
 
-    uprv_memset(data->fReserved, 0, sizeof(data->fReserved));
+    uprv_memset(انکڑے->fReserved, 0, حجم(انکڑے->fReserved));
 
-    fForwardTable->exportTable(reinterpret_cast<uint8_t*>(data.getAlias()) + data->fFTable);
-    fForwardTable->exportSafeTable(reinterpret_cast<uint8_t*>(data.getAlias()) + data->fRTable);
-    fSetBuilder->serializeTrie(reinterpret_cast<uint8_t*>(data.getAlias()) + data->fTrie);
+    f_Forward_جدول->export_جدول(reinterpret_cast<uint8_t*>(انکڑے.getAlias()) + انکڑے->fFTable);
+    f_Forward_جدول->export_محفوظ_جدول(reinterpret_cast<uint8_t*>(انکڑے.getAlias()) + انکڑے->fRTable);
+    f_سیٹ_Builder->serializeTrie(reinterpret_cast<uint8_t*>(انکڑے.getAlias()) + انکڑے->fTrie);
 
-    int32_t* ruleStatusTable = reinterpret_cast<int32_t*>(reinterpret_cast<uint8_t*>(data.getAlias()) + data->fStatusTable);
-    for (i=0; i<fRuleStatusVals->size(); i++) {
-        ruleStatusTable[i] = fRuleStatusVals->elementAti(i);
-    }
-
-    u_strToUTF8WithSub(reinterpret_cast<char*>(data.getAlias()) + data->fRuleSource, rulesSize, &rulesLengthInUTF8,
-                       fStrippedRules.getBuffer(), fStrippedRules.length(),
-                       0xfffd, nullptr, fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return nullptr;
+    int32_t* قاعدہ_حالت_جدول = reinterpret_cast<int32_t*>(reinterpret_cast<uint8_t*>(انکڑے.getAlias()) + انکڑے->f_حالت_جدول);
+    لكل (i=0; i<f_قاعدہ_حالت_Vals->size(); i++) {
+        قاعدہ_حالت_جدول[i] = f_قاعدہ_حالت_Vals->elementAti(i);
     }
 
-    return data.orphan();
+    u_str_منزل_UTF8_With_Sub(reinterpret_cast<حرف*>(انکڑے.getAlias()) + انکڑے->f_قاعدہ_سروت, قاعدے_ناپ, &قاعدے_لمائی_وچ_UTF8,
+                       f_Stripped_قاعدے.get_بفر(), f_Stripped_قاعدے.length(),
+                       0xfffd, خالی_سوچک, f_حالت);
+    إذا (U_FAILURE(*f_حالت)) {
+        أرجع خالی_سوچک;
+    }
+
+    أرجع انکڑے.orphan();
 }
 
 
@@ -240,23 +240,23 @@ RBBIDataHeader *RBBIRuleBuilder::flattenData() {
 //
 //----------------------------------------------------------------------------------------
 BreakIterator *
-RBBIRuleBuilder::createRuleBasedBreakIterator( const UnicodeString    &rules,
+RBBIRuleBuilder::create_قاعدہ_Based_Break_Iterator( ثابت UnicodeString    &قاعدے,
                                     UParseError      *parseError,
-                                    UErrorCode       &status)
+                                    UError_کوڈ       &حالت)
 {
     //
     // Read the input rules, generate a parse tree, symbol table,
     // and list of all Unicode Sets referenced by the rules.
     //
-    RBBIRuleBuilder  builder(rules, parseError, status);
-    if (U_FAILURE(status)) { // status checked here bcos build below doesn't
-        return nullptr;
+    RBBIRuleBuilder  builder(قاعدے, parseError, حالت);
+    إذا (U_FAILURE(حالت)) { // status checked here bcos build below doesn't
+        أرجع خالی_سوچک;
     }
 
-    RBBIDataHeader *data = builder.build(status);
+    RBBIData_سرخی *انکڑے = builder.build(حالت);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    إذا (U_FAILURE(حالت)) {
+        أرجع خالی_سوچک;
     }
 
     //
@@ -264,43 +264,43 @@ RBBIRuleBuilder::createRuleBasedBreakIterator( const UnicodeString    &rules,
     //     (Identical to creation from stored pre-compiled rules)
     //
     // status is checked after init in construction.
-    RuleBasedBreakIterator *This = new RuleBasedBreakIterator(data, status);
-    if (U_FAILURE(status)) {
-        delete This;
-        This = nullptr;
+    قاعدہ_Based_Break_Iterator *This = جديد قاعدہ_Based_Break_Iterator(انکڑے, حالت);
+    إذا (U_FAILURE(حالت)) {
+        مٹاؤ This;
+        This = خالی_سوچک;
     } 
-    else if(This == nullptr) { // test for nullptr
-        status = U_MEMORY_ALLOCATION_ERROR;
+    وإلا إذا(This == خالی_سوچک) { // test for nullptr
+        حالت = U_حافظہ_ونڈ_ERROR;
     }
-    return This;
+    أرجع This;
 }
 
-RBBIDataHeader *RBBIRuleBuilder::build(UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return nullptr;
+RBBIData_سرخی *RBBIRuleBuilder::build(UError_کوڈ &حالت) {
+    إذا (U_FAILURE(حالت)) {
+        أرجع خالی_سوچک;
     }
 
     fScanner->parse();
-    if (U_FAILURE(status)) {
-        return nullptr;
+    إذا (U_FAILURE(حالت)) {
+        أرجع خالی_سوچک;
     }
 
     //
     // UnicodeSet processing.
     //    Munge the Unicode Sets to create an initial set of character categories.
     //
-    fSetBuilder->buildRanges();
+    f_سیٹ_Builder->buildRanges();
 
     //
     //   Generate the DFA state transition table.
     //
-    fForwardTable = new RBBITableBuilder(this, &fForwardTree, status);
-    if (fForwardTable == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    f_Forward_جدول = جديد RBBITableBuilder(هذا, &f_Forward_درخت, حالت);
+    إذا (f_Forward_جدول == خالی_سوچک) {
+        حالت = U_حافظہ_ونڈ_ERROR;
+        أرجع خالی_سوچک;
     }
 
-    fForwardTable->buildForwardTable();
+    f_Forward_جدول->build_Forward_جدول();
 
     // State table and character category optimization.
     // Merge equivalent rows and columns.
@@ -308,56 +308,56 @@ RBBIDataHeader *RBBIRuleBuilder::build(UErrorCode &status) {
     // causing the representation of UnicodeSets in the parse tree to become invalid.
 
     optimizeTables();
-    fForwardTable->buildSafeReverseTable(status);
+    f_Forward_جدول->build_محفوظ_الٹ_جدول(حالت);
 
 
-#ifdef RBBI_DEBUG
-    if (fDebugEnv && uprv_strstr(fDebugEnv, "states")) {
-        fForwardTable->printStates();
-        fForwardTable->printRuleStatusTable();
-        fForwardTable->printReverseTable();
+#جے_تعریف_شدہ RBBI_DEBUG
+    إذا (fDebugEnv && uprv_strstr(fDebugEnv, "states")) {
+        f_Forward_جدول->print_حالتاں();
+        f_Forward_جدول->print_قاعدہ_حالت_جدول();
+        f_Forward_جدول->print_الٹ_جدول();
     }
-#endif
+#جے_انت
 
     //    Generate the mapping tables (TRIE) from input code points to
     //    the character categories.
     //
-    fSetBuilder->buildTrie();
+    f_سیٹ_Builder->buildTrie();
 
     //
     //   Package up the compiled data into a memory image
     //      in the run-time format.
     //
-    RBBIDataHeader *data = flattenData(); // returns nullptr if error
-    if (U_FAILURE(status)) {
-        return nullptr;
+    RBBIData_سرخی *انکڑے = flatten_انکڑے(); // returns nullptr if error
+    إذا (U_FAILURE(حالت)) {
+        أرجع خالی_سوچک;
     }
-    return data;
+    أرجع انکڑے;
 }
 
-void RBBIRuleBuilder::optimizeTables() {
-    bool didSomething;
-    fForwardTable->minimizeLookaheads();
-    do {
-        didSomething = false;
+فراغ RBBIRuleBuilder::optimizeTables() {
+    منطقي didSomething;
+    f_Forward_جدول->minimizeLookaheads();
+    افعل {
+        didSomething = خطأ;
 
         // Begin looking for duplicates with char class 3.
         // Class 0 is unused and should not have other categories merged into
         // it. We allow merging categories *into* class 1 {eof} (but not the
         // reverse, so that eof remains in class 1).
         IntPair duplPair = {1, 0};
-        while (fForwardTable->findDuplCharClassFrom(&duplPair)) {
-            fSetBuilder->mergeCategories(duplPair);
-            fForwardTable->removeColumn(duplPair.second);
-            didSomething = true;
+        طالما (f_Forward_جدول->لبھو_Dupl_Char_Class_From(&duplPair)) {
+            f_سیٹ_Builder->ملاؤ_Categories(duplPair);
+            f_Forward_جدول->remove_کالم(duplPair.دوجا);
+            didSomething = سچ;
         }
 
-        while (fForwardTable->removeDuplicateStates() > 0) {
-            didSomething = true;
+        طالما (f_Forward_جدول->remove_Duplicate_حالتاں() > 0) {
+            didSomething = سچ;
         }
-    } while (didSomething);
+    } طالما (didSomething);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_سرا
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#جے_انت /* #if !UCONFIG_NO_BREAK_ITERATION */

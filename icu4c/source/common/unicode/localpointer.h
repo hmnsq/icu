@@ -16,8 +16,8 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __LOCALPOINTER_H__
-#define __LOCALPOINTER_H__
+#جے_بنا_تعریف __LOCALPOINTER_H__
+#تعریف_کرو __LOCALPOINTER_H__
 
 /**
  * \file
@@ -38,11 +38,11 @@
  * For details see https://icu.unicode.org/design/cpp/scoped_ptr
  */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#include <memory>
+#ضمن <memory>
 
 U_NAMESPACE_BEGIN
 
@@ -64,38 +64,38 @@ U_NAMESPACE_BEGIN
  * @see U_DEFINE_LOCAL_OPEN_POINTER
  * @stable ICU 4.4
  */
-template<typename T>
-class LocalPointerBase {
-public:
+سانچا<typename T>
+class Local_اشارہ_گر_ادھار {
+عام:
     // No heap allocation. Use only on the stack.
-    static void* U_EXPORT2 operator new(size_t) = delete;
-    static void* U_EXPORT2 operator new[](size_t) = delete;
-    static void* U_EXPORT2 operator new(size_t, void*) = delete;
+    ساكن فراغ* U_EXPORT2 عامل new(size_t) = delete;
+    ساكن فراغ* U_EXPORT2 عامل new[](size_t) = delete;
+    ساكن فراغ* U_EXPORT2 عامل new(size_t, فراغ*) = delete;
 
     /**
      * Constructor takes ownership.
      * @param p simple pointer to an object that is adopted
      * @stable ICU 4.4
      */
-    explicit LocalPointerBase(T *p=nullptr) : ptr(p) {}
+    explicit Local_اشارہ_گر_ادھار(T *p=nullptr) : ptr(p) {}
     /**
      * Destructor deletes the object it owns.
      * Subclass must override: Base class does nothing.
      * @stable ICU 4.4
      */
-    ~LocalPointerBase() { /* delete ptr; */ }
+    ~Local_اشارہ_گر_ادھار() { /* delete ptr; */ }
     /**
      * nullptr check.
      * @return true if ==nullptr
      * @stable ICU 4.4
      */
-    UBool isNull() const { return ptr==nullptr; }
+    UBool isNull() ثابت { أرجع ptr==nullptr; }
     /**
      * nullptr check.
      * @return true if !=nullptr
      * @stable ICU 4.4
      */
-    UBool isValid() const { return ptr!=nullptr; }
+    UBool isValid() ثابت { أرجع ptr!=nullptr; }
     /**
      * Comparison with a simple pointer, so that existing code
      * with ==nullptr need not be changed.
@@ -103,7 +103,7 @@ public:
      * @return true if this pointer value equals other
      * @stable ICU 4.4
      */
-    bool operator==(const T *other) const { return ptr==other; }
+    bool عامل==(ثابت T *other) ثابت { أرجع ptr==other; }
     /**
      * Comparison with a simple pointer, so that existing code
      * with !=nullptr need not be changed.
@@ -111,25 +111,25 @@ public:
      * @return true if this pointer value differs from other
      * @stable ICU 4.4
      */
-    bool operator!=(const T *other) const { return ptr!=other; }
+    bool عامل!=(ثابت T *other) ثابت { أرجع ptr!=other; }
     /**
      * Access without ownership change.
      * @return the pointer value
      * @stable ICU 4.4
      */
-    T* getAlias() const U_LIFETIME_BOUND { return ptr; }
+    T* getAlias() ثابت U_LIFETIME_BOUND { أرجع ptr; }
     /**
      * Access without ownership change.
      * @return the pointer value as a reference
      * @stable ICU 4.4
      */
-    T& operator*() const U_LIFETIME_BOUND { return *ptr; }
+    T& عامل*() ثابت U_LIFETIME_BOUND { أرجع *ptr; }
     /**
      * Access without ownership change.
      * @return the pointer value
      * @stable ICU 4.4
      */
-    T* operator->() const U_LIFETIME_BOUND { return ptr; }
+    T* عامل->() ثابت U_LIFETIME_BOUND { أرجع ptr; }
     /**
      * Gives up ownership; the internal pointer becomes nullptr.
      * @return the pointer value;
@@ -139,7 +139,7 @@ public:
     T *orphan() {
         T *p=ptr;
         ptr=nullptr;
-        return p;
+        أرجع p;
     }
     /**
      * Deletes the object it owns,
@@ -148,23 +148,23 @@ public:
      * @param p simple pointer to an object that is adopted
      * @stable ICU 4.4
      */
-    void adoptInstead(T *p) {
+    فراغ adoptInstead(T *p) {
         // delete ptr;
         ptr=p;
     }
-protected:
+محمي:
     /**
      * Actual pointer.
      * @internal
      */
     T *ptr;
-private:
+خاص:
     // No comparison operators with other LocalPointerBases.
-    bool operator==(const LocalPointerBase<T> &other) = delete;
-    bool operator!=(const LocalPointerBase<T> &other) = delete;
+    bool عامل==(ثابت Local_اشارہ_گر_ادھار<T> &other) = delete;
+    bool عامل!=(ثابت Local_اشارہ_گر_ادھار<T> &other) = delete;
     // No ownership sharing: No copy constructor, no assignment operator.
-    LocalPointerBase(const LocalPointerBase<T> &other) = delete;
-    void operator=(const LocalPointerBase<T> &other) = delete;
+    Local_اشارہ_گر_ادھار(ثابت Local_اشارہ_گر_ادھار<T> &other) = delete;
+    فراغ عامل=(ثابت Local_اشارہ_گر_ادھار<T> &other) = delete;
 };
 
 /**
@@ -185,17 +185,17 @@ private:
  * @see LocalPointerBase
  * @stable ICU 4.4
  */
-template<typename T>
-class LocalPointer : public LocalPointerBase<T> {
-public:
-    using LocalPointerBase<T>::operator*;
-    using LocalPointerBase<T>::operator->;
+سانچا<typename T>
+class Local_اشارہ_گر : عام Local_اشارہ_گر_ادھار<T> {
+عام:
+    using Local_اشارہ_گر_ادھار<T>::عامل*;
+    using Local_اشارہ_گر_ادھار<T>::عامل->;
     /**
      * Constructor takes ownership.
      * @param p simple pointer to an object that is adopted
      * @stable ICU 4.4
      */
-    explicit LocalPointer(T *p=nullptr) : LocalPointerBase<T>(p) {}
+    explicit Local_اشارہ_گر(T *p=nullptr) : Local_اشارہ_گر_ادھار<T>(p) {}
     /**
      * Constructor takes ownership and reports an error if nullptr.
      *
@@ -209,9 +209,9 @@ public:
      *     if p==nullptr and no other failure code had been set
      * @stable ICU 55
      */
-    LocalPointer(T *p, UErrorCode &errorCode) : LocalPointerBase<T>(p) {
-        if(p==nullptr && U_SUCCESS(errorCode)) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
+    Local_اشارہ_گر(T *p, UError_کوڈ &error_کوڈ) : Local_اشارہ_گر_ادھار<T>(p) {
+        إذا(p==nullptr && U_SUCCESS(error_کوڈ)) {
+            error_کوڈ=U_حافظہ_ونڈ_ERROR;
         }
     }
     /**
@@ -219,7 +219,7 @@ public:
      * @param src source smart pointer
      * @stable ICU 56
      */
-    LocalPointer(LocalPointer<T> &&src) noexcept : LocalPointerBase<T>(src.ptr) {
+    Local_اشارہ_گر(Local_اشارہ_گر<T> &&src) noexcept : Local_اشارہ_گر_ادھار<T>(src.ptr) {
         src.ptr=nullptr;
     }
 
@@ -233,15 +233,15 @@ public:
      * @param p The std::unique_ptr from which the pointer will be stolen.
      * @stable ICU 64
      */
-    explicit LocalPointer(std::unique_ptr<T> &&p)
-        : LocalPointerBase<T>(p.release()) {}
+    explicit Local_اشارہ_گر(std::unique_ptr<T> &&p)
+        : Local_اشارہ_گر_ادھار<T>(p.release()) {}
 
     /**
      * Destructor deletes the object it owns.
      * @stable ICU 4.4
      */
-    ~LocalPointer() {
-        delete LocalPointerBase<T>::ptr;
+    ~Local_اشارہ_گر() {
+        delete Local_اشارہ_گر_ادھار<T>::ptr;
     }
     /**
      * Move assignment operator, leaves src with isNull().
@@ -250,11 +250,11 @@ public:
      * @return *this
      * @stable ICU 56
      */
-    LocalPointer<T>& operator=(LocalPointer<T>&& src) noexcept U_LIFETIME_BOUND {
-        delete LocalPointerBase<T>::ptr;
-        LocalPointerBase<T>::ptr=src.ptr;
+    Local_اشارہ_گر<T>& عامل=(Local_اشارہ_گر<T>&& src) noexcept U_LIFETIME_BOUND {
+        delete Local_اشارہ_گر_ادھار<T>::ptr;
+        Local_اشارہ_گر_ادھار<T>::ptr=src.ptr;
         src.ptr=nullptr;
-        return *this;
+        أرجع *this;
     }
 
     /**
@@ -265,9 +265,9 @@ public:
      * @return *this
      * @stable ICU 64
      */
-    LocalPointer<T>& operator=(std::unique_ptr<T>&& p) noexcept U_LIFETIME_BOUND {
+    Local_اشارہ_گر<T>& عامل=(std::unique_ptr<T>&& p) noexcept U_LIFETIME_BOUND {
         adoptInstead(p.release());
-        return *this;
+        أرجع *this;
     }
 
     /**
@@ -275,10 +275,10 @@ public:
      * @param other other smart pointer
      * @stable ICU 56
      */
-    void swap(LocalPointer<T> &other) noexcept {
-        T *temp=LocalPointerBase<T>::ptr;
-        LocalPointerBase<T>::ptr=other.ptr;
-        other.ptr=temp;
+    فراغ وٹاندرا(Local_اشارہ_گر<T> &other) noexcept {
+        T *عارضی=Local_اشارہ_گر_ادھار<T>::ptr;
+        Local_اشارہ_گر_ادھار<T>::ptr=other.ptr;
+        other.ptr=عارضی;
     }
     /**
      * Non-member LocalPointer swap function.
@@ -286,8 +286,8 @@ public:
      * @param p2 will get p1's pointer
      * @stable ICU 56
      */
-    friend inline void swap(LocalPointer<T> &p1, LocalPointer<T> &p2) noexcept {
-        p1.swap(p2);
+    یار مضمن فراغ وٹاندرا(Local_اشارہ_گر<T> &p1, Local_اشارہ_گر<T> &p2) noexcept {
+        p1.وٹاندرا(p2);
     }
     /**
      * Deletes the object it owns,
@@ -295,9 +295,9 @@ public:
      * @param p simple pointer to an object that is adopted
      * @stable ICU 4.4
      */
-    void adoptInstead(T *p) {
-        delete LocalPointerBase<T>::ptr;
-        LocalPointerBase<T>::ptr=p;
+    فراغ adoptInstead(T *p) {
+        delete Local_اشارہ_گر_ادھار<T>::ptr;
+        Local_اشارہ_گر_ادھار<T>::ptr=p;
     }
     /**
      * Deletes the object it owns,
@@ -314,14 +314,14 @@ public:
      *     if p==nullptr and no other failure code had been set
      * @stable ICU 55
      */
-    void adoptInsteadAndCheckErrorCode(T *p, UErrorCode &errorCode) {
-        if(U_SUCCESS(errorCode)) {
-            delete LocalPointerBase<T>::ptr;
-            LocalPointerBase<T>::ptr=p;
-            if(p==nullptr) {
-                errorCode=U_MEMORY_ALLOCATION_ERROR;
+    فراغ adopt_Instead_And_Check_Error_کوڈ(T *p, UError_کوڈ &error_کوڈ) {
+        إذا(U_SUCCESS(error_کوڈ)) {
+            delete Local_اشارہ_گر_ادھار<T>::ptr;
+            Local_اشارہ_گر_ادھار<T>::ptr=p;
+            إذا(p==nullptr) {
+                error_کوڈ=U_حافظہ_ونڈ_ERROR;
             }
-        } else {
+        } وإلا {
             delete p;
         }
     }
@@ -337,8 +337,8 @@ public:
      *         icu::LocalPointer.
      * @stable ICU 64
      */
-    operator std::unique_ptr<T> () && {
-        return std::unique_ptr<T>(LocalPointerBase<T>::orphan());
+    عامل std::unique_ptr<T> () && {
+        أرجع std::unique_ptr<T>(Local_اشارہ_گر_ادھار<T>::orphan());
     }
 };
 
@@ -360,17 +360,17 @@ public:
  * @see LocalPointerBase
  * @stable ICU 4.4
  */
-template<typename T>
-class LocalArray : public LocalPointerBase<T> {
-public:
-    using LocalPointerBase<T>::operator*;
-    using LocalPointerBase<T>::operator->;
+سانچا<typename T>
+class LocalArray : عام Local_اشارہ_گر_ادھار<T> {
+عام:
+    using Local_اشارہ_گر_ادھار<T>::عامل*;
+    using Local_اشارہ_گر_ادھار<T>::عامل->;
     /**
      * Constructor takes ownership.
      * @param p simple pointer to an array of T objects that is adopted
      * @stable ICU 4.4
      */
-    explicit LocalArray(T *p=nullptr) : LocalPointerBase<T>(p) {}
+    explicit LocalArray(T *p=nullptr) : Local_اشارہ_گر_ادھار<T>(p) {}
     /**
      * Constructor takes ownership and reports an error if nullptr.
      *
@@ -384,9 +384,9 @@ public:
      *     if p==nullptr and no other failure code had been set
      * @stable ICU 56
      */
-    LocalArray(T *p, UErrorCode &errorCode) : LocalPointerBase<T>(p) {
-        if(p==nullptr && U_SUCCESS(errorCode)) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
+    LocalArray(T *p, UError_کوڈ &error_کوڈ) : Local_اشارہ_گر_ادھار<T>(p) {
+        إذا(p==nullptr && U_SUCCESS(error_کوڈ)) {
+            error_کوڈ=U_حافظہ_ونڈ_ERROR;
         }
     }
     /**
@@ -394,7 +394,7 @@ public:
      * @param src source smart pointer
      * @stable ICU 56
      */
-    LocalArray(LocalArray<T> &&src) noexcept : LocalPointerBase<T>(src.ptr) {
+    LocalArray(LocalArray<T> &&src) noexcept : Local_اشارہ_گر_ادھار<T>(src.ptr) {
         src.ptr=nullptr;
     }
 
@@ -409,14 +409,14 @@ public:
      * @stable ICU 64
      */
     explicit LocalArray(std::unique_ptr<T[]> &&p)
-        : LocalPointerBase<T>(p.release()) {}
+        : Local_اشارہ_گر_ادھار<T>(p.release()) {}
 
     /**
      * Destructor deletes the array it owns.
      * @stable ICU 4.4
      */
     ~LocalArray() {
-        delete[] LocalPointerBase<T>::ptr;
+        delete[] Local_اشارہ_گر_ادھار<T>::ptr;
     }
     /**
      * Move assignment operator, leaves src with isNull().
@@ -425,11 +425,11 @@ public:
      * @return *this
      * @stable ICU 56
      */
-    LocalArray<T>& operator=(LocalArray<T>&& src) noexcept U_LIFETIME_BOUND {
-        delete[] LocalPointerBase<T>::ptr;
-        LocalPointerBase<T>::ptr=src.ptr;
+    LocalArray<T>& عامل=(LocalArray<T>&& src) noexcept U_LIFETIME_BOUND {
+        delete[] Local_اشارہ_گر_ادھار<T>::ptr;
+        Local_اشارہ_گر_ادھار<T>::ptr=src.ptr;
         src.ptr=nullptr;
-        return *this;
+        أرجع *this;
     }
 
     /**
@@ -440,9 +440,9 @@ public:
      * @return *this
      * @stable ICU 64
      */
-    LocalArray<T>& operator=(std::unique_ptr<T[]>&& p) noexcept U_LIFETIME_BOUND {
+    LocalArray<T>& عامل=(std::unique_ptr<T[]>&& p) noexcept U_LIFETIME_BOUND {
         adoptInstead(p.release());
-        return *this;
+        أرجع *this;
     }
 
     /**
@@ -450,10 +450,10 @@ public:
      * @param other other smart pointer
      * @stable ICU 56
      */
-    void swap(LocalArray<T> &other) noexcept {
-        T *temp=LocalPointerBase<T>::ptr;
-        LocalPointerBase<T>::ptr=other.ptr;
-        other.ptr=temp;
+    فراغ وٹاندرا(LocalArray<T> &other) noexcept {
+        T *عارضی=Local_اشارہ_گر_ادھار<T>::ptr;
+        Local_اشارہ_گر_ادھار<T>::ptr=other.ptr;
+        other.ptr=عارضی;
     }
     /**
      * Non-member LocalArray swap function.
@@ -461,8 +461,8 @@ public:
      * @param p2 will get p1's pointer
      * @stable ICU 56
      */
-    friend inline void swap(LocalArray<T> &p1, LocalArray<T> &p2) noexcept {
-        p1.swap(p2);
+    یار مضمن فراغ وٹاندرا(LocalArray<T> &p1, LocalArray<T> &p2) noexcept {
+        p1.وٹاندرا(p2);
     }
     /**
      * Deletes the array it owns,
@@ -470,9 +470,9 @@ public:
      * @param p simple pointer to an array of T objects that is adopted
      * @stable ICU 4.4
      */
-    void adoptInstead(T *p) {
-        delete[] LocalPointerBase<T>::ptr;
-        LocalPointerBase<T>::ptr=p;
+    فراغ adoptInstead(T *p) {
+        delete[] Local_اشارہ_گر_ادھار<T>::ptr;
+        Local_اشارہ_گر_ادھار<T>::ptr=p;
     }
     /**
      * Deletes the array it owns,
@@ -489,14 +489,14 @@ public:
      *     if p==nullptr and no other failure code had been set
      * @stable ICU 56
      */
-    void adoptInsteadAndCheckErrorCode(T *p, UErrorCode &errorCode) {
-        if(U_SUCCESS(errorCode)) {
-            delete[] LocalPointerBase<T>::ptr;
-            LocalPointerBase<T>::ptr=p;
-            if(p==nullptr) {
-                errorCode=U_MEMORY_ALLOCATION_ERROR;
+    فراغ adopt_Instead_And_Check_Error_کوڈ(T *p, UError_کوڈ &error_کوڈ) {
+        إذا(U_SUCCESS(error_کوڈ)) {
+            delete[] Local_اشارہ_گر_ادھار<T>::ptr;
+            Local_اشارہ_گر_ادھار<T>::ptr=p;
+            إذا(p==nullptr) {
+                error_کوڈ=U_حافظہ_ونڈ_ERROR;
             }
-        } else {
+        } وإلا {
             delete[] p;
         }
     }
@@ -507,7 +507,7 @@ public:
      * @return reference to the array item
      * @stable ICU 4.4
      */
-    T& operator[](ptrdiff_t i) const U_LIFETIME_BOUND { return LocalPointerBase<T>::ptr[i]; }
+    T& عامل[](ptrdiff_t i) ثابت U_LIFETIME_BOUND { أرجع Local_اشارہ_گر_ادھار<T>::ptr[i]; }
 
     /**
      * Conversion operator to a C++11 std::unique_ptr.
@@ -520,8 +520,8 @@ public:
      *         icu::LocalPointer.
      * @stable ICU 64
      */
-    operator std::unique_ptr<T[]> () && {
-        return std::unique_ptr<T[]>(LocalPointerBase<T>::orphan());
+    عامل std::unique_ptr<T[]> () && {
+        أرجع std::unique_ptr<T[]>(Local_اشارہ_گر_ادھار<T>::orphan());
     }
 };
 
@@ -545,64 +545,64 @@ public:
  * @see LocalPointer
  * @stable ICU 4.4
  */
-#define U_DEFINE_LOCAL_OPEN_POINTER(LocalPointerClassName, Type, closeFunction) \
-    using LocalPointerClassName = internal::LocalOpenPointer<Type, closeFunction>
+#تعریف_کرو U_DEFINE_LOCAL_OPEN_اشارہ_گر(Local_اشارہ_گر_Class_Name, Type, closeFunction) \
+    using Local_اشارہ_گر_Class_Name = اندرونی_2::Local_Open_اشارہ_گر<Type, closeFunction>
 
-#ifndef U_IN_DOXYGEN
-namespace internal {
+#جے_بنا_تعریف U_وچ_DOXYGEN
+namespace اندرونی_2 {
 /**
  * Implementation, do not use directly: use U_DEFINE_LOCAL_OPEN_POINTER.
  *
  * @see U_DEFINE_LOCAL_OPEN_POINTER
  * @internal
  */
-template <typename Type, auto closeFunction>
-class LocalOpenPointer : public LocalPointerBase<Type> {
-    using LocalPointerBase<Type>::ptr;
-public:
-    using LocalPointerBase<Type>::operator*;
-    using LocalPointerBase<Type>::operator->;
-    explicit LocalOpenPointer(Type *p=nullptr) : LocalPointerBase<Type>(p) {}
-    LocalOpenPointer(LocalOpenPointer &&src) noexcept
-            : LocalPointerBase<Type>(src.ptr) {
+سانچا <typename Type, خودکار closeFunction>
+class Local_Open_اشارہ_گر : عام Local_اشارہ_گر_ادھار<Type> {
+    using Local_اشارہ_گر_ادھار<Type>::ptr;
+عام:
+    using Local_اشارہ_گر_ادھار<Type>::عامل*;
+    using Local_اشارہ_گر_ادھار<Type>::عامل->;
+    explicit Local_Open_اشارہ_گر(Type *p=nullptr) : Local_اشارہ_گر_ادھار<Type>(p) {}
+    Local_Open_اشارہ_گر(Local_Open_اشارہ_گر &&src) noexcept
+            : Local_اشارہ_گر_ادھار<Type>(src.ptr) {
         src.ptr=nullptr;
     }
     /* TODO: Be agnostic of the deleter function signature from the user-provided std::unique_ptr? */
-    explicit LocalOpenPointer(std::unique_ptr<Type, decltype(closeFunction)> &&p)
-            : LocalPointerBase<Type>(p.release()) {}
-    ~LocalOpenPointer() { if (ptr != nullptr) { closeFunction(ptr); } }
-    LocalOpenPointer& operator=(LocalOpenPointer&& src) noexcept U_LIFETIME_BOUND {
-        if (ptr != nullptr) { closeFunction(ptr); }
-        LocalPointerBase<Type>::ptr=src.ptr;
+    explicit Local_Open_اشارہ_گر(std::unique_ptr<Type, decltype(closeFunction)> &&p)
+            : Local_اشارہ_گر_ادھار<Type>(p.release()) {}
+    ~Local_Open_اشارہ_گر() { إذا (ptr != nullptr) { closeFunction(ptr); } }
+    Local_Open_اشارہ_گر& عامل=(Local_Open_اشارہ_گر&& src) noexcept U_LIFETIME_BOUND {
+        إذا (ptr != nullptr) { closeFunction(ptr); }
+        Local_اشارہ_گر_ادھار<Type>::ptr=src.ptr;
         src.ptr=nullptr;
-        return *this;
+        أرجع *this;
     }
     /* TODO: Be agnostic of the deleter function signature from the user-provided std::unique_ptr? */
-    LocalOpenPointer&
-    operator=(std::unique_ptr<Type, decltype(closeFunction)>&& p) U_LIFETIME_BOUND {
+    Local_Open_اشارہ_گر&
+    عامل=(std::unique_ptr<Type, decltype(closeFunction)>&& p) U_LIFETIME_BOUND {
         adoptInstead(p.release());
-        return *this;
+        أرجع *this;
     }
-    void swap(LocalOpenPointer &other) noexcept {
-        Type *temp=LocalPointerBase<Type>::ptr;
-        LocalPointerBase<Type>::ptr=other.ptr;
-        other.ptr=temp;
+    فراغ وٹاندرا(Local_Open_اشارہ_گر &other) noexcept {
+        Type *عارضی=Local_اشارہ_گر_ادھار<Type>::ptr;
+        Local_اشارہ_گر_ادھار<Type>::ptr=other.ptr;
+        other.ptr=عارضی;
     }
-    friend inline void swap(LocalOpenPointer &p1, LocalOpenPointer &p2) noexcept {
-        p1.swap(p2);
+    یار مضمن فراغ وٹاندرا(Local_Open_اشارہ_گر &p1, Local_Open_اشارہ_گر &p2) noexcept {
+        p1.وٹاندرا(p2);
     }
-    void adoptInstead(Type *p) {
-        if (ptr != nullptr) { closeFunction(ptr); }
+    فراغ adoptInstead(Type *p) {
+        إذا (ptr != nullptr) { closeFunction(ptr); }
         ptr=p;
     }
-    operator std::unique_ptr<Type, decltype(closeFunction)> () && {
-        return std::unique_ptr<Type, decltype(closeFunction)>(LocalPointerBase<Type>::orphan(), closeFunction);
+    عامل std::unique_ptr<Type, decltype(closeFunction)> () && {
+        أرجع std::unique_ptr<Type, decltype(closeFunction)>(Local_اشارہ_گر_ادھار<Type>::orphan(), closeFunction);
     }
 };
 }  // namespace internal
-#endif
+#جے_انت
 
-U_NAMESPACE_END
+U_NAMESPACE_سرا
 
-#endif  /* U_SHOW_CPLUSPLUS_API */
-#endif  /* __LOCALPOINTER_H__ */
+#جے_انت  /* U_SHOW_CPLUSPLUS_API */
+#جے_انت  /* __LOCALPOINTER_H__ */

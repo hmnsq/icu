@@ -10,10 +10,10 @@
 *   06/27/00    aliu        Change from C++ class to C struct
 **********************************************************************
 */
-#ifndef PARSEERR_H
-#define PARSEERR_H
+#جے_بنا_تعریف PARSEERR_H
+#تعریف_کرو PARSEERR_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
 
 /**
@@ -24,7 +24,7 @@
  * The capacity of the context strings in UParseError.
  * @stable ICU 2.0
  */ 
-enum { U_PARSE_CONTEXT_LEN = 16 };
+تعداد { U_PARSE_CONTEXT_LEN = 16 };
 
 /**
  * A UParseError struct is used to returned detailed information about
@@ -55,7 +55,7 @@ enum { U_PARSE_CONTEXT_LEN = 16 };
  * 
  * @stable ICU 2.0
  */
-typedef struct UParseError {
+تعريفنوع بنية UParseError {
 
     /**
      * The line on which the error occurred.  If the parser uses this
@@ -64,7 +64,7 @@ typedef struct UParseError {
      * parse does not support line numbers, the value will be <= 0.
      * @stable ICU 2.0
      */
-    int32_t        line;
+    int32_t        سطر;
 
     /**
      * The character offset to the error.  If the line field is >= 1,
@@ -73,7 +73,7 @@ typedef struct UParseError {
      * does not support this field, it will have a value < 0.
      * @stable ICU 2.0
      */
-    int32_t        offset;
+    int32_t        وتھ;
 
     /**
      * Textual context before the error.  Null-terminated.  The empty
@@ -91,4 +91,4 @@ typedef struct UParseError {
 
 } UParseError;
 
-#endif
+#جے_انت

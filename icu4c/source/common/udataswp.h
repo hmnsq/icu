@@ -20,18 +20,18 @@
 *   charset families (ASCII<->EBCDIC).
 */
 
-#ifndef __UDATASWP_H__
-#define __UDATASWP_H__
+#جے_بنا_تعریف __UDATASWP_H__
+#تعریف_کرو __UDATASWP_H__
 
-#include <stdarg.h>
-#include "unicode/utypes.h"
+#ضمن <stdarg.h>
+#ضمن "unicode/utypes.h"
 
 /* forward declaration */
 
 U_CDECL_BEGIN
 
-struct UDataSwapper;
-typedef struct UDataSwapper UDataSwapper;
+بنية UDataSwapper;
+تعريفنوع بنية UDataSwapper UDataSwapper;
 
 /**
  * Function type for data transformation.
@@ -86,37 +86,37 @@ typedef struct UDataSwapper UDataSwapper;
  * @see UDataSwapper
  * @internal ICU 2.8
  */
-typedef int32_t U_CALLCONV
-UDataSwapFn(const UDataSwapper *ds,
-            const void *inData, int32_t length, void *outData,
-            UErrorCode *pErrorCode);
+تعريفنوع int32_t U_CALLCONV
+UData_وٹاندرا_Fn(ثابت UDataSwapper *ds,
+            ثابت فراغ *وچ_انکڑے, int32_t لمائی, فراغ *باہرلا_انکڑے,
+            UError_کوڈ *p_Error_کوڈ);
 
 /**
  * Convert one uint16_t from input to platform endianness.
  * @internal ICU 2.8
  */
-typedef uint16_t U_CALLCONV
+تعريفنوع uint16_t U_CALLCONV
 UDataReadUInt16(uint16_t x);
 
 /**
  * Convert one uint32_t from input to platform endianness.
  * @internal ICU 2.8
  */
-typedef uint32_t U_CALLCONV
+تعريفنوع uint32_t U_CALLCONV
 UDataReadUInt32(uint32_t x);
 
 /**
  * Convert one uint16_t from platform to input endianness.
  * @internal ICU 2.8
  */
-typedef void U_CALLCONV
+تعريفنوع فراغ U_CALLCONV
 UDataWriteUInt16(uint16_t *p, uint16_t x);
 
 /**
  * Convert one uint32_t from platform to input endianness.
  * @internal ICU 2.8
  */
-typedef void U_CALLCONV
+تعريفنوع فراغ U_CALLCONV
 UDataWriteUInt32(uint32_t *p, uint32_t x);
 
 /**
@@ -129,10 +129,10 @@ UDataWriteUInt32(uint32_t *p, uint32_t x);
  * Returns Unicode code point order for invariant characters.
  * @internal ICU 2.8
  */
-typedef int32_t U_CALLCONV
-UDataCompareInvChars(const UDataSwapper *ds,
-                     const char *outString, int32_t outLength,
-                     const UChar *localString, int32_t localLength);
+تعريفنوع int32_t U_CALLCONV
+UDataCompareInvChars(ثابت UDataSwapper *ds,
+                     ثابت حرف *باہرلا_String, int32_t باہرلا_لمائی,
+                     ثابت UChar *localString, int32_t local_لمائی);
 
 /**
  * Function for message output when an error occurs during data swapping.
@@ -145,18 +145,18 @@ UDataCompareInvChars(const UDataSwapper *ds,
  *
  * @internal ICU 2.8
  */
-typedef void U_CALLCONV
-UDataPrintError(void *context, const char *fmt, va_list args);
+تعريفنوع فراغ U_CALLCONV
+UDataPrintError(فراغ *context, ثابت حرف *fmt, va_list دلیلاں_2);
 
-struct UDataSwapper {
+بنية UDataSwapper {
     /** Input endianness. @internal ICU 2.8 */
-    UBool inIsBigEndian;
+    UBool وچ_Is_Big_Endian;
     /** Input charset family. @see U_CHARSET_FAMILY @internal ICU 2.8 */
-    uint8_t inCharset;
+    uint8_t وچ_Charset;
     /** Output endianness. @internal ICU 2.8 */
-    UBool outIsBigEndian;
+    UBool باہرلا_Is_Big_Endian;
     /** Output charset family. @see U_CHARSET_FAMILY @internal ICU 2.8 */
-    uint8_t outCharset;
+    uint8_t باہرلا_Charset;
 
     /* basic functions for reading data values */
 
@@ -177,13 +177,13 @@ struct UDataSwapper {
     /* basic functions for data transformations */
 
     /** Transform an array of 16-bit integers. @internal ICU 2.8 */
-    UDataSwapFn *swapArray16;
+    UData_وٹاندرا_Fn *وٹاندرا_Array16;
     /** Transform an array of 32-bit integers. @internal ICU 2.8 */
-    UDataSwapFn *swapArray32;
+    UData_وٹاندرا_Fn *وٹاندرا_Array32;
     /** Transform an array of 64-bit integers. @internal ICU 53 */
-    UDataSwapFn *swapArray64;
+    UData_وٹاندرا_Fn *وٹاندرا_Array64;
     /** Transform an invariant-character string. @internal ICU 2.8 */
-    UDataSwapFn *swapInvChars;
+    UData_وٹاندرا_Fn *وٹاندرا_Inv_Chars;
 
     /**
      * Function for message output when an error occurs during data swapping.
@@ -192,15 +192,15 @@ struct UDataSwapper {
      */
     UDataPrintError *printError;
     /** Context pointer for printError. @internal ICU 2.8 */
-    void *printErrorContext;
+    فراغ *printErrorContext;
 };
 
-U_CDECL_END
+U_CDECL_سرا
 
 U_CAPI UDataSwapper * U_EXPORT2
-udata_openSwapper(UBool inIsBigEndian, uint8_t inCharset,
-                  UBool outIsBigEndian, uint8_t outCharset,
-                  UErrorCode *pErrorCode);
+udata_openSwapper(UBool وچ_Is_Big_Endian, uint8_t وچ_Charset,
+                  UBool باہرلا_Is_Big_Endian, uint8_t باہرلا_Charset,
+                  UError_کوڈ *p_Error_کوڈ);
 
 /**
  * Open a UDataSwapper for the given input data and the specified output
@@ -212,11 +212,11 @@ udata_openSwapper(UBool inIsBigEndian, uint8_t inCharset,
  * @internal ICU 2.8
  */
 U_CAPI UDataSwapper * U_EXPORT2
-udata_openSwapperForInputData(const void *data, int32_t length,
-                              UBool outIsBigEndian, uint8_t outCharset,
-                              UErrorCode *pErrorCode);
+udata_open_Swapper_For_داخلہ_انکڑے(ثابت فراغ *انکڑے, int32_t لمائی,
+                              UBool باہرلا_Is_Big_Endian, uint8_t باہرلا_Charset,
+                              UError_کوڈ *p_Error_کوڈ);
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 udata_closeSwapper(UDataSwapper *ds);
 
 /**
@@ -229,23 +229,23 @@ udata_closeSwapper(UDataSwapper *ds);
  * @internal ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-udata_swapDataHeader(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
-                     UErrorCode *pErrorCode);
+udata_وٹاندرا_انکڑے_سرخی(ثابت UDataSwapper *ds,
+                     ثابت فراغ *وچ_انکڑے, int32_t لمائی, فراغ *باہرلا_انکڑے,
+                     UError_کوڈ *p_Error_کوڈ);
 
 /**
  * Convert one int16_t from input to platform endianness.
  * @internal ICU 2.8
  */
 U_CAPI int16_t U_EXPORT2
-udata_readInt16(const UDataSwapper *ds, int16_t x);
+udata_readInt16(ثابت UDataSwapper *ds, int16_t x);
 
 /**
  * Convert one int32_t from input to platform endianness.
  * @internal ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-udata_readInt32(const UDataSwapper *ds, int32_t x);
+udata_readInt32(ثابت UDataSwapper *ds, int32_t x);
 
 /**
  * Swap a block of invariant, NUL-terminated strings, but not padding
@@ -253,13 +253,13 @@ udata_readInt32(const UDataSwapper *ds, int32_t x);
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-udata_swapInvStringBlock(const UDataSwapper *ds,
-                         const void *inData, int32_t length, void *outData,
-                         UErrorCode *pErrorCode);
+udata_وٹاندرا_Inv_String_بلاک(ثابت UDataSwapper *ds,
+                         ثابت فراغ *وچ_انکڑے, int32_t لمائی, فراغ *باہرلا_انکڑے,
+                         UError_کوڈ *p_Error_کوڈ);
 
-U_CAPI void U_EXPORT2
-udata_printError(const UDataSwapper *ds,
-                 const char *fmt,
+U_CAPI فراغ U_EXPORT2
+udata_printError(ثابت UDataSwapper *ds,
+                 ثابت حرف *fmt,
                  ...);
 
 /* internal exports from putil.c -------------------------------------------- */
@@ -271,67 +271,67 @@ udata_printError(const UDataSwapper *ds,
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_ebcdicFromAscii(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
-                     UErrorCode *pErrorCode);
+uprv_ebcdicFromAscii(ثابت UDataSwapper *ds,
+                     ثابت فراغ *وچ_انکڑے, int32_t لمائی, فراغ *باہرلا_انکڑے,
+                     UError_کوڈ *p_Error_کوڈ);
 
 /**
  * Copy invariant ASCII char * strings and verify they are invariant.
  * @internal
  */
 U_CFUNC int32_t
-uprv_copyAscii(const UDataSwapper *ds,
-               const void *inData, int32_t length, void *outData,
-               UErrorCode *pErrorCode);
+uprv_copyAscii(ثابت UDataSwapper *ds,
+               ثابت فراغ *وچ_انکڑے, int32_t لمائی, فراغ *باہرلا_انکڑے,
+               UError_کوڈ *p_Error_کوڈ);
 
 /**
  * Swap invariant char * strings EBCDIC->ASCII.
  * @internal
  */
 U_CFUNC int32_t
-uprv_asciiFromEbcdic(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
-                     UErrorCode *pErrorCode);
+uprv_asciiFromEbcdic(ثابت UDataSwapper *ds,
+                     ثابت فراغ *وچ_انکڑے, int32_t لمائی, فراغ *باہرلا_انکڑے,
+                     UError_کوڈ *p_Error_کوڈ);
 
 /**
  * Copy invariant EBCDIC char * strings and verify they are invariant.
  * @internal
  */
 U_CFUNC int32_t
-uprv_copyEbcdic(const UDataSwapper *ds,
-                const void *inData, int32_t length, void *outData,
-                UErrorCode *pErrorCode);
+uprv_copyEbcdic(ثابت UDataSwapper *ds,
+                ثابت فراغ *وچ_انکڑے, int32_t لمائی, فراغ *باہرلا_انکڑے,
+                UError_کوڈ *p_Error_کوڈ);
 
 /**
  * Compare ASCII invariant char * with Unicode invariant UChar *
  * @internal
  */
 U_CFUNC int32_t
-uprv_compareInvAscii(const UDataSwapper *ds,
-                     const char *outString, int32_t outLength,
-                     const UChar *localString, int32_t localLength);
+uprv_compareInvAscii(ثابت UDataSwapper *ds,
+                     ثابت حرف *باہرلا_String, int32_t باہرلا_لمائی,
+                     ثابت UChar *localString, int32_t local_لمائی);
 
 /**
  * Compare EBCDIC invariant char * with Unicode invariant UChar *
  * @internal
  */
 U_CFUNC int32_t
-uprv_compareInvEbcdic(const UDataSwapper *ds,
-                      const char *outString, int32_t outLength,
-                      const UChar *localString, int32_t localLength);
+uprv_compareInvEbcdic(ثابت UDataSwapper *ds,
+                      ثابت حرف *باہرلا_String, int32_t باہرلا_لمائی,
+                      ثابت UChar *localString, int32_t local_لمائی);
 
 /**
  * \def uprv_compareInvWithUChar
  * Compare an invariant-character strings with a UChar string
  * @internal
  */
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#إذا U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define uprv_compareInvWithUChar uprv_compareInvAscii
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#وإلاإذا U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define uprv_compareInvWithUChar uprv_compareInvEbcdic
-#else
+#وإلا
 #   error Unknown charset family!
-#endif
+#جے_انت
 
 // utrie_swap.cpp -----------------------------------------------------------***
 
@@ -340,40 +340,40 @@ uprv_compareInvEbcdic(const UDataSwapper *ds,
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-utrie_swap(const UDataSwapper *ds,
-           const void *inData, int32_t length, void *outData,
-           UErrorCode *pErrorCode);
+utrie_وٹاندرا(ثابت UDataSwapper *ds,
+           ثابت فراغ *وچ_انکڑے, int32_t لمائی, فراغ *باہرلا_انکڑے,
+           UError_کوڈ *p_Error_کوڈ);
 
 /**
  * Swaps a serialized UTrie2.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-utrie2_swap(const UDataSwapper *ds,
-            const void *inData, int32_t length, void *outData,
-            UErrorCode *pErrorCode);
+utrie2_وٹاندرا(ثابت UDataSwapper *ds,
+            ثابت فراغ *وچ_انکڑے, int32_t لمائی, فراغ *باہرلا_انکڑے,
+            UError_کوڈ *p_Error_کوڈ);
 
 /**
  * Swaps a serialized UCPTrie.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ucptrie_swap(const UDataSwapper *ds,
-             const void *inData, int32_t length, void *outData,
-             UErrorCode *pErrorCode);
+ucptrie_وٹاندرا(ثابت UDataSwapper *ds,
+             ثابت فراغ *وچ_انکڑے, int32_t لمائی, فراغ *باہرلا_انکڑے,
+             UError_کوڈ *p_Error_کوڈ);
 
 /**
  * Swaps a serialized UTrie, UTrie2, or UCPTrie.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-utrie_swapAnyVersion(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
-                     UErrorCode *pErrorCode);
+utrie_وٹاندرا_Any_نسخہ(ثابت UDataSwapper *ds,
+                     ثابت فراغ *وچ_انکڑے, int32_t لمائی, فراغ *باہرلا_انکڑے,
+                     UError_کوڈ *p_Error_کوڈ);
 
 /* material... -------------------------------------------------------------- */
 
-#if 0
+#إذا 0
 
 /* udata.h */
 
@@ -392,13 +392,13 @@ utrie_swapAnyVersion(const UDataSwapper *ds,
  *
  * @internal ICU 2.8
  */
-U_CAPI UDataMemory * U_EXPORT2
-udata_openSwap(const char *path, const char *type, const char *name,
-               UDataMemoryIsAcceptable *isAcceptable, void *isAcceptableContext,
-               UDataSwapFn *swap,
-               UDataPrintError *printError, void *printErrorContext,
-               UErrorCode *pErrorCode);
+U_CAPI UData_حافظہ * U_EXPORT2
+udata_open_وٹاندرا(ثابت حرف *رستہ, ثابت حرف *type, ثابت حرف *name,
+               UData_حافظہ_Is_Acceptable *isAcceptable, فراغ *isAcceptableContext,
+               UData_وٹاندرا_Fn *وٹاندرا,
+               UDataPrintError *printError, فراغ *printErrorContext,
+               UError_کوڈ *p_Error_کوڈ);
 
-#endif
+#جے_انت
 
-#endif
+#جے_انت

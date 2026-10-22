@@ -17,43 +17,43 @@
 *   were moved here to break dependency cycles among parts of the common library.
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#إذا !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/brkiter.h"
-#include "unicode/locid.h"
-#include "unicode/ucasemap.h"
-#include "unicode/unistr.h"
-#include "ucasemap_imp.h"
+#ضمن "unicode/brkiter.h"
+#ضمن "unicode/locid.h"
+#ضمن "unicode/ucasemap.h"
+#ضمن "unicode/unistr.h"
+#ضمن "ucasemap_imp.h"
 
 U_NAMESPACE_BEGIN
 
 UnicodeString&
-UnicodeString::toTitle(BreakIterator* iter) U_LIFETIME_BOUND {
-    return toTitle(iter, Locale::getDefault(), 0);
+UnicodeString::منزل_Title(BreakIterator* iter) U_LIFETIME_BOUND {
+    أرجع منزل_Title(iter, Locale::getDefault(), 0);
 }
 
 UnicodeString&
-UnicodeString::toTitle(BreakIterator* iter, const Locale& locale) U_LIFETIME_BOUND {
-    return toTitle(iter, locale, 0);
+UnicodeString::منزل_Title(BreakIterator* iter, ثابت Locale& locale) U_LIFETIME_BOUND {
+    أرجع منزل_Title(iter, locale, 0);
 }
 
 UnicodeString&
-UnicodeString::toTitle(BreakIterator* iter,
-                       const Locale& locale,
+UnicodeString::منزل_Title(BreakIterator* iter,
+                       ثابت Locale& locale,
                        uint32_t options) U_LIFETIME_BOUND {
-    LocalPointer<BreakIterator> ownedIter;
-    UErrorCode errorCode = U_ZERO_ERROR;
-    iter = ustrcase_getTitleBreakIterator(&locale, "", options, iter, ownedIter, errorCode);
-    if (iter == nullptr) {
-        setToBogus();
-        return *this;
+    Local_اشارہ_گر<BreakIterator> ownedIter;
+    UError_کوڈ error_کوڈ = U_ZERO_ERROR;
+    iter = ustrcase_getTitleBreakIterator(&locale, "", options, iter, ownedIter, error_کوڈ);
+    إذا (iter == خالی_سوچک) {
+        سیٹ_منزل_Bogus();
+        أرجع *هذا;
     }
-    caseMap(ustrcase_getCaseLocale(locale.getBaseName()), options, iter, ustrcase_internalToTitle);
-    return *this;
+    caseMap(ustrcase_getCaseLocale(locale.get_ادھار_Name()), options, iter, ustrcase_اندرونی_منزل_Title);
+    أرجع *هذا;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_سرا
 
-#endif  // !UCONFIG_NO_BREAK_ITERATION
+#جے_انت  // !UCONFIG_NO_BREAK_ITERATION

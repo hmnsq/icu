@@ -15,10 +15,10 @@
 ******************************************************************************
 */
 
-#ifndef USC_IMPL_H
-#define USC_IMPL_H
-#include "unicode/utypes.h"
-#include "unicode/uscript.h"
+#جے_بنا_تعریف USC_IMPL_H
+#تعریف_کرو USC_IMPL_H
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uscript.h"
 
 /**
  * <code>UScriptRun</code> is used to find runs of characters in
@@ -54,9 +54,9 @@
  *  }
  * </pre>
  */
-struct UScriptRun;
+بنية UScript_لگاتار;
 
-typedef struct UScriptRun UScriptRun;
+تعريفنوع بنية UScript_لگاتار UScript_لگاتار;
 
 /**
  * Create a <code>UScriptRun</code> object for iterating over the given text. This object must
@@ -77,8 +77,8 @@ typedef struct UScriptRun UScriptRun;
  * @return the address of <code>UScriptRun</code> object which will iterate over the text,
  *         or <code>NULL</code> if the operation failed.
  */
-U_CAPI UScriptRun * U_EXPORT2
-uscript_openRun(const UChar *src, int32_t length, UErrorCode *pErrorCode);
+U_CAPI UScript_لگاتار * U_EXPORT2
+uscript_open_لگاتار(ثابت UChar *src, int32_t لمائی, UError_کوڈ *p_Error_کوڈ);
 
 /**
  * Frees the given <code>UScriptRun</code> object and any storage associated with it.
@@ -86,8 +86,8 @@ uscript_openRun(const UChar *src, int32_t length, UErrorCode *pErrorCode);
  *
  * @param scriptRun is the <code>UScriptRun</code> object which will be freed.
  */
-U_CAPI void U_EXPORT2
-uscript_closeRun(UScriptRun *scriptRun);
+U_CAPI فراغ U_EXPORT2
+uscript_close_لگاتار(UScript_لگاتار *script_لگاتار);
 
 /**
  * Reset the <code>UScriptRun</code> object so that it will start iterating from
@@ -95,8 +95,8 @@ uscript_closeRun(UScriptRun *scriptRun);
  *
  * @param scriptRun is the address of the <code>UScriptRun</code> object to be reset.
  */
-U_CAPI void U_EXPORT2
-uscript_resetRun(UScriptRun *scriptRun);
+U_CAPI فراغ U_EXPORT2
+uscript_reset_لگاتار(UScript_لگاتار *script_لگاتار);
 
 /**
  * Change the text over which the given <code>UScriptRun</code> object iterates.
@@ -113,8 +113,8 @@ uscript_resetRun(UScriptRun *scriptRun);
  *        indicates a failure on entry, the function will immediately return.
  *        On exit the value will indicate the success of the operation.
  */
-U_CAPI void U_EXPORT2
-uscript_setRunText(UScriptRun *scriptRun, const UChar *src, int32_t length, UErrorCode *pErrorCode);
+U_CAPI فراغ U_EXPORT2
+uscript_سیٹ_لگاتار_متن(UScript_لگاتار *script_لگاتار, ثابت UChar *src, int32_t لمائی, UError_کوڈ *p_Error_کوڈ);
 
 /**
  * Advance the <code>UScriptRun</code> object to the next script run, return the start and limit
@@ -134,6 +134,6 @@ uscript_setRunText(UScriptRun *scriptRun, const UChar *src, int32_t length, UErr
  * @return true if there was another script run.
  */
 U_CAPI UBool U_EXPORT2
-uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, UScriptCode *pRunScript);
+uscript_اگلا_لگاتار(UScript_لگاتار *script_لگاتار, int32_t *p_لگاتار_شروع, int32_t *p_لگاتار_حد_بندی, UScript_کوڈ *p_لگاتار_Script);
 
-#endif
+#جے_انت

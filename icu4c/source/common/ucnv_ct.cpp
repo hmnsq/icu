@@ -14,40 +14,40 @@
 *   created by: Michael Ow
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/uset.h"
-#include "unicode/ucnv_err.h"
-#include "unicode/ucnv_cb.h"
-#include "unicode/utf16.h"
-#include "ucnv_imp.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "ucnvmbcs.h"
-#include "cstring.h"
-#include "cmemory.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "unicode/uset.h"
+#ضمن "unicode/ucnv_err.h"
+#ضمن "unicode/ucnv_cb.h"
+#ضمن "unicode/utf16.h"
+#ضمن "ucnv_imp.h"
+#ضمن "ucnv_bld.h"
+#ضمن "ucnv_cnv.h"
+#ضمن "ucnvmbcs.h"
+#ضمن "cstring.h"
+#ضمن "cmemory.h"
 
-typedef enum {
+تعريفنوع تعداد {
     INVALID = -2,
-    DO_SEARCH = -1,
+    DO_تلاش = -1,
 
-    COMPOUND_TEXT_SINGLE_0 = 0,
-    COMPOUND_TEXT_SINGLE_1 = 1,
-    COMPOUND_TEXT_SINGLE_2 = 2,
-    COMPOUND_TEXT_SINGLE_3 = 3,
+    COMPOUND_متن_SINGLE_0 = 0,
+    COMPOUND_متن_SINGLE_1 = 1,
+    COMPOUND_متن_SINGLE_2 = 2,
+    COMPOUND_متن_SINGLE_3 = 3,
 
-    COMPOUND_TEXT_DOUBLE_1 = 4,
-    COMPOUND_TEXT_DOUBLE_2 = 5,
-    COMPOUND_TEXT_DOUBLE_3 = 6,
-    COMPOUND_TEXT_DOUBLE_4 = 7,
-    COMPOUND_TEXT_DOUBLE_5 = 8,
-    COMPOUND_TEXT_DOUBLE_6 = 9,
-    COMPOUND_TEXT_DOUBLE_7 = 10,
+    COMPOUND_متن_DOUBLE_1 = 4,
+    COMPOUND_متن_DOUBLE_2 = 5,
+    COMPOUND_متن_DOUBLE_3 = 6,
+    COMPOUND_متن_DOUBLE_4 = 7,
+    COMPOUND_متن_DOUBLE_5 = 8,
+    COMPOUND_متن_DOUBLE_6 = 9,
+    COMPOUND_متن_DOUBLE_7 = 10,
 
-    COMPOUND_TEXT_TRIPLE_DOUBLE = 11,
+    COMPOUND_متن_TRIPLE_DOUBLE = 11,
 
     IBM_915 = 12,
     IBM_916 = 13,
@@ -57,12 +57,12 @@ typedef enum {
     IBM_913 = 17,
     ISO_8859_14 = 18,
     IBM_923 = 19,
-    NUM_OF_CONVERTERS = 20
-} COMPOUND_TEXT_CONVERTERS;
+    عدد_دا_CONVERTERS = 20
+} COMPOUND_متن_CONVERTERS;
 
-#define SEARCH_LENGTH 12
+#تعریف_کرو تلاش_لمائی 12
 
-static const uint8_t escSeqCompoundText[NUM_OF_CONVERTERS][5] = {
+ساكن ثابت uint8_t esc_Seq_Compound_متن[عدد_دا_CONVERTERS][5] = {
     /* Single */
     { 0x1B, 0x2D, 0x41, 0, 0 },
     { 0x1B, 0x2D, 0x4D, 0, 0 },
@@ -99,37 +99,37 @@ static const uint8_t escSeqCompoundText[NUM_OF_CONVERTERS][5] = {
     { 0x1B, 0x2D, 0x62, 0, 0 },
 };
 
-#define ESC_START 0x1B
+#تعریف_کرو ESC_شروع 0x1B
 
-#define isASCIIRange(codepoint) \
+#تعریف_کرو isASCIIRange(codepoint) \
         ((codepoint == 0x0000) || (codepoint == 0x0009) || (codepoint == 0x000A) || \
          (codepoint >= 0x0020 && codepoint <= 0x007f) || (codepoint >= 0x00A0 && codepoint <= 0x00FF))
 
-#define isIBM915(codepoint) \
+#تعریف_کرو isIBM915(codepoint) \
         ((codepoint >= 0x0401 && codepoint <= 0x045F) || (codepoint == 0x2116))
 
-#define isIBM916(codepoint) \
+#تعریف_کرو isIBM916(codepoint) \
         ((codepoint >= 0x05D0 && codepoint <= 0x05EA) || (codepoint == 0x2017) || (codepoint == 0x203E))
 
-#define isCompoundS3(codepoint) \
+#تعریف_کرو isCompoundS3(codepoint) \
         ((codepoint == 0x060C) || (codepoint == 0x061B) || (codepoint == 0x061F) || (codepoint >= 0x0621 && codepoint <= 0x063A) || \
          (codepoint >= 0x0640 && codepoint <= 0x0652) || (codepoint >= 0x0660 && codepoint <= 0x066D) || (codepoint == 0x200B) || \
          (codepoint >= 0x0FE70 && codepoint <= 0x0FE72) || (codepoint == 0x0FE74) || (codepoint >= 0x0FE76 && codepoint <= 0x0FEBE))
 
-#define isCompoundS2(codepoint) \
+#تعریف_کرو isCompoundS2(codepoint) \
         ((codepoint == 0x02BC) || (codepoint == 0x02BD) || (codepoint >= 0x0384 && codepoint <= 0x03CE) || (codepoint == 0x2015))
 
-#define isIBM914(codepoint) \
+#تعریف_کرو isIBM914(codepoint) \
         ((codepoint == 0x0100) || (codepoint == 0x0101) || (codepoint == 0x0112) || (codepoint == 0x0113) || (codepoint == 0x0116) || (codepoint == 0x0117) || \
          (codepoint == 0x0122) || (codepoint == 0x0123) || (codepoint >= 0x0128 && codepoint <= 0x012B) || (codepoint == 0x012E) || (codepoint == 0x012F) || \
          (codepoint >= 0x0136 && codepoint <= 0x0138) || (codepoint == 0x013B) || (codepoint == 0x013C) || (codepoint == 0x0145) || (codepoint ==  0x0146) || \
          (codepoint >= 0x014A && codepoint <= 0x014D) || (codepoint == 0x0156) || (codepoint == 0x0157) || (codepoint >= 0x0166 && codepoint <= 0x016B) || \
          (codepoint == 0x0172) || (codepoint == 0x0173))
 
-#define isIBM874(codepoint) \
+#تعریف_کرو isIBM874(codepoint) \
         ((codepoint >= 0x0E01 && codepoint <= 0x0E3A) || (codepoint >= 0x0E3F && codepoint <= 0x0E5B))
 
-#define isIBM912(codepoint) \
+#تعریف_کرو isIBM912(codepoint) \
         ((codepoint >= 0x0102 && codepoint <= 0x0107) || (codepoint >= 0x010C && codepoint <= 0x0111) || (codepoint >= 0x0118 && codepoint <= 0x011B) || \
          (codepoint == 0x0139) || (codepoint == 0x013A) || (codepoint == 0x013D) || (codepoint == 0x013E) || (codepoint >= 0x0141 && codepoint <= 0x0144) || \
          (codepoint == 0x0147) || (codepoint == 0x0147) || (codepoint == 0x0150) || (codepoint == 0x0151) || (codepoint == 0x0154) || (codepoint == 0x0155) || \
@@ -137,17 +137,17 @@ static const uint8_t escSeqCompoundText[NUM_OF_CONVERTERS][5] = {
          (codepoint == 0x016E) || (codepoint == 0x016F) || (codepoint == 0x0170) || (codepoint ==  0x0171) || (codepoint >= 0x0179 && codepoint <= 0x017E) || \
          (codepoint == 0x02C7) || (codepoint == 0x02D8) || (codepoint == 0x02D9) || (codepoint == 0x02DB) || (codepoint == 0x02DD))
 
-#define isIBM913(codepoint) \
+#تعریف_کرو isIBM913(codepoint) \
         ((codepoint >= 0x0108 && codepoint <= 0x010B) || (codepoint == 0x011C) || \
          (codepoint == 0x011D) || (codepoint == 0x0120) || (codepoint == 0x0121) || \
          (codepoint >= 0x0124 && codepoint <= 0x0127) || (codepoint == 0x0134) || (codepoint == 0x0135) || \
          (codepoint == 0x015C) || (codepoint == 0x015D) || (codepoint == 0x016C) || (codepoint ==  0x016D))
 
-#define isCompoundS1(codepoint) \
+#تعریف_کرو isCompoundS1(codepoint) \
         ((codepoint == 0x011E) || (codepoint == 0x011F) || (codepoint == 0x0130) || \
          (codepoint == 0x0131) || (codepoint >= 0x0218 && codepoint <= 0x021B))
 
-#define isISO8859_14(codepoint) \
+#تعریف_کرو isISO8859_14(codepoint) \
         ((codepoint >= 0x0174 && codepoint <= 0x0177) || (codepoint == 0x1E0A) || \
          (codepoint == 0x1E0B) || (codepoint == 0x1E1E) || (codepoint == 0x1E1F) || \
          (codepoint == 0x1E40) || (codepoint == 0x1E41) || (codepoint == 0x1E56) || \
@@ -155,492 +155,492 @@ static const uint8_t escSeqCompoundText[NUM_OF_CONVERTERS][5] = {
          (codepoint == 0x1E6A) || (codepoint == 0x1E6B) || (codepoint == 0x1EF2) || \
          (codepoint == 0x1EF3) || (codepoint >= 0x1E80 && codepoint <= 0x1E85))
 
-#define isIBM923(codepoint) \
+#تعریف_کرو isIBM923(codepoint) \
         ((codepoint == 0x0152) || (codepoint == 0x0153) || (codepoint == 0x0178) || (codepoint == 0x20AC))
 
 
-typedef struct{
-    UConverterSharedData *myConverterArray[NUM_OF_CONVERTERS];
-    COMPOUND_TEXT_CONVERTERS state;
-} UConverterDataCompoundText;
+تعريفنوع بنية{
+    UConverter_Shared_انکڑے *myConverterArray[عدد_دا_CONVERTERS];
+    COMPOUND_متن_CONVERTERS state;
+} UConverter_انکڑے_Compound_متن;
 
 /*********** Compound Text Converter Protos ***********/
 U_CDECL_BEGIN
-static void U_CALLCONV
-_CompoundTextOpen(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode);
+ساكن فراغ U_CALLCONV
+Compound_متن_Open(UConverter *cnv, UConverter_لدو_دلیلاں *p_دلیلاں, UError_کوڈ *error_کوڈ);
 
-static void U_CALLCONV
- _CompoundTextClose(UConverter *converter);
+ساكن فراغ U_CALLCONV
+ Compound_متن_Close(UConverter *converter);
 
-static void U_CALLCONV
-_CompoundTextReset(UConverter *converter, UConverterResetChoice choice);
+ساكن فراغ U_CALLCONV
+Compound_متن_Reset(UConverter *converter, UConverterResetChoice choice);
 
-static const char* U_CALLCONV
-_CompoundTextgetName(const UConverter* cnv);
+ساكن ثابت حرف* U_CALLCONV
+_CompoundTextgetName(ثابت UConverter* cnv);
 
 
-static int32_t findNextEsc(const char *source, const char *sourceLimit) {
-    int32_t length = static_cast<int32_t>(sourceLimit - source);
+ساكن int32_t لبھو_اگلا_Esc(ثابت حرف *سروت, ثابت حرف *سروت_حد_بندی) {
+    int32_t length = static_cast<int32_t>(سروت_حد_بندی - سروت);
     int32_t i;
-    for (i = 1; i < length; i++) {
-        if (*(source + i) == 0x1B) {
-            return i;
+    لكل (i = 1; i < length; i++) {
+        إذا (*(سروت + i) == 0x1B) {
+            أرجع i;
         }
     }
 
-    return length;
+    أرجع length;
 }
 
-static COMPOUND_TEXT_CONVERTERS getState(int codepoint) {
-    COMPOUND_TEXT_CONVERTERS state = DO_SEARCH;
+ساكن COMPOUND_متن_CONVERTERS getState(صحيح codepoint) {
+    COMPOUND_متن_CONVERTERS state = DO_تلاش;
 
-    if (isASCIIRange(codepoint)) {
-        state = COMPOUND_TEXT_SINGLE_0;
-    } else if (isIBM912(codepoint)) {
+    إذا (isASCIIRange(codepoint)) {
+        state = COMPOUND_متن_SINGLE_0;
+    } وإلا إذا (isIBM912(codepoint)) {
         state = IBM_912;
-    }else if (isIBM913(codepoint)) {
+    }وإلا إذا (isIBM913(codepoint)) {
         state = IBM_913;
-    } else if (isISO8859_14(codepoint)) {
+    } وإلا إذا (isISO8859_14(codepoint)) {
         state = ISO_8859_14;
-    } else if (isIBM923(codepoint)) {
+    } وإلا إذا (isIBM923(codepoint)) {
         state = IBM_923;
-    } else if (isIBM874(codepoint)) {
+    } وإلا إذا (isIBM874(codepoint)) {
         state = IBM_874;
-    } else if (isIBM914(codepoint)) {
+    } وإلا إذا (isIBM914(codepoint)) {
         state = IBM_914;
-    } else if (isCompoundS2(codepoint)) {
-        state = COMPOUND_TEXT_SINGLE_2;
-    } else if (isCompoundS3(codepoint)) {
-        state = COMPOUND_TEXT_SINGLE_3;
-    } else if (isIBM916(codepoint)) {
+    } وإلا إذا (isCompoundS2(codepoint)) {
+        state = COMPOUND_متن_SINGLE_2;
+    } وإلا إذا (isCompoundS3(codepoint)) {
+        state = COMPOUND_متن_SINGLE_3;
+    } وإلا إذا (isIBM916(codepoint)) {
         state = IBM_916;
-    } else if (isIBM915(codepoint)) {
+    } وإلا إذا (isIBM915(codepoint)) {
         state = IBM_915;
-    } else if (isCompoundS1(codepoint)) {
-        state = COMPOUND_TEXT_SINGLE_1;
+    } وإلا إذا (isCompoundS1(codepoint)) {
+        state = COMPOUND_متن_SINGLE_1;
     }
 
-    return state;
+    أرجع state;
 }
 
-static COMPOUND_TEXT_CONVERTERS findStateFromEscSeq(const char* source, const char* sourceLimit, const uint8_t* toUBytesBuffer, int32_t toUBytesBufferLength, UErrorCode *err) {
-    COMPOUND_TEXT_CONVERTERS state = INVALID;
-    UBool matchFound = false;
-    int32_t i, n, offset = toUBytesBufferLength;
+ساكن COMPOUND_متن_CONVERTERS لبھو_State_From_Esc_Seq(ثابت حرف* سروت, ثابت حرف* سروت_حد_بندی, ثابت uint8_t* منزل_UBytes_بفر, int32_t منزل_UBytes_بفر_لمائی, UError_کوڈ *err) {
+    COMPOUND_متن_CONVERTERS state = INVALID;
+    UBool میل_لبھیا = خطأ;
+    int32_t i, n, وتھ = منزل_UBytes_بفر_لمائی;
 
-    for (i = 0; i < NUM_OF_CONVERTERS; i++) {
-        matchFound = true;
-        for (n = 0; escSeqCompoundText[i][n] != 0; n++) {
-            if (n < toUBytesBufferLength) {
-                if (toUBytesBuffer[n] != escSeqCompoundText[i][n]) {
-                    matchFound = false;
-                    break;
+    لكل (i = 0; i < عدد_دا_CONVERTERS; i++) {
+        میل_لبھیا = سچ;
+        لكل (n = 0; esc_Seq_Compound_متن[i][n] != 0; n++) {
+            إذا (n < منزل_UBytes_بفر_لمائی) {
+                إذا (منزل_UBytes_بفر[n] != esc_Seq_Compound_متن[i][n]) {
+                    میل_لبھیا = خطأ;
+                    اكسر;
                 }
-            } else if ((source + (n - offset)) >= sourceLimit) {
-                *err = U_TRUNCATED_CHAR_FOUND;
-                matchFound = false;
-                break;
-            } else if (*(source + (n - offset)) != escSeqCompoundText[i][n]) {
-                matchFound = false;
-                break;
+            } وإلا إذا ((سروت + (n - وتھ)) >= سروت_حد_بندی) {
+                *err = U_TRUNCATED_CHAR_لبھیا;
+                میل_لبھیا = خطأ;
+                اكسر;
+            } وإلا إذا (*(سروت + (n - وتھ)) != esc_Seq_Compound_متن[i][n]) {
+                میل_لبھیا = خطأ;
+                اكسر;
             }
         }
 
-        if (matchFound) {
-            break;
+        إذا (میل_لبھیا) {
+            اكسر;
         }
     }
 
-    if (matchFound) {
-        state = (COMPOUND_TEXT_CONVERTERS)i;
+    إذا (میل_لبھیا) {
+        state = (COMPOUND_متن_CONVERTERS)i;
     }
 
-    return state;
+    أرجع state;
 }
 
-static void U_CALLCONV
-_CompoundTextOpen(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
-    cnv->extraInfo = uprv_malloc (sizeof (UConverterDataCompoundText));
-    if (cnv->extraInfo != nullptr) {
-        UConverterDataCompoundText *myConverterData = (UConverterDataCompoundText *) cnv->extraInfo;
+ساكن فراغ U_CALLCONV
+Compound_متن_Open(UConverter *cnv, UConverter_لدو_دلیلاں *p_دلیلاں, UError_کوڈ *error_کوڈ){
+    cnv->extraInfo = uprv_malloc (حجم (UConverter_انکڑے_Compound_متن));
+    إذا (cnv->extraInfo != خالی_سوچک) {
+        UConverter_انکڑے_Compound_متن *my_Converter_انکڑے = (UConverter_انکڑے_Compound_متن *) cnv->extraInfo;
 
-        UConverterNamePieces stackPieces;
-        UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
+        UConverterNamePieces ڈھیر_Pieces;
+        UConverter_لدو_دلیلاں ڈھیر_دلیلاں=UCNV_لدو_دلیلاں_INITIALIZER;
 
-        myConverterData->myConverterArray[COMPOUND_TEXT_SINGLE_0] = nullptr;
-        myConverterData->myConverterArray[COMPOUND_TEXT_SINGLE_1] = ucnv_loadSharedData("icu-internal-compound-s1", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_SINGLE_2] = ucnv_loadSharedData("icu-internal-compound-s2", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_SINGLE_3] = ucnv_loadSharedData("icu-internal-compound-s3", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_DOUBLE_1] = ucnv_loadSharedData("icu-internal-compound-d1", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_DOUBLE_2] = ucnv_loadSharedData("icu-internal-compound-d2", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_DOUBLE_3] = ucnv_loadSharedData("icu-internal-compound-d3", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_DOUBLE_4] = ucnv_loadSharedData("icu-internal-compound-d4", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_DOUBLE_5] = ucnv_loadSharedData("icu-internal-compound-d5", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_DOUBLE_6] = ucnv_loadSharedData("icu-internal-compound-d6", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_DOUBLE_7] = ucnv_loadSharedData("icu-internal-compound-d7", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_TRIPLE_DOUBLE] = ucnv_loadSharedData("icu-internal-compound-t", &stackPieces, &stackArgs, errorCode);
+        my_Converter_انکڑے->myConverterArray[COMPOUND_متن_SINGLE_0] = خالی_سوچک;
+        my_Converter_انکڑے->myConverterArray[COMPOUND_متن_SINGLE_1] = ucnv_لدو_Shared_انکڑے("icu-internal-compound-s1", &ڈھیر_Pieces, &ڈھیر_دلیلاں, error_کوڈ);
+        my_Converter_انکڑے->myConverterArray[COMPOUND_متن_SINGLE_2] = ucnv_لدو_Shared_انکڑے("icu-internal-compound-s2", &ڈھیر_Pieces, &ڈھیر_دلیلاں, error_کوڈ);
+        my_Converter_انکڑے->myConverterArray[COMPOUND_متن_SINGLE_3] = ucnv_لدو_Shared_انکڑے("icu-internal-compound-s3", &ڈھیر_Pieces, &ڈھیر_دلیلاں, error_کوڈ);
+        my_Converter_انکڑے->myConverterArray[COMPOUND_متن_DOUBLE_1] = ucnv_لدو_Shared_انکڑے("icu-internal-compound-d1", &ڈھیر_Pieces, &ڈھیر_دلیلاں, error_کوڈ);
+        my_Converter_انکڑے->myConverterArray[COMPOUND_متن_DOUBLE_2] = ucnv_لدو_Shared_انکڑے("icu-internal-compound-d2", &ڈھیر_Pieces, &ڈھیر_دلیلاں, error_کوڈ);
+        my_Converter_انکڑے->myConverterArray[COMPOUND_متن_DOUBLE_3] = ucnv_لدو_Shared_انکڑے("icu-internal-compound-d3", &ڈھیر_Pieces, &ڈھیر_دلیلاں, error_کوڈ);
+        my_Converter_انکڑے->myConverterArray[COMPOUND_متن_DOUBLE_4] = ucnv_لدو_Shared_انکڑے("icu-internal-compound-d4", &ڈھیر_Pieces, &ڈھیر_دلیلاں, error_کوڈ);
+        my_Converter_انکڑے->myConverterArray[COMPOUND_متن_DOUBLE_5] = ucnv_لدو_Shared_انکڑے("icu-internal-compound-d5", &ڈھیر_Pieces, &ڈھیر_دلیلاں, error_کوڈ);
+        my_Converter_انکڑے->myConverterArray[COMPOUND_متن_DOUBLE_6] = ucnv_لدو_Shared_انکڑے("icu-internal-compound-d6", &ڈھیر_Pieces, &ڈھیر_دلیلاں, error_کوڈ);
+        my_Converter_انکڑے->myConverterArray[COMPOUND_متن_DOUBLE_7] = ucnv_لدو_Shared_انکڑے("icu-internal-compound-d7", &ڈھیر_Pieces, &ڈھیر_دلیلاں, error_کوڈ);
+        my_Converter_انکڑے->myConverterArray[COMPOUND_متن_TRIPLE_DOUBLE] = ucnv_لدو_Shared_انکڑے("icu-internal-compound-t", &ڈھیر_Pieces, &ڈھیر_دلیلاں, error_کوڈ);
 
-        myConverterData->myConverterArray[IBM_915] = ucnv_loadSharedData("ibm-915_P100-1995", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[IBM_916] = ucnv_loadSharedData("ibm-916_P100-1995", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[IBM_914] = ucnv_loadSharedData("ibm-914_P100-1995", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[IBM_874] = ucnv_loadSharedData("ibm-874_P100-1995", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[IBM_912] = ucnv_loadSharedData("ibm-912_P100-1995", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[IBM_913] = ucnv_loadSharedData("ibm-913_P100-2000", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[ISO_8859_14] = ucnv_loadSharedData("iso-8859_14-1998", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[IBM_923] = ucnv_loadSharedData("ibm-923_P100-1998", &stackPieces, &stackArgs, errorCode);
+        my_Converter_انکڑے->myConverterArray[IBM_915] = ucnv_لدو_Shared_انکڑے("ibm-915_P100-1995", &ڈھیر_Pieces, &ڈھیر_دلیلاں, error_کوڈ);
+        my_Converter_انکڑے->myConverterArray[IBM_916] = ucnv_لدو_Shared_انکڑے("ibm-916_P100-1995", &ڈھیر_Pieces, &ڈھیر_دلیلاں, error_کوڈ);
+        my_Converter_انکڑے->myConverterArray[IBM_914] = ucnv_لدو_Shared_انکڑے("ibm-914_P100-1995", &ڈھیر_Pieces, &ڈھیر_دلیلاں, error_کوڈ);
+        my_Converter_انکڑے->myConverterArray[IBM_874] = ucnv_لدو_Shared_انکڑے("ibm-874_P100-1995", &ڈھیر_Pieces, &ڈھیر_دلیلاں, error_کوڈ);
+        my_Converter_انکڑے->myConverterArray[IBM_912] = ucnv_لدو_Shared_انکڑے("ibm-912_P100-1995", &ڈھیر_Pieces, &ڈھیر_دلیلاں, error_کوڈ);
+        my_Converter_انکڑے->myConverterArray[IBM_913] = ucnv_لدو_Shared_انکڑے("ibm-913_P100-2000", &ڈھیر_Pieces, &ڈھیر_دلیلاں, error_کوڈ);
+        my_Converter_انکڑے->myConverterArray[ISO_8859_14] = ucnv_لدو_Shared_انکڑے("iso-8859_14-1998", &ڈھیر_Pieces, &ڈھیر_دلیلاں, error_کوڈ);
+        my_Converter_انکڑے->myConverterArray[IBM_923] = ucnv_لدو_Shared_انکڑے("ibm-923_P100-1998", &ڈھیر_Pieces, &ڈھیر_دلیلاں, error_کوڈ);
 
-        if (U_FAILURE(*errorCode) || pArgs->onlyTestIsLoadable) {
-            _CompoundTextClose(cnv);
-            return;
+        إذا (U_FAILURE(*error_کوڈ) || p_دلیلاں->onlyTestIsLoadable) {
+            Compound_متن_Close(cnv);
+            أرجع;
         }
 
-        myConverterData->state = (COMPOUND_TEXT_CONVERTERS)0;
-    } else {
-        *errorCode = U_MEMORY_ALLOCATION_ERROR;
+        my_Converter_انکڑے->state = (COMPOUND_متن_CONVERTERS)0;
+    } وإلا {
+        *error_کوڈ = U_حافظہ_ونڈ_ERROR;
     }
 }
 
 
-static void U_CALLCONV
-_CompoundTextClose(UConverter *converter) {
-    UConverterDataCompoundText* myConverterData = (UConverterDataCompoundText*)(converter->extraInfo);
+ساكن فراغ U_CALLCONV
+Compound_متن_Close(UConverter *converter) {
+    UConverter_انکڑے_Compound_متن* my_Converter_انکڑے = (UConverter_انکڑے_Compound_متن*)(converter->extraInfo);
     int32_t i;
 
-    if (converter->extraInfo != nullptr) {
+    إذا (converter->extraInfo != خالی_سوچک) {
         /*close the array of converter pointers and free the memory*/
-        for (i = 0; i < NUM_OF_CONVERTERS; i++) {
-            if (myConverterData->myConverterArray[i] != nullptr) {
-                ucnv_unloadSharedDataIfReady(myConverterData->myConverterArray[i]);
+        لكل (i = 0; i < عدد_دا_CONVERTERS; i++) {
+            إذا (my_Converter_انکڑے->myConverterArray[i] != خالی_سوچک) {
+                ucnv_unload_Shared_انکڑے_If_Ready(my_Converter_انکڑے->myConverterArray[i]);
             }
         }
 
         uprv_free(converter->extraInfo);
-        converter->extraInfo = nullptr;
+        converter->extraInfo = خالی_سوچک;
     }
 }
 
-static void U_CALLCONV
-_CompoundTextReset(UConverter *converter, UConverterResetChoice choice) {
-    (void)converter;
-    (void)choice;
+ساكن فراغ U_CALLCONV
+Compound_متن_Reset(UConverter *converter, UConverterResetChoice choice) {
+    (فراغ)converter;
+    (فراغ)choice;
 }
 
-static const char* U_CALLCONV
-_CompoundTextgetName(const UConverter* cnv){
-    (void)cnv;
-    return "x11-compound-text";
+ساكن ثابت حرف* U_CALLCONV
+_CompoundTextgetName(ثابت UConverter* cnv){
+    (فراغ)cnv;
+    أرجع "x11-compound-text";
 }
 
-static void U_CALLCONV
-UConverter_fromUnicode_CompoundText_OFFSETS(UConverterFromUnicodeArgs* args, UErrorCode* err){
-    UConverter *cnv = args->converter;
-    uint8_t *target = (uint8_t *) args->target;
-    const uint8_t *targetLimit = (const uint8_t *) args->targetLimit;
-    const char16_t* source = args->source;
-    const char16_t* sourceLimit = args->sourceLimit;
+ساكن فراغ U_CALLCONV
+UConverter_from_Unicode_Compound_متن_OFFSETS(UConverter_From_Unicode_دلیلاں* دلیلاں_2, UError_کوڈ* err){
+    UConverter *cnv = دلیلاں_2->converter;
+    uint8_t *نشانہ = (uint8_t *) دلیلاں_2->نشانہ;
+    ثابت uint8_t *نشانہ_حد_بندی = (ثابت uint8_t *) دلیلاں_2->نشانہ_حد_بندی;
+    ثابت char16_t* سروت = دلیلاں_2->سروت;
+    ثابت char16_t* سروت_حد_بندی = دلیلاں_2->سروت_حد_بندی;
     /* int32_t* offsets = args->offsets; */
-    UChar32 sourceChar;
+    UChar32 سروت_Char;
     UBool useFallback = cnv->useFallback;
-    uint8_t tmpTargetBuffer[7];
-    int32_t tmpTargetBufferLength = 0;
-    COMPOUND_TEXT_CONVERTERS currentState, tmpState;
-    uint32_t pValue;
-    int32_t pValueLength = 0;
+    uint8_t tmp_نشانہ_بفر[7];
+    int32_t tmp_نشانہ_بفر_لمائی = 0;
+    COMPOUND_متن_CONVERTERS currentState, tmpState;
+    uint32_t p_قدر;
+    int32_t p_قدر_لمائی = 0;
     int32_t i, n, j;
 
-    UConverterDataCompoundText *myConverterData = (UConverterDataCompoundText *) cnv->extraInfo;
+    UConverter_انکڑے_Compound_متن *my_Converter_انکڑے = (UConverter_انکڑے_Compound_متن *) cnv->extraInfo;
 
-    currentState = myConverterData->state;
+    currentState = my_Converter_انکڑے->state;
 
     /* check if the last codepoint of previous buffer was a lead surrogate*/
-    if((sourceChar = cnv->fromUChar32)!=0 && target< targetLimit) {
-        goto getTrail;
+    إذا((سروت_Char = cnv->fromUChar32)!=0 && نشانہ< نشانہ_حد_بندی) {
+        اذهب getTrail;
     }
 
-    while( source < sourceLimit){
-        if(target < targetLimit){
+    طالما( سروت < سروت_حد_بندی){
+        إذا(نشانہ < نشانہ_حد_بندی){
 
-            sourceChar  = *(source++);
+            سروت_Char  = *(سروت++);
             /*check if the char is a First surrogate*/
-             if(U16_IS_SURROGATE(sourceChar)) {
-                if(U16_IS_SURROGATE_LEAD(sourceChar)) {
+             إذا(U16_IS_SURROGATE(سروت_Char)) {
+                إذا(U16_IS_SURROGATE_LEAD(سروت_Char)) {
 getTrail:
                     /*look ahead to find the trail surrogate*/
-                    if(source < sourceLimit) {
+                    إذا(سروت < سروت_حد_بندی) {
                         /* test the following code unit */
-                        char16_t trail = *source;
-                        if(U16_IS_TRAIL(trail)) {
-                            source++;
-                            sourceChar=U16_GET_SUPPLEMENTARY(sourceChar, trail);
+                        char16_t trail = *سروت;
+                        إذا(U16_IS_TRAIL(trail)) {
+                            سروت++;
+                            سروت_Char=U16_GET_SUPPLEMENTARY(سروت_Char, trail);
                             cnv->fromUChar32=0x00;
                             /* convert this supplementary code point */
                             /* exit this condition tree */
-                        } else {
+                        } وإلا {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
-                            *err=U_ILLEGAL_CHAR_FOUND;
-                            cnv->fromUChar32=sourceChar;
-                            break;
+                            *err=U_ILLEGAL_CHAR_لبھیا;
+                            cnv->fromUChar32=سروت_Char;
+                            اكسر;
                         }
-                    } else {
+                    } وإلا {
                         /* no more input */
-                        cnv->fromUChar32=sourceChar;
-                        break;
+                        cnv->fromUChar32=سروت_Char;
+                        اكسر;
                     }
-                } else {
+                } وإلا {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
-                    *err=U_ILLEGAL_CHAR_FOUND;
-                    cnv->fromUChar32=sourceChar;
-                    break;
+                    *err=U_ILLEGAL_CHAR_لبھیا;
+                    cnv->fromUChar32=سروت_Char;
+                    اكسر;
                 }
             }
 
-             tmpTargetBufferLength = 0;
-             tmpState = getState(sourceChar);
+             tmp_نشانہ_بفر_لمائی = 0;
+             tmpState = getState(سروت_Char);
 
-             if (tmpState != DO_SEARCH && currentState != tmpState) {
+             إذا (tmpState != DO_تلاش && currentState != tmpState) {
                  /* Get escape sequence if necessary */
                  currentState = tmpState;
-                 for (i = 0; escSeqCompoundText[currentState][i] != 0; i++) {
-                     tmpTargetBuffer[tmpTargetBufferLength++] = escSeqCompoundText[currentState][i];
+                 لكل (i = 0; esc_Seq_Compound_متن[currentState][i] != 0; i++) {
+                     tmp_نشانہ_بفر[tmp_نشانہ_بفر_لمائی++] = esc_Seq_Compound_متن[currentState][i];
                  }
              }
 
-             if (tmpState == DO_SEARCH) {
+             إذا (tmpState == DO_تلاش) {
                  /* Test all available converters */
-                 for (i = 1; i < SEARCH_LENGTH; i++) {
-                     pValueLength = ucnv_MBCSFromUChar32(myConverterData->myConverterArray[i], sourceChar, &pValue, useFallback);
-                     if (pValueLength > 0) {
-                         tmpState = (COMPOUND_TEXT_CONVERTERS)i;
-                         if (currentState != tmpState) {
+                 لكل (i = 1; i < تلاش_لمائی; i++) {
+                     p_قدر_لمائی = ucnv_MBCSFromUChar32(my_Converter_انکڑے->myConverterArray[i], سروت_Char, &p_قدر, useFallback);
+                     إذا (p_قدر_لمائی > 0) {
+                         tmpState = (COMPOUND_متن_CONVERTERS)i;
+                         إذا (currentState != tmpState) {
                              currentState = tmpState;
-                             for (j = 0; escSeqCompoundText[currentState][j] != 0; j++) {
-                                 tmpTargetBuffer[tmpTargetBufferLength++] = escSeqCompoundText[currentState][j];
+                             لكل (j = 0; esc_Seq_Compound_متن[currentState][j] != 0; j++) {
+                                 tmp_نشانہ_بفر[tmp_نشانہ_بفر_لمائی++] = esc_Seq_Compound_متن[currentState][j];
                              }
                          }
-                         for (n = (pValueLength - 1); n >= 0; n--) {
-                             tmpTargetBuffer[tmpTargetBufferLength++] = (uint8_t)(pValue >> (n * 8));
+                         لكل (n = (p_قدر_لمائی - 1); n >= 0; n--) {
+                             tmp_نشانہ_بفر[tmp_نشانہ_بفر_لمائی++] = (uint8_t)(p_قدر >> (n * 8));
                          }
-                         break;
+                         اكسر;
                      }
                  }
-             } else if (tmpState == COMPOUND_TEXT_SINGLE_0) {
-                 tmpTargetBuffer[tmpTargetBufferLength++] = (uint8_t)sourceChar;
-             } else {
-                 pValueLength = ucnv_MBCSFromUChar32(myConverterData->myConverterArray[currentState], sourceChar, &pValue, useFallback);
-                 if (pValueLength > 0) {
-                     for (n = (pValueLength - 1); n >= 0; n--) {
-                         tmpTargetBuffer[tmpTargetBufferLength++] = (uint8_t)(pValue >> (n * 8));
+             } وإلا إذا (tmpState == COMPOUND_متن_SINGLE_0) {
+                 tmp_نشانہ_بفر[tmp_نشانہ_بفر_لمائی++] = (uint8_t)سروت_Char;
+             } وإلا {
+                 p_قدر_لمائی = ucnv_MBCSFromUChar32(my_Converter_انکڑے->myConverterArray[currentState], سروت_Char, &p_قدر, useFallback);
+                 إذا (p_قدر_لمائی > 0) {
+                     لكل (n = (p_قدر_لمائی - 1); n >= 0; n--) {
+                         tmp_نشانہ_بفر[tmp_نشانہ_بفر_لمائی++] = (uint8_t)(p_قدر >> (n * 8));
                      }
                  }
              }
 
-             for (i = 0; i < tmpTargetBufferLength; i++) {
-                 if (target < targetLimit) {
-                     *target++ = tmpTargetBuffer[i];
-                 } else {
-                     *err = U_BUFFER_OVERFLOW_ERROR;
-                     break;
+             لكل (i = 0; i < tmp_نشانہ_بفر_لمائی; i++) {
+                 إذا (نشانہ < نشانہ_حد_بندی) {
+                     *نشانہ++ = tmp_نشانہ_بفر[i];
+                 } وإلا {
+                     *err = U_بفر_حد_توں_ودھ_ERROR;
+                     اكسر;
                  }
              }
 
-             if (*err == U_BUFFER_OVERFLOW_ERROR) {
-                 for (; i < tmpTargetBufferLength; i++) {
-                     args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = tmpTargetBuffer[i];
+             إذا (*err == U_بفر_حد_توں_ودھ_ERROR) {
+                 لكل (; i < tmp_نشانہ_بفر_لمائی; i++) {
+                     دلیلاں_2->converter->char_Error_بفر[دلیلاں_2->converter->char_Error_بفر_لمائی++] = tmp_نشانہ_بفر[i];
                  }
              }
-        } else {
-            *err = U_BUFFER_OVERFLOW_ERROR;
-            break;
+        } وإلا {
+            *err = U_بفر_حد_توں_ودھ_ERROR;
+            اكسر;
         }
     }
 
     /*save the state and return */
-    myConverterData->state = currentState;
-    args->source = source;
-    args->target = (char*)target;
+    my_Converter_انکڑے->state = currentState;
+    دلیلاں_2->سروت = سروت;
+    دلیلاں_2->نشانہ = (حرف*)نشانہ;
 }
 
 
-static void U_CALLCONV
-UConverter_toUnicode_CompoundText_OFFSETS(UConverterToUnicodeArgs *args,
-                                               UErrorCode* err){
-    const char *mySource = (char *) args->source;
-    char16_t *myTarget = args->target;
-    const char *mySourceLimit = args->sourceLimit;
-    const char *tmpSourceLimit = mySourceLimit;
-    uint32_t mySourceChar = 0x0000;
-    COMPOUND_TEXT_CONVERTERS currentState, tmpState;
-    int32_t sourceOffset = 0;
-    UConverterDataCompoundText *myConverterData = (UConverterDataCompoundText *) args->converter->extraInfo;
-    UConverterSharedData* savedSharedData = nullptr;
+ساكن فراغ U_CALLCONV
+UConverter_منزل_Unicode_Compound_متن_OFFSETS(UConverter_منزل_Unicode_دلیلاں *دلیلاں_2,
+                                               UError_کوڈ* err){
+    ثابت حرف *my_سروت = (حرف *) دلیلاں_2->سروت;
+    char16_t *my_نشانہ = دلیلاں_2->نشانہ;
+    ثابت حرف *my_سروت_حد_بندی = دلیلاں_2->سروت_حد_بندی;
+    ثابت حرف *tmp_سروت_حد_بندی = my_سروت_حد_بندی;
+    uint32_t my_سروت_Char = 0x0000;
+    COMPOUND_متن_CONVERTERS currentState, tmpState;
+    int32_t سروت_وتھ = 0;
+    UConverter_انکڑے_Compound_متن *my_Converter_انکڑے = (UConverter_انکڑے_Compound_متن *) دلیلاں_2->converter->extraInfo;
+    UConverter_Shared_انکڑے* saved_Shared_انکڑے = خالی_سوچک;
 
-    UConverterToUnicodeArgs subArgs;
-    int32_t minArgsSize;
+    UConverter_منزل_Unicode_دلیلاں sub_دلیلاں;
+    int32_t min_دلیلاں_ناپ;
 
     /* set up the subconverter arguments */
-    if(args->size<sizeof(UConverterToUnicodeArgs)) {
-        minArgsSize = args->size;
-    } else {
-        minArgsSize = (int32_t)sizeof(UConverterToUnicodeArgs);
+    إذا(دلیلاں_2->size<حجم(UConverter_منزل_Unicode_دلیلاں)) {
+        min_دلیلاں_ناپ = دلیلاں_2->size;
+    } وإلا {
+        min_دلیلاں_ناپ = (int32_t)حجم(UConverter_منزل_Unicode_دلیلاں);
     }
 
-    uprv_memcpy(&subArgs, args, minArgsSize);
-    subArgs.size = (uint16_t)minArgsSize;
+    uprv_memcpy(&sub_دلیلاں, دلیلاں_2, min_دلیلاں_ناپ);
+    sub_دلیلاں.size = (uint16_t)min_دلیلاں_ناپ;
 
-    currentState = tmpState =  myConverterData->state;
+    currentState = tmpState =  my_Converter_انکڑے->state;
 
-    while(mySource < mySourceLimit){
-        if(myTarget < args->targetLimit){
-            if (args->converter->toULength > 0) {
-                mySourceChar = args->converter->toUBytes[0];
-            } else {
-                mySourceChar = (uint8_t)*mySource;
+    طالما(my_سروت < my_سروت_حد_بندی){
+        إذا(my_نشانہ < دلیلاں_2->نشانہ_حد_بندی){
+            إذا (دلیلاں_2->converter->منزل_ULength > 0) {
+                my_سروت_Char = دلیلاں_2->converter->منزل_UBytes[0];
+            } وإلا {
+                my_سروت_Char = (uint8_t)*my_سروت;
             }
 
-            if (mySourceChar == ESC_START) {
-                tmpState = findStateFromEscSeq(mySource, mySourceLimit, args->converter->toUBytes, args->converter->toULength, err);
+            إذا (my_سروت_Char == ESC_شروع) {
+                tmpState = لبھو_State_From_Esc_Seq(my_سروت, my_سروت_حد_بندی, دلیلاں_2->converter->منزل_UBytes, دلیلاں_2->converter->منزل_ULength, err);
 
-                if (*err == U_TRUNCATED_CHAR_FOUND) {
-                    for (; mySource < mySourceLimit;) {
-                        args->converter->toUBytes[args->converter->toULength++] = *mySource++;
+                إذا (*err == U_TRUNCATED_CHAR_لبھیا) {
+                    لكل (; my_سروت < my_سروت_حد_بندی;) {
+                        دلیلاں_2->converter->منزل_UBytes[دلیلاں_2->converter->منزل_ULength++] = *my_سروت++;
                     }
                     *err = U_ZERO_ERROR;
-                    break;
-                } else if (tmpState == INVALID) {
-                    if (args->converter->toULength == 0) {
-                        mySource++; /* skip over the 0x1b byte */
+                    اكسر;
+                } وإلا إذا (tmpState == INVALID) {
+                    إذا (دلیلاں_2->converter->منزل_ULength == 0) {
+                        my_سروت++; /* skip over the 0x1b byte */
                     }
-                    *err = U_ILLEGAL_CHAR_FOUND;
-                    break;
+                    *err = U_ILLEGAL_CHAR_لبھیا;
+                    اكسر;
                 }
 
-                if (tmpState != currentState) {
+                إذا (tmpState != currentState) {
                     currentState = tmpState;
                 }
 
-                sourceOffset = static_cast<int32_t>(uprv_strlen((char*)escSeqCompoundText[currentState]) - args->converter->toULength);
+                سروت_وتھ = static_cast<int32_t>(uprv_strlen((حرف*)esc_Seq_Compound_متن[currentState]) - دلیلاں_2->converter->منزل_ULength);
 
-                mySource += sourceOffset;
+                my_سروت += سروت_وتھ;
 
-                args->converter->toULength = 0;
+                دلیلاں_2->converter->منزل_ULength = 0;
             }
 
-            if (currentState == COMPOUND_TEXT_SINGLE_0) {
-                while (mySource < mySourceLimit) {
-                    if (*mySource == ESC_START) {
-                        break;
+            إذا (currentState == COMPOUND_متن_SINGLE_0) {
+                طالما (my_سروت < my_سروت_حد_بندی) {
+                    إذا (*my_سروت == ESC_شروع) {
+                        اكسر;
                     }
-                    if (myTarget < args->targetLimit) {
-                        *myTarget++ = 0x00ff&(*mySource++);
-                    } else {
-                        *err = U_BUFFER_OVERFLOW_ERROR;
-                        break;
+                    إذا (my_نشانہ < دلیلاں_2->نشانہ_حد_بندی) {
+                        *my_نشانہ++ = 0x00ff&(*my_سروت++);
+                    } وإلا {
+                        *err = U_بفر_حد_توں_ودھ_ERROR;
+                        اكسر;
                     }
                 }
-            } else if (mySource < mySourceLimit){
-                sourceOffset = findNextEsc(mySource, mySourceLimit);
+            } وإلا إذا (my_سروت < my_سروت_حد_بندی){
+                سروت_وتھ = لبھو_اگلا_Esc(my_سروت, my_سروت_حد_بندی);
 
-                tmpSourceLimit = mySource + sourceOffset;
+                tmp_سروت_حد_بندی = my_سروت + سروت_وتھ;
 
-                subArgs.source = mySource;
-                subArgs.sourceLimit = tmpSourceLimit;
-                subArgs.target = myTarget;
-                savedSharedData = subArgs.converter->sharedData;
-                subArgs.converter->sharedData = myConverterData->myConverterArray[currentState];
+                sub_دلیلاں.سروت = my_سروت;
+                sub_دلیلاں.سروت_حد_بندی = tmp_سروت_حد_بندی;
+                sub_دلیلاں.نشانہ = my_نشانہ;
+                saved_Shared_انکڑے = sub_دلیلاں.converter->shared_انکڑے;
+                sub_دلیلاں.converter->shared_انکڑے = my_Converter_انکڑے->myConverterArray[currentState];
 
-                ucnv_MBCSToUnicodeWithOffsets(&subArgs, err);
+                ucnv_MBCSToUnicodeWithOffsets(&sub_دلیلاں, err);
 
-                subArgs.converter->sharedData = savedSharedData;
+                sub_دلیلاں.converter->shared_انکڑے = saved_Shared_انکڑے;
 
-                mySource = subArgs.source;
-                myTarget = subArgs.target;
+                my_سروت = sub_دلیلاں.سروت;
+                my_نشانہ = sub_دلیلاں.نشانہ;
 
-                if (U_FAILURE(*err)) {
-                    if(*err == U_BUFFER_OVERFLOW_ERROR) {
-                        if(subArgs.converter->UCharErrorBufferLength > 0) {
-                            uprv_memcpy(args->converter->UCharErrorBuffer, subArgs.converter->UCharErrorBuffer,
-                                        subArgs.converter->UCharErrorBufferLength);
+                إذا (U_FAILURE(*err)) {
+                    إذا(*err == U_بفر_حد_توں_ودھ_ERROR) {
+                        إذا(sub_دلیلاں.converter->UChar_Error_بفر_لمائی > 0) {
+                            uprv_memcpy(دلیلاں_2->converter->UChar_Error_بفر, sub_دلیلاں.converter->UChar_Error_بفر,
+                                        sub_دلیلاں.converter->UChar_Error_بفر_لمائی);
                         }
-                        args->converter->UCharErrorBufferLength=subArgs.converter->UCharErrorBufferLength;
-                        subArgs.converter->UCharErrorBufferLength = 0;
+                        دلیلاں_2->converter->UChar_Error_بفر_لمائی=sub_دلیلاں.converter->UChar_Error_بفر_لمائی;
+                        sub_دلیلاں.converter->UChar_Error_بفر_لمائی = 0;
                     }
-                    break;
+                    اكسر;
                 }
             }
-        } else {
-            *err = U_BUFFER_OVERFLOW_ERROR;
-            break;
+        } وإلا {
+            *err = U_بفر_حد_توں_ودھ_ERROR;
+            اكسر;
         }
     }
-    myConverterData->state = currentState;
-    args->target = myTarget;
-    args->source = mySource;
+    my_Converter_انکڑے->state = currentState;
+    دلیلاں_2->نشانہ = my_نشانہ;
+    دلیلاں_2->سروت = my_سروت;
 }
 
-static void U_CALLCONV
-_CompoundText_GetUnicodeSet(const UConverter *cnv,
-                    const USetAdder *sa,
-                    UConverterUnicodeSet which,
-                    UErrorCode *pErrorCode) {
-    UConverterDataCompoundText *myConverterData = (UConverterDataCompoundText *)cnv->extraInfo;
+ساكن فراغ U_CALLCONV
+Compound_متن_Get_Unicode_سیٹ(ثابت UConverter *cnv,
+                    ثابت USetAdder *sa,
+                    UConverter_Unicode_سیٹ which,
+                    UError_کوڈ *p_Error_کوڈ) {
+    UConverter_انکڑے_Compound_متن *my_Converter_انکڑے = (UConverter_انکڑے_Compound_متن *)cnv->extraInfo;
     int32_t i;
 
-    for (i = 1; i < NUM_OF_CONVERTERS; i++) {
-        ucnv_MBCSGetUnicodeSetForUnicode(myConverterData->myConverterArray[i], sa, which, pErrorCode);
+    لكل (i = 1; i < عدد_دا_CONVERTERS; i++) {
+        ucnv_MBCSGet_Unicode_سیٹ_For_Unicode(my_Converter_انکڑے->myConverterArray[i], sa, which, p_Error_کوڈ);
     }
-    sa->add(sa->set, 0x0000);
-    sa->add(sa->set, 0x0009);
-    sa->add(sa->set, 0x000A);
-    sa->addRange(sa->set, 0x0020, 0x007F);
-    sa->addRange(sa->set, 0x00A0, 0x00FF);
+    sa->جوڑو(sa->سیٹ, 0x0000);
+    sa->جوڑو(sa->سیٹ, 0x0009);
+    sa->جوڑو(sa->سیٹ, 0x000A);
+    sa->جوڑو_Range(sa->سیٹ, 0x0020, 0x007F);
+    sa->جوڑو_Range(sa->سیٹ, 0x00A0, 0x00FF);
 }
-U_CDECL_END
+U_CDECL_سرا
 
-static const UConverterImpl _CompoundTextImpl = {
+ساكن ثابت UConverterImpl Compound_متن_Impl = {
 
-    UCNV_COMPOUND_TEXT,
+    UCNV_COMPOUND_متن,
 
-    nullptr,
-    nullptr,
+    خالی_سوچک,
+    خالی_سوچک,
 
-    _CompoundTextOpen,
-    _CompoundTextClose,
-    _CompoundTextReset,
+    Compound_متن_Open,
+    Compound_متن_Close,
+    Compound_متن_Reset,
 
-    UConverter_toUnicode_CompoundText_OFFSETS,
-    UConverter_toUnicode_CompoundText_OFFSETS,
-    UConverter_fromUnicode_CompoundText_OFFSETS,
-    UConverter_fromUnicode_CompoundText_OFFSETS,
-    nullptr,
+    UConverter_منزل_Unicode_Compound_متن_OFFSETS,
+    UConverter_منزل_Unicode_Compound_متن_OFFSETS,
+    UConverter_from_Unicode_Compound_متن_OFFSETS,
+    UConverter_from_Unicode_Compound_متن_OFFSETS,
+    خالی_سوچک,
 
-    nullptr,
+    خالی_سوچک,
     _CompoundTextgetName,
-    nullptr,
-    nullptr,
-    _CompoundText_GetUnicodeSet,
-    nullptr,
-    nullptr
+    خالی_سوچک,
+    خالی_سوچک,
+    Compound_متن_Get_Unicode_سیٹ,
+    خالی_سوچک,
+    خالی_سوچک
 };
 
-static const UConverterStaticData _CompoundTextStaticData = {
-    sizeof(UConverterStaticData),
+ساكن ثابت UConverter_Static_انکڑے Compound_متن_Static_انکڑے = {
+    حجم(UConverter_Static_انکڑے),
     "COMPOUND_TEXT",
     0,
     UCNV_IBM,
-    UCNV_COMPOUND_TEXT,
+    UCNV_COMPOUND_متن,
     1,
     6,
     { 0xef, 0, 0, 0 },
     1,
-    false,
-    false,
+    خطأ,
+    خطأ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
-const UConverterSharedData _CompoundTextData =
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_CompoundTextStaticData, &_CompoundTextImpl);
+ثابت UConverter_Shared_انکڑے Compound_متن_انکڑے =
+        UCNV_IMMUTABLE_SHARED_انکڑے_INITIALIZER(&Compound_متن_Static_انکڑے, &Compound_متن_Impl);
 
-#endif /* #if !UCONFIG_NO_LEGACY_CONVERSION */
+#جے_انت /* #if !UCONFIG_NO_LEGACY_CONVERSION */

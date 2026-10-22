@@ -16,8 +16,8 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __ERRORCODE_H__
-#define __ERRORCODE_H__
+#جے_بنا_تعریف __ERRORCODE_H__
+#تعریف_کرو __ERRORCODE_H__
 
 /**
  * \file 
@@ -25,11 +25,11 @@
  *                 ICU C and C++ APIs from C++ user code.
  */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#ضمن "unicode/uobject.h"
 
 U_NAMESPACE_BEGIN
 
@@ -81,29 +81,29 @@ U_NAMESPACE_BEGIN
  *
  * @stable ICU 4.2
  */
-class U_COMMON_API ErrorCode: public UMemory {
-public:
+class U_COMMON_API Error_کوڈ: عام UMemory {
+عام:
     /**
      * Default constructor. Initializes its UErrorCode to U_ZERO_ERROR.
      * @stable ICU 4.2
      */
-    ErrorCode() : errorCode(U_ZERO_ERROR) {}
+    Error_کوڈ() : error_کوڈ(U_ZERO_ERROR) {}
     /** Destructor, does nothing. See class documentation for details. @stable ICU 4.2 */
-    virtual ~ErrorCode();
+    مجازی ~Error_کوڈ();
     /** Conversion operator, returns a reference. @stable ICU 4.2 */
-    operator UErrorCode&() U_LIFETIME_BOUND { return errorCode; }
+    عامل UError_کوڈ&() U_LIFETIME_BOUND { أرجع error_کوڈ; }
     /** Conversion operator, returns a pointer. @stable ICU 4.2 */
-    operator UErrorCode*() U_LIFETIME_BOUND { return &errorCode; }
+    عامل UError_کوڈ*() U_LIFETIME_BOUND { أرجع &error_کوڈ; }
     /** Tests for U_SUCCESS(). @stable ICU 4.2 */
-    UBool isSuccess() const { return U_SUCCESS(errorCode); }
+    UBool isSuccess() ثابت { أرجع U_SUCCESS(error_کوڈ); }
     /** Tests for U_FAILURE(). @stable ICU 4.2 */
-    UBool isFailure() const { return U_FAILURE(errorCode); }
+    UBool isFailure() ثابت { أرجع U_FAILURE(error_کوڈ); }
     /** Returns the UErrorCode value. @stable ICU 4.2 */
-    UErrorCode get() const { return errorCode; }
+    UError_کوڈ get() ثابت { أرجع error_کوڈ; }
     /** Sets the UErrorCode value. @stable ICU 4.2 */
-    void set(UErrorCode value) { errorCode=value; }
+    فراغ سیٹ(UError_کوڈ قدر_2) { error_کوڈ=قدر_2; }
     /** Returns the UErrorCode value and resets it to U_ZERO_ERROR. @stable ICU 4.2 */
-    UErrorCode reset();
+    UError_کوڈ reset();
     /**
      * Asserts isSuccess().
      * In other words, this method checks for a failure code,
@@ -113,32 +113,32 @@ public:
      * \endcode
      * @stable ICU 4.4
      */
-    void assertSuccess() const;
+    فراغ assertSuccess() ثابت;
     /**
      * Return a string for the UErrorCode value.
      * The string will be the same as the name of the error code constant
      * in the UErrorCode enum.
      * @stable ICU 4.4
      */
-    const char* errorName() const;
+    ثابت حرف* errorName() ثابت;
 
-protected:
+محمي:
     /**
      * Internal UErrorCode, accessible to subclasses.
      * @stable ICU 4.2
      */
-    UErrorCode errorCode;
+    UError_کوڈ error_کوڈ;
     /**
      * Called by assertSuccess() if isFailure() is true.
      * A subclass should override this function to deal with a failure code:
      * Throw an exception, log an error, terminate the program, or similar.
      * @stable ICU 4.2
      */
-    virtual void handleFailure() const {}
+    مجازی فراغ handleFailure() ثابت {}
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_سرا
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#جے_انت /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __ERRORCODE_H__
+#جے_انت  // __ERRORCODE_H__

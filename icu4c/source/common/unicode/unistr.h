@@ -20,45 +20,45 @@
 ******************************************************************************
 */
 
-#ifndef UNISTR_H
-#define UNISTR_H
+#جے_بنا_تعریف UNISTR_H
+#تعریف_کرو UNISTR_H
 
 /**
  * \file
  * \brief C++ API: Unicode String
  */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#include <cstddef>
-#include <string_view>
-#include "unicode/char16ptr.h"
-#include "unicode/rep.h"
-#include "unicode/std_string.h"
-#include "unicode/stringpiece.h"
-#include "unicode/bytestream.h"
+#ضمن <cstddef>
+#ضمن <string_view>
+#ضمن "unicode/char16ptr.h"
+#ضمن "unicode/rep.h"
+#ضمن "unicode/std_string.h"
+#ضمن "unicode/stringpiece.h"
+#ضمن "unicode/bytestream.h"
 
-struct UConverter;          // unicode/ucnv.h
+بنية UConverter;          // unicode/ucnv.h
 
-#ifndef USTRING_H
+#جے_بنا_تعریف USTRING_H
 /**
  * \ingroup ustring_ustrlen
  * @param s Pointer to sequence of UChars.
  * @return Length of sequence.
  */
-U_CAPI int32_t U_EXPORT2 u_strlen(const UChar *s);
-#endif
+U_CAPI int32_t U_EXPORT2 u_strlen(ثابت UChar *s);
+#جے_انت
 
 U_NAMESPACE_BEGIN
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#إذا !UCONFIG_NO_BREAK_ITERATION
 class BreakIterator;        // unicode/brkiter.h
-#endif
+#جے_انت
 class Edits;
 
-U_NAMESPACE_END
+U_NAMESPACE_سرا
 
 // Not #ifndef U_HIDE_INTERNAL_API because UnicodeString needs the UStringCaseMapper.
 /**
@@ -67,15 +67,15 @@ U_NAMESPACE_END
  * src and dest must not overlap.
  * @internal
  */
-typedef int32_t U_CALLCONV
+تعريفنوع int32_t U_CALLCONV
 UStringCaseMapper(int32_t caseLocale, uint32_t options,
-#if !UCONFIG_NO_BREAK_ITERATION
+#إذا !UCONFIG_NO_BREAK_ITERATION
                   icu::BreakIterator *iter,
-#endif
-                  char16_t *dest, int32_t destCapacity,
-                  const char16_t *src, int32_t srcLength,
+#جے_انت
+                  char16_t *dest, int32_t dest_سمرتھا,
+                  ثابت char16_t *src, int32_t src_لمائی,
                   icu::Edits *edits,
-                  UErrorCode &errorCode);
+                  UError_کوڈ &error_کوڈ);
 
 U_NAMESPACE_BEGIN
 
@@ -95,7 +95,7 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  *
  * @stable ICU 3.2
  */
-#define US_INV icu::UnicodeString::kInvariant
+#تعریف_کرو US_INV icu::UnicodeString::kInvariant
 
 /**
  * \def UNICODE_STRING
@@ -117,11 +117,11 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * `NUL`, must be specified as a constant.
  * @stable ICU 2.0
  */
-#if !U_CHAR16_IS_TYPEDEF
-# define UNICODE_STRING(cs, _length) icu::UnicodeString(true, u ## cs, _length)
-#else
-# define UNICODE_STRING(cs, _length) icu::UnicodeString(true, (const char16_t*)u ## cs, _length)
-#endif
+#إذا !U_CHAR16_IS_TYPEDEF
+# define UNICODE_STRING(cs, لمائی_4) icu::UnicodeString(true, u ## cs, لمائی_4)
+#وإلا
+# define UNICODE_STRING(cs, لمائی_4) icu::UnicodeString(true, (ثابت char16_t*)u ## cs, لمائی_4)
+#جے_انت
 
 /**
  * Unicode String literals in C++.
@@ -132,7 +132,7 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * @stable ICU 2.0
  * @see UNICODE_STRING
  */
-#define UNICODE_STRING_SIMPLE(cs) UNICODE_STRING(cs, -1)
+#تعریف_کرو UNICODE_STRING_SIMPLE(cs) UNICODE_STRING(cs, -1)
 
 /**
  * \def UNISTR_FROM_CHAR_EXPLICIT
@@ -141,15 +141,15 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * constructors are marked as explicit, preventing their inadvertent use.
  * @stable ICU 49
  */
-#ifndef UNISTR_FROM_CHAR_EXPLICIT
-# if defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION)
+#جے_بنا_تعریف UNISTR_FROM_CHAR_EXPLICIT
+# إذا defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION)
     // Auto-"explicit" in ICU library code.
 #   define UNISTR_FROM_CHAR_EXPLICIT explicit
-# else
+# وإلا
     // Empty by default for source code compatibility.
 #   define UNISTR_FROM_CHAR_EXPLICIT
 # endif
-#endif
+#جے_انت
 
 /**
  * \def UNISTR_FROM_STRING_EXPLICIT
@@ -161,15 +161,15 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * by passing a string literal into an API with a const UnicodeString & parameter.
  * @stable ICU 49
  */
-#ifndef UNISTR_FROM_STRING_EXPLICIT
-# if defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION)
+#جے_بنا_تعریف UNISTR_FROM_STRING_EXPLICIT
+# إذا defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION)
     // Auto-"explicit" in ICU library code.
 #   define UNISTR_FROM_STRING_EXPLICIT explicit
-# else
+# وإلا
     // Empty by default for source code compatibility.
 #   define UNISTR_FROM_STRING_EXPLICIT
 # endif
-#endif
+#جے_انت
 
 /**
  * \def UNISTR_OBJECT_SIZE
@@ -204,9 +204,9 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * @see U16_MAX_LENGTH
  * @stable ICU 56
  */
-#ifndef UNISTR_OBJECT_SIZE
-# define UNISTR_OBJECT_SIZE 64
-#endif
+#جے_بنا_تعریف UNISTR_OBJECT_ناپ
+# define UNISTR_OBJECT_ناپ 64
+#جے_انت
 
 /**
  * UnicodeString is a string class that stores Unicode characters directly and provides
@@ -299,11 +299,11 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * @see CharacterIterator
  * @stable ICU 2.0
  */
-class U_COMMON_API UnicodeString : public Replaceable
+class U_COMMON_API UnicodeString : عام Replaceable
 {
-public:
+عام:
   /** C++ boilerplate @internal */
-  using value_type = char16_t;
+  using قدر_type = char16_t;
 
   /**
    * Constant to be used in the UnicodeString(char *, int32_t, EInvariant) constructor
@@ -313,7 +313,7 @@ public:
    * @see US_INV
    * @stable ICU 3.2
    */
-  enum EInvariant {
+  تعداد EInvariant {
     /**
      * @see EInvariant
      * @stable ICU 3.2
@@ -334,7 +334,7 @@ public:
    * false otherwise.
    * @stable ICU 2.0
    */
-  inline bool operator== (const UnicodeString& text) const;
+  مضمن bool عامل== (ثابت UnicodeString& متن) ثابت;
 
   /**
    * Equality operator. Performs only bitwise comparison with `text`
@@ -351,11 +351,11 @@ public:
    * @return true if `text` contains the same characters as this one, false otherwise.
    * @stable ICU 76
    */
-  template<typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  inline bool operator==(const S &text) const {
-    std::u16string_view sv(internal::toU16StringView(text));
+  سانچا<typename S, typename = std::enable_if_t<Convertible_منزل_U16_String_View<S>>>
+  مضمن bool عامل==(ثابت S &متن) ثابت {
+    std::u16string_view sv(اندرونی_2::منزل_U16_String_View(متن));
     uint32_t len;  // unsigned to avoid a compiler warning
-    return !isBogus() && (len = length()) == sv.length() && doEquals(sv.data(), len);
+    أرجع !isBogus() && (len = لمائی()) == sv.لمائی() && doEquals(sv.انکڑے(), len);
   }
 
   /**
@@ -365,7 +365,7 @@ public:
    * true otherwise.
    * @stable ICU 2.0
    */
-  inline bool operator!= (const UnicodeString& text) const;
+  مضمن bool عامل!= (ثابت UnicodeString& متن) ثابت;
 
   /**
    * Inequality operator. Performs only bitwise comparison with `text`
@@ -384,9 +384,9 @@ public:
    * @return false if `text` contains the same characters as this one, true otherwise.
    * @stable ICU 76
    */
-  template<typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  inline bool operator!=(const S &text) const {
-    return !operator==(text);
+  سانچا<typename S, typename = std::enable_if_t<Convertible_منزل_U16_String_View<S>>>
+  مضمن bool عامل!=(ثابت S &متن) ثابت {
+    أرجع !عامل==(متن);
   }
 
   /**
@@ -396,7 +396,7 @@ public:
    * greater than the characters in `text`, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool operator> (const UnicodeString& text) const;
+  مضمن UBool عامل> (ثابت UnicodeString& متن) ثابت;
 
   /**
    * Less than operator. Performs only bitwise comparison.
@@ -405,7 +405,7 @@ public:
    * less than the characters in `text`, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool operator< (const UnicodeString& text) const;
+  مضمن UBool عامل< (ثابت UnicodeString& متن) ثابت;
 
   /**
    * Greater than or equal operator. Performs only bitwise comparison.
@@ -414,7 +414,7 @@ public:
    * greater than or equal to the characters in `text`, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool operator>= (const UnicodeString& text) const;
+  مضمن UBool عامل>= (ثابت UnicodeString& متن) ثابت;
 
   /**
    * Less than or equal operator. Performs only bitwise comparison.
@@ -423,7 +423,7 @@ public:
    * less than or equal to the characters in `text`, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool operator<= (const UnicodeString& text) const;
+  مضمن UBool عامل<= (ثابت UnicodeString& متن) ثابت;
 
   /**
    * Compare the characters bitwise in this UnicodeString to
@@ -436,7 +436,7 @@ public:
    * in `text`.
    * @stable ICU 2.0
    */
-  inline int8_t compare(const UnicodeString& text) const;
+  مضمن int8_t compare(ثابت UnicodeString& متن) ثابت;
 
   /**
    * Compare the characters bitwise in the range
@@ -453,9 +453,9 @@ public:
    * in `text`.
    * @stable ICU 2.0
    */
-  inline int8_t compare(int32_t start,
-         int32_t length,
-         const UnicodeString& text) const;
+  مضمن int8_t compare(int32_t شروع,
+         int32_t لمائی,
+         ثابت UnicodeString& متن) ثابت;
 
   /**
    * Compare the characters bitwise in the range
@@ -474,11 +474,11 @@ public:
    * in `srcText`.
    * @stable ICU 2.0
    */
-   inline int8_t compare(int32_t start,
-         int32_t length,
-         const UnicodeString& srcText,
-         int32_t srcStart,
-         int32_t srcLength) const;
+   مضمن int8_t compare(int32_t شروع,
+         int32_t لمائی,
+         ثابت UnicodeString& src_متن,
+         int32_t src_شروع,
+         int32_t src_لمائی) ثابت;
 
   /**
    * Compare the characters bitwise in this UnicodeString with the first
@@ -492,8 +492,8 @@ public:
    * in `srcChars`.
    * @stable ICU 2.0
    */
-  inline int8_t compare(ConstChar16Ptr srcChars,
-         int32_t srcLength) const;
+  مضمن int8_t compare(ConstChar16Ptr srcChars,
+         int32_t src_لمائی) ثابت;
 
   /**
    * Compare the characters bitwise in the range
@@ -509,9 +509,9 @@ public:
    * in `srcChars`.
    * @stable ICU 2.0
    */
-  inline int8_t compare(int32_t start,
-         int32_t length,
-         const char16_t *srcChars) const;
+  مضمن int8_t compare(int32_t شروع,
+         int32_t لمائی,
+         ثابت char16_t *srcChars) ثابت;
 
   /**
    * Compare the characters bitwise in the range
@@ -530,11 +530,11 @@ public:
    * in `srcChars`.
    * @stable ICU 2.0
    */
-  inline int8_t compare(int32_t start,
-         int32_t length,
-         const char16_t *srcChars,
-         int32_t srcStart,
-         int32_t srcLength) const;
+  مضمن int8_t compare(int32_t شروع,
+         int32_t لمائی,
+         ثابت char16_t *srcChars,
+         int32_t src_شروع,
+         int32_t src_لمائی) ثابت;
 
   /**
    * Compare the characters bitwise in the range
@@ -553,11 +553,11 @@ public:
    * in `srcText`.
    * @stable ICU 2.0
    */
-  inline int8_t compareBetween(int32_t start,
-            int32_t limit,
-            const UnicodeString& srcText,
-            int32_t srcStart,
-            int32_t srcLimit) const;
+  مضمن int8_t compareBetween(int32_t شروع,
+            int32_t حد_بندی,
+            ثابت UnicodeString& src_متن,
+            int32_t src_شروع,
+            int32_t src_حد_بندی) ثابت;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -576,7 +576,7 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrder(const UnicodeString& text) const;
+  مضمن int8_t compare_کوڈ_نقطہ_ترتیب(ثابت UnicodeString& متن) ثابت;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -597,9 +597,9 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrder(int32_t start,
-                                      int32_t length,
-                                      const UnicodeString& srcText) const;
+  مضمن int8_t compare_کوڈ_نقطہ_ترتیب(int32_t شروع,
+                                      int32_t لمائی,
+                                      ثابت UnicodeString& src_متن) ثابت;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -622,11 +622,11 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-   inline int8_t compareCodePointOrder(int32_t start,
-                                       int32_t length,
-                                       const UnicodeString& srcText,
-                                       int32_t srcStart,
-                                       int32_t srcLength) const;
+   مضمن int8_t compare_کوڈ_نقطہ_ترتیب(int32_t شروع,
+                                       int32_t لمائی,
+                                       ثابت UnicodeString& src_متن,
+                                       int32_t src_شروع,
+                                       int32_t src_لمائی) ثابت;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -646,8 +646,8 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrder(ConstChar16Ptr srcChars,
-                                      int32_t srcLength) const;
+  مضمن int8_t compare_کوڈ_نقطہ_ترتیب(ConstChar16Ptr srcChars,
+                                      int32_t src_لمائی) ثابت;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -668,9 +668,9 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrder(int32_t start,
-                                      int32_t length,
-                                      const char16_t *srcChars) const;
+  مضمن int8_t compare_کوڈ_نقطہ_ترتیب(int32_t شروع,
+                                      int32_t لمائی,
+                                      ثابت char16_t *srcChars) ثابت;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -693,11 +693,11 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrder(int32_t start,
-                                      int32_t length,
-                                      const char16_t *srcChars,
-                                      int32_t srcStart,
-                                      int32_t srcLength) const;
+  مضمن int8_t compare_کوڈ_نقطہ_ترتیب(int32_t شروع,
+                                      int32_t لمائی,
+                                      ثابت char16_t *srcChars,
+                                      int32_t src_شروع,
+                                      int32_t src_لمائی) ثابت;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -720,11 +720,11 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrderBetween(int32_t start,
-                                             int32_t limit,
-                                             const UnicodeString& srcText,
-                                             int32_t srcStart,
-                                             int32_t srcLimit) const;
+  مضمن int8_t compare_کوڈ_نقطہ_ترتیب_Between(int32_t شروع,
+                                             int32_t حد_بندی,
+                                             ثابت UnicodeString& src_متن,
+                                             int32_t src_شروع,
+                                             int32_t src_حد_بندی) ثابت;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -744,7 +744,7 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(const UnicodeString& text, uint32_t options) const;
+  مضمن int8_t caseCompare(ثابت UnicodeString& متن, uint32_t options) ثابت;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -766,10 +766,10 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(int32_t start,
-         int32_t length,
-         const UnicodeString& srcText,
-         uint32_t options) const;
+  مضمن int8_t caseCompare(int32_t شروع,
+         int32_t لمائی,
+         ثابت UnicodeString& src_متن,
+         uint32_t options) ثابت;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -793,12 +793,12 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(int32_t start,
-         int32_t length,
-         const UnicodeString& srcText,
-         int32_t srcStart,
-         int32_t srcLength,
-         uint32_t options) const;
+  مضمن int8_t caseCompare(int32_t شروع,
+         int32_t لمائی,
+         ثابت UnicodeString& src_متن,
+         int32_t src_شروع,
+         int32_t src_لمائی,
+         uint32_t options) ثابت;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -819,9 +819,9 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(ConstChar16Ptr srcChars,
-         int32_t srcLength,
-         uint32_t options) const;
+  مضمن int8_t caseCompare(ConstChar16Ptr srcChars,
+         int32_t src_لمائی,
+         uint32_t options) ثابت;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -843,10 +843,10 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(int32_t start,
-         int32_t length,
-         const char16_t *srcChars,
-         uint32_t options) const;
+  مضمن int8_t caseCompare(int32_t شروع,
+         int32_t لمائی,
+         ثابت char16_t *srcChars,
+         uint32_t options) ثابت;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -870,12 +870,12 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(int32_t start,
-         int32_t length,
-         const char16_t *srcChars,
-         int32_t srcStart,
-         int32_t srcLength,
-         uint32_t options) const;
+  مضمن int8_t caseCompare(int32_t شروع,
+         int32_t لمائی,
+         ثابت char16_t *srcChars,
+         int32_t src_شروع,
+         int32_t src_لمائی,
+         uint32_t options) ثابت;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -899,12 +899,12 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompareBetween(int32_t start,
-            int32_t limit,
-            const UnicodeString& srcText,
-            int32_t srcStart,
-            int32_t srcLimit,
-            uint32_t options) const;
+  مضمن int8_t caseCompareBetween(int32_t شروع,
+            int32_t حد_بندی,
+            ثابت UnicodeString& src_متن,
+            int32_t src_شروع,
+            int32_t src_حد_بندی,
+            uint32_t options) ثابت;
 
   /**
    * Determine if this starts with the characters in `text`
@@ -913,7 +913,7 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool startsWith(const UnicodeString& text) const;
+  مضمن UBool startsWith(ثابت UnicodeString& متن) ثابت;
 
   /**
    * Determine if this starts with the characters in `srcText`
@@ -925,9 +925,9 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool startsWith(const UnicodeString& srcText,
-            int32_t srcStart,
-            int32_t srcLength) const;
+  مضمن UBool startsWith(ثابت UnicodeString& src_متن,
+            int32_t src_شروع,
+            int32_t src_لمائی) ثابت;
 
   /**
    * Determine if this starts with the characters in `srcChars`
@@ -937,8 +937,8 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool startsWith(ConstChar16Ptr srcChars,
-            int32_t srcLength) const;
+  مضمن UBool startsWith(ConstChar16Ptr srcChars,
+            int32_t src_لمائی) ثابت;
 
   /**
    * Determine if this ends with the characters in `srcChars`
@@ -949,9 +949,9 @@ public:
    * @return true if this ends with the characters in `srcChars`, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool startsWith(const char16_t *srcChars,
-            int32_t srcStart,
-            int32_t srcLength) const;
+  مضمن UBool startsWith(ثابت char16_t *srcChars,
+            int32_t src_شروع,
+            int32_t src_لمائی) ثابت;
 
   /**
    * Determine if this ends with the characters in `text`
@@ -960,7 +960,7 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool endsWith(const UnicodeString& text) const;
+  مضمن UBool سرے_With(ثابت UnicodeString& متن) ثابت;
 
   /**
    * Determine if this ends with the characters in `srcText`
@@ -972,9 +972,9 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool endsWith(const UnicodeString& srcText,
-          int32_t srcStart,
-          int32_t srcLength) const;
+  مضمن UBool سرے_With(ثابت UnicodeString& src_متن,
+          int32_t src_شروع,
+          int32_t src_لمائی) ثابت;
 
   /**
    * Determine if this ends with the characters in `srcChars`
@@ -984,8 +984,8 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool endsWith(ConstChar16Ptr srcChars,
-          int32_t srcLength) const;
+  مضمن UBool سرے_With(ConstChar16Ptr srcChars,
+          int32_t src_لمائی) ثابت;
 
   /**
    * Determine if this ends with the characters in `srcChars`
@@ -997,9 +997,9 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool endsWith(const char16_t *srcChars,
-          int32_t srcStart,
-          int32_t srcLength) const;
+  مضمن UBool سرے_With(ثابت char16_t *srcChars,
+          int32_t src_شروع,
+          int32_t src_لمائی) ثابت;
 
 
   /* Searching - bitwise only */
@@ -1012,7 +1012,7 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(const UnicodeString& text) const;
+  مضمن int32_t اشاریہ_دا(ثابت UnicodeString& متن) ثابت;
 
   /**
    * Locate in this the first occurrence of the characters in `text`
@@ -1023,8 +1023,8 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(const UnicodeString& text,
-              int32_t start) const;
+  مضمن int32_t اشاریہ_دا(ثابت UnicodeString& متن,
+              int32_t شروع) ثابت;
 
   /**
    * Locate in this the first occurrence in the range
@@ -1037,9 +1037,9 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(const UnicodeString& text,
-              int32_t start,
-              int32_t length) const;
+  مضمن int32_t اشاریہ_دا(ثابت UnicodeString& متن,
+              int32_t شروع,
+              int32_t لمائی) ثابت;
 
   /**
    * Locate in this the first occurrence in the range
@@ -1057,11 +1057,11 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(const UnicodeString& srcText,
-              int32_t srcStart,
-              int32_t srcLength,
-              int32_t start,
-              int32_t length) const;
+  مضمن int32_t اشاریہ_دا(ثابت UnicodeString& src_متن,
+              int32_t src_شروع,
+              int32_t src_لمائی,
+              int32_t شروع,
+              int32_t لمائی) ثابت;
 
   /**
    * Locate in this the first occurrence of the characters in
@@ -1074,9 +1074,9 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(const char16_t *srcChars,
-              int32_t srcLength,
-              int32_t start) const;
+  مضمن int32_t اشاریہ_دا(ثابت char16_t *srcChars,
+              int32_t src_لمائی,
+              int32_t شروع) ثابت;
 
   /**
    * Locate in this the first occurrence in the range
@@ -1090,10 +1090,10 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(ConstChar16Ptr srcChars,
-              int32_t srcLength,
-              int32_t start,
-              int32_t length) const;
+  مضمن int32_t اشاریہ_دا(ConstChar16Ptr srcChars,
+              int32_t src_لمائی,
+              int32_t شروع,
+              int32_t لمائی) ثابت;
 
   /**
    * Locate in this the first occurrence in the range
@@ -1111,11 +1111,11 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  int32_t indexOf(const char16_t *srcChars,
-              int32_t srcStart,
-              int32_t srcLength,
-              int32_t start,
-              int32_t length) const;
+  int32_t اشاریہ_دا(ثابت char16_t *srcChars,
+              int32_t src_شروع,
+              int32_t src_لمائی,
+              int32_t شروع,
+              int32_t لمائی) ثابت;
 
   /**
    * Locate in this the first occurrence of the BMP code point `c`,
@@ -1124,7 +1124,7 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(char16_t c) const;
+  مضمن int32_t اشاریہ_دا(char16_t c) ثابت;
 
   /**
    * Locate in this the first occurrence of the code point `c`,
@@ -1134,7 +1134,7 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(UChar32 c) const;
+  مضمن int32_t اشاریہ_دا(UChar32 c) ثابت;
 
   /**
    * Locate in this the first occurrence of the BMP code point `c`,
@@ -1144,8 +1144,8 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(char16_t c,
-              int32_t start) const;
+  مضمن int32_t اشاریہ_دا(char16_t c,
+              int32_t شروع) ثابت;
 
   /**
    * Locate in this the first occurrence of the code point `c`
@@ -1156,8 +1156,8 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(UChar32 c,
-              int32_t start) const;
+  مضمن int32_t اشاریہ_دا(UChar32 c,
+              int32_t شروع) ثابت;
 
   /**
    * Locate in this the first occurrence of the BMP code point `c`
@@ -1169,9 +1169,9 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(char16_t c,
-              int32_t start,
-              int32_t length) const;
+  مضمن int32_t اشاریہ_دا(char16_t c,
+              int32_t شروع,
+              int32_t لمائی) ثابت;
 
   /**
    * Locate in this the first occurrence of the code point `c`
@@ -1184,9 +1184,9 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(UChar32 c,
-              int32_t start,
-              int32_t length) const;
+  مضمن int32_t اشاریہ_دا(UChar32 c,
+              int32_t شروع,
+              int32_t لمائی) ثابت;
 
   /**
    * Locate in this the last occurrence of the characters in `text`,
@@ -1196,7 +1196,7 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(const UnicodeString& text) const;
+  مضمن int32_t آخری_اشاریہ_دا(ثابت UnicodeString& متن) ثابت;
 
   /**
    * Locate in this the last occurrence of the characters in `text`
@@ -1207,8 +1207,8 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(const UnicodeString& text,
-              int32_t start) const;
+  مضمن int32_t آخری_اشاریہ_دا(ثابت UnicodeString& متن,
+              int32_t شروع) ثابت;
 
   /**
    * Locate in this the last occurrence in the range
@@ -1221,9 +1221,9 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(const UnicodeString& text,
-              int32_t start,
-              int32_t length) const;
+  مضمن int32_t آخری_اشاریہ_دا(ثابت UnicodeString& متن,
+              int32_t شروع,
+              int32_t لمائی) ثابت;
 
   /**
    * Locate in this the last occurrence in the range
@@ -1241,11 +1241,11 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(const UnicodeString& srcText,
-              int32_t srcStart,
-              int32_t srcLength,
-              int32_t start,
-              int32_t length) const;
+  مضمن int32_t آخری_اشاریہ_دا(ثابت UnicodeString& src_متن,
+              int32_t src_شروع,
+              int32_t src_لمائی,
+              int32_t شروع,
+              int32_t لمائی) ثابت;
 
   /**
    * Locate in this the last occurrence of the characters in `srcChars`
@@ -1257,9 +1257,9 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(const char16_t *srcChars,
-              int32_t srcLength,
-              int32_t start) const;
+  مضمن int32_t آخری_اشاریہ_دا(ثابت char16_t *srcChars,
+              int32_t src_لمائی,
+              int32_t شروع) ثابت;
 
   /**
    * Locate in this the last occurrence in the range
@@ -1273,10 +1273,10 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(ConstChar16Ptr srcChars,
-              int32_t srcLength,
-              int32_t start,
-              int32_t length) const;
+  مضمن int32_t آخری_اشاریہ_دا(ConstChar16Ptr srcChars,
+              int32_t src_لمائی,
+              int32_t شروع,
+              int32_t لمائی) ثابت;
 
   /**
    * Locate in this the last occurrence in the range
@@ -1294,11 +1294,11 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  int32_t lastIndexOf(const char16_t *srcChars,
-              int32_t srcStart,
-              int32_t srcLength,
-              int32_t start,
-              int32_t length) const;
+  int32_t آخری_اشاریہ_دا(ثابت char16_t *srcChars,
+              int32_t src_شروع,
+              int32_t src_لمائی,
+              int32_t شروع,
+              int32_t لمائی) ثابت;
 
   /**
    * Locate in this the last occurrence of the BMP code point `c`,
@@ -1307,7 +1307,7 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(char16_t c) const;
+  مضمن int32_t آخری_اشاریہ_دا(char16_t c) ثابت;
 
   /**
    * Locate in this the last occurrence of the code point `c`,
@@ -1317,7 +1317,7 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(UChar32 c) const;
+  مضمن int32_t آخری_اشاریہ_دا(UChar32 c) ثابت;
 
   /**
    * Locate in this the last occurrence of the BMP code point `c`
@@ -1327,8 +1327,8 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(char16_t c,
-              int32_t start) const;
+  مضمن int32_t آخری_اشاریہ_دا(char16_t c,
+              int32_t شروع) ثابت;
 
   /**
    * Locate in this the last occurrence of the code point `c`
@@ -1339,8 +1339,8 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(UChar32 c,
-              int32_t start) const;
+  مضمن int32_t آخری_اشاریہ_دا(UChar32 c,
+              int32_t شروع) ثابت;
 
   /**
    * Locate in this the last occurrence of the BMP code point `c`
@@ -1352,9 +1352,9 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(char16_t c,
-              int32_t start,
-              int32_t length) const;
+  مضمن int32_t آخری_اشاریہ_دا(char16_t c,
+              int32_t شروع,
+              int32_t لمائی) ثابت;
 
   /**
    * Locate in this the last occurrence of the code point `c`
@@ -1367,9 +1367,9 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(UChar32 c,
-              int32_t start,
-              int32_t length) const;
+  مضمن int32_t آخری_اشاریہ_دا(UChar32 c,
+              int32_t شروع,
+              int32_t لمائی) ثابت;
 
 
   /* Character access */
@@ -1382,7 +1382,7 @@ public:
    *         or 0xffff if the offset is not valid for this string
    * @stable ICU 2.0
    */
-  inline char16_t charAt(int32_t offset) const;
+  مضمن char16_t charAt(int32_t وتھ) ثابت;
 
   /**
    * Return the code unit at offset `offset`.
@@ -1391,7 +1391,7 @@ public:
    * @return the code unit at offset `offset`
    * @stable ICU 2.0
    */
-  inline char16_t operator[] (int32_t offset) const;
+  مضمن char16_t عامل[] (int32_t وتھ) ثابت;
 
   /**
    * Return the code point that contains the code unit
@@ -1404,7 +1404,7 @@ public:
    *         or 0xffff if the offset is not valid for this string
    * @stable ICU 2.0
    */
-  UChar32 char32At(int32_t offset) const;
+  UChar32 char32At(int32_t وتھ) ثابت;
 
   /**
    * Adjust a random-access offset so that
@@ -1421,7 +1421,7 @@ public:
    * @see U16_SET_CP_START
    * @stable ICU 2.0
    */
-  int32_t getChar32Start(int32_t offset) const;
+  int32_t get_Char32_شروع(int32_t وتھ) ثابت;
 
   /**
    * Adjust a random-access offset so that
@@ -1439,7 +1439,7 @@ public:
    * @see U16_SET_CP_LIMIT
    * @stable ICU 2.0
    */
-  int32_t getChar32Limit(int32_t offset) const;
+  int32_t get_Char32_حد_بندی(int32_t وتھ) ثابت;
 
   /**
    * Move the code unit index along the string by delta code points.
@@ -1491,7 +1491,7 @@ public:
    * @return the resulting code unit index
    * @stable ICU 2.0
    */
-  int32_t moveIndex32(int32_t index, int32_t delta) const;
+  int32_t moveIndex32(int32_t اشاریہ, int32_t delta) ثابت;
 
   /* Substring extraction */
 
@@ -1510,10 +1510,10 @@ public:
    * will be extracted
    * @stable ICU 2.0
    */
-  inline void extract(int32_t start,
-           int32_t length,
+  مضمن فراغ کڈھو(int32_t شروع,
+           int32_t لمائی,
            Char16Ptr dst,
-           int32_t dstStart = 0) const;
+           int32_t dst_شروع = 0) ثابت;
 
   /**
    * Copy the contents of the string into dest.
@@ -1537,8 +1537,8 @@ public:
    * @stable ICU 2.0
    */
   int32_t
-  extract(Char16Ptr dest, int32_t destCapacity,
-          UErrorCode &errorCode) const;
+  کڈھو(Char16Ptr dest, int32_t dest_سمرتھا,
+          UError_کوڈ &error_کوڈ) ثابت;
 
   /**
    * Copy the characters in the range
@@ -1549,9 +1549,9 @@ public:
    * @param target UnicodeString into which to copy characters.
    * @stable ICU 2.0
    */
-  inline void extract(int32_t start,
-           int32_t length,
-           UnicodeString& target) const;
+  مضمن فراغ کڈھو(int32_t شروع,
+           int32_t لمائی,
+           UnicodeString& نشانہ) ثابت;
 
   /**
    * Copy the characters in the range [`start`, `limit`)
@@ -1564,10 +1564,10 @@ public:
    * will be extracted
    * @stable ICU 2.0
    */
-  inline void extractBetween(int32_t start,
-              int32_t limit,
+  مضمن فراغ کڈھو_Between(int32_t شروع,
+              int32_t حد_بندی,
               char16_t *dst,
-              int32_t dstStart = 0) const;
+              int32_t dst_شروع = 0) ثابت;
 
   /**
    * Copy the characters in the range [`start`, `limit`)
@@ -1577,9 +1577,9 @@ public:
    * @param target UnicodeString into which to copy characters.
    * @stable ICU 2.0
    */
-  virtual void extractBetween(int32_t start,
-              int32_t limit,
-              UnicodeString& target) const override;
+  مجازی فراغ کڈھو_Between(int32_t شروع,
+              int32_t حد_بندی,
+              UnicodeString& نشانہ) ثابت override;
 
   /**
    * Copy the characters in the range
@@ -1602,13 +1602,13 @@ public:
    * @return the output string length, not including the terminating NUL
    * @stable ICU 3.2
    */
-  int32_t extract(int32_t start,
-           int32_t startLength,
-           char *target,
-           int32_t targetCapacity,
-           enum EInvariant inv) const;
+  int32_t کڈھو(int32_t شروع,
+           int32_t شروع_لمائی,
+           حرف *نشانہ,
+           int32_t نشانہ_سمرتھا,
+           تعداد EInvariant inv) ثابت;
 
-#if U_CHARSET_IS_UTF8 || !UCONFIG_NO_CONVERSION
+#إذا U_CHARSET_IS_UTF8 || !UCONFIG_NO_CONVERSION
 
   /**
    * Copy the characters in the range
@@ -1629,14 +1629,14 @@ public:
    * @return the output string length, not including the terminating NUL
    * @stable ICU 2.0
    */
-  int32_t extract(int32_t start,
-           int32_t startLength,
-           char *target,
-           uint32_t targetLength) const;
+  int32_t کڈھو(int32_t شروع,
+           int32_t شروع_لمائی,
+           حرف *نشانہ,
+           uint32_t نشانہ_لمائی) ثابت;
 
-#endif
+#جے_انت
 
-#if !UCONFIG_NO_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION
 
   /**
    * Copy the characters in the range
@@ -1663,10 +1663,10 @@ public:
    * @return the output string length, not including the terminating NUL
    * @stable ICU 2.0
    */
-  inline int32_t extract(int32_t start,
-                         int32_t startLength,
-                         char* target,
-                         const char* codepage = nullptr) const;
+  مضمن int32_t کڈھو(int32_t شروع,
+                         int32_t شروع_لمائی,
+                         حرف* نشانہ,
+                         ثابت حرف* codepage = nullptr) ثابت;
 
   /**
    * Copy the characters in the range
@@ -1697,11 +1697,11 @@ public:
    * @return the output string length, not including the terminating NUL
    * @stable ICU 2.0
    */
-  int32_t extract(int32_t start,
-           int32_t startLength,
-           char *target,
-           uint32_t targetLength,
-           const char *codepage) const;
+  int32_t کڈھو(int32_t شروع,
+           int32_t شروع_لمائی,
+           حرف *نشانہ,
+           uint32_t نشانہ_لمائی,
+           ثابت حرف *codepage) ثابت;
 
   /**
    * Convert the UnicodeString into a codepage string using an existing UConverter.
@@ -1720,11 +1720,11 @@ public:
    *         and a buffer of the indicated length would need to be passed in
    * @stable ICU 2.0
    */
-  int32_t extract(char *dest, int32_t destCapacity,
+  int32_t کڈھو(حرف *dest, int32_t dest_سمرتھا,
                   UConverter *cnv,
-                  UErrorCode &errorCode) const;
+                  UError_کوڈ &error_کوڈ) ثابت;
 
-#endif
+#جے_انت
 
   /**
    * Create a temporary substring for the specified range.
@@ -1739,7 +1739,7 @@ public:
    * @return a read-only alias UnicodeString object for the substring
    * @stable ICU 4.4
    */
-  UnicodeString tempSubString(int32_t start=0, int32_t length=INT32_MAX) const U_LIFETIME_BOUND;
+  UnicodeString عارضی_Sub_String(int32_t شروع=0, int32_t لمائی=INT32_MAX) ثابت U_LIFETIME_BOUND;
 
   /**
    * Create a temporary substring for the specified range.
@@ -1751,8 +1751,8 @@ public:
    * @return a read-only alias UnicodeString object for the substring
    * @stable ICU 4.4
    */
-  inline UnicodeString tempSubStringBetween(int32_t start,
-                                            int32_t limit = INT32_MAX) const U_LIFETIME_BOUND;
+  مضمن UnicodeString عارضی_Sub_String_Between(int32_t شروع,
+                                            int32_t حد_بندی = INT32_MAX) ثابت U_LIFETIME_BOUND;
 
   /**
    * Convert the UnicodeString to UTF-8 and write the result
@@ -1765,7 +1765,7 @@ public:
    * @stable ICU 4.2
    * @see toUTF8String
    */
-  void toUTF8(ByteSink &sink) const;
+  فراغ منزل_UTF8(ByteSink &sink) ثابت;
 
   /**
    * Convert the UnicodeString to UTF-8 and append the result
@@ -1780,14 +1780,14 @@ public:
    * @stable ICU 4.2
    * @see toUTF8
    */
-  template <typename StringClass>
-  StringClass& toUTF8String(StringClass& result U_LIFETIME_BOUND) const {
-    StringByteSink<StringClass> sbs(&result, length());
-    toUTF8(sbs);
-    return result;
+  سانچا <typename StringClass>
+  StringClass& منزل_UTF8_String(StringClass& نتیجہ U_LIFETIME_BOUND) ثابت {
+    StringByteSink<StringClass> sbs(&نتیجہ, لمائی());
+    منزل_UTF8(sbs);
+    أرجع نتیجہ;
   }
 
-#ifndef U_HIDE_DRAFT_API
+#جے_بنا_تعریف U_HIDE_DRAFT_API
   /**
    * Convert the UnicodeString to a UTF-8 string.
    * Unpaired surrogates are replaced with U+FFFD.
@@ -1799,14 +1799,14 @@ public:
    * @draft ICU 78
    * @see toUTF8
    */
-  template<typename StringClass>
-  StringClass toUTF8String() const {
-    StringClass result;
-    StringByteSink<StringClass> sbs(&result, length());
-    toUTF8(sbs);
-    return result;
+  سانچا<typename StringClass>
+  StringClass منزل_UTF8_String() ثابت {
+    StringClass نتیجہ;
+    StringByteSink<StringClass> sbs(&نتیجہ, لمائی());
+    منزل_UTF8(sbs);
+    أرجع نتیجہ;
   }
-#endif  // U_HIDE_DRAFT_API
+#جے_انت  // U_HIDE_DRAFT_API
 
   /**
    * Convert the UnicodeString to UTF-32.
@@ -1823,7 +1823,7 @@ public:
    * @see fromUTF32
    * @stable ICU 4.2
    */
-  int32_t toUTF32(UChar32 *utf32, int32_t capacity, UErrorCode &errorCode) const;
+  int32_t منزل_UTF32(UChar32 *utf32, int32_t سمرتھا, UError_کوڈ &error_کوڈ) ثابت;
 
   /* Length operations */
 
@@ -1835,7 +1835,7 @@ public:
    * @see countChar32
    * @stable ICU 2.0
    */
-  inline int32_t length() const;
+  مضمن int32_t لمائی() ثابت;
 
   /**
    * Count Unicode code points in the length char16_t code units of the string.
@@ -1851,7 +1851,7 @@ public:
    * @stable ICU 2.0
    */
   int32_t
-  countChar32(int32_t start=0, int32_t length=INT32_MAX) const;
+  گنتی_Char32(int32_t شروع=0, int32_t لمائی=INT32_MAX) ثابت;
 
   /**
    * Check if the length char16_t code units of the string
@@ -1877,14 +1877,14 @@ public:
    * @stable ICU 2.4
    */
   UBool
-  hasMoreChar32Than(int32_t start, int32_t length, int32_t number) const;
+  has_ہور_Char32_Than(int32_t شروع, int32_t لمائی, int32_t نمبر) ثابت;
 
   /**
    * Determine if this string is empty.
    * @return true if this string contains 0 characters, false otherwise.
    * @stable ICU 2.0
    */
-  inline UBool isEmpty() const;
+  مضمن UBool is_خالی_تھاواں() ثابت;
 
   /**
    * Return the capacity of the internal buffer of the UnicodeString object.
@@ -1895,7 +1895,7 @@ public:
    * @see getBuffer
    * @stable ICU 2.0
    */
-  inline int32_t getCapacity() const;
+  مضمن int32_t get_سمرتھا() ثابت;
 
   /* Other operations */
 
@@ -1904,7 +1904,7 @@ public:
    * @return The hash code of this UnicodeString.
    * @stable ICU 2.0
    */
-  inline int32_t hashCode() const;
+  مضمن int32_t hash_کوڈ() ثابت;
 
   /**
    * Determine if this object contains a valid string.
@@ -1918,43 +1918,43 @@ public:
    * @see setToBogus()
    * @stable ICU 2.0
    */
-  inline UBool isBogus() const;
+  مضمن UBool isBogus() ثابت;
 
-#ifndef U_HIDE_DRAFT_API
-private:
+#جے_بنا_تعریف U_HIDE_DRAFT_API
+خاص:
   // These type aliases are private; there is no guarantee that they will remain
   // aliases to the same types in subsequent versions of ICU.
   // Note that whether `std::u16string_view::const_iterator` is a pointer or a
   // class that models contiguous_iterator is platform-dependent.
   using unspecified_iterator = std::u16string_view::const_iterator;
-  using unspecified_reverse_iterator = std::u16string_view::const_reverse_iterator;
+  using unspecified_الٹ_iterator = std::u16string_view::const_الٹ_iterator;
 
-public:
+عام:
   /**
    * @return an iterator to the first code unit in this string.
    *     The iterator may be a pointer or a contiguous-iterator object.
    * @draft ICU 78
    */
-  unspecified_iterator begin() const { return std::u16string_view(*this).begin(); }
+  unspecified_iterator begin() ثابت { أرجع std::u16string_view(*this).begin(); }
   /**
    * @return an iterator to just past the last code unit in this string.
    *     The iterator may be a pointer or a contiguous-iterator object.
    * @draft ICU 78
    */
-  unspecified_iterator end() const { return std::u16string_view(*this).end(); }
+  unspecified_iterator سرا() ثابت { أرجع std::u16string_view(*this).سرا(); }
   /**
    * @return a reverse iterator to the last code unit in this string.
    *     The iterator may be a pointer or a contiguous-iterator object.
    * @draft ICU 78
    */
-  unspecified_reverse_iterator rbegin() const { return std::u16string_view(*this).rbegin(); }
+  unspecified_الٹ_iterator rbegin() ثابت { أرجع std::u16string_view(*this).rbegin(); }
   /**
    * @return a reverse iterator to just before the first code unit in this string.
    *     The iterator may be a pointer or a contiguous-iterator object.
    * @draft ICU 78
    */
-  unspecified_reverse_iterator rend() const { return std::u16string_view(*this).rend(); }
-#endif  // U_HIDE_DRAFT_API
+  unspecified_الٹ_iterator rend() ثابت { أرجع std::u16string_view(*this).rend(); }
+#جے_انت  // U_HIDE_DRAFT_API
 
   //========================================
   // Write operations
@@ -1980,7 +1980,7 @@ public:
    * @stable ICU 2.0
    * @see fastCopyFrom
    */
-  UnicodeString& operator=(const UnicodeString& srcText) U_LIFETIME_BOUND;
+  UnicodeString& عامل=(ثابت UnicodeString& src_متن) U_LIFETIME_BOUND;
 
   /**
    * Almost the same as the assignment operator.
@@ -2007,7 +2007,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.4
    */
-  UnicodeString& fastCopyFrom(const UnicodeString& src) U_LIFETIME_BOUND;
+  UnicodeString& fastCopyFrom(ثابت UnicodeString& src) U_LIFETIME_BOUND;
 
   /**
    * Assignment operator. Replaces the characters in this UnicodeString
@@ -2019,10 +2019,10 @@ public:
    * @return a reference to this
    * @stable ICU 76
    */
-  template <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  inline UnicodeString& operator=(const S& src) U_LIFETIME_BOUND {
+  سانچا <typename S, typename = std::enable_if_t<Convertible_منزل_U16_String_View<S>>>
+  مضمن UnicodeString& عامل=(ثابت S& src) U_LIFETIME_BOUND {
     unBogus();
-    return doReplace(0, length(), internal::toU16StringView(src));
+    أرجع doReplace(0, لمائی(), اندرونی_2::منزل_U16_String_View(src));
   }
 
   /**
@@ -2033,14 +2033,14 @@ public:
    * @return *this
    * @stable ICU 56
    */
-  UnicodeString& operator=(UnicodeString&& src) noexcept U_LIFETIME_BOUND;
+  UnicodeString& عامل=(UnicodeString&& src) noexcept U_LIFETIME_BOUND;
 
   /**
    * Swap strings.
    * @param other other string
    * @stable ICU 56
    */
-  void swap(UnicodeString &other) noexcept;
+  فراغ وٹاندرا(UnicodeString &other) noexcept;
 
   /**
    * Non-member UnicodeString swap function.
@@ -2048,9 +2048,9 @@ public:
    * @param s2 will get s1's contents and state
    * @stable ICU 56
    */
-  friend inline void U_EXPORT2
-  swap(UnicodeString &s1, UnicodeString &s2) noexcept {
-    s1.swap(s2);
+  یار مضمن فراغ U_EXPORT2
+  وٹاندرا(UnicodeString &s1, UnicodeString &s2) noexcept {
+    s1.وٹاندرا(s2);
   }
 
   /**
@@ -2060,7 +2060,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& operator=(char16_t ch) U_LIFETIME_BOUND;
+  مضمن UnicodeString& عامل=(char16_t ch) U_LIFETIME_BOUND;
 
   /**
    * Assignment operator.  Replace the characters in this UnicodeString
@@ -2069,7 +2069,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& operator=(UChar32 ch) U_LIFETIME_BOUND;
+  مضمن UnicodeString& عامل=(UChar32 ch) U_LIFETIME_BOUND;
 
   /**
    * Set the text in the UnicodeString object to the characters
@@ -2082,7 +2082,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.2
    */
-  inline UnicodeString& setTo(const UnicodeString& srcText, int32_t srcStart) U_LIFETIME_BOUND;
+  مضمن UnicodeString& سیٹ_منزل(ثابت UnicodeString& src_متن, int32_t src_شروع) U_LIFETIME_BOUND;
 
   /**
    * Set the text in the UnicodeString object to the characters
@@ -2097,9 +2097,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& setTo(const UnicodeString& srcText,
-                              int32_t srcStart,
-                              int32_t srcLength) U_LIFETIME_BOUND;
+  مضمن UnicodeString& سیٹ_منزل(ثابت UnicodeString& src_متن,
+                              int32_t src_شروع,
+                              int32_t src_لمائی) U_LIFETIME_BOUND;
 
   /**
    * Set the text in the UnicodeString object to the characters in
@@ -2109,7 +2109,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& setTo(const UnicodeString& srcText) U_LIFETIME_BOUND;
+  مضمن UnicodeString& سیٹ_منزل(ثابت UnicodeString& src_متن) U_LIFETIME_BOUND;
 
   /**
    * Set the characters in the UnicodeString object to the characters
@@ -2119,7 +2119,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& setTo(const char16_t* srcChars, int32_t srcLength) U_LIFETIME_BOUND;
+  مضمن UnicodeString& سیٹ_منزل(ثابت char16_t* srcChars, int32_t src_لمائی) U_LIFETIME_BOUND;
 
   /**
    * Set the characters in the UnicodeString object to the code unit
@@ -2129,7 +2129,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& setTo(char16_t srcChar) U_LIFETIME_BOUND;
+  مضمن UnicodeString& سیٹ_منزل(char16_t srcChar) U_LIFETIME_BOUND;
 
   /**
    * Set the characters in the UnicodeString object to the code point
@@ -2139,7 +2139,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& setTo(UChar32 srcChar) U_LIFETIME_BOUND;
+  مضمن UnicodeString& سیٹ_منزل(UChar32 srcChar) U_LIFETIME_BOUND;
 
   /**
    * Aliasing setTo() function, analogous to the readonly-aliasing char16_t* constructor.
@@ -2164,9 +2164,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  UnicodeString& setTo(UBool isTerminated,
-                       ConstChar16Ptr text U_LIFETIME_BOUND,
-                       int32_t textLength) U_LIFETIME_BOUND;
+  UnicodeString& سیٹ_منزل(UBool isTerminated,
+                       ConstChar16Ptr متن U_LIFETIME_BOUND,
+                       int32_t متن_لمائی) U_LIFETIME_BOUND;
 
   /**
    * Aliasing setTo() function, analogous to the writable-aliasing char16_t* constructor.
@@ -2187,9 +2187,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  UnicodeString& setTo(char16_t* buffer U_LIFETIME_BOUND,
-                       int32_t buffLength,
-                       int32_t buffCapacity) U_LIFETIME_BOUND;
+  UnicodeString& سیٹ_منزل(char16_t* بفر U_LIFETIME_BOUND,
+                       int32_t buff_لمائی,
+                       int32_t buff_سمرتھا) U_LIFETIME_BOUND;
 
   /**
    * Make this UnicodeString object invalid.
@@ -2230,7 +2230,7 @@ public:
    * @see isBogus()
    * @stable ICU 2.0
    */
-  void setToBogus();
+  فراغ سیٹ_منزل_Bogus();
 
   /**
    * Set the character at the specified offset to the specified character.
@@ -2239,7 +2239,7 @@ public:
    * @return A reference to this
    * @stable ICU 2.0
    */
-  UnicodeString& setCharAt(int32_t offset, char16_t ch) U_LIFETIME_BOUND;
+  UnicodeString& سیٹ_Char_At(int32_t وتھ, char16_t ch) U_LIFETIME_BOUND;
 
   /* Append operations */
 
@@ -2250,7 +2250,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& operator+=(char16_t ch) U_LIFETIME_BOUND;
+  مضمن UnicodeString& عامل+=(char16_t ch) U_LIFETIME_BOUND;
 
   /**
    * Append operator. Append the code point `ch` to the UnicodeString
@@ -2259,7 +2259,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& operator+=(UChar32 ch) U_LIFETIME_BOUND;
+  مضمن UnicodeString& عامل+=(UChar32 ch) U_LIFETIME_BOUND;
 
   /**
    * Append operator. Append the characters in `srcText` to the
@@ -2268,7 +2268,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& operator+=(const UnicodeString& srcText) U_LIFETIME_BOUND;
+  مضمن UnicodeString& عامل+=(ثابت UnicodeString& src_متن) U_LIFETIME_BOUND;
 
   /**
    * Append operator. Appends the characters in `src`
@@ -2280,9 +2280,9 @@ public:
    * @return a reference to this
    * @stable ICU 76
    */
-  template <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  inline UnicodeString& operator+=(const S& src) U_LIFETIME_BOUND {
-    return doAppend(internal::toU16StringView(src));
+  سانچا <typename S, typename = std::enable_if_t<Convertible_منزل_U16_String_View<S>>>
+  مضمن UnicodeString& عامل+=(ثابت S& src) U_LIFETIME_BOUND {
+    أرجع doAppend(اندرونی_2::منزل_U16_String_View(src));
   }
 
   /**
@@ -2299,9 +2299,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& append(const UnicodeString& srcText,
-                               int32_t srcStart,
-                               int32_t srcLength) U_LIFETIME_BOUND;
+  مضمن UnicodeString& append(ثابت UnicodeString& src_متن,
+                               int32_t src_شروع,
+                               int32_t src_لمائی) U_LIFETIME_BOUND;
 
   /**
    * Append the characters in `srcText` to the UnicodeString object.
@@ -2310,7 +2310,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& append(const UnicodeString& srcText) U_LIFETIME_BOUND;
+  مضمن UnicodeString& append(ثابت UnicodeString& src_متن) U_LIFETIME_BOUND;
 
   /**
    * Append the characters in `srcChars` in the range
@@ -2325,9 +2325,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& append(const char16_t* srcChars,
-                               int32_t srcStart,
-                               int32_t srcLength) U_LIFETIME_BOUND;
+  مضمن UnicodeString& append(ثابت char16_t* srcChars,
+                               int32_t src_شروع,
+                               int32_t src_لمائی) U_LIFETIME_BOUND;
 
   /**
    * Append the characters in `srcChars` to the UnicodeString object.
@@ -2338,7 +2338,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& append(ConstChar16Ptr srcChars, int32_t srcLength) U_LIFETIME_BOUND;
+  مضمن UnicodeString& append(ConstChar16Ptr srcChars, int32_t src_لمائی) U_LIFETIME_BOUND;
 
   /**
    * Appends the characters in `src`
@@ -2350,9 +2350,9 @@ public:
    * @return a reference to this
    * @stable ICU 76
    */
-  template <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  inline UnicodeString& append(const S& src) U_LIFETIME_BOUND {
-    return doAppend(internal::toU16StringView(src));
+  سانچا <typename S, typename = std::enable_if_t<Convertible_منزل_U16_String_View<S>>>
+  مضمن UnicodeString& append(ثابت S& src) U_LIFETIME_BOUND {
+    أرجع doAppend(اندرونی_2::منزل_U16_String_View(src));
   }
 
   /**
@@ -2361,7 +2361,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& append(char16_t srcChar) U_LIFETIME_BOUND;
+  مضمن UnicodeString& append(char16_t srcChar) U_LIFETIME_BOUND;
 
   /**
    * Append the code point `srcChar` to the UnicodeString object.
@@ -2371,7 +2371,7 @@ public:
    */
   UnicodeString& append(UChar32 srcChar) U_LIFETIME_BOUND;
 
-#ifndef U_HIDE_DRAFT_API
+#جے_بنا_تعریف U_HIDE_DRAFT_API
   /**
    * Appends the code unit `c` to the UnicodeString object.
    * Same as append(c) except does not return *this.
@@ -2379,8 +2379,8 @@ public:
    * @param c the code unit to append
    * @draft ICU 78
    */
-  inline void push_back(char16_t c) { append(c); }
-#endif  // U_HIDE_DRAFT_API
+  مضمن فراغ ڈالو_پٹھ(char16_t c) { append(c); }
+#جے_انت  // U_HIDE_DRAFT_API
 
   /* Insert operations */
 
@@ -2397,10 +2397,10 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start,
-                               const UnicodeString& srcText,
-                               int32_t srcStart,
-                               int32_t srcLength) U_LIFETIME_BOUND;
+  مضمن UnicodeString& داخل_کرو(int32_t شروع,
+                               ثابت UnicodeString& src_متن,
+                               int32_t src_شروع,
+                               int32_t src_لمائی) U_LIFETIME_BOUND;
 
   /**
    * Insert the characters in `srcText` into the UnicodeString object
@@ -2410,7 +2410,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start, const UnicodeString& srcText) U_LIFETIME_BOUND;
+  مضمن UnicodeString& داخل_کرو(int32_t شروع, ثابت UnicodeString& src_متن) U_LIFETIME_BOUND;
 
   /**
    * Insert the characters in `srcChars` in the range
@@ -2425,10 +2425,10 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start,
-                               const char16_t* srcChars,
-                               int32_t srcStart,
-                               int32_t srcLength) U_LIFETIME_BOUND;
+  مضمن UnicodeString& داخل_کرو(int32_t شروع,
+                               ثابت char16_t* srcChars,
+                               int32_t src_شروع,
+                               int32_t src_لمائی) U_LIFETIME_BOUND;
 
   /**
    * Insert the characters in `srcChars` into the UnicodeString object
@@ -2439,9 +2439,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start,
+  مضمن UnicodeString& داخل_کرو(int32_t شروع,
                                ConstChar16Ptr srcChars,
-                               int32_t srcLength) U_LIFETIME_BOUND;
+                               int32_t src_لمائی) U_LIFETIME_BOUND;
 
   /**
    * Insert the code unit `srcChar` into the UnicodeString object at
@@ -2451,7 +2451,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start, char16_t srcChar) U_LIFETIME_BOUND;
+  مضمن UnicodeString& داخل_کرو(int32_t شروع, char16_t srcChar) U_LIFETIME_BOUND;
 
   /**
    * Insert the code point `srcChar` into the UnicodeString object at
@@ -2461,7 +2461,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start, UChar32 srcChar) U_LIFETIME_BOUND;
+  مضمن UnicodeString& داخل_کرو(int32_t شروع, UChar32 srcChar) U_LIFETIME_BOUND;
 
   /* Replace operations */
 
@@ -2482,11 +2482,11 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replace(int32_t start,
-                                int32_t length,
-                                const UnicodeString& srcText,
-                                int32_t srcStart,
-                                int32_t srcLength) U_LIFETIME_BOUND;
+  مضمن UnicodeString& replace(int32_t شروع,
+                                int32_t لمائی,
+                                ثابت UnicodeString& src_متن,
+                                int32_t src_شروع,
+                                int32_t src_لمائی) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range
@@ -2500,9 +2500,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replace(int32_t start,
-                                int32_t length,
-                                const UnicodeString& srcText) U_LIFETIME_BOUND;
+  مضمن UnicodeString& replace(int32_t شروع,
+                                int32_t لمائی,
+                                ثابت UnicodeString& src_متن) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range
@@ -2521,11 +2521,11 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replace(int32_t start,
-                                int32_t length,
-                                const char16_t* srcChars,
-                                int32_t srcStart,
-                                int32_t srcLength) U_LIFETIME_BOUND;
+  مضمن UnicodeString& replace(int32_t شروع,
+                                int32_t لمائی,
+                                ثابت char16_t* srcChars,
+                                int32_t src_شروع,
+                                int32_t src_لمائی) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range
@@ -2539,10 +2539,10 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replace(int32_t start,
-                                int32_t length,
+  مضمن UnicodeString& replace(int32_t شروع,
+                                int32_t لمائی,
                                 ConstChar16Ptr srcChars,
-                                int32_t srcLength) U_LIFETIME_BOUND;
+                                int32_t src_لمائی) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range
@@ -2555,7 +2555,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replace(int32_t start, int32_t length, char16_t srcChar) U_LIFETIME_BOUND;
+  مضمن UnicodeString& replace(int32_t شروع, int32_t لمائی, char16_t srcChar) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range
@@ -2568,7 +2568,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  UnicodeString& replace(int32_t start, int32_t length, UChar32 srcChar) U_LIFETIME_BOUND;
+  UnicodeString& replace(int32_t شروع, int32_t لمائی, UChar32 srcChar) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range [`start`, `limit`)
@@ -2579,9 +2579,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replaceBetween(int32_t start,
-                                       int32_t limit,
-                                       const UnicodeString& srcText) U_LIFETIME_BOUND;
+  مضمن UnicodeString& replaceBetween(int32_t شروع,
+                                       int32_t حد_بندی,
+                                       ثابت UnicodeString& src_متن) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range [`start`, `limit`)
@@ -2597,11 +2597,11 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replaceBetween(int32_t start,
-                                       int32_t limit,
-                                       const UnicodeString& srcText,
-                                       int32_t srcStart,
-                                       int32_t srcLimit) U_LIFETIME_BOUND;
+  مضمن UnicodeString& replaceBetween(int32_t شروع,
+                                       int32_t حد_بندی,
+                                       ثابت UnicodeString& src_متن,
+                                       int32_t src_شروع,
+                                       int32_t src_حد_بندی) U_LIFETIME_BOUND;
 
   /**
    * Replace a substring of this object with the given text.
@@ -2610,16 +2610,16 @@ public:
    * @param text the text to replace characters `start` to `limit - 1`
    * @stable ICU 2.0
    */
-  virtual void handleReplaceBetween(int32_t start,
-                                    int32_t limit,
-                                    const UnicodeString& text) override;
+  مجازی فراغ handleReplaceBetween(int32_t شروع,
+                                    int32_t حد_بندی,
+                                    ثابت UnicodeString& متن) override;
 
   /**
    * Replaceable API
    * @return true if it has MetaData
    * @stable ICU 2.4
    */
-  virtual UBool hasMetaData() const override;
+  مجازی UBool has_Meta_انکڑے() ثابت override;
 
   /**
    * Copy a substring of this object, retaining attribute (out-of-band)
@@ -2634,7 +2634,7 @@ public:
    * dest >= limit`.
    * @stable ICU 2.0
    */
-  virtual void copy(int32_t start, int32_t limit, int32_t dest) override;
+  مجازی فراغ copy(int32_t شروع, int32_t حد_بندی, int32_t dest) override;
 
   /* Search and replace operations */
 
@@ -2646,8 +2646,8 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& findAndReplace(const UnicodeString& oldText,
-                                       const UnicodeString& newText) U_LIFETIME_BOUND;
+  مضمن UnicodeString& لبھو_And_Replace(ثابت UnicodeString& old_متن,
+                                       ثابت UnicodeString& new_متن) U_LIFETIME_BOUND;
 
   /**
    * Replace all occurrences of characters in oldText with characters
@@ -2660,10 +2660,10 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& findAndReplace(int32_t start,
-                                       int32_t length,
-                                       const UnicodeString& oldText,
-                                       const UnicodeString& newText) U_LIFETIME_BOUND;
+  مضمن UnicodeString& لبھو_And_Replace(int32_t شروع,
+                                       int32_t لمائی,
+                                       ثابت UnicodeString& old_متن,
+                                       ثابت UnicodeString& new_متن) U_LIFETIME_BOUND;
 
   /**
    * Replace all occurrences of characters in oldText in the range
@@ -2682,14 +2682,14 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  UnicodeString& findAndReplace(int32_t start,
-                                int32_t length,
-                                const UnicodeString& oldText,
-                                int32_t oldStart,
-                                int32_t oldLength,
-                                const UnicodeString& newText,
-                                int32_t newStart,
-                                int32_t newLength) U_LIFETIME_BOUND;
+  UnicodeString& لبھو_And_Replace(int32_t شروع,
+                                int32_t لمائی,
+                                ثابت UnicodeString& old_متن,
+                                int32_t old_شروع,
+                                int32_t old_لمائی,
+                                ثابت UnicodeString& new_متن,
+                                int32_t new_شروع,
+                                int32_t new_لمائی) U_LIFETIME_BOUND;
 
 
   /* Remove operations */
@@ -2702,7 +2702,7 @@ public:
    * @see setToBogus
    * @stable ICU 2.0
    */
-  inline UnicodeString& remove() U_LIFETIME_BOUND;
+  مضمن UnicodeString& remove() U_LIFETIME_BOUND;
 
   /**
    * Remove the characters in the range
@@ -2712,8 +2712,8 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& remove(int32_t start,
-                               int32_t length = static_cast<int32_t>(INT32_MAX)) U_LIFETIME_BOUND;
+  مضمن UnicodeString& remove(int32_t شروع,
+                               int32_t لمائی = static_cast<int32_t>(INT32_MAX)) U_LIFETIME_BOUND;
 
   /**
    * Remove the characters in the range
@@ -2723,8 +2723,8 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString&
-  removeBetween(int32_t start, int32_t limit = static_cast<int32_t>(INT32_MAX)) U_LIFETIME_BOUND;
+  مضمن UnicodeString&
+  removeBetween(int32_t شروع, int32_t حد_بندی = static_cast<int32_t>(INT32_MAX)) U_LIFETIME_BOUND;
 
   /**
    * Retain only the characters in the range
@@ -2735,7 +2735,7 @@ public:
    * @return a reference to this
    * @stable ICU 4.4
    */
-  inline UnicodeString& retainBetween(int32_t start, int32_t limit = INT32_MAX) U_LIFETIME_BOUND;
+  مضمن UnicodeString& retainBetween(int32_t شروع, int32_t حد_بندی = INT32_MAX) U_LIFETIME_BOUND;
 
   /* Length operations */
 
@@ -2750,7 +2750,7 @@ public:
    * @return true if the text was padded, false otherwise.
    * @stable ICU 2.0
    */
-  UBool padLeading(int32_t targetLength,
+  UBool padLeading(int32_t نشانہ_لمائی,
                     char16_t padChar = 0x0020);
 
   /**
@@ -2764,7 +2764,7 @@ public:
    * @return true if the text was padded, false otherwise.
    * @stable ICU 2.0
    */
-  UBool padTrailing(int32_t targetLength,
+  UBool padTrailing(int32_t نشانہ_لمائی,
                      char16_t padChar = 0x0020);
 
   /**
@@ -2773,7 +2773,7 @@ public:
    * @return true if the text was truncated, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool truncate(int32_t targetLength);
+  مضمن UBool truncate(int32_t نشانہ_لمائی);
 
   /**
    * Trims leading and trailing whitespace from this UnicodeString.
@@ -2789,7 +2789,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& reverse() U_LIFETIME_BOUND;
+  مضمن UnicodeString& الٹ() U_LIFETIME_BOUND;
 
   /**
    * Reverse the range [`start`, `start + length`) in
@@ -2799,7 +2799,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& reverse(int32_t start, int32_t length) U_LIFETIME_BOUND;
+  مضمن UnicodeString& الٹ(int32_t شروع, int32_t لمائی) U_LIFETIME_BOUND;
 
   /**
    * Convert the characters in this to UPPER CASE following the conventions of
@@ -2807,7 +2807,7 @@ public:
    * @return A reference to this.
    * @stable ICU 2.0
    */
-  UnicodeString& toUpper() U_LIFETIME_BOUND;
+  UnicodeString& منزل_اتلا() U_LIFETIME_BOUND;
 
   /**
    * Convert the characters in this to UPPER CASE following the conventions of
@@ -2816,7 +2816,7 @@ public:
    * @return A reference to this.
    * @stable ICU 2.0
    */
-  UnicodeString& toUpper(const Locale& locale) U_LIFETIME_BOUND;
+  UnicodeString& منزل_اتلا(ثابت Locale& locale) U_LIFETIME_BOUND;
 
   /**
    * Convert the characters in this to lower case following the conventions of
@@ -2824,7 +2824,7 @@ public:
    * @return A reference to this.
    * @stable ICU 2.0
    */
-  UnicodeString& toLower() U_LIFETIME_BOUND;
+  UnicodeString& منزل_ہیٹھلا() U_LIFETIME_BOUND;
 
   /**
    * Convert the characters in this to lower case following the conventions of
@@ -2833,9 +2833,9 @@ public:
    * @return A reference to this.
    * @stable ICU 2.0
    */
-  UnicodeString& toLower(const Locale& locale) U_LIFETIME_BOUND;
+  UnicodeString& منزل_ہیٹھلا(ثابت Locale& locale) U_LIFETIME_BOUND;
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#إذا !UCONFIG_NO_BREAK_ITERATION
 
   /**
    * Titlecase this string, convenience function using the default locale.
@@ -2863,7 +2863,7 @@ public:
    * @return A reference to this.
    * @stable ICU 2.1
    */
-  UnicodeString& toTitle(BreakIterator* titleIter) U_LIFETIME_BOUND;
+  UnicodeString& منزل_Title(BreakIterator* titleIter) U_LIFETIME_BOUND;
 
   /**
    * Titlecase this string.
@@ -2892,7 +2892,7 @@ public:
    * @return A reference to this.
    * @stable ICU 2.1
    */
-  UnicodeString& toTitle(BreakIterator* titleIter, const Locale& locale) U_LIFETIME_BOUND;
+  UnicodeString& منزل_Title(BreakIterator* titleIter, ثابت Locale& locale) U_LIFETIME_BOUND;
 
   /**
    * Titlecase this string, with options.
@@ -2924,11 +2924,11 @@ public:
    * @return A reference to this.
    * @stable ICU 3.8
    */
-  UnicodeString& toTitle(BreakIterator* titleIter,
-                         const Locale& locale,
+  UnicodeString& منزل_Title(BreakIterator* titleIter,
+                         ثابت Locale& locale,
                          uint32_t options) U_LIFETIME_BOUND;
 
-#endif
+#جے_انت
 
   /**
    * Case-folds the characters in this string.
@@ -2992,7 +2992,7 @@ public:
    * @see getTerminatedBuffer()
    * @stable ICU 2.0
    */
-  char16_t* getBuffer(int32_t minCapacity) U_LIFETIME_BOUND;
+  char16_t* get_بفر(int32_t min_سمرتھا) U_LIFETIME_BOUND;
 
   /**
    * Release a read/write buffer on a UnicodeString object with an
@@ -3014,7 +3014,7 @@ public:
    * @see getBuffer(int32_t minCapacity)
    * @stable ICU 2.0
    */
-  void releaseBuffer(int32_t newLength=-1);
+  فراغ release_بفر(int32_t new_لمائی=-1);
 
   /**
    * Get a read-only pointer to the internal buffer.
@@ -3046,7 +3046,7 @@ public:
    * @see getTerminatedBuffer()
    * @stable ICU 2.0
    */
-  inline const char16_t* getBuffer() const U_LIFETIME_BOUND;
+  مضمن ثابت char16_t* get_بفر() ثابت U_LIFETIME_BOUND;
 
   /**
    * Get a read-only pointer to the internal buffer,
@@ -3081,7 +3081,7 @@ public:
    * @see getBuffer()
    * @stable ICU 2.2
    */
-  const char16_t* getTerminatedBuffer() U_LIFETIME_BOUND;
+  ثابت char16_t* get_Terminated_بفر() U_LIFETIME_BOUND;
 
   /**
    * Converts to a std::u16string_view.
@@ -3089,11 +3089,11 @@ public:
    * @return a string view of the contents of this string
    * @stable ICU 76
    */
-  inline operator std::u16string_view() const {
-    return {getBuffer(), static_cast<std::u16string_view::size_type>(length())};
+  مضمن عامل std::u16string_view() ثابت {
+    أرجع {get_بفر(), static_cast<std::u16string_view::ناپ_type>(لمائی())};
   }
 
-#if U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
+#إذا U_SIZEOF_WCHAR_T==2 || defined(U_وچ_DOXYGEN)
   /**
    * Converts to a std::wstring_view.
    *
@@ -3103,14 +3103,14 @@ public:
    * @return a string view of the contents of this string
    * @stable ICU 76
    */
-  inline operator std::wstring_view() const {
-    const char16_t *p = getBuffer();
-#ifdef U_ALIASING_BARRIER
+  مضمن عامل std::wstring_view() ثابت {
+    ثابت char16_t *p = get_بفر();
+#جے_تعریف_شدہ U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
-#endif
-    return { reinterpret_cast<const wchar_t *>(p), (std::wstring_view::size_type)length() };
+#جے_انت
+    أرجع { reinterpret_cast<ثابت wchar_t *>(p), (std::wstring_view::ناپ_type)لمائی() };
   }
-#endif  // U_SIZEOF_WCHAR_T
+#جے_انت  // U_SIZEOF_WCHAR_T
 
   //========================================
   // Constructors
@@ -3119,7 +3119,7 @@ public:
   /** Construct an empty UnicodeString.
    * @stable ICU 2.0
    */
-  inline UnicodeString();
+  مضمن UnicodeString();
 
   /**
    * Construct a UnicodeString with capacity to hold `capacity` char16_ts
@@ -3132,7 +3132,7 @@ public:
    *              string
    * @stable ICU 2.0
    */
-  UnicodeString(int32_t capacity, UChar32 c, int32_t count);
+  UnicodeString(int32_t سمرتھا, UChar32 c, int32_t گنتی);
 
   /**
    * Single char16_t (code unit) constructor.
@@ -3156,7 +3156,7 @@ public:
    */
   UNISTR_FROM_CHAR_EXPLICIT UnicodeString(UChar32 ch);
 
-#ifdef U_HIDE_DRAFT_API
+#جے_تعریف_شدہ U_HIDE_DRAFT_API
   /**
    * char16_t* constructor.
    *
@@ -3176,12 +3176,12 @@ public:
    * must be NUL (U+0000) terminated.
    * @stable ICU 2.0
    */
-  UNISTR_FROM_STRING_EXPLICIT UnicodeString(const char16_t *text) :
-      UnicodeString(text, -1) {}
-#endif  // U_HIDE_DRAFT_API
+  UNISTR_FROM_STRING_EXPLICIT UnicodeString(ثابت char16_t *متن) :
+      UnicodeString(متن, -1) {}
+#جے_انت  // U_HIDE_DRAFT_API
 
-#if !U_CHAR16_IS_TYPEDEF && \
-    (defined(U_HIDE_DRAFT_API) || (defined(_LIBCPP_VERSION) && _LIBCPP_VERSION >= 180000))
+#إذا !U_CHAR16_IS_TYPEDEF && \
+    (defined(U_HIDE_DRAFT_API) || (defined(LIBCPP_نسخہ) && LIBCPP_نسخہ >= 180000))
   /**
    * uint16_t * constructor.
    * Delegates to UnicodeString(const char16_t *).
@@ -3201,11 +3201,11 @@ public:
    * @param text NUL-terminated UTF-16 string
    * @stable ICU 59
    */
-  UNISTR_FROM_STRING_EXPLICIT UnicodeString(const uint16_t *text) :
-      UnicodeString(ConstChar16Ptr(text), -1) {}
-#endif
+  UNISTR_FROM_STRING_EXPLICIT UnicodeString(ثابت uint16_t *متن) :
+      UnicodeString(ConstChar16Ptr(متن), -1) {}
+#جے_انت
 
-#if defined(U_HIDE_DRAFT_API) && (U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN))
+#إذا defined(U_HIDE_DRAFT_API) && (U_SIZEOF_WCHAR_T==2 || defined(U_وچ_DOXYGEN))
   /**
    * wchar_t * constructor.
    * (Only defined if U_SIZEOF_WCHAR_T==2.)
@@ -3226,9 +3226,9 @@ public:
    * @param text NUL-terminated UTF-16 string
    * @stable ICU 59
    */
-  UNISTR_FROM_STRING_EXPLICIT UnicodeString(const wchar_t *text) :
-      UnicodeString(ConstChar16Ptr(text), -1) {}
-#endif
+  UNISTR_FROM_STRING_EXPLICIT UnicodeString(ثابت wchar_t *متن) :
+      UnicodeString(ConstChar16Ptr(متن), -1) {}
+#جے_انت
 
   /**
    * nullptr_t constructor.
@@ -3240,7 +3240,7 @@ public:
    * @param text nullptr
    * @stable ICU 59
    */
-  UNISTR_FROM_STRING_EXPLICIT inline UnicodeString(const std::nullptr_t text);
+  UNISTR_FROM_STRING_EXPLICIT مضمن UnicodeString(ثابت std::nullptr_t متن);
 
   /**
    * char16_t* constructor.
@@ -3258,10 +3258,10 @@ public:
    * to copy.
    * @stable ICU 2.0
    */
-  UnicodeString(const char16_t *text,
-        int32_t textLength);
+  UnicodeString(ثابت char16_t *متن,
+        int32_t متن_لمائی);
 
-#if !U_CHAR16_IS_TYPEDEF
+#إذا !U_CHAR16_IS_TYPEDEF
   /**
    * uint16_t * constructor.
    * Delegates to UnicodeString(const char16_t *, int32_t).
@@ -3278,11 +3278,11 @@ public:
    * @param textLength string length
    * @stable ICU 59
    */
-  UnicodeString(const uint16_t *text, int32_t textLength) :
-      UnicodeString(ConstChar16Ptr(text), textLength) {}
-#endif
+  UnicodeString(ثابت uint16_t *متن, int32_t متن_لمائی) :
+      UnicodeString(ConstChar16Ptr(متن), متن_لمائی) {}
+#جے_انت
 
-#if U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
+#إذا U_SIZEOF_WCHAR_T==2 || defined(U_وچ_DOXYGEN)
   /**
    * wchar_t * constructor.
    * (Only defined if U_SIZEOF_WCHAR_T==2.)
@@ -3300,9 +3300,9 @@ public:
    * @param textLength string length
    * @stable ICU 59
    */
-  UnicodeString(const wchar_t *text, int32_t textLength) :
-      UnicodeString(ConstChar16Ptr(text), textLength) {}
-#endif
+  UnicodeString(ثابت wchar_t *متن, int32_t متن_لمائی) :
+      UnicodeString(ConstChar16Ptr(متن), متن_لمائی) {}
+#جے_انت
 
   /**
    * nullptr_t constructor.
@@ -3311,7 +3311,7 @@ public:
    * @param textLength ignored
    * @stable ICU 59
    */
-  inline UnicodeString(const std::nullptr_t text, int32_t textLength);
+  مضمن UnicodeString(ثابت std::nullptr_t متن, int32_t متن_لمائی);
 
   /**
    * Constructor from `text`
@@ -3325,10 +3325,10 @@ public:
    * @param text UTF-16 string
    * @stable ICU 76
    */
-  template<typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  UNISTR_FROM_STRING_EXPLICIT UnicodeString(const S &text) {
-    fUnion.fFields.fLengthAndFlags = kShortString;
-    doAppend(internal::toU16StringViewNullable(text));
+  سانچا<typename S, typename = std::enable_if_t<Convertible_منزل_U16_String_View<S>>>
+  UNISTR_FROM_STRING_EXPLICIT UnicodeString(ثابت S &متن) {
+    fUnion.fFields.f_لمائی_And_Flags = kShortString;
+    doAppend(اندرونی_2::منزل_U16_String_View_Nullable(متن));
   }
 
   /**
@@ -3362,8 +3362,8 @@ public:
    * @stable ICU 2.0
    */
   UnicodeString(UBool isTerminated,
-                ConstChar16Ptr text U_LIFETIME_BOUND,
-                int32_t textLength);
+                ConstChar16Ptr متن U_LIFETIME_BOUND,
+                int32_t متن_لمائی);
 
   /**
    * Writable-aliasing char16_t* constructor.
@@ -3383,9 +3383,9 @@ public:
    * @param buffCapacity The size of `buffer` in char16_ts.
    * @stable ICU 2.0
    */
-  UnicodeString(char16_t* buffer U_LIFETIME_BOUND, int32_t buffLength, int32_t buffCapacity);
+  UnicodeString(char16_t* بفر U_LIFETIME_BOUND, int32_t buff_لمائی, int32_t buff_سمرتھا);
 
-#if !U_CHAR16_IS_TYPEDEF
+#إذا !U_CHAR16_IS_TYPEDEF
   /**
    * Writable-aliasing uint16_t * constructor.
    * Delegates to UnicodeString(const char16_t *, int32_t, int32_t).
@@ -3394,11 +3394,11 @@ public:
    * @param buffCapacity buffer capacity
    * @stable ICU 59
    */
-  UnicodeString(uint16_t* buffer U_LIFETIME_BOUND, int32_t buffLength, int32_t buffCapacity) :
-      UnicodeString(Char16Ptr(buffer), buffLength, buffCapacity) {}
-#endif
+  UnicodeString(uint16_t* بفر U_LIFETIME_BOUND, int32_t buff_لمائی, int32_t buff_سمرتھا) :
+      UnicodeString(Char16Ptr(بفر), buff_لمائی, buff_سمرتھا) {}
+#جے_انت
 
-#if U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
+#إذا U_SIZEOF_WCHAR_T==2 || defined(U_وچ_DOXYGEN)
   /**
    * Writable-aliasing wchar_t * constructor.
    * (Only defined if U_SIZEOF_WCHAR_T==2.)
@@ -3408,9 +3408,9 @@ public:
    * @param buffCapacity buffer capacity
    * @stable ICU 59
    */
-  UnicodeString(wchar_t* buffer U_LIFETIME_BOUND, int32_t buffLength, int32_t buffCapacity) :
-      UnicodeString(Char16Ptr(buffer), buffLength, buffCapacity) {}
-#endif
+  UnicodeString(wchar_t* بفر U_LIFETIME_BOUND, int32_t buff_لمائی, int32_t buff_سمرتھا) :
+      UnicodeString(Char16Ptr(بفر), buff_لمائی, buff_سمرتھا) {}
+#جے_انت
 
   /**
    * Writable-aliasing nullptr_t constructor.
@@ -3420,9 +3420,9 @@ public:
    * @param buffCapacity ignored
    * @stable ICU 59
    */
-  inline UnicodeString(std::nullptr_t buffer, int32_t buffLength, int32_t buffCapacity);
+  مضمن UnicodeString(std::nullptr_t بفر, int32_t buff_لمائی, int32_t buff_سمرتھا);
 
-#if U_CHARSET_IS_UTF8 || !UCONFIG_NO_CONVERSION
+#إذا U_CHARSET_IS_UTF8 || !UCONFIG_NO_CONVERSION
 
   /**
    * char* constructor.
@@ -3447,7 +3447,7 @@ public:
    *                     in the platform's default codepage.
    * @stable ICU 2.0
    */
-  UNISTR_FROM_STRING_EXPLICIT UnicodeString(const char *codepageData);
+  UNISTR_FROM_STRING_EXPLICIT UnicodeString(ثابت حرف *codepage_انکڑے);
 
   /**
    * char* constructor.
@@ -3457,11 +3457,11 @@ public:
    * @param dataLength The number of bytes in `codepageData`.
    * @stable ICU 2.0
    */
-  UnicodeString(const char *codepageData, int32_t dataLength);
+  UnicodeString(ثابت حرف *codepage_انکڑے, int32_t انکڑے_لمائی);
 
-#endif
+#جے_انت
 
-#if !UCONFIG_NO_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION
 
   /**
    * char* constructor.
@@ -3480,7 +3480,7 @@ public:
    *
    * @stable ICU 2.0
    */
-  UnicodeString(const char *codepageData, const char *codepage);
+  UnicodeString(ثابت حرف *codepage_انکڑے, ثابت حرف *codepage);
 
   /**
    * char* constructor.
@@ -3499,7 +3499,7 @@ public:
    *
    * @stable ICU 2.0
    */
-  UnicodeString(const char *codepageData, int32_t dataLength, const char *codepage);
+  UnicodeString(ثابت حرف *codepage_انکڑے, int32_t انکڑے_لمائی, ثابت حرف *codepage);
 
   /**
    * char * / UConverter constructor.
@@ -3523,11 +3523,11 @@ public:
    * @stable ICU 2.0
    */
   UnicodeString(
-        const char *src, int32_t srcLength,
+        ثابت حرف *src, int32_t src_لمائی,
         UConverter *cnv,
-        UErrorCode &errorCode);
+        UError_کوڈ &error_کوڈ);
 
-#endif
+#جے_انت
 
   /**
    * Constructs a Unicode string from an invariant-character char * string.
@@ -3561,7 +3561,7 @@ public:
    * @see US_INV
    * @stable ICU 3.2
    */
-  UnicodeString(const char *src, int32_t textLength, enum EInvariant inv);
+  UnicodeString(ثابت حرف *src, int32_t متن_لمائی, تعداد EInvariant inv);
 
 
   /**
@@ -3580,7 +3580,7 @@ public:
    * @stable ICU 2.0
    * @see fastCopyFrom
    */
-  UnicodeString(const UnicodeString& that);
+  UnicodeString(ثابت UnicodeString& that);
 
   /**
    * Move constructor; might leave src in bogus state.
@@ -3596,7 +3596,7 @@ public:
    * @param srcStart The offset into `src` at which to start copying.
    * @stable ICU 2.2
    */
-  UnicodeString(const UnicodeString& src, int32_t srcStart);
+  UnicodeString(ثابت UnicodeString& src, int32_t src_شروع);
 
   /**
    * 'Substring' constructor from subrange of source string.
@@ -3605,7 +3605,7 @@ public:
    * @param srcLength The number of characters from `src` to copy.
    * @stable ICU 2.2
    */
-  UnicodeString(const UnicodeString& src, int32_t srcStart, int32_t srcLength);
+  UnicodeString(ثابت UnicodeString& src, int32_t src_شروع, int32_t src_لمائی);
 
   /**
    * Clone this object, an instance of a subclass of Replaceable.
@@ -3620,12 +3620,12 @@ public:
    * @see getDynamicClassID
    * @stable ICU 2.6
    */
-  virtual UnicodeString *clone() const override;
+  مجازی UnicodeString *clone() ثابت override;
 
   /** Destructor.
    * @stable ICU 2.0
    */
-  virtual ~UnicodeString();
+  مجازی ~UnicodeString();
 
   /**
    * Readonly-aliasing factory method.
@@ -3649,9 +3649,9 @@ public:
    * @param text The string view to alias for the UnicodeString.
    * @stable ICU 76
    */
-  template <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  static inline UnicodeString readOnlyAlias(const S& text U_LIFETIME_BOUND) {
-    return readOnlyAliasFromU16StringView(internal::toU16StringView(text));
+  سانچا <typename S, typename = std::enable_if_t<Convertible_منزل_U16_String_View<S>>>
+  ساكن مضمن UnicodeString readOnlyAlias(ثابت S& متن U_LIFETIME_BOUND) {
+    أرجع readOnlyAliasFromU16StringView(اندرونی_2::منزل_U16_String_View(متن));
   }
 
   /**
@@ -3673,8 +3673,8 @@ public:
    * @param text The UnicodeString to alias.
    * @stable ICU 76
    */
-  static inline UnicodeString readOnlyAlias(const UnicodeString& text U_LIFETIME_BOUND) {
-    return readOnlyAliasFromUnicodeString(text);
+  ساكن مضمن UnicodeString readOnlyAlias(ثابت UnicodeString& متن U_LIFETIME_BOUND) {
+    أرجع readOnlyAliasFromUnicodeString(متن);
   }
 
   /**
@@ -3690,7 +3690,7 @@ public:
    * @see toUTF8String
    * @stable ICU 4.2
    */
-  static UnicodeString fromUTF8(StringPiece utf8);
+  ساكن UnicodeString fromUTF8(StringPiece utf8);
 
   /**
    * Create a UnicodeString from a UTF-32 string.
@@ -3703,7 +3703,7 @@ public:
    * @see toUTF32
    * @stable ICU 4.2
    */
-  static UnicodeString fromUTF32(const UChar32 *utf32, int32_t length);
+  ساكن UnicodeString fromUTF32(ثابت UChar32 *utf32, int32_t لمائی);
 
   /* Miscellaneous operations */
 
@@ -3741,7 +3741,7 @@ public:
    * @see u_unescapeAt()
    * @stable ICU 2.0
    */
-  UnicodeString unescape() const;
+  UnicodeString unescape() ثابت;
 
   /**
    * Unescape a single escape sequence and return the represented
@@ -3762,232 +3762,232 @@ public:
    * @see u_unescapeAt()
    * @stable ICU 2.0
    */
-  UChar32 unescapeAt(int32_t &offset) const;
+  UChar32 unescapeAt(int32_t &وتھ) ثابت;
 
   /**
    * ICU "poor man's RTTI", returns a UClassID for this class.
    *
    * @stable ICU 2.2
    */
-  static UClassID U_EXPORT2 getStaticClassID();
+  ساكن UClassID U_EXPORT2 getStaticClassID();
 
   /**
    * ICU "poor man's RTTI", returns a UClassID for the actual class.
    *
    * @stable ICU 2.2
    */
-  virtual UClassID getDynamicClassID() const override;
+  مجازی UClassID getDynamicClassID() ثابت override;
 
   //========================================
   // Implementation methods
   //========================================
 
-protected:
+محمي:
   /**
    * Implement Replaceable::getLength() (see jitterbug 1027).
    * @stable ICU 2.4
    */
-  virtual int32_t getLength() const override;
+  مجازی int32_t get_لمائی() ثابت override;
 
   /**
    * The change in Replaceable to use virtual getCharAt() allows
    * UnicodeString::charAt() to be inline again (see jitterbug 709).
    * @stable ICU 2.4
    */
-  virtual char16_t getCharAt(int32_t offset) const override;
+  مجازی char16_t getCharAt(int32_t وتھ) ثابت override;
 
   /**
    * The change in Replaceable to use virtual getChar32At() allows
    * UnicodeString::char32At() to be inline again (see jitterbug 709).
    * @stable ICU 2.4
    */
-  virtual UChar32 getChar32At(int32_t offset) const override;
+  مجازی UChar32 getChar32At(int32_t وتھ) ثابت override;
 
-private:
-  static UnicodeString readOnlyAliasFromU16StringView(std::u16string_view text U_LIFETIME_BOUND);
-  static UnicodeString readOnlyAliasFromUnicodeString(const UnicodeString& text U_LIFETIME_BOUND);
+خاص:
+  ساكن UnicodeString readOnlyAliasFromU16StringView(std::u16string_view متن U_LIFETIME_BOUND);
+  ساكن UnicodeString readOnlyAliasFromUnicodeString(ثابت UnicodeString& متن U_LIFETIME_BOUND);
 
   // For char* constructors. Could be made public.
-  UnicodeString& setToUTF8(StringPiece utf8) U_LIFETIME_BOUND;
+  UnicodeString& سیٹ_منزل_UTF8(StringPiece utf8) U_LIFETIME_BOUND;
   // For extract(char*).
   // We could make a toUTF8(target, capacity, errorCode) public but not
   // this version: New API will be cleaner if we make callers create substrings
   // rather than having start+length on every method,
   // and it should take a UErrorCode&.
   int32_t
-  toUTF8(int32_t start, int32_t len,
-         char *target, int32_t capacity) const;
+  منزل_UTF8(int32_t شروع, int32_t len,
+         حرف *نشانہ, int32_t سمرتھا) ثابت;
 
   /**
    * Internal string contents comparison, called by operator==.
    * Requires: this & text not bogus and have same lengths.
    */
-  inline UBool doEquals(const UnicodeString &text, int32_t len) const {
-    return doEquals(text.getArrayStart(), len);
+  مضمن UBool doEquals(ثابت UnicodeString &متن, int32_t len) ثابت {
+    أرجع doEquals(متن.get_Array_شروع(), len);
   }
-  UBool doEquals(const char16_t *text, int32_t len) const;
+  UBool doEquals(ثابت char16_t *متن, int32_t len) ثابت;
 
-  inline UBool
-  doEqualsSubstring(int32_t start,
-           int32_t length,
-           const UnicodeString& srcText,
-           int32_t srcStart,
-           int32_t srcLength) const;
+  مضمن UBool
+  doEqualsSubstring(int32_t شروع,
+           int32_t لمائی,
+           ثابت UnicodeString& src_متن,
+           int32_t src_شروع,
+           int32_t src_لمائی) ثابت;
 
-  UBool doEqualsSubstring(int32_t start,
-           int32_t length,
-           const char16_t *srcChars,
-           int32_t srcStart,
-           int32_t srcLength) const;
+  UBool doEqualsSubstring(int32_t شروع,
+           int32_t لمائی,
+           ثابت char16_t *srcChars,
+           int32_t src_شروع,
+           int32_t src_لمائی) ثابت;
 
-  inline int8_t
-  doCompare(int32_t start,
-           int32_t length,
-           const UnicodeString& srcText,
-           int32_t srcStart,
-           int32_t srcLength) const;
+  مضمن int8_t
+  doCompare(int32_t شروع,
+           int32_t لمائی,
+           ثابت UnicodeString& src_متن,
+           int32_t src_شروع,
+           int32_t src_لمائی) ثابت;
 
-  int8_t doCompare(int32_t start,
-           int32_t length,
-           const char16_t *srcChars,
-           int32_t srcStart,
-           int32_t srcLength) const;
+  int8_t doCompare(int32_t شروع,
+           int32_t لمائی,
+           ثابت char16_t *srcChars,
+           int32_t src_شروع,
+           int32_t src_لمائی) ثابت;
 
-  inline int8_t
-  doCompareCodePointOrder(int32_t start,
-                          int32_t length,
-                          const UnicodeString& srcText,
-                          int32_t srcStart,
-                          int32_t srcLength) const;
+  مضمن int8_t
+  do_Compare_کوڈ_نقطہ_ترتیب(int32_t شروع,
+                          int32_t لمائی,
+                          ثابت UnicodeString& src_متن,
+                          int32_t src_شروع,
+                          int32_t src_لمائی) ثابت;
 
-  int8_t doCompareCodePointOrder(int32_t start,
-                                 int32_t length,
-                                 const char16_t *srcChars,
-                                 int32_t srcStart,
-                                 int32_t srcLength) const;
+  int8_t do_Compare_کوڈ_نقطہ_ترتیب(int32_t شروع,
+                                 int32_t لمائی,
+                                 ثابت char16_t *srcChars,
+                                 int32_t src_شروع,
+                                 int32_t src_لمائی) ثابت;
 
-  inline int8_t
-  doCaseCompare(int32_t start,
-                int32_t length,
-                const UnicodeString &srcText,
-                int32_t srcStart,
-                int32_t srcLength,
-                uint32_t options) const;
+  مضمن int8_t
+  doCaseCompare(int32_t شروع,
+                int32_t لمائی,
+                ثابت UnicodeString &src_متن,
+                int32_t src_شروع,
+                int32_t src_لمائی,
+                uint32_t options) ثابت;
 
   int8_t
-  doCaseCompare(int32_t start,
-                int32_t length,
-                const char16_t *srcChars,
-                int32_t srcStart,
-                int32_t srcLength,
-                uint32_t options) const;
+  doCaseCompare(int32_t شروع,
+                int32_t لمائی,
+                ثابت char16_t *srcChars,
+                int32_t src_شروع,
+                int32_t src_لمائی,
+                uint32_t options) ثابت;
 
-  int32_t doIndexOf(char16_t c,
-            int32_t start,
-            int32_t length) const;
+  int32_t do_اشاریہ_دا(char16_t c,
+            int32_t شروع,
+            int32_t لمائی) ثابت;
 
-  int32_t doIndexOf(UChar32 c,
-                        int32_t start,
-                        int32_t length) const;
+  int32_t do_اشاریہ_دا(UChar32 c,
+                        int32_t شروع,
+                        int32_t لمائی) ثابت;
 
-  int32_t doLastIndexOf(char16_t c,
-                int32_t start,
-                int32_t length) const;
+  int32_t do_آخری_اشاریہ_دا(char16_t c,
+                int32_t شروع,
+                int32_t لمائی) ثابت;
 
-  int32_t doLastIndexOf(UChar32 c,
-                            int32_t start,
-                            int32_t length) const;
+  int32_t do_آخری_اشاریہ_دا(UChar32 c,
+                            int32_t شروع,
+                            int32_t لمائی) ثابت;
 
-  void doExtract(int32_t start,
-         int32_t length,
+  فراغ do_کڈھو(int32_t شروع,
+         int32_t لمائی,
          char16_t *dst,
-         int32_t dstStart) const;
+         int32_t dst_شروع) ثابت;
 
-  inline void doExtract(int32_t start,
-         int32_t length,
-         UnicodeString& target) const;
+  مضمن فراغ do_کڈھو(int32_t شروع,
+         int32_t لمائی,
+         UnicodeString& نشانہ) ثابت;
 
-  inline char16_t doCharAt(int32_t offset)  const;
+  مضمن char16_t doCharAt(int32_t وتھ)  ثابت;
 
-  UnicodeString& doReplace(int32_t start,
-                           int32_t length,
-                           const UnicodeString& srcText,
-                           int32_t srcStart,
-                           int32_t srcLength) U_LIFETIME_BOUND;
+  UnicodeString& doReplace(int32_t شروع,
+                           int32_t لمائی,
+                           ثابت UnicodeString& src_متن,
+                           int32_t src_شروع,
+                           int32_t src_لمائی) U_LIFETIME_BOUND;
 
-  UnicodeString& doReplace(int32_t start,
-                           int32_t length,
-                           const char16_t* srcChars,
-                           int32_t srcStart,
-                           int32_t srcLength) U_LIFETIME_BOUND;
-  UnicodeString& doReplace(int32_t start, int32_t length, std::u16string_view src) U_LIFETIME_BOUND;
+  UnicodeString& doReplace(int32_t شروع,
+                           int32_t لمائی,
+                           ثابت char16_t* srcChars,
+                           int32_t src_شروع,
+                           int32_t src_لمائی) U_LIFETIME_BOUND;
+  UnicodeString& doReplace(int32_t شروع, int32_t لمائی, std::u16string_view src) U_LIFETIME_BOUND;
 
-  UnicodeString& doAppend(const UnicodeString& src,
-                          int32_t srcStart,
-                          int32_t srcLength) U_LIFETIME_BOUND;
-  UnicodeString& doAppend(const char16_t* srcChars,
-                          int32_t srcStart,
-                          int32_t srcLength) U_LIFETIME_BOUND;
+  UnicodeString& doAppend(ثابت UnicodeString& src,
+                          int32_t src_شروع,
+                          int32_t src_لمائی) U_LIFETIME_BOUND;
+  UnicodeString& doAppend(ثابت char16_t* srcChars,
+                          int32_t src_شروع,
+                          int32_t src_لمائی) U_LIFETIME_BOUND;
   UnicodeString& doAppend(std::u16string_view src) U_LIFETIME_BOUND;
 
-  UnicodeString& doReverse(int32_t start, int32_t length) U_LIFETIME_BOUND;
+  UnicodeString& do_الٹ(int32_t شروع, int32_t لمائی) U_LIFETIME_BOUND;
 
   // calculate hash code
-  int32_t doHashCode() const;
+  int32_t do_Hash_کوڈ() ثابت;
 
   // get pointer to start of array
   // these do not check for kOpenGetBuffer, unlike the public getBuffer() function
-  inline char16_t* getArrayStart() U_LIFETIME_BOUND;
-  inline const char16_t* getArrayStart() const U_LIFETIME_BOUND;
+  مضمن char16_t* get_Array_شروع() U_LIFETIME_BOUND;
+  مضمن ثابت char16_t* get_Array_شروع() ثابت U_LIFETIME_BOUND;
 
-  inline UBool hasShortLength() const;
-  inline int32_t getShortLength() const;
+  مضمن UBool has_Short_لمائی() ثابت;
+  مضمن int32_t get_Short_لمائی() ثابت;
 
   // A UnicodeString object (not necessarily its current buffer)
   // is writable unless it isBogus() or it has an "open" getBuffer(minCapacity).
-  inline UBool isWritable() const;
+  مضمن UBool isWritable() ثابت;
 
   // Is the current buffer writable?
-  inline UBool isBufferWritable() const;
+  مضمن UBool is_بفر_Writable() ثابت;
 
   // None of the following does releaseArray().
-  inline void setZeroLength();
-  inline void setShortLength(int32_t len);
-  inline void setLength(int32_t len);
-  inline void setToEmpty();
-  inline void setArray(char16_t *array, int32_t len, int32_t capacity); // sets length but not flags
+  مضمن فراغ سیٹ_Zero_لمائی();
+  مضمن فراغ سیٹ_Short_لمائی(int32_t len);
+  مضمن فراغ سیٹ_لمائی(int32_t len);
+  مضمن فراغ سیٹ_منزل_خالی_تھاواں();
+  مضمن فراغ سیٹ_Array(char16_t *array, int32_t len, int32_t سمرتھا); // sets length but not flags
 
   // allocate the array; result may be the stack buffer
   // sets refCount to 1 if appropriate
   // sets fArray, fCapacity, and flags
   // sets length to 0
   // returns boolean for success or failure
-  UBool allocate(int32_t capacity);
+  UBool allocate(int32_t سمرتھا);
 
   // release the array if owned
-  void releaseArray();
+  فراغ releaseArray();
 
   // turn a bogus string into an empty one
-  void unBogus();
+  فراغ unBogus();
 
   // implements assignment operator, copy constructor, and fastCopyFrom()
-  UnicodeString& copyFrom(const UnicodeString& src, UBool fastCopy = false) U_LIFETIME_BOUND;
+  UnicodeString& copyFrom(ثابت UnicodeString& src, UBool fastCopy = false) U_LIFETIME_BOUND;
 
   // Copies just the fields without memory management.
-  void copyFieldsFrom(UnicodeString &src, UBool setSrcToBogus) noexcept;
+  فراغ copyFieldsFrom(UnicodeString &src, UBool سیٹ_Src_منزل_Bogus) noexcept;
 
   // Pin start and limit to acceptable values.
-  inline void pinIndex(int32_t& start) const;
-  inline void pinIndices(int32_t& start,
-                         int32_t& length) const;
+  مضمن فراغ pin_اشاریہ(int32_t& شروع) ثابت;
+  مضمن فراغ pinIndices(int32_t& شروع,
+                         int32_t& لمائی) ثابت;
 
-#if !UCONFIG_NO_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION
 
   /* Internal extract() using UConverter. */
-  int32_t doExtract(int32_t start, int32_t length,
-                    char *dest, int32_t destCapacity,
+  int32_t do_کڈھو(int32_t شروع, int32_t لمائی,
+                    حرف *dest, int32_t dest_سمرتھا,
                     UConverter *cnv,
-                    UErrorCode &errorCode) const;
+                    UError_کوڈ &error_کوڈ) ثابت;
 
   /*
    * Real constructor for converting from codepage data.
@@ -3999,21 +3999,21 @@ private:
    * then a simple conversion is performed on the codepage-invariant
    * subset ("invariant characters") of the platform encoding. See utypes.h.
    */
-  void doCodepageCreate(const char *codepageData,
-                        int32_t dataLength,
-                        const char *codepage);
+  فراغ doCodepageCreate(ثابت حرف *codepage_انکڑے,
+                        int32_t انکڑے_لمائی,
+                        ثابت حرف *codepage);
 
   /*
    * Worker function for creating a UnicodeString from
    * a codepage string using a UConverter.
    */
-  void
-  doCodepageCreate(const char *codepageData,
-                   int32_t dataLength,
+  فراغ
+  doCodepageCreate(ثابت حرف *codepage_انکڑے,
+                   int32_t انکڑے_لمائی,
                    UConverter *converter,
-                   UErrorCode &status);
+                   UError_کوڈ &حالت);
 
-#endif
+#جے_انت
 
   /*
    * This function is called when write access to the array
@@ -4026,10 +4026,10 @@ private:
    *
    * Return false if memory could not be allocated.
    */
-  UBool cloneArrayIfNeeded(int32_t newCapacity = -1,
-                           int32_t growCapacity = -1,
+  UBool cloneArrayIfNeeded(int32_t new_سمرتھا = -1,
+                           int32_t grow_سمرتھا = -1,
                            UBool doCopyArray = true,
-                           int32_t** pBufferToDelete = nullptr,
+                           int32_t** p_بفر_منزل_Delete = nullptr,
                            UBool forceClone = false);
 
   /**
@@ -4039,53 +4039,53 @@ private:
    */
   UnicodeString& caseMap(int32_t caseLocale,
                          uint32_t options,
-#if !UCONFIG_NO_BREAK_ITERATION
+#إذا !UCONFIG_NO_BREAK_ITERATION
                          BreakIterator* iter,
-#endif
+#جے_انت
                          UStringCaseMapper* stringCaseMapper) U_LIFETIME_BOUND;
 
   // ref counting
-  void addRef();
+  فراغ جوڑو_Ref();
   int32_t removeRef();
-  int32_t refCount() const;
+  int32_t ref_گنتی() ثابت;
 
   // constants
-  enum {
+  تعداد {
     /**
      * Size of stack buffer for short strings.
      * Must be at least U16_MAX_LENGTH for the single-code point constructor to work.
      * @see UNISTR_OBJECT_SIZE
      */
-    US_STACKBUF_SIZE = static_cast<int32_t>(UNISTR_OBJECT_SIZE - sizeof(void*) - 2) / U_SIZEOF_UCHAR,
+    US_STACKBUF_ناپ = static_cast<int32_t>(UNISTR_OBJECT_ناپ - حجم(فراغ*) - 2) / U_SIZEOF_UCHAR,
     kInvalidUChar=0xffff, // U+FFFF returned by charAt(invalid index)
-    kInvalidHashCode=0, // invalid hash code
-    kEmptyHashCode=1, // hash code for empty string
+    k_Invalid_Hash_کوڈ=0, // invalid hash code
+    k_خالی_تھاواں_Hash_کوڈ=1, // hash code for empty string
 
     // bit flag values for fLengthAndFlags
     kIsBogus=1,         // this string is bogus, i.e., not valid or nullptr
-    kUsingStackBuffer=2,// using fUnion.fStackFields instead of fUnion.fFields
+    k_Using_ڈھیر_بفر=2,// using fUnion.fStackFields instead of fUnion.fFields
     kRefCounted=4,      // there is a refCount field before the characters in fArray
-    kBufferIsReadonly=8,// do not write to this buffer
-    kOpenGetBuffer=16,  // getBuffer(minCapacity) was called (is "open"),
+    k_بفر_Is_Readonly=8,// do not write to this buffer
+    k_Open_Get_بفر=16,  // getBuffer(minCapacity) was called (is "open"),
                         // and releaseBuffer(newLength) must be called
     kAllStorageFlags=0x1f,
 
-    kLengthShift=5,     // remaining 11 bits for non-negative short length, or negative if long
-    kLength1=1<<kLengthShift,
-    kMaxShortLength=0x3ff,  // max non-negative short length (leaves top bit 0)
-    kLengthIsLarge=0xffe0,  // short length < 0, real length is in fUnion.fFields.fLength
+    k_لمائی_کھسکاؤ=5,     // remaining 11 bits for non-negative short length, or negative if long
+    kLength1=1<<k_لمائی_کھسکاؤ,
+    k_Max_Short_لمائی=0x3ff,  // max non-negative short length (leaves top bit 0)
+    k_لمائی_Is_Large=0xffe0,  // short length < 0, real length is in fUnion.fFields.fLength
 
     // combined values for convenience
-    kShortString=kUsingStackBuffer,
+    kShortString=k_Using_ڈھیر_بفر,
     kLongString=kRefCounted,
-    kReadonlyAlias=kBufferIsReadonly,
+    kReadonlyAlias=k_بفر_Is_Readonly,
     kWritableAlias=0
   };
 
-  friend class UnicodeStringAppendable;
+  یار class UnicodeStringAppendable;
 
-  union StackBufferOrFields;        // forward declaration necessary before friend declaration
-  friend union StackBufferOrFields; // make US_STACKBUF_SIZE visible inside fUnion
+  اتحاد ڈھیر_بفر_Or_Fields;        // forward declaration necessary before friend declaration
+  یار اتحاد ڈھیر_بفر_Or_Fields; // make US_STACKBUF_SIZE visible inside fUnion
 
   /*
    * The following are all the class fields that are stored
@@ -4128,17 +4128,17 @@ private:
    * - ICU ticket #8322 "why is sizeof(UnicodeString)==48?"
    */
   // (implicit) *vtable;
-  union StackBufferOrFields {
+  اتحاد ڈھیر_بفر_Or_Fields {
     // fStackFields is used iff (fLengthAndFlags&kUsingStackBuffer) else fFields is used.
     // Each struct of the union must begin with fLengthAndFlags.
-    struct {
-      int16_t fLengthAndFlags;          // bit fields: see constants above
-      char16_t fBuffer[US_STACKBUF_SIZE];  // buffer for short strings
-    } fStackFields;
-    struct {
-      int16_t fLengthAndFlags;          // bit fields: see constants above
-      int32_t fLength;    // number of characters in fArray if >127; else undefined
-      int32_t fCapacity;  // capacity of fArray (in char16_ts)
+    بنية {
+      int16_t f_لمائی_And_Flags;          // bit fields: see constants above
+      char16_t f_بفر[US_STACKBUF_ناپ];  // buffer for short strings
+    } f_ڈھیر_Fields;
+    بنية {
+      int16_t f_لمائی_And_Flags;          // bit fields: see constants above
+      int32_t f_لمائی;    // number of characters in fArray if >127; else undefined
+      int32_t f_سمرتھا;  // capacity of fArray (in char16_ts)
       // array pointer last to minimize padding for machines with P128 data model
       // or pointer sizes that are not a power of 2
       char16_t   *fArray;    // the Unicode data
@@ -4155,7 +4155,7 @@ private:
  * @stable ICU 2.8
  */
 U_COMMON_API UnicodeString U_EXPORT2
-operator+ (const UnicodeString &s1, const UnicodeString &s2);
+عامل+ (ثابت UnicodeString &s1, ثابت UnicodeString &s2);
 
 /**
  * Creates a new UnicodeString from the concatenation of a UnicodeString and `s2`
@@ -4167,18 +4167,18 @@ operator+ (const UnicodeString &s1, const UnicodeString &s2);
  * @return UnicodeString(s1).append(s2)
  * @stable ICU 76
  */
-template<
+سانچا<
     typename US, typename S,
-    typename = std::enable_if_t<ConvertibleToU16StringView<S> && std::is_same_v<US, UnicodeString>>>
-inline UnicodeString operator+(const US &s1, const S &s2) {
-  return unistr_internalConcat(s1, internal::toU16StringView(s2));
+    typename = std::enable_if_t<Convertible_منزل_U16_String_View<S> && std::is_same_v<US, UnicodeString>>>
+مضمن UnicodeString عامل+(ثابت US &s1, ثابت S &s2) {
+  أرجع unistr_اندرونی_Concat(s1, اندرونی_2::منزل_U16_String_View(s2));
 }
 
-#ifndef U_FORCE_HIDE_INTERNAL_API
+#جے_بنا_تعریف U_FORCE_HIDE_اندرونی_API
 /** @internal */
 U_COMMON_API UnicodeString U_EXPORT2
-unistr_internalConcat(const UnicodeString &s1, std::u16string_view s2);
-#endif
+unistr_اندرونی_Concat(ثابت UnicodeString &s1, std::u16string_view s2);
+#جے_انت
 
 //========================================
 // Inline members
@@ -4188,963 +4188,963 @@ unistr_internalConcat(const UnicodeString &s1, std::u16string_view s2);
 // Privates
 //========================================
 
-inline void
-UnicodeString::pinIndex(int32_t& start) const
+مضمن فراغ
+UnicodeString::pin_اشاریہ(int32_t& شروع) ثابت
 {
   // pin index
-  if(start < 0) {
-    start = 0;
-  } else if(start > length()) {
-    start = length();
+  إذا(شروع < 0) {
+    شروع = 0;
+  } وإلا إذا(شروع > لمائی()) {
+    شروع = لمائی();
   }
 }
 
-inline void
-UnicodeString::pinIndices(int32_t& start,
-                          int32_t& _length) const
+مضمن فراغ
+UnicodeString::pinIndices(int32_t& شروع,
+                          int32_t& لمائی_4) ثابت
 {
   // pin indices
-  int32_t len = length();
-  if(start < 0) {
-    start = 0;
-  } else if(start > len) {
-    start = len;
+  int32_t len = لمائی();
+  إذا(شروع < 0) {
+    شروع = 0;
+  } وإلا إذا(شروع > len) {
+    شروع = len;
   }
-  if(_length < 0) {
-    _length = 0;
-  } else if(_length > (len - start)) {
-    _length = (len - start);
+  إذا(لمائی_4 < 0) {
+    لمائی_4 = 0;
+  } وإلا إذا(لمائی_4 > (len - شروع)) {
+    لمائی_4 = (len - شروع);
   }
 }
 
-inline char16_t*
-UnicodeString::getArrayStart() U_LIFETIME_BOUND {
-  return (fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) ?
-    fUnion.fStackFields.fBuffer : fUnion.fFields.fArray;
+مضمن char16_t*
+UnicodeString::get_Array_شروع() U_LIFETIME_BOUND {
+  أرجع (fUnion.fFields.f_لمائی_And_Flags&k_Using_ڈھیر_بفر) ?
+    fUnion.f_ڈھیر_Fields.f_بفر : fUnion.fFields.fArray;
 }
 
-inline const char16_t*
-UnicodeString::getArrayStart() const U_LIFETIME_BOUND {
-  return (fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) ?
-    fUnion.fStackFields.fBuffer : fUnion.fFields.fArray;
+مضمن ثابت char16_t*
+UnicodeString::get_Array_شروع() ثابت U_LIFETIME_BOUND {
+  أرجع (fUnion.fFields.f_لمائی_And_Flags&k_Using_ڈھیر_بفر) ?
+    fUnion.f_ڈھیر_Fields.f_بفر : fUnion.fFields.fArray;
 }
 
 //========================================
 // Default constructor
 //========================================
 
-inline
+مضمن
 UnicodeString::UnicodeString() {
-  fUnion.fStackFields.fLengthAndFlags=kShortString;
+  fUnion.f_ڈھیر_Fields.f_لمائی_And_Flags=kShortString;
 }
 
-inline UnicodeString::UnicodeString(const std::nullptr_t /*text*/) {
-  fUnion.fStackFields.fLengthAndFlags=kShortString;
+مضمن UnicodeString::UnicodeString(ثابت std::nullptr_t /*متن*/) {
+  fUnion.f_ڈھیر_Fields.f_لمائی_And_Flags=kShortString;
 }
 
-inline UnicodeString::UnicodeString(const std::nullptr_t /*text*/, int32_t /*length*/) {
-  fUnion.fStackFields.fLengthAndFlags=kShortString;
+مضمن UnicodeString::UnicodeString(ثابت std::nullptr_t /*متن*/, int32_t /*لمائی*/) {
+  fUnion.f_ڈھیر_Fields.f_لمائی_And_Flags=kShortString;
 }
 
-inline UnicodeString::UnicodeString(std::nullptr_t /*buffer*/, int32_t /*buffLength*/, int32_t /*buffCapacity*/) {
-  fUnion.fStackFields.fLengthAndFlags=kShortString;
+مضمن UnicodeString::UnicodeString(std::nullptr_t /*بفر*/, int32_t /*buffLength*/, int32_t /*buffCapacity*/) {
+  fUnion.f_ڈھیر_Fields.f_لمائی_And_Flags=kShortString;
 }
 
 //========================================
 // Read-only implementation methods
 //========================================
-inline UBool
-UnicodeString::hasShortLength() const {
-  return fUnion.fFields.fLengthAndFlags>=0;
+مضمن UBool
+UnicodeString::has_Short_لمائی() ثابت {
+  أرجع fUnion.fFields.f_لمائی_And_Flags>=0;
 }
 
-inline int32_t
-UnicodeString::getShortLength() const {
+مضمن int32_t
+UnicodeString::get_Short_لمائی() ثابت {
   // fLengthAndFlags must be non-negative -> short length >= 0
   // and arithmetic or logical shift does not matter.
-  return fUnion.fFields.fLengthAndFlags>>kLengthShift;
+  أرجع fUnion.fFields.f_لمائی_And_Flags>>k_لمائی_کھسکاؤ;
 }
 
-inline int32_t
-UnicodeString::length() const {
-  return hasShortLength() ? getShortLength() : fUnion.fFields.fLength;
+مضمن int32_t
+UnicodeString::لمائی() ثابت {
+  أرجع has_Short_لمائی() ? get_Short_لمائی() : fUnion.fFields.f_لمائی;
 }
 
-inline int32_t
-UnicodeString::getCapacity() const {
-  return (fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) ?
-    US_STACKBUF_SIZE : fUnion.fFields.fCapacity;
+مضمن int32_t
+UnicodeString::get_سمرتھا() ثابت {
+  أرجع (fUnion.fFields.f_لمائی_And_Flags&k_Using_ڈھیر_بفر) ?
+    US_STACKBUF_ناپ : fUnion.fFields.f_سمرتھا;
 }
 
-inline int32_t
-UnicodeString::hashCode() const
-{ return doHashCode(); }
+مضمن int32_t
+UnicodeString::hash_کوڈ() ثابت
+{ أرجع do_Hash_کوڈ(); }
 
-inline UBool
-UnicodeString::isBogus() const
-{ return fUnion.fFields.fLengthAndFlags & kIsBogus; }
+مضمن UBool
+UnicodeString::isBogus() ثابت
+{ أرجع fUnion.fFields.f_لمائی_And_Flags & kIsBogus; }
 
-inline UBool
-UnicodeString::isWritable() const
-{ return !(fUnion.fFields.fLengthAndFlags & (kOpenGetBuffer | kIsBogus)); }
+مضمن UBool
+UnicodeString::isWritable() ثابت
+{ أرجع !(fUnion.fFields.f_لمائی_And_Flags & (k_Open_Get_بفر | kIsBogus)); }
 
-inline UBool
-UnicodeString::isBufferWritable() const
+مضمن UBool
+UnicodeString::is_بفر_Writable() ثابت
 {
-  return
-      !(fUnion.fFields.fLengthAndFlags&(kOpenGetBuffer|kIsBogus|kBufferIsReadonly)) &&
-      (!(fUnion.fFields.fLengthAndFlags&kRefCounted) || refCount()==1);
+  أرجع
+      !(fUnion.fFields.f_لمائی_And_Flags&(k_Open_Get_بفر|kIsBogus|k_بفر_Is_Readonly)) &&
+      (!(fUnion.fFields.f_لمائی_And_Flags&kRefCounted) || ref_گنتی()==1);
 }
 
-inline const char16_t *
-UnicodeString::getBuffer() const U_LIFETIME_BOUND {
-  if(fUnion.fFields.fLengthAndFlags&(kIsBogus|kOpenGetBuffer)) {
-    return nullptr;
-  } else if(fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) {
-    return fUnion.fStackFields.fBuffer;
-  } else {
-    return fUnion.fFields.fArray;
+مضمن ثابت char16_t *
+UnicodeString::get_بفر() ثابت U_LIFETIME_BOUND {
+  إذا(fUnion.fFields.f_لمائی_And_Flags&(kIsBogus|k_Open_Get_بفر)) {
+    أرجع nullptr;
+  } وإلا إذا(fUnion.fFields.f_لمائی_And_Flags&k_Using_ڈھیر_بفر) {
+    أرجع fUnion.f_ڈھیر_Fields.f_بفر;
+  } وإلا {
+    أرجع fUnion.fFields.fArray;
   }
 }
 
 //========================================
 // Read-only alias methods
 //========================================
-inline int8_t
-UnicodeString::doCompare(int32_t start,
-              int32_t thisLength,
-              const UnicodeString& srcText,
-              int32_t srcStart,
-              int32_t srcLength) const
+مضمن int8_t
+UnicodeString::doCompare(int32_t شروع,
+              int32_t this_لمائی,
+              ثابت UnicodeString& src_متن,
+              int32_t src_شروع,
+              int32_t src_لمائی) ثابت
 {
-  if(srcText.isBogus()) {
-    return static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
-  } else {
-    srcText.pinIndices(srcStart, srcLength);
-    return doCompare(start, thisLength, srcText.getArrayStart(), srcStart, srcLength);
+  إذا(src_متن.isBogus()) {
+    أرجع static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
+  } وإلا {
+    src_متن.pinIndices(src_شروع, src_لمائی);
+    أرجع doCompare(شروع, this_لمائی, src_متن.get_Array_شروع(), src_شروع, src_لمائی);
   }
 }
 
-inline UBool
-UnicodeString::doEqualsSubstring(int32_t start,
-              int32_t thisLength,
-              const UnicodeString& srcText,
-              int32_t srcStart,
-              int32_t srcLength) const
+مضمن UBool
+UnicodeString::doEqualsSubstring(int32_t شروع,
+              int32_t this_لمائی,
+              ثابت UnicodeString& src_متن,
+              int32_t src_شروع,
+              int32_t src_لمائی) ثابت
 {
-  if(srcText.isBogus()) {
-    return isBogus();
-  } else {
-    srcText.pinIndices(srcStart, srcLength);
-    return !isBogus() && doEqualsSubstring(start, thisLength, srcText.getArrayStart(), srcStart, srcLength);
+  إذا(src_متن.isBogus()) {
+    أرجع isBogus();
+  } وإلا {
+    src_متن.pinIndices(src_شروع, src_لمائی);
+    أرجع !isBogus() && doEqualsSubstring(شروع, this_لمائی, src_متن.get_Array_شروع(), src_شروع, src_لمائی);
   }
 }
 
-inline bool
-UnicodeString::operator== (const UnicodeString& text) const
+مضمن bool
+UnicodeString::عامل== (ثابت UnicodeString& متن) ثابت
 {
-  if(isBogus()) {
-    return text.isBogus();
-  } else {
-    int32_t len = length(), textLength = text.length();
-    return !text.isBogus() && len == textLength && doEquals(text, len);
+  إذا(isBogus()) {
+    أرجع متن.isBogus();
+  } وإلا {
+    int32_t len = لمائی(), متن_لمائی = متن.لمائی();
+    أرجع !متن.isBogus() && len == متن_لمائی && doEquals(متن, len);
   }
 }
 
-inline bool
-UnicodeString::operator!= (const UnicodeString& text) const
-{ return (! operator==(text)); }
+مضمن bool
+UnicodeString::عامل!= (ثابت UnicodeString& متن) ثابت
+{ أرجع (! عامل==(متن)); }
 
-inline UBool
-UnicodeString::operator> (const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()) == 1; }
+مضمن UBool
+UnicodeString::عامل> (ثابت UnicodeString& متن) ثابت
+{ أرجع doCompare(0, لمائی(), متن, 0, متن.لمائی()) == 1; }
 
-inline UBool
-UnicodeString::operator< (const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()) == -1; }
+مضمن UBool
+UnicodeString::عامل< (ثابت UnicodeString& متن) ثابت
+{ أرجع doCompare(0, لمائی(), متن, 0, متن.لمائی()) == -1; }
 
-inline UBool
-UnicodeString::operator>= (const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()) != -1; }
+مضمن UBool
+UnicodeString::عامل>= (ثابت UnicodeString& متن) ثابت
+{ أرجع doCompare(0, لمائی(), متن, 0, متن.لمائی()) != -1; }
 
-inline UBool
-UnicodeString::operator<= (const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()) != 1; }
+مضمن UBool
+UnicodeString::عامل<= (ثابت UnicodeString& متن) ثابت
+{ أرجع doCompare(0, لمائی(), متن, 0, متن.لمائی()) != 1; }
 
-inline int8_t
-UnicodeString::compare(const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()); }
+مضمن int8_t
+UnicodeString::compare(ثابت UnicodeString& متن) ثابت
+{ أرجع doCompare(0, لمائی(), متن, 0, متن.لمائی()); }
 
-inline int8_t
-UnicodeString::compare(int32_t start,
-               int32_t _length,
-               const UnicodeString& srcText) const
-{ return doCompare(start, _length, srcText, 0, srcText.length()); }
+مضمن int8_t
+UnicodeString::compare(int32_t شروع,
+               int32_t لمائی_4,
+               ثابت UnicodeString& src_متن) ثابت
+{ أرجع doCompare(شروع, لمائی_4, src_متن, 0, src_متن.لمائی()); }
 
-inline int8_t
+مضمن int8_t
 UnicodeString::compare(ConstChar16Ptr srcChars,
-               int32_t srcLength) const
-{ return doCompare(0, length(), srcChars, 0, srcLength); }
+               int32_t src_لمائی) ثابت
+{ أرجع doCompare(0, لمائی(), srcChars, 0, src_لمائی); }
 
-inline int8_t
-UnicodeString::compare(int32_t start,
-               int32_t _length,
-               const UnicodeString& srcText,
-               int32_t srcStart,
-               int32_t srcLength) const
-{ return doCompare(start, _length, srcText, srcStart, srcLength); }
+مضمن int8_t
+UnicodeString::compare(int32_t شروع,
+               int32_t لمائی_4,
+               ثابت UnicodeString& src_متن,
+               int32_t src_شروع,
+               int32_t src_لمائی) ثابت
+{ أرجع doCompare(شروع, لمائی_4, src_متن, src_شروع, src_لمائی); }
 
-inline int8_t
-UnicodeString::compare(int32_t start,
-               int32_t _length,
-               const char16_t *srcChars) const
-{ return doCompare(start, _length, srcChars, 0, _length); }
+مضمن int8_t
+UnicodeString::compare(int32_t شروع,
+               int32_t لمائی_4,
+               ثابت char16_t *srcChars) ثابت
+{ أرجع doCompare(شروع, لمائی_4, srcChars, 0, لمائی_4); }
 
-inline int8_t
-UnicodeString::compare(int32_t start,
-               int32_t _length,
-               const char16_t *srcChars,
-               int32_t srcStart,
-               int32_t srcLength) const
-{ return doCompare(start, _length, srcChars, srcStart, srcLength); }
+مضمن int8_t
+UnicodeString::compare(int32_t شروع,
+               int32_t لمائی_4,
+               ثابت char16_t *srcChars,
+               int32_t src_شروع,
+               int32_t src_لمائی) ثابت
+{ أرجع doCompare(شروع, لمائی_4, srcChars, src_شروع, src_لمائی); }
 
-inline int8_t
-UnicodeString::compareBetween(int32_t start,
-                  int32_t limit,
-                  const UnicodeString& srcText,
-                  int32_t srcStart,
-                  int32_t srcLimit) const
-{ return doCompare(start, limit - start,
-           srcText, srcStart, srcLimit - srcStart); }
+مضمن int8_t
+UnicodeString::compareBetween(int32_t شروع,
+                  int32_t حد_بندی,
+                  ثابت UnicodeString& src_متن,
+                  int32_t src_شروع,
+                  int32_t src_حد_بندی) ثابت
+{ أرجع doCompare(شروع, حد_بندی - شروع,
+           src_متن, src_شروع, src_حد_بندی - src_شروع); }
 
-inline int8_t
-UnicodeString::doCompareCodePointOrder(int32_t start,
-                                       int32_t thisLength,
-                                       const UnicodeString& srcText,
-                                       int32_t srcStart,
-                                       int32_t srcLength) const
+مضمن int8_t
+UnicodeString::do_Compare_کوڈ_نقطہ_ترتیب(int32_t شروع,
+                                       int32_t this_لمائی,
+                                       ثابت UnicodeString& src_متن,
+                                       int32_t src_شروع,
+                                       int32_t src_لمائی) ثابت
 {
-  if(srcText.isBogus()) {
-    return static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
-  } else {
-    srcText.pinIndices(srcStart, srcLength);
-    return doCompareCodePointOrder(start, thisLength, srcText.getArrayStart(), srcStart, srcLength);
+  إذا(src_متن.isBogus()) {
+    أرجع static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
+  } وإلا {
+    src_متن.pinIndices(src_شروع, src_لمائی);
+    أرجع do_Compare_کوڈ_نقطہ_ترتیب(شروع, this_لمائی, src_متن.get_Array_شروع(), src_شروع, src_لمائی);
   }
 }
 
-inline int8_t
-UnicodeString::compareCodePointOrder(const UnicodeString& text) const
-{ return doCompareCodePointOrder(0, length(), text, 0, text.length()); }
+مضمن int8_t
+UnicodeString::compare_کوڈ_نقطہ_ترتیب(ثابت UnicodeString& متن) ثابت
+{ أرجع do_Compare_کوڈ_نقطہ_ترتیب(0, لمائی(), متن, 0, متن.لمائی()); }
 
-inline int8_t
-UnicodeString::compareCodePointOrder(int32_t start,
-                                     int32_t _length,
-                                     const UnicodeString& srcText) const
-{ return doCompareCodePointOrder(start, _length, srcText, 0, srcText.length()); }
+مضمن int8_t
+UnicodeString::compare_کوڈ_نقطہ_ترتیب(int32_t شروع,
+                                     int32_t لمائی_4,
+                                     ثابت UnicodeString& src_متن) ثابت
+{ أرجع do_Compare_کوڈ_نقطہ_ترتیب(شروع, لمائی_4, src_متن, 0, src_متن.لمائی()); }
 
-inline int8_t
-UnicodeString::compareCodePointOrder(ConstChar16Ptr srcChars,
-                                     int32_t srcLength) const
-{ return doCompareCodePointOrder(0, length(), srcChars, 0, srcLength); }
+مضمن int8_t
+UnicodeString::compare_کوڈ_نقطہ_ترتیب(ConstChar16Ptr srcChars,
+                                     int32_t src_لمائی) ثابت
+{ أرجع do_Compare_کوڈ_نقطہ_ترتیب(0, لمائی(), srcChars, 0, src_لمائی); }
 
-inline int8_t
-UnicodeString::compareCodePointOrder(int32_t start,
-                                     int32_t _length,
-                                     const UnicodeString& srcText,
-                                     int32_t srcStart,
-                                     int32_t srcLength) const
-{ return doCompareCodePointOrder(start, _length, srcText, srcStart, srcLength); }
+مضمن int8_t
+UnicodeString::compare_کوڈ_نقطہ_ترتیب(int32_t شروع,
+                                     int32_t لمائی_4,
+                                     ثابت UnicodeString& src_متن,
+                                     int32_t src_شروع,
+                                     int32_t src_لمائی) ثابت
+{ أرجع do_Compare_کوڈ_نقطہ_ترتیب(شروع, لمائی_4, src_متن, src_شروع, src_لمائی); }
 
-inline int8_t
-UnicodeString::compareCodePointOrder(int32_t start,
-                                     int32_t _length,
-                                     const char16_t *srcChars) const
-{ return doCompareCodePointOrder(start, _length, srcChars, 0, _length); }
+مضمن int8_t
+UnicodeString::compare_کوڈ_نقطہ_ترتیب(int32_t شروع,
+                                     int32_t لمائی_4,
+                                     ثابت char16_t *srcChars) ثابت
+{ أرجع do_Compare_کوڈ_نقطہ_ترتیب(شروع, لمائی_4, srcChars, 0, لمائی_4); }
 
-inline int8_t
-UnicodeString::compareCodePointOrder(int32_t start,
-                                     int32_t _length,
-                                     const char16_t *srcChars,
-                                     int32_t srcStart,
-                                     int32_t srcLength) const
-{ return doCompareCodePointOrder(start, _length, srcChars, srcStart, srcLength); }
+مضمن int8_t
+UnicodeString::compare_کوڈ_نقطہ_ترتیب(int32_t شروع,
+                                     int32_t لمائی_4,
+                                     ثابت char16_t *srcChars,
+                                     int32_t src_شروع,
+                                     int32_t src_لمائی) ثابت
+{ أرجع do_Compare_کوڈ_نقطہ_ترتیب(شروع, لمائی_4, srcChars, src_شروع, src_لمائی); }
 
-inline int8_t
-UnicodeString::compareCodePointOrderBetween(int32_t start,
-                                            int32_t limit,
-                                            const UnicodeString& srcText,
-                                            int32_t srcStart,
-                                            int32_t srcLimit) const
-{ return doCompareCodePointOrder(start, limit - start,
-           srcText, srcStart, srcLimit - srcStart); }
+مضمن int8_t
+UnicodeString::compare_کوڈ_نقطہ_ترتیب_Between(int32_t شروع,
+                                            int32_t حد_بندی,
+                                            ثابت UnicodeString& src_متن,
+                                            int32_t src_شروع,
+                                            int32_t src_حد_بندی) ثابت
+{ أرجع do_Compare_کوڈ_نقطہ_ترتیب(شروع, حد_بندی - شروع,
+           src_متن, src_شروع, src_حد_بندی - src_شروع); }
 
-inline int8_t
-UnicodeString::doCaseCompare(int32_t start,
-                             int32_t thisLength,
-                             const UnicodeString &srcText,
-                             int32_t srcStart,
-                             int32_t srcLength,
-                             uint32_t options) const
+مضمن int8_t
+UnicodeString::doCaseCompare(int32_t شروع,
+                             int32_t this_لمائی,
+                             ثابت UnicodeString &src_متن,
+                             int32_t src_شروع,
+                             int32_t src_لمائی,
+                             uint32_t options) ثابت
 {
-  if(srcText.isBogus()) {
-    return static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
-  } else {
-    srcText.pinIndices(srcStart, srcLength);
-    return doCaseCompare(start, thisLength, srcText.getArrayStart(), srcStart, srcLength, options);
+  إذا(src_متن.isBogus()) {
+    أرجع static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
+  } وإلا {
+    src_متن.pinIndices(src_شروع, src_لمائی);
+    أرجع doCaseCompare(شروع, this_لمائی, src_متن.get_Array_شروع(), src_شروع, src_لمائی, options);
   }
 }
 
-inline int8_t
-UnicodeString::caseCompare(const UnicodeString &text, uint32_t options) const {
-  return doCaseCompare(0, length(), text, 0, text.length(), options);
+مضمن int8_t
+UnicodeString::caseCompare(ثابت UnicodeString &متن, uint32_t options) ثابت {
+  أرجع doCaseCompare(0, لمائی(), متن, 0, متن.لمائی(), options);
 }
 
-inline int8_t
-UnicodeString::caseCompare(int32_t start,
-                           int32_t _length,
-                           const UnicodeString &srcText,
-                           uint32_t options) const {
-  return doCaseCompare(start, _length, srcText, 0, srcText.length(), options);
+مضمن int8_t
+UnicodeString::caseCompare(int32_t شروع,
+                           int32_t لمائی_4,
+                           ثابت UnicodeString &src_متن,
+                           uint32_t options) ثابت {
+  أرجع doCaseCompare(شروع, لمائی_4, src_متن, 0, src_متن.لمائی(), options);
 }
 
-inline int8_t
+مضمن int8_t
 UnicodeString::caseCompare(ConstChar16Ptr srcChars,
-                           int32_t srcLength,
-                           uint32_t options) const {
-  return doCaseCompare(0, length(), srcChars, 0, srcLength, options);
+                           int32_t src_لمائی,
+                           uint32_t options) ثابت {
+  أرجع doCaseCompare(0, لمائی(), srcChars, 0, src_لمائی, options);
 }
 
-inline int8_t
-UnicodeString::caseCompare(int32_t start,
-                           int32_t _length,
-                           const UnicodeString &srcText,
-                           int32_t srcStart,
-                           int32_t srcLength,
-                           uint32_t options) const {
-  return doCaseCompare(start, _length, srcText, srcStart, srcLength, options);
+مضمن int8_t
+UnicodeString::caseCompare(int32_t شروع,
+                           int32_t لمائی_4,
+                           ثابت UnicodeString &src_متن,
+                           int32_t src_شروع,
+                           int32_t src_لمائی,
+                           uint32_t options) ثابت {
+  أرجع doCaseCompare(شروع, لمائی_4, src_متن, src_شروع, src_لمائی, options);
 }
 
-inline int8_t
-UnicodeString::caseCompare(int32_t start,
-                           int32_t _length,
-                           const char16_t *srcChars,
-                           uint32_t options) const {
-  return doCaseCompare(start, _length, srcChars, 0, _length, options);
+مضمن int8_t
+UnicodeString::caseCompare(int32_t شروع,
+                           int32_t لمائی_4,
+                           ثابت char16_t *srcChars,
+                           uint32_t options) ثابت {
+  أرجع doCaseCompare(شروع, لمائی_4, srcChars, 0, لمائی_4, options);
 }
 
-inline int8_t
-UnicodeString::caseCompare(int32_t start,
-                           int32_t _length,
-                           const char16_t *srcChars,
-                           int32_t srcStart,
-                           int32_t srcLength,
-                           uint32_t options) const {
-  return doCaseCompare(start, _length, srcChars, srcStart, srcLength, options);
+مضمن int8_t
+UnicodeString::caseCompare(int32_t شروع,
+                           int32_t لمائی_4,
+                           ثابت char16_t *srcChars,
+                           int32_t src_شروع,
+                           int32_t src_لمائی,
+                           uint32_t options) ثابت {
+  أرجع doCaseCompare(شروع, لمائی_4, srcChars, src_شروع, src_لمائی, options);
 }
 
-inline int8_t
-UnicodeString::caseCompareBetween(int32_t start,
-                                  int32_t limit,
-                                  const UnicodeString &srcText,
-                                  int32_t srcStart,
-                                  int32_t srcLimit,
-                                  uint32_t options) const {
-  return doCaseCompare(start, limit - start, srcText, srcStart, srcLimit - srcStart, options);
+مضمن int8_t
+UnicodeString::caseCompareBetween(int32_t شروع,
+                                  int32_t حد_بندی,
+                                  ثابت UnicodeString &src_متن,
+                                  int32_t src_شروع,
+                                  int32_t src_حد_بندی,
+                                  uint32_t options) ثابت {
+  أرجع doCaseCompare(شروع, حد_بندی - شروع, src_متن, src_شروع, src_حد_بندی - src_شروع, options);
 }
 
-inline int32_t
-UnicodeString::indexOf(const UnicodeString& srcText,
-               int32_t srcStart,
-               int32_t srcLength,
-               int32_t start,
-               int32_t _length) const
+مضمن int32_t
+UnicodeString::اشاریہ_دا(ثابت UnicodeString& src_متن,
+               int32_t src_شروع,
+               int32_t src_لمائی,
+               int32_t شروع,
+               int32_t لمائی_4) ثابت
 {
-  if(!srcText.isBogus()) {
-    srcText.pinIndices(srcStart, srcLength);
-    if(srcLength > 0) {
-      return indexOf(srcText.getArrayStart(), srcStart, srcLength, start, _length);
+  إذا(!src_متن.isBogus()) {
+    src_متن.pinIndices(src_شروع, src_لمائی);
+    إذا(src_لمائی > 0) {
+      أرجع اشاریہ_دا(src_متن.get_Array_شروع(), src_شروع, src_لمائی, شروع, لمائی_4);
     }
   }
-  return -1;
+  أرجع -1;
 }
 
-inline int32_t
-UnicodeString::indexOf(const UnicodeString& text) const
-{ return indexOf(text, 0, text.length(), 0, length()); }
+مضمن int32_t
+UnicodeString::اشاریہ_دا(ثابت UnicodeString& متن) ثابت
+{ أرجع اشاریہ_دا(متن, 0, متن.لمائی(), 0, لمائی()); }
 
-inline int32_t
-UnicodeString::indexOf(const UnicodeString& text,
-               int32_t start) const {
-  pinIndex(start);
-  return indexOf(text, 0, text.length(), start, length() - start);
+مضمن int32_t
+UnicodeString::اشاریہ_دا(ثابت UnicodeString& متن,
+               int32_t شروع) ثابت {
+  pin_اشاریہ(شروع);
+  أرجع اشاریہ_دا(متن, 0, متن.لمائی(), شروع, لمائی() - شروع);
 }
 
-inline int32_t
-UnicodeString::indexOf(const UnicodeString& text,
-               int32_t start,
-               int32_t _length) const
-{ return indexOf(text, 0, text.length(), start, _length); }
+مضمن int32_t
+UnicodeString::اشاریہ_دا(ثابت UnicodeString& متن,
+               int32_t شروع,
+               int32_t لمائی_4) ثابت
+{ أرجع اشاریہ_دا(متن, 0, متن.لمائی(), شروع, لمائی_4); }
 
-inline int32_t
-UnicodeString::indexOf(const char16_t *srcChars,
-               int32_t srcLength,
-               int32_t start) const {
-  pinIndex(start);
-  return indexOf(srcChars, 0, srcLength, start, length() - start);
+مضمن int32_t
+UnicodeString::اشاریہ_دا(ثابت char16_t *srcChars,
+               int32_t src_لمائی,
+               int32_t شروع) ثابت {
+  pin_اشاریہ(شروع);
+  أرجع اشاریہ_دا(srcChars, 0, src_لمائی, شروع, لمائی() - شروع);
 }
 
-inline int32_t
-UnicodeString::indexOf(ConstChar16Ptr srcChars,
-               int32_t srcLength,
-               int32_t start,
-               int32_t _length) const
-{ return indexOf(srcChars, 0, srcLength, start, _length); }
+مضمن int32_t
+UnicodeString::اشاریہ_دا(ConstChar16Ptr srcChars,
+               int32_t src_لمائی,
+               int32_t شروع,
+               int32_t لمائی_4) ثابت
+{ أرجع اشاریہ_دا(srcChars, 0, src_لمائی, شروع, لمائی_4); }
 
-inline int32_t
-UnicodeString::indexOf(char16_t c,
-               int32_t start,
-               int32_t _length) const
-{ return doIndexOf(c, start, _length); }
+مضمن int32_t
+UnicodeString::اشاریہ_دا(char16_t c,
+               int32_t شروع,
+               int32_t لمائی_4) ثابت
+{ أرجع do_اشاریہ_دا(c, شروع, لمائی_4); }
 
-inline int32_t
-UnicodeString::indexOf(UChar32 c,
-               int32_t start,
-               int32_t _length) const
-{ return doIndexOf(c, start, _length); }
+مضمن int32_t
+UnicodeString::اشاریہ_دا(UChar32 c,
+               int32_t شروع,
+               int32_t لمائی_4) ثابت
+{ أرجع do_اشاریہ_دا(c, شروع, لمائی_4); }
 
-inline int32_t
-UnicodeString::indexOf(char16_t c) const
-{ return doIndexOf(c, 0, length()); }
+مضمن int32_t
+UnicodeString::اشاریہ_دا(char16_t c) ثابت
+{ أرجع do_اشاریہ_دا(c, 0, لمائی()); }
 
-inline int32_t
-UnicodeString::indexOf(UChar32 c) const
-{ return indexOf(c, 0, length()); }
+مضمن int32_t
+UnicodeString::اشاریہ_دا(UChar32 c) ثابت
+{ أرجع اشاریہ_دا(c, 0, لمائی()); }
 
-inline int32_t
-UnicodeString::indexOf(char16_t c,
-               int32_t start) const {
-  pinIndex(start);
-  return doIndexOf(c, start, length() - start);
+مضمن int32_t
+UnicodeString::اشاریہ_دا(char16_t c,
+               int32_t شروع) ثابت {
+  pin_اشاریہ(شروع);
+  أرجع do_اشاریہ_دا(c, شروع, لمائی() - شروع);
 }
 
-inline int32_t
-UnicodeString::indexOf(UChar32 c,
-               int32_t start) const {
-  pinIndex(start);
-  return indexOf(c, start, length() - start);
+مضمن int32_t
+UnicodeString::اشاریہ_دا(UChar32 c,
+               int32_t شروع) ثابت {
+  pin_اشاریہ(شروع);
+  أرجع اشاریہ_دا(c, شروع, لمائی() - شروع);
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(ConstChar16Ptr srcChars,
-               int32_t srcLength,
-               int32_t start,
-               int32_t _length) const
-{ return lastIndexOf(srcChars, 0, srcLength, start, _length); }
+مضمن int32_t
+UnicodeString::آخری_اشاریہ_دا(ConstChar16Ptr srcChars,
+               int32_t src_لمائی,
+               int32_t شروع,
+               int32_t لمائی_4) ثابت
+{ أرجع آخری_اشاریہ_دا(srcChars, 0, src_لمائی, شروع, لمائی_4); }
 
-inline int32_t
-UnicodeString::lastIndexOf(const char16_t *srcChars,
-               int32_t srcLength,
-               int32_t start) const {
-  pinIndex(start);
-  return lastIndexOf(srcChars, 0, srcLength, start, length() - start);
+مضمن int32_t
+UnicodeString::آخری_اشاریہ_دا(ثابت char16_t *srcChars,
+               int32_t src_لمائی,
+               int32_t شروع) ثابت {
+  pin_اشاریہ(شروع);
+  أرجع آخری_اشاریہ_دا(srcChars, 0, src_لمائی, شروع, لمائی() - شروع);
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(const UnicodeString& srcText,
-               int32_t srcStart,
-               int32_t srcLength,
-               int32_t start,
-               int32_t _length) const
+مضمن int32_t
+UnicodeString::آخری_اشاریہ_دا(ثابت UnicodeString& src_متن,
+               int32_t src_شروع,
+               int32_t src_لمائی,
+               int32_t شروع,
+               int32_t لمائی_4) ثابت
 {
-  if(!srcText.isBogus()) {
-    srcText.pinIndices(srcStart, srcLength);
-    if(srcLength > 0) {
-      return lastIndexOf(srcText.getArrayStart(), srcStart, srcLength, start, _length);
+  إذا(!src_متن.isBogus()) {
+    src_متن.pinIndices(src_شروع, src_لمائی);
+    إذا(src_لمائی > 0) {
+      أرجع آخری_اشاریہ_دا(src_متن.get_Array_شروع(), src_شروع, src_لمائی, شروع, لمائی_4);
     }
   }
-  return -1;
+  أرجع -1;
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(const UnicodeString& text,
-               int32_t start,
-               int32_t _length) const
-{ return lastIndexOf(text, 0, text.length(), start, _length); }
+مضمن int32_t
+UnicodeString::آخری_اشاریہ_دا(ثابت UnicodeString& متن,
+               int32_t شروع,
+               int32_t لمائی_4) ثابت
+{ أرجع آخری_اشاریہ_دا(متن, 0, متن.لمائی(), شروع, لمائی_4); }
 
-inline int32_t
-UnicodeString::lastIndexOf(const UnicodeString& text,
-               int32_t start) const {
-  pinIndex(start);
-  return lastIndexOf(text, 0, text.length(), start, length() - start);
+مضمن int32_t
+UnicodeString::آخری_اشاریہ_دا(ثابت UnicodeString& متن,
+               int32_t شروع) ثابت {
+  pin_اشاریہ(شروع);
+  أرجع آخری_اشاریہ_دا(متن, 0, متن.لمائی(), شروع, لمائی() - شروع);
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(const UnicodeString& text) const
-{ return lastIndexOf(text, 0, text.length(), 0, length()); }
+مضمن int32_t
+UnicodeString::آخری_اشاریہ_دا(ثابت UnicodeString& متن) ثابت
+{ أرجع آخری_اشاریہ_دا(متن, 0, متن.لمائی(), 0, لمائی()); }
 
-inline int32_t
-UnicodeString::lastIndexOf(char16_t c,
-               int32_t start,
-               int32_t _length) const
-{ return doLastIndexOf(c, start, _length); }
+مضمن int32_t
+UnicodeString::آخری_اشاریہ_دا(char16_t c,
+               int32_t شروع,
+               int32_t لمائی_4) ثابت
+{ أرجع do_آخری_اشاریہ_دا(c, شروع, لمائی_4); }
 
-inline int32_t
-UnicodeString::lastIndexOf(UChar32 c,
-               int32_t start,
-               int32_t _length) const {
-  return doLastIndexOf(c, start, _length);
+مضمن int32_t
+UnicodeString::آخری_اشاریہ_دا(UChar32 c,
+               int32_t شروع,
+               int32_t لمائی_4) ثابت {
+  أرجع do_آخری_اشاریہ_دا(c, شروع, لمائی_4);
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(char16_t c) const
-{ return doLastIndexOf(c, 0, length()); }
+مضمن int32_t
+UnicodeString::آخری_اشاریہ_دا(char16_t c) ثابت
+{ أرجع do_آخری_اشاریہ_دا(c, 0, لمائی()); }
 
-inline int32_t
-UnicodeString::lastIndexOf(UChar32 c) const {
-  return lastIndexOf(c, 0, length());
+مضمن int32_t
+UnicodeString::آخری_اشاریہ_دا(UChar32 c) ثابت {
+  أرجع آخری_اشاریہ_دا(c, 0, لمائی());
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(char16_t c,
-               int32_t start) const {
-  pinIndex(start);
-  return doLastIndexOf(c, start, length() - start);
+مضمن int32_t
+UnicodeString::آخری_اشاریہ_دا(char16_t c,
+               int32_t شروع) ثابت {
+  pin_اشاریہ(شروع);
+  أرجع do_آخری_اشاریہ_دا(c, شروع, لمائی() - شروع);
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(UChar32 c,
-               int32_t start) const {
-  pinIndex(start);
-  return lastIndexOf(c, start, length() - start);
+مضمن int32_t
+UnicodeString::آخری_اشاریہ_دا(UChar32 c,
+               int32_t شروع) ثابت {
+  pin_اشاریہ(شروع);
+  أرجع آخری_اشاریہ_دا(c, شروع, لمائی() - شروع);
 }
 
-inline UBool
-UnicodeString::startsWith(const UnicodeString& text) const
-{ return doEqualsSubstring(0, text.length(), text, 0, text.length()); }
+مضمن UBool
+UnicodeString::startsWith(ثابت UnicodeString& متن) ثابت
+{ أرجع doEqualsSubstring(0, متن.لمائی(), متن, 0, متن.لمائی()); }
 
-inline UBool
-UnicodeString::startsWith(const UnicodeString& srcText,
-              int32_t srcStart,
-              int32_t srcLength) const
-{ return doEqualsSubstring(0, srcLength, srcText, srcStart, srcLength); }
+مضمن UBool
+UnicodeString::startsWith(ثابت UnicodeString& src_متن,
+              int32_t src_شروع,
+              int32_t src_لمائی) ثابت
+{ أرجع doEqualsSubstring(0, src_لمائی, src_متن, src_شروع, src_لمائی); }
 
-inline UBool
-UnicodeString::startsWith(ConstChar16Ptr srcChars, int32_t srcLength) const {
-  if(srcLength < 0) {
-    srcLength = u_strlen(toUCharPtr(srcChars));
+مضمن UBool
+UnicodeString::startsWith(ConstChar16Ptr srcChars, int32_t src_لمائی) ثابت {
+  إذا(src_لمائی < 0) {
+    src_لمائی = u_strlen(منزل_UChar_Ptr(srcChars));
   }
-  return doEqualsSubstring(0, srcLength, srcChars, 0, srcLength);
+  أرجع doEqualsSubstring(0, src_لمائی, srcChars, 0, src_لمائی);
 }
 
-inline UBool
-UnicodeString::startsWith(const char16_t *srcChars, int32_t srcStart, int32_t srcLength) const {
-  if(srcLength < 0) {
-    srcLength = u_strlen(toUCharPtr(srcChars));
+مضمن UBool
+UnicodeString::startsWith(ثابت char16_t *srcChars, int32_t src_شروع, int32_t src_لمائی) ثابت {
+  إذا(src_لمائی < 0) {
+    src_لمائی = u_strlen(منزل_UChar_Ptr(srcChars));
   }
-  return doEqualsSubstring(0, srcLength, srcChars, srcStart, srcLength);
+  أرجع doEqualsSubstring(0, src_لمائی, srcChars, src_شروع, src_لمائی);
 }
 
-inline UBool
-UnicodeString::endsWith(const UnicodeString& text) const
-{ return doEqualsSubstring(length() - text.length(), text.length(),
-           text, 0, text.length()); }
+مضمن UBool
+UnicodeString::سرے_With(ثابت UnicodeString& متن) ثابت
+{ أرجع doEqualsSubstring(لمائی() - متن.لمائی(), متن.لمائی(),
+           متن, 0, متن.لمائی()); }
 
-inline UBool
-UnicodeString::endsWith(const UnicodeString& srcText,
-            int32_t srcStart,
-            int32_t srcLength) const {
-  srcText.pinIndices(srcStart, srcLength);
-  return doEqualsSubstring(length() - srcLength, srcLength,
-                   srcText, srcStart, srcLength);
+مضمن UBool
+UnicodeString::سرے_With(ثابت UnicodeString& src_متن,
+            int32_t src_شروع,
+            int32_t src_لمائی) ثابت {
+  src_متن.pinIndices(src_شروع, src_لمائی);
+  أرجع doEqualsSubstring(لمائی() - src_لمائی, src_لمائی,
+                   src_متن, src_شروع, src_لمائی);
 }
 
-inline UBool
-UnicodeString::endsWith(ConstChar16Ptr srcChars,
-            int32_t srcLength) const {
-  if(srcLength < 0) {
-    srcLength = u_strlen(toUCharPtr(srcChars));
+مضمن UBool
+UnicodeString::سرے_With(ConstChar16Ptr srcChars,
+            int32_t src_لمائی) ثابت {
+  إذا(src_لمائی < 0) {
+    src_لمائی = u_strlen(منزل_UChar_Ptr(srcChars));
   }
-  return doEqualsSubstring(length() - srcLength, srcLength, srcChars, 0, srcLength);
+  أرجع doEqualsSubstring(لمائی() - src_لمائی, src_لمائی, srcChars, 0, src_لمائی);
 }
 
-inline UBool
-UnicodeString::endsWith(const char16_t *srcChars,
-            int32_t srcStart,
-            int32_t srcLength) const {
-  if(srcLength < 0) {
-    srcLength = u_strlen(toUCharPtr(srcChars + srcStart));
+مضمن UBool
+UnicodeString::سرے_With(ثابت char16_t *srcChars,
+            int32_t src_شروع,
+            int32_t src_لمائی) ثابت {
+  إذا(src_لمائی < 0) {
+    src_لمائی = u_strlen(منزل_UChar_Ptr(srcChars + src_شروع));
   }
-  return doEqualsSubstring(length() - srcLength, srcLength,
-                   srcChars, srcStart, srcLength);
+  أرجع doEqualsSubstring(لمائی() - src_لمائی, src_لمائی,
+                   srcChars, src_شروع, src_لمائی);
 }
 
 //========================================
 // replace
 //========================================
-inline UnicodeString&
-UnicodeString::replace(int32_t start,
-                       int32_t _length,
-                       const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doReplace(start, _length, srcText, 0, srcText.length()); }
+مضمن UnicodeString&
+UnicodeString::replace(int32_t شروع,
+                       int32_t لمائی_4,
+                       ثابت UnicodeString& src_متن) U_LIFETIME_BOUND
+{ أرجع doReplace(شروع, لمائی_4, src_متن, 0, src_متن.لمائی()); }
 
-inline UnicodeString&
-UnicodeString::replace(int32_t start,
-                       int32_t _length,
-                       const UnicodeString& srcText,
-                       int32_t srcStart,
-                       int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, _length, srcText, srcStart, srcLength); }
+مضمن UnicodeString&
+UnicodeString::replace(int32_t شروع,
+                       int32_t لمائی_4,
+                       ثابت UnicodeString& src_متن,
+                       int32_t src_شروع,
+                       int32_t src_لمائی) U_LIFETIME_BOUND
+{ أرجع doReplace(شروع, لمائی_4, src_متن, src_شروع, src_لمائی); }
 
-inline UnicodeString&
-UnicodeString::replace(int32_t start,
-                       int32_t _length,
+مضمن UnicodeString&
+UnicodeString::replace(int32_t شروع,
+                       int32_t لمائی_4,
                        ConstChar16Ptr srcChars,
-                       int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, _length, srcChars, 0, srcLength); }
+                       int32_t src_لمائی) U_LIFETIME_BOUND
+{ أرجع doReplace(شروع, لمائی_4, srcChars, 0, src_لمائی); }
 
-inline UnicodeString&
-UnicodeString::replace(int32_t start,
-                       int32_t _length,
-                       const char16_t* srcChars,
-                       int32_t srcStart,
-                       int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, _length, srcChars, srcStart, srcLength); }
+مضمن UnicodeString&
+UnicodeString::replace(int32_t شروع,
+                       int32_t لمائی_4,
+                       ثابت char16_t* srcChars,
+                       int32_t src_شروع,
+                       int32_t src_لمائی) U_LIFETIME_BOUND
+{ أرجع doReplace(شروع, لمائی_4, srcChars, src_شروع, src_لمائی); }
 
-inline UnicodeString&
-UnicodeString::replace(int32_t start,
-                       int32_t _length,
+مضمن UnicodeString&
+UnicodeString::replace(int32_t شروع,
+                       int32_t لمائی_4,
                        char16_t srcChar) U_LIFETIME_BOUND
-{ return doReplace(start, _length, &srcChar, 0, 1); }
+{ أرجع doReplace(شروع, لمائی_4, &srcChar, 0, 1); }
 
-inline UnicodeString&
-UnicodeString::replaceBetween(int32_t start,
-                              int32_t limit,
-                              const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doReplace(start, limit - start, srcText, 0, srcText.length()); }
+مضمن UnicodeString&
+UnicodeString::replaceBetween(int32_t شروع,
+                              int32_t حد_بندی,
+                              ثابت UnicodeString& src_متن) U_LIFETIME_BOUND
+{ أرجع doReplace(شروع, حد_بندی - شروع, src_متن, 0, src_متن.لمائی()); }
 
-inline UnicodeString&
-UnicodeString::replaceBetween(int32_t start,
-                              int32_t limit,
-                              const UnicodeString& srcText,
-                              int32_t srcStart,
-                              int32_t srcLimit) U_LIFETIME_BOUND
-{ return doReplace(start, limit - start, srcText, srcStart, srcLimit - srcStart); }
+مضمن UnicodeString&
+UnicodeString::replaceBetween(int32_t شروع,
+                              int32_t حد_بندی,
+                              ثابت UnicodeString& src_متن,
+                              int32_t src_شروع,
+                              int32_t src_حد_بندی) U_LIFETIME_BOUND
+{ أرجع doReplace(شروع, حد_بندی - شروع, src_متن, src_شروع, src_حد_بندی - src_شروع); }
 
-inline UnicodeString&
-UnicodeString::findAndReplace(const UnicodeString& oldText,
-                              const UnicodeString& newText) U_LIFETIME_BOUND
-{ return findAndReplace(0, length(), oldText, 0, oldText.length(),
-            newText, 0, newText.length()); }
+مضمن UnicodeString&
+UnicodeString::لبھو_And_Replace(ثابت UnicodeString& old_متن,
+                              ثابت UnicodeString& new_متن) U_LIFETIME_BOUND
+{ أرجع لبھو_And_Replace(0, لمائی(), old_متن, 0, old_متن.لمائی(),
+            new_متن, 0, new_متن.لمائی()); }
 
-inline UnicodeString&
-UnicodeString::findAndReplace(int32_t start,
-                              int32_t _length,
-                              const UnicodeString& oldText,
-                              const UnicodeString& newText) U_LIFETIME_BOUND
-{ return findAndReplace(start, _length, oldText, 0, oldText.length(),
-            newText, 0, newText.length()); }
+مضمن UnicodeString&
+UnicodeString::لبھو_And_Replace(int32_t شروع,
+                              int32_t لمائی_4,
+                              ثابت UnicodeString& old_متن,
+                              ثابت UnicodeString& new_متن) U_LIFETIME_BOUND
+{ أرجع لبھو_And_Replace(شروع, لمائی_4, old_متن, 0, old_متن.لمائی(),
+            new_متن, 0, new_متن.لمائی()); }
 
 // ============================
-// extract
+//کڈھو
 // ============================
-inline void
-UnicodeString::doExtract(int32_t start,
-             int32_t _length,
-             UnicodeString& target) const
-{ target.replace(0, target.length(), *this, start, _length); }
+مضمن فراغ
+UnicodeString::do_کڈھو(int32_t شروع,
+             int32_t لمائی_4,
+             UnicodeString& نشانہ) ثابت
+{ نشانہ.replace(0, نشانہ.لمائی(), *this, شروع, لمائی_4); }
 
-inline void
-UnicodeString::extract(int32_t start,
-               int32_t _length,
-               Char16Ptr target,
-               int32_t targetStart) const
-{ doExtract(start, _length, target, targetStart); }
+مضمن فراغ
+UnicodeString::کڈھو(int32_t شروع,
+               int32_t لمائی_4,
+               Char16Ptr نشانہ,
+               int32_t نشانہ_شروع) ثابت
+{ do_کڈھو(شروع, لمائی_4, نشانہ, نشانہ_شروع); }
 
-inline void
-UnicodeString::extract(int32_t start,
-               int32_t _length,
-               UnicodeString& target) const
-{ doExtract(start, _length, target); }
+مضمن فراغ
+UnicodeString::کڈھو(int32_t شروع,
+               int32_t لمائی_4,
+               UnicodeString& نشانہ) ثابت
+{ do_کڈھو(شروع, لمائی_4, نشانہ); }
 
-#if !UCONFIG_NO_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION
 
-inline int32_t
-UnicodeString::extract(int32_t start,
-               int32_t _length,
-               char *dst,
-               const char *codepage) const
+مضمن int32_t
+UnicodeString::کڈھو(int32_t شروع,
+               int32_t لمائی_4,
+               حرف *dst,
+               ثابت حرف *codepage) ثابت
 
 {
   // This dstSize value will be checked explicitly
-  return extract(start, _length, dst, dst != nullptr ? 0xffffffff : 0, codepage);
+  أرجع کڈھو(شروع, لمائی_4, dst, dst != nullptr ? 0xffffffff : 0, codepage);
 }
 
-#endif
+#جے_انت
 
-inline void
-UnicodeString::extractBetween(int32_t start,
-                  int32_t limit,
+مضمن فراغ
+UnicodeString::کڈھو_Between(int32_t شروع,
+                  int32_t حد_بندی,
                   char16_t *dst,
-                  int32_t dstStart) const {
-  pinIndex(start);
-  pinIndex(limit);
-  doExtract(start, limit - start, dst, dstStart);
+                  int32_t dst_شروع) ثابت {
+  pin_اشاریہ(شروع);
+  pin_اشاریہ(حد_بندی);
+  do_کڈھو(شروع, حد_بندی - شروع, dst, dst_شروع);
 }
 
-inline UnicodeString
-UnicodeString::tempSubStringBetween(int32_t start, int32_t limit) const U_LIFETIME_BOUND {
-    return tempSubString(start, limit - start);
+مضمن UnicodeString
+UnicodeString::عارضی_Sub_String_Between(int32_t شروع, int32_t حد_بندی) ثابت U_LIFETIME_BOUND {
+    أرجع عارضی_Sub_String(شروع, حد_بندی - شروع);
 }
 
-inline char16_t
-UnicodeString::doCharAt(int32_t offset) const
+مضمن char16_t
+UnicodeString::doCharAt(int32_t وتھ) ثابت
 {
-  if (static_cast<uint32_t>(offset) < static_cast<uint32_t>(length())) {
-    return getArrayStart()[offset];
-  } else {
-    return kInvalidUChar;
+  إذا (static_cast<uint32_t>(وتھ) < static_cast<uint32_t>(لمائی())) {
+    أرجع get_Array_شروع()[وتھ];
+  } وإلا {
+    أرجع kInvalidUChar;
   }
 }
 
-inline char16_t
-UnicodeString::charAt(int32_t offset) const
-{ return doCharAt(offset); }
+مضمن char16_t
+UnicodeString::charAt(int32_t وتھ) ثابت
+{ أرجع doCharAt(وتھ); }
 
-inline char16_t
-UnicodeString::operator[] (int32_t offset) const
-{ return doCharAt(offset); }
+مضمن char16_t
+UnicodeString::عامل[] (int32_t وتھ) ثابت
+{ أرجع doCharAt(وتھ); }
 
-inline UBool
-UnicodeString::isEmpty() const {
+مضمن UBool
+UnicodeString::is_خالی_تھاواں() ثابت {
   // Arithmetic or logical right shift does not matter: only testing for 0.
-  return (fUnion.fFields.fLengthAndFlags>>kLengthShift) == 0;
+  أرجع (fUnion.fFields.f_لمائی_And_Flags>>k_لمائی_کھسکاؤ) == 0;
 }
 
 //========================================
 // Write implementation methods
 //========================================
-inline void
-UnicodeString::setZeroLength() {
-  fUnion.fFields.fLengthAndFlags &= kAllStorageFlags;
+مضمن فراغ
+UnicodeString::سیٹ_Zero_لمائی() {
+  fUnion.fFields.f_لمائی_And_Flags &= kAllStorageFlags;
 }
 
-inline void
-UnicodeString::setShortLength(int32_t len) {
+مضمن فراغ
+UnicodeString::سیٹ_Short_لمائی(int32_t len) {
   // requires 0 <= len <= kMaxShortLength
-  fUnion.fFields.fLengthAndFlags =
-    static_cast<int16_t>((fUnion.fFields.fLengthAndFlags & kAllStorageFlags) | (len << kLengthShift));
+  fUnion.fFields.f_لمائی_And_Flags =
+    static_cast<int16_t>((fUnion.fFields.f_لمائی_And_Flags & kAllStorageFlags) | (len << k_لمائی_کھسکاؤ));
 }
 
-inline void
-UnicodeString::setLength(int32_t len) {
-  if(len <= kMaxShortLength) {
-    setShortLength(len);
-  } else {
-    fUnion.fFields.fLengthAndFlags |= kLengthIsLarge;
-    fUnion.fFields.fLength = len;
+مضمن فراغ
+UnicodeString::سیٹ_لمائی(int32_t len) {
+  إذا(len <= k_Max_Short_لمائی) {
+    سیٹ_Short_لمائی(len);
+  } وإلا {
+    fUnion.fFields.f_لمائی_And_Flags |= k_لمائی_Is_Large;
+    fUnion.fFields.f_لمائی = len;
   }
 }
 
-inline void
-UnicodeString::setToEmpty() {
-  fUnion.fFields.fLengthAndFlags = kShortString;
+مضمن فراغ
+UnicodeString::سیٹ_منزل_خالی_تھاواں() {
+  fUnion.fFields.f_لمائی_And_Flags = kShortString;
 }
 
-inline void
-UnicodeString::setArray(char16_t *array, int32_t len, int32_t capacity) {
-  setLength(len);
+مضمن فراغ
+UnicodeString::سیٹ_Array(char16_t *array, int32_t len, int32_t سمرتھا) {
+  سیٹ_لمائی(len);
   fUnion.fFields.fArray = array;
-  fUnion.fFields.fCapacity = capacity;
+  fUnion.fFields.f_سمرتھا = سمرتھا;
 }
 
-inline UnicodeString&
-UnicodeString::operator=(char16_t ch) U_LIFETIME_BOUND
-{ return doReplace(0, length(), &ch, 0, 1); }
+مضمن UnicodeString&
+UnicodeString::عامل=(char16_t ch) U_LIFETIME_BOUND
+{ أرجع doReplace(0, لمائی(), &ch, 0, 1); }
 
-inline UnicodeString&
-UnicodeString::operator=(UChar32 ch) U_LIFETIME_BOUND
-{ return replace(0, length(), ch); }
+مضمن UnicodeString&
+UnicodeString::عامل=(UChar32 ch) U_LIFETIME_BOUND
+{ أرجع replace(0, لمائی(), ch); }
 
-inline UnicodeString&
-UnicodeString::setTo(const UnicodeString& srcText,
-                     int32_t srcStart,
-                     int32_t srcLength) U_LIFETIME_BOUND
+مضمن UnicodeString&
+UnicodeString::سیٹ_منزل(ثابت UnicodeString& src_متن,
+                     int32_t src_شروع,
+                     int32_t src_لمائی) U_LIFETIME_BOUND
 {
   unBogus();
-  return doReplace(0, length(), srcText, srcStart, srcLength);
+  أرجع doReplace(0, لمائی(), src_متن, src_شروع, src_لمائی);
 }
 
-inline UnicodeString&
-UnicodeString::setTo(const UnicodeString& srcText,
-                     int32_t srcStart) U_LIFETIME_BOUND
+مضمن UnicodeString&
+UnicodeString::سیٹ_منزل(ثابت UnicodeString& src_متن,
+                     int32_t src_شروع) U_LIFETIME_BOUND
 {
   unBogus();
-  srcText.pinIndex(srcStart);
-  return doReplace(0, length(), srcText, srcStart, srcText.length() - srcStart);
+  src_متن.pin_اشاریہ(src_شروع);
+  أرجع doReplace(0, لمائی(), src_متن, src_شروع, src_متن.لمائی() - src_شروع);
 }
 
-inline UnicodeString&
-UnicodeString::setTo(const UnicodeString& srcText) U_LIFETIME_BOUND
+مضمن UnicodeString&
+UnicodeString::سیٹ_منزل(ثابت UnicodeString& src_متن) U_LIFETIME_BOUND
 {
-  return copyFrom(srcText);
+  أرجع copyFrom(src_متن);
 }
 
-inline UnicodeString&
-UnicodeString::setTo(const char16_t* srcChars,
-                     int32_t srcLength) U_LIFETIME_BOUND
-{
-  unBogus();
-  return doReplace(0, length(), srcChars, 0, srcLength);
-}
-
-inline UnicodeString&
-UnicodeString::setTo(char16_t srcChar) U_LIFETIME_BOUND
+مضمن UnicodeString&
+UnicodeString::سیٹ_منزل(ثابت char16_t* srcChars,
+                     int32_t src_لمائی) U_LIFETIME_BOUND
 {
   unBogus();
-  return doReplace(0, length(), &srcChar, 0, 1);
+  أرجع doReplace(0, لمائی(), srcChars, 0, src_لمائی);
 }
 
-inline UnicodeString&
-UnicodeString::setTo(UChar32 srcChar) U_LIFETIME_BOUND
+مضمن UnicodeString&
+UnicodeString::سیٹ_منزل(char16_t srcChar) U_LIFETIME_BOUND
 {
   unBogus();
-  return replace(0, length(), srcChar);
+  أرجع doReplace(0, لمائی(), &srcChar, 0, 1);
 }
 
-inline UnicodeString&
-UnicodeString::append(const UnicodeString& srcText,
-                      int32_t srcStart,
-                      int32_t srcLength) U_LIFETIME_BOUND
-{ return doAppend(srcText, srcStart, srcLength); }
+مضمن UnicodeString&
+UnicodeString::سیٹ_منزل(UChar32 srcChar) U_LIFETIME_BOUND
+{
+  unBogus();
+  أرجع replace(0, لمائی(), srcChar);
+}
 
-inline UnicodeString&
-UnicodeString::append(const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doAppend(srcText, 0, srcText.length()); }
+مضمن UnicodeString&
+UnicodeString::append(ثابت UnicodeString& src_متن,
+                      int32_t src_شروع,
+                      int32_t src_لمائی) U_LIFETIME_BOUND
+{ أرجع doAppend(src_متن, src_شروع, src_لمائی); }
 
-inline UnicodeString&
-UnicodeString::append(const char16_t* srcChars,
-                      int32_t srcStart,
-                      int32_t srcLength) U_LIFETIME_BOUND
-{ return doAppend(srcChars, srcStart, srcLength); }
+مضمن UnicodeString&
+UnicodeString::append(ثابت UnicodeString& src_متن) U_LIFETIME_BOUND
+{ أرجع doAppend(src_متن, 0, src_متن.لمائی()); }
 
-inline UnicodeString&
+مضمن UnicodeString&
+UnicodeString::append(ثابت char16_t* srcChars,
+                      int32_t src_شروع,
+                      int32_t src_لمائی) U_LIFETIME_BOUND
+{ أرجع doAppend(srcChars, src_شروع, src_لمائی); }
+
+مضمن UnicodeString&
 UnicodeString::append(ConstChar16Ptr srcChars,
-                      int32_t srcLength) U_LIFETIME_BOUND
-{ return doAppend(srcChars, 0, srcLength); }
+                      int32_t src_لمائی) U_LIFETIME_BOUND
+{ أرجع doAppend(srcChars, 0, src_لمائی); }
 
-inline UnicodeString&
+مضمن UnicodeString&
 UnicodeString::append(char16_t srcChar) U_LIFETIME_BOUND
-{ return doAppend(&srcChar, 0, 1); }
+{ أرجع doAppend(&srcChar, 0, 1); }
 
-inline UnicodeString&
-UnicodeString::operator+=(char16_t ch) U_LIFETIME_BOUND
-{ return doAppend(&ch, 0, 1); }
+مضمن UnicodeString&
+UnicodeString::عامل+=(char16_t ch) U_LIFETIME_BOUND
+{ أرجع doAppend(&ch, 0, 1); }
 
-inline UnicodeString&
-UnicodeString::operator+=(UChar32 ch) U_LIFETIME_BOUND {
-  return append(ch);
+مضمن UnicodeString&
+UnicodeString::عامل+=(UChar32 ch) U_LIFETIME_BOUND {
+  أرجع append(ch);
 }
 
-inline UnicodeString&
-UnicodeString::operator+=(const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doAppend(srcText, 0, srcText.length()); }
+مضمن UnicodeString&
+UnicodeString::عامل+=(ثابت UnicodeString& src_متن) U_LIFETIME_BOUND
+{ أرجع doAppend(src_متن, 0, src_متن.لمائی()); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
-                      const UnicodeString& srcText,
-                      int32_t srcStart,
-                      int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, 0, srcText, srcStart, srcLength); }
+مضمن UnicodeString&
+UnicodeString::داخل_کرو(int32_t شروع,
+                      ثابت UnicodeString& src_متن,
+                      int32_t src_شروع,
+                      int32_t src_لمائی) U_LIFETIME_BOUND
+{ أرجع doReplace(شروع, 0, src_متن, src_شروع, src_لمائی); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
-                      const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doReplace(start, 0, srcText, 0, srcText.length()); }
+مضمن UnicodeString&
+UnicodeString::داخل_کرو(int32_t شروع,
+                      ثابت UnicodeString& src_متن) U_LIFETIME_BOUND
+{ أرجع doReplace(شروع, 0, src_متن, 0, src_متن.لمائی()); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
-                      const char16_t* srcChars,
-                      int32_t srcStart,
-                      int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, 0, srcChars, srcStart, srcLength); }
+مضمن UnicodeString&
+UnicodeString::داخل_کرو(int32_t شروع,
+                      ثابت char16_t* srcChars,
+                      int32_t src_شروع,
+                      int32_t src_لمائی) U_LIFETIME_BOUND
+{ أرجع doReplace(شروع, 0, srcChars, src_شروع, src_لمائی); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
+مضمن UnicodeString&
+UnicodeString::داخل_کرو(int32_t شروع,
                       ConstChar16Ptr srcChars,
-                      int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, 0, srcChars, 0, srcLength); }
+                      int32_t src_لمائی) U_LIFETIME_BOUND
+{ أرجع doReplace(شروع, 0, srcChars, 0, src_لمائی); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
+مضمن UnicodeString&
+UnicodeString::داخل_کرو(int32_t شروع,
                       char16_t srcChar) U_LIFETIME_BOUND
-{ return doReplace(start, 0, &srcChar, 0, 1); }
+{ أرجع doReplace(شروع, 0, &srcChar, 0, 1); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
+مضمن UnicodeString&
+UnicodeString::داخل_کرو(int32_t شروع,
                       UChar32 srcChar) U_LIFETIME_BOUND
-{ return replace(start, 0, srcChar); }
+{ أرجع replace(شروع, 0, srcChar); }
 
 
-inline UnicodeString&
+مضمن UnicodeString&
 UnicodeString::remove() U_LIFETIME_BOUND
 {
   // remove() of a bogus string makes the string empty and non-bogus
-  if(isBogus()) {
-    setToEmpty();
-  } else {
-    setZeroLength();
+  إذا(isBogus()) {
+    سیٹ_منزل_خالی_تھاواں();
+  } وإلا {
+    سیٹ_Zero_لمائی();
   }
-  return *this;
+  أرجع *this;
 }
 
-inline UnicodeString&
-UnicodeString::remove(int32_t start,
-                      int32_t _length) U_LIFETIME_BOUND
+مضمن UnicodeString&
+UnicodeString::remove(int32_t شروع,
+                      int32_t لمائی_4) U_LIFETIME_BOUND
 {
-    if(start <= 0 && _length == INT32_MAX) {
+    إذا(شروع <= 0 && لمائی_4 == INT32_MAX) {
         // remove(guaranteed everything) of a bogus string makes the string empty and non-bogus
-        return remove();
+        أرجع remove();
     }
-    return doReplace(start, _length, nullptr, 0, 0);
+    أرجع doReplace(شروع, لمائی_4, nullptr, 0, 0);
 }
 
-inline UnicodeString&
-UnicodeString::removeBetween(int32_t start,
-                             int32_t limit) U_LIFETIME_BOUND
-{ return doReplace(start, limit - start, nullptr, 0, 0); }
+مضمن UnicodeString&
+UnicodeString::removeBetween(int32_t شروع,
+                             int32_t حد_بندی) U_LIFETIME_BOUND
+{ أرجع doReplace(شروع, حد_بندی - شروع, nullptr, 0, 0); }
 
-inline UnicodeString&
-UnicodeString::retainBetween(int32_t start, int32_t limit) U_LIFETIME_BOUND {
-  truncate(limit);
-  return doReplace(0, start, nullptr, 0, 0);
+مضمن UnicodeString&
+UnicodeString::retainBetween(int32_t شروع, int32_t حد_بندی) U_LIFETIME_BOUND {
+  truncate(حد_بندی);
+  أرجع doReplace(0, شروع, nullptr, 0, 0);
 }
 
-inline UBool
-UnicodeString::truncate(int32_t targetLength)
+مضمن UBool
+UnicodeString::truncate(int32_t نشانہ_لمائی)
 {
-  if(isBogus() && targetLength == 0) {
+  إذا(isBogus() && نشانہ_لمائی == 0) {
     // truncate(0) of a bogus string makes the string empty and non-bogus
     unBogus();
-    return false;
-  } else if (static_cast<uint32_t>(targetLength) < static_cast<uint32_t>(length())) {
-    setLength(targetLength);
-    return true;
-  } else {
-    return false;
+    أرجع false;
+  } وإلا إذا (static_cast<uint32_t>(نشانہ_لمائی) < static_cast<uint32_t>(لمائی())) {
+    سیٹ_لمائی(نشانہ_لمائی);
+    أرجع true;
+  } وإلا {
+    أرجع false;
   }
 }
 
-inline UnicodeString&
-UnicodeString::reverse() U_LIFETIME_BOUND
-{ return doReverse(0, length()); }
+مضمن UnicodeString&
+UnicodeString::الٹ() U_LIFETIME_BOUND
+{ أرجع do_الٹ(0, لمائی()); }
 
-inline UnicodeString&
-UnicodeString::reverse(int32_t start,
-                       int32_t _length) U_LIFETIME_BOUND
-{ return doReverse(start, _length); }
+مضمن UnicodeString&
+UnicodeString::الٹ(int32_t شروع,
+                       int32_t لمائی_4) U_LIFETIME_BOUND
+{ أرجع do_الٹ(شروع, لمائی_4); }
 
-U_NAMESPACE_END
+U_NAMESPACE_سرا
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#جے_انت /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#جے_انت

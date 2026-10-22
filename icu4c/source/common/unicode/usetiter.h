@@ -6,15 +6,15 @@
 * Corporation and others.  All Rights Reserved.
 **********************************************************************
 */
-#ifndef USETITER_H
-#define USETITER_H
+#جے_بنا_تعریف USETITER_H
+#تعریف_کرو USETITER_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
-#include "unicode/unistr.h"
+#ضمن "unicode/uobject.h"
+#ضمن "unicode/unistr.h"
 
 /**
  * \file 
@@ -23,7 +23,7 @@
 
 U_NAMESPACE_BEGIN
 
-class UnicodeSet;
+class Unicode_سیٹ;
 class UnicodeString;
 
 /**
@@ -64,13 +64,13 @@ class UnicodeString;
  * @author M. Davis
  * @stable ICU 2.4
  */
-class U_COMMON_API UnicodeSetIterator final : public UObject {
+class U_COMMON_API Unicode_سیٹ_Iterator final : عام UObject {
     /**
      * Value of <tt>codepoint</tt> if the iterator points to a string.
      * If <tt>codepoint == IS_STRING</tt>, then examine
      * <tt>string</tt> for the current iteration result.
      */
-    enum { IS_STRING = -1 };
+    تعداد { IS_STRING = -1 };
 
     /**
      * Current code point, or the special value <tt>IS_STRING</tt>, if
@@ -86,16 +86,16 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * <tt>codepoint == IS_STRING</tt>, then the value of
      * <tt>codepointEnd</tt> is undefined.
      */
-    UChar32 codepointEnd;
+    UChar32 codepoint_سرا;
 
     /**
      * If <tt>codepoint == IS_STRING</tt>, then <tt>string</tt> points
      * to the current string.  If <tt>codepoint != IS_STRING</tt>, the
      * value of <tt>string</tt> is undefined.
      */
-    const UnicodeString* string;
+    ثابت UnicodeString* string;
 
- public:
+ عام:
 
     /**
      * Create an iterator over the given set.  The iterator is valid
@@ -103,7 +103,7 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * @param set set to iterate over
      * @stable ICU 2.4
      */
-    UnicodeSetIterator(const UnicodeSet& set U_LIFETIME_BOUND);
+    Unicode_سیٹ_Iterator(ثابت Unicode_سیٹ& سیٹ U_LIFETIME_BOUND);
 
     /**
      * Create an iterator over nothing.  <tt>next()</tt> and
@@ -111,13 +111,13 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * constructor allowing the target to be set later.
      * @stable ICU 2.4
      */
-    UnicodeSetIterator();
+    Unicode_سیٹ_Iterator();
 
     /**
      * Destructor.
      * @stable ICU 2.4
      */
-    virtual ~UnicodeSetIterator();
+    مجازی ~Unicode_سیٹ_Iterator();
 
     /**
      * Returns true if the current element is a string.  If so, the
@@ -134,14 +134,14 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * of the range.
      * @stable ICU 2.4
      */
-    inline UBool isString() const;
+    مضمن UBool isString() ثابت;
 
     /**
      * Returns the current code point, if <tt>isString()</tt> returned
      * false.  Otherwise returns an undefined result.
      * @stable ICU 2.4
      */
-    inline UChar32 getCodepoint() const;
+    مضمن UChar32 getCodepoint() ثابت;
 
     /**
      * Returns the end of the current code point range, if
@@ -149,7 +149,7 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * called.  Otherwise returns an undefined result.
      * @stable ICU 2.4
      */
-    inline UChar32 getCodepointEnd() const;
+    مضمن UChar32 get_Codepoint_سرا() ثابت;
 
     /**
      * Returns the current string, if <tt>isString()</tt> returned
@@ -162,7 +162,7 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * 
      * @stable ICU 2.4
      */
-    const UnicodeString& getString() U_LIFETIME_BOUND;
+    ثابت UnicodeString& getString() U_LIFETIME_BOUND;
 
     /**
      * Skips over the remaining code points/ranges, if any.
@@ -173,12 +173,12 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * @stable ICU 70
      * @see UnicodeSet#strings()
      */
-    inline UnicodeSetIterator& skipToStrings() U_LIFETIME_BOUND {
+    مضمن Unicode_سیٹ_Iterator& skip_منزل_لڑیاں() U_LIFETIME_BOUND {
         // Finish code point/range iteration.
-        range = endRange;
-        endElement = -1;
-        nextElement = 0;
-        return *this;
+        range = سرا_Range;
+        سرا_Element = -1;
+        اگلا_Element = 0;
+        أرجع *this;
     }
 
     /**
@@ -203,7 +203,7 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * @return true if there was another element in the set.
      * @stable ICU 2.4
      */
-    UBool next();
+    UBool اگلا();
 
     /**
      * Returns the next element in the set, either a code point range
@@ -224,7 +224,7 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * @return true if there was another element in the set.
      * @stable ICU 2.4
      */
-    UBool nextRange();
+    UBool اگلا_Range();
 
     /**
      * Sets this iterator to visit the elements of the given set and
@@ -233,56 +233,56 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * @param set the set to iterate over.
      * @stable ICU 2.4
      */
-    void reset(const UnicodeSet& set);
+    فراغ reset(ثابت Unicode_سیٹ& سیٹ);
 
     /**
      * Resets this iterator to the start of the set.
      * @stable ICU 2.4
      */
-    void reset();
+    فراغ reset();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      *
      * @stable ICU 2.4
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ساكن UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      *
      * @stable ICU 2.4
      */
-    virtual UClassID getDynamicClassID() const override;
+    مجازی UClassID getDynamicClassID() ثابت override;
 
     // ======================= PRIVATES ===========================
 
-private:
+خاص:
 
     // endElement and nextElements are really UChar32's, but we keep
     // them as signed int32_t's so we can do comparisons with
     // endElement set to -1.  Leave them as int32_t's.
     /** The set
      */
-    const UnicodeSet* set;
+    ثابت Unicode_سیٹ* سیٹ;
     /** End range
      */
-    int32_t endRange;
+    int32_t سرا_Range;
     /** Range
      */
     int32_t range;
     /** End element
      */
-    int32_t endElement;
+    int32_t سرا_Element;
     /** Next element
      */
-    int32_t nextElement;
+    int32_t اگلا_Element;
     /** Next string
      */
-    int32_t nextString;
+    int32_t اگلا_String;
     /** String count
      */
-    int32_t stringCount;
+    int32_t string_گنتی;
 
     /**
      *  Points to the string to use when the caller asks for a
@@ -292,32 +292,32 @@ private:
 
     /** Copy constructor. Disallowed.
      */
-    UnicodeSetIterator(const UnicodeSetIterator&) = delete;
+    Unicode_سیٹ_Iterator(ثابت Unicode_سیٹ_Iterator&) = delete;
 
     /** Assignment operator. Disallowed.
      */
-    UnicodeSetIterator& operator=(const UnicodeSetIterator&) = delete;
+    Unicode_سیٹ_Iterator& عامل=(ثابت Unicode_سیٹ_Iterator&) = delete;
 
     /** Load range
      */
-    void loadRange(int32_t range);
+    فراغ لدو_Range(int32_t range);
 };
 
-inline UBool UnicodeSetIterator::isString() const {
-    return codepoint < 0;
+مضمن UBool Unicode_سیٹ_Iterator::isString() ثابت {
+    أرجع codepoint < 0;
 }
 
-inline UChar32 UnicodeSetIterator::getCodepoint() const {
-    return codepoint;
+مضمن UChar32 Unicode_سیٹ_Iterator::getCodepoint() ثابت {
+    أرجع codepoint;
 }
 
-inline UChar32 UnicodeSetIterator::getCodepointEnd() const {
-    return codepointEnd;
+مضمن UChar32 Unicode_سیٹ_Iterator::get_Codepoint_سرا() ثابت {
+    أرجع codepoint_سرا;
 }
 
 
-U_NAMESPACE_END
+U_NAMESPACE_سرا
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#جے_انت /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#جے_انت

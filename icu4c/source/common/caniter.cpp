@@ -7,20 +7,20 @@
  *****************************************************************************
  */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#إذا !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/caniter.h"
-#include "unicode/normalizer2.h"
-#include "unicode/uchar.h"
-#include "unicode/uniset.h"
-#include "unicode/usetiter.h"
-#include "unicode/ustring.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "hash.h"
-#include "normalizer2impl.h"
+#ضمن "unicode/caniter.h"
+#ضمن "unicode/normalizer2.h"
+#ضمن "unicode/uchar.h"
+#ضمن "unicode/uniset.h"
+#ضمن "unicode/usetiter.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/utf16.h"
+#ضمن "cmemory.h"
+#ضمن "hash.h"
+#ضمن "normalizer2impl.h"
 
 /**
  * This class allows one to iterate through all the strings that are canonically equivalent to a given
@@ -56,7 +56,7 @@ Results for: {LATIN CAPITAL LETTER A WITH RING ABOVE}{LATIN SMALL LETTER D}{COMB
  *@draft
  */
 
-// public
+//عوامی
 
 U_NAMESPACE_BEGIN
 
@@ -68,17 +68,17 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(CanonicalIterator)
 /**
  *@param source string to get results for
  */
-CanonicalIterator::CanonicalIterator(const UnicodeString &sourceStr, UErrorCode &status) :
-    pieces(nullptr),
-    pieces_length(0),
-    pieces_lengths(nullptr),
-    current(nullptr),
-    current_length(0),
-    nfd(Normalizer2::getNFDInstance(status)),
-    nfcImpl(Normalizer2Factory::getNFCImpl(status))
+CanonicalIterator::CanonicalIterator(ثابت UnicodeString &سروت_Str, UError_کوڈ &حالت) :
+    pieces(خالی_سوچک),
+    pieces_لمائی(0),
+    pieces_lengths(خالی_سوچک),
+    current(خالی_سوچک),
+    current_لمائی(0),
+    nfd(Normalizer2::getNFDInstance(حالت)),
+    nfcImpl(Normalizer2Factory::getNFCImpl(حالت))
 {
-    if(U_SUCCESS(status) && nfcImpl->ensureCanonIterData(status)) {
-      setSource(sourceStr, status);
+    إذا(U_SUCCESS(حالت) && nfcImpl->ensure_Canon_Iter_انکڑے(حالت)) {
+      سیٹ_سروت(سروت_Str, حالت);
     }
 }
 
@@ -86,42 +86,42 @@ CanonicalIterator::~CanonicalIterator() {
   cleanPieces();
 }
 
-void CanonicalIterator::cleanPieces() {
+فراغ CanonicalIterator::cleanPieces() {
     int32_t i = 0;
-    if(pieces != nullptr) {
-        for(i = 0; i < pieces_length; i++) {
-            if(pieces[i] != nullptr) {
-                delete[] pieces[i];
+    إذا(pieces != خالی_سوچک) {
+        لكل(i = 0; i < pieces_لمائی; i++) {
+            إذا(pieces[i] != خالی_سوچک) {
+                مٹاؤ[] pieces[i];
             }
         }
         uprv_free(pieces);
-        pieces = nullptr;
-        pieces_length = 0;
+        pieces = خالی_سوچک;
+        pieces_لمائی = 0;
     }
-    if(pieces_lengths != nullptr) {
+    إذا(pieces_lengths != خالی_سوچک) {
         uprv_free(pieces_lengths);
-        pieces_lengths = nullptr;
+        pieces_lengths = خالی_سوچک;
     }
-    if(current != nullptr) {
+    إذا(current != خالی_سوچک) {
         uprv_free(current);
-        current = nullptr;
-        current_length = 0;
+        current = خالی_سوچک;
+        current_لمائی = 0;
     }
 }
 
 /**
  *@return gets the source: NOTE: it is the NFD form of source
  */
-UnicodeString CanonicalIterator::getSource() {
-  return source;
+UnicodeString CanonicalIterator::get_سروت() {
+  أرجع سروت;
 }
 
 /**
  * Resets the iterator so that one can start again from the beginning.
  */
-void CanonicalIterator::reset() {
-    done = false;
-    for (int i = 0; i < current_length; ++i) {
+فراغ CanonicalIterator::reset() {
+    پورا = خطأ;
+    لكل (صحيح i = 0; i < current_لمائی; ++i) {
         current[i] = 0;
     }
 }
@@ -133,127 +133,127 @@ void CanonicalIterator::reset() {
 UnicodeString CanonicalIterator::next() {
     int32_t i = 0;
 
-    if (done) {
-      buffer.setToBogus();
-      return buffer;
+    إذا (پورا) {
+      بفر.سیٹ_منزل_Bogus();
+      أرجع بفر;
     }
 
     // delete old contents
-    buffer.remove();
+    بفر.remove();
 
     // construct return value
 
-    for (i = 0; i < pieces_length; ++i) {
-        buffer.append(pieces[i][current[i]]);
+    لكل (i = 0; i < pieces_لمائی; ++i) {
+        بفر.append(pieces[i][current[i]]);
     }
     //String result = buffer.toString(); // not needed
 
     // find next value for next time
 
-    for (i = current_length - 1; ; --i) {
-        if (i < 0) {
-            done = true;
-            break;
+    لكل (i = current_لمائی - 1; ; --i) {
+        إذا (i < 0) {
+            پورا = سچ;
+            اكسر;
         }
         current[i]++;
-        if (current[i] < pieces_lengths[i]) break; // got sequence
+        إذا (current[i] < pieces_lengths[i]) اكسر; // got sequence
         current[i] = 0;
     }
-    return buffer;
+    أرجع بفر;
 }
 
 /**
  *@param set the source string to iterate against. This allows the same iterator to be used
  * while changing the source string, saving object creation.
  */
-void CanonicalIterator::setSource(const UnicodeString &newSource, UErrorCode &status) {
-    int32_t list_length = 0;
+فراغ CanonicalIterator::سیٹ_سروت(ثابت UnicodeString &new_سروت, UError_کوڈ &حالت) {
+    int32_t list_لمائی_2 = 0;
     UChar32 cp = 0;
-    int32_t start = 0;
+    int32_t شروع = 0;
     int32_t i = 0;
-    UnicodeString *list = nullptr;
+    UnicodeString *list = خالی_سوچک;
 
-    nfd->normalize(newSource, source, status);
-    if(U_FAILURE(status)) {
-      return;
+    nfd->normalize(new_سروت, سروت, حالت);
+    إذا(U_FAILURE(حالت)) {
+      أرجع;
     }
-    done = false;
+    پورا = خطأ;
 
     cleanPieces();
 
     // catch degenerate case
-    if (newSource.length() == 0) {
-        pieces = static_cast<UnicodeString**>(uprv_malloc(sizeof(UnicodeString*)));
-        pieces_lengths = static_cast<int32_t*>(uprv_malloc(1 * sizeof(int32_t)));
-        pieces_length = 1;
-        current = static_cast<int32_t*>(uprv_malloc(1 * sizeof(int32_t)));
-        current_length = 1;
-        if (pieces == nullptr || pieces_lengths == nullptr || current == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-            goto CleanPartialInitialization;
+    إذا (new_سروت.length() == 0) {
+        pieces = static_cast<UnicodeString**>(uprv_malloc(حجم(UnicodeString*)));
+        pieces_lengths = static_cast<int32_t*>(uprv_malloc(1 * حجم(int32_t)));
+        pieces_لمائی = 1;
+        current = static_cast<int32_t*>(uprv_malloc(1 * حجم(int32_t)));
+        current_لمائی = 1;
+        إذا (pieces == خالی_سوچک || pieces_lengths == خالی_سوچک || current == خالی_سوچک) {
+            حالت = U_حافظہ_ونڈ_ERROR;
+            اذهب CleanPartialInitialization;
         }
         current[0] = 0;
-        pieces[0] = new UnicodeString[1];
+        pieces[0] = جديد UnicodeString[1];
         pieces_lengths[0] = 1;
-        if (pieces[0] == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-            goto CleanPartialInitialization;
+        إذا (pieces[0] == خالی_سوچک) {
+            حالت = U_حافظہ_ونڈ_ERROR;
+            اذهب CleanPartialInitialization;
         }
-        return;
+        أرجع;
     }
 
 
-    list = new UnicodeString[source.length()];
-    if (list == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        goto CleanPartialInitialization;
+    list = جديد UnicodeString[سروت.length()];
+    إذا (list == خالی_سوچک) {
+        حالت = U_حافظہ_ونڈ_ERROR;
+        اذهب CleanPartialInitialization;
     }
 
     // i should initially be the number of code units at the 
     // start of the string
-    i = U16_LENGTH(source.char32At(0));
+    i = U16_لمائی(سروت.char32At(0));
     // int32_t i = 1;
     // find the segments
     // This code iterates through the source string and 
     // extracts segments that end up on a codepoint that
     // doesn't start any decompositions. (Analysis is done
     // on the NFD form - see above).
-    for (; i < source.length(); i += U16_LENGTH(cp)) {
-        cp = source.char32At(i);
-        if (nfcImpl->isCanonSegmentStarter(cp)) {
-            source.extract(start, i-start, list[list_length++]); // add up to i
-            start = i;
+    لكل (; i < سروت.length(); i += U16_لمائی(cp)) {
+        cp = سروت.char32At(i);
+        إذا (nfcImpl->isCanonSegmentStarter(cp)) {
+            سروت.extract(شروع, i-شروع, list[list_لمائی_2++]); // add up to i
+            شروع = i;
         }
     }
-    source.extract(start, i-start, list[list_length++]); // add last one
+    سروت.extract(شروع, i-شروع, list[list_لمائی_2++]); // add last one
 
 
     // allocate the arrays, and find the strings that are CE to each segment
-    pieces = static_cast<UnicodeString**>(uprv_malloc(list_length * sizeof(UnicodeString*)));
-    pieces_length = list_length;
-    pieces_lengths = static_cast<int32_t*>(uprv_malloc(list_length * sizeof(int32_t)));
-    current = static_cast<int32_t*>(uprv_malloc(list_length * sizeof(int32_t)));
-    current_length = list_length;
-    if (pieces == nullptr || pieces_lengths == nullptr || current == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        goto CleanPartialInitialization;
+    pieces = static_cast<UnicodeString**>(uprv_malloc(list_لمائی_2 * حجم(UnicodeString*)));
+    pieces_لمائی = list_لمائی_2;
+    pieces_lengths = static_cast<int32_t*>(uprv_malloc(list_لمائی_2 * حجم(int32_t)));
+    current = static_cast<int32_t*>(uprv_malloc(list_لمائی_2 * حجم(int32_t)));
+    current_لمائی = list_لمائی_2;
+    إذا (pieces == خالی_سوچک || pieces_lengths == خالی_سوچک || current == خالی_سوچک) {
+        حالت = U_حافظہ_ونڈ_ERROR;
+        اذهب CleanPartialInitialization;
     }
 
-    for (i = 0; i < current_length; i++) {
+    لكل (i = 0; i < current_لمائی; i++) {
         current[i] = 0;
     }
     // for each segment, get all the combinations that can produce 
     // it after NFD normalization
-    for (i = 0; i < pieces_length; ++i) {
+    لكل (i = 0; i < pieces_لمائی; ++i) {
         //if (PROGRESS) printf("SEGMENT\n");
-        pieces[i] = getEquivalents(list[i], pieces_lengths[i], status);
+        pieces[i] = getEquivalents(list[i], pieces_lengths[i], حالت);
     }
 
-    delete[] list;
-    return;
+    مٹاؤ[] list;
+    أرجع;
 // Common section to cleanup all local variables and reset object variables.
 CleanPartialInitialization:
-    delete[] list;
+    مٹاؤ[] list;
     cleanPieces();
 }
 
@@ -263,18 +263,18 @@ CleanPartialInitialization:
  * @param source the string to find permutations for
  * @return the results in a set.
  */
-void U_EXPORT2 CanonicalIterator::permute(UnicodeString &source, UBool skipZeros, Hashtable *result, UErrorCode &status, int32_t depth) {
-    if(U_FAILURE(status)) {
-        return;
+فراغ U_EXPORT2 CanonicalIterator::ترتیب_بدلو(UnicodeString &سروت, UBool skipZeros, Hashtable *نتیجہ, UError_کوڈ &حالت, int32_t ڈونگھائی) {
+    إذا(U_FAILURE(حالت)) {
+        أرجع;
     }
     // To avoid infinity loop caused by permute, we limit the depth of recursive
     // call to permute and return U_UNSUPPORTED_ERROR.
     // We know in some unit test we need at least 4. Set to 8 just in case some
     // unforseen use cases.
-    constexpr int32_t kPermuteDepthLimit = 8;
-    if (depth > kPermuteDepthLimit) {
-        status = U_UNSUPPORTED_ERROR;
-        return;
+    constexpr int32_t k_ترتیب_بدلو_ڈونگھائی_حد_بندی = 8;
+    إذا (ڈونگھائی > k_ترتیب_بدلو_ڈونگھائی_حد_بندی) {
+        حالت = U_UNSUPPORTED_ERROR;
+        أرجع;
     }
     //if (PROGRESS) printf("Permute: %s\n", UToS(Tr(source)));
     int32_t i = 0;
@@ -282,65 +282,65 @@ void U_EXPORT2 CanonicalIterator::permute(UnicodeString &source, UBool skipZeros
     // optimization:
     // if zero or one character, just return a set with it
     // we check for length < 2 to keep from counting code points all the time
-    if (source.length() <= 2 && source.countChar32() <= 1) {
-        UnicodeString *toPut = new UnicodeString(source);
+    إذا (سروت.length() <= 2 && سروت.گنتی_Char32() <= 1) {
+        UnicodeString *منزل_Put = جديد UnicodeString(سروت);
         /* test for nullptr */
-        if (toPut == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-            return;
+        إذا (منزل_Put == خالی_سوچک) {
+            حالت = U_حافظہ_ونڈ_ERROR;
+            أرجع;
         }
-        result->put(source, toPut, status);
-        return;
+        نتیجہ->put(سروت, منزل_Put, حالت);
+        أرجع;
     }
 
     // otherwise iterate through the string, and recursively permute all the other characters
     UChar32 cp;
-    Hashtable subpermute(status);
-    if(U_FAILURE(status)) {
-        return;
+    Hashtable subpermute(حالت);
+    إذا(U_FAILURE(حالت)) {
+        أرجع;
     }
-    subpermute.setValueDeleter(uprv_deleteUObject);
+    subpermute.سیٹ_قدر_Deleter(uprv_deleteUObject);
 
-    for (i = 0; i < source.length(); i += U16_LENGTH(cp)) {
-        cp = source.char32At(i);
-        const UHashElement *ne = nullptr;
-        int32_t el = UHASH_FIRST;
-        UnicodeString subPermuteString = source;
+    لكل (i = 0; i < سروت.length(); i += U16_لمائی(cp)) {
+        cp = سروت.char32At(i);
+        ثابت UHashElement *ne = خالی_سوچک;
+        int32_t el = UHASH_پہلا;
+        UnicodeString sub_ترتیب_بدلو_String = سروت;
 
         // optimization:
         // if the character is canonical combining class zero,
         // don't permute it
-        if (skipZeros && i != 0 && u_getCombiningClass(cp) == 0) {
+        إذا (skipZeros && i != 0 && u_getCombiningClass(cp) == 0) {
             //System.out.println("Skipping " + Utility.hex(UTF16.valueOf(source, i)));
-            continue;
+            استمر;
         }
 
         subpermute.removeAll();
 
         // see what the permutations of the characters before and after this one are
         //Hashtable *subpermute = permute(source.substring(0,i) + source.substring(i + UTF16.getCharCount(cp)));
-        permute(subPermuteString.remove(i, U16_LENGTH(cp)), skipZeros, &subpermute, status, depth+1);
+        ترتیب_بدلو(sub_ترتیب_بدلو_String.remove(i, U16_لمائی(cp)), skipZeros, &subpermute, حالت, ڈونگھائی+1);
         /* Test for buffer overflows */
-        if(U_FAILURE(status)) {
-            return;
+        إذا(U_FAILURE(حالت)) {
+            أرجع;
         }
         // The upper remove is destructive. The question is do we have to make a copy, or we don't care about the contents 
         // of source at this point.
 
         // prefix this character to all of them
-        ne = subpermute.nextElement(el);
-        while (ne != nullptr) {
-            UnicodeString* permRes = static_cast<UnicodeString*>(ne->value.pointer);
-            UnicodeString *chStr = new UnicodeString(cp);
+        ne = subpermute.اگلا_Element(el);
+        طالما (ne != خالی_سوچک) {
+            UnicodeString* permRes = static_cast<UnicodeString*>(ne->value.اشارہ_گر);
+            UnicodeString *chStr = جديد UnicodeString(cp);
             //test for nullptr
-            if (chStr == nullptr) {
-                status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+            إذا (chStr == خالی_سوچک) {
+                حالت = U_حافظہ_ونڈ_ERROR;
+                أرجع;
             }
             chStr->append(*permRes); //*((UnicodeString *)(ne->value.pointer));
             //if (PROGRESS) printf("  Piece: %s\n", UToS(*chStr));
-            result->put(*chStr, chStr, status);
-            ne = subpermute.nextElement(el);
+            نتیجہ->put(*chStr, chStr, حالت);
+            ne = subpermute.اگلا_Element(el);
         }
     }
     //return result;
@@ -349,170 +349,170 @@ void U_EXPORT2 CanonicalIterator::permute(UnicodeString &source, UBool skipZeros
 // privates
 
 // we have a segment, in NFD. Find all the strings that are canonically equivalent to it.
-UnicodeString* CanonicalIterator::getEquivalents(const UnicodeString &segment, int32_t &result_len, UErrorCode &status) {
-    Hashtable result(status);
-    Hashtable permutations(status);
-    Hashtable basic(status);
-    if (U_FAILURE(status)) {
-        return nullptr;
+UnicodeString* CanonicalIterator::getEquivalents(ثابت UnicodeString &segment, int32_t &نتیجہ_len, UError_کوڈ &حالت) {
+    Hashtable نتیجہ(حالت);
+    Hashtable permutations(حالت);
+    Hashtable basic(حالت);
+    إذا (U_FAILURE(حالت)) {
+        أرجع خالی_سوچک;
     }
-    result.setValueDeleter(uprv_deleteUObject);
-    permutations.setValueDeleter(uprv_deleteUObject);
-    basic.setValueDeleter(uprv_deleteUObject);
+    نتیجہ.سیٹ_قدر_Deleter(uprv_deleteUObject);
+    permutations.سیٹ_قدر_Deleter(uprv_deleteUObject);
+    basic.سیٹ_قدر_Deleter(uprv_deleteUObject);
 
     char16_t USeg[256];
-    int32_t segLen = segment.extract(USeg, 256, status);
-    getEquivalents2(&basic, USeg, segLen, status);
-    if (U_FAILURE(status)) {
-        return nullptr;
+    int32_t segLen = segment.extract(USeg, 256, حالت);
+    getEquivalents2(&basic, USeg, segLen, حالت);
+    إذا (U_FAILURE(حالت)) {
+        أرجع خالی_سوچک;
     }
 
     // now get all the permutations
     // add only the ones that are canonically equivalent
     // TODO: optimize by not permuting any class zero.
 
-    const UHashElement *ne = nullptr;
-    int32_t el = UHASH_FIRST;
+    ثابت UHashElement *ne = خالی_سوچک;
+    int32_t el = UHASH_پہلا;
     //Iterator it = basic.iterator();
-    ne = basic.nextElement(el);
+    ne = basic.اگلا_Element(el);
     //while (it.hasNext())
-    while (ne != nullptr) {
+    طالما (ne != خالی_سوچک) {
         //String item = (String) it.next();
-        UnicodeString item = *static_cast<UnicodeString*>(ne->value.pointer);
+        UnicodeString شے = *static_cast<UnicodeString*>(ne->value.اشارہ_گر);
 
         permutations.removeAll();
-        permute(item, CANITER_SKIP_ZEROES, &permutations, status);
-        const UHashElement *ne2 = nullptr;
-        int32_t el2 = UHASH_FIRST;
+        ترتیب_بدلو(شے, CANITER_SKIP_ZEROES, &permutations, حالت);
+        ثابت UHashElement *ne2 = خالی_سوچک;
+        int32_t el2 = UHASH_پہلا;
         //Iterator it2 = permutations.iterator();
-        ne2 = permutations.nextElement(el2);
+        ne2 = permutations.اگلا_Element(el2);
         //while (it2.hasNext())
-        while (ne2 != nullptr) {
+        طالما (ne2 != خالی_سوچک) {
             //String possible = (String) it2.next();
             //UnicodeString *possible = new UnicodeString(*((UnicodeString *)(ne2->value.pointer)));
-            UnicodeString possible(*static_cast<UnicodeString*>(ne2->value.pointer));
+            UnicodeString possible(*static_cast<UnicodeString*>(ne2->value.اشارہ_گر));
             UnicodeString attempt;
-            nfd->normalize(possible, attempt, status);
+            nfd->normalize(possible, attempt, حالت);
 
             // TODO: check if operator == is semanticaly the same as attempt.equals(segment)
-            if (attempt==segment) {
+            إذا (attempt==segment) {
                 //if (PROGRESS) printf("Adding Permutation: %s\n", UToS(Tr(*possible)));
                 // TODO: use the hashtable just to catch duplicates - store strings directly (somehow).
-                result.put(possible, new UnicodeString(possible), status); //add(possible);
-            } else {
+                نتیجہ.put(possible, جديد UnicodeString(possible), حالت); //add(possible);
+            } وإلا {
                 //if (PROGRESS) printf("-Skipping Permutation: %s\n", UToS(Tr(*possible)));
             }
 
-            ne2 = permutations.nextElement(el2);
+            ne2 = permutations.اگلا_Element(el2);
         }
-        ne = basic.nextElement(el);
+        ne = basic.اگلا_Element(el);
     }
 
     /* Test for buffer overflows */
-    if(U_FAILURE(status)) {
-        return nullptr;
+    إذا(U_FAILURE(حالت)) {
+        أرجع خالی_سوچک;
     }
     // convert into a String[] to clean up storage
     //String[] finalResult = new String[result.size()];
-    UnicodeString *finalResult = nullptr;
-    int32_t resultCount;
-    if((resultCount = result.count()) != 0) {
-        finalResult = new UnicodeString[resultCount];
-        if (finalResult == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+    UnicodeString *final_نتیجہ = خالی_سوچک;
+    int32_t نتیجہ_گنتی;
+    إذا((نتیجہ_گنتی = نتیجہ.count()) != 0) {
+        final_نتیجہ = جديد UnicodeString[نتیجہ_گنتی];
+        إذا (final_نتیجہ == خالی_سوچک) {
+            حالت = U_حافظہ_ونڈ_ERROR;
+            أرجع خالی_سوچک;
         }
     }
-    else {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    وإلا {
+        حالت = U_ILLEGAL_دلیل_ERROR;
+        أرجع خالی_سوچک;
     }
     //result.toArray(finalResult);
-    result_len = 0;
-    el = UHASH_FIRST;
-    ne = result.nextElement(el);
-    while(ne != nullptr) {
-        finalResult[result_len++] = *static_cast<UnicodeString*>(ne->value.pointer);
-        ne = result.nextElement(el);
+    نتیجہ_len = 0;
+    el = UHASH_پہلا;
+    ne = نتیجہ.اگلا_Element(el);
+    طالما(ne != خالی_سوچک) {
+        final_نتیجہ[نتیجہ_len++] = *static_cast<UnicodeString*>(ne->value.اشارہ_گر);
+        ne = نتیجہ.اگلا_Element(el);
     }
 
 
-    return finalResult;
+    أرجع final_نتیجہ;
 }
 
-Hashtable* CanonicalIterator::getEquivalents2(Hashtable* fillinResult U_LIFETIME_BOUND,
-                                              const char16_t* segment,
+Hashtable* CanonicalIterator::getEquivalents2(Hashtable* fillin_نتیجہ U_LIFETIME_BOUND,
+                                              ثابت char16_t* segment,
                                               int32_t segLen,
-                                              UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return nullptr;
+                                              UError_کوڈ& حالت) {
+    إذا (U_FAILURE(حالت)) {
+        أرجع خالی_سوچک;
     }
 
     //if (PROGRESS) printf("Adding: %s\n", UToS(Tr(segment)));
 
-    UnicodeString toPut(segment, segLen);
+    UnicodeString منزل_Put(segment, segLen);
 
-    fillinResult->put(toPut, new UnicodeString(toPut), status);
+    fillin_نتیجہ->put(منزل_Put, جديد UnicodeString(منزل_Put), حالت);
 
-    UnicodeSet starts;
+    Unicode_سیٹ starts;
 
     // cycle through all the characters
     UChar32 cp;
-    for (int32_t i = 0; i < segLen; i += U16_LENGTH(cp)) {
+    لكل (int32_t i = 0; i < segLen; i += U16_لمائی(cp)) {
         // see if any character is at the start of some decomposition
         U16_GET(segment, 0, i, segLen, cp);
-        if (!nfcImpl->getCanonStartSet(cp, starts)) {
-            continue;
+        إذا (!nfcImpl->get_Canon_شروع_سیٹ(cp, starts)) {
+            استمر;
         }
         // if so, see which decompositions match
-        UnicodeSetIterator iter(starts);
-        while (iter.next()) {
+        Unicode_سیٹ_Iterator iter(starts);
+        طالما (iter.next()) {
             UChar32 cp2 = iter.getCodepoint();
-            Hashtable remainder(status);
-            remainder.setValueDeleter(uprv_deleteUObject);
-            if (extract(&remainder, cp2, segment, segLen, i, status) == nullptr) {
-                if (U_FAILURE(status)) {
-                    return nullptr;
+            Hashtable remainder(حالت);
+            remainder.سیٹ_قدر_Deleter(uprv_deleteUObject);
+            إذا (extract(&remainder, cp2, segment, segLen, i, حالت) == خالی_سوچک) {
+                إذا (U_FAILURE(حالت)) {
+                    أرجع خالی_سوچک;
                 }
-                continue;
+                استمر;
             }
 
             // there were some matches, so add all the possibilities to the set.
-            UnicodeString prefix(segment, i);
-            prefix += cp2;
+            UnicodeString اگیتر(segment, i);
+            اگیتر += cp2;
 
-            int32_t el = UHASH_FIRST;
-            const UHashElement *ne = remainder.nextElement(el);
-            while (ne != nullptr) {
-                UnicodeString item = *static_cast<UnicodeString*>(ne->value.pointer);
-                UnicodeString *toAdd = new UnicodeString(prefix);
+            int32_t el = UHASH_پہلا;
+            ثابت UHashElement *ne = remainder.اگلا_Element(el);
+            طالما (ne != خالی_سوچک) {
+                UnicodeString شے = *static_cast<UnicodeString*>(ne->value.اشارہ_گر);
+                UnicodeString *منزل_جوڑو = جديد UnicodeString(اگیتر);
                 /* test for nullptr */
-                if (toAdd == nullptr) {
-                    status = U_MEMORY_ALLOCATION_ERROR;
-                    return nullptr;
+                إذا (منزل_جوڑو == خالی_سوچک) {
+                    حالت = U_حافظہ_ونڈ_ERROR;
+                    أرجع خالی_سوچک;
                 }
-                *toAdd += item;
-                fillinResult->put(*toAdd, toAdd, status);
+                *منزل_جوڑو += شے;
+                fillin_نتیجہ->put(*منزل_جوڑو, منزل_جوڑو, حالت);
 
                 //if (PROGRESS) printf("Adding: %s\n", UToS(Tr(*toAdd)));
 
-                ne = remainder.nextElement(el);
+                ne = remainder.اگلا_Element(el);
             }
             // ICU-22642 Guards against strings that have so many permutations
             // that they would otherwise hang the function.
-            constexpr int32_t kResultLimit = 4096;
-            if (fillinResult->count() > kResultLimit) {
-                status = U_UNSUPPORTED_ERROR;
-                return nullptr;
+            constexpr int32_t k_نتیجہ_حد_بندی = 4096;
+            إذا (fillin_نتیجہ->count() > k_نتیجہ_حد_بندی) {
+                حالت = U_UNSUPPORTED_ERROR;
+                أرجع خالی_سوچک;
             }
         }
     }
 
     /* Test for buffer overflows */
-    if(U_FAILURE(status)) {
-        return nullptr;
+    إذا(U_FAILURE(حالت)) {
+        أرجع خالی_سوچک;
     }
-    return fillinResult;
+    أرجع fillin_نتیجہ;
 }
 
 /**
@@ -520,60 +520,60 @@ Hashtable* CanonicalIterator::getEquivalents2(Hashtable* fillinResult U_LIFETIME
  * (with canonical rearrangement!)
  * If so, take the remainder, and return the equivalents 
  */
-Hashtable* CanonicalIterator::extract(Hashtable* fillinResult U_LIFETIME_BOUND,
+Hashtable* CanonicalIterator::extract(Hashtable* fillin_نتیجہ U_LIFETIME_BOUND,
                                       UChar32 comp,
-                                      const char16_t* segment,
+                                      ثابت char16_t* segment,
                                       int32_t segLen,
                                       int32_t segmentPos,
-                                      UErrorCode& status) {
+                                      UError_کوڈ& حالت) {
 //Hashtable *CanonicalIterator::extract(UChar32 comp, const UnicodeString &segment, int32_t segLen, int32_t segmentPos, UErrorCode &status) {
     //if (PROGRESS) printf(" extract: %s, ", UToS(Tr(UnicodeString(comp))));
     //if (PROGRESS) printf("%s, %i\n", UToS(Tr(segment)), segmentPos);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    إذا (U_FAILURE(حالت)) {
+        أرجع خالی_سوچک;
     }
 
-    UnicodeString temp(comp);
-    int32_t inputLen=temp.length();
+    UnicodeString عارضی(comp);
+    int32_t داخلہ_Len=عارضی.length();
     UnicodeString decompString;
-    nfd->normalize(temp, decompString, status);
-    if (U_FAILURE(status)) {
-        return nullptr;
+    nfd->normalize(عارضی, decompString, حالت);
+    إذا (U_FAILURE(حالت)) {
+        أرجع خالی_سوچک;
     }
-    if (decompString.isBogus()) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    إذا (decompString.isBogus()) {
+        حالت = U_حافظہ_ونڈ_ERROR;
+        أرجع خالی_سوچک;
     }
-    const char16_t *decomp=decompString.getBuffer();
+    ثابت char16_t *decomp=decompString.get_بفر();
     int32_t decompLen=decompString.length();
 
     // See if it matches the start of segment (at segmentPos)
-    UBool ok = false;
+    UBool ok = خطأ;
     UChar32 cp;
     int32_t decompPos = 0;
     UChar32 decompCp;
-    U16_NEXT(decomp, decompPos, decompLen, decompCp);
+    U16_اگلا(decomp, decompPos, decompLen, decompCp);
 
     int32_t i = segmentPos;
-    while(i < segLen) {
-        U16_NEXT(segment, i, segLen, cp);
+    طالما(i < segLen) {
+        U16_اگلا(segment, i, segLen, cp);
 
-        if (cp == decompCp) { // if equal, eat another cp from decomp
+        إذا (cp == decompCp) { // if equal, eat another cp from decomp
 
             //if (PROGRESS) printf("  matches: %s\n", UToS(Tr(UnicodeString(cp))));
 
-            if (decompPos == decompLen) { // done, have all decomp characters!
-                temp.append(segment+i, segLen-i);
-                ok = true;
-                break;
+            إذا (decompPos == decompLen) { // done, have all decomp characters!
+                عارضی.append(segment+i, segLen-i);
+                ok = سچ;
+                اكسر;
             }
-            U16_NEXT(decomp, decompPos, decompLen, decompCp);
-        } else {
+            U16_اگلا(decomp, decompPos, decompLen, decompCp);
+        } وإلا {
             //if (PROGRESS) printf("  buffer: %s\n", UToS(Tr(UnicodeString(cp))));
 
             // brute force approach
-            temp.append(cp);
+            عارضی.append(cp);
 
             /* TODO: optimize
             // since we know that the classes are monotonically increasing, after zero
@@ -588,27 +588,27 @@ Hashtable* CanonicalIterator::extract(Hashtable* fillinResult U_LIFETIME_BOUND,
             */
         }
     }
-    if (!ok)
-        return nullptr; // we failed, characters left over
+    إذا (!ok)
+        أرجع خالی_سوچک; // we failed, characters left over
 
     //if (PROGRESS) printf("Matches\n");
 
-    if (inputLen == temp.length()) {
-        fillinResult->put(UnicodeString(), new UnicodeString(), status);
-        return fillinResult; // succeed, but no remainder
+    إذا (داخلہ_Len == عارضی.length()) {
+        fillin_نتیجہ->put(UnicodeString(), جديد UnicodeString(), حالت);
+        أرجع fillin_نتیجہ; // succeed, but no remainder
     }
 
     // brute force approach
     // check to make sure result is canonically equivalent
     UnicodeString trial;
-    nfd->normalize(temp, trial, status);
-    if(U_FAILURE(status) || trial.compare(segment+segmentPos, segLen - segmentPos) != 0) {
-        return nullptr;
+    nfd->normalize(عارضی, trial, حالت);
+    إذا(U_FAILURE(حالت) || trial.compare(segment+segmentPos, segLen - segmentPos) != 0) {
+        أرجع خالی_سوچک;
     }
 
-    return getEquivalents2(fillinResult, temp.getBuffer()+inputLen, temp.length()-inputLen, status);
+    أرجع getEquivalents2(fillin_نتیجہ, عارضی.get_بفر()+داخلہ_Len, عارضی.length()-داخلہ_Len, حالت);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_سرا
 
-#endif /* #if !UCONFIG_NO_NORMALIZATION */
+#جے_انت /* #if !UCONFIG_NO_NORMALIZATION */

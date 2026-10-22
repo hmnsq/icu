@@ -20,63 +20,63 @@
 *   09/08/2004  grhoten     split from ucnv.c
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION
 
-#include "unicode/ustring.h"
-#include "unicode/ures.h"
-#include "unicode/ucnv.h"
-#include "cstring.h"
-#include "ustr_imp.h"
-#include "ucnv_imp.h"
-#include "putilimp.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/ures.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "cstring.h"
+#ضمن "ustr_imp.h"
+#ضمن "ucnv_imp.h"
+#ضمن "putilimp.h"
 
 U_CAPI int32_t U_EXPORT2
-ucnv_getDisplayName(const UConverter *cnv,
-                    const char *displayLocale,
-                    char16_t *displayName, int32_t displayNameCapacity,
-                    UErrorCode *pErrorCode) {
+ucnv_getDisplayName(ثابت UConverter *cnv,
+                    ثابت حرف *displayLocale,
+                    char16_t *displayName, int32_t display_Name_سمرتھا,
+                    UError_کوڈ *p_Error_کوڈ) {
     UResourceBundle *rb;
-    const char16_t *name;
+    ثابت char16_t *name;
     int32_t length;
-    UErrorCode localStatus = U_ZERO_ERROR;
+    UError_کوڈ local_حالت = U_ZERO_ERROR;
 
     /* check arguments */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    إذا(p_Error_کوڈ==خالی_سوچک || U_FAILURE(*p_Error_کوڈ)) {
+        أرجع 0;
     }
 
-    if(cnv==nullptr || displayNameCapacity<0 || (displayNameCapacity>0 && displayName==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا(cnv==خالی_سوچک || display_Name_سمرتھا<0 || (display_Name_سمرتھا>0 && displayName==خالی_سوچک)) {
+        *p_Error_کوڈ=U_ILLEGAL_دلیل_ERROR;
+        أرجع 0;
     }
 
     /* open the resource bundle and get the display name string */
-    rb=ures_open(nullptr, displayLocale, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    rb=ures_open(خالی_سوچک, displayLocale, p_Error_کوڈ);
+    إذا(U_FAILURE(*p_Error_کوڈ)) {
+        أرجع 0;
     }
 
     /* use the internal name as the key */
-    name=ures_getStringByKey(rb, cnv->sharedData->staticData->name, &length, &localStatus);
+    name=ures_get_String_By_کلید(rb, cnv->shared_انکڑے->static_انکڑے->name, &length, &local_حالت);
     ures_close(rb);
 
-    if(U_SUCCESS(localStatus)) {
+    إذا(U_SUCCESS(local_حالت)) {
         /* copy the string */
-        if (*pErrorCode == U_ZERO_ERROR) {
-            *pErrorCode = localStatus;
+        إذا (*p_Error_کوڈ == U_ZERO_ERROR) {
+            *p_Error_کوڈ = local_حالت;
         }
-        u_memcpy(displayName, name, uprv_min(length, displayNameCapacity)*U_SIZEOF_UCHAR);
-    } else {
+        u_memcpy(displayName, name, uprv_min(length, display_Name_سمرتھا)*U_SIZEOF_UCHAR);
+    } وإلا {
         /* convert the internal name into a Unicode string */
-        length=(int32_t)uprv_strlen(cnv->sharedData->staticData->name);
-        u_charsToUChars(cnv->sharedData->staticData->name, displayName, uprv_min(length, displayNameCapacity));
+        length=(int32_t)uprv_strlen(cnv->shared_انکڑے->static_انکڑے->name);
+        u_chars_منزل_UChars(cnv->shared_انکڑے->static_انکڑے->name, displayName, uprv_min(length, display_Name_سمرتھا));
     }
-    return u_terminateUChars(displayName, displayNameCapacity, length, pErrorCode);
+    أرجع u_terminateUChars(displayName, display_Name_سمرتھا, length, p_Error_کوڈ);
 }
 
-#endif
+#جے_انت
 
 /*
  * Hey, Emacs, please set the following:

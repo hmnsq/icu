@@ -24,40 +24,40 @@
  *                 are not intended to be used directly by applications.
  */
 
-#ifndef __UCMNDATA_H__
-#define __UCMNDATA_H__
+#جے_بنا_تعریف __UCMNDATA_H__
+#تعریف_کرو __UCMNDATA_H__
 
-#include "unicode/udata.h"
-#include "umapfile.h"
+#ضمن "unicode/udata.h"
+#ضمن "umapfile.h"
 
 
-#define COMMON_DATA_NAME U_ICUDATA_NAME
+#تعریف_کرو COMMON_انکڑے_NAME U_ICUDATA_NAME
 
-typedef struct  {
-    uint16_t    headerSize;
+تعريفنوع بنية  {
+    uint16_t    سرخی_ناپ;
     uint8_t     magic1;
     uint8_t     magic2;
-} MappedData;
+} Mapped_انکڑے;
 
 
-typedef struct  {
-    MappedData  dataHeader;
+تعريفنوع بنية  {
+    Mapped_انکڑے  انکڑے_سرخی_2;
     UDataInfo   info;
-} DataHeader;
+} انکڑے_سرخی;
 
-typedef struct {
-    uint32_t nameOffset;
-    uint32_t dataOffset;
-} UDataOffsetTOCEntry;
+تعريفنوع بنية {
+    uint32_t name_وتھ;
+    uint32_t انکڑے_وتھ;
+} UData_وتھ_TOCEntry;
 
-typedef struct {
-    uint32_t count;
+تعريفنوع بنية {
+    uint32_t گنتی;
     /**
      * Variable-length array declared with length 1 to disable bounds checkers.
      * The actual array length is in the count field.
      */
-    UDataOffsetTOCEntry entry[1];
-} UDataOffsetTOC;
+    UData_وتھ_TOCEntry اندراج[1];
+} UData_وتھ_TOC;
 
 /**
  * Get the header size from a const DataHeader *udh.
@@ -66,7 +66,7 @@ typedef struct {
  * @internal
  */
 U_CFUNC uint16_t
-udata_getHeaderSize(const DataHeader *udh);
+udata_get_سرخی_ناپ(ثابت انکڑے_سرخی *udh);
 
 /**
  * Get the UDataInfo.size from a const UDataInfo *info.
@@ -75,7 +75,7 @@ udata_getHeaderSize(const DataHeader *udh);
  * @internal
  */
 U_CFUNC uint16_t
-udata_getInfoSize(const UDataInfo *info);
+udata_get_Info_ناپ(ثابت UDataInfo *info);
 
 U_CDECL_BEGIN
 /*
@@ -85,21 +85,21 @@ U_CDECL_BEGIN
  *          (I sure do wish this was written in C++, not C)
  */
 
-typedef const DataHeader *
-(U_CALLCONV * LookupFn)(const UDataMemory *pData,
-                        const char *tocEntryName,
-                        int32_t *pLength,
-                        UErrorCode *pErrorCode);
+تعريفنوع ثابت انکڑے_سرخی *
+(U_CALLCONV * LookupFn)(ثابت UData_حافظہ *p_انکڑے,
+                        ثابت حرف *toc_اندراج_Name,
+                        int32_t *p_لمائی,
+                        UError_کوڈ *p_Error_کوڈ);
 
-typedef uint32_t
-(U_CALLCONV * NumEntriesFn)(const UDataMemory *pData);
+تعريفنوع uint32_t
+(U_CALLCONV * عدد_Entries_Fn)(ثابت UData_حافظہ *p_انکڑے);
 
-U_CDECL_END
+U_CDECL_سرا
 
-typedef struct {
+تعريفنوع بنية {
     LookupFn      Lookup;
-    NumEntriesFn  NumEntries; 
-} commonDataFuncs;
+    عدد_Entries_Fn  عدد_Entries; 
+} common_انکڑے_Funcs;
 
 
 /*
@@ -112,6 +112,6 @@ typedef struct {
  *     otherwise
  *         set an errorcode.
  */
-U_CFUNC void udata_checkCommonData(UDataMemory *pData, UErrorCode *pErrorCode);
+U_CFUNC فراغ udata_check_Common_انکڑے(UData_حافظہ *p_انکڑے, UError_کوڈ *p_Error_کوڈ);
 
-#endif
+#جے_انت

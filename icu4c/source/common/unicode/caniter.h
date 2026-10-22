@@ -7,17 +7,17 @@
  *******************************************************************************
  */
 
-#ifndef CANITER_H
-#define CANITER_H
+#جے_بنا_تعریف CANITER_H
+#تعریف_کرو CANITER_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#if !UCONFIG_NO_NORMALIZATION
+#إذا !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/uobject.h"
-#include "unicode/unistr.h"
+#ضمن "unicode/uobject.h"
+#ضمن "unicode/unistr.h"
 
 /**
  * \file
@@ -28,9 +28,9 @@
  *  Should be either true or false. This is a compile time option
  *  @stable ICU 2.4
  */
-#ifndef CANITER_SKIP_ZEROES
-#define CANITER_SKIP_ZEROES true
-#endif
+#جے_بنا_تعریف CANITER_SKIP_ZEROES
+#تعریف_کرو CANITER_SKIP_ZEROES true
+#جے_انت
 
 U_NAMESPACE_BEGIN
 
@@ -73,34 +73,34 @@ Results for: {LATIN CAPITAL LETTER A WITH RING ABOVE}{LATIN SMALL LETTER D}{COMB
  * @author C++ port by V. Weinstein
  * @stable ICU 2.4
  */
-class U_COMMON_API CanonicalIterator final : public UObject {
-public:
+class U_COMMON_API CanonicalIterator final : عام UObject {
+عام:
     /**
      * Construct a CanonicalIterator object
      * @param source    string to get results for
      * @param status    Fill-in parameter which receives the status of this operation.
      * @stable ICU 2.4
      */
-    CanonicalIterator(const UnicodeString &source, UErrorCode &status);
+    CanonicalIterator(ثابت UnicodeString &سروت, UError_کوڈ &حالت);
 
     /** Destructor
      *  Cleans pieces
      * @stable ICU 2.4
      */
-    virtual ~CanonicalIterator();
+    مجازی ~CanonicalIterator();
 
     /**
      * Gets the NFD form of the current source we are iterating over.
      * @return gets the source: NOTE: it is the NFD form of source
      * @stable ICU 2.4
      */
-    UnicodeString getSource();
+    UnicodeString get_سروت();
 
     /**
      * Resets the iterator so that one can start again from the beginning.
      * @stable ICU 2.4
      */
-    void reset();
+    فراغ reset();
 
     /**
      * Get the next canonically equivalent string.
@@ -109,7 +109,7 @@ public:
      * the iteration is done.
      * @stable ICU 2.4
      */
-    UnicodeString next();
+    UnicodeString اگلا();
 
     /**
      * Set a new source for this iterator. Allows object reuse.
@@ -118,9 +118,9 @@ public:
      * @param status        Fill-in parameter which receives the status of this operation.
      * @stable ICU 2.4
      */
-    void setSource(const UnicodeString &newSource, UErrorCode &status);
+    فراغ سیٹ_سروت(ثابت UnicodeString &new_سروت, UError_کوڈ &حالت);
 
-#ifndef U_HIDE_INTERNAL_API
+#جے_بنا_تعریف U_HIDE_اندرونی_API
     /**
      * Dumb recursive implementation of permutation.
      * TODO: optimize
@@ -131,24 +131,24 @@ public:
      * @param depth     depth of the call.
      * @internal
      */
-    static void U_EXPORT2 permute(UnicodeString &source, UBool skipZeros, Hashtable *result, UErrorCode &status, int32_t depth=0);
-#endif  /* U_HIDE_INTERNAL_API */
+    ساكن فراغ U_EXPORT2 ترتیب_بدلو(UnicodeString &سروت, UBool skipZeros, Hashtable *نتیجہ, UError_کوڈ &حالت, int32_t ڈونگھائی=0);
+#جے_انت  /* U_HIDE_INTERNAL_API */
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      *
      * @stable ICU 2.2
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ساكن UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      *
      * @stable ICU 2.2
      */
-    virtual UClassID getDynamicClassID() const override;
+    مجازی UClassID getDynamicClassID() ثابت override;
 
-private:
+خاص:
     // ===================== PRIVATES ==============================
     // private default constructor
     CanonicalIterator() = delete;
@@ -157,41 +157,41 @@ private:
     /**
      * Copy constructor. Private for now.
      */
-    CanonicalIterator(const CanonicalIterator& other) = delete;
+    CanonicalIterator(ثابت CanonicalIterator& other) = delete;
 
     /**
      * Assignment operator. Private for now.
      */
-    CanonicalIterator& operator=(const CanonicalIterator& other) = delete;
+    CanonicalIterator& عامل=(ثابت CanonicalIterator& other) = delete;
 
     // fields
-    UnicodeString source;
-    UBool done;
+    UnicodeString سروت;
+    UBool پورا;
 
     // 2 dimensional array holds the pieces of the string with
     // their different canonically equivalent representations
     UnicodeString **pieces;
-    int32_t pieces_length;
+    int32_t pieces_لمائی;
     int32_t *pieces_lengths;
 
     // current is used in iterating to combine pieces
     int32_t *current;
-    int32_t current_length;
+    int32_t current_لمائی;
 
     // transient fields
-    UnicodeString buffer;
+    UnicodeString بفر;
 
-    const Normalizer2 *nfd;
-    const Normalizer2Impl *nfcImpl;
+    ثابت Normalizer2 *nfd;
+    ثابت Normalizer2Impl *nfcImpl;
 
     // we have a segment, in NFD. Find all the strings that are canonically equivalent to it.
-    UnicodeString *getEquivalents(const UnicodeString &segment, int32_t &result_len, UErrorCode &status); //private String[] getEquivalents(String segment)
+    UnicodeString *getEquivalents(ثابت UnicodeString &segment, int32_t &نتیجہ_len, UError_کوڈ &حالت); //private String[] getEquivalents(String segment)
 
     //Set getEquivalents2(String segment);
-    Hashtable* getEquivalents2(Hashtable* fillinResult U_LIFETIME_BOUND,
-                               const char16_t* segment,
+    Hashtable* getEquivalents2(Hashtable* fillin_نتیجہ U_LIFETIME_BOUND,
+                               ثابت char16_t* segment,
                                int32_t segLen,
-                               UErrorCode& status);
+                               UError_کوڈ& حالت);
     //Hashtable *getEquivalents2(const UnicodeString &segment, int32_t segLen, UErrorCode &status);
 
     /**
@@ -200,22 +200,22 @@ private:
      * If so, take the remainder, and return the equivalents
      */
     //Set extract(int comp, String segment, int segmentPos, StringBuffer buffer);
-    Hashtable* extract(Hashtable* fillinResult U_LIFETIME_BOUND,
+    Hashtable* کڈھو(Hashtable* fillin_نتیجہ U_LIFETIME_BOUND,
                        UChar32 comp,
-                       const char16_t* segment,
+                       ثابت char16_t* segment,
                        int32_t segLen,
                        int32_t segmentPos,
-                       UErrorCode& status);
+                       UError_کوڈ& حالت);
     //Hashtable *extract(UChar32 comp, const UnicodeString &segment, int32_t segLen, int32_t segmentPos, UErrorCode &status);
 
-    void cleanPieces();
+    فراغ cleanPieces();
 
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_سرا
 
-#endif /* #if !UCONFIG_NO_NORMALIZATION */
+#جے_انت /* #if !UCONFIG_NO_NORMALIZATION */
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#جے_انت /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#جے_انت

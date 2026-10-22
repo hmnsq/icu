@@ -14,8 +14,8 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UCONFIG_H__
-#define __UCONFIG_H__
+#جے_بنا_تعریف __UCONFIG_H__
+#تعریف_کرو __UCONFIG_H__
 
 
 /*!
@@ -51,9 +51,9 @@
  *
  * @internal ICU 4.0
  */
-#if defined(UCONFIG_USE_LOCAL)
-#include "uconfig_local.h"
-#endif
+#إذا defined(UCONFIG_USE_LOCAL)
+#ضمن "uconfig_local.h"
+#جے_انت
 
 /**
  * \def U_DEBUG
@@ -62,35 +62,35 @@
  * related predefined macros.
  * @internal
  */
-#ifdef U_DEBUG
+#جے_تعریف_شدہ U_DEBUG
     /* Use the predefined value. */
-#elif defined(_DEBUG)
+#وإلاإذا defined(_DEBUG)
     /*
      * _DEBUG is defined by Visual Studio debug compilation.
      * Do *not* test for its NDEBUG macro: It is an orthogonal macro
      * which disables assert().
      */
 #   define U_DEBUG 1
-# else
+# وإلا
 #   define U_DEBUG 0
-#endif
+#جے_انت
 
 /**
  * Determines whether to enable auto cleanup of libraries. 
  * @internal
  */
-#ifndef UCLN_NO_AUTO_CLEANUP
-#define UCLN_NO_AUTO_CLEANUP 1
-#endif
+#جے_بنا_تعریف UCLN_NO_AUTO_CLEANUP
+#تعریف_کرو UCLN_NO_AUTO_CLEANUP 1
+#جے_انت
 
 /**
  * \def U_DISABLE_RENAMING
  * Determines whether to disable renaming or not.
  * @internal
  */
-#ifndef U_DISABLE_RENAMING
-#define U_DISABLE_RENAMING 0
-#endif
+#جے_بنا_تعریف U_DISABLE_RENAMING
+#تعریف_کرو U_DISABLE_RENAMING 0
+#جے_انت
 
 /**
  * \def U_NO_DEFAULT_INCLUDE_UTF_HEADERS
@@ -100,15 +100,15 @@
  * Defaults to 0 for backward compatibility, except inside ICU.
  * @stable ICU 49
  */
-#ifdef U_NO_DEFAULT_INCLUDE_UTF_HEADERS
+#جے_تعریف_شدہ U_NO_DEFAULT_INCLUDE_UTF_سرخیاں
     /* Use the predefined value. */
-#elif defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || \
+#وإلاإذا defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || \
       defined(U_IO_IMPLEMENTATION) || defined(U_LAYOUT_IMPLEMENTATION) || defined(U_LAYOUTEX_IMPLEMENTATION) || \
       defined(U_TOOLUTIL_IMPLEMENTATION)
-#   define U_NO_DEFAULT_INCLUDE_UTF_HEADERS 1
-#else
-#   define U_NO_DEFAULT_INCLUDE_UTF_HEADERS 0
-#endif
+#   define U_NO_DEFAULT_INCLUDE_UTF_سرخیاں 1
+#وإلا
+#   define U_NO_DEFAULT_INCLUDE_UTF_سرخیاں 0
+#جے_انت
 
 /**
  * \def U_OVERRIDE_CXX_ALLOCATION
@@ -123,54 +123,54 @@
  *
  * @stable ICU 2.2
  */
-#ifndef U_OVERRIDE_CXX_ALLOCATION
-#define U_OVERRIDE_CXX_ALLOCATION 1
-#endif
+#جے_بنا_تعریف U_OVERRIDE_CXX_ونڈ
+#تعریف_کرو U_OVERRIDE_CXX_ونڈ 1
+#جے_انت
 
 /**
  * \def U_ENABLE_TRACING
  * Determines whether to enable tracing.
  * @internal
  */
-#ifndef U_ENABLE_TRACING
-#define U_ENABLE_TRACING 0
-#endif
+#جے_بنا_تعریف U_ENABLE_TRACING
+#تعریف_کرو U_ENABLE_TRACING 0
+#جے_انت
 
 /**
  * \def UCONFIG_ENABLE_PLUGINS
  * Determines whether to enable ICU plugins.
  * @internal
  */
-#ifndef UCONFIG_ENABLE_PLUGINS
-#define UCONFIG_ENABLE_PLUGINS 0
-#endif
+#جے_بنا_تعریف UCONFIG_ENABLE_PLUGINS
+#تعریف_کرو UCONFIG_ENABLE_PLUGINS 0
+#جے_انت
 
 /**
  * \def U_ENABLE_DYLOAD
  * Whether to enable Dynamic loading in ICU.
  * @internal
  */
-#ifndef U_ENABLE_DYLOAD
-#define U_ENABLE_DYLOAD 1
-#endif
+#جے_بنا_تعریف U_ENABLE_DYLOAD
+#تعریف_کرو U_ENABLE_DYLOAD 1
+#جے_انت
 
 /**
  * \def U_CHECK_DYLOAD
  * Whether to test Dynamic loading as an OS capability.
  * @internal
  */
-#ifndef U_CHECK_DYLOAD
-#define U_CHECK_DYLOAD 1
-#endif
+#جے_بنا_تعریف U_CHECK_DYLOAD
+#تعریف_کرو U_CHECK_DYLOAD 1
+#جے_انت
 
 /**
  * \def U_DEFAULT_SHOW_DRAFT
  * Do we allow ICU users to use the draft APIs by default?
  * @internal
  */
-#ifndef U_DEFAULT_SHOW_DRAFT
-#define U_DEFAULT_SHOW_DRAFT 1
-#endif
+#جے_بنا_تعریف U_DEFAULT_SHOW_DRAFT
+#تعریف_کرو U_DEFAULT_SHOW_DRAFT 1
+#جے_انت
 
 /*===========================================================================*/
 /* Custom icu entry point renaming                                           */
@@ -181,25 +181,25 @@
  * 1 if a custom library suffix is set.
  * @internal
  */
-#ifdef U_HAVE_LIB_SUFFIX
+#جے_تعریف_شدہ U_HAVE_LIB_SUFFIX
     /* Use the predefined value. */
-#elif defined(U_LIB_SUFFIX_C_NAME) || defined(U_IN_DOXYGEN)
+#وإلاإذا defined(U_LIB_SUFFIX_C_NAME) || defined(U_وچ_DOXYGEN)
 #   define U_HAVE_LIB_SUFFIX 1
-#endif
+#جے_انت
 
 /**
  * \def U_LIB_SUFFIX_C_NAME_STRING
  * Defines the library suffix as a string with C syntax.
  * @internal
  */
-#ifdef U_LIB_SUFFIX_C_NAME_STRING
+#جے_تعریف_شدہ U_LIB_SUFFIX_C_NAME_STRING
     /* Use the predefined value. */
-#elif defined(U_LIB_SUFFIX_C_NAME)
-#   define CONVERT_TO_STRING(s) #s
-#   define U_LIB_SUFFIX_C_NAME_STRING CONVERT_TO_STRING(U_LIB_SUFFIX_C_NAME)
-#else
+#وإلاإذا defined(U_LIB_SUFFIX_C_NAME)
+#   define CONVERT_منزل_STRING(s) #s
+#   define U_LIB_SUFFIX_C_NAME_STRING CONVERT_منزل_STRING(U_LIB_SUFFIX_C_NAME)
+#وإلا
 #   define U_LIB_SUFFIX_C_NAME_STRING ""
-#endif
+#جے_انت
 
 /* common/i18n library switches --------------------------------------------- */
 
@@ -214,23 +214,23 @@
  *
  * @stable ICU 2.4
  */
-#ifndef UCONFIG_ONLY_COLLATION
+#جے_بنا_تعریف UCONFIG_ONLY_COLLATION
 #   define UCONFIG_ONLY_COLLATION 0
-#endif
+#جے_انت
 
-#if UCONFIG_ONLY_COLLATION
+#إذا UCONFIG_ONLY_COLLATION
     /* common library */
 #   define UCONFIG_NO_BREAK_ITERATION 1
 #   define UCONFIG_NO_IDNA 1
 
     /* i18n library */
-#   if UCONFIG_NO_COLLATION
-#       error Contradictory collation switches in uconfig.h.
+#   إذا UCONFIG_NO_COLLATION
+#       error Contradictory collation switches وچ uconfig.h.
 #   endif
 #   define UCONFIG_NO_FORMATTING 1
 #   define UCONFIG_NO_TRANSLITERATION 1
 #   define UCONFIG_NO_REGULAR_EXPRESSIONS 1
-#endif
+#جے_انت
 
 /* common library switches -------------------------------------------------- */
 
@@ -252,13 +252,13 @@
  *
  * @stable ICU 3.6
  */
-#ifndef UCONFIG_NO_FILE_IO
+#جے_بنا_تعریف UCONFIG_NO_FILE_IO
 #   define UCONFIG_NO_FILE_IO 0
-#endif
+#جے_انت
 
-#if UCONFIG_NO_FILE_IO && defined(U_TIMEZONE_FILES_DIR) 
-#   error Contradictory file io switches in uconfig.h.
-#endif
+#إذا UCONFIG_NO_FILE_IO && defined(U_TIMEZONE_FILES_DIR) 
+#   error Contradictory file io switches وچ uconfig.h.
+#جے_انت
 
 /**
  * \def UCONFIG_NO_CONVERSION
@@ -272,13 +272,13 @@
  * @stable ICU 3.2
  * @see U_CHARSET_IS_UTF8
  */
-#ifndef UCONFIG_NO_CONVERSION
+#جے_بنا_تعریف UCONFIG_NO_CONVERSION
 #   define UCONFIG_NO_CONVERSION 0
-#endif
+#جے_انت
 
-#if UCONFIG_NO_CONVERSION
+#إذا UCONFIG_NO_CONVERSION
 #   define UCONFIG_NO_LEGACY_CONVERSION 1
-#endif
+#جے_انت
 
 /**
  * \def UCONFIG_ONLY_HTML_CONVERSION
@@ -291,9 +291,9 @@
  *
  * @stable ICU 55
  */
-#ifndef UCONFIG_ONLY_HTML_CONVERSION
+#جے_بنا_تعریف UCONFIG_ONLY_HTML_CONVERSION
 #   define UCONFIG_ONLY_HTML_CONVERSION 0
-#endif
+#جے_انت
 
 /**
  * \def UCONFIG_NO_LEGACY_CONVERSION
@@ -307,9 +307,9 @@
  *
  * @stable ICU 2.4
  */
-#ifndef UCONFIG_NO_LEGACY_CONVERSION
+#جے_بنا_تعریف UCONFIG_NO_LEGACY_CONVERSION
 #   define UCONFIG_NO_LEGACY_CONVERSION 0
-#endif
+#جے_انت
 
 /**
  * \def UCONFIG_NO_NORMALIZATION
@@ -319,9 +319,9 @@
  *
  * @stable ICU 2.6
  */
-#ifndef UCONFIG_NO_NORMALIZATION
+#جے_بنا_تعریف UCONFIG_NO_NORMALIZATION
 #   define UCONFIG_NO_NORMALIZATION 0
-#endif
+#جے_انت
 
 /**
  * \def UCONFIG_USE_ML_PHRASE_BREAKING
@@ -329,11 +329,11 @@
  *
  * @internal
  */
-#ifndef UCONFIG_USE_ML_PHRASE_BREAKING
+#جے_بنا_تعریف UCONFIG_USE_ML_PHRASE_BREAKING
 #   define UCONFIG_USE_ML_PHRASE_BREAKING 0
-#endif
+#جے_انت
 
-#if UCONFIG_NO_NORMALIZATION
+#إذا UCONFIG_NO_NORMALIZATION
     /* common library */
     /* ICU 50 CJK dictionary BreakIterator uses normalization */
 #   define UCONFIG_NO_BREAK_ITERATION 1
@@ -341,12 +341,12 @@
 #   define UCONFIG_NO_IDNA 1
 
     /* i18n library */
-#   if UCONFIG_ONLY_COLLATION
-#       error Contradictory collation switches in uconfig.h.
+#   إذا UCONFIG_ONLY_COLLATION
+#       error Contradictory collation switches وچ uconfig.h.
 #   endif
 #   define UCONFIG_NO_COLLATION 1
 #   define UCONFIG_NO_TRANSLITERATION 1
-#endif
+#جے_انت
 
 /**
  * \def UCONFIG_NO_BREAK_ITERATION
@@ -354,9 +354,9 @@
  *
  * @stable ICU 2.4
  */
-#ifndef UCONFIG_NO_BREAK_ITERATION
+#جے_بنا_تعریف UCONFIG_NO_BREAK_ITERATION
 #   define UCONFIG_NO_BREAK_ITERATION 0
-#endif
+#جے_انت
 
 /**
  * \def UCONFIG_NO_IDNA
@@ -364,9 +364,9 @@
  *
  * @stable ICU 2.6
  */
-#ifndef UCONFIG_NO_IDNA
+#جے_بنا_تعریف UCONFIG_NO_IDNA
 #   define UCONFIG_NO_IDNA 0
-#endif
+#جے_انت
 
 /**
  * \def UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_MODE
@@ -375,9 +375,9 @@
  *
  * @stable ICU 4.8
  */
-#ifndef UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_MODE
-#   define UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_MODE UMSGPAT_APOS_DOUBLE_OPTIONAL
-#endif
+#جے_بنا_تعریف UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_منوال
+#   define UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_منوال UMSGPAT_APOS_DOUBLE_OPTIONAL
+#جے_انت
 
 /**
  * \def UCONFIG_USE_WINDOWS_LCID_MAPPING_API
@@ -387,9 +387,9 @@
  * 
  * @internal ICU 64
  */
-#ifndef UCONFIG_USE_WINDOWS_LCID_MAPPING_API
+#جے_بنا_تعریف UCONFIG_USE_WINDOWS_LCID_MAPPING_API
 #   define UCONFIG_USE_WINDOWS_LCID_MAPPING_API 1
-#endif
+#جے_انت
 
 /* i18n library switches ---------------------------------------------------- */
 
@@ -399,9 +399,9 @@
  *
  * @stable ICU 2.4
  */
-#ifndef UCONFIG_NO_COLLATION
+#جے_بنا_تعریف UCONFIG_NO_COLLATION
 #   define UCONFIG_NO_COLLATION 0
-#endif
+#جے_انت
 
 /**
  * \def UCONFIG_NO_FORMATTING
@@ -409,9 +409,9 @@
  *
  * @stable ICU 2.4
  */
-#ifndef UCONFIG_NO_FORMATTING
+#جے_بنا_تعریف UCONFIG_NO_FORMATTING
 #   define UCONFIG_NO_FORMATTING 0
-#endif
+#جے_انت
 
 /**
  * \def UCONFIG_NO_MF2
@@ -420,9 +420,9 @@
  * @internal ICU 75 technology preview
  * @deprecated This API is for technology preview only.
  */
-#ifndef UCONFIG_NO_MF2
+#جے_بنا_تعریف UCONFIG_NO_MF2
 #   define UCONFIG_NO_MF2 0
-#endif
+#جے_انت
 
 /**
  * \def UCONFIG_NO_TRANSLITERATION
@@ -430,9 +430,9 @@
  *
  * @stable ICU 2.4
  */
-#ifndef UCONFIG_NO_TRANSLITERATION
+#جے_بنا_تعریف UCONFIG_NO_TRANSLITERATION
 #   define UCONFIG_NO_TRANSLITERATION 0
-#endif
+#جے_انت
 
 /**
  * \def UCONFIG_NO_REGULAR_EXPRESSIONS
@@ -440,9 +440,9 @@
  *
  * @stable ICU 2.4
  */
-#ifndef UCONFIG_NO_REGULAR_EXPRESSIONS
+#جے_بنا_تعریف UCONFIG_NO_REGULAR_EXPRESSIONS
 #   define UCONFIG_NO_REGULAR_EXPRESSIONS 0
-#endif
+#جے_انت
 
 /**
  * \def UCONFIG_NO_SERVICE
@@ -450,9 +450,9 @@
  *
  * @stable ICU 3.2
  */
-#ifndef UCONFIG_NO_SERVICE
+#جے_بنا_تعریف UCONFIG_NO_SERVICE
 #   define UCONFIG_NO_SERVICE 0
-#endif
+#جے_انت
 
 /**
  * \def UCONFIG_HAVE_PARSEALLINPUT
@@ -460,9 +460,9 @@
  *
  * @internal
  */
-#ifndef UCONFIG_HAVE_PARSEALLINPUT
+#جے_بنا_تعریف UCONFIG_HAVE_PARSEALLINPUT
 #   define UCONFIG_HAVE_PARSEALLINPUT 1
-#endif
+#جے_انت
 
 /**
  * \def UCONFIG_NO_FILTERED_BREAK_ITERATION
@@ -470,8 +470,8 @@
  *
  * @internal
  */
-#ifndef UCONFIG_NO_FILTERED_BREAK_ITERATION
+#جے_بنا_تعریف UCONFIG_NO_FILTERED_BREAK_ITERATION
 #   define UCONFIG_NO_FILTERED_BREAK_ITERATION 0
-#endif
+#جے_انت
 
-#endif  // __UCONFIG_H__
+#جے_انت  // __UCONFIG_H__

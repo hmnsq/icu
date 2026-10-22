@@ -14,10 +14,10 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef UMISC_H
-#define UMISC_H
+#جے_بنا_تعریف UMISC_H
+#تعریف_کرو UMISC_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
 /**
  * \file
@@ -31,32 +31,32 @@ U_CDECL_BEGIN
 /** A struct representing a range of text containing a specific field 
  *  @stable ICU 2.0
  */
-typedef struct UFieldPosition {
+تعريفنوع بنية UFieldPosition {
   /**
    * The field 
    * @stable ICU 2.0
    */
-  int32_t field;
+  int32_t میدان_2;
   /**
    * The start of the text range containing field 
    * @stable ICU 2.0
    */
-  int32_t beginIndex;
+  int32_t begin_اشاریہ;
   /** 
    * The limit of the text range containing field 
    * @stable ICU 2.0
    */
-  int32_t endIndex;
+  int32_t سرا_اشاریہ;
 } UFieldPosition;
 
-#if !UCONFIG_NO_SERVICE
+#إذا !UCONFIG_NO_SERVICE
 /**
  * Opaque type returned by registerInstance, registerFactory and unregister for service registration.
  * @stable ICU 2.6
  */
-typedef const void* URegistryKey;
-#endif
+تعريفنوع ثابت فراغ* URegistry_کلید;
+#جے_انت
 
-U_CDECL_END
+U_CDECL_سرا
 
-#endif
+#جے_انت

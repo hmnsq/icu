@@ -6,35 +6,35 @@
 * Corporation and others.  All Rights Reserved.
 **********************************************************************
 */
-#include "unicode/usetiter.h"
-#include "unicode/uniset.h"
-#include "unicode/unistr.h"
-#include "uvector.h"
+#ضمن "unicode/usetiter.h"
+#ضمن "unicode/uniset.h"
+#ضمن "unicode/unistr.h"
+#ضمن "uvector.h"
 
 U_NAMESPACE_BEGIN
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UnicodeSetIterator)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Unicode_سیٹ_Iterator)
 
 /**
  * Create an iterator
  * @param set set to iterate over
  */
-UnicodeSetIterator::UnicodeSetIterator(const UnicodeSet& uSet U_LIFETIME_BOUND) {
-    cpString  = nullptr;
-    reset(uSet);
+Unicode_سیٹ_Iterator::Unicode_سیٹ_Iterator(ثابت Unicode_سیٹ& u_سیٹ U_LIFETIME_BOUND) {
+    cpString  = خالی_سوچک;
+    reset(u_سیٹ);
 }
 
 /**
  * Create an iterator. Convenience for when the contents are to be set later.
  */
-UnicodeSetIterator::UnicodeSetIterator() {
-    this->set = nullptr;
-    cpString  = nullptr;
+Unicode_سیٹ_Iterator::Unicode_سیٹ_Iterator() {
+    هذا->سیٹ = خالی_سوچک;
+    cpString  = خالی_سوچک;
     reset();
 }
 
-UnicodeSetIterator::~UnicodeSetIterator() {
-    delete cpString;
+Unicode_سیٹ_Iterator::~Unicode_سیٹ_Iterator() {
+    مٹاؤ cpString;
 }
 
 /**
@@ -46,23 +46,23 @@ UnicodeSetIterator::~UnicodeSetIterator() {
  * and that all code points are returned before any strings are returned.
  * <br>Note also that the codepointEnd is undefined after calling this method.
  */
-UBool UnicodeSetIterator::next() {
-    if (nextElement <= endElement) {
-        codepoint = codepointEnd = nextElement++;
-        string = nullptr;
-        return true;
+UBool Unicode_سیٹ_Iterator::next() {
+    إذا (اگلا_Element <= سرا_Element) {
+        codepoint = codepoint_سرا = اگلا_Element++;
+        string = خالی_سوچک;
+        أرجع سچ;
     }
-    if (range < endRange) {
-        loadRange(++range);
-        codepoint = codepointEnd = nextElement++;
-        string = nullptr;
-        return true;
+    إذا (range < سرا_Range) {
+        لدو_Range(++range);
+        codepoint = codepoint_سرا = اگلا_Element++;
+        string = خالی_سوچک;
+        أرجع سچ;
     }
 
-    if (nextString >= stringCount) return false;
+    إذا (اگلا_String >= string_گنتی) أرجع خطأ;
     codepoint = static_cast<UChar32>(IS_STRING); // signal that value is actually a string
-    string = static_cast<const UnicodeString*>(set->strings_->elementAt(nextString++));
-    return true;
+    string = static_cast<ثابت UnicodeString*>(سیٹ->لڑیاں_2->elementAt(اگلا_String++));
+    أرجع سچ;
 }
 
 /**
@@ -76,77 +76,77 @@ UBool UnicodeSetIterator::next() {
  * <br>You are also guaranteed that ranges are disjoint and non-contiguous.
  * <br>Note also that the codepointEnd is undefined after calling this method.
  */
-UBool UnicodeSetIterator::nextRange() {
-    string = nullptr;
-    if (nextElement <= endElement) {
-        codepointEnd = endElement;
-        codepoint = nextElement;
-        nextElement = endElement+1;
-        return true;
+UBool Unicode_سیٹ_Iterator::اگلا_Range() {
+    string = خالی_سوچک;
+    إذا (اگلا_Element <= سرا_Element) {
+        codepoint_سرا = سرا_Element;
+        codepoint = اگلا_Element;
+        اگلا_Element = سرا_Element+1;
+        أرجع سچ;
     }
-    if (range < endRange) {
-        loadRange(++range);
-        codepointEnd = endElement;
-        codepoint = nextElement;
-        nextElement = endElement+1;
-        return true;
+    إذا (range < سرا_Range) {
+        لدو_Range(++range);
+        codepoint_سرا = سرا_Element;
+        codepoint = اگلا_Element;
+        اگلا_Element = سرا_Element+1;
+        أرجع سچ;
     }
 
-    if (nextString >= stringCount) return false;
+    إذا (اگلا_String >= string_گنتی) أرجع خطأ;
     codepoint = static_cast<UChar32>(IS_STRING); // signal that value is actually a string
-    string = static_cast<const UnicodeString*>(set->strings_->elementAt(nextString++));
-    return true;
+    string = static_cast<ثابت UnicodeString*>(سیٹ->لڑیاں_2->elementAt(اگلا_String++));
+    أرجع سچ;
 }
 
 /**
  *@param set the set to iterate over. This allows reuse of the iterator.
  */
-void UnicodeSetIterator::reset(const UnicodeSet& uSet) {
-    this->set = &uSet;
+فراغ Unicode_سیٹ_Iterator::reset(ثابت Unicode_سیٹ& u_سیٹ) {
+    هذا->سیٹ = &u_سیٹ;
     reset();
 }
 
 /**
  * Resets to the start, to allow the iteration to start over again.
  */
-void UnicodeSetIterator::reset() {
-    if (set == nullptr) {
+فراغ Unicode_سیٹ_Iterator::reset() {
+    إذا (سیٹ == خالی_سوچک) {
         // Set up indices to empty iteration
-        endRange = -1;
-        stringCount = 0;
-    } else {
-        endRange = set->getRangeCount() - 1;
-        stringCount = set->stringsSize();
+        سرا_Range = -1;
+        string_گنتی = 0;
+    } وإلا {
+        سرا_Range = سیٹ->get_Range_گنتی() - 1;
+        string_گنتی = سیٹ->لڑیاں_ناپ();
     }
     range = 0;
-    endElement = -1;
-    nextElement = 0;            
-    if (endRange >= 0) {
-        loadRange(range);
+    سرا_Element = -1;
+    اگلا_Element = 0;            
+    إذا (سرا_Range >= 0) {
+        لدو_Range(range);
     }
-    nextString = 0;
-    string = nullptr;
+    اگلا_String = 0;
+    string = خالی_سوچک;
 }
 
-void UnicodeSetIterator::loadRange(int32_t iRange) {
-    nextElement = set->getRangeStart(iRange);
-    endElement = set->getRangeEnd(iRange);
+فراغ Unicode_سیٹ_Iterator::لدو_Range(int32_t iRange) {
+    اگلا_Element = سیٹ->get_Range_شروع(iRange);
+    سرا_Element = سیٹ->get_Range_سرا(iRange);
 }
 
 
-const UnicodeString& UnicodeSetIterator::getString() U_LIFETIME_BOUND {
-    if (string == nullptr && codepoint != static_cast<UChar32>(IS_STRING)) {
-       if (cpString == nullptr) {
-          cpString = new UnicodeString();
+ثابت UnicodeString& Unicode_سیٹ_Iterator::getString() U_LIFETIME_BOUND {
+    إذا (string == خالی_سوچک && codepoint != static_cast<UChar32>(IS_STRING)) {
+       إذا (cpString == خالی_سوچک) {
+          cpString = جديد UnicodeString();
        }
-       if (cpString != nullptr) {
-          cpString->setTo(codepoint);
+       إذا (cpString != خالی_سوچک) {
+          cpString->سیٹ_منزل(codepoint);
        }
        string = cpString;
     }
-    return *string;
+    أرجع *string;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_سرا
 
 //eof

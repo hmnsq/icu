@@ -18,61 +18,61 @@
 *   Character conversion functions moved here from uresbund.c
 */
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "unicode/ustring.h"
-#include "unicode/ucnv.h"
-#include "unicode/ures.h"
-#include "uinvchar.h"
-#include "ustr_cnv.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/putil.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "unicode/ures.h"
+#ضمن "uinvchar.h"
+#ضمن "ustr_cnv.h"
 
 U_CAPI UResourceBundle * U_EXPORT2
-ures_openU(const char16_t *myPath,
-           const char *localeID, 
-           UErrorCode *status)
+ures_openU(ثابت char16_t *my_رستہ,
+           ثابت حرف *localeID, 
+           UError_کوڈ *حالت)
 {
-    char pathBuffer[1024];
+    حرف رستہ_بفر[1024];
     int32_t length;
-    char *path = pathBuffer;
+    حرف *رستہ = رستہ_بفر;
 
-    if(status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    إذا(حالت==خالی_سوچک || U_FAILURE(*حالت)) {
+        أرجع خالی_سوچک;
     }
-    if(myPath==nullptr) {
-        path = nullptr;
+    إذا(my_رستہ==خالی_سوچک) {
+        رستہ = خالی_سوچک;
     }
-    else {
-        length=u_strlen(myPath);
-        if(length>=(int32_t)sizeof(pathBuffer)) {
-            *status=U_ILLEGAL_ARGUMENT_ERROR;
-            return nullptr;
-        } else if(uprv_isInvariantUString(myPath, length)) {
+    وإلا {
+        length=u_strlen(my_رستہ);
+        إذا(length>=(int32_t)حجم(رستہ_بفر)) {
+            *حالت=U_ILLEGAL_دلیل_ERROR;
+            أرجع خالی_سوچک;
+        } وإلا إذا(uprv_isInvariantUString(my_رستہ, length)) {
             /*
              * the invariant converter is sufficient for package and tree names
              * and is more efficient
              */
-            u_UCharsToChars(myPath, path, length+1); /* length+1 to include the NUL */
-        } else {
-#if !UCONFIG_NO_CONVERSION
+            u_UChars_منزل_Chars(my_رستہ, رستہ, length+1); /* length+1 to include the NUL */
+        } وإلا {
+#إذا !UCONFIG_NO_CONVERSION
             /* use the default converter to support variant-character paths */
-            UConverter *cnv=u_getDefaultConverter(status);
-            length=ucnv_fromUChars(cnv, path, (int32_t)sizeof(pathBuffer), myPath, length, status);
+            UConverter *cnv=u_getDefaultConverter(حالت);
+            length=ucnv_fromUChars(cnv, رستہ, (int32_t)حجم(رستہ_بفر), my_رستہ, length, حالت);
             u_releaseDefaultConverter(cnv);
-            if(U_FAILURE(*status)) {
-                return nullptr;
+            إذا(U_FAILURE(*حالت)) {
+                أرجع خالی_سوچک;
             }
-            if(length>=(int32_t)sizeof(pathBuffer)) {
+            إذا(length>=(int32_t)حجم(رستہ_بفر)) {
                 /* not NUL-terminated - path too long */
-                *status=U_ILLEGAL_ARGUMENT_ERROR;
-                return nullptr;
+                *حالت=U_ILLEGAL_دلیل_ERROR;
+                أرجع خالی_سوچک;
             }
-#else
+#وإلا
             /* the default converter is not available */
-            *status=U_UNSUPPORTED_ERROR;
-            return nullptr;
-#endif
+            *حالت=U_UNSUPPORTED_ERROR;
+            أرجع خالی_سوچک;
+#جے_انت
         }
     }
 
-    return ures_open(path, localeID, status);
+    أرجع ures_open(رستہ, localeID, حالت);
 }
