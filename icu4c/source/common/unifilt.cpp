@@ -10,9 +10,9 @@
 **********************************************************************
 */
 
-#include "unicode/unifilt.h"
-#include "unicode/rep.h"
-#include "unicode/utf16.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/unifilt.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/rep.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf16.h"
 
 U_NAMESPACE_BEGIN
 UOBJECT_DEFINE_ABSTRACT_RTTI_IMPLEMENTATION(UnicodeFilter)
@@ -28,44 +28,44 @@ UnicodeFilter::~UnicodeFilter() {}
  * UnicodeFunctor API.
  *   Note that UnicodeMatcher is a base class of UnicodeFilter.
  */
-UnicodeMatcher* UnicodeFilter::toMatcher() const U_LIFETIME_BOUND {
-  return const_cast<UnicodeFilter *>(this);
+UnicodeMatcher* UnicodeFilter::ਮੰਜ਼ਿਲ_Matcher() ਅਚਲ U_LIFETIME_BOUND {
+  ਵਾਪਸ const_cast<UnicodeFilter *>(ਇਹ);
 }
 
-void UnicodeFilter::setData(const TransliterationRuleData*) {}
+ਖਾਲੀ UnicodeFilter::ਸੈੱਟ_ਅੰਕੜੇ(ਅਚਲ Transliteration_ਨਿਯਮ_ਅੰਕੜੇ*) {}
 
 /**
  * Default implementation of UnicodeMatcher::matches() for Unicode
  * filters.  Matches a single code point at offset (either one or
  * two 16-bit code units).
  */
-UMatchDegree UnicodeFilter::matches(const Replaceable& text,
-                                    int32_t& offset,
-                                    int32_t limit,
+UMatchDegree UnicodeFilter::matches(ਅਚਲ Replaceable& ਪਾਠ,
+                                    int32_t& ਵਿੱਥ,
+                                    int32_t ਹੱਦਬੰਦੀ,
                                     UBool incremental) {
     UChar32 c;
-    if (offset < limit &&
-        contains(c = text.char32At(offset))) {
-        offset += U16_LENGTH(c);
-        return U_MATCH;
+    ਜੇ (ਵਿੱਥ < ਹੱਦਬੰਦੀ &&
+        ਸ਼ਾਮਲ_ਹੈ(c = ਪਾਠ.char32At(ਵਿੱਥ))) {
+        ਵਿੱਥ += U16_ਲੰਮਾਈ(c);
+        ਵਾਪਸ U_ਮੇਲ;
     }
-    if (offset > limit &&
-        contains(c = text.char32At(offset))) {
+    ਜੇ (ਵਿੱਥ > ਹੱਦਬੰਦੀ &&
+        ਸ਼ਾਮਲ_ਹੈ(c = ਪਾਠ.char32At(ਵਿੱਥ))) {
         // Backup offset by 1, unless the preceding character is a
         // surrogate pair -- then backup by 2 (keep offset pointing at
         // the lead surrogate).
-        --offset;
-        if (offset >= 0) {
-            offset -= U16_LENGTH(text.char32At(offset)) - 1;
+        --ਵਿੱਥ;
+        ਜੇ (ਵਿੱਥ >= 0) {
+            ਵਿੱਥ -= U16_ਲੰਮਾਈ(ਪਾਠ.char32At(ਵਿੱਥ)) - 1;
         }
-        return U_MATCH;
+        ਵਾਪਸ U_ਮੇਲ;
     }
-    if (incremental && offset == limit) {
-        return U_PARTIAL_MATCH;
+    ਜੇ (incremental && ਵਿੱਥ == ਹੱਦਬੰਦੀ) {
+        ਵਾਪਸ U_PARTIAL_ਮੇਲ;
     }
-    return U_MISMATCH;
+    ਵਾਪਸ U_MISMATCH;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
 //eof

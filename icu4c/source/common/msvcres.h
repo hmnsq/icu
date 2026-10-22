@@ -14,12 +14,12 @@
 These are defined before unicode/uversion.h in order to prevent 
 STLPort's broken stddef.h from being used when rc.exe parses this file. 
 */
-#define _STLP_OUTERMOST_HEADER_ID 0
-#define _STLP_WINCE 1
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ STLP_OUTERMOST_ਸਿਰਲੇਖ_ID 0
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ _STLP_WINCE 1
 
-#include "unicode/uversion.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uversion.h"
 
-#define ICU_WEBSITE "https://icu.unicode.org/"
-#define ICU_COMPANY "The ICU Project"
-#define ICU_PRODUCT_PREFIX "ICU"
-#define ICU_PRODUCT "International Components for Unicode"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ICU_WEBSITE "https://icu.unicode.org/"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ICU_COMPANY "The ICU Project"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ICU_ਗੁਣਨਫਲ_ਅਗੇਤਰ "ICU"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ICU_ਗੁਣਨਫਲ "International Components for Unicode"

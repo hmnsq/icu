@@ -10,40 +10,40 @@
 **********************************************************************
 */
 
-#include "unicode/utypes.h"
-#include "unicode/parsepos.h"
-#include "unicode/symtable.h"
-#include "unicode/uniset.h"
-#include "unicode/ustring.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "ruleiter.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "patternprops.h"
-#include "uelement.h"
-#include "util.h"
-#include "uvector.h"
-#include "charstr.h"
-#include "ustrfmt.h"
-#include "uassert.h"
-#include "bmpset.h"
-#include "unisetspan.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/parsepos.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/symtable.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uniset.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ustring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf8.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf16.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ruleiter.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "patternprops.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uelement.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "util.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uvector.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "charstr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ustrfmt.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "bmpset.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unisetspan.h"
 
 // HIGH_VALUE > all valid values. 110000 for codepoints
-#define UNICODESET_HIGH 0x0110000
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UNICODESET_ਉੱਚਾ 0x0110000
 
 // LOW <= all valid values. ZERO for codepoints
-#define UNICODESET_LOW 0x000000
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UNICODESET_ਨੀਵਾਂ 0x000000
 
 /** Max list [0, 1, 2, ..., max code point, HIGH] */
-constexpr int32_t MAX_LENGTH = UNICODESET_HIGH + 1;
+constexpr int32_t MAX_ਲੰਮਾਈ = UNICODESET_ਉੱਚਾ + 1;
 
 U_NAMESPACE_BEGIN
 
-SymbolTable::~SymbolTable() {}
+ਚਿੰਨ੍ਹ_ਸਾਰਣੀ::~ਚਿੰਨ੍ਹ_ਸਾਰਣੀ() {}
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UnicodeSet)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Unicode_ਸੈੱਟ)
 
 /**
  * Modify the given UChar32 variable so that it is in range, by
@@ -51,13 +51,13 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UnicodeSet)
  * pinning values > UNICODESET_HIGH-1 to UNICODESET_HIGH-1.
  * It modifies its argument in-place and also returns it.
  */
-static inline UChar32 pinCodePoint(UChar32& c) {
-    if (c < UNICODESET_LOW) {
-        c = UNICODESET_LOW;
-    } else if (c > (UNICODESET_HIGH-1)) {
-        c = (UNICODESET_HIGH-1);
+ਸਥਿਰ ਸਤਰਅੰਦਰ UChar32 pin_ਕੋਡ_ਬਿੰਦੂ(UChar32& c) {
+    ਜੇ (c < UNICODESET_ਨੀਵਾਂ) {
+        c = UNICODESET_ਨੀਵਾਂ;
+    } ਨਹੀਂਤਾਂ ਜੇ (c > (UNICODESET_ਉੱਚਾ-1)) {
+        c = (UNICODESET_ਉੱਚਾ-1);
     }
-    return c;
+    ਵਾਪਸ c;
 }
 
 //----------------------------------------------------------------
@@ -76,57 +76,57 @@ static inline UChar32 pinCodePoint(UChar32& c) {
 
 // #define DEBUG_MEM
 
-#ifdef DEBUG_MEM
-#include <stdio.h>
-static int32_t _dbgCount = 0;
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ DEBUG_MEM
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
+ਸਥਿਰ int32_t dbg_ਗਿਣਤੀ = 0;
 
-static inline void _dbgct(UnicodeSet* set) {
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਖਾਲੀ _dbgct(Unicode_ਸੈੱਟ* ਸੈੱਟ) {
     UnicodeString str;
-    set->toPattern(str, true);
-    char buf[40];
+    ਸੈੱਟ->ਮੰਜ਼ਿਲ_ਨਮੂਨਾ(str, ਸੱਚ);
+    ਅੱਖਰ buf[40];
     str.extract(0, 39, buf, "");
-    printf("DEBUG UnicodeSet: ct 0x%08X; %d %s\n", set, ++_dbgCount, buf);
+    ਲਿਖੋ("DEBUG UnicodeSet: ct 0x%08X; %d %s\n", ਸੈੱਟ, ++dbg_ਗਿਣਤੀ, buf);
 }
 
-static inline void _dbgdt(UnicodeSet* set) {
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਖਾਲੀ _dbgdt(Unicode_ਸੈੱਟ* ਸੈੱਟ) {
     UnicodeString str;
-    set->toPattern(str, true);
-    char buf[40];
+    ਸੈੱਟ->ਮੰਜ਼ਿਲ_ਨਮੂਨਾ(str, ਸੱਚ);
+    ਅੱਖਰ buf[40];
     str.extract(0, 39, buf, "");
-    printf("DEBUG UnicodeSet: dt 0x%08X; %d %s\n", set, --_dbgCount, buf);
+    ਲਿਖੋ("DEBUG UnicodeSet: dt 0x%08X; %d %s\n", ਸੈੱਟ, --dbg_ਗਿਣਤੀ, buf);
 }
 
-#else
+#ਨਹੀਂਤਾਂ
 
-#define _dbgct(set)
-#define _dbgdt(set)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ _dbgct(ਸੈੱਟ)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ _dbgdt(ਸੈੱਟ)
 
-#endif
+#ਜੇ_ਅੰਤ
 
 //----------------------------------------------------------------
 // UnicodeString in UVector support
 //----------------------------------------------------------------
 
-static void U_CALLCONV cloneUnicodeString(UElement *dst, UElement *src) {
-    dst->pointer = new UnicodeString(*static_cast<UnicodeString*>(src->pointer));
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV cloneUnicodeString(UElement *dst, UElement *src) {
+    dst->ਸੂਚਕ = ਨਵਾਂ UnicodeString(*static_cast<UnicodeString*>(src->ਸੂਚਕ));
 }
 
-static int32_t U_CALLCONV compareUnicodeString(UElement t1, UElement t2) {
-    const UnicodeString& a = *static_cast<const UnicodeString*>(t1.pointer);
-    const UnicodeString& b = *static_cast<const UnicodeString*>(t2.pointer);
-    return a.compare(b);
+ਸਥਿਰ int32_t U_CALLCONV compareUnicodeString(UElement t1, UElement t2) {
+    ਅਚਲ UnicodeString& a = *static_cast<ਅਚਲ UnicodeString*>(t1.ਸੂਚਕ);
+    ਅਚਲ UnicodeString& b = *static_cast<ਅਚਲ UnicodeString*>(t2.ਸੂਚਕ);
+    ਵਾਪਸ a.compare(b);
 }
 
-UBool UnicodeSet::hasStrings() const {
-    return strings_ != nullptr && !strings_->isEmpty();
+UBool Unicode_ਸੈੱਟ::has_ਲੜੀਆਂ() ਅਚਲ {
+    ਵਾਪਸ ਲੜੀਆਂ_2 != ਖਾਲੀ_ਸੂਚਕ && !ਲੜੀਆਂ_2->is_ਖਾਲੀ_ਥਾਵਾਂ();
 }
 
-int32_t UnicodeSet::stringsSize() const {
-    return strings_ == nullptr ? 0 : strings_->size();
+int32_t Unicode_ਸੈੱਟ::ਲੜੀਆਂ_ਮਾਪ() ਅਚਲ {
+    ਵਾਪਸ ਲੜੀਆਂ_2 == ਖਾਲੀ_ਸੂਚਕ ? 0 : ਲੜੀਆਂ_2->size();
 }
 
-UBool UnicodeSet::stringsContains(const UnicodeString &s) const {
-    return strings_ != nullptr && strings_->contains((void*) &s);
+UBool Unicode_ਸੈੱਟ::ਲੜੀਆਂ_ਸ਼ਾਮਲ_ਹੈ(ਅਚਲ UnicodeString &s) ਅਚਲ {
+    ਵਾਪਸ ਲੜੀਆਂ_2 != ਖਾਲੀ_ਸੂਚਕ && ਲੜੀਆਂ_2->ਸ਼ਾਮਲ_ਹੈ((ਖਾਲੀ*) &s);
 }
 
 //----------------------------------------------------------------
@@ -136,9 +136,9 @@ UBool UnicodeSet::stringsContains(const UnicodeString &s) const {
 /**
  * Constructs an empty set.
  */
-UnicodeSet::UnicodeSet() {
-    list[0] = UNICODESET_HIGH;
-    _dbgct(this);
+Unicode_ਸੈੱਟ::Unicode_ਸੈੱਟ() {
+    list[0] = UNICODESET_ਉੱਚਾ;
+    _dbgct(ਇਹ);
 }
 
 /**
@@ -148,111 +148,111 @@ UnicodeSet::UnicodeSet() {
  * @param start first character, inclusive, of range
  * @param end last character, inclusive, of range
  */
-UnicodeSet::UnicodeSet(UChar32 start, UChar32 end) {
-    list[0] = UNICODESET_HIGH;
-    add(start, end);
-    _dbgct(this);
+Unicode_ਸੈੱਟ::Unicode_ਸੈੱਟ(UChar32 ਸ਼ੁਰੂ, UChar32 ਸਿਰਾ) {
+    list[0] = UNICODESET_ਉੱਚਾ;
+    ਜੋੜੋ(ਸ਼ੁਰੂ, ਸਿਰਾ);
+    _dbgct(ਇਹ);
 }
 
 /**
  * Constructs a set that is identical to the given UnicodeSet.
  */
-UnicodeSet::UnicodeSet(const UnicodeSet& o) : UnicodeFilter(o) {
-    *this = o;
-    _dbgct(this);
+Unicode_ਸੈੱਟ::Unicode_ਸੈੱਟ(ਅਚਲ Unicode_ਸੈੱਟ& o) : UnicodeFilter(o) {
+    *ਇਹ = o;
+    _dbgct(ਇਹ);
 }
 
 // Copy-construct as thawed.
-UnicodeSet::UnicodeSet(const UnicodeSet& o, UBool /* asThawed */) : UnicodeFilter(o) {
-    if (ensureCapacity(o.len)) {
+Unicode_ਸੈੱਟ::Unicode_ਸੈੱਟ(ਅਚਲ Unicode_ਸੈੱਟ& o, UBool /* asThawed */) : UnicodeFilter(o) {
+    ਜੇ (ensure_ਸਮਰੱਥਾ(o.len)) {
         // *this = o except for bmpSet and stringSpan
         len = o.len;
-        uprv_memcpy(list, o.list, (size_t)len*sizeof(UChar32));
-        if (o.hasStrings()) {
-            UErrorCode status = U_ZERO_ERROR;
-            if (!allocateStrings(status) ||
-                    (strings_->assign(*o.strings_, cloneUnicodeString, status), U_FAILURE(status))) {
-                setToBogus();
-                return;
+        uprv_memcpy(list, o.list, (size_t)len*ਆਕਾਰ(UChar32));
+        ਜੇ (o.has_ਲੜੀਆਂ()) {
+            UError_ਕੋਡ ਸਥਿਤੀ = U_ZERO_ERROR;
+            ਜੇ (!allocate_ਲੜੀਆਂ(ਸਥਿਤੀ) ||
+                    (ਲੜੀਆਂ_2->assign(*o.ਲੜੀਆਂ_2, cloneUnicodeString, ਸਥਿਤੀ), U_FAILURE(ਸਥਿਤੀ))) {
+                ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus();
+                ਵਾਪਸ;
             }
         }
-        if (o.pat) {
-            setPattern(o.pat, o.patLen);
+        ਜੇ (o.pat) {
+            ਸੈੱਟ_ਨਮੂਨਾ(o.pat, o.patLen);
         }
-        _dbgct(this);
+        _dbgct(ਇਹ);
     }
 }
 
 /**
  * Destructs the set.
  */
-UnicodeSet::~UnicodeSet() {
-    _dbgdt(this); // first!
-    if (list != stackList) {
+Unicode_ਸੈੱਟ::~Unicode_ਸੈੱਟ() {
+    _dbgdt(ਇਹ); // first!
+    ਜੇ (list != ਢੇਰ_List) {
         uprv_free(list);
     }
-    delete bmpSet;
-    if (buffer != stackList) {
-        uprv_free(buffer);
+    ਮਿਟਾਓ bmp_ਸੈੱਟ;
+    ਜੇ (ਬਫਰ != ਢੇਰ_List) {
+        uprv_free(ਬਫਰ);
     }
-    delete strings_;
-    delete stringSpan;
-    releasePattern();
+    ਮਿਟਾਓ ਲੜੀਆਂ_2;
+    ਮਿਟਾਓ string_ਵਿਸਤਾਰ;
+    release_ਨਮੂਨਾ();
 }
 
 /**
  * Assigns this object to be a copy of another.
  */
-UnicodeSet& UnicodeSet::operator=(const UnicodeSet& o) U_LIFETIME_BOUND {
-    return copyFrom(o, false);
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::ਸੰਚਾਲਕ=(ਅਚਲ Unicode_ਸੈੱਟ& o) U_LIFETIME_BOUND {
+    ਵਾਪਸ copyFrom(o, ਝੂਠ);
 }
 
-UnicodeSet& UnicodeSet::copyFrom(const UnicodeSet& o, UBool asThawed) U_LIFETIME_BOUND {
-    if (this == &o) {
-        return *this;
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::copyFrom(ਅਚਲ Unicode_ਸੈੱਟ& o, UBool asThawed) U_LIFETIME_BOUND {
+    ਜੇ (ਇਹ == &o) {
+        ਵਾਪਸ *ਇਹ;
     }
-    if (isFrozen()) {
-        return *this;
+    ਜੇ (isFrozen()) {
+        ਵਾਪਸ *ਇਹ;
     }
-    if (o.isBogus()) {
-        setToBogus();
-        return *this;
+    ਜੇ (o.isBogus()) {
+        ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus();
+        ਵਾਪਸ *ਇਹ;
     }
-    if (!ensureCapacity(o.len)) {
+    ਜੇ (!ensure_ਸਮਰੱਥਾ(o.len)) {
         // ensureCapacity will mark the UnicodeSet as Bogus if OOM failure happens.
-        return *this;
+        ਵਾਪਸ *ਇਹ;
     }
     len = o.len;
-    uprv_memcpy(list, o.list, (size_t)len*sizeof(UChar32));
-    if (o.bmpSet != nullptr && !asThawed) {
-        bmpSet = new BMPSet(*o.bmpSet, list, len);
-        if (bmpSet == nullptr) { // Check for memory allocation error.
-            setToBogus();
-            return *this;
+    uprv_memcpy(list, o.list, (size_t)len*ਆਕਾਰ(UChar32));
+    ਜੇ (o.bmp_ਸੈੱਟ != ਖਾਲੀ_ਸੂਚਕ && !asThawed) {
+        bmp_ਸੈੱਟ = ਨਵਾਂ BMPSet(*o.bmp_ਸੈੱਟ, list, len);
+        ਜੇ (bmp_ਸੈੱਟ == ਖਾਲੀ_ਸੂਚਕ) { // Check for memory allocation error.
+            ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus();
+            ਵਾਪਸ *ਇਹ;
         }
     }
-    if (o.hasStrings()) {
-        UErrorCode status = U_ZERO_ERROR;
-        if ((strings_ == nullptr && !allocateStrings(status)) ||
-                (strings_->assign(*o.strings_, cloneUnicodeString, status), U_FAILURE(status))) {
-            setToBogus();
-            return *this;
+    ਜੇ (o.has_ਲੜੀਆਂ()) {
+        UError_ਕੋਡ ਸਥਿਤੀ = U_ZERO_ERROR;
+        ਜੇ ((ਲੜੀਆਂ_2 == ਖਾਲੀ_ਸੂਚਕ && !allocate_ਲੜੀਆਂ(ਸਥਿਤੀ)) ||
+                (ਲੜੀਆਂ_2->assign(*o.ਲੜੀਆਂ_2, cloneUnicodeString, ਸਥਿਤੀ), U_FAILURE(ਸਥਿਤੀ))) {
+            ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus();
+            ਵਾਪਸ *ਇਹ;
         }
-    } else if (hasStrings()) {
-        strings_->removeAllElements();
+    } ਨਹੀਂਤਾਂ ਜੇ (has_ਲੜੀਆਂ()) {
+        ਲੜੀਆਂ_2->removeAllElements();
     }
-    if (o.stringSpan != nullptr && strings_ != nullptr && !asThawed) {
-        stringSpan = new UnicodeSetStringSpan(*o.stringSpan, *strings_);
-        if (stringSpan == nullptr) { // Check for memory allocation error.
-            setToBogus();
-            return *this;
+    ਜੇ (o.string_ਵਿਸਤਾਰ != ਖਾਲੀ_ਸੂਚਕ && ਲੜੀਆਂ_2 != ਖਾਲੀ_ਸੂਚਕ && !asThawed) {
+        string_ਵਿਸਤਾਰ = ਨਵਾਂ Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ(*o.string_ਵਿਸਤਾਰ, *ਲੜੀਆਂ_2);
+        ਜੇ (string_ਵਿਸਤਾਰ == ਖਾਲੀ_ਸੂਚਕ) { // Check for memory allocation error.
+            ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus();
+            ਵਾਪਸ *ਇਹ;
         }
     }
-    releasePattern();
-    if (o.pat) {
-        setPattern(o.pat, o.patLen);
+    release_ਨਮੂਨਾ();
+    ਜੇ (o.pat) {
+        ਸੈੱਟ_ਨਮੂਨਾ(o.pat, o.patLen);
     }
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
 /**
@@ -260,12 +260,12 @@ UnicodeSet& UnicodeSet::copyFrom(const UnicodeSet& o, UBool asThawed) U_LIFETIME
  * to support cloning in order to allow classes using
  * UnicodeMatchers, such as Transliterator, to implement cloning.
  */
-UnicodeSet* UnicodeSet::clone() const {
-    return new UnicodeSet(*this);
+Unicode_ਸੈੱਟ* Unicode_ਸੈੱਟ::clone() ਅਚਲ {
+    ਵਾਪਸ ਨਵਾਂ Unicode_ਸੈੱਟ(*ਇਹ);
 }
 
-UnicodeSet *UnicodeSet::cloneAsThawed() const {
-    return new UnicodeSet(*this, true);
+Unicode_ਸੈੱਟ *Unicode_ਸੈੱਟ::cloneAsThawed() ਅਚਲ {
+    ਵਾਪਸ ਨਵਾਂ Unicode_ਸੈੱਟ(*ਇਹ, ਸੱਚ);
 }
 
 /**
@@ -278,14 +278,14 @@ UnicodeSet *UnicodeSet::cloneAsThawed() const {
  * @param o set to be compared for equality with this set.
  * @return <tt>true</tt> if the specified set is equal to this set.
  */
-bool UnicodeSet::operator==(const UnicodeSet& o) const {
-    if (len != o.len) return false;
-    for (int32_t i = 0; i < len; ++i) {
-        if (list[i] != o.list[i]) return false;
+ਤਾਰਕਿਕ Unicode_ਸੈੱਟ::ਸੰਚਾਲਕ==(ਅਚਲ Unicode_ਸੈੱਟ& o) ਅਚਲ {
+    ਜੇ (len != o.len) ਵਾਪਸ ਝੂਠ;
+    ਲਈ (int32_t i = 0; i < len; ++i) {
+        ਜੇ (list[i] != o.list[i]) ਵਾਪਸ ਝੂਠ;
     }
-    if (hasStrings() != o.hasStrings()) { return false; }
-    if (hasStrings() && *strings_ != *o.strings_) return false;
-    return true;
+    ਜੇ (has_ਲੜੀਆਂ() != o.has_ਲੜੀਆਂ()) { ਵਾਪਸ ਝੂਠ; }
+    ਜੇ (has_ਲੜੀਆਂ() && *ਲੜੀਆਂ_2 != *o.ਲੜੀਆਂ_2) ਵਾਪਸ ਝੂਠ;
+    ਵਾਪਸ ਸੱਚ;
 }
 
 /**
@@ -294,13 +294,13 @@ bool UnicodeSet::operator==(const UnicodeSet& o) const {
  * @return the hash code value for this set.
  * @see Object#hashCode()
  */
-int32_t UnicodeSet::hashCode() const {
-    uint32_t result = static_cast<uint32_t>(len);
-    for (int32_t i = 0; i < len; ++i) {
-        result *= 1000003u;
-        result += list[i];
+int32_t Unicode_ਸੈੱਟ::hash_ਕੋਡ() ਅਚਲ {
+    uint32_t ਨਤੀਜਾ = static_cast<uint32_t>(len);
+    ਲਈ (int32_t i = 0; i < len; ++i) {
+        ਨਤੀਜਾ *= 1000003u;
+        ਨਤੀਜਾ += list[i];
     }
-    return static_cast<int32_t>(result);
+    ਵਾਪਸ static_cast<int32_t>(ਨਤੀਜਾ);
 }
 
 //----------------------------------------------------------------
@@ -314,13 +314,13 @@ int32_t UnicodeSet::hashCode() const {
  *
  * @return the number of elements in this set (its cardinality).
  */
-int32_t UnicodeSet::size() const {
+int32_t Unicode_ਸੈੱਟ::size() ਅਚਲ {
     int32_t n = 0;
-    int32_t count = getRangeCount();
-    for (int32_t i = 0; i < count; ++i) {
-        n += getRangeEnd(i) - getRangeStart(i) + 1;
+    int32_t count = get_Range_ਗਿਣਤੀ();
+    ਲਈ (int32_t i = 0; i < count; ++i) {
+        n += get_Range_ਸਿਰਾ(i) - get_Range_ਸ਼ੁਰੂ(i) + 1;
     }
-    return n + stringsSize();
+    ਵਾਪਸ n + ਲੜੀਆਂ_ਮਾਪ();
 }
 
 /**
@@ -328,8 +328,8 @@ int32_t UnicodeSet::size() const {
  *
  * @return <tt>true</tt> if this set contains no elements.
  */
-UBool UnicodeSet::isEmpty() const {
-    return len == 1 && !hasStrings();
+UBool Unicode_ਸੈੱਟ::is_ਖਾਲੀ_ਥਾਵਾਂ() ਅਚਲ {
+    ਵਾਪਸ len == 1 && !has_ਲੜੀਆਂ();
 }
 
 /**
@@ -337,7 +337,7 @@ UBool UnicodeSet::isEmpty() const {
  * @param c character to be checked for containment
  * @return true if the test condition is met
  */
-UBool UnicodeSet::contains(UChar32 c) const {
+UBool Unicode_ਸੈੱਟ::ਸ਼ਾਮਲ_ਹੈ(UChar32 c) ਅਚਲ {
     // Set i to the index of the start item greater than ch
     // We know we will terminate without length test!
     // LATER: for large sets, add binary search
@@ -345,17 +345,17 @@ UBool UnicodeSet::contains(UChar32 c) const {
     //for (;;) {
     //    if (c < list[++i]) break;
     //}
-    if (bmpSet != nullptr) {
-        return bmpSet->contains(c);
+    ਜੇ (bmp_ਸੈੱਟ != ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ bmp_ਸੈੱਟ->ਸ਼ਾਮਲ_ਹੈ(c);
     }
-    if (stringSpan != nullptr) {
-        return stringSpan->contains(c);
+    ਜੇ (string_ਵਿਸਤਾਰ != ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ string_ਵਿਸਤਾਰ->ਸ਼ਾਮਲ_ਹੈ(c);
     }
-    if (c >= UNICODESET_HIGH) { // Don't need to check LOW bound
-        return false;
+    ਜੇ (c >= UNICODESET_ਉੱਚਾ) { // Don't need to check LOW bound
+        ਵਾਪਸ ਝੂਠ;
     }
-    int32_t i = findCodePoint(c);
-    return i & 1; // return true if odd
+    int32_t i = ਲੱਭੋ_ਕੋਡ_ਬਿੰਦੂ(c);
+    ਵਾਪਸ i & 1; // return true if odd
 }
 
 /**
@@ -367,7 +367,7 @@ UBool UnicodeSet::contains(UChar32 c) const {
  * @return the smallest integer i in the range 0..len-1,
  * inclusive, such that c < list[i]
  */
-int32_t UnicodeSet::findCodePoint(UChar32 c) const {
+int32_t Unicode_ਸੈੱਟ::ਲੱਭੋ_ਕੋਡ_ਬਿੰਦੂ(UChar32 c) ਅਚਲ {
     /* Examples:
                                        findCodePoint(c)
        set              list[]         c=0 1 3 4 7 8
@@ -380,27 +380,27 @@ int32_t UnicodeSet::findCodePoint(UChar32 c) const {
 
     // Return the smallest i such that c < list[i].  Assume
     // list[len - 1] == HIGH and that c is legal (0..HIGH-1).
-    if (c < list[0])
-        return 0;
+    ਜੇ (c < list[0])
+        ਵਾਪਸ 0;
     // High runner test.  c is often after the last range, so an
     // initial check for this condition pays off.
     int32_t lo = 0;
     int32_t hi = len - 1;
-    if (lo >= hi || c >= list[hi-1])
-        return hi;
+    ਜੇ (lo >= hi || c >= list[hi-1])
+        ਵਾਪਸ hi;
     // invariant: c >= list[lo]
     // invariant: c < list[hi]
-    for (;;) {
+    ਲਈ (;;) {
         int32_t i = (lo + hi) >> 1;
-        if (i == lo) {
-            break; // Found!
-        } else if (c < list[i]) {
+        ਜੇ (i == lo) {
+            ਰੋਕੋ; // Found!
+        } ਨਹੀਂਤਾਂ ਜੇ (c < list[i]) {
             hi = i;
-        } else {
+        } ਨਹੀਂਤਾਂ {
             lo = i;
         }
     }
-    return hi;
+    ਵਾਪਸ hi;
 }
 
 /**
@@ -410,13 +410,13 @@ int32_t UnicodeSet::findCodePoint(UChar32 c) const {
  * @param end last character, inclusive, of the range
  * @return true if the test condition is met
  */
-UBool UnicodeSet::contains(UChar32 start, UChar32 end) const {
+UBool Unicode_ਸੈੱਟ::ਸ਼ਾਮਲ_ਹੈ(UChar32 ਸ਼ੁਰੂ, UChar32 ਸਿਰਾ) ਅਚਲ {
     //int32_t i = -1;
     //for (;;) {
     //    if (start < list[++i]) break;
     //}
-    int32_t i = findCodePoint(start);
-    return ((i & 1) != 0 && end < list[i]);
+    int32_t i = ਲੱਭੋ_ਕੋਡ_ਬਿੰਦੂ(ਸ਼ੁਰੂ);
+    ਵਾਪਸ ((i & 1) != 0 && ਸਿਰਾ < list[i]);
 }
 
 /**
@@ -425,12 +425,12 @@ UBool UnicodeSet::contains(UChar32 start, UChar32 end) const {
  * @param s string to be checked for containment
  * @return <tt>true</tt> if this set contains the specified string
  */
-UBool UnicodeSet::contains(const UnicodeString& s) const {
+UBool Unicode_ਸੈੱਟ::ਸ਼ਾਮਲ_ਹੈ(ਅਚਲ UnicodeString& s) ਅਚਲ {
     int32_t cp = getSingleCP(s);
-    if (cp < 0) {
-        return stringsContains(s);
-    } else {
-        return contains(static_cast<UChar32>(cp));
+    ਜੇ (cp < 0) {
+        ਵਾਪਸ ਲੜੀਆਂ_ਸ਼ਾਮਲ_ਹੈ(s);
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ ਸ਼ਾਮਲ_ਹੈ(static_cast<UChar32>(cp));
     }
 }
 
@@ -440,17 +440,17 @@ UBool UnicodeSet::contains(const UnicodeString& s) const {
  * @param c set to be checked for containment
  * @return true if the test condition is met
  */
-UBool UnicodeSet::containsAll(const UnicodeSet& c) const {
+UBool Unicode_ਸੈੱਟ::ਸ਼ਾਮਲ_ਹੈ_All(ਅਚਲ Unicode_ਸੈੱਟ& c) ਅਚਲ {
     // The specified set is a subset if all of its pairs are contained in
     // this set.  It's possible to code this more efficiently in terms of
     // direct manipulation of the inversion lists if the need arises.
-    int32_t n = c.getRangeCount();
-    for (int i=0; i<n; ++i) {
-        if (!contains(c.getRangeStart(i), c.getRangeEnd(i))) {
-            return false;
+    int32_t n = c.get_Range_ਗਿਣਤੀ();
+    ਲਈ (ਪੂਰਨ i=0; i<n; ++i) {
+        ਜੇ (!ਸ਼ਾਮਲ_ਹੈ(c.get_Range_ਸ਼ੁਰੂ(i), c.get_Range_ਸਿਰਾ(i))) {
+            ਵਾਪਸ ਝੂਠ;
         }
     }
-    return !c.hasStrings() || (strings_ != nullptr && strings_->containsAll(*c.strings_));
+    ਵਾਪਸ !c.has_ਲੜੀਆਂ() || (ਲੜੀਆਂ_2 != ਖਾਲੀ_ਸੂਚਕ && ਲੜੀਆਂ_2->ਸ਼ਾਮਲ_ਹੈ_All(*c.ਲੜੀਆਂ_2));
 }
 
 /**
@@ -459,8 +459,8 @@ UBool UnicodeSet::containsAll(const UnicodeSet& c) const {
  * @param s string containing characters to be checked for containment
  * @return true if the test condition is met
  */
-UBool UnicodeSet::containsAll(const UnicodeString& s) const {
-    return span(s.getBuffer(), s.length(), USET_SPAN_CONTAINED) == s.length();
+UBool Unicode_ਸੈੱਟ::ਸ਼ਾਮਲ_ਹੈ_All(ਅਚਲ UnicodeString& s) ਅਚਲ {
+    ਵਾਪਸ ਵਿਸਤਾਰ(s.get_ਬਫਰ(), s.length(), USET_ਵਿਸਤਾਰ_CONTAINED) == s.length();
 }
 
 /**
@@ -470,13 +470,13 @@ UBool UnicodeSet::containsAll(const UnicodeString& s) const {
  * @param end last character, inclusive, of the range
  * @return true if the test condition is met
  */
-UBool UnicodeSet::containsNone(UChar32 start, UChar32 end) const {
+UBool Unicode_ਸੈੱਟ::ਸ਼ਾਮਲ_ਹੈ_None(UChar32 ਸ਼ੁਰੂ, UChar32 ਸਿਰਾ) ਅਚਲ {
     //int32_t i = -1;
     //for (;;) {
     //    if (start < list[++i]) break;
     //}
-    int32_t i = findCodePoint(start);
-    return ((i & 1) == 0 && end < list[i]);
+    int32_t i = ਲੱਭੋ_ਕੋਡ_ਬਿੰਦੂ(ਸ਼ੁਰੂ);
+    ਵਾਪਸ ((i & 1) == 0 && ਸਿਰਾ < list[i]);
 }
 
 /**
@@ -485,17 +485,17 @@ UBool UnicodeSet::containsNone(UChar32 start, UChar32 end) const {
  * @param c set to be checked for containment
  * @return true if the test condition is met
  */
-UBool UnicodeSet::containsNone(const UnicodeSet& c) const {
+UBool Unicode_ਸੈੱਟ::ਸ਼ਾਮਲ_ਹੈ_None(ਅਚਲ Unicode_ਸੈੱਟ& c) ਅਚਲ {
     // The specified set is a subset if all of its pairs are contained in
     // this set.  It's possible to code this more efficiently in terms of
     // direct manipulation of the inversion lists if the need arises.
-    int32_t n = c.getRangeCount();
-    for (int32_t i=0; i<n; ++i) {
-        if (!containsNone(c.getRangeStart(i), c.getRangeEnd(i))) {
-            return false;
+    int32_t n = c.get_Range_ਗਿਣਤੀ();
+    ਲਈ (int32_t i=0; i<n; ++i) {
+        ਜੇ (!ਸ਼ਾਮਲ_ਹੈ_None(c.get_Range_ਸ਼ੁਰੂ(i), c.get_Range_ਸਿਰਾ(i))) {
+            ਵਾਪਸ ਝੂਠ;
         }
     }
-    return strings_ == nullptr || !c.hasStrings() || strings_->containsNone(*c.strings_);
+    ਵਾਪਸ ਲੜੀਆਂ_2 == ਖਾਲੀ_ਸੂਚਕ || !c.has_ਲੜੀਆਂ() || ਲੜੀਆਂ_2->ਸ਼ਾਮਲ_ਹੈ_None(*c.ਲੜੀਆਂ_2);
 }
 
 /**
@@ -504,8 +504,8 @@ UBool UnicodeSet::containsNone(const UnicodeSet& c) const {
  * @param s string containing characters to be checked for containment
  * @return true if the test condition is met
  */
-UBool UnicodeSet::containsNone(const UnicodeString& s) const {
-    return span(s.getBuffer(), s.length(), USET_SPAN_NOT_CONTAINED) == s.length();
+UBool Unicode_ਸੈੱਟ::ਸ਼ਾਮਲ_ਹੈ_None(ਅਚਲ UnicodeString& s) ਅਚਲ {
+    ਵਾਪਸ ਵਿਸਤਾਰ(s.get_ਬਫਰ(), s.length(), USET_ਵਿਸਤਾਰ_NOT_CONTAINED) == s.length();
 }
 
 /**
@@ -513,7 +513,7 @@ UBool UnicodeSet::containsNone(const UnicodeString& s) const {
  * is the given value.  This is used by <tt>RuleBasedTransliterator</tt> for
  * indexing.
  */
-UBool UnicodeSet::matchesIndexValue(uint8_t v) const {
+UBool Unicode_ਸੈੱਟ::matches_ਸੂਚਕਾਂਕ_ਮੁੱਲ(uint8_t v) ਅਚਲ {
     /* The index value v, in the range [0,255], is contained in this set if
      * it is contained in any pair of this set.  Pairs either have the high
      * bytes equal, or unequal.  If the high bytes are equal, then we have
@@ -523,49 +523,49 @@ UBool UnicodeSet::matchesIndexValue(uint8_t v) const {
      * time zone month containment logic.)
      */
     int32_t i;
-    int32_t rangeCount=getRangeCount();
-    for (i=0; i<rangeCount; ++i) {
-        UChar32 low = getRangeStart(i);
-        UChar32 high = getRangeEnd(i);
-        if ((low & ~0xFF) == (high & ~0xFF)) {
-            if ((low & 0xFF) <= v && v <= (high & 0xFF)) {
-                return true;
+    int32_t range_ਗਿਣਤੀ=get_Range_ਗਿਣਤੀ();
+    ਲਈ (i=0; i<range_ਗਿਣਤੀ; ++i) {
+        UChar32 ਨੀਵਾਂ = get_Range_ਸ਼ੁਰੂ(i);
+        UChar32 ਉੱਚਾ = get_Range_ਸਿਰਾ(i);
+        ਜੇ ((ਨੀਵਾਂ & ~0xFF) == (ਉੱਚਾ & ~0xFF)) {
+            ਜੇ ((ਨੀਵਾਂ & 0xFF) <= v && v <= (ਉੱਚਾ & 0xFF)) {
+                ਵਾਪਸ ਸੱਚ;
             }
-        } else if ((low & 0xFF) <= v || v <= (high & 0xFF)) {
-            return true;
+        } ਨਹੀਂਤਾਂ ਜੇ ((ਨੀਵਾਂ & 0xFF) <= v || v <= (ਉੱਚਾ & 0xFF)) {
+            ਵਾਪਸ ਸੱਚ;
         }
     }
-    if (hasStrings()) {
-        for (i=0; i<strings_->size(); ++i) {
-            const UnicodeString& s = *static_cast<const UnicodeString*>(strings_->elementAt(i));
-            if (s.isEmpty()) {
-                continue;  // skip the empty string
+    ਜੇ (has_ਲੜੀਆਂ()) {
+        ਲਈ (i=0; i<ਲੜੀਆਂ_2->size(); ++i) {
+            ਅਚਲ UnicodeString& s = *static_cast<ਅਚਲ UnicodeString*>(ਲੜੀਆਂ_2->elementAt(i));
+            ਜੇ (s.is_ਖਾਲੀ_ਥਾਵਾਂ()) {
+                ਜਾਰੀ;  // skip the empty string
             }
             UChar32 c = s.char32At(0);
-            if ((c & 0xFF) == v) {
-                return true;
+            ਜੇ ((c & 0xFF) == v) {
+                ਵਾਪਸ ਸੱਚ;
             }
         }
     }
-    return false;
+    ਵਾਪਸ ਝੂਠ;
 }
 
 /**
  * Implementation of UnicodeMatcher::matches().  Always matches the
  * longest possible multichar string.
  */
-UMatchDegree UnicodeSet::matches(const Replaceable& text,
-                                 int32_t& offset,
-                                 int32_t limit,
+UMatchDegree Unicode_ਸੈੱਟ::matches(ਅਚਲ Replaceable& ਪਾਠ,
+                                 int32_t& ਵਿੱਥ,
+                                 int32_t ਹੱਦਬੰਦੀ,
                                  UBool incremental) {
-    if (offset == limit) {
-        if (contains(U_ETHER)) {
-            return incremental ? U_PARTIAL_MATCH : U_MATCH;
-        } else {
-            return U_MISMATCH;
+    ਜੇ (ਵਿੱਥ == ਹੱਦਬੰਦੀ) {
+        ਜੇ (ਸ਼ਾਮਲ_ਹੈ(U_ETHER)) {
+            ਵਾਪਸ incremental ? U_PARTIAL_ਮੇਲ : U_ਮੇਲ;
+        } ਨਹੀਂਤਾਂ {
+            ਵਾਪਸ U_MISMATCH;
         }
-    } else {
-        if (hasStrings()) { // try strings first
+    } ਨਹੀਂਤਾਂ {
+        ਜੇ (has_ਲੜੀਆਂ()) { // try strings first
 
             // might separate forward and backward loops later
             // for now they are combined
@@ -575,62 +575,62 @@ UMatchDegree UnicodeSet::matches(const Replaceable& text,
             // can assume the strings are sorted.
 
             int32_t i;
-            UBool forward = offset < limit;
+            UBool forward = ਵਿੱਥ < ਹੱਦਬੰਦੀ;
 
             // firstChar is the leftmost char to match in the
             // forward direction or the rightmost char to match in
             // the reverse direction.
-            char16_t firstChar = text.charAt(offset);
+            char16_t ਪਹਿਲਾ_Char = ਪਾਠ.charAt(ਵਿੱਥ);
 
             // If there are multiple strings that can match we
             // return the longest match.
-            int32_t highWaterLength = 0;
+            int32_t ਉੱਚਾ_Water_ਲੰਮਾਈ = 0;
 
-            for (i=0; i<strings_->size(); ++i) {
-                const UnicodeString& trial = *static_cast<const UnicodeString*>(strings_->elementAt(i));
-                if (trial.isEmpty()) {
-                    continue;  // skip the empty string
+            ਲਈ (i=0; i<ਲੜੀਆਂ_2->size(); ++i) {
+                ਅਚਲ UnicodeString& trial = *static_cast<ਅਚਲ UnicodeString*>(ਲੜੀਆਂ_2->elementAt(i));
+                ਜੇ (trial.is_ਖਾਲੀ_ਥਾਵਾਂ()) {
+                    ਜਾਰੀ;  // skip the empty string
                 }
 
                 char16_t c = trial.charAt(forward ? 0 : trial.length() - 1);
 
                 // Strings are sorted, so we can optimize in the
                 // forward direction.
-                if (forward && c > firstChar) break;
-                if (c != firstChar) continue;
+                ਜੇ (forward && c > ਪਹਿਲਾ_Char) ਰੋਕੋ;
+                ਜੇ (c != ਪਹਿਲਾ_Char) ਜਾਰੀ;
 
-                int32_t matchLen = matchRest(text, offset, limit, trial);
+                int32_t ਮੇਲ_Len = ਮੇਲ_Rest(ਪਾਠ, ਵਿੱਥ, ਹੱਦਬੰਦੀ, trial);
 
-                if (incremental) {
-                    int32_t maxLen = forward ? limit-offset : offset-limit;
-                    if (matchLen == maxLen) {
+                ਜੇ (incremental) {
+                    int32_t maxLen = forward ? ਹੱਦਬੰਦੀ-ਵਿੱਥ : ਵਿੱਥ-ਹੱਦਬੰਦੀ;
+                    ਜੇ (ਮੇਲ_Len == maxLen) {
                         // We have successfully matched but only up to limit.
-                        return U_PARTIAL_MATCH;
+                        ਵਾਪਸ U_PARTIAL_ਮੇਲ;
                     }
                 }
 
-                if (matchLen == trial.length()) {
+                ਜੇ (ਮੇਲ_Len == trial.length()) {
                     // We have successfully matched the whole string.
-                    if (matchLen > highWaterLength) {
-                        highWaterLength = matchLen;
+                    ਜੇ (ਮੇਲ_Len > ਉੱਚਾ_Water_ਲੰਮਾਈ) {
+                        ਉੱਚਾ_Water_ਲੰਮਾਈ = ਮੇਲ_Len;
                     }
                     // In the forward direction we know strings
                     // are sorted so we can bail early.
-                    if (forward && matchLen < highWaterLength) {
-                        break;
+                    ਜੇ (forward && ਮੇਲ_Len < ਉੱਚਾ_Water_ਲੰਮਾਈ) {
+                        ਰੋਕੋ;
                     }
-                    continue;
+                    ਜਾਰੀ;
                 }
             }
 
             // We've checked all strings without a partial match.
             // If we have full matches, return the longest one.
-            if (highWaterLength != 0) {
-                offset += forward ? highWaterLength : -highWaterLength;
-                return U_MATCH;
+            ਜੇ (ਉੱਚਾ_Water_ਲੰਮਾਈ != 0) {
+                ਵਿੱਥ += forward ? ਉੱਚਾ_Water_ਲੰਮਾਈ : -ਉੱਚਾ_Water_ਲੰਮਾਈ;
+                ਵਾਪਸ U_ਮੇਲ;
             }
         }
-        return UnicodeFilter::matches(text, offset, limit, incremental);
+        ਵਾਪਸ UnicodeFilter::matches(ਪਾਠ, ਵਿੱਥ, ਹੱਦਬੰਦੀ, incremental);
     }
 }
 
@@ -655,34 +655,34 @@ UMatchDegree UnicodeSet::matches(const Replaceable& text,
  * s.length().  If there is a mismatch between s and text, return
  * 0
  */
-int32_t UnicodeSet::matchRest(const Replaceable& text,
-                              int32_t start, int32_t limit,
-                              const UnicodeString& s) {
+int32_t Unicode_ਸੈੱਟ::ਮੇਲ_Rest(ਅਚਲ Replaceable& ਪਾਠ,
+                              int32_t ਸ਼ੁਰੂ, int32_t ਹੱਦਬੰਦੀ,
+                              ਅਚਲ UnicodeString& s) {
     int32_t i;
     int32_t maxLen;
     int32_t slen = s.length();
-    if (start < limit) {
-        maxLen = limit - start;
-        if (maxLen > slen) maxLen = slen;
-        for (i = 1; i < maxLen; ++i) {
-            if (text.charAt(start + i) != s.charAt(i)) return 0;
+    ਜੇ (ਸ਼ੁਰੂ < ਹੱਦਬੰਦੀ) {
+        maxLen = ਹੱਦਬੰਦੀ - ਸ਼ੁਰੂ;
+        ਜੇ (maxLen > slen) maxLen = slen;
+        ਲਈ (i = 1; i < maxLen; ++i) {
+            ਜੇ (ਪਾਠ.charAt(ਸ਼ੁਰੂ + i) != s.charAt(i)) ਵਾਪਸ 0;
         }
-    } else {
-        maxLen = start - limit;
-        if (maxLen > slen) maxLen = slen;
+    } ਨਹੀਂਤਾਂ {
+        maxLen = ਸ਼ੁਰੂ - ਹੱਦਬੰਦੀ;
+        ਜੇ (maxLen > slen) maxLen = slen;
         --slen; // <=> slen = s.length() - 1;
-        for (i = 1; i < maxLen; ++i) {
-            if (text.charAt(start - i) != s.charAt(slen - i)) return 0;
+        ਲਈ (i = 1; i < maxLen; ++i) {
+            ਜੇ (ਪਾਠ.charAt(ਸ਼ੁਰੂ - i) != s.charAt(slen - i)) ਵਾਪਸ 0;
         }
     }
-    return maxLen;
+    ਵਾਪਸ maxLen;
 }
 
 /**
  * Implement of UnicodeMatcher
  */
-void UnicodeSet::addMatchSetTo(UnicodeSet& toUnionTo) const {
-    toUnionTo.addAll(*this);
+ਖਾਲੀ Unicode_ਸੈੱਟ::ਜੋੜੋ_ਮੇਲ_ਸੈੱਟ_ਮੰਜ਼ਿਲ(Unicode_ਸੈੱਟ& ਮੰਜ਼ਿਲ_Union_ਮੰਜ਼ਿਲ) ਅਚਲ {
+    ਮੰਜ਼ਿਲ_Union_ਮੰਜ਼ਿਲ.ਜੋੜੋ_All(*ਇਹ);
 }
 
 /**
@@ -692,22 +692,22 @@ void UnicodeSet::addMatchSetTo(UnicodeSet& toUnionTo) const {
  * <code>charAt()</code>.
  * @return an index from 0..size()-1, or -1
  */
-int32_t UnicodeSet::indexOf(UChar32 c) const {
-    if (c < MIN_VALUE || c > MAX_VALUE) {
-        return -1;
+int32_t Unicode_ਸੈੱਟ::ਸੂਚਕਾਂਕ_ਦਾ(UChar32 c) ਅਚਲ {
+    ਜੇ (c < MIN_ਮੁੱਲ || c > MAX_ਮੁੱਲ) {
+        ਵਾਪਸ -1;
     }
     int32_t i = 0;
     int32_t n = 0;
-    for (;;) {
-        UChar32 start = list[i++];
-        if (c < start) {
-            return -1;
+    ਲਈ (;;) {
+        UChar32 ਸ਼ੁਰੂ = list[i++];
+        ਜੇ (c < ਸ਼ੁਰੂ) {
+            ਵਾਪਸ -1;
         }
-        UChar32 limit = list[i++];
-        if (c < limit) {
-            return n + c - start;
+        UChar32 ਹੱਦਬੰਦੀ = list[i++];
+        ਜੇ (c < ਹੱਦਬੰਦੀ) {
+            ਵਾਪਸ n + c - ਸ਼ੁਰੂ;
         }
-        n += limit - start;
+        n += ਹੱਦਬੰਦੀ - ਸ਼ੁਰੂ;
     }
 }
 
@@ -719,22 +719,22 @@ int32_t UnicodeSet::indexOf(UChar32 c) const {
  * @param index an index from 0..size()-1
  * @return the character at the given index, or (UChar32)-1.
  */
-UChar32 UnicodeSet::charAt(int32_t index) const {
-    if (index >= 0) {
+UChar32 Unicode_ਸੈੱਟ::charAt(int32_t ਸੂਚਕਾਂਕ) ਅਚਲ {
+    ਜੇ (ਸੂਚਕਾਂਕ >= 0) {
         // len2 is the largest even integer <= len, that is, it is len
         // for even values and len-1 for odd values.  With odd values
         // the last entry is UNICODESET_HIGH.
         int32_t len2 = len & ~1;
-        for (int32_t i=0; i < len2;) {
-            UChar32 start = list[i++];
-            int32_t count = list[i++] - start;
-            if (index < count) {
-                return static_cast<UChar32>(start + index);
+        ਲਈ (int32_t i=0; i < len2;) {
+            UChar32 ਸ਼ੁਰੂ = list[i++];
+            int32_t count = list[i++] - ਸ਼ੁਰੂ;
+            ਜੇ (ਸੂਚਕਾਂਕ < count) {
+                ਵਾਪਸ static_cast<UChar32>(ਸ਼ੁਰੂ + ਸੂਚਕਾਂਕ);
             }
-            index -= count;
+            ਸੂਚਕਾਂਕ -= count;
         }
     }
-    return static_cast<UChar32>(-1);
+    ਵਾਪਸ static_cast<UChar32>(-1);
 }
 
 /**
@@ -745,10 +745,10 @@ UChar32 UnicodeSet::charAt(int32_t index) const {
  * @param start first character in the set, inclusive
  * @rparam end last character in the set, inclusive
  */
-UnicodeSet& UnicodeSet::set(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::ਸੈੱਟ(UChar32 ਸ਼ੁਰੂ, UChar32 ਸਿਰਾ) U_LIFETIME_BOUND {
     clear();
-    complement(start, end);
-    return *this;
+    complement(ਸ਼ੁਰੂ, ਸਿਰਾ);
+    ਵਾਪਸ *ਇਹ;
 }
 
 /**
@@ -762,82 +762,82 @@ UnicodeSet& UnicodeSet::set(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
  * @param end last character, inclusive, of range to be added
  * to this set.
  */
-UnicodeSet& UnicodeSet::add(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
-    if (pinCodePoint(start) < pinCodePoint(end)) {
-        UChar32 limit = end + 1;
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::ਜੋੜੋ(UChar32 ਸ਼ੁਰੂ, UChar32 ਸਿਰਾ) U_LIFETIME_BOUND {
+    ਜੇ (pin_ਕੋਡ_ਬਿੰਦੂ(ਸ਼ੁਰੂ) < pin_ਕੋਡ_ਬਿੰਦੂ(ਸਿਰਾ)) {
+        UChar32 ਹੱਦਬੰਦੀ = ਸਿਰਾ + 1;
         // Fast path for adding a new range after the last one.
         // Odd list length: [..., lastStart, lastLimit, HIGH]
-        if ((len & 1) != 0) {
+        ਜੇ ((len & 1) != 0) {
             // If the list is empty, set lastLimit low enough to not be adjacent to 0.
-            UChar32 lastLimit = len == 1 ? -2 : list[len - 2];
-            if (lastLimit <= start && !isFrozen() && !isBogus()) {
-                if (lastLimit == start) {
+            UChar32 ਆਖਰੀ_ਹੱਦਬੰਦੀ = len == 1 ? -2 : list[len - 2];
+            ਜੇ (ਆਖਰੀ_ਹੱਦਬੰਦੀ <= ਸ਼ੁਰੂ && !isFrozen() && !isBogus()) {
+                ਜੇ (ਆਖਰੀ_ਹੱਦਬੰਦੀ == ਸ਼ੁਰੂ) {
                     // Extend the last range.
-                    list[len - 2] = limit;
-                    if (limit == UNICODESET_HIGH) {
+                    list[len - 2] = ਹੱਦਬੰਦੀ;
+                    ਜੇ (ਹੱਦਬੰਦੀ == UNICODESET_ਉੱਚਾ) {
                         --len;
                     }
-                } else {
-                    list[len - 1] = start;
-                    if (limit < UNICODESET_HIGH) {
-                        if (ensureCapacity(len + 2)) {
-                            list[len++] = limit;
-                            list[len++] = UNICODESET_HIGH;
+                } ਨਹੀਂਤਾਂ {
+                    list[len - 1] = ਸ਼ੁਰੂ;
+                    ਜੇ (ਹੱਦਬੰਦੀ < UNICODESET_ਉੱਚਾ) {
+                        ਜੇ (ensure_ਸਮਰੱਥਾ(len + 2)) {
+                            list[len++] = ਹੱਦਬੰਦੀ;
+                            list[len++] = UNICODESET_ਉੱਚਾ;
                         }
-                    } else {  // limit == UNICODESET_HIGH
-                        if (ensureCapacity(len + 1)) {
-                            list[len++] = UNICODESET_HIGH;
+                    } ਨਹੀਂਤਾਂ {  // limit == UNICODESET_HIGH
+                        ਜੇ (ensure_ਸਮਰੱਥਾ(len + 1)) {
+                            list[len++] = UNICODESET_ਉੱਚਾ;
                         }
                     }
                 }
-                releasePattern();
-                return *this;
+                release_ਨਮੂਨਾ();
+                ਵਾਪਸ *ਇਹ;
             }
         }
         // This is slow. Could be much faster using findCodePoint(start)
         // and modifying the list, dealing with adjacent & overlapping ranges.
-        UChar32 range[3] = { start, limit, UNICODESET_HIGH };
-        add(range, 2, 0);
-    } else if (start == end) {
-        add(start);
+        UChar32 range[3] = { ਸ਼ੁਰੂ, ਹੱਦਬੰਦੀ, UNICODESET_ਉੱਚਾ };
+        ਜੋੜੋ(range, 2, 0);
+    } ਨਹੀਂਤਾਂ ਜੇ (ਸ਼ੁਰੂ == ਸਿਰਾ) {
+        ਜੋੜੋ(ਸ਼ੁਰੂ);
     }
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
 // #define DEBUG_US_ADD
 
-#ifdef DEBUG_US_ADD
-#include <stdio.h>
-void dump(UChar32 c) {
-    if (c <= 0xFF) {
-        printf("%c", (char)c);
-    } else {
-        printf("U+%04X", c);
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ DEBUG_US_ਜੋੜੋ
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
+ਖਾਲੀ dump(UChar32 c) {
+    ਜੇ (c <= 0xFF) {
+        ਲਿਖੋ("%c", (ਅੱਖਰ)c);
+    } ਨਹੀਂਤਾਂ {
+        ਲਿਖੋ("U+%04X", c);
     }
 }
-void dump(const UChar32* list, int32_t len) {
-    printf("[");
-    for (int32_t i=0; i<len; ++i) {
-        if (i != 0) printf(", ");
+ਖਾਲੀ dump(ਅਚਲ UChar32* list, int32_t len) {
+    ਲਿਖੋ("[");
+    ਲਈ (int32_t i=0; i<len; ++i) {
+        ਜੇ (i != 0) ਲਿਖੋ(", ");
         dump(list[i]);
     }
-    printf("]");
+    ਲਿਖੋ("]");
 }
-#endif
+#ਜੇ_ਅੰਤ
 
 /**
  * Adds the specified character to this set if it is not already
  * present.  If this set already contains the specified character,
  * the call leaves this set unchanged.
  */
-UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::ਜੋੜੋ(UChar32 c) U_LIFETIME_BOUND {
     // find smallest i such that c < list[i]
     // if odd, then it is IN the set
     // if even, then it is OUT of the set
-    int32_t i = findCodePoint(pinCodePoint(c));
+    int32_t i = ਲੱਭੋ_ਕੋਡ_ਬਿੰਦੂ(pin_ਕੋਡ_ਬਿੰਦੂ(c));
 
     // already in set?
-    if ((i & 1) != 0  || isFrozen() || isBogus()) return *this;
+    ਜੇ ((i & 1) != 0  || isFrozen() || isBogus()) ਵਾਪਸ *ਇਹ;
 
     // HIGH is 0x110000
     // assert(list[len-1] == HIGH);
@@ -851,27 +851,27 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
 
     // i == 0 means c is before the first range
 
-#ifdef DEBUG_US_ADD
-    printf("Add of ");
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ DEBUG_US_ਜੋੜੋ
+    ਲਿਖੋ("Add of ");
     dump(c);
-    printf(" found at %d", i);
-    printf(": ");
+    ਲਿਖੋ(" found at %d", i);
+    ਲਿਖੋ(": ");
     dump(list, len);
-    printf(" => ");
-#endif
+    ਲਿਖੋ(" => ");
+#ਜੇ_ਅੰਤ
 
-    if (c == list[i]-1) {
+    ਜੇ (c == list[i]-1) {
         // c is before start of next range
         list[i] = c;
         // if we touched the HIGH mark, then add a new one
-        if (c == (UNICODESET_HIGH - 1)) {
-            if (!ensureCapacity(len+1)) {
+        ਜੇ (c == (UNICODESET_ਉੱਚਾ - 1)) {
+            ਜੇ (!ensure_ਸਮਰੱਥਾ(len+1)) {
                 // ensureCapacity will mark the object as Bogus if OOM failure happens.
-                return *this;
+                ਵਾਪਸ *ਇਹ;
             }
-            list[len++] = UNICODESET_HIGH;
+            list[len++] = UNICODESET_ਉੱਚਾ;
         }
-        if (i > 0 && c == list[i-1]) {
+        ਜੇ (i > 0 && c == list[i-1]) {
             // collapse adjacent ranges
 
             // [..., start_k-1, c, c, limit_k, ..., HIGH]
@@ -884,19 +884,19 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
             UChar32* dst = list + i - 1;
             UChar32* src = dst + 2;
             UChar32* srclimit = list + len;
-            while (src < srclimit) *(dst++) = *(src++);
+            ਜਦੋਂ (src < srclimit) *(dst++) = *(src++);
 
             len -= 2;
         }
     }
 
-    else if (i > 0 && c == list[i-1]) {
+    ਨਹੀਂਤਾਂ ਜੇ (i > 0 && c == list[i-1]) {
         // c is after end of prior range
         list[i-1]++;
         // no need to check for collapse here
     }
 
-    else {
+    ਨਹੀਂਤਾਂ {
         // At this point we know the new char is not adjacent to
         // any existing ranges, and it is not 10FFFF.
 
@@ -909,33 +909,33 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
         //                             ^
         //                             list[i]
 
-        if (!ensureCapacity(len+2)) {
+        ਜੇ (!ensure_ਸਮਰੱਥਾ(len+2)) {
             // ensureCapacity will mark the object as Bogus if OOM failure happens.
-            return *this;
+            ਵਾਪਸ *ਇਹ;
         }
 
         UChar32 *p = list + i;
-        uprv_memmove(p + 2, p, (len - i) * sizeof(*p));
+        uprv_memmove(p + 2, p, (len - i) * ਆਕਾਰ(*p));
         list[i] = c;
         list[i+1] = c+1;
         len += 2;
     }
 
-#ifdef DEBUG_US_ADD
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ DEBUG_US_ਜੋੜੋ
     dump(list, len);
-    printf("\n");
+    ਲਿਖੋ("\n");
 
-    for (i=1; i<len; ++i) {
-        if (list[i] <= list[i-1]) {
+    ਲਈ (i=1; i<len; ++i) {
+        ਜੇ (list[i] <= list[i-1]) {
             // Corrupt array!
-            printf("ERROR: list has been corrupted\n");
-            exit(1);
+            ਲਿਖੋ("ERROR: list has been corrupted\n");
+            ਬਾਹਰ_ਨਿਕਲੋ(1);
         }
     }
-#endif
+#ਜੇ_ਅੰਤ
 
-    releasePattern();
-    return *this;
+    release_ਨਮੂਨਾ();
+    ਵਾਪਸ *ਇਹ;
 }
 
 /**
@@ -947,41 +947,41 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
  * @param s the source string
  * @return the modified set, for chaining
  */
-UnicodeSet& UnicodeSet::add(const UnicodeString& s) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) return *this;
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::ਜੋੜੋ(ਅਚਲ UnicodeString& s) U_LIFETIME_BOUND {
+    ਜੇ (isFrozen() || isBogus()) ਵਾਪਸ *ਇਹ;
     int32_t cp = getSingleCP(s);
-    if (cp < 0) {
-        if (!stringsContains(s)) {
-            _add(s);
-            releasePattern();
+    ਜੇ (cp < 0) {
+        ਜੇ (!ਲੜੀਆਂ_ਸ਼ਾਮਲ_ਹੈ(s)) {
+            ਜੋੜੋ_2(s);
+            release_ਨਮੂਨਾ();
         }
-    } else {
-        add(static_cast<UChar32>(cp));
+    } ਨਹੀਂਤਾਂ {
+        ਜੋੜੋ(static_cast<UChar32>(cp));
     }
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
 /**
  * Adds the given string, in order, to 'strings_'.  The given string
  * must have been checked by the caller to not already be in 'strings_'.
  */
-void UnicodeSet::_add(const UnicodeString& s) {
-    if (isFrozen() || isBogus()) {
-        return;
+ਖਾਲੀ Unicode_ਸੈੱਟ::ਜੋੜੋ_2(ਅਚਲ UnicodeString& s) {
+    ਜੇ (isFrozen() || isBogus()) {
+        ਵਾਪਸ;
     }
-    UErrorCode ec = U_ZERO_ERROR;
-    if (strings_ == nullptr && !allocateStrings(ec)) {
-        setToBogus();
-        return;
+    UError_ਕੋਡ ec = U_ZERO_ERROR;
+    ਜੇ (ਲੜੀਆਂ_2 == ਖਾਲੀ_ਸੂਚਕ && !allocate_ਲੜੀਆਂ(ec)) {
+        ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus();
+        ਵਾਪਸ;
     }
-    LocalPointer<UnicodeString> t(new UnicodeString(s));
-    if (t.isNull()) { // Check for memory allocation error.
-        setToBogus();
-        return;
+    Local_ਸੂਚਕ<UnicodeString> t(ਨਵਾਂ UnicodeString(s));
+    ਜੇ (t.isNull()) { // Check for memory allocation error.
+        ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus();
+        ਵਾਪਸ;
     }
-    strings_->sortedInsert(t.orphan(), compareUnicodeString, ec);
-    if (U_FAILURE(ec)) {
-        setToBogus();
+    ਲੜੀਆਂ_2->sorted_ਪਾਓ(t.orphan(), compareUnicodeString, ec);
+    ਜੇ (U_FAILURE(ec)) {
+        ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus();
     }
 }
 
@@ -990,16 +990,16 @@ void UnicodeSet::_add(const UnicodeString& s) {
  * otherwise returns -1.
  * @param string to test
  */
-int32_t UnicodeSet::getSingleCP(const UnicodeString& s) {
-    int32_t sLength = s.length();
-    if (sLength == 1) return s.charAt(0);
-    if (sLength == 2) {
+int32_t Unicode_ਸੈੱਟ::getSingleCP(ਅਚਲ UnicodeString& s) {
+    int32_t s_ਲੰਮਾਈ = s.length();
+    ਜੇ (s_ਲੰਮਾਈ == 1) ਵਾਪਸ s.charAt(0);
+    ਜੇ (s_ਲੰਮਾਈ == 2) {
         UChar32 cp = s.char32At(0);
-        if (cp > 0xFFFF) { // is surrogate pair
-            return cp;
+        ਜੇ (cp > 0xFFFF) { // is surrogate pair
+            ਵਾਪਸ cp;
         }
     }
-    return -1;
+    ਵਾਪਸ -1;
 }
 
 /**
@@ -1008,13 +1008,13 @@ int32_t UnicodeSet::getSingleCP(const UnicodeString& s) {
  * @param the source string
  * @return the modified set, for chaining
  */
-UnicodeSet& UnicodeSet::addAll(const UnicodeString& s) U_LIFETIME_BOUND {
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::ਜੋੜੋ_All(ਅਚਲ UnicodeString& s) U_LIFETIME_BOUND {
     UChar32 cp;
-    for (int32_t i = 0; i < s.length(); i += U16_LENGTH(cp)) {
+    ਲਈ (int32_t i = 0; i < s.length(); i += U16_ਲੰਮਾਈ(cp)) {
         cp = s.char32At(i);
-        add(cp);
+        ਜੋੜੋ(cp);
     }
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
 /**
@@ -1023,11 +1023,11 @@ UnicodeSet& UnicodeSet::addAll(const UnicodeString& s) U_LIFETIME_BOUND {
  * @param the source string
  * @return the modified set, for chaining
  */
-UnicodeSet& UnicodeSet::retainAll(const UnicodeString& s) U_LIFETIME_BOUND {
-    UnicodeSet set;
-    set.addAll(s);
-    retainAll(set);
-    return *this;
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::retainAll(ਅਚਲ UnicodeString& s) U_LIFETIME_BOUND {
+    Unicode_ਸੈੱਟ ਸੈੱਟ;
+    ਸੈੱਟ.ਜੋੜੋ_All(s);
+    retainAll(ਸੈੱਟ);
+    ਵਾਪਸ *ਇਹ;
 }
 
 /**
@@ -1036,11 +1036,11 @@ UnicodeSet& UnicodeSet::retainAll(const UnicodeString& s) U_LIFETIME_BOUND {
  * @param the source string
  * @return the modified set, for chaining
  */
-UnicodeSet& UnicodeSet::complementAll(const UnicodeString& s) U_LIFETIME_BOUND {
-    UnicodeSet set;
-    set.addAll(s);
-    complementAll(set);
-    return *this;
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::complementAll(ਅਚਲ UnicodeString& s) U_LIFETIME_BOUND {
+    Unicode_ਸੈੱਟ ਸੈੱਟ;
+    ਸੈੱਟ.ਜੋੜੋ_All(s);
+    complementAll(ਸੈੱਟ);
+    ਵਾਪਸ *ਇਹ;
 }
 
 /**
@@ -1049,19 +1049,19 @@ UnicodeSet& UnicodeSet::complementAll(const UnicodeString& s) U_LIFETIME_BOUND {
  * @param the source string
  * @return the modified set, for chaining
  */
-UnicodeSet& UnicodeSet::removeAll(const UnicodeString& s) U_LIFETIME_BOUND {
-    UnicodeSet set;
-    set.addAll(s);
-    removeAll(set);
-    return *this;
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::removeAll(ਅਚਲ UnicodeString& s) U_LIFETIME_BOUND {
+    Unicode_ਸੈੱਟ ਸੈੱਟ;
+    ਸੈੱਟ.ਜੋੜੋ_All(s);
+    removeAll(ਸੈੱਟ);
+    ਵਾਪਸ *ਇਹ;
 }
 
-UnicodeSet& UnicodeSet::removeAllStrings() U_LIFETIME_BOUND {
-    if (!isFrozen() && hasStrings()) {
-        strings_->removeAllElements();
-        releasePattern();
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::remove_All_ਲੜੀਆਂ() U_LIFETIME_BOUND {
+    ਜੇ (!isFrozen() && has_ਲੜੀਆਂ()) {
+        ਲੜੀਆਂ_2->removeAllElements();
+        release_ਨਮੂਨਾ();
     }
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
 
@@ -1071,12 +1071,12 @@ UnicodeSet& UnicodeSet::removeAllStrings() U_LIFETIME_BOUND {
  * @param the source string
  * @return a newly created set containing the given string
  */
-UnicodeSet* U_EXPORT2 UnicodeSet::createFrom(const UnicodeString& s) {
-    UnicodeSet *set = new UnicodeSet();
-    if (set != nullptr) { // Check for memory allocation error.
-        set->add(s);
+Unicode_ਸੈੱਟ* U_EXPORT2 Unicode_ਸੈੱਟ::createFrom(ਅਚਲ UnicodeString& s) {
+    Unicode_ਸੈੱਟ *ਸੈੱਟ = ਨਵਾਂ Unicode_ਸੈੱਟ();
+    ਜੇ (ਸੈੱਟ != ਖਾਲੀ_ਸੂਚਕ) { // Check for memory allocation error.
+        ਸੈੱਟ->ਜੋੜੋ(s);
     }
-    return set;
+    ਵਾਪਸ ਸੈੱਟ;
 }
 
 
@@ -1085,12 +1085,12 @@ UnicodeSet* U_EXPORT2 UnicodeSet::createFrom(const UnicodeString& s) {
  * @param the source string
  * @return a newly created set containing the given characters
  */
-UnicodeSet* U_EXPORT2 UnicodeSet::createFromAll(const UnicodeString& s) {
-    UnicodeSet *set = new UnicodeSet();
-    if (set != nullptr) { // Check for memory allocation error.
-        set->addAll(s);
+Unicode_ਸੈੱਟ* U_EXPORT2 Unicode_ਸੈੱਟ::createFromAll(ਅਚਲ UnicodeString& s) {
+    Unicode_ਸੈੱਟ *ਸੈੱਟ = ਨਵਾਂ Unicode_ਸੈੱਟ();
+    ਜੇ (ਸੈੱਟ != ਖਾਲੀ_ਸੂਚਕ) { // Check for memory allocation error.
+        ਸੈੱਟ->ਜੋੜੋ_All(s);
     }
-    return set;
+    ਵਾਪਸ ਸੈੱਟ;
 }
 
 /**
@@ -1103,38 +1103,38 @@ UnicodeSet* U_EXPORT2 UnicodeSet::createFromAll(const UnicodeString& s) {
  * @param end last character, inclusive, of range to be retained
  * to this set.
  */
-UnicodeSet& UnicodeSet::retain(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
-    if (pinCodePoint(start) <= pinCodePoint(end)) {
-        UChar32 range[3] = { start, end+1, UNICODESET_HIGH };
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::retain(UChar32 ਸ਼ੁਰੂ, UChar32 ਸਿਰਾ) U_LIFETIME_BOUND {
+    ਜੇ (pin_ਕੋਡ_ਬਿੰਦੂ(ਸ਼ੁਰੂ) <= pin_ਕੋਡ_ਬਿੰਦੂ(ਸਿਰਾ)) {
+        UChar32 range[3] = { ਸ਼ੁਰੂ, ਸਿਰਾ+1, UNICODESET_ਉੱਚਾ };
         retain(range, 2, 0);
-    } else {
+    } ਨਹੀਂਤਾਂ {
         clear();
     }
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
-UnicodeSet& UnicodeSet::retain(UChar32 c) U_LIFETIME_BOUND {
-    return retain(c, c);
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::retain(UChar32 c) U_LIFETIME_BOUND {
+    ਵਾਪਸ retain(c, c);
 }
 
-UnicodeSet& UnicodeSet::retain(const UnicodeString &s) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) { return *this; }
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::retain(ਅਚਲ UnicodeString &s) U_LIFETIME_BOUND {
+    ਜੇ (isFrozen() || isBogus()) { ਵਾਪਸ *ਇਹ; }
     UChar32 cp = getSingleCP(s);
-    if (cp < 0) {
-        bool isIn = stringsContains(s);
+    ਜੇ (cp < 0) {
+        ਤਾਰਕਿਕ is_ਵਿੱਚ = ਲੜੀਆਂ_ਸ਼ਾਮਲ_ਹੈ(s);
         // Check for getRangeCount() first to avoid somewhat-expensive size()
         // when there are single code points.
-        if (isIn && getRangeCount() == 0 && size() == 1) {
-            return *this;
+        ਜੇ (is_ਵਿੱਚ && get_Range_ਗਿਣਤੀ() == 0 && size() == 1) {
+            ਵਾਪਸ *ਇਹ;
         }
         clear();
-        if (isIn) {
-            _add(s);
+        ਜੇ (is_ਵਿੱਚ) {
+            ਜੋੜੋ_2(s);
         }
-    } else {
+    } ਨਹੀਂਤਾਂ {
         retain(cp, cp);
     }
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
 /**
@@ -1148,12 +1148,12 @@ UnicodeSet& UnicodeSet::retain(const UnicodeString &s) U_LIFETIME_BOUND {
  * @param end last character, inclusive, of range to be removed
  * from this set.
  */
-UnicodeSet& UnicodeSet::remove(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
-    if (pinCodePoint(start) <= pinCodePoint(end)) {
-        UChar32 range[3] = { start, end+1, UNICODESET_HIGH };
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::remove(UChar32 ਸ਼ੁਰੂ, UChar32 ਸਿਰਾ) U_LIFETIME_BOUND {
+    ਜੇ (pin_ਕੋਡ_ਬਿੰਦੂ(ਸ਼ੁਰੂ) <= pin_ਕੋਡ_ਬਿੰਦੂ(ਸਿਰਾ)) {
+        UChar32 range[3] = { ਸ਼ੁਰੂ, ਸਿਰਾ+1, UNICODESET_ਉੱਚਾ };
         retain(range, 2, 2);
     }
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
 /**
@@ -1161,8 +1161,8 @@ UnicodeSet& UnicodeSet::remove(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
  * The set will not contain the specified range once the call
  * returns.
  */
-UnicodeSet& UnicodeSet::remove(UChar32 c) U_LIFETIME_BOUND {
-    return remove(c, c);
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::remove(UChar32 c) U_LIFETIME_BOUND {
+    ਵਾਪਸ remove(c, c);
 }
 
 /**
@@ -1172,17 +1172,17 @@ UnicodeSet& UnicodeSet::remove(UChar32 c) U_LIFETIME_BOUND {
  * @param the source string
  * @return the modified set, for chaining
  */
-UnicodeSet& UnicodeSet::remove(const UnicodeString& s) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) return *this;
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::remove(ਅਚਲ UnicodeString& s) U_LIFETIME_BOUND {
+    ਜੇ (isFrozen() || isBogus()) ਵਾਪਸ *ਇਹ;
     int32_t cp = getSingleCP(s);
-    if (cp < 0) {
-        if (strings_ != nullptr && strings_->removeElement((void*) &s)) {
-            releasePattern();
+    ਜੇ (cp < 0) {
+        ਜੇ (ਲੜੀਆਂ_2 != ਖਾਲੀ_ਸੂਚਕ && ਲੜੀਆਂ_2->removeElement((ਖਾਲੀ*) &s)) {
+            release_ਨਮੂਨਾ();
         }
-    } else {
+    } ਨਹੀਂਤਾਂ {
         remove(static_cast<UChar32>(cp), static_cast<UChar32>(cp));
     }
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
 /**
@@ -1196,43 +1196,43 @@ UnicodeSet& UnicodeSet::remove(const UnicodeString& s) U_LIFETIME_BOUND {
  * @param end last character, inclusive, of range to be removed
  * from this set.
  */
-UnicodeSet& UnicodeSet::complement(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::complement(UChar32 ਸ਼ੁਰੂ, UChar32 ਸਿਰਾ) U_LIFETIME_BOUND {
+    ਜੇ (isFrozen() || isBogus()) {
+        ਵਾਪਸ *ਇਹ;
     }
-    if (pinCodePoint(start) <= pinCodePoint(end)) {
-        UChar32 range[3] = { start, end+1, UNICODESET_HIGH };
+    ਜੇ (pin_ਕੋਡ_ਬਿੰਦੂ(ਸ਼ੁਰੂ) <= pin_ਕੋਡ_ਬਿੰਦੂ(ਸਿਰਾ)) {
+        UChar32 range[3] = { ਸ਼ੁਰੂ, ਸਿਰਾ+1, UNICODESET_ਉੱਚਾ };
         exclusiveOr(range, 2, 0);
     }
-    releasePattern();
-    return *this;
+    release_ਨਮੂਨਾ();
+    ਵਾਪਸ *ਇਹ;
 }
 
-UnicodeSet& UnicodeSet::complement(UChar32 c) U_LIFETIME_BOUND {
-    return complement(c, c);
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::complement(UChar32 c) U_LIFETIME_BOUND {
+    ਵਾਪਸ complement(c, c);
 }
 
 /**
  * This is equivalent to
  * <code>complement(MIN_VALUE, MAX_VALUE)</code>.
  */
-UnicodeSet& UnicodeSet::complement() U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::complement() U_LIFETIME_BOUND {
+    ਜੇ (isFrozen() || isBogus()) {
+        ਵਾਪਸ *ਇਹ;
     }
-    if (list[0] == UNICODESET_LOW) {
-        uprv_memmove(list, list + 1, (size_t)(len-1)*sizeof(UChar32));
+    ਜੇ (list[0] == UNICODESET_ਨੀਵਾਂ) {
+        uprv_memmove(list, list + 1, (size_t)(len-1)*ਆਕਾਰ(UChar32));
         --len;
-    } else {
-        if (!ensureCapacity(len+1)) {
-            return *this;
+    } ਨਹੀਂਤਾਂ {
+        ਜੇ (!ensure_ਸਮਰੱਥਾ(len+1)) {
+            ਵਾਪਸ *ਇਹ;
         }
-        uprv_memmove(list + 1, list, (size_t)len*sizeof(UChar32));
-        list[0] = UNICODESET_LOW;
+        uprv_memmove(list + 1, list, (size_t)len*ਆਕਾਰ(UChar32));
+        list[0] = UNICODESET_ਨੀਵਾਂ;
         ++len;
     }
-    releasePattern();
-    return *this;
+    release_ਨਮੂਨਾ();
+    ਵਾਪਸ *ਇਹ;
 }
 
 /**
@@ -1243,20 +1243,20 @@ UnicodeSet& UnicodeSet::complement() U_LIFETIME_BOUND {
  * @param s the string to complement
  * @return this object, for chaining
  */
-UnicodeSet& UnicodeSet::complement(const UnicodeString& s) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) return *this;
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::complement(ਅਚਲ UnicodeString& s) U_LIFETIME_BOUND {
+    ਜੇ (isFrozen() || isBogus()) ਵਾਪਸ *ਇਹ;
     int32_t cp = getSingleCP(s);
-    if (cp < 0) {
-        if (stringsContains(s)) {
-            strings_->removeElement((void*) &s);
-        } else {
-            _add(s);
+    ਜੇ (cp < 0) {
+        ਜੇ (ਲੜੀਆਂ_ਸ਼ਾਮਲ_ਹੈ(s)) {
+            ਲੜੀਆਂ_2->removeElement((ਖਾਲੀ*) &s);
+        } ਨਹੀਂਤਾਂ {
+            ਜੋੜੋ_2(s);
         }
-        releasePattern();
-    } else {
+        release_ਨਮੂਨਾ();
+    } ਨਹੀਂਤਾਂ {
         complement(static_cast<UChar32>(cp), static_cast<UChar32>(cp));
     }
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
 /**
@@ -1269,21 +1269,21 @@ UnicodeSet& UnicodeSet::complement(const UnicodeString& s) U_LIFETIME_BOUND {
  * @param c set whose elements are to be added to this set.
  * @see #add(char, char)
  */
-UnicodeSet& UnicodeSet::addAll(const UnicodeSet& c) U_LIFETIME_BOUND {
-    if ( c.len>0 && c.list!=nullptr ) {
-        add(c.list, c.len, 0);
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::ਜੋੜੋ_All(ਅਚਲ Unicode_ਸੈੱਟ& c) U_LIFETIME_BOUND {
+    ਜੇ ( c.len>0 && c.list!=ਖਾਲੀ_ਸੂਚਕ ) {
+        ਜੋੜੋ(c.list, c.len, 0);
     }
 
     // Add strings in order
-    if ( c.strings_!=nullptr ) {
-        for (int32_t i=0; i<c.strings_->size(); ++i) {
-            const UnicodeString* s = static_cast<const UnicodeString*>(c.strings_->elementAt(i));
-            if (!stringsContains(*s)) {
-                _add(*s);
+    ਜੇ ( c.ਲੜੀਆਂ_2!=ਖਾਲੀ_ਸੂਚਕ ) {
+        ਲਈ (int32_t i=0; i<c.ਲੜੀਆਂ_2->size(); ++i) {
+            ਅਚਲ UnicodeString* s = static_cast<ਅਚਲ UnicodeString*>(c.ਲੜੀਆਂ_2->elementAt(i));
+            ਜੇ (!ਲੜੀਆਂ_ਸ਼ਾਮਲ_ਹੈ(*s)) {
+                ਜੋੜੋ_2(*s);
             }
         }
     }
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
 /**
@@ -1295,19 +1295,19 @@ UnicodeSet& UnicodeSet::addAll(const UnicodeSet& c) U_LIFETIME_BOUND {
  *
  * @param c set that defines which elements this set will retain.
  */
-UnicodeSet& UnicodeSet::retainAll(const UnicodeSet& c) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::retainAll(ਅਚਲ Unicode_ਸੈੱਟ& c) U_LIFETIME_BOUND {
+    ਜੇ (isFrozen() || isBogus()) {
+        ਵਾਪਸ *ਇਹ;
     }
     retain(c.list, c.len, 0);
-    if (hasStrings()) {
-        if (!c.hasStrings()) {
-            strings_->removeAllElements();
-        } else {
-            strings_->retainAll(*c.strings_);
+    ਜੇ (has_ਲੜੀਆਂ()) {
+        ਜੇ (!c.has_ਲੜੀਆਂ()) {
+            ਲੜੀਆਂ_2->removeAllElements();
+        } ਨਹੀਂਤਾਂ {
+            ਲੜੀਆਂ_2->retainAll(*c.ਲੜੀਆਂ_2);
         }
     }
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
 /**
@@ -1319,15 +1319,15 @@ UnicodeSet& UnicodeSet::retainAll(const UnicodeSet& c) U_LIFETIME_BOUND {
  * @param c set that defines which elements will be removed from
  *          this set.
  */
-UnicodeSet& UnicodeSet::removeAll(const UnicodeSet& c) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::removeAll(ਅਚਲ Unicode_ਸੈੱਟ& c) U_LIFETIME_BOUND {
+    ਜੇ (isFrozen() || isBogus()) {
+        ਵਾਪਸ *ਇਹ;
     }
     retain(c.list, c.len, 2);
-    if (hasStrings() && c.hasStrings()) {
-        strings_->removeAll(*c.strings_);
+    ਜੇ (has_ਲੜੀਆਂ() && c.has_ਲੜੀਆਂ()) {
+        ਲੜੀਆਂ_2->removeAll(*c.ਲੜੀਆਂ_2);
     }
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
 /**
@@ -1338,40 +1338,40 @@ UnicodeSet& UnicodeSet::removeAll(const UnicodeSet& c) U_LIFETIME_BOUND {
  * @param c set that defines which elements will be xor'ed from
  *          this set.
  */
-UnicodeSet& UnicodeSet::complementAll(const UnicodeSet& c) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::complementAll(ਅਚਲ Unicode_ਸੈੱਟ& c) U_LIFETIME_BOUND {
+    ਜੇ (isFrozen() || isBogus()) {
+        ਵਾਪਸ *ਇਹ;
     }
     exclusiveOr(c.list, c.len, 0);
 
-    if (c.strings_ != nullptr) {
-        for (int32_t i=0; i<c.strings_->size(); ++i) {
-            void* e = c.strings_->elementAt(i);
-            if (strings_ == nullptr || !strings_->removeElement(e)) {
-                _add(*static_cast<const UnicodeString*>(e));
+    ਜੇ (c.ਲੜੀਆਂ_2 != ਖਾਲੀ_ਸੂਚਕ) {
+        ਲਈ (int32_t i=0; i<c.ਲੜੀਆਂ_2->size(); ++i) {
+            ਖਾਲੀ* e = c.ਲੜੀਆਂ_2->elementAt(i);
+            ਜੇ (ਲੜੀਆਂ_2 == ਖਾਲੀ_ਸੂਚਕ || !ਲੜੀਆਂ_2->removeElement(e)) {
+                ਜੋੜੋ_2(*static_cast<ਅਚਲ UnicodeString*>(e));
             }
         }
     }
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
 /**
  * Removes all of the elements from this set.  This set will be
  * empty after this call returns.
  */
-UnicodeSet& UnicodeSet::clear() U_LIFETIME_BOUND {
-    if (isFrozen()) {
-        return *this;
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::clear() U_LIFETIME_BOUND {
+    ਜੇ (isFrozen()) {
+        ਵਾਪਸ *ਇਹ;
     }
-    list[0] = UNICODESET_HIGH;
+    list[0] = UNICODESET_ਉੱਚਾ;
     len = 1;
-    releasePattern();
-    if (strings_ != nullptr) {
-        strings_->removeAllElements();
+    release_ਨਮੂਨਾ();
+    ਜੇ (ਲੜੀਆਂ_2 != ਖਾਲੀ_ਸੂਚਕ) {
+        ਲੜੀਆਂ_2->removeAllElements();
     }
     // Remove bogus
     fFlags = 0;
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
 /**
@@ -1380,8 +1380,8 @@ UnicodeSet& UnicodeSet::clear() U_LIFETIME_BOUND {
  * @see #getRangeStart
  * @see #getRangeEnd
  */
-int32_t UnicodeSet::getRangeCount() const {
-    return len/2;
+int32_t Unicode_ਸੈੱਟ::get_Range_ਗਿਣਤੀ() ਅਚਲ {
+    ਵਾਪਸ len/2;
 }
 
 /**
@@ -1390,8 +1390,8 @@ int32_t UnicodeSet::getRangeCount() const {
  * @see #getRangeCount
  * @see #getRangeEnd
  */
-UChar32 UnicodeSet::getRangeStart(int32_t index) const {
-    return list[index*2];
+UChar32 Unicode_ਸੈੱਟ::get_Range_ਸ਼ੁਰੂ(int32_t ਸੂਚਕਾਂਕ) ਅਚਲ {
+    ਵਾਪਸ list[ਸੂਚਕਾਂਕ*2];
 }
 
 /**
@@ -1400,156 +1400,156 @@ UChar32 UnicodeSet::getRangeStart(int32_t index) const {
  * @see #getRangeStart
  * @see #getRangeEnd
  */
-UChar32 UnicodeSet::getRangeEnd(int32_t index) const {
-    return list[index*2 + 1] - 1;
+UChar32 Unicode_ਸੈੱਟ::get_Range_ਸਿਰਾ(int32_t ਸੂਚਕਾਂਕ) ਅਚਲ {
+    ਵਾਪਸ list[ਸੂਚਕਾਂਕ*2 + 1] - 1;
 }
 
-const UnicodeString* UnicodeSet::getString(int32_t index) const U_LIFETIME_BOUND {
-    return static_cast<const UnicodeString*>(strings_->elementAt(index));
+ਅਚਲ UnicodeString* Unicode_ਸੈੱਟ::getString(int32_t ਸੂਚਕਾਂਕ) ਅਚਲ U_LIFETIME_BOUND {
+    ਵਾਪਸ static_cast<ਅਚਲ UnicodeString*>(ਲੜੀਆਂ_2->elementAt(ਸੂਚਕਾਂਕ));
 }
 
 /**
  * Reallocate this objects internal structures to take up the least
  * possible space, without changing this object's value.
  */
-UnicodeSet& UnicodeSet::compact() U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+Unicode_ਸੈੱਟ& Unicode_ਸੈੱਟ::compact() U_LIFETIME_BOUND {
+    ਜੇ (isFrozen() || isBogus()) {
+        ਵਾਪਸ *ਇਹ;
     }
     // Delete buffer first to defragment memory less.
-    if (buffer != stackList) {
-        uprv_free(buffer);
-        buffer = nullptr;
-        bufferCapacity = 0;
+    ਜੇ (ਬਫਰ != ਢੇਰ_List) {
+        uprv_free(ਬਫਰ);
+        ਬਫਰ = ਖਾਲੀ_ਸੂਚਕ;
+        ਬਫਰ_ਸਮਰੱਥਾ = 0;
     }
-    if (list == stackList) {
+    ਜੇ (list == ਢੇਰ_List) {
         // pass
-    } else if (len <= INITIAL_CAPACITY) {
-        uprv_memcpy(stackList, list, len * sizeof(UChar32));
+    } ਨਹੀਂਤਾਂ ਜੇ (len <= INITIAL_ਸਮਰੱਥਾ) {
+        uprv_memcpy(ਢੇਰ_List, list, len * ਆਕਾਰ(UChar32));
         uprv_free(list);
-        list = stackList;
-        capacity = INITIAL_CAPACITY;
-    } else if ((len + 7) < capacity) {
+        list = ਢੇਰ_List;
+        capacity = INITIAL_ਸਮਰੱਥਾ;
+    } ਨਹੀਂਤਾਂ ਜੇ ((len + 7) < capacity) {
         // If we have more than a little unused capacity, shrink it to len.
-        UChar32* temp = static_cast<UChar32*>(uprv_realloc(list, sizeof(UChar32) * len));
-        if (temp) {
-            list = temp;
+        UChar32* ਆਰਜ਼ੀ = static_cast<UChar32*>(uprv_realloc(list, ਆਕਾਰ(UChar32) * len));
+        ਜੇ (ਆਰਜ਼ੀ) {
+            list = ਆਰਜ਼ੀ;
             capacity = len;
         }
         // else what the heck happened?! We allocated less memory!
         // Oh well. We'll keep our original array.
     }
-    if (strings_ != nullptr && strings_->isEmpty()) {
-        delete strings_;
-        strings_ = nullptr;
+    ਜੇ (ਲੜੀਆਂ_2 != ਖਾਲੀ_ਸੂਚਕ && ਲੜੀਆਂ_2->is_ਖਾਲੀ_ਥਾਵਾਂ()) {
+        ਮਿਟਾਓ ਲੜੀਆਂ_2;
+        ਲੜੀਆਂ_2 = ਖਾਲੀ_ਸੂਚਕ;
     }
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
-#ifdef DEBUG_SERIALIZE
-#include <stdio.h>
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ DEBUG_SERIALIZE
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
+#ਜੇ_ਅੰਤ
 
 /**
  * Deserialize constructor.
  */
-UnicodeSet::UnicodeSet(const uint16_t data[], int32_t dataLen, ESerialization serialization,
-                       UErrorCode &ec) {
+Unicode_ਸੈੱਟ::Unicode_ਸੈੱਟ(ਅਚਲ uint16_t ਅੰਕੜੇ[], int32_t ਅੰਕੜੇ_Len, ESerialization serialization,
+                       UError_ਕੋਡ &ec) {
 
-  if(U_FAILURE(ec)) {
-    setToBogus();
-    return;
+  ਜੇ(U_FAILURE(ec)) {
+    ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus();
+    ਵਾਪਸ;
   }
 
-  if( (serialization != kSerialized)
-      || (data==nullptr)
-      || (dataLen < 1)) {
-    ec = U_ILLEGAL_ARGUMENT_ERROR;
-    setToBogus();
-    return;
+  ਜੇ( (serialization != kSerialized)
+      || (ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ)
+      || (ਅੰਕੜੇ_Len < 1)) {
+    ec = U_ILLEGAL_ਦਲੀਲ_ERROR;
+    ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus();
+    ਵਾਪਸ;
   }
 
   // bmp?
-  int32_t headerSize = ((data[0]&0x8000)) ?2:1;
-  int32_t bmpLength = (headerSize==1)?data[0]:data[1];
+  int32_t ਸਿਰਲੇਖ_ਮਾਪ = ((ਅੰਕੜੇ[0]&0x8000)) ?2:1;
+  int32_t bmp_ਲੰਮਾਈ = (ਸਿਰਲੇਖ_ਮਾਪ==1)?ਅੰਕੜੇ[0]:ਅੰਕੜੇ[1];
 
-  int32_t newLength = (((data[0]&0x7FFF)-bmpLength)/2)+bmpLength;
-#ifdef DEBUG_SERIALIZE
-  printf("dataLen %d headerSize %d bmpLen %d len %d. data[0]=%X/%X/%X/%X\n", dataLen,headerSize,bmpLength,newLength, data[0],data[1],data[2],data[3]);
-#endif
-  if(!ensureCapacity(newLength + 1)) {  // +1 for HIGH
-    return;
+  int32_t new_ਲੰਮਾਈ = (((ਅੰਕੜੇ[0]&0x7FFF)-bmp_ਲੰਮਾਈ)/2)+bmp_ਲੰਮਾਈ;
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ DEBUG_SERIALIZE
+  ਲਿਖੋ("dataLen %d headerSize %d bmpLen %d len %d. data[0]=%X/%X/%X/%X\n", ਅੰਕੜੇ_Len,ਸਿਰਲੇਖ_ਮਾਪ,bmp_ਲੰਮਾਈ,new_ਲੰਮਾਈ, ਅੰਕੜੇ[0],ਅੰਕੜੇ[1],ਅੰਕੜੇ[2],ਅੰਕੜੇ[3]);
+#ਜੇ_ਅੰਤ
+  ਜੇ(!ensure_ਸਮਰੱਥਾ(new_ਲੰਮਾਈ + 1)) {  // +1 for HIGH
+    ਵਾਪਸ;
   }
   // copy bmp
   int32_t i;
-  for(i = 0; i< bmpLength;i++) {
-    list[i] = data[i+headerSize];
-#ifdef DEBUG_SERIALIZE
-    printf("<<16@%d[%d] %X\n", i+headerSize, i, list[i]);
-#endif
+  ਲਈ(i = 0; i< bmp_ਲੰਮਾਈ;i++) {
+    list[i] = ਅੰਕੜੇ[i+ਸਿਰਲੇਖ_ਮਾਪ];
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ DEBUG_SERIALIZE
+    ਲਿਖੋ("<<16@%d[%d] %X\n", i+ਸਿਰਲੇਖ_ਮਾਪ, i, list[i]);
+#ਜੇ_ਅੰਤ
   }
   // copy smp
-  for(i=bmpLength;i<newLength;i++) {
-    list[i] = (static_cast<UChar32>(data[headerSize + bmpLength + (i - bmpLength) * 2 + 0]) << 16) +
-               static_cast<UChar32>(data[headerSize + bmpLength + (i - bmpLength) * 2 + 1]);
-#ifdef DEBUG_SERIALIZE
-    printf("<<32@%d+[%d] %lX\n", headerSize+bmpLength+i, i, list[i]);
-#endif
+  ਲਈ(i=bmp_ਲੰਮਾਈ;i<new_ਲੰਮਾਈ;i++) {
+    list[i] = (static_cast<UChar32>(ਅੰਕੜੇ[ਸਿਰਲੇਖ_ਮਾਪ + bmp_ਲੰਮਾਈ + (i - bmp_ਲੰਮਾਈ) * 2 + 0]) << 16) +
+               static_cast<UChar32>(ਅੰਕੜੇ[ਸਿਰਲੇਖ_ਮਾਪ + bmp_ਲੰਮਾਈ + (i - bmp_ਲੰਮਾਈ) * 2 + 1]);
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ DEBUG_SERIALIZE
+    ਲਿਖੋ("<<32@%d+[%d] %lX\n", ਸਿਰਲੇਖ_ਮਾਪ+bmp_ਲੰਮਾਈ+i, i, list[i]);
+#ਜੇ_ਅੰਤ
   }
-  U_ASSERT(i == newLength);
-  if (i == 0 || list[i - 1] != UNICODESET_HIGH) {
-    list[i++] = UNICODESET_HIGH;
+  U_ASSERT(i == new_ਲੰਮਾਈ);
+  ਜੇ (i == 0 || list[i - 1] != UNICODESET_ਉੱਚਾ) {
+    list[i++] = UNICODESET_ਉੱਚਾ;
   }
   len = i;
 }
 
 
-int32_t UnicodeSet::serialize(uint16_t *dest, int32_t destCapacity, UErrorCode& ec) const {
-    int32_t bmpLength, length, destLength;
+int32_t Unicode_ਸੈੱਟ::serialize(uint16_t *dest, int32_t dest_ਸਮਰੱਥਾ, UError_ਕੋਡ& ec) ਅਚਲ {
+    int32_t bmp_ਲੰਮਾਈ, length, dest_ਲੰਮਾਈ;
 
-    if (U_FAILURE(ec)) {
-        return 0;
+    ਜੇ (U_FAILURE(ec)) {
+        ਵਾਪਸ 0;
     }
 
-    if (destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
-        ec=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ਜੇ (dest_ਸਮਰੱਥਾ<0 || (dest_ਸਮਰੱਥਾ>0 && dest==ਖਾਲੀ_ਸੂਚਕ)) {
+        ec=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
 
     /* count necessary 16-bit units */
-    length=this->len-1; // Subtract 1 to ignore final UNICODESET_HIGH
+    length=ਇਹ->len-1; // Subtract 1 to ignore final UNICODESET_HIGH
     // assert(length>=0);
-    if (length==0) {
+    ਜੇ (length==0) {
         /* empty set */
-        if (destCapacity>0) {
+        ਜੇ (dest_ਸਮਰੱਥਾ>0) {
             *dest=0;
-        } else {
-            ec=U_BUFFER_OVERFLOW_ERROR;
+        } ਨਹੀਂਤਾਂ {
+            ec=U_ਬਫਰ_ਉਛਾਲ_ERROR;
         }
-        return 1;
+        ਵਾਪਸ 1;
     }
     /* now length>0 */
 
-    if (this->list[length-1]<=0xffff) {
+    ਜੇ (ਇਹ->list[length-1]<=0xffff) {
         /* all BMP */
-        bmpLength=length;
-    } else if (this->list[0]>=0x10000) {
+        bmp_ਲੰਮਾਈ=length;
+    } ਨਹੀਂਤਾਂ ਜੇ (ਇਹ->list[0]>=0x10000) {
         /* all supplementary */
-        bmpLength=0;
+        bmp_ਲੰਮਾਈ=0;
         length*=2;
-    } else {
+    } ਨਹੀਂਤਾਂ {
         /* some BMP, some supplementary */
-        for (bmpLength=0; bmpLength<length && this->list[bmpLength]<=0xffff; ++bmpLength) {}
-        length=bmpLength+2*(length-bmpLength);
+        ਲਈ (bmp_ਲੰਮਾਈ=0; bmp_ਲੰਮਾਈ<length && ਇਹ->list[bmp_ਲੰਮਾਈ]<=0xffff; ++bmp_ਲੰਮਾਈ) {}
+        length=bmp_ਲੰਮਾਈ+2*(length-bmp_ਲੰਮਾਈ);
     }
-#ifdef DEBUG_SERIALIZE
-    printf(">> bmpLength%d length%d len%d\n", bmpLength, length, len);
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ DEBUG_SERIALIZE
+    ਲਿਖੋ(">> bmpLength%d length%d len%d\n", bmp_ਲੰਮਾਈ, length, len);
+#ਜੇ_ਅੰਤ
     /* length: number of 16-bit array units */
-    if (length>0x7fff) {
+    ਜੇ (length>0x7fff) {
         /* there are only 15 bits for the length in the first serialized word */
-        ec=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        ec=U_ਸੂਚਕਾਂਕ_OUTOFBOUNDS_ERROR;
+        ਵਾਪਸ 0;
     }
 
     /*
@@ -1558,42 +1558,42 @@ int32_t UnicodeSet::serialize(uint16_t *dest, int32_t destCapacity, UErrorCode& 
      * 1 length unit (always) +
      * 1 bmpLength unit (if there are supplementary values)
      */
-    destLength=length+((length>bmpLength)?2:1);
-    if (destLength<=destCapacity) {
-        const UChar32 *p;
+    dest_ਲੰਮਾਈ=length+((length>bmp_ਲੰਮਾਈ)?2:1);
+    ਜੇ (dest_ਲੰਮਾਈ<=dest_ਸਮਰੱਥਾ) {
+        ਅਚਲ UChar32 *p;
         int32_t i;
 
-#ifdef DEBUG_SERIALIZE
-        printf("writeHdr\n");
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ DEBUG_SERIALIZE
+        ਲਿਖੋ("writeHdr\n");
+#ਜੇ_ਅੰਤ
         *dest = static_cast<uint16_t>(length);
-        if (length>bmpLength) {
+        ਜੇ (length>bmp_ਲੰਮਾਈ) {
             *dest|=0x8000;
-            *++dest = static_cast<uint16_t>(bmpLength);
+            *++dest = static_cast<uint16_t>(bmp_ਲੰਮਾਈ);
         }
         ++dest;
 
         /* write the BMP part of the array */
-        p=this->list;
-        for (i=0; i<bmpLength; ++i) {
-#ifdef DEBUG_SERIALIZE
-          printf("writebmp: %x\n", (int)*p);
-#endif
+        p=ਇਹ->list;
+        ਲਈ (i=0; i<bmp_ਲੰਮਾਈ; ++i) {
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ DEBUG_SERIALIZE
+          ਲਿਖੋ("writebmp: %x\n", (ਪੂਰਨ)*p);
+#ਜੇ_ਅੰਤ
             *dest++ = static_cast<uint16_t>(*p++);
         }
 
         /* write the supplementary part of the array */
-        for (; i<length; i+=2) {
-#ifdef DEBUG_SERIALIZE
-          printf("write32: %x\n", (int)*p);
-#endif
+        ਲਈ (; i<length; i+=2) {
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ DEBUG_SERIALIZE
+          ਲਿਖੋ("write32: %x\n", (ਪੂਰਨ)*p);
+#ਜੇ_ਅੰਤ
             *dest++ = static_cast<uint16_t>(*p >> 16);
             *dest++ = static_cast<uint16_t>(*p++);
         }
-    } else {
-        ec=U_BUFFER_OVERFLOW_ERROR;
+    } ਨਹੀਂਤਾਂ {
+        ec=U_ਬਫਰ_ਉਛਾਲ_ERROR;
     }
-    return destLength;
+    ਵਾਪਸ dest_ਲੰਮਾਈ;
 }
 
 //----------------------------------------------------------------
@@ -1603,100 +1603,100 @@ int32_t UnicodeSet::serialize(uint16_t *dest, int32_t destCapacity, UErrorCode& 
 /**
  * Allocate our strings vector and return true if successful.
  */
-UBool UnicodeSet::allocateStrings(UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+UBool Unicode_ਸੈੱਟ::allocate_ਲੜੀਆਂ(UError_ਕੋਡ &ਸਥਿਤੀ) {
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਵਾਪਸ ਝੂਠ;
     }
-    strings_ = new UVector(uprv_deleteUObject,
-                          uhash_compareUnicodeString, 1, status);
-    if (strings_ == nullptr) { // Check for memory allocation error.
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return false;
+    ਲੜੀਆਂ_2 = ਨਵਾਂ UVector(uprv_deleteUObject,
+                          uhash_compareUnicodeString, 1, ਸਥਿਤੀ);
+    ਜੇ (ਲੜੀਆਂ_2 == ਖਾਲੀ_ਸੂਚਕ) { // Check for memory allocation error.
+        ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+        ਵਾਪਸ ਝੂਠ;
     }
-    if (U_FAILURE(status)) {
-        delete strings_;
-        strings_ = nullptr;
-        return false;
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਮਿਟਾਓ ਲੜੀਆਂ_2;
+        ਲੜੀਆਂ_2 = ਖਾਲੀ_ਸੂਚਕ;
+        ਵਾਪਸ ਝੂਠ;
     } 
-    return true;
+    ਵਾਪਸ ਸੱਚ;
 }
 
-int32_t UnicodeSet::nextCapacity(int32_t minCapacity) {
+int32_t Unicode_ਸੈੱਟ::ਅਗਲਾ_ਸਮਰੱਥਾ(int32_t min_ਸਮਰੱਥਾ) {
     // Grow exponentially to reduce the frequency of allocations.
-    if (minCapacity < INITIAL_CAPACITY) {
-        return minCapacity + INITIAL_CAPACITY;
-    } else if (minCapacity <= 2500) {
-        return 5 * minCapacity;
-    } else {
-        int32_t newCapacity = 2 * minCapacity;
-        if (newCapacity > MAX_LENGTH) {
-            newCapacity = MAX_LENGTH;
+    ਜੇ (min_ਸਮਰੱਥਾ < INITIAL_ਸਮਰੱਥਾ) {
+        ਵਾਪਸ min_ਸਮਰੱਥਾ + INITIAL_ਸਮਰੱਥਾ;
+    } ਨਹੀਂਤਾਂ ਜੇ (min_ਸਮਰੱਥਾ <= 2500) {
+        ਵਾਪਸ 5 * min_ਸਮਰੱਥਾ;
+    } ਨਹੀਂਤਾਂ {
+        int32_t new_ਸਮਰੱਥਾ = 2 * min_ਸਮਰੱਥਾ;
+        ਜੇ (new_ਸਮਰੱਥਾ > MAX_ਲੰਮਾਈ) {
+            new_ਸਮਰੱਥਾ = MAX_ਲੰਮਾਈ;
         }
-        return newCapacity;
+        ਵਾਪਸ new_ਸਮਰੱਥਾ;
     }
 }
 
-bool UnicodeSet::ensureCapacity(int32_t newLen) {
-    if (newLen > MAX_LENGTH) {
-        newLen = MAX_LENGTH;
+ਤਾਰਕਿਕ Unicode_ਸੈੱਟ::ensure_ਸਮਰੱਥਾ(int32_t newLen) {
+    ਜੇ (newLen > MAX_ਲੰਮਾਈ) {
+        newLen = MAX_ਲੰਮਾਈ;
     }
-    if (newLen <= capacity) {
-        return true;
+    ਜੇ (newLen <= capacity) {
+        ਵਾਪਸ ਸੱਚ;
     }
-    int32_t newCapacity = nextCapacity(newLen);
-    UChar32* temp = static_cast<UChar32*>(uprv_malloc(newCapacity * sizeof(UChar32)));
-    if (temp == nullptr) {
-        setToBogus(); // set the object to bogus state if an OOM failure occurred.
-        return false;
+    int32_t new_ਸਮਰੱਥਾ = ਅਗਲਾ_ਸਮਰੱਥਾ(newLen);
+    UChar32* ਆਰਜ਼ੀ = static_cast<UChar32*>(uprv_malloc(new_ਸਮਰੱਥਾ * ਆਕਾਰ(UChar32)));
+    ਜੇ (ਆਰਜ਼ੀ == ਖਾਲੀ_ਸੂਚਕ) {
+        ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus(); // set the object to bogus state if an OOM failure occurred.
+        ਵਾਪਸ ਝੂਠ;
     }
     // Copy only the actual contents.
-    uprv_memcpy(temp, list, len * sizeof(UChar32));
-    if (list != stackList) {
+    uprv_memcpy(ਆਰਜ਼ੀ, list, len * ਆਕਾਰ(UChar32));
+    ਜੇ (list != ਢੇਰ_List) {
         uprv_free(list);
     }
-    list = temp;
-    capacity = newCapacity;
-    return true;
+    list = ਆਰਜ਼ੀ;
+    capacity = new_ਸਮਰੱਥਾ;
+    ਵਾਪਸ ਸੱਚ;
 }
 
-bool UnicodeSet::ensureBufferCapacity(int32_t newLen) {
-    if (newLen > MAX_LENGTH) {
-        newLen = MAX_LENGTH;
+ਤਾਰਕਿਕ Unicode_ਸੈੱਟ::ensure_ਬਫਰ_ਸਮਰੱਥਾ(int32_t newLen) {
+    ਜੇ (newLen > MAX_ਲੰਮਾਈ) {
+        newLen = MAX_ਲੰਮਾਈ;
     }
-    if (newLen <= bufferCapacity) {
-        return true;
+    ਜੇ (newLen <= ਬਫਰ_ਸਮਰੱਥਾ) {
+        ਵਾਪਸ ਸੱਚ;
     }
-    int32_t newCapacity = nextCapacity(newLen);
-    UChar32* temp = static_cast<UChar32*>(uprv_malloc(newCapacity * sizeof(UChar32)));
-    if (temp == nullptr) {
-        setToBogus();
-        return false;
+    int32_t new_ਸਮਰੱਥਾ = ਅਗਲਾ_ਸਮਰੱਥਾ(newLen);
+    UChar32* ਆਰਜ਼ੀ = static_cast<UChar32*>(uprv_malloc(new_ਸਮਰੱਥਾ * ਆਕਾਰ(UChar32)));
+    ਜੇ (ਆਰਜ਼ੀ == ਖਾਲੀ_ਸੂਚਕ) {
+        ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus();
+        ਵਾਪਸ ਝੂਠ;
     }
     // The buffer has no contents to be copied.
     // It is always filled from scratch after this call.
-    if (buffer != stackList) {
-        uprv_free(buffer);
+    ਜੇ (ਬਫਰ != ਢੇਰ_List) {
+        uprv_free(ਬਫਰ);
     }
-    buffer = temp;
-    bufferCapacity = newCapacity;
-    return true;
+    ਬਫਰ = ਆਰਜ਼ੀ;
+    ਬਫਰ_ਸਮਰੱਥਾ = new_ਸਮਰੱਥਾ;
+    ਵਾਪਸ ਸੱਚ;
 }
 
 /**
  * Swap list and buffer.
  */
-void UnicodeSet::swapBuffers() {
+ਖਾਲੀ Unicode_ਸੈੱਟ::ਅਦਲਾ_ਬਦਲੀ_Buffers() {
     // swap list and buffer
-    UChar32* temp = list;
-    list = buffer;
-    buffer = temp;
+    UChar32* ਆਰਜ਼ੀ = list;
+    list = ਬਫਰ;
+    ਬਫਰ = ਆਰਜ਼ੀ;
 
     int32_t c = capacity;
-    capacity = bufferCapacity;
-    bufferCapacity = c;
+    capacity = ਬਫਰ_ਸਮਰੱਥਾ;
+    ਬਫਰ_ਸਮਰੱਥਾ = c;
 }
 
-void UnicodeSet::setToBogus() {
+ਖਾਲੀ Unicode_ਸੈੱਟ::ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus() {
     clear(); // Remove everything in the set.
     fFlags = kIsBogus;
 }
@@ -1705,54 +1705,54 @@ void UnicodeSet::setToBogus() {
 // Implementation: Fundamental operators
 //----------------------------------------------------------------
 
-static inline UChar32 max(UChar32 a, UChar32 b) {
-    return (a > b) ? a : b;
+ਸਥਿਰ ਸਤਰਅੰਦਰ UChar32 max(UChar32 a, UChar32 b) {
+    ਵਾਪਸ (a > b) ? a : b;
 }
 
 // polarity = 0, 3 is normal: x xor y
 // polarity = 1, 2: x xor ~y == x === y
 
-void UnicodeSet::exclusiveOr(const UChar32* other, int32_t otherLen, int8_t polarity) {
-    if (isFrozen() || isBogus()) {
-        return;
+ਖਾਲੀ Unicode_ਸੈੱਟ::exclusiveOr(ਅਚਲ UChar32* other, int32_t otherLen, int8_t polarity) {
+    ਜੇ (isFrozen() || isBogus()) {
+        ਵਾਪਸ;
     }
-    if (!ensureBufferCapacity(len + otherLen)) {
-        return;
+    ਜੇ (!ensure_ਬਫਰ_ਸਮਰੱਥਾ(len + otherLen)) {
+        ਵਾਪਸ;
     }
 
     int32_t i = 0, j = 0, k = 0;
     UChar32 a = list[i++];
     UChar32 b;
-    if (polarity == 1 || polarity == 2) {
-        b = UNICODESET_LOW;
-        if (other[j] == UNICODESET_LOW) { // skip base if already LOW
+    ਜੇ (polarity == 1 || polarity == 2) {
+        b = UNICODESET_ਨੀਵਾਂ;
+        ਜੇ (other[j] == UNICODESET_ਨੀਵਾਂ) { // skip base if already LOW
             ++j;
             b = other[j];
         }
-    } else {
+    } ਨਹੀਂਤਾਂ {
         b = other[j++];
     }
     // simplest of all the routines
     // sort the values, discarding identicals!
-    for (;;) {
-        if (a < b) {
-            buffer[k++] = a;
+    ਲਈ (;;) {
+        ਜੇ (a < b) {
+            ਬਫਰ[k++] = a;
             a = list[i++];
-        } else if (b < a) {
-            buffer[k++] = b;
+        } ਨਹੀਂਤਾਂ ਜੇ (b < a) {
+            ਬਫਰ[k++] = b;
             b = other[j++];
-        } else if (a != UNICODESET_HIGH) { // at this point, a == b
+        } ਨਹੀਂਤਾਂ ਜੇ (a != UNICODESET_ਉੱਚਾ) { // at this point, a == b
             // discard both values!
             a = list[i++];
             b = other[j++];
-        } else { // DONE!
-            buffer[k++] = UNICODESET_HIGH;
+        } ਨਹੀਂਤਾਂ { // DONE!
+            ਬਫਰ[k++] = UNICODESET_ਉੱਚਾ;
             len = k;
-            break;
+            ਰੋਕੋ;
         }
     }
-    swapBuffers();
-    releasePattern();
+    ਅਦਲਾ_ਬਦਲੀ_Buffers();
+    release_ਨਮੂਨਾ();
 }
 
 // polarity = 0 is normal: x union y
@@ -1760,12 +1760,12 @@ void UnicodeSet::exclusiveOr(const UChar32* other, int32_t otherLen, int8_t pola
 // polarity = 1: ~x union y
 // polarity = 3: ~x union ~y
 
-void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
-    if (isFrozen() || isBogus() || other==nullptr) {
-        return;
+ਖਾਲੀ Unicode_ਸੈੱਟ::ਜੋੜੋ(ਅਚਲ UChar32* other, int32_t otherLen, int8_t polarity) {
+    ਜੇ (isFrozen() || isBogus() || other==ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ;
     }
-    if (!ensureBufferCapacity(len + otherLen)) {
-        return;
+    ਜੇ (!ensure_ਬਫਰ_ਸਮਰੱਥਾ(len + otherLen)) {
+        ਵਾਪਸ;
     }
 
     int32_t i = 0, j = 0, k = 0;
@@ -1773,39 +1773,39 @@ void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
     UChar32 b = other[j++];
     // change from xor is that we have to check overlapping pairs
     // polarity bit 1 means a is second, bit 2 means b is.
-    for (;;) {
-        switch (polarity) {
-          case 0: // both first; take lower if unequal
-            if (a < b) { // take a
+    ਲਈ (;;) {
+        ਚੋਣ (polarity) {
+          ਹਾਲਤ 0: // both first; take lower if unequal
+            ਜੇ (a < b) { // take a
                 // Back up over overlapping ranges in buffer[]
-                if (k > 0 && a <= buffer[k-1]) {
+                ਜੇ (k > 0 && a <= ਬਫਰ[k-1]) {
                     // Pick latter end value in buffer[] vs. list[]
-                    a = max(list[i], buffer[--k]);
-                } else {
+                    a = max(list[i], ਬਫਰ[--k]);
+                } ਨਹੀਂਤਾਂ {
                     // No overlap
-                    buffer[k++] = a;
+                    ਬਫਰ[k++] = a;
                     a = list[i];
                 }
                 i++; // Common if/else code factored out
                 polarity ^= 1;
-            } else if (b < a) { // take b
-                if (k > 0 && b <= buffer[k-1]) {
-                    b = max(other[j], buffer[--k]);
-                } else {
-                    buffer[k++] = b;
+            } ਨਹੀਂਤਾਂ ਜੇ (b < a) { // take b
+                ਜੇ (k > 0 && b <= ਬਫਰ[k-1]) {
+                    b = max(other[j], ਬਫਰ[--k]);
+                } ਨਹੀਂਤਾਂ {
+                    ਬਫਰ[k++] = b;
                     b = other[j];
                 }
                 j++;
                 polarity ^= 2;
-            } else { // a == b, take a, drop b
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } ਨਹੀਂਤਾਂ { // a == b, take a, drop b
+                ਜੇ (a == UNICODESET_ਉੱਚਾ) ਜਾਓ loop_ਸਿਰਾ;
                 // This is symmetrical; it doesn't matter if
                 // we backtrack with a or b. - liu
-                if (k > 0 && a <= buffer[k-1]) {
-                    a = max(list[i], buffer[--k]);
-                } else {
+                ਜੇ (k > 0 && a <= ਬਫਰ[k-1]) {
+                    a = max(list[i], ਬਫਰ[--k]);
+                } ਨਹੀਂਤਾਂ {
                     // No overlap
-                    buffer[k++] = a;
+                    ਬਫਰ[k++] = a;
                     a = list[i];
                 }
                 i++;
@@ -1813,57 +1813,57 @@ void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
                 b = other[j++];
                 polarity ^= 2;
             }
-            break;
-          case 3: // both second; take higher if unequal, and drop other
-            if (b <= a) { // take a
-                if (a == UNICODESET_HIGH) goto loop_end;
-                buffer[k++] = a;
-            } else { // take b
-                if (b == UNICODESET_HIGH) goto loop_end;
-                buffer[k++] = b;
+            ਰੋਕੋ;
+          ਹਾਲਤ 3: // both second; take higher if unequal, and drop other
+            ਜੇ (b <= a) { // take a
+                ਜੇ (a == UNICODESET_ਉੱਚਾ) ਜਾਓ loop_ਸਿਰਾ;
+                ਬਫਰ[k++] = a;
+            } ਨਹੀਂਤਾਂ { // take b
+                ਜੇ (b == UNICODESET_ਉੱਚਾ) ਜਾਓ loop_ਸਿਰਾ;
+                ਬਫਰ[k++] = b;
             }
             a = list[i++];
             polarity ^= 1;   // factored common code
             b = other[j++];
             polarity ^= 2;
-            break;
-          case 1: // a second, b first; if b < a, overlap
-            if (a < b) { // no overlap, take a
-                buffer[k++] = a; a = list[i++]; polarity ^= 1;
-            } else if (b < a) { // OVERLAP, drop b
+            ਰੋਕੋ;
+          ਹਾਲਤ 1: // a second, b first; if b < a, overlap
+            ਜੇ (a < b) { // no overlap, take a
+                ਬਫਰ[k++] = a; a = list[i++]; polarity ^= 1;
+            } ਨਹੀਂਤਾਂ ਜੇ (b < a) { // OVERLAP, drop b
                 b = other[j++];
                 polarity ^= 2;
-            } else { // a == b, drop both!
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } ਨਹੀਂਤਾਂ { // a == b, drop both!
+                ਜੇ (a == UNICODESET_ਉੱਚਾ) ਜਾਓ loop_ਸਿਰਾ;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
                 polarity ^= 2;
             }
-            break;
-          case 2: // a first, b second; if a < b, overlap
-            if (b < a) { // no overlap, take b
-                buffer[k++] = b;
+            ਰੋਕੋ;
+          ਹਾਲਤ 2: // a first, b second; if a < b, overlap
+            ਜੇ (b < a) { // no overlap, take b
+                ਬਫਰ[k++] = b;
                 b = other[j++];
                 polarity ^= 2;
-            } else  if (a < b) { // OVERLAP, drop a
+            } ਨਹੀਂਤਾਂ  ਜੇ (a < b) { // OVERLAP, drop a
                 a = list[i++];
                 polarity ^= 1;
-            } else { // a == b, drop both!
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } ਨਹੀਂਤਾਂ { // a == b, drop both!
+                ਜੇ (a == UNICODESET_ਉੱਚਾ) ਜਾਓ loop_ਸਿਰਾ;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
                 polarity ^= 2;
             }
-            break;
+            ਰੋਕੋ;
         }
     }
- loop_end:
-    buffer[k++] = UNICODESET_HIGH;    // terminate
+ loop_ਸਿਰਾ:
+    ਬਫਰ[k++] = UNICODESET_ਉੱਚਾ;    // terminate
     len = k;
-    swapBuffers();
-    releasePattern();
+    ਅਦਲਾ_ਬਦਲੀ_Buffers();
+    release_ਨਮੂਨਾ();
 }
 
 // polarity = 0 is normal: x intersect y
@@ -1871,12 +1871,12 @@ void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
 // polarity = 1: ~x intersect y
 // polarity = 3: ~x intersect ~y
 
-void UnicodeSet::retain(const UChar32* other, int32_t otherLen, int8_t polarity) {
-    if (isFrozen() || isBogus()) {
-        return;
+ਖਾਲੀ Unicode_ਸੈੱਟ::retain(ਅਚਲ UChar32* other, int32_t otherLen, int8_t polarity) {
+    ਜੇ (isFrozen() || isBogus()) {
+        ਵਾਪਸ;
     }
-    if (!ensureBufferCapacity(len + otherLen)) {
-        return;
+    ਜੇ (!ensure_ਬਫਰ_ਸਮਰੱਥਾ(len + otherLen)) {
+        ਵਾਪਸ;
     }
 
     int32_t i = 0, j = 0, k = 0;
@@ -1884,91 +1884,91 @@ void UnicodeSet::retain(const UChar32* other, int32_t otherLen, int8_t polarity)
     UChar32 b = other[j++];
     // change from xor is that we have to check overlapping pairs
     // polarity bit 1 means a is second, bit 2 means b is.
-    for (;;) {
-        switch (polarity) {
-          case 0: // both first; drop the smaller
-            if (a < b) { // drop a
+    ਲਈ (;;) {
+        ਚੋਣ (polarity) {
+          ਹਾਲਤ 0: // both first; drop the smaller
+            ਜੇ (a < b) { // drop a
                 a = list[i++];
                 polarity ^= 1;
-            } else if (b < a) { // drop b
+            } ਨਹੀਂਤਾਂ ਜੇ (b < a) { // drop b
                 b = other[j++];
                 polarity ^= 2;
-            } else { // a == b, take one, drop other
-                if (a == UNICODESET_HIGH) goto loop_end;
-                buffer[k++] = a;
-                a = list[i++];
-                polarity ^= 1;
-                b = other[j++];
-                polarity ^= 2;
-            }
-            break;
-          case 3: // both second; take lower if unequal
-            if (a < b) { // take a
-                buffer[k++] = a;
-                a = list[i++];
-                polarity ^= 1;
-            } else if (b < a) { // take b
-                buffer[k++] = b;
-                b = other[j++];
-                polarity ^= 2;
-            } else { // a == b, take one, drop other
-                if (a == UNICODESET_HIGH) goto loop_end;
-                buffer[k++] = a;
+            } ਨਹੀਂਤਾਂ { // a == b, take one, drop other
+                ਜੇ (a == UNICODESET_ਉੱਚਾ) ਜਾਓ loop_ਸਿਰਾ;
+                ਬਫਰ[k++] = a;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
                 polarity ^= 2;
             }
-            break;
-          case 1: // a second, b first;
-            if (a < b) { // NO OVERLAP, drop a
+            ਰੋਕੋ;
+          ਹਾਲਤ 3: // both second; take lower if unequal
+            ਜੇ (a < b) { // take a
+                ਬਫਰ[k++] = a;
                 a = list[i++];
                 polarity ^= 1;
-            } else if (b < a) { // OVERLAP, take b
-                buffer[k++] = b;
+            } ਨਹੀਂਤਾਂ ਜੇ (b < a) { // take b
+                ਬਫਰ[k++] = b;
                 b = other[j++];
                 polarity ^= 2;
-            } else { // a == b, drop both!
-                if (a == UNICODESET_HIGH) goto loop_end;
-                a = list[i++];
-                polarity ^= 1;
-                b = other[j++];
-                polarity ^= 2;
-            }
-            break;
-          case 2: // a first, b second; if a < b, overlap
-            if (b < a) { // no overlap, drop b
-                b = other[j++];
-                polarity ^= 2;
-            } else  if (a < b) { // OVERLAP, take a
-                buffer[k++] = a;
-                a = list[i++];
-                polarity ^= 1;
-            } else { // a == b, drop both!
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } ਨਹੀਂਤਾਂ { // a == b, take one, drop other
+                ਜੇ (a == UNICODESET_ਉੱਚਾ) ਜਾਓ loop_ਸਿਰਾ;
+                ਬਫਰ[k++] = a;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
                 polarity ^= 2;
             }
-            break;
+            ਰੋਕੋ;
+          ਹਾਲਤ 1: // a second, b first;
+            ਜੇ (a < b) { // NO OVERLAP, drop a
+                a = list[i++];
+                polarity ^= 1;
+            } ਨਹੀਂਤਾਂ ਜੇ (b < a) { // OVERLAP, take b
+                ਬਫਰ[k++] = b;
+                b = other[j++];
+                polarity ^= 2;
+            } ਨਹੀਂਤਾਂ { // a == b, drop both!
+                ਜੇ (a == UNICODESET_ਉੱਚਾ) ਜਾਓ loop_ਸਿਰਾ;
+                a = list[i++];
+                polarity ^= 1;
+                b = other[j++];
+                polarity ^= 2;
+            }
+            ਰੋਕੋ;
+          ਹਾਲਤ 2: // a first, b second; if a < b, overlap
+            ਜੇ (b < a) { // no overlap, drop b
+                b = other[j++];
+                polarity ^= 2;
+            } ਨਹੀਂਤਾਂ  ਜੇ (a < b) { // OVERLAP, take a
+                ਬਫਰ[k++] = a;
+                a = list[i++];
+                polarity ^= 1;
+            } ਨਹੀਂਤਾਂ { // a == b, drop both!
+                ਜੇ (a == UNICODESET_ਉੱਚਾ) ਜਾਓ loop_ਸਿਰਾ;
+                a = list[i++];
+                polarity ^= 1;
+                b = other[j++];
+                polarity ^= 2;
+            }
+            ਰੋਕੋ;
         }
     }
- loop_end:
-    buffer[k++] = UNICODESET_HIGH;    // terminate
+ loop_ਸਿਰਾ:
+    ਬਫਰ[k++] = UNICODESET_ਉੱਚਾ;    // terminate
     len = k;
-    swapBuffers();
-    releasePattern();
+    ਅਦਲਾ_ਬਦਲੀ_Buffers();
+    release_ਨਮੂਨਾ();
 }
 
 /**
  * Append the <code>toPattern()</code> representation of a
  * string to the given <code>StringBuffer</code>.
  */
-void UnicodeSet::_appendToPat(UnicodeString& buf, const UnicodeString& s, UBool escapeUnprintable) {
+ਖਾਲੀ Unicode_ਸੈੱਟ::append_ਮੰਜ਼ਿਲ_Pat(UnicodeString& buf, ਅਚਲ UnicodeString& s, UBool escapeUnprintable) {
     UChar32 cp;
-    for (int32_t i = 0; i < s.length(); i += U16_LENGTH(cp)) {
-        _appendToPat(buf, cp = s.char32At(i), escapeUnprintable);
+    ਲਈ (int32_t i = 0; i < s.length(); i += U16_ਲੰਮਾਈ(cp)) {
+        append_ਮੰਜ਼ਿਲ_Pat(buf, cp = s.char32At(i), escapeUnprintable);
     }
 }
 
@@ -1976,47 +1976,47 @@ void UnicodeSet::_appendToPat(UnicodeString& buf, const UnicodeString& s, UBool 
  * Append the <code>toPattern()</code> representation of a
  * character to the given <code>StringBuffer</code>.
  */
-void UnicodeSet::_appendToPat(UnicodeString& buf, UChar32 c, UBool escapeUnprintable) {
-    if (escapeUnprintable ? ICU_Utility::isUnprintable(c) : ICU_Utility::shouldAlwaysBeEscaped(c)) {
+ਖਾਲੀ Unicode_ਸੈੱਟ::append_ਮੰਜ਼ਿਲ_Pat(UnicodeString& buf, UChar32 c, UBool escapeUnprintable) {
+    ਜੇ (escapeUnprintable ? ICU_Utility::isUnprintable(c) : ICU_Utility::shouldAlwaysBeEscaped(c)) {
         // Use hex escape notation (\uxxxx or \Uxxxxxxxx) for anything
         // unprintable
         ICU_Utility::escape(buf, c);
-        return;
+        ਵਾਪਸ;
     }
     // Okay to let ':' pass through
-    switch (c) {
-    case u'[':
-    case u']':
-    case u'-':
-    case u'^':
-    case u'&':
-    case u'\\':
-    case u'{':
-    case u'}':
-    case u':':
-    case SymbolTable::SYMBOL_REF:
+    ਚੋਣ (c) {
+    ਹਾਲਤ u'[':
+    ਹਾਲਤ u']':
+    ਹਾਲਤ u'-':
+    ਹਾਲਤ u'^':
+    ਹਾਲਤ u'&':
+    ਹਾਲਤ u'\\':
+    ਹਾਲਤ u'{':
+    ਹਾਲਤ u'}':
+    ਹਾਲਤ u':':
+    ਹਾਲਤ ਚਿੰਨ੍ਹ_ਸਾਰਣੀ::ਚਿੰਨ੍ਹ_REF:
         buf.append(u'\\');
-        break;
-    default:
+        ਰੋਕੋ;
+    ਮੂਲ:
         // Escape whitespace
-        if (PatternProps::isWhiteSpace(c)) {
+        ਜੇ (ਨਮੂਨਾ_Props::isWhiteSpace(c)) {
             buf.append(u'\\');
         }
-        break;
+        ਰੋਕੋ;
     }
     buf.append(c);
 }
 
-void UnicodeSet::_appendToPat(UnicodeString &result, UChar32 start, UChar32 end,
+ਖਾਲੀ Unicode_ਸੈੱਟ::append_ਮੰਜ਼ਿਲ_Pat(UnicodeString &ਨਤੀਜਾ, UChar32 ਸ਼ੁਰੂ, UChar32 ਸਿਰਾ,
                               UBool escapeUnprintable) {
-    _appendToPat(result, start, escapeUnprintable);
-    if (start != end) {
-        if ((start+1) != end ||
+    append_ਮੰਜ਼ਿਲ_Pat(ਨਤੀਜਾ, ਸ਼ੁਰੂ, escapeUnprintable);
+    ਜੇ (ਸ਼ੁਰੂ != ਸਿਰਾ) {
+        ਜੇ ((ਸ਼ੁਰੂ+1) != ਸਿਰਾ ||
                 // Avoid writing what looks like a lead+trail surrogate pair.
-                start == 0xdbff) {
-            result.append(u'-');
+                ਸ਼ੁਰੂ == 0xdbff) {
+            ਨਤੀਜਾ.append(u'-');
         }
-        _appendToPat(result, end, escapeUnprintable);
+        append_ਮੰਜ਼ਿਲ_Pat(ਨਤੀਜਾ, ਸਿਰਾ, escapeUnprintable);
     }
 }
 
@@ -2025,39 +2025,39 @@ void UnicodeSet::_appendToPat(UnicodeString &result, UChar32 start, UChar32 end,
  * a cleaned version of the string passed to applyPattern(), if there
  * is one.  Otherwise it will be generated.
  */
-UnicodeString& UnicodeSet::_toPattern(UnicodeString& result U_LIFETIME_BOUND,
-                                      UBool escapeUnprintable) const
+UnicodeString& Unicode_ਸੈੱਟ::ਮੰਜ਼ਿਲ_ਨਮੂਨਾ_2(UnicodeString& ਨਤੀਜਾ U_LIFETIME_BOUND,
+                                      UBool escapeUnprintable) ਅਚਲ
 {
-    if (pat != nullptr) {
+    ਜੇ (pat != ਖਾਲੀ_ਸੂਚਕ) {
         int32_t i;
-        int32_t backslashCount = 0;
-        for (i=0; i<patLen; ) {
+        int32_t backslash_ਗਿਣਤੀ = 0;
+        ਲਈ (i=0; i<patLen; ) {
             UChar32 c;
-            U16_NEXT(pat, i, patLen, c);
-            if (escapeUnprintable ?
+            U16_ਅਗਲਾ(pat, i, patLen, c);
+            ਜੇ (escapeUnprintable ?
                     ICU_Utility::isUnprintable(c) : ICU_Utility::shouldAlwaysBeEscaped(c)) {
                 // If the unprintable character is preceded by an odd
                 // number of backslashes, then it has been escaped.
                 // Before unescaping it, we delete the final
                 // backslash.
-                if ((backslashCount % 2) == 1) {
-                    result.truncate(result.length() - 1);
+                ਜੇ ((backslash_ਗਿਣਤੀ % 2) == 1) {
+                    ਨਤੀਜਾ.truncate(ਨਤੀਜਾ.length() - 1);
                 }
-                ICU_Utility::escape(result, c);
-                backslashCount = 0;
-            } else {
-                result.append(c);
-                if (c == u'\\') {
-                    ++backslashCount;
-                } else {
-                    backslashCount = 0;
+                ICU_Utility::escape(ਨਤੀਜਾ, c);
+                backslash_ਗਿਣਤੀ = 0;
+            } ਨਹੀਂਤਾਂ {
+                ਨਤੀਜਾ.append(c);
+                ਜੇ (c == u'\\') {
+                    ++backslash_ਗਿਣਤੀ;
+                } ਨਹੀਂਤਾਂ {
+                    backslash_ਗਿਣਤੀ = 0;
                 }
             }
         }
-        return result;
+        ਵਾਪਸ ਨਤੀਜਾ;
     }
 
-    return _generatePattern(result, escapeUnprintable);
+    ਵਾਪਸ generate_ਨਮੂਨਾ(ਨਤੀਜਾ, escapeUnprintable);
 }
 
 /**
@@ -2065,11 +2065,11 @@ UnicodeString& UnicodeSet::_toPattern(UnicodeString& result U_LIFETIME_BOUND,
  * calling this function is passed to a UnicodeSet constructor, it
  * will produce another set that is equal to this one.
  */
-UnicodeString& UnicodeSet::toPattern(UnicodeString& result U_LIFETIME_BOUND,
-                                     UBool escapeUnprintable) const
+UnicodeString& Unicode_ਸੈੱਟ::ਮੰਜ਼ਿਲ_ਨਮੂਨਾ(UnicodeString& ਨਤੀਜਾ U_LIFETIME_BOUND,
+                                     UBool escapeUnprintable) ਅਚਲ
 {
-    result.truncate(0);
-    return _toPattern(result, escapeUnprintable);
+    ਨਤੀਜਾ.truncate(0);
+    ਵਾਪਸ ਮੰਜ਼ਿਲ_ਨਮੂਨਾ_2(ਨਤੀਜਾ, escapeUnprintable);
 }
 
 /**
@@ -2077,13 +2077,13 @@ UnicodeString& UnicodeSet::toPattern(UnicodeString& result U_LIFETIME_BOUND,
  * This does not use this.pat, the cleaned up copy of the string
  * passed to applyPattern().
  */
-UnicodeString& UnicodeSet::_generatePattern(UnicodeString& result U_LIFETIME_BOUND,
-                                            UBool escapeUnprintable) const
+UnicodeString& Unicode_ਸੈੱਟ::generate_ਨਮੂਨਾ(UnicodeString& ਨਤੀਜਾ U_LIFETIME_BOUND,
+                                            UBool escapeUnprintable) ਅਚਲ
 {
-    result.append(u'[');
+    ਨਤੀਜਾ.append(u'[');
 
     int32_t i = 0;
-    int32_t limit = len & ~1;  // = 2 * getRangeCount()
+    int32_t ਹੱਦਬੰਦੀ = len & ~1;  // = 2 * getRangeCount()
 
     // If the set contains at least 2 intervals and includes both
     // MIN_VALUE and MAX_VALUE, then the inverse representation will
@@ -2096,60 +2096,60 @@ UnicodeString& UnicodeSet::_generatePattern(UnicodeString& result U_LIFETIME_BOU
     //
     // *But* do not write the inverse (complement) if there are strings.
     // Since ICU 70, the '^' performs a code point complement which removes all strings.
-    if (len >= 4 && list[0] == 0 && limit == len && !hasStrings()) {
+    ਜੇ (len >= 4 && list[0] == 0 && ਹੱਦਬੰਦੀ == len && !has_ਲੜੀਆਂ()) {
         // Emit the inverse
-        result.append(u'^');
+        ਨਤੀਜਾ.append(u'^');
         // Offsetting the inversion list index by one lets us
         // iterate over the ranges of the set complement.
         i = 1;
-        --limit;
+        --ਹੱਦਬੰਦੀ;
     }
 
     // Emit the ranges as pairs.
-    while (i < limit) {
-        UChar32 start = list[i];  // getRangeStart()
-        UChar32 end = list[i + 1] - 1;  // getRangeEnd() = range limit minus one
-        if (!(0xd800 <= end && end <= 0xdbff)) {
-            _appendToPat(result, start, end, escapeUnprintable);
+    ਜਦੋਂ (i < ਹੱਦਬੰਦੀ) {
+        UChar32 ਸ਼ੁਰੂ = list[i];  // getRangeStart()
+        UChar32 ਸਿਰਾ = list[i + 1] - 1;  // getRangeEnd() = range limit minus one
+        ਜੇ (!(0xd800 <= ਸਿਰਾ && ਸਿਰਾ <= 0xdbff)) {
+            append_ਮੰਜ਼ਿਲ_Pat(ਨਤੀਜਾ, ਸ਼ੁਰੂ, ਸਿਰਾ, escapeUnprintable);
             i += 2;
-        } else {
+        } ਨਹੀਂਤਾਂ {
             // The range ends with a lead surrogate.
             // Avoid writing what looks like a lead+trail surrogate pair.
             // 1. Postpone ranges that start with a lead surrogate code point.
-            int32_t firstLead = i;
-            while ((i += 2) < limit && list[i] <= 0xdbff) {}
-            int32_t firstAfterLead = i;
+            int32_t ਪਹਿਲਾ_Lead = i;
+            ਜਦੋਂ ((i += 2) < ਹੱਦਬੰਦੀ && list[i] <= 0xdbff) {}
+            int32_t ਪਹਿਲਾ_After_Lead = i;
             // 2. Write following ranges that start with a trail surrogate code point.
-            while (i < limit && (start = list[i]) <= 0xdfff) {
-                _appendToPat(result, start, list[i + 1] - 1, escapeUnprintable);
+            ਜਦੋਂ (i < ਹੱਦਬੰਦੀ && (ਸ਼ੁਰੂ = list[i]) <= 0xdfff) {
+                append_ਮੰਜ਼ਿਲ_Pat(ਨਤੀਜਾ, ਸ਼ੁਰੂ, list[i + 1] - 1, escapeUnprintable);
                 i += 2;
             }
             // 3. Now write the postponed ranges.
-            for (int j = firstLead; j < firstAfterLead; j += 2) {
-                _appendToPat(result, list[j], list[j + 1] - 1, escapeUnprintable);
+            ਲਈ (ਪੂਰਨ j = ਪਹਿਲਾ_Lead; j < ਪਹਿਲਾ_After_Lead; j += 2) {
+                append_ਮੰਜ਼ਿਲ_Pat(ਨਤੀਜਾ, list[j], list[j + 1] - 1, escapeUnprintable);
             }
         }
     }
 
-    if (strings_ != nullptr) {
-        for (int32_t i = 0; i<strings_->size(); ++i) {
-            result.append(u'{');
-            _appendToPat(result,
-                         *static_cast<const UnicodeString*>(strings_->elementAt(i)),
+    ਜੇ (ਲੜੀਆਂ_2 != ਖਾਲੀ_ਸੂਚਕ) {
+        ਲਈ (int32_t i = 0; i<ਲੜੀਆਂ_2->size(); ++i) {
+            ਨਤੀਜਾ.append(u'{');
+            append_ਮੰਜ਼ਿਲ_Pat(ਨਤੀਜਾ,
+                         *static_cast<ਅਚਲ UnicodeString*>(ਲੜੀਆਂ_2->elementAt(i)),
                          escapeUnprintable);
-            result.append(u'}');
+            ਨਤੀਜਾ.append(u'}');
         }
     }
-    return result.append(u']');
+    ਵਾਪਸ ਨਤੀਜਾ.append(u']');
 }
 
 /**
 * Release existing cached pattern
 */
-void UnicodeSet::releasePattern() {
-    if (pat) {
+ਖਾਲੀ Unicode_ਸੈੱਟ::release_ਨਮੂਨਾ() {
+    ਜੇ (pat) {
         uprv_free(pat);
-        pat = nullptr;
+        pat = ਖਾਲੀ_ਸੂਚਕ;
         patLen = 0;
     }
 }
@@ -2157,10 +2157,10 @@ void UnicodeSet::releasePattern() {
 /**
 * Set the new pattern to cache.
 */
-void UnicodeSet::setPattern(const char16_t *newPat, int32_t newPatLen) {
-    releasePattern();
-    pat = static_cast<char16_t*>(uprv_malloc((newPatLen + 1) * sizeof(char16_t)));
-    if (pat) {
+ਖਾਲੀ Unicode_ਸੈੱਟ::ਸੈੱਟ_ਨਮੂਨਾ(ਅਚਲ char16_t *newPat, int32_t newPatLen) {
+    release_ਨਮੂਨਾ();
+    pat = static_cast<char16_t*>(uprv_malloc((newPatLen + 1) * ਆਕਾਰ(char16_t)));
+    ਜੇ (pat) {
         patLen = newPatLen;
         u_memcpy(pat, newPat, patLen);
         pat[patLen] = 0;
@@ -2169,185 +2169,185 @@ void UnicodeSet::setPattern(const char16_t *newPat, int32_t newPatLen) {
     // We can regenerate an equivalent pattern later when requested.
 }
 
-UnicodeSet* UnicodeSet::freeze() U_LIFETIME_BOUND {
-    if(!isFrozen() && !isBogus()) {
+Unicode_ਸੈੱਟ* Unicode_ਸੈੱਟ::freeze() U_LIFETIME_BOUND {
+    ਜੇ(!isFrozen() && !isBogus()) {
         compact();
 
         // Optimize contains() and span() and similar functions.
-        if (hasStrings()) {
-            stringSpan = new UnicodeSetStringSpan(*this, *strings_, UnicodeSetStringSpan::ALL);
-            if (stringSpan == nullptr) {
-                setToBogus();
-                return this;
-            } else if (!stringSpan->needsStringSpanUTF16()) {
+        ਜੇ (has_ਲੜੀਆਂ()) {
+            string_ਵਿਸਤਾਰ = ਨਵਾਂ Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ(*ਇਹ, *ਲੜੀਆਂ_2, Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ::ALL);
+            ਜੇ (string_ਵਿਸਤਾਰ == ਖਾਲੀ_ਸੂਚਕ) {
+                ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus();
+                ਵਾਪਸ ਇਹ;
+            } ਨਹੀਂਤਾਂ ਜੇ (!string_ਵਿਸਤਾਰ->needs_String_ਵਿਸਤਾਰ_UTF16()) {
                 // All strings are irrelevant for span() etc. because
                 // all of each string's code points are contained in this set.
                 // Do not check needsStringSpanUTF8() because UTF-8 has at most as
                 // many relevant strings as UTF-16.
                 // (Thus needsStringSpanUTF8() implies needsStringSpanUTF16().)
-                delete stringSpan;
-                stringSpan = nullptr;
+                ਮਿਟਾਓ string_ਵਿਸਤਾਰ;
+                string_ਵਿਸਤਾਰ = ਖਾਲੀ_ਸੂਚਕ;
             }
         }
-        if (stringSpan == nullptr) {
+        ਜੇ (string_ਵਿਸਤਾਰ == ਖਾਲੀ_ਸੂਚਕ) {
             // No span-relevant strings: Optimize for code point spans.
-            bmpSet=new BMPSet(list, len);
-            if (bmpSet == nullptr) { // Check for memory allocation error.
-                setToBogus();
+            bmp_ਸੈੱਟ=ਨਵਾਂ BMPSet(list, len);
+            ਜੇ (bmp_ਸੈੱਟ == ਖਾਲੀ_ਸੂਚਕ) { // Check for memory allocation error.
+                ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus();
             }
         }
     }
-    return this;
+    ਵਾਪਸ ਇਹ;
 }
 
-int32_t UnicodeSet::span(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(length>0 && bmpSet!=nullptr) {
-        return static_cast<int32_t>(bmpSet->span(s, s + length, spanCondition) - s);
+int32_t Unicode_ਸੈੱਟ::ਵਿਸਤਾਰ(ਅਚਲ char16_t *s, int32_t length, USet_ਵਿਸਤਾਰ_Condition ਵਿਸਤਾਰ_Condition) ਅਚਲ {
+    ਜੇ(length>0 && bmp_ਸੈੱਟ!=ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ static_cast<int32_t>(bmp_ਸੈੱਟ->ਵਿਸਤਾਰ(s, s + length, ਵਿਸਤਾਰ_Condition) - s);
     }
-    if(length<0) {
+    ਜੇ(length<0) {
         length=u_strlen(s);
     }
-    if(length==0) {
-        return 0;
+    ਜੇ(length==0) {
+        ਵਾਪਸ 0;
     }
-    if(stringSpan!=nullptr) {
-        return stringSpan->span(s, length, spanCondition);
-    } else if(hasStrings()) {
-        uint32_t which= spanCondition==USET_SPAN_NOT_CONTAINED ?
-                            UnicodeSetStringSpan::FWD_UTF16_NOT_CONTAINED :
-                            UnicodeSetStringSpan::FWD_UTF16_CONTAINED;
-        UnicodeSetStringSpan strSpan(*this, *strings_, which);
-        if(strSpan.needsStringSpanUTF16()) {
-            return strSpan.span(s, length, spanCondition);
+    ਜੇ(string_ਵਿਸਤਾਰ!=ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ string_ਵਿਸਤਾਰ->ਵਿਸਤਾਰ(s, length, ਵਿਸਤਾਰ_Condition);
+    } ਨਹੀਂਤਾਂ ਜੇ(has_ਲੜੀਆਂ()) {
+        uint32_t which= ਵਿਸਤਾਰ_Condition==USET_ਵਿਸਤਾਰ_NOT_CONTAINED ?
+                            Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ::FWD_UTF16_NOT_CONTAINED :
+                            Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ::FWD_UTF16_CONTAINED;
+        Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ str_ਵਿਸਤਾਰ(*ਇਹ, *ਲੜੀਆਂ_2, which);
+        ਜੇ(str_ਵਿਸਤਾਰ.needs_String_ਵਿਸਤਾਰ_UTF16()) {
+            ਵਾਪਸ str_ਵਿਸਤਾਰ.ਵਿਸਤਾਰ(s, length, ਵਿਸਤਾਰ_Condition);
         }
     }
 
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
-        spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
+    ਜੇ(ਵਿਸਤਾਰ_Condition!=USET_ਵਿਸਤਾਰ_NOT_CONTAINED) {
+        ਵਿਸਤਾਰ_Condition=USET_ਵਿਸਤਾਰ_CONTAINED;  // Pin to 0/1 values.
     }
 
     UChar32 c;
-    int32_t start=0, prev=0;
-    do {
-        U16_NEXT(s, start, length, c);
-        if(spanCondition!=contains(c)) {
-            break;
+    int32_t ਸ਼ੁਰੂ=0, prev=0;
+    ਕਰੋ {
+        U16_ਅਗਲਾ(s, ਸ਼ੁਰੂ, length, c);
+        ਜੇ(ਵਿਸਤਾਰ_Condition!=ਸ਼ਾਮਲ_ਹੈ(c)) {
+            ਰੋਕੋ;
         }
-    } while((prev=start)<length);
-    return prev;
+    } ਜਦੋਂ((prev=ਸ਼ੁਰੂ)<length);
+    ਵਾਪਸ prev;
 }
 
-int32_t UnicodeSet::spanBack(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(length>0 && bmpSet!=nullptr) {
-        return static_cast<int32_t>(bmpSet->spanBack(s, s + length, spanCondition) - s);
+int32_t Unicode_ਸੈੱਟ::ਵਿਸਤਾਰ_ਪਿੱਠ(ਅਚਲ char16_t *s, int32_t length, USet_ਵਿਸਤਾਰ_Condition ਵਿਸਤਾਰ_Condition) ਅਚਲ {
+    ਜੇ(length>0 && bmp_ਸੈੱਟ!=ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ static_cast<int32_t>(bmp_ਸੈੱਟ->ਵਿਸਤਾਰ_ਪਿੱਠ(s, s + length, ਵਿਸਤਾਰ_Condition) - s);
     }
-    if(length<0) {
+    ਜੇ(length<0) {
         length=u_strlen(s);
     }
-    if(length==0) {
-        return 0;
+    ਜੇ(length==0) {
+        ਵਾਪਸ 0;
     }
-    if(stringSpan!=nullptr) {
-        return stringSpan->spanBack(s, length, spanCondition);
-    } else if(hasStrings()) {
-        uint32_t which= spanCondition==USET_SPAN_NOT_CONTAINED ?
-                            UnicodeSetStringSpan::BACK_UTF16_NOT_CONTAINED :
-                            UnicodeSetStringSpan::BACK_UTF16_CONTAINED;
-        UnicodeSetStringSpan strSpan(*this, *strings_, which);
-        if(strSpan.needsStringSpanUTF16()) {
-            return strSpan.spanBack(s, length, spanCondition);
+    ਜੇ(string_ਵਿਸਤਾਰ!=ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ string_ਵਿਸਤਾਰ->ਵਿਸਤਾਰ_ਪਿੱਠ(s, length, ਵਿਸਤਾਰ_Condition);
+    } ਨਹੀਂਤਾਂ ਜੇ(has_ਲੜੀਆਂ()) {
+        uint32_t which= ਵਿਸਤਾਰ_Condition==USET_ਵਿਸਤਾਰ_NOT_CONTAINED ?
+                            Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ::ਪਿੱਠ_UTF16_NOT_CONTAINED :
+                            Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ::ਪਿੱਠ_UTF16_CONTAINED;
+        Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ str_ਵਿਸਤਾਰ(*ਇਹ, *ਲੜੀਆਂ_2, which);
+        ਜੇ(str_ਵਿਸਤਾਰ.needs_String_ਵਿਸਤਾਰ_UTF16()) {
+            ਵਾਪਸ str_ਵਿਸਤਾਰ.ਵਿਸਤਾਰ_ਪਿੱਠ(s, length, ਵਿਸਤਾਰ_Condition);
         }
     }
 
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
-        spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
+    ਜੇ(ਵਿਸਤਾਰ_Condition!=USET_ਵਿਸਤਾਰ_NOT_CONTAINED) {
+        ਵਿਸਤਾਰ_Condition=USET_ਵਿਸਤਾਰ_CONTAINED;  // Pin to 0/1 values.
     }
 
     UChar32 c;
     int32_t prev=length;
-    do {
+    ਕਰੋ {
         U16_PREV(s, 0, length, c);
-        if(spanCondition!=contains(c)) {
-            break;
+        ਜੇ(ਵਿਸਤਾਰ_Condition!=ਸ਼ਾਮਲ_ਹੈ(c)) {
+            ਰੋਕੋ;
         }
-    } while((prev=length)>0);
-    return prev;
+    } ਜਦੋਂ((prev=length)>0);
+    ਵਾਪਸ prev;
 }
 
-int32_t UnicodeSet::spanUTF8(const char *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(length>0 && bmpSet!=nullptr) {
-        const uint8_t* s0 = reinterpret_cast<const uint8_t*>(s);
-        return static_cast<int32_t>(bmpSet->spanUTF8(s0, length, spanCondition) - s0);
+int32_t Unicode_ਸੈੱਟ::ਵਿਸਤਾਰ_UTF8(ਅਚਲ ਅੱਖਰ *s, int32_t length, USet_ਵਿਸਤਾਰ_Condition ਵਿਸਤਾਰ_Condition) ਅਚਲ {
+    ਜੇ(length>0 && bmp_ਸੈੱਟ!=ਖਾਲੀ_ਸੂਚਕ) {
+        ਅਚਲ uint8_t* s0 = reinterpret_cast<ਅਚਲ uint8_t*>(s);
+        ਵਾਪਸ static_cast<int32_t>(bmp_ਸੈੱਟ->ਵਿਸਤਾਰ_UTF8(s0, length, ਵਿਸਤਾਰ_Condition) - s0);
     }
-    if(length<0) {
+    ਜੇ(length<0) {
         length = static_cast<int32_t>(uprv_strlen(s));
     }
-    if(length==0) {
-        return 0;
+    ਜੇ(length==0) {
+        ਵਾਪਸ 0;
     }
-    if(stringSpan!=nullptr) {
-        return stringSpan->spanUTF8(reinterpret_cast<const uint8_t*>(s), length, spanCondition);
-    } else if(hasStrings()) {
-        uint32_t which= spanCondition==USET_SPAN_NOT_CONTAINED ?
-                            UnicodeSetStringSpan::FWD_UTF8_NOT_CONTAINED :
-                            UnicodeSetStringSpan::FWD_UTF8_CONTAINED;
-        UnicodeSetStringSpan strSpan(*this, *strings_, which);
-        if(strSpan.needsStringSpanUTF8()) {
-            return strSpan.spanUTF8(reinterpret_cast<const uint8_t*>(s), length, spanCondition);
+    ਜੇ(string_ਵਿਸਤਾਰ!=ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ string_ਵਿਸਤਾਰ->ਵਿਸਤਾਰ_UTF8(reinterpret_cast<ਅਚਲ uint8_t*>(s), length, ਵਿਸਤਾਰ_Condition);
+    } ਨਹੀਂਤਾਂ ਜੇ(has_ਲੜੀਆਂ()) {
+        uint32_t which= ਵਿਸਤਾਰ_Condition==USET_ਵਿਸਤਾਰ_NOT_CONTAINED ?
+                            Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ::FWD_UTF8_NOT_CONTAINED :
+                            Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ::FWD_UTF8_CONTAINED;
+        Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ str_ਵਿਸਤਾਰ(*ਇਹ, *ਲੜੀਆਂ_2, which);
+        ਜੇ(str_ਵਿਸਤਾਰ.needs_String_ਵਿਸਤਾਰ_UTF8()) {
+            ਵਾਪਸ str_ਵਿਸਤਾਰ.ਵਿਸਤਾਰ_UTF8(reinterpret_cast<ਅਚਲ uint8_t*>(s), length, ਵਿਸਤਾਰ_Condition);
         }
     }
 
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
-        spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
+    ਜੇ(ਵਿਸਤਾਰ_Condition!=USET_ਵਿਸਤਾਰ_NOT_CONTAINED) {
+        ਵਿਸਤਾਰ_Condition=USET_ਵਿਸਤਾਰ_CONTAINED;  // Pin to 0/1 values.
     }
 
     UChar32 c;
-    int32_t start=0, prev=0;
-    do {
-        U8_NEXT_OR_FFFD(s, start, length, c);
-        if(spanCondition!=contains(c)) {
-            break;
+    int32_t ਸ਼ੁਰੂ=0, prev=0;
+    ਕਰੋ {
+        U8_ਅਗਲਾ_OR_FFFD(s, ਸ਼ੁਰੂ, length, c);
+        ਜੇ(ਵਿਸਤਾਰ_Condition!=ਸ਼ਾਮਲ_ਹੈ(c)) {
+            ਰੋਕੋ;
         }
-    } while((prev=start)<length);
-    return prev;
+    } ਜਦੋਂ((prev=ਸ਼ੁਰੂ)<length);
+    ਵਾਪਸ prev;
 }
 
-int32_t UnicodeSet::spanBackUTF8(const char *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(length>0 && bmpSet!=nullptr) {
-        const uint8_t* s0 = reinterpret_cast<const uint8_t*>(s);
-        return bmpSet->spanBackUTF8(s0, length, spanCondition);
+int32_t Unicode_ਸੈੱਟ::ਵਿਸਤਾਰ_ਪਿੱਠ_UTF8(ਅਚਲ ਅੱਖਰ *s, int32_t length, USet_ਵਿਸਤਾਰ_Condition ਵਿਸਤਾਰ_Condition) ਅਚਲ {
+    ਜੇ(length>0 && bmp_ਸੈੱਟ!=ਖਾਲੀ_ਸੂਚਕ) {
+        ਅਚਲ uint8_t* s0 = reinterpret_cast<ਅਚਲ uint8_t*>(s);
+        ਵਾਪਸ bmp_ਸੈੱਟ->ਵਿਸਤਾਰ_ਪਿੱਠ_UTF8(s0, length, ਵਿਸਤਾਰ_Condition);
     }
-    if(length<0) {
+    ਜੇ(length<0) {
         length = static_cast<int32_t>(uprv_strlen(s));
     }
-    if(length==0) {
-        return 0;
+    ਜੇ(length==0) {
+        ਵਾਪਸ 0;
     }
-    if(stringSpan!=nullptr) {
-        return stringSpan->spanBackUTF8(reinterpret_cast<const uint8_t*>(s), length, spanCondition);
-    } else if(hasStrings()) {
-        uint32_t which= spanCondition==USET_SPAN_NOT_CONTAINED ?
-                            UnicodeSetStringSpan::BACK_UTF8_NOT_CONTAINED :
-                            UnicodeSetStringSpan::BACK_UTF8_CONTAINED;
-        UnicodeSetStringSpan strSpan(*this, *strings_, which);
-        if(strSpan.needsStringSpanUTF8()) {
-            return strSpan.spanBackUTF8(reinterpret_cast<const uint8_t*>(s), length, spanCondition);
+    ਜੇ(string_ਵਿਸਤਾਰ!=ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ string_ਵਿਸਤਾਰ->ਵਿਸਤਾਰ_ਪਿੱਠ_UTF8(reinterpret_cast<ਅਚਲ uint8_t*>(s), length, ਵਿਸਤਾਰ_Condition);
+    } ਨਹੀਂਤਾਂ ਜੇ(has_ਲੜੀਆਂ()) {
+        uint32_t which= ਵਿਸਤਾਰ_Condition==USET_ਵਿਸਤਾਰ_NOT_CONTAINED ?
+                            Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ::ਪਿੱਠ_UTF8_NOT_CONTAINED :
+                            Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ::ਪਿੱਠ_UTF8_CONTAINED;
+        Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ str_ਵਿਸਤਾਰ(*ਇਹ, *ਲੜੀਆਂ_2, which);
+        ਜੇ(str_ਵਿਸਤਾਰ.needs_String_ਵਿਸਤਾਰ_UTF8()) {
+            ਵਾਪਸ str_ਵਿਸਤਾਰ.ਵਿਸਤਾਰ_ਪਿੱਠ_UTF8(reinterpret_cast<ਅਚਲ uint8_t*>(s), length, ਵਿਸਤਾਰ_Condition);
         }
     }
 
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
-        spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
+    ਜੇ(ਵਿਸਤਾਰ_Condition!=USET_ਵਿਸਤਾਰ_NOT_CONTAINED) {
+        ਵਿਸਤਾਰ_Condition=USET_ਵਿਸਤਾਰ_CONTAINED;  // Pin to 0/1 values.
     }
 
     UChar32 c;
     int32_t prev=length;
-    do {
+    ਕਰੋ {
         U8_PREV_OR_FFFD(s, 0, length, c);
-        if(spanCondition!=contains(c)) {
-            break;
+        ਜੇ(ਵਿਸਤਾਰ_Condition!=ਸ਼ਾਮਲ_ਹੈ(c)) {
+            ਰੋਕੋ;
         }
-    } while((prev=length)>0);
-    return prev;
+    } ਜਦੋਂ((prev=length)>0);
+    ਵਾਪਸ prev;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ

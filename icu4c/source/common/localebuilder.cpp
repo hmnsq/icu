@@ -1,35 +1,35 @@
 // © 2019 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#include <optional>
-#include <string_view>
-#include <utility>
+#ਅਨ੍ਤਰ੍ਭਾਵ <optional>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string_view>
+#ਅਨ੍ਤਰ੍ਭਾਵ <utility>
 
-#include "bytesinkutil.h"  // StringByteSink<CharString>
-#include "charstr.h"
-#include "cstring.h"
-#include "fixedstring.h"
-#include "ulocimp.h"
-#include "unicode/localebuilder.h"
-#include "unicode/locid.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "bytesinkutil.h"  // StringByteSink<CharString>
+#ਅਨ੍ਤਰ੍ਭਾਵ "charstr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "fixedstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ulocimp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/localebuilder.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/locid.h"
 
-namespace {
+ਨਾਮਾਕਾਸ਼ {
 
-inline bool UPRV_ISDIGIT(char c) { return c >= '0' && c <= '9'; }
-inline bool UPRV_ISALPHANUM(char c) { return uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
+ਸਤਰਅੰਦਰ ਤਾਰਕਿਕ UPRV_ISDIGIT(ਅੱਖਰ c) { ਵਾਪਸ c >= '0' && c <= '9'; }
+ਸਤਰਅੰਦਰ ਤਾਰਕਿਕ UPRV_ISALPHANUM(ਅੱਖਰ c) { ਵਾਪਸ uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
 
-constexpr const char* kAttributeKey = "attribute";
+constexpr ਅਚਲ ਅੱਖਰ* k_Attribute_ਕੁੰਜੀ = "attribute";
 
-bool _isExtensionSubtags(char key, const char* s, int32_t len) {
-    switch (uprv_tolower(key)) {
-        case 'u':
-            return ultag_isUnicodeExtensionSubtags(s, len);
-        case 't':
-            return ultag_isTransformedExtensionSubtags(s, len);
-        case 'x':
-            return ultag_isPrivateuseValueSubtags(s, len);
-        default:
-            return ultag_isExtensionSubtags(s, len);
+ਤਾਰਕਿਕ _isExtensionSubtags(ਅੱਖਰ ਕੁੰਜੀ, ਅਚਲ ਅੱਖਰ* s, int32_t len) {
+    ਚੋਣ (uprv_tolower(ਕੁੰਜੀ)) {
+        ਹਾਲਤ 'u':
+            ਵਾਪਸ ultag_isUnicodeExtensionSubtags(s, len);
+        ਹਾਲਤ 't':
+            ਵਾਪਸ ultag_isTransformedExtensionSubtags(s, len);
+        ਹਾਲਤ 'x':
+            ਵਾਪਸ ultag_is_Privateuse_ਮੁੱਲ_Subtags(s, len);
+        ਮੂਲ:
+            ਵਾਪਸ ultag_isExtensionSubtags(s, len);
     }
 }
 
@@ -37,8 +37,8 @@ bool _isExtensionSubtags(char key, const char* s, int32_t len) {
 
 U_NAMESPACE_BEGIN
 
-LocaleBuilder::LocaleBuilder() : UObject(), status_(U_ZERO_ERROR), language_(),
-    script_(), region_(), variant_(nullptr), extensions_(nullptr)
+LocaleBuilder::LocaleBuilder() : UObject(), ਸਥਿਤੀ_2(U_ZERO_ERROR), language_(),
+    script_(), region_(), variant_(ਖਾਲੀ_ਸੂਚਕ), extensions_(ਖਾਲੀ_ਸੂਚਕ)
 {
     language_[0] = 0;
     script_[0] = 0;
@@ -47,437 +47,437 @@ LocaleBuilder::LocaleBuilder() : UObject(), status_(U_ZERO_ERROR), language_(),
 
 LocaleBuilder::~LocaleBuilder()
 {
-    delete variant_;
-    delete extensions_;
+    ਮਿਟਾਓ variant_;
+    ਮਿਟਾਓ extensions_;
 }
 
-LocaleBuilder& LocaleBuilder::setLocale(const Locale& locale) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::ਸੈੱਟ_Locale(ਅਚਲ Locale& locale) U_LIFETIME_BOUND
 {
     clear();
-    setLanguage(locale.getLanguage());
-    setScript(locale.getScript());
-    setRegion(locale.getCountry());
-    setVariant(locale.getVariant());
+    ਸੈੱਟ_Language(locale.getLanguage());
+    ਸੈੱਟ_Script(locale.getScript());
+    ਸੈੱਟ_Region(locale.getCountry());
+    ਸੈੱਟ_Variant(locale.getVariant());
     extensions_ = locale.clone();
-    if (extensions_ == nullptr) {
-        status_ = U_MEMORY_ALLOCATION_ERROR;
+    ਜੇ (extensions_ == ਖਾਲੀ_ਸੂਚਕ) {
+        ਸਥਿਤੀ_2 = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
     }
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
-LocaleBuilder& LocaleBuilder::setLanguageTag(StringPiece tag) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::ਸੈੱਟ_Language_ਟੈਗ(StringPiece ਟੈਗ) U_LIFETIME_BOUND
 {
-    Locale l = Locale::forLanguageTag(tag, status_);
-    if (U_FAILURE(status_)) { return *this; }
+    Locale l = Locale::for_Language_ਟੈਗ(ਟੈਗ, ਸਥਿਤੀ_2);
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ_2)) { ਵਾਪਸ *ਇਹ; }
     // Because setLocale will reset status_ we need to return
     // first if we have error in forLanguageTag.
-    setLocale(l);
-    return *this;
+    ਸੈੱਟ_Locale(l);
+    ਵਾਪਸ *ਇਹ;
 }
 
-namespace {
+ਨਾਮਾਕਾਸ਼ {
 
-void setField(StringPiece input, char* dest, UErrorCode& errorCode,
-              bool (*test)(const char*, int32_t)) {
-    if (U_FAILURE(errorCode)) { return; }
-    if (input.empty()) {
+ਖਾਲੀ ਸੈੱਟ_ਖੇਤਰ(StringPiece input, ਅੱਖਰ* dest, UError_ਕੋਡ& error_ਕੋਡ,
+              ਤਾਰਕਿਕ (*test)(ਅਚਲ ਅੱਖਰ*, int32_t)) {
+    ਜੇ (U_FAILURE(error_ਕੋਡ)) { ਵਾਪਸ; }
+    ਜੇ (input.empty()) {
         dest[0] = '\0';
-    } else if (test(input.data(), input.length())) {
-        uprv_memcpy(dest, input.data(), input.length());
+    } ਨਹੀਂਤਾਂ ਜੇ (test(input.ਅੰਕੜੇ(), input.length())) {
+        uprv_memcpy(dest, input.ਅੰਕੜੇ(), input.length());
         dest[input.length()] = '\0';
-    } else {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
+    } ਨਹੀਂਤਾਂ {
+        error_ਕੋਡ = U_ILLEGAL_ਦਲੀਲ_ERROR;
     }
 }
 
 }  // namespace
 
-LocaleBuilder& LocaleBuilder::setLanguage(StringPiece language) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::ਸੈੱਟ_Language(StringPiece language) U_LIFETIME_BOUND
 {
-    setField(language, language_, status_, &ultag_isLanguageSubtag);
-    return *this;
+    ਸੈੱਟ_ਖੇਤਰ(language, language_, ਸਥਿਤੀ_2, &ultag_isLanguageSubtag);
+    ਵਾਪਸ *ਇਹ;
 }
 
-LocaleBuilder& LocaleBuilder::setScript(StringPiece script) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::ਸੈੱਟ_Script(StringPiece script) U_LIFETIME_BOUND
 {
-    setField(script, script_, status_, &ultag_isScriptSubtag);
-    return *this;
+    ਸੈੱਟ_ਖੇਤਰ(script, script_, ਸਥਿਤੀ_2, &ultag_isScriptSubtag);
+    ਵਾਪਸ *ਇਹ;
 }
 
-LocaleBuilder& LocaleBuilder::setRegion(StringPiece region) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::ਸੈੱਟ_Region(StringPiece region) U_LIFETIME_BOUND
 {
-    setField(region, region_, status_, &ultag_isRegionSubtag);
-    return *this;
+    ਸੈੱਟ_ਖੇਤਰ(region, region_, ਸਥਿਤੀ_2, &ultag_isRegionSubtag);
+    ਵਾਪਸ *ਇਹ;
 }
 
-namespace {
+ਨਾਮਾਕਾਸ਼ {
 
-void transform(char* data, int32_t len) {
-    for (int32_t i = 0; i < len; i++, data++) {
-        if (*data == '_') {
-            *data = '-';
-        } else {
-            *data = uprv_tolower(*data);
+ਖਾਲੀ transform(ਅੱਖਰ* ਅੰਕੜੇ, int32_t len) {
+    ਲਈ (int32_t i = 0; i < len; i++, ਅੰਕੜੇ++) {
+        ਜੇ (*ਅੰਕੜੇ == '_') {
+            *ਅੰਕੜੇ = '-';
+        } ਨਹੀਂਤਾਂ {
+            *ਅੰਕੜੇ = uprv_tolower(*ਅੰਕੜੇ);
         }
     }
 }
 
 }  // namespace
 
-LocaleBuilder& LocaleBuilder::setVariant(StringPiece variant) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::ਸੈੱਟ_Variant(StringPiece variant) U_LIFETIME_BOUND
 {
-    if (U_FAILURE(status_)) { return *this; }
-    if (variant.empty()) {
-        delete variant_;
-        variant_ = nullptr;
-        return *this;
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ_2)) { ਵਾਪਸ *ਇਹ; }
+    ਜੇ (variant.empty()) {
+        ਮਿਟਾਓ variant_;
+        variant_ = ਖਾਲੀ_ਸੂਚਕ;
+        ਵਾਪਸ *ਇਹ;
     }
-    FixedString* new_variant = new FixedString(variant);
-    if (new_variant == nullptr || new_variant->isEmpty()) {
-        status_ = U_MEMORY_ALLOCATION_ERROR;
-        return *this;
+    FixedString* new_variant = ਨਵਾਂ FixedString(variant);
+    ਜੇ (new_variant == ਖਾਲੀ_ਸੂਚਕ || new_variant->is_ਖਾਲੀ_ਥਾਵਾਂ()) {
+        ਸਥਿਤੀ_2 = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+        ਵਾਪਸ *ਇਹ;
     }
     transform(new_variant->getAlias(), variant.length());
-    if (!ultag_isVariantSubtags(new_variant->data(), variant.length())) {
-        delete new_variant;
-        status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+    ਜੇ (!ultag_isVariantSubtags(new_variant->ਅੰਕੜੇ(), variant.length())) {
+        ਮਿਟਾਓ new_variant;
+        ਸਥਿਤੀ_2 = U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ *ਇਹ;
     }
-    delete variant_;
+    ਮਿਟਾਓ variant_;
     variant_ = new_variant;
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
-namespace {
+ਨਾਮਾਕਾਸ਼ {
 
-bool
-_isKeywordValue(const char* key, const char* value, int32_t value_len)
+ਤਾਰਕਿਕ
+is_Keyword_ਮੁੱਲ(ਅਚਲ ਅੱਖਰ* ਕੁੰਜੀ, ਅਚਲ ਅੱਖਰ* value, int32_t ਮੁੱਲ_len)
 {
-    if (key[1] == '\0') {
+    ਜੇ (ਕੁੰਜੀ[1] == '\0') {
         // one char key
-        return (UPRV_ISALPHANUM(uprv_tolower(key[0])) &&
-                _isExtensionSubtags(key[0], value, value_len));
-    } else if (uprv_strcmp(key, kAttributeKey) == 0) {
+        ਵਾਪਸ (UPRV_ISALPHANUM(uprv_tolower(ਕੁੰਜੀ[0])) &&
+                _isExtensionSubtags(ਕੁੰਜੀ[0], value, ਮੁੱਲ_len));
+    } ਨਹੀਂਤਾਂ ਜੇ (uprv_strcmp(ਕੁੰਜੀ, k_Attribute_ਕੁੰਜੀ) == 0) {
         // unicode attributes
-        return ultag_isUnicodeLocaleAttributes(value, value_len);
+        ਵਾਪਸ ultag_is_Unicode_Locale_ਗੁਣ(value, ਮੁੱਲ_len);
     }
     // otherwise: unicode extension value
     // We need to convert from legacy key/value to unicode
     // key/value
-    std::optional<std::string_view> unicode_locale_key = ulocimp_toBcpKeyWithFallback(key);
-    std::optional<std::string_view> unicode_locale_type = ulocimp_toBcpTypeWithFallback(key, value);
+    std::optional<std::string_view> unicode_locale_ਕੁੰਜੀ = ulocimp_ਮੰਜ਼ਿਲ_Bcp_ਕੁੰਜੀ_With_Fallback(ਕੁੰਜੀ);
+    std::optional<std::string_view> unicode_locale_type = ulocimp_ਮੰਜ਼ਿਲ_Bcp_Type_With_Fallback(ਕੁੰਜੀ, value);
 
-    return unicode_locale_key.has_value() &&
+    ਵਾਪਸ unicode_locale_ਕੁੰਜੀ.has_value() &&
            unicode_locale_type.has_value() &&
-           ultag_isUnicodeLocaleKey(unicode_locale_key->data(),
-                                    static_cast<int32_t>(unicode_locale_key->size())) &&
-           ultag_isUnicodeLocaleType(unicode_locale_type->data(),
+           ultag_is_Unicode_Locale_ਕੁੰਜੀ(unicode_locale_ਕੁੰਜੀ->ਅੰਕੜੇ(),
+                                    static_cast<int32_t>(unicode_locale_ਕੁੰਜੀ->size())) &&
+           ultag_isUnicodeLocaleType(unicode_locale_type->ਅੰਕੜੇ(),
                                      static_cast<int32_t>(unicode_locale_type->size()));
 }
 
-void
-_copyExtensions(const Locale& from, icu::StringEnumeration *keywords,
-                Locale& to, bool validate, UErrorCode& errorCode)
+ਖਾਲੀ
+_copyExtensions(ਅਚਲ Locale& from, icu::StringEnumeration *keywords,
+                Locale& ਮੰਜ਼ਿਲ, ਤਾਰਕਿਕ validate, UError_ਕੋਡ& error_ਕੋਡ)
 {
-    if (U_FAILURE(errorCode)) { return; }
-    LocalPointer<icu::StringEnumeration> ownedKeywords;
-    if (keywords == nullptr) {
-        ownedKeywords.adoptInstead(from.createKeywords(errorCode));
-        if (U_FAILURE(errorCode) || ownedKeywords.isNull()) { return; }
+    ਜੇ (U_FAILURE(error_ਕੋਡ)) { ਵਾਪਸ; }
+    Local_ਸੂਚਕ<icu::StringEnumeration> ownedKeywords;
+    ਜੇ (keywords == ਖਾਲੀ_ਸੂਚਕ) {
+        ownedKeywords.adoptInstead(from.createKeywords(error_ਕੋਡ));
+        ਜੇ (U_FAILURE(error_ਕੋਡ) || ownedKeywords.isNull()) { ਵਾਪਸ; }
         keywords = ownedKeywords.getAlias();
     }
-    const char* key;
-    while ((key = keywords->next(nullptr, errorCode)) != nullptr) {
-        auto value = from.getKeywordValue<CharString>(key, errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        if (uprv_strcmp(key, kAttributeKey) == 0) {
-            transform(value.data(), value.length());
+    ਅਚਲ ਅੱਖਰ* ਕੁੰਜੀ;
+    ਜਦੋਂ ((ਕੁੰਜੀ = keywords->next(ਖਾਲੀ_ਸੂਚਕ, error_ਕੋਡ)) != ਖਾਲੀ_ਸੂਚਕ) {
+        ਸਵੈਚਾਲਿਤ value = from.get_Keyword_ਮੁੱਲ<CharString>(ਕੁੰਜੀ, error_ਕੋਡ);
+        ਜੇ (U_FAILURE(error_ਕੋਡ)) { ਵਾਪਸ; }
+        ਜੇ (uprv_strcmp(ਕੁੰਜੀ, k_Attribute_ਕੁੰਜੀ) == 0) {
+            transform(value.ਅੰਕੜੇ(), value.length());
         }
-        if (validate &&
-            !_isKeywordValue(key, value.data(), value.length())) {
-            errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+        ਜੇ (validate &&
+            !is_Keyword_ਮੁੱਲ(ਕੁੰਜੀ, value.ਅੰਕੜੇ(), value.length())) {
+            error_ਕੋਡ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+            ਵਾਪਸ;
         }
-        to.setKeywordValue(key, value.data(), errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        ਮੰਜ਼ਿਲ.ਸੈੱਟ_Keyword_ਮੁੱਲ(ਕੁੰਜੀ, value.ਅੰਕੜੇ(), error_ਕੋਡ);
+        ਜੇ (U_FAILURE(error_ਕੋਡ)) { ਵਾਪਸ; }
     }
 }
 
-void
-_clearUAttributesAndKeyType(Locale& locale, UErrorCode& errorCode)
+ਖਾਲੀ
+clear_UAttributes_And_ਕੁੰਜੀ_Type(Locale& locale, UError_ਕੋਡ& error_ਕੋਡ)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    ਜੇ (U_FAILURE(error_ਕੋਡ)) { ਵਾਪਸ; }
     // Clear Unicode attributes
-    locale.setKeywordValue(kAttributeKey, "", errorCode);
+    locale.ਸੈੱਟ_Keyword_ਮੁੱਲ(k_Attribute_ਕੁੰਜੀ, "", error_ਕੋਡ);
 
     // Clear all Unicode keyword values
-    LocalPointer<icu::StringEnumeration> iter(locale.createUnicodeKeywords(errorCode));
-    if (U_FAILURE(errorCode) || iter.isNull()) { return; }
-    const char* key;
-    while ((key = iter->next(nullptr, errorCode)) != nullptr) {
-        locale.setUnicodeKeywordValue(key, nullptr, errorCode);
+    Local_ਸੂਚਕ<icu::StringEnumeration> iter(locale.createUnicodeKeywords(error_ਕੋਡ));
+    ਜੇ (U_FAILURE(error_ਕੋਡ) || iter.isNull()) { ਵਾਪਸ; }
+    ਅਚਲ ਅੱਖਰ* ਕੁੰਜੀ;
+    ਜਦੋਂ ((ਕੁੰਜੀ = iter->next(ਖਾਲੀ_ਸੂਚਕ, error_ਕੋਡ)) != ਖਾਲੀ_ਸੂਚਕ) {
+        locale.ਸੈੱਟ_Unicode_Keyword_ਮੁੱਲ(ਕੁੰਜੀ, ਖਾਲੀ_ਸੂਚਕ, error_ਕੋਡ);
     }
 }
 
-void
-_setUnicodeExtensions(Locale& locale, const CharString& value, UErrorCode& errorCode)
+ਖਾਲੀ
+ਸੈੱਟ_Unicode_Extensions(Locale& locale, ਅਚਲ CharString& value, UError_ਕੋਡ& error_ਕੋਡ)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    ਜੇ (U_FAILURE(error_ਕੋਡ)) { ਵਾਪਸ; }
     // Add the unicode extensions to extensions_
-    CharString locale_str("und-u-", errorCode);
-    locale_str.append(value, errorCode);
+    CharString locale_str("und-u-", error_ਕੋਡ);
+    locale_str.append(value, error_ਕੋਡ);
     _copyExtensions(
-        Locale::forLanguageTag(locale_str.data(), errorCode), nullptr,
-        locale, false, errorCode);
+        Locale::for_Language_ਟੈਗ(locale_str.ਅੰਕੜੇ(), error_ਕੋਡ), ਖਾਲੀ_ਸੂਚਕ,
+        locale, ਝੂਠ, error_ਕੋਡ);
 }
 
 }  // namespace
 
-LocaleBuilder& LocaleBuilder::setExtension(char key, StringPiece value) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::ਸੈੱਟ_Extension(ਅੱਖਰ ਕੁੰਜੀ, StringPiece value) U_LIFETIME_BOUND
 {
-    if (U_FAILURE(status_)) { return *this; }
-    if (!UPRV_ISALPHANUM(key)) {
-        status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ_2)) { ਵਾਪਸ *ਇਹ; }
+    ਜੇ (!UPRV_ISALPHANUM(ਕੁੰਜੀ)) {
+        ਸਥਿਤੀ_2 = U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ *ਇਹ;
     }
-    CharString value_str(value, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    transform(value_str.data(), value_str.length());
-    if (!value_str.isEmpty() &&
-            !_isExtensionSubtags(key, value_str.data(), value_str.length())) {
-        status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+    CharString ਮੁੱਲ_str(value, ਸਥਿਤੀ_2);
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ_2)) { ਵਾਪਸ *ਇਹ; }
+    transform(ਮੁੱਲ_str.ਅੰਕੜੇ(), ਮੁੱਲ_str.length());
+    ਜੇ (!ਮੁੱਲ_str.is_ਖਾਲੀ_ਥਾਵਾਂ() &&
+            !_isExtensionSubtags(ਕੁੰਜੀ, ਮੁੱਲ_str.ਅੰਕੜੇ(), ਮੁੱਲ_str.length())) {
+        ਸਥਿਤੀ_2 = U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ *ਇਹ;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
-            status_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+    ਜੇ (extensions_ == ਖਾਲੀ_ਸੂਚਕ) {
+        extensions_ = Locale::get_ਜੜ੍ਹ().clone();
+        ਜੇ (extensions_ == ਖਾਲੀ_ਸੂਚਕ) {
+            ਸਥਿਤੀ_2 = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+            ਵਾਪਸ *ਇਹ;
         }
     }
-    if (uprv_tolower(key) != 'u') {
+    ਜੇ (uprv_tolower(ਕੁੰਜੀ) != 'u') {
         // for t, x and others extension.
-        extensions_->setKeywordValue(StringPiece(&key, 1), value_str.data(),
-                                     status_);
-        return *this;
+        extensions_->ਸੈੱਟ_Keyword_ਮੁੱਲ(StringPiece(&ਕੁੰਜੀ, 1), ਮੁੱਲ_str.ਅੰਕੜੇ(),
+                                     ਸਥਿਤੀ_2);
+        ਵਾਪਸ *ਇਹ;
     }
-    _clearUAttributesAndKeyType(*extensions_, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    if (!value.empty()) {
-        _setUnicodeExtensions(*extensions_, value_str, status_);
+    clear_UAttributes_And_ਕੁੰਜੀ_Type(*extensions_, ਸਥਿਤੀ_2);
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ_2)) { ਵਾਪਸ *ਇਹ; }
+    ਜੇ (!value.empty()) {
+        ਸੈੱਟ_Unicode_Extensions(*extensions_, ਮੁੱਲ_str, ਸਥਿਤੀ_2);
     }
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
-LocaleBuilder& LocaleBuilder::setUnicodeLocaleKeyword(StringPiece key,
+LocaleBuilder& LocaleBuilder::ਸੈੱਟ_Unicode_Locale_Keyword(StringPiece ਕੁੰਜੀ,
                                                       StringPiece type) U_LIFETIME_BOUND
 {
-    if (U_FAILURE(status_)) { return *this; }
-    if (!ultag_isUnicodeLocaleKey(key.data(), key.length()) ||
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ_2)) { ਵਾਪਸ *ਇਹ; }
+    ਜੇ (!ultag_is_Unicode_Locale_ਕੁੰਜੀ(ਕੁੰਜੀ.ਅੰਕੜੇ(), ਕੁੰਜੀ.length()) ||
             (!type.empty() &&
-                 !ultag_isUnicodeLocaleType(type.data(), type.length()))) {
-      status_ = U_ILLEGAL_ARGUMENT_ERROR;
-      return *this;
+                 !ultag_isUnicodeLocaleType(type.ਅੰਕੜੇ(), type.length()))) {
+      ਸਥਿਤੀ_2 = U_ILLEGAL_ਦਲੀਲ_ERROR;
+      ਵਾਪਸ *ਇਹ;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
-            status_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+    ਜੇ (extensions_ == ਖਾਲੀ_ਸੂਚਕ) {
+        extensions_ = Locale::get_ਜੜ੍ਹ().clone();
+        ਜੇ (extensions_ == ਖਾਲੀ_ਸੂਚਕ) {
+            ਸਥਿਤੀ_2 = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+            ਵਾਪਸ *ਇਹ;
         }
     }
-    extensions_->setUnicodeKeywordValue(key, type, status_);
-    return *this;
+    extensions_->ਸੈੱਟ_Unicode_Keyword_ਮੁੱਲ(ਕੁੰਜੀ, type, ਸਥਿਤੀ_2);
+    ਵਾਪਸ *ਇਹ;
 }
 
-LocaleBuilder& LocaleBuilder::addUnicodeLocaleAttribute(StringPiece value) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::ਜੋੜੋ_Unicode_Locale_Attribute(StringPiece value) U_LIFETIME_BOUND
 {
-    CharString value_str(value, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    transform(value_str.data(), value_str.length());
-    if (!ultag_isUnicodeLocaleAttribute(value_str.data(), value_str.length())) {
-        status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+    CharString ਮੁੱਲ_str(value, ਸਥਿਤੀ_2);
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ_2)) { ਵਾਪਸ *ਇਹ; }
+    transform(ਮੁੱਲ_str.ਅੰਕੜੇ(), ਮੁੱਲ_str.length());
+    ਜੇ (!ultag_isUnicodeLocaleAttribute(ਮੁੱਲ_str.ਅੰਕੜੇ(), ਮੁੱਲ_str.length())) {
+        ਸਥਿਤੀ_2 = U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ *ਇਹ;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
-            status_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+    ਜੇ (extensions_ == ਖਾਲੀ_ਸੂਚਕ) {
+        extensions_ = Locale::get_ਜੜ੍ਹ().clone();
+        ਜੇ (extensions_ == ਖਾਲੀ_ਸੂਚਕ) {
+            ਸਥਿਤੀ_2 = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+            ਵਾਪਸ *ਇਹ;
         }
-        extensions_->setKeywordValue(kAttributeKey, value_str.data(), status_);
-        return *this;
+        extensions_->ਸੈੱਟ_Keyword_ਮੁੱਲ(k_Attribute_ਕੁੰਜੀ, ਮੁੱਲ_str.ਅੰਕੜੇ(), ਸਥਿਤੀ_2);
+        ਵਾਪਸ *ਇਹ;
     }
 
-    UErrorCode localErrorCode = U_ZERO_ERROR;
-    auto attributes = extensions_->getKeywordValue<CharString>(kAttributeKey, localErrorCode);
-    if (U_FAILURE(localErrorCode)) {
-        CharString new_attributes(value_str.data(), status_);
+    UError_ਕੋਡ local_Error_ਕੋਡ = U_ZERO_ERROR;
+    ਸਵੈਚਾਲਿਤ ਗੁਣ = extensions_->get_Keyword_ਮੁੱਲ<CharString>(k_Attribute_ਕੁੰਜੀ, local_Error_ਕੋਡ);
+    ਜੇ (U_FAILURE(local_Error_ਕੋਡ)) {
+        CharString new_ਗੁਣ(ਮੁੱਲ_str.ਅੰਕੜੇ(), ਸਥਿਤੀ_2);
         // No attributes, set the attribute.
-        extensions_->setKeywordValue(kAttributeKey, new_attributes.data(), status_);
-        return *this;
+        extensions_->ਸੈੱਟ_Keyword_ਮੁੱਲ(k_Attribute_ਕੁੰਜੀ, new_ਗੁਣ.ਅੰਕੜੇ(), ਸਥਿਤੀ_2);
+        ਵਾਪਸ *ਇਹ;
     }
 
-    transform(attributes.data(),attributes.length());
-    const char* start = attributes.data();
-    const char* limit = attributes.data() + attributes.length();
-    CharString new_attributes;
-    bool inserted = false;
-    while (start < limit) {
-        if (!inserted) {
-            int cmp = uprv_strcmp(start, value_str.data());
-            if (cmp == 0) { return *this; }  // Found it in attributes: Just return
-            if (cmp > 0) {
-                if (!new_attributes.isEmpty()) new_attributes.append('_', status_);
-                new_attributes.append(value_str.data(), status_);
-                inserted = true;
+    transform(ਗੁਣ.ਅੰਕੜੇ(),ਗੁਣ.length());
+    ਅਚਲ ਅੱਖਰ* ਸ਼ੁਰੂ = ਗੁਣ.ਅੰਕੜੇ();
+    ਅਚਲ ਅੱਖਰ* ਹੱਦਬੰਦੀ = ਗੁਣ.ਅੰਕੜੇ() + ਗੁਣ.length();
+    CharString new_ਗੁਣ;
+    ਤਾਰਕਿਕ inserted = ਝੂਠ;
+    ਜਦੋਂ (ਸ਼ੁਰੂ < ਹੱਦਬੰਦੀ) {
+        ਜੇ (!inserted) {
+            ਪੂਰਨ cmp = uprv_strcmp(ਸ਼ੁਰੂ, ਮੁੱਲ_str.ਅੰਕੜੇ());
+            ਜੇ (cmp == 0) { ਵਾਪਸ *ਇਹ; }  // Found it in attributes: Just return
+            ਜੇ (cmp > 0) {
+                ਜੇ (!new_ਗੁਣ.is_ਖਾਲੀ_ਥਾਵਾਂ()) new_ਗੁਣ.append('_', ਸਥਿਤੀ_2);
+                new_ਗੁਣ.append(ਮੁੱਲ_str.ਅੰਕੜੇ(), ਸਥਿਤੀ_2);
+                inserted = ਸੱਚ;
             }
         }
-        if (!new_attributes.isEmpty()) {
-            new_attributes.append('_', status_);
+        ਜੇ (!new_ਗੁਣ.is_ਖਾਲੀ_ਥਾਵਾਂ()) {
+            new_ਗੁਣ.append('_', ਸਥਿਤੀ_2);
         }
-        new_attributes.append(start, status_);
-        start += uprv_strlen(start) + 1;
+        new_ਗੁਣ.append(ਸ਼ੁਰੂ, ਸਥਿਤੀ_2);
+        ਸ਼ੁਰੂ += uprv_strlen(ਸ਼ੁਰੂ) + 1;
     }
-    if (!inserted) {
-        if (!new_attributes.isEmpty()) {
-            new_attributes.append('_', status_);
+    ਜੇ (!inserted) {
+        ਜੇ (!new_ਗੁਣ.is_ਖਾਲੀ_ਥਾਵਾਂ()) {
+            new_ਗੁਣ.append('_', ਸਥਿਤੀ_2);
         }
-        new_attributes.append(value_str.data(), status_);
+        new_ਗੁਣ.append(ਮੁੱਲ_str.ਅੰਕੜੇ(), ਸਥਿਤੀ_2);
     }
     // Not yet in the attributes, set the attribute.
-    extensions_->setKeywordValue(kAttributeKey, new_attributes.data(), status_);
-    return *this;
+    extensions_->ਸੈੱਟ_Keyword_ਮੁੱਲ(k_Attribute_ਕੁੰਜੀ, new_ਗੁਣ.ਅੰਕੜੇ(), ਸਥਿਤੀ_2);
+    ਵਾਪਸ *ਇਹ;
 }
 
 LocaleBuilder& LocaleBuilder::removeUnicodeLocaleAttribute(StringPiece value) U_LIFETIME_BOUND
 {
-    CharString value_str(value, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    transform(value_str.data(), value_str.length());
-    if (!ultag_isUnicodeLocaleAttribute(value_str.data(), value_str.length())) {
-        status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+    CharString ਮੁੱਲ_str(value, ਸਥਿਤੀ_2);
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ_2)) { ਵਾਪਸ *ਇਹ; }
+    transform(ਮੁੱਲ_str.ਅੰਕੜੇ(), ਮੁੱਲ_str.length());
+    ਜੇ (!ultag_isUnicodeLocaleAttribute(ਮੁੱਲ_str.ਅੰਕੜੇ(), ਮੁੱਲ_str.length())) {
+        ਸਥਿਤੀ_2 = U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ *ਇਹ;
     }
-    if (extensions_ == nullptr) { return *this; }
-    UErrorCode localErrorCode = U_ZERO_ERROR;
-    auto attributes = extensions_->getKeywordValue<CharString>(kAttributeKey, localErrorCode);
+    ਜੇ (extensions_ == ਖਾਲੀ_ਸੂਚਕ) { ਵਾਪਸ *ਇਹ; }
+    UError_ਕੋਡ local_Error_ਕੋਡ = U_ZERO_ERROR;
+    ਸਵੈਚਾਲਿਤ ਗੁਣ = extensions_->get_Keyword_ਮੁੱਲ<CharString>(k_Attribute_ਕੁੰਜੀ, local_Error_ਕੋਡ);
     // get failure, just return
-    if (U_FAILURE(localErrorCode)) { return *this; }
+    ਜੇ (U_FAILURE(local_Error_ਕੋਡ)) { ਵਾਪਸ *ਇਹ; }
     // Do not have any attributes, just return.
-    if (attributes.isEmpty()) { return *this; }
+    ਜੇ (ਗੁਣ.is_ਖਾਲੀ_ਥਾਵਾਂ()) { ਵਾਪਸ *ਇਹ; }
 
-    char* p = attributes.data();
+    ਅੱਖਰ* p = ਗੁਣ.ਅੰਕੜੇ();
     // Replace null terminiator in place for _ and - so later
     // we can use uprv_strcmp to compare.
-    for (int32_t i = 0; i < attributes.length(); i++, p++) {
+    ਲਈ (int32_t i = 0; i < ਗੁਣ.length(); i++, p++) {
         *p = (*p == '_' || *p == '-') ? '\0' : uprv_tolower(*p);
     }
 
-    const char* start = attributes.data();
-    const char* limit = attributes.data() + attributes.length();
-    CharString new_attributes;
-    bool found = false;
-    while (start < limit) {
-        if (uprv_strcmp(start, value_str.data()) == 0) {
-            found = true;
-        } else {
-            if (!new_attributes.isEmpty()) {
-                new_attributes.append('_', status_);
+    ਅਚਲ ਅੱਖਰ* ਸ਼ੁਰੂ = ਗੁਣ.ਅੰਕੜੇ();
+    ਅਚਲ ਅੱਖਰ* ਹੱਦਬੰਦੀ = ਗੁਣ.ਅੰਕੜੇ() + ਗੁਣ.length();
+    CharString new_ਗੁਣ;
+    ਤਾਰਕਿਕ ਮਿਲਿਆ = ਝੂਠ;
+    ਜਦੋਂ (ਸ਼ੁਰੂ < ਹੱਦਬੰਦੀ) {
+        ਜੇ (uprv_strcmp(ਸ਼ੁਰੂ, ਮੁੱਲ_str.ਅੰਕੜੇ()) == 0) {
+            ਮਿਲਿਆ = ਸੱਚ;
+        } ਨਹੀਂਤਾਂ {
+            ਜੇ (!new_ਗੁਣ.is_ਖਾਲੀ_ਥਾਵਾਂ()) {
+                new_ਗੁਣ.append('_', ਸਥਿਤੀ_2);
             }
-            new_attributes.append(start, status_);
+            new_ਗੁਣ.append(ਸ਼ੁਰੂ, ਸਥਿਤੀ_2);
         }
-        start += uprv_strlen(start) + 1;
+        ਸ਼ੁਰੂ += uprv_strlen(ਸ਼ੁਰੂ) + 1;
     }
     // Found the value in attributes, set the attribute.
-    if (found) {
-        extensions_->setKeywordValue(kAttributeKey, new_attributes.data(), status_);
+    ਜੇ (ਮਿਲਿਆ) {
+        extensions_->ਸੈੱਟ_Keyword_ਮੁੱਲ(k_Attribute_ਕੁੰਜੀ, new_ਗੁਣ.ਅੰਕੜੇ(), ਸਥਿਤੀ_2);
     }
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
 LocaleBuilder& LocaleBuilder::clear() U_LIFETIME_BOUND
 {
-    status_ = U_ZERO_ERROR;
+    ਸਥਿਤੀ_2 = U_ZERO_ERROR;
     language_[0] = 0;
     script_[0] = 0;
     region_[0] = 0;
-    delete variant_;
-    variant_ = nullptr;
+    ਮਿਟਾਓ variant_;
+    variant_ = ਖਾਲੀ_ਸੂਚਕ;
     clearExtensions();
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
 LocaleBuilder& LocaleBuilder::clearExtensions() U_LIFETIME_BOUND
 {
-    delete extensions_;
-    extensions_ = nullptr;
-    return *this;
+    ਮਿਟਾਓ extensions_;
+    extensions_ = ਖਾਲੀ_ਸੂਚਕ;
+    ਵਾਪਸ *ਇਹ;
 }
 
 Locale makeBogusLocale() {
   Locale bogus;
-  bogus.setToBogus();
-  return bogus;
+  bogus.ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus();
+  ਵਾਪਸ bogus;
 }
 
-void LocaleBuilder::copyExtensionsFrom(const Locale& src, UErrorCode& errorCode)
+ਖਾਲੀ LocaleBuilder::copyExtensionsFrom(ਅਚਲ Locale& src, UError_ਕੋਡ& error_ਕੋਡ)
 {
-    if (U_FAILURE(errorCode)) { return; }
-    LocalPointer<icu::StringEnumeration> keywords(src.createKeywords(errorCode));
-    if (U_FAILURE(errorCode) || keywords.isNull() || keywords->count(errorCode) == 0) {
+    ਜੇ (U_FAILURE(error_ਕੋਡ)) { ਵਾਪਸ; }
+    Local_ਸੂਚਕ<icu::StringEnumeration> keywords(src.createKeywords(error_ਕੋਡ));
+    ਜੇ (U_FAILURE(error_ਕੋਡ) || keywords.isNull() || keywords->count(error_ਕੋਡ) == 0) {
         // Error, or no extensions to copy.
-        return;
+        ਵਾਪਸ;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
-            status_ = U_MEMORY_ALLOCATION_ERROR;
-            return;
+    ਜੇ (extensions_ == ਖਾਲੀ_ਸੂਚਕ) {
+        extensions_ = Locale::get_ਜੜ੍ਹ().clone();
+        ਜੇ (extensions_ == ਖਾਲੀ_ਸੂਚਕ) {
+            ਸਥਿਤੀ_2 = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+            ਵਾਪਸ;
         }
     }
-    _copyExtensions(src, keywords.getAlias(), *extensions_, false, errorCode);
+    _copyExtensions(src, keywords.getAlias(), *extensions_, ਝੂਠ, error_ਕੋਡ);
 }
 
-Locale LocaleBuilder::build(UErrorCode& errorCode)
+Locale LocaleBuilder::build(UError_ਕੋਡ& error_ਕੋਡ)
 {
-    if (U_FAILURE(errorCode)) {
-        return makeBogusLocale();
+    ਜੇ (U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ makeBogusLocale();
     }
-    if (U_FAILURE(status_)) {
-        errorCode = status_;
-        return makeBogusLocale();
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ_2)) {
+        error_ਕੋਡ = ਸਥਿਤੀ_2;
+        ਵਾਪਸ makeBogusLocale();
     }
-    CharString locale_str(language_, errorCode);
-    if (uprv_strlen(script_) > 0) {
-        locale_str.append('-', errorCode).append(StringPiece(script_), errorCode);
+    CharString locale_str(language_, error_ਕੋਡ);
+    ਜੇ (uprv_strlen(script_) > 0) {
+        locale_str.append('-', error_ਕੋਡ).append(StringPiece(script_), error_ਕੋਡ);
     }
-    if (uprv_strlen(region_) > 0) {
-        locale_str.append('-', errorCode).append(StringPiece(region_), errorCode);
+    ਜੇ (uprv_strlen(region_) > 0) {
+        locale_str.append('-', error_ਕੋਡ).append(StringPiece(region_), error_ਕੋਡ);
     }
-    if (variant_ != nullptr) {
-        locale_str.append('-', errorCode).append(StringPiece(variant_->data()), errorCode);
+    ਜੇ (variant_ != ਖਾਲੀ_ਸੂਚਕ) {
+        locale_str.append('-', error_ਕੋਡ).append(StringPiece(variant_->ਅੰਕੜੇ()), error_ਕੋਡ);
     }
-    if (U_FAILURE(errorCode)) {
-        return makeBogusLocale();
+    ਜੇ (U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ makeBogusLocale();
     }
-    Locale product(locale_str.data());
-    if (extensions_ != nullptr) {
-        _copyExtensions(*extensions_, nullptr, product, true, errorCode);
+    Locale ਗੁਣਨਫਲ(locale_str.ਅੰਕੜੇ());
+    ਜੇ (extensions_ != ਖਾਲੀ_ਸੂਚਕ) {
+        _copyExtensions(*extensions_, ਖਾਲੀ_ਸੂਚਕ, ਗੁਣਨਫਲ, ਸੱਚ, error_ਕੋਡ);
     }
-    if (U_FAILURE(errorCode)) {
-        return makeBogusLocale();
+    ਜੇ (U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ makeBogusLocale();
     }
-    return product;
+    ਵਾਪਸ ਗੁਣਨਫਲ;
 }
 
-UBool LocaleBuilder::copyErrorTo(UErrorCode &outErrorCode) const {
-    if (U_FAILURE(outErrorCode)) {
+UBool LocaleBuilder::copy_Error_ਮੰਜ਼ਿਲ(UError_ਕੋਡ &ਬਾਹਰਲਾ_Error_ਕੋਡ) ਅਚਲ {
+    ਜੇ (U_FAILURE(ਬਾਹਰਲਾ_Error_ਕੋਡ)) {
         // Do not overwrite the older error code
-        return true;
+        ਵਾਪਸ ਸੱਚ;
     }
-    outErrorCode = status_;
-    return U_FAILURE(outErrorCode);
+    ਬਾਹਰਲਾ_Error_ਕੋਡ = ਸਥਿਤੀ_2;
+    ਵਾਪਸ U_FAILURE(ਬਾਹਰਲਾ_Error_ਕੋਡ);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ

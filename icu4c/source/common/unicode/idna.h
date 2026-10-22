@@ -14,24 +14,24 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __IDNA_H__
-#define __IDNA_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __IDNA_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __IDNA_H__
 
 /**
  * \file
  * \brief C++ API: Internationalizing Domain Names in Applications (IDNA)
  */
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
 
-#if !UCONFIG_NO_IDNA
+#ਜੇ !UCONFIG_NO_IDNA
 
-#include "unicode/bytestream.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uidna.h"
-#include "unicode/unistr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/bytestream.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/stringpiece.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uidna.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/unistr.h"
 
 U_NAMESPACE_BEGIN
 
@@ -49,8 +49,8 @@ class IDNAInfo;
  * and IDNA2003 (functions that do not use a service object).
  * @stable ICU 4.6
  */
-class U_COMMON_API IDNA : public UObject {
-public:
+class U_COMMON_API IDNA : ਜਨਤਕ UObject {
+ਜਨਤਕ:
     /**
      * Destructor.
      * @stable ICU 4.6
@@ -93,8 +93,8 @@ public:
      * @return the UTS #46 IDNA instance, if successful
      * @stable ICU 4.6
      */
-    static IDNA *
-    createUTS46Instance(uint32_t options, UErrorCode &errorCode);
+    ਸਥਿਰ IDNA *
+    createUTS46Instance(uint32_t options, UError_ਕੋਡ &error_ਕੋਡ);
 
     /**
      * Converts a single domain name label into its ASCII form for DNS lookup.
@@ -116,11 +116,11 @@ public:
      * @return dest
      * @stable ICU 4.6
      */
-    virtual UnicodeString&
-    labelToASCII(const UnicodeString& label,
+    ਆਭਾਸੀ UnicodeString&
+    label_ਮੰਜ਼ਿਲ_ASCII(ਅਚਲ UnicodeString& label,
                  UnicodeString& dest U_LIFETIME_BOUND,
                  IDNAInfo& info,
-                 UErrorCode& errorCode) const = 0;
+                 UError_ਕੋਡ& error_ਕੋਡ) ਅਚਲ = 0;
 
     /**
      * Converts a single domain name label into its Unicode form for human-readable display.
@@ -140,11 +140,11 @@ public:
      * @return dest
      * @stable ICU 4.6
      */
-    virtual UnicodeString&
-    labelToUnicode(const UnicodeString& label,
+    ਆਭਾਸੀ UnicodeString&
+    label_ਮੰਜ਼ਿਲ_Unicode(ਅਚਲ UnicodeString& label,
                    UnicodeString& dest U_LIFETIME_BOUND,
                    IDNAInfo& info,
-                   UErrorCode& errorCode) const = 0;
+                   UError_ਕੋਡ& error_ਕੋਡ) ਅਚਲ = 0;
 
     /**
      * Converts a whole domain name into its ASCII form for DNS lookup.
@@ -166,11 +166,11 @@ public:
      * @return dest
      * @stable ICU 4.6
      */
-    virtual UnicodeString&
-    nameToASCII(const UnicodeString& name,
+    ਆਭਾਸੀ UnicodeString&
+    name_ਮੰਜ਼ਿਲ_ASCII(ਅਚਲ UnicodeString& name,
                 UnicodeString& dest U_LIFETIME_BOUND,
                 IDNAInfo& info,
-                UErrorCode& errorCode) const = 0;
+                UError_ਕੋਡ& error_ਕੋਡ) ਅਚਲ = 0;
 
     /**
      * Converts a whole domain name into its Unicode form for human-readable display.
@@ -190,11 +190,11 @@ public:
      * @return dest
      * @stable ICU 4.6
      */
-    virtual UnicodeString&
-    nameToUnicode(const UnicodeString& name,
+    ਆਭਾਸੀ UnicodeString&
+    name_ਮੰਜ਼ਿਲ_Unicode(ਅਚਲ UnicodeString& name,
                   UnicodeString& dest U_LIFETIME_BOUND,
                   IDNAInfo& info,
-                  UErrorCode& errorCode) const = 0;
+                  UError_ਕੋਡ& error_ਕੋਡ) ਅਚਲ = 0;
 
     // UTF-8 versions of the processing methods ---------------------------- ***
 
@@ -211,9 +211,9 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 4.6
      */
-    virtual void
-    labelToASCII_UTF8(StringPiece label, ByteSink &dest,
-                      IDNAInfo &info, UErrorCode &errorCode) const;
+    ਆਭਾਸੀ ਖਾਲੀ
+    label_ਮੰਜ਼ਿਲ_ASCII_UTF8(StringPiece label, ByteSink &dest,
+                      IDNAInfo &info, UError_ਕੋਡ &error_ਕੋਡ) ਅਚਲ;
 
     /**
      * Converts a single domain name label into its Unicode form for human-readable display.
@@ -228,9 +228,9 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 4.6
      */
-    virtual void
-    labelToUnicodeUTF8(StringPiece label, ByteSink &dest,
-                       IDNAInfo &info, UErrorCode &errorCode) const;
+    ਆਭਾਸੀ ਖਾਲੀ
+    label_ਮੰਜ਼ਿਲ_Unicode_UTF8(StringPiece label, ByteSink &dest,
+                       IDNAInfo &info, UError_ਕੋਡ &error_ਕੋਡ) ਅਚਲ;
 
     /**
      * Converts a whole domain name into its ASCII form for DNS lookup.
@@ -245,9 +245,9 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 4.6
      */
-    virtual void
-    nameToASCII_UTF8(StringPiece name, ByteSink &dest,
-                     IDNAInfo &info, UErrorCode &errorCode) const;
+    ਆਭਾਸੀ ਖਾਲੀ
+    name_ਮੰਜ਼ਿਲ_ASCII_UTF8(StringPiece name, ByteSink &dest,
+                     IDNAInfo &info, UError_ਕੋਡ &error_ਕੋਡ) ਅਚਲ;
 
     /**
      * Converts a whole domain name into its Unicode form for human-readable display.
@@ -262,9 +262,9 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 4.6
      */
-    virtual void
-    nameToUnicodeUTF8(StringPiece name, ByteSink &dest,
-                      IDNAInfo &info, UErrorCode &errorCode) const;
+    ਆਭਾਸੀ ਖਾਲੀ
+    name_ਮੰਜ਼ਿਲ_Unicode_UTF8(StringPiece name, ByteSink &dest,
+                      IDNAInfo &info, UError_ਕੋਡ &error_ਕੋਡ) ਅਚਲ;
 };
 
 class UTS46;
@@ -274,8 +274,8 @@ class UTS46;
  * The IDNAInfo class is not suitable for subclassing.
  * @stable ICU 4.6
  */
-class U_COMMON_API IDNAInfo : public UMemory {
-public:
+class U_COMMON_API IDNAInfo : ਜਨਤਕ UMemory {
+ਜਨਤਕ:
     /**
      * Constructor for stack allocation.
      * @stable ICU 4.6
@@ -286,14 +286,14 @@ public:
      * @return true if there were processing errors
      * @stable ICU 4.6
      */
-    UBool hasErrors() const { return errors!=0; }
+    UBool hasErrors() ਅਚਲ { ਵਾਪਸ errors!=0; }
     /**
      * Returns a bit set indicating IDNA processing errors.
      * See UIDNA_ERROR_... constants in uidna.h.
      * @return bit set of processing errors
      * @stable ICU 4.6
      */
-    uint32_t getErrors() const { return errors; }
+    uint32_t getErrors() ਅਚਲ { ਵਾਪਸ errors; }
     /**
      * Returns true if transitional and nontransitional processing produce different results.
      * This is the case when the input label or domain name contains
@@ -307,15 +307,15 @@ public:
      * @return true if transitional and nontransitional processing produce different results
      * @stable ICU 4.6
      */
-    UBool isTransitionalDifferent() const { return isTransDiff; }
+    UBool isTransitionalDifferent() ਅਚਲ { ਵਾਪਸ isTransDiff; }
 
-private:
-    friend class UTS46;
+ਨਿਜੀ:
+    ਮਿੱਤਰ class UTS46;
 
-    IDNAInfo(const IDNAInfo &other) = delete;  // no copying
-    IDNAInfo &operator=(const IDNAInfo &other) = delete;  // no copying
+    IDNAInfo(ਅਚਲ IDNAInfo &other) = delete;  // no copying
+    IDNAInfo &ਸੰਚਾਲਕ=(ਅਚਲ IDNAInfo &other) = delete;  // no copying
 
-    void reset() {
+    ਖਾਲੀ reset() {
         errors=labelErrors=0;
         isTransDiff=false;
         isBiDi=false;
@@ -328,10 +328,10 @@ private:
     UBool isOkBiDi;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif  // UCONFIG_NO_IDNA
+#ਜੇ_ਅੰਤ  // UCONFIG_NO_IDNA
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ਜੇ_ਅੰਤ /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __IDNA_H__
+#ਜੇ_ਅੰਤ  // __IDNA_H__

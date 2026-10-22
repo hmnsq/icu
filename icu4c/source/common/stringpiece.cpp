@@ -8,109 +8,109 @@
 // Author: wilsonh@google.com (Wilson Hsieh)
 //
 
-#include "unicode/utypes.h"
-#include "unicode/stringpiece.h"
-#include "cstring.h"
-#include "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/stringpiece.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
-StringPiece::StringPiece(const char* str U_LIFETIME_BOUND)
-    : ptr_(str), length_((str == nullptr) ? 0 : static_cast<int32_t>(uprv_strlen(str))) { }
+StringPiece::StringPiece(ਅਚਲ ਅੱਖਰ* str U_LIFETIME_BOUND)
+    : ptr_(str), ਲੰਮਾਈ_2((str == ਖਾਲੀ_ਸੂਚਕ) ? 0 : static_cast<int32_t>(uprv_strlen(str))) { }
 
-StringPiece::StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos) {
-  if (pos < 0) {
+StringPiece::StringPiece(ਅਚਲ StringPiece& x U_LIFETIME_BOUND, int32_t pos) {
+  ਜੇ (pos < 0) {
     pos = 0;
-  } else if (pos > x.length_) {
-    pos = x.length_;
+  } ਨਹੀਂਤਾਂ ਜੇ (pos > x.ਲੰਮਾਈ_2) {
+    pos = x.ਲੰਮਾਈ_2;
   }
   ptr_ = x.ptr_ + pos;
-  length_ = x.length_ - pos;
+  ਲੰਮਾਈ_2 = x.ਲੰਮਾਈ_2 - pos;
 }
 
-StringPiece::StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len) {
-  if (pos < 0) {
+StringPiece::StringPiece(ਅਚਲ StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len) {
+  ਜੇ (pos < 0) {
     pos = 0;
-  } else if (pos > x.length_) {
-    pos = x.length_;
+  } ਨਹੀਂਤਾਂ ਜੇ (pos > x.ਲੰਮਾਈ_2) {
+    pos = x.ਲੰਮਾਈ_2;
   }
-  if (len < 0) {
+  ਜੇ (len < 0) {
     len = 0;
-  } else if (len > x.length_ - pos) {
-    len = x.length_ - pos;
+  } ਨਹੀਂਤਾਂ ਜੇ (len > x.ਲੰਮਾਈ_2 - pos) {
+    len = x.ਲੰਮਾਈ_2 - pos;
   }
   ptr_ = x.ptr_ + pos;
-  length_ = len;
+  ਲੰਮਾਈ_2 = len;
 }
 
-void StringPiece::set(const char* str) {
+ਖਾਲੀ StringPiece::ਸੈੱਟ(ਅਚਲ ਅੱਖਰ* str) {
   ptr_ = str;
-  if (str != nullptr)
-    length_ = static_cast<int32_t>(uprv_strlen(str));
-  else
-    length_ = 0;
+  ਜੇ (str != ਖਾਲੀ_ਸੂਚਕ)
+    ਲੰਮਾਈ_2 = static_cast<int32_t>(uprv_strlen(str));
+  ਨਹੀਂਤਾਂ
+    ਲੰਮਾਈ_2 = 0;
 }
 
-int32_t StringPiece::find(StringPiece needle, int32_t offset) {
-  if (length() == 0 && needle.length() == 0) {
-    return 0;
+int32_t StringPiece::find(StringPiece needle, int32_t ਵਿੱਥ) {
+  ਜੇ (length() == 0 && needle.length() == 0) {
+    ਵਾਪਸ 0;
   }
   // TODO: Improve to be better than O(N^2)?
-  for (int32_t i = offset; i < length(); i++) {
+  ਲਈ (int32_t i = ਵਿੱਥ; i < length(); i++) {
     int32_t j = 0;
-    for (; j < needle.length(); i++, j++) {
-      if (data()[i] != needle.data()[j]) {
+    ਲਈ (; j < needle.length(); i++, j++) {
+      ਜੇ (ਅੰਕੜੇ()[i] != needle.ਅੰਕੜੇ()[j]) {
         i -= j;
-        goto outer_end;
+        ਜਾਓ outer_ਸਿਰਾ_2;
       }
     }
-    return i - j;
-    outer_end: void();
+    ਵਾਪਸ i - j;
+    outer_ਸਿਰਾ_2: ਖਾਲੀ();
   }
-  return -1;
+  ਵਾਪਸ -1;
 }
 
 int32_t StringPiece::compare(StringPiece other) {
   int32_t i = 0;
-  for (; i < length(); i++) {
-    if (i == other.length()) {
+  ਲਈ (; i < length(); i++) {
+    ਜੇ (i == other.length()) {
       // this is longer
-      return 1;
+      ਵਾਪਸ 1;
     }
-    char a = data()[i];
-    char b = other.data()[i];
-    if (a < b) {
-      return -1;
-    } else if (a > b) {
-      return 1;
+    ਅੱਖਰ a = ਅੰਕੜੇ()[i];
+    ਅੱਖਰ b = other.ਅੰਕੜੇ()[i];
+    ਜੇ (a < b) {
+      ਵਾਪਸ -1;
+    } ਨਹੀਂਤਾਂ ਜੇ (a > b) {
+      ਵਾਪਸ 1;
     }
   }
-  if (i < other.length()) {
+  ਜੇ (i < other.length()) {
     // other is longer
-    return -1;
+    ਵਾਪਸ -1;
   }
-  return 0;
+  ਵਾਪਸ 0;
 }
 
 U_EXPORT UBool U_EXPORT2
-operator==(const StringPiece& x, const StringPiece& y) {
+ਸੰਚਾਲਕ==(ਅਚਲ StringPiece& x, ਅਚਲ StringPiece& y) {
   int32_t len = x.size();
-  if (len != y.size()) {
-    return false;
+  ਜੇ (len != y.size()) {
+    ਵਾਪਸ ਝੂਠ;
   }
-  if (len == 0) {
-    return true;
+  ਜੇ (len == 0) {
+    ਵਾਪਸ ਸੱਚ;
   }
-  const char* p = x.data();
-  const char* p2 = y.data();
+  ਅਚਲ ਅੱਖਰ* p = x.ਅੰਕੜੇ();
+  ਅਚਲ ਅੱਖਰ* p2 = y.ਅੰਕੜੇ();
   // Test last byte in case strings share large common prefix
   --len;
-  if (p[len] != p2[len]) return false;
+  ਜੇ (p[len] != p2[len]) ਵਾਪਸ ਝੂਠ;
   // At this point we can, but don't have to, ignore the last byte.
-  return uprv_memcmp(p, p2, len) == 0;
+  ਵਾਪਸ uprv_memcmp(p, p2, len) == 0;
 }
 
 
-const int32_t StringPiece::npos = 0x7fffffff;
+ਅਚਲ int32_t StringPiece::npos = 0x7fffffff;
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ

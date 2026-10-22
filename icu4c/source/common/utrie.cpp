@@ -20,170 +20,170 @@
 *   Unicode code points (0..0x10ffff).
 */
 
-#ifdef UTRIE_DEBUG
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UTRIE_DEBUG
 #   include <stdio.h>
-#endif
+#ਜੇ_ਅੰਤ
 
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "utrie.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "utrie.h"
 
 /* miscellaneous ------------------------------------------------------------ */
 
-#undef ABS
-#define ABS(x) ((x)>=0 ? (x) : -(x))
+#ਪਰਿਭਾਸ਼ਾ_ਰੱਦ ABS
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ABS(x) ((x)>=0 ? (x) : -(x))
 
-static inline UBool
-equal_uint32(const uint32_t *s, const uint32_t *t, int32_t length) {
-    while(length>0 && *s==*t) {
+ਸਥਿਰ ਸਤਰਅੰਦਰ UBool
+equal_uint32(ਅਚਲ uint32_t *s, ਅਚਲ uint32_t *t, int32_t length) {
+    ਜਦੋਂ(length>0 && *s==*t) {
         ++s;
         ++t;
         --length;
     }
-    return length == 0;
+    ਵਾਪਸ length == 0;
 }
 
 /* Building a trie ----------------------------------------------------------*/
 
 U_CAPI UNewTrie * U_EXPORT2
-utrie_open(UNewTrie *fillIn,
-           uint32_t *aliasData, int32_t maxDataLength,
-           uint32_t initialValue, uint32_t leadUnitValue,
-           UBool latin1Linear) {
+utrie_open(UNewTrie *fill_ਵਿੱਚ,
+           uint32_t *alias_ਅੰਕੜੇ, int32_t max_ਅੰਕੜੇ_ਲੰਮਾਈ,
+           uint32_t initial_ਮੁੱਲ, uint32_t lead_Unit_ਮੁੱਲ,
+           UBool latin1_ਰੇਖਿਕ) {
     UNewTrie *trie;
     int32_t i, j;
 
-    if( maxDataLength<UTRIE_DATA_BLOCK_LENGTH ||
-        (latin1Linear && maxDataLength<1024)
+    ਜੇ( max_ਅੰਕੜੇ_ਲੰਮਾਈ<UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ ||
+        (latin1_ਰੇਖਿਕ && max_ਅੰਕੜੇ_ਲੰਮਾਈ<1024)
     ) {
-        return nullptr;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    if(fillIn!=nullptr) {
-        trie=fillIn;
-    } else {
-        trie=(UNewTrie *)uprv_malloc(sizeof(UNewTrie));
-        if(trie==nullptr) {
-            return nullptr;
+    ਜੇ(fill_ਵਿੱਚ!=ਖਾਲੀ_ਸੂਚਕ) {
+        trie=fill_ਵਿੱਚ;
+    } ਨਹੀਂਤਾਂ {
+        trie=(UNewTrie *)uprv_malloc(ਆਕਾਰ(UNewTrie));
+        ਜੇ(trie==ਖਾਲੀ_ਸੂਚਕ) {
+            ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
         }
     }
-    uprv_memset(trie, 0, sizeof(UNewTrie));
-    trie->isAllocated = fillIn == nullptr;
+    uprv_memset(trie, 0, ਆਕਾਰ(UNewTrie));
+    trie->isAllocated = fill_ਵਿੱਚ == ਖਾਲੀ_ਸੂਚਕ;
 
-    if(aliasData!=nullptr) {
-        trie->data=aliasData;
-        trie->isDataAllocated=false;
-    } else {
-        trie->data=(uint32_t *)uprv_malloc(maxDataLength*4);
-        if(trie->data==nullptr) {
+    ਜੇ(alias_ਅੰਕੜੇ!=ਖਾਲੀ_ਸੂਚਕ) {
+        trie->ਅੰਕੜੇ=alias_ਅੰਕੜੇ;
+        trie->is_ਅੰਕੜੇ_Allocated=ਝੂਠ;
+    } ਨਹੀਂਤਾਂ {
+        trie->ਅੰਕੜੇ=(uint32_t *)uprv_malloc(max_ਅੰਕੜੇ_ਲੰਮਾਈ*4);
+        ਜੇ(trie->ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ) {
             uprv_free(trie);
-            return nullptr;
+            ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
         }
-        trie->isDataAllocated=true;
+        trie->is_ਅੰਕੜੇ_Allocated=ਸੱਚ;
     }
 
     /* preallocate and reset the first data block (block index 0) */
-    j=UTRIE_DATA_BLOCK_LENGTH;
+    j=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
 
-    if(latin1Linear) {
+    ਜੇ(latin1_ਰੇਖਿਕ) {
         /* preallocate and reset the first block (number 0) and Latin-1 (U+0000..U+00ff) after that */
         /* made sure above that maxDataLength>=1024 */
 
         /* set indexes to point to consecutive data blocks */
         i=0;
-        do {
+        ਕਰੋ {
             /* do this at least for trie->index[0] even if that block is only partly used for Latin-1 */
-            trie->index[i++]=j;
-            j+=UTRIE_DATA_BLOCK_LENGTH;
-        } while(i<(256>>UTRIE_SHIFT));
+            trie->ਸੂਚਕਾਂਕ[i++]=j;
+            j+=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
+        } ਜਦੋਂ(i<(256>>UTRIE_ਖਿਸਕਾਓ));
     }
 
     /* reset the initially allocated blocks to the initial value */
-    trie->dataLength=j;
-    while(j>0) {
-        trie->data[--j]=initialValue;
+    trie->ਅੰਕੜੇ_ਲੰਮਾਈ=j;
+    ਜਦੋਂ(j>0) {
+        trie->ਅੰਕੜੇ[--j]=initial_ਮੁੱਲ;
     }
 
-    trie->leadUnitValue=leadUnitValue;
-    trie->indexLength=UTRIE_MAX_INDEX_LENGTH;
-    trie->dataCapacity=maxDataLength;
-    trie->isLatin1Linear=latin1Linear;
-    trie->isCompacted=false;
-    return trie;
+    trie->lead_Unit_ਮੁੱਲ=lead_Unit_ਮੁੱਲ;
+    trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ=UTRIE_MAX_ਸੂਚਕਾਂਕ_ਲੰਮਾਈ;
+    trie->ਅੰਕੜੇ_ਸਮਰੱਥਾ=max_ਅੰਕੜੇ_ਲੰਮਾਈ;
+    trie->is_Latin1_ਰੇਖਿਕ=latin1_ਰੇਖਿਕ;
+    trie->isCompacted=ਝੂਠ;
+    ਵਾਪਸ trie;
 }
 
 U_CAPI UNewTrie * U_EXPORT2
-utrie_clone(UNewTrie *fillIn, const UNewTrie *other, uint32_t *aliasData, int32_t aliasDataCapacity) {
+utrie_clone(UNewTrie *fill_ਵਿੱਚ, ਅਚਲ UNewTrie *other, uint32_t *alias_ਅੰਕੜੇ, int32_t alias_ਅੰਕੜੇ_ਸਮਰੱਥਾ) {
     UNewTrie *trie;
-    UBool isDataAllocated;
+    UBool is_ਅੰਕੜੇ_Allocated;
 
     /* do not clone if other is not valid or already compacted */
-    if(other==nullptr || other->data==nullptr || other->isCompacted) {
-        return nullptr;
+    ਜੇ(other==ਖਾਲੀ_ਸੂਚਕ || other->ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ || other->isCompacted) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
     /* clone data */
-    if(aliasData!=nullptr && aliasDataCapacity>=other->dataCapacity) {
-        isDataAllocated=false;
-    } else {
-        aliasDataCapacity=other->dataCapacity;
-        aliasData=(uint32_t *)uprv_malloc(other->dataCapacity*4);
-        if(aliasData==nullptr) {
-            return nullptr;
+    ਜੇ(alias_ਅੰਕੜੇ!=ਖਾਲੀ_ਸੂਚਕ && alias_ਅੰਕੜੇ_ਸਮਰੱਥਾ>=other->ਅੰਕੜੇ_ਸਮਰੱਥਾ) {
+        is_ਅੰਕੜੇ_Allocated=ਝੂਠ;
+    } ਨਹੀਂਤਾਂ {
+        alias_ਅੰਕੜੇ_ਸਮਰੱਥਾ=other->ਅੰਕੜੇ_ਸਮਰੱਥਾ;
+        alias_ਅੰਕੜੇ=(uint32_t *)uprv_malloc(other->ਅੰਕੜੇ_ਸਮਰੱਥਾ*4);
+        ਜੇ(alias_ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ) {
+            ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
         }
-        isDataAllocated=true;
+        is_ਅੰਕੜੇ_Allocated=ਸੱਚ;
     }
 
-    trie=utrie_open(fillIn, aliasData, aliasDataCapacity,
-                    other->data[0], other->leadUnitValue,
-                    other->isLatin1Linear);
-    if(trie==nullptr) {
-        uprv_free(aliasData);
-    } else {
-        uprv_memcpy(trie->index, other->index, sizeof(trie->index));
-        uprv_memcpy(trie->data, other->data, (size_t)other->dataLength*4);
-        trie->dataLength=other->dataLength;
-        trie->isDataAllocated=isDataAllocated;
+    trie=utrie_open(fill_ਵਿੱਚ, alias_ਅੰਕੜੇ, alias_ਅੰਕੜੇ_ਸਮਰੱਥਾ,
+                    other->ਅੰਕੜੇ[0], other->lead_Unit_ਮੁੱਲ,
+                    other->is_Latin1_ਰੇਖਿਕ);
+    ਜੇ(trie==ਖਾਲੀ_ਸੂਚਕ) {
+        uprv_free(alias_ਅੰਕੜੇ);
+    } ਨਹੀਂਤਾਂ {
+        uprv_memcpy(trie->ਸੂਚਕਾਂਕ, other->ਸੂਚਕਾਂਕ, ਆਕਾਰ(trie->ਸੂਚਕਾਂਕ));
+        uprv_memcpy(trie->ਅੰਕੜੇ, other->ਅੰਕੜੇ, (size_t)other->ਅੰਕੜੇ_ਲੰਮਾਈ*4);
+        trie->ਅੰਕੜੇ_ਲੰਮਾਈ=other->ਅੰਕੜੇ_ਲੰਮਾਈ;
+        trie->is_ਅੰਕੜੇ_Allocated=is_ਅੰਕੜੇ_Allocated;
     }
 
-    return trie;
+    ਵਾਪਸ trie;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ਖਾਲੀ U_EXPORT2
 utrie_close(UNewTrie *trie) {
-    if(trie!=nullptr) {
-        if(trie->isDataAllocated) {
-            uprv_free(trie->data);
-            trie->data=nullptr;
+    ਜੇ(trie!=ਖਾਲੀ_ਸੂਚਕ) {
+        ਜੇ(trie->is_ਅੰਕੜੇ_Allocated) {
+            uprv_free(trie->ਅੰਕੜੇ);
+            trie->ਅੰਕੜੇ=ਖਾਲੀ_ਸੂਚਕ;
         }
-        if(trie->isAllocated) {
+        ਜੇ(trie->isAllocated) {
             uprv_free(trie);
         }
     }
 }
 
 U_CAPI uint32_t * U_EXPORT2
-utrie_getData(UNewTrie *trie, int32_t *pLength) {
-    if(trie==nullptr || pLength==nullptr) {
-        return nullptr;
+utrie_get_ਅੰਕੜੇ(UNewTrie *trie, int32_t *p_ਲੰਮਾਈ) {
+    ਜੇ(trie==ਖਾਲੀ_ਸੂਚਕ || p_ਲੰਮਾਈ==ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    *pLength=trie->dataLength;
-    return trie->data;
+    *p_ਲੰਮਾਈ=trie->ਅੰਕੜੇ_ਲੰਮਾਈ;
+    ਵਾਪਸ trie->ਅੰਕੜੇ;
 }
 
-static int32_t
-utrie_allocDataBlock(UNewTrie *trie) {
-    int32_t newBlock, newTop;
+ਸਥਿਰ int32_t
+utrie_alloc_ਅੰਕੜੇ_ਖੰਡ(UNewTrie *trie) {
+    int32_t new_ਖੰਡ, new_ਸਿਖਰ;
 
-    newBlock=trie->dataLength;
-    newTop=newBlock+UTRIE_DATA_BLOCK_LENGTH;
-    if(newTop>trie->dataCapacity) {
+    new_ਖੰਡ=trie->ਅੰਕੜੇ_ਲੰਮਾਈ;
+    new_ਸਿਖਰ=new_ਖੰਡ+UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
+    ਜੇ(new_ਸਿਖਰ>trie->ਅੰਕੜੇ_ਸਮਰੱਥਾ) {
         /* out of memory in the data array */
-        return -1;
+        ਵਾਪਸ -1;
     }
-    trie->dataLength=newTop;
-    return newBlock;
+    trie->ਅੰਕੜੇ_ਲੰਮਾਈ=new_ਸਿਖਰ;
+    ਵਾਪਸ new_ਖੰਡ;
 }
 
 /**
@@ -192,27 +192,27 @@ utrie_allocDataBlock(UNewTrie *trie) {
  * @return -1 if no new data block available (out of memory in data array)
  * @internal
  */
-static int32_t
-utrie_getDataBlock(UNewTrie *trie, UChar32 c) {
-    int32_t indexValue, newBlock;
+ਸਥਿਰ int32_t
+utrie_get_ਅੰਕੜੇ_ਖੰਡ(UNewTrie *trie, UChar32 c) {
+    int32_t ਸੂਚਕਾਂਕ_ਮੁੱਲ, new_ਖੰਡ;
 
-    c>>=UTRIE_SHIFT;
-    indexValue=trie->index[c];
-    if(indexValue>0) {
-        return indexValue;
+    c>>=UTRIE_ਖਿਸਕਾਓ;
+    ਸੂਚਕਾਂਕ_ਮੁੱਲ=trie->ਸੂਚਕਾਂਕ[c];
+    ਜੇ(ਸੂਚਕਾਂਕ_ਮੁੱਲ>0) {
+        ਵਾਪਸ ਸੂਚਕਾਂਕ_ਮੁੱਲ;
     }
 
     /* allocate a new data block */
-    newBlock=utrie_allocDataBlock(trie);
-    if(newBlock<0) {
+    new_ਖੰਡ=utrie_alloc_ਅੰਕੜੇ_ਖੰਡ(trie);
+    ਜੇ(new_ਖੰਡ<0) {
         /* out of memory in the data array */
-        return -1;
+        ਵਾਪਸ -1;
     }
-    trie->index[c]=newBlock;
+    trie->ਸੂਚਕਾਂਕ[c]=new_ਖੰਡ;
 
     /* copy-on-write for a block from a setRange() */
-    uprv_memcpy(trie->data+newBlock, trie->data-indexValue, 4*UTRIE_DATA_BLOCK_LENGTH);
-    return newBlock;
+    uprv_memcpy(trie->ਅੰਕੜੇ+new_ਖੰਡ, trie->ਅੰਕੜੇ-ਸੂਚਕਾਂਕ_ਮੁੱਲ, 4*UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ);
+    ਵਾਪਸ new_ਖੰਡ;
 }
 
 /**
@@ -220,175 +220,175 @@ utrie_getDataBlock(UNewTrie *trie, UChar32 c) {
  */
 U_CAPI UBool U_EXPORT2
 utrie_set32(UNewTrie *trie, UChar32 c, uint32_t value) {
-    int32_t block;
+    int32_t ਖੰਡ;
 
     /* valid, uncompacted trie and valid c? */
-    if(trie==nullptr || trie->isCompacted || (uint32_t)c>0x10ffff) {
-        return false;
+    ਜੇ(trie==ਖਾਲੀ_ਸੂਚਕ || trie->isCompacted || (uint32_t)c>0x10ffff) {
+        ਵਾਪਸ ਝੂਠ;
     }
 
-    block=utrie_getDataBlock(trie, c);
-    if(block<0) {
-        return false;
+    ਖੰਡ=utrie_get_ਅੰਕੜੇ_ਖੰਡ(trie, c);
+    ਜੇ(ਖੰਡ<0) {
+        ਵਾਪਸ ਝੂਠ;
     }
 
-    trie->data[block+(c&UTRIE_MASK)]=value;
-    return true;
+    trie->ਅੰਕੜੇ[ਖੰਡ+(c&UTRIE_ਨਕਾਬ)]=value;
+    ਵਾਪਸ ਸੱਚ;
 }
 
 U_CAPI uint32_t U_EXPORT2
-utrie_get32(UNewTrie *trie, UChar32 c, UBool *pInBlockZero) {
-    int32_t block;
+utrie_get32(UNewTrie *trie, UChar32 c, UBool *p_ਵਿੱਚ_ਖੰਡ_Zero) {
+    int32_t ਖੰਡ;
 
     /* valid, uncompacted trie and valid c? */
-    if(trie==nullptr || trie->isCompacted || (uint32_t)c>0x10ffff) {
-        if(pInBlockZero!=nullptr) {
-            *pInBlockZero=true;
+    ਜੇ(trie==ਖਾਲੀ_ਸੂਚਕ || trie->isCompacted || (uint32_t)c>0x10ffff) {
+        ਜੇ(p_ਵਿੱਚ_ਖੰਡ_Zero!=ਖਾਲੀ_ਸੂਚਕ) {
+            *p_ਵਿੱਚ_ਖੰਡ_Zero=ਸੱਚ;
         }
-        return 0;
+        ਵਾਪਸ 0;
     }
 
-    block=trie->index[c>>UTRIE_SHIFT];
-    if(pInBlockZero!=nullptr) {
-        *pInBlockZero = block == 0;
+    ਖੰਡ=trie->ਸੂਚਕਾਂਕ[c>>UTRIE_ਖਿਸਕਾਓ];
+    ਜੇ(p_ਵਿੱਚ_ਖੰਡ_Zero!=ਖਾਲੀ_ਸੂਚਕ) {
+        *p_ਵਿੱਚ_ਖੰਡ_Zero = ਖੰਡ == 0;
     }
 
-    return trie->data[ABS(block)+(c&UTRIE_MASK)];
+    ਵਾਪਸ trie->ਅੰਕੜੇ[ABS(ਖੰਡ)+(c&UTRIE_ਨਕਾਬ)];
 }
 
 /**
  * @internal
  */
-static void
-utrie_fillBlock(uint32_t *block, UChar32 start, UChar32 limit,
-                uint32_t value, uint32_t initialValue, UBool overwrite) {
-    uint32_t *pLimit;
+ਸਥਿਰ ਖਾਲੀ
+utrie_fill_ਖੰਡ(uint32_t *ਖੰਡ, UChar32 ਸ਼ੁਰੂ, UChar32 ਹੱਦਬੰਦੀ,
+                uint32_t value, uint32_t initial_ਮੁੱਲ, UBool overwrite) {
+    uint32_t *p_ਹੱਦਬੰਦੀ;
 
-    pLimit=block+limit;
-    block+=start;
-    if(overwrite) {
-        while(block<pLimit) {
-            *block++=value;
+    p_ਹੱਦਬੰਦੀ=ਖੰਡ+ਹੱਦਬੰਦੀ;
+    ਖੰਡ+=ਸ਼ੁਰੂ;
+    ਜੇ(overwrite) {
+        ਜਦੋਂ(ਖੰਡ<p_ਹੱਦਬੰਦੀ) {
+            *ਖੰਡ++=value;
         }
-    } else {
-        while(block<pLimit) {
-            if(*block==initialValue) {
-                *block=value;
+    } ਨਹੀਂਤਾਂ {
+        ਜਦੋਂ(ਖੰਡ<p_ਹੱਦਬੰਦੀ) {
+            ਜੇ(*ਖੰਡ==initial_ਮੁੱਲ) {
+                *ਖੰਡ=value;
             }
-            ++block;
+            ++ਖੰਡ;
         }
     }
 }
 
 U_CAPI UBool U_EXPORT2
-utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t value, UBool overwrite) {
+utrie_ਸੈੱਟ_Range32(UNewTrie *trie, UChar32 ਸ਼ੁਰੂ, UChar32 ਹੱਦਬੰਦੀ, uint32_t value, UBool overwrite) {
     /*
      * repeat value in [start..limit[
      * mark index values for repeat-data blocks by setting bit 31 of the index values
      * fill around existing values if any, if(overwrite)
      */
-    uint32_t initialValue;
-    int32_t block, rest, repeatBlock;
+    uint32_t initial_ਮੁੱਲ;
+    int32_t ਖੰਡ, rest, repeat_ਖੰਡ;
 
     /* valid, uncompacted trie and valid indexes? */
-    if( trie==nullptr || trie->isCompacted ||
-        (uint32_t)start>0x10ffff || (uint32_t)limit>0x110000 || start>limit
+    ਜੇ( trie==ਖਾਲੀ_ਸੂਚਕ || trie->isCompacted ||
+        (uint32_t)ਸ਼ੁਰੂ>0x10ffff || (uint32_t)ਹੱਦਬੰਦੀ>0x110000 || ਸ਼ੁਰੂ>ਹੱਦਬੰਦੀ
     ) {
-        return false;
+        ਵਾਪਸ ਝੂਠ;
     }
-    if(start==limit) {
-        return true; /* nothing to do */
+    ਜੇ(ਸ਼ੁਰੂ==ਹੱਦਬੰਦੀ) {
+        ਵਾਪਸ ਸੱਚ; /* nothing to do */
     }
 
-    initialValue=trie->data[0];
-    if(start&UTRIE_MASK) {
-        UChar32 nextStart;
+    initial_ਮੁੱਲ=trie->ਅੰਕੜੇ[0];
+    ਜੇ(ਸ਼ੁਰੂ&UTRIE_ਨਕਾਬ) {
+        UChar32 ਅਗਲਾ_ਸ਼ੁਰੂ;
 
         /* set partial block at [start..following block boundary[ */
-        block=utrie_getDataBlock(trie, start);
-        if(block<0) {
-            return false;
+        ਖੰਡ=utrie_get_ਅੰਕੜੇ_ਖੰਡ(trie, ਸ਼ੁਰੂ);
+        ਜੇ(ਖੰਡ<0) {
+            ਵਾਪਸ ਝੂਠ;
         }
 
-        nextStart=(start+UTRIE_DATA_BLOCK_LENGTH)&~UTRIE_MASK;
-        if(nextStart<=limit) {
-            utrie_fillBlock(trie->data+block, start&UTRIE_MASK, UTRIE_DATA_BLOCK_LENGTH,
-                            value, initialValue, overwrite);
-            start=nextStart;
-        } else {
-            utrie_fillBlock(trie->data+block, start&UTRIE_MASK, limit&UTRIE_MASK,
-                            value, initialValue, overwrite);
-            return true;
+        ਅਗਲਾ_ਸ਼ੁਰੂ=(ਸ਼ੁਰੂ+UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ)&~UTRIE_ਨਕਾਬ;
+        ਜੇ(ਅਗਲਾ_ਸ਼ੁਰੂ<=ਹੱਦਬੰਦੀ) {
+            utrie_fill_ਖੰਡ(trie->ਅੰਕੜੇ+ਖੰਡ, ਸ਼ੁਰੂ&UTRIE_ਨਕਾਬ, UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ,
+                            value, initial_ਮੁੱਲ, overwrite);
+            ਸ਼ੁਰੂ=ਅਗਲਾ_ਸ਼ੁਰੂ;
+        } ਨਹੀਂਤਾਂ {
+            utrie_fill_ਖੰਡ(trie->ਅੰਕੜੇ+ਖੰਡ, ਸ਼ੁਰੂ&UTRIE_ਨਕਾਬ, ਹੱਦਬੰਦੀ&UTRIE_ਨਕਾਬ,
+                            value, initial_ਮੁੱਲ, overwrite);
+            ਵਾਪਸ ਸੱਚ;
         }
     }
 
     /* number of positions in the last, partial block */
-    rest=limit&UTRIE_MASK;
+    rest=ਹੱਦਬੰਦੀ&UTRIE_ਨਕਾਬ;
 
     /* round down limit to a block boundary */
-    limit&=~UTRIE_MASK;
+    ਹੱਦਬੰਦੀ&=~UTRIE_ਨਕਾਬ;
 
     /* iterate over all-value blocks */
-    if(value==initialValue) {
-        repeatBlock=0;
-    } else {
-        repeatBlock=-1;
+    ਜੇ(value==initial_ਮੁੱਲ) {
+        repeat_ਖੰਡ=0;
+    } ਨਹੀਂਤਾਂ {
+        repeat_ਖੰਡ=-1;
     }
-    while(start<limit) {
+    ਜਦੋਂ(ਸ਼ੁਰੂ<ਹੱਦਬੰਦੀ) {
         /* get index value */
-        block=trie->index[start>>UTRIE_SHIFT];
-        if(block>0) {
+        ਖੰਡ=trie->ਸੂਚਕਾਂਕ[ਸ਼ੁਰੂ>>UTRIE_ਖਿਸਕਾਓ];
+        ਜੇ(ਖੰਡ>0) {
             /* already allocated, fill in value */
-            utrie_fillBlock(trie->data+block, 0, UTRIE_DATA_BLOCK_LENGTH, value, initialValue, overwrite);
-        } else if(trie->data[-block]!=value && (block==0 || overwrite)) {
+            utrie_fill_ਖੰਡ(trie->ਅੰਕੜੇ+ਖੰਡ, 0, UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ, value, initial_ਮੁੱਲ, overwrite);
+        } ਨਹੀਂਤਾਂ ਜੇ(trie->ਅੰਕੜੇ[-ਖੰਡ]!=value && (ਖੰਡ==0 || overwrite)) {
             /* set the repeatBlock instead of the current block 0 or range block */
-            if(repeatBlock>=0) {
-                trie->index[start>>UTRIE_SHIFT]=-repeatBlock;
-            } else {
+            ਜੇ(repeat_ਖੰਡ>=0) {
+                trie->ਸੂਚਕਾਂਕ[ਸ਼ੁਰੂ>>UTRIE_ਖਿਸਕਾਓ]=-repeat_ਖੰਡ;
+            } ਨਹੀਂਤਾਂ {
                 /* create and set and fill the repeatBlock */
-                repeatBlock=utrie_getDataBlock(trie, start);
-                if(repeatBlock<0) {
-                    return false;
+                repeat_ਖੰਡ=utrie_get_ਅੰਕੜੇ_ਖੰਡ(trie, ਸ਼ੁਰੂ);
+                ਜੇ(repeat_ਖੰਡ<0) {
+                    ਵਾਪਸ ਝੂਠ;
                 }
 
                 /* set the negative block number to indicate that it is a repeat block */
-                trie->index[start>>UTRIE_SHIFT]=-repeatBlock;
-                utrie_fillBlock(trie->data+repeatBlock, 0, UTRIE_DATA_BLOCK_LENGTH, value, initialValue, true);
+                trie->ਸੂਚਕਾਂਕ[ਸ਼ੁਰੂ>>UTRIE_ਖਿਸਕਾਓ]=-repeat_ਖੰਡ;
+                utrie_fill_ਖੰਡ(trie->ਅੰਕੜੇ+repeat_ਖੰਡ, 0, UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ, value, initial_ਮੁੱਲ, ਸੱਚ);
             }
         }
 
-        start+=UTRIE_DATA_BLOCK_LENGTH;
+        ਸ਼ੁਰੂ+=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
     }
 
-    if(rest>0) {
+    ਜੇ(rest>0) {
         /* set partial block at [last block boundary..limit[ */
-        block=utrie_getDataBlock(trie, start);
-        if(block<0) {
-            return false;
+        ਖੰਡ=utrie_get_ਅੰਕੜੇ_ਖੰਡ(trie, ਸ਼ੁਰੂ);
+        ਜੇ(ਖੰਡ<0) {
+            ਵਾਪਸ ਝੂਠ;
         }
 
-        utrie_fillBlock(trie->data+block, 0, rest, value, initialValue, overwrite);
+        utrie_fill_ਖੰਡ(trie->ਅੰਕੜੇ+ਖੰਡ, 0, rest, value, initial_ਮੁੱਲ, overwrite);
     }
 
-    return true;
+    ਵਾਪਸ ਸੱਚ;
 }
 
-static int32_t
-_findSameIndexBlock(const int32_t *idx, int32_t indexLength,
-                    int32_t otherBlock) {
-    int32_t block, i;
+ਸਥਿਰ int32_t
+ਲੱਭੋ_Same_ਸੂਚਕਾਂਕ_ਖੰਡ(ਅਚਲ int32_t *idx, int32_t ਸੂਚਕਾਂਕ_ਲੰਮਾਈ,
+                    int32_t other_ਖੰਡ) {
+    int32_t ਖੰਡ, i;
 
-    for(block=UTRIE_BMP_INDEX_LENGTH; block<indexLength; block+=UTRIE_SURROGATE_BLOCK_COUNT) {
-        for(i=0; i<UTRIE_SURROGATE_BLOCK_COUNT; ++i) {
-            if(idx[block+i]!=idx[otherBlock+i]) {
-                break;
+    ਲਈ(ਖੰਡ=UTRIE_BMP_ਸੂਚਕਾਂਕ_ਲੰਮਾਈ; ਖੰਡ<ਸੂਚਕਾਂਕ_ਲੰਮਾਈ; ਖੰਡ+=UTRIE_SURROGATE_ਖੰਡ_ਗਿਣਤੀ) {
+        ਲਈ(i=0; i<UTRIE_SURROGATE_ਖੰਡ_ਗਿਣਤੀ; ++i) {
+            ਜੇ(idx[ਖੰਡ+i]!=idx[other_ਖੰਡ+i]) {
+                ਰੋਕੋ;
             }
         }
-        if(i==UTRIE_SURROGATE_BLOCK_COUNT) {
-            return block;
+        ਜੇ(i==UTRIE_SURROGATE_ਖੰਡ_ਗਿਣਤੀ) {
+            ਵਾਪਸ ਖੰਡ;
         }
     }
-    return indexLength;
+    ਵਾਪਸ ਸੂਚਕਾਂਕ_ਲੰਮਾਈ;
 }
 
 /*
@@ -401,21 +401,21 @@ _findSameIndexBlock(const int32_t *idx, int32_t indexLength,
  * to just after the BMP area, where they can be retrieved for
  * code point lookups.
  */
-static void
-utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *pErrorCode) {
-    int32_t leadIndexes[UTRIE_SURROGATE_BLOCK_COUNT];
+ਸਥਿਰ ਖਾਲੀ
+utrie_fold(UNewTrie *trie, UNew_Trie_Get_Folded_ਮੁੱਲ *get_Folded_ਮੁੱਲ, UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    int32_t leadIndexes[UTRIE_SURROGATE_ਖੰਡ_ਗਿਣਤੀ];
     int32_t *idx;
     uint32_t value;
     UChar32 c;
-    int32_t indexLength, block;
-#ifdef UTRIE_DEBUG
-    int countLeadCUWithData=0;
-#endif
+    int32_t ਸੂਚਕਾਂਕ_ਲੰਮਾਈ, ਖੰਡ;
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UTRIE_DEBUG
+    ਪੂਰਨ ਗਿਣਤੀ_Lead_CUWith_ਅੰਕੜੇ=0;
+#ਜੇ_ਅੰਤ
 
-    idx=trie->index;
+    idx=trie->ਸੂਚਕਾਂਕ;
 
     /* copy the lead surrogate indexes into a temporary array */
-    uprv_memcpy(leadIndexes, idx+(0xd800>>UTRIE_SHIFT), 4*UTRIE_SURROGATE_BLOCK_COUNT);
+    uprv_memcpy(leadIndexes, idx+(0xd800>>UTRIE_ਖਿਸਕਾਓ), 4*UTRIE_SURROGATE_ਖੰਡ_ਗਿਣਤੀ);
 
     /*
      * set all values for lead surrogate code *units* to leadUnitValue
@@ -427,21 +427,21 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
      * the above saved the indexes for surrogate code *points*
      * fill the indexes with simplified code from utrie_setRange32()
      */
-    if(trie->leadUnitValue==trie->data[0]) {
-        block=0; /* leadUnitValue==initialValue, use all-initial-value block */
-    } else {
+    ਜੇ(trie->lead_Unit_ਮੁੱਲ==trie->ਅੰਕੜੇ[0]) {
+        ਖੰਡ=0; /* leadUnitValue==initialValue, use all-initial-value block */
+    } ਨਹੀਂਤਾਂ {
         /* create and fill the repeatBlock */
-        block=utrie_allocDataBlock(trie);
-        if(block<0) {
+        ਖੰਡ=utrie_alloc_ਅੰਕੜੇ_ਖੰਡ(trie);
+        ਜੇ(ਖੰਡ<0) {
             /* data table overflow */
-            *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            *p_Error_ਕੋਡ=U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+            ਵਾਪਸ;
         }
-        utrie_fillBlock(trie->data+block, 0, UTRIE_DATA_BLOCK_LENGTH, trie->leadUnitValue, trie->data[0], true);
-        block=-block; /* negative block number to indicate that it is a repeat block */
+        utrie_fill_ਖੰਡ(trie->ਅੰਕੜੇ+ਖੰਡ, 0, UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ, trie->lead_Unit_ਮੁੱਲ, trie->ਅੰਕੜੇ[0], ਸੱਚ);
+        ਖੰਡ=-ਖੰਡ; /* negative block number to indicate that it is a repeat block */
     }
-    for(c=(0xd800>>UTRIE_SHIFT); c<(0xdc00>>UTRIE_SHIFT); ++c) {
-        trie->index[c]=block;
+    ਲਈ(c=(0xd800>>UTRIE_ਖਿਸਕਾਓ); c<(0xdc00>>UTRIE_ਖਿਸਕਾਓ); ++c) {
+        trie->ਸੂਚਕਾਂਕ[c]=ਖੰਡ;
     }
 
     /*
@@ -451,54 +451,54 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
      * Later all folded index blocks are moved up one to insert the copied
      * lead surrogate indexes.
      */
-    indexLength=UTRIE_BMP_INDEX_LENGTH;
+    ਸੂਚਕਾਂਕ_ਲੰਮਾਈ=UTRIE_BMP_ਸੂਚਕਾਂਕ_ਲੰਮਾਈ;
 
     /* search for any index (stage 1) entries for supplementary code points */
-    for(c=0x10000; c<0x110000;) {
-        if(idx[c>>UTRIE_SHIFT]!=0) {
+    ਲਈ(c=0x10000; c<0x110000;) {
+        ਜੇ(idx[c>>UTRIE_ਖਿਸਕਾਓ]!=0) {
             /* there is data, treat the full block for a lead surrogate */
             c&=~0x3ff;
 
-#ifdef UTRIE_DEBUG
-            ++countLeadCUWithData;
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UTRIE_DEBUG
+            ++ਗਿਣਤੀ_Lead_CUWith_ਅੰਕੜੇ;
             /* printf("supplementary data for lead surrogate U+%04lx\n", (long)(0xd7c0+(c>>10))); */
-#endif
+#ਜੇ_ਅੰਤ
 
             /* is there an identical index block? */
-            block=_findSameIndexBlock(idx, indexLength, c>>UTRIE_SHIFT);
+            ਖੰਡ=ਲੱਭੋ_Same_ਸੂਚਕਾਂਕ_ਖੰਡ(idx, ਸੂਚਕਾਂਕ_ਲੰਮਾਈ, c>>UTRIE_ਖਿਸਕਾਓ);
 
             /*
              * get a folded value for [c..c+0x400[ and,
              * if different from the value for the lead surrogate code point,
              * set it for the lead surrogate code unit
              */
-            value=getFoldedValue(trie, c, block+UTRIE_SURROGATE_BLOCK_COUNT);
-            if(value!=utrie_get32(trie, U16_LEAD(c), nullptr)) {
-                if(!utrie_set32(trie, U16_LEAD(c), value)) {
+            value=get_Folded_ਮੁੱਲ(trie, c, ਖੰਡ+UTRIE_SURROGATE_ਖੰਡ_ਗਿਣਤੀ);
+            ਜੇ(value!=utrie_get32(trie, U16_LEAD(c), ਖਾਲੀ_ਸੂਚਕ)) {
+                ਜੇ(!utrie_set32(trie, U16_LEAD(c), value)) {
                     /* data table overflow */
-                    *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                    return;
+                    *p_Error_ਕੋਡ=U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                    ਵਾਪਸ;
                 }
 
                 /* if we did not find an identical index block... */
-                if(block==indexLength) {
+                ਜੇ(ਖੰਡ==ਸੂਚਕਾਂਕ_ਲੰਮਾਈ) {
                     /* move the actual index (stage 1) entries from the supplementary position to the new one */
-                    uprv_memmove(idx+indexLength,
-                                 idx+(c>>UTRIE_SHIFT),
-                                 4*UTRIE_SURROGATE_BLOCK_COUNT);
-                    indexLength+=UTRIE_SURROGATE_BLOCK_COUNT;
+                    uprv_memmove(idx+ਸੂਚਕਾਂਕ_ਲੰਮਾਈ,
+                                 idx+(c>>UTRIE_ਖਿਸਕਾਓ),
+                                 4*UTRIE_SURROGATE_ਖੰਡ_ਗਿਣਤੀ);
+                    ਸੂਚਕਾਂਕ_ਲੰਮਾਈ+=UTRIE_SURROGATE_ਖੰਡ_ਗਿਣਤੀ;
                 }
             }
             c+=0x400;
-        } else {
-            c+=UTRIE_DATA_BLOCK_LENGTH;
+        } ਨਹੀਂਤਾਂ {
+            c+=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
         }
     }
-#ifdef UTRIE_DEBUG
-    if(countLeadCUWithData>0) {
-        printf("supplementary data for %d lead surrogates\n", countLeadCUWithData);
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UTRIE_DEBUG
+    ਜੇ(ਗਿਣਤੀ_Lead_CUWith_ਅੰਕੜੇ>0) {
+        ਲਿਖੋ("supplementary data for %d lead surrogates\n", ਗਿਣਤੀ_Lead_CUWith_ਅੰਕੜੇ);
     }
-#endif
+#ਜੇ_ਅੰਤ
 
     /*
      * index array overflow?
@@ -509,29 +509,29 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
      * In fact, it can only ever become n==1024 with completely unfoldable data and
      * the additional block of duplicated values for lead surrogates.
      */
-    if(indexLength>=UTRIE_MAX_INDEX_LENGTH) {
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+    ਜੇ(ਸੂਚਕਾਂਕ_ਲੰਮਾਈ>=UTRIE_MAX_ਸੂਚਕਾਂਕ_ਲੰਮਾਈ) {
+        *p_Error_ਕੋਡ=U_ਸੂਚਕਾਂਕ_OUTOFBOUNDS_ERROR;
+        ਵਾਪਸ;
     }
 
     /*
      * make space for the lead surrogate index block and
      * insert it between the BMP indexes and the folded ones
      */
-    uprv_memmove(idx+UTRIE_BMP_INDEX_LENGTH+UTRIE_SURROGATE_BLOCK_COUNT,
-                 idx+UTRIE_BMP_INDEX_LENGTH,
-                 4*(indexLength-UTRIE_BMP_INDEX_LENGTH));
-    uprv_memcpy(idx+UTRIE_BMP_INDEX_LENGTH,
+    uprv_memmove(idx+UTRIE_BMP_ਸੂਚਕਾਂਕ_ਲੰਮਾਈ+UTRIE_SURROGATE_ਖੰਡ_ਗਿਣਤੀ,
+                 idx+UTRIE_BMP_ਸੂਚਕਾਂਕ_ਲੰਮਾਈ,
+                 4*(ਸੂਚਕਾਂਕ_ਲੰਮਾਈ-UTRIE_BMP_ਸੂਚਕਾਂਕ_ਲੰਮਾਈ));
+    uprv_memcpy(idx+UTRIE_BMP_ਸੂਚਕਾਂਕ_ਲੰਮਾਈ,
                 leadIndexes,
-                4*UTRIE_SURROGATE_BLOCK_COUNT);
-    indexLength+=UTRIE_SURROGATE_BLOCK_COUNT;
+                4*UTRIE_SURROGATE_ਖੰਡ_ਗਿਣਤੀ);
+    ਸੂਚਕਾਂਕ_ਲੰਮਾਈ+=UTRIE_SURROGATE_ਖੰਡ_ਗਿਣਤੀ;
 
-#ifdef UTRIE_DEBUG
-    printf("trie index count: BMP %ld  all Unicode %ld  folded %ld\n",
-           UTRIE_BMP_INDEX_LENGTH, (long)UTRIE_MAX_INDEX_LENGTH, indexLength);
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UTRIE_DEBUG
+    ਲਿਖੋ("trie index count: BMP %ld  all Unicode %ld  folded %ld\n",
+           UTRIE_BMP_ਸੂਚਕਾਂਕ_ਲੰਮਾਈ, (ਲੰਮਾ)UTRIE_MAX_ਸੂਚਕਾਂਕ_ਲੰਮਾਈ, ਸੂਚਕਾਂਕ_ਲੰਮਾਈ);
+#ਜੇ_ਅੰਤ
 
-    trie->indexLength=indexLength;
+    trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ=ਸੂਚਕਾਂਕ_ਲੰਮਾਈ;
 }
 
 /*
@@ -542,36 +542,36 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
  * - 0 if it is used
  * - -1 if it is not used
  */
-static void
-_findUnusedBlocks(UNewTrie *trie) {
+ਸਥਿਰ ਖਾਲੀ
+ਲੱਭੋ_ਅਣਵਰਤਿਆ_ਖੰਡਾਂ(UNewTrie *trie) {
     int32_t i;
 
     /* fill the entire map with "not used" */
-    uprv_memset(trie->map, 0xff, (UTRIE_MAX_BUILD_TIME_DATA_LENGTH>>UTRIE_SHIFT)*4);
+    uprv_memset(trie->map, 0xff, (UTRIE_MAX_BUILD_ਸਮਾਂ_ਅੰਕੜੇ_ਲੰਮਾਈ>>UTRIE_ਖਿਸਕਾਓ)*4);
 
     /* mark each block that _is_ used with 0 */
-    for(i=0; i<trie->indexLength; ++i) {
-        trie->map[ABS(trie->index[i])>>UTRIE_SHIFT]=0;
+    ਲਈ(i=0; i<trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ; ++i) {
+        trie->map[ABS(trie->ਸੂਚਕਾਂਕ[i])>>UTRIE_ਖਿਸਕਾਓ]=0;
     }
 
     /* never move the all-initial-value block 0 */
     trie->map[0]=0;
 }
 
-static int32_t
-_findSameDataBlock(const uint32_t *data, int32_t dataLength,
-                   int32_t otherBlock, int32_t step) {
-    int32_t block;
+ਸਥਿਰ int32_t
+ਲੱਭੋ_Same_ਅੰਕੜੇ_ਖੰਡ(ਅਚਲ uint32_t *ਅੰਕੜੇ, int32_t ਅੰਕੜੇ_ਲੰਮਾਈ,
+                   int32_t other_ਖੰਡ, int32_t ਕਦਮ) {
+    int32_t ਖੰਡ;
 
     /* ensure that we do not even partially get past dataLength */
-    dataLength-=UTRIE_DATA_BLOCK_LENGTH;
+    ਅੰਕੜੇ_ਲੰਮਾਈ-=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
 
-    for(block=0; block<=dataLength; block+=step) {
-        if(equal_uint32(data+block, data+otherBlock, UTRIE_DATA_BLOCK_LENGTH)) {
-            return block;
+    ਲਈ(ਖੰਡ=0; ਖੰਡ<=ਅੰਕੜੇ_ਲੰਮਾਈ; ਖੰਡ+=ਕਦਮ) {
+        ਜੇ(equal_uint32(ਅੰਕੜੇ+ਖੰਡ, ਅੰਕੜੇ+other_ਖੰਡ, UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ)) {
+            ਵਾਪਸ ਖੰਡ;
         }
     }
-    return -1;
+    ਵਾਪਸ -1;
 }
 
 /*
@@ -586,37 +586,37 @@ _findSameDataBlock(const uint32_t *data, int32_t dataLength,
  * It does not
  * - try to move and overlap blocks that are not already adjacent
  */
-static void
-utrie_compact(UNewTrie *trie, UBool overlap, UErrorCode *pErrorCode) {
-    int32_t i, start, newStart, overlapStart;
+ਸਥਿਰ ਖਾਲੀ
+utrie_compact(UNewTrie *trie, UBool overlap, UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    int32_t i, ਸ਼ੁਰੂ, new_ਸ਼ੁਰੂ, overlap_ਸ਼ੁਰੂ;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    ਜੇ(p_Error_ਕੋਡ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ;
     }
 
     /* valid, uncompacted trie? */
-    if(trie==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ਜੇ(trie==ਖਾਲੀ_ਸੂਚਕ) {
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ;
     }
-    if(trie->isCompacted) {
-        return; /* nothing left to do */
+    ਜੇ(trie->isCompacted) {
+        ਵਾਪਸ; /* nothing left to do */
     }
 
     /* compaction */
 
     /* initialize the index map with "block is used/unused" flags */
-    _findUnusedBlocks(trie);
+    ਲੱਭੋ_ਅਣਵਰਤਿਆ_ਖੰਡਾਂ(trie);
 
     /* if Latin-1 is preallocated and linear, then do not compact Latin-1 data */
-    if(trie->isLatin1Linear && UTRIE_SHIFT<=8) {
-        overlapStart=UTRIE_DATA_BLOCK_LENGTH+256;
-    } else {
-        overlapStart=UTRIE_DATA_BLOCK_LENGTH;
+    ਜੇ(trie->is_Latin1_ਰੇਖਿਕ && UTRIE_ਖਿਸਕਾਓ<=8) {
+        overlap_ਸ਼ੁਰੂ=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ+256;
+    } ਨਹੀਂਤਾਂ {
+        overlap_ਸ਼ੁਰੂ=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
     }
 
-    newStart=UTRIE_DATA_BLOCK_LENGTH;
-    for(start=newStart; start<trie->dataLength;) {
+    new_ਸ਼ੁਰੂ=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
+    ਲਈ(ਸ਼ੁਰੂ=new_ਸ਼ੁਰੂ; ਸ਼ੁਰੂ<trie->ਅੰਕੜੇ_ਲੰਮਾਈ;) {
         /*
          * start: index of first entry of current block
          * newStart: index where the current block is to be moved
@@ -624,74 +624,74 @@ utrie_compact(UNewTrie *trie, UBool overlap, UErrorCode *pErrorCode) {
          */
 
         /* skip blocks that are not used */
-        if(trie->map[start>>UTRIE_SHIFT]<0) {
+        ਜੇ(trie->map[ਸ਼ੁਰੂ>>UTRIE_ਖਿਸਕਾਓ]<0) {
             /* advance start to the next block */
-            start+=UTRIE_DATA_BLOCK_LENGTH;
+            ਸ਼ੁਰੂ+=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
 
             /* leave newStart with the previous block! */
-            continue;
+            ਜਾਰੀ;
         }
 
         /* search for an identical block */
-        if( start>=overlapStart &&
-            (i=_findSameDataBlock(trie->data, newStart, start,
-                            overlap ? UTRIE_DATA_GRANULARITY : UTRIE_DATA_BLOCK_LENGTH))
+        ਜੇ( ਸ਼ੁਰੂ>=overlap_ਸ਼ੁਰੂ &&
+            (i=ਲੱਭੋ_Same_ਅੰਕੜੇ_ਖੰਡ(trie->ਅੰਕੜੇ, new_ਸ਼ੁਰੂ, ਸ਼ੁਰੂ,
+                            overlap ? UTRIE_ਅੰਕੜੇ_GRANULARITY : UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ))
              >=0
         ) {
             /* found an identical block, set the other block's index value for the current block */
-            trie->map[start>>UTRIE_SHIFT]=i;
+            trie->map[ਸ਼ੁਰੂ>>UTRIE_ਖਿਸਕਾਓ]=i;
 
             /* advance start to the next block */
-            start+=UTRIE_DATA_BLOCK_LENGTH;
+            ਸ਼ੁਰੂ+=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
 
             /* leave newStart with the previous block! */
-            continue;
+            ਜਾਰੀ;
         }
 
         /* see if the beginning of this block can be overlapped with the end of the previous block */
-        if(overlap && start>=overlapStart) {
+        ਜੇ(overlap && ਸ਼ੁਰੂ>=overlap_ਸ਼ੁਰੂ) {
             /* look for maximum overlap (modulo granularity) with the previous, adjacent block */
-            for(i=UTRIE_DATA_BLOCK_LENGTH-UTRIE_DATA_GRANULARITY;
-                i>0 && !equal_uint32(trie->data+(newStart-i), trie->data+start, i);
-                i-=UTRIE_DATA_GRANULARITY) {}
-        } else {
+            ਲਈ(i=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ-UTRIE_ਅੰਕੜੇ_GRANULARITY;
+                i>0 && !equal_uint32(trie->ਅੰਕੜੇ+(new_ਸ਼ੁਰੂ-i), trie->ਅੰਕੜੇ+ਸ਼ੁਰੂ, i);
+                i-=UTRIE_ਅੰਕੜੇ_GRANULARITY) {}
+        } ਨਹੀਂਤਾਂ {
             i=0;
         }
 
-        if(i>0) {
+        ਜੇ(i>0) {
             /* some overlap */
-            trie->map[start>>UTRIE_SHIFT]=newStart-i;
+            trie->map[ਸ਼ੁਰੂ>>UTRIE_ਖਿਸਕਾਓ]=new_ਸ਼ੁਰੂ-i;
 
             /* move the non-overlapping indexes to their new positions */
-            start+=i;
-            for(i=UTRIE_DATA_BLOCK_LENGTH-i; i>0; --i) {
-                trie->data[newStart++]=trie->data[start++];
+            ਸ਼ੁਰੂ+=i;
+            ਲਈ(i=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ-i; i>0; --i) {
+                trie->ਅੰਕੜੇ[new_ਸ਼ੁਰੂ++]=trie->ਅੰਕੜੇ[ਸ਼ੁਰੂ++];
             }
-        } else if(newStart<start) {
+        } ਨਹੀਂਤਾਂ ਜੇ(new_ਸ਼ੁਰੂ<ਸ਼ੁਰੂ) {
             /* no overlap, just move the indexes to their new positions */
-            trie->map[start>>UTRIE_SHIFT]=newStart;
-            for(i=UTRIE_DATA_BLOCK_LENGTH; i>0; --i) {
-                trie->data[newStart++]=trie->data[start++];
+            trie->map[ਸ਼ੁਰੂ>>UTRIE_ਖਿਸਕਾਓ]=new_ਸ਼ੁਰੂ;
+            ਲਈ(i=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ; i>0; --i) {
+                trie->ਅੰਕੜੇ[new_ਸ਼ੁਰੂ++]=trie->ਅੰਕੜੇ[ਸ਼ੁਰੂ++];
             }
-        } else /* no overlap && newStart==start */ {
-            trie->map[start>>UTRIE_SHIFT]=start;
-            newStart+=UTRIE_DATA_BLOCK_LENGTH;
-            start=newStart;
+        } ਨਹੀਂਤਾਂ /* no overlap && newStart==start */ {
+            trie->map[ਸ਼ੁਰੂ>>UTRIE_ਖਿਸਕਾਓ]=ਸ਼ੁਰੂ;
+            new_ਸ਼ੁਰੂ+=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
+            ਸ਼ੁਰੂ=new_ਸ਼ੁਰੂ;
         }
     }
 
     /* now adjust the index (stage 1) table */
-    for(i=0; i<trie->indexLength; ++i) {
-        trie->index[i]=trie->map[ABS(trie->index[i])>>UTRIE_SHIFT];
+    ਲਈ(i=0; i<trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ; ++i) {
+        trie->ਸੂਚਕਾਂਕ[i]=trie->map[ABS(trie->ਸੂਚਕਾਂਕ[i])>>UTRIE_ਖਿਸਕਾਓ];
     }
 
-#ifdef UTRIE_DEBUG
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UTRIE_DEBUG
     /* we saved some space */
-    printf("compacting trie: count of 32-bit words %lu->%lu\n",
-            (long)trie->dataLength, (long)newStart);
-#endif
+    ਲਿਖੋ("compacting trie: count of 32-bit words %lu->%lu\n",
+            (ਲੰਮਾ)trie->ਅੰਕੜੇ_ਲੰਮਾਈ, (ਲੰਮਾ)new_ਸ਼ੁਰੂ);
+#ਜੇ_ਅੰਤ
 
-    trie->dataLength=newStart;
+    trie->ਅੰਕੜੇ_ਲੰਮਾਈ=new_ਸ਼ੁਰੂ;
 }
 
 /* serialization ------------------------------------------------------------ */
@@ -717,422 +717,422 @@ utrie_compact(UNewTrie *trie, UBool overlap, UErrorCode *pErrorCode) {
  * data file formats, and we would probably not make it smaller because of
  * the then even larger BMP index length even for empty tries.
  */
-static uint32_t U_CALLCONV
-defaultGetFoldedValue(UNewTrie *trie, UChar32 start, int32_t offset) {
-    uint32_t value, initialValue;
-    UChar32 limit;
-    UBool inBlockZero;
+ਸਥਿਰ uint32_t U_CALLCONV
+default_Get_Folded_ਮੁੱਲ(UNewTrie *trie, UChar32 ਸ਼ੁਰੂ, int32_t ਵਿੱਥ) {
+    uint32_t value, initial_ਮੁੱਲ;
+    UChar32 ਹੱਦਬੰਦੀ;
+    UBool ਵਿੱਚ_ਖੰਡ_Zero;
 
-    initialValue=trie->data[0];
-    limit=start+0x400;
-    while(start<limit) {
-        value=utrie_get32(trie, start, &inBlockZero);
-        if(inBlockZero) {
-            start+=UTRIE_DATA_BLOCK_LENGTH;
-        } else if(value!=initialValue) {
-            return static_cast<uint32_t>(offset);
-        } else {
-            ++start;
+    initial_ਮੁੱਲ=trie->ਅੰਕੜੇ[0];
+    ਹੱਦਬੰਦੀ=ਸ਼ੁਰੂ+0x400;
+    ਜਦੋਂ(ਸ਼ੁਰੂ<ਹੱਦਬੰਦੀ) {
+        value=utrie_get32(trie, ਸ਼ੁਰੂ, &ਵਿੱਚ_ਖੰਡ_Zero);
+        ਜੇ(ਵਿੱਚ_ਖੰਡ_Zero) {
+            ਸ਼ੁਰੂ+=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
+        } ਨਹੀਂਤਾਂ ਜੇ(value!=initial_ਮੁੱਲ) {
+            ਵਾਪਸ static_cast<uint32_t>(ਵਿੱਥ);
+        } ਨਹੀਂਤਾਂ {
+            ++ਸ਼ੁਰੂ;
         }
     }
-    return 0;
+    ਵਾਪਸ 0;
 }
 
 U_CAPI int32_t U_EXPORT2
-utrie_serialize(UNewTrie *trie, void *dt, int32_t capacity,
-                UNewTrieGetFoldedValue *getFoldedValue,
-                UBool reduceTo16Bits,
-                UErrorCode *pErrorCode) {
-    UTrieHeader *header;
+utrie_serialize(UNewTrie *trie, ਖਾਲੀ *dt, int32_t capacity,
+                UNew_Trie_Get_Folded_ਮੁੱਲ *get_Folded_ਮੁੱਲ,
+                UBool reduce_To16_ਬਿੱਟ,
+                UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    UTrie_ਸਿਰਲੇਖ *ਸਿਰਲੇਖ;
     uint32_t *p;
     uint16_t *dest16;
     int32_t i, length;
-    uint8_t* data = nullptr;
+    uint8_t* ਅੰਕੜੇ = ਖਾਲੀ_ਸੂਚਕ;
 
     /* argument check */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ਜੇ(p_Error_ਕੋਡ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ 0;
     }
 
-    if(trie==nullptr || capacity<0 || (capacity>0 && dt==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ਜੇ(trie==ਖਾਲੀ_ਸੂਚਕ || capacity<0 || (capacity>0 && dt==ਖਾਲੀ_ਸੂਚਕ)) {
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
-    if(getFoldedValue==nullptr) {
-        getFoldedValue=defaultGetFoldedValue;
+    ਜੇ(get_Folded_ਮੁੱਲ==ਖਾਲੀ_ਸੂਚਕ) {
+        get_Folded_ਮੁੱਲ=default_Get_Folded_ਮੁੱਲ;
     }
 
-    data = (uint8_t*)dt;
+    ਅੰਕੜੇ = (uint8_t*)dt;
     /* fold and compact if necessary, also checks that indexLength is within limits */
-    if(!trie->isCompacted) {
+    ਜੇ(!trie->isCompacted) {
         /* compact once without overlap to improve folding */
-        utrie_compact(trie, false, pErrorCode);
+        utrie_compact(trie, ਝੂਠ, p_Error_ਕੋਡ);
 
         /* fold the supplementary part of the index array */
-        utrie_fold(trie, getFoldedValue, pErrorCode);
+        utrie_fold(trie, get_Folded_ਮੁੱਲ, p_Error_ਕੋਡ);
 
         /* compact again with overlap for minimum data array length */
-        utrie_compact(trie, true, pErrorCode);
+        utrie_compact(trie, ਸੱਚ, p_Error_ਕੋਡ);
 
-        trie->isCompacted=true;
-        if(U_FAILURE(*pErrorCode)) {
-            return 0;
+        trie->isCompacted=ਸੱਚ;
+        ਜੇ(U_FAILURE(*p_Error_ਕੋਡ)) {
+            ਵਾਪਸ 0;
         }
     }
 
     /* is dataLength within limits? */
-    if( (reduceTo16Bits ? (trie->dataLength+trie->indexLength) : trie->dataLength) >= UTRIE_MAX_DATA_LENGTH) {
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
+    ਜੇ( (reduce_To16_ਬਿੱਟ ? (trie->ਅੰਕੜੇ_ਲੰਮਾਈ+trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ) : trie->ਅੰਕੜੇ_ਲੰਮਾਈ) >= UTRIE_MAX_ਅੰਕੜੇ_ਲੰਮਾਈ) {
+        *p_Error_ਕੋਡ=U_ਸੂਚਕਾਂਕ_OUTOFBOUNDS_ERROR;
     }
 
-    length=sizeof(UTrieHeader)+2*trie->indexLength;
-    if(reduceTo16Bits) {
-        length+=2*trie->dataLength;
-    } else {
-        length+=4*trie->dataLength;
+    length=ਆਕਾਰ(UTrie_ਸਿਰਲੇਖ)+2*trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ;
+    ਜੇ(reduce_To16_ਬਿੱਟ) {
+        length+=2*trie->ਅੰਕੜੇ_ਲੰਮਾਈ;
+    } ਨਹੀਂਤਾਂ {
+        length+=4*trie->ਅੰਕੜੇ_ਲੰਮਾਈ;
     }
 
-    if(length>capacity) {
-        return length; /* preflighting */
+    ਜੇ(length>capacity) {
+        ਵਾਪਸ length; /* preflighting */
     }
 
-#ifdef UTRIE_DEBUG
-    printf("**UTrieLengths(serialize)** index:%6ld  data:%6ld  serialized:%6ld\n",
-           (long)trie->indexLength, (long)trie->dataLength, (long)length);
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UTRIE_DEBUG
+    ਲਿਖੋ("**UTrieLengths(serialize)** index:%6ld  data:%6ld  serialized:%6ld\n",
+           (ਲੰਮਾ)trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ, (ਲੰਮਾ)trie->ਅੰਕੜੇ_ਲੰਮਾਈ, (ਲੰਮਾ)length);
+#ਜੇ_ਅੰਤ
 
     /* set the header fields */
-    header=(UTrieHeader *)data;
-    data+=sizeof(UTrieHeader);
+    ਸਿਰਲੇਖ=(UTrie_ਸਿਰਲੇਖ *)ਅੰਕੜੇ;
+    ਅੰਕੜੇ+=ਆਕਾਰ(UTrie_ਸਿਰਲੇਖ);
 
-    header->signature=0x54726965; /* "Trie" */
-    header->options=UTRIE_SHIFT | (UTRIE_INDEX_SHIFT<<UTRIE_OPTIONS_INDEX_SHIFT);
+    ਸਿਰਲੇਖ->signature=0x54726965; /* "Trie" */
+    ਸਿਰਲੇਖ->options=UTRIE_ਖਿਸਕਾਓ | (UTRIE_ਸੂਚਕਾਂਕ_ਖਿਸਕਾਓ<<UTRIE_OPTIONS_ਸੂਚਕਾਂਕ_ਖਿਸਕਾਓ);
 
-    if(!reduceTo16Bits) {
-        header->options|=UTRIE_OPTIONS_DATA_IS_32_BIT;
+    ਜੇ(!reduce_To16_ਬਿੱਟ) {
+        ਸਿਰਲੇਖ->options|=UTRIE_OPTIONS_ਅੰਕੜੇ_IS_32_ਦੋਆਧਾਰੀ_ਅੰਕ;
     }
-    if(trie->isLatin1Linear) {
-        header->options|=UTRIE_OPTIONS_LATIN1_IS_LINEAR;
+    ਜੇ(trie->is_Latin1_ਰੇਖਿਕ) {
+        ਸਿਰਲੇਖ->options|=UTRIE_OPTIONS_LATIN1_IS_ਰੇਖਿਕ;
     }
 
-    header->indexLength=trie->indexLength;
-    header->dataLength=trie->dataLength;
+    ਸਿਰਲੇਖ->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ=trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ;
+    ਸਿਰਲੇਖ->ਅੰਕੜੇ_ਲੰਮਾਈ=trie->ਅੰਕੜੇ_ਲੰਮਾਈ;
 
     /* write the index (stage 1) array and the 16/32-bit data (stage 2) array */
-    if(reduceTo16Bits) {
+    ਜੇ(reduce_To16_ਬਿੱਟ) {
         /* write 16-bit index values shifted right by UTRIE_INDEX_SHIFT, after adding indexLength */
-        p=(uint32_t *)trie->index;
-        dest16=(uint16_t *)data;
-        for(i=trie->indexLength; i>0; --i) {
-            *dest16++=(uint16_t)((*p++ + trie->indexLength)>>UTRIE_INDEX_SHIFT);
+        p=(uint32_t *)trie->ਸੂਚਕਾਂਕ;
+        dest16=(uint16_t *)ਅੰਕੜੇ;
+        ਲਈ(i=trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ; i>0; --i) {
+            *dest16++=(uint16_t)((*p++ + trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ)>>UTRIE_ਸੂਚਕਾਂਕ_ਖਿਸਕਾਓ);
         }
 
         /* write 16-bit data values */
-        p=trie->data;
-        for(i=trie->dataLength; i>0; --i) {
+        p=trie->ਅੰਕੜੇ;
+        ਲਈ(i=trie->ਅੰਕੜੇ_ਲੰਮਾਈ; i>0; --i) {
             *dest16++=(uint16_t)*p++;
         }
-    } else {
+    } ਨਹੀਂਤਾਂ {
         /* write 16-bit index values shifted right by UTRIE_INDEX_SHIFT */
-        p=(uint32_t *)trie->index;
-        dest16=(uint16_t *)data;
-        for(i=trie->indexLength; i>0; --i) {
-            *dest16++=(uint16_t)(*p++ >> UTRIE_INDEX_SHIFT);
+        p=(uint32_t *)trie->ਸੂਚਕਾਂਕ;
+        dest16=(uint16_t *)ਅੰਕੜੇ;
+        ਲਈ(i=trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ; i>0; --i) {
+            *dest16++=(uint16_t)(*p++ >> UTRIE_ਸੂਚਕਾਂਕ_ਖਿਸਕਾਓ);
         }
 
         /* write 32-bit data values */
-        uprv_memcpy(dest16, trie->data, 4*(size_t)trie->dataLength);
+        uprv_memcpy(dest16, trie->ਅੰਕੜੇ, 4*(size_t)trie->ਅੰਕੜੇ_ਲੰਮਾਈ);
     }
 
-    return length;
+    ਵਾਪਸ length;
 }
 
 /* inverse to defaultGetFoldedValue() */
 U_CAPI int32_t U_EXPORT2
-utrie_defaultGetFoldingOffset(uint32_t data) {
-    return (int32_t)data;
+utrie_default_Get_Folding_ਵਿੱਥ(uint32_t ਅੰਕੜੇ) {
+    ਵਾਪਸ (int32_t)ਅੰਕੜੇ;
 }
 
 U_CAPI int32_t U_EXPORT2
-utrie_unserialize(UTrie *trie, const void *data, int32_t length, UErrorCode *pErrorCode) {
-    const UTrieHeader *header;
-    const uint16_t *p16;
+utrie_unserialize(UTrie *trie, ਅਚਲ ਖਾਲੀ *ਅੰਕੜੇ, int32_t length, UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਅਚਲ UTrie_ਸਿਰਲੇਖ *ਸਿਰਲੇਖ;
+    ਅਚਲ uint16_t *p16;
     uint32_t options;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return -1;
+    ਜੇ(p_Error_ਕੋਡ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ -1;
     }
 
     /* enough data for a trie header? */
-    if(length<(int32_t)sizeof(UTrieHeader)) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return -1;
+    ਜੇ(length<(int32_t)ਆਕਾਰ(UTrie_ਸਿਰਲੇਖ)) {
+        *p_Error_ਕੋਡ=U_INVALID_FORMAT_ERROR;
+        ਵਾਪਸ -1;
     }
 
     /* check the signature */
-    header=(const UTrieHeader *)data;
-    if(header->signature!=0x54726965) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return -1;
+    ਸਿਰਲੇਖ=(ਅਚਲ UTrie_ਸਿਰਲੇਖ *)ਅੰਕੜੇ;
+    ਜੇ(ਸਿਰਲੇਖ->signature!=0x54726965) {
+        *p_Error_ਕੋਡ=U_INVALID_FORMAT_ERROR;
+        ਵਾਪਸ -1;
     }
 
     /* get the options and check the shift values */
-    options=header->options;
-    if( (options&UTRIE_OPTIONS_SHIFT_MASK)!=UTRIE_SHIFT ||
-        ((options>>UTRIE_OPTIONS_INDEX_SHIFT)&UTRIE_OPTIONS_SHIFT_MASK)!=UTRIE_INDEX_SHIFT
+    options=ਸਿਰਲੇਖ->options;
+    ਜੇ( (options&UTRIE_OPTIONS_ਖਿਸਕਾਓ_ਨਕਾਬ)!=UTRIE_ਖਿਸਕਾਓ ||
+        ((options>>UTRIE_OPTIONS_ਸੂਚਕਾਂਕ_ਖਿਸਕਾਓ)&UTRIE_OPTIONS_ਖਿਸਕਾਓ_ਨਕਾਬ)!=UTRIE_ਸੂਚਕਾਂਕ_ਖਿਸਕਾਓ
     ) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return -1;
+        *p_Error_ਕੋਡ=U_INVALID_FORMAT_ERROR;
+        ਵਾਪਸ -1;
     }
-    trie->isLatin1Linear = (options & UTRIE_OPTIONS_LATIN1_IS_LINEAR) != 0;
+    trie->is_Latin1_ਰੇਖਿਕ = (options & UTRIE_OPTIONS_LATIN1_IS_ਰੇਖਿਕ) != 0;
 
     /* get the length values */
-    trie->indexLength=header->indexLength;
-    trie->dataLength=header->dataLength;
+    trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ=ਸਿਰਲੇਖ->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ;
+    trie->ਅੰਕੜੇ_ਲੰਮਾਈ=ਸਿਰਲੇਖ->ਅੰਕੜੇ_ਲੰਮਾਈ;
 
-    length-=(int32_t)sizeof(UTrieHeader);
+    length-=(int32_t)ਆਕਾਰ(UTrie_ਸਿਰਲੇਖ);
 
     /* enough data for the index? */
-    if(length<2*trie->indexLength) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return -1;
+    ਜੇ(length<2*trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ) {
+        *p_Error_ਕੋਡ=U_INVALID_FORMAT_ERROR;
+        ਵਾਪਸ -1;
     }
-    p16=(const uint16_t *)(header+1);
-    trie->index=p16;
-    p16+=trie->indexLength;
-    length-=2*trie->indexLength;
+    p16=(ਅਚਲ uint16_t *)(ਸਿਰਲੇਖ+1);
+    trie->ਸੂਚਕਾਂਕ=p16;
+    p16+=trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ;
+    length-=2*trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ;
 
     /* get the data */
-    if(options&UTRIE_OPTIONS_DATA_IS_32_BIT) {
-        if(length<4*trie->dataLength) {
-            *pErrorCode=U_INVALID_FORMAT_ERROR;
-            return -1;
+    ਜੇ(options&UTRIE_OPTIONS_ਅੰਕੜੇ_IS_32_ਦੋਆਧਾਰੀ_ਅੰਕ) {
+        ਜੇ(length<4*trie->ਅੰਕੜੇ_ਲੰਮਾਈ) {
+            *p_Error_ਕੋਡ=U_INVALID_FORMAT_ERROR;
+            ਵਾਪਸ -1;
         }
-        trie->data32=(const uint32_t *)p16;
-        trie->initialValue=trie->data32[0];
-        length=(int32_t)sizeof(UTrieHeader)+2*trie->indexLength+4*trie->dataLength;
-    } else {
-        if(length<2*trie->dataLength) {
-            *pErrorCode=U_INVALID_FORMAT_ERROR;
-            return -1;
+        trie->data32=(ਅਚਲ uint32_t *)p16;
+        trie->initial_ਮੁੱਲ=trie->data32[0];
+        length=(int32_t)ਆਕਾਰ(UTrie_ਸਿਰਲੇਖ)+2*trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ+4*trie->ਅੰਕੜੇ_ਲੰਮਾਈ;
+    } ਨਹੀਂਤਾਂ {
+        ਜੇ(length<2*trie->ਅੰਕੜੇ_ਲੰਮਾਈ) {
+            *p_Error_ਕੋਡ=U_INVALID_FORMAT_ERROR;
+            ਵਾਪਸ -1;
         }
 
         /* the "data16" data is used via the index pointer */
-        trie->data32=nullptr;
-        trie->initialValue=trie->index[trie->indexLength];
-        length=(int32_t)sizeof(UTrieHeader)+2*trie->indexLength+2*trie->dataLength;
+        trie->data32=ਖਾਲੀ_ਸੂਚਕ;
+        trie->initial_ਮੁੱਲ=trie->ਸੂਚਕਾਂਕ[trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ];
+        length=(int32_t)ਆਕਾਰ(UTrie_ਸਿਰਲੇਖ)+2*trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ+2*trie->ਅੰਕੜੇ_ਲੰਮਾਈ;
     }
 
-    trie->getFoldingOffset=utrie_defaultGetFoldingOffset;
+    trie->get_Folding_ਵਿੱਥ=utrie_default_Get_Folding_ਵਿੱਥ;
 
-    return length;
+    ਵਾਪਸ length;
 }
 
 U_CAPI int32_t U_EXPORT2
 utrie_unserializeDummy(UTrie *trie,
-                       void *data, int32_t length,
-                       uint32_t initialValue, uint32_t leadUnitValue,
-                       UBool make16BitTrie,
-                       UErrorCode *pErrorCode) {
+                       ਖਾਲੀ *ਅੰਕੜੇ, int32_t length,
+                       uint32_t initial_ਮੁੱਲ, uint32_t lead_Unit_ਮੁੱਲ,
+                       UBool make16_ਦੋਆਧਾਰੀ_ਅੰਕ_Trie,
+                       UError_ਕੋਡ *p_Error_ਕੋਡ) {
     uint16_t *p16;
-    int32_t actualLength, latin1Length, i, limit;
-    uint16_t block;
+    int32_t actual_ਲੰਮਾਈ, latin1_ਲੰਮਾਈ, i, ਹੱਦਬੰਦੀ;
+    uint16_t ਖੰਡ;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return -1;
+    ਜੇ(p_Error_ਕੋਡ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ -1;
     }
 
     /* calculate the actual size of the dummy trie data */
 
     /* max(Latin-1, block 0) */
-    latin1Length= 256; /*UTRIE_SHIFT<=8 ? 256 : UTRIE_DATA_BLOCK_LENGTH;*/
+    latin1_ਲੰਮਾਈ= 256; /*UTRIE_SHIFT<=8 ? 256 : UTRIE_DATA_BLOCK_LENGTH;*/
 
-    trie->indexLength=UTRIE_BMP_INDEX_LENGTH+UTRIE_SURROGATE_BLOCK_COUNT;
-    trie->dataLength=latin1Length;
-    if(leadUnitValue!=initialValue) {
-        trie->dataLength+=UTRIE_DATA_BLOCK_LENGTH;
+    trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ=UTRIE_BMP_ਸੂਚਕਾਂਕ_ਲੰਮਾਈ+UTRIE_SURROGATE_ਖੰਡ_ਗਿਣਤੀ;
+    trie->ਅੰਕੜੇ_ਲੰਮਾਈ=latin1_ਲੰਮਾਈ;
+    ਜੇ(lead_Unit_ਮੁੱਲ!=initial_ਮੁੱਲ) {
+        trie->ਅੰਕੜੇ_ਲੰਮਾਈ+=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
     }
 
-    actualLength=trie->indexLength*2;
-    if(make16BitTrie) {
-        actualLength+=trie->dataLength*2;
-    } else {
-        actualLength+=trie->dataLength*4;
+    actual_ਲੰਮਾਈ=trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ*2;
+    ਜੇ(make16_ਦੋਆਧਾਰੀ_ਅੰਕ_Trie) {
+        actual_ਲੰਮਾਈ+=trie->ਅੰਕੜੇ_ਲੰਮਾਈ*2;
+    } ਨਹੀਂਤਾਂ {
+        actual_ਲੰਮਾਈ+=trie->ਅੰਕੜੇ_ਲੰਮਾਈ*4;
     }
 
     /* enough space for the dummy trie? */
-    if(length<actualLength) {
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-        return actualLength;
+    ਜੇ(length<actual_ਲੰਮਾਈ) {
+        *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
+        ਵਾਪਸ actual_ਲੰਮਾਈ;
     }
 
-    trie->isLatin1Linear=true;
-    trie->initialValue=initialValue;
+    trie->is_Latin1_ਰੇਖਿਕ=ਸੱਚ;
+    trie->initial_ਮੁੱਲ=initial_ਮੁੱਲ;
 
     /* fill the index and data arrays */
-    p16=(uint16_t *)data;
-    trie->index=p16;
+    p16=(uint16_t *)ਅੰਕੜੇ;
+    trie->ਸੂਚਕਾਂਕ=p16;
 
-    if(make16BitTrie) {
+    ਜੇ(make16_ਦੋਆਧਾਰੀ_ਅੰਕ_Trie) {
         /* indexes to block 0 */
-        block=(uint16_t)(trie->indexLength>>UTRIE_INDEX_SHIFT);
-        limit=trie->indexLength;
-        for(i=0; i<limit; ++i) {
-            p16[i]=block;
+        ਖੰਡ=(uint16_t)(trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ>>UTRIE_ਸੂਚਕਾਂਕ_ਖਿਸਕਾਓ);
+        ਹੱਦਬੰਦੀ=trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ;
+        ਲਈ(i=0; i<ਹੱਦਬੰਦੀ; ++i) {
+            p16[i]=ਖੰਡ;
         }
 
-        if(leadUnitValue!=initialValue) {
+        ਜੇ(lead_Unit_ਮੁੱਲ!=initial_ਮੁੱਲ) {
             /* indexes for lead surrogate code units to the block after Latin-1 */
-            block+=(uint16_t)(latin1Length>>UTRIE_INDEX_SHIFT);
-            i=0xd800>>UTRIE_SHIFT;
-            limit=0xdc00>>UTRIE_SHIFT;
-            for(; i<limit; ++i) {
-                p16[i]=block;
+            ਖੰਡ+=(uint16_t)(latin1_ਲੰਮਾਈ>>UTRIE_ਸੂਚਕਾਂਕ_ਖਿਸਕਾਓ);
+            i=0xd800>>UTRIE_ਖਿਸਕਾਓ;
+            ਹੱਦਬੰਦੀ=0xdc00>>UTRIE_ਖਿਸਕਾਓ;
+            ਲਈ(; i<ਹੱਦਬੰਦੀ; ++i) {
+                p16[i]=ਖੰਡ;
             }
         }
 
-        trie->data32=nullptr;
+        trie->data32=ਖਾਲੀ_ਸੂਚਕ;
 
         /* Latin-1 data */
-        p16+=trie->indexLength;
-        for(i=0; i<latin1Length; ++i) {
-            p16[i]=(uint16_t)initialValue;
+        p16+=trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ;
+        ਲਈ(i=0; i<latin1_ਲੰਮਾਈ; ++i) {
+            p16[i]=(uint16_t)initial_ਮੁੱਲ;
         }
 
         /* data for lead surrogate code units */
-        if(leadUnitValue!=initialValue) {
-            limit=latin1Length+UTRIE_DATA_BLOCK_LENGTH;
-            for(/* i=latin1Length */; i<limit; ++i) {
-                p16[i]=(uint16_t)leadUnitValue;
+        ਜੇ(lead_Unit_ਮੁੱਲ!=initial_ਮੁੱਲ) {
+            ਹੱਦਬੰਦੀ=latin1_ਲੰਮਾਈ+UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
+            ਲਈ(/* i=latin1Length */; i<ਹੱਦਬੰਦੀ; ++i) {
+                p16[i]=(uint16_t)lead_Unit_ਮੁੱਲ;
             }
         }
-    } else {
+    } ਨਹੀਂਤਾਂ {
         uint32_t *p32;
 
         /* indexes to block 0 */
-        uprv_memset(p16, 0, trie->indexLength*2);
+        uprv_memset(p16, 0, trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ*2);
 
-        if(leadUnitValue!=initialValue) {
+        ਜੇ(lead_Unit_ਮੁੱਲ!=initial_ਮੁੱਲ) {
             /* indexes for lead surrogate code units to the block after Latin-1 */
-            block=(uint16_t)(latin1Length>>UTRIE_INDEX_SHIFT);
-            i=0xd800>>UTRIE_SHIFT;
-            limit=0xdc00>>UTRIE_SHIFT;
-            for(; i<limit; ++i) {
-                p16[i]=block;
+            ਖੰਡ=(uint16_t)(latin1_ਲੰਮਾਈ>>UTRIE_ਸੂਚਕਾਂਕ_ਖਿਸਕਾਓ);
+            i=0xd800>>UTRIE_ਖਿਸਕਾਓ;
+            ਹੱਦਬੰਦੀ=0xdc00>>UTRIE_ਖਿਸਕਾਓ;
+            ਲਈ(; i<ਹੱਦਬੰਦੀ; ++i) {
+                p16[i]=ਖੰਡ;
             }
         }
 
-        trie->data32=p32=(uint32_t *)(p16+trie->indexLength);
+        trie->data32=p32=(uint32_t *)(p16+trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ);
 
         /* Latin-1 data */
-        for(i=0; i<latin1Length; ++i) {
-            p32[i]=initialValue;
+        ਲਈ(i=0; i<latin1_ਲੰਮਾਈ; ++i) {
+            p32[i]=initial_ਮੁੱਲ;
         }
 
         /* data for lead surrogate code units */
-        if(leadUnitValue!=initialValue) {
-            limit=latin1Length+UTRIE_DATA_BLOCK_LENGTH;
-            for(/* i=latin1Length */; i<limit; ++i) {
-                p32[i]=leadUnitValue;
+        ਜੇ(lead_Unit_ਮੁੱਲ!=initial_ਮੁੱਲ) {
+            ਹੱਦਬੰਦੀ=latin1_ਲੰਮਾਈ+UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
+            ਲਈ(/* i=latin1Length */; i<ਹੱਦਬੰਦੀ; ++i) {
+                p32[i]=lead_Unit_ਮੁੱਲ;
             }
         }
     }
 
-    trie->getFoldingOffset=utrie_defaultGetFoldingOffset;
+    trie->get_Folding_ਵਿੱਥ=utrie_default_Get_Folding_ਵਿੱਥ;
 
-    return actualLength;
+    ਵਾਪਸ actual_ਲੰਮਾਈ;
 }
 
 /* enumeration -------------------------------------------------------------- */
 
 /* default UTrieEnumValue() returns the input value itself */
-static uint32_t U_CALLCONV
-enumSameValue(const void * /*context*/, uint32_t value) {
-    return value;
+ਸਥਿਰ uint32_t U_CALLCONV
+enum_Same_ਮੁੱਲ(ਅਚਲ ਖਾਲੀ * /*context*/, uint32_t value) {
+    ਵਾਪਸ value;
 }
 
 /**
  * Enumerate all ranges of code points with the same relevant values.
  * The values are transformed from the raw trie entries by the enumValue function.
  */
-U_CAPI void U_EXPORT2
-utrie_enum(const UTrie *trie,
-           UTrieEnumValue *enumValue, UTrieEnumRange *enumRange, const void *context) {
-    const uint32_t *data32;
-    const uint16_t *idx;
+U_CAPI ਖਾਲੀ U_EXPORT2
+utrie_enum(ਅਚਲ UTrie *trie,
+           UTrie_Enum_ਮੁੱਲ *enum_ਮੁੱਲ, UTrieEnumRange *enumRange, ਅਚਲ ਖਾਲੀ *context) {
+    ਅਚਲ uint32_t *data32;
+    ਅਚਲ uint16_t *idx;
 
-    uint32_t value, prevValue, initialValue;
+    uint32_t value, prev_ਮੁੱਲ, initial_ਮੁੱਲ;
     UChar32 c, prev;
-    int32_t l, i, j, block, prevBlock, nullBlock, offset;
+    int32_t l, i, j, ਖੰਡ, prev_ਖੰਡ, null_ਖੰਡ, ਵਿੱਥ;
 
     /* check arguments */
-    if(trie==nullptr || trie->index==nullptr || enumRange==nullptr) {
-        return;
+    ਜੇ(trie==ਖਾਲੀ_ਸੂਚਕ || trie->ਸੂਚਕਾਂਕ==ਖਾਲੀ_ਸੂਚਕ || enumRange==ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ;
     }
-    if(enumValue==nullptr) {
-        enumValue=enumSameValue;
+    ਜੇ(enum_ਮੁੱਲ==ਖਾਲੀ_ਸੂਚਕ) {
+        enum_ਮੁੱਲ=enum_Same_ਮੁੱਲ;
     }
 
-    idx=trie->index;
+    idx=trie->ਸੂਚਕਾਂਕ;
     data32=trie->data32;
 
     /* get the enumeration value that corresponds to an initial-value trie data entry */
-    initialValue=enumValue(context, trie->initialValue);
+    initial_ਮੁੱਲ=enum_ਮੁੱਲ(context, trie->initial_ਮੁੱਲ);
 
-    if(data32==nullptr) {
-        nullBlock=trie->indexLength;
-    } else {
-        nullBlock=0;
+    ਜੇ(data32==ਖਾਲੀ_ਸੂਚਕ) {
+        null_ਖੰਡ=trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ;
+    } ਨਹੀਂਤਾਂ {
+        null_ਖੰਡ=0;
     }
 
     /* set variables for previous range */
-    prevBlock=nullBlock;
+    prev_ਖੰਡ=null_ਖੰਡ;
     prev=0;
-    prevValue=initialValue;
+    prev_ਮੁੱਲ=initial_ਮੁੱਲ;
 
     /* enumerate BMP - the main loop enumerates data blocks */
-    for(i=0, c=0; c<=0xffff; ++i) {
-        if(c==0xd800) {
+    ਲਈ(i=0, c=0; c<=0xffff; ++i) {
+        ਜੇ(c==0xd800) {
             /* skip lead surrogate code _units_, go to lead surr. code _points_ */
-            i=UTRIE_BMP_INDEX_LENGTH;
-        } else if(c==0xdc00) {
+            i=UTRIE_BMP_ਸੂਚਕਾਂਕ_ਲੰਮਾਈ;
+        } ਨਹੀਂਤਾਂ ਜੇ(c==0xdc00) {
             /* go back to regular BMP code points */
-            i=c>>UTRIE_SHIFT;
+            i=c>>UTRIE_ਖਿਸਕਾਓ;
         }
 
-        block=idx[i]<<UTRIE_INDEX_SHIFT;
-        if(block==prevBlock) {
+        ਖੰਡ=idx[i]<<UTRIE_ਸੂਚਕਾਂਕ_ਖਿਸਕਾਓ;
+        ਜੇ(ਖੰਡ==prev_ਖੰਡ) {
             /* the block is the same as the previous one, and filled with value */
-            c+=UTRIE_DATA_BLOCK_LENGTH;
-        } else if(block==nullBlock) {
+            c+=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
+        } ਨਹੀਂਤਾਂ ਜੇ(ਖੰਡ==null_ਖੰਡ) {
             /* this is the all-initial-value block */
-            if(prevValue!=initialValue) {
-                if(prev<c) {
-                    if(!enumRange(context, prev, c, prevValue)) {
-                        return;
+            ਜੇ(prev_ਮੁੱਲ!=initial_ਮੁੱਲ) {
+                ਜੇ(prev<c) {
+                    ਜੇ(!enumRange(context, prev, c, prev_ਮੁੱਲ)) {
+                        ਵਾਪਸ;
                     }
                 }
-                prevBlock=nullBlock;
+                prev_ਖੰਡ=null_ਖੰਡ;
                 prev=c;
-                prevValue=initialValue;
+                prev_ਮੁੱਲ=initial_ਮੁੱਲ;
             }
-            c+=UTRIE_DATA_BLOCK_LENGTH;
-        } else {
-            prevBlock=block;
-            for(j=0; j<UTRIE_DATA_BLOCK_LENGTH; ++j) {
-                value=enumValue(context, data32!=nullptr ? data32[block+j] : idx[block+j]);
-                if(value!=prevValue) {
-                    if(prev<c) {
-                        if(!enumRange(context, prev, c, prevValue)) {
-                            return;
+            c+=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
+        } ਨਹੀਂਤਾਂ {
+            prev_ਖੰਡ=ਖੰਡ;
+            ਲਈ(j=0; j<UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ; ++j) {
+                value=enum_ਮੁੱਲ(context, data32!=ਖਾਲੀ_ਸੂਚਕ ? data32[ਖੰਡ+j] : idx[ਖੰਡ+j]);
+                ਜੇ(value!=prev_ਮੁੱਲ) {
+                    ਜੇ(prev<c) {
+                        ਜੇ(!enumRange(context, prev, c, prev_ਮੁੱਲ)) {
+                            ਵਾਪਸ;
                         }
                     }
-                    if(j>0) {
+                    ਜੇ(j>0) {
                         /* the block is not filled with all the same value */
-                        prevBlock=-1;
+                        prev_ਖੰਡ=-1;
                     }
                     prev=c;
-                    prevValue=value;
+                    prev_ਮੁੱਲ=value;
                 }
                 ++c;
             }
@@ -1140,95 +1140,95 @@ utrie_enum(const UTrie *trie,
     }
 
     /* enumerate supplementary code points */
-    for(l=0xd800; l<0xdc00;) {
+    ਲਈ(l=0xd800; l<0xdc00;) {
         /* lead surrogate access */
-        offset=idx[l>>UTRIE_SHIFT]<<UTRIE_INDEX_SHIFT;
-        if(offset==nullBlock) {
+        ਵਿੱਥ=idx[l>>UTRIE_ਖਿਸਕਾਓ]<<UTRIE_ਸੂਚਕਾਂਕ_ਖਿਸਕਾਓ;
+        ਜੇ(ਵਿੱਥ==null_ਖੰਡ) {
             /* no entries for a whole block of lead surrogates */
-            if(prevValue!=initialValue) {
-                if(prev<c) {
-                    if(!enumRange(context, prev, c, prevValue)) {
-                        return;
+            ਜੇ(prev_ਮੁੱਲ!=initial_ਮੁੱਲ) {
+                ਜੇ(prev<c) {
+                    ਜੇ(!enumRange(context, prev, c, prev_ਮੁੱਲ)) {
+                        ਵਾਪਸ;
                     }
                 }
-                prevBlock=nullBlock;
+                prev_ਖੰਡ=null_ਖੰਡ;
                 prev=c;
-                prevValue=initialValue;
+                prev_ਮੁੱਲ=initial_ਮੁੱਲ;
             }
 
-            l+=UTRIE_DATA_BLOCK_LENGTH;
-            c+=UTRIE_DATA_BLOCK_LENGTH<<10;
-            continue;
+            l+=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
+            c+=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ<<10;
+            ਜਾਰੀ;
         }
 
-        value= data32!=nullptr ? data32[offset+(l&UTRIE_MASK)] : idx[offset+(l&UTRIE_MASK)];
+        value= data32!=ਖਾਲੀ_ਸੂਚਕ ? data32[ਵਿੱਥ+(l&UTRIE_ਨਕਾਬ)] : idx[ਵਿੱਥ+(l&UTRIE_ਨਕਾਬ)];
 
         /* enumerate trail surrogates for this lead surrogate */
-        offset=trie->getFoldingOffset(value);
-        if(offset<=0) {
+        ਵਿੱਥ=trie->get_Folding_ਵਿੱਥ(value);
+        ਜੇ(ਵਿੱਥ<=0) {
             /* no data for this lead surrogate */
-            if(prevValue!=initialValue) {
-                if(prev<c) {
-                    if(!enumRange(context, prev, c, prevValue)) {
-                        return;
+            ਜੇ(prev_ਮੁੱਲ!=initial_ਮੁੱਲ) {
+                ਜੇ(prev<c) {
+                    ਜੇ(!enumRange(context, prev, c, prev_ਮੁੱਲ)) {
+                        ਵਾਪਸ;
                     }
                 }
-                prevBlock=nullBlock;
+                prev_ਖੰਡ=null_ਖੰਡ;
                 prev=c;
-                prevValue=initialValue;
+                prev_ਮੁੱਲ=initial_ਮੁੱਲ;
             }
 
             /* nothing else to do for the supplementary code points for this lead surrogate */
             c+=0x400;
-        } else {
+        } ਨਹੀਂਤਾਂ {
             /* enumerate code points for this lead surrogate */
-            i=offset;
-            offset+=UTRIE_SURROGATE_BLOCK_COUNT;
-            do {
+            i=ਵਿੱਥ;
+            ਵਿੱਥ+=UTRIE_SURROGATE_ਖੰਡ_ਗਿਣਤੀ;
+            ਕਰੋ {
                 /* copy of most of the body of the BMP loop */
-                block=idx[i]<<UTRIE_INDEX_SHIFT;
-                if(block==prevBlock) {
+                ਖੰਡ=idx[i]<<UTRIE_ਸੂਚਕਾਂਕ_ਖਿਸਕਾਓ;
+                ਜੇ(ਖੰਡ==prev_ਖੰਡ) {
                     /* the block is the same as the previous one, and filled with value */
-                    c+=UTRIE_DATA_BLOCK_LENGTH;
-                } else if(block==nullBlock) {
+                    c+=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
+                } ਨਹੀਂਤਾਂ ਜੇ(ਖੰਡ==null_ਖੰਡ) {
                     /* this is the all-initial-value block */
-                    if(prevValue!=initialValue) {
-                        if(prev<c) {
-                            if(!enumRange(context, prev, c, prevValue)) {
-                                return;
+                    ਜੇ(prev_ਮੁੱਲ!=initial_ਮੁੱਲ) {
+                        ਜੇ(prev<c) {
+                            ਜੇ(!enumRange(context, prev, c, prev_ਮੁੱਲ)) {
+                                ਵਾਪਸ;
                             }
                         }
-                        prevBlock=nullBlock;
+                        prev_ਖੰਡ=null_ਖੰਡ;
                         prev=c;
-                        prevValue=initialValue;
+                        prev_ਮੁੱਲ=initial_ਮੁੱਲ;
                     }
-                    c+=UTRIE_DATA_BLOCK_LENGTH;
-                } else {
-                    prevBlock=block;
-                    for(j=0; j<UTRIE_DATA_BLOCK_LENGTH; ++j) {
-                        value=enumValue(context, data32!=nullptr ? data32[block+j] : idx[block+j]);
-                        if(value!=prevValue) {
-                            if(prev<c) {
-                                if(!enumRange(context, prev, c, prevValue)) {
-                                    return;
+                    c+=UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
+                } ਨਹੀਂਤਾਂ {
+                    prev_ਖੰਡ=ਖੰਡ;
+                    ਲਈ(j=0; j<UTRIE_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ; ++j) {
+                        value=enum_ਮੁੱਲ(context, data32!=ਖਾਲੀ_ਸੂਚਕ ? data32[ਖੰਡ+j] : idx[ਖੰਡ+j]);
+                        ਜੇ(value!=prev_ਮੁੱਲ) {
+                            ਜੇ(prev<c) {
+                                ਜੇ(!enumRange(context, prev, c, prev_ਮੁੱਲ)) {
+                                    ਵਾਪਸ;
                                 }
                             }
-                            if(j>0) {
+                            ਜੇ(j>0) {
                                 /* the block is not filled with all the same value */
-                                prevBlock=-1;
+                                prev_ਖੰਡ=-1;
                             }
                             prev=c;
-                            prevValue=value;
+                            prev_ਮੁੱਲ=value;
                         }
                         ++c;
                     }
                 }
-            } while(++i<offset);
+            } ਜਦੋਂ(++i<ਵਿੱਥ);
         }
 
         ++l;
     }
 
     /* deliver last range */
-    enumRange(context, prev, c, prevValue);
+    enumRange(context, prev, c, prev_ਮੁੱਲ);
 }

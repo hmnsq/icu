@@ -4,13 +4,13 @@
 // charstrmap.h
 // created: 2020sep01 Frank Yung-Fong Tang
 
-#ifndef __CHARSTRMAP_H__
-#define __CHARSTRMAP_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __CHARSTRMAP_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __CHARSTRMAP_H__
 
-#include <utility>
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "uhash.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <utility>
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uobject.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uhash.h"
 
 U_NAMESPACE_BEGIN
 
@@ -18,38 +18,38 @@ U_NAMESPACE_BEGIN
  * Map of const char * keys & values.
  * Stores pointers as is: Does not own/copy/adopt/release strings.
  */
-class CharStringMap final : public UMemory {
-public:
+class CharStringMap final : ਜਨਤਕ UMemory {
+ਜਨਤਕ:
     /** Constructs an unusable non-map. */
     CharStringMap() : map(nullptr) {}
-    CharStringMap(int32_t size, UErrorCode &errorCode) {
-        map = uhash_openSize(uhash_hashChars, uhash_compareChars, uhash_compareChars,
-                             size, &errorCode);
+    CharStringMap(int32_t ਮਾਪ_2, UError_ਕੋਡ &error_ਕੋਡ) {
+        map = uhash_open_ਮਾਪ(uhash_hashChars, uhash_compareChars, uhash_compareChars,
+                             ਮਾਪ_2, &error_ਕੋਡ);
     }
     CharStringMap(CharStringMap &&other) noexcept : map(other.map) {
         other.map = nullptr;
     }
-    CharStringMap(const CharStringMap &other) = delete;
+    CharStringMap(ਅਚਲ CharStringMap &other) = delete;
     ~CharStringMap() {
         uhash_close(map);
     }
 
-    CharStringMap &operator=(CharStringMap &&other) noexcept {
+    CharStringMap &ਸੰਚਾਲਕ=(CharStringMap &&other) noexcept {
         map = other.map;
         other.map = nullptr;
-        return *this;
+        ਵਾਪਸ *this;
     }
-    CharStringMap &operator=(const CharStringMap &other) = delete;
+    CharStringMap &ਸੰਚਾਲਕ=(ਅਚਲ CharStringMap &other) = delete;
 
-    const char *get(const char *key) const { return static_cast<const char *>(uhash_get(map, key)); }
-    void put(const char *key, const char *value, UErrorCode &errorCode) {
-        uhash_put(map, const_cast<char *>(key), const_cast<char *>(value), &errorCode);
+    ਅਚਲ ਅੱਖਰ *get(ਅਚਲ ਅੱਖਰ *ਕੁੰਜੀ) ਅਚਲ { ਵਾਪਸ static_cast<ਅਚਲ ਅੱਖਰ *>(uhash_get(map, ਕੁੰਜੀ)); }
+    ਖਾਲੀ put(ਅਚਲ ਅੱਖਰ *ਕੁੰਜੀ, ਅਚਲ ਅੱਖਰ *ਮੁੱਲ_2, UError_ਕੋਡ &error_ਕੋਡ) {
+        uhash_put(map, const_cast<ਅੱਖਰ *>(ਕੁੰਜੀ), const_cast<ਅੱਖਰ *>(ਮੁੱਲ_2), &error_ਕੋਡ);
     }
 
-private:
+ਨਿਜੀ:
     UHashtable *map;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif  //  __CHARSTRMAP_H__
+#ਜੇ_ਅੰਤ  //  __CHARSTRMAP_H__

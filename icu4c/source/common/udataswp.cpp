@@ -20,132 +20,132 @@
 *   charset families (ASCII<->EBCDIC).
 */
 
-#include <stdarg.h>
-#include "unicode/utypes.h"
-#include "unicode/udata.h" /* UDataInfo */
-#include "ucmndata.h" /* DataHeader */
-#include "cmemory.h"
-#include "udataswp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdarg.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/udata.h" /* UDataInfo */
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucmndata.h" /* DataHeader */
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "udataswp.h"
 
 /* swapping primitives ------------------------------------------------------ */
 
-static int32_t U_CALLCONV
-uprv_swapArray16(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
-                 UErrorCode *pErrorCode) {
-    const uint16_t *p;
+ਸਥਿਰ int32_t U_CALLCONV
+uprv_ਅਦਲਾ_ਬਦਲੀ_Array16(ਅਚਲ UDataSwapper *ds,
+                 ਅਚਲ ਖਾਲੀ *ਵਿੱਚ_ਅੰਕੜੇ, int32_t length, ਖਾਲੀ *ਬਾਹਰਲਾ_ਅੰਕੜੇ,
+                 UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਅਚਲ uint16_t *p;
     uint16_t *q;
     int32_t count;
     uint16_t x;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ਜੇ(p_Error_ਕੋਡ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length&1)!=0 || outData==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ਜੇ(ds==ਖਾਲੀ_ਸੂਚਕ || ਵਿੱਚ_ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ || length<0 || (length&1)!=0 || ਬਾਹਰਲਾ_ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ) {
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
 
     /* setup and swapping */
-    p = static_cast<const uint16_t*>(inData);
-    q = static_cast<uint16_t*>(outData);
+    p = static_cast<ਅਚਲ uint16_t*>(ਵਿੱਚ_ਅੰਕੜੇ);
+    q = static_cast<uint16_t*>(ਬਾਹਰਲਾ_ਅੰਕੜੇ);
     count=length/2;
-    while(count>0) {
+    ਜਦੋਂ(count>0) {
         x=*p++;
         *q++ = static_cast<uint16_t>((x << 8) | (x >> 8));
         --count;
     }
 
-    return length;
+    ਵਾਪਸ length;
 }
 
-static int32_t U_CALLCONV
-uprv_copyArray16(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
-                 UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+ਸਥਿਰ int32_t U_CALLCONV
+uprv_copyArray16(ਅਚਲ UDataSwapper *ds,
+                 ਅਚਲ ਖਾਲੀ *ਵਿੱਚ_ਅੰਕੜੇ, int32_t length, ਖਾਲੀ *ਬਾਹਰਲਾ_ਅੰਕੜੇ,
+                 UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਜੇ(p_Error_ਕੋਡ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length&1)!=0 || outData==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ਜੇ(ds==ਖਾਲੀ_ਸੂਚਕ || ਵਿੱਚ_ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ || length<0 || (length&1)!=0 || ਬਾਹਰਲਾ_ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ) {
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
 
-    if(length>0 && inData!=outData) {
-        uprv_memcpy(outData, inData, length);
+    ਜੇ(length>0 && ਵਿੱਚ_ਅੰਕੜੇ!=ਬਾਹਰਲਾ_ਅੰਕੜੇ) {
+        uprv_memcpy(ਬਾਹਰਲਾ_ਅੰਕੜੇ, ਵਿੱਚ_ਅੰਕੜੇ, length);
     }
-    return length;
+    ਵਾਪਸ length;
 }
 
-static int32_t U_CALLCONV
-uprv_swapArray32(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
-                 UErrorCode *pErrorCode) {
-    const uint32_t *p;
+ਸਥਿਰ int32_t U_CALLCONV
+uprv_ਅਦਲਾ_ਬਦਲੀ_Array32(ਅਚਲ UDataSwapper *ds,
+                 ਅਚਲ ਖਾਲੀ *ਵਿੱਚ_ਅੰਕੜੇ, int32_t length, ਖਾਲੀ *ਬਾਹਰਲਾ_ਅੰਕੜੇ,
+                 UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਅਚਲ uint32_t *p;
     uint32_t *q;
     int32_t count;
     uint32_t x;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ਜੇ(p_Error_ਕੋਡ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length&3)!=0 || outData==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ਜੇ(ds==ਖਾਲੀ_ਸੂਚਕ || ਵਿੱਚ_ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ || length<0 || (length&3)!=0 || ਬਾਹਰਲਾ_ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ) {
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
 
     /* setup and swapping */
-    p = static_cast<const uint32_t*>(inData);
-    q = static_cast<uint32_t*>(outData);
+    p = static_cast<ਅਚਲ uint32_t*>(ਵਿੱਚ_ਅੰਕੜੇ);
+    q = static_cast<uint32_t*>(ਬਾਹਰਲਾ_ਅੰਕੜੇ);
     count=length/4;
-    while(count>0) {
+    ਜਦੋਂ(count>0) {
         x=*p++;
         *q++ = (x << 24) | ((x << 8) & 0xff0000) | ((x >> 8) & 0xff00) | (x >> 24);
         --count;
     }
 
-    return length;
+    ਵਾਪਸ length;
 }
 
-static int32_t U_CALLCONV
-uprv_copyArray32(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
-                 UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+ਸਥਿਰ int32_t U_CALLCONV
+uprv_copyArray32(ਅਚਲ UDataSwapper *ds,
+                 ਅਚਲ ਖਾਲੀ *ਵਿੱਚ_ਅੰਕੜੇ, int32_t length, ਖਾਲੀ *ਬਾਹਰਲਾ_ਅੰਕੜੇ,
+                 UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਜੇ(p_Error_ਕੋਡ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length&3)!=0 || outData==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ਜੇ(ds==ਖਾਲੀ_ਸੂਚਕ || ਵਿੱਚ_ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ || length<0 || (length&3)!=0 || ਬਾਹਰਲਾ_ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ) {
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
 
-    if(length>0 && inData!=outData) {
-        uprv_memcpy(outData, inData, length);
+    ਜੇ(length>0 && ਵਿੱਚ_ਅੰਕੜੇ!=ਬਾਹਰਲਾ_ਅੰਕੜੇ) {
+        uprv_memcpy(ਬਾਹਰਲਾ_ਅੰਕੜੇ, ਵਿੱਚ_ਅੰਕੜੇ, length);
     }
-    return length;
+    ਵਾਪਸ length;
 }
 
-static int32_t U_CALLCONV
-uprv_swapArray64(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
-                 UErrorCode *pErrorCode) {
-    const uint64_t *p;
+ਸਥਿਰ int32_t U_CALLCONV
+uprv_ਅਦਲਾ_ਬਦਲੀ_Array64(ਅਚਲ UDataSwapper *ds,
+                 ਅਚਲ ਖਾਲੀ *ਵਿੱਚ_ਅੰਕੜੇ, int32_t length, ਖਾਲੀ *ਬਾਹਰਲਾ_ਅੰਕੜੇ,
+                 UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਅਚਲ uint64_t *p;
     uint64_t *q;
     int32_t count;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ਜੇ(p_Error_ਕੋਡ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length&7)!=0 || outData==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ਜੇ(ds==ਖਾਲੀ_ਸੂਚਕ || ਵਿੱਚ_ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ || length<0 || (length&7)!=0 || ਬਾਹਰਲਾ_ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ) {
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
 
     /* setup and swapping */
-    p = static_cast<const uint64_t*>(inData);
-    q = static_cast<uint64_t*>(outData);
+    p = static_cast<ਅਚਲ uint64_t*>(ਵਿੱਚ_ਅੰਕੜੇ);
+    q = static_cast<uint64_t*>(ਬਾਹਰਲਾ_ਅੰਕੜੇ);
     count=length/8;
-    while(count>0) {
+    ਜਦੋਂ(count>0) {
         uint64_t x=*p++;
         x=(x<<56)|((x&0xff00)<<40)|((x&0xff0000)<<24)|((x&0xff000000)<<8)|
             ((x>>8)&0xff000000)|((x>>24)&0xff0000)|((x>>40)&0xff00)|(x>>56);
@@ -153,75 +153,75 @@ uprv_swapArray64(const UDataSwapper *ds,
         --count;
     }
 
-    return length;
+    ਵਾਪਸ length;
 }
 
-static int32_t U_CALLCONV
-uprv_copyArray64(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
-                 UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+ਸਥਿਰ int32_t U_CALLCONV
+uprv_copyArray64(ਅਚਲ UDataSwapper *ds,
+                 ਅਚਲ ਖਾਲੀ *ਵਿੱਚ_ਅੰਕੜੇ, int32_t length, ਖਾਲੀ *ਬਾਹਰਲਾ_ਅੰਕੜੇ,
+                 UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਜੇ(p_Error_ਕੋਡ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length&7)!=0 || outData==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ਜੇ(ds==ਖਾਲੀ_ਸੂਚਕ || ਵਿੱਚ_ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ || length<0 || (length&7)!=0 || ਬਾਹਰਲਾ_ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ) {
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
 
-    if(length>0 && inData!=outData) {
-        uprv_memcpy(outData, inData, length);
+    ਜੇ(length>0 && ਵਿੱਚ_ਅੰਕੜੇ!=ਬਾਹਰਲਾ_ਅੰਕੜੇ) {
+        uprv_memcpy(ਬਾਹਰਲਾ_ਅੰਕੜੇ, ਵਿੱਚ_ਅੰਕੜੇ, length);
     }
-    return length;
+    ਵਾਪਸ length;
 }
 
-static uint16_t U_CALLCONV
-uprv_readSwapUInt16(uint16_t x) {
-    return static_cast<uint16_t>((x << 8) | (x >> 8));
+ਸਥਿਰ uint16_t U_CALLCONV
+uprv_read_ਅਦਲਾ_ਬਦਲੀ_UInt16(uint16_t x) {
+    ਵਾਪਸ static_cast<uint16_t>((x << 8) | (x >> 8));
 }
 
-static uint16_t U_CALLCONV
-uprv_readDirectUInt16(uint16_t x) {
-    return x;
+ਸਥਿਰ uint16_t U_CALLCONV
+uprv_read_ਸਿੱਧਾ_UInt16(uint16_t x) {
+    ਵਾਪਸ x;
 }
 
-static uint32_t U_CALLCONV
-uprv_readSwapUInt32(uint32_t x) {
-    return (x << 24) | ((x << 8) & 0xff0000) | ((x >> 8) & 0xff00) | (x >> 24);
+ਸਥਿਰ uint32_t U_CALLCONV
+uprv_read_ਅਦਲਾ_ਬਦਲੀ_UInt32(uint32_t x) {
+    ਵਾਪਸ (x << 24) | ((x << 8) & 0xff0000) | ((x >> 8) & 0xff00) | (x >> 24);
 }
 
-static uint32_t U_CALLCONV
-uprv_readDirectUInt32(uint32_t x) {
-    return x;
+ਸਥਿਰ uint32_t U_CALLCONV
+uprv_read_ਸਿੱਧਾ_UInt32(uint32_t x) {
+    ਵਾਪਸ x;
 }
 
-static void U_CALLCONV
-uprv_writeSwapUInt16(uint16_t *p, uint16_t x) {
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV
+uprv_write_ਅਦਲਾ_ਬਦਲੀ_UInt16(uint16_t *p, uint16_t x) {
     *p = static_cast<uint16_t>((x << 8) | (x >> 8));
 }
 
-static void U_CALLCONV
-uprv_writeDirectUInt16(uint16_t *p, uint16_t x) {
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV
+uprv_write_ਸਿੱਧਾ_UInt16(uint16_t *p, uint16_t x) {
     *p=x;
 }
 
-static void U_CALLCONV
-uprv_writeSwapUInt32(uint32_t *p, uint32_t x) {
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV
+uprv_write_ਅਦਲਾ_ਬਦਲੀ_UInt32(uint32_t *p, uint32_t x) {
     *p = (x << 24) | ((x << 8) & 0xff0000) | ((x >> 8) & 0xff00) | (x >> 24);
 }
 
-static void U_CALLCONV
-uprv_writeDirectUInt32(uint32_t *p, uint32_t x) {
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV
+uprv_write_ਸਿੱਧਾ_UInt32(uint32_t *p, uint32_t x) {
     *p=x;
 }
 
 U_CAPI int16_t U_EXPORT2
-udata_readInt16(const UDataSwapper *ds, int16_t x) {
-    return (int16_t)ds->readUInt16((uint16_t)x);
+udata_readInt16(ਅਚਲ UDataSwapper *ds, int16_t x) {
+    ਵਾਪਸ (int16_t)ds->readUInt16((uint16_t)x);
 }
 
 U_CAPI int32_t U_EXPORT2
-udata_readInt32(const UDataSwapper *ds, int32_t x) {
-    return (int32_t)ds->readUInt32((uint32_t)x);
+udata_readInt32(ਅਚਲ UDataSwapper *ds, int32_t x) {
+    ਵਾਪਸ (int32_t)ds->readUInt32((uint32_t)x);
 }
 
 /**
@@ -230,244 +230,244 @@ udata_readInt32(const UDataSwapper *ds, int32_t x) {
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-udata_swapInvStringBlock(const UDataSwapper *ds,
-                         const void *inData, int32_t length, void *outData,
-                         UErrorCode *pErrorCode) {
-    const char *inChars;
-    int32_t stringsLength;
+udata_ਅਦਲਾ_ਬਦਲੀ_Inv_String_ਖੰਡ(ਅਚਲ UDataSwapper *ds,
+                         ਅਚਲ ਖਾਲੀ *ਵਿੱਚ_ਅੰਕੜੇ, int32_t length, ਖਾਲੀ *ਬਾਹਰਲਾ_ਅੰਕੜੇ,
+                         UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਅਚਲ ਅੱਖਰ *ਵਿੱਚ_Chars;
+    int32_t ਲੜੀਆਂ_ਲੰਮਾਈ;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ਜੇ(p_Error_ਕੋਡ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ਜੇ(ds==ਖਾਲੀ_ਸੂਚਕ || ਵਿੱਚ_ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ || length<0 || (length>0 && ਬਾਹਰਲਾ_ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ)) {
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
 
     /* reduce the strings length to not include bytes after the last NUL */
-    inChars=(const char *)inData;
-    stringsLength=length;
-    while(stringsLength>0 && inChars[stringsLength-1]!=0) {
-        --stringsLength;
+    ਵਿੱਚ_Chars=(ਅਚਲ ਅੱਖਰ *)ਵਿੱਚ_ਅੰਕੜੇ;
+    ਲੜੀਆਂ_ਲੰਮਾਈ=length;
+    ਜਦੋਂ(ਲੜੀਆਂ_ਲੰਮਾਈ>0 && ਵਿੱਚ_Chars[ਲੜੀਆਂ_ਲੰਮਾਈ-1]!=0) {
+        --ਲੜੀਆਂ_ਲੰਮਾਈ;
     }
 
     /* swap up to the last NUL */
-    ds->swapInvChars(ds, inData, stringsLength, outData, pErrorCode);
+    ds->ਅਦਲਾ_ਬਦਲੀ_Inv_Chars(ds, ਵਿੱਚ_ਅੰਕੜੇ, ਲੜੀਆਂ_ਲੰਮਾਈ, ਬਾਹਰਲਾ_ਅੰਕੜੇ, p_Error_ਕੋਡ);
 
     /* copy the bytes after the last NUL */
-    if(inData!=outData && length>stringsLength) {
-        uprv_memcpy((char *)outData+stringsLength, inChars+stringsLength, length-stringsLength);
+    ਜੇ(ਵਿੱਚ_ਅੰਕੜੇ!=ਬਾਹਰਲਾ_ਅੰਕੜੇ && length>ਲੜੀਆਂ_ਲੰਮਾਈ) {
+        uprv_memcpy((ਅੱਖਰ *)ਬਾਹਰਲਾ_ਅੰਕੜੇ+ਲੜੀਆਂ_ਲੰਮਾਈ, ਵਿੱਚ_Chars+ਲੜੀਆਂ_ਲੰਮਾਈ, length-ਲੜੀਆਂ_ਲੰਮਾਈ);
     }
 
     /* return the length including padding bytes */
-    if(U_SUCCESS(*pErrorCode)) {
-        return length;
-    } else {
-        return 0;
+    ਜੇ(U_SUCCESS(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ length;
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ 0;
     }
 }
 
-U_CAPI void U_EXPORT2
-udata_printError(const UDataSwapper *ds,
-                 const char *fmt,
+U_CAPI ਖਾਲੀ U_EXPORT2
+udata_printError(ਅਚਲ UDataSwapper *ds,
+                 ਅਚਲ ਅੱਖਰ *fmt,
                  ...) {
-    va_list args;
+    va_list ਦਲੀਲਾਂ_2;
 
-    if(ds->printError!=nullptr) {
-        va_start(args, fmt);
-        ds->printError(ds->printErrorContext, fmt, args);
-        va_end(args);
+    ਜੇ(ds->printError!=ਖਾਲੀ_ਸੂਚਕ) {
+        va_start(ਦਲੀਲਾਂ_2, fmt);
+        ds->printError(ds->printErrorContext, fmt, ਦਲੀਲਾਂ_2);
+        va_end(ਦਲੀਲਾਂ_2);
     }
 }
 
 /* swap a data header ------------------------------------------------------- */
 
 U_CAPI int32_t U_EXPORT2
-udata_swapDataHeader(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
-                     UErrorCode *pErrorCode) {
-    const DataHeader *pHeader;
-    uint16_t headerSize, infoSize;
+udata_ਅਦਲਾ_ਬਦਲੀ_ਅੰਕੜੇ_ਸਿਰਲੇਖ(ਅਚਲ UDataSwapper *ds,
+                     ਅਚਲ ਖਾਲੀ *ਵਿੱਚ_ਅੰਕੜੇ, int32_t length, ਖਾਲੀ *ਬਾਹਰਲਾ_ਅੰਕੜੇ,
+                     UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਅਚਲ ਅੰਕੜੇ_ਸਿਰਲੇਖ *p_ਸਿਰਲੇਖ;
+    uint16_t ਸਿਰਲੇਖ_ਮਾਪ, info_ਮਾਪ;
 
     /* argument checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ਜੇ(p_Error_ਕੋਡ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ 0;
     }
-    if(ds==nullptr || inData==nullptr || length<-1 || (length>0 && outData==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ਜੇ(ds==ਖਾਲੀ_ਸੂਚਕ || ਵਿੱਚ_ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ || length<-1 || (length>0 && ਬਾਹਰਲਾ_ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ)) {
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
 
     /* check minimum length and magic bytes */
-    pHeader=(const DataHeader *)inData;
-    if( (length>=0 && length<(int32_t)sizeof(DataHeader)) ||
-        pHeader->dataHeader.magic1!=0xda ||
-        pHeader->dataHeader.magic2!=0x27 ||
-        pHeader->info.sizeofUChar!=2
+    p_ਸਿਰਲੇਖ=(ਅਚਲ ਅੰਕੜੇ_ਸਿਰਲੇਖ *)ਵਿੱਚ_ਅੰਕੜੇ;
+    ਜੇ( (length>=0 && length<(int32_t)ਆਕਾਰ(ਅੰਕੜੇ_ਸਿਰਲੇਖ)) ||
+        p_ਸਿਰਲੇਖ->ਅੰਕੜੇ_ਸਿਰਲੇਖ_2.magic1!=0xda ||
+        p_ਸਿਰਲੇਖ->ਅੰਕੜੇ_ਸਿਰਲੇਖ_2.magic2!=0x27 ||
+        p_ਸਿਰਲੇਖ->info.sizeofUChar!=2
     ) {
         udata_printError(ds, "udata_swapDataHeader(): initial bytes do not look like ICU data\n");
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+        *p_Error_ਕੋਡ=U_UNSUPPORTED_ERROR;
+        ਵਾਪਸ 0;
     }
 
-    headerSize=ds->readUInt16(pHeader->dataHeader.headerSize);
-    infoSize=ds->readUInt16(pHeader->info.size);
+    ਸਿਰਲੇਖ_ਮਾਪ=ds->readUInt16(p_ਸਿਰਲੇਖ->ਅੰਕੜੇ_ਸਿਰਲੇਖ_2.ਸਿਰਲੇਖ_ਮਾਪ);
+    info_ਮਾਪ=ds->readUInt16(p_ਸਿਰਲੇਖ->info.size);
 
-    if( headerSize<sizeof(DataHeader) ||
-        infoSize<sizeof(UDataInfo) ||
-        headerSize<(sizeof(pHeader->dataHeader)+infoSize) ||
-        (length>=0 && length<headerSize)
+    ਜੇ( ਸਿਰਲੇਖ_ਮਾਪ<ਆਕਾਰ(ਅੰਕੜੇ_ਸਿਰਲੇਖ) ||
+        info_ਮਾਪ<ਆਕਾਰ(UDataInfo) ||
+        ਸਿਰਲੇਖ_ਮਾਪ<(ਆਕਾਰ(p_ਸਿਰਲੇਖ->ਅੰਕੜੇ_ਸਿਰਲੇਖ_2)+info_ਮਾਪ) ||
+        (length>=0 && length<ਸਿਰਲੇਖ_ਮਾਪ)
     ) {
         udata_printError(ds, "udata_swapDataHeader(): header size mismatch - headerSize %d infoSize %d length %d\n",
-                         headerSize, infoSize, length);
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+                         ਸਿਰਲੇਖ_ਮਾਪ, info_ਮਾਪ, length);
+        *p_Error_ਕੋਡ=U_ਸੂਚਕਾਂਕ_OUTOFBOUNDS_ERROR;
+        ਵਾਪਸ 0;
     }
 
-    if(length>0) {
-        DataHeader *outHeader;
-        const char *s;
-        int32_t maxLength;
+    ਜੇ(length>0) {
+        ਅੰਕੜੇ_ਸਿਰਲੇਖ *ਬਾਹਰਲਾ_ਸਿਰਲੇਖ;
+        ਅਚਲ ਅੱਖਰ *s;
+        int32_t max_ਲੰਮਾਈ_2;
 
         /* Most of the fields are just bytes and need no swapping. */
-        if(inData!=outData) {
-            uprv_memcpy(outData, inData, headerSize);
+        ਜੇ(ਵਿੱਚ_ਅੰਕੜੇ!=ਬਾਹਰਲਾ_ਅੰਕੜੇ) {
+            uprv_memcpy(ਬਾਹਰਲਾ_ਅੰਕੜੇ, ਵਿੱਚ_ਅੰਕੜੇ, ਸਿਰਲੇਖ_ਮਾਪ);
         }
-        outHeader=(DataHeader *)outData;
+        ਬਾਹਰਲਾ_ਸਿਰਲੇਖ=(ਅੰਕੜੇ_ਸਿਰਲੇਖ *)ਬਾਹਰਲਾ_ਅੰਕੜੇ;
 
-        outHeader->info.isBigEndian = ds->outIsBigEndian;
-        outHeader->info.charsetFamily = ds->outCharset;
+        ਬਾਹਰਲਾ_ਸਿਰਲੇਖ->info.isBigEndian = ds->ਬਾਹਰਲਾ_Is_Big_Endian;
+        ਬਾਹਰਲਾ_ਸਿਰਲੇਖ->info.charsetFamily = ds->ਬਾਹਰਲਾ_Charset;
 
         /* swap headerSize */
-        ds->swapArray16(ds, &pHeader->dataHeader.headerSize, 2, &outHeader->dataHeader.headerSize, pErrorCode);
+        ds->ਅਦਲਾ_ਬਦਲੀ_Array16(ds, &p_ਸਿਰਲੇਖ->ਅੰਕੜੇ_ਸਿਰਲੇਖ_2.ਸਿਰਲੇਖ_ਮਾਪ, 2, &ਬਾਹਰਲਾ_ਸਿਰਲੇਖ->ਅੰਕੜੇ_ਸਿਰਲੇਖ_2.ਸਿਰਲੇਖ_ਮਾਪ, p_Error_ਕੋਡ);
 
         /* swap UDataInfo size and reservedWord */
-        ds->swapArray16(ds, &pHeader->info.size, 4, &outHeader->info.size, pErrorCode);
+        ds->ਅਦਲਾ_ਬਦਲੀ_Array16(ds, &p_ਸਿਰਲੇਖ->info.size, 4, &ਬਾਹਰਲਾ_ਸਿਰਲੇਖ->info.size, p_Error_ਕੋਡ);
 
         /* swap copyright statement after the UDataInfo */
-        infoSize+=sizeof(pHeader->dataHeader);
-        s=(const char *)inData+infoSize;
-        maxLength=headerSize-infoSize;
+        info_ਮਾਪ+=ਆਕਾਰ(p_ਸਿਰਲੇਖ->ਅੰਕੜੇ_ਸਿਰਲੇਖ_2);
+        s=(ਅਚਲ ਅੱਖਰ *)ਵਿੱਚ_ਅੰਕੜੇ+info_ਮਾਪ;
+        max_ਲੰਮਾਈ_2=ਸਿਰਲੇਖ_ਮਾਪ-info_ਮਾਪ;
         /* get the length of the string */
-        for(length=0; length<maxLength && s[length]!=0; ++length) {}
+        ਲਈ(length=0; length<max_ਲੰਮਾਈ_2 && s[length]!=0; ++length) {}
         /* swap the string contents */
-        ds->swapInvChars(ds, s, length, (char *)outData+infoSize, pErrorCode);
+        ds->ਅਦਲਾ_ਬਦਲੀ_Inv_Chars(ds, s, length, (ਅੱਖਰ *)ਬਾਹਰਲਾ_ਅੰਕੜੇ+info_ਮਾਪ, p_Error_ਕੋਡ);
     }
 
-    return headerSize;
+    ਵਾਪਸ ਸਿਰਲੇਖ_ਮਾਪ;
 }
 
 /* API functions ------------------------------------------------------------ */
 
 U_CAPI UDataSwapper * U_EXPORT2
-udata_openSwapper(UBool inIsBigEndian, uint8_t inCharset,
-                  UBool outIsBigEndian, uint8_t outCharset,
-                  UErrorCode *pErrorCode) {
+udata_openSwapper(UBool ਵਿੱਚ_Is_Big_Endian, uint8_t ਵਿੱਚ_Charset,
+                  UBool ਬਾਹਰਲਾ_Is_Big_Endian, uint8_t ਬਾਹਰਲਾ_Charset,
+                  UError_ਕੋਡ *p_Error_ਕੋਡ) {
     UDataSwapper *swapper;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ਜੇ(p_Error_ਕੋਡ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
-    if(inCharset>U_EBCDIC_FAMILY || outCharset>U_EBCDIC_FAMILY) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    ਜੇ(ਵਿੱਚ_Charset>U_EBCDIC_FAMILY || ਬਾਹਰਲਾ_Charset>U_EBCDIC_FAMILY) {
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
     /* allocate the swapper */
-    swapper=(UDataSwapper *)uprv_malloc(sizeof(UDataSwapper));
-    if(swapper==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    swapper=(UDataSwapper *)uprv_malloc(ਆਕਾਰ(UDataSwapper));
+    ਜੇ(swapper==ਖਾਲੀ_ਸੂਚਕ) {
+        *p_Error_ਕੋਡ=U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
-    uprv_memset(swapper, 0, sizeof(UDataSwapper));
+    uprv_memset(swapper, 0, ਆਕਾਰ(UDataSwapper));
 
     /* set values and functions pointers according to in/out parameters */
-    swapper->inIsBigEndian=inIsBigEndian;
-    swapper->inCharset=inCharset;
-    swapper->outIsBigEndian=outIsBigEndian;
-    swapper->outCharset=outCharset;
+    swapper->ਵਿੱਚ_Is_Big_Endian=ਵਿੱਚ_Is_Big_Endian;
+    swapper->ਵਿੱਚ_Charset=ਵਿੱਚ_Charset;
+    swapper->ਬਾਹਰਲਾ_Is_Big_Endian=ਬਾਹਰਲਾ_Is_Big_Endian;
+    swapper->ਬਾਹਰਲਾ_Charset=ਬਾਹਰਲਾ_Charset;
 
-    swapper->readUInt16= inIsBigEndian==U_IS_BIG_ENDIAN ? uprv_readDirectUInt16 : uprv_readSwapUInt16;
-    swapper->readUInt32= inIsBigEndian==U_IS_BIG_ENDIAN ? uprv_readDirectUInt32 : uprv_readSwapUInt32;
+    swapper->readUInt16= ਵਿੱਚ_Is_Big_Endian==U_IS_BIG_ENDIAN ? uprv_read_ਸਿੱਧਾ_UInt16 : uprv_read_ਅਦਲਾ_ਬਦਲੀ_UInt16;
+    swapper->readUInt32= ਵਿੱਚ_Is_Big_Endian==U_IS_BIG_ENDIAN ? uprv_read_ਸਿੱਧਾ_UInt32 : uprv_read_ਅਦਲਾ_ਬਦਲੀ_UInt32;
 
-    swapper->writeUInt16= outIsBigEndian==U_IS_BIG_ENDIAN ? uprv_writeDirectUInt16 : uprv_writeSwapUInt16;
-    swapper->writeUInt32= outIsBigEndian==U_IS_BIG_ENDIAN ? uprv_writeDirectUInt32 : uprv_writeSwapUInt32;
+    swapper->writeUInt16= ਬਾਹਰਲਾ_Is_Big_Endian==U_IS_BIG_ENDIAN ? uprv_write_ਸਿੱਧਾ_UInt16 : uprv_write_ਅਦਲਾ_ਬਦਲੀ_UInt16;
+    swapper->writeUInt32= ਬਾਹਰਲਾ_Is_Big_Endian==U_IS_BIG_ENDIAN ? uprv_write_ਸਿੱਧਾ_UInt32 : uprv_write_ਅਦਲਾ_ਬਦਲੀ_UInt32;
 
-    swapper->compareInvChars= outCharset==U_ASCII_FAMILY ? uprv_compareInvAscii : uprv_compareInvEbcdic;
+    swapper->compareInvChars= ਬਾਹਰਲਾ_Charset==U_ASCII_FAMILY ? uprv_compareInvAscii : uprv_compareInvEbcdic;
 
-    if(inIsBigEndian==outIsBigEndian) {
-        swapper->swapArray16=uprv_copyArray16;
-        swapper->swapArray32=uprv_copyArray32;
-        swapper->swapArray64=uprv_copyArray64;
-    } else {
-        swapper->swapArray16=uprv_swapArray16;
-        swapper->swapArray32=uprv_swapArray32;
-        swapper->swapArray64=uprv_swapArray64;
+    ਜੇ(ਵਿੱਚ_Is_Big_Endian==ਬਾਹਰਲਾ_Is_Big_Endian) {
+        swapper->ਅਦਲਾ_ਬਦਲੀ_Array16=uprv_copyArray16;
+        swapper->ਅਦਲਾ_ਬਦਲੀ_Array32=uprv_copyArray32;
+        swapper->ਅਦਲਾ_ਬਦਲੀ_Array64=uprv_copyArray64;
+    } ਨਹੀਂਤਾਂ {
+        swapper->ਅਦਲਾ_ਬਦਲੀ_Array16=uprv_ਅਦਲਾ_ਬਦਲੀ_Array16;
+        swapper->ਅਦਲਾ_ਬਦਲੀ_Array32=uprv_ਅਦਲਾ_ਬਦਲੀ_Array32;
+        swapper->ਅਦਲਾ_ਬਦਲੀ_Array64=uprv_ਅਦਲਾ_ਬਦਲੀ_Array64;
     }
 
-    if(inCharset==U_ASCII_FAMILY) {
-        swapper->swapInvChars= outCharset==U_ASCII_FAMILY ? uprv_copyAscii : uprv_ebcdicFromAscii;
-    } else /* U_EBCDIC_FAMILY */ {
-        swapper->swapInvChars= outCharset==U_EBCDIC_FAMILY ? uprv_copyEbcdic : uprv_asciiFromEbcdic;
+    ਜੇ(ਵਿੱਚ_Charset==U_ASCII_FAMILY) {
+        swapper->ਅਦਲਾ_ਬਦਲੀ_Inv_Chars= ਬਾਹਰਲਾ_Charset==U_ASCII_FAMILY ? uprv_copyAscii : uprv_ebcdicFromAscii;
+    } ਨਹੀਂਤਾਂ /* U_EBCDIC_FAMILY */ {
+        swapper->ਅਦਲਾ_ਬਦਲੀ_Inv_Chars= ਬਾਹਰਲਾ_Charset==U_EBCDIC_FAMILY ? uprv_copyEbcdic : uprv_asciiFromEbcdic;
     }
 
-    return swapper;
+    ਵਾਪਸ swapper;
 }
 
 U_CAPI UDataSwapper * U_EXPORT2
-udata_openSwapperForInputData(const void *data, int32_t length,
-                              UBool outIsBigEndian, uint8_t outCharset,
-                              UErrorCode *pErrorCode) {
-    const DataHeader *pHeader;
-    uint16_t headerSize, infoSize;
-    UBool inIsBigEndian;
-    int8_t inCharset;
+udata_open_Swapper_For_ਨਿਵੇਸ਼_ਅੰਕੜੇ(ਅਚਲ ਖਾਲੀ *ਅੰਕੜੇ, int32_t length,
+                              UBool ਬਾਹਰਲਾ_Is_Big_Endian, uint8_t ਬਾਹਰਲਾ_Charset,
+                              UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਅਚਲ ਅੰਕੜੇ_ਸਿਰਲੇਖ *p_ਸਿਰਲੇਖ;
+    uint16_t ਸਿਰਲੇਖ_ਮਾਪ, info_ਮਾਪ;
+    UBool ਵਿੱਚ_Is_Big_Endian;
+    int8_t ਵਿੱਚ_Charset;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ਜੇ(p_Error_ਕੋਡ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
-    if( data==nullptr ||
-        (length>=0 && length<(int32_t)sizeof(DataHeader)) ||
-        outCharset>U_EBCDIC_FAMILY
+    ਜੇ( ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ ||
+        (length>=0 && length<(int32_t)ਆਕਾਰ(ਅੰਕੜੇ_ਸਿਰਲੇਖ)) ||
+        ਬਾਹਰਲਾ_Charset>U_EBCDIC_FAMILY
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    pHeader=(const DataHeader *)data;
-    if( (length>=0 && length<(int32_t)sizeof(DataHeader)) ||
-        pHeader->dataHeader.magic1!=0xda ||
-        pHeader->dataHeader.magic2!=0x27 ||
-        pHeader->info.sizeofUChar!=2
+    p_ਸਿਰਲੇਖ=(ਅਚਲ ਅੰਕੜੇ_ਸਿਰਲੇਖ *)ਅੰਕੜੇ;
+    ਜੇ( (length>=0 && length<(int32_t)ਆਕਾਰ(ਅੰਕੜੇ_ਸਿਰਲੇਖ)) ||
+        p_ਸਿਰਲੇਖ->ਅੰਕੜੇ_ਸਿਰਲੇਖ_2.magic1!=0xda ||
+        p_ਸਿਰਲੇਖ->ਅੰਕੜੇ_ਸਿਰਲੇਖ_2.magic2!=0x27 ||
+        p_ਸਿਰਲੇਖ->info.sizeofUChar!=2
     ) {
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return nullptr;
+        *p_Error_ਕੋਡ=U_UNSUPPORTED_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    inIsBigEndian=(UBool)pHeader->info.isBigEndian;
-    inCharset=pHeader->info.charsetFamily;
+    ਵਿੱਚ_Is_Big_Endian=(UBool)p_ਸਿਰਲੇਖ->info.isBigEndian;
+    ਵਿੱਚ_Charset=p_ਸਿਰਲੇਖ->info.charsetFamily;
 
-    if(inIsBigEndian==U_IS_BIG_ENDIAN) {
-        headerSize=pHeader->dataHeader.headerSize;
-        infoSize=pHeader->info.size;
-    } else {
-        headerSize=uprv_readSwapUInt16(pHeader->dataHeader.headerSize);
-        infoSize=uprv_readSwapUInt16(pHeader->info.size);
+    ਜੇ(ਵਿੱਚ_Is_Big_Endian==U_IS_BIG_ENDIAN) {
+        ਸਿਰਲੇਖ_ਮਾਪ=p_ਸਿਰਲੇਖ->ਅੰਕੜੇ_ਸਿਰਲੇਖ_2.ਸਿਰਲੇਖ_ਮਾਪ;
+        info_ਮਾਪ=p_ਸਿਰਲੇਖ->info.size;
+    } ਨਹੀਂਤਾਂ {
+        ਸਿਰਲੇਖ_ਮਾਪ=uprv_read_ਅਦਲਾ_ਬਦਲੀ_UInt16(p_ਸਿਰਲੇਖ->ਅੰਕੜੇ_ਸਿਰਲੇਖ_2.ਸਿਰਲੇਖ_ਮਾਪ);
+        info_ਮਾਪ=uprv_read_ਅਦਲਾ_ਬਦਲੀ_UInt16(p_ਸਿਰਲੇਖ->info.size);
     }
 
-    if( headerSize<sizeof(DataHeader) ||
-        infoSize<sizeof(UDataInfo) ||
-        headerSize<(sizeof(pHeader->dataHeader)+infoSize) ||
-        (length>=0 && length<headerSize)
+    ਜੇ( ਸਿਰਲੇਖ_ਮਾਪ<ਆਕਾਰ(ਅੰਕੜੇ_ਸਿਰਲੇਖ) ||
+        info_ਮਾਪ<ਆਕਾਰ(UDataInfo) ||
+        ਸਿਰਲੇਖ_ਮਾਪ<(ਆਕਾਰ(p_ਸਿਰਲੇਖ->ਅੰਕੜੇ_ਸਿਰਲੇਖ_2)+info_ਮਾਪ) ||
+        (length>=0 && length<ਸਿਰਲੇਖ_ਮਾਪ)
     ) {
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return nullptr;
+        *p_Error_ਕੋਡ=U_UNSUPPORTED_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    return udata_openSwapper(inIsBigEndian, inCharset, outIsBigEndian, outCharset, pErrorCode);
+    ਵਾਪਸ udata_openSwapper(ਵਿੱਚ_Is_Big_Endian, ਵਿੱਚ_Charset, ਬਾਹਰਲਾ_Is_Big_Endian, ਬਾਹਰਲਾ_Charset, p_Error_ਕੋਡ);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ਖਾਲੀ U_EXPORT2
 udata_closeSwapper(UDataSwapper *ds) {
     uprv_free(ds);
 }

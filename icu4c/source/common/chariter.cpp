@@ -7,7 +7,7 @@
 **********************************************************************
 */
 
-#include "unicode/chariter.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/chariter.h"
 
 U_NAMESPACE_BEGIN
 
@@ -15,86 +15,86 @@ ForwardCharacterIterator::~ForwardCharacterIterator() {}
 ForwardCharacterIterator::ForwardCharacterIterator()
 : UObject()
 {}
-ForwardCharacterIterator::ForwardCharacterIterator(const ForwardCharacterIterator &other)
+ForwardCharacterIterator::ForwardCharacterIterator(ਅਚਲ ForwardCharacterIterator &other)
 : UObject(other)
 {}
 
 
 CharacterIterator::CharacterIterator()
-: textLength(0), pos(0), begin(0), end(0) {
+: ਪਾਠ_ਲੰਮਾਈ(0), pos(0), begin(0), ਸਿਰਾ(0) {
 }
 
 CharacterIterator::CharacterIterator(int32_t length)
-: textLength(length), pos(0), begin(0), end(length) {
-    if(textLength < 0) {
-        textLength = end = 0;
+: ਪਾਠ_ਲੰਮਾਈ(length), pos(0), begin(0), ਸਿਰਾ(length) {
+    ਜੇ(ਪਾਠ_ਲੰਮਾਈ < 0) {
+        ਪਾਠ_ਲੰਮਾਈ = ਸਿਰਾ = 0;
     }
 }
 
 CharacterIterator::CharacterIterator(int32_t length, int32_t position)
-: textLength(length), pos(position), begin(0), end(length) {
-    if(textLength < 0) {
-        textLength = end = 0;
+: ਪਾਠ_ਲੰਮਾਈ(length), pos(position), begin(0), ਸਿਰਾ(length) {
+    ਜੇ(ਪਾਠ_ਲੰਮਾਈ < 0) {
+        ਪਾਠ_ਲੰਮਾਈ = ਸਿਰਾ = 0;
     }
-    if(pos < 0) {
+    ਜੇ(pos < 0) {
         pos = 0;
-    } else if(pos > end) {
-        pos = end;
+    } ਨਹੀਂਤਾਂ ਜੇ(pos > ਸਿਰਾ) {
+        pos = ਸਿਰਾ;
     }
 }
 
-CharacterIterator::CharacterIterator(int32_t length, int32_t textBegin, int32_t textEnd, int32_t position)
-: textLength(length), pos(position), begin(textBegin), end(textEnd) {
-    if(textLength < 0) {
-        textLength = 0;
+CharacterIterator::CharacterIterator(int32_t length, int32_t ਪਾਠ_Begin, int32_t ਪਾਠ_ਸਿਰਾ, int32_t position)
+: ਪਾਠ_ਲੰਮਾਈ(length), pos(position), begin(ਪਾਠ_Begin), ਸਿਰਾ(ਪਾਠ_ਸਿਰਾ) {
+    ਜੇ(ਪਾਠ_ਲੰਮਾਈ < 0) {
+        ਪਾਠ_ਲੰਮਾਈ = 0;
     }
-    if(begin < 0) {
+    ਜੇ(begin < 0) {
         begin = 0;
-    } else if(begin > textLength) {
-        begin = textLength;
+    } ਨਹੀਂਤਾਂ ਜੇ(begin > ਪਾਠ_ਲੰਮਾਈ) {
+        begin = ਪਾਠ_ਲੰਮਾਈ;
     }
-    if(end < begin) {
-        end = begin;
-    } else if(end > textLength) {
-        end = textLength;
+    ਜੇ(ਸਿਰਾ < begin) {
+        ਸਿਰਾ = begin;
+    } ਨਹੀਂਤਾਂ ਜੇ(ਸਿਰਾ > ਪਾਠ_ਲੰਮਾਈ) {
+        ਸਿਰਾ = ਪਾਠ_ਲੰਮਾਈ;
     }
-    if(pos < begin) {
+    ਜੇ(pos < begin) {
         pos = begin;
-    } else if(pos > end) {
-        pos = end;
+    } ਨਹੀਂਤਾਂ ਜੇ(pos > ਸਿਰਾ) {
+        pos = ਸਿਰਾ;
     }
 }
 
 CharacterIterator::~CharacterIterator() {}
 
-CharacterIterator::CharacterIterator(const CharacterIterator &that) :
+CharacterIterator::CharacterIterator(ਅਚਲ CharacterIterator &that) :
 ForwardCharacterIterator(that),
-textLength(that.textLength), pos(that.pos), begin(that.begin), end(that.end)
+ਪਾਠ_ਲੰਮਾਈ(that.ਪਾਠ_ਲੰਮਾਈ), pos(that.pos), begin(that.begin), ਸਿਰਾ(that.ਸਿਰਾ)
 {
 }
 
 CharacterIterator&
-CharacterIterator::operator=(const CharacterIterator& that) U_LIFETIME_BOUND {
-    ForwardCharacterIterator::operator=(that);
-    textLength = that.textLength;
+CharacterIterator::ਸੰਚਾਲਕ=(ਅਚਲ CharacterIterator& that) U_LIFETIME_BOUND {
+    ForwardCharacterIterator::ਸੰਚਾਲਕ=(that);
+    ਪਾਠ_ਲੰਮਾਈ = that.ਪਾਠ_ਲੰਮਾਈ;
     pos = that.pos;
     begin = that.begin;
-    end = that.end;
-    return *this;
+    ਸਿਰਾ = that.ਸਿਰਾ;
+    ਵਾਪਸ *ਇਹ;
 }
 
 // implementing first[32]PostInc() directly in a subclass should be faster
 // but these implementations make subclassing a little easier
 char16_t
-CharacterIterator::firstPostInc() {
-    setToStart();
-    return nextPostInc();
+CharacterIterator::ਪਹਿਲਾ_Post_Inc() {
+    ਸੈੱਟ_ਮੰਜ਼ਿਲ_ਸ਼ੁਰੂ();
+    ਵਾਪਸ ਅਗਲਾ_Post_Inc();
 }
 
 UChar32
 CharacterIterator::first32PostInc() {
-    setToStart();
-    return next32PostInc();
+    ਸੈੱਟ_ਮੰਜ਼ਿਲ_ਸ਼ੁਰੂ();
+    ਵਾਪਸ next32PostInc();
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ

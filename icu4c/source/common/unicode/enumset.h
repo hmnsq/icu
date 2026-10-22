@@ -14,12 +14,12 @@
  * \brief C++: internal template EnumSet<>
  */
 
-#ifndef ENUMSET_H
-#define ENUMSET_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ ENUMSET_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ENUMSET_H
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -30,41 +30,41 @@ U_NAMESPACE_BEGIN
  * @internal
  * \cond
  */
-template<typename T, uint32_t minValue, uint32_t limitValue>
-class EnumSet {
-public:
-    inline EnumSet() : fBools(0) {}
-    inline EnumSet(const EnumSet<T,minValue,limitValue>& other) : fBools(other.fBools) {}
-    inline ~EnumSet() {}
-#ifndef U_HIDE_INTERNAL_API
-    inline void clear() { fBools=0; }
-    inline void add(T toAdd) { set(toAdd, 1); }
-    inline void remove(T toRemove) { set(toRemove, 0); }
-    inline int32_t contains(T toCheck) const { return get(toCheck); }
-    inline void set(T toSet, int32_t v) { fBools=(fBools&(~flag(toSet)))|(v?(flag(toSet)):0); }
-    inline int32_t get(T toCheck) const { return (fBools & flag(toCheck))?1:0; }
-    inline UBool isValidEnum(T toCheck) const {  return (toCheck>=minValue&&toCheck<limitValue); }
-    inline UBool isValidValue(int32_t v) const { return (v==0||v==1); }
-    inline const EnumSet<T, minValue, limitValue>&
-    operator=(const EnumSet<T, minValue, limitValue>& other) U_LIFETIME_BOUND {
+ਸਾਂਚਾ<typename T, uint32_t min_ਮੁੱਲ, uint32_t ਹੱਦਬੰਦੀ_ਮੁੱਲ>
+class Enum_ਸੈੱਟ {
+ਜਨਤਕ:
+    ਸਤਰਅੰਦਰ Enum_ਸੈੱਟ() : fBools(0) {}
+    ਸਤਰਅੰਦਰ Enum_ਸੈੱਟ(ਅਚਲ Enum_ਸੈੱਟ<T,min_ਮੁੱਲ,ਹੱਦਬੰਦੀ_ਮੁੱਲ>& other) : fBools(other.fBools) {}
+    ਸਤਰਅੰਦਰ ~Enum_ਸੈੱਟ() {}
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ U_HIDE_ਅੰਦਰੂਨੀ_API
+    ਸਤਰਅੰਦਰ ਖਾਲੀ clear() { fBools=0; }
+    ਸਤਰਅੰਦਰ ਖਾਲੀ ਜੋੜੋ(T ਮੰਜ਼ਿਲ_ਜੋੜੋ) { ਸੈੱਟ(ਮੰਜ਼ਿਲ_ਜੋੜੋ, 1); }
+    ਸਤਰਅੰਦਰ ਖਾਲੀ remove(T ਮੰਜ਼ਿਲ_Remove) { ਸੈੱਟ(ਮੰਜ਼ਿਲ_Remove, 0); }
+    ਸਤਰਅੰਦਰ int32_t ਸ਼ਾਮਲ_ਹੈ(T ਮੰਜ਼ਿਲ_Check) ਅਚਲ { ਵਾਪਸ get(ਮੰਜ਼ਿਲ_Check); }
+    ਸਤਰਅੰਦਰ ਖਾਲੀ ਸੈੱਟ(T ਮੰਜ਼ਿਲ_ਸੈੱਟ, int32_t v) { fBools=(fBools&(~flag(ਮੰਜ਼ਿਲ_ਸੈੱਟ)))|(v?(flag(ਮੰਜ਼ਿਲ_ਸੈੱਟ)):0); }
+    ਸਤਰਅੰਦਰ int32_t get(T ਮੰਜ਼ਿਲ_Check) ਅਚਲ { ਵਾਪਸ (fBools & flag(ਮੰਜ਼ਿਲ_Check))?1:0; }
+    ਸਤਰਅੰਦਰ UBool isValidEnum(T ਮੰਜ਼ਿਲ_Check) ਅਚਲ {  ਵਾਪਸ (ਮੰਜ਼ਿਲ_Check>=min_ਮੁੱਲ&&ਮੰਜ਼ਿਲ_Check<ਹੱਦਬੰਦੀ_ਮੁੱਲ); }
+    ਸਤਰਅੰਦਰ UBool is_Valid_ਮੁੱਲ(int32_t v) ਅਚਲ { ਵਾਪਸ (v==0||v==1); }
+    ਸਤਰਅੰਦਰ ਅਚਲ Enum_ਸੈੱਟ<T, min_ਮੁੱਲ, ਹੱਦਬੰਦੀ_ਮੁੱਲ>&
+    ਸੰਚਾਲਕ=(ਅਚਲ Enum_ਸੈੱਟ<T, min_ਮੁੱਲ, ਹੱਦਬੰਦੀ_ਮੁੱਲ>& other) U_LIFETIME_BOUND {
         fBools = other.fBools;
-        return *this;
+        ਵਾਪਸ *this;
     }
   
-    inline uint32_t getAll() const {
-        return fBools; 
+    ਸਤਰਅੰਦਰ uint32_t getAll() ਅਚਲ {
+        ਵਾਪਸ fBools; 
     }
-#endif /* U_HIDE_INTERNAL_API */
+#ਜੇ_ਅੰਤ /* U_HIDE_INTERNAL_API */
 
-private:
-    inline uint32_t flag(T toCheck) const { return (1<<(toCheck-minValue)); }
-private:
+ਨਿਜੀ:
+    ਸਤਰਅੰਦਰ uint32_t flag(T ਮੰਜ਼ਿਲ_Check) ਅਚਲ { ਵਾਪਸ (1<<(ਮੰਜ਼ਿਲ_Check-min_ਮੁੱਲ)); }
+ਨਿਜੀ:
     uint32_t fBools;
 };
 
 /** \endcond */
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
-#endif /* ENUMSET_H */
+#ਜੇ_ਅੰਤ /* U_SHOW_CPLUSPLUS_API */
+#ਜੇ_ਅੰਤ /* ENUMSET_H */

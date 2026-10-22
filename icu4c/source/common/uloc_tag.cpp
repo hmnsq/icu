@@ -7,84 +7,84 @@
 **********************************************************************
 */
 
-#include <optional>
-#include <string_view>
-#include <utility>
+#ਅਨ੍ਤਰ੍ਭਾਵ <optional>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string_view>
+#ਅਨ੍ਤਰ੍ਭਾਵ <utility>
 
-#include "unicode/bytestream.h"
-#include "unicode/utypes.h"
-#include "unicode/ures.h"
-#include "unicode/localpointer.h"
-#include "unicode/putil.h"
-#include "unicode/uenum.h"
-#include "unicode/uloc.h"
-#include "bytesinkutil.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "putilimp.h"
-#include "uinvchar.h"
-#include "ulocimp.h"
-#include "uassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/bytestream.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ures.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/localpointer.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/putil.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uenum.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uloc.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "bytesinkutil.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "charstr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "putilimp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uinvchar.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ulocimp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uassert.h"
 
-namespace {
+ਨਾਮਾਕਾਸ਼ {
 
 /* struct holding a single variant */
-typedef struct VariantListEntry : public icu::UMemory {
-    const char              *variant;
-    struct VariantListEntry *next;
-} VariantListEntry;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ Variant_List_ਇੰਦਰਾਜ : ਜਨਤਕ icu::UMemory {
+    ਅਚਲ ਅੱਖਰ              *variant;
+    ਬਣਤਰ Variant_List_ਇੰਦਰਾਜ *next;
+} Variant_List_ਇੰਦਰਾਜ;
 
 /* struct holding a single attribute value */
-struct AttributeListEntry : public icu::UMemory {
-    const char              *attribute;
-    struct AttributeListEntry *next;
+ਬਣਤਰ Attribute_List_ਇੰਦਰਾਜ : ਜਨਤਕ icu::UMemory {
+    ਅਚਲ ਅੱਖਰ              *attribute;
+    ਬਣਤਰ Attribute_List_ਇੰਦਰਾਜ *next;
 };
 
 /* struct holding a single extension */
-struct ExtensionListEntry : public icu::UMemory {
-    const char                  *key;
-    const char                  *value;
-    struct ExtensionListEntry   *next;
+ਬਣਤਰ Extension_List_ਇੰਦਰਾਜ : ਜਨਤਕ icu::UMemory {
+    ਅਚਲ ਅੱਖਰ                  *ਕੁੰਜੀ;
+    ਅਚਲ ਅੱਖਰ                  *value;
+    ਬਣਤਰ Extension_List_ਇੰਦਰਾਜ   *next;
 };
 
-#define MAXEXTLANG 3
-typedef struct ULanguageTag {
-    char                *buf;   /* holding parsed subtags */
-    const char          *language;
-    const char          *extlang[MAXEXTLANG];
-    const char          *script;
-    const char          *region;
-    VariantListEntry    *variants;
-    ExtensionListEntry  *extensions;
-    const char          *privateuse;
-    const char          *legacy;
-} ULanguageTag;
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MAXEXTLANG 3
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ULanguage_ਟੈਗ {
+    ਅੱਖਰ                *buf;   /* holding parsed subtags */
+    ਅਚਲ ਅੱਖਰ          *language;
+    ਅਚਲ ਅੱਖਰ          *extlang[MAXEXTLANG];
+    ਅਚਲ ਅੱਖਰ          *script;
+    ਅਚਲ ਅੱਖਰ          *region;
+    Variant_List_ਇੰਦਰਾਜ    *variants;
+    Extension_List_ਇੰਦਰਾਜ  *extensions;
+    ਅਚਲ ਅੱਖਰ          *privateuse;
+    ਅਚਲ ਅੱਖਰ          *legacy;
+} ULanguage_ਟੈਗ;
 
-#define MINLEN 2
-#define SEP '-'
-#define PRIVATEUSE 'x'
-#define LDMLEXT 'u'
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MINLEN 2
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ SEP '-'
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ PRIVATEUSE 'x'
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LDMLEXT 'u'
 
-#define LOCALE_SEP '_'
-#define LOCALE_EXT_SEP '@'
-#define LOCALE_KEYWORD_SEP ';'
-#define LOCALE_KEY_TYPE_SEP '='
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LOCALE_SEP '_'
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LOCALE_EXT_SEP '@'
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LOCALE_KEYWORD_SEP ';'
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LOCALE_ਕੁੰਜੀ_TYPE_SEP '='
 
-constexpr auto ISALPHA = uprv_isASCIILetter;
-inline bool ISNUMERIC(char c) { return c >= '0' && c <= '9'; }
+constexpr ਸਵੈਚਾਲਿਤ ISALPHA = uprv_isASCIILetter;
+ਸਤਰਅੰਦਰ ਤਾਰਕਿਕ ISNUMERIC(ਅੱਖਰ c) { ਵਾਪਸ c >= '0' && c <= '9'; }
 
-constexpr char EMPTY[] = "";
-constexpr char LANG_UND[] = "und";
-constexpr char PRIVATEUSE_KEY[] = "x";
-constexpr char _POSIX[] = "_POSIX";
-constexpr char POSIX_KEY[] = "va";
-constexpr char POSIX_VALUE[] = "posix";
-constexpr char LOCALE_ATTRIBUTE_KEY[] = "attribute";
-constexpr char PRIVUSE_VARIANT_PREFIX[] = "lvariant";
-constexpr char LOCALE_TYPE_YES[] = "yes";
+constexpr ਅੱਖਰ ਖਾਲੀ_ਥਾਵਾਂ_2[] = "";
+constexpr ਅੱਖਰ LANG_UND[] = "und";
+constexpr ਅੱਖਰ PRIVATEUSE_ਕੁੰਜੀ[] = "x";
+constexpr ਅੱਖਰ _POSIX[] = "_POSIX";
+constexpr ਅੱਖਰ POSIX_ਕੁੰਜੀ[] = "va";
+constexpr ਅੱਖਰ POSIX_ਮੁੱਲ[] = "posix";
+constexpr ਅੱਖਰ LOCALE_ATTRIBUTE_ਕੁੰਜੀ[] = "attribute";
+constexpr ਅੱਖਰ PRIVUSE_VARIANT_ਅਗੇਤਰ[] = "lvariant";
+constexpr ਅੱਖਰ LOCALE_TYPE_YES[] = "yes";
 
-#define LANG_UND_LEN 3
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LANG_UND_LEN 3
 
 /*
  Updated on 2018-09-12 from
@@ -106,7 +106,7 @@ constexpr char LOCALE_TYPE_YES[] = "yes";
  values. They may have to be removed for the strict BCP 47 compliance.
 
 */
-constexpr const char* LEGACY[] = {
+constexpr ਅਚਲ ਅੱਖਰ* LEGACY[] = {
 /*  legacy          preferred */
     "art-lojban",   "jbo",
     "en-gb-oed",    "en-gb-oxendict",
@@ -155,7 +155,7 @@ constexpr const char* LEGACY[] = {
  a variant tag 'hepburn-heploc' has the preferred subtag, 'alaic97'.
 */
 
-constexpr const char* REDUNDANT[] = {
+constexpr ਅਚਲ ਅੱਖਰ* REDUNDANT[] = {
 //  redundant       preferred
     "sgn-br",       "bzs",
     "sgn-co",       "csn",
@@ -197,7 +197,7 @@ constexpr const char* REDUNDANT[] = {
 
   Make sure that 2-letter language subtags come before 3-letter subtags.
 */
-constexpr char DEPRECATEDLANGS[][4] = {
+constexpr ਅੱਖਰ DEPRECATEDLANGS[][4] = {
 /*  deprecated  new */
     "in",       "id",
     "iw",       "he",
@@ -287,7 +287,7 @@ constexpr char DEPRECATEDLANGS[][4] = {
   grep -B1 'Preferred' | \
   awk -n '/Subtag/ {printf("    \"%s\",       ", $2);} /Preferred/ {printf("\"%s\",\n", $2);}'
 */
-constexpr char DEPRECATEDREGIONS[][3] = {
+constexpr ਅੱਖਰ DEPRECATEDREGIONS[][3] = {
 /*  deprecated  new */
     "BU",       "MM",
     "DD",       "DE",
@@ -305,54 +305,54 @@ constexpr char DEPRECATEDREGIONS[][3] = {
 * -------------------------------------------------
 */
 
-ULanguageTag*
-ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status);
+ULanguage_ਟੈਗ*
+ultag_parse(ਅਚਲ ਅੱਖਰ* ਟੈਗ, int32_t ਟੈਗ_Len, int32_t* parsedLen, UError_ਕੋਡ& ਸਥਿਤੀ);
 
-void
-ultag_close(ULanguageTag* langtag);
+ਖਾਲੀ
+ultag_close(ULanguage_ਟੈਗ* langtag);
 
-const char*
-ultag_getLanguage(const ULanguageTag* langtag U_LIFETIME_BOUND);
+ਅਚਲ ਅੱਖਰ*
+ultag_getLanguage(ਅਚਲ ULanguage_ਟੈਗ* langtag U_LIFETIME_BOUND);
 
-#if 0
-const char*
-ultag_getJDKLanguage(const ULanguageTag* langtag);
-#endif
+#ਜੇ 0
+ਅਚਲ ਅੱਖਰ*
+ultag_getJDKLanguage(ਅਚਲ ULanguage_ਟੈਗ* langtag);
+#ਜੇ_ਅੰਤ
 
-const char*
-ultag_getExtlang(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
-
-int32_t
-ultag_getExtlangSize(const ULanguageTag* langtag);
-
-const char*
-ultag_getScript(const ULanguageTag* langtag U_LIFETIME_BOUND);
-
-const char*
-ultag_getRegion(const ULanguageTag* langtag U_LIFETIME_BOUND);
-
-const char*
-ultag_getVariant(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
+ਅਚਲ ਅੱਖਰ*
+ultag_getExtlang(ਅਚਲ ULanguage_ਟੈਗ* langtag U_LIFETIME_BOUND, int32_t idx);
 
 int32_t
-ultag_getVariantsSize(const ULanguageTag* langtag);
+ultag_get_Extlang_ਮਾਪ(ਅਚਲ ULanguage_ਟੈਗ* langtag);
 
-const char*
-ultag_getExtensionKey(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
+ਅਚਲ ਅੱਖਰ*
+ultag_getScript(ਅਚਲ ULanguage_ਟੈਗ* langtag U_LIFETIME_BOUND);
 
-const char*
-ultag_getExtensionValue(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
+ਅਚਲ ਅੱਖਰ*
+ultag_getRegion(ਅਚਲ ULanguage_ਟੈਗ* langtag U_LIFETIME_BOUND);
+
+ਅਚਲ ਅੱਖਰ*
+ultag_getVariant(ਅਚਲ ULanguage_ਟੈਗ* langtag U_LIFETIME_BOUND, int32_t idx);
 
 int32_t
-ultag_getExtensionsSize(const ULanguageTag* langtag);
+ultag_get_Variants_ਮਾਪ(ਅਚਲ ULanguage_ਟੈਗ* langtag);
 
-const char*
-ultag_getPrivateUse(const ULanguageTag* langtag U_LIFETIME_BOUND);
+ਅਚਲ ਅੱਖਰ*
+ultag_get_Extension_ਕੁੰਜੀ(ਅਚਲ ULanguage_ਟੈਗ* langtag U_LIFETIME_BOUND, int32_t idx);
 
-#if 0
-const char*
-ultag_getLegacy(const ULanguageTag* langtag);
-#endif
+ਅਚਲ ਅੱਖਰ*
+ultag_get_Extension_ਮੁੱਲ(ਅਚਲ ULanguage_ਟੈਗ* langtag U_LIFETIME_BOUND, int32_t idx);
+
+int32_t
+ultag_get_Extensions_ਮਾਪ(ਅਚਲ ULanguage_ਟੈਗ* langtag);
+
+ਅਚਲ ਅੱਖਰ*
+ultag_get_ਨਿੱਜੀ_Use(ਅਚਲ ULanguage_ਟੈਗ* langtag U_LIFETIME_BOUND);
+
+#ਜੇ 0
+ਅਚਲ ਅੱਖਰ*
+ultag_getLegacy(ਅਚਲ ULanguage_ਟੈਗ* langtag);
+#ਜੇ_ਅੰਤ
 
 }  // namespace
 
@@ -367,9 +367,9 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @internal
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalULanguageTagPointer, ULanguageTag, ultag_close);
+U_DEFINE_LOCAL_OPEN_ਸੂਚਕ(Local_ULanguage_ਟੈਗ_ਸੂਚਕ, ULanguage_ਟੈਗ, ultag_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
 /*
 * -------------------------------------------------
@@ -379,191 +379,191 @@ U_NAMESPACE_END
 * -------------------------------------------------
 */
 
-namespace {
+ਨਾਮਾਕਾਸ਼ {
 
-bool
-_isAlphaString(const char* s, int32_t len) {
+ਤਾਰਕਿਕ
+_isAlphaString(ਅਚਲ ਅੱਖਰ* s, int32_t len) {
     int32_t i;
-    for (i = 0; i < len; i++) {
-        if (!ISALPHA(*(s + i))) {
-            return false;
+    ਲਈ (i = 0; i < len; i++) {
+        ਜੇ (!ISALPHA(*(s + i))) {
+            ਵਾਪਸ ਝੂਠ;
         }
     }
-    return true;
+    ਵਾਪਸ ਸੱਚ;
 }
 
-bool
-_isNumericString(const char* s, int32_t len) {
+ਤਾਰਕਿਕ
+_isNumericString(ਅਚਲ ਅੱਖਰ* s, int32_t len) {
     int32_t i;
-    for (i = 0; i < len; i++) {
-        if (!ISNUMERIC(*(s + i))) {
-            return false;
+    ਲਈ (i = 0; i < len; i++) {
+        ਜੇ (!ISNUMERIC(*(s + i))) {
+            ਵਾਪਸ ਝੂਠ;
         }
     }
-    return true;
+    ਵਾਪਸ ਸੱਚ;
 }
 
-bool
-_isAlphaNumericString(const char* s, int32_t len) {
+ਤਾਰਕਿਕ
+_isAlphaNumericString(ਅਚਲ ਅੱਖਰ* s, int32_t len) {
     int32_t i;
-    for (i = 0; i < len; i++) {
-        if (!ISALPHA(*(s + i)) && !ISNUMERIC(*(s + i))) {
-            return false;
+    ਲਈ (i = 0; i < len; i++) {
+        ਜੇ (!ISALPHA(*(s + i)) && !ISNUMERIC(*(s + i))) {
+            ਵਾਪਸ ਝੂਠ;
         }
     }
-    return true;
+    ਵਾਪਸ ਸੱਚ;
 }
 
-bool
-_isAlphaNumericStringLimitedLength(const char* s, int32_t len, int32_t min, int32_t max) {
-    if (len < 0) {
+ਤਾਰਕਿਕ
+is_Alpha_Numeric_String_Limited_ਲੰਮਾਈ(ਅਚਲ ਅੱਖਰ* s, int32_t len, int32_t min, int32_t max) {
+    ਜੇ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len >= min && len <= max && _isAlphaNumericString(s, len)) {
-        return true;
+    ਜੇ (len >= min && len <= max && _isAlphaNumericString(s, len)) {
+        ਵਾਪਸ ਸੱਚ;
     }
-    return false;
+    ਵਾਪਸ ਝੂਠ;
 }
 
 }  // namespace
 
-bool
-ultag_isLanguageSubtag(const char* s, int32_t len) {
+ਤਾਰਕਿਕ
+ultag_isLanguageSubtag(ਅਚਲ ਅੱਖਰ* s, int32_t len) {
     /*
      * unicode_language_subtag = alpha{2,3} | alpha{5,8};
      * NOTE: Per ICUTC 2019/01/23- accepting alpha 4
      * See ICU-20372
      */
-    if (len < 0) {
+    ਜੇ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len >= 2 && len <= 8 && _isAlphaString(s, len)) {
-        return true;
+    ਜੇ (len >= 2 && len <= 8 && _isAlphaString(s, len)) {
+        ਵਾਪਸ ਸੱਚ;
     }
-    return false;
+    ਵਾਪਸ ਝੂਠ;
 }
 
-namespace {
+ਨਾਮਾਕਾਸ਼ {
 
-bool
-_isExtlangSubtag(const char* s, int32_t len) {
+ਤਾਰਕਿਕ
+_isExtlangSubtag(ਅਚਲ ਅੱਖਰ* s, int32_t len) {
     /*
      * extlang       = 3ALPHA              ; selected ISO 639 codes
      *                 *2("-" 3ALPHA)      ; permanently reserved
      */
-    if (len < 0) {
+    ਜੇ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 3 && _isAlphaString(s, len)) {
-        return true;
+    ਜੇ (len == 3 && _isAlphaString(s, len)) {
+        ਵਾਪਸ ਸੱਚ;
     }
-    return false;
+    ਵਾਪਸ ਝੂਠ;
 }
 
 }  // namespace
 
-bool
-ultag_isScriptSubtag(const char* s, int32_t len) {
+ਤਾਰਕਿਕ
+ultag_isScriptSubtag(ਅਚਲ ਅੱਖਰ* s, int32_t len) {
     /*
      * script        = 4ALPHA              ; ISO 15924 code
      */
-    if (len < 0) {
+    ਜੇ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 4 && _isAlphaString(s, len)) {
-        return true;
+    ਜੇ (len == 4 && _isAlphaString(s, len)) {
+        ਵਾਪਸ ਸੱਚ;
     }
-    return false;
+    ਵਾਪਸ ਝੂਠ;
 }
 
-bool
-ultag_isRegionSubtag(const char* s, int32_t len) {
+ਤਾਰਕਿਕ
+ultag_isRegionSubtag(ਅਚਲ ਅੱਖਰ* s, int32_t len) {
     /*
      * region        = 2ALPHA              ; ISO 3166-1 code
      *               / 3DIGIT              ; UN M.49 code
      */
-    if (len < 0) {
+    ਜੇ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 2 && _isAlphaString(s, len)) {
-        return true;
+    ਜੇ (len == 2 && _isAlphaString(s, len)) {
+        ਵਾਪਸ ਸੱਚ;
     }
-    if (len == 3 && _isNumericString(s, len)) {
-        return true;
+    ਜੇ (len == 3 && _isNumericString(s, len)) {
+        ਵਾਪਸ ਸੱਚ;
     }
-    return false;
+    ਵਾਪਸ ਝੂਠ;
 }
 
-namespace {
+ਨਾਮਾਕਾਸ਼ {
 
-bool
-_isVariantSubtag(const char* s, int32_t len) {
+ਤਾਰਕਿਕ
+_isVariantSubtag(ਅਚਲ ਅੱਖਰ* s, int32_t len) {
     /*
      * variant       = 5*8alphanum         ; registered variants
      *               / (DIGIT 3alphanum)
      */
-    if (len < 0) {
+    ਜੇ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (_isAlphaNumericStringLimitedLength(s, len, 5, 8)) {
-        return true;
+    ਜੇ (is_Alpha_Numeric_String_Limited_ਲੰਮਾਈ(s, len, 5, 8)) {
+        ਵਾਪਸ ਸੱਚ;
     }
-    if (len == 4 && ISNUMERIC(*s) && _isAlphaNumericString(s + 1, 3)) {
-        return true;
+    ਜੇ (len == 4 && ISNUMERIC(*s) && _isAlphaNumericString(s + 1, 3)) {
+        ਵਾਪਸ ਸੱਚ;
     }
-    return false;
+    ਵਾਪਸ ਝੂਠ;
 }
 
-bool
-_isSepListOf(bool (*test)(const char*, int32_t), const char* s, int32_t len) {
-    const char *p = s;
-    const char *pSubtag = nullptr;
+ਤਾਰਕਿਕ
+is_Sep_List_ਦਾ(ਤਾਰਕਿਕ (*test)(ਅਚਲ ਅੱਖਰ*, int32_t), ਅਚਲ ਅੱਖਰ* s, int32_t len) {
+    ਅਚਲ ਅੱਖਰ *p = s;
+    ਅਚਲ ਅੱਖਰ *pSubtag = ਖਾਲੀ_ਸੂਚਕ;
 
-    if (len < 0) {
+    ਜੇ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
 
-    while ((p - s) < len) {
-        if (*p == SEP) {
-            if (pSubtag == nullptr) {
-                return false;
+    ਜਦੋਂ ((p - s) < len) {
+        ਜੇ (*p == SEP) {
+            ਜੇ (pSubtag == ਖਾਲੀ_ਸੂਚਕ) {
+                ਵਾਪਸ ਝੂਠ;
             }
-            if (!test(pSubtag, static_cast<int32_t>(p - pSubtag))) {
-                return false;
+            ਜੇ (!test(pSubtag, static_cast<int32_t>(p - pSubtag))) {
+                ਵਾਪਸ ਝੂਠ;
             }
-            pSubtag = nullptr;
-        } else if (pSubtag == nullptr) {
+            pSubtag = ਖਾਲੀ_ਸੂਚਕ;
+        } ਨਹੀਂਤਾਂ ਜੇ (pSubtag == ਖਾਲੀ_ਸੂਚਕ) {
             pSubtag = p;
         }
         p++;
     }
-    if (pSubtag == nullptr) {
-        return false;
+    ਜੇ (pSubtag == ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ ਝੂਠ;
     }
-    return test(pSubtag, static_cast<int32_t>(p - pSubtag));
+    ਵਾਪਸ test(pSubtag, static_cast<int32_t>(p - pSubtag));
 }
 
 }  // namespace
 
-bool
-ultag_isVariantSubtags(const char* s, int32_t len) {
-    return _isSepListOf(&_isVariantSubtag, s, len);
+ਤਾਰਕਿਕ
+ultag_isVariantSubtags(ਅਚਲ ਅੱਖਰ* s, int32_t len) {
+    ਵਾਪਸ is_Sep_List_ਦਾ(&_isVariantSubtag, s, len);
 }
 
-namespace {
+ਨਾਮਾਕਾਸ਼ {
 
 // This is for the ICU-specific "lvariant" handling.
-bool
-_isPrivateuseVariantSubtag(const char* s, int32_t len) {
+ਤਾਰਕਿਕ
+_isPrivateuseVariantSubtag(ਅਚਲ ਅੱਖਰ* s, int32_t len) {
     /*
      * variant       = 1*8alphanum         ; registered variants
      *               / (DIGIT 3alphanum)
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 1, 8);
+    ਵਾਪਸ is_Alpha_Numeric_String_Limited_ਲੰਮਾਈ(s, len , 1, 8);
 }
 
-bool
-_isExtensionSingleton(const char* s, int32_t len) {
+ਤਾਰਕਿਕ
+_isExtensionSingleton(ਅਚਲ ਅੱਖਰ* s, int32_t len) {
     /*
      * extension     = singleton 1*("-" (2*8alphanum))
      *
@@ -573,292 +573,292 @@ _isExtensionSingleton(const char* s, int32_t len) {
      *               / %x61-77             ; a - w
      *               / %x79-7A             ; y - z
      */
-    if (len < 0) {
+    ਜੇ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 1 && (ISALPHA(*s) || ISNUMERIC(*s)) && (uprv_tolower(*s) != PRIVATEUSE)) {
-        return true;
+    ਜੇ (len == 1 && (ISALPHA(*s) || ISNUMERIC(*s)) && (uprv_tolower(*s) != PRIVATEUSE)) {
+        ਵਾਪਸ ਸੱਚ;
     }
-    return false;
+    ਵਾਪਸ ਝੂਠ;
 }
 
-bool
-_isExtensionSubtag(const char* s, int32_t len) {
+ਤਾਰਕਿਕ
+_isExtensionSubtag(ਅਚਲ ਅੱਖਰ* s, int32_t len) {
     /*
      * extension     = singleton 1*("-" (2*8alphanum))
      */
-    return _isAlphaNumericStringLimitedLength(s, len, 2, 8);
+    ਵਾਪਸ is_Alpha_Numeric_String_Limited_ਲੰਮਾਈ(s, len, 2, 8);
 }
 
 }  // namespace
 
-bool
-ultag_isExtensionSubtags(const char* s, int32_t len) {
-    return _isSepListOf(&_isExtensionSubtag, s, len);
+ਤਾਰਕਿਕ
+ultag_isExtensionSubtags(ਅਚਲ ਅੱਖਰ* s, int32_t len) {
+    ਵਾਪਸ is_Sep_List_ਦਾ(&_isExtensionSubtag, s, len);
 }
 
-namespace {
+ਨਾਮਾਕਾਸ਼ {
 
-bool
-_isPrivateuseValueSubtag(const char* s, int32_t len) {
+ਤਾਰਕਿਕ
+is_Privateuse_ਮੁੱਲ_Subtag(ਅਚਲ ਅੱਖਰ* s, int32_t len) {
     /*
      * privateuse    = "x" 1*("-" (1*8alphanum))
      */
-    return _isAlphaNumericStringLimitedLength(s, len, 1, 8);
+    ਵਾਪਸ is_Alpha_Numeric_String_Limited_ਲੰਮਾਈ(s, len, 1, 8);
 }
 
 }  // namespace
 
-bool
-ultag_isPrivateuseValueSubtags(const char* s, int32_t len) {
-    return _isSepListOf(&_isPrivateuseValueSubtag, s, len);
+ਤਾਰਕਿਕ
+ultag_is_Privateuse_ਮੁੱਲ_Subtags(ਅਚਲ ਅੱਖਰ* s, int32_t len) {
+    ਵਾਪਸ is_Sep_List_ਦਾ(&is_Privateuse_ਮੁੱਲ_Subtag, s, len);
 }
 
-bool
-ultag_isUnicodeLocaleAttribute(const char* s, int32_t len) {
+ਤਾਰਕਿਕ
+ultag_isUnicodeLocaleAttribute(ਅਚਲ ਅੱਖਰ* s, int32_t len) {
     /*
      * attribute = alphanum{3,8} ;
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 3, 8);
+    ਵਾਪਸ is_Alpha_Numeric_String_Limited_ਲੰਮਾਈ(s, len , 3, 8);
 }
 
-bool
-ultag_isUnicodeLocaleAttributes(const char* s, int32_t len) {
-    return _isSepListOf(&ultag_isUnicodeLocaleAttribute, s, len);
+ਤਾਰਕਿਕ
+ultag_is_Unicode_Locale_ਗੁਣ(ਅਚਲ ਅੱਖਰ* s, int32_t len) {
+    ਵਾਪਸ is_Sep_List_ਦਾ(&ultag_isUnicodeLocaleAttribute, s, len);
 }
 
-bool
-ultag_isUnicodeLocaleKey(const char* s, int32_t len) {
+ਤਾਰਕਿਕ
+ultag_is_Unicode_Locale_ਕੁੰਜੀ(ਅਚਲ ਅੱਖਰ* s, int32_t len) {
     /*
      * key = alphanum alpha ;
      */
-    if (len < 0) {
+    ਜੇ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 2 && (ISALPHA(*s) || ISNUMERIC(*s)) && ISALPHA(s[1])) {
-        return true;
+    ਜੇ (len == 2 && (ISALPHA(*s) || ISNUMERIC(*s)) && ISALPHA(s[1])) {
+        ਵਾਪਸ ਸੱਚ;
     }
-    return false;
+    ਵਾਪਸ ਝੂਠ;
 }
 
-bool
-_isUnicodeLocaleTypeSubtag(const char*s, int32_t len) {
+ਤਾਰਕਿਕ
+_isUnicodeLocaleTypeSubtag(ਅਚਲ ਅੱਖਰ*s, int32_t len) {
     /*
      * alphanum{3,8}
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 3, 8);
+    ਵਾਪਸ is_Alpha_Numeric_String_Limited_ਲੰਮਾਈ(s, len , 3, 8);
 }
 
-bool
-ultag_isUnicodeLocaleType(const char*s, int32_t len) {
+ਤਾਰਕਿਕ
+ultag_isUnicodeLocaleType(ਅਚਲ ਅੱਖਰ*s, int32_t len) {
     /*
      * type = alphanum{3,8} (sep alphanum{3,8})* ;
      */
-    return _isSepListOf(&_isUnicodeLocaleTypeSubtag, s, len);
+    ਵਾਪਸ is_Sep_List_ਦਾ(&_isUnicodeLocaleTypeSubtag, s, len);
 }
 
-namespace {
+ਨਾਮਾਕਾਸ਼ {
 
-bool
-_isTKey(const char* s, int32_t len)
+ਤਾਰਕਿਕ
+_isTKey(ਅਚਲ ਅੱਖਰ* s, int32_t len)
 {
     /*
      * tkey = alpha digit ;
      */
-    if (len < 0) {
+    ਜੇ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 2 && ISALPHA(*s) && ISNUMERIC(*(s + 1))) {
-        return true;
+    ਜੇ (len == 2 && ISALPHA(*s) && ISNUMERIC(*(s + 1))) {
+        ਵਾਪਸ ਸੱਚ;
     }
-    return false;
+    ਵਾਪਸ ਝੂਠ;
 }
 
 }  // namespace
 
-const char*
-ultag_getTKeyStart(const char* localeID U_LIFETIME_BOUND) {
-    const char *result = localeID;
-    const char *sep;
-    while((sep = uprv_strchr(result, SEP)) != nullptr) {
-        if (_isTKey(result, static_cast<int32_t>(sep - result))) {
-            return result;
+ਅਚਲ ਅੱਖਰ*
+ultag_get_TKey_ਸ਼ੁਰੂ(ਅਚਲ ਅੱਖਰ* localeID U_LIFETIME_BOUND) {
+    ਅਚਲ ਅੱਖਰ *ਨਤੀਜਾ = localeID;
+    ਅਚਲ ਅੱਖਰ *sep;
+    ਜਦੋਂ((sep = uprv_strchr(ਨਤੀਜਾ, SEP)) != ਖਾਲੀ_ਸੂਚਕ) {
+        ਜੇ (_isTKey(ਨਤੀਜਾ, static_cast<int32_t>(sep - ਨਤੀਜਾ))) {
+            ਵਾਪਸ ਨਤੀਜਾ;
         }
-        result = ++sep;
+        ਨਤੀਜਾ = ++sep;
     }
-    if (_isTKey(result, -1)) {
-        return result;
+    ਜੇ (_isTKey(ਨਤੀਜਾ, -1)) {
+        ਵਾਪਸ ਨਤੀਜਾ;
     }
-    return nullptr;
+    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
 }
 
-namespace {
+ਨਾਮਾਕਾਸ਼ {
 
-bool
-_isTValue(const char* s, int32_t len)
+ਤਾਰਕਿਕ
+_isTValue(ਅਚਲ ਅੱਖਰ* s, int32_t len)
 {
     /*
      * tvalue = (sep alphanum{3,8})+ ;
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 3, 8);
+    ਵਾਪਸ is_Alpha_Numeric_String_Limited_ਲੰਮਾਈ(s, len , 3, 8);
 }
 
-bool
-_isTransformedExtensionSubtag(int32_t& state, const char* s, int32_t len)
+ਤਾਰਕਿਕ
+_isTransformedExtensionSubtag(int32_t& state, ਅਚਲ ਅੱਖਰ* s, int32_t len)
 {
-    const int32_t kStart = 0;       // Start, wait for unicode_language_subtag, tkey or end
-    const int32_t kGotLanguage = 1; // Got unicode_language_subtag, wait for unicode_script_subtag,
+    ਅਚਲ int32_t k_ਸ਼ੁਰੂ = 0;       // Start, wait for unicode_language_subtag, tkey or end
+    ਅਚਲ int32_t kGotLanguage = 1; // Got unicode_language_subtag, wait for unicode_script_subtag,
                                     // unicode_region_subtag, unicode_variant_subtag, tkey or end
-    const int32_t kGotScript = 2;   // Got unicode_script_subtag, wait for unicode_region_subtag,
+    ਅਚਲ int32_t kGotScript = 2;   // Got unicode_script_subtag, wait for unicode_region_subtag,
                                     // unicode_variant_subtag, tkey, or end
-    const int32_t kGotRegion = 3;   // Got unicode_region_subtag, wait for unicode_variant_subtag,
+    ਅਚਲ int32_t kGotRegion = 3;   // Got unicode_region_subtag, wait for unicode_variant_subtag,
                                     // tkey, or end.
-    const int32_t kGotVariant = 4;  // Got unicode_variant_subtag, wait for unicode_variant_subtag
+    ਅਚਲ int32_t kGotVariant = 4;  // Got unicode_variant_subtag, wait for unicode_variant_subtag
                                     // tkey or end.
-    const int32_t kGotTKey = -1;    // Got tkey, wait for tvalue. ERROR if stop here.
-    const int32_t kGotTValue = 6;   // Got tvalue, wait for tkey, tvalue or end
+    ਅਚਲ int32_t kGotTKey = -1;    // Got tkey, wait for tvalue. ERROR if stop here.
+    ਅਚਲ int32_t kGotTValue = 6;   // Got tvalue, wait for tkey, tvalue or end
 
 
-    if (len < 0) {
+    ਜੇ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    switch (state) {
-        case kStart:
-            if (ultag_isLanguageSubtag(s, len) && len != 4) {
+    ਚੋਣ (state) {
+        ਹਾਲਤ k_ਸ਼ੁਰੂ:
+            ਜੇ (ultag_isLanguageSubtag(s, len) && len != 4) {
                 state = kGotLanguage;
-                return true;
+                ਵਾਪਸ ਸੱਚ;
             }
-            if (_isTKey(s, len)) {
+            ਜੇ (_isTKey(s, len)) {
                 state = kGotTKey;
-                return true;
+                ਵਾਪਸ ਸੱਚ;
             }
-            return false;
-        case kGotLanguage:
-            if (ultag_isScriptSubtag(s, len)) {
+            ਵਾਪਸ ਝੂਠ;
+        ਹਾਲਤ kGotLanguage:
+            ਜੇ (ultag_isScriptSubtag(s, len)) {
                 state = kGotScript;
-                return true;
+                ਵਾਪਸ ਸੱਚ;
             }
             U_FALLTHROUGH;
-        case kGotScript:
-            if (ultag_isRegionSubtag(s, len)) {
+        ਹਾਲਤ kGotScript:
+            ਜੇ (ultag_isRegionSubtag(s, len)) {
                 state = kGotRegion;
-                return true;
+                ਵਾਪਸ ਸੱਚ;
             }
             U_FALLTHROUGH;
-        case kGotRegion:
+        ਹਾਲਤ kGotRegion:
             U_FALLTHROUGH;
-        case kGotVariant:
-            if (_isVariantSubtag(s, len)) {
+        ਹਾਲਤ kGotVariant:
+            ਜੇ (_isVariantSubtag(s, len)) {
                 state = kGotVariant;
-                return true;
+                ਵਾਪਸ ਸੱਚ;
             }
-            if (_isTKey(s, len)) {
+            ਜੇ (_isTKey(s, len)) {
                 state = kGotTKey;
-                return true;
+                ਵਾਪਸ ਸੱਚ;
             }
-            return false;
-        case kGotTKey:
-            if (_isTValue(s, len)) {
+            ਵਾਪਸ ਝੂਠ;
+        ਹਾਲਤ kGotTKey:
+            ਜੇ (_isTValue(s, len)) {
                 state = kGotTValue;
-                return true;
+                ਵਾਪਸ ਸੱਚ;
             }
-            return false;
-        case kGotTValue:
-            if (_isTKey(s, len)) {
+            ਵਾਪਸ ਝੂਠ;
+        ਹਾਲਤ kGotTValue:
+            ਜੇ (_isTKey(s, len)) {
                 state = kGotTKey;
-                return true;
+                ਵਾਪਸ ਸੱਚ;
             }
-            if (_isTValue(s, len)) {
-                return true;
+            ਜੇ (_isTValue(s, len)) {
+                ਵਾਪਸ ਸੱਚ;
             }
-            return false;
+            ਵਾਪਸ ਝੂਠ;
     }
-    return false;
+    ਵਾਪਸ ਝੂਠ;
 }
 
-bool
-_isUnicodeExtensionSubtag(int32_t& state, const char* s, int32_t len)
+ਤਾਰਕਿਕ
+_isUnicodeExtensionSubtag(int32_t& state, ਅਚਲ ਅੱਖਰ* s, int32_t len)
 {
-    const int32_t kStart = 0;         // Start, wait for a key or attribute or end
-    const int32_t kGotKey = 1;        // Got a key, wait for type or key or end
-    const int32_t kGotType = 2;       // Got a type, wait for key or end
+    ਅਚਲ int32_t k_ਸ਼ੁਰੂ = 0;         // Start, wait for a key or attribute or end
+    ਅਚਲ int32_t k_Got_ਕੁੰਜੀ = 1;        // Got a key, wait for type or key or end
+    ਅਚਲ int32_t kGotType = 2;       // Got a type, wait for key or end
 
-    switch (state) {
-        case kStart:
-            if (ultag_isUnicodeLocaleKey(s, len)) {
-                state = kGotKey;
-                return true;
+    ਚੋਣ (state) {
+        ਹਾਲਤ k_ਸ਼ੁਰੂ:
+            ਜੇ (ultag_is_Unicode_Locale_ਕੁੰਜੀ(s, len)) {
+                state = k_Got_ਕੁੰਜੀ;
+                ਵਾਪਸ ਸੱਚ;
             }
-            if (ultag_isUnicodeLocaleAttribute(s, len)) {
-                return true;
+            ਜੇ (ultag_isUnicodeLocaleAttribute(s, len)) {
+                ਵਾਪਸ ਸੱਚ;
             }
-            return false;
-        case kGotKey:
-            if (ultag_isUnicodeLocaleKey(s, len)) {
-                return true;
+            ਵਾਪਸ ਝੂਠ;
+        ਹਾਲਤ k_Got_ਕੁੰਜੀ:
+            ਜੇ (ultag_is_Unicode_Locale_ਕੁੰਜੀ(s, len)) {
+                ਵਾਪਸ ਸੱਚ;
             }
-            if (_isUnicodeLocaleTypeSubtag(s, len)) {
+            ਜੇ (_isUnicodeLocaleTypeSubtag(s, len)) {
                 state = kGotType;
-                return true;
+                ਵਾਪਸ ਸੱਚ;
             }
-            return false;
-        case kGotType:
-            if (ultag_isUnicodeLocaleKey(s, len)) {
-                state = kGotKey;
-                return true;
+            ਵਾਪਸ ਝੂਠ;
+        ਹਾਲਤ kGotType:
+            ਜੇ (ultag_is_Unicode_Locale_ਕੁੰਜੀ(s, len)) {
+                state = k_Got_ਕੁੰਜੀ;
+                ਵਾਪਸ ਸੱਚ;
             }
-            if (_isUnicodeLocaleTypeSubtag(s, len)) {
-                return true;
+            ਜੇ (_isUnicodeLocaleTypeSubtag(s, len)) {
+                ਵਾਪਸ ਸੱਚ;
             }
-            return false;
+            ਵਾਪਸ ਝੂਠ;
     }
-    return false;
+    ਵਾਪਸ ਝੂਠ;
 }
 
-bool
-_isStatefulSepListOf(bool (*test)(int32_t&, const char*, int32_t), const char* s, int32_t len)
+ਤਾਰਕਿਕ
+is_Stateful_Sep_List_ਦਾ(ਤਾਰਕਿਕ (*test)(int32_t&, ਅਚਲ ਅੱਖਰ*, int32_t), ਅਚਲ ਅੱਖਰ* s, int32_t len)
 {
     int32_t state = 0;
-    const char* p;
-    const char* start = s;
+    ਅਚਲ ਅੱਖਰ* p;
+    ਅਚਲ ਅੱਖਰ* ਸ਼ੁਰੂ = s;
     int32_t subtagLen = 0;
 
-    if (len < 0) {
+    ਜੇ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
 
-    for (p = s; len > 0; p++, len--) {
-        if (*p == SEP) {
-            if (!test(state, start, subtagLen)) {
-                return false;
+    ਲਈ (p = s; len > 0; p++, len--) {
+        ਜੇ (*p == SEP) {
+            ਜੇ (!test(state, ਸ਼ੁਰੂ, subtagLen)) {
+                ਵਾਪਸ ਝੂਠ;
             }
             subtagLen = 0;
-            start = p + 1;
-        } else {
+            ਸ਼ੁਰੂ = p + 1;
+        } ਨਹੀਂਤਾਂ {
             subtagLen++;
         }
     }
 
-    if (test(state, start, subtagLen) && state >= 0) {
-        return true;
+    ਜੇ (test(state, ਸ਼ੁਰੂ, subtagLen) && state >= 0) {
+        ਵਾਪਸ ਸੱਚ;
     }
-    return false;
+    ਵਾਪਸ ਝੂਠ;
 }
 
 }  // namespace
 
-bool
-ultag_isTransformedExtensionSubtags(const char* s, int32_t len)
+ਤਾਰਕਿਕ
+ultag_isTransformedExtensionSubtags(ਅਚਲ ਅੱਖਰ* s, int32_t len)
 {
-    return _isStatefulSepListOf(&_isTransformedExtensionSubtag, s, len);
+    ਵਾਪਸ is_Stateful_Sep_List_ਦਾ(&_isTransformedExtensionSubtag, s, len);
 }
 
-bool
-ultag_isUnicodeExtensionSubtags(const char* s, int32_t len) {
-    return _isStatefulSepListOf(&_isUnicodeExtensionSubtag, s, len);
+ਤਾਰਕਿਕ
+ultag_isUnicodeExtensionSubtags(ਅਚਲ ਅੱਖਰ* s, int32_t len) {
+    ਵਾਪਸ is_Stateful_Sep_List_ਦਾ(&_isUnicodeExtensionSubtag, s, len);
 }
 
-namespace {
+ਨਾਮਾਕਾਸ਼ {
 
 /*
 * -------------------------------------------------
@@ -868,393 +868,393 @@ namespace {
 * -------------------------------------------------
 */
 
-bool
-_addVariantToList(VariantListEntry **first, icu::LocalPointer<VariantListEntry> var) {
-    if (*first == nullptr) {
-        var->next = nullptr;
+ਤਾਰਕਿਕ
+ਜੋੜੋ_Variant_ਮੰਜ਼ਿਲ_List(Variant_List_ਇੰਦਰਾਜ **first, icu::Local_ਸੂਚਕ<Variant_List_ਇੰਦਰਾਜ> var) {
+    ਜੇ (*first == ਖਾਲੀ_ਸੂਚਕ) {
+        var->next = ਖਾਲੀ_ਸੂਚਕ;
         *first = var.orphan();
-    } else {
-        VariantListEntry *prev, *cur;
+    } ਨਹੀਂਤਾਂ {
+        Variant_List_ਇੰਦਰਾਜ *prev, *cur;
         int32_t cmp;
 
         /* variants order should be preserved */
-        prev = nullptr;
+        prev = ਖਾਲੀ_ਸੂਚਕ;
         cur = *first;
-        while (true) {
-            if (cur == nullptr) {
-                var->next = nullptr;
+        ਜਦੋਂ (ਸੱਚ) {
+            ਜੇ (cur == ਖਾਲੀ_ਸੂਚਕ) {
+                var->next = ਖਾਲੀ_ਸੂਚਕ;
                 prev->next = var.orphan();
-                break;
+                ਰੋਕੋ;
             }
 
             /* Checking for duplicate variant */
             cmp = uprv_compareInvCharsAsAscii(var->variant, cur->variant);
-            if (cmp == 0) {
+            ਜੇ (cmp == 0) {
                 /* duplicated variant */
-                return false;
+                ਵਾਪਸ ਝੂਠ;
             }
             prev = cur;
             cur = cur->next;
         }
     }
 
-    return true;
+    ਵਾਪਸ ਸੱਚ;
 }
 
-bool
-_addAttributeToList(AttributeListEntry **first, AttributeListEntry *attr) {
-    bool bAdded = true;
+ਤਾਰਕਿਕ
+ਜੋੜੋ_Attribute_ਮੰਜ਼ਿਲ_List(Attribute_List_ਇੰਦਰਾਜ **first, Attribute_List_ਇੰਦਰਾਜ *attr) {
+    ਤਾਰਕਿਕ bAdded = ਸੱਚ;
 
-    if (*first == nullptr) {
-        attr->next = nullptr;
+    ਜੇ (*first == ਖਾਲੀ_ਸੂਚਕ) {
+        attr->next = ਖਾਲੀ_ਸੂਚਕ;
         *first = attr;
-    } else {
-        AttributeListEntry *prev, *cur;
+    } ਨਹੀਂਤਾਂ {
+        Attribute_List_ਇੰਦਰਾਜ *prev, *cur;
         int32_t cmp;
 
         /* reorder variants in alphabetical order */
-        prev = nullptr;
+        prev = ਖਾਲੀ_ਸੂਚਕ;
         cur = *first;
-        while (true) {
-            if (cur == nullptr) {
+        ਜਦੋਂ (ਸੱਚ) {
+            ਜੇ (cur == ਖਾਲੀ_ਸੂਚਕ) {
                 prev->next = attr;
-                attr->next = nullptr;
-                break;
+                attr->next = ਖਾਲੀ_ਸੂਚਕ;
+                ਰੋਕੋ;
             }
             cmp = uprv_compareInvCharsAsAscii(attr->attribute, cur->attribute);
-            if (cmp < 0) {
-                if (prev == nullptr) {
+            ਜੇ (cmp < 0) {
+                ਜੇ (prev == ਖਾਲੀ_ਸੂਚਕ) {
                     *first = attr;
-                } else {
+                } ਨਹੀਂਤਾਂ {
                     prev->next = attr;
                 }
                 attr->next = cur;
-                break;
+                ਰੋਕੋ;
             }
-            if (cmp == 0) {
+            ਜੇ (cmp == 0) {
                 /* duplicated variant */
-                bAdded = false;
-                break;
+                bAdded = ਝੂਠ;
+                ਰੋਕੋ;
             }
             prev = cur;
             cur = cur->next;
         }
     }
 
-    return bAdded;
+    ਵਾਪਸ bAdded;
 }
 
-bool
-_addExtensionToList(ExtensionListEntry **first, ExtensionListEntry *ext, bool localeToBCP) {
-    bool bAdded = true;
+ਤਾਰਕਿਕ
+ਜੋੜੋ_Extension_ਮੰਜ਼ਿਲ_List(Extension_List_ਇੰਦਰਾਜ **first, Extension_List_ਇੰਦਰਾਜ *ext, ਤਾਰਕਿਕ locale_ਮੰਜ਼ਿਲ_BCP) {
+    ਤਾਰਕਿਕ bAdded = ਸੱਚ;
 
-    if (*first == nullptr) {
-        ext->next = nullptr;
+    ਜੇ (*first == ਖਾਲੀ_ਸੂਚਕ) {
+        ext->next = ਖਾਲੀ_ਸੂਚਕ;
         *first = ext;
-    } else {
-        ExtensionListEntry *prev, *cur;
+    } ਨਹੀਂਤਾਂ {
+        Extension_List_ਇੰਦਰਾਜ *prev, *cur;
         int32_t cmp;
 
         /* reorder variants in alphabetical order */
-        prev = nullptr;
+        prev = ਖਾਲੀ_ਸੂਚਕ;
         cur = *first;
-        while (true) {
-            if (cur == nullptr) {
+        ਜਦੋਂ (ਸੱਚ) {
+            ਜੇ (cur == ਖਾਲੀ_ਸੂਚਕ) {
                 prev->next = ext;
-                ext->next = nullptr;
-                break;
+                ext->next = ਖਾਲੀ_ਸੂਚਕ;
+                ਰੋਕੋ;
             }
-            if (localeToBCP) {
+            ਜੇ (locale_ਮੰਜ਼ਿਲ_BCP) {
                 /* special handling for locale to bcp conversion */
                 int32_t len, curlen;
 
-                len = static_cast<int32_t>(uprv_strlen(ext->key));
-                curlen = static_cast<int32_t>(uprv_strlen(cur->key));
+                len = static_cast<int32_t>(uprv_strlen(ext->ਕੁੰਜੀ));
+                curlen = static_cast<int32_t>(uprv_strlen(cur->ਕੁੰਜੀ));
 
-                if (len == 1 && curlen == 1) {
-                    if (*(ext->key) == *(cur->key)) {
+                ਜੇ (len == 1 && curlen == 1) {
+                    ਜੇ (*(ext->ਕੁੰਜੀ) == *(cur->ਕੁੰਜੀ)) {
                         cmp = 0;
-                    } else if (*(ext->key) == PRIVATEUSE) {
+                    } ਨਹੀਂਤਾਂ ਜੇ (*(ext->ਕੁੰਜੀ) == PRIVATEUSE) {
                         cmp = 1;
-                    } else if (*(cur->key) == PRIVATEUSE) {
+                    } ਨਹੀਂਤਾਂ ਜੇ (*(cur->ਕੁੰਜੀ) == PRIVATEUSE) {
                         cmp = -1;
-                    } else {
-                        cmp = *(ext->key) - *(cur->key);
+                    } ਨਹੀਂਤਾਂ {
+                        cmp = *(ext->ਕੁੰਜੀ) - *(cur->ਕੁੰਜੀ);
                     }
-                } else if (len == 1) {
-                    cmp = *(ext->key) - LDMLEXT; 
-                } else if (curlen == 1) {
-                    cmp = LDMLEXT - *(cur->key);
-                } else {
-                    cmp = uprv_compareInvCharsAsAscii(ext->key, cur->key);
+                } ਨਹੀਂਤਾਂ ਜੇ (len == 1) {
+                    cmp = *(ext->ਕੁੰਜੀ) - LDMLEXT; 
+                } ਨਹੀਂਤਾਂ ਜੇ (curlen == 1) {
+                    cmp = LDMLEXT - *(cur->ਕੁੰਜੀ);
+                } ਨਹੀਂਤਾਂ {
+                    cmp = uprv_compareInvCharsAsAscii(ext->ਕੁੰਜੀ, cur->ਕੁੰਜੀ);
                     /* Both are u extension keys - we need special handling for 'attribute' */
-                    if (cmp != 0) {
-                        if (uprv_strcmp(cur->key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                    ਜੇ (cmp != 0) {
+                        ਜੇ (uprv_strcmp(cur->ਕੁੰਜੀ, LOCALE_ATTRIBUTE_ਕੁੰਜੀ) == 0) {
                             cmp = 1;
-                        } else if (uprv_strcmp(ext->key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                        } ਨਹੀਂਤਾਂ ਜੇ (uprv_strcmp(ext->ਕੁੰਜੀ, LOCALE_ATTRIBUTE_ਕੁੰਜੀ) == 0) {
                             cmp = -1;
                         }
                     }
                 }
-            } else {
-                cmp = uprv_compareInvCharsAsAscii(ext->key, cur->key);
+            } ਨਹੀਂਤਾਂ {
+                cmp = uprv_compareInvCharsAsAscii(ext->ਕੁੰਜੀ, cur->ਕੁੰਜੀ);
             }
-            if (cmp < 0) {
-                if (prev == nullptr) {
+            ਜੇ (cmp < 0) {
+                ਜੇ (prev == ਖਾਲੀ_ਸੂਚਕ) {
                     *first = ext;
-                } else {
+                } ਨਹੀਂਤਾਂ {
                     prev->next = ext;
                 }
                 ext->next = cur;
-                break;
+                ਰੋਕੋ;
             }
-            if (cmp == 0) {
+            ਜੇ (cmp == 0) {
                 /* duplicated extension key */
-                bAdded = false;
-                break;
+                bAdded = ਝੂਠ;
+                ਰੋਕੋ;
             }
             prev = cur;
             cur = cur->next;
         }
     }
 
-    return bAdded;
+    ਵਾਪਸ bAdded;
 }
 
-void
-_initializeULanguageTag(ULanguageTag* langtag) {
+ਖਾਲੀ
+initialize_ULanguage_ਟੈਗ(ULanguage_ਟੈਗ* langtag) {
     int32_t i;
 
-    langtag->buf = nullptr;
+    langtag->buf = ਖਾਲੀ_ਸੂਚਕ;
 
-    langtag->language = EMPTY;
-    for (i = 0; i < MAXEXTLANG; i++) {
-        langtag->extlang[i] = nullptr;
+    langtag->language = ਖਾਲੀ_ਥਾਵਾਂ_2;
+    ਲਈ (i = 0; i < MAXEXTLANG; i++) {
+        langtag->extlang[i] = ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    langtag->script = EMPTY;
-    langtag->region = EMPTY;
+    langtag->script = ਖਾਲੀ_ਥਾਵਾਂ_2;
+    langtag->region = ਖਾਲੀ_ਥਾਵਾਂ_2;
 
-    langtag->variants = nullptr;
-    langtag->extensions = nullptr;
+    langtag->variants = ਖਾਲੀ_ਸੂਚਕ;
+    langtag->extensions = ਖਾਲੀ_ਸੂਚਕ;
 
-    langtag->legacy = EMPTY;
-    langtag->privateuse = EMPTY;
+    langtag->legacy = ਖਾਲੀ_ਥਾਵਾਂ_2;
+    langtag->privateuse = ਖਾਲੀ_ਥਾਵਾਂ_2;
 }
 
-void
-_appendLanguageToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, UErrorCode& status) {
-    UErrorCode tmpStatus = U_ZERO_ERROR;
+ਖਾਲੀ
+append_Language_ਮੰਜ਼ਿਲ_Language_ਟੈਗ(std::string_view localeID, icu::ByteSink& sink, ਤਾਰਕਿਕ strict, UError_ਕੋਡ& ਸਥਿਤੀ) {
+    UError_ਕੋਡ tmp_ਸਥਿਤੀ = U_ZERO_ERROR;
 
-    if (U_FAILURE(status)) {
-        return;
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਵਾਪਸ;
     }
 
-    icu::CharString buf = ulocimp_getLanguage(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
-            status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+    icu::CharString buf = ulocimp_getLanguage(localeID, tmp_ਸਥਿਤੀ);
+    ਜੇ (U_FAILURE(tmp_ਸਥਿਤੀ)) {
+        ਜੇ (strict) {
+            ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+            ਵਾਪਸ;
         }
     }
 
     /* Note: returned language code is in lower case letters */
 
-    if (buf.isEmpty()) {
+    ਜੇ (buf.is_ਖਾਲੀ_ਥਾਵਾਂ()) {
         sink.Append(LANG_UND, LANG_UND_LEN);
-    } else if (!ultag_isLanguageSubtag(buf.data(), buf.length())) {
+    } ਨਹੀਂਤਾਂ ਜੇ (!ultag_isLanguageSubtag(buf.ਅੰਕੜੇ(), buf.length())) {
             /* invalid language code */
-        if (strict) {
-            status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+        ਜੇ (strict) {
+            ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+            ਵਾਪਸ;
         }
         sink.Append(LANG_UND, LANG_UND_LEN);
-    } else {
+    } ਨਹੀਂਤਾਂ {
         /* resolve deprecated */
-        for (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDLANGS); i += 2) {
+        ਲਈ (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDLANGS); i += 2) {
             // 2-letter deprecated subtags are listede before 3-letter
             // ones in DEPRECATEDLANGS[]. Get out of loop on coming
             // across the 1st 3-letter subtag, if the input is a 2-letter code.
             // to avoid continuing to try when there's no match.
-            if (buf.length() < static_cast<int32_t>(uprv_strlen(DEPRECATEDLANGS[i]))) break;
-            if (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDLANGS[i]) == 0) {
-                const char* const resolved = DEPRECATEDLANGS[i + 1];
+            ਜੇ (buf.length() < static_cast<int32_t>(uprv_strlen(DEPRECATEDLANGS[i]))) ਰੋਕੋ;
+            ਜੇ (uprv_compareInvCharsAsAscii(buf.ਅੰਕੜੇ(), DEPRECATEDLANGS[i]) == 0) {
+                ਅਚਲ ਅੱਖਰ* ਅਚਲ resolved = DEPRECATEDLANGS[i + 1];
                 sink.Append(resolved, static_cast<int32_t>(uprv_strlen(resolved)));
-                return;
+                ਵਾਪਸ;
             }
         }
-        sink.Append(buf.data(), buf.length());
+        sink.Append(buf.ਅੰਕੜੇ(), buf.length());
     }
 }
 
-void
-_appendScriptToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, UErrorCode& status) {
-    UErrorCode tmpStatus = U_ZERO_ERROR;
+ਖਾਲੀ
+append_Script_ਮੰਜ਼ਿਲ_Language_ਟੈਗ(std::string_view localeID, icu::ByteSink& sink, ਤਾਰਕਿਕ strict, UError_ਕੋਡ& ਸਥਿਤੀ) {
+    UError_ਕੋਡ tmp_ਸਥਿਤੀ = U_ZERO_ERROR;
 
-    if (U_FAILURE(status)) {
-        return;
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਵਾਪਸ;
     }
 
-    icu::CharString buf = ulocimp_getScript(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
-            status = U_ILLEGAL_ARGUMENT_ERROR;
+    icu::CharString buf = ulocimp_getScript(localeID, tmp_ਸਥਿਤੀ);
+    ਜੇ (U_FAILURE(tmp_ਸਥਿਤੀ)) {
+        ਜੇ (strict) {
+            ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
         }
-        return;
+        ਵਾਪਸ;
     }
 
-    if (!buf.isEmpty()) {
-        if (!ultag_isScriptSubtag(buf.data(), buf.length())) {
+    ਜੇ (!buf.is_ਖਾਲੀ_ਥਾਵਾਂ()) {
+        ਜੇ (!ultag_isScriptSubtag(buf.ਅੰਕੜੇ(), buf.length())) {
             /* invalid script code */
-            if (strict) {
-                status = U_ILLEGAL_ARGUMENT_ERROR;
+            ਜੇ (strict) {
+                ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
             }
-            return;
-        } else {
+            ਵਾਪਸ;
+        } ਨਹੀਂਤਾਂ {
             sink.Append("-", 1);
-            sink.Append(buf.data(), buf.length());
+            sink.Append(buf.ਅੰਕੜੇ(), buf.length());
         }
     }
 }
 
-void
-_appendRegionToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, UErrorCode& status) {
-    UErrorCode tmpStatus = U_ZERO_ERROR;
+ਖਾਲੀ
+append_Region_ਮੰਜ਼ਿਲ_Language_ਟੈਗ(std::string_view localeID, icu::ByteSink& sink, ਤਾਰਕਿਕ strict, UError_ਕੋਡ& ਸਥਿਤੀ) {
+    UError_ਕੋਡ tmp_ਸਥਿਤੀ = U_ZERO_ERROR;
 
-    if (U_FAILURE(status)) {
-        return;
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਵਾਪਸ;
     }
 
-    icu::CharString buf = ulocimp_getRegion(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
-            status = U_ILLEGAL_ARGUMENT_ERROR;
+    icu::CharString buf = ulocimp_getRegion(localeID, tmp_ਸਥਿਤੀ);
+    ਜੇ (U_FAILURE(tmp_ਸਥਿਤੀ)) {
+        ਜੇ (strict) {
+            ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
         }
-        return;
+        ਵਾਪਸ;
     }
 
-    if (!buf.isEmpty()) {
-        if (!ultag_isRegionSubtag(buf.data(), buf.length())) {
+    ਜੇ (!buf.is_ਖਾਲੀ_ਥਾਵਾਂ()) {
+        ਜੇ (!ultag_isRegionSubtag(buf.ਅੰਕੜੇ(), buf.length())) {
             /* invalid region code */
-            if (strict) {
-                status = U_ILLEGAL_ARGUMENT_ERROR;
+            ਜੇ (strict) {
+                ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
             }
-            return;
-        } else {
+            ਵਾਪਸ;
+        } ਨਹੀਂਤਾਂ {
             sink.Append("-", 1);
             /* resolve deprecated */
-            for (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDREGIONS); i += 2) {
-                if (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDREGIONS[i]) == 0) {
-                    const char* const resolved = DEPRECATEDREGIONS[i + 1];
+            ਲਈ (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDREGIONS); i += 2) {
+                ਜੇ (uprv_compareInvCharsAsAscii(buf.ਅੰਕੜੇ(), DEPRECATEDREGIONS[i]) == 0) {
+                    ਅਚਲ ਅੱਖਰ* ਅਚਲ resolved = DEPRECATEDREGIONS[i + 1];
                     sink.Append(resolved, static_cast<int32_t>(uprv_strlen(resolved)));
-                    return;
+                    ਵਾਪਸ;
                 }
             }
-            sink.Append(buf.data(), buf.length());
+            sink.Append(buf.ਅੰਕੜੇ(), buf.length());
         }
     }
 }
 
-void _sortVariants(VariantListEntry* first) {
-    for (VariantListEntry* var1 = first; var1 != nullptr; var1 = var1->next) {
-        for (VariantListEntry* var2 = var1->next; var2 != nullptr; var2 = var2->next) {
+ਖਾਲੀ ਛਾਂਟੋ_Variants(Variant_List_ਇੰਦਰਾਜ* first) {
+    ਲਈ (Variant_List_ਇੰਦਰਾਜ* var1 = first; var1 != ਖਾਲੀ_ਸੂਚਕ; var1 = var1->next) {
+        ਲਈ (Variant_List_ਇੰਦਰਾਜ* var2 = var1->next; var2 != ਖਾਲੀ_ਸੂਚਕ; var2 = var2->next) {
             // Swap var1->variant and var2->variant.
-            if (uprv_compareInvCharsAsAscii(var1->variant, var2->variant) > 0) {
-                const char* temp = var1->variant;
+            ਜੇ (uprv_compareInvCharsAsAscii(var1->variant, var2->variant) > 0) {
+                ਅਚਲ ਅੱਖਰ* ਆਰਜ਼ੀ = var1->variant;
                 var1->variant = var2->variant;
-                var2->variant = temp;
+                var2->variant = ਆਰਜ਼ੀ;
             }
         }
     }
 }
 
-void
-_appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, bool& hadPosix, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+ਖਾਲੀ
+append_Variants_ਮੰਜ਼ਿਲ_Language_ਟੈਗ(std::string_view localeID, icu::ByteSink& sink, ਤਾਰਕਿਕ strict, ਤਾਰਕਿਕ& hadPosix, UError_ਕੋਡ& ਸਥਿਤੀ) {
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) { ਵਾਪਸ; }
 
-    UErrorCode tmpStatus = U_ZERO_ERROR;
-    icu::CharString buf = ulocimp_getVariant(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus) || tmpStatus == U_STRING_NOT_TERMINATED_WARNING) {
-        if (strict) {
-            status = U_ILLEGAL_ARGUMENT_ERROR;
+    UError_ਕੋਡ tmp_ਸਥਿਤੀ = U_ZERO_ERROR;
+    icu::CharString buf = ulocimp_getVariant(localeID, tmp_ਸਥਿਤੀ);
+    ਜੇ (U_FAILURE(tmp_ਸਥਿਤੀ) || tmp_ਸਥਿਤੀ == U_STRING_NOT_TERMINATED_WARNING) {
+        ਜੇ (strict) {
+            ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
         }
-        return;
+        ਵਾਪਸ;
     }
 
-    if (!buf.isEmpty()) {
-        char *p, *pVar;
-        bool bNext = true;
-        VariantListEntry *varFirst = nullptr;
+    ਜੇ (!buf.is_ਖਾਲੀ_ਥਾਵਾਂ()) {
+        ਅੱਖਰ *p, *pVar;
+        ਤਾਰਕਿਕ b_ਅਗਲਾ = ਸੱਚ;
+        Variant_List_ਇੰਦਰਾਜ *var_ਪਹਿਲਾ = ਖਾਲੀ_ਸੂਚਕ;
 
-        pVar = nullptr;
-        p = buf.data();
-        while (bNext) {
-            if (*p == SEP || *p == LOCALE_SEP || *p == 0) {
-                if (*p == 0) {
-                    bNext = false;
-                } else {
+        pVar = ਖਾਲੀ_ਸੂਚਕ;
+        p = buf.ਅੰਕੜੇ();
+        ਜਦੋਂ (b_ਅਗਲਾ) {
+            ਜੇ (*p == SEP || *p == LOCALE_SEP || *p == 0) {
+                ਜੇ (*p == 0) {
+                    b_ਅਗਲਾ = ਝੂਠ;
+                } ਨਹੀਂਤਾਂ {
                     *p = 0; /* terminate */
                 }
-                if (pVar == nullptr) {
-                    if (strict) {
-                        status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
+                ਜੇ (pVar == ਖਾਲੀ_ਸੂਚਕ) {
+                    ਜੇ (strict) {
+                        ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                        ਰੋਕੋ;
                     }
                     /* ignore empty variant */
-                } else {
+                } ਨਹੀਂਤਾਂ {
                     /* ICU uses upper case letters for variants, but
                        the canonical format is lowercase in BCP47 */
-                    for (int32_t i = 0; *(pVar + i) != 0; i++) {
+                    ਲਈ (int32_t i = 0; *(pVar + i) != 0; i++) {
                         *(pVar + i) = uprv_tolower(*(pVar + i));
                     }
 
                     /* validate */
-                    if (_isVariantSubtag(pVar, -1)) {
-                        if (uprv_strcmp(pVar, POSIX_VALUE) || buf.length() != static_cast<int32_t>(uprv_strlen(POSIX_VALUE))) {
+                    ਜੇ (_isVariantSubtag(pVar, -1)) {
+                        ਜੇ (uprv_strcmp(pVar, POSIX_ਮੁੱਲ) || buf.length() != static_cast<int32_t>(uprv_strlen(POSIX_ਮੁੱਲ))) {
                             /* emit the variant to the list */
-                            icu::LocalPointer<VariantListEntry> var(new VariantListEntry, status);
-                            if (U_FAILURE(status)) {
-                                break;
+                            icu::Local_ਸੂਚਕ<Variant_List_ਇੰਦਰਾਜ> var(ਨਵਾਂ Variant_List_ਇੰਦਰਾਜ, ਸਥਿਤੀ);
+                            ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                                ਰੋਕੋ;
                             }
                             var->variant = pVar;
-                            if (!_addVariantToList(&varFirst, std::move(var))) {
+                            ਜੇ (!ਜੋੜੋ_Variant_ਮੰਜ਼ਿਲ_List(&var_ਪਹਿਲਾ, std::move(var))) {
                                 /* duplicated variant */
-                                if (strict) {
-                                    status = U_ILLEGAL_ARGUMENT_ERROR;
-                                    break;
+                                ਜੇ (strict) {
+                                    ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                                    ਰੋਕੋ;
                                 }
                             }
-                        } else {
+                        } ਨਹੀਂਤਾਂ {
                             /* Special handling for POSIX variant, need to remember that we had it and then */
                             /* treat it like an extension later. */
-                            hadPosix = true;
+                            hadPosix = ਸੱਚ;
                         }
-                    } else if (strict) {
-                        status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
-                    } else if (_isPrivateuseValueSubtag(pVar, -1)) {
+                    } ਨਹੀਂਤਾਂ ਜੇ (strict) {
+                        ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                        ਰੋਕੋ;
+                    } ਨਹੀਂਤਾਂ ਜੇ (is_Privateuse_ਮੁੱਲ_Subtag(pVar, -1)) {
                         /* Handle private use subtags separately */
-                        break;
+                        ਰੋਕੋ;
                     }
                 }
                 /* reset variant starting position */
-                pVar = nullptr;
-            } else if (pVar == nullptr) {
+                pVar = ਖਾਲੀ_ਸੂਚਕ;
+            } ਨਹੀਂਤਾਂ ਜੇ (pVar == ਖਾਲੀ_ਸੂਚਕ) {
                 pVar = p;
             }
             p++;
         }
 
-        if (U_SUCCESS(status)) {
-            if (varFirst != nullptr) {
+        ਜੇ (U_SUCCESS(ਸਥਿਤੀ)) {
+            ਜੇ (var_ਪਹਿਲਾ != ਖਾਲੀ_ਸੂਚਕ) {
                 int32_t varLen;
 
                 /* per UTS35, we should sort the variants */
-                _sortVariants(varFirst);
+                ਛਾਂਟੋ_Variants(var_ਪਹਿਲਾ);
 
                 /* write out validated/normalized variants to the target */
-                VariantListEntry* var = varFirst;
-                while (var != nullptr) {
+                Variant_List_ਇੰਦਰਾਜ* var = var_ਪਹਿਲਾ;
+                ਜਦੋਂ (var != ਖਾਲੀ_ਸੂਚਕ) {
                     sink.Append("-", 1);
                     varLen = static_cast<int32_t>(uprv_strlen(var->variant));
                     sink.Append(var->variant, varLen);
@@ -1264,246 +1264,246 @@ _appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, boo
         }
 
         /* clean up */
-        for (VariantListEntry* var = varFirst; var != nullptr; ) {
-            VariantListEntry *tmpVar = var->next;
-            delete var;
+        ਲਈ (Variant_List_ਇੰਦਰਾਜ* var = var_ਪਹਿਲਾ; var != ਖਾਲੀ_ਸੂਚਕ; ) {
+            Variant_List_ਇੰਦਰਾਜ *tmpVar = var->next;
+            ਮਿਟਾਓ var;
             var = tmpVar;
         }
 
-        if (U_FAILURE(status)) {
-            return;
+        ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+            ਵਾਪਸ;
         }
     }
 }
 
-void
-_appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool strict, bool hadPosix, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+ਖਾਲੀ
+append_Keywords_ਮੰਜ਼ਿਲ_Language_ਟੈਗ(ਅਚਲ ਅੱਖਰ* localeID, icu::ByteSink& sink, ਤਾਰਕਿਕ strict, ਤਾਰਕਿਕ hadPosix, UError_ਕੋਡ& ਸਥਿਤੀ) {
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) { ਵਾਪਸ; }
 
-    icu::MemoryPool<AttributeListEntry> attrPool;
-    icu::MemoryPool<ExtensionListEntry> extPool;
-    icu::MemoryPool<icu::CharString> strPool;
+    icu::ਸਮ੍ਰਿਤੀ_Pool<Attribute_List_ਇੰਦਰਾਜ> attrPool;
+    icu::ਸਮ੍ਰਿਤੀ_Pool<Extension_List_ਇੰਦਰਾਜ> extPool;
+    icu::ਸਮ੍ਰਿਤੀ_Pool<icu::CharString> strPool;
 
-    icu::LocalUEnumerationPointer keywordEnum(uloc_openKeywords(localeID, &status));
-    if (U_FAILURE(status) && !hadPosix) {
-        return;
+    icu::Local_UEnumeration_ਸੂਚਕ keywordEnum(uloc_openKeywords(localeID, &ਸਥਿਤੀ));
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ) && !hadPosix) {
+        ਵਾਪਸ;
     }
-    if (keywordEnum.isValid() || hadPosix) {
+    ਜੇ (keywordEnum.isValid() || hadPosix) {
         /* reorder extensions */
         int32_t len;
-        const char *key;
-        ExtensionListEntry *firstExt = nullptr;
-        ExtensionListEntry *ext;
-        AttributeListEntry *firstAttr = nullptr;
-        AttributeListEntry *attr;
-        icu::MemoryPool<icu::CharString> extBufPool;
-        const char *bcpKey=nullptr, *bcpValue=nullptr;
-        UErrorCode tmpStatus = U_ZERO_ERROR;
+        ਅਚਲ ਅੱਖਰ *ਕੁੰਜੀ;
+        Extension_List_ਇੰਦਰਾਜ *ਪਹਿਲਾ_Ext = ਖਾਲੀ_ਸੂਚਕ;
+        Extension_List_ਇੰਦਰਾਜ *ext;
+        Attribute_List_ਇੰਦਰਾਜ *ਪਹਿਲਾ_Attr = ਖਾਲੀ_ਸੂਚਕ;
+        Attribute_List_ਇੰਦਰਾਜ *attr;
+        icu::ਸਮ੍ਰਿਤੀ_Pool<icu::CharString> extBufPool;
+        ਅਚਲ ਅੱਖਰ *bcp_ਕੁੰਜੀ=ਖਾਲੀ_ਸੂਚਕ, *bcp_ਮੁੱਲ=ਖਾਲੀ_ਸੂਚਕ;
+        UError_ਕੋਡ tmp_ਸਥਿਤੀ = U_ZERO_ERROR;
         int32_t keylen;
-        bool isBcpUExt;
+        ਤਾਰਕਿਕ isBcpUExt;
 
-        while (true) {
-            key = uenum_next(keywordEnum.getAlias(), nullptr, &status);
-            if (key == nullptr) {
-                break;
+        ਜਦੋਂ (ਸੱਚ) {
+            ਕੁੰਜੀ = uenum_ਅਗਲਾ(keywordEnum.getAlias(), ਖਾਲੀ_ਸੂਚਕ, &ਸਥਿਤੀ);
+            ਜੇ (ਕੁੰਜੀ == ਖਾਲੀ_ਸੂਚਕ) {
+                ਰੋਕੋ;
             }
 
-            icu::CharString buf = ulocimp_getKeywordValue(localeID, key, tmpStatus);
+            icu::CharString buf = ulocimp_get_Keyword_ਮੁੱਲ(localeID, ਕੁੰਜੀ, tmp_ਸਥਿਤੀ);
             len = buf.length();
 
-            if (U_FAILURE(tmpStatus)) {
-                if (tmpStatus == U_MEMORY_ALLOCATION_ERROR) {
-                    status = U_MEMORY_ALLOCATION_ERROR;
-                    break;
+            ਜੇ (U_FAILURE(tmp_ਸਥਿਤੀ)) {
+                ਜੇ (tmp_ਸਥਿਤੀ == U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR) {
+                    ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                    ਰੋਕੋ;
                 }
-                if (strict) {
-                    status = U_ILLEGAL_ARGUMENT_ERROR;
-                    break;
+                ਜੇ (strict) {
+                    ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                    ਰੋਕੋ;
                 }
                 /* ignore this keyword */
-                tmpStatus = U_ZERO_ERROR;
-                continue;
+                tmp_ਸਥਿਤੀ = U_ZERO_ERROR;
+                ਜਾਰੀ;
             }
 
-            keylen = static_cast<int32_t>(uprv_strlen(key));
+            keylen = static_cast<int32_t>(uprv_strlen(ਕੁੰਜੀ));
             isBcpUExt = (keylen > 1);
 
             /* special keyword used for representing Unicode locale attributes */
-            if (uprv_strcmp(key, LOCALE_ATTRIBUTE_KEY) == 0) {
-                if (len > 0) {
+            ਜੇ (uprv_strcmp(ਕੁੰਜੀ, LOCALE_ATTRIBUTE_ਕੁੰਜੀ) == 0) {
+                ਜੇ (len > 0) {
                     int32_t i = 0;
-                    while (true) {
+                    ਜਦੋਂ (ਸੱਚ) {
                         icu::CharString attrBuf;
-                        for (; i < len; i++) {
-                            if (buf[i] != '-') {
-                                attrBuf.append(buf[i], status);
-                            } else {
+                        ਲਈ (; i < len; i++) {
+                            ਜੇ (buf[i] != '-') {
+                                attrBuf.append(buf[i], ਸਥਿਤੀ);
+                            } ਨਹੀਂਤਾਂ {
                                 i++;
-                                break;
+                                ਰੋਕੋ;
                             }
                         }
-                        if (U_FAILURE(status)) {
-                            return;
+                        ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                            ਵਾਪਸ;
                         }
-                        if (attrBuf.isEmpty() && i >= len) {
-                            break;
+                        ਜੇ (attrBuf.is_ਖਾਲੀ_ਥਾਵਾਂ() && i >= len) {
+                            ਰੋਕੋ;
                         }
 
                         /* create AttributeListEntry */
                         attr = attrPool.create();
-                        if (attr == nullptr) {
-                            status = U_MEMORY_ALLOCATION_ERROR;
-                            break;
+                        ਜੇ (attr == ਖਾਲੀ_ਸੂਚਕ) {
+                            ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                            ਰੋਕੋ;
                         }
-                        if (icu::CharString* str =
-                                strPool.create(std::move(attrBuf), status)) {
-                            if (U_FAILURE(status)) { break; }
-                            attr->attribute = str->data();
-                        } else {
-                            status = U_MEMORY_ALLOCATION_ERROR;
-                            break;
+                        ਜੇ (icu::CharString* str =
+                                strPool.create(std::move(attrBuf), ਸਥਿਤੀ)) {
+                            ਜੇ (U_FAILURE(ਸਥਿਤੀ)) { ਰੋਕੋ; }
+                            attr->attribute = str->ਅੰਕੜੇ();
+                        } ਨਹੀਂਤਾਂ {
+                            ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                            ਰੋਕੋ;
                         }
 
-                        if (!_addAttributeToList(&firstAttr, attr)) {
-                            if (strict) {
-                                status = U_ILLEGAL_ARGUMENT_ERROR;
-                                break;
+                        ਜੇ (!ਜੋੜੋ_Attribute_ਮੰਜ਼ਿਲ_List(&ਪਹਿਲਾ_Attr, attr)) {
+                            ਜੇ (strict) {
+                                ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                                ਰੋਕੋ;
                             }
                         }
                     }
                     /* for a place holder ExtensionListEntry */
-                    bcpKey = LOCALE_ATTRIBUTE_KEY;
-                    bcpValue = nullptr;
+                    bcp_ਕੁੰਜੀ = LOCALE_ATTRIBUTE_ਕੁੰਜੀ;
+                    bcp_ਮੁੱਲ = ਖਾਲੀ_ਸੂਚਕ;
                 }
-            } else if (isBcpUExt) {
-                std::optional<std::string_view> optBcpKey = ulocimp_toBcpKeyWithFallback(key);
-                if (!optBcpKey.has_value()) {
-                    if (strict) {
-                        status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
+            } ਨਹੀਂਤਾਂ ਜੇ (isBcpUExt) {
+                std::optional<std::string_view> opt_Bcp_ਕੁੰਜੀ = ulocimp_ਮੰਜ਼ਿਲ_Bcp_ਕੁੰਜੀ_With_Fallback(ਕੁੰਜੀ);
+                ਜੇ (!opt_Bcp_ਕੁੰਜੀ.has_value()) {
+                    ਜੇ (strict) {
+                        ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                        ਰੋਕੋ;
                     }
-                    continue;
+                    ਜਾਰੀ;
                 }
-                bcpKey = optBcpKey->data();
+                bcp_ਕੁੰਜੀ = opt_Bcp_ਕੁੰਜੀ->ਅੰਕੜੇ();
 
-                std::optional<std::string_view> optBcpValue =
-                    ulocimp_toBcpTypeWithFallback(key, buf.toStringPiece());
-                if (!optBcpValue.has_value()) {
-                    if (strict) {
-                        status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
+                std::optional<std::string_view> opt_Bcp_ਮੁੱਲ =
+                    ulocimp_ਮੰਜ਼ਿਲ_Bcp_Type_With_Fallback(ਕੁੰਜੀ, buf.ਮੰਜ਼ਿਲ_String_Piece());
+                ਜੇ (!opt_Bcp_ਮੁੱਲ.has_value()) {
+                    ਜੇ (strict) {
+                        ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                        ਰੋਕੋ;
                     }
-                    continue;
+                    ਜਾਰੀ;
                 }
-                if (optBcpValue->data() == buf.data()) {
+                ਜੇ (opt_Bcp_ਮੁੱਲ->ਅੰਕੜੇ() == buf.ਅੰਕੜੇ()) {
                     /*
                     When ulocimp_toBcpTypeWithFallback(key, buf) returns the
                     input value as is, the value is well-formed, but has
                     no known mapping. This implementation normalizes the
                     value to lower case
                     */
-                    icu::CharString* extBuf = extBufPool.create(buf, tmpStatus);
+                    icu::CharString* extBuf = extBufPool.create(buf, tmp_ਸਥਿਤੀ);
 
-                    if (extBuf == nullptr) {
-                        status = U_MEMORY_ALLOCATION_ERROR;
-                        break;
+                    ਜੇ (extBuf == ਖਾਲੀ_ਸੂਚਕ) {
+                        ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                        ਰੋਕੋ;
                     }
-                    if (U_FAILURE(tmpStatus)) {
-                        status = tmpStatus;
-                        break;
+                    ਜੇ (U_FAILURE(tmp_ਸਥਿਤੀ)) {
+                        ਸਥਿਤੀ = tmp_ਸਥਿਤੀ;
+                        ਰੋਕੋ;
                     }
 
-                    T_CString_toLowerCase(extBuf->data());
-                    bcpValue = extBuf->data();
-                } else {
-                    bcpValue = optBcpValue->data();
+                    T_CString_ਮੰਜ਼ਿਲ_ਹੇਠਲਾ_Case(extBuf->ਅੰਕੜੇ());
+                    bcp_ਮੁੱਲ = extBuf->ਅੰਕੜੇ();
+                } ਨਹੀਂਤਾਂ {
+                    bcp_ਮੁੱਲ = opt_Bcp_ਮੁੱਲ->ਅੰਕੜੇ();
                 }
-            } else {
-                if (*key == PRIVATEUSE) {
-                    if (!ultag_isPrivateuseValueSubtags(buf.data(), len)) {
-                        if (strict) {
-                            status = U_ILLEGAL_ARGUMENT_ERROR;
-                            break;
+            } ਨਹੀਂਤਾਂ {
+                ਜੇ (*ਕੁੰਜੀ == PRIVATEUSE) {
+                    ਜੇ (!ultag_is_Privateuse_ਮੁੱਲ_Subtags(buf.ਅੰਕੜੇ(), len)) {
+                        ਜੇ (strict) {
+                            ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                            ਰੋਕੋ;
                         }
-                        continue;
+                        ਜਾਰੀ;
                     }
-                } else {
-                    if (!_isExtensionSingleton(key, keylen) || !ultag_isExtensionSubtags(buf.data(), len)) {
-                        if (strict) {
-                            status = U_ILLEGAL_ARGUMENT_ERROR;
-                            break;
+                } ਨਹੀਂਤਾਂ {
+                    ਜੇ (!_isExtensionSingleton(ਕੁੰਜੀ, keylen) || !ultag_isExtensionSubtags(buf.ਅੰਕੜੇ(), len)) {
+                        ਜੇ (strict) {
+                            ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                            ਰੋਕੋ;
                         }
-                        continue;
+                        ਜਾਰੀ;
                     }
                 }
-                bcpKey = key;
+                bcp_ਕੁੰਜੀ = ਕੁੰਜੀ;
                 icu::CharString* extBuf =
-                    extBufPool.create(buf.data(), len, tmpStatus);
-                if (extBuf == nullptr) {
-                    status = U_MEMORY_ALLOCATION_ERROR;
-                    break;
+                    extBufPool.create(buf.ਅੰਕੜੇ(), len, tmp_ਸਥਿਤੀ);
+                ਜੇ (extBuf == ਖਾਲੀ_ਸੂਚਕ) {
+                    ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                    ਰੋਕੋ;
                 }
-                if (U_FAILURE(tmpStatus)) {
-                    status = tmpStatus;
-                    break;
+                ਜੇ (U_FAILURE(tmp_ਸਥਿਤੀ)) {
+                    ਸਥਿਤੀ = tmp_ਸਥਿਤੀ;
+                    ਰੋਕੋ;
                 }
-                bcpValue = extBuf->data();
+                bcp_ਮੁੱਲ = extBuf->ਅੰਕੜੇ();
             }
 
             /* create ExtensionListEntry */
             ext = extPool.create();
-            if (ext == nullptr) {
-                status = U_MEMORY_ALLOCATION_ERROR;
-                break;
+            ਜੇ (ext == ਖਾਲੀ_ਸੂਚਕ) {
+                ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                ਰੋਕੋ;
             }
-            ext->key = bcpKey;
-            ext->value = bcpValue;
+            ext->ਕੁੰਜੀ = bcp_ਕੁੰਜੀ;
+            ext->value = bcp_ਮੁੱਲ;
 
-            if (!_addExtensionToList(&firstExt, ext, true)) {
-                if (strict) {
-                    status = U_ILLEGAL_ARGUMENT_ERROR;
-                    break;
+            ਜੇ (!ਜੋੜੋ_Extension_ਮੰਜ਼ਿਲ_List(&ਪਹਿਲਾ_Ext, ext, ਸੱਚ)) {
+                ਜੇ (strict) {
+                    ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                    ਰੋਕੋ;
                 }
             }
         }
 
         /* Special handling for POSIX variant - add the keywords for POSIX */
-        if (hadPosix) {
+        ਜੇ (hadPosix) {
             /* create ExtensionListEntry for POSIX */
             ext = extPool.create();
-            if (ext == nullptr) {
-                status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+            ਜੇ (ext == ਖਾਲੀ_ਸੂਚਕ) {
+                ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                ਵਾਪਸ;
             }
-            ext->key = POSIX_KEY;
-            ext->value = POSIX_VALUE;
+            ext->ਕੁੰਜੀ = POSIX_ਕੁੰਜੀ;
+            ext->value = POSIX_ਮੁੱਲ;
 
-            if (!_addExtensionToList(&firstExt, ext, true)) {
+            ਜੇ (!ਜੋੜੋ_Extension_ਮੰਜ਼ਿਲ_List(&ਪਹਿਲਾ_Ext, ext, ਸੱਚ)) {
                 // Silently ignore errors.
             }
         }
 
-        if (U_SUCCESS(status) && (firstExt != nullptr || firstAttr != nullptr)) {
-            bool startLDMLExtension = false;
-            for (ext = firstExt; ext; ext = ext->next) {
-                if (!startLDMLExtension && uprv_strlen(ext->key) > 1) {
+        ਜੇ (U_SUCCESS(ਸਥਿਤੀ) && (ਪਹਿਲਾ_Ext != ਖਾਲੀ_ਸੂਚਕ || ਪਹਿਲਾ_Attr != ਖਾਲੀ_ਸੂਚਕ)) {
+            ਤਾਰਕਿਕ ਸ਼ੁਰੂ_LDMLExtension = ਝੂਠ;
+            ਲਈ (ext = ਪਹਿਲਾ_Ext; ext; ext = ext->next) {
+                ਜੇ (!ਸ਼ੁਰੂ_LDMLExtension && uprv_strlen(ext->ਕੁੰਜੀ) > 1) {
                     /* first LDML u singlton extension */
                    sink.Append("-u", 2);
-                   startLDMLExtension = true;
+                   ਸ਼ੁਰੂ_LDMLExtension = ਸੱਚ;
                 }
 
                 /* write out the sorted BCP47 attributes, extensions and private use */
-                if (uprv_strcmp(ext->key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                ਜੇ (uprv_strcmp(ext->ਕੁੰਜੀ, LOCALE_ATTRIBUTE_ਕੁੰਜੀ) == 0) {
                     /* write the value for the attributes */
-                    for (attr = firstAttr; attr; attr = attr->next) {
+                    ਲਈ (attr = ਪਹਿਲਾ_Attr; attr; attr = attr->next) {
                         sink.Append("-", 1);
                         sink.Append(
                                 attr->attribute, static_cast<int32_t>(uprv_strlen(attr->attribute)));
                     }
-                } else {
+                } ਨਹੀਂਤਾਂ {
                     sink.Append("-", 1);
-                    sink.Append(ext->key, static_cast<int32_t>(uprv_strlen(ext->key)));
-                    if (uprv_strcmp(ext->value, "true") != 0 &&
+                    sink.Append(ext->ਕੁੰਜੀ, static_cast<int32_t>(uprv_strlen(ext->ਕੁੰਜੀ)));
+                    ਜੇ (uprv_strcmp(ext->value, "true") != 0 &&
                         uprv_strcmp(ext->value, "yes") != 0) {
                       sink.Append("-", 1);
                       sink.Append(ext->value, static_cast<int32_t>(uprv_strlen(ext->value)));
@@ -1519,320 +1519,320 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
  * e.g. "u-ca-gregory-co-trad" -> {calendar = gregorian} {collation = traditional}
  * Note: char* buf is used for storing keywords
  */
-void
-_appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendTo, icu::MemoryPool<ExtensionListEntry>& extPool, icu::MemoryPool<icu::CharString>& kwdBuf, bool& posixVariant, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+ਖਾਲੀ
+_appendLDMLExtensionAsKeywords(ਅਚਲ ਅੱਖਰ* ldmlext, Extension_List_ਇੰਦਰਾਜ** append_ਮੰਜ਼ਿਲ, icu::ਸਮ੍ਰਿਤੀ_Pool<Extension_List_ਇੰਦਰਾਜ>& extPool, icu::ਸਮ੍ਰਿਤੀ_Pool<icu::CharString>& kwdBuf, ਤਾਰਕਿਕ& posixVariant, UError_ਕੋਡ& ਸਥਿਤੀ) {
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) { ਵਾਪਸ; }
 
-    const char *pTag;   /* beginning of current subtag */
-    const char *pKwds;  /* beginning of key-type pairs */
-    bool variantExists = posixVariant;
+    ਅਚਲ ਅੱਖਰ *p_ਟੈਗ;   /* beginning of current subtag */
+    ਅਚਲ ਅੱਖਰ *pKwds;  /* beginning of key-type pairs */
+    ਤਾਰਕਿਕ variantExists = posixVariant;
 
-    ExtensionListEntry *kwdFirst = nullptr;    /* first LDML keyword */
-    ExtensionListEntry *kwd, *nextKwd;
+    Extension_List_ਇੰਦਰਾਜ *kwd_ਪਹਿਲਾ = ਖਾਲੀ_ਸੂਚਕ;    /* first LDML keyword */
+    Extension_List_ਇੰਦਰਾਜ *kwd, *ਅਗਲਾ_Kwd;
 
     int32_t len;
 
     /* Reset the posixVariant value */
-    posixVariant = false;
+    posixVariant = ਝੂਠ;
 
-    pTag = ldmlext;
-    pKwds = nullptr;
+    p_ਟੈਗ = ldmlext;
+    pKwds = ਖਾਲੀ_ਸੂਚਕ;
 
     {
-        AttributeListEntry *attrFirst = nullptr;   /* first attribute */
-        AttributeListEntry *attr, *nextAttr;
+        Attribute_List_ਇੰਦਰਾਜ *attr_ਪਹਿਲਾ = ਖਾਲੀ_ਸੂਚਕ;   /* first attribute */
+        Attribute_List_ਇੰਦਰਾਜ *attr, *ਅਗਲਾ_Attr;
 
-        icu::MemoryPool<icu::CharString> strPool;
-        icu::MemoryPool<AttributeListEntry> attrPool;
+        icu::ਸਮ੍ਰਿਤੀ_Pool<icu::CharString> strPool;
+        icu::ਸਮ੍ਰਿਤੀ_Pool<Attribute_List_ਇੰਦਰਾਜ> attrPool;
 
         /* Iterate through u extension attributes */
-        while (*pTag) {
+        ਜਦੋਂ (*p_ਟੈਗ) {
             /* locate next separator char */
-            for (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
+            ਲਈ (len = 0; *(p_ਟੈਗ + len) && *(p_ਟੈਗ + len) != SEP; len++);
 
-            if (ultag_isUnicodeLocaleKey(pTag, len)) {
-                pKwds = pTag;
-                break;
+            ਜੇ (ultag_is_Unicode_Locale_ਕੁੰਜੀ(p_ਟੈਗ, len)) {
+                pKwds = p_ਟੈਗ;
+                ਰੋਕੋ;
             }
 
             /* add this attribute to the list */
             attr = attrPool.create();
-            if (attr == nullptr) {
-                status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+            ਜੇ (attr == ਖਾਲੀ_ਸੂਚਕ) {
+                ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                ਵਾਪਸ;
             }
 
-            if (icu::CharString* str = strPool.create(pTag, len, status)) {
-                if (U_FAILURE(status)) { return; }
-                attr->attribute = str->data();
-            } else {
-                status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+            ਜੇ (icu::CharString* str = strPool.create(p_ਟੈਗ, len, ਸਥਿਤੀ)) {
+                ਜੇ (U_FAILURE(ਸਥਿਤੀ)) { ਵਾਪਸ; }
+                attr->attribute = str->ਅੰਕੜੇ();
+            } ਨਹੀਂਤਾਂ {
+                ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                ਵਾਪਸ;
             }
 
             // duplicate attribute is ignored, causes no error.
-            _addAttributeToList(&attrFirst, attr);
+            ਜੋੜੋ_Attribute_ਮੰਜ਼ਿਲ_List(&attr_ਪਹਿਲਾ, attr);
 
             /* next tag */
-            pTag += len;
-            if (*pTag) {
+            p_ਟੈਗ += len;
+            ਜੇ (*p_ਟੈਗ) {
                 /* next to the separator */
-                pTag++;
+                p_ਟੈਗ++;
             }
         }
 
-        if (attrFirst) {
+        ਜੇ (attr_ਪਹਿਲਾ) {
             /* emit attributes as an LDML keyword, e.g. attribute=attr1-attr2 */
 
             kwd = extPool.create();
-            if (kwd == nullptr) {
-                status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+            ਜੇ (kwd == ਖਾਲੀ_ਸੂਚਕ) {
+                ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                ਵਾਪਸ;
             }
 
             icu::CharString* value = kwdBuf.create();
-            if (value == nullptr) {
-                status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+            ਜੇ (value == ਖਾਲੀ_ਸੂਚਕ) {
+                ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                ਵਾਪਸ;
             }
 
             /* attribute subtags sorted in alphabetical order as type */
-            attr = attrFirst;
-            while (attr != nullptr) {
-                nextAttr = attr->next;
-                if (attr != attrFirst) {
-                    value->append('-', status);
+            attr = attr_ਪਹਿਲਾ;
+            ਜਦੋਂ (attr != ਖਾਲੀ_ਸੂਚਕ) {
+                ਅਗਲਾ_Attr = attr->next;
+                ਜੇ (attr != attr_ਪਹਿਲਾ) {
+                    value->append('-', ਸਥਿਤੀ);
                 }
-                value->append(attr->attribute, status);
-                attr = nextAttr;
+                value->append(attr->attribute, ਸਥਿਤੀ);
+                attr = ਅਗਲਾ_Attr;
             }
-            if (U_FAILURE(status)) {
-                return;
+            ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                ਵਾਪਸ;
             }
 
-            kwd->key = LOCALE_ATTRIBUTE_KEY;
-            kwd->value = value->data();
+            kwd->ਕੁੰਜੀ = LOCALE_ATTRIBUTE_ਕੁੰਜੀ;
+            kwd->value = value->ਅੰਕੜੇ();
 
-            if (!_addExtensionToList(&kwdFirst, kwd, false)) {
-                status = U_ILLEGAL_ARGUMENT_ERROR;
-                return;
+            ਜੇ (!ਜੋੜੋ_Extension_ਮੰਜ਼ਿਲ_List(&kwd_ਪਹਿਲਾ, kwd, ਝੂਠ)) {
+                ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                ਵਾਪਸ;
             }
         }
     }
 
-    if (pKwds) {
-        const char *pBcpKey = nullptr;     /* u extension key subtag */
-        const char *pBcpType = nullptr;    /* beginning of u extension type subtag(s) */
-        int32_t bcpKeyLen = 0;
+    ਜੇ (pKwds) {
+        ਅਚਲ ਅੱਖਰ *p_Bcp_ਕੁੰਜੀ = ਖਾਲੀ_ਸੂਚਕ;     /* u extension key subtag */
+        ਅਚਲ ਅੱਖਰ *pBcpType = ਖਾਲੀ_ਸੂਚਕ;    /* beginning of u extension type subtag(s) */
+        int32_t bcp_ਕੁੰਜੀ_Len = 0;
         int32_t bcpTypeLen = 0;
-        bool isDone = false;
+        ਤਾਰਕਿਕ is_ਪੂਰਾ = ਝੂਠ;
 
-        pTag = pKwds;
+        p_ਟੈਗ = pKwds;
         /* BCP47 representation of LDML key/type pairs */
-        while (!isDone) {
-            const char *pNextBcpKey = nullptr;
-            int32_t nextBcpKeyLen = 0;
-            bool emitKeyword = false;
+        ਜਦੋਂ (!is_ਪੂਰਾ) {
+            ਅਚਲ ਅੱਖਰ *p_ਅਗਲਾ_Bcp_ਕੁੰਜੀ = ਖਾਲੀ_ਸੂਚਕ;
+            int32_t ਅਗਲਾ_Bcp_ਕੁੰਜੀ_Len = 0;
+            ਤਾਰਕਿਕ emitKeyword = ਝੂਠ;
 
-            if (*pTag) {
+            ਜੇ (*p_ਟੈਗ) {
                 /* locate next separator char */
-                for (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
+                ਲਈ (len = 0; *(p_ਟੈਗ + len) && *(p_ਟੈਗ + len) != SEP; len++);
 
-                if (ultag_isUnicodeLocaleKey(pTag, len)) {
-                    if (pBcpKey) {
-                        emitKeyword = true;
-                        pNextBcpKey = pTag;
-                        nextBcpKeyLen = len;
-                    } else {
-                        pBcpKey = pTag;
-                        bcpKeyLen = len;
+                ਜੇ (ultag_is_Unicode_Locale_ਕੁੰਜੀ(p_ਟੈਗ, len)) {
+                    ਜੇ (p_Bcp_ਕੁੰਜੀ) {
+                        emitKeyword = ਸੱਚ;
+                        p_ਅਗਲਾ_Bcp_ਕੁੰਜੀ = p_ਟੈਗ;
+                        ਅਗਲਾ_Bcp_ਕੁੰਜੀ_Len = len;
+                    } ਨਹੀਂਤਾਂ {
+                        p_Bcp_ਕੁੰਜੀ = p_ਟੈਗ;
+                        bcp_ਕੁੰਜੀ_Len = len;
                     }
-                } else {
-                    U_ASSERT(pBcpKey != nullptr);
+                } ਨਹੀਂਤਾਂ {
+                    U_ASSERT(p_Bcp_ਕੁੰਜੀ != ਖਾਲੀ_ਸੂਚਕ);
                     /* within LDML type subtags */
-                    if (pBcpType) {
+                    ਜੇ (pBcpType) {
                         bcpTypeLen += (len + 1);
-                    } else {
-                        pBcpType = pTag;
+                    } ਨਹੀਂਤਾਂ {
+                        pBcpType = p_ਟੈਗ;
                         bcpTypeLen = len;
                     }
                 }
 
                 /* next tag */
-                pTag += len;
-                if (*pTag) {
+                p_ਟੈਗ += len;
+                ਜੇ (*p_ਟੈਗ) {
                     /* next to the separator */
-                    pTag++;
+                    p_ਟੈਗ++;
                 }
-            } else {
+            } ਨਹੀਂਤਾਂ {
                 /* processing last one */
-                emitKeyword = true;
-                isDone = true;
+                emitKeyword = ਸੱਚ;
+                is_ਪੂਰਾ = ਸੱਚ;
             }
 
-            if (emitKeyword) {
-                const char *pKey = nullptr;    /* LDML key */
-                const char *pType = nullptr;   /* LDML type */
+            ਜੇ (emitKeyword) {
+                ਅਚਲ ਅੱਖਰ *p_ਕੁੰਜੀ = ਖਾਲੀ_ਸੂਚਕ;    /* LDML key */
+                ਅਚਲ ਅੱਖਰ *pType = ਖਾਲੀ_ਸੂਚਕ;   /* LDML type */
 
-                U_ASSERT(pBcpKey != nullptr);
+                U_ASSERT(p_Bcp_ਕੁੰਜੀ != ਖਾਲੀ_ਸੂਚਕ);
 
                 /* BCP key length is always 2 for now */
-                if (bcpKeyLen != 2) {
+                ਜੇ (bcp_ਕੁੰਜੀ_Len != 2) {
                     /* the BCP key is invalid */
-                    status = U_ILLEGAL_ARGUMENT_ERROR;
-                    return;
+                    ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                    ਵਾਪਸ;
                 }
 
                 /* u extension key to LDML key */
-                std::optional<std::string_view> legacyKey = ulocimp_toLegacyKeyWithFallback(
-                    {pBcpKey, static_cast<std::string_view::size_type>(bcpKeyLen)});
-                if (!legacyKey.has_value()) {
-                    status = U_ILLEGAL_ARGUMENT_ERROR;
-                    return;
+                std::optional<std::string_view> legacy_ਕੁੰਜੀ_2 = ulocimp_ਮੰਜ਼ਿਲ_Legacy_ਕੁੰਜੀ_With_Fallback(
+                    {p_Bcp_ਕੁੰਜੀ, static_cast<std::string_view::size_type>(bcp_ਕੁੰਜੀ_Len)});
+                ਜੇ (!legacy_ਕੁੰਜੀ_2.has_value()) {
+                    ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                    ਵਾਪਸ;
                 }
-                if (legacyKey->data() == pBcpKey) {
+                ਜੇ (legacy_ਕੁੰਜੀ_2->ਅੰਕੜੇ() == p_Bcp_ਕੁੰਜੀ) {
                     /*
                     The key returned by toLegacyKey points to the input buffer.
                     We normalize the result key to lower case.
                     */
-                    icu::CharString* key = kwdBuf.create(pBcpKey, bcpKeyLen, status);
-                    if (key == nullptr) {
-                        status = U_MEMORY_ALLOCATION_ERROR;
-                        return;
+                    icu::CharString* ਕੁੰਜੀ = kwdBuf.create(p_Bcp_ਕੁੰਜੀ, bcp_ਕੁੰਜੀ_Len, ਸਥਿਤੀ);
+                    ਜੇ (ਕੁੰਜੀ == ਖਾਲੀ_ਸੂਚਕ) {
+                        ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                        ਵਾਪਸ;
                     }
-                    if (U_FAILURE(status)) {
-                        return;
+                    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                        ਵਾਪਸ;
                     }
-                    T_CString_toLowerCase(key->data());
-                    pKey = key->data();
-                } else {
-                    pKey = legacyKey->data();
+                    T_CString_ਮੰਜ਼ਿਲ_ਹੇਠਲਾ_Case(ਕੁੰਜੀ->ਅੰਕੜੇ());
+                    p_ਕੁੰਜੀ = ਕੁੰਜੀ->ਅੰਕੜੇ();
+                } ਨਹੀਂਤਾਂ {
+                    p_ਕੁੰਜੀ = legacy_ਕੁੰਜੀ_2->ਅੰਕੜੇ();
                 }
 
-                if (pBcpType) {
+                ਜੇ (pBcpType) {
                     /* BCP type to locale type */
-                    std::optional<std::string_view> legacyType = ulocimp_toLegacyTypeWithFallback(
-                        pKey, {pBcpType, static_cast<std::string_view::size_type>(bcpTypeLen)});
-                    if (!legacyType.has_value()) {
-                        status = U_ILLEGAL_ARGUMENT_ERROR;
-                        return;
+                    std::optional<std::string_view> legacyType = ulocimp_ਮੰਜ਼ਿਲ_Legacy_Type_With_Fallback(
+                        p_ਕੁੰਜੀ, {pBcpType, static_cast<std::string_view::size_type>(bcpTypeLen)});
+                    ਜੇ (!legacyType.has_value()) {
+                        ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                        ਵਾਪਸ;
                     }
-                    if (legacyType->data() == pBcpType) {
+                    ਜੇ (legacyType->ਅੰਕੜੇ() == pBcpType) {
                         /*
                         The type returned by toLegacyType points to the input buffer.
                         We normalize the result type to lower case.
                         */
-                        icu::CharString* type = kwdBuf.create(pBcpType, bcpTypeLen, status);
-                        if (type == nullptr) {
-                            status = U_MEMORY_ALLOCATION_ERROR;
-                            return;
+                        icu::CharString* type = kwdBuf.create(pBcpType, bcpTypeLen, ਸਥਿਤੀ);
+                        ਜੇ (type == ਖਾਲੀ_ਸੂਚਕ) {
+                            ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                            ਵਾਪਸ;
                         }
-                        if (U_FAILURE(status)) {
-                            return;
+                        ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                            ਵਾਪਸ;
                         }
-                        T_CString_toLowerCase(type->data());
-                        pType = type->data();
-                    } else {
-                        pType = legacyType->data();
+                        T_CString_ਮੰਜ਼ਿਲ_ਹੇਠਲਾ_Case(type->ਅੰਕੜੇ());
+                        pType = type->ਅੰਕੜੇ();
+                    } ਨਹੀਂਤਾਂ {
+                        pType = legacyType->ਅੰਕੜੇ();
                     }
-                } else {
+                } ਨਹੀਂਤਾਂ {
                     /* typeless - default type value is "yes" */
                     pType = LOCALE_TYPE_YES;
                 }
 
                 /* Special handling for u-va-posix, since we want to treat this as a variant, 
                    not as a keyword */
-                if (!variantExists && !uprv_strcmp(pKey, POSIX_KEY) && !uprv_strcmp(pType, POSIX_VALUE) ) {
-                    posixVariant = true;
-                } else {
+                ਜੇ (!variantExists && !uprv_strcmp(p_ਕੁੰਜੀ, POSIX_ਕੁੰਜੀ) && !uprv_strcmp(pType, POSIX_ਮੁੱਲ) ) {
+                    posixVariant = ਸੱਚ;
+                } ਨਹੀਂਤਾਂ {
                     /* create an ExtensionListEntry for this keyword */
                     kwd = extPool.create();
-                    if (kwd == nullptr) {
-                        status = U_MEMORY_ALLOCATION_ERROR;
-                        return;
+                    ਜੇ (kwd == ਖਾਲੀ_ਸੂਚਕ) {
+                        ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                        ਵਾਪਸ;
                     }
 
-                    kwd->key = pKey;
+                    kwd->ਕੁੰਜੀ = p_ਕੁੰਜੀ;
                     kwd->value = pType;
 
-                    if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+                    ਜੇ (!ਜੋੜੋ_Extension_ਮੰਜ਼ਿਲ_List(&kwd_ਪਹਿਲਾ, kwd, ਝੂਠ)) {
                         // duplicate keyword is allowed, Only the first
                         // is honored.
                     }
                 }
 
-                pBcpKey = pNextBcpKey;
-                bcpKeyLen = pNextBcpKey != nullptr ? nextBcpKeyLen : 0;
-                pBcpType = nullptr;
+                p_Bcp_ਕੁੰਜੀ = p_ਅਗਲਾ_Bcp_ਕੁੰਜੀ;
+                bcp_ਕੁੰਜੀ_Len = p_ਅਗਲਾ_Bcp_ਕੁੰਜੀ != ਖਾਲੀ_ਸੂਚਕ ? ਅਗਲਾ_Bcp_ਕੁੰਜੀ_Len : 0;
+                pBcpType = ਖਾਲੀ_ਸੂਚਕ;
                 bcpTypeLen = 0;
             }
         }
     }
 
-    kwd = kwdFirst;
-    while (kwd != nullptr) {
-        nextKwd = kwd->next;
-        _addExtensionToList(appendTo, kwd, false);
-        kwd = nextKwd;
+    kwd = kwd_ਪਹਿਲਾ;
+    ਜਦੋਂ (kwd != ਖਾਲੀ_ਸੂਚਕ) {
+        ਅਗਲਾ_Kwd = kwd->next;
+        ਜੋੜੋ_Extension_ਮੰਜ਼ਿਲ_List(append_ਮੰਜ਼ਿਲ, kwd, ਝੂਠ);
+        kwd = ਅਗਲਾ_Kwd;
     }
 }
 
-void
-_appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+ਖਾਲੀ
+_appendKeywords(ULanguage_ਟੈਗ* langtag, icu::ByteSink& sink, UError_ਕੋਡ& ਸਥਿਤੀ) {
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) { ਵਾਪਸ; }
 
     int32_t i, n;
     int32_t len;
-    ExtensionListEntry *kwdFirst = nullptr;
-    ExtensionListEntry *kwd;
-    const char *key, *type;
-    icu::MemoryPool<ExtensionListEntry> extPool;
-    icu::MemoryPool<icu::CharString> kwdBuf;
-    bool posixVariant = false;
+    Extension_List_ਇੰਦਰਾਜ *kwd_ਪਹਿਲਾ = ਖਾਲੀ_ਸੂਚਕ;
+    Extension_List_ਇੰਦਰਾਜ *kwd;
+    ਅਚਲ ਅੱਖਰ *ਕੁੰਜੀ, *type;
+    icu::ਸਮ੍ਰਿਤੀ_Pool<Extension_List_ਇੰਦਰਾਜ> extPool;
+    icu::ਸਮ੍ਰਿਤੀ_Pool<icu::CharString> kwdBuf;
+    ਤਾਰਕਿਕ posixVariant = ਝੂਠ;
 
-    n = ultag_getExtensionsSize(langtag);
+    n = ultag_get_Extensions_ਮਾਪ(langtag);
 
     /* resolve locale keywords and reordering keys */
-    for (i = 0; i < n; i++) {
-        key = ultag_getExtensionKey(langtag, i);
-        type = ultag_getExtensionValue(langtag, i);
-        if (*key == LDMLEXT) {
+    ਲਈ (i = 0; i < n; i++) {
+        ਕੁੰਜੀ = ultag_get_Extension_ਕੁੰਜੀ(langtag, i);
+        type = ultag_get_Extension_ਮੁੱਲ(langtag, i);
+        ਜੇ (*ਕੁੰਜੀ == LDMLEXT) {
             /* Determine if variants already exists */
-            if (ultag_getVariantsSize(langtag)) {
-                posixVariant = true;
+            ਜੇ (ultag_get_Variants_ਮਾਪ(langtag)) {
+                posixVariant = ਸੱਚ;
             }
 
-            _appendLDMLExtensionAsKeywords(type, &kwdFirst, extPool, kwdBuf, posixVariant, status);
-            if (U_FAILURE(status)) {
-                break;
+            _appendLDMLExtensionAsKeywords(type, &kwd_ਪਹਿਲਾ, extPool, kwdBuf, posixVariant, ਸਥਿਤੀ);
+            ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                ਰੋਕੋ;
             }
-        } else {
+        } ਨਹੀਂਤਾਂ {
             kwd = extPool.create();
-            if (kwd == nullptr) {
-                status = U_MEMORY_ALLOCATION_ERROR;
-                break;
+            ਜੇ (kwd == ਖਾਲੀ_ਸੂਚਕ) {
+                ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                ਰੋਕੋ;
             }
-            kwd->key = key;
+            kwd->ਕੁੰਜੀ = ਕੁੰਜੀ;
             kwd->value = type;
-            if (!_addExtensionToList(&kwdFirst, kwd, false)) {
-                status = U_ILLEGAL_ARGUMENT_ERROR;
-                break;
+            ਜੇ (!ਜੋੜੋ_Extension_ਮੰਜ਼ਿਲ_List(&kwd_ਪਹਿਲਾ, kwd, ਝੂਠ)) {
+                ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                ਰੋਕੋ;
             }
         }
     }
 
-    if (U_SUCCESS(status)) {
-        type = ultag_getPrivateUse(langtag);
-        if (static_cast<int32_t>(uprv_strlen(type)) > 0) {
+    ਜੇ (U_SUCCESS(ਸਥਿਤੀ)) {
+        type = ultag_get_ਨਿੱਜੀ_Use(langtag);
+        ਜੇ (static_cast<int32_t>(uprv_strlen(type)) > 0) {
             /* add private use as a keyword */
             kwd = extPool.create();
-            if (kwd == nullptr) {
-                status = U_MEMORY_ALLOCATION_ERROR;
-            } else {
-                kwd->key = PRIVATEUSE_KEY;
+            ਜੇ (kwd == ਖਾਲੀ_ਸੂਚਕ) {
+                ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+            } ਨਹੀਂਤਾਂ {
+                kwd->ਕੁੰਜੀ = PRIVATEUSE_ਕੁੰਜੀ;
                 kwd->value = type;
-                if (!_addExtensionToList(&kwdFirst, kwd, false)) {
-                    status = U_ILLEGAL_ARGUMENT_ERROR;
+                ਜੇ (!ਜੋੜੋ_Extension_ਮੰਜ਼ਿਲ_List(&kwd_ਪਹਿਲਾ, kwd, ਝੂਠ)) {
+                    ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
                 }
             }
         }
@@ -1840,26 +1840,26 @@ _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) 
 
     /* If a POSIX variant was in the extensions, write it out before writing the keywords. */
 
-    if (U_SUCCESS(status) && posixVariant) {
+    ਜੇ (U_SUCCESS(ਸਥਿਤੀ) && posixVariant) {
         len = static_cast<int32_t>(uprv_strlen(_POSIX));
         sink.Append(_POSIX, len);
     }
 
-    if (U_SUCCESS(status) && kwdFirst != nullptr) {
+    ਜੇ (U_SUCCESS(ਸਥਿਤੀ) && kwd_ਪਹਿਲਾ != ਖਾਲੀ_ਸੂਚਕ) {
         /* write out the sorted keywords */
-        bool firstValue = true;
-        kwd = kwdFirst;
-        do {
-            if (firstValue) {
+        ਤਾਰਕਿਕ ਪਹਿਲਾ_ਮੁੱਲ = ਸੱਚ;
+        kwd = kwd_ਪਹਿਲਾ;
+        ਕਰੋ {
+            ਜੇ (ਪਹਿਲਾ_ਮੁੱਲ) {
                 sink.Append("@", 1);
-                firstValue = false;
-            } else {
+                ਪਹਿਲਾ_ਮੁੱਲ = ਝੂਠ;
+            } ਨਹੀਂਤਾਂ {
                 sink.Append(";", 1);
             }
 
-            /* key */
-            len = static_cast<int32_t>(uprv_strlen(kwd->key));
-            sink.Append(kwd->key, len);
+            /*ਕੁੰਜੀ*/
+            len = static_cast<int32_t>(uprv_strlen(kwd->ਕੁੰਜੀ));
+            sink.Append(kwd->ਕੁੰਜੀ, len);
             sink.Append("=", 1);
 
             /* type */
@@ -1867,70 +1867,70 @@ _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) 
             sink.Append(kwd->value, len);
 
             kwd = kwd->next;
-        } while (kwd);
+        } ਜਦੋਂ (kwd);
     }
 }
 
-void
-_appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, bool /*hadPosix*/, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+ਖਾਲੀ
+append_Privateuse_ਮੰਜ਼ਿਲ_Language_ਟੈਗ(std::string_view localeID, icu::ByteSink& sink, ਤਾਰਕਿਕ strict, ਤਾਰਕਿਕ /*hadPosix*/, UError_ਕੋਡ& ਸਥਿਤੀ) {
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) { ਵਾਪਸ; }
 
-    UErrorCode tmpStatus = U_ZERO_ERROR;
-    icu::CharString buf = ulocimp_getVariant(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
-            status = U_ILLEGAL_ARGUMENT_ERROR;
+    UError_ਕੋਡ tmp_ਸਥਿਤੀ = U_ZERO_ERROR;
+    icu::CharString buf = ulocimp_getVariant(localeID, tmp_ਸਥਿਤੀ);
+    ਜੇ (U_FAILURE(tmp_ਸਥਿਤੀ)) {
+        ਜੇ (strict) {
+            ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
         }
-        return;
+        ਵਾਪਸ;
     }
 
-    if (!buf.isEmpty()) {
-        char *p, *pPriv;
-        bool bNext = true;
-        bool firstValue = true;
-        bool writeValue;
+    ਜੇ (!buf.is_ਖਾਲੀ_ਥਾਵਾਂ()) {
+        ਅੱਖਰ *p, *pPriv;
+        ਤਾਰਕਿਕ b_ਅਗਲਾ = ਸੱਚ;
+        ਤਾਰਕਿਕ ਪਹਿਲਾ_ਮੁੱਲ = ਸੱਚ;
+        ਤਾਰਕਿਕ write_ਮੁੱਲ;
 
-        pPriv = nullptr;
-        p = buf.data();
-        while (bNext) {
-            writeValue = false;
-            if (*p == SEP || *p == LOCALE_SEP || *p == 0) {
-                if (*p == 0) {
-                    bNext = false;
-                } else {
+        pPriv = ਖਾਲੀ_ਸੂਚਕ;
+        p = buf.ਅੰਕੜੇ();
+        ਜਦੋਂ (b_ਅਗਲਾ) {
+            write_ਮੁੱਲ = ਝੂਠ;
+            ਜੇ (*p == SEP || *p == LOCALE_SEP || *p == 0) {
+                ਜੇ (*p == 0) {
+                    b_ਅਗਲਾ = ਝੂਠ;
+                } ਨਹੀਂਤਾਂ {
                     *p = 0; /* terminate */
                 }
-                if (pPriv != nullptr) {
+                ਜੇ (pPriv != ਖਾਲੀ_ਸੂਚਕ) {
                     /* Private use in the canonical format is lowercase in BCP47 */
-                    for (int32_t i = 0; *(pPriv + i) != 0; i++) {
+                    ਲਈ (int32_t i = 0; *(pPriv + i) != 0; i++) {
                         *(pPriv + i) = uprv_tolower(*(pPriv + i));
                     }
 
                     /* validate */
-                    if (_isPrivateuseValueSubtag(pPriv, -1)) {
-                        if (firstValue) {
-                            if (!_isVariantSubtag(pPriv, -1)) {
-                                writeValue = true;
+                    ਜੇ (is_Privateuse_ਮੁੱਲ_Subtag(pPriv, -1)) {
+                        ਜੇ (ਪਹਿਲਾ_ਮੁੱਲ) {
+                            ਜੇ (!_isVariantSubtag(pPriv, -1)) {
+                                write_ਮੁੱਲ = ਸੱਚ;
                             }
-                        } else {
-                            writeValue = true;
+                        } ਨਹੀਂਤਾਂ {
+                            write_ਮੁੱਲ = ਸੱਚ;
                         }
-                    } else if (strict) {
-                        status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
-                    } else {
-                        break;
+                    } ਨਹੀਂਤਾਂ ਜੇ (strict) {
+                        ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                        ਰੋਕੋ;
+                    } ਨਹੀਂਤਾਂ {
+                        ਰੋਕੋ;
                     }
 
-                    if (writeValue) {
+                    ਜੇ (write_ਮੁੱਲ) {
                         sink.Append("-", 1);
 
-                        if (firstValue) {
-                            sink.Append(PRIVATEUSE_KEY, UPRV_LENGTHOF(PRIVATEUSE_KEY) - 1);
+                        ਜੇ (ਪਹਿਲਾ_ਮੁੱਲ) {
+                            sink.Append(PRIVATEUSE_ਕੁੰਜੀ, UPRV_LENGTHOF(PRIVATEUSE_ਕੁੰਜੀ) - 1);
                             sink.Append("-", 1);
-                            sink.Append(PRIVUSE_VARIANT_PREFIX, UPRV_LENGTHOF(PRIVUSE_VARIANT_PREFIX) - 1);
+                            sink.Append(PRIVUSE_VARIANT_ਅਗੇਤਰ, UPRV_LENGTHOF(PRIVUSE_VARIANT_ਅਗੇਤਰ) - 1);
                             sink.Append("-", 1);
-                            firstValue = false;
+                            ਪਹਿਲਾ_ਮੁੱਲ = ਝੂਠ;
                         }
 
                         int32_t len = static_cast<int32_t>(uprv_strlen(pPriv));
@@ -1938,8 +1938,8 @@ _appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, b
                     }
                 }
                 /* reset private use starting position */
-                pPriv = nullptr;
-            } else if (pPriv == nullptr) {
+                pPriv = ਖਾਲੀ_ਸੂਚਕ;
+            } ਨਹੀਂਤਾਂ ਜੇ (pPriv == ਖਾਲੀ_ਸੂਚਕ) {
                 pPriv = p;
             }
             p++;
@@ -1956,14 +1956,14 @@ _appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, b
 */
 
 /* Bit flags used by the parser */
-#define LANG 0x0001
-#define EXTL 0x0002
-#define SCRT 0x0004
-#define REGN 0x0008
-#define VART 0x0010
-#define EXTS 0x0020
-#define EXTV 0x0040
-#define PRIV 0x0080
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LANG 0x0001
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ EXTL 0x0002
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ SCRT 0x0004
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ REGN 0x0008
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ VART 0x0010
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ EXTS 0x0020
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ EXTV 0x0040
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ PRIV 0x0080
 
 /**
  * Ticket #12705 - The optimizer in Visual Studio 2015 Update 3 has problems optimizing this function.
@@ -1971,59 +1971,59 @@ _appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, b
  * This work-around should be removed once the following versions of Visual Studio are no
  * longer supported: All versions of VS2015/VS2017, and versions of VS2019 below 16.4.
  */
-#if defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
-#pragma optimize( "", off )
-#endif
+#ਜੇ defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
+#ਹਦਾਇਤ optimize( "", off )
+#ਜੇ_ਅੰਤ
 
-ULanguageTag*
-ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status) {
-    if (U_FAILURE(status)) { return nullptr; }
+ULanguage_ਟੈਗ*
+ultag_parse(ਅਚਲ ਅੱਖਰ* ਟੈਗ, int32_t ਟੈਗ_Len, int32_t* parsedLen, UError_ਕੋਡ& ਸਥਿਤੀ) {
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) { ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ; }
 
-    char *tagBuf;
+    ਅੱਖਰ *ਟੈਗ_Buf;
     int16_t next;
-    char *pSubtag, *pNext, *pLastGoodPosition;
+    ਅੱਖਰ *pSubtag, *p_ਅਗਲਾ, *p_ਆਖਰੀ_Good_Position;
     int32_t subtagLen;
     int32_t extlangIdx;
-    icu::LocalPointer<ExtensionListEntry> pExtension;
-    char *pExtValueSubtag, *pExtValueSubtagEnd;
+    icu::Local_ਸੂਚਕ<Extension_List_ਇੰਦਰਾਜ> pExtension;
+    ਅੱਖਰ *p_Ext_ਮੁੱਲ_Subtag, *p_Ext_ਮੁੱਲ_Subtag_ਸਿਰਾ;
     int32_t i;
-    bool privateuseVar = false;
+    ਤਾਰਕਿਕ privateuseVar = ਝੂਠ;
     int32_t legacyLen = 0;
 
-    if (parsedLen != nullptr) {
+    ਜੇ (parsedLen != ਖਾਲੀ_ਸੂਚਕ) {
         *parsedLen = 0;
     }
 
-    if (tagLen < 0) {
-        tagLen = static_cast<int32_t>(uprv_strlen(tag));
+    ਜੇ (ਟੈਗ_Len < 0) {
+        ਟੈਗ_Len = static_cast<int32_t>(uprv_strlen(ਟੈਗ));
     }
 
     /* copy the entire string */
-    tagBuf = static_cast<char*>(uprv_malloc(tagLen + 1));
-    if (tagBuf == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    ਟੈਗ_Buf = static_cast<ਅੱਖਰ*>(uprv_malloc(ਟੈਗ_Len + 1));
+    ਜੇ (ਟੈਗ_Buf == ਖਾਲੀ_ਸੂਚਕ) {
+        ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
     
-    if (tagLen > 0) {
-        uprv_memcpy(tagBuf, tag, tagLen);
+    ਜੇ (ਟੈਗ_Len > 0) {
+        uprv_memcpy(ਟੈਗ_Buf, ਟੈਗ, ਟੈਗ_Len);
     }
-    *(tagBuf + tagLen) = 0;
+    *(ਟੈਗ_Buf + ਟੈਗ_Len) = 0;
 
     /* create a ULanguageTag */
-    icu::LocalULanguageTagPointer t(
-            static_cast<ULanguageTag*>(uprv_malloc(sizeof(ULanguageTag))));
-    if (t.isNull()) {
-        uprv_free(tagBuf);
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    icu::Local_ULanguage_ਟੈਗ_ਸੂਚਕ t(
+            static_cast<ULanguage_ਟੈਗ*>(uprv_malloc(ਆਕਾਰ(ULanguage_ਟੈਗ))));
+    ਜੇ (t.isNull()) {
+        uprv_free(ਟੈਗ_Buf);
+        ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
-    _initializeULanguageTag(t.getAlias());
-    t->buf = tagBuf;
+    initialize_ULanguage_ਟੈਗ(t.getAlias());
+    t->buf = ਟੈਗ_Buf;
 
-    if (tagLen < MINLEN) {
+    ਜੇ (ਟੈਗ_Len < MINLEN) {
         /* the input tag is too short - return empty ULanguageTag */
-        return t.orphan();
+        ਵਾਪਸ t.orphan();
     }
 
     size_t parsedLenDelta = 0;
@@ -2031,70 +2031,70 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
     // script and region such as art-DE-lojban or art-Latn-lojban won't be
     // matched.
     /* check if the tag is legacy */
-    for (i = 0; i < UPRV_LENGTHOF(LEGACY); i += 2) {
+    ਲਈ (i = 0; i < UPRV_LENGTHOF(LEGACY); i += 2) {
         int32_t checkLegacyLen = static_cast<int32_t>(uprv_strlen(LEGACY[i]));
-        if (tagLen < checkLegacyLen) {
-            continue;
+        ਜੇ (ਟੈਗ_Len < checkLegacyLen) {
+            ਜਾਰੀ;
         }
-        if (tagLen > checkLegacyLen && tagBuf[checkLegacyLen] != '-') {
+        ਜੇ (ਟੈਗ_Len > checkLegacyLen && ਟੈਗ_Buf[checkLegacyLen] != '-') {
             // make sure next char is '-'.
-            continue;
+            ਜਾਰੀ;
         }
-        if (uprv_strnicmp(LEGACY[i], tagBuf, checkLegacyLen) == 0) {
-            int32_t newTagLength;
+        ਜੇ (uprv_strnicmp(LEGACY[i], ਟੈਗ_Buf, checkLegacyLen) == 0) {
+            int32_t new_ਟੈਗ_ਲੰਮਾਈ;
 
             legacyLen = checkLegacyLen;  /* back up for output parsedLen */
             int32_t replacementLen = static_cast<int32_t>(uprv_strlen(LEGACY[i+1]));
-            newTagLength = replacementLen + tagLen - checkLegacyLen;
-            int32_t oldTagLength = tagLen;
-            if (tagLen < newTagLength) {
-                uprv_free(tagBuf);
+            new_ਟੈਗ_ਲੰਮਾਈ = replacementLen + ਟੈਗ_Len - checkLegacyLen;
+            int32_t old_ਟੈਗ_ਲੰਮਾਈ = ਟੈਗ_Len;
+            ਜੇ (ਟੈਗ_Len < new_ਟੈਗ_ਲੰਮਾਈ) {
+                uprv_free(ਟੈਗ_Buf);
                 // Change t->buf after the free and before return to avoid the second double free in
                 // the destructor of t when t is out of scope.
-                t->buf = tagBuf = static_cast<char*>(uprv_malloc(newTagLength + 1));
-                if (tagBuf == nullptr) {
-                    status = U_MEMORY_ALLOCATION_ERROR;
-                    return nullptr;
+                t->buf = ਟੈਗ_Buf = static_cast<ਅੱਖਰ*>(uprv_malloc(new_ਟੈਗ_ਲੰਮਾਈ + 1));
+                ਜੇ (ਟੈਗ_Buf == ਖਾਲੀ_ਸੂਚਕ) {
+                    ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
                 }
-                tagLen = newTagLength;
+                ਟੈਗ_Len = new_ਟੈਗ_ਲੰਮਾਈ;
             }
             parsedLenDelta = checkLegacyLen - replacementLen;
             uprv_strcpy(t->buf, LEGACY[i + 1]);
-            if (checkLegacyLen != tagLen) {
-                uprv_memcpy(t->buf + replacementLen, tag + checkLegacyLen,
-                            oldTagLength - checkLegacyLen);
+            ਜੇ (checkLegacyLen != ਟੈਗ_Len) {
+                uprv_memcpy(t->buf + replacementLen, ਟੈਗ + checkLegacyLen,
+                            old_ਟੈਗ_ਲੰਮਾਈ - checkLegacyLen);
                 // NUL-terminate after memcpy().
-                t->buf[replacementLen + oldTagLength - checkLegacyLen] = 0;
+                t->buf[replacementLen + old_ਟੈਗ_ਲੰਮਾਈ - checkLegacyLen] = 0;
             }
-            break;
+            ਰੋਕੋ;
         }
     }
 
-    if (legacyLen == 0) {
-        for (i = 0; i < UPRV_LENGTHOF(REDUNDANT); i += 2) {
-            const char* redundantTag = REDUNDANT[i];
-            size_t redundantTagLen = uprv_strlen(redundantTag);
+    ਜੇ (legacyLen == 0) {
+        ਲਈ (i = 0; i < UPRV_LENGTHOF(REDUNDANT); i += 2) {
+            ਅਚਲ ਅੱਖਰ* redundant_ਟੈਗ = REDUNDANT[i];
+            size_t redundant_ਟੈਗ_Len = uprv_strlen(redundant_ਟੈਗ);
             // The preferred tag for a redundant tag is always shorter than redundant
             // tag. A redundant tag may or may not be followed by other subtags.
             // (i.e. "zh-yue" or "zh-yue-u-co-pinyin").
-            if (uprv_strnicmp(redundantTag, tagBuf, static_cast<uint32_t>(redundantTagLen)) == 0) {
-                const char* redundantTagEnd = tagBuf + redundantTagLen;
-                if (*redundantTagEnd  == '\0' || *redundantTagEnd == SEP) {
-                    const char* preferredTag = REDUNDANT[i + 1];
-                    size_t preferredTagLen = uprv_strlen(preferredTag);
-                    uprv_memcpy(t->buf, preferredTag, preferredTagLen);
-                    if (*redundantTagEnd == SEP) {
-                        uprv_memmove(tagBuf + preferredTagLen,
-                                     redundantTagEnd,
-                                     tagLen - redundantTagLen + 1);
-                    } else {
-                        tagBuf[preferredTagLen] = '\0';
+            ਜੇ (uprv_strnicmp(redundant_ਟੈਗ, ਟੈਗ_Buf, static_cast<uint32_t>(redundant_ਟੈਗ_Len)) == 0) {
+                ਅਚਲ ਅੱਖਰ* redundant_ਟੈਗ_ਸਿਰਾ = ਟੈਗ_Buf + redundant_ਟੈਗ_Len;
+                ਜੇ (*redundant_ਟੈਗ_ਸਿਰਾ  == '\0' || *redundant_ਟੈਗ_ਸਿਰਾ == SEP) {
+                    ਅਚਲ ਅੱਖਰ* preferred_ਟੈਗ = REDUNDANT[i + 1];
+                    size_t preferred_ਟੈਗ_Len = uprv_strlen(preferred_ਟੈਗ);
+                    uprv_memcpy(t->buf, preferred_ਟੈਗ, preferred_ਟੈਗ_Len);
+                    ਜੇ (*redundant_ਟੈਗ_ਸਿਰਾ == SEP) {
+                        uprv_memmove(ਟੈਗ_Buf + preferred_ਟੈਗ_Len,
+                                     redundant_ਟੈਗ_ਸਿਰਾ,
+                                     ਟੈਗ_Len - redundant_ਟੈਗ_Len + 1);
+                    } ਨਹੀਂਤਾਂ {
+                        ਟੈਗ_Buf[preferred_ਟੈਗ_Len] = '\0';
                     }
                     // parsedLen should be the length of the input
                     // before redundantTag is replaced by preferredTag.
                     // Save the delta to add it back later.
-                    parsedLenDelta = redundantTagLen - preferredTagLen;
-                    break;
+                    parsedLenDelta = redundant_ਟੈਗ_Len - preferred_ਟੈਗ_Len;
+                    ਰੋਕੋ;
                 }
             }
         }
@@ -2110,446 +2110,446 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
      */
 
     next = LANG | PRIV;
-    pNext = pLastGoodPosition = tagBuf;
+    p_ਅਗਲਾ = p_ਆਖਰੀ_Good_Position = ਟੈਗ_Buf;
     extlangIdx = 0;
-    pExtValueSubtag = nullptr;
-    pExtValueSubtagEnd = nullptr;
+    p_Ext_ਮੁੱਲ_Subtag = ਖਾਲੀ_ਸੂਚਕ;
+    p_Ext_ਮੁੱਲ_Subtag_ਸਿਰਾ = ਖਾਲੀ_ਸੂਚਕ;
 
-    while (pNext) {
-        char *pSep;
+    ਜਦੋਂ (p_ਅਗਲਾ) {
+        ਅੱਖਰ *pSep;
 
-        pSubtag = pNext;
+        pSubtag = p_ਅਗਲਾ;
 
         /* locate next separator char */
         pSep = pSubtag;
-        while (*pSep) {
-            if (*pSep == SEP) {
-                break;
+        ਜਦੋਂ (*pSep) {
+            ਜੇ (*pSep == SEP) {
+                ਰੋਕੋ;
             }
             pSep++;
         }
-        if (*pSep == 0) {
+        ਜੇ (*pSep == 0) {
             /* last subtag */
-            pNext = nullptr;
-        } else {
-            pNext = pSep + 1;
+            p_ਅਗਲਾ = ਖਾਲੀ_ਸੂਚਕ;
+        } ਨਹੀਂਤਾਂ {
+            p_ਅਗਲਾ = pSep + 1;
         }
         subtagLen = static_cast<int32_t>(pSep - pSubtag);
 
-        if (next & LANG) {
-            if (ultag_isLanguageSubtag(pSubtag, subtagLen)) {
+        ਜੇ (next & LANG) {
+            ਜੇ (ultag_isLanguageSubtag(pSubtag, subtagLen)) {
                 *pSep = 0;  /* terminate */
                 // TODO: move deprecated language code handling here.
-                t->language = T_CString_toLowerCase(pSubtag);
+                t->language = T_CString_ਮੰਜ਼ਿਲ_ਹੇਠਲਾ_Case(pSubtag);
 
-                pLastGoodPosition = pSep;
+                p_ਆਖਰੀ_Good_Position = pSep;
                 next = SCRT | REGN | VART | EXTS | PRIV;
-                if (subtagLen <= 3)
+                ਜੇ (subtagLen <= 3)
                   next |= EXTL;
-                continue;
+                ਜਾਰੀ;
             }
         }
-        if (next & EXTL) {
-            if (_isExtlangSubtag(pSubtag, subtagLen)) {
+        ਜੇ (next & EXTL) {
+            ਜੇ (_isExtlangSubtag(pSubtag, subtagLen)) {
                 *pSep = 0;
-                t->extlang[extlangIdx++] = T_CString_toLowerCase(pSubtag);
+                t->extlang[extlangIdx++] = T_CString_ਮੰਜ਼ਿਲ_ਹੇਠਲਾ_Case(pSubtag);
 
-                pLastGoodPosition = pSep;
-                if (extlangIdx < 3) {
+                p_ਆਖਰੀ_Good_Position = pSep;
+                ਜੇ (extlangIdx < 3) {
                     next = EXTL | SCRT | REGN | VART | EXTS | PRIV;
-                } else {
+                } ਨਹੀਂਤਾਂ {
                     next = SCRT | REGN | VART | EXTS | PRIV;
                 }
-                continue;
+                ਜਾਰੀ;
             }
         }
-        if (next & SCRT) {
-            if (ultag_isScriptSubtag(pSubtag, subtagLen)) {
-                char *p = pSubtag;
+        ਜੇ (next & SCRT) {
+            ਜੇ (ultag_isScriptSubtag(pSubtag, subtagLen)) {
+                ਅੱਖਰ *p = pSubtag;
 
                 *pSep = 0;
 
                 /* to title case */
                 *p = uprv_toupper(*p);
                 p++;
-                for (; *p; p++) {
+                ਲਈ (; *p; p++) {
                     *p = uprv_tolower(*p);
                 }
 
                 t->script = pSubtag;
 
-                pLastGoodPosition = pSep;
+                p_ਆਖਰੀ_Good_Position = pSep;
                 next = REGN | VART | EXTS | PRIV;
-                continue;
+                ਜਾਰੀ;
             }
         }
-        if (next & REGN) {
-            if (ultag_isRegionSubtag(pSubtag, subtagLen)) {
+        ਜੇ (next & REGN) {
+            ਜੇ (ultag_isRegionSubtag(pSubtag, subtagLen)) {
                 *pSep = 0;
                 // TODO: move deprecated region code handling here.
-                t->region = T_CString_toUpperCase(pSubtag);
+                t->region = T_CString_ਮੰਜ਼ਿਲ_ਉੱਤਲਾ_Case(pSubtag);
 
-                pLastGoodPosition = pSep;
+                p_ਆਖਰੀ_Good_Position = pSep;
                 next = VART | EXTS | PRIV;
-                continue;
+                ਜਾਰੀ;
             }
         }
-        if (next & VART) {
-            if (_isVariantSubtag(pSubtag, subtagLen) ||
+        ਜੇ (next & VART) {
+            ਜੇ (_isVariantSubtag(pSubtag, subtagLen) ||
                (privateuseVar && _isPrivateuseVariantSubtag(pSubtag, subtagLen))) {
-                icu::LocalPointer<VariantListEntry> var(new VariantListEntry, status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                icu::Local_ਸੂਚਕ<Variant_List_ਇੰਦਰਾਜ> var(ਨਵਾਂ Variant_List_ਇੰਦਰਾਜ, ਸਥਿਤੀ);
+                ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
                 }
                 *pSep = 0;
-                var->variant = T_CString_toUpperCase(pSubtag);
-                if (!_addVariantToList(&(t->variants), std::move(var))) {
+                var->variant = T_CString_ਮੰਜ਼ਿਲ_ਉੱਤਲਾ_Case(pSubtag);
+                ਜੇ (!ਜੋੜੋ_Variant_ਮੰਜ਼ਿਲ_List(&(t->variants), std::move(var))) {
                     /* duplicated variant entry */
-                    break;
+                    ਰੋਕੋ;
                 }
-                pLastGoodPosition = pSep;
+                p_ਆਖਰੀ_Good_Position = pSep;
                 next = VART | EXTS | PRIV;
-                continue;
+                ਜਾਰੀ;
             }
         }
-        if (next & EXTS) {
-            if (_isExtensionSingleton(pSubtag, subtagLen)) {
-                if (pExtension.isValid()) {
-                    if (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
+        ਜੇ (next & EXTS) {
+            ਜੇ (_isExtensionSingleton(pSubtag, subtagLen)) {
+                ਜੇ (pExtension.isValid()) {
+                    ਜੇ (p_Ext_ਮੁੱਲ_Subtag == ਖਾਲੀ_ਸੂਚਕ || p_Ext_ਮੁੱਲ_Subtag_ਸਿਰਾ == ਖਾਲੀ_ਸੂਚਕ) {
                         /* the previous extension is incomplete */
-                        delete pExtension.orphan();
-                        break;
+                        ਮਿਟਾਓ pExtension.orphan();
+                        ਰੋਕੋ;
                     }
 
                     /* terminate the previous extension value */
-                    *pExtValueSubtagEnd = 0;
-                    pExtension->value = T_CString_toLowerCase(pExtValueSubtag);
+                    *p_Ext_ਮੁੱਲ_Subtag_ਸਿਰਾ = 0;
+                    pExtension->value = T_CString_ਮੰਜ਼ਿਲ_ਹੇਠਲਾ_Case(p_Ext_ਮੁੱਲ_Subtag);
 
                     /* insert the extension to the list */
-                    if (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
+                    ਜੇ (ਜੋੜੋ_Extension_ਮੰਜ਼ਿਲ_List(&(t->extensions), pExtension.getAlias(), ਝੂਠ)) {
                         pExtension.orphan();
-                        pLastGoodPosition = pExtValueSubtagEnd;
-                    } else {
+                        p_ਆਖਰੀ_Good_Position = p_Ext_ਮੁੱਲ_Subtag_ਸਿਰਾ;
+                    } ਨਹੀਂਤਾਂ {
                         /* stop parsing here */
-                        delete pExtension.orphan();
-                        break;
+                        ਮਿਟਾਓ pExtension.orphan();
+                        ਰੋਕੋ;
                     }
                 }
 
                 /* create a new extension */
-                pExtension.adoptInsteadAndCheckErrorCode(new ExtensionListEntry, status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                pExtension.adopt_Instead_And_Check_Error_ਕੋਡ(ਨਵਾਂ Extension_List_ਇੰਦਰਾਜ, ਸਥਿਤੀ);
+                ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
                 }
                 *pSep = 0;
-                pExtension->key = T_CString_toLowerCase(pSubtag);
-                pExtension->value = nullptr;   /* will be set later */
+                pExtension->ਕੁੰਜੀ = T_CString_ਮੰਜ਼ਿਲ_ਹੇਠਲਾ_Case(pSubtag);
+                pExtension->value = ਖਾਲੀ_ਸੂਚਕ;   /* will be set later */
 
                 /*
                  * reset the start and the end location of extension value
                  * subtags for this extension
                  */
-                pExtValueSubtag = nullptr;
-                pExtValueSubtagEnd = nullptr;
+                p_Ext_ਮੁੱਲ_Subtag = ਖਾਲੀ_ਸੂਚਕ;
+                p_Ext_ਮੁੱਲ_Subtag_ਸਿਰਾ = ਖਾਲੀ_ਸੂਚਕ;
 
                 next = EXTV;
-                continue;
+                ਜਾਰੀ;
             }
         }
-        if (next & EXTV) {
-            if (_isExtensionSubtag(pSubtag, subtagLen)) {
-                if (pExtValueSubtag == nullptr) {
+        ਜੇ (next & EXTV) {
+            ਜੇ (_isExtensionSubtag(pSubtag, subtagLen)) {
+                ਜੇ (p_Ext_ਮੁੱਲ_Subtag == ਖਾਲੀ_ਸੂਚਕ) {
                     /* if the start position of this extension's value is not yet,
                         this one is the first value subtag */
-                    pExtValueSubtag = pSubtag;
+                    p_Ext_ਮੁੱਲ_Subtag = pSubtag;
                 }
 
                 /* Mark the end of this subtag */
-                pExtValueSubtagEnd = pSep;
+                p_Ext_ਮੁੱਲ_Subtag_ਸਿਰਾ = pSep;
                 next = EXTS | EXTV | PRIV;
 
-                continue;
+                ਜਾਰੀ;
             }
         }
-        if (next & PRIV) {
-            if (uprv_tolower(*pSubtag) == PRIVATEUSE && subtagLen == 1) {
-                char *pPrivuseVal;
+        ਜੇ (next & PRIV) {
+            ਜੇ (uprv_tolower(*pSubtag) == PRIVATEUSE && subtagLen == 1) {
+                ਅੱਖਰ *pPrivuseVal;
 
-                if (pExtension.isValid()) {
+                ਜੇ (pExtension.isValid()) {
                     /* Process the last extension */
-                    if (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
+                    ਜੇ (p_Ext_ਮੁੱਲ_Subtag == ਖਾਲੀ_ਸੂਚਕ || p_Ext_ਮੁੱਲ_Subtag_ਸਿਰਾ == ਖਾਲੀ_ਸੂਚਕ) {
                         /* the previous extension is incomplete */
-                        delete pExtension.orphan();
-                        break;
-                    } else {
+                        ਮਿਟਾਓ pExtension.orphan();
+                        ਰੋਕੋ;
+                    } ਨਹੀਂਤਾਂ {
                         /* terminate the previous extension value */
-                        *pExtValueSubtagEnd = 0;
-                        pExtension->value = T_CString_toLowerCase(pExtValueSubtag);
+                        *p_Ext_ਮੁੱਲ_Subtag_ਸਿਰਾ = 0;
+                        pExtension->value = T_CString_ਮੰਜ਼ਿਲ_ਹੇਠਲਾ_Case(p_Ext_ਮੁੱਲ_Subtag);
 
                         /* insert the extension to the list */
-                        if (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
+                        ਜੇ (ਜੋੜੋ_Extension_ਮੰਜ਼ਿਲ_List(&(t->extensions), pExtension.getAlias(), ਝੂਠ)) {
                             pExtension.orphan();
-                            pLastGoodPosition = pExtValueSubtagEnd;
-                        } else {
+                            p_ਆਖਰੀ_Good_Position = p_Ext_ਮੁੱਲ_Subtag_ਸਿਰਾ;
+                        } ਨਹੀਂਤਾਂ {
                         /* stop parsing here */
-                            delete pExtension.orphan();
-                            break;
+                            ਮਿਟਾਓ pExtension.orphan();
+                            ਰੋਕੋ;
                         }
                     }
                 }
 
                 /* The rest of part will be private use value subtags */
-                if (pNext == nullptr) {
+                ਜੇ (p_ਅਗਲਾ == ਖਾਲੀ_ਸੂਚਕ) {
                     /* empty private use subtag */
-                    break;
+                    ਰੋਕੋ;
                 }
                 /* back up the private use value start position */
-                pPrivuseVal = pNext;
+                pPrivuseVal = p_ਅਗਲਾ;
 
                 /* validate private use value subtags */
-                while (pNext) {
-                    pSubtag = pNext;
+                ਜਦੋਂ (p_ਅਗਲਾ) {
+                    pSubtag = p_ਅਗਲਾ;
                     pSep = pSubtag;
-                    while (*pSep) {
-                        if (*pSep == SEP) {
-                            break;
+                    ਜਦੋਂ (*pSep) {
+                        ਜੇ (*pSep == SEP) {
+                            ਰੋਕੋ;
                         }
                         pSep++;
                     }
-                    if (*pSep == 0) {
+                    ਜੇ (*pSep == 0) {
                         /* last subtag */
-                        pNext = nullptr;
-                    } else {
-                        pNext = pSep + 1;
+                        p_ਅਗਲਾ = ਖਾਲੀ_ਸੂਚਕ;
+                    } ਨਹੀਂਤਾਂ {
+                        p_ਅਗਲਾ = pSep + 1;
                     }
                     subtagLen = static_cast<int32_t>(pSep - pSubtag);
 
-                    if (uprv_strncmp(pSubtag, PRIVUSE_VARIANT_PREFIX, uprv_strlen(PRIVUSE_VARIANT_PREFIX)) == 0) {
+                    ਜੇ (uprv_strncmp(pSubtag, PRIVUSE_VARIANT_ਅਗੇਤਰ, uprv_strlen(PRIVUSE_VARIANT_ਅਗੇਤਰ)) == 0) {
                         *pSep = 0;
                         next = VART;
-                        privateuseVar = true;
-                        break;
-                    } else if (_isPrivateuseValueSubtag(pSubtag, subtagLen)) {
-                        pLastGoodPosition = pSep;
-                    } else {
-                        break;
+                        privateuseVar = ਸੱਚ;
+                        ਰੋਕੋ;
+                    } ਨਹੀਂਤਾਂ ਜੇ (is_Privateuse_ਮੁੱਲ_Subtag(pSubtag, subtagLen)) {
+                        p_ਆਖਰੀ_Good_Position = pSep;
+                    } ਨਹੀਂਤਾਂ {
+                        ਰੋਕੋ;
                     }
                 }
 
-                if (next == VART) {
-                    continue;
+                ਜੇ (next == VART) {
+                    ਜਾਰੀ;
                 }
 
-                if (pLastGoodPosition - pPrivuseVal > 0) {
-                    *pLastGoodPosition = 0;
-                    t->privateuse = T_CString_toLowerCase(pPrivuseVal);
+                ਜੇ (p_ਆਖਰੀ_Good_Position - pPrivuseVal > 0) {
+                    *p_ਆਖਰੀ_Good_Position = 0;
+                    t->privateuse = T_CString_ਮੰਜ਼ਿਲ_ਹੇਠਲਾ_Case(pPrivuseVal);
                 }
                 /* No more subtags, exiting the parse loop */
-                break;
+                ਰੋਕੋ;
             }
-            break;
+            ਰੋਕੋ;
         }
 
         /* If we fell through here, it means this subtag is illegal - quit parsing */
-        break;
+        ਰੋਕੋ;
     }
 
-    if (pExtension.isValid()) {
+    ਜੇ (pExtension.isValid()) {
         /* Process the last extension */
-        if (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
+        ਜੇ (p_Ext_ਮੁੱਲ_Subtag == ਖਾਲੀ_ਸੂਚਕ || p_Ext_ਮੁੱਲ_Subtag_ਸਿਰਾ == ਖਾਲੀ_ਸੂਚਕ) {
             /* the previous extension is incomplete */
-            delete pExtension.orphan();
-        } else {
+            ਮਿਟਾਓ pExtension.orphan();
+        } ਨਹੀਂਤਾਂ {
             /* terminate the previous extension value */
-            *pExtValueSubtagEnd = 0;
-            pExtension->value = T_CString_toLowerCase(pExtValueSubtag);
+            *p_Ext_ਮੁੱਲ_Subtag_ਸਿਰਾ = 0;
+            pExtension->value = T_CString_ਮੰਜ਼ਿਲ_ਹੇਠਲਾ_Case(p_Ext_ਮੁੱਲ_Subtag);
             /* insert the extension to the list */
-            if (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
+            ਜੇ (ਜੋੜੋ_Extension_ਮੰਜ਼ਿਲ_List(&(t->extensions), pExtension.getAlias(), ਝੂਠ)) {
                 pExtension.orphan();
-                pLastGoodPosition = pExtValueSubtagEnd;
-            } else {
-                delete pExtension.orphan();
+                p_ਆਖਰੀ_Good_Position = p_Ext_ਮੁੱਲ_Subtag_ਸਿਰਾ;
+            } ਨਹੀਂਤਾਂ {
+                ਮਿਟਾਓ pExtension.orphan();
             }
         }
     }
 
-    if (parsedLen != nullptr) {
-        *parsedLen = static_cast<int32_t>(pLastGoodPosition - t->buf + parsedLenDelta);
+    ਜੇ (parsedLen != ਖਾਲੀ_ਸੂਚਕ) {
+        *parsedLen = static_cast<int32_t>(p_ਆਖਰੀ_Good_Position - t->buf + parsedLenDelta);
     }
 
-    return t.orphan();
+    ਵਾਪਸ t.orphan();
 }
 
 // Ticket #12705 - Turn optimization back on.
-#if defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
-#pragma optimize( "", on )
-#endif
+#ਜੇ defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
+#ਹਦਾਇਤ optimize( "", on )
+#ਜੇ_ਅੰਤ
 
-void
-ultag_close(ULanguageTag* langtag) {
+ਖਾਲੀ
+ultag_close(ULanguage_ਟੈਗ* langtag) {
 
-    if (langtag == nullptr) {
-        return;
+    ਜੇ (langtag == ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ;
     }
 
     uprv_free(langtag->buf);
 
-    if (langtag->variants) {
-        VariantListEntry *curVar = langtag->variants;
-        while (curVar) {
-            VariantListEntry *nextVar = curVar->next;
-            delete curVar;
-            curVar = nextVar;
+    ਜੇ (langtag->variants) {
+        Variant_List_ਇੰਦਰਾਜ *curVar = langtag->variants;
+        ਜਦੋਂ (curVar) {
+            Variant_List_ਇੰਦਰਾਜ *ਅਗਲਾ_Var = curVar->next;
+            ਮਿਟਾਓ curVar;
+            curVar = ਅਗਲਾ_Var;
         }
     }
 
-    if (langtag->extensions) {
-        ExtensionListEntry *curExt = langtag->extensions;
-        while (curExt) {
-            ExtensionListEntry *nextExt = curExt->next;
-            delete curExt;
-            curExt = nextExt;
+    ਜੇ (langtag->extensions) {
+        Extension_List_ਇੰਦਰਾਜ *curExt = langtag->extensions;
+        ਜਦੋਂ (curExt) {
+            Extension_List_ਇੰਦਰਾਜ *ਅਗਲਾ_Ext = curExt->next;
+            ਮਿਟਾਓ curExt;
+            curExt = ਅਗਲਾ_Ext;
         }
     }
 
     uprv_free(langtag);
 }
 
-const char*
-ultag_getLanguage(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->language;
+ਅਚਲ ਅੱਖਰ*
+ultag_getLanguage(ਅਚਲ ULanguage_ਟੈਗ* langtag U_LIFETIME_BOUND) {
+    ਵਾਪਸ langtag->language;
 }
 
-#if 0
-const char*
-ultag_getJDKLanguage(const ULanguageTag* langtag) {
+#ਜੇ 0
+ਅਚਲ ਅੱਖਰ*
+ultag_getJDKLanguage(ਅਚਲ ULanguage_ਟੈਗ* langtag) {
     int32_t i;
-    for (i = 0; DEPRECATEDLANGS[i] != nullptr; i += 2) {
-        if (uprv_compareInvCharsAsAscii(DEPRECATEDLANGS[i], langtag->language) == 0) {
-            return DEPRECATEDLANGS[i + 1];
+    ਲਈ (i = 0; DEPRECATEDLANGS[i] != ਖਾਲੀ_ਸੂਚਕ; i += 2) {
+        ਜੇ (uprv_compareInvCharsAsAscii(DEPRECATEDLANGS[i], langtag->language) == 0) {
+            ਵਾਪਸ DEPRECATEDLANGS[i + 1];
         }
     }
-    return langtag->language;
+    ਵਾਪਸ langtag->language;
 }
-#endif
+#ਜੇ_ਅੰਤ
 
-const char*
-ultag_getExtlang(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    if (idx >= 0 && idx < MAXEXTLANG) {
-        return langtag->extlang[idx];
+ਅਚਲ ਅੱਖਰ*
+ultag_getExtlang(ਅਚਲ ULanguage_ਟੈਗ* langtag U_LIFETIME_BOUND, int32_t idx) {
+    ਜੇ (idx >= 0 && idx < MAXEXTLANG) {
+        ਵਾਪਸ langtag->extlang[idx];
     }
-    return nullptr;
+    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
 }
 
 int32_t
-ultag_getExtlangSize(const ULanguageTag* langtag) {
+ultag_get_Extlang_ਮਾਪ(ਅਚਲ ULanguage_ਟੈਗ* langtag) {
     int32_t size = 0;
     int32_t i;
-    for (i = 0; i < MAXEXTLANG; i++) {
-        if (langtag->extlang[i]) {
+    ਲਈ (i = 0; i < MAXEXTLANG; i++) {
+        ਜੇ (langtag->extlang[i]) {
             size++;
         }
     }
-    return size;
+    ਵਾਪਸ size;
 }
 
-const char*
-ultag_getScript(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->script;
+ਅਚਲ ਅੱਖਰ*
+ultag_getScript(ਅਚਲ ULanguage_ਟੈਗ* langtag U_LIFETIME_BOUND) {
+    ਵਾਪਸ langtag->script;
 }
 
-const char*
-ultag_getRegion(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->region;
+ਅਚਲ ਅੱਖਰ*
+ultag_getRegion(ਅਚਲ ULanguage_ਟੈਗ* langtag U_LIFETIME_BOUND) {
+    ਵਾਪਸ langtag->region;
 }
 
-const char*
-ultag_getVariant(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    const char *var = nullptr;
-    VariantListEntry *cur = langtag->variants;
+ਅਚਲ ਅੱਖਰ*
+ultag_getVariant(ਅਚਲ ULanguage_ਟੈਗ* langtag U_LIFETIME_BOUND, int32_t idx) {
+    ਅਚਲ ਅੱਖਰ *var = ਖਾਲੀ_ਸੂਚਕ;
+    Variant_List_ਇੰਦਰਾਜ *cur = langtag->variants;
     int32_t i = 0;
-    while (cur) {
-        if (i == idx) {
+    ਜਦੋਂ (cur) {
+        ਜੇ (i == idx) {
             var = cur->variant;
-            break;
+            ਰੋਕੋ;
         }
         cur = cur->next;
         i++;
     }
-    return var;
+    ਵਾਪਸ var;
 }
 
 int32_t
-ultag_getVariantsSize(const ULanguageTag* langtag) {
+ultag_get_Variants_ਮਾਪ(ਅਚਲ ULanguage_ਟੈਗ* langtag) {
     int32_t size = 0;
-    VariantListEntry *cur = langtag->variants;
-    while (true) {
-        if (cur == nullptr) {
-            break;
+    Variant_List_ਇੰਦਰਾਜ *cur = langtag->variants;
+    ਜਦੋਂ (ਸੱਚ) {
+        ਜੇ (cur == ਖਾਲੀ_ਸੂਚਕ) {
+            ਰੋਕੋ;
         }
         size++;
         cur = cur->next;
     }
-    return size;
+    ਵਾਪਸ size;
 }
 
-const char*
-ultag_getExtensionKey(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    const char *key = nullptr;
-    ExtensionListEntry *cur = langtag->extensions;
+ਅਚਲ ਅੱਖਰ*
+ultag_get_Extension_ਕੁੰਜੀ(ਅਚਲ ULanguage_ਟੈਗ* langtag U_LIFETIME_BOUND, int32_t idx) {
+    ਅਚਲ ਅੱਖਰ *ਕੁੰਜੀ = ਖਾਲੀ_ਸੂਚਕ;
+    Extension_List_ਇੰਦਰਾਜ *cur = langtag->extensions;
     int32_t i = 0;
-    while (cur) {
-        if (i == idx) {
-            key = cur->key;
-            break;
+    ਜਦੋਂ (cur) {
+        ਜੇ (i == idx) {
+            ਕੁੰਜੀ = cur->ਕੁੰਜੀ;
+            ਰੋਕੋ;
         }
         cur = cur->next;
         i++;
     }
-    return key;
+    ਵਾਪਸ ਕੁੰਜੀ;
 }
 
-const char*
-ultag_getExtensionValue(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    const char *val = nullptr;
-    ExtensionListEntry *cur = langtag->extensions;
+ਅਚਲ ਅੱਖਰ*
+ultag_get_Extension_ਮੁੱਲ(ਅਚਲ ULanguage_ਟੈਗ* langtag U_LIFETIME_BOUND, int32_t idx) {
+    ਅਚਲ ਅੱਖਰ *val = ਖਾਲੀ_ਸੂਚਕ;
+    Extension_List_ਇੰਦਰਾਜ *cur = langtag->extensions;
     int32_t i = 0;
-    while (cur) {
-        if (i == idx) {
+    ਜਦੋਂ (cur) {
+        ਜੇ (i == idx) {
             val = cur->value;
-            break;
+            ਰੋਕੋ;
         }
         cur = cur->next;
         i++;
     }
-    return val;
+    ਵਾਪਸ val;
 }
 
 int32_t
-ultag_getExtensionsSize(const ULanguageTag* langtag) {
+ultag_get_Extensions_ਮਾਪ(ਅਚਲ ULanguage_ਟੈਗ* langtag) {
     int32_t size = 0;
-    ExtensionListEntry *cur = langtag->extensions;
-    while (true) {
-        if (cur == nullptr) {
-            break;
+    Extension_List_ਇੰਦਰਾਜ *cur = langtag->extensions;
+    ਜਦੋਂ (ਸੱਚ) {
+        ਜੇ (cur == ਖਾਲੀ_ਸੂਚਕ) {
+            ਰੋਕੋ;
         }
         size++;
         cur = cur->next;
     }
-    return size;
+    ਵਾਪਸ size;
 }
 
-const char*
-ultag_getPrivateUse(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->privateuse;
+ਅਚਲ ਅੱਖਰ*
+ultag_get_ਨਿੱਜੀ_Use(ਅਚਲ ULanguage_ਟੈਗ* langtag U_LIFETIME_BOUND) {
+    ਵਾਪਸ langtag->privateuse;
 }
 
-#if 0
-const char*
-ultag_getLegacy(const ULanguageTag* langtag) {
-    return langtag->legacy;
+#ਜੇ 0
+ਅਚਲ ਅੱਖਰ*
+ultag_getLegacy(ਅਚਲ ULanguage_ਟੈਗ* langtag) {
+    ਵਾਪਸ langtag->legacy;
 }
-#endif
+#ਜੇ_ਅੰਤ
 
 }  // namespace
 
@@ -2561,163 +2561,163 @@ ultag_getLegacy(const ULanguageTag* langtag) {
 * -------------------------------------------------
 */
 U_CAPI int32_t U_EXPORT2
-uloc_toLanguageTag(const char* localeID,
-                   char* langtag,
-                   int32_t langtagCapacity,
+uloc_ਮੰਜ਼ਿਲ_Language_ਟੈਗ(ਅਚਲ ਅੱਖਰ* localeID,
+                   ਅੱਖਰ* langtag,
+                   int32_t langtag_ਸਮਰੱਥਾ,
                    UBool strict,
-                   UErrorCode* status) {
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
-        langtag, langtagCapacity,
-        [&](icu::ByteSink& sink, UErrorCode& status) {
-            ulocimp_toLanguageTag(localeID, sink, strict, status);
+                   UError_ਕੋਡ* ਸਥਿਤੀ) {
+    ਵਾਪਸ icu::ByteSinkUtil::ਰਾਹੀਂ_Byte_Sink_ਮੰਜ਼ਿਲ_Terminated_Chars(
+        langtag, langtag_ਸਮਰੱਥਾ,
+        [&](icu::ByteSink& sink, UError_ਕੋਡ& ਸਥਿਤੀ) {
+            ulocimp_ਮੰਜ਼ਿਲ_Language_ਟੈਗ(localeID, sink, strict, ਸਥਿਤੀ);
         },
-        *status);
+        *ਸਥਿਤੀ);
 }
 
 U_EXPORT icu::CharString
-ulocimp_toLanguageTag(const char* localeID,
-                      bool strict,
-                      UErrorCode& status) {
-    return icu::ByteSinkUtil::viaByteSinkToCharString(
-        [&](icu::ByteSink& sink, UErrorCode& status) {
-            ulocimp_toLanguageTag(localeID, sink, strict, status);
+ulocimp_ਮੰਜ਼ਿਲ_Language_ਟੈਗ(ਅਚਲ ਅੱਖਰ* localeID,
+                      ਤਾਰਕਿਕ strict,
+                      UError_ਕੋਡ& ਸਥਿਤੀ) {
+    ਵਾਪਸ icu::ByteSinkUtil::ਰਾਹੀਂ_Byte_Sink_ਮੰਜ਼ਿਲ_Char_String(
+        [&](icu::ByteSink& sink, UError_ਕੋਡ& ਸਥਿਤੀ) {
+            ulocimp_ਮੰਜ਼ਿਲ_Language_ਟੈਗ(localeID, sink, strict, ਸਥਿਤੀ);
         },
-        status);
+        ਸਥਿਤੀ);
 }
 
-U_EXPORT void
-ulocimp_toLanguageTag(const char* localeID,
+U_EXPORT ਖਾਲੀ
+ulocimp_ਮੰਜ਼ਿਲ_Language_ਟੈਗ(ਅਚਲ ਅੱਖਰ* localeID,
                       icu::ByteSink& sink,
-                      bool strict,
-                      UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+                      ਤਾਰਕਿਕ strict,
+                      UError_ਕੋਡ& ਸਥਿਤੀ) {
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) { ਵਾਪਸ; }
 
-    UErrorCode tmpStatus = U_ZERO_ERROR;
-    bool hadPosix = false;
-    const char* pKeywordStart;
+    UError_ਕੋਡ tmp_ਸਥਿਤੀ = U_ZERO_ERROR;
+    ਤਾਰਕਿਕ hadPosix = ਝੂਠ;
+    ਅਚਲ ਅੱਖਰ* p_Keyword_ਸ਼ੁਰੂ;
 
-    if (localeID == nullptr) {
+    ਜੇ (localeID == ਖਾਲੀ_ਸੂਚਕ) {
         localeID = uloc_getDefault();
     }
     /* Note: uloc_canonicalize returns "en_US_POSIX" for input locale ID "".  See #6835 */
-    icu::CharString canonical = ulocimp_canonicalize(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        status = tmpStatus;
-        return;
+    icu::CharString canonical = ulocimp_canonicalize(localeID, tmp_ਸਥਿਤੀ);
+    ਜੇ (U_FAILURE(tmp_ਸਥਿਤੀ)) {
+        ਸਥਿਤੀ = tmp_ਸਥਿਤੀ;
+        ਵਾਪਸ;
     }
 
     /* For handling special case - private use only tag */
-    pKeywordStart = locale_getKeywordsStart(canonical.toStringPiece());
-    if (pKeywordStart == canonical.data()) {
-        int kwdCnt = 0;
-        bool done = false;
+    p_Keyword_ਸ਼ੁਰੂ = locale_get_Keywords_ਸ਼ੁਰੂ(canonical.ਮੰਜ਼ਿਲ_String_Piece());
+    ਜੇ (p_Keyword_ਸ਼ੁਰੂ == canonical.ਅੰਕੜੇ()) {
+        ਪੂਰਨ kwdCnt = 0;
+        ਤਾਰਕਿਕ ਪੂਰਾ = ਝੂਠ;
 
-        icu::LocalUEnumerationPointer kwdEnum(uloc_openKeywords(canonical.data(), &tmpStatus));
-        if (U_SUCCESS(tmpStatus)) {
-            kwdCnt = uenum_count(kwdEnum.getAlias(), &tmpStatus);
-            if (kwdCnt == 1) {
-                const char *key;
+        icu::Local_UEnumeration_ਸੂਚਕ kwdEnum(uloc_openKeywords(canonical.ਅੰਕੜੇ(), &tmp_ਸਥਿਤੀ));
+        ਜੇ (U_SUCCESS(tmp_ਸਥਿਤੀ)) {
+            kwdCnt = uenum_ਗਿਣਤੀ(kwdEnum.getAlias(), &tmp_ਸਥਿਤੀ);
+            ਜੇ (kwdCnt == 1) {
+                ਅਚਲ ਅੱਖਰ *ਕੁੰਜੀ;
                 int32_t len = 0;
 
-                key = uenum_next(kwdEnum.getAlias(), &len, &tmpStatus);
-                if (len == 1 && *key == PRIVATEUSE) {
-                    icu::CharString buf = ulocimp_getKeywordValue(localeID, key, tmpStatus);
-                    if (U_SUCCESS(tmpStatus)) {
-                        if (ultag_isPrivateuseValueSubtags(buf.data(), buf.length())) {
+                ਕੁੰਜੀ = uenum_ਅਗਲਾ(kwdEnum.getAlias(), &len, &tmp_ਸਥਿਤੀ);
+                ਜੇ (len == 1 && *ਕੁੰਜੀ == PRIVATEUSE) {
+                    icu::CharString buf = ulocimp_get_Keyword_ਮੁੱਲ(localeID, ਕੁੰਜੀ, tmp_ਸਥਿਤੀ);
+                    ਜੇ (U_SUCCESS(tmp_ਸਥਿਤੀ)) {
+                        ਜੇ (ultag_is_Privateuse_ਮੁੱਲ_Subtags(buf.ਅੰਕੜੇ(), buf.length())) {
                             /* return private use only tag */
                             sink.Append("und-x-", 6);
-                            sink.Append(buf.data(), buf.length());
-                            done = true;
-                        } else if (strict) {
-                            status = U_ILLEGAL_ARGUMENT_ERROR;
-                            done = true;
+                            sink.Append(buf.ਅੰਕੜੇ(), buf.length());
+                            ਪੂਰਾ = ਸੱਚ;
+                        } ਨਹੀਂਤਾਂ ਜੇ (strict) {
+                            ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                            ਪੂਰਾ = ਸੱਚ;
                         }
                         /* if not strict mode, then "und" will be returned */
-                    } else {
-                        status = U_ILLEGAL_ARGUMENT_ERROR;
-                        done = true;
+                    } ਨਹੀਂਤਾਂ {
+                        ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                        ਪੂਰਾ = ਸੱਚ;
                     }
                 }
             }
-            if (done) {
-                return;
+            ਜੇ (ਪੂਰਾ) {
+                ਵਾਪਸ;
             }
         }
     }
 
-    _appendLanguageToLanguageTag(canonical.toStringPiece(), sink, strict, status);
-    _appendScriptToLanguageTag(canonical.toStringPiece(), sink, strict, status);
-    _appendRegionToLanguageTag(canonical.toStringPiece(), sink, strict, status);
-    _appendVariantsToLanguageTag(canonical.toStringPiece(), sink, strict, hadPosix, status);
-    _appendKeywordsToLanguageTag(canonical.data(), sink, strict, hadPosix, status);
-    _appendPrivateuseToLanguageTag(canonical.toStringPiece(), sink, strict, hadPosix, status);
+    append_Language_ਮੰਜ਼ਿਲ_Language_ਟੈਗ(canonical.ਮੰਜ਼ਿਲ_String_Piece(), sink, strict, ਸਥਿਤੀ);
+    append_Script_ਮੰਜ਼ਿਲ_Language_ਟੈਗ(canonical.ਮੰਜ਼ਿਲ_String_Piece(), sink, strict, ਸਥਿਤੀ);
+    append_Region_ਮੰਜ਼ਿਲ_Language_ਟੈਗ(canonical.ਮੰਜ਼ਿਲ_String_Piece(), sink, strict, ਸਥਿਤੀ);
+    append_Variants_ਮੰਜ਼ਿਲ_Language_ਟੈਗ(canonical.ਮੰਜ਼ਿਲ_String_Piece(), sink, strict, hadPosix, ਸਥਿਤੀ);
+    append_Keywords_ਮੰਜ਼ਿਲ_Language_ਟੈਗ(canonical.ਅੰਕੜੇ(), sink, strict, hadPosix, ਸਥਿਤੀ);
+    append_Privateuse_ਮੰਜ਼ਿਲ_Language_ਟੈਗ(canonical.ਮੰਜ਼ਿਲ_String_Piece(), sink, strict, hadPosix, ਸਥਿਤੀ);
 }
 
 
 U_CAPI int32_t U_EXPORT2
-uloc_forLanguageTag(const char* langtag,
-                    char* localeID,
+uloc_for_Language_ਟੈਗ(ਅਚਲ ਅੱਖਰ* langtag,
+                    ਅੱਖਰ* localeID,
                     int32_t localeIDCapacity,
-                    int32_t* parsedLength,
-                    UErrorCode* status) {
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+                    int32_t* parsed_ਲੰਮਾਈ,
+                    UError_ਕੋਡ* ਸਥਿਤੀ) {
+    ਵਾਪਸ icu::ByteSinkUtil::ਰਾਹੀਂ_Byte_Sink_ਮੰਜ਼ਿਲ_Terminated_Chars(
         localeID, localeIDCapacity,
-        [&](icu::ByteSink& sink, UErrorCode& status) {
-            ulocimp_forLanguageTag(langtag, -1, sink, parsedLength, status);
+        [&](icu::ByteSink& sink, UError_ਕੋਡ& ਸਥਿਤੀ) {
+            ulocimp_for_Language_ਟੈਗ(langtag, -1, sink, parsed_ਲੰਮਾਈ, ਸਥਿਤੀ);
         },
-        *status);
+        *ਸਥਿਤੀ);
 }
 
 U_EXPORT icu::CharString
-ulocimp_forLanguageTag(const char* langtag,
-                       int32_t tagLen,
-                       int32_t* parsedLength,
-                       UErrorCode& status) {
-    return icu::ByteSinkUtil::viaByteSinkToCharString(
-        [&](icu::ByteSink& sink, UErrorCode& status) {
-            ulocimp_forLanguageTag(langtag, tagLen, sink, parsedLength, status);
+ulocimp_for_Language_ਟੈਗ(ਅਚਲ ਅੱਖਰ* langtag,
+                       int32_t ਟੈਗ_Len,
+                       int32_t* parsed_ਲੰਮਾਈ,
+                       UError_ਕੋਡ& ਸਥਿਤੀ) {
+    ਵਾਪਸ icu::ByteSinkUtil::ਰਾਹੀਂ_Byte_Sink_ਮੰਜ਼ਿਲ_Char_String(
+        [&](icu::ByteSink& sink, UError_ਕੋਡ& ਸਥਿਤੀ) {
+            ulocimp_for_Language_ਟੈਗ(langtag, ਟੈਗ_Len, sink, parsed_ਲੰਮਾਈ, ਸਥਿਤੀ);
         },
-        status);
+        ਸਥਿਤੀ);
 }
 
-U_EXPORT void
-ulocimp_forLanguageTag(const char* langtag,
-                       int32_t tagLen,
+U_EXPORT ਖਾਲੀ
+ulocimp_for_Language_ਟੈਗ(ਅਚਲ ਅੱਖਰ* langtag,
+                       int32_t ਟੈਗ_Len,
                        icu::ByteSink& sink,
-                       int32_t* parsedLength,
-                       UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+                       int32_t* parsed_ਲੰਮਾਈ,
+                       UError_ਕੋਡ& ਸਥਿਤੀ) {
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) { ਵਾਪਸ; }
 
-    bool isEmpty = true;
-    const char *subtag, *p;
+    ਤਾਰਕਿਕ is_ਖਾਲੀ_ਥਾਵਾਂ = ਸੱਚ;
+    ਅਚਲ ਅੱਖਰ *subtag, *p;
     int32_t len;
     int32_t i, n;
-    bool noRegion = true;
+    ਤਾਰਕਿਕ noRegion = ਸੱਚ;
 
-    icu::LocalULanguageTagPointer lt(ultag_parse(langtag, tagLen, parsedLength, status));
-    if (U_FAILURE(status)) {
-        return;
+    icu::Local_ULanguage_ਟੈਗ_ਸੂਚਕ lt(ultag_parse(langtag, ਟੈਗ_Len, parsed_ਲੰਮਾਈ, ਸਥਿਤੀ));
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਵਾਪਸ;
     }
 
     /* language */
-    subtag = ultag_getExtlangSize(lt.getAlias()) > 0 ? ultag_getExtlang(lt.getAlias(), 0) : ultag_getLanguage(lt.getAlias());
-    if (uprv_compareInvCharsAsAscii(subtag, LANG_UND) != 0) {
+    subtag = ultag_get_Extlang_ਮਾਪ(lt.getAlias()) > 0 ? ultag_getExtlang(lt.getAlias(), 0) : ultag_getLanguage(lt.getAlias());
+    ਜੇ (uprv_compareInvCharsAsAscii(subtag, LANG_UND) != 0) {
         len = static_cast<int32_t>(uprv_strlen(subtag));
-        if (len > 0) {
+        ਜੇ (len > 0) {
             sink.Append(subtag, len);
-            isEmpty = false;
+            is_ਖਾਲੀ_ਥਾਵਾਂ = ਝੂਠ;
         }
     }
 
     /* script */
     subtag = ultag_getScript(lt.getAlias());
     len = static_cast<int32_t>(uprv_strlen(subtag));
-    if (len > 0) {
+    ਜੇ (len > 0) {
         sink.Append("_", 1);
-        isEmpty = false;
+        is_ਖਾਲੀ_ਥਾਵਾਂ = ਝੂਠ;
 
         /* write out the script in title case */
-        char c = uprv_toupper(*subtag);
+        ਅੱਖਰ c = uprv_toupper(*subtag);
         sink.Append(&c, 1);
         sink.Append(subtag + 1, len - 1);
     }
@@ -2725,37 +2725,37 @@ ulocimp_forLanguageTag(const char* langtag,
     /* region */
     subtag = ultag_getRegion(lt.getAlias());
     len = static_cast<int32_t>(uprv_strlen(subtag));
-    if (len > 0) {
+    ਜੇ (len > 0) {
         sink.Append("_", 1);
-        isEmpty = false;
+        is_ਖਾਲੀ_ਥਾਵਾਂ = ਝੂਠ;
 
         /* write out the region in upper case */
         p = subtag;
-        while (*p) {
-            char c = uprv_toupper(*p);
+        ਜਦੋਂ (*p) {
+            ਅੱਖਰ c = uprv_toupper(*p);
             sink.Append(&c, 1);
             p++;
         }
-        noRegion = false;
+        noRegion = ਝੂਠ;
     }
 
     /* variants */
-    _sortVariants(lt.getAlias()->variants);
-    n = ultag_getVariantsSize(lt.getAlias());
-    if (n > 0) {
-        if (noRegion) {
+    ਛਾਂਟੋ_Variants(lt.getAlias()->variants);
+    n = ultag_get_Variants_ਮਾਪ(lt.getAlias());
+    ਜੇ (n > 0) {
+        ਜੇ (noRegion) {
             sink.Append("_", 1);
-            isEmpty = false;
+            is_ਖਾਲੀ_ਥਾਵਾਂ = ਝੂਠ;
         }
 
-        for (i = 0; i < n; i++) {
+        ਲਈ (i = 0; i < n; i++) {
             subtag = ultag_getVariant(lt.getAlias(), i);
             sink.Append("_", 1);
 
             /* write out the variant in upper case */
             p = subtag;
-            while (*p) {
-                char c = uprv_toupper(*p);
+            ਜਦੋਂ (*p) {
+                ਅੱਖਰ c = uprv_toupper(*p);
                 sink.Append(&c, 1);
                 p++;
             }
@@ -2763,13 +2763,13 @@ ulocimp_forLanguageTag(const char* langtag,
     }
 
     /* keywords */
-    n = ultag_getExtensionsSize(lt.getAlias());
-    subtag = ultag_getPrivateUse(lt.getAlias());
-    if (n > 0 || uprv_strlen(subtag) > 0) {
-        if (isEmpty && n > 0) {
+    n = ultag_get_Extensions_ਮਾਪ(lt.getAlias());
+    subtag = ultag_get_ਨਿੱਜੀ_Use(lt.getAlias());
+    ਜੇ (n > 0 || uprv_strlen(subtag) > 0) {
+        ਜੇ (is_ਖਾਲੀ_ਥਾਵਾਂ && n > 0) {
             /* need a language */
             sink.Append(LANG_UND, LANG_UND_LEN);
         }
-        _appendKeywords(lt.getAlias(), sink, status);
+        _appendKeywords(lt.getAlias(), sink, ਸਥਿਤੀ);
     }
 }

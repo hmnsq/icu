@@ -20,107 +20,107 @@
 *
 ******************************************************************************
 */
-#include "unicode/uclean.h"
-#include "cmemory.h"
-#include "putilimp.h"
-#include "uassert.h"
-#include <stdlib.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uclean.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "putilimp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdlib.h>
 
 /* uprv_malloc(0) returns a pointer to this read-only data. */
-static const int32_t zeroMem[] = {0, 0, 0, 0, 0, 0};
+ਸਥਿਰ ਅਚਲ int32_t zeroMem[] = {0, 0, 0, 0, 0, 0};
 
 /* Function Pointers for user-supplied heap functions  */
-static const void     *pContext;
-static UMemAllocFn    *pAlloc;
-static UMemReallocFn  *pRealloc;
-static UMemFreeFn     *pFree;
+ਸਥਿਰ ਅਚਲ ਖਾਲੀ     *pContext;
+ਸਥਿਰ UMemAllocFn    *pAlloc;
+ਸਥਿਰ UMemReallocFn  *pRealloc;
+ਸਥਿਰ UMemFreeFn     *pFree;
 
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-#include <stdio.h>
-static int n=0;
-static long b=0; 
-#endif
+#ਜੇ U_DEBUG && defined(UPRV_MALLOC_ਗਿਣਤੀ)
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
+ਸਥਿਰ ਪੂਰਨ n=0;
+ਸਥਿਰ ਲੰਮਾ b=0; 
+#ਜੇ_ਅੰਤ
 
-U_CAPI void * U_EXPORT2
+U_CAPI ਖਾਲੀ * U_EXPORT2
 uprv_malloc(size_t s) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-#if 1
-  putchar('>');
+#ਜੇ U_DEBUG && defined(UPRV_MALLOC_ਗਿਣਤੀ)
+#ਜੇ 1
+  ਅੱਖਰ_ਲਿਖੋ('>');
   fflush(stdout);
-#else
+#ਨਹੀਂਤਾਂ
   fprintf(stderr,"MALLOC\t#%d\t%ul bytes\t%ul total\n", ++n,s,(b+=s)); fflush(stderr);
-#endif
-#endif
-    if (s > 0) {
-        if (pAlloc) {
-            return (*pAlloc)(pContext, s);
-        } else {
-            return uprv_default_malloc(s);
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅੰਤ
+    ਜੇ (s > 0) {
+        ਜੇ (pAlloc) {
+            ਵਾਪਸ (*pAlloc)(pContext, s);
+        } ਨਹੀਂਤਾਂ {
+            ਵਾਪਸ uprv_default_malloc(s);
         }
-    } else {
-        return (void *)zeroMem;
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ (ਖਾਲੀ *)zeroMem;
     }
 }
 
-U_CAPI void * U_EXPORT2
-uprv_realloc(void * buffer, size_t size) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-  putchar('~');
+U_CAPI ਖਾਲੀ * U_EXPORT2
+uprv_realloc(ਖਾਲੀ * ਬਫਰ, size_t size) {
+#ਜੇ U_DEBUG && defined(UPRV_MALLOC_ਗਿਣਤੀ)
+  ਅੱਖਰ_ਲਿਖੋ('~');
   fflush(stdout);
-#endif
-    if (buffer == zeroMem) {
-        return uprv_malloc(size);
-    } else if (size == 0) {
-        if (pFree) {
-            (*pFree)(pContext, buffer);
-        } else {
-            uprv_default_free(buffer);
+#ਜੇ_ਅੰਤ
+    ਜੇ (ਬਫਰ == zeroMem) {
+        ਵਾਪਸ uprv_malloc(size);
+    } ਨਹੀਂਤਾਂ ਜੇ (size == 0) {
+        ਜੇ (pFree) {
+            (*pFree)(pContext, ਬਫਰ);
+        } ਨਹੀਂਤਾਂ {
+            uprv_default_free(ਬਫਰ);
         }
-        return (void *)zeroMem;
-    } else {
-        if (pRealloc) {
-            return (*pRealloc)(pContext, buffer, size);
-        } else {
-            return uprv_default_realloc(buffer, size);
+        ਵਾਪਸ (ਖਾਲੀ *)zeroMem;
+    } ਨਹੀਂਤਾਂ {
+        ਜੇ (pRealloc) {
+            ਵਾਪਸ (*pRealloc)(pContext, ਬਫਰ, size);
+        } ਨਹੀਂਤਾਂ {
+            ਵਾਪਸ uprv_default_realloc(ਬਫਰ, size);
         }
     }
 }
 
-U_CAPI void U_EXPORT2
-uprv_free(void *buffer) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-  putchar('<');
+U_CAPI ਖਾਲੀ U_EXPORT2
+uprv_free(ਖਾਲੀ *ਬਫਰ) {
+#ਜੇ U_DEBUG && defined(UPRV_MALLOC_ਗਿਣਤੀ)
+  ਅੱਖਰ_ਲਿਖੋ('<');
   fflush(stdout);
-#endif
-    if (buffer != zeroMem) {
-        if (pFree) {
-            (*pFree)(pContext, buffer);
-        } else {
-            uprv_default_free(buffer);
+#ਜੇ_ਅੰਤ
+    ਜੇ (ਬਫਰ != zeroMem) {
+        ਜੇ (pFree) {
+            (*pFree)(pContext, ਬਫਰ);
+        } ਨਹੀਂਤਾਂ {
+            uprv_default_free(ਬਫਰ);
         }
     }
 }
 
-U_CAPI void * U_EXPORT2
+U_CAPI ਖਾਲੀ * U_EXPORT2
 uprv_calloc(size_t num, size_t size) {
-    void *mem = nullptr;
+    ਖਾਲੀ *mem = ਖਾਲੀ_ਸੂਚਕ;
     size *= num;
     mem = uprv_malloc(size);
-    if (mem) {
+    ਜੇ (mem) {
         uprv_memset(mem, 0, size);
     }
-    return mem;
+    ਵਾਪਸ mem;
 }
 
-U_CAPI void U_EXPORT2
-u_setMemoryFunctions(const void *context, UMemAllocFn *a, UMemReallocFn *r, UMemFreeFn *f,  UErrorCode *status)
+U_CAPI ਖਾਲੀ U_EXPORT2
+u_ਸੈੱਟ_ਸਮ੍ਰਿਤੀ_Functions(ਅਚਲ ਖਾਲੀ *context, UMemAllocFn *a, UMemReallocFn *r, UMemFreeFn *f,  UError_ਕੋਡ *ਸਥਿਤੀ)
 {
-    if (U_FAILURE(*status)) {
-        return;
+    ਜੇ (U_FAILURE(*ਸਥਿਤੀ)) {
+        ਵਾਪਸ;
     }
-    if (a==nullptr || r==nullptr || f==nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ਜੇ (a==ਖਾਲੀ_ਸੂਚਕ || r==ਖਾਲੀ_ਸੂਚਕ || f==ਖਾਲੀ_ਸੂਚਕ) {
+        *ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ;
     }
     pContext  = context;
     pAlloc    = a;
@@ -130,9 +130,9 @@ u_setMemoryFunctions(const void *context, UMemAllocFn *a, UMemReallocFn *r, UMem
 
 
 U_CFUNC UBool cmemory_cleanup() {
-    pContext   = nullptr;
-    pAlloc     = nullptr;
-    pRealloc   = nullptr;
-    pFree      = nullptr;
-    return true;
+    pContext   = ਖਾਲੀ_ਸੂਚਕ;
+    pAlloc     = ਖਾਲੀ_ਸੂਚਕ;
+    pRealloc   = ਖਾਲੀ_ਸੂਚਕ;
+    pFree      = ਖਾਲੀ_ਸੂਚਕ;
+    ਵਾਪਸ ਸੱਚ;
 }

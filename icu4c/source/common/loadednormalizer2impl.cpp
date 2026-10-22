@@ -11,437 +11,437 @@
 * created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#ਜੇ !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/udata.h"
-#include "unicode/localpointer.h"
-#include "unicode/normalizer2.h"
-#include "unicode/ucptrie.h"
-#include "unicode/unistr.h"
-#include "unicode/unorm.h"
-#include "cstring.h"
-#include "mutex.h"
-#include "norm2allmodes.h"
-#include "normalizer2impl.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
-#include "uhash.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/udata.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/localpointer.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/normalizer2.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ucptrie.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/unistr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/unorm.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mutex.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "norm2allmodes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "normalizer2impl.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucln_cmn.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uhash.h"
 
 U_NAMESPACE_BEGIN
 
-class LoadedNormalizer2Impl : public Normalizer2Impl {
-public:
-    LoadedNormalizer2Impl() : memory(nullptr), ownedTrie(nullptr) {}
-    virtual ~LoadedNormalizer2Impl();
+ਵਰਗ LoadedNormalizer2Impl : ਜਨਤਕ Normalizer2Impl {
+ਜਨਤਕ:
+    LoadedNormalizer2Impl() : ਸਮ੍ਰਿਤੀ(ਖਾਲੀ_ਸੂਚਕ), ownedTrie(ਖਾਲੀ_ਸੂਚਕ) {}
+    ਆਭਾਸੀ ~LoadedNormalizer2Impl();
 
-    void load(const char *packageName, const char *name, UErrorCode &errorCode);
+    ਖਾਲੀ load(ਅਚਲ ਅੱਖਰ *packageName, ਅਚਲ ਅੱਖਰ *name, UError_ਕੋਡ &error_ਕੋਡ);
 
-private:
-    static UBool U_CALLCONV
-    isAcceptable(void *context, const char *type, const char *name, const UDataInfo *pInfo);
+ਨਿਜੀ:
+    ਸਥਿਰ UBool U_CALLCONV
+    isAcceptable(ਖਾਲੀ *context, ਅਚਲ ਅੱਖਰ *type, ਅਚਲ ਅੱਖਰ *name, ਅਚਲ UDataInfo *pInfo);
 
-    UDataMemory *memory;
+    UData_ਸਮ੍ਰਿਤੀ *ਸਮ੍ਰਿਤੀ;
     UCPTrie *ownedTrie;
 };
 
 LoadedNormalizer2Impl::~LoadedNormalizer2Impl() {
-    udata_close(memory);
+    udata_close(ਸਮ੍ਰਿਤੀ);
     ucptrie_close(ownedTrie);
 }
 
 UBool U_CALLCONV
-LoadedNormalizer2Impl::isAcceptable(void * /*context*/,
-                                    const char * /* type */, const char * /*name*/,
-                                    const UDataInfo *pInfo) {
-    if(
+LoadedNormalizer2Impl::isAcceptable(ਖਾਲੀ * /*context*/,
+                                    ਅਚਲ ਅੱਖਰ * /* type */, ਅਚਲ ਅੱਖਰ * /*name*/,
+                                    ਅਚਲ UDataInfo *pInfo) {
+    ਜੇ(
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
-        pInfo->dataFormat[0]==0x4e &&    /* dataFormat="Nrm2" */
-        pInfo->dataFormat[1]==0x72 &&
-        pInfo->dataFormat[2]==0x6d &&
-        pInfo->dataFormat[3]==0x32 &&
-        pInfo->formatVersion[0]==5
+        pInfo->ਅੰਕੜੇ_Format[0]==0x4e &&    /* dataFormat="Nrm2" */
+        pInfo->ਅੰਕੜੇ_Format[1]==0x72 &&
+        pInfo->ਅੰਕੜੇ_Format[2]==0x6d &&
+        pInfo->ਅੰਕੜੇ_Format[3]==0x32 &&
+        pInfo->format_ਸੰਸਕਰਣ[0]==5
     ) {
         // Normalizer2Impl *me=(Normalizer2Impl *)context;
         // uprv_memcpy(me->dataVersion, pInfo->dataVersion, 4);
-        return true;
-    } else {
-        return false;
+        ਵਾਪਸ ਸੱਚ;
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ ਝੂਠ;
     }
 }
 
-void
-LoadedNormalizer2Impl::load(const char *packageName, const char *name, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+ਖਾਲੀ
+LoadedNormalizer2Impl::load(ਅਚਲ ਅੱਖਰ *packageName, ਅਚਲ ਅੱਖਰ *name, UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ;
     }
-    memory=udata_openChoice(packageName, "nrm", name, isAcceptable, this, &errorCode);
-    if(U_FAILURE(errorCode)) {
-        return;
+    ਸਮ੍ਰਿਤੀ=udata_openChoice(packageName, "nrm", name, isAcceptable, ਇਹ, &error_ਕੋਡ);
+    ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ;
     }
-    const uint8_t* inBytes = static_cast<const uint8_t*>(udata_getMemory(memory));
-    const int32_t* inIndexes = reinterpret_cast<const int32_t*>(inBytes);
-    int32_t indexesLength=inIndexes[IX_NORM_TRIE_OFFSET]/4;
-    if(indexesLength<=IX_MIN_LCCC_CP) {
-        errorCode=U_INVALID_FORMAT_ERROR;  // Not enough indexes.
-        return;
-    }
-
-    int32_t offset=inIndexes[IX_NORM_TRIE_OFFSET];
-    int32_t nextOffset=inIndexes[IX_EXTRA_DATA_OFFSET];
-    ownedTrie=ucptrie_openFromBinary(UCPTRIE_TYPE_FAST, UCPTRIE_VALUE_BITS_16,
-                                     inBytes+offset, nextOffset-offset, nullptr,
-                                     &errorCode);
-    if(U_FAILURE(errorCode)) {
-        return;
+    ਅਚਲ uint8_t* ਵਿੱਚ_ਬਾਈਟਾਂ = static_cast<ਅਚਲ uint8_t*>(udata_get_ਸਮ੍ਰਿਤੀ(ਸਮ੍ਰਿਤੀ));
+    ਅਚਲ int32_t* ਵਿੱਚ_Indexes = reinterpret_cast<ਅਚਲ int32_t*>(ਵਿੱਚ_ਬਾਈਟਾਂ);
+    int32_t indexes_ਲੰਮਾਈ=ਵਿੱਚ_Indexes[IX_NORM_TRIE_ਵਿੱਥ]/4;
+    ਜੇ(indexes_ਲੰਮਾਈ<=IX_MIN_LCCC_CP) {
+        error_ਕੋਡ=U_INVALID_FORMAT_ERROR;  // Not enough indexes.
+        ਵਾਪਸ;
     }
 
-    offset=nextOffset;
-    nextOffset=inIndexes[IX_SMALL_FCD_OFFSET];
-    const uint16_t* inExtraData = reinterpret_cast<const uint16_t*>(inBytes + offset);
+    int32_t ਵਿੱਥ=ਵਿੱਚ_Indexes[IX_NORM_TRIE_ਵਿੱਥ];
+    int32_t ਅਗਲਾ_ਵਿੱਥ=ਵਿੱਚ_Indexes[IX_EXTRA_ਅੰਕੜੇ_ਵਿੱਥ];
+    ownedTrie=ucptrie_open_From_ਦੁਆਧਾਰੀ(UCPTRIE_TYPE_FAST, UCPTRIE_ਮੁੱਲ_ਬਿੱਟ_16,
+                                     ਵਿੱਚ_ਬਾਈਟਾਂ+ਵਿੱਥ, ਅਗਲਾ_ਵਿੱਥ-ਵਿੱਥ, ਖਾਲੀ_ਸੂਚਕ,
+                                     &error_ਕੋਡ);
+    ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ;
+    }
+
+    ਵਿੱਥ=ਅਗਲਾ_ਵਿੱਥ;
+    ਅਗਲਾ_ਵਿੱਥ=ਵਿੱਚ_Indexes[IX_SMALL_FCD_ਵਿੱਥ];
+    ਅਚਲ uint16_t* ਵਿੱਚ_Extra_ਅੰਕੜੇ = reinterpret_cast<ਅਚਲ uint16_t*>(ਵਿੱਚ_ਬਾਈਟਾਂ + ਵਿੱਥ);
 
     // smallFCD: new in formatVersion 2
-    offset=nextOffset;
-    const uint8_t *inSmallFCD=inBytes+offset;
+    ਵਿੱਥ=ਅਗਲਾ_ਵਿੱਥ;
+    ਅਚਲ uint8_t *ਵਿੱਚ_Small_FCD=ਵਿੱਚ_ਬਾਈਟਾਂ+ਵਿੱਥ;
 
-    init(inIndexes, ownedTrie, inExtraData, inSmallFCD);
+    init(ਵਿੱਚ_Indexes, ownedTrie, ਵਿੱਚ_Extra_ਅੰਕੜੇ, ਵਿੱਚ_Small_FCD);
 }
 
 // instance cache ---------------------------------------------------------- ***
 
 Norm2AllModes *
-Norm2AllModes::createInstance(const char *packageName,
-                              const char *name,
-                              UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+Norm2AllModes::createInstance(ਅਚਲ ਅੱਖਰ *packageName,
+                              ਅਚਲ ਅੱਖਰ *name,
+                              UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
-    LoadedNormalizer2Impl *impl=new LoadedNormalizer2Impl;
-    if(impl==nullptr) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    LoadedNormalizer2Impl *impl=ਨਵਾਂ LoadedNormalizer2Impl;
+    ਜੇ(impl==ਖਾਲੀ_ਸੂਚਕ) {
+        error_ਕੋਡ=U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
-    impl->load(packageName, name, errorCode);
-    return createInstance(impl, errorCode);
+    impl->load(packageName, name, error_ਕੋਡ);
+    ਵਾਪਸ createInstance(impl, error_ਕੋਡ);
 }
 
 U_CDECL_BEGIN
-static UBool U_CALLCONV uprv_loaded_normalizer2_cleanup();
-U_CDECL_END
+ਸਥਿਰ UBool U_CALLCONV uprv_loaded_normalizer2_cleanup();
+U_CDECL_ਸਿਰਾ
 
-#if !NORM2_HARDCODE_NFC_DATA
-static Norm2AllModes *nfcSingleton;
-static icu::UInitOnce nfcInitOnce {};
-#endif
+#ਜੇ !NORM2_HARDCODE_NFC_ਅੰਕੜੇ
+ਸਥਿਰ Norm2AllModes *nfcSingleton;
+ਸਥਿਰ icu::UInitOnce nfcInitOnce {};
+#ਜੇ_ਅੰਤ
 
-static Norm2AllModes *nfkcSingleton;
-static icu::UInitOnce nfkcInitOnce {};
+ਸਥਿਰ Norm2AllModes *nfkcSingleton;
+ਸਥਿਰ icu::UInitOnce nfkcInitOnce {};
 
-static Norm2AllModes *nfkc_cfSingleton;
-static icu::UInitOnce nfkc_cfInitOnce {};
+ਸਥਿਰ Norm2AllModes *nfkc_cfSingleton;
+ਸਥਿਰ icu::UInitOnce nfkc_cfInitOnce {};
 
-static Norm2AllModes *nfkc_scfSingleton;
-static icu::UInitOnce nfkc_scfInitOnce {};
+ਸਥਿਰ Norm2AllModes *nfkc_scfSingleton;
+ਸਥਿਰ icu::UInitOnce nfkc_scfInitOnce {};
 
-static UHashtable    *cache=nullptr;
+ਸਥਿਰ UHashtable    *cache=ਖਾਲੀ_ਸੂਚਕ;
 
 // UInitOnce singleton initialization function
-static void U_CALLCONV initSingletons(const char *what, UErrorCode &errorCode) {
-#if !NORM2_HARDCODE_NFC_DATA
-    if (uprv_strcmp(what, "nfc") == 0) {
-        nfcSingleton    = Norm2AllModes::createInstance(nullptr, "nfc", errorCode);
-    } else
-#endif
-    if (uprv_strcmp(what, "nfkc") == 0) {
-        nfkcSingleton    = Norm2AllModes::createInstance(nullptr, "nfkc", errorCode);
-    } else if (uprv_strcmp(what, "nfkc_cf") == 0) {
-        nfkc_cfSingleton = Norm2AllModes::createInstance(nullptr, "nfkc_cf", errorCode);
-    } else if (uprv_strcmp(what, "nfkc_scf") == 0) {
-        nfkc_scfSingleton = Norm2AllModes::createInstance(nullptr, "nfkc_scf", errorCode);
-    } else {
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV initSingletons(ਅਚਲ ਅੱਖਰ *what, UError_ਕੋਡ &error_ਕੋਡ) {
+#ਜੇ !NORM2_HARDCODE_NFC_ਅੰਕੜੇ
+    ਜੇ (uprv_strcmp(what, "nfc") == 0) {
+        nfcSingleton    = Norm2AllModes::createInstance(ਖਾਲੀ_ਸੂਚਕ, "nfc", error_ਕੋਡ);
+    } ਨਹੀਂਤਾਂ
+#ਜੇ_ਅੰਤ
+    ਜੇ (uprv_strcmp(what, "nfkc") == 0) {
+        nfkcSingleton    = Norm2AllModes::createInstance(ਖਾਲੀ_ਸੂਚਕ, "nfkc", error_ਕੋਡ);
+    } ਨਹੀਂਤਾਂ ਜੇ (uprv_strcmp(what, "nfkc_cf") == 0) {
+        nfkc_cfSingleton = Norm2AllModes::createInstance(ਖਾਲੀ_ਸੂਚਕ, "nfkc_cf", error_ਕੋਡ);
+    } ਨਹੀਂਤਾਂ ਜੇ (uprv_strcmp(what, "nfkc_scf") == 0) {
+        nfkc_scfSingleton = Norm2AllModes::createInstance(ਖਾਲੀ_ਸੂਚਕ, "nfkc_scf", error_ਕੋਡ);
+    } ਨਹੀਂਤਾਂ {
         UPRV_UNREACHABLE_EXIT;   // Unknown singleton
     }
-    ucln_common_registerCleanup(UCLN_COMMON_LOADED_NORMALIZER2, uprv_loaded_normalizer2_cleanup);
+    ucln_common_ਰਜਿਸਟਰ_Cleanup(UCLN_COMMON_LOADED_NORMALIZER2, uprv_loaded_normalizer2_cleanup);
 }
 
 U_CDECL_BEGIN
 
-static void U_CALLCONV deleteNorm2AllModes(void *allModes) {
-    delete (Norm2AllModes *)allModes;
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV deleteNorm2AllModes(ਖਾਲੀ *allModes) {
+    ਮਿਟਾਓ (Norm2AllModes *)allModes;
 }
 
-static UBool U_CALLCONV uprv_loaded_normalizer2_cleanup() {
-#if !NORM2_HARDCODE_NFC_DATA
-    delete nfcSingleton;
-    nfcSingleton = nullptr;
+ਸਥਿਰ UBool U_CALLCONV uprv_loaded_normalizer2_cleanup() {
+#ਜੇ !NORM2_HARDCODE_NFC_ਅੰਕੜੇ
+    ਮਿਟਾਓ nfcSingleton;
+    nfcSingleton = ਖਾਲੀ_ਸੂਚਕ;
     nfcInitOnce.reset();
-#endif
+#ਜੇ_ਅੰਤ
 
-    delete nfkcSingleton;
-    nfkcSingleton = nullptr;
+    ਮਿਟਾਓ nfkcSingleton;
+    nfkcSingleton = ਖਾਲੀ_ਸੂਚਕ;
     nfkcInitOnce.reset();
 
-    delete nfkc_cfSingleton;
-    nfkc_cfSingleton = nullptr;
+    ਮਿਟਾਓ nfkc_cfSingleton;
+    nfkc_cfSingleton = ਖਾਲੀ_ਸੂਚਕ;
     nfkc_cfInitOnce.reset();
 
-    delete nfkc_scfSingleton;
-    nfkc_scfSingleton = nullptr;
+    ਮਿਟਾਓ nfkc_scfSingleton;
+    nfkc_scfSingleton = ਖਾਲੀ_ਸੂਚਕ;
     nfkc_scfInitOnce.reset();
 
     uhash_close(cache);
-    cache=nullptr;
-    return true;
+    cache=ਖਾਲੀ_ਸੂਚਕ;
+    ਵਾਪਸ ਸੱਚ;
 }
 
-U_CDECL_END
+U_CDECL_ਸਿਰਾ
 
-#if !NORM2_HARDCODE_NFC_DATA
-const Norm2AllModes *
-Norm2AllModes::getNFCInstance(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return nullptr; }
-    umtx_initOnce(nfcInitOnce, &initSingletons, "nfc", errorCode);
-    return nfcSingleton;
+#ਜੇ !NORM2_HARDCODE_NFC_ਅੰਕੜੇ
+ਅਚਲ Norm2AllModes *
+Norm2AllModes::getNFCInstance(UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ(U_FAILURE(error_ਕੋਡ)) { ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ; }
+    umtx_initOnce(nfcInitOnce, &initSingletons, "nfc", error_ਕੋਡ);
+    ਵਾਪਸ nfcSingleton;
 }
-#endif
+#ਜੇ_ਅੰਤ
 
-const Norm2AllModes *
-Norm2AllModes::getNFKCInstance(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return nullptr; }
-    umtx_initOnce(nfkcInitOnce, &initSingletons, "nfkc", errorCode);
-    return nfkcSingleton;
-}
-
-const Norm2AllModes *
-Norm2AllModes::getNFKC_CFInstance(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return nullptr; }
-    umtx_initOnce(nfkc_cfInitOnce, &initSingletons, "nfkc_cf", errorCode);
-    return nfkc_cfSingleton;
+ਅਚਲ Norm2AllModes *
+Norm2AllModes::getNFKCInstance(UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ(U_FAILURE(error_ਕੋਡ)) { ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ; }
+    umtx_initOnce(nfkcInitOnce, &initSingletons, "nfkc", error_ਕੋਡ);
+    ਵਾਪਸ nfkcSingleton;
 }
 
-const Norm2AllModes *
-Norm2AllModes::getNFKC_SCFInstance(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return nullptr; }
-    umtx_initOnce(nfkc_scfInitOnce, &initSingletons, "nfkc_scf", errorCode);
-    return nfkc_scfSingleton;
+ਅਚਲ Norm2AllModes *
+Norm2AllModes::getNFKC_CFInstance(UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ(U_FAILURE(error_ਕੋਡ)) { ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ; }
+    umtx_initOnce(nfkc_cfInitOnce, &initSingletons, "nfkc_cf", error_ਕੋਡ);
+    ਵਾਪਸ nfkc_cfSingleton;
 }
 
-#if !NORM2_HARDCODE_NFC_DATA
-const Normalizer2 *
-Normalizer2::getNFCInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->comp : nullptr;
+ਅਚਲ Norm2AllModes *
+Norm2AllModes::getNFKC_SCFInstance(UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ(U_FAILURE(error_ਕੋਡ)) { ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ; }
+    umtx_initOnce(nfkc_scfInitOnce, &initSingletons, "nfkc_scf", error_ਕੋਡ);
+    ਵਾਪਸ nfkc_scfSingleton;
 }
 
-const Normalizer2 *
-Normalizer2::getNFDInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->decomp : nullptr;
+#ਜੇ !NORM2_HARDCODE_NFC_ਅੰਕੜੇ
+ਅਚਲ Normalizer2 *
+Normalizer2::getNFCInstance(UError_ਕੋਡ &error_ਕੋਡ) {
+    ਅਚਲ Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(error_ਕੋਡ);
+    ਵਾਪਸ allModes!=ਖਾਲੀ_ਸੂਚਕ ? &allModes->comp : ਖਾਲੀ_ਸੂਚਕ;
 }
 
-const Normalizer2 *Normalizer2Factory::getFCDInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->fcd : nullptr;
+ਅਚਲ Normalizer2 *
+Normalizer2::getNFDInstance(UError_ਕੋਡ &error_ਕੋਡ) {
+    ਅਚਲ Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(error_ਕੋਡ);
+    ਵਾਪਸ allModes!=ਖਾਲੀ_ਸੂਚਕ ? &allModes->decomp : ਖਾਲੀ_ਸੂਚਕ;
 }
 
-const Normalizer2 *Normalizer2Factory::getFCCInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->fcc : nullptr;
+ਅਚਲ Normalizer2 *Normalizer2Factory::getFCDInstance(UError_ਕੋਡ &error_ਕੋਡ) {
+    ਅਚਲ Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(error_ਕੋਡ);
+    ਵਾਪਸ allModes!=ਖਾਲੀ_ਸੂਚਕ ? &allModes->fcd : ਖਾਲੀ_ਸੂਚਕ;
 }
 
-const Normalizer2Impl *
-Normalizer2Factory::getNFCImpl(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? allModes->impl : nullptr;
-}
-#endif
-
-const Normalizer2 *
-Normalizer2::getNFKCInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->comp : nullptr;
+ਅਚਲ Normalizer2 *Normalizer2Factory::getFCCInstance(UError_ਕੋਡ &error_ਕੋਡ) {
+    ਅਚਲ Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(error_ਕੋਡ);
+    ਵਾਪਸ allModes!=ਖਾਲੀ_ਸੂਚਕ ? &allModes->fcc : ਖਾਲੀ_ਸੂਚਕ;
 }
 
-const Normalizer2 *
-Normalizer2::getNFKDInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->decomp : nullptr;
+ਅਚਲ Normalizer2Impl *
+Normalizer2Factory::getNFCImpl(UError_ਕੋਡ &error_ਕੋਡ) {
+    ਅਚਲ Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(error_ਕੋਡ);
+    ਵਾਪਸ allModes!=ਖਾਲੀ_ਸੂਚਕ ? allModes->impl : ਖਾਲੀ_ਸੂਚਕ;
+}
+#ਜੇ_ਅੰਤ
+
+ਅਚਲ Normalizer2 *
+Normalizer2::getNFKCInstance(UError_ਕੋਡ &error_ਕੋਡ) {
+    ਅਚਲ Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(error_ਕੋਡ);
+    ਵਾਪਸ allModes!=ਖਾਲੀ_ਸੂਚਕ ? &allModes->comp : ਖਾਲੀ_ਸੂਚਕ;
 }
 
-const Normalizer2 *
-Normalizer2::getNFKCCasefoldInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKC_CFInstance(errorCode);
-    return allModes!=nullptr ? &allModes->comp : nullptr;
+ਅਚਲ Normalizer2 *
+Normalizer2::getNFKDInstance(UError_ਕੋਡ &error_ਕੋਡ) {
+    ਅਚਲ Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(error_ਕੋਡ);
+    ਵਾਪਸ allModes!=ਖਾਲੀ_ਸੂਚਕ ? &allModes->decomp : ਖਾਲੀ_ਸੂਚਕ;
 }
 
-const Normalizer2 *
-Normalizer2::getNFKCSimpleCasefoldInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKC_SCFInstance(errorCode);
-    return allModes!=nullptr ? &allModes->comp : nullptr;
+ਅਚਲ Normalizer2 *
+Normalizer2::getNFKCCasefoldInstance(UError_ਕੋਡ &error_ਕੋਡ) {
+    ਅਚਲ Norm2AllModes *allModes=Norm2AllModes::getNFKC_CFInstance(error_ਕੋਡ);
+    ਵਾਪਸ allModes!=ਖਾਲੀ_ਸੂਚਕ ? &allModes->comp : ਖਾਲੀ_ਸੂਚਕ;
 }
 
-const Normalizer2 *
-Normalizer2::getInstance(const char *packageName,
-                         const char *name,
-                         UNormalization2Mode mode,
-                         UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+ਅਚਲ Normalizer2 *
+Normalizer2::getNFKCSimpleCasefoldInstance(UError_ਕੋਡ &error_ਕੋਡ) {
+    ਅਚਲ Norm2AllModes *allModes=Norm2AllModes::getNFKC_SCFInstance(error_ਕੋਡ);
+    ਵਾਪਸ allModes!=ਖਾਲੀ_ਸੂਚਕ ? &allModes->comp : ਖਾਲੀ_ਸੂਚਕ;
+}
+
+ਅਚਲ Normalizer2 *
+Normalizer2::getInstance(ਅਚਲ ਅੱਖਰ *packageName,
+                         ਅਚਲ ਅੱਖਰ *name,
+                         UNormalization2_ਬਹੁਲਕ ਬਹੁਲਕ,
+                         UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
-    if(name==nullptr || *name==0) {
-        errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    ਜੇ(name==ਖਾਲੀ_ਸੂਚਕ || *name==0) {
+        error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
-    const Norm2AllModes *allModes=nullptr;
-    if(packageName==nullptr) {
-        if(0==uprv_strcmp(name, "nfc")) {
-            allModes=Norm2AllModes::getNFCInstance(errorCode);
-        } else if(0==uprv_strcmp(name, "nfkc")) {
-            allModes=Norm2AllModes::getNFKCInstance(errorCode);
-        } else if(0==uprv_strcmp(name, "nfkc_cf")) {
-            allModes=Norm2AllModes::getNFKC_CFInstance(errorCode);
-        } else if(0==uprv_strcmp(name, "nfkc_scf")) {
-            allModes=Norm2AllModes::getNFKC_SCFInstance(errorCode);
+    ਅਚਲ Norm2AllModes *allModes=ਖਾਲੀ_ਸੂਚਕ;
+    ਜੇ(packageName==ਖਾਲੀ_ਸੂਚਕ) {
+        ਜੇ(0==uprv_strcmp(name, "nfc")) {
+            allModes=Norm2AllModes::getNFCInstance(error_ਕੋਡ);
+        } ਨਹੀਂਤਾਂ ਜੇ(0==uprv_strcmp(name, "nfkc")) {
+            allModes=Norm2AllModes::getNFKCInstance(error_ਕੋਡ);
+        } ਨਹੀਂਤਾਂ ਜੇ(0==uprv_strcmp(name, "nfkc_cf")) {
+            allModes=Norm2AllModes::getNFKC_CFInstance(error_ਕੋਡ);
+        } ਨਹੀਂਤਾਂ ਜੇ(0==uprv_strcmp(name, "nfkc_scf")) {
+            allModes=Norm2AllModes::getNFKC_SCFInstance(error_ਕੋਡ);
         }
     }
-    if(allModes==nullptr && U_SUCCESS(errorCode)) {
+    ਜੇ(allModes==ਖਾਲੀ_ਸੂਚਕ && U_SUCCESS(error_ਕੋਡ)) {
         {
-            Mutex lock;
-            if(cache!=nullptr) {
+            Mutex ਤਾਲਾ;
+            ਜੇ(cache!=ਖਾਲੀ_ਸੂਚਕ) {
                 allModes = static_cast<Norm2AllModes*>(uhash_get(cache, name));
             }
         }
-        if(allModes==nullptr) {
-            ucln_common_registerCleanup(UCLN_COMMON_LOADED_NORMALIZER2, uprv_loaded_normalizer2_cleanup);
-            LocalPointer<Norm2AllModes> localAllModes(
-                Norm2AllModes::createInstance(packageName, name, errorCode));
-            if(U_SUCCESS(errorCode)) {
-                Mutex lock;
-                if(cache==nullptr) {
-                    cache=uhash_open(uhash_hashChars, uhash_compareChars, nullptr, &errorCode);
-                    if(U_FAILURE(errorCode)) {
-                        return nullptr;
+        ਜੇ(allModes==ਖਾਲੀ_ਸੂਚਕ) {
+            ucln_common_ਰਜਿਸਟਰ_Cleanup(UCLN_COMMON_LOADED_NORMALIZER2, uprv_loaded_normalizer2_cleanup);
+            Local_ਸੂਚਕ<Norm2AllModes> localAllModes(
+                Norm2AllModes::createInstance(packageName, name, error_ਕੋਡ));
+            ਜੇ(U_SUCCESS(error_ਕੋਡ)) {
+                Mutex ਤਾਲਾ;
+                ਜੇ(cache==ਖਾਲੀ_ਸੂਚਕ) {
+                    cache=uhash_open(uhash_hashChars, uhash_compareChars, ਖਾਲੀ_ਸੂਚਕ, &error_ਕੋਡ);
+                    ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+                        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
                     }
-                    uhash_setKeyDeleter(cache, uprv_free);
-                    uhash_setValueDeleter(cache, deleteNorm2AllModes);
+                    uhash_ਸੈੱਟ_ਕੁੰਜੀ_Deleter(cache, uprv_free);
+                    uhash_ਸੈੱਟ_ਮੁੱਲ_Deleter(cache, deleteNorm2AllModes);
                 }
-                void *temp=uhash_get(cache, name);
-                if(temp==nullptr) {
-                    int32_t keyLength= static_cast<int32_t>(uprv_strlen(name)+1);
-                    char* nameCopy = static_cast<char*>(uprv_malloc(keyLength));
-                    if(nameCopy==nullptr) {
-                        errorCode=U_MEMORY_ALLOCATION_ERROR;
-                        return nullptr;
+                ਖਾਲੀ *ਆਰਜ਼ੀ=uhash_get(cache, name);
+                ਜੇ(ਆਰਜ਼ੀ==ਖਾਲੀ_ਸੂਚਕ) {
+                    int32_t ਕੁੰਜੀ_ਲੰਮਾਈ= static_cast<int32_t>(uprv_strlen(name)+1);
+                    ਅੱਖਰ* nameCopy = static_cast<ਅੱਖਰ*>(uprv_malloc(ਕੁੰਜੀ_ਲੰਮਾਈ));
+                    ਜੇ(nameCopy==ਖਾਲੀ_ਸੂਚਕ) {
+                        error_ਕੋਡ=U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
                     }
-                    uprv_memcpy(nameCopy, name, keyLength);
+                    uprv_memcpy(nameCopy, name, ਕੁੰਜੀ_ਲੰਮਾਈ);
                     allModes=localAllModes.getAlias();
-                    uhash_put(cache, nameCopy, localAllModes.orphan(), &errorCode);
-                } else {
+                    uhash_put(cache, nameCopy, localAllModes.orphan(), &error_ਕੋਡ);
+                } ਨਹੀਂਤਾਂ {
                     // race condition
-                    allModes = static_cast<Norm2AllModes*>(temp);
+                    allModes = static_cast<Norm2AllModes*>(ਆਰਜ਼ੀ);
                 }
             }
         }
     }
-    if(allModes!=nullptr && U_SUCCESS(errorCode)) {
-        switch(mode) {
-        case UNORM2_COMPOSE:
-            return &allModes->comp;
-        case UNORM2_DECOMPOSE:
-            return &allModes->decomp;
-        case UNORM2_FCD:
-            return &allModes->fcd;
-        case UNORM2_COMPOSE_CONTIGUOUS:
-            return &allModes->fcc;
-        default:
-            break;  // do nothing
+    ਜੇ(allModes!=ਖਾਲੀ_ਸੂਚਕ && U_SUCCESS(error_ਕੋਡ)) {
+        ਚੋਣ(ਬਹੁਲਕ) {
+        ਹਾਲਤ UNORM2_COMPOSE:
+            ਵਾਪਸ &allModes->comp;
+        ਹਾਲਤ UNORM2_DECOMPOSE:
+            ਵਾਪਸ &allModes->decomp;
+        ਹਾਲਤ UNORM2_FCD:
+            ਵਾਪਸ &allModes->fcd;
+        ਹਾਲਤ UNORM2_COMPOSE_CONTIGUOUS:
+            ਵਾਪਸ &allModes->fcc;
+        ਮੂਲ:
+            ਰੋਕੋ;  // do nothing
         }
     }
-    return nullptr;
+    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
 }
 
-const Normalizer2 *
-Normalizer2Factory::getInstance(UNormalizationMode mode, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+ਅਚਲ Normalizer2 *
+Normalizer2Factory::getInstance(UNormalization_ਬਹੁਲਕ ਬਹੁਲਕ, UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
-    switch(mode) {
-    case UNORM_NFD:
-        return Normalizer2::getNFDInstance(errorCode);
-    case UNORM_NFKD:
-        return Normalizer2::getNFKDInstance(errorCode);
-    case UNORM_NFC:
-        return Normalizer2::getNFCInstance(errorCode);
-    case UNORM_NFKC:
-        return Normalizer2::getNFKCInstance(errorCode);
-    case UNORM_FCD:
-        return getFCDInstance(errorCode);
-    default:  // UNORM_NONE
-        return getNoopInstance(errorCode);
+    ਚੋਣ(ਬਹੁਲਕ) {
+    ਹਾਲਤ UNORM_NFD:
+        ਵਾਪਸ Normalizer2::getNFDInstance(error_ਕੋਡ);
+    ਹਾਲਤ UNORM_NFKD:
+        ਵਾਪਸ Normalizer2::getNFKDInstance(error_ਕੋਡ);
+    ਹਾਲਤ UNORM_NFC:
+        ਵਾਪਸ Normalizer2::getNFCInstance(error_ਕੋਡ);
+    ਹਾਲਤ UNORM_NFKC:
+        ਵਾਪਸ Normalizer2::getNFKCInstance(error_ਕੋਡ);
+    ਹਾਲਤ UNORM_FCD:
+        ਵਾਪਸ getFCDInstance(error_ਕੋਡ);
+    ਮੂਲ:  // UNORM_NONE
+        ਵਾਪਸ getNoopInstance(error_ਕੋਡ);
     }
 }
 
-const Normalizer2Impl *
-Normalizer2Factory::getNFKCImpl(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(errorCode);
-    return allModes!=nullptr ? allModes->impl : nullptr;
+ਅਚਲ Normalizer2Impl *
+Normalizer2Factory::getNFKCImpl(UError_ਕੋਡ &error_ਕੋਡ) {
+    ਅਚਲ Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(error_ਕੋਡ);
+    ਵਾਪਸ allModes!=ਖਾਲੀ_ਸੂਚਕ ? allModes->impl : ਖਾਲੀ_ਸੂਚਕ;
 }
 
-const Normalizer2Impl *
-Normalizer2Factory::getNFKC_CFImpl(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKC_CFInstance(errorCode);
-    return allModes!=nullptr ? allModes->impl : nullptr;
+ਅਚਲ Normalizer2Impl *
+Normalizer2Factory::getNFKC_CFImpl(UError_ਕੋਡ &error_ਕੋਡ) {
+    ਅਚਲ Norm2AllModes *allModes=Norm2AllModes::getNFKC_CFInstance(error_ਕੋਡ);
+    ਵਾਪਸ allModes!=ਖਾਲੀ_ਸੂਚਕ ? allModes->impl : ਖਾਲੀ_ਸੂਚਕ;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
 // C API ------------------------------------------------------------------- ***
 
 U_NAMESPACE_USE
 
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFKCInstance(UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getNFKCInstance(*pErrorCode);
+U_CAPI ਅਚਲ UNormalizer2 * U_EXPORT2
+unorm2_getNFKCInstance(UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਵਾਪਸ (ਅਚਲ UNormalizer2 *)Normalizer2::getNFKCInstance(*p_Error_ਕੋਡ);
 }
 
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFKDInstance(UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getNFKDInstance(*pErrorCode);
+U_CAPI ਅਚਲ UNormalizer2 * U_EXPORT2
+unorm2_getNFKDInstance(UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਵਾਪਸ (ਅਚਲ UNormalizer2 *)Normalizer2::getNFKDInstance(*p_Error_ਕੋਡ);
 }
 
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFKCCasefoldInstance(UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getNFKCCasefoldInstance(*pErrorCode);
+U_CAPI ਅਚਲ UNormalizer2 * U_EXPORT2
+unorm2_getNFKCCasefoldInstance(UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਵਾਪਸ (ਅਚਲ UNormalizer2 *)Normalizer2::getNFKCCasefoldInstance(*p_Error_ਕੋਡ);
 }
 
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFKCSimpleCasefoldInstance(UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getNFKCSimpleCasefoldInstance(*pErrorCode);
+U_CAPI ਅਚਲ UNormalizer2 * U_EXPORT2
+unorm2_getNFKCSimpleCasefoldInstance(UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਵਾਪਸ (ਅਚਲ UNormalizer2 *)Normalizer2::getNFKCSimpleCasefoldInstance(*p_Error_ਕੋਡ);
 }
 
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getInstance(const char *packageName,
-                   const char *name,
-                   UNormalization2Mode mode,
-                   UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getInstance(packageName, name, mode, *pErrorCode);
+U_CAPI ਅਚਲ UNormalizer2 * U_EXPORT2
+unorm2_getInstance(ਅਚਲ ਅੱਖਰ *packageName,
+                   ਅਚਲ ਅੱਖਰ *name,
+                   UNormalization2_ਬਹੁਲਕ ਬਹੁਲਕ,
+                   UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਵਾਪਸ (ਅਚਲ UNormalizer2 *)Normalizer2::getInstance(packageName, name, ਬਹੁਲਕ, *p_Error_ਕੋਡ);
 }
 
-U_CFUNC UNormalizationCheckResult
-unorm_getQuickCheck(UChar32 c, UNormalizationMode mode) {
-    if(mode<=UNORM_NONE || UNORM_FCD<=mode) {
-        return UNORM_YES;
+U_CFUNC UNormalization_Check_ਨਤੀਜਾ
+unorm_get_ਤੇਜ਼_Check(UChar32 c, UNormalization_ਬਹੁਲਕ ਬਹੁਲਕ) {
+    ਜੇ(ਬਹੁਲਕ<=UNORM_NONE || UNORM_FCD<=ਬਹੁਲਕ) {
+        ਵਾਪਸ UNORM_YES;
     }
-    UErrorCode errorCode=U_ZERO_ERROR;
-    const Normalizer2 *norm2=Normalizer2Factory::getInstance(mode, errorCode);
-    if(U_SUCCESS(errorCode)) {
-        return ((const Normalizer2WithImpl *)norm2)->getQuickCheck(c);
-    } else {
-        return UNORM_MAYBE;
+    UError_ਕੋਡ error_ਕੋਡ=U_ZERO_ERROR;
+    ਅਚਲ Normalizer2 *norm2=Normalizer2Factory::getInstance(ਬਹੁਲਕ, error_ਕੋਡ);
+    ਜੇ(U_SUCCESS(error_ਕੋਡ)) {
+        ਵਾਪਸ ((ਅਚਲ Normalizer2WithImpl *)norm2)->get_ਤੇਜ਼_Check(c);
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ UNORM_MAYBE;
     }
 }
 
-#endif  // !UCONFIG_NO_NORMALIZATION
+#ਜੇ_ਅੰਤ  // !UCONFIG_NO_NORMALIZATION

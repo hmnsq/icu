@@ -13,23 +13,23 @@
 //
 // Author: sffc
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
-#ifndef __STATIC_UNICODE_SETS_H__
-#define __STATIC_UNICODE_SETS_H__
+#ਜੇ !UCONFIG_NO_FORMATTING
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __STATIC_UNICODE_SETS_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __STATIC_UNICODE_SETS_H__
 
-#include "unicode/uniset.h"
-#include "unicode/unistr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uniset.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/unistr.h"
 
 U_NAMESPACE_BEGIN
 namespace unisets {
 
-enum Key {
+ਗਿਣਤੀ ਕੁੰਜੀ_2 {
     // NONE is used to indicate null in chooseFrom().
     // EMPTY is used to get an empty UnicodeSet.
     NONE = -1,
-    EMPTY = 0,
+    ਖਾਲੀ_ਥਾਵਾਂ_2 = 0,
 
     // Ignorables
     DEFAULT_IGNORABLES,
@@ -73,7 +73,7 @@ enum Key {
     DIGITS_OR_STRICT_ALL_SEPARATORS,
 
     // The number of elements in the enum.
-    UNISETS_KEY_COUNT
+    UNISETS_ਕੁੰਜੀ_ਗਿਣਤੀ
 };
 
 /**
@@ -93,7 +93,7 @@ enum Key {
  * @return The requested UnicodeSet. Guaranteed to be frozen and non-null, but
  *         may be empty if an error occurred during data loading.
  */
-U_COMMON_API const UnicodeSet* get(Key key);
+U_COMMON_API ਅਚਲ Unicode_ਸੈੱਟ* get(ਕੁੰਜੀ_2 ਕੁੰਜੀ);
 
 /**
  * Checks if the UnicodeSet given by key1 contains the given string.
@@ -104,7 +104,7 @@ U_COMMON_API const UnicodeSet* get(Key key);
  * @param key1 The set to check.
  * @return key1 if the set contains str, or NONE if not.
  */
-U_COMMON_API Key chooseFrom(UnicodeString str, Key key1);
+U_COMMON_API ਕੁੰਜੀ_2 ਚੁਣੋ_From(UnicodeString str, ਕੁੰਜੀ_2 key1);
 
 /**
  * Checks if the UnicodeSet given by either key1 or key2 contains the string.
@@ -117,14 +117,14 @@ U_COMMON_API Key chooseFrom(UnicodeString str, Key key1);
  * @return key1 if that set contains str; key2 if that set contains str; or
  *         NONE if neither set contains str.
  */
-U_COMMON_API Key chooseFrom(UnicodeString str, Key key1, Key key2);
+U_COMMON_API ਕੁੰਜੀ_2 ਚੁਣੋ_From(UnicodeString str, ਕੁੰਜੀ_2 key1, ਕੁੰਜੀ_2 key2);
 
 // TODO: Load these from data: ICU-20108
 // Unused in C++:
 // Key chooseCurrency(UnicodeString str);
 // Used instead:
-static const struct {
-    Key key;
+ਸਥਿਰ ਅਚਲ ਬਣਤਰ {
+    ਕੁੰਜੀ_2 ਕੁੰਜੀ;
     UChar32 exemplar;
 } kCurrencyEntries[] = {
     {DOLLAR_SIGN, u'$'},
@@ -135,7 +135,7 @@ static const struct {
 };
 
 } // namespace unisets
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif //__STATIC_UNICODE_SETS_H__
-#endif /* #if !UCONFIG_NO_FORMATTING */
+#ਜੇ_ਅੰਤ //__STATIC_UNICODE_SETS_H__
+#ਜੇ_ਅੰਤ /* #if !UCONFIG_NO_FORMATTING */

@@ -19,14 +19,14 @@
 * the core algorithm and core API to write reordered text.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "unicode/uchar.h"
-#include "unicode/ubidi.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "ustr_imp.h"
-#include "ubidiimp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ustring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uchar.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ubidi.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf16.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ustr_imp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ubidiimp.h"
 
 /*
  * The function implementations in this file are designed
@@ -39,11 +39,11 @@
  *
  * Note: Since Unicode 18, u_charMirror(c) may change the number of code units.
  */
-#if defined(UTF_SIZE) && UTF_SIZE==8
-# error reimplement ubidi_writeReordered() for UTF-8, see comment above
-#endif
+#ਜੇ defined(UTF_ਮਾਪ) && UTF_ਮਾਪ==8
+# error reimplement ubidi_writeReordered() ਲਈ UTF-8, see comment above
+#ਜੇ_ਅੰਤ
 
-#define IS_COMBINING(type) ((1UL<<(type))&(1UL<<U_NON_SPACING_MARK|1UL<<U_COMBINING_SPACING_MARK|1UL<<U_ENCLOSING_MARK))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ IS_COMBINING(type) ((1UL<<(type))&(1UL<<U_NON_SPACING_MARK|1UL<<U_COMBINING_SPACING_MARK|1UL<<U_ENCLOSING_MARK))
 
 /*
  * When we have UBIDI_OUTPUT_REVERSE set on ubidi_writeReordered(), then we
@@ -54,115 +54,115 @@
  * It looks strange to do mirroring in LTR output, but it is only because
  * we are writing RTL output in reverse.
  */
-static int32_t
-doWriteForward(const char16_t *src, int32_t srcLength,
-               char16_t *dest, int32_t destSize,
+ਸਥਿਰ int32_t
+doWriteForward(ਅਚਲ char16_t *src, int32_t src_ਲੰਮਾਈ,
+               char16_t *dest, int32_t dest_ਮਾਪ,
                uint16_t options,
-               UErrorCode *pErrorCode) {
-    if (srcLength<=0) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+               UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਜੇ (src_ਲੰਮਾਈ<=0) {
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
     /* optimize for several combinations of options */
-    switch(options&(UBIDI_REMOVE_BIDI_CONTROLS|UBIDI_DO_MIRRORING)) {
-    case 0: {
+    ਚੋਣ(options&(UBIDI_REMOVE_BIDI_CONTROLS|UBIDI_DO_MIRRORING)) {
+    ਹਾਲਤ 0: {
         /* simply copy the LTR run to the destination */
-        int32_t length=srcLength;
-        if(destSize<length) {
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            return srcLength;
+        int32_t length=src_ਲੰਮਾਈ;
+        ਜੇ(dest_ਮਾਪ<length) {
+            *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
+            ਵਾਪਸ src_ਲੰਮਾਈ;
         }
-        do {
+        ਕਰੋ {
             *dest++=*src++;
-        } while(--length>0);
-        return srcLength;
+        } ਜਦੋਂ(--length>0);
+        ਵਾਪਸ src_ਲੰਮਾਈ;
     }
-    case UBIDI_DO_MIRRORING: {
+    ਹਾਲਤ UBIDI_DO_MIRRORING: {
         /* do mirroring */
         int32_t i=0, j=0;
         UChar32 c;
-        do {
-            U16_NEXT(src, i, srcLength, c);
+        ਕਰੋ {
+            U16_ਅਗਲਾ(src, i, src_ਲੰਮਾਈ, c);
             c=u_charMirror(c);
-            int32_t charLen = U16_LENGTH(c);
-            if(j + charLen <= destSize) {
-                int32_t temp = j;
-                U16_APPEND_UNSAFE(dest, temp, c);
+            int32_t charLen = U16_ਲੰਮਾਈ(c);
+            ਜੇ(j + charLen <= dest_ਮਾਪ) {
+                int32_t ਆਰਜ਼ੀ = j;
+                U16_APPEND_UNSAFE(dest, ਆਰਜ਼ੀ, c);
             }
             j += charLen;
-        } while(i<srcLength);
-        if(destSize < j) {
-            *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
+        } ਜਦੋਂ(i<src_ਲੰਮਾਈ);
+        ਜੇ(dest_ਮਾਪ < j) {
+            *p_Error_ਕੋਡ = U_ਬਫਰ_ਉਛਾਲ_ERROR;
         }
-        if(j > srcLength) {
-            return j;
+        ਜੇ(j > src_ਲੰਮਾਈ) {
+            ਵਾਪਸ j;
         }
         /* If mirroring caused code unit contraction (e.g., U+1DB10 contracting to U+221D),
          * pad trailing array slots up to srcLength to avoid leaving uninitialized memory.
          * If j > 0, repeat the preceding code unit; if j == 0, fallback to 0x0020 (ASCII space).
          */
-        while(j < srcLength && j < destSize) {
+        ਜਦੋਂ(j < src_ਲੰਮਾਈ && j < dest_ਮਾਪ) {
             dest[j] = j > 0 ? dest[j - 1] : 0x0020;
             j++;
         }
-        return srcLength;
+        ਵਾਪਸ src_ਲੰਮਾਈ;
     }
-    case UBIDI_REMOVE_BIDI_CONTROLS: {
+    ਹਾਲਤ UBIDI_REMOVE_BIDI_CONTROLS: {
         /* copy the LTR run and remove any BiDi control characters */
-        int32_t remaining=destSize;
+        int32_t ਬਚਿਆ=dest_ਮਾਪ;
         char16_t c;
-        do {
+        ਕਰੋ {
             c=*src++;
-            if(!IS_BIDI_CONTROL_CHAR(c)) {
-                if(--remaining<0) {
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            ਜੇ(!IS_BIDI_CONTROL_CHAR(c)) {
+                ਜੇ(--ਬਚਿਆ<0) {
+                    *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
 
                     /* preflight the length */
-                    while(--srcLength>0) {
+                    ਜਦੋਂ(--src_ਲੰਮਾਈ>0) {
                         c=*src++;
-                        if(!IS_BIDI_CONTROL_CHAR(c)) {
-                            --remaining;
+                        ਜੇ(!IS_BIDI_CONTROL_CHAR(c)) {
+                            --ਬਚਿਆ;
                         }
                     }
-                    return destSize-remaining;
+                    ਵਾਪਸ dest_ਮਾਪ-ਬਚਿਆ;
                 }
                 *dest++=c;
             }
-        } while(--srcLength>0);
-        return destSize-remaining;
+        } ਜਦੋਂ(--src_ਲੰਮਾਈ>0);
+        ਵਾਪਸ dest_ਮਾਪ-ਬਚਿਆ;
     }
-    default: {
+    ਮੂਲ: {
         /* remove BiDi control characters and do mirroring */
         int32_t i, j=0;
         UChar32 c;
-        do {
+        ਕਰੋ {
             i=0;
-            U16_NEXT(src, i, srcLength, c);
+            U16_ਅਗਲਾ(src, i, src_ਲੰਮਾਈ, c);
             src+=i;
-            srcLength-=i;
-            if(!IS_BIDI_CONTROL_CHAR(c)) {
+            src_ਲੰਮਾਈ-=i;
+            ਜੇ(!IS_BIDI_CONTROL_CHAR(c)) {
                 c=u_charMirror(c);
-                int32_t charLen = U16_LENGTH(c);
-                if(j + charLen <= destSize) {
-                    int32_t temp = j;
-                    U16_APPEND_UNSAFE(dest, temp, c);
+                int32_t charLen = U16_ਲੰਮਾਈ(c);
+                ਜੇ(j + charLen <= dest_ਮਾਪ) {
+                    int32_t ਆਰਜ਼ੀ = j;
+                    U16_APPEND_UNSAFE(dest, ਆਰਜ਼ੀ, c);
                 }
                 j += charLen;
             }
-        } while(srcLength>0);
-        if(destSize < j) {
-            *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
+        } ਜਦੋਂ(src_ਲੰਮਾਈ>0);
+        ਜੇ(dest_ਮਾਪ < j) {
+            *p_Error_ਕੋਡ = U_ਬਫਰ_ਉਛਾਲ_ERROR;
         }
-        return j;
+        ਵਾਪਸ j;
     }
     } /* end of switch */
 }
 
-static int32_t
-doWriteReverse(const char16_t *src, int32_t srcLength,
-               char16_t *dest, int32_t destSize,
+ਸਥਿਰ int32_t
+do_Write_ਉਲਟ(ਅਚਲ char16_t *src, int32_t src_ਲੰਮਾਈ,
+               char16_t *dest, int32_t dest_ਮਾਪ,
                uint16_t options,
-               UErrorCode *pErrorCode) {
+               UError_ਕੋਡ *p_Error_ਕੋਡ) {
     /*
      * RTL run -
      *
@@ -184,72 +184,72 @@ doWriteReverse(const char16_t *src, int32_t srcLength,
     int32_t i, j;
     UChar32 c;
 
-    if(srcLength<=0) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ਜੇ(src_ਲੰਮਾਈ<=0) {
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
 
     /* optimize for several combinations of options */
-    switch(options&(UBIDI_REMOVE_BIDI_CONTROLS|UBIDI_DO_MIRRORING|UBIDI_KEEP_BASE_COMBINING)) {
-    case 0:
+    ਚੋਣ(options&(UBIDI_REMOVE_BIDI_CONTROLS|UBIDI_DO_MIRRORING|UBIDI_KEEP_ਅਧਾਰ_COMBINING)) {
+    ਹਾਲਤ 0:
         /*
          * With none of the "complicated" options set, the destination
          * run will have the same length as the source run,
          * and there is no mirroring and no keeping combining characters
          * with their base characters.
          */
-        if(destSize<srcLength) {
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            return srcLength;
+        ਜੇ(dest_ਮਾਪ<src_ਲੰਮਾਈ) {
+            *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
+            ਵਾਪਸ src_ਲੰਮਾਈ;
         }
-        destSize=srcLength;
+        dest_ਮਾਪ=src_ਲੰਮਾਈ;
 
         /* preserve character integrity */
-        do {
+        ਕਰੋ {
             /* i is always after the last code unit known to need to be kept in this segment */
-            i=srcLength;
+            i=src_ਲੰਮਾਈ;
 
             /* collect code units for one base character */
-            U16_PREV(src, 0, srcLength, c);
+            U16_PREV(src, 0, src_ਲੰਮਾਈ, c);
 
             /* copy this base character */
-            j=srcLength;
-            do {
+            j=src_ਲੰਮਾਈ;
+            ਕਰੋ {
                 *dest++=src[j++];
-            } while(j<i);
-        } while(srcLength>0);
-        break;
-    case UBIDI_KEEP_BASE_COMBINING:
+            } ਜਦੋਂ(j<i);
+        } ਜਦੋਂ(src_ਲੰਮਾਈ>0);
+        ਰੋਕੋ;
+    ਹਾਲਤ UBIDI_KEEP_ਅਧਾਰ_COMBINING:
         /*
          * Here, too, the destination
          * run will have the same length as the source run,
          * and there is no mirroring.
          * We do need to keep combining characters with their base characters.
          */
-        if(destSize<srcLength) {
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            return srcLength;
+        ਜੇ(dest_ਮਾਪ<src_ਲੰਮਾਈ) {
+            *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
+            ਵਾਪਸ src_ਲੰਮਾਈ;
         }
-        destSize=srcLength;
+        dest_ਮਾਪ=src_ਲੰਮਾਈ;
 
         /* preserve character integrity */
-        do {
+        ਕਰੋ {
             /* i is always after the last code unit known to need to be kept in this segment */
-            i=srcLength;
+            i=src_ਲੰਮਾਈ;
 
             /* collect code units and modifier letters for one base character */
-            do {
-                U16_PREV(src, 0, srcLength, c);
-            } while(srcLength>0 && IS_COMBINING(u_charType(c)));
+            ਕਰੋ {
+                U16_PREV(src, 0, src_ਲੰਮਾਈ, c);
+            } ਜਦੋਂ(src_ਲੰਮਾਈ>0 && IS_COMBINING(u_charType(c)));
 
             /* copy this "user character" */
-            j=srcLength;
-            do {
+            j=src_ਲੰਮਾਈ;
+            ਕਰੋ {
                 *dest++=src[j++];
-            } while(j<i);
-        } while(srcLength>0);
-        break;
-    default: {
+            } ਜਦੋਂ(j<i);
+        } ਜਦੋਂ(src_ਲੰਮਾਈ>0);
+        ਰੋਕੋ;
+    ਮੂਲ: {
         /*
          * Note on UBIDI_INTERNAL_RUNS_ONLY:
          * This internal flag is passed exclusively by setParaRunsOnly() in ubidi.cpp during
@@ -265,240 +265,240 @@ doWriteReverse(const char16_t *src, int32_t srcLength,
          * reordering), we use character stepping (j += origBaseLen) and return destLength,
          * which correctly handles expansion and contraction without leaking broken surrogates.
          */
-        if(options&UBIDI_INTERNAL_RUNS_ONLY) {
-            if(!(options&UBIDI_REMOVE_BIDI_CONTROLS)) {
-                i=srcLength;
-            } else {
-                int32_t length=srcLength;
+        ਜੇ(options&UBIDI_ਅੰਦਰੂਨੀ_RUNS_ONLY) {
+            ਜੇ(!(options&UBIDI_REMOVE_BIDI_CONTROLS)) {
+                i=src_ਲੰਮਾਈ;
+            } ਨਹੀਂਤਾਂ {
+                int32_t length=src_ਲੰਮਾਈ;
                 char16_t ch;
                 i=0;
                 /* Loop over all code units in the source run to count those that are not Bidi control characters,
                  * determining the required destination buffer length for preflighting when UBIDI_REMOVE_BIDI_CONTROLS is set.
                  */
-                do {
+                ਕਰੋ {
                     ch=*src++;
-                    if(!IS_BIDI_CONTROL_CHAR(ch)) {
+                    ਜੇ(!IS_BIDI_CONTROL_CHAR(ch)) {
                         ++i;
                     }
-                } while(--length>0);
-                src-=srcLength;
+                } ਜਦੋਂ(--length>0);
+                src-=src_ਲੰਮਾਈ;
             }
-            if(destSize<i) {
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                return i;
+            ਜੇ(dest_ਮਾਪ<i) {
+                *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
+                ਵਾਪਸ i;
             }
             char16_t *saveDest=dest;
-            int32_t destLength=0;
+            int32_t dest_ਲੰਮਾਈ=0;
             /* Loop backward across the source run segment by segment, using legacy 1-to-1 code unit stepping
              * to extract and reverse character clusters for internal setPara classification.
              */
-            do {
-                i=srcLength;
-                U16_PREV(src, 0, srcLength, c);
-                if(options&UBIDI_KEEP_BASE_COMBINING) {
+            ਕਰੋ {
+                i=src_ਲੰਮਾਈ;
+                U16_PREV(src, 0, src_ਲੰਮਾਈ, c);
+                ਜੇ(options&UBIDI_KEEP_ਅਧਾਰ_COMBINING) {
                     /* Loop backward over any combining marks attached to the base character so that the combining
                      * sequence remains attached after its base character when reversed.
                      */
-                    while(srcLength>0 && IS_COMBINING(u_charType(c))) {
-                        U16_PREV(src, 0, srcLength, c);
+                    ਜਦੋਂ(src_ਲੰਮਾਈ>0 && IS_COMBINING(u_charType(c))) {
+                        U16_PREV(src, 0, src_ਲੰਮਾਈ, c);
                     }
                 }
-                if(options&UBIDI_REMOVE_BIDI_CONTROLS && IS_BIDI_CONTROL_CHAR(c)) {
-                    continue;
+                ਜੇ(options&UBIDI_REMOVE_BIDI_CONTROLS && IS_BIDI_CONTROL_CHAR(c)) {
+                    ਜਾਰੀ;
                 }
-                int32_t origBaseLen=U16_LENGTH(c);
-                j=srcLength;
-                if(options&UBIDI_DO_MIRRORING) {
+                int32_t orig_ਅਧਾਰ_Len=U16_ਲੰਮਾਈ(c);
+                j=src_ਲੰਮਾਈ;
+                ਜੇ(options&UBIDI_DO_MIRRORING) {
                     c=u_charMirror(c);
-                    int32_t k=U16_LENGTH(c);
-                    if(destLength+k<=destSize) {
-                        int32_t temp=destLength;
-                        U16_APPEND_UNSAFE(saveDest, temp, c);
+                    int32_t k=U16_ਲੰਮਾਈ(c);
+                    ਜੇ(dest_ਲੰਮਾਈ+k<=dest_ਮਾਪ) {
+                        int32_t ਆਰਜ਼ੀ=dest_ਲੰਮਾਈ;
+                        U16_APPEND_UNSAFE(saveDest, ਆਰਜ਼ੀ, c);
                     }
-                    destLength+=k;
-                    j+=origBaseLen;
+                    dest_ਲੰਮਾਈ+=k;
+                    j+=orig_ਅਧਾਰ_Len;
                 }
                 /* Loop forward from the current segment index to copy any unmirrored code units (such as combining marks
                  * or surrogate halves) into dest in forward visual order.
                  */
-                while(j<i) {
-                    if(destLength<destSize) {
-                        saveDest[destLength]=src[j];
+                ਜਦੋਂ(j<i) {
+                    ਜੇ(dest_ਲੰਮਾਈ<dest_ਮਾਪ) {
+                        saveDest[dest_ਲੰਮਾਈ]=src[j];
                     }
-                    destLength++;
+                    dest_ਲੰਮਾਈ++;
                     j++;
                 }
-            } while(srcLength>0);
-            if(destSize<destLength) {
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            } ਜਦੋਂ(src_ਲੰਮਾਈ>0);
+            ਜੇ(dest_ਮਾਪ<dest_ਲੰਮਾਈ) {
+                *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
             }
-            return destLength;
+            ਵਾਪਸ dest_ਲੰਮਾਈ;
         }
-        int32_t destLength=0;
-        do {
-            i=srcLength;
-            U16_PREV(src, 0, srcLength, c);
-            if(options&UBIDI_KEEP_BASE_COMBINING) {
-                while(srcLength>0 && IS_COMBINING(u_charType(c))) {
-                    U16_PREV(src, 0, srcLength, c);
+        int32_t dest_ਲੰਮਾਈ=0;
+        ਕਰੋ {
+            i=src_ਲੰਮਾਈ;
+            U16_PREV(src, 0, src_ਲੰਮਾਈ, c);
+            ਜੇ(options&UBIDI_KEEP_ਅਧਾਰ_COMBINING) {
+                ਜਦੋਂ(src_ਲੰਮਾਈ>0 && IS_COMBINING(u_charType(c))) {
+                    U16_PREV(src, 0, src_ਲੰਮਾਈ, c);
                 }
             }
-            if(options&UBIDI_REMOVE_BIDI_CONTROLS && IS_BIDI_CONTROL_CHAR(c)) {
-                continue;
+            ਜੇ(options&UBIDI_REMOVE_BIDI_CONTROLS && IS_BIDI_CONTROL_CHAR(c)) {
+                ਜਾਰੀ;
             }
 
-            int32_t origBaseLen=U16_LENGTH(c);
-            j=srcLength;
-            if(options&UBIDI_DO_MIRRORING) {
+            int32_t orig_ਅਧਾਰ_Len=U16_ਲੰਮਾਈ(c);
+            j=src_ਲੰਮਾਈ;
+            ਜੇ(options&UBIDI_DO_MIRRORING) {
                 /* mirror only the base character */
                 c=u_charMirror(c);
-                int32_t k=U16_LENGTH(c);
-                if(destLength+k<=destSize) {
-                    int32_t temp=destLength;
-                    U16_APPEND_UNSAFE(dest, temp, c);
+                int32_t k=U16_ਲੰਮਾਈ(c);
+                ਜੇ(dest_ਲੰਮਾਈ+k<=dest_ਮਾਪ) {
+                    int32_t ਆਰਜ਼ੀ=dest_ਲੰਮਾਈ;
+                    U16_APPEND_UNSAFE(dest, ਆਰਜ਼ੀ, c);
                 }
-                destLength+=k;
-                j+=origBaseLen;
+                dest_ਲੰਮਾਈ+=k;
+                j+=orig_ਅਧਾਰ_Len;
             }
-            while(j<i) {
-                if(destLength<destSize) {
-                    dest[destLength]=src[j];
+            ਜਦੋਂ(j<i) {
+                ਜੇ(dest_ਲੰਮਾਈ<dest_ਮਾਪ) {
+                    dest[dest_ਲੰਮਾਈ]=src[j];
                 }
-                destLength++;
+                dest_ਲੰਮਾਈ++;
                 j++;
             }
-        } while(srcLength>0);
+        } ਜਦੋਂ(src_ਲੰਮਾਈ>0);
 
 
-        if(destSize<destLength) {
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        ਜੇ(dest_ਮਾਪ<dest_ਲੰਮਾਈ) {
+            *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
         }
-        return destLength;
+        ਵਾਪਸ dest_ਲੰਮਾਈ;
     }
     } /* end of switch */
-    return destSize;
+    ਵਾਪਸ dest_ਮਾਪ;
 }
 
 U_CAPI int32_t U_EXPORT2
-ubidi_writeReverse(const char16_t *src, int32_t srcLength,
-                   char16_t *dest, int32_t destSize,
+ubidi_write_ਉਲਟ(ਅਚਲ char16_t *src, int32_t src_ਲੰਮਾਈ,
+                   char16_t *dest, int32_t dest_ਮਾਪ,
                    uint16_t options,
-                   UErrorCode *pErrorCode) {
-    int32_t destLength;
+                   UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    int32_t dest_ਲੰਮਾਈ;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ਜੇ(p_Error_ਕੋਡ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ 0;
     }
 
     /* more error checking */
-    if( src==nullptr || srcLength<-1 ||
-        destSize<0 || (destSize>0 && dest==nullptr))
+    ਜੇ( src==ਖਾਲੀ_ਸੂਚਕ || src_ਲੰਮਾਈ<-1 ||
+        dest_ਮਾਪ<0 || (dest_ਮਾਪ>0 && dest==ਖਾਲੀ_ਸੂਚਕ))
     {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
 
     /* do input and output overlap? */
-    if( dest!=nullptr &&
-        ((src>=dest && src<dest+destSize) ||
-         (dest>=src && dest<src+srcLength)))
+    ਜੇ( dest!=ਖਾਲੀ_ਸੂਚਕ &&
+        ((src>=dest && src<dest+dest_ਮਾਪ) ||
+         (dest>=src && dest<src+src_ਲੰਮਾਈ)))
     {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
 
-    if(srcLength==-1) {
-        srcLength=u_strlen(src);
+    ਜੇ(src_ਲੰਮਾਈ==-1) {
+        src_ਲੰਮਾਈ=u_strlen(src);
     }
-    if(srcLength>0) {
-        destLength=doWriteReverse(src, srcLength, dest, destSize, options, pErrorCode);
-    } else {
+    ਜੇ(src_ਲੰਮਾਈ>0) {
+        dest_ਲੰਮਾਈ=do_Write_ਉਲਟ(src, src_ਲੰਮਾਈ, dest, dest_ਮਾਪ, options, p_Error_ਕੋਡ);
+    } ਨਹੀਂਤਾਂ {
         /* nothing to do */
-        destLength=0;
+        dest_ਲੰਮਾਈ=0;
     }
 
-    return u_terminateUChars(dest, destSize, destLength, pErrorCode);
+    ਵਾਪਸ u_terminateUChars(dest, dest_ਮਾਪ, dest_ਲੰਮਾਈ, p_Error_ਕੋਡ);
 }
 
 // Ticket 20907 - The optimizer in MSVC/Visual Studio versions below 16.4 has trouble with this
 // function on Windows ARM64. As a work-around, we disable optimizations for this function.
 // This work-around could/should be removed once the following versions of Visual Studio are no
 // longer supported: All versions of VS2017, and versions of VS2019 below 16.4.
-#if (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
-#pragma optimize( "", off )
-#endif
+#ਜੇ (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
+#ਹਦਾਇਤ optimize( "", off )
+#ਜੇ_ਅੰਤ
 U_CAPI int32_t U_EXPORT2
 ubidi_writeReordered(UBiDi *pBiDi,
-                     char16_t *dest, int32_t destSize,
+                     char16_t *dest, int32_t dest_ਮਾਪ,
                      uint16_t options,
-                     UErrorCode *pErrorCode) {
-    const char16_t *text;
+                     UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਅਚਲ char16_t *ਪਾਠ;
     char16_t *saveDest;
-    int32_t length, destCapacity;
-    int32_t run, runCount, logicalStart, runLength;
+    int32_t length, dest_ਸਮਰੱਥਾ;
+    int32_t ਲੜੀਵਾਰ_2, ਲੜੀਵਾਰ_ਗਿਣਤੀ, logical_ਸ਼ੁਰੂ, ਲੜੀਵਾਰ_ਲੰਮਾਈ;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ਜੇ(p_Error_ਕੋਡ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ 0;
     }
 
     /* more error checking */
-    if( pBiDi==nullptr ||
-        (text=pBiDi->text)==nullptr || (length=pBiDi->length)<0 ||
-        destSize<0 || (destSize>0 && dest==nullptr))
+    ਜੇ( pBiDi==ਖਾਲੀ_ਸੂਚਕ ||
+        (ਪਾਠ=pBiDi->ਪਾਠ)==ਖਾਲੀ_ਸੂਚਕ || (length=pBiDi->length)<0 ||
+        dest_ਮਾਪ<0 || (dest_ਮਾਪ>0 && dest==ਖਾਲੀ_ਸੂਚਕ))
     {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
 
     /* do input and output overlap? */
-    if( dest!=nullptr &&
-        ((text>=dest && text<dest+destSize) ||
-         (dest>=text && dest<text+pBiDi->originalLength)))
+    ਜੇ( dest!=ਖਾਲੀ_ਸੂਚਕ &&
+        ((ਪਾਠ>=dest && ਪਾਠ<dest+dest_ਮਾਪ) ||
+         (dest>=ਪਾਠ && dest<ਪਾਠ+pBiDi->original_ਲੰਮਾਈ)))
     {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
 
-    if(length==0) {
+    ਜੇ(length==0) {
         /* nothing to do */
-        return u_terminateUChars(dest, destSize, 0, pErrorCode);
+        ਵਾਪਸ u_terminateUChars(dest, dest_ਮਾਪ, 0, p_Error_ਕੋਡ);
     }
 
-    runCount=ubidi_countRuns(pBiDi, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    ਲੜੀਵਾਰ_ਗਿਣਤੀ=ubidi_ਗਿਣਤੀ_Runs(pBiDi, p_Error_ਕੋਡ);
+    ਜੇ(U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ 0;
     }
 
     /* destSize shrinks, later destination length=destCapacity-destSize */
     saveDest=dest;
-    destCapacity=destSize;
-    runLength = 0;
+    dest_ਸਮਰੱਥਾ=dest_ਮਾਪ;
+    ਲੜੀਵਾਰ_ਲੰਮਾਈ = 0;
 
     /*
      * Option "insert marks" implies UBIDI_INSERT_LRM_FOR_NUMERIC if the
      * reordering mode (checked below) is appropriate.
      */
-    if(pBiDi->reorderingOptions & UBIDI_OPTION_INSERT_MARKS) {
-        options|=UBIDI_INSERT_LRM_FOR_NUMERIC;
+    ਜੇ(pBiDi->reorderingOptions & UBIDI_OPTION_ਪਾਓ_MARKS) {
+        options|=UBIDI_ਪਾਓ_LRM_FOR_NUMERIC;
         options&=~UBIDI_REMOVE_BIDI_CONTROLS;
     }
     /*
      * Option "remove controls" implies UBIDI_REMOVE_BIDI_CONTROLS
      * and cancels UBIDI_INSERT_LRM_FOR_NUMERIC.
      */
-    if(pBiDi->reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
+    ਜੇ(pBiDi->reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
         options|=UBIDI_REMOVE_BIDI_CONTROLS;
-        options&=~UBIDI_INSERT_LRM_FOR_NUMERIC;
+        options&=~UBIDI_ਪਾਓ_LRM_FOR_NUMERIC;
     }
     /*
      * If we do not perform the "inverse BiDi" algorithm, then we
      * don't need to insert any LRMs, and don't need to test for it.
      */
-    if((pBiDi->reorderingMode != UBIDI_REORDER_INVERSE_NUMBERS_AS_L) &&
-       (pBiDi->reorderingMode != UBIDI_REORDER_INVERSE_LIKE_DIRECT)  &&
-       (pBiDi->reorderingMode != UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL) &&
-       (pBiDi->reorderingMode != UBIDI_REORDER_RUNS_ONLY)) {
-        options&=~UBIDI_INSERT_LRM_FOR_NUMERIC;
+    ਜੇ((pBiDi->reordering_ਬਹੁਲਕ != UBIDI_REORDER_INVERSE_NUMBERS_AS_L) &&
+       (pBiDi->reordering_ਬਹੁਲਕ != UBIDI_REORDER_INVERSE_LIKE_ਸਿੱਧਾ)  &&
+       (pBiDi->reordering_ਬਹੁਲਕ != UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL) &&
+       (pBiDi->reordering_ਬਹੁਲਕ != UBIDI_REORDER_RUNS_ONLY)) {
+        options&=~UBIDI_ਪਾਓ_LRM_FOR_NUMERIC;
     }
     /*
      * Iterate through all visual runs and copy the run text segments to
@@ -512,221 +512,221 @@ ubidi_writeReordered(UBiDi *pBiDi,
      * Note that the only errors that are set by doWriteXY() are buffer overflow
      * errors. Ignore them until the end, and continue for preflighting.
      */
-    if(!(options&UBIDI_OUTPUT_REVERSE)) {
+    ਜੇ(!(options&UBIDI_OUTPUT_ਉਲਟ)) {
         /* forward output */
-        if(!(options&UBIDI_INSERT_LRM_FOR_NUMERIC)) {
+        ਜੇ(!(options&UBIDI_ਪਾਓ_LRM_FOR_NUMERIC)) {
             /* do not insert BiDi controls */
-            for(run=0; run<runCount; ++run) {
-                if(UBIDI_LTR==ubidi_getVisualRun(pBiDi, run, &logicalStart, &runLength)) {
-                    runLength=doWriteForward(text+logicalStart, runLength,
-                                             dest, destSize,
-                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), pErrorCode);
-                } else {
-                    runLength=doWriteReverse(text+logicalStart, runLength,
-                                             dest, destSize,
-                                             options, pErrorCode);
+            ਲਈ(ਲੜੀਵਾਰ_2=0; ਲੜੀਵਾਰ_2<ਲੜੀਵਾਰ_ਗਿਣਤੀ; ++ਲੜੀਵਾਰ_2) {
+                ਜੇ(UBIDI_LTR==ubidi_get_Visual_ਲੜੀਵਾਰ(pBiDi, ਲੜੀਵਾਰ_2, &logical_ਸ਼ੁਰੂ, &ਲੜੀਵਾਰ_ਲੰਮਾਈ)) {
+                    ਲੜੀਵਾਰ_ਲੰਮਾਈ=doWriteForward(ਪਾਠ+logical_ਸ਼ੁਰੂ, ਲੜੀਵਾਰ_ਲੰਮਾਈ,
+                                             dest, dest_ਮਾਪ,
+                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), p_Error_ਕੋਡ);
+                } ਨਹੀਂਤਾਂ {
+                    ਲੜੀਵਾਰ_ਲੰਮਾਈ=do_Write_ਉਲਟ(ਪਾਠ+logical_ਸ਼ੁਰੂ, ਲੜੀਵਾਰ_ਲੰਮਾਈ,
+                                             dest, dest_ਮਾਪ,
+                                             options, p_Error_ਕੋਡ);
                 }
-                if(dest!=nullptr) {
-                  dest+=runLength;
+                ਜੇ(dest!=ਖਾਲੀ_ਸੂਚਕ) {
+                  dest+=ਲੜੀਵਾਰ_ਲੰਮਾਈ;
                 }
-                destSize-=runLength;
+                dest_ਮਾਪ-=ਲੜੀਵਾਰ_ਲੰਮਾਈ;
             }
-        } else {
+        } ਨਹੀਂਤਾਂ {
             /* insert BiDi controls for "inverse BiDi" */
-            const DirProp *dirProps=pBiDi->dirProps;
-            const char16_t *src;
+            ਅਚਲ DirProp *dirProps=pBiDi->dirProps;
+            ਅਚਲ char16_t *src;
             char16_t uc;
             UBiDiDirection dir;
             int32_t markFlag;
 
-            for(run=0; run<runCount; ++run) {
-                dir=ubidi_getVisualRun(pBiDi, run, &logicalStart, &runLength);
-                src=text+logicalStart;
+            ਲਈ(ਲੜੀਵਾਰ_2=0; ਲੜੀਵਾਰ_2<ਲੜੀਵਾਰ_ਗਿਣਤੀ; ++ਲੜੀਵਾਰ_2) {
+                dir=ubidi_get_Visual_ਲੜੀਵਾਰ(pBiDi, ਲੜੀਵਾਰ_2, &logical_ਸ਼ੁਰੂ, &ਲੜੀਵਾਰ_ਲੰਮਾਈ);
+                src=ਪਾਠ+logical_ਸ਼ੁਰੂ;
                 /* check if something relevant in insertPoints */
-                markFlag=pBiDi->runs[run].insertRemove;
-                if(markFlag<0) {        /* BiDi controls count */
+                markFlag=pBiDi->runs[ਲੜੀਵਾਰ_2].ਪਾਓ_Remove;
+                ਜੇ(markFlag<0) {        /* BiDi controls count */
                     markFlag=0;
                 }
 
-                if(UBIDI_LTR==dir) {
-                    if((pBiDi->isInverse) &&
-                       (/*run>0 &&*/ dirProps[logicalStart]!=L)) {
+                ਜੇ(UBIDI_LTR==dir) {
+                    ਜੇ((pBiDi->isInverse) &&
+                       (/*run>0 &&*/ dirProps[logical_ਸ਼ੁਰੂ]!=L)) {
                         markFlag |= LRM_BEFORE;
                     }
-                    if (markFlag & LRM_BEFORE) {
+                    ਜੇ (markFlag & LRM_BEFORE) {
                         uc=LRM_CHAR;
                     }
-                    else if (markFlag & RLM_BEFORE) {
+                    ਨਹੀਂਤਾਂ ਜੇ (markFlag & RLM_BEFORE) {
                         uc=RLM_CHAR;
                     }
-                    else  uc=0;
-                    if(uc) {
-                        if(destSize>0) {
+                    ਨਹੀਂਤਾਂ  uc=0;
+                    ਜੇ(uc) {
+                        ਜੇ(dest_ਮਾਪ>0) {
                             *dest++=uc;
                         }
-                        --destSize;
+                        --dest_ਮਾਪ;
                     }
 
-                    runLength=doWriteForward(src, runLength,
-                                             dest, destSize,
-                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), pErrorCode);
-                    if(dest!=nullptr) {
-                      dest+=runLength;
+                    ਲੜੀਵਾਰ_ਲੰਮਾਈ=doWriteForward(src, ਲੜੀਵਾਰ_ਲੰਮਾਈ,
+                                             dest, dest_ਮਾਪ,
+                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), p_Error_ਕੋਡ);
+                    ਜੇ(dest!=ਖਾਲੀ_ਸੂਚਕ) {
+                      dest+=ਲੜੀਵਾਰ_ਲੰਮਾਈ;
                     }
-                    destSize-=runLength;
+                    dest_ਮਾਪ-=ਲੜੀਵਾਰ_ਲੰਮਾਈ;
 
-                    if((pBiDi->isInverse) &&
+                    ਜੇ((pBiDi->isInverse) &&
                            (/*run<runCount-1 &&*/
-                            runLength > 0 && // doWriteForward may return 0 if src
+                            ਲੜੀਵਾਰ_ਲੰਮਾਈ > 0 && // doWriteForward may return 0 if src
                                              // only include bidi control chars
-                            dirProps[logicalStart+runLength-1]!=L)) {
+                            dirProps[logical_ਸ਼ੁਰੂ+ਲੜੀਵਾਰ_ਲੰਮਾਈ-1]!=L)) {
                         markFlag |= LRM_AFTER;
                     }
-                    if (markFlag & LRM_AFTER) {
+                    ਜੇ (markFlag & LRM_AFTER) {
                         uc=LRM_CHAR;
                     }
-                    else if (markFlag & RLM_AFTER) {
+                    ਨਹੀਂਤਾਂ ਜੇ (markFlag & RLM_AFTER) {
                         uc=RLM_CHAR;
                     }
-                    else  uc=0;
-                    if(uc) {
-                        if(destSize>0) {
+                    ਨਹੀਂਤਾਂ  uc=0;
+                    ਜੇ(uc) {
+                        ਜੇ(dest_ਮਾਪ>0) {
                             *dest++=uc;
                         }
-                        --destSize;
+                        --dest_ਮਾਪ;
                     }
-                } else {                /* RTL run */
-                    if((pBiDi->isInverse) &&
-                       (/*run>0 &&*/ !(MASK_R_AL&DIRPROP_FLAG(dirProps[logicalStart+runLength-1])))) {
+                } ਨਹੀਂਤਾਂ {                /* RTL run */
+                    ਜੇ((pBiDi->isInverse) &&
+                       (/*run>0 &&*/ !(ਨਕਾਬ_R_AL&DIRPROP_FLAG(dirProps[logical_ਸ਼ੁਰੂ+ਲੜੀਵਾਰ_ਲੰਮਾਈ-1])))) {
                         markFlag |= RLM_BEFORE;
                     }
-                    if (markFlag & LRM_BEFORE) {
+                    ਜੇ (markFlag & LRM_BEFORE) {
                         uc=LRM_CHAR;
                     }
-                    else if (markFlag & RLM_BEFORE) {
+                    ਨਹੀਂਤਾਂ ਜੇ (markFlag & RLM_BEFORE) {
                         uc=RLM_CHAR;
                     }
-                    else  uc=0;
-                    if(uc) {
-                        if(destSize>0) {
+                    ਨਹੀਂਤਾਂ  uc=0;
+                    ਜੇ(uc) {
+                        ਜੇ(dest_ਮਾਪ>0) {
                             *dest++=uc;
                         }
-                        --destSize;
+                        --dest_ਮਾਪ;
                     }
 
-                    runLength=doWriteReverse(src, runLength,
-                                             dest, destSize,
-                                             options, pErrorCode);
-                    if(dest!=nullptr) {
-                      dest+=runLength;
+                    ਲੜੀਵਾਰ_ਲੰਮਾਈ=do_Write_ਉਲਟ(src, ਲੜੀਵਾਰ_ਲੰਮਾਈ,
+                                             dest, dest_ਮਾਪ,
+                                             options, p_Error_ਕੋਡ);
+                    ਜੇ(dest!=ਖਾਲੀ_ਸੂਚਕ) {
+                      dest+=ਲੜੀਵਾਰ_ਲੰਮਾਈ;
                     }
-                    destSize-=runLength;
+                    dest_ਮਾਪ-=ਲੜੀਵਾਰ_ਲੰਮਾਈ;
 
-                    if((pBiDi->isInverse) &&
-                       (/*run<runCount-1 &&*/ !(MASK_R_AL&DIRPROP_FLAG(dirProps[logicalStart])))) {
+                    ਜੇ((pBiDi->isInverse) &&
+                       (/*run<runCount-1 &&*/ !(ਨਕਾਬ_R_AL&DIRPROP_FLAG(dirProps[logical_ਸ਼ੁਰੂ])))) {
                         markFlag |= RLM_AFTER;
                     }
-                    if (markFlag & LRM_AFTER) {
+                    ਜੇ (markFlag & LRM_AFTER) {
                         uc=LRM_CHAR;
                     }
-                    else if (markFlag & RLM_AFTER) {
+                    ਨਹੀਂਤਾਂ ਜੇ (markFlag & RLM_AFTER) {
                         uc=RLM_CHAR;
                     }
-                    else  uc=0;
-                    if(uc) {
-                        if(destSize>0) {
+                    ਨਹੀਂਤਾਂ  uc=0;
+                    ਜੇ(uc) {
+                        ਜੇ(dest_ਮਾਪ>0) {
                             *dest++=uc;
                         }
-                        --destSize;
+                        --dest_ਮਾਪ;
                     }
                 }
             }
         }
-    } else {
+    } ਨਹੀਂਤਾਂ {
         /* reverse output */
-        if(!(options&UBIDI_INSERT_LRM_FOR_NUMERIC)) {
+        ਜੇ(!(options&UBIDI_ਪਾਓ_LRM_FOR_NUMERIC)) {
             /* do not insert BiDi controls */
-            for(run=runCount; --run>=0;) {
-                if(UBIDI_LTR==ubidi_getVisualRun(pBiDi, run, &logicalStart, &runLength)) {
-                    runLength=doWriteReverse(text+logicalStart, runLength,
-                                             dest, destSize,
-                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), pErrorCode);
-                } else {
-                    runLength=doWriteForward(text+logicalStart, runLength,
-                                             dest, destSize,
-                                             options, pErrorCode);
+            ਲਈ(ਲੜੀਵਾਰ_2=ਲੜੀਵਾਰ_ਗਿਣਤੀ; --ਲੜੀਵਾਰ_2>=0;) {
+                ਜੇ(UBIDI_LTR==ubidi_get_Visual_ਲੜੀਵਾਰ(pBiDi, ਲੜੀਵਾਰ_2, &logical_ਸ਼ੁਰੂ, &ਲੜੀਵਾਰ_ਲੰਮਾਈ)) {
+                    ਲੜੀਵਾਰ_ਲੰਮਾਈ=do_Write_ਉਲਟ(ਪਾਠ+logical_ਸ਼ੁਰੂ, ਲੜੀਵਾਰ_ਲੰਮਾਈ,
+                                             dest, dest_ਮਾਪ,
+                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), p_Error_ਕੋਡ);
+                } ਨਹੀਂਤਾਂ {
+                    ਲੜੀਵਾਰ_ਲੰਮਾਈ=doWriteForward(ਪਾਠ+logical_ਸ਼ੁਰੂ, ਲੜੀਵਾਰ_ਲੰਮਾਈ,
+                                             dest, dest_ਮਾਪ,
+                                             options, p_Error_ਕੋਡ);
                 }
-                if(dest!=nullptr) {
-                  dest+=runLength;
+                ਜੇ(dest!=ਖਾਲੀ_ਸੂਚਕ) {
+                  dest+=ਲੜੀਵਾਰ_ਲੰਮਾਈ;
                 }
-                destSize-=runLength;
+                dest_ਮਾਪ-=ਲੜੀਵਾਰ_ਲੰਮਾਈ;
             }
-        } else {
+        } ਨਹੀਂਤਾਂ {
             /* insert BiDi controls for "inverse BiDi" */
-            const DirProp *dirProps=pBiDi->dirProps;
-            const char16_t *src;
+            ਅਚਲ DirProp *dirProps=pBiDi->dirProps;
+            ਅਚਲ char16_t *src;
             UBiDiDirection dir;
 
-            for(run=runCount; --run>=0;) {
+            ਲਈ(ਲੜੀਵਾਰ_2=ਲੜੀਵਾਰ_ਗਿਣਤੀ; --ਲੜੀਵਾਰ_2>=0;) {
                 /* reverse output */
-                dir=ubidi_getVisualRun(pBiDi, run, &logicalStart, &runLength);
-                src=text+logicalStart;
+                dir=ubidi_get_Visual_ਲੜੀਵਾਰ(pBiDi, ਲੜੀਵਾਰ_2, &logical_ਸ਼ੁਰੂ, &ਲੜੀਵਾਰ_ਲੰਮਾਈ);
+                src=ਪਾਠ+logical_ਸ਼ੁਰੂ;
 
-                if(UBIDI_LTR==dir) {
-                    if(/*run<runCount-1 &&*/ dirProps[logicalStart+runLength-1]!=L) {
-                        if(destSize>0) {
+                ਜੇ(UBIDI_LTR==dir) {
+                    ਜੇ(/*run<runCount-1 &&*/ dirProps[logical_ਸ਼ੁਰੂ+ਲੜੀਵਾਰ_ਲੰਮਾਈ-1]!=L) {
+                        ਜੇ(dest_ਮਾਪ>0) {
                             *dest++=LRM_CHAR;
                         }
-                        --destSize;
+                        --dest_ਮਾਪ;
                     }
 
-                    runLength=doWriteReverse(src, runLength,
-                                             dest, destSize,
-                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), pErrorCode);
-                    if(dest!=nullptr) {
-                      dest+=runLength;
+                    ਲੜੀਵਾਰ_ਲੰਮਾਈ=do_Write_ਉਲਟ(src, ਲੜੀਵਾਰ_ਲੰਮਾਈ,
+                                             dest, dest_ਮਾਪ,
+                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), p_Error_ਕੋਡ);
+                    ਜੇ(dest!=ਖਾਲੀ_ਸੂਚਕ) {
+                      dest+=ਲੜੀਵਾਰ_ਲੰਮਾਈ;
                     }
-                    destSize-=runLength;
+                    dest_ਮਾਪ-=ਲੜੀਵਾਰ_ਲੰਮਾਈ;
 
-                    if(/*run>0 &&*/ dirProps[logicalStart]!=L) {
-                        if(destSize>0) {
+                    ਜੇ(/*run>0 &&*/ dirProps[logical_ਸ਼ੁਰੂ]!=L) {
+                        ਜੇ(dest_ਮਾਪ>0) {
                             *dest++=LRM_CHAR;
                         }
-                        --destSize;
+                        --dest_ਮਾਪ;
                     }
-                } else {
-                    if(/*run<runCount-1 &&*/ !(MASK_R_AL&DIRPROP_FLAG(dirProps[logicalStart]))) {
-                        if(destSize>0) {
+                } ਨਹੀਂਤਾਂ {
+                    ਜੇ(/*run<runCount-1 &&*/ !(ਨਕਾਬ_R_AL&DIRPROP_FLAG(dirProps[logical_ਸ਼ੁਰੂ]))) {
+                        ਜੇ(dest_ਮਾਪ>0) {
                             *dest++=RLM_CHAR;
                         }
-                        --destSize;
+                        --dest_ਮਾਪ;
                     }
 
-                    int32_t originalRunLength = runLength;
-                    runLength=doWriteForward(src, runLength,
-                                             dest, destSize,
-                                             options, pErrorCode);
-                    if(dest!=nullptr) {
-                      dest+=runLength;
+                    int32_t original_ਲੜੀਵਾਰ_ਲੰਮਾਈ = ਲੜੀਵਾਰ_ਲੰਮਾਈ;
+                    ਲੜੀਵਾਰ_ਲੰਮਾਈ=doWriteForward(src, ਲੜੀਵਾਰ_ਲੰਮਾਈ,
+                                             dest, dest_ਮਾਪ,
+                                             options, p_Error_ਕੋਡ);
+                    ਜੇ(dest!=ਖਾਲੀ_ਸੂਚਕ) {
+                      dest+=ਲੜੀਵਾਰ_ਲੰਮਾਈ;
                     }
-                    destSize-=runLength;
+                    dest_ਮਾਪ-=ਲੜੀਵਾਰ_ਲੰਮਾਈ;
 
-                    if(/*run>0 &&*/
-                            runLength > 0 && // doWriteForward may return 0 if src
+                    ਜੇ(/*run>0 &&*/
+                            ਲੜੀਵਾਰ_ਲੰਮਾਈ > 0 && // doWriteForward may return 0 if src
                                              // only include bidi control chars
-                            !(MASK_R_AL&DIRPROP_FLAG(dirProps[logicalStart+originalRunLength-1]))) {
-                        if(destSize>0) {
+                            !(ਨਕਾਬ_R_AL&DIRPROP_FLAG(dirProps[logical_ਸ਼ੁਰੂ+original_ਲੜੀਵਾਰ_ਲੰਮਾਈ-1]))) {
+                        ਜੇ(dest_ਮਾਪ>0) {
                             *dest++=RLM_CHAR;
                         }
-                        --destSize;
+                        --dest_ਮਾਪ;
                     }
                 }
             }
         }
     }
 
-    return u_terminateUChars(saveDest, destCapacity, destCapacity-destSize, pErrorCode);
+    ਵਾਪਸ u_terminateUChars(saveDest, dest_ਸਮਰੱਥਾ, dest_ਸਮਰੱਥਾ-dest_ਮਾਪ, p_Error_ਕੋਡ);
 }
-#if (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
-#pragma optimize( "", on )
-#endif
+#ਜੇ (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
+#ਹਦਾਇਤ optimize( "", on )
+#ਜੇ_ਅੰਤ

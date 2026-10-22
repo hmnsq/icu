@@ -16,10 +16,10 @@
 *   created by: Vladimir Weinstein
 */
 
-#ifndef __UENUMIMP_H
-#define __UENUMIMP_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __UENUMIMP_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __UENUMIMP_H
 
-#include "unicode/uenum.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uenum.h"
 
 U_CDECL_BEGIN
 
@@ -41,7 +41,7 @@ U_CDECL_BEGIN
  *
  * @param en enumeration to be closed
  */
-typedef void U_CALLCONV
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਖਾਲੀ U_CALLCONV
 UEnumClose(UEnumeration *en);
 
 /**
@@ -54,8 +54,8 @@ UEnumClose(UEnumeration *en);
  * @param status pointer to UErrorCode variable
  * @return number of elements in enumeration
  */
-typedef int32_t U_CALLCONV
-UEnumCount(UEnumeration *en, UErrorCode *status);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ int32_t U_CALLCONV
+UEnum_ਗਿਣਤੀ(UEnumeration *en, UError_ਕੋਡ *ਸਥਿਤੀ);
 
 /**
  * Function type declaration for uenum_unext().
@@ -69,10 +69,10 @@ UEnumCount(UEnumeration *en, UErrorCode *status);
  * @return next element as UChar *,
  *         or NULL after all elements haven been enumerated
  */
-typedef const UChar* U_CALLCONV 
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਅਚਲ UChar* U_CALLCONV 
 UEnumUNext(UEnumeration* en,
-            int32_t* resultLength,
-            UErrorCode* status);
+            int32_t* ਨਤੀਜਾ_ਲੰਮਾਈ,
+            UError_ਕੋਡ* ਸਥਿਤੀ);
 
 /**
  * Function type declaration for uenum_next().
@@ -86,10 +86,10 @@ UEnumUNext(UEnumeration* en,
  * @return next element as char *,
  *         or NULL after all elements haven been enumerated
  */
-typedef const char* U_CALLCONV 
-UEnumNext(UEnumeration* en,
-           int32_t* resultLength,
-           UErrorCode* status);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਅਚਲ ਅੱਖਰ* U_CALLCONV 
+UEnum_ਅਗਲਾ(UEnumeration* en,
+           int32_t* ਨਤੀਜਾ_ਲੰਮਾਈ,
+           UError_ਕੋਡ* ਸਥਿਤੀ);
 
 /**
  * Function type declaration for uenum_reset().
@@ -100,17 +100,17 @@ UEnumNext(UEnumeration* en,
  * @param en enumeration 
  * @param status pointer to UErrorCode variable
  */
-typedef void U_CALLCONV 
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਖਾਲੀ U_CALLCONV 
 UEnumReset(UEnumeration* en, 
-            UErrorCode* status);
+            UError_ਕੋਡ* ਸਥਿਤੀ);
 
 
-struct UEnumeration {
+ਬਣਤਰ UEnumeration {
     /* baseContext. For the base class only. Don't touch! */
-    void *baseContext;
+    ਖਾਲੀ *ਅਧਾਰ_Context;
 
     /* context. Use it for what you need */
-    void *context;
+    ਖਾਲੀ *context;
 
     /** 
      * these are functions that will 
@@ -119,16 +119,16 @@ struct UEnumeration {
     /* called from uenum_close */
     UEnumClose *close;
     /* called from uenum_count */
-    UEnumCount *count;
+    UEnum_ਗਿਣਤੀ *ਗਿਣਤੀ_2;
     /* called from uenum_unext */
-    UEnumUNext *uNext;
+    UEnumUNext *u_ਅਗਲਾ;
     /* called from uenum_next */
-    UEnumNext  *next;
+    UEnum_ਅਗਲਾ  *ਅਗਲਾ;
     /* called from uenum_reset */
     UEnumReset *reset;
 };
 
-U_CDECL_END
+U_CDECL_ਸਿਰਾ
 
 /* This is the default implementation for uenum_unext().
  * It automatically converts the char * string to UChar *.
@@ -136,10 +136,10 @@ U_CDECL_END
  * when a UEnumeration is defined with 'uNext' pointing to this
  * function.
  */
-U_CAPI const UChar* U_EXPORT2
+U_CAPI ਅਚਲ UChar* U_EXPORT2
 uenum_unextDefault(UEnumeration* en U_LIFETIME_BOUND,
-                   int32_t* resultLength,
-                   UErrorCode* status);
+                   int32_t* ਨਤੀਜਾ_ਲੰਮਾਈ,
+                   UError_ਕੋਡ* ਸਥਿਤੀ);
 
 /* This is the default implementation for uenum_next().
  * It automatically converts the UChar * string to char *.
@@ -147,9 +147,9 @@ uenum_unextDefault(UEnumeration* en U_LIFETIME_BOUND,
  * when a UEnumeration is defined with 'next' pointing to this
  * function.
  */
-U_CAPI const char* U_EXPORT2
-uenum_nextDefault(UEnumeration* en U_LIFETIME_BOUND,
-                  int32_t* resultLength,
-                  UErrorCode* status);
+U_CAPI ਅਚਲ ਅੱਖਰ* U_EXPORT2
+uenum_ਅਗਲਾ_Default(UEnumeration* en U_LIFETIME_BOUND,
+                  int32_t* ਨਤੀਜਾ_ਲੰਮਾਈ,
+                  UError_ਕੋਡ* ਸਥਿਤੀ);
 
-#endif
+#ਜੇ_ਅੰਤ

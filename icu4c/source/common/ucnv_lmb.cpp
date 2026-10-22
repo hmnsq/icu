@@ -25,23 +25,23 @@
 *   06/28/2000  helena           Major rewrite for the callback API changes.
 */
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#ਜੇ !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "unicode/ucnv_err.h"
-#include "unicode/ucnv.h"
-#include "unicode/uset.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uassert.h"
-#include "ucnv_imp.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ucnv_err.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ucnv.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uset.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucnv_imp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucnv_bld.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucnv_cnv.h"
 
-#ifdef EBCDIC_RTL
-    #include "ascii_a.h"
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ EBCDIC_RTL
+    #ਅਨ੍ਤਰ੍ਭਾਵ "ascii_a.h"
+#ਜੇ_ਅੰਤ
 
 /*
   LMBCS
@@ -83,20 +83,20 @@
   That is, a sometimes-optional 'group' byte, followed by 1 and sometimes 2
   data bytes. The maximum size of a LMBCS character is 3 bytes:
 */
-#define ULMBCS_CHARSIZE_MAX      3
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_CHARSIZE_MAX      3
 /*
   The single-byte values from 0x20 to 0x7F are examples of single D1 bytes.
   We often have to figure out if byte values are below or above this, so we 
   use the ANSI nomenclature 'C0' and 'C1' to refer to the range of control 
   characters just above & below the common lower-ANSI  range */
-#define ULMBCS_C0END           0x1F   
-#define ULMBCS_C1START         0x80   
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_C0_ਸਿਰਾ           0x1F   
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_C1_ਸ਼ੁਰੂ         0x80   
 /*
   Since LMBCS is always dealing in byte units. we create a local type here for 
   dealing with these units of LMBCS code units:
 
 */  
-typedef uint8_t ulmbcs_byte_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ uint8_t ulmbcs_byte_t;
 
 /* 
    Most of the values less than 0x20 are reserved in LMBCS to announce 
@@ -105,18 +105,18 @@ typedef uint8_t ulmbcs_byte_t;
    for these character-set announcers:
 */
 
-#define ULMBCS_GRP_L1         0x01   /* Latin-1    :ibm-850  */
-#define ULMBCS_GRP_GR         0x02   /* Greek      :ibm-851  */
-#define ULMBCS_GRP_HE         0x03   /* Hebrew     :ibm-1255 */
-#define ULMBCS_GRP_AR         0x04   /* Arabic     :ibm-1256 */
-#define ULMBCS_GRP_RU         0x05   /* Cyrillic   :ibm-1251 */
-#define ULMBCS_GRP_L2         0x06   /* Latin-2    :ibm-852  */
-#define ULMBCS_GRP_TR         0x08   /* Turkish    :ibm-1254 */
-#define ULMBCS_GRP_TH         0x0B   /* Thai       :ibm-874  */
-#define ULMBCS_GRP_JA         0x10   /* Japanese   :ibm-943  */
-#define ULMBCS_GRP_KO         0x11   /* Korean     :ibm-1261 */
-#define ULMBCS_GRP_TW         0x12   /* Chinese SC :ibm-950  */
-#define ULMBCS_GRP_CN         0x13   /* Chinese TC :ibm-1386 */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_GRP_L1         0x01   /* Latin-1    :ibm-850  */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_GRP_GR         0x02   /* Greek      :ibm-851  */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_GRP_HE         0x03   /* Hebrew     :ibm-1255 */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_GRP_AR         0x04   /* Arabic     :ibm-1256 */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_GRP_RU         0x05   /* Cyrillic   :ibm-1251 */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_GRP_L2         0x06   /* Latin-2    :ibm-852  */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_GRP_TR         0x08   /* Turkish    :ibm-1254 */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_GRP_TH         0x0B   /* Thai       :ibm-874  */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_GRP_JA         0x10   /* Japanese   :ibm-943  */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_GRP_KO         0x11   /* Korean     :ibm-1261 */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_GRP_TW         0x12   /* Chinese SC :ibm-950  */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_GRP_CN         0x13   /* Chinese TC :ibm-1386 */
 
 /*
    So, the beginning of understanding LMBCS is that IF the first byte of a LMBCS 
@@ -130,7 +130,7 @@ typedef uint8_t ulmbcs_byte_t;
    before the multi-byte character sets. When we need to tell whether a 
    group byte is for a single byte char set or not we use this define: */
 
-#define ULMBCS_DOUBLEOPTGROUP_START  0x10   
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_DOUBLEOPTGROUP_ਸ਼ੁਰੂ  0x10   
 
 /* 
 However, to fully understand LMBCS, you must also understand a series of 
@@ -152,26 +152,26 @@ We reserve a few special single byte values for common control
 characters. These are in the same place as their ANSI equivalents for speed.
 */
                      
-#define ULMBCS_HT    0x09   /* Fixed control char - Horizontal Tab */
-#define ULMBCS_LF    0x0A   /* Fixed control char - Line Feed */
-#define ULMBCS_CR    0x0D   /* Fixed control char - Carriage Return */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_HT    0x09   /* Fixed control char - Horizontal Tab */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_LF    0x0A   /* Fixed control char - Line Feed */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_CR    0x0D   /* Fixed control char - Carriage Return */
 
 /* Then, 1-2-3 reserved a special single-byte character to put at the 
 beginning of internal 'system' range names: */
 
-#define ULMBCS_123SYSTEMRANGE  0x19   
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_123SYSTEMRANGE  0x19   
 
 /* Then we needed a place to put all the other ansi control characters 
 that must be moved to different values because LMBCS reserves those 
 values for other purposes. To represent the control characters, we start 
 with a first byte of 0xF & add the control character value as the 
 second byte */
-#define ULMBCS_GRP_CTRL       0x0F   
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_GRP_CTRL       0x0F   
 
 /* For the C0 controls (less than 0x20), we add 0x20 to preserve the 
 useful doctrine that any byte less than 0x20 in a LMBCS char must be 
 the first byte of a character:*/
-#define ULMBCS_CTRLOFFSET      0x20   
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_CTRLOFFSET      0x20   
 
 /* 
 Where to put the characters that aren't part of any of the 12 national 
@@ -186,23 +186,23 @@ LMBCS, was to use up the spaces of the form
  lot of stray values. Internally, in this implementation, we track this 
  as group '0', as a place to tuck this exceptions list.*/
 
-#define ULMBCS_GRP_EXCEPT     0x00    
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_GRP_EXCEPT     0x00    
 /*
  Finally, as the durability and usefulness of UNICODE became clear, 
  LOTUS added a new group 0x14 to hold Unicode values not otherwise 
  represented in LMBCS: */
-#define ULMBCS_GRP_UNICODE    0x14   
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_GRP_UNICODE    0x14   
 /* The two bytes appearing after a 0x14 are interpreted as UFT-16 BE
 (Big-Endian) characters. The exception comes when the UTF16 
 representation would have a zero as the second byte. In that case,
 'F6' is used in its place, and the bytes are swapped. (This prevents 
 LMBCS from encoding any Unicode values of the form U+F6xx, but that's OK:
 0xF6xx is in the middle of the Private Use Area.)*/
-#define ULMBCS_UNICOMPATZERO   0xF6   
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_UNICOMPATZERO   0xF6   
 
 /* It is also useful in our code to have a constant for the size of 
 a LMBCS char that holds a literal Unicode value */
-#define ULMBCS_UNICODE_SIZE      3    
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_UNICODE_ਮਾਪ      3    
 
 /* 
 To squish the LMBCS representations down even further, and to make 
@@ -211,7 +211,7 @@ from a LMBCS character. This is decided on a process-by-process basis. The
 group byte that is dropped is called the 'optimization group'.
 
 For Notes, the optimzation group is always 0x1.*/
-#define ULMBCS_DEFAULTOPTGROUP 0x1    
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_DEFAULTOPTGROUP 0x1    
 /* For 1-2-3 files, the optimzation group is stored in the header of the 1-2-3 
 file. 
 
@@ -232,9 +232,9 @@ ICU converters can be created and used as needed. */
 byte, only those at 0x13 or below can map to an actual converter. To limit
 some loops and searches, we define a value for that last group converter:*/
 
-#define ULMBCS_GRP_LAST       0x13   /* last LMBCS group that has a converter */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_GRP_ਆਖਰੀ       0x13   /* last LMBCS group that has a converter */
 
-static const char * const OptGroupByteToCPName[ULMBCS_GRP_LAST + 1] = {
+ਸਥਿਰ ਅਚਲ ਅੱਖਰ * ਅਚਲ Opt_ਸਮੂਹ_Byte_ਮੰਜ਼ਿਲ_CPName[ULMBCS_GRP_ਆਖਰੀ + 1] = {
    /* 0x0000 */ "lmb-excp", /* internal home for the LOTUS exceptions list */
    /* 0x0001 */ "ibm-850",
    /* 0x0002 */ "ibm-851",
@@ -242,15 +242,15 @@ static const char * const OptGroupByteToCPName[ULMBCS_GRP_LAST + 1] = {
    /* 0x0004 */ "windows-1256",
    /* 0x0005 */ "windows-1251",
    /* 0x0006 */ "ibm-852",
-   /* 0x0007 */ nullptr,      /* Unused */
+   /* 0x0007 */ ਖਾਲੀ_ਸੂਚਕ,      /* Unused */
    /* 0x0008 */ "windows-1254",
-   /* 0x0009 */ nullptr,      /* Control char HT */
-   /* 0x000A */ nullptr,      /* Control char LF */
+   /* 0x0009 */ ਖਾਲੀ_ਸੂਚਕ,      /* Control char HT */
+   /* 0x000A */ ਖਾਲੀ_ਸੂਚਕ,      /* Control char LF */
    /* 0x000B */ "windows-874",
-   /* 0x000C */ nullptr,      /* Unused */
-   /* 0x000D */ nullptr,      /* Control char CR */
-   /* 0x000E */ nullptr,      /* Unused */
-   /* 0x000F */ nullptr,      /* Control chars: 0x0F20 + C0/C1 character: algorithmic */
+   /* 0x000C */ ਖਾਲੀ_ਸੂਚਕ,      /* Unused */
+   /* 0x000D */ ਖਾਲੀ_ਸੂਚਕ,      /* Control char CR */
+   /* 0x000E */ ਖਾਲੀ_ਸੂਚਕ,      /* Unused */
+   /* 0x000F */ ਖਾਲੀ_ਸੂਚਕ,      /* Control chars: 0x0F20 + C0/C1 character: algorithmic */
    /* 0x0010 */ "windows-932",
    /* 0x0011 */ "windows-949",
    /* 0x0012 */ "windows-950",
@@ -277,30 +277,30 @@ SBCS, the table will place it in the SBCS sets, to make the LMBCS code point
 length as small as possible. Here's the two special markers we use to indicate
 ambiguous mappings: */
 
-#define ULMBCS_AMBIGUOUS_SBCS   0x80   /* could fit in more than one 
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_AMBIGUOUS_SBCS   0x80   /* could fit in more than one 
                                           LMBCS sbcs native encoding 
                                           (example: most accented latin) */
-#define ULMBCS_AMBIGUOUS_MBCS   0x81   /* could fit in more than one 
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_AMBIGUOUS_MBCS   0x81   /* could fit in more than one 
                                           LMBCS mbcs native encoding 
                                           (example: Unihan) */
-#define ULMBCS_AMBIGUOUS_ALL   0x82
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_AMBIGUOUS_ALL   0x82
 /* And here's a simple way to see if a group falls in an appropriate range */
-#define ULMBCS_AMBIGUOUS_MATCH(agroup, xgroup) \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ULMBCS_AMBIGUOUS_ਮੇਲ(agroup, xgroup) \
                   ((((agroup) == ULMBCS_AMBIGUOUS_SBCS) && \
-                  (xgroup) < ULMBCS_DOUBLEOPTGROUP_START) || \
+                  (xgroup) < ULMBCS_DOUBLEOPTGROUP_ਸ਼ੁਰੂ) || \
                   (((agroup) == ULMBCS_AMBIGUOUS_MBCS) && \
-                  (xgroup) >= ULMBCS_DOUBLEOPTGROUP_START)) || \
+                  (xgroup) >= ULMBCS_DOUBLEOPTGROUP_ਸ਼ੁਰੂ)) || \
                   ((agroup) == ULMBCS_AMBIGUOUS_ALL)
 
 
 /* The table & some code to use it: */
 
 
-static const struct _UniLMBCSGrpMap  
+ਸਥਿਰ ਅਚਲ ਬਣਤਰ _UniLMBCSGrpMap  
 {
-   const char16_t uniStartRange;
-   const char16_t uniEndRange;
-   const ulmbcs_byte_t  GrpType;
+   ਅਚਲ char16_t uni_ਸ਼ੁਰੂ_Range;
+   ਅਚਲ char16_t uni_ਸਿਰਾ_Range;
+   ਅਚਲ ulmbcs_byte_t  GrpType;
 } UniLMBCSGrpMap[]
 =
 {
@@ -444,21 +444,21 @@ static const struct _UniLMBCSGrpMap
     {0xFFFF, 0xFFFF,  ULMBCS_GRP_UNICODE}
 };
    
-static ulmbcs_byte_t 
-FindLMBCSUniRange(char16_t uniChar)
+ਸਥਿਰ ulmbcs_byte_t 
+ਲੱਭੋ_LMBCSUni_Range(char16_t uniChar)
 {
-   const struct _UniLMBCSGrpMap * pTable = UniLMBCSGrpMap;
+   ਅਚਲ ਬਣਤਰ _UniLMBCSGrpMap * p_ਸਾਰਣੀ = UniLMBCSGrpMap;
 
-   while (uniChar > pTable->uniEndRange) 
+   ਜਦੋਂ (uniChar > p_ਸਾਰਣੀ->uni_ਸਿਰਾ_Range) 
    {
-      pTable++;
+      p_ਸਾਰਣੀ++;
    }
 
-   if (uniChar >= pTable->uniStartRange) 
+   ਜੇ (uniChar >= p_ਸਾਰਣੀ->uni_ਸ਼ੁਰੂ_Range) 
    {
-      return pTable->GrpType;
+      ਵਾਪਸ p_ਸਾਰਣੀ->GrpType;
    }
-   return ULMBCS_GRP_UNICODE;
+   ਵਾਪਸ ULMBCS_GRP_UNICODE;
 }
 
 /* 
@@ -483,10 +483,10 @@ do the lookup: */
   search to go quickly.
  *************************************************/
 
-static const struct _LocaleLMBCSGrpMap
+ਸਥਿਰ ਅਚਲ ਬਣਤਰ _LocaleLMBCSGrpMap
 {
-   const char    *LocaleID;
-   const ulmbcs_byte_t OptGroup;
+   ਅਚਲ ਅੱਖਰ    *LocaleID;
+   ਅਚਲ ulmbcs_byte_t Opt_ਸਮੂਹ;
 } LocaleLMBCSGrpMap[] =
 {
     {"ar", ULMBCS_GRP_AR},
@@ -530,34 +530,34 @@ static const struct _LocaleLMBCSGrpMap
    /* {"vi", ULMBCS_GRP_L1}, */
     {"zhTW", ULMBCS_GRP_TW},
     {"zh", ULMBCS_GRP_CN},
-    {nullptr, ULMBCS_GRP_L1}
+    {ਖਾਲੀ_ਸੂਚਕ, ULMBCS_GRP_L1}
 };
 
 
-static ulmbcs_byte_t 
-FindLMBCSLocale(const char *LocaleID)
+ਸਥਿਰ ulmbcs_byte_t 
+ਲੱਭੋ_LMBCSLocale(ਅਚਲ ਅੱਖਰ *LocaleID)
 {
-   const struct _LocaleLMBCSGrpMap *pTable = LocaleLMBCSGrpMap;
+   ਅਚਲ ਬਣਤਰ _LocaleLMBCSGrpMap *p_ਸਾਰਣੀ = LocaleLMBCSGrpMap;
 
-   if ((!LocaleID) || (!*LocaleID)) 
+   ਜੇ ((!LocaleID) || (!*LocaleID)) 
    {
-      return 0;
+      ਵਾਪਸ 0;
    }
 
-   while (pTable->LocaleID)
+   ਜਦੋਂ (p_ਸਾਰਣੀ->LocaleID)
    {
-      if (*pTable->LocaleID == *LocaleID) /* Check only first char for speed */
+      ਜੇ (*p_ਸਾਰਣੀ->LocaleID == *LocaleID) /* Check only first char for speed */
       {
          /* First char matches - check whole name, for entry-length */
-         if (uprv_strncmp(pTable->LocaleID, LocaleID, strlen(pTable->LocaleID)) == 0)
-            return pTable->OptGroup;
+         ਜੇ (uprv_strncmp(p_ਸਾਰਣੀ->LocaleID, LocaleID, ਲੜੀ_ਲੰਬਾਈ(p_ਸਾਰਣੀ->LocaleID)) == 0)
+            ਵਾਪਸ p_ਸਾਰਣੀ->Opt_ਸਮੂਹ;
       }
-      else
-      if (*pTable->LocaleID > *LocaleID) /* Sorted alphabetically - exit */
-         break;
-      pTable++;
+      ਨਹੀਂਤਾਂ
+      ਜੇ (*p_ਸਾਰਣੀ->LocaleID > *LocaleID) /* Sorted alphabetically - exit */
+         ਰੋਕੋ;
+      p_ਸਾਰਣੀ++;
    }
-   return ULMBCS_GRP_L1;
+   ਵਾਪਸ ULMBCS_GRP_L1;
 }
 
 
@@ -574,155 +574,155 @@ FindLMBCSLocale(const char *LocaleID)
   the definitions of these structures, see unicode\ucnv_bld.h
 */
 
-typedef struct
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ
   {
-    UConverterSharedData *OptGrpConverter[ULMBCS_GRP_LAST+1];    /* Converter per Opt. grp. */
-    uint8_t    OptGroup;                  /* default Opt. grp. for this LMBCS session */
-    uint8_t    localeConverterIndex;      /* reasonable locale match for index */
+    UConverter_Shared_ਅੰਕੜੇ *OptGrpConverter[ULMBCS_GRP_ਆਖਰੀ+1];    /* Converter per Opt. grp. */
+    uint8_t    Opt_ਸਮੂਹ;                  /* default Opt. grp. for this LMBCS session */
+    uint8_t    locale_Converter_ਸੂਚਕਾਂਕ;      /* reasonable locale match for index */
   }
-UConverterDataLMBCS;
+UConverter_ਅੰਕੜੇ_LMBCS;
 
 U_CDECL_BEGIN
-static void  U_CALLCONV _LMBCSClose(UConverter * _this);
-U_CDECL_END
+ਸਥਿਰ ਖਾਲੀ  U_CALLCONV _LMBCSClose(UConverter * _this);
+U_CDECL_ਸਿਰਾ
 
-#define DECLARE_LMBCS_DATA(n) \
-static const UConverterImpl _LMBCSImpl##n={\
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DECLARE_LMBCS_ਅੰਕੜੇ(n) \
+ਸਥਿਰ ਅਚਲ UConverterImpl _LMBCSImpl##n={\
     UCNV_LMBCS_##n,\
-    nullptr,nullptr,\
+    ਖਾਲੀ_ਸੂਚਕ,ਖਾਲੀ_ਸੂਚਕ,\
     _LMBCSOpen##n,\
     _LMBCSClose,\
-    nullptr,\
+    ਖਾਲੀ_ਸੂਚਕ,\
     _LMBCSToUnicodeWithOffsets,\
     _LMBCSToUnicodeWithOffsets,\
     _LMBCSFromUnicode,\
     _LMBCSFromUnicode,\
-    nullptr,\
-    nullptr,\
-    nullptr,\
-    nullptr,\
+    ਖਾਲੀ_ਸੂਚਕ,\
+    ਖਾਲੀ_ਸੂਚਕ,\
+    ਖਾਲੀ_ਸੂਚਕ,\
+    ਖਾਲੀ_ਸੂਚਕ,\
     _LMBCSSafeClone,\
-    ucnv_getCompleteUnicodeSet,\
-    nullptr,\
-    nullptr\
+    ucnv_get_Complete_Unicode_ਸੈੱਟ,\
+    ਖਾਲੀ_ਸੂਚਕ,\
+    ਖਾਲੀ_ਸੂਚਕ\
 };\
-static const UConverterStaticData _LMBCSStaticData##n={\
-  sizeof(UConverterStaticData),\
+ਸਥਿਰ ਅਚਲ UConverter_Static_ਅੰਕੜੇ LMBCSStatic_ਅੰਕੜੇ##n={\
+  ਆਕਾਰ(UConverter_Static_ਅੰਕੜੇ),\
  "LMBCS-"  #n,\
     0, UCNV_IBM, UCNV_LMBCS_##n, 1, 3,\
-    { 0x3f, 0, 0, 0 },1,false,false,0,0,{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} \
+    { 0x3f, 0, 0, 0 },1,ਝੂਠ,ਝੂਠ,0,0,{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} \
 };\
-const UConverterSharedData _LMBCSData##n= \
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_LMBCSStaticData##n, &_LMBCSImpl##n);
+ਅਚਲ UConverter_Shared_ਅੰਕੜੇ _LMBCSData##n= \
+        UCNV_IMMUTABLE_SHARED_ਅੰਕੜੇ_INITIALIZER(&LMBCSStatic_ਅੰਕੜੇ##n, &_LMBCSImpl##n);
 
  /* The only function we needed to duplicate 12 times was the 'open'
 function, which will do basically the same thing except set a  different
 optimization group. So, we put the common stuff into a worker function, 
 and set up another macro to stamp out the 12 open functions:*/
-#define DEFINE_LMBCS_OPEN(n) \
-static void U_CALLCONV \
-   _LMBCSOpen##n(UConverter* _this, UConverterLoadArgs* pArgs, UErrorCode* err) \
-{ _LMBCSOpenWorker(_this, pArgs, err, n); }
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DEFINE_LMBCS_OPEN(n) \
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV \
+   _LMBCSOpen##n(UConverter* _this, UConverter_ਲੱਦੋ_ਦਲੀਲਾਂ* p_ਦਲੀਲਾਂ, UError_ਕੋਡ* err) \
+{ LMBCSOpen_ਕਾਮਾ(_this, p_ਦਲੀਲਾਂ, err, n); }
 
 
 
 /* Here's the open worker & the common close function */
-static void 
-_LMBCSOpenWorker(UConverter*  _this,
-                 UConverterLoadArgs *pArgs,
-                 UErrorCode*  err,
-                 ulmbcs_byte_t OptGroup)
+ਸਥਿਰ ਖਾਲੀ 
+LMBCSOpen_ਕਾਮਾ(UConverter*  _this,
+                 UConverter_ਲੱਦੋ_ਦਲੀਲਾਂ *p_ਦਲੀਲਾਂ,
+                 UError_ਕੋਡ*  err,
+                 ulmbcs_byte_t Opt_ਸਮੂਹ)
 {
-    UConverterDataLMBCS* extraInfo = static_cast<UConverterDataLMBCS*>(uprv_malloc(sizeof(UConverterDataLMBCS)));
+    UConverter_ਅੰਕੜੇ_LMBCS* extraInfo = static_cast<UConverter_ਅੰਕੜੇ_LMBCS*>(uprv_malloc(ਆਕਾਰ(UConverter_ਅੰਕੜੇ_LMBCS)));
     _this->extraInfo = extraInfo;
-    if(extraInfo != nullptr)
+    ਜੇ(extraInfo != ਖਾਲੀ_ਸੂਚਕ)
     {
-        UConverterNamePieces stackPieces;
-        UConverterLoadArgs stackArgs= UCNV_LOAD_ARGS_INITIALIZER;
+        UConverterNamePieces ਢੇਰ_Pieces;
+        UConverter_ਲੱਦੋ_ਦਲੀਲਾਂ ਢੇਰ_ਦਲੀਲਾਂ= UCNV_ਲੱਦੋ_ਦਲੀਲਾਂ_INITIALIZER;
         ulmbcs_byte_t i;
 
-        uprv_memset(extraInfo, 0, sizeof(UConverterDataLMBCS));
+        uprv_memset(extraInfo, 0, ਆਕਾਰ(UConverter_ਅੰਕੜੇ_LMBCS));
 
-        stackArgs.onlyTestIsLoadable = pArgs->onlyTestIsLoadable;
+        ਢੇਰ_ਦਲੀਲਾਂ.onlyTestIsLoadable = p_ਦਲੀਲਾਂ->onlyTestIsLoadable;
 
-        for (i=0; i <= ULMBCS_GRP_LAST && U_SUCCESS(*err); i++)         
+        ਲਈ (i=0; i <= ULMBCS_GRP_ਆਖਰੀ && U_SUCCESS(*err); i++)         
         {
-            if(OptGroupByteToCPName[i] != nullptr) {
-                extraInfo->OptGrpConverter[i] = ucnv_loadSharedData(OptGroupByteToCPName[i], &stackPieces, &stackArgs, err);
+            ਜੇ(Opt_ਸਮੂਹ_Byte_ਮੰਜ਼ਿਲ_CPName[i] != ਖਾਲੀ_ਸੂਚਕ) {
+                extraInfo->OptGrpConverter[i] = ucnv_ਲੱਦੋ_Shared_ਅੰਕੜੇ(Opt_ਸਮੂਹ_Byte_ਮੰਜ਼ਿਲ_CPName[i], &ਢੇਰ_Pieces, &ਢੇਰ_ਦਲੀਲਾਂ, err);
             }
         }
 
-        if(U_FAILURE(*err) || pArgs->onlyTestIsLoadable) {
+        ਜੇ(U_FAILURE(*err) || p_ਦਲੀਲਾਂ->onlyTestIsLoadable) {
             _LMBCSClose(_this);
-            return;
+            ਵਾਪਸ;
         }
-        extraInfo->OptGroup = OptGroup;
-        extraInfo->localeConverterIndex = FindLMBCSLocale(pArgs->locale);
+        extraInfo->Opt_ਸਮੂਹ = Opt_ਸਮੂਹ;
+        extraInfo->locale_Converter_ਸੂਚਕਾਂਕ = ਲੱਭੋ_LMBCSLocale(p_ਦਲੀਲਾਂ->locale);
     }
-    else
+    ਨਹੀਂਤਾਂ
     {
-        *err = U_MEMORY_ALLOCATION_ERROR;
+        *err = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
     }
 }
 
 U_CDECL_BEGIN
-static void  U_CALLCONV
+ਸਥਿਰ ਖਾਲੀ  U_CALLCONV
 _LMBCSClose(UConverter *   _this) 
 {
-    if (_this->extraInfo != nullptr)
+    ਜੇ (_this->extraInfo != ਖਾਲੀ_ਸੂਚਕ)
     {
         ulmbcs_byte_t Ix;
-        UConverterDataLMBCS * extraInfo = (UConverterDataLMBCS *) _this->extraInfo;
+        UConverter_ਅੰਕੜੇ_LMBCS * extraInfo = (UConverter_ਅੰਕੜੇ_LMBCS *) _this->extraInfo;
 
-        for (Ix=0; Ix <= ULMBCS_GRP_LAST; Ix++)
+        ਲਈ (Ix=0; Ix <= ULMBCS_GRP_ਆਖਰੀ; Ix++)
         {
-           if (extraInfo->OptGrpConverter[Ix] != nullptr)
-              ucnv_unloadSharedDataIfReady(extraInfo->OptGrpConverter[Ix]);
+           ਜੇ (extraInfo->OptGrpConverter[Ix] != ਖਾਲੀ_ਸੂਚਕ)
+              ucnv_unload_Shared_ਅੰਕੜੇ_If_Ready(extraInfo->OptGrpConverter[Ix]);
         }
-        if (!_this->isExtraLocal) {
+        ਜੇ (!_this->isExtraLocal) {
             uprv_free (_this->extraInfo);
-            _this->extraInfo = nullptr;
+            _this->extraInfo = ਖਾਲੀ_ਸੂਚਕ;
         }
     }
 }
 
-typedef struct LMBCSClone {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ LMBCSClone {
     UConverter cnv;
-    UConverterDataLMBCS lmbcs;
+    UConverter_ਅੰਕੜੇ_LMBCS lmbcs;
 } LMBCSClone;
 
-static UConverter *  U_CALLCONV
-_LMBCSSafeClone(const UConverter *cnv, 
-                void *stackBuffer, 
-                int32_t *pBufferSize, 
-                UErrorCode *status) {
-    (void)status;
+ਸਥਿਰ UConverter *  U_CALLCONV
+_LMBCSSafeClone(ਅਚਲ UConverter *cnv, 
+                ਖਾਲੀ *ਢੇਰ_ਬਫਰ, 
+                int32_t *p_ਬਫਰ_ਮਾਪ, 
+                UError_ਕੋਡ *ਸਥਿਤੀ) {
+    (ਖਾਲੀ)ਸਥਿਤੀ;
     LMBCSClone *newLMBCS;
-    UConverterDataLMBCS *extraInfo;
+    UConverter_ਅੰਕੜੇ_LMBCS *extraInfo;
     int32_t i;
 
-    if(*pBufferSize<=0) {
-        *pBufferSize=(int32_t)sizeof(LMBCSClone);
-        return nullptr;
+    ਜੇ(*p_ਬਫਰ_ਮਾਪ<=0) {
+        *p_ਬਫਰ_ਮਾਪ=(int32_t)ਆਕਾਰ(LMBCSClone);
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    extraInfo=(UConverterDataLMBCS *)cnv->extraInfo;
-    newLMBCS=(LMBCSClone *)stackBuffer;
+    extraInfo=(UConverter_ਅੰਕੜੇ_LMBCS *)cnv->extraInfo;
+    newLMBCS=(LMBCSClone *)ਢੇਰ_ਬਫਰ;
 
     /* ucnv.c/ucnv_safeClone() copied the main UConverter already */
 
-    uprv_memcpy(&newLMBCS->lmbcs, extraInfo, sizeof(UConverterDataLMBCS));
+    uprv_memcpy(&newLMBCS->lmbcs, extraInfo, ਆਕਾਰ(UConverter_ਅੰਕੜੇ_LMBCS));
 
     /* share the subconverters */
-    for(i = 0; i <= ULMBCS_GRP_LAST; ++i) {
-        if(extraInfo->OptGrpConverter[i] != nullptr) {
-            ucnv_incrementRefCount(extraInfo->OptGrpConverter[i]);
+    ਲਈ(i = 0; i <= ULMBCS_GRP_ਆਖਰੀ; ++i) {
+        ਜੇ(extraInfo->OptGrpConverter[i] != ਖਾਲੀ_ਸੂਚਕ) {
+            ucnv_increment_Ref_ਗਿਣਤੀ(extraInfo->OptGrpConverter[i]);
         }
     }
 
     newLMBCS->cnv.extraInfo = &newLMBCS->lmbcs;
-    newLMBCS->cnv.isExtraLocal = true;
-    return &newLMBCS->cnv;
+    newLMBCS->cnv.isExtraLocal = ਸੱਚ;
+    ਵਾਪਸ &newLMBCS->cnv;
 }
 
 /*
@@ -743,123 +743,123 @@ _LMBCSSafeClone(const UConverter *cnv,
    starting at pStartLMBCS (if any).
 */
 
-static size_t
-LMBCSConversionWorker (
-   UConverterDataLMBCS * extraInfo,    /* subconverters, opt & locale groups */
-   ulmbcs_byte_t group,                /* The group to try */
-   ulmbcs_byte_t  * pStartLMBCS,              /* where to put the results */
+ਸਥਿਰ size_t
+LMBCSConversion_ਕਾਮਾ (
+   UConverter_ਅੰਕੜੇ_LMBCS * extraInfo,    /* subconverters, opt & locale groups */
+   ulmbcs_byte_t ਸਮੂਹ,                /* The group to try */
+   ulmbcs_byte_t  * p_ਸ਼ੁਰੂ_LMBCS,              /* where to put the results */
    char16_t * pUniChar,                   /* The input unicode character */
-   ulmbcs_byte_t * lastConverterIndex, /* output: track last successful group used */
+   ulmbcs_byte_t * ਆਖਰੀ_Converter_ਸੂਚਕਾਂਕ, /* output: track last successful group used */
    UBool * groups_tried                /* output: track any unsuccessful groups */
 )   
 {
-   ulmbcs_byte_t  * pLMBCS = pStartLMBCS;
-   UConverterSharedData * xcnv = extraInfo->OptGrpConverter[group];
+   ulmbcs_byte_t  * pLMBCS = p_ਸ਼ੁਰੂ_LMBCS;
+   UConverter_Shared_ਅੰਕੜੇ * xcnv = extraInfo->OptGrpConverter[ਸਮੂਹ];
 
-   int bytesConverted;
+   ਪੂਰਨ ਬਾਈਟਾਂ_Converted;
    uint32_t value;
-   ulmbcs_byte_t firstByte;
+   ulmbcs_byte_t ਪਹਿਲਾ_Byte;
 
    U_ASSERT(xcnv);
-   U_ASSERT(group<ULMBCS_GRP_UNICODE);
+   U_ASSERT(ਸਮੂਹ<ULMBCS_GRP_UNICODE);
 
-   bytesConverted = ucnv_MBCSFromUChar32(xcnv, *pUniChar, &value, false);
+   ਬਾਈਟਾਂ_Converted = ucnv_MBCSFromUChar32(xcnv, *pUniChar, &value, ਝੂਠ);
 
    /* get the first result byte */
-   if(bytesConverted > 0) {
-      firstByte = (ulmbcs_byte_t)(value >> ((bytesConverted - 1) * 8));
-   } else {
+   ਜੇ(ਬਾਈਟਾਂ_Converted > 0) {
+      ਪਹਿਲਾ_Byte = (ulmbcs_byte_t)(value >> ((ਬਾਈਟਾਂ_Converted - 1) * 8));
+   } ਨਹੀਂਤਾਂ {
       /* most common failure mode is an unassigned character */
-      groups_tried[group] = true;
-      return 0;
+      groups_tried[ਸਮੂਹ] = ਸੱਚ;
+      ਵਾਪਸ 0;
    }
 
-   *lastConverterIndex = group;
+   *ਆਖਰੀ_Converter_ਸੂਚਕਾਂਕ = ਸਮੂਹ;
 
    /* All initial byte values in lower ascii range should have been caught by now,
       except with the exception group.
     */
-   U_ASSERT((firstByte <= ULMBCS_C0END) || (firstByte >= ULMBCS_C1START) || (group == ULMBCS_GRP_EXCEPT));
+   U_ASSERT((ਪਹਿਲਾ_Byte <= ULMBCS_C0_ਸਿਰਾ) || (ਪਹਿਲਾ_Byte >= ULMBCS_C1_ਸ਼ੁਰੂ) || (ਸਮੂਹ == ULMBCS_GRP_EXCEPT));
    
    /* use converted data: first write 0, 1 or two group bytes */
-   if (group != ULMBCS_GRP_EXCEPT && extraInfo->OptGroup != group)
+   ਜੇ (ਸਮੂਹ != ULMBCS_GRP_EXCEPT && extraInfo->Opt_ਸਮੂਹ != ਸਮੂਹ)
    {
-      *pLMBCS++ = group;
-      if (bytesConverted == 1 && group >= ULMBCS_DOUBLEOPTGROUP_START)
+      *pLMBCS++ = ਸਮੂਹ;
+      ਜੇ (ਬਾਈਟਾਂ_Converted == 1 && ਸਮੂਹ >= ULMBCS_DOUBLEOPTGROUP_ਸ਼ੁਰੂ)
       {
-         *pLMBCS++ = group;
+         *pLMBCS++ = ਸਮੂਹ;
       }
    }
 
   /* don't emit control chars */
-   if ( bytesConverted == 1 && firstByte < 0x20 )
-      return 0;
+   ਜੇ ( ਬਾਈਟਾਂ_Converted == 1 && ਪਹਿਲਾ_Byte < 0x20 )
+      ਵਾਪਸ 0;
 
 
    /* then move over the converted data */
-   switch(bytesConverted)
+   ਚੋਣ(ਬਾਈਟਾਂ_Converted)
    {
-   case 4:
+   ਹਾਲਤ 4:
       *pLMBCS++ = (ulmbcs_byte_t)(value >> 24);
       U_FALLTHROUGH;
-   case 3:
+   ਹਾਲਤ 3:
       *pLMBCS++ = (ulmbcs_byte_t)(value >> 16);
       U_FALLTHROUGH;
-   case 2:
+   ਹਾਲਤ 2:
       *pLMBCS++ = (ulmbcs_byte_t)(value >> 8);
       U_FALLTHROUGH;
-   case 1:
+   ਹਾਲਤ 1:
       *pLMBCS++ = (ulmbcs_byte_t)value;
       U_FALLTHROUGH;
-   default:
+   ਮੂਲ:
       /* will never occur */
-      break;
+      ਰੋਕੋ;
    }
 
-   return (pLMBCS - pStartLMBCS);
+   ਵਾਪਸ (pLMBCS - p_ਸ਼ੁਰੂ_LMBCS);
 }
 
 
 /* This is a much simpler version of above, when we 
 know we are writing LMBCS using the Unicode group
 */
-static size_t 
+ਸਥਿਰ size_t 
 LMBCSConvertUni(ulmbcs_byte_t * pLMBCS, char16_t uniChar)
 {
      /* encode into LMBCS Unicode range */
-   uint8_t LowCh =   (uint8_t)(uniChar & 0x00FF);
-   uint8_t HighCh  = (uint8_t)(uniChar >> 8);
+   uint8_t ਨੀਵਾਂ_Ch =   (uint8_t)(uniChar & 0x00FF);
+   uint8_t ਉੱਚਾ_Ch  = (uint8_t)(uniChar >> 8);
 
    *pLMBCS++ = ULMBCS_GRP_UNICODE;
 
-   if (LowCh == 0)
+   ਜੇ (ਨੀਵਾਂ_Ch == 0)
    {
       *pLMBCS++ = ULMBCS_UNICOMPATZERO;
-      *pLMBCS++ = HighCh;
+      *pLMBCS++ = ਉੱਚਾ_Ch;
    }
-   else
+   ਨਹੀਂਤਾਂ
    {
-      *pLMBCS++ = HighCh;
-      *pLMBCS++ = LowCh;
+      *pLMBCS++ = ਉੱਚਾ_Ch;
+      *pLMBCS++ = ਨੀਵਾਂ_Ch;
    }
-   return ULMBCS_UNICODE_SIZE;
+   ਵਾਪਸ ULMBCS_UNICODE_ਮਾਪ;
 }
 
 
 
 /* The main Unicode to LMBCS conversion function */
-static void  U_CALLCONV
-_LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
-                  UErrorCode*     err)
+ਸਥਿਰ ਖਾਲੀ  U_CALLCONV
+_LMBCSFromUnicode(UConverter_From_Unicode_ਦਲੀਲਾਂ*     ਦਲੀਲਾਂ_2,
+                  UError_ਕੋਡ*     err)
 {
-   ulmbcs_byte_t lastConverterIndex = 0;
+   ulmbcs_byte_t ਆਖਰੀ_Converter_ਸੂਚਕਾਂਕ = 0;
    char16_t uniChar;
    ulmbcs_byte_t  LMBCS[ULMBCS_CHARSIZE_MAX];
    ulmbcs_byte_t  * pLMBCS;
-   int32_t bytes_written;
-   UBool groups_tried[ULMBCS_GRP_LAST+1];
-   UConverterDataLMBCS * extraInfo = (UConverterDataLMBCS *) args->converter->extraInfo;
-   int sourceIndex = 0; 
+   int32_t ਬਾਈਟਾਂ_written;
+   UBool groups_tried[ULMBCS_GRP_ਆਖਰੀ+1];
+   UConverter_ਅੰਕੜੇ_LMBCS * extraInfo = (UConverter_ਅੰਕੜੇ_LMBCS *) ਦਲੀਲਾਂ_2->converter->extraInfo;
+   ਪੂਰਨ ਸਰੋਤ_ਸੂਚਕਾਂਕ = 0; 
 
    /* Basic strategy: attempt to fill in local LMBCS 1-char buffer.(LMBCS)
       If that succeeds, see if it will all fit into the target & copy it over 
@@ -885,198 +885,198 @@ _LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
    */
 
     /*Fix for SPR#DJOE66JFN3 (Lotus)*/
-    ulmbcs_byte_t OldConverterIndex = 0;
+    ulmbcs_byte_t Old_Converter_ਸੂਚਕਾਂਕ = 0;
 
-   while (args->source < args->sourceLimit && !U_FAILURE(*err))
+   ਜਦੋਂ (ਦਲੀਲਾਂ_2->ਸਰੋਤ < ਦਲੀਲਾਂ_2->ਸਰੋਤ_ਹੱਦਬੰਦੀ && !U_FAILURE(*err))
    {
       /*Fix for SPR#DJOE66JFN3 (Lotus)*/
-      OldConverterIndex = extraInfo->localeConverterIndex;
+      Old_Converter_ਸੂਚਕਾਂਕ = extraInfo->locale_Converter_ਸੂਚਕਾਂਕ;
 
-      if (args->target >= args->targetLimit)
+      ਜੇ (ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ >= ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ)
       {
-         *err = U_BUFFER_OVERFLOW_ERROR;
-         break;
+         *err = U_ਬਫਰ_ਉਛਾਲ_ERROR;
+         ਰੋਕੋ;
       }
-      uniChar = *(args->source);
-      bytes_written = 0;
+      uniChar = *(ਦਲੀਲਾਂ_2->ਸਰੋਤ);
+      ਬਾਈਟਾਂ_written = 0;
       pLMBCS = LMBCS;
 
       /* check cases in rough order of how common they are, for speed */
 
       /* single byte matches: strategy 1 */
       /*Fix for SPR#DJOE66JFN3 (Lotus)*/
-      if((uniChar>=0x80) && (uniChar<=0xff)
+      ਜੇ((uniChar>=0x80) && (uniChar<=0xff)
       /*Fix for SPR#JUYA6XAERU and TSAO7GL5NK (Lotus)*/ &&(uniChar!=0xB1) &&(uniChar!=0xD7) &&(uniChar!=0xF7)
         &&(uniChar!=0xB0) &&(uniChar!=0xB4) &&(uniChar!=0xB6) &&(uniChar!=0xA7) &&(uniChar!=0xA8))
       {
-            extraInfo->localeConverterIndex = ULMBCS_GRP_L1;
+            extraInfo->locale_Converter_ਸੂਚਕਾਂਕ = ULMBCS_GRP_L1;
       }
-      if (((uniChar > ULMBCS_C0END) && (uniChar < ULMBCS_C1START)) ||
+      ਜੇ (((uniChar > ULMBCS_C0_ਸਿਰਾ) && (uniChar < ULMBCS_C1_ਸ਼ੁਰੂ)) ||
           uniChar == 0 || uniChar == ULMBCS_HT || uniChar == ULMBCS_CR || 
           uniChar == ULMBCS_LF || uniChar == ULMBCS_123SYSTEMRANGE 
           )
       {
          *pLMBCS++ = (ulmbcs_byte_t ) uniChar;
-         bytes_written = 1;
+         ਬਾਈਟਾਂ_written = 1;
       }
 
 
-      if (!bytes_written) 
+      ਜੇ (!ਬਾਈਟਾਂ_written) 
       {
          /* Check by UNICODE range (Strategy 2) */
-         ulmbcs_byte_t group = FindLMBCSUniRange(uniChar);
+         ulmbcs_byte_t ਸਮੂਹ = ਲੱਭੋ_LMBCSUni_Range(uniChar);
          
-         if (group == ULMBCS_GRP_UNICODE)  /* (Strategy 2A) */
+         ਜੇ (ਸਮੂਹ == ULMBCS_GRP_UNICODE)  /* (Strategy 2A) */
          {
             pLMBCS += LMBCSConvertUni(pLMBCS,uniChar);
             
-            bytes_written = (int32_t)(pLMBCS - LMBCS);
+            ਬਾਈਟਾਂ_written = (int32_t)(pLMBCS - LMBCS);
          }
-         else if (group == ULMBCS_GRP_CTRL)  /* (Strategy 2B) */
+         ਨਹੀਂਤਾਂ ਜੇ (ਸਮੂਹ == ULMBCS_GRP_CTRL)  /* (Strategy 2B) */
          {
             /* Handle control characters here */
-            if (uniChar <= ULMBCS_C0END)
+            ਜੇ (uniChar <= ULMBCS_C0_ਸਿਰਾ)
             {
                *pLMBCS++ = ULMBCS_GRP_CTRL;
                *pLMBCS++ = (ulmbcs_byte_t)(ULMBCS_CTRLOFFSET + uniChar);
             }
-            else if (uniChar >= ULMBCS_C1START && uniChar <= ULMBCS_C1START + ULMBCS_CTRLOFFSET)
+            ਨਹੀਂਤਾਂ ਜੇ (uniChar >= ULMBCS_C1_ਸ਼ੁਰੂ && uniChar <= ULMBCS_C1_ਸ਼ੁਰੂ + ULMBCS_CTRLOFFSET)
             {
                *pLMBCS++ = ULMBCS_GRP_CTRL;
                *pLMBCS++ = (ulmbcs_byte_t ) (uniChar & 0x00FF);
             }
-            bytes_written = (int32_t)(pLMBCS - LMBCS);
+            ਬਾਈਟਾਂ_written = (int32_t)(pLMBCS - LMBCS);
          }
-         else if (group < ULMBCS_GRP_UNICODE)  /* (Strategy 2C) */
+         ਨਹੀਂਤਾਂ ਜੇ (ਸਮੂਹ < ULMBCS_GRP_UNICODE)  /* (Strategy 2C) */
          {
             /* a specific converter has been identified - use it */
-            bytes_written = (int32_t)LMBCSConversionWorker (
-                              extraInfo, group, pLMBCS, &uniChar, 
-                              &lastConverterIndex, groups_tried);
+            ਬਾਈਟਾਂ_written = (int32_t)LMBCSConversion_ਕਾਮਾ (
+                              extraInfo, ਸਮੂਹ, pLMBCS, &uniChar, 
+                              &ਆਖਰੀ_Converter_ਸੂਚਕਾਂਕ, groups_tried);
          }
-         if (!bytes_written)    /* the ambiguous group cases  (Strategy 3) */
+         ਜੇ (!ਬਾਈਟਾਂ_written)    /* the ambiguous group cases  (Strategy 3) */
          {
-            uprv_memset(groups_tried, 0, sizeof(groups_tried));
+            uprv_memset(groups_tried, 0, ਆਕਾਰ(groups_tried));
 
             /* check for non-default optimization group (Strategy 3A )*/
-            if ((extraInfo->OptGroup != 1) && (ULMBCS_AMBIGUOUS_MATCH(group, extraInfo->OptGroup)))
+            ਜੇ ((extraInfo->Opt_ਸਮੂਹ != 1) && (ULMBCS_AMBIGUOUS_ਮੇਲ(ਸਮੂਹ, extraInfo->Opt_ਸਮੂਹ)))
             {
                 /*zhujin: upgrade, merge #39299 here (Lotus) */
                 /*To make R5 compatible translation, look for exceptional group first for non-DBCS*/
 
-                if(extraInfo->localeConverterIndex < ULMBCS_DOUBLEOPTGROUP_START)
+                ਜੇ(extraInfo->locale_Converter_ਸੂਚਕਾਂਕ < ULMBCS_DOUBLEOPTGROUP_ਸ਼ੁਰੂ)
                 {
-                  bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
+                  ਬਾਈਟਾਂ_written = (int32_t)LMBCSConversion_ਕਾਮਾ (extraInfo,
                      ULMBCS_GRP_L1, pLMBCS, &uniChar,
-                     &lastConverterIndex, groups_tried);
+                     &ਆਖਰੀ_Converter_ਸੂਚਕਾਂਕ, groups_tried);
 
-                  if(!bytes_written)
+                  ਜੇ(!ਬਾਈਟਾਂ_written)
                   {
-                     bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
+                     ਬਾਈਟਾਂ_written = (int32_t)LMBCSConversion_ਕਾਮਾ (extraInfo,
                          ULMBCS_GRP_EXCEPT, pLMBCS, &uniChar,
-                         &lastConverterIndex, groups_tried);
+                         &ਆਖਰੀ_Converter_ਸੂਚਕਾਂਕ, groups_tried);
                   }
-                  if(!bytes_written)
+                  ਜੇ(!ਬਾਈਟਾਂ_written)
                   {
-                      bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
-                          extraInfo->localeConverterIndex, pLMBCS, &uniChar,
-                          &lastConverterIndex, groups_tried);
+                      ਬਾਈਟਾਂ_written = (int32_t)LMBCSConversion_ਕਾਮਾ (extraInfo,
+                          extraInfo->locale_Converter_ਸੂਚਕਾਂਕ, pLMBCS, &uniChar,
+                          &ਆਖਰੀ_Converter_ਸੂਚਕਾਂਕ, groups_tried);
                   }
                 }
-                else
+                ਨਹੀਂਤਾਂ
                 {
-                     bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
-                         extraInfo->localeConverterIndex, pLMBCS, &uniChar,
-                         &lastConverterIndex, groups_tried);
+                     ਬਾਈਟਾਂ_written = (int32_t)LMBCSConversion_ਕਾਮਾ (extraInfo,
+                         extraInfo->locale_Converter_ਸੂਚਕਾਂਕ, pLMBCS, &uniChar,
+                         &ਆਖਰੀ_Converter_ਸੂਚਕਾਂਕ, groups_tried);
                 }
             }
             /* check for locale optimization group (Strategy 3B) */
-            if (!bytes_written && (extraInfo->localeConverterIndex) && (ULMBCS_AMBIGUOUS_MATCH(group, extraInfo->localeConverterIndex)))
+            ਜੇ (!ਬਾਈਟਾਂ_written && (extraInfo->locale_Converter_ਸੂਚਕਾਂਕ) && (ULMBCS_AMBIGUOUS_ਮੇਲ(ਸਮੂਹ, extraInfo->locale_Converter_ਸੂਚਕਾਂਕ)))
             {
-                bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
-                        extraInfo->localeConverterIndex, pLMBCS, &uniChar, &lastConverterIndex, groups_tried);
+                ਬਾਈਟਾਂ_written = (int32_t)LMBCSConversion_ਕਾਮਾ (extraInfo,
+                        extraInfo->locale_Converter_ਸੂਚਕਾਂਕ, pLMBCS, &uniChar, &ਆਖਰੀ_Converter_ਸੂਚਕਾਂਕ, groups_tried);
             }
             /* check for last optimization group used for this string (Strategy 3C) */
-            if (!bytes_written && (lastConverterIndex) && (ULMBCS_AMBIGUOUS_MATCH(group, lastConverterIndex)))
+            ਜੇ (!ਬਾਈਟਾਂ_written && (ਆਖਰੀ_Converter_ਸੂਚਕਾਂਕ) && (ULMBCS_AMBIGUOUS_ਮੇਲ(ਸਮੂਹ, ਆਖਰੀ_Converter_ਸੂਚਕਾਂਕ)))
             {
-                bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
-                        lastConverterIndex, pLMBCS, &uniChar, &lastConverterIndex, groups_tried);
+                ਬਾਈਟਾਂ_written = (int32_t)LMBCSConversion_ਕਾਮਾ (extraInfo,
+                        ਆਖਰੀ_Converter_ਸੂਚਕਾਂਕ, pLMBCS, &uniChar, &ਆਖਰੀ_Converter_ਸੂਚਕਾਂਕ, groups_tried);
             }
-            if (!bytes_written)
+            ਜੇ (!ਬਾਈਟਾਂ_written)
             {
                /* just check every possible matching converter (Strategy 3D) */ 
-               ulmbcs_byte_t grp_start;
-               ulmbcs_byte_t grp_end;  
+               ulmbcs_byte_t grp_ਸ਼ੁਰੂ;
+               ulmbcs_byte_t grp_ਸਿਰਾ;  
                ulmbcs_byte_t grp_ix;
-               grp_start = (ulmbcs_byte_t)((group == ULMBCS_AMBIGUOUS_MBCS) 
-                        ? ULMBCS_DOUBLEOPTGROUP_START 
+               grp_ਸ਼ੁਰੂ = (ulmbcs_byte_t)((ਸਮੂਹ == ULMBCS_AMBIGUOUS_MBCS) 
+                        ? ULMBCS_DOUBLEOPTGROUP_ਸ਼ੁਰੂ 
                         :  ULMBCS_GRP_L1);
-               grp_end = (ulmbcs_byte_t)((group == ULMBCS_AMBIGUOUS_MBCS) 
-                        ? ULMBCS_GRP_LAST 
+               grp_ਸਿਰਾ = (ulmbcs_byte_t)((ਸਮੂਹ == ULMBCS_AMBIGUOUS_MBCS) 
+                        ? ULMBCS_GRP_ਆਖਰੀ 
                         :  ULMBCS_GRP_TH);
-               if(group == ULMBCS_AMBIGUOUS_ALL)
+               ਜੇ(ਸਮੂਹ == ULMBCS_AMBIGUOUS_ALL)
                {
-                   grp_start = ULMBCS_GRP_L1;
-                   grp_end = ULMBCS_GRP_LAST;
+                   grp_ਸ਼ੁਰੂ = ULMBCS_GRP_L1;
+                   grp_ਸਿਰਾ = ULMBCS_GRP_ਆਖਰੀ;
                }
-               for (grp_ix = grp_start;
-                   grp_ix <= grp_end && !bytes_written; 
+               ਲਈ (grp_ix = grp_ਸ਼ੁਰੂ;
+                   grp_ix <= grp_ਸਿਰਾ && !ਬਾਈਟਾਂ_written; 
                     grp_ix++)
                {
-                  if (extraInfo->OptGrpConverter [grp_ix] && !groups_tried [grp_ix])
+                  ਜੇ (extraInfo->OptGrpConverter [grp_ix] && !groups_tried [grp_ix])
                   {
-                     bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
+                     ਬਾਈਟਾਂ_written = (int32_t)LMBCSConversion_ਕਾਮਾ (extraInfo,
                        grp_ix, pLMBCS, &uniChar, 
-                       &lastConverterIndex, groups_tried);
+                       &ਆਖਰੀ_Converter_ਸੂਚਕਾਂਕ, groups_tried);
                   }
                }
                 /* a final conversion fallback to the exceptions group if its likely 
                      to be single byte  (Strategy 3E) */
-               if (!bytes_written && grp_start == ULMBCS_GRP_L1)
+               ਜੇ (!ਬਾਈਟਾਂ_written && grp_ਸ਼ੁਰੂ == ULMBCS_GRP_L1)
                {
-                  bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
+                  ਬਾਈਟਾਂ_written = (int32_t)LMBCSConversion_ਕਾਮਾ (extraInfo,
                      ULMBCS_GRP_EXCEPT, pLMBCS, &uniChar, 
-                     &lastConverterIndex, groups_tried);
+                     &ਆਖਰੀ_Converter_ਸੂਚਕਾਂਕ, groups_tried);
                }
             }
             /* all of our other strategies failed. Fallback to Unicode. (Strategy 4)*/
-            if (!bytes_written)
+            ਜੇ (!ਬਾਈਟਾਂ_written)
             {
 
                pLMBCS += LMBCSConvertUni(pLMBCS, uniChar);
-               bytes_written = (int32_t)(pLMBCS - LMBCS);
+               ਬਾਈਟਾਂ_written = (int32_t)(pLMBCS - LMBCS);
             }
          }
       }
   
       /* we have a translation. increment source and write as much as possible to target */
-      args->source++;
+      ਦਲੀਲਾਂ_2->ਸਰੋਤ++;
       pLMBCS = LMBCS;
-      while (args->target < args->targetLimit && bytes_written--)
+      ਜਦੋਂ (ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ < ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ && ਬਾਈਟਾਂ_written--)
       {
-         *(args->target)++ = *pLMBCS++;
-         if (args->offsets)
+         *(ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ)++ = *pLMBCS++;
+         ਜੇ (ਦਲੀਲਾਂ_2->offsets)
          {
-            *(args->offsets)++ = sourceIndex;
+            *(ਦਲੀਲਾਂ_2->offsets)++ = ਸਰੋਤ_ਸੂਚਕਾਂਕ;
          }
       }
-      sourceIndex++;
-      if (bytes_written > 0)
+      ਸਰੋਤ_ਸੂਚਕਾਂਕ++;
+      ਜੇ (ਬਾਈਟਾਂ_written > 0)
       {
          /* write any bytes that didn't fit in target to the error buffer,
             common code will move this to target if we get called back with
             enough target room
          */
-         uint8_t * pErrorBuffer = args->converter->charErrorBuffer;
-         *err = U_BUFFER_OVERFLOW_ERROR;
-         args->converter->charErrorBufferLength = (int8_t)bytes_written;
-         while (bytes_written--)
+         uint8_t * p_Error_ਬਫਰ = ਦਲੀਲਾਂ_2->converter->char_Error_ਬਫਰ;
+         *err = U_ਬਫਰ_ਉਛਾਲ_ERROR;
+         ਦਲੀਲਾਂ_2->converter->char_Error_ਬਫਰ_ਲੰਮਾਈ = (int8_t)ਬਾਈਟਾਂ_written;
+         ਜਦੋਂ (ਬਾਈਟਾਂ_written--)
          {
-            *pErrorBuffer++ = *pLMBCS++;
+            *p_Error_ਬਫਰ++ = *pLMBCS++;
          }
       }
       /*Fix for SPR#DJOE66JFN3 (Lotus)*/
-      extraInfo->localeConverterIndex = OldConverterIndex;
+      extraInfo->locale_Converter_ਸੂਚਕਾਂਕ = Old_Converter_ਸੂਚਕਾਂਕ;
    }     
 }
 
@@ -1085,18 +1085,18 @@ _LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
 
 
 /* A function to call when we are looking at the Unicode group byte in LMBCS */
-static char16_t
-GetUniFromLMBCSUni(char const ** ppLMBCSin)  /* Called with LMBCS-style Unicode byte stream */
+ਸਥਿਰ char16_t
+GetUniFromLMBCSUni(ਅੱਖਰ ਅਚਲ ** ppLMBCSin)  /* Called with LMBCS-style Unicode byte stream */
 {
-   uint8_t  HighCh = *(*ppLMBCSin)++;  /* Big-endian Unicode in LMBCS compatibility group*/
-   uint8_t  LowCh  = *(*ppLMBCSin)++;
+   uint8_t  ਉੱਚਾ_Ch = *(*ppLMBCSin)++;  /* Big-endian Unicode in LMBCS compatibility group*/
+   uint8_t  ਨੀਵਾਂ_Ch  = *(*ppLMBCSin)++;
 
-   if (HighCh == ULMBCS_UNICOMPATZERO ) 
+   ਜੇ (ਉੱਚਾ_Ch == ULMBCS_UNICOMPATZERO ) 
    {
-      HighCh = LowCh;
-      LowCh = 0; /* zero-byte in LSB special character */
+      ਉੱਚਾ_Ch = ਨੀਵਾਂ_Ch;
+      ਨੀਵਾਂ_Ch = 0; /* zero-byte in LSB special character */
    }
-   return (char16_t)((HighCh << 8) | LowCh);
+   ਵਾਪਸ (char16_t)((ਉੱਚਾ_Ch << 8) | ਨੀਵਾਂ_Ch);
 }
 
 
@@ -1107,31 +1107,31 @@ GetUniFromLMBCSUni(char const ** ppLMBCSin)  /* Called with LMBCS-style Unicode 
    all input as required by ICU converter semantics.
 */
 
-#define CHECK_SOURCE_LIMIT(index) UPRV_BLOCK_MACRO_BEGIN { \
-    if (args->source+index > args->sourceLimit) { \
-        *err = U_TRUNCATED_CHAR_FOUND; \
-        args->source = args->sourceLimit; \
-        return 0xffff; \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CHECK_ਸਰੋਤ_ਹੱਦਬੰਦੀ(ਸੂਚਕਾਂਕ) UPRV_ਖੰਡ_MACRO_BEGIN { \
+    ਜੇ (ਦਲੀਲਾਂ_2->ਸਰੋਤ+ਸੂਚਕਾਂਕ > ਦਲੀਲਾਂ_2->ਸਰੋਤ_ਹੱਦਬੰਦੀ) { \
+        *err = U_TRUNCATED_CHAR_ਮਿਲਿਆ; \
+        ਦਲੀਲਾਂ_2->ਸਰੋਤ = ਦਲੀਲਾਂ_2->ਸਰੋਤ_ਹੱਦਬੰਦੀ; \
+        ਵਾਪਸ 0xffff; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ਖੰਡ_MACRO_ਸਿਰਾ
 
 /* Return the Unicode representation for the current LMBCS character */
 
-static UChar32  U_CALLCONV
-_LMBCSGetNextUCharWorker(UConverterToUnicodeArgs*   args,
-                         UErrorCode*   err)
+ਸਥਿਰ UChar32  U_CALLCONV
+LMBCSGet_ਅਗਲਾ_UChar_ਕਾਮਾ(UConverter_ਮੰਜ਼ਿਲ_Unicode_ਦਲੀਲਾਂ*   ਦਲੀਲਾਂ_2,
+                         UError_ਕੋਡ*   err)
 {
     UChar32 uniChar = 0;    /* an output UNICODE char */
     ulmbcs_byte_t   CurByte; /* A byte from the input stream */
 
     /* error check */
-    if (args->source >= args->sourceLimit)
+    ਜੇ (ਦਲੀਲਾਂ_2->ਸਰੋਤ >= ਦਲੀਲਾਂ_2->ਸਰੋਤ_ਹੱਦਬੰਦੀ)
     {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0xffff;
+        *err = U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0xffff;
     }
     /* Grab first byte & save address for error recovery */
-    CurByte = *((ulmbcs_byte_t  *) (args->source++));
+    CurByte = *((ulmbcs_byte_t  *) (ਦਲੀਲਾਂ_2->ਸਰੋਤ++));
    
     /*
     * at entry of each if clause:
@@ -1145,211 +1145,211 @@ _LMBCSGetNextUCharWorker(UConverterToUnicodeArgs*   args,
    
     /* First lets check the simple fixed values. */
 
-    if(((CurByte > ULMBCS_C0END) && (CurByte < ULMBCS_C1START)) /* ascii range */
+    ਜੇ(((CurByte > ULMBCS_C0_ਸਿਰਾ) && (CurByte < ULMBCS_C1_ਸ਼ੁਰੂ)) /* ascii range */
     ||  (CurByte == 0) 
     ||  CurByte == ULMBCS_HT || CurByte == ULMBCS_CR 
     ||  CurByte == ULMBCS_LF || CurByte == ULMBCS_123SYSTEMRANGE)
     {
         uniChar = CurByte;
     }
-    else  
+    ਨਹੀਂਤਾਂ  
     {
-        UConverterDataLMBCS * extraInfo;
-        ulmbcs_byte_t group; 
-        UConverterSharedData *cnv; 
+        UConverter_ਅੰਕੜੇ_LMBCS * extraInfo;
+        ulmbcs_byte_t ਸਮੂਹ; 
+        UConverter_Shared_ਅੰਕੜੇ *cnv; 
         
-        if (CurByte == ULMBCS_GRP_CTRL)  /* Control character group - no opt group update */
+        ਜੇ (CurByte == ULMBCS_GRP_CTRL)  /* Control character group - no opt group update */
         {
             ulmbcs_byte_t  C0C1byte;
-            CHECK_SOURCE_LIMIT(1);
-            C0C1byte = *(args->source)++;
-            uniChar = (C0C1byte < ULMBCS_C1START) ? C0C1byte - ULMBCS_CTRLOFFSET : C0C1byte;
+            CHECK_ਸਰੋਤ_ਹੱਦਬੰਦੀ(1);
+            C0C1byte = *(ਦਲੀਲਾਂ_2->ਸਰੋਤ)++;
+            uniChar = (C0C1byte < ULMBCS_C1_ਸ਼ੁਰੂ) ? C0C1byte - ULMBCS_CTRLOFFSET : C0C1byte;
         }
-        else 
-        if (CurByte == ULMBCS_GRP_UNICODE) /* Unicode compatibility group: BigEndian UTF16 */
+        ਨਹੀਂਤਾਂ 
+        ਜੇ (CurByte == ULMBCS_GRP_UNICODE) /* Unicode compatibility group: BigEndian UTF16 */
         {
-            CHECK_SOURCE_LIMIT(2);
+            CHECK_ਸਰੋਤ_ਹੱਦਬੰਦੀ(2);
      
             /* don't check for error indicators fffe/ffff below */
-            return GetUniFromLMBCSUni(&(args->source));
+            ਵਾਪਸ GetUniFromLMBCSUni(&(ਦਲੀਲਾਂ_2->ਸਰੋਤ));
         }
-        else if (CurByte <= ULMBCS_CTRLOFFSET)  
+        ਨਹੀਂਤਾਂ ਜੇ (CurByte <= ULMBCS_CTRLOFFSET)  
         {
-            group = CurByte;                   /* group byte is in the source */
-            extraInfo = (UConverterDataLMBCS *) args->converter->extraInfo;
-            if (group > ULMBCS_GRP_LAST || (cnv = extraInfo->OptGrpConverter[group]) == nullptr)
+            ਸਮੂਹ = CurByte;                   /* group byte is in the source */
+            extraInfo = (UConverter_ਅੰਕੜੇ_LMBCS *) ਦਲੀਲਾਂ_2->converter->extraInfo;
+            ਜੇ (ਸਮੂਹ > ULMBCS_GRP_ਆਖਰੀ || (cnv = extraInfo->OptGrpConverter[ਸਮੂਹ]) == ਖਾਲੀ_ਸੂਚਕ)
             {
                 /* this is not a valid group byte - no converter*/
-                *err = U_INVALID_CHAR_FOUND;
+                *err = U_INVALID_CHAR_ਮਿਲਿਆ;
             }      
-            else if (group >= ULMBCS_DOUBLEOPTGROUP_START)    /* double byte conversion */
+            ਨਹੀਂਤਾਂ ਜੇ (ਸਮੂਹ >= ULMBCS_DOUBLEOPTGROUP_ਸ਼ੁਰੂ)    /* double byte conversion */
             {
 
-                CHECK_SOURCE_LIMIT(2);
+                CHECK_ਸਰੋਤ_ਹੱਦਬੰਦੀ(2);
 
                 /* check for LMBCS doubled-group-byte case */
-                if (*args->source == group) {
+                ਜੇ (*ਦਲੀਲਾਂ_2->ਸਰੋਤ == ਸਮੂਹ) {
                     /* single byte */
-                    ++args->source;
-                    uniChar = ucnv_MBCSSimpleGetNextUChar(cnv, args->source, 1, false);
-                    ++args->source;
-                } else {
+                    ++ਦਲੀਲਾਂ_2->ਸਰੋਤ;
+                    uniChar = ucnv_MBCSSimple_Get_ਅਗਲਾ_UChar(cnv, ਦਲੀਲਾਂ_2->ਸਰੋਤ, 1, ਝੂਠ);
+                    ++ਦਲੀਲਾਂ_2->ਸਰੋਤ;
+                } ਨਹੀਂਤਾਂ {
                     /* double byte */
-                    uniChar = ucnv_MBCSSimpleGetNextUChar(cnv, args->source, 2, false);
-                    args->source += 2;
+                    uniChar = ucnv_MBCSSimple_Get_ਅਗਲਾ_UChar(cnv, ਦਲੀਲਾਂ_2->ਸਰੋਤ, 2, ਝੂਠ);
+                    ਦਲੀਲਾਂ_2->ਸਰੋਤ += 2;
                 }
             }
-            else {                                  /* single byte conversion */
-                CHECK_SOURCE_LIMIT(1);
-                CurByte = *(args->source)++;
+            ਨਹੀਂਤਾਂ {                                  /* single byte conversion */
+                CHECK_ਸਰੋਤ_ਹੱਦਬੰਦੀ(1);
+                CurByte = *(ਦਲੀਲਾਂ_2->ਸਰੋਤ)++;
         
-                if (CurByte >= ULMBCS_C1START)
+                ਜੇ (CurByte >= ULMBCS_C1_ਸ਼ੁਰੂ)
                 {
-                    uniChar = _MBCS_SINGLE_SIMPLE_GET_NEXT_BMP(cnv, CurByte);
+                    uniChar = MBCS_SINGLE_SIMPLE_GET_ਅਗਲਾ_BMP(cnv, CurByte);
                 }
-                else
+                ਨਹੀਂਤਾਂ
                 {
                     /* The non-optimizable oddballs where there is an explicit byte 
                     * AND the second byte is not in the upper ascii range
                     */
-                    char bytes[2];
+                    ਅੱਖਰ ਬਾਈਟਾਂ[2];
 
-                    extraInfo = (UConverterDataLMBCS *) args->converter->extraInfo;
+                    extraInfo = (UConverter_ਅੰਕੜੇ_LMBCS *) ਦਲੀਲਾਂ_2->converter->extraInfo;
                     cnv = extraInfo->OptGrpConverter [ULMBCS_GRP_EXCEPT];  
         
                     /* Lookup value must include opt group */
-                    bytes[0] = group;
-                    bytes[1] = CurByte;
-                    uniChar = ucnv_MBCSSimpleGetNextUChar(cnv, bytes, 2, false);
+                    ਬਾਈਟਾਂ[0] = ਸਮੂਹ;
+                    ਬਾਈਟਾਂ[1] = CurByte;
+                    uniChar = ucnv_MBCSSimple_Get_ਅਗਲਾ_UChar(cnv, ਬਾਈਟਾਂ, 2, ਝੂਠ);
                 }
             }
         }
-        else if (CurByte >= ULMBCS_C1START) /* group byte is implicit */
+        ਨਹੀਂਤਾਂ ਜੇ (CurByte >= ULMBCS_C1_ਸ਼ੁਰੂ) /* group byte is implicit */
         {
-            extraInfo = (UConverterDataLMBCS *) args->converter->extraInfo;
-            group = extraInfo->OptGroup;
-            cnv = extraInfo->OptGrpConverter[group];
-            if (group >= ULMBCS_DOUBLEOPTGROUP_START)    /* double byte conversion */
+            extraInfo = (UConverter_ਅੰਕੜੇ_LMBCS *) ਦਲੀਲਾਂ_2->converter->extraInfo;
+            ਸਮੂਹ = extraInfo->Opt_ਸਮੂਹ;
+            cnv = extraInfo->OptGrpConverter[ਸਮੂਹ];
+            ਜੇ (ਸਮੂਹ >= ULMBCS_DOUBLEOPTGROUP_ਸ਼ੁਰੂ)    /* double byte conversion */
             {
-                if (!ucnv_MBCSIsLeadByte(cnv, CurByte))
+                ਜੇ (!ucnv_MBCSIsLeadByte(cnv, CurByte))
                 {
-                    CHECK_SOURCE_LIMIT(0);
+                    CHECK_ਸਰੋਤ_ਹੱਦਬੰਦੀ(0);
 
                     /* let the MBCS conversion consume CurByte again */
-                    uniChar = ucnv_MBCSSimpleGetNextUChar(cnv, args->source - 1, 1, false);
+                    uniChar = ucnv_MBCSSimple_Get_ਅਗਲਾ_UChar(cnv, ਦਲੀਲਾਂ_2->ਸਰੋਤ - 1, 1, ਝੂਠ);
                 }
-                else
+                ਨਹੀਂਤਾਂ
                 {
-                    CHECK_SOURCE_LIMIT(1);
+                    CHECK_ਸਰੋਤ_ਹੱਦਬੰਦੀ(1);
                     /* let the MBCS conversion consume CurByte again */
-                    uniChar = ucnv_MBCSSimpleGetNextUChar(cnv, args->source - 1, 2, false);
-                    ++args->source;
+                    uniChar = ucnv_MBCSSimple_Get_ਅਗਲਾ_UChar(cnv, ਦਲੀਲਾਂ_2->ਸਰੋਤ - 1, 2, ਝੂਠ);
+                    ++ਦਲੀਲਾਂ_2->ਸਰੋਤ;
                 }
             }
-            else                                   /* single byte conversion */
+            ਨਹੀਂਤਾਂ                                   /* single byte conversion */
             {
-                uniChar = _MBCS_SINGLE_SIMPLE_GET_NEXT_BMP(cnv, CurByte);
+                uniChar = MBCS_SINGLE_SIMPLE_GET_ਅਗਲਾ_BMP(cnv, CurByte);
             }
         }
     }
-    return uniChar;
+    ਵਾਪਸ uniChar;
 }
 
 
 /* The exported function that converts lmbcs to one or more
    UChars - currently UTF-16
 */
-static void  U_CALLCONV
-_LMBCSToUnicodeWithOffsets(UConverterToUnicodeArgs*    args,
-                     UErrorCode*    err)
+ਸਥਿਰ ਖਾਲੀ  U_CALLCONV
+_LMBCSToUnicodeWithOffsets(UConverter_ਮੰਜ਼ਿਲ_Unicode_ਦਲੀਲਾਂ*    ਦਲੀਲਾਂ_2,
+                     UError_ਕੋਡ*    err)
 {
-   char LMBCS [ULMBCS_CHARSIZE_MAX];
+   ਅੱਖਰ LMBCS [ULMBCS_CHARSIZE_MAX];
    char16_t uniChar;    /* one output UNICODE char */
-   const char * saveSource; /* beginning of current code point */
-   const char * pStartLMBCS = args->source;  /* beginning of whole string */
-   const char * errSource = nullptr; /* pointer to actual input in case an error occurs */
+   ਅਚਲ ਅੱਖਰ * save_ਸਰੋਤ; /* beginning of current code point */
+   ਅਚਲ ਅੱਖਰ * p_ਸ਼ੁਰੂ_LMBCS = ਦਲੀਲਾਂ_2->ਸਰੋਤ;  /* beginning of whole string */
+   ਅਚਲ ਅੱਖਰ * err_ਸਰੋਤ = ਖਾਲੀ_ਸੂਚਕ; /* pointer to actual input in case an error occurs */
    int8_t savebytes = 0;
 
    /* Process from source to limit, or until error */
-   while (U_SUCCESS(*err) && args->sourceLimit > args->source && args->targetLimit > args->target)
+   ਜਦੋਂ (U_SUCCESS(*err) && ਦਲੀਲਾਂ_2->ਸਰੋਤ_ਹੱਦਬੰਦੀ > ਦਲੀਲਾਂ_2->ਸਰੋਤ && ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ > ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ)
    {
-      saveSource = args->source; /* beginning of current code point */
+      save_ਸਰੋਤ = ਦਲੀਲਾਂ_2->ਸਰੋਤ; /* beginning of current code point */
 
-      if (args->converter->toULength) /* reassemble char from previous call */
+      ਜੇ (ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_ULength) /* reassemble char from previous call */
       {
-        const char *saveSourceLimit; 
-        size_t size_old = args->converter->toULength;
+        ਅਚਲ ਅੱਖਰ *save_ਸਰੋਤ_ਹੱਦਬੰਦੀ; 
+        size_t ਮਾਪ_old = ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_ULength;
 
          /* limit from source is either remainder of temp buffer, or user limit on source */
-        size_t size_new_maybe_1 = sizeof(LMBCS) - size_old;
-        size_t size_new_maybe_2 = args->sourceLimit - args->source;
-        size_t size_new = (size_new_maybe_1 < size_new_maybe_2) ? size_new_maybe_1 : size_new_maybe_2;
+        size_t ਮਾਪ_new_maybe_1 = ਆਕਾਰ(LMBCS) - ਮਾਪ_old;
+        size_t ਮਾਪ_new_maybe_2 = ਦਲੀਲਾਂ_2->ਸਰੋਤ_ਹੱਦਬੰਦੀ - ਦਲੀਲਾਂ_2->ਸਰੋਤ;
+        size_t ਮਾਪ_new = (ਮਾਪ_new_maybe_1 < ਮਾਪ_new_maybe_2) ? ਮਾਪ_new_maybe_1 : ਮਾਪ_new_maybe_2;
          
       
-        uprv_memcpy(LMBCS, args->converter->toUBytes, size_old);
-        uprv_memcpy(LMBCS + size_old, args->source, size_new);
-        saveSourceLimit = args->sourceLimit;
-        args->source = errSource = LMBCS;
-        args->sourceLimit = LMBCS+size_old+size_new;
-        savebytes = (int8_t)(size_old+size_new);
-        uniChar = (char16_t) _LMBCSGetNextUCharWorker(args, err);
-        args->source = saveSource + ((args->source - LMBCS) - size_old);
-        args->sourceLimit = saveSourceLimit;
+        uprv_memcpy(LMBCS, ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_UBytes, ਮਾਪ_old);
+        uprv_memcpy(LMBCS + ਮਾਪ_old, ਦਲੀਲਾਂ_2->ਸਰੋਤ, ਮਾਪ_new);
+        save_ਸਰੋਤ_ਹੱਦਬੰਦੀ = ਦਲੀਲਾਂ_2->ਸਰੋਤ_ਹੱਦਬੰਦੀ;
+        ਦਲੀਲਾਂ_2->ਸਰੋਤ = err_ਸਰੋਤ = LMBCS;
+        ਦਲੀਲਾਂ_2->ਸਰੋਤ_ਹੱਦਬੰਦੀ = LMBCS+ਮਾਪ_old+ਮਾਪ_new;
+        savebytes = (int8_t)(ਮਾਪ_old+ਮਾਪ_new);
+        uniChar = (char16_t) LMBCSGet_ਅਗਲਾ_UChar_ਕਾਮਾ(ਦਲੀਲਾਂ_2, err);
+        ਦਲੀਲਾਂ_2->ਸਰੋਤ = save_ਸਰੋਤ + ((ਦਲੀਲਾਂ_2->ਸਰੋਤ - LMBCS) - ਮਾਪ_old);
+        ਦਲੀਲਾਂ_2->ਸਰੋਤ_ਹੱਦਬੰਦੀ = save_ਸਰੋਤ_ਹੱਦਬੰਦੀ;
 
-        if (*err == U_TRUNCATED_CHAR_FOUND)
+        ਜੇ (*err == U_TRUNCATED_CHAR_ਮਿਲਿਆ)
         {
             /* evil special case: source buffers so small a char spans more than 2 buffers */
-            args->converter->toULength = savebytes;
-            uprv_memcpy(args->converter->toUBytes, LMBCS, savebytes);
-            args->source = args->sourceLimit;
+            ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_ULength = savebytes;
+            uprv_memcpy(ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_UBytes, LMBCS, savebytes);
+            ਦਲੀਲਾਂ_2->ਸਰੋਤ = ਦਲੀਲਾਂ_2->ਸਰੋਤ_ਹੱਦਬੰਦੀ;
             *err = U_ZERO_ERROR;
-            return;
+            ਵਾਪਸ;
          }
-         else
+         ਨਹੀਂਤਾਂ
          {
             /* clear the partial-char marker */
-            args->converter->toULength = 0;
+            ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_ULength = 0;
          }
       }
-      else
+      ਨਹੀਂਤਾਂ
       {
-         errSource = saveSource;
-         uniChar = (char16_t) _LMBCSGetNextUCharWorker(args, err);
-         savebytes = (int8_t)(args->source - saveSource);
+         err_ਸਰੋਤ = save_ਸਰੋਤ;
+         uniChar = (char16_t) LMBCSGet_ਅਗਲਾ_UChar_ਕਾਮਾ(ਦਲੀਲਾਂ_2, err);
+         savebytes = (int8_t)(ਦਲੀਲਾਂ_2->ਸਰੋਤ - save_ਸਰੋਤ);
       }
-      if (U_SUCCESS(*err))
+      ਜੇ (U_SUCCESS(*err))
       {
-         if (uniChar < 0xfffe)
+         ਜੇ (uniChar < 0xfffe)
          {
-            *(args->target)++ = uniChar;
-            if(args->offsets)
+            *(ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ)++ = uniChar;
+            ਜੇ(ਦਲੀਲਾਂ_2->offsets)
             {
-               *(args->offsets)++ = (int32_t)(saveSource - pStartLMBCS);
+               *(ਦਲੀਲਾਂ_2->offsets)++ = (int32_t)(save_ਸਰੋਤ - p_ਸ਼ੁਰੂ_LMBCS);
             }
          }
-         else if (uniChar == 0xfffe)
+         ਨਹੀਂਤਾਂ ਜੇ (uniChar == 0xfffe)
          {
-            *err = U_INVALID_CHAR_FOUND;
+            *err = U_INVALID_CHAR_ਮਿਲਿਆ;
          }
-         else /* if (uniChar == 0xffff) */
+         ਨਹੀਂਤਾਂ /* if (uniChar == 0xffff) */
          {
-            *err = U_ILLEGAL_CHAR_FOUND;
+            *err = U_ILLEGAL_CHAR_ਮਿਲਿਆ;
          }
       }
    }
    /* if target ran out before source, return U_BUFFER_OVERFLOW_ERROR */
-   if (U_SUCCESS(*err) && args->sourceLimit > args->source && args->targetLimit <= args->target)
+   ਜੇ (U_SUCCESS(*err) && ਦਲੀਲਾਂ_2->ਸਰੋਤ_ਹੱਦਬੰਦੀ > ਦਲੀਲਾਂ_2->ਸਰੋਤ && ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ <= ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ)
    {
-      *err = U_BUFFER_OVERFLOW_ERROR;
+      *err = U_ਬਫਰ_ਉਛਾਲ_ERROR;
    }
-   else if (U_FAILURE(*err)) 
+   ਨਹੀਂਤਾਂ ਜੇ (U_FAILURE(*err)) 
    {
       /* If character incomplete or unmappable/illegal, store it in toUBytes[] */
-      args->converter->toULength = savebytes;
-      if (savebytes > 0) {
-         uprv_memcpy(args->converter->toUBytes, errSource, savebytes);
+      ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_ULength = savebytes;
+      ਜੇ (savebytes > 0) {
+         uprv_memcpy(ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_UBytes, err_ਸਰੋਤ, savebytes);
       }
-      if (*err == U_TRUNCATED_CHAR_FOUND) {
+      ਜੇ (*err == U_TRUNCATED_CHAR_ਮਿਲਿਆ) {
          *err = U_ZERO_ERROR;
       }
    }
@@ -1370,19 +1370,19 @@ DEFINE_LMBCS_OPEN(18)
 DEFINE_LMBCS_OPEN(19)
 
 
-DECLARE_LMBCS_DATA(1)
-DECLARE_LMBCS_DATA(2)
-DECLARE_LMBCS_DATA(3)
-DECLARE_LMBCS_DATA(4)
-DECLARE_LMBCS_DATA(5)
-DECLARE_LMBCS_DATA(6)
-DECLARE_LMBCS_DATA(8)
-DECLARE_LMBCS_DATA(11)
-DECLARE_LMBCS_DATA(16)
-DECLARE_LMBCS_DATA(17)
-DECLARE_LMBCS_DATA(18)
-DECLARE_LMBCS_DATA(19)
+DECLARE_LMBCS_ਅੰਕੜੇ(1)
+DECLARE_LMBCS_ਅੰਕੜੇ(2)
+DECLARE_LMBCS_ਅੰਕੜੇ(3)
+DECLARE_LMBCS_ਅੰਕੜੇ(4)
+DECLARE_LMBCS_ਅੰਕੜੇ(5)
+DECLARE_LMBCS_ਅੰਕੜੇ(6)
+DECLARE_LMBCS_ਅੰਕੜੇ(8)
+DECLARE_LMBCS_ਅੰਕੜੇ(11)
+DECLARE_LMBCS_ਅੰਕੜੇ(16)
+DECLARE_LMBCS_ਅੰਕੜੇ(17)
+DECLARE_LMBCS_ਅੰਕੜੇ(18)
+DECLARE_LMBCS_ਅੰਕੜੇ(19)
 
-U_CDECL_END
+U_CDECL_ਸਿਰਾ
 
-#endif /* #if !UCONFIG_NO_LEGACY_CONVERSION */
+#ਜੇ_ਅੰਤ /* #if !UCONFIG_NO_LEGACY_CONVERSION */

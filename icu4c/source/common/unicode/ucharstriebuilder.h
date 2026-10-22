@@ -14,16 +14,16 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UCHARSTRIEBUILDER_H__
-#define __UCHARSTRIEBUILDER_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __UCHARSTRIEBUILDER_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __UCHARSTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/stringtriebuilder.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/unistr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/stringtriebuilder.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ucharstrie.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/unistr.h"
 
 /**
  * \file
@@ -40,20 +40,20 @@ class UCharsTrieElement;
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API UCharsTrieBuilder : public StringTrieBuilder {
-public:
+class U_COMMON_API UCharsTrieBuilder : ਜਨਤਕ StringTrieBuilder {
+ਜਨਤਕ:
     /**
      * Constructs an empty builder.
      * @param errorCode Standard ICU error code.
      * @stable ICU 4.8
      */
-    UCharsTrieBuilder(UErrorCode &errorCode);
+    UCharsTrieBuilder(UError_ਕੋਡ &error_ਕੋਡ);
 
     /**
      * Destructor.
      * @stable ICU 4.8
      */
-    virtual ~UCharsTrieBuilder();
+    ਆਭਾਸੀ ~UCharsTrieBuilder();
 
     /**
      * Adds a (string, value) pair.
@@ -69,9 +69,9 @@ public:
      * @return *this
      * @stable ICU 4.8
      */
-    UCharsTrieBuilder& add(const UnicodeString& s,
-                           int32_t value,
-                           UErrorCode& errorCode) U_LIFETIME_BOUND;
+    UCharsTrieBuilder& ਜੋੜੋ(ਅਚਲ UnicodeString& s,
+                           int32_t ਮੁੱਲ_2,
+                           UError_ਕੋਡ& error_ਕੋਡ) U_LIFETIME_BOUND;
 
     /**
      * Builds a UCharsTrie for the add()ed data.
@@ -91,7 +91,7 @@ public:
      * @return A new UCharsTrie for the add()ed data.
      * @stable ICU 4.8
      */
-    UCharsTrie *build(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
+    UCharsTrie *build(UStringTrieBuildOption buildOption, UError_ਕੋਡ &error_ਕੋਡ);
 
     /**
      * Builds a UCharsTrie for the add()ed data and char16_t-serializes it.
@@ -119,8 +119,8 @@ public:
      * @stable ICU 4.8
      */
     UnicodeString& buildUnicodeString(UStringTrieBuildOption buildOption,
-                                      UnicodeString& result U_LIFETIME_BOUND,
-                                      UErrorCode& errorCode) U_LIFETIME_BOUND;
+                                      UnicodeString& ਨਤੀਜਾ U_LIFETIME_BOUND,
+                                      UError_ਕੋਡ& error_ਕੋਡ) U_LIFETIME_BOUND;
 
     /**
      * Removes all (string, value) pairs.
@@ -129,68 +129,68 @@ public:
      * @stable ICU 4.8
      */
     UCharsTrieBuilder& clear() U_LIFETIME_BOUND {
-        strings.remove();
-        elementsLength=0;
-        ucharsLength=0;
-        return *this;
+        ਲੜੀਆਂ.remove();
+        elements_ਲੰਮਾਈ=0;
+        uchars_ਲੰਮਾਈ=0;
+        ਵਾਪਸ *this;
     }
 
-private:
-    UCharsTrieBuilder(const UCharsTrieBuilder &other) = delete;  // no copy constructor
-    UCharsTrieBuilder &operator=(const UCharsTrieBuilder &other) = delete;  // no assignment operator
+ਨਿਜੀ:
+    UCharsTrieBuilder(ਅਚਲ UCharsTrieBuilder &other) = delete;  // no copy constructor
+    UCharsTrieBuilder &ਸੰਚਾਲਕ=(ਅਚਲ UCharsTrieBuilder &other) = delete;  // no assignment operator
 
-    void buildUChars(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
+    ਖਾਲੀ buildUChars(UStringTrieBuildOption buildOption, UError_ਕੋਡ &error_ਕੋਡ);
 
-    virtual int32_t getElementStringLength(int32_t i) const override;
-    virtual char16_t getElementUnit(int32_t i, int32_t unitIndex) const override;
-    virtual int32_t getElementValue(int32_t i) const override;
+    ਆਭਾਸੀ int32_t get_Element_String_ਲੰਮਾਈ(int32_t i) ਅਚਲ override;
+    ਆਭਾਸੀ char16_t getElementUnit(int32_t i, int32_t unit_ਸੂਚਕਾਂਕ) ਅਚਲ override;
+    ਆਭਾਸੀ int32_t get_Element_ਮੁੱਲ(int32_t i) ਅਚਲ override;
 
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) const override;
+    ਆਭਾਸੀ int32_t get_ਹੱਦਬੰਦੀ_ਦਾ_ਰੇਖਿਕ_ਮੇਲ(int32_t ਪਹਿਲਾ, int32_t ਆਖਰੀ, int32_t unit_ਸੂਚਕਾਂਕ) ਅਚਲ override;
 
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const override;
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const override;
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const override;
+    ਆਭਾਸੀ int32_t ਗਿਣਤੀ_Element_Units(int32_t ਸ਼ੁਰੂ, int32_t ਹੱਦਬੰਦੀ, int32_t unit_ਸੂਚਕਾਂਕ) ਅਚਲ override;
+    ਆਭਾਸੀ int32_t skipElementsBySomeUnits(int32_t i, int32_t unit_ਸੂਚਕਾਂਕ, int32_t ਗਿਣਤੀ_2) ਅਚਲ override;
+    ਆਭਾਸੀ int32_t ਸੂਚਕਾਂਕ_ਦਾ_Element_With_ਅਗਲਾ_Unit(int32_t i, int32_t unit_ਸੂਚਕਾਂਕ, char16_t unit) ਅਚਲ override;
 
-    virtual UBool matchNodesCanHaveValues() const override { return true; }
+    ਆਭਾਸੀ UBool ਮੇਲ_Nodes_Can_Have_ਮੁੱਲਾਂ() ਅਚਲ override { ਵਾਪਸ true; }
 
-    virtual int32_t getMaxBranchLinearSubNodeLength() const override { return UCharsTrie::kMaxBranchLinearSubNodeLength; }
-    virtual int32_t getMinLinearMatch() const override { return UCharsTrie::kMinLinearMatch; }
-    virtual int32_t getMaxLinearMatchLength() const override { return UCharsTrie::kMaxLinearMatchLength; }
+    ਆਭਾਸੀ int32_t get_Max_Branch_ਰੇਖਿਕ_Sub_ਗੰਢ_ਲੰਮਾਈ() ਅਚਲ override { ਵਾਪਸ UCharsTrie::k_Max_Branch_ਰੇਖਿਕ_Sub_ਗੰਢ_ਲੰਮਾਈ; }
+    ਆਭਾਸੀ int32_t get_Min_ਰੇਖਿਕ_ਮੇਲ() ਅਚਲ override { ਵਾਪਸ UCharsTrie::k_Min_ਰੇਖਿਕ_ਮੇਲ; }
+    ਆਭਾਸੀ int32_t get_Max_ਰੇਖਿਕ_ਮੇਲ_ਲੰਮਾਈ() ਅਚਲ override { ਵਾਪਸ UCharsTrie::k_Max_ਰੇਖਿਕ_ਮੇਲ_ਲੰਮਾਈ; }
 
-    class UCTLinearMatchNode : public LinearMatchNode {
-    public:
-        UCTLinearMatchNode(const char16_t *units, int32_t len, Node *nextNode);
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    private:
-        const char16_t *s;
+    class UCTLinear_ਮੇਲ_ਗੰਢ : ਜਨਤਕ ਰੇਖਿਕ_ਮੇਲ_ਗੰਢ {
+    ਜਨਤਕ:
+        UCTLinear_ਮੇਲ_ਗੰਢ(ਅਚਲ char16_t *units, int32_t len, ਗੰਢ_2 *ਅਗਲਾ_ਗੰਢ);
+        ਆਭਾਸੀ bool ਸੰਚਾਲਕ==(ਅਚਲ ਗੰਢ_2 &other) ਅਚਲ override;
+        ਆਭਾਸੀ ਖਾਲੀ ਲਿਖ(StringTrieBuilder &builder) override;
+    ਨਿਜੀ:
+        ਅਚਲ char16_t *s;
     };
 
-    virtual Node *createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                        Node *nextNode) const override;
+    ਆਭਾਸੀ ਗੰਢ_2 *create_ਰੇਖਿਕ_ਮੇਲ_ਗੰਢ(int32_t i, int32_t unit_ਸੂਚਕਾਂਕ, int32_t ਲੰਮਾਈ,
+                                        ਗੰਢ_2 *ਅਗਲਾ_ਗੰਢ) ਅਚਲ override;
 
-    UBool ensureCapacity(int32_t length);
-    virtual int32_t write(int32_t unit) override;
-    int32_t write(const char16_t *s, int32_t length);
-    virtual int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) override;
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) override;
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) override;
-    virtual int32_t writeDeltaTo(int32_t jumpTarget) override;
+    UBool ensure_ਸਮਰੱਥਾ(int32_t ਲੰਮਾਈ);
+    ਆਭਾਸੀ int32_t ਲਿਖ(int32_t unit) override;
+    int32_t ਲਿਖ(ਅਚਲ char16_t *s, int32_t ਲੰਮਾਈ);
+    ਆਭਾਸੀ int32_t writeElementUnits(int32_t i, int32_t unit_ਸੂਚਕਾਂਕ, int32_t ਲੰਮਾਈ) override;
+    ਆਭਾਸੀ int32_t write_ਮੁੱਲ_And_Final(int32_t i, UBool isFinal) override;
+    ਆਭਾਸੀ int32_t write_ਮੁੱਲ_And_Type(UBool has_ਮੁੱਲ, int32_t ਮੁੱਲ_2, int32_t ਗੰਢ) override;
+    ਆਭਾਸੀ int32_t write_Delta_ਮੰਜ਼ਿਲ(int32_t jump_ਨਿਸ਼ਾਨਾ) override;
 
-    UnicodeString strings;
+    UnicodeString ਲੜੀਆਂ;
     UCharsTrieElement *elements;
-    int32_t elementsCapacity;
-    int32_t elementsLength;
+    int32_t elements_ਸਮਰੱਥਾ;
+    int32_t elements_ਲੰਮਾਈ;
 
     // char16_t serialization of the trie.
     // Grows from the back: ucharsLength measures from the end of the buffer!
     char16_t *uchars;
-    int32_t ucharsCapacity;
-    int32_t ucharsLength;
+    int32_t uchars_ਸਮਰੱਥਾ;
+    int32_t uchars_ਲੰਮਾਈ;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ਜੇ_ਅੰਤ /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __UCHARSTRIEBUILDER_H__
+#ਜੇ_ਅੰਤ  // __UCHARSTRIEBUILDER_H__

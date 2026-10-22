@@ -18,61 +18,61 @@
 *   Character conversion functions moved here from uresbund.c
 */
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "unicode/ustring.h"
-#include "unicode/ucnv.h"
-#include "unicode/ures.h"
-#include "uinvchar.h"
-#include "ustr_cnv.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/putil.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ustring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ucnv.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ures.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uinvchar.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ustr_cnv.h"
 
 U_CAPI UResourceBundle * U_EXPORT2
-ures_openU(const char16_t *myPath,
-           const char *localeID, 
-           UErrorCode *status)
+ures_openU(ਅਚਲ char16_t *my_ਰਸਤਾ,
+           ਅਚਲ ਅੱਖਰ *localeID, 
+           UError_ਕੋਡ *ਸਥਿਤੀ)
 {
-    char pathBuffer[1024];
+    ਅੱਖਰ ਰਸਤਾ_ਬਫਰ[1024];
     int32_t length;
-    char *path = pathBuffer;
+    ਅੱਖਰ *ਰਸਤਾ = ਰਸਤਾ_ਬਫਰ;
 
-    if(status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    ਜੇ(ਸਥਿਤੀ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*ਸਥਿਤੀ)) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
-    if(myPath==nullptr) {
-        path = nullptr;
+    ਜੇ(my_ਰਸਤਾ==ਖਾਲੀ_ਸੂਚਕ) {
+        ਰਸਤਾ = ਖਾਲੀ_ਸੂਚਕ;
     }
-    else {
-        length=u_strlen(myPath);
-        if(length>=(int32_t)sizeof(pathBuffer)) {
-            *status=U_ILLEGAL_ARGUMENT_ERROR;
-            return nullptr;
-        } else if(uprv_isInvariantUString(myPath, length)) {
+    ਨਹੀਂਤਾਂ {
+        length=u_strlen(my_ਰਸਤਾ);
+        ਜੇ(length>=(int32_t)ਆਕਾਰ(ਰਸਤਾ_ਬਫਰ)) {
+            *ਸਥਿਤੀ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+            ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
+        } ਨਹੀਂਤਾਂ ਜੇ(uprv_isInvariantUString(my_ਰਸਤਾ, length)) {
             /*
              * the invariant converter is sufficient for package and tree names
              * and is more efficient
              */
-            u_UCharsToChars(myPath, path, length+1); /* length+1 to include the NUL */
-        } else {
-#if !UCONFIG_NO_CONVERSION
+            u_UChars_ਮੰਜ਼ਿਲ_Chars(my_ਰਸਤਾ, ਰਸਤਾ, length+1); /* length+1 to include the NUL */
+        } ਨਹੀਂਤਾਂ {
+#ਜੇ !UCONFIG_NO_CONVERSION
             /* use the default converter to support variant-character paths */
-            UConverter *cnv=u_getDefaultConverter(status);
-            length=ucnv_fromUChars(cnv, path, (int32_t)sizeof(pathBuffer), myPath, length, status);
+            UConverter *cnv=u_getDefaultConverter(ਸਥਿਤੀ);
+            length=ucnv_fromUChars(cnv, ਰਸਤਾ, (int32_t)ਆਕਾਰ(ਰਸਤਾ_ਬਫਰ), my_ਰਸਤਾ, length, ਸਥਿਤੀ);
             u_releaseDefaultConverter(cnv);
-            if(U_FAILURE(*status)) {
-                return nullptr;
+            ਜੇ(U_FAILURE(*ਸਥਿਤੀ)) {
+                ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
             }
-            if(length>=(int32_t)sizeof(pathBuffer)) {
+            ਜੇ(length>=(int32_t)ਆਕਾਰ(ਰਸਤਾ_ਬਫਰ)) {
                 /* not NUL-terminated - path too long */
-                *status=U_ILLEGAL_ARGUMENT_ERROR;
-                return nullptr;
+                *ਸਥਿਤੀ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+                ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
             }
-#else
+#ਨਹੀਂਤਾਂ
             /* the default converter is not available */
-            *status=U_UNSUPPORTED_ERROR;
-            return nullptr;
-#endif
+            *ਸਥਿਤੀ=U_UNSUPPORTED_ERROR;
+            ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
+#ਜੇ_ਅੰਤ
         }
     }
 
-    return ures_open(path, localeID, status);
+    ਵਾਪਸ ures_open(ਰਸਤਾ, localeID, ਸਥਿਤੀ);
 }

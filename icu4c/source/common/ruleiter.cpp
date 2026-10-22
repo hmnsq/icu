@@ -10,119 +10,119 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#include "ruleiter.h"
-#include "unicode/parsepos.h"
-#include "unicode/symtable.h"
-#include "unicode/unistr.h"
-#include "unicode/utf16.h"
-#include "patternprops.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ruleiter.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/parsepos.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/symtable.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/unistr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf16.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "patternprops.h"
 
 /* \U87654321 or \ud800\udc00 */
-#define MAX_U_NOTATION_LEN 12
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MAX_U_NOTATION_LEN 12
 
 U_NAMESPACE_BEGIN
 
-RuleCharacterIterator::RuleCharacterIterator(const UnicodeString& theText, const SymbolTable* theSym,
+ਨਿਯਮ_Character_Iterator::ਨਿਯਮ_Character_Iterator(ਅਚਲ UnicodeString& the_ਪਾਠ, ਅਚਲ ਚਿੰਨ੍ਹ_ਸਾਰਣੀ* theSym,
                       ParsePosition& thePos) :
-    text(theText),
+    ਪਾਠ(the_ਪਾਠ),
     pos(thePos),
     sym(theSym),
-    buf(nullptr),
+    buf(ਖਾਲੀ_ਸੂਚਕ),
     bufPos(0)
 {}
 
-UBool RuleCharacterIterator::atEnd() const {
-    return buf == nullptr && pos.getIndex() == text.length();
+UBool ਨਿਯਮ_Character_Iterator::at_ਸਿਰਾ() ਅਚਲ {
+    ਵਾਪਸ buf == ਖਾਲੀ_ਸੂਚਕ && pos.get_ਸੂਚਕਾਂਕ() == ਪਾਠ.length();
 }
 
-UChar32 RuleCharacterIterator::next(int32_t options, UBool& isEscaped, UErrorCode& ec) {
-    if (U_FAILURE(ec)) return DONE;
+UChar32 ਨਿਯਮ_Character_Iterator::next(int32_t options, UBool& isEscaped, UError_ਕੋਡ& ec) {
+    ਜੇ (U_FAILURE(ec)) ਵਾਪਸ ਪੂਰਾ_2;
 
-    UChar32 c = DONE;
-    isEscaped = false;
+    UChar32 c = ਪੂਰਾ_2;
+    isEscaped = ਝੂਠ;
 
-    for (;;) {
+    ਲਈ (;;) {
         c = _current();
-        _advance(U16_LENGTH(c));
+        _advance(U16_ਲੰਮਾਈ(c));
 
-        if (c == SymbolTable::SYMBOL_REF && buf == nullptr &&
-            (options & PARSE_VARIABLES) != 0 && sym != nullptr) {
-            UnicodeString name = sym->parseReference(text, pos, text.length());
+        ਜੇ (c == ਚਿੰਨ੍ਹ_ਸਾਰਣੀ::ਚਿੰਨ੍ਹ_REF && buf == ਖਾਲੀ_ਸੂਚਕ &&
+            (options & PARSE_VARIABLES) != 0 && sym != ਖਾਲੀ_ਸੂਚਕ) {
+            UnicodeString name = sym->parseReference(ਪਾਠ, pos, ਪਾਠ.length());
             // If name is empty there was an isolated SYMBOL_REF;
             // return it.  Caller must be prepared for this.
-            if (name.length() == 0) {
-                break;
+            ਜੇ (name.length() == 0) {
+                ਰੋਕੋ;
             }
             bufPos = 0;
             buf = sym->lookup(name);
-            if (buf == nullptr) {
+            ਜੇ (buf == ਖਾਲੀ_ਸੂਚਕ) {
                 ec = U_UNDEFINED_VARIABLE;
-                return DONE;
+                ਵਾਪਸ ਪੂਰਾ_2;
             }
             // Handle empty variable value
-            if (buf->length() == 0) {
-                buf = nullptr;
+            ਜੇ (buf->length() == 0) {
+                buf = ਖਾਲੀ_ਸੂਚਕ;
             }
-            continue;
+            ਜਾਰੀ;
         }
 
-        if ((options & SKIP_WHITESPACE) != 0 && PatternProps::isWhiteSpace(c)) {
-            continue;
+        ਜੇ ((options & SKIP_WHITESPACE) != 0 && ਨਮੂਨਾ_Props::isWhiteSpace(c)) {
+            ਜਾਰੀ;
         }
 
-        if (c == 0x5C /*'\\'*/ && (options & PARSE_ESCAPES) != 0) {
-            UnicodeString tempEscape;
-            int32_t offset = 0;
-            c = lookahead(tempEscape, MAX_U_NOTATION_LEN).unescapeAt(offset);
-            jumpahead(offset);
-            isEscaped = true;
-            if (c < 0) {
+        ਜੇ (c == 0x5C /*'\\'*/ && (options & PARSE_ESCAPES) != 0) {
+            UnicodeString ਆਰਜ਼ੀ_Escape;
+            int32_t ਵਿੱਥ = 0;
+            c = lookahead(ਆਰਜ਼ੀ_Escape, MAX_U_NOTATION_LEN).unescapeAt(ਵਿੱਥ);
+            jumpahead(ਵਿੱਥ);
+            isEscaped = ਸੱਚ;
+            ਜੇ (c < 0) {
                 ec = U_MALFORMED_UNICODE_ESCAPE;
-                return DONE;
+                ਵਾਪਸ ਪੂਰਾ_2;
             }
         }
 
-        break;
+        ਰੋਕੋ;
     }
 
-    return c;
+    ਵਾਪਸ c;
 }
 
-void RuleCharacterIterator::getPos(RuleCharacterIterator::Pos& p) const {
+ਖਾਲੀ ਨਿਯਮ_Character_Iterator::getPos(ਨਿਯਮ_Character_Iterator::Pos& p) ਅਚਲ {
     p.buf = buf;
-    p.pos = pos.getIndex();
+    p.pos = pos.get_ਸੂਚਕਾਂਕ();
     p.bufPos = bufPos;
 }
 
-void RuleCharacterIterator::setPos(const RuleCharacterIterator::Pos& p) {
+ਖਾਲੀ ਨਿਯਮ_Character_Iterator::ਸੈੱਟ_Pos(ਅਚਲ ਨਿਯਮ_Character_Iterator::Pos& p) {
     buf = p.buf;
-    pos.setIndex(p.pos);
+    pos.ਸੈੱਟ_ਸੂਚਕਾਂਕ(p.pos);
     bufPos = p.bufPos;
 }
 
-void RuleCharacterIterator::skipIgnored(int32_t options) {
-    if ((options & SKIP_WHITESPACE) != 0) {
-        for (;;) {
+ਖਾਲੀ ਨਿਯਮ_Character_Iterator::skipIgnored(int32_t options) {
+    ਜੇ ((options & SKIP_WHITESPACE) != 0) {
+        ਲਈ (;;) {
             UChar32 a = _current();
-            if (!PatternProps::isWhiteSpace(a)) break;
-            _advance(U16_LENGTH(a));
+            ਜੇ (!ਨਮੂਨਾ_Props::isWhiteSpace(a)) ਰੋਕੋ;
+            _advance(U16_ਲੰਮਾਈ(a));
         }
     }
 }
 
-UnicodeString& RuleCharacterIterator::lookahead(UnicodeString& result, int32_t maxLookAhead) const {
-    if (maxLookAhead < 0) {
+UnicodeString& ਨਿਯਮ_Character_Iterator::lookahead(UnicodeString& ਨਤੀਜਾ, int32_t maxLookAhead) ਅਚਲ {
+    ਜੇ (maxLookAhead < 0) {
         maxLookAhead = 0x7FFFFFFF;
     }
-    if (buf != nullptr) {
-        buf->extract(bufPos, maxLookAhead, result);
-    } else {
-        text.extract(pos.getIndex(), maxLookAhead, result);
+    ਜੇ (buf != ਖਾਲੀ_ਸੂਚਕ) {
+        buf->extract(bufPos, maxLookAhead, ਨਤੀਜਾ);
+    } ਨਹੀਂਤਾਂ {
+        ਪਾਠ.extract(pos.get_ਸੂਚਕਾਂਕ(), maxLookAhead, ਨਤੀਜਾ);
     }
-    return result;
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
-void RuleCharacterIterator::jumpahead(int32_t count) {
+ਖਾਲੀ ਨਿਯਮ_Character_Iterator::jumpahead(int32_t count) {
     _advance(count);
 }
 
@@ -134,29 +134,29 @@ UnicodeString& RuleCharacterIterator::toString(UnicodeString& result) const {
 }
 */
 
-UChar32 RuleCharacterIterator::_current() const {
-    if (buf != nullptr) {
-        return buf->char32At(bufPos);
-    } else {
-        int i = pos.getIndex();
-        return (i < text.length()) ? text.char32At(i) : static_cast<UChar32>(DONE);
+UChar32 ਨਿਯਮ_Character_Iterator::_current() ਅਚਲ {
+    ਜੇ (buf != ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ buf->char32At(bufPos);
+    } ਨਹੀਂਤਾਂ {
+        ਪੂਰਨ i = pos.get_ਸੂਚਕਾਂਕ();
+        ਵਾਪਸ (i < ਪਾਠ.length()) ? ਪਾਠ.char32At(i) : static_cast<UChar32>(ਪੂਰਾ_2);
     }
 }
 
-void RuleCharacterIterator::_advance(int32_t count) {
-    if (buf != nullptr) {
+ਖਾਲੀ ਨਿਯਮ_Character_Iterator::_advance(int32_t count) {
+    ਜੇ (buf != ਖਾਲੀ_ਸੂਚਕ) {
         bufPos += count;
-        if (bufPos == buf->length()) {
-            buf = nullptr;
+        ਜੇ (bufPos == buf->length()) {
+            buf = ਖਾਲੀ_ਸੂਚਕ;
         }
-    } else {
-        pos.setIndex(pos.getIndex() + count);
-        if (pos.getIndex() > text.length()) {
-            pos.setIndex(text.length());
+    } ਨਹੀਂਤਾਂ {
+        pos.ਸੈੱਟ_ਸੂਚਕਾਂਕ(pos.get_ਸੂਚਕਾਂਕ() + count);
+        ਜੇ (pos.get_ਸੂਚਕਾਂਕ() > ਪਾਠ.length()) {
+            pos.ਸੈੱਟ_ਸੂਚਕਾਂਕ(ਪਾਠ.length());
         }
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
 //eof

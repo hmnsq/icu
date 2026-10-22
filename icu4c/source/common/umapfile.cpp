@@ -19,52 +19,52 @@
  *----------------------------------------------------------------------------*/
 /* Defines _XOPEN_SOURCE for access to POSIX functions.
  * Must be before any other #includes. */
-#include "uposixdefs.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uposixdefs.h"
 
-#include "unicode/putil.h"
-#include "unicode/ustring.h"
-#include "udatamem.h"
-#include "umapfile.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/putil.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ustring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "udatamem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "umapfile.h"
 
 /* memory-mapping base definitions ------------------------------------------ */
 
-#if MAP_IMPLEMENTATION==MAP_WIN32
-#ifndef WIN32_LEAN_AND_MEAN
-#   define WIN32_LEAN_AND_MEAN
-#endif
+#ਜੇ MAP_IMPLEMENTATION==MAP_WIN32
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ WIN32_LEAN_AND_ਔਸਤ
+#   define WIN32_LEAN_AND_ਔਸਤ
+#ਜੇ_ਅੰਤ
 #   define VC_EXTRALEAN
 #   define NOUSER
 #   define NOSERVICE
 #   define NOIME
 #   define NOMCX
 
-#   if U_PLATFORM_HAS_WINUWP_API == 1
+#   ਜੇ U_PLATFORM_HAS_WINUWP_API == 1
         // Some previous versions of the Windows 10 SDK don't expose various APIs for UWP applications
         // to use, even though UWP apps are allowed to call and use them.  Temporarily change the
         // WINAPI family partition below to Desktop, so that function declarations are visible for UWP.
 #       include <winapifamily.h>
-#       if !(WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM))
-#           pragma push_macro("WINAPI_PARTITION_DESKTOP")
-#           undef WINAPI_PARTITION_DESKTOP
-#           define WINAPI_PARTITION_DESKTOP 1
-#           define CHANGED_WINAPI_PARTITION_DESKTOP_VALUE
+#       ਜੇ !(WINAPI_FAMILY_ਹਿੱਸੇ_ਕਰੋ(WINAPI_ਹਿੱਸੇ_ਕਰੋ_DESKTOP | WINAPI_ਹਿੱਸੇ_ਕਰੋ_SYSTEM))
+#           pragma ਧੱਕੋ_macro("WINAPI_PARTITION_DESKTOP")
+#           undef WINAPI_ਹਿੱਸੇ_ਕਰੋ_DESKTOP
+#           define WINAPI_ਹਿੱਸੇ_ਕਰੋ_DESKTOP 1
+#           define ਬਦਲਿਆ_WINAPI_ਹਿੱਸੇ_ਕਰੋ_DESKTOP_ਮੁੱਲ
 #       endif
 #   endif
 
 #   include <windows.h>
 
-#   if U_PLATFORM_HAS_WINUWP_API == 1 && defined(CHANGED_WINAPI_PARTITION_DESKTOP_VALUE)
-#       pragma pop_macro("WINAPI_PARTITION_DESKTOP")
+#   ਜੇ U_PLATFORM_HAS_WINUWP_API == 1 && defined(ਬਦਲਿਆ_WINAPI_ਹਿੱਸੇ_ਕਰੋ_DESKTOP_ਮੁੱਲ)
+#       pragma ਕੱਢੋ_macro("WINAPI_PARTITION_DESKTOP")
 #   endif
 
 #   include "cmemory.h"
 
-typedef HANDLE MemoryMap;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ HANDLE ਸਮ੍ਰਿਤੀ_Map;
 
-#   define IS_MAP(map) ((map)!=nullptr)
+#   define IS_MAP(map) ((map)!=ਖਾਲੀ_ਸੂਚਕ)
 
-#elif MAP_IMPLEMENTATION==MAP_POSIX
-    typedef size_t MemoryMap;
+#ਜਾਂਜੇ MAP_IMPLEMENTATION==MAP_POSIX
+    ਕਿਸਮਪਰਿਭਾਸ਼ਾ size_t ਸਮ੍ਰਿਤੀ_Map;
 
 #   define IS_MAP(map) ((map)!=0)
 
@@ -74,16 +74,16 @@ typedef HANDLE MemoryMap;
 #   include <fcntl.h>
 
 #   ifndef MAP_FAILED
-#       define MAP_FAILED ((void*)-1)
+#       define MAP_FAILED ((ਖਾਲੀ*)-1)
 #   endif
-#elif MAP_IMPLEMENTATION==MAP_STDIO
+#ਜਾਂਜੇ MAP_IMPLEMENTATION==MAP_STDIO
 #   include <stdio.h>
 #   include "cmemory.h"
 
-    typedef void *MemoryMap;
+    ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਖਾਲੀ *ਸਮ੍ਰਿਤੀ_Map;
 
-#   define IS_MAP(map) ((map)!=nullptr)
-#endif
+#   define IS_MAP(map) ((map)!=ਖਾਲੀ_ਸੂਚਕ)
+#ਜੇ_ਅੰਤ
 
 /*----------------------------------------------------------------------------*
  *                                                                            *
@@ -91,187 +91,187 @@ typedef HANDLE MemoryMap;
  *                           functions used by the rest of the implementation.*
  *                                                                            *
  *----------------------------------------------------------------------------*/
-#if MAP_IMPLEMENTATION==MAP_NONE
+#ਜੇ MAP_IMPLEMENTATION==MAP_NONE
     U_CFUNC UBool
-    uprv_mapFile(UDataMemory *pData, const char *path, UErrorCode *status) {
-        if (U_FAILURE(*status)) {
-            return false;
+    uprv_mapFile(UData_ਸਮ੍ਰਿਤੀ *p_ਅੰਕੜੇ, ਅਚਲ ਅੱਖਰ *ਰਸਤਾ, UError_ਕੋਡ *ਸਥਿਤੀ) {
+        ਜੇ (U_FAILURE(*ਸਥਿਤੀ)) {
+            ਵਾਪਸ ਝੂਠ;
         }
-        UDataMemory_init(pData); /* Clear the output struct. */
-        return false;            /* no file access */
+        UData_ਸਮ੍ਰਿਤੀ_init(p_ਅੰਕੜੇ); /* Clear the output struct. */
+        ਵਾਪਸ ਝੂਠ;            /* no file access */
     }
 
-    U_CFUNC void uprv_unmapFile(UDataMemory *pData) {
+    U_CFUNC ਖਾਲੀ uprv_unmapFile(UData_ਸਮ੍ਰਿਤੀ *p_ਅੰਕੜੇ) {
         /* nothing to do */
     }
-#elif MAP_IMPLEMENTATION==MAP_WIN32
+#ਜਾਂਜੇ MAP_IMPLEMENTATION==MAP_WIN32
     U_CFUNC UBool
     uprv_mapFile(
-         UDataMemory *pData,    /* Fill in with info on the result doing the mapping. */
+         UData_ਸਮ੍ਰਿਤੀ *p_ਅੰਕੜੇ,    /* Fill in with info on the result doing the mapping. */
                                 /*   Output only; any original contents are cleared.  */
-         const char *path,      /* File path to be opened/mapped.                     */
-         UErrorCode *status     /* Error status, used to report out-of-memory errors. */
+         ਅਚਲ ਅੱਖਰ *ਰਸਤਾ,      /* File path to be opened/mapped.                     */
+         UError_ਕੋਡ *ਸਥਿਤੀ     /* Error status, used to report out-of-memory errors. */
          )
     {
-        if (U_FAILURE(*status)) {
-            return false;
+        ਜੇ (U_FAILURE(*ਸਥਿਤੀ)) {
+            ਵਾਪਸ ਝੂਠ;
         }
 
-        HANDLE map = nullptr;
-        HANDLE file = INVALID_HANDLE_VALUE;
-        DWORD fileLength = 0;
+        HANDLE map = ਖਾਲੀ_ਸੂਚਕ;
+        HANDLE file = INVALID_HANDLE_ਮੁੱਲ;
+        DWORD file_ਲੰਮਾਈ = 0;
 
-        UDataMemory_init(pData); /* Clear the output struct.        */
+        UData_ਸਮ੍ਰਿਤੀ_init(p_ਅੰਕੜੇ); /* Clear the output struct.        */
 
         /* open the input file */
-#if U_PLATFORM_HAS_WINUWP_API == 0
+#ਜੇ U_PLATFORM_HAS_WINUWP_API == 0
         // Note: In the non-UWP code-path (ie: Win32), the value of the path variable might have come from 
         // the CRT 'getenv' function, and would be therefore be encoded in the default ANSI code page.
         // This means that we can't call the *W version of API below, whereas in the UWP code-path
         // there is no 'getenv' call, and thus the string will be only UTF-8/Invariant characters.
-        file=CreateFileA(path, GENERIC_READ, FILE_SHARE_READ, nullptr,
+        file=CreateFileA(ਰਸਤਾ, GENERIC_READ, FILE_SHARE_READ, ਖਾਲੀ_ਸੂਚਕ,
             OPEN_EXISTING,
-            FILE_ATTRIBUTE_NORMAL|FILE_FLAG_RANDOM_ACCESS, nullptr);
-#else
+            FILE_ATTRIBUTE_ਸਾਧਾਰਨ|FILE_FLAG_RANDOM_ACCESS, ਖਾਲੀ_ਸੂਚਕ);
+#ਨਹੀਂਤਾਂ
         // Convert from UTF-8 string to UTF-16 string.
-        wchar_t utf16Path[MAX_PATH];
-        int32_t pathUtf16Len = 0;
-        u_strFromUTF8(reinterpret_cast<char16_t*>(utf16Path), static_cast<int32_t>(UPRV_LENGTHOF(utf16Path)), &pathUtf16Len, path, -1, status);
+        wchar_t utf16_ਰਸਤਾ[MAX_ਰਸਤਾ];
+        int32_t ਰਸਤਾ_Utf16_Len = 0;
+        u_strFromUTF8(reinterpret_cast<char16_t*>(utf16_ਰਸਤਾ), static_cast<int32_t>(UPRV_LENGTHOF(utf16_ਰਸਤਾ)), &ਰਸਤਾ_Utf16_Len, ਰਸਤਾ, -1, ਸਥਿਤੀ);
 
-        if (U_FAILURE(*status)) {
-            return false;
+        ਜੇ (U_FAILURE(*ਸਥਿਤੀ)) {
+            ਵਾਪਸ ਝੂਠ;
         }
-        if (*status == U_STRING_NOT_TERMINATED_WARNING) {
+        ਜੇ (*ਸਥਿਤੀ == U_STRING_NOT_TERMINATED_WARNING) {
             // Report back an error instead of a warning.
-            *status = U_BUFFER_OVERFLOW_ERROR;
-            return false;
+            *ਸਥਿਤੀ = U_ਬਫਰ_ਉਛਾਲ_ERROR;
+            ਵਾਪਸ ਝੂਠ;
         }
 
-        file = CreateFileW(utf16Path, GENERIC_READ, FILE_SHARE_READ, nullptr,
+        file = CreateFileW(utf16_ਰਸਤਾ, GENERIC_READ, FILE_SHARE_READ, ਖਾਲੀ_ਸੂਚਕ,
             OPEN_EXISTING,
-            FILE_ATTRIBUTE_NORMAL | FILE_FLAG_RANDOM_ACCESS, nullptr);
-#endif
-        if (file == INVALID_HANDLE_VALUE) {
+            FILE_ATTRIBUTE_ਸਾਧਾਰਨ | FILE_FLAG_RANDOM_ACCESS, ਖਾਲੀ_ਸੂਚਕ);
+#ਜੇ_ਅੰਤ
+        ਜੇ (file == INVALID_HANDLE_ਮੁੱਲ) {
             // If we failed to open the file due to an out-of-memory error, then we want
             // to report that error back to the caller.
-            if (HRESULT_FROM_WIN32(GetLastError()) == E_OUTOFMEMORY) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
+            ਜੇ (HRESULT_FROM_WIN32(Get_ਆਖਰੀ_Error()) == E_OUTOFMEMORY) {
+                *ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
             }
-            return false;
+            ਵਾਪਸ ਝੂਠ;
         }
 
-        fileLength = GetFileSize(file, nullptr);
+        file_ਲੰਮਾਈ = Get_File_ਮਾਪ(file, ਖਾਲੀ_ਸੂਚਕ);
 
         // Note: We use nullptr/nullptr for lpAttributes parameter below.
         // This means our handle cannot be inherited and we will get the default security descriptor.
         /* create an unnamed Windows file-mapping object for the specified file */
-        map = CreateFileMappingW(file, nullptr, PAGE_READONLY, 0, 0, nullptr);
+        map = CreateFileMappingW(file, ਖਾਲੀ_ਸੂਚਕ, ਪੰਨਾ_READONLY, 0, 0, ਖਾਲੀ_ਸੂਚਕ);
 
         CloseHandle(file);
-        if (map == nullptr) {
+        ਜੇ (map == ਖਾਲੀ_ਸੂਚਕ) {
             // If we failed to create the mapping due to an out-of-memory error, then 
             // we want to report that error back to the caller.
-            if (HRESULT_FROM_WIN32(GetLastError()) == E_OUTOFMEMORY) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
+            ਜੇ (HRESULT_FROM_WIN32(Get_ਆਖਰੀ_Error()) == E_OUTOFMEMORY) {
+                *ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
             }
-            return false;
+            ਵਾਪਸ ਝੂਠ;
         }
 
         /* map a view of the file into our address space */
-        pData->pHeader = reinterpret_cast<const DataHeader *>(MapViewOfFile(map, FILE_MAP_READ, 0, 0, 0));
-        if (pData->pHeader == nullptr) {
+        p_ਅੰਕੜੇ->p_ਸਿਰਲੇਖ = reinterpret_cast<ਅਚਲ ਅੰਕੜੇ_ਸਿਰਲੇਖ *>(Map_View_ਦਾ_File(map, FILE_MAP_READ, 0, 0, 0));
+        ਜੇ (p_ਅੰਕੜੇ->p_ਸਿਰਲੇਖ == ਖਾਲੀ_ਸੂਚਕ) {
             CloseHandle(map);
-            return false;
+            ਵਾਪਸ ਝੂਠ;
         }
-        pData->map = map;
-        pData->length = fileLength;
+        p_ਅੰਕੜੇ->map = map;
+        p_ਅੰਕੜੇ->length = file_ਲੰਮਾਈ;
 
-        return true;
+        ਵਾਪਸ ਸੱਚ;
     }
 
-    U_CFUNC void
-    uprv_unmapFile(UDataMemory *pData) {
-        if (pData != nullptr && pData->map != nullptr) {
-            UnmapViewOfFile(pData->pHeader);
-            CloseHandle(pData->map);
-            pData->pHeader = nullptr;
-            pData->map = nullptr;
+    U_CFUNC ਖਾਲੀ
+    uprv_unmapFile(UData_ਸਮ੍ਰਿਤੀ *p_ਅੰਕੜੇ) {
+        ਜੇ (p_ਅੰਕੜੇ != ਖਾਲੀ_ਸੂਚਕ && p_ਅੰਕੜੇ->map != ਖਾਲੀ_ਸੂਚਕ) {
+            Unmap_View_ਦਾ_File(p_ਅੰਕੜੇ->p_ਸਿਰਲੇਖ);
+            CloseHandle(p_ਅੰਕੜੇ->map);
+            p_ਅੰਕੜੇ->p_ਸਿਰਲੇਖ = ਖਾਲੀ_ਸੂਚਕ;
+            p_ਅੰਕੜੇ->map = ਖਾਲੀ_ਸੂਚਕ;
         }
     }
 
 
 
-#elif MAP_IMPLEMENTATION==MAP_POSIX
+#ਜਾਂਜੇ MAP_IMPLEMENTATION==MAP_POSIX
     U_CFUNC UBool
-    uprv_mapFile(UDataMemory *pData, const char *path, UErrorCode *status) {
-        int fd;
-        int length;
-        struct stat mystat;
-        void *data;
+    uprv_mapFile(UData_ਸਮ੍ਰਿਤੀ *p_ਅੰਕੜੇ, ਅਚਲ ਅੱਖਰ *ਰਸਤਾ, UError_ਕੋਡ *ਸਥਿਤੀ) {
+        ਪੂਰਨ fd;
+        ਪੂਰਨ length;
+        ਬਣਤਰ stat mystat;
+        ਖਾਲੀ *ਅੰਕੜੇ;
 
-        if (U_FAILURE(*status)) {
-            return false;
+        ਜੇ (U_FAILURE(*ਸਥਿਤੀ)) {
+            ਵਾਪਸ ਝੂਠ;
         }
 
-        UDataMemory_init(pData); /* Clear the output struct.        */
+        UData_ਸਮ੍ਰਿਤੀ_init(p_ਅੰਕੜੇ); /* Clear the output struct.        */
 
         /* open the file */
-        fd=open(path, O_RDONLY);
-        if(fd==-1) {
-            return false;
+        fd=open(ਰਸਤਾ, O_RDONLY);
+        ਜੇ(fd==-1) {
+            ਵਾਪਸ ਝੂਠ;
         }
 
         /* determine the length of the file */
-        if(stat(path, &mystat)!=0 || mystat.st_size<=0) {
+        ਜੇ(stat(ਰਸਤਾ, &mystat)!=0 || mystat.st_size<=0) {
             close(fd);
-            return false;
+            ਵਾਪਸ ਝੂਠ;
         }
         length=mystat.st_size;
 
         /* get a view of the mapping */
-#if U_PLATFORM != U_PF_HPUX
-        data=mmap(nullptr, length, PROT_READ, MAP_SHARED, fd, 0);
-#else
-        data=mmap(nullptr, length, PROT_READ, MAP_PRIVATE, fd, 0);
-#endif
+#ਜੇ U_PLATFORM != U_PF_HPUX
+        ਅੰਕੜੇ=mmap(ਖਾਲੀ_ਸੂਚਕ, length, PROT_READ, MAP_SHARED, fd, 0);
+#ਨਹੀਂਤਾਂ
+        ਅੰਕੜੇ=mmap(ਖਾਲੀ_ਸੂਚਕ, length, PROT_READ, MAP_ਨਿੱਜੀ, fd, 0);
+#ਜੇ_ਅੰਤ
         close(fd); /* no longer needed */
-        if(data==MAP_FAILED) {
+        ਜੇ(ਅੰਕੜੇ==MAP_FAILED) {
             // Possibly check the errno value for ENOMEM, and report U_MEMORY_ALLOCATION_ERROR?
-            return false;
+            ਵਾਪਸ ਝੂਠ;
         }
 
-        pData->map = (char *)data + length;
-        pData->pHeader=(const DataHeader *)data;
-        pData->mapAddr = data;
-        pData->length = length;
-#if U_PLATFORM == U_PF_IPHONE || U_PLATFORM == U_PF_ANDROID
+        p_ਅੰਕੜੇ->map = (ਅੱਖਰ *)ਅੰਕੜੇ + length;
+        p_ਅੰਕੜੇ->p_ਸਿਰਲੇਖ=(ਅਚਲ ਅੰਕੜੇ_ਸਿਰਲੇਖ *)ਅੰਕੜੇ;
+        p_ਅੰਕੜੇ->mapAddr = ਅੰਕੜੇ;
+        p_ਅੰਕੜੇ->length = length;
+#ਜੇ U_PLATFORM == U_PF_IPHONE || U_PLATFORM == U_PF_ANDROID
     // Apparently supported from Android 23 and higher:
     //   https://github.com/ggml-org/llama.cpp/pull/3631
     // Checking for the flag itself is safer than checking for __ANDROID_API__.
 #   ifdef POSIX_MADV_RANDOM
-        posix_madvise(data, length, POSIX_MADV_RANDOM);
+        posix_madvise(ਅੰਕੜੇ, length, POSIX_MADV_RANDOM);
 #   endif
-#endif
-        return true;
+#ਜੇ_ਅੰਤ
+        ਵਾਪਸ ਸੱਚ;
     }
 
-    U_CFUNC void
-    uprv_unmapFile(UDataMemory *pData) {
-        if(pData!=nullptr && pData->map!=nullptr) {
-            size_t dataLen = (char *)pData->map - (char *)pData->mapAddr;
-            if(munmap(pData->mapAddr, dataLen)==-1) {
+    U_CFUNC ਖਾਲੀ
+    uprv_unmapFile(UData_ਸਮ੍ਰਿਤੀ *p_ਅੰਕੜੇ) {
+        ਜੇ(p_ਅੰਕੜੇ!=ਖਾਲੀ_ਸੂਚਕ && p_ਅੰਕੜੇ->map!=ਖਾਲੀ_ਸੂਚਕ) {
+            size_t ਅੰਕੜੇ_Len = (ਅੱਖਰ *)p_ਅੰਕੜੇ->map - (ਅੱਖਰ *)p_ਅੰਕੜੇ->mapAddr;
+            ਜੇ(munmap(p_ਅੰਕੜੇ->mapAddr, ਅੰਕੜੇ_Len)==-1) {
             }
-            pData->pHeader=nullptr;
-            pData->map=nullptr;
-            pData->mapAddr=nullptr;
+            p_ਅੰਕੜੇ->p_ਸਿਰਲੇਖ=ਖਾਲੀ_ਸੂਚਕ;
+            p_ਅੰਕੜੇ->map=ਖਾਲੀ_ਸੂਚਕ;
+            p_ਅੰਕੜੇ->mapAddr=ਖਾਲੀ_ਸੂਚਕ;
         }
     }
 
 
 
-#elif MAP_IMPLEMENTATION==MAP_STDIO
+#ਜਾਂਜੇ MAP_IMPLEMENTATION==MAP_STDIO
     /* copy of the filestrm.c/T_FileStream_size() implementation */
-    static int32_t
+    ਸਥਿਰ int32_t
     umap_fsize(FILE *f) {
         int32_t savedPos = ftell(f);
         int32_t size = 0;
@@ -281,65 +281,65 @@ typedef HANDLE MemoryMap;
         fseek(f, 0, SEEK_END);
         size = (int32_t)ftell(f);
         fseek(f, savedPos, SEEK_SET);
-        return size;
+        ਵਾਪਸ size;
     }
 
     U_CFUNC UBool
-    uprv_mapFile(UDataMemory *pData, const char *path, UErrorCode *status) {
+    uprv_mapFile(UData_ਸਮ੍ਰਿਤੀ *p_ਅੰਕੜੇ, ਅਚਲ ਅੱਖਰ *ਰਸਤਾ, UError_ਕੋਡ *ਸਥਿਤੀ) {
         FILE *file;
-        int32_t fileLength;
-        void *p;
+        int32_t file_ਲੰਮਾਈ;
+        ਖਾਲੀ *p;
 
-        if (U_FAILURE(*status)) {
-            return false;
+        ਜੇ (U_FAILURE(*ਸਥਿਤੀ)) {
+            ਵਾਪਸ ਝੂਠ;
         }
 
-        UDataMemory_init(pData); /* Clear the output struct.        */
+        UData_ਸਮ੍ਰਿਤੀ_init(p_ਅੰਕੜੇ); /* Clear the output struct.        */
         /* open the input file */
-        file=fopen(path, "rb");
-        if(file==nullptr) {
-            return false;
+        file=fopen(ਰਸਤਾ, "rb");
+        ਜੇ(file==ਖਾਲੀ_ਸੂਚਕ) {
+            ਵਾਪਸ ਝੂਠ;
         }
 
         /* get the file length */
-        fileLength=umap_fsize(file);
-        if(ferror(file) || fileLength<=20) {
+        file_ਲੰਮਾਈ=umap_fsize(file);
+        ਜੇ(ferror(file) || file_ਲੰਮਾਈ<=20) {
             fclose(file);
-            return false;
+            ਵਾਪਸ ਝੂਠ;
         }
 
         /* allocate the memory to hold the file data */
-        p=uprv_malloc(fileLength);
-        if(p==nullptr) {
+        p=uprv_malloc(file_ਲੰਮਾਈ);
+        ਜੇ(p==ਖਾਲੀ_ਸੂਚਕ) {
             fclose(file);
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            return false;
+            *ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+            ਵਾਪਸ ਝੂਠ;
         }
 
         /* read the file */
-        if(fileLength!=fread(p, 1, fileLength, file)) {
+        ਜੇ(file_ਲੰਮਾਈ!=fread(p, 1, file_ਲੰਮਾਈ, file)) {
             uprv_free(p);
             fclose(file);
-            return false;
+            ਵਾਪਸ ਝੂਠ;
         }
 
         fclose(file);
-        pData->map=p;
-        pData->pHeader=(const DataHeader *)p;
-        pData->mapAddr=p;
-        pData->length = fileLength;
-        return true;
+        p_ਅੰਕੜੇ->map=p;
+        p_ਅੰਕੜੇ->p_ਸਿਰਲੇਖ=(ਅਚਲ ਅੰਕੜੇ_ਸਿਰਲੇਖ *)p;
+        p_ਅੰਕੜੇ->mapAddr=p;
+        p_ਅੰਕੜੇ->length = file_ਲੰਮਾਈ;
+        ਵਾਪਸ ਸੱਚ;
     }
 
-    U_CFUNC void
-    uprv_unmapFile(UDataMemory *pData) {
-        if(pData!=nullptr && pData->map!=nullptr) {
-            uprv_free(pData->map);
-            pData->map     = nullptr;
-            pData->mapAddr = nullptr;
-            pData->pHeader = nullptr;
+    U_CFUNC ਖਾਲੀ
+    uprv_unmapFile(UData_ਸਮ੍ਰਿਤੀ *p_ਅੰਕੜੇ) {
+        ਜੇ(p_ਅੰਕੜੇ!=ਖਾਲੀ_ਸੂਚਕ && p_ਅੰਕੜੇ->map!=ਖਾਲੀ_ਸੂਚਕ) {
+            uprv_free(p_ਅੰਕੜੇ->map);
+            p_ਅੰਕੜੇ->map     = ਖਾਲੀ_ਸੂਚਕ;
+            p_ਅੰਕੜੇ->mapAddr = ਖਾਲੀ_ਸੂਚਕ;
+            p_ਅੰਕੜੇ->p_ਸਿਰਲੇਖ = ਖਾਲੀ_ਸੂਚਕ;
         }
     }
-#else
-#   error MAP_IMPLEMENTATION is set incorrectly
-#endif
+#ਨਹੀਂਤਾਂ
+#   error MAP_IMPLEMENTATION is ਸੈੱਟ incorrectly
+#ਜੇ_ਅੰਤ

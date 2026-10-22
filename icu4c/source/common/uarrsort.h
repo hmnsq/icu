@@ -18,10 +18,10 @@
 *   Internal function for sorting arrays.
 */
 
-#ifndef __UARRSORT_H__
-#define __UARRSORT_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __UARRSORT_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __UARRSORT_H__
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
 U_CDECL_BEGIN
 /**
@@ -38,9 +38,9 @@ U_CDECL_BEGIN
  *
  * @internal
  */
-typedef int32_t U_CALLCONV
-UComparator(const void *context, const void *left, const void *right);
-U_CDECL_END
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ int32_t U_CALLCONV
+UComparator(ਅਚਲ ਖਾਲੀ *context, ਅਚਲ ਖਾਲੀ *ਖੱਬਾ, ਅਚਲ ਖਾਲੀ *ਸੱਜਾ);
+U_CDECL_ਸਿਰਾ
 
 /**
  * Array sorting function.
@@ -57,31 +57,31 @@ U_CDECL_END
  *
  * @internal
  */
-U_CAPI void U_EXPORT2
-uprv_sortArray(void *array, int32_t length, int32_t itemSize,
-               UComparator *cmp, const void *context,
-               UBool sortStable, UErrorCode *pErrorCode);
+U_CAPI ਖਾਲੀ U_EXPORT2
+uprv_ਛਾਂਟੋ_Array(ਖਾਲੀ *array, int32_t ਲੰਮਾਈ, int32_t ਵਸਤੂ_ਮਾਪ,
+               UComparator *cmp, ਅਚਲ ਖਾਲੀ *context,
+               UBool ਛਾਂਟੋ_Stable, UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Convenience UComparator implementation for uint16_t arrays.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_uint16Comparator(const void *context, const void *left, const void *right);
+uprv_uint16Comparator(ਅਚਲ ਖਾਲੀ *context, ਅਚਲ ਖਾਲੀ *ਖੱਬਾ, ਅਚਲ ਖਾਲੀ *ਸੱਜਾ);
 
 /**
  * Convenience UComparator implementation for int32_t arrays.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_int32Comparator(const void *context, const void *left, const void *right);
+uprv_int32Comparator(ਅਚਲ ਖਾਲੀ *context, ਅਚਲ ਖਾਲੀ *ਖੱਬਾ, ਅਚਲ ਖਾਲੀ *ਸੱਜਾ);
 
 /**
  * Convenience UComparator implementation for uint32_t arrays.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_uint32Comparator(const void *context, const void *left, const void *right);
+uprv_uint32Comparator(ਅਚਲ ਖਾਲੀ *context, ਅਚਲ ਖਾਲੀ *ਖੱਬਾ, ਅਚਲ ਖਾਲੀ *ਸੱਜਾ);
 
 /**
  * Much like Java Collections.binarySearch(list, key, comparator).
@@ -97,7 +97,7 @@ uprv_uint32Comparator(const void *context, const void *left, const void *right);
  *         or the index<0 for inserting the item at ~index in sorted order
  */
 U_CAPI int32_t U_EXPORT2
-uprv_stableBinarySearch(char *array, int32_t length, void *item, int32_t itemSize,
-                        UComparator *cmp, const void *context);
+uprv_stable_ਦੁਆਧਾਰੀ_ਖੋਜ(ਅੱਖਰ *array, int32_t ਲੰਮਾਈ, ਖਾਲੀ *ਵਸਤੂ, int32_t ਵਸਤੂ_ਮਾਪ,
+                        UComparator *cmp, ਅਚਲ ਖਾਲੀ *context);
 
-#endif
+#ਜੇ_ਅੰਤ

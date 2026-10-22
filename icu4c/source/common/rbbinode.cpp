@@ -17,29 +17,29 @@
 //         Code using it is expected to directly access fields much of the time.
 //
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ਜੇ !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/unistr.h"
-#include "unicode/uniset.h"
-#include "unicode/uchar.h"
-#include "unicode/parsepos.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/unistr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uniset.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uchar.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/parsepos.h"
 
-#include "cstr.h"
-#include "uvector.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cstr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uvector.h"
 
-#include "rbbirb.h"
-#include "rbbinode.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "rbbirb.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "rbbinode.h"
 
-#include "uassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uassert.h"
 
 
 U_NAMESPACE_BEGIN
 
-#ifdef RBBI_DEBUG
-static int  gLastSerial = 0;
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ RBBI_DEBUG
+ਸਥਿਰ ਪੂਰਨ  g_ਆਖਰੀ_Serial = 0;
+#ਜੇ_ਅੰਤ
 
 
 //-------------------------------------------------------------------------
@@ -47,68 +47,68 @@ static int  gLastSerial = 0;
 //    Constructor.   Just set the fields to reasonable default values.
 //
 //-------------------------------------------------------------------------
-RBBINode::RBBINode(NodeType t, UErrorCode& status) : UMemory() {
-    if (U_FAILURE(status)) {
-        return;
+RBBINode::RBBINode(ਗੰਢ_Type t, UError_ਕੋਡ& ਸਥਿਤੀ) : UMemory() {
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਵਾਪਸ;
     }
-#ifdef RBBI_DEBUG
-    fSerialNum    = ++gLastSerial;
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ RBBI_DEBUG
+    f_Serial_ਅੰਕ    = ++g_ਆਖਰੀ_Serial;
+#ਜੇ_ਅੰਤ
     fType         = t;
-    fParent       = nullptr;
-    fLeftChild    = nullptr;
-    fRightChild   = nullptr;
-    fInputSet     = nullptr;
-    fFirstPos     = 0;
-    fLastPos      = 0;
-    fNullable     = false;
-    fLookAheadEnd = false;
-    fRuleRoot     = false;
-    fChainIn      = false;
+    f_ਮਾਪਾ       = ਖਾਲੀ_ਸੂਚਕ;
+    f_ਖੱਬਾ_ਬੱਚਾ    = ਖਾਲੀ_ਸੂਚਕ;
+    f_ਸੱਜਾ_ਬੱਚਾ   = ਖਾਲੀ_ਸੂਚਕ;
+    f_ਨਿਵੇਸ਼_ਸੈੱਟ     = ਖਾਲੀ_ਸੂਚਕ;
+    f_ਪਹਿਲਾ_Pos     = 0;
+    f_ਆਖਰੀ_Pos      = 0;
+    fNullable     = ਝੂਠ;
+    f_Look_Ahead_ਸਿਰਾ = ਝੂਠ;
+    f_ਨਿਯਮ_ਜੜ੍ਹ     = ਝੂਠ;
+    f_Chain_ਵਿੱਚ      = ਝੂਠ;
     fVal          = 0;
     fPrecedence   = precZero;
 
-    fFirstPosSet  = new UVector(status);
-    fLastPosSet   = new UVector(status);
-    fFollowPos    = new UVector(status);
-    if (U_SUCCESS(status) &&
-        (fFirstPosSet == nullptr || fLastPosSet == nullptr || fFollowPos == nullptr)) {
-        status =  U_MEMORY_ALLOCATION_ERROR;
+    f_ਪਹਿਲਾ_Pos_ਸੈੱਟ  = ਨਵਾਂ UVector(ਸਥਿਤੀ);
+    f_ਆਖਰੀ_Pos_ਸੈੱਟ   = ਨਵਾਂ UVector(ਸਥਿਤੀ);
+    fFollowPos    = ਨਵਾਂ UVector(ਸਥਿਤੀ);
+    ਜੇ (U_SUCCESS(ਸਥਿਤੀ) &&
+        (f_ਪਹਿਲਾ_Pos_ਸੈੱਟ == ਖਾਲੀ_ਸੂਚਕ || f_ਆਖਰੀ_Pos_ਸੈੱਟ == ਖਾਲੀ_ਸੂਚਕ || fFollowPos == ਖਾਲੀ_ਸੂਚਕ)) {
+        ਸਥਿਤੀ =  U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
     }
-    if      (t==opCat)    {fPrecedence = precOpCat;}
-    else if (t==opOr)     {fPrecedence = precOpOr;}
-    else if (t==opStart)  {fPrecedence = precStart;}
-    else if (t==opLParen) {fPrecedence = precLParen;}
+    ਜੇ      (t==opCat)    {fPrecedence = precOpCat;}
+    ਨਹੀਂਤਾਂ ਜੇ (t==opOr)     {fPrecedence = precOpOr;}
+    ਨਹੀਂਤਾਂ ਜੇ (t==op_ਸ਼ੁਰੂ)  {fPrecedence = prec_ਸ਼ੁਰੂ;}
+    ਨਹੀਂਤਾਂ ਜੇ (t==opLParen) {fPrecedence = precLParen;}
 
 }
 
 
-RBBINode::RBBINode(const RBBINode &other, UErrorCode& status) : UMemory(other) {
-    if (U_FAILURE(status)) {
-        return;
+RBBINode::RBBINode(ਅਚਲ RBBINode &other, UError_ਕੋਡ& ਸਥਿਤੀ) : UMemory(other) {
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਵਾਪਸ;
     }
-#ifdef RBBI_DEBUG
-    fSerialNum   = ++gLastSerial;
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ RBBI_DEBUG
+    f_Serial_ਅੰਕ   = ++g_ਆਖਰੀ_Serial;
+#ਜੇ_ਅੰਤ
     fType        = other.fType;
-    fParent      = nullptr;
-    fLeftChild   = nullptr;
-    fRightChild  = nullptr;
-    fInputSet    = other.fInputSet;
+    f_ਮਾਪਾ      = ਖਾਲੀ_ਸੂਚਕ;
+    f_ਖੱਬਾ_ਬੱਚਾ   = ਖਾਲੀ_ਸੂਚਕ;
+    f_ਸੱਜਾ_ਬੱਚਾ  = ਖਾਲੀ_ਸੂਚਕ;
+    f_ਨਿਵੇਸ਼_ਸੈੱਟ    = other.f_ਨਿਵੇਸ਼_ਸੈੱਟ;
     fPrecedence  = other.fPrecedence;
-    fText        = other.fText;
-    fFirstPos    = other.fFirstPos;
-    fLastPos     = other.fLastPos;
+    f_ਪਾਠ        = other.f_ਪਾਠ;
+    f_ਪਹਿਲਾ_Pos    = other.f_ਪਹਿਲਾ_Pos;
+    f_ਆਖਰੀ_Pos     = other.f_ਆਖਰੀ_Pos;
     fNullable    = other.fNullable;
     fVal         = other.fVal;
-    fRuleRoot    = false;
-    fChainIn     = other.fChainIn;
-    fFirstPosSet = new UVector(status);   // TODO - get a real status from somewhere
-    fLastPosSet  = new UVector(status);
-    fFollowPos   = new UVector(status);
-    if (U_SUCCESS(status) &&
-        (fFirstPosSet == nullptr || fLastPosSet == nullptr || fFollowPos == nullptr)) {
-        status =  U_MEMORY_ALLOCATION_ERROR;
+    f_ਨਿਯਮ_ਜੜ੍ਹ    = ਝੂਠ;
+    f_Chain_ਵਿੱਚ     = other.f_Chain_ਵਿੱਚ;
+    f_ਪਹਿਲਾ_Pos_ਸੈੱਟ = ਨਵਾਂ UVector(ਸਥਿਤੀ);   // TODO - get a real status from somewhere
+    f_ਆਖਰੀ_Pos_ਸੈੱਟ  = ਨਵਾਂ UVector(ਸਥਿਤੀ);
+    fFollowPos   = ਨਵਾਂ UVector(ਸਥਿਤੀ);
+    ਜੇ (U_SUCCESS(ਸਥਿਤੀ) &&
+        (f_ਪਹਿਲਾ_Pos_ਸੈੱਟ == ਖਾਲੀ_ਸੂਚਕ || f_ਆਖਰੀ_Pos_ਸੈੱਟ == ਖਾਲੀ_ਸੂਚਕ || fFollowPos == ਖਾਲੀ_ਸੂਚਕ)) {
+        ਸਥਿਤੀ =  U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
     }
 }
 
@@ -124,30 +124,30 @@ RBBINode::RBBINode(const RBBINode &other, UErrorCode& status) : UMemory(other) {
 //-------------------------------------------------------------------------
 RBBINode::~RBBINode() {
     // printf("deleting node %8x   serial %4d\n", this, this->fSerialNum);
-    delete fInputSet;
-    fInputSet = nullptr;
+    ਮਿਟਾਓ f_ਨਿਵੇਸ਼_ਸੈੱਟ;
+    f_ਨਿਵੇਸ਼_ਸੈੱਟ = ਖਾਲੀ_ਸੂਚਕ;
 
-    switch (this->fType) {
-    case varRef:
-    case setRef:
+    ਚੋਣ (ਇਹ->fType) {
+    ਹਾਲਤ varRef:
+    ਹਾਲਤ ਸੈੱਟ_Ref:
         // for these node types, multiple instances point to the same "children"
         // Storage ownership of children handled elsewhere.  Don't delete here.
-        break;
+        ਰੋਕੋ;
 
-    default:
+    ਮੂਲ:
         // Avoid using a recursive implementation because of stack overflow problems.
         // See bug ICU-22584.
         // delete        fLeftChild;
-        NRDeleteNode(fLeftChild);
-        fLeftChild =   nullptr;
+        NRDelete_ਗੰਢ(f_ਖੱਬਾ_ਬੱਚਾ);
+        f_ਖੱਬਾ_ਬੱਚਾ =   ਖਾਲੀ_ਸੂਚਕ;
         // delete        fRightChild;
-        NRDeleteNode(fRightChild);
-        fRightChild = nullptr;
+        NRDelete_ਗੰਢ(f_ਸੱਜਾ_ਬੱਚਾ);
+        f_ਸੱਜਾ_ਬੱਚਾ = ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    delete fFirstPosSet;
-    delete fLastPosSet;
-    delete fFollowPos;
+    ਮਿਟਾਓ f_ਪਹਿਲਾ_Pos_ਸੈੱਟ;
+    ਮਿਟਾਓ f_ਆਖਰੀ_Pos_ਸੈੱਟ;
+    ਮਿਟਾਓ fFollowPos;
 }
 
 /**
@@ -155,43 +155,43 @@ RBBINode::~RBBINode() {
  * instead of the more obvious recursive implementation to avoid problems with
  * stack overflow with some perverse test rule data (from fuzzing).
  */
-void RBBINode::NRDeleteNode(RBBINode *node) {
-    if (node == nullptr) {
-        return;
+ਖਾਲੀ RBBINode::NRDelete_ਗੰਢ(RBBINode *ਗੰਢ) {
+    ਜੇ (ਗੰਢ == ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ;
     }
 
-    RBBINode *stopNode = node->fParent;
-    RBBINode *nextNode = node;
-    while (nextNode != stopNode && nextNode != nullptr) {
-        RBBINode *currentNode = nextNode;
+    RBBINode *stop_ਗੰਢ = ਗੰਢ->f_ਮਾਪਾ;
+    RBBINode *ਅਗਲਾ_ਗੰਢ = ਗੰਢ;
+    ਜਦੋਂ (ਅਗਲਾ_ਗੰਢ != stop_ਗੰਢ && ਅਗਲਾ_ਗੰਢ != ਖਾਲੀ_ਸੂਚਕ) {
+        RBBINode *current_ਗੰਢ = ਅਗਲਾ_ਗੰਢ;
 
-        if ((currentNode->fLeftChild == nullptr && currentNode->fRightChild == nullptr) ||
-                currentNode->fType == varRef ||      // varRef and setRef nodes do not
-                currentNode->fType == setRef) {      // own their children nodes.
+        ਜੇ ((current_ਗੰਢ->f_ਖੱਬਾ_ਬੱਚਾ == ਖਾਲੀ_ਸੂਚਕ && current_ਗੰਢ->f_ਸੱਜਾ_ਬੱਚਾ == ਖਾਲੀ_ਸੂਚਕ) ||
+                current_ਗੰਢ->fType == varRef ||      // varRef and setRef nodes do not
+                current_ਗੰਢ->fType == ਸੈੱਟ_Ref) {      // own their children nodes.
             // CurrentNode is effectively a leaf node; it's safe to go ahead and delete it.
-            nextNode = currentNode->fParent;
-            if (nextNode) {
-                if (nextNode->fLeftChild == currentNode) {
-                    nextNode->fLeftChild = nullptr;
-                } else if (nextNode->fRightChild == currentNode) {
-                    nextNode->fRightChild = nullptr;
+            ਅਗਲਾ_ਗੰਢ = current_ਗੰਢ->f_ਮਾਪਾ;
+            ਜੇ (ਅਗਲਾ_ਗੰਢ) {
+                ਜੇ (ਅਗਲਾ_ਗੰਢ->f_ਖੱਬਾ_ਬੱਚਾ == current_ਗੰਢ) {
+                    ਅਗਲਾ_ਗੰਢ->f_ਖੱਬਾ_ਬੱਚਾ = ਖਾਲੀ_ਸੂਚਕ;
+                } ਨਹੀਂਤਾਂ ਜੇ (ਅਗਲਾ_ਗੰਢ->f_ਸੱਜਾ_ਬੱਚਾ == current_ਗੰਢ) {
+                    ਅਗਲਾ_ਗੰਢ->f_ਸੱਜਾ_ਬੱਚਾ = ਖਾਲੀ_ਸੂਚਕ;
                 }
             }
-            delete currentNode;
-        } else if (currentNode->fLeftChild) {
-            nextNode = currentNode->fLeftChild;
-            if (nextNode->fParent == nullptr) {
-                nextNode->fParent = currentNode;
+            ਮਿਟਾਓ current_ਗੰਢ;
+        } ਨਹੀਂਤਾਂ ਜੇ (current_ਗੰਢ->f_ਖੱਬਾ_ਬੱਚਾ) {
+            ਅਗਲਾ_ਗੰਢ = current_ਗੰਢ->f_ਖੱਬਾ_ਬੱਚਾ;
+            ਜੇ (ਅਗਲਾ_ਗੰਢ->f_ਮਾਪਾ == ਖਾਲੀ_ਸੂਚਕ) {
+                ਅਗਲਾ_ਗੰਢ->f_ਮਾਪਾ = current_ਗੰਢ;
                 // fParent isn't always set; do it now if not.
             }
-            U_ASSERT(nextNode->fParent == currentNode);
-        } else if (currentNode->fRightChild) {
-            nextNode = currentNode->fRightChild;
-            if (nextNode->fParent == nullptr) {
-                nextNode->fParent = currentNode;
+            U_ASSERT(ਅਗਲਾ_ਗੰਢ->f_ਮਾਪਾ == current_ਗੰਢ);
+        } ਨਹੀਂਤਾਂ ਜੇ (current_ਗੰਢ->f_ਸੱਜਾ_ਬੱਚਾ) {
+            ਅਗਲਾ_ਗੰਢ = current_ਗੰਢ->f_ਸੱਜਾ_ਬੱਚਾ;
+            ਜੇ (ਅਗਲਾ_ਗੰਢ->f_ਮਾਪਾ == ਖਾਲੀ_ਸੂਚਕ) {
+                ਅਗਲਾ_ਗੰਢ->f_ਮਾਪਾ = current_ਗੰਢ;
                 // fParent isn't always set; do it now if not.
             }
-            U_ASSERT(nextNode->fParent == currentNode);
+            U_ASSERT(ਅਗਲਾ_ਗੰਢ->f_ਮਾਪਾ == current_ਗੰਢ);
         }
     }
 }
@@ -205,57 +205,57 @@ void RBBINode::NRDeleteNode(RBBINode *node) {
 //                  references in preparation for generating the DFA tables.
 //
 //-------------------------------------------------------------------------
-constexpr int kRecursiveDepthLimit = 3500;
-RBBINode *RBBINode::cloneTree(UErrorCode &status, int depth) {
-    if (U_FAILURE(status)) {
-        return nullptr;
+constexpr ਪੂਰਨ k_Recursive_ਡੂੰਘਾਈ_ਹੱਦਬੰਦੀ = 3500;
+RBBINode *RBBINode::clone_ਰੁੱਖ(UError_ਕੋਡ &ਸਥਿਤੀ, ਪੂਰਨ ਡੂੰਘਾਈ) {
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
-        status = U_INPUT_TOO_LONG_ERROR;
-        return nullptr;
+    ਜੇ (ਡੂੰਘਾਈ > k_Recursive_ਡੂੰਘਾਈ_ਹੱਦਬੰਦੀ) {
+        ਸਥਿਤੀ = U_ਨਿਵੇਸ਼_TOO_LONG_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
     RBBINode    *n;
 
-    if (fType == RBBINode::varRef) {
+    ਜੇ (fType == RBBINode::varRef) {
         // If the current node is a variable reference, skip over it
         //   and clone the definition of the variable instead.
-        n = fLeftChild->cloneTree(status, depth+1);
-        if (U_FAILURE(status)) {
-            return nullptr;
+        n = f_ਖੱਬਾ_ਬੱਚਾ->clone_ਰੁੱਖ(ਸਥਿਤੀ, ਡੂੰਘਾਈ+1);
+        ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+            ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
         }
-    } else if (fType == RBBINode::uset) {
-        n = this;
-    } else {
-        n = new RBBINode(*this, status);
-        if (U_FAILURE(status)) {
-            delete n;
-            return nullptr;
+    } ਨਹੀਂਤਾਂ ਜੇ (fType == RBBINode::uset) {
+        n = ਇਹ;
+    } ਨਹੀਂਤਾਂ {
+        n = ਨਵਾਂ RBBINode(*ਇਹ, ਸਥਿਤੀ);
+        ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+            ਮਿਟਾਓ n;
+            ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
         }
         // Check for null pointer.
-        if (n == nullptr) {
-            status =  U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+        ਜੇ (n == ਖਾਲੀ_ਸੂਚਕ) {
+            ਸਥਿਤੀ =  U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+            ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
         }
-        if (fLeftChild != nullptr) {
-            n->fLeftChild          = fLeftChild->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
-                delete n;
-                return nullptr;
+        ਜੇ (f_ਖੱਬਾ_ਬੱਚਾ != ਖਾਲੀ_ਸੂਚਕ) {
+            n->f_ਖੱਬਾ_ਬੱਚਾ          = f_ਖੱਬਾ_ਬੱਚਾ->clone_ਰੁੱਖ(ਸਥਿਤੀ, ਡੂੰਘਾਈ+1);
+            ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                ਮਿਟਾਓ n;
+                ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
             }
-            n->fLeftChild->fParent = n;
+            n->f_ਖੱਬਾ_ਬੱਚਾ->f_ਮਾਪਾ = n;
         }
-        if (fRightChild != nullptr) {
-            n->fRightChild          = fRightChild->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
-                delete n;
-                return nullptr;
+        ਜੇ (f_ਸੱਜਾ_ਬੱਚਾ != ਖਾਲੀ_ਸੂਚਕ) {
+            n->f_ਸੱਜਾ_ਬੱਚਾ          = f_ਸੱਜਾ_ਬੱਚਾ->clone_ਰੁੱਖ(ਸਥਿਤੀ, ਡੂੰਘਾਈ+1);
+            ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                ਮਿਟਾਓ n;
+                ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
             }
-            n->fRightChild->fParent = n;
+            n->f_ਸੱਜਾ_ਬੱਚਾ->f_ਮਾਪਾ = n;
         }
     }
-    return n;
+    ਵਾਪਸ n;
 }
 
 
@@ -278,48 +278,48 @@ RBBINode *RBBINode::cloneTree(UErrorCode &status, int depth) {
 //                      nested references are handled by cloneTree(), not here.
 //
 //-------------------------------------------------------------------------
-RBBINode *RBBINode::flattenVariables(UErrorCode& status, int depth) {
-    if (U_FAILURE(status)) {
-        return this;
+RBBINode *RBBINode::flattenVariables(UError_ਕੋਡ& ਸਥਿਤੀ, ਪੂਰਨ ਡੂੰਘਾਈ) {
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਵਾਪਸ ਇਹ;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
-        status = U_INPUT_TOO_LONG_ERROR;
-        return this;
+    ਜੇ (ਡੂੰਘਾਈ > k_Recursive_ਡੂੰਘਾਈ_ਹੱਦਬੰਦੀ) {
+        ਸਥਿਤੀ = U_ਨਿਵੇਸ਼_TOO_LONG_ERROR;
+        ਵਾਪਸ ਇਹ;
     }
-    if (fType == varRef) {
-        RBBINode *retNode  = fLeftChild->cloneTree(status, depth+1);
-        if (U_FAILURE(status)) {
-            return this;
+    ਜੇ (fType == varRef) {
+        RBBINode *ret_ਗੰਢ  = f_ਖੱਬਾ_ਬੱਚਾ->clone_ਰੁੱਖ(ਸਥਿਤੀ, ਡੂੰਘਾਈ+1);
+        ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+            ਵਾਪਸ ਇਹ;
         }
-        retNode->fRuleRoot = this->fRuleRoot;
-        retNode->fChainIn  = this->fChainIn;
-        delete this;   // TODO: undefined behavior. Fix.
-        return retNode;
+        ret_ਗੰਢ->f_ਨਿਯਮ_ਜੜ੍ਹ = ਇਹ->f_ਨਿਯਮ_ਜੜ੍ਹ;
+        ret_ਗੰਢ->f_Chain_ਵਿੱਚ  = ਇਹ->f_Chain_ਵਿੱਚ;
+        ਮਿਟਾਓ ਇਹ;   // TODO: undefined behavior. Fix.
+        ਵਾਪਸ ret_ਗੰਢ;
     }
 
-    if (fLeftChild != nullptr) {
-        fLeftChild = fLeftChild->flattenVariables(status, depth+1);
-        if (fLeftChild == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
+    ਜੇ (f_ਖੱਬਾ_ਬੱਚਾ != ਖਾਲੀ_ਸੂਚਕ) {
+        f_ਖੱਬਾ_ਬੱਚਾ = f_ਖੱਬਾ_ਬੱਚਾ->flattenVariables(ਸਥਿਤੀ, ਡੂੰਘਾਈ+1);
+        ਜੇ (f_ਖੱਬਾ_ਬੱਚਾ == ਖਾਲੀ_ਸੂਚਕ) {
+            ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
         }
-        if (U_FAILURE(status)) {
-            return this;
+        ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+            ਵਾਪਸ ਇਹ;
         }
-        fLeftChild->fParent  = this;
+        f_ਖੱਬਾ_ਬੱਚਾ->f_ਮਾਪਾ  = ਇਹ;
     }
-    if (fRightChild != nullptr) {
-        fRightChild = fRightChild->flattenVariables(status, depth+1);
-        if (fRightChild == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
+    ਜੇ (f_ਸੱਜਾ_ਬੱਚਾ != ਖਾਲੀ_ਸੂਚਕ) {
+        f_ਸੱਜਾ_ਬੱਚਾ = f_ਸੱਜਾ_ਬੱਚਾ->flattenVariables(ਸਥਿਤੀ, ਡੂੰਘਾਈ+1);
+        ਜੇ (f_ਸੱਜਾ_ਬੱਚਾ == ਖਾਲੀ_ਸੂਚਕ) {
+            ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
         }
-        if (U_FAILURE(status)) {
-            return this;
+        ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+            ਵਾਪਸ ਇਹ;
         }
-        fRightChild->fParent = this;
+        f_ਸੱਜਾ_ਬੱਚਾ->f_ਮਾਪਾ = ਇਹ;
     }
-    return this;
+    ਵਾਪਸ ਇਹ;
 }
 
 
@@ -331,49 +331,49 @@ RBBINode *RBBINode::flattenVariables(UErrorCode& status, int depth) {
 //                 the left child of the uset node.
 //
 //-------------------------------------------------------------------------
-void RBBINode::flattenSets(UErrorCode &status, int depth) {
-    if (U_FAILURE(status)) {
-        return;
+ਖਾਲੀ RBBINode::flattenSets(UError_ਕੋਡ &ਸਥਿਤੀ, ਪੂਰਨ ਡੂੰਘਾਈ) {
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਵਾਪਸ;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
-        status = U_INPUT_TOO_LONG_ERROR;
-        return;
+    ਜੇ (ਡੂੰਘਾਈ > k_Recursive_ਡੂੰਘਾਈ_ਹੱਦਬੰਦੀ) {
+        ਸਥਿਤੀ = U_ਨਿਵੇਸ਼_TOO_LONG_ERROR;
+        ਵਾਪਸ;
     }
-    U_ASSERT(fType != setRef);
+    U_ASSERT(fType != ਸੈੱਟ_Ref);
 
-    if (fLeftChild != nullptr) {
-        if (fLeftChild->fType==setRef) {
-            RBBINode *setRefNode = fLeftChild;
-            RBBINode *usetNode   = setRefNode->fLeftChild;
-            RBBINode *replTree   = usetNode->fLeftChild;
-            fLeftChild           = replTree->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
-                delete setRefNode;
-                return;
+    ਜੇ (f_ਖੱਬਾ_ਬੱਚਾ != ਖਾਲੀ_ਸੂਚਕ) {
+        ਜੇ (f_ਖੱਬਾ_ਬੱਚਾ->fType==ਸੈੱਟ_Ref) {
+            RBBINode *ਸੈੱਟ_Ref_ਗੰਢ = f_ਖੱਬਾ_ਬੱਚਾ;
+            RBBINode *uset_ਗੰਢ   = ਸੈੱਟ_Ref_ਗੰਢ->f_ਖੱਬਾ_ਬੱਚਾ;
+            RBBINode *repl_ਰੁੱਖ   = uset_ਗੰਢ->f_ਖੱਬਾ_ਬੱਚਾ;
+            f_ਖੱਬਾ_ਬੱਚਾ           = repl_ਰੁੱਖ->clone_ਰੁੱਖ(ਸਥਿਤੀ, ਡੂੰਘਾਈ+1);
+            ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                ਮਿਟਾਓ ਸੈੱਟ_Ref_ਗੰਢ;
+                ਵਾਪਸ;
             }
-            fLeftChild->fParent  = this;
-            delete setRefNode;
-        } else {
-            fLeftChild->flattenSets(status, depth+1);
+            f_ਖੱਬਾ_ਬੱਚਾ->f_ਮਾਪਾ  = ਇਹ;
+            ਮਿਟਾਓ ਸੈੱਟ_Ref_ਗੰਢ;
+        } ਨਹੀਂਤਾਂ {
+            f_ਖੱਬਾ_ਬੱਚਾ->flattenSets(ਸਥਿਤੀ, ਡੂੰਘਾਈ+1);
         }
     }
 
-    if (fRightChild != nullptr) {
-        if (fRightChild->fType==setRef) {
-            RBBINode *setRefNode = fRightChild;
-            RBBINode *usetNode   = setRefNode->fLeftChild;
-            RBBINode *replTree   = usetNode->fLeftChild;
-            fRightChild           = replTree->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
-                delete setRefNode;
-                return;
+    ਜੇ (f_ਸੱਜਾ_ਬੱਚਾ != ਖਾਲੀ_ਸੂਚਕ) {
+        ਜੇ (f_ਸੱਜਾ_ਬੱਚਾ->fType==ਸੈੱਟ_Ref) {
+            RBBINode *ਸੈੱਟ_Ref_ਗੰਢ = f_ਸੱਜਾ_ਬੱਚਾ;
+            RBBINode *uset_ਗੰਢ   = ਸੈੱਟ_Ref_ਗੰਢ->f_ਖੱਬਾ_ਬੱਚਾ;
+            RBBINode *repl_ਰੁੱਖ   = uset_ਗੰਢ->f_ਖੱਬਾ_ਬੱਚਾ;
+            f_ਸੱਜਾ_ਬੱਚਾ           = repl_ਰੁੱਖ->clone_ਰੁੱਖ(ਸਥਿਤੀ, ਡੂੰਘਾਈ+1);
+            ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                ਮਿਟਾਓ ਸੈੱਟ_Ref_ਗੰਢ;
+                ਵਾਪਸ;
             }
-            fRightChild->fParent  = this;
-            delete setRefNode;
-        } else {
-            fRightChild->flattenSets(status, depth+1);
+            f_ਸੱਜਾ_ਬੱਚਾ->f_ਮਾਪਾ  = ਇਹ;
+            ਮਿਟਾਓ ਸੈੱਟ_Ref_ਗੰਢ;
+        } ਨਹੀਂਤਾਂ {
+            f_ਸੱਜਾ_ਬੱਚਾ->flattenSets(ਸਥਿਤੀ, ਡੂੰਘਾਈ+1);
         }
     }
 }
@@ -386,20 +386,20 @@ void RBBINode::flattenSets(UErrorCode &status, int depth) {
 //                   at the specified root.
 //
 //-------------------------------------------------------------------------
-void   RBBINode::findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &status) {
+ਖਾਲੀ   RBBINode::ਲੱਭੋ_Nodes(UVector *dest, RBBINode::ਗੰਢ_Type ਕਿਸਮ, UError_ਕੋਡ &ਸਥਿਤੀ) {
     /* test for buffer overflows */
-    if (U_FAILURE(status)) {
-        return;
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਵਾਪਸ;
     }
     U_ASSERT(!dest->hasDeleter());
-    if (fType == kind) {
-        dest->addElement(this, status);
+    ਜੇ (fType == ਕਿਸਮ) {
+        dest->ਜੋੜੋ_Element(ਇਹ, ਸਥਿਤੀ);
     }
-    if (fLeftChild != nullptr) {
-        fLeftChild->findNodes(dest, kind, status);
+    ਜੇ (f_ਖੱਬਾ_ਬੱਚਾ != ਖਾਲੀ_ਸੂਚਕ) {
+        f_ਖੱਬਾ_ਬੱਚਾ->ਲੱਭੋ_Nodes(dest, ਕਿਸਮ, ਸਥਿਤੀ);
     }
-    if (fRightChild != nullptr) {
-        fRightChild->findNodes(dest, kind, status);
+    ਜੇ (f_ਸੱਜਾ_ਬੱਚਾ != ਖਾਲੀ_ਸੂਚਕ) {
+        f_ਸੱਜਾ_ਬੱਚਾ->ਲੱਭੋ_Nodes(dest, ਕਿਸਮ, ਸਥਿਤੀ);
     }
 }
 
@@ -409,15 +409,15 @@ void   RBBINode::findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &s
 //    print.         Print out a single node, for debugging.
 //
 //-------------------------------------------------------------------------
-#ifdef RBBI_DEBUG
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ RBBI_DEBUG
 
-static int32_t serial(const RBBINode *node) {
-    return (node == nullptr? -1 : node->fSerialNum);
+ਸਥਿਰ int32_t serial(ਅਚਲ RBBINode *ਗੰਢ) {
+    ਵਾਪਸ (ਗੰਢ == ਖਾਲੀ_ਸੂਚਕ? -1 : ਗੰਢ->f_Serial_ਅੰਕ);
 }
 
 
-void RBBINode::printNode(const RBBINode *node) {
-    static const char * const nodeTypeNames[] = {
+ਖਾਲੀ RBBINode::print_ਗੰਢ(ਅਚਲ RBBINode *ਗੰਢ) {
+    ਸਥਿਰ ਅਚਲ ਅੱਖਰ * ਅਚਲ ਗੰਢ_Type_ਨਾਂ[] = {
                 "setRef",
                 "uset",
                 "varRef",
@@ -436,28 +436,28 @@ void RBBINode::printNode(const RBBINode *node) {
                 "opLParen"
     };
 
-    if (node==nullptr) {
-        RBBIDebugPrintf("%10p", (void *)node);
-    } else {
+    ਜੇ (ਗੰਢ==ਖਾਲੀ_ਸੂਚਕ) {
+        RBBIDebugPrintf("%10p", (ਖਾਲੀ *)ਗੰਢ);
+    } ਨਹੀਂਤਾਂ {
         RBBIDebugPrintf("%10p %5d %12s %c%c  %5d       %5d     %5d       %6d     %d ",
-            (void *)node, node->fSerialNum, nodeTypeNames[node->fType],
-            node->fRuleRoot?'R':' ', node->fChainIn?'C':' ',
-            serial(node->fLeftChild), serial(node->fRightChild), serial(node->fParent),
-            node->fFirstPos, node->fVal);
-        if (node->fType == varRef) {
-            RBBI_DEBUG_printUnicodeString(node->fText);
+            (ਖਾਲੀ *)ਗੰਢ, ਗੰਢ->f_Serial_ਅੰਕ, ਗੰਢ_Type_ਨਾਂ[ਗੰਢ->fType],
+            ਗੰਢ->f_ਨਿਯਮ_ਜੜ੍ਹ?'R':' ', ਗੰਢ->f_Chain_ਵਿੱਚ?'C':' ',
+            serial(ਗੰਢ->f_ਖੱਬਾ_ਬੱਚਾ), serial(ਗੰਢ->f_ਸੱਜਾ_ਬੱਚਾ), serial(ਗੰਢ->f_ਮਾਪਾ),
+            ਗੰਢ->f_ਪਹਿਲਾ_Pos, ਗੰਢ->fVal);
+        ਜੇ (ਗੰਢ->fType == varRef) {
+            RBBI_DEBUG_printUnicodeString(ਗੰਢ->f_ਪਾਠ);
         }
     }
     RBBIDebugPrintf("\n");
 }
-#endif
+#ਜੇ_ਅੰਤ
 
 
-#ifdef RBBI_DEBUG
-U_CFUNC void RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth) {
-    RBBIDebugPrintf("%*s", minWidth, CStr(s)());
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ RBBI_DEBUG
+U_CFUNC ਖਾਲੀ RBBI_DEBUG_printUnicodeString(ਅਚਲ UnicodeString &s, ਪੂਰਨ min_ਚੌੜਾਈ) {
+    RBBIDebugPrintf("%*s", min_ਚੌੜਾਈ, CStr(s)());
 }
-#endif
+#ਜੇ_ਅੰਤ
 
 
 //-------------------------------------------------------------------------
@@ -465,34 +465,34 @@ U_CFUNC void RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth)
 //    print.         Print out the tree of nodes rooted at "this"
 //
 //-------------------------------------------------------------------------
-#ifdef RBBI_DEBUG
-void RBBINode::printNodeHeader() {
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ RBBI_DEBUG
+ਖਾਲੀ RBBINode::print_ਗੰਢ_ਸਿਰਲੇਖ() {
     RBBIDebugPrintf(" Address   serial        type     LeftChild  RightChild   Parent   position value\n");
 }
     
-void RBBINode::printTree(const RBBINode *node, UBool printHeading) {
-    if (printHeading) {
-        printNodeHeader();
+ਖਾਲੀ RBBINode::print_ਰੁੱਖ(ਅਚਲ RBBINode *ਗੰਢ, UBool printHeading) {
+    ਜੇ (printHeading) {
+        print_ਗੰਢ_ਸਿਰਲੇਖ();
     }
-    printNode(node);
-    if (node != nullptr) {
+    print_ਗੰਢ(ਗੰਢ);
+    ਜੇ (ਗੰਢ != ਖਾਲੀ_ਸੂਚਕ) {
         // Only dump the definition under a variable reference if asked to.
         // Unconditionally dump children of all other node types.
-        if (node->fType != varRef) {
-            if (node->fLeftChild != nullptr) {
-                printTree(node->fLeftChild, false);
+        ਜੇ (ਗੰਢ->fType != varRef) {
+            ਜੇ (ਗੰਢ->f_ਖੱਬਾ_ਬੱਚਾ != ਖਾਲੀ_ਸੂਚਕ) {
+                print_ਰੁੱਖ(ਗੰਢ->f_ਖੱਬਾ_ਬੱਚਾ, ਝੂਠ);
             }
             
-            if (node->fRightChild != nullptr) {
-                printTree(node->fRightChild, false);
+            ਜੇ (ਗੰਢ->f_ਸੱਜਾ_ਬੱਚਾ != ਖਾਲੀ_ਸੂਚਕ) {
+                print_ਰੁੱਖ(ਗੰਢ->f_ਸੱਜਾ_ਬੱਚਾ, ਝੂਠ);
             }
         }
     }
 }
-#endif
+#ਜੇ_ਅੰਤ
 
 
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#ਜੇ_ਅੰਤ /* #if !UCONFIG_NO_BREAK_ITERATION */

@@ -15,10 +15,10 @@
 ******************************************************************************
 */
 
-#ifndef USC_IMPL_H
-#define USC_IMPL_H
-#include "unicode/utypes.h"
-#include "unicode/uscript.h"
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ USC_IMPL_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ USC_IMPL_H
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uscript.h"
 
 /**
  * <code>UScriptRun</code> is used to find runs of characters in
@@ -54,9 +54,9 @@
  *  }
  * </pre>
  */
-struct UScriptRun;
+ਬਣਤਰ UScript_ਲੜੀਵਾਰ;
 
-typedef struct UScriptRun UScriptRun;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ UScript_ਲੜੀਵਾਰ UScript_ਲੜੀਵਾਰ;
 
 /**
  * Create a <code>UScriptRun</code> object for iterating over the given text. This object must
@@ -77,8 +77,8 @@ typedef struct UScriptRun UScriptRun;
  * @return the address of <code>UScriptRun</code> object which will iterate over the text,
  *         or <code>NULL</code> if the operation failed.
  */
-U_CAPI UScriptRun * U_EXPORT2
-uscript_openRun(const UChar *src, int32_t length, UErrorCode *pErrorCode);
+U_CAPI UScript_ਲੜੀਵਾਰ * U_EXPORT2
+uscript_open_ਲੜੀਵਾਰ(ਅਚਲ UChar *src, int32_t ਲੰਮਾਈ, UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Frees the given <code>UScriptRun</code> object and any storage associated with it.
@@ -86,8 +86,8 @@ uscript_openRun(const UChar *src, int32_t length, UErrorCode *pErrorCode);
  *
  * @param scriptRun is the <code>UScriptRun</code> object which will be freed.
  */
-U_CAPI void U_EXPORT2
-uscript_closeRun(UScriptRun *scriptRun);
+U_CAPI ਖਾਲੀ U_EXPORT2
+uscript_close_ਲੜੀਵਾਰ(UScript_ਲੜੀਵਾਰ *script_ਲੜੀਵਾਰ);
 
 /**
  * Reset the <code>UScriptRun</code> object so that it will start iterating from
@@ -95,8 +95,8 @@ uscript_closeRun(UScriptRun *scriptRun);
  *
  * @param scriptRun is the address of the <code>UScriptRun</code> object to be reset.
  */
-U_CAPI void U_EXPORT2
-uscript_resetRun(UScriptRun *scriptRun);
+U_CAPI ਖਾਲੀ U_EXPORT2
+uscript_reset_ਲੜੀਵਾਰ(UScript_ਲੜੀਵਾਰ *script_ਲੜੀਵਾਰ);
 
 /**
  * Change the text over which the given <code>UScriptRun</code> object iterates.
@@ -113,8 +113,8 @@ uscript_resetRun(UScriptRun *scriptRun);
  *        indicates a failure on entry, the function will immediately return.
  *        On exit the value will indicate the success of the operation.
  */
-U_CAPI void U_EXPORT2
-uscript_setRunText(UScriptRun *scriptRun, const UChar *src, int32_t length, UErrorCode *pErrorCode);
+U_CAPI ਖਾਲੀ U_EXPORT2
+uscript_ਸੈੱਟ_ਲੜੀਵਾਰ_ਪਾਠ(UScript_ਲੜੀਵਾਰ *script_ਲੜੀਵਾਰ, ਅਚਲ UChar *src, int32_t ਲੰਮਾਈ, UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Advance the <code>UScriptRun</code> object to the next script run, return the start and limit
@@ -134,6 +134,6 @@ uscript_setRunText(UScriptRun *scriptRun, const UChar *src, int32_t length, UErr
  * @return true if there was another script run.
  */
 U_CAPI UBool U_EXPORT2
-uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, UScriptCode *pRunScript);
+uscript_ਅਗਲਾ_ਲੜੀਵਾਰ(UScript_ਲੜੀਵਾਰ *script_ਲੜੀਵਾਰ, int32_t *p_ਲੜੀਵਾਰ_ਸ਼ੁਰੂ, int32_t *p_ਲੜੀਵਾਰ_ਹੱਦਬੰਦੀ, UScript_ਕੋਡ *p_ਲੜੀਵਾਰ_Script);
 
-#endif
+#ਜੇ_ਅੰਤ

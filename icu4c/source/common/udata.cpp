@@ -16,31 +16,31 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"  /* U_PLATFORM etc. */
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"  /* U_PLATFORM etc. */
 
-#ifdef __GNUC__
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ __GNUC__
 /* if gcc
 #define ATTRIBUTE_WEAK __attribute__ ((weak))
 might have to #include some other header
 */
-#endif
+#ਜੇ_ਅੰਤ
 
-#include "unicode/putil.h"
-#include "unicode/udata.h"
-#include "unicode/uversion.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "mutex.h"
-#include "putilimp.h"
-#include "restrace.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
-#include "ucmndata.h"
-#include "udatamem.h"
-#include "uhash.h"
-#include "umapfile.h"
-#include "umutex.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/putil.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/udata.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uversion.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "charstr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mutex.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "putilimp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "restrace.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucln_cmn.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucmndata.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "udatamem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uhash.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "umapfile.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "umutex.h"
 
 /***********************************************************************
 *
@@ -71,16 +71,16 @@ might have to #include some other header
 /* If you are excruciatingly bored turn this on .. */
 /* #define UDATA_DEBUG 1 */
 
-#if defined(UDATA_DEBUG)
+#ਜੇ defined(UDATA_DEBUG)
 #   include <stdio.h>
-#endif
+#ਜੇ_ਅੰਤ
 
 U_NAMESPACE_USE
 
 /*
  *  Forward declarations
  */
-static UDataMemory *udata_findCachedData(const char *path, UErrorCode &err);
+ਸਥਿਰ UData_ਸਮ੍ਰਿਤੀ *udata_ਲੱਭੋ_Cached_ਅੰਕੜੇ(ਅਚਲ ਅੱਖਰ *ਰਸਤਾ, UError_ਕੋਡ &err);
 
 /***********************************************************************
 *
@@ -104,150 +104,150 @@ static UDataMemory *udata_findCachedData(const char *path, UErrorCode &err);
  * that they really need, reducing the size of binaries that take advantage
  * of this.
  */
-static UDataMemory *gCommonICUDataArray[10] = { nullptr };   // Access protected by icu global mutex.
+ਸਥਿਰ UData_ਸਮ੍ਰਿਤੀ *gCommonICUDataArray[10] = { ਖਾਲੀ_ਸੂਚਕ };   // Access protected by icu global mutex.
 
-static u_atomic_int32_t gHaveTriedToLoadCommonData {0};  //  See extendICUData().
+ਸਥਿਰ u_atomic_int32_t g_Have_Tried_ਮੰਜ਼ਿਲ_ਲੱਦੋ_Common_ਅੰਕੜੇ {0};  //  See extendICUData().
 
-static UHashtable  *gCommonDataCache = nullptr;  /* Global hash table of opened ICU data files.  */
-static icu::UInitOnce gCommonDataCacheInitOnce {};
+ਸਥਿਰ UHashtable  *g_Common_ਅੰਕੜੇ_Cache = ਖਾਲੀ_ਸੂਚਕ;  /* Global hash table of opened ICU data files.  */
+ਸਥਿਰ icu::UInitOnce g_Common_ਅੰਕੜੇ_Cache_Init_Once {};
 
-#if !defined(ICU_DATA_DIR_WINDOWS)
-static UDataFileAccess  gDataFileAccess = UDATA_DEFAULT_ACCESS;  // Access not synchronized.
+#ਜੇ !defined(ICU_ਅੰਕੜੇ_DIR_WINDOWS)
+ਸਥਿਰ UDataFileAccess  g_ਅੰਕੜੇ_File_Access = UDATA_DEFAULT_ACCESS;  // Access not synchronized.
                                                                  // Modifying is documented as thread-unsafe.
-#else
+#ਨਹੀਂਤਾਂ
 // If we are using the Windows data directory, then look in one spot only.
-static UDataFileAccess  gDataFileAccess = UDATA_NO_FILES;
-#endif
+ਸਥਿਰ UDataFileAccess  g_ਅੰਕੜੇ_File_Access = UDATA_NO_FILES;
+#ਜੇ_ਅੰਤ
 
-static UBool U_CALLCONV
+ਸਥਿਰ UBool U_CALLCONV
 udata_cleanup()
 {
     int32_t i;
 
-    if (gCommonDataCache) {             /* Delete the cache of user data mappings.  */
-        uhash_close(gCommonDataCache);  /*   Table owns the contents, and will delete them. */
-        gCommonDataCache = nullptr;        /*   Cleanup is not thread safe.                */
+    ਜੇ (g_Common_ਅੰਕੜੇ_Cache) {             /* Delete the cache of user data mappings.  */
+        uhash_close(g_Common_ਅੰਕੜੇ_Cache);  /*   Table owns the contents, and will delete them. */
+        g_Common_ਅੰਕੜੇ_Cache = ਖਾਲੀ_ਸੂਚਕ;        /*   Cleanup is not thread safe.                */
     }
-    gCommonDataCacheInitOnce.reset();
+    g_Common_ਅੰਕੜੇ_Cache_Init_Once.reset();
 
-    for (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray) && gCommonICUDataArray[i] != nullptr; ++i) {
+    ਲਈ (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray) && gCommonICUDataArray[i] != ਖਾਲੀ_ਸੂਚਕ; ++i) {
         udata_close(gCommonICUDataArray[i]);
-        gCommonICUDataArray[i] = nullptr;
+        gCommonICUDataArray[i] = ਖਾਲੀ_ਸੂਚਕ;
     }
-    gHaveTriedToLoadCommonData = 0;
+    g_Have_Tried_ਮੰਜ਼ਿਲ_ਲੱਦੋ_Common_ਅੰਕੜੇ = 0;
 
-    return true;                   /* Everything was cleaned up */
+    ਵਾਪਸ ਸੱਚ;                   /* Everything was cleaned up */
 }
 
-static UBool U_CALLCONV
-findCommonICUDataByName(const char *inBasename, UErrorCode &err)
+ਸਥਿਰ UBool U_CALLCONV
+ਲੱਭੋ_Common_ICUData_By_Name(ਅਚਲ ਅੱਖਰ *ਵਿੱਚ_Basename, UError_ਕੋਡ &err)
 {
-    UBool found = false;
+    UBool ਮਿਲਿਆ = ਝੂਠ;
     int32_t i;
 
-    UDataMemory  *pData = udata_findCachedData(inBasename, err);
-    if (U_FAILURE(err) || pData == nullptr)
-        return false;
+    UData_ਸਮ੍ਰਿਤੀ  *p_ਅੰਕੜੇ = udata_ਲੱਭੋ_Cached_ਅੰਕੜੇ(ਵਿੱਚ_Basename, err);
+    ਜੇ (U_FAILURE(err) || p_ਅੰਕੜੇ == ਖਾਲੀ_ਸੂਚਕ)
+        ਵਾਪਸ ਝੂਠ;
 
     {
-        Mutex lock;
-        for (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray); ++i) {
-            if ((gCommonICUDataArray[i] != nullptr) && (gCommonICUDataArray[i]->pHeader == pData->pHeader)) {
+        Mutex ਤਾਲਾ;
+        ਲਈ (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray); ++i) {
+            ਜੇ ((gCommonICUDataArray[i] != ਖਾਲੀ_ਸੂਚਕ) && (gCommonICUDataArray[i]->p_ਸਿਰਲੇਖ == p_ਅੰਕੜੇ->p_ਸਿਰਲੇਖ)) {
                 /* The data pointer is already in the array. */
-                found = true;
-                break;
+                ਮਿਲਿਆ = ਸੱਚ;
+                ਰੋਕੋ;
             }
         }
     }
-    return found;
+    ਵਾਪਸ ਮਿਲਿਆ;
 }
 
 
 /*
  * setCommonICUData.   Set a UDataMemory to be the global ICU Data
  */
-static UBool
-setCommonICUData(UDataMemory *pData,     /*  The new common data.  Belongs to caller, we copy it. */
+ਸਥਿਰ UBool
+ਸੈੱਟ_Common_ICUData(UData_ਸਮ੍ਰਿਤੀ *p_ਅੰਕੜੇ,     /*  The new common data.  Belongs to caller, we copy it. */
                  UBool       warn,       /*  If true, set USING_DEFAULT warning if ICUData was    */
                                          /*    changed by another thread before we got to it.     */
-                 UErrorCode *pErr)
+                 UError_ਕੋਡ *pErr)
 {
-    UDataMemory  *newCommonData = UDataMemory_createNewInstance(pErr);
+    UData_ਸਮ੍ਰਿਤੀ  *new_Common_ਅੰਕੜੇ = UData_ਸਮ੍ਰਿਤੀ_create_New_Instance(pErr);
     int32_t i;
-    UBool didUpdate = false;
-    if (U_FAILURE(*pErr)) {
-        return false;
+    UBool didUpdate = ਝੂਠ;
+    ਜੇ (U_FAILURE(*pErr)) {
+        ਵਾਪਸ ਝੂਠ;
     }
 
     /*  For the assignment, other threads must cleanly see either the old            */
     /*    or the new, not some partially initialized new.  The old can not be        */
     /*    deleted - someone may still have a pointer to it lying around in           */
     /*    their locals.                                                              */
-    UDatamemory_assign(newCommonData, pData);
-    umtx_lock(nullptr);
-    for (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray); ++i) {
-        if (gCommonICUDataArray[i] == nullptr) {
-            gCommonICUDataArray[i] = newCommonData;
-            didUpdate = true;
-            break;
-        } else if (gCommonICUDataArray[i]->pHeader == pData->pHeader) {
+    UDatamemory_ਸੌਂਪੋ(new_Common_ਅੰਕੜੇ, p_ਅੰਕੜੇ);
+    umtx_ਤਾਲਾ(ਖਾਲੀ_ਸੂਚਕ);
+    ਲਈ (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray); ++i) {
+        ਜੇ (gCommonICUDataArray[i] == ਖਾਲੀ_ਸੂਚਕ) {
+            gCommonICUDataArray[i] = new_Common_ਅੰਕੜੇ;
+            didUpdate = ਸੱਚ;
+            ਰੋਕੋ;
+        } ਨਹੀਂਤਾਂ ਜੇ (gCommonICUDataArray[i]->p_ਸਿਰਲੇਖ == p_ਅੰਕੜੇ->p_ਸਿਰਲੇਖ) {
             /* The same data pointer is already in the array. */
-            break;
+            ਰੋਕੋ;
         }
     }
-    umtx_unlock(nullptr);
+    umtx_unlock(ਖਾਲੀ_ਸੂਚਕ);
 
-    if (i == UPRV_LENGTHOF(gCommonICUDataArray) && warn) {
+    ਜੇ (i == UPRV_LENGTHOF(gCommonICUDataArray) && warn) {
         *pErr = U_USING_DEFAULT_WARNING;
     }
-    if (didUpdate) {
-        ucln_common_registerCleanup(UCLN_COMMON_UDATA, udata_cleanup);
-    } else {
-        uprv_free(newCommonData);
+    ਜੇ (didUpdate) {
+        ucln_common_ਰਜਿਸਟਰ_Cleanup(UCLN_COMMON_UDATA, udata_cleanup);
+    } ਨਹੀਂਤਾਂ {
+        uprv_free(new_Common_ਅੰਕੜੇ);
     }
-    return didUpdate;
+    ਵਾਪਸ didUpdate;
 }
 
-#if !defined(ICU_DATA_DIR_WINDOWS)
+#ਜੇ !defined(ICU_ਅੰਕੜੇ_DIR_WINDOWS)
 
-static UBool
-setCommonICUDataPointer(const void *pData, UBool /*warn*/, UErrorCode *pErrorCode) {
-    UDataMemory tData;
-    UDataMemory_init(&tData);
-    UDataMemory_setData(&tData, pData);
-    udata_checkCommonData(&tData, pErrorCode);
-    return setCommonICUData(&tData, false, pErrorCode);
+ਸਥਿਰ UBool
+ਸੈੱਟ_Common_ICUData_ਸੂਚਕ(ਅਚਲ ਖਾਲੀ *p_ਅੰਕੜੇ, UBool /*warn*/, UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    UData_ਸਮ੍ਰਿਤੀ t_ਅੰਕੜੇ;
+    UData_ਸਮ੍ਰਿਤੀ_init(&t_ਅੰਕੜੇ);
+    UData_ਸਮ੍ਰਿਤੀ_ਸੈੱਟ_ਅੰਕੜੇ(&t_ਅੰਕੜੇ, p_ਅੰਕੜੇ);
+    udata_check_Common_ਅੰਕੜੇ(&t_ਅੰਕੜੇ, p_Error_ਕੋਡ);
+    ਵਾਪਸ ਸੈੱਟ_Common_ICUData(&t_ਅੰਕੜੇ, ਝੂਠ, p_Error_ਕੋਡ);
 }
 
-#endif
+#ਜੇ_ਅੰਤ
 
-static const char *
-findBasename(const char *path) {
-    const char *basename=uprv_strrchr(path, U_FILE_SEP_CHAR);
-    if(basename==nullptr) {
-        return path;
-    } else {
-        return basename+1;
+ਸਥਿਰ ਅਚਲ ਅੱਖਰ *
+ਲੱਭੋ_Basename(ਅਚਲ ਅੱਖਰ *ਰਸਤਾ) {
+    ਅਚਲ ਅੱਖਰ *basename=uprv_strrchr(ਰਸਤਾ, U_FILE_SEP_CHAR);
+    ਜੇ(basename==ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ ਰਸਤਾ;
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ basename+1;
     }
 }
 
-#ifdef UDATA_DEBUG
-static const char *
-packageNameFromPath(const char *path)
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+ਸਥਿਰ ਅਚਲ ਅੱਖਰ *
+package_Name_From_ਰਸਤਾ(ਅਚਲ ਅੱਖਰ *ਰਸਤਾ)
 {
-    if((path == nullptr) || (*path == 0)) {
-        return U_ICUDATA_NAME;
+    ਜੇ((ਰਸਤਾ == ਖਾਲੀ_ਸੂਚਕ) || (*ਰਸਤਾ == 0)) {
+        ਵਾਪਸ U_ICUDATA_NAME;
     }
 
-    path = findBasename(path);
+    ਰਸਤਾ = ਲੱਭੋ_Basename(ਰਸਤਾ);
 
-    if((path == nullptr) || (*path == 0)) {
-        return U_ICUDATA_NAME;
+    ਜੇ((ਰਸਤਾ == ਖਾਲੀ_ਸੂਚਕ) || (*ਰਸਤਾ == 0)) {
+        ਵਾਪਸ U_ICUDATA_NAME;
     }
 
-    return path;
+    ਵਾਪਸ ਰਸਤਾ;
 }
-#endif
+#ਜੇ_ਅੰਤ
 
 /*----------------------------------------------------------------------*
  *                                                                      *
@@ -261,10 +261,10 @@ packageNameFromPath(const char *path)
  *                                                                      *
  *----------------------------------------------------------------------*/
 
-typedef struct DataCacheElement {
-    char          *name;
-    UDataMemory   *item;
-} DataCacheElement;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ਅੰਕੜੇ_Cache_Element {
+    ਅੱਖਰ          *name;
+    UData_ਸਮ੍ਰਿਤੀ   *ਵਸਤੂ;
+} ਅੰਕੜੇ_Cache_Element;
 
 
 
@@ -273,130 +273,130 @@ typedef struct DataCacheElement {
  *         udata cleanup function closes the hash table; hash table in turn calls back to
  *         here for each entry.
  */
-static void U_CALLCONV DataCacheElement_deleter(void *pDCEl) {
-    DataCacheElement* p = static_cast<DataCacheElement*>(pDCEl);
-    udata_close(p->item);              /* unmaps storage */
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV ਅੰਕੜੇ_Cache_Element_deleter(ਖਾਲੀ *pDCEl) {
+    ਅੰਕੜੇ_Cache_Element* p = static_cast<ਅੰਕੜੇ_Cache_Element*>(pDCEl);
+    udata_close(p->ਵਸਤੂ);              /* unmaps storage */
     uprv_free(p->name);                /* delete the hash key string. */
     uprv_free(pDCEl);                  /* delete 'this'          */
 }
 
-static void U_CALLCONV udata_initHashTable(UErrorCode &err) {
-    U_ASSERT(gCommonDataCache == nullptr);
-    gCommonDataCache = uhash_open(uhash_hashChars, uhash_compareChars, nullptr, &err);
-    if (U_FAILURE(err)) {
-       return;
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV udata_init_Hash_ਸਾਰਣੀ(UError_ਕੋਡ &err) {
+    U_ASSERT(g_Common_ਅੰਕੜੇ_Cache == ਖਾਲੀ_ਸੂਚਕ);
+    g_Common_ਅੰਕੜੇ_Cache = uhash_open(uhash_hashChars, uhash_compareChars, ਖਾਲੀ_ਸੂਚਕ, &err);
+    ਜੇ (U_FAILURE(err)) {
+       ਵਾਪਸ;
     }
-    U_ASSERT(gCommonDataCache != nullptr);
-    uhash_setValueDeleter(gCommonDataCache, DataCacheElement_deleter);
-    ucln_common_registerCleanup(UCLN_COMMON_UDATA, udata_cleanup);
+    U_ASSERT(g_Common_ਅੰਕੜੇ_Cache != ਖਾਲੀ_ਸੂਚਕ);
+    uhash_ਸੈੱਟ_ਮੁੱਲ_Deleter(g_Common_ਅੰਕੜੇ_Cache, ਅੰਕੜੇ_Cache_Element_deleter);
+    ucln_common_ਰਜਿਸਟਰ_Cleanup(UCLN_COMMON_UDATA, udata_cleanup);
 }
 
  /*   udata_getCacheHashTable()
   *     Get the hash table used to store the data cache entries.
   *     Lazy create it if it doesn't yet exist.
   */
-static UHashtable *udata_getHashTable(UErrorCode &err) {
-    umtx_initOnce(gCommonDataCacheInitOnce, &udata_initHashTable, err);
-    return gCommonDataCache;
+ਸਥਿਰ UHashtable *udata_get_Hash_ਸਾਰਣੀ(UError_ਕੋਡ &err) {
+    umtx_initOnce(g_Common_ਅੰਕੜੇ_Cache_Init_Once, &udata_init_Hash_ਸਾਰਣੀ, err);
+    ਵਾਪਸ g_Common_ਅੰਕੜੇ_Cache;
 }
 
 
 
-static UDataMemory *udata_findCachedData(const char *path, UErrorCode &err)
+ਸਥਿਰ UData_ਸਮ੍ਰਿਤੀ *udata_ਲੱਭੋ_Cached_ਅੰਕੜੇ(ਅਚਲ ਅੱਖਰ *ਰਸਤਾ, UError_ਕੋਡ &err)
 {
     UHashtable        *htable;
-    UDataMemory       *retVal = nullptr;
-    DataCacheElement  *el;
-    const char        *baseName;
+    UData_ਸਮ੍ਰਿਤੀ       *retVal = ਖਾਲੀ_ਸੂਚਕ;
+    ਅੰਕੜੇ_Cache_Element  *el;
+    ਅਚਲ ਅੱਖਰ        *ਅਧਾਰ_Name;
 
-    htable = udata_getHashTable(err);
-    if (U_FAILURE(err)) {
-        return nullptr;
+    htable = udata_get_Hash_ਸਾਰਣੀ(err);
+    ਜੇ (U_FAILURE(err)) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    baseName = findBasename(path);   /* Cache remembers only the base name, not the full path. */
-    umtx_lock(nullptr);
-    el = static_cast<DataCacheElement*>(uhash_get(htable, baseName));
-    umtx_unlock(nullptr);
-    if (el != nullptr) {
-        retVal = el->item;
+    ਅਧਾਰ_Name = ਲੱਭੋ_Basename(ਰਸਤਾ);   /* Cache remembers only the base name, not the full path. */
+    umtx_ਤਾਲਾ(ਖਾਲੀ_ਸੂਚਕ);
+    el = static_cast<ਅੰਕੜੇ_Cache_Element*>(uhash_get(htable, ਅਧਾਰ_Name));
+    umtx_unlock(ਖਾਲੀ_ਸੂਚਕ);
+    ਜੇ (el != ਖਾਲੀ_ਸੂਚਕ) {
+        retVal = el->ਵਸਤੂ;
     }
-#ifdef UDATA_DEBUG
-    fprintf(stderr, "Cache: [%s] -> %p\n", baseName, (void*) retVal);
-#endif
-    return retVal;
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+    fprintf(stderr, "Cache: [%s] -> %p\n", ਅਧਾਰ_Name, (ਖਾਲੀ*) retVal);
+#ਜੇ_ਅੰਤ
+    ਵਾਪਸ retVal;
 }
 
 
-static UDataMemory *udata_cacheDataItem(const char *path, UDataMemory *item, UErrorCode *pErr) {
-    DataCacheElement *newElement;
-    const char       *baseName;
+ਸਥਿਰ UData_ਸਮ੍ਰਿਤੀ *udata_cache_ਅੰਕੜੇ_ਵਸਤੂ(ਅਚਲ ਅੱਖਰ *ਰਸਤਾ, UData_ਸਮ੍ਰਿਤੀ *ਵਸਤੂ, UError_ਕੋਡ *pErr) {
+    ਅੰਕੜੇ_Cache_Element *newElement;
+    ਅਚਲ ਅੱਖਰ       *ਅਧਾਰ_Name;
     int32_t           nameLen;
     UHashtable       *htable;
-    DataCacheElement *oldValue = nullptr;
-    UErrorCode        subErr = U_ZERO_ERROR;
+    ਅੰਕੜੇ_Cache_Element *old_ਮੁੱਲ = ਖਾਲੀ_ਸੂਚਕ;
+    UError_ਕੋਡ        subErr = U_ZERO_ERROR;
 
-    htable = udata_getHashTable(*pErr);
-    if (U_FAILURE(*pErr)) {
-        return nullptr;
+    htable = udata_get_Hash_ਸਾਰਣੀ(*pErr);
+    ਜੇ (U_FAILURE(*pErr)) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
     /* Create a new DataCacheElement - the thingy we store in the hash table -
      * and copy the supplied path and UDataMemoryItems into it.
      */
-    newElement = static_cast<DataCacheElement*>(uprv_malloc(sizeof(DataCacheElement)));
-    if (newElement == nullptr) {
-        *pErr = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    newElement = static_cast<ਅੰਕੜੇ_Cache_Element*>(uprv_malloc(ਆਕਾਰ(ਅੰਕੜੇ_Cache_Element)));
+    ਜੇ (newElement == ਖਾਲੀ_ਸੂਚਕ) {
+        *pErr = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
-    newElement->item = UDataMemory_createNewInstance(pErr);
-    if (U_FAILURE(*pErr)) {
+    newElement->ਵਸਤੂ = UData_ਸਮ੍ਰਿਤੀ_create_New_Instance(pErr);
+    ਜੇ (U_FAILURE(*pErr)) {
         uprv_free(newElement);
-        return nullptr;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
-    UDatamemory_assign(newElement->item, item);
+    UDatamemory_ਸੌਂਪੋ(newElement->ਵਸਤੂ, ਵਸਤੂ);
 
-    baseName = findBasename(path);
-    nameLen = static_cast<int32_t>(uprv_strlen(baseName));
-    newElement->name = static_cast<char*>(uprv_malloc(nameLen + 1));
-    if (newElement->name == nullptr) {
-        *pErr = U_MEMORY_ALLOCATION_ERROR;
-        uprv_free(newElement->item);
+    ਅਧਾਰ_Name = ਲੱਭੋ_Basename(ਰਸਤਾ);
+    nameLen = static_cast<int32_t>(uprv_strlen(ਅਧਾਰ_Name));
+    newElement->name = static_cast<ਅੱਖਰ*>(uprv_malloc(nameLen + 1));
+    ਜੇ (newElement->name == ਖਾਲੀ_ਸੂਚਕ) {
+        *pErr = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+        uprv_free(newElement->ਵਸਤੂ);
         uprv_free(newElement);
-        return nullptr;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
-    uprv_strcpy(newElement->name, baseName);
+    uprv_strcpy(newElement->name, ਅਧਾਰ_Name);
 
     /* Stick the new DataCacheElement into the hash table.
     */
-    umtx_lock(nullptr);
-    oldValue = static_cast<DataCacheElement*>(uhash_get(htable, path));
-    if (oldValue != nullptr) {
+    umtx_ਤਾਲਾ(ਖਾਲੀ_ਸੂਚਕ);
+    old_ਮੁੱਲ = static_cast<ਅੰਕੜੇ_Cache_Element*>(uhash_get(htable, ਰਸਤਾ));
+    ਜੇ (old_ਮੁੱਲ != ਖਾਲੀ_ਸੂਚਕ) {
         subErr = U_USING_DEFAULT_WARNING;
     }
-    else {
+    ਨਹੀਂਤਾਂ {
         uhash_put(
             htable,
             newElement->name,               /* Key   */
             newElement,                     /* Value */
             &subErr);
     }
-    umtx_unlock(nullptr);
+    umtx_unlock(ਖਾਲੀ_ਸੂਚਕ);
 
-#ifdef UDATA_DEBUG
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
     fprintf(stderr, "Cache: [%s] <<< %p : %s. vFunc=%p\n", newElement->name, 
-    (void*) newElement->item, u_errorName(subErr), (void*) newElement->item->vFuncs);
-#endif
+    (ਖਾਲੀ*) newElement->ਵਸਤੂ, u_errorName(subErr), (ਖਾਲੀ*) newElement->ਵਸਤੂ->vFuncs);
+#ਜੇ_ਅੰਤ
 
-    if (subErr == U_USING_DEFAULT_WARNING || U_FAILURE(subErr)) {
+    ਜੇ (subErr == U_USING_DEFAULT_WARNING || U_FAILURE(subErr)) {
         *pErr = subErr; /* copy sub err unto fillin ONLY if something happens. */
         uprv_free(newElement->name);
-        uprv_free(newElement->item);
+        uprv_free(newElement->ਵਸਤੂ);
         uprv_free(newElement);
-        return oldValue ? oldValue->item : nullptr;
+        ਵਾਪਸ old_ਮੁੱਲ ? old_ਮੁੱਲ->ਵਸਤੂ : ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    return newElement->item;
+    ਵਾਪਸ newElement->ਵਸਤੂ;
 }
 
 /*----------------------------------------------------------------------*==============
@@ -408,28 +408,28 @@ static UDataMemory *udata_cacheDataItem(const char *path, UDataMemory *item, UEr
 
 U_NAMESPACE_BEGIN
 
-class UDataPathIterator
+ਵਰਗ UData_ਰਸਤਾ_Iterator
 {
-public:
-    UDataPathIterator(const char *path, const char *pkg,
-                      const char *item, const char *suffix, UBool doCheckLastFour,
-                      UErrorCode *pErrorCode);
-    const char *next(UErrorCode *pErrorCode);
+ਜਨਤਕ:
+    UData_ਰਸਤਾ_Iterator(ਅਚਲ ਅੱਖਰ *ਰਸਤਾ, ਅਚਲ ਅੱਖਰ *pkg,
+                      ਅਚਲ ਅੱਖਰ *ਵਸਤੂ, ਅਚਲ ਅੱਖਰ *suffix, UBool do_Check_ਆਖਰੀ_Four,
+                      UError_ਕੋਡ *p_Error_ਕੋਡ);
+    ਅਚਲ ਅੱਖਰ *next(UError_ਕੋਡ *p_Error_ਕੋਡ);
 
-private:
-    const char *path;                              /* working path (u_icudata_Dir) */
-    const char *nextPath;                          /* path following this one */
-    const char *basename;                          /* item's basename (icudt22e_mt.res)*/
+ਨਿਜੀ:
+    ਅਚਲ ਅੱਖਰ *ਰਸਤਾ;                              /* working path (u_icudata_Dir) */
+    ਅਚਲ ਅੱਖਰ *ਅਗਲਾ_ਰਸਤਾ;                          /* path following this one */
+    ਅਚਲ ਅੱਖਰ *basename;                          /* item's basename (icudt22e_mt.res)*/
 
     StringPiece suffix;                            /* item suffix (can be null) */
 
     uint32_t    basenameLen;                       /* length of basename */
 
-    CharString  itemPath;                          /* path passed in with item name */
-    CharString  pathBuffer;                        /* output path for this it'ion */
+    CharString  ਵਸਤੂ_ਰਸਤਾ;                          /* path passed in with item name */
+    CharString  ਰਸਤਾ_ਬਫਰ;                        /* output path for this it'ion */
     CharString  packageStub;                       /* example:  "/icudt28b". Will ignore that leaf in set paths. */
 
-    UBool       checkLastFour;                     /* if true then allow paths such as '/foo/myapp.dat'
+    UBool       check_ਆਖਰੀ_Four;                     /* if true then allow paths such as '/foo/myapp.dat'
                                                     * to match, checks last 4 chars of suffix with
                                                     * last 4 of path, then previous chars. */
 };
@@ -445,64 +445,64 @@ private:
  *  Note: inSuffix may also be the 'item' being searched for as well, (ex: "ibm-5348_P100-1997.cnv"), in which case 
  *        the 'item' parameter is often the same as pkg. (Though sometimes might have a tree part as well, ex: "icudt62l-curr").
  */
-UDataPathIterator::UDataPathIterator(const char *inPath, const char *pkg,
-                                     const char *item, const char *inSuffix, UBool doCheckLastFour,
-                                     UErrorCode *pErrorCode)
+UData_ਰਸਤਾ_Iterator::UData_ਰਸਤਾ_Iterator(ਅਚਲ ਅੱਖਰ *ਵਿੱਚ_ਰਸਤਾ, ਅਚਲ ਅੱਖਰ *pkg,
+                                     ਅਚਲ ਅੱਖਰ *ਵਸਤੂ, ਅਚਲ ਅੱਖਰ *ਵਿੱਚ_Suffix, UBool do_Check_ਆਖਰੀ_Four,
+                                     UError_ਕੋਡ *p_Error_ਕੋਡ)
 {
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "SUFFIX1=%s PATH=%s\n", inSuffix, inPath);
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+        fprintf(stderr, "SUFFIX1=%s PATH=%s\n", ਵਿੱਚ_Suffix, ਵਿੱਚ_ਰਸਤਾ);
+#ਜੇ_ਅੰਤ
     /** Path **/
-    if(inPath == nullptr) {
-        path = u_getDataDirectory();
-    } else {
-        path = inPath;
+    ਜੇ(ਵਿੱਚ_ਰਸਤਾ == ਖਾਲੀ_ਸੂਚਕ) {
+        ਰਸਤਾ = u_get_ਅੰਕੜੇ_Directory();
+    } ਨਹੀਂਤਾਂ {
+        ਰਸਤਾ = ਵਿੱਚ_ਰਸਤਾ;
     }
 
     /** Package **/
-    if(pkg != nullptr) {
-      packageStub.append(U_FILE_SEP_CHAR, *pErrorCode).append(pkg, *pErrorCode);
-#ifdef UDATA_DEBUG
-      fprintf(stderr, "STUB=%s [%d]\n", packageStub.data(), packageStub.length());
-#endif
+    ਜੇ(pkg != ਖਾਲੀ_ਸੂਚਕ) {
+      packageStub.append(U_FILE_SEP_CHAR, *p_Error_ਕੋਡ).append(pkg, *p_Error_ਕੋਡ);
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+      fprintf(stderr, "STUB=%s [%d]\n", packageStub.ਅੰਕੜੇ(), packageStub.length());
+#ਜੇ_ਅੰਤ
     }
 
     /** Item **/
-    basename = findBasename(item);
+    basename = ਲੱਭੋ_Basename(ਵਸਤੂ);
     basenameLen = static_cast<int32_t>(uprv_strlen(basename));
 
     /** Item path **/
-    if(basename == item) {
-        nextPath = path;
-    } else {
-        itemPath.append(item, static_cast<int32_t>(basename - item), *pErrorCode);
-        nextPath = itemPath.data();
+    ਜੇ(basename == ਵਸਤੂ) {
+        ਅਗਲਾ_ਰਸਤਾ = ਰਸਤਾ;
+    } ਨਹੀਂਤਾਂ {
+        ਵਸਤੂ_ਰਸਤਾ.append(ਵਸਤੂ, static_cast<int32_t>(basename - ਵਸਤੂ), *p_Error_ਕੋਡ);
+        ਅਗਲਾ_ਰਸਤਾ = ਵਸਤੂ_ਰਸਤਾ.ਅੰਕੜੇ();
     }
-#ifdef UDATA_DEBUG
-    fprintf(stderr, "SUFFIX=%s [%p]\n", inSuffix, (void*) inSuffix);
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+    fprintf(stderr, "SUFFIX=%s [%p]\n", ਵਿੱਚ_Suffix, (ਖਾਲੀ*) ਵਿੱਚ_Suffix);
+#ਜੇ_ਅੰਤ
 
     /** Suffix  **/
-    if(inSuffix != nullptr) {
-        suffix = inSuffix;
-    } else {
+    ਜੇ(ਵਿੱਚ_Suffix != ਖਾਲੀ_ਸੂਚਕ) {
+        suffix = ਵਿੱਚ_Suffix;
+    } ਨਹੀਂਤਾਂ {
         suffix = "";
     }
 
-    checkLastFour = doCheckLastFour;
+    check_ਆਖਰੀ_Four = do_Check_ਆਖਰੀ_Four;
 
     /* pathBuffer will hold the output path strings returned by this iterator */
 
-#ifdef UDATA_DEBUG
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
     fprintf(stderr, "0: init %s -> [path=%s], [base=%s], [suff=%s], [itempath=%s], [nextpath=%s], [checklast4=%s]\n",
-            item,
-            path,
+            ਵਸਤੂ,
+            ਰਸਤਾ,
             basename,
-            suffix.data(),
-            itemPath.data(),
-            nextPath,
-            checkLastFour?"true":"false");
-#endif
+            suffix.ਅੰਕੜੇ(),
+            ਵਸਤੂ_ਰਸਤਾ.ਅੰਕੜੇ(),
+            ਅਗਲਾ_ਰਸਤਾ,
+            check_ਆਖਰੀ_Four?"true":"false");
+#ਜੇ_ਅੰਤ
 }
 
 /**
@@ -512,124 +512,124 @@ UDataPathIterator::UDataPathIterator(const char *inPath, const char *pkg,
  * @param len  If set, pointer to the length of the returned path, for convenience. 
  * @return Pointer to the next path segment, or nullptr if there are no more.
  */
-const char *UDataPathIterator::next(UErrorCode *pErrorCode)
+ਅਚਲ ਅੱਖਰ *UData_ਰਸਤਾ_Iterator::next(UError_ਕੋਡ *p_Error_ਕੋਡ)
 {
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ਜੇ(U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    const char *currentPath = nullptr;
-    int32_t     pathLen = 0;
-    const char *pathBasename;
+    ਅਚਲ ਅੱਖਰ *current_ਰਸਤਾ = ਖਾਲੀ_ਸੂਚਕ;
+    int32_t     ਰਸਤਾ_Len = 0;
+    ਅਚਲ ਅੱਖਰ *ਰਸਤਾ_Basename;
 
-    do
+    ਕਰੋ
     {
-        if( nextPath == nullptr ) {
-            break;
+        ਜੇ( ਅਗਲਾ_ਰਸਤਾ == ਖਾਲੀ_ਸੂਚਕ ) {
+            ਰੋਕੋ;
         }
-        currentPath = nextPath;
+        current_ਰਸਤਾ = ਅਗਲਾ_ਰਸਤਾ;
 
-        if(nextPath == itemPath.data()) { /* we were processing item's path. */
-            nextPath = path; /* start with regular path next tm. */
-            pathLen = static_cast<int32_t>(uprv_strlen(currentPath));
-        } else {
+        ਜੇ(ਅਗਲਾ_ਰਸਤਾ == ਵਸਤੂ_ਰਸਤਾ.ਅੰਕੜੇ()) { /* we were processing item's path. */
+            ਅਗਲਾ_ਰਸਤਾ = ਰਸਤਾ; /* start with regular path next tm. */
+            ਰਸਤਾ_Len = static_cast<int32_t>(uprv_strlen(current_ਰਸਤਾ));
+        } ਨਹੀਂਤਾਂ {
             /* fix up next for next time */
-            nextPath = uprv_strchr(currentPath, U_PATH_SEP_CHAR);
-            if(nextPath == nullptr) {
+            ਅਗਲਾ_ਰਸਤਾ = uprv_strchr(current_ਰਸਤਾ, U_ਰਸਤਾ_SEP_CHAR);
+            ਜੇ(ਅਗਲਾ_ਰਸਤਾ == ਖਾਲੀ_ਸੂਚਕ) {
                 /* segment: entire path */
-                pathLen = static_cast<int32_t>(uprv_strlen(currentPath));
-            } else {
+                ਰਸਤਾ_Len = static_cast<int32_t>(uprv_strlen(current_ਰਸਤਾ));
+            } ਨਹੀਂਤਾਂ {
                 /* segment: until next segment */
-                pathLen = static_cast<int32_t>(nextPath - currentPath);
+                ਰਸਤਾ_Len = static_cast<int32_t>(ਅਗਲਾ_ਰਸਤਾ - current_ਰਸਤਾ);
                 /* skip divider */
-                nextPath ++;
+                ਅਗਲਾ_ਰਸਤਾ ++;
             }
         }
 
-        if(pathLen == 0) {
-            continue;
+        ਜੇ(ਰਸਤਾ_Len == 0) {
+            ਜਾਰੀ;
         }
 
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "rest of path (IDD) = %s\n", currentPath);
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+        fprintf(stderr, "rest of path (IDD) = %s\n", current_ਰਸਤਾ);
         fprintf(stderr, "                     ");
         { 
             int32_t qqq;
-            for(qqq=0;qqq<pathLen;qqq++)
+            ਲਈ(qqq=0;qqq<ਰਸਤਾ_Len;qqq++)
             {
                 fprintf(stderr, " ");
             }
 
             fprintf(stderr, "^\n");
         }
-#endif
-        pathBuffer.clear().append(currentPath, pathLen, *pErrorCode);
+#ਜੇ_ਅੰਤ
+        ਰਸਤਾ_ਬਫਰ.clear().append(current_ਰਸਤਾ, ਰਸਤਾ_Len, *p_Error_ਕੋਡ);
 
         /* check for .dat files */
-        pathBasename = findBasename(pathBuffer.data());
+        ਰਸਤਾ_Basename = ਲੱਭੋ_Basename(ਰਸਤਾ_ਬਫਰ.ਅੰਕੜੇ());
 
-        if(checkLastFour && 
-           (pathLen>=4) &&
-           uprv_strncmp(pathBuffer.data() +(pathLen-4), suffix.data(), 4)==0 && /* suffix matches */
-           uprv_strncmp(findBasename(pathBuffer.data()), basename, basenameLen)==0  && /* base matches */
-           uprv_strlen(pathBasename)==(basenameLen+4)) { /* base+suffix = full len */
+        ਜੇ(check_ਆਖਰੀ_Four && 
+           (ਰਸਤਾ_Len>=4) &&
+           uprv_strncmp(ਰਸਤਾ_ਬਫਰ.ਅੰਕੜੇ() +(ਰਸਤਾ_Len-4), suffix.ਅੰਕੜੇ(), 4)==0 && /* suffix matches */
+           uprv_strncmp(ਲੱਭੋ_Basename(ਰਸਤਾ_ਬਫਰ.ਅੰਕੜੇ()), basename, basenameLen)==0  && /* base matches */
+           uprv_strlen(ਰਸਤਾ_Basename)==(basenameLen+4)) { /* base+suffix = full len */
 
-#ifdef UDATA_DEBUG
-            fprintf(stderr, "Have %s file on the path: %s\n", suffix.data(), pathBuffer.data());
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+            fprintf(stderr, "Have %s file on the path: %s\n", suffix.ਅੰਕੜੇ(), ਰਸਤਾ_ਬਫਰ.ਅੰਕੜੇ());
+#ਜੇ_ਅੰਤ
             /* do nothing */
         }
-        else 
+        ਨਹੀਂਤਾਂ 
         {       /* regular dir path */
-            if(pathBuffer[pathLen-1] != U_FILE_SEP_CHAR) {
-                if((pathLen>=4) &&
-                   uprv_strncmp(pathBuffer.data()+(pathLen-4), ".dat", 4) == 0)
+            ਜੇ(ਰਸਤਾ_ਬਫਰ[ਰਸਤਾ_Len-1] != U_FILE_SEP_CHAR) {
+                ਜੇ((ਰਸਤਾ_Len>=4) &&
+                   uprv_strncmp(ਰਸਤਾ_ਬਫਰ.ਅੰਕੜੇ()+(ਰਸਤਾ_Len-4), ".dat", 4) == 0)
                 {
-#ifdef UDATA_DEBUG
-                    fprintf(stderr, "skipping non-directory .dat file %s\n", pathBuffer.data());
-#endif
-                    continue;
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+                    fprintf(stderr, "skipping non-directory .dat file %s\n", ਰਸਤਾ_ਬਫਰ.ਅੰਕੜੇ());
+#ਜੇ_ਅੰਤ
+                    ਜਾਰੀ;
                 }
 
                 /* Check if it is a directory with the same name as our package */
-                if(!packageStub.isEmpty() &&
-                   (pathLen > packageStub.length()) &&
-                   !uprv_strcmp(pathBuffer.data() + pathLen - packageStub.length(), packageStub.data())) {
-#ifdef UDATA_DEBUG
-                  fprintf(stderr, "Found stub %s (will add package %s of len %d)\n", packageStub.data(), basename, basenameLen);
-#endif
-                  pathBuffer.truncate(pathLen - packageStub.length());
+                ਜੇ(!packageStub.is_ਖਾਲੀ_ਥਾਵਾਂ() &&
+                   (ਰਸਤਾ_Len > packageStub.length()) &&
+                   !uprv_strcmp(ਰਸਤਾ_ਬਫਰ.ਅੰਕੜੇ() + ਰਸਤਾ_Len - packageStub.length(), packageStub.ਅੰਕੜੇ())) {
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+                  fprintf(stderr, "Found stub %s (will add package %s of len %d)\n", packageStub.ਅੰਕੜੇ(), basename, basenameLen);
+#ਜੇ_ਅੰਤ
+                  ਰਸਤਾ_ਬਫਰ.truncate(ਰਸਤਾ_Len - packageStub.length());
                 }
-                pathBuffer.append(U_FILE_SEP_CHAR, *pErrorCode);
+                ਰਸਤਾ_ਬਫਰ.append(U_FILE_SEP_CHAR, *p_Error_ਕੋਡ);
             }
 
             /* + basename */
-            pathBuffer.append(packageStub.data()+1, packageStub.length()-1, *pErrorCode);
+            ਰਸਤਾ_ਬਫਰ.append(packageStub.ਅੰਕੜੇ()+1, packageStub.length()-1, *p_Error_ਕੋਡ);
 
-            if (!suffix.empty())  /* tack on suffix */
+            ਜੇ (!suffix.empty())  /* tack on suffix */
             {
-                if (suffix.length() > 4) {
+                ਜੇ (suffix.length() > 4) {
                     // If the suffix is actually an item ("ibm-5348_P100-1997.cnv") and not an extension (".res")
                     // then we need to ensure that the path ends with a separator.
-                    pathBuffer.ensureEndsWithFileSeparator(*pErrorCode);
+                    ਰਸਤਾ_ਬਫਰ.ensure_ਸਿਰੇ_With_File_Separator(*p_Error_ਕੋਡ);
                 }
-                pathBuffer.append(suffix, *pErrorCode);
+                ਰਸਤਾ_ਬਫਰ.append(suffix, *p_Error_ਕੋਡ);
             }
         }
 
-#ifdef UDATA_DEBUG
-        fprintf(stderr, " -->  %s\n", pathBuffer.data());
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+        fprintf(stderr, " -->  %s\n", ਰਸਤਾ_ਬਫਰ.ਅੰਕੜੇ());
+#ਜੇ_ਅੰਤ
 
-        return pathBuffer.data();
+        ਵਾਪਸ ਰਸਤਾ_ਬਫਰ.ਅੰਕੜੇ();
 
-    } while(path);
+    } ਜਦੋਂ(ਰਸਤਾ);
 
     /* fell way off the end */
-    return nullptr;
+    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
 /* ==================================================================================*/
 
@@ -641,10 +641,10 @@ U_NAMESPACE_END
  *      our common data.                                                *
  *                                                                      *
  *----------------------------------------------------------------------*/
-#if !defined(ICU_DATA_DIR_WINDOWS)
+#ਜੇ !defined(ICU_ਅੰਕੜੇ_DIR_WINDOWS)
 // When using the Windows system data, we expect only a single data file.
-extern "C" const DataHeader U_DATA_API U_ICUDATA_ENTRY_POINT;
-#endif
+ਬਾਹਰੀ "C" ਅਚਲ ਅੰਕੜੇ_ਸਿਰਲੇਖ U_ਅੰਕੜੇ_API U_ICUDATA_ਇੰਦਰਾਜ_ਬਿੰਦੂ;
+#ਜੇ_ਅੰਤ
 
 /*
  * This would be a good place for weak-linkage declarations of
@@ -666,42 +666,42 @@ extern const void *uprv_getICUData_conversion() ATTRIBUTE_WEAK;
  *                       just return the cached UDataMem object.        *
  *                                                                      *
  *----------------------------------------------------------------------*/
-static UDataMemory *
-openCommonData(const char *path,          /*  Path from OpenChoice?          */
-               int32_t commonDataIndex,   /*  ICU Data (index >= 0) if path == nullptr */
-               UErrorCode *pErrorCode)
+ਸਥਿਰ UData_ਸਮ੍ਰਿਤੀ *
+open_Common_ਅੰਕੜੇ(ਅਚਲ ਅੱਖਰ *ਰਸਤਾ,          /*  Path from OpenChoice?          */
+               int32_t common_ਅੰਕੜੇ_ਸੂਚਕਾਂਕ,   /*  ICU Data (index >= 0) if path == nullptr */
+               UError_ਕੋਡ *p_Error_ਕੋਡ)
 {
-    UDataMemory tData;
-    const char *pathBuffer;
-    const char *inBasename;
+    UData_ਸਮ੍ਰਿਤੀ t_ਅੰਕੜੇ;
+    ਅਚਲ ਅੱਖਰ *ਰਸਤਾ_ਬਫਰ;
+    ਅਚਲ ਅੱਖਰ *ਵਿੱਚ_Basename;
 
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ਜੇ (U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    UDataMemory_init(&tData);
+    UData_ਸਮ੍ਰਿਤੀ_init(&t_ਅੰਕੜੇ);
 
     /* ??????? TODO revisit this */ 
-    if (commonDataIndex >= 0) {
+    ਜੇ (common_ਅੰਕੜੇ_ਸੂਚਕਾਂਕ >= 0) {
         /* "mini-cache" for common ICU data */
-        if(commonDataIndex >= UPRV_LENGTHOF(gCommonICUDataArray)) {
-            return nullptr;
+        ਜੇ(common_ਅੰਕੜੇ_ਸੂਚਕਾਂਕ >= UPRV_LENGTHOF(gCommonICUDataArray)) {
+            ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
         }
         {
-            Mutex lock;
-            if(gCommonICUDataArray[commonDataIndex] != nullptr) {
-                return gCommonICUDataArray[commonDataIndex];
+            Mutex ਤਾਲਾ;
+            ਜੇ(gCommonICUDataArray[common_ਅੰਕੜੇ_ਸੂਚਕਾਂਕ] != ਖਾਲੀ_ਸੂਚਕ) {
+                ਵਾਪਸ gCommonICUDataArray[common_ਅੰਕੜੇ_ਸੂਚਕਾਂਕ];
             }
-#if !defined(ICU_DATA_DIR_WINDOWS)
+#ਜੇ !defined(ICU_ਅੰਕੜੇ_DIR_WINDOWS)
 // When using the Windows system data, we expect only a single data file.
             int32_t i;
-            for(i = 0; i < commonDataIndex; ++i) {
-                if(gCommonICUDataArray[i]->pHeader == &U_ICUDATA_ENTRY_POINT) {
+            ਲਈ(i = 0; i < common_ਅੰਕੜੇ_ਸੂਚਕਾਂਕ; ++i) {
+                ਜੇ(gCommonICUDataArray[i]->p_ਸਿਰਲੇਖ == &U_ICUDATA_ਇੰਦਰਾਜ_ਬਿੰਦੂ) {
                     /* The linked-in data is already in the list. */
-                    return nullptr;
+                    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
                 }
             }
-#endif
+#ਜੇ_ਅੰਤ
         }
 
         /* Add the linked-in data to the list. */
@@ -717,14 +717,14 @@ openCommonData(const char *path,          /*  Path from OpenChoice?          */
             setCommonICUDataPointer(uprv_getICUData_conversion(), false, pErrorCode);
         }
         */
-#if !defined(ICU_DATA_DIR_WINDOWS)
+#ਜੇ !defined(ICU_ਅੰਕੜੇ_DIR_WINDOWS)
 // When using the Windows system data, we expect only a single data file.
-        setCommonICUDataPointer(&U_ICUDATA_ENTRY_POINT, false, pErrorCode);
+        ਸੈੱਟ_Common_ICUData_ਸੂਚਕ(&U_ICUDATA_ਇੰਦਰਾਜ_ਬਿੰਦੂ, ਝੂਠ, p_Error_ਕੋਡ);
         {
-            Mutex lock;
-            return gCommonICUDataArray[commonDataIndex];
+            Mutex ਤਾਲਾ;
+            ਵਾਪਸ gCommonICUDataArray[common_ਅੰਕੜੇ_ਸੂਚਕਾਂਕ];
         }
-#endif
+#ਜੇ_ਅੰਤ
     }
 
 
@@ -732,68 +732,68 @@ openCommonData(const char *path,          /*  Path from OpenChoice?          */
 
     /* Find the base name portion of the supplied path.   */
     /*   inBasename will be left pointing somewhere within the original path string.      */
-    inBasename = findBasename(path);
-#ifdef UDATA_DEBUG
-    fprintf(stderr, "inBasename = %s\n", inBasename);
-#endif
+    ਵਿੱਚ_Basename = ਲੱਭੋ_Basename(ਰਸਤਾ);
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+    fprintf(stderr, "inBasename = %s\n", ਵਿੱਚ_Basename);
+#ਜੇ_ਅੰਤ
 
-    if(*inBasename==0) {
+    ਜੇ(*ਵਿੱਚ_Basename==0) {
         /* no basename.     This will happen if the original path was a directory name,   */
         /*    like  "a/b/c/".   (Fallback to separate files will still work.)             */
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "ocd: no basename in %s, bailing.\n", path);
-#endif
-        if (U_SUCCESS(*pErrorCode)) {
-            *pErrorCode=U_FILE_ACCESS_ERROR;
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+        fprintf(stderr, "ocd: no basename in %s, bailing.\n", ਰਸਤਾ);
+#ਜੇ_ਅੰਤ
+        ਜੇ (U_SUCCESS(*p_Error_ਕੋਡ)) {
+            *p_Error_ਕੋਡ=U_FILE_ACCESS_ERROR;
         }
-        return nullptr;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
    /* Is the requested common data file already open and cached?                     */
    /*   Note that the cache is keyed by the base name only.  The rest of the path,   */
    /*     if any, is not considered.                                                 */
-    UDataMemory  *dataToReturn = udata_findCachedData(inBasename, *pErrorCode);
-    if (dataToReturn != nullptr || U_FAILURE(*pErrorCode)) {
-        return dataToReturn;
+    UData_ਸਮ੍ਰਿਤੀ  *ਅੰਕੜੇ_ਮੰਜ਼ਿਲ_Return = udata_ਲੱਭੋ_Cached_ਅੰਕੜੇ(ਵਿੱਚ_Basename, *p_Error_ਕੋਡ);
+    ਜੇ (ਅੰਕੜੇ_ਮੰਜ਼ਿਲ_Return != ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ ਅੰਕੜੇ_ਮੰਜ਼ਿਲ_Return;
     }
 
     /* Requested item is not in the cache.
      * Hunt it down, trying all the path locations
      */
 
-    UDataPathIterator iter(u_getDataDirectory(), inBasename, path, ".dat", true, pErrorCode);
+    UData_ਰਸਤਾ_Iterator iter(u_get_ਅੰਕੜੇ_Directory(), ਵਿੱਚ_Basename, ਰਸਤਾ, ".dat", ਸੱਚ, p_Error_ਕੋਡ);
 
-    while ((UDataMemory_isLoaded(&tData)==false) && (pathBuffer = iter.next(pErrorCode)) != nullptr)
+    ਜਦੋਂ ((UData_ਸਮ੍ਰਿਤੀ_is_Loaded(&t_ਅੰਕੜੇ)==ਝੂਠ) && (ਰਸਤਾ_ਬਫਰ = iter.next(p_Error_ਕੋਡ)) != ਖਾਲੀ_ਸੂਚਕ)
     {
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "ocd: trying path %s - ", pathBuffer);
-#endif
-        uprv_mapFile(&tData, pathBuffer, pErrorCode);
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "%s\n", UDataMemory_isLoaded(&tData)?"LOADED":"not loaded");
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+        fprintf(stderr, "ocd: trying path %s - ", ਰਸਤਾ_ਬਫਰ);
+#ਜੇ_ਅੰਤ
+        uprv_mapFile(&t_ਅੰਕੜੇ, ਰਸਤਾ_ਬਫਰ, p_Error_ਕੋਡ);
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+        fprintf(stderr, "%s\n", UData_ਸਮ੍ਰਿਤੀ_is_Loaded(&t_ਅੰਕੜੇ)?"LOADED":"not loaded");
+#ਜੇ_ਅੰਤ
     }
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ਜੇ (U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ਜੇ (U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
-    if (!UDataMemory_isLoaded(&tData)) {
+    ਜੇ (!UData_ਸਮ੍ਰਿਤੀ_is_Loaded(&t_ਅੰਕੜੇ)) {
         /* no common data */
-        *pErrorCode=U_FILE_ACCESS_ERROR;
-        return nullptr;
+        *p_Error_ਕੋਡ=U_FILE_ACCESS_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
     /* we have mapped a file, check its header */
-    udata_checkCommonData(&tData, pErrorCode);
+    udata_check_Common_ਅੰਕੜੇ(&t_ਅੰਕੜੇ, p_Error_ਕੋਡ);
 
 
     /* Cache the UDataMemory struct for this .dat file,
      *   so we won't need to hunt it down and map it again next time
      *   something is needed from it.                */
-    return udata_cacheDataItem(inBasename, &tData, pErrorCode);
+    ਵਾਪਸ udata_cache_ਅੰਕੜੇ_ਵਸਤੂ(ਵਿੱਚ_Basename, &t_ਅੰਕੜੇ, p_Error_ਕੋਡ);
 }
 
 
@@ -807,11 +807,11 @@ openCommonData(const char *path,          /*  Path from OpenChoice?          */
  *                   return true if new data is loaded, false otherwise.*
  *                                                                      *
  *----------------------------------------------------------------------*/
-static UBool extendICUData(UErrorCode *pErr)
+ਸਥਿਰ UBool extendICUData(UError_ਕੋਡ *pErr)
 {
-    UDataMemory   *pData;
-    UDataMemory   copyPData;
-    UBool         didUpdate = false;
+    UData_ਸਮ੍ਰਿਤੀ   *p_ਅੰਕੜੇ;
+    UData_ਸਮ੍ਰਿਤੀ   copyPData;
+    UBool         didUpdate = ਝੂਠ;
 
     /*
      * There is a chance for a race condition here.
@@ -823,47 +823,47 @@ static UBool extendICUData(UErrorCode *pErr)
      * In this case, use a mutex to prevent the race.
      * Use a specific mutex to avoid nested locks of the global mutex.
      */
-#if MAP_IMPLEMENTATION==MAP_STDIO
-    static UMutex extendICUDataMutex;
-    umtx_lock(&extendICUDataMutex);
-#endif
-    if(!umtx_loadAcquire(gHaveTriedToLoadCommonData)) {
+#ਜੇ MAP_IMPLEMENTATION==MAP_STDIO
+    ਸਥਿਰ UMutex extendICUDataMutex;
+    umtx_ਤਾਲਾ(&extendICUDataMutex);
+#ਜੇ_ਅੰਤ
+    ਜੇ(!umtx_ਲੱਦੋ_Acquire(g_Have_Tried_ਮੰਜ਼ਿਲ_ਲੱਦੋ_Common_ਅੰਕੜੇ)) {
         /* See if we can explicitly open a .dat file for the ICUData. */
-        pData = openCommonData(
+        p_ਅੰਕੜੇ = open_Common_ਅੰਕੜੇ(
                    U_ICUDATA_NAME,            /*  "icudt20l" , for example.          */
                    -1,                        /*  Pretend we're not opening ICUData  */
                    pErr);
 
         /* How about if there is no pData, eh... */
 
-       UDataMemory_init(&copyPData);
-       if(pData != nullptr) {
-          UDatamemory_assign(&copyPData, pData);
-          copyPData.map = nullptr;     /* The mapping for this data is owned by the hash table */
-          copyPData.mapAddr = nullptr; /*   which will unmap it when ICU is shut down.         */
+       UData_ਸਮ੍ਰਿਤੀ_init(&copyPData);
+       ਜੇ(p_ਅੰਕੜੇ != ਖਾਲੀ_ਸੂਚਕ) {
+          UDatamemory_ਸੌਂਪੋ(&copyPData, p_ਅੰਕੜੇ);
+          copyPData.map = ਖਾਲੀ_ਸੂਚਕ;     /* The mapping for this data is owned by the hash table */
+          copyPData.mapAddr = ਖਾਲੀ_ਸੂਚਕ; /*   which will unmap it when ICU is shut down.         */
                                        /* CommonICUData is also unmapped when ICU is shut down.*/
                                        /* To avoid unmapping the data twice, zero out the map  */
                                        /*   fields in the UDataMemory that we're assigning     */
                                        /*   to CommonICUData.                                  */
 
           didUpdate = /* no longer using this result */
-              setCommonICUData(&copyPData,/*  The new common data.                                */
-                       false,             /*  No warnings if write didn't happen                  */
+              ਸੈੱਟ_Common_ICUData(&copyPData,/*  The new common data.                                */
+                       ਝੂਠ,             /*  No warnings if write didn't happen                  */
                        pErr);             /*  setCommonICUData honors errors; NOP if error set    */
         }
 
-        umtx_storeRelease(gHaveTriedToLoadCommonData, 1);
+        umtx_storeRelease(g_Have_Tried_ਮੰਜ਼ਿਲ_ਲੱਦੋ_Common_ਅੰਕੜੇ, 1);
     }
 
-    didUpdate = findCommonICUDataByName(U_ICUDATA_NAME, *pErr);  /* Return 'true' when a racing writes out the extended                 */
+    didUpdate = ਲੱਭੋ_Common_ICUData_By_Name(U_ICUDATA_NAME, *pErr);  /* Return 'true' when a racing writes out the extended                 */
                                                           /* data after another thread has failed to see it (in openCommonData), so     */
                                                           /* extended data can be examined.                                             */
                                                           /* Also handles a race through here before gHaveTriedToLoadCommonData is set. */
 
-#if MAP_IMPLEMENTATION==MAP_STDIO
+#ਜੇ MAP_IMPLEMENTATION==MAP_STDIO
     umtx_unlock(&extendICUDataMutex);
-#endif
-    return didUpdate;               /* Return true if ICUData pointer was updated.   */
+#ਜੇ_ਅੰਤ
+    ਵਾਪਸ didUpdate;               /* Return true if ICUData pointer was updated.   */
                                     /*   (Could potentially have been done by another thread racing */
                                     /*   us through here, but that's fine, we still return true    */
                                     /*   so that current thread will also examine extended data.   */
@@ -874,28 +874,28 @@ static UBool extendICUData(UErrorCode *pErr)
  *   udata_setCommonData                                                *
  *                                                                      *
  *----------------------------------------------------------------------*/
-U_CAPI void U_EXPORT2
-udata_setCommonData(const void *data, UErrorCode *pErrorCode) {
-    UDataMemory dataMemory;
+U_CAPI ਖਾਲੀ U_EXPORT2
+udata_ਸੈੱਟ_Common_ਅੰਕੜੇ(ਅਚਲ ਖਾਲੀ *ਅੰਕੜੇ, UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    UData_ਸਮ੍ਰਿਤੀ ਅੰਕੜੇ_ਸਮ੍ਰਿਤੀ;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    ਜੇ(p_Error_ਕੋਡ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ;
     }
 
-    if(data==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ਜੇ(ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ) {
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ;
     }
 
     /* set the data pointer and test for validity */
-    UDataMemory_init(&dataMemory);
-    UDataMemory_setData(&dataMemory, data);
-    udata_checkCommonData(&dataMemory, pErrorCode);
-    if (U_FAILURE(*pErrorCode)) {return;}
+    UData_ਸਮ੍ਰਿਤੀ_init(&ਅੰਕੜੇ_ਸਮ੍ਰਿਤੀ);
+    UData_ਸਮ੍ਰਿਤੀ_ਸੈੱਟ_ਅੰਕੜੇ(&ਅੰਕੜੇ_ਸਮ੍ਰਿਤੀ, ਅੰਕੜੇ);
+    udata_check_Common_ਅੰਕੜੇ(&ਅੰਕੜੇ_ਸਮ੍ਰਿਤੀ, p_Error_ਕੋਡ);
+    ਜੇ (U_FAILURE(*p_Error_ਕੋਡ)) {ਵਾਪਸ;}
 
     /* we have good data */
     /* Set it up as the ICU Common Data.  */
-    setCommonICUData(&dataMemory, true, pErrorCode);
+    ਸੈੱਟ_Common_ICUData(&ਅੰਕੜੇ_ਸਮ੍ਰਿਤੀ, ਸੱਚ, p_Error_ਕੋਡ);
 }
 
 /*---------------------------------------------------------------------------
@@ -903,23 +903,23 @@ udata_setCommonData(const void *data, UErrorCode *pErrorCode) {
  *  udata_setAppData
  *
  *---------------------------------------------------------------------------- */
-U_CAPI void U_EXPORT2
-udata_setAppData(const char *path, const void *data, UErrorCode *err)
+U_CAPI ਖਾਲੀ U_EXPORT2
+udata_ਸੈੱਟ_App_ਅੰਕੜੇ(ਅਚਲ ਅੱਖਰ *ਰਸਤਾ, ਅਚਲ ਖਾਲੀ *ਅੰਕੜੇ, UError_ਕੋਡ *err)
 {
-    UDataMemory     udm;
+    UData_ਸਮ੍ਰਿਤੀ     udm;
 
-    if(err==nullptr || U_FAILURE(*err)) {
-        return;
+    ਜੇ(err==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*err)) {
+        ਵਾਪਸ;
     }
-    if(data==nullptr) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ਜੇ(ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ) {
+        *err=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ;
     }
 
-    UDataMemory_init(&udm);
-    UDataMemory_setData(&udm, data);
-    udata_checkCommonData(&udm, err);
-    udata_cacheDataItem(path, &udm, err);
+    UData_ਸਮ੍ਰਿਤੀ_init(&udm);
+    UData_ਸਮ੍ਰਿਤੀ_ਸੈੱਟ_ਅੰਕੜੇ(&udm, ਅੰਕੜੇ);
+    udata_check_Common_ਅੰਕੜੇ(&udm, err);
+    udata_cache_ਅੰਕੜੇ_ਵਸਤੂ(ਰਸਤਾ, &udm, err);
 }
 
 /*----------------------------------------------------------------------------*
@@ -933,119 +933,119 @@ udata_setAppData(const char *path, const void *data, UErrorCode *err)
  *                    Return nullptr on any sort of failure.                     *
  *                                                                            *
  *----------------------------------------------------------------------------*/
-static UDataMemory *
-checkDataItem
+ਸਥਿਰ UData_ਸਮ੍ਰਿਤੀ *
+check_ਅੰਕੜੇ_ਵਸਤੂ
 (
- const DataHeader         *pHeader,         /* The data item to be checked.                */
- UDataMemoryIsAcceptable  *isAcceptable,    /* App's call-back function                    */
- void                     *context,         /*   pass-thru param for above.                */
- const char               *type,            /*   pass-thru param for above.                */
- const char               *name,            /*   pass-thru param for above.                */
- UErrorCode               *nonFatalErr,     /* Error code if this data was not acceptable  */
+ ਅਚਲ ਅੰਕੜੇ_ਸਿਰਲੇਖ         *p_ਸਿਰਲੇਖ,         /* The data item to be checked.                */
+ UData_ਸਮ੍ਰਿਤੀ_Is_Acceptable  *isAcceptable,    /* App's call-back function                    */
+ ਖਾਲੀ                     *context,         /*   pass-thru param for above.                */
+ ਅਚਲ ਅੱਖਰ               *type,            /*   pass-thru param for above.                */
+ ਅਚਲ ਅੱਖਰ               *name,            /*   pass-thru param for above.                */
+ UError_ਕੋਡ               *nonFatalErr,     /* Error code if this data was not acceptable  */
                                             /*   but openChoice should continue with       */
                                             /*   trying to get data from fallback path.    */
- UErrorCode               *fatalErr         /* Bad error, caller should return immediately */
+ UError_ਕੋਡ               *fatalErr         /* Bad error, caller should return immediately */
  )
 {
-    UDataMemory  *rDataMem = nullptr;          /* the new UDataMemory, to be returned.        */
+    UData_ਸਮ੍ਰਿਤੀ  *r_ਅੰਕੜੇ_Mem = ਖਾਲੀ_ਸੂਚਕ;          /* the new UDataMemory, to be returned.        */
 
-    if (U_FAILURE(*fatalErr)) {
-        return nullptr;
+    ਜੇ (U_FAILURE(*fatalErr)) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    if(pHeader->dataHeader.magic1==0xda &&
-        pHeader->dataHeader.magic2==0x27 &&
-        (isAcceptable==nullptr || isAcceptable(context, type, name, &pHeader->info))
+    ਜੇ(p_ਸਿਰਲੇਖ->ਅੰਕੜੇ_ਸਿਰਲੇਖ_2.magic1==0xda &&
+        p_ਸਿਰਲੇਖ->ਅੰਕੜੇ_ਸਿਰਲੇਖ_2.magic2==0x27 &&
+        (isAcceptable==ਖਾਲੀ_ਸੂਚਕ || isAcceptable(context, type, name, &p_ਸਿਰਲੇਖ->info))
     ) {
-        rDataMem=UDataMemory_createNewInstance(fatalErr);
-        if (U_FAILURE(*fatalErr)) {
-            return nullptr;
+        r_ਅੰਕੜੇ_Mem=UData_ਸਮ੍ਰਿਤੀ_create_New_Instance(fatalErr);
+        ਜੇ (U_FAILURE(*fatalErr)) {
+            ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
         }
-        rDataMem->pHeader = pHeader;
-    } else {
+        r_ਅੰਕੜੇ_Mem->p_ਸਿਰਲੇਖ = p_ਸਿਰਲੇਖ;
+    } ਨਹੀਂਤਾਂ {
         /* the data is not acceptable, look further */
         /* If we eventually find something good, this errorcode will be */
         /*    cleared out.                                              */
         *nonFatalErr=U_INVALID_FORMAT_ERROR;
     }
-    return rDataMem;
+    ਵਾਪਸ r_ਅੰਕੜੇ_Mem;
 }
 
 /**
  * @return 0 if not loaded, 1 if loaded or err 
  */
-static UDataMemory *doLoadFromIndividualFiles(const char *pkgName, 
-        const char *dataPath, const char *tocEntryPathSuffix,
+ਸਥਿਰ UData_ਸਮ੍ਰਿਤੀ *do_ਲੱਦੋ_From_Individual_Files(ਅਚਲ ਅੱਖਰ *pkgName, 
+        ਅਚਲ ਅੱਖਰ *ਅੰਕੜੇ_ਰਸਤਾ, ਅਚਲ ਅੱਖਰ *toc_ਇੰਦਰਾਜ_ਰਸਤਾ_Suffix,
             /* following arguments are the same as doOpenChoice itself */
-            const char *path, const char *type, const char *name,
-             UDataMemoryIsAcceptable *isAcceptable, void *context,
-             UErrorCode *subErrorCode,
-             UErrorCode *pErrorCode)
+            ਅਚਲ ਅੱਖਰ *ਰਸਤਾ, ਅਚਲ ਅੱਖਰ *type, ਅਚਲ ਅੱਖਰ *name,
+             UData_ਸਮ੍ਰਿਤੀ_Is_Acceptable *isAcceptable, ਖਾਲੀ *context,
+             UError_ਕੋਡ *sub_Error_ਕੋਡ,
+             UError_ਕੋਡ *p_Error_ਕੋਡ)
 {
-    const char         *pathBuffer;
-    UDataMemory         dataMemory;
-    UDataMemory *pEntryData;
+    ਅਚਲ ਅੱਖਰ         *ਰਸਤਾ_ਬਫਰ;
+    UData_ਸਮ੍ਰਿਤੀ         ਅੰਕੜੇ_ਸਮ੍ਰਿਤੀ;
+    UData_ਸਮ੍ਰਿਤੀ *p_ਇੰਦਰਾਜ_ਅੰਕੜੇ;
 
     /* look in ind. files: package\nam.typ  ========================= */
     /* init path iterator for individual files */
-    UDataPathIterator iter(dataPath, pkgName, path, tocEntryPathSuffix, false, pErrorCode);
+    UData_ਰਸਤਾ_Iterator iter(ਅੰਕੜੇ_ਰਸਤਾ, pkgName, ਰਸਤਾ, toc_ਇੰਦਰਾਜ_ਰਸਤਾ_Suffix, ਝੂਠ, p_Error_ਕੋਡ);
 
-    while ((pathBuffer = iter.next(pErrorCode)) != nullptr)
+    ਜਦੋਂ ((ਰਸਤਾ_ਬਫਰ = iter.next(p_Error_ਕੋਡ)) != ਖਾਲੀ_ਸੂਚਕ)
     {
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "UDATA: trying individual file %s\n", pathBuffer);
-#endif
-        if (uprv_mapFile(&dataMemory, pathBuffer, pErrorCode))
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+        fprintf(stderr, "UDATA: trying individual file %s\n", ਰਸਤਾ_ਬਫਰ);
+#ਜੇ_ਅੰਤ
+        ਜੇ (uprv_mapFile(&ਅੰਕੜੇ_ਸਮ੍ਰਿਤੀ, ਰਸਤਾ_ਬਫਰ, p_Error_ਕੋਡ))
         {
-            pEntryData = checkDataItem(dataMemory.pHeader, isAcceptable, context, type, name, subErrorCode, pErrorCode);
-            if (pEntryData != nullptr) {
+            p_ਇੰਦਰਾਜ_ਅੰਕੜੇ = check_ਅੰਕੜੇ_ਵਸਤੂ(ਅੰਕੜੇ_ਸਮ੍ਰਿਤੀ.p_ਸਿਰਲੇਖ, isAcceptable, context, type, name, sub_Error_ਕੋਡ, p_Error_ਕੋਡ);
+            ਜੇ (p_ਇੰਦਰਾਜ_ਅੰਕੜੇ != ਖਾਲੀ_ਸੂਚਕ) {
                 /* Data is good.
                 *  Hand off ownership of the backing memory to the user's UDataMemory.
                 *  and return it.   */
-                pEntryData->mapAddr = dataMemory.mapAddr;
-                pEntryData->map     = dataMemory.map;
-                pEntryData->length  = dataMemory.length;
+                p_ਇੰਦਰਾਜ_ਅੰਕੜੇ->mapAddr = ਅੰਕੜੇ_ਸਮ੍ਰਿਤੀ.mapAddr;
+                p_ਇੰਦਰਾਜ_ਅੰਕੜੇ->map     = ਅੰਕੜੇ_ਸਮ੍ਰਿਤੀ.map;
+                p_ਇੰਦਰਾਜ_ਅੰਕੜੇ->length  = ਅੰਕੜੇ_ਸਮ੍ਰਿਤੀ.length;
 
-#ifdef UDATA_DEBUG
-                fprintf(stderr, "** Mapped file: %s\n", pathBuffer);
-#endif
-                return pEntryData;
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+                fprintf(stderr, "** Mapped file: %s\n", ਰਸਤਾ_ਬਫਰ);
+#ਜੇ_ਅੰਤ
+                ਵਾਪਸ p_ਇੰਦਰਾਜ_ਅੰਕੜੇ;
             }
 
             /* the data is not acceptable, or some error occurred.  Either way, unmap the memory */
-            udata_close(&dataMemory);
+            udata_close(&ਅੰਕੜੇ_ਸਮ੍ਰਿਤੀ);
 
             /* If we had a nasty error, bail out completely.  */
-            if (U_FAILURE(*pErrorCode)) {
-                return nullptr;
+            ਜੇ (U_FAILURE(*p_Error_ਕੋਡ)) {
+                ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
             }
 
             /* Otherwise remember that we found data but didn't like it for some reason  */
-            *subErrorCode=U_INVALID_FORMAT_ERROR;
+            *sub_Error_ਕੋਡ=U_INVALID_FORMAT_ERROR;
         }
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "%s\n", UDataMemory_isLoaded(&dataMemory)?"LOADED":"not loaded");
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+        fprintf(stderr, "%s\n", UData_ਸਮ੍ਰਿਤੀ_is_Loaded(&ਅੰਕੜੇ_ਸਮ੍ਰਿਤੀ)?"LOADED":"not loaded");
+#ਜੇ_ਅੰਤ
     }
-    return nullptr;
+    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
 }
 
 /**
  * @return 0 if not loaded, 1 if loaded or err 
  */
-static UDataMemory *doLoadFromCommonData(UBool isICUData, const char * /*pkgName*/, 
-        const char * /*dataPath*/, const char * /*tocEntryPathSuffix*/, const char *tocEntryName,
+ਸਥਿਰ UData_ਸਮ੍ਰਿਤੀ *do_ਲੱਦੋ_From_Common_ਅੰਕੜੇ(UBool isICUData, ਅਚਲ ਅੱਖਰ * /*pkgName*/, 
+        ਅਚਲ ਅੱਖਰ * /*dataPath*/, ਅਚਲ ਅੱਖਰ * /*tocEntryPathSuffix*/, ਅਚਲ ਅੱਖਰ *toc_ਇੰਦਰਾਜ_Name,
             /* following arguments are the same as doOpenChoice itself */
-            const char *path, const char *type, const char *name,
-             UDataMemoryIsAcceptable *isAcceptable, void *context,
-             UErrorCode *subErrorCode,
-             UErrorCode *pErrorCode)
+            ਅਚਲ ਅੱਖਰ *ਰਸਤਾ, ਅਚਲ ਅੱਖਰ *type, ਅਚਲ ਅੱਖਰ *name,
+             UData_ਸਮ੍ਰਿਤੀ_Is_Acceptable *isAcceptable, ਖਾਲੀ *context,
+             UError_ਕੋਡ *sub_Error_ਕੋਡ,
+             UError_ਕੋਡ *p_Error_ਕੋਡ)
 {
-    UDataMemory        *pEntryData;
-    const DataHeader   *pHeader;
-    UDataMemory        *pCommonData;
-    int32_t            commonDataIndex;
-    UBool              checkedExtendedICUData = false;
+    UData_ਸਮ੍ਰਿਤੀ        *p_ਇੰਦਰਾਜ_ਅੰਕੜੇ;
+    ਅਚਲ ਅੰਕੜੇ_ਸਿਰਲੇਖ   *p_ਸਿਰਲੇਖ;
+    UData_ਸਮ੍ਰਿਤੀ        *p_Common_ਅੰਕੜੇ;
+    int32_t            common_ਅੰਕੜੇ_ਸੂਚਕਾਂਕ;
+    UBool              checkedExtendedICUData = ਝੂਠ;
     /* try to get common data.  The loop is for platforms such as the 390 that do
      *  not initially load the full set of ICU data.  If the lookup of an ICU data item
      *  fails, the full (but slower to load) set is loaded, the and the loop repeats,
@@ -1055,49 +1055,49 @@ static UDataMemory *doLoadFromCommonData(UBool isICUData, const char * /*pkgName
      *  The loop also handles the fallback to a .dat file if the application linked
      *   to the stub data library rather than a real library.
      */
-    for (commonDataIndex = isICUData ? 0 : -1;;) {
-        pCommonData=openCommonData(path, commonDataIndex, subErrorCode); /** search for pkg **/
+    ਲਈ (common_ਅੰਕੜੇ_ਸੂਚਕਾਂਕ = isICUData ? 0 : -1;;) {
+        p_Common_ਅੰਕੜੇ=open_Common_ਅੰਕੜੇ(ਰਸਤਾ, common_ਅੰਕੜੇ_ਸੂਚਕਾਂਕ, sub_Error_ਕੋਡ); /** search for pkg **/
 
-        if(U_SUCCESS(*subErrorCode) && pCommonData!=nullptr) {
+        ਜੇ(U_SUCCESS(*sub_Error_ਕੋਡ) && p_Common_ਅੰਕੜੇ!=ਖਾਲੀ_ਸੂਚਕ) {
             int32_t length;
 
             /* look up the data piece in the common data */
-            pHeader=pCommonData->vFuncs->Lookup(pCommonData, tocEntryName, &length, subErrorCode);
-#ifdef UDATA_DEBUG
-            fprintf(stderr, "%s: pHeader=%p - %s\n", tocEntryName, (void*) pHeader, u_errorName(*subErrorCode));
-#endif
+            p_ਸਿਰਲੇਖ=p_Common_ਅੰਕੜੇ->vFuncs->Lookup(p_Common_ਅੰਕੜੇ, toc_ਇੰਦਰਾਜ_Name, &length, sub_Error_ਕੋਡ);
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+            fprintf(stderr, "%s: pHeader=%p - %s\n", toc_ਇੰਦਰਾਜ_Name, (ਖਾਲੀ*) p_ਸਿਰਲੇਖ, u_errorName(*sub_Error_ਕੋਡ));
+#ਜੇ_ਅੰਤ
 
-            if(pHeader!=nullptr) {
-                pEntryData = checkDataItem(pHeader, isAcceptable, context, type, name, subErrorCode, pErrorCode);
-#ifdef UDATA_DEBUG
-                fprintf(stderr, "pEntryData=%p\n", (void*) pEntryData);
-#endif
-                if (U_FAILURE(*pErrorCode)) {
-                    return nullptr;
+            ਜੇ(p_ਸਿਰਲੇਖ!=ਖਾਲੀ_ਸੂਚਕ) {
+                p_ਇੰਦਰਾਜ_ਅੰਕੜੇ = check_ਅੰਕੜੇ_ਵਸਤੂ(p_ਸਿਰਲੇਖ, isAcceptable, context, type, name, sub_Error_ਕੋਡ, p_Error_ਕੋਡ);
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+                fprintf(stderr, "pEntryData=%p\n", (ਖਾਲੀ*) p_ਇੰਦਰਾਜ_ਅੰਕੜੇ);
+#ਜੇ_ਅੰਤ
+                ਜੇ (U_FAILURE(*p_Error_ਕੋਡ)) {
+                    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
                 }
-                if (pEntryData != nullptr) {
-                    pEntryData->length = length;
-                    return pEntryData;
+                ਜੇ (p_ਇੰਦਰਾਜ_ਅੰਕੜੇ != ਖਾਲੀ_ਸੂਚਕ) {
+                    p_ਇੰਦਰਾਜ_ਅੰਕੜੇ->length = length;
+                    ਵਾਪਸ p_ਇੰਦਰਾਜ_ਅੰਕੜੇ;
                 }
             }
         }
         // If we failed due to being out-of-memory, then stop early and report the error.
-        if (*subErrorCode == U_MEMORY_ALLOCATION_ERROR) {
-            *pErrorCode = *subErrorCode;
-            return nullptr;
+        ਜੇ (*sub_Error_ਕੋਡ == U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR) {
+            *p_Error_ਕੋਡ = *sub_Error_ਕੋਡ;
+            ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
         }
         /* Data wasn't found.  If we were looking for an ICUData item and there is
          * more data available, load it and try again,
          * otherwise break out of this loop. */
-        if (!isICUData) {
-            return nullptr;
-        } else if (pCommonData != nullptr) {
-            ++commonDataIndex;  /* try the next data package */
-        } else if ((!checkedExtendedICUData) && extendICUData(subErrorCode)) {
-            checkedExtendedICUData = true;
+        ਜੇ (!isICUData) {
+            ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
+        } ਨਹੀਂਤਾਂ ਜੇ (p_Common_ਅੰਕੜੇ != ਖਾਲੀ_ਸੂਚਕ) {
+            ++common_ਅੰਕੜੇ_ਸੂਚਕਾਂਕ;  /* try the next data package */
+        } ਨਹੀਂਤਾਂ ਜੇ ((!checkedExtendedICUData) && extendICUData(sub_Error_ਕੋਡ)) {
+            checkedExtendedICUData = ਸੱਚ;
             /* try this data package slot again: it changed from nullptr to non-nullptr */
-        } else {
-            return nullptr;
+        } ਨਹੀਂਤਾਂ {
+            ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
         }
     }
 }
@@ -1105,8 +1105,8 @@ static UDataMemory *doLoadFromCommonData(UBool isICUData, const char * /*pkgName
 /*
  * Identify the Time Zone resources that are subject to special override data loading.
  */
-static UBool isTimeZoneFile(const char *name, const char *type) {
-    return ((uprv_strcmp(type, "res") == 0) &&
+ਸਥਿਰ UBool is_ਸਮਾਂ_Zone_File(ਅਚਲ ਅੱਖਰ *name, ਅਚਲ ਅੱਖਰ *type) {
+    ਵਾਪਸ ((uprv_strcmp(type, "res") == 0) &&
             (uprv_strcmp(name, "zoneinfo64") == 0 ||
              uprv_strcmp(name, "timezoneTypes") == 0 ||
              uprv_strcmp(name, "windowsZones") == 0 ||
@@ -1145,104 +1145,104 @@ static UBool isTimeZoneFile(const char *name, const char *type) {
  * main data loading functions                                                *
  *                                                                            *
  *----------------------------------------------------------------------------*/
-static UDataMemory *
-doOpenChoice(const char *path, const char *type, const char *name,
-             UDataMemoryIsAcceptable *isAcceptable, void *context,
-             UErrorCode *pErrorCode)
+ਸਥਿਰ UData_ਸਮ੍ਰਿਤੀ *
+doOpenChoice(ਅਚਲ ਅੱਖਰ *ਰਸਤਾ, ਅਚਲ ਅੱਖਰ *type, ਅਚਲ ਅੱਖਰ *name,
+             UData_ਸਮ੍ਰਿਤੀ_Is_Acceptable *isAcceptable, ਖਾਲੀ *context,
+             UError_ਕੋਡ *p_Error_ਕੋਡ)
 {
-    UDataMemory         *retVal = nullptr;
+    UData_ਸਮ੍ਰਿਤੀ         *retVal = ਖਾਲੀ_ਸੂਚਕ;
 
-    const char         *dataPath;
+    ਅਚਲ ਅੱਖਰ         *ਅੰਕੜੇ_ਰਸਤਾ;
 
-    int32_t             tocEntrySuffixIndex;
-    const char         *tocEntryPathSuffix;
-    UErrorCode          subErrorCode=U_ZERO_ERROR;
-    const char         *treeChar;
+    int32_t             toc_ਇੰਦਰਾਜ_Suffix_ਸੂਚਕਾਂਕ;
+    ਅਚਲ ਅੱਖਰ         *toc_ਇੰਦਰਾਜ_ਰਸਤਾ_Suffix;
+    UError_ਕੋਡ          sub_Error_ਕੋਡ=U_ZERO_ERROR;
+    ਅਚਲ ਅੱਖਰ         *ਰੁੱਖ_Char;
 
-    UBool               isICUData = false;
+    UBool               isICUData = ਝੂਠ;
 
 
-    FileTracer::traceOpen(path, type, name);
+    FileTracer::traceOpen(ਰਸਤਾ, type, name);
 
 
     /* Is this path ICU data? */
-    if(path == nullptr ||
-       !strcmp(path, U_ICUDATA_ALIAS) ||  /* "ICUDATA" */
-       !uprv_strncmp(path, U_ICUDATA_NAME U_TREE_SEPARATOR_STRING, /* "icudt26e-" */
-                     uprv_strlen(U_ICUDATA_NAME U_TREE_SEPARATOR_STRING)) ||  
-       !uprv_strncmp(path, U_ICUDATA_ALIAS U_TREE_SEPARATOR_STRING, /* "ICUDATA-" */
-                     uprv_strlen(U_ICUDATA_ALIAS U_TREE_SEPARATOR_STRING))) {
-      isICUData = true;
+    ਜੇ(ਰਸਤਾ == ਖਾਲੀ_ਸੂਚਕ ||
+       !strcmp(ਰਸਤਾ, U_ICUDATA_ALIAS) ||  /* "ICUDATA" */
+       !uprv_strncmp(ਰਸਤਾ, U_ICUDATA_NAME U_ਰੁੱਖ_SEPARATOR_STRING, /* "icudt26e-" */
+                     uprv_strlen(U_ICUDATA_NAME U_ਰੁੱਖ_SEPARATOR_STRING)) ||  
+       !uprv_strncmp(ਰਸਤਾ, U_ICUDATA_ALIAS U_ਰੁੱਖ_SEPARATOR_STRING, /* "ICUDATA-" */
+                     uprv_strlen(U_ICUDATA_ALIAS U_ਰੁੱਖ_SEPARATOR_STRING))) {
+      isICUData = ਸੱਚ;
     }
 
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)  /* Windows:  try "foo\bar" and "foo/bar" */
+#ਜੇ (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)  /* Windows:  try "foo\bar" and "foo/bar" */
     /* remap from alternate path char to the main one */
-    CharString altSepPath;
-    if(path) {
-        if(uprv_strchr(path,U_FILE_ALT_SEP_CHAR) != nullptr) {
-            altSepPath.append(path, *pErrorCode);
-            char *p;
-            while ((p = uprv_strchr(altSepPath.data(), U_FILE_ALT_SEP_CHAR)) != nullptr) {
+    CharString alt_Sep_ਰਸਤਾ;
+    ਜੇ(ਰਸਤਾ) {
+        ਜੇ(uprv_strchr(ਰਸਤਾ,U_FILE_ALT_SEP_CHAR) != ਖਾਲੀ_ਸੂਚਕ) {
+            alt_Sep_ਰਸਤਾ.append(ਰਸਤਾ, *p_Error_ਕੋਡ);
+            ਅੱਖਰ *p;
+            ਜਦੋਂ ((p = uprv_strchr(alt_Sep_ਰਸਤਾ.ਅੰਕੜੇ(), U_FILE_ALT_SEP_CHAR)) != ਖਾਲੀ_ਸੂਚਕ) {
                 *p = U_FILE_SEP_CHAR;
             }
-#if defined (UDATA_DEBUG)
-            fprintf(stderr, "Changed path from [%s] to [%s]\n", path, altSepPath.data());
-#endif
-            path = altSepPath.data();
+#ਜੇ defined (UDATA_DEBUG)
+            fprintf(stderr, "Changed path from [%s] to [%s]\n", ਰਸਤਾ, alt_Sep_ਰਸਤਾ.ਅੰਕੜੇ());
+#ਜੇ_ਅੰਤ
+            ਰਸਤਾ = alt_Sep_ਰਸਤਾ.ਅੰਕੜੇ();
         }
     }
-#endif
+#ਜੇ_ਅੰਤ
 
-    CharString tocEntryName; /* entry name in tree format. ex:  'icudt28b/coll/ar.res' */
-    CharString tocEntryPath; /* entry name in path format. ex:  'icudt28b\\coll\\ar.res' */
+    CharString toc_ਇੰਦਰਾਜ_Name; /* entry name in tree format. ex:  'icudt28b/coll/ar.res' */
+    CharString toc_ਇੰਦਰਾਜ_ਰਸਤਾ; /* entry name in path format. ex:  'icudt28b\\coll\\ar.res' */
 
     CharString pkgName;
-    CharString treeName;
+    CharString ਰੁੱਖ_Name;
 
     /* ======= Set up strings */
-    if(path==nullptr) {
-        pkgName.append(U_ICUDATA_NAME, *pErrorCode);
-    } else {
-        const char *pkg;
-        const char *first;
-        pkg = uprv_strrchr(path, U_FILE_SEP_CHAR);
-        first = uprv_strchr(path, U_FILE_SEP_CHAR);
-        if(uprv_pathIsAbsolute(path) || (pkg != first)) { /* more than one slash in the path- not a tree name */
+    ਜੇ(ਰਸਤਾ==ਖਾਲੀ_ਸੂਚਕ) {
+        pkgName.append(U_ICUDATA_NAME, *p_Error_ਕੋਡ);
+    } ਨਹੀਂਤਾਂ {
+        ਅਚਲ ਅੱਖਰ *pkg;
+        ਅਚਲ ਅੱਖਰ *first;
+        pkg = uprv_strrchr(ਰਸਤਾ, U_FILE_SEP_CHAR);
+        first = uprv_strchr(ਰਸਤਾ, U_FILE_SEP_CHAR);
+        ਜੇ(uprv_ਰਸਤਾ_Is_Absolute(ਰਸਤਾ) || (pkg != first)) { /* more than one slash in the path- not a tree name */
             /* see if this is an /absolute/path/to/package  path */
-            if(pkg) {
-                pkgName.append(pkg+1, *pErrorCode);
-            } else {
-                pkgName.append(path, *pErrorCode);
+            ਜੇ(pkg) {
+                pkgName.append(pkg+1, *p_Error_ਕੋਡ);
+            } ਨਹੀਂਤਾਂ {
+                pkgName.append(ਰਸਤਾ, *p_Error_ਕੋਡ);
             }
-        } else {
-            treeChar = uprv_strchr(path, U_TREE_SEPARATOR);
-            if(treeChar) { 
-                treeName.append(treeChar+1, *pErrorCode); /* following '-' */
-                if(isICUData) {
-                    pkgName.append(U_ICUDATA_NAME, *pErrorCode);
-                } else {
-                    pkgName.append(path, static_cast<int32_t>(treeChar - path), *pErrorCode);
-                    if (first == nullptr) {
+        } ਨਹੀਂਤਾਂ {
+            ਰੁੱਖ_Char = uprv_strchr(ਰਸਤਾ, U_ਰੁੱਖ_SEPARATOR);
+            ਜੇ(ਰੁੱਖ_Char) { 
+                ਰੁੱਖ_Name.append(ਰੁੱਖ_Char+1, *p_Error_ਕੋਡ); /* following '-' */
+                ਜੇ(isICUData) {
+                    pkgName.append(U_ICUDATA_NAME, *p_Error_ਕੋਡ);
+                } ਨਹੀਂਤਾਂ {
+                    pkgName.append(ਰਸਤਾ, static_cast<int32_t>(ਰੁੱਖ_Char - ਰਸਤਾ), *p_Error_ਕੋਡ);
+                    ਜੇ (first == ਖਾਲੀ_ਸੂਚਕ) {
                         /*
                         This user data has no path, but there is a tree name.
                         Look up the correct path from the data cache later.
                         */
-                        path = pkgName.data();
+                        ਰਸਤਾ = pkgName.ਅੰਕੜੇ();
                     }
                 }
-            } else {
-                if(isICUData) {
-                    pkgName.append(U_ICUDATA_NAME, *pErrorCode);
-                } else {
-                    pkgName.append(path, *pErrorCode);
+            } ਨਹੀਂਤਾਂ {
+                ਜੇ(isICUData) {
+                    pkgName.append(U_ICUDATA_NAME, *p_Error_ਕੋਡ);
+                } ਨਹੀਂਤਾਂ {
+                    pkgName.append(ਰਸਤਾ, *p_Error_ਕੋਡ);
                 }
             }
         }
     }
 
-#ifdef UDATA_DEBUG
-    fprintf(stderr, " P=%s T=%s\n", pkgName.data(), treeName.data());
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+    fprintf(stderr, " P=%s T=%s\n", pkgName.ਅੰਕੜੇ(), ਰੁੱਖ_Name.ਅੰਕੜੇ());
+#ਜੇ_ਅੰਤ
 
     /* setting up the entry name and file name 
      * Make up a full name by appending the type to the supplied
@@ -1250,201 +1250,201 @@ doOpenChoice(const char *path, const char *type, const char *name,
      */
 
     /* prepend the package */
-    tocEntryName.append(pkgName, *pErrorCode);
-    tocEntryPath.append(pkgName, *pErrorCode);
-    tocEntrySuffixIndex = tocEntryName.length();
+    toc_ਇੰਦਰਾਜ_Name.append(pkgName, *p_Error_ਕੋਡ);
+    toc_ਇੰਦਰਾਜ_ਰਸਤਾ.append(pkgName, *p_Error_ਕੋਡ);
+    toc_ਇੰਦਰਾਜ_Suffix_ਸੂਚਕਾਂਕ = toc_ਇੰਦਰਾਜ_Name.length();
 
-    if(!treeName.isEmpty()) {
-        tocEntryName.append(U_TREE_ENTRY_SEP_CHAR, *pErrorCode).append(treeName, *pErrorCode);
-        tocEntryPath.append(U_FILE_SEP_CHAR, *pErrorCode).append(treeName, *pErrorCode);
+    ਜੇ(!ਰੁੱਖ_Name.is_ਖਾਲੀ_ਥਾਵਾਂ()) {
+        toc_ਇੰਦਰਾਜ_Name.append(U_ਰੁੱਖ_ਇੰਦਰਾਜ_SEP_CHAR, *p_Error_ਕੋਡ).append(ਰੁੱਖ_Name, *p_Error_ਕੋਡ);
+        toc_ਇੰਦਰਾਜ_ਰਸਤਾ.append(U_FILE_SEP_CHAR, *p_Error_ਕੋਡ).append(ਰੁੱਖ_Name, *p_Error_ਕੋਡ);
     }
 
-    tocEntryName.append(U_TREE_ENTRY_SEP_CHAR, *pErrorCode).append(name, *pErrorCode);
-    tocEntryPath.append(U_FILE_SEP_CHAR, *pErrorCode).append(name, *pErrorCode);
-    if(type!=nullptr && *type!=0) {
-        tocEntryName.append(".", *pErrorCode).append(type, *pErrorCode);
-        tocEntryPath.append(".", *pErrorCode).append(type, *pErrorCode);
+    toc_ਇੰਦਰਾਜ_Name.append(U_ਰੁੱਖ_ਇੰਦਰਾਜ_SEP_CHAR, *p_Error_ਕੋਡ).append(name, *p_Error_ਕੋਡ);
+    toc_ਇੰਦਰਾਜ_ਰਸਤਾ.append(U_FILE_SEP_CHAR, *p_Error_ਕੋਡ).append(name, *p_Error_ਕੋਡ);
+    ਜੇ(type!=ਖਾਲੀ_ਸੂਚਕ && *type!=0) {
+        toc_ਇੰਦਰਾਜ_Name.append(".", *p_Error_ਕੋਡ).append(type, *p_Error_ਕੋਡ);
+        toc_ਇੰਦਰਾਜ_ਰਸਤਾ.append(".", *p_Error_ਕੋਡ).append(type, *p_Error_ਕੋਡ);
     }
     // The +1 is for the U_FILE_SEP_CHAR that is always appended above.
-    tocEntryPathSuffix = tocEntryPath.data() + tocEntrySuffixIndex + 1; /* suffix starts here */
+    toc_ਇੰਦਰਾਜ_ਰਸਤਾ_Suffix = toc_ਇੰਦਰਾਜ_ਰਸਤਾ.ਅੰਕੜੇ() + toc_ਇੰਦਰਾਜ_Suffix_ਸੂਚਕਾਂਕ + 1; /* suffix starts here */
 
-#ifdef UDATA_DEBUG
-    fprintf(stderr, " tocEntryName = %s\n", tocEntryName.data());
-    fprintf(stderr, " tocEntryPath = %s\n", tocEntryPath.data());
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+    fprintf(stderr, " tocEntryName = %s\n", toc_ਇੰਦਰਾਜ_Name.ਅੰਕੜੇ());
+    fprintf(stderr, " tocEntryPath = %s\n", toc_ਇੰਦਰਾਜ_ਰਸਤਾ.ਅੰਕੜੇ());
+#ਜੇ_ਅੰਤ
 
-#if !defined(ICU_DATA_DIR_WINDOWS)
-    if(path == nullptr) {
-        path = COMMON_DATA_NAME; /* "icudt26e" */
+#ਜੇ !defined(ICU_ਅੰਕੜੇ_DIR_WINDOWS)
+    ਜੇ(ਰਸਤਾ == ਖਾਲੀ_ਸੂਚਕ) {
+        ਰਸਤਾ = COMMON_ਅੰਕੜੇ_NAME; /* "icudt26e" */
     }
-#else
+#ਨਹੀਂਤਾਂ
     // When using the Windows system data, we expects only a single data file.
-    path = COMMON_DATA_NAME; /* "icudt26e" */
-#endif
+    ਰਸਤਾ = COMMON_ਅੰਕੜੇ_NAME; /* "icudt26e" */
+#ਜੇ_ਅੰਤ
 
     /************************ Begin loop looking for ind. files ***************/
-#ifdef UDATA_DEBUG
-    fprintf(stderr, "IND: inBasename = %s, pkg=%s\n", "(n/a)", packageNameFromPath(path));
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+    fprintf(stderr, "IND: inBasename = %s, pkg=%s\n", "(n/a)", package_Name_From_ਰਸਤਾ(ਰਸਤਾ));
+#ਜੇ_ਅੰਤ
 
     /* End of dealing with a null basename */
-    dataPath = u_getDataDirectory();
+    ਅੰਕੜੇ_ਰਸਤਾ = u_get_ਅੰਕੜੇ_Directory();
 
     /****    Time zone individual files override  */
-    if (isICUData && type != nullptr && isTimeZoneFile(name, type)) {
-        const char *tzFilesDir = u_getTimeZoneFilesDirectory(pErrorCode);
-        if (tzFilesDir[0] != 0) {
-#ifdef UDATA_DEBUG
+    ਜੇ (isICUData && type != ਖਾਲੀ_ਸੂਚਕ && is_ਸਮਾਂ_Zone_File(name, type)) {
+        ਅਚਲ ਅੱਖਰ *tzFilesDir = u_get_ਸਮਾਂ_Zone_Files_Directory(p_Error_ਕੋਡ);
+        ਜੇ (tzFilesDir[0] != 0) {
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
             fprintf(stderr, "Trying Time Zone Files directory = %s\n", tzFilesDir);
-#endif
-            retVal = doLoadFromIndividualFiles(/* pkgName.data() */ "", tzFilesDir, tocEntryPathSuffix,
-                            /* path */ "", type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-            if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-                return retVal;
+#ਜੇ_ਅੰਤ
+            retVal = do_ਲੱਦੋ_From_Individual_Files(/* pkgName.data() */ "", tzFilesDir, toc_ਇੰਦਰਾਜ_ਰਸਤਾ_Suffix,
+                            /*ਰਸਤਾ*/ "", type, name, isAcceptable, context, &sub_Error_ਕੋਡ, p_Error_ਕੋਡ);
+            ਜੇ((retVal != ਖਾਲੀ_ਸੂਚਕ) || U_FAILURE(*p_Error_ਕੋਡ)) {
+                ਵਾਪਸ retVal;
             }
         }
     }
 
     /****    COMMON PACKAGE  - only if packages are first. */
-    if(gDataFileAccess == UDATA_PACKAGES_FIRST) {
-#ifdef UDATA_DEBUG
+    ਜੇ(g_ਅੰਕੜੇ_File_Access == UDATA_PACKAGES_ਪਹਿਲਾ) {
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
         fprintf(stderr, "Trying packages (UDATA_PACKAGES_FIRST)\n");
-#endif
+#ਜੇ_ਅੰਤ
         /* #2 */
-        retVal = doLoadFromCommonData(isICUData, 
-                            pkgName.data(), dataPath, tocEntryPathSuffix, tocEntryName.data(),
-                            path, type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-        if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-            return retVal;
+        retVal = do_ਲੱਦੋ_From_Common_ਅੰਕੜੇ(isICUData, 
+                            pkgName.ਅੰਕੜੇ(), ਅੰਕੜੇ_ਰਸਤਾ, toc_ਇੰਦਰਾਜ_ਰਸਤਾ_Suffix, toc_ਇੰਦਰਾਜ_Name.ਅੰਕੜੇ(),
+                            ਰਸਤਾ, type, name, isAcceptable, context, &sub_Error_ਕੋਡ, p_Error_ਕੋਡ);
+        ਜੇ((retVal != ਖਾਲੀ_ਸੂਚਕ) || U_FAILURE(*p_Error_ਕੋਡ)) {
+            ਵਾਪਸ retVal;
         }
     }
 
     /****    INDIVIDUAL FILES  */
-    if((gDataFileAccess==UDATA_PACKAGES_FIRST) ||
-       (gDataFileAccess==UDATA_FILES_FIRST)) {
-#ifdef UDATA_DEBUG
+    ਜੇ((g_ਅੰਕੜੇ_File_Access==UDATA_PACKAGES_ਪਹਿਲਾ) ||
+       (g_ਅੰਕੜੇ_File_Access==UDATA_FILES_ਪਹਿਲਾ)) {
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
         fprintf(stderr, "Trying individual files\n");
-#endif
+#ਜੇ_ਅੰਤ
         /* Check to make sure that there is a dataPath to iterate over */
-        if ((dataPath && *dataPath) || !isICUData) {
-            retVal = doLoadFromIndividualFiles(pkgName.data(), dataPath, tocEntryPathSuffix,
-                            path, type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-            if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-                return retVal;
+        ਜੇ ((ਅੰਕੜੇ_ਰਸਤਾ && *ਅੰਕੜੇ_ਰਸਤਾ) || !isICUData) {
+            retVal = do_ਲੱਦੋ_From_Individual_Files(pkgName.ਅੰਕੜੇ(), ਅੰਕੜੇ_ਰਸਤਾ, toc_ਇੰਦਰਾਜ_ਰਸਤਾ_Suffix,
+                            ਰਸਤਾ, type, name, isAcceptable, context, &sub_Error_ਕੋਡ, p_Error_ਕੋਡ);
+            ਜੇ((retVal != ਖਾਲੀ_ਸੂਚਕ) || U_FAILURE(*p_Error_ਕੋਡ)) {
+                ਵਾਪਸ retVal;
             }
         }
     }
 
     /****    COMMON PACKAGE  */
-    if((gDataFileAccess==UDATA_ONLY_PACKAGES) || 
-       (gDataFileAccess==UDATA_FILES_FIRST)) {
-#ifdef UDATA_DEBUG
+    ਜੇ((g_ਅੰਕੜੇ_File_Access==UDATA_ONLY_PACKAGES) || 
+       (g_ਅੰਕੜੇ_File_Access==UDATA_FILES_ਪਹਿਲਾ)) {
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
         fprintf(stderr, "Trying packages (UDATA_ONLY_PACKAGES || UDATA_FILES_FIRST)\n");
-#endif
-        retVal = doLoadFromCommonData(isICUData,
-                            pkgName.data(), dataPath, tocEntryPathSuffix, tocEntryName.data(),
-                            path, type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-        if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-            return retVal;
+#ਜੇ_ਅੰਤ
+        retVal = do_ਲੱਦੋ_From_Common_ਅੰਕੜੇ(isICUData,
+                            pkgName.ਅੰਕੜੇ(), ਅੰਕੜੇ_ਰਸਤਾ, toc_ਇੰਦਰਾਜ_ਰਸਤਾ_Suffix, toc_ਇੰਦਰਾਜ_Name.ਅੰਕੜੇ(),
+                            ਰਸਤਾ, type, name, isAcceptable, context, &sub_Error_ਕੋਡ, p_Error_ਕੋਡ);
+        ਜੇ((retVal != ਖਾਲੀ_ਸੂਚਕ) || U_FAILURE(*p_Error_ਕੋਡ)) {
+            ਵਾਪਸ retVal;
         }
     }
     
     /* Load from DLL.  If we haven't attempted package load, we also haven't had any chance to
         try a DLL (static or setCommonData/etc)  load.
          If we ever have a "UDATA_ONLY_FILES", add it to the or list here.  */  
-    if(gDataFileAccess==UDATA_NO_FILES) {
-#ifdef UDATA_DEBUG
+    ਜੇ(g_ਅੰਕੜੇ_File_Access==UDATA_NO_FILES) {
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
         fprintf(stderr, "Trying common data (UDATA_NO_FILES)\n");
-#endif
-        retVal = doLoadFromCommonData(isICUData,
-                            pkgName.data(), "", tocEntryPathSuffix, tocEntryName.data(),
-                            path, type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-        if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-            return retVal;
+#ਜੇ_ਅੰਤ
+        retVal = do_ਲੱਦੋ_From_Common_ਅੰਕੜੇ(isICUData,
+                            pkgName.ਅੰਕੜੇ(), "", toc_ਇੰਦਰਾਜ_ਰਸਤਾ_Suffix, toc_ਇੰਦਰਾਜ_Name.ਅੰਕੜੇ(),
+                            ਰਸਤਾ, type, name, isAcceptable, context, &sub_Error_ਕੋਡ, p_Error_ਕੋਡ);
+        ਜੇ((retVal != ਖਾਲੀ_ਸੂਚਕ) || U_FAILURE(*p_Error_ਕੋਡ)) {
+            ਵਾਪਸ retVal;
         }
     }
 
     /* data not found */
-    if(U_SUCCESS(*pErrorCode)) {
-        if(U_SUCCESS(subErrorCode)) {
+    ਜੇ(U_SUCCESS(*p_Error_ਕੋਡ)) {
+        ਜੇ(U_SUCCESS(sub_Error_ਕੋਡ)) {
             /* file not found */
-            *pErrorCode=U_FILE_ACCESS_ERROR;
-        } else {
+            *p_Error_ਕੋਡ=U_FILE_ACCESS_ERROR;
+        } ਨਹੀਂਤਾਂ {
             /* entry point not found or rejected */
-            *pErrorCode=subErrorCode;
+            *p_Error_ਕੋਡ=sub_Error_ਕੋਡ;
         }
     }
-    return retVal;
+    ਵਾਪਸ retVal;
 }
 
 
 
 /* API ---------------------------------------------------------------------- */
 
-U_CAPI UDataMemory * U_EXPORT2
-udata_open(const char *path, const char *type, const char *name,
-           UErrorCode *pErrorCode) {
-#ifdef UDATA_DEBUG
-  fprintf(stderr, "udata_open(): Opening: %s : %s . %s\n", (path?path:"nullptr"), name, type);
+U_CAPI UData_ਸਮ੍ਰਿਤੀ * U_EXPORT2
+udata_open(ਅਚਲ ਅੱਖਰ *ਰਸਤਾ, ਅਚਲ ਅੱਖਰ *type, ਅਚਲ ਅੱਖਰ *name,
+           UError_ਕੋਡ *p_Error_ਕੋਡ) {
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+  fprintf(stderr, "udata_open(): Opening: %s : %s . %s\n", (ਰਸਤਾ?ਰਸਤਾ:"nullptr"), name, type);
     fflush(stderr);
-#endif
+#ਜੇ_ਅੰਤ
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
-    } else if(name==nullptr || *name==0) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
-    } else {
-        return doOpenChoice(path, type, name, nullptr, nullptr, pErrorCode);
+    ਜੇ(p_Error_ਕੋਡ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
+    } ਨਹੀਂਤਾਂ ਜੇ(name==ਖਾਲੀ_ਸੂਚਕ || *name==0) {
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ doOpenChoice(ਰਸਤਾ, type, name, ਖਾਲੀ_ਸੂਚਕ, ਖਾਲੀ_ਸੂਚਕ, p_Error_ਕੋਡ);
     }
 }
 
 
 
-U_CAPI UDataMemory * U_EXPORT2
-udata_openChoice(const char *path, const char *type, const char *name,
-                 UDataMemoryIsAcceptable *isAcceptable, void *context,
-                 UErrorCode *pErrorCode) {
-#ifdef UDATA_DEBUG
-  fprintf(stderr, "udata_openChoice(): Opening: %s : %s . %s\n", (path?path:"nullptr"), name, type);
-#endif
+U_CAPI UData_ਸਮ੍ਰਿਤੀ * U_EXPORT2
+udata_openChoice(ਅਚਲ ਅੱਖਰ *ਰਸਤਾ, ਅਚਲ ਅੱਖਰ *type, ਅਚਲ ਅੱਖਰ *name,
+                 UData_ਸਮ੍ਰਿਤੀ_Is_Acceptable *isAcceptable, ਖਾਲੀ *context,
+                 UError_ਕੋਡ *p_Error_ਕੋਡ) {
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UDATA_DEBUG
+  fprintf(stderr, "udata_openChoice(): Opening: %s : %s . %s\n", (ਰਸਤਾ?ਰਸਤਾ:"nullptr"), name, type);
+#ਜੇ_ਅੰਤ
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
-    } else if(name==nullptr || *name==0 || isAcceptable==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
-    } else {
-        return doOpenChoice(path, type, name, isAcceptable, context, pErrorCode);
+    ਜੇ(p_Error_ਕੋਡ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
+    } ਨਹੀਂਤਾਂ ਜੇ(name==ਖਾਲੀ_ਸੂਚਕ || *name==0 || isAcceptable==ਖਾਲੀ_ਸੂਚਕ) {
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ doOpenChoice(ਰਸਤਾ, type, name, isAcceptable, context, p_Error_ਕੋਡ);
     }
 }
 
 
 
-U_CAPI void U_EXPORT2
-udata_getInfo(UDataMemory *pData, UDataInfo *pInfo) {
-    if(pInfo!=nullptr) {
-        if(pData!=nullptr && pData->pHeader!=nullptr) {
-            const UDataInfo *info=&pData->pHeader->info;
-            uint16_t dataInfoSize=udata_getInfoSize(info);
-            if(pInfo->size>dataInfoSize) {
-                pInfo->size=dataInfoSize;
+U_CAPI ਖਾਲੀ U_EXPORT2
+udata_getInfo(UData_ਸਮ੍ਰਿਤੀ *p_ਅੰਕੜੇ, UDataInfo *pInfo) {
+    ਜੇ(pInfo!=ਖਾਲੀ_ਸੂਚਕ) {
+        ਜੇ(p_ਅੰਕੜੇ!=ਖਾਲੀ_ਸੂਚਕ && p_ਅੰਕੜੇ->p_ਸਿਰਲੇਖ!=ਖਾਲੀ_ਸੂਚਕ) {
+            ਅਚਲ UDataInfo *info=&p_ਅੰਕੜੇ->p_ਸਿਰਲੇਖ->info;
+            uint16_t ਅੰਕੜੇ_Info_ਮਾਪ=udata_get_Info_ਮਾਪ(info);
+            ਜੇ(pInfo->size>ਅੰਕੜੇ_Info_ਮਾਪ) {
+                pInfo->size=ਅੰਕੜੇ_Info_ਮਾਪ;
             }
-            uprv_memcpy((uint16_t *)pInfo+1, (const uint16_t *)info+1, pInfo->size-2);
-            if(info->isBigEndian!=U_IS_BIG_ENDIAN) {
+            uprv_memcpy((uint16_t *)pInfo+1, (ਅਚਲ uint16_t *)info+1, pInfo->size-2);
+            ਜੇ(info->isBigEndian!=U_IS_BIG_ENDIAN) {
                 /* opposite endianness */
-                uint16_t x=info->reservedWord;
-                pInfo->reservedWord=(uint16_t)((x<<8)|(x>>8));
+                uint16_t x=info->reserved_ਸ਼ਬਦ;
+                pInfo->reserved_ਸ਼ਬਦ=(uint16_t)((x<<8)|(x>>8));
             }
-        } else {
+        } ਨਹੀਂਤਾਂ {
             pInfo->size=0;
         }
     }
 }
 
 
-U_CAPI void U_EXPORT2 udata_setFileAccess(UDataFileAccess access, UErrorCode * /*status*/)
+U_CAPI ਖਾਲੀ U_EXPORT2 udata_ਸੈੱਟ_File_Access(UDataFileAccess access, UError_ਕੋਡ * /*ਸਥਿਤੀ*/)
 {
     // Note: this function is documented as not thread safe.
-    gDataFileAccess = access;
+    g_ਅੰਕੜੇ_File_Access = access;
 }

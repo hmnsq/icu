@@ -18,16 +18,16 @@
 *   Case mapping service object and functions using it.
 */
 
-#ifndef __UCASEMAP_H__
-#define __UCASEMAP_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __UCASEMAP_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __UCASEMAP_H__
 
-#include "unicode/utypes.h"
-#include "unicode/stringoptions.h"
-#include "unicode/ustring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/stringoptions.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ustring.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/localpointer.h"
+#ਜੇ_ਅੰਤ   // U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
@@ -47,8 +47,8 @@
  * Older functions did not use a service object.
  * @stable ICU 3.4
  */
-struct UCaseMap;
-typedef struct UCaseMap UCaseMap; /**< C typedef for struct UCaseMap. @stable ICU 3.4 */
+ਬਣਤਰ UCaseMap;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ UCaseMap UCaseMap; /**< C typedef for struct UCaseMap. @stable ICU 3.4 */
 
 /**
  * Open a UCaseMap service object for a locale and a set of options.
@@ -73,17 +73,17 @@ typedef struct UCaseMap UCaseMap; /**< C typedef for struct UCaseMap. @stable IC
  * @stable ICU 3.4
  */
 U_CAPI UCaseMap * U_EXPORT2
-ucasemap_open(const char *locale, uint32_t options, UErrorCode *pErrorCode);
+ucasemap_open(ਅਚਲ ਅੱਖਰ *locale, uint32_t options, UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Close a UCaseMap service object.
  * @param csm Object to be closed.
  * @stable ICU 3.4
  */
-U_CAPI void U_EXPORT2
+U_CAPI ਖਾਲੀ U_EXPORT2
 ucasemap_close(UCaseMap *csm);
 
-#if U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -96,11 +96,11 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 4.4
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalUCaseMapPointer, UCaseMap, ucasemap_close);
+U_DEFINE_LOCAL_OPEN_ਸੂਚਕ(Local_UCase_Map_ਸੂਚਕ, UCaseMap, ucasemap_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif
+#ਜੇ_ਅੰਤ
 
 /**
  * Get the locale ID that is used for language-dependent case mappings.
@@ -108,8 +108,8 @@ U_NAMESPACE_END
  * @return locale ID
  * @stable ICU 3.4
  */
-U_CAPI const char* U_EXPORT2
-ucasemap_getLocale(const UCaseMap* csm U_LIFETIME_BOUND);
+U_CAPI ਅਚਲ ਅੱਖਰ* U_EXPORT2
+ucasemap_getLocale(ਅਚਲ UCaseMap* csm U_LIFETIME_BOUND);
 
 /**
  * Get the options bit set that is used for case folding and string comparisons.
@@ -118,7 +118,7 @@ ucasemap_getLocale(const UCaseMap* csm U_LIFETIME_BOUND);
  * @stable ICU 3.4
  */
 U_CAPI uint32_t U_EXPORT2
-ucasemap_getOptions(const UCaseMap *csm);
+ucasemap_getOptions(ਅਚਲ UCaseMap *csm);
 
 /**
  * Set the locale ID that is used for language-dependent case mappings.
@@ -131,8 +131,8 @@ ucasemap_getOptions(const UCaseMap *csm);
  * @see ucasemap_open
  * @stable ICU 3.4
  */
-U_CAPI void U_EXPORT2
-ucasemap_setLocale(UCaseMap *csm, const char *locale, UErrorCode *pErrorCode);
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucasemap_ਸੈੱਟ_Locale(UCaseMap *csm, ਅਚਲ ਅੱਖਰ *locale, UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Set the options bit set that is used for case folding and string comparisons.
@@ -145,10 +145,10 @@ ucasemap_setLocale(UCaseMap *csm, const char *locale, UErrorCode *pErrorCode);
  * @see ucasemap_open
  * @stable ICU 3.4
  */
-U_CAPI void U_EXPORT2
-ucasemap_setOptions(UCaseMap *csm, uint32_t options, UErrorCode *pErrorCode);
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucasemap_ਸੈੱਟ_Options(UCaseMap *csm, uint32_t options, UError_ਕੋਡ *p_Error_ਕੋਡ);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ਜੇ !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * Get the break iterator that is used for titlecasing.
@@ -157,8 +157,8 @@ ucasemap_setOptions(UCaseMap *csm, uint32_t options, UErrorCode *pErrorCode);
  * @return titlecasing break iterator
  * @stable ICU 3.8
  */
-U_CAPI const UBreakIterator* U_EXPORT2
-ucasemap_getBreakIterator(const UCaseMap* csm U_LIFETIME_BOUND);
+U_CAPI ਅਚਲ UBreakIterator* U_EXPORT2
+ucasemap_getBreakIterator(ਅਚਲ UCaseMap* csm U_LIFETIME_BOUND);
 
 /**
  * Set the break iterator that is used for titlecasing.
@@ -180,8 +180,8 @@ ucasemap_getBreakIterator(const UCaseMap* csm U_LIFETIME_BOUND);
  * @see ucasemap_utf8ToTitle
  * @stable ICU 3.8
  */
-U_CAPI void U_EXPORT2
-ucasemap_setBreakIterator(UCaseMap *csm, UBreakIterator *iterToAdopt, UErrorCode *pErrorCode);
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucasemap_ਸੈੱਟ_Break_Iterator(UCaseMap *csm, UBreakIterator *iter_ਮੰਜ਼ਿਲ_Adopt, UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Titlecase a UTF-16 string. This function is almost a duplicate of u_strToTitle(),
@@ -230,12 +230,12 @@ ucasemap_setBreakIterator(UCaseMap *csm, UBreakIterator *iterToAdopt, UErrorCode
  * @stable ICU 3.8
  */
 U_CAPI int32_t U_EXPORT2
-ucasemap_toTitle(UCaseMap *csm,
-                 UChar *dest, int32_t destCapacity,
-                 const UChar *src, int32_t srcLength,
-                 UErrorCode *pErrorCode);
+ucasemap_ਮੰਜ਼ਿਲ_Title(UCaseMap *csm,
+                 UChar *dest, int32_t dest_ਸਮਰੱਥਾ,
+                 ਅਚਲ UChar *src, int32_t src_ਲੰਮਾਈ,
+                 UError_ਕੋਡ *p_Error_ਕੋਡ);
 
-#endif  // UCONFIG_NO_BREAK_ITERATION
+#ਜੇ_ਅੰਤ  // UCONFIG_NO_BREAK_ITERATION
 
 /**
  * Lowercase the characters in a UTF-8 string.
@@ -261,10 +261,10 @@ ucasemap_toTitle(UCaseMap *csm,
  * @stable ICU 3.4
  */
 U_CAPI int32_t U_EXPORT2
-ucasemap_utf8ToLower(const UCaseMap *csm,
-                     char *dest, int32_t destCapacity,
-                     const char *src, int32_t srcLength,
-                     UErrorCode *pErrorCode);
+ucasemap_utf8_ਮੰਜ਼ਿਲ_ਹੇਠਲਾ(ਅਚਲ UCaseMap *csm,
+                     ਅੱਖਰ *dest, int32_t dest_ਸਮਰੱਥਾ,
+                     ਅਚਲ ਅੱਖਰ *src, int32_t src_ਲੰਮਾਈ,
+                     UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Uppercase the characters in a UTF-8 string.
@@ -290,12 +290,12 @@ ucasemap_utf8ToLower(const UCaseMap *csm,
  * @stable ICU 3.4
  */
 U_CAPI int32_t U_EXPORT2
-ucasemap_utf8ToUpper(const UCaseMap *csm,
-                     char *dest, int32_t destCapacity,
-                     const char *src, int32_t srcLength,
-                     UErrorCode *pErrorCode);
+ucasemap_utf8_ਮੰਜ਼ਿਲ_ਉੱਤਲਾ(ਅਚਲ UCaseMap *csm,
+                     ਅੱਖਰ *dest, int32_t dest_ਸਮਰੱਥਾ,
+                     ਅਚਲ ਅੱਖਰ *src, int32_t src_ਲੰਮਾਈ,
+                     UError_ਕੋਡ *p_Error_ਕੋਡ);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ਜੇ !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * Titlecase a UTF-8 string.
@@ -342,12 +342,12 @@ ucasemap_utf8ToUpper(const UCaseMap *csm,
  * @stable ICU 3.8
  */
 U_CAPI int32_t U_EXPORT2
-ucasemap_utf8ToTitle(UCaseMap *csm,
-                    char *dest, int32_t destCapacity,
-                    const char *src, int32_t srcLength,
-                    UErrorCode *pErrorCode);
+ucasemap_utf8_ਮੰਜ਼ਿਲ_Title(UCaseMap *csm,
+                    ਅੱਖਰ *dest, int32_t dest_ਸਮਰੱਥਾ,
+                    ਅਚਲ ਅੱਖਰ *src, int32_t src_ਲੰਮਾਈ,
+                    UError_ਕੋਡ *p_Error_ਕੋਡ);
 
-#endif
+#ਜੇ_ਅੰਤ
 
 /**
  * Case-folds the characters in a UTF-8 string.
@@ -380,9 +380,9 @@ ucasemap_utf8ToTitle(UCaseMap *csm,
  * @stable ICU 3.8
  */
 U_CAPI int32_t U_EXPORT2
-ucasemap_utf8FoldCase(const UCaseMap *csm,
-                      char *dest, int32_t destCapacity,
-                      const char *src, int32_t srcLength,
-                      UErrorCode *pErrorCode);
+ucasemap_utf8FoldCase(ਅਚਲ UCaseMap *csm,
+                      ਅੱਖਰ *dest, int32_t dest_ਸਮਰੱਥਾ,
+                      ਅਚਲ ਅੱਖਰ *src, int32_t src_ਲੰਮਾਈ,
+                      UError_ਕੋਡ *p_Error_ਕੋਡ);
 
-#endif
+#ਜੇ_ਅੰਤ

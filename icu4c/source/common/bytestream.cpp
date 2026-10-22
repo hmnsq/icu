@@ -6,81 +6,81 @@
 // Copyright 2007 Google Inc. All Rights Reserved.
 // Author: sanjay@google.com (Sanjay Ghemawat)
 
-#include "unicode/utypes.h"
-#include "unicode/bytestream.h"
-#include "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/bytestream.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
 ByteSink::~ByteSink() {}
 
-char* ByteSink::GetAppendBuffer(int32_t min_capacity,
+ਅੱਖਰ* ByteSink::Get_Append_ਬਫਰ(int32_t min_ਸਮਰੱਥਾ_2,
                                 int32_t /*desired_capacity_hint*/,
-                                char* scratch U_LIFETIME_BOUND,
-                                int32_t scratch_capacity,
-                                int32_t* result_capacity) U_LIFETIME_BOUND {
-  if (min_capacity < 1 || scratch_capacity < min_capacity) {
-    *result_capacity = 0;
-    return nullptr;
+                                ਅੱਖਰ* scratch U_LIFETIME_BOUND,
+                                int32_t scratch_ਸਮਰੱਥਾ_2,
+                                int32_t* ਨਤੀਜਾ_ਸਮਰੱਥਾ_2) U_LIFETIME_BOUND {
+  ਜੇ (min_ਸਮਰੱਥਾ_2 < 1 || scratch_ਸਮਰੱਥਾ_2 < min_ਸਮਰੱਥਾ_2) {
+    *ਨਤੀਜਾ_ਸਮਰੱਥਾ_2 = 0;
+    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
   }
-  *result_capacity = scratch_capacity;
-  return scratch;
+  *ਨਤੀਜਾ_ਸਮਰੱਥਾ_2 = scratch_ਸਮਰੱਥਾ_2;
+  ਵਾਪਸ scratch;
 }
 
-void ByteSink::Flush() {}
+ਖਾਲੀ ByteSink::Flush() {}
 
-CheckedArrayByteSink::CheckedArrayByteSink(char* outbuf, int32_t capacity)
-    : outbuf_(outbuf), capacity_(capacity < 0 ? 0 : capacity),
-      size_(0), appended_(0), overflowed_(false) {
+CheckedArrayByteSink::CheckedArrayByteSink(ਅੱਖਰ* outbuf, int32_t capacity)
+    : outbuf_(outbuf), ਸਮਰੱਥਾ_2(capacity < 0 ? 0 : capacity),
+      ਮਾਪ(0), appended_(0), overflowed_(ਝੂਠ) {
 }
 
 CheckedArrayByteSink::~CheckedArrayByteSink() {}
 
 CheckedArrayByteSink& CheckedArrayByteSink::Reset() U_LIFETIME_BOUND {
-  size_ = appended_ = 0;
-  overflowed_ = false;
-  return *this;
+  ਮਾਪ = appended_ = 0;
+  overflowed_ = ਝੂਠ;
+  ਵਾਪਸ *ਇਹ;
 }
 
-void CheckedArrayByteSink::Append(const char* bytes, int32_t n) {
-  if (n <= 0) {
-    return;
+ਖਾਲੀ CheckedArrayByteSink::Append(ਅਚਲ ਅੱਖਰ* ਬਾਈਟਾਂ, int32_t n) {
+  ਜੇ (n <= 0) {
+    ਵਾਪਸ;
   }
-  if (n > (INT32_MAX - appended_)) {
+  ਜੇ (n > (INT32_MAX - appended_)) {
     // TODO: Report as integer overflow, not merely buffer overflow.
     appended_ = INT32_MAX;
-    overflowed_ = true;
-    return;
+    overflowed_ = ਸੱਚ;
+    ਵਾਪਸ;
   }
   appended_ += n;
-  int32_t available = capacity_ - size_;
-  if (n > available) {
-    n = available;
-    overflowed_ = true;
+  int32_t ਉਪਲਬਧ = ਸਮਰੱਥਾ_2 - ਮਾਪ;
+  ਜੇ (n > ਉਪਲਬਧ) {
+    n = ਉਪਲਬਧ;
+    overflowed_ = ਸੱਚ;
   }
-  if (n > 0 && bytes != (outbuf_ + size_)) {
-    uprv_memcpy(outbuf_ + size_, bytes, n);
+  ਜੇ (n > 0 && ਬਾਈਟਾਂ != (outbuf_ + ਮਾਪ)) {
+    uprv_memcpy(outbuf_ + ਮਾਪ, ਬਾਈਟਾਂ, n);
   }
-  size_ += n;
+  ਮਾਪ += n;
 }
 
-char* CheckedArrayByteSink::GetAppendBuffer(int32_t min_capacity,
+ਅੱਖਰ* CheckedArrayByteSink::Get_Append_ਬਫਰ(int32_t min_ਸਮਰੱਥਾ_2,
                                             int32_t /*desired_capacity_hint*/,
-                                            char* scratch U_LIFETIME_BOUND,
-                                            int32_t scratch_capacity,
-                                            int32_t* result_capacity) U_LIFETIME_BOUND {
-  if (min_capacity < 1 || scratch_capacity < min_capacity) {
-    *result_capacity = 0;
-    return nullptr;
+                                            ਅੱਖਰ* scratch U_LIFETIME_BOUND,
+                                            int32_t scratch_ਸਮਰੱਥਾ_2,
+                                            int32_t* ਨਤੀਜਾ_ਸਮਰੱਥਾ_2) U_LIFETIME_BOUND {
+  ਜੇ (min_ਸਮਰੱਥਾ_2 < 1 || scratch_ਸਮਰੱਥਾ_2 < min_ਸਮਰੱਥਾ_2) {
+    *ਨਤੀਜਾ_ਸਮਰੱਥਾ_2 = 0;
+    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
   }
-  int32_t available = capacity_ - size_;
-  if (available >= min_capacity) {
-    *result_capacity = available;
-    return outbuf_ + size_;
-  } else {
-    *result_capacity = scratch_capacity;
-    return scratch;
+  int32_t ਉਪਲਬਧ = ਸਮਰੱਥਾ_2 - ਮਾਪ;
+  ਜੇ (ਉਪਲਬਧ >= min_ਸਮਰੱਥਾ_2) {
+    *ਨਤੀਜਾ_ਸਮਰੱਥਾ_2 = ਉਪਲਬਧ;
+    ਵਾਪਸ outbuf_ + ਮਾਪ;
+  } ਨਹੀਂਤਾਂ {
+    *ਨਤੀਜਾ_ਸਮਰੱਥਾ_2 = scratch_ਸਮਰੱਥਾ_2;
+    ਵਾਪਸ scratch;
   }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ

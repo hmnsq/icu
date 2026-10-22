@@ -9,22 +9,22 @@
 ******************************************************************************
 */
 
-#include "unicode/utypes.h"
-#include "unicode/icudataver.h"
-#include "unicode/ures.h"
-#include "uresimp.h" /* for ures_getVersionByKey */
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/icudataver.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ures.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uresimp.h" /* for ures_getVersionByKey */
 
-U_CAPI void U_EXPORT2 u_getDataVersion(UVersionInfo dataVersionFillin, UErrorCode *status) {
-    UResourceBundle *icudatares = nullptr;
+U_CAPI ਖਾਲੀ U_EXPORT2 u_get_ਅੰਕੜੇ_ਸੰਸਕਰਣ(UVersionInfo ਅੰਕੜੇ_ਸੰਸਕਰਣ_Fillin, UError_ਕੋਡ *ਸਥਿਤੀ) {
+    UResourceBundle *icudatares = ਖਾਲੀ_ਸੂਚਕ;
     
-    if (U_FAILURE(*status)) {
-        return;
+    ਜੇ (U_FAILURE(*ਸਥਿਤੀ)) {
+        ਵਾਪਸ;
     }
     
-    if (dataVersionFillin != nullptr) {
-        icudatares = ures_openDirect(nullptr, U_ICU_VERSION_BUNDLE , status);
-        if (U_SUCCESS(*status)) {
-            ures_getVersionByKey(icudatares, U_ICU_DATA_KEY, dataVersionFillin, status);
+    ਜੇ (ਅੰਕੜੇ_ਸੰਸਕਰਣ_Fillin != ਖਾਲੀ_ਸੂਚਕ) {
+        icudatares = ures_open_ਸਿੱਧਾ(ਖਾਲੀ_ਸੂਚਕ, U_ICU_ਸੰਸਕਰਣ_BUNDLE , ਸਥਿਤੀ);
+        ਜੇ (U_SUCCESS(*ਸਥਿਤੀ)) {
+            ures_get_ਸੰਸਕਰਣ_By_ਕੁੰਜੀ(icudatares, U_ICU_ਅੰਕੜੇ_ਕੁੰਜੀ, ਅੰਕੜੇ_ਸੰਸਕਰਣ_Fillin, ਸਥਿਤੀ);
         }
         ures_close(icudatares);
     }

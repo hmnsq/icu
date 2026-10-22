@@ -7,21 +7,21 @@
 ******************************************************************************
 * sharedobject.cpp
 */
-#include "sharedobject.h"
-#include "mutex.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "unifiedcache.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "sharedobject.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mutex.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "umutex.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unifiedcache.h"
 
 U_NAMESPACE_BEGIN
 
 SharedObject::~SharedObject() {}
 
-UnifiedCacheBase::~UnifiedCacheBase() {}
+Unified_Cache_ਅਧਾਰ::~Unified_Cache_ਅਧਾਰ() {}
 
-void
-SharedObject::addRef() const {
-    umtx_atomic_inc(&hardRefCount);
+ਖਾਲੀ
+SharedObject::ਜੋੜੋ_Ref() ਅਚਲ {
+    umtx_atomic_inc(&hard_Ref_ਗਿਣਤੀ);
 }
 
 // removeRef Decrement the reference count and delete if it is zero.
@@ -32,31 +32,31 @@ SharedObject::addRef() const {
 //           a cache eviction cycle concurrently.
 //           NO ACCESS TO *this PERMITTED AFTER REFERENCE COUNT == 0 for cached objects.
 //           THE OBJECT MAY ALREADY BE GONE.
-void
-SharedObject::removeRef() const {
-    const UnifiedCacheBase *cache = this->cachePtr;
-    int32_t updatedRefCount = umtx_atomic_dec(&hardRefCount);
-    U_ASSERT(updatedRefCount >= 0);
-    if (updatedRefCount == 0) {
-        if (cache) {
+ਖਾਲੀ
+SharedObject::removeRef() ਅਚਲ {
+    ਅਚਲ Unified_Cache_ਅਧਾਰ *cache = ਇਹ->cachePtr;
+    int32_t updated_Ref_ਗਿਣਤੀ = umtx_atomic_dec(&hard_Ref_ਗਿਣਤੀ);
+    U_ASSERT(updated_Ref_ਗਿਣਤੀ >= 0);
+    ਜੇ (updated_Ref_ਗਿਣਤੀ == 0) {
+        ਜੇ (cache) {
             cache->handleUnreferencedObject();
-        } else {
-            delete this;
+        } ਨਹੀਂਤਾਂ {
+            ਮਿਟਾਓ ਇਹ;
         }
     }
 }
 
 
 int32_t
-SharedObject::getRefCount() const {
-    return umtx_loadAcquire(hardRefCount);
+SharedObject::get_Ref_ਗਿਣਤੀ() ਅਚਲ {
+    ਵਾਪਸ umtx_ਲੱਦੋ_Acquire(hard_Ref_ਗਿਣਤੀ);
 }
 
-void
-SharedObject::deleteIfZeroRefCount() const {
-    if (this->cachePtr == nullptr && getRefCount() == 0) {
-        delete this;
+ਖਾਲੀ
+SharedObject::delete_If_Zero_Ref_ਗਿਣਤੀ() ਅਚਲ {
+    ਜੇ (ਇਹ->cachePtr == ਖਾਲੀ_ਸੂਚਕ && get_Ref_ਗਿਣਤੀ() == 0) {
+        ਮਿਟਾਓ ਇਹ;
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ

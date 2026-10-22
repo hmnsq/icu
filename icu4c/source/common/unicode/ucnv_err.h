@@ -82,71 +82,71 @@
  *  substituted to be the default substitution character.
  */
 
-#ifndef UCNV_ERR_H
-#define UCNV_ERR_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ UCNV_ERR_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_ERR_H
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ਜੇ !UCONFIG_NO_CONVERSION
 
 /** Forward declaring the UConverter structure. @stable ICU 2.0 */
-struct UConverter;
+ਬਣਤਰ UConverter;
 
 /** @stable ICU 2.0 */
-typedef struct UConverter UConverter;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ UConverter UConverter;
 
 /**
  * FROM_U, TO_U context options for sub callback
  * @stable ICU 2.0
  */
-#define UCNV_SUB_STOP_ON_ILLEGAL "i"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_SUB_STOP_ON_ILLEGAL "i"
 
 /**
  * FROM_U, TO_U context options for skip callback
  * @stable ICU 2.0
  */
-#define UCNV_SKIP_STOP_ON_ILLEGAL "i"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_SKIP_STOP_ON_ILLEGAL "i"
 
 /**
  * FROM_U_CALLBACK_ESCAPE context option to escape the code unit according to ICU (%UXXXX) 
  * @stable ICU 2.0
  */
-#define UCNV_ESCAPE_ICU       NULL
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_ESCAPE_ICU       ਨਿਰਾ
 /**
  * FROM_U_CALLBACK_ESCAPE context option to escape the code unit according to JAVA (\\uXXXX)
  * @stable ICU 2.0
  */
-#define UCNV_ESCAPE_JAVA      "J"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_ESCAPE_JAVA      "J"
 /**
  * FROM_U_CALLBACK_ESCAPE context option to escape the code unit according to C (\\uXXXX \\UXXXXXXXX)
  * TO_U_CALLBACK_ESCAPE option to escape the character value according to C (\\xXXXX)
  * @stable ICU 2.0
  */
-#define UCNV_ESCAPE_C         "C"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_ESCAPE_C         "C"
 /**
  * FROM_U_CALLBACK_ESCAPE context option to escape the code unit according to XML Decimal escape \htmlonly(&amp;#DDDD;)\endhtmlonly
  * TO_U_CALLBACK_ESCAPE context option to escape the character value according to XML Decimal escape \htmlonly(&amp;#DDDD;)\endhtmlonly
  * @stable ICU 2.0
  */
-#define UCNV_ESCAPE_XML_DEC   "D"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_ESCAPE_XML_DEC   "D"
 /**
  * FROM_U_CALLBACK_ESCAPE context option to escape the code unit according to XML Hex escape \htmlonly(&amp;#xXXXX;)\endhtmlonly
  * TO_U_CALLBACK_ESCAPE context option to escape the character value according to XML Hex escape \htmlonly(&amp;#xXXXX;)\endhtmlonly
  * @stable ICU 2.0
  */
-#define UCNV_ESCAPE_XML_HEX   "X"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_ESCAPE_XML_HEX   "X"
 /**
  * FROM_U_CALLBACK_ESCAPE context option to escape the code unit according to Unicode (U+XXXXX)
  * @stable ICU 2.0
  */
-#define UCNV_ESCAPE_UNICODE   "U"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_ESCAPE_UNICODE   "U"
 
 /**
  * FROM_U_CALLBACK_ESCAPE context option to escape the code unit according to CSS2 conventions (\\HH..H<space>, that is,
  * a backslash, 1..6 hex digits, and a space)
  * @stable ICU 4.0
  */
-#define UCNV_ESCAPE_CSS2   "S"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_ESCAPE_CSS2   "S"
 
 /** 
  * The process condition code to be used with the callbacks.  
@@ -154,7 +154,7 @@ typedef struct UConverter UConverter;
  * passed on to any chained callbacks.
  * @stable ICU 2.0
  */
-typedef enum {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਗਿਣਤੀ {
     UCNV_UNASSIGNED = 0,  /**< The code point is unassigned.
                              The error code U_INVALID_CHAR_FOUND will be set. */
     UCNV_ILLEGAL = 1,     /**< The code point is illegal. For example, 
@@ -191,32 +191,32 @@ typedef enum {
  * The structure for the fromUnicode callback function parameter.
  * @stable ICU 2.0
  */
-typedef struct {
-    uint16_t size;              /**< The size of this struct. @stable ICU 2.0 */
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ {
+    uint16_t ਮਾਪ_2;              /**< The size of this struct. @stable ICU 2.0 */
     UBool flush;                /**< The internal state of converter will be reset and data flushed if set to true. @stable ICU 2.0    */
     UConverter *converter;      /**< Pointer to the converter that is opened and to which this struct is passed as an argument. @stable ICU 2.0  */
-    const UChar *source;        /**< Pointer to the source source buffer. @stable ICU 2.0    */
-    const UChar *sourceLimit;   /**< Pointer to the limit (end + 1) of source buffer. @stable ICU 2.0    */
-    char *target;               /**< Pointer to the target buffer. @stable ICU 2.0    */
-    const char *targetLimit;    /**< Pointer to the limit (end + 1) of target buffer. @stable ICU 2.0     */
+    ਅਚਲ UChar *ਸਰੋਤ;        /**< Pointer to the source source buffer. @stable ICU 2.0    */
+    ਅਚਲ UChar *ਸਰੋਤ_ਹੱਦਬੰਦੀ;   /**< Pointer to the limit (end + 1) of source buffer. @stable ICU 2.0    */
+    ਅੱਖਰ *ਨਿਸ਼ਾਨਾ;               /**< Pointer to the target buffer. @stable ICU 2.0    */
+    ਅਚਲ ਅੱਖਰ *ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ;    /**< Pointer to the limit (end + 1) of target buffer. @stable ICU 2.0     */
     int32_t *offsets;           /**< Pointer to the buffer that receives the offsets. *offset = blah ; offset++;. @stable ICU 2.0  */
-} UConverterFromUnicodeArgs;
+} UConverter_From_Unicode_ਦਲੀਲਾਂ;
 
 
 /**
  * The structure for the toUnicode callback function parameter.
  * @stable ICU 2.0
  */
-typedef struct {
-    uint16_t size;              /**< The size of this struct   @stable ICU 2.0 */
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ {
+    uint16_t ਮਾਪ_2;              /**< The size of this struct   @stable ICU 2.0 */
     UBool flush;                /**< The internal state of converter will be reset and data flushed if set to true. @stable ICU 2.0   */
     UConverter *converter;      /**< Pointer to the converter that is opened and to which this struct is passed as an argument. @stable ICU 2.0 */
-    const char *source;         /**< Pointer to the source source buffer. @stable ICU 2.0    */
-    const char *sourceLimit;    /**< Pointer to the limit (end + 1) of source buffer. @stable ICU 2.0    */
-    UChar *target;              /**< Pointer to the target buffer. @stable ICU 2.0    */
-    const UChar *targetLimit;   /**< Pointer to the limit (end + 1) of target buffer. @stable ICU 2.0     */
+    ਅਚਲ ਅੱਖਰ *ਸਰੋਤ;         /**< Pointer to the source source buffer. @stable ICU 2.0    */
+    ਅਚਲ ਅੱਖਰ *ਸਰੋਤ_ਹੱਦਬੰਦੀ;    /**< Pointer to the limit (end + 1) of source buffer. @stable ICU 2.0    */
+    UChar *ਨਿਸ਼ਾਨਾ;              /**< Pointer to the target buffer. @stable ICU 2.0    */
+    ਅਚਲ UChar *ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ;   /**< Pointer to the limit (end + 1) of target buffer. @stable ICU 2.0     */
     int32_t *offsets;           /**< Pointer to the buffer that receives the offsets. *offset = blah ; offset++;. @stable ICU 2.0  */
-} UConverterToUnicodeArgs;
+} UConverter_ਮੰਜ਼ਿਲ_Unicode_ਦਲੀਲਾਂ;
 
 
 /**
@@ -233,14 +233,14 @@ typedef struct {
  * @param err This should always be set to a failure status prior to calling.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_STOP (
-                  const void *context,
-                  UConverterFromUnicodeArgs *fromUArgs,
-                  const UChar* codeUnits,
-                  int32_t length,
-                  UChar32 codePoint,
+U_CAPI ਖਾਲੀ U_EXPORT2 UCNV_FROM_U_CALLBACK_STOP (
+                  ਅਚਲ ਖਾਲੀ *context,
+                  UConverter_From_Unicode_ਦਲੀਲਾਂ *fromUArgs,
+                  ਅਚਲ UChar* ਕੋਡ_Units,
+                  int32_t ਲੰਮਾਈ,
+                  UChar32 ਕੋਡ_ਬਿੰਦੂ,
                   UConverterCallbackReason reason,
-                  UErrorCode * err);
+                  UError_ਕੋਡ * err);
 
 
 
@@ -257,13 +257,13 @@ U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_STOP (
  * @param err This should always be set to a failure status prior to calling.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_STOP (
-                  const void *context,
-                  UConverterToUnicodeArgs *toUArgs,
-                  const char* codeUnits,
-                  int32_t length,
+U_CAPI ਖਾਲੀ U_EXPORT2 UCNV_ਮੰਜ਼ਿਲ_U_CALLBACK_STOP (
+                  ਅਚਲ ਖਾਲੀ *context,
+                  UConverter_ਮੰਜ਼ਿਲ_Unicode_ਦਲੀਲਾਂ *ਮੰਜ਼ਿਲ_UArgs,
+                  ਅਚਲ ਅੱਖਰ* ਕੋਡ_Units,
+                  int32_t ਲੰਮਾਈ,
                   UConverterCallbackReason reason,
-                  UErrorCode * err);
+                  UError_ਕੋਡ * err);
 
 /**
  * DO NOT CALL THIS FUNCTION DIRECTLY!
@@ -284,14 +284,14 @@ U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_STOP (
  *      otherwise this value will be set to a failure status.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_SKIP (
-                  const void *context,
-                  UConverterFromUnicodeArgs *fromUArgs,
-                  const UChar* codeUnits,
-                  int32_t length,
-                  UChar32 codePoint,
+U_CAPI ਖਾਲੀ U_EXPORT2 UCNV_FROM_U_CALLBACK_SKIP (
+                  ਅਚਲ ਖਾਲੀ *context,
+                  UConverter_From_Unicode_ਦਲੀਲਾਂ *fromUArgs,
+                  ਅਚਲ UChar* ਕੋਡ_Units,
+                  int32_t ਲੰਮਾਈ,
+                  UChar32 ਕੋਡ_ਬਿੰਦੂ,
                   UConverterCallbackReason reason,
-                  UErrorCode * err);
+                  UError_ਕੋਡ * err);
 
 /**
  * DO NOT CALL THIS FUNCTION DIRECTLY!
@@ -314,14 +314,14 @@ U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_SKIP (
  * @see ucnv_setSubstChars
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_SUBSTITUTE (
-                  const void *context,
-                  UConverterFromUnicodeArgs *fromUArgs,
-                  const UChar* codeUnits,
-                  int32_t length,
-                  UChar32 codePoint,
+U_CAPI ਖਾਲੀ U_EXPORT2 UCNV_FROM_U_CALLBACK_SUBSTITUTE (
+                  ਅਚਲ ਖਾਲੀ *context,
+                  UConverter_From_Unicode_ਦਲੀਲਾਂ *fromUArgs,
+                  ਅਚਲ UChar* ਕੋਡ_Units,
+                  int32_t ਲੰਮਾਈ,
+                  UChar32 ਕੋਡ_ਬਿੰਦੂ,
                   UConverterCallbackReason reason,
-                  UErrorCode * err);
+                  UError_ਕੋਡ * err);
 
 /**
  * DO NOT CALL THIS FUNCTION DIRECTLY!
@@ -370,14 +370,14 @@ U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_SUBSTITUTE (
  *      otherwise this value will be set to a failure status.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_ESCAPE (
-                  const void *context,
-                  UConverterFromUnicodeArgs *fromUArgs,
-                  const UChar* codeUnits,
-                  int32_t length,
-                  UChar32 codePoint,
+U_CAPI ਖਾਲੀ U_EXPORT2 UCNV_FROM_U_CALLBACK_ESCAPE (
+                  ਅਚਲ ਖਾਲੀ *context,
+                  UConverter_From_Unicode_ਦਲੀਲਾਂ *fromUArgs,
+                  ਅਚਲ UChar* ਕੋਡ_Units,
+                  int32_t ਲੰਮਾਈ,
+                  UChar32 ਕੋਡ_ਬਿੰਦੂ,
                   UConverterCallbackReason reason,
-                  UErrorCode * err);
+                  UError_ਕੋਡ * err);
 
 
 /**
@@ -398,13 +398,13 @@ U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_ESCAPE (
  *      otherwise this value will be set to a failure status.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_SKIP (
-                  const void *context,
-                  UConverterToUnicodeArgs *toUArgs,
-                  const char* codeUnits,
-                  int32_t length,
+U_CAPI ਖਾਲੀ U_EXPORT2 UCNV_ਮੰਜ਼ਿਲ_U_CALLBACK_SKIP (
+                  ਅਚਲ ਖਾਲੀ *context,
+                  UConverter_ਮੰਜ਼ਿਲ_Unicode_ਦਲੀਲਾਂ *ਮੰਜ਼ਿਲ_UArgs,
+                  ਅਚਲ ਅੱਖਰ* ਕੋਡ_Units,
+                  int32_t ਲੰਮਾਈ,
                   UConverterCallbackReason reason,
-                  UErrorCode * err);
+                  UError_ਕੋਡ * err);
 
 /**
  * DO NOT CALL THIS FUNCTION DIRECTLY!
@@ -424,13 +424,13 @@ U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_SKIP (
  *      otherwise this value will be set to a failure status.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_SUBSTITUTE (
-                  const void *context,
-                  UConverterToUnicodeArgs *toUArgs,
-                  const char* codeUnits,
-                  int32_t length,
+U_CAPI ਖਾਲੀ U_EXPORT2 UCNV_ਮੰਜ਼ਿਲ_U_CALLBACK_SUBSTITUTE (
+                  ਅਚਲ ਖਾਲੀ *context,
+                  UConverter_ਮੰਜ਼ਿਲ_Unicode_ਦਲੀਲਾਂ *ਮੰਜ਼ਿਲ_UArgs,
+                  ਅਚਲ ਅੱਖਰ* ਕੋਡ_Units,
+                  int32_t ਲੰਮਾਈ,
                   UConverterCallbackReason reason,
-                  UErrorCode * err);
+                  UError_ਕੋਡ * err);
 
 /**
  * DO NOT CALL THIS FUNCTION DIRECTLY!
@@ -450,16 +450,16 @@ U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_SUBSTITUTE (
  * @stable ICU 2.0
  */
 
-U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_ESCAPE (
-                  const void *context,
-                  UConverterToUnicodeArgs *toUArgs,
-                  const char* codeUnits,
-                  int32_t length,
+U_CAPI ਖਾਲੀ U_EXPORT2 UCNV_ਮੰਜ਼ਿਲ_U_CALLBACK_ESCAPE (
+                  ਅਚਲ ਖਾਲੀ *context,
+                  UConverter_ਮੰਜ਼ਿਲ_Unicode_ਦਲੀਲਾਂ *ਮੰਜ਼ਿਲ_UArgs,
+                  ਅਚਲ ਅੱਖਰ* ਕੋਡ_Units,
+                  int32_t ਲੰਮਾਈ,
                   UConverterCallbackReason reason,
-                  UErrorCode * err);
+                  UError_ਕੋਡ * err);
 
-#endif
+#ਜੇ_ਅੰਤ
 
-#endif
+#ਜੇ_ਅੰਤ
 
 /*UCNV_ERR_H*/ 

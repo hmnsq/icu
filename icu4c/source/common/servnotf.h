@@ -6,12 +6,12 @@
  * others. All Rights Reserved.                                                *
  *******************************************************************************
  */
-#ifndef ICUNOTIF_H
-#define ICUNOTIF_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ ICUNOTIF_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ICUNOTIF_H
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if UCONFIG_NO_SERVICE
+#ਜੇ UCONFIG_NO_SERVICE
 
 U_NAMESPACE_BEGIN
 
@@ -21,37 +21,37 @@ U_NAMESPACE_BEGIN
  */
 class ICUNotifier;
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#else
+#ਨਹੀਂਤਾਂ
 
-#include "unicode/uobject.h"
-#include "unicode/unistr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uobject.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/unistr.h"
 
-#include "mutex.h"
-#include "uvector.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mutex.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uvector.h"
 
 U_NAMESPACE_BEGIN
 
-class U_COMMON_API EventListener : public UObject {
-public: 
-    virtual ~EventListener();
+class U_COMMON_API EventListener : ਜਨਤਕ UObject {
+ਜਨਤਕ: 
+    ਆਭਾਸੀ ~EventListener();
 
-public:
-    static UClassID U_EXPORT2 getStaticClassID();
+ਜਨਤਕ:
+    ਸਥਿਰ UClassID U_EXPORT2 getStaticClassID();
 
-    virtual UClassID getDynamicClassID() const override;
+    ਆਭਾਸੀ UClassID getDynamicClassID() ਅਚਲ override;
 
-public:
-#ifdef SERVICE_DEBUG
-    virtual UnicodeString& debug(UnicodeString& result) const {
-      return debugClass(result);
+ਜਨਤਕ:
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ SERVICE_DEBUG
+    ਆਭਾਸੀ UnicodeString& debug(UnicodeString& ਨਤੀਜਾ) ਅਚਲ {
+      ਵਾਪਸ debugClass(ਨਤੀਜਾ);
     }
 
-    virtual UnicodeString& debugClass(UnicodeString& result) const {
-      return result.append((UnicodeString)"Key");
+    ਆਭਾਸੀ UnicodeString& debugClass(UnicodeString& ਨਤੀਜਾ) ਅਚਲ {
+      ਵਾਪਸ ਨਤੀਜਾ.append((UnicodeString)"Key");
     }
-#endif
+#ਜੇ_ਅੰਤ
 };
 
 /**
@@ -71,13 +71,13 @@ public:
  * type and call the appropriate method on the listener.
  */
 
-class U_COMMON_API ICUNotifier : public UMemory  {
-private: UVector* listeners;
+class U_COMMON_API ICUNotifier : ਜਨਤਕ UMemory  {
+ਨਿਜੀ: UVector* listeners;
          
-public: 
+ਜਨਤਕ: 
     ICUNotifier();
     
-    virtual ~ICUNotifier();
+    ਆਭਾਸੀ ~ICUNotifier();
     
     /**
      * Add a listener to be notified when notifyChanged is called.
@@ -86,14 +86,14 @@ public:
      * register the identical listener more than once will be
      * silently ignored.  
      */
-    virtual void addListener(const EventListener* l, UErrorCode& status);
+    ਆਭਾਸੀ ਖਾਲੀ ਜੋੜੋ_Listener(ਅਚਲ EventListener* l, UError_ਕੋਡ& ਸਥਿਤੀ);
     
     /**
      * Stop notifying this listener.  The listener must
      * not be null. Attempts to remove a listener that is
      * not registered will be silently ignored.
      */
-    virtual void removeListener(const EventListener* l, UErrorCode& status);
+    ਆਭਾਸੀ ਖਾਲੀ removeListener(ਅਚਲ EventListener* l, UError_ਕੋਡ& ਸਥਿਤੀ);
     
     /**
      * ICU doesn't spawn its own threads.  All listeners are notified in
@@ -101,25 +101,25 @@ public:
      * indefinitely block the calling thread.  Callers should beware of
      * deadlock situations.  
      */
-    virtual void notifyChanged();
+    ਆਭਾਸੀ ਖਾਲੀ notify_ਬਦਲਿਆ();
     
-protected: 
+ਸੁਰੱਖਿਅਤ: 
     /**
      * Subclasses implement this to return true if the listener is
      * of the appropriate type.
      */
-    virtual UBool acceptsListener(const EventListener& l) const = 0;
+    ਆਭਾਸੀ UBool ਮੰਨਦਾ_Listener(ਅਚਲ EventListener& l) ਅਚਲ = 0;
     
     /**
      * Subclasses implement this to notify the listener.
      */
-    virtual void notifyListener(EventListener& l) const = 0;
+    ਆਭਾਸੀ ਖਾਲੀ notifyListener(EventListener& l) ਅਚਲ = 0;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
 /* UCONFIG_NO_SERVICE */
-#endif
+#ਜੇ_ਅੰਤ
 
 /* ICUNOTIF_H */
-#endif
+#ਜੇ_ਅੰਤ

@@ -24,363 +24,363 @@
 *   This file contains only the runtime and enumeration code, for read-only access.
 *   See utrie2_builder.c for the builder code.
 */
-#include "unicode/utypes.h"
-#ifdef UCPTRIE_DEBUG
-#include "unicode/umutablecptrie.h"
-#endif
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "utrie2.h"
-#include "utrie2_impl.h"
-#include "uassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UCPTRIE_DEBUG
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/umutablecptrie.h"
+#ਜੇ_ਅੰਤ
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf8.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf16.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "utrie2.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "utrie2_impl.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uassert.h"
 
 /* Public UTrie2 API implementation ----------------------------------------- */
 
-static uint32_t
-get32(const UNewTrie2 *trie, UChar32 c, UBool fromLSCP) {
-    int32_t i2, block;
+ਸਥਿਰ uint32_t
+get32(ਅਚਲ UNewTrie2 *trie, UChar32 c, UBool fromLSCP) {
+    int32_t i2, ਖੰਡ;
 
-    if(c>=trie->highStart && (!U_IS_LEAD(c) || fromLSCP)) {
-        return trie->data[trie->dataLength-UTRIE2_DATA_GRANULARITY];
+    ਜੇ(c>=trie->ਉੱਚਾ_ਸ਼ੁਰੂ && (!U_IS_LEAD(c) || fromLSCP)) {
+        ਵਾਪਸ trie->ਅੰਕੜੇ[trie->ਅੰਕੜੇ_ਲੰਮਾਈ-UTRIE2_ਅੰਕੜੇ_GRANULARITY];
     }
 
-    if(U_IS_LEAD(c) && fromLSCP) {
-        i2=(UTRIE2_LSCP_INDEX_2_OFFSET-(0xd800>>UTRIE2_SHIFT_2))+
-            (c>>UTRIE2_SHIFT_2);
-    } else {
-        i2=trie->index1[c>>UTRIE2_SHIFT_1]+
-            ((c>>UTRIE2_SHIFT_2)&UTRIE2_INDEX_2_MASK);
+    ਜੇ(U_IS_LEAD(c) && fromLSCP) {
+        i2=(UTRIE2_LSCP_ਸੂਚਕਾਂਕ_2_ਵਿੱਥ-(0xd800>>UTRIE2_ਖਿਸਕਾਓ_2))+
+            (c>>UTRIE2_ਖਿਸਕਾਓ_2);
+    } ਨਹੀਂਤਾਂ {
+        i2=trie->index1[c>>UTRIE2_ਖਿਸਕਾਓ_1]+
+            ((c>>UTRIE2_ਖਿਸਕਾਓ_2)&UTRIE2_ਸੂਚਕਾਂਕ_2_ਨਕਾਬ);
     }
-    block=trie->index2[i2];
-    return trie->data[block+(c&UTRIE2_DATA_MASK)];
+    ਖੰਡ=trie->index2[i2];
+    ਵਾਪਸ trie->ਅੰਕੜੇ[ਖੰਡ+(c&UTRIE2_ਅੰਕੜੇ_ਨਕਾਬ)];
 }
 
 U_CAPI uint32_t U_EXPORT2
-utrie2_get32(const UTrie2 *trie, UChar32 c) {
-    if(trie->data16!=nullptr) {
-        return UTRIE2_GET16(trie, c);
-    } else if(trie->data32!=nullptr) {
-        return UTRIE2_GET32(trie, c);
-    } else if((uint32_t)c>0x10ffff) {
-        return trie->errorValue;
-    } else {
-        return get32(trie->newTrie, c, true);
+utrie2_get32(ਅਚਲ UTrie2 *trie, UChar32 c) {
+    ਜੇ(trie->data16!=ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ UTRIE2_GET16(trie, c);
+    } ਨਹੀਂਤਾਂ ਜੇ(trie->data32!=ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ UTRIE2_GET32(trie, c);
+    } ਨਹੀਂਤਾਂ ਜੇ((uint32_t)c>0x10ffff) {
+        ਵਾਪਸ trie->error_ਮੁੱਲ;
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ get32(trie->newTrie, c, ਸੱਚ);
     }
 }
 
 U_CAPI uint32_t U_EXPORT2
-utrie2_get32FromLeadSurrogateCodeUnit(const UTrie2 *trie, UChar32 c) {
-    if(!U_IS_LEAD(c)) {
-        return trie->errorValue;
+utrie2_get32_From_Lead_Surrogate_ਕੋਡ_Unit(ਅਚਲ UTrie2 *trie, UChar32 c) {
+    ਜੇ(!U_IS_LEAD(c)) {
+        ਵਾਪਸ trie->error_ਮੁੱਲ;
     }
-    if(trie->data16!=nullptr) {
-        return UTRIE2_GET16_FROM_U16_SINGLE_LEAD(trie, c);
-    } else if(trie->data32!=nullptr) {
-        return UTRIE2_GET32_FROM_U16_SINGLE_LEAD(trie, c);
-    } else {
-        return get32(trie->newTrie, c, false);
+    ਜੇ(trie->data16!=ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ UTRIE2_GET16_FROM_U16_SINGLE_LEAD(trie, c);
+    } ਨਹੀਂਤਾਂ ਜੇ(trie->data32!=ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ UTRIE2_GET32_FROM_U16_SINGLE_LEAD(trie, c);
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ get32(trie->newTrie, c, ਝੂਠ);
     }
 }
 
-static inline int32_t
-u8Index(const UTrie2 *trie, UChar32 c, int32_t i) {
+ਸਥਿਰ ਸਤਰਅੰਦਰ int32_t
+u8_ਸੂਚਕਾਂਕ(ਅਚਲ UTrie2 *trie, UChar32 c, int32_t i) {
     int32_t idx=
-        _UTRIE2_INDEX_FROM_CP(
+        UTRIE2_ਸੂਚਕਾਂਕ_FROM_CP(
             trie,
-            trie->data32==nullptr ? trie->indexLength : 0,
+            trie->data32==ਖਾਲੀ_ਸੂਚਕ ? trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ : 0,
             c);
-    return (idx<<3)|i;
+    ਵਾਪਸ (idx<<3)|i;
 }
 
 U_CAPI int32_t U_EXPORT2
-utrie2_internalU8NextIndex(const UTrie2 *trie, UChar32 c,
-                           const uint8_t *src, const uint8_t *limit) {
+utrie2_ਅੰਦਰੂਨੀ_U8_ਅਗਲਾ_ਸੂਚਕਾਂਕ(ਅਚਲ UTrie2 *trie, UChar32 c,
+                           ਅਚਲ uint8_t *src, ਅਚਲ uint8_t *ਹੱਦਬੰਦੀ) {
     int32_t i, length;
     i=0;
     /* support 64-bit pointers by avoiding cast of arbitrary difference */
-    if((limit-src)<=7) {
-        length=(int32_t)(limit-src);
-    } else {
+    ਜੇ((ਹੱਦਬੰਦੀ-src)<=7) {
+        length=(int32_t)(ਹੱਦਬੰਦੀ-src);
+    } ਨਹੀਂਤਾਂ {
         length=7;
     }
-    c=utf8_nextCharSafeBody(src, &i, length, c, -1);
-    return u8Index(trie, c, i);
+    c=utf8_ਅਗਲਾ_Char_ਸੁਰੱਖਿਅਤ_Body(src, &i, length, c, -1);
+    ਵਾਪਸ u8_ਸੂਚਕਾਂਕ(trie, c, i);
 }
 
 U_CAPI int32_t U_EXPORT2
-utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
-                           const uint8_t *start, const uint8_t *src) {
+utrie2_ਅੰਦਰੂਨੀ_U8_Prev_ਸੂਚਕਾਂਕ(ਅਚਲ UTrie2 *trie, UChar32 c,
+                           ਅਚਲ uint8_t *ਸ਼ੁਰੂ, ਅਚਲ uint8_t *src) {
     int32_t i, length;
     /* support 64-bit pointers by avoiding cast of arbitrary difference */
-    if((src-start)<=7) {
-        i=length=(int32_t)(src-start);
-    } else {
+    ਜੇ((src-ਸ਼ੁਰੂ)<=7) {
+        i=length=(int32_t)(src-ਸ਼ੁਰੂ);
+    } ਨਹੀਂਤਾਂ {
         i=length=7;
-        start=src-7;
+        ਸ਼ੁਰੂ=src-7;
     }
-    c=utf8_prevCharSafeBody(start, 0, &i, c, -1);
+    c=utf8_prev_Char_ਸੁਰੱਖਿਅਤ_Body(ਸ਼ੁਰੂ, 0, &i, c, -1);
     i=length-i;  /* number of bytes read backward from src */
-    return u8Index(trie, c, i);
+    ਵਾਪਸ u8_ਸੂਚਕਾਂਕ(trie, c, i);
 }
 
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_openFromSerialized(UTrie2ValueBits valueBits,
-                          const void *data, int32_t length, int32_t *pActualLength,
-                          UErrorCode *pErrorCode) {
-    const UTrie2Header *header;
-    const uint16_t *p16;
-    int32_t actualLength;
+utrie2_openFromSerialized(UTrie2_ਮੁੱਲ_ਬਿੱਟ ਮੁੱਲ_ਬਿੱਟ,
+                          ਅਚਲ ਖਾਲੀ *ਅੰਕੜੇ, int32_t length, int32_t *p_Actual_ਲੰਮਾਈ,
+                          UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਅਚਲ UTrie2_ਸਿਰਲੇਖ *ਸਿਰਲੇਖ;
+    ਅਚਲ uint16_t *p16;
+    int32_t actual_ਲੰਮਾਈ;
 
-    UTrie2 tempTrie;
+    UTrie2 ਆਰਜ਼ੀ_Trie;
     UTrie2 *trie;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ਜੇ(U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    if( length<=0 || (U_POINTER_MASK_LSB(data, 3)!=0) ||
-        valueBits<0 || UTRIE2_COUNT_VALUE_BITS<=valueBits
+    ਜੇ( length<=0 || (U_ਸੂਚਕ_ਨਕਾਬ_LSB(ਅੰਕੜੇ, 3)!=0) ||
+        ਮੁੱਲ_ਬਿੱਟ<0 || UTRIE2_ਗਿਣਤੀ_ਮੁੱਲ_ਬਿੱਟ<=ਮੁੱਲ_ਬਿੱਟ
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
     /* enough data for a trie header? */
-    if(length<(int32_t)sizeof(UTrie2Header)) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return nullptr;
+    ਜੇ(length<(int32_t)ਆਕਾਰ(UTrie2_ਸਿਰਲੇਖ)) {
+        *p_Error_ਕੋਡ=U_INVALID_FORMAT_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
     /* check the signature */
-    header=(const UTrie2Header *)data;
-    if(header->signature!=UTRIE2_SIG) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return nullptr;
+    ਸਿਰਲੇਖ=(ਅਚਲ UTrie2_ਸਿਰਲੇਖ *)ਅੰਕੜੇ;
+    ਜੇ(ਸਿਰਲੇਖ->signature!=UTRIE2_SIG) {
+        *p_Error_ਕੋਡ=U_INVALID_FORMAT_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
     /* get the options */
-    if(valueBits!=(UTrie2ValueBits)(header->options&UTRIE2_OPTIONS_VALUE_BITS_MASK)) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return nullptr;
+    ਜੇ(ਮੁੱਲ_ਬਿੱਟ!=(UTrie2_ਮੁੱਲ_ਬਿੱਟ)(ਸਿਰਲੇਖ->options&UTRIE2_OPTIONS_ਮੁੱਲ_ਬਿੱਟ_ਨਕਾਬ)) {
+        *p_Error_ਕੋਡ=U_INVALID_FORMAT_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
     /* get the length values and offsets */
-    uprv_memset(&tempTrie, 0, sizeof(tempTrie));
-    tempTrie.indexLength=header->indexLength;
-    tempTrie.dataLength=header->shiftedDataLength<<UTRIE2_INDEX_SHIFT;
-    tempTrie.index2NullOffset=header->index2NullOffset;
-    tempTrie.dataNullOffset=header->dataNullOffset;
+    uprv_memset(&ਆਰਜ਼ੀ_Trie, 0, ਆਕਾਰ(ਆਰਜ਼ੀ_Trie));
+    ਆਰਜ਼ੀ_Trie.ਸੂਚਕਾਂਕ_ਲੰਮਾਈ=ਸਿਰਲੇਖ->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ;
+    ਆਰਜ਼ੀ_Trie.ਅੰਕੜੇ_ਲੰਮਾਈ=ਸਿਰਲੇਖ->shifted_ਅੰਕੜੇ_ਲੰਮਾਈ<<UTRIE2_ਸੂਚਕਾਂਕ_ਖਿਸਕਾਓ;
+    ਆਰਜ਼ੀ_Trie.index2_Null_ਵਿੱਥ=ਸਿਰਲੇਖ->index2_Null_ਵਿੱਥ;
+    ਆਰਜ਼ੀ_Trie.ਅੰਕੜੇ_Null_ਵਿੱਥ=ਸਿਰਲੇਖ->ਅੰਕੜੇ_Null_ਵਿੱਥ;
 
-    tempTrie.highStart=header->shiftedHighStart<<UTRIE2_SHIFT_1;
-    tempTrie.highValueIndex=tempTrie.dataLength-UTRIE2_DATA_GRANULARITY;
-    if(valueBits==UTRIE2_16_VALUE_BITS) {
-        tempTrie.highValueIndex+=tempTrie.indexLength;
+    ਆਰਜ਼ੀ_Trie.ਉੱਚਾ_ਸ਼ੁਰੂ=ਸਿਰਲੇਖ->shifted_ਉੱਚਾ_ਸ਼ੁਰੂ<<UTRIE2_ਖਿਸਕਾਓ_1;
+    ਆਰਜ਼ੀ_Trie.ਉੱਚਾ_ਮੁੱਲ_ਸੂਚਕਾਂਕ=ਆਰਜ਼ੀ_Trie.ਅੰਕੜੇ_ਲੰਮਾਈ-UTRIE2_ਅੰਕੜੇ_GRANULARITY;
+    ਜੇ(ਮੁੱਲ_ਬਿੱਟ==UTRIE2_16_ਮੁੱਲ_ਬਿੱਟ) {
+        ਆਰਜ਼ੀ_Trie.ਉੱਚਾ_ਮੁੱਲ_ਸੂਚਕਾਂਕ+=ਆਰਜ਼ੀ_Trie.ਸੂਚਕਾਂਕ_ਲੰਮਾਈ;
     }
 
     /* calculate the actual length */
-    actualLength=(int32_t)sizeof(UTrie2Header)+tempTrie.indexLength*2;
-    if(valueBits==UTRIE2_16_VALUE_BITS) {
-        actualLength+=tempTrie.dataLength*2;
-    } else {
-        actualLength+=tempTrie.dataLength*4;
+    actual_ਲੰਮਾਈ=(int32_t)ਆਕਾਰ(UTrie2_ਸਿਰਲੇਖ)+ਆਰਜ਼ੀ_Trie.ਸੂਚਕਾਂਕ_ਲੰਮਾਈ*2;
+    ਜੇ(ਮੁੱਲ_ਬਿੱਟ==UTRIE2_16_ਮੁੱਲ_ਬਿੱਟ) {
+        actual_ਲੰਮਾਈ+=ਆਰਜ਼ੀ_Trie.ਅੰਕੜੇ_ਲੰਮਾਈ*2;
+    } ਨਹੀਂਤਾਂ {
+        actual_ਲੰਮਾਈ+=ਆਰਜ਼ੀ_Trie.ਅੰਕੜੇ_ਲੰਮਾਈ*4;
     }
-    if(length<actualLength) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;  /* not enough bytes */
-        return nullptr;
+    ਜੇ(length<actual_ਲੰਮਾਈ) {
+        *p_Error_ਕੋਡ=U_INVALID_FORMAT_ERROR;  /* not enough bytes */
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
     /* allocate the trie */
-    trie=(UTrie2 *)uprv_malloc(sizeof(UTrie2));
-    if(trie==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    trie=(UTrie2 *)uprv_malloc(ਆਕਾਰ(UTrie2));
+    ਜੇ(trie==ਖਾਲੀ_ਸੂਚਕ) {
+        *p_Error_ਕੋਡ=U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
-    uprv_memcpy(trie, &tempTrie, sizeof(tempTrie));
-    trie->memory=(uint32_t *)data;
-    trie->length=actualLength;
-    trie->isMemoryOwned=false;
-#ifdef UTRIE2_DEBUG
+    uprv_memcpy(trie, &ਆਰਜ਼ੀ_Trie, ਆਕਾਰ(ਆਰਜ਼ੀ_Trie));
+    trie->ਸਮ੍ਰਿਤੀ=(uint32_t *)ਅੰਕੜੇ;
+    trie->length=actual_ਲੰਮਾਈ;
+    trie->is_ਸਮ੍ਰਿਤੀ_Owned=ਝੂਠ;
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UTRIE2_DEBUG
     trie->name="fromSerialized";
-#endif
+#ਜੇ_ਅੰਤ
 
     /* set the pointers to its index and data arrays */
-    p16=(const uint16_t *)(header+1);
-    trie->index=p16;
-    p16+=trie->indexLength;
+    p16=(ਅਚਲ uint16_t *)(ਸਿਰਲੇਖ+1);
+    trie->ਸੂਚਕਾਂਕ=p16;
+    p16+=trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ;
 
     /* get the data */
-    switch(valueBits) {
-    case UTRIE2_16_VALUE_BITS:
+    ਚੋਣ(ਮੁੱਲ_ਬਿੱਟ) {
+    ਹਾਲਤ UTRIE2_16_ਮੁੱਲ_ਬਿੱਟ:
         trie->data16=p16;
-        trie->data32=nullptr;
-        trie->initialValue=trie->index[trie->dataNullOffset];
-        trie->errorValue=trie->data16[UTRIE2_BAD_UTF8_DATA_OFFSET];
-        break;
-    case UTRIE2_32_VALUE_BITS:
-        trie->data16=nullptr;
-        trie->data32=(const uint32_t *)p16;
-        trie->initialValue=trie->data32[trie->dataNullOffset];
-        trie->errorValue=trie->data32[UTRIE2_BAD_UTF8_DATA_OFFSET];
-        break;
-    default:
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return nullptr;
+        trie->data32=ਖਾਲੀ_ਸੂਚਕ;
+        trie->initial_ਮੁੱਲ=trie->ਸੂਚਕਾਂਕ[trie->ਅੰਕੜੇ_Null_ਵਿੱਥ];
+        trie->error_ਮੁੱਲ=trie->data16[UTRIE2_BAD_UTF8_ਅੰਕੜੇ_ਵਿੱਥ];
+        ਰੋਕੋ;
+    ਹਾਲਤ UTRIE2_32_ਮੁੱਲ_ਬਿੱਟ:
+        trie->data16=ਖਾਲੀ_ਸੂਚਕ;
+        trie->data32=(ਅਚਲ uint32_t *)p16;
+        trie->initial_ਮੁੱਲ=trie->data32[trie->ਅੰਕੜੇ_Null_ਵਿੱਥ];
+        trie->error_ਮੁੱਲ=trie->data32[UTRIE2_BAD_UTF8_ਅੰਕੜੇ_ਵਿੱਥ];
+        ਰੋਕੋ;
+    ਮੂਲ:
+        *p_Error_ਕੋਡ=U_INVALID_FORMAT_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    if(pActualLength!=nullptr) {
-        *pActualLength=actualLength;
+    ਜੇ(p_Actual_ਲੰਮਾਈ!=ਖਾਲੀ_ਸੂਚਕ) {
+        *p_Actual_ਲੰਮਾਈ=actual_ਲੰਮਾਈ;
     }
-    return trie;
+    ਵਾਪਸ trie;
 }
 
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_openDummy(UTrie2ValueBits valueBits,
-                 uint32_t initialValue, uint32_t errorValue,
-                 UErrorCode *pErrorCode) {
+utrie2_openDummy(UTrie2_ਮੁੱਲ_ਬਿੱਟ ਮੁੱਲ_ਬਿੱਟ,
+                 uint32_t initial_ਮੁੱਲ, uint32_t error_ਮੁੱਲ,
+                 UError_ਕੋਡ *p_Error_ਕੋਡ) {
     UTrie2 *trie;
-    UTrie2Header *header;
+    UTrie2_ਸਿਰਲੇਖ *ਸਿਰਲੇਖ;
     uint32_t *p;
     uint16_t *dest16;
-    int32_t indexLength, dataLength, length, i;
-    int32_t dataMove;  /* >0 if the data is moved to the end of the index array */
+    int32_t ਸੂਚਕਾਂਕ_ਲੰਮਾਈ, ਅੰਕੜੇ_ਲੰਮਾਈ, length, i;
+    int32_t ਅੰਕੜੇ_Move;  /* >0 if the data is moved to the end of the index array */
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ਜੇ(U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    if(valueBits<0 || UTRIE2_COUNT_VALUE_BITS<=valueBits) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    ਜੇ(ਮੁੱਲ_ਬਿੱਟ<0 || UTRIE2_ਗਿਣਤੀ_ਮੁੱਲ_ਬਿੱਟ<=ਮੁੱਲ_ਬਿੱਟ) {
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
     /* calculate the total length of the dummy trie data */
-    indexLength=UTRIE2_INDEX_1_OFFSET;
-    dataLength=UTRIE2_DATA_START_OFFSET+UTRIE2_DATA_GRANULARITY;
-    length=(int32_t)sizeof(UTrie2Header)+indexLength*2;
-    if(valueBits==UTRIE2_16_VALUE_BITS) {
-        length+=dataLength*2;
-    } else {
-        length+=dataLength*4;
+    ਸੂਚਕਾਂਕ_ਲੰਮਾਈ=UTRIE2_ਸੂਚਕਾਂਕ_1_ਵਿੱਥ;
+    ਅੰਕੜੇ_ਲੰਮਾਈ=UTRIE2_ਅੰਕੜੇ_ਸ਼ੁਰੂ_ਵਿੱਥ+UTRIE2_ਅੰਕੜੇ_GRANULARITY;
+    length=(int32_t)ਆਕਾਰ(UTrie2_ਸਿਰਲੇਖ)+ਸੂਚਕਾਂਕ_ਲੰਮਾਈ*2;
+    ਜੇ(ਮੁੱਲ_ਬਿੱਟ==UTRIE2_16_ਮੁੱਲ_ਬਿੱਟ) {
+        length+=ਅੰਕੜੇ_ਲੰਮਾਈ*2;
+    } ਨਹੀਂਤਾਂ {
+        length+=ਅੰਕੜੇ_ਲੰਮਾਈ*4;
     }
 
     /* allocate the trie */
-    trie=(UTrie2 *)uprv_malloc(sizeof(UTrie2));
-    if(trie==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    trie=(UTrie2 *)uprv_malloc(ਆਕਾਰ(UTrie2));
+    ਜੇ(trie==ਖਾਲੀ_ਸੂਚਕ) {
+        *p_Error_ਕੋਡ=U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
-    uprv_memset(trie, 0, sizeof(UTrie2));
-    trie->memory=uprv_malloc(length);
-    if(trie->memory==nullptr) {
+    uprv_memset(trie, 0, ਆਕਾਰ(UTrie2));
+    trie->ਸਮ੍ਰਿਤੀ=uprv_malloc(length);
+    ਜੇ(trie->ਸਮ੍ਰਿਤੀ==ਖਾਲੀ_ਸੂਚਕ) {
         uprv_free(trie);
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        *p_Error_ਕੋਡ=U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
     trie->length=length;
-    trie->isMemoryOwned=true;
+    trie->is_ਸਮ੍ਰਿਤੀ_Owned=ਸੱਚ;
 
     /* set the UTrie2 fields */
-    if(valueBits==UTRIE2_16_VALUE_BITS) {
-        dataMove=indexLength;
-    } else {
-        dataMove=0;
+    ਜੇ(ਮੁੱਲ_ਬਿੱਟ==UTRIE2_16_ਮੁੱਲ_ਬਿੱਟ) {
+        ਅੰਕੜੇ_Move=ਸੂਚਕਾਂਕ_ਲੰਮਾਈ;
+    } ਨਹੀਂਤਾਂ {
+        ਅੰਕੜੇ_Move=0;
     }
 
-    trie->indexLength=indexLength;
-    trie->dataLength=dataLength;
-    trie->index2NullOffset=UTRIE2_INDEX_2_OFFSET;
-    trie->dataNullOffset=(uint16_t)dataMove;
-    trie->initialValue=initialValue;
-    trie->errorValue=errorValue;
-    trie->highStart=0;
-    trie->highValueIndex=dataMove+UTRIE2_DATA_START_OFFSET;
-#ifdef UTRIE2_DEBUG
+    trie->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ=ਸੂਚਕਾਂਕ_ਲੰਮਾਈ;
+    trie->ਅੰਕੜੇ_ਲੰਮਾਈ=ਅੰਕੜੇ_ਲੰਮਾਈ;
+    trie->index2_Null_ਵਿੱਥ=UTRIE2_ਸੂਚਕਾਂਕ_2_ਵਿੱਥ;
+    trie->ਅੰਕੜੇ_Null_ਵਿੱਥ=(uint16_t)ਅੰਕੜੇ_Move;
+    trie->initial_ਮੁੱਲ=initial_ਮੁੱਲ;
+    trie->error_ਮੁੱਲ=error_ਮੁੱਲ;
+    trie->ਉੱਚਾ_ਸ਼ੁਰੂ=0;
+    trie->ਉੱਚਾ_ਮੁੱਲ_ਸੂਚਕਾਂਕ=ਅੰਕੜੇ_Move+UTRIE2_ਅੰਕੜੇ_ਸ਼ੁਰੂ_ਵਿੱਥ;
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UTRIE2_DEBUG
     trie->name="dummy";
-#endif
+#ਜੇ_ਅੰਤ
 
     /* set the header fields */
-    header=(UTrie2Header *)trie->memory;
+    ਸਿਰਲੇਖ=(UTrie2_ਸਿਰਲੇਖ *)trie->ਸਮ੍ਰਿਤੀ;
 
-    header->signature=UTRIE2_SIG; /* "Tri2" */
-    header->options=(uint16_t)valueBits;
+    ਸਿਰਲੇਖ->signature=UTRIE2_SIG; /* "Tri2" */
+    ਸਿਰਲੇਖ->options=(uint16_t)ਮੁੱਲ_ਬਿੱਟ;
 
-    header->indexLength=(uint16_t)indexLength;
-    header->shiftedDataLength=(uint16_t)(dataLength>>UTRIE2_INDEX_SHIFT);
-    header->index2NullOffset=(uint16_t)UTRIE2_INDEX_2_OFFSET;
-    header->dataNullOffset=(uint16_t)dataMove;
-    header->shiftedHighStart=0;
+    ਸਿਰਲੇਖ->ਸੂਚਕਾਂਕ_ਲੰਮਾਈ=(uint16_t)ਸੂਚਕਾਂਕ_ਲੰਮਾਈ;
+    ਸਿਰਲੇਖ->shifted_ਅੰਕੜੇ_ਲੰਮਾਈ=(uint16_t)(ਅੰਕੜੇ_ਲੰਮਾਈ>>UTRIE2_ਸੂਚਕਾਂਕ_ਖਿਸਕਾਓ);
+    ਸਿਰਲੇਖ->index2_Null_ਵਿੱਥ=(uint16_t)UTRIE2_ਸੂਚਕਾਂਕ_2_ਵਿੱਥ;
+    ਸਿਰਲੇਖ->ਅੰਕੜੇ_Null_ਵਿੱਥ=(uint16_t)ਅੰਕੜੇ_Move;
+    ਸਿਰਲੇਖ->shifted_ਉੱਚਾ_ਸ਼ੁਰੂ=0;
 
     /* fill the index and data arrays */
-    dest16=(uint16_t *)(header+1);
-    trie->index=dest16;
+    dest16=(uint16_t *)(ਸਿਰਲੇਖ+1);
+    trie->ਸੂਚਕਾਂਕ=dest16;
 
     /* write the index-2 array values shifted right by UTRIE2_INDEX_SHIFT */
-    for(i=0; i<UTRIE2_INDEX_2_BMP_LENGTH; ++i) {
-        *dest16++=(uint16_t)(dataMove>>UTRIE2_INDEX_SHIFT);  /* null data block */
+    ਲਈ(i=0; i<UTRIE2_ਸੂਚਕਾਂਕ_2_BMP_ਲੰਮਾਈ; ++i) {
+        *dest16++=(uint16_t)(ਅੰਕੜੇ_Move>>UTRIE2_ਸੂਚਕਾਂਕ_ਖਿਸਕਾਓ);  /* null data block */
     }
 
     /* write UTF-8 2-byte index-2 values, not right-shifted */
-    for(i=0; i<(0xc2-0xc0); ++i) {                                  /* C0..C1 */
-        *dest16++=(uint16_t)(dataMove+UTRIE2_BAD_UTF8_DATA_OFFSET);
+    ਲਈ(i=0; i<(0xc2-0xc0); ++i) {                                  /* C0..C1 */
+        *dest16++=(uint16_t)(ਅੰਕੜੇ_Move+UTRIE2_BAD_UTF8_ਅੰਕੜੇ_ਵਿੱਥ);
     }
-    for(; i<(0xe0-0xc0); ++i) {                                     /* C2..DF */
-        *dest16++=(uint16_t)dataMove;
+    ਲਈ(; i<(0xe0-0xc0); ++i) {                                     /* C2..DF */
+        *dest16++=(uint16_t)ਅੰਕੜੇ_Move;
     }
 
     /* write the 16/32-bit data array */
-    switch(valueBits) {
-    case UTRIE2_16_VALUE_BITS:
+    ਚੋਣ(ਮੁੱਲ_ਬਿੱਟ) {
+    ਹਾਲਤ UTRIE2_16_ਮੁੱਲ_ਬਿੱਟ:
         /* write 16-bit data values */
         trie->data16=dest16;
-        trie->data32=nullptr;
-        for(i=0; i<0x80; ++i) {
-            *dest16++=(uint16_t)initialValue;
+        trie->data32=ਖਾਲੀ_ਸੂਚਕ;
+        ਲਈ(i=0; i<0x80; ++i) {
+            *dest16++=(uint16_t)initial_ਮੁੱਲ;
         }
-        for(; i<0xc0; ++i) {
-            *dest16++=(uint16_t)errorValue;
+        ਲਈ(; i<0xc0; ++i) {
+            *dest16++=(uint16_t)error_ਮੁੱਲ;
         }
         /* highValue and reserved values */
-        for(i=0; i<UTRIE2_DATA_GRANULARITY; ++i) {
-            *dest16++=(uint16_t)initialValue;
+        ਲਈ(i=0; i<UTRIE2_ਅੰਕੜੇ_GRANULARITY; ++i) {
+            *dest16++=(uint16_t)initial_ਮੁੱਲ;
         }
-        break;
-    case UTRIE2_32_VALUE_BITS:
+        ਰੋਕੋ;
+    ਹਾਲਤ UTRIE2_32_ਮੁੱਲ_ਬਿੱਟ:
         /* write 32-bit data values */
         p=(uint32_t *)dest16;
-        trie->data16=nullptr;
+        trie->data16=ਖਾਲੀ_ਸੂਚਕ;
         trie->data32=p;
-        for(i=0; i<0x80; ++i) {
-            *p++=initialValue;
+        ਲਈ(i=0; i<0x80; ++i) {
+            *p++=initial_ਮੁੱਲ;
         }
-        for(; i<0xc0; ++i) {
-            *p++=errorValue;
+        ਲਈ(; i<0xc0; ++i) {
+            *p++=error_ਮੁੱਲ;
         }
         /* highValue and reserved values */
-        for(i=0; i<UTRIE2_DATA_GRANULARITY; ++i) {
-            *p++=initialValue;
+        ਲਈ(i=0; i<UTRIE2_ਅੰਕੜੇ_GRANULARITY; ++i) {
+            *p++=initial_ਮੁੱਲ;
         }
-        break;
-    default:
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ਰੋਕੋ;
+    ਮੂਲ:
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    return trie;
+    ਵਾਪਸ trie;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ਖਾਲੀ U_EXPORT2
 utrie2_close(UTrie2 *trie) {
-    if(trie!=nullptr) {
-        if(trie->isMemoryOwned) {
-            uprv_free(trie->memory);
+    ਜੇ(trie!=ਖਾਲੀ_ਸੂਚਕ) {
+        ਜੇ(trie->is_ਸਮ੍ਰਿਤੀ_Owned) {
+            uprv_free(trie->ਸਮ੍ਰਿਤੀ);
         }
-        if(trie->newTrie!=nullptr) {
-            uprv_free(trie->newTrie->data);
-#ifdef UCPTRIE_DEBUG
+        ਜੇ(trie->newTrie!=ਖਾਲੀ_ਸੂਚਕ) {
+            uprv_free(trie->newTrie->ਅੰਕੜੇ);
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ UCPTRIE_DEBUG
             umutablecptrie_close(trie->newTrie->t3);
-#endif
+#ਜੇ_ਅੰਤ
             uprv_free(trie->newTrie);
         }
         uprv_free(trie);
@@ -388,42 +388,42 @@ utrie2_close(UTrie2 *trie) {
 }
 
 U_CAPI UBool U_EXPORT2
-utrie2_isFrozen(const UTrie2 *trie) {
-    return trie->newTrie==nullptr;
+utrie2_isFrozen(ਅਚਲ UTrie2 *trie) {
+    ਵਾਪਸ trie->newTrie==ਖਾਲੀ_ਸੂਚਕ;
 }
 
 U_CAPI int32_t U_EXPORT2
-utrie2_serialize(const UTrie2 *trie,
-                 void *data, int32_t capacity,
-                 UErrorCode *pErrorCode) {
+utrie2_serialize(ਅਚਲ UTrie2 *trie,
+                 ਖਾਲੀ *ਅੰਕੜੇ, int32_t capacity,
+                 UError_ਕੋਡ *p_Error_ਕੋਡ) {
     /* argument check */
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    ਜੇ(U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ 0;
     }
 
-    if( trie==nullptr || trie->memory==nullptr || trie->newTrie!=nullptr ||
-        capacity<0 || (capacity>0 && (data==nullptr || (U_POINTER_MASK_LSB(data, 3)!=0)))
+    ਜੇ( trie==ਖਾਲੀ_ਸੂਚਕ || trie->ਸਮ੍ਰਿਤੀ==ਖਾਲੀ_ਸੂਚਕ || trie->newTrie!=ਖਾਲੀ_ਸੂਚਕ ||
+        capacity<0 || (capacity>0 && (ਅੰਕੜੇ==ਖਾਲੀ_ਸੂਚਕ || (U_ਸੂਚਕ_ਨਕਾਬ_LSB(ਅੰਕੜੇ, 3)!=0)))
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
 
-    if(capacity>=trie->length) {
-        uprv_memcpy(data, trie->memory, trie->length);
-    } else {
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+    ਜੇ(capacity>=trie->length) {
+        uprv_memcpy(ਅੰਕੜੇ, trie->ਸਮ੍ਰਿਤੀ, trie->length);
+    } ਨਹੀਂਤਾਂ {
+        *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
     }
-    return trie->length;
+    ਵਾਪਸ trie->length;
 }
 
 /* enumeration -------------------------------------------------------------- */
 
-#define MIN_VALUE(a, b) ((a)<(b) ? (a) : (b))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MIN_ਮੁੱਲ(a, b) ((a)<(b) ? (a) : (b))
 
 /* default UTrie2EnumValue() returns the input value itself */
-static uint32_t U_CALLCONV
-enumSameValue(const void * /*context*/, uint32_t value) {
-    return value;
+ਸਥਿਰ uint32_t U_CALLCONV
+enum_Same_ਮੁੱਲ(ਅਚਲ ਖਾਲੀ * /*context*/, uint32_t value) {
+    ਵਾਪਸ value;
 }
 
 /**
@@ -439,148 +439,148 @@ enumSameValue(const void * /*context*/, uint32_t value) {
  * - Handle the null block specially because we know a priori that it is filled
  *   with a single value.
  */
-static void
-enumEitherTrie(const UTrie2 *trie,
-               UChar32 start, UChar32 limit,
-               UTrie2EnumValue *enumValue, UTrie2EnumRange *enumRange, const void *context) {
-    const uint32_t *data32;
-    const uint16_t *idx;
+ਸਥਿਰ ਖਾਲੀ
+enumEitherTrie(ਅਚਲ UTrie2 *trie,
+               UChar32 ਸ਼ੁਰੂ, UChar32 ਹੱਦਬੰਦੀ,
+               UTrie2_Enum_ਮੁੱਲ *enum_ਮੁੱਲ, UTrie2EnumRange *enumRange, ਅਚਲ ਖਾਲੀ *context) {
+    ਅਚਲ uint32_t *data32;
+    ਅਚਲ uint16_t *idx;
 
-    uint32_t value, prevValue, initialValue;
-    UChar32 c, prev, highStart;
-    int32_t j, i2Block, prevI2Block, index2NullOffset, block, prevBlock, nullBlock;
+    uint32_t value, prev_ਮੁੱਲ, initial_ਮੁੱਲ;
+    UChar32 c, prev, ਉੱਚਾ_ਸ਼ੁਰੂ;
+    int32_t j, i2_ਖੰਡ, prev_I2_ਖੰਡ, index2_Null_ਵਿੱਥ, ਖੰਡ, prev_ਖੰਡ, null_ਖੰਡ;
 
-    if(enumRange==nullptr) {
-        return;
+    ਜੇ(enumRange==ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ;
     }
-    if(enumValue==nullptr) {
-        enumValue=enumSameValue;
+    ਜੇ(enum_ਮੁੱਲ==ਖਾਲੀ_ਸੂਚਕ) {
+        enum_ਮੁੱਲ=enum_Same_ਮੁੱਲ;
     }
 
-    if(trie->newTrie==nullptr) {
+    ਜੇ(trie->newTrie==ਖਾਲੀ_ਸੂਚਕ) {
         /* frozen trie */
-        idx=trie->index;
-        U_ASSERT(idx!=nullptr); /* the following code assumes trie->newTrie is not nullptr when idx is nullptr */
+        idx=trie->ਸੂਚਕਾਂਕ;
+        U_ASSERT(idx!=ਖਾਲੀ_ਸੂਚਕ); /* the following code assumes trie->newTrie is not nullptr when idx is nullptr */
         data32=trie->data32;
 
-        index2NullOffset=trie->index2NullOffset;
-        nullBlock=trie->dataNullOffset;
-    } else {
+        index2_Null_ਵਿੱਥ=trie->index2_Null_ਵਿੱਥ;
+        null_ਖੰਡ=trie->ਅੰਕੜੇ_Null_ਵਿੱਥ;
+    } ਨਹੀਂਤਾਂ {
         /* unfrozen, mutable trie */
-        idx=nullptr;
-        data32=trie->newTrie->data;
-        U_ASSERT(data32!=nullptr); /* the following code assumes idx is not nullptr when data32 is nullptr */
+        idx=ਖਾਲੀ_ਸੂਚਕ;
+        data32=trie->newTrie->ਅੰਕੜੇ;
+        U_ASSERT(data32!=ਖਾਲੀ_ਸੂਚਕ); /* the following code assumes idx is not nullptr when data32 is nullptr */
 
-        index2NullOffset=trie->newTrie->index2NullOffset;
-        nullBlock=trie->newTrie->dataNullOffset;
+        index2_Null_ਵਿੱਥ=trie->newTrie->index2_Null_ਵਿੱਥ;
+        null_ਖੰਡ=trie->newTrie->ਅੰਕੜੇ_Null_ਵਿੱਥ;
     }
 
-    highStart=trie->highStart;
+    ਉੱਚਾ_ਸ਼ੁਰੂ=trie->ਉੱਚਾ_ਸ਼ੁਰੂ;
 
     /* get the enumeration value that corresponds to an initial-value trie data entry */
-    initialValue=enumValue(context, trie->initialValue);
+    initial_ਮੁੱਲ=enum_ਮੁੱਲ(context, trie->initial_ਮੁੱਲ);
 
     /* set variables for previous range */
-    prevI2Block=-1;
-    prevBlock=-1;
-    prev=start;
-    prevValue=0;
+    prev_I2_ਖੰਡ=-1;
+    prev_ਖੰਡ=-1;
+    prev=ਸ਼ੁਰੂ;
+    prev_ਮੁੱਲ=0;
 
     /* enumerate index-2 blocks */
-    for(c=start; c<limit && c<highStart;) {
+    ਲਈ(c=ਸ਼ੁਰੂ; c<ਹੱਦਬੰਦੀ && c<ਉੱਚਾ_ਸ਼ੁਰੂ;) {
         /* Code point limit for iterating inside this i2Block. */
-        UChar32 tempLimit=c+UTRIE2_CP_PER_INDEX_1_ENTRY;
-        if(limit<tempLimit) {
-            tempLimit=limit;
+        UChar32 ਆਰਜ਼ੀ_ਹੱਦਬੰਦੀ=c+UTRIE2_CP_ਪ੍ਰਤੀ_ਸੂਚਕਾਂਕ_1_ਇੰਦਰਾਜ;
+        ਜੇ(ਹੱਦਬੰਦੀ<ਆਰਜ਼ੀ_ਹੱਦਬੰਦੀ) {
+            ਆਰਜ਼ੀ_ਹੱਦਬੰਦੀ=ਹੱਦਬੰਦੀ;
         }
-        if(c<=0xffff) {
-            if(!U_IS_SURROGATE(c)) {
-                i2Block=c>>UTRIE2_SHIFT_2;
-            } else if(U_IS_SURROGATE_LEAD(c)) {
+        ਜੇ(c<=0xffff) {
+            ਜੇ(!U_IS_SURROGATE(c)) {
+                i2_ਖੰਡ=c>>UTRIE2_ਖਿਸਕਾਓ_2;
+            } ਨਹੀਂਤਾਂ ਜੇ(U_IS_SURROGATE_LEAD(c)) {
                 /*
                  * Enumerate values for lead surrogate code points, not code units:
                  * This special block has half the normal length.
                  */
-                i2Block=UTRIE2_LSCP_INDEX_2_OFFSET;
-                tempLimit=MIN_VALUE(0xdc00, limit);
-            } else {
+                i2_ਖੰਡ=UTRIE2_LSCP_ਸੂਚਕਾਂਕ_2_ਵਿੱਥ;
+                ਆਰਜ਼ੀ_ਹੱਦਬੰਦੀ=MIN_ਮੁੱਲ(0xdc00, ਹੱਦਬੰਦੀ);
+            } ਨਹੀਂਤਾਂ {
                 /*
                  * Switch back to the normal part of the index-2 table.
                  * Enumerate the second half of the surrogates block.
                  */
-                i2Block=0xd800>>UTRIE2_SHIFT_2;
-                tempLimit=MIN_VALUE(0xe000, limit);
+                i2_ਖੰਡ=0xd800>>UTRIE2_ਖਿਸਕਾਓ_2;
+                ਆਰਜ਼ੀ_ਹੱਦਬੰਦੀ=MIN_ਮੁੱਲ(0xe000, ਹੱਦਬੰਦੀ);
             }
-        } else {
+        } ਨਹੀਂਤਾਂ {
             /* supplementary code points */
-            if(idx!=nullptr) {
-                i2Block=idx[(UTRIE2_INDEX_1_OFFSET-UTRIE2_OMITTED_BMP_INDEX_1_LENGTH)+
-                              (c>>UTRIE2_SHIFT_1)];
-            } else {
-                i2Block=trie->newTrie->index1[c>>UTRIE2_SHIFT_1];
+            ਜੇ(idx!=ਖਾਲੀ_ਸੂਚਕ) {
+                i2_ਖੰਡ=idx[(UTRIE2_ਸੂਚਕਾਂਕ_1_ਵਿੱਥ-UTRIE2_OMITTED_BMP_ਸੂਚਕਾਂਕ_1_ਲੰਮਾਈ)+
+                              (c>>UTRIE2_ਖਿਸਕਾਓ_1)];
+            } ਨਹੀਂਤਾਂ {
+                i2_ਖੰਡ=trie->newTrie->index1[c>>UTRIE2_ਖਿਸਕਾਓ_1];
             }
-            if(i2Block==prevI2Block && (c-prev)>=UTRIE2_CP_PER_INDEX_1_ENTRY) {
+            ਜੇ(i2_ਖੰਡ==prev_I2_ਖੰਡ && (c-prev)>=UTRIE2_CP_ਪ੍ਰਤੀ_ਸੂਚਕਾਂਕ_1_ਇੰਦਰਾਜ) {
                 /*
                  * The index-2 block is the same as the previous one, and filled with prevValue.
                  * Only possible for supplementary code points because the linear-BMP index-2
                  * table creates unique i2Block values.
                  */
-                c+=UTRIE2_CP_PER_INDEX_1_ENTRY;
-                continue;
+                c+=UTRIE2_CP_ਪ੍ਰਤੀ_ਸੂਚਕਾਂਕ_1_ਇੰਦਰਾਜ;
+                ਜਾਰੀ;
             }
         }
-        prevI2Block=i2Block;
-        if(i2Block==index2NullOffset) {
+        prev_I2_ਖੰਡ=i2_ਖੰਡ;
+        ਜੇ(i2_ਖੰਡ==index2_Null_ਵਿੱਥ) {
             /* this is the null index-2 block */
-            if(prevValue!=initialValue) {
-                if(prev<c && !enumRange(context, prev, c-1, prevValue)) {
-                    return;
+            ਜੇ(prev_ਮੁੱਲ!=initial_ਮੁੱਲ) {
+                ਜੇ(prev<c && !enumRange(context, prev, c-1, prev_ਮੁੱਲ)) {
+                    ਵਾਪਸ;
                 }
-                prevBlock=nullBlock;
+                prev_ਖੰਡ=null_ਖੰਡ;
                 prev=c;
-                prevValue=initialValue;
+                prev_ਮੁੱਲ=initial_ਮੁੱਲ;
             }
-            c+=UTRIE2_CP_PER_INDEX_1_ENTRY;
-        } else {
+            c+=UTRIE2_CP_ਪ੍ਰਤੀ_ਸੂਚਕਾਂਕ_1_ਇੰਦਰਾਜ;
+        } ਨਹੀਂਤਾਂ {
             /* enumerate data blocks for one index-2 block */
-            int32_t i2, i2Limit;
-            i2=(c>>UTRIE2_SHIFT_2)&UTRIE2_INDEX_2_MASK;
-            if((c>>UTRIE2_SHIFT_1)==(tempLimit>>UTRIE2_SHIFT_1)) {
-                i2Limit=(tempLimit>>UTRIE2_SHIFT_2)&UTRIE2_INDEX_2_MASK;
-            } else {
-                i2Limit=UTRIE2_INDEX_2_BLOCK_LENGTH;
+            int32_t i2, i2_ਹੱਦਬੰਦੀ;
+            i2=(c>>UTRIE2_ਖਿਸਕਾਓ_2)&UTRIE2_ਸੂਚਕਾਂਕ_2_ਨਕਾਬ;
+            ਜੇ((c>>UTRIE2_ਖਿਸਕਾਓ_1)==(ਆਰਜ਼ੀ_ਹੱਦਬੰਦੀ>>UTRIE2_ਖਿਸਕਾਓ_1)) {
+                i2_ਹੱਦਬੰਦੀ=(ਆਰਜ਼ੀ_ਹੱਦਬੰਦੀ>>UTRIE2_ਖਿਸਕਾਓ_2)&UTRIE2_ਸੂਚਕਾਂਕ_2_ਨਕਾਬ;
+            } ਨਹੀਂਤਾਂ {
+                i2_ਹੱਦਬੰਦੀ=UTRIE2_ਸੂਚਕਾਂਕ_2_ਖੰਡ_ਲੰਮਾਈ;
             }
-            for(; i2<i2Limit; ++i2) {
-                if(idx!=nullptr) {
-                    block = static_cast<int32_t>(idx[i2Block + i2]) << UTRIE2_INDEX_SHIFT;
-                } else {
-                    block=trie->newTrie->index2[i2Block+i2];
+            ਲਈ(; i2<i2_ਹੱਦਬੰਦੀ; ++i2) {
+                ਜੇ(idx!=ਖਾਲੀ_ਸੂਚਕ) {
+                    ਖੰਡ = static_cast<int32_t>(idx[i2_ਖੰਡ + i2]) << UTRIE2_ਸੂਚਕਾਂਕ_ਖਿਸਕਾਓ;
+                } ਨਹੀਂਤਾਂ {
+                    ਖੰਡ=trie->newTrie->index2[i2_ਖੰਡ+i2];
                 }
-                if(block==prevBlock && (c-prev)>=UTRIE2_DATA_BLOCK_LENGTH) {
+                ਜੇ(ਖੰਡ==prev_ਖੰਡ && (c-prev)>=UTRIE2_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ) {
                     /* the block is the same as the previous one, and filled with prevValue */
-                    c+=UTRIE2_DATA_BLOCK_LENGTH;
-                    continue;
+                    c+=UTRIE2_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
+                    ਜਾਰੀ;
                 }
-                prevBlock=block;
-                if(block==nullBlock) {
+                prev_ਖੰਡ=ਖੰਡ;
+                ਜੇ(ਖੰਡ==null_ਖੰਡ) {
                     /* this is the null data block */
-                    if(prevValue!=initialValue) {
-                        if(prev<c && !enumRange(context, prev, c-1, prevValue)) {
-                            return;
+                    ਜੇ(prev_ਮੁੱਲ!=initial_ਮੁੱਲ) {
+                        ਜੇ(prev<c && !enumRange(context, prev, c-1, prev_ਮੁੱਲ)) {
+                            ਵਾਪਸ;
                         }
                         prev=c;
-                        prevValue=initialValue;
+                        prev_ਮੁੱਲ=initial_ਮੁੱਲ;
                     }
-                    c+=UTRIE2_DATA_BLOCK_LENGTH;
-                } else {
-                    for(j=0; j<UTRIE2_DATA_BLOCK_LENGTH; ++j) {
-                        value=enumValue(context, data32!=nullptr ? data32[block+j] : idx[block+j]);
-                        if(value!=prevValue) {
-                            if(prev<c && !enumRange(context, prev, c-1, prevValue)) {
-                                return;
+                    c+=UTRIE2_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ;
+                } ਨਹੀਂਤਾਂ {
+                    ਲਈ(j=0; j<UTRIE2_ਅੰਕੜੇ_ਖੰਡ_ਲੰਮਾਈ; ++j) {
+                        value=enum_ਮੁੱਲ(context, data32!=ਖਾਲੀ_ਸੂਚਕ ? data32[ਖੰਡ+j] : idx[ਖੰਡ+j]);
+                        ਜੇ(value!=prev_ਮੁੱਲ) {
+                            ਜੇ(prev<c && !enumRange(context, prev, c-1, prev_ਮੁੱਲ)) {
+                                ਵਾਪਸ;
                             }
                             prev=c;
-                            prevValue=value;
+                            prev_ਮੁੱਲ=value;
                         }
                         ++c;
                     }
@@ -589,49 +589,49 @@ enumEitherTrie(const UTrie2 *trie,
         }
     }
 
-    if(c>limit) {
-        c=limit;  /* could be higher if in the index2NullOffset */
-    } else if(c<limit) {
+    ਜੇ(c>ਹੱਦਬੰਦੀ) {
+        c=ਹੱਦਬੰਦੀ;  /* could be higher if in the index2NullOffset */
+    } ਨਹੀਂਤਾਂ ਜੇ(c<ਹੱਦਬੰਦੀ) {
         /* c==highStart<limit */
-        uint32_t highValue;
-        if(idx!=nullptr) {
-            highValue=
-                data32!=nullptr ?
-                    data32[trie->highValueIndex] :
-                    idx[trie->highValueIndex];
-        } else {
-            highValue=trie->newTrie->data[trie->newTrie->dataLength-UTRIE2_DATA_GRANULARITY];
+        uint32_t ਉੱਚਾ_ਮੁੱਲ;
+        ਜੇ(idx!=ਖਾਲੀ_ਸੂਚਕ) {
+            ਉੱਚਾ_ਮੁੱਲ=
+                data32!=ਖਾਲੀ_ਸੂਚਕ ?
+                    data32[trie->ਉੱਚਾ_ਮੁੱਲ_ਸੂਚਕਾਂਕ] :
+                    idx[trie->ਉੱਚਾ_ਮੁੱਲ_ਸੂਚਕਾਂਕ];
+        } ਨਹੀਂਤਾਂ {
+            ਉੱਚਾ_ਮੁੱਲ=trie->newTrie->ਅੰਕੜੇ[trie->newTrie->ਅੰਕੜੇ_ਲੰਮਾਈ-UTRIE2_ਅੰਕੜੇ_GRANULARITY];
         }
-        value=enumValue(context, highValue);
-        if(value!=prevValue) {
-            if(prev<c && !enumRange(context, prev, c-1, prevValue)) {
-                return;
+        value=enum_ਮੁੱਲ(context, ਉੱਚਾ_ਮੁੱਲ);
+        ਜੇ(value!=prev_ਮੁੱਲ) {
+            ਜੇ(prev<c && !enumRange(context, prev, c-1, prev_ਮੁੱਲ)) {
+                ਵਾਪਸ;
             }
             prev=c;
-            prevValue=value;
+            prev_ਮੁੱਲ=value;
         }
-        c=limit;
+        c=ਹੱਦਬੰਦੀ;
     }
 
     /* deliver last range */
-    enumRange(context, prev, c-1, prevValue);
+    enumRange(context, prev, c-1, prev_ਮੁੱਲ);
 }
 
-U_CAPI void U_EXPORT2
-utrie2_enum(const UTrie2 *trie,
-            UTrie2EnumValue *enumValue, UTrie2EnumRange *enumRange, const void *context) {
-    enumEitherTrie(trie, 0, 0x110000, enumValue, enumRange, context);
+U_CAPI ਖਾਲੀ U_EXPORT2
+utrie2_enum(ਅਚਲ UTrie2 *trie,
+            UTrie2_Enum_ਮੁੱਲ *enum_ਮੁੱਲ, UTrie2EnumRange *enumRange, ਅਚਲ ਖਾਲੀ *context) {
+    enumEitherTrie(trie, 0, 0x110000, enum_ਮੁੱਲ, enumRange, context);
 }
 
-U_CAPI void U_EXPORT2
-utrie2_enumForLeadSurrogate(const UTrie2 *trie, UChar32 lead,
-                            UTrie2EnumValue *enumValue, UTrie2EnumRange *enumRange,
-                            const void *context) {
-    if(!U16_IS_LEAD(lead)) {
-        return;
+U_CAPI ਖਾਲੀ U_EXPORT2
+utrie2_enumForLeadSurrogate(ਅਚਲ UTrie2 *trie, UChar32 lead,
+                            UTrie2_Enum_ਮੁੱਲ *enum_ਮੁੱਲ, UTrie2EnumRange *enumRange,
+                            ਅਚਲ ਖਾਲੀ *context) {
+    ਜੇ(!U16_IS_LEAD(lead)) {
+        ਵਾਪਸ;
     }
     lead=(lead-0xd7c0)<<10;   /* start code point */
-    enumEitherTrie(trie, lead, lead+0x400, enumValue, enumRange, context);
+    enumEitherTrie(trie, lead, lead+0x400, enum_ਮੁੱਲ, enumRange, context);
 }
 
 /* C++ convenience wrappers ------------------------------------------------- */
@@ -639,25 +639,25 @@ utrie2_enumForLeadSurrogate(const UTrie2 *trie, UChar32 lead,
 U_NAMESPACE_BEGIN
 
 uint16_t BackwardUTrie2StringIterator::previous16() {
-    codePointLimit=codePointStart;
-    if(start>=codePointStart) {
-        codePoint=U_SENTINEL;
-        return static_cast<uint16_t>(trie->errorValue);
+    ਕੋਡ_ਬਿੰਦੂ_ਹੱਦਬੰਦੀ=ਕੋਡ_ਬਿੰਦੂ_ਸ਼ੁਰੂ;
+    ਜੇ(ਸ਼ੁਰੂ>=ਕੋਡ_ਬਿੰਦੂ_ਸ਼ੁਰੂ) {
+        ਕੋਡ_ਬਿੰਦੂ=U_SENTINEL;
+        ਵਾਪਸ static_cast<uint16_t>(trie->error_ਮੁੱਲ);
     }
-    uint16_t result;
-    UTRIE2_U16_PREV16(trie, start, codePointStart, codePoint, result);
-    return result;
+    uint16_t ਨਤੀਜਾ;
+    UTRIE2_U16_PREV16(trie, ਸ਼ੁਰੂ, ਕੋਡ_ਬਿੰਦੂ_ਸ਼ੁਰੂ, ਕੋਡ_ਬਿੰਦੂ, ਨਤੀਜਾ);
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
 uint16_t ForwardUTrie2StringIterator::next16() {
-    codePointStart=codePointLimit;
-    if(codePointLimit==limit) {
-        codePoint=U_SENTINEL;
-        return static_cast<uint16_t>(trie->errorValue);
+    ਕੋਡ_ਬਿੰਦੂ_ਸ਼ੁਰੂ=ਕੋਡ_ਬਿੰਦੂ_ਹੱਦਬੰਦੀ;
+    ਜੇ(ਕੋਡ_ਬਿੰਦੂ_ਹੱਦਬੰਦੀ==ਹੱਦਬੰਦੀ) {
+        ਕੋਡ_ਬਿੰਦੂ=U_SENTINEL;
+        ਵਾਪਸ static_cast<uint16_t>(trie->error_ਮੁੱਲ);
     }
-    uint16_t result;
-    UTRIE2_U16_NEXT16(trie, codePointLimit, limit, codePoint, result);
-    return result;
+    uint16_t ਨਤੀਜਾ;
+    UTRIE2_U16_NEXT16(trie, ਕੋਡ_ਬਿੰਦੂ_ਹੱਦਬੰਦੀ, ਹੱਦਬੰਦੀ, ਕੋਡ_ਬਿੰਦੂ, ਨਤੀਜਾ);
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ

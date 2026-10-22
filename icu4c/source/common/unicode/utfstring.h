@@ -4,54 +4,54 @@
 // utfstring.h
 // created: 2025jul18 Markus W. Scherer
 
-#ifndef __UTFSTRING_H__
-#define __UTFSTRING_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __UTFSTRING_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __UTFSTRING_H__
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API || !defined(UTYPES_H)
+#ਜੇ U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_ਸਿਰਲੇਖ_API || !defined(UTYPES_H)
 
-#include "unicode/utf16.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf16.h"
 
 /**
  * \file
  * \brief C++ header-only API: C++ string helper functions.
  */
 
-#ifndef U_HIDE_DRAFT_API
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ U_HIDE_DRAFT_API
 
-namespace U_HEADER_ONLY_NAMESPACE {
+namespace U_ਸਿਰਲੇਖ_ONLY_NAMESPACE {
 namespace utfstring {
 
 // Write code points to strings -------------------------------------------- ***
 
-#ifndef U_IN_DOXYGEN
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ U_ਵਿੱਚ_DOXYGEN
 namespace prv {
 
 // This function, and the public wrappers,
 // want to be U_FORCE_INLINE but the gcc-debug-build-and-test CI check failed with
 // error: ‘always_inline’ function might not be inlinable [-Werror=attributes]
-template <typename StringClass, bool validate>
-inline StringClass& appendCodePoint(StringClass& s U_LIFETIME_BOUND, uint32_t c) {
-    using Unit = typename StringClass::value_type;
-    if constexpr (sizeof(Unit) == 1) {
+ਸਾਂਚਾ <typename StringClass, bool validate>
+ਸਤਰਅੰਦਰ StringClass& append_ਕੋਡ_ਬਿੰਦੂ(StringClass& s U_LIFETIME_BOUND, uint32_t c) {
+    using Unit = typename StringClass::ਮੁੱਲ_type;
+    ਜੇ constexpr (ਆਕਾਰ(Unit) == 1) {
         // UTF-8: Similar to U8_APPEND().
-        if (c <= 0x7f) {
-            s.push_back(static_cast<Unit>(c));
-        } else {
+        ਜੇ (c <= 0x7f) {
+            s.ਧੱਕੋ_ਪਿੱਠ(static_cast<Unit>(c));
+        } ਨਹੀਂਤਾਂ {
             Unit buf[4];
             uint8_t len;
-            if (c <= 0x7ff) {
+            ਜੇ (c <= 0x7ff) {
                 len = 2;
                 buf[2] = (c >> 6) | 0xc0;
-            } else {
-                if (validate ?
+            } ਨਹੀਂਤਾਂ {
+                ਜੇ (validate ?
                         c < 0xd800 ||
                             (c < 0xe000 || c > 0x10ffff ? (c = 0xfffd, true) : c <= 0xffff) :
                         c <= 0xffff) {
                     len = 3;
                     buf[1] = (c >> 12) | 0xe0;
-                } else {
+                } ਨਹੀਂਤਾਂ {
                     len = 4;
                     buf[0] = (c >> 18) | 0xf0;
                     buf[1] = ((c >> 12) & 0x3f) | 0x80;
@@ -61,27 +61,27 @@ inline StringClass& appendCodePoint(StringClass& s U_LIFETIME_BOUND, uint32_t c)
             buf[3] = (c & 0x3f) | 0x80;
             s.append(buf + 4 - len, len);
         }
-    } else if constexpr (sizeof(Unit) == 2) {
+    } ਨਹੀਂਤਾਂ ਜੇ constexpr (ਆਕਾਰ(Unit) == 2) {
         // UTF-16: Similar to U16_APPEND().
-        if (validate ?
+        ਜੇ (validate ?
                 c < 0xd800 || (c < 0xe000 || c > 0x10ffff ? (c = 0xfffd, true) : c <= 0xffff) :
                 c <= 0xffff) {
-            s.push_back(static_cast<Unit>(c));
-        } else {
+            s.ਧੱਕੋ_ਪਿੱਠ(static_cast<Unit>(c));
+        } ਨਹੀਂਤਾਂ {
             Unit buf[2] = { U16_LEAD(c), U16_TRAIL(c) };
             s.append(buf, 2);
         }
-    } else {
+    } ਨਹੀਂਤਾਂ {
         // UTF-32
-        s.push_back(!validate || U_IS_SCALAR_VALUE(c) ? c : 0xfffd);
+        s.ਧੱਕੋ_ਪਿੱਠ(!validate || U_IS_SCALAR_ਮੁੱਲ(c) ? c : 0xfffd);
     }
-    return s;
+    ਵਾਪਸ s;
 }
 
 }  // namespace prv
-#endif  // U_IN_DOXYGEN
+#ਜੇ_ਅੰਤ  // U_IN_DOXYGEN
 
-#ifndef U_HIDE_DRAFT_API
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ U_HIDE_DRAFT_API
 /**
  * Appends the code point to the string.
  * Appends the U+FFFD replacement character instead if c is not a scalar value.
@@ -94,9 +94,9 @@ inline StringClass& appendCodePoint(StringClass& s U_LIFETIME_BOUND, uint32_t c)
  * @draft ICU 78
  * @see U_IS_SCALAR_VALUE
  */
-template <typename StringClass>
-inline StringClass& appendOrFFFD(StringClass& s U_LIFETIME_BOUND, UChar32 c) {
-    return prv::appendCodePoint<StringClass, true>(s, c);
+ਸਾਂਚਾ <typename StringClass>
+ਸਤਰਅੰਦਰ StringClass& appendOrFFFD(StringClass& s U_LIFETIME_BOUND, UChar32 c) {
+    ਵਾਪਸ prv::append_ਕੋਡ_ਬਿੰਦੂ<StringClass, true>(s, c);
 }
 
 /**
@@ -111,9 +111,9 @@ inline StringClass& appendOrFFFD(StringClass& s U_LIFETIME_BOUND, UChar32 c) {
  * @draft ICU 78
  * @see U_IS_SCALAR_VALUE
  */
-template <typename StringClass>
-inline StringClass& appendUnsafe(StringClass& s U_LIFETIME_BOUND, UChar32 c) {
-    return prv::appendCodePoint<StringClass, false>(s, c);
+ਸਾਂਚਾ <typename StringClass>
+ਸਤਰਅੰਦਰ StringClass& appendUnsafe(StringClass& s U_LIFETIME_BOUND, UChar32 c) {
+    ਵਾਪਸ prv::append_ਕੋਡ_ਬਿੰਦੂ<StringClass, false>(s, c);
 }
 
 /**
@@ -127,11 +127,11 @@ inline StringClass& appendUnsafe(StringClass& s U_LIFETIME_BOUND, UChar32 c) {
  * @draft ICU 78
  * @see U_IS_SCALAR_VALUE
  */
-template<typename StringClass>
-inline StringClass encodeOrFFFD(UChar32 c) {
+ਸਾਂਚਾ<typename StringClass>
+ਸਤਰਅੰਦਰ StringClass encodeOrFFFD(UChar32 c) {
     StringClass s;
-    prv::appendCodePoint<StringClass, true>(s, c);
-    return s;
+    prv::append_ਕੋਡ_ਬਿੰਦੂ<StringClass, true>(s, c);
+    ਵਾਪਸ s;
 }
 
 /**
@@ -145,17 +145,17 @@ inline StringClass encodeOrFFFD(UChar32 c) {
  * @draft ICU 78
  * @see U_IS_SCALAR_VALUE
  */
-template<typename StringClass>
-inline StringClass encodeUnsafe(UChar32 c) {
+ਸਾਂਚਾ<typename StringClass>
+ਸਤਰਅੰਦਰ StringClass encodeUnsafe(UChar32 c) {
     StringClass s;
-    prv::appendCodePoint<StringClass, false>(s, c);
-    return s;
+    prv::append_ਕੋਡ_ਬਿੰਦੂ<StringClass, false>(s, c);
+    ਵਾਪਸ s;
 }
-#endif  // U_HIDE_DRAFT_API
+#ਜੇ_ਅੰਤ  // U_HIDE_DRAFT_API
 
 }  // namespace utfstring
 }  // namespace U_HEADER_ONLY_NAMESPACE
 
-#endif  // U_HIDE_DRAFT_API
-#endif  // U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
-#endif  // __UTFSTRING_H__
+#ਜੇ_ਅੰਤ  // U_HIDE_DRAFT_API
+#ਜੇ_ਅੰਤ  // U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+#ਜੇ_ਅੰਤ  // __UTFSTRING_H__

@@ -15,14 +15,14 @@
 *******************************************************************************
 */
 
-#ifndef PARSEPOS_H
-#define PARSEPOS_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ PARSEPOS_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ PARSEPOS_H
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uobject.h"
 
  
 U_NAMESPACE_BEGIN
@@ -49,16 +49,16 @@ U_NAMESPACE_BEGIN
  * @see         java.text.Format
  */
 
-class U_COMMON_API ParsePosition : public UObject {
-public:
+class U_COMMON_API ParsePosition : ਜਨਤਕ UObject {
+ਜਨਤਕ:
     /**
      * Default constructor, the index starts with 0 as default.
      * @stable ICU 2.0
      */
     ParsePosition()
         : UObject(),
-        index(0),
-        errorIndex(-1)
+        ਸੂਚਕਾਂਕ(0),
+        error_ਸੂਚਕਾਂਕ(-1)
       {}
 
     /**
@@ -66,10 +66,10 @@ public:
      * @param newIndex the new text offset.
      * @stable ICU 2.0
      */
-    ParsePosition(int32_t newIndex)
+    ParsePosition(int32_t new_ਸੂਚਕਾਂਕ)
         : UObject(),
-        index(newIndex),
-        errorIndex(-1)
+        ਸੂਚਕਾਂਕ(new_ਸੂਚਕਾਂਕ),
+        error_ਸੂਚਕਾਂਕ(-1)
       {}
 
     /**
@@ -77,37 +77,37 @@ public:
      * @param copy the object to be copied from.
      * @stable ICU 2.0
      */
-    ParsePosition(const ParsePosition& copy)
+    ParsePosition(ਅਚਲ ParsePosition& copy)
         : UObject(copy),
-        index(copy.index),
-        errorIndex(copy.errorIndex)
+        ਸੂਚਕਾਂਕ(copy.ਸੂਚਕਾਂਕ),
+        error_ਸੂਚਕਾਂਕ(copy.error_ਸੂਚਕਾਂਕ)
       {}
 
     /**
      * Destructor
      * @stable ICU 2.0
      */
-    virtual ~ParsePosition();
+    ਆਭਾਸੀ ~ParsePosition();
 
     /**
      * Assignment operator
      * @stable ICU 2.0
      */
-    inline ParsePosition& operator=(const ParsePosition& copy) U_LIFETIME_BOUND;
+    ਸਤਰਅੰਦਰ ParsePosition& ਸੰਚਾਲਕ=(ਅਚਲ ParsePosition& copy) U_LIFETIME_BOUND;
 
     /**
      * Equality operator.
      * @return true if the two parse positions are equal, false otherwise.
      * @stable ICU 2.0
      */
-    inline bool               operator==(const ParsePosition& that) const;
+    ਸਤਰਅੰਦਰ bool               ਸੰਚਾਲਕ==(ਅਚਲ ParsePosition& that) ਅਚਲ;
 
     /**
      * Equality operator.
      * @return true if the two parse positions are not equal, false otherwise.
      * @stable ICU 2.0
      */
-    inline bool               operator!=(const ParsePosition& that) const;
+    ਸਤਰਅੰਦਰ bool               ਸੰਚਾਲਕ!=(ਅਚਲ ParsePosition& that) ਅਚਲ;
 
     /**
      * Clone this object.
@@ -120,7 +120,7 @@ public:
      * @see getDynamicClassID
      * @stable ICU 2.8
      */
-    ParsePosition *clone() const;
+    ParsePosition *clone() ਅਚਲ;
 
     /**
      * Retrieve the current parse position.  On input to a parse method, this
@@ -129,14 +129,14 @@ public:
      * @return the current index.
      * @stable ICU 2.0
      */
-    inline int32_t getIndex() const;
+    ਸਤਰਅੰਦਰ int32_t get_ਸੂਚਕਾਂਕ() ਅਚਲ;
 
     /**
      * Set the current parse position.
      * @param index the new index.
      * @stable ICU 2.0
      */
-    inline void setIndex(int32_t index);
+    ਸਤਰਅੰਦਰ ਖਾਲੀ ਸੈੱਟ_ਸੂਚਕਾਂਕ(int32_t ਸੂਚਕਾਂਕ);
 
     /**
      * Set the index at which a parse error occurred.  Formatters
@@ -145,93 +145,93 @@ public:
      * set.
      * @stable ICU 2.0
      */
-    inline void setErrorIndex(int32_t ei);
+    ਸਤਰਅੰਦਰ ਖਾਲੀ ਸੈੱਟ_Error_ਸੂਚਕਾਂਕ(int32_t ei);
 
     /**
      * Retrieve the index at which an error occurred, or -1 if the
      * error index has not been set.
      * @stable ICU 2.0
      */
-    inline int32_t getErrorIndex() const;
+    ਸਤਰਅੰਦਰ int32_t get_Error_ਸੂਚਕਾਂਕ() ਅਚਲ;
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      *
      * @stable ICU 2.2
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ਸਥਿਰ UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      *
      * @stable ICU 2.2
      */
-    virtual UClassID getDynamicClassID() const override;
+    ਆਭਾਸੀ UClassID getDynamicClassID() ਅਚਲ override;
 
-private:
+ਨਿਜੀ:
     /**
      * Input: the place you start parsing.
      * <br>Output: position where the parse stopped.
      * This is designed to be used serially,
      * with each call setting index up for the next one.
      */
-    int32_t index;
+    int32_t ਸੂਚਕਾਂਕ;
 
     /**
      * The index at which a parse error occurred.
      */
-    int32_t errorIndex;
+    int32_t error_ਸੂਚਕਾਂਕ;
 
 };
 
-inline ParsePosition&
-ParsePosition::operator=(const ParsePosition& copy) U_LIFETIME_BOUND
+ਸਤਰਅੰਦਰ ParsePosition&
+ParsePosition::ਸੰਚਾਲਕ=(ਅਚਲ ParsePosition& copy) U_LIFETIME_BOUND
 {
-  index = copy.index;
-  errorIndex = copy.errorIndex;
-  return *this;
+  ਸੂਚਕਾਂਕ = copy.ਸੂਚਕਾਂਕ;
+  error_ਸੂਚਕਾਂਕ = copy.error_ਸੂਚਕਾਂਕ;
+  ਵਾਪਸ *this;
 }
 
-inline bool
-ParsePosition::operator==(const ParsePosition& copy) const
+ਸਤਰਅੰਦਰ bool
+ParsePosition::ਸੰਚਾਲਕ==(ਅਚਲ ParsePosition& copy) ਅਚਲ
 {
-  if(index != copy.index || errorIndex != copy.errorIndex)
-  return false;
-  else
-  return true;
+  ਜੇ(ਸੂਚਕਾਂਕ != copy.ਸੂਚਕਾਂਕ || error_ਸੂਚਕਾਂਕ != copy.error_ਸੂਚਕਾਂਕ)
+  ਵਾਪਸ false;
+  ਨਹੀਂਤਾਂ
+  ਵਾਪਸ true;
 }
 
-inline bool
-ParsePosition::operator!=(const ParsePosition& copy) const
+ਸਤਰਅੰਦਰ bool
+ParsePosition::ਸੰਚਾਲਕ!=(ਅਚਲ ParsePosition& copy) ਅਚਲ
 {
-  return !operator==(copy);
+  ਵਾਪਸ !ਸੰਚਾਲਕ==(copy);
 }
 
-inline int32_t
-ParsePosition::getIndex() const
+ਸਤਰਅੰਦਰ int32_t
+ParsePosition::get_ਸੂਚਕਾਂਕ() ਅਚਲ
 {
-  return index;
+  ਵਾਪਸ ਸੂਚਕਾਂਕ;
 }
 
-inline void
-ParsePosition::setIndex(int32_t offset)
+ਸਤਰਅੰਦਰ ਖਾਲੀ
+ParsePosition::ਸੈੱਟ_ਸੂਚਕਾਂਕ(int32_t ਵਿੱਥ)
 {
-  this->index = offset;
+  this->ਸੂਚਕਾਂਕ = ਵਿੱਥ;
 }
 
-inline int32_t
-ParsePosition::getErrorIndex() const
+ਸਤਰਅੰਦਰ int32_t
+ParsePosition::get_Error_ਸੂਚਕਾਂਕ() ਅਚਲ
 {
-  return errorIndex;
+  ਵਾਪਸ error_ਸੂਚਕਾਂਕ;
 }
 
-inline void
-ParsePosition::setErrorIndex(int32_t ei)
+ਸਤਰਅੰਦਰ ਖਾਲੀ
+ParsePosition::ਸੈੱਟ_Error_ਸੂਚਕਾਂਕ(int32_t ei)
 {
-  this->errorIndex = ei;
+  this->error_ਸੂਚਕਾਂਕ = ei;
 }
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ਜੇ_ਅੰਤ /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#ਜੇ_ਅੰਤ

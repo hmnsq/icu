@@ -10,19 +10,19 @@
 ***************************************************************************
 */
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ਜੇ !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/unistr.h"
-#include "unicode/uniset.h"
-#include "unicode/uchar.h"
-#include "unicode/parsepos.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/unistr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uniset.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uchar.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/parsepos.h"
 
-#include "cstr.h"
-#include "rbbinode.h"
-#include "rbbirb.h"
-#include "umutex.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cstr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "rbbinode.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "rbbirb.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "umutex.h"
 
 
 //
@@ -30,34 +30,34 @@
 //                                  when the hash table is deleted.
 //
 U_CDECL_BEGIN
-static void U_CALLCONV RBBISymbolTableEntry_deleter(void *p) {
-    icu::RBBISymbolTableEntry *px = (icu::RBBISymbolTableEntry *)p;
-    delete px;
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV RBBISymbol_ਸਾਰਣੀ_ਇੰਦਰਾਜ_deleter(ਖਾਲੀ *p) {
+    icu::RBBISymbol_ਸਾਰਣੀ_ਇੰਦਰਾਜ *px = (icu::RBBISymbol_ਸਾਰਣੀ_ਇੰਦਰਾਜ *)p;
+    ਮਿਟਾਓ px;
 }
-U_CDECL_END
+U_CDECL_ਸਿਰਾ
 
 
 
 U_NAMESPACE_BEGIN
 
-RBBISymbolTable::RBBISymbolTable(RBBIRuleScanner *rs, const UnicodeString &rules, UErrorCode &status)
-    : fRules(rules), fRuleScanner(rs)
+RBBISymbol_ਸਾਰਣੀ::RBBISymbol_ਸਾਰਣੀ(RBBIRuleScanner *rs, ਅਚਲ UnicodeString &ਨਿਯਮਾਂ, UError_ਕੋਡ &ਸਥਿਤੀ)
+    : f_ਨਿਯਮਾਂ(ਨਿਯਮਾਂ), f_ਨਿਯਮ_Scanner(rs)
 {
-    fHashTable       = nullptr;
+    f_Hash_ਸਾਰਣੀ       = ਖਾਲੀ_ਸੂਚਕ;
 
-    fHashTable = uhash_open(uhash_hashUnicodeString, uhash_compareUnicodeString, nullptr, &status);
+    f_Hash_ਸਾਰਣੀ = uhash_open(uhash_hashUnicodeString, uhash_compareUnicodeString, ਖਾਲੀ_ਸੂਚਕ, &ਸਥਿਤੀ);
     // uhash_open checks status
-    if (U_FAILURE(status)) {
-        return;
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਵਾਪਸ;
     }
-    uhash_setValueDeleter(fHashTable, RBBISymbolTableEntry_deleter);
+    uhash_ਸੈੱਟ_ਮੁੱਲ_Deleter(f_Hash_ਸਾਰਣੀ, RBBISymbol_ਸਾਰਣੀ_ਇੰਦਰਾਜ_deleter);
 }
 
 
 
-RBBISymbolTable::~RBBISymbolTable()
+RBBISymbol_ਸਾਰਣੀ::~RBBISymbol_ਸਾਰਣੀ()
 {
-    uhash_close(fHashTable);
+    uhash_close(f_Hash_ਸਾਰਣੀ);
 }
 
 
@@ -68,14 +68,14 @@ RBBISymbolTable::~RBBISymbolTable()
 //
 //                                The variable name does NOT include the leading $.
 //
-const UnicodeString  *RBBISymbolTable::lookup(const UnicodeString& s) const
+ਅਚਲ UnicodeString  *RBBISymbol_ਸਾਰਣੀ::lookup(ਅਚਲ UnicodeString& s) ਅਚਲ
 {
-    const RBBISymbolTableEntry* const el =
-        static_cast<const RBBISymbolTableEntry*>(uhash_get(fHashTable, &s));
-    if (el == nullptr) {
-        return nullptr;
+    ਅਚਲ RBBISymbol_ਸਾਰਣੀ_ਇੰਦਰਾਜ* ਅਚਲ el =
+        static_cast<ਅਚਲ RBBISymbol_ਸਾਰਣੀ_ਇੰਦਰਾਜ*>(uhash_get(f_Hash_ਸਾਰਣੀ, &s));
+    ਜੇ (el == ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
-    const RBBINode& exprNode = *el->val->fLeftChild; // Root node of expression for variable
+    ਅਚਲ RBBINode& ਵਿਅੰਜਕ_ਗੰਢ = *el->val->f_ਖੱਬਾ_ਬੱਚਾ; // Root node of expression for variable
     // Return the original source string for the expression.
     // Note that for set-valued variables used in UnicodeSet expressions, this would be rejected by
     // the UnicodeSet parser if the source itself contains variable references.  For instance, with
@@ -90,27 +90,27 @@ const UnicodeString  *RBBISymbolTable::lookup(const UnicodeString& s) const
     // to lookup() never happens; instead, lookupSet("CaseIgnorable") is called when computing
     // $Cased and returns the non-null value of $CaseIgnorable, and then when computing $NotCased,
     // lookupSet("Cased") returns the value computed for $Cased.
-    return &exprNode.fText;
+    ਵਾਪਸ &ਵਿਅੰਜਕ_ਗੰਢ.f_ਪਾਠ;
 }
 
-const UnicodeSet* RBBISymbolTable::lookupSet(const UnicodeString& s) const {
-    const RBBISymbolTableEntry* const el = static_cast<const RBBISymbolTableEntry*>(uhash_get(fHashTable, &s));
-    if (el == nullptr) {
-        return nullptr;
+ਅਚਲ Unicode_ਸੈੱਟ* RBBISymbol_ਸਾਰਣੀ::lookup_ਸੈੱਟ(ਅਚਲ UnicodeString& s) ਅਚਲ {
+    ਅਚਲ RBBISymbol_ਸਾਰਣੀ_ਇੰਦਰਾਜ* ਅਚਲ el = static_cast<ਅਚਲ RBBISymbol_ਸਾਰਣੀ_ਇੰਦਰਾਜ*>(uhash_get(f_Hash_ਸਾਰਣੀ, &s));
+    ਜੇ (el == ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
-    const RBBINode& exprNode = *el->val->fLeftChild;
-    if (exprNode.fType == RBBINode::setRef) {
-        return exprNode.fLeftChild->fInputSet;
-    } else {
-        return nullptr;
+    ਅਚਲ RBBINode& ਵਿਅੰਜਕ_ਗੰਢ = *el->val->f_ਖੱਬਾ_ਬੱਚਾ;
+    ਜੇ (ਵਿਅੰਜਕ_ਗੰਢ.fType == RBBINode::ਸੈੱਟ_Ref) {
+        ਵਾਪਸ ਵਿਅੰਜਕ_ਗੰਢ.f_ਖੱਬਾ_ਬੱਚਾ->f_ਨਿਵੇਸ਼_ਸੈੱਟ;
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 }
 
 
 
 //  No longer used, see ICU-23297.
-const UnicodeFunctor* RBBISymbolTable::lookupMatcher(UChar32 /*ch*/) const {
-    return nullptr;
+ਅਚਲ UnicodeFunctor* RBBISymbol_ਸਾਰਣੀ::lookupMatcher(UChar32 /*ch*/) ਅਚਲ {
+    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
 }
 
 //
@@ -123,25 +123,25 @@ const UnicodeFunctor* RBBISymbolTable::lookupMatcher(UChar32 /*ch*/) const {
 //                                   from the rules based transliterator implementation.
 //                                   I didn't see an obvious way of sharing it.
 //
-UnicodeString   RBBISymbolTable::parseReference(const UnicodeString& text,
-                                                ParsePosition& pos, int32_t limit) const
+UnicodeString   RBBISymbol_ਸਾਰਣੀ::parseReference(ਅਚਲ UnicodeString& ਪਾਠ,
+                                                ParsePosition& pos, int32_t ਹੱਦਬੰਦੀ) ਅਚਲ
 {
-    int32_t start = pos.getIndex();
-    int32_t i = start;
-    UnicodeString result;
-    while (i < limit) {
-        char16_t c = text.charAt(i);
-        if ((i==start && !u_isIDStart(c)) || !u_isIDPart(c)) {
-            break;
+    int32_t ਸ਼ੁਰੂ = pos.get_ਸੂਚਕਾਂਕ();
+    int32_t i = ਸ਼ੁਰੂ;
+    UnicodeString ਨਤੀਜਾ;
+    ਜਦੋਂ (i < ਹੱਦਬੰਦੀ) {
+        char16_t c = ਪਾਠ.charAt(i);
+        ਜੇ ((i==ਸ਼ੁਰੂ && !u_isIDStart(c)) || !u_isIDPart(c)) {
+            ਰੋਕੋ;
         }
         ++i;
     }
-    if (i == start) { // No valid name chars
-        return result; // Indicate failure with empty string
+    ਜੇ (i == ਸ਼ੁਰੂ) { // No valid name chars
+        ਵਾਪਸ ਨਤੀਜਾ; // Indicate failure with empty string
     }
-    pos.setIndex(i);
-    text.extractBetween(start, i, result);
-    return result;
+    pos.ਸੈੱਟ_ਸੂਚਕਾਂਕ(i);
+    ਪਾਠ.ਕੱਢੋ_Between(ਸ਼ੁਰੂ, i, ਨਤੀਜਾ);
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
 
@@ -151,16 +151,16 @@ UnicodeString   RBBISymbolTable::parseReference(const UnicodeString& text,
 //                                  corresponding RBBI Node.  If there is no entry
 //                                  in the table for this name, return nullptr.
 //
-RBBINode       *RBBISymbolTable::lookupNode(const UnicodeString &key) const{
+RBBINode       *RBBISymbol_ਸਾਰਣੀ::lookup_ਗੰਢ(ਅਚਲ UnicodeString &ਕੁੰਜੀ) ਅਚਲ{
 
-    RBBINode             *retNode = nullptr;
-    RBBISymbolTableEntry *el;
+    RBBINode             *ret_ਗੰਢ = ਖਾਲੀ_ਸੂਚਕ;
+    RBBISymbol_ਸਾਰਣੀ_ਇੰਦਰਾਜ *el;
 
-    el = static_cast<RBBISymbolTableEntry*>(uhash_get(fHashTable, &key));
-    if (el != nullptr) {
-        retNode = el->val;
+    el = static_cast<RBBISymbol_ਸਾਰਣੀ_ਇੰਦਰਾਜ*>(uhash_get(f_Hash_ਸਾਰਣੀ, &ਕੁੰਜੀ));
+    ਜੇ (el != ਖਾਲੀ_ਸੂਚਕ) {
+        ret_ਗੰਢ = el->val;
     }
-    return retNode;
+    ਵਾਪਸ ret_ਗੰਢ;
 }
 
 
@@ -170,40 +170,40 @@ RBBINode       *RBBISymbolTable::lookupNode(const UnicodeString &key) const{
 //                                    this will only occur in the case of duplicate
 //                                    variable assignments.
 //
-void            RBBISymbolTable::addEntry  (const UnicodeString &key, RBBINode *val, UErrorCode &err) {
-    RBBISymbolTableEntry *e;
+ਖਾਲੀ            RBBISymbol_ਸਾਰਣੀ::ਜੋੜੋ_ਇੰਦਰਾਜ  (ਅਚਲ UnicodeString &ਕੁੰਜੀ, RBBINode *val, UError_ਕੋਡ &err) {
+    RBBISymbol_ਸਾਰਣੀ_ਇੰਦਰਾਜ *e;
     /* test for buffer overflows */
-    if (U_FAILURE(err)) {
-        return;
+    ਜੇ (U_FAILURE(err)) {
+        ਵਾਪਸ;
     }
-    e = static_cast<RBBISymbolTableEntry*>(uhash_get(fHashTable, &key));
-    if (e != nullptr) {
+    e = static_cast<RBBISymbol_ਸਾਰਣੀ_ਇੰਦਰਾਜ*>(uhash_get(f_Hash_ਸਾਰਣੀ, &ਕੁੰਜੀ));
+    ਜੇ (e != ਖਾਲੀ_ਸੂਚਕ) {
         err = U_BRK_VARIABLE_REDFINITION;
-        return;
+        ਵਾਪਸ;
     }
 
-    e = new RBBISymbolTableEntry;
-    if (e == nullptr) {
-        err = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    e = ਨਵਾਂ RBBISymbol_ਸਾਰਣੀ_ਇੰਦਰਾਜ;
+    ਜੇ (e == ਖਾਲੀ_ਸੂਚਕ) {
+        err = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+        ਵਾਪਸ;
     }
-    e->key = key;
+    e->ਕੁੰਜੀ = ਕੁੰਜੀ;
     e->val = val;
-    uhash_put( fHashTable, &e->key, e, &err);
+    uhash_put( f_Hash_ਸਾਰਣੀ, &e->ਕੁੰਜੀ, e, &err);
 }
 
 
-RBBISymbolTableEntry::RBBISymbolTableEntry() : UMemory(), key(), val(nullptr) {}
+RBBISymbol_ਸਾਰਣੀ_ਇੰਦਰਾਜ::RBBISymbol_ਸਾਰਣੀ_ਇੰਦਰਾਜ() : UMemory(), ਕੁੰਜੀ(), val(ਖਾਲੀ_ਸੂਚਕ) {}
 
-RBBISymbolTableEntry::~RBBISymbolTableEntry() {
+RBBISymbol_ਸਾਰਣੀ_ਇੰਦਰਾਜ::~RBBISymbol_ਸਾਰਣੀ_ਇੰਦਰਾਜ() {
     // The "val" of a symbol table entry is a variable reference node.
     // The l. child of the val is the rhs expression from the assignment.
     // Unlike other node types, children of variable reference nodes are not
     //    automatically recursively deleted.  We do it manually here.
-    delete val->fLeftChild;
-    val->fLeftChild = nullptr;
+    ਮਿਟਾਓ val->f_ਖੱਬਾ_ਬੱਚਾ;
+    val->f_ਖੱਬਾ_ਬੱਚਾ = ਖਾਲੀ_ਸੂਚਕ;
 
-    delete  val;
+    ਮਿਟਾਓ  val;
 
     // Note: the key UnicodeString is destructed by virtue of being in the object by value.
 }
@@ -212,45 +212,45 @@ RBBISymbolTableEntry::~RBBISymbolTableEntry() {
 //
 //  RBBISymbolTable::print    Debugging function, dump out the symbol table contents.
 //
-#ifdef RBBI_DEBUG
-void RBBISymbolTable::rbbiSymtablePrint() const {
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ RBBI_DEBUG
+ਖਾਲੀ RBBISymbol_ਸਾਰਣੀ::rbbiSymtablePrint() ਅਚਲ {
     RBBIDebugPrintf("Variable Definitions Symbol Table\n"
            "Name                  Node         serial  String Val\n"
            "-------------------------------------------------------------------\n");
 
-    int32_t pos = UHASH_FIRST;
-    const UHashElement  *e   = nullptr;
-    for (;;) {
-        e = uhash_nextElement(fHashTable,  &pos);
-        if (e == nullptr ) {
-            break;
+    int32_t pos = UHASH_ਪਹਿਲਾ;
+    ਅਚਲ UHashElement  *e   = ਖਾਲੀ_ਸੂਚਕ;
+    ਲਈ (;;) {
+        e = uhash_ਅਗਲਾ_Element(f_Hash_ਸਾਰਣੀ,  &pos);
+        ਜੇ (e == ਖਾਲੀ_ਸੂਚਕ ) {
+            ਰੋਕੋ;
         }
-        RBBISymbolTableEntry  *s   = (RBBISymbolTableEntry *)e->value.pointer;
+        RBBISymbol_ਸਾਰਣੀ_ਇੰਦਰਾਜ  *s   = (RBBISymbol_ਸਾਰਣੀ_ਇੰਦਰਾਜ *)e->value.ਸੂਚਕ;
 
-        RBBIDebugPrintf("%-19s   %8p %7d ", CStr(s->key)(), (void *)s->val, s->val->fSerialNum);
-        RBBIDebugPrintf(" %s\n", CStr(s->val->fLeftChild->fText)());
+        RBBIDebugPrintf("%-19s   %8p %7d ", CStr(s->ਕੁੰਜੀ)(), (ਖਾਲੀ *)s->val, s->val->f_Serial_ਅੰਕ);
+        RBBIDebugPrintf(" %s\n", CStr(s->val->f_ਖੱਬਾ_ਬੱਚਾ->f_ਪਾਠ)());
     }
 
     RBBIDebugPrintf("\nParsed Variable Definitions\n");
     pos = -1;
-    for (;;) {
-        e = uhash_nextElement(fHashTable,  &pos);
-        if (e == nullptr ) {
-            break;
+    ਲਈ (;;) {
+        e = uhash_ਅਗਲਾ_Element(f_Hash_ਸਾਰਣੀ,  &pos);
+        ਜੇ (e == ਖਾਲੀ_ਸੂਚਕ ) {
+            ਰੋਕੋ;
         }
-        RBBISymbolTableEntry  *s   = (RBBISymbolTableEntry *)e->value.pointer;
-        RBBIDebugPrintf("%s\n", CStr(s->key)());
-        RBBINode::printTree(s->val, true);
-        RBBINode::printTree(s->val->fLeftChild, false);
+        RBBISymbol_ਸਾਰਣੀ_ਇੰਦਰਾਜ  *s   = (RBBISymbol_ਸਾਰਣੀ_ਇੰਦਰਾਜ *)e->value.ਸੂਚਕ;
+        RBBIDebugPrintf("%s\n", CStr(s->ਕੁੰਜੀ)());
+        RBBINode::print_ਰੁੱਖ(s->val, ਸੱਚ);
+        RBBINode::print_ਰੁੱਖ(s->val->f_ਖੱਬਾ_ਬੱਚਾ, ਝੂਠ);
         RBBIDebugPrintf("\n");
     }
 }
-#endif
+#ਜੇ_ਅੰਤ
 
 
 
 
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#ਜੇ_ਅੰਤ /* #if !UCONFIG_NO_BREAK_ITERATION */

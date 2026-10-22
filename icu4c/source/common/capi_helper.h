@@ -1,33 +1,33 @@
 // © 2018 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#ifndef __CAPI_HELPER_H__
-#define __CAPI_HELPER_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __CAPI_HELPER_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __CAPI_HELPER_H__
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
 U_NAMESPACE_BEGIN
 
 /**
  * An internal helper class to help convert between C and C++ APIs.
  */
-template<typename CType, typename CPPType, int32_t kMagic>
+ਸਾਂਚਾ<typename CType, typename CPPType, int32_t kMagic>
 class IcuCApiHelper {
-  public:
+  ਜਨਤਕ:
     /**
      * Convert from the C type to the C++ type (const version).
      */
-    static const CPPType* validate(const CType* input, UErrorCode& status);
+    ਸਥਿਰ ਅਚਲ CPPType* validate(ਅਚਲ CType* ਨਿਵੇਸ਼, UError_ਕੋਡ& ਸਥਿਤੀ);
 
     /**
      * Convert from the C type to the C++ type (non-const version).
      */
-    static CPPType* validate(CType* input, UErrorCode& status);
+    ਸਥਿਰ CPPType* validate(CType* ਨਿਵੇਸ਼, UError_ਕੋਡ& ਸਥਿਤੀ);
 
     /**
      * Convert from the C++ type to the C type (const version).
      */
-    const CType* exportConstForC() const;
+    ਅਚਲ CType* exportConstForC() ਅਚਲ;
 
     /**
      * Convert from the C++ type to the C type (non-const version).
@@ -39,7 +39,7 @@ class IcuCApiHelper {
      */
     ~IcuCApiHelper();
 
-  private:
+  ਨਿਜੀ:
     /**
      * While the object is valid, fMagic equals kMagic.
      */
@@ -47,51 +47,51 @@ class IcuCApiHelper {
 };
 
 
-template<typename CType, typename CPPType, int32_t kMagic>
-const CPPType*
-IcuCApiHelper<CType, CPPType, kMagic>::validate(const CType* input, UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return nullptr;
+ਸਾਂਚਾ<typename CType, typename CPPType, int32_t kMagic>
+ਅਚਲ CPPType*
+IcuCApiHelper<CType, CPPType, kMagic>::validate(ਅਚਲ CType* ਨਿਵੇਸ਼, UError_ਕੋਡ& ਸਥਿਤੀ) {
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਵਾਪਸ nullptr;
     }
-    if (input == nullptr) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    ਜੇ (ਨਿਵੇਸ਼ == nullptr) {
+        ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ nullptr;
     }
-    auto* impl = reinterpret_cast<const CPPType*>(input);
-    if (static_cast<const IcuCApiHelper<CType, CPPType, kMagic>*>(impl)->fMagic != kMagic) {
-        status = U_INVALID_FORMAT_ERROR;
-        return nullptr;
+    ਸਵੈਚਾਲਿਤ* impl = reinterpret_cast<ਅਚਲ CPPType*>(ਨਿਵੇਸ਼);
+    ਜੇ (static_cast<ਅਚਲ IcuCApiHelper<CType, CPPType, kMagic>*>(impl)->fMagic != kMagic) {
+        ਸਥਿਤੀ = U_INVALID_FORMAT_ERROR;
+        ਵਾਪਸ nullptr;
     }
-    return impl;
+    ਵਾਪਸ impl;
 }
 
-template<typename CType, typename CPPType, int32_t kMagic>
+ਸਾਂਚਾ<typename CType, typename CPPType, int32_t kMagic>
 CPPType*
-IcuCApiHelper<CType, CPPType, kMagic>::validate(CType* input, UErrorCode& status) {
-    auto* constInput = static_cast<const CType*>(input);
-    auto* validated = validate(constInput, status);
-    return const_cast<CPPType*>(validated);
+IcuCApiHelper<CType, CPPType, kMagic>::validate(CType* ਨਿਵੇਸ਼, UError_ਕੋਡ& ਸਥਿਤੀ) {
+    ਸਵੈਚਾਲਿਤ* const_ਨਿਵੇਸ਼ = static_cast<ਅਚਲ CType*>(ਨਿਵੇਸ਼);
+    ਸਵੈਚਾਲਿਤ* validated = validate(const_ਨਿਵੇਸ਼, ਸਥਿਤੀ);
+    ਵਾਪਸ const_cast<CPPType*>(validated);
 }
 
-template<typename CType, typename CPPType, int32_t kMagic>
-const CType*
-IcuCApiHelper<CType, CPPType, kMagic>::exportConstForC() const {
-    return reinterpret_cast<const CType*>(static_cast<const CPPType*>(this));
+ਸਾਂਚਾ<typename CType, typename CPPType, int32_t kMagic>
+ਅਚਲ CType*
+IcuCApiHelper<CType, CPPType, kMagic>::exportConstForC() ਅਚਲ {
+    ਵਾਪਸ reinterpret_cast<ਅਚਲ CType*>(static_cast<ਅਚਲ CPPType*>(this));
 }
 
-template<typename CType, typename CPPType, int32_t kMagic>
+ਸਾਂਚਾ<typename CType, typename CPPType, int32_t kMagic>
 CType*
 IcuCApiHelper<CType, CPPType, kMagic>::exportForC() {
-    return reinterpret_cast<CType*>(static_cast<CPPType*>(this));
+    ਵਾਪਸ reinterpret_cast<CType*>(static_cast<CPPType*>(this));
 }
 
-template<typename CType, typename CPPType, int32_t kMagic>
+ਸਾਂਚਾ<typename CType, typename CPPType, int32_t kMagic>
 IcuCApiHelper<CType, CPPType, kMagic>::~IcuCApiHelper() {
     // head off application errors by preventing use of of deleted objects.
     fMagic = 0;
 }
 
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif // __CAPI_HELPER_H__
+#ਜੇ_ਅੰਤ // __CAPI_HELPER_H__

@@ -18,40 +18,40 @@
 *   Character conversion functions moved here from resbund.cpp
 */
 
-#include "unicode/utypes.h"
-#include "unicode/resbund.h"
-#include "uinvchar.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/resbund.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uinvchar.h"
 
 U_NAMESPACE_BEGIN
 
-ResourceBundle::ResourceBundle( const UnicodeString&    path,
-                                const Locale&           locale,
-                                UErrorCode&              error)
-                                :UObject(), fLocale(nullptr)
+ResourceBundle::ResourceBundle( ਅਚਲ UnicodeString&    ਰਸਤਾ,
+                                ਅਚਲ Locale&           locale,
+                                UError_ਕੋਡ&              error)
+                                :UObject(), fLocale(ਖਾਲੀ_ਸੂਚਕ)
 {
-    constructForLocale(path, locale, error);
+    constructForLocale(ਰਸਤਾ, locale, error);
 }
 
-ResourceBundle::ResourceBundle( const UnicodeString&    path,
-                                UErrorCode&              error)
-                                :UObject(), fLocale(nullptr)
+ResourceBundle::ResourceBundle( ਅਚਲ UnicodeString&    ਰਸਤਾ,
+                                UError_ਕੋਡ&              error)
+                                :UObject(), fLocale(ਖਾਲੀ_ਸੂਚਕ)
 {
-    constructForLocale(path, Locale::getDefault(), error);
+    constructForLocale(ਰਸਤਾ, Locale::getDefault(), error);
 }
 
-void 
-ResourceBundle::constructForLocale(const UnicodeString& path,
-                                   const Locale& locale,
-                                   UErrorCode& error)
+ਖਾਲੀ 
+ResourceBundle::constructForLocale(ਅਚਲ UnicodeString& ਰਸਤਾ,
+                                   ਅਚਲ Locale& locale,
+                                   UError_ਕੋਡ& error)
 {
-    if (path.isEmpty()) {
-        fResource = ures_open(nullptr, locale.getName(), &error);
+    ਜੇ (ਰਸਤਾ.is_ਖਾਲੀ_ਥਾਵਾਂ()) {
+        fResource = ures_open(ਖਾਲੀ_ਸੂਚਕ, locale.getName(), &error);
     }
-    else {
-        UnicodeString nullTerminatedPath(path);
-        nullTerminatedPath.append(static_cast<char16_t>(0));
-        fResource = ures_openU(nullTerminatedPath.getBuffer(), locale.getName(), &error);
+    ਨਹੀਂਤਾਂ {
+        UnicodeString null_Terminated_ਰਸਤਾ(ਰਸਤਾ);
+        null_Terminated_ਰਸਤਾ.append(static_cast<char16_t>(0));
+        fResource = ures_openU(null_Terminated_ਰਸਤਾ.get_ਬਫਰ(), locale.getName(), &error);
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ

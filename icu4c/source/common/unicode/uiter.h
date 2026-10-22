@@ -16,8 +16,8 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UITER_H__
-#define __UITER_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __UITER_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __UITER_H__
 
 /**
  * \file
@@ -26,21 +26,21 @@
  * @see UCharIterator
  */
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
     U_NAMESPACE_BEGIN
 
     class CharacterIterator;
     class Replaceable;
 
-    U_NAMESPACE_END
-#endif
+    U_NAMESPACE_ਸਿਰਾ
+#ਜੇ_ਅੰਤ
 
 U_CDECL_BEGIN
 
-struct UCharIterator;
-typedef struct UCharIterator UCharIterator; /**< C typedef for struct UCharIterator. @stable ICU 2.1 */
+ਬਣਤਰ UCharIterator;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ UCharIterator UCharIterator; /**< C typedef for struct UCharIterator. @stable ICU 2.1 */
 
 /**
  * Origin constants for UCharIterator.getIndex() and UCharIterator.move().
@@ -48,12 +48,12 @@ typedef struct UCharIterator UCharIterator; /**< C typedef for struct UCharItera
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef enum UCharIteratorOrigin {
-    UITER_START, UITER_CURRENT, UITER_LIMIT, UITER_ZERO, UITER_LENGTH
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਗਿਣਤੀ UCharIteratorOrigin {
+    UITER_ਸ਼ੁਰੂ, UITER_CURRENT, UITER_ਹੱਦਬੰਦੀ, UITER_ZERO, UITER_ਲੰਮਾਈ
 } UCharIteratorOrigin;
 
 /** Constants for UCharIterator. @stable ICU 2.6 */
-enum {
+ਗਿਣਤੀ {
     /**
      * Constant value that may be returned by UCharIteratorMove
      * indicating that the final UTF-16 index is not known, but that the move succeeded.
@@ -68,7 +68,7 @@ enum {
      *
      * @stable ICU 2.6
      */
-    UITER_UNKNOWN_INDEX=-2
+    UITER_UNKNOWN_ਸੂਚਕਾਂਕ=-2
 };
 
 
@@ -83,7 +83,7 @@ enum {
  *
  * @stable ICU 2.6
  */
-#define UITER_NO_STATE ((uint32_t)0xffffffff)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UITER_NO_STATE ((uint32_t)0xffffffff)
 
 /**
  * Function type declaration for UCharIterator.getIndex().
@@ -103,8 +103,8 @@ enum {
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef int32_t U_CALLCONV
-UCharIteratorGetIndex(UCharIterator *iter, UCharIteratorOrigin origin);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ int32_t U_CALLCONV
+UChar_Iterator_Get_ਸੂਚਕਾਂਕ(UCharIterator *iter, UCharIteratorOrigin origin);
 
 /**
  * Function type declaration for UCharIterator.move().
@@ -140,7 +140,7 @@ UCharIteratorGetIndex(UCharIterator *iter, UCharIteratorOrigin origin);
  * @see UITER_UNKNOWN_INDEX
  * @stable ICU 2.1
  */
-typedef int32_t U_CALLCONV
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ int32_t U_CALLCONV
 UCharIteratorMove(UCharIterator *iter, int32_t delta, UCharIteratorOrigin origin);
 
 /**
@@ -155,8 +155,8 @@ UCharIteratorMove(UCharIterator *iter, int32_t delta, UCharIteratorOrigin origin
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef UBool U_CALLCONV
-UCharIteratorHasNext(UCharIterator *iter);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ UBool U_CALLCONV
+UChar_Iterator_Has_ਅਗਲਾ(UCharIterator *iter);
 
 /**
  * Function type declaration for UCharIterator.hasPrevious().
@@ -169,8 +169,8 @@ UCharIteratorHasNext(UCharIterator *iter);
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef UBool U_CALLCONV
-UCharIteratorHasPrevious(UCharIterator *iter);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ UBool U_CALLCONV
+UChar_Iterator_Has_ਪਿਛਲਾ(UCharIterator *iter);
  
 /**
  * Function type declaration for UCharIterator.current().
@@ -184,7 +184,7 @@ UCharIteratorHasPrevious(UCharIterator *iter);
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef UChar32 U_CALLCONV
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ UChar32 U_CALLCONV
 UCharIteratorCurrent(UCharIterator *iter);
 
 /**
@@ -200,8 +200,8 @@ UCharIteratorCurrent(UCharIterator *iter);
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef UChar32 U_CALLCONV
-UCharIteratorNext(UCharIterator *iter);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ UChar32 U_CALLCONV
+UChar_Iterator_ਅਗਲਾ(UCharIterator *iter);
 
 /**
  * Function type declaration for UCharIterator.previous().
@@ -216,8 +216,8 @@ UCharIteratorNext(UCharIterator *iter);
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef UChar32 U_CALLCONV
-UCharIteratorPrevious(UCharIterator *iter);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ UChar32 U_CALLCONV
+UChar_Iterator_ਪਿਛਲਾ(UCharIterator *iter);
 
 /**
  * Function type declaration for UCharIterator.reservedFn().
@@ -230,7 +230,7 @@ UCharIteratorPrevious(UCharIterator *iter);
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef int32_t U_CALLCONV
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ int32_t U_CALLCONV
 UCharIteratorReserved(UCharIterator *iter, int32_t something);
 
 /**
@@ -277,8 +277,8 @@ UCharIteratorReserved(UCharIterator *iter, int32_t something);
  * @see UITER_NO_STATE
  * @stable ICU 2.6
  */
-typedef uint32_t U_CALLCONV
-UCharIteratorGetState(const UCharIterator *iter);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ uint32_t U_CALLCONV
+UCharIteratorGetState(ਅਚਲ UCharIterator *iter);
 
 /**
  * Function type declaration for UCharIterator.setState().
@@ -305,8 +305,8 @@ UCharIteratorGetState(const UCharIterator *iter);
  * @see UCharIteratorGetState
  * @stable ICU 2.6
  */
-typedef void U_CALLCONV
-UCharIteratorSetState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCode);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਖਾਲੀ U_CALLCONV
+UChar_Iterator_ਸੈੱਟ_State(UCharIterator *iter, uint32_t state, UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 
 /**
@@ -338,47 +338,47 @@ UCharIteratorSetState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCod
  *
  * @stable ICU 2.1
  */
-struct UCharIterator {
+ਬਣਤਰ UCharIterator {
     /**
      * (protected) Pointer to string or wrapped object or similar.
      * Not used by caller.
      * @stable ICU 2.1
      */
-    const void *context;
+    ਅਚਲ ਖਾਲੀ *context;
 
     /**
      * (protected) Length of string or similar.
      * Not used by caller.
      * @stable ICU 2.1
      */
-    int32_t length;
+    int32_t ਲੰਮਾਈ;
 
     /**
      * (protected) Start index or similar.
      * Not used by caller.
      * @stable ICU 2.1
      */
-    int32_t start;
+    int32_t ਸ਼ੁਰੂ;
 
     /**
      * (protected) Current index or similar.
      * Not used by caller.
      * @stable ICU 2.1
      */
-    int32_t index;
+    int32_t ਸੂਚਕਾਂਕ;
 
     /**
      * (protected) Limit index or similar.
      * Not used by caller.
      * @stable ICU 2.1
      */
-    int32_t limit;
+    int32_t ਹੱਦਬੰਦੀ;
 
     /**
      * (protected) Used by UTF-8 iterators and possibly others.
      * @stable ICU 2.1
      */
-    int32_t reservedField;
+    int32_t reserved_ਖੇਤਰ;
 
     /**
      * (public) Returns the current position or the
@@ -387,7 +387,7 @@ struct UCharIterator {
      * @see UCharIteratorGetIndex
      * @stable ICU 2.1
      */
-    UCharIteratorGetIndex *getIndex;
+    UChar_Iterator_Get_ਸੂਚਕਾਂਕ *get_ਸੂਚਕਾਂਕ;
 
     /**
      * (public) Moves the current position relative to the start or limit of the
@@ -407,7 +407,7 @@ struct UCharIterator {
      * @see UCharIteratorHasNext
      * @stable ICU 2.1
      */
-    UCharIteratorHasNext *hasNext;
+    UChar_Iterator_Has_ਅਗਲਾ *has_ਅਗਲਾ;
 
     /**
      * (public) Check if previous() can still return another code unit.
@@ -415,7 +415,7 @@ struct UCharIterator {
      * @see UCharIteratorHasPrevious
      * @stable ICU 2.1
      */
-    UCharIteratorHasPrevious *hasPrevious;
+    UChar_Iterator_Has_ਪਿਛਲਾ *has_ਪਿਛਲਾ;
 
     /**
      * (public) Return the code unit at the current position,
@@ -434,7 +434,7 @@ struct UCharIterator {
      * @see UCharIteratorNext
      * @stable ICU 2.1
      */
-    UCharIteratorNext *next;
+    UChar_Iterator_ਅਗਲਾ *ਅਗਲਾ;
 
     /**
      * (public) Decrement the index and return the code unit from there
@@ -444,7 +444,7 @@ struct UCharIterator {
      * @see UCharIteratorPrevious
      * @stable ICU 2.1
      */
-    UCharIteratorPrevious *previous;
+    UChar_Iterator_ਪਿਛਲਾ *ਪਿਛਲਾ;
 
     /**
      * (public) Reserved for future use. Currently NULL.
@@ -471,7 +471,7 @@ struct UCharIterator {
      * @see UCharIteratorSet
      * @stable ICU 2.6
      */
-    UCharIteratorSetState *setState;
+    UChar_Iterator_ਸੈੱਟ_State *ਸੈੱਟ_State;
 };
 
 /**
@@ -548,7 +548,7 @@ uiter_previous32(UCharIterator *iter);
  * @stable ICU 2.6
  */
 U_CAPI uint32_t U_EXPORT2
-uiter_getState(const UCharIterator *iter);
+uiter_getState(ਅਚਲ UCharIterator *iter);
 
 /**
  * Restore the "state" of the iterator using a state word from a getState() call.
@@ -565,8 +565,8 @@ uiter_getState(const UCharIterator *iter);
  * @see UCharIteratorSetState
  * @stable ICU 2.6
  */
-U_CAPI void U_EXPORT2
-uiter_setState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCode);
+U_CAPI ਖਾਲੀ U_EXPORT2
+uiter_ਸੈੱਟ_State(UCharIterator *iter, uint32_t state, UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Set up a UCharIterator to iterate over a string.
@@ -590,8 +590,8 @@ uiter_setState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCode);
  * @see UCharIterator
  * @stable ICU 2.1
  */
-U_CAPI void U_EXPORT2
-uiter_setString(UCharIterator *iter, const UChar *s, int32_t length);
+U_CAPI ਖਾਲੀ U_EXPORT2
+uiter_ਸੈੱਟ_String(UCharIterator *iter, ਅਚਲ UChar *s, int32_t ਲੰਮਾਈ);
 
 /**
  * Set up a UCharIterator to iterate over a UTF-16BE string
@@ -613,8 +613,8 @@ uiter_setString(UCharIterator *iter, const UChar *s, int32_t length);
  * @see uiter_setString
  * @stable ICU 2.6
  */
-U_CAPI void U_EXPORT2
-uiter_setUTF16BE(UCharIterator *iter, const char *s, int32_t length);
+U_CAPI ਖਾਲੀ U_EXPORT2
+uiter_ਸੈੱਟ_UTF16_BE(UCharIterator *iter, ਅਚਲ ਅੱਖਰ *s, int32_t ਲੰਮਾਈ);
 
 /**
  * Set up a UCharIterator to iterate over a UTF-8 string.
@@ -649,10 +649,10 @@ uiter_setUTF16BE(UCharIterator *iter, const char *s, int32_t length);
  * @see UCharIterator
  * @stable ICU 2.6
  */
-U_CAPI void U_EXPORT2
-uiter_setUTF8(UCharIterator *iter, const char *s, int32_t length);
+U_CAPI ਖਾਲੀ U_EXPORT2
+uiter_ਸੈੱਟ_UTF8(UCharIterator *iter, ਅਚਲ ਅੱਖਰ *s, int32_t ਲੰਮਾਈ);
 
-#if U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
 
 /**
  * Set up a UCharIterator to wrap around a C++ CharacterIterator.
@@ -674,8 +674,8 @@ uiter_setUTF8(UCharIterator *iter, const char *s, int32_t length);
  * @see UCharIterator
  * @stable ICU 2.1
  */
-U_CAPI void U_EXPORT2
-uiter_setCharacterIterator(UCharIterator *iter, icu::CharacterIterator *charIter);
+U_CAPI ਖਾਲੀ U_EXPORT2
+uiter_ਸੈੱਟ_Character_Iterator(UCharIterator *iter, icu::CharacterIterator *charIter);
 
 /**
  * Set up a UCharIterator to iterate over a C++ Replaceable.
@@ -699,11 +699,11 @@ uiter_setCharacterIterator(UCharIterator *iter, icu::CharacterIterator *charIter
  * @see UCharIterator
  * @stable ICU 2.1
  */
-U_CAPI void U_EXPORT2
-uiter_setReplaceable(UCharIterator *iter, const icu::Replaceable *rep);
+U_CAPI ਖਾਲੀ U_EXPORT2
+uiter_ਸੈੱਟ_Replaceable(UCharIterator *iter, ਅਚਲ icu::Replaceable *rep);
 
-#endif
+#ਜੇ_ਅੰਤ
 
-U_CDECL_END
+U_CDECL_ਸਿਰਾ
 
-#endif
+#ਜੇ_ਅੰਤ

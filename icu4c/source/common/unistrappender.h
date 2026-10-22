@@ -10,14 +10,14 @@
 ******************************************************************************
 */
 
-#ifndef __UNISTRAPPENDER_H__
-#define __UNISTRAPPENDER_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __UNISTRAPPENDER_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __UNISTRAPPENDER_H__
 
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
-#include "unicode/utf16.h"
-#include "unicode/utypes.h"
-#include "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/unistr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uobject.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf16.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
@@ -36,8 +36,8 @@ U_NAMESPACE_BEGIN
  *     // appender flushed automatically when it goes out of scope.
  * }
  */
-class UnicodeStringAppender : public UMemory {
-public:
+class UnicodeStringAppender : ਜਨਤਕ UMemory {
+ਜਨਤਕ:
     
     /**
      * dest is the UnicodeString being appended to. It must always
@@ -45,28 +45,28 @@ public:
      */
     UnicodeStringAppender(UnicodeString &dest) : fDest(&dest), fIdx(0) { }
 
-    inline void append(char16_t x) {
-        if (fIdx == UPRV_LENGTHOF(fBuffer)) {
-            fDest->append(fBuffer, 0, fIdx);
+    ਸਤਰਅੰਦਰ ਖਾਲੀ append(char16_t x) {
+        ਜੇ (fIdx == UPRV_LENGTHOF(f_ਬਫਰ)) {
+            fDest->append(f_ਬਫਰ, 0, fIdx);
             fIdx = 0;
         }
-        fBuffer[fIdx++] = x;
+        f_ਬਫਰ[fIdx++] = x;
     }
 
-    inline void append(UChar32 x) {
-        if (fIdx >= UPRV_LENGTHOF(fBuffer) - 1) {
-            fDest->append(fBuffer, 0, fIdx);
+    ਸਤਰਅੰਦਰ ਖਾਲੀ append(UChar32 x) {
+        ਜੇ (fIdx >= UPRV_LENGTHOF(f_ਬਫਰ) - 1) {
+            fDest->append(f_ਬਫਰ, 0, fIdx);
             fIdx = 0;
         }
-        U16_APPEND_UNSAFE(fBuffer, fIdx, x);
+        U16_APPEND_UNSAFE(f_ਬਫਰ, fIdx, x);
     }
 
     /**
      * Ensures that all appended characters have been written out to dest.
      */
-    inline void flush() {
-        if (fIdx) {
-            fDest->append(fBuffer, 0, fIdx);
+    ਸਤਰਅੰਦਰ ਖਾਲੀ flush() {
+        ਜੇ (fIdx) {
+            fDest->append(f_ਬਫਰ, 0, fIdx);
         }
         fIdx = 0;
     }
@@ -77,14 +77,14 @@ public:
     ~UnicodeStringAppender() {
         flush();
     }
-private:
+ਨਿਜੀ:
     UnicodeString *fDest;
     int32_t fIdx;
-    char16_t fBuffer[32];
-    UnicodeStringAppender(const UnicodeStringAppender &other);
-    UnicodeStringAppender &operator=(const UnicodeStringAppender &other);
+    char16_t f_ਬਫਰ[32];
+    UnicodeStringAppender(ਅਚਲ UnicodeStringAppender &other);
+    UnicodeStringAppender &ਸੰਚਾਲਕ=(ਅਚਲ UnicodeStringAppender &other);
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif
+#ਜੇ_ਅੰਤ

@@ -1,15 +1,15 @@
 // © 2025 and later: Unicode, Inc. and others.
 // License & terms of use: https://www.unicode.org/copyright.html
 
-#ifndef FIXEDSTRING_H
-#define FIXEDSTRING_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ FIXEDSTRING_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FIXEDSTRING_H
 
-#include <string_view>
-#include <utility>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string_view>
+#ਅਨ੍ਤਰ੍ਭਾਵ <utility>
 
-#include "unicode/uobject.h"
-#include "unicode/utypes.h"
-#include "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uobject.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
@@ -26,79 +26,79 @@ class UnicodeString;
  * This class wants to be convenient but is also deliberately minimalist.
  * Please do not add methods if they only add minor convenience.
  */
-class FixedString : public UMemory {
-public:
-    FixedString() = default;
-    ~FixedString() { operator delete[](ptr); }
+class FixedString : ਜਨਤਕ UMemory {
+ਜਨਤਕ:
+    FixedString() = ਮੂਲ;
+    ~FixedString() { ਸੰਚਾਲਕ delete[](ptr); }
 
-    FixedString(const FixedString& other) : FixedString(other.data()) {}
+    FixedString(ਅਚਲ FixedString& other) : FixedString(other.ਅੰਕੜੇ()) {}
 
     FixedString(std::string_view init) {
-        size_t size = init.size();
-        if (size > 0 && reserve(size + 1)) {
-            uprv_memcpy(ptr, init.data(), size);
-            ptr[size] = '\0';
+        size_t ਮਾਪ_2 = init.ਮਾਪ_2();
+        ਜੇ (ਮਾਪ_2 > 0 && reserve(ਮਾਪ_2 + 1)) {
+            uprv_memcpy(ptr, init.ਅੰਕੜੇ(), ਮਾਪ_2);
+            ptr[ਮਾਪ_2] = '\0';
         }
     }
 
-    FixedString& operator=(const FixedString& other) {
-        *this = other.data();
-        return *this;
+    FixedString& ਸੰਚਾਲਕ=(ਅਚਲ FixedString& other) {
+        *this = other.ਅੰਕੜੇ();
+        ਵਾਪਸ *this;
     }
 
-    FixedString& operator=(std::string_view init) {
-        if (init.empty()) {
-            operator delete[](ptr);
+    FixedString& ਸੰਚਾਲਕ=(std::string_view init) {
+        ਜੇ (init.ਖਾਲੀ_ਥਾਵਾਂ()) {
+            ਸੰਚਾਲਕ delete[](ptr);
             ptr = nullptr;
-        } else {
-            size_t size = init.size();
-            if (reserve(size + 1)) {
-                uprv_memcpy(ptr, init.data(), size);
-                ptr[size] = '\0';
+        } ਨਹੀਂਤਾਂ {
+            size_t ਮਾਪ_2 = init.ਮਾਪ_2();
+            ਜੇ (reserve(ਮਾਪ_2 + 1)) {
+                uprv_memcpy(ptr, init.ਅੰਕੜੇ(), ਮਾਪ_2);
+                ptr[ਮਾਪ_2] = '\0';
             }
         }
-        return *this;
+        ਵਾਪਸ *this;
     }
 
     FixedString(FixedString&& other) noexcept : ptr(std::exchange(other.ptr, nullptr)) {}
 
-    FixedString& operator=(FixedString&& other) noexcept {
-        operator delete[](ptr);
+    FixedString& ਸੰਚਾਲਕ=(FixedString&& other) noexcept {
+        ਸੰਚਾਲਕ delete[](ptr);
         ptr = other.ptr;
         other.ptr = nullptr;
-        return *this;
+        ਵਾਪਸ *this;
     }
 
-    void clear() {
-        operator delete[](ptr);
+    ਖਾਲੀ clear() {
+        ਸੰਚਾਲਕ delete[](ptr);
         ptr = nullptr;
     }
 
-    const char* data() const {
-        return isEmpty() ? "" : ptr;
+    ਅਚਲ ਅੱਖਰ* ਅੰਕੜੇ() ਅਚਲ {
+        ਵਾਪਸ is_ਖਾਲੀ_ਥਾਵਾਂ() ? "" : ptr;
     }
 
-    char* getAlias() {
-        return ptr;
+    ਅੱਖਰ* getAlias() {
+        ਵਾਪਸ ptr;
     }
 
-    bool isEmpty() const {
-        return ptr == nullptr;
+    bool is_ਖਾਲੀ_ਥਾਵਾਂ() ਅਚਲ {
+        ਵਾਪਸ ptr == nullptr;
     }
 
     /** Allocate storage for a new string, without initializing it. */
-    bool reserve(size_t size) {
-        operator delete[](ptr);
-        ptr = static_cast<char*>(operator new[](size));
-        return ptr != nullptr;
+    bool reserve(size_t ਮਾਪ_2) {
+        ਸੰਚਾਲਕ delete[](ptr);
+        ptr = static_cast<ਅੱਖਰ*>(ਸੰਚਾਲਕ new[](ਮਾਪ_2));
+        ਵਾਪਸ ptr != nullptr;
     }
 
-private:
-    char* ptr = nullptr;
+ਨਿਜੀ:
+    ਅੱਖਰ* ptr = nullptr;
 };
 
-U_COMMON_API void copyInvariantChars(const UnicodeString& src, FixedString& dst, UErrorCode& status);
+U_COMMON_API ਖਾਲੀ copyInvariantChars(ਅਚਲ UnicodeString& src, FixedString& dst, UError_ਕੋਡ& ਸਥਿਤੀ);
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif
+#ਜੇ_ਅੰਤ

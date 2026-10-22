@@ -45,19 +45,19 @@
  * <a href="https://unicode-org.github.io/icu/userguide/conversion/">User Guide</a>.</p>
  */
 
-#ifndef UCNV_H
-#define UCNV_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ UCNV_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_H
 
-#include "unicode/ucnv_err.h"
-#include "unicode/uenum.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ucnv_err.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uenum.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/localpointer.h"
+#ਜੇ_ਅੰਤ   // U_SHOW_CPLUSPLUS_API
 
-#if !defined(USET_DEFINED) && !defined(U_IN_DOXYGEN)
+#ਜੇ !defined(USET_DEFINED) && !defined(U_ਵਿੱਚ_DOXYGEN)
 
-#define USET_DEFINED
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ USET_DEFINED
 
 /**
  * USet is the C API type corresponding to C++ class UnicodeSet.
@@ -67,30 +67,30 @@
  * @see ucnv_getUnicodeSet
  * @stable ICU 2.4
  */
-typedef struct USet USet;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ USet USet;
 
-#endif
+#ਜੇ_ਅੰਤ
 
-#if !UCONFIG_NO_CONVERSION
+#ਜੇ !UCONFIG_NO_CONVERSION
 
 U_CDECL_BEGIN
 
 /** Maximum length of a converter name including the terminating NULL @stable ICU 2.0 */
-#define UCNV_MAX_CONVERTER_NAME_LENGTH 60
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_MAX_CONVERTER_NAME_ਲੰਮਾਈ 60
 /** Maximum length of a converter name including path and terminating NULL @stable ICU 2.0 */
-#define UCNV_MAX_FULL_FILE_NAME_LENGTH (600+UCNV_MAX_CONVERTER_NAME_LENGTH)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_MAX_ਭਰਿਆ_FILE_NAME_ਲੰਮਾਈ (600+UCNV_MAX_CONVERTER_NAME_ਲੰਮਾਈ)
 
 /** Shift in for EBDCDIC_STATEFUL and iso2022 states @stable ICU 2.0 */
-#define  UCNV_SI 0x0F
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ  UCNV_SI 0x0F
 /** Shift out for EBDCDIC_STATEFUL and iso2022 states @stable ICU 2.0 */
-#define  UCNV_SO 0x0E
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ  UCNV_SO 0x0E
 
 /**
  * Enum for specifying basic types of converters
  * @see ucnv_getType
  * @stable ICU 2.0
  */
-typedef enum {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਗਿਣਤੀ {
     /** @stable ICU 2.0 */
     UCNV_UNSUPPORTED_CONVERTER = -1,
     /** @stable ICU 2.0 */
@@ -141,7 +141,7 @@ typedef enum {
     /** @stable ICU 2.0 */
     UCNV_LMBCS_19,
     /** @stable ICU 2.0 */
-    UCNV_LMBCS_LAST = UCNV_LMBCS_19,
+    UCNV_LMBCS_ਆਖਰੀ = UCNV_LMBCS_19,
     /** @stable ICU 2.0 */
     UCNV_HZ,
     /** @stable ICU 2.0 */
@@ -163,10 +163,10 @@ typedef enum {
     /** @stable ICU 2.4 */
     UCNV_IMAP_MAILBOX,
     /** @stable ICU 4.8 */
-    UCNV_COMPOUND_TEXT,
+    UCNV_COMPOUND_ਪਾਠ,
 
     /* Number of converter types for which we have conversion routines. */
-    UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES
+    UCNV_ਸੰਖਿਆ_ਦਾ_SUPPORTED_CONVERTER_TYPES
 } UConverterType;
 
 /**
@@ -178,7 +178,7 @@ typedef enum {
  * @see ucnv_getCCSID
  * @stable ICU 2.0
  */
-typedef enum {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਗਿਣਤੀ {
     UCNV_UNKNOWN = -1,
     UCNV_IBM = 0
 } UConverterPlatform;
@@ -198,13 +198,13 @@ typedef enum {
  * @see UConverterToUnicodeArgs
  * @stable ICU 2.0
  */
-typedef void (U_EXPORT2 *UConverterToUCallback) (
-                  const void* context,
-                  UConverterToUnicodeArgs *args,
-                  const char *codeUnits,
-                  int32_t length,
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਖਾਲੀ (U_EXPORT2 *UConverter_ਮੰਜ਼ਿਲ_UCallback) (
+                  ਅਚਲ ਖਾਲੀ* context,
+                  UConverter_ਮੰਜ਼ਿਲ_Unicode_ਦਲੀਲਾਂ *ਦਲੀਲਾਂ_2,
+                  ਅਚਲ ਅੱਖਰ *ਕੋਡ_Units,
+                  int32_t ਲੰਮਾਈ,
                   UConverterCallbackReason reason,
-                  UErrorCode *pErrorCode);
+                  UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Function pointer for error callback in the unicode to codepage direction.
@@ -221,44 +221,44 @@ typedef void (U_EXPORT2 *UConverterToUCallback) (
  * @see ucnv_setFromUCallBack
  * @stable ICU 2.0
  */
-typedef void (U_EXPORT2 *UConverterFromUCallback) (
-                    const void* context,
-                    UConverterFromUnicodeArgs *args,
-                    const UChar* codeUnits,
-                    int32_t length,
-                    UChar32 codePoint,
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਖਾਲੀ (U_EXPORT2 *UConverterFromUCallback) (
+                    ਅਚਲ ਖਾਲੀ* context,
+                    UConverter_From_Unicode_ਦਲੀਲਾਂ *ਦਲੀਲਾਂ_2,
+                    ਅਚਲ UChar* ਕੋਡ_Units,
+                    int32_t ਲੰਮਾਈ,
+                    UChar32 ਕੋਡ_ਬਿੰਦੂ,
                     UConverterCallbackReason reason,
-                    UErrorCode *pErrorCode);
+                    UError_ਕੋਡ *p_Error_ਕੋਡ);
 
-U_CDECL_END
+U_CDECL_ਸਿਰਾ
 
 /**
  * Character that separates converter names from options and options from each other.
  * @see ucnv_open
  * @stable ICU 2.0
  */
-#define UCNV_OPTION_SEP_CHAR ','
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_OPTION_SEP_CHAR ','
 
 /**
  * String version of UCNV_OPTION_SEP_CHAR.
  * @see ucnv_open
  * @stable ICU 2.0
  */
-#define UCNV_OPTION_SEP_STRING ","
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_OPTION_SEP_STRING ","
 
 /**
  * Character that separates a converter option from its value.
  * @see ucnv_open
  * @stable ICU 2.0
  */
-#define UCNV_VALUE_SEP_CHAR '='
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_ਮੁੱਲ_SEP_CHAR '='
 
 /**
  * String version of UCNV_VALUE_SEP_CHAR.
  * @see ucnv_open
  * @stable ICU 2.0
  */
-#define UCNV_VALUE_SEP_STRING "="
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_ਮੁੱਲ_SEP_STRING "="
 
 /**
  * Converter option for specifying a locale.
@@ -268,7 +268,7 @@ U_CDECL_END
  * @see ucnv_open
  * @stable ICU 2.0
  */
-#define UCNV_LOCALE_OPTION_STRING ",locale="
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_LOCALE_OPTION_STRING ",locale="
 
 /**
  * Converter option for specifying a version selector (0..9) for some converters.
@@ -281,7 +281,7 @@ U_CDECL_END
  * @see ucnv_open
  * @stable ICU 2.4
  */
-#define UCNV_VERSION_OPTION_STRING ",version="
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_ਸੰਸਕਰਣ_OPTION_STRING ",version="
 
 /**
  * Converter option for EBCDIC SBCS or mixed-SBCS/DBCS (stateful) codepages.
@@ -293,7 +293,7 @@ U_CDECL_END
  * @see ucnv_open
  * @stable ICU 2.4
  */
-#define UCNV_SWAP_LFNL_OPTION_STRING ",swaplfnl"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_ਅਦਲਾ_ਬਦਲੀ_LFNL_OPTION_STRING ",swaplfnl"
 
 /**
  * Do a fuzzy compare of two converter/alias names.
@@ -310,8 +310,8 @@ U_CDECL_END
  * lexically follows name2.
  * @stable ICU 2.0
  */
-U_CAPI int U_EXPORT2
-ucnv_compareNames(const char *name1, const char *name2);
+U_CAPI ਪੂਰਨ U_EXPORT2
+ucnv_compare_ਨਾਂ(ਅਚਲ ਅੱਖਰ *name1, ਅਚਲ ਅੱਖਰ *name2);
 
 
 /**
@@ -363,7 +363,7 @@ ucnv_compareNames(const char *name1, const char *name2);
  * @stable ICU 2.0
  */
 U_CAPI UConverter* U_EXPORT2
-ucnv_open(const char *converterName, UErrorCode *err);
+ucnv_open(ਅਚਲ ਅੱਖਰ *converterName, UError_ਕੋਡ *err);
 
 
 /**
@@ -393,8 +393,8 @@ ucnv_open(const char *converterName, UErrorCode *err);
  * @stable ICU 2.0
  */
 U_CAPI UConverter* U_EXPORT2
-ucnv_openU(const UChar *name,
-           UErrorCode *err);
+ucnv_openU(ਅਚਲ UChar *name,
+           UError_ਕੋਡ *err);
 
 /**
  * Creates a UConverter object from a CCSID number and platform pair.
@@ -463,7 +463,7 @@ ucnv_openU(const UChar *name,
 U_CAPI UConverter* U_EXPORT2
 ucnv_openCCSID(int32_t codepage,
                UConverterPlatform platform,
-               UErrorCode * err);
+               UError_ਕੋਡ * err);
 
 /**
  * <p>Creates a UConverter object specified from a packageName and a converterName.</p>
@@ -496,7 +496,7 @@ ucnv_openCCSID(int32_t codepage,
  * @stable ICU 2.2
  */
 U_CAPI UConverter* U_EXPORT2
-ucnv_openPackage(const char *packageName, const char *converterName, UErrorCode *err);
+ucnv_openPackage(ਅਚਲ ਅੱਖਰ *packageName, ਅਚਲ ਅੱਖਰ *converterName, UError_ਕੋਡ *err);
 
 /**
  * Thread safe converter cloning operation.
@@ -508,9 +508,9 @@ ucnv_openPackage(const char *packageName, const char *converterName, UErrorCode 
  * @return pointer to the new clone
  * @stable ICU 71
  */
-U_CAPI UConverter* U_EXPORT2 ucnv_clone(const UConverter *cnv, UErrorCode *status);
+U_CAPI UConverter* U_EXPORT2 ucnv_clone(ਅਚਲ UConverter *cnv, UError_ਕੋਡ *ਸਥਿਤੀ);
 
-#ifndef U_HIDE_DEPRECATED_API
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ U_HIDE_DEPRECATED_API
 
 /**
  * Thread safe converter cloning operation.
@@ -552,10 +552,10 @@ U_CAPI UConverter* U_EXPORT2 ucnv_clone(const UConverter *cnv, UErrorCode *statu
  * @deprecated ICU 71 Use ucnv_clone() instead.
  */
 U_DEPRECATED UConverter* U_EXPORT2
-ucnv_safeClone(const UConverter* cnv,
-               void* stackBuffer U_LIFETIME_BOUND,
-               int32_t* pBufferSize,
-               UErrorCode* status);
+ucnv_ਸੁਰੱਖਿਅਤ_Clone(ਅਚਲ UConverter* cnv,
+               ਖਾਲੀ* ਢੇਰ_ਬਫਰ U_LIFETIME_BOUND,
+               int32_t* p_ਬਫਰ_ਮਾਪ,
+               UError_ਕੋਡ* ਸਥਿਤੀ);
 
 /**
  * \def U_CNV_SAFECLONE_BUFFERSIZE
@@ -563,9 +563,9 @@ ucnv_safeClone(const UConverter* cnv,
  * converters to be cloned with ucnv_safeClone().
  * @deprecated ICU 52. Do not rely on ucnv_safeClone() cloning into any provided buffer.
  */
-#define U_CNV_SAFECLONE_BUFFERSIZE  1024
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_CNV_SAFECLONE_BUFFERSIZE  1024
 
-#endif /* U_HIDE_DEPRECATED_API */
+#ਜੇ_ਅੰਤ /* U_HIDE_DEPRECATED_API */
 
 /**
  * Deletes the unicode converter and releases resources associated
@@ -578,10 +578,10 @@ ucnv_safeClone(const UConverter* cnv,
  * @see ucnv_openCCSID
  * @stable ICU 2.0
  */
-U_CAPI void  U_EXPORT2
+U_CAPI ਖਾਲੀ  U_EXPORT2
 ucnv_close(UConverter * converter);
 
-#if U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -594,11 +594,11 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 4.4
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalUConverterPointer, UConverter, ucnv_close);
+U_DEFINE_LOCAL_OPEN_ਸੂਚਕ(Local_UConverter_ਸੂਚਕ, UConverter, ucnv_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif
+#ਜੇ_ਅੰਤ
 
 /**
  * Fills in the output parameter, subChars, with the substitution characters
@@ -617,11 +617,11 @@ U_NAMESPACE_END
  * @see ucnv_setSubstChars
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ucnv_getSubstChars(const UConverter *converter,
-                   char *subChars,
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucnv_getSubstChars(ਅਚਲ UConverter *converter,
+                   ਅੱਖਰ *subChars,
                    int8_t *len,
-                   UErrorCode *err);
+                   UError_ਕੋਡ *err);
 
 /**
  * Sets the substitution chars when converting from unicode to a codepage. The
@@ -642,11 +642,11 @@ ucnv_getSubstChars(const UConverter *converter,
  * @see ucnv_getSubstChars
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ucnv_setSubstChars(UConverter *converter,
-                   const char *subChars,
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucnv_ਸੈੱਟ_Subst_Chars(UConverter *converter,
+                   ਅਚਲ ਅੱਖਰ *subChars,
                    int8_t len,
-                   UErrorCode *err);
+                   UError_ਕੋਡ *err);
 
 /**
  * Set a substitution string for converting from Unicode to a charset.
@@ -675,11 +675,11 @@ ucnv_setSubstChars(UConverter *converter,
  * @see ucnv_getSubstChars
  * @stable ICU 3.6
  */
-U_CAPI void U_EXPORT2
-ucnv_setSubstString(UConverter *cnv,
-                    const UChar *s,
-                    int32_t length,
-                    UErrorCode *err);
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucnv_ਸੈੱਟ_Subst_String(UConverter *cnv,
+                    ਅਚਲ UChar *s,
+                    int32_t ਲੰਮਾਈ,
+                    UError_ਕੋਡ *err);
 
 /**
  * Fills in the output parameter, errBytes, with the error characters from the
@@ -694,11 +694,11 @@ ucnv_setSubstString(UConverter *cnv,
  * <TT>U_INDEX_OUTOFBOUNDS_ERROR</TT> will be returned.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ucnv_getInvalidChars(const UConverter *converter,
-                     char *errBytes,
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucnv_getInvalidChars(ਅਚਲ UConverter *converter,
+                     ਅੱਖਰ *err_ਬਾਈਟਾਂ,
                      int8_t *len,
-                     UErrorCode *err);
+                     UError_ਕੋਡ *err);
 
 /**
  * Fills in the output parameter, errChars, with the error characters from the
@@ -713,11 +713,11 @@ ucnv_getInvalidChars(const UConverter *converter,
  * <TT>U_INDEX_OUTOFBOUNDS_ERROR</TT> will be returned.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ucnv_getInvalidUChars(const UConverter *converter,
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucnv_getInvalidUChars(ਅਚਲ UConverter *converter,
                       UChar *errUChars,
                       int8_t *len,
-                      UErrorCode *err);
+                      UError_ਕੋਡ *err);
 
 /**
  * Resets the state of a converter to the default state. This is used
@@ -726,7 +726,7 @@ ucnv_getInvalidUChars(const UConverter *converter,
  * @param converter the Unicode converter
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI ਖਾਲੀ U_EXPORT2
 ucnv_reset(UConverter *converter);
 
 /**
@@ -737,8 +737,8 @@ ucnv_reset(UConverter *converter);
  * @param converter the Unicode converter
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ucnv_resetToUnicode(UConverter *converter);
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucnv_reset_ਮੰਜ਼ਿਲ_Unicode(UConverter *converter);
 
 /**
  * Resets the from-Unicode part of a converter state to the default state.
@@ -748,7 +748,7 @@ ucnv_resetToUnicode(UConverter *converter);
  * @param converter the Unicode converter
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI ਖਾਲੀ U_EXPORT2
 ucnv_resetFromUnicode(UConverter *converter);
 
 /**
@@ -802,7 +802,7 @@ ucnv_resetFromUnicode(UConverter *converter);
  * @stable ICU 2.0
  */
 U_CAPI int8_t U_EXPORT2
-ucnv_getMaxCharSize(const UConverter *converter);
+ucnv_get_Max_Char_ਮਾਪ(ਅਚਲ UConverter *converter);
 
 /**
  * Calculates the size of a buffer for conversion from Unicode to a charset.
@@ -823,8 +823,8 @@ ucnv_getMaxCharSize(const UConverter *converter);
  * @see ucnv_getMaxCharSize
  * @stable ICU 2.8
  */
-#define UCNV_GET_MAX_BYTES_FOR_STRING(length, maxCharSize) \
-     (((int32_t)(length)+10)*(int32_t)(maxCharSize))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_GET_MAX_ਬਾਈਟਾਂ_FOR_STRING(ਲੰਮਾਈ, max_Char_ਮਾਪ) \
+     (((int32_t)(ਲੰਮਾਈ)+10)*(int32_t)(max_Char_ਮਾਪ))
 
 /**
  * Returns the minimum byte length (per codepoint) for characters in this codepage.
@@ -835,7 +835,7 @@ ucnv_getMaxCharSize(const UConverter *converter);
  * @stable ICU 2.0
  */
 U_CAPI int8_t U_EXPORT2
-ucnv_getMinCharSize(const UConverter *converter);
+ucnv_get_Min_Char_ਮਾਪ(ਅਚਲ UConverter *converter);
 
 /**
  * Returns the display name of the converter passed in based on the Locale
@@ -852,11 +852,11 @@ ucnv_getMinCharSize(const UConverter *converter);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ucnv_getDisplayName(const UConverter *converter,
-                    const char *displayLocale,
+ucnv_getDisplayName(ਅਚਲ UConverter *converter,
+                    ਅਚਲ ਅੱਖਰ *displayLocale,
                     UChar *displayName,
-                    int32_t displayNameCapacity,
-                    UErrorCode *err);
+                    int32_t display_Name_ਸਮਰੱਥਾ,
+                    UError_ਕੋਡ *err);
 
 /**
  * Gets the internal, canonical name of the converter (zero-terminated).
@@ -868,8 +868,8 @@ ucnv_getDisplayName(const UConverter *converter,
  * @see ucnv_getDisplayName
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
-ucnv_getName(const UConverter* converter U_LIFETIME_BOUND, UErrorCode* err);
+U_CAPI ਅਚਲ ਅੱਖਰ* U_EXPORT2
+ucnv_getName(ਅਚਲ UConverter* converter U_LIFETIME_BOUND, UError_ਕੋਡ* err);
 
 /**
  * Gets a codepage number associated with the converter. This is not guaranteed
@@ -895,8 +895,8 @@ ucnv_getName(const UConverter* converter U_LIFETIME_BOUND, UErrorCode* err);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ucnv_getCCSID(const UConverter *converter,
-              UErrorCode *err);
+ucnv_getCCSID(ਅਚਲ UConverter *converter,
+              UError_ਕੋਡ *err);
 
 /**
  * Gets a codepage platform associated with the converter. Currently,
@@ -909,8 +909,8 @@ ucnv_getCCSID(const UConverter *converter,
  * @stable ICU 2.0
  */
 U_CAPI UConverterPlatform U_EXPORT2
-ucnv_getPlatform(const UConverter *converter,
-                 UErrorCode *err);
+ucnv_getPlatform(ਅਚਲ UConverter *converter,
+                 UError_ਕੋਡ *err);
 
 /**
  * Gets the type of the converter
@@ -921,7 +921,7 @@ ucnv_getPlatform(const UConverter *converter,
  * @stable ICU 2.0
  */
 U_CAPI UConverterType U_EXPORT2
-ucnv_getType(const UConverter * converter);
+ucnv_getType(ਅਚਲ UConverter * converter);
 
 /**
  * Gets the "starter" (lead) bytes for converters of type MBCS.
@@ -938,10 +938,10 @@ ucnv_getType(const UConverter * converter);
  * @see ucnv_getType
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ucnv_getStarters(const UConverter* converter,
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucnv_getStarters(ਅਚਲ UConverter* converter,
                  UBool starters[256],
-                 UErrorCode* err);
+                 UError_ਕੋਡ* err);
 
 
 /**
@@ -949,19 +949,19 @@ ucnv_getStarters(const UConverter* converter,
  * @see ucnv_getUnicodeSet
  * @stable ICU 2.6
  */
-typedef enum UConverterUnicodeSet {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਗਿਣਤੀ UConverter_Unicode_ਸੈੱਟ {
     /** Select the set of roundtrippable Unicode code points. @stable ICU 2.6 */
-    UCNV_ROUNDTRIP_SET,
+    UCNV_ROUNDTRIP_ਸੈੱਟ,
     /** Select the set of Unicode code points with roundtrip or fallback mappings. @stable ICU 4.0 */
-    UCNV_ROUNDTRIP_AND_FALLBACK_SET,
-#ifndef U_HIDE_DEPRECATED_API
+    UCNV_ROUNDTRIP_AND_FALLBACK_ਸੈੱਟ,
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ U_HIDE_DEPRECATED_API
     /**
      * Number of UConverterUnicodeSet selectors.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UCNV_SET_COUNT
-#endif  // U_HIDE_DEPRECATED_API
-} UConverterUnicodeSet;
+    UCNV_ਸੈੱਟ_ਗਿਣਤੀ
+#ਜੇ_ਅੰਤ  // U_HIDE_DEPRECATED_API
+} UConverter_Unicode_ਸੈੱਟ;
 
 
 /**
@@ -1009,11 +1009,11 @@ typedef enum UConverterUnicodeSet {
  * @see uset_close
  * @stable ICU 2.6
  */
-U_CAPI void U_EXPORT2
-ucnv_getUnicodeSet(const UConverter *cnv,
-                   USet *setFillIn,
-                   UConverterUnicodeSet whichSet,
-                   UErrorCode *pErrorCode);
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucnv_get_Unicode_ਸੈੱਟ(ਅਚਲ UConverter *cnv,
+                   USet *ਸੈੱਟ_Fill_ਵਿੱਚ,
+                   UConverter_Unicode_ਸੈੱਟ which_ਸੈੱਟ,
+                   UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Gets the current callback function used by the converter when an illegal
@@ -1026,10 +1026,10 @@ ucnv_getUnicodeSet(const UConverter *cnv,
  * @see ucnv_setToUCallBack
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ucnv_getToUCallBack (const UConverter * converter,
-                     UConverterToUCallback *action,
-                     const void **context);
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucnv_get_ਮੰਜ਼ਿਲ_UCall_ਪਿੱਠ (ਅਚਲ UConverter * converter,
+                     UConverter_ਮੰਜ਼ਿਲ_UCallback *action,
+                     ਅਚਲ ਖਾਲੀ **context);
 
 /**
  * Gets the current callback function used by the converter when illegal
@@ -1042,10 +1042,10 @@ ucnv_getToUCallBack (const UConverter * converter,
  * @see ucnv_setFromUCallBack
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ucnv_getFromUCallBack (const UConverter * converter,
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucnv_get_From_UCall_ਪਿੱਠ (ਅਚਲ UConverter * converter,
                        UConverterFromUCallback *action,
-                       const void **context);
+                       ਅਚਲ ਖਾਲੀ **context);
 
 /**
  * Changes the callback function used by the converter when
@@ -1062,13 +1062,13 @@ ucnv_getFromUCallBack (const UConverter * converter,
  * @see ucnv_getToUCallBack
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ucnv_setToUCallBack (UConverter * converter,
-                     UConverterToUCallback newAction,
-                     const void* newContext,
-                     UConverterToUCallback *oldAction,
-                     const void** oldContext,
-                     UErrorCode * err);
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucnv_ਸੈੱਟ_ਮੰਜ਼ਿਲ_UCall_ਪਿੱਠ (UConverter * converter,
+                     UConverter_ਮੰਜ਼ਿਲ_UCallback newAction,
+                     ਅਚਲ ਖਾਲੀ* newContext,
+                     UConverter_ਮੰਜ਼ਿਲ_UCallback *oldAction,
+                     ਅਚਲ ਖਾਲੀ** oldContext,
+                     UError_ਕੋਡ * err);
 
 /**
  * Changes the current callback function used by the converter when
@@ -1085,13 +1085,13 @@ ucnv_setToUCallBack (UConverter * converter,
  * @see ucnv_getFromUCallBack
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ucnv_setFromUCallBack (UConverter * converter,
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucnv_ਸੈੱਟ_From_UCall_ਪਿੱਠ (UConverter * converter,
                        UConverterFromUCallback newAction,
-                       const void *newContext,
+                       ਅਚਲ ਖਾਲੀ *newContext,
                        UConverterFromUCallback *oldAction,
-                       const void **oldContext,
-                       UErrorCode * err);
+                       ਅਚਲ ਖਾਲੀ **oldContext,
+                       UError_ਕੋਡ * err);
 
 /**
  * Converts an array of unicode characters to an array of codepage
@@ -1151,15 +1151,15 @@ ucnv_setFromUCallBack (UConverter * converter,
  * @see ucnv_setToUCallBack
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI ਖਾਲੀ U_EXPORT2
 ucnv_fromUnicode (UConverter * converter,
-                  char **target,
-                  const char *targetLimit,
-                  const UChar ** source,
-                  const UChar * sourceLimit,
+                  ਅੱਖਰ **ਨਿਸ਼ਾਨਾ,
+                  ਅਚਲ ਅੱਖਰ *ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ,
+                  ਅਚਲ UChar ** ਸਰੋਤ,
+                  ਅਚਲ UChar * ਸਰੋਤ_ਹੱਦਬੰਦੀ,
                   int32_t* offsets,
                   UBool flush,
-                  UErrorCode * err);
+                  UError_ਕੋਡ * err);
 
 /**
  * Converts a buffer of codepage bytes into an array of unicode UChars
@@ -1220,15 +1220,15 @@ ucnv_fromUnicode (UConverter * converter,
  * @see ucnv_getNextUChar
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ucnv_toUnicode(UConverter *converter,
-               UChar **target,
-               const UChar *targetLimit,
-               const char **source,
-               const char *sourceLimit,
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucnv_ਮੰਜ਼ਿਲ_Unicode(UConverter *converter,
+               UChar **ਨਿਸ਼ਾਨਾ,
+               ਅਚਲ UChar *ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ,
+               ਅਚਲ ਅੱਖਰ **ਸਰੋਤ,
+               ਅਚਲ ਅੱਖਰ *ਸਰੋਤ_ਹੱਦਬੰਦੀ,
                int32_t *offsets,
                UBool flush,
-               UErrorCode *err);
+               UError_ਕੋਡ *err);
 
 /**
  * Convert the Unicode string into a codepage string using an existing UConverter.
@@ -1259,9 +1259,9 @@ ucnv_toUnicode(UConverter *converter,
  */
 U_CAPI int32_t U_EXPORT2
 ucnv_fromUChars(UConverter *cnv,
-                char *dest, int32_t destCapacity,
-                const UChar *src, int32_t srcLength,
-                UErrorCode *pErrorCode);
+                ਅੱਖਰ *dest, int32_t dest_ਸਮਰੱਥਾ,
+                ਅਚਲ UChar *src, int32_t src_ਲੰਮਾਈ,
+                UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Convert the codepage string into a Unicode string using an existing UConverter.
@@ -1290,10 +1290,10 @@ ucnv_fromUChars(UConverter *cnv,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ucnv_toUChars(UConverter *cnv,
-              UChar *dest, int32_t destCapacity,
-              const char *src, int32_t srcLength,
-              UErrorCode *pErrorCode);
+ucnv_ਮੰਜ਼ਿਲ_UChars(UConverter *cnv,
+              UChar *dest, int32_t dest_ਸਮਰੱਥਾ,
+              ਅਚਲ ਅੱਖਰ *src, int32_t src_ਲੰਮਾਈ,
+              UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Convert a codepage buffer into Unicode one character at a time.
@@ -1366,10 +1366,10 @@ ucnv_toUChars(UConverter *cnv,
  * @stable ICU 2.0
  */
 U_CAPI UChar32 U_EXPORT2
-ucnv_getNextUChar(UConverter * converter,
-                  const char **source,
-                  const char * sourceLimit,
-                  UErrorCode * err);
+ucnv_get_ਅਗਲਾ_UChar(UConverter * converter,
+                  ਅਚਲ ਅੱਖਰ **ਸਰੋਤ,
+                  ਅਚਲ ਅੱਖਰ * ਸਰੋਤ_ਹੱਦਬੰਦੀ,
+                  UError_ਕੋਡ * err);
 
 /**
  * Convert from one external charset to another using two existing UConverters.
@@ -1509,14 +1509,14 @@ ucnv_getNextUChar(UConverter * converter,
  * @see ucnv_toUChars
  * @stable ICU 2.6
  */
-U_CAPI void U_EXPORT2
-ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
-               char **target, const char *targetLimit,
-               const char **source, const char *sourceLimit,
-               UChar *pivotStart, UChar **pivotSource,
-               UChar **pivotTarget, const UChar *pivotLimit,
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucnv_convertEx(UConverter *ਨਿਸ਼ਾਨਾ_Cnv, UConverter *ਸਰੋਤ_Cnv,
+               ਅੱਖਰ **ਨਿਸ਼ਾਨਾ, ਅਚਲ ਅੱਖਰ *ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ,
+               ਅਚਲ ਅੱਖਰ **ਸਰੋਤ, ਅਚਲ ਅੱਖਰ *ਸਰੋਤ_ਹੱਦਬੰਦੀ,
+               UChar *ਧੁਰਾ_ਸ਼ੁਰੂ, UChar **ਧੁਰਾ_ਸਰੋਤ,
+               UChar **ਧੁਰਾ_ਨਿਸ਼ਾਨਾ, ਅਚਲ UChar *ਧੁਰਾ_ਹੱਦਬੰਦੀ,
                UBool reset, UBool flush,
-               UErrorCode *pErrorCode);
+               UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Convert from one external charset to another.
@@ -1574,13 +1574,13 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ucnv_convert(const char *toConverterName,
-             const char *fromConverterName,
-             char *target,
-             int32_t targetCapacity,
-             const char *source,
-             int32_t sourceLength,
-             UErrorCode *pErrorCode);
+ucnv_convert(ਅਚਲ ਅੱਖਰ *ਮੰਜ਼ਿਲ_Converter_Name,
+             ਅਚਲ ਅੱਖਰ *fromConverterName,
+             ਅੱਖਰ *ਨਿਸ਼ਾਨਾ,
+             int32_t ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ,
+             ਅਚਲ ਅੱਖਰ *ਸਰੋਤ,
+             int32_t ਸਰੋਤ_ਲੰਮਾਈ,
+             UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Convert from one external charset to another.
@@ -1628,11 +1628,11 @@ ucnv_convert(const char *toConverterName,
  * @stable ICU 2.6
  */
 U_CAPI int32_t U_EXPORT2
-ucnv_toAlgorithmic(UConverterType algorithmicType,
+ucnv_ਮੰਜ਼ਿਲ_Algorithmic(UConverterType algorithmicType,
                    UConverter *cnv,
-                   char *target, int32_t targetCapacity,
-                   const char *source, int32_t sourceLength,
-                   UErrorCode *pErrorCode);
+                   ਅੱਖਰ *ਨਿਸ਼ਾਨਾ, int32_t ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ,
+                   ਅਚਲ ਅੱਖਰ *ਸਰੋਤ, int32_t ਸਰੋਤ_ਲੰਮਾਈ,
+                   UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Convert from one external charset to another.
@@ -1682,9 +1682,9 @@ ucnv_toAlgorithmic(UConverterType algorithmicType,
 U_CAPI int32_t U_EXPORT2
 ucnv_fromAlgorithmic(UConverter *cnv,
                      UConverterType algorithmicType,
-                     char *target, int32_t targetCapacity,
-                     const char *source, int32_t sourceLength,
-                     UErrorCode *pErrorCode);
+                     ਅੱਖਰ *ਨਿਸ਼ਾਨਾ, int32_t ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ,
+                     ਅਚਲ ਅੱਖਰ *ਸਰੋਤ, int32_t ਸਰੋਤ_ਲੰਮਾਈ,
+                     UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Frees up memory occupied by unused, cached converter shared data.
@@ -1694,7 +1694,7 @@ ucnv_fromAlgorithmic(UConverter *cnv,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ucnv_flushCache(void);
+ucnv_flushCache(ਖਾਲੀ);
 
 /**
  * Returns the number of available converters, as per the alias file.
@@ -1704,7 +1704,7 @@ ucnv_flushCache(void);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ucnv_countAvailable(void);
+ucnv_ਗਿਣਤੀ_ਉਪਲਬਧ(ਖਾਲੀ);
 
 /**
  * Gets the canonical converter name of the specified converter from a list of
@@ -1716,8 +1716,8 @@ ucnv_countAvailable(void);
  * @see ucnv_countAvailable
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
-ucnv_getAvailableName(int32_t n);
+U_CAPI ਅਚਲ ਅੱਖਰ* U_EXPORT2
+ucnv_get_ਉਪਲਬਧ_Name(int32_t n);
 
 /**
  * Returns a UEnumeration to enumerate all of the canonical converter
@@ -1732,7 +1732,7 @@ ucnv_getAvailableName(int32_t n);
  * @stable ICU 2.4
  */
 U_CAPI UEnumeration * U_EXPORT2
-ucnv_openAllNames(UErrorCode *pErrorCode);
+ucnv_open_All_ਨਾਂ(UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Gives the number of aliases for a given converter or alias name.
@@ -1745,7 +1745,7 @@ ucnv_openAllNames(UErrorCode *pErrorCode);
  * @stable ICU 2.0
  */
 U_CAPI uint16_t U_EXPORT2
-ucnv_countAliases(const char *alias, UErrorCode *pErrorCode);
+ucnv_ਗਿਣਤੀ_Aliases(ਅਚਲ ਅੱਖਰ *alias, UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Gives the name of the alias at given index of alias list.
@@ -1759,8 +1759,8 @@ ucnv_countAliases(const char *alias, UErrorCode *pErrorCode);
  * @see ucnv_countAliases
  * @stable ICU 2.0
  */
-U_CAPI const char * U_EXPORT2
-ucnv_getAlias(const char *alias, uint16_t n, UErrorCode *pErrorCode);
+U_CAPI ਅਚਲ ਅੱਖਰ * U_EXPORT2
+ucnv_getAlias(ਅਚਲ ਅੱਖਰ *alias, uint16_t n, UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Fill-up the list of alias names for the given alias.
@@ -1775,8 +1775,8 @@ ucnv_getAlias(const char *alias, uint16_t n, UErrorCode *pErrorCode);
  * @param pErrorCode result of operation
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ucnv_getAliases(const char *alias, const char **aliases, UErrorCode *pErrorCode);
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucnv_getAliases(ਅਚਲ ਅੱਖਰ *alias, ਅਚਲ ਅੱਖਰ **aliases, UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Return a new UEnumeration object for enumerating all the
@@ -1802,9 +1802,9 @@ ucnv_getAliases(const char *alias, const char **aliases, UErrorCode *pErrorCode)
  * @stable ICU 2.2
  */
 U_CAPI UEnumeration * U_EXPORT2
-ucnv_openStandardNames(const char *convName,
-                       const char *standard,
-                       UErrorCode *pErrorCode);
+ucnv_open_Standard_ਨਾਂ(ਅਚਲ ਅੱਖਰ *convName,
+                       ਅਚਲ ਅੱਖਰ *standard,
+                       UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Gives the number of standards associated to converter names.
@@ -1812,7 +1812,7 @@ ucnv_openStandardNames(const char *convName,
  * @stable ICU 2.0
  */
 U_CAPI uint16_t U_EXPORT2
-ucnv_countStandards(void);
+ucnv_ਗਿਣਤੀ_Standards(ਖਾਲੀ);
 
 /**
  * Gives the name of the standard at given index of standard list.
@@ -1821,8 +1821,8 @@ ucnv_countStandards(void);
  * @return returns the name of the standard at given index. Owned by the library.
  * @stable ICU 2.0
  */
-U_CAPI const char * U_EXPORT2
-ucnv_getStandard(uint16_t n, UErrorCode *pErrorCode);
+U_CAPI ਅਚਲ ਅੱਖਰ * U_EXPORT2
+ucnv_getStandard(uint16_t n, UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Returns a standard name for a given converter name.
@@ -1843,8 +1843,8 @@ ucnv_getStandard(uint16_t n, UErrorCode *pErrorCode);
  *         then <code>NULL</code> is returned. Owned by the library.
  * @stable ICU 2.0
  */
-U_CAPI const char * U_EXPORT2
-ucnv_getStandardName(const char *name, const char *standard, UErrorCode *pErrorCode);
+U_CAPI ਅਚਲ ਅੱਖਰ * U_EXPORT2
+ucnv_getStandardName(ਅਚਲ ਅੱਖਰ *name, ਅਚਲ ਅੱਖਰ *standard, UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * This function will return the internal canonical converter name of the
@@ -1865,8 +1865,8 @@ ucnv_getStandardName(const char *name, const char *standard, UErrorCode *pErrorC
  * @see ucnv_getStandardName
  * @stable ICU 2.4
  */
-U_CAPI const char * U_EXPORT2
-ucnv_getCanonicalName(const char *alias, const char *standard, UErrorCode *pErrorCode);
+U_CAPI ਅਚਲ ਅੱਖਰ * U_EXPORT2
+ucnv_getCanonicalName(ਅਚਲ ਅੱਖਰ *alias, ਅਚਲ ਅੱਖਰ *standard, UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Returns the current default converter name. If you want to open
@@ -1882,10 +1882,10 @@ ucnv_getCanonicalName(const char *alias, const char *standard, UErrorCode *pErro
  * @see ucnv_setDefaultName
  * @stable ICU 2.0
  */
-U_CAPI const char * U_EXPORT2
-ucnv_getDefaultName(void);
+U_CAPI ਅਚਲ ਅੱਖਰ * U_EXPORT2
+ucnv_getDefaultName(ਖਾਲੀ);
 
-#ifndef U_HIDE_SYSTEM_API
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ U_HIDE_SYSTEM_API
 /**
  * This function is not thread safe. DO NOT call this function when ANY ICU
  * function is being used from more than one thread! This function sets the
@@ -1902,9 +1902,9 @@ ucnv_getDefaultName(void);
  * @system
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ucnv_setDefaultName(const char *name);
-#endif  /* U_HIDE_SYSTEM_API */
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucnv_ਸੈੱਟ_Default_Name(ਅਚਲ ਅੱਖਰ *name);
+#ਜੇ_ਅੰਤ  /* U_HIDE_SYSTEM_API */
 
 /**
  * Fixes the backslash character mismapping.  For example, in SJIS, the backslash
@@ -1923,8 +1923,8 @@ ucnv_setDefaultName(const char *name);
  * @see ucnv_isAmbiguous
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ucnv_fixFileSeparator(const UConverter *cnv, UChar *source, int32_t sourceLen);
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucnv_fixFileSeparator(ਅਚਲ UConverter *cnv, UChar *ਸਰੋਤ, int32_t ਸਰੋਤ_Len);
 
 /**
  * Determines if the converter contains ambiguous mappings of the same
@@ -1935,7 +1935,7 @@ ucnv_fixFileSeparator(const UConverter *cnv, UChar *source, int32_t sourceLen);
  * @stable ICU 2.0
  */
 U_CAPI UBool U_EXPORT2
-ucnv_isAmbiguous(const UConverter *cnv);
+ucnv_isAmbiguous(ਅਚਲ UConverter *cnv);
 
 /**
  * Sets the converter to use fallback mappings or not.
@@ -1952,8 +1952,8 @@ ucnv_isAmbiguous(const UConverter *cnv);
  * @stable ICU 2.0
  * @see ucnv_usesFallback
  */
-U_CAPI void U_EXPORT2
-ucnv_setFallback(UConverter *cnv, UBool usesFallback);
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucnv_ਸੈੱਟ_Fallback(UConverter *cnv, UBool ਵਰਤਦਾ_Fallback);
 
 /**
  * Determines if the converter uses fallback mappings or not.
@@ -1965,7 +1965,7 @@ ucnv_setFallback(UConverter *cnv, UBool usesFallback);
  * @see ucnv_setFallback
  */
 U_CAPI UBool U_EXPORT2
-ucnv_usesFallback(const UConverter *cnv);
+ucnv_ਵਰਤਦਾ_Fallback(ਅਚਲ UConverter *cnv);
 
 /**
  * Detects Unicode signature byte sequences at the start of the byte stream
@@ -1995,11 +1995,11 @@ ucnv_usesFallback(const UConverter *cnv);
  * @return The name of the encoding detected. NULL if encoding is not detected.
  * @stable ICU 2.4
  */
-U_CAPI const char* U_EXPORT2
-ucnv_detectUnicodeSignature(const char* source,
-                            int32_t sourceLength,
-                            int32_t *signatureLength,
-                            UErrorCode *pErrorCode);
+U_CAPI ਅਚਲ ਅੱਖਰ* U_EXPORT2
+ucnv_detectUnicodeSignature(ਅਚਲ ਅੱਖਰ* ਸਰੋਤ,
+                            int32_t ਸਰੋਤ_ਲੰਮਾਈ,
+                            int32_t *signature_ਲੰਮਾਈ,
+                            UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Returns the number of UChars held in the converter's internal state
@@ -2013,7 +2013,7 @@ ucnv_detectUnicodeSignature(const char* source,
  * @stable ICU 3.4
  */
 U_CAPI int32_t U_EXPORT2
-ucnv_fromUCountPending(const UConverter* cnv, UErrorCode* status);
+ucnv_fromUCountPending(ਅਚਲ UConverter* cnv, UError_ਕੋਡ* ਸਥਿਤੀ);
 
 /**
  * Returns the number of chars held in the converter's internal state
@@ -2027,7 +2027,7 @@ ucnv_fromUCountPending(const UConverter* cnv, UErrorCode* status);
  * @stable ICU 3.4
  */
 U_CAPI int32_t U_EXPORT2
-ucnv_toUCountPending(const UConverter* cnv, UErrorCode* status);
+ucnv_ਮੰਜ਼ਿਲ_UCount_Pending(ਅਚਲ UConverter* cnv, UError_ਕੋਡ* ਸਥਿਤੀ);
 
 /**
  * Returns whether or not the charset of the converter has a fixed number of bytes
@@ -2045,9 +2045,9 @@ ucnv_toUCountPending(const UConverter* cnv, UErrorCode* status);
  * @stable ICU 4.8
  */
 U_CAPI UBool U_EXPORT2
-ucnv_isFixedWidth(UConverter *cnv, UErrorCode *status);
+ucnv_is_Fixed_ਚੌੜਾਈ(UConverter *cnv, UError_ਕੋਡ *ਸਥਿਤੀ);
 
-#endif
+#ਜੇ_ਅੰਤ
 
-#endif
+#ਜੇ_ਅੰਤ
 /*_UCNV*/

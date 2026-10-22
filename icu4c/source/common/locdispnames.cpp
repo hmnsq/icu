@@ -19,32 +19,32 @@
 *   that then do not depend on resource bundle code and display name data.
 */
 
-#include <string_view>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string_view>
 
-#include "unicode/utypes.h"
-#include "unicode/brkiter.h"
-#include "unicode/locid.h"
-#include "unicode/uenum.h"
-#include "unicode/uloc.h"
-#include "unicode/ures.h"
-#include "unicode/ustring.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "putilimp.h"
-#include "ulocimp.h"
-#include "uresimp.h"
-#include "ureslocs.h"
-#include "ustr_imp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/brkiter.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/locid.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uenum.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uloc.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ures.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ustring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "charstr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "putilimp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ulocimp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uresimp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ureslocs.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ustr_imp.h"
 
 // C++ API ----------------------------------------------------------------- ***
 
 U_NAMESPACE_BEGIN
 
 UnicodeString&
-Locale::getDisplayLanguage(UnicodeString& dispLang U_LIFETIME_BOUND) const
+Locale::getDisplayLanguage(UnicodeString& dispLang U_LIFETIME_BOUND) ਅਚਲ
 {
-    return this->getDisplayLanguage(getDefault(), dispLang);
+    ਵਾਪਸ ਇਹ->getDisplayLanguage(getDefault(), dispLang);
 }
 
 /*We cannot make any assumptions on the size of the output display strings
@@ -54,413 +54,413 @@ Locale::getDisplayLanguage(UnicodeString& dispLang U_LIFETIME_BOUND) const
 * the exact buffer we need copy it to the UnicodeString and delete it*/
 
 UnicodeString&
-Locale::getDisplayLanguage(const Locale& displayLocale,
-                           UnicodeString& result U_LIFETIME_BOUND) const {
-    char16_t *buffer;
-    UErrorCode errorCode=U_ZERO_ERROR;
+Locale::getDisplayLanguage(ਅਚਲ Locale& displayLocale,
+                           UnicodeString& ਨਤੀਜਾ U_LIFETIME_BOUND) ਅਚਲ {
+    char16_t *ਬਫਰ;
+    UError_ਕੋਡ error_ਕੋਡ=U_ZERO_ERROR;
     int32_t length;
 
-    buffer=result.getBuffer(ULOC_FULLNAME_CAPACITY);
-    if (buffer == nullptr) {
-        result.truncate(0);
-        return result;
+    ਬਫਰ=ਨਤੀਜਾ.get_ਬਫਰ(ULOC_FULLNAME_ਸਮਰੱਥਾ);
+    ਜੇ (ਬਫਰ == ਖਾਲੀ_ਸੂਚਕ) {
+        ਨਤੀਜਾ.truncate(0);
+        ਵਾਪਸ ਨਤੀਜਾ;
     }
 
     length=uloc_getDisplayLanguage(getName(), displayLocale.getName(),
-                                   buffer, result.getCapacity(),
-                                   &errorCode);
-    result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
+                                   ਬਫਰ, ਨਤੀਜਾ.get_ਸਮਰੱਥਾ(),
+                                   &error_ਕੋਡ);
+    ਨਤੀਜਾ.release_ਬਫਰ(U_SUCCESS(error_ਕੋਡ) ? length : 0);
 
-    if(errorCode==U_BUFFER_OVERFLOW_ERROR) {
-        buffer=result.getBuffer(length);
-        if (buffer == nullptr) {
-            result.truncate(0);
-            return result;
+    ਜੇ(error_ਕੋਡ==U_ਬਫਰ_ਉਛਾਲ_ERROR) {
+        ਬਫਰ=ਨਤੀਜਾ.get_ਬਫਰ(length);
+        ਜੇ (ਬਫਰ == ਖਾਲੀ_ਸੂਚਕ) {
+            ਨਤੀਜਾ.truncate(0);
+            ਵਾਪਸ ਨਤੀਜਾ;
         }
-        errorCode=U_ZERO_ERROR;
+        error_ਕੋਡ=U_ZERO_ERROR;
         length=uloc_getDisplayLanguage(getName(), displayLocale.getName(),
-                                       buffer, result.getCapacity(),
-                                       &errorCode);
-        result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
+                                       ਬਫਰ, ਨਤੀਜਾ.get_ਸਮਰੱਥਾ(),
+                                       &error_ਕੋਡ);
+        ਨਤੀਜਾ.release_ਬਫਰ(U_SUCCESS(error_ਕੋਡ) ? length : 0);
     }
 
-    return result;
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
 UnicodeString&
-Locale::getDisplayScript(UnicodeString& dispScript U_LIFETIME_BOUND) const
+Locale::getDisplayScript(UnicodeString& dispScript U_LIFETIME_BOUND) ਅਚਲ
 {
-    return this->getDisplayScript(getDefault(), dispScript);
+    ਵਾਪਸ ਇਹ->getDisplayScript(getDefault(), dispScript);
 }
 
 UnicodeString&
-Locale::getDisplayScript(const Locale& displayLocale,
-                         UnicodeString& result U_LIFETIME_BOUND) const {
-    char16_t *buffer;
-    UErrorCode errorCode=U_ZERO_ERROR;
+Locale::getDisplayScript(ਅਚਲ Locale& displayLocale,
+                         UnicodeString& ਨਤੀਜਾ U_LIFETIME_BOUND) ਅਚਲ {
+    char16_t *ਬਫਰ;
+    UError_ਕੋਡ error_ਕੋਡ=U_ZERO_ERROR;
     int32_t length;
 
-    buffer=result.getBuffer(ULOC_FULLNAME_CAPACITY);
-    if (buffer == nullptr) {
-        result.truncate(0);
-        return result;
+    ਬਫਰ=ਨਤੀਜਾ.get_ਬਫਰ(ULOC_FULLNAME_ਸਮਰੱਥਾ);
+    ਜੇ (ਬਫਰ == ਖਾਲੀ_ਸੂਚਕ) {
+        ਨਤੀਜਾ.truncate(0);
+        ਵਾਪਸ ਨਤੀਜਾ;
     }
 
     length=uloc_getDisplayScript(getName(), displayLocale.getName(),
-                                  buffer, result.getCapacity(),
-                                  &errorCode);
-    result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
+                                  ਬਫਰ, ਨਤੀਜਾ.get_ਸਮਰੱਥਾ(),
+                                  &error_ਕੋਡ);
+    ਨਤੀਜਾ.release_ਬਫਰ(U_SUCCESS(error_ਕੋਡ) ? length : 0);
 
-    if(errorCode==U_BUFFER_OVERFLOW_ERROR) {
-        buffer=result.getBuffer(length);
-        if (buffer == nullptr) {
-            result.truncate(0);
-            return result;
+    ਜੇ(error_ਕੋਡ==U_ਬਫਰ_ਉਛਾਲ_ERROR) {
+        ਬਫਰ=ਨਤੀਜਾ.get_ਬਫਰ(length);
+        ਜੇ (ਬਫਰ == ਖਾਲੀ_ਸੂਚਕ) {
+            ਨਤੀਜਾ.truncate(0);
+            ਵਾਪਸ ਨਤੀਜਾ;
         }
-        errorCode=U_ZERO_ERROR;
+        error_ਕੋਡ=U_ZERO_ERROR;
         length=uloc_getDisplayScript(getName(), displayLocale.getName(),
-                                      buffer, result.getCapacity(),
-                                      &errorCode);
-        result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
+                                      ਬਫਰ, ਨਤੀਜਾ.get_ਸਮਰੱਥਾ(),
+                                      &error_ਕੋਡ);
+        ਨਤੀਜਾ.release_ਬਫਰ(U_SUCCESS(error_ਕੋਡ) ? length : 0);
     }
 
-    return result;
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
 UnicodeString&
-Locale::getDisplayCountry(UnicodeString& dispCntry U_LIFETIME_BOUND) const
+Locale::getDisplayCountry(UnicodeString& dispCntry U_LIFETIME_BOUND) ਅਚਲ
 {
-    return this->getDisplayCountry(getDefault(), dispCntry);
+    ਵਾਪਸ ਇਹ->getDisplayCountry(getDefault(), dispCntry);
 }
 
 UnicodeString&
-Locale::getDisplayCountry(const Locale& displayLocale,
-                          UnicodeString& result U_LIFETIME_BOUND) const {
-    char16_t *buffer;
-    UErrorCode errorCode=U_ZERO_ERROR;
+Locale::getDisplayCountry(ਅਚਲ Locale& displayLocale,
+                          UnicodeString& ਨਤੀਜਾ U_LIFETIME_BOUND) ਅਚਲ {
+    char16_t *ਬਫਰ;
+    UError_ਕੋਡ error_ਕੋਡ=U_ZERO_ERROR;
     int32_t length;
 
-    buffer=result.getBuffer(ULOC_FULLNAME_CAPACITY);
-    if (buffer == nullptr) {
-        result.truncate(0);
-        return result;
+    ਬਫਰ=ਨਤੀਜਾ.get_ਬਫਰ(ULOC_FULLNAME_ਸਮਰੱਥਾ);
+    ਜੇ (ਬਫਰ == ਖਾਲੀ_ਸੂਚਕ) {
+        ਨਤੀਜਾ.truncate(0);
+        ਵਾਪਸ ਨਤੀਜਾ;
     }
 
     length=uloc_getDisplayCountry(getName(), displayLocale.getName(),
-                                  buffer, result.getCapacity(),
-                                  &errorCode);
-    result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
+                                  ਬਫਰ, ਨਤੀਜਾ.get_ਸਮਰੱਥਾ(),
+                                  &error_ਕੋਡ);
+    ਨਤੀਜਾ.release_ਬਫਰ(U_SUCCESS(error_ਕੋਡ) ? length : 0);
 
-    if(errorCode==U_BUFFER_OVERFLOW_ERROR) {
-        buffer=result.getBuffer(length);
-        if (buffer == nullptr) {
-            result.truncate(0);
-            return result;
+    ਜੇ(error_ਕੋਡ==U_ਬਫਰ_ਉਛਾਲ_ERROR) {
+        ਬਫਰ=ਨਤੀਜਾ.get_ਬਫਰ(length);
+        ਜੇ (ਬਫਰ == ਖਾਲੀ_ਸੂਚਕ) {
+            ਨਤੀਜਾ.truncate(0);
+            ਵਾਪਸ ਨਤੀਜਾ;
         }
-        errorCode=U_ZERO_ERROR;
+        error_ਕੋਡ=U_ZERO_ERROR;
         length=uloc_getDisplayCountry(getName(), displayLocale.getName(),
-                                      buffer, result.getCapacity(),
-                                      &errorCode);
-        result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
+                                      ਬਫਰ, ਨਤੀਜਾ.get_ਸਮਰੱਥਾ(),
+                                      &error_ਕੋਡ);
+        ਨਤੀਜਾ.release_ਬਫਰ(U_SUCCESS(error_ਕੋਡ) ? length : 0);
     }
 
-    return result;
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
 UnicodeString&
-Locale::getDisplayVariant(UnicodeString& dispVar U_LIFETIME_BOUND) const
+Locale::getDisplayVariant(UnicodeString& dispVar U_LIFETIME_BOUND) ਅਚਲ
 {
-    return this->getDisplayVariant(getDefault(), dispVar);
+    ਵਾਪਸ ਇਹ->getDisplayVariant(getDefault(), dispVar);
 }
 
 UnicodeString&
-Locale::getDisplayVariant(const Locale& displayLocale,
-                          UnicodeString& result U_LIFETIME_BOUND) const {
-    char16_t *buffer;
-    UErrorCode errorCode=U_ZERO_ERROR;
+Locale::getDisplayVariant(ਅਚਲ Locale& displayLocale,
+                          UnicodeString& ਨਤੀਜਾ U_LIFETIME_BOUND) ਅਚਲ {
+    char16_t *ਬਫਰ;
+    UError_ਕੋਡ error_ਕੋਡ=U_ZERO_ERROR;
     int32_t length;
 
-    buffer=result.getBuffer(ULOC_FULLNAME_CAPACITY);
-    if (buffer == nullptr) {
-        result.truncate(0);
-        return result;
+    ਬਫਰ=ਨਤੀਜਾ.get_ਬਫਰ(ULOC_FULLNAME_ਸਮਰੱਥਾ);
+    ਜੇ (ਬਫਰ == ਖਾਲੀ_ਸੂਚਕ) {
+        ਨਤੀਜਾ.truncate(0);
+        ਵਾਪਸ ਨਤੀਜਾ;
     }
 
     length=uloc_getDisplayVariant(getName(), displayLocale.getName(),
-                                  buffer, result.getCapacity(),
-                                  &errorCode);
-    result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
+                                  ਬਫਰ, ਨਤੀਜਾ.get_ਸਮਰੱਥਾ(),
+                                  &error_ਕੋਡ);
+    ਨਤੀਜਾ.release_ਬਫਰ(U_SUCCESS(error_ਕੋਡ) ? length : 0);
 
-    if(errorCode==U_BUFFER_OVERFLOW_ERROR) {
-        buffer=result.getBuffer(length);
-        if (buffer == nullptr) {
-            result.truncate(0);
-            return result;
+    ਜੇ(error_ਕੋਡ==U_ਬਫਰ_ਉਛਾਲ_ERROR) {
+        ਬਫਰ=ਨਤੀਜਾ.get_ਬਫਰ(length);
+        ਜੇ (ਬਫਰ == ਖਾਲੀ_ਸੂਚਕ) {
+            ਨਤੀਜਾ.truncate(0);
+            ਵਾਪਸ ਨਤੀਜਾ;
         }
-        errorCode=U_ZERO_ERROR;
+        error_ਕੋਡ=U_ZERO_ERROR;
         length=uloc_getDisplayVariant(getName(), displayLocale.getName(),
-                                      buffer, result.getCapacity(),
-                                      &errorCode);
-        result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
+                                      ਬਫਰ, ਨਤੀਜਾ.get_ਸਮਰੱਥਾ(),
+                                      &error_ਕੋਡ);
+        ਨਤੀਜਾ.release_ਬਫਰ(U_SUCCESS(error_ਕੋਡ) ? length : 0);
     }
 
-    return result;
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
 UnicodeString&
-Locale::getDisplayName(UnicodeString& name U_LIFETIME_BOUND) const
+Locale::getDisplayName(UnicodeString& name U_LIFETIME_BOUND) ਅਚਲ
 {
-    return this->getDisplayName(getDefault(), name);
+    ਵਾਪਸ ਇਹ->getDisplayName(getDefault(), name);
 }
 
 UnicodeString&
-Locale::getDisplayName(const Locale& displayLocale,
-                       UnicodeString& result U_LIFETIME_BOUND) const {
-    char16_t *buffer;
-    UErrorCode errorCode=U_ZERO_ERROR;
+Locale::getDisplayName(ਅਚਲ Locale& displayLocale,
+                       UnicodeString& ਨਤੀਜਾ U_LIFETIME_BOUND) ਅਚਲ {
+    char16_t *ਬਫਰ;
+    UError_ਕੋਡ error_ਕੋਡ=U_ZERO_ERROR;
     int32_t length;
 
-    buffer=result.getBuffer(ULOC_FULLNAME_CAPACITY);
-    if (buffer == nullptr) {
-        result.truncate(0);
-        return result;
+    ਬਫਰ=ਨਤੀਜਾ.get_ਬਫਰ(ULOC_FULLNAME_ਸਮਰੱਥਾ);
+    ਜੇ (ਬਫਰ == ਖਾਲੀ_ਸੂਚਕ) {
+        ਨਤੀਜਾ.truncate(0);
+        ਵਾਪਸ ਨਤੀਜਾ;
     }
 
     length=uloc_getDisplayName(getName(), displayLocale.getName(),
-                               buffer, result.getCapacity(),
-                               &errorCode);
-    result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
+                               ਬਫਰ, ਨਤੀਜਾ.get_ਸਮਰੱਥਾ(),
+                               &error_ਕੋਡ);
+    ਨਤੀਜਾ.release_ਬਫਰ(U_SUCCESS(error_ਕੋਡ) ? length : 0);
 
-    if(errorCode==U_BUFFER_OVERFLOW_ERROR) {
-        buffer=result.getBuffer(length);
-        if (buffer == nullptr) {
-            result.truncate(0);
-            return result;
+    ਜੇ(error_ਕੋਡ==U_ਬਫਰ_ਉਛਾਲ_ERROR) {
+        ਬਫਰ=ਨਤੀਜਾ.get_ਬਫਰ(length);
+        ਜੇ (ਬਫਰ == ਖਾਲੀ_ਸੂਚਕ) {
+            ਨਤੀਜਾ.truncate(0);
+            ਵਾਪਸ ਨਤੀਜਾ;
         }
-        errorCode=U_ZERO_ERROR;
+        error_ਕੋਡ=U_ZERO_ERROR;
         length=uloc_getDisplayName(getName(), displayLocale.getName(),
-                                   buffer, result.getCapacity(),
-                                   &errorCode);
-        result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
+                                   ਬਫਰ, ਨਤੀਜਾ.get_ਸਮਰੱਥਾ(),
+                                   &error_ਕੋਡ);
+        ਨਤੀਜਾ.release_ਬਫਰ(U_SUCCESS(error_ਕੋਡ) ? length : 0);
     }
 
-    return result;
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ਜੇ !UCONFIG_NO_BREAK_ITERATION
 
 // -------------------------------------
 // Gets the objectLocale display name in the default locale language.
 UnicodeString& U_EXPORT2
-BreakIterator::getDisplayName(const Locale& objectLocale,
+BreakIterator::getDisplayName(ਅਚਲ Locale& objectLocale,
                               UnicodeString& name U_LIFETIME_BOUND)
 {
-    return objectLocale.getDisplayName(name);
+    ਵਾਪਸ objectLocale.getDisplayName(name);
 }
 
 // -------------------------------------
 // Gets the objectLocale display name in the displayLocale language.
 UnicodeString& U_EXPORT2
-BreakIterator::getDisplayName(const Locale& objectLocale,
-                              const Locale& displayLocale,
+BreakIterator::getDisplayName(ਅਚਲ Locale& objectLocale,
+                              ਅਚਲ Locale& displayLocale,
                               UnicodeString& name U_LIFETIME_BOUND)
 {
-    return objectLocale.getDisplayName(displayLocale, name);
+    ਵਾਪਸ objectLocale.getDisplayName(displayLocale, name);
 }
 
-#endif
+#ਜੇ_ਅੰਤ
 
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
 // C API ------------------------------------------------------------------- ***
 
 U_NAMESPACE_USE
 
-namespace {
+ਨਾਮਾਕਾਸ਼ {
 
 /* ### Constants **************************************************/
 
 /* These strings describe the resources we attempt to load from
  the locale ResourceBundle data file.*/
-constexpr char _kLanguages[]       = "Languages";
-constexpr char _kScripts[]         = "Scripts";
-constexpr char _kScriptsStandAlone[] = "Scripts%stand-alone";
-constexpr char _kCountries[]       = "Countries";
-constexpr char _kVariants[]        = "Variants";
-constexpr char _kKeys[]            = "Keys";
-constexpr char _kTypes[]           = "Types";
+constexpr ਅੱਖਰ _kLanguages[]       = "Languages";
+constexpr ਅੱਖਰ _kScripts[]         = "Scripts";
+constexpr ਅੱਖਰ _kScriptsStandAlone[] = "Scripts%stand-alone";
+constexpr ਅੱਖਰ _kCountries[]       = "Countries";
+constexpr ਅੱਖਰ _kVariants[]        = "Variants";
+constexpr ਅੱਖਰ k_ਕੁੰਜੀਆਂ[]            = "Keys";
+constexpr ਅੱਖਰ _kTypes[]           = "Types";
 //constexpr char _kRootName[]        = "root";
-constexpr char _kCurrency[]        = "currency";
-constexpr char _kCurrencies[]      = "Currencies";
-constexpr char _kLocaleDisplayPattern[] = "localeDisplayPattern";
-constexpr char _kPattern[]         = "pattern";
-constexpr char _kSeparator[]       = "separator";
+constexpr ਅੱਖਰ _kCurrency[]        = "currency";
+constexpr ਅੱਖਰ _kCurrencies[]      = "Currencies";
+constexpr ਅੱਖਰ k_Locale_Display_ਨਮੂਨਾ[] = "localeDisplayPattern";
+constexpr ਅੱਖਰ k_ਨਮੂਨਾ[]         = "pattern";
+constexpr ਅੱਖਰ _kSeparator[]       = "separator";
 
 /* ### Display name **************************************************/
 
 int32_t
-_getStringOrCopyKey(const char *path, const char *locale,
-                    const char *tableKey, 
-                    const char* subTableKey,
-                    const char *itemKey,
-                    const char *substitute,
-                    char16_t *dest, int32_t destCapacity,
-                    UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return 0; }
-    const char16_t *s = nullptr;
+get_String_Or_Copy_ਕੁੰਜੀ(ਅਚਲ ਅੱਖਰ *ਰਸਤਾ, ਅਚਲ ਅੱਖਰ *locale,
+                    ਅਚਲ ਅੱਖਰ *ਸਾਰਣੀ_ਕੁੰਜੀ, 
+                    ਅਚਲ ਅੱਖਰ* sub_ਸਾਰਣੀ_ਕੁੰਜੀ,
+                    ਅਚਲ ਅੱਖਰ *ਵਸਤੂ_ਕੁੰਜੀ,
+                    ਅਚਲ ਅੱਖਰ *substitute,
+                    char16_t *dest, int32_t dest_ਸਮਰੱਥਾ,
+                    UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ (U_FAILURE(error_ਕੋਡ)) { ਵਾਪਸ 0; }
+    ਅਚਲ char16_t *s = ਖਾਲੀ_ਸੂਚਕ;
     int32_t length = 0;
 
-    if(itemKey==nullptr) {
+    ਜੇ(ਵਸਤੂ_ਕੁੰਜੀ==ਖਾਲੀ_ਸੂਚਕ) {
         /* top-level item: normal resource bundle access */
-        icu::LocalUResourceBundlePointer rb(ures_open(path, locale, &errorCode));
+        icu::Local_UResource_Bundle_ਸੂਚਕ rb(ures_open(ਰਸਤਾ, locale, &error_ਕੋਡ));
 
-        if(U_SUCCESS(errorCode)) {
-            s=ures_getStringByKey(rb.getAlias(), tableKey, &length, &errorCode);
+        ਜੇ(U_SUCCESS(error_ਕੋਡ)) {
+            s=ures_get_String_By_ਕੁੰਜੀ(rb.getAlias(), ਸਾਰਣੀ_ਕੁੰਜੀ, &length, &error_ਕੋਡ);
             /* see comment about closing rb near "return item;" in _res_getTableStringWithFallback() */
         }
-    } else {
-        bool isLanguageCode = (uprv_strncmp(tableKey, _kLanguages, 9) == 0);
+    } ਨਹੀਂਤਾਂ {
+        ਤਾਰਕਿਕ is_Language_ਕੋਡ = (uprv_strncmp(ਸਾਰਣੀ_ਕੁੰਜੀ, _kLanguages, 9) == 0);
         /* Language code should not be a number. If it is, set the error code. */
-        if (isLanguageCode && uprv_strtol(itemKey, nullptr, 10)) {
-            errorCode = U_MISSING_RESOURCE_ERROR;
-        } else {
+        ਜੇ (is_Language_ਕੋਡ && uprv_strtol(ਵਸਤੂ_ਕੁੰਜੀ, ਖਾਲੀ_ਸੂਚਕ, 10)) {
+            error_ਕੋਡ = U_MISSING_RESOURCE_ERROR;
+        } ਨਹੀਂਤਾਂ {
             /* second-level item, use special fallback */
-            s=uloc_getTableStringWithFallback(path, locale,
-                                               tableKey,
-                                               subTableKey,
-                                               itemKey,
+            s=uloc_get_ਸਾਰਣੀ_String_With_Fallback(ਰਸਤਾ, locale,
+                                               ਸਾਰਣੀ_ਕੁੰਜੀ,
+                                               sub_ਸਾਰਣੀ_ਕੁੰਜੀ,
+                                               ਵਸਤੂ_ਕੁੰਜੀ,
                                                &length,
-                                               &errorCode);
-            if (U_FAILURE(errorCode) && isLanguageCode && itemKey != nullptr) {
+                                               &error_ਕੋਡ);
+            ਜੇ (U_FAILURE(error_ਕੋਡ) && is_Language_ਕੋਡ && ਵਸਤੂ_ਕੁੰਜੀ != ਖਾਲੀ_ਸੂਚਕ) {
                 // convert itemKey locale code to canonical form and try again, ICU-20870
-                errorCode = U_ZERO_ERROR;
-                Locale canonKey = Locale::createCanonical(itemKey);
-                s=uloc_getTableStringWithFallback(path, locale,
-                                                    tableKey,
-                                                    subTableKey,
-                                                    canonKey.getName(),
+                error_ਕੋਡ = U_ZERO_ERROR;
+                Locale canon_ਕੁੰਜੀ = Locale::createCanonical(ਵਸਤੂ_ਕੁੰਜੀ);
+                s=uloc_get_ਸਾਰਣੀ_String_With_Fallback(ਰਸਤਾ, locale,
+                                                    ਸਾਰਣੀ_ਕੁੰਜੀ,
+                                                    sub_ਸਾਰਣੀ_ਕੁੰਜੀ,
+                                                    canon_ਕੁੰਜੀ.getName(),
                                                     &length,
-                                                    &errorCode);
+                                                    &error_ਕੋਡ);
             }
         }
     }
 
-    if(U_SUCCESS(errorCode)) {
-        int32_t copyLength=uprv_min(length, destCapacity);
-        if(copyLength>0 && s != nullptr) {
-            u_memcpy(dest, s, copyLength);
+    ਜੇ(U_SUCCESS(error_ਕੋਡ)) {
+        int32_t copy_ਲੰਮਾਈ=uprv_min(length, dest_ਸਮਰੱਥਾ);
+        ਜੇ(copy_ਲੰਮਾਈ>0 && s != ਖਾਲੀ_ਸੂਚਕ) {
+            u_memcpy(dest, s, copy_ਲੰਮਾਈ);
         }
-    } else {
+    } ਨਹੀਂਤਾਂ {
         /* no string from a resource bundle: convert the substitute */
         length = static_cast<int32_t>(uprv_strlen(substitute));
-        u_charsToUChars(substitute, dest, uprv_min(length, destCapacity));
-        errorCode = U_USING_DEFAULT_WARNING;
+        u_chars_ਮੰਜ਼ਿਲ_UChars(substitute, dest, uprv_min(length, dest_ਸਮਰੱਥਾ));
+        error_ਕੋਡ = U_USING_DEFAULT_WARNING;
     }
 
-    return u_terminateUChars(dest, destCapacity, length, &errorCode);
+    ਵਾਪਸ u_terminateUChars(dest, dest_ਸਮਰੱਥਾ, length, &error_ਕੋਡ);
 }
 
-using UDisplayNameGetter = icu::CharString(std::string_view, UErrorCode&);
+ਵਰਤੋਂ UDisplayNameGetter = icu::CharString(std::string_view, UError_ਕੋਡ&);
 
 int32_t
-_getDisplayNameForComponent(const char *locale,
-                            const char *displayLocale,
-                            char16_t *dest, int32_t destCapacity,
+_getDisplayNameForComponent(ਅਚਲ ਅੱਖਰ *locale,
+                            ਅਚਲ ਅੱਖਰ *displayLocale,
+                            char16_t *dest, int32_t dest_ਸਮਰੱਥਾ,
                             UDisplayNameGetter *getter,
-                            const char *tag,
-                            UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return 0; }
-    UErrorCode localStatus;
-    const char* root = nullptr;
+                            ਅਚਲ ਅੱਖਰ *ਟੈਗ,
+                            UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ (U_FAILURE(error_ਕੋਡ)) { ਵਾਪਸ 0; }
+    UError_ਕੋਡ local_ਸਥਿਤੀ;
+    ਅਚਲ ਅੱਖਰ* ਜੜ੍ਹ = ਖਾਲੀ_ਸੂਚਕ;
 
-    if(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ਜੇ(dest_ਸਮਰੱਥਾ<0 || (dest_ਸਮਰੱਥਾ>0 && dest==ਖਾਲੀ_ਸੂਚਕ)) {
+        error_ਕੋਡ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
 
-    if (locale == nullptr) {
+    ਜੇ (locale == ਖਾਲੀ_ਸੂਚਕ) {
         locale = uloc_getDefault();
     }
 
-    localStatus = U_ZERO_ERROR;
-    icu::CharString localeBuffer = (*getter)(locale, localStatus);
-    if (U_FAILURE(localStatus)) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    local_ਸਥਿਤੀ = U_ZERO_ERROR;
+    icu::CharString locale_ਬਫਰ = (*getter)(locale, local_ਸਥਿਤੀ);
+    ਜੇ (U_FAILURE(local_ਸਥਿਤੀ)) {
+        error_ਕੋਡ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
-    if (localeBuffer.isEmpty()) {
+    ਜੇ (locale_ਬਫਰ.is_ਖਾਲੀ_ਥਾਵਾਂ()) {
         // For the display name, we treat this as unknown language (ICU-20273).
-        if (getter == ulocimp_getLanguage) {
-            localeBuffer.append("und", errorCode);
-        } else {
-            return u_terminateUChars(dest, destCapacity, 0, &errorCode);
+        ਜੇ (getter == ulocimp_getLanguage) {
+            locale_ਬਫਰ.append("und", error_ਕੋਡ);
+        } ਨਹੀਂਤਾਂ {
+            ਵਾਪਸ u_terminateUChars(dest, dest_ਸਮਰੱਥਾ, 0, &error_ਕੋਡ);
         }
     }
 
-    root = tag == _kCountries ? U_ICUDATA_REGION : U_ICUDATA_LANG;
+    ਜੜ੍ਹ = ਟੈਗ == _kCountries ? U_ICUDATA_REGION : U_ICUDATA_LANG;
 
-    return _getStringOrCopyKey(root, displayLocale,
-                               tag, nullptr, localeBuffer.data(),
-                               localeBuffer.data(),
-                               dest, destCapacity,
-                               errorCode);
+    ਵਾਪਸ get_String_Or_Copy_ਕੁੰਜੀ(ਜੜ੍ਹ, displayLocale,
+                               ਟੈਗ, ਖਾਲੀ_ਸੂਚਕ, locale_ਬਫਰ.ਅੰਕੜੇ(),
+                               locale_ਬਫਰ.ਅੰਕੜੇ(),
+                               dest, dest_ਸਮਰੱਥਾ,
+                               error_ਕੋਡ);
 }
 
 }  // namespace
 
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayLanguage(const char *locale,
-                        const char *displayLocale,
-                        char16_t *dest, int32_t destCapacity,
-                        UErrorCode *pErrorCode) {
-    return _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
-                ulocimp_getLanguage, _kLanguages, *pErrorCode);
+uloc_getDisplayLanguage(ਅਚਲ ਅੱਖਰ *locale,
+                        ਅਚਲ ਅੱਖਰ *displayLocale,
+                        char16_t *dest, int32_t dest_ਸਮਰੱਥਾ,
+                        UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਵਾਪਸ _getDisplayNameForComponent(locale, displayLocale, dest, dest_ਸਮਰੱਥਾ,
+                ulocimp_getLanguage, _kLanguages, *p_Error_ਕੋਡ);
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayScript(const char* locale,
-                      const char* displayLocale,
-                      char16_t *dest, int32_t destCapacity,
-                      UErrorCode *pErrorCode)
+uloc_getDisplayScript(ਅਚਲ ਅੱਖਰ* locale,
+                      ਅਚਲ ਅੱਖਰ* displayLocale,
+                      char16_t *dest, int32_t dest_ਸਮਰੱਥਾ,
+                      UError_ਕੋਡ *p_Error_ਕੋਡ)
 {
-    if (U_FAILURE(*pErrorCode)) { return 0; }
-    UErrorCode err = U_ZERO_ERROR;
-    int32_t res = _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
+    ਜੇ (U_FAILURE(*p_Error_ਕੋਡ)) { ਵਾਪਸ 0; }
+    UError_ਕੋਡ err = U_ZERO_ERROR;
+    int32_t res = _getDisplayNameForComponent(locale, displayLocale, dest, dest_ਸਮਰੱਥਾ,
                 ulocimp_getScript, _kScriptsStandAlone, err);
 
-    if (destCapacity == 0 && err == U_BUFFER_OVERFLOW_ERROR) {
+    ਜੇ (dest_ਸਮਰੱਥਾ == 0 && err == U_ਬਫਰ_ਉਛਾਲ_ERROR) {
         // For preflight, return the max of the value and the fallback.
-        int32_t fallback_res = _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
-                                                           ulocimp_getScript, _kScripts, *pErrorCode);
-        return (fallback_res > res) ? fallback_res : res;
+        int32_t fallback_res = _getDisplayNameForComponent(locale, displayLocale, dest, dest_ਸਮਰੱਥਾ,
+                                                           ulocimp_getScript, _kScripts, *p_Error_ਕੋਡ);
+        ਵਾਪਸ (fallback_res > res) ? fallback_res : res;
     }
-    if ( err == U_USING_DEFAULT_WARNING ) {
-        return _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
-                                           ulocimp_getScript, _kScripts, *pErrorCode);
-    } else {
-        *pErrorCode = err;
-        return res;
+    ਜੇ ( err == U_USING_DEFAULT_WARNING ) {
+        ਵਾਪਸ _getDisplayNameForComponent(locale, displayLocale, dest, dest_ਸਮਰੱਥਾ,
+                                           ulocimp_getScript, _kScripts, *p_Error_ਕੋਡ);
+    } ਨਹੀਂਤਾਂ {
+        *p_Error_ਕੋਡ = err;
+        ਵਾਪਸ res;
     }
 }
 
-static int32_t
-uloc_getDisplayScriptInContext(const char* locale,
-                      const char* displayLocale,
-                      char16_t *dest, int32_t destCapacity,
-                      UErrorCode *pErrorCode)
+ਸਥਿਰ int32_t
+uloc_get_Display_Script_ਵਿੱਚ_Context(ਅਚਲ ਅੱਖਰ* locale,
+                      ਅਚਲ ਅੱਖਰ* displayLocale,
+                      char16_t *dest, int32_t dest_ਸਮਰੱਥਾ,
+                      UError_ਕੋਡ *p_Error_ਕੋਡ)
 {
-    return _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
-                    ulocimp_getScript, _kScripts, *pErrorCode);
+    ਵਾਪਸ _getDisplayNameForComponent(locale, displayLocale, dest, dest_ਸਮਰੱਥਾ,
+                    ulocimp_getScript, _kScripts, *p_Error_ਕੋਡ);
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayCountry(const char *locale,
-                       const char *displayLocale,
-                       char16_t *dest, int32_t destCapacity,
-                       UErrorCode *pErrorCode) {
-    return _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
-                ulocimp_getRegion, _kCountries, *pErrorCode);
+uloc_getDisplayCountry(ਅਚਲ ਅੱਖਰ *locale,
+                       ਅਚਲ ਅੱਖਰ *displayLocale,
+                       char16_t *dest, int32_t dest_ਸਮਰੱਥਾ,
+                       UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਵਾਪਸ _getDisplayNameForComponent(locale, displayLocale, dest, dest_ਸਮਰੱਥਾ,
+                ulocimp_getRegion, _kCountries, *p_Error_ਕੋਡ);
 }
 
 /*
@@ -469,12 +469,12 @@ uloc_getDisplayCountry(const char *locale,
  * in between - similar to uloc_getDisplayName()
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayVariant(const char *locale,
-                       const char *displayLocale,
-                       char16_t *dest, int32_t destCapacity,
-                       UErrorCode *pErrorCode) {
-    return _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
-                ulocimp_getVariant, _kVariants, *pErrorCode);
+uloc_getDisplayVariant(ਅਚਲ ਅੱਖਰ *locale,
+                       ਅਚਲ ਅੱਖਰ *displayLocale,
+                       char16_t *dest, int32_t dest_ਸਮਰੱਥਾ,
+                       UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਵਾਪਸ _getDisplayNameForComponent(locale, displayLocale, dest, dest_ਸਮਰੱਥਾ,
+                ulocimp_getVariant, _kVariants, *p_Error_ਕੋਡ);
 }
 
 /* Instead of having a separate pass for 'special' patterns, reintegrate the two
@@ -490,27 +490,27 @@ uloc_getDisplayVariant(const char *locale,
  * chars than the standard open/close paren (which ja and ko use, btw).
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayName(const char *locale,
-                    const char *displayLocale,
-                    char16_t *dest, int32_t destCapacity,
-                    UErrorCode *pErrorCode)
+uloc_getDisplayName(ਅਚਲ ਅੱਖਰ *locale,
+                    ਅਚਲ ਅੱਖਰ *displayLocale,
+                    char16_t *dest, int32_t dest_ਸਮਰੱਥਾ,
+                    UError_ਕੋਡ *p_Error_ਕੋਡ)
 {
-    static const char16_t defaultSeparator[9] = { 0x007b, 0x0030, 0x007d, 0x002c, 0x0020, 0x007b, 0x0031, 0x007d, 0x0000 }; /* "{0}, {1}" */
-    static const char16_t sub0[4] = { 0x007b, 0x0030, 0x007d , 0x0000 } ; /* {0} */
-    static const char16_t sub1[4] = { 0x007b, 0x0031, 0x007d , 0x0000 } ; /* {1} */
-    static const int32_t subLen = 3;
-    static const char16_t defaultPattern[10] = {
+    ਸਥਿਰ ਅਚਲ char16_t defaultSeparator[9] = { 0x007b, 0x0030, 0x007d, 0x002c, 0x0020, 0x007b, 0x0031, 0x007d, 0x0000 }; /* "{0}, {1}" */
+    ਸਥਿਰ ਅਚਲ char16_t sub0[4] = { 0x007b, 0x0030, 0x007d , 0x0000 } ; /* {0} */
+    ਸਥਿਰ ਅਚਲ char16_t sub1[4] = { 0x007b, 0x0031, 0x007d , 0x0000 } ; /* {1} */
+    ਸਥਿਰ ਅਚਲ int32_t subLen = 3;
+    ਸਥਿਰ ਅਚਲ char16_t default_ਨਮੂਨਾ[10] = {
         0x007b, 0x0030, 0x007d, 0x0020, 0x0028, 0x007b, 0x0031, 0x007d, 0x0029, 0x0000
     }; /* {0} ({1}) */
-    static const int32_t defaultPatLen = 9;
-    static const int32_t defaultSub0Pos = 0;
-    static const int32_t defaultSub1Pos = 5;
+    ਸਥਿਰ ਅਚਲ int32_t defaultPatLen = 9;
+    ਸਥਿਰ ਅਚਲ int32_t defaultSub0Pos = 0;
+    ਸਥਿਰ ਅਚਲ int32_t defaultSub1Pos = 5;
 
     int32_t length; /* of formatted result */
 
-    const char16_t *separator;
+    ਅਚਲ char16_t *separator;
     int32_t sepLen = 0;
-    const char16_t *pattern;
+    ਅਚਲ char16_t *ਨਮੂਨਾ;
     int32_t patLen = 0;
     int32_t sub0Pos, sub1Pos;
     
@@ -519,37 +519,37 @@ uloc_getDisplayName(const char *locale,
     char16_t formatCloseParen        = 0x0029; // )
     char16_t formatReplaceCloseParen = 0x005D; // ]
 
-    UBool haveLang = true; /* assume true, set false if we find we don't have
+    UBool haveLang = ਸੱਚ; /* assume true, set false if we find we don't have
                               a lang component in the locale */
-    UBool haveRest = true; /* assume true, set false if we find we don't have
+    UBool haveRest = ਸੱਚ; /* assume true, set false if we find we don't have
                               any other component in the locale */
-    UBool retry = false; /* set true if we need to retry, see below */
+    UBool retry = ਝੂਠ; /* set true if we need to retry, see below */
 
     int32_t langi = 0; /* index of the language substitution (0 or 1), virtually always 0 */
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ਜੇ(p_Error_ਕੋਡ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ 0;
     }
 
-    if(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ਜੇ(dest_ਸਮਰੱਥਾ<0 || (dest_ਸਮਰੱਥਾ>0 && dest==ਖਾਲੀ_ਸੂਚਕ)) {
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
 
     {
-        UErrorCode status = U_ZERO_ERROR;
+        UError_ਕੋਡ ਸਥਿਤੀ = U_ZERO_ERROR;
 
-        icu::LocalUResourceBundlePointer locbundle(
-                ures_open(U_ICUDATA_LANG, displayLocale, &status));
-        icu::LocalUResourceBundlePointer dspbundle(
-                ures_getByKeyWithFallback(locbundle.getAlias(), _kLocaleDisplayPattern, nullptr, &status));
+        icu::Local_UResource_Bundle_ਸੂਚਕ locbundle(
+                ures_open(U_ICUDATA_LANG, displayLocale, &ਸਥਿਤੀ));
+        icu::Local_UResource_Bundle_ਸੂਚਕ dspbundle(
+                ures_get_By_ਕੁੰਜੀ_With_Fallback(locbundle.getAlias(), k_Locale_Display_ਨਮੂਨਾ, ਖਾਲੀ_ਸੂਚਕ, &ਸਥਿਤੀ));
 
-        separator=ures_getStringByKeyWithFallback(dspbundle.getAlias(), _kSeparator, &sepLen, &status);
-        pattern=ures_getStringByKeyWithFallback(dspbundle.getAlias(), _kPattern, &patLen, &status);
+        separator=ures_get_String_By_ਕੁੰਜੀ_With_Fallback(dspbundle.getAlias(), _kSeparator, &sepLen, &ਸਥਿਤੀ);
+        ਨਮੂਨਾ=ures_get_String_By_ਕੁੰਜੀ_With_Fallback(dspbundle.getAlias(), k_ਨਮੂਨਾ, &patLen, &ਸਥਿਤੀ);
     }
 
     /* If we couldn't find any data, then use the defaults */
-    if(sepLen == 0) {
+    ਜੇ(sepLen == 0) {
        separator = defaultSeparator;
     }
     /* #10244: Even though separator is now a pattern, it is awkward to handle it as such
@@ -564,34 +564,34 @@ uloc_getDisplayName(const char *locale,
     {
         char16_t *p0=u_strstr(separator, sub0);
         char16_t *p1=u_strstr(separator, sub1);
-        if (p0==nullptr || p1==nullptr || p1<p0) {
-            *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+        ਜੇ (p0==ਖਾਲੀ_ਸੂਚਕ || p1==ਖਾਲੀ_ਸੂਚਕ || p1<p0) {
+            *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+            ਵਾਪਸ 0;
         }
-        separator = (const char16_t *)p0 + subLen;
+        separator = (ਅਚਲ char16_t *)p0 + subLen;
         sepLen = static_cast<int32_t>(p1 - separator);
     }
 
-    if(patLen==0 || (patLen==defaultPatLen && !u_strncmp(pattern, defaultPattern, patLen))) {
-        pattern=defaultPattern;
+    ਜੇ(patLen==0 || (patLen==defaultPatLen && !u_strncmp(ਨਮੂਨਾ, default_ਨਮੂਨਾ, patLen))) {
+        ਨਮੂਨਾ=default_ਨਮੂਨਾ;
         patLen=defaultPatLen;
         sub0Pos=defaultSub0Pos;
         sub1Pos=defaultSub1Pos;
         // use default formatOpenParen etc. set above
-    } else { /* non-default pattern */
-        char16_t *p0=u_strstr(pattern, sub0);
-        char16_t *p1=u_strstr(pattern, sub1);
-        if (p0==nullptr || p1==nullptr) {
-            *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+    } ਨਹੀਂਤਾਂ { /* non-default pattern */
+        char16_t *p0=u_strstr(ਨਮੂਨਾ, sub0);
+        char16_t *p1=u_strstr(ਨਮੂਨਾ, sub1);
+        ਜੇ (p0==ਖਾਲੀ_ਸੂਚਕ || p1==ਖਾਲੀ_ਸੂਚਕ) {
+            *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+            ਵਾਪਸ 0;
         }
-        sub0Pos = static_cast<int32_t>(p0-pattern);
-        sub1Pos = static_cast<int32_t>(p1-pattern);
-        if (sub1Pos < sub0Pos) { /* a very odd pattern */
+        sub0Pos = static_cast<int32_t>(p0-ਨਮੂਨਾ);
+        sub1Pos = static_cast<int32_t>(p1-ਨਮੂਨਾ);
+        ਜੇ (sub1Pos < sub0Pos) { /* a very odd pattern */
             int32_t t=sub0Pos; sub0Pos=sub1Pos; sub1Pos=t;
             langi=1;
         }
-        if (u_strchr(pattern, 0xFF08) != nullptr) {
+        ਜੇ (u_strchr(ਨਮੂਨਾ, 0xFF08) != ਖਾਲੀ_ਸੂਚਕ) {
             formatOpenParen         = 0xFF08; // fullwidth (
             formatReplaceOpenParen  = 0xFF3B; // fullwidth [
             formatCloseParen        = 0xFF09; // fullwidth )
@@ -606,133 +606,133 @@ uloc_getDisplayName(const char *locale,
      * would have fit but for the padding, we need to reextract.  In this case (only) we
      * adjust the parameters so padding is not added, and repeat.
      */
-    do {
+    ਕਰੋ {
         char16_t* p=dest;
         int32_t patPos=0; /* position in the pattern, used for non-substitution portions */
         int32_t langLen=0; /* length of language substitution */
         int32_t langPos=0; /* position in output of language substitution */
         int32_t restLen=0; /* length of 'everything else' substitution */
         int32_t restPos=0; /* position in output of 'everything else' substitution */
-        icu::LocalUEnumerationPointer kenum; /* keyword enumeration */
+        icu::Local_UEnumeration_ਸੂਚਕ kenum; /* keyword enumeration */
 
         /* prefix of pattern, extremely likely to be empty */
-        if(sub0Pos) {
-            if(destCapacity >= sub0Pos) {
-                while (patPos < sub0Pos) {
-                    *p++ = pattern[patPos++];
+        ਜੇ(sub0Pos) {
+            ਜੇ(dest_ਸਮਰੱਥਾ >= sub0Pos) {
+                ਜਦੋਂ (patPos < sub0Pos) {
+                    *p++ = ਨਮੂਨਾ[patPos++];
                 }
-            } else {
+            } ਨਹੀਂਤਾਂ {
                 patPos=sub0Pos;
             }
             length=sub0Pos;
-        } else {
+        } ਨਹੀਂਤਾਂ {
             length=0;
         }
 
-        for(int32_t subi=0,resti=0;subi<2;) { /* iterate through patterns 0 and 1*/
-            UBool subdone = false; /* set true when ready to move to next substitution */
+        ਲਈ(int32_t subi=0,resti=0;subi<2;) { /* iterate through patterns 0 and 1*/
+            UBool subdone = ਝੂਠ; /* set true when ready to move to next substitution */
 
             /* prep p and cap for calls to get display components, pin cap to 0 since
                they complain if cap is negative */
-            int32_t cap=destCapacity-length;
-            if (cap <= 0) {
+            int32_t cap=dest_ਸਮਰੱਥਾ-length;
+            ਜੇ (cap <= 0) {
                 cap=0;
-            } else {
+            } ਨਹੀਂਤਾਂ {
                 p=dest+length;
             }
 
-            if (subi == langi) { /* {0}*/
-                if(haveLang) {
+            ਜੇ (subi == langi) { /* {0}*/
+                ਜੇ(haveLang) {
                     langPos=length;
-                    langLen=uloc_getDisplayLanguage(locale, displayLocale, p, cap, pErrorCode);
+                    langLen=uloc_getDisplayLanguage(locale, displayLocale, p, cap, p_Error_ਕੋਡ);
                     length+=langLen;
                     haveLang=langLen>0;
                 }
-                subdone=true;
-            } else { /* {1} */
-                if(!haveRest) {
-                    subdone=true;
-                } else {
+                subdone=ਸੱਚ;
+            } ਨਹੀਂਤਾਂ { /* {1} */
+                ਜੇ(!haveRest) {
+                    subdone=ਸੱਚ;
+                } ਨਹੀਂਤਾਂ {
                     int32_t len; /* length of component (plus other stuff) we just fetched */
-                    switch(resti++) {
-                        case 0:
+                    ਚੋਣ(resti++) {
+                        ਹਾਲਤ 0:
                             restPos=length;
-                            len=uloc_getDisplayScriptInContext(locale, displayLocale, p, cap, pErrorCode);
-                            break;
-                        case 1:
-                            len=uloc_getDisplayCountry(locale, displayLocale, p, cap, pErrorCode);
-                            break;
-                        case 2:
-                            len=uloc_getDisplayVariant(locale, displayLocale, p, cap, pErrorCode);
-                            break;
-                        case 3:
-                            kenum.adoptInstead(uloc_openKeywords(locale, pErrorCode));
+                            len=uloc_get_Display_Script_ਵਿੱਚ_Context(locale, displayLocale, p, cap, p_Error_ਕੋਡ);
+                            ਰੋਕੋ;
+                        ਹਾਲਤ 1:
+                            len=uloc_getDisplayCountry(locale, displayLocale, p, cap, p_Error_ਕੋਡ);
+                            ਰੋਕੋ;
+                        ਹਾਲਤ 2:
+                            len=uloc_getDisplayVariant(locale, displayLocale, p, cap, p_Error_ਕੋਡ);
+                            ਰੋਕੋ;
+                        ਹਾਲਤ 3:
+                            kenum.adoptInstead(uloc_openKeywords(locale, p_Error_ਕੋਡ));
                             U_FALLTHROUGH;
-                        default: {
-                            const char* kw=uenum_next(kenum.getAlias(), &len, pErrorCode);
-                            if (kw == nullptr) {
+                        ਮੂਲ: {
+                            ਅਚਲ ਅੱਖਰ* kw=uenum_ਅਗਲਾ(kenum.getAlias(), &len, p_Error_ਕੋਡ);
+                            ਜੇ (kw == ਖਾਲੀ_ਸੂਚਕ) {
                                 len=0; /* mark that we didn't add a component */
-                                subdone=true;
-                            } else {
+                                subdone=ਸੱਚ;
+                            } ਨਹੀਂਤਾਂ {
                                 /* incorporating this behavior into the loop made it even more complex,
                                    so just special case it here */
-                                len = uloc_getDisplayKeyword(kw, displayLocale, p, cap, pErrorCode);
-                                if(len) {
-                                    if(len < cap) {
+                                len = uloc_getDisplayKeyword(kw, displayLocale, p, cap, p_Error_ਕੋਡ);
+                                ਜੇ(len) {
+                                    ਜੇ(len < cap) {
                                         p[len]=0x3d; /* '=', assume we'll need it */
                                     }
                                     len+=1;
 
                                     /* adjust for call to get keyword */
                                     cap-=len;
-                                    if(cap <= 0) {
+                                    ਜੇ(cap <= 0) {
                                         cap=0;
-                                    } else {
+                                    } ਨਹੀਂਤਾਂ {
                                         p+=len;
                                     }
                                 }
                                 /* reset for call below */
-                                if(*pErrorCode == U_BUFFER_OVERFLOW_ERROR) {
-                                    *pErrorCode=U_ZERO_ERROR;
+                                ਜੇ(*p_Error_ਕੋਡ == U_ਬਫਰ_ਉਛਾਲ_ERROR) {
+                                    *p_Error_ਕੋਡ=U_ZERO_ERROR;
                                 }
-                                int32_t vlen = uloc_getDisplayKeywordValue(locale, kw, displayLocale,
-                                                                           p, cap, pErrorCode);
-                                if(len) {
-                                    if(vlen==0) {
+                                int32_t vlen = uloc_get_Display_Keyword_ਮੁੱਲ(locale, kw, displayLocale,
+                                                                           p, cap, p_Error_ਕੋਡ);
+                                ਜੇ(len) {
+                                    ਜੇ(vlen==0) {
                                         --len; /* remove unneeded '=' */
                                     }
                                     /* restore cap and p to what they were at start */
-                                    cap=destCapacity-length;
-                                    if(cap <= 0) {
+                                    cap=dest_ਸਮਰੱਥਾ-length;
+                                    ਜੇ(cap <= 0) {
                                         cap=0;
-                                    } else {
+                                    } ਨਹੀਂਤਾਂ {
                                         p=dest+length;
                                     }
                                 }
                                 len+=vlen; /* total we added for key + '=' + value */
                             }
-                        } break;
+                        } ਰੋਕੋ;
                     } /* end switch */
 
-                    if (len>0) {
+                    ਜੇ (len>0) {
                         /* we added a component, so add separator and write it if there's room. */
-                        if(len+sepLen<=cap) {
-                            const char16_t * plimit = p + len;
-                            for (; p < plimit; p++) {
-                                if (*p == formatOpenParen) {
+                        ਜੇ(len+sepLen<=cap) {
+                            ਅਚਲ char16_t * plimit = p + len;
+                            ਲਈ (; p < plimit; p++) {
+                                ਜੇ (*p == formatOpenParen) {
                                     *p = formatReplaceOpenParen;
-                                } else if (*p == formatCloseParen) {
+                                } ਨਹੀਂਤਾਂ ਜੇ (*p == formatCloseParen) {
                                     *p = formatReplaceCloseParen;
                                 }
                             }
-                            for(int32_t i=0;i<sepLen;++i) {
+                            ਲਈ(int32_t i=0;i<sepLen;++i) {
                                 *p++=separator[i];
                             }
                         }
                         length+=len+sepLen;
-                    } else if(subdone) {
+                    } ਨਹੀਂਤਾਂ ਜੇ(subdone) {
                         /* remove separator if we added it */
-                        if (length!=restPos) {
+                        ਜੇ (length!=restPos) {
                             length-=sepLen;
                         }
                         restLen=length-restPos;
@@ -741,43 +741,43 @@ uloc_getDisplayName(const char *locale,
                 }
             }
 
-            if(*pErrorCode == U_BUFFER_OVERFLOW_ERROR) {
-                *pErrorCode=U_ZERO_ERROR;
+            ਜੇ(*p_Error_ਕੋਡ == U_ਬਫਰ_ਉਛਾਲ_ERROR) {
+                *p_Error_ਕੋਡ=U_ZERO_ERROR;
             }
 
-            if(subdone) {
-                if(haveLang && haveRest) {
+            ਜੇ(subdone) {
+                ਜੇ(haveLang && haveRest) {
                     /* append internal portion of pattern, the first time,
                        or last portion of pattern the second time */
                     int32_t padLen;
                     patPos+=subLen;
                     padLen=(subi==0 ? sub1Pos : patLen)-patPos;
-                    if(length+padLen <= destCapacity) {
+                    ਜੇ(length+padLen <= dest_ਸਮਰੱਥਾ) {
                         p=dest+length;
-                        for(int32_t i=0;i<padLen;++i) {
-                            *p++=pattern[patPos++];
+                        ਲਈ(int32_t i=0;i<padLen;++i) {
+                            *p++=ਨਮੂਨਾ[patPos++];
                         }
-                    } else {
+                    } ਨਹੀਂਤਾਂ {
                         patPos+=padLen;
                     }
                     length+=padLen;
-                } else if(subi==0) {
+                } ਨਹੀਂਤਾਂ ਜੇ(subi==0) {
                     /* don't have first component, reset for second component */
                     sub0Pos=0;
                     length=0;
-                } else if(length>0) {
+                } ਨਹੀਂਤਾਂ ਜੇ(length>0) {
                     /* true length is the length of just the component we got. */
                     length=haveLang?langLen:restLen;
-                    if(dest && sub0Pos!=0) {
-                        if (sub0Pos+length<=destCapacity) {
+                    ਜੇ(dest && sub0Pos!=0) {
+                        ਜੇ (sub0Pos+length<=dest_ਸਮਰੱਥਾ) {
                             /* first component not at start of result,
                                but we have full component in buffer. */
                             u_memmove(dest, dest+(haveLang?langPos:restPos), length);
-                        } else {
+                        } ਨਹੀਂਤਾਂ {
                             /* would have fit, but didn't because of pattern prefix. */
                             sub0Pos=0; /* stops initial padding (and a second retry,
                                           so we won't end up here again) */
-                            retry=true;
+                            retry=ਸੱਚ;
                         }
                     }
                 }
@@ -785,122 +785,122 @@ uloc_getDisplayName(const char *locale,
                 ++subi; /* move on to next substitution */
             }
         }
-    } while(retry);
+    } ਜਦੋਂ(retry);
 
-    return u_terminateUChars(dest, destCapacity, length, pErrorCode);
+    ਵਾਪਸ u_terminateUChars(dest, dest_ਸਮਰੱਥਾ, length, p_Error_ਕੋਡ);
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayKeyword(const char* keyword,
-                       const char* displayLocale,
+uloc_getDisplayKeyword(ਅਚਲ ਅੱਖਰ* keyword,
+                       ਅਚਲ ਅੱਖਰ* displayLocale,
                        char16_t* dest,
-                       int32_t destCapacity,
-                       UErrorCode* status){
+                       int32_t dest_ਸਮਰੱਥਾ,
+                       UError_ਕੋਡ* ਸਥਿਤੀ){
 
     /* argument checking */
-    if(status==nullptr || U_FAILURE(*status)) {
-        return 0;
+    ਜੇ(ਸਥਿਤੀ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*ਸਥਿਤੀ)) {
+        ਵਾਪਸ 0;
     }
 
-    if(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
-        *status=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ਜੇ(dest_ਸਮਰੱਥਾ<0 || (dest_ਸਮਰੱਥਾ>0 && dest==ਖਾਲੀ_ਸੂਚਕ)) {
+        *ਸਥਿਤੀ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
 
 
     /* pass itemKey=nullptr to look for a top-level item */
-    return _getStringOrCopyKey(U_ICUDATA_LANG, displayLocale,
-                               _kKeys, nullptr,
+    ਵਾਪਸ get_String_Or_Copy_ਕੁੰਜੀ(U_ICUDATA_LANG, displayLocale,
+                               k_ਕੁੰਜੀਆਂ, ਖਾਲੀ_ਸੂਚਕ,
                                keyword, 
                                keyword,      
-                               dest, destCapacity,
-                               *status);
+                               dest, dest_ਸਮਰੱਥਾ,
+                               *ਸਥਿਤੀ);
 
 }
 
 
-#define UCURRENCY_DISPLAY_NAME_INDEX 1
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCURRENCY_DISPLAY_NAME_ਸੂਚਕਾਂਕ 1
 
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayKeywordValue(   const char* locale,
-                               const char* keyword,
-                               const char* displayLocale,
+uloc_get_Display_Keyword_ਮੁੱਲ(   ਅਚਲ ਅੱਖਰ* locale,
+                               ਅਚਲ ਅੱਖਰ* keyword,
+                               ਅਚਲ ਅੱਖਰ* displayLocale,
                                char16_t* dest,
-                               int32_t destCapacity,
-                               UErrorCode* status){
+                               int32_t dest_ਸਮਰੱਥਾ,
+                               UError_ਕੋਡ* ਸਥਿਤੀ){
 
 
     /* argument checking */
-    if(status==nullptr || U_FAILURE(*status)) {
-        return 0;
+    ਜੇ(ਸਥਿਤੀ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*ਸਥਿਤੀ)) {
+        ਵਾਪਸ 0;
     }
 
-    if(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
-        *status=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ਜੇ(dest_ਸਮਰੱਥਾ<0 || (dest_ਸਮਰੱਥਾ>0 && dest==ਖਾਲੀ_ਸੂਚਕ)) {
+        *ਸਥਿਤੀ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
 
     /* get the keyword value */
-    CharString keywordValue;
-    if (keyword != nullptr && *keyword != '\0') {
-        keywordValue = ulocimp_getKeywordValue(locale, keyword, *status);
+    CharString keyword_ਮੁੱਲ;
+    ਜੇ (keyword != ਖਾਲੀ_ਸੂਚਕ && *keyword != '\0') {
+        keyword_ਮੁੱਲ = ulocimp_get_Keyword_ਮੁੱਲ(locale, keyword, *ਸਥਿਤੀ);
     }
 
     /* 
      * if the keyword is equal to currency .. then to get the display name 
      * we need to do the fallback ourselves
      */
-    if(uprv_stricmp(keyword, _kCurrency)==0){
+    ਜੇ(uprv_stricmp(keyword, _kCurrency)==0){
 
         int32_t dispNameLen = 0;
-        const char16_t *dispName = nullptr;
+        ਅਚਲ char16_t *dispName = ਖਾਲੀ_ਸੂਚਕ;
 
-        icu::LocalUResourceBundlePointer bundle(
-                ures_open(U_ICUDATA_CURR, displayLocale, status));
-        icu::LocalUResourceBundlePointer currencies(
-                ures_getByKey(bundle.getAlias(), _kCurrencies, nullptr, status));
-        icu::LocalUResourceBundlePointer currency(
-                ures_getByKeyWithFallback(currencies.getAlias(), keywordValue.data(), nullptr, status));
+        icu::Local_UResource_Bundle_ਸੂਚਕ bundle(
+                ures_open(U_ICUDATA_CURR, displayLocale, ਸਥਿਤੀ));
+        icu::Local_UResource_Bundle_ਸੂਚਕ currencies(
+                ures_get_By_ਕੁੰਜੀ(bundle.getAlias(), _kCurrencies, ਖਾਲੀ_ਸੂਚਕ, ਸਥਿਤੀ));
+        icu::Local_UResource_Bundle_ਸੂਚਕ currency(
+                ures_get_By_ਕੁੰਜੀ_With_Fallback(currencies.getAlias(), keyword_ਮੁੱਲ.ਅੰਕੜੇ(), ਖਾਲੀ_ਸੂਚਕ, ਸਥਿਤੀ));
 
-        dispName = ures_getStringByIndex(currency.getAlias(), UCURRENCY_DISPLAY_NAME_INDEX, &dispNameLen, status);
+        dispName = ures_get_String_By_ਸੂਚਕਾਂਕ(currency.getAlias(), UCURRENCY_DISPLAY_NAME_ਸੂਚਕਾਂਕ, &dispNameLen, ਸਥਿਤੀ);
 
-        if(U_FAILURE(*status)){
-            if(*status == U_MISSING_RESOURCE_ERROR){
+        ਜੇ(U_FAILURE(*ਸਥਿਤੀ)){
+            ਜੇ(*ਸਥਿਤੀ == U_MISSING_RESOURCE_ERROR){
                 /* we just want to write the value over if nothing is available */
-                *status = U_USING_DEFAULT_WARNING;
-            }else{
-                return 0;
+                *ਸਥਿਤੀ = U_USING_DEFAULT_WARNING;
+            }ਨਹੀਂਤਾਂ{
+                ਵਾਪਸ 0;
             }
         }
 
         /* now copy the dispName over if not nullptr */
-        if(dispName != nullptr){
-            if(dispNameLen <= destCapacity){
+        ਜੇ(dispName != ਖਾਲੀ_ਸੂਚਕ){
+            ਜੇ(dispNameLen <= dest_ਸਮਰੱਥਾ){
                 u_memcpy(dest, dispName, dispNameLen);
-                return u_terminateUChars(dest, destCapacity, dispNameLen, status);
-            }else{
-                *status = U_BUFFER_OVERFLOW_ERROR;
-                return dispNameLen;
+                ਵਾਪਸ u_terminateUChars(dest, dest_ਸਮਰੱਥਾ, dispNameLen, ਸਥਿਤੀ);
+            }ਨਹੀਂਤਾਂ{
+                *ਸਥਿਤੀ = U_ਬਫਰ_ਉਛਾਲ_ERROR;
+                ਵਾਪਸ dispNameLen;
             }
-        }else{
+        }ਨਹੀਂਤਾਂ{
             /* we have not found the display name for the value .. just copy over */
-            if(keywordValue.length() <= destCapacity){
-                u_charsToUChars(keywordValue.data(), dest, keywordValue.length());
-                return u_terminateUChars(dest, destCapacity, keywordValue.length(), status);
-            }else{
-                 *status = U_BUFFER_OVERFLOW_ERROR;
-                return keywordValue.length();
+            ਜੇ(keyword_ਮੁੱਲ.length() <= dest_ਸਮਰੱਥਾ){
+                u_chars_ਮੰਜ਼ਿਲ_UChars(keyword_ਮੁੱਲ.ਅੰਕੜੇ(), dest, keyword_ਮੁੱਲ.length());
+                ਵਾਪਸ u_terminateUChars(dest, dest_ਸਮਰੱਥਾ, keyword_ਮੁੱਲ.length(), ਸਥਿਤੀ);
+            }ਨਹੀਂਤਾਂ{
+                 *ਸਥਿਤੀ = U_ਬਫਰ_ਉਛਾਲ_ERROR;
+                ਵਾਪਸ keyword_ਮੁੱਲ.length();
             }
         }
 
         
-    }else{
+    }ਨਹੀਂਤਾਂ{
 
-        return _getStringOrCopyKey(U_ICUDATA_LANG, displayLocale,
+        ਵਾਪਸ get_String_Or_Copy_ਕੁੰਜੀ(U_ICUDATA_LANG, displayLocale,
                                    _kTypes, keyword, 
-                                   keywordValue.data(),
-                                   keywordValue.data(),
-                                   dest, destCapacity,
-                                   *status);
+                                   keyword_ਮੁੱਲ.ਅੰਕੜੇ(),
+                                   keyword_ਮੁੱਲ.ਅੰਕੜੇ(),
+                                   dest, dest_ਸਮਰੱਥਾ,
+                                   *ਸਥਿਤੀ);
     }
 }

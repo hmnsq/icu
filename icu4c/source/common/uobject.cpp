@@ -16,12 +16,12 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/uobject.h"
-#include "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uobject.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
-#if U_OVERRIDE_CXX_ALLOCATION
+#ਜੇ U_OVERRIDE_CXX_ਵੰਡ
 
 /*
  * Default implementation of UMemory::new/delete
@@ -58,48 +58,48 @@ U_NAMESPACE_BEGIN
  * and replace with uprv_malloc/uprv_free.
  */
 
-void * U_EXPORT2 UMemory::operator new(size_t size) noexcept {
-    return uprv_malloc(size);
+ਖਾਲੀ * U_EXPORT2 UMemory::ਸੰਚਾਲਕ ਨਵਾਂ(size_t size) noexcept {
+    ਵਾਪਸ uprv_malloc(size);
 }
 
-void U_EXPORT2 UMemory::operator delete(void *p) noexcept {
-    if(p!=nullptr) {
+ਖਾਲੀ U_EXPORT2 UMemory::ਸੰਚਾਲਕ ਮਿਟਾਓ(ਖਾਲੀ *p) noexcept {
+    ਜੇ(p!=ਖਾਲੀ_ਸੂਚਕ) {
         uprv_free(p);
     }
 }
 
-void * U_EXPORT2 UMemory::operator new[](size_t size) noexcept {
-    return uprv_malloc(size);
+ਖਾਲੀ * U_EXPORT2 UMemory::ਸੰਚਾਲਕ ਨਵਾਂ[](size_t size) noexcept {
+    ਵਾਪਸ uprv_malloc(size);
 }
 
-void U_EXPORT2 UMemory::operator delete[](void *p) noexcept {
-    if(p!=nullptr) {
+ਖਾਲੀ U_EXPORT2 UMemory::ਸੰਚਾਲਕ ਮਿਟਾਓ[](ਖਾਲੀ *p) noexcept {
+    ਜੇ(p!=ਖਾਲੀ_ਸੂਚਕ) {
         uprv_free(p);
     }
 }
 
-#if U_HAVE_DEBUG_LOCATION_NEW
-void * U_EXPORT2 UMemory::operator new(size_t size, const char* /*file*/, int /*line*/) noexcept {
-    return UMemory::operator new(size);
+#ਜੇ U_HAVE_DEBUG_LOCATION_NEW
+ਖਾਲੀ * U_EXPORT2 UMemory::ਸੰਚਾਲਕ ਨਵਾਂ(size_t size, ਅਚਲ ਅੱਖਰ* /*file*/, ਪੂਰਨ /*ਸਤਰ*/) noexcept {
+    ਵਾਪਸ UMemory::ਸੰਚਾਲਕ ਨਵਾਂ(size);
 }
 
-void U_EXPORT2 UMemory::operator delete(void* p, const char* /*file*/, int /*line*/) noexcept {
-    UMemory::operator delete(p);
+ਖਾਲੀ U_EXPORT2 UMemory::ਸੰਚਾਲਕ ਮਿਟਾਓ(ਖਾਲੀ* p, ਅਚਲ ਅੱਖਰ* /*file*/, ਪੂਰਨ /*ਸਤਰ*/) noexcept {
+    UMemory::ਸੰਚਾਲਕ ਮਿਟਾਓ(p);
 }
-#endif /* U_HAVE_DEBUG_LOCATION_NEW */
+#ਜੇ_ਅੰਤ /* U_HAVE_DEBUG_LOCATION_NEW */
 
 
-#endif
+#ਜੇ_ਅੰਤ
 
 UObject::~UObject() {}
 
-UClassID UObject::getDynamicClassID() const { return nullptr; }
+UClassID UObject::getDynamicClassID() ਅਚਲ { ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ; }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
 U_NAMESPACE_USE
 
-U_CAPI void U_EXPORT2
-uprv_deleteUObject(void *obj) {
-    delete static_cast<UObject *>(obj);
+U_CAPI ਖਾਲੀ U_EXPORT2
+uprv_deleteUObject(ਖਾਲੀ *obj) {
+    ਮਿਟਾਓ static_cast<UObject *>(obj);
 }

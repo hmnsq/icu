@@ -17,15 +17,15 @@
 ******************************************************************************
 */
 
-#ifndef SCHRITER_H
-#define SCHRITER_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ SCHRITER_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ SCHRITER_H
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/chariter.h"
-#include "unicode/uchriter.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/chariter.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uchriter.h"
 
 /**
  * \file 
@@ -45,8 +45,8 @@ U_NAMESPACE_BEGIN
  * @see ForwardCharacterIterator
  * @stable ICU 2.0
  */
-class U_COMMON_API StringCharacterIterator : public UCharCharacterIterator {
-public:
+class U_COMMON_API StringCharacterIterator : ਜਨਤਕ UCharCharacterIterator {
+ਜਨਤਕ:
   /**
    * Create an iterator over the UnicodeString referred to by "textStr".
    * The UnicodeString object is copied.
@@ -54,7 +54,7 @@ public:
    * @param textStr The unicode string used to create an iterator
    * @stable ICU 2.0
    */
-  StringCharacterIterator(const UnicodeString& textStr);
+  StringCharacterIterator(ਅਚਲ UnicodeString& ਪਾਠ_Str);
 
   /**
    * Create an iterator over the UnicodeString referred to by "textStr".
@@ -65,8 +65,8 @@ public:
    * @param textPos The starting position of the iteration
    * @stable ICU 2.0
    */
-  StringCharacterIterator(const UnicodeString&    textStr,
-              int32_t              textPos);
+  StringCharacterIterator(ਅਚਲ UnicodeString&    ਪਾਠ_Str,
+              int32_t              ਪਾਠ_Pos);
 
   /**
    * Create an iterator over the UnicodeString referred to by "textStr".
@@ -84,10 +84,10 @@ public:
    * @param textPos    The starting position of the iteration
    * @stable ICU 2.0
    */
-  StringCharacterIterator(const UnicodeString&    textStr,
-              int32_t              textBegin,
-              int32_t              textEnd,
-              int32_t              textPos);
+  StringCharacterIterator(ਅਚਲ UnicodeString&    ਪਾਠ_Str,
+              int32_t              ਪਾਠ_Begin,
+              int32_t              ਪਾਠ_ਸਿਰਾ,
+              int32_t              ਪਾਠ_Pos);
 
   /**
    * Copy constructor.  The new iterator iterates over the same range
@@ -97,13 +97,13 @@ public:
    * @param that The StringCharacterIterator to be copied
    * @stable ICU 2.0
    */
-  StringCharacterIterator(const StringCharacterIterator&  that);
+  StringCharacterIterator(ਅਚਲ StringCharacterIterator&  that);
 
   /**
    * Destructor.
    * @stable ICU 2.0
    */
-  virtual ~StringCharacterIterator();
+  ਆਭਾਸੀ ~StringCharacterIterator();
 
   /**
    * Assignment operator.  *this is altered to iterate over the same
@@ -113,7 +113,7 @@ public:
    * @return the newly created object.
    * @stable ICU 2.0
    */
-  StringCharacterIterator& operator=(const StringCharacterIterator& that) U_LIFETIME_BOUND;
+  StringCharacterIterator& ਸੰਚਾਲਕ=(ਅਚਲ StringCharacterIterator& that) U_LIFETIME_BOUND;
 
   /**
    * Returns true if the iterators iterate over the same range of the
@@ -123,7 +123,7 @@ public:
    * same string and are pointing at the same character.
    * @stable ICU 2.0
    */
-  virtual bool           operator==(const ForwardCharacterIterator& that) const override;
+  ਆਭਾਸੀ bool           ਸੰਚਾਲਕ==(ਅਚਲ ForwardCharacterIterator& that) ਅਚਲ override;
 
   /**
    * Returns a new StringCharacterIterator referring to the same
@@ -132,14 +132,14 @@ public:
    * @return the newly cloned object.
    * @stable ICU 2.0
    */
-  virtual StringCharacterIterator* clone() const override;
+  ਆਭਾਸੀ StringCharacterIterator* clone() ਅਚਲ override;
 
   /**
    * Sets the iterator to iterate over the provided string.
    * @param newText The string to be iterated over
    * @stable ICU 2.0
    */
-  void setText(const UnicodeString& newText);
+  ਖਾਲੀ ਸੈੱਟ_ਪਾਠ(ਅਚਲ UnicodeString& new_ਪਾਠ);
 
   /**
    * Copies the UnicodeString under iteration into the UnicodeString
@@ -148,23 +148,23 @@ public:
    * @param result Receives a copy of the text under iteration.
    * @stable ICU 2.0
    */
-  virtual void            getText(UnicodeString& result) override;
+  ਆਭਾਸੀ ਖਾਲੀ            get_ਪਾਠ(UnicodeString& ਨਤੀਜਾ) override;
 
   /**
    * Return a class ID for this object (not really public)
    * @return a class ID for this object.
    * @stable ICU 2.0
    */
-  virtual UClassID getDynamicClassID() const override;
+  ਆਭਾਸੀ UClassID getDynamicClassID() ਅਚਲ override;
 
   /**
    * Return a class ID for this class (not really public)
    * @return a class ID for this class
    * @stable ICU 2.0
    */
-  static UClassID U_EXPORT2 getStaticClassID();
+  ਸਥਿਰ UClassID U_EXPORT2 getStaticClassID();
 
-protected:
+ਸੁਰੱਖਿਅਤ:
   /**
    * Default constructor, iteration over empty string.
    * @stable ICU 2.0
@@ -175,12 +175,12 @@ protected:
    * Copy of the iterated string object.
    * @stable ICU 2.0
    */
-  UnicodeString            text;
+  UnicodeString            ਪਾਠ;
 
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ਜੇ_ਅੰਤ /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#ਜੇ_ਅੰਤ

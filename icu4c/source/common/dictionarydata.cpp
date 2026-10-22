@@ -11,25 +11,25 @@
 * created by: Markus W. Scherer & Maxime Serrano
 */
 
-#include "dictionarydata.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/bytestrie.h"
-#include "unicode/udata.h"
-#include "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "dictionarydata.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ucharstrie.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/bytestrie.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/udata.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ਜੇ !UCONFIG_NO_BREAK_ITERATION
 
 U_NAMESPACE_BEGIN
 
-const int32_t  DictionaryData::TRIE_TYPE_BYTES = 0;
-const int32_t  DictionaryData::TRIE_TYPE_UCHARS = 1;
-const int32_t  DictionaryData::TRIE_TYPE_MASK = 7;
-const int32_t  DictionaryData::TRIE_HAS_VALUES = 8;
+ਅਚਲ int32_t  Dictionary_ਅੰਕੜੇ::TRIE_TYPE_ਬਾਈਟਾਂ = 0;
+ਅਚਲ int32_t  Dictionary_ਅੰਕੜੇ::TRIE_TYPE_UCHARS = 1;
+ਅਚਲ int32_t  Dictionary_ਅੰਕੜੇ::TRIE_TYPE_ਨਕਾਬ = 7;
+ਅਚਲ int32_t  Dictionary_ਅੰਕੜੇ::TRIE_HAS_ਮੁੱਲਾਂ = 8;
 
-const int32_t  DictionaryData::TRANSFORM_NONE = 0;
-const int32_t  DictionaryData::TRANSFORM_TYPE_OFFSET = 0x1000000;
-const int32_t  DictionaryData::TRANSFORM_TYPE_MASK = 0x7f000000;
-const int32_t  DictionaryData::TRANSFORM_OFFSET_MASK = 0x1fffff;
+ਅਚਲ int32_t  Dictionary_ਅੰਕੜੇ::TRANSFORM_NONE = 0;
+ਅਚਲ int32_t  Dictionary_ਅੰਕੜੇ::TRANSFORM_TYPE_ਵਿੱਥ = 0x1000000;
+ਅਚਲ int32_t  Dictionary_ਅੰਕੜੇ::TRANSFORM_TYPE_ਨਕਾਬ = 0x7f000000;
+ਅਚਲ int32_t  Dictionary_ਅੰਕੜੇ::TRANSFORM_ਵਿੱਥ_ਨਕਾਬ = 0x1fffff;
     
 DictionaryMatcher::~DictionaryMatcher() {
 }
@@ -38,205 +38,205 @@ UCharsDictionaryMatcher::~UCharsDictionaryMatcher() {
     udata_close(file);
 }
 
-int32_t UCharsDictionaryMatcher::getType() const {
-    return DictionaryData::TRIE_TYPE_UCHARS;
+int32_t UCharsDictionaryMatcher::getType() ਅਚਲ {
+    ਵਾਪਸ Dictionary_ਅੰਕੜੇ::TRIE_TYPE_UCHARS;
 }
 
-int32_t UCharsDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const {
+int32_t UCharsDictionaryMatcher::matches(UText *ਪਾਠ, int32_t max_ਲੰਮਾਈ_2, int32_t ਹੱਦਬੰਦੀ,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *ਮੁੱਲਾਂ,
+                            int32_t *ਅਗੇਤਰ) ਅਚਲ {
 
     UCharsTrie uct(characters);
-    int32_t startingTextIndex = static_cast<int32_t>(utext_getNativeIndex(text));
-    int32_t wordCount = 0;
-    int32_t codePointsMatched = 0;
+    int32_t starting_ਪਾਠ_ਸੂਚਕਾਂਕ = static_cast<int32_t>(utext_get_Native_ਸੂਚਕਾਂਕ(ਪਾਠ));
+    int32_t ਸ਼ਬਦ_ਗਿਣਤੀ = 0;
+    int32_t ਕੋਡ_Points_Matched = 0;
 
-    for (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
-        UStringTrieResult result = (codePointsMatched == 0) ? uct.first(c) : uct.next(c);
-        int32_t lengthMatched = static_cast<int32_t>(utext_getNativeIndex(text)) - startingTextIndex;
-        codePointsMatched += 1;
-        if (USTRINGTRIE_HAS_VALUE(result)) {
-            if (wordCount < limit) {
-                if (values != nullptr) {
-                    values[wordCount] = uct.getValue();
+    ਲਈ (UChar32 c = utext_next32(ਪਾਠ); c >= 0; c=utext_next32(ਪਾਠ)) {
+        UString_Trie_ਨਤੀਜਾ ਨਤੀਜਾ = (ਕੋਡ_Points_Matched == 0) ? uct.first(c) : uct.next(c);
+        int32_t ਲੰਮਾਈ_Matched = static_cast<int32_t>(utext_get_Native_ਸੂਚਕਾਂਕ(ਪਾਠ)) - starting_ਪਾਠ_ਸੂਚਕਾਂਕ;
+        ਕੋਡ_Points_Matched += 1;
+        ਜੇ (USTRINGTRIE_HAS_ਮੁੱਲ(ਨਤੀਜਾ)) {
+            ਜੇ (ਸ਼ਬਦ_ਗਿਣਤੀ < ਹੱਦਬੰਦੀ) {
+                ਜੇ (ਮੁੱਲਾਂ != ਖਾਲੀ_ਸੂਚਕ) {
+                    ਮੁੱਲਾਂ[ਸ਼ਬਦ_ਗਿਣਤੀ] = uct.get_ਮੁੱਲ();
                 }
-                if (lengths != nullptr) {
-                    lengths[wordCount] = lengthMatched;
+                ਜੇ (lengths != ਖਾਲੀ_ਸੂਚਕ) {
+                    lengths[ਸ਼ਬਦ_ਗਿਣਤੀ] = ਲੰਮਾਈ_Matched;
                 }
-                if (cpLengths != nullptr) {
-                    cpLengths[wordCount] = codePointsMatched;
+                ਜੇ (cpLengths != ਖਾਲੀ_ਸੂਚਕ) {
+                    cpLengths[ਸ਼ਬਦ_ਗਿਣਤੀ] = ਕੋਡ_Points_Matched;
                 }
-                ++wordCount;
+                ++ਸ਼ਬਦ_ਗਿਣਤੀ;
             }
-            if (result == USTRINGTRIE_FINAL_VALUE) {
-                break;
+            ਜੇ (ਨਤੀਜਾ == USTRINGTRIE_FINAL_ਮੁੱਲ) {
+                ਰੋਕੋ;
             }
         }
-        else if (result == USTRINGTRIE_NO_MATCH) {
-            break;
+        ਨਹੀਂਤਾਂ ਜੇ (ਨਤੀਜਾ == USTRINGTRIE_NO_ਮੇਲ) {
+            ਰੋਕੋ;
         }
-        if (lengthMatched >= maxLength) {
-            break;
+        ਜੇ (ਲੰਮਾਈ_Matched >= max_ਲੰਮਾਈ_2) {
+            ਰੋਕੋ;
         }
     }
 
-    if (prefix != nullptr) {
-        *prefix = codePointsMatched;
+    ਜੇ (ਅਗੇਤਰ != ਖਾਲੀ_ਸੂਚਕ) {
+        *ਅਗੇਤਰ = ਕੋਡ_Points_Matched;
     }
-    return wordCount;
+    ਵਾਪਸ ਸ਼ਬਦ_ਗਿਣਤੀ;
 }
 
-BytesDictionaryMatcher::~BytesDictionaryMatcher() {
+ਬਾਈਟਾਂ_Dictionary_Matcher::~ਬਾਈਟਾਂ_Dictionary_Matcher() {
     udata_close(file);
 }
 
-UChar32 BytesDictionaryMatcher::transform(UChar32 c) const {
-    if ((transformConstant & DictionaryData::TRANSFORM_TYPE_MASK) == DictionaryData::TRANSFORM_TYPE_OFFSET) {
-        if (c == 0x200D) {
-            return 0xFF;
-        } else if (c == 0x200C) {
-            return 0xFE;
+UChar32 ਬਾਈਟਾਂ_Dictionary_Matcher::transform(UChar32 c) ਅਚਲ {
+    ਜੇ ((transformConstant & Dictionary_ਅੰਕੜੇ::TRANSFORM_TYPE_ਨਕਾਬ) == Dictionary_ਅੰਕੜੇ::TRANSFORM_TYPE_ਵਿੱਥ) {
+        ਜੇ (c == 0x200D) {
+            ਵਾਪਸ 0xFF;
+        } ਨਹੀਂਤਾਂ ਜੇ (c == 0x200C) {
+            ਵਾਪਸ 0xFE;
         }
-        int32_t delta = c - (transformConstant & DictionaryData::TRANSFORM_OFFSET_MASK);
-        if (delta < 0 || 0xFD < delta) {
-            return U_SENTINEL;
+        int32_t delta = c - (transformConstant & Dictionary_ਅੰਕੜੇ::TRANSFORM_ਵਿੱਥ_ਨਕਾਬ);
+        ਜੇ (delta < 0 || 0xFD < delta) {
+            ਵਾਪਸ U_SENTINEL;
         }
-        return static_cast<UChar32>(delta);
+        ਵਾਪਸ static_cast<UChar32>(delta);
     }
-    return c;
+    ਵਾਪਸ c;
 }
 
-int32_t BytesDictionaryMatcher::getType() const {
-    return DictionaryData::TRIE_TYPE_BYTES;
+int32_t ਬਾਈਟਾਂ_Dictionary_Matcher::getType() ਅਚਲ {
+    ਵਾਪਸ Dictionary_ਅੰਕੜੇ::TRIE_TYPE_ਬਾਈਟਾਂ;
 }
 
-int32_t BytesDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const {
-    BytesTrie bt(characters);
-    int32_t startingTextIndex = static_cast<int32_t>(utext_getNativeIndex(text));
-    int32_t wordCount = 0;
-    int32_t codePointsMatched = 0;
+int32_t ਬਾਈਟਾਂ_Dictionary_Matcher::matches(UText *ਪਾਠ, int32_t max_ਲੰਮਾਈ_2, int32_t ਹੱਦਬੰਦੀ,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *ਮੁੱਲਾਂ,
+                            int32_t *ਅਗੇਤਰ) ਅਚਲ {
+    ਬਾਈਟਾਂ_Trie bt(characters);
+    int32_t starting_ਪਾਠ_ਸੂਚਕਾਂਕ = static_cast<int32_t>(utext_get_Native_ਸੂਚਕਾਂਕ(ਪਾਠ));
+    int32_t ਸ਼ਬਦ_ਗਿਣਤੀ = 0;
+    int32_t ਕੋਡ_Points_Matched = 0;
 
-    for (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
-        UStringTrieResult result = (codePointsMatched == 0) ? bt.first(transform(c)) : bt.next(transform(c));
-        int32_t lengthMatched = static_cast<int32_t>(utext_getNativeIndex(text)) - startingTextIndex;
-        codePointsMatched += 1;
-        if (USTRINGTRIE_HAS_VALUE(result)) {
-            if (wordCount < limit) {
-                if (values != nullptr) {
-                    values[wordCount] = bt.getValue();
+    ਲਈ (UChar32 c = utext_next32(ਪਾਠ); c >= 0; c=utext_next32(ਪਾਠ)) {
+        UString_Trie_ਨਤੀਜਾ ਨਤੀਜਾ = (ਕੋਡ_Points_Matched == 0) ? bt.first(transform(c)) : bt.next(transform(c));
+        int32_t ਲੰਮਾਈ_Matched = static_cast<int32_t>(utext_get_Native_ਸੂਚਕਾਂਕ(ਪਾਠ)) - starting_ਪਾਠ_ਸੂਚਕਾਂਕ;
+        ਕੋਡ_Points_Matched += 1;
+        ਜੇ (USTRINGTRIE_HAS_ਮੁੱਲ(ਨਤੀਜਾ)) {
+            ਜੇ (ਸ਼ਬਦ_ਗਿਣਤੀ < ਹੱਦਬੰਦੀ) {
+                ਜੇ (ਮੁੱਲਾਂ != ਖਾਲੀ_ਸੂਚਕ) {
+                    ਮੁੱਲਾਂ[ਸ਼ਬਦ_ਗਿਣਤੀ] = bt.get_ਮੁੱਲ();
                 }
-                if (lengths != nullptr) {
-                    lengths[wordCount] = lengthMatched;
+                ਜੇ (lengths != ਖਾਲੀ_ਸੂਚਕ) {
+                    lengths[ਸ਼ਬਦ_ਗਿਣਤੀ] = ਲੰਮਾਈ_Matched;
                 }
-                if (cpLengths != nullptr) {
-                    cpLengths[wordCount] = codePointsMatched;
+                ਜੇ (cpLengths != ਖਾਲੀ_ਸੂਚਕ) {
+                    cpLengths[ਸ਼ਬਦ_ਗਿਣਤੀ] = ਕੋਡ_Points_Matched;
                 }
-                ++wordCount;
+                ++ਸ਼ਬਦ_ਗਿਣਤੀ;
             }
-            if (result == USTRINGTRIE_FINAL_VALUE) {
-                break;
+            ਜੇ (ਨਤੀਜਾ == USTRINGTRIE_FINAL_ਮੁੱਲ) {
+                ਰੋਕੋ;
             }
         }
-        else if (result == USTRINGTRIE_NO_MATCH) {
-            break;
+        ਨਹੀਂਤਾਂ ਜੇ (ਨਤੀਜਾ == USTRINGTRIE_NO_ਮੇਲ) {
+            ਰੋਕੋ;
         }
-        if (lengthMatched >= maxLength) {
-            break;
+        ਜੇ (ਲੰਮਾਈ_Matched >= max_ਲੰਮਾਈ_2) {
+            ਰੋਕੋ;
         }
     }
 
-    if (prefix != nullptr) {
-        *prefix = codePointsMatched;
+    ਜੇ (ਅਗੇਤਰ != ਖਾਲੀ_ਸੂਚਕ) {
+        *ਅਗੇਤਰ = ਕੋਡ_Points_Matched;
     }
-    return wordCount;
+    ਵਾਪਸ ਸ਼ਬਦ_ਗਿਣਤੀ;
 }
 
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
 U_NAMESPACE_USE
 
 U_CAPI int32_t U_EXPORT2
-udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
-           void *outData, UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
-    int32_t headerSize;
-    const uint8_t *inBytes;
-    uint8_t *outBytes;
-    const int32_t *inIndexes;
-    int32_t indexes[DictionaryData::IX_COUNT];
-    int32_t i, offset, size;
+udict_ਅਦਲਾ_ਬਦਲੀ(ਅਚਲ UDataSwapper *ds, ਅਚਲ ਖਾਲੀ *ਵਿੱਚ_ਅੰਕੜੇ, int32_t length,
+           ਖਾਲੀ *ਬਾਹਰਲਾ_ਅੰਕੜੇ, UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਅਚਲ UDataInfo *pInfo;
+    int32_t ਸਿਰਲੇਖ_ਮਾਪ;
+    ਅਚਲ uint8_t *ਵਿੱਚ_ਬਾਈਟਾਂ;
+    uint8_t *ਬਾਹਰਲਾ_ਬਾਈਟਾਂ;
+    ਅਚਲ int32_t *ਵਿੱਚ_Indexes;
+    int32_t indexes[Dictionary_ਅੰਕੜੇ::IX_ਗਿਣਤੀ];
+    int32_t i, ਵਿੱਥ, size;
 
-    headerSize = udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) return 0;
-    pInfo = (const UDataInfo *)((const char *)inData + 4);
-    if (!(pInfo->dataFormat[0] == 0x44 && 
-          pInfo->dataFormat[1] == 0x69 && 
-          pInfo->dataFormat[2] == 0x63 && 
-          pInfo->dataFormat[3] == 0x74 && 
-          pInfo->formatVersion[0] == 1)) {
+    ਸਿਰਲੇਖ_ਮਾਪ = udata_ਅਦਲਾ_ਬਦਲੀ_ਅੰਕੜੇ_ਸਿਰਲੇਖ(ds, ਵਿੱਚ_ਅੰਕੜੇ, length, ਬਾਹਰਲਾ_ਅੰਕੜੇ, p_Error_ਕੋਡ);
+    ਜੇ (p_Error_ਕੋਡ == ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) ਵਾਪਸ 0;
+    pInfo = (ਅਚਲ UDataInfo *)((ਅਚਲ ਅੱਖਰ *)ਵਿੱਚ_ਅੰਕੜੇ + 4);
+    ਜੇ (!(pInfo->ਅੰਕੜੇ_Format[0] == 0x44 && 
+          pInfo->ਅੰਕੜੇ_Format[1] == 0x69 && 
+          pInfo->ਅੰਕੜੇ_Format[2] == 0x63 && 
+          pInfo->ਅੰਕੜੇ_Format[3] == 0x74 && 
+          pInfo->format_ਸੰਸਕਰਣ[0] == 1)) {
         udata_printError(ds, "udict_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized as dictionary data\n",
-                         pInfo->dataFormat[0], pInfo->dataFormat[1], pInfo->dataFormat[2], pInfo->dataFormat[3], pInfo->formatVersion[0]);
-        *pErrorCode = U_UNSUPPORTED_ERROR;
-        return 0;
+                         pInfo->ਅੰਕੜੇ_Format[0], pInfo->ਅੰਕੜੇ_Format[1], pInfo->ਅੰਕੜੇ_Format[2], pInfo->ਅੰਕੜੇ_Format[3], pInfo->format_ਸੰਸਕਰਣ[0]);
+        *p_Error_ਕੋਡ = U_UNSUPPORTED_ERROR;
+        ਵਾਪਸ 0;
     }
 
-    inBytes = (const uint8_t *)inData + headerSize;
-    outBytes = (outData == nullptr) ? nullptr : (uint8_t *)outData + headerSize;
+    ਵਿੱਚ_ਬਾਈਟਾਂ = (ਅਚਲ uint8_t *)ਵਿੱਚ_ਅੰਕੜੇ + ਸਿਰਲੇਖ_ਮਾਪ;
+    ਬਾਹਰਲਾ_ਬਾਈਟਾਂ = (ਬਾਹਰਲਾ_ਅੰਕੜੇ == ਖਾਲੀ_ਸੂਚਕ) ? ਖਾਲੀ_ਸੂਚਕ : (uint8_t *)ਬਾਹਰਲਾ_ਅੰਕੜੇ + ਸਿਰਲੇਖ_ਮਾਪ;
 
-    inIndexes = (const int32_t *)inBytes;
-    if (length >= 0) {
-        length -= headerSize;
-        if (length < (int32_t)(sizeof(indexes))) {
+    ਵਿੱਚ_Indexes = (ਅਚਲ int32_t *)ਵਿੱਚ_ਬਾਈਟਾਂ;
+    ਜੇ (length >= 0) {
+        length -= ਸਿਰਲੇਖ_ਮਾਪ;
+        ਜੇ (length < (int32_t)(ਆਕਾਰ(indexes))) {
             udata_printError(ds, "udict_swap(): too few bytes (%d after header) for dictionary data\n", length);
-            *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *p_Error_ਕੋਡ = U_ਸੂਚਕਾਂਕ_OUTOFBOUNDS_ERROR;
+            ਵਾਪਸ 0;
         }
     }
 
-    for (i = 0; i < DictionaryData::IX_COUNT; i++) {
-        indexes[i] = udata_readInt32(ds, inIndexes[i]);
+    ਲਈ (i = 0; i < Dictionary_ਅੰਕੜੇ::IX_ਗਿਣਤੀ; i++) {
+        indexes[i] = udata_readInt32(ds, ਵਿੱਚ_Indexes[i]);
     }
 
-    size = indexes[DictionaryData::IX_TOTAL_SIZE];
+    size = indexes[Dictionary_ਅੰਕੜੇ::IX_ਕੁੱਲ_ਮਾਪ];
 
-    if (length >= 0) {
-        if (length < size) {
+    ਜੇ (length >= 0) {
+        ਜੇ (length < size) {
             udata_printError(ds, "udict_swap(): too few bytes (%d after header) for all of dictionary data\n", length);
-            *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *p_Error_ਕੋਡ = U_ਸੂਚਕਾਂਕ_OUTOFBOUNDS_ERROR;
+            ਵਾਪਸ 0;
         }
 
-        if (inBytes != outBytes) {
-            uprv_memcpy(outBytes, inBytes, size);
+        ਜੇ (ਵਿੱਚ_ਬਾਈਟਾਂ != ਬਾਹਰਲਾ_ਬਾਈਟਾਂ) {
+            uprv_memcpy(ਬਾਹਰਲਾ_ਬਾਈਟਾਂ, ਵਿੱਚ_ਬਾਈਟਾਂ, size);
         }
 
-        offset = 0;
-        ds->swapArray32(ds, inBytes, sizeof(indexes), outBytes, pErrorCode);
-        offset = (int32_t)sizeof(indexes);
-        int32_t trieType = indexes[DictionaryData::IX_TRIE_TYPE] & DictionaryData::TRIE_TYPE_MASK;
-        int32_t nextOffset = indexes[DictionaryData::IX_RESERVED1_OFFSET];
+        ਵਿੱਥ = 0;
+        ds->ਅਦਲਾ_ਬਦਲੀ_Array32(ds, ਵਿੱਚ_ਬਾਈਟਾਂ, ਆਕਾਰ(indexes), ਬਾਹਰਲਾ_ਬਾਈਟਾਂ, p_Error_ਕੋਡ);
+        ਵਿੱਥ = (int32_t)ਆਕਾਰ(indexes);
+        int32_t trieType = indexes[Dictionary_ਅੰਕੜੇ::IX_TRIE_TYPE] & Dictionary_ਅੰਕੜੇ::TRIE_TYPE_ਨਕਾਬ;
+        int32_t ਅਗਲਾ_ਵਿੱਥ = indexes[Dictionary_ਅੰਕੜੇ::IX_RESERVED1_ਵਿੱਥ];
 
-        if (trieType == DictionaryData::TRIE_TYPE_UCHARS) {
-            ds->swapArray16(ds, inBytes + offset, nextOffset - offset, outBytes + offset, pErrorCode);
-        } else if (trieType == DictionaryData::TRIE_TYPE_BYTES) {
+        ਜੇ (trieType == Dictionary_ਅੰਕੜੇ::TRIE_TYPE_UCHARS) {
+            ds->ਅਦਲਾ_ਬਦਲੀ_Array16(ds, ਵਿੱਚ_ਬਾਈਟਾਂ + ਵਿੱਥ, ਅਗਲਾ_ਵਿੱਥ - ਵਿੱਥ, ਬਾਹਰਲਾ_ਬਾਈਟਾਂ + ਵਿੱਥ, p_Error_ਕੋਡ);
+        } ਨਹੀਂਤਾਂ ਜੇ (trieType == Dictionary_ਅੰਕੜੇ::TRIE_TYPE_ਬਾਈਟਾਂ) {
             // nothing to do
-        } else {
+        } ਨਹੀਂਤਾਂ {
             udata_printError(ds, "udict_swap(): unknown trie type!\n");
-            *pErrorCode = U_UNSUPPORTED_ERROR;
-            return 0;
+            *p_Error_ਕੋਡ = U_UNSUPPORTED_ERROR;
+            ਵਾਪਸ 0;
         }
 
         // these next two sections are empty in the current format,
         // but may be used later.
-        offset = nextOffset;
-        nextOffset = indexes[DictionaryData::IX_RESERVED2_OFFSET];
-        offset = nextOffset;
-        nextOffset = indexes[DictionaryData::IX_TOTAL_SIZE];
-        offset = nextOffset;
+        ਵਿੱਥ = ਅਗਲਾ_ਵਿੱਥ;
+        ਅਗਲਾ_ਵਿੱਥ = indexes[Dictionary_ਅੰਕੜੇ::IX_RESERVED2_ਵਿੱਥ];
+        ਵਿੱਥ = ਅਗਲਾ_ਵਿੱਥ;
+        ਅਗਲਾ_ਵਿੱਥ = indexes[Dictionary_ਅੰਕੜੇ::IX_ਕੁੱਲ_ਮਾਪ];
+        ਵਿੱਥ = ਅਗਲਾ_ਵਿੱਥ;
     }
-    return headerSize + size;
+    ਵਾਪਸ ਸਿਰਲੇਖ_ਮਾਪ + size;
 }
-#endif
+#ਜੇ_ਅੰਤ

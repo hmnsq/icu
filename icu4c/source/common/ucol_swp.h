@@ -18,41 +18,41 @@
 *   Swap collation binaries.
 */
 
-#ifndef __UCOL_SWP_H__
-#define __UCOL_SWP_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __UCOL_SWP_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __UCOL_SWP_H__
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if !UCONFIG_NO_COLLATION
+#ਜੇ !UCONFIG_NO_COLLATION
 
-#include "udataswp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "udataswp.h"
 
 /*
  * Does the data look like a collation binary?
  * @internal
  */
 U_CAPI UBool U_EXPORT2
-ucol_looksLikeCollationBinary(const UDataSwapper *ds,
-                              const void *inData, int32_t length);
+ucol_looks_Like_Collation_ਦੁਆਧਾਰੀ(ਅਚਲ UDataSwapper *ds,
+                              ਅਚਲ ਖਾਲੀ *ਵਿੱਚ_ਅੰਕੜੇ, int32_t ਲੰਮਾਈ);
 
 /**
  * Swap ICU collation data like ucadata.icu. See udataswp.h.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ucol_swap(const UDataSwapper *ds,
-          const void *inData, int32_t length, void *outData,
-          UErrorCode *pErrorCode);
+ucol_ਅਦਲਾ_ਬਦਲੀ(ਅਚਲ UDataSwapper *ds,
+          ਅਚਲ ਖਾਲੀ *ਵਿੱਚ_ਅੰਕੜੇ, int32_t ਲੰਮਾਈ, ਖਾਲੀ *ਬਾਹਰਲਾ_ਅੰਕੜੇ,
+          UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Swap inverse UCA collation data (invuca.icu). See udataswp.h.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ucol_swapInverseUCA(const UDataSwapper *ds,
-                    const void *inData, int32_t length, void *outData,
-                    UErrorCode *pErrorCode);
+ucol_ਅਦਲਾ_ਬਦਲੀ_Inverse_UCA(ਅਚਲ UDataSwapper *ds,
+                    ਅਚਲ ਖਾਲੀ *ਵਿੱਚ_ਅੰਕੜੇ, int32_t ਲੰਮਾਈ, ਖਾਲੀ *ਬਾਹਰਲਾ_ਅੰਕੜੇ,
+                    UError_ਕੋਡ *p_Error_ਕੋਡ);
 
-#endif /* #if !UCONFIG_NO_COLLATION */
+#ਜੇ_ਅੰਤ /* #if !UCONFIG_NO_COLLATION */
 
-#endif
+#ਜੇ_ਅੰਤ

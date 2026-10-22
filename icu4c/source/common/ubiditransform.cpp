@@ -15,29 +15,29 @@
 *
 */
 
-#include "cmemory.h"
-#include "unicode/ubidi.h"
-#include "unicode/ustring.h"
-#include "unicode/ushape.h"
-#include "unicode/utf16.h"
-#include "ustr_imp.h"
-#include "unicode/ubiditransform.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ubidi.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ustring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ushape.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf16.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ustr_imp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ubiditransform.h"
 
 /* Some convenience defines */
-#define LTR                     UBIDI_LTR
-#define RTL                     UBIDI_RTL
-#define LOGICAL                 UBIDI_LOGICAL
-#define VISUAL                  UBIDI_VISUAL
-#define SHAPE_LOGICAL           U_SHAPE_TEXT_DIRECTION_LOGICAL
-#define SHAPE_VISUAL            U_SHAPE_TEXT_DIRECTION_VISUAL_LTR
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LTR                     UBIDI_LTR
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ RTL                     UBIDI_RTL
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LOGICAL                 UBIDI_LOGICAL
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ VISUAL                  UBIDI_VISUAL
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ SHAPE_LOGICAL           U_SHAPE_ਪਾਠ_DIRECTION_LOGICAL
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ SHAPE_VISUAL            U_SHAPE_ਪਾਠ_DIRECTION_VISUAL_LTR
 
-#define CHECK_LEN(STR, LEN, ERROR) UPRV_BLOCK_MACRO_BEGIN { \
-    if (LEN == 0) return 0; \
-    if (LEN < -1) { *(ERROR) = U_ILLEGAL_ARGUMENT_ERROR; return 0; } \
-    if (LEN == -1) LEN = u_strlen(STR); \
-} UPRV_BLOCK_MACRO_END
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CHECK_LEN(STR, LEN, ERROR) UPRV_ਖੰਡ_MACRO_BEGIN { \
+    ਜੇ (LEN == 0) ਵਾਪਸ 0; \
+    ਜੇ (LEN < -1) { *(ERROR) = U_ILLEGAL_ਦਲੀਲ_ERROR; ਵਾਪਸ 0; } \
+    ਜੇ (LEN == -1) LEN = u_strlen(STR); \
+} UPRV_ਖੰਡ_MACRO_ਸਿਰਾ
 
-#define MAX_ACTIONS     7
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MAX_ACTIONS     7
 
 /**
  * Typedef for a pointer to a function, which performs some operation (such as
@@ -45,7 +45,7 @@
  * indicates whether the text was changed in the course of this operation or
  * not.
  */
-typedef UBool (*UBiDiAction)(UBiDiTransform *, UErrorCode *);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ UBool (*UBiDiAction)(UBiDiTransform *, UError_ਕੋਡ *);
 
 /**
  * Structure that holds a predefined reordering scheme, including the following
@@ -64,52 +64,52 @@ typedef UBool (*UBiDiAction)(UBiDiTransform *, UErrorCode *);
  *     transformation.</li>
  * </ul>
  */
-typedef struct {
-    UBiDiLevel        inLevel;               /* input level */
-    UBiDiOrder        inOrder;               /* input order */
-    UBiDiLevel        outLevel;              /* output level */
-    UBiDiOrder        outOrder;              /* output order */
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ {
+    UBiDiLevel        ਵਿੱਚ_Level;               /* input level */
+    UBi_Di_ਕ੍ਰਮ        ਵਿੱਚ_ਕ੍ਰਮ;               /* input order */
+    UBiDiLevel        ਬਾਹਰਲਾ_Level;              /* output level */
+    UBi_Di_ਕ੍ਰਮ        ਬਾਹਰਲਾ_ਕ੍ਰਮ;              /* output order */
     uint32_t          digitsDir;             /* digit shaping direction */
     uint32_t          lettersDir;            /* letter shaping direction */
-    UBiDiLevel        baseLevel;             /* paragraph level to be used with setPara */
-    const UBiDiAction actions[MAX_ACTIONS];  /* array of pointers to functions carrying out the transformation */
+    UBiDiLevel        ਅਧਾਰ_Level;             /* paragraph level to be used with setPara */
+    ਅਚਲ UBiDiAction actions[MAX_ACTIONS];  /* array of pointers to functions carrying out the transformation */
 } ReorderingScheme;
 
-struct UBiDiTransform {
+ਬਣਤਰ UBiDiTransform {
     UBiDi                   *pBidi;             /* pointer to a UBiDi object */
-    const ReorderingScheme  *pActiveScheme;     /* effective reordering scheme */
+    ਅਚਲ ReorderingScheme  *p_ਸਰਗਰਮ_Scheme;     /* effective reordering scheme */
     char16_t                *src;               /* input text */
     char16_t                *dest;              /* output text */
-    uint32_t                srcLength;          /* input text length - not really needed as we are zero-terminated and can u_strlen */
-    uint32_t                srcSize;            /* input text capacity excluding the trailing zero */
-    uint32_t                destSize;           /* output text capacity */
-    uint32_t                *pDestLength;       /* number of UChars written to dest */
+    uint32_t                src_ਲੰਮਾਈ;          /* input text length - not really needed as we are zero-terminated and can u_strlen */
+    uint32_t                src_ਮਾਪ;            /* input text capacity excluding the trailing zero */
+    uint32_t                dest_ਮਾਪ;           /* output text capacity */
+    uint32_t                *p_Dest_ਲੰਮਾਈ;       /* number of UChars written to dest */
     uint32_t                reorderingOptions;  /* reordering options - currently only suppot DO_MIRRORING */
     uint32_t                digits;             /* digit option for ArabicShaping */
     uint32_t                letters;            /* letter option for ArabicShaping */
 };
 
 U_CAPI UBiDiTransform* U_EXPORT2
-ubiditransform_open(UErrorCode *pErrorCode)
+ubiditransform_open(UError_ਕੋਡ *p_Error_ਕੋਡ)
 {
-    UBiDiTransform *pBiDiTransform = nullptr;
-    if (U_SUCCESS(*pErrorCode)) {
-        pBiDiTransform = (UBiDiTransform*) uprv_calloc(1, sizeof(UBiDiTransform));
-        if (pBiDiTransform == nullptr) {
-            *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
+    UBiDiTransform *pBiDiTransform = ਖਾਲੀ_ਸੂਚਕ;
+    ਜੇ (U_SUCCESS(*p_Error_ਕੋਡ)) {
+        pBiDiTransform = (UBiDiTransform*) uprv_calloc(1, ਆਕਾਰ(UBiDiTransform));
+        ਜੇ (pBiDiTransform == ਖਾਲੀ_ਸੂਚਕ) {
+            *p_Error_ਕੋਡ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
         }
     }
-    return pBiDiTransform;
+    ਵਾਪਸ pBiDiTransform;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ਖਾਲੀ U_EXPORT2
 ubiditransform_close(UBiDiTransform *pBiDiTransform)
 {
-    if (pBiDiTransform != nullptr) {
-        if (pBiDiTransform->pBidi != nullptr) {
+    ਜੇ (pBiDiTransform != ਖਾਲੀ_ਸੂਚਕ) {
+        ਜੇ (pBiDiTransform->pBidi != ਖਾਲੀ_ਸੂਚਕ) {
             ubidi_close(pBiDiTransform->pBidi);
         }
-        if (pBiDiTransform->src != nullptr) {
+        ਜੇ (pBiDiTransform->src != ਖਾਲੀ_ਸੂਚਕ) {
             uprv_free(pBiDiTransform->src);
         }
         uprv_free(pBiDiTransform);
@@ -125,12 +125,12 @@ ubiditransform_close(UBiDiTransform *pBiDiTransform)
  * @return Whether or not this function modifies the text. Besides the return
  * value, the caller should also check <code>U_SUCCESS(*pErrorCode)</code>.
  */
-static UBool
-action_resolve(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
+ਸਥਿਰ UBool
+action_resolve(UBiDiTransform *pTransform, UError_ਕੋਡ *p_Error_ਕੋਡ)
 {
-    ubidi_setPara(pTransform->pBidi, pTransform->src, pTransform->srcLength,
-            pTransform->pActiveScheme->baseLevel, nullptr, pErrorCode);
-    return false;
+    ubidi_ਸੈੱਟ_Para(pTransform->pBidi, pTransform->src, pTransform->src_ਲੰਮਾਈ,
+            pTransform->p_ਸਰਗਰਮ_Scheme->ਅਧਾਰ_Level, ਖਾਲੀ_ਸੂਚਕ, p_Error_ਕੋਡ);
+    ਵਾਪਸ ਝੂਠ;
 }
 
 /**
@@ -142,15 +142,15 @@ action_resolve(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
  * @return Whether or not this function modifies the text. Besides the return
  * value, the caller should also check <code>U_SUCCESS(*pErrorCode)</code>.
  */
-static UBool
-action_reorder(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
+ਸਥਿਰ UBool
+action_reorder(UBiDiTransform *pTransform, UError_ਕੋਡ *p_Error_ਕੋਡ)
 {
-    ubidi_writeReordered(pTransform->pBidi, pTransform->dest, pTransform->destSize,
-            static_cast<uint16_t>(pTransform->reorderingOptions), pErrorCode);
+    ubidi_writeReordered(pTransform->pBidi, pTransform->dest, pTransform->dest_ਮਾਪ,
+            static_cast<uint16_t>(pTransform->reorderingOptions), p_Error_ਕੋਡ);
 
-    *pTransform->pDestLength = pTransform->srcLength;
+    *pTransform->p_Dest_ਲੰਮਾਈ = pTransform->src_ਲੰਮਾਈ;
     pTransform->reorderingOptions = UBIDI_REORDER_DEFAULT;
-    return true;
+    ਵਾਪਸ ਸੱਚ;
 }
 
 /**
@@ -162,13 +162,13 @@ action_reorder(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
  * @return Whether or not this function modifies the text. Besides the return
  * value, the caller should also check <code>U_SUCCESS(*pErrorCode)</code>.
  */
-static UBool
-action_setInverse(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
+ਸਥਿਰ UBool
+action_ਸੈੱਟ_Inverse(UBiDiTransform *pTransform, UError_ਕੋਡ *p_Error_ਕੋਡ)
 {
-    (void)pErrorCode;
-    ubidi_setInverse(pTransform->pBidi, true);
-    ubidi_setReorderingMode(pTransform->pBidi, UBIDI_REORDER_INVERSE_LIKE_DIRECT);
-    return false;
+    (ਖਾਲੀ)p_Error_ਕੋਡ;
+    ubidi_ਸੈੱਟ_Inverse(pTransform->pBidi, ਸੱਚ);
+    ubidi_ਸੈੱਟ_Reordering_ਬਹੁਲਕ(pTransform->pBidi, UBIDI_REORDER_INVERSE_LIKE_ਸਿੱਧਾ);
+    ਵਾਪਸ ਝੂਠ;
 }
 
 /**
@@ -181,12 +181,12 @@ action_setInverse(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
  * @return Whether or not this function modifies the text. Besides the return
  * value, the caller should also check <code>U_SUCCESS(*pErrorCode)</code>.
  */
-static UBool
-action_setRunsOnly(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
+ਸਥਿਰ UBool
+action_ਸੈੱਟ_Runs_Only(UBiDiTransform *pTransform, UError_ਕੋਡ *p_Error_ਕੋਡ)
 {
-    (void)pErrorCode;
-    ubidi_setReorderingMode(pTransform->pBidi, UBIDI_REORDER_RUNS_ONLY);
-    return false;
+    (ਖਾਲੀ)p_Error_ਕੋਡ;
+    ubidi_ਸੈੱਟ_Reordering_ਬਹੁਲਕ(pTransform->pBidi, UBIDI_REORDER_RUNS_ONLY);
+    ਵਾਪਸ ਝੂਠ;
 }
 
 /**
@@ -198,14 +198,14 @@ action_setRunsOnly(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
  * @return Whether or not this function modifies the text. Besides the return
  * value, the caller should also check <code>U_SUCCESS(*pErrorCode)</code>.
  */
-static UBool
-action_reverse(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
+ਸਥਿਰ UBool
+action_ਉਲਟ(UBiDiTransform *pTransform, UError_ਕੋਡ *p_Error_ਕੋਡ)
 {
-    ubidi_writeReverse(pTransform->src, pTransform->srcLength,
-            pTransform->dest, pTransform->destSize,
-            UBIDI_REORDER_DEFAULT, pErrorCode);
-    *pTransform->pDestLength = pTransform->srcLength;
-    return true;
+    ubidi_write_ਉਲਟ(pTransform->src, pTransform->src_ਲੰਮਾਈ,
+            pTransform->dest, pTransform->dest_ਮਾਪ,
+            UBIDI_REORDER_DEFAULT, p_Error_ਕੋਡ);
+    *pTransform->p_Dest_ਲੰਮਾਈ = pTransform->src_ਲੰਮਾਈ;
+    ਵਾਪਸ ਸੱਚ;
 }
 
 /**
@@ -219,31 +219,31 @@ action_reverse(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
  * @param newSize A new source capacity in <code>char16_t</code>s.
  * @param pErrorCode Pointer to the error code value.
  */
-static void
-updateSrc(UBiDiTransform *pTransform, const char16_t *newSrc, uint32_t newLength,
-        uint32_t newSize, UErrorCode *pErrorCode)
+ਸਥਿਰ ਖਾਲੀ
+updateSrc(UBiDiTransform *pTransform, ਅਚਲ char16_t *newSrc, uint32_t new_ਲੰਮਾਈ,
+        uint32_t new_ਮਾਪ, UError_ਕੋਡ *p_Error_ਕੋਡ)
 {
-    if (newSize < newLength) {
-        *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
-        return;
+    ਜੇ (new_ਮਾਪ < new_ਲੰਮਾਈ) {
+        *p_Error_ਕੋਡ = U_ਬਫਰ_ਉਛਾਲ_ERROR;
+        ਵਾਪਸ;
     }
-    if (newSize > pTransform->srcSize) {
-        newSize += 50; // allocate slightly more than needed right now
-        if (pTransform->src != nullptr) {
+    ਜੇ (new_ਮਾਪ > pTransform->src_ਮਾਪ) {
+        new_ਮਾਪ += 50; // allocate slightly more than needed right now
+        ਜੇ (pTransform->src != ਖਾਲੀ_ਸੂਚਕ) {
             uprv_free(pTransform->src);
-            pTransform->src = nullptr;
+            pTransform->src = ਖਾਲੀ_ਸੂਚਕ;
         }
-        pTransform->src = static_cast<char16_t*>(uprv_malloc(newSize * sizeof(char16_t)));
-        if (pTransform->src == nullptr) {
-            *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
+        pTransform->src = static_cast<char16_t*>(uprv_malloc(new_ਮਾਪ * ਆਕਾਰ(char16_t)));
+        ਜੇ (pTransform->src == ਖਾਲੀ_ਸੂਚਕ) {
+            *p_Error_ਕੋਡ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
             //pTransform->srcLength = pTransform->srcSize = 0;
-            return;
+            ਵਾਪਸ;
         }
-        pTransform->srcSize = newSize;
+        pTransform->src_ਮਾਪ = new_ਮਾਪ;
     }
-    u_strncpy(pTransform->src, newSrc, newLength);
-    pTransform->srcLength = u_terminateUChars(pTransform->src,
-    		pTransform->srcSize, newLength, pErrorCode);
+    u_strncpy(pTransform->src, newSrc, new_ਲੰਮਾਈ);
+    pTransform->src_ਲੰਮਾਈ = u_terminateUChars(pTransform->src,
+    		pTransform->src_ਮਾਪ, new_ਲੰਮਾਈ, p_Error_ਕੋਡ);
 }
 
 /**
@@ -253,12 +253,12 @@ updateSrc(UBiDiTransform *pTransform, const char16_t *newSrc, uint32_t newLength
  * @param options Shaping options.
  * @param pErrorCode Pointer to the error code value.
  */
-static void
-doShape(UBiDiTransform *pTransform, uint32_t options, UErrorCode *pErrorCode)
+ਸਥਿਰ ਖਾਲੀ
+doShape(UBiDiTransform *pTransform, uint32_t options, UError_ਕੋਡ *p_Error_ਕੋਡ)
 {
-    *pTransform->pDestLength = u_shapeArabic(pTransform->src,
-            pTransform->srcLength, pTransform->dest, pTransform->destSize,
-            options, pErrorCode);
+    *pTransform->p_Dest_ਲੰਮਾਈ = u_shapeArabic(pTransform->src,
+            pTransform->src_ਲੰਮਾਈ, pTransform->dest, pTransform->dest_ਮਾਪ,
+            options, p_Error_ਕੋਡ);
 }
 
 /**
@@ -270,25 +270,25 @@ doShape(UBiDiTransform *pTransform, uint32_t options, UErrorCode *pErrorCode)
  * @return Whether or not this function modifies the text. Besides the return
  * value, the caller should also check <code>U_SUCCESS(*pErrorCode)</code>.
  */
-static UBool
-action_shapeArabic(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
+ਸਥਿਰ UBool
+action_shapeArabic(UBiDiTransform *pTransform, UError_ਕੋਡ *p_Error_ਕੋਡ)
 {
-    if ((pTransform->letters | pTransform->digits) == 0) {
-        return false;
+    ਜੇ ((pTransform->letters | pTransform->digits) == 0) {
+        ਵਾਪਸ ਝੂਠ;
     }
-    if (pTransform->pActiveScheme->lettersDir == pTransform->pActiveScheme->digitsDir) {
-        doShape(pTransform, pTransform->letters | pTransform->digits | pTransform->pActiveScheme->lettersDir,
-                pErrorCode);
-    } else {
-        doShape(pTransform, pTransform->digits | pTransform->pActiveScheme->digitsDir, pErrorCode);
-        if (U_SUCCESS(*pErrorCode)) {
-            updateSrc(pTransform, pTransform->dest, *pTransform->pDestLength,
-                    *pTransform->pDestLength, pErrorCode);
-            doShape(pTransform, pTransform->letters | pTransform->pActiveScheme->lettersDir,
-                    pErrorCode);
+    ਜੇ (pTransform->p_ਸਰਗਰਮ_Scheme->lettersDir == pTransform->p_ਸਰਗਰਮ_Scheme->digitsDir) {
+        doShape(pTransform, pTransform->letters | pTransform->digits | pTransform->p_ਸਰਗਰਮ_Scheme->lettersDir,
+                p_Error_ਕੋਡ);
+    } ਨਹੀਂਤਾਂ {
+        doShape(pTransform, pTransform->digits | pTransform->p_ਸਰਗਰਮ_Scheme->digitsDir, p_Error_ਕੋਡ);
+        ਜੇ (U_SUCCESS(*p_Error_ਕੋਡ)) {
+            updateSrc(pTransform, pTransform->dest, *pTransform->p_Dest_ਲੰਮਾਈ,
+                    *pTransform->p_Dest_ਲੰਮਾਈ, p_Error_ਕੋਡ);
+            doShape(pTransform, pTransform->letters | pTransform->p_ਸਰਗਰਮ_Scheme->lettersDir,
+                    p_Error_ਕੋਡ);
         }
     }
-    return true;
+    ਵਾਪਸ ਸੱਚ;
 }
 
 /**
@@ -300,124 +300,124 @@ action_shapeArabic(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
  * @return Whether or not this function modifies the text. Besides the return
  * value, the caller should also check <code>U_SUCCESS(*pErrorCode)</code>.
  */
-static UBool
-action_mirror(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
+ਸਥਿਰ UBool
+action_mirror(UBiDiTransform *pTransform, UError_ਕੋਡ *p_Error_ਕੋਡ)
 {
     UChar32 c;
     uint32_t i = 0, j = 0;
-    if (0 == (pTransform->reorderingOptions & UBIDI_DO_MIRRORING)) {
-        return false;
+    ਜੇ (0 == (pTransform->reorderingOptions & UBIDI_DO_MIRRORING)) {
+        ਵਾਪਸ ਝੂਠ;
     }
-    do {
+    ਕਰੋ {
         UBool isOdd = ubidi_getLevelAt(pTransform->pBidi, i) & 1;
-        U16_NEXT(pTransform->src, i, pTransform->srcLength, c); 
-        if (isOdd) {
+        U16_ਅਗਲਾ(pTransform->src, i, pTransform->src_ਲੰਮਾਈ, c); 
+        ਜੇ (isOdd) {
             c = u_charMirror(c);
         }
-        uint32_t k = U16_LENGTH(c);
-        if (j + k <= pTransform->destSize) {
+        uint32_t k = U16_ਲੰਮਾਈ(c);
+        ਜੇ (j + k <= pTransform->dest_ਮਾਪ) {
             U16_APPEND_UNSAFE(pTransform->dest, j, c);
-        } else {
+        } ਨਹੀਂਤਾਂ {
             j += k;
         }
-    } while (i < pTransform->srcLength);
+    } ਜਦੋਂ (i < pTransform->src_ਲੰਮਾਈ);
     
-    *pTransform->pDestLength = j;
-    if (pTransform->destSize < j) {
-        *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
-        return false;
+    *pTransform->p_Dest_ਲੰਮਾਈ = j;
+    ਜੇ (pTransform->dest_ਮਾਪ < j) {
+        *p_Error_ਕੋਡ = U_ਬਫਰ_ਉਛਾਲ_ERROR;
+        ਵਾਪਸ ਝੂਠ;
     }
     pTransform->reorderingOptions = UBIDI_REORDER_DEFAULT;
-    return true;
+    ਵਾਪਸ ਸੱਚ;
 }
 
 /**
  * All possible reordering schemes.
  *
  */
-static const ReorderingScheme Schemes[] =
+ਸਥਿਰ ਅਚਲ ReorderingScheme Schemes[] =
 {
     /* 0: Logical LTR => Visual LTR */
     {LTR, LOGICAL, LTR, VISUAL, SHAPE_LOGICAL, SHAPE_LOGICAL, LTR,
-            {action_shapeArabic, action_resolve, action_reorder, nullptr}},
+            {action_shapeArabic, action_resolve, action_reorder, ਖਾਲੀ_ਸੂਚਕ}},
     /* 1: Logical RTL => Visual LTR */
     {RTL, LOGICAL, LTR, VISUAL, SHAPE_LOGICAL, SHAPE_VISUAL, RTL,
-            {action_resolve, action_reorder, action_shapeArabic, nullptr}},
+            {action_resolve, action_reorder, action_shapeArabic, ਖਾਲੀ_ਸੂਚਕ}},
     /* 2: Logical LTR => Visual RTL */
     {LTR, LOGICAL, RTL, VISUAL, SHAPE_LOGICAL, SHAPE_LOGICAL, LTR,
-            {action_shapeArabic, action_resolve, action_reorder, action_reverse, nullptr}},
+            {action_shapeArabic, action_resolve, action_reorder, action_ਉਲਟ, ਖਾਲੀ_ਸੂਚਕ}},
     /* 3: Logical RTL => Visual RTL */
     {RTL, LOGICAL, RTL, VISUAL, SHAPE_LOGICAL, SHAPE_VISUAL, RTL,
-            {action_resolve, action_reorder, action_shapeArabic, action_reverse, nullptr}},
+            {action_resolve, action_reorder, action_shapeArabic, action_ਉਲਟ, ਖਾਲੀ_ਸੂਚਕ}},
     /* 4: Visual LTR => Logical RTL */
     {LTR, VISUAL, RTL, LOGICAL, SHAPE_LOGICAL, SHAPE_VISUAL, RTL,
-            {action_shapeArabic, action_setInverse, action_resolve, action_reorder, nullptr}},
+            {action_shapeArabic, action_ਸੈੱਟ_Inverse, action_resolve, action_reorder, ਖਾਲੀ_ਸੂਚਕ}},
     /* 5: Visual RTL => Logical RTL */
     {RTL, VISUAL, RTL, LOGICAL, SHAPE_LOGICAL, SHAPE_VISUAL, RTL,
-            {action_reverse, action_shapeArabic, action_setInverse, action_resolve, action_reorder, nullptr}},
+            {action_ਉਲਟ, action_shapeArabic, action_ਸੈੱਟ_Inverse, action_resolve, action_reorder, ਖਾਲੀ_ਸੂਚਕ}},
     /* 6: Visual LTR => Logical LTR */
     {LTR, VISUAL, LTR, LOGICAL, SHAPE_LOGICAL, SHAPE_LOGICAL, LTR,
-            {action_setInverse, action_resolve, action_reorder, action_shapeArabic, nullptr}},
+            {action_ਸੈੱਟ_Inverse, action_resolve, action_reorder, action_shapeArabic, ਖਾਲੀ_ਸੂਚਕ}},
     /* 7: Visual RTL => Logical LTR */
     {RTL, VISUAL, LTR, LOGICAL, SHAPE_LOGICAL, SHAPE_LOGICAL, LTR,
-            {action_reverse, action_setInverse, action_resolve, action_reorder, action_shapeArabic, nullptr}},
+            {action_ਉਲਟ, action_ਸੈੱਟ_Inverse, action_resolve, action_reorder, action_shapeArabic, ਖਾਲੀ_ਸੂਚਕ}},
     /* 8: Logical LTR => Logical RTL */
     {LTR, LOGICAL, RTL, LOGICAL, SHAPE_LOGICAL, SHAPE_LOGICAL, LTR,
-            {action_shapeArabic, action_resolve, action_mirror, action_setRunsOnly, action_resolve, action_reorder, nullptr}},
+            {action_shapeArabic, action_resolve, action_mirror, action_ਸੈੱਟ_Runs_Only, action_resolve, action_reorder, ਖਾਲੀ_ਸੂਚਕ}},
     /* 9: Logical RTL => Logical LTR */
     {RTL, LOGICAL, LTR, LOGICAL, SHAPE_LOGICAL, SHAPE_LOGICAL, RTL,
-            {action_resolve, action_mirror, action_setRunsOnly, action_resolve, action_reorder, action_shapeArabic, nullptr}},
+            {action_resolve, action_mirror, action_ਸੈੱਟ_Runs_Only, action_resolve, action_reorder, action_shapeArabic, ਖਾਲੀ_ਸੂਚਕ}},
     /* 10: Visual LTR => Visual RTL */
     {LTR, VISUAL, RTL, VISUAL, SHAPE_LOGICAL, SHAPE_VISUAL, LTR,
-            {action_shapeArabic, action_setInverse, action_resolve, action_mirror, action_reverse, nullptr}},
+            {action_shapeArabic, action_ਸੈੱਟ_Inverse, action_resolve, action_mirror, action_ਉਲਟ, ਖਾਲੀ_ਸੂਚਕ}},
     /* 11: Visual RTL => Visual LTR */
     {RTL, VISUAL, LTR, VISUAL, SHAPE_LOGICAL, SHAPE_VISUAL, LTR,
-            {action_reverse, action_shapeArabic, action_setInverse, action_resolve, action_mirror, nullptr}},
+            {action_ਉਲਟ, action_shapeArabic, action_ਸੈੱਟ_Inverse, action_resolve, action_mirror, ਖਾਲੀ_ਸੂਚਕ}},
     /* 12: Logical LTR => Logical LTR */
     {LTR, LOGICAL, LTR, LOGICAL, SHAPE_LOGICAL, SHAPE_LOGICAL, LTR,
-            {action_resolve, action_mirror, action_shapeArabic, nullptr}},
+            {action_resolve, action_mirror, action_shapeArabic, ਖਾਲੀ_ਸੂਚਕ}},
     /* 13: Logical RTL => Logical RTL */
     {RTL, LOGICAL, RTL, LOGICAL, SHAPE_VISUAL, SHAPE_LOGICAL, RTL,
-            {action_resolve, action_mirror, action_shapeArabic, nullptr}},
+            {action_resolve, action_mirror, action_shapeArabic, ਖਾਲੀ_ਸੂਚਕ}},
     /* 14: Visual LTR => Visual LTR */
     {LTR, VISUAL, LTR, VISUAL, SHAPE_LOGICAL, SHAPE_VISUAL, LTR,
-            {action_resolve, action_mirror, action_shapeArabic, nullptr}},
+            {action_resolve, action_mirror, action_shapeArabic, ਖਾਲੀ_ਸੂਚਕ}},
     /* 15: Visual RTL => Visual RTL */
     {RTL, VISUAL, RTL, VISUAL, SHAPE_LOGICAL, SHAPE_VISUAL, LTR,
-            {action_reverse, action_resolve, action_mirror, action_shapeArabic, action_reverse, nullptr}}
+            {action_ਉਲਟ, action_resolve, action_mirror, action_shapeArabic, action_ਉਲਟ, ਖਾਲੀ_ਸੂਚਕ}}
 };
 
-static const uint32_t nSchemes = sizeof(Schemes) / sizeof(*Schemes);
+ਸਥਿਰ ਅਚਲ uint32_t nSchemes = ਆਕਾਰ(Schemes) / ਆਕਾਰ(*Schemes);
 
 /**
  * When the direction option is <code>UBIDI_DEFAULT_LTR</code> or
  * <code>UBIDI_DEFAULT_RTL</code>, resolve the base direction according to that
  * of the first strong bidi character.
  */
-static void
-resolveBaseDirection(const char16_t *text, uint32_t length,
-        UBiDiLevel *pInLevel, UBiDiLevel *pOutLevel)
+ਸਥਿਰ ਖਾਲੀ
+resolve_ਅਧਾਰ_Direction(ਅਚਲ char16_t *ਪਾਠ, uint32_t length,
+        UBiDiLevel *p_ਵਿੱਚ_Level, UBiDiLevel *p_ਬਾਹਰਲਾ_Level)
 {
-    switch (*pInLevel) {
-        case UBIDI_DEFAULT_LTR:
-        case UBIDI_DEFAULT_RTL: {
-            UBiDiLevel level = static_cast<UBiDiLevel>(ubidi_getBaseDirection(text, length));
-            *pInLevel = static_cast<UBiDiLevel>(level != UBIDI_NEUTRAL) ? level
-                    : *pInLevel == UBIDI_DEFAULT_RTL ? static_cast<UBiDiLevel>(RTL) : static_cast<UBiDiLevel>(LTR);
-            break;
+    ਚੋਣ (*p_ਵਿੱਚ_Level) {
+        ਹਾਲਤ UBIDI_DEFAULT_LTR:
+        ਹਾਲਤ UBIDI_DEFAULT_RTL: {
+            UBiDiLevel level = static_cast<UBiDiLevel>(ubidi_get_ਅਧਾਰ_Direction(ਪਾਠ, length));
+            *p_ਵਿੱਚ_Level = static_cast<UBiDiLevel>(level != UBIDI_NEUTRAL) ? level
+                    : *p_ਵਿੱਚ_Level == UBIDI_DEFAULT_RTL ? static_cast<UBiDiLevel>(RTL) : static_cast<UBiDiLevel>(LTR);
+            ਰੋਕੋ;
         }
-        default:
-            *pInLevel &= 1;
-            break;
+        ਮੂਲ:
+            *p_ਵਿੱਚ_Level &= 1;
+            ਰੋਕੋ;
     }
-    switch (*pOutLevel) {
-        case UBIDI_DEFAULT_LTR:
-        case UBIDI_DEFAULT_RTL:
-            *pOutLevel = *pInLevel;
-            break;
-        default:
-            *pOutLevel &= 1;
-            break;
+    ਚੋਣ (*p_ਬਾਹਰਲਾ_Level) {
+        ਹਾਲਤ UBIDI_DEFAULT_LTR:
+        ਹਾਲਤ UBIDI_DEFAULT_RTL:
+            *p_ਬਾਹਰਲਾ_Level = *p_ਵਿੱਚ_Level;
+            ਰੋਕੋ;
+        ਮੂਲ:
+            *p_ਬਾਹਰਲਾ_Level &= 1;
+            ਰੋਕੋ;
     }
 }
 
@@ -427,112 +427,112 @@ resolveBaseDirection(const char16_t *text, uint32_t length,
  * 
  * @return A valid <code>ReorderingScheme</code> object or nullptr
  */
-static const ReorderingScheme*
-findMatchingScheme(UBiDiLevel inLevel, UBiDiLevel outLevel,
-        UBiDiOrder inOrder, UBiDiOrder outOrder)
+ਸਥਿਰ ਅਚਲ ReorderingScheme*
+ਲੱਭੋ_Matching_Scheme(UBiDiLevel ਵਿੱਚ_Level, UBiDiLevel ਬਾਹਰਲਾ_Level,
+        UBi_Di_ਕ੍ਰਮ ਵਿੱਚ_ਕ੍ਰਮ, UBi_Di_ਕ੍ਰਮ ਬਾਹਰਲਾ_ਕ੍ਰਮ)
 {
     uint32_t i;
-    for (i = 0; i < nSchemes; i++) {
-        const ReorderingScheme *pScheme = Schemes + i;
-        if (inLevel == pScheme->inLevel && outLevel == pScheme->outLevel
-                && inOrder == pScheme->inOrder && outOrder == pScheme->outOrder) {
-            return pScheme;
+    ਲਈ (i = 0; i < nSchemes; i++) {
+        ਅਚਲ ReorderingScheme *pScheme = Schemes + i;
+        ਜੇ (ਵਿੱਚ_Level == pScheme->ਵਿੱਚ_Level && ਬਾਹਰਲਾ_Level == pScheme->ਬਾਹਰਲਾ_Level
+                && ਵਿੱਚ_ਕ੍ਰਮ == pScheme->ਵਿੱਚ_ਕ੍ਰਮ && ਬਾਹਰਲਾ_ਕ੍ਰਮ == pScheme->ਬਾਹਰਲਾ_ਕ੍ਰਮ) {
+            ਵਾਪਸ pScheme;
         }
     }
-    return nullptr;
+    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
 }
 
 U_CAPI uint32_t U_EXPORT2
 ubiditransform_transform(UBiDiTransform *pBiDiTransform,
-            const char16_t *src, int32_t srcLength,
-            char16_t *dest, int32_t destSize,
-            UBiDiLevel inParaLevel, UBiDiOrder inOrder,
-            UBiDiLevel outParaLevel, UBiDiOrder outOrder,
+            ਅਚਲ char16_t *src, int32_t src_ਲੰਮਾਈ,
+            char16_t *dest, int32_t dest_ਮਾਪ,
+            UBiDiLevel ਵਿੱਚ_Para_Level, UBi_Di_ਕ੍ਰਮ ਵਿੱਚ_ਕ੍ਰਮ,
+            UBiDiLevel ਬਾਹਰਲਾ_Para_Level, UBi_Di_ਕ੍ਰਮ ਬਾਹਰਲਾ_ਕ੍ਰਮ,
             UBiDiMirroring doMirroring, uint32_t shapingOptions,
-            UErrorCode *pErrorCode)
+            UError_ਕੋਡ *p_Error_ਕੋਡ)
 {
-    uint32_t destLength = 0;
-    UBool textChanged = false;
-    const UBiDiTransform *pOrigTransform = pBiDiTransform;
-    const UBiDiAction *action = nullptr;
+    uint32_t dest_ਲੰਮਾਈ = 0;
+    UBool ਪਾਠ_ਬਦਲਿਆ = ਝੂਠ;
+    ਅਚਲ UBiDiTransform *pOrigTransform = pBiDiTransform;
+    ਅਚਲ UBiDiAction *action = ਖਾਲੀ_ਸੂਚਕ;
 
-    if (U_FAILURE(*pErrorCode)) {
-        return 0;
+    ਜੇ (U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ 0;
     }
-    if (src == nullptr || dest == nullptr) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ਜੇ (src == ਖਾਲੀ_ਸੂਚਕ || dest == ਖਾਲੀ_ਸੂਚਕ) {
+        *p_Error_ਕੋਡ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
-    CHECK_LEN(src, srcLength, pErrorCode);
-    CHECK_LEN(dest, destSize, pErrorCode);
+    CHECK_LEN(src, src_ਲੰਮਾਈ, p_Error_ਕੋਡ);
+    CHECK_LEN(dest, dest_ਮਾਪ, p_Error_ਕੋਡ);
 
-    if (pBiDiTransform == nullptr) {
-        pBiDiTransform = ubiditransform_open(pErrorCode);
-        if (U_FAILURE(*pErrorCode)) {
-            return 0;
+    ਜੇ (pBiDiTransform == ਖਾਲੀ_ਸੂਚਕ) {
+        pBiDiTransform = ubiditransform_open(p_Error_ਕੋਡ);
+        ਜੇ (U_FAILURE(*p_Error_ਕੋਡ)) {
+            ਵਾਪਸ 0;
         }
     }
     /* Current limitation: in multiple paragraphs will be resolved according
        to the 1st paragraph */
-    resolveBaseDirection(src, srcLength, &inParaLevel, &outParaLevel);
+    resolve_ਅਧਾਰ_Direction(src, src_ਲੰਮਾਈ, &ਵਿੱਚ_Para_Level, &ਬਾਹਰਲਾ_Para_Level);
 
-    pBiDiTransform->pActiveScheme = findMatchingScheme(inParaLevel, outParaLevel,
-            inOrder, outOrder);
-    if (pBiDiTransform->pActiveScheme == nullptr) {
-        goto cleanup;
+    pBiDiTransform->p_ਸਰਗਰਮ_Scheme = ਲੱਭੋ_Matching_Scheme(ਵਿੱਚ_Para_Level, ਬਾਹਰਲਾ_Para_Level,
+            ਵਿੱਚ_ਕ੍ਰਮ, ਬਾਹਰਲਾ_ਕ੍ਰਮ);
+    ਜੇ (pBiDiTransform->p_ਸਰਗਰਮ_Scheme == ਖਾਲੀ_ਸੂਚਕ) {
+        ਜਾਓ cleanup;
     }
     pBiDiTransform->reorderingOptions = doMirroring ? UBIDI_DO_MIRRORING
             : UBIDI_REORDER_DEFAULT;
 
     /* Ignore TEXT_DIRECTION_* flags, as we apply our own depending on the text
        scheme at the time shaping is invoked. */
-    shapingOptions &= ~U_SHAPE_TEXT_DIRECTION_MASK;
-    pBiDiTransform->digits = shapingOptions & ~U_SHAPE_LETTERS_MASK;
-    pBiDiTransform->letters = shapingOptions & ~U_SHAPE_DIGITS_MASK;
+    shapingOptions &= ~U_SHAPE_ਪਾਠ_DIRECTION_ਨਕਾਬ;
+    pBiDiTransform->digits = shapingOptions & ~U_SHAPE_LETTERS_ਨਕਾਬ;
+    pBiDiTransform->letters = shapingOptions & ~U_SHAPE_DIGITS_ਨਕਾਬ;
 
-    updateSrc(pBiDiTransform, src, srcLength, destSize > srcLength ? destSize : srcLength, pErrorCode);
-    if (U_FAILURE(*pErrorCode)) {
-        goto cleanup;
+    updateSrc(pBiDiTransform, src, src_ਲੰਮਾਈ, dest_ਮਾਪ > src_ਲੰਮਾਈ ? dest_ਮਾਪ : src_ਲੰਮਾਈ, p_Error_ਕੋਡ);
+    ਜੇ (U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਜਾਓ cleanup;
     }
-    if (pBiDiTransform->pBidi == nullptr) {
-        pBiDiTransform->pBidi = ubidi_openSized(0, 0, pErrorCode);
-        if (U_FAILURE(*pErrorCode)) {
-            goto cleanup;
+    ਜੇ (pBiDiTransform->pBidi == ਖਾਲੀ_ਸੂਚਕ) {
+        pBiDiTransform->pBidi = ubidi_openSized(0, 0, p_Error_ਕੋਡ);
+        ਜੇ (U_FAILURE(*p_Error_ਕੋਡ)) {
+            ਜਾਓ cleanup;
         }
     }
     pBiDiTransform->dest = dest;
-    pBiDiTransform->destSize = destSize;
-    pBiDiTransform->pDestLength = &destLength;
+    pBiDiTransform->dest_ਮਾਪ = dest_ਮਾਪ;
+    pBiDiTransform->p_Dest_ਲੰਮਾਈ = &dest_ਲੰਮਾਈ;
 
     /* Checking for U_SUCCESS() within the loop to bail out on first failure. */
-    for (action = pBiDiTransform->pActiveScheme->actions; *action && U_SUCCESS(*pErrorCode); action++) {
-        if ((*action)(pBiDiTransform, pErrorCode)) {
-            if (action[1] != nullptr) {
-                updateSrc(pBiDiTransform, pBiDiTransform->dest, *pBiDiTransform->pDestLength,
-                        *pBiDiTransform->pDestLength, pErrorCode);
+    ਲਈ (action = pBiDiTransform->p_ਸਰਗਰਮ_Scheme->actions; *action && U_SUCCESS(*p_Error_ਕੋਡ); action++) {
+        ਜੇ ((*action)(pBiDiTransform, p_Error_ਕੋਡ)) {
+            ਜੇ (action[1] != ਖਾਲੀ_ਸੂਚਕ) {
+                updateSrc(pBiDiTransform, pBiDiTransform->dest, *pBiDiTransform->p_Dest_ਲੰਮਾਈ,
+                        *pBiDiTransform->p_Dest_ਲੰਮਾਈ, p_Error_ਕੋਡ);
             }
-            textChanged = true;
+            ਪਾਠ_ਬਦਲਿਆ = ਸੱਚ;
         }
     }
-    ubidi_setInverse(pBiDiTransform->pBidi, false);
+    ubidi_ਸੈੱਟ_Inverse(pBiDiTransform->pBidi, ਝੂਠ);
 
-    if (!textChanged && U_SUCCESS(*pErrorCode)) {
+    ਜੇ (!ਪਾਠ_ਬਦਲਿਆ && U_SUCCESS(*p_Error_ਕੋਡ)) {
         /* Text was not changed - just copy src to dest */
-        if (destSize < srcLength) {
-            *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
-        } else {
-            u_strncpy(dest, src, srcLength);
-            destLength = srcLength;
+        ਜੇ (dest_ਮਾਪ < src_ਲੰਮਾਈ) {
+            *p_Error_ਕੋਡ = U_ਬਫਰ_ਉਛਾਲ_ERROR;
+        } ਨਹੀਂਤਾਂ {
+            u_strncpy(dest, src, src_ਲੰਮਾਈ);
+            dest_ਲੰਮਾਈ = src_ਲੰਮਾਈ;
         }
     }
 cleanup:
-    if (pOrigTransform != pBiDiTransform) {
+    ਜੇ (pOrigTransform != pBiDiTransform) {
         ubiditransform_close(pBiDiTransform);
-    } else {
-        pBiDiTransform->dest = nullptr;
-        pBiDiTransform->pDestLength = nullptr;
-        pBiDiTransform->srcLength = 0;
-        pBiDiTransform->destSize = 0;
+    } ਨਹੀਂਤਾਂ {
+        pBiDiTransform->dest = ਖਾਲੀ_ਸੂਚਕ;
+        pBiDiTransform->p_Dest_ਲੰਮਾਈ = ਖਾਲੀ_ਸੂਚਕ;
+        pBiDiTransform->src_ਲੰਮਾਈ = 0;
+        pBiDiTransform->dest_ਮਾਪ = 0;
     }
-    return (U_FAILURE(*pErrorCode) && *pErrorCode != U_BUFFER_OVERFLOW_ERROR) ? 0 : destLength;
+    ਵਾਪਸ (U_FAILURE(*p_Error_ਕੋਡ) && *p_Error_ਕੋਡ != U_ਬਫਰ_ਉਛਾਲ_ERROR) ? 0 : dest_ਲੰਮਾਈ;
 }

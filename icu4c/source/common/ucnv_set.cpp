@@ -20,51 +20,51 @@
 *   implementation functions on the USet implementation.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
-#include "unicode/ucnv.h"
-#include "ucnv_bld.h"
-#include "uset_imp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uset.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ucnv.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucnv_bld.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uset_imp.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ਜੇ !UCONFIG_NO_CONVERSION
 
-U_CAPI void U_EXPORT2
-ucnv_getUnicodeSet(const UConverter *cnv,
-                   USet *setFillIn,
-                   UConverterUnicodeSet whichSet,
-                   UErrorCode *pErrorCode) {
+U_CAPI ਖਾਲੀ U_EXPORT2
+ucnv_get_Unicode_ਸੈੱਟ(ਅਚਲ UConverter *cnv,
+                   USet *ਸੈੱਟ_Fill_ਵਿੱਚ,
+                   UConverter_Unicode_ਸੈੱਟ which_ਸੈੱਟ,
+                   UError_ਕੋਡ *p_Error_ਕੋਡ) {
     /* argument checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    ਜੇ(p_Error_ਕੋਡ==ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*p_Error_ਕੋਡ)) {
+        ਵਾਪਸ;
     }
-    if(cnv==nullptr || setFillIn==nullptr || whichSet<UCNV_ROUNDTRIP_SET || UCNV_SET_COUNT<=whichSet) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ਜੇ(cnv==ਖਾਲੀ_ਸੂਚਕ || ਸੈੱਟ_Fill_ਵਿੱਚ==ਖਾਲੀ_ਸੂਚਕ || which_ਸੈੱਟ<UCNV_ROUNDTRIP_ਸੈੱਟ || UCNV_ਸੈੱਟ_ਗਿਣਤੀ<=which_ਸੈੱਟ) {
+        *p_Error_ਕੋਡ=U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ;
     }
 
     /* does this converter support this function? */
-    if(cnv->sharedData->impl->getUnicodeSet==nullptr) {
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return;
+    ਜੇ(cnv->shared_ਅੰਕੜੇ->impl->get_Unicode_ਸੈੱਟ==ਖਾਲੀ_ਸੂਚਕ) {
+        *p_Error_ਕੋਡ=U_UNSUPPORTED_ERROR;
+        ਵਾਪਸ;
     }
 
     {
         USetAdder sa={
-            nullptr,
-            uset_add,
-            uset_addRange,
-            uset_addString,
+            ਖਾਲੀ_ਸੂਚਕ,
+            uset_ਜੋੜੋ,
+            uset_ਜੋੜੋ_Range,
+            uset_ਜੋੜੋ_String,
             uset_remove,
             uset_removeRange
         };
-        sa.set=setFillIn;
+        sa.ਸੈੱਟ=ਸੈੱਟ_Fill_ਵਿੱਚ;
 
         /* empty the set */
-        uset_clear(setFillIn);
+        uset_clear(ਸੈੱਟ_Fill_ਵਿੱਚ);
 
         /* call the converter to add the code points it supports */
-        cnv->sharedData->impl->getUnicodeSet(cnv, &sa, whichSet, pErrorCode);
+        cnv->shared_ਅੰਕੜੇ->impl->get_Unicode_ਸੈੱਟ(cnv, &sa, which_ਸੈੱਟ, p_Error_ਕੋਡ);
     }
 }
 
-#endif
+#ਜੇ_ਅੰਤ

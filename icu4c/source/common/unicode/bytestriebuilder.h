@@ -19,22 +19,22 @@
  * \brief C++ API: Builder for icu::BytesTrie
  */
 
-#ifndef __BYTESTRIEBUILDER_H__
-#define __BYTESTRIEBUILDER_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __BYTESTRIEBUILDER_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __BYTESTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/bytestrie.h"
-#include "unicode/stringpiece.h"
-#include "unicode/stringtriebuilder.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/bytestrie.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/stringpiece.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/stringtriebuilder.h"
 
-class BytesTrieTest;
+class ਬਾਈਟਾਂ_Trie_Test;
 
 U_NAMESPACE_BEGIN
 
-class BytesTrieElement;
+class ਬਾਈਟਾਂ_Trie_Element;
 class CharString;
 /**
  * Builder class for BytesTrie.
@@ -42,20 +42,20 @@ class CharString;
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API BytesTrieBuilder : public StringTrieBuilder {
-public:
+class U_COMMON_API ਬਾਈਟਾਂ_Trie_Builder : ਜਨਤਕ StringTrieBuilder {
+ਜਨਤਕ:
     /**
      * Constructs an empty builder.
      * @param errorCode Standard ICU error code.
      * @stable ICU 4.8
      */
-    BytesTrieBuilder(UErrorCode &errorCode);
+    ਬਾਈਟਾਂ_Trie_Builder(UError_ਕੋਡ &error_ਕੋਡ);
 
     /**
      * Destructor.
      * @stable ICU 4.8
      */
-    virtual ~BytesTrieBuilder();
+    ਆਭਾਸੀ ~ਬਾਈਟਾਂ_Trie_Builder();
 
     /**
      * Adds a (byte sequence, value) pair.
@@ -71,7 +71,7 @@ public:
      * @return *this
      * @stable ICU 4.8
      */
-    BytesTrieBuilder& add(StringPiece s, int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND;
+    ਬਾਈਟਾਂ_Trie_Builder& ਜੋੜੋ(StringPiece s, int32_t ਮੁੱਲ_2, UError_ਕੋਡ& error_ਕੋਡ) U_LIFETIME_BOUND;
 
     /**
      * Builds a BytesTrie for the add()ed data.
@@ -91,7 +91,7 @@ public:
      * @return A new BytesTrie for the add()ed data.
      * @stable ICU 4.8
      */
-    BytesTrie *build(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
+    ਬਾਈਟਾਂ_Trie *build(UStringTrieBuildOption buildOption, UError_ਕੋਡ &error_ਕੋਡ);
 
     /**
      * Builds a BytesTrie for the add()ed data and byte-serializes it.
@@ -117,7 +117,7 @@ public:
      * @stable ICU 4.8
      */
     StringPiece buildStringPiece(UStringTrieBuildOption buildOption,
-                                 UErrorCode& errorCode) U_LIFETIME_BOUND;
+                                 UError_ਕੋਡ& error_ਕੋਡ) U_LIFETIME_BOUND;
 
     /**
      * Removes all (byte sequence, value) pairs.
@@ -125,67 +125,67 @@ public:
      * @return *this
      * @stable ICU 4.8
      */
-    BytesTrieBuilder& clear() U_LIFETIME_BOUND;
+    ਬਾਈਟਾਂ_Trie_Builder& clear() U_LIFETIME_BOUND;
 
-private:
-    friend class ::BytesTrieTest;
+ਨਿਜੀ:
+    ਮਿੱਤਰ class ::ਬਾਈਟਾਂ_Trie_Test;
 
-    BytesTrieBuilder(const BytesTrieBuilder &other) = delete;  // no copy constructor
-    BytesTrieBuilder &operator=(const BytesTrieBuilder &other) = delete;  // no assignment operator
+    ਬਾਈਟਾਂ_Trie_Builder(ਅਚਲ ਬਾਈਟਾਂ_Trie_Builder &other) = delete;  // no copy constructor
+    ਬਾਈਟਾਂ_Trie_Builder &ਸੰਚਾਲਕ=(ਅਚਲ ਬਾਈਟਾਂ_Trie_Builder &other) = delete;  // no assignment operator
 
-    void buildBytes(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
+    ਖਾਲੀ build_ਬਾਈਟਾਂ(UStringTrieBuildOption buildOption, UError_ਕੋਡ &error_ਕੋਡ);
 
-    virtual int32_t getElementStringLength(int32_t i) const override;
-    virtual char16_t getElementUnit(int32_t i, int32_t byteIndex) const override;
-    virtual int32_t getElementValue(int32_t i) const override;
+    ਆਭਾਸੀ int32_t get_Element_String_ਲੰਮਾਈ(int32_t i) ਅਚਲ override;
+    ਆਭਾਸੀ char16_t getElementUnit(int32_t i, int32_t byte_ਸੂਚਕਾਂਕ) ਅਚਲ override;
+    ਆਭਾਸੀ int32_t get_Element_ਮੁੱਲ(int32_t i) ਅਚਲ override;
 
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t byteIndex) const override;
+    ਆਭਾਸੀ int32_t get_ਹੱਦਬੰਦੀ_ਦਾ_ਰੇਖਿਕ_ਮੇਲ(int32_t ਪਹਿਲਾ, int32_t ਆਖਰੀ, int32_t byte_ਸੂਚਕਾਂਕ) ਅਚਲ override;
 
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t byteIndex) const override;
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t byteIndex, int32_t count) const override;
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t byteIndex, char16_t byte) const override;
+    ਆਭਾਸੀ int32_t ਗਿਣਤੀ_Element_Units(int32_t ਸ਼ੁਰੂ, int32_t ਹੱਦਬੰਦੀ, int32_t byte_ਸੂਚਕਾਂਕ) ਅਚਲ override;
+    ਆਭਾਸੀ int32_t skipElementsBySomeUnits(int32_t i, int32_t byte_ਸੂਚਕਾਂਕ, int32_t ਗਿਣਤੀ_2) ਅਚਲ override;
+    ਆਭਾਸੀ int32_t ਸੂਚਕਾਂਕ_ਦਾ_Element_With_ਅਗਲਾ_Unit(int32_t i, int32_t byte_ਸੂਚਕਾਂਕ, char16_t byte) ਅਚਲ override;
 
-    virtual UBool matchNodesCanHaveValues() const override { return false; }
+    ਆਭਾਸੀ UBool ਮੇਲ_Nodes_Can_Have_ਮੁੱਲਾਂ() ਅਚਲ override { ਵਾਪਸ false; }
 
-    virtual int32_t getMaxBranchLinearSubNodeLength() const override { return BytesTrie::kMaxBranchLinearSubNodeLength; }
-    virtual int32_t getMinLinearMatch() const override { return BytesTrie::kMinLinearMatch; }
-    virtual int32_t getMaxLinearMatchLength() const override { return BytesTrie::kMaxLinearMatchLength; }
+    ਆਭਾਸੀ int32_t get_Max_Branch_ਰੇਖਿਕ_Sub_ਗੰਢ_ਲੰਮਾਈ() ਅਚਲ override { ਵਾਪਸ ਬਾਈਟਾਂ_Trie::k_Max_Branch_ਰੇਖਿਕ_Sub_ਗੰਢ_ਲੰਮਾਈ; }
+    ਆਭਾਸੀ int32_t get_Min_ਰੇਖਿਕ_ਮੇਲ() ਅਚਲ override { ਵਾਪਸ ਬਾਈਟਾਂ_Trie::k_Min_ਰੇਖਿਕ_ਮੇਲ; }
+    ਆਭਾਸੀ int32_t get_Max_ਰੇਖਿਕ_ਮੇਲ_ਲੰਮਾਈ() ਅਚਲ override { ਵਾਪਸ ਬਾਈਟਾਂ_Trie::k_Max_ਰੇਖਿਕ_ਮੇਲ_ਲੰਮਾਈ; }
 
-    class BTLinearMatchNode : public LinearMatchNode {
-    public:
-        BTLinearMatchNode(const char *units, int32_t len, Node *nextNode);
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    private:
-        const char *s;
+    class BTLinear_ਮੇਲ_ਗੰਢ : ਜਨਤਕ ਰੇਖਿਕ_ਮੇਲ_ਗੰਢ {
+    ਜਨਤਕ:
+        BTLinear_ਮੇਲ_ਗੰਢ(ਅਚਲ ਅੱਖਰ *units, int32_t len, ਗੰਢ_2 *ਅਗਲਾ_ਗੰਢ);
+        ਆਭਾਸੀ bool ਸੰਚਾਲਕ==(ਅਚਲ ਗੰਢ_2 &other) ਅਚਲ override;
+        ਆਭਾਸੀ ਖਾਲੀ ਲਿਖ(StringTrieBuilder &builder) override;
+    ਨਿਜੀ:
+        ਅਚਲ ਅੱਖਰ *s;
     };
     
-    virtual Node *createLinearMatchNode(int32_t i, int32_t byteIndex, int32_t length,
-                                        Node *nextNode) const override;
+    ਆਭਾਸੀ ਗੰਢ_2 *create_ਰੇਖਿਕ_ਮੇਲ_ਗੰਢ(int32_t i, int32_t byte_ਸੂਚਕਾਂਕ, int32_t ਲੰਮਾਈ,
+                                        ਗੰਢ_2 *ਅਗਲਾ_ਗੰਢ) ਅਚਲ override;
 
-    UBool ensureCapacity(int32_t length);
-    virtual int32_t write(int32_t byte) override;
-    int32_t write(const char *b, int32_t length);
-    virtual int32_t writeElementUnits(int32_t i, int32_t byteIndex, int32_t length) override;
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) override;
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) override;
-    virtual int32_t writeDeltaTo(int32_t jumpTarget) override;
-    static int32_t internalEncodeDelta(int32_t i, char intBytes[]);
+    UBool ensure_ਸਮਰੱਥਾ(int32_t ਲੰਮਾਈ);
+    ਆਭਾਸੀ int32_t ਲਿਖ(int32_t byte) override;
+    int32_t ਲਿਖ(ਅਚਲ ਅੱਖਰ *b, int32_t ਲੰਮਾਈ);
+    ਆਭਾਸੀ int32_t writeElementUnits(int32_t i, int32_t byte_ਸੂਚਕਾਂਕ, int32_t ਲੰਮਾਈ) override;
+    ਆਭਾਸੀ int32_t write_ਮੁੱਲ_And_Final(int32_t i, UBool isFinal) override;
+    ਆਭਾਸੀ int32_t write_ਮੁੱਲ_And_Type(UBool has_ਮੁੱਲ, int32_t ਮੁੱਲ_2, int32_t ਗੰਢ) override;
+    ਆਭਾਸੀ int32_t write_Delta_ਮੰਜ਼ਿਲ(int32_t jump_ਨਿਸ਼ਾਨਾ) override;
+    ਸਥਿਰ int32_t ਅੰਦਰੂਨੀ_Encode_Delta(int32_t i, ਅੱਖਰ int_ਬਾਈਟਾਂ[]);
 
-    CharString *strings;  // Pointer not object so we need not #include internal charstr.h.
-    BytesTrieElement *elements;
-    int32_t elementsCapacity;
-    int32_t elementsLength;
+    CharString *ਲੜੀਆਂ;  // Pointer not object so we need not #include internal charstr.h.
+    ਬਾਈਟਾਂ_Trie_Element *elements;
+    int32_t elements_ਸਮਰੱਥਾ;
+    int32_t elements_ਲੰਮਾਈ;
 
     // Byte serialization of the trie.
     // Grows from the back: bytesLength measures from the end of the buffer!
-    char *bytes;
-    int32_t bytesCapacity;
-    int32_t bytesLength;
+    ਅੱਖਰ *ਬਾਈਟਾਂ;
+    int32_t ਬਾਈਟਾਂ_ਸਮਰੱਥਾ;
+    int32_t ਬਾਈਟਾਂ_ਲੰਮਾਈ;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ਜੇ_ਅੰਤ /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __BYTESTRIEBUILDER_H__
+#ਜੇ_ਅੰਤ  // __BYTESTRIEBUILDER_H__

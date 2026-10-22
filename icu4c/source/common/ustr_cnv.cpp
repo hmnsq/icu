@@ -18,89 +18,89 @@
 *   Character conversion functions moved here from ustring.c
 */
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ਜੇ !UCONFIG_NO_CONVERSION
 
-#include "unicode/ustring.h"
-#include "unicode/ucnv.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "umutex.h"
-#include "ustr_cnv.h"
-#include "ucnv_bld.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ustring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ucnv.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "umutex.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ustr_cnv.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucnv_bld.h"
 
 /* mutexed access to a shared default converter ----------------------------- */
 
-static UConverter *gDefaultConverter = nullptr;
+ਸਥਿਰ UConverter *gDefaultConverter = ਖਾਲੀ_ਸੂਚਕ;
 
 U_CAPI UConverter* U_EXPORT2
-u_getDefaultConverter(UErrorCode *status)
+u_getDefaultConverter(UError_ਕੋਡ *ਸਥਿਤੀ)
 {
-    UConverter *converter = nullptr;
+    UConverter *converter = ਖਾਲੀ_ਸੂਚਕ;
     
-    if (gDefaultConverter != nullptr) {
-        icu::umtx_lock(nullptr);
+    ਜੇ (gDefaultConverter != ਖਾਲੀ_ਸੂਚਕ) {
+        icu::umtx_ਤਾਲਾ(ਖਾਲੀ_ਸੂਚਕ);
         
         /* need to check to make sure it wasn't taken out from under us */
-        if (gDefaultConverter != nullptr) {
+        ਜੇ (gDefaultConverter != ਖਾਲੀ_ਸੂਚਕ) {
             converter = gDefaultConverter;
-            gDefaultConverter = nullptr;
+            gDefaultConverter = ਖਾਲੀ_ਸੂਚਕ;
         }
-        icu::umtx_unlock(nullptr);
+        icu::umtx_unlock(ਖਾਲੀ_ਸੂਚਕ);
     }
 
     /* if the cache was empty, create a converter */
-    if(converter == nullptr) {
-        converter = ucnv_open(nullptr, status);
-        if(U_FAILURE(*status)) {
+    ਜੇ(converter == ਖਾਲੀ_ਸੂਚਕ) {
+        converter = ucnv_open(ਖਾਲੀ_ਸੂਚਕ, ਸਥਿਤੀ);
+        ਜੇ(U_FAILURE(*ਸਥਿਤੀ)) {
             ucnv_close(converter);
-            converter = nullptr;
+            converter = ਖਾਲੀ_ਸੂਚਕ;
         }
     }
 
-    return converter;
+    ਵਾਪਸ converter;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ਖਾਲੀ U_EXPORT2
 u_releaseDefaultConverter(UConverter *converter)
 {
-    if(gDefaultConverter == nullptr) {
-        if (converter != nullptr) {
+    ਜੇ(gDefaultConverter == ਖਾਲੀ_ਸੂਚਕ) {
+        ਜੇ (converter != ਖਾਲੀ_ਸੂਚਕ) {
             ucnv_reset(converter);
         }
         ucnv_enableCleanup();
-        icu::umtx_lock(nullptr);
-        if(gDefaultConverter == nullptr) {
+        icu::umtx_ਤਾਲਾ(ਖਾਲੀ_ਸੂਚਕ);
+        ਜੇ(gDefaultConverter == ਖਾਲੀ_ਸੂਚਕ) {
             gDefaultConverter = converter;
-            converter = nullptr;
+            converter = ਖਾਲੀ_ਸੂਚਕ;
         }
-        icu::umtx_unlock(nullptr);
+        icu::umtx_unlock(ਖਾਲੀ_ਸੂਚਕ);
     }
 
-    if(converter != nullptr) {
+    ਜੇ(converter != ਖਾਲੀ_ਸੂਚਕ) {
         ucnv_close(converter);
     }
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ਖਾਲੀ U_EXPORT2
 u_flushDefaultConverter()
 {
-    UConverter *converter = nullptr;
+    UConverter *converter = ਖਾਲੀ_ਸੂਚਕ;
     
-    if (gDefaultConverter != nullptr) {
-        icu::umtx_lock(nullptr);
+    ਜੇ (gDefaultConverter != ਖਾਲੀ_ਸੂਚਕ) {
+        icu::umtx_ਤਾਲਾ(ਖਾਲੀ_ਸੂਚਕ);
         
         /* need to check to make sure it wasn't taken out from under us */
-        if (gDefaultConverter != nullptr) {
+        ਜੇ (gDefaultConverter != ਖਾਲੀ_ਸੂਚਕ) {
             converter = gDefaultConverter;
-            gDefaultConverter = nullptr;
+            gDefaultConverter = ਖਾਲੀ_ਸੂਚਕ;
         }
-        icu::umtx_unlock(nullptr);
+        icu::umtx_unlock(ਖਾਲੀ_ਸੂਚਕ);
     }
 
     /* if the cache was populated, flush it */
-    if(converter != nullptr) {
+    ਜੇ(converter != ਖਾਲੀ_ਸੂਚਕ) {
          ucnv_close(converter);
     }
 }
@@ -109,130 +109,130 @@ u_flushDefaultConverter()
 /* conversions between char* and char16_t* ------------------------------------- */
 
 /* maximum string length for u_uastrcpy() and u_austrcpy() implementations */
-#define MAX_STRLEN 0x0FFFFFFF
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MAX_STRLEN 0x0FFFFFFF
 
 /*
  returns the minimum of (the length of the null-terminated string) and n.
 */
-static int32_t u_astrnlen(const char *s1, int32_t n)
+ਸਥਿਰ int32_t u_astrnlen(ਅਚਲ ਅੱਖਰ *s1, int32_t n)
 {
     int32_t len = 0;
 
-    if (s1)
+    ਜੇ (s1)
     {
-        while (n-- && *(s1++))
+        ਜਦੋਂ (n-- && *(s1++))
         {
             len++;
         }
     }
-    return len;
+    ਵਾਪਸ len;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_uastrncpy(char16_t* ucs1 U_LIFETIME_BOUND, const char* s2, int32_t n)
+u_uastrncpy(char16_t* ucs1 U_LIFETIME_BOUND, ਅਚਲ ਅੱਖਰ* s2, int32_t n)
 {
-  char16_t *target = ucs1;
-  UErrorCode err = U_ZERO_ERROR;
+  char16_t *ਨਿਸ਼ਾਨਾ = ucs1;
+  UError_ਕੋਡ err = U_ZERO_ERROR;
   UConverter *cnv = u_getDefaultConverter(&err);
-  if(U_SUCCESS(err) && cnv != nullptr) {
+  ਜੇ(U_SUCCESS(err) && cnv != ਖਾਲੀ_ਸੂਚਕ) {
     ucnv_reset(cnv);
-    ucnv_toUnicode(cnv,
-                   &target,
+    ucnv_ਮੰਜ਼ਿਲ_Unicode(cnv,
+                   &ਨਿਸ਼ਾਨਾ,
                    ucs1+n,
                    &s2,
                    s2+u_astrnlen(s2, n),
-                   nullptr,
-                   true,
+                   ਖਾਲੀ_ਸੂਚਕ,
+                   ਸੱਚ,
                    &err);
     ucnv_reset(cnv); /* be good citizens */
     u_releaseDefaultConverter(cnv);
-    if(U_FAILURE(err) && (err != U_BUFFER_OVERFLOW_ERROR) ) {
+    ਜੇ(U_FAILURE(err) && (err != U_ਬਫਰ_ਉਛਾਲ_ERROR) ) {
       *ucs1 = 0; /* failure */
     }
-    if(target < (ucs1+n)) { /* U_BUFFER_OVERFLOW_ERROR isn't an err, just means no termination will happen. */
-      *target = 0;  /* terminate */
+    ਜੇ(ਨਿਸ਼ਾਨਾ < (ucs1+n)) { /* U_BUFFER_OVERFLOW_ERROR isn't an err, just means no termination will happen. */
+      *ਨਿਸ਼ਾਨਾ = 0;  /* terminate */
     }
-  } else {
+  } ਨਹੀਂਤਾਂ {
     *ucs1 = 0;
   }
-  return ucs1;
+  ਵਾਪਸ ucs1;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_uastrcpy(char16_t* ucs1 U_LIFETIME_BOUND, const char* s2)
+u_uastrcpy(char16_t* ucs1 U_LIFETIME_BOUND, ਅਚਲ ਅੱਖਰ* s2)
 {
-  UErrorCode err = U_ZERO_ERROR;
+  UError_ਕੋਡ err = U_ZERO_ERROR;
   UConverter *cnv = u_getDefaultConverter(&err);
-  if(U_SUCCESS(err) && cnv != nullptr) {
-    ucnv_toUChars(cnv,
+  ਜੇ(U_SUCCESS(err) && cnv != ਖਾਲੀ_ਸੂਚਕ) {
+    ucnv_ਮੰਜ਼ਿਲ_UChars(cnv,
                     ucs1,
                     MAX_STRLEN,
                     s2,
                     (int32_t)uprv_strlen(s2),
                     &err);
     u_releaseDefaultConverter(cnv);
-    if(U_FAILURE(err)) {
+    ਜੇ(U_FAILURE(err)) {
       *ucs1 = 0;
     }
-  } else {
+  } ਨਹੀਂਤਾਂ {
     *ucs1 = 0;
   }
-  return ucs1;
+  ਵਾਪਸ ucs1;
 }
 
 /*
  returns the minimum of (the length of the null-terminated string) and n.
 */
-static int32_t u_ustrnlen(const char16_t *ucs1, int32_t n)
+ਸਥਿਰ int32_t u_ustrnlen(ਅਚਲ char16_t *ucs1, int32_t n)
 {
     int32_t len = 0;
 
-    if (ucs1)
+    ਜੇ (ucs1)
     {
-        while (n-- && *(ucs1++))
+        ਜਦੋਂ (n-- && *(ucs1++))
         {
             len++;
         }
     }
-    return len;
+    ਵਾਪਸ len;
 }
 
-U_CAPI char* U_EXPORT2
-u_austrncpy(char* s1 U_LIFETIME_BOUND, const char16_t* ucs2, int32_t n)
+U_CAPI ਅੱਖਰ* U_EXPORT2
+u_austrncpy(ਅੱਖਰ* s1 U_LIFETIME_BOUND, ਅਚਲ char16_t* ucs2, int32_t n)
 {
-  char *target = s1;
-  UErrorCode err = U_ZERO_ERROR;
+  ਅੱਖਰ *ਨਿਸ਼ਾਨਾ = s1;
+  UError_ਕੋਡ err = U_ZERO_ERROR;
   UConverter *cnv = u_getDefaultConverter(&err);
-  if(U_SUCCESS(err) && cnv != nullptr) {
+  ਜੇ(U_SUCCESS(err) && cnv != ਖਾਲੀ_ਸੂਚਕ) {
     ucnv_reset(cnv);
     ucnv_fromUnicode(cnv,
-                  &target,
+                  &ਨਿਸ਼ਾਨਾ,
                   s1+n,
                   &ucs2,
                   ucs2+u_ustrnlen(ucs2, n),
-                  nullptr,
-                  true,
+                  ਖਾਲੀ_ਸੂਚਕ,
+                  ਸੱਚ,
                   &err);
     ucnv_reset(cnv); /* be good citizens */
     u_releaseDefaultConverter(cnv);
-    if(U_FAILURE(err) && (err != U_BUFFER_OVERFLOW_ERROR) ) {
+    ਜੇ(U_FAILURE(err) && (err != U_ਬਫਰ_ਉਛਾਲ_ERROR) ) {
       *s1 = 0; /* failure */
     }
-    if(target < (s1+n)) { /* U_BUFFER_OVERFLOW_ERROR isn't an err, just means no termination will happen. */
-      *target = 0;  /* terminate */
+    ਜੇ(ਨਿਸ਼ਾਨਾ < (s1+n)) { /* U_BUFFER_OVERFLOW_ERROR isn't an err, just means no termination will happen. */
+      *ਨਿਸ਼ਾਨਾ = 0;  /* terminate */
     }
-  } else {
+  } ਨਹੀਂਤਾਂ {
     *s1 = 0;
   }
-  return s1;
+  ਵਾਪਸ s1;
 }
 
-U_CAPI char* U_EXPORT2
-u_austrcpy(char* s1 U_LIFETIME_BOUND, const char16_t* ucs2)
+U_CAPI ਅੱਖਰ* U_EXPORT2
+u_austrcpy(ਅੱਖਰ* s1 U_LIFETIME_BOUND, ਅਚਲ char16_t* ucs2)
 {
-  UErrorCode err = U_ZERO_ERROR;
+  UError_ਕੋਡ err = U_ZERO_ERROR;
   UConverter *cnv = u_getDefaultConverter(&err);
-  if(U_SUCCESS(err) && cnv != nullptr) {
+  ਜੇ(U_SUCCESS(err) && cnv != ਖਾਲੀ_ਸੂਚਕ) {
     int32_t len = ucnv_fromUChars(cnv,
                   s1,
                   MAX_STRLEN,
@@ -241,10 +241,10 @@ u_austrcpy(char* s1 U_LIFETIME_BOUND, const char16_t* ucs2)
                   &err);
     u_releaseDefaultConverter(cnv);
     s1[len] = 0;
-  } else {
+  } ਨਹੀਂਤਾਂ {
     *s1 = 0;
   }
-  return s1;
+  ਵਾਪਸ s1;
 }
 
-#endif
+#ਜੇ_ਅੰਤ

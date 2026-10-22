@@ -7,13 +7,13 @@
 **********************************************************************
 */
 
-#ifndef _UCURR_IMP_H_
-#define _UCURR_IMP_H_
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ _UCURR_IMP_H_
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ _UCURR_IMP_H_
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/parsepos.h"
-#include "unicode/uniset.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/unistr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/parsepos.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uniset.h"
 
 /**
  * Internal method.  Given a currency ISO code and a locale, return
@@ -25,9 +25,9 @@
  * This is used for backward compatibility with old currency logic in
  * DecimalFormat and DecimalFormatSymbols.
  */
-U_CAPI void
-uprv_getStaticCurrencyName(const UChar* iso, const char* loc,
-                           icu::UnicodeString& result, UErrorCode& ec);
+U_CAPI ਖਾਲੀ
+uprv_getStaticCurrencyName(ਅਚਲ UChar* iso, ਅਚਲ ਅੱਖਰ* loc,
+                           icu::UnicodeString& ਨਤੀਜਾ, UError_ਕੋਡ& ec);
 
 /**
  * Attempt to parse the given string as a currency, either as a
@@ -53,14 +53,14 @@ uprv_getStaticCurrencyName(const UChar* iso, const char* loc,
  *
  * @internal
  */
-U_CAPI void
-uprv_parseCurrency(const char* locale,
-                   const icu::UnicodeString& text,
+U_CAPI ਖਾਲੀ
+uprv_parseCurrency(ਅਚਲ ਅੱਖਰ* locale,
+                   ਅਚਲ icu::UnicodeString& ਪਾਠ,
                    icu::ParsePosition& pos,
                    int8_t type,
-                   int32_t* partialMatchLen,
-                   UChar* result,
-                   UErrorCode& ec);
+                   int32_t* partial_ਮੇਲ_Len,
+                   UChar* ਨਤੀਜਾ,
+                   UError_ਕੋਡ& ec);
 
 /**
  * Puts all possible first-characters of a currency into the
@@ -69,10 +69,10 @@ uprv_parseCurrency(const char* locale,
  * @param locale the locale of the display names of interest
  * @param result the UnicodeSet to which to add the starting characters
  */
-void uprv_currencyLeads(const char* locale, icu::UnicodeSet& result, UErrorCode& ec);
+ਖਾਲੀ uprv_currencyLeads(ਅਚਲ ਅੱਖਰ* locale, icu::Unicode_ਸੈੱਟ& ਨਤੀਜਾ, UError_ਕੋਡ& ec);
 
 
 
-#endif /* #ifndef _UCURR_IMP_H_ */
+#ਜੇ_ਅੰਤ /* #ifndef _UCURR_IMP_H_ */
 
 //eof

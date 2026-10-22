@@ -4,18 +4,18 @@
 // localematcher.h
 // created: 2019may08 Markus W. Scherer
 
-#ifndef __LOCALEMATCHER_H__
-#define __LOCALEMATCHER_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __LOCALEMATCHER_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __LOCALEMATCHER_H__
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
 
-#include <optional>
+#ਅਨ੍ਤਰ੍ਭਾਵ <optional>
 
-#include "unicode/locid.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/locid.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/stringpiece.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uobject.h"
 
 /**
  * \file
@@ -28,7 +28,7 @@
  * @see LocaleMatcher::Builder#setFavorSubtag(ULocMatchFavorSubtag)
  * @stable ICU 65
  */
-enum ULocMatchFavorSubtag {
+ਗਿਣਤੀ ULoc_ਮੇਲ_Favor_Subtag {
     /**
      * Language differences are most important, then script differences, then region differences.
      * (This is the default behavior.)
@@ -43,9 +43,9 @@ enum ULocMatchFavorSubtag {
      */
     ULOCMATCH_FAVOR_SCRIPT
 };
-#ifndef U_IN_DOXYGEN
-typedef enum ULocMatchFavorSubtag ULocMatchFavorSubtag;
-#endif
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ U_ਵਿੱਚ_DOXYGEN
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਗਿਣਤੀ ULoc_ਮੇਲ_Favor_Subtag ULoc_ਮੇਲ_Favor_Subtag;
+#ਜੇ_ਅੰਤ
 
 /**
  * Builder option for whether all desired locales are treated equally or
@@ -54,7 +54,7 @@ typedef enum ULocMatchFavorSubtag ULocMatchFavorSubtag;
  * @see LocaleMatcher::Builder#setDemotionPerDesiredLocale(ULocMatchDemotion)
  * @stable ICU 65
  */
-enum ULocMatchDemotion {
+ਗਿਣਤੀ ULoc_ਮੇਲ_Demotion {
     /**
      * All desired locales are treated equally.
      *
@@ -89,9 +89,9 @@ enum ULocMatchDemotion {
      */
     ULOCMATCH_DEMOTION_REGION
 };
-#ifndef U_IN_DOXYGEN
-typedef enum ULocMatchDemotion ULocMatchDemotion;
-#endif
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ U_ਵਿੱਚ_DOXYGEN
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਗਿਣਤੀ ULoc_ਮੇਲ_Demotion ULoc_ਮੇਲ_Demotion;
+#ਜੇ_ਅੰਤ
 
 /**
  * Builder option for whether to include or ignore one-way (fallback) match data.
@@ -110,7 +110,7 @@ typedef enum ULocMatchDemotion ULocMatchDemotion;
  * @see LocaleMatcher::Builder#setDirection(ULocMatchDirection)
  * @stable ICU 67
  */
-enum ULocMatchDirection {
+ਗਿਣਤੀ ULoc_ਮੇਲ_Direction {
     /**
      * Locale matching includes one-way matches such as Breton→French. (default)
      *
@@ -125,18 +125,18 @@ enum ULocMatchDirection {
      */
     ULOCMATCH_DIRECTION_ONLY_TWO_WAY
 };
-#ifndef U_IN_DOXYGEN
-typedef enum ULocMatchDirection ULocMatchDirection;
-#endif
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ U_ਵਿੱਚ_DOXYGEN
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਗਿਣਤੀ ULoc_ਮੇਲ_Direction ULoc_ਮੇਲ_Direction;
+#ਜੇ_ਅੰਤ
 
-struct UHashtable;
+ਬਣਤਰ UHashtable;
 
 U_NAMESPACE_BEGIN
 
-struct LSR;
+ਬਣਤਰ LSR;
 
 class LikelySubtags;
-class LocaleDistance;
+class Locale_ਦੂਰੀ;
 class LocaleLsrIterator;
 class UVector;
 
@@ -183,16 +183,16 @@ class UVector;
  *
  * @stable ICU 65
  */
-class U_COMMON_API LocaleMatcher : public UMemory {
-public:
+class U_COMMON_API LocaleMatcher : ਜਨਤਕ UMemory {
+ਜਨਤਕ:
     /**
      * Data for the best-matching pair of a desired and a supported locale.
      * Movable but not copyable.
      *
      * @stable ICU 65
      */
-    class U_COMMON_API Result : public UMemory {
-    public:
+    class U_COMMON_API ਨਤੀਜਾ_2 : ਜਨਤਕ UMemory {
+    ਜਨਤਕ:
         /**
          * Move constructor; might modify the source.
          * This object will have the same contents that the source object had.
@@ -200,14 +200,14 @@ public:
          * @param src Result to move contents from.
          * @stable ICU 65
          */
-        Result(Result &&src) noexcept;
+        ਨਤੀਜਾ_2(ਨਤੀਜਾ_2 &&src) noexcept;
 
         /**
          * Destructor.
          *
          * @stable ICU 65
          */
-        ~Result();
+        ~ਨਤੀਜਾ_2();
 
         /**
          * Move assignment; might modify the source.
@@ -216,7 +216,7 @@ public:
          * @param src Result to move contents from.
          * @stable ICU 65
          */
-        Result& operator=(Result&& src) noexcept U_LIFETIME_BOUND;
+        ਨਤੀਜਾ_2& ਸੰਚਾਲਕ=(ਨਤੀਜਾ_2&& src) noexcept U_LIFETIME_BOUND;
 
         /**
          * Returns the best-matching desired locale.
@@ -225,7 +225,7 @@ public:
          * @return the best-matching desired locale, or nullptr.
          * @stable ICU 65
          */
-        inline const Locale* getDesiredLocale() const U_LIFETIME_BOUND { return desiredLocale; }
+        ਸਤਰਅੰਦਰ ਅਚਲ Locale* getDesiredLocale() ਅਚਲ U_LIFETIME_BOUND { ਵਾਪਸ desiredLocale; }
 
         /**
          * Returns the best-matching supported locale.
@@ -236,7 +236,7 @@ public:
          * @return the best-matching supported locale, or nullptr.
          * @stable ICU 65
          */
-        inline const Locale* getSupportedLocale() const U_LIFETIME_BOUND { return supportedLocale; }
+        ਸਤਰਅੰਦਰ ਅਚਲ Locale* getSupportedLocale() ਅਚਲ U_LIFETIME_BOUND { ਵਾਪਸ supportedLocale; }
 
         /**
          * Returns the index of the best-matching desired locale in the input Iterable order.
@@ -245,7 +245,7 @@ public:
          * @return the index of the best-matching desired locale, or -1.
          * @stable ICU 65
          */
-        inline int32_t getDesiredIndex() const { return desiredIndex; }
+        ਸਤਰਅੰਦਰ int32_t get_Desired_ਸੂਚਕਾਂਕ() ਅਚਲ { ਵਾਪਸ desired_ਸੂਚਕਾਂਕ; }
 
         /**
          * Returns the index of the best-matching supported locale in the
@@ -257,7 +257,7 @@ public:
          * @return the index of the best-matching supported locale, or -1.
          * @stable ICU 65
          */
-        inline int32_t getSupportedIndex() const { return supportedIndex; }
+        ਸਤਰਅੰਦਰ int32_t get_Supported_ਸੂਚਕਾਂਕ() ਅਚਲ { ਵਾਪਸ supported_ਸੂਚਕਾਂਕ; }
 
         /**
          * Takes the best-matching supported locale and adds relevant fields of the
@@ -271,25 +271,25 @@ public:
          * @return a locale combining the best-matching desired and supported locales.
          * @stable ICU 65
          */
-        Locale makeResolvedLocale(UErrorCode &errorCode) const;
+        Locale makeResolvedLocale(UError_ਕੋਡ &error_ਕੋਡ) ਅਚਲ;
 
-    private:
-        Result(const Locale *desired, const Locale *supported,
-               int32_t desIndex, int32_t suppIndex, UBool owned) :
+    ਨਿਜੀ:
+        ਨਤੀਜਾ_2(ਅਚਲ Locale *desired, ਅਚਲ Locale *supported,
+               int32_t des_ਸੂਚਕਾਂਕ, int32_t supp_ਸੂਚਕਾਂਕ, UBool owned) :
                 desiredLocale(desired), supportedLocale(supported),
-                desiredIndex(desIndex), supportedIndex(suppIndex),
+                desired_ਸੂਚਕਾਂਕ(des_ਸੂਚਕਾਂਕ), supported_ਸੂਚਕਾਂਕ(supp_ਸੂਚਕਾਂਕ),
                 desiredIsOwned(owned) {}
 
-        Result(const Result &other) = delete;
-        Result &operator=(const Result &other) = delete;
+        ਨਤੀਜਾ_2(ਅਚਲ ਨਤੀਜਾ_2 &other) = delete;
+        ਨਤੀਜਾ_2 &ਸੰਚਾਲਕ=(ਅਚਲ ਨਤੀਜਾ_2 &other) = delete;
 
-        const Locale *desiredLocale;
-        const Locale *supportedLocale;
-        int32_t desiredIndex;
-        int32_t supportedIndex;
+        ਅਚਲ Locale *desiredLocale;
+        ਅਚਲ Locale *supportedLocale;
+        int32_t desired_ਸੂਚਕਾਂਕ;
+        int32_t supported_ਸੂਚਕਾਂਕ;
         UBool desiredIsOwned;
 
-        friend class LocaleMatcher;
+        ਮਿੱਤਰ class LocaleMatcher;
     };
 
     /**
@@ -298,8 +298,8 @@ public:
      *
      * @stable ICU 65
      */
-    class U_COMMON_API Builder : public UMemory {
-    public:
+    class U_COMMON_API Builder : ਜਨਤਕ UMemory {
+    ਜਨਤਕ:
         /**
          * Constructs a builder used in chaining parameters for building a LocaleMatcher.
          *
@@ -330,7 +330,7 @@ public:
          * @param src Builder to move contents from.
          * @stable ICU 65
          */
-        Builder& operator=(Builder&& src) noexcept U_LIFETIME_BOUND;
+        Builder& ਸੰਚਾਲਕ=(Builder&& src) noexcept U_LIFETIME_BOUND;
 
         /**
          * Parses an Accept-Language string
@@ -343,7 +343,7 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        Builder& setSupportedLocalesFromListString(StringPiece locales) U_LIFETIME_BOUND;
+        Builder& ਸੈੱਟ_Supported_Locales_From_List_String(StringPiece locales) U_LIFETIME_BOUND;
 
         /**
          * Copies the supported locales, preserving iteration order.
@@ -354,7 +354,7 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        Builder& setSupportedLocales(Locale::Iterator& locales) U_LIFETIME_BOUND;
+        Builder& ਸੈੱਟ_Supported_Locales(Locale::Iterator& locales) U_LIFETIME_BOUND;
 
         /**
          * Copies the supported locales from the begin/end range, preserving iteration order.
@@ -369,14 +369,14 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        template <typename Iter>
-        Builder& setSupportedLocales(Iter begin, Iter end) U_LIFETIME_BOUND {
-            if (U_FAILURE(errorCode_)) { return *this; }
+        ਸਾਂਚਾ <typename Iter>
+        Builder& ਸੈੱਟ_Supported_Locales(Iter begin, Iter ਸਿਰਾ) U_LIFETIME_BOUND {
+            ਜੇ (U_FAILURE(error_ਕੋਡ_2)) { ਵਾਪਸ *this; }
             clearSupportedLocales();
-            while (begin != end) {
-                addSupportedLocale(*begin++);
+            ਜਦੋਂ (begin != ਸਿਰਾ) {
+                ਜੋੜੋ_Supported_Locale(*begin++);
             }
-            return *this;
+            ਵਾਪਸ *this;
         }
 
         /**
@@ -394,15 +394,15 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        template <typename Iter, typename Conv>
-        Builder& setSupportedLocalesViaConverter(Iter begin, Iter end,
+        ਸਾਂਚਾ <typename Iter, typename Conv>
+        Builder& ਸੈੱਟ_Supported_Locales_ਰਾਹੀਂ_Converter(Iter begin, Iter ਸਿਰਾ,
                                                  Conv converter) U_LIFETIME_BOUND {
-            if (U_FAILURE(errorCode_)) { return *this; }
+            ਜੇ (U_FAILURE(error_ਕੋਡ_2)) { ਵਾਪਸ *this; }
             clearSupportedLocales();
-            while (begin != end) {
-                addSupportedLocale(converter(*begin++));
+            ਜਦੋਂ (begin != ਸਿਰਾ) {
+                ਜੋੜੋ_Supported_Locale(converter(*begin++));
             }
-            return *this;
+            ਵਾਪਸ *this;
         }
 
         /**
@@ -413,7 +413,7 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        Builder& addSupportedLocale(const Locale& locale) U_LIFETIME_BOUND;
+        Builder& ਜੋੜੋ_Supported_Locale(ਅਚਲ Locale& locale) U_LIFETIME_BOUND;
 
         /**
          * Sets no default locale.
@@ -423,7 +423,7 @@ public:
          *
          * @stable ICU 68
          */
-        Builder& setNoDefaultLocale() U_LIFETIME_BOUND;
+        Builder& ਸੈੱਟ_No_Default_Locale() U_LIFETIME_BOUND;
 
         /**
          * Sets the default locale; if nullptr, or if it is not set explicitly,
@@ -435,7 +435,7 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        Builder& setDefaultLocale(const Locale* defaultLocale) U_LIFETIME_BOUND;
+        Builder& ਸੈੱਟ_Default_Locale(ਅਚਲ Locale* defaultLocale) U_LIFETIME_BOUND;
 
         /**
          * If ULOCMATCH_FAVOR_SCRIPT, then the language differences are smaller than script
@@ -447,7 +447,7 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        Builder& setFavorSubtag(ULocMatchFavorSubtag subtag) U_LIFETIME_BOUND;
+        Builder& ਸੈੱਟ_Favor_Subtag(ULoc_ਮੇਲ_Favor_Subtag subtag) U_LIFETIME_BOUND;
 
         /**
          * Option for whether all desired locales are treated equally or
@@ -457,7 +457,7 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        Builder& setDemotionPerDesiredLocale(ULocMatchDemotion demotion) U_LIFETIME_BOUND;
+        Builder& ਸੈੱਟ_Demotion_ਪ੍ਰਤੀ_Desired_Locale(ULoc_ਮੇਲ_Demotion demotion) U_LIFETIME_BOUND;
 
         /**
          * Option for whether to include or ignore one-way (fallback) match data.
@@ -467,11 +467,11 @@ public:
          * @return this Builder object
          * @stable ICU 67
          */
-        Builder& setDirection(ULocMatchDirection matchDirection) U_LIFETIME_BOUND {
-            if (U_SUCCESS(errorCode_)) {
-                direction_ = matchDirection;
+        Builder& ਸੈੱਟ_Direction(ULoc_ਮੇਲ_Direction ਮੇਲ_Direction) U_LIFETIME_BOUND {
+            ਜੇ (U_SUCCESS(error_ਕੋਡ_2)) {
+                direction_ = ਮੇਲ_Direction;
             }
-            return *this;
+            ਵਾਪਸ *this;
         }
 
         /**
@@ -495,7 +495,7 @@ public:
          * @return this Builder object
          * @stable ICU 68
          */
-        Builder& setMaxDistance(const Locale& desired, const Locale& supported) U_LIFETIME_BOUND;
+        Builder& ਸੈੱਟ_Max_ਦੂਰੀ(ਅਚਲ Locale& desired, ਅਚਲ Locale& supported) U_LIFETIME_BOUND;
 
         /**
          * Sets the UErrorCode if an error occurred while setting parameters.
@@ -507,7 +507,7 @@ public:
          * @return true if U_FAILURE(outErrorCode)
          * @stable ICU 65
          */
-        UBool copyErrorTo(UErrorCode &outErrorCode) const;
+        UBool copy_Error_ਮੰਜ਼ਿਲ(UError_ਕੋਡ &ਬਾਹਰਲਾ_Error_ਕੋਡ) ਅਚਲ;
 
         /**
          * Builds and returns a new locale matcher.
@@ -519,27 +519,27 @@ public:
          * @return LocaleMatcher
          * @stable ICU 65
          */
-        LocaleMatcher build(UErrorCode &errorCode) const;
+        LocaleMatcher build(UError_ਕੋਡ &error_ਕੋਡ) ਅਚਲ;
 
-    private:
-        friend class LocaleMatcher;
+    ਨਿਜੀ:
+        ਮਿੱਤਰ class LocaleMatcher;
 
-        Builder(const Builder &other) = delete;
-        Builder &operator=(const Builder &other) = delete;
+        Builder(ਅਚਲ Builder &other) = delete;
+        Builder &ਸੰਚਾਲਕ=(ਅਚਲ Builder &other) = delete;
 
-        void clearSupportedLocales();
-        bool ensureSupportedLocaleVector();
+        ਖਾਲੀ clearSupportedLocales();
+        bool ensure_Supported_Locale_ਸਦਿਸ਼();
 
-        UErrorCode errorCode_ = U_ZERO_ERROR;
+        UError_ਕੋਡ error_ਕੋਡ_2 = U_ZERO_ERROR;
         UVector *supportedLocales_ = nullptr;
-        int32_t thresholdDistance_ = -1;
-        ULocMatchDemotion demotion_ = ULOCMATCH_DEMOTION_REGION;
+        int32_t ਹੱਦ_ਦੂਰੀ = -1;
+        ULoc_ਮੇਲ_Demotion demotion_ = ULOCMATCH_DEMOTION_REGION;
         Locale *defaultLocale_ = nullptr;
         bool withDefault_ = true;
-        ULocMatchFavorSubtag favor_ = ULOCMATCH_FAVOR_LANGUAGE;
-        ULocMatchDirection direction_ = ULOCMATCH_DIRECTION_WITH_ONE_WAY;
-        Locale *maxDistanceDesired_ = nullptr;
-        Locale *maxDistanceSupported_ = nullptr;
+        ULoc_ਮੇਲ_Favor_Subtag favor_ = ULOCMATCH_FAVOR_LANGUAGE;
+        ULoc_ਮੇਲ_Direction direction_ = ULOCMATCH_DIRECTION_WITH_ONE_WAY;
+        Locale *max_ਦੂਰੀ_Desired = nullptr;
+        Locale *max_ਦੂਰੀ_Supported = nullptr;
     };
 
     // FYI No public LocaleMatcher constructors in C++; use the Builder.
@@ -566,7 +566,7 @@ public:
      * @return *this
      * @stable ICU 65
      */
-    LocaleMatcher& operator=(LocaleMatcher&& src) noexcept U_LIFETIME_BOUND;
+    LocaleMatcher& ਸੰਚਾਲਕ=(LocaleMatcher&& src) noexcept U_LIFETIME_BOUND;
 
     /**
      * Returns the supported locale which best matches the desired locale.
@@ -578,8 +578,8 @@ public:
      * @return the best-matching supported locale.
      * @stable ICU 65
      */
-    const Locale* getBestMatch(const Locale& desiredLocale,
-                               UErrorCode& errorCode) const U_LIFETIME_BOUND;
+    ਅਚਲ Locale* get_ਉੱਤਮ_ਮੇਲ(ਅਚਲ Locale& desiredLocale,
+                               UError_ਕੋਡ& error_ਕੋਡ) ਅਚਲ U_LIFETIME_BOUND;
 
     /**
      * Returns the supported locale which best matches one of the desired locales.
@@ -591,8 +591,8 @@ public:
      * @return the best-matching supported locale.
      * @stable ICU 65
      */
-    const Locale* getBestMatch(Locale::Iterator& desiredLocales,
-                               UErrorCode& errorCode) const U_LIFETIME_BOUND;
+    ਅਚਲ Locale* get_ਉੱਤਮ_ਮੇਲ(Locale::Iterator& desiredLocales,
+                               UError_ਕੋਡ& error_ਕੋਡ) ਅਚਲ U_LIFETIME_BOUND;
 
     /**
      * Parses an Accept-Language string
@@ -608,8 +608,8 @@ public:
      * @return the best-matching supported locale.
      * @stable ICU 65
      */
-    const Locale* getBestMatchForListString(StringPiece desiredLocaleList,
-                                            UErrorCode& errorCode) const U_LIFETIME_BOUND;
+    ਅਚਲ Locale* get_ਉੱਤਮ_ਮੇਲ_For_List_String(StringPiece desiredLocaleList,
+                                            UError_ਕੋਡ& error_ਕੋਡ) ਅਚਲ U_LIFETIME_BOUND;
 
     /**
      * Returns the best match between the desired locale and the supported locales.
@@ -623,8 +623,8 @@ public:
      * @return the best-matching pair of the desired and a supported locale.
      * @stable ICU 65
      */
-    Result getBestMatchResult(const Locale& desiredLocale U_LIFETIME_BOUND,
-                              UErrorCode& errorCode) const U_LIFETIME_BOUND;
+    ਨਤੀਜਾ_2 get_ਉੱਤਮ_ਮੇਲ_ਨਤੀਜਾ(ਅਚਲ Locale& desiredLocale U_LIFETIME_BOUND,
+                              UError_ਕੋਡ& error_ਕੋਡ) ਅਚਲ U_LIFETIME_BOUND;
 
     /**
      * Returns the best match between the desired and supported locales.
@@ -638,8 +638,8 @@ public:
      * @return the best-matching pair of a desired and a supported locale.
      * @stable ICU 65
      */
-    Result getBestMatchResult(Locale::Iterator& desiredLocales,
-                              UErrorCode& errorCode) const U_LIFETIME_BOUND;
+    ਨਤੀਜਾ_2 get_ਉੱਤਮ_ਮੇਲ_ਨਤੀਜਾ(Locale::Iterator& desiredLocales,
+                              UError_ਕੋਡ& error_ਕੋਡ) ਅਚਲ U_LIFETIME_BOUND;
 
     /**
      * Returns true if the pair of locales matches acceptably.
@@ -654,9 +654,9 @@ public:
      * @return true if the pair of locales matches acceptably.
      * @stable ICU 68
      */
-    UBool isMatch(const Locale &desired, const Locale &supported, UErrorCode &errorCode) const;
+    UBool is_ਮੇਲ(ਅਚਲ Locale &desired, ਅਚਲ Locale &supported, UError_ਕੋਡ &error_ਕੋਡ) ਅਚਲ;
 
-#ifndef U_HIDE_INTERNAL_API
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ U_HIDE_ਅੰਦਰੂਨੀ_API
     /**
      * Returns a fraction between 0 and 1, where 1 means that the languages are a
      * perfect match, and 0 means that they are completely different.
@@ -675,41 +675,41 @@ public:
      * @return value between 0 and 1, inclusive.
      * @internal (has a known user)
      */
-    double internalMatch(const Locale &desired, const Locale &supported, UErrorCode &errorCode) const;
-#endif  // U_HIDE_INTERNAL_API
+    ਦੁੱਗਣਾ ਅੰਦਰੂਨੀ_ਮੇਲ(ਅਚਲ Locale &desired, ਅਚਲ Locale &supported, UError_ਕੋਡ &error_ਕੋਡ) ਅਚਲ;
+#ਜੇ_ਅੰਤ  // U_HIDE_INTERNAL_API
 
-private:
-    LocaleMatcher(const Builder &builder, UErrorCode &errorCode);
-    LocaleMatcher(const LocaleMatcher &other) = delete;
-    LocaleMatcher &operator=(const LocaleMatcher &other) = delete;
+ਨਿਜੀ:
+    LocaleMatcher(ਅਚਲ Builder &builder, UError_ਕੋਡ &error_ਕੋਡ);
+    LocaleMatcher(ਅਚਲ LocaleMatcher &other) = delete;
+    LocaleMatcher &ਸੰਚਾਲਕ=(ਅਚਲ LocaleMatcher &other) = delete;
 
-    int32_t putIfAbsent(const LSR &lsr, int32_t i, int32_t suppLength, UErrorCode &errorCode);
+    int32_t putIfAbsent(ਅਚਲ LSR &lsr, int32_t i, int32_t supp_ਲੰਮਾਈ, UError_ਕੋਡ &error_ਕੋਡ);
 
-    std::optional<int32_t> getBestSuppIndex(LSR desiredLSR, LocaleLsrIterator *remainingIter, UErrorCode &errorCode) const;
+    std::optional<int32_t> get_ਉੱਤਮ_Supp_ਸੂਚਕਾਂਕ(LSR desiredLSR, LocaleLsrIterator *ਬਚਿਆ_Iter, UError_ਕੋਡ &error_ਕੋਡ) ਅਚਲ;
 
-    const LikelySubtags &likelySubtags;
-    const LocaleDistance &localeDistance;
-    int32_t thresholdDistance;
-    int32_t demotionPerDesiredLocale;
-    ULocMatchFavorSubtag favorSubtag;
-    ULocMatchDirection direction;
+    ਅਚਲ LikelySubtags &likelySubtags;
+    ਅਚਲ Locale_ਦੂਰੀ &locale_ਦੂਰੀ;
+    int32_t ਹੱਦ_ਦੂਰੀ_2;
+    int32_t demotion_ਪ੍ਰਤੀ_Desired_Locale;
+    ULoc_ਮੇਲ_Favor_Subtag favorSubtag;
+    ULoc_ਮੇਲ_Direction direction;
 
     // These are in input order.
-    const Locale ** supportedLocales;
+    ਅਚਲ Locale ** supportedLocales;
     LSR *lsrs;
-    int32_t supportedLocalesLength;
+    int32_t supported_Locales_ਲੰਮਾਈ;
     // These are in preference order: 1. Default locale 2. paradigm locales 3. others.
-    UHashtable *supportedLsrToIndex;  // Map<LSR, Integer>
+    UHashtable *supported_Lsr_ਮੰਜ਼ਿਲ_ਸੂਚਕਾਂਕ;  // Map<LSR, Integer>
     // Array versions of the supportedLsrToIndex keys and values.
     // The distance lookup loops over the supportedLSRs and returns the index of the best match.
-    const LSR **supportedLSRs;
+    ਅਚਲ LSR **supportedLSRs;
     int32_t *supportedIndexes;
-    int32_t supportedLSRsLength;
+    int32_t supported_LSRs_ਲੰਮਾਈ;
     Locale *ownedDefaultLocale;
-    const Locale *defaultLocale;
+    ਅਚਲ Locale *defaultLocale;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif  // U_SHOW_CPLUSPLUS_API
-#endif  // __LOCALEMATCHER_H__
+#ਜੇ_ਅੰਤ  // U_SHOW_CPLUSPLUS_API
+#ਜੇ_ਅੰਤ  // __LOCALEMATCHER_H__

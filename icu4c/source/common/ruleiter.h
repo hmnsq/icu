@@ -10,16 +10,16 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#ifndef _RULEITER_H_
-#define _RULEITER_H_
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ _RULEITER_H_
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ _RULEITER_H_
 
-#include "unicode/uobject.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uobject.h"
 
 U_NAMESPACE_BEGIN
 
 class UnicodeString;
 class ParsePosition;
-class SymbolTable;
+class ਚਿੰਨ੍ਹ_ਸਾਰਣੀ;
 
 /**
  * An iterator that returns 32-bit code points.  This class is deliberately
@@ -28,7 +28,7 @@ class SymbolTable;
  * @author Alan Liu
  * @since ICU 2.8
  */
-class RuleCharacterIterator : public UMemory {
+class ਨਿਯਮ_Character_Iterator : ਜਨਤਕ UMemory {
 
     // TODO: Ideas for later.  (Do not implement if not needed, lest the
     // code coverage numbers go down due to unused methods.)
@@ -36,11 +36,11 @@ class RuleCharacterIterator : public UMemory {
     // 2. Rather than return DONE, throw an exception if the end
     // is reached -- this is an alternate usage model, probably not useful.
 
-private:
+ਨਿਜੀ:
     /**
      * Text being iterated.
      */    
-    const UnicodeString& text;
+    ਅਚਲ UnicodeString& ਪਾਠ;
 
     /**
      * Position of iterator.
@@ -50,44 +50,44 @@ private:
     /**
      * Symbol table used to parse and dereference variables.  May be 0.
      */
-    const SymbolTable* sym;
+    ਅਚਲ ਚਿੰਨ੍ਹ_ਸਾਰਣੀ* sym;
     
     /**
      * Current variable expansion, or 0 if none.
      */
-    const UnicodeString* buf;
+    ਅਚਲ UnicodeString* buf;
 
     /**
      * Position within buf.  Meaningless if buf == 0.
      */
     int32_t bufPos;
 
-public:
+ਜਨਤਕ:
     /**
      * Value returned when there are no more characters to iterate.
      */
-    static constexpr int32_t DONE = -1;
+    ਸਥਿਰ constexpr int32_t ਪੂਰਾ_2 = -1;
 
     /**
      * Bitmask option to enable parsing of variable names.  If (options &
      * PARSE_VARIABLES) != 0, then an embedded variable will be expanded to
      * its value.  Variables are parsed using the SymbolTable API.
      */
-    static constexpr int32_t PARSE_VARIABLES = 1;
+    ਸਥਿਰ constexpr int32_t PARSE_VARIABLES = 1;
 
     /**
      * Bitmask option to enable parsing of escape sequences.  If (options &
      * PARSE_ESCAPES) != 0, then an embedded escape sequence will be expanded
      * to its value.  Escapes are parsed using Utility.unescapeAt().
      */
-    static constexpr int32_t PARSE_ESCAPES   = 2;
+    ਸਥਿਰ constexpr int32_t PARSE_ESCAPES   = 2;
 
     /**
      * Bitmask option to enable skipping of whitespace.  If (options &
      * SKIP_WHITESPACE) != 0, then Pattern_White_Space characters will be silently
      * skipped, as if they were not present in the input.
      */
-    static constexpr int32_t SKIP_WHITESPACE = 4;
+    ਸਥਿਰ constexpr int32_t SKIP_WHITESPACE = 4;
 
     /**
      * Constructs an iterator over the given text, starting at the given
@@ -100,13 +100,13 @@ public:
      * variable has been dereferenced, then pos will <em>not</em> increment as
      * characters of the variable value are iterated.
      */
-    RuleCharacterIterator(const UnicodeString& text, const SymbolTable* sym,
+    ਨਿਯਮ_Character_Iterator(ਅਚਲ UnicodeString& ਪਾਠ, ਅਚਲ ਚਿੰਨ੍ਹ_ਸਾਰਣੀ* sym,
                           ParsePosition& pos);
     
     /**
      * Returns true if this iterator has no more characters to return.
      */
-    UBool atEnd() const;
+    UBool at_ਸਿਰਾ() ਅਚਲ;
 
     /**
      * Returns the next character using the given options, or DONE if there
@@ -122,22 +122,22 @@ public:
      * an invalid escape sequence is seen.
      * @return the current 32-bit code point, or DONE
      */
-    UChar32 next(int32_t options, UBool& isEscaped, UErrorCode& ec);
+    UChar32 ਅਗਲਾ(int32_t options, UBool& isEscaped, UError_ਕੋਡ& ec);
 
     /**
      * Returns true if this iterator is currently within a variable expansion.
      */
-    inline UBool inVariable() const;
+    ਸਤਰਅੰਦਰ UBool ਵਿੱਚ_Variable() ਅਚਲ;
 
     /**
      * An opaque object representing the position of a RuleCharacterIterator.
      */
-    struct Pos : public UMemory {
-    private:
-        const UnicodeString* buf;
+    ਬਣਤਰ Pos : ਜਨਤਕ UMemory {
+    ਨਿਜੀ:
+        ਅਚਲ UnicodeString* buf;
         int32_t pos;
         int32_t bufPos;
-        friend class RuleCharacterIterator;
+        ਮਿੱਤਰ class ਨਿਯਮ_Character_Iterator;
     };
 
     /**
@@ -157,14 +157,14 @@ public:
      * @param p a position object to be set to this iterator's
      * current position.
      */
-    void getPos(Pos& p) const;
+    ਖਾਲੀ getPos(Pos& p) ਅਚਲ;
 
     /**
      * Restores this iterator to the position it had when getPos()
      * set the given object.
      * @param p a position object previously set by getPos()
      */
-    void setPos(const Pos& p);
+    ਖਾਲੀ ਸੈੱਟ_Pos(ਅਚਲ Pos& p);
 
     /**
      * Skips ahead past any ignored characters, as indicated by the given
@@ -174,7 +174,7 @@ public:
      * @param options one or more of the following options, bitwise-OR-ed
      * together: PARSE_VARIABLES, PARSE_ESCAPES, SKIP_WHITESPACE.
      */
-    void skipIgnored(int32_t options);
+    ਖਾਲੀ skipIgnored(int32_t options);
 
     /**
      * Returns a string containing the remainder of the characters to be
@@ -190,14 +190,14 @@ public:
      * @param maxLookAhead The maximum to copy into the result.
      * @return a reference to result
      */
-    UnicodeString& lookahead(UnicodeString& result, int32_t maxLookAhead = -1) const;
+    UnicodeString& lookahead(UnicodeString& ਨਤੀਜਾ, int32_t maxLookAhead = -1) ਅਚਲ;
 
     /**
      * Advances the position by the given number of 16-bit code units.
      * This is useful in conjunction with the lookahead() method.
      * @param count the number of 16-bit code units to jump over
      */
-    void jumpahead(int32_t count);
+    ਖਾਲੀ jumpahead(int32_t ਗਿਣਤੀ_2);
 
     /**
      * Returns a string representation of this object, consisting of the
@@ -208,26 +208,26 @@ public:
      */
 //    UnicodeString& toString(UnicodeString& result) const;
     
-private:
+ਨਿਜੀ:
     /**
      * Returns the current 32-bit code point without parsing escapes, parsing
      * variables, or skipping whitespace.
      * @return the current 32-bit code point
      */
-    UChar32 _current() const;
+    UChar32 _current() ਅਚਲ;
     
     /**
      * Advances the position by the given amount.
      * @param count the number of 16-bit code units to advance past
      */
-    void _advance(int32_t count);
+    ਖਾਲੀ _advance(int32_t ਗਿਣਤੀ_2);
 };
 
-inline UBool RuleCharacterIterator::inVariable() const {
-    return buf != nullptr;
+ਸਤਰਅੰਦਰ UBool ਨਿਯਮ_Character_Iterator::ਵਿੱਚ_Variable() ਅਚਲ {
+    ਵਾਪਸ buf != nullptr;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif // _RULEITER_H_
+#ਜੇ_ਅੰਤ // _RULEITER_H_
 //eof

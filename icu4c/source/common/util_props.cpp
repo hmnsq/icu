@@ -10,10 +10,10 @@
 **********************************************************************
 */
 
-#include "unicode/uchar.h"
-#include "unicode/utf16.h"
-#include "patternprops.h"
-#include "util.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uchar.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf16.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "patternprops.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "util.h"
 
 U_NAMESPACE_BEGIN
 
@@ -25,45 +25,45 @@ U_NAMESPACE_BEGIN
  * character to parse.  On output, the character after the last
  * parsed character.
  */
-int32_t ICU_Utility::parseInteger(const UnicodeString& rule, int32_t& pos, int32_t limit) {
+int32_t ICU_Utility::parseInteger(ਅਚਲ UnicodeString& ਨਿਯਮ, int32_t& pos, int32_t ਹੱਦਬੰਦੀ) {
     int32_t count = 0;
     int32_t value = 0;
     int32_t p = pos;
     int8_t radix = 10;
 
-    if (p < limit && rule.charAt(p) == 48 /*0*/) {
-        if (p+1 < limit && (rule.charAt(p+1) == 0x78 /*x*/ || rule.charAt(p+1) == 0x58 /*X*/)) {
+    ਜੇ (p < ਹੱਦਬੰਦੀ && ਨਿਯਮ.charAt(p) == 48 /*0*/) {
+        ਜੇ (p+1 < ਹੱਦਬੰਦੀ && (ਨਿਯਮ.charAt(p+1) == 0x78 /*x*/ || ਨਿਯਮ.charAt(p+1) == 0x58 /*X*/)) {
             p += 2;
             radix = 16;
         }
-        else {
+        ਨਹੀਂਤਾਂ {
             p++;
             count = 1;
             radix = 8;
         }
     }
 
-    while (p < limit) {
-        int32_t d = u_digit(rule.charAt(p++), radix);
-        if (d < 0) {
+    ਜਦੋਂ (p < ਹੱਦਬੰਦੀ) {
+        int32_t d = u_digit(ਨਿਯਮ.charAt(p++), radix);
+        ਜੇ (d < 0) {
             --p;
-            break;
+            ਰੋਕੋ;
         }
         ++count;
         int32_t v = (value * radix) + d;
-        if (v <= value) {
+        ਜੇ (v <= value) {
             // If there are too many input digits, at some point
             // the value will go negative, e.g., if we have seen
             // "0x8000000" already and there is another '0', when
             // we parse the next 0 the value will go negative.
-            return 0;
+            ਵਾਪਸ 0;
         }
         value = v;
     }
-    if (count > 0) {
+    ਜੇ (count > 0) {
         pos = p;
     }
-    return value;
+    ਵਾਪਸ value;
 }
 
 /**
@@ -85,49 +85,49 @@ int32_t ICU_Utility::parseInteger(const UnicodeString& rule, int32_t& pos, int32
  * @return the position after the last character parsed, or -1 if
  * the parse failed
  */
-int32_t ICU_Utility::parsePattern(const UnicodeString& rule, int32_t pos, int32_t limit,
-                              const UnicodeString& pattern, int32_t* parsedInts) {
+int32_t ICU_Utility::parse_ਨਮੂਨਾ(ਅਚਲ UnicodeString& ਨਿਯਮ, int32_t pos, int32_t ਹੱਦਬੰਦੀ,
+                              ਅਚਲ UnicodeString& ਨਮੂਨਾ, int32_t* parsedInts) {
     // TODO Update this to handle surrogates
     int32_t p;
-    int32_t intCount = 0; // number of integers parsed
-    for (int32_t i=0; i<pattern.length(); ++i) {
-        char16_t cpat = pattern.charAt(i);
+    int32_t int_ਗਿਣਤੀ = 0; // number of integers parsed
+    ਲਈ (int32_t i=0; i<ਨਮੂਨਾ.length(); ++i) {
+        char16_t cpat = ਨਮੂਨਾ.charAt(i);
         char16_t c;
-        switch (cpat) {
-        case 32 /*' '*/:
-            if (pos >= limit) {
-                return -1;
+        ਚੋਣ (cpat) {
+        ਹਾਲਤ 32 /*' '*/:
+            ਜੇ (pos >= ਹੱਦਬੰਦੀ) {
+                ਵਾਪਸ -1;
             }
-            c = rule.charAt(pos++);
-            if (!PatternProps::isWhiteSpace(c)) {
-                return -1;
+            c = ਨਿਯਮ.charAt(pos++);
+            ਜੇ (!ਨਮੂਨਾ_Props::isWhiteSpace(c)) {
+                ਵਾਪਸ -1;
             }
             // FALL THROUGH to skipWhitespace
             U_FALLTHROUGH;
-        case 126 /*'~'*/:
-            pos = skipWhitespace(rule, pos);
-            break;
-        case 35 /*'#'*/:
+        ਹਾਲਤ 126 /*'~'*/:
+            pos = skipWhitespace(ਨਿਯਮ, pos);
+            ਰੋਕੋ;
+        ਹਾਲਤ 35 /*'#'*/:
             p = pos;
-            parsedInts[intCount++] = parseInteger(rule, p, limit);
-            if (p == pos) {
+            parsedInts[int_ਗਿਣਤੀ++] = parseInteger(ਨਿਯਮ, p, ਹੱਦਬੰਦੀ);
+            ਜੇ (p == pos) {
                 // Syntax error; failed to parse integer
-                return -1;
+                ਵਾਪਸ -1;
             }
             pos = p;
-            break;
-        default:
-            if (pos >= limit) {
-                return -1;
+            ਰੋਕੋ;
+        ਮੂਲ:
+            ਜੇ (pos >= ਹੱਦਬੰਦੀ) {
+                ਵਾਪਸ -1;
             }
-            c = static_cast<char16_t>(u_tolower(rule.charAt(pos++)));
-            if (c != cpat) {
-                return -1;
+            c = static_cast<char16_t>(u_tolower(ਨਿਯਮ.charAt(pos++)));
+            ਜੇ (c != cpat) {
+                ਵਾਪਸ -1;
             }
-            break;
+            ਰੋਕੋ;
         }
     }
-    return pos;
+    ਵਾਪਸ pos;
 }
 
 /**
@@ -143,30 +143,30 @@ int32_t ICU_Utility::parsePattern(const UnicodeString& rule, int32_t pos, int32_
  * @return the Unicode identifier, or an empty string if there is
  * no valid identifier at pos.
  */
-UnicodeString ICU_Utility::parseUnicodeIdentifier(const UnicodeString& str, int32_t& pos) {
+UnicodeString ICU_Utility::parseUnicodeIdentifier(ਅਚਲ UnicodeString& str, int32_t& pos) {
     // assert(pos < str.length());
     UnicodeString buf;
-    int p = pos;
-    while (p < str.length()) {
+    ਪੂਰਨ p = pos;
+    ਜਦੋਂ (p < str.length()) {
         UChar32 ch = str.char32At(p);
-        if (buf.length() == 0) {
-            if (u_isIDStart(ch)) {
+        ਜੇ (buf.length() == 0) {
+            ਜੇ (u_isIDStart(ch)) {
                 buf.append(ch);
-            } else {
+            } ਨਹੀਂਤਾਂ {
                 buf.truncate(0);
-                return buf;
+                ਵਾਪਸ buf;
             }
-        } else {
-            if (u_isIDPart(ch)) {
+        } ਨਹੀਂਤਾਂ {
+            ਜੇ (u_isIDPart(ch)) {
                 buf.append(ch);
-            } else {
-                break;
+            } ਨਹੀਂਤਾਂ {
+                ਰੋਕੋ;
             }
         }
-        p += U16_LENGTH(ch);
+        p += U16_ਲੰਮਾਈ(ch);
     }
     pos = p;
-    return buf;
+    ਵਾਪਸ buf;
 }
 
 /**
@@ -185,32 +185,32 @@ UnicodeString ICU_Utility::parseUnicodeIdentifier(const UnicodeString& str, int3
  * point to a valid digit on entry, or if the number to be parsed
  * does not fit into a 31-bit unsigned integer.
  */
-int32_t ICU_Utility::parseNumber(const UnicodeString& text,
+int32_t ICU_Utility::parse_ਸੰਖਿਆ(ਅਚਲ UnicodeString& ਪਾਠ,
                                  int32_t& pos, int8_t radix) {
     // assert(pos[0] >= 0);
     // assert(radix >= 2);
     // assert(radix <= 36);
     int32_t n = 0;
     int32_t p = pos;
-    while (p < text.length()) {
-        UChar32 ch = text.char32At(p);
+    ਜਦੋਂ (p < ਪਾਠ.length()) {
+        UChar32 ch = ਪਾਠ.char32At(p);
         int32_t d = u_digit(ch, radix);
-        if (d < 0) {
-            break;
+        ਜੇ (d < 0) {
+            ਰੋਕੋ;
         }
         int64_t update = radix*static_cast<int64_t>(n) + d;
-        if (update > INT32_MAX) {
-            return -1;
+        ਜੇ (update > INT32_MAX) {
+            ਵਾਪਸ -1;
         }
         n = static_cast<int32_t>(update);
         ++p;
     }
-    if (p == pos) {
-        return -1;
+    ਜੇ (p == pos) {
+        ਵਾਪਸ -1;
     }
     pos = p;
-    return n;
+    ਵਾਪਸ n;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 

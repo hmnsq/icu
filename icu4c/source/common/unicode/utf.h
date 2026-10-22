@@ -113,15 +113,15 @@
  * @stable ICU 2.4
  */
 
-#ifndef __UTF_H__
-#define __UTF_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __UTF_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __UTF_H__
 
-#include "unicode/umachine.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/umachine.h"
 /* include the utfXX.h after the following definitions */
 
 /* single-code point definitions -------------------------------------------- */
 
-#ifndef U_HIDE_DRAFT_API
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ U_HIDE_DRAFT_API
 
 /**
  * Is c a Unicode code point U+0000..U+10FFFF?
@@ -133,7 +133,7 @@
  * @see AllCodePoints
  * @see U_IS_SCALAR_VALUE
  */
-#define U_IS_CODE_POINT(c) ((uint32_t)(c)<=0x10ffff)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_IS_ਕੋਡ_ਬਿੰਦੂ(c) ((uint32_t)(c)<=0x10ffff)
 
 /**
  * Is c a Unicode scalar value, that is, a non-surrogate code point?
@@ -146,9 +146,9 @@
  * @see AllScalarValues
  * @see U_IS_CODE_POINT
  */
-#define U_IS_SCALAR_VALUE(c) ((uint32_t)(c)<0xd800 || (0xe000<=(c) && (c)<=0x10ffff))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_IS_SCALAR_ਮੁੱਲ(c) ((uint32_t)(c)<0xd800 || (0xe000<=(c) && (c)<=0x10ffff))
 
-#endif  // U_HIDE_DRAFT_API
+#ਜੇ_ਅੰਤ  // U_HIDE_DRAFT_API
 
 /**
  * Is this code point a Unicode noncharacter?
@@ -158,7 +158,7 @@
  * @return true or false
  * @stable ICU 2.4
  */
-#define U_IS_UNICODE_NONCHAR(c) \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_IS_UNICODE_NONCHAR(c) \
     ((c)>=0xfdd0 && \
      ((c)<=0xfdef || ((c)&0xfffe)==0xfffe) && (c)<=0x10ffff)
 
@@ -179,7 +179,7 @@
  * @return true or false
  * @stable ICU 2.4
  */
-#define U_IS_UNICODE_CHAR(c) \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_IS_UNICODE_CHAR(c) \
     ((uint32_t)(c)<0xd800 || \
         (0xe000<=(c) && (c)<=0x10ffff && !U_IS_UNICODE_NONCHAR(c)))
 
@@ -189,7 +189,7 @@
  * @return true or false
  * @stable ICU 2.8
  */
-#define U_IS_BMP(c) ((uint32_t)(c)<=0xffff)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_IS_BMP(c) ((uint32_t)(c)<=0xffff)
 
 /**
  * Is this code point a supplementary code point (U+10000..U+10ffff)?
@@ -197,7 +197,7 @@
  * @return true or false
  * @stable ICU 2.8
  */
-#define U_IS_SUPPLEMENTARY(c) ((uint32_t)((c)-0x10000)<=0xfffff)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_IS_SUPPLEMENTARY(c) ((uint32_t)((c)-0x10000)<=0xfffff)
  
 /**
  * Is this code point a lead surrogate (U+d800..U+dbff)?
@@ -205,7 +205,7 @@
  * @return true or false
  * @stable ICU 2.4
  */
-#define U_IS_LEAD(c) (((c)&0xfffffc00)==0xd800)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_IS_LEAD(c) (((c)&0xfffffc00)==0xd800)
 
 /**
  * Is this code point a trail surrogate (U+dc00..U+dfff)?
@@ -213,7 +213,7 @@
  * @return true or false
  * @stable ICU 2.4
  */
-#define U_IS_TRAIL(c) (((c)&0xfffffc00)==0xdc00)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_IS_TRAIL(c) (((c)&0xfffffc00)==0xdc00)
 
 /**
  * Is this code point a surrogate (U+d800..U+dfff)?
@@ -221,7 +221,7 @@
  * @return true or false
  * @stable ICU 2.4
  */
-#define U_IS_SURROGATE(c) (((c)&0xfffff800)==0xd800)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_IS_SURROGATE(c) (((c)&0xfffff800)==0xd800)
 
 /**
  * Assuming c is a surrogate code point (U_IS_SURROGATE(c)),
@@ -230,7 +230,7 @@
  * @return true or false
  * @stable ICU 2.4
  */
-#define U_IS_SURROGATE_LEAD(c) (((c)&0x400)==0)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_IS_SURROGATE_LEAD(c) (((c)&0x400)==0)
 
 /**
  * Assuming c is a surrogate code point (U_IS_SURROGATE(c)),
@@ -239,18 +239,18 @@
  * @return true or false
  * @stable ICU 4.2
  */
-#define U_IS_SURROGATE_TRAIL(c) (((c)&0x400)!=0)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_IS_SURROGATE_TRAIL(c) (((c)&0x400)!=0)
 
 /* include the utfXX.h ------------------------------------------------------ */
 
-#if !U_NO_DEFAULT_INCLUDE_UTF_HEADERS
+#ਜੇ !U_NO_DEFAULT_INCLUDE_UTF_ਸਿਰਲੇਖਾਂ
 
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf8.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf16.h"
 
 /* utf_old.h contains deprecated, pre-ICU 2.4 definitions */
-#include "unicode/utf_old.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf_old.h"
 
-#endif  /* !U_NO_DEFAULT_INCLUDE_UTF_HEADERS */
+#ਜੇ_ਅੰਤ  /* !U_NO_DEFAULT_INCLUDE_UTF_HEADERS */
 
-#endif  /* __UTF_H__ */
+#ਜੇ_ਅੰਤ  /* __UTF_H__ */

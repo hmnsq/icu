@@ -6,27 +6,27 @@
  * others. All Rights Reserved.
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE || !UCONFIG_NO_TRANSLITERATION
+#ਜੇ !UCONFIG_NO_SERVICE || !UCONFIG_NO_TRANSLITERATION
 
-#include "unicode/resbund.h"
-#include "unicode/uenum.h"
-#include "cmemory.h"
-#include "ustrfmt.h"
-#include "locutil.h"
-#include "charstr.h"
-#include "ucln_cmn.h"
-#include "uassert.h"
-#include "umutex.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/resbund.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uenum.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ustrfmt.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "locutil.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "charstr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucln_cmn.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "umutex.h"
 
 // see LocaleUtility::getAvailableLocaleNames
-static icu::UInitOnce   LocaleUtilityInitOnce {};
-static icu::Hashtable * LocaleUtility_cache = nullptr;
+ਸਥਿਰ icu::UInitOnce   LocaleUtilityInitOnce {};
+ਸਥਿਰ icu::Hashtable * LocaleUtility_cache = ਖਾਲੀ_ਸੂਚਕ;
 
-#define UNDERSCORE_CHAR ((char16_t)0x005f)
-#define AT_SIGN_CHAR    ((char16_t)64)
-#define PERIOD_CHAR     ((char16_t)46)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UNDERSCORE_CHAR ((char16_t)0x005f)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AT_SIGN_CHAR    ((char16_t)64)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ PERIOD_CHAR     ((char16_t)46)
 
 /*
  ******************************************************************
@@ -36,42 +36,42 @@ static icu::Hashtable * LocaleUtility_cache = nullptr;
  * Release all static memory held by Locale Utility.  
  */
 U_CDECL_BEGIN
-static UBool U_CALLCONV service_cleanup() {
-    if (LocaleUtility_cache) {
-        delete LocaleUtility_cache;
-        LocaleUtility_cache = nullptr;
+ਸਥਿਰ UBool U_CALLCONV service_cleanup() {
+    ਜੇ (LocaleUtility_cache) {
+        ਮਿਟਾਓ LocaleUtility_cache;
+        LocaleUtility_cache = ਖਾਲੀ_ਸੂਚਕ;
     }
-    return true;
+    ਵਾਪਸ ਸੱਚ;
 }
 
 
-static void U_CALLCONV locale_utility_init(UErrorCode &status) {
-    using namespace icu;
-    U_ASSERT(LocaleUtility_cache == nullptr);
-    ucln_common_registerCleanup(UCLN_COMMON_SERVICE, service_cleanup);
-    LocaleUtility_cache = new Hashtable(status);
-    if (U_FAILURE(status)) {
-        delete LocaleUtility_cache;
-        LocaleUtility_cache = nullptr;
-        return;
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV locale_utility_init(UError_ਕੋਡ &ਸਥਿਤੀ) {
+    ਵਰਤੋਂ ਨਾਮਾਕਾਸ਼ icu;
+    U_ASSERT(LocaleUtility_cache == ਖਾਲੀ_ਸੂਚਕ);
+    ucln_common_ਰਜਿਸਟਰ_Cleanup(UCLN_COMMON_SERVICE, service_cleanup);
+    LocaleUtility_cache = ਨਵਾਂ Hashtable(ਸਥਿਤੀ);
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਮਿਟਾਓ LocaleUtility_cache;
+        LocaleUtility_cache = ਖਾਲੀ_ਸੂਚਕ;
+        ਵਾਪਸ;
     }
-    if (LocaleUtility_cache == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    ਜੇ (LocaleUtility_cache == ਖਾਲੀ_ਸੂਚਕ) {
+        ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+        ਵਾਪਸ;
     }
-    LocaleUtility_cache->setValueDeleter(uhash_deleteHashtable);
+    LocaleUtility_cache->ਸੈੱਟ_ਮੁੱਲ_Deleter(uhash_deleteHashtable);
 }
 
-U_CDECL_END
+U_CDECL_ਸਿਰਾ
 
 U_NAMESPACE_BEGIN
 
 UnicodeString&
-LocaleUtility::canonicalLocaleString(const UnicodeString* id, UnicodeString& result)
+LocaleUtility::canonicalLocaleString(ਅਚਲ UnicodeString* id, UnicodeString& ਨਤੀਜਾ)
 {
-  if (id == nullptr) {
-    result.setToBogus();
-  } else {
+  ਜੇ (id == ਖਾਲੀ_ਸੂਚਕ) {
+    ਨਤੀਜਾ.ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus();
+  } ਨਹੀਂਤਾਂ {
     // Fix case only (no other changes) up to the first '@' or '.' or
     // end of string, whichever comes first.  In 3.0 I changed this to
     // stop at first '@' or '.'.  It used to run out to the end of
@@ -79,38 +79,38 @@ LocaleUtility::canonicalLocaleString(const UnicodeString* id, UnicodeString& res
     // structurally incorrect.  See below.  [alan 3.0]
 
     // TODO: Doug, you might want to revise this...
-    result = *id;
+    ਨਤੀਜਾ = *id;
     int32_t i = 0;
-    int32_t end = result.indexOf(AT_SIGN_CHAR);
-    int32_t n = result.indexOf(PERIOD_CHAR);
-    if (n >= 0 && n < end) {
-        end = n;
+    int32_t ਸਿਰਾ = ਨਤੀਜਾ.ਸੂਚਕਾਂਕ_ਦਾ(AT_SIGN_CHAR);
+    int32_t n = ਨਤੀਜਾ.ਸੂਚਕਾਂਕ_ਦਾ(PERIOD_CHAR);
+    ਜੇ (n >= 0 && n < ਸਿਰਾ) {
+        ਸਿਰਾ = n;
     }
-    if (end < 0) {
-        end = result.length();
+    ਜੇ (ਸਿਰਾ < 0) {
+        ਸਿਰਾ = ਨਤੀਜਾ.length();
     }
-    n = result.indexOf(UNDERSCORE_CHAR);
-    if (n < 0) {
-      n = end;
+    n = ਨਤੀਜਾ.ਸੂਚਕਾਂਕ_ਦਾ(UNDERSCORE_CHAR);
+    ਜੇ (n < 0) {
+      n = ਸਿਰਾ;
     }
-    for (; i < n; ++i) {
-      char16_t c = result.charAt(i);
-      if (c >= 0x0041 && c <= 0x005a) {
+    ਲਈ (; i < n; ++i) {
+      char16_t c = ਨਤੀਜਾ.charAt(i);
+      ਜੇ (c >= 0x0041 && c <= 0x005a) {
         c += 0x20;
-        result.setCharAt(i, c);
+        ਨਤੀਜਾ.ਸੈੱਟ_Char_At(i, c);
       }
     }
-    for (n = end; i < n; ++i) {
-      char16_t c = result.charAt(i);
-      if (c >= 0x0061 && c <= 0x007a) {
+    ਲਈ (n = ਸਿਰਾ; i < n; ++i) {
+      char16_t c = ਨਤੀਜਾ.charAt(i);
+      ਜੇ (c >= 0x0061 && c <= 0x007a) {
         c -= 0x20;
-        result.setCharAt(i, c);
+        ਨਤੀਜਾ.ਸੈੱਟ_Char_At(i, c);
       }
     }
   }
-  return result;
+  ਵਾਪਸ ਨਤੀਜਾ;
 
-#if 0
+#ਜੇ 0
     // This code does a proper full level 2 canonicalization of id.
     // It's nasty to go from char16_t to char to char to char16_t -- but
     // that's what you have to do to use the uloc_canonicalize
@@ -122,32 +122,32 @@ LocaleUtility::canonicalLocaleString(const UnicodeString* id, UnicodeString& res
     // causes some tests to fail.  [alan 3.0]
 
     // TODO: Doug, you might want to revisit this...
-    result.setToBogus();
-    if (id != 0) {
+    ਨਤੀਜਾ.ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus();
+    ਜੇ (id != 0) {
         int32_t buflen = id->length() + 8; // space for NUL
-        char* buf = (char*) uprv_malloc(buflen);
-        char* canon = (buf == 0) ? 0 : (char*) uprv_malloc(buflen);
-        if (buf != 0 && canon != 0) {
+        ਅੱਖਰ* buf = (ਅੱਖਰ*) uprv_malloc(buflen);
+        ਅੱਖਰ* canon = (buf == 0) ? 0 : (ਅੱਖਰ*) uprv_malloc(buflen);
+        ਜੇ (buf != 0 && canon != 0) {
             U_ASSERT(id->extract(0, INT32_MAX, buf, buflen) < buflen);
-            UErrorCode ec = U_ZERO_ERROR;
+            UError_ਕੋਡ ec = U_ZERO_ERROR;
             uloc_canonicalize(buf, canon, buflen, &ec);
-            if (U_SUCCESS(ec)) {
-                result = UnicodeString(canon);
+            ਜੇ (U_SUCCESS(ec)) {
+                ਨਤੀਜਾ = UnicodeString(canon);
             }
         }
         uprv_free(buf);
         uprv_free(canon);
     }
-    return result;
-#endif
+    ਵਾਪਸ ਨਤੀਜਾ;
+#ਜੇ_ਅੰਤ
 }
 
 Locale&
-LocaleUtility::initLocaleFromName(const UnicodeString& id, Locale& result)
+LocaleUtility::initLocaleFromName(ਅਚਲ UnicodeString& id, Locale& ਨਤੀਜਾ)
 {
-    if (id.isBogus()) {
-        result.setToBogus();
-    } else {
+    ਜੇ (id.isBogus()) {
+        ਨਤੀਜਾ.ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus();
+    } ਨਹੀਂਤਾਂ {
         /*
          * We need to convert from a UnicodeString to char * in order to
          * create a Locale.
@@ -166,46 +166,46 @@ LocaleUtility::initLocaleFromName(const UnicodeString& id, Locale& result)
          *
          * There should be only at most one '@' in a locale ID.
          */
-        CharString buffer;
+        CharString ਬਫਰ;
         int32_t prev, i;
         prev = 0;
-        UErrorCode status = U_ZERO_ERROR;
-        do {
-            i = id.indexOf(static_cast<char16_t>(0x40), prev);
-            if(i < 0) {
+        UError_ਕੋਡ ਸਥਿਤੀ = U_ZERO_ERROR;
+        ਕਰੋ {
+            i = id.ਸੂਚਕਾਂਕ_ਦਾ(static_cast<char16_t>(0x40), prev);
+            ਜੇ(i < 0) {
                 // no @ between prev and the rest of the string
-                buffer.appendInvariantChars(id.tempSubString(prev), status);
-                break; // done
-            } else {
+                ਬਫਰ.appendInvariantChars(id.ਆਰਜ਼ੀ_Sub_String(prev), ਸਥਿਤੀ);
+                ਰੋਕੋ; //ਪੂਰਾ
+            } ਨਹੀਂਤਾਂ {
                 // normal invariant-character conversion for text between @s
-                buffer.appendInvariantChars(id.tempSubString(prev, i - prev), status);
+                ਬਫਰ.appendInvariantChars(id.ਆਰਜ਼ੀ_Sub_String(prev, i - prev), ਸਥਿਤੀ);
                 // manually "convert" U+0040 at id[i] into '@' at buffer[i]
-                buffer.append('@', status);
+                ਬਫਰ.append('@', ਸਥਿਤੀ);
                 prev = i + 1;
             }
-        } while (U_SUCCESS(status));
-        if (U_FAILURE(status)) {
-            result.setToBogus();
-        } else {
-            result = Locale::createFromName(buffer.data());
+        } ਜਦੋਂ (U_SUCCESS(ਸਥਿਤੀ));
+        ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+            ਨਤੀਜਾ.ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus();
+        } ਨਹੀਂਤਾਂ {
+            ਨਤੀਜਾ = Locale::createFromName(ਬਫਰ.ਅੰਕੜੇ());
         }
     }
-    return result;
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
 UnicodeString&
-LocaleUtility::initNameFromLocale(const Locale& locale, UnicodeString& result)
+LocaleUtility::initNameFromLocale(ਅਚਲ Locale& locale, UnicodeString& ਨਤੀਜਾ)
 {
-    if (locale.isBogus()) {
-        result.setToBogus();
-    } else {
-        result.append(UnicodeString(locale.getName(), -1, US_INV));
+    ਜੇ (locale.isBogus()) {
+        ਨਤੀਜਾ.ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus();
+    } ਨਹੀਂਤਾਂ {
+        ਨਤੀਜਾ.append(UnicodeString(locale.getName(), -1, US_INV));
     }
-    return result;
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
-const Hashtable*
-LocaleUtility::getAvailableLocaleNames(const UnicodeString& bundleID)
+ਅਚਲ Hashtable*
+LocaleUtility::get_ਉਪਲਬਧ_Locale_ਨਾਂ(ਅਚਲ UnicodeString& bundleID)
 {
     // LocaleUtility_cache is a hash-of-hashes.  The top-level keys
     // are path strings ('bundleID') passed to
@@ -214,63 +214,63 @@ LocaleUtility::getAvailableLocaleNames(const UnicodeString& bundleID)
     // from ures_openAvailableLocales.  The second-level values are
     // garbage ((void*)1 or other random pointer).
 
-    UErrorCode status = U_ZERO_ERROR;
-    umtx_initOnce(LocaleUtilityInitOnce, locale_utility_init, status);
+    UError_ਕੋਡ ਸਥਿਤੀ = U_ZERO_ERROR;
+    umtx_initOnce(LocaleUtilityInitOnce, locale_utility_init, ਸਥਿਤੀ);
     Hashtable *cache = LocaleUtility_cache;
-    if (cache == nullptr) {
+    ਜੇ (cache == ਖਾਲੀ_ਸੂਚਕ) {
         // Catastrophic failure.
-        return nullptr;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
     Hashtable* htp;
-    umtx_lock(nullptr);
+    umtx_ਤਾਲਾ(ਖਾਲੀ_ਸੂਚਕ);
     htp = static_cast<Hashtable*>(cache->get(bundleID));
-    umtx_unlock(nullptr);
+    umtx_unlock(ਖਾਲੀ_ਸੂਚਕ);
 
-    if (htp == nullptr) {
-        htp = new Hashtable(status);
-        if (htp && U_SUCCESS(status)) {
+    ਜੇ (htp == ਖਾਲੀ_ਸੂਚਕ) {
+        htp = ਨਵਾਂ Hashtable(ਸਥਿਤੀ);
+        ਜੇ (htp && U_SUCCESS(ਸਥਿਤੀ)) {
             CharString cbundleID;
-            cbundleID.appendInvariantChars(bundleID, status);
-            const char* path = cbundleID.isEmpty() ? nullptr : cbundleID.data();
-            icu::LocalUEnumerationPointer uenum(ures_openAvailableLocales(path, &status));
-            for (;;) {
-                const char16_t* id = uenum_unext(uenum.getAlias(), nullptr, &status);
-                if (id == nullptr) {
-                    break;
+            cbundleID.appendInvariantChars(bundleID, ਸਥਿਤੀ);
+            ਅਚਲ ਅੱਖਰ* ਰਸਤਾ = cbundleID.is_ਖਾਲੀ_ਥਾਵਾਂ() ? ਖਾਲੀ_ਸੂਚਕ : cbundleID.ਅੰਕੜੇ();
+            icu::Local_UEnumeration_ਸੂਚਕ uenum(ures_open_ਉਪਲਬਧ_Locales(ਰਸਤਾ, &ਸਥਿਤੀ));
+            ਲਈ (;;) {
+                ਅਚਲ char16_t* id = uenum_unext(uenum.getAlias(), ਖਾਲੀ_ਸੂਚਕ, &ਸਥਿਤੀ);
+                ਜੇ (id == ਖਾਲੀ_ਸੂਚਕ) {
+                    ਰੋਕੋ;
                 }
-                htp->put(UnicodeString(id), (void*)htp, status);
+                htp->put(UnicodeString(id), (ਖਾਲੀ*)htp, ਸਥਿਤੀ);
             }
-            if (U_FAILURE(status)) {
-                delete htp;
-                return nullptr;
+            ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                ਮਿਟਾਓ htp;
+                ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
             }
-            umtx_lock(nullptr);
+            umtx_ਤਾਲਾ(ਖਾਲੀ_ਸੂਚਕ);
             Hashtable *t = static_cast<Hashtable *>(cache->get(bundleID));
-            if (t != nullptr) {
+            ਜੇ (t != ਖਾਲੀ_ਸੂਚਕ) {
                 // Another thread raced through this code, creating the cache entry first.
                 // Discard ours and return theirs.
-                umtx_unlock(nullptr);
-                delete htp;
+                umtx_unlock(ਖਾਲੀ_ਸੂਚਕ);
+                ਮਿਟਾਓ htp;
                 htp = t;
-            } else {
-                cache->put(bundleID, (void*)htp, status);
-                umtx_unlock(nullptr);
+            } ਨਹੀਂਤਾਂ {
+                cache->put(bundleID, (ਖਾਲੀ*)htp, ਸਥਿਤੀ);
+                umtx_unlock(ਖਾਲੀ_ਸੂਚਕ);
             }
         }
     }
-    return htp;
+    ਵਾਪਸ htp;
 }
 
-bool
-LocaleUtility::isFallbackOf(const UnicodeString& root, const UnicodeString& child)
+ਤਾਰਕਿਕ
+LocaleUtility::is_Fallback_ਦਾ(ਅਚਲ UnicodeString& ਜੜ੍ਹ, ਅਚਲ UnicodeString& ਬੱਚਾ)
 {
-    return child.indexOf(root) == 0 &&
-      (child.length() == root.length() ||
-       child.charAt(root.length()) == UNDERSCORE_CHAR);
+    ਵਾਪਸ ਬੱਚਾ.ਸੂਚਕਾਂਕ_ਦਾ(ਜੜ੍ਹ) == 0 &&
+      (ਬੱਚਾ.length() == ਜੜ੍ਹ.length() ||
+       ਬੱਚਾ.charAt(ਜੜ੍ਹ.length()) == UNDERSCORE_CHAR);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
 /* !UCONFIG_NO_SERVICE */
-#endif
+#ਜੇ_ਅੰਤ

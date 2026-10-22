@@ -16,14 +16,14 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UDATA_H__
-#define __UDATA_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __UDATA_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __UDATA_H__
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/localpointer.h"
+#ਜੇ_ਅੰਤ   // U_SHOW_CPLUSPLUS_API
 
 U_CDECL_BEGIN
 
@@ -42,38 +42,38 @@ U_CDECL_BEGIN
  * See the User Guide Data Management chapter.
  */
  
-#ifndef U_HIDE_INTERNAL_API
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ U_HIDE_ਅੰਦਰੂਨੀ_API
 /**
  * Character used to separate package names from tree names 
  * @internal ICU 3.0
  */
-#define U_TREE_SEPARATOR '-'
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_ਰੁੱਖ_SEPARATOR '-'
 
 /**
  * String used to separate package names from tree names 
  * @internal ICU 3.0
  */
-#define U_TREE_SEPARATOR_STRING "-"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_ਰੁੱਖ_SEPARATOR_STRING "-"
 
 /**
  * Character used to separate parts of entry names
  * @internal ICU 3.0
  */
-#define U_TREE_ENTRY_SEP_CHAR '/'
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_ਰੁੱਖ_ਇੰਦਰਾਜ_SEP_CHAR '/'
 
 /**
  * String used to separate parts of entry names
  * @internal ICU 3.0
  */
-#define U_TREE_ENTRY_SEP_STRING "/"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_ਰੁੱਖ_ਇੰਦਰਾਜ_SEP_STRING "/"
 
 /**
  * Alias for standard ICU data 
  * @internal ICU 3.0
  */
-#define U_ICUDATA_ALIAS "ICUDATA"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_ICUDATA_ALIAS "ICUDATA"
 
-#endif /* U_HIDE_INTERNAL_API */
+#ਜੇ_ਅੰਤ /* U_HIDE_INTERNAL_API */
 
 /**
  * UDataInfo contains the properties about the requested data.
@@ -113,14 +113,14 @@ U_CDECL_BEGIN
  *
  * @stable ICU 2.0
  */
-typedef struct {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ {
     /** sizeof(UDataInfo)
      *  @stable ICU 2.0 */
-    uint16_t size;
+    uint16_t ਮਾਪ_2;
 
     /** unused, set to 0 
      *  @stable ICU 2.0*/
-    uint16_t reservedWord;
+    uint16_t reserved_ਸ਼ਬਦ;
 
     /* platform data properties */
     /** 0 for little-endian machine, 1 for big-endian
@@ -141,15 +141,15 @@ typedef struct {
 
     /** data format identifier 
      *  @stable ICU 2.0*/
-    uint8_t dataFormat[4];
+    uint8_t ਅੰਕੜੇ_Format[4];
 
     /** versions: [0] major [1] minor [2] milli [3] micro 
      *  @stable ICU 2.0*/
-    uint8_t formatVersion[4];
+    uint8_t format_ਸੰਸਕਰਣ[4];
 
     /** versions: [0] major [1] minor [2] milli [3] micro 
      *  @stable ICU 2.0*/
-    uint8_t dataVersion[4];
+    uint8_t ਅੰਕੜੇ_ਸੰਸਕਰਣ[4];
 } UDataInfo;
 
 /* API for reading data -----------------------------------------------------*/
@@ -158,7 +158,7 @@ typedef struct {
  * Forward declaration of the data memory type.
  * @stable ICU 2.0
  */
-typedef struct UDataMemory UDataMemory;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ UData_ਸਮ੍ਰਿਤੀ UData_ਸਮ੍ਰਿਤੀ;
 
 /**
  * Callback function for udata_openChoice().
@@ -173,10 +173,10 @@ typedef struct UDataMemory UDataMemory;
  * @return true if the current data memory is acceptable
  * @stable ICU 2.0
  */
-typedef UBool U_CALLCONV
-UDataMemoryIsAcceptable(void *context,
-                        const char *type, const char *name,
-                        const UDataInfo *pInfo);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ UBool U_CALLCONV
+UData_ਸਮ੍ਰਿਤੀ_Is_Acceptable(ਖਾਲੀ *context,
+                        ਅਚਲ ਅੱਖਰ *type, ਅਚਲ ਅੱਖਰ *name,
+                        ਅਚਲ UDataInfo *pInfo);
 
 
 /**
@@ -200,9 +200,9 @@ UDataMemoryIsAcceptable(void *context,
  * @see udata_openChoice
  * @stable ICU 2.0
  */
-U_CAPI UDataMemory * U_EXPORT2
-udata_open(const char *path, const char *type, const char *name,
-           UErrorCode *pErrorCode);
+U_CAPI UData_ਸਮ੍ਰਿਤੀ * U_EXPORT2
+udata_open(ਅਚਲ ਅੱਖਰ *ਰਸਤਾ, ਅਚਲ ਅੱਖਰ *type, ਅਚਲ ਅੱਖਰ *name,
+           UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Data loading function.
@@ -252,10 +252,10 @@ udata_open(const char *path, const char *type, const char *name,
  *         to get a pointer to the actual data.
  * @stable ICU 2.0
  */
-U_CAPI UDataMemory * U_EXPORT2
-udata_openChoice(const char *path, const char *type, const char *name,
-                 UDataMemoryIsAcceptable *isAcceptable, void *context,
-                 UErrorCode *pErrorCode);
+U_CAPI UData_ਸਮ੍ਰਿਤੀ * U_EXPORT2
+udata_openChoice(ਅਚਲ ਅੱਖਰ *ਰਸਤਾ, ਅਚਲ ਅੱਖਰ *type, ਅਚਲ ਅੱਖਰ *name,
+                 UData_ਸਮ੍ਰਿਤੀ_Is_Acceptable *isAcceptable, ਖਾਲੀ *context,
+                 UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Close the data memory.
@@ -264,8 +264,8 @@ udata_openChoice(const char *path, const char *type, const char *name,
  * @param pData The pointer to data memory object
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-udata_close(UDataMemory *pData);
+U_CAPI ਖਾਲੀ U_EXPORT2
+udata_close(UData_ਸਮ੍ਰਿਤੀ *p_ਅੰਕੜੇ);
 
 /**
  * Get the pointer to the actual data inside the data memory.
@@ -276,8 +276,8 @@ udata_close(UDataMemory *pData);
  * @param pData The pointer to data memory object
  * @stable ICU 2.0
  */
-U_CAPI const void* U_EXPORT2
-udata_getMemory(UDataMemory* pData U_LIFETIME_BOUND);
+U_CAPI ਅਚਲ ਖਾਲੀ* U_EXPORT2
+udata_get_ਸਮ੍ਰਿਤੀ(UData_ਸਮ੍ਰਿਤੀ* p_ਅੰਕੜੇ U_LIFETIME_BOUND);
 
 /**
  * Get the information from the data memory header.
@@ -297,8 +297,8 @@ udata_getMemory(UDataMemory* pData U_LIFETIME_BOUND);
  * adjusted and only part of the structure will be filled.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-udata_getInfo(UDataMemory *pData, UDataInfo *pInfo);
+U_CAPI ਖਾਲੀ U_EXPORT2
+udata_getInfo(UData_ਸਮ੍ਰਿਤੀ *p_ਅੰਕੜੇ, UDataInfo *pInfo);
 
 /**
  * This function bypasses the normal ICU data loading process and
@@ -343,8 +343,8 @@ udata_getInfo(UDataMemory *pData, UDataInfo *pInfo);
  * @param err outgoing error status <code>U_USING_DEFAULT_WARNING, U_UNSUPPORTED_ERROR</code>
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-udata_setCommonData(const void *data, UErrorCode *err);
+U_CAPI ਖਾਲੀ U_EXPORT2
+udata_ਸੈੱਟ_Common_ਅੰਕੜੇ(ਅਚਲ ਖਾਲੀ *ਅੰਕੜੇ, UError_ਕੋਡ *err);
 
 
 /**
@@ -374,33 +374,33 @@ udata_setCommonData(const void *data, UErrorCode *err);
  * @see udata_setCommonData
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-udata_setAppData(const char *packageName, const void *data, UErrorCode *err);
+U_CAPI ਖਾਲੀ U_EXPORT2
+udata_ਸੈੱਟ_App_ਅੰਕੜੇ(ਅਚਲ ਅੱਖਰ *packageName, ਅਚਲ ਖਾਲੀ *ਅੰਕੜੇ, UError_ਕੋਡ *err);
 
 /**
  * Possible settings for udata_setFileAccess()
  * @see udata_setFileAccess
  * @stable ICU 3.4
  */
-typedef enum UDataFileAccess {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਗਿਣਤੀ UDataFileAccess {
     /** ICU looks for data in single files first, then in packages. (default) @stable ICU 3.4 */
-    UDATA_FILES_FIRST,
+    UDATA_FILES_ਪਹਿਲਾ,
     /** An alias for the default access mode. @stable ICU 3.4 */
-    UDATA_DEFAULT_ACCESS = UDATA_FILES_FIRST,
+    UDATA_DEFAULT_ACCESS = UDATA_FILES_ਪਹਿਲਾ,
     /** ICU only loads data from packages, not from single files. @stable ICU 3.4 */
     UDATA_ONLY_PACKAGES,
     /** ICU loads data from packages first, and only from single files
         if the data cannot be found in a package. @stable ICU 3.4 */
-    UDATA_PACKAGES_FIRST,
+    UDATA_PACKAGES_ਪਹਿਲਾ,
     /** ICU does not access the file system for data loading. @stable ICU 3.4 */
     UDATA_NO_FILES,
-#ifndef U_HIDE_DEPRECATED_API
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ U_HIDE_DEPRECATED_API
     /**
      * Number of real UDataFileAccess values.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UDATA_FILE_ACCESS_COUNT
-#endif  // U_HIDE_DEPRECATED_API
+    UDATA_FILE_ACCESS_ਗਿਣਤੀ
+#ਜੇ_ਅੰਤ  // U_HIDE_DEPRECATED_API
 } UDataFileAccess;
 
 /**
@@ -413,12 +413,12 @@ typedef enum UDataFileAccess {
  * @see UDataFileAccess
  * @stable ICU 3.4 
  */
-U_CAPI void U_EXPORT2
-udata_setFileAccess(UDataFileAccess access, UErrorCode *status);
+U_CAPI ਖਾਲੀ U_EXPORT2
+udata_ਸੈੱਟ_File_Access(UDataFileAccess access, UError_ਕੋਡ *ਸਥਿਤੀ);
 
-U_CDECL_END
+U_CDECL_ਸਿਰਾ
 
-#if U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -431,10 +431,10 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 4.4
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalUDataMemoryPointer, UDataMemory, udata_close);
+U_DEFINE_LOCAL_OPEN_ਸੂਚਕ(Local_UData_ਸਮ੍ਰਿਤੀ_ਸੂਚਕ, UData_ਸਮ੍ਰਿਤੀ, udata_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif  // U_SHOW_CPLUSPLUS_API
+#ਜੇ_ਅੰਤ  // U_SHOW_CPLUSPLUS_API
 
-#endif
+#ਜੇ_ਅੰਤ

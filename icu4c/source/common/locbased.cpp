@@ -10,39 +10,39 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#include "locbased.h"
-#include "uresimp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "locbased.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uresimp.h"
 
 U_NAMESPACE_BEGIN
 
-const Locale& LocaleBased::getLocale(const Locale& valid U_LIFETIME_BOUND,
-                                     const Locale& actual U_LIFETIME_BOUND,
-                                     ULocDataLocaleType type,
-                                     UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return Locale::getRoot();
+ਅਚਲ Locale& LocaleBased::getLocale(ਅਚਲ Locale& valid U_LIFETIME_BOUND,
+                                     ਅਚਲ Locale& actual U_LIFETIME_BOUND,
+                                     ULoc_ਅੰਕੜੇ_Locale_Type type,
+                                     UError_ਕੋਡ& ਸਥਿਤੀ) {
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਵਾਪਸ Locale::get_ਜੜ੍ਹ();
     }
 
-    switch(type) {
-    case ULOC_VALID_LOCALE:
-        return valid;
-    case ULOC_ACTUAL_LOCALE:
-        return actual;
-    default:
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return Locale::getRoot();
+    ਚੋਣ(type) {
+    ਹਾਲਤ ULOC_VALID_LOCALE:
+        ਵਾਪਸ valid;
+    ਹਾਲਤ ULOC_ACTUAL_LOCALE:
+        ਵਾਪਸ actual;
+    ਮੂਲ:
+        ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ Locale::get_ਜੜ੍ਹ();
     }
 }
 
-const char* LocaleBased::getLocaleID(const Locale& valid, const Locale& actual,
-                                     ULocDataLocaleType type, UErrorCode& status) {
-    const Locale& locale = getLocale(valid, actual, type, status);
+ਅਚਲ ਅੱਖਰ* LocaleBased::getLocaleID(ਅਚਲ Locale& valid, ਅਚਲ Locale& actual,
+                                     ULoc_ਅੰਕੜੇ_Locale_Type type, UError_ਕੋਡ& ਸਥਿਤੀ) {
+    ਅਚਲ Locale& locale = getLocale(valid, actual, type, ਸਥਿਤੀ);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    return locale == Locale::getRoot() ? kRootLocaleName : locale.getName();
+    ਵਾਪਸ locale == Locale::get_ਜੜ੍ਹ() ? k_ਜੜ੍ਹ_Locale_Name : locale.getName();
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ

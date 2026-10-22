@@ -14,363 +14,363 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#ਜੇ !UCONFIG_NO_FORMATTING
 
-#include "unicode/messagepattern.h"
-#include "unicode/unistr.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "messageimpl.h"
-#include "patternprops.h"
-#include "putilimp.h"
-#include "uassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/messagepattern.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/unistr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf16.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "messageimpl.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "patternprops.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "putilimp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uassert.h"
 
 U_NAMESPACE_BEGIN
 
 // Unicode character/code point constants ---------------------------------- ***
 
-static const char16_t u_pound=0x23;
-static const char16_t u_apos=0x27;
-static const char16_t u_plus=0x2B;
-static const char16_t u_comma=0x2C;
-static const char16_t u_minus=0x2D;
-static const char16_t u_dot=0x2E;
-static const char16_t u_colon=0x3A;
-static const char16_t u_lessThan=0x3C;
-static const char16_t u_equal=0x3D;
-static const char16_t u_A=0x41;
-static const char16_t u_C=0x43;
-static const char16_t u_D=0x44;
-static const char16_t u_E=0x45;
-static const char16_t u_H=0x48;
-static const char16_t u_I=0x49;
-static const char16_t u_L=0x4C;
-static const char16_t u_N=0x4E;
-static const char16_t u_O=0x4F;
-static const char16_t u_P=0x50;
-static const char16_t u_R=0x52;
-static const char16_t u_S=0x53;
-static const char16_t u_T=0x54;
-static const char16_t u_U=0x55;
-static const char16_t u_Z=0x5A;
-static const char16_t u_a=0x61;
-static const char16_t u_c=0x63;
-static const char16_t u_d=0x64;
-static const char16_t u_e=0x65;
-static const char16_t u_f=0x66;
-static const char16_t u_h=0x68;
-static const char16_t u_i=0x69;
-static const char16_t u_l=0x6C;
-static const char16_t u_n=0x6E;
-static const char16_t u_o=0x6F;
-static const char16_t u_p=0x70;
-static const char16_t u_r=0x72;
-static const char16_t u_s=0x73;
-static const char16_t u_t=0x74;
-static const char16_t u_u=0x75;
-static const char16_t u_z=0x7A;
-static const char16_t u_leftCurlyBrace=0x7B;
-static const char16_t u_pipe=0x7C;
-static const char16_t u_rightCurlyBrace=0x7D;
-static const char16_t u_lessOrEqual=0x2264;  // U+2264 is <=
+ਸਥਿਰ ਅਚਲ char16_t u_pound=0x23;
+ਸਥਿਰ ਅਚਲ char16_t u_apos=0x27;
+ਸਥਿਰ ਅਚਲ char16_t u_plus=0x2B;
+ਸਥਿਰ ਅਚਲ char16_t u_comma=0x2C;
+ਸਥਿਰ ਅਚਲ char16_t u_minus=0x2D;
+ਸਥਿਰ ਅਚਲ char16_t u_dot=0x2E;
+ਸਥਿਰ ਅਚਲ char16_t u_colon=0x3A;
+ਸਥਿਰ ਅਚਲ char16_t u_lessThan=0x3C;
+ਸਥਿਰ ਅਚਲ char16_t u_equal=0x3D;
+ਸਥਿਰ ਅਚਲ char16_t u_A=0x41;
+ਸਥਿਰ ਅਚਲ char16_t u_C=0x43;
+ਸਥਿਰ ਅਚਲ char16_t u_D=0x44;
+ਸਥਿਰ ਅਚਲ char16_t u_E=0x45;
+ਸਥਿਰ ਅਚਲ char16_t u_H=0x48;
+ਸਥਿਰ ਅਚਲ char16_t u_I=0x49;
+ਸਥਿਰ ਅਚਲ char16_t u_L=0x4C;
+ਸਥਿਰ ਅਚਲ char16_t u_N=0x4E;
+ਸਥਿਰ ਅਚਲ char16_t u_O=0x4F;
+ਸਥਿਰ ਅਚਲ char16_t u_P=0x50;
+ਸਥਿਰ ਅਚਲ char16_t u_R=0x52;
+ਸਥਿਰ ਅਚਲ char16_t u_S=0x53;
+ਸਥਿਰ ਅਚਲ char16_t u_T=0x54;
+ਸਥਿਰ ਅਚਲ char16_t u_U=0x55;
+ਸਥਿਰ ਅਚਲ char16_t u_Z=0x5A;
+ਸਥਿਰ ਅਚਲ char16_t u_a=0x61;
+ਸਥਿਰ ਅਚਲ char16_t u_c=0x63;
+ਸਥਿਰ ਅਚਲ char16_t u_d=0x64;
+ਸਥਿਰ ਅਚਲ char16_t u_e=0x65;
+ਸਥਿਰ ਅਚਲ char16_t u_f=0x66;
+ਸਥਿਰ ਅਚਲ char16_t u_h=0x68;
+ਸਥਿਰ ਅਚਲ char16_t u_i=0x69;
+ਸਥਿਰ ਅਚਲ char16_t u_l=0x6C;
+ਸਥਿਰ ਅਚਲ char16_t u_n=0x6E;
+ਸਥਿਰ ਅਚਲ char16_t u_o=0x6F;
+ਸਥਿਰ ਅਚਲ char16_t u_p=0x70;
+ਸਥਿਰ ਅਚਲ char16_t u_r=0x72;
+ਸਥਿਰ ਅਚਲ char16_t u_s=0x73;
+ਸਥਿਰ ਅਚਲ char16_t u_t=0x74;
+ਸਥਿਰ ਅਚਲ char16_t u_u=0x75;
+ਸਥਿਰ ਅਚਲ char16_t u_z=0x7A;
+ਸਥਿਰ ਅਚਲ char16_t u_ਖੱਬਾ_Curly_Brace=0x7B;
+ਸਥਿਰ ਅਚਲ char16_t u_pipe=0x7C;
+ਸਥਿਰ ਅਚਲ char16_t u_ਸੱਜਾ_Curly_Brace=0x7D;
+ਸਥਿਰ ਅਚਲ char16_t u_lessOrEqual=0x2264;  // U+2264 is <=
 
-static const char16_t kOffsetColon[]={  // "offset:"
+ਸਥਿਰ ਅਚਲ char16_t k_ਵਿੱਥ_Colon[]={  // "offset:"
     u_o, u_f, u_f, u_s, u_e, u_t, u_colon
 };
 
-static const char16_t kOther[]={  // "other"
+ਸਥਿਰ ਅਚਲ char16_t kOther[]={  // "other"
     u_o, u_t, u_h, u_e, u_r
 };
 
 // MessagePatternList ------------------------------------------------------ ***
 
-template<typename T, int32_t stackCapacity>
-class MessagePatternList : public UMemory {
-public:
-    MessagePatternList() {}
-    void copyFrom(const MessagePatternList<T, stackCapacity> &other,
+ਸਾਂਚਾ<ਕਿਸਮ_ਨਾਂ T, int32_t ਢੇਰ_ਸਮਰੱਥਾ>
+ਵਰਗ ਸੁਨੇਹਾ_ਨਮੂਨਾ_List : ਜਨਤਕ UMemory {
+ਜਨਤਕ:
+    ਸੁਨੇਹਾ_ਨਮੂਨਾ_List() {}
+    ਖਾਲੀ copyFrom(ਅਚਲ ਸੁਨੇਹਾ_ਨਮੂਨਾ_List<T, ਢੇਰ_ਸਮਰੱਥਾ> &other,
                   int32_t length,
-                  UErrorCode &errorCode);
-    UBool ensureCapacityForOneMore(int32_t oldLength, UErrorCode &errorCode);
-    UBool equals(const MessagePatternList<T, stackCapacity> &other, int32_t length) const {
-        for(int32_t i=0; i<length; ++i) {
-            if(a[i]!=other.a[i]) { return false; }
+                  UError_ਕੋਡ &error_ਕੋਡ);
+    UBool ensure_ਸਮਰੱਥਾ_For_One_ਹੋਰ(int32_t old_ਲੰਮਾਈ, UError_ਕੋਡ &error_ਕੋਡ);
+    UBool equals(ਅਚਲ ਸੁਨੇਹਾ_ਨਮੂਨਾ_List<T, ਢੇਰ_ਸਮਰੱਥਾ> &other, int32_t length) ਅਚਲ {
+        ਲਈ(int32_t i=0; i<length; ++i) {
+            ਜੇ(a[i]!=other.a[i]) { ਵਾਪਸ ਝੂਠ; }
         }
-        return true;
+        ਵਾਪਸ ਸੱਚ;
     }
 
-    MaybeStackArray<T, stackCapacity> a;
+    Maybe_ਢੇਰ_Array<T, ਢੇਰ_ਸਮਰੱਥਾ> a;
 };
 
-template<typename T, int32_t stackCapacity>
-void
-MessagePatternList<T, stackCapacity>::copyFrom(
-        const MessagePatternList<T, stackCapacity> &other,
+ਸਾਂਚਾ<ਕਿਸਮ_ਨਾਂ T, int32_t ਢੇਰ_ਸਮਰੱਥਾ>
+ਖਾਲੀ
+ਸੁਨੇਹਾ_ਨਮੂਨਾ_List<T, ਢੇਰ_ਸਮਰੱਥਾ>::copyFrom(
+        ਅਚਲ ਸੁਨੇਹਾ_ਨਮੂਨਾ_List<T, ਢੇਰ_ਸਮਰੱਥਾ> &other,
         int32_t length,
-        UErrorCode &errorCode) {
-    if(U_SUCCESS(errorCode) && length>0) {
-        if(length>a.getCapacity() && nullptr==a.resize(length)) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+        UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ(U_SUCCESS(error_ਕੋਡ) && length>0) {
+        ਜੇ(length>a.get_ਸਮਰੱਥਾ() && ਖਾਲੀ_ਸੂਚਕ==a.resize(length)) {
+            error_ਕੋਡ=U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+            ਵਾਪਸ;
         }
-        uprv_memcpy(a.getAlias(), other.a.getAlias(), (size_t)length*sizeof(T));
+        uprv_memcpy(a.getAlias(), other.a.getAlias(), (size_t)length*ਆਕਾਰ(T));
     }
 }
 
-template<typename T, int32_t stackCapacity>
+ਸਾਂਚਾ<ਕਿਸਮ_ਨਾਂ T, int32_t ਢੇਰ_ਸਮਰੱਥਾ>
 UBool
-MessagePatternList<T, stackCapacity>::ensureCapacityForOneMore(int32_t oldLength, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+ਸੁਨੇਹਾ_ਨਮੂਨਾ_List<T, ਢੇਰ_ਸਮਰੱਥਾ>::ensure_ਸਮਰੱਥਾ_For_One_ਹੋਰ(int32_t old_ਲੰਮਾਈ, UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ ਝੂਠ;
     }
-    if(a.getCapacity()>oldLength || a.resize(2*oldLength, oldLength)!=nullptr) {
-        return true;
+    ਜੇ(a.get_ਸਮਰੱਥਾ()>old_ਲੰਮਾਈ || a.resize(2*old_ਲੰਮਾਈ, old_ਲੰਮਾਈ)!=ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ ਸੱਚ;
     }
-    errorCode=U_MEMORY_ALLOCATION_ERROR;
-    return false;
+    error_ਕੋਡ=U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+    ਵਾਪਸ ਝੂਠ;
 }
 
 // MessagePatternList specializations -------------------------------------- ***
 
-class MessagePatternDoubleList : public MessagePatternList<double, 8> {
+ਵਰਗ ਸੁਨੇਹਾ_ਨਮੂਨਾ_Double_List : ਜਨਤਕ ਸੁਨੇਹਾ_ਨਮੂਨਾ_List<ਦੁੱਗਣਾ, 8> {
 };
 
-class MessagePatternPartsList : public MessagePatternList<MessagePattern::Part, 32> {
+ਵਰਗ ਸੁਨੇਹਾ_ਨਮੂਨਾ_Parts_List : ਜਨਤਕ ਸੁਨੇਹਾ_ਨਮੂਨਾ_List<ਸੁਨੇਹਾ_ਨਮੂਨਾ::Part, 32> {
 };
 
 // MessagePattern constructors etc. ---------------------------------------- ***
 
-MessagePattern::MessagePattern(UErrorCode &errorCode)
-        : aposMode(UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_MODE),
-          partsList(nullptr), parts(nullptr), partsLength(0),
-          numericValuesList(nullptr), numericValues(nullptr), numericValuesLength(0),
-          hasArgNames(false), hasArgNumbers(false), needsAutoQuoting(false) {
-    init(errorCode);
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::ਸੁਨੇਹਾ_ਨਮੂਨਾ(UError_ਕੋਡ &error_ਕੋਡ)
+        : apos_ਬਹੁਲਕ(UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_ਬਹੁਲਕ),
+          partsList(ਖਾਲੀ_ਸੂਚਕ), parts(ਖਾਲੀ_ਸੂਚਕ), parts_ਲੰਮਾਈ(0),
+          numeric_ਮੁੱਲਾਂ_List(ਖਾਲੀ_ਸੂਚਕ), numeric_ਮੁੱਲਾਂ(ਖਾਲੀ_ਸੂਚਕ), numeric_ਮੁੱਲਾਂ_ਲੰਮਾਈ(0),
+          has_Arg_ਨਾਂ(ਝੂਠ), hasArgNumbers(ਝੂਠ), needsAutoQuoting(ਝੂਠ) {
+    init(error_ਕੋਡ);
 }
 
-MessagePattern::MessagePattern(UMessagePatternApostropheMode mode, UErrorCode &errorCode)
-        : aposMode(mode),
-          partsList(nullptr), parts(nullptr), partsLength(0),
-          numericValuesList(nullptr), numericValues(nullptr), numericValuesLength(0),
-          hasArgNames(false), hasArgNumbers(false), needsAutoQuoting(false) {
-    init(errorCode);
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::ਸੁਨੇਹਾ_ਨਮੂਨਾ(UMessage_ਨਮੂਨਾ_Apostrophe_ਬਹੁਲਕ ਬਹੁਲਕ, UError_ਕੋਡ &error_ਕੋਡ)
+        : apos_ਬਹੁਲਕ(ਬਹੁਲਕ),
+          partsList(ਖਾਲੀ_ਸੂਚਕ), parts(ਖਾਲੀ_ਸੂਚਕ), parts_ਲੰਮਾਈ(0),
+          numeric_ਮੁੱਲਾਂ_List(ਖਾਲੀ_ਸੂਚਕ), numeric_ਮੁੱਲਾਂ(ਖਾਲੀ_ਸੂਚਕ), numeric_ਮੁੱਲਾਂ_ਲੰਮਾਈ(0),
+          has_Arg_ਨਾਂ(ਝੂਠ), hasArgNumbers(ਝੂਠ), needsAutoQuoting(ਝੂਠ) {
+    init(error_ਕੋਡ);
 }
 
-MessagePattern::MessagePattern(const UnicodeString &pattern, UParseError *parseError, UErrorCode &errorCode)
-        : aposMode(UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_MODE),
-          partsList(nullptr), parts(nullptr), partsLength(0),
-          numericValuesList(nullptr), numericValues(nullptr), numericValuesLength(0),
-          hasArgNames(false), hasArgNumbers(false), needsAutoQuoting(false) {
-    if(init(errorCode)) {
-        parse(pattern, parseError, errorCode);
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::ਸੁਨੇਹਾ_ਨਮੂਨਾ(ਅਚਲ UnicodeString &ਨਮੂਨਾ, UParseError *parseError, UError_ਕੋਡ &error_ਕੋਡ)
+        : apos_ਬਹੁਲਕ(UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_ਬਹੁਲਕ),
+          partsList(ਖਾਲੀ_ਸੂਚਕ), parts(ਖਾਲੀ_ਸੂਚਕ), parts_ਲੰਮਾਈ(0),
+          numeric_ਮੁੱਲਾਂ_List(ਖਾਲੀ_ਸੂਚਕ), numeric_ਮੁੱਲਾਂ(ਖਾਲੀ_ਸੂਚਕ), numeric_ਮੁੱਲਾਂ_ਲੰਮਾਈ(0),
+          has_Arg_ਨਾਂ(ਝੂਠ), hasArgNumbers(ਝੂਠ), needsAutoQuoting(ਝੂਠ) {
+    ਜੇ(init(error_ਕੋਡ)) {
+        parse(ਨਮੂਨਾ, parseError, error_ਕੋਡ);
     }
 }
 
 UBool
-MessagePattern::init(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::init(UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ ਝੂਠ;
     }
-    partsList=new MessagePatternPartsList();
-    if(partsList==nullptr) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return false;
+    partsList=ਨਵਾਂ ਸੁਨੇਹਾ_ਨਮੂਨਾ_Parts_List();
+    ਜੇ(partsList==ਖਾਲੀ_ਸੂਚਕ) {
+        error_ਕੋਡ=U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+        ਵਾਪਸ ਝੂਠ;
     }
     parts=partsList->a.getAlias();
-    return true;
+    ਵਾਪਸ ਸੱਚ;
 }
 
-MessagePattern::MessagePattern(const MessagePattern &other)
-        : UObject(other), aposMode(other.aposMode), msg(other.msg),
-          partsList(nullptr), parts(nullptr), partsLength(0),
-          numericValuesList(nullptr), numericValues(nullptr), numericValuesLength(0),
-          hasArgNames(other.hasArgNames), hasArgNumbers(other.hasArgNumbers),
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::ਸੁਨੇਹਾ_ਨਮੂਨਾ(ਅਚਲ ਸੁਨੇਹਾ_ਨਮੂਨਾ &other)
+        : UObject(other), apos_ਬਹੁਲਕ(other.apos_ਬਹੁਲਕ), ਸੁਨੇਹਾ(other.ਸੁਨੇਹਾ),
+          partsList(ਖਾਲੀ_ਸੂਚਕ), parts(ਖਾਲੀ_ਸੂਚਕ), parts_ਲੰਮਾਈ(0),
+          numeric_ਮੁੱਲਾਂ_List(ਖਾਲੀ_ਸੂਚਕ), numeric_ਮੁੱਲਾਂ(ਖਾਲੀ_ਸੂਚਕ), numeric_ਮੁੱਲਾਂ_ਲੰਮਾਈ(0),
+          has_Arg_ਨਾਂ(other.has_Arg_ਨਾਂ), hasArgNumbers(other.hasArgNumbers),
           needsAutoQuoting(other.needsAutoQuoting) {
-    UErrorCode errorCode=U_ZERO_ERROR;
-    if(!copyStorage(other, errorCode)) {
+    UError_ਕੋਡ error_ਕੋਡ=U_ZERO_ERROR;
+    ਜੇ(!copyStorage(other, error_ਕੋਡ)) {
         clear();
     }
 }
 
-MessagePattern&
-MessagePattern::operator=(const MessagePattern& other) U_LIFETIME_BOUND {
-    if(this==&other) {
-        return *this;
+ਸੁਨੇਹਾ_ਨਮੂਨਾ&
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::ਸੰਚਾਲਕ=(ਅਚਲ ਸੁਨੇਹਾ_ਨਮੂਨਾ& other) U_LIFETIME_BOUND {
+    ਜੇ(ਇਹ==&other) {
+        ਵਾਪਸ *ਇਹ;
     }
-    aposMode=other.aposMode;
-    msg=other.msg;
-    hasArgNames=other.hasArgNames;
+    apos_ਬਹੁਲਕ=other.apos_ਬਹੁਲਕ;
+    ਸੁਨੇਹਾ=other.ਸੁਨੇਹਾ;
+    has_Arg_ਨਾਂ=other.has_Arg_ਨਾਂ;
     hasArgNumbers=other.hasArgNumbers;
     needsAutoQuoting=other.needsAutoQuoting;
-    UErrorCode errorCode=U_ZERO_ERROR;
-    if(!copyStorage(other, errorCode)) {
+    UError_ਕੋਡ error_ਕੋਡ=U_ZERO_ERROR;
+    ਜੇ(!copyStorage(other, error_ਕੋਡ)) {
         clear();
     }
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
 UBool
-MessagePattern::copyStorage(const MessagePattern &other, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::copyStorage(ਅਚਲ ਸੁਨੇਹਾ_ਨਮੂਨਾ &other, UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ ਝੂਠ;
     }
-    parts=nullptr;
-    partsLength=0;
-    numericValues=nullptr;
-    numericValuesLength=0;
-    if(partsList==nullptr) {
-        partsList=new MessagePatternPartsList();
-        if(partsList==nullptr) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return false;
+    parts=ਖਾਲੀ_ਸੂਚਕ;
+    parts_ਲੰਮਾਈ=0;
+    numeric_ਮੁੱਲਾਂ=ਖਾਲੀ_ਸੂਚਕ;
+    numeric_ਮੁੱਲਾਂ_ਲੰਮਾਈ=0;
+    ਜੇ(partsList==ਖਾਲੀ_ਸੂਚਕ) {
+        partsList=ਨਵਾਂ ਸੁਨੇਹਾ_ਨਮੂਨਾ_Parts_List();
+        ਜੇ(partsList==ਖਾਲੀ_ਸੂਚਕ) {
+            error_ਕੋਡ=U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+            ਵਾਪਸ ਝੂਠ;
         }
         parts=partsList->a.getAlias();
     }
-    if(other.partsLength>0) {
-        partsList->copyFrom(*other.partsList, other.partsLength, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return false;
+    ਜੇ(other.parts_ਲੰਮਾਈ>0) {
+        partsList->copyFrom(*other.partsList, other.parts_ਲੰਮਾਈ, error_ਕੋਡ);
+        ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+            ਵਾਪਸ ਝੂਠ;
         }
         parts=partsList->a.getAlias();
-        partsLength=other.partsLength;
+        parts_ਲੰਮਾਈ=other.parts_ਲੰਮਾਈ;
     }
-    if(other.numericValuesLength>0) {
-        if(numericValuesList==nullptr) {
-            numericValuesList=new MessagePatternDoubleList();
-            if(numericValuesList==nullptr) {
-                errorCode=U_MEMORY_ALLOCATION_ERROR;
-                return false;
+    ਜੇ(other.numeric_ਮੁੱਲਾਂ_ਲੰਮਾਈ>0) {
+        ਜੇ(numeric_ਮੁੱਲਾਂ_List==ਖਾਲੀ_ਸੂਚਕ) {
+            numeric_ਮੁੱਲਾਂ_List=ਨਵਾਂ ਸੁਨੇਹਾ_ਨਮੂਨਾ_Double_List();
+            ਜੇ(numeric_ਮੁੱਲਾਂ_List==ਖਾਲੀ_ਸੂਚਕ) {
+                error_ਕੋਡ=U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                ਵਾਪਸ ਝੂਠ;
             }
-            numericValues=numericValuesList->a.getAlias();
+            numeric_ਮੁੱਲਾਂ=numeric_ਮੁੱਲਾਂ_List->a.getAlias();
         }
-        numericValuesList->copyFrom(
-            *other.numericValuesList, other.numericValuesLength, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return false;
+        numeric_ਮੁੱਲਾਂ_List->copyFrom(
+            *other.numeric_ਮੁੱਲਾਂ_List, other.numeric_ਮੁੱਲਾਂ_ਲੰਮਾਈ, error_ਕੋਡ);
+        ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+            ਵਾਪਸ ਝੂਠ;
         }
-        numericValues=numericValuesList->a.getAlias();
-        numericValuesLength=other.numericValuesLength;
+        numeric_ਮੁੱਲਾਂ=numeric_ਮੁੱਲਾਂ_List->a.getAlias();
+        numeric_ਮੁੱਲਾਂ_ਲੰਮਾਈ=other.numeric_ਮੁੱਲਾਂ_ਲੰਮਾਈ;
     }
-    return true;
+    ਵਾਪਸ ਸੱਚ;
 }
 
-MessagePattern::~MessagePattern() {
-    delete partsList;
-    delete numericValuesList;
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::~ਸੁਨੇਹਾ_ਨਮੂਨਾ() {
+    ਮਿਟਾਓ partsList;
+    ਮਿਟਾਓ numeric_ਮੁੱਲਾਂ_List;
 }
 
 // MessagePattern API ------------------------------------------------------ ***
 
-MessagePattern&
-MessagePattern::parse(const UnicodeString& pattern,
+ਸੁਨੇਹਾ_ਨਮੂਨਾ&
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::parse(ਅਚਲ UnicodeString& ਨਮੂਨਾ,
                       UParseError* parseError,
-                      UErrorCode& errorCode) U_LIFETIME_BOUND {
-    preParse(pattern, parseError, errorCode);
-    parseMessage(0, 0, 0, UMSGPAT_ARG_TYPE_NONE, parseError, errorCode);
+                      UError_ਕੋਡ& error_ਕੋਡ) U_LIFETIME_BOUND {
+    preParse(ਨਮੂਨਾ, parseError, error_ਕੋਡ);
+    parse_ਸੁਨੇਹਾ(0, 0, 0, UMSGPAT_ARG_TYPE_NONE, parseError, error_ਕੋਡ);
     postParse();
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
-MessagePattern&
-MessagePattern::parseChoiceStyle(const UnicodeString& pattern,
+ਸੁਨੇਹਾ_ਨਮੂਨਾ&
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::parseChoiceStyle(ਅਚਲ UnicodeString& ਨਮੂਨਾ,
                                  UParseError* parseError,
-                                 UErrorCode& errorCode) U_LIFETIME_BOUND {
-    preParse(pattern, parseError, errorCode);
-    parseChoiceStyle(0, 0, parseError, errorCode);
+                                 UError_ਕੋਡ& error_ਕੋਡ) U_LIFETIME_BOUND {
+    preParse(ਨਮੂਨਾ, parseError, error_ਕੋਡ);
+    parseChoiceStyle(0, 0, parseError, error_ਕੋਡ);
     postParse();
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
-MessagePattern&
-MessagePattern::parsePluralStyle(const UnicodeString& pattern,
+ਸੁਨੇਹਾ_ਨਮੂਨਾ&
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::parsePluralStyle(ਅਚਲ UnicodeString& ਨਮੂਨਾ,
                                  UParseError* parseError,
-                                 UErrorCode& errorCode) U_LIFETIME_BOUND {
-    preParse(pattern, parseError, errorCode);
-    parsePluralOrSelectStyle(UMSGPAT_ARG_TYPE_PLURAL, 0, 0, parseError, errorCode);
+                                 UError_ਕੋਡ& error_ਕੋਡ) U_LIFETIME_BOUND {
+    preParse(ਨਮੂਨਾ, parseError, error_ਕੋਡ);
+    parsePluralOrSelectStyle(UMSGPAT_ARG_TYPE_PLURAL, 0, 0, parseError, error_ਕੋਡ);
     postParse();
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
-MessagePattern&
-MessagePattern::parseSelectStyle(const UnicodeString& pattern,
+ਸੁਨੇਹਾ_ਨਮੂਨਾ&
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::parseSelectStyle(ਅਚਲ UnicodeString& ਨਮੂਨਾ,
                                  UParseError* parseError,
-                                 UErrorCode& errorCode) U_LIFETIME_BOUND {
-    preParse(pattern, parseError, errorCode);
-    parsePluralOrSelectStyle(UMSGPAT_ARG_TYPE_SELECT, 0, 0, parseError, errorCode);
+                                 UError_ਕੋਡ& error_ਕੋਡ) U_LIFETIME_BOUND {
+    preParse(ਨਮੂਨਾ, parseError, error_ਕੋਡ);
+    parsePluralOrSelectStyle(UMSGPAT_ARG_TYPE_SELECT, 0, 0, parseError, error_ਕੋਡ);
     postParse();
-    return *this;
+    ਵਾਪਸ *ਇਹ;
 }
 
-void
-MessagePattern::clear() {
+ਖਾਲੀ
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::clear() {
     // Mostly the same as preParse().
-    msg.remove();
-    hasArgNames=hasArgNumbers=false;
-    needsAutoQuoting=false;
-    partsLength=0;
-    numericValuesLength=0;
+    ਸੁਨੇਹਾ.remove();
+    has_Arg_ਨਾਂ=hasArgNumbers=ਝੂਠ;
+    needsAutoQuoting=ਝੂਠ;
+    parts_ਲੰਮਾਈ=0;
+    numeric_ਮੁੱਲਾਂ_ਲੰਮਾਈ=0;
 }
 
-bool
-MessagePattern::operator==(const MessagePattern &other) const {
-    if(this==&other) {
-        return true;
+ਤਾਰਕਿਕ
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::ਸੰਚਾਲਕ==(ਅਚਲ ਸੁਨੇਹਾ_ਨਮੂਨਾ &other) ਅਚਲ {
+    ਜੇ(ਇਹ==&other) {
+        ਵਾਪਸ ਸੱਚ;
     }
-    return
-        aposMode==other.aposMode &&
-        msg==other.msg &&
+    ਵਾਪਸ
+        apos_ਬਹੁਲਕ==other.apos_ਬਹੁਲਕ &&
+        ਸੁਨੇਹਾ==other.ਸੁਨੇਹਾ &&
         // parts.equals(o.parts)
-        partsLength==other.partsLength &&
-        (partsLength==0 || partsList->equals(*other.partsList, partsLength));
+        parts_ਲੰਮਾਈ==other.parts_ਲੰਮਾਈ &&
+        (parts_ਲੰਮਾਈ==0 || partsList->equals(*other.partsList, parts_ਲੰਮਾਈ));
     // No need to compare numericValues if msg and parts are the same.
 }
 
 int32_t
-MessagePattern::hashCode() const {
-    int32_t hash=(aposMode*37+msg.hashCode())*37+partsLength;
-    for(int32_t i=0; i<partsLength; ++i) {
-        hash=hash*37+parts[i].hashCode();
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::hash_ਕੋਡ() ਅਚਲ {
+    int32_t hash=(apos_ਬਹੁਲਕ*37+ਸੁਨੇਹਾ.hash_ਕੋਡ())*37+parts_ਲੰਮਾਈ;
+    ਲਈ(int32_t i=0; i<parts_ਲੰਮਾਈ; ++i) {
+        hash=hash*37+parts[i].hash_ਕੋਡ();
     }
-    return hash;
+    ਵਾਪਸ hash;
 }
 
 int32_t
-MessagePattern::validateArgumentName(const UnicodeString &name) {
-    if(!PatternProps::isIdentifier(name.getBuffer(), name.length())) {
-        return UMSGPAT_ARG_NAME_NOT_VALID;
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::validate_ਦਲੀਲ_Name(ਅਚਲ UnicodeString &name) {
+    ਜੇ(!ਨਮੂਨਾ_Props::isIdentifier(name.get_ਬਫਰ(), name.length())) {
+        ਵਾਪਸ UMSGPAT_ARG_NAME_NOT_VALID;
     }
-    return parseArgNumber(name, 0, name.length());
+    ਵਾਪਸ parse_Arg_ਸੰਖਿਆ(name, 0, name.length());
 }
 
 UnicodeString
-MessagePattern::autoQuoteApostropheDeep() const {
-    if(!needsAutoQuoting) {
-        return msg;
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::autoQuoteApostropheDeep() ਅਚਲ {
+    ਜੇ(!needsAutoQuoting) {
+        ਵਾਪਸ ਸੁਨੇਹਾ;
     }
-    UnicodeString modified(msg);
+    UnicodeString modified(ਸੁਨੇਹਾ);
     // Iterate backward so that the insertion indexes do not change.
-    int32_t count=countParts();
-    for(int32_t i=count; i>0;) {
-        const Part &part=getPart(--i);
-        if(part.getType()==UMSGPAT_PART_TYPE_INSERT_CHAR) {
-           modified.insert(part.index, static_cast<char16_t>(part.value));
+    int32_t count=ਗਿਣਤੀ_Parts();
+    ਲਈ(int32_t i=count; i>0;) {
+        ਅਚਲ Part &part=getPart(--i);
+        ਜੇ(part.getType()==UMSGPAT_PART_TYPE_ਪਾਓ_CHAR) {
+           modified.insert(part.ਸੂਚਕਾਂਕ, static_cast<char16_t>(part.value));
         }
     }
-    return modified;
+    ਵਾਪਸ modified;
 }
 
-double
-MessagePattern::getNumericValue(const Part &part) const {
-    UMessagePatternPartType type=part.type;
-    if(type==UMSGPAT_PART_TYPE_ARG_INT) {
-        return part.value;
-    } else if(type==UMSGPAT_PART_TYPE_ARG_DOUBLE) {
-        return numericValues[part.value];
-    } else {
-        return UMSGPAT_NO_NUMERIC_VALUE;
+ਦੁੱਗਣਾ
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::get_Numeric_ਮੁੱਲ(ਅਚਲ Part &part) ਅਚਲ {
+    UMessage_ਨਮੂਨਾ_Part_Type type=part.type;
+    ਜੇ(type==UMSGPAT_PART_TYPE_ARG_INT) {
+        ਵਾਪਸ part.value;
+    } ਨਹੀਂਤਾਂ ਜੇ(type==UMSGPAT_PART_TYPE_ARG_DOUBLE) {
+        ਵਾਪਸ numeric_ਮੁੱਲਾਂ[part.value];
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ UMSGPAT_NO_NUMERIC_ਮੁੱਲ;
     }
 }
 
@@ -380,859 +380,859 @@ MessagePattern::getNumericValue(const Part &part) const {
   * @return the "offset:" value.
   * @draft ICU 4.8
   */
-double
-MessagePattern::getPluralOffset(int32_t pluralStart) const {
-    const Part &part=getPart(pluralStart);
-    if(Part::hasNumericValue(part.type)) {
-        return getNumericValue(part);
-    } else {
-        return 0;
+ਦੁੱਗਣਾ
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::get_Plural_ਵਿੱਥ(int32_t plural_ਸ਼ੁਰੂ) ਅਚਲ {
+    ਅਚਲ Part &part=getPart(plural_ਸ਼ੁਰੂ);
+    ਜੇ(Part::has_Numeric_ਮੁੱਲ(part.type)) {
+        ਵਾਪਸ get_Numeric_ਮੁੱਲ(part);
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ 0;
     }
 }
 
 // MessagePattern::Part ---------------------------------------------------- ***
 
-bool
-MessagePattern::Part::operator==(const Part &other) const {
-    if(this==&other) {
-        return true;
+ਤਾਰਕਿਕ
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::Part::ਸੰਚਾਲਕ==(ਅਚਲ Part &other) ਅਚਲ {
+    ਜੇ(ਇਹ==&other) {
+        ਵਾਪਸ ਸੱਚ;
     }
-    return
+    ਵਾਪਸ
         type==other.type &&
-        index==other.index &&
+        ਸੂਚਕਾਂਕ==other.ਸੂਚਕਾਂਕ &&
         length==other.length &&
         value==other.value &&
-        limitPartIndex==other.limitPartIndex;
+        ਹੱਦਬੰਦੀ_Part_ਸੂਚਕਾਂਕ==other.ਹੱਦਬੰਦੀ_Part_ਸੂਚਕਾਂਕ;
 }
 
 // MessagePattern parser --------------------------------------------------- ***
 
-void
-MessagePattern::preParse(const UnicodeString &pattern, UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+ਖਾਲੀ
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::preParse(ਅਚਲ UnicodeString &ਨਮੂਨਾ, UParseError *parseError, UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ;
     }
-    if(parseError!=nullptr) {
-        parseError->line=0;
-        parseError->offset=0;
+    ਜੇ(parseError!=ਖਾਲੀ_ਸੂਚਕ) {
+        parseError->ਸਤਰ=0;
+        parseError->ਵਿੱਥ=0;
         parseError->preContext[0]=0;
         parseError->postContext[0]=0;
     }
-    msg=pattern;
-    hasArgNames=hasArgNumbers=false;
-    needsAutoQuoting=false;
-    partsLength=0;
-    numericValuesLength=0;
+    ਸੁਨੇਹਾ=ਨਮੂਨਾ;
+    has_Arg_ਨਾਂ=hasArgNumbers=ਝੂਠ;
+    needsAutoQuoting=ਝੂਠ;
+    parts_ਲੰਮਾਈ=0;
+    numeric_ਮੁੱਲਾਂ_ਲੰਮਾਈ=0;
 }
 
-void
-MessagePattern::postParse() {
-    if(partsList!=nullptr) {
+ਖਾਲੀ
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::postParse() {
+    ਜੇ(partsList!=ਖਾਲੀ_ਸੂਚਕ) {
         parts=partsList->a.getAlias();
     }
-    if(numericValuesList!=nullptr) {
-        numericValues=numericValuesList->a.getAlias();
+    ਜੇ(numeric_ਮੁੱਲਾਂ_List!=ਖਾਲੀ_ਸੂਚਕ) {
+        numeric_ਮੁੱਲਾਂ=numeric_ਮੁੱਲਾਂ_List->a.getAlias();
     }
 }
 
 int32_t
-MessagePattern::parseMessage(int32_t index, int32_t msgStartLength,
-                             int32_t nestingLevel, UMessagePatternArgType parentType,
-                             UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::parse_ਸੁਨੇਹਾ(int32_t ਸੂਚਕਾਂਕ, int32_t ਸੁਨੇਹਾ_ਸ਼ੁਰੂ_ਲੰਮਾਈ,
+                             int32_t nestingLevel, UMessage_ਨਮੂਨਾ_Arg_Type ਮਾਪਾ_Type,
+                             UParseError *parseError, UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ 0;
     }
-    if(nestingLevel>Part::MAX_NESTED_LEVELS) {
-        errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+    ਜੇ(nestingLevel>Part::MAX_NESTED_ਪੱਧਰ) {
+        error_ਕੋਡ=U_ਸੂਚਕਾਂਕ_OUTOFBOUNDS_ERROR;
+        ਵਾਪਸ 0;
     }
-    int32_t msgStart=partsLength;
-    addPart(UMSGPAT_PART_TYPE_MSG_START, index, msgStartLength, nestingLevel, errorCode);
-    index+=msgStartLength;
-    for(;;) {  // while(index<msg.length()) with U_FAILURE(errorCode) check
-        if(U_FAILURE(errorCode)) {
-            return 0;
+    int32_t ਸੁਨੇਹਾ_ਸ਼ੁਰੂ=parts_ਲੰਮਾਈ;
+    ਜੋੜੋ_Part(UMSGPAT_PART_TYPE_ਸੁਨੇਹਾ_ਸ਼ੁਰੂ, ਸੂਚਕਾਂਕ, ਸੁਨੇਹਾ_ਸ਼ੁਰੂ_ਲੰਮਾਈ, nestingLevel, error_ਕੋਡ);
+    ਸੂਚਕਾਂਕ+=ਸੁਨੇਹਾ_ਸ਼ੁਰੂ_ਲੰਮਾਈ;
+    ਲਈ(;;) {  // while(index<msg.length()) with U_FAILURE(errorCode) check
+        ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+            ਵਾਪਸ 0;
         }
-        if(index>=msg.length()) {
-            break;
+        ਜੇ(ਸੂਚਕਾਂਕ>=ਸੁਨੇਹਾ.length()) {
+            ਰੋਕੋ;
         }
-        char16_t c=msg.charAt(index++);
-        if(c==u_apos) {
-            if(index==msg.length()) {
+        char16_t c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++);
+        ਜੇ(c==u_apos) {
+            ਜੇ(ਸੂਚਕਾਂਕ==ਸੁਨੇਹਾ.length()) {
                 // The apostrophe is the last character in the pattern. 
                 // Add a Part for auto-quoting.
-                addPart(UMSGPAT_PART_TYPE_INSERT_CHAR, index, 0,
-                        u_apos, errorCode);  // value=char to be inserted
-                needsAutoQuoting=true;
-            } else {
-                c=msg.charAt(index);
-                if(c==u_apos) {
+                ਜੋੜੋ_Part(UMSGPAT_PART_TYPE_ਪਾਓ_CHAR, ਸੂਚਕਾਂਕ, 0,
+                        u_apos, error_ਕੋਡ);  // value=char to be inserted
+                needsAutoQuoting=ਸੱਚ;
+            } ਨਹੀਂਤਾਂ {
+                c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ);
+                ਜੇ(c==u_apos) {
                     // double apostrophe, skip the second one
-                    addPart(UMSGPAT_PART_TYPE_SKIP_SYNTAX, index++, 1, 0, errorCode);
-                } else if(
-                    aposMode==UMSGPAT_APOS_DOUBLE_REQUIRED ||
-                    c==u_leftCurlyBrace || c==u_rightCurlyBrace ||
-                    (parentType==UMSGPAT_ARG_TYPE_CHOICE && c==u_pipe) ||
-                    (UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(parentType) && c==u_pound)
+                    ਜੋੜੋ_Part(UMSGPAT_PART_TYPE_SKIP_SYNTAX, ਸੂਚਕਾਂਕ++, 1, 0, error_ਕੋਡ);
+                } ਨਹੀਂਤਾਂ ਜੇ(
+                    apos_ਬਹੁਲਕ==UMSGPAT_APOS_DOUBLE_REQUIRED ||
+                    c==u_ਖੱਬਾ_Curly_Brace || c==u_ਸੱਜਾ_Curly_Brace ||
+                    (ਮਾਪਾ_Type==UMSGPAT_ARG_TYPE_CHOICE && c==u_pipe) ||
+                    (UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(ਮਾਪਾ_Type) && c==u_pound)
                 ) {
                     // skip the quote-starting apostrophe
-                    addPart(UMSGPAT_PART_TYPE_SKIP_SYNTAX, index-1, 1, 0, errorCode);
+                    ਜੋੜੋ_Part(UMSGPAT_PART_TYPE_SKIP_SYNTAX, ਸੂਚਕਾਂਕ-1, 1, 0, error_ਕੋਡ);
                     // find the end of the quoted literal text
-                    for(;;) {
-                        index=msg.indexOf(u_apos, index+1);
-                        if(index>=0) {
-                            if(/*(index+1)<msg.length() &&*/ msg.charAt(index+1)==u_apos) {
+                    ਲਈ(;;) {
+                        ਸੂਚਕਾਂਕ=ਸੁਨੇਹਾ.ਸੂਚਕਾਂਕ_ਦਾ(u_apos, ਸੂਚਕਾਂਕ+1);
+                        ਜੇ(ਸੂਚਕਾਂਕ>=0) {
+                            ਜੇ(/*(index+1)<msg.length() &&*/ ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ+1)==u_apos) {
                                 // double apostrophe inside quoted literal text
                                 // still encodes a single apostrophe, skip the second one
-                                addPart(UMSGPAT_PART_TYPE_SKIP_SYNTAX, ++index, 1, 0, errorCode);
-                            } else {
+                                ਜੋੜੋ_Part(UMSGPAT_PART_TYPE_SKIP_SYNTAX, ++ਸੂਚਕਾਂਕ, 1, 0, error_ਕੋਡ);
+                            } ਨਹੀਂਤਾਂ {
                                 // skip the quote-ending apostrophe
-                                addPart(UMSGPAT_PART_TYPE_SKIP_SYNTAX, index++, 1, 0, errorCode);
-                                break;
+                                ਜੋੜੋ_Part(UMSGPAT_PART_TYPE_SKIP_SYNTAX, ਸੂਚਕਾਂਕ++, 1, 0, error_ਕੋਡ);
+                                ਰੋਕੋ;
                             }
-                        } else {
+                        } ਨਹੀਂਤਾਂ {
                             // The quoted text reaches to the end of the of the message.
-                            index=msg.length();
+                            ਸੂਚਕਾਂਕ=ਸੁਨੇਹਾ.length();
                             // Add a Part for auto-quoting.
-                            addPart(UMSGPAT_PART_TYPE_INSERT_CHAR, index, 0,
-                                    u_apos, errorCode);  // value=char to be inserted
-                            needsAutoQuoting=true;
-                            break;
+                            ਜੋੜੋ_Part(UMSGPAT_PART_TYPE_ਪਾਓ_CHAR, ਸੂਚਕਾਂਕ, 0,
+                                    u_apos, error_ਕੋਡ);  // value=char to be inserted
+                            needsAutoQuoting=ਸੱਚ;
+                            ਰੋਕੋ;
                         }
                     }
-                } else {
+                } ਨਹੀਂਤਾਂ {
                     // Interpret the apostrophe as literal text.
                     // Add a Part for auto-quoting.
-                    addPart(UMSGPAT_PART_TYPE_INSERT_CHAR, index, 0,
-                            u_apos, errorCode);  // value=char to be inserted
-                    needsAutoQuoting=true;
+                    ਜੋੜੋ_Part(UMSGPAT_PART_TYPE_ਪਾਓ_CHAR, ਸੂਚਕਾਂਕ, 0,
+                            u_apos, error_ਕੋਡ);  // value=char to be inserted
+                    needsAutoQuoting=ਸੱਚ;
                 }
             }
-        } else if(UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(parentType) && c==u_pound) {
+        } ਨਹੀਂਤਾਂ ਜੇ(UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(ਮਾਪਾ_Type) && c==u_pound) {
             // The unquoted # in a plural message fragment will be replaced
             // with the (number-offset).
-            addPart(UMSGPAT_PART_TYPE_REPLACE_NUMBER, index-1, 1, 0, errorCode);
-        } else if(c==u_leftCurlyBrace) {
-            index=parseArg(index-1, 1, nestingLevel, parseError, errorCode);
-        } else if((nestingLevel>0 && c==u_rightCurlyBrace) ||
-                  (parentType==UMSGPAT_ARG_TYPE_CHOICE && c==u_pipe)) {
+            ਜੋੜੋ_Part(UMSGPAT_PART_TYPE_REPLACE_ਸੰਖਿਆ, ਸੂਚਕਾਂਕ-1, 1, 0, error_ਕੋਡ);
+        } ਨਹੀਂਤਾਂ ਜੇ(c==u_ਖੱਬਾ_Curly_Brace) {
+            ਸੂਚਕਾਂਕ=parseArg(ਸੂਚਕਾਂਕ-1, 1, nestingLevel, parseError, error_ਕੋਡ);
+        } ਨਹੀਂਤਾਂ ਜੇ((nestingLevel>0 && c==u_ਸੱਜਾ_Curly_Brace) ||
+                  (ਮਾਪਾ_Type==UMSGPAT_ARG_TYPE_CHOICE && c==u_pipe)) {
             // Finish the message before the terminator.
             // In a choice style, report the "}" substring only for the following ARG_LIMIT,
             // not for this MSG_LIMIT.
-            int32_t limitLength=(parentType==UMSGPAT_ARG_TYPE_CHOICE && c==u_rightCurlyBrace) ? 0 : 1;
-            addLimitPart(msgStart, UMSGPAT_PART_TYPE_MSG_LIMIT, index-1, limitLength,
-                         nestingLevel, errorCode);
-            if(parentType==UMSGPAT_ARG_TYPE_CHOICE) {
+            int32_t ਹੱਦਬੰਦੀ_ਲੰਮਾਈ=(ਮਾਪਾ_Type==UMSGPAT_ARG_TYPE_CHOICE && c==u_ਸੱਜਾ_Curly_Brace) ? 0 : 1;
+            ਜੋੜੋ_ਹੱਦਬੰਦੀ_Part(ਸੁਨੇਹਾ_ਸ਼ੁਰੂ, UMSGPAT_PART_TYPE_ਸੁਨੇਹਾ_ਹੱਦਬੰਦੀ, ਸੂਚਕਾਂਕ-1, ਹੱਦਬੰਦੀ_ਲੰਮਾਈ,
+                         nestingLevel, error_ਕੋਡ);
+            ਜੇ(ਮਾਪਾ_Type==UMSGPAT_ARG_TYPE_CHOICE) {
                 // Let the choice style parser see the '}' or '|'.
-                return index-1;
-            } else {
+                ਵਾਪਸ ਸੂਚਕਾਂਕ-1;
+            } ਨਹੀਂਤਾਂ {
                 // continue parsing after the '}'
-                return index;
+                ਵਾਪਸ ਸੂਚਕਾਂਕ;
             }
         }  // else: c is part of literal text
     }
-    if(nestingLevel>0 && !inTopLevelChoiceMessage(nestingLevel, parentType)) {
-        setParseError(parseError, 0);  // Unmatched '{' braces in message.
-        errorCode=U_UNMATCHED_BRACES;
-        return 0;
+    ਜੇ(nestingLevel>0 && !ਵਿੱਚ_ਸਿਖਰ_Level_Choice_ਸੁਨੇਹਾ(nestingLevel, ਮਾਪਾ_Type)) {
+        ਸੈੱਟ_Parse_Error(parseError, 0);  // Unmatched '{' braces in message.
+        error_ਕੋਡ=U_UNMATCHED_BRACES;
+        ਵਾਪਸ 0;
     }
-    addLimitPart(msgStart, UMSGPAT_PART_TYPE_MSG_LIMIT, index, 0, nestingLevel, errorCode);
-    return index;
+    ਜੋੜੋ_ਹੱਦਬੰਦੀ_Part(ਸੁਨੇਹਾ_ਸ਼ੁਰੂ, UMSGPAT_PART_TYPE_ਸੁਨੇਹਾ_ਹੱਦਬੰਦੀ, ਸੂਚਕਾਂਕ, 0, nestingLevel, error_ਕੋਡ);
+    ਵਾਪਸ ਸੂਚਕਾਂਕ;
 }
 
 int32_t
-MessagePattern::parseArg(int32_t index, int32_t argStartLength, int32_t nestingLevel,
-                         UParseError *parseError, UErrorCode &errorCode) {
-    int32_t argStart=partsLength;
-    UMessagePatternArgType argType=UMSGPAT_ARG_TYPE_NONE;
-    addPart(UMSGPAT_PART_TYPE_ARG_START, index, argStartLength, argType, errorCode);
-    if(U_FAILURE(errorCode)) {
-        return 0;
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::parseArg(int32_t ਸੂਚਕਾਂਕ, int32_t arg_ਸ਼ੁਰੂ_ਲੰਮਾਈ, int32_t nestingLevel,
+                         UParseError *parseError, UError_ਕੋਡ &error_ਕੋਡ) {
+    int32_t arg_ਸ਼ੁਰੂ=parts_ਲੰਮਾਈ;
+    UMessage_ਨਮੂਨਾ_Arg_Type argType=UMSGPAT_ARG_TYPE_NONE;
+    ਜੋੜੋ_Part(UMSGPAT_PART_TYPE_ARG_ਸ਼ੁਰੂ, ਸੂਚਕਾਂਕ, arg_ਸ਼ੁਰੂ_ਲੰਮਾਈ, argType, error_ਕੋਡ);
+    ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ 0;
     }
-    int32_t nameIndex=index=skipWhiteSpace(index+argStartLength);
-    if(index==msg.length()) {
-        setParseError(parseError, 0);  // Unmatched '{' braces in message.
-        errorCode=U_UNMATCHED_BRACES;
-        return 0;
+    int32_t name_ਸੂਚਕਾਂਕ=ਸੂਚਕਾਂਕ=skipWhiteSpace(ਸੂਚਕਾਂਕ+arg_ਸ਼ੁਰੂ_ਲੰਮਾਈ);
+    ਜੇ(ਸੂਚਕਾਂਕ==ਸੁਨੇਹਾ.length()) {
+        ਸੈੱਟ_Parse_Error(parseError, 0);  // Unmatched '{' braces in message.
+        error_ਕੋਡ=U_UNMATCHED_BRACES;
+        ਵਾਪਸ 0;
     }
     // parse argument name or number
-    index=skipIdentifier(index);
-    int32_t number=parseArgNumber(nameIndex, index);
-    if(number>=0) {
-        int32_t length=index-nameIndex;
-        if(length>Part::MAX_LENGTH || number>Part::MAX_VALUE) {
-            setParseError(parseError, nameIndex);  // Argument number too large.
-            errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+    ਸੂਚਕਾਂਕ=skipIdentifier(ਸੂਚਕਾਂਕ);
+    int32_t number=parse_Arg_ਸੰਖਿਆ(name_ਸੂਚਕਾਂਕ, ਸੂਚਕਾਂਕ);
+    ਜੇ(number>=0) {
+        int32_t length=ਸੂਚਕਾਂਕ-name_ਸੂਚਕਾਂਕ;
+        ਜੇ(length>Part::MAX_ਲੰਮਾਈ || number>Part::MAX_ਮੁੱਲ) {
+            ਸੈੱਟ_Parse_Error(parseError, name_ਸੂਚਕਾਂਕ);  // Argument number too large.
+            error_ਕੋਡ=U_ਸੂਚਕਾਂਕ_OUTOFBOUNDS_ERROR;
+            ਵਾਪਸ 0;
         }
-        hasArgNumbers=true;
-        addPart(UMSGPAT_PART_TYPE_ARG_NUMBER, nameIndex, length, number, errorCode);
-    } else if(number==UMSGPAT_ARG_NAME_NOT_NUMBER) {
-        int32_t length=index-nameIndex;
-        if(length>Part::MAX_LENGTH) {
-            setParseError(parseError, nameIndex);  // Argument name too long.
-            errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+        hasArgNumbers=ਸੱਚ;
+        ਜੋੜੋ_Part(UMSGPAT_PART_TYPE_ARG_ਸੰਖਿਆ, name_ਸੂਚਕਾਂਕ, length, number, error_ਕੋਡ);
+    } ਨਹੀਂਤਾਂ ਜੇ(number==UMSGPAT_ARG_NAME_NOT_ਸੰਖਿਆ) {
+        int32_t length=ਸੂਚਕਾਂਕ-name_ਸੂਚਕਾਂਕ;
+        ਜੇ(length>Part::MAX_ਲੰਮਾਈ) {
+            ਸੈੱਟ_Parse_Error(parseError, name_ਸੂਚਕਾਂਕ);  // Argument name too long.
+            error_ਕੋਡ=U_ਸੂਚਕਾਂਕ_OUTOFBOUNDS_ERROR;
+            ਵਾਪਸ 0;
         }
-        hasArgNames=true;
-        addPart(UMSGPAT_PART_TYPE_ARG_NAME, nameIndex, length, 0, errorCode);
-    } else {  // number<-1 (ARG_NAME_NOT_VALID)
-        setParseError(parseError, nameIndex);  // Bad argument syntax.
-        errorCode=U_PATTERN_SYNTAX_ERROR;
-        return 0;
+        has_Arg_ਨਾਂ=ਸੱਚ;
+        ਜੋੜੋ_Part(UMSGPAT_PART_TYPE_ARG_NAME, name_ਸੂਚਕਾਂਕ, length, 0, error_ਕੋਡ);
+    } ਨਹੀਂਤਾਂ {  // number<-1 (ARG_NAME_NOT_VALID)
+        ਸੈੱਟ_Parse_Error(parseError, name_ਸੂਚਕਾਂਕ);  // Bad argument syntax.
+        error_ਕੋਡ=U_ਨਮੂਨਾ_SYNTAX_ERROR;
+        ਵਾਪਸ 0;
     }
-    index=skipWhiteSpace(index);
-    if(index==msg.length()) {
-        setParseError(parseError, 0);  // Unmatched '{' braces in message.
-        errorCode=U_UNMATCHED_BRACES;
-        return 0;
+    ਸੂਚਕਾਂਕ=skipWhiteSpace(ਸੂਚਕਾਂਕ);
+    ਜੇ(ਸੂਚਕਾਂਕ==ਸੁਨੇਹਾ.length()) {
+        ਸੈੱਟ_Parse_Error(parseError, 0);  // Unmatched '{' braces in message.
+        error_ਕੋਡ=U_UNMATCHED_BRACES;
+        ਵਾਪਸ 0;
     }
-    char16_t c=msg.charAt(index);
-    if(c==u_rightCurlyBrace) {
+    char16_t c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ);
+    ਜੇ(c==u_ਸੱਜਾ_Curly_Brace) {
         // all done
-    } else if(c!=u_comma) {
-        setParseError(parseError, nameIndex);  // Bad argument syntax.
-        errorCode=U_PATTERN_SYNTAX_ERROR;
-        return 0;
-    } else /* ',' */ {
+    } ਨਹੀਂਤਾਂ ਜੇ(c!=u_comma) {
+        ਸੈੱਟ_Parse_Error(parseError, name_ਸੂਚਕਾਂਕ);  // Bad argument syntax.
+        error_ਕੋਡ=U_ਨਮੂਨਾ_SYNTAX_ERROR;
+        ਵਾਪਸ 0;
+    } ਨਹੀਂਤਾਂ /* ',' */ {
         // parse argument type: case-sensitive a-zA-Z
-        int32_t typeIndex=index=skipWhiteSpace(index+1);
-        while(index<msg.length() && isArgTypeChar(msg.charAt(index))) {
-            ++index;
+        int32_t type_ਸੂਚਕਾਂਕ=ਸੂਚਕਾਂਕ=skipWhiteSpace(ਸੂਚਕਾਂਕ+1);
+        ਜਦੋਂ(ਸੂਚਕਾਂਕ<ਸੁਨੇਹਾ.length() && isArgTypeChar(ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ))) {
+            ++ਸੂਚਕਾਂਕ;
         }
-        int32_t length=index-typeIndex;
-        index=skipWhiteSpace(index);
-        if(index==msg.length()) {
-            setParseError(parseError, 0);  // Unmatched '{' braces in message.
-            errorCode=U_UNMATCHED_BRACES;
-            return 0;
+        int32_t length=ਸੂਚਕਾਂਕ-type_ਸੂਚਕਾਂਕ;
+        ਸੂਚਕਾਂਕ=skipWhiteSpace(ਸੂਚਕਾਂਕ);
+        ਜੇ(ਸੂਚਕਾਂਕ==ਸੁਨੇਹਾ.length()) {
+            ਸੈੱਟ_Parse_Error(parseError, 0);  // Unmatched '{' braces in message.
+            error_ਕੋਡ=U_UNMATCHED_BRACES;
+            ਵਾਪਸ 0;
         }
-        if(length==0 || ((c=msg.charAt(index))!=u_comma && c!=u_rightCurlyBrace)) {
-            setParseError(parseError, nameIndex);  // Bad argument syntax.
-            errorCode=U_PATTERN_SYNTAX_ERROR;
-            return 0;
+        ਜੇ(length==0 || ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ))!=u_comma && c!=u_ਸੱਜਾ_Curly_Brace)) {
+            ਸੈੱਟ_Parse_Error(parseError, name_ਸੂਚਕਾਂਕ);  // Bad argument syntax.
+            error_ਕੋਡ=U_ਨਮੂਨਾ_SYNTAX_ERROR;
+            ਵਾਪਸ 0;
         }
-        if(length>Part::MAX_LENGTH) {
-            setParseError(parseError, nameIndex);  // Argument type name too long.
-            errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+        ਜੇ(length>Part::MAX_ਲੰਮਾਈ) {
+            ਸੈੱਟ_Parse_Error(parseError, name_ਸੂਚਕਾਂਕ);  // Argument type name too long.
+            error_ਕੋਡ=U_ਸੂਚਕਾਂਕ_OUTOFBOUNDS_ERROR;
+            ਵਾਪਸ 0;
         }
         argType=UMSGPAT_ARG_TYPE_SIMPLE;
-        if(length==6) {
+        ਜੇ(length==6) {
             // case-insensitive comparisons for complex-type names
-            if(isChoice(typeIndex)) {
+            ਜੇ(isChoice(type_ਸੂਚਕਾਂਕ)) {
                 argType=UMSGPAT_ARG_TYPE_CHOICE;
-            } else if(isPlural(typeIndex)) {
+            } ਨਹੀਂਤਾਂ ਜੇ(isPlural(type_ਸੂਚਕਾਂਕ)) {
                 argType=UMSGPAT_ARG_TYPE_PLURAL;
-            } else if(isSelect(typeIndex)) {
+            } ਨਹੀਂਤਾਂ ਜੇ(isSelect(type_ਸੂਚਕਾਂਕ)) {
                 argType=UMSGPAT_ARG_TYPE_SELECT;
             }
-        } else if(length==13) {
-            if(isSelect(typeIndex) && isOrdinal(typeIndex+6)) {
+        } ਨਹੀਂਤਾਂ ਜੇ(length==13) {
+            ਜੇ(isSelect(type_ਸੂਚਕਾਂਕ) && isOrdinal(type_ਸੂਚਕਾਂਕ+6)) {
                 argType=UMSGPAT_ARG_TYPE_SELECTORDINAL;
             }
         }
         // change the ARG_START type from NONE to argType
-        partsList->a[argStart].value = static_cast<int16_t>(argType);
-        if(argType==UMSGPAT_ARG_TYPE_SIMPLE) {
-            addPart(UMSGPAT_PART_TYPE_ARG_TYPE, typeIndex, length, 0, errorCode);
+        partsList->a[arg_ਸ਼ੁਰੂ].value = static_cast<int16_t>(argType);
+        ਜੇ(argType==UMSGPAT_ARG_TYPE_SIMPLE) {
+            ਜੋੜੋ_Part(UMSGPAT_PART_TYPE_ARG_TYPE, type_ਸੂਚਕਾਂਕ, length, 0, error_ਕੋਡ);
         }
         // look for an argument style (pattern)
-        if(c==u_rightCurlyBrace) {
-            if(argType!=UMSGPAT_ARG_TYPE_SIMPLE) {
-                setParseError(parseError, nameIndex);  // No style field for complex argument.
-                errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+        ਜੇ(c==u_ਸੱਜਾ_Curly_Brace) {
+            ਜੇ(argType!=UMSGPAT_ARG_TYPE_SIMPLE) {
+                ਸੈੱਟ_Parse_Error(parseError, name_ਸੂਚਕਾਂਕ);  // No style field for complex argument.
+                error_ਕੋਡ=U_ਨਮੂਨਾ_SYNTAX_ERROR;
+                ਵਾਪਸ 0;
             }
-        } else /* ',' */ {
-            ++index;
-            if(argType==UMSGPAT_ARG_TYPE_SIMPLE) {
-                index=parseSimpleStyle(index, parseError, errorCode);
-            } else if(argType==UMSGPAT_ARG_TYPE_CHOICE) {
-                index=parseChoiceStyle(index, nestingLevel, parseError, errorCode);
-            } else {
-                index=parsePluralOrSelectStyle(argType, index, nestingLevel, parseError, errorCode);
+        } ਨਹੀਂਤਾਂ /* ',' */ {
+            ++ਸੂਚਕਾਂਕ;
+            ਜੇ(argType==UMSGPAT_ARG_TYPE_SIMPLE) {
+                ਸੂਚਕਾਂਕ=parseSimpleStyle(ਸੂਚਕਾਂਕ, parseError, error_ਕੋਡ);
+            } ਨਹੀਂਤਾਂ ਜੇ(argType==UMSGPAT_ARG_TYPE_CHOICE) {
+                ਸੂਚਕਾਂਕ=parseChoiceStyle(ਸੂਚਕਾਂਕ, nestingLevel, parseError, error_ਕੋਡ);
+            } ਨਹੀਂਤਾਂ {
+                ਸੂਚਕਾਂਕ=parsePluralOrSelectStyle(argType, ਸੂਚਕਾਂਕ, nestingLevel, parseError, error_ਕੋਡ);
             }
         }
     }
     // Argument parsing stopped on the '}'.
-    addLimitPart(argStart, UMSGPAT_PART_TYPE_ARG_LIMIT, index, 1, argType, errorCode);
-    return index+1;
+    ਜੋੜੋ_ਹੱਦਬੰਦੀ_Part(arg_ਸ਼ੁਰੂ, UMSGPAT_PART_TYPE_ARG_ਹੱਦਬੰਦੀ, ਸੂਚਕਾਂਕ, 1, argType, error_ਕੋਡ);
+    ਵਾਪਸ ਸੂਚਕਾਂਕ+1;
 }
 
 int32_t
-MessagePattern::parseSimpleStyle(int32_t index, UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::parseSimpleStyle(int32_t ਸੂਚਕਾਂਕ, UParseError *parseError, UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ 0;
     }
-    int32_t start=index;
+    int32_t ਸ਼ੁਰੂ=ਸੂਚਕਾਂਕ;
     int32_t nestedBraces=0;
-    while(index<msg.length()) {
-        char16_t c=msg.charAt(index++);
-        if(c==u_apos) {
+    ਜਦੋਂ(ਸੂਚਕਾਂਕ<ਸੁਨੇਹਾ.length()) {
+        char16_t c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++);
+        ਜੇ(c==u_apos) {
             // Treat apostrophe as quoting but include it in the style part.
             // Find the end of the quoted literal text.
-            index=msg.indexOf(u_apos, index);
-            if(index<0) {
+            ਸੂਚਕਾਂਕ=ਸੁਨੇਹਾ.ਸੂਚਕਾਂਕ_ਦਾ(u_apos, ਸੂਚਕਾਂਕ);
+            ਜੇ(ਸੂਚਕਾਂਕ<0) {
                 // Quoted literal argument style text reaches to the end of the message.
-                setParseError(parseError, start);
-                errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+                ਸੈੱਟ_Parse_Error(parseError, ਸ਼ੁਰੂ);
+                error_ਕੋਡ=U_ਨਮੂਨਾ_SYNTAX_ERROR;
+                ਵਾਪਸ 0;
             }
             // skip the quote-ending apostrophe
-            ++index;
-        } else if(c==u_leftCurlyBrace) {
+            ++ਸੂਚਕਾਂਕ;
+        } ਨਹੀਂਤਾਂ ਜੇ(c==u_ਖੱਬਾ_Curly_Brace) {
             ++nestedBraces;
-        } else if(c==u_rightCurlyBrace) {
-            if(nestedBraces>0) {
+        } ਨਹੀਂਤਾਂ ਜੇ(c==u_ਸੱਜਾ_Curly_Brace) {
+            ਜੇ(nestedBraces>0) {
                 --nestedBraces;
-            } else {
-                int32_t length=--index-start;
-                if(length>Part::MAX_LENGTH) {
-                    setParseError(parseError, start);  // Argument style text too long.
-                    errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                    return 0;
+            } ਨਹੀਂਤਾਂ {
+                int32_t length=--ਸੂਚਕਾਂਕ-ਸ਼ੁਰੂ;
+                ਜੇ(length>Part::MAX_ਲੰਮਾਈ) {
+                    ਸੈੱਟ_Parse_Error(parseError, ਸ਼ੁਰੂ);  // Argument style text too long.
+                    error_ਕੋਡ=U_ਸੂਚਕਾਂਕ_OUTOFBOUNDS_ERROR;
+                    ਵਾਪਸ 0;
                 }
-                addPart(UMSGPAT_PART_TYPE_ARG_STYLE, start, length, 0, errorCode);
-                return index;
+                ਜੋੜੋ_Part(UMSGPAT_PART_TYPE_ARG_STYLE, ਸ਼ੁਰੂ, length, 0, error_ਕੋਡ);
+                ਵਾਪਸ ਸੂਚਕਾਂਕ;
             }
         }  // c is part of literal text
     }
-    setParseError(parseError, 0);  // Unmatched '{' braces in message.
-    errorCode=U_UNMATCHED_BRACES;
-    return 0;
+    ਸੈੱਟ_Parse_Error(parseError, 0);  // Unmatched '{' braces in message.
+    error_ਕੋਡ=U_UNMATCHED_BRACES;
+    ਵਾਪਸ 0;
 }
 
 int32_t
-MessagePattern::parseChoiceStyle(int32_t index, int32_t nestingLevel,
-                                 UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::parseChoiceStyle(int32_t ਸੂਚਕਾਂਕ, int32_t nestingLevel,
+                                 UParseError *parseError, UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ 0;
     }
-    int32_t start=index;
-    index=skipWhiteSpace(index);
-    if(index==msg.length() || msg.charAt(index)==u_rightCurlyBrace) {
-        setParseError(parseError, 0);  // Missing choice argument pattern.
-        errorCode=U_PATTERN_SYNTAX_ERROR;
-        return 0;
+    int32_t ਸ਼ੁਰੂ=ਸੂਚਕਾਂਕ;
+    ਸੂਚਕਾਂਕ=skipWhiteSpace(ਸੂਚਕਾਂਕ);
+    ਜੇ(ਸੂਚਕਾਂਕ==ਸੁਨੇਹਾ.length() || ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ)==u_ਸੱਜਾ_Curly_Brace) {
+        ਸੈੱਟ_Parse_Error(parseError, 0);  // Missing choice argument pattern.
+        error_ਕੋਡ=U_ਨਮੂਨਾ_SYNTAX_ERROR;
+        ਵਾਪਸ 0;
     }
-    for(;;) {
+    ਲਈ(;;) {
         // The choice argument style contains |-separated (number, separator, message) triples.
         // Parse the number.
-        int32_t numberIndex=index;
-        index=skipDouble(index);
-        int32_t length=index-numberIndex;
-        if(length==0) {
-            setParseError(parseError, start);  // Bad choice pattern syntax.
-            errorCode=U_PATTERN_SYNTAX_ERROR;
-            return 0;
+        int32_t ਸੰਖਿਆ_ਸੂਚਕਾਂਕ=ਸੂਚਕਾਂਕ;
+        ਸੂਚਕਾਂਕ=skipDouble(ਸੂਚਕਾਂਕ);
+        int32_t length=ਸੂਚਕਾਂਕ-ਸੰਖਿਆ_ਸੂਚਕਾਂਕ;
+        ਜੇ(length==0) {
+            ਸੈੱਟ_Parse_Error(parseError, ਸ਼ੁਰੂ);  // Bad choice pattern syntax.
+            error_ਕੋਡ=U_ਨਮੂਨਾ_SYNTAX_ERROR;
+            ਵਾਪਸ 0;
         }
-        if(length>Part::MAX_LENGTH) {
-            setParseError(parseError, numberIndex);  // Choice number too long.
-            errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+        ਜੇ(length>Part::MAX_ਲੰਮਾਈ) {
+            ਸੈੱਟ_Parse_Error(parseError, ਸੰਖਿਆ_ਸੂਚਕਾਂਕ);  // Choice number too long.
+            error_ਕੋਡ=U_ਸੂਚਕਾਂਕ_OUTOFBOUNDS_ERROR;
+            ਵਾਪਸ 0;
         }
-        parseDouble(numberIndex, index, true, parseError, errorCode);  // adds ARG_INT or ARG_DOUBLE
-        if(U_FAILURE(errorCode)) {
-            return 0;
+        parseDouble(ਸੰਖਿਆ_ਸੂਚਕਾਂਕ, ਸੂਚਕਾਂਕ, ਸੱਚ, parseError, error_ਕੋਡ);  // adds ARG_INT or ARG_DOUBLE
+        ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+            ਵਾਪਸ 0;
         }
         // Parse the separator.
-        index=skipWhiteSpace(index);
-        if(index==msg.length()) {
-            setParseError(parseError, start);  // Bad choice pattern syntax.
-            errorCode=U_PATTERN_SYNTAX_ERROR;
-            return 0;
+        ਸੂਚਕਾਂਕ=skipWhiteSpace(ਸੂਚਕਾਂਕ);
+        ਜੇ(ਸੂਚਕਾਂਕ==ਸੁਨੇਹਾ.length()) {
+            ਸੈੱਟ_Parse_Error(parseError, ਸ਼ੁਰੂ);  // Bad choice pattern syntax.
+            error_ਕੋਡ=U_ਨਮੂਨਾ_SYNTAX_ERROR;
+            ਵਾਪਸ 0;
         }
-        char16_t c=msg.charAt(index);
-        if(!(c==u_pound || c==u_lessThan || c==u_lessOrEqual)) {  // U+2264 is <=
-            setParseError(parseError, start);  // Expected choice separator (#<\u2264) instead of c.
-            errorCode=U_PATTERN_SYNTAX_ERROR;
-            return 0;
+        char16_t c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ);
+        ਜੇ(!(c==u_pound || c==u_lessThan || c==u_lessOrEqual)) {  // U+2264 is <=
+            ਸੈੱਟ_Parse_Error(parseError, ਸ਼ੁਰੂ);  // Expected choice separator (#<\u2264) instead of c.
+            error_ਕੋਡ=U_ਨਮੂਨਾ_SYNTAX_ERROR;
+            ਵਾਪਸ 0;
         }
-        addPart(UMSGPAT_PART_TYPE_ARG_SELECTOR, index, 1, 0, errorCode);
+        ਜੋੜੋ_Part(UMSGPAT_PART_TYPE_ARG_SELECTOR, ਸੂਚਕਾਂਕ, 1, 0, error_ਕੋਡ);
         // Parse the message fragment.
-        index=parseMessage(++index, 0, nestingLevel+1, UMSGPAT_ARG_TYPE_CHOICE, parseError, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return 0;
+        ਸੂਚਕਾਂਕ=parse_ਸੁਨੇਹਾ(++ਸੂਚਕਾਂਕ, 0, nestingLevel+1, UMSGPAT_ARG_TYPE_CHOICE, parseError, error_ਕੋਡ);
+        ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+            ਵਾਪਸ 0;
         }
         // parseMessage(..., CHOICE) returns the index of the terminator, or msg.length().
-        if(index==msg.length()) {
-            return index;
+        ਜੇ(ਸੂਚਕਾਂਕ==ਸੁਨੇਹਾ.length()) {
+            ਵਾਪਸ ਸੂਚਕਾਂਕ;
         }
-        if(msg.charAt(index)==u_rightCurlyBrace) {
-            if(!inMessageFormatPattern(nestingLevel)) {
-                setParseError(parseError, start);  // Bad choice pattern syntax.
-                errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+        ਜੇ(ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ)==u_ਸੱਜਾ_Curly_Brace) {
+            ਜੇ(!ਵਿੱਚ_ਸੁਨੇਹਾ_Format_ਨਮੂਨਾ(nestingLevel)) {
+                ਸੈੱਟ_Parse_Error(parseError, ਸ਼ੁਰੂ);  // Bad choice pattern syntax.
+                error_ਕੋਡ=U_ਨਮੂਨਾ_SYNTAX_ERROR;
+                ਵਾਪਸ 0;
             }
-            return index;
+            ਵਾਪਸ ਸੂਚਕਾਂਕ;
         }  // else the terminator is '|'
-        index=skipWhiteSpace(index+1);
+        ਸੂਚਕਾਂਕ=skipWhiteSpace(ਸੂਚਕਾਂਕ+1);
     }
 }
 
 int32_t
-MessagePattern::parsePluralOrSelectStyle(UMessagePatternArgType argType,
-                                         int32_t index, int32_t nestingLevel,
-                                         UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::parsePluralOrSelectStyle(UMessage_ਨਮੂਨਾ_Arg_Type argType,
+                                         int32_t ਸੂਚਕਾਂਕ, int32_t nestingLevel,
+                                         UParseError *parseError, UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ 0;
     }
-    int32_t start=index;
-    UBool isEmpty=true;
-    UBool hasOther=false;
-    for(;;) {
+    int32_t ਸ਼ੁਰੂ=ਸੂਚਕਾਂਕ;
+    UBool is_ਖਾਲੀ_ਥਾਵਾਂ=ਸੱਚ;
+    UBool hasOther=ਝੂਠ;
+    ਲਈ(;;) {
         // First, collect the selector looking for a small set of terminators.
         // It would be a little faster to consider the syntax of each possible
         // token right here, but that makes the code too complicated.
-        index=skipWhiteSpace(index);
-        UBool eos=index==msg.length();
-        if(eos || msg.charAt(index)==u_rightCurlyBrace) {
-            if(eos==inMessageFormatPattern(nestingLevel)) {
-                setParseError(parseError, start);  // Bad plural/select pattern syntax.
-                errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+        ਸੂਚਕਾਂਕ=skipWhiteSpace(ਸੂਚਕਾਂਕ);
+        UBool eos=ਸੂਚਕਾਂਕ==ਸੁਨੇਹਾ.length();
+        ਜੇ(eos || ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ)==u_ਸੱਜਾ_Curly_Brace) {
+            ਜੇ(eos==ਵਿੱਚ_ਸੁਨੇਹਾ_Format_ਨਮੂਨਾ(nestingLevel)) {
+                ਸੈੱਟ_Parse_Error(parseError, ਸ਼ੁਰੂ);  // Bad plural/select pattern syntax.
+                error_ਕੋਡ=U_ਨਮੂਨਾ_SYNTAX_ERROR;
+                ਵਾਪਸ 0;
             }
-            if(!hasOther) {
-                setParseError(parseError, 0);  // Missing 'other' keyword in plural/select pattern.
-                errorCode=U_DEFAULT_KEYWORD_MISSING;
-                return 0;
+            ਜੇ(!hasOther) {
+                ਸੈੱਟ_Parse_Error(parseError, 0);  // Missing 'other' keyword in plural/select pattern.
+                error_ਕੋਡ=U_DEFAULT_KEYWORD_MISSING;
+                ਵਾਪਸ 0;
             }
-            return index;
+            ਵਾਪਸ ਸੂਚਕਾਂਕ;
         }
-        int32_t selectorIndex=index;
-        if(UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) && msg.charAt(selectorIndex)==u_equal) {
+        int32_t selector_ਸੂਚਕਾਂਕ=ਸੂਚਕਾਂਕ;
+        ਜੇ(UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) && ਸੁਨੇਹਾ.charAt(selector_ਸੂਚਕਾਂਕ)==u_equal) {
             // explicit-value plural selector: =double
-            index=skipDouble(index+1);
-            int32_t length=index-selectorIndex;
-            if(length==1) {
-                setParseError(parseError, start);  // Bad plural/select pattern syntax.
-                errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+            ਸੂਚਕਾਂਕ=skipDouble(ਸੂਚਕਾਂਕ+1);
+            int32_t length=ਸੂਚਕਾਂਕ-selector_ਸੂਚਕਾਂਕ;
+            ਜੇ(length==1) {
+                ਸੈੱਟ_Parse_Error(parseError, ਸ਼ੁਰੂ);  // Bad plural/select pattern syntax.
+                error_ਕੋਡ=U_ਨਮੂਨਾ_SYNTAX_ERROR;
+                ਵਾਪਸ 0;
             }
-            if(length>Part::MAX_LENGTH) {
-                setParseError(parseError, selectorIndex);  // Argument selector too long.
-                errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                return 0;
+            ਜੇ(length>Part::MAX_ਲੰਮਾਈ) {
+                ਸੈੱਟ_Parse_Error(parseError, selector_ਸੂਚਕਾਂਕ);  // Argument selector too long.
+                error_ਕੋਡ=U_ਸੂਚਕਾਂਕ_OUTOFBOUNDS_ERROR;
+                ਵਾਪਸ 0;
             }
-            addPart(UMSGPAT_PART_TYPE_ARG_SELECTOR, selectorIndex, length, 0, errorCode);
-            parseDouble(selectorIndex+1, index, false,
-                        parseError, errorCode);  // adds ARG_INT or ARG_DOUBLE
-        } else {
-            index=skipIdentifier(index);
-            int32_t length=index-selectorIndex;
-            if(length==0) {
-                setParseError(parseError, start);  // Bad plural/select pattern syntax.
-                errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+            ਜੋੜੋ_Part(UMSGPAT_PART_TYPE_ARG_SELECTOR, selector_ਸੂਚਕਾਂਕ, length, 0, error_ਕੋਡ);
+            parseDouble(selector_ਸੂਚਕਾਂਕ+1, ਸੂਚਕਾਂਕ, ਝੂਠ,
+                        parseError, error_ਕੋਡ);  // adds ARG_INT or ARG_DOUBLE
+        } ਨਹੀਂਤਾਂ {
+            ਸੂਚਕਾਂਕ=skipIdentifier(ਸੂਚਕਾਂਕ);
+            int32_t length=ਸੂਚਕਾਂਕ-selector_ਸੂਚਕਾਂਕ;
+            ਜੇ(length==0) {
+                ਸੈੱਟ_Parse_Error(parseError, ਸ਼ੁਰੂ);  // Bad plural/select pattern syntax.
+                error_ਕੋਡ=U_ਨਮੂਨਾ_SYNTAX_ERROR;
+                ਵਾਪਸ 0;
             }
             // Note: The ':' in "offset:" is just beyond the skipIdentifier() range.
-            if( UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) && length==6 && index<msg.length() &&
-                0==msg.compare(selectorIndex, 7, kOffsetColon, 0, 7)
+            ਜੇ( UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) && length==6 && ਸੂਚਕਾਂਕ<ਸੁਨੇਹਾ.length() &&
+                0==ਸੁਨੇਹਾ.compare(selector_ਸੂਚਕਾਂਕ, 7, k_ਵਿੱਥ_Colon, 0, 7)
             ) {
                 // plural offset, not a selector
-                if(!isEmpty) {
+                ਜੇ(!is_ਖਾਲੀ_ਥਾਵਾਂ) {
                     // Plural argument 'offset:' (if present) must precede key-message pairs.
-                    setParseError(parseError, start);
-                    errorCode=U_PATTERN_SYNTAX_ERROR;
-                    return 0;
+                    ਸੈੱਟ_Parse_Error(parseError, ਸ਼ੁਰੂ);
+                    error_ਕੋਡ=U_ਨਮੂਨਾ_SYNTAX_ERROR;
+                    ਵਾਪਸ 0;
                 }
                 // allow whitespace between offset: and its value
-                int32_t valueIndex=skipWhiteSpace(index+1);  // The ':' is at index.
-                index=skipDouble(valueIndex);
-                if(index==valueIndex) {
-                    setParseError(parseError, start);  // Missing value for plural 'offset:'.
-                    errorCode=U_PATTERN_SYNTAX_ERROR;
-                    return 0;
+                int32_t ਮੁੱਲ_ਸੂਚਕਾਂਕ=skipWhiteSpace(ਸੂਚਕਾਂਕ+1);  // The ':' is at index.
+                ਸੂਚਕਾਂਕ=skipDouble(ਮੁੱਲ_ਸੂਚਕਾਂਕ);
+                ਜੇ(ਸੂਚਕਾਂਕ==ਮੁੱਲ_ਸੂਚਕਾਂਕ) {
+                    ਸੈੱਟ_Parse_Error(parseError, ਸ਼ੁਰੂ);  // Missing value for plural 'offset:'.
+                    error_ਕੋਡ=U_ਨਮੂਨਾ_SYNTAX_ERROR;
+                    ਵਾਪਸ 0;
                 }
-                if((index-valueIndex)>Part::MAX_LENGTH) {
-                    setParseError(parseError, valueIndex);  // Plural offset value too long.
-                    errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                    return 0;
+                ਜੇ((ਸੂਚਕਾਂਕ-ਮੁੱਲ_ਸੂਚਕਾਂਕ)>Part::MAX_ਲੰਮਾਈ) {
+                    ਸੈੱਟ_Parse_Error(parseError, ਮੁੱਲ_ਸੂਚਕਾਂਕ);  // Plural offset value too long.
+                    error_ਕੋਡ=U_ਸੂਚਕਾਂਕ_OUTOFBOUNDS_ERROR;
+                    ਵਾਪਸ 0;
                 }
-                parseDouble(valueIndex, index, false,
-                            parseError, errorCode);  // adds ARG_INT or ARG_DOUBLE
-                if(U_FAILURE(errorCode)) {
-                    return 0;
+                parseDouble(ਮੁੱਲ_ਸੂਚਕਾਂਕ, ਸੂਚਕਾਂਕ, ਝੂਠ,
+                            parseError, error_ਕੋਡ);  // adds ARG_INT or ARG_DOUBLE
+                ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+                    ਵਾਪਸ 0;
                 }
-                isEmpty=false;
-                continue;  // no message fragment after the offset
-            } else {
+                is_ਖਾਲੀ_ਥਾਵਾਂ=ਝੂਠ;
+                ਜਾਰੀ;  // no message fragment after the offset
+            } ਨਹੀਂਤਾਂ {
                 // normal selector word
-                if(length>Part::MAX_LENGTH) {
-                    setParseError(parseError, selectorIndex);  // Argument selector too long.
-                    errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                    return 0;
+                ਜੇ(length>Part::MAX_ਲੰਮਾਈ) {
+                    ਸੈੱਟ_Parse_Error(parseError, selector_ਸੂਚਕਾਂਕ);  // Argument selector too long.
+                    error_ਕੋਡ=U_ਸੂਚਕਾਂਕ_OUTOFBOUNDS_ERROR;
+                    ਵਾਪਸ 0;
                 }
-                addPart(UMSGPAT_PART_TYPE_ARG_SELECTOR, selectorIndex, length, 0, errorCode);
-                if(0==msg.compare(selectorIndex, length, kOther, 0, 5)) {
-                    hasOther=true;
+                ਜੋੜੋ_Part(UMSGPAT_PART_TYPE_ARG_SELECTOR, selector_ਸੂਚਕਾਂਕ, length, 0, error_ਕੋਡ);
+                ਜੇ(0==ਸੁਨੇਹਾ.compare(selector_ਸੂਚਕਾਂਕ, length, kOther, 0, 5)) {
+                    hasOther=ਸੱਚ;
                 }
             }
         }
-        if(U_FAILURE(errorCode)) {
-            return 0;
+        ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+            ਵਾਪਸ 0;
         }
 
         // parse the message fragment following the selector
-        index=skipWhiteSpace(index);
-        if(index==msg.length() || msg.charAt(index)!=u_leftCurlyBrace) {
-            setParseError(parseError, selectorIndex);  // No message fragment after plural/select selector.
-            errorCode=U_PATTERN_SYNTAX_ERROR;
-            return 0;
+        ਸੂਚਕਾਂਕ=skipWhiteSpace(ਸੂਚਕਾਂਕ);
+        ਜੇ(ਸੂਚਕਾਂਕ==ਸੁਨੇਹਾ.length() || ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ)!=u_ਖੱਬਾ_Curly_Brace) {
+            ਸੈੱਟ_Parse_Error(parseError, selector_ਸੂਚਕਾਂਕ);  // No message fragment after plural/select selector.
+            error_ਕੋਡ=U_ਨਮੂਨਾ_SYNTAX_ERROR;
+            ਵਾਪਸ 0;
         }
-        index=parseMessage(index, 1, nestingLevel+1, argType, parseError, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return 0;
+        ਸੂਚਕਾਂਕ=parse_ਸੁਨੇਹਾ(ਸੂਚਕਾਂਕ, 1, nestingLevel+1, argType, parseError, error_ਕੋਡ);
+        ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+            ਵਾਪਸ 0;
         }
-        isEmpty=false;
+        is_ਖਾਲੀ_ਥਾਵਾਂ=ਝੂਠ;
     }
 }
 
 int32_t
-MessagePattern::parseArgNumber(const UnicodeString &s, int32_t start, int32_t limit) {
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::parse_Arg_ਸੰਖਿਆ(ਅਚਲ UnicodeString &s, int32_t ਸ਼ੁਰੂ, int32_t ਹੱਦਬੰਦੀ) {
     // If the identifier contains only ASCII digits, then it is an argument _number_
     // and must not have leading zeros (except "0" itself).
     // Otherwise it is an argument _name_.
-    if(start>=limit) {
-        return UMSGPAT_ARG_NAME_NOT_VALID;
+    ਜੇ(ਸ਼ੁਰੂ>=ਹੱਦਬੰਦੀ) {
+        ਵਾਪਸ UMSGPAT_ARG_NAME_NOT_VALID;
     }
     int32_t number;
     // Defer numeric errors until we know there are only digits.
-    UBool badNumber;
-    char16_t c=s.charAt(start++);
-    if(c==0x30) {
-        if(start==limit) {
-            return 0;
-        } else {
+    UBool bad_ਸੰਖਿਆ;
+    char16_t c=s.charAt(ਸ਼ੁਰੂ++);
+    ਜੇ(c==0x30) {
+        ਜੇ(ਸ਼ੁਰੂ==ਹੱਦਬੰਦੀ) {
+            ਵਾਪਸ 0;
+        } ਨਹੀਂਤਾਂ {
             number=0;
-            badNumber=true;  // leading zero
+            bad_ਸੰਖਿਆ=ਸੱਚ;  // leading zero
         }
-    } else if(0x31<=c && c<=0x39) {
+    } ਨਹੀਂਤਾਂ ਜੇ(0x31<=c && c<=0x39) {
         number=c-0x30;
-        badNumber=false;
-    } else {
-        return UMSGPAT_ARG_NAME_NOT_NUMBER;
+        bad_ਸੰਖਿਆ=ਝੂਠ;
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ UMSGPAT_ARG_NAME_NOT_ਸੰਖਿਆ;
     }
-    while(start<limit) {
-        c=s.charAt(start++);
-        if(0x30<=c && c<=0x39) {
-            if(number>=INT32_MAX/10) {
-                badNumber=true;  // overflow
-            } else {
+    ਜਦੋਂ(ਸ਼ੁਰੂ<ਹੱਦਬੰਦੀ) {
+        c=s.charAt(ਸ਼ੁਰੂ++);
+        ਜੇ(0x30<=c && c<=0x39) {
+            ਜੇ(number>=INT32_MAX/10) {
+                bad_ਸੰਖਿਆ=ਸੱਚ;  //ਉਛਾਲ
+            } ਨਹੀਂਤਾਂ {
                 number=number*10+(c-0x30);
             }
-        } else {
-            return UMSGPAT_ARG_NAME_NOT_NUMBER;
+        } ਨਹੀਂਤਾਂ {
+            ਵਾਪਸ UMSGPAT_ARG_NAME_NOT_ਸੰਖਿਆ;
         }
     }
     // There are only ASCII digits.
-    if(badNumber) {
-        return UMSGPAT_ARG_NAME_NOT_VALID;
-    } else {
-        return number;
+    ਜੇ(bad_ਸੰਖਿਆ) {
+        ਵਾਪਸ UMSGPAT_ARG_NAME_NOT_VALID;
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ number;
     }
 }
 
-void
-MessagePattern::parseDouble(int32_t start, int32_t limit, UBool allowInfinity,
-                            UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+ਖਾਲੀ
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::parseDouble(int32_t ਸ਼ੁਰੂ, int32_t ਹੱਦਬੰਦੀ, UBool allowInfinity,
+                            UParseError *parseError, UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ;
     }
-    U_ASSERT(start<limit);
+    U_ASSERT(ਸ਼ੁਰੂ<ਹੱਦਬੰਦੀ);
     // fake loop for easy exit and single throw statement
-    for(;;) { /*loop doesn't iterate*/
+    ਲਈ(;;) { /*loop doesn't iterate*/
         // fast path for small integers and infinity
         int32_t value=0;
         int32_t isNegative=0;  // not boolean so that we can easily add it to value
-        int32_t index=start;
-        char16_t c=msg.charAt(index++);
-        if(c==u_minus) {
+        int32_t ਸੂਚਕਾਂਕ=ਸ਼ੁਰੂ;
+        char16_t c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++);
+        ਜੇ(c==u_minus) {
             isNegative=1;
-            if(index==limit) {
-                break;  // no number
+            ਜੇ(ਸੂਚਕਾਂਕ==ਹੱਦਬੰਦੀ) {
+                ਰੋਕੋ;  // no number
             }
-            c=msg.charAt(index++);
-        } else if(c==u_plus) {
-            if(index==limit) {
-                break;  // no number
+            c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++);
+        } ਨਹੀਂਤਾਂ ਜੇ(c==u_plus) {
+            ਜੇ(ਸੂਚਕਾਂਕ==ਹੱਦਬੰਦੀ) {
+                ਰੋਕੋ;  // no number
             }
-            c=msg.charAt(index++);
+            c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++);
         }
-        if(c==0x221e) {  // infinity
-            if(allowInfinity && index==limit) {
-                double infinity=uprv_getInfinity();
-                addArgDoublePart(
+        ਜੇ(c==0x221e) {  // infinity
+            ਜੇ(allowInfinity && ਸੂਚਕਾਂਕ==ਹੱਦਬੰਦੀ) {
+                ਦੁੱਗਣਾ infinity=uprv_getInfinity();
+                ਜੋੜੋ_Arg_Double_Part(
                     isNegative!=0 ? -infinity : infinity,
-                    start, limit-start, errorCode);
-                return;
-            } else {
-                break;
+                    ਸ਼ੁਰੂ, ਹੱਦਬੰਦੀ-ਸ਼ੁਰੂ, error_ਕੋਡ);
+                ਵਾਪਸ;
+            } ਨਹੀਂਤਾਂ {
+                ਰੋਕੋ;
             }
         }
         // try to parse the number as a small integer but fall back to a double
-        while('0'<=c && c<='9') {
+        ਜਦੋਂ('0'<=c && c<='9') {
             value=value*10+(c-'0');
-            if(value>(Part::MAX_VALUE+isNegative)) {
-                break;  // not a small-enough integer
+            ਜੇ(value>(Part::MAX_ਮੁੱਲ+isNegative)) {
+                ਰੋਕੋ;  // not a small-enough integer
             }
-            if(index==limit) {
-                addPart(UMSGPAT_PART_TYPE_ARG_INT, start, limit-start,
-                        isNegative!=0 ? -value : value, errorCode);
-                return;
+            ਜੇ(ਸੂਚਕਾਂਕ==ਹੱਦਬੰਦੀ) {
+                ਜੋੜੋ_Part(UMSGPAT_PART_TYPE_ARG_INT, ਸ਼ੁਰੂ, ਹੱਦਬੰਦੀ-ਸ਼ੁਰੂ,
+                        isNegative!=0 ? -value : value, error_ਕੋਡ);
+                ਵਾਪਸ;
             }
-            c=msg.charAt(index++);
+            c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++);
         }
         // Let Double.parseDouble() throw a NumberFormatException.
-        char numberChars[128];
-        int32_t capacity = static_cast<int32_t>(sizeof(numberChars));
-        int32_t length=limit-start;
-        if(length>=capacity) {
-            break;  // number too long
+        ਅੱਖਰ ਸੰਖਿਆ_Chars[128];
+        int32_t capacity = static_cast<int32_t>(ਆਕਾਰ(ਸੰਖਿਆ_Chars));
+        int32_t length=ਹੱਦਬੰਦੀ-ਸ਼ੁਰੂ;
+        ਜੇ(length>=capacity) {
+            ਰੋਕੋ;  // number too long
         }
-        msg.extract(start, length, numberChars, capacity, US_INV);
-        if (static_cast<int32_t>(uprv_strlen(numberChars)) < length) {
-            break;  // contains non-invariant character that was turned into NUL
+        ਸੁਨੇਹਾ.extract(ਸ਼ੁਰੂ, length, ਸੰਖਿਆ_Chars, capacity, US_INV);
+        ਜੇ (static_cast<int32_t>(uprv_strlen(ਸੰਖਿਆ_Chars)) < length) {
+            ਰੋਕੋ;  // contains non-invariant character that was turned into NUL
         }
-        char *end;
-        double numericValue=uprv_strtod(numberChars, &end);
-        if(end!=(numberChars+length)) {
-            break;  // parsing error
+        ਅੱਖਰ *ਸਿਰਾ;
+        ਦੁੱਗਣਾ numeric_ਮੁੱਲ=uprv_strtod(ਸੰਖਿਆ_Chars, &ਸਿਰਾ);
+        ਜੇ(ਸਿਰਾ!=(ਸੰਖਿਆ_Chars+length)) {
+            ਰੋਕੋ;  // parsing error
         }
-        addArgDoublePart(numericValue, start, length, errorCode);
-        return;
+        ਜੋੜੋ_Arg_Double_Part(numeric_ਮੁੱਲ, ਸ਼ੁਰੂ, length, error_ਕੋਡ);
+        ਵਾਪਸ;
     }
-    setParseError(parseError, start /*, limit*/);  // Bad syntax for numeric value.
-    errorCode=U_PATTERN_SYNTAX_ERROR;
+    ਸੈੱਟ_Parse_Error(parseError, ਸ਼ੁਰੂ /*, limit*/);  // Bad syntax for numeric value.
+    error_ਕੋਡ=U_ਨਮੂਨਾ_SYNTAX_ERROR;
 }
 
 int32_t
-MessagePattern::skipWhiteSpace(int32_t index) {
-    const char16_t *s=msg.getBuffer();
-    int32_t msgLength=msg.length();
-    const char16_t *t=PatternProps::skipWhiteSpace(s+index, msgLength-index);
-    return static_cast<int32_t>(t - s);
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::skipWhiteSpace(int32_t ਸੂਚਕਾਂਕ) {
+    ਅਚਲ char16_t *s=ਸੁਨੇਹਾ.get_ਬਫਰ();
+    int32_t ਸੁਨੇਹਾ_ਲੰਮਾਈ=ਸੁਨੇਹਾ.length();
+    ਅਚਲ char16_t *t=ਨਮੂਨਾ_Props::skipWhiteSpace(s+ਸੂਚਕਾਂਕ, ਸੁਨੇਹਾ_ਲੰਮਾਈ-ਸੂਚਕਾਂਕ);
+    ਵਾਪਸ static_cast<int32_t>(t - s);
 }
 
 int32_t
-MessagePattern::skipIdentifier(int32_t index) {
-    const char16_t *s=msg.getBuffer();
-    int32_t msgLength=msg.length();
-    const char16_t *t=PatternProps::skipIdentifier(s+index, msgLength-index);
-    return static_cast<int32_t>(t - s);
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::skipIdentifier(int32_t ਸੂਚਕਾਂਕ) {
+    ਅਚਲ char16_t *s=ਸੁਨੇਹਾ.get_ਬਫਰ();
+    int32_t ਸੁਨੇਹਾ_ਲੰਮਾਈ=ਸੁਨੇਹਾ.length();
+    ਅਚਲ char16_t *t=ਨਮੂਨਾ_Props::skipIdentifier(s+ਸੂਚਕਾਂਕ, ਸੁਨੇਹਾ_ਲੰਮਾਈ-ਸੂਚਕਾਂਕ);
+    ਵਾਪਸ static_cast<int32_t>(t - s);
 }
 
 int32_t
-MessagePattern::skipDouble(int32_t index) {
-    int32_t msgLength=msg.length();
-    while(index<msgLength) {
-        char16_t c=msg.charAt(index);
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::skipDouble(int32_t ਸੂਚਕਾਂਕ) {
+    int32_t ਸੁਨੇਹਾ_ਲੰਮਾਈ=ਸੁਨੇਹਾ.length();
+    ਜਦੋਂ(ਸੂਚਕਾਂਕ<ਸੁਨੇਹਾ_ਲੰਮਾਈ) {
+        char16_t c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ);
         // U+221E: Allow the infinity symbol, for ChoiceFormat patterns.
-        if((c<0x30 && c!=u_plus && c!=u_minus && c!=u_dot) || (c>0x39 && c!=u_e && c!=u_E && c!=0x221e)) {
-            break;
+        ਜੇ((c<0x30 && c!=u_plus && c!=u_minus && c!=u_dot) || (c>0x39 && c!=u_e && c!=u_E && c!=0x221e)) {
+            ਰੋਕੋ;
         }
-        ++index;
+        ++ਸੂਚਕਾਂਕ;
     }
-    return index;
+    ਵਾਪਸ ਸੂਚਕਾਂਕ;
 }
 
 UBool
-MessagePattern::isArgTypeChar(UChar32 c) {
-    return (u_a<=c && c<=u_z) || (u_A<=c && c<=u_Z);
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::isArgTypeChar(UChar32 c) {
+    ਵਾਪਸ (u_a<=c && c<=u_z) || (u_A<=c && c<=u_Z);
 }
 
 UBool
-MessagePattern::isChoice(int32_t index) {
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::isChoice(int32_t ਸੂਚਕਾਂਕ) {
     char16_t c;
-    return
-        ((c=msg.charAt(index++))==u_c || c==u_C) &&
-        ((c=msg.charAt(index++))==u_h || c==u_H) &&
-        ((c=msg.charAt(index++))==u_o || c==u_O) &&
-        ((c=msg.charAt(index++))==u_i || c==u_I) &&
-        ((c=msg.charAt(index++))==u_c || c==u_C) &&
-        ((c=msg.charAt(index))==u_e || c==u_E);
+    ਵਾਪਸ
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++))==u_c || c==u_C) &&
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++))==u_h || c==u_H) &&
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++))==u_o || c==u_O) &&
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++))==u_i || c==u_I) &&
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++))==u_c || c==u_C) &&
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ))==u_e || c==u_E);
 }
 
 UBool
-MessagePattern::isPlural(int32_t index) {
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::isPlural(int32_t ਸੂਚਕਾਂਕ) {
     char16_t c;
-    return
-        ((c=msg.charAt(index++))==u_p || c==u_P) &&
-        ((c=msg.charAt(index++))==u_l || c==u_L) &&
-        ((c=msg.charAt(index++))==u_u || c==u_U) &&
-        ((c=msg.charAt(index++))==u_r || c==u_R) &&
-        ((c=msg.charAt(index++))==u_a || c==u_A) &&
-        ((c=msg.charAt(index))==u_l || c==u_L);
+    ਵਾਪਸ
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++))==u_p || c==u_P) &&
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++))==u_l || c==u_L) &&
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++))==u_u || c==u_U) &&
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++))==u_r || c==u_R) &&
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++))==u_a || c==u_A) &&
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ))==u_l || c==u_L);
 }
 
 UBool
-MessagePattern::isSelect(int32_t index) {
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::isSelect(int32_t ਸੂਚਕਾਂਕ) {
     char16_t c;
-    return
-        ((c=msg.charAt(index++))==u_s || c==u_S) &&
-        ((c=msg.charAt(index++))==u_e || c==u_E) &&
-        ((c=msg.charAt(index++))==u_l || c==u_L) &&
-        ((c=msg.charAt(index++))==u_e || c==u_E) &&
-        ((c=msg.charAt(index++))==u_c || c==u_C) &&
-        ((c=msg.charAt(index))==u_t || c==u_T);
+    ਵਾਪਸ
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++))==u_s || c==u_S) &&
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++))==u_e || c==u_E) &&
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++))==u_l || c==u_L) &&
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++))==u_e || c==u_E) &&
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++))==u_c || c==u_C) &&
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ))==u_t || c==u_T);
 }
 
 UBool
-MessagePattern::isOrdinal(int32_t index) {
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::isOrdinal(int32_t ਸੂਚਕਾਂਕ) {
     char16_t c;
-    return
-        ((c=msg.charAt(index++))==u_o || c==u_O) &&
-        ((c=msg.charAt(index++))==u_r || c==u_R) &&
-        ((c=msg.charAt(index++))==u_d || c==u_D) &&
-        ((c=msg.charAt(index++))==u_i || c==u_I) &&
-        ((c=msg.charAt(index++))==u_n || c==u_N) &&
-        ((c=msg.charAt(index++))==u_a || c==u_A) &&
-        ((c=msg.charAt(index))==u_l || c==u_L);
+    ਵਾਪਸ
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++))==u_o || c==u_O) &&
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++))==u_r || c==u_R) &&
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++))==u_d || c==u_D) &&
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++))==u_i || c==u_I) &&
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++))==u_n || c==u_N) &&
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ++))==u_a || c==u_A) &&
+        ((c=ਸੁਨੇਹਾ.charAt(ਸੂਚਕਾਂਕ))==u_l || c==u_L);
 }
 
 UBool
-MessagePattern::inMessageFormatPattern(int32_t nestingLevel) {
-    return nestingLevel>0 || partsList->a[0].type==UMSGPAT_PART_TYPE_MSG_START;
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::ਵਿੱਚ_ਸੁਨੇਹਾ_Format_ਨਮੂਨਾ(int32_t nestingLevel) {
+    ਵਾਪਸ nestingLevel>0 || partsList->a[0].type==UMSGPAT_PART_TYPE_ਸੁਨੇਹਾ_ਸ਼ੁਰੂ;
 }
 
 UBool
-MessagePattern::inTopLevelChoiceMessage(int32_t nestingLevel, UMessagePatternArgType parentType) {
-    return
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::ਵਿੱਚ_ਸਿਖਰ_Level_Choice_ਸੁਨੇਹਾ(int32_t nestingLevel, UMessage_ਨਮੂਨਾ_Arg_Type ਮਾਪਾ_Type) {
+    ਵਾਪਸ
         nestingLevel==1 &&
-        parentType==UMSGPAT_ARG_TYPE_CHOICE &&
-        partsList->a[0].type!=UMSGPAT_PART_TYPE_MSG_START;
+        ਮਾਪਾ_Type==UMSGPAT_ARG_TYPE_CHOICE &&
+        partsList->a[0].type!=UMSGPAT_PART_TYPE_ਸੁਨੇਹਾ_ਸ਼ੁਰੂ;
 }
 
-void
-MessagePattern::addPart(UMessagePatternPartType type, int32_t index, int32_t length,
-                        int32_t value, UErrorCode &errorCode) {
-    if(partsList->ensureCapacityForOneMore(partsLength, errorCode)) {
-        Part &part=partsList->a[partsLength++];
+ਖਾਲੀ
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::ਜੋੜੋ_Part(UMessage_ਨਮੂਨਾ_Part_Type type, int32_t ਸੂਚਕਾਂਕ, int32_t length,
+                        int32_t value, UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ(partsList->ensure_ਸਮਰੱਥਾ_For_One_ਹੋਰ(parts_ਲੰਮਾਈ, error_ਕੋਡ)) {
+        Part &part=partsList->a[parts_ਲੰਮਾਈ++];
         part.type=type;
-        part.index=index;
+        part.ਸੂਚਕਾਂਕ=ਸੂਚਕਾਂਕ;
         part.length = static_cast<uint16_t>(length);
         part.value = static_cast<int16_t>(value);
-        part.limitPartIndex=0;
+        part.ਹੱਦਬੰਦੀ_Part_ਸੂਚਕਾਂਕ=0;
     }
 }
 
-void
-MessagePattern::addLimitPart(int32_t start,
-                             UMessagePatternPartType type, int32_t index, int32_t length,
-                             int32_t value, UErrorCode &errorCode) {
-    partsList->a[start].limitPartIndex=partsLength;
-    addPart(type, index, length, value, errorCode);
+ਖਾਲੀ
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::ਜੋੜੋ_ਹੱਦਬੰਦੀ_Part(int32_t ਸ਼ੁਰੂ,
+                             UMessage_ਨਮੂਨਾ_Part_Type type, int32_t ਸੂਚਕਾਂਕ, int32_t length,
+                             int32_t value, UError_ਕੋਡ &error_ਕੋਡ) {
+    partsList->a[ਸ਼ੁਰੂ].ਹੱਦਬੰਦੀ_Part_ਸੂਚਕਾਂਕ=parts_ਲੰਮਾਈ;
+    ਜੋੜੋ_Part(type, ਸੂਚਕਾਂਕ, length, value, error_ਕੋਡ);
 }
 
-void
-MessagePattern::addArgDoublePart(double numericValue, int32_t start, int32_t length,
-                                 UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+ਖਾਲੀ
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::ਜੋੜੋ_Arg_Double_Part(ਦੁੱਗਣਾ numeric_ਮੁੱਲ, int32_t ਸ਼ੁਰੂ, int32_t length,
+                                 UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ(U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ;
     }
-    int32_t numericIndex=numericValuesLength;
-    if(numericValuesList==nullptr) {
-        numericValuesList=new MessagePatternDoubleList();
-        if(numericValuesList==nullptr) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+    int32_t numeric_ਸੂਚਕਾਂਕ=numeric_ਮੁੱਲਾਂ_ਲੰਮਾਈ;
+    ਜੇ(numeric_ਮੁੱਲਾਂ_List==ਖਾਲੀ_ਸੂਚਕ) {
+        numeric_ਮੁੱਲਾਂ_List=ਨਵਾਂ ਸੁਨੇਹਾ_ਨਮੂਨਾ_Double_List();
+        ਜੇ(numeric_ਮੁੱਲਾਂ_List==ਖਾਲੀ_ਸੂਚਕ) {
+            error_ਕੋਡ=U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+            ਵਾਪਸ;
         }
-    } else if(!numericValuesList->ensureCapacityForOneMore(numericValuesLength, errorCode)) {
-        return;
-    } else {
-        if(numericIndex>Part::MAX_VALUE) {
-            errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return;
+    } ਨਹੀਂਤਾਂ ਜੇ(!numeric_ਮੁੱਲਾਂ_List->ensure_ਸਮਰੱਥਾ_For_One_ਹੋਰ(numeric_ਮੁੱਲਾਂ_ਲੰਮਾਈ, error_ਕੋਡ)) {
+        ਵਾਪਸ;
+    } ਨਹੀਂਤਾਂ {
+        ਜੇ(numeric_ਸੂਚਕਾਂਕ>Part::MAX_ਮੁੱਲ) {
+            error_ਕੋਡ=U_ਸੂਚਕਾਂਕ_OUTOFBOUNDS_ERROR;
+            ਵਾਪਸ;
         }
     }
-    numericValuesList->a[numericValuesLength++]=numericValue;
-    addPart(UMSGPAT_PART_TYPE_ARG_DOUBLE, start, length, numericIndex, errorCode);
+    numeric_ਮੁੱਲਾਂ_List->a[numeric_ਮੁੱਲਾਂ_ਲੰਮਾਈ++]=numeric_ਮੁੱਲ;
+    ਜੋੜੋ_Part(UMSGPAT_PART_TYPE_ARG_DOUBLE, ਸ਼ੁਰੂ, length, numeric_ਸੂਚਕਾਂਕ, error_ਕੋਡ);
 }
 
-void
-MessagePattern::setParseError(UParseError *parseError, int32_t index) {
-    if(parseError==nullptr) {
-        return;
+ਖਾਲੀ
+ਸੁਨੇਹਾ_ਨਮੂਨਾ::ਸੈੱਟ_Parse_Error(UParseError *parseError, int32_t ਸੂਚਕਾਂਕ) {
+    ਜੇ(parseError==ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ;
     }
-    parseError->offset=index;
+    parseError->ਵਿੱਥ=ਸੂਚਕਾਂਕ;
 
     // Set preContext to some of msg before index.
     // Avoid splitting a surrogate pair.
-    int32_t length=index;
-    if(length>=U_PARSE_CONTEXT_LEN) {
+    int32_t length=ਸੂਚਕਾਂਕ;
+    ਜੇ(length>=U_PARSE_CONTEXT_LEN) {
         length=U_PARSE_CONTEXT_LEN-1;
-        if(length>0 && U16_IS_TRAIL(msg[index-length])) {
+        ਜੇ(length>0 && U16_IS_TRAIL(ਸੁਨੇਹਾ[ਸੂਚਕਾਂਕ-length])) {
             --length;
         }
     }
-    msg.extract(index-length, length, parseError->preContext);
+    ਸੁਨੇਹਾ.extract(ਸੂਚਕਾਂਕ-length, length, parseError->preContext);
     parseError->preContext[length]=0;
 
     // Set postContext to some of msg starting at index.
-    length=msg.length()-index;
-    if(length>=U_PARSE_CONTEXT_LEN) {
+    length=ਸੁਨੇਹਾ.length()-ਸੂਚਕਾਂਕ;
+    ਜੇ(length>=U_PARSE_CONTEXT_LEN) {
         length=U_PARSE_CONTEXT_LEN-1;
-        if(length>0 && U16_IS_LEAD(msg[index+length-1])) {
+        ਜੇ(length>0 && U16_IS_LEAD(ਸੁਨੇਹਾ[ਸੂਚਕਾਂਕ+length-1])) {
             --length;
         }
     }
-    msg.extract(index, length, parseError->postContext);
+    ਸੁਨੇਹਾ.extract(ਸੂਚਕਾਂਕ, length, parseError->postContext);
     parseError->postContext[length]=0;
 }
 
 // MessageImpl ------------------------------------------------------------- ***
 
-void
-MessageImpl::appendReducedApostrophes(const UnicodeString &s, int32_t start, int32_t limit,
+ਖਾਲੀ
+ਸੁਨੇਹਾ_Impl::appendReducedApostrophes(ਅਚਲ UnicodeString &s, int32_t ਸ਼ੁਰੂ, int32_t ਹੱਦਬੰਦੀ,
                                       UnicodeString &sb) {
     int32_t doubleApos=-1;
-    for(;;) {
-        int32_t i=s.indexOf(u_apos, start);
-        if(i<0 || i>=limit) {
-            sb.append(s, start, limit-start);
-            break;
+    ਲਈ(;;) {
+        int32_t i=s.ਸੂਚਕਾਂਕ_ਦਾ(u_apos, ਸ਼ੁਰੂ);
+        ਜੇ(i<0 || i>=ਹੱਦਬੰਦੀ) {
+            sb.append(s, ਸ਼ੁਰੂ, ਹੱਦਬੰਦੀ-ਸ਼ੁਰੂ);
+            ਰੋਕੋ;
         }
-        if(i==doubleApos) {
+        ਜੇ(i==doubleApos) {
             // Double apostrophe at start-1 and start==i, append one.
             sb.append(u_apos);
-            ++start;
+            ++ਸ਼ੁਰੂ;
             doubleApos=-1;
-        } else {
+        } ਨਹੀਂਤਾਂ {
             // Append text between apostrophes and skip this one.
-            sb.append(s, start, i-start);
-            doubleApos=start=i+1;
+            sb.append(s, ਸ਼ੁਰੂ, i-ਸ਼ੁਰੂ);
+            doubleApos=ਸ਼ੁਰੂ=i+1;
         }
     }
 }
 
 // Ported from second half of ICU4J SelectFormat.format(String).
 UnicodeString&
-MessageImpl::appendSubMessageWithoutSkipSyntax(const MessagePattern& msgPattern,
-                                               int32_t msgStart,
-                                               UnicodeString& result U_LIFETIME_BOUND) {
-    const UnicodeString &msgString=msgPattern.getPatternString();
-    int32_t prevIndex=msgPattern.getPart(msgStart).getLimit();
-    for(int32_t i=msgStart;;) {
-        const MessagePattern::Part &part=msgPattern.getPart(++i);
-        UMessagePatternPartType type=part.getType();
-        int32_t index=part.getIndex();
-        if(type==UMSGPAT_PART_TYPE_MSG_LIMIT) {
-            return result.append(msgString, prevIndex, index-prevIndex);
-        } else if(type==UMSGPAT_PART_TYPE_SKIP_SYNTAX) {
-            result.append(msgString, prevIndex, index-prevIndex);
-            prevIndex=part.getLimit();
-        } else if(type==UMSGPAT_PART_TYPE_ARG_START) {
-            result.append(msgString, prevIndex, index-prevIndex);
-            prevIndex=index;
-            i=msgPattern.getLimitPartIndex(i);
-            index=msgPattern.getPart(i).getLimit();
-            appendReducedApostrophes(msgString, prevIndex, index, result);
-            prevIndex=index;
+ਸੁਨੇਹਾ_Impl::append_Sub_ਸੁਨੇਹਾ_Without_Skip_Syntax(ਅਚਲ ਸੁਨੇਹਾ_ਨਮੂਨਾ& ਸੁਨੇਹਾ_ਨਮੂਨਾ_2,
+                                               int32_t ਸੁਨੇਹਾ_ਸ਼ੁਰੂ,
+                                               UnicodeString& ਨਤੀਜਾ U_LIFETIME_BOUND) {
+    ਅਚਲ UnicodeString &ਸੁਨੇਹਾ_String=ਸੁਨੇਹਾ_ਨਮੂਨਾ_2.get_ਨਮੂਨਾ_String();
+    int32_t prev_ਸੂਚਕਾਂਕ=ਸੁਨੇਹਾ_ਨਮੂਨਾ_2.getPart(ਸੁਨੇਹਾ_ਸ਼ੁਰੂ).get_ਹੱਦਬੰਦੀ();
+    ਲਈ(int32_t i=ਸੁਨੇਹਾ_ਸ਼ੁਰੂ;;) {
+        ਅਚਲ ਸੁਨੇਹਾ_ਨਮੂਨਾ::Part &part=ਸੁਨੇਹਾ_ਨਮੂਨਾ_2.getPart(++i);
+        UMessage_ਨਮੂਨਾ_Part_Type type=part.getType();
+        int32_t ਸੂਚਕਾਂਕ=part.get_ਸੂਚਕਾਂਕ();
+        ਜੇ(type==UMSGPAT_PART_TYPE_ਸੁਨੇਹਾ_ਹੱਦਬੰਦੀ) {
+            ਵਾਪਸ ਨਤੀਜਾ.append(ਸੁਨੇਹਾ_String, prev_ਸੂਚਕਾਂਕ, ਸੂਚਕਾਂਕ-prev_ਸੂਚਕਾਂਕ);
+        } ਨਹੀਂਤਾਂ ਜੇ(type==UMSGPAT_PART_TYPE_SKIP_SYNTAX) {
+            ਨਤੀਜਾ.append(ਸੁਨੇਹਾ_String, prev_ਸੂਚਕਾਂਕ, ਸੂਚਕਾਂਕ-prev_ਸੂਚਕਾਂਕ);
+            prev_ਸੂਚਕਾਂਕ=part.get_ਹੱਦਬੰਦੀ();
+        } ਨਹੀਂਤਾਂ ਜੇ(type==UMSGPAT_PART_TYPE_ARG_ਸ਼ੁਰੂ) {
+            ਨਤੀਜਾ.append(ਸੁਨੇਹਾ_String, prev_ਸੂਚਕਾਂਕ, ਸੂਚਕਾਂਕ-prev_ਸੂਚਕਾਂਕ);
+            prev_ਸੂਚਕਾਂਕ=ਸੂਚਕਾਂਕ;
+            i=ਸੁਨੇਹਾ_ਨਮੂਨਾ_2.get_ਹੱਦਬੰਦੀ_Part_ਸੂਚਕਾਂਕ(i);
+            ਸੂਚਕਾਂਕ=ਸੁਨੇਹਾ_ਨਮੂਨਾ_2.getPart(i).get_ਹੱਦਬੰਦੀ();
+            appendReducedApostrophes(ਸੁਨੇਹਾ_String, prev_ਸੂਚਕਾਂਕ, ਸੂਚਕਾਂਕ, ਨਤੀਜਾ);
+            prev_ਸੂਚਕਾਂਕ=ਸੂਚਕਾਂਕ;
         }
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif  // !UCONFIG_NO_FORMATTING
+#ਜੇ_ਅੰਤ  // !UCONFIG_NO_FORMATTING

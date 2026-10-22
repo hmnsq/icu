@@ -14,8 +14,8 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "patternprops.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "patternprops.h"
 
 U_NAMESPACE_BEGIN
 
@@ -26,7 +26,7 @@ U_NAMESPACE_BEGIN
  * bit 2 if Pattern_White_Space is true.
  * That is, Pattern_Syntax is encoded as 3 and Pattern_White_Space as 5.
  */
-static const uint8_t latin1[256]={
+ਸਥਿਰ ਅਚਲ uint8_t latin1[256]={
     // WS: 9..D
     0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -61,7 +61,7 @@ static const uint8_t latin1[256]={
  * a small table of 32-bit data words.
  * The first two data words are all-zeros and all-ones.
  */
-static const uint8_t index2000[130]={
+ਸਥਿਰ ਅਚਲ uint8_t index2000[130]={
     2, 3, 4, 0, 0, 0, 0, 0,  // 20xx
     0, 0, 0, 0, 5, 1, 1, 1,  // 21xx
     1, 1, 1, 1, 1, 1, 1, 1,  // 22xx
@@ -85,7 +85,7 @@ static const uint8_t index2000[130]={
  * One 32-bit integer per 32 characters. Ranges of all-false and all-true
  * are mapped to the first two values, other ranges map to appropriate bit patterns.
  */
-static const uint32_t syntax2000[]={
+ਸਥਿਰ ਅਚਲ uint32_t syntax2000[]={
     0,
     0xffffffff,
     0xffff0000,  // 2: 2010..201F
@@ -102,7 +102,7 @@ static const uint32_t syntax2000[]={
  * Same as syntax2000, but with additional bits set for the
  * Pattern_White_Space characters 200E 200F 2028 2029.
  */
-static const uint32_t syntaxOrWhiteSpace2000[]={
+ਸਥਿਰ ਅਚਲ uint32_t syntaxOrWhiteSpace2000[]={
     0,
     0xffffffff,
     0xffffc000,  // 2: 200E..201F
@@ -116,115 +116,115 @@ static const uint32_t syntaxOrWhiteSpace2000[]={
 };
 
 UBool
-PatternProps::isSyntax(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return (latin1[c] >> 1) & 1;
-    } else if(c<0x2010) {
-        return false;
-    } else if(c<=0x3030) {
-        uint32_t bits=syntax2000[index2000[(c-0x2000)>>5]];
-        return (bits >> (c & 0x1f)) & 1;
-    } else if(0xfd3e<=c && c<=0xfe46) {
-        return c<=0xfd3f || 0xfe45<=c;
-    } else {
-        return false;
+ਨਮੂਨਾ_Props::isSyntax(UChar32 c) {
+    ਜੇ(c<0) {
+        ਵਾਪਸ ਝੂਠ;
+    } ਨਹੀਂਤਾਂ ਜੇ(c<=0xff) {
+        ਵਾਪਸ (latin1[c] >> 1) & 1;
+    } ਨਹੀਂਤਾਂ ਜੇ(c<0x2010) {
+        ਵਾਪਸ ਝੂਠ;
+    } ਨਹੀਂਤਾਂ ਜੇ(c<=0x3030) {
+        uint32_t ਬਿੱਟ=syntax2000[index2000[(c-0x2000)>>5]];
+        ਵਾਪਸ (ਬਿੱਟ >> (c & 0x1f)) & 1;
+    } ਨਹੀਂਤਾਂ ਜੇ(0xfd3e<=c && c<=0xfe46) {
+        ਵਾਪਸ c<=0xfd3f || 0xfe45<=c;
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ ਝੂਠ;
     }
 }
 
 UBool
-PatternProps::isSyntaxOrWhiteSpace(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return latin1[c] & 1;
-    } else if(c<0x200e) {
-        return false;
-    } else if(c<=0x3030) {
-        uint32_t bits=syntaxOrWhiteSpace2000[index2000[(c-0x2000)>>5]];
-        return (bits >> (c & 0x1f)) & 1;
-    } else if(0xfd3e<=c && c<=0xfe46) {
-        return c<=0xfd3f || 0xfe45<=c;
-    } else {
-        return false;
+ਨਮੂਨਾ_Props::isSyntaxOrWhiteSpace(UChar32 c) {
+    ਜੇ(c<0) {
+        ਵਾਪਸ ਝੂਠ;
+    } ਨਹੀਂਤਾਂ ਜੇ(c<=0xff) {
+        ਵਾਪਸ latin1[c] & 1;
+    } ਨਹੀਂਤਾਂ ਜੇ(c<0x200e) {
+        ਵਾਪਸ ਝੂਠ;
+    } ਨਹੀਂਤਾਂ ਜੇ(c<=0x3030) {
+        uint32_t ਬਿੱਟ=syntaxOrWhiteSpace2000[index2000[(c-0x2000)>>5]];
+        ਵਾਪਸ (ਬਿੱਟ >> (c & 0x1f)) & 1;
+    } ਨਹੀਂਤਾਂ ਜੇ(0xfd3e<=c && c<=0xfe46) {
+        ਵਾਪਸ c<=0xfd3f || 0xfe45<=c;
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ ਝੂਠ;
     }
 }
 
 UBool
-PatternProps::isWhiteSpace(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return (latin1[c] >> 2) & 1;
-    } else if(0x200e<=c && c<=0x2029) {
-        return c<=0x200f || 0x2028<=c;
-    } else {
-        return false;
+ਨਮੂਨਾ_Props::isWhiteSpace(UChar32 c) {
+    ਜੇ(c<0) {
+        ਵਾਪਸ ਝੂਠ;
+    } ਨਹੀਂਤਾਂ ਜੇ(c<=0xff) {
+        ਵਾਪਸ (latin1[c] >> 2) & 1;
+    } ਨਹੀਂਤਾਂ ਜੇ(0x200e<=c && c<=0x2029) {
+        ਵਾਪਸ c<=0x200f || 0x2028<=c;
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ ਝੂਠ;
     }
 }
 
-const char16_t *
-PatternProps::skipWhiteSpace(const char16_t *s, int32_t length) {
-    while(length>0 && isWhiteSpace(*s)) {
+ਅਚਲ char16_t *
+ਨਮੂਨਾ_Props::skipWhiteSpace(ਅਚਲ char16_t *s, int32_t length) {
+    ਜਦੋਂ(length>0 && isWhiteSpace(*s)) {
         ++s;
         --length;
     }
-    return s;
+    ਵਾਪਸ s;
 }
 
 int32_t
-PatternProps::skipWhiteSpace(const UnicodeString& s, int32_t start) {
-    int32_t i = start;
+ਨਮੂਨਾ_Props::skipWhiteSpace(ਅਚਲ UnicodeString& s, int32_t ਸ਼ੁਰੂ) {
+    int32_t i = ਸ਼ੁਰੂ;
     int32_t length = s.length();
-    while(i<length && isWhiteSpace(s.charAt(i))) {
+    ਜਦੋਂ(i<length && isWhiteSpace(s.charAt(i))) {
         ++i;
     }
-    return i;
+    ਵਾਪਸ i;
 }
 
-const char16_t *
-PatternProps::trimWhiteSpace(const char16_t *s, int32_t &length) {
-    if(length<=0 || (!isWhiteSpace(s[0]) && !isWhiteSpace(s[length-1]))) {
-        return s;
+ਅਚਲ char16_t *
+ਨਮੂਨਾ_Props::trimWhiteSpace(ਅਚਲ char16_t *s, int32_t &length) {
+    ਜੇ(length<=0 || (!isWhiteSpace(s[0]) && !isWhiteSpace(s[length-1]))) {
+        ਵਾਪਸ s;
     }
-    int32_t start=0;
-    int32_t limit=length;
-    while(start<limit && isWhiteSpace(s[start])) {
-        ++start;
+    int32_t ਸ਼ੁਰੂ=0;
+    int32_t ਹੱਦਬੰਦੀ=length;
+    ਜਦੋਂ(ਸ਼ੁਰੂ<ਹੱਦਬੰਦੀ && isWhiteSpace(s[ਸ਼ੁਰੂ])) {
+        ++ਸ਼ੁਰੂ;
     }
-    if(start<limit) {
+    ਜੇ(ਸ਼ੁਰੂ<ਹੱਦਬੰਦੀ) {
         // There is non-white space at start; we will not move limit below that,
         // so we need not test start<limit in the loop.
-        while(isWhiteSpace(s[limit-1])) {
-            --limit;
+        ਜਦੋਂ(isWhiteSpace(s[ਹੱਦਬੰਦੀ-1])) {
+            --ਹੱਦਬੰਦੀ;
         }
     }
-    length=limit-start;
-    return s+start;
+    length=ਹੱਦਬੰਦੀ-ਸ਼ੁਰੂ;
+    ਵਾਪਸ s+ਸ਼ੁਰੂ;
 }
 
 UBool
-PatternProps::isIdentifier(const char16_t *s, int32_t length) {
-    if(length<=0) {
-        return false;
+ਨਮੂਨਾ_Props::isIdentifier(ਅਚਲ char16_t *s, int32_t length) {
+    ਜੇ(length<=0) {
+        ਵਾਪਸ ਝੂਠ;
     }
-    const char16_t *limit=s+length;
-    do {
-        if(isSyntaxOrWhiteSpace(*s++)) {
-            return false;
+    ਅਚਲ char16_t *ਹੱਦਬੰਦੀ=s+length;
+    ਕਰੋ {
+        ਜੇ(isSyntaxOrWhiteSpace(*s++)) {
+            ਵਾਪਸ ਝੂਠ;
         }
-    } while(s<limit);
-    return true;
+    } ਜਦੋਂ(s<ਹੱਦਬੰਦੀ);
+    ਵਾਪਸ ਸੱਚ;
 }
 
-const char16_t *
-PatternProps::skipIdentifier(const char16_t *s, int32_t length) {
-    while(length>0 && !isSyntaxOrWhiteSpace(*s)) {
+ਅਚਲ char16_t *
+ਨਮੂਨਾ_Props::skipIdentifier(ਅਚਲ char16_t *s, int32_t length) {
+    ਜਦੋਂ(length>0 && !isSyntaxOrWhiteSpace(*s)) {
         ++s;
         --length;
     }
-    return s;
+    ਵਾਪਸ s;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ

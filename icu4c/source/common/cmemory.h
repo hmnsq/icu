@@ -23,72 +23,72 @@
 ******************************************************************************
 */
 
-#ifndef CMEMORY_H
-#define CMEMORY_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ CMEMORY_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CMEMORY_H
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#include <limits.h>
-#include <stddef.h>
-#include <string.h>
-#include "unicode/localpointer.h"
-#include "uassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <limits.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stddef.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/localpointer.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uassert.h"
 
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-#include <stdio.h>
-#endif
+#ਜੇ U_DEBUG && defined(UPRV_MALLOC_ਗਿਣਤੀ)
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
+#ਜੇ_ਅੰਤ
 
 // uprv_memcpy and uprv_memmove
-#if defined(__clang__)
-#define uprv_memcpy(dst, src, size) UPRV_BLOCK_MACRO_BEGIN { \
+#ਜੇ defined(__clang__)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ uprv_memcpy(dst, src, ਮਾਪ_2) UPRV_ਖੰਡ_MACRO_BEGIN { \
     /* Suppress warnings about addresses that will never be NULL */ \
     _Pragma("clang diagnostic push") \
     _Pragma("clang diagnostic ignored \"-Waddress\"") \
-    U_ASSERT(dst != NULL); \
-    U_ASSERT(src != NULL); \
+    U_ASSERT(dst != ਨਿਰਾ); \
+    U_ASSERT(src != ਨਿਰਾ); \
     _Pragma("clang diagnostic pop") \
-    U_STANDARD_CPP_NAMESPACE memcpy(dst, src, size); \
-} UPRV_BLOCK_MACRO_END
-#define uprv_memmove(dst, src, size) UPRV_BLOCK_MACRO_BEGIN { \
+    U_STANDARD_CPP_NAMESPACE ਸਮ੍ਰਿਤੀ_ਨਕਲ(dst, src, ਮਾਪ_2); \
+} UPRV_ਖੰਡ_MACRO_ਸਿਰਾ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ uprv_memmove(dst, src, ਮਾਪ_2) UPRV_ਖੰਡ_MACRO_BEGIN { \
     /* Suppress warnings about addresses that will never be NULL */ \
     _Pragma("clang diagnostic push") \
     _Pragma("clang diagnostic ignored \"-Waddress\"") \
-    U_ASSERT(dst != NULL); \
-    U_ASSERT(src != NULL); \
+    U_ASSERT(dst != ਨਿਰਾ); \
+    U_ASSERT(src != ਨਿਰਾ); \
     _Pragma("clang diagnostic pop") \
-    U_STANDARD_CPP_NAMESPACE memmove(dst, src, size); \
-} UPRV_BLOCK_MACRO_END
-#elif defined(__GNUC__)
-#define uprv_memcpy(dst, src, size) UPRV_BLOCK_MACRO_BEGIN { \
+    U_STANDARD_CPP_NAMESPACE memmove(dst, src, ਮਾਪ_2); \
+} UPRV_ਖੰਡ_MACRO_ਸਿਰਾ
+#ਜਾਂਜੇ defined(__GNUC__)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ uprv_memcpy(dst, src, ਮਾਪ_2) UPRV_ਖੰਡ_MACRO_BEGIN { \
     /* Suppress warnings about addresses that will never be NULL */ \
     _Pragma("GCC diagnostic push") \
     _Pragma("GCC diagnostic ignored \"-Waddress\"") \
-    U_ASSERT(dst != NULL); \
-    U_ASSERT(src != NULL); \
+    U_ASSERT(dst != ਨਿਰਾ); \
+    U_ASSERT(src != ਨਿਰਾ); \
     _Pragma("GCC diagnostic pop") \
-    U_STANDARD_CPP_NAMESPACE memcpy(dst, src, size); \
-} UPRV_BLOCK_MACRO_END
-#define uprv_memmove(dst, src, size) UPRV_BLOCK_MACRO_BEGIN { \
+    U_STANDARD_CPP_NAMESPACE ਸਮ੍ਰਿਤੀ_ਨਕਲ(dst, src, ਮਾਪ_2); \
+} UPRV_ਖੰਡ_MACRO_ਸਿਰਾ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ uprv_memmove(dst, src, ਮਾਪ_2) UPRV_ਖੰਡ_MACRO_BEGIN { \
     /* Suppress warnings about addresses that will never be NULL */ \
     _Pragma("GCC diagnostic push") \
     _Pragma("GCC diagnostic ignored \"-Waddress\"") \
-    U_ASSERT(dst != NULL); \
-    U_ASSERT(src != NULL); \
+    U_ASSERT(dst != ਨਿਰਾ); \
+    U_ASSERT(src != ਨਿਰਾ); \
     _Pragma("GCC diagnostic pop") \
-    U_STANDARD_CPP_NAMESPACE memmove(dst, src, size); \
-} UPRV_BLOCK_MACRO_END
-#else
-#define uprv_memcpy(dst, src, size) UPRV_BLOCK_MACRO_BEGIN { \
-    U_ASSERT(dst != NULL); \
-    U_ASSERT(src != NULL); \
-    U_STANDARD_CPP_NAMESPACE memcpy(dst, src, size); \
-} UPRV_BLOCK_MACRO_END
-#define uprv_memmove(dst, src, size) UPRV_BLOCK_MACRO_BEGIN { \
-    U_ASSERT(dst != NULL); \
-    U_ASSERT(src != NULL); \
-    U_STANDARD_CPP_NAMESPACE memmove(dst, src, size); \
-} UPRV_BLOCK_MACRO_END
-#endif
+    U_STANDARD_CPP_NAMESPACE memmove(dst, src, ਮਾਪ_2); \
+} UPRV_ਖੰਡ_MACRO_ਸਿਰਾ
+#ਨਹੀਂਤਾਂ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ uprv_memcpy(dst, src, ਮਾਪ_2) UPRV_ਖੰਡ_MACRO_BEGIN { \
+    U_ASSERT(dst != ਨਿਰਾ); \
+    U_ASSERT(src != ਨਿਰਾ); \
+    U_STANDARD_CPP_NAMESPACE ਸਮ੍ਰਿਤੀ_ਨਕਲ(dst, src, ਮਾਪ_2); \
+} UPRV_ਖੰਡ_MACRO_ਸਿਰਾ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ uprv_memmove(dst, src, ਮਾਪ_2) UPRV_ਖੰਡ_MACRO_BEGIN { \
+    U_ASSERT(dst != ਨਿਰਾ); \
+    U_ASSERT(src != ਨਿਰਾ); \
+    U_STANDARD_CPP_NAMESPACE memmove(dst, src, ਮਾਪ_2); \
+} UPRV_ਖੰਡ_MACRO_ਸਿਰਾ
+#ਜੇ_ਅੰਤ
 
 /**
  * \def UPRV_LENGTHOF
@@ -97,22 +97,22 @@
  * @return The length of the array, in elements
  * @internal
  */
-#define UPRV_LENGTHOF(array) (int32_t)(sizeof(array)/sizeof((array)[0]))
-#define uprv_memset(buffer, mark, size) U_STANDARD_CPP_NAMESPACE memset(buffer, mark, size)
-#define uprv_memcmp(buffer1, buffer2, size) U_STANDARD_CPP_NAMESPACE memcmp(buffer1, buffer2,size)
-#define uprv_memchr(ptr, value, num) U_STANDARD_CPP_NAMESPACE memchr(ptr, value, num)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UPRV_LENGTHOF(array) (int32_t)(ਆਕਾਰ(array)/ਆਕਾਰ((array)[0]))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ uprv_memset(ਬਫਰ, mark, ਮਾਪ_2) U_STANDARD_CPP_NAMESPACE memset(ਬਫਰ, mark, ਮਾਪ_2)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ uprv_memcmp(buffer1, buffer2, ਮਾਪ_2) U_STANDARD_CPP_NAMESPACE memcmp(buffer1, buffer2,ਮਾਪ_2)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ uprv_memchr(ptr, ਮੁੱਲ_2, ਅੰਕ) U_STANDARD_CPP_NAMESPACE memchr(ptr, ਮੁੱਲ_2, ਅੰਕ)
 
-U_CAPI void * U_EXPORT2
-uprv_malloc(size_t s) U_MALLOC_ATTR U_ALLOC_SIZE_ATTR(1);
+U_CAPI ਖਾਲੀ * U_EXPORT2
+uprv_malloc(size_t s) U_MALLOC_ATTR U_ALLOC_ਮਾਪ_ATTR(1);
 
-U_CAPI void * U_EXPORT2
-uprv_realloc(void *mem, size_t size) U_ALLOC_SIZE_ATTR(2);
+U_CAPI ਖਾਲੀ * U_EXPORT2
+uprv_realloc(ਖਾਲੀ *mem, size_t ਮਾਪ_2) U_ALLOC_ਮਾਪ_ATTR(2);
 
-U_CAPI void U_EXPORT2
-uprv_free(void *mem);
+U_CAPI ਖਾਲੀ U_EXPORT2
+uprv_free(ਖਾਲੀ *mem);
 
-U_CAPI void * U_EXPORT2
-uprv_calloc(size_t num, size_t size) U_MALLOC_ATTR U_ALLOC_SIZE_ATTR2(1,2);
+U_CAPI ਖਾਲੀ * U_EXPORT2
+uprv_calloc(size_t ਅੰਕ, size_t ਮਾਪ_2) U_MALLOC_ATTR U_ALLOC_ਮਾਪ_ATTR2(1,2);
 
 /**
  * Get the least significant bits of a pointer (a memory address).
@@ -121,7 +121,7 @@ uprv_calloc(size_t num, size_t size) U_MALLOC_ATTR U_ALLOC_SIZE_ATTR2(1,2);
  *
  * uintptr_t is the most appropriate integer type to cast to.
  */
-#define U_POINTER_MASK_LSB(ptr, mask) ((uintptr_t)(ptr) & (mask))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_ਸੂਚਕ_ਨਕਾਬ_LSB(ptr, ਨਕਾਬ) ((uintptr_t)(ptr) & (ਨਕਾਬ))
 
 /**
  * Create & return an instance of "type" in statically allocated storage.
@@ -142,9 +142,9 @@ uprv_calloc(size_t num, size_t size) U_MALLOC_ATTR U_ALLOC_SIZE_ATTR2(1,2);
  * This is defined as a macro rather than a template function because each invocation
  * must define distinct static storage for the object being returned.
  */
-#define STATIC_NEW(type) [] () { \
-    alignas(type) static char storage[sizeof(type)]; \
-    return new(storage) type();} ()
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ STATIC_NEW(type) [] () { \
+    alignas(type) ਸਥਿਰ ਅੱਖਰ storage[ਆਕਾਰ(type)]; \
+    ਵਾਪਸ new(storage) type();} ()
 
 /**
   *  Heap clean up function, called from u_cleanup()
@@ -152,7 +152,7 @@ uprv_calloc(size_t num, size_t size) U_MALLOC_ATTR U_ALLOC_SIZE_ATTR2(1,2);
   *    Does NOT deallocate any remaining allocated memory.
   */
 U_CFUNC UBool 
-cmemory_cleanup(void);
+cmemory_cleanup(ਖਾਲੀ);
 
 /**
  * A function called by <TT>uhash_remove</TT>,
@@ -161,21 +161,21 @@ cmemory_cleanup(void);
  * @param obj A key or value stored in a hashtable
  * @see uprv_deleteUObject
  */
-typedef void U_CALLCONV UObjectDeleter(void* obj);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਖਾਲੀ U_CALLCONV UObjectDeleter(ਖਾਲੀ* obj);
 
 /**
  * Deleter for UObject instances.
  * Works for all subclasses of UObject because it has a virtual destructor.
  */
-U_CAPI void U_EXPORT2
-uprv_deleteUObject(void *obj);
+U_CAPI ਖਾਲੀ U_EXPORT2
+uprv_deleteUObject(ਖਾਲੀ *obj);
 
-#ifdef __cplusplus
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ __cplusplus
 
-#include <memory>
-#include <utility>
-#include <type_traits>
-#include "unicode/uobject.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <memory>
+#ਅਨ੍ਤਰ੍ਭਾਵ <utility>
+#ਅਨ੍ਤਰ੍ਭਾਵ <type_traits>
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uobject.h"
 
 U_NAMESPACE_BEGIN
 
@@ -190,28 +190,28 @@ U_NAMESPACE_BEGIN
  * @see prv::make_unique
  * @deprecated use prv::make_unique & prv::make_unique_for_overwrite
  */
-template<typename T>
-class LocalMemory : public LocalPointerBase<T> {
-public:
-    using LocalPointerBase<T>::operator*;
-    using LocalPointerBase<T>::operator->;
+ਸਾਂਚਾ<typename T>
+class Local_ਸਮ੍ਰਿਤੀ : ਜਨਤਕ Local_ਸੂਚਕ_ਅਧਾਰ<T> {
+ਜਨਤਕ:
+    using Local_ਸੂਚਕ_ਅਧਾਰ<T>::ਸੰਚਾਲਕ*;
+    using Local_ਸੂਚਕ_ਅਧਾਰ<T>::ਸੰਚਾਲਕ->;
     /**
      * Constructor takes ownership.
      * @param p simple pointer to an array of T items that is adopted
      */
-    explicit LocalMemory(T *p=nullptr) : LocalPointerBase<T>(p) {}
+    explicit Local_ਸਮ੍ਰਿਤੀ(T *p=nullptr) : Local_ਸੂਚਕ_ਅਧਾਰ<T>(p) {}
     /**
      * Move constructor, leaves src with isNull().
      * @param src source smart pointer
      */
-    LocalMemory(LocalMemory<T> &&src) noexcept : LocalPointerBase<T>(src.ptr) {
+    Local_ਸਮ੍ਰਿਤੀ(Local_ਸਮ੍ਰਿਤੀ<T> &&src) noexcept : Local_ਸੂਚਕ_ਅਧਾਰ<T>(src.ptr) {
         src.ptr=nullptr;
     }
     /**
      * Destructor deletes the memory it owns.
      */
-    ~LocalMemory() {
-        uprv_free(LocalPointerBase<T>::ptr);
+    ~Local_ਸਮ੍ਰਿਤੀ() {
+        uprv_free(Local_ਸੂਚਕ_ਅਧਾਰ<T>::ptr);
     }
     /**
      * Move assignment operator, leaves src with isNull().
@@ -219,37 +219,37 @@ public:
      * @param src source smart pointer
      * @return *this
      */
-    LocalMemory<T>& operator=(LocalMemory<T>&& src) noexcept U_LIFETIME_BOUND {
-        uprv_free(LocalPointerBase<T>::ptr);
-        LocalPointerBase<T>::ptr=src.ptr;
+    Local_ਸਮ੍ਰਿਤੀ<T>& ਸੰਚਾਲਕ=(Local_ਸਮ੍ਰਿਤੀ<T>&& src) noexcept U_LIFETIME_BOUND {
+        uprv_free(Local_ਸੂਚਕ_ਅਧਾਰ<T>::ptr);
+        Local_ਸੂਚਕ_ਅਧਾਰ<T>::ptr=src.ptr;
         src.ptr=nullptr;
-        return *this;
+        ਵਾਪਸ *this;
     }
     /**
      * Swap pointers.
      * @param other other smart pointer
      */
-    void swap(LocalMemory<T> &other) noexcept {
-        T *temp=LocalPointerBase<T>::ptr;
-        LocalPointerBase<T>::ptr=other.ptr;
-        other.ptr=temp;
+    ਖਾਲੀ ਅਦਲਾ_ਬਦਲੀ(Local_ਸਮ੍ਰਿਤੀ<T> &other) noexcept {
+        T *ਆਰਜ਼ੀ=Local_ਸੂਚਕ_ਅਧਾਰ<T>::ptr;
+        Local_ਸੂਚਕ_ਅਧਾਰ<T>::ptr=other.ptr;
+        other.ptr=ਆਰਜ਼ੀ;
     }
     /**
      * Non-member LocalMemory swap function.
      * @param p1 will get p2's pointer
      * @param p2 will get p1's pointer
      */
-    friend inline void swap(LocalMemory<T> &p1, LocalMemory<T> &p2) noexcept {
-        p1.swap(p2);
+    ਮਿੱਤਰ ਸਤਰਅੰਦਰ ਖਾਲੀ ਅਦਲਾ_ਬਦਲੀ(Local_ਸਮ੍ਰਿਤੀ<T> &p1, Local_ਸਮ੍ਰਿਤੀ<T> &p2) noexcept {
+        p1.ਅਦਲਾ_ਬਦਲੀ(p2);
     }
     /**
      * Deletes the array it owns,
      * and adopts (takes ownership of) the one passed in.
      * @param p simple pointer to an array of T items that is adopted
      */
-    void adoptInstead(T *p) {
-        uprv_free(LocalPointerBase<T>::ptr);
-        LocalPointerBase<T>::ptr=p;
+    ਖਾਲੀ adoptInstead(T *p) {
+        uprv_free(Local_ਸੂਚਕ_ਅਧਾਰ<T>::ptr);
+        Local_ਸੂਚਕ_ਅਧਾਰ<T>::ptr=p;
     }
     /**
      * Deletes the array it owns, allocates a new one and reset its bytes to 0.
@@ -259,7 +259,7 @@ public:
      * @param newCapacity must be >0
      * @return the allocated array pointer, or nullptr if the allocation failed
      */
-    inline T* allocateInsteadAndReset(int32_t newCapacity = 1) U_LIFETIME_BOUND;
+    ਸਤਰਅੰਦਰ T* allocateInsteadAndReset(int32_t new_ਸਮਰੱਥਾ = 1) U_LIFETIME_BOUND;
     /**
      * Deletes the array it owns and allocates a new one, copying length T items.
      * Returns the new array pointer.
@@ -271,49 +271,49 @@ public:
      *               which the caller must track because the LocalMemory does not track it
      * @return the allocated array pointer, or nullptr if the allocation failed
      */
-    inline T* allocateInsteadAndCopy(int32_t newCapacity = 1, int32_t length = 0) U_LIFETIME_BOUND;
+    ਸਤਰਅੰਦਰ T* allocateInsteadAndCopy(int32_t new_ਸਮਰੱਥਾ = 1, int32_t ਲੰਮਾਈ = 0) U_LIFETIME_BOUND;
     /**
      * Array item access (writable).
      * No index bounds check.
      * @param i array index
      * @return reference to the array item
      */
-    T& operator[](ptrdiff_t i) const U_LIFETIME_BOUND { return LocalPointerBase<T>::ptr[i]; }
+    T& ਸੰਚਾਲਕ[](ptrdiff_t i) ਅਚਲ U_LIFETIME_BOUND { ਵਾਪਸ Local_ਸੂਚਕ_ਅਧਾਰ<T>::ptr[i]; }
 };
 
-template <typename T>
-inline T* LocalMemory<T>::allocateInsteadAndReset(int32_t newCapacity) U_LIFETIME_BOUND {
-    if(newCapacity>0) {
-        T *p=(T *)uprv_malloc(newCapacity*sizeof(T));
-        if(p!=nullptr) {
-            uprv_memset(p, 0, newCapacity*sizeof(T));
-            uprv_free(LocalPointerBase<T>::ptr);
-            LocalPointerBase<T>::ptr=p;
+ਸਾਂਚਾ <typename T>
+ਸਤਰਅੰਦਰ T* Local_ਸਮ੍ਰਿਤੀ<T>::allocateInsteadAndReset(int32_t new_ਸਮਰੱਥਾ) U_LIFETIME_BOUND {
+    ਜੇ(new_ਸਮਰੱਥਾ>0) {
+        T *p=(T *)uprv_malloc(new_ਸਮਰੱਥਾ*ਆਕਾਰ(T));
+        ਜੇ(p!=nullptr) {
+            uprv_memset(p, 0, new_ਸਮਰੱਥਾ*ਆਕਾਰ(T));
+            uprv_free(Local_ਸੂਚਕ_ਅਧਾਰ<T>::ptr);
+            Local_ਸੂਚਕ_ਅਧਾਰ<T>::ptr=p;
         }
-        return p;
-    } else {
-        return nullptr;
+        ਵਾਪਸ p;
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ nullptr;
     }
 }
 
-template <typename T>
-inline T* LocalMemory<T>::allocateInsteadAndCopy(int32_t newCapacity,
-                                                 int32_t length) U_LIFETIME_BOUND {
-    if(newCapacity>0) {
-        T *p=(T *)uprv_malloc(newCapacity*sizeof(T));
-        if(p!=nullptr) {
-            if(length>0) {
-                if(length>newCapacity) {
-                    length=newCapacity;
+ਸਾਂਚਾ <typename T>
+ਸਤਰਅੰਦਰ T* Local_ਸਮ੍ਰਿਤੀ<T>::allocateInsteadAndCopy(int32_t new_ਸਮਰੱਥਾ,
+                                                 int32_t ਲੰਮਾਈ) U_LIFETIME_BOUND {
+    ਜੇ(new_ਸਮਰੱਥਾ>0) {
+        T *p=(T *)uprv_malloc(new_ਸਮਰੱਥਾ*ਆਕਾਰ(T));
+        ਜੇ(p!=nullptr) {
+            ਜੇ(ਲੰਮਾਈ>0) {
+                ਜੇ(ਲੰਮਾਈ>new_ਸਮਰੱਥਾ) {
+                    ਲੰਮਾਈ=new_ਸਮਰੱਥਾ;
                 }
-                uprv_memcpy(p, LocalPointerBase<T>::ptr, (size_t)length*sizeof(T));
+                uprv_memcpy(p, Local_ਸੂਚਕ_ਅਧਾਰ<T>::ptr, (size_t)ਲੰਮਾਈ*ਆਕਾਰ(T));
             }
-            uprv_free(LocalPointerBase<T>::ptr);
-            LocalPointerBase<T>::ptr=p;
+            uprv_free(Local_ਸੂਚਕ_ਅਧਾਰ<T>::ptr);
+            Local_ਸੂਚਕ_ਅਧਾਰ<T>::ptr=p;
         }
-        return p;
-    } else {
-        return nullptr;
+        ਵਾਪਸ p;
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ nullptr;
     }
 }
 
@@ -335,61 +335,61 @@ inline T* LocalMemory<T>::allocateInsteadAndCopy(int32_t newCapacity,
  * - LocalArray in localpointer.h if you know the length ahead of time
  * - MaybeStackVector if you know the length at runtime
  */
-template<typename T, int32_t stackCapacity>
-class MaybeStackArray {
-public:
+ਸਾਂਚਾ<typename T, int32_t ਢੇਰ_ਸਮਰੱਥਾ>
+class Maybe_ਢੇਰ_Array {
+ਜਨਤਕ:
     // No heap allocation. Use only on the stack.
-    static void* U_EXPORT2 operator new(size_t) noexcept = delete;
-    static void* U_EXPORT2 operator new[](size_t) noexcept = delete;
-    static void* U_EXPORT2 operator new(size_t, void*) noexcept = delete;
+    ਸਥਿਰ ਖਾਲੀ* U_EXPORT2 ਸੰਚਾਲਕ new(size_t) noexcept = delete;
+    ਸਥਿਰ ਖਾਲੀ* U_EXPORT2 ਸੰਚਾਲਕ new[](size_t) noexcept = delete;
+    ਸਥਿਰ ਖਾਲੀ* U_EXPORT2 ਸੰਚਾਲਕ new(size_t, ਖਾਲੀ*) noexcept = delete;
 
     /**
      * Default constructor initializes with internal T[stackCapacity] buffer.
      */
-    MaybeStackArray() : ptr(stackArray), capacity(stackCapacity), needToRelease(false) {}
+    Maybe_ਢੇਰ_Array() : ptr(ਢੇਰ_Array), ਸਮਰੱਥਾ(ਢੇਰ_ਸਮਰੱਥਾ), need_ਮੰਜ਼ਿਲ_Release(false) {}
     /**
      * Automatically allocates the heap array if the argument is larger than the stack capacity.
      * Intended for use when an approximate capacity is known at compile time but the true
      * capacity is not known until runtime.
      */
-    MaybeStackArray(int32_t newCapacity, UErrorCode status) : MaybeStackArray() {
-        if (U_FAILURE(status)) {
-            return;
+    Maybe_ਢੇਰ_Array(int32_t new_ਸਮਰੱਥਾ, UError_ਕੋਡ ਸਥਿਤੀ) : Maybe_ਢੇਰ_Array() {
+        ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+            ਵਾਪਸ;
         }
-        if (capacity < newCapacity) {
-            if (resize(newCapacity) == nullptr) {
-                status = U_MEMORY_ALLOCATION_ERROR;
+        ਜੇ (ਸਮਰੱਥਾ < new_ਸਮਰੱਥਾ) {
+            ਜੇ (resize(new_ਸਮਰੱਥਾ) == nullptr) {
+                ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
             }
         }
     }
     /**
      * Destructor deletes the array (if owned).
      */
-    ~MaybeStackArray() { releaseArray(); }
+    ~Maybe_ਢੇਰ_Array() { releaseArray(); }
     /**
      * Move constructor: transfers ownership or copies the stack array.
      */
-    MaybeStackArray(MaybeStackArray<T, stackCapacity> &&src) noexcept;
+    Maybe_ਢੇਰ_Array(Maybe_ਢੇਰ_Array<T, ਢੇਰ_ਸਮਰੱਥਾ> &&src) noexcept;
     /**
      * Move assignment: transfers ownership or copies the stack array.
      */
-    MaybeStackArray<T, stackCapacity>&
-    operator=(MaybeStackArray<T, stackCapacity>&& src) noexcept U_LIFETIME_BOUND;
+    Maybe_ਢੇਰ_Array<T, ਢੇਰ_ਸਮਰੱਥਾ>&
+    ਸੰਚਾਲਕ=(Maybe_ਢੇਰ_Array<T, ਢੇਰ_ਸਮਰੱਥਾ>&& src) noexcept U_LIFETIME_BOUND;
     /**
      * Returns the array capacity (number of T items).
      * @return array capacity
      */
-    int32_t getCapacity() const { return capacity; }
+    int32_t get_ਸਮਰੱਥਾ() ਅਚਲ { ਵਾਪਸ ਸਮਰੱਥਾ; }
     /**
      * Access without ownership change.
      * @return the array pointer
      */
-    T* getAlias() const U_LIFETIME_BOUND { return ptr; }
+    T* getAlias() ਅਚਲ U_LIFETIME_BOUND { ਵਾਪਸ ptr; }
     /**
      * Returns the array limit. Simple convenience method.
      * @return getAlias()+getCapacity()
      */
-    T* getArrayLimit() const U_LIFETIME_BOUND { return getAlias() + capacity; }
+    T* get_Array_ਹੱਦਬੰਦੀ() ਅਚਲ U_LIFETIME_BOUND { ਵਾਪਸ getAlias() + ਸਮਰੱਥਾ; }
     // No "operator T *() const" because that can make
     // expressions like mbs[index] ambiguous for some compilers.
     /**
@@ -398,26 +398,26 @@ public:
      * @param i array index
      * @return reference to the array item
      */
-    const T& operator[](ptrdiff_t i) const U_LIFETIME_BOUND { return ptr[i]; }
+    ਅਚਲ T& ਸੰਚਾਲਕ[](ptrdiff_t i) ਅਚਲ U_LIFETIME_BOUND { ਵਾਪਸ ptr[i]; }
     /**
      * Array item access (writable).
      * No index bounds check.
      * @param i array index
      * @return reference to the array item
      */
-    T& operator[](ptrdiff_t i) U_LIFETIME_BOUND { return ptr[i]; }
+    T& ਸੰਚਾਲਕ[](ptrdiff_t i) U_LIFETIME_BOUND { ਵਾਪਸ ptr[i]; }
     /**
      * Deletes the array (if owned) and aliases another one, no transfer of ownership.
      * If the arguments are illegal, then the current array is unchanged.
      * @param otherArray must not be nullptr
      * @param otherCapacity must be >0
      */
-    void aliasInstead(T *otherArray, int32_t otherCapacity) {
-        if(otherArray!=nullptr && otherCapacity>0) {
+    ਖਾਲੀ aliasInstead(T *otherArray, int32_t other_ਸਮਰੱਥਾ) {
+        ਜੇ(otherArray!=nullptr && other_ਸਮਰੱਥਾ>0) {
             releaseArray();
             ptr=otherArray;
-            capacity=otherCapacity;
-            needToRelease=false;
+            ਸਮਰੱਥਾ=other_ਸਮਰੱਥਾ;
+            need_ਮੰਜ਼ਿਲ_Release=false;
         }
     }
     /**
@@ -430,7 +430,7 @@ public:
      * @param length number of T items to be copied from the old array to the new one
      * @return the allocated array pointer, or nullptr if the allocation failed
      */
-    inline T* resize(int32_t newCapacity, int32_t length = 0) U_LIFETIME_BOUND;
+    ਸਤਰਅੰਦਰ T* resize(int32_t new_ਸਮਰੱਥਾ, int32_t ਲੰਮਾਈ = 0) U_LIFETIME_BOUND;
     /**
      * Gives up ownership of the array if owned, or else clones it,
      * copying length T items; resets itself to the internal stack array.
@@ -441,124 +441,124 @@ public:
      * @return the array pointer;
      *         caller becomes responsible for deleting the array
      */
-    inline T *orphanOrClone(int32_t length, int32_t &resultCapacity);
+    ਸਤਰਅੰਦਰ T *orphanOrClone(int32_t ਲੰਮਾਈ, int32_t &ਨਤੀਜਾ_ਸਮਰੱਥਾ);
 
-protected:
+ਸੁਰੱਖਿਅਤ:
     // Resizes the array to the size of src, then copies the contents of src.
-    void copyFrom(const MaybeStackArray &src, UErrorCode &status) {
-        if (U_FAILURE(status)) {
-            return;
+    ਖਾਲੀ copyFrom(ਅਚਲ Maybe_ਢੇਰ_Array &src, UError_ਕੋਡ &ਸਥਿਤੀ) {
+        ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+            ਵਾਪਸ;
         }
-        if (this->resize(src.capacity, 0) == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-            return;
+        ਜੇ (this->resize(src.ਸਮਰੱਥਾ, 0) == nullptr) {
+            ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+            ਵਾਪਸ;
         }
-        uprv_memcpy(this->ptr, src.ptr, (size_t)capacity * sizeof(T));
+        uprv_memcpy(this->ptr, src.ptr, (size_t)ਸਮਰੱਥਾ * ਆਕਾਰ(T));
     }
 
-private:
+ਨਿਜੀ:
     T *ptr;
-    int32_t capacity;
-    UBool needToRelease;
-    T stackArray[stackCapacity];
-    void releaseArray() {
-        if(needToRelease) {
+    int32_t ਸਮਰੱਥਾ;
+    UBool need_ਮੰਜ਼ਿਲ_Release;
+    T ਢੇਰ_Array[ਢੇਰ_ਸਮਰੱਥਾ];
+    ਖਾਲੀ releaseArray() {
+        ਜੇ(need_ਮੰਜ਼ਿਲ_Release) {
             uprv_free(ptr);
         }
     }
-    void resetToStackArray() {
-        ptr=stackArray;
-        capacity=stackCapacity;
-        needToRelease=false;
+    ਖਾਲੀ reset_ਮੰਜ਼ਿਲ_ਢੇਰ_Array() {
+        ptr=ਢੇਰ_Array;
+        ਸਮਰੱਥਾ=ਢੇਰ_ਸਮਰੱਥਾ;
+        need_ਮੰਜ਼ਿਲ_Release=false;
     }
     /* No comparison operators with other MaybeStackArray's. */
-    bool operator==(const MaybeStackArray & /*other*/) = delete;
-    bool operator!=(const MaybeStackArray & /*other*/) = delete;
+    bool ਸੰਚਾਲਕ==(ਅਚਲ Maybe_ਢੇਰ_Array & /*other*/) = delete;
+    bool ਸੰਚਾਲਕ!=(ਅਚਲ Maybe_ਢੇਰ_Array & /*other*/) = delete;
     /* No ownership transfer: No copy constructor, no assignment operator. */
-    MaybeStackArray(const MaybeStackArray & /*other*/) = delete;
-    void operator=(const MaybeStackArray & /*other*/) = delete;
+    Maybe_ਢੇਰ_Array(ਅਚਲ Maybe_ਢੇਰ_Array & /*other*/) = delete;
+    ਖਾਲੀ ਸੰਚਾਲਕ=(ਅਚਲ Maybe_ਢੇਰ_Array & /*other*/) = delete;
 };
 
-template<typename T, int32_t stackCapacity>
-icu::MaybeStackArray<T, stackCapacity>::MaybeStackArray(
-        MaybeStackArray <T, stackCapacity>&& src) noexcept
-        : ptr(src.ptr), capacity(src.capacity), needToRelease(src.needToRelease) {
-    if (src.ptr == src.stackArray) {
-        ptr = stackArray;
-        uprv_memcpy(stackArray, src.stackArray, sizeof(T) * src.capacity);
-    } else {
-        src.resetToStackArray();  // take ownership away from src
+ਸਾਂਚਾ<typename T, int32_t ਢੇਰ_ਸਮਰੱਥਾ>
+icu::Maybe_ਢੇਰ_Array<T, ਢੇਰ_ਸਮਰੱਥਾ>::Maybe_ਢੇਰ_Array(
+        Maybe_ਢੇਰ_Array <T, ਢੇਰ_ਸਮਰੱਥਾ>&& src) noexcept
+        : ptr(src.ptr), ਸਮਰੱਥਾ(src.ਸਮਰੱਥਾ), need_ਮੰਜ਼ਿਲ_Release(src.need_ਮੰਜ਼ਿਲ_Release) {
+    ਜੇ (src.ptr == src.ਢੇਰ_Array) {
+        ptr = ਢੇਰ_Array;
+        uprv_memcpy(ਢੇਰ_Array, src.ਢੇਰ_Array, ਆਕਾਰ(T) * src.ਸਮਰੱਥਾ);
+    } ਨਹੀਂਤਾਂ {
+        src.reset_ਮੰਜ਼ਿਲ_ਢੇਰ_Array();  // take ownership away from src
     }
 }
 
-template <typename T, int32_t stackCapacity>
-inline MaybeStackArray<T, stackCapacity>& MaybeStackArray<T, stackCapacity>::operator=(
-    MaybeStackArray<T, stackCapacity>&& src) noexcept U_LIFETIME_BOUND {
+ਸਾਂਚਾ <typename T, int32_t ਢੇਰ_ਸਮਰੱਥਾ>
+ਸਤਰਅੰਦਰ Maybe_ਢੇਰ_Array<T, ਢੇਰ_ਸਮਰੱਥਾ>& Maybe_ਢੇਰ_Array<T, ਢੇਰ_ਸਮਰੱਥਾ>::ਸੰਚਾਲਕ=(
+    Maybe_ਢੇਰ_Array<T, ਢੇਰ_ਸਮਰੱਥਾ>&& src) noexcept U_LIFETIME_BOUND {
     releaseArray();  // in case this instance had its own memory allocated
-    capacity = src.capacity;
-    needToRelease = src.needToRelease;
-    if (src.ptr == src.stackArray) {
-        ptr = stackArray;
-        uprv_memcpy(stackArray, src.stackArray, sizeof(T) * src.capacity);
-    } else {
+    ਸਮਰੱਥਾ = src.ਸਮਰੱਥਾ;
+    need_ਮੰਜ਼ਿਲ_Release = src.need_ਮੰਜ਼ਿਲ_Release;
+    ਜੇ (src.ptr == src.ਢੇਰ_Array) {
+        ptr = ਢੇਰ_Array;
+        uprv_memcpy(ਢੇਰ_Array, src.ਢੇਰ_Array, ਆਕਾਰ(T) * src.ਸਮਰੱਥਾ);
+    } ਨਹੀਂਤਾਂ {
         ptr = src.ptr;
-        src.resetToStackArray();  // take ownership away from src
+        src.reset_ਮੰਜ਼ਿਲ_ਢੇਰ_Array();  // take ownership away from src
     }
-    return *this;
+    ਵਾਪਸ *this;
 }
 
-template <typename T, int32_t stackCapacity>
-inline T* MaybeStackArray<T, stackCapacity>::resize(int32_t newCapacity,
-                                                    int32_t length) U_LIFETIME_BOUND {
-    if(newCapacity>0) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-        ::fprintf(::stderr, "MaybeStackArray (resize) alloc %d * %lu\n", newCapacity, sizeof(T));
-#endif
-        T *p=(T *)uprv_malloc(newCapacity*sizeof(T));
-        if(p!=nullptr) {
-            if(length>0) {
-                if(length>capacity) {
-                    length=capacity;
+ਸਾਂਚਾ <typename T, int32_t ਢੇਰ_ਸਮਰੱਥਾ>
+ਸਤਰਅੰਦਰ T* Maybe_ਢੇਰ_Array<T, ਢੇਰ_ਸਮਰੱਥਾ>::resize(int32_t new_ਸਮਰੱਥਾ,
+                                                    int32_t ਲੰਮਾਈ) U_LIFETIME_BOUND {
+    ਜੇ(new_ਸਮਰੱਥਾ>0) {
+#ਜੇ U_DEBUG && defined(UPRV_MALLOC_ਗਿਣਤੀ)
+        ::fprintf(::stderr, "MaybeStackArray (resize) alloc %d * %lu\n", new_ਸਮਰੱਥਾ, ਆਕਾਰ(T));
+#ਜੇ_ਅੰਤ
+        T *p=(T *)uprv_malloc(new_ਸਮਰੱਥਾ*ਆਕਾਰ(T));
+        ਜੇ(p!=nullptr) {
+            ਜੇ(ਲੰਮਾਈ>0) {
+                ਜੇ(ਲੰਮਾਈ>ਸਮਰੱਥਾ) {
+                    ਲੰਮਾਈ=ਸਮਰੱਥਾ;
                 }
-                if(length>newCapacity) {
-                    length=newCapacity;
+                ਜੇ(ਲੰਮਾਈ>new_ਸਮਰੱਥਾ) {
+                    ਲੰਮਾਈ=new_ਸਮਰੱਥਾ;
                 }
-                uprv_memcpy(p, ptr, (size_t)length*sizeof(T));
+                uprv_memcpy(p, ptr, (size_t)ਲੰਮਾਈ*ਆਕਾਰ(T));
             }
             releaseArray();
             ptr=p;
-            capacity=newCapacity;
-            needToRelease=true;
+            ਸਮਰੱਥਾ=new_ਸਮਰੱਥਾ;
+            need_ਮੰਜ਼ਿਲ_Release=true;
         }
-        return p;
-    } else {
-        return nullptr;
+        ਵਾਪਸ p;
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ nullptr;
     }
 }
 
-template<typename T, int32_t stackCapacity>
-inline T *MaybeStackArray<T, stackCapacity>::orphanOrClone(int32_t length, int32_t &resultCapacity) {
+ਸਾਂਚਾ<typename T, int32_t ਢੇਰ_ਸਮਰੱਥਾ>
+ਸਤਰਅੰਦਰ T *Maybe_ਢੇਰ_Array<T, ਢੇਰ_ਸਮਰੱਥਾ>::orphanOrClone(int32_t ਲੰਮਾਈ, int32_t &ਨਤੀਜਾ_ਸਮਰੱਥਾ) {
     T *p;
-    if(needToRelease) {
+    ਜੇ(need_ਮੰਜ਼ਿਲ_Release) {
         p=ptr;
-    } else if(length<=0) {
-        return nullptr;
-    } else {
-        if(length>capacity) {
-            length=capacity;
+    } ਨਹੀਂਤਾਂ ਜੇ(ਲੰਮਾਈ<=0) {
+        ਵਾਪਸ nullptr;
+    } ਨਹੀਂਤਾਂ {
+        ਜੇ(ਲੰਮਾਈ>ਸਮਰੱਥਾ) {
+            ਲੰਮਾਈ=ਸਮਰੱਥਾ;
         }
-        p=(T *)uprv_malloc(length*sizeof(T));
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-      ::fprintf(::stderr,"MaybeStacArray (orphan) alloc %d * %lu\n", length,sizeof(T));
-#endif
-        if(p==nullptr) {
-            return nullptr;
+        p=(T *)uprv_malloc(ਲੰਮਾਈ*ਆਕਾਰ(T));
+#ਜੇ U_DEBUG && defined(UPRV_MALLOC_ਗਿਣਤੀ)
+      ::fprintf(::stderr,"MaybeStacArray (orphan) alloc %d * %lu\n", ਲੰਮਾਈ,ਆਕਾਰ(T));
+#ਜੇ_ਅੰਤ
+        ਜੇ(p==nullptr) {
+            ਵਾਪਸ nullptr;
         }
-        uprv_memcpy(p, ptr, (size_t)length*sizeof(T));
+        uprv_memcpy(p, ptr, (size_t)ਲੰਮਾਈ*ਆਕਾਰ(T));
     }
-    resultCapacity=length;
-    resetToStackArray();
-    return p;
+    ਨਤੀਜਾ_ਸਮਰੱਥਾ=ਲੰਮਾਈ;
+    reset_ਮੰਜ਼ਿਲ_ਢੇਰ_Array();
+    ਵਾਪਸ p;
 }
 
 /**
@@ -571,67 +571,67 @@ inline T *MaybeStackArray<T, stackCapacity>::orphanOrClone(int32_t length, int32
  * Unlike LocalMemory and LocalArray, this class never adopts
  * (takes ownership of) another memory block.
  */
-template<typename H, typename T, int32_t stackCapacity>
-class MaybeStackHeaderAndArray {
-public:
+ਸਾਂਚਾ<typename H, typename T, int32_t ਢੇਰ_ਸਮਰੱਥਾ>
+class Maybe_ਢੇਰ_ਸਿਰਲੇਖ_And_Array {
+ਜਨਤਕ:
     // No heap allocation. Use only on the stack.
-    static void* U_EXPORT2 operator new(size_t) noexcept = delete;
-    static void* U_EXPORT2 operator new[](size_t) noexcept = delete;
-    static void* U_EXPORT2 operator new(size_t, void*) noexcept = delete;
+    ਸਥਿਰ ਖਾਲੀ* U_EXPORT2 ਸੰਚਾਲਕ new(size_t) noexcept = delete;
+    ਸਥਿਰ ਖਾਲੀ* U_EXPORT2 ਸੰਚਾਲਕ new[](size_t) noexcept = delete;
+    ਸਥਿਰ ਖਾਲੀ* U_EXPORT2 ਸੰਚਾਲਕ new(size_t, ਖਾਲੀ*) noexcept = delete;
 
     /**
      * Default constructor initializes with internal H+T[stackCapacity] buffer.
      */
-    MaybeStackHeaderAndArray() : ptr(&stackHeader), capacity(stackCapacity), needToRelease(false) {}
+    Maybe_ਢੇਰ_ਸਿਰਲੇਖ_And_Array() : ptr(&ਢੇਰ_ਸਿਰਲੇਖ), ਸਮਰੱਥਾ(ਢੇਰ_ਸਮਰੱਥਾ), need_ਮੰਜ਼ਿਲ_Release(false) {}
     /**
      * Destructor deletes the memory (if owned).
      */
-    ~MaybeStackHeaderAndArray() { releaseMemory(); }
+    ~Maybe_ਢੇਰ_ਸਿਰਲੇਖ_And_Array() { release_ਸਮ੍ਰਿਤੀ(); }
     /**
      * Returns the array capacity (number of T items).
      * @return array capacity
      */
-    int32_t getCapacity() const { return capacity; }
+    int32_t get_ਸਮਰੱਥਾ() ਅਚਲ { ਵਾਪਸ ਸਮਰੱਥਾ; }
     /**
      * Access without ownership change.
      * @return the header pointer
      */
-    H* getAlias() const U_LIFETIME_BOUND { return ptr; }
+    H* getAlias() ਅਚਲ U_LIFETIME_BOUND { ਵਾਪਸ ptr; }
     /**
      * Returns the array start.
      * @return array start, same address as getAlias()+1
      */
-    T* getArrayStart() const U_LIFETIME_BOUND { return reinterpret_cast<T*>(getAlias() + 1); }
+    T* get_Array_ਸ਼ੁਰੂ() ਅਚਲ U_LIFETIME_BOUND { ਵਾਪਸ reinterpret_cast<T*>(getAlias() + 1); }
     /**
      * Returns the array limit.
      * @return array limit
      */
-    T* getArrayLimit() const U_LIFETIME_BOUND { return getArrayStart() + capacity; }
+    T* get_Array_ਹੱਦਬੰਦੀ() ਅਚਲ U_LIFETIME_BOUND { ਵਾਪਸ get_Array_ਸ਼ੁਰੂ() + ਸਮਰੱਥਾ; }
     /**
      * Access without ownership change. Same as getAlias().
      * A class instance can be used directly in expressions that take a T *.
      * @return the header pointer
      */
-    operator H*() const U_LIFETIME_BOUND { return ptr; }
+    ਸੰਚਾਲਕ H*() ਅਚਲ U_LIFETIME_BOUND { ਵਾਪਸ ptr; }
     /**
      * Array item access (writable).
      * No index bounds check.
      * @param i array index
      * @return reference to the array item
      */
-    T& operator[](ptrdiff_t i) U_LIFETIME_BOUND { return getArrayStart()[i]; }
+    T& ਸੰਚਾਲਕ[](ptrdiff_t i) U_LIFETIME_BOUND { ਵਾਪਸ get_Array_ਸ਼ੁਰੂ()[i]; }
     /**
      * Deletes the memory block (if owned) and aliases another one, no transfer of ownership.
      * If the arguments are illegal, then the current memory is unchanged.
      * @param otherArray must not be nullptr
      * @param otherCapacity must be >0
      */
-    void aliasInstead(H *otherMemory, int32_t otherCapacity) {
-        if(otherMemory!=nullptr && otherCapacity>0) {
-            releaseMemory();
-            ptr=otherMemory;
-            capacity=otherCapacity;
-            needToRelease=false;
+    ਖਾਲੀ aliasInstead(H *other_ਸਮ੍ਰਿਤੀ, int32_t other_ਸਮਰੱਥਾ) {
+        ਜੇ(other_ਸਮ੍ਰਿਤੀ!=nullptr && other_ਸਮਰੱਥਾ>0) {
+            release_ਸਮ੍ਰਿਤੀ();
+            ptr=other_ਸਮ੍ਰਿਤੀ;
+            ਸਮਰੱਥਾ=other_ਸਮਰੱਥਾ;
+            need_ਮੰਜ਼ਿਲ_Release=false;
         }
     }
     /**
@@ -645,7 +645,7 @@ public:
      * @param length number of T items to be copied from the old array to the new one
      * @return the allocated pointer, or nullptr if the allocation failed
      */
-    inline H* resize(int32_t newCapacity, int32_t length = 0) U_LIFETIME_BOUND;
+    ਸਤਰਅੰਦਰ H* resize(int32_t new_ਸਮਰੱਥਾ, int32_t ਲੰਮਾਈ = 0) U_LIFETIME_BOUND;
     /**
      * Gives up ownership of the memory if owned, or else clones it,
      * copying the header and length T array items; resets itself to the internal memory.
@@ -656,84 +656,84 @@ public:
      * @return the header pointer;
      *         caller becomes responsible for deleting the array
      */
-    inline H *orphanOrClone(int32_t length, int32_t &resultCapacity);
-private:
+    ਸਤਰਅੰਦਰ H *orphanOrClone(int32_t ਲੰਮਾਈ, int32_t &ਨਤੀਜਾ_ਸਮਰੱਥਾ);
+ਨਿਜੀ:
     H *ptr;
-    int32_t capacity;
-    UBool needToRelease;
+    int32_t ਸਮਰੱਥਾ;
+    UBool need_ਮੰਜ਼ਿਲ_Release;
     // stackHeader must precede stackArray immediately.
-    H stackHeader;
-    T stackArray[stackCapacity];
-    void releaseMemory() {
-        if(needToRelease) {
+    H ਢੇਰ_ਸਿਰਲੇਖ;
+    T ਢੇਰ_Array[ਢੇਰ_ਸਮਰੱਥਾ];
+    ਖਾਲੀ release_ਸਮ੍ਰਿਤੀ() {
+        ਜੇ(need_ਮੰਜ਼ਿਲ_Release) {
             uprv_free(ptr);
         }
     }
     /* No comparison operators with other MaybeStackHeaderAndArray's. */
-    bool operator==(const MaybeStackHeaderAndArray & /*other*/) {return false;}
-    bool operator!=(const MaybeStackHeaderAndArray & /*other*/) {return true;}
+    bool ਸੰਚਾਲਕ==(ਅਚਲ Maybe_ਢੇਰ_ਸਿਰਲੇਖ_And_Array & /*other*/) {ਵਾਪਸ false;}
+    bool ਸੰਚਾਲਕ!=(ਅਚਲ Maybe_ਢੇਰ_ਸਿਰਲੇਖ_And_Array & /*other*/) {ਵਾਪਸ true;}
     /* No ownership transfer: No copy constructor, no assignment operator. */
-    MaybeStackHeaderAndArray(const MaybeStackHeaderAndArray & /*other*/) {}
-    void operator=(const MaybeStackHeaderAndArray & /*other*/) {}
+    Maybe_ਢੇਰ_ਸਿਰਲੇਖ_And_Array(ਅਚਲ Maybe_ਢੇਰ_ਸਿਰਲੇਖ_And_Array & /*other*/) {}
+    ਖਾਲੀ ਸੰਚਾਲਕ=(ਅਚਲ Maybe_ਢੇਰ_ਸਿਰਲੇਖ_And_Array & /*other*/) {}
 };
 
-template <typename H, typename T, int32_t stackCapacity>
-inline H* MaybeStackHeaderAndArray<H, T, stackCapacity>::resize(int32_t newCapacity,
-                                                                int32_t length) U_LIFETIME_BOUND {
-    if(newCapacity>=0) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-      ::fprintf(::stderr,"MaybeStackHeaderAndArray alloc %d + %d * %ul\n", sizeof(H),newCapacity,sizeof(T));
-#endif
-        H *p=(H *)uprv_malloc(sizeof(H)+newCapacity*sizeof(T));
-        if(p!=nullptr) {
-            if(length<0) {
-                length=0;
-            } else if(length>0) {
-                if(length>capacity) {
-                    length=capacity;
+ਸਾਂਚਾ <typename H, typename T, int32_t ਢੇਰ_ਸਮਰੱਥਾ>
+ਸਤਰਅੰਦਰ H* Maybe_ਢੇਰ_ਸਿਰਲੇਖ_And_Array<H, T, ਢੇਰ_ਸਮਰੱਥਾ>::resize(int32_t new_ਸਮਰੱਥਾ,
+                                                                int32_t ਲੰਮਾਈ) U_LIFETIME_BOUND {
+    ਜੇ(new_ਸਮਰੱਥਾ>=0) {
+#ਜੇ U_DEBUG && defined(UPRV_MALLOC_ਗਿਣਤੀ)
+      ::fprintf(::stderr,"MaybeStackHeaderAndArray alloc %d + %d * %ul\n", ਆਕਾਰ(H),new_ਸਮਰੱਥਾ,ਆਕਾਰ(T));
+#ਜੇ_ਅੰਤ
+        H *p=(H *)uprv_malloc(ਆਕਾਰ(H)+new_ਸਮਰੱਥਾ*ਆਕਾਰ(T));
+        ਜੇ(p!=nullptr) {
+            ਜੇ(ਲੰਮਾਈ<0) {
+                ਲੰਮਾਈ=0;
+            } ਨਹੀਂਤਾਂ ਜੇ(ਲੰਮਾਈ>0) {
+                ਜੇ(ਲੰਮਾਈ>ਸਮਰੱਥਾ) {
+                    ਲੰਮਾਈ=ਸਮਰੱਥਾ;
                 }
-                if(length>newCapacity) {
-                    length=newCapacity;
+                ਜੇ(ਲੰਮਾਈ>new_ਸਮਰੱਥਾ) {
+                    ਲੰਮਾਈ=new_ਸਮਰੱਥਾ;
                 }
             }
-            uprv_memcpy(p, ptr, sizeof(H)+(size_t)length*sizeof(T));
-            releaseMemory();
+            uprv_memcpy(p, ptr, ਆਕਾਰ(H)+(size_t)ਲੰਮਾਈ*ਆਕਾਰ(T));
+            release_ਸਮ੍ਰਿਤੀ();
             ptr=p;
-            capacity=newCapacity;
-            needToRelease=true;
+            ਸਮਰੱਥਾ=new_ਸਮਰੱਥਾ;
+            need_ਮੰਜ਼ਿਲ_Release=true;
         }
-        return p;
-    } else {
-        return nullptr;
+        ਵਾਪਸ p;
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ nullptr;
     }
 }
 
-template<typename H, typename T, int32_t stackCapacity>
-inline H *MaybeStackHeaderAndArray<H, T, stackCapacity>::orphanOrClone(int32_t length,
-                                                                       int32_t &resultCapacity) {
+ਸਾਂਚਾ<typename H, typename T, int32_t ਢੇਰ_ਸਮਰੱਥਾ>
+ਸਤਰਅੰਦਰ H *Maybe_ਢੇਰ_ਸਿਰਲੇਖ_And_Array<H, T, ਢੇਰ_ਸਮਰੱਥਾ>::orphanOrClone(int32_t ਲੰਮਾਈ,
+                                                                       int32_t &ਨਤੀਜਾ_ਸਮਰੱਥਾ) {
     H *p;
-    if(needToRelease) {
+    ਜੇ(need_ਮੰਜ਼ਿਲ_Release) {
         p=ptr;
-    } else {
-        if(length<0) {
-            length=0;
-        } else if(length>capacity) {
-            length=capacity;
+    } ਨਹੀਂਤਾਂ {
+        ਜੇ(ਲੰਮਾਈ<0) {
+            ਲੰਮਾਈ=0;
+        } ਨਹੀਂਤਾਂ ਜੇ(ਲੰਮਾਈ>ਸਮਰੱਥਾ) {
+            ਲੰਮਾਈ=ਸਮਰੱਥਾ;
         }
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-      ::fprintf(::stderr,"MaybeStackHeaderAndArray (orphan) alloc %ul + %d * %lu\n", sizeof(H),length,sizeof(T));
-#endif
-        p=(H *)uprv_malloc(sizeof(H)+length*sizeof(T));
-        if(p==nullptr) {
-            return nullptr;
+#ਜੇ U_DEBUG && defined(UPRV_MALLOC_ਗਿਣਤੀ)
+      ::fprintf(::stderr,"MaybeStackHeaderAndArray (orphan) alloc %ul + %d * %lu\n", ਆਕਾਰ(H),ਲੰਮਾਈ,ਆਕਾਰ(T));
+#ਜੇ_ਅੰਤ
+        p=(H *)uprv_malloc(ਆਕਾਰ(H)+ਲੰਮਾਈ*ਆਕਾਰ(T));
+        ਜੇ(p==nullptr) {
+            ਵਾਪਸ nullptr;
         }
-        uprv_memcpy(p, ptr, sizeof(H)+(size_t)length*sizeof(T));
+        uprv_memcpy(p, ptr, ਆਕਾਰ(H)+(size_t)ਲੰਮਾਈ*ਆਕਾਰ(T));
     }
-    resultCapacity=length;
-    ptr=&stackHeader;
-    capacity=stackCapacity;
-    needToRelease=false;
-    return p;
+    ਨਤੀਜਾ_ਸਮਰੱਥਾ=ਲੰਮਾਈ;
+    ptr=&ਢੇਰ_ਸਿਰਲੇਖ;
+    ਸਮਰੱਥਾ=ਢੇਰ_ਸਮਰੱਥਾ;
+    need_ਮੰਜ਼ਿਲ_Release=false;
+    ਵਾਪਸ p;
 }
 
 /**
@@ -759,35 +759,35 @@ inline H *MaybeStackHeaderAndArray<H, T, stackCapacity>::orphanOrClone(int32_t l
  *
  * It doesn't do anything more than that, and is intentionally kept minimalist.
  */
-template<typename T, int32_t stackCapacity = 8>
-class MemoryPool : public UMemory {
-public:
-    MemoryPool() : fCount(0), fPool() {}
+ਸਾਂਚਾ<typename T, int32_t ਢੇਰ_ਸਮਰੱਥਾ = 8>
+class ਸਮ੍ਰਿਤੀ_Pool : ਜਨਤਕ UMemory {
+ਜਨਤਕ:
+    ਸਮ੍ਰਿਤੀ_Pool() : f_ਗਿਣਤੀ(0), fPool() {}
 
-    ~MemoryPool() {
-        for (int32_t i = 0; i < fCount; ++i) {
+    ~ਸਮ੍ਰਿਤੀ_Pool() {
+        ਲਈ (int32_t i = 0; i < f_ਗਿਣਤੀ; ++i) {
             delete fPool[i];
         }
     }
 
-    MemoryPool(const MemoryPool&) = delete;
-    MemoryPool& operator=(const MemoryPool&) = delete;
+    ਸਮ੍ਰਿਤੀ_Pool(ਅਚਲ ਸਮ੍ਰਿਤੀ_Pool&) = delete;
+    ਸਮ੍ਰਿਤੀ_Pool& ਸੰਚਾਲਕ=(ਅਚਲ ਸਮ੍ਰਿਤੀ_Pool&) = delete;
 
-    MemoryPool(MemoryPool&& other) noexcept : fCount(other.fCount),
+    ਸਮ੍ਰਿਤੀ_Pool(ਸਮ੍ਰਿਤੀ_Pool&& other) noexcept : f_ਗਿਣਤੀ(other.f_ਗਿਣਤੀ),
                                                 fPool(std::move(other.fPool)) {
-        other.fCount = 0;
+        other.f_ਗਿਣਤੀ = 0;
     }
 
-    MemoryPool& operator=(MemoryPool&& other) noexcept U_LIFETIME_BOUND {
+    ਸਮ੍ਰਿਤੀ_Pool& ਸੰਚਾਲਕ=(ਸਮ੍ਰਿਤੀ_Pool&& other) noexcept U_LIFETIME_BOUND {
         // Since `this` may contain instances that need to be deleted, we can't
         // just throw them away and replace them with `other`. The normal way of
         // dealing with this in C++ is to swap `this` and `other`, rather than
         // simply overwrite: the destruction of `other` can then take care of
         // running MemoryPool::~MemoryPool() over the still-to-be-deallocated
         // instances.
-        std::swap(fCount, other.fCount);
-        std::swap(fPool, other.fPool);
-        return *this;
+        std::ਅਦਲਾ_ਬਦਲੀ(f_ਗਿਣਤੀ, other.f_ਗਿਣਤੀ);
+        std::ਅਦਲਾ_ਬਦਲੀ(fPool, other.fPool);
+        ਵਾਪਸ *this;
     }
 
     /**
@@ -797,39 +797,39 @@ public:
      * @param args Arguments to be forwarded to the typename T constructor.
      * @return A pointer to the newly created object, or nullptr on error.
      */
-    template <typename... Args>
-    T* create(Args&&... args) U_LIFETIME_BOUND {
-        int32_t capacity = fPool.getCapacity();
-        if (fCount == capacity &&
-            fPool.resize(capacity == stackCapacity ? 4 * capacity : 2 * capacity,
-                         capacity) == nullptr) {
-            return nullptr;
+    ਸਾਂਚਾ <typename... ਦਲੀਲਾਂ>
+    T* create(ਦਲੀਲਾਂ&&... ਦਲੀਲਾਂ_2) U_LIFETIME_BOUND {
+        int32_t ਸਮਰੱਥਾ = fPool.get_ਸਮਰੱਥਾ();
+        ਜੇ (f_ਗਿਣਤੀ == ਸਮਰੱਥਾ &&
+            fPool.resize(ਸਮਰੱਥਾ == ਢੇਰ_ਸਮਰੱਥਾ ? 4 * ਸਮਰੱਥਾ : 2 * ਸਮਰੱਥਾ,
+                         ਸਮਰੱਥਾ) == nullptr) {
+            ਵਾਪਸ nullptr;
         }
-        return fPool[fCount++] = new T(std::forward<Args>(args)...);
+        ਵਾਪਸ fPool[f_ਗਿਣਤੀ++] = new T(std::forward<ਦਲੀਲਾਂ>(ਦਲੀਲਾਂ_2)...);
     }
 
-    template <typename... Args>
-    T* createAndCheckErrorCode(UErrorCode& status, Args&&... args) U_LIFETIME_BOUND {
-        if (U_FAILURE(status)) {
-            return nullptr;
+    ਸਾਂਚਾ <typename... ਦਲੀਲਾਂ>
+    T* create_And_Check_Error_ਕੋਡ(UError_ਕੋਡ& ਸਥਿਤੀ, ਦਲੀਲਾਂ&&... ਦਲੀਲਾਂ_2) U_LIFETIME_BOUND {
+        ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+            ਵਾਪਸ nullptr;
         }
-        T *pointer = this->create(args...);
-        if (U_SUCCESS(status) && pointer == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
+        T *ਸੂਚਕ = this->create(ਦਲੀਲਾਂ_2...);
+        ਜੇ (U_SUCCESS(ਸਥਿਤੀ) && ਸੂਚਕ == nullptr) {
+            ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
         }
-        return pointer;
+        ਵਾਪਸ ਸੂਚਕ;
     }
 
     /**
      * @return Number of elements that have been allocated.
      */
-    int32_t count() const {
-        return fCount;
+    int32_t ਗਿਣਤੀ_2() ਅਚਲ {
+        ਵਾਪਸ f_ਗਿਣਤੀ;
     }
 
-protected:
-    int32_t fCount;
-    MaybeStackArray<T*, stackCapacity> fPool;
+ਸੁਰੱਖਿਅਤ:
+    int32_t f_ਗਿਣਤੀ;
+    Maybe_ਢੇਰ_Array<T*, ਢੇਰ_ਸਮਰੱਥਾ> fPool;
 };
 
 /**
@@ -852,29 +852,29 @@ protected:
  *         MyType* element = vector[i];
  *     }
  */
-template<typename T, int32_t stackCapacity = 8>
-class MaybeStackVector : protected MemoryPool<T, stackCapacity> {
-public:
-    template <typename... Args>
-    T* emplaceBack(Args&&... args) U_LIFETIME_BOUND {
-        return this->create(args...);
+ਸਾਂਚਾ<typename T, int32_t ਢੇਰ_ਸਮਰੱਥਾ = 8>
+class Maybe_ਢੇਰ_ਸਦਿਸ਼ : ਸੁਰੱਖਿਅਤ ਸਮ੍ਰਿਤੀ_Pool<T, ਢੇਰ_ਸਮਰੱਥਾ> {
+ਜਨਤਕ:
+    ਸਾਂਚਾ <typename... ਦਲੀਲਾਂ>
+    T* emplace_ਪਿੱਠ(ਦਲੀਲਾਂ&&... ਦਲੀਲਾਂ_2) U_LIFETIME_BOUND {
+        ਵਾਪਸ this->create(ਦਲੀਲਾਂ_2...);
     }
 
-    template <typename... Args>
-    T* emplaceBackAndCheckErrorCode(UErrorCode& status, Args&&... args) U_LIFETIME_BOUND {
-        return this->createAndCheckErrorCode(status, args...);
+    ਸਾਂਚਾ <typename... ਦਲੀਲਾਂ>
+    T* emplace_ਪਿੱਠ_And_Check_Error_ਕੋਡ(UError_ਕੋਡ& ਸਥਿਤੀ, ਦਲੀਲਾਂ&&... ਦਲੀਲਾਂ_2) U_LIFETIME_BOUND {
+        ਵਾਪਸ this->create_And_Check_Error_ਕੋਡ(ਸਥਿਤੀ, ਦਲੀਲਾਂ_2...);
     }
 
-    int32_t length() const {
-        return this->fCount;
+    int32_t ਲੰਮਾਈ() ਅਚਲ {
+        ਵਾਪਸ this->f_ਗਿਣਤੀ;
     }
 
     T** getAlias() U_LIFETIME_BOUND {
-        return this->fPool.getAlias();
+        ਵਾਪਸ this->fPool.getAlias();
     }
 
-    const T* const* getAlias() const U_LIFETIME_BOUND {
-        return this->fPool.getAlias();
+    ਅਚਲ T* ਅਚਲ* getAlias() ਅਚਲ U_LIFETIME_BOUND {
+        ਵਾਪਸ this->fPool.getAlias();
     }
 
     /**
@@ -883,8 +883,8 @@ public:
      * @param i array index
      * @return reference to the array item
      */
-    const T* operator[](ptrdiff_t i) const U_LIFETIME_BOUND {
-        return this->fPool[i];
+    ਅਚਲ T* ਸੰਚਾਲਕ[](ptrdiff_t i) ਅਚਲ U_LIFETIME_BOUND {
+        ਵਾਪਸ this->fPool[i];
     }
 
     /**
@@ -893,24 +893,24 @@ public:
      * @param i array index
      * @return reference to the array item
      */
-    T* operator[](ptrdiff_t i) U_LIFETIME_BOUND {
-        return this->fPool[i];
+    T* ਸੰਚਾਲਕ[](ptrdiff_t i) U_LIFETIME_BOUND {
+        ਵਾਪਸ this->fPool[i];
     }
 };
 
 namespace prv {
 
-#if U_OVERRIDE_CXX_ALLOCATION
+#ਜੇ U_OVERRIDE_CXX_ਵੰਡ
 
 /**
  * A deleter (as used by std::unique_ptr) that deallocates using `deallocate`.
  * @internal
  */
-template <typename T, void deallocate(void *), typename = void> class Deleter {
-  public:
-    Deleter() = default;
-    void operator()(T *const ptr) const {
-        if constexpr (!std::is_trivially_destructible_v<T>) {
+ਸਾਂਚਾ <typename T, ਖਾਲੀ deallocate(ਖਾਲੀ *), typename = ਖਾਲੀ> class Deleter {
+  ਜਨਤਕ:
+    Deleter() = ਮੂਲ;
+    ਖਾਲੀ ਸੰਚਾਲਕ()(T *ਅਚਲ ptr) ਅਚਲ {
+        ਜੇ constexpr (!std::is_trivially_destructible_v<T>) {
             ptr->~T();
         }
         deallocate(ptr);
@@ -922,11 +922,11 @@ template <typename T, void deallocate(void *), typename = void> class Deleter {
  * arrays of trivially destructible objects, e.g., int32_t[].
  * @internal
  */
-template <typename T, void deallocate(void *)>
+ਸਾਂਚਾ <typename T, ਖਾਲੀ deallocate(ਖਾਲੀ *)>
 class Deleter<T[], deallocate, std::enable_if_t<std::is_trivially_destructible_v<T>>> {
-  public:
-    Deleter() = default;
-    void operator()(T *const ptr) const { deallocate(ptr); }
+  ਜਨਤਕ:
+    Deleter() = ਮੂਲ;
+    ਖਾਲੀ ਸੰਚਾਲਕ()(T *ਅਚਲ ptr) ਅਚਲ { deallocate(ptr); }
 };
 
 /**
@@ -934,31 +934,31 @@ class Deleter<T[], deallocate, std::enable_if_t<std::is_trivially_destructible_v
  * arrays of nontrivially destructible objects, e.g., UnicodeString[].
  * @internal
  */
-template <typename T, void deallocate(void *)>
+ਸਾਂਚਾ <typename T, ਖਾਲੀ deallocate(ਖਾਲੀ *)>
 class Deleter<T[], deallocate, std::enable_if_t<!std::is_trivially_destructible_v<T>>> {
-  public:
-    Deleter(const std::size_t size) : size_(size) {}
-    void operator()(T *const ptr) const {
-        for (std::ptrdiff_t i = static_cast<std::ptrdiff_t>(size_) - 1; i >= 0; --i) {
+  ਜਨਤਕ:
+    Deleter(ਅਚਲ std::size_t ਮਾਪ_2) : ਮਾਪ(ਮਾਪ_2) {}
+    ਖਾਲੀ ਸੰਚਾਲਕ()(T *ਅਚਲ ptr) ਅਚਲ {
+        ਲਈ (std::ptrdiff_t i = static_cast<std::ptrdiff_t>(ਮਾਪ) - 1; i >= 0; --i) {
             ptr[i]->~T();
         }
         deallocate(ptr);
     }
-  private:
-    const std::size_t size_;
+  ਨਿਜੀ:
+    ਅਚਲ std::size_t ਮਾਪ;
 };
 
 /**
  * An std::unique_ptr that deallocates using uprv_free.
  * @internal
  */
-template <typename T> using unique_ptr = std::unique_ptr<T, Deleter<T, uprv_free>>;
+ਸਾਂਚਾ <typename T> using unique_ptr = std::unique_ptr<T, Deleter<T, uprv_free>>;
 
-#else
+#ਨਹੀਂਤਾਂ
 
 using std::unique_ptr;
 
-#endif
+#ਜੇ_ਅੰਤ
 
 /**
  * Helper for make_unique<T, Args...>; forwards all but the last of args to the constructor of
@@ -968,26 +968,26 @@ using std::unique_ptr;
  *
  * @internal
  */
-template <typename T, typename... Args, std::size_t... i>
-unique_ptr<T> make_unique_impl(std::tuple<Args...> args,
-                               std::index_sequence<i...> constructor_arg_indices) {
+ਸਾਂਚਾ <typename T, typename... ਦਲੀਲਾਂ, std::size_t... i>
+unique_ptr<T> make_unique_impl(std::tuple<ਦਲੀਲਾਂ...> ਦਲੀਲਾਂ_2,
+                               std::ਸੂਚਕਾਂਕ_sequence<i...> constructor_arg_indices) {
     static_assert(std::is_same_v<decltype(constructor_arg_indices),
-                                 std::make_index_sequence<sizeof...(Args) - 1>>);
-    auto &&error = std::get<sizeof...(Args) - 1>(args);
-    static_assert(std::is_same_v<decltype(error), UErrorCode &>);
-    if (U_FAILURE(error)) {
-        return nullptr;
+                                 std::make_ਸੂਚਕਾਂਕ_sequence<ਆਕਾਰ...(ਦਲੀਲਾਂ) - 1>>);
+    ਸਵੈਚਾਲਿਤ &&error = std::get<ਆਕਾਰ...(ਦਲੀਲਾਂ) - 1>(ਦਲੀਲਾਂ_2);
+    static_assert(std::is_same_v<decltype(error), UError_ਕੋਡ &>);
+    ਜੇ (U_FAILURE(error)) {
+        ਵਾਪਸ nullptr;
     }
-#if U_OVERRIDE_CXX_ALLOCATION
-    void *const buffer = uprv_malloc(sizeof(T));
-    if (buffer == nullptr) {
-        error = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+#ਜੇ U_OVERRIDE_CXX_ਵੰਡ
+    ਖਾਲੀ *ਅਚਲ ਬਫਰ = uprv_malloc(ਆਕਾਰ(T));
+    ਜੇ (ਬਫਰ == nullptr) {
+        error = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+        ਵਾਪਸ nullptr;
     }
-    return unique_ptr<T>(new (buffer) T(std::get<i>(args)...));
-#else
-    return std::make_unique<T>(std::get<i>(args)...);
-#endif
+    ਵਾਪਸ unique_ptr<T>(new (ਬਫਰ) T(std::get<i>(ਦਲੀਲਾਂ_2)...));
+#ਨਹੀਂਤਾਂ
+    ਵਾਪਸ std::make_unique<T>(std::get<i>(ਦਲੀਲਾਂ_2)...);
+#ਜੇ_ਅੰਤ
 }
 
 /**
@@ -1008,10 +1008,10 @@ unique_ptr<T> make_unique_impl(std::tuple<Args...> args,
  *
  * @internal
  */
-template <typename T, typename... Args, typename = std::enable_if_t<!std::is_array_v<T>>>
-unique_ptr<T> make_unique(Args &&...args) {
-    return make_unique_impl<T>(std::forward_as_tuple(args...),
-                               std::make_index_sequence<sizeof...(Args) - 1>());
+ਸਾਂਚਾ <typename T, typename... ਦਲੀਲਾਂ, typename = std::enable_if_t<!std::is_array_v<T>>>
+unique_ptr<T> make_unique(ਦਲੀਲਾਂ &&...ਦਲੀਲਾਂ_2) {
+    ਵਾਪਸ make_unique_impl<T>(std::forward_as_tuple(ਦਲੀਲਾਂ_2...),
+                               std::make_ਸੂਚਕਾਂਕ_sequence<ਆਕਾਰ...(ਦਲੀਲਾਂ) - 1>());
 }
 
 /**
@@ -1031,37 +1031,37 @@ unique_ptr<T> make_unique(Args &&...args) {
  *
  * @internal
  */
-template <typename T,
+ਸਾਂਚਾ <typename T,
           // In C++20, this could require is_unbounded_array_v<T>.
           typename = std::enable_if_t<std::is_same_v<std::remove_extent_t<T>[], T>>>
-unique_ptr<T> make_unique(const std::size_t n, UErrorCode &error) {
-    if (U_FAILURE(error)) {
-        return nullptr;
+unique_ptr<T> make_unique(ਅਚਲ std::size_t n, UError_ਕੋਡ &error) {
+    ਜੇ (U_FAILURE(error)) {
+        ਵਾਪਸ nullptr;
     }
     // In C23/C++26, we could use ckd_mul.
-    constexpr std::size_t maxSize = SIZE_MAX / sizeof(std::remove_extent_t<T>);
-    if (n > maxSize) {
-        error = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    constexpr std::size_t max_ਮਾਪ = SIZE_MAX / ਆਕਾਰ(std::remove_extent_t<T>);
+    ਜੇ (n > max_ਮਾਪ) {
+        error = U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ nullptr;
     }
-#if U_OVERRIDE_CXX_ALLOCATION
-    void *const buffer = uprv_malloc(sizeof(std::remove_extent_t<T>) * n);
-    if (buffer == nullptr) {
-        error = U_MEMORY_ALLOCATION_ERROR;
-        if constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
-            return nullptr;
-        } else {
-            return unique_ptr<T>(nullptr, Deleter<T, uprv_free>(0));
+#ਜੇ U_OVERRIDE_CXX_ਵੰਡ
+    ਖਾਲੀ *ਅਚਲ ਬਫਰ = uprv_malloc(ਆਕਾਰ(std::remove_extent_t<T>) * n);
+    ਜੇ (ਬਫਰ == nullptr) {
+        error = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+        ਜੇ constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
+            ਵਾਪਸ nullptr;
+        } ਨਹੀਂਤਾਂ {
+            ਵਾਪਸ unique_ptr<T>(nullptr, Deleter<T, uprv_free>(0));
         }
     }
-    if constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
-        return unique_ptr<T>(new (buffer) std::remove_extent_t<T>[n]());
-    } else {
-        return unique_ptr<T>(new (buffer) std::remove_extent_t<T>[n](), Deleter<T, uprv_free>(n));
+    ਜੇ constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
+        ਵਾਪਸ unique_ptr<T>(new (ਬਫਰ) std::remove_extent_t<T>[n]());
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ unique_ptr<T>(new (ਬਫਰ) std::remove_extent_t<T>[n](), Deleter<T, uprv_free>(n));
     }
-#else
-    return std::make_unique<T>(n);
-#endif
+#ਨਹੀਂਤਾਂ
+    ਵਾਪਸ std::make_unique<T>(n);
+#ਜੇ_ਅੰਤ
 }
 
 /**
@@ -1083,23 +1083,23 @@ unique_ptr<T> make_unique(const std::size_t n, UErrorCode &error) {
  *
  * @internal
  */
-template <typename T, typename = std::enable_if_t<!std::is_array_v<T>>>
-unique_ptr<T> make_unique_for_overwrite(UErrorCode &error) {
-    if (U_FAILURE(error)) {
-        return nullptr;
+ਸਾਂਚਾ <typename T, typename = std::enable_if_t<!std::is_array_v<T>>>
+unique_ptr<T> make_unique_for_overwrite(UError_ਕੋਡ &error) {
+    ਜੇ (U_FAILURE(error)) {
+        ਵਾਪਸ nullptr;
     }
-#if U_OVERRIDE_CXX_ALLOCATION
-    void *const buffer = uprv_malloc(sizeof(T));
-    if (buffer == nullptr) {
-        error = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+#ਜੇ U_OVERRIDE_CXX_ਵੰਡ
+    ਖਾਲੀ *ਅਚਲ ਬਫਰ = uprv_malloc(ਆਕਾਰ(T));
+    ਜੇ (ਬਫਰ == nullptr) {
+        error = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+        ਵਾਪਸ nullptr;
     }
-    return unique_ptr<T>(new (buffer) T);
-#elif U_CPLUSPLUS_VERSION >= 20
-    return std::make_unique_for_overwrite<T>();
-#else
-    return unique_ptr<T>(new T);
-#endif
+    ਵਾਪਸ unique_ptr<T>(new (ਬਫਰ) T);
+#ਜਾਂਜੇ U_CPLUSPLUS_ਸੰਸਕਰਣ >= 20
+    ਵਾਪਸ std::make_unique_for_overwrite<T>();
+#ਨਹੀਂਤਾਂ
+    ਵਾਪਸ unique_ptr<T>(new T);
+#ਜੇ_ਅੰਤ
 }
 
 /**
@@ -1121,44 +1121,44 @@ unique_ptr<T> make_unique_for_overwrite(UErrorCode &error) {
  *
  * @internal
  */
-template <typename T,
+ਸਾਂਚਾ <typename T,
           // In C++20, this could require is_unbounded_array_v<T>.
           typename = std::enable_if_t<std::is_same_v<std::remove_extent_t<T>[], T>>>
-unique_ptr<T> make_unique_for_overwrite(const std::size_t n, UErrorCode &error) {
-    if (U_FAILURE(error)) {
-        return nullptr;
+unique_ptr<T> make_unique_for_overwrite(ਅਚਲ std::size_t n, UError_ਕੋਡ &error) {
+    ਜੇ (U_FAILURE(error)) {
+        ਵਾਪਸ nullptr;
     }
     // In C23/C++26, we could use ckd_mul.
-    constexpr std::size_t maxSize = SIZE_MAX / sizeof(std::remove_extent_t<T>);
-    if (n > maxSize) {
-        error = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    constexpr std::size_t max_ਮਾਪ = SIZE_MAX / ਆਕਾਰ(std::remove_extent_t<T>);
+    ਜੇ (n > max_ਮਾਪ) {
+        error = U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ nullptr;
     }
-#if U_OVERRIDE_CXX_ALLOCATION
-    void *const buffer = uprv_malloc(sizeof(std::remove_extent_t<T>) * n);
-    if (buffer == nullptr) {
-        error = U_MEMORY_ALLOCATION_ERROR;
-        if constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
-            return nullptr;
-        } else {
-            return unique_ptr<T>(nullptr, Deleter<T, uprv_free>(0));
+#ਜੇ U_OVERRIDE_CXX_ਵੰਡ
+    ਖਾਲੀ *ਅਚਲ ਬਫਰ = uprv_malloc(ਆਕਾਰ(std::remove_extent_t<T>) * n);
+    ਜੇ (ਬਫਰ == nullptr) {
+        error = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+        ਜੇ constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
+            ਵਾਪਸ nullptr;
+        } ਨਹੀਂਤਾਂ {
+            ਵਾਪਸ unique_ptr<T>(nullptr, Deleter<T, uprv_free>(0));
         }
     }
-    if constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
-        return unique_ptr<T>(new (buffer) std::remove_extent_t<T>[n]);
-    } else {
-        return unique_ptr<T>(new (buffer) std::remove_extent_t<T>[n], Deleter<T, uprv_free>(n));
+    ਜੇ constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
+        ਵਾਪਸ unique_ptr<T>(new (ਬਫਰ) std::remove_extent_t<T>[n]);
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ unique_ptr<T>(new (ਬਫਰ) std::remove_extent_t<T>[n], Deleter<T, uprv_free>(n));
     }
-#elif U_CPLUSPLUS_VERSION >= 20
-    return std::make_unique_for_overwrite<T>(n);
-#else
-    return unique_ptr<T>(new std::remove_extent_t<T>[n]);
-#endif
+#ਜਾਂਜੇ U_CPLUSPLUS_ਸੰਸਕਰਣ >= 20
+    ਵਾਪਸ std::make_unique_for_overwrite<T>(n);
+#ਨਹੀਂਤਾਂ
+    ਵਾਪਸ unique_ptr<T>(new std::remove_extent_t<T>[n]);
+#ਜੇ_ਅੰਤ
 }
 
 }  // namespace prv
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif  /* __cplusplus */
-#endif  /* CMEMORY_H */
+#ਜੇ_ਅੰਤ  /* __cplusplus */
+#ਜੇ_ਅੰਤ  /* CMEMORY_H */

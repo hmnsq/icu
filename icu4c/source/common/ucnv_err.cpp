@@ -17,40 +17,40 @@
 *   06/29/2000  helena      Major rewrite of the callback APIs.
 */
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ਜੇ !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv_err.h"
-#include "unicode/ucnv_cb.h"
-#include "ucnv_cnv.h"
-#include "cmemory.h"
-#include "unicode/ucnv.h"
-#include "ustrfmt.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ucnv_err.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ucnv_cb.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucnv_cnv.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ucnv.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ustrfmt.h"
 
-#define VALUE_STRING_LENGTH 48
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ਮੁੱਲ_STRING_ਲੰਮਾਈ 48
 /*Magic # 32 = 4(number of char in value string) * 8(max number of bytes per char for any converter) */
-#define UNICODE_PERCENT_SIGN_CODEPOINT  0x0025
-#define UNICODE_U_CODEPOINT             0x0055
-#define UNICODE_X_CODEPOINT             0x0058
-#define UNICODE_RS_CODEPOINT            0x005C
-#define UNICODE_U_LOW_CODEPOINT         0x0075
-#define UNICODE_X_LOW_CODEPOINT         0x0078
-#define UNICODE_AMP_CODEPOINT           0x0026
-#define UNICODE_HASH_CODEPOINT          0x0023
-#define UNICODE_SEMICOLON_CODEPOINT     0x003B
-#define UNICODE_PLUS_CODEPOINT          0x002B
-#define UNICODE_LEFT_CURLY_CODEPOINT    0x007B
-#define UNICODE_RIGHT_CURLY_CODEPOINT   0x007D
-#define UNICODE_SPACE_CODEPOINT         0x0020
-#define UCNV_PRV_ESCAPE_ICU         0
-#define UCNV_PRV_ESCAPE_C           'C'
-#define UCNV_PRV_ESCAPE_XML_DEC     'D'
-#define UCNV_PRV_ESCAPE_XML_HEX     'X'
-#define UCNV_PRV_ESCAPE_JAVA        'J'
-#define UCNV_PRV_ESCAPE_UNICODE     'U'
-#define UCNV_PRV_ESCAPE_CSS2        'S'
-#define UCNV_PRV_STOP_ON_ILLEGAL    'i'
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UNICODE_PERCENT_SIGN_CODEPOINT  0x0025
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UNICODE_U_CODEPOINT             0x0055
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UNICODE_X_CODEPOINT             0x0058
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UNICODE_RS_CODEPOINT            0x005C
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UNICODE_U_ਨੀਵਾਂ_CODEPOINT         0x0075
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UNICODE_X_ਨੀਵਾਂ_CODEPOINT         0x0078
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UNICODE_AMP_CODEPOINT           0x0026
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UNICODE_HASH_CODEPOINT          0x0023
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UNICODE_SEMICOLON_CODEPOINT     0x003B
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UNICODE_PLUS_CODEPOINT          0x002B
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UNICODE_ਖੱਬਾ_CURLY_CODEPOINT    0x007B
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UNICODE_ਸੱਜਾ_CURLY_CODEPOINT   0x007D
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UNICODE_SPACE_CODEPOINT         0x0020
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_PRV_ESCAPE_ICU         0
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_PRV_ESCAPE_C           'C'
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_PRV_ESCAPE_XML_DEC     'D'
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_PRV_ESCAPE_XML_HEX     'X'
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_PRV_ESCAPE_JAVA        'J'
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_PRV_ESCAPE_UNICODE     'U'
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_PRV_ESCAPE_CSS2        'S'
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_PRV_STOP_ON_ILLEGAL    'i'
 
 /*
  * IS_DEFAULT_IGNORABLE_CODE_POINT
@@ -65,7 +65,7 @@
  *
  * This list should be sync with the one in CharsetCallback.java
  */
-#define IS_DEFAULT_IGNORABLE_CODE_POINT(c) ( \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ IS_DEFAULT_IGNORABLE_ਕੋਡ_ਬਿੰਦੂ(c) ( \
     (c == 0x00AD) || \
     (c == 0x034F) || \
     (c == 0x061C) || \
@@ -87,21 +87,21 @@
 
 
 /*Function Pointer STOPS at the ILLEGAL_SEQUENCE */
-U_CAPI void    U_EXPORT2
+U_CAPI ਖਾਲੀ    U_EXPORT2
 UCNV_FROM_U_CALLBACK_STOP (
-                  const void *context,
-                  UConverterFromUnicodeArgs *fromUArgs,
-                  const char16_t* codeUnits,
+                  ਅਚਲ ਖਾਲੀ *context,
+                  UConverter_From_Unicode_ਦਲੀਲਾਂ *fromUArgs,
+                  ਅਚਲ char16_t* ਕੋਡ_Units,
                   int32_t length,
-                  UChar32 codePoint,
+                  UChar32 ਕੋਡ_ਬਿੰਦੂ,
                   UConverterCallbackReason reason,
-                  UErrorCode * err)
+                  UError_ਕੋਡ * err)
 {
-    (void)context;
-    (void)fromUArgs;
-    (void)codeUnits;
-    (void)length;
-    if (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
+    (ਖਾਲੀ)context;
+    (ਖਾਲੀ)fromUArgs;
+    (ਖਾਲੀ)ਕੋਡ_Units;
+    (ਖਾਲੀ)length;
+    ਜੇ (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_ਕੋਡ_ਬਿੰਦੂ(ਕੋਡ_ਬਿੰਦੂ))
     {
         /*
          * Skip if the codepoint has unicode property of default ignorable.
@@ -113,42 +113,42 @@ UCNV_FROM_U_CALLBACK_STOP (
 
 
 /*Function Pointer STOPS at the ILLEGAL_SEQUENCE */
-U_CAPI void    U_EXPORT2
-UCNV_TO_U_CALLBACK_STOP (
-                   const void *context,
-                   UConverterToUnicodeArgs *toUArgs,
-                   const char* codePoints,
+U_CAPI ਖਾਲੀ    U_EXPORT2
+UCNV_ਮੰਜ਼ਿਲ_U_CALLBACK_STOP (
+                   ਅਚਲ ਖਾਲੀ *context,
+                   UConverter_ਮੰਜ਼ਿਲ_Unicode_ਦਲੀਲਾਂ *ਮੰਜ਼ਿਲ_UArgs,
+                   ਅਚਲ ਅੱਖਰ* ਕੋਡ_Points,
                    int32_t length,
                    UConverterCallbackReason reason,
-                   UErrorCode * err)
+                   UError_ਕੋਡ * err)
 {
     /* the caller must have set the error code accordingly */
-    (void)context; (void)toUArgs; (void)codePoints; (void)length; (void)reason; (void)err;
+    (ਖਾਲੀ)context; (ਖਾਲੀ)ਮੰਜ਼ਿਲ_UArgs; (ਖਾਲੀ)ਕੋਡ_Points; (ਖਾਲੀ)length; (ਖਾਲੀ)reason; (ਖਾਲੀ)err;
 }
 
-U_CAPI void    U_EXPORT2
+U_CAPI ਖਾਲੀ    U_EXPORT2
 UCNV_FROM_U_CALLBACK_SKIP (                  
-                  const void *context,
-                  UConverterFromUnicodeArgs *fromUArgs,
-                  const char16_t* codeUnits,
+                  ਅਚਲ ਖਾਲੀ *context,
+                  UConverter_From_Unicode_ਦਲੀਲਾਂ *fromUArgs,
+                  ਅਚਲ char16_t* ਕੋਡ_Units,
                   int32_t length,
-                  UChar32 codePoint,
+                  UChar32 ਕੋਡ_ਬਿੰਦੂ,
                   UConverterCallbackReason reason,
-                  UErrorCode * err)
+                  UError_ਕੋਡ * err)
 {
-    (void)fromUArgs;
-    (void)codeUnits;
-    (void)length;
-    if (reason <= UCNV_IRREGULAR)
+    (ਖਾਲੀ)fromUArgs;
+    (ਖਾਲੀ)ਕੋਡ_Units;
+    (ਖਾਲੀ)length;
+    ਜੇ (reason <= UCNV_IRREGULAR)
     {
-        if (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
+        ਜੇ (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_ਕੋਡ_ਬਿੰਦੂ(ਕੋਡ_ਬਿੰਦੂ))
         {
             /*
              * Skip if the codepoint has unicode property of default ignorable.
              */
             *err = U_ZERO_ERROR;
         }
-        else if (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
+        ਨਹੀਂਤਾਂ ਜੇ (context == ਖਾਲੀ_ਸੂਚਕ || (*((ਅੱਖਰ*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
         {
             *err = U_ZERO_ERROR;
         }
@@ -157,31 +157,31 @@ UCNV_FROM_U_CALLBACK_SKIP (
     /* else ignore the reset, close and clone calls. */
 }
 
-U_CAPI void    U_EXPORT2
+U_CAPI ਖਾਲੀ    U_EXPORT2
 UCNV_FROM_U_CALLBACK_SUBSTITUTE (
-                  const void *context,
-                  UConverterFromUnicodeArgs *fromArgs,
-                  const char16_t* codeUnits,
+                  ਅਚਲ ਖਾਲੀ *context,
+                  UConverter_From_Unicode_ਦਲੀਲਾਂ *from_ਦਲੀਲਾਂ,
+                  ਅਚਲ char16_t* ਕੋਡ_Units,
                   int32_t length,
-                  UChar32 codePoint,
+                  UChar32 ਕੋਡ_ਬਿੰਦੂ,
                   UConverterCallbackReason reason,
-                  UErrorCode * err)
+                  UError_ਕੋਡ * err)
 {
-    (void)codeUnits;
-    (void)length;
-    if (reason <= UCNV_IRREGULAR)
+    (ਖਾਲੀ)ਕੋਡ_Units;
+    (ਖਾਲੀ)length;
+    ਜੇ (reason <= UCNV_IRREGULAR)
     {
-        if (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
+        ਜੇ (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_ਕੋਡ_ਬਿੰਦੂ(ਕੋਡ_ਬਿੰਦੂ))
         {
             /*
              * Skip if the codepoint has unicode property of default ignorable.
              */
             *err = U_ZERO_ERROR;
         }
-        else if (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
+        ਨਹੀਂਤਾਂ ਜੇ (context == ਖਾਲੀ_ਸੂਚਕ || (*((ਅੱਖਰ*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
         {
             *err = U_ZERO_ERROR;
-            ucnv_cbFromUWriteSub(fromArgs, 0, err);
+            ucnv_cbFromUWriteSub(from_ਦਲੀਲਾਂ, 0, err);
         }
         /* else the caller must have set the error code accordingly. */
     }
@@ -193,183 +193,183 @@ UCNV_FROM_U_CALLBACK_SUBSTITUTE (
  *escape sequence to the target codepage (if conversion failure happens then
  *we revert to substituting with subchar)
  */
-U_CAPI void    U_EXPORT2
+U_CAPI ਖਾਲੀ    U_EXPORT2
 UCNV_FROM_U_CALLBACK_ESCAPE (
-                         const void *context,
-                         UConverterFromUnicodeArgs *fromArgs,
-                         const char16_t *codeUnits,
+                         ਅਚਲ ਖਾਲੀ *context,
+                         UConverter_From_Unicode_ਦਲੀਲਾਂ *from_ਦਲੀਲਾਂ,
+                         ਅਚਲ char16_t *ਕੋਡ_Units,
                          int32_t length,
-                         UChar32 codePoint,
+                         UChar32 ਕੋਡ_ਬਿੰਦੂ,
                          UConverterCallbackReason reason,
-                         UErrorCode * err)
+                         UError_ਕੋਡ * err)
 {
 
-  char16_t valueString[VALUE_STRING_LENGTH];
-  int32_t valueStringLength = 0;
+  char16_t ਮੁੱਲ_String[ਮੁੱਲ_STRING_ਲੰਮਾਈ];
+  int32_t ਮੁੱਲ_String_ਲੰਮਾਈ = 0;
   int32_t i = 0;
 
-  const char16_t *myValueSource = nullptr;
-  UErrorCode err2 = U_ZERO_ERROR;
-  UConverterFromUCallback original = nullptr;
-  const void *originalContext;
+  ਅਚਲ char16_t *my_ਮੁੱਲ_ਸਰੋਤ = ਖਾਲੀ_ਸੂਚਕ;
+  UError_ਕੋਡ err2 = U_ZERO_ERROR;
+  UConverterFromUCallback original = ਖਾਲੀ_ਸੂਚਕ;
+  ਅਚਲ ਖਾਲੀ *originalContext;
 
-  UConverterFromUCallback ignoredCallback = nullptr;
-  const void *ignoredContext;
+  UConverterFromUCallback ignoredCallback = ਖਾਲੀ_ਸੂਚਕ;
+  ਅਚਲ ਖਾਲੀ *ignoredContext;
   
-  if (reason > UCNV_IRREGULAR)
+  ਜੇ (reason > UCNV_IRREGULAR)
   {
-      return;
+      ਵਾਪਸ;
   }
-  else if (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
+  ਨਹੀਂਤਾਂ ਜੇ (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_ਕੋਡ_ਬਿੰਦੂ(ਕੋਡ_ਬਿੰਦੂ))
   {
       /*
        * Skip if the codepoint has unicode property of default ignorable.
        */
       *err = U_ZERO_ERROR;
-      return;
+      ਵਾਪਸ;
   }
 
-  ucnv_setFromUCallBack (fromArgs->converter,
+  ucnv_ਸੈੱਟ_From_UCall_ਪਿੱਠ (from_ਦਲੀਲਾਂ->converter,
                      (UConverterFromUCallback) UCNV_FROM_U_CALLBACK_SUBSTITUTE,
-                     nullptr,
+                     ਖਾਲੀ_ਸੂਚਕ,
                      &original,
                      &originalContext,
                      &err2);
   
-  if (U_FAILURE (err2))
+  ਜੇ (U_FAILURE (err2))
   {
     *err = err2;
-    return;
+    ਵਾਪਸ;
   } 
-  if(context==nullptr)
+  ਜੇ(context==ਖਾਲੀ_ਸੂਚਕ)
   { 
-      while (i < length)
+      ਜਦੋਂ (i < length)
       {
-        valueString[valueStringLength++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT;  /* adding % */
-        valueString[valueStringLength++] = (char16_t) UNICODE_U_CODEPOINT; /* adding U */
-        valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[i++], 16, 4);
+        ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT;  /* adding % */
+        ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_U_CODEPOINT; /* adding U */
+        ਮੁੱਲ_String_ਲੰਮਾਈ += uprv_itou (ਮੁੱਲ_String + ਮੁੱਲ_String_ਲੰਮਾਈ, ਮੁੱਲ_STRING_ਲੰਮਾਈ - ਮੁੱਲ_String_ਲੰਮਾਈ, (uint16_t)ਕੋਡ_Units[i++], 16, 4);
       }
   }
-  else
+  ਨਹੀਂਤਾਂ
   {
-      switch(*((char*)context))
+      ਚੋਣ(*((ਅੱਖਰ*)context))
       {
-      case UCNV_PRV_ESCAPE_JAVA:
-          while (i < length)
+      ਹਾਲਤ UCNV_PRV_ESCAPE_JAVA:
+          ਜਦੋਂ (i < length)
           {
-              valueString[valueStringLength++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
-              valueString[valueStringLength++] = (char16_t) UNICODE_U_LOW_CODEPOINT; /* adding u */
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[i++], 16, 4);
+              ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
+              ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_U_ਨੀਵਾਂ_CODEPOINT; /* adding u */
+              ਮੁੱਲ_String_ਲੰਮਾਈ += uprv_itou (ਮੁੱਲ_String + ਮੁੱਲ_String_ਲੰਮਾਈ, ਮੁੱਲ_STRING_ਲੰਮਾਈ - ਮੁੱਲ_String_ਲੰਮਾਈ, (uint16_t)ਕੋਡ_Units[i++], 16, 4);
           }
-          break;
+          ਰੋਕੋ;
 
-      case UCNV_PRV_ESCAPE_C:
-          valueString[valueStringLength++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
+      ਹਾਲਤ UCNV_PRV_ESCAPE_C:
+          ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
 
-          if(length==2){
-              valueString[valueStringLength++] = (char16_t) UNICODE_U_CODEPOINT; /* adding U */
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 16, 8);
+          ਜੇ(length==2){
+              ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_U_CODEPOINT; /* adding U */
+              ਮੁੱਲ_String_ਲੰਮਾਈ += uprv_itou (ਮੁੱਲ_String + ਮੁੱਲ_String_ਲੰਮਾਈ, ਮੁੱਲ_STRING_ਲੰਮਾਈ - ਮੁੱਲ_String_ਲੰਮਾਈ, ਕੋਡ_ਬਿੰਦੂ, 16, 8);
 
           }
-          else{
-              valueString[valueStringLength++] = (char16_t) UNICODE_U_LOW_CODEPOINT; /* adding u */
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[0], 16, 4);
+          ਨਹੀਂਤਾਂ{
+              ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_U_ਨੀਵਾਂ_CODEPOINT; /* adding u */
+              ਮੁੱਲ_String_ਲੰਮਾਈ += uprv_itou (ਮੁੱਲ_String + ਮੁੱਲ_String_ਲੰਮਾਈ, ਮੁੱਲ_STRING_ਲੰਮਾਈ - ਮੁੱਲ_String_ਲੰਮਾਈ, (uint16_t)ਕੋਡ_Units[0], 16, 4);
           }
-          break;
+          ਰੋਕੋ;
 
-      case UCNV_PRV_ESCAPE_XML_DEC:
+      ਹਾਲਤ UCNV_PRV_ESCAPE_XML_DEC:
 
-          valueString[valueStringLength++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
-          valueString[valueStringLength++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
-          if(length==2){
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 10, 0);
+          ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
+          ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
+          ਜੇ(length==2){
+              ਮੁੱਲ_String_ਲੰਮਾਈ += uprv_itou (ਮੁੱਲ_String + ਮੁੱਲ_String_ਲੰਮਾਈ, ਮੁੱਲ_STRING_ਲੰਮਾਈ - ਮੁੱਲ_String_ਲੰਮਾਈ, ਕੋਡ_ਬਿੰਦੂ, 10, 0);
           }
-          else{
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[0], 10, 0);
+          ਨਹੀਂਤਾਂ{
+              ਮੁੱਲ_String_ਲੰਮਾਈ += uprv_itou (ਮੁੱਲ_String + ਮੁੱਲ_String_ਲੰਮਾਈ, ਮੁੱਲ_STRING_ਲੰਮਾਈ - ਮੁੱਲ_String_ਲੰਮਾਈ, (uint16_t)ਕੋਡ_Units[0], 10, 0);
           }
-          valueString[valueStringLength++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
-          break;
+          ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
+          ਰੋਕੋ;
 
-      case UCNV_PRV_ESCAPE_XML_HEX:
+      ਹਾਲਤ UCNV_PRV_ESCAPE_XML_HEX:
 
-          valueString[valueStringLength++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
-          valueString[valueStringLength++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
-          valueString[valueStringLength++] = (char16_t) UNICODE_X_LOW_CODEPOINT; /* adding x */
-          if(length==2){
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 16, 0);
+          ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
+          ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
+          ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_X_ਨੀਵਾਂ_CODEPOINT; /* adding x */
+          ਜੇ(length==2){
+              ਮੁੱਲ_String_ਲੰਮਾਈ += uprv_itou (ਮੁੱਲ_String + ਮੁੱਲ_String_ਲੰਮਾਈ, ਮੁੱਲ_STRING_ਲੰਮਾਈ - ਮੁੱਲ_String_ਲੰਮਾਈ, ਕੋਡ_ਬਿੰਦੂ, 16, 0);
           }
-          else{
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[0], 16, 0);
+          ਨਹੀਂਤਾਂ{
+              ਮੁੱਲ_String_ਲੰਮਾਈ += uprv_itou (ਮੁੱਲ_String + ਮੁੱਲ_String_ਲੰਮਾਈ, ਮੁੱਲ_STRING_ਲੰਮਾਈ - ਮੁੱਲ_String_ਲੰਮਾਈ, (uint16_t)ਕੋਡ_Units[0], 16, 0);
           }
-          valueString[valueStringLength++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
-          break;
+          ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
+          ਰੋਕੋ;
 
-      case UCNV_PRV_ESCAPE_UNICODE:
-          valueString[valueStringLength++] = (char16_t) UNICODE_LEFT_CURLY_CODEPOINT;    /* adding { */
-          valueString[valueStringLength++] = (char16_t) UNICODE_U_CODEPOINT;    /* adding U */
-          valueString[valueStringLength++] = (char16_t) UNICODE_PLUS_CODEPOINT; /* adding + */
-          if (length == 2) {
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 16, 4);
-          } else {
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[0], 16, 4);
+      ਹਾਲਤ UCNV_PRV_ESCAPE_UNICODE:
+          ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_ਖੱਬਾ_CURLY_CODEPOINT;    /* adding { */
+          ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_U_CODEPOINT;    /* adding U */
+          ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_PLUS_CODEPOINT; /* adding + */
+          ਜੇ (length == 2) {
+              ਮੁੱਲ_String_ਲੰਮਾਈ += uprv_itou (ਮੁੱਲ_String + ਮੁੱਲ_String_ਲੰਮਾਈ, ਮੁੱਲ_STRING_ਲੰਮਾਈ - ਮੁੱਲ_String_ਲੰਮਾਈ, ਕੋਡ_ਬਿੰਦੂ, 16, 4);
+          } ਨਹੀਂਤਾਂ {
+              ਮੁੱਲ_String_ਲੰਮਾਈ += uprv_itou (ਮੁੱਲ_String + ਮੁੱਲ_String_ਲੰਮਾਈ, ਮੁੱਲ_STRING_ਲੰਮਾਈ - ਮੁੱਲ_String_ਲੰਮਾਈ, (uint16_t)ਕੋਡ_Units[0], 16, 4);
           }
-          valueString[valueStringLength++] = (char16_t) UNICODE_RIGHT_CURLY_CODEPOINT;    /* adding } */
-          break;
+          ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_ਸੱਜਾ_CURLY_CODEPOINT;    /* adding } */
+          ਰੋਕੋ;
 
-      case UCNV_PRV_ESCAPE_CSS2:
-          valueString[valueStringLength++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
-          valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 16, 0);
+      ਹਾਲਤ UCNV_PRV_ESCAPE_CSS2:
+          ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
+          ਮੁੱਲ_String_ਲੰਮਾਈ += uprv_itou (ਮੁੱਲ_String + ਮੁੱਲ_String_ਲੰਮਾਈ, ਮੁੱਲ_STRING_ਲੰਮਾਈ - ਮੁੱਲ_String_ਲੰਮਾਈ, ਕੋਡ_ਬਿੰਦੂ, 16, 0);
           /* Always add space character, because the next character might be whitespace,
              which would erroneously be considered the termination of the escape sequence. */
-          valueString[valueStringLength++] = (char16_t) UNICODE_SPACE_CODEPOINT;
-          break;
+          ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_SPACE_CODEPOINT;
+          ਰੋਕੋ;
 
-      default:
-          while (i < length)
+      ਮੂਲ:
+          ਜਦੋਂ (i < length)
           {
-              valueString[valueStringLength++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT;  /* adding % */
-              valueString[valueStringLength++] = (char16_t) UNICODE_U_CODEPOINT;             /* adding U */
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[i++], 16, 4);
+              ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT;  /* adding % */
+              ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_U_CODEPOINT;             /* adding U */
+              ਮੁੱਲ_String_ਲੰਮਾਈ += uprv_itou (ਮੁੱਲ_String + ਮੁੱਲ_String_ਲੰਮਾਈ, ਮੁੱਲ_STRING_ਲੰਮਾਈ - ਮੁੱਲ_String_ਲੰਮਾਈ, (uint16_t)ਕੋਡ_Units[i++], 16, 4);
           }
       }
   }  
-  myValueSource = valueString;
+  my_ਮੁੱਲ_ਸਰੋਤ = ਮੁੱਲ_String;
 
   /* reset the error */
   *err = U_ZERO_ERROR;
 
-  ucnv_cbFromUWriteUChars(fromArgs, &myValueSource, myValueSource+valueStringLength, 0, err);
+  ucnv_cbFromUWriteUChars(from_ਦਲੀਲਾਂ, &my_ਮੁੱਲ_ਸਰੋਤ, my_ਮੁੱਲ_ਸਰੋਤ+ਮੁੱਲ_String_ਲੰਮਾਈ, 0, err);
 
-  ucnv_setFromUCallBack (fromArgs->converter,
+  ucnv_ਸੈੱਟ_From_UCall_ਪਿੱਠ (from_ਦਲੀਲਾਂ->converter,
                          original,
                          originalContext,
                          &ignoredCallback,
                          &ignoredContext,
                          &err2);
-  if (U_FAILURE (err2))
+  ਜੇ (U_FAILURE (err2))
   {
       *err = err2;
-      return;
+      ਵਾਪਸ;
   }
 }
 
 
 
-U_CAPI void  U_EXPORT2
-UCNV_TO_U_CALLBACK_SKIP (
-                 const void *context,
-                 UConverterToUnicodeArgs *toArgs,
-                 const char* codeUnits,
+U_CAPI ਖਾਲੀ  U_EXPORT2
+UCNV_ਮੰਜ਼ਿਲ_U_CALLBACK_SKIP (
+                 ਅਚਲ ਖਾਲੀ *context,
+                 UConverter_ਮੰਜ਼ਿਲ_Unicode_ਦਲੀਲਾਂ *ਮੰਜ਼ਿਲ_ਦਲੀਲਾਂ,
+                 ਅਚਲ ਅੱਖਰ* ਕੋਡ_Units,
                  int32_t length,
                  UConverterCallbackReason reason,
-                 UErrorCode * err)
+                 UError_ਕੋਡ * err)
 {
-    (void)toArgs;
-    (void)codeUnits;
-    (void)length;
-    if (reason <= UCNV_IRREGULAR)
+    (ਖਾਲੀ)ਮੰਜ਼ਿਲ_ਦਲੀਲਾਂ;
+    (ਖਾਲੀ)ਕੋਡ_Units;
+    (ਖਾਲੀ)length;
+    ਜੇ (reason <= UCNV_IRREGULAR)
     {
-        if (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
+        ਜੇ (context == ਖਾਲੀ_ਸੂਚਕ || (*((ਅੱਖਰ*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
         {
             *err = U_ZERO_ERROR;
         }
@@ -378,23 +378,23 @@ UCNV_TO_U_CALLBACK_SKIP (
     /* else ignore the reset, close and clone calls. */
 }
 
-U_CAPI void    U_EXPORT2
-UCNV_TO_U_CALLBACK_SUBSTITUTE (
-                 const void *context,
-                 UConverterToUnicodeArgs *toArgs,
-                 const char* codeUnits,
+U_CAPI ਖਾਲੀ    U_EXPORT2
+UCNV_ਮੰਜ਼ਿਲ_U_CALLBACK_SUBSTITUTE (
+                 ਅਚਲ ਖਾਲੀ *context,
+                 UConverter_ਮੰਜ਼ਿਲ_Unicode_ਦਲੀਲਾਂ *ਮੰਜ਼ਿਲ_ਦਲੀਲਾਂ,
+                 ਅਚਲ ਅੱਖਰ* ਕੋਡ_Units,
                  int32_t length,
                  UConverterCallbackReason reason,
-                 UErrorCode * err)
+                 UError_ਕੋਡ * err)
 {
-    (void)codeUnits;
-    (void)length;
-    if (reason <= UCNV_IRREGULAR)
+    (ਖਾਲੀ)ਕੋਡ_Units;
+    (ਖਾਲੀ)length;
+    ਜੇ (reason <= UCNV_IRREGULAR)
     {
-        if (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
+        ਜੇ (context == ਖਾਲੀ_ਸੂਚਕ || (*((ਅੱਖਰ*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
         {
             *err = U_ZERO_ERROR;
-            ucnv_cbToUWriteSub(toArgs,0,err);
+            ucnv_cb_ਮੰਜ਼ਿਲ_UWrite_Sub(ਮੰਜ਼ਿਲ_ਦਲੀਲਾਂ,0,err);
         }
         /* else the caller must have set the error code accordingly. */
     }
@@ -404,79 +404,79 @@ UCNV_TO_U_CALLBACK_SUBSTITUTE (
 /*uses uprv_itou to get a unicode escape sequence of the offensive sequence,
  *and uses that as the substitution sequence
  */
-U_CAPI void   U_EXPORT2
-UCNV_TO_U_CALLBACK_ESCAPE (
-                 const void *context,
-                 UConverterToUnicodeArgs *toArgs,
-                 const char* codeUnits,
+U_CAPI ਖਾਲੀ   U_EXPORT2
+UCNV_ਮੰਜ਼ਿਲ_U_CALLBACK_ESCAPE (
+                 ਅਚਲ ਖਾਲੀ *context,
+                 UConverter_ਮੰਜ਼ਿਲ_Unicode_ਦਲੀਲਾਂ *ਮੰਜ਼ਿਲ_ਦਲੀਲਾਂ,
+                 ਅਚਲ ਅੱਖਰ* ਕੋਡ_Units,
                  int32_t length,
                  UConverterCallbackReason reason,
-                 UErrorCode * err)
+                 UError_ਕੋਡ * err)
 {
-    char16_t uniValueString[VALUE_STRING_LENGTH];
-    int32_t valueStringLength = 0;
+    char16_t uni_ਮੁੱਲ_String[ਮੁੱਲ_STRING_ਲੰਮਾਈ];
+    int32_t ਮੁੱਲ_String_ਲੰਮਾਈ = 0;
     int32_t i = 0;
 
-    if (reason > UCNV_IRREGULAR)
+    ਜੇ (reason > UCNV_IRREGULAR)
     {
-        return;
+        ਵਾਪਸ;
     }
 
-    if(context==nullptr)
+    ਜੇ(context==ਖਾਲੀ_ਸੂਚਕ)
     {    
-        while (i < length)
+        ਜਦੋਂ (i < length)
         {
-            uniValueString[valueStringLength++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT; /* adding % */
-            uniValueString[valueStringLength++] = (char16_t) UNICODE_X_CODEPOINT;    /* adding X */
-            valueStringLength += uprv_itou (uniValueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint8_t) codeUnits[i++], 16, 2);
+            uni_ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT; /* adding % */
+            uni_ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_X_CODEPOINT;    /* adding X */
+            ਮੁੱਲ_String_ਲੰਮਾਈ += uprv_itou (uni_ਮੁੱਲ_String + ਮੁੱਲ_String_ਲੰਮਾਈ, ਮੁੱਲ_STRING_ਲੰਮਾਈ - ਮੁੱਲ_String_ਲੰਮਾਈ, (uint8_t) ਕੋਡ_Units[i++], 16, 2);
         }
     }
-    else
+    ਨਹੀਂਤਾਂ
     {
-        switch(*((char*)context))
+        ਚੋਣ(*((ਅੱਖਰ*)context))
         {
-        case UCNV_PRV_ESCAPE_XML_DEC:
-            while (i < length)
+        ਹਾਲਤ UCNV_PRV_ESCAPE_XML_DEC:
+            ਜਦੋਂ (i < length)
             {
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
-                valueStringLength += uprv_itou (uniValueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint8_t)codeUnits[i++], 10, 0);
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
+                uni_ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
+                uni_ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
+                ਮੁੱਲ_String_ਲੰਮਾਈ += uprv_itou (uni_ਮੁੱਲ_String + ਮੁੱਲ_String_ਲੰਮਾਈ, ਮੁੱਲ_STRING_ਲੰਮਾਈ - ਮੁੱਲ_String_ਲੰਮਾਈ, (uint8_t)ਕੋਡ_Units[i++], 10, 0);
+                uni_ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
             }
-            break;
+            ਰੋਕੋ;
 
-        case UCNV_PRV_ESCAPE_XML_HEX:
-            while (i < length)
+        ਹਾਲਤ UCNV_PRV_ESCAPE_XML_HEX:
+            ਜਦੋਂ (i < length)
             {
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_X_LOW_CODEPOINT; /* adding x */
-                valueStringLength += uprv_itou (uniValueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint8_t)codeUnits[i++], 16, 0);
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
+                uni_ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
+                uni_ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
+                uni_ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_X_ਨੀਵਾਂ_CODEPOINT; /* adding x */
+                ਮੁੱਲ_String_ਲੰਮਾਈ += uprv_itou (uni_ਮੁੱਲ_String + ਮੁੱਲ_String_ਲੰਮਾਈ, ਮੁੱਲ_STRING_ਲੰਮਾਈ - ਮੁੱਲ_String_ਲੰਮਾਈ, (uint8_t)ਕੋਡ_Units[i++], 16, 0);
+                uni_ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
             }
-            break;
-        case UCNV_PRV_ESCAPE_C:
-            while (i < length)
+            ਰੋਕੋ;
+        ਹਾਲਤ UCNV_PRV_ESCAPE_C:
+            ਜਦੋਂ (i < length)
             {
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_X_LOW_CODEPOINT; /* adding x */
-                valueStringLength += uprv_itou (uniValueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint8_t)codeUnits[i++], 16, 2);
+                uni_ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
+                uni_ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_X_ਨੀਵਾਂ_CODEPOINT; /* adding x */
+                ਮੁੱਲ_String_ਲੰਮਾਈ += uprv_itou (uni_ਮੁੱਲ_String + ਮੁੱਲ_String_ਲੰਮਾਈ, ਮੁੱਲ_STRING_ਲੰਮਾਈ - ਮੁੱਲ_String_ਲੰਮਾਈ, (uint8_t)ਕੋਡ_Units[i++], 16, 2);
             }
-            break;
-        default:
-            while (i < length)
+            ਰੋਕੋ;
+        ਮੂਲ:
+            ਜਦੋਂ (i < length)
             {
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT; /* adding % */
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_X_CODEPOINT;    /* adding X */
-                uprv_itou (uniValueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint8_t) codeUnits[i++], 16, 2);
-                valueStringLength += 2;
+                uni_ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT; /* adding % */
+                uni_ਮੁੱਲ_String[ਮੁੱਲ_String_ਲੰਮਾਈ++] = (char16_t) UNICODE_X_CODEPOINT;    /* adding X */
+                uprv_itou (uni_ਮੁੱਲ_String + ਮੁੱਲ_String_ਲੰਮਾਈ, ਮੁੱਲ_STRING_ਲੰਮਾਈ - ਮੁੱਲ_String_ਲੰਮਾਈ, (uint8_t) ਕੋਡ_Units[i++], 16, 2);
+                ਮੁੱਲ_String_ਲੰਮਾਈ += 2;
             }
         }
     }
     /* reset the error */
     *err = U_ZERO_ERROR;
 
-    ucnv_cbToUWriteUChars(toArgs, uniValueString, valueStringLength, 0, err);
+    ucnv_cb_ਮੰਜ਼ਿਲ_UWrite_UChars(ਮੰਜ਼ਿਲ_ਦਲੀਲਾਂ, uni_ਮੁੱਲ_String, ਮੁੱਲ_String_ਲੰਮਾਈ, 0, err);
 }
 
-#endif
+#ਜੇ_ਅੰਤ

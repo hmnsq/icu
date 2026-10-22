@@ -11,28 +11,28 @@
 ********************************************************************************
 */
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#ਜੇ U_PLATFORM_ਵਰਤਦਾ_ONLY_WIN32_API
 
-#include "wintz.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "wintz.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "charstr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cstring.h"
 
-#include "unicode/ures.h"
-#include "unicode/unistr.h"
-#include "uresimp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ures.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/unistr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uresimp.h"
 
-#ifndef WIN32_LEAN_AND_MEAN
-#   define WIN32_LEAN_AND_MEAN
-#endif
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ WIN32_LEAN_AND_ਔਸਤ
+#   define WIN32_LEAN_AND_ਔਸਤ
+#ਜੇ_ਅੰਤ
 #   define VC_EXTRALEAN
 #   define NOUSER
 #   define NOSERVICE
 #   define NOIME
 #   define NOMCX
-#include <windows.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <windows.h>
 
 U_NAMESPACE_BEGIN
 
@@ -40,17 +40,17 @@ U_NAMESPACE_BEGIN
 
 // This is the location of the time zones in the registry on Vista+ systems.
 // See: https://docs.microsoft.com/windows/win32/api/timezoneapi/ns-timezoneapi-dynamic_time_zone_information
-#define WINDOWS_TIMEZONES_REG_KEY_PATH L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Time Zones"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ WINDOWS_TIMEZONES_REG_ਕੁੰਜੀ_ਰਸਤਾ L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Time Zones"
 
 // Max length for a registry key is 255. +1 for null.
 // See: https://docs.microsoft.com/windows/win32/sysinfo/registry-element-size-limits
-#define WINDOWS_MAX_REG_KEY_LENGTH 256
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ WINDOWS_MAX_REG_ਕੁੰਜੀ_ਲੰਮਾਈ 256
 
-#if U_PLATFORM_HAS_WINUWP_API == 0
+#ਜੇ U_PLATFORM_HAS_WINUWP_API == 0
 
 // This is the layout of the TZI binary value in the registry.
 // See: https://docs.microsoft.com/windows/win32/api/timezoneapi/ns-timezoneapi-time_zone_information
-typedef struct _REG_TZI_FORMAT {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ _REG_TZI_FORMAT {
     LONG Bias;
     LONG StandardBias;
     LONG DaylightBias;
@@ -58,7 +58,7 @@ typedef struct _REG_TZI_FORMAT {
     SYSTEMTIME DaylightDate;
 } REG_TZI_FORMAT;
 
-#endif // U_PLATFORM_HAS_WINUWP_API
+#ਜੇ_ਅੰਤ // U_PLATFORM_HAS_WINUWP_API
 
 /**
 * This is main Windows time zone detection function.
@@ -84,17 +84,17 @@ typedef struct _REG_TZI_FORMAT {
 * 
 * Once we have the current Windows time zone, then we can then map it to an ICU time zone ID (~ Olsen ID).
 */
-U_CAPI const char* U_EXPORT2
-uprv_detectWindowsTimeZone()
+U_CAPI ਅਚਲ ਅੱਖਰ* U_EXPORT2
+uprv_detect_Windows_ਸਮਾਂ_Zone()
 {
     // We first try to obtain the time zone directly by using the TimeZoneKeyName field of the DYNAMIC_TIME_ZONE_INFORMATION struct.
-    DYNAMIC_TIME_ZONE_INFORMATION dynamicTZI;
-    uprv_memset(&dynamicTZI, 0, sizeof(dynamicTZI));
-    SYSTEMTIME systemTimeAllZero;
-    uprv_memset(&systemTimeAllZero, 0, sizeof(systemTimeAllZero));
+    DYNAMIC_ਸਮਾਂ_ZONE_INFORMATION dynamicTZI;
+    uprv_memset(&dynamicTZI, 0, ਆਕਾਰ(dynamicTZI));
+    SYSTEMTIME system_ਸਮਾਂ_All_Zero;
+    uprv_memset(&system_ਸਮਾਂ_All_Zero, 0, ਆਕਾਰ(system_ਸਮਾਂ_All_Zero));
 
-    if (GetDynamicTimeZoneInformation(&dynamicTZI) == TIME_ZONE_ID_INVALID) {
-        return nullptr;
+    ਜੇ (Get_Dynamic_ਸਮਾਂ_Zone_Information(&dynamicTZI) == ਸਮਾਂ_ZONE_ID_INVALID) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
     // If the DST setting has been turned off in the Control Panel, then return "Etc/GMT<offset>".
@@ -111,19 +111,19 @@ uprv_detectWindowsTimeZone()
     //   THEN
     //     DST setting is "Disabled".
     //
-    if (dynamicTZI.DynamicDaylightTimeDisabled != 0 &&
-        uprv_memcmp(&dynamicTZI.StandardDate, &dynamicTZI.DaylightDate, sizeof(dynamicTZI.StandardDate)) == 0 &&
-        ((dynamicTZI.TimeZoneKeyName[0] != L'\0' && uprv_memcmp(&dynamicTZI.StandardDate, &systemTimeAllZero, sizeof(systemTimeAllZero)) == 0) ||
-         (dynamicTZI.TimeZoneKeyName[0] == L'\0' && uprv_memcmp(&dynamicTZI.StandardDate, &systemTimeAllZero, sizeof(systemTimeAllZero)) != 0)))
+    ਜੇ (dynamicTZI.Dynamic_Daylight_ਸਮਾਂ_Disabled != 0 &&
+        uprv_memcmp(&dynamicTZI.StandardDate, &dynamicTZI.DaylightDate, ਆਕਾਰ(dynamicTZI.StandardDate)) == 0 &&
+        ((dynamicTZI.ਸਮਾਂ_Zone_ਕੁੰਜੀ_Name[0] != L'\0' && uprv_memcmp(&dynamicTZI.StandardDate, &system_ਸਮਾਂ_All_Zero, ਆਕਾਰ(system_ਸਮਾਂ_All_Zero)) == 0) ||
+         (dynamicTZI.ਸਮਾਂ_Zone_ਕੁੰਜੀ_Name[0] == L'\0' && uprv_memcmp(&dynamicTZI.StandardDate, &system_ਸਮਾਂ_All_Zero, ਆਕਾਰ(system_ਸਮਾਂ_All_Zero)) != 0)))
     {
-        LONG utcOffsetMins = dynamicTZI.Bias;
-        if (utcOffsetMins == 0) {
-            return uprv_strdup("Etc/UTC");
+        LONG utc_ਵਿੱਥ_Mins = dynamicTZI.Bias;
+        ਜੇ (utc_ਵਿੱਥ_Mins == 0) {
+            ਵਾਪਸ uprv_strdup("Etc/UTC");
         }
 
         // No way to support when DST is turned off and the offset in minutes is not a multiple of 60.
-        if (utcOffsetMins % 60 == 0) {
-            char gmtOffsetTz[11] = {}; // "Etc/GMT+dd" is 11-char long with a terminal null.
+        ਜੇ (utc_ਵਿੱਥ_Mins % 60 == 0) {
+            ਅੱਖਰ gmt_ਵਿੱਥ_Tz[11] = {}; // "Etc/GMT+dd" is 11-char long with a terminal null.
             // Important note on the sign convention for zones:
             //
             // From https://en.wikipedia.org/wiki/Tz_database#Area
@@ -143,9 +143,9 @@ uprv_detectWindowsTimeZone()
             //
             // For example, a time zone that is 3 hours ahead of UTC (UTC+03:00) would have a Bias value of -180, and the
             // corresponding time zone ID would be "Etc/GMT-3". (So there is no need to negate utcOffsetMins below.)
-            int ret = snprintf(gmtOffsetTz, sizeof(gmtOffsetTz), "Etc/GMT%+ld", utcOffsetMins / 60);
-            if (ret > 0 && ret < UPRV_LENGTHOF(gmtOffsetTz)) {
-                return uprv_strdup(gmtOffsetTz);
+            ਪੂਰਨ ret = snprintf(gmt_ਵਿੱਥ_Tz, ਆਕਾਰ(gmt_ਵਿੱਥ_Tz), "Etc/GMT%+ld", utc_ਵਿੱਥ_Mins / 60);
+            ਜੇ (ret > 0 && ret < UPRV_LENGTHOF(gmt_ਵਿੱਥ_Tz)) {
+                ਵਾਪਸ uprv_strdup(gmt_ਵਿੱਥ_Tz);
             }
         }
     }
@@ -165,35 +165,35 @@ uprv_detectWindowsTimeZone()
     // One other note is that this fallback method doesn't work for the UWP version, as we can't use the registry APIs.
 
     // windowsTimeZoneName will point at timezoneSubKeyName if we had to fallback to using the registry, and we found a match.
-    WCHAR timezoneSubKeyName[WINDOWS_MAX_REG_KEY_LENGTH];
-    WCHAR *windowsTimeZoneName = dynamicTZI.TimeZoneKeyName;
+    WCHAR timezone_Sub_ਕੁੰਜੀ_Name[WINDOWS_MAX_REG_ਕੁੰਜੀ_ਲੰਮਾਈ];
+    WCHAR *windows_ਸਮਾਂ_Zone_Name = dynamicTZI.ਸਮਾਂ_Zone_ਕੁੰਜੀ_Name;
 
-    if (dynamicTZI.TimeZoneKeyName[0] == 0) {
+    ਜੇ (dynamicTZI.ਸਮਾਂ_Zone_ਕੁੰਜੀ_Name[0] == 0) {
 
 // We can't use the registry APIs in the UWP version.
-#if U_PLATFORM_HAS_WINUWP_API == 1
-        (void)timezoneSubKeyName; // suppress unused variable warnings.
-        return nullptr;
-#else
+#ਜੇ U_PLATFORM_HAS_WINUWP_API == 1
+        (ਖਾਲੀ)timezone_Sub_ਕੁੰਜੀ_Name; // suppress unused variable warnings.
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
+#ਨਹੀਂਤਾਂ
         // Open the path to the time zones in the Windows registry.
         LONG ret;
-        HKEY hKeyAllTimeZones = nullptr;
-        ret = RegOpenKeyExW(HKEY_LOCAL_MACHINE, WINDOWS_TIMEZONES_REG_KEY_PATH, 0, KEY_READ,
-                            reinterpret_cast<PHKEY>(&hKeyAllTimeZones));
+        HKEY h_ਕੁੰਜੀ_All_ਸਮਾਂ_Zones = ਖਾਲੀ_ਸੂਚਕ;
+        ret = Reg_Open_ਕੁੰਜੀ_Ex_W(HKEY_LOCAL_MACHINE, WINDOWS_TIMEZONES_REG_ਕੁੰਜੀ_ਰਸਤਾ, 0, ਕੁੰਜੀ_READ,
+                            reinterpret_cast<PHKEY>(&h_ਕੁੰਜੀ_All_ਸਮਾਂ_Zones));
         
-        if (ret != ERROR_SUCCESS) {
+        ਜੇ (ret != ERROR_SUCCESS) {
             // If we can't open the key, then we can't do much, so fail.
-            return nullptr;
+            ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
         }
 
         // Read the number of subkeys under the time zone registry path.
-        DWORD numTimeZoneSubKeys;
-        ret = RegQueryInfoKeyW(hKeyAllTimeZones, nullptr, nullptr, nullptr, &numTimeZoneSubKeys,
-                               nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+        DWORD ਅੰਕ_ਸਮਾਂ_Zone_Sub_ਕੁੰਜੀਆਂ;
+        ret = Reg_Query_Info_ਕੁੰਜੀ_W(h_ਕੁੰਜੀ_All_ਸਮਾਂ_Zones, ਖਾਲੀ_ਸੂਚਕ, ਖਾਲੀ_ਸੂਚਕ, ਖਾਲੀ_ਸੂਚਕ, &ਅੰਕ_ਸਮਾਂ_Zone_Sub_ਕੁੰਜੀਆਂ,
+                               ਖਾਲੀ_ਸੂਚਕ, ਖਾਲੀ_ਸੂਚਕ, ਖਾਲੀ_ਸੂਚਕ, ਖਾਲੀ_ਸੂਚਕ, ਖਾਲੀ_ਸੂਚਕ, ਖਾਲੀ_ਸੂਚਕ, ਖਾਲੀ_ਸੂਚਕ);
         
-        if (ret != ERROR_SUCCESS) {
-            RegCloseKey(hKeyAllTimeZones);
-            return nullptr;
+        ਜੇ (ret != ERROR_SUCCESS) {
+            Reg_Close_ਕੁੰਜੀ(h_ਕੁੰਜੀ_All_ਸਮਾਂ_Zones);
+            ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
         }
 
         // Examine each of the subkeys to try and find a match for the localized standard name ("Std").
@@ -201,113 +201,113 @@ uprv_detectWindowsTimeZone()
         // Note: The name of the time zone subkey itself is not localized, but the "Std" name is localized. This means
         // that we could fail to find a match if the RDP client and RDP server are using different languages, but unfortunately
         // there isn't much we can do about it.
-        HKEY hKeyTimeZoneSubKey = nullptr;
-        ULONG registryValueType;
-        WCHAR registryStandardName[WINDOWS_MAX_REG_KEY_LENGTH];
+        HKEY h_ਕੁੰਜੀ_ਸਮਾਂ_Zone_Sub_ਕੁੰਜੀ = ਖਾਲੀ_ਸੂਚਕ;
+        ULONG registry_ਮੁੱਲ_Type;
+        WCHAR registryStandardName[WINDOWS_MAX_REG_ਕੁੰਜੀ_ਲੰਮਾਈ];
 
-        for (DWORD i = 0; i < numTimeZoneSubKeys; i++) {
+        ਲਈ (DWORD i = 0; i < ਅੰਕ_ਸਮਾਂ_Zone_Sub_ਕੁੰਜੀਆਂ; i++) {
             // Note: RegEnumKeyExW wants the size of the buffer in characters.
-            DWORD size = UPRV_LENGTHOF(timezoneSubKeyName);
-            ret = RegEnumKeyExW(hKeyAllTimeZones, i, timezoneSubKeyName, &size, nullptr, nullptr, nullptr, nullptr);
+            DWORD size = UPRV_LENGTHOF(timezone_Sub_ਕੁੰਜੀ_Name);
+            ret = Reg_Enum_ਕੁੰਜੀ_Ex_W(h_ਕੁੰਜੀ_All_ਸਮਾਂ_Zones, i, timezone_Sub_ਕੁੰਜੀ_Name, &size, ਖਾਲੀ_ਸੂਚਕ, ਖਾਲੀ_ਸੂਚਕ, ਖਾਲੀ_ਸੂਚਕ, ਖਾਲੀ_ਸੂਚਕ);
 
-            if (ret != ERROR_SUCCESS) {
-                RegCloseKey(hKeyAllTimeZones);
-                return nullptr;
+            ਜੇ (ret != ERROR_SUCCESS) {
+                Reg_Close_ਕੁੰਜੀ(h_ਕੁੰਜੀ_All_ਸਮਾਂ_Zones);
+                ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
             }
             
-            ret = RegOpenKeyExW(hKeyAllTimeZones, timezoneSubKeyName, 0, KEY_READ,
-                                reinterpret_cast<PHKEY>(&hKeyTimeZoneSubKey));
+            ret = Reg_Open_ਕੁੰਜੀ_Ex_W(h_ਕੁੰਜੀ_All_ਸਮਾਂ_Zones, timezone_Sub_ਕੁੰਜੀ_Name, 0, ਕੁੰਜੀ_READ,
+                                reinterpret_cast<PHKEY>(&h_ਕੁੰਜੀ_ਸਮਾਂ_Zone_Sub_ਕੁੰਜੀ));
             
-            if (ret != ERROR_SUCCESS) {
-                RegCloseKey(hKeyAllTimeZones);
-                return nullptr;
+            ਜੇ (ret != ERROR_SUCCESS) {
+                Reg_Close_ਕੁੰਜੀ(h_ਕੁੰਜੀ_All_ਸਮਾਂ_Zones);
+                ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
             }
 
             // Note: RegQueryValueExW wants the size of the buffer in bytes.
-            size = sizeof(registryStandardName);
-            ret = RegQueryValueExW(hKeyTimeZoneSubKey, L"Std", nullptr, &registryValueType,
+            size = ਆਕਾਰ(registryStandardName);
+            ret = Reg_Query_ਮੁੱਲ_Ex_W(h_ਕੁੰਜੀ_ਸਮਾਂ_Zone_Sub_ਕੁੰਜੀ, L"Std", ਖਾਲੀ_ਸੂਚਕ, &registry_ਮੁੱਲ_Type,
                                    reinterpret_cast<LPBYTE>(registryStandardName), &size);
             
-            if (ret != ERROR_SUCCESS || registryValueType != REG_SZ) {
-                RegCloseKey(hKeyTimeZoneSubKey);
-                RegCloseKey(hKeyAllTimeZones);
-                return nullptr;
+            ਜੇ (ret != ERROR_SUCCESS || registry_ਮੁੱਲ_Type != REG_SZ) {
+                Reg_Close_ਕੁੰਜੀ(h_ਕੁੰਜੀ_ਸਮਾਂ_Zone_Sub_ਕੁੰਜੀ);
+                Reg_Close_ਕੁੰਜੀ(h_ਕੁੰਜੀ_All_ਸਮਾਂ_Zones);
+                ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
             }
 
             // Note: wcscmp does an ordinal (byte) comparison.
-            if (wcscmp(reinterpret_cast<WCHAR *>(registryStandardName), dynamicTZI.StandardName) == 0) {
+            ਜੇ (wcscmp(reinterpret_cast<WCHAR *>(registryStandardName), dynamicTZI.StandardName) == 0) {
                 // Since we are comparing the *localized* time zone name, it's possible that some languages might use
                 // the same string for more than one time zone. Thus we need to examine the TZI data in the registry to
                 // compare the GMT offset (the bias), and the DST transition dates, to ensure it's the same time zone
                 // as the currently reported one.
-                REG_TZI_FORMAT registryTziValue;
-                uprv_memset(&registryTziValue, 0, sizeof(registryTziValue));
+                REG_TZI_FORMAT registry_Tzi_ਮੁੱਲ;
+                uprv_memset(&registry_Tzi_ਮੁੱਲ, 0, ਆਕਾਰ(registry_Tzi_ਮੁੱਲ));
 
                 // Note: RegQueryValueExW wants the size of the buffer in bytes.
-                DWORD timezoneTziValueSize = sizeof(registryTziValue);
-                ret = RegQueryValueExW(hKeyTimeZoneSubKey, L"TZI", nullptr, &registryValueType,
-                                     reinterpret_cast<LPBYTE>(&registryTziValue), &timezoneTziValueSize);
+                DWORD timezone_Tzi_ਮੁੱਲ_ਮਾਪ = ਆਕਾਰ(registry_Tzi_ਮੁੱਲ);
+                ret = Reg_Query_ਮੁੱਲ_Ex_W(h_ਕੁੰਜੀ_ਸਮਾਂ_Zone_Sub_ਕੁੰਜੀ, L"TZI", ਖਾਲੀ_ਸੂਚਕ, &registry_ਮੁੱਲ_Type,
+                                     reinterpret_cast<LPBYTE>(&registry_Tzi_ਮੁੱਲ), &timezone_Tzi_ਮੁੱਲ_ਮਾਪ);
 
-                if (ret == ERROR_SUCCESS) {
-                    if ((dynamicTZI.Bias == registryTziValue.Bias) &&
-                        (memcmp((const void *)&dynamicTZI.StandardDate, (const void *)&registryTziValue.StandardDate, sizeof(SYSTEMTIME)) == 0) &&
-                        (memcmp((const void *)&dynamicTZI.DaylightDate, (const void *)&registryTziValue.DaylightDate, sizeof(SYSTEMTIME)) == 0))
+                ਜੇ (ret == ERROR_SUCCESS) {
+                    ਜੇ ((dynamicTZI.Bias == registry_Tzi_ਮੁੱਲ.Bias) &&
+                        (memcmp((ਅਚਲ ਖਾਲੀ *)&dynamicTZI.StandardDate, (ਅਚਲ ਖਾਲੀ *)&registry_Tzi_ਮੁੱਲ.StandardDate, ਆਕਾਰ(SYSTEMTIME)) == 0) &&
+                        (memcmp((ਅਚਲ ਖਾਲੀ *)&dynamicTZI.DaylightDate, (ਅਚਲ ਖਾਲੀ *)&registry_Tzi_ਮੁੱਲ.DaylightDate, ਆਕਾਰ(SYSTEMTIME)) == 0))
                     {
                         // We found a matching time zone.
-                        windowsTimeZoneName = timezoneSubKeyName;
-                        break;
+                        windows_ਸਮਾਂ_Zone_Name = timezone_Sub_ਕੁੰਜੀ_Name;
+                        ਰੋਕੋ;
                     }
                 }
             }
-            RegCloseKey(hKeyTimeZoneSubKey);
-            hKeyTimeZoneSubKey = nullptr;
+            Reg_Close_ਕੁੰਜੀ(h_ਕੁੰਜੀ_ਸਮਾਂ_Zone_Sub_ਕੁੰਜੀ);
+            h_ਕੁੰਜੀ_ਸਮਾਂ_Zone_Sub_ਕੁੰਜੀ = ਖਾਲੀ_ਸੂਚਕ;
         }
 
-        if (hKeyTimeZoneSubKey != nullptr) {
-            RegCloseKey(hKeyTimeZoneSubKey);
+        ਜੇ (h_ਕੁੰਜੀ_ਸਮਾਂ_Zone_Sub_ਕੁੰਜੀ != ਖਾਲੀ_ਸੂਚਕ) {
+            Reg_Close_ਕੁੰਜੀ(h_ਕੁੰਜੀ_ਸਮਾਂ_Zone_Sub_ਕੁੰਜੀ);
         }
-        if (hKeyAllTimeZones != nullptr) {
-            RegCloseKey(hKeyAllTimeZones);
+        ਜੇ (h_ਕੁੰਜੀ_All_ਸਮਾਂ_Zones != ਖਾਲੀ_ਸੂਚਕ) {
+            Reg_Close_ਕੁੰਜੀ(h_ਕੁੰਜੀ_All_ਸਮਾਂ_Zones);
         }
-#endif // U_PLATFORM_HAS_WINUWP_API
+#ਜੇ_ਅੰਤ // U_PLATFORM_HAS_WINUWP_API
     }
 
     CharString winTZ;
-    UErrorCode status = U_ZERO_ERROR;
-    winTZ.appendInvariantChars(UnicodeString(true, windowsTimeZoneName, -1), status);
+    UError_ਕੋਡ ਸਥਿਤੀ = U_ZERO_ERROR;
+    winTZ.appendInvariantChars(UnicodeString(ਸੱਚ, windows_ਸਮਾਂ_Zone_Name, -1), ਸਥਿਤੀ);
 
     // Map Windows Timezone name (non-localized) to ICU timezone ID (~ Olson timezone id).
-    StackUResourceBundle winTZBundle;
-    ures_openDirectFillIn(winTZBundle.getAlias(), nullptr, "windowsZones", &status);
-    ures_getByKey(winTZBundle.getAlias(), "mapTimezones", winTZBundle.getAlias(), &status);
-    ures_getByKey(winTZBundle.getAlias(), winTZ.data(), winTZBundle.getAlias(), &status);
+    ਢੇਰ_UResource_Bundle winTZBundle;
+    ures_open_ਸਿੱਧਾ_Fill_ਵਿੱਚ(winTZBundle.getAlias(), ਖਾਲੀ_ਸੂਚਕ, "windowsZones", &ਸਥਿਤੀ);
+    ures_get_By_ਕੁੰਜੀ(winTZBundle.getAlias(), "mapTimezones", winTZBundle.getAlias(), &ਸਥਿਤੀ);
+    ures_get_By_ਕੁੰਜੀ(winTZBundle.getAlias(), winTZ.ਅੰਕੜੇ(), winTZBundle.getAlias(), &ਸਥਿਤੀ);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
     
     // Note: Since the ISO 3166 country/region codes are all invariant ASCII chars, we can
     // directly downcast from wchar_t to do the conversion.
     // We could call the A version of the GetGeoInfo API, but that would be slightly slower than calling the W API,
     // as the A version of the API will end up calling MultiByteToWideChar anyways internally.
-    wchar_t regionCodeW[3] = {};
-    char regionCode[3] = {}; // 2 letter ISO 3166 country/region code made entirely of invariant chars.
-    int geoId = GetUserGeoID(GEOCLASS_NATION);
-    int regionCodeLen = GetGeoInfoW(geoId, GEO_ISO2, regionCodeW, UPRV_LENGTHOF(regionCodeW), 0);
+    wchar_t region_ਕੋਡ_W[3] = {};
+    ਅੱਖਰ region_ਕੋਡ[3] = {}; // 2 letter ISO 3166 country/region code made entirely of invariant chars.
+    ਪੂਰਨ geoId = GetUserGeoID(GEOCLASS_NATION);
+    ਪੂਰਨ region_ਕੋਡ_Len = GetGeoInfoW(geoId, GEO_ISO2, region_ਕੋਡ_W, UPRV_LENGTHOF(region_ਕੋਡ_W), 0);
 
-    const char16_t *icuTZ16 = nullptr;
+    ਅਚਲ char16_t *icuTZ16 = ਖਾਲੀ_ਸੂਚਕ;
     int32_t tzListLen = 0;
 
-    if (regionCodeLen != 0) {
-        for (int i = 0; i < UPRV_LENGTHOF(regionCodeW); i++) {
-            regionCode[i] = static_cast<char>(regionCodeW[i]);
+    ਜੇ (region_ਕੋਡ_Len != 0) {
+        ਲਈ (ਪੂਰਨ i = 0; i < UPRV_LENGTHOF(region_ਕੋਡ_W); i++) {
+            region_ਕੋਡ[i] = static_cast<ਅੱਖਰ>(region_ਕੋਡ_W[i]);
         }
-        icuTZ16 = ures_getStringByKey(winTZBundle.getAlias(), regionCode, &tzListLen, &status);
+        icuTZ16 = ures_get_String_By_ਕੁੰਜੀ(winTZBundle.getAlias(), region_ਕੋਡ, &tzListLen, &ਸਥਿਤੀ);
     }
-    if (regionCodeLen == 0 || U_FAILURE(status)) {
+    ਜੇ (region_ਕੋਡ_Len == 0 || U_FAILURE(ਸਥਿਤੀ)) {
         // fallback to default "001" (world)
-        status = U_ZERO_ERROR;
-        icuTZ16 = ures_getStringByKey(winTZBundle.getAlias(), "001", &tzListLen, &status);
+        ਸਥਿਤੀ = U_ZERO_ERROR;
+        icuTZ16 = ures_get_String_By_ਕੁੰਜੀ(winTZBundle.getAlias(), "001", &tzListLen, &ਸਥਿਤੀ);
     }
 
     // Note: We want the first entry in the string returned by ures_getStringByKey.
@@ -315,8 +315,8 @@ uprv_detectWindowsTimeZone()
     //  Ex: "America/New_York America/Detroit America/Indiana/Petersburg ..."
     // We need to stop at the first space, so we pass tzLen (instead of tzListLen) to appendInvariantChars below.
     int32_t tzLen = 0;
-    if (tzListLen > 0) {
-        while (!(icuTZ16[tzLen] == u'\0' || icuTZ16[tzLen] == u' ')) {
+    ਜੇ (tzListLen > 0) {
+        ਜਦੋਂ (!(icuTZ16[tzLen] == u'\0' || icuTZ16[tzLen] == u' ')) {
             tzLen++;
         }
     }
@@ -324,8 +324,8 @@ uprv_detectWindowsTimeZone()
     // Note: cloneData returns nullptr if the status is a failure, so this
     // will return nullptr if the above look-up fails.
     CharString icuTZStr;
-    return icuTZStr.appendInvariantChars(icuTZ16, tzLen, status).cloneData(status);
+    ਵਾਪਸ icuTZStr.appendInvariantChars(icuTZ16, tzLen, ਸਥਿਤੀ).clone_ਅੰਕੜੇ(ਸਥਿਤੀ);
 }
 
-U_NAMESPACE_END
-#endif /* U_PLATFORM_USES_ONLY_WIN32_API  */
+U_NAMESPACE_ਸਿਰਾ
+#ਜੇ_ਅੰਤ /* U_PLATFORM_USES_ONLY_WIN32_API  */

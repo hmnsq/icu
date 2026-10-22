@@ -19,24 +19,24 @@
 // is in the ICU svn repository at icuhtml/trunk/design/strings/contrib
 // (see ICU ticket 6765, r25517).
 
-#ifndef __STRINGPIECE_H__
-#define __STRINGPIECE_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __STRINGPIECE_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __STRINGPIECE_H__
 
 /**
  * \file 
  * \brief C++ API: StringPiece: Read-only byte string wrapper class.
  */
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
 
-#include <cstddef>
-#include <string_view>
-#include <type_traits>
+#ਅਨ੍ਤਰ੍ਭਾਵ <cstddef>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string_view>
+#ਅਨ੍ਤਰ੍ਭਾਵ <type_traits>
 
-#include "unicode/uobject.h"
-#include "unicode/std_string.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uobject.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/std_string.h"
 
 // Arghh!  I wish C++ literals were "string".
 
@@ -58,55 +58,55 @@ U_NAMESPACE_BEGIN
  *
  * @stable ICU 4.2
  */
-class U_COMMON_API StringPiece : public UMemory {
- private:
-  const char*   ptr_;
-  int32_t       length_;
+class U_COMMON_API StringPiece : ਜਨਤਕ UMemory {
+ ਨਿਜੀ:
+  ਅਚਲ ਅੱਖਰ*   ptr_;
+  int32_t       ਲੰਮਾਈ_2;
 
- public:
+ ਜਨਤਕ:
   /**
    * Default constructor, creates an empty StringPiece.
    * @stable ICU 4.2
    */
-  StringPiece() : ptr_(nullptr), length_(0) { }
+  StringPiece() : ptr_(nullptr), ਲੰਮਾਈ_2(0) { }
 
   /**
    * Constructs from a NUL-terminated const char * pointer.
    * @param str a NUL-terminated const char * pointer
    * @stable ICU 4.2
    */
-  StringPiece(const char* str U_LIFETIME_BOUND);
-#if defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
+  StringPiece(ਅਚਲ ਅੱਖਰ* str U_LIFETIME_BOUND);
+#ਜੇ defined(__cpp_char8_t) || defined(U_ਵਿੱਚ_DOXYGEN)
   /**
    * Constructs from a NUL-terminated const char8_t * pointer.
    * @param str a NUL-terminated const char8_t * pointer
    * @stable ICU 67
    */
-  StringPiece(const char8_t* str U_LIFETIME_BOUND) : StringPiece(reinterpret_cast<const char*>(str)) {}
-#endif
+  StringPiece(ਅਚਲ char8_t* str U_LIFETIME_BOUND) : StringPiece(reinterpret_cast<ਅਚਲ ਅੱਖਰ*>(str)) {}
+#ਜੇ_ਅੰਤ
   /**
    * Constructs an empty StringPiece.
    * Needed for type disambiguation from multiple other overloads.
    * @param p nullptr
    * @stable ICU 67
    */
-  StringPiece(std::nullptr_t p) : ptr_(p), length_(0) {}
+  StringPiece(std::nullptr_t p) : ptr_(p), ਲੰਮਾਈ_2(0) {}
 
   /**
    * Constructs from a std::string.
    * @stable ICU 4.2
    */
-  StringPiece(const std::string& str U_LIFETIME_BOUND)
-    : ptr_(str.data()), length_(static_cast<int32_t>(str.size())) { }
-#if defined(__cpp_lib_char8_t) || defined(U_IN_DOXYGEN)
+  StringPiece(ਅਚਲ std::string& str U_LIFETIME_BOUND)
+    : ptr_(str.ਅੰਕੜੇ()), ਲੰਮਾਈ_2(static_cast<int32_t>(str.ਮਾਪ_2())) { }
+#ਜੇ defined(__cpp_lib_char8_t) || defined(U_ਵਿੱਚ_DOXYGEN)
   /**
    * Constructs from a std::u8string.
    * @stable ICU 67
    */
-  StringPiece(const std::u8string& str U_LIFETIME_BOUND)
-    : ptr_(reinterpret_cast<const char*>(str.data())),
-      length_(static_cast<int32_t>(str.size())) { }
-#endif
+  StringPiece(ਅਚਲ std::u8string& str U_LIFETIME_BOUND)
+    : ptr_(reinterpret_cast<ਅਚਲ ਅੱਖਰ*>(str.ਅੰਕੜੇ())),
+      ਲੰਮਾਈ_2(static_cast<int32_t>(str.ਮਾਪ_2())) { }
+#ਜੇ_ਅੰਤ
 
   /**
    * Constructs from some other implementation of a string piece class, from any
@@ -130,17 +130,17 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param str the other string piece
    * @stable ICU 65
    */
-  template <typename T,
+  ਸਾਂਚਾ <typename T,
             typename = std::enable_if_t<
-                (std::is_same_v<decltype(T().data()), const char*>
-#if defined(__cpp_char8_t)
-                    || std::is_same_v<decltype(T().data()), const char8_t*>
-#endif
+                (std::is_same_v<decltype(T().ਅੰਕੜੇ()), ਅਚਲ ਅੱਖਰ*>
+#ਜੇ defined(__cpp_char8_t)
+                    || std::is_same_v<decltype(T().ਅੰਕੜੇ()), ਅਚਲ char8_t*>
+#ਜੇ_ਅੰਤ
                 ) &&
-                std::is_same_v<decltype(T().size()), size_t>>>
+                std::is_same_v<decltype(T().ਮਾਪ_2()), size_t>>>
   StringPiece(T str U_LIFETIME_BOUND)
-      : ptr_(reinterpret_cast<const char*>(str.data())),
-        length_(static_cast<int32_t>(str.size())) {}
+      : ptr_(reinterpret_cast<ਅਚਲ ਅੱਖਰ*>(str.ਅੰਕੜੇ())),
+        ਲੰਮਾਈ_2(static_cast<int32_t>(str.ਮਾਪ_2())) {}
 
   /**
    * Constructs from a const char * pointer and a specified length.
@@ -148,17 +148,17 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param len the length of the string; must be non-negative
    * @stable ICU 4.2
    */
-  StringPiece(const char* offset U_LIFETIME_BOUND, int32_t len) : ptr_(offset), length_(len) { }
-#if defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
+  StringPiece(ਅਚਲ ਅੱਖਰ* ਵਿੱਥ U_LIFETIME_BOUND, int32_t len) : ptr_(ਵਿੱਥ), ਲੰਮਾਈ_2(len) { }
+#ਜੇ defined(__cpp_char8_t) || defined(U_ਵਿੱਚ_DOXYGEN)
   /**
    * Constructs from a const char8_t * pointer and a specified length.
    * @param str a const char8_t * pointer (need not be terminated)
    * @param len the length of the string; must be non-negative
    * @stable ICU 67
    */
-  StringPiece(const char8_t* str U_LIFETIME_BOUND, int32_t len) :
-      StringPiece(reinterpret_cast<const char*>(str), len) {}
-#endif
+  StringPiece(ਅਚਲ char8_t* str U_LIFETIME_BOUND, int32_t len) :
+      StringPiece(reinterpret_cast<ਅਚਲ ਅੱਖਰ*>(str), len) {}
+#ਜੇ_ਅੰਤ
 
   /**
    * Substring of another StringPiece.
@@ -166,7 +166,7 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param pos start position in x; must be non-negative and <= x.length().
    * @stable ICU 4.2
    */
-  StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos);
+  StringPiece(ਅਚਲ StringPiece& x U_LIFETIME_BOUND, int32_t pos);
   /**
    * Substring of another StringPiece.
    * @param x the other StringPiece
@@ -175,17 +175,17 @@ class U_COMMON_API StringPiece : public UMemory {
    *            must be non-negative and will be pinned to at most x.length() - pos.
    * @stable ICU 4.2
    */
-  StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len);
+  StringPiece(ਅਚਲ StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len);
 
-#ifndef U_HIDE_INTERNAL_API
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ U_HIDE_ਅੰਦਰੂਨੀ_API
   /**
    * Converts to a std::string_view().
    * @internal
    */
-  inline operator std::string_view() const {
-    return {data(), static_cast<std::string_view::size_type>(size())};
+  ਸਤਰਅੰਦਰ ਸੰਚਾਲਕ std::string_view() ਅਚਲ {
+    ਵਾਪਸ {ਅੰਕੜੇ(), static_cast<std::string_view::ਮਾਪ_type>(ਮਾਪ_2())};
   }
-#endif  // U_HIDE_INTERNAL_API
+#ਜੇ_ਅੰਤ  // U_HIDE_INTERNAL_API
 
   /**
    * Returns the string pointer. May be nullptr if it is empty.
@@ -197,31 +197,31 @@ class U_COMMON_API StringPiece : public UMemory {
    * @return the string pointer
    * @stable ICU 4.2
    */
-  const char* data() const { return ptr_; }
+  ਅਚਲ ਅੱਖਰ* ਅੰਕੜੇ() ਅਚਲ { ਵਾਪਸ ptr_; }
   /**
    * Returns the string length. Same as length().
    * @return the string length
    * @stable ICU 4.2
    */
-  int32_t size() const { return length_; }
+  int32_t ਮਾਪ_2() ਅਚਲ { ਵਾਪਸ ਲੰਮਾਈ_2; }
   /**
    * Returns the string length. Same as size().
    * @return the string length
    * @stable ICU 4.2
    */
-  int32_t length() const { return length_; }
+  int32_t ਲੰਮਾਈ() ਅਚਲ { ਵਾਪਸ ਲੰਮਾਈ_2; }
   /**
    * Returns whether the string is empty.
    * @return true if the string is empty
    * @stable ICU 4.2
    */
-  UBool empty() const { return length_ == 0; }
+  UBool ਖਾਲੀ_ਥਾਵਾਂ() ਅਚਲ { ਵਾਪਸ ਲੰਮਾਈ_2 == 0; }
 
   /**
    * Sets to an empty string.
    * @stable ICU 4.2
    */
-  void clear() { ptr_ = nullptr; length_ = 0; }
+  ਖਾਲੀ clear() { ptr_ = nullptr; ਲੰਮਾਈ_2 = 0; }
 
   /**
    * Reset the stringpiece to refer to new data.
@@ -229,24 +229,24 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param len the length of the new data
    * @stable ICU 4.8
    */
-  void set(const char* xdata, int32_t len) { ptr_ = xdata; length_ = len; }
+  ਖਾਲੀ ਸੈੱਟ(ਅਚਲ ਅੱਖਰ* xdata, int32_t len) { ptr_ = xdata; ਲੰਮਾਈ_2 = len; }
 
   /**
    * Reset the stringpiece to refer to new data.
    * @param str a pointer to a NUL-terminated string. 
    * @stable ICU 4.8
    */
-  void set(const char* str);
+  ਖਾਲੀ ਸੈੱਟ(ਅਚਲ ਅੱਖਰ* str);
 
-#if defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
+#ਜੇ defined(__cpp_char8_t) || defined(U_ਵਿੱਚ_DOXYGEN)
   /**
    * Resets the stringpiece to refer to new data.
    * @param xdata pointer the new string data. Need not be NUL-terminated.
    * @param len the length of the new data
    * @stable ICU 67
    */
-  inline void set(const char8_t* xdata, int32_t len) {
-      set(reinterpret_cast<const char*>(xdata), len);
+  ਸਤਰਅੰਦਰ ਖਾਲੀ ਸੈੱਟ(ਅਚਲ char8_t* xdata, int32_t len) {
+      ਸੈੱਟ(reinterpret_cast<ਅਚਲ ਅੱਖਰ*>(xdata), len);
   }
 
   /**
@@ -254,23 +254,23 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param str a pointer to a NUL-terminated string.
    * @stable ICU 67
    */
-  inline void set(const char8_t* str) {
-      set(reinterpret_cast<const char*>(str));
+  ਸਤਰਅੰਦਰ ਖਾਲੀ ਸੈੱਟ(ਅਚਲ char8_t* str) {
+      ਸੈੱਟ(reinterpret_cast<ਅਚਲ ਅੱਖਰ*>(str));
   }
-#endif
+#ਜੇ_ਅੰਤ
 
   /**
    * Removes the first n string units.
    * @param n prefix length, must be non-negative and <=length()
    * @stable ICU 4.2
    */
-  void remove_prefix(int32_t n) {
-    if (n >= 0) {
-      if (n > length_) {
-        n = length_;
+  ਖਾਲੀ remove_ਅਗੇਤਰ(int32_t n) {
+    ਜੇ (n >= 0) {
+      ਜੇ (n > ਲੰਮਾਈ_2) {
+        n = ਲੰਮਾਈ_2;
       }
       ptr_ += n;
-      length_ -= n;
+      ਲੰਮਾਈ_2 -= n;
     }
   }
 
@@ -279,12 +279,12 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param n suffix length, must be non-negative and <=length()
    * @stable ICU 4.2
    */
-  void remove_suffix(int32_t n) {
-    if (n >= 0) {
-      if (n <= length_) {
-        length_ -= n;
-      } else {
-        length_ = 0;
+  ਖਾਲੀ remove_suffix(int32_t n) {
+    ਜੇ (n >= 0) {
+      ਜੇ (n <= ਲੰਮਾਈ_2) {
+        ਲੰਮਾਈ_2 -= n;
+      } ਨਹੀਂਤਾਂ {
+        ਲੰਮਾਈ_2 = 0;
       }
     }
   }
@@ -296,7 +296,7 @@ class U_COMMON_API StringPiece : public UMemory {
    * @return The offset of needle in haystack, or -1 if not found.
    * @stable ICU 67
    */
-  int32_t find(StringPiece needle, int32_t offset);
+  int32_t ਲੱਭੋ(StringPiece needle, int32_t ਵਿੱਥ);
 
   /**
    * Compares this StringPiece with the other StringPiece, with semantics
@@ -311,7 +311,7 @@ class U_COMMON_API StringPiece : public UMemory {
    * Maximum integer, used as a default value for substring methods.
    * @stable ICU 4.2
    */
-  static const int32_t npos; // = 0x7fffffff;
+  ਸਥਿਰ ਅਚਲ int32_t npos; // = 0x7fffffff;
 
   /**
    * Returns a substring of this StringPiece.
@@ -321,8 +321,8 @@ class U_COMMON_API StringPiece : public UMemory {
    * @return the substring StringPiece
    * @stable ICU 4.2
    */
-  StringPiece substr(int32_t pos, int32_t len = npos) const {
-    return StringPiece(*this, pos, len);
+  StringPiece substr(int32_t pos, int32_t len = npos) ਅਚਲ {
+    ਵਾਪਸ StringPiece(*this, pos, len);
   }
 };
 
@@ -334,7 +334,7 @@ class U_COMMON_API StringPiece : public UMemory {
  * @stable ICU 4.8
  */
 U_COMMON_API UBool U_EXPORT2 
-operator==(const StringPiece& x, const StringPiece& y);
+ਸੰਚਾਲਕ==(ਅਚਲ StringPiece& x, ਅਚਲ StringPiece& y);
 
 /**
  * Global operator != for StringPiece
@@ -343,12 +343,12 @@ operator==(const StringPiece& x, const StringPiece& y);
  * @return true if the string data is not equal
  * @stable ICU 4.8
  */
-inline bool operator!=(const StringPiece& x, const StringPiece& y) {
-  return !(x == y);
+ਸਤਰਅੰਦਰ bool ਸੰਚਾਲਕ!=(ਅਚਲ StringPiece& x, ਅਚਲ StringPiece& y) {
+  ਵਾਪਸ !(x == y);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ਜੇ_ਅੰਤ /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __STRINGPIECE_H__
+#ਜੇ_ਅੰਤ  // __STRINGPIECE_H__

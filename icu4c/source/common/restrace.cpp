@@ -1,133 +1,133 @@
 // © 2019 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if U_ENABLE_TRACING
+#ਜੇ U_ENABLE_TRACING
 
-#include "restrace.h"
-#include "charstr.h"
-#include "cstring.h"
-#include "utracimp.h"
-#include "uresimp.h"
-#include "uassert.h"
-#include "util.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "restrace.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "charstr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "utracimp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uresimp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "util.h"
 
 U_NAMESPACE_BEGIN
 
-ResourceTracer::~ResourceTracer() = default;
+ResourceTracer::~ResourceTracer() = ਮੂਲ;
 
-void ResourceTracer::trace(const char* resType) const {
-    U_ASSERT(fResB || fParent);
-    UTRACE_ENTRY(UTRACE_UDATA_RESOURCE);
-    UErrorCode status = U_ZERO_ERROR;
+ਖਾਲੀ ResourceTracer::trace(ਅਚਲ ਅੱਖਰ* resType) ਅਚਲ {
+    U_ASSERT(fResB || f_ਮਾਪਾ);
+    UTRACE_ਇੰਦਰਾਜ(UTRACE_UDATA_RESOURCE);
+    UError_ਕੋਡ ਸਥਿਤੀ = U_ZERO_ERROR;
 
-    CharString filePath;
-    getFilePath(filePath, status);
+    CharString file_ਰਸਤਾ;
+    get_File_ਰਸਤਾ(file_ਰਸਤਾ, ਸਥਿਤੀ);
 
-    CharString resPath;
-    getResPath(resPath, status);
+    CharString res_ਰਸਤਾ;
+    get_Res_ਰਸਤਾ(res_ਰਸਤਾ, ਸਥਿਤੀ);
 
     // The longest type ("intvector") is 9 chars
-    const char kSpaces[] = "         ";
+    ਅਚਲ ਅੱਖਰ kSpaces[] = "         ";
     CharString format;
-    format.append(kSpaces, sizeof(kSpaces) - 1 - uprv_strlen(resType), status);
-    format.append("(%s) %s @ %s", status);
+    format.append(kSpaces, ਆਕਾਰ(kSpaces) - 1 - uprv_strlen(resType), ਸਥਿਤੀ);
+    format.append("(%s) %s @ %s", ਸਥਿਤੀ);
 
     UTRACE_DATA3(UTRACE_VERBOSE,
-        format.data(),
+        format.ਅੰਕੜੇ(),
         resType,
-        filePath.data(),
-        resPath.data());
-    UTRACE_EXIT_STATUS(status);
+        file_ਰਸਤਾ.ਅੰਕੜੇ(),
+        res_ਰਸਤਾ.ਅੰਕੜੇ());
+    UTRACE_EXIT_ਸਥਿਤੀ(ਸਥਿਤੀ);
 }
 
-void ResourceTracer::traceOpen() const {
+ਖਾਲੀ ResourceTracer::traceOpen() ਅਚਲ {
     U_ASSERT(fResB);
-    UTRACE_ENTRY(UTRACE_UDATA_BUNDLE);
-    UErrorCode status = U_ZERO_ERROR;
+    UTRACE_ਇੰਦਰਾਜ(UTRACE_UDATA_BUNDLE);
+    UError_ਕੋਡ ਸਥਿਤੀ = U_ZERO_ERROR;
 
-    CharString filePath;
-    UTRACE_DATA1(UTRACE_VERBOSE, "%s", getFilePath(filePath, status).data());
-    UTRACE_EXIT_STATUS(status);
+    CharString file_ਰਸਤਾ;
+    UTRACE_DATA1(UTRACE_VERBOSE, "%s", get_File_ਰਸਤਾ(file_ਰਸਤਾ, ਸਥਿਤੀ).ਅੰਕੜੇ());
+    UTRACE_EXIT_ਸਥਿਤੀ(ਸਥਿਤੀ);
 }
 
-CharString& ResourceTracer::getFilePath(CharString& output, UErrorCode& status) const {
-    if (fResB) {
+CharString& ResourceTracer::get_File_ਰਸਤਾ(CharString& output, UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ {
+    ਜੇ (fResB) {
         // Note: if you get a segfault around here, check that ResourceTable and
         // ResourceArray instances outlive ResourceValue instances referring to
         // their contents:
-        output.append(fResB->fData->fPath, status);
-        output.append('/', status);
-        output.append(fResB->fData->fName, status);
-        output.append(".res", status);
-    } else {
-        fParent->getFilePath(output, status);
+        output.append(fResB->f_ਅੰਕੜੇ->f_ਰਸਤਾ, ਸਥਿਤੀ);
+        output.append('/', ਸਥਿਤੀ);
+        output.append(fResB->f_ਅੰਕੜੇ->fName, ਸਥਿਤੀ);
+        output.append(".res", ਸਥਿਤੀ);
+    } ਨਹੀਂਤਾਂ {
+        f_ਮਾਪਾ->get_File_ਰਸਤਾ(output, ਸਥਿਤੀ);
     }
-    return output;
+    ਵਾਪਸ output;
 }
 
-CharString& ResourceTracer::getResPath(CharString& output, UErrorCode& status) const {
-    if (fResB) {
-        output.append('/', status);
-        output.append(fResB->fResPath, status);
+CharString& ResourceTracer::get_Res_ਰਸਤਾ(CharString& output, UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ {
+    ਜੇ (fResB) {
+        output.append('/', ਸਥਿਤੀ);
+        output.append(fResB->f_Res_ਰਸਤਾ, ਸਥਿਤੀ);
         // removing the trailing /
         U_ASSERT(output[output.length()-1] == '/');
         output.truncate(output.length()-1);
-    } else {
-        fParent->getResPath(output, status);
+    } ਨਹੀਂਤਾਂ {
+        f_ਮਾਪਾ->get_Res_ਰਸਤਾ(output, ਸਥਿਤੀ);
     }
-    if (fKey) {
-        output.append('/', status);
-        output.append(fKey, status);
+    ਜੇ (f_ਕੁੰਜੀ) {
+        output.append('/', ਸਥਿਤੀ);
+        output.append(f_ਕੁੰਜੀ, ਸਥਿਤੀ);
     }
-    if (fIndex != -1) {
-        output.append('[', status);
-        UnicodeString indexString;
-        ICU_Utility::appendNumber(indexString, fIndex);
-        output.appendInvariantChars(indexString, status);
-        output.append(']', status);
+    ਜੇ (f_ਸੂਚਕਾਂਕ != -1) {
+        output.append('[', ਸਥਿਤੀ);
+        UnicodeString ਸੂਚਕਾਂਕ_String;
+        ICU_Utility::append_ਸੰਖਿਆ(ਸੂਚਕਾਂਕ_String, f_ਸੂਚਕਾਂਕ);
+        output.appendInvariantChars(ਸੂਚਕਾਂਕ_String, ਸਥਿਤੀ);
+        output.append(']', ਸਥਿਤੀ);
     }
-    return output;
+    ਵਾਪਸ output;
 }
 
-void FileTracer::traceOpen(const char* path, const char* type, const char* name) {
-    if (uprv_strcmp(type, "res") == 0) {
-        traceOpenResFile(path, name);
-    } else {
-        traceOpenDataFile(path, type, name);
+ਖਾਲੀ FileTracer::traceOpen(ਅਚਲ ਅੱਖਰ* ਰਸਤਾ, ਅਚਲ ਅੱਖਰ* type, ਅਚਲ ਅੱਖਰ* name) {
+    ਜੇ (uprv_strcmp(type, "res") == 0) {
+        traceOpenResFile(ਰਸਤਾ, name);
+    } ਨਹੀਂਤਾਂ {
+        trace_Open_ਅੰਕੜੇ_File(ਰਸਤਾ, type, name);
     }
 }
 
-void FileTracer::traceOpenDataFile(const char* path, const char* type, const char* name) {
-    UTRACE_ENTRY(UTRACE_UDATA_DATA_FILE);
-    UErrorCode status = U_ZERO_ERROR;
+ਖਾਲੀ FileTracer::trace_Open_ਅੰਕੜੇ_File(ਅਚਲ ਅੱਖਰ* ਰਸਤਾ, ਅਚਲ ਅੱਖਰ* type, ਅਚਲ ਅੱਖਰ* name) {
+    UTRACE_ਇੰਦਰਾਜ(UTRACE_UDATA_ਅੰਕੜੇ_FILE);
+    UError_ਕੋਡ ਸਥਿਤੀ = U_ZERO_ERROR;
 
-    CharString filePath;
-    filePath.append(path, status);
-    filePath.append('/', status);
-    filePath.append(name, status);
-    filePath.append('.', status);
-    filePath.append(type, status);
+    CharString file_ਰਸਤਾ;
+    file_ਰਸਤਾ.append(ਰਸਤਾ, ਸਥਿਤੀ);
+    file_ਰਸਤਾ.append('/', ਸਥਿਤੀ);
+    file_ਰਸਤਾ.append(name, ਸਥਿਤੀ);
+    file_ਰਸਤਾ.append('.', ਸਥਿਤੀ);
+    file_ਰਸਤਾ.append(type, ਸਥਿਤੀ);
 
-    UTRACE_DATA1(UTRACE_VERBOSE, "%s", filePath.data());
-    UTRACE_EXIT_STATUS(status);
+    UTRACE_DATA1(UTRACE_VERBOSE, "%s", file_ਰਸਤਾ.ਅੰਕੜੇ());
+    UTRACE_EXIT_ਸਥਿਤੀ(ਸਥਿਤੀ);
 }
 
-void FileTracer::traceOpenResFile(const char* path, const char* name) {
-    UTRACE_ENTRY(UTRACE_UDATA_RES_FILE);
-    UErrorCode status = U_ZERO_ERROR;
+ਖਾਲੀ FileTracer::traceOpenResFile(ਅਚਲ ਅੱਖਰ* ਰਸਤਾ, ਅਚਲ ਅੱਖਰ* name) {
+    UTRACE_ਇੰਦਰਾਜ(UTRACE_UDATA_RES_FILE);
+    UError_ਕੋਡ ਸਥਿਤੀ = U_ZERO_ERROR;
 
-    CharString filePath;
-    filePath.append(path, status);
-    filePath.append('/', status);
-    filePath.append(name, status);
-    filePath.append(".res", status);
+    CharString file_ਰਸਤਾ;
+    file_ਰਸਤਾ.append(ਰਸਤਾ, ਸਥਿਤੀ);
+    file_ਰਸਤਾ.append('/', ਸਥਿਤੀ);
+    file_ਰਸਤਾ.append(name, ਸਥਿਤੀ);
+    file_ਰਸਤਾ.append(".res", ਸਥਿਤੀ);
 
-    UTRACE_DATA1(UTRACE_VERBOSE, "%s", filePath.data());
-    UTRACE_EXIT_STATUS(status);
+    UTRACE_DATA1(UTRACE_VERBOSE, "%s", file_ਰਸਤਾ.ਅੰਕੜੇ());
+    UTRACE_EXIT_ਸਥਿਤੀ(ਸਥਿਤੀ);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif // U_ENABLE_TRACING
+#ਜੇ_ਅੰਤ // U_ENABLE_TRACING

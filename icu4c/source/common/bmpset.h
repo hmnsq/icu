@@ -16,11 +16,11 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __BMPSET_H__
-#define __BMPSET_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __BMPSET_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __BMPSET_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uniset.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uniset.h"
 
 U_NAMESPACE_BEGIN
 
@@ -35,45 +35,45 @@ U_NAMESPACE_BEGIN
  * Supplementary characters: Binary search over
  * the supplementary part of the parent set's inversion list.
  */
-class BMPSet : public UMemory {
-public:
-    BMPSet(const int32_t *parentList, int32_t parentListLength);
-    BMPSet(const BMPSet &otherBMPSet, const int32_t *newParentList, int32_t newParentListLength);
-    virtual ~BMPSet();
+class BMPSet : ਜਨਤਕ UMemory {
+ਜਨਤਕ:
+    BMPSet(ਅਚਲ int32_t *ਮਾਪਾ_List, int32_t ਮਾਪਾ_List_ਲੰਮਾਈ);
+    BMPSet(ਅਚਲ BMPSet &otherBMPSet, ਅਚਲ int32_t *new_ਮਾਪਾ_List, int32_t new_ਮਾਪਾ_List_ਲੰਮਾਈ);
+    ਆਭਾਸੀ ~BMPSet();
 
-    virtual UBool contains(UChar32 c) const;
+    ਆਭਾਸੀ UBool ਸ਼ਾਮਲ_ਹੈ(UChar32 c) ਅਚਲ;
 
     /*
      * Span the initial substring for which each character c has spanCondition==contains(c).
      * It must be s<limit and spanCondition==0 or 1.
      * @return The string pointer which limits the span.
      */
-    const char16_t *span(const char16_t *s, const char16_t *limit, USetSpanCondition spanCondition) const;
+    ਅਚਲ char16_t *ਵਿਸਤਾਰ(ਅਚਲ char16_t *s, ਅਚਲ char16_t *ਹੱਦਬੰਦੀ, USet_ਵਿਸਤਾਰ_Condition ਵਿਸਤਾਰ_Condition) ਅਚਲ;
 
     /*
      * Span the trailing substring for which each character c has spanCondition==contains(c).
      * It must be s<limit and spanCondition==0 or 1.
      * @return The string pointer which starts the span.
      */
-    const char16_t *spanBack(const char16_t *s, const char16_t *limit, USetSpanCondition spanCondition) const;
+    ਅਚਲ char16_t *ਵਿਸਤਾਰ_ਪਿੱਠ(ਅਚਲ char16_t *s, ਅਚਲ char16_t *ਹੱਦਬੰਦੀ, USet_ਵਿਸਤਾਰ_Condition ਵਿਸਤਾਰ_Condition) ਅਚਲ;
 
     /*
      * Span the initial substring for which each character c has spanCondition==contains(c).
      * It must be length>0 and spanCondition==0 or 1.
      * @return The string pointer which limits the span.
      */
-    const uint8_t *spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    ਅਚਲ uint8_t *ਵਿਸਤਾਰ_UTF8(ਅਚਲ uint8_t *s, int32_t ਲੰਮਾਈ, USet_ਵਿਸਤਾਰ_Condition ਵਿਸਤਾਰ_Condition) ਅਚਲ;
 
     /*
      * Span the trailing substring for which each character c has spanCondition==contains(c).
      * It must be length>0 and spanCondition==0 or 1.
      * @return The start of the span.
      */
-    int32_t spanBackUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t ਵਿਸਤਾਰ_ਪਿੱਠ_UTF8(ਅਚਲ uint8_t *s, int32_t ਲੰਮਾਈ, USet_ਵਿਸਤਾਰ_Condition ਵਿਸਤਾਰ_Condition) ਅਚਲ;
 
-private:
-    void initBits();
-    void overrideIllegal();
+ਨਿਜੀ:
+    ਖਾਲੀ init_ਬਿੱਟ();
+    ਖਾਲੀ overrideIllegal();
 
     /**
      * Same as UnicodeSet::findCodePoint(UChar32 c) const except that the
@@ -92,17 +92,17 @@ private:
      * @return the smallest integer i in the range lo..hi,
      *         inclusive, such that c < list[i]
      */
-    int32_t findCodePoint(UChar32 c, int32_t lo, int32_t hi) const;
+    int32_t ਲੱਭੋ_ਕੋਡ_ਬਿੰਦੂ(UChar32 c, int32_t lo, int32_t hi) ਅਚਲ;
 
-    inline UBool containsSlow(UChar32 c, int32_t lo, int32_t hi) const;
+    ਸਤਰਅੰਦਰ UBool ਸ਼ਾਮਲ_ਹੈ_Slow(UChar32 c, int32_t lo, int32_t hi) ਅਚਲ;
 
     /*
      * One byte 0 or 1 per Latin-1 character.
      */
-    UBool latin1Contains[0x100];
+    UBool latin1_ਸ਼ਾਮਲ_ਹੈ[0x100];
 
     /* true if contains(U+FFFD). */
-    UBool containsFFFD;
+    UBool ਸ਼ਾਮਲ_ਹੈ_FFFD;
 
     /*
      * One bit per code point from U+0000..U+07FF.
@@ -134,7 +134,7 @@ private:
      * Bits for 0..7FF (non-shortest forms) and D800..DFFF are set to
      * the result of contains(FFFD) for faster validity checking at runtime.
      */
-    uint32_t bmpBlockBits[64];
+    uint32_t bmp_ਖੰਡ_ਬਿੱਟ[64];
 
     /*
      * Inversion list indexes for restricted binary searches in
@@ -151,14 +151,14 @@ private:
      * for mixed BMP blocks and for supplementary code points.
      * The list is terminated with list[listLength-1]=0x110000.
      */
-    const int32_t *list;
-    int32_t listLength;
+    ਅਚਲ int32_t *list;
+    int32_t list_ਲੰਮਾਈ;
 };
 
-inline UBool BMPSet::containsSlow(UChar32 c, int32_t lo, int32_t hi) const {
-    return findCodePoint(c, lo, hi) & 1;
+ਸਤਰਅੰਦਰ UBool BMPSet::ਸ਼ਾਮਲ_ਹੈ_Slow(UChar32 c, int32_t lo, int32_t hi) ਅਚਲ {
+    ਵਾਪਸ ਲੱਭੋ_ਕੋਡ_ਬਿੰਦੂ(c, lo, hi) & 1;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif
+#ਜੇ_ਅੰਤ

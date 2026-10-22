@@ -15,9 +15,9 @@
  ******************************************************************************
  */
 
-#ifndef USCRIPT_H
-#define USCRIPT_H
-#include "unicode/utypes.h"
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ USCRIPT_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ USCRIPT_H
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
 /**
  * \file
@@ -51,7 +51,7 @@
  *
  * @stable ICU 2.2
  */
-typedef enum UScriptCode {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਗਿਣਤੀ UScript_ਕੋਡ {
     /*
      * Note: UScriptCode constants and their ISO script code comments
      * are parsed by preparseucd.py.
@@ -60,7 +60,7 @@ typedef enum UScriptCode {
      */
 
       /** @stable ICU 2.2 */
-      USCRIPT_INVALID_CODE = -1,
+      USCRIPT_INVALID_ਕੋਡ = -1,
       /** @stable ICU 2.2 */
       USCRIPT_COMMON       =  0,  /* Zyyy */
       /** @stable ICU 2.2 */
@@ -165,7 +165,7 @@ typedef enum UScriptCode {
       /** @stable ICU 2.6 */
       USCRIPT_LIMBU        = 48,  /* Limb */
       /** @stable ICU 2.6 */
-      USCRIPT_LINEAR_B     = 49,  /* Linb */
+      USCRIPT_ਰੇਖਿਕ_B     = 49,  /* Linb */
       /** @stable ICU 2.6 */
       USCRIPT_OSMANYA      = 50,  /* Osma */
       /** @stable ICU 2.6 */
@@ -238,7 +238,7 @@ typedef enum UScriptCode {
       /** @stable ICU 3.6 */
       USCRIPT_LEPCHA                        = 82, /* Lepc */
       /** @stable ICU 3.6 */
-      USCRIPT_LINEAR_A                      = 83, /* Lina */
+      USCRIPT_ਰੇਖਿਕ_A                      = 83, /* Lina */
       /** @stable ICU 4.6 */
       USCRIPT_MANDAIC                       = 84, /* Mand */
       /** @stable ICU 3.6 */
@@ -353,10 +353,10 @@ typedef enum UScriptCode {
       USCRIPT_BASSA_VAH                     = 134,/* Bass */
       /** @stable ICU 54 */
       USCRIPT_DUPLOYAN                      = 135,/* Dupl */
-#ifndef U_HIDE_DEPRECATED_API
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ U_HIDE_DEPRECATED_API
       /** @deprecated ICU 54 Typo, use USCRIPT_DUPLOYAN */
       USCRIPT_DUPLOYAN_SHORTAND             = USCRIPT_DUPLOYAN,
-#endif  /* U_HIDE_DEPRECATED_API */
+#ਜੇ_ਅੰਤ  /* U_HIDE_DEPRECATED_API */
       /** @stable ICU 4.6 */
       USCRIPT_ELBASAN                       = 136,/* Elba */
       /** @stable ICU 4.6 */
@@ -449,7 +449,7 @@ typedef enum UScriptCode {
       /** @stable ICU 60 */
       USCRIPT_SOYOMBO                       = 176,/* Soyo */
       /** @stable ICU 60 */
-      USCRIPT_ZANABAZAR_SQUARE              = 177,/* Zanb */
+      USCRIPT_ZANABAZAR_ਵਰਗਫਲ              = 177,/* Zanb */
 
       /** @stable ICU 62 */
       USCRIPT_DOGRA                         = 178,/* Dogr */
@@ -534,16 +534,16 @@ typedef enum UScriptCode {
       /** @stable ICU 79 */
       USCRIPT_SEAL                          = 214, /* Seal */
 
-#ifndef U_HIDE_DEPRECATED_API
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ U_HIDE_DEPRECATED_API
     /**
      * One more than the highest normal UScriptCode value.
      * The highest value is available via u_getIntPropertyMaxValue(UCHAR_SCRIPT).
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    USCRIPT_CODE_LIMIT    = 215
-#endif  // U_HIDE_DEPRECATED_API
-} UScriptCode;
+    USCRIPT_ਕੋਡ_ਹੱਦਬੰਦੀ    = 215
+#ਜੇ_ਅੰਤ  // U_HIDE_DEPRECATED_API
+} UScript_ਕੋਡ;
 
 /**
  * Gets the script codes associated with the given locale or ISO 15924 abbreviation or name.
@@ -565,7 +565,7 @@ typedef enum UScriptCode {
  * @stable ICU 2.4
  */
 U_CAPI int32_t  U_EXPORT2
-uscript_getCode(const char* nameOrAbbrOrLocale,UScriptCode* fillIn,int32_t capacity,UErrorCode *err);
+uscript_get_ਕੋਡ(ਅਚਲ ਅੱਖਰ* nameOrAbbrOrLocale,UScript_ਕੋਡ* fill_ਵਿੱਚ,int32_t ਸਮਰੱਥਾ,UError_ਕੋਡ *err);
 
 /**
  * Returns the long Unicode script name, if there is one.
@@ -577,8 +577,8 @@ uscript_getCode(const char* nameOrAbbrOrLocale,UScriptCode* fillIn,int32_t capac
  * or NULL if scriptCode is invalid
  * @stable ICU 2.4
  */
-U_CAPI const char*  U_EXPORT2
-uscript_getName(UScriptCode scriptCode);
+U_CAPI ਅਚਲ ਅੱਖਰ*  U_EXPORT2
+uscript_getName(UScript_ਕੋਡ script_ਕੋਡ);
 
 /**
  * Returns the 4-letter ISO 15924 script code,
@@ -589,8 +589,8 @@ uscript_getName(UScriptCode scriptCode);
  * @return short script name (4-letter code), or NULL if scriptCode is invalid
  * @stable ICU 2.4
  */
-U_CAPI const char*  U_EXPORT2
-uscript_getShortName(UScriptCode scriptCode);
+U_CAPI ਅਚਲ ਅੱਖਰ*  U_EXPORT2
+uscript_getShortName(UScript_ਕੋਡ script_ਕੋਡ);
 
 /**
  * Gets the script code associated with the given codepoint.
@@ -600,8 +600,8 @@ uscript_getShortName(UScriptCode scriptCode);
  * @return The UScriptCode, or 0 if codepoint is invalid
  * @stable ICU 2.4
  */
-U_CAPI UScriptCode  U_EXPORT2
-uscript_getScript(UChar32 codepoint, UErrorCode *err);
+U_CAPI UScript_ਕੋਡ  U_EXPORT2
+uscript_getScript(UChar32 codepoint, UError_ਕੋਡ *err);
 
 /**
  * Do the Script_Extensions of code point c contain script sc?
@@ -616,7 +616,7 @@ uscript_getScript(UChar32 codepoint, UErrorCode *err);
  * @stable ICU 49
  */
 U_CAPI UBool U_EXPORT2
-uscript_hasScript(UChar32 c, UScriptCode sc);
+uscript_hasScript(UChar32 c, UScript_ਕੋਡ sc);
 
 /**
  * Writes code point c's Script_Extensions as a list of UScriptCode values
@@ -649,8 +649,8 @@ uscript_hasScript(UChar32 c, UScriptCode sc);
  */
 U_CAPI int32_t U_EXPORT2
 uscript_getScriptExtensions(UChar32 c,
-                            UScriptCode *scripts, int32_t capacity,
-                            UErrorCode *errorCode);
+                            UScript_ਕੋਡ *scripts, int32_t ਸਮਰੱਥਾ,
+                            UError_ਕੋਡ *error_ਕੋਡ);
 
 /**
  * Script usage constants.
@@ -659,7 +659,7 @@ uscript_getScriptExtensions(UChar32 c,
  *
  * @stable ICU 51
  */
-typedef enum UScriptUsage {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਗਿਣਤੀ UScriptUsage {
     /** Not encoded in Unicode. @stable ICU 51 */
     USCRIPT_USAGE_NOT_ENCODED,
     /** Unknown script usage. @stable ICU 51 */
@@ -687,13 +687,13 @@ typedef enum UScriptUsage {
  * @stable ICU 51
  */
 U_CAPI int32_t U_EXPORT2
-uscript_getSampleString(UScriptCode script, UChar *dest, int32_t capacity, UErrorCode *pErrorCode);
+uscript_getSampleString(UScript_ਕੋਡ script, UChar *dest, int32_t ਸਮਰੱਥਾ, UError_ਕੋਡ *p_Error_ਕੋਡ);
 
-#if U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 class UnicodeString;
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
 /**
  * Returns the script sample character string.
@@ -705,9 +705,9 @@ U_NAMESPACE_END
  * @stable ICU 51
  */
 U_COMMON_API icu::UnicodeString U_EXPORT2
-uscript_getSampleUnicodeString(UScriptCode script);
+uscript_getSampleUnicodeString(UScript_ਕੋਡ script);
 
-#endif
+#ਜੇ_ਅੰਤ
 
 /**
  * Returns the script usage according to UAX #31 Unicode Identifier and Pattern Syntax.
@@ -719,7 +719,7 @@ uscript_getSampleUnicodeString(UScriptCode script);
  * @stable ICU 51
  */
 U_CAPI UScriptUsage U_EXPORT2
-uscript_getUsage(UScriptCode script);
+uscript_getUsage(UScript_ਕੋਡ script);
 
 /**
  * Returns true if the script is written right-to-left.
@@ -730,7 +730,7 @@ uscript_getUsage(UScriptCode script);
  * @stable ICU 51
  */
 U_CAPI UBool U_EXPORT2
-uscript_isRightToLeft(UScriptCode script);
+uscript_is_ਸੱਜਾ_ਮੰਜ਼ਿਲ_ਖੱਬਾ(UScript_ਕੋਡ script);
 
 /**
  * Returns true if the script allows line breaks between letters (excluding hyphenation).
@@ -742,7 +742,7 @@ uscript_isRightToLeft(UScriptCode script);
  * @stable ICU 51
  */
 U_CAPI UBool U_EXPORT2
-uscript_breaksBetweenLetters(UScriptCode script);
+uscript_breaksBetweenLetters(UScript_ਕੋਡ script);
 
 /**
  * Returns true if in modern (or most recent) usage of the script case distinctions are customary.
@@ -753,6 +753,6 @@ uscript_breaksBetweenLetters(UScriptCode script);
  * @stable ICU 51
  */
 U_CAPI UBool U_EXPORT2
-uscript_isCased(UScriptCode script);
+uscript_isCased(UScript_ਕੋਡ script);
 
-#endif
+#ਜੇ_ਅੰਤ

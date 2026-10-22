@@ -16,14 +16,14 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UNORMIMP_H__
-#define __UNORMIMP_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __UNORMIMP_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __UNORMIMP_H__
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#ਜੇ !UCONFIG_NO_NORMALIZATION
 
-#include "udataswp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "udataswp.h"
 
 /*
  * The 2001-2010 implementation of the normalization code loads its data from
@@ -32,7 +32,7 @@
  */
 
 /* norm32 value constants */
-enum {
+ਗਿਣਤੀ {
     /* quick check flags 0..3 set mean "no" for their forms */
     _NORM_QC_NFC=0x11,          /* no|maybe */
     _NORM_QC_NFKC=0x22,         /* no|maybe */
@@ -45,103 +45,103 @@ enum {
     _NORM_QC_MAYBE=0x10,
     _NORM_QC_ANY_MAYBE=0x30,
 
-    _NORM_QC_MASK=0x3f,
+    NORM_QC_ਨਕਾਬ=0x3f,
 
     _NORM_COMBINES_FWD=0x40,
-    _NORM_COMBINES_BACK=0x80,
+    NORM_COMBINES_ਪਿੱਠ=0x80,
     _NORM_COMBINES_ANY=0xc0,
 
-    _NORM_CC_SHIFT=8,           /* UnicodeData.txt combining class in bits 15..8 */
-    _NORM_CC_MASK=0xff00,
+    NORM_CC_ਖਿਸਕਾਓ=8,           /* UnicodeData.txt combining class in bits 15..8 */
+    NORM_CC_ਨਕਾਬ=0xff00,
 
-    _NORM_EXTRA_SHIFT=16,               /* 16 bits for the index to UChars and other extra data */
-    _NORM_EXTRA_INDEX_TOP=0xfc00,       /* start of surrogate specials after shift */
+    NORM_EXTRA_ਖਿਸਕਾਓ=16,               /* 16 bits for the index to UChars and other extra data */
+    NORM_EXTRA_ਸੂਚਕਾਂਕ_ਸਿਖਰ=0xfc00,       /* start of surrogate specials after shift */
 
-    _NORM_EXTRA_SURROGATE_MASK=0x3ff,
-    _NORM_EXTRA_SURROGATE_TOP=0x3f0,    /* hangul etc. */
+    NORM_EXTRA_SURROGATE_ਨਕਾਬ=0x3ff,
+    NORM_EXTRA_SURROGATE_ਸਿਖਰ=0x3f0,    /* hangul etc. */
 
-    _NORM_EXTRA_HANGUL=_NORM_EXTRA_SURROGATE_TOP,
+    _NORM_EXTRA_HANGUL=NORM_EXTRA_SURROGATE_ਸਿਖਰ,
     _NORM_EXTRA_JAMO_L,
     _NORM_EXTRA_JAMO_V,
     _NORM_EXTRA_JAMO_T
 };
 
 /* norm32 value constants using >16 bits */
-#define _NORM_MIN_SPECIAL       0xfc000000
-#define _NORM_SURROGATES_TOP    0xfff00000
-#define _NORM_MIN_HANGUL        0xfff00000
-#define _NORM_MIN_JAMO_V        0xfff20000
-#define _NORM_JAMO_V_TOP        0xfff30000
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ _NORM_MIN_SPECIAL       0xfc000000
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NORM_SURROGATES_ਸਿਖਰ    0xfff00000
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ _NORM_MIN_HANGUL        0xfff00000
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ _NORM_MIN_JAMO_V        0xfff20000
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NORM_JAMO_V_ਸਿਖਰ        0xfff30000
 
 /* value constants for auxTrie */
-enum {
-    _NORM_AUX_COMP_EX_SHIFT=10,
-    _NORM_AUX_UNSAFE_SHIFT=11,
-    _NORM_AUX_NFC_SKIPPABLE_F_SHIFT=12
+ਗਿਣਤੀ {
+    NORM_AUX_COMP_EX_ਖਿਸਕਾਓ=10,
+    NORM_AUX_UNSAFE_ਖਿਸਕਾਓ=11,
+    NORM_AUX_NFC_SKIPPABLE_F_ਖਿਸਕਾਓ=12
 };
 
-#define _NORM_AUX_MAX_FNC           ((int32_t)1<<_NORM_AUX_COMP_EX_SHIFT)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ _NORM_AUX_MAX_FNC           ((int32_t)1<<NORM_AUX_COMP_EX_ਖਿਸਕਾਓ)
 
-#define _NORM_AUX_FNC_MASK          (uint32_t)(_NORM_AUX_MAX_FNC-1)
-#define _NORM_AUX_COMP_EX_MASK      ((uint32_t)1<<_NORM_AUX_COMP_EX_SHIFT)
-#define _NORM_AUX_UNSAFE_MASK       ((uint32_t)1<<_NORM_AUX_UNSAFE_SHIFT)
-#define _NORM_AUX_NFC_SKIP_F_MASK   ((uint32_t)1<<_NORM_AUX_NFC_SKIPPABLE_F_SHIFT)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NORM_AUX_FNC_ਨਕਾਬ          (uint32_t)(_NORM_AUX_MAX_FNC-1)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NORM_AUX_COMP_EX_ਨਕਾਬ      ((uint32_t)1<<NORM_AUX_COMP_EX_ਖਿਸਕਾਓ)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NORM_AUX_UNSAFE_ਨਕਾਬ       ((uint32_t)1<<NORM_AUX_UNSAFE_ਖਿਸਕਾਓ)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NORM_AUX_NFC_SKIP_F_ਨਕਾਬ   ((uint32_t)1<<NORM_AUX_NFC_SKIPPABLE_F_ਖਿਸਕਾਓ)
 
 /* canonStartSets[0..31] contains indexes for what is in the array */
-enum {
-    _NORM_SET_INDEX_CANON_SETS_LENGTH,      /* number of uint16_t in canonical starter sets */
-    _NORM_SET_INDEX_CANON_BMP_TABLE_LENGTH, /* number of uint16_t in the BMP search table (contains pairs) */
-    _NORM_SET_INDEX_CANON_SUPP_TABLE_LENGTH,/* number of uint16_t in the supplementary search table (contains triplets) */
+ਗਿਣਤੀ {
+    NORM_ਸੈੱਟ_ਸੂਚਕਾਂਕ_CANON_SETS_ਲੰਮਾਈ,      /* number of uint16_t in canonical starter sets */
+    NORM_ਸੈੱਟ_ਸੂਚਕਾਂਕ_CANON_BMP_ਸਾਰਣੀ_ਲੰਮਾਈ, /* number of uint16_t in the BMP search table (contains pairs) */
+    NORM_ਸੈੱਟ_ਸੂਚਕਾਂਕ_CANON_SUPP_ਸਾਰਣੀ_ਲੰਮਾਈ,/* number of uint16_t in the supplementary search table (contains triplets) */
 
     /* from formatVersion 2.3: */
-    _NORM_SET_INDEX_NX_CJK_COMPAT_OFFSET,   /* uint16_t offset from canonStartSets[0] to the
+    NORM_ਸੈੱਟ_ਸੂਚਕਾਂਕ_NX_CJK_COMPAT_ਵਿੱਥ,   /* uint16_t offset from canonStartSets[0] to the
                                                exclusion set for CJK compatibility characters */
-    _NORM_SET_INDEX_NX_UNICODE32_OFFSET,    /* uint16_t offset from canonStartSets[0] to the
+    NORM_ਸੈੱਟ_ਸੂਚਕਾਂਕ_NX_UNICODE32_ਵਿੱਥ,    /* uint16_t offset from canonStartSets[0] to the
                                                exclusion set for Unicode 3.2 characters */
-    _NORM_SET_INDEX_NX_RESERVED_OFFSET,     /* uint16_t offset from canonStartSets[0] to the
+    NORM_ਸੈੱਟ_ਸੂਚਕਾਂਕ_NX_RESERVED_ਵਿੱਥ,     /* uint16_t offset from canonStartSets[0] to the
                                                end of the previous exclusion set */
 
-    _NORM_SET_INDEX_TOP=32                  /* changing this requires a new formatVersion */
+    NORM_ਸੈੱਟ_ਸੂਚਕਾਂਕ_ਸਿਖਰ=32                  /* changing this requires a new formatVersion */
 };
 
 /* more constants for canonical starter sets */
 
 /* 14 bit indexes to canonical USerializedSets */
-#define _NORM_MAX_CANON_SETS            0x4000
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ _NORM_MAX_CANON_SETS            0x4000
 
 /* single-code point BMP sets are encoded directly in the search table except if result=0x4000..0x7fff */
-#define _NORM_CANON_SET_BMP_MASK        0xc000
-#define _NORM_CANON_SET_BMP_IS_INDEX    0x4000
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NORM_CANON_ਸੈੱਟ_BMP_ਨਕਾਬ        0xc000
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NORM_CANON_ਸੈੱਟ_BMP_IS_ਸੂਚਕਾਂਕ    0x4000
 
 /* indexes[] value names */
-enum {
-    _NORM_INDEX_TRIE_SIZE,              /* number of bytes in normalization trie */
-    _NORM_INDEX_UCHAR_COUNT,            /* number of UChars in extra data */
+ਗਿਣਤੀ {
+    NORM_ਸੂਚਕਾਂਕ_TRIE_ਮਾਪ,              /* number of bytes in normalization trie */
+    NORM_ਸੂਚਕਾਂਕ_UCHAR_ਗਿਣਤੀ,            /* number of UChars in extra data */
 
-    _NORM_INDEX_COMBINE_DATA_COUNT,     /* number of uint16_t words for combining data */
-    _NORM_INDEX_COMBINE_FWD_COUNT,      /* number of code points that combine forward */
-    _NORM_INDEX_COMBINE_BOTH_COUNT,     /* number of code points that combine forward and backward */
-    _NORM_INDEX_COMBINE_BACK_COUNT,     /* number of code points that combine backward */
+    NORM_ਸੂਚਕਾਂਕ_COMBINE_ਅੰਕੜੇ_ਗਿਣਤੀ,     /* number of uint16_t words for combining data */
+    NORM_ਸੂਚਕਾਂਕ_COMBINE_FWD_ਗਿਣਤੀ,      /* number of code points that combine forward */
+    NORM_ਸੂਚਕਾਂਕ_COMBINE_BOTH_ਗਿਣਤੀ,     /* number of code points that combine forward and backward */
+    NORM_ਸੂਚਕਾਂਕ_COMBINE_ਪਿੱਠ_ਗਿਣਤੀ,     /* number of code points that combine backward */
 
-    _NORM_INDEX_MIN_NFC_NO_MAYBE,       /* first code point with quick check NFC NO/MAYBE */
-    _NORM_INDEX_MIN_NFKC_NO_MAYBE,      /* first code point with quick check NFKC NO/MAYBE */
-    _NORM_INDEX_MIN_NFD_NO_MAYBE,       /* first code point with quick check NFD NO/MAYBE */
-    _NORM_INDEX_MIN_NFKD_NO_MAYBE,      /* first code point with quick check NFKD NO/MAYBE */
+    NORM_ਸੂਚਕਾਂਕ_MIN_NFC_NO_MAYBE,       /* first code point with quick check NFC NO/MAYBE */
+    NORM_ਸੂਚਕਾਂਕ_MIN_NFKC_NO_MAYBE,      /* first code point with quick check NFKC NO/MAYBE */
+    NORM_ਸੂਚਕਾਂਕ_MIN_NFD_NO_MAYBE,       /* first code point with quick check NFD NO/MAYBE */
+    NORM_ਸੂਚਕਾਂਕ_MIN_NFKD_NO_MAYBE,      /* first code point with quick check NFKD NO/MAYBE */
 
-    _NORM_INDEX_FCD_TRIE_SIZE,          /* number of bytes in FCD trie */
+    NORM_ਸੂਚਕਾਂਕ_FCD_TRIE_ਮਾਪ,          /* number of bytes in FCD trie */
 
-    _NORM_INDEX_AUX_TRIE_SIZE,          /* number of bytes in the auxiliary trie */
-    _NORM_INDEX_CANON_SET_COUNT,        /* number of uint16_t in the array of serialized USet */
+    NORM_ਸੂਚਕਾਂਕ_AUX_TRIE_ਮਾਪ,          /* number of bytes in the auxiliary trie */
+    NORM_ਸੂਚਕਾਂਕ_CANON_ਸੈੱਟ_ਗਿਣਤੀ,        /* number of uint16_t in the array of serialized USet */
 
-    _NORM_INDEX_TOP=32                  /* changing this requires a new formatVersion */
+    NORM_ਸੂਚਕਾਂਕ_ਸਿਖਰ=32                  /* changing this requires a new formatVersion */
 };
 
-enum {
+ਗਿਣਤੀ {
     /* FCD check: everything below this code point is known to have a 0 lead combining class */
     _NORM_MIN_WITH_LEAD_CC=0x300
 };
 
-enum {
+ਗਿਣਤੀ {
     /**
      * Bit 7 of the length byte for a decomposition string in extra data is
      * a flag indicating whether the decomposition string is
@@ -149,15 +149,15 @@ enum {
      * of the decomposition (like for A-umlaut);
      * if not, then both cc's are zero (like for compatibility ideographs).
      */
-    _NORM_DECOMP_FLAG_LENGTH_HAS_CC=0x80,
+    NORM_DECOMP_FLAG_ਲੰਮਾਈ_HAS_CC=0x80,
     /**
      * Bits 6..0 of the length byte contain the actual length.
      */
-    _NORM_DECOMP_LENGTH_MASK=0x7f
+    NORM_DECOMP_ਲੰਮਾਈ_ਨਕਾਬ=0x7f
 };
 
 /** Constants for options flags for normalization. */
-enum {
+ਗਿਣਤੀ {
     /** Options bit 0, do not decompose Hangul syllables. */
     UNORM_NX_HANGUL=1,
     /** Options bit 1, do not decompose CJK compatibility characters. */
@@ -483,6 +483,6 @@ enum {
  *     the immediately following one regardless of that one's enum name.
  */
 
-#endif /* #if !UCONFIG_NO_NORMALIZATION */
+#ਜੇ_ਅੰਤ /* #if !UCONFIG_NO_NORMALIZATION */
 
-#endif
+#ਜੇ_ਅੰਤ

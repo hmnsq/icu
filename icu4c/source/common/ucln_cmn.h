@@ -14,35 +14,35 @@
 *   created by: George Rhoten
 */
 
-#ifndef __UCLN_CMN_H__
-#define __UCLN_CMN_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __UCLN_CMN_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __UCLN_CMN_H__
 
-#include "unicode/utypes.h"
-#include "ucln.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucln.h"
 
 /* These are the cleanup functions for various APIs. */
 /* @return true if cleanup complete successfully.*/
-U_CFUNC UBool utrace_cleanup(void);
+U_CFUNC UBool utrace_cleanup(ਖਾਲੀ);
 
-U_CFUNC UBool ucln_lib_cleanup(void);
+U_CFUNC UBool ucln_lib_cleanup(ਖਾਲੀ);
 
 /*
 Please keep the order of enums declared in same order
 as the cleanup functions are suppose to be called. */
-typedef enum ECleanupCommonType {
-    UCLN_COMMON_START = -1,
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਗਿਣਤੀ ECleanupCommonType {
+    UCLN_COMMON_ਸ਼ੁਰੂ = -1,
     UCLN_COMMON_NUMPARSE_UNISETS,
     UCLN_COMMON_USPREP,
     UCLN_COMMON_BREAKITERATOR,
     UCLN_COMMON_RBBI,
     UCLN_COMMON_SERVICE,
-    UCLN_COMMON_LOCALE_KEY_TYPE,
+    UCLN_COMMON_LOCALE_ਕੁੰਜੀ_TYPE,
     UCLN_COMMON_LOCALE,
     UCLN_COMMON_LOCALE_ALIAS,
-    UCLN_COMMON_LOCALE_KNOWN_CANONICALIZED,
-    UCLN_COMMON_LOCALE_AVAILABLE,
+    UCLN_COMMON_LOCALE_ਗਿਆਤ_CANONICALIZED,
+    UCLN_COMMON_LOCALE_ਉਪਲਬਧ,
     UCLN_COMMON_LIKELY_SUBTAGS,
-    UCLN_COMMON_LOCALE_DISTANCE,
+    UCLN_COMMON_LOCALE_ਦੂਰੀ,
     UCLN_COMMON_ULOC,
     UCLN_COMMON_CURRENCY,
     UCLN_COMMON_LOADED_NORMALIZER2,
@@ -66,13 +66,13 @@ typedef enum ECleanupCommonType {
     UCLN_COMMON_UNIFIED_CACHE,
     UCLN_COMMON_URES,
     UCLN_COMMON_MUTEX,    // Mutexes should be the last to be cleaned up.
-    UCLN_COMMON_COUNT /* This must be last */
+    UCLN_COMMON_ਗਿਣਤੀ /* This must be last */
 } ECleanupCommonType;
 
 /* Main library cleanup registration function. */
 /* See common/ucln.h for details on adding a cleanup function. */
 /* Note: the global mutex must not be held when calling this function. */
-U_CFUNC void U_EXPORT2 ucln_common_registerCleanup(ECleanupCommonType type,
+U_CFUNC ਖਾਲੀ U_EXPORT2 ucln_common_ਰਜਿਸਟਰ_Cleanup(ECleanupCommonType type,
                                                    cleanupFunc *func);
 
-#endif
+#ਜੇ_ਅੰਤ

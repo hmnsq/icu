@@ -4,15 +4,15 @@
 // casemap.h
 // created: 2017jan12 Markus W. Scherer
 
-#ifndef __CASEMAP_H__
-#define __CASEMAP_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __CASEMAP_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __CASEMAP_H__
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/stringpiece.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uobject.h"
 
 /**
  * \file
@@ -30,8 +30,8 @@ class Edits;
  *
  * @stable ICU 59
  */
-class U_COMMON_API CaseMap final : public UMemory {
-public:
+class U_COMMON_API CaseMap final : ਜਨਤਕ UMemory {
+ਜਨਤਕ:
     /**
      * Lowercases a UTF-16 string and optionally records edits.
      * Casing is locale-dependent and context-sensitive.
@@ -62,11 +62,11 @@ public:
      * @see u_strToLower
      * @stable ICU 59
      */
-     static int32_t toLower(
-            const char *locale, uint32_t options,
-            const char16_t *src, int32_t srcLength,
-            char16_t *dest, int32_t destCapacity, Edits *edits,
-            UErrorCode &errorCode);
+     ਸਥਿਰ int32_t ਮੰਜ਼ਿਲ_ਹੇਠਲਾ(
+            ਅਚਲ ਅੱਖਰ *locale, uint32_t options,
+            ਅਚਲ char16_t *src, int32_t src_ਲੰਮਾਈ,
+            char16_t *dest, int32_t dest_ਸਮਰੱਥਾ, Edits *edits,
+            UError_ਕੋਡ &error_ਕੋਡ);
 
     /**
      * Uppercases a UTF-16 string and optionally records edits.
@@ -98,13 +98,13 @@ public:
      * @see u_strToUpper
      * @stable ICU 59
      */
-    static int32_t toUpper(
-            const char *locale, uint32_t options,
-            const char16_t *src, int32_t srcLength,
-            char16_t *dest, int32_t destCapacity, Edits *edits,
-            UErrorCode &errorCode);
+    ਸਥਿਰ int32_t ਮੰਜ਼ਿਲ_ਉੱਤਲਾ(
+            ਅਚਲ ਅੱਖਰ *locale, uint32_t options,
+            ਅਚਲ char16_t *src, int32_t src_ਲੰਮਾਈ,
+            char16_t *dest, int32_t dest_ਸਮਰੱਥਾ, Edits *edits,
+            UError_ਕੋਡ &error_ਕੋਡ);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ਜੇ !UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Titlecases a UTF-16 string and optionally records edits.
@@ -149,13 +149,13 @@ public:
      * @see ucasemap_toTitle
      * @stable ICU 59
      */
-    static int32_t toTitle(
-            const char *locale, uint32_t options, BreakIterator *iter,
-            const char16_t *src, int32_t srcLength,
-            char16_t *dest, int32_t destCapacity, Edits *edits,
-            UErrorCode &errorCode);
+    ਸਥਿਰ int32_t ਮੰਜ਼ਿਲ_Title(
+            ਅਚਲ ਅੱਖਰ *locale, uint32_t options, BreakIterator *iter,
+            ਅਚਲ char16_t *src, int32_t src_ਲੰਮਾਈ,
+            char16_t *dest, int32_t dest_ਸਮਰੱਥਾ, Edits *edits,
+            UError_ਕੋਡ &error_ਕੋਡ);
 
-#endif  // UCONFIG_NO_BREAK_ITERATION
+#ਜੇ_ਅੰਤ  // UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Case-folds a UTF-16 string and optionally records edits.
@@ -191,11 +191,11 @@ public:
      * @see u_strFoldCase
      * @stable ICU 59
      */
-    static int32_t fold(
+    ਸਥਿਰ int32_t fold(
             uint32_t options,
-            const char16_t *src, int32_t srcLength,
-            char16_t *dest, int32_t destCapacity, Edits *edits,
-            UErrorCode &errorCode);
+            ਅਚਲ char16_t *src, int32_t src_ਲੰਮਾਈ,
+            char16_t *dest, int32_t dest_ਸਮਰੱਥਾ, Edits *edits,
+            UError_ਕੋਡ &error_ਕੋਡ);
 
     /**
      * Lowercases a UTF-8 string and optionally records edits.
@@ -218,10 +218,10 @@ public:
      * @see ucasemap_utf8ToLower
      * @stable ICU 60
      */
-    static void utf8ToLower(
-            const char *locale, uint32_t options,
+    ਸਥਿਰ ਖਾਲੀ utf8_ਮੰਜ਼ਿਲ_ਹੇਠਲਾ(
+            ਅਚਲ ਅੱਖਰ *locale, uint32_t options,
             StringPiece src, ByteSink &sink, Edits *edits,
-            UErrorCode &errorCode);
+            UError_ਕੋਡ &error_ਕੋਡ);
 
     /**
      * Uppercases a UTF-8 string and optionally records edits.
@@ -244,12 +244,12 @@ public:
      * @see ucasemap_utf8ToUpper
      * @stable ICU 60
      */
-    static void utf8ToUpper(
-            const char *locale, uint32_t options,
+    ਸਥਿਰ ਖਾਲੀ utf8_ਮੰਜ਼ਿਲ_ਉੱਤਲਾ(
+            ਅਚਲ ਅੱਖਰ *locale, uint32_t options,
             StringPiece src, ByteSink &sink, Edits *edits,
-            UErrorCode &errorCode);
+            UError_ਕੋਡ &error_ਕੋਡ);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ਜੇ !UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Titlecases a UTF-8 string and optionally records edits.
@@ -284,12 +284,12 @@ public:
      * @see ucasemap_utf8ToTitle
      * @stable ICU 60
      */
-    static void utf8ToTitle(
-            const char *locale, uint32_t options, BreakIterator *iter,
+    ਸਥਿਰ ਖਾਲੀ utf8_ਮੰਜ਼ਿਲ_Title(
+            ਅਚਲ ਅੱਖਰ *locale, uint32_t options, BreakIterator *iter,
             StringPiece src, ByteSink &sink, Edits *edits,
-            UErrorCode &errorCode);
+            UError_ਕੋਡ &error_ਕੋਡ);
 
-#endif  // UCONFIG_NO_BREAK_ITERATION
+#ਜੇ_ਅੰਤ  // UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Case-folds a UTF-8 string and optionally records edits.
@@ -315,10 +315,10 @@ public:
      * @see ucasemap_utf8FoldCase
      * @stable ICU 60
      */
-    static void utf8Fold(
+    ਸਥਿਰ ਖਾਲੀ utf8Fold(
             uint32_t options,
             StringPiece src, ByteSink &sink, Edits *edits,
-            UErrorCode &errorCode);
+            UError_ਕੋਡ &error_ਕੋਡ);
 
     /**
      * Lowercases a UTF-8 string and optionally records edits.
@@ -350,11 +350,11 @@ public:
      * @see ucasemap_utf8ToLower
      * @stable ICU 59
      */
-    static int32_t utf8ToLower(
-            const char *locale, uint32_t options,
-            const char *src, int32_t srcLength,
-            char *dest, int32_t destCapacity, Edits *edits,
-            UErrorCode &errorCode);
+    ਸਥਿਰ int32_t utf8_ਮੰਜ਼ਿਲ_ਹੇਠਲਾ(
+            ਅਚਲ ਅੱਖਰ *locale, uint32_t options,
+            ਅਚਲ ਅੱਖਰ *src, int32_t src_ਲੰਮਾਈ,
+            ਅੱਖਰ *dest, int32_t dest_ਸਮਰੱਥਾ, Edits *edits,
+            UError_ਕੋਡ &error_ਕੋਡ);
 
     /**
      * Uppercases a UTF-8 string and optionally records edits.
@@ -386,13 +386,13 @@ public:
      * @see ucasemap_utf8ToUpper
      * @stable ICU 59
      */
-    static int32_t utf8ToUpper(
-            const char *locale, uint32_t options,
-            const char *src, int32_t srcLength,
-            char *dest, int32_t destCapacity, Edits *edits,
-            UErrorCode &errorCode);
+    ਸਥਿਰ int32_t utf8_ਮੰਜ਼ਿਲ_ਉੱਤਲਾ(
+            ਅਚਲ ਅੱਖਰ *locale, uint32_t options,
+            ਅਚਲ ਅੱਖਰ *src, int32_t src_ਲੰਮਾਈ,
+            ਅੱਖਰ *dest, int32_t dest_ਸਮਰੱਥਾ, Edits *edits,
+            UError_ਕੋਡ &error_ਕੋਡ);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ਜੇ !UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Titlecases a UTF-8 string and optionally records edits.
@@ -436,13 +436,13 @@ public:
      * @see ucasemap_utf8ToTitle
      * @stable ICU 59
      */
-    static int32_t utf8ToTitle(
-            const char *locale, uint32_t options, BreakIterator *iter,
-            const char *src, int32_t srcLength,
-            char *dest, int32_t destCapacity, Edits *edits,
-            UErrorCode &errorCode);
+    ਸਥਿਰ int32_t utf8_ਮੰਜ਼ਿਲ_Title(
+            ਅਚਲ ਅੱਖਰ *locale, uint32_t options, BreakIterator *iter,
+            ਅਚਲ ਅੱਖਰ *src, int32_t src_ਲੰਮਾਈ,
+            ਅੱਖਰ *dest, int32_t dest_ਸਮਰੱਥਾ, Edits *edits,
+            UError_ਕੋਡ &error_ਕੋਡ);
 
-#endif  // UCONFIG_NO_BREAK_ITERATION
+#ਜੇ_ਅੰਤ  // UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Case-folds a UTF-8 string and optionally records edits.
@@ -478,20 +478,20 @@ public:
      * @see ucasemap_utf8FoldCase
      * @stable ICU 59
      */
-    static int32_t utf8Fold(
+    ਸਥਿਰ int32_t utf8Fold(
             uint32_t options,
-            const char *src, int32_t srcLength,
-            char *dest, int32_t destCapacity, Edits *edits,
-            UErrorCode &errorCode);
+            ਅਚਲ ਅੱਖਰ *src, int32_t src_ਲੰਮਾਈ,
+            ਅੱਖਰ *dest, int32_t dest_ਸਮਰੱਥਾ, Edits *edits,
+            UError_ਕੋਡ &error_ਕੋਡ);
 
-private:
+ਨਿਜੀ:
     CaseMap() = delete;
-    CaseMap(const CaseMap &other) = delete;
-    CaseMap &operator=(const CaseMap &other) = delete;
+    CaseMap(ਅਚਲ CaseMap &other) = delete;
+    CaseMap &ਸੰਚਾਲਕ=(ਅਚਲ CaseMap &other) = delete;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ਜੇ_ਅੰਤ /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __CASEMAP_H__
+#ਜੇ_ਅੰਤ  // __CASEMAP_H__

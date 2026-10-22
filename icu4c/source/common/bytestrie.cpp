@@ -14,83 +14,83 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/bytestream.h"
-#include "unicode/bytestrie.h"
-#include "unicode/uobject.h"
-#include "cmemory.h"
-#include "uassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/bytestream.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/bytestrie.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uobject.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uassert.h"
 
 U_NAMESPACE_BEGIN
 
-BytesTrie::~BytesTrie() {
+ਬਾਈਟਾਂ_Trie::~ਬਾਈਟਾਂ_Trie() {
     uprv_free(ownedArray_);
 }
 
 // lead byte already shifted right by 1.
 int32_t
-BytesTrie::readValue(const uint8_t *pos, int32_t leadByte) {
+ਬਾਈਟਾਂ_Trie::read_ਮੁੱਲ(ਅਚਲ uint8_t *pos, int32_t leadByte) {
     int32_t value;
-    if(leadByte<kMinTwoByteValueLead) {
-        value=leadByte-kMinOneByteValueLead;
-    } else if(leadByte<kMinThreeByteValueLead) {
-        value=((leadByte-kMinTwoByteValueLead)<<8)|*pos;
-    } else if(leadByte<kFourByteValueLead) {
-        value=((leadByte-kMinThreeByteValueLead)<<16)|(pos[0]<<8)|pos[1];
-    } else if(leadByte==kFourByteValueLead) {
+    ਜੇ(leadByte<k_Min_Two_Byte_ਮੁੱਲ_Lead) {
+        value=leadByte-k_Min_One_Byte_ਮੁੱਲ_Lead;
+    } ਨਹੀਂਤਾਂ ਜੇ(leadByte<k_Min_Three_Byte_ਮੁੱਲ_Lead) {
+        value=((leadByte-k_Min_Two_Byte_ਮੁੱਲ_Lead)<<8)|*pos;
+    } ਨਹੀਂਤਾਂ ਜੇ(leadByte<k_Four_Byte_ਮੁੱਲ_Lead) {
+        value=((leadByte-k_Min_Three_Byte_ਮੁੱਲ_Lead)<<16)|(pos[0]<<8)|pos[1];
+    } ਨਹੀਂਤਾਂ ਜੇ(leadByte==k_Four_Byte_ਮੁੱਲ_Lead) {
         value=(pos[0]<<16)|(pos[1]<<8)|pos[2];
-    } else {
+    } ਨਹੀਂਤਾਂ {
         value=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
     }
-    return value;
+    ਵਾਪਸ value;
 }
 
-const uint8_t*
-BytesTrie::jumpByDelta(const uint8_t* pos U_LIFETIME_BOUND) {
+ਅਚਲ uint8_t*
+ਬਾਈਟਾਂ_Trie::jumpByDelta(ਅਚਲ uint8_t* pos U_LIFETIME_BOUND) {
     int32_t delta=*pos++;
-    if(delta<kMinTwoByteDeltaLead) {
+    ਜੇ(delta<kMinTwoByteDeltaLead) {
         // nothing to do
-    } else if(delta<kMinThreeByteDeltaLead) {
+    } ਨਹੀਂਤਾਂ ਜੇ(delta<kMinThreeByteDeltaLead) {
         delta=((delta-kMinTwoByteDeltaLead)<<8)|*pos++;
-    } else if(delta<kFourByteDeltaLead) {
+    } ਨਹੀਂਤਾਂ ਜੇ(delta<kFourByteDeltaLead) {
         delta=((delta-kMinThreeByteDeltaLead)<<16)|(pos[0]<<8)|pos[1];
         pos+=2;
-    } else if(delta==kFourByteDeltaLead) {
+    } ਨਹੀਂਤਾਂ ਜੇ(delta==kFourByteDeltaLead) {
         delta=(pos[0]<<16)|(pos[1]<<8)|pos[2];
         pos+=3;
-    } else {
+    } ਨਹੀਂਤਾਂ {
         delta=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
         pos+=4;
     }
-    return pos+delta;
+    ਵਾਪਸ pos+delta;
 }
 
-UStringTrieResult
-BytesTrie::current() const {
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
-    } else {
-        int32_t node;
-        return (remainingMatchLength_<0 && (node=*pos)>=kMinValueLead) ?
-                valueResult(node) : USTRINGTRIE_NO_VALUE;
+UString_Trie_ਨਤੀਜਾ
+ਬਾਈਟਾਂ_Trie::current() ਅਚਲ {
+    ਅਚਲ uint8_t *pos=pos_;
+    ਜੇ(pos==ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ USTRINGTRIE_NO_ਮੇਲ;
+    } ਨਹੀਂਤਾਂ {
+        int32_t ਗੰਢ;
+        ਵਾਪਸ (ਬਚਿਆ_ਮੇਲ_ਲੰਮਾਈ<0 && (ਗੰਢ=*pos)>=k_Min_ਮੁੱਲ_Lead) ?
+                ਮੁੱਲ_ਨਤੀਜਾ(ਗੰਢ) : USTRINGTRIE_NO_ਮੁੱਲ;
     }
 }
 
-UStringTrieResult
-BytesTrie::branchNext(const uint8_t *pos, int32_t length, int32_t inByte) {
+UString_Trie_ਨਤੀਜਾ
+ਬਾਈਟਾਂ_Trie::branch_ਅਗਲਾ(ਅਚਲ uint8_t *pos, int32_t length, int32_t ਵਿੱਚ_Byte) {
     // Branch according to the current byte.
-    if(length==0) {
+    ਜੇ(length==0) {
         length=*pos++;
     }
     ++length;
     // The length of the branch is the number of bytes to select from.
     // The data structure encodes a binary search.
-    while(length>kMaxBranchLinearSubNodeLength) {
-        if(inByte<*pos++) {
+    ਜਦੋਂ(length>k_Max_Branch_ਰੇਖਿਕ_Sub_ਗੰਢ_ਲੰਮਾਈ) {
+        ਜੇ(ਵਿੱਚ_Byte<*pos++) {
             length>>=1;
             pos=jumpByDelta(pos);
-        } else {
+        } ਨਹੀਂਤਾਂ {
             length=length-(length>>1);
             pos=skipDelta(pos);
         }
@@ -98,346 +98,346 @@ BytesTrie::branchNext(const uint8_t *pos, int32_t length, int32_t inByte) {
     // Drop down to linear search for the last few bytes.
     // length>=2 because the loop body above sees length>kMaxBranchLinearSubNodeLength>=3
     // and divides length by 2.
-    do {
-        if(inByte==*pos++) {
-            UStringTrieResult result;
-            int32_t node=*pos;
-            U_ASSERT(node>=kMinValueLead);
-            if(node&kValueIsFinal) {
+    ਕਰੋ {
+        ਜੇ(ਵਿੱਚ_Byte==*pos++) {
+            UString_Trie_ਨਤੀਜਾ ਨਤੀਜਾ;
+            int32_t ਗੰਢ=*pos;
+            U_ASSERT(ਗੰਢ>=k_Min_ਮੁੱਲ_Lead);
+            ਜੇ(ਗੰਢ&k_ਮੁੱਲ_Is_Final) {
                 // Leave the final value for getValue() to read.
-                result=USTRINGTRIE_FINAL_VALUE;
-            } else {
+                ਨਤੀਜਾ=USTRINGTRIE_FINAL_ਮੁੱਲ;
+            } ਨਹੀਂਤਾਂ {
                 // Use the non-final value as the jump delta.
                 ++pos;
                 // int32_t delta=readValue(pos, node>>1);
-                node>>=1;
+                ਗੰਢ>>=1;
                 int32_t delta;
-                if(node<kMinTwoByteValueLead) {
-                    delta=node-kMinOneByteValueLead;
-                } else if(node<kMinThreeByteValueLead) {
-                    delta=((node-kMinTwoByteValueLead)<<8)|*pos++;
-                } else if(node<kFourByteValueLead) {
-                    delta=((node-kMinThreeByteValueLead)<<16)|(pos[0]<<8)|pos[1];
+                ਜੇ(ਗੰਢ<k_Min_Two_Byte_ਮੁੱਲ_Lead) {
+                    delta=ਗੰਢ-k_Min_One_Byte_ਮੁੱਲ_Lead;
+                } ਨਹੀਂਤਾਂ ਜੇ(ਗੰਢ<k_Min_Three_Byte_ਮੁੱਲ_Lead) {
+                    delta=((ਗੰਢ-k_Min_Two_Byte_ਮੁੱਲ_Lead)<<8)|*pos++;
+                } ਨਹੀਂਤਾਂ ਜੇ(ਗੰਢ<k_Four_Byte_ਮੁੱਲ_Lead) {
+                    delta=((ਗੰਢ-k_Min_Three_Byte_ਮੁੱਲ_Lead)<<16)|(pos[0]<<8)|pos[1];
                     pos+=2;
-                } else if(node==kFourByteValueLead) {
+                } ਨਹੀਂਤਾਂ ਜੇ(ਗੰਢ==k_Four_Byte_ਮੁੱਲ_Lead) {
                     delta=(pos[0]<<16)|(pos[1]<<8)|pos[2];
                     pos+=3;
-                } else {
+                } ਨਹੀਂਤਾਂ {
                     delta=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
                     pos+=4;
                 }
                 // end readValue()
                 pos+=delta;
-                node=*pos;
-                result= node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
+                ਗੰਢ=*pos;
+                ਨਤੀਜਾ= ਗੰਢ>=k_Min_ਮੁੱਲ_Lead ? ਮੁੱਲ_ਨਤੀਜਾ(ਗੰਢ) : USTRINGTRIE_NO_ਮੁੱਲ;
             }
             pos_=pos;
-            return result;
+            ਵਾਪਸ ਨਤੀਜਾ;
         }
         --length;
-        pos=skipValue(pos);
-    } while(length>1);
-    if(inByte==*pos++) {
+        pos=skip_ਮੁੱਲ(pos);
+    } ਜਦੋਂ(length>1);
+    ਜੇ(ਵਿੱਚ_Byte==*pos++) {
         pos_=pos;
-        int32_t node=*pos;
-        return node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
-    } else {
+        int32_t ਗੰਢ=*pos;
+        ਵਾਪਸ ਗੰਢ>=k_Min_ਮੁੱਲ_Lead ? ਮੁੱਲ_ਨਤੀਜਾ(ਗੰਢ) : USTRINGTRIE_NO_ਮੁੱਲ;
+    } ਨਹੀਂਤਾਂ {
         stop();
-        return USTRINGTRIE_NO_MATCH;
+        ਵਾਪਸ USTRINGTRIE_NO_ਮੇਲ;
     }
 }
 
-UStringTrieResult
-BytesTrie::nextImpl(const uint8_t *pos, int32_t inByte) {
-    for(;;) {
-        int32_t node=*pos++;
-        if(node<kMinLinearMatch) {
-            return branchNext(pos, node, inByte);
-        } else if(node<kMinValueLead) {
+UString_Trie_ਨਤੀਜਾ
+ਬਾਈਟਾਂ_Trie::ਅਗਲਾ_Impl(ਅਚਲ uint8_t *pos, int32_t ਵਿੱਚ_Byte) {
+    ਲਈ(;;) {
+        int32_t ਗੰਢ=*pos++;
+        ਜੇ(ਗੰਢ<k_Min_ਰੇਖਿਕ_ਮੇਲ) {
+            ਵਾਪਸ branch_ਅਗਲਾ(pos, ਗੰਢ, ਵਿੱਚ_Byte);
+        } ਨਹੀਂਤਾਂ ਜੇ(ਗੰਢ<k_Min_ਮੁੱਲ_Lead) {
             // Match the first of length+1 bytes.
-            int32_t length=node-kMinLinearMatch;  // Actual match length minus 1.
-            if(inByte==*pos++) {
-                remainingMatchLength_=--length;
+            int32_t length=ਗੰਢ-k_Min_ਰੇਖਿਕ_ਮੇਲ;  // Actual match length minus 1.
+            ਜੇ(ਵਿੱਚ_Byte==*pos++) {
+                ਬਚਿਆ_ਮੇਲ_ਲੰਮਾਈ=--length;
                 pos_=pos;
-                return (length<0 && (node=*pos)>=kMinValueLead) ?
-                        valueResult(node) : USTRINGTRIE_NO_VALUE;
-            } else {
+                ਵਾਪਸ (length<0 && (ਗੰਢ=*pos)>=k_Min_ਮੁੱਲ_Lead) ?
+                        ਮੁੱਲ_ਨਤੀਜਾ(ਗੰਢ) : USTRINGTRIE_NO_ਮੁੱਲ;
+            } ਨਹੀਂਤਾਂ {
                 // No match.
-                break;
+                ਰੋਕੋ;
             }
-        } else if(node&kValueIsFinal) {
+        } ਨਹੀਂਤਾਂ ਜੇ(ਗੰਢ&k_ਮੁੱਲ_Is_Final) {
             // No further matching bytes.
-            break;
-        } else {
+            ਰੋਕੋ;
+        } ਨਹੀਂਤਾਂ {
             // Skip intermediate value.
-            pos=skipValue(pos, node);
+            pos=skip_ਮੁੱਲ(pos, ਗੰਢ);
             // The next node must not also be a value node.
-            U_ASSERT(*pos<kMinValueLead);
+            U_ASSERT(*pos<k_Min_ਮੁੱਲ_Lead);
         }
     }
     stop();
-    return USTRINGTRIE_NO_MATCH;
+    ਵਾਪਸ USTRINGTRIE_NO_ਮੇਲ;
 }
 
-UStringTrieResult
-BytesTrie::next(int32_t inByte) {
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+UString_Trie_ਨਤੀਜਾ
+ਬਾਈਟਾਂ_Trie::next(int32_t ਵਿੱਚ_Byte) {
+    ਅਚਲ uint8_t *pos=pos_;
+    ਜੇ(pos==ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ USTRINGTRIE_NO_ਮੇਲ;
     }
-    if(inByte<0) {
-        inByte+=0x100;
+    ਜੇ(ਵਿੱਚ_Byte<0) {
+        ਵਿੱਚ_Byte+=0x100;
     }
-    int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    if(length>=0) {
+    int32_t length=ਬਚਿਆ_ਮੇਲ_ਲੰਮਾਈ;  // Actual remaining match length minus 1.
+    ਜੇ(length>=0) {
         // Remaining part of a linear-match node.
-        if(inByte==*pos++) {
-            remainingMatchLength_=--length;
+        ਜੇ(ਵਿੱਚ_Byte==*pos++) {
+            ਬਚਿਆ_ਮੇਲ_ਲੰਮਾਈ=--length;
             pos_=pos;
-            int32_t node;
-            return (length<0 && (node=*pos)>=kMinValueLead) ?
-                    valueResult(node) : USTRINGTRIE_NO_VALUE;
-        } else {
+            int32_t ਗੰਢ;
+            ਵਾਪਸ (length<0 && (ਗੰਢ=*pos)>=k_Min_ਮੁੱਲ_Lead) ?
+                    ਮੁੱਲ_ਨਤੀਜਾ(ਗੰਢ) : USTRINGTRIE_NO_ਮੁੱਲ;
+        } ਨਹੀਂਤਾਂ {
             stop();
-            return USTRINGTRIE_NO_MATCH;
+            ਵਾਪਸ USTRINGTRIE_NO_ਮੇਲ;
         }
     }
-    return nextImpl(pos, inByte);
+    ਵਾਪਸ ਅਗਲਾ_Impl(pos, ਵਿੱਚ_Byte);
 }
 
-UStringTrieResult
-BytesTrie::next(const char *s, int32_t sLength) {
-    if(sLength<0 ? *s==0 : sLength==0) {
+UString_Trie_ਨਤੀਜਾ
+ਬਾਈਟਾਂ_Trie::next(ਅਚਲ ਅੱਖਰ *s, int32_t s_ਲੰਮਾਈ) {
+    ਜੇ(s_ਲੰਮਾਈ<0 ? *s==0 : s_ਲੰਮਾਈ==0) {
         // Empty input.
-        return current();
+        ਵਾਪਸ current();
     }
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    ਅਚਲ uint8_t *pos=pos_;
+    ਜੇ(pos==ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ USTRINGTRIE_NO_ਮੇਲ;
     }
-    int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    for(;;) {
+    int32_t length=ਬਚਿਆ_ਮੇਲ_ਲੰਮਾਈ;  // Actual remaining match length minus 1.
+    ਲਈ(;;) {
         // Fetch the next input byte, if there is one.
         // Continue a linear-match node without rechecking sLength<0.
-        int32_t inByte;
-        if(sLength<0) {
-            for(;;) {
-                if((inByte=*s++)==0) {
-                    remainingMatchLength_=length;
+        int32_t ਵਿੱਚ_Byte;
+        ਜੇ(s_ਲੰਮਾਈ<0) {
+            ਲਈ(;;) {
+                ਜੇ((ਵਿੱਚ_Byte=*s++)==0) {
+                    ਬਚਿਆ_ਮੇਲ_ਲੰਮਾਈ=length;
                     pos_=pos;
-                    int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
-                            valueResult(node) : USTRINGTRIE_NO_VALUE;
+                    int32_t ਗੰਢ;
+                    ਵਾਪਸ (length<0 && (ਗੰਢ=*pos)>=k_Min_ਮੁੱਲ_Lead) ?
+                            ਮੁੱਲ_ਨਤੀਜਾ(ਗੰਢ) : USTRINGTRIE_NO_ਮੁੱਲ;
                 }
-                if(length<0) {
-                    remainingMatchLength_=length;
-                    break;
+                ਜੇ(length<0) {
+                    ਬਚਿਆ_ਮੇਲ_ਲੰਮਾਈ=length;
+                    ਰੋਕੋ;
                 }
-                if(inByte!=*pos) {
+                ਜੇ(ਵਿੱਚ_Byte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ਵਾਪਸ USTRINGTRIE_NO_ਮੇਲ;
                 }
                 ++pos;
                 --length;
             }
-        } else {
-            for(;;) {
-                if(sLength==0) {
-                    remainingMatchLength_=length;
+        } ਨਹੀਂਤਾਂ {
+            ਲਈ(;;) {
+                ਜੇ(s_ਲੰਮਾਈ==0) {
+                    ਬਚਿਆ_ਮੇਲ_ਲੰਮਾਈ=length;
                     pos_=pos;
-                    int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
-                            valueResult(node) : USTRINGTRIE_NO_VALUE;
+                    int32_t ਗੰਢ;
+                    ਵਾਪਸ (length<0 && (ਗੰਢ=*pos)>=k_Min_ਮੁੱਲ_Lead) ?
+                            ਮੁੱਲ_ਨਤੀਜਾ(ਗੰਢ) : USTRINGTRIE_NO_ਮੁੱਲ;
                 }
-                inByte=*s++;
-                --sLength;
-                if(length<0) {
-                    remainingMatchLength_=length;
-                    break;
+                ਵਿੱਚ_Byte=*s++;
+                --s_ਲੰਮਾਈ;
+                ਜੇ(length<0) {
+                    ਬਚਿਆ_ਮੇਲ_ਲੰਮਾਈ=length;
+                    ਰੋਕੋ;
                 }
-                if(inByte!=*pos) {
+                ਜੇ(ਵਿੱਚ_Byte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ਵਾਪਸ USTRINGTRIE_NO_ਮੇਲ;
                 }
                 ++pos;
                 --length;
             }
         }
-        for(;;) {
-            int32_t node=*pos++;
-            if(node<kMinLinearMatch) {
-                UStringTrieResult result=branchNext(pos, node, inByte);
-                if(result==USTRINGTRIE_NO_MATCH) {
-                    return USTRINGTRIE_NO_MATCH;
+        ਲਈ(;;) {
+            int32_t ਗੰਢ=*pos++;
+            ਜੇ(ਗੰਢ<k_Min_ਰੇਖਿਕ_ਮੇਲ) {
+                UString_Trie_ਨਤੀਜਾ ਨਤੀਜਾ=branch_ਅਗਲਾ(pos, ਗੰਢ, ਵਿੱਚ_Byte);
+                ਜੇ(ਨਤੀਜਾ==USTRINGTRIE_NO_ਮੇਲ) {
+                    ਵਾਪਸ USTRINGTRIE_NO_ਮੇਲ;
                 }
                 // Fetch the next input byte, if there is one.
-                if(sLength<0) {
-                    if((inByte=*s++)==0) {
-                        return result;
+                ਜੇ(s_ਲੰਮਾਈ<0) {
+                    ਜੇ((ਵਿੱਚ_Byte=*s++)==0) {
+                        ਵਾਪਸ ਨਤੀਜਾ;
                     }
-                } else {
-                    if(sLength==0) {
-                        return result;
+                } ਨਹੀਂਤਾਂ {
+                    ਜੇ(s_ਲੰਮਾਈ==0) {
+                        ਵਾਪਸ ਨਤੀਜਾ;
                     }
-                    inByte=*s++;
-                    --sLength;
+                    ਵਿੱਚ_Byte=*s++;
+                    --s_ਲੰਮਾਈ;
                 }
-                if(result==USTRINGTRIE_FINAL_VALUE) {
+                ਜੇ(ਨਤੀਜਾ==USTRINGTRIE_FINAL_ਮੁੱਲ) {
                     // No further matching bytes.
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ਵਾਪਸ USTRINGTRIE_NO_ਮੇਲ;
                 }
                 pos=pos_;  // branchNext() advanced pos and wrote it to pos_ .
-            } else if(node<kMinValueLead) {
+            } ਨਹੀਂਤਾਂ ਜੇ(ਗੰਢ<k_Min_ਮੁੱਲ_Lead) {
                 // Match length+1 bytes.
-                length=node-kMinLinearMatch;  // Actual match length minus 1.
-                if(inByte!=*pos) {
+                length=ਗੰਢ-k_Min_ਰੇਖਿਕ_ਮੇਲ;  // Actual match length minus 1.
+                ਜੇ(ਵਿੱਚ_Byte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ਵਾਪਸ USTRINGTRIE_NO_ਮੇਲ;
                 }
                 ++pos;
                 --length;
-                break;
-            } else if(node&kValueIsFinal) {
+                ਰੋਕੋ;
+            } ਨਹੀਂਤਾਂ ਜੇ(ਗੰਢ&k_ਮੁੱਲ_Is_Final) {
                 // No further matching bytes.
                 stop();
-                return USTRINGTRIE_NO_MATCH;
-            } else {
+                ਵਾਪਸ USTRINGTRIE_NO_ਮੇਲ;
+            } ਨਹੀਂਤਾਂ {
                 // Skip intermediate value.
-                pos=skipValue(pos, node);
+                pos=skip_ਮੁੱਲ(pos, ਗੰਢ);
                 // The next node must not also be a value node.
-                U_ASSERT(*pos<kMinValueLead);
+                U_ASSERT(*pos<k_Min_ਮੁੱਲ_Lead);
             }
         }
     }
 }
 
-const uint8_t*
-BytesTrie::findUniqueValueFromBranch(const uint8_t* pos U_LIFETIME_BOUND,
+ਅਚਲ uint8_t*
+ਬਾਈਟਾਂ_Trie::ਲੱਭੋ_Unique_ਮੁੱਲ_From_Branch(ਅਚਲ uint8_t* pos U_LIFETIME_BOUND,
                                      int32_t length,
-                                     UBool haveUniqueValue,
-                                     int32_t& uniqueValue) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+                                     UBool have_Unique_ਮੁੱਲ,
+                                     int32_t& unique_ਮੁੱਲ) {
+    ਜਦੋਂ(length>k_Max_Branch_ਰੇਖਿਕ_Sub_ਗੰਢ_ਲੰਮਾਈ) {
         ++pos;  // ignore the comparison byte
-        if(nullptr==findUniqueValueFromBranch(jumpByDelta(pos), length>>1, haveUniqueValue, uniqueValue)) {
-            return nullptr;
+        ਜੇ(ਖਾਲੀ_ਸੂਚਕ==ਲੱਭੋ_Unique_ਮੁੱਲ_From_Branch(jumpByDelta(pos), length>>1, have_Unique_ਮੁੱਲ, unique_ਮੁੱਲ)) {
+            ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
         }
         length=length-(length>>1);
         pos=skipDelta(pos);
     }
-    do {
+    ਕਰੋ {
         ++pos;  // ignore a comparison byte
         // handle its value
-        int32_t node=*pos++;
-        UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
-        int32_t value=readValue(pos, node>>1);
-        pos=skipValue(pos, node);
-        if(isFinal) {
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return nullptr;
+        int32_t ਗੰਢ=*pos++;
+        UBool isFinal = static_cast<UBool>(ਗੰਢ & k_ਮੁੱਲ_Is_Final);
+        int32_t value=read_ਮੁੱਲ(pos, ਗੰਢ>>1);
+        pos=skip_ਮੁੱਲ(pos, ਗੰਢ);
+        ਜੇ(isFinal) {
+            ਜੇ(have_Unique_ਮੁੱਲ) {
+                ਜੇ(value!=unique_ਮੁੱਲ) {
+                    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
                 }
-            } else {
-                uniqueValue=value;
-                haveUniqueValue=true;
+            } ਨਹੀਂਤਾਂ {
+                unique_ਮੁੱਲ=value;
+                have_Unique_ਮੁੱਲ=ਸੱਚ;
             }
-        } else {
-            if(!findUniqueValue(pos+value, haveUniqueValue, uniqueValue)) {
-                return nullptr;
+        } ਨਹੀਂਤਾਂ {
+            ਜੇ(!ਲੱਭੋ_Unique_ਮੁੱਲ(pos+value, have_Unique_ਮੁੱਲ, unique_ਮੁੱਲ)) {
+                ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
             }
-            haveUniqueValue=true;
+            have_Unique_ਮੁੱਲ=ਸੱਚ;
         }
-    } while(--length>1);
-    return pos+1;  // ignore the last comparison byte
+    } ਜਦੋਂ(--length>1);
+    ਵਾਪਸ pos+1;  // ignore the last comparison byte
 }
 
 UBool
-BytesTrie::findUniqueValue(const uint8_t *pos, UBool haveUniqueValue, int32_t &uniqueValue) {
-    for(;;) {
-        int32_t node=*pos++;
-        if(node<kMinLinearMatch) {
-            if(node==0) {
-                node=*pos++;
+ਬਾਈਟਾਂ_Trie::ਲੱਭੋ_Unique_ਮੁੱਲ(ਅਚਲ uint8_t *pos, UBool have_Unique_ਮੁੱਲ, int32_t &unique_ਮੁੱਲ) {
+    ਲਈ(;;) {
+        int32_t ਗੰਢ=*pos++;
+        ਜੇ(ਗੰਢ<k_Min_ਰੇਖਿਕ_ਮੇਲ) {
+            ਜੇ(ਗੰਢ==0) {
+                ਗੰਢ=*pos++;
             }
-            pos=findUniqueValueFromBranch(pos, node+1, haveUniqueValue, uniqueValue);
-            if(pos==nullptr) {
-                return false;
+            pos=ਲੱਭੋ_Unique_ਮੁੱਲ_From_Branch(pos, ਗੰਢ+1, have_Unique_ਮੁੱਲ, unique_ਮੁੱਲ);
+            ਜੇ(pos==ਖਾਲੀ_ਸੂਚਕ) {
+                ਵਾਪਸ ਝੂਠ;
             }
-            haveUniqueValue=true;
-        } else if(node<kMinValueLead) {
+            have_Unique_ਮੁੱਲ=ਸੱਚ;
+        } ਨਹੀਂਤਾਂ ਜੇ(ਗੰਢ<k_Min_ਮੁੱਲ_Lead) {
             // linear-match node
-            pos+=node-kMinLinearMatch+1;  // Ignore the match bytes.
-        } else {
-            UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
-            int32_t value=readValue(pos, node>>1);
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return false;
+            pos+=ਗੰਢ-k_Min_ਰੇਖਿਕ_ਮੇਲ+1;  // Ignore the match bytes.
+        } ਨਹੀਂਤਾਂ {
+            UBool isFinal = static_cast<UBool>(ਗੰਢ & k_ਮੁੱਲ_Is_Final);
+            int32_t value=read_ਮੁੱਲ(pos, ਗੰਢ>>1);
+            ਜੇ(have_Unique_ਮੁੱਲ) {
+                ਜੇ(value!=unique_ਮੁੱਲ) {
+                    ਵਾਪਸ ਝੂਠ;
                 }
-            } else {
-                uniqueValue=value;
-                haveUniqueValue=true;
+            } ਨਹੀਂਤਾਂ {
+                unique_ਮੁੱਲ=value;
+                have_Unique_ਮੁੱਲ=ਸੱਚ;
             }
-            if(isFinal) {
-                return true;
+            ਜੇ(isFinal) {
+                ਵਾਪਸ ਸੱਚ;
             }
-            pos=skipValue(pos, node);
+            pos=skip_ਮੁੱਲ(pos, ਗੰਢ);
         }
     }
 }
 
 int32_t
-BytesTrie::getNextBytes(ByteSink &out) const {
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return 0;
+ਬਾਈਟਾਂ_Trie::get_ਅਗਲਾ_ਬਾਈਟਾਂ(ByteSink &out) ਅਚਲ {
+    ਅਚਲ uint8_t *pos=pos_;
+    ਜੇ(pos==ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ 0;
     }
-    if(remainingMatchLength_>=0) {
+    ਜੇ(ਬਚਿਆ_ਮੇਲ_ਲੰਮਾਈ>=0) {
         append(out, *pos);  // Next byte of a pending linear-match node.
-        return 1;
+        ਵਾਪਸ 1;
     }
-    int32_t node=*pos++;
-    if(node>=kMinValueLead) {
-        if(node&kValueIsFinal) {
-            return 0;
-        } else {
-            pos=skipValue(pos, node);
-            node=*pos++;
-            U_ASSERT(node<kMinValueLead);
+    int32_t ਗੰਢ=*pos++;
+    ਜੇ(ਗੰਢ>=k_Min_ਮੁੱਲ_Lead) {
+        ਜੇ(ਗੰਢ&k_ਮੁੱਲ_Is_Final) {
+            ਵਾਪਸ 0;
+        } ਨਹੀਂਤਾਂ {
+            pos=skip_ਮੁੱਲ(pos, ਗੰਢ);
+            ਗੰਢ=*pos++;
+            U_ASSERT(ਗੰਢ<k_Min_ਮੁੱਲ_Lead);
         }
     }
-    if(node<kMinLinearMatch) {
-        if(node==0) {
-            node=*pos++;
+    ਜੇ(ਗੰਢ<k_Min_ਰੇਖਿਕ_ਮੇਲ) {
+        ਜੇ(ਗੰਢ==0) {
+            ਗੰਢ=*pos++;
         }
-        getNextBranchBytes(pos, ++node, out);
-        return node;
-    } else {
+        get_ਅਗਲਾ_Branch_ਬਾਈਟਾਂ(pos, ++ਗੰਢ, out);
+        ਵਾਪਸ ਗੰਢ;
+    } ਨਹੀਂਤਾਂ {
         // First byte of the linear-match node.
         append(out, *pos);
-        return 1;
+        ਵਾਪਸ 1;
     }
 }
 
-void
-BytesTrie::getNextBranchBytes(const uint8_t *pos, int32_t length, ByteSink &out) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+ਖਾਲੀ
+ਬਾਈਟਾਂ_Trie::get_ਅਗਲਾ_Branch_ਬਾਈਟਾਂ(ਅਚਲ uint8_t *pos, int32_t length, ByteSink &out) {
+    ਜਦੋਂ(length>k_Max_Branch_ਰੇਖਿਕ_Sub_ਗੰਢ_ਲੰਮਾਈ) {
         ++pos;  // ignore the comparison byte
-        getNextBranchBytes(jumpByDelta(pos), length>>1, out);
+        get_ਅਗਲਾ_Branch_ਬਾਈਟਾਂ(jumpByDelta(pos), length>>1, out);
         length=length-(length>>1);
         pos=skipDelta(pos);
     }
-    do {
+    ਕਰੋ {
         append(out, *pos++);
-        pos=skipValue(pos);
-    } while(--length>1);
+        pos=skip_ਮੁੱਲ(pos);
+    } ਜਦੋਂ(--length>1);
     append(out, *pos);
 }
 
-void
-BytesTrie::append(ByteSink &out, int c) {
-    char ch = static_cast<char>(c);
+ਖਾਲੀ
+ਬਾਈਟਾਂ_Trie::append(ByteSink &out, ਪੂਰਨ c) {
+    ਅੱਖਰ ch = static_cast<ਅੱਖਰ>(c);
     out.Append(&ch, 1);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ

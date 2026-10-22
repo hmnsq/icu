@@ -7,21 +7,21 @@
 **********************************************************************
 */
 
-#ifndef __URESLOCS_H__
-#define __URESLOCS_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __URESLOCS_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __URESLOCS_H__
 
-#include "unicode/utypes.h"
-#include "unicode/udata.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/udata.h"
 
 U_CDECL_BEGIN
 
 
-#define U_ICUDATA_LANG U_ICUDATA_NAME U_TREE_SEPARATOR_STRING "lang"
-#define U_ICUDATA_REGION U_ICUDATA_NAME U_TREE_SEPARATOR_STRING "region"
-#define U_ICUDATA_CURR U_ICUDATA_NAME U_TREE_SEPARATOR_STRING "curr"
-#define U_ICUDATA_ZONE U_ICUDATA_NAME U_TREE_SEPARATOR_STRING "zone"
-#define U_ICUDATA_UNIT U_ICUDATA_NAME U_TREE_SEPARATOR_STRING "unit"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_ICUDATA_LANG U_ICUDATA_NAME U_ਰੁੱਖ_SEPARATOR_STRING "lang"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_ICUDATA_REGION U_ICUDATA_NAME U_ਰੁੱਖ_SEPARATOR_STRING "region"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_ICUDATA_CURR U_ICUDATA_NAME U_ਰੁੱਖ_SEPARATOR_STRING "curr"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_ICUDATA_ZONE U_ICUDATA_NAME U_ਰੁੱਖ_SEPARATOR_STRING "zone"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_ICUDATA_UNIT U_ICUDATA_NAME U_ਰੁੱਖ_SEPARATOR_STRING "unit"
 
-U_CDECL_END
+U_CDECL_ਸਿਰਾ
 
-#endif
+#ਜੇ_ਅੰਤ

@@ -10,16 +10,16 @@
 **********************************************************************
 */
 
-#ifndef DBBI_H
-#define DBBI_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ DBBI_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DBBI_H
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/rbbi.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/rbbi.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ਜੇ !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * \file
@@ -28,21 +28,21 @@
  
 U_NAMESPACE_BEGIN
 
-#ifndef U_HIDE_DEPRECATED_API
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ U_HIDE_DEPRECATED_API
 /**
  * An obsolete subclass of RuleBasedBreakIterator. Handling of dictionary-
  * based break iteration has been folded into the base class. This class
  * is deprecated as of ICU 3.6.
  * @deprecated ICU 3.6
  */
-typedef RuleBasedBreakIterator DictionaryBasedBreakIterator;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਨਿਯਮ_Based_Break_Iterator DictionaryBasedBreakIterator;
 
-#endif  /* U_HIDE_DEPRECATED_API */
+#ਜੇ_ਅੰਤ  /* U_HIDE_DEPRECATED_API */
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#ਜੇ_ਅੰਤ /* #if !UCONFIG_NO_BREAK_ITERATION */
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ਜੇ_ਅੰਤ /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#ਜੇ_ਅੰਤ

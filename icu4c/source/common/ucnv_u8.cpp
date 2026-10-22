@@ -20,684 +20,684 @@
 *   UTF-8 converter, with a branch for converting supplementary code points.
 */
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ਜੇ !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "uassert.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "cmemory.h"
-#include "ustr_imp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ucnv.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf8.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf16.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucnv_bld.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucnv_cnv.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ustr_imp.h"
 
 /* Prototypes --------------------------------------------------------------- */
 
 /* Keep these here to make finicky compilers happy */
 
-U_CFUNC void ucnv_fromUnicode_UTF8(UConverterFromUnicodeArgs *args,
-                                           UErrorCode *err);
-U_CFUNC void ucnv_fromUnicode_UTF8_OFFSETS_LOGIC(UConverterFromUnicodeArgs *args,
-                                                        UErrorCode *err);
+U_CFUNC ਖਾਲੀ ucnv_fromUnicode_UTF8(UConverter_From_Unicode_ਦਲੀਲਾਂ *ਦਲੀਲਾਂ_2,
+                                           UError_ਕੋਡ *err);
+U_CFUNC ਖਾਲੀ ucnv_fromUnicode_UTF8_OFFSETS_LOGIC(UConverter_From_Unicode_ਦਲੀਲਾਂ *ਦਲੀਲਾਂ_2,
+                                                        UError_ਕੋਡ *err);
 
 
 /* UTF-8 -------------------------------------------------------------------- */
 
-#define MAXIMUM_UCS2            0x0000FFFF
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ਵੱਧ_ਤੋਂ_ਵੱਧ_UCS2            0x0000FFFF
 
-static const uint32_t offsetsFromUTF8[5] = {0,
+ਸਥਿਰ ਅਚਲ uint32_t offsetsFromUTF8[5] = {0,
   static_cast<uint32_t>(0x00000000), static_cast<uint32_t>(0x00003080),
   static_cast<uint32_t>(0x000E2080), static_cast<uint32_t>(0x03C82080)
 };
 
-static UBool hasCESU8Data(const UConverter *cnv)
+ਸਥਿਰ UBool has_CESU8_ਅੰਕੜੇ(ਅਚਲ UConverter *cnv)
 {
-#if UCONFIG_ONLY_HTML_CONVERSION
-    return false;
-#else
-    return cnv->sharedData == &_CESU8Data;
-#endif
+#ਜੇ UCONFIG_ONLY_HTML_CONVERSION
+    ਵਾਪਸ ਝੂਠ;
+#ਨਹੀਂਤਾਂ
+    ਵਾਪਸ cnv->shared_ਅੰਕੜੇ == &CESU8_ਅੰਕੜੇ;
+#ਜੇ_ਅੰਤ
 }
 U_CDECL_BEGIN
-static void  U_CALLCONV ucnv_toUnicode_UTF8 (UConverterToUnicodeArgs * args,
-                                  UErrorCode * err)
+ਸਥਿਰ ਖਾਲੀ  U_CALLCONV ucnv_ਮੰਜ਼ਿਲ_Unicode_UTF8 (UConverter_ਮੰਜ਼ਿਲ_Unicode_ਦਲੀਲਾਂ * ਦਲੀਲਾਂ_2,
+                                  UError_ਕੋਡ * err)
 {
-    UConverter *cnv = args->converter;
-    const unsigned char *mySource = (unsigned char *) args->source;
-    char16_t *myTarget = args->target;
-    const unsigned char *sourceLimit = (unsigned char *) args->sourceLimit;
-    const char16_t *targetLimit = args->targetLimit;
-    unsigned char *toUBytes = cnv->toUBytes;
-    UBool isCESU8 = hasCESU8Data(cnv);
+    UConverter *cnv = ਦਲੀਲਾਂ_2->converter;
+    ਅਚਲ ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ *my_ਸਰੋਤ = (ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ *) ਦਲੀਲਾਂ_2->ਸਰੋਤ;
+    char16_t *my_ਨਿਸ਼ਾਨਾ = ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ;
+    ਅਚਲ ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ *ਸਰੋਤ_ਹੱਦਬੰਦੀ = (ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ *) ਦਲੀਲਾਂ_2->ਸਰੋਤ_ਹੱਦਬੰਦੀ;
+    ਅਚਲ char16_t *ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ = ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ *ਮੰਜ਼ਿਲ_UBytes = cnv->ਮੰਜ਼ਿਲ_UBytes;
+    UBool isCESU8 = has_CESU8_ਅੰਕੜੇ(cnv);
     uint32_t ch, ch2 = 0;
-    int32_t i, inBytes;
+    int32_t i, ਵਿੱਚ_ਬਾਈਟਾਂ;
 
     /* Restore size of current sequence */
-    if (cnv->toULength > 0 && myTarget < targetLimit)
+    ਜੇ (cnv->ਮੰਜ਼ਿਲ_ULength > 0 && my_ਨਿਸ਼ਾਨਾ < ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ)
     {
-        inBytes = cnv->mode;            /* restore # of bytes to consume */
-        i = cnv->toULength;             /* restore # of bytes consumed */
-        cnv->toULength = 0;
+        ਵਿੱਚ_ਬਾਈਟਾਂ = cnv->ਬਹੁਲਕ;            /* restore # of bytes to consume */
+        i = cnv->ਮੰਜ਼ਿਲ_ULength;             /* restore # of bytes consumed */
+        cnv->ਮੰਜ਼ਿਲ_ULength = 0;
 
-        ch = cnv->toUnicodeStatus;/*Stores the previously calculated ch from a previous call*/
-        cnv->toUnicodeStatus = 0;
-        goto morebytes;
+        ch = cnv->ਮੰਜ਼ਿਲ_Unicode_ਸਥਿਤੀ;/*Stores the previously calculated ch from a previous call*/
+        cnv->ਮੰਜ਼ਿਲ_Unicode_ਸਥਿਤੀ = 0;
+        ਜਾਓ morebytes;
     }
 
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    ਜਦੋਂ (my_ਸਰੋਤ < ਸਰੋਤ_ਹੱਦਬੰਦੀ && my_ਨਿਸ਼ਾਨਾ < ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ)
     {
-        ch = *(mySource++);
-        if (U8_IS_SINGLE(ch))        /* Simple case */
+        ch = *(my_ਸਰੋਤ++);
+        ਜੇ (U8_IS_SINGLE(ch))        /* Simple case */
         {
-            *(myTarget++) = (char16_t) ch;
+            *(my_ਨਿਸ਼ਾਨਾ++) = (char16_t) ch;
         }
-        else
+        ਨਹੀਂਤਾਂ
         {
             /* store the first char */
-            toUBytes[0] = (char)ch;
-            inBytes = U8_COUNT_BYTES_NON_ASCII(ch); /* lookup current sequence length */
+            ਮੰਜ਼ਿਲ_UBytes[0] = (ਅੱਖਰ)ch;
+            ਵਿੱਚ_ਬਾਈਟਾਂ = U8_ਗਿਣਤੀ_ਬਾਈਟਾਂ_NON_ASCII(ch); /* lookup current sequence length */
             i = 1;
 
 morebytes:
-            while (i < inBytes)
+            ਜਦੋਂ (i < ਵਿੱਚ_ਬਾਈਟਾਂ)
             {
-                if (mySource < sourceLimit)
+                ਜੇ (my_ਸਰੋਤ < ਸਰੋਤ_ਹੱਦਬੰਦੀ)
                 {
-                    toUBytes[i] = (char) (ch2 = *mySource);
-                    if (!icu::UTF8::isValidTrail(ch, static_cast<uint8_t>(ch2), i, inBytes) &&
+                    ਮੰਜ਼ਿਲ_UBytes[i] = (ਅੱਖਰ) (ch2 = *my_ਸਰੋਤ);
+                    ਜੇ (!icu::UTF8::isValidTrail(ch, static_cast<uint8_t>(ch2), i, ਵਿੱਚ_ਬਾਈਟਾਂ) &&
                             !(isCESU8 && i == 1 && ch == 0xed && U8_IS_TRAIL(ch2)))
                     {
-                        break; /* i < inBytes */
+                        ਰੋਕੋ; /* i < inBytes */
                     }
                     ch = (ch << 6) + ch2;
-                    ++mySource;
+                    ++my_ਸਰੋਤ;
                     i++;
                 }
-                else
+                ਨਹੀਂਤਾਂ
                 {
                     /* stores a partially calculated target*/
-                    cnv->toUnicodeStatus = ch;
-                    cnv->mode = inBytes;
-                    cnv->toULength = (int8_t) i;
-                    goto donefornow;
+                    cnv->ਮੰਜ਼ਿਲ_Unicode_ਸਥਿਤੀ = ch;
+                    cnv->ਬਹੁਲਕ = ਵਿੱਚ_ਬਾਈਟਾਂ;
+                    cnv->ਮੰਜ਼ਿਲ_ULength = (int8_t) i;
+                    ਜਾਓ donefornow;
                 }
             }
 
             // In CESU-8, only surrogates, not supplementary code points, are encoded directly.
-            if (i == inBytes && (!isCESU8 || i <= 3))
+            ਜੇ (i == ਵਿੱਚ_ਬਾਈਟਾਂ && (!isCESU8 || i <= 3))
             {
                 /* Remove the accumulated high bits */
-                ch -= offsetsFromUTF8[inBytes];
+                ch -= offsetsFromUTF8[ਵਿੱਚ_ਬਾਈਟਾਂ];
 
                 /* Normal valid byte when the loop has not prematurely terminated (i < inBytes) */
-                if (ch <= MAXIMUM_UCS2) 
+                ਜੇ (ch <= ਵੱਧ_ਤੋਂ_ਵੱਧ_UCS2) 
                 {
                     /* fits in 16 bits */
-                    *(myTarget++) = (char16_t) ch;
+                    *(my_ਨਿਸ਼ਾਨਾ++) = (char16_t) ch;
                 }
-                else
+                ਨਹੀਂਤਾਂ
                 {
                     /* write out the surrogates */
-                    *(myTarget++) = U16_LEAD(ch);
+                    *(my_ਨਿਸ਼ਾਨਾ++) = U16_LEAD(ch);
                     ch = U16_TRAIL(ch);
-                    if (myTarget < targetLimit)
+                    ਜੇ (my_ਨਿਸ਼ਾਨਾ < ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ)
                     {
-                        *(myTarget++) = (char16_t)ch;
+                        *(my_ਨਿਸ਼ਾਨਾ++) = (char16_t)ch;
                     }
-                    else
+                    ਨਹੀਂਤਾਂ
                     {
                         /* Put in overflow buffer (not handled here) */
-                        cnv->UCharErrorBuffer[0] = (char16_t) ch;
-                        cnv->UCharErrorBufferLength = 1;
-                        *err = U_BUFFER_OVERFLOW_ERROR;
-                        break;
+                        cnv->UChar_Error_ਬਫਰ[0] = (char16_t) ch;
+                        cnv->UChar_Error_ਬਫਰ_ਲੰਮਾਈ = 1;
+                        *err = U_ਬਫਰ_ਉਛਾਲ_ERROR;
+                        ਰੋਕੋ;
                     }
                 }
             }
-            else
+            ਨਹੀਂਤਾਂ
             {
-                cnv->toULength = (int8_t)i;
-                *err = U_ILLEGAL_CHAR_FOUND;
-                break;
+                cnv->ਮੰਜ਼ਿਲ_ULength = (int8_t)i;
+                *err = U_ILLEGAL_CHAR_ਮਿਲਿਆ;
+                ਰੋਕੋ;
             }
         }
     }
 
 donefornow:
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ਜੇ (my_ਸਰੋਤ < ਸਰੋਤ_ਹੱਦਬੰਦੀ && my_ਨਿਸ਼ਾਨਾ >= ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ && U_SUCCESS(*err))
     {
         /* End of target buffer */
-        *err = U_BUFFER_OVERFLOW_ERROR;
+        *err = U_ਬਫਰ_ਉਛਾਲ_ERROR;
     }
 
-    args->target = myTarget;
-    args->source = (const char *) mySource;
+    ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ = my_ਨਿਸ਼ਾਨਾ;
+    ਦਲੀਲਾਂ_2->ਸਰੋਤ = (ਅਚਲ ਅੱਖਰ *) my_ਸਰੋਤ;
 }
 
-static void  U_CALLCONV ucnv_toUnicode_UTF8_OFFSETS_LOGIC (UConverterToUnicodeArgs * args,
-                                                UErrorCode * err)
+ਸਥਿਰ ਖਾਲੀ  U_CALLCONV ucnv_ਮੰਜ਼ਿਲ_Unicode_UTF8_OFFSETS_LOGIC (UConverter_ਮੰਜ਼ਿਲ_Unicode_ਦਲੀਲਾਂ * ਦਲੀਲਾਂ_2,
+                                                UError_ਕੋਡ * err)
 {
-    UConverter *cnv = args->converter;
-    const unsigned char *mySource = (unsigned char *) args->source;
-    char16_t *myTarget = args->target;
-    int32_t *myOffsets = args->offsets;
-    int32_t offsetNum = 0;
-    const unsigned char *sourceLimit = (unsigned char *) args->sourceLimit;
-    const char16_t *targetLimit = args->targetLimit;
-    unsigned char *toUBytes = cnv->toUBytes;
-    UBool isCESU8 = hasCESU8Data(cnv);
+    UConverter *cnv = ਦਲੀਲਾਂ_2->converter;
+    ਅਚਲ ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ *my_ਸਰੋਤ = (ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ *) ਦਲੀਲਾਂ_2->ਸਰੋਤ;
+    char16_t *my_ਨਿਸ਼ਾਨਾ = ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ;
+    int32_t *myOffsets = ਦਲੀਲਾਂ_2->offsets;
+    int32_t ਵਿੱਥ_ਅੰਕ = 0;
+    ਅਚਲ ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ *ਸਰੋਤ_ਹੱਦਬੰਦੀ = (ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ *) ਦਲੀਲਾਂ_2->ਸਰੋਤ_ਹੱਦਬੰਦੀ;
+    ਅਚਲ char16_t *ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ = ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ *ਮੰਜ਼ਿਲ_UBytes = cnv->ਮੰਜ਼ਿਲ_UBytes;
+    UBool isCESU8 = has_CESU8_ਅੰਕੜੇ(cnv);
     uint32_t ch, ch2 = 0;
-    int32_t i, inBytes;
+    int32_t i, ਵਿੱਚ_ਬਾਈਟਾਂ;
 
     /* Restore size of current sequence */
-    if (cnv->toULength > 0 && myTarget < targetLimit)
+    ਜੇ (cnv->ਮੰਜ਼ਿਲ_ULength > 0 && my_ਨਿਸ਼ਾਨਾ < ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ)
     {
-        inBytes = cnv->mode;            /* restore # of bytes to consume */
-        i = cnv->toULength;             /* restore # of bytes consumed */
-        cnv->toULength = 0;
+        ਵਿੱਚ_ਬਾਈਟਾਂ = cnv->ਬਹੁਲਕ;            /* restore # of bytes to consume */
+        i = cnv->ਮੰਜ਼ਿਲ_ULength;             /* restore # of bytes consumed */
+        cnv->ਮੰਜ਼ਿਲ_ULength = 0;
 
-        ch = cnv->toUnicodeStatus;/*Stores the previously calculated ch from a previous call*/
-        cnv->toUnicodeStatus = 0;
-        goto morebytes;
+        ch = cnv->ਮੰਜ਼ਿਲ_Unicode_ਸਥਿਤੀ;/*Stores the previously calculated ch from a previous call*/
+        cnv->ਮੰਜ਼ਿਲ_Unicode_ਸਥਿਤੀ = 0;
+        ਜਾਓ morebytes;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    ਜਦੋਂ (my_ਸਰੋਤ < ਸਰੋਤ_ਹੱਦਬੰਦੀ && my_ਨਿਸ਼ਾਨਾ < ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ)
     {
-        ch = *(mySource++);
-        if (U8_IS_SINGLE(ch))        /* Simple case */
+        ch = *(my_ਸਰੋਤ++);
+        ਜੇ (U8_IS_SINGLE(ch))        /* Simple case */
         {
-            *(myTarget++) = (char16_t) ch;
-            *(myOffsets++) = offsetNum++;
+            *(my_ਨਿਸ਼ਾਨਾ++) = (char16_t) ch;
+            *(myOffsets++) = ਵਿੱਥ_ਅੰਕ++;
         }
-        else
+        ਨਹੀਂਤਾਂ
         {
-            toUBytes[0] = (char)ch;
-            inBytes = U8_COUNT_BYTES_NON_ASCII(ch);
+            ਮੰਜ਼ਿਲ_UBytes[0] = (ਅੱਖਰ)ch;
+            ਵਿੱਚ_ਬਾਈਟਾਂ = U8_ਗਿਣਤੀ_ਬਾਈਟਾਂ_NON_ASCII(ch);
             i = 1;
 
 morebytes:
-            while (i < inBytes)
+            ਜਦੋਂ (i < ਵਿੱਚ_ਬਾਈਟਾਂ)
             {
-                if (mySource < sourceLimit)
+                ਜੇ (my_ਸਰੋਤ < ਸਰੋਤ_ਹੱਦਬੰਦੀ)
                 {
-                    toUBytes[i] = (char) (ch2 = *mySource);
-                    if (!icu::UTF8::isValidTrail(ch, static_cast<uint8_t>(ch2), i, inBytes) &&
+                    ਮੰਜ਼ਿਲ_UBytes[i] = (ਅੱਖਰ) (ch2 = *my_ਸਰੋਤ);
+                    ਜੇ (!icu::UTF8::isValidTrail(ch, static_cast<uint8_t>(ch2), i, ਵਿੱਚ_ਬਾਈਟਾਂ) &&
                             !(isCESU8 && i == 1 && ch == 0xed && U8_IS_TRAIL(ch2)))
                     {
-                        break; /* i < inBytes */
+                        ਰੋਕੋ; /* i < inBytes */
                     }
                     ch = (ch << 6) + ch2;
-                    ++mySource;
+                    ++my_ਸਰੋਤ;
                     i++;
                 }
-                else
+                ਨਹੀਂਤਾਂ
                 {
-                    cnv->toUnicodeStatus = ch;
-                    cnv->mode = inBytes;
-                    cnv->toULength = (int8_t)i;
-                    goto donefornow;
+                    cnv->ਮੰਜ਼ਿਲ_Unicode_ਸਥਿਤੀ = ch;
+                    cnv->ਬਹੁਲਕ = ਵਿੱਚ_ਬਾਈਟਾਂ;
+                    cnv->ਮੰਜ਼ਿਲ_ULength = (int8_t)i;
+                    ਜਾਓ donefornow;
                 }
             }
 
             // In CESU-8, only surrogates, not supplementary code points, are encoded directly.
-            if (i == inBytes && (!isCESU8 || i <= 3))
+            ਜੇ (i == ਵਿੱਚ_ਬਾਈਟਾਂ && (!isCESU8 || i <= 3))
             {
                 /* Remove the accumulated high bits */
-                ch -= offsetsFromUTF8[inBytes];
+                ch -= offsetsFromUTF8[ਵਿੱਚ_ਬਾਈਟਾਂ];
 
                 /* Normal valid byte when the loop has not prematurely terminated (i < inBytes) */
-                if (ch <= MAXIMUM_UCS2) 
+                ਜੇ (ch <= ਵੱਧ_ਤੋਂ_ਵੱਧ_UCS2) 
                 {
                     /* fits in 16 bits */
-                    *(myTarget++) = (char16_t) ch;
-                    *(myOffsets++) = offsetNum;
+                    *(my_ਨਿਸ਼ਾਨਾ++) = (char16_t) ch;
+                    *(myOffsets++) = ਵਿੱਥ_ਅੰਕ;
                 }
-                else
+                ਨਹੀਂਤਾਂ
                 {
                     /* write out the surrogates */
-                    *(myTarget++) = U16_LEAD(ch);
-                    *(myOffsets++) = offsetNum;
+                    *(my_ਨਿਸ਼ਾਨਾ++) = U16_LEAD(ch);
+                    *(myOffsets++) = ਵਿੱਥ_ਅੰਕ;
                     ch = U16_TRAIL(ch);
-                    if (myTarget < targetLimit)
+                    ਜੇ (my_ਨਿਸ਼ਾਨਾ < ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ)
                     {
-                        *(myTarget++) = (char16_t)ch;
-                        *(myOffsets++) = offsetNum;
+                        *(my_ਨਿਸ਼ਾਨਾ++) = (char16_t)ch;
+                        *(myOffsets++) = ਵਿੱਥ_ਅੰਕ;
                     }
-                    else
+                    ਨਹੀਂਤਾਂ
                     {
-                        cnv->UCharErrorBuffer[0] = (char16_t) ch;
-                        cnv->UCharErrorBufferLength = 1;
-                        *err = U_BUFFER_OVERFLOW_ERROR;
+                        cnv->UChar_Error_ਬਫਰ[0] = (char16_t) ch;
+                        cnv->UChar_Error_ਬਫਰ_ਲੰਮਾਈ = 1;
+                        *err = U_ਬਫਰ_ਉਛਾਲ_ERROR;
                     }
                 }
-                offsetNum += i;
+                ਵਿੱਥ_ਅੰਕ += i;
             }
-            else
+            ਨਹੀਂਤਾਂ
             {
-                cnv->toULength = (int8_t)i;
-                *err = U_ILLEGAL_CHAR_FOUND;
-                break;
+                cnv->ਮੰਜ਼ਿਲ_ULength = (int8_t)i;
+                *err = U_ILLEGAL_CHAR_ਮਿਲਿਆ;
+                ਰੋਕੋ;
             }
         }
     }
 
 donefornow:
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ਜੇ (my_ਸਰੋਤ < ਸਰੋਤ_ਹੱਦਬੰਦੀ && my_ਨਿਸ਼ਾਨਾ >= ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ && U_SUCCESS(*err))
     {   /* End of target buffer */
-        *err = U_BUFFER_OVERFLOW_ERROR;
+        *err = U_ਬਫਰ_ਉਛਾਲ_ERROR;
     }
 
-    args->target = myTarget;
-    args->source = (const char *) mySource;
-    args->offsets = myOffsets;
+    ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ = my_ਨਿਸ਼ਾਨਾ;
+    ਦਲੀਲਾਂ_2->ਸਰੋਤ = (ਅਚਲ ਅੱਖਰ *) my_ਸਰੋਤ;
+    ਦਲੀਲਾਂ_2->offsets = myOffsets;
 }
-U_CDECL_END
+U_CDECL_ਸਿਰਾ
 
-U_CFUNC void  U_CALLCONV ucnv_fromUnicode_UTF8 (UConverterFromUnicodeArgs * args,
-                                    UErrorCode * err)
+U_CFUNC ਖਾਲੀ  U_CALLCONV ucnv_fromUnicode_UTF8 (UConverter_From_Unicode_ਦਲੀਲਾਂ * ਦਲੀਲਾਂ_2,
+                                    UError_ਕੋਡ * err)
 {
-    UConverter *cnv = args->converter;
-    const char16_t *mySource = args->source;
-    const char16_t *sourceLimit = args->sourceLimit;
-    uint8_t *myTarget = (uint8_t *) args->target;
-    const uint8_t *targetLimit = (uint8_t *) args->targetLimit;
-    uint8_t *tempPtr;
+    UConverter *cnv = ਦਲੀਲਾਂ_2->converter;
+    ਅਚਲ char16_t *my_ਸਰੋਤ = ਦਲੀਲਾਂ_2->ਸਰੋਤ;
+    ਅਚਲ char16_t *ਸਰੋਤ_ਹੱਦਬੰਦੀ = ਦਲੀਲਾਂ_2->ਸਰੋਤ_ਹੱਦਬੰਦੀ;
+    uint8_t *my_ਨਿਸ਼ਾਨਾ = (uint8_t *) ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ;
+    ਅਚਲ uint8_t *ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ = (uint8_t *) ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ;
+    uint8_t *ਆਰਜ਼ੀ_Ptr;
     UChar32 ch;
-    uint8_t tempBuf[4];
-    int32_t indexToWrite;
-    UBool isNotCESU8 = !hasCESU8Data(cnv);
+    uint8_t ਆਰਜ਼ੀ_Buf[4];
+    int32_t ਸੂਚਕਾਂਕ_ਮੰਜ਼ਿਲ_Write;
+    UBool isNotCESU8 = !has_CESU8_ਅੰਕੜੇ(cnv);
 
-    if (cnv->fromUChar32 && myTarget < targetLimit)
+    ਜੇ (cnv->fromUChar32 && my_ਨਿਸ਼ਾਨਾ < ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ)
     {
         ch = cnv->fromUChar32;
         cnv->fromUChar32 = 0;
-        goto lowsurrogate;
+        ਜਾਓ lowsurrogate;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    ਜਦੋਂ (my_ਸਰੋਤ < ਸਰੋਤ_ਹੱਦਬੰਦੀ && my_ਨਿਸ਼ਾਨਾ < ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ)
     {
-        ch = *(mySource++);
+        ch = *(my_ਸਰੋਤ++);
 
-        if (ch < 0x80)        /* Single byte */
+        ਜੇ (ch < 0x80)        /* Single byte */
         {
-            *(myTarget++) = (uint8_t) ch;
+            *(my_ਨਿਸ਼ਾਨਾ++) = (uint8_t) ch;
         }
-        else if (ch < 0x800)  /* Double byte */
+        ਨਹੀਂਤਾਂ ਜੇ (ch < 0x800)  /* Double byte */
         {
-            *(myTarget++) = (uint8_t) ((ch >> 6) | 0xc0);
-            if (myTarget < targetLimit)
+            *(my_ਨਿਸ਼ਾਨਾ++) = (uint8_t) ((ch >> 6) | 0xc0);
+            ਜੇ (my_ਨਿਸ਼ਾਨਾ < ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ)
             {
-                *(myTarget++) = (uint8_t) ((ch & 0x3f) | 0x80);
+                *(my_ਨਿਸ਼ਾਨਾ++) = (uint8_t) ((ch & 0x3f) | 0x80);
             }
-            else
+            ਨਹੀਂਤਾਂ
             {
-                cnv->charErrorBuffer[0] = (uint8_t) ((ch & 0x3f) | 0x80);
-                cnv->charErrorBufferLength = 1;
-                *err = U_BUFFER_OVERFLOW_ERROR;
+                cnv->char_Error_ਬਫਰ[0] = (uint8_t) ((ch & 0x3f) | 0x80);
+                cnv->char_Error_ਬਫਰ_ਲੰਮਾਈ = 1;
+                *err = U_ਬਫਰ_ਉਛਾਲ_ERROR;
             }
         }
-        else {
+        ਨਹੀਂਤਾਂ {
             /* Check for surrogates */
-            if(U16_IS_SURROGATE(ch) && isNotCESU8) {
+            ਜੇ(U16_IS_SURROGATE(ch) && isNotCESU8) {
 lowsurrogate:
-                if (mySource < sourceLimit) {
+                ਜੇ (my_ਸਰੋਤ < ਸਰੋਤ_ਹੱਦਬੰਦੀ) {
                     /* test both code units */
-                    if(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(*mySource)) {
+                    ਜੇ(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(*my_ਸਰੋਤ)) {
                         /* convert and consume this supplementary code point */
-                        ch=U16_GET_SUPPLEMENTARY(ch, *mySource);
-                        ++mySource;
+                        ch=U16_GET_SUPPLEMENTARY(ch, *my_ਸਰੋਤ);
+                        ++my_ਸਰੋਤ;
                         /* exit this condition tree */
                     }
-                    else {
+                    ਨਹੀਂਤਾਂ {
                         /* this is an unpaired trail or lead code unit */
                         /* callback(illegal) */
                         cnv->fromUChar32 = ch;
-                        *err = U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        *err = U_ILLEGAL_CHAR_ਮਿਲਿਆ;
+                        ਰੋਕੋ;
                     }
                 }
-                else {
+                ਨਹੀਂਤਾਂ {
                     /* no more input */
                     cnv->fromUChar32 = ch;
-                    break;
+                    ਰੋਕੋ;
                 }
             }
 
             /* Do we write the buffer directly for speed,
             or do we have to be careful about target buffer space? */
-            tempPtr = (((targetLimit - myTarget) >= 4) ? myTarget : tempBuf);
+            ਆਰਜ਼ੀ_Ptr = (((ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ - my_ਨਿਸ਼ਾਨਾ) >= 4) ? my_ਨਿਸ਼ਾਨਾ : ਆਰਜ਼ੀ_Buf);
 
-            if (ch <= MAXIMUM_UCS2) {
-                indexToWrite = 2;
-                tempPtr[0] = (uint8_t) ((ch >> 12) | 0xe0);
+            ਜੇ (ch <= ਵੱਧ_ਤੋਂ_ਵੱਧ_UCS2) {
+                ਸੂਚਕਾਂਕ_ਮੰਜ਼ਿਲ_Write = 2;
+                ਆਰਜ਼ੀ_Ptr[0] = (uint8_t) ((ch >> 12) | 0xe0);
             }
-            else {
-                indexToWrite = 3;
-                tempPtr[0] = (uint8_t) ((ch >> 18) | 0xf0);
-                tempPtr[1] = (uint8_t) (((ch >> 12) & 0x3f) | 0x80);
+            ਨਹੀਂਤਾਂ {
+                ਸੂਚਕਾਂਕ_ਮੰਜ਼ਿਲ_Write = 3;
+                ਆਰਜ਼ੀ_Ptr[0] = (uint8_t) ((ch >> 18) | 0xf0);
+                ਆਰਜ਼ੀ_Ptr[1] = (uint8_t) (((ch >> 12) & 0x3f) | 0x80);
             }
-            tempPtr[indexToWrite-1] = (uint8_t) (((ch >> 6) & 0x3f) | 0x80);
-            tempPtr[indexToWrite] = (uint8_t) ((ch & 0x3f) | 0x80);
+            ਆਰਜ਼ੀ_Ptr[ਸੂਚਕਾਂਕ_ਮੰਜ਼ਿਲ_Write-1] = (uint8_t) (((ch >> 6) & 0x3f) | 0x80);
+            ਆਰਜ਼ੀ_Ptr[ਸੂਚਕਾਂਕ_ਮੰਜ਼ਿਲ_Write] = (uint8_t) ((ch & 0x3f) | 0x80);
 
-            if (tempPtr == myTarget) {
+            ਜੇ (ਆਰਜ਼ੀ_Ptr == my_ਨਿਸ਼ਾਨਾ) {
                 /* There was enough space to write the codepoint directly. */
-                myTarget += (indexToWrite + 1);
+                my_ਨਿਸ਼ਾਨਾ += (ਸੂਚਕਾਂਕ_ਮੰਜ਼ਿਲ_Write + 1);
             }
-            else {
+            ਨਹੀਂਤਾਂ {
                 /* We might run out of room soon. Write it slowly. */
-                for (; tempPtr <= (tempBuf + indexToWrite); tempPtr++) {
-                    if (myTarget < targetLimit) {
-                        *(myTarget++) = *tempPtr;
+                ਲਈ (; ਆਰਜ਼ੀ_Ptr <= (ਆਰਜ਼ੀ_Buf + ਸੂਚਕਾਂਕ_ਮੰਜ਼ਿਲ_Write); ਆਰਜ਼ੀ_Ptr++) {
+                    ਜੇ (my_ਨਿਸ਼ਾਨਾ < ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ) {
+                        *(my_ਨਿਸ਼ਾਨਾ++) = *ਆਰਜ਼ੀ_Ptr;
                     }
-                    else {
-                        cnv->charErrorBuffer[cnv->charErrorBufferLength++] = *tempPtr;
-                        *err = U_BUFFER_OVERFLOW_ERROR;
+                    ਨਹੀਂਤਾਂ {
+                        cnv->char_Error_ਬਫਰ[cnv->char_Error_ਬਫਰ_ਲੰਮਾਈ++] = *ਆਰਜ਼ੀ_Ptr;
+                        *err = U_ਬਫਰ_ਉਛਾਲ_ERROR;
                     }
                 }
             }
         }
     }
 
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ਜੇ (my_ਸਰੋਤ < ਸਰੋਤ_ਹੱਦਬੰਦੀ && my_ਨਿਸ਼ਾਨਾ >= ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ && U_SUCCESS(*err))
     {
-        *err = U_BUFFER_OVERFLOW_ERROR;
+        *err = U_ਬਫਰ_ਉਛਾਲ_ERROR;
     }
 
-    args->target = (char *) myTarget;
-    args->source = mySource;
+    ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ = (ਅੱਖਰ *) my_ਨਿਸ਼ਾਨਾ;
+    ਦਲੀਲਾਂ_2->ਸਰੋਤ = my_ਸਰੋਤ;
 }
 
-U_CFUNC void  U_CALLCONV ucnv_fromUnicode_UTF8_OFFSETS_LOGIC (UConverterFromUnicodeArgs * args,
-                                                  UErrorCode * err)
+U_CFUNC ਖਾਲੀ  U_CALLCONV ucnv_fromUnicode_UTF8_OFFSETS_LOGIC (UConverter_From_Unicode_ਦਲੀਲਾਂ * ਦਲੀਲਾਂ_2,
+                                                  UError_ਕੋਡ * err)
 {
-    UConverter *cnv = args->converter;
-    const char16_t *mySource = args->source;
-    int32_t *myOffsets = args->offsets;
-    const char16_t *sourceLimit = args->sourceLimit;
-    uint8_t *myTarget = (uint8_t *) args->target;
-    const uint8_t *targetLimit = (uint8_t *) args->targetLimit;
-    uint8_t *tempPtr;
+    UConverter *cnv = ਦਲੀਲਾਂ_2->converter;
+    ਅਚਲ char16_t *my_ਸਰੋਤ = ਦਲੀਲਾਂ_2->ਸਰੋਤ;
+    int32_t *myOffsets = ਦਲੀਲਾਂ_2->offsets;
+    ਅਚਲ char16_t *ਸਰੋਤ_ਹੱਦਬੰਦੀ = ਦਲੀਲਾਂ_2->ਸਰੋਤ_ਹੱਦਬੰਦੀ;
+    uint8_t *my_ਨਿਸ਼ਾਨਾ = (uint8_t *) ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ;
+    ਅਚਲ uint8_t *ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ = (uint8_t *) ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ;
+    uint8_t *ਆਰਜ਼ੀ_Ptr;
     UChar32 ch;
-    int32_t offsetNum, nextSourceIndex;
-    int32_t indexToWrite;
-    uint8_t tempBuf[4];
-    UBool isNotCESU8 = !hasCESU8Data(cnv);
+    int32_t ਵਿੱਥ_ਅੰਕ, ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
+    int32_t ਸੂਚਕਾਂਕ_ਮੰਜ਼ਿਲ_Write;
+    uint8_t ਆਰਜ਼ੀ_Buf[4];
+    UBool isNotCESU8 = !has_CESU8_ਅੰਕੜੇ(cnv);
 
-    if (cnv->fromUChar32 && myTarget < targetLimit)
+    ਜੇ (cnv->fromUChar32 && my_ਨਿਸ਼ਾਨਾ < ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ)
     {
         ch = cnv->fromUChar32;
         cnv->fromUChar32 = 0;
-        offsetNum = -1;
-        nextSourceIndex = 0;
-        goto lowsurrogate;
-    } else {
-        offsetNum = 0;
+        ਵਿੱਥ_ਅੰਕ = -1;
+        ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ = 0;
+        ਜਾਓ lowsurrogate;
+    } ਨਹੀਂਤਾਂ {
+        ਵਿੱਥ_ਅੰਕ = 0;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    ਜਦੋਂ (my_ਸਰੋਤ < ਸਰੋਤ_ਹੱਦਬੰਦੀ && my_ਨਿਸ਼ਾਨਾ < ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ)
     {
-        ch = *(mySource++);
+        ch = *(my_ਸਰੋਤ++);
 
-        if (ch < 0x80)        /* Single byte */
+        ਜੇ (ch < 0x80)        /* Single byte */
         {
-            *(myOffsets++) = offsetNum++;
-            *(myTarget++) = (char) ch;
+            *(myOffsets++) = ਵਿੱਥ_ਅੰਕ++;
+            *(my_ਨਿਸ਼ਾਨਾ++) = (ਅੱਖਰ) ch;
         }
-        else if (ch < 0x800)  /* Double byte */
+        ਨਹੀਂਤਾਂ ਜੇ (ch < 0x800)  /* Double byte */
         {
-            *(myOffsets++) = offsetNum;
-            *(myTarget++) = (uint8_t) ((ch >> 6) | 0xc0);
-            if (myTarget < targetLimit)
+            *(myOffsets++) = ਵਿੱਥ_ਅੰਕ;
+            *(my_ਨਿਸ਼ਾਨਾ++) = (uint8_t) ((ch >> 6) | 0xc0);
+            ਜੇ (my_ਨਿਸ਼ਾਨਾ < ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ)
             {
-                *(myOffsets++) = offsetNum++;
-                *(myTarget++) = (uint8_t) ((ch & 0x3f) | 0x80);
+                *(myOffsets++) = ਵਿੱਥ_ਅੰਕ++;
+                *(my_ਨਿਸ਼ਾਨਾ++) = (uint8_t) ((ch & 0x3f) | 0x80);
             }
-            else
+            ਨਹੀਂਤਾਂ
             {
-                cnv->charErrorBuffer[0] = (uint8_t) ((ch & 0x3f) | 0x80);
-                cnv->charErrorBufferLength = 1;
-                *err = U_BUFFER_OVERFLOW_ERROR;
+                cnv->char_Error_ਬਫਰ[0] = (uint8_t) ((ch & 0x3f) | 0x80);
+                cnv->char_Error_ਬਫਰ_ਲੰਮਾਈ = 1;
+                *err = U_ਬਫਰ_ਉਛਾਲ_ERROR;
             }
         }
-        else
+        ਨਹੀਂਤਾਂ
         /* Check for surrogates */
         {
-            nextSourceIndex = offsetNum + 1;
+            ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ = ਵਿੱਥ_ਅੰਕ + 1;
 
-            if(U16_IS_SURROGATE(ch) && isNotCESU8) {
+            ਜੇ(U16_IS_SURROGATE(ch) && isNotCESU8) {
 lowsurrogate:
-                if (mySource < sourceLimit) {
+                ਜੇ (my_ਸਰੋਤ < ਸਰੋਤ_ਹੱਦਬੰਦੀ) {
                     /* test both code units */
-                    if(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(*mySource)) {
+                    ਜੇ(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(*my_ਸਰੋਤ)) {
                         /* convert and consume this supplementary code point */
-                        ch=U16_GET_SUPPLEMENTARY(ch, *mySource);
-                        ++mySource;
-                        ++nextSourceIndex;
+                        ch=U16_GET_SUPPLEMENTARY(ch, *my_ਸਰੋਤ);
+                        ++my_ਸਰੋਤ;
+                        ++ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                         /* exit this condition tree */
                     }
-                    else {
+                    ਨਹੀਂਤਾਂ {
                         /* this is an unpaired trail or lead code unit */
                         /* callback(illegal) */
                         cnv->fromUChar32 = ch;
-                        *err = U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        *err = U_ILLEGAL_CHAR_ਮਿਲਿਆ;
+                        ਰੋਕੋ;
                     }
                 }
-                else {
+                ਨਹੀਂਤਾਂ {
                     /* no more input */
                     cnv->fromUChar32 = ch;
-                    break;
+                    ਰੋਕੋ;
                 }
             }
 
             /* Do we write the buffer directly for speed,
             or do we have to be careful about target buffer space? */
-            tempPtr = (((targetLimit - myTarget) >= 4) ? myTarget : tempBuf);
+            ਆਰਜ਼ੀ_Ptr = (((ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ - my_ਨਿਸ਼ਾਨਾ) >= 4) ? my_ਨਿਸ਼ਾਨਾ : ਆਰਜ਼ੀ_Buf);
 
-            if (ch <= MAXIMUM_UCS2) {
-                indexToWrite = 2;
-                tempPtr[0] = (uint8_t) ((ch >> 12) | 0xe0);
+            ਜੇ (ch <= ਵੱਧ_ਤੋਂ_ਵੱਧ_UCS2) {
+                ਸੂਚਕਾਂਕ_ਮੰਜ਼ਿਲ_Write = 2;
+                ਆਰਜ਼ੀ_Ptr[0] = (uint8_t) ((ch >> 12) | 0xe0);
             }
-            else {
-                indexToWrite = 3;
-                tempPtr[0] = (uint8_t) ((ch >> 18) | 0xf0);
-                tempPtr[1] = (uint8_t) (((ch >> 12) & 0x3f) | 0x80);
+            ਨਹੀਂਤਾਂ {
+                ਸੂਚਕਾਂਕ_ਮੰਜ਼ਿਲ_Write = 3;
+                ਆਰਜ਼ੀ_Ptr[0] = (uint8_t) ((ch >> 18) | 0xf0);
+                ਆਰਜ਼ੀ_Ptr[1] = (uint8_t) (((ch >> 12) & 0x3f) | 0x80);
             }
-            tempPtr[indexToWrite-1] = (uint8_t) (((ch >> 6) & 0x3f) | 0x80);
-            tempPtr[indexToWrite] = (uint8_t) ((ch & 0x3f) | 0x80);
+            ਆਰਜ਼ੀ_Ptr[ਸੂਚਕਾਂਕ_ਮੰਜ਼ਿਲ_Write-1] = (uint8_t) (((ch >> 6) & 0x3f) | 0x80);
+            ਆਰਜ਼ੀ_Ptr[ਸੂਚਕਾਂਕ_ਮੰਜ਼ਿਲ_Write] = (uint8_t) ((ch & 0x3f) | 0x80);
 
-            if (tempPtr == myTarget) {
+            ਜੇ (ਆਰਜ਼ੀ_Ptr == my_ਨਿਸ਼ਾਨਾ) {
                 /* There was enough space to write the codepoint directly. */
-                myTarget += (indexToWrite + 1);
-                myOffsets[0] = offsetNum;
-                myOffsets[1] = offsetNum;
-                myOffsets[2] = offsetNum;
-                if (indexToWrite >= 3) {
-                    myOffsets[3] = offsetNum;
+                my_ਨਿਸ਼ਾਨਾ += (ਸੂਚਕਾਂਕ_ਮੰਜ਼ਿਲ_Write + 1);
+                myOffsets[0] = ਵਿੱਥ_ਅੰਕ;
+                myOffsets[1] = ਵਿੱਥ_ਅੰਕ;
+                myOffsets[2] = ਵਿੱਥ_ਅੰਕ;
+                ਜੇ (ਸੂਚਕਾਂਕ_ਮੰਜ਼ਿਲ_Write >= 3) {
+                    myOffsets[3] = ਵਿੱਥ_ਅੰਕ;
                 }
-                myOffsets += (indexToWrite + 1);
+                myOffsets += (ਸੂਚਕਾਂਕ_ਮੰਜ਼ਿਲ_Write + 1);
             }
-            else {
+            ਨਹੀਂਤਾਂ {
                 /* We might run out of room soon. Write it slowly. */
-                for (; tempPtr <= (tempBuf + indexToWrite); tempPtr++) {
-                    if (myTarget < targetLimit)
+                ਲਈ (; ਆਰਜ਼ੀ_Ptr <= (ਆਰਜ਼ੀ_Buf + ਸੂਚਕਾਂਕ_ਮੰਜ਼ਿਲ_Write); ਆਰਜ਼ੀ_Ptr++) {
+                    ਜੇ (my_ਨਿਸ਼ਾਨਾ < ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ)
                     {
-                        *(myOffsets++) = offsetNum;
-                        *(myTarget++) = *tempPtr;
+                        *(myOffsets++) = ਵਿੱਥ_ਅੰਕ;
+                        *(my_ਨਿਸ਼ਾਨਾ++) = *ਆਰਜ਼ੀ_Ptr;
                     }
-                    else
+                    ਨਹੀਂਤਾਂ
                     {
-                        cnv->charErrorBuffer[cnv->charErrorBufferLength++] = *tempPtr;
-                        *err = U_BUFFER_OVERFLOW_ERROR;
+                        cnv->char_Error_ਬਫਰ[cnv->char_Error_ਬਫਰ_ਲੰਮਾਈ++] = *ਆਰਜ਼ੀ_Ptr;
+                        *err = U_ਬਫਰ_ਉਛਾਲ_ERROR;
                     }
                 }
             }
-            offsetNum = nextSourceIndex;
+            ਵਿੱਥ_ਅੰਕ = ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
         }
     }
 
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ਜੇ (my_ਸਰੋਤ < ਸਰੋਤ_ਹੱਦਬੰਦੀ && my_ਨਿਸ਼ਾਨਾ >= ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ && U_SUCCESS(*err))
     {
-        *err = U_BUFFER_OVERFLOW_ERROR;
+        *err = U_ਬਫਰ_ਉਛਾਲ_ERROR;
     }
 
-    args->target = (char *) myTarget;
-    args->source = mySource;
-    args->offsets = myOffsets;
+    ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ = (ਅੱਖਰ *) my_ਨਿਸ਼ਾਨਾ;
+    ਦਲੀਲਾਂ_2->ਸਰੋਤ = my_ਸਰੋਤ;
+    ਦਲੀਲਾਂ_2->offsets = myOffsets;
 }
 
 U_CDECL_BEGIN
-static UChar32 U_CALLCONV ucnv_getNextUChar_UTF8(UConverterToUnicodeArgs *args,
-                                               UErrorCode *err) {
+ਸਥਿਰ UChar32 U_CALLCONV ucnv_get_ਅਗਲਾ_UChar_UTF8(UConverter_ਮੰਜ਼ਿਲ_Unicode_ਦਲੀਲਾਂ *ਦਲੀਲਾਂ_2,
+                                               UError_ਕੋਡ *err) {
     UConverter *cnv;
-    const uint8_t *sourceInitial;
-    const uint8_t *source;
+    ਅਚਲ uint8_t *ਸਰੋਤ_Initial;
+    ਅਚਲ uint8_t *ਸਰੋਤ;
     uint8_t myByte;
     UChar32 ch;
     int8_t i;
 
     /* UTF-8 only here, the framework handles CESU-8 to combine surrogate pairs */
 
-    cnv = args->converter;
-    sourceInitial = source = (const uint8_t *)args->source;
-    if (source >= (const uint8_t *)args->sourceLimit)
+    cnv = ਦਲੀਲਾਂ_2->converter;
+    ਸਰੋਤ_Initial = ਸਰੋਤ = (ਅਚਲ uint8_t *)ਦਲੀਲਾਂ_2->ਸਰੋਤ;
+    ਜੇ (ਸਰੋਤ >= (ਅਚਲ uint8_t *)ਦਲੀਲਾਂ_2->ਸਰੋਤ_ਹੱਦਬੰਦੀ)
     {
         /* no input */
-        *err = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0xffff;
+        *err = U_ਸੂਚਕਾਂਕ_OUTOFBOUNDS_ERROR;
+        ਵਾਪਸ 0xffff;
     }
 
-    myByte = *(source++);
-    if (U8_IS_SINGLE(myByte))
+    myByte = *(ਸਰੋਤ++);
+    ਜੇ (U8_IS_SINGLE(myByte))
     {
-        args->source = (const char *)source;
-        return (UChar32)myByte;
+        ਦਲੀਲਾਂ_2->ਸਰੋਤ = (ਅਚਲ ਅੱਖਰ *)ਸਰੋਤ;
+        ਵਾਪਸ (UChar32)myByte;
     }
 
-    uint16_t countTrailBytes = U8_COUNT_TRAIL_BYTES(myByte);
-    if (countTrailBytes == 0) {
-        cnv->toUBytes[0] = myByte;
-        cnv->toULength = 1;
-        *err = U_ILLEGAL_CHAR_FOUND;
-        args->source = (const char *)source;
-        return 0xffff;
+    uint16_t ਗਿਣਤੀ_Trail_ਬਾਈਟਾਂ = U8_ਗਿਣਤੀ_TRAIL_ਬਾਈਟਾਂ(myByte);
+    ਜੇ (ਗਿਣਤੀ_Trail_ਬਾਈਟਾਂ == 0) {
+        cnv->ਮੰਜ਼ਿਲ_UBytes[0] = myByte;
+        cnv->ਮੰਜ਼ਿਲ_ULength = 1;
+        *err = U_ILLEGAL_CHAR_ਮਿਲਿਆ;
+        ਦਲੀਲਾਂ_2->ਸਰੋਤ = (ਅਚਲ ਅੱਖਰ *)ਸਰੋਤ;
+        ਵਾਪਸ 0xffff;
     }
 
     /*The byte sequence is longer than the buffer area passed*/
-    if (((const char *)source + countTrailBytes) > args->sourceLimit)
+    ਜੇ (((ਅਚਲ ਅੱਖਰ *)ਸਰੋਤ + ਗਿਣਤੀ_Trail_ਬਾਈਟਾਂ) > ਦਲੀਲਾਂ_2->ਸਰੋਤ_ਹੱਦਬੰਦੀ)
     {
         /* check if all of the remaining bytes are trail bytes */
-        uint16_t extraBytesToWrite = countTrailBytes + 1;
-        cnv->toUBytes[0] = myByte;
+        uint16_t extra_ਬਾਈਟਾਂ_ਮੰਜ਼ਿਲ_Write = ਗਿਣਤੀ_Trail_ਬਾਈਟਾਂ + 1;
+        cnv->ਮੰਜ਼ਿਲ_UBytes[0] = myByte;
         i = 1;
-        *err = U_TRUNCATED_CHAR_FOUND;
-        while(source < (const uint8_t *)args->sourceLimit) {
-            uint8_t b = *source;
-            if(icu::UTF8::isValidTrail(myByte, b, i, extraBytesToWrite)) {
-                cnv->toUBytes[i++] = b;
-                ++source;
-            } else {
+        *err = U_TRUNCATED_CHAR_ਮਿਲਿਆ;
+        ਜਦੋਂ(ਸਰੋਤ < (ਅਚਲ uint8_t *)ਦਲੀਲਾਂ_2->ਸਰੋਤ_ਹੱਦਬੰਦੀ) {
+            uint8_t b = *ਸਰੋਤ;
+            ਜੇ(icu::UTF8::isValidTrail(myByte, b, i, extra_ਬਾਈਟਾਂ_ਮੰਜ਼ਿਲ_Write)) {
+                cnv->ਮੰਜ਼ਿਲ_UBytes[i++] = b;
+                ++ਸਰੋਤ;
+            } ਨਹੀਂਤਾਂ {
                 /* error even before we run out of input */
-                *err = U_ILLEGAL_CHAR_FOUND;
-                break;
+                *err = U_ILLEGAL_CHAR_ਮਿਲਿਆ;
+                ਰੋਕੋ;
             }
         }
-        cnv->toULength = i;
-        args->source = (const char *)source;
-        return 0xffff;
+        cnv->ਮੰਜ਼ਿਲ_ULength = i;
+        ਦਲੀਲਾਂ_2->ਸਰੋਤ = (ਅਚਲ ਅੱਖਰ *)ਸਰੋਤ;
+        ਵਾਪਸ 0xffff;
     }
 
     ch = myByte << 6;
-    if(countTrailBytes == 2) {
-        uint8_t t1 = *source, t2;
-        if(U8_IS_VALID_LEAD3_AND_T1(myByte, t1) && U8_IS_TRAIL(t2 = *++source)) {
-            args->source = (const char *)(source + 1);
-            return (((ch + t1) << 6) + t2) - offsetsFromUTF8[3];
+    ਜੇ(ਗਿਣਤੀ_Trail_ਬਾਈਟਾਂ == 2) {
+        uint8_t t1 = *ਸਰੋਤ, t2;
+        ਜੇ(U8_IS_VALID_LEAD3_AND_T1(myByte, t1) && U8_IS_TRAIL(t2 = *++ਸਰੋਤ)) {
+            ਦਲੀਲਾਂ_2->ਸਰੋਤ = (ਅਚਲ ਅੱਖਰ *)(ਸਰੋਤ + 1);
+            ਵਾਪਸ (((ch + t1) << 6) + t2) - offsetsFromUTF8[3];
         }
-    } else if(countTrailBytes == 1) {
-        uint8_t t1 = *source;
-        if(U8_IS_TRAIL(t1)) {
-            args->source = (const char *)(source + 1);
-            return (ch + t1) - offsetsFromUTF8[2];
+    } ਨਹੀਂਤਾਂ ਜੇ(ਗਿਣਤੀ_Trail_ਬਾਈਟਾਂ == 1) {
+        uint8_t t1 = *ਸਰੋਤ;
+        ਜੇ(U8_IS_TRAIL(t1)) {
+            ਦਲੀਲਾਂ_2->ਸਰੋਤ = (ਅਚਲ ਅੱਖਰ *)(ਸਰੋਤ + 1);
+            ਵਾਪਸ (ch + t1) - offsetsFromUTF8[2];
         }
-    } else {  // countTrailBytes == 3
-        uint8_t t1 = *source, t2, t3;
-        if(U8_IS_VALID_LEAD4_AND_T1(myByte, t1) && U8_IS_TRAIL(t2 = *++source) &&
-                U8_IS_TRAIL(t3 = *++source)) {
-            args->source = (const char *)(source + 1);
-            return (((((ch + t1) << 6) + t2) << 6) + t3) - offsetsFromUTF8[4];
+    } ਨਹੀਂਤਾਂ {  // countTrailBytes == 3
+        uint8_t t1 = *ਸਰੋਤ, t2, t3;
+        ਜੇ(U8_IS_VALID_LEAD4_AND_T1(myByte, t1) && U8_IS_TRAIL(t2 = *++ਸਰੋਤ) &&
+                U8_IS_TRAIL(t3 = *++ਸਰੋਤ)) {
+            ਦਲੀਲਾਂ_2->ਸਰੋਤ = (ਅਚਲ ਅੱਖਰ *)(ਸਰੋਤ + 1);
+            ਵਾਪਸ (((((ch + t1) << 6) + t2) << 6) + t3) - offsetsFromUTF8[4];
         }
     }
-    args->source = (const char *)source;
+    ਦਲੀਲਾਂ_2->ਸਰੋਤ = (ਅਚਲ ਅੱਖਰ *)ਸਰੋਤ;
 
-    for(i = 0; sourceInitial < source; ++i) {
-        cnv->toUBytes[i] = *sourceInitial++;
+    ਲਈ(i = 0; ਸਰੋਤ_Initial < ਸਰੋਤ; ++i) {
+        cnv->ਮੰਜ਼ਿਲ_UBytes[i] = *ਸਰੋਤ_Initial++;
     }
-    cnv->toULength = i;
-    *err = U_ILLEGAL_CHAR_FOUND;
-    return 0xffff;
+    cnv->ਮੰਜ਼ਿਲ_ULength = i;
+    *err = U_ILLEGAL_CHAR_ਮਿਲਿਆ;
+    ਵਾਪਸ 0xffff;
 } 
-U_CDECL_END
+U_CDECL_ਸਿਰਾ
 
 /* UTF-8-from-UTF-8 conversion functions ------------------------------------ */
 
 U_CDECL_BEGIN
 /* "Convert" UTF-8 to UTF-8: Validate and copy. Modified from ucnv_DBCSFromUTF8(). */
-static void U_CALLCONV
-ucnv_UTF8FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
-                  UConverterToUnicodeArgs *pToUArgs,
-                  UErrorCode *pErrorCode) {
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV
+ucnv_UTF8FromUTF8(UConverter_From_Unicode_ਦਲੀਲਾਂ *pFromUArgs,
+                  UConverter_ਮੰਜ਼ਿਲ_Unicode_ਦਲੀਲਾਂ *p_ਮੰਜ਼ਿਲ_UArgs,
+                  UError_ਕੋਡ *p_Error_ਕੋਡ) {
     UConverter *utf8;
-    const uint8_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity;
+    ਅਚਲ uint8_t *ਸਰੋਤ, *ਸਰੋਤ_ਹੱਦਬੰਦੀ;
+    uint8_t *ਨਿਸ਼ਾਨਾ;
+    int32_t ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ;
     int32_t count;
 
-    int8_t oldToULength, toULength, toULimit;
+    int8_t old_ਮੰਜ਼ਿਲ_ULength, ਮੰਜ਼ਿਲ_ULength, ਮੰਜ਼ਿਲ_ULimit;
 
     UChar32 c;
     uint8_t b, t1, t2;
 
     /* set up the local pointers */
-    utf8=pToUArgs->converter;
-    source=(uint8_t *)pToUArgs->source;
-    sourceLimit=(uint8_t *)pToUArgs->sourceLimit;
-    target=(uint8_t *)pFromUArgs->target;
-    targetCapacity=(int32_t)(pFromUArgs->targetLimit-pFromUArgs->target);
+    utf8=p_ਮੰਜ਼ਿਲ_UArgs->converter;
+    ਸਰੋਤ=(uint8_t *)p_ਮੰਜ਼ਿਲ_UArgs->ਸਰੋਤ;
+    ਸਰੋਤ_ਹੱਦਬੰਦੀ=(uint8_t *)p_ਮੰਜ਼ਿਲ_UArgs->ਸਰੋਤ_ਹੱਦਬੰਦੀ;
+    ਨਿਸ਼ਾਨਾ=(uint8_t *)pFromUArgs->ਨਿਸ਼ਾਨਾ;
+    ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ=(int32_t)(pFromUArgs->ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ-pFromUArgs->ਨਿਸ਼ਾਨਾ);
 
     /* get the converter state from the UTF-8 UConverter */
-    if(utf8->toULength > 0) {
-        toULength=oldToULength=utf8->toULength;
-        toULimit=(int8_t)utf8->mode;
-        c=(UChar32)utf8->toUnicodeStatus;
-    } else {
-        toULength=oldToULength=toULimit=0;
+    ਜੇ(utf8->ਮੰਜ਼ਿਲ_ULength > 0) {
+        ਮੰਜ਼ਿਲ_ULength=old_ਮੰਜ਼ਿਲ_ULength=utf8->ਮੰਜ਼ਿਲ_ULength;
+        ਮੰਜ਼ਿਲ_ULimit=(int8_t)utf8->ਬਹੁਲਕ;
+        c=(UChar32)utf8->ਮੰਜ਼ਿਲ_Unicode_ਸਥਿਤੀ;
+    } ਨਹੀਂਤਾਂ {
+        ਮੰਜ਼ਿਲ_ULength=old_ਮੰਜ਼ਿਲ_ULength=ਮੰਜ਼ਿਲ_ULimit=0;
         c = 0;
     }
 
-    count=(int32_t)(sourceLimit-source)+oldToULength;
-    if(count<toULimit) {
+    count=(int32_t)(ਸਰੋਤ_ਹੱਦਬੰਦੀ-ਸਰੋਤ)+old_ਮੰਜ਼ਿਲ_ULength;
+    ਜੇ(count<ਮੰਜ਼ਿਲ_ULimit) {
         /*
          * Not enough input to complete the partial character.
          * Jump to moreBytes below - it will not output to target.
          */
-    } else if(targetCapacity<toULimit) {
+    } ਨਹੀਂਤਾਂ ਜੇ(ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ<ਮੰਜ਼ਿਲ_ULimit) {
         /*
          * Not enough target capacity to output the partial character.
          * Let the standard converter handle this.
          */
-        *pErrorCode=U_USING_DEFAULT_WARNING;
-        return;
-    } else {
+        *p_Error_ਕੋਡ=U_USING_DEFAULT_WARNING;
+        ਵਾਪਸ;
+    } ਨਹੀਂਤਾਂ {
         // Use a single counter for source and target, counting the minimum of
         // the source length and the target capacity.
         // Let the standard converter handle edge cases.
-        if(count>targetCapacity) {
-            count=targetCapacity;
+        ਜੇ(count>ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ) {
+            count=ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ;
         }
 
         // The conversion loop checks count>0 only once per character.
@@ -707,238 +707,238 @@ ucnv_UTF8FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
 
         // Do not go back into the bytes that will be read for finishing a partial
         // sequence from the previous buffer.
-        int32_t length=count-toULength;
-        U8_TRUNCATE_IF_INCOMPLETE(source, 0, length);
-        count=toULength+length;
+        int32_t length=count-ਮੰਜ਼ਿਲ_ULength;
+        U8_TRUNCATE_IF_INCOMPLETE(ਸਰੋਤ, 0, length);
+        count=ਮੰਜ਼ਿਲ_ULength+length;
     }
 
-    if(c!=0) {
-        utf8->toUnicodeStatus=0;
-        utf8->toULength=0;
-        goto moreBytes;
+    ਜੇ(c!=0) {
+        utf8->ਮੰਜ਼ਿਲ_Unicode_ਸਥਿਤੀ=0;
+        utf8->ਮੰਜ਼ਿਲ_ULength=0;
+        ਜਾਓ ਹੋਰ_ਬਾਈਟਾਂ;
         /* See note in ucnv_SBCSFromUTF8() about this goto. */
     }
 
     /* conversion loop */
-    while(count>0) {
-        b=*source++;
-        if(U8_IS_SINGLE(b)) {
+    ਜਦੋਂ(count>0) {
+        b=*ਸਰੋਤ++;
+        ਜੇ(U8_IS_SINGLE(b)) {
             /* convert ASCII */
-            *target++=b;
+            *ਨਿਸ਼ਾਨਾ++=b;
             --count;
-            continue;
-        } else {
-            if(b>=0xe0) {
-                if( /* handle U+0800..U+FFFF inline */
+            ਜਾਰੀ;
+        } ਨਹੀਂਤਾਂ {
+            ਜੇ(b>=0xe0) {
+                ਜੇ( /* handle U+0800..U+FFFF inline */
                     b<0xf0 &&
-                    U8_IS_VALID_LEAD3_AND_T1(b, t1=source[0]) &&
-                    U8_IS_TRAIL(t2=source[1])
+                    U8_IS_VALID_LEAD3_AND_T1(b, t1=ਸਰੋਤ[0]) &&
+                    U8_IS_TRAIL(t2=ਸਰੋਤ[1])
                 ) {
-                    source+=2;
-                    *target++=b;
-                    *target++=t1;
-                    *target++=t2;
+                    ਸਰੋਤ+=2;
+                    *ਨਿਸ਼ਾਨਾ++=b;
+                    *ਨਿਸ਼ਾਨਾ++=t1;
+                    *ਨਿਸ਼ਾਨਾ++=t2;
                     count-=3;
-                    continue;
+                    ਜਾਰੀ;
                 }
-            } else {
-                if( /* handle U+0080..U+07FF inline */
+            } ਨਹੀਂਤਾਂ {
+                ਜੇ( /* handle U+0080..U+07FF inline */
                     b>=0xc2 &&
-                    U8_IS_TRAIL(t1=*source)
+                    U8_IS_TRAIL(t1=*ਸਰੋਤ)
                 ) {
-                    ++source;
-                    *target++=b;
-                    *target++=t1;
+                    ++ਸਰੋਤ;
+                    *ਨਿਸ਼ਾਨਾ++=b;
+                    *ਨਿਸ਼ਾਨਾ++=t1;
                     count-=2;
-                    continue;
+                    ਜਾਰੀ;
                 }
             }
 
             /* handle "complicated" and error cases, and continuing partial characters */
-            oldToULength=0;
-            toULength=1;
-            toULimit=U8_COUNT_BYTES_NON_ASCII(b);
+            old_ਮੰਜ਼ਿਲ_ULength=0;
+            ਮੰਜ਼ਿਲ_ULength=1;
+            ਮੰਜ਼ਿਲ_ULimit=U8_ਗਿਣਤੀ_ਬਾਈਟਾਂ_NON_ASCII(b);
             c=b;
-moreBytes:
-            while(toULength<toULimit) {
-                if(source<sourceLimit) {
-                    b=*source;
-                    if(icu::UTF8::isValidTrail(c, b, toULength, toULimit)) {
-                        ++source;
-                        ++toULength;
+ਹੋਰ_ਬਾਈਟਾਂ:
+            ਜਦੋਂ(ਮੰਜ਼ਿਲ_ULength<ਮੰਜ਼ਿਲ_ULimit) {
+                ਜੇ(ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ) {
+                    b=*ਸਰੋਤ;
+                    ਜੇ(icu::UTF8::isValidTrail(c, b, ਮੰਜ਼ਿਲ_ULength, ਮੰਜ਼ਿਲ_ULimit)) {
+                        ++ਸਰੋਤ;
+                        ++ਮੰਜ਼ਿਲ_ULength;
                         c=(c<<6)+b;
-                    } else {
-                        break; /* sequence too short, stop with toULength<toULimit */
+                    } ਨਹੀਂਤਾਂ {
+                        ਰੋਕੋ; /* sequence too short, stop with toULength<toULimit */
                     }
-                } else {
+                } ਨਹੀਂਤਾਂ {
                     /* store the partial UTF-8 character, compatible with the regular UTF-8 converter */
-                    source-=(toULength-oldToULength);
-                    while(oldToULength<toULength) {
-                        utf8->toUBytes[oldToULength++]=*source++;
+                    ਸਰੋਤ-=(ਮੰਜ਼ਿਲ_ULength-old_ਮੰਜ਼ਿਲ_ULength);
+                    ਜਦੋਂ(old_ਮੰਜ਼ਿਲ_ULength<ਮੰਜ਼ਿਲ_ULength) {
+                        utf8->ਮੰਜ਼ਿਲ_UBytes[old_ਮੰਜ਼ਿਲ_ULength++]=*ਸਰੋਤ++;
                     }
-                    utf8->toUnicodeStatus=c;
-                    utf8->toULength=toULength;
-                    utf8->mode=toULimit;
-                    pToUArgs->source=(char *)source;
-                    pFromUArgs->target=(char *)target;
-                    return;
+                    utf8->ਮੰਜ਼ਿਲ_Unicode_ਸਥਿਤੀ=c;
+                    utf8->ਮੰਜ਼ਿਲ_ULength=ਮੰਜ਼ਿਲ_ULength;
+                    utf8->ਬਹੁਲਕ=ਮੰਜ਼ਿਲ_ULimit;
+                    p_ਮੰਜ਼ਿਲ_UArgs->ਸਰੋਤ=(ਅੱਖਰ *)ਸਰੋਤ;
+                    pFromUArgs->ਨਿਸ਼ਾਨਾ=(ਅੱਖਰ *)ਨਿਸ਼ਾਨਾ;
+                    ਵਾਪਸ;
                 }
             }
 
-            if(toULength!=toULimit) {
+            ਜੇ(ਮੰਜ਼ਿਲ_ULength!=ਮੰਜ਼ਿਲ_ULimit) {
                 /* error handling: illegal UTF-8 byte sequence */
-                source-=(toULength-oldToULength);
-                while(oldToULength<toULength) {
-                    utf8->toUBytes[oldToULength++]=*source++;
+                ਸਰੋਤ-=(ਮੰਜ਼ਿਲ_ULength-old_ਮੰਜ਼ਿਲ_ULength);
+                ਜਦੋਂ(old_ਮੰਜ਼ਿਲ_ULength<ਮੰਜ਼ਿਲ_ULength) {
+                    utf8->ਮੰਜ਼ਿਲ_UBytes[old_ਮੰਜ਼ਿਲ_ULength++]=*ਸਰੋਤ++;
                 }
-                utf8->toULength=toULength;
-                pToUArgs->source=(char *)source;
-                pFromUArgs->target=(char *)target;
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                return;
+                utf8->ਮੰਜ਼ਿਲ_ULength=ਮੰਜ਼ਿਲ_ULength;
+                p_ਮੰਜ਼ਿਲ_UArgs->ਸਰੋਤ=(ਅੱਖਰ *)ਸਰੋਤ;
+                pFromUArgs->ਨਿਸ਼ਾਨਾ=(ਅੱਖਰ *)ਨਿਸ਼ਾਨਾ;
+                *p_Error_ਕੋਡ=U_ILLEGAL_CHAR_ਮਿਲਿਆ;
+                ਵਾਪਸ;
             }
 
             /* copy the legal byte sequence to the target */
             {
                 int8_t i;
 
-                for(i=0; i<oldToULength; ++i) {
-                    *target++=utf8->toUBytes[i];
+                ਲਈ(i=0; i<old_ਮੰਜ਼ਿਲ_ULength; ++i) {
+                    *ਨਿਸ਼ਾਨਾ++=utf8->ਮੰਜ਼ਿਲ_UBytes[i];
                 }
-                source-=(toULength-oldToULength);
-                for(; i<toULength; ++i) {
-                    *target++=*source++;
+                ਸਰੋਤ-=(ਮੰਜ਼ਿਲ_ULength-old_ਮੰਜ਼ਿਲ_ULength);
+                ਲਈ(; i<ਮੰਜ਼ਿਲ_ULength; ++i) {
+                    *ਨਿਸ਼ਾਨਾ++=*ਸਰੋਤ++;
                 }
-                count-=toULength;
+                count-=ਮੰਜ਼ਿਲ_ULength;
             }
         }
     }
     U_ASSERT(count>=0);
 
-    if(U_SUCCESS(*pErrorCode) && source<sourceLimit) {
-        if(target==(const uint8_t *)pFromUArgs->targetLimit) {
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-        } else {
-            b=*source;
-            toULimit=U8_COUNT_BYTES(b);
-            if(toULimit>(sourceLimit-source)) {
+    ਜੇ(U_SUCCESS(*p_Error_ਕੋਡ) && ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ) {
+        ਜੇ(ਨਿਸ਼ਾਨਾ==(ਅਚਲ uint8_t *)pFromUArgs->ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ) {
+            *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
+        } ਨਹੀਂਤਾਂ {
+            b=*ਸਰੋਤ;
+            ਮੰਜ਼ਿਲ_ULimit=U8_ਗਿਣਤੀ_ਬਾਈਟਾਂ(b);
+            ਜੇ(ਮੰਜ਼ਿਲ_ULimit>(ਸਰੋਤ_ਹੱਦਬੰਦੀ-ਸਰੋਤ)) {
                 /* collect a truncated byte sequence */
-                toULength=0;
+                ਮੰਜ਼ਿਲ_ULength=0;
                 c=b;
-                for(;;) {
-                    utf8->toUBytes[toULength++]=b;
-                    if(++source==sourceLimit) {
+                ਲਈ(;;) {
+                    utf8->ਮੰਜ਼ਿਲ_UBytes[ਮੰਜ਼ਿਲ_ULength++]=b;
+                    ਜੇ(++ਸਰੋਤ==ਸਰੋਤ_ਹੱਦਬੰਦੀ) {
                         /* partial byte sequence at end of source */
-                        utf8->toUnicodeStatus=c;
-                        utf8->toULength=toULength;
-                        utf8->mode=toULimit;
-                        break;
-                    } else if(!icu::UTF8::isValidTrail(c, b=*source, toULength, toULimit)) {
-                        utf8->toULength=toULength;
-                        *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        utf8->ਮੰਜ਼ਿਲ_Unicode_ਸਥਿਤੀ=c;
+                        utf8->ਮੰਜ਼ਿਲ_ULength=ਮੰਜ਼ਿਲ_ULength;
+                        utf8->ਬਹੁਲਕ=ਮੰਜ਼ਿਲ_ULimit;
+                        ਰੋਕੋ;
+                    } ਨਹੀਂਤਾਂ ਜੇ(!icu::UTF8::isValidTrail(c, b=*ਸਰੋਤ, ਮੰਜ਼ਿਲ_ULength, ਮੰਜ਼ਿਲ_ULimit)) {
+                        utf8->ਮੰਜ਼ਿਲ_ULength=ਮੰਜ਼ਿਲ_ULength;
+                        *p_Error_ਕੋਡ=U_ILLEGAL_CHAR_ਮਿਲਿਆ;
+                        ਰੋਕੋ;
                     }
                     c=(c<<6)+b;
                 }
-            } else {
+            } ਨਹੀਂਤਾਂ {
                 /* partial-sequence target overflow: fall back to the pivoting implementation */
-                *pErrorCode=U_USING_DEFAULT_WARNING;
+                *p_Error_ਕੋਡ=U_USING_DEFAULT_WARNING;
             }
         }
     }
 
     /* write back the updated pointers */
-    pToUArgs->source=(char *)source;
-    pFromUArgs->target=(char *)target;
+    p_ਮੰਜ਼ਿਲ_UArgs->ਸਰੋਤ=(ਅੱਖਰ *)ਸਰੋਤ;
+    pFromUArgs->ਨਿਸ਼ਾਨਾ=(ਅੱਖਰ *)ਨਿਸ਼ਾਨਾ;
 }
 
-U_CDECL_END
+U_CDECL_ਸਿਰਾ
 
 /* UTF-8 converter data ----------------------------------------------------- */
 
-static const UConverterImpl _UTF8Impl={
+ਸਥਿਰ ਅਚਲ UConverterImpl _UTF8Impl={
     UCNV_UTF8,
 
-    nullptr,
-    nullptr,
+    ਖਾਲੀ_ਸੂਚਕ,
+    ਖਾਲੀ_ਸੂਚਕ,
 
-    nullptr,
-    nullptr,
-    nullptr,
+    ਖਾਲੀ_ਸੂਚਕ,
+    ਖਾਲੀ_ਸੂਚਕ,
+    ਖਾਲੀ_ਸੂਚਕ,
 
-    ucnv_toUnicode_UTF8,
-    ucnv_toUnicode_UTF8_OFFSETS_LOGIC,
+    ucnv_ਮੰਜ਼ਿਲ_Unicode_UTF8,
+    ucnv_ਮੰਜ਼ਿਲ_Unicode_UTF8_OFFSETS_LOGIC,
     ucnv_fromUnicode_UTF8,
     ucnv_fromUnicode_UTF8_OFFSETS_LOGIC,
-    ucnv_getNextUChar_UTF8,
+    ucnv_get_ਅਗਲਾ_UChar_UTF8,
 
-    nullptr,
-    nullptr,
-    nullptr,
-    nullptr,
-    ucnv_getNonSurrogateUnicodeSet,
+    ਖਾਲੀ_ਸੂਚਕ,
+    ਖਾਲੀ_ਸੂਚਕ,
+    ਖਾਲੀ_ਸੂਚਕ,
+    ਖਾਲੀ_ਸੂਚਕ,
+    ucnv_get_Non_Surrogate_Unicode_ਸੈੱਟ,
 
     ucnv_UTF8FromUTF8,
     ucnv_UTF8FromUTF8
 };
 
 /* The 1208 CCSID refers to any version of Unicode of UTF-8 */
-static const UConverterStaticData _UTF8StaticData={
-    sizeof(UConverterStaticData),
+ਸਥਿਰ ਅਚਲ UConverter_Static_ਅੰਕੜੇ UTF8_Static_ਅੰਕੜੇ={
+    ਆਕਾਰ(UConverter_Static_ਅੰਕੜੇ),
     "UTF-8",
     1208, UCNV_IBM, UCNV_UTF8,
     1, 3, /* max 3 bytes per char16_t from UTF-8 (4 bytes from surrogate _pair_) */
-    { 0xef, 0xbf, 0xbd, 0 },3,false,false,
+    { 0xef, 0xbf, 0xbd, 0 },3,ਝੂਠ,ਝੂਠ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
 
-const UConverterSharedData _UTF8Data=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF8StaticData, &_UTF8Impl);
+ਅਚਲ UConverter_Shared_ਅੰਕੜੇ UTF8_ਅੰਕੜੇ=
+        UCNV_IMMUTABLE_SHARED_ਅੰਕੜੇ_INITIALIZER(&UTF8_Static_ਅੰਕੜੇ, &_UTF8Impl);
 
 /* CESU-8 converter data ---------------------------------------------------- */
 
-static const UConverterImpl _CESU8Impl={
+ਸਥਿਰ ਅਚਲ UConverterImpl _CESU8Impl={
     UCNV_CESU8,
 
-    nullptr,
-    nullptr,
+    ਖਾਲੀ_ਸੂਚਕ,
+    ਖਾਲੀ_ਸੂਚਕ,
 
-    nullptr,
-    nullptr,
-    nullptr,
+    ਖਾਲੀ_ਸੂਚਕ,
+    ਖਾਲੀ_ਸੂਚਕ,
+    ਖਾਲੀ_ਸੂਚਕ,
 
-    ucnv_toUnicode_UTF8,
-    ucnv_toUnicode_UTF8_OFFSETS_LOGIC,
+    ucnv_ਮੰਜ਼ਿਲ_Unicode_UTF8,
+    ucnv_ਮੰਜ਼ਿਲ_Unicode_UTF8_OFFSETS_LOGIC,
     ucnv_fromUnicode_UTF8,
     ucnv_fromUnicode_UTF8_OFFSETS_LOGIC,
-    nullptr,
+    ਖਾਲੀ_ਸੂਚਕ,
 
-    nullptr,
-    nullptr,
-    nullptr,
-    nullptr,
-    ucnv_getCompleteUnicodeSet,
+    ਖਾਲੀ_ਸੂਚਕ,
+    ਖਾਲੀ_ਸੂਚਕ,
+    ਖਾਲੀ_ਸੂਚਕ,
+    ਖਾਲੀ_ਸੂਚਕ,
+    ucnv_get_Complete_Unicode_ਸੈੱਟ,
 
-    nullptr,
-    nullptr
+    ਖਾਲੀ_ਸੂਚਕ,
+    ਖਾਲੀ_ਸੂਚਕ
 };
 
-static const UConverterStaticData _CESU8StaticData={
-    sizeof(UConverterStaticData),
+ਸਥਿਰ ਅਚਲ UConverter_Static_ਅੰਕੜੇ CESU8_Static_ਅੰਕੜੇ={
+    ਆਕਾਰ(UConverter_Static_ਅੰਕੜੇ),
     "CESU-8",
     9400, /* CCSID for CESU-8 */
     UCNV_UNKNOWN, UCNV_CESU8, 1, 3,
-    { 0xef, 0xbf, 0xbd, 0 },3,false,false,
+    { 0xef, 0xbf, 0xbd, 0 },3,ਝੂਠ,ਝੂਠ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
 
-const UConverterSharedData _CESU8Data=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_CESU8StaticData, &_CESU8Impl);
+ਅਚਲ UConverter_Shared_ਅੰਕੜੇ CESU8_ਅੰਕੜੇ=
+        UCNV_IMMUTABLE_SHARED_ਅੰਕੜੇ_INITIALIZER(&CESU8_Static_ਅੰਕੜੇ, &_CESU8Impl);
 
-#endif
+#ਜੇ_ਅੰਤ

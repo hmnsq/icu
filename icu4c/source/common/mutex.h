@@ -19,12 +19,12 @@
 // 04/07/1999  srl               refocused as a thin wrapper
 //
 //----------------------------------------------------------------------------
-#ifndef MUTEX_H
-#define MUTEX_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ MUTEX_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MUTEX_H
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "umutex.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uobject.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "umutex.h"
 
 U_NAMESPACE_BEGIN
 
@@ -53,25 +53,25 @@ U_NAMESPACE_BEGIN
   *         compiler!!
   */
 
-class U_COMMON_API Mutex : public UMemory {
-public:
+class U_COMMON_API Mutex : ਜਨਤਕ UMemory {
+ਜਨਤਕ:
     Mutex(UMutex *mutex = nullptr) : fMutex(mutex) {
-        umtx_lock(fMutex);
+        umtx_ਤਾਲਾ(fMutex);
     }
     ~Mutex() {
         umtx_unlock(fMutex);
     }
 
-    Mutex(const Mutex &other) = delete; // forbid assigning of this class
-    Mutex &operator=(const Mutex &other) = delete; // forbid copying of this class
-    void *operator new(size_t s) = delete;  // forbid heap allocation. Locals only.
+    Mutex(ਅਚਲ Mutex &other) = delete; // forbid assigning of this class
+    Mutex &ਸੰਚਾਲਕ=(ਅਚਲ Mutex &other) = delete; // forbid copying of this class
+    ਖਾਲੀ *ਸੰਚਾਲਕ new(size_t s) = delete;  // forbid heap allocation. Locals only.
 
-private:
+ਨਿਜੀ:
     UMutex   *fMutex;
 };
 
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif //_MUTEX_
+#ਜੇ_ਅੰਤ //_MUTEX_
 //eof

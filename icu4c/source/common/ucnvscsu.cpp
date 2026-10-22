@@ -21,21 +21,21 @@
 *   will result in callback calls.
 */
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#ਜੇ !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_cb.h"
-#include "unicode/utf16.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ucnv.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ucnv_cb.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf16.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucnv_bld.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucnv_cnv.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
 
 /* SCSU definitions --------------------------------------------------------- */
 
 /* SCSU command byte values */
-enum {
+ਗਿਣਤੀ {
     SQ0=0x01, /* Quote from window pair 0 */
     SQ7=0x08, /* Quote from window pair 7 */
     SDX=0x0B, /* Define a window as extended */
@@ -56,24 +56,24 @@ enum {
     Urs=0xF2  /* reserved */
 };
 
-enum {
+ਗਿਣਤੀ {
     /*
      * Unicode code points from 3400 to E000 are not adressible by
      * dynamic window, since in these areas no short run alphabets are
      * found. Therefore add gapOffset to all values from gapThreshold.
      */
-    gapThreshold=0x68,
-    gapOffset=0xAC00,
+    gap_ਹੱਦ=0x68,
+    gap_ਵਿੱਥ=0xAC00,
 
     /* values between reservedStart and fixedThreshold are reserved */
-    reservedStart=0xA8,
+    reserved_ਸ਼ੁਰੂ=0xA8,
 
     /* use table of predefined fixed offsets for values from fixedThreshold */
-    fixedThreshold=0xF9
+    fixed_ਹੱਦ=0xF9
 };
 
 /* constant offsets for the 8 static windows */
-static const uint32_t staticOffsets[8]={
+ਸਥਿਰ ਅਚਲ uint32_t staticOffsets[8]={
     0x0000, /* ASCII for quoted tags */
     0x0080, /* Latin - 1 Supplement (for access to punctuation) */
     0x0100, /* Latin Extended-A */
@@ -85,7 +85,7 @@ static const uint32_t staticOffsets[8]={
 };
 
 /* initial offsets for the 8 dynamic (sliding) windows */
-static const uint32_t initialDynamicOffsets[8]={
+ਸਥਿਰ ਅਚਲ uint32_t initialDynamicOffsets[8]={
     0x0080, /* Latin-1 */
     0x00C0, /* Latin Extended A */
     0x0400, /* Cyrillic */
@@ -97,7 +97,7 @@ static const uint32_t initialDynamicOffsets[8]={
 };
 
 /* Table of fixed predefined Offsets */
-static const uint32_t fixedOffsets[]={
+ਸਥਿਰ ਅਚਲ uint32_t fixedOffsets[]={
     /* 0xF9 */ 0x00C0, /* Latin-1 Letters + half of Latin Extended A */
     /* 0xFA */ 0x0250, /* IPA extensions */
     /* 0xFB */ 0x0370, /* Greek */
@@ -108,7 +108,7 @@ static const uint32_t fixedOffsets[]={
 };
 
 /* state values */
-enum {
+ਗਿਣਤੀ {
     readCommand,
     quotePairOne,
     quotePairTwo,
@@ -118,21 +118,21 @@ enum {
     defineOne
 };
 
-typedef struct SCSUData {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ SCSUData {
     /* dynamic window offsets, initialize to default values from initialDynamicOffsets */
-    uint32_t toUDynamicOffsets[8];
+    uint32_t ਮੰਜ਼ਿਲ_UDynamic_Offsets[8];
     uint32_t fromUDynamicOffsets[8];
 
     /* state machine state - toUnicode */
-    UBool toUIsSingleByteMode;
-    uint8_t toUState;
-    int8_t toUQuoteWindow, toUDynamicWindow;
-    uint8_t toUByteOne;
-    uint8_t toUPadding[3];
+    UBool ਮੰਜ਼ਿਲ_UIs_Single_Byte_ਬਹੁਲਕ;
+    uint8_t ਮੰਜ਼ਿਲ_UState;
+    int8_t ਮੰਜ਼ਿਲ_UQuote_ਖਿੜਕੀ, ਮੰਜ਼ਿਲ_UDynamic_ਖਿੜਕੀ;
+    uint8_t ਮੰਜ਼ਿਲ_UByte_One;
+    uint8_t ਮੰਜ਼ਿਲ_UPadding[3];
 
     /* state machine state - fromUnicode */
-    UBool fromUIsSingleByteMode;
-    int8_t fromUDynamicWindow;
+    UBool from_UIs_Single_Byte_ਬਹੁਲਕ;
+    int8_t from_UDynamic_ਖਿੜਕੀ;
 
     /*
      * windowUse[] keeps track of the use of the dynamic windows:
@@ -142,73 +142,73 @@ typedef struct SCSUData {
      * At nextWindowUseIndex-1 there is the most recently used window.
      */
     uint8_t locale;
-    int8_t nextWindowUseIndex;
-    int8_t windowUse[8];
+    int8_t ਅਗਲਾ_ਖਿੜਕੀ_Use_ਸੂਚਕਾਂਕ;
+    int8_t ਖਿੜਕੀ_Use[8];
 } SCSUData;
 
-static const int8_t initialWindowUse[8]={ 7, 0, 3, 2, 4, 5, 6, 1 };
-static const int8_t initialWindowUse_ja[8]={ 3, 2, 4, 1, 0, 7, 5, 6 };
+ਸਥਿਰ ਅਚਲ int8_t initial_ਖਿੜਕੀ_Use[8]={ 7, 0, 3, 2, 4, 5, 6, 1 };
+ਸਥਿਰ ਅਚਲ int8_t initial_ਖਿੜਕੀ_Use_ja[8]={ 3, 2, 4, 1, 0, 7, 5, 6 };
 
-enum {
+ਗਿਣਤੀ {
     lGeneric, l_ja
 };
 
 /* SCSU setup functions ----------------------------------------------------- */
 U_CDECL_BEGIN
-static void U_CALLCONV
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV
 _SCSUReset(UConverter *cnv, UConverterResetChoice choice) {
     SCSUData *scsu=(SCSUData *)cnv->extraInfo;
 
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    ਜੇ(choice<=UCNV_RESET_ਮੰਜ਼ਿਲ_UNICODE) {
         /* reset toUnicode */
-        uprv_memcpy(scsu->toUDynamicOffsets, initialDynamicOffsets, 32);
+        uprv_memcpy(scsu->ਮੰਜ਼ਿਲ_UDynamic_Offsets, initialDynamicOffsets, 32);
 
-        scsu->toUIsSingleByteMode=true;
-        scsu->toUState=readCommand;
-        scsu->toUQuoteWindow=scsu->toUDynamicWindow=0;
-        scsu->toUByteOne=0;
+        scsu->ਮੰਜ਼ਿਲ_UIs_Single_Byte_ਬਹੁਲਕ=ਸੱਚ;
+        scsu->ਮੰਜ਼ਿਲ_UState=readCommand;
+        scsu->ਮੰਜ਼ਿਲ_UQuote_ਖਿੜਕੀ=scsu->ਮੰਜ਼ਿਲ_UDynamic_ਖਿੜਕੀ=0;
+        scsu->ਮੰਜ਼ਿਲ_UByte_One=0;
 
-        cnv->toULength=0;
+        cnv->ਮੰਜ਼ਿਲ_ULength=0;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
+    ਜੇ(choice!=UCNV_RESET_ਮੰਜ਼ਿਲ_UNICODE) {
         /* reset fromUnicode */
         uprv_memcpy(scsu->fromUDynamicOffsets, initialDynamicOffsets, 32);
 
-        scsu->fromUIsSingleByteMode=true;
-        scsu->fromUDynamicWindow=0;
+        scsu->from_UIs_Single_Byte_ਬਹੁਲਕ=ਸੱਚ;
+        scsu->from_UDynamic_ਖਿੜਕੀ=0;
 
-        scsu->nextWindowUseIndex=0;
-        switch(scsu->locale) {
-        case l_ja:
-            uprv_memcpy(scsu->windowUse, initialWindowUse_ja, 8);
-            break;
-        default:
-            uprv_memcpy(scsu->windowUse, initialWindowUse, 8);
-            break;
+        scsu->ਅਗਲਾ_ਖਿੜਕੀ_Use_ਸੂਚਕਾਂਕ=0;
+        ਚੋਣ(scsu->locale) {
+        ਹਾਲਤ l_ja:
+            uprv_memcpy(scsu->ਖਿੜਕੀ_Use, initial_ਖਿੜਕੀ_Use_ja, 8);
+            ਰੋਕੋ;
+        ਮੂਲ:
+            uprv_memcpy(scsu->ਖਿੜਕੀ_Use, initial_ਖਿੜਕੀ_Use, 8);
+            ਰੋਕੋ;
         }
 
         cnv->fromUChar32=0;
     }
 }
 
-static void U_CALLCONV
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV
 _SCSUOpen(UConverter *cnv,
-          UConverterLoadArgs *pArgs,
-          UErrorCode *pErrorCode) {
-    const char *locale=pArgs->locale;
-    if(pArgs->onlyTestIsLoadable) {
-        return;
+          UConverter_ਲੱਦੋ_ਦਲੀਲਾਂ *p_ਦਲੀਲਾਂ,
+          UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਅਚਲ ਅੱਖਰ *locale=p_ਦਲੀਲਾਂ->locale;
+    ਜੇ(p_ਦਲੀਲਾਂ->onlyTestIsLoadable) {
+        ਵਾਪਸ;
     }
-    cnv->extraInfo=uprv_malloc(sizeof(SCSUData));
-    if(cnv->extraInfo!=nullptr) {
-        if(locale!=nullptr && locale[0]=='j' && locale[1]=='a' && (locale[2]==0 || locale[2]=='_')) {
+    cnv->extraInfo=uprv_malloc(ਆਕਾਰ(SCSUData));
+    ਜੇ(cnv->extraInfo!=ਖਾਲੀ_ਸੂਚਕ) {
+        ਜੇ(locale!=ਖਾਲੀ_ਸੂਚਕ && locale[0]=='j' && locale[1]=='a' && (locale[2]==0 || locale[2]=='_')) {
             ((SCSUData *)cnv->extraInfo)->locale=l_ja;
-        } else {
+        } ਨਹੀਂਤਾਂ {
             ((SCSUData *)cnv->extraInfo)->locale=lGeneric;
         }
         _SCSUReset(cnv, UCNV_RESET_BOTH);
-    } else {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
+    } ਨਹੀਂਤਾਂ {
+        *p_Error_ਕੋਡ=U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
     }
 
     /* Set the substitution character U+fffd as a Unicode string. */
@@ -216,55 +216,55 @@ _SCSUOpen(UConverter *cnv,
     cnv->subCharLen=-1;
 }
 
-static void U_CALLCONV
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV
 _SCSUClose(UConverter *cnv) {
-    if(cnv->extraInfo!=nullptr) {
-        if(!cnv->isExtraLocal) {
+    ਜੇ(cnv->extraInfo!=ਖਾਲੀ_ਸੂਚਕ) {
+        ਜੇ(!cnv->isExtraLocal) {
             uprv_free(cnv->extraInfo);
         }
-        cnv->extraInfo=nullptr;
+        cnv->extraInfo=ਖਾਲੀ_ਸੂਚਕ;
     }
 }
 
 /* SCSU-to-Unicode conversion functions ------------------------------------- */
 
-static void U_CALLCONV
-_SCSUToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                          UErrorCode *pErrorCode) {
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV
+_SCSUToUnicodeWithOffsets(UConverter_ਮੰਜ਼ਿਲ_Unicode_ਦਲੀਲਾਂ *p_ਦਲੀਲਾਂ,
+                          UError_ਕੋਡ *p_Error_ਕੋਡ) {
     UConverter *cnv;
     SCSUData *scsu;
-    const uint8_t *source, *sourceLimit;
-    char16_t *target;
-    const char16_t *targetLimit;
+    ਅਚਲ uint8_t *ਸਰੋਤ, *ਸਰੋਤ_ਹੱਦਬੰਦੀ;
+    char16_t *ਨਿਸ਼ਾਨਾ;
+    ਅਚਲ char16_t *ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ;
     int32_t *offsets;
-    UBool isSingleByteMode;
+    UBool is_Single_Byte_ਬਹੁਲਕ;
     uint8_t state, byteOne;
-    int8_t quoteWindow, dynamicWindow;
+    int8_t quote_ਖਿੜਕੀ, dynamic_ਖਿੜਕੀ;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t ਸਰੋਤ_ਸੂਚਕਾਂਕ, ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
 
     uint8_t b;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_ਦਲੀਲਾਂ->converter;
     scsu=(SCSUData *)cnv->extraInfo;
 
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    ਸਰੋਤ=(ਅਚਲ uint8_t *)p_ਦਲੀਲਾਂ->ਸਰੋਤ;
+    ਸਰੋਤ_ਹੱਦਬੰਦੀ=(ਅਚਲ uint8_t *)p_ਦਲੀਲਾਂ->ਸਰੋਤ_ਹੱਦਬੰਦੀ;
+    ਨਿਸ਼ਾਨਾ=p_ਦਲੀਲਾਂ->ਨਿਸ਼ਾਨਾ;
+    ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ=p_ਦਲੀਲਾਂ->ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ;
+    offsets=p_ਦਲੀਲਾਂ->offsets;
 
     /* get the state machine state */
-    isSingleByteMode=scsu->toUIsSingleByteMode;
-    state=scsu->toUState;
-    quoteWindow=scsu->toUQuoteWindow;
-    dynamicWindow=scsu->toUDynamicWindow;
-    byteOne=scsu->toUByteOne;
+    is_Single_Byte_ਬਹੁਲਕ=scsu->ਮੰਜ਼ਿਲ_UIs_Single_Byte_ਬਹੁਲਕ;
+    state=scsu->ਮੰਜ਼ਿਲ_UState;
+    quote_ਖਿੜਕੀ=scsu->ਮੰਜ਼ਿਲ_UQuote_ਖਿੜਕੀ;
+    dynamic_ਖਿੜਕੀ=scsu->ਮੰਜ਼ਿਲ_UDynamic_ਖਿੜਕੀ;
+    byteOne=scsu->ਮੰਜ਼ਿਲ_UByte_One;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=state==readCommand ? 0 : -1;
-    nextSourceIndex=0;
+    ਸਰੋਤ_ਸੂਚਕਾਂਕ=state==readCommand ? 0 : -1;
+    ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ=0;
 
     /*
      * conversion "loop"
@@ -285,293 +285,293 @@ _SCSUToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
      * The callback handling is done by returning with an error code.
      * The conversion framework actually calls the callback function.
      */
-    if(isSingleByteMode) {
+    ਜੇ(is_Single_Byte_ਬਹੁਲਕ) {
         /* fast path for single-byte mode */
-        if(state==readCommand) {
+        ਜੇ(state==readCommand) {
 fastSingle:
-            while(source<sourceLimit && target<targetLimit && (b=*source)>=0x20) {
-                ++source;
-                ++nextSourceIndex;
-                if(b<=0x7f) {
+            ਜਦੋਂ(ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ && ਨਿਸ਼ਾਨਾ<ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ && (b=*ਸਰੋਤ)>=0x20) {
+                ++ਸਰੋਤ;
+                ++ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
+                ਜੇ(b<=0x7f) {
                     /* write US-ASCII graphic character or DEL */
-                    *target++=(char16_t)b;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    *ਨਿਸ਼ਾਨਾ++=(char16_t)b;
+                    ਜੇ(offsets!=ਖਾਲੀ_ਸੂਚਕ) {
+                        *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                     }
-                } else {
+                } ਨਹੀਂਤਾਂ {
                     /* write from dynamic window */
-                    uint32_t c=scsu->toUDynamicOffsets[dynamicWindow]+(b&0x7f);
-                    if(c<=0xffff) {
-                        *target++=(char16_t)c;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
+                    uint32_t c=scsu->ਮੰਜ਼ਿਲ_UDynamic_Offsets[dynamic_ਖਿੜਕੀ]+(b&0x7f);
+                    ਜੇ(c<=0xffff) {
+                        *ਨਿਸ਼ਾਨਾ++=(char16_t)c;
+                        ਜੇ(offsets!=ਖਾਲੀ_ਸੂਚਕ) {
+                            *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                         }
-                    } else {
+                    } ਨਹੀਂਤਾਂ {
                         /* output surrogate pair */
-                        *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
-                            *target++=(char16_t)(0xdc00|(c&0x3ff));
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex;
-                                *offsets++=sourceIndex;
+                        *ਨਿਸ਼ਾਨਾ++=(char16_t)(0xd7c0+(c>>10));
+                        ਜੇ(ਨਿਸ਼ਾਨਾ<ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ) {
+                            *ਨਿਸ਼ਾਨਾ++=(char16_t)(0xdc00|(c&0x3ff));
+                            ਜੇ(offsets!=ਖਾਲੀ_ਸੂਚਕ) {
+                                *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
+                                *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                             }
-                        } else {
+                        } ਨਹੀਂਤਾਂ {
                             /* target overflow */
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex;
+                            ਜੇ(offsets!=ਖਾਲੀ_ਸੂਚਕ) {
+                                *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                             }
-                            cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
-                            cnv->UCharErrorBufferLength=1;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                            goto endloop;
+                            cnv->UChar_Error_ਬਫਰ[0]=(char16_t)(0xdc00|(c&0x3ff));
+                            cnv->UChar_Error_ਬਫਰ_ਲੰਮਾਈ=1;
+                            *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
+                            ਜਾਓ endloop;
                         }
                     }
                 }
-                sourceIndex=nextSourceIndex;
+                ਸਰੋਤ_ਸੂਚਕਾਂਕ=ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
             }
         }
 
         /* normal state machine for single-byte mode, minus handling for what fastSingle covers */
-singleByteMode:
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+single_Byte_ਬਹੁਲਕ:
+        ਜਦੋਂ(ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ) {
+            ਜੇ(ਨਿਸ਼ਾਨਾ>=ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ) {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
+                ਰੋਕੋ;
             }
-            b=*source++;
-            ++nextSourceIndex;
-            switch(state) {
-            case readCommand:
+            b=*ਸਰੋਤ++;
+            ++ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
+            ਚੋਣ(state) {
+            ਹਾਲਤ readCommand:
                 /* redundant conditions are commented out */
                 /* here: b<0x20 because otherwise we would be in fastSingle */
-                if((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+                ਜੇ((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
-                    *target++=(char16_t)b;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    *ਨਿਸ਼ਾਨਾ++=(char16_t)b;
+                    ਜੇ(offsets!=ਖਾਲੀ_ਸੂਚਕ) {
+                        *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                     }
-                    sourceIndex=nextSourceIndex;
-                    goto fastSingle;
-                } else if(SC0<=b) {
-                    if(b<=SC7) {
-                        dynamicWindow=(int8_t)(b-SC0);
-                        sourceIndex=nextSourceIndex;
-                        goto fastSingle;
-                    } else /* if(SD0<=b && b<=SD7) */ {
-                        dynamicWindow=(int8_t)(b-SD0);
+                    ਸਰੋਤ_ਸੂਚਕਾਂਕ=ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
+                    ਜਾਓ fastSingle;
+                } ਨਹੀਂਤਾਂ ਜੇ(SC0<=b) {
+                    ਜੇ(b<=SC7) {
+                        dynamic_ਖਿੜਕੀ=(int8_t)(b-SC0);
+                        ਸਰੋਤ_ਸੂਚਕਾਂਕ=ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
+                        ਜਾਓ fastSingle;
+                    } ਨਹੀਂਤਾਂ /* if(SD0<=b && b<=SD7) */ {
+                        dynamic_ਖਿੜਕੀ=(int8_t)(b-SD0);
                         state=defineOne;
                     }
-                } else if(/* SQ0<=b && */ b<=SQ7) {
-                    quoteWindow=(int8_t)(b-SQ0);
+                } ਨਹੀਂਤਾਂ ਜੇ(/* SQ0<=b && */ b<=SQ7) {
+                    quote_ਖਿੜਕੀ=(int8_t)(b-SQ0);
                     state=quoteOne;
-                } else if(b==SDX) {
+                } ਨਹੀਂਤਾਂ ਜੇ(b==SDX) {
                     state=definePairOne;
-                } else if(b==SQU) {
+                } ਨਹੀਂਤਾਂ ਜੇ(b==SQU) {
                     state=quotePairOne;
-                } else if(b==SCU) {
-                    sourceIndex=nextSourceIndex;
-                    isSingleByteMode=false;
-                    goto fastUnicode;
-                } else /* Srs */ {
+                } ਨਹੀਂਤਾਂ ਜੇ(b==SCU) {
+                    ਸਰੋਤ_ਸੂਚਕਾਂਕ=ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
+                    is_Single_Byte_ਬਹੁਲਕ=ਝੂਠ;
+                    ਜਾਓ fastUnicode;
+                } ਨਹੀਂਤਾਂ /* Srs */ {
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
-                    goto endloop;
+                    *p_Error_ਕੋਡ=U_ILLEGAL_CHAR_ਮਿਲਿਆ;
+                    cnv->ਮੰਜ਼ਿਲ_UBytes[0]=b;
+                    cnv->ਮੰਜ਼ਿਲ_ULength=1;
+                    ਜਾਓ endloop;
                 }
 
                 /* store the first byte of a multibyte sequence in toUBytes[] */
-                cnv->toUBytes[0]=b;
-                cnv->toULength=1;
-                break;
-            case quotePairOne:
+                cnv->ਮੰਜ਼ਿਲ_UBytes[0]=b;
+                cnv->ਮੰਜ਼ਿਲ_ULength=1;
+                ਰੋਕੋ;
+            ਹਾਲਤ quotePairOne:
                 byteOne=b;
-                cnv->toUBytes[1]=b;
-                cnv->toULength=2;
+                cnv->ਮੰਜ਼ਿਲ_UBytes[1]=b;
+                cnv->ਮੰਜ਼ਿਲ_ULength=2;
                 state=quotePairTwo;
-                break;
-            case quotePairTwo:
-                *target++=(char16_t)((byteOne<<8)|b);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                ਰੋਕੋ;
+            ਹਾਲਤ quotePairTwo:
+                *ਨਿਸ਼ਾਨਾ++=(char16_t)((byteOne<<8)|b);
+                ਜੇ(offsets!=ਖਾਲੀ_ਸੂਚਕ) {
+                    *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                 }
-                sourceIndex=nextSourceIndex;
+                ਸਰੋਤ_ਸੂਚਕਾਂਕ=ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                 state=readCommand;
-                goto fastSingle;
-            case quoteOne:
-                if(b<0x80) {
+                ਜਾਓ fastSingle;
+            ਹਾਲਤ quoteOne:
+                ਜੇ(b<0x80) {
                     /* all static offsets are in the BMP */
-                    *target++=(char16_t)(staticOffsets[quoteWindow]+b);
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    *ਨਿਸ਼ਾਨਾ++=(char16_t)(staticOffsets[quote_ਖਿੜਕੀ]+b);
+                    ਜੇ(offsets!=ਖਾਲੀ_ਸੂਚਕ) {
+                        *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                     }
-                } else {
+                } ਨਹੀਂਤਾਂ {
                     /* write from dynamic window */
-                    uint32_t c=scsu->toUDynamicOffsets[quoteWindow]+(b&0x7f);
-                    if(c<=0xffff) {
-                        *target++=(char16_t)c;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
+                    uint32_t c=scsu->ਮੰਜ਼ਿਲ_UDynamic_Offsets[quote_ਖਿੜਕੀ]+(b&0x7f);
+                    ਜੇ(c<=0xffff) {
+                        *ਨਿਸ਼ਾਨਾ++=(char16_t)c;
+                        ਜੇ(offsets!=ਖਾਲੀ_ਸੂਚਕ) {
+                            *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                         }
-                    } else {
+                    } ਨਹੀਂਤਾਂ {
                         /* output surrogate pair */
-                        *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
-                            *target++=(char16_t)(0xdc00|(c&0x3ff));
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex;
-                                *offsets++=sourceIndex;
+                        *ਨਿਸ਼ਾਨਾ++=(char16_t)(0xd7c0+(c>>10));
+                        ਜੇ(ਨਿਸ਼ਾਨਾ<ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ) {
+                            *ਨਿਸ਼ਾਨਾ++=(char16_t)(0xdc00|(c&0x3ff));
+                            ਜੇ(offsets!=ਖਾਲੀ_ਸੂਚਕ) {
+                                *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
+                                *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                             }
-                        } else {
+                        } ਨਹੀਂਤਾਂ {
                             /* target overflow */
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex;
+                            ਜੇ(offsets!=ਖਾਲੀ_ਸੂਚਕ) {
+                                *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                             }
-                            cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
-                            cnv->UCharErrorBufferLength=1;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                            goto endloop;
+                            cnv->UChar_Error_ਬਫਰ[0]=(char16_t)(0xdc00|(c&0x3ff));
+                            cnv->UChar_Error_ਬਫਰ_ਲੰਮਾਈ=1;
+                            *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
+                            ਜਾਓ endloop;
                         }
                     }
                 }
-                sourceIndex=nextSourceIndex;
+                ਸਰੋਤ_ਸੂਚਕਾਂਕ=ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                 state=readCommand;
-                goto fastSingle;
-            case definePairOne:
-                dynamicWindow=(int8_t)((b>>5)&7);
+                ਜਾਓ fastSingle;
+            ਹਾਲਤ definePairOne:
+                dynamic_ਖਿੜਕੀ=(int8_t)((b>>5)&7);
                 byteOne=(uint8_t)(b&0x1f);
-                cnv->toUBytes[1]=b;
-                cnv->toULength=2;
+                cnv->ਮੰਜ਼ਿਲ_UBytes[1]=b;
+                cnv->ਮੰਜ਼ਿਲ_ULength=2;
                 state=definePairTwo;
-                break;
-            case definePairTwo:
-                scsu->toUDynamicOffsets[dynamicWindow]=0x10000+(byteOne<<15UL | b<<7UL);
-                sourceIndex=nextSourceIndex;
+                ਰੋਕੋ;
+            ਹਾਲਤ definePairTwo:
+                scsu->ਮੰਜ਼ਿਲ_UDynamic_Offsets[dynamic_ਖਿੜਕੀ]=0x10000+(byteOne<<15UL | b<<7UL);
+                ਸਰੋਤ_ਸੂਚਕਾਂਕ=ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                 state=readCommand;
-                goto fastSingle;
-            case defineOne:
-                if(b==0) {
+                ਜਾਓ fastSingle;
+            ਹਾਲਤ defineOne:
+                ਜੇ(b==0) {
                     /* callback(illegal): Reserved window offset value 0 */
-                    cnv->toUBytes[1]=b;
-                    cnv->toULength=2;
-                    goto endloop;
-                } else if(b<gapThreshold) {
-                    scsu->toUDynamicOffsets[dynamicWindow]=b<<7UL;
-                } else if((uint8_t)(b-gapThreshold)<(reservedStart-gapThreshold)) {
-                    scsu->toUDynamicOffsets[dynamicWindow]=(b<<7UL)+gapOffset;
-                } else if(b>=fixedThreshold) {
-                    scsu->toUDynamicOffsets[dynamicWindow]=fixedOffsets[b-fixedThreshold];
-                } else {
+                    cnv->ਮੰਜ਼ਿਲ_UBytes[1]=b;
+                    cnv->ਮੰਜ਼ਿਲ_ULength=2;
+                    ਜਾਓ endloop;
+                } ਨਹੀਂਤਾਂ ਜੇ(b<gap_ਹੱਦ) {
+                    scsu->ਮੰਜ਼ਿਲ_UDynamic_Offsets[dynamic_ਖਿੜਕੀ]=b<<7UL;
+                } ਨਹੀਂਤਾਂ ਜੇ((uint8_t)(b-gap_ਹੱਦ)<(reserved_ਸ਼ੁਰੂ-gap_ਹੱਦ)) {
+                    scsu->ਮੰਜ਼ਿਲ_UDynamic_Offsets[dynamic_ਖਿੜਕੀ]=(b<<7UL)+gap_ਵਿੱਥ;
+                } ਨਹੀਂਤਾਂ ਜੇ(b>=fixed_ਹੱਦ) {
+                    scsu->ਮੰਜ਼ਿਲ_UDynamic_Offsets[dynamic_ਖਿੜਕੀ]=fixedOffsets[b-fixed_ਹੱਦ];
+                } ਨਹੀਂਤਾਂ {
                     /* callback(illegal): Reserved window offset value 0xa8..0xf8 */
-                    cnv->toUBytes[1]=b;
-                    cnv->toULength=2;
-                    goto endloop;
+                    cnv->ਮੰਜ਼ਿਲ_UBytes[1]=b;
+                    cnv->ਮੰਜ਼ਿਲ_ULength=2;
+                    ਜਾਓ endloop;
                 }
-                sourceIndex=nextSourceIndex;
+                ਸਰੋਤ_ਸੂਚਕਾਂਕ=ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                 state=readCommand;
-                goto fastSingle;
+                ਜਾਓ fastSingle;
             }
         }
-    } else {
+    } ਨਹੀਂਤਾਂ {
         /* fast path for Unicode mode */
-        if(state==readCommand) {
+        ਜੇ(state==readCommand) {
 fastUnicode:
-            while(source+1<sourceLimit && target<targetLimit && (uint8_t)((b=*source)-UC0)>(Urs-UC0)) {
-                *target++=(char16_t)((b<<8)|source[1]);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+            ਜਦੋਂ(ਸਰੋਤ+1<ਸਰੋਤ_ਹੱਦਬੰਦੀ && ਨਿਸ਼ਾਨਾ<ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ && (uint8_t)((b=*ਸਰੋਤ)-UC0)>(Urs-UC0)) {
+                *ਨਿਸ਼ਾਨਾ++=(char16_t)((b<<8)|ਸਰੋਤ[1]);
+                ਜੇ(offsets!=ਖਾਲੀ_ਸੂਚਕ) {
+                    *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                 }
-                sourceIndex=nextSourceIndex;
-                nextSourceIndex+=2;
-                source+=2;
+                ਸਰੋਤ_ਸੂਚਕਾਂਕ=ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
+                ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ+=2;
+                ਸਰੋਤ+=2;
             }
         }
 
         /* normal state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+        ਜਦੋਂ(ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ) {
+            ਜੇ(ਨਿਸ਼ਾਨਾ>=ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ) {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
+                ਰੋਕੋ;
             }
-            b=*source++;
-            ++nextSourceIndex;
-            switch(state) {
-            case readCommand:
-                if((uint8_t)(b-UC0)>(Urs-UC0)) {
+            b=*ਸਰੋਤ++;
+            ++ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
+            ਚੋਣ(state) {
+            ਹਾਲਤ readCommand:
+                ਜੇ((uint8_t)(b-UC0)>(Urs-UC0)) {
                     byteOne=b;
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
+                    cnv->ਮੰਜ਼ਿਲ_UBytes[0]=b;
+                    cnv->ਮੰਜ਼ਿਲ_ULength=1;
                     state=quotePairTwo;
-                } else if(/* UC0<=b && */ b<=UC7) {
-                    dynamicWindow=(int8_t)(b-UC0);
-                    sourceIndex=nextSourceIndex;
-                    isSingleByteMode=true;
-                    goto fastSingle;
-                } else if(/* UD0<=b && */ b<=UD7) {
-                    dynamicWindow=(int8_t)(b-UD0);
-                    isSingleByteMode=true;
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
+                } ਨਹੀਂਤਾਂ ਜੇ(/* UC0<=b && */ b<=UC7) {
+                    dynamic_ਖਿੜਕੀ=(int8_t)(b-UC0);
+                    ਸਰੋਤ_ਸੂਚਕਾਂਕ=ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
+                    is_Single_Byte_ਬਹੁਲਕ=ਸੱਚ;
+                    ਜਾਓ fastSingle;
+                } ਨਹੀਂਤਾਂ ਜੇ(/* UD0<=b && */ b<=UD7) {
+                    dynamic_ਖਿੜਕੀ=(int8_t)(b-UD0);
+                    is_Single_Byte_ਬਹੁਲਕ=ਸੱਚ;
+                    cnv->ਮੰਜ਼ਿਲ_UBytes[0]=b;
+                    cnv->ਮੰਜ਼ਿਲ_ULength=1;
                     state=defineOne;
-                    goto singleByteMode;
-                } else if(b==UDX) {
-                    isSingleByteMode=true;
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
+                    ਜਾਓ single_Byte_ਬਹੁਲਕ;
+                } ਨਹੀਂਤਾਂ ਜੇ(b==UDX) {
+                    is_Single_Byte_ਬਹੁਲਕ=ਸੱਚ;
+                    cnv->ਮੰਜ਼ਿਲ_UBytes[0]=b;
+                    cnv->ਮੰਜ਼ਿਲ_ULength=1;
                     state=definePairOne;
-                    goto singleByteMode;
-                } else if(b==UQU) {
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
+                    ਜਾਓ single_Byte_ਬਹੁਲਕ;
+                } ਨਹੀਂਤਾਂ ਜੇ(b==UQU) {
+                    cnv->ਮੰਜ਼ਿਲ_UBytes[0]=b;
+                    cnv->ਮੰਜ਼ਿਲ_ULength=1;
                     state=quotePairOne;
-                } else /* Urs */ {
+                } ਨਹੀਂਤਾਂ /* Urs */ {
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
-                    goto endloop;
+                    *p_Error_ਕੋਡ=U_ILLEGAL_CHAR_ਮਿਲਿਆ;
+                    cnv->ਮੰਜ਼ਿਲ_UBytes[0]=b;
+                    cnv->ਮੰਜ਼ਿਲ_ULength=1;
+                    ਜਾਓ endloop;
                 }
-                break;
-            case quotePairOne:
+                ਰੋਕੋ;
+            ਹਾਲਤ quotePairOne:
                 byteOne=b;
-                cnv->toUBytes[1]=b;
-                cnv->toULength=2;
+                cnv->ਮੰਜ਼ਿਲ_UBytes[1]=b;
+                cnv->ਮੰਜ਼ਿਲ_ULength=2;
                 state=quotePairTwo;
-                break;
-            case quotePairTwo:
-                *target++=(char16_t)((byteOne<<8)|b);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                ਰੋਕੋ;
+            ਹਾਲਤ quotePairTwo:
+                *ਨਿਸ਼ਾਨਾ++=(char16_t)((byteOne<<8)|b);
+                ਜੇ(offsets!=ਖਾਲੀ_ਸੂਚਕ) {
+                    *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                 }
-                sourceIndex=nextSourceIndex;
+                ਸਰੋਤ_ਸੂਚਕਾਂਕ=ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                 state=readCommand;
-                goto fastUnicode;
+                ਜਾਓ fastUnicode;
             }
         }
     }
 endloop:
 
     /* set the converter state back into UConverter */
-    if(U_FAILURE(*pErrorCode) && *pErrorCode!=U_BUFFER_OVERFLOW_ERROR) {
+    ਜੇ(U_FAILURE(*p_Error_ਕੋਡ) && *p_Error_ਕੋਡ!=U_ਬਫਰ_ਉਛਾਲ_ERROR) {
         /* reset to deal with the next character */
         state=readCommand;
-    } else if(state==readCommand) {
+    } ਨਹੀਂਤਾਂ ਜੇ(state==readCommand) {
         /* not in a multi-byte sequence, reset toULength */
-        cnv->toULength=0;
+        cnv->ਮੰਜ਼ਿਲ_ULength=0;
     }
-    scsu->toUIsSingleByteMode=isSingleByteMode;
-    scsu->toUState=state;
-    scsu->toUQuoteWindow=quoteWindow;
-    scsu->toUDynamicWindow=dynamicWindow;
-    scsu->toUByteOne=byteOne;
+    scsu->ਮੰਜ਼ਿਲ_UIs_Single_Byte_ਬਹੁਲਕ=is_Single_Byte_ਬਹੁਲਕ;
+    scsu->ਮੰਜ਼ਿਲ_UState=state;
+    scsu->ਮੰਜ਼ਿਲ_UQuote_ਖਿੜਕੀ=quote_ਖਿੜਕੀ;
+    scsu->ਮੰਜ਼ਿਲ_UDynamic_ਖਿੜਕੀ=dynamic_ਖਿੜਕੀ;
+    scsu->ਮੰਜ਼ਿਲ_UByte_One=byteOne;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_ਦਲੀਲਾਂ->ਸਰੋਤ=(ਅਚਲ ਅੱਖਰ *)ਸਰੋਤ;
+    p_ਦਲੀਲਾਂ->ਨਿਸ਼ਾਨਾ=ਨਿਸ਼ਾਨਾ;
+    p_ਦਲੀਲਾਂ->offsets=offsets;
 }
 
 /*
@@ -581,35 +581,35 @@ endloop:
  * re-copy the original function and remove the variables
  * offsets, sourceIndex, and nextSourceIndex.
  */
-static void U_CALLCONV
-_SCSUToUnicode(UConverterToUnicodeArgs *pArgs,
-               UErrorCode *pErrorCode) {
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV
+_SCSUToUnicode(UConverter_ਮੰਜ਼ਿਲ_Unicode_ਦਲੀਲਾਂ *p_ਦਲੀਲਾਂ,
+               UError_ਕੋਡ *p_Error_ਕੋਡ) {
     UConverter *cnv;
     SCSUData *scsu;
-    const uint8_t *source, *sourceLimit;
-    char16_t *target;
-    const char16_t *targetLimit;
-    UBool isSingleByteMode;
+    ਅਚਲ uint8_t *ਸਰੋਤ, *ਸਰੋਤ_ਹੱਦਬੰਦੀ;
+    char16_t *ਨਿਸ਼ਾਨਾ;
+    ਅਚਲ char16_t *ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ;
+    UBool is_Single_Byte_ਬਹੁਲਕ;
     uint8_t state, byteOne;
-    int8_t quoteWindow, dynamicWindow;
+    int8_t quote_ਖਿੜਕੀ, dynamic_ਖਿੜਕੀ;
 
     uint8_t b;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_ਦਲੀਲਾਂ->converter;
     scsu=(SCSUData *)cnv->extraInfo;
 
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
+    ਸਰੋਤ=(ਅਚਲ uint8_t *)p_ਦਲੀਲਾਂ->ਸਰੋਤ;
+    ਸਰੋਤ_ਹੱਦਬੰਦੀ=(ਅਚਲ uint8_t *)p_ਦਲੀਲਾਂ->ਸਰੋਤ_ਹੱਦਬੰਦੀ;
+    ਨਿਸ਼ਾਨਾ=p_ਦਲੀਲਾਂ->ਨਿਸ਼ਾਨਾ;
+    ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ=p_ਦਲੀਲਾਂ->ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ;
 
     /* get the state machine state */
-    isSingleByteMode=scsu->toUIsSingleByteMode;
-    state=scsu->toUState;
-    quoteWindow=scsu->toUQuoteWindow;
-    dynamicWindow=scsu->toUDynamicWindow;
-    byteOne=scsu->toUByteOne;
+    is_Single_Byte_ਬਹੁਲਕ=scsu->ਮੰਜ਼ਿਲ_UIs_Single_Byte_ਬਹੁਲਕ;
+    state=scsu->ਮੰਜ਼ਿਲ_UState;
+    quote_ਖਿੜਕੀ=scsu->ਮੰਜ਼ਿਲ_UQuote_ਖਿੜਕੀ;
+    dynamic_ਖਿੜਕੀ=scsu->ਮੰਜ਼ਿਲ_UDynamic_ਖਿੜਕੀ;
+    byteOne=scsu->ਮੰਜ਼ਿਲ_UByte_One;
 
     /*
      * conversion "loop"
@@ -630,31 +630,31 @@ _SCSUToUnicode(UConverterToUnicodeArgs *pArgs,
      * The callback handling is done by returning with an error code.
      * The conversion framework actually calls the callback function.
      */
-    if(isSingleByteMode) {
+    ਜੇ(is_Single_Byte_ਬਹੁਲਕ) {
         /* fast path for single-byte mode */
-        if(state==readCommand) {
+        ਜੇ(state==readCommand) {
 fastSingle:
-            while(source<sourceLimit && target<targetLimit && (b=*source)>=0x20) {
-                ++source;
-                if(b<=0x7f) {
+            ਜਦੋਂ(ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ && ਨਿਸ਼ਾਨਾ<ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ && (b=*ਸਰੋਤ)>=0x20) {
+                ++ਸਰੋਤ;
+                ਜੇ(b<=0x7f) {
                     /* write US-ASCII graphic character or DEL */
-                    *target++=(char16_t)b;
-                } else {
+                    *ਨਿਸ਼ਾਨਾ++=(char16_t)b;
+                } ਨਹੀਂਤਾਂ {
                     /* write from dynamic window */
-                    uint32_t c=scsu->toUDynamicOffsets[dynamicWindow]+(b&0x7f);
-                    if(c<=0xffff) {
-                        *target++=(char16_t)c;
-                    } else {
+                    uint32_t c=scsu->ਮੰਜ਼ਿਲ_UDynamic_Offsets[dynamic_ਖਿੜਕੀ]+(b&0x7f);
+                    ਜੇ(c<=0xffff) {
+                        *ਨਿਸ਼ਾਨਾ++=(char16_t)c;
+                    } ਨਹੀਂਤਾਂ {
                         /* output surrogate pair */
-                        *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
-                            *target++=(char16_t)(0xdc00|(c&0x3ff));
-                        } else {
+                        *ਨਿਸ਼ਾਨਾ++=(char16_t)(0xd7c0+(c>>10));
+                        ਜੇ(ਨਿਸ਼ਾਨਾ<ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ) {
+                            *ਨਿਸ਼ਾਨਾ++=(char16_t)(0xdc00|(c&0x3ff));
+                        } ਨਹੀਂਤਾਂ {
                             /* target overflow */
-                            cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
-                            cnv->UCharErrorBufferLength=1;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                            goto endloop;
+                            cnv->UChar_Error_ਬਫਰ[0]=(char16_t)(0xdc00|(c&0x3ff));
+                            cnv->UChar_Error_ਬਫਰ_ਲੰਮਾਈ=1;
+                            *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
+                            ਜਾਓ endloop;
                         }
                     }
                 }
@@ -662,209 +662,209 @@ fastSingle:
         }
 
         /* normal state machine for single-byte mode, minus handling for what fastSingle covers */
-singleByteMode:
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+single_Byte_ਬਹੁਲਕ:
+        ਜਦੋਂ(ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ) {
+            ਜੇ(ਨਿਸ਼ਾਨਾ>=ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ) {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
+                ਰੋਕੋ;
             }
-            b=*source++;
-            switch(state) {
-            case readCommand:
+            b=*ਸਰੋਤ++;
+            ਚੋਣ(state) {
+            ਹਾਲਤ readCommand:
                 /* redundant conditions are commented out */
                 /* here: b<0x20 because otherwise we would be in fastSingle */
-                if((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+                ਜੇ((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
-                    *target++=(char16_t)b;
-                    goto fastSingle;
-                } else if(SC0<=b) {
-                    if(b<=SC7) {
-                        dynamicWindow=(int8_t)(b-SC0);
-                        goto fastSingle;
-                    } else /* if(SD0<=b && b<=SD7) */ {
-                        dynamicWindow=(int8_t)(b-SD0);
+                    *ਨਿਸ਼ਾਨਾ++=(char16_t)b;
+                    ਜਾਓ fastSingle;
+                } ਨਹੀਂਤਾਂ ਜੇ(SC0<=b) {
+                    ਜੇ(b<=SC7) {
+                        dynamic_ਖਿੜਕੀ=(int8_t)(b-SC0);
+                        ਜਾਓ fastSingle;
+                    } ਨਹੀਂਤਾਂ /* if(SD0<=b && b<=SD7) */ {
+                        dynamic_ਖਿੜਕੀ=(int8_t)(b-SD0);
                         state=defineOne;
                     }
-                } else if(/* SQ0<=b && */ b<=SQ7) {
-                    quoteWindow=(int8_t)(b-SQ0);
+                } ਨਹੀਂਤਾਂ ਜੇ(/* SQ0<=b && */ b<=SQ7) {
+                    quote_ਖਿੜਕੀ=(int8_t)(b-SQ0);
                     state=quoteOne;
-                } else if(b==SDX) {
+                } ਨਹੀਂਤਾਂ ਜੇ(b==SDX) {
                     state=definePairOne;
-                } else if(b==SQU) {
+                } ਨਹੀਂਤਾਂ ਜੇ(b==SQU) {
                     state=quotePairOne;
-                } else if(b==SCU) {
-                    isSingleByteMode=false;
-                    goto fastUnicode;
-                } else /* Srs */ {
+                } ਨਹੀਂਤਾਂ ਜੇ(b==SCU) {
+                    is_Single_Byte_ਬਹੁਲਕ=ਝੂਠ;
+                    ਜਾਓ fastUnicode;
+                } ਨਹੀਂਤਾਂ /* Srs */ {
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
-                    goto endloop;
+                    *p_Error_ਕੋਡ=U_ILLEGAL_CHAR_ਮਿਲਿਆ;
+                    cnv->ਮੰਜ਼ਿਲ_UBytes[0]=b;
+                    cnv->ਮੰਜ਼ਿਲ_ULength=1;
+                    ਜਾਓ endloop;
                 }
 
                 /* store the first byte of a multibyte sequence in toUBytes[] */
-                cnv->toUBytes[0]=b;
-                cnv->toULength=1;
-                break;
-            case quotePairOne:
+                cnv->ਮੰਜ਼ਿਲ_UBytes[0]=b;
+                cnv->ਮੰਜ਼ਿਲ_ULength=1;
+                ਰੋਕੋ;
+            ਹਾਲਤ quotePairOne:
                 byteOne=b;
-                cnv->toUBytes[1]=b;
-                cnv->toULength=2;
+                cnv->ਮੰਜ਼ਿਲ_UBytes[1]=b;
+                cnv->ਮੰਜ਼ਿਲ_ULength=2;
                 state=quotePairTwo;
-                break;
-            case quotePairTwo:
-                *target++=(char16_t)((byteOne<<8)|b);
+                ਰੋਕੋ;
+            ਹਾਲਤ quotePairTwo:
+                *ਨਿਸ਼ਾਨਾ++=(char16_t)((byteOne<<8)|b);
                 state=readCommand;
-                goto fastSingle;
-            case quoteOne:
-                if(b<0x80) {
+                ਜਾਓ fastSingle;
+            ਹਾਲਤ quoteOne:
+                ਜੇ(b<0x80) {
                     /* all static offsets are in the BMP */
-                    *target++=(char16_t)(staticOffsets[quoteWindow]+b);
-                } else {
+                    *ਨਿਸ਼ਾਨਾ++=(char16_t)(staticOffsets[quote_ਖਿੜਕੀ]+b);
+                } ਨਹੀਂਤਾਂ {
                     /* write from dynamic window */
-                    uint32_t c=scsu->toUDynamicOffsets[quoteWindow]+(b&0x7f);
-                    if(c<=0xffff) {
-                        *target++=(char16_t)c;
-                    } else {
+                    uint32_t c=scsu->ਮੰਜ਼ਿਲ_UDynamic_Offsets[quote_ਖਿੜਕੀ]+(b&0x7f);
+                    ਜੇ(c<=0xffff) {
+                        *ਨਿਸ਼ਾਨਾ++=(char16_t)c;
+                    } ਨਹੀਂਤਾਂ {
                         /* output surrogate pair */
-                        *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
-                            *target++=(char16_t)(0xdc00|(c&0x3ff));
-                        } else {
+                        *ਨਿਸ਼ਾਨਾ++=(char16_t)(0xd7c0+(c>>10));
+                        ਜੇ(ਨਿਸ਼ਾਨਾ<ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ) {
+                            *ਨਿਸ਼ਾਨਾ++=(char16_t)(0xdc00|(c&0x3ff));
+                        } ਨਹੀਂਤਾਂ {
                             /* target overflow */
-                            cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
-                            cnv->UCharErrorBufferLength=1;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                            goto endloop;
+                            cnv->UChar_Error_ਬਫਰ[0]=(char16_t)(0xdc00|(c&0x3ff));
+                            cnv->UChar_Error_ਬਫਰ_ਲੰਮਾਈ=1;
+                            *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
+                            ਜਾਓ endloop;
                         }
                     }
                 }
                 state=readCommand;
-                goto fastSingle;
-            case definePairOne:
-                dynamicWindow=(int8_t)((b>>5)&7);
+                ਜਾਓ fastSingle;
+            ਹਾਲਤ definePairOne:
+                dynamic_ਖਿੜਕੀ=(int8_t)((b>>5)&7);
                 byteOne=(uint8_t)(b&0x1f);
-                cnv->toUBytes[1]=b;
-                cnv->toULength=2;
+                cnv->ਮੰਜ਼ਿਲ_UBytes[1]=b;
+                cnv->ਮੰਜ਼ਿਲ_ULength=2;
                 state=definePairTwo;
-                break;
-            case definePairTwo:
-                scsu->toUDynamicOffsets[dynamicWindow]=0x10000+(byteOne<<15UL | b<<7UL);
+                ਰੋਕੋ;
+            ਹਾਲਤ definePairTwo:
+                scsu->ਮੰਜ਼ਿਲ_UDynamic_Offsets[dynamic_ਖਿੜਕੀ]=0x10000+(byteOne<<15UL | b<<7UL);
                 state=readCommand;
-                goto fastSingle;
-            case defineOne:
-                if(b==0) {
+                ਜਾਓ fastSingle;
+            ਹਾਲਤ defineOne:
+                ਜੇ(b==0) {
                     /* callback(illegal): Reserved window offset value 0 */
-                    cnv->toUBytes[1]=b;
-                    cnv->toULength=2;
-                    goto endloop;
-                } else if(b<gapThreshold) {
-                    scsu->toUDynamicOffsets[dynamicWindow]=b<<7UL;
-                } else if((uint8_t)(b-gapThreshold)<(reservedStart-gapThreshold)) {
-                    scsu->toUDynamicOffsets[dynamicWindow]=(b<<7UL)+gapOffset;
-                } else if(b>=fixedThreshold) {
-                    scsu->toUDynamicOffsets[dynamicWindow]=fixedOffsets[b-fixedThreshold];
-                } else {
+                    cnv->ਮੰਜ਼ਿਲ_UBytes[1]=b;
+                    cnv->ਮੰਜ਼ਿਲ_ULength=2;
+                    ਜਾਓ endloop;
+                } ਨਹੀਂਤਾਂ ਜੇ(b<gap_ਹੱਦ) {
+                    scsu->ਮੰਜ਼ਿਲ_UDynamic_Offsets[dynamic_ਖਿੜਕੀ]=b<<7UL;
+                } ਨਹੀਂਤਾਂ ਜੇ((uint8_t)(b-gap_ਹੱਦ)<(reserved_ਸ਼ੁਰੂ-gap_ਹੱਦ)) {
+                    scsu->ਮੰਜ਼ਿਲ_UDynamic_Offsets[dynamic_ਖਿੜਕੀ]=(b<<7UL)+gap_ਵਿੱਥ;
+                } ਨਹੀਂਤਾਂ ਜੇ(b>=fixed_ਹੱਦ) {
+                    scsu->ਮੰਜ਼ਿਲ_UDynamic_Offsets[dynamic_ਖਿੜਕੀ]=fixedOffsets[b-fixed_ਹੱਦ];
+                } ਨਹੀਂਤਾਂ {
                     /* callback(illegal): Reserved window offset value 0xa8..0xf8 */
-                    cnv->toUBytes[1]=b;
-                    cnv->toULength=2;
-                    goto endloop;
+                    cnv->ਮੰਜ਼ਿਲ_UBytes[1]=b;
+                    cnv->ਮੰਜ਼ਿਲ_ULength=2;
+                    ਜਾਓ endloop;
                 }
                 state=readCommand;
-                goto fastSingle;
+                ਜਾਓ fastSingle;
             }
         }
-    } else {
+    } ਨਹੀਂਤਾਂ {
         /* fast path for Unicode mode */
-        if(state==readCommand) {
+        ਜੇ(state==readCommand) {
 fastUnicode:
-            while(source+1<sourceLimit && target<targetLimit && (uint8_t)((b=*source)-UC0)>(Urs-UC0)) {
-                *target++=(char16_t)((b<<8)|source[1]);
-                source+=2;
+            ਜਦੋਂ(ਸਰੋਤ+1<ਸਰੋਤ_ਹੱਦਬੰਦੀ && ਨਿਸ਼ਾਨਾ<ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ && (uint8_t)((b=*ਸਰੋਤ)-UC0)>(Urs-UC0)) {
+                *ਨਿਸ਼ਾਨਾ++=(char16_t)((b<<8)|ਸਰੋਤ[1]);
+                ਸਰੋਤ+=2;
             }
         }
 
         /* normal state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+        ਜਦੋਂ(ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ) {
+            ਜੇ(ਨਿਸ਼ਾਨਾ>=ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ) {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
+                ਰੋਕੋ;
             }
-            b=*source++;
-            switch(state) {
-            case readCommand:
-                if((uint8_t)(b-UC0)>(Urs-UC0)) {
+            b=*ਸਰੋਤ++;
+            ਚੋਣ(state) {
+            ਹਾਲਤ readCommand:
+                ਜੇ((uint8_t)(b-UC0)>(Urs-UC0)) {
                     byteOne=b;
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
+                    cnv->ਮੰਜ਼ਿਲ_UBytes[0]=b;
+                    cnv->ਮੰਜ਼ਿਲ_ULength=1;
                     state=quotePairTwo;
-                } else if(/* UC0<=b && */ b<=UC7) {
-                    dynamicWindow=(int8_t)(b-UC0);
-                    isSingleByteMode=true;
-                    goto fastSingle;
-                } else if(/* UD0<=b && */ b<=UD7) {
-                    dynamicWindow=(int8_t)(b-UD0);
-                    isSingleByteMode=true;
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
+                } ਨਹੀਂਤਾਂ ਜੇ(/* UC0<=b && */ b<=UC7) {
+                    dynamic_ਖਿੜਕੀ=(int8_t)(b-UC0);
+                    is_Single_Byte_ਬਹੁਲਕ=ਸੱਚ;
+                    ਜਾਓ fastSingle;
+                } ਨਹੀਂਤਾਂ ਜੇ(/* UD0<=b && */ b<=UD7) {
+                    dynamic_ਖਿੜਕੀ=(int8_t)(b-UD0);
+                    is_Single_Byte_ਬਹੁਲਕ=ਸੱਚ;
+                    cnv->ਮੰਜ਼ਿਲ_UBytes[0]=b;
+                    cnv->ਮੰਜ਼ਿਲ_ULength=1;
                     state=defineOne;
-                    goto singleByteMode;
-                } else if(b==UDX) {
-                    isSingleByteMode=true;
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
+                    ਜਾਓ single_Byte_ਬਹੁਲਕ;
+                } ਨਹੀਂਤਾਂ ਜੇ(b==UDX) {
+                    is_Single_Byte_ਬਹੁਲਕ=ਸੱਚ;
+                    cnv->ਮੰਜ਼ਿਲ_UBytes[0]=b;
+                    cnv->ਮੰਜ਼ਿਲ_ULength=1;
                     state=definePairOne;
-                    goto singleByteMode;
-                } else if(b==UQU) {
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
+                    ਜਾਓ single_Byte_ਬਹੁਲਕ;
+                } ਨਹੀਂਤਾਂ ਜੇ(b==UQU) {
+                    cnv->ਮੰਜ਼ਿਲ_UBytes[0]=b;
+                    cnv->ਮੰਜ਼ਿਲ_ULength=1;
                     state=quotePairOne;
-                } else /* Urs */ {
+                } ਨਹੀਂਤਾਂ /* Urs */ {
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
-                    goto endloop;
+                    *p_Error_ਕੋਡ=U_ILLEGAL_CHAR_ਮਿਲਿਆ;
+                    cnv->ਮੰਜ਼ਿਲ_UBytes[0]=b;
+                    cnv->ਮੰਜ਼ਿਲ_ULength=1;
+                    ਜਾਓ endloop;
                 }
-                break;
-            case quotePairOne:
+                ਰੋਕੋ;
+            ਹਾਲਤ quotePairOne:
                 byteOne=b;
-                cnv->toUBytes[1]=b;
-                cnv->toULength=2;
+                cnv->ਮੰਜ਼ਿਲ_UBytes[1]=b;
+                cnv->ਮੰਜ਼ਿਲ_ULength=2;
                 state=quotePairTwo;
-                break;
-            case quotePairTwo:
-                *target++=(char16_t)((byteOne<<8)|b);
+                ਰੋਕੋ;
+            ਹਾਲਤ quotePairTwo:
+                *ਨਿਸ਼ਾਨਾ++=(char16_t)((byteOne<<8)|b);
                 state=readCommand;
-                goto fastUnicode;
+                ਜਾਓ fastUnicode;
             }
         }
     }
 endloop:
 
     /* set the converter state back into UConverter */
-    if(U_FAILURE(*pErrorCode) && *pErrorCode!=U_BUFFER_OVERFLOW_ERROR) {
+    ਜੇ(U_FAILURE(*p_Error_ਕੋਡ) && *p_Error_ਕੋਡ!=U_ਬਫਰ_ਉਛਾਲ_ERROR) {
         /* reset to deal with the next character */
         state=readCommand;
-    } else if(state==readCommand) {
+    } ਨਹੀਂਤਾਂ ਜੇ(state==readCommand) {
         /* not in a multi-byte sequence, reset toULength */
-        cnv->toULength=0;
+        cnv->ਮੰਜ਼ਿਲ_ULength=0;
     }
-    scsu->toUIsSingleByteMode=isSingleByteMode;
-    scsu->toUState=state;
-    scsu->toUQuoteWindow=quoteWindow;
-    scsu->toUDynamicWindow=dynamicWindow;
-    scsu->toUByteOne=byteOne;
+    scsu->ਮੰਜ਼ਿਲ_UIs_Single_Byte_ਬਹੁਲਕ=is_Single_Byte_ਬਹੁਲਕ;
+    scsu->ਮੰਜ਼ਿਲ_UState=state;
+    scsu->ਮੰਜ਼ਿਲ_UQuote_ਖਿੜਕੀ=quote_ਖਿੜਕੀ;
+    scsu->ਮੰਜ਼ਿਲ_UDynamic_ਖਿੜਕੀ=dynamic_ਖਿੜਕੀ;
+    scsu->ਮੰਜ਼ਿਲ_UByte_One=byteOne;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
+    p_ਦਲੀਲਾਂ->ਸਰੋਤ=(ਅਚਲ ਅੱਖਰ *)ਸਰੋਤ;
+    p_ਦਲੀਲਾਂ->ਨਿਸ਼ਾਨਾ=ਨਿਸ਼ਾਨਾ;
 }
-U_CDECL_END
+U_CDECL_ਸਿਰਾ
 /* SCSU-from-Unicode conversion functions ----------------------------------- */
 
 /*
@@ -879,22 +879,22 @@ U_CDECL_END
  */
 
 /* get the number of the window that this character is in, or -1 */
-static int8_t
-getWindow(const uint32_t offsets[8], uint32_t c) {
-    int i;
-    for(i=0; i<8; ++i) {
-        if (c - offsets[i] <= 0x7f) {
-            return static_cast<int8_t>(i);
+ਸਥਿਰ int8_t
+get_ਖਿੜਕੀ(ਅਚਲ uint32_t offsets[8], uint32_t c) {
+    ਪੂਰਨ i;
+    ਲਈ(i=0; i<8; ++i) {
+        ਜੇ (c - offsets[i] <= 0x7f) {
+            ਵਾਪਸ static_cast<int8_t>(i);
         }
     }
-    return -1;
+    ਵਾਪਸ -1;
 }
 
 /* is the character in the dynamic window starting at the offset, or in the direct-encoded range? */
-static UBool
-isInOffsetWindowOrDirect(uint32_t offset, uint32_t c) {
-    return c<=offset+0x7f &&
-          (c>=offset || (c<=0x7f &&
+ਸਥਿਰ UBool
+is_ਵਿੱਚ_ਵਿੱਥ_ਖਿੜਕੀ_Or_ਸਿੱਧਾ(uint32_t ਵਿੱਥ, uint32_t c) {
+    ਵਾਪਸ c<=ਵਿੱਥ+0x7f &&
+          (c>=ਵਿੱਥ || (c<=0x7f &&
                         (c>=0x20 || (1UL<<c)&0x2601)));
                                 /* binary 0010 0110 0000 0001,
                                    check for b==0xd || b==0xa || b==9 || b==0 */
@@ -903,13 +903,13 @@ isInOffsetWindowOrDirect(uint32_t offset, uint32_t c) {
 /*
  * getNextDynamicWindow returns the next dynamic window to be redefined
  */
-static int8_t
-getNextDynamicWindow(SCSUData *scsu) {
-    int8_t window=scsu->windowUse[scsu->nextWindowUseIndex];
-    if(++scsu->nextWindowUseIndex==8) {
-        scsu->nextWindowUseIndex=0;
+ਸਥਿਰ int8_t
+get_ਅਗਲਾ_Dynamic_ਖਿੜਕੀ(SCSUData *scsu) {
+    int8_t ਖਿੜਕੀ=scsu->ਖਿੜਕੀ_Use[scsu->ਅਗਲਾ_ਖਿੜਕੀ_Use_ਸੂਚਕਾਂਕ];
+    ਜੇ(++scsu->ਅਗਲਾ_ਖਿੜਕੀ_Use_ਸੂਚਕਾਂਕ==8) {
+        scsu->ਅਗਲਾ_ਖਿੜਕੀ_Use_ਸੂਚਕਾਂਕ=0;
     }
-    return window;
+    ਵਾਪਸ ਖਿੜਕੀ;
 }
 
 /*
@@ -918,36 +918,36 @@ getNextDynamicWindow(SCSUData *scsu) {
  * the next dynamic window to be defined;
  * a subclass may override it and provide its own algorithm.
  */
-static void
-useDynamicWindow(SCSUData *scsu, int8_t window) {
+ਸਥਿਰ ਖਾਲੀ
+use_Dynamic_ਖਿੜਕੀ(SCSUData *scsu, int8_t ਖਿੜਕੀ) {
     /*
      * move the existing window, which just became the most recently used one,
      * up in windowUse[] to nextWindowUseIndex-1
      */
 
     /* first, find the index of the window - backwards to favor the more recently used windows */
-    int i, j;
+    ਪੂਰਨ i, j;
 
-    i=scsu->nextWindowUseIndex;
-    do {
-        if(--i<0) {
+    i=scsu->ਅਗਲਾ_ਖਿੜਕੀ_Use_ਸੂਚਕਾਂਕ;
+    ਕਰੋ {
+        ਜੇ(--i<0) {
             i=7;
         }
-    } while(scsu->windowUse[i]!=window);
+    } ਜਦੋਂ(scsu->ਖਿੜਕੀ_Use[i]!=ਖਿੜਕੀ);
 
     /* now copy each windowUse[i+1] to [i] */
     j=i+1;
-    if(j==8) {
+    ਜੇ(j==8) {
         j=0;
     }
-    while(j!=scsu->nextWindowUseIndex) {
-        scsu->windowUse[i]=scsu->windowUse[j];
+    ਜਦੋਂ(j!=scsu->ਅਗਲਾ_ਖਿੜਕੀ_Use_ਸੂਚਕਾਂਕ) {
+        scsu->ਖਿੜਕੀ_Use[i]=scsu->ਖਿੜਕੀ_Use[j];
         i=j;
-        if(++j==8) { j=0; }
+        ਜੇ(++j==8) { j=0; }
     }
 
     /* finally, set the window into the most recently used index */
-    scsu->windowUse[i]=window;
+    scsu->ਖਿੜਕੀ_Use[i]=ਖਿੜਕੀ;
 }
 
 /*
@@ -958,33 +958,33 @@ useDynamicWindow(SCSUData *scsu, int8_t window) {
  *
  * return offset code: -1 none  <=0xff code for SDn/UDn  else code for SDX/UDX, subtract 0x200 to get the true code
  */
-static int
-getDynamicOffset(uint32_t c, uint32_t *pOffset) {
-    int i;
+ਸਥਿਰ ਪੂਰਨ
+get_Dynamic_ਵਿੱਥ(uint32_t c, uint32_t *p_ਵਿੱਥ) {
+    ਪੂਰਨ i;
 
-    for(i=0; i<7; ++i) {
-        if (c - fixedOffsets[i] <= 0x7f) {
-            *pOffset=fixedOffsets[i];
-            return 0xf9+i;
+    ਲਈ(i=0; i<7; ++i) {
+        ਜੇ (c - fixedOffsets[i] <= 0x7f) {
+            *p_ਵਿੱਥ=fixedOffsets[i];
+            ਵਾਪਸ 0xf9+i;
         }
     }
 
-    if(c<0x80) {
+    ਜੇ(c<0x80) {
         /* No dynamic window for US-ASCII. */
-        return -1;
-    } else if(c<0x3400 ||
+        ਵਾਪਸ -1;
+    } ਨਹੀਂਤਾਂ ਜੇ(c<0x3400 ||
               c - 0x10000 < 0x14000 - 0x10000 ||
               c - 0x1d000 <= 0x1ffff - 0x1d000
     ) {
         /* This character is in a code range for a "small", i.e., reasonably windowable, script. */
-        *pOffset=c&0x7fffff80;
-        return static_cast<int>(c >> 7);
-    } else if(0xe000<=c && c!=0xfeff && c<0xfff0) {
+        *p_ਵਿੱਥ=c&0x7fffff80;
+        ਵਾਪਸ static_cast<ਪੂਰਨ>(c >> 7);
+    } ਨਹੀਂਤਾਂ ਜੇ(0xe000<=c && c!=0xfeff && c<0xfff0) {
         /* For these characters we need to take the gapOffset into account. */
-        *pOffset=c&0x7fffff80;
-        return static_cast<int>((c - gapOffset) >> 7);
-    } else {
-        return -1;
+        *p_ਵਿੱਥ=c&0x7fffff80;
+        ਵਾਪਸ static_cast<ਪੂਰਨ>((c - gap_ਵਿੱਥ) >> 7);
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ -1;
     }
 }
 U_CDECL_BEGIN
@@ -1005,441 +1005,441 @@ U_CDECL_BEGIN
  *  - Only replace the result after an SDX or SCU?
  */
 
-static void U_CALLCONV
-_SCSUFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                            UErrorCode *pErrorCode) {
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV
+_SCSUFromUnicodeWithOffsets(UConverter_From_Unicode_ਦਲੀਲਾਂ *p_ਦਲੀਲਾਂ,
+                            UError_ਕੋਡ *p_Error_ਕੋਡ) {
     UConverter *cnv;
     SCSUData *scsu;
-    const char16_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity;
+    ਅਚਲ char16_t *ਸਰੋਤ, *ਸਰੋਤ_ਹੱਦਬੰਦੀ;
+    uint8_t *ਨਿਸ਼ਾਨਾ;
+    int32_t ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ;
     int32_t *offsets;
 
-    UBool isSingleByteMode;
-    uint8_t dynamicWindow;
-    uint32_t currentOffset;
+    UBool is_Single_Byte_ਬਹੁਲਕ;
+    uint8_t dynamic_ਖਿੜਕੀ;
+    uint32_t current_ਵਿੱਥ;
 
     uint32_t c, delta;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t ਸਰੋਤ_ਸੂਚਕਾਂਕ, ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
 
     int32_t length;
 
     /* variables for compression heuristics */
-    uint32_t offset;
+    uint32_t ਵਿੱਥ;
     char16_t lead, trail;
-    int code;
-    int8_t window;
+    ਪੂਰਨ ਕੋਡ;
+    int8_t ਖਿੜਕੀ;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_ਦਲੀਲਾਂ->converter;
     scsu=(SCSUData *)cnv->extraInfo;
 
     /* set up the local pointers */
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target=(uint8_t *)pArgs->target;
-    targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
-    offsets=pArgs->offsets;
+    ਸਰੋਤ=p_ਦਲੀਲਾਂ->ਸਰੋਤ;
+    ਸਰੋਤ_ਹੱਦਬੰਦੀ=p_ਦਲੀਲਾਂ->ਸਰੋਤ_ਹੱਦਬੰਦੀ;
+    ਨਿਸ਼ਾਨਾ=(uint8_t *)p_ਦਲੀਲਾਂ->ਨਿਸ਼ਾਨਾ;
+    ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ=(int32_t)(p_ਦਲੀਲਾਂ->ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ-p_ਦਲੀਲਾਂ->ਨਿਸ਼ਾਨਾ);
+    offsets=p_ਦਲੀਲਾਂ->offsets;
 
     /* get the state machine state */
-    isSingleByteMode=scsu->fromUIsSingleByteMode;
-    dynamicWindow=scsu->fromUDynamicWindow;
-    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
+    is_Single_Byte_ਬਹੁਲਕ=scsu->from_UIs_Single_Byte_ਬਹੁਲਕ;
+    dynamic_ਖਿੜਕੀ=scsu->from_UDynamic_ਖਿੜਕੀ;
+    current_ਵਿੱਥ=scsu->fromUDynamicOffsets[dynamic_ਖਿੜਕੀ];
 
     c=cnv->fromUChar32;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex= c==0 ? 0 : -1;
-    nextSourceIndex=0;
+    ਸਰੋਤ_ਸੂਚਕਾਂਕ= c==0 ? 0 : -1;
+    ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ=0;
 
     /* similar conversion "loop" as in toUnicode */
 loop:
-    if(isSingleByteMode) {
-        if(c!=0 && targetCapacity>0) {
-            goto getTrailSingle;
+    ਜੇ(is_Single_Byte_ਬਹੁਲਕ) {
+        ਜੇ(c!=0 && ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ>0) {
+            ਜਾਓ getTrailSingle;
         }
 
         /* state machine for single-byte mode */
 /* singleByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        ਜਦੋਂ(ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ) {
+            ਜੇ(ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ<=0) {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
+                ਰੋਕੋ;
             }
-            c=*source++;
-            ++nextSourceIndex;
+            c=*ਸਰੋਤ++;
+            ++ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
 
-            if((c-0x20)<=0x5f) {
+            ਜੇ((c-0x20)<=0x5f) {
                 /* pass US-ASCII graphic character through */
-                *target++=(uint8_t)c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *ਨਿਸ਼ਾਨਾ++=(uint8_t)c;
+                ਜੇ(offsets!=ਖਾਲੀ_ਸੂਚਕ) {
+                    *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                 }
-                --targetCapacity;
-            } else if(c<0x20) {
-                if((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+                --ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ;
+            } ਨਹੀਂਤਾਂ ਜੇ(c<0x20) {
+                ਜੇ((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
-                    *target++=(uint8_t)c;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    *ਨਿਸ਼ਾਨਾ++=(uint8_t)c;
+                    ਜੇ(offsets!=ਖਾਲੀ_ਸੂਚਕ) {
+                        *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                     }
-                    --targetCapacity;
-                } else {
+                    --ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ;
+                } ਨਹੀਂਤਾਂ {
                     /* quote C0 control character */
                     c|=SQ0<<8;
                     length=2;
-                    goto outputBytes;
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
                 }
-            } else if((delta=c-currentOffset)<=0x7f) {
+            } ਨਹੀਂਤਾਂ ਜੇ((delta=c-current_ਵਿੱਥ)<=0x7f) {
                 /* use the current dynamic window */
-                *target++=(uint8_t)(delta|0x80);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *ਨਿਸ਼ਾਨਾ++=(uint8_t)(delta|0x80);
+                ਜੇ(offsets!=ਖਾਲੀ_ਸੂਚਕ) {
+                    *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                 }
-                --targetCapacity;
-            } else if(U16_IS_SURROGATE(c)) {
-                if(U16_IS_SURROGATE_LEAD(c)) {
+                --ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ;
+            } ਨਹੀਂਤਾਂ ਜੇ(U16_IS_SURROGATE(c)) {
+                ਜੇ(U16_IS_SURROGATE_LEAD(c)) {
 getTrailSingle:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    ਜੇ(ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ) {
                         /* test the following code unit */
-                        trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
-                            ++source;
-                            ++nextSourceIndex;
+                        trail=*ਸਰੋਤ;
+                        ਜੇ(U16_IS_TRAIL(trail)) {
+                            ++ਸਰੋਤ;
+                            ++ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } ਨਹੀਂਤਾਂ {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            *p_Error_ਕੋਡ=U_ILLEGAL_CHAR_ਮਿਲਿਆ;
+                            ਜਾਓ endloop;
                         }
-                    } else {
+                    } ਨਹੀਂਤਾਂ {
                         /* no more input */
-                        break;
+                        ਰੋਕੋ;
                     }
-                } else {
+                } ਨਹੀਂਤਾਂ {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    goto endloop;
+                    *p_Error_ਕੋਡ=U_ILLEGAL_CHAR_ਮਿਲਿਆ;
+                    ਜਾਓ endloop;
                 }
 
                 /* compress supplementary character U+10000..U+10ffff */
-                if((delta=c-currentOffset)<=0x7f) {
+                ਜੇ((delta=c-current_ਵਿੱਥ)<=0x7f) {
                     /* use the current dynamic window */
-                    *target++=(uint8_t)(delta|0x80);
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    *ਨਿਸ਼ਾਨਾ++=(uint8_t)(delta|0x80);
+                    ਜੇ(offsets!=ਖਾਲੀ_ਸੂਚਕ) {
+                        *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                     }
-                    --targetCapacity;
-                } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                    --ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ;
+                } ਨਹੀਂਤਾਂ ਜੇ((ਖਿੜਕੀ=get_ਖਿੜਕੀ(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a dynamic window that contains this character, change to it */
-                    dynamicWindow=window;
-                    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
-                    useDynamicWindow(scsu, dynamicWindow);
-                    c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
+                    dynamic_ਖਿੜਕੀ=ਖਿੜਕੀ;
+                    current_ਵਿੱਥ=scsu->fromUDynamicOffsets[dynamic_ਖਿੜਕੀ];
+                    use_Dynamic_ਖਿੜਕੀ(scsu, dynamic_ਖਿੜਕੀ);
+                    c=((uint32_t)(SC0+dynamic_ਖਿੜਕੀ)<<8)|(c-current_ਵਿੱਥ)|0x80;
                     length=2;
-                    goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
+                } ਨਹੀਂਤਾਂ ਜੇ((ਕੋਡ=get_Dynamic_ਵਿੱਥ(c, &ਵਿੱਥ))>=0) {
                     /* might check if there are more characters in this window to come */
                     /* define an extended window with this character */
-                    code-=0x200;
-                    dynamicWindow=getNextDynamicWindow(scsu);
-                    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
-                    useDynamicWindow(scsu, dynamicWindow);
-                    c=((uint32_t)SDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
+                    ਕੋਡ-=0x200;
+                    dynamic_ਖਿੜਕੀ=get_ਅਗਲਾ_Dynamic_ਖਿੜਕੀ(scsu);
+                    current_ਵਿੱਥ=scsu->fromUDynamicOffsets[dynamic_ਖਿੜਕੀ]=ਵਿੱਥ;
+                    use_Dynamic_ਖਿੜਕੀ(scsu, dynamic_ਖਿੜਕੀ);
+                    c=((uint32_t)SDX<<24)|((uint32_t)dynamic_ਖਿੜਕੀ<<21)|((uint32_t)ਕੋਡ<<8)|(c-current_ਵਿੱਥ)|0x80;
                     length=4;
-                    goto outputBytes;
-                } else {
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
+                } ਨਹੀਂਤਾਂ {
                     /* change to Unicode mode and output this (lead, trail) pair */
-                    isSingleByteMode=false;
-                    *target++=(uint8_t)SCU;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    is_Single_Byte_ਬਹੁਲਕ=ਝੂਠ;
+                    *ਨਿਸ਼ਾਨਾ++=(uint8_t)SCU;
+                    ਜੇ(offsets!=ਖਾਲੀ_ਸੂਚਕ) {
+                        *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                     }
-                    --targetCapacity;
+                    --ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ;
                     c=((uint32_t)lead<<16)|trail;
                     length=4;
-                    goto outputBytes;
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
                 }
-            } else if(c<0xa0) {
+            } ਨਹੀਂਤਾਂ ਜੇ(c<0xa0) {
                 /* quote C1 control character */
                 c=(c&0x7f)|(SQ0+1)<<8; /* SQ0+1==SQ1 */
                 length=2;
-                goto outputBytes;
-            } else if(c==0xfeff || c>=0xfff0) {
+                ਜਾਓ output_ਬਾਈਟਾਂ;
+            } ਨਹੀਂਤਾਂ ਜੇ(c==0xfeff || c>=0xfff0) {
                 /* quote signature character=byte order mark and specials */
                 c|=SQU<<16;
                 length=3;
-                goto outputBytes;
-            } else {
+                ਜਾਓ output_ਬਾਈਟਾਂ;
+            } ਨਹੀਂਤਾਂ {
                 /* compress all other BMP characters */
-                if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                ਜੇ((ਖਿੜਕੀ=get_ਖਿੜਕੀ(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a window defined that contains this character - switch to it or quote from it? */
-                    if(source>=sourceLimit || isInOffsetWindowOrDirect(scsu->fromUDynamicOffsets[window], *source)) {
+                    ਜੇ(ਸਰੋਤ>=ਸਰੋਤ_ਹੱਦਬੰਦੀ || is_ਵਿੱਚ_ਵਿੱਥ_ਖਿੜਕੀ_Or_ਸਿੱਧਾ(scsu->fromUDynamicOffsets[ਖਿੜਕੀ], *ਸਰੋਤ)) {
                         /* change to dynamic window */
-                        dynamicWindow=window;
-                        currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
-                        useDynamicWindow(scsu, dynamicWindow);
-                        c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
+                        dynamic_ਖਿੜਕੀ=ਖਿੜਕੀ;
+                        current_ਵਿੱਥ=scsu->fromUDynamicOffsets[dynamic_ਖਿੜਕੀ];
+                        use_Dynamic_ਖਿੜਕੀ(scsu, dynamic_ਖਿੜਕੀ);
+                        c=((uint32_t)(SC0+dynamic_ਖਿੜਕੀ)<<8)|(c-current_ਵਿੱਥ)|0x80;
                         length=2;
-                        goto outputBytes;
-                    } else {
+                        ਜਾਓ output_ਬਾਈਟਾਂ;
+                    } ਨਹੀਂਤਾਂ {
                         /* quote from dynamic window */
-                        c=((uint32_t)(SQ0+window)<<8)|(c-scsu->fromUDynamicOffsets[window])|0x80;
+                        c=((uint32_t)(SQ0+ਖਿੜਕੀ)<<8)|(c-scsu->fromUDynamicOffsets[ਖਿੜਕੀ])|0x80;
                         length=2;
-                        goto outputBytes;
+                        ਜਾਓ output_ਬਾਈਟਾਂ;
                     }
-                } else if((window=getWindow(staticOffsets, c))>=0) {
+                } ਨਹੀਂਤਾਂ ਜੇ((ਖਿੜਕੀ=get_ਖਿੜਕੀ(staticOffsets, c))>=0) {
                     /* quote from static window */
-                    c=((uint32_t)(SQ0+window)<<8)|(c-staticOffsets[window]);
+                    c=((uint32_t)(SQ0+ਖਿੜਕੀ)<<8)|(c-staticOffsets[ਖਿੜਕੀ]);
                     length=2;
-                    goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
+                } ਨਹੀਂਤਾਂ ਜੇ((ਕੋਡ=get_Dynamic_ਵਿੱਥ(c, &ਵਿੱਥ))>=0) {
                     /* define a dynamic window with this character */
-                    dynamicWindow=getNextDynamicWindow(scsu);
-                    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
-                    useDynamicWindow(scsu, dynamicWindow);
-                    c=((uint32_t)(SD0+dynamicWindow)<<16)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
+                    dynamic_ਖਿੜਕੀ=get_ਅਗਲਾ_Dynamic_ਖਿੜਕੀ(scsu);
+                    current_ਵਿੱਥ=scsu->fromUDynamicOffsets[dynamic_ਖਿੜਕੀ]=ਵਿੱਥ;
+                    use_Dynamic_ਖਿੜਕੀ(scsu, dynamic_ਖਿੜਕੀ);
+                    c=((uint32_t)(SD0+dynamic_ਖਿੜਕੀ)<<16)|((uint32_t)ਕੋਡ<<8)|(c-current_ਵਿੱਥ)|0x80;
                     length=3;
-                    goto outputBytes;
-                } else if ((c - 0x3400) < (0xd800 - 0x3400) &&
-                           (source >= sourceLimit || (uint32_t)(*source - 0x3400) < (0xd800 - 0x3400))
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
+                } ਨਹੀਂਤਾਂ ਜੇ ((c - 0x3400) < (0xd800 - 0x3400) &&
+                           (ਸਰੋਤ >= ਸਰੋਤ_ਹੱਦਬੰਦੀ || (uint32_t)(*ਸਰੋਤ - 0x3400) < (0xd800 - 0x3400))
                 ) {
                     /*
                      * this character is not compressible (a BMP ideograph or similar);
                      * switch to Unicode mode if this is the last character in the block
                      * or there is at least one more ideograph following immediately
                      */
-                    isSingleByteMode=false;
+                    is_Single_Byte_ਬਹੁਲਕ=ਝੂਠ;
                     c|=SCU<<16;
                     length=3;
-                    goto outputBytes;
-                } else {
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
+                } ਨਹੀਂਤਾਂ {
                     /* quote Unicode */
                     c|=SQU<<16;
                     length=3;
-                    goto outputBytes;
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
                 }
             }
 
             /* normal end of conversion: prepare for a new character */
             c=0;
-            sourceIndex=nextSourceIndex;
+            ਸਰੋਤ_ਸੂਚਕਾਂਕ=ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
         }
-    } else {
-        if(c!=0 && targetCapacity>0) {
-            goto getTrailUnicode;
+    } ਨਹੀਂਤਾਂ {
+        ਜੇ(c!=0 && ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ>0) {
+            ਜਾਓ getTrailUnicode;
         }
 
         /* state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        ਜਦੋਂ(ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ) {
+            ਜੇ(ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ<=0) {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
+                ਰੋਕੋ;
             }
-            c=*source++;
-            ++nextSourceIndex;
+            c=*ਸਰੋਤ++;
+            ++ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
 
-            if ((c - 0x3400) < (0xd800 - 0x3400)) {
+            ਜੇ ((c - 0x3400) < (0xd800 - 0x3400)) {
                 /* not compressible, write character directly */
-                if(targetCapacity>=2) {
-                    *target++=(uint8_t)(c>>8);
-                    *target++=(uint8_t)c;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
-                        *offsets++=sourceIndex;
+                ਜੇ(ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ>=2) {
+                    *ਨਿਸ਼ਾਨਾ++=(uint8_t)(c>>8);
+                    *ਨਿਸ਼ਾਨਾ++=(uint8_t)c;
+                    ਜੇ(offsets!=ਖਾਲੀ_ਸੂਚਕ) {
+                        *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
+                        *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                     }
-                    targetCapacity-=2;
-                } else {
+                    ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ-=2;
+                } ਨਹੀਂਤਾਂ {
                     length=2;
-                    goto outputBytes;
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
                 }
-            } else if (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
+            } ਨਹੀਂਤਾਂ ਜੇ (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
                 /* compress BMP character if the following one is not an uncompressible ideograph */
-                if(!(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))) {
-                    if (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
+                ਜੇ(!(ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ && (uint32_t)(*ਸਰੋਤ-0x3400)<(0xd800-0x3400))) {
+                    ਜੇ (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
                         /* ASCII digit or letter */
-                        isSingleByteMode=true;
-                        c|=((uint32_t)(UC0+dynamicWindow)<<8)|c;
+                        is_Single_Byte_ਬਹੁਲਕ=ਸੱਚ;
+                        c|=((uint32_t)(UC0+dynamic_ਖਿੜਕੀ)<<8)|c;
                         length=2;
-                        goto outputBytes;
-                    } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                        ਜਾਓ output_ਬਾਈਟਾਂ;
+                    } ਨਹੀਂਤਾਂ ਜੇ((ਖਿੜਕੀ=get_ਖਿੜਕੀ(scsu->fromUDynamicOffsets, c))>=0) {
                         /* there is a dynamic window that contains this character, change to it */
-                        isSingleByteMode=true;
-                        dynamicWindow=window;
-                        currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
-                        useDynamicWindow(scsu, dynamicWindow);
-                        c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
+                        is_Single_Byte_ਬਹੁਲਕ=ਸੱਚ;
+                        dynamic_ਖਿੜਕੀ=ਖਿੜਕੀ;
+                        current_ਵਿੱਥ=scsu->fromUDynamicOffsets[dynamic_ਖਿੜਕੀ];
+                        use_Dynamic_ਖਿੜਕੀ(scsu, dynamic_ਖਿੜਕੀ);
+                        c=((uint32_t)(UC0+dynamic_ਖਿੜਕੀ)<<8)|(c-current_ਵਿੱਥ)|0x80;
                         length=2;
-                        goto outputBytes;
-                    } else if((code=getDynamicOffset(c, &offset))>=0) {
+                        ਜਾਓ output_ਬਾਈਟਾਂ;
+                    } ਨਹੀਂਤਾਂ ਜੇ((ਕੋਡ=get_Dynamic_ਵਿੱਥ(c, &ਵਿੱਥ))>=0) {
                         /* define a dynamic window with this character */
-                        isSingleByteMode=true;
-                        dynamicWindow=getNextDynamicWindow(scsu);
-                        currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
-                        useDynamicWindow(scsu, dynamicWindow);
-                        c=((uint32_t)(UD0+dynamicWindow)<<16)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
+                        is_Single_Byte_ਬਹੁਲਕ=ਸੱਚ;
+                        dynamic_ਖਿੜਕੀ=get_ਅਗਲਾ_Dynamic_ਖਿੜਕੀ(scsu);
+                        current_ਵਿੱਥ=scsu->fromUDynamicOffsets[dynamic_ਖਿੜਕੀ]=ਵਿੱਥ;
+                        use_Dynamic_ਖਿੜਕੀ(scsu, dynamic_ਖਿੜਕੀ);
+                        c=((uint32_t)(UD0+dynamic_ਖਿੜਕੀ)<<16)|((uint32_t)ਕੋਡ<<8)|(c-current_ਵਿੱਥ)|0x80;
                         length=3;
-                        goto outputBytes;
+                        ਜਾਓ output_ਬਾਈਟਾਂ;
                     }
                 }
 
                 /* don't know how to compress this character, just write it directly */
                 length=2;
-                goto outputBytes;
-            } else if(c<0xe000) {
+                ਜਾਓ output_ਬਾਈਟਾਂ;
+            } ਨਹੀਂਤਾਂ ਜੇ(c<0xe000) {
                 /* c is a surrogate */
-                if(U16_IS_SURROGATE_LEAD(c)) {
+                ਜੇ(U16_IS_SURROGATE_LEAD(c)) {
 getTrailUnicode:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    ਜੇ(ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ) {
                         /* test the following code unit */
-                        trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
-                            ++source;
-                            ++nextSourceIndex;
+                        trail=*ਸਰੋਤ;
+                        ਜੇ(U16_IS_TRAIL(trail)) {
+                            ++ਸਰੋਤ;
+                            ++ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } ਨਹੀਂਤਾਂ {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            *p_Error_ਕੋਡ=U_ILLEGAL_CHAR_ਮਿਲਿਆ;
+                            ਜਾਓ endloop;
                         }
-                    } else {
+                    } ਨਹੀਂਤਾਂ {
                         /* no more input */
-                        break;
+                        ਰੋਕੋ;
                     }
-                } else {
+                } ਨਹੀਂਤਾਂ {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    goto endloop;
+                    *p_Error_ਕੋਡ=U_ILLEGAL_CHAR_ਮਿਲਿਆ;
+                    ਜਾਓ endloop;
                 }
 
                 /* compress supplementary character */
-                if( (window=getWindow(scsu->fromUDynamicOffsets, c))>=0 &&
-                    !(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))
+                ਜੇ( (ਖਿੜਕੀ=get_ਖਿੜਕੀ(scsu->fromUDynamicOffsets, c))>=0 &&
+                    !(ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ && (uint32_t)(*ਸਰੋਤ-0x3400)<(0xd800-0x3400))
                 ) {
                     /*
                      * there is a dynamic window that contains this character and
                      * the following character is not uncompressible,
                      * change to the window
                      */
-                    isSingleByteMode=true;
-                    dynamicWindow=window;
-                    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
-                    useDynamicWindow(scsu, dynamicWindow);
-                    c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
+                    is_Single_Byte_ਬਹੁਲਕ=ਸੱਚ;
+                    dynamic_ਖਿੜਕੀ=ਖਿੜਕੀ;
+                    current_ਵਿੱਥ=scsu->fromUDynamicOffsets[dynamic_ਖਿੜਕੀ];
+                    use_Dynamic_ਖਿੜਕੀ(scsu, dynamic_ਖਿੜਕੀ);
+                    c=((uint32_t)(UC0+dynamic_ਖਿੜਕੀ)<<8)|(c-current_ਵਿੱਥ)|0x80;
                     length=2;
-                    goto outputBytes;
-                } else if(source<sourceLimit && lead==*source && /* too lazy to check trail in same window as source[1] */
-                          (code=getDynamicOffset(c, &offset))>=0
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
+                } ਨਹੀਂਤਾਂ ਜੇ(ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ && lead==*ਸਰੋਤ && /* too lazy to check trail in same window as source[1] */
+                          (ਕੋਡ=get_Dynamic_ਵਿੱਥ(c, &ਵਿੱਥ))>=0
                 ) {
                     /* two supplementary characters in (probably) the same window - define an extended one */
-                    isSingleByteMode=true;
-                    code-=0x200;
-                    dynamicWindow=getNextDynamicWindow(scsu);
-                    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
-                    useDynamicWindow(scsu, dynamicWindow);
-                    c=((uint32_t)UDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
+                    is_Single_Byte_ਬਹੁਲਕ=ਸੱਚ;
+                    ਕੋਡ-=0x200;
+                    dynamic_ਖਿੜਕੀ=get_ਅਗਲਾ_Dynamic_ਖਿੜਕੀ(scsu);
+                    current_ਵਿੱਥ=scsu->fromUDynamicOffsets[dynamic_ਖਿੜਕੀ]=ਵਿੱਥ;
+                    use_Dynamic_ਖਿੜਕੀ(scsu, dynamic_ਖਿੜਕੀ);
+                    c=((uint32_t)UDX<<24)|((uint32_t)dynamic_ਖਿੜਕੀ<<21)|((uint32_t)ਕੋਡ<<8)|(c-current_ਵਿੱਥ)|0x80;
                     length=4;
-                    goto outputBytes;
-                } else {
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
+                } ਨਹੀਂਤਾਂ {
                     /* don't know how to compress this character, just write it directly */
                     c=((uint32_t)lead<<16)|trail;
                     length=4;
-                    goto outputBytes;
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
                 }
-            } else /* 0xe000<=c<0xf300 */ {
+            } ਨਹੀਂਤਾਂ /* 0xe000<=c<0xf300 */ {
                 /* quote to avoid SCSU tags */
                 c|=UQU<<16;
                 length=3;
-                goto outputBytes;
+                ਜਾਓ output_ਬਾਈਟਾਂ;
             }
 
             /* normal end of conversion: prepare for a new character */
             c=0;
-            sourceIndex=nextSourceIndex;
+            ਸਰੋਤ_ਸੂਚਕਾਂਕ=ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
         }
     }
 endloop:
 
     /* set the converter state back into UConverter */
-    scsu->fromUIsSingleByteMode=isSingleByteMode;
-    scsu->fromUDynamicWindow=dynamicWindow;
+    scsu->from_UIs_Single_Byte_ਬਹੁਲਕ=is_Single_Byte_ਬਹੁਲਕ;
+    scsu->from_UDynamic_ਖਿੜਕੀ=dynamic_ਖਿੜਕੀ;
 
     cnv->fromUChar32=c;
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=(char *)target;
-    pArgs->offsets=offsets;
-    return;
+    p_ਦਲੀਲਾਂ->ਸਰੋਤ=ਸਰੋਤ;
+    p_ਦਲੀਲਾਂ->ਨਿਸ਼ਾਨਾ=(ਅੱਖਰ *)ਨਿਸ਼ਾਨਾ;
+    p_ਦਲੀਲਾਂ->offsets=offsets;
+    ਵਾਪਸ;
 
-outputBytes:
+output_ਬਾਈਟਾਂ:
     /* write the output character bytes from c and length [code copied from ucnvmbcs.c] */
     /* from the first if in the loop we know that targetCapacity>0 */
-    if(length<=targetCapacity) {
-        if(offsets==nullptr) {
-            switch(length) {
+    ਜੇ(length<=ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ) {
+        ਜੇ(offsets==ਖਾਲੀ_ਸੂਚਕ) {
+            ਚੋਣ(length) {
                 /* each branch falls through to the next one */
-            case 4:
-                *target++=(uint8_t)(c>>24);
+            ਹਾਲਤ 4:
+                *ਨਿਸ਼ਾਨਾ++=(uint8_t)(c>>24);
                 U_FALLTHROUGH;
-            case 3:
-                *target++=(uint8_t)(c>>16);
+            ਹਾਲਤ 3:
+                *ਨਿਸ਼ਾਨਾ++=(uint8_t)(c>>16);
                 U_FALLTHROUGH;
-            case 2:
-                *target++=(uint8_t)(c>>8);
+            ਹਾਲਤ 2:
+                *ਨਿਸ਼ਾਨਾ++=(uint8_t)(c>>8);
                 U_FALLTHROUGH;
-            case 1:
-                *target++=(uint8_t)c;
+            ਹਾਲਤ 1:
+                *ਨਿਸ਼ਾਨਾ++=(uint8_t)c;
                 U_FALLTHROUGH;
-            default:
+            ਮੂਲ:
                 /* will never occur */
-                break;
+                ਰੋਕੋ;
             }
-        } else {
-            switch(length) {
+        } ਨਹੀਂਤਾਂ {
+            ਚੋਣ(length) {
                 /* each branch falls through to the next one */
-            case 4:
-                *target++=(uint8_t)(c>>24);
-                *offsets++=sourceIndex;
+            ਹਾਲਤ 4:
+                *ਨਿਸ਼ਾਨਾ++=(uint8_t)(c>>24);
+                *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                 U_FALLTHROUGH;
-            case 3:
-                *target++=(uint8_t)(c>>16);
-                *offsets++=sourceIndex;
+            ਹਾਲਤ 3:
+                *ਨਿਸ਼ਾਨਾ++=(uint8_t)(c>>16);
+                *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                 U_FALLTHROUGH;
-            case 2:
-                *target++=(uint8_t)(c>>8);
-                *offsets++=sourceIndex;
+            ਹਾਲਤ 2:
+                *ਨਿਸ਼ਾਨਾ++=(uint8_t)(c>>8);
+                *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                 U_FALLTHROUGH;
-            case 1:
-                *target++=(uint8_t)c;
-                *offsets++=sourceIndex;
+            ਹਾਲਤ 1:
+                *ਨਿਸ਼ਾਨਾ++=(uint8_t)c;
+                *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
                 U_FALLTHROUGH;
-            default:
+            ਮੂਲ:
                 /* will never occur */
-                break;
+                ਰੋਕੋ;
             }
         }
-        targetCapacity-=length;
+        ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ-=length;
 
         /* normal end of conversion: prepare for a new character */
         c=0;
-        sourceIndex=nextSourceIndex;
-        goto loop;
-    } else {
+        ਸਰੋਤ_ਸੂਚਕਾਂਕ=ਅਗਲਾ_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
+        ਜਾਓ loop;
+    } ਨਹੀਂਤਾਂ {
         uint8_t *p;
 
         /*
@@ -1450,59 +1450,59 @@ outputBytes:
          */
         /* we know that 0<=targetCapacity<length<=4 */
         /* targetCapacity==0 when SCU+supplementary where SCU used up targetCapacity==1 */
-        length-=targetCapacity;
-        p=(uint8_t *)cnv->charErrorBuffer;
-        switch(length) {
+        length-=ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ;
+        p=(uint8_t *)cnv->char_Error_ਬਫਰ;
+        ਚੋਣ(length) {
             /* each branch falls through to the next one */
-        case 4:
+        ਹਾਲਤ 4:
             *p++=(uint8_t)(c>>24);
             U_FALLTHROUGH;
-        case 3:
+        ਹਾਲਤ 3:
             *p++=(uint8_t)(c>>16);
             U_FALLTHROUGH;
-        case 2:
+        ਹਾਲਤ 2:
             *p++=(uint8_t)(c>>8);
             U_FALLTHROUGH;
-        case 1:
+        ਹਾਲਤ 1:
             *p=(uint8_t)c;
             U_FALLTHROUGH;
-        default:
+        ਮੂਲ:
             /* will never occur */
-            break;
+            ਰੋਕੋ;
         }
-        cnv->charErrorBufferLength=(int8_t)length;
+        cnv->char_Error_ਬਫਰ_ਲੰਮਾਈ=(int8_t)length;
 
         /* now output what fits into the regular target */
         c>>=8*length; /* length was reduced by targetCapacity */
-        switch(targetCapacity) {
+        ਚੋਣ(ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ) {
             /* each branch falls through to the next one */
-        case 3:
-            *target++=(uint8_t)(c>>16);
-            if(offsets!=nullptr) {
-                *offsets++=sourceIndex;
+        ਹਾਲਤ 3:
+            *ਨਿਸ਼ਾਨਾ++=(uint8_t)(c>>16);
+            ਜੇ(offsets!=ਖਾਲੀ_ਸੂਚਕ) {
+                *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
             }
             U_FALLTHROUGH;
-        case 2:
-            *target++=(uint8_t)(c>>8);
-            if(offsets!=nullptr) {
-                *offsets++=sourceIndex;
+        ਹਾਲਤ 2:
+            *ਨਿਸ਼ਾਨਾ++=(uint8_t)(c>>8);
+            ਜੇ(offsets!=ਖਾਲੀ_ਸੂਚਕ) {
+                *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
             }
             U_FALLTHROUGH;
-        case 1:
-            *target++=(uint8_t)c;
-            if(offsets!=nullptr) {
-                *offsets++=sourceIndex;
+        ਹਾਲਤ 1:
+            *ਨਿਸ਼ਾਨਾ++=(uint8_t)c;
+            ਜੇ(offsets!=ਖਾਲੀ_ਸੂਚਕ) {
+                *offsets++=ਸਰੋਤ_ਸੂਚਕਾਂਕ;
             }
             U_FALLTHROUGH;
-        default:
-            break;
+        ਮੂਲ:
+            ਰੋਕੋ;
         }
 
         /* target overflow */
-        targetCapacity=0;
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ=0;
+        *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
         c=0;
-        goto endloop;
+        ਜਾਓ endloop;
     }
 }
 
@@ -1513,334 +1513,334 @@ outputBytes:
  * re-copy the original function and remove the variables
  * offsets, sourceIndex, and nextSourceIndex.
  */
-static void U_CALLCONV
-_SCSUFromUnicode(UConverterFromUnicodeArgs *pArgs,
-                 UErrorCode *pErrorCode) {
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV
+_SCSUFromUnicode(UConverter_From_Unicode_ਦਲੀਲਾਂ *p_ਦਲੀਲਾਂ,
+                 UError_ਕੋਡ *p_Error_ਕੋਡ) {
     UConverter *cnv;
     SCSUData *scsu;
-    const char16_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity;
+    ਅਚਲ char16_t *ਸਰੋਤ, *ਸਰੋਤ_ਹੱਦਬੰਦੀ;
+    uint8_t *ਨਿਸ਼ਾਨਾ;
+    int32_t ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ;
 
-    UBool isSingleByteMode;
-    uint8_t dynamicWindow;
-    uint32_t currentOffset;
+    UBool is_Single_Byte_ਬਹੁਲਕ;
+    uint8_t dynamic_ਖਿੜਕੀ;
+    uint32_t current_ਵਿੱਥ;
 
     uint32_t c, delta;
 
     int32_t length;
 
     /* variables for compression heuristics */
-    uint32_t offset;
+    uint32_t ਵਿੱਥ;
     char16_t lead, trail;
-    int code;
-    int8_t window;
+    ਪੂਰਨ ਕੋਡ;
+    int8_t ਖਿੜਕੀ;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_ਦਲੀਲਾਂ->converter;
     scsu=(SCSUData *)cnv->extraInfo;
 
     /* set up the local pointers */
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target=(uint8_t *)pArgs->target;
-    targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
+    ਸਰੋਤ=p_ਦਲੀਲਾਂ->ਸਰੋਤ;
+    ਸਰੋਤ_ਹੱਦਬੰਦੀ=p_ਦਲੀਲਾਂ->ਸਰੋਤ_ਹੱਦਬੰਦੀ;
+    ਨਿਸ਼ਾਨਾ=(uint8_t *)p_ਦਲੀਲਾਂ->ਨਿਸ਼ਾਨਾ;
+    ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ=(int32_t)(p_ਦਲੀਲਾਂ->ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ-p_ਦਲੀਲਾਂ->ਨਿਸ਼ਾਨਾ);
 
     /* get the state machine state */
-    isSingleByteMode=scsu->fromUIsSingleByteMode;
-    dynamicWindow=scsu->fromUDynamicWindow;
-    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
+    is_Single_Byte_ਬਹੁਲਕ=scsu->from_UIs_Single_Byte_ਬਹੁਲਕ;
+    dynamic_ਖਿੜਕੀ=scsu->from_UDynamic_ਖਿੜਕੀ;
+    current_ਵਿੱਥ=scsu->fromUDynamicOffsets[dynamic_ਖਿੜਕੀ];
 
     c=cnv->fromUChar32;
 
     /* similar conversion "loop" as in toUnicode */
 loop:
-    if(isSingleByteMode) {
-        if(c!=0 && targetCapacity>0) {
-            goto getTrailSingle;
+    ਜੇ(is_Single_Byte_ਬਹੁਲਕ) {
+        ਜੇ(c!=0 && ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ>0) {
+            ਜਾਓ getTrailSingle;
         }
 
         /* state machine for single-byte mode */
 /* singleByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        ਜਦੋਂ(ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ) {
+            ਜੇ(ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ<=0) {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
+                ਰੋਕੋ;
             }
-            c=*source++;
+            c=*ਸਰੋਤ++;
 
-            if((c-0x20)<=0x5f) {
+            ਜੇ((c-0x20)<=0x5f) {
                 /* pass US-ASCII graphic character through */
-                *target++=(uint8_t)c;
-                --targetCapacity;
-            } else if(c<0x20) {
-                if((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+                *ਨਿਸ਼ਾਨਾ++=(uint8_t)c;
+                --ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ;
+            } ਨਹੀਂਤਾਂ ਜੇ(c<0x20) {
+                ਜੇ((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
-                    *target++=(uint8_t)c;
-                    --targetCapacity;
-                } else {
+                    *ਨਿਸ਼ਾਨਾ++=(uint8_t)c;
+                    --ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ;
+                } ਨਹੀਂਤਾਂ {
                     /* quote C0 control character */
                     c|=SQ0<<8;
                     length=2;
-                    goto outputBytes;
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
                 }
-            } else if((delta=c-currentOffset)<=0x7f) {
+            } ਨਹੀਂਤਾਂ ਜੇ((delta=c-current_ਵਿੱਥ)<=0x7f) {
                 /* use the current dynamic window */
-                *target++=(uint8_t)(delta|0x80);
-                --targetCapacity;
-            } else if(U16_IS_SURROGATE(c)) {
-                if(U16_IS_SURROGATE_LEAD(c)) {
+                *ਨਿਸ਼ਾਨਾ++=(uint8_t)(delta|0x80);
+                --ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ;
+            } ਨਹੀਂਤਾਂ ਜੇ(U16_IS_SURROGATE(c)) {
+                ਜੇ(U16_IS_SURROGATE_LEAD(c)) {
 getTrailSingle:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    ਜੇ(ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ) {
                         /* test the following code unit */
-                        trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
-                            ++source;
+                        trail=*ਸਰੋਤ;
+                        ਜੇ(U16_IS_TRAIL(trail)) {
+                            ++ਸਰੋਤ;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } ਨਹੀਂਤਾਂ {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            *p_Error_ਕੋਡ=U_ILLEGAL_CHAR_ਮਿਲਿਆ;
+                            ਜਾਓ endloop;
                         }
-                    } else {
+                    } ਨਹੀਂਤਾਂ {
                         /* no more input */
-                        break;
+                        ਰੋਕੋ;
                     }
-                } else {
+                } ਨਹੀਂਤਾਂ {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    goto endloop;
+                    *p_Error_ਕੋਡ=U_ILLEGAL_CHAR_ਮਿਲਿਆ;
+                    ਜਾਓ endloop;
                 }
 
                 /* compress supplementary character U+10000..U+10ffff */
-                if((delta=c-currentOffset)<=0x7f) {
+                ਜੇ((delta=c-current_ਵਿੱਥ)<=0x7f) {
                     /* use the current dynamic window */
-                    *target++=(uint8_t)(delta|0x80);
-                    --targetCapacity;
-                } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                    *ਨਿਸ਼ਾਨਾ++=(uint8_t)(delta|0x80);
+                    --ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ;
+                } ਨਹੀਂਤਾਂ ਜੇ((ਖਿੜਕੀ=get_ਖਿੜਕੀ(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a dynamic window that contains this character, change to it */
-                    dynamicWindow=window;
-                    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
-                    useDynamicWindow(scsu, dynamicWindow);
-                    c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
+                    dynamic_ਖਿੜਕੀ=ਖਿੜਕੀ;
+                    current_ਵਿੱਥ=scsu->fromUDynamicOffsets[dynamic_ਖਿੜਕੀ];
+                    use_Dynamic_ਖਿੜਕੀ(scsu, dynamic_ਖਿੜਕੀ);
+                    c=((uint32_t)(SC0+dynamic_ਖਿੜਕੀ)<<8)|(c-current_ਵਿੱਥ)|0x80;
                     length=2;
-                    goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
+                } ਨਹੀਂਤਾਂ ਜੇ((ਕੋਡ=get_Dynamic_ਵਿੱਥ(c, &ਵਿੱਥ))>=0) {
                     /* might check if there are more characters in this window to come */
                     /* define an extended window with this character */
-                    code-=0x200;
-                    dynamicWindow=getNextDynamicWindow(scsu);
-                    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
-                    useDynamicWindow(scsu, dynamicWindow);
-                    c=((uint32_t)SDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
+                    ਕੋਡ-=0x200;
+                    dynamic_ਖਿੜਕੀ=get_ਅਗਲਾ_Dynamic_ਖਿੜਕੀ(scsu);
+                    current_ਵਿੱਥ=scsu->fromUDynamicOffsets[dynamic_ਖਿੜਕੀ]=ਵਿੱਥ;
+                    use_Dynamic_ਖਿੜਕੀ(scsu, dynamic_ਖਿੜਕੀ);
+                    c=((uint32_t)SDX<<24)|((uint32_t)dynamic_ਖਿੜਕੀ<<21)|((uint32_t)ਕੋਡ<<8)|(c-current_ਵਿੱਥ)|0x80;
                     length=4;
-                    goto outputBytes;
-                } else {
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
+                } ਨਹੀਂਤਾਂ {
                     /* change to Unicode mode and output this (lead, trail) pair */
-                    isSingleByteMode=false;
-                    *target++=(uint8_t)SCU;
-                    --targetCapacity;
+                    is_Single_Byte_ਬਹੁਲਕ=ਝੂਠ;
+                    *ਨਿਸ਼ਾਨਾ++=(uint8_t)SCU;
+                    --ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ;
                     c=((uint32_t)lead<<16)|trail;
                     length=4;
-                    goto outputBytes;
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
                 }
-            } else if(c<0xa0) {
+            } ਨਹੀਂਤਾਂ ਜੇ(c<0xa0) {
                 /* quote C1 control character */
                 c=(c&0x7f)|(SQ0+1)<<8; /* SQ0+1==SQ1 */
                 length=2;
-                goto outputBytes;
-            } else if(c==0xfeff || c>=0xfff0) {
+                ਜਾਓ output_ਬਾਈਟਾਂ;
+            } ਨਹੀਂਤਾਂ ਜੇ(c==0xfeff || c>=0xfff0) {
                 /* quote signature character=byte order mark and specials */
                 c|=SQU<<16;
                 length=3;
-                goto outputBytes;
-            } else {
+                ਜਾਓ output_ਬਾਈਟਾਂ;
+            } ਨਹੀਂਤਾਂ {
                 /* compress all other BMP characters */
-                if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                ਜੇ((ਖਿੜਕੀ=get_ਖਿੜਕੀ(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a window defined that contains this character - switch to it or quote from it? */
-                    if(source>=sourceLimit || isInOffsetWindowOrDirect(scsu->fromUDynamicOffsets[window], *source)) {
+                    ਜੇ(ਸਰੋਤ>=ਸਰੋਤ_ਹੱਦਬੰਦੀ || is_ਵਿੱਚ_ਵਿੱਥ_ਖਿੜਕੀ_Or_ਸਿੱਧਾ(scsu->fromUDynamicOffsets[ਖਿੜਕੀ], *ਸਰੋਤ)) {
                         /* change to dynamic window */
-                        dynamicWindow=window;
-                        currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
-                        useDynamicWindow(scsu, dynamicWindow);
-                        c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
+                        dynamic_ਖਿੜਕੀ=ਖਿੜਕੀ;
+                        current_ਵਿੱਥ=scsu->fromUDynamicOffsets[dynamic_ਖਿੜਕੀ];
+                        use_Dynamic_ਖਿੜਕੀ(scsu, dynamic_ਖਿੜਕੀ);
+                        c=((uint32_t)(SC0+dynamic_ਖਿੜਕੀ)<<8)|(c-current_ਵਿੱਥ)|0x80;
                         length=2;
-                        goto outputBytes;
-                    } else {
+                        ਜਾਓ output_ਬਾਈਟਾਂ;
+                    } ਨਹੀਂਤਾਂ {
                         /* quote from dynamic window */
-                        c=((uint32_t)(SQ0+window)<<8)|(c-scsu->fromUDynamicOffsets[window])|0x80;
+                        c=((uint32_t)(SQ0+ਖਿੜਕੀ)<<8)|(c-scsu->fromUDynamicOffsets[ਖਿੜਕੀ])|0x80;
                         length=2;
-                        goto outputBytes;
+                        ਜਾਓ output_ਬਾਈਟਾਂ;
                     }
-                } else if((window=getWindow(staticOffsets, c))>=0) {
+                } ਨਹੀਂਤਾਂ ਜੇ((ਖਿੜਕੀ=get_ਖਿੜਕੀ(staticOffsets, c))>=0) {
                     /* quote from static window */
-                    c=((uint32_t)(SQ0+window)<<8)|(c-staticOffsets[window]);
+                    c=((uint32_t)(SQ0+ਖਿੜਕੀ)<<8)|(c-staticOffsets[ਖਿੜਕੀ]);
                     length=2;
-                    goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
+                } ਨਹੀਂਤਾਂ ਜੇ((ਕੋਡ=get_Dynamic_ਵਿੱਥ(c, &ਵਿੱਥ))>=0) {
                     /* define a dynamic window with this character */
-                    dynamicWindow=getNextDynamicWindow(scsu);
-                    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
-                    useDynamicWindow(scsu, dynamicWindow);
-                    c=((uint32_t)(SD0+dynamicWindow)<<16)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
+                    dynamic_ਖਿੜਕੀ=get_ਅਗਲਾ_Dynamic_ਖਿੜਕੀ(scsu);
+                    current_ਵਿੱਥ=scsu->fromUDynamicOffsets[dynamic_ਖਿੜਕੀ]=ਵਿੱਥ;
+                    use_Dynamic_ਖਿੜਕੀ(scsu, dynamic_ਖਿੜਕੀ);
+                    c=((uint32_t)(SD0+dynamic_ਖਿੜਕੀ)<<16)|((uint32_t)ਕੋਡ<<8)|(c-current_ਵਿੱਥ)|0x80;
                     length=3;
-                    goto outputBytes;
-                } else if (c - 0x3400 < 0xd800 - 0x3400 &&
-                           (source >= sourceLimit || static_cast<uint32_t>(*source - 0x3400) < 0xd800 - 0x3400)
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
+                } ਨਹੀਂਤਾਂ ਜੇ (c - 0x3400 < 0xd800 - 0x3400 &&
+                           (ਸਰੋਤ >= ਸਰੋਤ_ਹੱਦਬੰਦੀ || static_cast<uint32_t>(*ਸਰੋਤ - 0x3400) < 0xd800 - 0x3400)
                 ) {
                     /*
                      * this character is not compressible (a BMP ideograph or similar);
                      * switch to Unicode mode if this is the last character in the block
                      * or there is at least one more ideograph following immediately
                      */
-                    isSingleByteMode=false;
+                    is_Single_Byte_ਬਹੁਲਕ=ਝੂਠ;
                     c|=SCU<<16;
                     length=3;
-                    goto outputBytes;
-                } else {
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
+                } ਨਹੀਂਤਾਂ {
                     /* quote Unicode */
                     c|=SQU<<16;
                     length=3;
-                    goto outputBytes;
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
                 }
             }
 
             /* normal end of conversion: prepare for a new character */
             c=0;
         }
-    } else {
-        if(c!=0 && targetCapacity>0) {
-            goto getTrailUnicode;
+    } ਨਹੀਂਤਾਂ {
+        ਜੇ(c!=0 && ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ>0) {
+            ਜਾਓ getTrailUnicode;
         }
 
         /* state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        ਜਦੋਂ(ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ) {
+            ਜੇ(ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ<=0) {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
+                ਰੋਕੋ;
             }
-            c=*source++;
+            c=*ਸਰੋਤ++;
 
-            if (c - 0x3400 < 0xd800 - 0x3400) {
+            ਜੇ (c - 0x3400 < 0xd800 - 0x3400) {
                 /* not compressible, write character directly */
-                if(targetCapacity>=2) {
-                    *target++=(uint8_t)(c>>8);
-                    *target++=(uint8_t)c;
-                    targetCapacity-=2;
-                } else {
+                ਜੇ(ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ>=2) {
+                    *ਨਿਸ਼ਾਨਾ++=(uint8_t)(c>>8);
+                    *ਨਿਸ਼ਾਨਾ++=(uint8_t)c;
+                    ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ-=2;
+                } ਨਹੀਂਤਾਂ {
                     length=2;
-                    goto outputBytes;
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
                 }
-            } else if (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
+            } ਨਹੀਂਤਾਂ ਜੇ (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
                 /* compress BMP character if the following one is not an uncompressible ideograph */
-                if(!(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))) {
-                    if (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
+                ਜੇ(!(ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ && (uint32_t)(*ਸਰੋਤ-0x3400)<(0xd800-0x3400))) {
+                    ਜੇ (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
                         /* ASCII digit or letter */
-                        isSingleByteMode=true;
-                        c|=((uint32_t)(UC0+dynamicWindow)<<8)|c;
+                        is_Single_Byte_ਬਹੁਲਕ=ਸੱਚ;
+                        c|=((uint32_t)(UC0+dynamic_ਖਿੜਕੀ)<<8)|c;
                         length=2;
-                        goto outputBytes;
-                    } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                        ਜਾਓ output_ਬਾਈਟਾਂ;
+                    } ਨਹੀਂਤਾਂ ਜੇ((ਖਿੜਕੀ=get_ਖਿੜਕੀ(scsu->fromUDynamicOffsets, c))>=0) {
                         /* there is a dynamic window that contains this character, change to it */
-                        isSingleByteMode=true;
-                        dynamicWindow=window;
-                        currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
-                        useDynamicWindow(scsu, dynamicWindow);
-                        c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
+                        is_Single_Byte_ਬਹੁਲਕ=ਸੱਚ;
+                        dynamic_ਖਿੜਕੀ=ਖਿੜਕੀ;
+                        current_ਵਿੱਥ=scsu->fromUDynamicOffsets[dynamic_ਖਿੜਕੀ];
+                        use_Dynamic_ਖਿੜਕੀ(scsu, dynamic_ਖਿੜਕੀ);
+                        c=((uint32_t)(UC0+dynamic_ਖਿੜਕੀ)<<8)|(c-current_ਵਿੱਥ)|0x80;
                         length=2;
-                        goto outputBytes;
-                    } else if((code=getDynamicOffset(c, &offset))>=0) {
+                        ਜਾਓ output_ਬਾਈਟਾਂ;
+                    } ਨਹੀਂਤਾਂ ਜੇ((ਕੋਡ=get_Dynamic_ਵਿੱਥ(c, &ਵਿੱਥ))>=0) {
                         /* define a dynamic window with this character */
-                        isSingleByteMode=true;
-                        dynamicWindow=getNextDynamicWindow(scsu);
-                        currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
-                        useDynamicWindow(scsu, dynamicWindow);
-                        c=((uint32_t)(UD0+dynamicWindow)<<16)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
+                        is_Single_Byte_ਬਹੁਲਕ=ਸੱਚ;
+                        dynamic_ਖਿੜਕੀ=get_ਅਗਲਾ_Dynamic_ਖਿੜਕੀ(scsu);
+                        current_ਵਿੱਥ=scsu->fromUDynamicOffsets[dynamic_ਖਿੜਕੀ]=ਵਿੱਥ;
+                        use_Dynamic_ਖਿੜਕੀ(scsu, dynamic_ਖਿੜਕੀ);
+                        c=((uint32_t)(UD0+dynamic_ਖਿੜਕੀ)<<16)|((uint32_t)ਕੋਡ<<8)|(c-current_ਵਿੱਥ)|0x80;
                         length=3;
-                        goto outputBytes;
+                        ਜਾਓ output_ਬਾਈਟਾਂ;
                     }
                 }
 
                 /* don't know how to compress this character, just write it directly */
                 length=2;
-                goto outputBytes;
-            } else if(c<0xe000) {
+                ਜਾਓ output_ਬਾਈਟਾਂ;
+            } ਨਹੀਂਤਾਂ ਜੇ(c<0xe000) {
                 /* c is a surrogate */
-                if(U16_IS_SURROGATE_LEAD(c)) {
+                ਜੇ(U16_IS_SURROGATE_LEAD(c)) {
 getTrailUnicode:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    ਜੇ(ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ) {
                         /* test the following code unit */
-                        trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
-                            ++source;
+                        trail=*ਸਰੋਤ;
+                        ਜੇ(U16_IS_TRAIL(trail)) {
+                            ++ਸਰੋਤ;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } ਨਹੀਂਤਾਂ {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            *p_Error_ਕੋਡ=U_ILLEGAL_CHAR_ਮਿਲਿਆ;
+                            ਜਾਓ endloop;
                         }
-                    } else {
+                    } ਨਹੀਂਤਾਂ {
                         /* no more input */
-                        break;
+                        ਰੋਕੋ;
                     }
-                } else {
+                } ਨਹੀਂਤਾਂ {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    goto endloop;
+                    *p_Error_ਕੋਡ=U_ILLEGAL_CHAR_ਮਿਲਿਆ;
+                    ਜਾਓ endloop;
                 }
 
                 /* compress supplementary character */
-                if( (window=getWindow(scsu->fromUDynamicOffsets, c))>=0 &&
-                    !(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))
+                ਜੇ( (ਖਿੜਕੀ=get_ਖਿੜਕੀ(scsu->fromUDynamicOffsets, c))>=0 &&
+                    !(ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ && (uint32_t)(*ਸਰੋਤ-0x3400)<(0xd800-0x3400))
                 ) {
                     /*
                      * there is a dynamic window that contains this character and
                      * the following character is not uncompressible,
                      * change to the window
                      */
-                    isSingleByteMode=true;
-                    dynamicWindow=window;
-                    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
-                    useDynamicWindow(scsu, dynamicWindow);
-                    c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
+                    is_Single_Byte_ਬਹੁਲਕ=ਸੱਚ;
+                    dynamic_ਖਿੜਕੀ=ਖਿੜਕੀ;
+                    current_ਵਿੱਥ=scsu->fromUDynamicOffsets[dynamic_ਖਿੜਕੀ];
+                    use_Dynamic_ਖਿੜਕੀ(scsu, dynamic_ਖਿੜਕੀ);
+                    c=((uint32_t)(UC0+dynamic_ਖਿੜਕੀ)<<8)|(c-current_ਵਿੱਥ)|0x80;
                     length=2;
-                    goto outputBytes;
-                } else if(source<sourceLimit && lead==*source && /* too lazy to check trail in same window as source[1] */
-                          (code=getDynamicOffset(c, &offset))>=0
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
+                } ਨਹੀਂਤਾਂ ਜੇ(ਸਰੋਤ<ਸਰੋਤ_ਹੱਦਬੰਦੀ && lead==*ਸਰੋਤ && /* too lazy to check trail in same window as source[1] */
+                          (ਕੋਡ=get_Dynamic_ਵਿੱਥ(c, &ਵਿੱਥ))>=0
                 ) {
                     /* two supplementary characters in (probably) the same window - define an extended one */
-                    isSingleByteMode=true;
-                    code-=0x200;
-                    dynamicWindow=getNextDynamicWindow(scsu);
-                    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
-                    useDynamicWindow(scsu, dynamicWindow);
-                    c=((uint32_t)UDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
+                    is_Single_Byte_ਬਹੁਲਕ=ਸੱਚ;
+                    ਕੋਡ-=0x200;
+                    dynamic_ਖਿੜਕੀ=get_ਅਗਲਾ_Dynamic_ਖਿੜਕੀ(scsu);
+                    current_ਵਿੱਥ=scsu->fromUDynamicOffsets[dynamic_ਖਿੜਕੀ]=ਵਿੱਥ;
+                    use_Dynamic_ਖਿੜਕੀ(scsu, dynamic_ਖਿੜਕੀ);
+                    c=((uint32_t)UDX<<24)|((uint32_t)dynamic_ਖਿੜਕੀ<<21)|((uint32_t)ਕੋਡ<<8)|(c-current_ਵਿੱਥ)|0x80;
                     length=4;
-                    goto outputBytes;
-                } else {
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
+                } ਨਹੀਂਤਾਂ {
                     /* don't know how to compress this character, just write it directly */
                     c=((uint32_t)lead<<16)|trail;
                     length=4;
-                    goto outputBytes;
+                    ਜਾਓ output_ਬਾਈਟਾਂ;
                 }
-            } else /* 0xe000<=c<0xf300 */ {
+            } ਨਹੀਂਤਾਂ /* 0xe000<=c<0xf300 */ {
                 /* quote to avoid SCSU tags */
                 c|=UQU<<16;
                 length=3;
-                goto outputBytes;
+                ਜਾਓ output_ਬਾਈਟਾਂ;
             }
 
             /* normal end of conversion: prepare for a new character */
@@ -1850,44 +1850,44 @@ getTrailUnicode:
 endloop:
 
     /* set the converter state back into UConverter */
-    scsu->fromUIsSingleByteMode=isSingleByteMode;
-    scsu->fromUDynamicWindow=dynamicWindow;
+    scsu->from_UIs_Single_Byte_ਬਹੁਲਕ=is_Single_Byte_ਬਹੁਲਕ;
+    scsu->from_UDynamic_ਖਿੜਕੀ=dynamic_ਖਿੜਕੀ;
 
     cnv->fromUChar32=c;
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=(char *)target;
-    return;
+    p_ਦਲੀਲਾਂ->ਸਰੋਤ=ਸਰੋਤ;
+    p_ਦਲੀਲਾਂ->ਨਿਸ਼ਾਨਾ=(ਅੱਖਰ *)ਨਿਸ਼ਾਨਾ;
+    ਵਾਪਸ;
 
-outputBytes:
+output_ਬਾਈਟਾਂ:
     /* write the output character bytes from c and length [code copied from ucnvmbcs.c] */
     /* from the first if in the loop we know that targetCapacity>0 */
-    if(length<=targetCapacity) {
-        switch(length) {
+    ਜੇ(length<=ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ) {
+        ਚੋਣ(length) {
             /* each branch falls through to the next one */
-        case 4:
-            *target++=(uint8_t)(c>>24);
+        ਹਾਲਤ 4:
+            *ਨਿਸ਼ਾਨਾ++=(uint8_t)(c>>24);
             U_FALLTHROUGH;
-        case 3:
-            *target++=(uint8_t)(c>>16);
+        ਹਾਲਤ 3:
+            *ਨਿਸ਼ਾਨਾ++=(uint8_t)(c>>16);
             U_FALLTHROUGH;
-        case 2:
-            *target++=(uint8_t)(c>>8);
+        ਹਾਲਤ 2:
+            *ਨਿਸ਼ਾਨਾ++=(uint8_t)(c>>8);
             U_FALLTHROUGH;
-        case 1:
-            *target++=(uint8_t)c;
+        ਹਾਲਤ 1:
+            *ਨਿਸ਼ਾਨਾ++=(uint8_t)c;
             U_FALLTHROUGH;
-        default:
+        ਮੂਲ:
             /* will never occur */
-            break;
+            ਰੋਕੋ;
         }
-        targetCapacity-=length;
+        ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ-=length;
 
         /* normal end of conversion: prepare for a new character */
         c=0;
-        goto loop;
-    } else {
+        ਜਾਓ loop;
+    } ਨਹੀਂਤਾਂ {
         uint8_t *p;
 
         /*
@@ -1898,108 +1898,108 @@ outputBytes:
          */
         /* we know that 0<=targetCapacity<length<=4 */
         /* targetCapacity==0 when SCU+supplementary where SCU used up targetCapacity==1 */
-        length-=targetCapacity;
-        p=(uint8_t *)cnv->charErrorBuffer;
-        switch(length) {
+        length-=ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ;
+        p=(uint8_t *)cnv->char_Error_ਬਫਰ;
+        ਚੋਣ(length) {
             /* each branch falls through to the next one */
-        case 4:
+        ਹਾਲਤ 4:
             *p++=(uint8_t)(c>>24);
             U_FALLTHROUGH;
-        case 3:
+        ਹਾਲਤ 3:
             *p++=(uint8_t)(c>>16);
             U_FALLTHROUGH;
-        case 2:
+        ਹਾਲਤ 2:
             *p++=(uint8_t)(c>>8);
             U_FALLTHROUGH;
-        case 1:
+        ਹਾਲਤ 1:
             *p=(uint8_t)c;
             U_FALLTHROUGH;
-        default:
+        ਮੂਲ:
             /* will never occur */
-            break;
+            ਰੋਕੋ;
         }
-        cnv->charErrorBufferLength=(int8_t)length;
+        cnv->char_Error_ਬਫਰ_ਲੰਮਾਈ=(int8_t)length;
 
         /* now output what fits into the regular target */
         c = (length == 4) ? 0 : c >> 8*length; /* length was reduced by targetCapacity */
-        switch(targetCapacity) {
+        ਚੋਣ(ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ) {
             /* each branch falls through to the next one */
-        case 3:
-            *target++=(uint8_t)(c>>16);
+        ਹਾਲਤ 3:
+            *ਨਿਸ਼ਾਨਾ++=(uint8_t)(c>>16);
             U_FALLTHROUGH;
-        case 2:
-            *target++=(uint8_t)(c>>8);
+        ਹਾਲਤ 2:
+            *ਨਿਸ਼ਾਨਾ++=(uint8_t)(c>>8);
             U_FALLTHROUGH;
-        case 1:
-            *target++=(uint8_t)c;
+        ਹਾਲਤ 1:
+            *ਨਿਸ਼ਾਨਾ++=(uint8_t)c;
             U_FALLTHROUGH;
-        default:
-            break;
+        ਮੂਲ:
+            ਰੋਕੋ;
         }
 
         /* target overflow */
-        targetCapacity=0;
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        ਨਿਸ਼ਾਨਾ_ਸਮਰੱਥਾ=0;
+        *p_Error_ਕੋਡ=U_ਬਫਰ_ਉਛਾਲ_ERROR;
         c=0;
-        goto endloop;
+        ਜਾਓ endloop;
     }
 }
 
 /* miscellaneous ------------------------------------------------------------ */
 
-static const char *  U_CALLCONV
-_SCSUGetName(const UConverter *cnv) {
+ਸਥਿਰ ਅਚਲ ਅੱਖਰ *  U_CALLCONV
+_SCSUGetName(ਅਚਲ UConverter *cnv) {
     SCSUData *scsu=(SCSUData *)cnv->extraInfo;
 
-    switch(scsu->locale) {
-    case l_ja:
-        return "SCSU,locale=ja";
-    default:
-        return "SCSU";
+    ਚੋਣ(scsu->locale) {
+    ਹਾਲਤ l_ja:
+        ਵਾਪਸ "SCSU,locale=ja";
+    ਮੂਲ:
+        ਵਾਪਸ "SCSU";
     }
 }
 
 /* structure for SafeClone calculations */
-struct cloneSCSUStruct
+ਬਣਤਰ cloneSCSUStruct
 {
     UConverter cnv;
     SCSUData mydata;
 };
 
-static UConverter *  U_CALLCONV
-_SCSUSafeClone(const UConverter *cnv, 
-               void *stackBuffer, 
-               int32_t *pBufferSize, 
-               UErrorCode *status)
+ਸਥਿਰ UConverter *  U_CALLCONV
+_SCSUSafeClone(ਅਚਲ UConverter *cnv, 
+               ਖਾਲੀ *ਢੇਰ_ਬਫਰ, 
+               int32_t *p_ਬਫਰ_ਮਾਪ, 
+               UError_ਕੋਡ *ਸਥਿਤੀ)
 {
-    struct cloneSCSUStruct * localClone;
-    int32_t bufferSizeNeeded = sizeof(struct cloneSCSUStruct);
+    ਬਣਤਰ cloneSCSUStruct * localClone;
+    int32_t ਬਫਰ_ਮਾਪ_Needed = ਆਕਾਰ(ਬਣਤਰ cloneSCSUStruct);
 
-    if (U_FAILURE(*status)){
-        return nullptr;
+    ਜੇ (U_FAILURE(*ਸਥਿਤੀ)){
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    if (*pBufferSize == 0){ /* 'preflighting' request - set needed size into *pBufferSize */
-        *pBufferSize = bufferSizeNeeded;
-        return nullptr;
+    ਜੇ (*p_ਬਫਰ_ਮਾਪ == 0){ /* 'preflighting' request - set needed size into *pBufferSize */
+        *p_ਬਫਰ_ਮਾਪ = ਬਫਰ_ਮਾਪ_Needed;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    localClone = (struct cloneSCSUStruct *)stackBuffer;
+    localClone = (ਬਣਤਰ cloneSCSUStruct *)ਢੇਰ_ਬਫਰ;
     /* ucnv.c/ucnv_safeClone() copied the main UConverter already */
 
-    uprv_memcpy(&localClone->mydata, cnv->extraInfo, sizeof(SCSUData));
+    uprv_memcpy(&localClone->mydata, cnv->extraInfo, ਆਕਾਰ(SCSUData));
     localClone->cnv.extraInfo = &localClone->mydata;
-    localClone->cnv.isExtraLocal = true;
+    localClone->cnv.isExtraLocal = ਸੱਚ;
 
-    return &localClone->cnv;
+    ਵਾਪਸ &localClone->cnv;
 }
-U_CDECL_END
+U_CDECL_ਸਿਰਾ
 
-static const UConverterImpl _SCSUImpl={
+ਸਥਿਰ ਅਚਲ UConverterImpl _SCSUImpl={
     UCNV_SCSU,
 
-    nullptr,
-    nullptr,
+    ਖਾਲੀ_ਸੂਚਕ,
+    ਖਾਲੀ_ਸੂਚਕ,
 
     _SCSUOpen,
     _SCSUClose,
@@ -2009,19 +2009,19 @@ static const UConverterImpl _SCSUImpl={
     _SCSUToUnicodeWithOffsets,
     _SCSUFromUnicode,
     _SCSUFromUnicodeWithOffsets,
-    nullptr,
+    ਖਾਲੀ_ਸੂਚਕ,
 
-    nullptr,
+    ਖਾਲੀ_ਸੂਚਕ,
     _SCSUGetName,
-    nullptr,
+    ਖਾਲੀ_ਸੂਚਕ,
     _SCSUSafeClone,
-    ucnv_getCompleteUnicodeSet,
-    nullptr,
-    nullptr
+    ucnv_get_Complete_Unicode_ਸੈੱਟ,
+    ਖਾਲੀ_ਸੂਚਕ,
+    ਖਾਲੀ_ਸੂਚਕ
 };
 
-static const UConverterStaticData _SCSUStaticData={
-    sizeof(UConverterStaticData),
+ਸਥਿਰ ਅਚਲ UConverter_Static_ਅੰਕੜੇ SCSUStatic_ਅੰਕੜੇ={
+    ਆਕਾਰ(UConverter_Static_ਅੰਕੜੇ),
     "SCSU",
     1212, /* CCSID for SCSU */
     UCNV_IBM, UCNV_SCSU,
@@ -2031,13 +2031,13 @@ static const UConverterStaticData _SCSUStaticData={
      * substitution string.
      */
     { 0x0e, 0xff, 0xfd, 0 }, 3,
-    false, false,
+    ਝੂਠ, ਝੂਠ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _SCSUData=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_SCSUStaticData, &_SCSUImpl);
+ਅਚਲ UConverter_Shared_ਅੰਕੜੇ _SCSUData=
+        UCNV_IMMUTABLE_SHARED_ਅੰਕੜੇ_INITIALIZER(&SCSUStatic_ਅੰਕੜੇ, &_SCSUImpl);
 
-#endif
+#ਜੇ_ਅੰਤ

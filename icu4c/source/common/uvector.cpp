@@ -10,73 +10,73 @@
 **********************************************************************
 */
 
-#include "uvector.h"
-#include "cmemory.h"
-#include "uarrsort.h"
-#include "uelement.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uvector.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uarrsort.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uelement.h"
 
 U_NAMESPACE_BEGIN
 
-constexpr int32_t DEFAULT_CAPACITY = 8;
+constexpr int32_t DEFAULT_ਸਮਰੱਥਾ = 8;
 
 /*
  * Constants for hinting whether a key is an integer
  * or a pointer.  If a hint bit is zero, then the associated
  * token is assumed to be an integer. This is needed for iSeries
  */
-constexpr int8_t HINT_KEY_POINTER = 1;
-constexpr int8_t HINT_KEY_INTEGER = 0;
+constexpr int8_t HINT_ਕੁੰਜੀ_ਸੂਚਕ = 1;
+constexpr int8_t HINT_ਕੁੰਜੀ_INTEGER = 0;
  
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UVector)
 
-UVector::UVector(UErrorCode &status) :
-        UVector(nullptr, nullptr, DEFAULT_CAPACITY, status) {
+UVector::UVector(UError_ਕੋਡ &ਸਥਿਤੀ) :
+        UVector(ਖਾਲੀ_ਸੂਚਕ, ਖਾਲੀ_ਸੂਚਕ, DEFAULT_ਸਮਰੱਥਾ, ਸਥਿਤੀ) {
 }
 
-UVector::UVector(int32_t initialCapacity, UErrorCode &status) :
-        UVector(nullptr, nullptr, initialCapacity, status) {
+UVector::UVector(int32_t initial_ਸਮਰੱਥਾ, UError_ਕੋਡ &ਸਥਿਤੀ) :
+        UVector(ਖਾਲੀ_ਸੂਚਕ, ਖਾਲੀ_ਸੂਚਕ, initial_ਸਮਰੱਥਾ, ਸਥਿਤੀ) {
 }
 
-UVector::UVector(UObjectDeleter *d, UElementsAreEqual *c, UErrorCode &status) :
-        UVector(d, c, DEFAULT_CAPACITY, status) {
+UVector::UVector(UObjectDeleter *d, UElementsAreEqual *c, UError_ਕੋਡ &ਸਥਿਤੀ) :
+        UVector(d, c, DEFAULT_ਸਮਰੱਥਾ, ਸਥਿਤੀ) {
 }
 
-UVector::UVector(UObjectDeleter *d, UElementsAreEqual *c, int32_t initialCapacity, UErrorCode &status) :
+UVector::UVector(UObjectDeleter *d, UElementsAreEqual *c, int32_t initial_ਸਮਰੱਥਾ, UError_ਕੋਡ &ਸਥਿਤੀ) :
     deleter(d),
     comparer(c)
 {
-    if (U_FAILURE(status)) {
-        return;
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਵਾਪਸ;
     }
     // Fix bogus initialCapacity values; avoid malloc(0) and integer overflow
-    if ((initialCapacity < 1) || (initialCapacity > static_cast<int32_t>(INT32_MAX / sizeof(UElement)))) {
-        initialCapacity = DEFAULT_CAPACITY;
+    ਜੇ ((initial_ਸਮਰੱਥਾ < 1) || (initial_ਸਮਰੱਥਾ > static_cast<int32_t>(INT32_MAX / ਆਕਾਰ(UElement)))) {
+        initial_ਸਮਰੱਥਾ = DEFAULT_ਸਮਰੱਥਾ;
     }
-    elements = static_cast<UElement*>(uprv_malloc(sizeof(UElement) * initialCapacity));
-    if (elements == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
-        capacity = initialCapacity;
+    elements = static_cast<UElement*>(uprv_malloc(ਆਕਾਰ(UElement) * initial_ਸਮਰੱਥਾ));
+    ਜੇ (elements == ਖਾਲੀ_ਸੂਚਕ) {
+        ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+    } ਨਹੀਂਤਾਂ {
+        capacity = initial_ਸਮਰੱਥਾ;
     }
 }
 
 UVector::~UVector() {
     removeAllElements();
     uprv_free(elements);
-    elements = nullptr;
+    elements = ਖਾਲੀ_ਸੂਚਕ;
 }
 
 /**
  * Assign this object to another (make this a copy of 'other').
  * Use the 'assign' function to assign each element.
  */
-void UVector::assign(const UVector& other, UElementAssigner *assign, UErrorCode &ec) {
-    if (ensureCapacity(other.count, ec)) {
-        setSize(other.count, ec);
-        if (U_SUCCESS(ec)) {
-            for (int32_t i=0; i<other.count; ++i) {
-                if (elements[i].pointer != nullptr && deleter != nullptr) {
-                    (*deleter)(elements[i].pointer);
+ਖਾਲੀ UVector::assign(ਅਚਲ UVector& other, UElementAssigner *assign, UError_ਕੋਡ &ec) {
+    ਜੇ (ensure_ਸਮਰੱਥਾ(other.count, ec)) {
+        ਸੈੱਟ_ਮਾਪ(other.count, ec);
+        ਜੇ (U_SUCCESS(ec)) {
+            ਲਈ (int32_t i=0; i<other.count; ++i) {
+                ਜੇ (elements[i].ਸੂਚਕ != ਖਾਲੀ_ਸੂਚਕ && deleter != ਖਾਲੀ_ਸੂਚਕ) {
+                    (*deleter)(elements[i].ਸੂਚਕ);
                 }
                 (*assign)(&elements[i], &other.elements[i]);
             }
@@ -85,276 +85,276 @@ void UVector::assign(const UVector& other, UElementAssigner *assign, UErrorCode 
 }
 
 // This only does something sensible if this object has a non-null comparer
-bool UVector::operator==(const UVector& other) const {
-    U_ASSERT(comparer != nullptr);
-    if (count != other.count) return false;
-    if (comparer != nullptr) {
+ਤਾਰਕਿਕ UVector::ਸੰਚਾਲਕ==(ਅਚਲ UVector& other) ਅਚਲ {
+    U_ASSERT(comparer != ਖਾਲੀ_ਸੂਚਕ);
+    ਜੇ (count != other.count) ਵਾਪਸ ਝੂਠ;
+    ਜੇ (comparer != ਖਾਲੀ_ਸੂਚਕ) {
         // Compare using this object's comparer
-        for (int32_t i=0; i<count; ++i) {
-            if (!(*comparer)(elements[i], other.elements[i])) {
-                return false;
+        ਲਈ (int32_t i=0; i<count; ++i) {
+            ਜੇ (!(*comparer)(elements[i], other.elements[i])) {
+                ਵਾਪਸ ਝੂਠ;
             }
         }
     }
-    return true;
+    ਵਾਪਸ ਸੱਚ;
 }
 
-void UVector::addElement(void* obj, UErrorCode &status) {
-    U_ASSERT(deleter == nullptr);
-    if (ensureCapacity(count + 1, status)) {
-        elements[count++].pointer = obj;
+ਖਾਲੀ UVector::ਜੋੜੋ_Element(ਖਾਲੀ* obj, UError_ਕੋਡ &ਸਥਿਤੀ) {
+    U_ASSERT(deleter == ਖਾਲੀ_ਸੂਚਕ);
+    ਜੇ (ensure_ਸਮਰੱਥਾ(count + 1, ਸਥਿਤੀ)) {
+        elements[count++].ਸੂਚਕ = obj;
     }
 }
 
-void UVector::adoptElement(void* obj, UErrorCode &status) {
-    U_ASSERT(deleter != nullptr);
-    if (ensureCapacity(count + 1, status)) {
-        elements[count++].pointer = obj;
-    } else {
+ਖਾਲੀ UVector::adoptElement(ਖਾਲੀ* obj, UError_ਕੋਡ &ਸਥਿਤੀ) {
+    U_ASSERT(deleter != ਖਾਲੀ_ਸੂਚਕ);
+    ਜੇ (ensure_ਸਮਰੱਥਾ(count + 1, ਸਥਿਤੀ)) {
+        elements[count++].ਸੂਚਕ = obj;
+    } ਨਹੀਂਤਾਂ {
         (*deleter)(obj);
     }
 }
-void UVector::addElement(int32_t elem, UErrorCode &status) {
-    U_ASSERT(deleter == nullptr);  // Usage error. Mixing up ints and pointers.
-    if (ensureCapacity(count + 1, status)) {
-        elements[count].pointer = nullptr;     // Pointers may be bigger than ints.
+ਖਾਲੀ UVector::ਜੋੜੋ_Element(int32_t elem, UError_ਕੋਡ &ਸਥਿਤੀ) {
+    U_ASSERT(deleter == ਖਾਲੀ_ਸੂਚਕ);  // Usage error. Mixing up ints and pointers.
+    ਜੇ (ensure_ਸਮਰੱਥਾ(count + 1, ਸਥਿਤੀ)) {
+        elements[count].ਸੂਚਕ = ਖਾਲੀ_ਸੂਚਕ;     // Pointers may be bigger than ints.
         elements[count].integer = elem;
         count++;
     }
 }
 
-void UVector::setElementAt(void* obj, int32_t index) {
-    if (0 <= index && index < count) {
-        if (elements[index].pointer != nullptr && deleter != nullptr) {
-            (*deleter)(elements[index].pointer);
+ਖਾਲੀ UVector::ਸੈੱਟ_Element_At(ਖਾਲੀ* obj, int32_t ਸੂਚਕਾਂਕ) {
+    ਜੇ (0 <= ਸੂਚਕਾਂਕ && ਸੂਚਕਾਂਕ < count) {
+        ਜੇ (elements[ਸੂਚਕਾਂਕ].ਸੂਚਕ != ਖਾਲੀ_ਸੂਚਕ && deleter != ਖਾਲੀ_ਸੂਚਕ) {
+            (*deleter)(elements[ਸੂਚਕਾਂਕ].ਸੂਚਕ);
         }
-        elements[index].pointer = obj;
-    } else {
+        elements[ਸੂਚਕਾਂਕ].ਸੂਚਕ = obj;
+    } ਨਹੀਂਤਾਂ {
         /* index out of range */
-        if (deleter != nullptr) {
+        ਜੇ (deleter != ਖਾਲੀ_ਸੂਚਕ) {
             (*deleter)(obj);
         }
     }
 }
 
-void UVector::setElementAt(int32_t elem, int32_t index) {
-    U_ASSERT(deleter == nullptr);  // Usage error. Mixing up ints and pointers.
-    if (0 <= index && index < count) {
-        elements[index].pointer = nullptr;
-        elements[index].integer = elem;
+ਖਾਲੀ UVector::ਸੈੱਟ_Element_At(int32_t elem, int32_t ਸੂਚਕਾਂਕ) {
+    U_ASSERT(deleter == ਖਾਲੀ_ਸੂਚਕ);  // Usage error. Mixing up ints and pointers.
+    ਜੇ (0 <= ਸੂਚਕਾਂਕ && ਸੂਚਕਾਂਕ < count) {
+        elements[ਸੂਚਕਾਂਕ].ਸੂਚਕ = ਖਾਲੀ_ਸੂਚਕ;
+        elements[ਸੂਚਕਾਂਕ].integer = elem;
     }
     /* else index out of range */
 }
 
-void UVector::insertElementAt(void* obj, int32_t index, UErrorCode &status) {
-    if (ensureCapacity(count + 1, status)) {
-        if (0 <= index && index <= count) {
-            for (int32_t i=count; i>index; --i) {
+ਖਾਲੀ UVector::ਪਾਓ_Element_At(ਖਾਲੀ* obj, int32_t ਸੂਚਕਾਂਕ, UError_ਕੋਡ &ਸਥਿਤੀ) {
+    ਜੇ (ensure_ਸਮਰੱਥਾ(count + 1, ਸਥਿਤੀ)) {
+        ਜੇ (0 <= ਸੂਚਕਾਂਕ && ਸੂਚਕਾਂਕ <= count) {
+            ਲਈ (int32_t i=count; i>ਸੂਚਕਾਂਕ; --i) {
                 elements[i] = elements[i-1];
             }
-            elements[index].pointer = obj;
+            elements[ਸੂਚਕਾਂਕ].ਸੂਚਕ = obj;
             ++count;
-        } else {
+        } ਨਹੀਂਤਾਂ {
             /* index out of range */
-            status = U_ILLEGAL_ARGUMENT_ERROR;
+            ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
         }
     }
-    if (U_FAILURE(status) && deleter != nullptr) {
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ) && deleter != ਖਾਲੀ_ਸੂਚਕ) {
         (*deleter)(obj);
     }
 }
 
-void UVector::insertElementAt(int32_t elem, int32_t index, UErrorCode &status) {
-    U_ASSERT(deleter == nullptr);  // Usage error. Mixing up ints and pointers.
+ਖਾਲੀ UVector::ਪਾਓ_Element_At(int32_t elem, int32_t ਸੂਚਕਾਂਕ, UError_ਕੋਡ &ਸਥਿਤੀ) {
+    U_ASSERT(deleter == ਖਾਲੀ_ਸੂਚਕ);  // Usage error. Mixing up ints and pointers.
     // must have 0 <= index <= count
-    if (ensureCapacity(count + 1, status)) {
-        if (0 <= index && index <= count) {
-            for (int32_t i=count; i>index; --i) {
+    ਜੇ (ensure_ਸਮਰੱਥਾ(count + 1, ਸਥਿਤੀ)) {
+        ਜੇ (0 <= ਸੂਚਕਾਂਕ && ਸੂਚਕਾਂਕ <= count) {
+            ਲਈ (int32_t i=count; i>ਸੂਚਕਾਂਕ; --i) {
                 elements[i] = elements[i-1];
             }
-            elements[index].pointer = nullptr;
-            elements[index].integer = elem;
+            elements[ਸੂਚਕਾਂਕ].ਸੂਚਕ = ਖਾਲੀ_ਸੂਚਕ;
+            elements[ਸੂਚਕਾਂਕ].integer = elem;
             ++count;
-        } else {
+        } ਨਹੀਂਤਾਂ {
             /* index out of range */
-            status = U_ILLEGAL_ARGUMENT_ERROR;
+            ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
         }
     }
 }
 
-void* UVector::elementAt(int32_t index) const {
-    return (0 <= index && index < count) ? elements[index].pointer : nullptr;
+ਖਾਲੀ* UVector::elementAt(int32_t ਸੂਚਕਾਂਕ) ਅਚਲ {
+    ਵਾਪਸ (0 <= ਸੂਚਕਾਂਕ && ਸੂਚਕਾਂਕ < count) ? elements[ਸੂਚਕਾਂਕ].ਸੂਚਕ : ਖਾਲੀ_ਸੂਚਕ;
 }
 
-int32_t UVector::elementAti(int32_t index) const {
-    return (0 <= index && index < count) ? elements[index].integer : 0;
+int32_t UVector::elementAti(int32_t ਸੂਚਕਾਂਕ) ਅਚਲ {
+    ਵਾਪਸ (0 <= ਸੂਚਕਾਂਕ && ਸੂਚਕਾਂਕ < count) ? elements[ਸੂਚਕਾਂਕ].integer : 0;
 }
 
-UBool UVector::containsAll(const UVector& other) const {
-    for (int32_t i=0; i<other.size(); ++i) {
-        if (indexOf(other.elements[i]) < 0) {
-            return false;
+UBool UVector::ਸ਼ਾਮਲ_ਹੈ_All(ਅਚਲ UVector& other) ਅਚਲ {
+    ਲਈ (int32_t i=0; i<other.size(); ++i) {
+        ਜੇ (ਸੂਚਕਾਂਕ_ਦਾ(other.elements[i]) < 0) {
+            ਵਾਪਸ ਝੂਠ;
         }
     }
-    return true;
+    ਵਾਪਸ ਸੱਚ;
 }
 
-UBool UVector::containsNone(const UVector& other) const {
-    for (int32_t i=0; i<other.size(); ++i) {
-        if (indexOf(other.elements[i]) >= 0) {
-            return false;
+UBool UVector::ਸ਼ਾਮਲ_ਹੈ_None(ਅਚਲ UVector& other) ਅਚਲ {
+    ਲਈ (int32_t i=0; i<other.size(); ++i) {
+        ਜੇ (ਸੂਚਕਾਂਕ_ਦਾ(other.elements[i]) >= 0) {
+            ਵਾਪਸ ਝੂਠ;
         }
     }
-    return true;
+    ਵਾਪਸ ਸੱਚ;
 }
 
-UBool UVector::removeAll(const UVector& other) {
-    UBool changed = false;
-    for (int32_t i=0; i<other.size(); ++i) {
-        int32_t j = indexOf(other.elements[i]);
-        if (j >= 0) {
+UBool UVector::removeAll(ਅਚਲ UVector& other) {
+    UBool ਬਦਲਿਆ = ਝੂਠ;
+    ਲਈ (int32_t i=0; i<other.size(); ++i) {
+        int32_t j = ਸੂਚਕਾਂਕ_ਦਾ(other.elements[i]);
+        ਜੇ (j >= 0) {
             removeElementAt(j);
-            changed = true;
+            ਬਦਲਿਆ = ਸੱਚ;
         }
     }
-    return changed;
+    ਵਾਪਸ ਬਦਲਿਆ;
 }
 
-UBool UVector::retainAll(const UVector& other) {
-    UBool changed = false;
-    for (int32_t j=size()-1; j>=0; --j) {
-        int32_t i = other.indexOf(elements[j]);
-        if (i < 0) {
+UBool UVector::retainAll(ਅਚਲ UVector& other) {
+    UBool ਬਦਲਿਆ = ਝੂਠ;
+    ਲਈ (int32_t j=size()-1; j>=0; --j) {
+        int32_t i = other.ਸੂਚਕਾਂਕ_ਦਾ(elements[j]);
+        ਜੇ (i < 0) {
             removeElementAt(j);
-            changed = true;
+            ਬਦਲਿਆ = ਸੱਚ;
         }
     }
-    return changed;
+    ਵਾਪਸ ਬਦਲਿਆ;
 }
 
-void UVector::removeElementAt(int32_t index) {
-    void* e = orphanElementAt(index);
-    if (e != nullptr && deleter != nullptr) {
+ਖਾਲੀ UVector::removeElementAt(int32_t ਸੂਚਕਾਂਕ) {
+    ਖਾਲੀ* e = orphanElementAt(ਸੂਚਕਾਂਕ);
+    ਜੇ (e != ਖਾਲੀ_ਸੂਚਕ && deleter != ਖਾਲੀ_ਸੂਚਕ) {
         (*deleter)(e);
     }
 }
 
-UBool UVector::removeElement(void* obj) {
-    int32_t i = indexOf(obj);
-    if (i >= 0) {
+UBool UVector::removeElement(ਖਾਲੀ* obj) {
+    int32_t i = ਸੂਚਕਾਂਕ_ਦਾ(obj);
+    ਜੇ (i >= 0) {
         removeElementAt(i);
-        return true;
+        ਵਾਪਸ ਸੱਚ;
     }
-    return false;
+    ਵਾਪਸ ਝੂਠ;
 }
 
-void UVector::removeAllElements() {
-    if (deleter != nullptr) {
-        for (int32_t i=0; i<count; ++i) {
-            if (elements[i].pointer != nullptr) {
-                (*deleter)(elements[i].pointer);
+ਖਾਲੀ UVector::removeAllElements() {
+    ਜੇ (deleter != ਖਾਲੀ_ਸੂਚਕ) {
+        ਲਈ (int32_t i=0; i<count; ++i) {
+            ਜੇ (elements[i].ਸੂਚਕ != ਖਾਲੀ_ਸੂਚਕ) {
+                (*deleter)(elements[i].ਸੂਚਕ);
             }
         }
     }
     count = 0;
 }
 
-UBool   UVector::equals(const UVector &other) const {
-    int      i;
+UBool   UVector::equals(ਅਚਲ UVector &other) ਅਚਲ {
+    ਪੂਰਨ      i;
 
-    if (this->count != other.count) {
-        return false;
+    ਜੇ (ਇਹ->count != other.count) {
+        ਵਾਪਸ ਝੂਠ;
     }
-    if (comparer == nullptr) {
-        for (i=0; i<count; i++) {
-            if (elements[i].pointer != other.elements[i].pointer) {
-                return false;
+    ਜੇ (comparer == ਖਾਲੀ_ਸੂਚਕ) {
+        ਲਈ (i=0; i<count; i++) {
+            ਜੇ (elements[i].ਸੂਚਕ != other.elements[i].ਸੂਚਕ) {
+                ਵਾਪਸ ਝੂਠ;
             }
         }
-    } else {
-        UElement key;
-        for (i=0; i<count; i++) {
-            key.pointer = &other.elements[i];
-            if (!(*comparer)(key, elements[i])) {
-                return false;
+    } ਨਹੀਂਤਾਂ {
+        UElement ਕੁੰਜੀ;
+        ਲਈ (i=0; i<count; i++) {
+            ਕੁੰਜੀ.ਸੂਚਕ = &other.elements[i];
+            ਜੇ (!(*comparer)(ਕੁੰਜੀ, elements[i])) {
+                ਵਾਪਸ ਝੂਠ;
             }
         }
     }
-    return true;
+    ਵਾਪਸ ਸੱਚ;
 }
 
 
 
-int32_t UVector::indexOf(void* obj, int32_t startIndex) const {
-    UElement key;
-    key.pointer = obj;
-    return indexOf(key, startIndex, HINT_KEY_POINTER);
+int32_t UVector::ਸੂਚਕਾਂਕ_ਦਾ(ਖਾਲੀ* obj, int32_t ਸ਼ੁਰੂ_ਸੂਚਕਾਂਕ) ਅਚਲ {
+    UElement ਕੁੰਜੀ;
+    ਕੁੰਜੀ.ਸੂਚਕ = obj;
+    ਵਾਪਸ ਸੂਚਕਾਂਕ_ਦਾ(ਕੁੰਜੀ, ਸ਼ੁਰੂ_ਸੂਚਕਾਂਕ, HINT_ਕੁੰਜੀ_ਸੂਚਕ);
 }
 
-int32_t UVector::indexOf(int32_t obj, int32_t startIndex) const {
-    UElement key;
-    key.integer = obj;
-    return indexOf(key, startIndex, HINT_KEY_INTEGER);
+int32_t UVector::ਸੂਚਕਾਂਕ_ਦਾ(int32_t obj, int32_t ਸ਼ੁਰੂ_ਸੂਚਕਾਂਕ) ਅਚਲ {
+    UElement ਕੁੰਜੀ;
+    ਕੁੰਜੀ.integer = obj;
+    ਵਾਪਸ ਸੂਚਕਾਂਕ_ਦਾ(ਕੁੰਜੀ, ਸ਼ੁਰੂ_ਸੂਚਕਾਂਕ, HINT_ਕੁੰਜੀ_INTEGER);
 }
 
-int32_t UVector::indexOf(UElement key, int32_t startIndex, int8_t hint) const {
-    if (comparer != nullptr) {
-        for (int32_t i=startIndex; i<count; ++i) {
-            if ((*comparer)(key, elements[i])) {
-                return i;
+int32_t UVector::ਸੂਚਕਾਂਕ_ਦਾ(UElement ਕੁੰਜੀ, int32_t ਸ਼ੁਰੂ_ਸੂਚਕਾਂਕ, int8_t hint) ਅਚਲ {
+    ਜੇ (comparer != ਖਾਲੀ_ਸੂਚਕ) {
+        ਲਈ (int32_t i=ਸ਼ੁਰੂ_ਸੂਚਕਾਂਕ; i<count; ++i) {
+            ਜੇ ((*comparer)(ਕੁੰਜੀ, elements[i])) {
+                ਵਾਪਸ i;
             }
         }
-    } else {
-        for (int32_t i=startIndex; i<count; ++i) {
+    } ਨਹੀਂਤਾਂ {
+        ਲਈ (int32_t i=ਸ਼ੁਰੂ_ਸੂਚਕਾਂਕ; i<count; ++i) {
             /* Pointers are not always the same size as ints so to perform
              * a valid comparison we need to know whether we are being
              * provided an int or a pointer. */
-            if (hint & HINT_KEY_POINTER) {
-                if (key.pointer == elements[i].pointer) {
-                    return i;
+            ਜੇ (hint & HINT_ਕੁੰਜੀ_ਸੂਚਕ) {
+                ਜੇ (ਕੁੰਜੀ.ਸੂਚਕ == elements[i].ਸੂਚਕ) {
+                    ਵਾਪਸ i;
                 }
-            } else {
-                if (key.integer == elements[i].integer) {
-                    return i;
+            } ਨਹੀਂਤਾਂ {
+                ਜੇ (ਕੁੰਜੀ.integer == elements[i].integer) {
+                    ਵਾਪਸ i;
                 }
             }
         }
     }
-    return -1;
+    ਵਾਪਸ -1;
 }
 
-UBool UVector::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+UBool UVector::ensure_ਸਮਰੱਥਾ(int32_t minimum_ਸਮਰੱਥਾ, UError_ਕੋਡ &ਸਥਿਤੀ) {
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਵਾਪਸ ਝੂਠ;
     }
-    if (minimumCapacity < 0) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+    ਜੇ (minimum_ਸਮਰੱਥਾ < 0) {
+        ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ ਝੂਠ;
     }
-    if (capacity < minimumCapacity) {
-        if (capacity > (INT32_MAX - 1) / 2) {        	// integer overflow check
-            status = U_ILLEGAL_ARGUMENT_ERROR;
-            return false;
+    ਜੇ (capacity < minimum_ਸਮਰੱਥਾ) {
+        ਜੇ (capacity > (INT32_MAX - 1) / 2) {        	// integer overflow check
+            ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+            ਵਾਪਸ ਝੂਠ;
         }
         int32_t newCap = capacity * 2;
-        if (newCap < minimumCapacity) {
-            newCap = minimumCapacity;
+        ਜੇ (newCap < minimum_ਸਮਰੱਥਾ) {
+            newCap = minimum_ਸਮਰੱਥਾ;
         }
-        if (newCap > static_cast<int32_t>(INT32_MAX / sizeof(UElement))) { // integer overflow check
+        ਜੇ (newCap > static_cast<int32_t>(INT32_MAX / ਆਕਾਰ(UElement))) { // integer overflow check
             // We keep the original memory contents on bad minimumCapacity.
-            status = U_ILLEGAL_ARGUMENT_ERROR;
-            return false;
+            ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+            ਵਾਪਸ ਝੂਠ;
         }
-        UElement* newElems = static_cast<UElement*>(uprv_realloc(elements, sizeof(UElement) * newCap));
-        if (newElems == nullptr) {
+        UElement* newElems = static_cast<UElement*>(uprv_realloc(elements, ਆਕਾਰ(UElement) * newCap));
+        ਜੇ (newElems == ਖਾਲੀ_ਸੂਚਕ) {
             // We keep the original contents on the memory failure on realloc or bad minimumCapacity.
-            status = U_MEMORY_ALLOCATION_ERROR;
-            return false;
+            ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+            ਵਾਪਸ ਝੂਠ;
         }
         elements = newElems;
         capacity = newCap;
     }
-    return true;
+    ਵਾਪਸ ਸੱਚ;
 }
 
 /**
@@ -363,47 +363,47 @@ UBool UVector::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
  * newSize.  If newSize is larger, grow the array, filling in new
  * slots with nullptr.
  */
-void UVector::setSize(int32_t newSize, UErrorCode &status) {
-    if (!ensureCapacity(newSize, status)) {
-        return;
+ਖਾਲੀ UVector::ਸੈੱਟ_ਮਾਪ(int32_t new_ਮਾਪ, UError_ਕੋਡ &ਸਥਿਤੀ) {
+    ਜੇ (!ensure_ਸਮਰੱਥਾ(new_ਮਾਪ, ਸਥਿਤੀ)) {
+        ਵਾਪਸ;
     }
-    if (newSize > count) {
+    ਜੇ (new_ਮਾਪ > count) {
         UElement empty;
-        empty.pointer = nullptr;
+        empty.ਸੂਚਕ = ਖਾਲੀ_ਸੂਚਕ;
         empty.integer = 0;
-        for (int32_t i=count; i<newSize; ++i) {
+        ਲਈ (int32_t i=count; i<new_ਮਾਪ; ++i) {
             elements[i] = empty;
         }
-    } else {
+    } ਨਹੀਂਤਾਂ {
         /* Most efficient to count down */
-        for (int32_t i=count-1; i>=newSize; --i) {
+        ਲਈ (int32_t i=count-1; i>=new_ਮਾਪ; --i) {
             removeElementAt(i);
         }
     }
-    count = newSize;
+    count = new_ਮਾਪ;
 }
 
 /**
  * Fill in the given array with all elements of this vector.
  */
-void** UVector::toArray(void** result) const {
-    void** a = result;
-    for (int i=0; i<count; ++i) {
-        *a++ = elements[i].pointer;
+ਖਾਲੀ** UVector::ਮੰਜ਼ਿਲ_Array(ਖਾਲੀ** ਨਤੀਜਾ) ਅਚਲ {
+    ਖਾਲੀ** a = ਨਤੀਜਾ;
+    ਲਈ (ਪੂਰਨ i=0; i<count; ++i) {
+        *a++ = elements[i].ਸੂਚਕ;
     }
-    return result;
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
-UObjectDeleter *UVector::setDeleter(UObjectDeleter *d) {
+UObjectDeleter *UVector::ਸੈੱਟ_Deleter(UObjectDeleter *d) {
     UObjectDeleter *old = deleter;
     deleter = d;
-    return old;
+    ਵਾਪਸ old;
 }
 
-UElementsAreEqual *UVector::setComparer(UElementsAreEqual *d) {
+UElementsAreEqual *UVector::ਸੈੱਟ_Comparer(UElementsAreEqual *d) {
     UElementsAreEqual *old = comparer;
     comparer = d;
-    return old;
+    ਵਾਪਸ old;
 }
 
 /**
@@ -415,17 +415,17 @@ UElementsAreEqual *UVector::setComparer(UElementsAreEqual *d) {
  * index is out of range or if there is no item at the given index
  * then 0 is returned and the vector is unchanged.
  */
-void* UVector::orphanElementAt(int32_t index) {
-    void* e = nullptr;
-    if (0 <= index && index < count) {
-        e = elements[index].pointer;
-        for (int32_t i=index; i<count-1; ++i) {
+ਖਾਲੀ* UVector::orphanElementAt(int32_t ਸੂਚਕਾਂਕ) {
+    ਖਾਲੀ* e = ਖਾਲੀ_ਸੂਚਕ;
+    ਜੇ (0 <= ਸੂਚਕਾਂਕ && ਸੂਚਕਾਂਕ < count) {
+        e = elements[ਸੂਚਕਾਂਕ].ਸੂਚਕ;
+        ਲਈ (int32_t i=ਸੂਚਕਾਂਕ; i<count-1; ++i) {
             elements[i] = elements[i+1];
         }
         --count;
     }
     /* else index out of range */
-    return e;
+    ਵਾਪਸ e;
 }
 
 /**
@@ -433,10 +433,10 @@ void* UVector::orphanElementAt(int32_t index) {
  * as defined by 'compare'.  The current elements are assumed to
  * be sorted already.
  */
-void UVector::sortedInsert(void* obj, UElementComparator *compare, UErrorCode& ec) {
+ਖਾਲੀ UVector::sorted_ਪਾਓ(ਖਾਲੀ* obj, UElementComparator *compare, UError_ਕੋਡ& ec) {
     UElement e;
-    e.pointer = obj;
-    sortedInsert(e, compare, ec);
+    e.ਸੂਚਕ = obj;
+    sorted_ਪਾਓ(e, compare, ec);
 }
 
 /**
@@ -444,38 +444,38 @@ void UVector::sortedInsert(void* obj, UElementComparator *compare, UErrorCode& e
  * as defined by 'compare'.  The current elements are assumed to
  * be sorted already.
  */
-void UVector::sortedInsert(int32_t obj, UElementComparator *compare, UErrorCode& ec) {
-    U_ASSERT(deleter == nullptr);
+ਖਾਲੀ UVector::sorted_ਪਾਓ(int32_t obj, UElementComparator *compare, UError_ਕੋਡ& ec) {
+    U_ASSERT(deleter == ਖਾਲੀ_ਸੂਚਕ);
     UElement e {};
     e.integer = obj;
-    sortedInsert(e, compare, ec);
+    sorted_ਪਾਓ(e, compare, ec);
 }
 
 // ASSUME elements[] IS CURRENTLY SORTED
-void UVector::sortedInsert(UElement e, UElementComparator *compare, UErrorCode& ec) {
+ਖਾਲੀ UVector::sorted_ਪਾਓ(UElement e, UElementComparator *compare, UError_ਕੋਡ& ec) {
     // Perform a binary search for the location to insert tok at.  Tok
     // will be inserted between two elements a and b such that a <=
     // tok && tok < b, where there is a 'virtual' elements[-1] always
     // less than tok and a 'virtual' elements[count] always greater
     // than tok.
-    if (!ensureCapacity(count + 1, ec)) {
-        if (deleter != nullptr) {
-            (*deleter)(e.pointer);
+    ਜੇ (!ensure_ਸਮਰੱਥਾ(count + 1, ec)) {
+        ਜੇ (deleter != ਖਾਲੀ_ਸੂਚਕ) {
+            (*deleter)(e.ਸੂਚਕ);
         }
-        return;
+        ਵਾਪਸ;
     }
     int32_t min = 0, max = count;
-    while (min != max) {
+    ਜਦੋਂ (min != max) {
         int32_t probe = (min + max) / 2;
         int32_t c = (*compare)(elements[probe], e);
-        if (c > 0) {
+        ਜੇ (c > 0) {
             max = probe;
-        } else {
+        } ਨਹੀਂਤਾਂ {
             // assert(c <= 0);
             min = probe + 1;
         }
     }
-    for (int32_t i=count; i>min; --i) {
+    ਲਈ (int32_t i=count; i>min; --i) {
         elements[i] = elements[i-1];
     }
     elements[min] = e;
@@ -493,13 +493,13 @@ void UVector::sortedInsert(UElement e, UElementComparator *compare, UErrorCode& 
   *  (with some extra indirection) to the user supplied comparator.
   *  
   */
-static int32_t U_CALLCONV
-sortComparator(const void *context, const void *left, const void *right) {
-    UElementComparator *compare = *static_cast<UElementComparator * const *>(context);
-    UElement e1 = *static_cast<const UElement *>(left);
-    UElement e2 = *static_cast<const UElement *>(right);
-    int32_t result = (*compare)(e1, e2);
-    return result;
+ਸਥਿਰ int32_t U_CALLCONV
+ਛਾਂਟੋ_Comparator(ਅਚਲ ਖਾਲੀ *context, ਅਚਲ ਖਾਲੀ *ਖੱਬੇ, ਅਚਲ ਖਾਲੀ *ਸੱਜੇ) {
+    UElementComparator *compare = *static_cast<UElementComparator * ਅਚਲ *>(context);
+    UElement e1 = *static_cast<ਅਚਲ UElement *>(ਖੱਬੇ);
+    UElement e2 = *static_cast<ਅਚਲ UElement *>(ਸੱਜੇ);
+    int32_t ਨਤੀਜਾ = (*compare)(e1, e2);
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
 
@@ -507,13 +507,13 @@ sortComparator(const void *context, const void *left, const void *right) {
   *  Array sort comparison function for use from UVector::sorti()
   *  Compares int32_t vector elements.
   */
-static int32_t U_CALLCONV
-sortiComparator(const void * /*context */, const void *left, const void *right) {
-    const UElement *e1 = static_cast<const UElement *>(left);
-    const UElement *e2 = static_cast<const UElement *>(right);
-    int32_t result = e1->integer < e2->integer? -1 :
+ਸਥਿਰ int32_t U_CALLCONV
+sortiComparator(ਅਚਲ ਖਾਲੀ * /*context */, ਅਚਲ ਖਾਲੀ *ਖੱਬੇ, ਅਚਲ ਖਾਲੀ *ਸੱਜੇ) {
+    ਅਚਲ UElement *e1 = static_cast<ਅਚਲ UElement *>(ਖੱਬੇ);
+    ਅਚਲ UElement *e2 = static_cast<ਅਚਲ UElement *>(ਸੱਜੇ);
+    int32_t ਨਤੀਜਾ = e1->integer < e2->integer? -1 :
                      e1->integer == e2->integer? 0 : 1;
-    return result;
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
 /**
@@ -522,10 +522,10 @@ sortiComparator(const void * /*context */, const void *left, const void *right) 
   *     not clear whether UVector's UElementComparator or
   *     UComparator from uprv_sortAray would be more appropriate.)
   */
-void UVector::sorti(UErrorCode &ec) {
-    if (U_SUCCESS(ec)) {
-        uprv_sortArray(elements, count, sizeof(UElement),
-                       sortiComparator, nullptr,  false, &ec);
+ਖਾਲੀ UVector::sorti(UError_ਕੋਡ &ec) {
+    ਜੇ (U_SUCCESS(ec)) {
+        uprv_ਛਾਂਟੋ_Array(elements, count, ਆਕਾਰ(UElement),
+                       sortiComparator, ਖਾਲੀ_ਸੂਚਕ,  ਝੂਠ, &ec);
     }
 }
 
@@ -544,10 +544,10 @@ void UVector::sorti(UErrorCode &ec) {
  *    as  a (void *) data pointer, so instead we pass a (data) pointer to a
  *    pointer-to-function variable.
  */
-void UVector::sort(UElementComparator *compare, UErrorCode &ec) {
-    if (U_SUCCESS(ec)) {
-        uprv_sortArray(elements, count, sizeof(UElement),
-                       sortComparator, &compare, false, &ec);
+ਖਾਲੀ UVector::sort(UElementComparator *compare, UError_ਕੋਡ &ec) {
+    ਜੇ (U_SUCCESS(ec)) {
+        uprv_ਛਾਂਟੋ_Array(elements, count, ਆਕਾਰ(UElement),
+                       ਛਾਂਟੋ_Comparator, &compare, ਝੂਠ, &ec);
     }
 }
 
@@ -555,12 +555,12 @@ void UVector::sort(UElementComparator *compare, UErrorCode &ec) {
 /**
  *  Stable sort with a user supplied comparator of type UComparator.
  */
-void UVector::sortWithUComparator(UComparator *compare, const void *context, UErrorCode &ec) {
-    if (U_SUCCESS(ec)) {
-        uprv_sortArray(elements, count, sizeof(UElement),
-                       compare, context, true, &ec);
+ਖਾਲੀ UVector::ਛਾਂਟੋ_With_UComparator(UComparator *compare, ਅਚਲ ਖਾਲੀ *context, UError_ਕੋਡ &ec) {
+    ਜੇ (U_SUCCESS(ec)) {
+        uprv_ਛਾਂਟੋ_Array(elements, count, ਆਕਾਰ(UElement),
+                       compare, context, ਸੱਚ, &ec);
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 

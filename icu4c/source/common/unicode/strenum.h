@@ -9,15 +9,15 @@
 *******************************************************************************
 */
 
-#ifndef STRENUM_H
-#define STRENUM_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ STRENUM_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ STRENUM_H
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
-#include "unicode/unistr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uobject.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/unistr.h"
 
 /**
  * \file 
@@ -58,13 +58,13 @@ U_NAMESPACE_BEGIN
  *
  * @stable ICU 2.4 
  */
-class U_COMMON_API StringEnumeration : public UObject { 
-public:
+class U_COMMON_API StringEnumeration : ਜਨਤਕ UObject { 
+ਜਨਤਕ:
     /**
      * Destructor.
      * @stable ICU 2.4
      */
-    virtual ~StringEnumeration();
+    ਆਭਾਸੀ ~StringEnumeration();
 
     /**
      * Clone this object, an instance of a subclass of StringEnumeration.
@@ -78,7 +78,7 @@ public:
      * @see getDynamicClassID
      * @stable ICU 2.8
      */
-    virtual StringEnumeration *clone() const;
+    ਆਭਾਸੀ StringEnumeration *clone() ਅਚਲ;
 
     /**
      * <p>Return the number of elements that the iterator traverses.  If
@@ -97,7 +97,7 @@ public:
      * @return number of elements in the iterator.
      *
      * @stable ICU 2.4 */
-    virtual int32_t count(UErrorCode& status) const = 0;
+    ਆਭਾਸੀ int32_t ਗਿਣਤੀ_2(UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ = 0;
 
     /**
      * <p>Returns the next element as a NUL-terminated char*.  If there
@@ -129,7 +129,7 @@ public:
      *
      * @stable ICU 2.4 
      */
-    virtual const char* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND;
+    ਆਭਾਸੀ ਅਚਲ ਅੱਖਰ* ਅਗਲਾ(int32_t* ਨਤੀਜਾ_ਲੰਮਾਈ, UError_ਕੋਡ& ਸਥਿਤੀ) U_LIFETIME_BOUND;
 
     /**
      * <p>Returns the next element as a NUL-terminated char16_t*.  If there
@@ -154,7 +154,7 @@ public:
      *
      * @stable ICU 2.4 
      */
-    virtual const char16_t* unext(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND;
+    ਆਭਾਸੀ ਅਚਲ char16_t* unext(int32_t* ਨਤੀਜਾ_ਲੰਮਾਈ, UError_ਕੋਡ& ਸਥਿਤੀ) U_LIFETIME_BOUND;
 
     /**
      * <p>Returns the next element a UnicodeString*.  If there are no
@@ -176,7 +176,7 @@ public:
      *
      * @stable ICU 2.4 
      */
-    virtual const UnicodeString* snext(UErrorCode& status) U_LIFETIME_BOUND;
+    ਆਭਾਸੀ ਅਚਲ UnicodeString* snext(UError_ਕੋਡ& ਸਥਿਤੀ) U_LIFETIME_BOUND;
 
     /**
      * <p>Resets the iterator.  This re-establishes sync with the
@@ -190,7 +190,7 @@ public:
      *
      * @stable ICU 2.4 
      */
-    virtual void reset(UErrorCode& status) = 0;
+    ਆਭਾਸੀ ਖਾਲੀ reset(UError_ਕੋਡ& ਸਥਿਤੀ) = 0;
 
     /**
      * Compares this enumeration to other to check if both are equal
@@ -199,7 +199,7 @@ public:
      * @return true if the enumerations are equal. false if not.
      * @stable ICU 3.6 
      */
-    virtual bool operator==(const StringEnumeration& that)const;
+    ਆਭਾਸੀ bool ਸੰਚਾਲਕ==(ਅਚਲ StringEnumeration& that)ਅਚਲ;
     /**
      * Compares this enumeration to other to check if both are not equal
      *
@@ -207,9 +207,9 @@ public:
      * @return true if the enumerations are equal. false if not.
      * @stable ICU 3.6 
      */
-    virtual bool operator!=(const StringEnumeration& that)const;
+    ਆਭਾਸੀ bool ਸੰਚਾਲਕ!=(ਅਚਲ StringEnumeration& that)ਅਚਲ;
 
-protected:
+ਸੁਰੱਖਿਅਤ:
     /**
      * UnicodeString field for use with default implementations and subclasses.
      * @stable ICU 2.8
@@ -219,18 +219,18 @@ protected:
      * char * default buffer for use with default implementations and subclasses.
      * @stable ICU 2.8
      */
-    char charsBuffer[32];
+    ਅੱਖਰ chars_ਬਫਰ[32];
     /**
      * char * buffer for use with default implementations and subclasses.
      * Allocated in constructor and in ensureCharsCapacity().
      * @stable ICU 2.8
      */
-    char *chars;
+    ਅੱਖਰ *chars;
     /**
      * Capacity of chars, for use with default implementations and subclasses.
      * @stable ICU 2.8
      */
-    int32_t charsCapacity;
+    int32_t chars_ਸਮਰੱਥਾ;
 
     /**
      * Default constructor for use with default implementations and subclasses.
@@ -246,7 +246,7 @@ protected:
      * @param status ICU in/out error code.
      * @stable ICU 2.8
      */
-    void ensureCharsCapacity(int32_t capacity, UErrorCode &status);
+    ਖਾਲੀ ensure_Chars_ਸਮਰੱਥਾ(int32_t ਸਮਰੱਥਾ, UError_ਕੋਡ &ਸਥਿਤੀ);
 
     /**
      * Converts s to Unicode and sets unistr to the result.
@@ -270,12 +270,12 @@ protected:
      * @return A pointer to unistr.
      * @stable ICU 2.8
      */
-    UnicodeString* setChars(const char* s, int32_t length, UErrorCode& status) U_LIFETIME_BOUND;
+    UnicodeString* ਸੈੱਟ_Chars(ਅਚਲ ਅੱਖਰ* s, int32_t ਲੰਮਾਈ, UError_ਕੋਡ& ਸਥਿਤੀ) U_LIFETIME_BOUND;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ਜੇ_ਅੰਤ /* U_SHOW_CPLUSPLUS_API */
 
 /* STRENUM_H */
-#endif
+#ਜੇ_ਅੰਤ

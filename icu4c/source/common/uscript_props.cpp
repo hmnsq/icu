@@ -14,14 +14,14 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/uscript.h"
-#include "unicode/utf16.h"
-#include "ustr_imp.h"
-#include "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/unistr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uscript.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf16.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ustr_imp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
 
-namespace {
+ਨਾਮਾਕਾਸ਼ {
 
 // Script metadata (script properties).
 // See http://unicode.org/cldr/trac/browser/trunk/common/properties/scriptMetadata.txt
@@ -30,18 +30,18 @@ namespace {
 // Bits 20.. 0: sample character
 
 // Bits 23..21: usage
-const int32_t UNKNOWN = 1 << 21;
-const int32_t EXCLUSION = 2 << 21;
-const int32_t LIMITED_USE = 3 << 21;
+ਅਚਲ int32_t UNKNOWN = 1 << 21;
+ਅਚਲ int32_t EXCLUSION = 2 << 21;
+ਅਚਲ int32_t LIMITED_USE = 3 << 21;
 // st int32_t ASPIRATIONAL = 4 << 21; -- not used any more since Unicode 10
-const int32_t RECOMMENDED = 5 << 21;
+ਅਚਲ int32_t RECOMMENDED = 5 << 21;
 
 // Bits 31..24: Single-bit flags
-const int32_t RTL = 1 << 24;
-const int32_t LB_LETTERS = 1 << 25;
-const int32_t CASED = 1 << 26;
+ਅਚਲ int32_t RTL = 1 << 24;
+ਅਚਲ int32_t LB_LETTERS = 1 << 25;
+ਅਚਲ int32_t CASED = 1 << 26;
 
-const int32_t SCRIPT_PROPS[] = {
+ਅਚਲ int32_t SCRIPT_PROPS[] = {
     // Begin copy-paste output from
     // tools/trunk/unicode/py/parsescriptmetadata.py
     0x0040 | RECOMMENDED,  // Zyyy
@@ -262,63 +262,63 @@ const int32_t SCRIPT_PROPS[] = {
     // End copy-paste from parsescriptmetadata.py
 };
 
-int32_t getScriptProps(UScriptCode script) {
-    if (0 <= script && script < UPRV_LENGTHOF(SCRIPT_PROPS)) {
-        return SCRIPT_PROPS[script];
-    } else {
-        return 0;
+int32_t getScriptProps(UScript_ਕੋਡ script) {
+    ਜੇ (0 <= script && script < UPRV_LENGTHOF(SCRIPT_PROPS)) {
+        ਵਾਪਸ SCRIPT_PROPS[script];
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ 0;
     }
 }
 
 }  // namespace
 
 U_CAPI int32_t U_EXPORT2
-uscript_getSampleString(UScriptCode script, char16_t *dest, int32_t capacity, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) { return 0; }
-    if(capacity < 0 || (capacity > 0 && dest == nullptr)) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+uscript_getSampleString(UScript_ਕੋਡ script, char16_t *dest, int32_t capacity, UError_ਕੋਡ *p_Error_ਕੋਡ) {
+    ਜੇ(U_FAILURE(*p_Error_ਕੋਡ)) { ਵਾਪਸ 0; }
+    ਜੇ(capacity < 0 || (capacity > 0 && dest == ਖਾਲੀ_ਸੂਚਕ)) {
+        *p_Error_ਕੋਡ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ 0;
     }
     int32_t sampleChar = getScriptProps(script) & 0x1fffff;
     int32_t length;
-    if(sampleChar == 0) {
+    ਜੇ(sampleChar == 0) {
         length = 0;
-    } else {
-        length = U16_LENGTH(sampleChar);
-        if(length <= capacity) {
+    } ਨਹੀਂਤਾਂ {
+        length = U16_ਲੰਮਾਈ(sampleChar);
+        ਜੇ(length <= capacity) {
             int32_t i = 0;
             U16_APPEND_UNSAFE(dest, i, sampleChar);
         }
     }
-    return u_terminateUChars(dest, capacity, length, pErrorCode);
+    ਵਾਪਸ u_terminateUChars(dest, capacity, length, p_Error_ਕੋਡ);
 }
 
 U_COMMON_API icu::UnicodeString U_EXPORT2
-uscript_getSampleUnicodeString(UScriptCode script) {
+uscript_getSampleUnicodeString(UScript_ਕੋਡ script) {
     icu::UnicodeString sample;
     int32_t sampleChar = getScriptProps(script) & 0x1fffff;
-    if(sampleChar != 0) {
+    ਜੇ(sampleChar != 0) {
         sample.append(sampleChar);
     }
-    return sample;
+    ਵਾਪਸ sample;
 }
 
 U_CAPI UScriptUsage U_EXPORT2
-uscript_getUsage(UScriptCode script) {
-    return (UScriptUsage)((getScriptProps(script) >> 21) & 7);
+uscript_getUsage(UScript_ਕੋਡ script) {
+    ਵਾਪਸ (UScriptUsage)((getScriptProps(script) >> 21) & 7);
 }
 
 U_CAPI UBool U_EXPORT2
-uscript_isRightToLeft(UScriptCode script) {
-    return (getScriptProps(script) & RTL) != 0;
+uscript_is_ਸੱਜਾ_ਮੰਜ਼ਿਲ_ਖੱਬਾ(UScript_ਕੋਡ script) {
+    ਵਾਪਸ (getScriptProps(script) & RTL) != 0;
 }
 
 U_CAPI UBool U_EXPORT2
-uscript_breaksBetweenLetters(UScriptCode script) {
-    return (getScriptProps(script) & LB_LETTERS) != 0;
+uscript_breaksBetweenLetters(UScript_ਕੋਡ script) {
+    ਵਾਪਸ (getScriptProps(script) & LB_LETTERS) != 0;
 }
 
 U_CAPI UBool U_EXPORT2
-uscript_isCased(UScriptCode script) {
-    return (getScriptProps(script) & CASED) != 0;
+uscript_isCased(UScript_ਕੋਡ script) {
+    ਵਾਪਸ (getScriptProps(script) & CASED) != 0;
 }

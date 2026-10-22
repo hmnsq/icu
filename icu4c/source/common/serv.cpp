@@ -7,15 +7,15 @@
 *******************************************************************************
 */
 
-#include "unicode/utypes.h"
-#include "unicode/localpointer.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/localpointer.h"
 
-#if !UCONFIG_NO_SERVICE
+#ਜੇ !UCONFIG_NO_SERVICE
 
-#include "serv.h"
-#include "umutex.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "serv.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "umutex.h"
 
-#undef SERVICE_REFCOUNT
+#ਪਰਿਭਾਸ਼ਾ_ਰੱਦ SERVICE_REFCOUNT
 
 // in case we use the refcount stuff
 
@@ -25,99 +25,99 @@ U_NAMESPACE_BEGIN
 ******************************************************************
 */
 
-const char16_t ICUServiceKey::PREFIX_DELIMITER = 0x002F;   /* '/' */
+ਅਚਲ char16_t ICUService_ਕੁੰਜੀ::ਅਗੇਤਰ_DELIMITER = 0x002F;   /* '/' */
 
-ICUServiceKey::ICUServiceKey(const UnicodeString& id) 
+ICUService_ਕੁੰਜੀ::ICUService_ਕੁੰਜੀ(ਅਚਲ UnicodeString& id) 
 : _id(id) {
 }
 
-ICUServiceKey::~ICUServiceKey() 
+ICUService_ਕੁੰਜੀ::~ICUService_ਕੁੰਜੀ() 
 {
 }
 
-const UnicodeString& 
-ICUServiceKey::getID() const 
+ਅਚਲ UnicodeString& 
+ICUService_ਕੁੰਜੀ::getID() ਅਚਲ 
 {
-    return _id;
-}
-
-UnicodeString& 
-ICUServiceKey::canonicalID(UnicodeString& result) const 
-{
-    return result.append(_id);
+    ਵਾਪਸ _id;
 }
 
 UnicodeString& 
-ICUServiceKey::currentID(UnicodeString& result) const 
+ICUService_ਕੁੰਜੀ::canonicalID(UnicodeString& ਨਤੀਜਾ) ਅਚਲ 
 {
-    return canonicalID(result);
+    ਵਾਪਸ ਨਤੀਜਾ.append(_id);
 }
 
 UnicodeString& 
-ICUServiceKey::currentDescriptor(UnicodeString& result) const 
+ICUService_ਕੁੰਜੀ::currentID(UnicodeString& ਨਤੀਜਾ) ਅਚਲ 
 {
-    prefix(result);
-    result.append(PREFIX_DELIMITER);
-    return currentID(result);
+    ਵਾਪਸ canonicalID(ਨਤੀਜਾ);
+}
+
+UnicodeString& 
+ICUService_ਕੁੰਜੀ::currentDescriptor(UnicodeString& ਨਤੀਜਾ) ਅਚਲ 
+{
+    ਅਗੇਤਰ(ਨਤੀਜਾ);
+    ਨਤੀਜਾ.append(ਅਗੇਤਰ_DELIMITER);
+    ਵਾਪਸ currentID(ਨਤੀਜਾ);
 }
 
 UBool 
-ICUServiceKey::fallback() 
+ICUService_ਕੁੰਜੀ::fallback() 
 {
-    return false;
+    ਵਾਪਸ ਝੂਠ;
 }
 
 UBool 
-ICUServiceKey::isFallbackOf(const UnicodeString& id) const 
+ICUService_ਕੁੰਜੀ::is_Fallback_ਦਾ(ਅਚਲ UnicodeString& id) ਅਚਲ 
 {
-    return id == _id;
+    ਵਾਪਸ id == _id;
 }
 
 UnicodeString& 
-ICUServiceKey::prefix(UnicodeString& result) const 
+ICUService_ਕੁੰਜੀ::ਅਗੇਤਰ(UnicodeString& ਨਤੀਜਾ) ਅਚਲ 
 {
-    return result;
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
 UnicodeString& 
-ICUServiceKey::parsePrefix(UnicodeString& result) 
+ICUService_ਕੁੰਜੀ::parse_ਅਗੇਤਰ(UnicodeString& ਨਤੀਜਾ) 
 {
-    int32_t n = result.indexOf(PREFIX_DELIMITER);
-    if (n < 0) {
+    int32_t n = ਨਤੀਜਾ.ਸੂਚਕਾਂਕ_ਦਾ(ਅਗੇਤਰ_DELIMITER);
+    ਜੇ (n < 0) {
         n = 0;
     }
-    result.remove(n);
-    return result;
+    ਨਤੀਜਾ.remove(n);
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
 UnicodeString& 
-ICUServiceKey::parseSuffix(UnicodeString& result) 
+ICUService_ਕੁੰਜੀ::parseSuffix(UnicodeString& ਨਤੀਜਾ) 
 {
-    int32_t n = result.indexOf(PREFIX_DELIMITER);
-    if (n >= 0) {
-        result.remove(0, n+1);
+    int32_t n = ਨਤੀਜਾ.ਸੂਚਕਾਂਕ_ਦਾ(ਅਗੇਤਰ_DELIMITER);
+    ਜੇ (n >= 0) {
+        ਨਤੀਜਾ.remove(0, n+1);
     }
-    return result;
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
-#ifdef SERVICE_DEBUG
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ SERVICE_DEBUG
 UnicodeString& 
-ICUServiceKey::debug(UnicodeString& result) const 
+ICUService_ਕੁੰਜੀ::debug(UnicodeString& ਨਤੀਜਾ) ਅਚਲ 
 {
-    debugClass(result);
-    result.append((UnicodeString)" id: ");
-    result.append(_id);
-    return result;
+    debugClass(ਨਤੀਜਾ);
+    ਨਤੀਜਾ.append((UnicodeString)" id: ");
+    ਨਤੀਜਾ.append(_id);
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
 UnicodeString& 
-ICUServiceKey::debugClass(UnicodeString& result) const 
+ICUService_ਕੁੰਜੀ::debugClass(UnicodeString& ਨਤੀਜਾ) ਅਚਲ 
 {
-    return result.append((UnicodeString)"ICUServiceKey");
+    ਵਾਪਸ ਨਤੀਜਾ.append((UnicodeString)"ICUServiceKey");
 }
-#endif
+#ਜੇ_ਅੰਤ
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ICUServiceKey)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ICUService_ਕੁੰਜੀ)
 
 /*
 ******************************************************************
@@ -125,67 +125,67 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ICUServiceKey)
 
 ICUServiceFactory::~ICUServiceFactory() {}
 
-SimpleFactory::SimpleFactory(UObject* instanceToAdopt, const UnicodeString& id, UBool visible) 
-: _instance(instanceToAdopt), _id(id), _visible(visible)
+SimpleFactory::SimpleFactory(UObject* instance_ਮੰਜ਼ਿਲ_Adopt, ਅਚਲ UnicodeString& id, UBool visible) 
+: _instance(instance_ਮੰਜ਼ਿਲ_Adopt), _id(id), _visible(visible)
 {
 }
 
 SimpleFactory::~SimpleFactory() 
 {
-    delete _instance;
+    ਮਿਟਾਓ _instance;
 }
 
 UObject* 
-SimpleFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const 
+SimpleFactory::create(ਅਚਲ ICUService_ਕੁੰਜੀ& ਕੁੰਜੀ, ਅਚਲ ICUService* service, UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ 
 {
-    if (U_SUCCESS(status)) {
-        UnicodeString temp;
-        if (_id == key.currentID(temp)) {
-            return service->cloneInstance(_instance); 
+    ਜੇ (U_SUCCESS(ਸਥਿਤੀ)) {
+        UnicodeString ਆਰਜ਼ੀ;
+        ਜੇ (_id == ਕੁੰਜੀ.currentID(ਆਰਜ਼ੀ)) {
+            ਵਾਪਸ service->cloneInstance(_instance); 
         }
     }
-    return nullptr;
+    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
 }
 
-void 
-SimpleFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const 
+ਖਾਲੀ 
+SimpleFactory::updateVisibleIDs(Hashtable& ਨਤੀਜਾ, UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ 
 {
-    if (_visible) {
-        result.put(_id, (void*)this, status); // cast away const
-    } else {
-        result.remove(_id);
+    ਜੇ (_visible) {
+        ਨਤੀਜਾ.put(_id, (ਖਾਲੀ*)ਇਹ, ਸਥਿਤੀ); // cast away const
+    } ਨਹੀਂਤਾਂ {
+        ਨਤੀਜਾ.remove(_id);
     }
 }
 
 UnicodeString& 
-SimpleFactory::getDisplayName(const UnicodeString& id, const Locale& /* locale */, UnicodeString& result) const 
+SimpleFactory::getDisplayName(ਅਚਲ UnicodeString& id, ਅਚਲ Locale& /* locale */, UnicodeString& ਨਤੀਜਾ) ਅਚਲ 
 {
-    if (_visible && _id == id) {
-        result = _id;
-    } else {
-        result.setToBogus();
+    ਜੇ (_visible && _id == id) {
+        ਨਤੀਜਾ = _id;
+    } ਨਹੀਂਤਾਂ {
+        ਨਤੀਜਾ.ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus();
     }
-    return result;
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
-#ifdef SERVICE_DEBUG
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ SERVICE_DEBUG
 UnicodeString& 
-SimpleFactory::debug(UnicodeString& toAppendTo) const 
+SimpleFactory::debug(UnicodeString& ਮੰਜ਼ਿਲ_Append_ਮੰਜ਼ਿਲ) ਅਚਲ 
 {
-    debugClass(toAppendTo);
-    toAppendTo.append((UnicodeString)" id: ");
-    toAppendTo.append(_id);
-    toAppendTo.append((UnicodeString)", visible: ");
-    toAppendTo.append(_visible ? (UnicodeString)"T" : (UnicodeString)"F");
-    return toAppendTo;
+    debugClass(ਮੰਜ਼ਿਲ_Append_ਮੰਜ਼ਿਲ);
+    ਮੰਜ਼ਿਲ_Append_ਮੰਜ਼ਿਲ.append((UnicodeString)" id: ");
+    ਮੰਜ਼ਿਲ_Append_ਮੰਜ਼ਿਲ.append(_id);
+    ਮੰਜ਼ਿਲ_Append_ਮੰਜ਼ਿਲ.append((UnicodeString)", visible: ");
+    ਮੰਜ਼ਿਲ_Append_ਮੰਜ਼ਿਲ.append(_visible ? (UnicodeString)"T" : (UnicodeString)"F");
+    ਵਾਪਸ ਮੰਜ਼ਿਲ_Append_ਮੰਜ਼ਿਲ;
 }
 
 UnicodeString& 
-SimpleFactory::debugClass(UnicodeString& toAppendTo) const 
+SimpleFactory::debugClass(UnicodeString& ਮੰਜ਼ਿਲ_Append_ਮੰਜ਼ਿਲ) ਅਚਲ 
 {
-    return toAppendTo.append((UnicodeString)"SimpleFactory");
+    ਵਾਪਸ ਮੰਜ਼ਿਲ_Append_ਮੰਜ਼ਿਲ.append((UnicodeString)"SimpleFactory");
 }
-#endif
+#ਜੇ_ਅੰਤ
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(SimpleFactory)
 
@@ -203,22 +203,22 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ServiceListener)
 
 // Record the actual id for this service in the cache, so we can return it
 // even if we succeed later with a different id.
-class CacheEntry : public UMemory {
-private:
+ਵਰਗ Cache_ਇੰਦਰਾਜ : ਜਨਤਕ UMemory {
+ਨਿਜੀ:
     int32_t refcount;
 
-public:
+ਜਨਤਕ:
     UnicodeString actualDescriptor;
     UObject* service;
 
     /**
     * Releases a reference to the shared resource.
     */
-    ~CacheEntry() {
-        delete service;
+    ~Cache_ਇੰਦਰਾਜ() {
+        ਮਿਟਾਓ service;
     }
 
-    CacheEntry(const UnicodeString& _actualDescriptor, UObject* _service) 
+    Cache_ਇੰਦਰਾਜ(ਅਚਲ UnicodeString& _actualDescriptor, UObject* _service) 
         : refcount(1), actualDescriptor(_actualDescriptor), service(_service) {
     }
 
@@ -228,9 +228,9 @@ public:
     * that pointer will have to know how to deal with refcounts.  
     * Return true if the resource has not already been released.
     */
-    CacheEntry* ref() {
+    Cache_ਇੰਦਰਾਜ* ref() {
         ++refcount;
-        return this;
+        ਵਾਪਸ ਇਹ;
     }
 
     /**
@@ -240,42 +240,42 @@ public:
     * the refcount drops to zero, the resource is released.  Return
     * false if the resource has been released.
     */
-    CacheEntry* unref() {
-        if ((--refcount) == 0) {
-            delete this;
-            return nullptr;
+    Cache_ਇੰਦਰਾਜ* unref() {
+        ਜੇ ((--refcount) == 0) {
+            ਮਿਟਾਓ ਇਹ;
+            ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
         }
-        return this;
+        ਵਾਪਸ ਇਹ;
     }
 
     /**
     * Return true if there is at least one reference to this and the
     * resource has not been released.
     */
-    UBool isShared() const {
-        return refcount > 1;
+    UBool isShared() ਅਚਲ {
+        ਵਾਪਸ refcount > 1;
     }
 };
 
 // Deleter for serviceCache
 U_CDECL_BEGIN
-static void U_CALLCONV
-cacheDeleter(void* obj) {
-    U_NAMESPACE_USE ((CacheEntry*)obj)->unref();
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV
+cacheDeleter(ਖਾਲੀ* obj) {
+    U_NAMESPACE_USE ((Cache_ਇੰਦਰਾਜ*)obj)->unref();
 }
 
-U_CDECL_END
+U_CDECL_ਸਿਰਾ
 
 /*
 ******************************************************************
 */
 
-class DNCache : public UMemory {
-public:
+ਵਰਗ DNCache : ਜਨਤਕ UMemory {
+ਜਨਤਕ:
     Hashtable cache;
-    const Locale locale;
+    ਅਚਲ Locale locale;
 
-    DNCache(const Locale& _locale) 
+    DNCache(ਅਚਲ Locale& _locale) 
         : cache(), locale(_locale) 
     {
         // cache.setKeyDeleter(uprv_deleteUObject);
@@ -288,145 +288,145 @@ public:
 */
 
 StringPair* 
-StringPair::create(const UnicodeString& displayName, 
-                   const UnicodeString& id,
-                   UErrorCode& status)
+StringPair::create(ਅਚਲ UnicodeString& displayName, 
+                   ਅਚਲ UnicodeString& id,
+                   UError_ਕੋਡ& ਸਥਿਤੀ)
 {
-    if (U_SUCCESS(status)) {
-        StringPair* sp = new StringPair(displayName, id);
-        if (sp == nullptr || sp->isBogus()) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-            delete sp;
-            return nullptr;
+    ਜੇ (U_SUCCESS(ਸਥਿਤੀ)) {
+        StringPair* sp = ਨਵਾਂ StringPair(displayName, id);
+        ਜੇ (sp == ਖਾਲੀ_ਸੂਚਕ || sp->isBogus()) {
+            ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+            ਮਿਟਾਓ sp;
+            ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
         }
-        return sp;
+        ਵਾਪਸ sp;
     }
-    return nullptr;
+    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
 }
 
 UBool 
-StringPair::isBogus() const {
-    return displayName.isBogus() || id.isBogus();
+StringPair::isBogus() ਅਚਲ {
+    ਵਾਪਸ displayName.isBogus() || id.isBogus();
 }
 
-StringPair::StringPair(const UnicodeString& _displayName, 
-                       const UnicodeString& _id)
+StringPair::StringPair(ਅਚਲ UnicodeString& _displayName, 
+                       ਅਚਲ UnicodeString& _id)
 : displayName(_displayName)
 , id(_id)
 {
 }
 
 U_CDECL_BEGIN
-static void U_CALLCONV
-userv_deleteStringPair(void *obj) {
-    U_NAMESPACE_USE delete (StringPair*) obj;
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV
+userv_deleteStringPair(ਖਾਲੀ *obj) {
+    U_NAMESPACE_USE ਮਿਟਾਓ (StringPair*) obj;
 }
-U_CDECL_END
+U_CDECL_ਸਿਰਾ
 
 /*
 ******************************************************************
 */
 
-static UMutex lock;
+ਸਥਿਰ UMutex ਤਾਲਾ;
 
 ICUService::ICUService()
 : name()
 , timestamp(0)
-, factories(nullptr)
-, serviceCache(nullptr)
-, idCache(nullptr)
-, dnCache(nullptr)
+, factories(ਖਾਲੀ_ਸੂਚਕ)
+, serviceCache(ਖਾਲੀ_ਸੂਚਕ)
+, idCache(ਖਾਲੀ_ਸੂਚਕ)
+, dnCache(ਖਾਲੀ_ਸੂਚਕ)
 {
 }
 
-ICUService::ICUService(const UnicodeString& newName) 
+ICUService::ICUService(ਅਚਲ UnicodeString& newName) 
 : name(newName)
 , timestamp(0)
-, factories(nullptr)
-, serviceCache(nullptr)
-, idCache(nullptr)
-, dnCache(nullptr)
+, factories(ਖਾਲੀ_ਸੂਚਕ)
+, serviceCache(ਖਾਲੀ_ਸੂਚਕ)
+, idCache(ਖਾਲੀ_ਸੂਚਕ)
+, dnCache(ਖਾਲੀ_ਸੂਚਕ)
 {
 }
 
 ICUService::~ICUService()
 {
     {
-        Mutex mutex(&lock);
+        Mutex mutex(&ਤਾਲਾ);
         clearCaches();
-        delete factories;
-        factories = nullptr;
+        ਮਿਟਾਓ factories;
+        factories = ਖਾਲੀ_ਸੂਚਕ;
     }
 }
 
 UObject* 
-ICUService::get(const UnicodeString& descriptor, UErrorCode& status) const 
+ICUService::get(ਅਚਲ UnicodeString& descriptor, UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ 
 {
-    return get(descriptor, nullptr, status);
+    ਵਾਪਸ get(descriptor, ਖਾਲੀ_ਸੂਚਕ, ਸਥਿਤੀ);
 }
 
 UObject* 
-ICUService::get(const UnicodeString& descriptor, UnicodeString* actualReturn, UErrorCode& status) const 
+ICUService::get(ਅਚਲ UnicodeString& descriptor, UnicodeString* actualReturn, UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ 
 {
-    UObject* result = nullptr;
-    ICUServiceKey* key = createKey(&descriptor, status);
-    if (key) {
-        result = getKey(*key, actualReturn, status);
-        delete key;
+    UObject* ਨਤੀਜਾ = ਖਾਲੀ_ਸੂਚਕ;
+    ICUService_ਕੁੰਜੀ* ਕੁੰਜੀ = create_ਕੁੰਜੀ(&descriptor, ਸਥਿਤੀ);
+    ਜੇ (ਕੁੰਜੀ) {
+        ਨਤੀਜਾ = get_ਕੁੰਜੀ(*ਕੁੰਜੀ, actualReturn, ਸਥਿਤੀ);
+        ਮਿਟਾਓ ਕੁੰਜੀ;
     }
-    return result;
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
 UObject* 
-ICUService::getKey(ICUServiceKey& key, UErrorCode& status) const 
+ICUService::get_ਕੁੰਜੀ(ICUService_ਕੁੰਜੀ& ਕੁੰਜੀ, UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ 
 {
-    return getKey(key, nullptr, status);
+    ਵਾਪਸ get_ਕੁੰਜੀ(ਕੁੰਜੀ, ਖਾਲੀ_ਸੂਚਕ, ਸਥਿਤੀ);
 }
 
 // this is a vector that subclasses of ICUService can override to further customize the result object
 // before returning it.  All other public get functions should call this one.
 
 UObject* 
-ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, UErrorCode& status) const 
+ICUService::get_ਕੁੰਜੀ(ICUService_ਕੁੰਜੀ& ਕੁੰਜੀ, UnicodeString* actualReturn, UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ 
 {
-    return getKey(key, actualReturn, nullptr, status);
+    ਵਾਪਸ get_ਕੁੰਜੀ(ਕੁੰਜੀ, actualReturn, ਖਾਲੀ_ਸੂਚਕ, ਸਥਿਤੀ);
 }
 
 // make it possible to call reentrantly on systems that don't have reentrant mutexes.
 // we can use this simple approach since we know the situation where we're calling
 // reentrantly even without knowing the thread.
-class XMutex : public UMemory {
-public:
-    inline XMutex(UMutex *mutex, UBool reentering) 
+ਵਰਗ XMutex : ਜਨਤਕ UMemory {
+ਜਨਤਕ:
+    ਸਤਰਅੰਦਰ XMutex(UMutex *mutex, UBool reentering) 
         : fMutex(mutex)
-        , fActive(!reentering) 
+        , f_ਸਰਗਰਮ(!reentering) 
     {
-        if (fActive) umtx_lock(fMutex);
+        ਜੇ (f_ਸਰਗਰਮ) umtx_ਤਾਲਾ(fMutex);
     }
-    inline ~XMutex() {
-        if (fActive) umtx_unlock(fMutex);
+    ਸਤਰਅੰਦਰ ~XMutex() {
+        ਜੇ (f_ਸਰਗਰਮ) umtx_unlock(fMutex);
     }
 
-private:
+ਨਿਜੀ:
     UMutex  *fMutex;
-    UBool fActive;
+    UBool f_ਸਰਗਰਮ;
 };
 
 // called only by factories, treat as private
 UObject* 
-ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUServiceFactory* factory, UErrorCode& status) const 
+ICUService::get_ਕੁੰਜੀ(ICUService_ਕੁੰਜੀ& ਕੁੰਜੀ, UnicodeString* actualReturn, ਅਚਲ ICUServiceFactory* factory, UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ 
 {
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    if (isDefault()) {
-        return handleDefault(key, actualReturn, status);
+    ਜੇ (isDefault()) {
+        ਵਾਪਸ handleDefault(ਕੁੰਜੀ, actualReturn, ਸਥਿਤੀ);
     }
 
-    ICUService* ncthis = const_cast<ICUService*>(this); // cast away semantic const
+    ICUService* ncthis = const_cast<ICUService*>(ਇਹ); // cast away semantic const
 
-    CacheEntry* result = nullptr;
+    Cache_ਇੰਦਰਾਜ* ਨਤੀਜਾ = ਖਾਲੀ_ਸੂਚਕ;
     {
         // The factory list can't be modified until we're done, 
         // otherwise we might update the cache with an invalid result.
@@ -437,73 +437,73 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
         // if factory is not null, we're calling from within the mutex,
         // and since some unix machines don't have reentrant mutexes we
         // need to make sure not to try to lock it again.
-        XMutex mutex(&lock, factory != nullptr);
+        XMutex mutex(&ਤਾਲਾ, factory != ਖਾਲੀ_ਸੂਚਕ);
 
-        if (serviceCache == nullptr) {
-            ncthis->serviceCache = new Hashtable(status);
-            if (ncthis->serviceCache == nullptr) {
-                status = U_MEMORY_ALLOCATION_ERROR;
-                return nullptr;
+        ਜੇ (serviceCache == ਖਾਲੀ_ਸੂਚਕ) {
+            ncthis->serviceCache = ਨਵਾਂ Hashtable(ਸਥਿਤੀ);
+            ਜੇ (ncthis->serviceCache == ਖਾਲੀ_ਸੂਚਕ) {
+                ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
             }
-            if (U_FAILURE(status)) {
-                delete serviceCache;
-                return nullptr;
+            ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                ਮਿਟਾਓ serviceCache;
+                ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
             }
-            serviceCache->setValueDeleter(cacheDeleter);
+            serviceCache->ਸੈੱਟ_ਮੁੱਲ_Deleter(cacheDeleter);
         }
 
         UnicodeString currentDescriptor;
-        LocalPointer<UVector> cacheDescriptorList;
-        UBool putInCache = false;
+        Local_ਸੂਚਕ<UVector> cacheDescriptorList;
+        UBool put_ਵਿੱਚ_Cache = ਝੂਠ;
 
-        int32_t startIndex = 0;
-        int32_t limit = factories->size();
-        UBool cacheResult = true;
+        int32_t ਸ਼ੁਰੂ_ਸੂਚਕਾਂਕ = 0;
+        int32_t ਹੱਦਬੰਦੀ = factories->size();
+        UBool cache_ਨਤੀਜਾ = ਸੱਚ;
 
-        if (factory != nullptr) {
-            for (int32_t i = 0; i < limit; ++i) {
-                if (factory == static_cast<const ICUServiceFactory*>(factories->elementAt(i))) {
-                    startIndex = i + 1;
-                    break;
+        ਜੇ (factory != ਖਾਲੀ_ਸੂਚਕ) {
+            ਲਈ (int32_t i = 0; i < ਹੱਦਬੰਦੀ; ++i) {
+                ਜੇ (factory == static_cast<ਅਚਲ ICUServiceFactory*>(factories->elementAt(i))) {
+                    ਸ਼ੁਰੂ_ਸੂਚਕਾਂਕ = i + 1;
+                    ਰੋਕੋ;
                 }
             }
-            if (startIndex == 0) {
+            ਜੇ (ਸ਼ੁਰੂ_ਸੂਚਕਾਂਕ == 0) {
                 // throw new InternalError("Factory " + factory + "not registered with service: " + this);
-                status = U_ILLEGAL_ARGUMENT_ERROR;
-                return nullptr;
+                ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
             }
-            cacheResult = false;
+            cache_ਨਤੀਜਾ = ਝੂਠ;
         }
 
-        do {
+        ਕਰੋ {
             currentDescriptor.remove();
-            key.currentDescriptor(currentDescriptor);
-            result = static_cast<CacheEntry*>(serviceCache->get(currentDescriptor));
-            if (result != nullptr) {
-                break;
+            ਕੁੰਜੀ.currentDescriptor(currentDescriptor);
+            ਨਤੀਜਾ = static_cast<Cache_ਇੰਦਰਾਜ*>(serviceCache->get(currentDescriptor));
+            ਜੇ (ਨਤੀਜਾ != ਖਾਲੀ_ਸੂਚਕ) {
+                ਰੋਕੋ;
             }
 
             // first test of cache failed, so we'll have to update
             // the cache if we eventually succeed-- that is, if we're 
             // going to update the cache at all.
-            putInCache = true;
+            put_ਵਿੱਚ_Cache = ਸੱਚ;
 
-            int32_t index = startIndex;
-            while (index < limit) {
-                ICUServiceFactory* f = static_cast<ICUServiceFactory*>(factories->elementAt(index++));
-                LocalPointer<UObject> service(f->create(key, this, status));
-                if (U_FAILURE(status)) {
-                    return nullptr;
+            int32_t ਸੂਚਕਾਂਕ = ਸ਼ੁਰੂ_ਸੂਚਕਾਂਕ;
+            ਜਦੋਂ (ਸੂਚਕਾਂਕ < ਹੱਦਬੰਦੀ) {
+                ICUServiceFactory* f = static_cast<ICUServiceFactory*>(factories->elementAt(ਸੂਚਕਾਂਕ++));
+                Local_ਸੂਚਕ<UObject> service(f->create(ਕੁੰਜੀ, ਇਹ, ਸਥਿਤੀ));
+                ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
                 }
-                if (service.isValid()) {
-                    result = new CacheEntry(currentDescriptor, service.getAlias());
-                    if (result == nullptr) {
-                        status = U_MEMORY_ALLOCATION_ERROR;
-                        return nullptr;
+                ਜੇ (service.isValid()) {
+                    ਨਤੀਜਾ = ਨਵਾਂ Cache_ਇੰਦਰਾਜ(currentDescriptor, service.getAlias());
+                    ਜੇ (ਨਤੀਜਾ == ਖਾਲੀ_ਸੂਚਕ) {
+                        ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
                     }
                     service.orphan(); // result now owns service.
 
-                    goto outerEnd;
+                    ਜਾਓ outer_ਸਿਰਾ;
                 }
             }
 
@@ -512,457 +512,457 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
             // don't want to keep querying on an id that's going to
             // fallback to the one that succeeded, we want to hit the
             // cache the first time next goaround.
-            if (cacheDescriptorList.isNull()) {
-                cacheDescriptorList.adoptInsteadAndCheckErrorCode(new UVector(uprv_deleteUObject, nullptr, 5, status), status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+            ਜੇ (cacheDescriptorList.isNull()) {
+                cacheDescriptorList.adopt_Instead_And_Check_Error_ਕੋਡ(ਨਵਾਂ UVector(uprv_deleteUObject, ਖਾਲੀ_ਸੂਚਕ, 5, ਸਥਿਤੀ), ਸਥਿਤੀ);
+                ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
                 }
             }
 
-            LocalPointer<UnicodeString> idToCache(new UnicodeString(currentDescriptor), status);
-            if (U_FAILURE(status)) {
-                return nullptr;
+            Local_ਸੂਚਕ<UnicodeString> id_ਮੰਜ਼ਿਲ_Cache(ਨਵਾਂ UnicodeString(currentDescriptor), ਸਥਿਤੀ);
+            ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
             }
-            if (idToCache->isBogus()) {
-                status = U_MEMORY_ALLOCATION_ERROR;
-                return nullptr;
+            ਜੇ (id_ਮੰਜ਼ਿਲ_Cache->isBogus()) {
+                ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
             }
-            cacheDescriptorList->adoptElement(idToCache.orphan(), status);
-            if (U_FAILURE(status)) {
-                return nullptr;
+            cacheDescriptorList->adoptElement(id_ਮੰਜ਼ਿਲ_Cache.orphan(), ਸਥਿਤੀ);
+            ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
             }
-        } while (key.fallback());
-outerEnd:
+        } ਜਦੋਂ (ਕੁੰਜੀ.fallback());
+outer_ਸਿਰਾ:
 
-        if (result != nullptr) {
-            if (putInCache && cacheResult) {
-                serviceCache->put(result->actualDescriptor, result, status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+        ਜੇ (ਨਤੀਜਾ != ਖਾਲੀ_ਸੂਚਕ) {
+            ਜੇ (put_ਵਿੱਚ_Cache && cache_ਨਤੀਜਾ) {
+                serviceCache->put(ਨਤੀਜਾ->actualDescriptor, ਨਤੀਜਾ, ਸਥਿਤੀ);
+                ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
                 }
 
-                if (cacheDescriptorList.isValid()) {
-                    for (int32_t i = cacheDescriptorList->size(); --i >= 0;) {
+                ਜੇ (cacheDescriptorList.isValid()) {
+                    ਲਈ (int32_t i = cacheDescriptorList->size(); --i >= 0;) {
                         UnicodeString* desc = static_cast<UnicodeString*>(cacheDescriptorList->elementAt(i));
 
-                        serviceCache->put(*desc, result, status);
-                        if (U_FAILURE(status)) {
-                            return nullptr;
+                        serviceCache->put(*desc, ਨਤੀਜਾ, ਸਥਿਤੀ);
+                        ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                            ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
                         }
 
-                        result->ref();
+                        ਨਤੀਜਾ->ref();
                         cacheDescriptorList->removeElementAt(i);
                     }
                 }
             }
 
-            if (actualReturn != nullptr) {
+            ਜੇ (actualReturn != ਖਾਲੀ_ਸੂਚਕ) {
                 // strip null prefix
-                if (result->actualDescriptor.indexOf(static_cast<char16_t>(0x2f)) == 0) { // U+002f=slash (/)
+                ਜੇ (ਨਤੀਜਾ->actualDescriptor.ਸੂਚਕਾਂਕ_ਦਾ(static_cast<char16_t>(0x2f)) == 0) { // U+002f=slash (/)
                     actualReturn->remove();
-                    actualReturn->append(result->actualDescriptor, 
+                    actualReturn->append(ਨਤੀਜਾ->actualDescriptor, 
                         1, 
-                        result->actualDescriptor.length() - 1);
-                } else {
-                    *actualReturn = result->actualDescriptor;
+                        ਨਤੀਜਾ->actualDescriptor.length() - 1);
+                } ਨਹੀਂਤਾਂ {
+                    *actualReturn = ਨਤੀਜਾ->actualDescriptor;
                 }
 
-                if (actualReturn->isBogus()) {
-                    status = U_MEMORY_ALLOCATION_ERROR;
-                    delete result;
-                    return nullptr;
+                ਜੇ (actualReturn->isBogus()) {
+                    ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                    ਮਿਟਾਓ ਨਤੀਜਾ;
+                    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
                 }
             }
 
-            UObject* service = cloneInstance(result->service);
-            if (putInCache && !cacheResult) {
-                delete result;
+            UObject* service = cloneInstance(ਨਤੀਜਾ->service);
+            ਜੇ (put_ਵਿੱਚ_Cache && !cache_ਨਤੀਜਾ) {
+                ਮਿਟਾਓ ਨਤੀਜਾ;
             }
-            return service;
+            ਵਾਪਸ service;
         }
     }
 
-    return handleDefault(key, actualReturn, status);
+    ਵਾਪਸ handleDefault(ਕੁੰਜੀ, actualReturn, ਸਥਿਤੀ);
 }
 
 UObject* 
-ICUService::handleDefault(const ICUServiceKey& /* key */, UnicodeString* /* actualIDReturn */, UErrorCode& /* status */) const 
+ICUService::handleDefault(ਅਚਲ ICUService_ਕੁੰਜੀ& /*ਕੁੰਜੀ*/, UnicodeString* /* actualIDReturn */, UError_ਕੋਡ& /* status */) ਅਚਲ 
 {
-    return nullptr;
+    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
 }
 
 UVector& 
-ICUService::getVisibleIDs(UVector& result, UErrorCode& status) const {
-    return getVisibleIDs(result, nullptr, status);
+ICUService::getVisibleIDs(UVector& ਨਤੀਜਾ, UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ {
+    ਵਾਪਸ getVisibleIDs(ਨਤੀਜਾ, ਖਾਲੀ_ਸੂਚਕ, ਸਥਿਤੀ);
 }
 
 UVector& 
-ICUService::getVisibleIDs(UVector& result, const UnicodeString* matchID, UErrorCode& status) const 
+ICUService::getVisibleIDs(UVector& ਨਤੀਜਾ, ਅਚਲ UnicodeString* ਮੇਲ_ID, UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ 
 {
-    result.removeAllElements();
+    ਨਤੀਜਾ.removeAllElements();
 
-    if (U_FAILURE(status)) {
-        return result;
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਵਾਪਸ ਨਤੀਜਾ;
     }
-    UObjectDeleter *savedDeleter = result.setDeleter(uprv_deleteUObject);
+    UObjectDeleter *savedDeleter = ਨਤੀਜਾ.ਸੈੱਟ_Deleter(uprv_deleteUObject);
 
     {
-        Mutex mutex(&lock);
-        const Hashtable* map = getVisibleIDMap(status);
-        if (map != nullptr) {
-            ICUServiceKey* fallbackKey = createKey(matchID, status);
+        Mutex mutex(&ਤਾਲਾ);
+        ਅਚਲ Hashtable* map = getVisibleIDMap(ਸਥਿਤੀ);
+        ਜੇ (map != ਖਾਲੀ_ਸੂਚਕ) {
+            ICUService_ਕੁੰਜੀ* fallback_ਕੁੰਜੀ = create_ਕੁੰਜੀ(ਮੇਲ_ID, ਸਥਿਤੀ);
 
-            for (int32_t pos = UHASH_FIRST; U_SUCCESS(status); ) {
-                const UHashElement* e = map->nextElement(pos);
-                if (e == nullptr) {
-                    break;
+            ਲਈ (int32_t pos = UHASH_ਪਹਿਲਾ; U_SUCCESS(ਸਥਿਤੀ); ) {
+                ਅਚਲ UHashElement* e = map->ਅਗਲਾ_Element(pos);
+                ਜੇ (e == ਖਾਲੀ_ਸੂਚਕ) {
+                    ਰੋਕੋ;
                 }
 
-                const UnicodeString* id = static_cast<const UnicodeString*>(e->key.pointer);
-                if (fallbackKey != nullptr) {
-                    if (!fallbackKey->isFallbackOf(*id)) {
-                        continue;
+                ਅਚਲ UnicodeString* id = static_cast<ਅਚਲ UnicodeString*>(e->ਕੁੰਜੀ.ਸੂਚਕ);
+                ਜੇ (fallback_ਕੁੰਜੀ != ਖਾਲੀ_ਸੂਚਕ) {
+                    ਜੇ (!fallback_ਕੁੰਜੀ->is_Fallback_ਦਾ(*id)) {
+                        ਜਾਰੀ;
                     }
                 }
 
-                LocalPointer<UnicodeString> idClone(id->clone(), status);
-                result.adoptElement(idClone.orphan(), status);
+                Local_ਸੂਚਕ<UnicodeString> idClone(id->clone(), ਸਥਿਤੀ);
+                ਨਤੀਜਾ.adoptElement(idClone.orphan(), ਸਥਿਤੀ);
             }
-            delete fallbackKey;
+            ਮਿਟਾਓ fallback_ਕੁੰਜੀ;
         }
     }
-    if (U_FAILURE(status)) {
-        result.removeAllElements();
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+        ਨਤੀਜਾ.removeAllElements();
     }
-    result.setDeleter(savedDeleter);
-    return result;
+    ਨਤੀਜਾ.ਸੈੱਟ_Deleter(savedDeleter);
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
-const Hashtable* 
-ICUService::getVisibleIDMap(UErrorCode& status) const {
-    if (U_FAILURE(status)) return nullptr;
+ਅਚਲ Hashtable* 
+ICUService::getVisibleIDMap(UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ {
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ)) ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
 
     // must only be called when lock is already held
 
-    ICUService* ncthis = const_cast<ICUService*>(this); // cast away semantic const
-    if (idCache == nullptr) {
-        ncthis->idCache = new Hashtable(status);
-        if (idCache == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-        } else if (factories != nullptr) {
-            for (int32_t pos = factories->size(); --pos >= 0;) {
+    ICUService* ncthis = const_cast<ICUService*>(ਇਹ); // cast away semantic const
+    ਜੇ (idCache == ਖਾਲੀ_ਸੂਚਕ) {
+        ncthis->idCache = ਨਵਾਂ Hashtable(ਸਥਿਤੀ);
+        ਜੇ (idCache == ਖਾਲੀ_ਸੂਚਕ) {
+            ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+        } ਨਹੀਂਤਾਂ ਜੇ (factories != ਖਾਲੀ_ਸੂਚਕ) {
+            ਲਈ (int32_t pos = factories->size(); --pos >= 0;) {
                 ICUServiceFactory* f = static_cast<ICUServiceFactory*>(factories->elementAt(pos));
-                f->updateVisibleIDs(*idCache, status);
+                f->updateVisibleIDs(*idCache, ਸਥਿਤੀ);
             }
-            if (U_FAILURE(status)) {
-                delete idCache;
-                ncthis->idCache = nullptr;
+            ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                ਮਿਟਾਓ idCache;
+                ncthis->idCache = ਖਾਲੀ_ਸੂਚਕ;
             }
         }
     }
 
-    return idCache;
+    ਵਾਪਸ idCache;
 }
 
 
 UnicodeString& 
-ICUService::getDisplayName(const UnicodeString& id, UnicodeString& result) const 
+ICUService::getDisplayName(ਅਚਲ UnicodeString& id, UnicodeString& ਨਤੀਜਾ) ਅਚਲ 
 {
-    return getDisplayName(id, result, Locale::getDefault());
+    ਵਾਪਸ getDisplayName(id, ਨਤੀਜਾ, Locale::getDefault());
 }
 
 UnicodeString& 
-ICUService::getDisplayName(const UnicodeString& id, UnicodeString& result, const Locale& locale) const 
+ICUService::getDisplayName(ਅਚਲ UnicodeString& id, UnicodeString& ਨਤੀਜਾ, ਅਚਲ Locale& locale) ਅਚਲ 
 {
     {
-        UErrorCode status = U_ZERO_ERROR;
-        Mutex mutex(&lock);
-        const Hashtable* map = getVisibleIDMap(status);
-        if (map != nullptr) {
+        UError_ਕੋਡ ਸਥਿਤੀ = U_ZERO_ERROR;
+        Mutex mutex(&ਤਾਲਾ);
+        ਅਚਲ Hashtable* map = getVisibleIDMap(ਸਥਿਤੀ);
+        ਜੇ (map != ਖਾਲੀ_ਸੂਚਕ) {
             ICUServiceFactory* f = static_cast<ICUServiceFactory*>(map->get(id));
-            if (f != nullptr) {
-                f->getDisplayName(id, locale, result);
-                return result;
+            ਜੇ (f != ਖਾਲੀ_ਸੂਚਕ) {
+                f->getDisplayName(id, locale, ਨਤੀਜਾ);
+                ਵਾਪਸ ਨਤੀਜਾ;
             }
 
             // fallback
-            status = U_ZERO_ERROR;
-            ICUServiceKey* fallbackKey = createKey(&id, status);
-            while (fallbackKey != nullptr && fallbackKey->fallback()) {
+            ਸਥਿਤੀ = U_ZERO_ERROR;
+            ICUService_ਕੁੰਜੀ* fallback_ਕੁੰਜੀ = create_ਕੁੰਜੀ(&id, ਸਥਿਤੀ);
+            ਜਦੋਂ (fallback_ਕੁੰਜੀ != ਖਾਲੀ_ਸੂਚਕ && fallback_ਕੁੰਜੀ->fallback()) {
                 UnicodeString us;
-                fallbackKey->currentID(us);
+                fallback_ਕੁੰਜੀ->currentID(us);
                 f = static_cast<ICUServiceFactory*>(map->get(us));
-                if (f != nullptr) {
-                    f->getDisplayName(id, locale, result);
-                    delete fallbackKey;
-                    return result;
+                ਜੇ (f != ਖਾਲੀ_ਸੂਚਕ) {
+                    f->getDisplayName(id, locale, ਨਤੀਜਾ);
+                    ਮਿਟਾਓ fallback_ਕੁੰਜੀ;
+                    ਵਾਪਸ ਨਤੀਜਾ;
                 }
             }
-            delete fallbackKey;
+            ਮਿਟਾਓ fallback_ਕੁੰਜੀ;
         }
     }
-    result.setToBogus();
-    return result;
+    ਨਤੀਜਾ.ਸੈੱਟ_ਮੰਜ਼ਿਲ_Bogus();
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
 UVector& 
-ICUService::getDisplayNames(UVector& result, UErrorCode& status) const 
+ICUService::get_Display_ਨਾਂ(UVector& ਨਤੀਜਾ, UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ 
 {
-    return getDisplayNames(result, Locale::getDefault(), nullptr, status);
+    ਵਾਪਸ get_Display_ਨਾਂ(ਨਤੀਜਾ, Locale::getDefault(), ਖਾਲੀ_ਸੂਚਕ, ਸਥਿਤੀ);
 }
 
 
 UVector& 
-ICUService::getDisplayNames(UVector& result, const Locale& locale, UErrorCode& status) const 
+ICUService::get_Display_ਨਾਂ(UVector& ਨਤੀਜਾ, ਅਚਲ Locale& locale, UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ 
 {
-    return getDisplayNames(result, locale, nullptr, status);
+    ਵਾਪਸ get_Display_ਨਾਂ(ਨਤੀਜਾ, locale, ਖਾਲੀ_ਸੂਚਕ, ਸਥਿਤੀ);
 }
 
 UVector& 
-ICUService::getDisplayNames(UVector& result, 
-                            const Locale& locale, 
-                            const UnicodeString* matchID, 
-                            UErrorCode& status) const 
+ICUService::get_Display_ਨਾਂ(UVector& ਨਤੀਜਾ, 
+                            ਅਚਲ Locale& locale, 
+                            ਅਚਲ UnicodeString* ਮੇਲ_ID, 
+                            UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ 
 {
-    result.removeAllElements();
-    result.setDeleter(userv_deleteStringPair);
-    if (U_SUCCESS(status)) {
-        ICUService* ncthis = const_cast<ICUService*>(this); // cast away semantic const
-        Mutex mutex(&lock);
+    ਨਤੀਜਾ.removeAllElements();
+    ਨਤੀਜਾ.ਸੈੱਟ_Deleter(userv_deleteStringPair);
+    ਜੇ (U_SUCCESS(ਸਥਿਤੀ)) {
+        ICUService* ncthis = const_cast<ICUService*>(ਇਹ); // cast away semantic const
+        Mutex mutex(&ਤਾਲਾ);
 
-        if (dnCache != nullptr && dnCache->locale != locale) {
-            delete dnCache;
-            ncthis->dnCache = nullptr;
+        ਜੇ (dnCache != ਖਾਲੀ_ਸੂਚਕ && dnCache->locale != locale) {
+            ਮਿਟਾਓ dnCache;
+            ncthis->dnCache = ਖਾਲੀ_ਸੂਚਕ;
         }
 
-        if (dnCache == nullptr) {
-            const Hashtable* m = getVisibleIDMap(status);
-            if (U_FAILURE(status)) {
-                return result;
+        ਜੇ (dnCache == ਖਾਲੀ_ਸੂਚਕ) {
+            ਅਚਲ Hashtable* m = getVisibleIDMap(ਸਥਿਤੀ);
+            ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                ਵਾਪਸ ਨਤੀਜਾ;
             }
-            ncthis->dnCache = new DNCache(locale); 
-            if (dnCache == nullptr) {
-                status = U_MEMORY_ALLOCATION_ERROR;
-                return result;
+            ncthis->dnCache = ਨਵਾਂ DNCache(locale); 
+            ਜੇ (dnCache == ਖਾਲੀ_ਸੂਚਕ) {
+                ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                ਵਾਪਸ ਨਤੀਜਾ;
             }
 
-            int32_t pos = UHASH_FIRST;
-            const UHashElement* entry = nullptr;
-            while ((entry = m->nextElement(pos)) != nullptr) {
-                const UnicodeString* id = static_cast<const UnicodeString*>(entry->key.pointer);
-                ICUServiceFactory* f = static_cast<ICUServiceFactory*>(entry->value.pointer);
+            int32_t pos = UHASH_ਪਹਿਲਾ;
+            ਅਚਲ UHashElement* ਇੰਦਰਾਜ = ਖਾਲੀ_ਸੂਚਕ;
+            ਜਦੋਂ ((ਇੰਦਰਾਜ = m->ਅਗਲਾ_Element(pos)) != ਖਾਲੀ_ਸੂਚਕ) {
+                ਅਚਲ UnicodeString* id = static_cast<ਅਚਲ UnicodeString*>(ਇੰਦਰਾਜ->ਕੁੰਜੀ.ਸੂਚਕ);
+                ICUServiceFactory* f = static_cast<ICUServiceFactory*>(ਇੰਦਰਾਜ->value.ਸੂਚਕ);
                 UnicodeString dname;
                 f->getDisplayName(*id, locale, dname);
-                if (dname.isBogus()) {
-                    status = U_MEMORY_ALLOCATION_ERROR;
-                } else {
-                    dnCache->cache.put(dname, (void*)id, status); // share pointer with visibleIDMap
-                    if (U_SUCCESS(status)) {
-                        continue;
+                ਜੇ (dname.isBogus()) {
+                    ਸਥਿਤੀ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+                } ਨਹੀਂਤਾਂ {
+                    dnCache->cache.put(dname, (ਖਾਲੀ*)id, ਸਥਿਤੀ); // share pointer with visibleIDMap
+                    ਜੇ (U_SUCCESS(ਸਥਿਤੀ)) {
+                        ਜਾਰੀ;
                     }
                 }
-                delete dnCache;
-                ncthis->dnCache = nullptr;
-                return result;
+                ਮਿਟਾਓ dnCache;
+                ncthis->dnCache = ਖਾਲੀ_ਸੂਚਕ;
+                ਵਾਪਸ ਨਤੀਜਾ;
             }
         }
     }
 
-    ICUServiceKey* matchKey = createKey(matchID, status);
+    ICUService_ਕੁੰਜੀ* ਮੇਲ_ਕੁੰਜੀ = create_ਕੁੰਜੀ(ਮੇਲ_ID, ਸਥਿਤੀ);
     /* To ensure that all elements in the hashtable are iterated, set pos to -1.
      * nextElement(pos) will skip the position at pos and begin the iteration
      * at the next position, which in this case will be 0.
      */
-    int32_t pos = UHASH_FIRST; 
-    const UHashElement *entry = nullptr;
-    while ((entry = dnCache->cache.nextElement(pos)) != nullptr) {
-        const UnicodeString* id = static_cast<const UnicodeString*>(entry->value.pointer);
-        if (matchKey != nullptr && !matchKey->isFallbackOf(*id)) {
-            continue;
+    int32_t pos = UHASH_ਪਹਿਲਾ; 
+    ਅਚਲ UHashElement *ਇੰਦਰਾਜ = ਖਾਲੀ_ਸੂਚਕ;
+    ਜਦੋਂ ((ਇੰਦਰਾਜ = dnCache->cache.ਅਗਲਾ_Element(pos)) != ਖਾਲੀ_ਸੂਚਕ) {
+        ਅਚਲ UnicodeString* id = static_cast<ਅਚਲ UnicodeString*>(ਇੰਦਰਾਜ->value.ਸੂਚਕ);
+        ਜੇ (ਮੇਲ_ਕੁੰਜੀ != ਖਾਲੀ_ਸੂਚਕ && !ਮੇਲ_ਕੁੰਜੀ->is_Fallback_ਦਾ(*id)) {
+            ਜਾਰੀ;
         }
-        const UnicodeString* dn = static_cast<const UnicodeString*>(entry->key.pointer);
-        StringPair* sp = StringPair::create(*id, *dn, status);
-        result.adoptElement(sp, status);
-        if (U_FAILURE(status)) {
-            result.removeAllElements();
-            break;
+        ਅਚਲ UnicodeString* dn = static_cast<ਅਚਲ UnicodeString*>(ਇੰਦਰਾਜ->ਕੁੰਜੀ.ਸੂਚਕ);
+        StringPair* sp = StringPair::create(*id, *dn, ਸਥਿਤੀ);
+        ਨਤੀਜਾ.adoptElement(sp, ਸਥਿਤੀ);
+        ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+            ਨਤੀਜਾ.removeAllElements();
+            ਰੋਕੋ;
         }
     }
-    delete matchKey;
+    ਮਿਟਾਓ ਮੇਲ_ਕੁੰਜੀ;
 
-    return result;
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
-URegistryKey
-ICUService::registerInstance(UObject* objToAdopt, const UnicodeString& id, UErrorCode& status) 
+URegistry_ਕੁੰਜੀ
+ICUService::ਰਜਿਸਟਰ_Instance(UObject* obj_ਮੰਜ਼ਿਲ_Adopt, ਅਚਲ UnicodeString& id, UError_ਕੋਡ& ਸਥਿਤੀ) 
 {
-    return registerInstance(objToAdopt, id, true, status);
+    ਵਾਪਸ ਰਜਿਸਟਰ_Instance(obj_ਮੰਜ਼ਿਲ_Adopt, id, ਸੱਚ, ਸਥਿਤੀ);
 }
 
-URegistryKey
-ICUService::registerInstance(UObject* objToAdopt, const UnicodeString& id, UBool visible, UErrorCode& status) 
+URegistry_ਕੁੰਜੀ
+ICUService::ਰਜਿਸਟਰ_Instance(UObject* obj_ਮੰਜ਼ਿਲ_Adopt, ਅਚਲ UnicodeString& id, UBool visible, UError_ਕੋਡ& ਸਥਿਤੀ) 
 {
-    ICUServiceKey* key = createKey(&id, status);
-    if (key != nullptr) {
+    ICUService_ਕੁੰਜੀ* ਕੁੰਜੀ = create_ਕੁੰਜੀ(&id, ਸਥਿਤੀ);
+    ਜੇ (ਕੁੰਜੀ != ਖਾਲੀ_ਸੂਚਕ) {
         UnicodeString canonicalID;
-        key->canonicalID(canonicalID);
-        delete key;
+        ਕੁੰਜੀ->canonicalID(canonicalID);
+        ਮਿਟਾਓ ਕੁੰਜੀ;
 
-        ICUServiceFactory* f = createSimpleFactory(objToAdopt, canonicalID, visible, status);
-        if (f != nullptr) {
-            return registerFactory(f, status);
+        ICUServiceFactory* f = createSimpleFactory(obj_ਮੰਜ਼ਿਲ_Adopt, canonicalID, visible, ਸਥਿਤੀ);
+        ਜੇ (f != ਖਾਲੀ_ਸੂਚਕ) {
+            ਵਾਪਸ ਰਜਿਸਟਰ_Factory(f, ਸਥਿਤੀ);
         }
     }
-    delete objToAdopt;
-    return nullptr;
+    ਮਿਟਾਓ obj_ਮੰਜ਼ਿਲ_Adopt;
+    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
 }
 
 ICUServiceFactory* 
-ICUService::createSimpleFactory(UObject* objToAdopt, const UnicodeString& id, UBool visible, UErrorCode& status)
+ICUService::createSimpleFactory(UObject* obj_ਮੰਜ਼ਿਲ_Adopt, ਅਚਲ UnicodeString& id, UBool visible, UError_ਕੋਡ& ਸਥਿਤੀ)
 {
-    if (U_SUCCESS(status)) {
-        if ((objToAdopt != nullptr) && (!id.isBogus())) {
-            return new SimpleFactory(objToAdopt, id, visible);
+    ਜੇ (U_SUCCESS(ਸਥਿਤੀ)) {
+        ਜੇ ((obj_ਮੰਜ਼ਿਲ_Adopt != ਖਾਲੀ_ਸੂਚਕ) && (!id.isBogus())) {
+            ਵਾਪਸ ਨਵਾਂ SimpleFactory(obj_ਮੰਜ਼ਿਲ_Adopt, id, visible);
         }
-        status = U_ILLEGAL_ARGUMENT_ERROR;
+        ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
     }
-    return nullptr;
+    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
 }
 
-URegistryKey
-ICUService::registerFactory(ICUServiceFactory* factoryToAdopt, UErrorCode& status)
+URegistry_ਕੁੰਜੀ
+ICUService::ਰਜਿਸਟਰ_Factory(ICUServiceFactory* factory_ਮੰਜ਼ਿਲ_Adopt, UError_ਕੋਡ& ਸਥਿਤੀ)
 {
-    LocalPointer<ICUServiceFactory>lpFactoryToAdopt(factoryToAdopt);
-    if (U_FAILURE(status) || factoryToAdopt == nullptr) {
-        return nullptr;
+    Local_ਸੂਚਕ<ICUServiceFactory>lp_Factory_ਮੰਜ਼ਿਲ_Adopt(factory_ਮੰਜ਼ਿਲ_Adopt);
+    ਜੇ (U_FAILURE(ਸਥਿਤੀ) || factory_ਮੰਜ਼ਿਲ_Adopt == ਖਾਲੀ_ਸੂਚਕ) {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
     {
-        Mutex mutex(&lock);
+        Mutex mutex(&ਤਾਲਾ);
 
-        if (factories == nullptr) {
-            LocalPointer<UVector> lpFactories(new UVector(uprv_deleteUObject, nullptr, status), status);
-            if (U_FAILURE(status)) {
-                return nullptr;
+        ਜੇ (factories == ਖਾਲੀ_ਸੂਚਕ) {
+            Local_ਸੂਚਕ<UVector> lpFactories(ਨਵਾਂ UVector(uprv_deleteUObject, ਖਾਲੀ_ਸੂਚਕ, ਸਥਿਤੀ), ਸਥਿਤੀ);
+            ਜੇ (U_FAILURE(ਸਥਿਤੀ)) {
+                ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
             }
             factories = lpFactories.orphan();
         }
-        factories->insertElementAt(lpFactoryToAdopt.orphan(), 0, status);
-        if (U_SUCCESS(status)) {
+        factories->ਪਾਓ_Element_At(lp_Factory_ਮੰਜ਼ਿਲ_Adopt.orphan(), 0, ਸਥਿਤੀ);
+        ਜੇ (U_SUCCESS(ਸਥਿਤੀ)) {
             clearCaches();
         }
     }   // Close of mutex lock block.
 
-    if (U_SUCCESS(status)) {
-        notifyChanged();
-        return (URegistryKey)factoryToAdopt;
-    } else {
-        return nullptr;
+    ਜੇ (U_SUCCESS(ਸਥਿਤੀ)) {
+        notify_ਬਦਲਿਆ();
+        ਵਾਪਸ (URegistry_ਕੁੰਜੀ)factory_ਮੰਜ਼ਿਲ_Adopt;
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 }
 
 UBool 
-ICUService::unregister(URegistryKey rkey, UErrorCode& status) 
+ICUService::unregister(URegistry_ਕੁੰਜੀ rkey, UError_ਕੋਡ& ਸਥਿਤੀ) 
 {
     ICUServiceFactory *factory = (ICUServiceFactory*)rkey;
-    UBool result = false;
-    if (factory != nullptr && factories != nullptr) {
-        Mutex mutex(&lock);
+    UBool ਨਤੀਜਾ = ਝੂਠ;
+    ਜੇ (factory != ਖਾਲੀ_ਸੂਚਕ && factories != ਖਾਲੀ_ਸੂਚਕ) {
+        Mutex mutex(&ਤਾਲਾ);
 
-        if (factories->removeElement(factory)) {
+        ਜੇ (factories->removeElement(factory)) {
             clearCaches();
-            result = true;
-        } else {
-            status = U_ILLEGAL_ARGUMENT_ERROR;
-            delete factory;
+            ਨਤੀਜਾ = ਸੱਚ;
+        } ਨਹੀਂਤਾਂ {
+            ਸਥਿਤੀ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+            ਮਿਟਾਓ factory;
         }
     }
-    if (result) {
-        notifyChanged();
+    ਜੇ (ਨਤੀਜਾ) {
+        notify_ਬਦਲਿਆ();
     }
-    return result;
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
-void 
+ਖਾਲੀ 
 ICUService::reset() 
 {
     {
-        Mutex mutex(&lock);
+        Mutex mutex(&ਤਾਲਾ);
         reInitializeFactories();
         clearCaches();
     }
-    notifyChanged();
+    notify_ਬਦਲਿਆ();
 }
 
-void 
+ਖਾਲੀ 
 ICUService::reInitializeFactories() 
 {
-    if (factories != nullptr) {
+    ਜੇ (factories != ਖਾਲੀ_ਸੂਚਕ) {
         factories->removeAllElements();
     }
 }
 
 UBool 
-ICUService::isDefault() const 
+ICUService::isDefault() ਅਚਲ 
 {
-    return countFactories() == 0;
+    ਵਾਪਸ ਗਿਣਤੀ_Factories() == 0;
 }
 
-ICUServiceKey* 
-ICUService::createKey(const UnicodeString* id, UErrorCode& status) const 
+ICUService_ਕੁੰਜੀ* 
+ICUService::create_ਕੁੰਜੀ(ਅਚਲ UnicodeString* id, UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ 
 {
-    return (U_FAILURE(status) || id == nullptr) ? nullptr : new ICUServiceKey(*id);
+    ਵਾਪਸ (U_FAILURE(ਸਥਿਤੀ) || id == ਖਾਲੀ_ਸੂਚਕ) ? ਖਾਲੀ_ਸੂਚਕ : ਨਵਾਂ ICUService_ਕੁੰਜੀ(*id);
 }
 
-void 
+ਖਾਲੀ 
 ICUService::clearCaches() 
 {
     // callers synchronize before use
     ++timestamp;
-    delete dnCache;
-    dnCache = nullptr;
-    delete idCache;
-    idCache = nullptr;
-    delete serviceCache; serviceCache = nullptr;
+    ਮਿਟਾਓ dnCache;
+    dnCache = ਖਾਲੀ_ਸੂਚਕ;
+    ਮਿਟਾਓ idCache;
+    idCache = ਖਾਲੀ_ਸੂਚਕ;
+    ਮਿਟਾਓ serviceCache; serviceCache = ਖਾਲੀ_ਸੂਚਕ;
 }
 
-void 
+ਖਾਲੀ 
 ICUService::clearServiceCache() 
 {
     // callers synchronize before use
-    delete serviceCache; serviceCache = nullptr;
+    ਮਿਟਾਓ serviceCache; serviceCache = ਖਾਲੀ_ਸੂਚਕ;
 }
 
 UBool 
-ICUService::acceptsListener(const EventListener& l) const 
+ICUService::ਮੰਨਦਾ_Listener(ਅਚਲ EventListener& l) ਅਚਲ 
 {
-    return dynamic_cast<const ServiceListener*>(&l) != nullptr;
+    ਵਾਪਸ dynamic_cast<ਅਚਲ ServiceListener*>(&l) != ਖਾਲੀ_ਸੂਚਕ;
 }
 
-void 
-ICUService::notifyListener(EventListener& l) const 
+ਖਾਲੀ 
+ICUService::notifyListener(EventListener& l) ਅਚਲ 
 {
-    (static_cast<ServiceListener&>(l)).serviceChanged(*this);
+    (static_cast<ServiceListener&>(l)).service_ਬਦਲਿਆ(*ਇਹ);
 }
 
 UnicodeString&
-ICUService::getName(UnicodeString& result) const 
+ICUService::getName(UnicodeString& ਨਤੀਜਾ) ਅਚਲ 
 {
-    return result.append(name);
+    ਵਾਪਸ ਨਤੀਜਾ.append(name);
 }
 
 int32_t 
-ICUService::countFactories() const 
+ICUService::ਗਿਣਤੀ_Factories() ਅਚਲ 
 {
-    return factories == nullptr ? 0 : factories->size();
+    ਵਾਪਸ factories == ਖਾਲੀ_ਸੂਚਕ ? 0 : factories->size();
 }
 
 int32_t
-ICUService::getTimestamp() const
+ICUService::getTimestamp() ਅਚਲ
 {
-    return timestamp;
+    ਵਾਪਸ timestamp;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
 /* UCONFIG_NO_SERVICE */
-#endif
+#ਜੇ_ਅੰਤ

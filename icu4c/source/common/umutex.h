@@ -17,25 +17,25 @@
 ******************************************************************************
 */
 
-#ifndef UMUTEX_H
-#define UMUTEX_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ UMUTEX_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UMUTEX_H
 
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <type_traits>
+#ਅਨ੍ਤਰ੍ਭਾਵ <atomic>
+#ਅਨ੍ਤਰ੍ਭਾਵ <condition_variable>
+#ਅਨ੍ਤਰ੍ਭਾਵ <mutex>
+#ਅਨ੍ਤਰ੍ਭਾਵ <type_traits>
 
-#include "unicode/utypes.h"
-#include "unicode/uclean.h"
-#include "unicode/uobject.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uclean.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uobject.h"
 
-#include "putilimp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "putilimp.h"
 
-#if defined(U_USER_ATOMICS_H) || defined(U_USER_MUTEX_H)
+#ਜੇ defined(U_USER_ATOMICS_H) || defined(U_USER_MUTEX_H)
 // Support for including an alternate implementation of atomic & mutex operations has been withdrawn.
 // See issue ICU-20185.
-#error U_USER_ATOMICS and U_USER_MUTEX_H are not supported
-#endif
+#ਗਲਤੀ U_USER_ATOMICS and U_USER_MUTEX_H are not supported
+#ਜੇ_ਅੰਤ
 
 U_NAMESPACE_BEGIN
 
@@ -45,22 +45,22 @@ U_NAMESPACE_BEGIN
  *
  ****************************************************************************/
 
-typedef std::atomic<int32_t> u_atomic_int32_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ std::atomic<int32_t> u_atomic_int32_t;
 
-inline int32_t umtx_loadAcquire(u_atomic_int32_t &var) {
-    return var.load(std::memory_order_acquire);
+ਸਤਰਅੰਦਰ int32_t umtx_ਲੱਦੋ_Acquire(u_atomic_int32_t &var) {
+    ਵਾਪਸ var.ਲੱਦੋ(std::ਸਮ੍ਰਿਤੀ_ਕ੍ਰਮ_acquire);
 }
 
-inline void umtx_storeRelease(u_atomic_int32_t &var, int32_t val) {
-    var.store(val, std::memory_order_release);
+ਸਤਰਅੰਦਰ ਖਾਲੀ umtx_storeRelease(u_atomic_int32_t &var, int32_t val) {
+    var.store(val, std::ਸਮ੍ਰਿਤੀ_ਕ੍ਰਮ_release);
 }
 
-inline int32_t umtx_atomic_inc(u_atomic_int32_t *var) {
-    return var->fetch_add(1) + 1;
+ਸਤਰਅੰਦਰ int32_t umtx_atomic_inc(u_atomic_int32_t *var) {
+    ਵਾਪਸ var->fetch_ਜੋੜੋ(1) + 1;
 }
 
-inline int32_t umtx_atomic_dec(u_atomic_int32_t *var) {
-    return var->fetch_sub(1) - 1;
+ਸਤਰਅੰਦਰ int32_t umtx_atomic_dec(u_atomic_int32_t *var) {
+    ਵਾਪਸ var->fetch_sub(1) - 1;
 }
 
 
@@ -70,34 +70,34 @@ inline int32_t umtx_atomic_dec(u_atomic_int32_t *var) {
  *
  *************************************************************************************************/
 
-struct U_COMMON_API_CLASS UInitOnce {
-private:
-    friend U_COMMON_API UBool U_EXPORT2 umtx_initImplPreInit(UInitOnce&);
-    friend U_COMMON_API void U_EXPORT2 umtx_initImplPostInit(UInitOnce&);
-    template <typename T> friend void umtx_initOnce(UInitOnce&, T*, void (T::*)());
-    friend void umtx_initOnce(UInitOnce&, void (*)());
-    friend void umtx_initOnce(UInitOnce&, void (*)(UErrorCode&), UErrorCode&);
-    template <typename T> friend void umtx_initOnce(UInitOnce&, void (*)(T), T);
-    template <typename T> friend void umtx_initOnce(UInitOnce&, void (*)(T, UErrorCode&), T, UErrorCode&);
+ਬਣਤਰ U_COMMON_API_CLASS UInitOnce {
+ਨਿਜੀ:
+    ਮਿੱਤਰ U_COMMON_API UBool U_EXPORT2 umtx_initImplPreInit(UInitOnce&);
+    ਮਿੱਤਰ U_COMMON_API ਖਾਲੀ U_EXPORT2 umtx_initImplPostInit(UInitOnce&);
+    ਸਾਂਚਾ <typename T> ਮਿੱਤਰ ਖਾਲੀ umtx_initOnce(UInitOnce&, T*, ਖਾਲੀ (T::*)());
+    ਮਿੱਤਰ ਖਾਲੀ umtx_initOnce(UInitOnce&, ਖਾਲੀ (*)());
+    ਮਿੱਤਰ ਖਾਲੀ umtx_initOnce(UInitOnce&, ਖਾਲੀ (*)(UError_ਕੋਡ&), UError_ਕੋਡ&);
+    ਸਾਂਚਾ <typename T> ਮਿੱਤਰ ਖਾਲੀ umtx_initOnce(UInitOnce&, ਖਾਲੀ (*)(T), T);
+    ਸਾਂਚਾ <typename T> ਮਿੱਤਰ ਖਾਲੀ umtx_initOnce(UInitOnce&, ਖਾਲੀ (*)(T, UError_ਕੋਡ&), T, UError_ਕੋਡ&);
 
     u_atomic_int32_t fState{0};
-    UErrorCode fErrCode{U_ZERO_ERROR};
+    UError_ਕੋਡ f_Err_ਕੋਡ{U_ZERO_ERROR};
 
-public:
-    U_COMMON_API void reset() { fState = 0; }
-    U_COMMON_API UBool isReset() { return umtx_loadAcquire(fState) == 0; }
+ਜਨਤਕ:
+    U_COMMON_API ਖਾਲੀ reset() { fState = 0; }
+    U_COMMON_API UBool isReset() { ਵਾਪਸ umtx_ਲੱਦੋ_Acquire(fState) == 0; }
 // Note: isReset() is used by service registration code.
 //                 Thread safety of this usage needs review.
 };
 
 U_COMMON_API UBool U_EXPORT2 umtx_initImplPreInit(UInitOnce &);
-U_COMMON_API void  U_EXPORT2 umtx_initImplPostInit(UInitOnce &);
+U_COMMON_API ਖਾਲੀ  U_EXPORT2 umtx_initImplPostInit(UInitOnce &);
 
-template<class T> void umtx_initOnce(UInitOnce &uio, T *obj, void (U_CALLCONV T::*fp)()) {
-    if (umtx_loadAcquire(uio.fState) == 2) {
-        return;
+ਸਾਂਚਾ<class T> ਖਾਲੀ umtx_initOnce(UInitOnce &uio, T *obj, ਖਾਲੀ (U_CALLCONV T::*fp)()) {
+    ਜੇ (umtx_ਲੱਦੋ_Acquire(uio.fState) == 2) {
+        ਵਾਪਸ;
     }
-    if (umtx_initImplPreInit(uio)) {
+    ਜੇ (umtx_initImplPreInit(uio)) {
         (obj->*fp)();
         umtx_initImplPostInit(uio);
     }
@@ -106,11 +106,11 @@ template<class T> void umtx_initOnce(UInitOnce &uio, T *obj, void (U_CALLCONV T:
 
 // umtx_initOnce variant for plain functions, or static class functions.
 //               No context parameter.
-inline void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)()) {
-    if (umtx_loadAcquire(uio.fState) == 2) {
-        return;
+ਸਤਰਅੰਦਰ ਖਾਲੀ umtx_initOnce(UInitOnce &uio, ਖਾਲੀ (U_CALLCONV *fp)()) {
+    ਜੇ (umtx_ਲੱਦੋ_Acquire(uio.fState) == 2) {
+        ਵਾਪਸ;
     }
-    if (umtx_initImplPreInit(uio)) {
+    ਜੇ (umtx_initImplPreInit(uio)) {
         (*fp)();
         umtx_initImplPostInit(uio);
     }
@@ -118,30 +118,30 @@ inline void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)()) {
 
 // umtx_initOnce variant for plain functions, or static class functions.
 //               With ErrorCode, No context parameter.
-inline void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)(UErrorCode &), UErrorCode &errCode) {
-    if (U_FAILURE(errCode)) {
-        return;
+ਸਤਰਅੰਦਰ ਖਾਲੀ umtx_initOnce(UInitOnce &uio, ਖਾਲੀ (U_CALLCONV *fp)(UError_ਕੋਡ &), UError_ਕੋਡ &err_ਕੋਡ) {
+    ਜੇ (U_FAILURE(err_ਕੋਡ)) {
+        ਵਾਪਸ;
     }
-    if (umtx_loadAcquire(uio.fState) != 2 && umtx_initImplPreInit(uio)) {
+    ਜੇ (umtx_ਲੱਦੋ_Acquire(uio.fState) != 2 && umtx_initImplPreInit(uio)) {
         // We run the initialization.
-        (*fp)(errCode);
-        uio.fErrCode = errCode;
+        (*fp)(err_ਕੋਡ);
+        uio.f_Err_ਕੋਡ = err_ਕੋਡ;
         umtx_initImplPostInit(uio);
-    } else {
+    } ਨਹੀਂਤਾਂ {
         // Someone else already ran the initialization.
-        if (U_FAILURE(uio.fErrCode)) {
-            errCode = uio.fErrCode;
+        ਜੇ (U_FAILURE(uio.f_Err_ਕੋਡ)) {
+            err_ਕੋਡ = uio.f_Err_ਕੋਡ;
         }
     }
 }
 
 // umtx_initOnce variant for plain functions, or static class functions,
 //               with a context parameter.
-template<class T> void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)(T), T context) {
-    if (umtx_loadAcquire(uio.fState) == 2) {
-        return;
+ਸਾਂਚਾ<class T> ਖਾਲੀ umtx_initOnce(UInitOnce &uio, ਖਾਲੀ (U_CALLCONV *fp)(T), T context) {
+    ਜੇ (umtx_ਲੱਦੋ_Acquire(uio.fState) == 2) {
+        ਵਾਪਸ;
     }
-    if (umtx_initImplPreInit(uio)) {
+    ਜੇ (umtx_initImplPreInit(uio)) {
         (*fp)(context);
         umtx_initImplPostInit(uio);
     }
@@ -149,19 +149,19 @@ template<class T> void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)(T), T
 
 // umtx_initOnce variant for plain functions, or static class functions,
 //               with a context parameter and an error code.
-template<class T> void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)(T, UErrorCode &), T context, UErrorCode &errCode) {
-    if (U_FAILURE(errCode)) {
-        return;
+ਸਾਂਚਾ<class T> ਖਾਲੀ umtx_initOnce(UInitOnce &uio, ਖਾਲੀ (U_CALLCONV *fp)(T, UError_ਕੋਡ &), T context, UError_ਕੋਡ &err_ਕੋਡ) {
+    ਜੇ (U_FAILURE(err_ਕੋਡ)) {
+        ਵਾਪਸ;
     }
-    if (umtx_loadAcquire(uio.fState) != 2 && umtx_initImplPreInit(uio)) {
+    ਜੇ (umtx_ਲੱਦੋ_Acquire(uio.fState) != 2 && umtx_initImplPreInit(uio)) {
         // We run the initialization.
-        (*fp)(context, errCode);
-        uio.fErrCode = errCode;
+        (*fp)(context, err_ਕੋਡ);
+        uio.f_Err_ਕੋਡ = err_ਕੋਡ;
         umtx_initImplPostInit(uio);
-    } else {
+    } ਨਹੀਂਤਾਂ {
         // Someone else already ran the initialization.
-        if (U_FAILURE(uio.fErrCode)) {
-            errCode = uio.fErrCode;
+        ਜੇ (U_FAILURE(uio.f_Err_ਕੋਡ)) {
+            err_ਕੋਡ = uio.f_Err_ਕੋਡ;
         }
     }
 }
@@ -169,13 +169,13 @@ template<class T> void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)(T, UE
 // UMutex should be constexpr-constructible, so that no initialization code
 // is run during startup.
 // This works on all C++ libraries except MS VS before VS2019.
-#if (defined(_CPPLIB_VER) && !defined(_MSVC_STL_VERSION)) || \
-    (defined(_MSVC_STL_VERSION) && _MSVC_STL_VERSION < 142)
+#ਜੇ (defined(_CPPLIB_VER) && !defined(MSVC_STL_ਸੰਸਕਰਣ)) || \
+    (defined(MSVC_STL_ਸੰਸਕਰਣ) && MSVC_STL_ਸੰਸਕਰਣ < 142)
     // (VS std lib older than VS2017) || (VS std lib version < VS2019)
 #   define UMUTEX_CONSTEXPR
-#else
+#ਨਹੀਂਤਾਂ
 #   define UMUTEX_CONSTEXPR constexpr
-#endif
+#ਜੇ_ਅੰਤ
 
 /**
  * UMutex - ICU Mutex class.
@@ -203,33 +203,33 @@ template<class T> void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)(T, UE
  */
 
 class U_COMMON_API_CLASS UMutex {
-public:
+ਜਨਤਕ:
     U_COMMON_API UMUTEX_CONSTEXPR UMutex() {}
-    U_COMMON_API ~UMutex() = default;
+    U_COMMON_API ~UMutex() = ਮੂਲ;
 
-    UMutex(const UMutex& other) = delete;
-    UMutex& operator=(const UMutex& other) = delete;
-    void* operator new(size_t) = delete;
+    UMutex(ਅਚਲ UMutex& other) = delete;
+    UMutex& ਸੰਚਾਲਕ=(ਅਚਲ UMutex& other) = delete;
+    ਖਾਲੀ* ਸੰਚਾਲਕ new(size_t) = delete;
 
     // requirements for C++ BasicLockable, allows UMutex to work with std::lock_guard
-    U_COMMON_API void lock() {
-        std::mutex *m = fMutex.load(std::memory_order_acquire);
-        if (m == nullptr) { m = getMutex(); }
-        m->lock();
+    U_COMMON_API ਖਾਲੀ ਤਾਲਾ() {
+        std::mutex *m = fMutex.ਲੱਦੋ(std::ਸਮ੍ਰਿਤੀ_ਕ੍ਰਮ_acquire);
+        ਜੇ (m == nullptr) { m = getMutex(); }
+        m->ਤਾਲਾ();
     }
-    U_COMMON_API void unlock() { fMutex.load(std::memory_order_relaxed)->unlock(); }
+    U_COMMON_API ਖਾਲੀ unlock() { fMutex.ਲੱਦੋ(std::ਸਮ੍ਰਿਤੀ_ਕ੍ਰਮ_relaxed)->unlock(); }
 
-    U_COMMON_API static void cleanup();
+    U_COMMON_API ਸਥਿਰ ਖਾਲੀ cleanup();
 
-private:
-    alignas(std::mutex) char fStorage[sizeof(std::mutex)] {};
+ਨਿਜੀ:
+    alignas(std::mutex) ਅੱਖਰ fStorage[ਆਕਾਰ(std::mutex)] {};
     std::atomic<std::mutex *> fMutex { nullptr };
 
     /** All initialized UMutexes are kept in a linked list, so that they can be found,
      * and the underlying std::mutex destructed, by u_cleanup().
      */
     UMutex *fListLink { nullptr };
-    static UMutex *gListHead;
+    ਸਥਿਰ UMutex *g_List_ਸਿਰ;
 
     /** Out-of-line function to lazily initialize a UMutex on first use.
      * Initial fast check is inline, in lock().  The returned value may never
@@ -244,16 +244,16 @@ private:
  *              the global ICU mutex.  Recursive locks are an error
  *              and may cause a deadlock on some platforms.
  */
-U_CAPI void U_EXPORT2 umtx_lock(UMutex* mutex);
+U_CAPI ਖਾਲੀ U_EXPORT2 umtx_ਤਾਲਾ(UMutex* mutex);
 
 /* Unlock a mutex.
  * @param mutex The given mutex to be unlocked.  Pass NULL to specify
  *              the global ICU mutex.
  */
-U_CAPI void U_EXPORT2 umtx_unlock (UMutex* mutex);
+U_CAPI ਖਾਲੀ U_EXPORT2 umtx_unlock (UMutex* mutex);
 
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif /* UMUTEX_H */
+#ਜੇ_ਅੰਤ /* UMUTEX_H */
 /*eof*/

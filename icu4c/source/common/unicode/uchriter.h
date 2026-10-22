@@ -7,14 +7,14 @@
 **********************************************************************
 */
 
-#ifndef UCHRITER_H
-#define UCHRITER_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ UCHRITER_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCHRITER_H
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/chariter.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/chariter.h"
 
 /**
  * \file 
@@ -35,8 +35,8 @@ U_NAMESPACE_BEGIN
  * @see ForwardCharacterIterator
  * @stable ICU 2.0
  */
-class U_COMMON_API UCharCharacterIterator : public CharacterIterator {
-public:
+class U_COMMON_API UCharCharacterIterator : ਜਨਤਕ CharacterIterator {
+ਜਨਤਕ:
   /**
    * Create an iterator over the char16_t array referred to by "textPtr".
    * The iteration range is 0 to <code>length-1</code>.
@@ -46,7 +46,7 @@ public:
    * @param length The length of the char16_t array
    * @stable ICU 2.0
    */
-  UCharCharacterIterator(ConstChar16Ptr textPtr U_LIFETIME_BOUND, int32_t length);
+  UCharCharacterIterator(ConstChar16Ptr ਪਾਠ_Ptr U_LIFETIME_BOUND, int32_t ਲੰਮਾਈ);
 
   /**
    * Create an iterator over the char16_t array referred to by "textPtr".
@@ -61,7 +61,7 @@ public:
    * @param position The starting position of the iteration
    * @stable ICU 2.0
    */
-  UCharCharacterIterator(ConstChar16Ptr textPtr U_LIFETIME_BOUND, int32_t length,
+  UCharCharacterIterator(ConstChar16Ptr ਪਾਠ_Ptr U_LIFETIME_BOUND, int32_t ਲੰਮਾਈ,
                          int32_t position);
 
   /**
@@ -80,9 +80,9 @@ public:
    * @param position    The starting position of the iteration
    * @stable ICU 2.0
    */
-  UCharCharacterIterator(ConstChar16Ptr textPtr U_LIFETIME_BOUND, int32_t length,
-                         int32_t textBegin,
-                         int32_t textEnd,
+  UCharCharacterIterator(ConstChar16Ptr ਪਾਠ_Ptr U_LIFETIME_BOUND, int32_t ਲੰਮਾਈ,
+                         int32_t ਪਾਠ_Begin,
+                         int32_t ਪਾਠ_ਸਿਰਾ,
                          int32_t position);
 
   /**
@@ -92,13 +92,13 @@ public:
    * @param that The UCharCharacterIterator to be copied
    * @stable ICU 2.0
    */
-  UCharCharacterIterator(const UCharCharacterIterator&  that);
+  UCharCharacterIterator(ਅਚਲ UCharCharacterIterator&  that);
 
   /**
    * Destructor.
    * @stable ICU 2.0
    */
-  virtual ~UCharCharacterIterator();
+  ਆਭਾਸੀ ~UCharCharacterIterator();
 
   /**
    * Assignment operator.  *this is altered to iterate over the sane
@@ -108,7 +108,7 @@ public:
    * @return the newly created object
    * @stable ICU 2.0
    */
-  UCharCharacterIterator& operator=(const UCharCharacterIterator& that) U_LIFETIME_BOUND;
+  UCharCharacterIterator& ਸੰਚਾਲਕ=(ਅਚਲ UCharCharacterIterator& that) U_LIFETIME_BOUND;
 
   /**
    * Returns true if the iterators iterate over the same range of the
@@ -118,14 +118,14 @@ public:
    * same string and are pointing at the same character.
    * @stable ICU 2.0
    */
-  virtual bool           operator==(const ForwardCharacterIterator& that) const override;
+  ਆਭਾਸੀ bool           ਸੰਚਾਲਕ==(ਅਚਲ ForwardCharacterIterator& that) ਅਚਲ override;
 
   /**
    * Generates a hash code for this iterator.
    * @return the hash code.
    * @stable ICU 2.0
    */
-  virtual int32_t hashCode() const override;
+  ਆਭਾਸੀ int32_t hash_ਕੋਡ() ਅਚਲ override;
 
   /**
    * Returns a new UCharCharacterIterator referring to the same
@@ -134,7 +134,7 @@ public:
    * @return the CharacterIterator newly created
    * @stable ICU 2.0
    */
-  virtual UCharCharacterIterator* clone() const override;
+  ਆਭਾਸੀ UCharCharacterIterator* clone() ਅਚਲ override;
 
   /**
    * Sets the iterator to refer to the first code unit in its
@@ -143,7 +143,7 @@ public:
    * @return the first code unit in its iteration range.
    * @stable ICU 2.0
    */
-  virtual char16_t first() override;
+  ਆਭਾਸੀ char16_t ਪਹਿਲਾ() override;
 
   /**
    * Sets the iterator to refer to the first code unit in its
@@ -153,7 +153,7 @@ public:
    * @return the first code unit in its iteration range
    * @stable ICU 2.0
    */
-  virtual char16_t firstPostInc() override;
+  ਆਭਾਸੀ char16_t ਪਹਿਲਾ_Post_Inc() override;
 
   /**
    * Sets the iterator to refer to the first code point in its
@@ -164,7 +164,7 @@ public:
    * @return the first code point in its iteration range
    * @stable ICU 2.0
    */
-  virtual UChar32 first32() override;
+  ਆਭਾਸੀ UChar32 first32() override;
 
   /**
    * Sets the iterator to refer to the first code point in its
@@ -174,7 +174,7 @@ public:
    * @return the first code point in its iteration range.
    * @stable ICU 2.0
    */
-  virtual UChar32 first32PostInc() override;
+  ਆਭਾਸੀ UChar32 first32PostInc() override;
 
   /**
    * Sets the iterator to refer to the last code unit in its
@@ -183,7 +183,7 @@ public:
    * @return the last code unit in its iteration range.
    * @stable ICU 2.0
    */
-  virtual char16_t last() override;
+  ਆਭਾਸੀ char16_t ਆਖਰੀ() override;
 
   /**
    * Sets the iterator to refer to the last code point in its
@@ -192,7 +192,7 @@ public:
    * @return the last code point in its iteration range.
    * @stable ICU 2.0
    */
-  virtual UChar32 last32() override;
+  ਆਭਾਸੀ UChar32 last32() override;
 
   /**
    * Sets the iterator to refer to the "position"-th code unit
@@ -202,7 +202,7 @@ public:
    * @return the code unit
    * @stable ICU 2.0
    */
-  virtual char16_t         setIndex(int32_t position) override;
+  ਆਭਾਸੀ char16_t         ਸੈੱਟ_ਸੂਚਕਾਂਕ(int32_t position) override;
 
   /**
    * Sets the iterator to refer to the beginning of the code point
@@ -215,21 +215,21 @@ public:
    * @return the code unit
    * @stable ICU 2.0
    */
-  virtual UChar32       setIndex32(int32_t position) override;
+  ਆਭਾਸੀ UChar32       ਸੈੱਟ_Index32(int32_t position) override;
 
   /**
    * Returns the code unit the iterator currently refers to.
    * @return the code unit the iterator currently refers to.
    * @stable ICU 2.0
    */
-  virtual char16_t current() const override;
+  ਆਭਾਸੀ char16_t current() ਅਚਲ override;
 
   /**
    * Returns the code point the iterator currently refers to.
    * @return the code point the iterator currently refers to.
    * @stable ICU 2.0
    */
-  virtual UChar32 current32() const override;
+  ਆਭਾਸੀ UChar32 current32() ਅਚਲ override;
 
   /**
    * Advances to the next code unit in the iteration range (toward
@@ -238,7 +238,7 @@ public:
    * @return the next code unit in the iteration range.
    * @stable ICU 2.0
    */
-  virtual char16_t next() override;
+  ਆਭਾਸੀ char16_t ਅਗਲਾ() override;
 
   /**
    * Gets the current code unit for returning and advances to the next code unit
@@ -248,7 +248,7 @@ public:
    * @return the current code unit.
    * @stable ICU 2.0
    */
-  virtual char16_t nextPostInc() override;
+  ਆਭਾਸੀ char16_t ਅਗਲਾ_Post_Inc() override;
 
   /**
    * Advances to the next code point in the iteration range (toward
@@ -260,7 +260,7 @@ public:
    * @return the next code point in the iteration range.
    * @stable ICU 2.0
    */
-  virtual UChar32 next32() override;
+  ਆਭਾਸੀ UChar32 next32() override;
 
   /**
    * Gets the current code point for returning and advances to the next code point
@@ -270,7 +270,7 @@ public:
    * @return the current point.
    * @stable ICU 2.0
    */
-  virtual UChar32 next32PostInc() override;
+  ਆਭਾਸੀ UChar32 next32PostInc() override;
 
   /**
    * Returns false if there are no more code units or code points
@@ -281,7 +281,7 @@ public:
    * at or after the current position in the iteration range.
    * @stable ICU 2.0
    */
-  virtual UBool        hasNext() override;
+  ਆਭਾਸੀ UBool        has_ਅਗਲਾ() override;
 
   /**
    * Advances to the previous code unit in the iteration range (toward
@@ -290,7 +290,7 @@ public:
    * @return the previous code unit in the iteration range.
    * @stable ICU 2.0
    */
-  virtual char16_t previous() override;
+  ਆਭਾਸੀ char16_t ਪਿਛਲਾ() override;
 
   /**
    * Advances to the previous code point in the iteration range (toward
@@ -299,7 +299,7 @@ public:
    * @return the previous code point in the iteration range.
    * @stable ICU 2.0
    */
-  virtual UChar32 previous32() override;
+  ਆਭਾਸੀ UChar32 previous32() override;
 
   /**
    * Returns false if there are no more code units or code points
@@ -310,7 +310,7 @@ public:
    * before the current position in the iteration range.
    * @stable ICU 2.0
    */
-  virtual UBool        hasPrevious() override;
+  ਆਭਾਸੀ UBool        has_ਪਿਛਲਾ() override;
 
   /**
    * Moves the current position relative to the start or end of the
@@ -323,7 +323,7 @@ public:
    * @return the new position
    * @stable ICU 2.0
    */
-  virtual int32_t      move(int32_t delta, EOrigin origin) override;
+  ਆਭਾਸੀ int32_t      move(int32_t delta, EOrigin origin) override;
 
   /**
    * Moves the current position relative to the start or end of the
@@ -336,17 +336,17 @@ public:
    * @return the new position
    * @stable ICU 2.0
    */
-#ifdef move32
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ move32
    // One of the system headers right now is sometimes defining a conflicting macro we don't use
-#undef move32
-#endif
-  virtual int32_t      move32(int32_t delta, EOrigin origin) override;
+#ਪਰਿਭਾਸ਼ਾ_ਰੱਦ move32
+#ਜੇ_ਅੰਤ
+  ਆਭਾਸੀ int32_t      move32(int32_t delta, EOrigin origin) override;
 
   /**
    * Sets the iterator to iterate over a new range of text
    * @stable ICU 2.0
    */
-  void setText(ConstChar16Ptr newText, int32_t newTextLength);
+  ਖਾਲੀ ਸੈੱਟ_ਪਾਠ(ConstChar16Ptr new_ਪਾਠ, int32_t new_ਪਾਠ_ਲੰਮਾਈ);
 
   /**
    * Copies the char16_t array under iteration into the UnicodeString
@@ -355,23 +355,23 @@ public:
    * @param result Receives a copy of the text under iteration.
    * @stable ICU 2.0
    */
-  virtual void            getText(UnicodeString& result) override;
+  ਆਭਾਸੀ ਖਾਲੀ            get_ਪਾਠ(UnicodeString& ਨਤੀਜਾ) override;
 
   /**
    * Return a class ID for this class (not really public)
    * @return a class ID for this class
    * @stable ICU 2.0
    */
-  static UClassID U_EXPORT2 getStaticClassID();
+  ਸਥਿਰ UClassID U_EXPORT2 getStaticClassID();
 
   /**
    * Return a class ID for this object (not really public)
    * @return a class ID for this object.
    * @stable ICU 2.0
    */
-  virtual UClassID getDynamicClassID() const override;
+  ਆਭਾਸੀ UClassID getDynamicClassID() ਅਚਲ override;
 
-protected:
+ਸੁਰੱਖਿਅਤ:
   /**
    * Protected constructor
    * @stable ICU 2.0
@@ -381,12 +381,12 @@ protected:
    * Protected member text
    * @stable ICU 2.0
    */
-  const char16_t*            text;
+  ਅਚਲ char16_t*            ਪਾਠ;
 
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ਜੇ_ਅੰਤ /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#ਜੇ_ਅੰਤ

@@ -16,40 +16,40 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if !U_HAVE_WCSCPY
+#ਜੇ !U_HAVE_WCSCPY
 
-#include "cwchar.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cwchar.h"
 
-U_CAPI wchar_t *uprv_wcscat(wchar_t *dst, const wchar_t *src) {
-    wchar_t *start=dst;
-    while(*dst!=0) {
+U_CAPI wchar_t *uprv_wcscat(wchar_t *dst, ਅਚਲ wchar_t *src) {
+    wchar_t *ਸ਼ੁਰੂ=dst;
+    ਜਦੋਂ(*dst!=0) {
         ++dst;
     }
-    while((*dst=*src)!=0) {
-        ++dst;
-        ++src;
-    }
-    return start;
-}
-
-U_CAPI wchar_t *uprv_wcscpy(wchar_t *dst, const wchar_t *src) {
-    wchar_t *start=dst;
-    while((*dst=*src)!=0) {
+    ਜਦੋਂ((*dst=*src)!=0) {
         ++dst;
         ++src;
     }
-    return start;
+    ਵਾਪਸ ਸ਼ੁਰੂ;
 }
 
-U_CAPI size_t uprv_wcslen(const wchar_t *src) {
-    const wchar_t *start=src;
-    while(*src!=0) {
+U_CAPI wchar_t *uprv_wcscpy(wchar_t *dst, ਅਚਲ wchar_t *src) {
+    wchar_t *ਸ਼ੁਰੂ=dst;
+    ਜਦੋਂ((*dst=*src)!=0) {
+        ++dst;
         ++src;
     }
-    return src-start;
+    ਵਾਪਸ ਸ਼ੁਰੂ;
 }
 
-#endif
+U_CAPI size_t uprv_wcslen(ਅਚਲ wchar_t *src) {
+    ਅਚਲ wchar_t *ਸ਼ੁਰੂ=src;
+    ਜਦੋਂ(*src!=0) {
+        ++src;
+    }
+    ਵਾਪਸ src-ਸ਼ੁਰੂ;
+}
+
+#ਜੇ_ਅੰਤ
 

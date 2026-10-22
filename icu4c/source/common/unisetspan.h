@@ -16,11 +16,11 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UNISETSPAN_H__
-#define __UNISETSPAN_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __UNISETSPAN_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __UNISETSPAN_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uniset.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uniset.h"
 
 U_NAMESPACE_BEGIN
 
@@ -29,16 +29,16 @@ U_NAMESPACE_BEGIN
  * Avoid recursion because of its exponential complexity.
  * Instead, try multiple paths at once and track them with an IndexList.
  */
-class UnicodeSetStringSpan : public UMemory {
-public:
+class Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ : ਜਨਤਕ UMemory {
+ਜਨਤਕ:
     /*
      * Which span() variant will be used?
      * The object is either built for one variant and used once,
      * or built for all and may be used many times.
      */
-    enum {
+    ਗਿਣਤੀ {
         FWD             = 0x20,
-        BACK            = 0x10,
+        ਪਿੱਠ_2            = 0x10,
         UTF16           = 8,
         UTF8            = 4,
         CONTAINED       = 2,
@@ -50,65 +50,65 @@ public:
         FWD_UTF16_NOT_CONTAINED = FWD  | UTF16 | NOT_CONTAINED,
         FWD_UTF8_CONTAINED      = FWD  | UTF8  |     CONTAINED,
         FWD_UTF8_NOT_CONTAINED  = FWD  | UTF8  | NOT_CONTAINED,
-        BACK_UTF16_CONTAINED    = BACK | UTF16 |     CONTAINED,
-        BACK_UTF16_NOT_CONTAINED= BACK | UTF16 | NOT_CONTAINED,
-        BACK_UTF8_CONTAINED     = BACK | UTF8  |     CONTAINED,
-        BACK_UTF8_NOT_CONTAINED = BACK | UTF8  | NOT_CONTAINED
+        ਪਿੱਠ_UTF16_CONTAINED    = ਪਿੱਠ_2 | UTF16 |     CONTAINED,
+        ਪਿੱਠ_UTF16_NOT_CONTAINED= ਪਿੱਠ_2 | UTF16 | NOT_CONTAINED,
+        ਪਿੱਠ_UTF8_CONTAINED     = ਪਿੱਠ_2 | UTF8  |     CONTAINED,
+        ਪਿੱਠ_UTF8_NOT_CONTAINED = ਪਿੱਠ_2 | UTF8  | NOT_CONTAINED
     };
 
-    UnicodeSetStringSpan(const UnicodeSet &set, const UVector &setStrings, uint32_t which);
+    Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ(ਅਚਲ Unicode_ਸੈੱਟ &ਸੈੱਟ, ਅਚਲ UVector &ਸੈੱਟ_ਲੜੀਆਂ, uint32_t which);
 
     // Copy constructor. Assumes which==ALL for a frozen set.
-    UnicodeSetStringSpan(const UnicodeSetStringSpan &otherStringSpan, const UVector &newParentSetStrings);
+    Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ(ਅਚਲ Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ &other_String_ਵਿਸਤਾਰ, ਅਚਲ UVector &new_ਮਾਪਾ_ਸੈੱਟ_ਲੜੀਆਂ);
 
-    ~UnicodeSetStringSpan();
+    ~Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ();
 
     /*
      * Do the strings need to be checked in span() etc.?
      * @return true if strings need to be checked (call span() here),
      *         false if not (use a BMPSet for best performance).
      */
-    inline UBool needsStringSpanUTF16();
-    inline UBool needsStringSpanUTF8();
+    ਸਤਰਅੰਦਰ UBool needs_String_ਵਿਸਤਾਰ_UTF16();
+    ਸਤਰਅੰਦਰ UBool needs_String_ਵਿਸਤਾਰ_UTF8();
 
     // For fast UnicodeSet::contains(c).
-    inline UBool contains(UChar32 c) const;
+    ਸਤਰਅੰਦਰ UBool ਸ਼ਾਮਲ_ਹੈ(UChar32 c) ਅਚਲ;
 
-    int32_t span(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t ਵਿਸਤਾਰ(ਅਚਲ char16_t *s, int32_t ਲੰਮਾਈ, USet_ਵਿਸਤਾਰ_Condition ਵਿਸਤਾਰ_Condition) ਅਚਲ;
 
-    int32_t spanBack(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t ਵਿਸਤਾਰ_ਪਿੱਠ(ਅਚਲ char16_t *s, int32_t ਲੰਮਾਈ, USet_ਵਿਸਤਾਰ_Condition ਵਿਸਤਾਰ_Condition) ਅਚਲ;
 
-    int32_t spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t ਵਿਸਤਾਰ_UTF8(ਅਚਲ uint8_t *s, int32_t ਲੰਮਾਈ, USet_ਵਿਸਤਾਰ_Condition ਵਿਸਤਾਰ_Condition) ਅਚਲ;
 
-    int32_t spanBackUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t ਵਿਸਤਾਰ_ਪਿੱਠ_UTF8(ਅਚਲ uint8_t *s, int32_t ਲੰਮਾਈ, USet_ਵਿਸਤਾਰ_Condition ਵਿਸਤਾਰ_Condition) ਅਚਲ;
 
-private:
+ਨਿਜੀ:
     // Special spanLength byte values.
-    enum {
+    ਗਿਣਤੀ {
         // The spanLength is >=0xfe.
-        LONG_SPAN=0xfe,
+        LONG_ਵਿਸਤਾਰ=0xfe,
         // All code points in the string are contained in the parent set.
         ALL_CP_CONTAINED=0xff
     };
 
     // Add a starting or ending string character to the spanNotSet
     // so that a character span ends before any string.
-    void addToSpanNotSet(UChar32 c);
+    ਖਾਲੀ ਜੋੜੋ_ਮੰਜ਼ਿਲ_ਵਿਸਤਾਰ_Not_ਸੈੱਟ(UChar32 c);
 
-    int32_t spanNot(const char16_t *s, int32_t length) const;
-    int32_t spanNotBack(const char16_t *s, int32_t length) const;
-    int32_t spanNotUTF8(const uint8_t *s, int32_t length) const;
-    int32_t spanNotBackUTF8(const uint8_t *s, int32_t length) const;
+    int32_t ਵਿਸਤਾਰ_Not(ਅਚਲ char16_t *s, int32_t ਲੰਮਾਈ) ਅਚਲ;
+    int32_t ਵਿਸਤਾਰ_Not_ਪਿੱਠ(ਅਚਲ char16_t *s, int32_t ਲੰਮਾਈ) ਅਚਲ;
+    int32_t ਵਿਸਤਾਰ_Not_UTF8(ਅਚਲ uint8_t *s, int32_t ਲੰਮਾਈ) ਅਚਲ;
+    int32_t ਵਿਸਤਾਰ_Not_ਪਿੱਠ_UTF8(ਅਚਲ uint8_t *s, int32_t ਲੰਮਾਈ) ਅਚਲ;
 
     // Set for span(). Same as parent but without strings.
-    UnicodeSet spanSet;
+    Unicode_ਸੈੱਟ ਵਿਸਤਾਰ_ਸੈੱਟ;
 
     // Set for span(not contained).
     // Same as spanSet, plus characters that start or end strings.
-    UnicodeSet *pSpanNotSet;
+    Unicode_ਸੈੱਟ *p_ਵਿਸਤਾਰ_Not_ਸੈੱਟ;
 
     // The strings of the parent set.
-    const UVector &strings;
+    ਅਚਲ UVector &ਲੜੀਆਂ;
 
     // Pointer to the UTF-8 string lengths.
     // Also pointer to further allocated storage for meta data and
@@ -117,14 +117,14 @@ private:
 
     // Pointer to the part of the (utf8Lengths) memory block that stores
     // the lengths of span(), spanBack() etc. for each string.
-    uint8_t *spanLengths;
+    uint8_t *ਵਿਸਤਾਰ_Lengths;
 
     // Pointer to the part of the (utf8Lengths) memory block that stores
     // the UTF-8 versions of the parent set's strings.
     uint8_t *utf8;
 
     // Number of bytes for all UTF-8 versions of strings together.
-    int32_t utf8Length;
+    int32_t utf8_ਲੰਮਾਈ;
 
     // Maximum lengths of relevant strings.
     int32_t maxLength16;
@@ -140,18 +140,18 @@ private:
     int32_t staticLengths[32];
 };
 
-UBool UnicodeSetStringSpan::needsStringSpanUTF16() {
-    return maxLength16 != 0;
+UBool Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ::needs_String_ਵਿਸਤਾਰ_UTF16() {
+    ਵਾਪਸ maxLength16 != 0;
 }
 
-UBool UnicodeSetStringSpan::needsStringSpanUTF8() {
-    return maxLength8 != 0;
+UBool Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ::needs_String_ਵਿਸਤਾਰ_UTF8() {
+    ਵਾਪਸ maxLength8 != 0;
 }
 
-UBool UnicodeSetStringSpan::contains(UChar32 c) const {
-    return spanSet.contains(c);
+UBool Unicode_ਸੈੱਟ_String_ਵਿਸਤਾਰ::ਸ਼ਾਮਲ_ਹੈ(UChar32 c) ਅਚਲ {
+    ਵਾਪਸ ਵਿਸਤਾਰ_ਸੈੱਟ.ਸ਼ਾਮਲ_ਹੈ(c);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif
+#ਜੇ_ਅੰਤ

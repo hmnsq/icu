@@ -8,24 +8,24 @@
 * simpleformatter.h
 */
 
-#ifndef __SIMPLEFORMATTER_H__
-#define __SIMPLEFORMATTER_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __SIMPLEFORMATTER_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __SIMPLEFORMATTER_H__
 
 /**
  * \file
  * \brief C++ API: Simple formatter, minimal subset of MessageFormat.
  */
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/unistr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/unistr.h"
 
 U_NAMESPACE_BEGIN
 
 // Forward declaration:
-namespace number::impl {
+namespace ਸੰਖਿਆ::impl {
 class SimpleModifier;
 }
 
@@ -57,13 +57,13 @@ class SimpleModifier;
  * @see UMessagePatternApostropheMode
  * @stable ICU 57
  */
-class U_COMMON_API SimpleFormatter final : public UMemory {
-public:
+class U_COMMON_API SimpleFormatter final : ਜਨਤਕ UMemory {
+ਜਨਤਕ:
     /**
      * Default constructor.
      * @stable ICU 57
      */
-    SimpleFormatter() : compiledPattern(static_cast<char16_t>(0)) {}
+    SimpleFormatter() : compiled_ਨਮੂਨਾ(static_cast<char16_t>(0)) {}
 
     /**
      * Constructs a formatter from the pattern string.
@@ -74,8 +74,8 @@ public:
      *                  Set to U_ILLEGAL_ARGUMENT_ERROR for bad argument syntax.
      * @stable ICU 57
      */
-    SimpleFormatter(const UnicodeString& pattern, UErrorCode &errorCode) {
-        applyPattern(pattern, errorCode);
+    SimpleFormatter(ਅਚਲ UnicodeString& ਨਮੂਨਾ, UError_ਕੋਡ &error_ਕੋਡ) {
+        apply_ਨਮੂਨਾ(ਨਮੂਨਾ, error_ਕੋਡ);
     }
 
     /**
@@ -92,23 +92,23 @@ public:
      *                  too few or too many arguments.
      * @stable ICU 57
      */
-    SimpleFormatter(const UnicodeString& pattern, int32_t min, int32_t max,
-                    UErrorCode &errorCode) {
-        applyPatternMinMaxArguments(pattern, min, max, errorCode);
+    SimpleFormatter(ਅਚਲ UnicodeString& ਨਮੂਨਾ, int32_t min, int32_t max,
+                    UError_ਕੋਡ &error_ਕੋਡ) {
+        apply_ਨਮੂਨਾ_Min_Max_Arguments(ਨਮੂਨਾ, min, max, error_ਕੋਡ);
     }
 
     /**
      * Copy constructor.
      * @stable ICU 57
      */
-    SimpleFormatter(const SimpleFormatter& other)
-            : compiledPattern(other.compiledPattern) {}
+    SimpleFormatter(ਅਚਲ SimpleFormatter& other)
+            : compiled_ਨਮੂਨਾ(other.compiled_ਨਮੂਨਾ) {}
 
     /**
      * Assignment operator.
      * @stable ICU 57
      */
-    SimpleFormatter& operator=(const SimpleFormatter& other) U_LIFETIME_BOUND;
+    SimpleFormatter& ਸੰਚਾਲਕ=(ਅਚਲ SimpleFormatter& other) U_LIFETIME_BOUND;
 
     /**
      * Destructor.
@@ -126,8 +126,8 @@ public:
      * @return true if U_SUCCESS(errorCode).
      * @stable ICU 57
      */
-    UBool applyPattern(const UnicodeString &pattern, UErrorCode &errorCode) {
-        return applyPatternMinMaxArguments(pattern, 0, INT32_MAX, errorCode);
+    UBool apply_ਨਮੂਨਾ(ਅਚਲ UnicodeString &ਨਮੂਨਾ, UError_ਕੋਡ &error_ਕੋਡ) {
+        ਵਾਪਸ apply_ਨਮੂਨਾ_Min_Max_Arguments(ਨਮੂਨਾ, 0, INT32_MAX, error_ਕੋਡ);
     }
 
     /**
@@ -145,15 +145,15 @@ public:
      * @return true if U_SUCCESS(errorCode).
      * @stable ICU 57
      */
-    UBool applyPatternMinMaxArguments(const UnicodeString &pattern,
-                                      int32_t min, int32_t max, UErrorCode &errorCode);
+    UBool apply_ਨਮੂਨਾ_Min_Max_Arguments(ਅਚਲ UnicodeString &ਨਮੂਨਾ,
+                                      int32_t min, int32_t max, UError_ਕੋਡ &error_ਕੋਡ);
 
     /**
      * @return The max argument number + 1.
      * @stable ICU 57
      */
-    int32_t getArgumentLimit() const {
-        return getArgumentLimit(compiledPattern.getBuffer(), compiledPattern.length());
+    int32_t get_ਦਲੀਲ_ਹੱਦਬੰਦੀ() ਅਚਲ {
+        ਵਾਪਸ get_ਦਲੀਲ_ਹੱਦਬੰਦੀ(compiled_ਨਮੂਨਾ.get_ਬਫਰ(), compiled_ਨਮੂਨਾ.ਲੰਮਾਈ());
     }
 
     /**
@@ -169,9 +169,9 @@ public:
      * @stable ICU 57
      */
     UnicodeString& format(
-            const UnicodeString& value0,
-            UnicodeString& appendTo U_LIFETIME_BOUND,
-            UErrorCode& errorCode) const;
+            ਅਚਲ UnicodeString& value0,
+            UnicodeString& append_ਮੰਜ਼ਿਲ U_LIFETIME_BOUND,
+            UError_ਕੋਡ& error_ਕੋਡ) ਅਚਲ;
 
     /**
      * Formats the given values, appending to the appendTo builder.
@@ -187,10 +187,10 @@ public:
      * @stable ICU 57
      */
     UnicodeString& format(
-            const UnicodeString& value0,
-            const UnicodeString& value1,
-            UnicodeString& appendTo U_LIFETIME_BOUND,
-            UErrorCode& errorCode) const;
+            ਅਚਲ UnicodeString& value0,
+            ਅਚਲ UnicodeString& value1,
+            UnicodeString& append_ਮੰਜ਼ਿਲ U_LIFETIME_BOUND,
+            UError_ਕੋਡ& error_ਕੋਡ) ਅਚਲ;
 
     /**
      * Formats the given values, appending to the appendTo builder.
@@ -207,11 +207,11 @@ public:
      * @stable ICU 57
      */
     UnicodeString& format(
-            const UnicodeString& value0,
-            const UnicodeString& value1,
-            const UnicodeString& value2,
-            UnicodeString& appendTo U_LIFETIME_BOUND,
-            UErrorCode& errorCode) const;
+            ਅਚਲ UnicodeString& value0,
+            ਅਚਲ UnicodeString& value1,
+            ਅਚਲ UnicodeString& value2,
+            UnicodeString& append_ਮੰਜ਼ਿਲ U_LIFETIME_BOUND,
+            UError_ਕੋਡ& error_ਕੋਡ) ਅਚਲ;
 
     /**
      * Formats the given values, appending to the appendTo string.
@@ -233,12 +233,12 @@ public:
      * @stable ICU 57
      */
     UnicodeString& formatAndAppend(
-            const UnicodeString* const* values,
-            int32_t valuesLength,
-            UnicodeString& appendTo U_LIFETIME_BOUND,
+            ਅਚਲ UnicodeString* ਅਚਲ* ਮੁੱਲਾਂ,
+            int32_t ਮੁੱਲਾਂ_ਲੰਮਾਈ,
+            UnicodeString& append_ਮੰਜ਼ਿਲ U_LIFETIME_BOUND,
             int32_t* offsets,
-            int32_t offsetsLength,
-            UErrorCode& errorCode) const;
+            int32_t offsets_ਲੰਮਾਈ,
+            UError_ਕੋਡ& error_ਕੋਡ) ਅਚਲ;
 
     /**
      * Formats the given values, replacing the contents of the result string.
@@ -262,27 +262,27 @@ public:
      * @stable ICU 57
      */
     UnicodeString& formatAndReplace(
-            const UnicodeString* const* values,
-            int32_t valuesLength,
-            UnicodeString& result U_LIFETIME_BOUND,
+            ਅਚਲ UnicodeString* ਅਚਲ* ਮੁੱਲਾਂ,
+            int32_t ਮੁੱਲਾਂ_ਲੰਮਾਈ,
+            UnicodeString& ਨਤੀਜਾ U_LIFETIME_BOUND,
             int32_t* offsets,
-            int32_t offsetsLength,
-            UErrorCode& errorCode) const;
+            int32_t offsets_ਲੰਮਾਈ,
+            UError_ਕੋਡ& error_ਕੋਡ) ਅਚਲ;
 
     /**
      * Returns the pattern text with none of the arguments.
      * Like formatting with all-empty string values.
      * @stable ICU 57
      */
-    UnicodeString getTextWithNoArguments() const {
-        return getTextWithNoArguments(
-            compiledPattern.getBuffer(),
-            compiledPattern.length(),
+    UnicodeString get_ਪਾਠ_With_No_Arguments() ਅਚਲ {
+        ਵਾਪਸ get_ਪਾਠ_With_No_Arguments(
+            compiled_ਨਮੂਨਾ.get_ਬਫਰ(),
+            compiled_ਨਮੂਨਾ.ਲੰਮਾਈ(),
             nullptr,
             0);
     }
 
-#ifndef U_HIDE_INTERNAL_API
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ U_HIDE_ਅੰਦਰੂਨੀ_API
     /**
      * Returns the pattern text with none of the arguments.
      * Like formatting with all-empty string values.
@@ -298,16 +298,16 @@ public:
      *
      * @internal
      */
-    UnicodeString getTextWithNoArguments(int32_t *offsets, int32_t offsetsLength) const {
-        return getTextWithNoArguments(
-            compiledPattern.getBuffer(),
-            compiledPattern.length(),
+    UnicodeString get_ਪਾਠ_With_No_Arguments(int32_t *offsets, int32_t offsets_ਲੰਮਾਈ) ਅਚਲ {
+        ਵਾਪਸ get_ਪਾਠ_With_No_Arguments(
+            compiled_ਨਮੂਨਾ.get_ਬਫਰ(),
+            compiled_ਨਮੂਨਾ.ਲੰਮਾਈ(),
             offsets,
-            offsetsLength);
+            offsets_ਲੰਮਾਈ);
     }
-#endif // U_HIDE_INTERNAL_API
+#ਜੇ_ਅੰਤ // U_HIDE_INTERNAL_API
 
-private:
+ਨਿਜੀ:
     /**
      * Binary representation of the compiled pattern.
      * Index 0: One more than the highest argument number.
@@ -317,36 +317,36 @@ private:
      * A literal-text segment is stored as its length (at least 1) offset by ARG_NUM_LIMIT,
      * followed by that many chars.
      */
-    UnicodeString compiledPattern;
+    UnicodeString compiled_ਨਮੂਨਾ;
 
-    static inline int32_t getArgumentLimit(const char16_t *compiledPattern,
-                                              int32_t compiledPatternLength) {
-        return compiledPatternLength == 0 ? 0 : compiledPattern[0];
+    ਸਥਿਰ ਸਤਰਅੰਦਰ int32_t get_ਦਲੀਲ_ਹੱਦਬੰਦੀ(ਅਚਲ char16_t *compiled_ਨਮੂਨਾ,
+                                              int32_t compiled_ਨਮੂਨਾ_ਲੰਮਾਈ) {
+        ਵਾਪਸ compiled_ਨਮੂਨਾ_ਲੰਮਾਈ == 0 ? 0 : compiled_ਨਮੂਨਾ[0];
     }
 
-    static UnicodeString getTextWithNoArguments(
-        const char16_t *compiledPattern,
-        int32_t compiledPatternLength,
+    ਸਥਿਰ UnicodeString get_ਪਾਠ_With_No_Arguments(
+        ਅਚਲ char16_t *compiled_ਨਮੂਨਾ,
+        int32_t compiled_ਨਮੂਨਾ_ਲੰਮਾਈ,
         int32_t *offsets,
-        int32_t offsetsLength);
+        int32_t offsets_ਲੰਮਾਈ);
 
-    static UnicodeString& format(
-            const char16_t* compiledPattern,
-            int32_t compiledPatternLength,
-            const UnicodeString* const* values,
-            UnicodeString& result U_LIFETIME_BOUND,
-            const UnicodeString* resultCopy,
-            UBool forbidResultAsValue,
+    ਸਥਿਰ UnicodeString& format(
+            ਅਚਲ char16_t* compiled_ਨਮੂਨਾ,
+            int32_t compiled_ਨਮੂਨਾ_ਲੰਮਾਈ,
+            ਅਚਲ UnicodeString* ਅਚਲ* ਮੁੱਲਾਂ,
+            UnicodeString& ਨਤੀਜਾ U_LIFETIME_BOUND,
+            ਅਚਲ UnicodeString* ਨਤੀਜਾ_Copy,
+            UBool forbid_ਨਤੀਜਾ_As_ਮੁੱਲ,
             int32_t* offsets,
-            int32_t offsetsLength,
-            UErrorCode& errorCode);
+            int32_t offsets_ਲੰਮਾਈ,
+            UError_ਕੋਡ& error_ਕੋਡ);
 
     // Give access to internals to SimpleModifier for number formatting
-    friend class number::impl::SimpleModifier;
+    ਮਿੱਤਰ class ਸੰਖਿਆ::impl::SimpleModifier;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ਜੇ_ਅੰਤ /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __SIMPLEFORMATTER_H__
+#ਜੇ_ਅੰਤ  // __SIMPLEFORMATTER_H__

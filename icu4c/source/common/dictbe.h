@@ -7,17 +7,17 @@
  *******************************************************************************
  */
 
-#ifndef DICTBE_H
-#define DICTBE_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ DICTBE_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DICTBE_H
 
-#include "unicode/utypes.h"
-#include "unicode/uniset.h"
-#include "unicode/utext.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uniset.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utext.h"
 
-#include "brkeng.h"
-#include "hash.h"
-#include "mlbe.h"
-#include "uvectr32.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "brkeng.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "hash.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mlbe.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
@@ -36,16 +36,16 @@ class Normalizer2;
  * <p>After it is constructed a DictionaryBreakEngine may be shared between
  * threads without synchronization.</p>
  */
-class DictionaryBreakEngine : public LanguageBreakEngine {
- private:
+class DictionaryBreakEngine : ਜਨਤਕ LanguageBreakEngine {
+ ਨਿਜੀ:
     /**
      * The set of characters handled by this engine
      * @internal
      */
 
-  UnicodeSet    fSet;
+  Unicode_ਸੈੱਟ    f_ਸੈੱਟ;
 
- public:
+ ਜਨਤਕ:
 
   /**
    * <p>Constructor </p>
@@ -55,7 +55,7 @@ class DictionaryBreakEngine : public LanguageBreakEngine {
   /**
    * <p>Virtual destructor.</p>
    */
-  virtual ~DictionaryBreakEngine();
+  ਆਭਾਸੀ ~DictionaryBreakEngine();
 
   /**
    * <p>Indicate whether this engine handles a particular character for
@@ -66,7 +66,7 @@ class DictionaryBreakEngine : public LanguageBreakEngine {
    * @return true if this engine handles the particular character and break
    * type.
    */
-  virtual UBool handles(UChar32 c, const char* locale) const override;
+  ਆਭਾਸੀ UBool handles(UChar32 c, ਅਚਲ ਅੱਖਰ* locale) ਅਚਲ override;
 
   /**
    * <p>Find any breaks within a run in the supplied text.</p>
@@ -80,21 +80,21 @@ class DictionaryBreakEngine : public LanguageBreakEngine {
    * @param status Information on any errors encountered.
    * @return The number of breaks found.
    */
-  virtual int32_t findBreaks( UText *text,
-                              int32_t startPos,
-                              int32_t endPos,
-                              UVector32 &foundBreaks,
+  ਆਭਾਸੀ int32_t ਲੱਭੋ_Breaks( UText *ਪਾਠ,
+                              int32_t ਸ਼ੁਰੂ_Pos,
+                              int32_t ਸਿਰਾ_Pos,
+                              UVector32 &ਮਿਲਿਆ_Breaks,
                               UBool isPhraseBreaking,
-                              UErrorCode& status ) const override;
+                              UError_ਕੋਡ& ਸਥਿਤੀ ) ਅਚਲ override;
 
- protected:
+ ਸੁਰੱਖਿਅਤ:
 
  /**
   * <p>Set the character set handled by this engine.</p>
   *
   * @param set A UnicodeSet of the set of characters handled by the engine
   */
-  virtual void setCharacters( const UnicodeSet &set );
+  ਆਭਾਸੀ ਖਾਲੀ ਸੈੱਟ_Characters( ਅਚਲ Unicode_ਸੈੱਟ &ਸੈੱਟ );
 
  /**
   * <p>Divide up a range of known dictionary characters handled by this break engine.</p>
@@ -106,12 +106,12 @@ class DictionaryBreakEngine : public LanguageBreakEngine {
   * @param status Information on any errors encountered.
   * @return The number of breaks found
   */
-  virtual int32_t divideUpDictionaryRange( UText *text,
-                                           int32_t rangeStart,
-                                           int32_t rangeEnd,
-                                           UVector32 &foundBreaks,
+  ਆਭਾਸੀ int32_t divide_ਉੱਪਰ_Dictionary_Range( UText *ਪਾਠ,
+                                           int32_t range_ਸ਼ੁਰੂ,
+                                           int32_t range_ਸਿਰਾ,
+                                           UVector32 &ਮਿਲਿਆ_Breaks,
                                            UBool isPhraseBreaking,
-                                           UErrorCode& status) const = 0;
+                                           UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ = 0;
 
 };
 
@@ -126,20 +126,20 @@ class DictionaryBreakEngine : public LanguageBreakEngine {
  * <p>After it is constructed a ThaiBreakEngine may be shared between
  * threads without synchronization.</p>
  */
-class ThaiBreakEngine : public DictionaryBreakEngine {
- private:
+class ThaiBreakEngine : ਜਨਤਕ DictionaryBreakEngine {
+ ਨਿਜੀ:
     /**
      * The set of characters handled by this engine
      * @internal
      */
 
-  UnicodeSet                fEndWordSet;
-  UnicodeSet                fBeginWordSet;
-  UnicodeSet                fSuffixSet;
-  UnicodeSet                fMarkSet;
+  Unicode_ਸੈੱਟ                f_ਸਿਰਾ_ਸ਼ਬਦ_ਸੈੱਟ;
+  Unicode_ਸੈੱਟ                f_Begin_ਸ਼ਬਦ_ਸੈੱਟ;
+  Unicode_ਸੈੱਟ                f_Suffix_ਸੈੱਟ;
+  Unicode_ਸੈੱਟ                f_Mark_ਸੈੱਟ;
   DictionaryMatcher  *fDictionary;
 
- public:
+ ਜਨਤਕ:
 
   /**
    * <p>Default constructor.</p>
@@ -147,14 +147,14 @@ class ThaiBreakEngine : public DictionaryBreakEngine {
    * @param adoptDictionary A DictionaryMatcher to adopt. Deleted when the
    * engine is deleted.
    */
-  ThaiBreakEngine(DictionaryMatcher *adoptDictionary, UErrorCode &status);
+  ThaiBreakEngine(DictionaryMatcher *adoptDictionary, UError_ਕੋਡ &ਸਥਿਤੀ);
 
   /**
    * <p>Virtual destructor.</p>
    */
-  virtual ~ThaiBreakEngine();
+  ਆਭਾਸੀ ~ThaiBreakEngine();
 
- protected:
+ ਸੁਰੱਖਿਅਤ:
  /**
   * <p>Divide up a range of known dictionary characters handled by this break engine.</p>
   *
@@ -165,12 +165,12 @@ class ThaiBreakEngine : public DictionaryBreakEngine {
   * @param status Information on any errors encountered.
   * @return The number of breaks found
   */
-  virtual int32_t divideUpDictionaryRange( UText *text,
-                                           int32_t rangeStart,
-                                           int32_t rangeEnd,
-                                           UVector32 &foundBreaks,
+  ਆਭਾਸੀ int32_t divide_ਉੱਪਰ_Dictionary_Range( UText *ਪਾਠ,
+                                           int32_t range_ਸ਼ੁਰੂ,
+                                           int32_t range_ਸਿਰਾ,
+                                           UVector32 &ਮਿਲਿਆ_Breaks,
                                            UBool isPhraseBreaking,
-                                           UErrorCode& status) const override;
+                                           UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ override;
 
 };
 
@@ -185,19 +185,19 @@ class ThaiBreakEngine : public DictionaryBreakEngine {
  * <p>After it is constructed a LaoBreakEngine may be shared between
  * threads without synchronization.</p>
  */
-class LaoBreakEngine : public DictionaryBreakEngine {
- private:
+class LaoBreakEngine : ਜਨਤਕ DictionaryBreakEngine {
+ ਨਿਜੀ:
     /**
      * The set of characters handled by this engine
      * @internal
      */
 
-  UnicodeSet                fEndWordSet;
-  UnicodeSet                fBeginWordSet;
-  UnicodeSet                fMarkSet;
+  Unicode_ਸੈੱਟ                f_ਸਿਰਾ_ਸ਼ਬਦ_ਸੈੱਟ;
+  Unicode_ਸੈੱਟ                f_Begin_ਸ਼ਬਦ_ਸੈੱਟ;
+  Unicode_ਸੈੱਟ                f_Mark_ਸੈੱਟ;
   DictionaryMatcher  *fDictionary;
 
- public:
+ ਜਨਤਕ:
 
   /**
    * <p>Default constructor.</p>
@@ -205,14 +205,14 @@ class LaoBreakEngine : public DictionaryBreakEngine {
    * @param adoptDictionary A DictionaryMatcher to adopt. Deleted when the
    * engine is deleted.
    */
-  LaoBreakEngine(DictionaryMatcher *adoptDictionary, UErrorCode &status);
+  LaoBreakEngine(DictionaryMatcher *adoptDictionary, UError_ਕੋਡ &ਸਥਿਤੀ);
 
   /**
    * <p>Virtual destructor.</p>
    */
-  virtual ~LaoBreakEngine();
+  ਆਭਾਸੀ ~LaoBreakEngine();
 
- protected:
+ ਸੁਰੱਖਿਅਤ:
  /**
   * <p>Divide up a range of known dictionary characters handled by this break engine.</p>
   *
@@ -223,12 +223,12 @@ class LaoBreakEngine : public DictionaryBreakEngine {
   * @param status Information on any errors encountered.
   * @return The number of breaks found
   */
-  virtual int32_t divideUpDictionaryRange( UText *text,
-                                           int32_t rangeStart,
-                                           int32_t rangeEnd,
-                                           UVector32 &foundBreaks,
+  ਆਭਾਸੀ int32_t divide_ਉੱਪਰ_Dictionary_Range( UText *ਪਾਠ,
+                                           int32_t range_ਸ਼ੁਰੂ,
+                                           int32_t range_ਸਿਰਾ,
+                                           UVector32 &ਮਿਲਿਆ_Breaks,
                                            UBool isPhraseBreaking,
-                                           UErrorCode& status) const override;
+                                           UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ override;
 
 };
 
@@ -243,19 +243,19 @@ class LaoBreakEngine : public DictionaryBreakEngine {
  * <p>After it is constructed a BurmeseBreakEngine may be shared between
  * threads without synchronization.</p>
  */
-class BurmeseBreakEngine : public DictionaryBreakEngine {
- private:
+class BurmeseBreakEngine : ਜਨਤਕ DictionaryBreakEngine {
+ ਨਿਜੀ:
     /**
      * The set of characters handled by this engine
      * @internal
      */
 
-  UnicodeSet                fEndWordSet;
-  UnicodeSet                fBeginWordSet;
-  UnicodeSet                fMarkSet;
+  Unicode_ਸੈੱਟ                f_ਸਿਰਾ_ਸ਼ਬਦ_ਸੈੱਟ;
+  Unicode_ਸੈੱਟ                f_Begin_ਸ਼ਬਦ_ਸੈੱਟ;
+  Unicode_ਸੈੱਟ                f_Mark_ਸੈੱਟ;
   DictionaryMatcher  *fDictionary;
 
- public:
+ ਜਨਤਕ:
 
   /**
    * <p>Default constructor.</p>
@@ -263,14 +263,14 @@ class BurmeseBreakEngine : public DictionaryBreakEngine {
    * @param adoptDictionary A DictionaryMatcher to adopt. Deleted when the
    * engine is deleted.
    */
-  BurmeseBreakEngine(DictionaryMatcher *adoptDictionary, UErrorCode &status);
+  BurmeseBreakEngine(DictionaryMatcher *adoptDictionary, UError_ਕੋਡ &ਸਥਿਤੀ);
 
   /**
    * <p>Virtual destructor.</p>
    */
-  virtual ~BurmeseBreakEngine();
+  ਆਭਾਸੀ ~BurmeseBreakEngine();
 
- protected:
+ ਸੁਰੱਖਿਅਤ:
  /**
   * <p>Divide up a range of known dictionary characters.</p>
   *
@@ -281,12 +281,12 @@ class BurmeseBreakEngine : public DictionaryBreakEngine {
   * @param status Information on any errors encountered.
   * @return The number of breaks found
   */
-  virtual int32_t divideUpDictionaryRange( UText *text,
-                                           int32_t rangeStart,
-                                           int32_t rangeEnd,
-                                           UVector32 &foundBreaks,
+  ਆਭਾਸੀ int32_t divide_ਉੱਪਰ_Dictionary_Range( UText *ਪਾਠ,
+                                           int32_t range_ਸ਼ੁਰੂ,
+                                           int32_t range_ਸਿਰਾ,
+                                           UVector32 &ਮਿਲਿਆ_Breaks,
                                            UBool isPhraseBreaking,
-                                           UErrorCode& status) const override;
+                                           UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ override;
 
 };
 
@@ -301,19 +301,19 @@ class BurmeseBreakEngine : public DictionaryBreakEngine {
  * <p>After it is constructed a KhmerBreakEngine may be shared between
  * threads without synchronization.</p>
  */
-class KhmerBreakEngine : public DictionaryBreakEngine {
- private:
+class KhmerBreakEngine : ਜਨਤਕ DictionaryBreakEngine {
+ ਨਿਜੀ:
     /**
      * The set of characters handled by this engine
      * @internal
      */
 
-  UnicodeSet                fEndWordSet;
-  UnicodeSet                fBeginWordSet;
-  UnicodeSet                fMarkSet;
+  Unicode_ਸੈੱਟ                f_ਸਿਰਾ_ਸ਼ਬਦ_ਸੈੱਟ;
+  Unicode_ਸੈੱਟ                f_Begin_ਸ਼ਬਦ_ਸੈੱਟ;
+  Unicode_ਸੈੱਟ                f_Mark_ਸੈੱਟ;
   DictionaryMatcher  *fDictionary;
 
- public:
+ ਜਨਤਕ:
 
   /**
    * <p>Default constructor.</p>
@@ -321,14 +321,14 @@ class KhmerBreakEngine : public DictionaryBreakEngine {
    * @param adoptDictionary A DictionaryMatcher to adopt. Deleted when the
    * engine is deleted.
    */
-  KhmerBreakEngine(DictionaryMatcher *adoptDictionary, UErrorCode &status);
+  KhmerBreakEngine(DictionaryMatcher *adoptDictionary, UError_ਕੋਡ &ਸਥਿਤੀ);
 
   /**
    * <p>Virtual destructor.</p>
    */
-  virtual ~KhmerBreakEngine();
+  ਆਭਾਸੀ ~KhmerBreakEngine();
 
- protected:
+ ਸੁਰੱਖਿਅਤ:
  /**
   * <p>Divide up a range of known dictionary characters.</p>
   *
@@ -339,23 +339,23 @@ class KhmerBreakEngine : public DictionaryBreakEngine {
   * @param status Information on any errors encountered.
   * @return The number of breaks found
   */
-  virtual int32_t divideUpDictionaryRange( UText *text,
-                                           int32_t rangeStart,
-                                           int32_t rangeEnd,
-                                           UVector32 &foundBreaks,
+  ਆਭਾਸੀ int32_t divide_ਉੱਪਰ_Dictionary_Range( UText *ਪਾਠ,
+                                           int32_t range_ਸ਼ੁਰੂ,
+                                           int32_t range_ਸਿਰਾ,
+                                           UVector32 &ਮਿਲਿਆ_Breaks,
                                            UBool isPhraseBreaking,
-                                           UErrorCode& status) const override;
+                                           UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ override;
 
 };
 
-#if !UCONFIG_NO_NORMALIZATION
+#ਜੇ !UCONFIG_NO_NORMALIZATION
 
 /*******************************************************************
  * CjkBreakEngine
  */
 
 //indicates language/script that the CjkBreakEngine will handle
-enum LanguageType {
+ਗਿਣਤੀ LanguageType {
     kKorean,
     kChineseJapanese
 };
@@ -365,32 +365,32 @@ enum LanguageType {
  * dictionary with costs associated with each word and
  * Viterbi decoding to determine CJK-specific breaks.</p>
  */
-class CjkBreakEngine : public DictionaryBreakEngine {
- protected:
+class CjkBreakEngine : ਜਨਤਕ DictionaryBreakEngine {
+ ਸੁਰੱਖਿਅਤ:
     /**
      * The set of characters handled by this engine
      * @internal
      */
-  UnicodeSet                fHangulWordSet;
-  UnicodeSet                fDigitOrOpenPunctuationOrAlphabetSet;
-  UnicodeSet                fClosePunctuationSet;
+  Unicode_ਸੈੱਟ                f_Hangul_ਸ਼ਬਦ_ਸੈੱਟ;
+  Unicode_ਸੈੱਟ                f_Digit_Or_Open_Punctuation_Or_Alphabet_ਸੈੱਟ;
+  Unicode_ਸੈੱਟ                f_Close_Punctuation_ਸੈੱਟ;
 
   DictionaryMatcher        *fDictionary;
-  const Normalizer2        *nfkcNorm2;
+  ਅਚਲ Normalizer2        *nfkcNorm2;
   MlBreakEngine            *fMlBreakEngine;
   bool                      isCj;
 
- private:
+ ਨਿਜੀ:
   // Load Japanese extensions.
-  void loadJapaneseExtensions(UErrorCode& error);
+  ਖਾਲੀ ਲੱਦੋ_Japanese_Extensions(UError_ਕੋਡ& error);
   // Load Japanese Hiragana.
-  void loadHiragana(UErrorCode& error);
+  ਖਾਲੀ ਲੱਦੋ_Hiragana(UError_ਕੋਡ& error);
   // Initialize fSkipSet by loading Japanese Hiragana and extensions.
-  void initJapanesePhraseParameter(UErrorCode& error);
+  ਖਾਲੀ initJapanesePhraseParameter(UError_ਕੋਡ& error);
 
-  Hashtable fSkipSet;
+  Hashtable f_Skip_ਸੈੱਟ;
 
- public:
+ ਜਨਤਕ:
 
     /**
      * <p>Default constructor.</p>
@@ -399,14 +399,14 @@ class CjkBreakEngine : public DictionaryBreakEngine {
      * engine is deleted. The DictionaryMatcher must contain costs for each word
      * in order for the dictionary to work properly.
      */
-  CjkBreakEngine(DictionaryMatcher *adoptDictionary, LanguageType type, UErrorCode &status);
+  CjkBreakEngine(DictionaryMatcher *adoptDictionary, LanguageType type, UError_ਕੋਡ &ਸਥਿਤੀ);
 
     /**
      * <p>Virtual destructor.</p>
      */
-  virtual ~CjkBreakEngine();
+  ਆਭਾਸੀ ~CjkBreakEngine();
 
- protected:
+ ਸੁਰੱਖਿਅਤ:
     /**
      * <p>Divide up a range of known dictionary characters handled by this break engine.</p>
      *
@@ -417,18 +417,18 @@ class CjkBreakEngine : public DictionaryBreakEngine {
      * @param status Information on any errors encountered.
      * @return The number of breaks found
      */
-  virtual int32_t divideUpDictionaryRange( UText *text,
-          int32_t rangeStart,
-          int32_t rangeEnd,
-          UVector32 &foundBreaks,
+  ਆਭਾਸੀ int32_t divide_ਉੱਪਰ_Dictionary_Range( UText *ਪਾਠ,
+          int32_t range_ਸ਼ੁਰੂ,
+          int32_t range_ਸਿਰਾ,
+          UVector32 &ਮਿਲਿਆ_Breaks,
           UBool isPhraseBreaking,
-          UErrorCode& status) const override;
+          UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ override;
 
 };
 
-#endif
+#ਜੇ_ਅੰਤ
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
     /* DICTBE_H */
-#endif
+#ਜੇ_ਅੰਤ

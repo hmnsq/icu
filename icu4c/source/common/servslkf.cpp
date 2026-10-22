@@ -8,22 +8,22 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#ਜੇ !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "uassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/resbund.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uresimp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "servloc.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ustrfmt.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uhash.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "charstr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uassert.h"
 
-#define UNDERSCORE_CHAR ((char16_t)0x005f)
-#define AT_SIGN_CHAR    ((char16_t)64)
-#define PERIOD_CHAR     ((char16_t)46)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UNDERSCORE_CHAR ((char16_t)0x005f)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AT_SIGN_CHAR    ((char16_t)64)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ PERIOD_CHAR     ((char16_t)46)
 
 U_NAMESPACE_BEGIN
 
@@ -31,49 +31,49 @@ U_NAMESPACE_BEGIN
  ******************************************************************
  */
 
-SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
-                                               const UnicodeString& locale,
-                                               int32_t kind,
+Simple_Locale_ਕੁੰਜੀ_Factory::Simple_Locale_ਕੁੰਜੀ_Factory(UObject* obj_ਮੰਜ਼ਿਲ_Adopt,
+                                               ਅਚਲ UnicodeString& locale,
+                                               int32_t ਕਿਸਮ,
                                                int32_t coverage)
-  : LocaleKeyFactory(coverage)
-  , _obj(objToAdopt)
+  : Locale_ਕੁੰਜੀ_Factory(coverage)
+  , _obj(obj_ਮੰਜ਼ਿਲ_Adopt)
   , _id(locale)
-  , _kind(kind)
+  , ਕਿਸਮ_2(ਕਿਸਮ)
 {
 }
 
-SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
-                                               const Locale& locale,
-                                               int32_t kind,
+Simple_Locale_ਕੁੰਜੀ_Factory::Simple_Locale_ਕੁੰਜੀ_Factory(UObject* obj_ਮੰਜ਼ਿਲ_Adopt,
+                                               ਅਚਲ Locale& locale,
+                                               int32_t ਕਿਸਮ,
                                                int32_t coverage)
-  : LocaleKeyFactory(coverage)
-  , _obj(objToAdopt)
+  : Locale_ਕੁੰਜੀ_Factory(coverage)
+  , _obj(obj_ਮੰਜ਼ਿਲ_Adopt)
   , _id()
-  , _kind(kind)
+  , ਕਿਸਮ_2(ਕਿਸਮ)
 {
     LocaleUtility::initNameFromLocale(locale, _id);
 }
 
-SimpleLocaleKeyFactory::~SimpleLocaleKeyFactory()
+Simple_Locale_ਕੁੰਜੀ_Factory::~Simple_Locale_ਕੁੰਜੀ_Factory()
 {
-  delete _obj;
-  _obj = nullptr;
+  ਮਿਟਾਓ _obj;
+  _obj = ਖਾਲੀ_ਸੂਚਕ;
 }
 
 UObject*
-SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const
+Simple_Locale_ਕੁੰਜੀ_Factory::create(ਅਚਲ ICUService_ਕੁੰਜੀ& ਕੁੰਜੀ, ਅਚਲ ICUService* service, UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ
 {
-    if (U_SUCCESS(status)) {
-        const LocaleKey& lkey = static_cast<const LocaleKey&>(key);
-        if (_kind == LocaleKey::KIND_ANY || _kind == lkey.kind()) {
-            UnicodeString keyID;
-            lkey.currentID(keyID);
-            if (_id == keyID) {
-                return service->cloneInstance(_obj);
+    ਜੇ (U_SUCCESS(ਸਥਿਤੀ)) {
+        ਅਚਲ Locale_ਕੁੰਜੀ& lkey = static_cast<ਅਚਲ Locale_ਕੁੰਜੀ&>(ਕੁੰਜੀ);
+        ਜੇ (ਕਿਸਮ_2 == Locale_ਕੁੰਜੀ::ਕਿਸਮ_ANY || ਕਿਸਮ_2 == lkey.ਕਿਸਮ()) {
+            UnicodeString ਕੁੰਜੀ_ID;
+            lkey.currentID(ਕੁੰਜੀ_ID);
+            ਜੇ (_id == ਕੁੰਜੀ_ID) {
+                ਵਾਪਸ service->cloneInstance(_obj);
             }
         }
     }
-    return nullptr;
+    ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
 }
 
 //UBool
@@ -82,42 +82,42 @@ SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* servi
 //    return id == _id;
 //}
 
-void
-SimpleLocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const
+ਖਾਲੀ
+Simple_Locale_ਕੁੰਜੀ_Factory::updateVisibleIDs(Hashtable& ਨਤੀਜਾ, UError_ਕੋਡ& ਸਥਿਤੀ) ਅਚਲ
 {
-    if (U_SUCCESS(status)) {
-        if (_coverage & 0x1) {
-            result.remove(_id);
-        } else {
-            result.put(_id, (void*)this, status);
+    ਜੇ (U_SUCCESS(ਸਥਿਤੀ)) {
+        ਜੇ (_coverage & 0x1) {
+            ਨਤੀਜਾ.remove(_id);
+        } ਨਹੀਂਤਾਂ {
+            ਨਤੀਜਾ.put(_id, (ਖਾਲੀ*)ਇਹ, ਸਥਿਤੀ);
         }
     }
 }
 
-#ifdef SERVICE_DEBUG
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ SERVICE_DEBUG
 UnicodeString&
-SimpleLocaleKeyFactory::debug(UnicodeString& result) const
+Simple_Locale_ਕੁੰਜੀ_Factory::debug(UnicodeString& ਨਤੀਜਾ) ਅਚਲ
 {
-    LocaleKeyFactory::debug(result);
-    result.append((UnicodeString)", id: ");
-    result.append(_id);
-    result.append((UnicodeString)", kind: ");
-    result.append(_kind);
-    return result;
+    Locale_ਕੁੰਜੀ_Factory::debug(ਨਤੀਜਾ);
+    ਨਤੀਜਾ.append((UnicodeString)", id: ");
+    ਨਤੀਜਾ.append(_id);
+    ਨਤੀਜਾ.append((UnicodeString)", kind: ");
+    ਨਤੀਜਾ.append(ਕਿਸਮ_2);
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
 UnicodeString&
-SimpleLocaleKeyFactory::debugClass(UnicodeString& result) const
+Simple_Locale_ਕੁੰਜੀ_Factory::debugClass(UnicodeString& ਨਤੀਜਾ) ਅਚਲ
 {
-    return result.append((UnicodeString)"SimpleLocaleKeyFactory");
+    ਵਾਪਸ ਨਤੀਜਾ.append((UnicodeString)"SimpleLocaleKeyFactory");
 }
-#endif
+#ਜੇ_ਅੰਤ
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(SimpleLocaleKeyFactory)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Simple_Locale_ਕੁੰਜੀ_Factory)
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
 /* !UCONFIG_NO_SERVICE */
-#endif
+#ਜੇ_ਅੰਤ
 
 

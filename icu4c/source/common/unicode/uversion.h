@@ -24,46 +24,46 @@
 /* Main ICU version information                                              */
 /*===========================================================================*/
 
-#ifndef UVERSION_H
-#define UVERSION_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ UVERSION_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UVERSION_H
 
-#include "unicode/umachine.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/umachine.h"
 
 /* Actual version info lives in uvernum.h */
-#include "unicode/uvernum.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uvernum.h"
 
 /** Maximum length of the copyright string.
  *  @stable ICU 2.4
  */
-#define U_COPYRIGHT_STRING_LENGTH  128
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_COPYRIGHT_STRING_ਲੰਮਾਈ  128
 
 /** An ICU version consists of up to 4 numbers from 0..255.
  *  @stable ICU 2.4
  */
-#define U_MAX_VERSION_LENGTH 4
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_MAX_ਸੰਸਕਰਣ_ਲੰਮਾਈ 4
 
 /** In a string, ICU version fields are delimited by dots.
  *  @stable ICU 2.4
  */
-#define U_VERSION_DELIMITER '.'
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_ਸੰਸਕਰਣ_DELIMITER '.'
 
 /** The maximum length of an ICU version string.
  *  @stable ICU 2.4
  */
-#define U_MAX_VERSION_STRING_LENGTH 20
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_MAX_ਸੰਸਕਰਣ_STRING_ਲੰਮਾਈ 20
 
 /** The binary form of a version on ICU APIs is an array of 4 uint8_t.
  *  To compare two versions, use memcmp(v1,v2,sizeof(UVersionInfo)).
  *  @stable ICU 2.4
  */
-typedef uint8_t UVersionInfo[U_MAX_VERSION_LENGTH];
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ uint8_t UVersionInfo[U_MAX_ਸੰਸਕਰਣ_ਲੰਮਾਈ];
 
 /*===========================================================================*/
 /* C++ namespace if supported. Versioned unless versioning is disabled.      */
 /*===========================================================================*/
 
 /* Define C++ namespace symbols. */
-#ifdef __cplusplus
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ __cplusplus
 
 /**
  * \def U_NAMESPACE_BEGIN
@@ -98,30 +98,30 @@ typedef uint8_t UVersionInfo[U_MAX_VERSION_LENGTH];
  * @stable ICU 2.4
  */
 
-#   if U_DISABLE_RENAMING
+#   ਜੇ U_DISABLE_RENAMING
 #       define U_ICU_NAMESPACE icu
         namespace U_ICU_NAMESPACE { }
-#   else
-#       define U_ICU_NAMESPACE U_ICU_ENTRY_POINT_RENAME(icu)
+#   ਨਹੀਂਤਾਂ
+#       define U_ICU_NAMESPACE U_ICU_ਇੰਦਰਾਜ_ਬਿੰਦੂ_RENAME(icu)
         namespace U_ICU_NAMESPACE { }
         namespace icu = U_ICU_NAMESPACE;
 #   endif
 
 #   define U_NAMESPACE_BEGIN namespace U_ICU_NAMESPACE {
-#   define U_NAMESPACE_END }
+#   define U_NAMESPACE_ਸਿਰਾ }
 #   define U_NAMESPACE_USE using namespace U_ICU_NAMESPACE;
 #   define U_NAMESPACE_QUALIFIER U_ICU_NAMESPACE::
 
 #   ifndef U_USING_ICU_NAMESPACE
-#       if defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || \
+#       ਜੇ defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || \
                 defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION) || \
                 defined(U_LAYOUTEX_IMPLEMENTATION) || defined(U_TOOLUTIL_IMPLEMENTATION)
 #           define U_USING_ICU_NAMESPACE 0
-#       else
+#       ਨਹੀਂਤਾਂ
 #           define U_USING_ICU_NAMESPACE 0
 #       endif
 #   endif
-#   if U_USING_ICU_NAMESPACE
+#   ਜੇ U_USING_ICU_NAMESPACE
         U_NAMESPACE_USE
 #   endif
 
@@ -160,27 +160,27 @@ typedef uint8_t UVersionInfo[U_MAX_VERSION_LENGTH];
  */
 
 // The first test is the same as for defining U_EXPORT for Windows.
-#if defined(_MSC_VER) || (UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllexport__) && \
+#ਜੇ defined(_MSC_VER) || (UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllexport__) && \
                           UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllimport__))
-#   define U_HEADER_NESTED_NAMESPACE header
-#   define U_ICU_NAMESPACE_OR_INTERNAL U_ICU_NAMESPACE
-#elif defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || \
+#   define U_ਸਿਰਲੇਖ_NESTED_NAMESPACE ਸਿਰਲੇਖ
+#   define U_ICU_NAMESPACE_OR_ਅੰਦਰੂਨੀ U_ICU_NAMESPACE
+#ਜਾਂਜੇ defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || \
         defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION) || \
         defined(U_LAYOUTEX_IMPLEMENTATION) || defined(U_TOOLUTIL_IMPLEMENTATION)
-#   define U_HEADER_NESTED_NAMESPACE internal
-#   define U_ICU_NAMESPACE_OR_INTERNAL U_ICU_NAMESPACE::internal
-    namespace U_ICU_NAMESPACE_OR_INTERNAL {}
-    using namespace U_ICU_NAMESPACE_OR_INTERNAL;
-#else
-#   define U_HEADER_NESTED_NAMESPACE header
-#   define U_ICU_NAMESPACE_OR_INTERNAL U_ICU_NAMESPACE
-#endif
+#   define U_ਸਿਰਲੇਖ_NESTED_NAMESPACE ਅੰਦਰੂਨੀ_2
+#   define U_ICU_NAMESPACE_OR_ਅੰਦਰੂਨੀ U_ICU_NAMESPACE::ਅੰਦਰੂਨੀ_2
+    namespace U_ICU_NAMESPACE_OR_ਅੰਦਰੂਨੀ {}
+    using namespace U_ICU_NAMESPACE_OR_ਅੰਦਰੂਨੀ;
+#ਨਹੀਂਤਾਂ
+#   define U_ਸਿਰਲੇਖ_NESTED_NAMESPACE ਸਿਰਲੇਖ
+#   define U_ICU_NAMESPACE_OR_ਅੰਦਰੂਨੀ U_ICU_NAMESPACE
+#ਜੇ_ਅੰਤ
 
-#define U_HEADER_ONLY_NAMESPACE U_ICU_NAMESPACE::U_HEADER_NESTED_NAMESPACE
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_ਸਿਰਲੇਖ_ONLY_NAMESPACE U_ICU_NAMESPACE::U_ਸਿਰਲੇਖ_NESTED_NAMESPACE
 
-namespace U_HEADER_ONLY_NAMESPACE {}
+namespace U_ਸਿਰਲੇਖ_ONLY_NAMESPACE {}
 
-#endif /* __cplusplus */
+#ਜੇ_ਅੰਤ /* __cplusplus */
 
 /*===========================================================================*/
 /* General version helper functions. Definitions in putil.c                  */
@@ -197,8 +197,8 @@ namespace U_HEADER_ONLY_NAMESPACE {}
  *                      values of up to 255 each.
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
-u_versionFromString(UVersionInfo versionArray, const char *versionString);
+U_CAPI ਖਾਲੀ U_EXPORT2
+u_ਸੰਸਕਰਣ_From_String(UVersionInfo ਸੰਸਕਰਣ_Array, ਅਚਲ ਅੱਖਰ *ਸੰਸਕਰਣ_String);
 
 /**
  * Parse a Unicode string with dotted-decimal version information and
@@ -211,8 +211,8 @@ u_versionFromString(UVersionInfo versionArray, const char *versionString);
  *                      fields with values of up to 255 each.
  * @stable ICU 4.2
  */
-U_CAPI void U_EXPORT2
-u_versionFromUString(UVersionInfo versionArray, const UChar *versionString);
+U_CAPI ਖਾਲੀ U_EXPORT2
+u_ਸੰਸਕਰਣ_From_UString(UVersionInfo ਸੰਸਕਰਣ_Array, ਅਚਲ UChar *ਸੰਸਕਰਣ_String);
 
 
 /**
@@ -227,8 +227,8 @@ u_versionFromUString(UVersionInfo versionArray, const UChar *versionString);
  *                      The buffer size must be at least U_MAX_VERSION_STRING_LENGTH.
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
-u_versionToString(const UVersionInfo versionArray, char *versionString);
+U_CAPI ਖਾਲੀ U_EXPORT2
+u_ਸੰਸਕਰਣ_ਮੰਜ਼ਿਲ_String(ਅਚਲ UVersionInfo ਸੰਸਕਰਣ_Array, ਅੱਖਰ *ਸੰਸਕਰਣ_String);
 
 /**
  * Gets the ICU release version.  The version array stores the version information
@@ -238,6 +238,6 @@ u_versionToString(const UVersionInfo versionArray, char *versionString);
  * @param versionArray the version # information, the result will be filled in
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-u_getVersion(UVersionInfo versionArray);
-#endif
+U_CAPI ਖਾਲੀ U_EXPORT2
+u_get_ਸੰਸਕਰਣ(UVersionInfo ਸੰਸਕਰਣ_Array);
+#ਜੇ_ਅੰਤ

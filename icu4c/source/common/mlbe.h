@@ -1,24 +1,24 @@
 // © 2022 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#ifndef MLBREAKENGINE_H
-#define MLBREAKENGINE_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ MLBREAKENGINE_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MLBREAKENGINE_H
 
-#include "hash.h"
-#include "unicode/resbund.h"
-#include "unicode/uniset.h"
-#include "unicode/utext.h"
-#include "uvectr32.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "hash.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/resbund.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uniset.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utext.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ਜੇ !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * A machine learning break engine for the phrase breaking in Japanese.
  */
-class MlBreakEngine : public UMemory {
-   public:
+class MlBreakEngine : ਜਨਤਕ UMemory {
+   ਜਨਤਕ:
     /**
      * Constructor.
      *
@@ -27,15 +27,15 @@ class MlBreakEngine : public UMemory {
      * @param closePunctuationSet An UnicodeSet with close punctuation.
      * @param status Information on any errors encountered.
      */
-    MlBreakEngine(const UnicodeSet &digitOrOpenPunctuationOrAlphabetSet,
-                  const UnicodeSet &closePunctuationSet, UErrorCode &status);
+    MlBreakEngine(ਅਚਲ Unicode_ਸੈੱਟ &digit_Or_Open_Punctuation_Or_Alphabet_ਸੈੱਟ,
+                  ਅਚਲ Unicode_ਸੈੱਟ &close_Punctuation_ਸੈੱਟ, UError_ਕੋਡ &ਸਥਿਤੀ);
 
     /**
      * Virtual destructor.
      */
-    virtual ~MlBreakEngine();
+    ਆਭਾਸੀ ~MlBreakEngine();
 
-   public:
+   ਜਨਤਕ:
     /**
      * Divide up a range of characters handled by this break engine.
      *
@@ -48,17 +48,17 @@ class MlBreakEngine : public UMemory {
      * @param status Information on any errors encountered.
      * @return The number of breaks found
      */
-    int32_t divideUpRange(UText *inText, int32_t rangeStart, int32_t rangeEnd,
-                          UVector32 &foundBreaks, const UnicodeString &inString,
-                          const LocalPointer<UVector32> &inputMap, UErrorCode &status) const;
+    int32_t divide_ਉੱਪਰ_Range(UText *ਵਿੱਚ_ਪਾਠ, int32_t range_ਸ਼ੁਰੂ, int32_t range_ਸਿਰਾ,
+                          UVector32 &ਮਿਲਿਆ_Breaks, ਅਚਲ UnicodeString &ਵਿੱਚ_String,
+                          ਅਚਲ Local_ਸੂਚਕ<UVector32> &ਨਿਵੇਸ਼_Map, UError_ਕੋਡ &ਸਥਿਤੀ) ਅਚਲ;
 
-   private:
+   ਨਿਜੀ:
     /**
      * Load the machine learning's model file.
      *
      * @param error Information on any errors encountered.
      */
-    void loadMLModel(UErrorCode &error);
+    ਖਾਲੀ ਲੱਦੋ_MLModel(UError_ਕੋਡ &error);
 
     /**
      * In the machine learning's model file, specify the name of the key and value to load the
@@ -70,8 +70,8 @@ class MlBreakEngine : public UMemory {
      * @param model A hashtable to store the pairs of the feature and its score.
      * @param error Information on any errors encountered.
      */
-    void initKeyValue(UResourceBundle *rb, const char *keyName, const char *valueName,
-                      Hashtable &model, UErrorCode &error);
+    ਖਾਲੀ init_ਕੁੰਜੀ_ਮੁੱਲ(UResourceBundle *rb, ਅਚਲ ਅੱਖਰ *ਕੁੰਜੀ_Name, ਅਚਲ ਅੱਖਰ *ਮੁੱਲ_Name,
+                      Hashtable &model, UError_ਕੋਡ &error);
 
     /**
      * Initialize the index list from the input string.
@@ -81,8 +81,8 @@ class MlBreakEngine : public UMemory {
      * @param status Information on any errors encountered.
      * @return The number of code units of the first four characters in inString.
      */
-    int32_t initIndexList(const UnicodeString &inString, int32_t *indexList,
-                          UErrorCode &status) const;
+    int32_t init_ਸੂਚਕਾਂਕ_List(ਅਚਲ UnicodeString &ਵਿੱਚ_String, int32_t *ਸੂਚਕਾਂਕ_List,
+                          UError_ਕੋਡ &ਸਥਿਤੀ) ਅਚਲ;
 
     /**
      * Evaluate whether the index is a potential breakpoint.
@@ -96,21 +96,21 @@ class MlBreakEngine : public UMemory {
      * @param status Information on any errors encountered.
      * @return The number of breakpoints
      */
-    int32_t evaluateBreakpoint(const UnicodeString &inString, int32_t *indexList, int32_t startIdx,
-                               int32_t numCodeUnits, int32_t numBreaks, UVector32 &boundary,
-                               UErrorCode &status) const;
+    int32_t evaluateBreakpoint(ਅਚਲ UnicodeString &ਵਿੱਚ_String, int32_t *ਸੂਚਕਾਂਕ_List, int32_t ਸ਼ੁਰੂ_Idx,
+                               int32_t ਅੰਕ_ਕੋਡ_Units, int32_t ਅੰਕ_Breaks, UVector32 &boundary,
+                               UError_ਕੋਡ &ਸਥਿਤੀ) ਅਚਲ;
 
-    void printUnicodeString(const UnicodeString &s) const;
+    ਖਾਲੀ printUnicodeString(ਅਚਲ UnicodeString &s) ਅਚਲ;
 
-    UnicodeSet fDigitOrOpenPunctuationOrAlphabetSet;
-    UnicodeSet fClosePunctuationSet;
+    Unicode_ਸੈੱਟ f_Digit_Or_Open_Punctuation_Or_Alphabet_ਸੈੱਟ;
+    Unicode_ਸੈੱਟ f_Close_Punctuation_ਸੈੱਟ;
     Hashtable fModel[13];  // {UW1, UW2, ... UW6, BW1, ... BW3, TW1, TW2, ... TW4} 6+3+4= 13
-    int32_t fNegativeSum;
+    int32_t f_Negative_ਜੋੜ;
 };
 
-#endif
+#ਜੇ_ਅੰਤ
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
 /* MLBREAKENGINE_H */
-#endif
+#ਜੇ_ਅੰਤ

@@ -16,113 +16,113 @@
 *   
 */
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#ਜੇ !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "cmemory.h"
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_cb.h"
-#include "unicode/uset.h"
-#include "unicode/utf16.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "ucnv_imp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ucnv.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ucnv_cb.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uset.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf16.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucnv_bld.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucnv_cnv.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucnv_imp.h"
 
-#define UCNV_TILDE 0x7E          /* ~ */
-#define UCNV_OPEN_BRACE 0x7B     /* { */
-#define UCNV_CLOSE_BRACE 0x7D   /* } */
-#define SB_ESCAPE    "\x7E\x7D"
-#define DB_ESCAPE    "\x7E\x7B"
-#define TILDE_ESCAPE "\x7E\x7E"
-#define ESC_LEN       2
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_TILDE 0x7E          /* ~ */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_OPEN_BRACE 0x7B     /* { */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_CLOSE_BRACE 0x7D   /* } */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ SB_ESCAPE    "\x7E\x7D"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DB_ESCAPE    "\x7E\x7B"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ TILDE_ESCAPE "\x7E\x7E"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ESC_LEN       2
 
 
-#define CONCAT_ESCAPE_MACRO(args, targetIndex,targetLength,strToAppend, err, len,sourceIndex) UPRV_BLOCK_MACRO_BEGIN {      \
-    while(len-->0){                                                                                                         \
-        if(targetIndex < targetLength){                                                                                     \
-            args->target[targetIndex] = (unsigned char) *strToAppend;                                                       \
-            if(args->offsets!=nullptr){                                                                                        \
-                *(offsets++) = sourceIndex-1;                                                                               \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CONCAT_ESCAPE_MACRO(ਦਲੀਲਾਂ_2, ਨਿਸ਼ਾਨਾ_ਸੂਚਕਾਂਕ,ਨਿਸ਼ਾਨਾ_ਲੰਮਾਈ,str_ਮੰਜ਼ਿਲ_Append, err, len,ਸਰੋਤ_ਸੂਚਕਾਂਕ) UPRV_ਖੰਡ_MACRO_BEGIN {      \
+    ਜਦੋਂ(len-->0){                                                                                                         \
+        ਜੇ(ਨਿਸ਼ਾਨਾ_ਸੂਚਕਾਂਕ < ਨਿਸ਼ਾਨਾ_ਲੰਮਾਈ){                                                                                     \
+            ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ[ਨਿਸ਼ਾਨਾ_ਸੂਚਕਾਂਕ] = (ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ) *str_ਮੰਜ਼ਿਲ_Append;                                                       \
+            ਜੇ(ਦਲੀਲਾਂ_2->offsets!=ਖਾਲੀ_ਸੂਚਕ){                                                                                        \
+                *(offsets++) = ਸਰੋਤ_ਸੂਚਕਾਂਕ-1;                                                                               \
             }                                                                                                               \
-            targetIndex++;                                                                                                  \
+            ਨਿਸ਼ਾਨਾ_ਸੂਚਕਾਂਕ++;                                                                                                  \
         }                                                                                                                   \
-        else{                                                                                                               \
-            args->converter->charErrorBuffer[(int)args->converter->charErrorBufferLength++] = (unsigned char) *strToAppend; \
-            *err =U_BUFFER_OVERFLOW_ERROR;                                                                                  \
+        ਨਹੀਂਤਾਂ{                                                                                                               \
+            ਦਲੀਲਾਂ_2->converter->char_Error_ਬਫਰ[(ਪੂਰਨ)ਦਲੀਲਾਂ_2->converter->char_Error_ਬਫਰ_ਲੰਮਾਈ++] = (ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ) *str_ਮੰਜ਼ਿਲ_Append; \
+            *err =U_ਬਫਰ_ਉਛਾਲ_ERROR;                                                                                  \
         }                                                                                                                   \
-        strToAppend++;                                                                                                      \
+        str_ਮੰਜ਼ਿਲ_Append++;                                                                                                      \
     }                                                                                                                       \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ਖੰਡ_MACRO_ਸਿਰਾ
 
 
-typedef struct{
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ{
     UConverter* gbConverter;
-    int32_t targetIndex;
-    int32_t sourceIndex;
+    int32_t ਨਿਸ਼ਾਨਾ_ਸੂਚਕਾਂਕ;
+    int32_t ਸਰੋਤ_ਸੂਚਕਾਂਕ;
     UBool isEscapeAppended;
     UBool isStateDBCS;
-    UBool isTargetUCharDBCS;
-    UBool isEmptySegment;
-}UConverterDataHZ;
+    UBool is_ਨਿਸ਼ਾਨਾ_UChar_DBCS;
+    UBool is_ਖਾਲੀ_ਥਾਵਾਂ_Segment;
+}UConverter_ਅੰਕੜੇ_HZ;
 
 
 U_CDECL_BEGIN
-static void  U_CALLCONV
-_HZOpen(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
+ਸਥਿਰ ਖਾਲੀ  U_CALLCONV
+_HZOpen(UConverter *cnv, UConverter_ਲੱਦੋ_ਦਲੀਲਾਂ *p_ਦਲੀਲਾਂ, UError_ਕੋਡ *error_ਕੋਡ){
     UConverter *gbConverter;
-    if(pArgs->onlyTestIsLoadable) {
-        ucnv_canCreateConverter("GBK", errorCode);  /* errorCode carries result */
-        return;
+    ਜੇ(p_ਦਲੀਲਾਂ->onlyTestIsLoadable) {
+        ucnv_canCreateConverter("GBK", error_ਕੋਡ);  /* errorCode carries result */
+        ਵਾਪਸ;
     }
-    gbConverter = ucnv_open("GBK", errorCode);
-    if(U_FAILURE(*errorCode)) {
-        return;
+    gbConverter = ucnv_open("GBK", error_ਕੋਡ);
+    ਜੇ(U_FAILURE(*error_ਕੋਡ)) {
+        ਵਾਪਸ;
     }
-    cnv->toUnicodeStatus = 0;
-    cnv->fromUnicodeStatus= 0;
-    cnv->mode=0;
+    cnv->ਮੰਜ਼ਿਲ_Unicode_ਸਥਿਤੀ = 0;
+    cnv->from_Unicode_ਸਥਿਤੀ= 0;
+    cnv->ਬਹੁਲਕ=0;
     cnv->fromUChar32=0x0000;
-    cnv->extraInfo = uprv_calloc(1, sizeof(UConverterDataHZ));
-    if(cnv->extraInfo != nullptr){
-        ((UConverterDataHZ*)cnv->extraInfo)->gbConverter = gbConverter;
+    cnv->extraInfo = uprv_calloc(1, ਆਕਾਰ(UConverter_ਅੰਕੜੇ_HZ));
+    ਜੇ(cnv->extraInfo != ਖਾਲੀ_ਸੂਚਕ){
+        ((UConverter_ਅੰਕੜੇ_HZ*)cnv->extraInfo)->gbConverter = gbConverter;
     }
-    else {
+    ਨਹੀਂਤਾਂ {
         ucnv_close(gbConverter);
-        *errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        *error_ਕੋਡ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+        ਵਾਪਸ;
     }
 }
 
-static void  U_CALLCONV
+ਸਥਿਰ ਖਾਲੀ  U_CALLCONV
 _HZClose(UConverter *cnv){
-    if(cnv->extraInfo != nullptr) {
-        ucnv_close (((UConverterDataHZ *) (cnv->extraInfo))->gbConverter);
-        if(!cnv->isExtraLocal) {
+    ਜੇ(cnv->extraInfo != ਖਾਲੀ_ਸੂਚਕ) {
+        ucnv_close (((UConverter_ਅੰਕੜੇ_HZ *) (cnv->extraInfo))->gbConverter);
+        ਜੇ(!cnv->isExtraLocal) {
             uprv_free(cnv->extraInfo);
         }
-        cnv->extraInfo = nullptr;
+        cnv->extraInfo = ਖਾਲੀ_ਸੂਚਕ;
     }
 }
 
-static void  U_CALLCONV
+ਸਥਿਰ ਖਾਲੀ  U_CALLCONV
 _HZReset(UConverter *cnv, UConverterResetChoice choice){
-    if(choice<=UCNV_RESET_TO_UNICODE) {
-        cnv->toUnicodeStatus = 0;
-        cnv->mode=0;
-        if(cnv->extraInfo != nullptr){
-            ((UConverterDataHZ*)cnv->extraInfo)->isStateDBCS = false;
-            ((UConverterDataHZ*)cnv->extraInfo)->isEmptySegment = false;
+    ਜੇ(choice<=UCNV_RESET_ਮੰਜ਼ਿਲ_UNICODE) {
+        cnv->ਮੰਜ਼ਿਲ_Unicode_ਸਥਿਤੀ = 0;
+        cnv->ਬਹੁਲਕ=0;
+        ਜੇ(cnv->extraInfo != ਖਾਲੀ_ਸੂਚਕ){
+            ((UConverter_ਅੰਕੜੇ_HZ*)cnv->extraInfo)->isStateDBCS = ਝੂਠ;
+            ((UConverter_ਅੰਕੜੇ_HZ*)cnv->extraInfo)->is_ਖਾਲੀ_ਥਾਵਾਂ_Segment = ਝੂਠ;
         }
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
-        cnv->fromUnicodeStatus= 0;
+    ਜੇ(choice!=UCNV_RESET_ਮੰਜ਼ਿਲ_UNICODE) {
+        cnv->from_Unicode_ਸਥਿਤੀ= 0;
         cnv->fromUChar32=0x0000; 
-        if(cnv->extraInfo != nullptr){
-            ((UConverterDataHZ*)cnv->extraInfo)->isEscapeAppended = false;
-            ((UConverterDataHZ*)cnv->extraInfo)->targetIndex = 0;
-            ((UConverterDataHZ*)cnv->extraInfo)->sourceIndex = 0;
-            ((UConverterDataHZ*)cnv->extraInfo)->isTargetUCharDBCS = false;
+        ਜੇ(cnv->extraInfo != ਖਾਲੀ_ਸੂਚਕ){
+            ((UConverter_ਅੰਕੜੇ_HZ*)cnv->extraInfo)->isEscapeAppended = ਝੂਠ;
+            ((UConverter_ਅੰਕੜੇ_HZ*)cnv->extraInfo)->ਨਿਸ਼ਾਨਾ_ਸੂਚਕਾਂਕ = 0;
+            ((UConverter_ਅੰਕੜੇ_HZ*)cnv->extraInfo)->ਸਰੋਤ_ਸੂਚਕਾਂਕ = 0;
+            ((UConverter_ਅੰਕੜੇ_HZ*)cnv->extraInfo)->is_ਨਿਸ਼ਾਨਾ_UChar_DBCS = ਝੂਠ;
         }
     }
 }
@@ -152,18 +152,18 @@ _HZReset(UConverter *cnv, UConverterResetChoice choice){
 */
 
 
-static void  U_CALLCONV
-UConverter_toUnicode_HZ_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
-                                                            UErrorCode* err){
-    char tempBuf[2];
-    const char *mySource = ( char *) args->source;
-    char16_t *myTarget = args->target;
-    const char *mySourceLimit = args->sourceLimit;
-    UChar32 targetUniChar = 0x0000;
-    int32_t mySourceChar = 0x0000;
-    UConverterDataHZ* myData=(UConverterDataHZ*)(args->converter->extraInfo);
-    tempBuf[0]=0; 
-    tempBuf[1]=0;
+ਸਥਿਰ ਖਾਲੀ  U_CALLCONV
+UConverter_ਮੰਜ਼ਿਲ_Unicode_HZ_OFFSETS_LOGIC(UConverter_ਮੰਜ਼ਿਲ_Unicode_ਦਲੀਲਾਂ *ਦਲੀਲਾਂ_2,
+                                                            UError_ਕੋਡ* err){
+    ਅੱਖਰ ਆਰਜ਼ੀ_Buf[2];
+    ਅਚਲ ਅੱਖਰ *my_ਸਰੋਤ = ( ਅੱਖਰ *) ਦਲੀਲਾਂ_2->ਸਰੋਤ;
+    char16_t *my_ਨਿਸ਼ਾਨਾ = ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ;
+    ਅਚਲ ਅੱਖਰ *my_ਸਰੋਤ_ਹੱਦਬੰਦੀ = ਦਲੀਲਾਂ_2->ਸਰੋਤ_ਹੱਦਬੰਦੀ;
+    UChar32 ਨਿਸ਼ਾਨਾ_Uni_Char = 0x0000;
+    int32_t my_ਸਰੋਤ_Char = 0x0000;
+    UConverter_ਅੰਕੜੇ_HZ* my_ਅੰਕੜੇ=(UConverter_ਅੰਕੜੇ_HZ*)(ਦਲੀਲਾਂ_2->converter->extraInfo);
+    ਆਰਜ਼ੀ_Buf[0]=0; 
+    ਆਰਜ਼ੀ_Buf[1]=0;
 
     /* Calling code already handles this situation. */
     /*if ((args->converter == nullptr) || (args->targetLimit < args->target) || (mySourceLimit < args->source)){
@@ -171,43 +171,43 @@ UConverter_toUnicode_HZ_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
         return;
     }*/
     
-    while(mySource< mySourceLimit){
+    ਜਦੋਂ(my_ਸਰੋਤ< my_ਸਰੋਤ_ਹੱਦਬੰਦੀ){
         
-        if(myTarget < args->targetLimit){
+        ਜੇ(my_ਨਿਸ਼ਾਨਾ < ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ){
             
-            mySourceChar= (unsigned char) *mySource++;
+            my_ਸਰੋਤ_Char= (ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ) *my_ਸਰੋਤ++;
 
-            if(args->converter->mode == UCNV_TILDE) {
+            ਜੇ(ਦਲੀਲਾਂ_2->converter->ਬਹੁਲਕ == UCNV_TILDE) {
                 /* second byte after ~ */
-                args->converter->mode=0;
-                switch(mySourceChar) {
-                case 0x0A:
+                ਦਲੀਲਾਂ_2->converter->ਬਹੁਲਕ=0;
+                ਚੋਣ(my_ਸਰੋਤ_Char) {
+                ਹਾਲਤ 0x0A:
                     /* no output for ~\n (line-continuation marker) */
-                    continue;
-                case UCNV_TILDE:
-                    if(args->offsets) {
-                        args->offsets[myTarget - args->target]=(int32_t)(mySource - args->source - 2);
+                    ਜਾਰੀ;
+                ਹਾਲਤ UCNV_TILDE:
+                    ਜੇ(ਦਲੀਲਾਂ_2->offsets) {
+                        ਦਲੀਲਾਂ_2->offsets[my_ਨਿਸ਼ਾਨਾ - ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ]=(int32_t)(my_ਸਰੋਤ - ਦਲੀਲਾਂ_2->ਸਰੋਤ - 2);
                     }
-                    *(myTarget++)=(char16_t)mySourceChar;
-                    myData->isEmptySegment = false;
-                    continue;
-                case UCNV_OPEN_BRACE:
-                case UCNV_CLOSE_BRACE:
-                    myData->isStateDBCS = (mySourceChar == UCNV_OPEN_BRACE);
-                    if (myData->isEmptySegment) {
-                        myData->isEmptySegment = false; /* we are handling it, reset to avoid future spurious errors */
+                    *(my_ਨਿਸ਼ਾਨਾ++)=(char16_t)my_ਸਰੋਤ_Char;
+                    my_ਅੰਕੜੇ->is_ਖਾਲੀ_ਥਾਵਾਂ_Segment = ਝੂਠ;
+                    ਜਾਰੀ;
+                ਹਾਲਤ UCNV_OPEN_BRACE:
+                ਹਾਲਤ UCNV_CLOSE_BRACE:
+                    my_ਅੰਕੜੇ->isStateDBCS = (my_ਸਰੋਤ_Char == UCNV_OPEN_BRACE);
+                    ਜੇ (my_ਅੰਕੜੇ->is_ਖਾਲੀ_ਥਾਵਾਂ_Segment) {
+                        my_ਅੰਕੜੇ->is_ਖਾਲੀ_ਥਾਵਾਂ_Segment = ਝੂਠ; /* we are handling it, reset to avoid future spurious errors */
                         *err = U_ILLEGAL_ESCAPE_SEQUENCE;
-                        args->converter->toUCallbackReason = UCNV_IRREGULAR;
-                        args->converter->toUBytes[0] = UCNV_TILDE;
-                        args->converter->toUBytes[1] = static_cast<uint8_t>(mySourceChar);
-                        args->converter->toULength = 2;
-                        args->target = myTarget;
-                        args->source = mySource;
-                        return;
+                        ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_UCallback_Reason = UCNV_IRREGULAR;
+                        ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_UBytes[0] = UCNV_TILDE;
+                        ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_UBytes[1] = static_cast<uint8_t>(my_ਸਰੋਤ_Char);
+                        ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_ULength = 2;
+                        ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ = my_ਨਿਸ਼ਾਨਾ;
+                        ਦਲੀਲਾਂ_2->ਸਰੋਤ = my_ਸਰੋਤ;
+                        ਵਾਪਸ;
                     }
-                    myData->isEmptySegment = true;
-                    continue;
-                default:
+                    my_ਅੰਕੜੇ->is_ਖਾਲੀ_ਥਾਵਾਂ_Segment = ਸੱਚ;
+                    ਜਾਰੀ;
+                ਮੂਲ:
                      /* if the first byte is equal to TILDE and the trail byte
                      * is not a valid byte then it is an error condition
                      */
@@ -217,42 +217,42 @@ UConverter_toUnicode_HZ_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
                      * - If any of the non-initial bytes could be the start of a character,
                      *   we stop the illegal sequence before the first one of those.
                      */
-                    myData->isEmptySegment = false; /* different error here, reset this to avoid spurious future error */
+                    my_ਅੰਕੜੇ->is_ਖਾਲੀ_ਥਾਵਾਂ_Segment = ਝੂਠ; /* different error here, reset this to avoid spurious future error */
                     *err = U_ILLEGAL_ESCAPE_SEQUENCE;
-                    args->converter->toUBytes[0] = UCNV_TILDE;
-                    if( myData->isStateDBCS ?
-                            (0x21 <= mySourceChar && mySourceChar <= 0x7e) :
-                            mySourceChar <= 0x7f
+                    ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_UBytes[0] = UCNV_TILDE;
+                    ਜੇ( my_ਅੰਕੜੇ->isStateDBCS ?
+                            (0x21 <= my_ਸਰੋਤ_Char && my_ਸਰੋਤ_Char <= 0x7e) :
+                            my_ਸਰੋਤ_Char <= 0x7f
                     ) {
                         /* The current byte could be the start of a character: Back it out. */
-                        args->converter->toULength = 1;
-                        --mySource;
-                    } else {
+                        ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_ULength = 1;
+                        --my_ਸਰੋਤ;
+                    } ਨਹੀਂਤਾਂ {
                         /* Include the current byte in the illegal sequence. */
-                        args->converter->toUBytes[1] = static_cast<uint8_t>(mySourceChar);
-                        args->converter->toULength = 2;
+                        ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_UBytes[1] = static_cast<uint8_t>(my_ਸਰੋਤ_Char);
+                        ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_ULength = 2;
                     }
-                    args->target = myTarget;
-                    args->source = mySource;
-                    return;
+                    ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ = my_ਨਿਸ਼ਾਨਾ;
+                    ਦਲੀਲਾਂ_2->ਸਰੋਤ = my_ਸਰੋਤ;
+                    ਵਾਪਸ;
                 }
-            } else if(myData->isStateDBCS) {
-                if(args->converter->toUnicodeStatus == 0x00){
+            } ਨਹੀਂਤਾਂ ਜੇ(my_ਅੰਕੜੇ->isStateDBCS) {
+                ਜੇ(ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_Unicode_ਸਥਿਤੀ == 0x00){
                     /* lead byte */
-                    if(mySourceChar == UCNV_TILDE) {
-                        args->converter->mode = UCNV_TILDE;
-                    } else {
+                    ਜੇ(my_ਸਰੋਤ_Char == UCNV_TILDE) {
+                        ਦਲੀਲਾਂ_2->converter->ਬਹੁਲਕ = UCNV_TILDE;
+                    } ਨਹੀਂਤਾਂ {
                         /* add another bit to distinguish a 0 byte from not having seen a lead byte */
-                        args->converter->toUnicodeStatus = (uint32_t) (mySourceChar | 0x100);
-                        myData->isEmptySegment = false; /* the segment has something, either valid or will produce a different error, so reset this */
+                        ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_Unicode_ਸਥਿਤੀ = (uint32_t) (my_ਸਰੋਤ_Char | 0x100);
+                        my_ਅੰਕੜੇ->is_ਖਾਲੀ_ਥਾਵਾਂ_Segment = ਝੂਠ; /* the segment has something, either valid or will produce a different error, so reset this */
                     }
-                    continue;
+                    ਜਾਰੀ;
                 }
-                else{
+                ਨਹੀਂਤਾਂ{
                     /* trail byte */
-                    int leadIsOk, trailIsOk;
-                    uint32_t leadByte = args->converter->toUnicodeStatus & 0xff;
-                    targetUniChar = 0xffff;
+                    ਪੂਰਨ leadIsOk, trailIsOk;
+                    uint32_t leadByte = ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_Unicode_ਸਥਿਤੀ & 0xff;
+                    ਨਿਸ਼ਾਨਾ_Uni_Char = 0xffff;
                     /*
                      * Ticket 5691: consistent illegal sequences:
                      * - We include at least the first byte in the illegal sequence.
@@ -264,345 +264,345 @@ UConverter_toUnicode_HZ_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
                      * Otherwise we convert or report the pair of bytes.
                      */
                     leadIsOk = (uint8_t)(leadByte - 0x21) <= (0x7d - 0x21);
-                    trailIsOk = (uint8_t)(mySourceChar - 0x21) <= (0x7e - 0x21);
-                    if (leadIsOk && trailIsOk) {
-                        tempBuf[0] = (char) (leadByte+0x80) ;
-                        tempBuf[1] = (char) (mySourceChar+0x80);
-                        targetUniChar = ucnv_MBCSSimpleGetNextUChar(myData->gbConverter->sharedData,
-                            tempBuf, 2, args->converter->useFallback);
-                        mySourceChar= (leadByte << 8) | mySourceChar;
-                    } else if (trailIsOk) {
+                    trailIsOk = (uint8_t)(my_ਸਰੋਤ_Char - 0x21) <= (0x7e - 0x21);
+                    ਜੇ (leadIsOk && trailIsOk) {
+                        ਆਰਜ਼ੀ_Buf[0] = (ਅੱਖਰ) (leadByte+0x80) ;
+                        ਆਰਜ਼ੀ_Buf[1] = (ਅੱਖਰ) (my_ਸਰੋਤ_Char+0x80);
+                        ਨਿਸ਼ਾਨਾ_Uni_Char = ucnv_MBCSSimple_Get_ਅਗਲਾ_UChar(my_ਅੰਕੜੇ->gbConverter->shared_ਅੰਕੜੇ,
+                            ਆਰਜ਼ੀ_Buf, 2, ਦਲੀਲਾਂ_2->converter->useFallback);
+                        my_ਸਰੋਤ_Char= (leadByte << 8) | my_ਸਰੋਤ_Char;
+                    } ਨਹੀਂਤਾਂ ਜੇ (trailIsOk) {
                         /* report a single illegal byte and continue with the following DBCS starter byte */
-                        --mySource;
-                        mySourceChar = (int32_t)leadByte;
-                    } else {
+                        --my_ਸਰੋਤ;
+                        my_ਸਰੋਤ_Char = (int32_t)leadByte;
+                    } ਨਹੀਂਤਾਂ {
                         /* report a pair of illegal bytes if the second byte is not a DBCS starter */
                         /* add another bit so that the code below writes 2 bytes in case of error */
-                        mySourceChar= 0x10000 | (leadByte << 8) | mySourceChar;
+                        my_ਸਰੋਤ_Char= 0x10000 | (leadByte << 8) | my_ਸਰੋਤ_Char;
                     }
-                    args->converter->toUnicodeStatus =0x00;
+                    ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_Unicode_ਸਥਿਤੀ =0x00;
                 }
             }
-            else{
-                if(mySourceChar == UCNV_TILDE) {
-                    args->converter->mode = UCNV_TILDE;
-                    continue;
-                } else if(mySourceChar <= 0x7f) {
-                    targetUniChar = (char16_t)mySourceChar;  /* ASCII */
-                    myData->isEmptySegment = false; /* the segment has something valid */
-                } else {
-                    targetUniChar = 0xffff;
-                    myData->isEmptySegment = false; /* different error here, reset this to avoid spurious future error */
+            ਨਹੀਂਤਾਂ{
+                ਜੇ(my_ਸਰੋਤ_Char == UCNV_TILDE) {
+                    ਦਲੀਲਾਂ_2->converter->ਬਹੁਲਕ = UCNV_TILDE;
+                    ਜਾਰੀ;
+                } ਨਹੀਂਤਾਂ ਜੇ(my_ਸਰੋਤ_Char <= 0x7f) {
+                    ਨਿਸ਼ਾਨਾ_Uni_Char = (char16_t)my_ਸਰੋਤ_Char;  /* ASCII */
+                    my_ਅੰਕੜੇ->is_ਖਾਲੀ_ਥਾਵਾਂ_Segment = ਝੂਠ; /* the segment has something valid */
+                } ਨਹੀਂਤਾਂ {
+                    ਨਿਸ਼ਾਨਾ_Uni_Char = 0xffff;
+                    my_ਅੰਕੜੇ->is_ਖਾਲੀ_ਥਾਵਾਂ_Segment = ਝੂਠ; /* different error here, reset this to avoid spurious future error */
                 }
             }
-            if(targetUniChar < 0xfffe){
-                if(args->offsets) {
-                    args->offsets[myTarget - args->target]=(int32_t)(mySource - args->source - 1-(myData->isStateDBCS));
+            ਜੇ(ਨਿਸ਼ਾਨਾ_Uni_Char < 0xfffe){
+                ਜੇ(ਦਲੀਲਾਂ_2->offsets) {
+                    ਦਲੀਲਾਂ_2->offsets[my_ਨਿਸ਼ਾਨਾ - ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ]=(int32_t)(my_ਸਰੋਤ - ਦਲੀਲਾਂ_2->ਸਰੋਤ - 1-(my_ਅੰਕੜੇ->isStateDBCS));
                 }
 
-                *(myTarget++)=(char16_t)targetUniChar;
+                *(my_ਨਿਸ਼ਾਨਾ++)=(char16_t)ਨਿਸ਼ਾਨਾ_Uni_Char;
             }
-            else /* targetUniChar>=0xfffe */ {
-                if(targetUniChar == 0xfffe){
-                    *err = U_INVALID_CHAR_FOUND;
+            ਨਹੀਂਤਾਂ /* targetUniChar>=0xfffe */ {
+                ਜੇ(ਨਿਸ਼ਾਨਾ_Uni_Char == 0xfffe){
+                    *err = U_INVALID_CHAR_ਮਿਲਿਆ;
                 }
-                else{
-                    *err = U_ILLEGAL_CHAR_FOUND;
+                ਨਹੀਂਤਾਂ{
+                    *err = U_ILLEGAL_CHAR_ਮਿਲਿਆ;
                 }
-                if(mySourceChar > 0xff){
-                    args->converter->toUBytes[0] = (uint8_t)(mySourceChar >> 8);
-                    args->converter->toUBytes[1] = (uint8_t)mySourceChar;
-                    args->converter->toULength=2;
+                ਜੇ(my_ਸਰੋਤ_Char > 0xff){
+                    ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_UBytes[0] = (uint8_t)(my_ਸਰੋਤ_Char >> 8);
+                    ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_UBytes[1] = (uint8_t)my_ਸਰੋਤ_Char;
+                    ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_ULength=2;
                 }
-                else{
-                    args->converter->toUBytes[0] = (uint8_t)mySourceChar;
-                    args->converter->toULength=1;
+                ਨਹੀਂਤਾਂ{
+                    ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_UBytes[0] = (uint8_t)my_ਸਰੋਤ_Char;
+                    ਦਲੀਲਾਂ_2->converter->ਮੰਜ਼ਿਲ_ULength=1;
                 }
-                break;
+                ਰੋਕੋ;
             }
         }
-        else{
-            *err =U_BUFFER_OVERFLOW_ERROR;
-            break;
+        ਨਹੀਂਤਾਂ{
+            *err =U_ਬਫਰ_ਉਛਾਲ_ERROR;
+            ਰੋਕੋ;
         }
     }
 
-    args->target = myTarget;
-    args->source = mySource;
+    ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ = my_ਨਿਸ਼ਾਨਾ;
+    ਦਲੀਲਾਂ_2->ਸਰੋਤ = my_ਸਰੋਤ;
 }
 
 
-static void  U_CALLCONV
-UConverter_fromUnicode_HZ_OFFSETS_LOGIC (UConverterFromUnicodeArgs * args,
-                                                      UErrorCode * err){
-    const char16_t *mySource = args->source;
-    char *myTarget = args->target;
-    int32_t* offsets = args->offsets;
-    int32_t mySourceIndex = 0;
-    int32_t myTargetIndex = 0;
-    int32_t targetLength = (int32_t)(args->targetLimit - myTarget);
-    int32_t mySourceLength = (int32_t)(args->sourceLimit - args->source);
-    uint32_t targetUniChar = 0x0000;
-    UChar32 mySourceChar = 0x0000;
-    UConverterDataHZ *myConverterData=(UConverterDataHZ*)args->converter->extraInfo;
-    UBool isTargetUCharDBCS = myConverterData->isTargetUCharDBCS;
-    UBool oldIsTargetUCharDBCS;
-    int len =0;
-    const char* escSeq=nullptr;
+ਸਥਿਰ ਖਾਲੀ  U_CALLCONV
+UConverter_fromUnicode_HZ_OFFSETS_LOGIC (UConverter_From_Unicode_ਦਲੀਲਾਂ * ਦਲੀਲਾਂ_2,
+                                                      UError_ਕੋਡ * err){
+    ਅਚਲ char16_t *my_ਸਰੋਤ = ਦਲੀਲਾਂ_2->ਸਰੋਤ;
+    ਅੱਖਰ *my_ਨਿਸ਼ਾਨਾ = ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ;
+    int32_t* offsets = ਦਲੀਲਾਂ_2->offsets;
+    int32_t my_ਸਰੋਤ_ਸੂਚਕਾਂਕ = 0;
+    int32_t my_ਨਿਸ਼ਾਨਾ_ਸੂਚਕਾਂਕ = 0;
+    int32_t ਨਿਸ਼ਾਨਾ_ਲੰਮਾਈ = (int32_t)(ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ_ਹੱਦਬੰਦੀ - my_ਨਿਸ਼ਾਨਾ);
+    int32_t my_ਸਰੋਤ_ਲੰਮਾਈ = (int32_t)(ਦਲੀਲਾਂ_2->ਸਰੋਤ_ਹੱਦਬੰਦੀ - ਦਲੀਲਾਂ_2->ਸਰੋਤ);
+    uint32_t ਨਿਸ਼ਾਨਾ_Uni_Char = 0x0000;
+    UChar32 my_ਸਰੋਤ_Char = 0x0000;
+    UConverter_ਅੰਕੜੇ_HZ *my_Converter_ਅੰਕੜੇ=(UConverter_ਅੰਕੜੇ_HZ*)ਦਲੀਲਾਂ_2->converter->extraInfo;
+    UBool is_ਨਿਸ਼ਾਨਾ_UChar_DBCS = my_Converter_ਅੰਕੜੇ->is_ਨਿਸ਼ਾਨਾ_UChar_DBCS;
+    UBool old_Is_ਨਿਸ਼ਾਨਾ_UChar_DBCS;
+    ਪੂਰਨ len =0;
+    ਅਚਲ ਅੱਖਰ* escSeq=ਖਾਲੀ_ਸੂਚਕ;
     
     /* Calling code already handles this situation. */
     /*if ((args->converter == nullptr) || (args->targetLimit < myTarget) || (args->sourceLimit < args->source)){
         *err = U_ILLEGAL_ARGUMENT_ERROR;
         return;
     }*/
-    if(args->converter->fromUChar32!=0 && myTargetIndex < targetLength) {
-        goto getTrail;
+    ਜੇ(ਦਲੀਲਾਂ_2->converter->fromUChar32!=0 && my_ਨਿਸ਼ਾਨਾ_ਸੂਚਕਾਂਕ < ਨਿਸ਼ਾਨਾ_ਲੰਮਾਈ) {
+        ਜਾਓ getTrail;
     }
     /*writing the char to the output stream */
-    while (mySourceIndex < mySourceLength){
-        targetUniChar = missingCharMarker;
-        if (myTargetIndex < targetLength){
+    ਜਦੋਂ (my_ਸਰੋਤ_ਸੂਚਕਾਂਕ < my_ਸਰੋਤ_ਲੰਮਾਈ){
+        ਨਿਸ਼ਾਨਾ_Uni_Char = missingCharMarker;
+        ਜੇ (my_ਨਿਸ਼ਾਨਾ_ਸੂਚਕਾਂਕ < ਨਿਸ਼ਾਨਾ_ਲੰਮਾਈ){
             
-            mySourceChar = mySource[mySourceIndex++];
+            my_ਸਰੋਤ_Char = my_ਸਰੋਤ[my_ਸਰੋਤ_ਸੂਚਕਾਂਕ++];
             
 
-            oldIsTargetUCharDBCS = isTargetUCharDBCS;
-            if(mySourceChar ==UCNV_TILDE){
+            old_Is_ਨਿਸ਼ਾਨਾ_UChar_DBCS = is_ਨਿਸ਼ਾਨਾ_UChar_DBCS;
+            ਜੇ(my_ਸਰੋਤ_Char ==UCNV_TILDE){
                 /*concatEscape(args, &myTargetIndex, &targetLength,"\x7E\x7E",err,2,&mySourceIndex);*/
                 len = ESC_LEN;
                 escSeq = TILDE_ESCAPE;
-                CONCAT_ESCAPE_MACRO(args, myTargetIndex, targetLength, escSeq,err,len,mySourceIndex);
-                continue;
-            } else if(mySourceChar <= 0x7f) {
-                targetUniChar = mySourceChar;
-            } else {
-                int32_t length= ucnv_MBCSFromUChar32(myConverterData->gbConverter->sharedData,
-                    mySourceChar,&targetUniChar,args->converter->useFallback);
+                CONCAT_ESCAPE_MACRO(ਦਲੀਲਾਂ_2, my_ਨਿਸ਼ਾਨਾ_ਸੂਚਕਾਂਕ, ਨਿਸ਼ਾਨਾ_ਲੰਮਾਈ, escSeq,err,len,my_ਸਰੋਤ_ਸੂਚਕਾਂਕ);
+                ਜਾਰੀ;
+            } ਨਹੀਂਤਾਂ ਜੇ(my_ਸਰੋਤ_Char <= 0x7f) {
+                ਨਿਸ਼ਾਨਾ_Uni_Char = my_ਸਰੋਤ_Char;
+            } ਨਹੀਂਤਾਂ {
+                int32_t length= ucnv_MBCSFromUChar32(my_Converter_ਅੰਕੜੇ->gbConverter->shared_ਅੰਕੜੇ,
+                    my_ਸਰੋਤ_Char,&ਨਿਸ਼ਾਨਾ_Uni_Char,ਦਲੀਲਾਂ_2->converter->useFallback);
                 /* we can only use lead bytes 21..7D and trail bytes 21..7E */
-                if( length == 2 &&
-                    (uint16_t)(targetUniChar - 0xa1a1) <= (0xfdfe - 0xa1a1) &&
-                    (uint8_t)(targetUniChar - 0xa1) <= (0xfe - 0xa1)
+                ਜੇ( length == 2 &&
+                    (uint16_t)(ਨਿਸ਼ਾਨਾ_Uni_Char - 0xa1a1) <= (0xfdfe - 0xa1a1) &&
+                    (uint8_t)(ਨਿਸ਼ਾਨਾ_Uni_Char - 0xa1) <= (0xfe - 0xa1)
                 ) {
-                    targetUniChar -= 0x8080;
-                } else {
-                    targetUniChar = missingCharMarker;
+                    ਨਿਸ਼ਾਨਾ_Uni_Char -= 0x8080;
+                } ਨਹੀਂਤਾਂ {
+                    ਨਿਸ਼ਾਨਾ_Uni_Char = missingCharMarker;
                 }
             }
-            if (targetUniChar != missingCharMarker){
-               myConverterData->isTargetUCharDBCS = isTargetUCharDBCS = targetUniChar > 0x00FF;
-                 if(oldIsTargetUCharDBCS != isTargetUCharDBCS || !myConverterData->isEscapeAppended ){
+            ਜੇ (ਨਿਸ਼ਾਨਾ_Uni_Char != missingCharMarker){
+               my_Converter_ਅੰਕੜੇ->is_ਨਿਸ਼ਾਨਾ_UChar_DBCS = is_ਨਿਸ਼ਾਨਾ_UChar_DBCS = ਨਿਸ਼ਾਨਾ_Uni_Char > 0x00FF;
+                 ਜੇ(old_Is_ਨਿਸ਼ਾਨਾ_UChar_DBCS != is_ਨਿਸ਼ਾਨਾ_UChar_DBCS || !my_Converter_ਅੰਕੜੇ->isEscapeAppended ){
                     /*Shifting from a double byte to single byte mode*/
-                    if(!isTargetUCharDBCS){
+                    ਜੇ(!is_ਨਿਸ਼ਾਨਾ_UChar_DBCS){
                         len =ESC_LEN;
                         escSeq = SB_ESCAPE;
-                        CONCAT_ESCAPE_MACRO(args, myTargetIndex, targetLength, escSeq,err,len,mySourceIndex);
-                        myConverterData->isEscapeAppended = true;
+                        CONCAT_ESCAPE_MACRO(ਦਲੀਲਾਂ_2, my_ਨਿਸ਼ਾਨਾ_ਸੂਚਕਾਂਕ, ਨਿਸ਼ਾਨਾ_ਲੰਮਾਈ, escSeq,err,len,my_ਸਰੋਤ_ਸੂਚਕਾਂਕ);
+                        my_Converter_ਅੰਕੜੇ->isEscapeAppended = ਸੱਚ;
                     }
-                    else{ /* Shifting from a single byte to double byte mode*/
+                    ਨਹੀਂਤਾਂ{ /* Shifting from a single byte to double byte mode*/
                         len =ESC_LEN;
                         escSeq = DB_ESCAPE;
-                        CONCAT_ESCAPE_MACRO(args, myTargetIndex, targetLength, escSeq,err,len,mySourceIndex);
-                        myConverterData->isEscapeAppended = true;
+                        CONCAT_ESCAPE_MACRO(ਦਲੀਲਾਂ_2, my_ਨਿਸ਼ਾਨਾ_ਸੂਚਕਾਂਕ, ਨਿਸ਼ਾਨਾ_ਲੰਮਾਈ, escSeq,err,len,my_ਸਰੋਤ_ਸੂਚਕਾਂਕ);
+                        my_Converter_ਅੰਕੜੇ->isEscapeAppended = ਸੱਚ;
                         
                     }
                 }
             
-                if(isTargetUCharDBCS){
-                    if( myTargetIndex <targetLength){
-                        myTarget[myTargetIndex++] =(char) (targetUniChar >> 8);
-                        if(offsets){
-                            *(offsets++) = mySourceIndex-1;
+                ਜੇ(is_ਨਿਸ਼ਾਨਾ_UChar_DBCS){
+                    ਜੇ( my_ਨਿਸ਼ਾਨਾ_ਸੂਚਕਾਂਕ <ਨਿਸ਼ਾਨਾ_ਲੰਮਾਈ){
+                        my_ਨਿਸ਼ਾਨਾ[my_ਨਿਸ਼ਾਨਾ_ਸੂਚਕਾਂਕ++] =(ਅੱਖਰ) (ਨਿਸ਼ਾਨਾ_Uni_Char >> 8);
+                        ਜੇ(offsets){
+                            *(offsets++) = my_ਸਰੋਤ_ਸੂਚਕਾਂਕ-1;
                         }
-                        if(myTargetIndex < targetLength){
-                            myTarget[myTargetIndex++] =(char) targetUniChar;
-                            if(offsets){
-                                *(offsets++) = mySourceIndex-1;
+                        ਜੇ(my_ਨਿਸ਼ਾਨਾ_ਸੂਚਕਾਂਕ < ਨਿਸ਼ਾਨਾ_ਲੰਮਾਈ){
+                            my_ਨਿਸ਼ਾਨਾ[my_ਨਿਸ਼ਾਨਾ_ਸੂਚਕਾਂਕ++] =(ਅੱਖਰ) ਨਿਸ਼ਾਨਾ_Uni_Char;
+                            ਜੇ(offsets){
+                                *(offsets++) = my_ਸਰੋਤ_ਸੂਚਕਾਂਕ-1;
                             }
-                        }else{
-                            args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = (char) targetUniChar;
-                            *err = U_BUFFER_OVERFLOW_ERROR;
+                        }ਨਹੀਂਤਾਂ{
+                            ਦਲੀਲਾਂ_2->converter->char_Error_ਬਫਰ[ਦਲੀਲਾਂ_2->converter->char_Error_ਬਫਰ_ਲੰਮਾਈ++] = (ਅੱਖਰ) ਨਿਸ਼ਾਨਾ_Uni_Char;
+                            *err = U_ਬਫਰ_ਉਛਾਲ_ERROR;
                         } 
-                    }else{
-                        args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =(char) (targetUniChar >> 8);
-                        args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = (char) targetUniChar;
-                        *err = U_BUFFER_OVERFLOW_ERROR;
+                    }ਨਹੀਂਤਾਂ{
+                        ਦਲੀਲਾਂ_2->converter->char_Error_ਬਫਰ[ਦਲੀਲਾਂ_2->converter->char_Error_ਬਫਰ_ਲੰਮਾਈ++] =(ਅੱਖਰ) (ਨਿਸ਼ਾਨਾ_Uni_Char >> 8);
+                        ਦਲੀਲਾਂ_2->converter->char_Error_ਬਫਰ[ਦਲੀਲਾਂ_2->converter->char_Error_ਬਫਰ_ਲੰਮਾਈ++] = (ਅੱਖਰ) ਨਿਸ਼ਾਨਾ_Uni_Char;
+                        *err = U_ਬਫਰ_ਉਛਾਲ_ERROR;
                     }
 
-                }else{
-                    if( myTargetIndex <targetLength){
-                        myTarget[myTargetIndex++] = (char) (targetUniChar );
-                        if(offsets){
-                            *(offsets++) = mySourceIndex-1;
+                }ਨਹੀਂਤਾਂ{
+                    ਜੇ( my_ਨਿਸ਼ਾਨਾ_ਸੂਚਕਾਂਕ <ਨਿਸ਼ਾਨਾ_ਲੰਮਾਈ){
+                        my_ਨਿਸ਼ਾਨਾ[my_ਨਿਸ਼ਾਨਾ_ਸੂਚਕਾਂਕ++] = (ਅੱਖਰ) (ਨਿਸ਼ਾਨਾ_Uni_Char );
+                        ਜੇ(offsets){
+                            *(offsets++) = my_ਸਰੋਤ_ਸੂਚਕਾਂਕ-1;
                         }
                         
-                    }else{
-                        args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = (char) targetUniChar;
-                        *err = U_BUFFER_OVERFLOW_ERROR;
+                    }ਨਹੀਂਤਾਂ{
+                        ਦਲੀਲਾਂ_2->converter->char_Error_ਬਫਰ[ਦਲੀਲਾਂ_2->converter->char_Error_ਬਫਰ_ਲੰਮਾਈ++] = (ਅੱਖਰ) ਨਿਸ਼ਾਨਾ_Uni_Char;
+                        *err = U_ਬਫਰ_ਉਛਾਲ_ERROR;
                     }
                 }
 
             }
-            else{
+            ਨਹੀਂਤਾਂ{
                 /* oops.. the code point is unassigned */
                 /*Handle surrogates */
                 /*check if the char is a First surrogate*/
-                if(U16_IS_SURROGATE(mySourceChar)) {
-                    if(U16_IS_SURROGATE_LEAD(mySourceChar)) {
-                        args->converter->fromUChar32=mySourceChar;
+                ਜੇ(U16_IS_SURROGATE(my_ਸਰੋਤ_Char)) {
+                    ਜੇ(U16_IS_SURROGATE_LEAD(my_ਸਰੋਤ_Char)) {
+                        ਦਲੀਲਾਂ_2->converter->fromUChar32=my_ਸਰੋਤ_Char;
 getTrail:
                         /*look ahead to find the trail surrogate*/
-                        if(mySourceIndex <  mySourceLength) {
+                        ਜੇ(my_ਸਰੋਤ_ਸੂਚਕਾਂਕ <  my_ਸਰੋਤ_ਲੰਮਾਈ) {
                             /* test the following code unit */
-                            char16_t trail=(char16_t) args->source[mySourceIndex];
-                            if(U16_IS_TRAIL(trail)) {
-                                ++mySourceIndex;
-                                mySourceChar=U16_GET_SUPPLEMENTARY(args->converter->fromUChar32, trail);
-                                args->converter->fromUChar32=0x00;
+                            char16_t trail=(char16_t) ਦਲੀਲਾਂ_2->ਸਰੋਤ[my_ਸਰੋਤ_ਸੂਚਕਾਂਕ];
+                            ਜੇ(U16_IS_TRAIL(trail)) {
+                                ++my_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
+                                my_ਸਰੋਤ_Char=U16_GET_SUPPLEMENTARY(ਦਲੀਲਾਂ_2->converter->fromUChar32, trail);
+                                ਦਲੀਲਾਂ_2->converter->fromUChar32=0x00;
                                 /* there are no surrogates in GB2312*/
-                                *err = U_INVALID_CHAR_FOUND;
+                                *err = U_INVALID_CHAR_ਮਿਲਿਆ;
                                 /* exit this condition tree */
-                            } else {
+                            } ਨਹੀਂਤਾਂ {
                                 /* this is an unmatched lead code unit (1st surrogate) */
                                 /* callback(illegal) */
-                                *err=U_ILLEGAL_CHAR_FOUND;
+                                *err=U_ILLEGAL_CHAR_ਮਿਲਿਆ;
                             }
-                        } else {
+                        } ਨਹੀਂਤਾਂ {
                             /* no more input */
                             *err = U_ZERO_ERROR;
                         }
-                    } else {
+                    } ਨਹੀਂਤਾਂ {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        *err=U_ILLEGAL_CHAR_FOUND;
+                        *err=U_ILLEGAL_CHAR_ਮਿਲਿਆ;
                     }
-                } else {
+                } ਨਹੀਂਤਾਂ {
                     /* callback(unassigned) for a BMP code point */
-                    *err = U_INVALID_CHAR_FOUND;
+                    *err = U_INVALID_CHAR_ਮਿਲਿਆ;
                 }
 
-                args->converter->fromUChar32=mySourceChar;
-                break;
+                ਦਲੀਲਾਂ_2->converter->fromUChar32=my_ਸਰੋਤ_Char;
+                ਰੋਕੋ;
             }
         }
-        else{
-            *err = U_BUFFER_OVERFLOW_ERROR;
-            break;
+        ਨਹੀਂਤਾਂ{
+            *err = U_ਬਫਰ_ਉਛਾਲ_ERROR;
+            ਰੋਕੋ;
         }
-        targetUniChar=missingCharMarker;
+        ਨਿਸ਼ਾਨਾ_Uni_Char=missingCharMarker;
     }
 
-    args->target += myTargetIndex;
-    args->source += mySourceIndex;
-    myConverterData->isTargetUCharDBCS = isTargetUCharDBCS;
+    ਦਲੀਲਾਂ_2->ਨਿਸ਼ਾਨਾ += my_ਨਿਸ਼ਾਨਾ_ਸੂਚਕਾਂਕ;
+    ਦਲੀਲਾਂ_2->ਸਰੋਤ += my_ਸਰੋਤ_ਸੂਚਕਾਂਕ;
+    my_Converter_ਅੰਕੜੇ->is_ਨਿਸ਼ਾਨਾ_UChar_DBCS = is_ਨਿਸ਼ਾਨਾ_UChar_DBCS;
 }
 
-static void U_CALLCONV
-_HZ_WriteSub(UConverterFromUnicodeArgs *args, int32_t offsetIndex, UErrorCode *err) {
-    UConverter *cnv = args->converter;
-    UConverterDataHZ *convData=(UConverterDataHZ *) cnv->extraInfo;
-    char *p;
-    char buffer[4];
-    p = buffer;
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV
+_HZ_WriteSub(UConverter_From_Unicode_ਦਲੀਲਾਂ *ਦਲੀਲਾਂ_2, int32_t ਵਿੱਥ_ਸੂਚਕਾਂਕ, UError_ਕੋਡ *err) {
+    UConverter *cnv = ਦਲੀਲਾਂ_2->converter;
+    UConverter_ਅੰਕੜੇ_HZ *conv_ਅੰਕੜੇ=(UConverter_ਅੰਕੜੇ_HZ *) cnv->extraInfo;
+    ਅੱਖਰ *p;
+    ਅੱਖਰ ਬਫਰ[4];
+    p = ਬਫਰ;
     
-    if( convData->isTargetUCharDBCS){
+    ਜੇ( conv_ਅੰਕੜੇ->is_ਨਿਸ਼ਾਨਾ_UChar_DBCS){
         *p++= UCNV_TILDE;
         *p++= UCNV_CLOSE_BRACE;
-        convData->isTargetUCharDBCS=false;
+        conv_ਅੰਕੜੇ->is_ਨਿਸ਼ਾਨਾ_UChar_DBCS=ਝੂਠ;
     }
-    *p++= (char)cnv->subChars[0];
+    *p++= (ਅੱਖਰ)cnv->subChars[0];
 
-    ucnv_cbFromUWriteBytes(args,
-                           buffer, (int32_t)(p - buffer),
-                           offsetIndex, err);
+    ucnv_cb_From_UWrite_ਬਾਈਟਾਂ(ਦਲੀਲਾਂ_2,
+                           ਬਫਰ, (int32_t)(p - ਬਫਰ),
+                           ਵਿੱਥ_ਸੂਚਕਾਂਕ, err);
 }
 
 /*
  * Structure for cloning an HZ converter into a single memory block.
  */
-struct cloneHZStruct
+ਬਣਤਰ cloneHZStruct
 {
     UConverter cnv;
     UConverter subCnv;
-    UConverterDataHZ mydata;
+    UConverter_ਅੰਕੜੇ_HZ mydata;
 };
 
 
-static UConverter *  U_CALLCONV
-_HZ_SafeClone(const UConverter *cnv, 
-              void *stackBuffer, 
-              int32_t *pBufferSize, 
-              UErrorCode *status)
+ਸਥਿਰ UConverter *  U_CALLCONV
+HZ_ਸੁਰੱਖਿਅਤ_Clone(ਅਚਲ UConverter *cnv, 
+              ਖਾਲੀ *ਢੇਰ_ਬਫਰ, 
+              int32_t *p_ਬਫਰ_ਮਾਪ, 
+              UError_ਕੋਡ *ਸਥਿਤੀ)
 {
-    struct cloneHZStruct * localClone;
-    int32_t size, bufferSizeNeeded = sizeof(struct cloneHZStruct);
+    ਬਣਤਰ cloneHZStruct * localClone;
+    int32_t size, ਬਫਰ_ਮਾਪ_Needed = ਆਕਾਰ(ਬਣਤਰ cloneHZStruct);
 
-    if (U_FAILURE(*status)){
-        return nullptr;
+    ਜੇ (U_FAILURE(*ਸਥਿਤੀ)){
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    if (*pBufferSize == 0){ /* 'preflighting' request - set needed size into *pBufferSize */
-        *pBufferSize = bufferSizeNeeded;
-        return nullptr;
+    ਜੇ (*p_ਬਫਰ_ਮਾਪ == 0){ /* 'preflighting' request - set needed size into *pBufferSize */
+        *p_ਬਫਰ_ਮਾਪ = ਬਫਰ_ਮਾਪ_Needed;
+        ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ;
     }
 
-    localClone = (struct cloneHZStruct *)stackBuffer;
+    localClone = (ਬਣਤਰ cloneHZStruct *)ਢੇਰ_ਬਫਰ;
     /* ucnv.c/ucnv_safeClone() copied the main UConverter already */
 
-    uprv_memcpy(&localClone->mydata, cnv->extraInfo, sizeof(UConverterDataHZ));
+    uprv_memcpy(&localClone->mydata, cnv->extraInfo, ਆਕਾਰ(UConverter_ਅੰਕੜੇ_HZ));
     localClone->cnv.extraInfo = &localClone->mydata;
-    localClone->cnv.isExtraLocal = true;
+    localClone->cnv.isExtraLocal = ਸੱਚ;
 
     /* deep-clone the sub-converter */
-    size = (int32_t)sizeof(UConverter);
-    ((UConverterDataHZ*)localClone->cnv.extraInfo)->gbConverter =
-        ucnv_safeClone(((UConverterDataHZ*)cnv->extraInfo)->gbConverter, &localClone->subCnv, &size, status);
+    size = (int32_t)ਆਕਾਰ(UConverter);
+    ((UConverter_ਅੰਕੜੇ_HZ*)localClone->cnv.extraInfo)->gbConverter =
+        ucnv_ਸੁਰੱਖਿਅਤ_Clone(((UConverter_ਅੰਕੜੇ_HZ*)cnv->extraInfo)->gbConverter, &localClone->subCnv, &size, ਸਥਿਤੀ);
 
-    return &localClone->cnv;
+    ਵਾਪਸ &localClone->cnv;
 }
 
-static void U_CALLCONV
-_HZ_GetUnicodeSet(const UConverter *cnv,
-                  const USetAdder *sa,
-                  UConverterUnicodeSet which,
-                  UErrorCode *pErrorCode) {
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV
+HZ_Get_Unicode_ਸੈੱਟ(ਅਚਲ UConverter *cnv,
+                  ਅਚਲ USetAdder *sa,
+                  UConverter_Unicode_ਸੈੱਟ which,
+                  UError_ਕੋਡ *p_Error_ਕੋਡ) {
     /* HZ converts all of ASCII */
-    sa->addRange(sa->set, 0, 0x7f);
+    sa->ਜੋੜੋ_Range(sa->ਸੈੱਟ, 0, 0x7f);
 
     /* add all of the code points that the sub-converter handles */
-    ucnv_MBCSGetFilteredUnicodeSetForUnicode(
-        ((UConverterDataHZ*)cnv->extraInfo)->gbConverter->sharedData,
-        sa, which, UCNV_SET_FILTER_HZ,
-        pErrorCode);
+    ucnv_MBCSGet_Filtered_Unicode_ਸੈੱਟ_For_Unicode(
+        ((UConverter_ਅੰਕੜੇ_HZ*)cnv->extraInfo)->gbConverter->shared_ਅੰਕੜੇ,
+        sa, which, UCNV_ਸੈੱਟ_FILTER_HZ,
+        p_Error_ਕੋਡ);
 }
-U_CDECL_END
-static const UConverterImpl _HZImpl={
+U_CDECL_ਸਿਰਾ
+ਸਥਿਰ ਅਚਲ UConverterImpl _HZImpl={
 
     UCNV_HZ,
     
-    nullptr,
-    nullptr,
+    ਖਾਲੀ_ਸੂਚਕ,
+    ਖਾਲੀ_ਸੂਚਕ,
     
     _HZOpen,
     _HZClose,
     _HZReset,
     
-    UConverter_toUnicode_HZ_OFFSETS_LOGIC,
-    UConverter_toUnicode_HZ_OFFSETS_LOGIC,
+    UConverter_ਮੰਜ਼ਿਲ_Unicode_HZ_OFFSETS_LOGIC,
+    UConverter_ਮੰਜ਼ਿਲ_Unicode_HZ_OFFSETS_LOGIC,
     UConverter_fromUnicode_HZ_OFFSETS_LOGIC,
     UConverter_fromUnicode_HZ_OFFSETS_LOGIC,
-    nullptr,
+    ਖਾਲੀ_ਸੂਚਕ,
     
-    nullptr,
-    nullptr,
+    ਖਾਲੀ_ਸੂਚਕ,
+    ਖਾਲੀ_ਸੂਚਕ,
     _HZ_WriteSub,
-    _HZ_SafeClone,
-    _HZ_GetUnicodeSet,
-    nullptr,
-    nullptr
+    HZ_ਸੁਰੱਖਿਅਤ_Clone,
+    HZ_Get_Unicode_ਸੈੱਟ,
+    ਖਾਲੀ_ਸੂਚਕ,
+    ਖਾਲੀ_ਸੂਚਕ
 };
 
-static const UConverterStaticData _HZStaticData={
-    sizeof(UConverterStaticData),
+ਸਥਿਰ ਅਚਲ UConverter_Static_ਅੰਕੜੇ HZStatic_ਅੰਕੜੇ={
+    ਆਕਾਰ(UConverter_Static_ਅੰਕੜੇ),
         "HZ",
          0, 
          UCNV_IBM, 
@@ -611,15 +611,15 @@ static const UConverterStaticData _HZStaticData={
          4,
         { 0x1a, 0, 0, 0 },
         1,
-        false, 
-        false,
+        ਝੂਠ, 
+        ਝੂਠ,
         0,
         0,
         { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, /* reserved */
 
 };
 
-const UConverterSharedData _HZData=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_HZStaticData, &_HZImpl);
+ਅਚਲ UConverter_Shared_ਅੰਕੜੇ _HZData=
+        UCNV_IMMUTABLE_SHARED_ਅੰਕੜੇ_INITIALIZER(&HZStatic_ਅੰਕੜੇ, &_HZImpl);
 
-#endif /* #if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION */
+#ਜੇ_ਅੰਤ /* #if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION */

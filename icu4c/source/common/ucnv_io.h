@@ -12,52 +12,52 @@
  *  aspect of the conversion code
  */
 
-#ifndef UCNV_IO_H
-#define UCNV_IO_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ UCNV_IO_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_IO_H
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ਜੇ !UCONFIG_NO_CONVERSION
 
-#include "udataswp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "udataswp.h"
 
-#define UCNV_AMBIGUOUS_ALIAS_MAP_BIT 0x8000
-#define UCNV_CONTAINS_OPTION_BIT 0x4000
-#define UCNV_CONVERTER_INDEX_MASK 0xFFF
-#define UCNV_NUM_RESERVED_TAGS 2
-#define UCNV_NUM_HIDDEN_TAGS 1
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_AMBIGUOUS_ALIAS_MAP_ਦੋਆਧਾਰੀ_ਅੰਕ 0x8000
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_ਸ਼ਾਮਲ_ਹੈ_OPTION_ਦੋਆਧਾਰੀ_ਅੰਕ 0x4000
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_CONVERTER_ਸੂਚਕਾਂਕ_ਨਕਾਬ 0xFFF
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_ਅੰਕ_RESERVED_ਟੈਗ_ਸੂਚੀ 2
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UCNV_ਅੰਕ_HIDDEN_ਟੈਗ_ਸੂਚੀ 1
 
-enum {
+ਗਿਣਤੀ {
     UCNV_IO_UNNORMALIZED,
     UCNV_IO_STD_NORMALIZED,
-    UCNV_IO_NORM_TYPE_COUNT
+    UCNV_IO_NORM_TYPE_ਗਿਣਤੀ
 };
 
-typedef struct {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ {
     uint16_t stringNormalizationType;
-    uint16_t containsCnvOptionInfo;
+    uint16_t ਸ਼ਾਮਲ_ਹੈ_Cnv_Option_Info;
 } UConverterAliasOptions;
 
-typedef struct UConverterAlias {
-    const uint16_t *converterList;
-    const uint16_t *tagList;
-    const uint16_t *aliasList;
-    const uint16_t *untaggedConvArray;
-    const uint16_t *taggedAliasArray;
-    const uint16_t *taggedAliasLists;
-    const UConverterAliasOptions *optionTable;
-    const uint16_t *stringTable;
-    const uint16_t *normalizedStringTable;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ UConverterAlias {
+    ਅਚਲ uint16_t *converterList;
+    ਅਚਲ uint16_t *ਟੈਗ_List;
+    ਅਚਲ uint16_t *aliasList;
+    ਅਚਲ uint16_t *untaggedConvArray;
+    ਅਚਲ uint16_t *taggedAliasArray;
+    ਅਚਲ uint16_t *taggedAliasLists;
+    ਅਚਲ UConverterAliasOptions *option_ਸਾਰਣੀ;
+    ਅਚਲ uint16_t *string_ਸਾਰਣੀ;
+    ਅਚਲ uint16_t *normalized_String_ਸਾਰਣੀ;
 
-    uint32_t converterListSize;
-    uint32_t tagListSize;
-    uint32_t aliasListSize;
-    uint32_t untaggedConvArraySize;
-    uint32_t taggedAliasArraySize;
-    uint32_t taggedAliasListsSize;
-    uint32_t optionTableSize;
-    uint32_t stringTableSize;
-    uint32_t normalizedStringTableSize;
+    uint32_t converter_List_ਮਾਪ;
+    uint32_t ਟੈਗ_List_ਮਾਪ;
+    uint32_t alias_List_ਮਾਪ;
+    uint32_t untagged_Conv_Array_ਮਾਪ;
+    uint32_t tagged_Alias_Array_ਮਾਪ;
+    uint32_t tagged_Alias_Lists_ਮਾਪ;
+    uint32_t option_ਸਾਰਣੀ_ਮਾਪ;
+    uint32_t string_ਸਾਰਣੀ_ਮਾਪ;
+    uint32_t normalized_String_ਸਾਰਣੀ_ਮਾਪ;
 } UConverterAlias;
 
 /**
@@ -69,19 +69,19 @@ typedef struct UConverterAlias {
  * @see ucnv_compareNames
  * @return the destination buffer.
  */
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#ਜੇ U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define ucnv_io_stripForCompare ucnv_io_stripASCIIForCompare
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#ਜਾਂਜੇ U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define ucnv_io_stripForCompare ucnv_io_stripEBCDICForCompare
-#else
+#ਨਹੀਂਤਾਂ
 #   error U_CHARSET_FAMILY is not valid
-#endif
+#ਜੇ_ਅੰਤ
 
-U_CAPI char* U_CALLCONV
-ucnv_io_stripASCIIForCompare(char* dst U_LIFETIME_BOUND, const char* name);
+U_CAPI ਅੱਖਰ* U_CALLCONV
+ucnv_io_stripASCIIForCompare(ਅੱਖਰ* dst U_LIFETIME_BOUND, ਅਚਲ ਅੱਖਰ* name);
 
-U_CAPI char* U_CALLCONV
-ucnv_io_stripEBCDICForCompare(char* dst U_LIFETIME_BOUND, const char* name);
+U_CAPI ਅੱਖਰ* U_CALLCONV
+ucnv_io_stripEBCDICForCompare(ਅੱਖਰ* dst U_LIFETIME_BOUND, ਅਚਲ ਅੱਖਰ* name);
 
 /**
  * Map a converter alias name to a canonical converter name.
@@ -93,8 +93,8 @@ ucnv_io_stripEBCDICForCompare(char* dst U_LIFETIME_BOUND, const char* name);
  * @param pErrorCode The error code
  * @return the converter name in mixed-case, return NULL if the alias is not found.
  */
-U_CAPI const char *
-ucnv_io_getConverterName(const char *alias, UBool *containsOption, UErrorCode *pErrorCode);
+U_CAPI ਅਚਲ ਅੱਖਰ *
+ucnv_io_getConverterName(ਅਚਲ ਅੱਖਰ *alias, UBool *ਸ਼ਾਮਲ_ਹੈ_Option, UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Return the number of all known converter names (no aliases).
@@ -102,20 +102,20 @@ ucnv_io_getConverterName(const char *alias, UBool *containsOption, UErrorCode *p
  * @return the number of all aliases
  */
 U_CAPI uint16_t
-ucnv_io_countKnownConverters(UErrorCode *pErrorCode);
+ucnv_io_ਗਿਣਤੀ_ਗਿਆਤ_Converters(UError_ਕੋਡ *p_Error_ਕੋਡ);
 
 /**
  * Swap an ICU converter alias table. See implementation for details.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ucnv_swapAliases(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
-                 UErrorCode *pErrorCode);
+ucnv_ਅਦਲਾ_ਬਦਲੀ_Aliases(ਅਚਲ UDataSwapper *ds,
+                 ਅਚਲ ਖਾਲੀ *ਵਿੱਚ_ਅੰਕੜੇ, int32_t ਲੰਮਾਈ, ਖਾਲੀ *ਬਾਹਰਲਾ_ਅੰਕੜੇ,
+                 UError_ਕੋਡ *p_Error_ਕੋਡ);
 
-#endif
+#ਜੇ_ਅੰਤ
 
-#endif /* _UCNV_IO */
+#ਜੇ_ਅੰਤ /* _UCNV_IO */
 
 /*
  * Hey, Emacs, please set the following:

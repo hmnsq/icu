@@ -29,22 +29,22 @@
 // is in the ICU svn repository at icuhtml/trunk/design/strings/contrib
 // (see ICU ticket 6765, r25517).
 
-#ifndef __BYTESTREAM_H__
-#define __BYTESTREAM_H__
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ __BYTESTREAM_H__
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __BYTESTREAM_H__
 
 /**
  * \file
  * \brief C++ API: Interface for writing bytes, and implementation classes.
  */
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
 
-#include <type_traits>
+#ਅਨ੍ਤਰ੍ਭਾਵ <type_traits>
 
-#include "unicode/uobject.h"
-#include "unicode/std_string.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uobject.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/std_string.h"
 
 U_NAMESPACE_BEGIN
 
@@ -52,8 +52,8 @@ U_NAMESPACE_BEGIN
  * A ByteSink can be filled with bytes.
  * @stable ICU 4.2
  */
-class U_COMMON_API ByteSink : public UMemory {
-public:
+class U_COMMON_API ByteSink : ਜਨਤਕ UMemory {
+ਜਨਤਕ:
   /**
    * Default constructor.
    * @stable ICU 4.2
@@ -63,7 +63,7 @@ public:
    * Virtual destructor.
    * @stable ICU 4.2
    */
-  virtual ~ByteSink();
+  ਆਭਾਸੀ ~ByteSink();
 
   /**
    * Append "bytes[0,n-1]" to this.
@@ -71,7 +71,7 @@ public:
    * @param n the number of bytes; must be non-negative
    * @stable ICU 4.2
    */
-  virtual void Append(const char* bytes, int32_t n) = 0;
+  ਆਭਾਸੀ ਖਾਲੀ Append(ਅਚਲ ਅੱਖਰ* ਬਾਈਟਾਂ, int32_t n) = 0;
 
   /**
    * Appends n bytes to this. Same as Append().
@@ -84,11 +84,11 @@ public:
    * @param n the number of bytes; must be non-negative
    * @stable ICU 67
    */
-  inline void AppendU8(const char* bytes, int32_t n) {
-    Append(bytes, n);
+  ਸਤਰਅੰਦਰ ਖਾਲੀ AppendU8(ਅਚਲ ਅੱਖਰ* ਬਾਈਟਾਂ, int32_t n) {
+    Append(ਬਾਈਟਾਂ, n);
   }
 
-#if defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
+#ਜੇ defined(__cpp_char8_t) || defined(U_ਵਿੱਚ_DOXYGEN)
   /**
    * Appends n bytes to this. Same as Append() but for a const char8_t * pointer.
    * Call AppendU8() with u8"string literals" which are const char * in C++11
@@ -100,10 +100,10 @@ public:
    * @param n the number of bytes; must be non-negative
    * @stable ICU 67
    */
-  inline void AppendU8(const char8_t* bytes, int32_t n) {
-    Append(reinterpret_cast<const char*>(bytes), n);
+  ਸਤਰਅੰਦਰ ਖਾਲੀ AppendU8(ਅਚਲ char8_t* ਬਾਈਟਾਂ, int32_t n) {
+    Append(reinterpret_cast<ਅਚਲ ਅੱਖਰ*>(ਬਾਈਟਾਂ), n);
   }
-#endif
+#ਜੇ_ਅੰਤ
 
   /**
    * Returns a writable buffer for appending and writes the buffer's capacity to
@@ -147,11 +147,11 @@ public:
    * @return a buffer with *result_capacity>=min_capacity
    * @stable ICU 4.2
    */
-  virtual char* GetAppendBuffer(int32_t min_capacity,
-                                int32_t desired_capacity_hint,
-                                char* scratch U_LIFETIME_BOUND,
-                                int32_t scratch_capacity,
-                                int32_t* result_capacity) U_LIFETIME_BOUND;
+  ਆਭਾਸੀ ਅੱਖਰ* Get_Append_ਬਫਰ(int32_t min_ਸਮਰੱਥਾ_2,
+                                int32_t desired_ਸਮਰੱਥਾ_hint,
+                                ਅੱਖਰ* scratch U_LIFETIME_BOUND,
+                                int32_t scratch_ਸਮਰੱਥਾ_2,
+                                int32_t* ਨਤੀਜਾ_ਸਮਰੱਥਾ_2) U_LIFETIME_BOUND;
 
   /**
    * Flush internal buffers.
@@ -161,11 +161,11 @@ public:
    * The default implementation of Flush() does nothing.
    * @stable ICU 4.2
    */
-  virtual void Flush();
+  ਆਭਾਸੀ ਖਾਲੀ Flush();
 
-private:
-  ByteSink(const ByteSink &) = delete;
-  ByteSink &operator=(const ByteSink &) = delete;
+ਨਿਜੀ:
+  ByteSink(ਅਚਲ ByteSink &) = delete;
+  ByteSink &ਸੰਚਾਲਕ=(ਅਚਲ ByteSink &) = delete;
 };
 
 // -------------------------------------------------------------
@@ -180,20 +180,20 @@ private:
  * Overflow does not cause a runtime error.
  * @stable ICU 4.2
  */
-class U_COMMON_API CheckedArrayByteSink : public ByteSink {
-public:
+class U_COMMON_API CheckedArrayByteSink : ਜਨਤਕ ByteSink {
+ਜਨਤਕ:
   /**
    * Constructs a ByteSink that will write to outbuf[0..capacity-1].
    * @param outbuf buffer to write to
    * @param capacity size of the buffer
    * @stable ICU 4.2
    */
-  CheckedArrayByteSink(char* outbuf, int32_t capacity);
+  CheckedArrayByteSink(ਅੱਖਰ* outbuf, int32_t ਸਮਰੱਥਾ);
   /**
    * Destructor.
    * @stable ICU 4.2
    */
-  virtual ~CheckedArrayByteSink();
+  ਆਭਾਸੀ ~CheckedArrayByteSink();
   /**
    * Returns the sink to its original state, without modifying the buffer.
    * Useful for reusing both the buffer and the sink for multiple streams.
@@ -202,14 +202,14 @@ public:
    * @return *this
    * @stable ICU 4.6
    */
-  virtual CheckedArrayByteSink& Reset() U_LIFETIME_BOUND;
+  ਆਭਾਸੀ CheckedArrayByteSink& Reset() U_LIFETIME_BOUND;
   /**
    * Append "bytes[0,n-1]" to this.
    * @param bytes the pointer to the bytes
    * @param n the number of bytes; must be non-negative
    * @stable ICU 4.2
    */
-  virtual void Append(const char* bytes, int32_t n) override;
+  ਆਭਾਸੀ ਖਾਲੀ Append(ਅਚਲ ਅੱਖਰ* ਬਾਈਟਾਂ, int32_t n) override;
   /**
    * Returns a writable buffer for appending and writes the buffer's capacity to
    * *result_capacity. For details see the base class documentation.
@@ -224,24 +224,24 @@ public:
    * @return a buffer with *result_capacity>=min_capacity
    * @stable ICU 4.2
    */
-  virtual char* GetAppendBuffer(int32_t min_capacity,
-                                int32_t desired_capacity_hint,
-                                char* scratch U_LIFETIME_BOUND,
-                                int32_t scratch_capacity,
-                                int32_t* result_capacity) U_LIFETIME_BOUND override;
+  ਆਭਾਸੀ ਅੱਖਰ* Get_Append_ਬਫਰ(int32_t min_ਸਮਰੱਥਾ_2,
+                                int32_t desired_ਸਮਰੱਥਾ_hint,
+                                ਅੱਖਰ* scratch U_LIFETIME_BOUND,
+                                int32_t scratch_ਸਮਰੱਥਾ_2,
+                                int32_t* ਨਤੀਜਾ_ਸਮਰੱਥਾ_2) U_LIFETIME_BOUND override;
   /**
    * Returns the number of bytes actually written to the sink.
    * @return number of bytes written to the buffer
    * @stable ICU 4.2
    */
-  int32_t NumberOfBytesWritten() const { return size_; }
+  int32_t ਸੰਖਿਆ_ਦਾ_ਬਾਈਟਾਂ_Written() ਅਚਲ { ਵਾਪਸ ਮਾਪ; }
   /**
    * Returns true if any bytes were discarded, i.e., if there was an
    * attempt to write more than 'capacity' bytes.
    * @return true if more than 'capacity' bytes were Append()ed
    * @stable ICU 4.2
    */
-  UBool Overflowed() const { return overflowed_; }
+  UBool Overflowed() ਅਚਲ { ਵਾਪਸ overflowed_; }
   /**
    * Returns the number of bytes appended to the sink.
    * If Overflowed() then NumberOfBytesAppended()>NumberOfBytesWritten()
@@ -249,35 +249,35 @@ public:
    * @return number of bytes written to the buffer
    * @stable ICU 4.6
    */
-  int32_t NumberOfBytesAppended() const { return appended_; }
-private:
-  char* outbuf_;
-  const int32_t capacity_;
-  int32_t size_;
+  int32_t ਸੰਖਿਆ_ਦਾ_ਬਾਈਟਾਂ_Appended() ਅਚਲ { ਵਾਪਸ appended_; }
+ਨਿਜੀ:
+  ਅੱਖਰ* outbuf_;
+  ਅਚਲ int32_t ਸਮਰੱਥਾ_2;
+  int32_t ਮਾਪ;
   int32_t appended_;
   UBool overflowed_;
 
   CheckedArrayByteSink() = delete;
-  CheckedArrayByteSink(const CheckedArrayByteSink &) = delete;
-  CheckedArrayByteSink &operator=(const CheckedArrayByteSink &) = delete;
+  CheckedArrayByteSink(ਅਚਲ CheckedArrayByteSink &) = delete;
+  CheckedArrayByteSink &ਸੰਚਾਲਕ=(ਅਚਲ CheckedArrayByteSink &) = delete;
 };
 
 namespace prv {
 /** @internal */
-template<typename StringClass, typename = void>
-struct value_type_or_char {
+ਸਾਂਚਾ<typename StringClass, typename = ਖਾਲੀ>
+ਬਣਤਰ ਮੁੱਲ_type_or_char {
   /** @internal */
-  using type = char;
+  using type = ਅੱਖਰ;
 };
 /** @internal */
-template<typename StringClass>
-struct value_type_or_char<StringClass, std::void_t<typename StringClass::value_type>> {
+ਸਾਂਚਾ<typename StringClass>
+ਬਣਤਰ ਮੁੱਲ_type_or_char<StringClass, std::void_t<typename StringClass::ਮੁੱਲ_type>> {
   /** @internal */
-  using type = typename StringClass::value_type;
+  using type = typename StringClass::ਮੁੱਲ_type;
 };
 /** @internal */
-template<typename StringClass>
-using value_type_or_char_t = typename value_type_or_char<StringClass>::type;
+ਸਾਂਚਾ<typename StringClass>
+using ਮੁੱਲ_type_or_char_t = typename ਮੁੱਲ_type_or_char<StringClass>::type;
 }
 
 /** 
@@ -289,10 +289,10 @@ using value_type_or_char_t = typename value_type_or_char<StringClass>::type;
  * StringClass::value_type.
  * @stable ICU 4.2
  */
-template<typename StringClass>
-class StringByteSink : public ByteSink {
-  using Unit = typename prv::value_type_or_char_t<StringClass>;
- public:
+ਸਾਂਚਾ<typename StringClass>
+class StringByteSink : ਜਨਤਕ ByteSink {
+  using Unit = typename prv::ਮੁੱਲ_type_or_char_t<StringClass>;
+ ਜਨਤਕ:
   /**
    * Constructs a ByteSink that will append bytes to the dest string.
    * @param dest pointer to string object to append to
@@ -306,10 +306,10 @@ class StringByteSink : public ByteSink {
    * @param initialAppendCapacity capacity beyond dest->length() to be reserve()d
    * @stable ICU 60
    */
-  StringByteSink(StringClass* dest, int32_t initialAppendCapacity) : dest_(dest) {
-    if (initialAppendCapacity > 0 &&
-        static_cast<uint32_t>(initialAppendCapacity) > dest->capacity() - dest->length()) {
-      dest->reserve(dest->length() + initialAppendCapacity);
+  StringByteSink(StringClass* dest, int32_t initial_Append_ਸਮਰੱਥਾ) : dest_(dest) {
+    ਜੇ (initial_Append_ਸਮਰੱਥਾ > 0 &&
+        static_cast<uint32_t>(initial_Append_ਸਮਰੱਥਾ) > dest->ਸਮਰੱਥਾ() - dest->ਲੰਮਾਈ()) {
+      dest->reserve(dest->ਲੰਮਾਈ() + initial_Append_ਸਮਰੱਥਾ);
     }
   }
   /**
@@ -318,23 +318,23 @@ class StringByteSink : public ByteSink {
    * @param n the number of bytes; must be non-negative
    * @stable ICU 4.2
    */
-  virtual void Append(const char* data, int32_t n) override {
-    if constexpr (std::is_same_v<Unit, char>) {
-      dest_->append(data, n);
-    } else {
-      dest_->append(reinterpret_cast<const Unit*>(data), n);
+  ਆਭਾਸੀ ਖਾਲੀ Append(ਅਚਲ ਅੱਖਰ* ਅੰਕੜੇ, int32_t n) override {
+    ਜੇ constexpr (std::is_same_v<Unit, ਅੱਖਰ>) {
+      dest_->append(ਅੰਕੜੇ, n);
+    } ਨਹੀਂਤਾਂ {
+      dest_->append(reinterpret_cast<ਅਚਲ Unit*>(ਅੰਕੜੇ), n);
     }
   }
- private:
+ ਨਿਜੀ:
   StringClass* dest_;
 
   StringByteSink() = delete;
-  StringByteSink(const StringByteSink &) = delete;
-  StringByteSink &operator=(const StringByteSink &) = delete;
+  StringByteSink(ਅਚਲ StringByteSink &) = delete;
+  StringByteSink &ਸੰਚਾਲਕ=(ਅਚਲ StringByteSink &) = delete;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ਜੇ_ਅੰਤ /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __BYTESTREAM_H__
+#ਜੇ_ਅੰਤ  // __BYTESTREAM_H__

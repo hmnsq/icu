@@ -4,217 +4,217 @@
 // emojiprops.cpp
 // created: 2021sep04 Markus W. Scherer
 
-#include "unicode/utypes.h"
-#include "unicode/uchar.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/ucptrie.h"
-#include "unicode/udata.h"
-#include "unicode/ustringtrie.h"
-#include "unicode/utf16.h"
-#include "emojiprops.h"
-#include "ucln.h"
-#include "ucln_cmn.h"
-#include "umutex.h"
-#include "uset_imp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uchar.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ucharstrie.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ucptrie.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/udata.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ustringtrie.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utf16.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "emojiprops.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucln.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucln_cmn.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "umutex.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uset_imp.h"
 
 U_NAMESPACE_BEGIN
 
-namespace {
+ਨਾਮਾਕਾਸ਼ {
 
-EmojiProps *singleton = nullptr;
+EmojiProps *singleton = ਖਾਲੀ_ਸੂਚਕ;
 icu::UInitOnce emojiInitOnce {};
 
 UBool U_CALLCONV emojiprops_cleanup() {
-    delete singleton;
-    singleton = nullptr;
+    ਮਿਟਾਓ singleton;
+    singleton = ਖਾਲੀ_ਸੂਚਕ;
     emojiInitOnce.reset();
-    return true;
+    ਵਾਪਸ ਸੱਚ;
 }
 
-void U_CALLCONV initSingleton(UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return; }
-    singleton = new EmojiProps(errorCode);
-    if (singleton == nullptr) {
-        errorCode = U_MEMORY_ALLOCATION_ERROR;
-    } else if (U_FAILURE(errorCode)) {
-        delete singleton;
-        singleton = nullptr;
+ਖਾਲੀ U_CALLCONV initSingleton(UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ (U_FAILURE(error_ਕੋਡ)) { ਵਾਪਸ; }
+    singleton = ਨਵਾਂ EmojiProps(error_ਕੋਡ);
+    ਜੇ (singleton == ਖਾਲੀ_ਸੂਚਕ) {
+        error_ਕੋਡ = U_ਸਮ੍ਰਿਤੀ_ਵੰਡ_ERROR;
+    } ਨਹੀਂਤਾਂ ਜੇ (U_FAILURE(error_ਕੋਡ)) {
+        ਮਿਟਾਓ singleton;
+        singleton = ਖਾਲੀ_ਸੂਚਕ;
     }
-    ucln_common_registerCleanup(UCLN_COMMON_EMOJIPROPS, emojiprops_cleanup);
+    ucln_common_ਰਜਿਸਟਰ_Cleanup(UCLN_COMMON_EMOJIPROPS, emojiprops_cleanup);
 }
 
 // TODO: turn this into a shared helper function
 // Requires the major version to match, and then requires at least the minor version.
 UBool udata_isAcceptableMajorMinor(
-        const UDataInfo &info, const char16_t *dataFormat, uint8_t major, uint8_t minor) {
-    return
+        ਅਚਲ UDataInfo &info, ਅਚਲ char16_t *ਅੰਕੜੇ_Format, uint8_t major, uint8_t minor) {
+    ਵਾਪਸ
         info.size >= 20 &&
         info.isBigEndian == U_IS_BIG_ENDIAN &&
         info.charsetFamily == U_CHARSET_FAMILY &&
-        info.dataFormat[0] == dataFormat[0] &&
-        info.dataFormat[1] == dataFormat[1] &&
-        info.dataFormat[2] == dataFormat[2] &&
-        info.dataFormat[3] == dataFormat[3] &&
-        info.formatVersion[0] == major &&
-        info.formatVersion[1] >= minor;
+        info.ਅੰਕੜੇ_Format[0] == ਅੰਕੜੇ_Format[0] &&
+        info.ਅੰਕੜੇ_Format[1] == ਅੰਕੜੇ_Format[1] &&
+        info.ਅੰਕੜੇ_Format[2] == ਅੰਕੜੇ_Format[2] &&
+        info.ਅੰਕੜੇ_Format[3] == ਅੰਕੜੇ_Format[3] &&
+        info.format_ਸੰਸਕਰਣ[0] == major &&
+        info.format_ਸੰਸਕਰਣ[1] >= minor;
 }
 
 }  // namespace
 
 EmojiProps::~EmojiProps() {
-    udata_close(memory);
+    udata_close(ਸਮ੍ਰਿਤੀ);
     ucptrie_close(cpTrie);
 }
 
-const EmojiProps *
-EmojiProps::getSingleton(UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    umtx_initOnce(emojiInitOnce, &initSingleton, errorCode);
-    return singleton;
+ਅਚਲ EmojiProps *
+EmojiProps::getSingleton(UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ (U_FAILURE(error_ਕੋਡ)) { ਵਾਪਸ ਖਾਲੀ_ਸੂਚਕ; }
+    umtx_initOnce(emojiInitOnce, &initSingleton, error_ਕੋਡ);
+    ਵਾਪਸ singleton;
 }
 
 UBool U_CALLCONV
-EmojiProps::isAcceptable(void * /*context*/, const char * /*type*/, const char * /*name*/,
-                         const UDataInfo *pInfo) {
-    return udata_isAcceptableMajorMinor(*pInfo, u"Emoj", 1, 0);
+EmojiProps::isAcceptable(ਖਾਲੀ * /*context*/, ਅਚਲ ਅੱਖਰ * /*type*/, ਅਚਲ ਅੱਖਰ * /*name*/,
+                         ਅਚਲ UDataInfo *pInfo) {
+    ਵਾਪਸ udata_isAcceptableMajorMinor(*pInfo, u"Emoj", 1, 0);
 }
 
-void
-EmojiProps::load(UErrorCode &errorCode) {
-    memory = udata_openChoice(nullptr, "icu", "uemoji", isAcceptable, this, &errorCode);
-    if (U_FAILURE(errorCode)) { return; }
-    const uint8_t* inBytes = static_cast<const uint8_t*>(udata_getMemory(memory));
-    const int32_t* inIndexes = reinterpret_cast<const int32_t*>(inBytes);
-    int32_t indexesLength = inIndexes[IX_CPTRIE_OFFSET] / 4;
-    if (indexesLength <= IX_RGI_EMOJI_ZWJ_SEQUENCE_TRIE_OFFSET) {
-        errorCode = U_INVALID_FORMAT_ERROR;  // Not enough indexes.
-        return;
+ਖਾਲੀ
+EmojiProps::load(UError_ਕੋਡ &error_ਕੋਡ) {
+    ਸਮ੍ਰਿਤੀ = udata_openChoice(ਖਾਲੀ_ਸੂਚਕ, "icu", "uemoji", isAcceptable, ਇਹ, &error_ਕੋਡ);
+    ਜੇ (U_FAILURE(error_ਕੋਡ)) { ਵਾਪਸ; }
+    ਅਚਲ uint8_t* ਵਿੱਚ_ਬਾਈਟਾਂ = static_cast<ਅਚਲ uint8_t*>(udata_get_ਸਮ੍ਰਿਤੀ(ਸਮ੍ਰਿਤੀ));
+    ਅਚਲ int32_t* ਵਿੱਚ_Indexes = reinterpret_cast<ਅਚਲ int32_t*>(ਵਿੱਚ_ਬਾਈਟਾਂ);
+    int32_t indexes_ਲੰਮਾਈ = ਵਿੱਚ_Indexes[IX_CPTRIE_ਵਿੱਥ] / 4;
+    ਜੇ (indexes_ਲੰਮਾਈ <= IX_RGI_EMOJI_ZWJ_SEQUENCE_TRIE_ਵਿੱਥ) {
+        error_ਕੋਡ = U_INVALID_FORMAT_ERROR;  // Not enough indexes.
+        ਵਾਪਸ;
     }
 
-    int32_t i = IX_CPTRIE_OFFSET;
-    int32_t offset = inIndexes[i++];
-    int32_t nextOffset = inIndexes[i];
-    cpTrie = ucptrie_openFromBinary(UCPTRIE_TYPE_FAST, UCPTRIE_VALUE_BITS_8,
-                                    inBytes + offset, nextOffset - offset, nullptr, &errorCode);
-    if (U_FAILURE(errorCode)) {
-        return;
+    int32_t i = IX_CPTRIE_ਵਿੱਥ;
+    int32_t ਵਿੱਥ = ਵਿੱਚ_Indexes[i++];
+    int32_t ਅਗਲਾ_ਵਿੱਥ = ਵਿੱਚ_Indexes[i];
+    cpTrie = ucptrie_open_From_ਦੁਆਧਾਰੀ(UCPTRIE_TYPE_FAST, UCPTRIE_ਮੁੱਲ_ਬਿੱਟ_8,
+                                    ਵਿੱਚ_ਬਾਈਟਾਂ + ਵਿੱਥ, ਅਗਲਾ_ਵਿੱਥ - ਵਿੱਥ, ਖਾਲੀ_ਸੂਚਕ, &error_ਕੋਡ);
+    ਜੇ (U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ;
     }
 
-    for (i = IX_BASIC_EMOJI_TRIE_OFFSET; i <= IX_RGI_EMOJI_ZWJ_SEQUENCE_TRIE_OFFSET; ++i) {
-        offset = inIndexes[i];
-        nextOffset = inIndexes[i + 1];
+    ਲਈ (i = IX_BASIC_EMOJI_TRIE_ਵਿੱਥ; i <= IX_RGI_EMOJI_ZWJ_SEQUENCE_TRIE_ਵਿੱਥ; ++i) {
+        ਵਿੱਥ = ਵਿੱਚ_Indexes[i];
+        ਅਗਲਾ_ਵਿੱਥ = ਵਿੱਚ_Indexes[i + 1];
         // Set/leave nullptr if there is no UCharsTrie.
-        const char16_t* p = nextOffset > offset ? reinterpret_cast<const char16_t*>(inBytes + offset) : nullptr;
-        stringTries[getStringTrieIndex(i)] = p;
+        ਅਚਲ char16_t* p = ਅਗਲਾ_ਵਿੱਥ > ਵਿੱਥ ? reinterpret_cast<ਅਚਲ char16_t*>(ਵਿੱਚ_ਬਾਈਟਾਂ + ਵਿੱਥ) : ਖਾਲੀ_ਸੂਚਕ;
+        stringTries[get_String_Trie_ਸੂਚਕਾਂਕ(i)] = p;
     }
 }
 
-void
-EmojiProps::addPropertyStarts(const USetAdder *sa, UErrorCode & /*errorCode*/) const {
+ਖਾਲੀ
+EmojiProps::ਜੋੜੋ_Property_Starts(ਅਚਲ USetAdder *sa, UError_ਕੋਡ & /*errorCode*/) ਅਚਲ {
     // Add the start code point of each same-value range of the trie.
-    UChar32 start = 0, end;
+    UChar32 ਸ਼ੁਰੂ = 0, ਸਿਰਾ;
     uint32_t value;
-    while ((end = ucptrie_getRange(cpTrie, start, UCPMAP_RANGE_NORMAL, 0,
-                                   nullptr, nullptr, &value)) >= 0) {
-        sa->add(sa->set, start);
-        start = end + 1;
+    ਜਦੋਂ ((ਸਿਰਾ = ucptrie_getRange(cpTrie, ਸ਼ੁਰੂ, UCPMAP_RANGE_ਸਾਧਾਰਨ, 0,
+                                   ਖਾਲੀ_ਸੂਚਕ, ਖਾਲੀ_ਸੂਚਕ, &value)) >= 0) {
+        sa->ਜੋੜੋ(sa->ਸੈੱਟ, ਸ਼ੁਰੂ);
+        ਸ਼ੁਰੂ = ਸਿਰਾ + 1;
     }
 }
 
 UBool
-EmojiProps::hasBinaryProperty(UChar32 c, UProperty which) {
-    UErrorCode errorCode = U_ZERO_ERROR;
-    const EmojiProps *ep = getSingleton(errorCode);
-    return U_SUCCESS(errorCode) && ep->hasBinaryPropertyImpl(c, which);
+EmojiProps::has_ਦੁਆਧਾਰੀ_Property(UChar32 c, UProperty which) {
+    UError_ਕੋਡ error_ਕੋਡ = U_ZERO_ERROR;
+    ਅਚਲ EmojiProps *ep = getSingleton(error_ਕੋਡ);
+    ਵਾਪਸ U_SUCCESS(error_ਕੋਡ) && ep->has_ਦੁਆਧਾਰੀ_Property_Impl(c, which);
 }
 
 UBool
-EmojiProps::hasBinaryPropertyImpl(UChar32 c, UProperty which) const {
-    if (which < UCHAR_EMOJI || UCHAR_RGI_EMOJI < which) {
-        return false;
+EmojiProps::has_ਦੁਆਧਾਰੀ_Property_Impl(UChar32 c, UProperty which) ਅਚਲ {
+    ਜੇ (which < UCHAR_EMOJI || UCHAR_RGI_EMOJI < which) {
+        ਵਾਪਸ ਝੂਠ;
     }
     // Note: UCHAR_REGIONAL_INDICATOR is a single, hardcoded range implemented elsewhere.
-    static constexpr int8_t bitFlags[] = {
-        BIT_EMOJI,                  // UCHAR_EMOJI=57
-        BIT_EMOJI_PRESENTATION,     // UCHAR_EMOJI_PRESENTATION=58
-        BIT_EMOJI_MODIFIER,         // UCHAR_EMOJI_MODIFIER=59
-        BIT_EMOJI_MODIFIER_BASE,    // UCHAR_EMOJI_MODIFIER_BASE=60
-        BIT_EMOJI_COMPONENT,        // UCHAR_EMOJI_COMPONENT=61
+    ਸਥਿਰ constexpr int8_t ਦੋਆਧਾਰੀ_ਅੰਕ_Flags[] = {
+        ਦੋਆਧਾਰੀ_ਅੰਕ_EMOJI,                  // UCHAR_EMOJI=57
+        ਦੋਆਧਾਰੀ_ਅੰਕ_EMOJI_PRESENTATION,     // UCHAR_EMOJI_PRESENTATION=58
+        ਦੋਆਧਾਰੀ_ਅੰਕ_EMOJI_MODIFIER,         // UCHAR_EMOJI_MODIFIER=59
+        ਦੋਆਧਾਰੀ_ਅੰਕ_EMOJI_MODIFIER_ਅਧਾਰ,    // UCHAR_EMOJI_MODIFIER_BASE=60
+        ਦੋਆਧਾਰੀ_ਅੰਕ_EMOJI_COMPONENT,        // UCHAR_EMOJI_COMPONENT=61
         -1,                         // UCHAR_REGIONAL_INDICATOR=62
         -1,                         // UCHAR_PREPENDED_CONCATENATION_MARK=63
-        BIT_EXTENDED_PICTOGRAPHIC,  // UCHAR_EXTENDED_PICTOGRAPHIC=64
-        BIT_BASIC_EMOJI,            // UCHAR_BASIC_EMOJI=65
+        ਦੋਆਧਾਰੀ_ਅੰਕ_EXTENDED_PICTOGRAPHIC,  // UCHAR_EXTENDED_PICTOGRAPHIC=64
+        ਦੋਆਧਾਰੀ_ਅੰਕ_BASIC_EMOJI,            // UCHAR_BASIC_EMOJI=65
         -1,                         // UCHAR_EMOJI_KEYCAP_SEQUENCE=66
         -1,                         // UCHAR_RGI_EMOJI_MODIFIER_SEQUENCE=67
         -1,                         // UCHAR_RGI_EMOJI_FLAG_SEQUENCE=68
         -1,                         // UCHAR_RGI_EMOJI_TAG_SEQUENCE=69
         -1,                         // UCHAR_RGI_EMOJI_ZWJ_SEQUENCE=70
-        BIT_BASIC_EMOJI,            // UCHAR_RGI_EMOJI=71
+        ਦੋਆਧਾਰੀ_ਅੰਕ_BASIC_EMOJI,            // UCHAR_RGI_EMOJI=71
     };
-    int32_t bit = bitFlags[which - UCHAR_EMOJI];
-    if (bit < 0) {
-        return false;  // not a property that we support in this function
+    int32_t bit = ਦੋਆਧਾਰੀ_ਅੰਕ_Flags[which - UCHAR_EMOJI];
+    ਜੇ (bit < 0) {
+        ਵਾਪਸ ਝੂਠ;  // not a property that we support in this function
     }
-    uint8_t bits = UCPTRIE_FAST_GET(cpTrie, UCPTRIE_8, c);
-    return (bits >> bit) & 1;
+    uint8_t ਬਿੱਟ = UCPTRIE_FAST_GET(cpTrie, UCPTRIE_8, c);
+    ਵਾਪਸ (ਬਿੱਟ >> bit) & 1;
 }
 
 UBool
-EmojiProps::hasBinaryProperty(const char16_t *s, int32_t length, UProperty which) {
-    UErrorCode errorCode = U_ZERO_ERROR;
-    const EmojiProps *ep = getSingleton(errorCode);
-    return U_SUCCESS(errorCode) && ep->hasBinaryPropertyImpl(s, length, which);
+EmojiProps::has_ਦੁਆਧਾਰੀ_Property(ਅਚਲ char16_t *s, int32_t length, UProperty which) {
+    UError_ਕੋਡ error_ਕੋਡ = U_ZERO_ERROR;
+    ਅਚਲ EmojiProps *ep = getSingleton(error_ਕੋਡ);
+    ਵਾਪਸ U_SUCCESS(error_ਕੋਡ) && ep->has_ਦੁਆਧਾਰੀ_Property_Impl(s, length, which);
 }
 
 UBool
-EmojiProps::hasBinaryPropertyImpl(const char16_t *s, int32_t length, UProperty which) const {
-    if (s == nullptr && length != 0) { return false; }
-    if (length <= 0 && (length == 0 || *s == 0)) { return false; }  // empty string
+EmojiProps::has_ਦੁਆਧਾਰੀ_Property_Impl(ਅਚਲ char16_t *s, int32_t length, UProperty which) ਅਚਲ {
+    ਜੇ (s == ਖਾਲੀ_ਸੂਚਕ && length != 0) { ਵਾਪਸ ਝੂਠ; }
+    ਜੇ (length <= 0 && (length == 0 || *s == 0)) { ਵਾਪਸ ਝੂਠ; }  // empty string
     // The caller should have delegated single code points to hasBinaryProperty(c, which).
-    if (which < UCHAR_BASIC_EMOJI || UCHAR_RGI_EMOJI < which) {
-        return false;
+    ਜੇ (which < UCHAR_BASIC_EMOJI || UCHAR_RGI_EMOJI < which) {
+        ਵਾਪਸ ਝੂਠ;
     }
-    UProperty firstProp = which, lastProp = which;
-    if (which == UCHAR_RGI_EMOJI) {
+    UProperty ਪਹਿਲਾ_Prop = which, ਆਖਰੀ_Prop = which;
+    ਜੇ (which == UCHAR_RGI_EMOJI) {
         // RGI_Emoji is the union of the other emoji properties of strings.
-        firstProp = UCHAR_BASIC_EMOJI;
-        lastProp = UCHAR_RGI_EMOJI_ZWJ_SEQUENCE;
+        ਪਹਿਲਾ_Prop = UCHAR_BASIC_EMOJI;
+        ਆਖਰੀ_Prop = UCHAR_RGI_EMOJI_ZWJ_SEQUENCE;
     }
-    for (int32_t prop = firstProp; prop <= lastProp; ++prop) {
-        const char16_t *trieUChars = stringTries[prop - UCHAR_BASIC_EMOJI];
-        if (trieUChars != nullptr) {
+    ਲਈ (int32_t prop = ਪਹਿਲਾ_Prop; prop <= ਆਖਰੀ_Prop; ++prop) {
+        ਅਚਲ char16_t *trieUChars = stringTries[prop - UCHAR_BASIC_EMOJI];
+        ਜੇ (trieUChars != ਖਾਲੀ_ਸੂਚਕ) {
             UCharsTrie trie(trieUChars);
-            UStringTrieResult result = trie.next(s, length);
-            if (USTRINGTRIE_HAS_VALUE(result)) {
-                return true;
+            UString_Trie_ਨਤੀਜਾ ਨਤੀਜਾ = trie.next(s, length);
+            ਜੇ (USTRINGTRIE_HAS_ਮੁੱਲ(ਨਤੀਜਾ)) {
+                ਵਾਪਸ ਸੱਚ;
             }
         }
     }
-    return false;
+    ਵਾਪਸ ਝੂਠ;
 }
 
-void
-EmojiProps::addStrings(const USetAdder *sa, UProperty which, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return; }
-    if (which < UCHAR_BASIC_EMOJI || UCHAR_RGI_EMOJI < which) {
-        return;
+ਖਾਲੀ
+EmojiProps::ਜੋੜੋ_ਲੜੀਆਂ(ਅਚਲ USetAdder *sa, UProperty which, UError_ਕੋਡ &error_ਕੋਡ) ਅਚਲ {
+    ਜੇ (U_FAILURE(error_ਕੋਡ)) { ਵਾਪਸ; }
+    ਜੇ (which < UCHAR_BASIC_EMOJI || UCHAR_RGI_EMOJI < which) {
+        ਵਾਪਸ;
     }
-    UProperty firstProp = which, lastProp = which;
-    if (which == UCHAR_RGI_EMOJI) {
+    UProperty ਪਹਿਲਾ_Prop = which, ਆਖਰੀ_Prop = which;
+    ਜੇ (which == UCHAR_RGI_EMOJI) {
         // RGI_Emoji is the union of the other emoji properties of strings.
-        firstProp = UCHAR_BASIC_EMOJI;
-        lastProp = UCHAR_RGI_EMOJI_ZWJ_SEQUENCE;
+        ਪਹਿਲਾ_Prop = UCHAR_BASIC_EMOJI;
+        ਆਖਰੀ_Prop = UCHAR_RGI_EMOJI_ZWJ_SEQUENCE;
     }
-    for (int32_t prop = firstProp; prop <= lastProp; ++prop) {
-        const char16_t *trieUChars = stringTries[prop - UCHAR_BASIC_EMOJI];
-        if (trieUChars != nullptr) {
-            UCharsTrie::Iterator iter(trieUChars, 0, errorCode);
-            while (iter.next(errorCode)) {
-                const UnicodeString &s = iter.getString();
-                sa->addString(sa->set, s.getBuffer(), s.length());
+    ਲਈ (int32_t prop = ਪਹਿਲਾ_Prop; prop <= ਆਖਰੀ_Prop; ++prop) {
+        ਅਚਲ char16_t *trieUChars = stringTries[prop - UCHAR_BASIC_EMOJI];
+        ਜੇ (trieUChars != ਖਾਲੀ_ਸੂਚਕ) {
+            UCharsTrie::Iterator iter(trieUChars, 0, error_ਕੋਡ);
+            ਜਦੋਂ (iter.next(error_ਕੋਡ)) {
+                ਅਚਲ UnicodeString &s = iter.getString();
+                sa->ਜੋੜੋ_String(sa->ਸੈੱਟ, s.get_ਬਫਰ(), s.length());
             }
         }
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ

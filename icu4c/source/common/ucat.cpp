@@ -10,72 +10,72 @@
 * Since: ICU 2.6
 **********************************************************************
 */
-#include "unicode/ucat.h"
-#include "unicode/ustring.h"
-#include "cstring.h"
-#include "uassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ucat.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/ustring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uassert.h"
 
 /* Separator between set_num and msg_num */
-static const char SEPARATOR = '%';
+ਸਥਿਰ ਅਚਲ ਅੱਖਰ SEPARATOR = '%';
 
 /* Maximum length of a set_num/msg_num key, incl. terminating zero.
  * Longest possible key is "-2147483648%-2147483648" */
-#define MAX_KEY_LEN (24)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MAX_ਕੁੰਜੀ_LEN (24)
 
 /**
  * Fill in buffer with a set_num/msg_num key string, given the numeric
  * values. Numeric values must be >= 0. Buffer must be of length
  * MAX_KEY_LEN or more.
  */
-static char*
-_catkey(char* buffer U_LIFETIME_BOUND, int32_t set_num, int32_t msg_num) {
+ਸਥਿਰ ਅੱਖਰ*
+_catkey(ਅੱਖਰ* ਬਫਰ U_LIFETIME_BOUND, int32_t ਸੈੱਟ_ਅੰਕ, int32_t ਸੁਨੇਹਾ_ਅੰਕ) {
     int32_t i = 0;
-    i = T_CString_integerToString(buffer, set_num, 10);
-    buffer[i++] = SEPARATOR;
-    T_CString_integerToString(buffer+i, msg_num, 10);
-    return buffer;
+    i = T_CString_integer_ਮੰਜ਼ਿਲ_String(ਬਫਰ, ਸੈੱਟ_ਅੰਕ, 10);
+    ਬਫਰ[i++] = SEPARATOR;
+    T_CString_integer_ਮੰਜ਼ਿਲ_String(ਬਫਰ+i, ਸੁਨੇਹਾ_ਅੰਕ, 10);
+    ਵਾਪਸ ਬਫਰ;
 }
 
 U_CAPI u_nl_catd U_EXPORT2
-u_catopen(const char* name, const char* locale, UErrorCode* ec) {
-    return (u_nl_catd) ures_open(name, locale, ec);
+u_catopen(ਅਚਲ ਅੱਖਰ* name, ਅਚਲ ਅੱਖਰ* locale, UError_ਕੋਡ* ec) {
+    ਵਾਪਸ (u_nl_catd) ures_open(name, locale, ec);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ਖਾਲੀ U_EXPORT2
 u_catclose(u_nl_catd catd) {
     ures_close((UResourceBundle*) catd); /* may be nullptr */
 }
 
-U_CAPI const char16_t* U_EXPORT2
+U_CAPI ਅਚਲ char16_t* U_EXPORT2
 u_catgets(u_nl_catd catd U_LIFETIME_BOUND,
-          int32_t set_num,
-          int32_t msg_num,
-          const char16_t* s U_LIFETIME_BOUND,
+          int32_t ਸੈੱਟ_ਅੰਕ,
+          int32_t ਸੁਨੇਹਾ_ਅੰਕ,
+          ਅਚਲ char16_t* s U_LIFETIME_BOUND,
           int32_t* len,
-          UErrorCode* ec) {
+          UError_ਕੋਡ* ec) {
 
-    char key[MAX_KEY_LEN];
-    const char16_t* result;
+    ਅੱਖਰ ਕੁੰਜੀ[MAX_ਕੁੰਜੀ_LEN];
+    ਅਚਲ char16_t* ਨਤੀਜਾ;
 
-    if (ec == nullptr || U_FAILURE(*ec)) {
-        goto ERROR;
+    ਜੇ (ec == ਖਾਲੀ_ਸੂਚਕ || U_FAILURE(*ec)) {
+        ਜਾਓ ERROR;
     }
 
-    result = ures_getStringByKey((const UResourceBundle*) catd,
-                                 _catkey(key, set_num, msg_num),
+    ਨਤੀਜਾ = ures_get_String_By_ਕੁੰਜੀ((ਅਚਲ UResourceBundle*) catd,
+                                 _catkey(ਕੁੰਜੀ, ਸੈੱਟ_ਅੰਕ, ਸੁਨੇਹਾ_ਅੰਕ),
                                  len, ec);
-    if (U_FAILURE(*ec)) {
-        goto ERROR;
+    ਜੇ (U_FAILURE(*ec)) {
+        ਜਾਓ ERROR;
     }
 
-    return result;
+    ਵਾਪਸ ਨਤੀਜਾ;
 
  ERROR:
     /* In case of any failure, return s */
-    if (len != nullptr) {
+    ਜੇ (len != ਖਾਲੀ_ਸੂਚਕ) {
         *len = u_strlen(s);
     }
-    return s;
+    ਵਾਪਸ s;
 }
 
 /*eof*/

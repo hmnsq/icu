@@ -14,34 +14,34 @@
 *   created by: George Rhoten
 */
 
-#include "unicode/utypes.h"
-#include "unicode/icuplug.h"
-#include "unicode/uclean.h"
-#include "cmemory.h"
-#include "icuplugimp.h"
-#include "ucln_cmn.h"
-#include "ucnv_io.h"
-#include "umutex.h"
-#include "utracimp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/icuplug.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/uclean.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cmemory.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "icuplugimp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucln_cmn.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ucnv_io.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "umutex.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "utracimp.h"
 
 U_NAMESPACE_BEGIN
 
-static UInitOnce gICUInitOnce {};
+ਸਥਿਰ UInitOnce gICUInitOnce {};
 
-static UBool U_CALLCONV uinit_cleanup() {
+ਸਥਿਰ UBool U_CALLCONV uinit_cleanup() {
     gICUInitOnce.reset();
-    return true;
+    ਵਾਪਸ ਸੱਚ;
 }
 
-static void U_CALLCONV
-initData(UErrorCode &status)
+ਸਥਿਰ ਖਾਲੀ U_CALLCONV
+init_ਅੰਕੜੇ(UError_ਕੋਡ &ਸਥਿਤੀ)
 {
-#if UCONFIG_ENABLE_PLUGINS
+#ਜੇ UCONFIG_ENABLE_PLUGINS
     /* initialize plugins */
-    uplug_init(&status);
-#endif
+    uplug_init(&ਸਥਿਤੀ);
+#ਜੇ_ਅੰਤ
 
-#if !UCONFIG_NO_CONVERSION
+#ਜੇ !UCONFIG_NO_CONVERSION
     /*
      * 2005-may-02
      *
@@ -54,21 +54,21 @@ initData(UErrorCode &status)
      * for errors there, to make sure that the actual items they need are
      * available.
      */
-    ucnv_io_countKnownConverters(&status);
-#endif
-    ucln_common_registerCleanup(UCLN_COMMON_UINIT, uinit_cleanup);
+    ucnv_io_ਗਿਣਤੀ_ਗਿਆਤ_Converters(&ਸਥਿਤੀ);
+#ਜੇ_ਅੰਤ
+    ucln_common_ਰਜਿਸਟਰ_Cleanup(UCLN_COMMON_UINIT, uinit_cleanup);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
 U_NAMESPACE_USE
 
 /*
  * ICU Initialization Function. Need not be called.
  */
-U_CAPI void U_EXPORT2
-u_init(UErrorCode *status) {
-    UTRACE_ENTRY_OC(UTRACE_U_INIT);
-    umtx_initOnce(gICUInitOnce, &initData, *status);
-    UTRACE_EXIT_STATUS(*status);
+U_CAPI ਖਾਲੀ U_EXPORT2
+u_init(UError_ਕੋਡ *ਸਥਿਤੀ) {
+    UTRACE_ਇੰਦਰਾਜ_OC(UTRACE_U_INIT);
+    umtx_initOnce(gICUInitOnce, &init_ਅੰਕੜੇ, *ਸਥਿਤੀ);
+    UTRACE_EXIT_ਸਥਿਤੀ(*ਸਥਿਤੀ);
 }

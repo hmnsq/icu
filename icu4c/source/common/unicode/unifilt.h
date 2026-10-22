@@ -9,15 +9,15 @@
 *   11/17/99    aliu        Creation.
 **********************************************************************
 */
-#ifndef UNIFILT_H
-#define UNIFILT_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ UNIFILT_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UNIFILT_H
 
-#include "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ਜੇ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/unifunct.h"
-#include "unicode/unimatch.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/unifunct.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/unimatch.h"
 
 /**
  * \file 
@@ -34,7 +34,7 @@ U_NAMESPACE_BEGIN
  * defined range.
  * @stable ICU 3.0
  */
-#define U_ETHER ((char16_t)0xFFFF)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ U_ETHER ((char16_t)0xFFFF)
 
 /**
  *
@@ -62,14 +62,14 @@ U_NAMESPACE_BEGIN
  * @see UnicodeFilterLogic
  * @stable ICU 2.0
  */
-class U_COMMON_API UnicodeFilter : public UnicodeFunctor, public UnicodeMatcher {
+class U_COMMON_API UnicodeFilter : ਜਨਤਕ UnicodeFunctor, ਜਨਤਕ UnicodeMatcher {
 
-public:
+ਜਨਤਕ:
     /**
      * Destructor
      * @stable ICU 2.0
      */
-    virtual ~UnicodeFilter();
+    ਆਭਾਸੀ ~UnicodeFilter();
 
     /**
      * Clones this object polymorphically.
@@ -77,7 +77,7 @@ public:
      * @return clone, or nullptr if an error occurred
      * @stable ICU 2.4
      */
-    virtual UnicodeFilter* clone() const override = 0;
+    ਆਭਾਸੀ UnicodeFilter* clone() ਅਚਲ override = 0;
 
     /**
      * Returns <tt>true</tt> for characters that are in the selected
@@ -86,38 +86,38 @@ public:
      * <b><tt>false</tt></b>.
      * @stable ICU 2.0
      */
-    virtual UBool contains(UChar32 c) const = 0;
+    ਆਭਾਸੀ UBool ਸ਼ਾਮਲ_ਹੈ(UChar32 c) ਅਚਲ = 0;
 
     /**
      * UnicodeFunctor API.  Cast 'this' to a UnicodeMatcher* pointer
      * and return the pointer.
      * @stable ICU 2.4
      */
-    virtual UnicodeMatcher* toMatcher() const U_LIFETIME_BOUND override;
+    ਆਭਾਸੀ UnicodeMatcher* ਮੰਜ਼ਿਲ_Matcher() ਅਚਲ U_LIFETIME_BOUND override;
 
     /**
      * Implement UnicodeMatcher API.
      * @stable ICU 2.4
      */
-    virtual UMatchDegree matches(const Replaceable& text,
-                                 int32_t& offset,
-                                 int32_t limit,
+    ਆਭਾਸੀ UMatchDegree matches(ਅਚਲ Replaceable& ਪਾਠ,
+                                 int32_t& ਵਿੱਥ,
+                                 int32_t ਹੱਦਬੰਦੀ,
                                  UBool incremental) override;
 
     /**
      * UnicodeFunctor API.  Nothing to do.
      * @stable ICU 2.4
      */
-    virtual void setData(const TransliterationRuleData*) override;
+    ਆਭਾਸੀ ਖਾਲੀ ਸੈੱਟ_ਅੰਕੜੇ(ਅਚਲ Transliteration_ਨਿਯਮ_ਅੰਕੜੇ*) override;
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      *
      * @stable ICU 2.2
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ਸਥਿਰ UClassID U_EXPORT2 getStaticClassID();
 
-protected:
+ਸੁਰੱਖਿਅਤ:
 
     /*
      * Since this class has pure virtual functions,
@@ -129,8 +129,8 @@ protected:
 
 /*inline UnicodeFilter::UnicodeFilter() {}*/
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ਜੇ_ਅੰਤ /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#ਜੇ_ਅੰਤ

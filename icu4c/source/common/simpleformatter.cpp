@@ -8,14 +8,14 @@
 * simpleformatter.cpp
 */
 
-#include "unicode/utypes.h"
-#include "unicode/simpleformatter.h"
-#include "unicode/unistr.h"
-#include "uassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/utypes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/simpleformatter.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "unicode/unistr.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uassert.h"
 
 U_NAMESPACE_BEGIN
 
-namespace {
+ਨਾਮਾਕਾਸ਼ {
 
 /**
  * Argument numbers must be smaller than this limit.
@@ -23,19 +23,19 @@ namespace {
  * This is currently the only unused char value in compiled patterns,
  * except it is the maximum value of the first unit (max arg +1).
  */
-const int32_t ARG_NUM_LIMIT = 0x100;
+ਅਚਲ int32_t ARG_ਅੰਕ_ਹੱਦਬੰਦੀ = 0x100;
 /**
  * Initial and maximum char/char16_t value set for a text segment.
  * Segment length char values are from ARG_NUM_LIMIT+1 to this value here.
  * Normally 0xffff, but can be as small as ARG_NUM_LIMIT+1 for testing.
  */
-const char16_t SEGMENT_LENGTH_PLACEHOLDER_CHAR = 0xffff;
+ਅਚਲ char16_t SEGMENT_ਲੰਮਾਈ_PLACEHOLDER_CHAR = 0xffff;
 /**
  * Maximum length of a text segment. Longer segments are split into shorter ones.
  */
-const int32_t MAX_SEGMENT_LENGTH = SEGMENT_LENGTH_PLACEHOLDER_CHAR - ARG_NUM_LIMIT;
+ਅਚਲ int32_t MAX_SEGMENT_ਲੰਮਾਈ = SEGMENT_ਲੰਮਾਈ_PLACEHOLDER_CHAR - ARG_ਅੰਕ_ਹੱਦਬੰਦੀ;
 
-enum {
+ਗਿਣਤੀ {
     APOS = 0x27,
     DIGIT_ZERO = 0x30,
     DIGIT_ONE = 0x31,
@@ -44,295 +44,295 @@ enum {
     CLOSE_BRACE = 0x7d
 };
 
-inline UBool isInvalidArray(const void *array, int32_t length) {
-   return (length < 0 || (array == nullptr && length != 0));
+ਸਤਰਅੰਦਰ UBool isInvalidArray(ਅਚਲ ਖਾਲੀ *array, int32_t length) {
+   ਵਾਪਸ (length < 0 || (array == ਖਾਲੀ_ਸੂਚਕ && length != 0));
 }
 
 }  // namespace
 
-SimpleFormatter& SimpleFormatter::operator=(const SimpleFormatter& other) U_LIFETIME_BOUND {
-    if (this == &other) {
-        return *this;
+SimpleFormatter& SimpleFormatter::ਸੰਚਾਲਕ=(ਅਚਲ SimpleFormatter& other) U_LIFETIME_BOUND {
+    ਜੇ (ਇਹ == &other) {
+        ਵਾਪਸ *ਇਹ;
     }
-    compiledPattern = other.compiledPattern;
-    return *this;
+    compiled_ਨਮੂਨਾ = other.compiled_ਨਮੂਨਾ;
+    ਵਾਪਸ *ਇਹ;
 }
 
 SimpleFormatter::~SimpleFormatter() {}
 
-UBool SimpleFormatter::applyPatternMinMaxArguments(
-        const UnicodeString &pattern,
+UBool SimpleFormatter::apply_ਨਮੂਨਾ_Min_Max_Arguments(
+        ਅਚਲ UnicodeString &ਨਮੂਨਾ,
         int32_t min, int32_t max,
-        UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return false;
+        UError_ਕੋਡ &error_ਕੋਡ) {
+    ਜੇ (U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ ਝੂਠ;
     }
     // Parse consistent with MessagePattern, but
     // - support only simple numbered arguments
     // - build a simple binary structure into the result string
-    const char16_t *patternBuffer = pattern.getBuffer();
-    int32_t patternLength = pattern.length();
+    ਅਚਲ char16_t *ਨਮੂਨਾ_ਬਫਰ = ਨਮੂਨਾ.get_ਬਫਰ();
+    int32_t ਨਮੂਨਾ_ਲੰਮਾਈ = ਨਮੂਨਾ.length();
     // Reserve the first char for the number of arguments.
-    compiledPattern.setTo(static_cast<char16_t>(0));
-    int32_t textLength = 0;
+    compiled_ਨਮੂਨਾ.ਸੈੱਟ_ਮੰਜ਼ਿਲ(static_cast<char16_t>(0));
+    int32_t ਪਾਠ_ਲੰਮਾਈ = 0;
     int32_t maxArg = -1;
-    UBool inQuote = false;
-    for (int32_t i = 0; i < patternLength;) {
-        char16_t c = patternBuffer[i++];
-        if (c == APOS) {
-            if (i < patternLength && (c = patternBuffer[i]) == APOS) {
+    UBool ਵਿੱਚ_Quote = ਝੂਠ;
+    ਲਈ (int32_t i = 0; i < ਨਮੂਨਾ_ਲੰਮਾਈ;) {
+        char16_t c = ਨਮੂਨਾ_ਬਫਰ[i++];
+        ਜੇ (c == APOS) {
+            ਜੇ (i < ਨਮੂਨਾ_ਲੰਮਾਈ && (c = ਨਮੂਨਾ_ਬਫਰ[i]) == APOS) {
                 // double apostrophe, skip the second one
                 ++i;
-            } else if (inQuote) {
+            } ਨਹੀਂਤਾਂ ਜੇ (ਵਿੱਚ_Quote) {
                 // skip the quote-ending apostrophe
-                inQuote = false;
-                continue;
-            } else if (c == OPEN_BRACE || c == CLOSE_BRACE) {
+                ਵਿੱਚ_Quote = ਝੂਠ;
+                ਜਾਰੀ;
+            } ਨਹੀਂਤਾਂ ਜੇ (c == OPEN_BRACE || c == CLOSE_BRACE) {
                 // Skip the quote-starting apostrophe, find the end of the quoted literal text.
                 ++i;
-                inQuote = true;
-            } else {
+                ਵਿੱਚ_Quote = ਸੱਚ;
+            } ਨਹੀਂਤਾਂ {
                 // The apostrophe is part of literal text.
                 c = APOS;
             }
-        } else if (!inQuote && c == OPEN_BRACE) {
-            if (textLength > 0) {
-                compiledPattern.setCharAt(compiledPattern.length() - textLength - 1,
-                                          static_cast<char16_t>(ARG_NUM_LIMIT + textLength));
-                textLength = 0;
+        } ਨਹੀਂਤਾਂ ਜੇ (!ਵਿੱਚ_Quote && c == OPEN_BRACE) {
+            ਜੇ (ਪਾਠ_ਲੰਮਾਈ > 0) {
+                compiled_ਨਮੂਨਾ.ਸੈੱਟ_Char_At(compiled_ਨਮੂਨਾ.length() - ਪਾਠ_ਲੰਮਾਈ - 1,
+                                          static_cast<char16_t>(ARG_ਅੰਕ_ਹੱਦਬੰਦੀ + ਪਾਠ_ਲੰਮਾਈ));
+                ਪਾਠ_ਲੰਮਾਈ = 0;
             }
-            int32_t argNumber;
-            if ((i + 1) < patternLength &&
-                    0 <= (argNumber = patternBuffer[i] - DIGIT_ZERO) && argNumber <= 9 &&
-                    patternBuffer[i + 1] == CLOSE_BRACE) {
+            int32_t arg_ਸੰਖਿਆ;
+            ਜੇ ((i + 1) < ਨਮੂਨਾ_ਲੰਮਾਈ &&
+                    0 <= (arg_ਸੰਖਿਆ = ਨਮੂਨਾ_ਬਫਰ[i] - DIGIT_ZERO) && arg_ਸੰਖਿਆ <= 9 &&
+                    ਨਮੂਨਾ_ਬਫਰ[i + 1] == CLOSE_BRACE) {
                 i += 2;
-            } else {
+            } ਨਹੀਂਤਾਂ {
                 // Multi-digit argument number (no leading zero) or syntax error.
                 // MessagePattern permits PatternProps.skipWhiteSpace(pattern, index)
                 // around the number, but this class does not.
-                argNumber = -1;
-                if (i < patternLength && DIGIT_ONE <= (c = patternBuffer[i++]) && c <= DIGIT_NINE) {
-                    argNumber = c - DIGIT_ZERO;
-                    while (i < patternLength &&
-                            DIGIT_ZERO <= (c = patternBuffer[i++]) && c <= DIGIT_NINE) {
-                        argNumber = argNumber * 10 + (c - DIGIT_ZERO);
-                        if (argNumber >= ARG_NUM_LIMIT) {
-                            break;
+                arg_ਸੰਖਿਆ = -1;
+                ਜੇ (i < ਨਮੂਨਾ_ਲੰਮਾਈ && DIGIT_ONE <= (c = ਨਮੂਨਾ_ਬਫਰ[i++]) && c <= DIGIT_NINE) {
+                    arg_ਸੰਖਿਆ = c - DIGIT_ZERO;
+                    ਜਦੋਂ (i < ਨਮੂਨਾ_ਲੰਮਾਈ &&
+                            DIGIT_ZERO <= (c = ਨਮੂਨਾ_ਬਫਰ[i++]) && c <= DIGIT_NINE) {
+                        arg_ਸੰਖਿਆ = arg_ਸੰਖਿਆ * 10 + (c - DIGIT_ZERO);
+                        ਜੇ (arg_ਸੰਖਿਆ >= ARG_ਅੰਕ_ਹੱਦਬੰਦੀ) {
+                            ਰੋਕੋ;
                         }
                     }
                 }
-                if (argNumber < 0 || c != CLOSE_BRACE) {
-                    errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                    return false;
+                ਜੇ (arg_ਸੰਖਿਆ < 0 || c != CLOSE_BRACE) {
+                    error_ਕੋਡ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                    ਵਾਪਸ ਝੂਠ;
                 }
             }
-            if (argNumber > maxArg) {
-                maxArg = argNumber;
+            ਜੇ (arg_ਸੰਖਿਆ > maxArg) {
+                maxArg = arg_ਸੰਖਿਆ;
             }
-            compiledPattern.append(static_cast<char16_t>(argNumber));
-            continue;
+            compiled_ਨਮੂਨਾ.append(static_cast<char16_t>(arg_ਸੰਖਿਆ));
+            ਜਾਰੀ;
         }  // else: c is part of literal text
         // Append c and track the literal-text segment length.
-        if (textLength == 0) {
+        ਜੇ (ਪਾਠ_ਲੰਮਾਈ == 0) {
             // Reserve a char for the length of a new text segment, preset the maximum length.
-            compiledPattern.append(SEGMENT_LENGTH_PLACEHOLDER_CHAR);
+            compiled_ਨਮੂਨਾ.append(SEGMENT_ਲੰਮਾਈ_PLACEHOLDER_CHAR);
         }
-        compiledPattern.append(c);
-        if (++textLength == MAX_SEGMENT_LENGTH) {
-            textLength = 0;
+        compiled_ਨਮੂਨਾ.append(c);
+        ਜੇ (++ਪਾਠ_ਲੰਮਾਈ == MAX_SEGMENT_ਲੰਮਾਈ) {
+            ਪਾਠ_ਲੰਮਾਈ = 0;
         }
     }
-    if (textLength > 0) {
-        compiledPattern.setCharAt(compiledPattern.length() - textLength - 1,
-                                  static_cast<char16_t>(ARG_NUM_LIMIT + textLength));
+    ਜੇ (ਪਾਠ_ਲੰਮਾਈ > 0) {
+        compiled_ਨਮੂਨਾ.ਸੈੱਟ_Char_At(compiled_ਨਮੂਨਾ.length() - ਪਾਠ_ਲੰਮਾਈ - 1,
+                                  static_cast<char16_t>(ARG_ਅੰਕ_ਹੱਦਬੰਦੀ + ਪਾਠ_ਲੰਮਾਈ));
     }
-    int32_t argCount = maxArg + 1;
-    if (argCount < min || max < argCount) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+    int32_t arg_ਗਿਣਤੀ = maxArg + 1;
+    ਜੇ (arg_ਗਿਣਤੀ < min || max < arg_ਗਿਣਤੀ) {
+        error_ਕੋਡ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ ਝੂਠ;
     }
-    compiledPattern.setCharAt(0, static_cast<char16_t>(argCount));
-    return true;
+    compiled_ਨਮੂਨਾ.ਸੈੱਟ_Char_At(0, static_cast<char16_t>(arg_ਗਿਣਤੀ));
+    ਵਾਪਸ ਸੱਚ;
 }
 
 UnicodeString& SimpleFormatter::format(
-        const UnicodeString& value0,
-        UnicodeString& appendTo U_LIFETIME_BOUND,
-        UErrorCode& errorCode) const {
-    const UnicodeString *values[] = { &value0 };
-    return formatAndAppend(values, 1, appendTo, nullptr, 0, errorCode);
+        ਅਚਲ UnicodeString& value0,
+        UnicodeString& append_ਮੰਜ਼ਿਲ U_LIFETIME_BOUND,
+        UError_ਕੋਡ& error_ਕੋਡ) ਅਚਲ {
+    ਅਚਲ UnicodeString *ਮੁੱਲਾਂ[] = { &value0 };
+    ਵਾਪਸ formatAndAppend(ਮੁੱਲਾਂ, 1, append_ਮੰਜ਼ਿਲ, ਖਾਲੀ_ਸੂਚਕ, 0, error_ਕੋਡ);
 }
 
 UnicodeString& SimpleFormatter::format(
-        const UnicodeString& value0,
-        const UnicodeString& value1,
-        UnicodeString& appendTo U_LIFETIME_BOUND,
-        UErrorCode& errorCode) const {
-    const UnicodeString *values[] = { &value0, &value1 };
-    return formatAndAppend(values, 2, appendTo, nullptr, 0, errorCode);
+        ਅਚਲ UnicodeString& value0,
+        ਅਚਲ UnicodeString& value1,
+        UnicodeString& append_ਮੰਜ਼ਿਲ U_LIFETIME_BOUND,
+        UError_ਕੋਡ& error_ਕੋਡ) ਅਚਲ {
+    ਅਚਲ UnicodeString *ਮੁੱਲਾਂ[] = { &value0, &value1 };
+    ਵਾਪਸ formatAndAppend(ਮੁੱਲਾਂ, 2, append_ਮੰਜ਼ਿਲ, ਖਾਲੀ_ਸੂਚਕ, 0, error_ਕੋਡ);
 }
 
 UnicodeString& SimpleFormatter::format(
-        const UnicodeString& value0,
-        const UnicodeString& value1,
-        const UnicodeString& value2,
-        UnicodeString& appendTo U_LIFETIME_BOUND,
-        UErrorCode& errorCode) const {
-    const UnicodeString *values[] = { &value0, &value1, &value2 };
-    return formatAndAppend(values, 3, appendTo, nullptr, 0, errorCode);
+        ਅਚਲ UnicodeString& value0,
+        ਅਚਲ UnicodeString& value1,
+        ਅਚਲ UnicodeString& value2,
+        UnicodeString& append_ਮੰਜ਼ਿਲ U_LIFETIME_BOUND,
+        UError_ਕੋਡ& error_ਕੋਡ) ਅਚਲ {
+    ਅਚਲ UnicodeString *ਮੁੱਲਾਂ[] = { &value0, &value1, &value2 };
+    ਵਾਪਸ formatAndAppend(ਮੁੱਲਾਂ, 3, append_ਮੰਜ਼ਿਲ, ਖਾਲੀ_ਸੂਚਕ, 0, error_ਕੋਡ);
 }
 
 UnicodeString& SimpleFormatter::formatAndAppend(
-        const UnicodeString* const* values,
-        int32_t valuesLength,
-        UnicodeString& appendTo U_LIFETIME_BOUND,
+        ਅਚਲ UnicodeString* ਅਚਲ* ਮੁੱਲਾਂ,
+        int32_t ਮੁੱਲਾਂ_ਲੰਮਾਈ,
+        UnicodeString& append_ਮੰਜ਼ਿਲ U_LIFETIME_BOUND,
         int32_t* offsets,
-        int32_t offsetsLength,
-        UErrorCode& errorCode) const {
-    if (U_FAILURE(errorCode)) {
-        return appendTo;
+        int32_t offsets_ਲੰਮਾਈ,
+        UError_ਕੋਡ& error_ਕੋਡ) ਅਚਲ {
+    ਜੇ (U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ append_ਮੰਜ਼ਿਲ;
     }
-    if (isInvalidArray(values, valuesLength) || isInvalidArray(offsets, offsetsLength) ||
-            valuesLength < getArgumentLimit()) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return appendTo;
+    ਜੇ (isInvalidArray(ਮੁੱਲਾਂ, ਮੁੱਲਾਂ_ਲੰਮਾਈ) || isInvalidArray(offsets, offsets_ਲੰਮਾਈ) ||
+            ਮੁੱਲਾਂ_ਲੰਮਾਈ < get_ਦਲੀਲ_ਹੱਦਬੰਦੀ()) {
+        error_ਕੋਡ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ append_ਮੰਜ਼ਿਲ;
     }
-    return format(compiledPattern.getBuffer(), compiledPattern.length(), values,
-                  appendTo, nullptr, true,
-                  offsets, offsetsLength, errorCode);
+    ਵਾਪਸ format(compiled_ਨਮੂਨਾ.get_ਬਫਰ(), compiled_ਨਮੂਨਾ.length(), ਮੁੱਲਾਂ,
+                  append_ਮੰਜ਼ਿਲ, ਖਾਲੀ_ਸੂਚਕ, ਸੱਚ,
+                  offsets, offsets_ਲੰਮਾਈ, error_ਕੋਡ);
 }
 
 UnicodeString& SimpleFormatter::formatAndReplace(
-        const UnicodeString* const* values,
-        int32_t valuesLength,
-        UnicodeString& result U_LIFETIME_BOUND,
+        ਅਚਲ UnicodeString* ਅਚਲ* ਮੁੱਲਾਂ,
+        int32_t ਮੁੱਲਾਂ_ਲੰਮਾਈ,
+        UnicodeString& ਨਤੀਜਾ U_LIFETIME_BOUND,
         int32_t* offsets,
-        int32_t offsetsLength,
-        UErrorCode& errorCode) const {
-    if (U_FAILURE(errorCode)) {
-        return result;
+        int32_t offsets_ਲੰਮਾਈ,
+        UError_ਕੋਡ& error_ਕੋਡ) ਅਚਲ {
+    ਜੇ (U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ ਨਤੀਜਾ;
     }
-    if (isInvalidArray(values, valuesLength) || isInvalidArray(offsets, offsetsLength)) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return result;
+    ਜੇ (isInvalidArray(ਮੁੱਲਾਂ, ਮੁੱਲਾਂ_ਲੰਮਾਈ) || isInvalidArray(offsets, offsets_ਲੰਮਾਈ)) {
+        error_ਕੋਡ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ ਨਤੀਜਾ;
     }
-    const char16_t *cp = compiledPattern.getBuffer();
-    int32_t cpLength = compiledPattern.length();
-    if (valuesLength < getArgumentLimit(cp, cpLength)) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return result;
+    ਅਚਲ char16_t *cp = compiled_ਨਮੂਨਾ.get_ਬਫਰ();
+    int32_t cp_ਲੰਮਾਈ = compiled_ਨਮੂਨਾ.length();
+    ਜੇ (ਮੁੱਲਾਂ_ਲੰਮਾਈ < get_ਦਲੀਲ_ਹੱਦਬੰਦੀ(cp, cp_ਲੰਮਾਈ)) {
+        error_ਕੋਡ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+        ਵਾਪਸ ਨਤੀਜਾ;
     }
 
     // If the pattern starts with an argument whose value is the same object
     // as the result, then we keep the result contents and append to it.
     // Otherwise we replace its contents.
-    int32_t firstArg = -1;
+    int32_t ਪਹਿਲਾ_Arg = -1;
     // If any non-initial argument value is the same object as the result,
     // then we first copy its contents and use that instead while formatting.
-    UnicodeString resultCopy;
-    if (getArgumentLimit(cp, cpLength) > 0) {
-        for (int32_t i = 1; i < cpLength;) {
+    UnicodeString ਨਤੀਜਾ_Copy;
+    ਜੇ (get_ਦਲੀਲ_ਹੱਦਬੰਦੀ(cp, cp_ਲੰਮਾਈ) > 0) {
+        ਲਈ (int32_t i = 1; i < cp_ਲੰਮਾਈ;) {
             int32_t n = cp[i++];
-            if (n < ARG_NUM_LIMIT) {
-                if (values[n] == &result) {
-                    if (i == 2) {
-                        firstArg = n;
-                    } else if (resultCopy.isEmpty() && !result.isEmpty()) {
-                        resultCopy = result;
+            ਜੇ (n < ARG_ਅੰਕ_ਹੱਦਬੰਦੀ) {
+                ਜੇ (ਮੁੱਲਾਂ[n] == &ਨਤੀਜਾ) {
+                    ਜੇ (i == 2) {
+                        ਪਹਿਲਾ_Arg = n;
+                    } ਨਹੀਂਤਾਂ ਜੇ (ਨਤੀਜਾ_Copy.is_ਖਾਲੀ_ਥਾਵਾਂ() && !ਨਤੀਜਾ.is_ਖਾਲੀ_ਥਾਵਾਂ()) {
+                        ਨਤੀਜਾ_Copy = ਨਤੀਜਾ;
                     }
                 }
-            } else {
-                i += n - ARG_NUM_LIMIT;
+            } ਨਹੀਂਤਾਂ {
+                i += n - ARG_ਅੰਕ_ਹੱਦਬੰਦੀ;
             }
         }
     }
-    if (firstArg < 0) {
-        result.remove();
+    ਜੇ (ਪਹਿਲਾ_Arg < 0) {
+        ਨਤੀਜਾ.remove();
     }
-    return format(cp, cpLength, values,
-                  result, &resultCopy, false,
-                  offsets, offsetsLength, errorCode);
+    ਵਾਪਸ format(cp, cp_ਲੰਮਾਈ, ਮੁੱਲਾਂ,
+                  ਨਤੀਜਾ, &ਨਤੀਜਾ_Copy, ਝੂਠ,
+                  offsets, offsets_ਲੰਮਾਈ, error_ਕੋਡ);
 }
 
-UnicodeString SimpleFormatter::getTextWithNoArguments(
-        const char16_t *compiledPattern,
-        int32_t compiledPatternLength,
+UnicodeString SimpleFormatter::get_ਪਾਠ_With_No_Arguments(
+        ਅਚਲ char16_t *compiled_ਨਮੂਨਾ,
+        int32_t compiled_ਨਮੂਨਾ_ਲੰਮਾਈ,
         int32_t* offsets,
-        int32_t offsetsLength) {
-    for (int32_t i = 0; i < offsetsLength; i++) {
+        int32_t offsets_ਲੰਮਾਈ) {
+    ਲਈ (int32_t i = 0; i < offsets_ਲੰਮਾਈ; i++) {
         offsets[i] = -1;
     }
-    int32_t capacity = compiledPatternLength - 1 -
-            getArgumentLimit(compiledPattern, compiledPatternLength);
+    int32_t capacity = compiled_ਨਮੂਨਾ_ਲੰਮਾਈ - 1 -
+            get_ਦਲੀਲ_ਹੱਦਬੰਦੀ(compiled_ਨਮੂਨਾ, compiled_ਨਮੂਨਾ_ਲੰਮਾਈ);
     UnicodeString sb(capacity, 0, 0);  // Java: StringBuilder
-    for (int32_t i = 1; i < compiledPatternLength;) {
-        int32_t n = compiledPattern[i++];
-        if (n > ARG_NUM_LIMIT) {
-            n -= ARG_NUM_LIMIT;
-            sb.append(compiledPattern + i, n);
+    ਲਈ (int32_t i = 1; i < compiled_ਨਮੂਨਾ_ਲੰਮਾਈ;) {
+        int32_t n = compiled_ਨਮੂਨਾ[i++];
+        ਜੇ (n > ARG_ਅੰਕ_ਹੱਦਬੰਦੀ) {
+            n -= ARG_ਅੰਕ_ਹੱਦਬੰਦੀ;
+            sb.append(compiled_ਨਮੂਨਾ + i, n);
             i += n;
-        } else if (n < offsetsLength) {
+        } ਨਹੀਂਤਾਂ ਜੇ (n < offsets_ਲੰਮਾਈ) {
             // TODO(ICU-20406): This does not distinguish between "{0}{1}" and "{1}{0}".
             // Consider removing this function and replacing it with an iterator interface.
             offsets[n] = sb.length();
         }
     }
-    return sb;
+    ਵਾਪਸ sb;
 }
 
 UnicodeString& SimpleFormatter::format(
-        const char16_t* compiledPattern,
-        int32_t compiledPatternLength,
-        const UnicodeString* const* values,
-        UnicodeString& result U_LIFETIME_BOUND,
-        const UnicodeString* resultCopy,
-        UBool forbidResultAsValue,
+        ਅਚਲ char16_t* compiled_ਨਮੂਨਾ,
+        int32_t compiled_ਨਮੂਨਾ_ਲੰਮਾਈ,
+        ਅਚਲ UnicodeString* ਅਚਲ* ਮੁੱਲਾਂ,
+        UnicodeString& ਨਤੀਜਾ U_LIFETIME_BOUND,
+        ਅਚਲ UnicodeString* ਨਤੀਜਾ_Copy,
+        UBool forbid_ਨਤੀਜਾ_As_ਮੁੱਲ,
         int32_t* offsets,
-        int32_t offsetsLength,
-        UErrorCode& errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return result;
+        int32_t offsets_ਲੰਮਾਈ,
+        UError_ਕੋਡ& error_ਕੋਡ) {
+    ਜੇ (U_FAILURE(error_ਕੋਡ)) {
+        ਵਾਪਸ ਨਤੀਜਾ;
     }
-    for (int32_t i = 0; i < offsetsLength; i++) {
+    ਲਈ (int32_t i = 0; i < offsets_ਲੰਮਾਈ; i++) {
         offsets[i] = -1;
     }
-    for (int32_t i = 1; i < compiledPatternLength;) {
-        int32_t n = compiledPattern[i++];
-        if (n < ARG_NUM_LIMIT) {
-            const UnicodeString *value = values[n];
-            if (value == nullptr) {
-                errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                return result;
+    ਲਈ (int32_t i = 1; i < compiled_ਨਮੂਨਾ_ਲੰਮਾਈ;) {
+        int32_t n = compiled_ਨਮੂਨਾ[i++];
+        ਜੇ (n < ARG_ਅੰਕ_ਹੱਦਬੰਦੀ) {
+            ਅਚਲ UnicodeString *value = ਮੁੱਲਾਂ[n];
+            ਜੇ (value == ਖਾਲੀ_ਸੂਚਕ) {
+                error_ਕੋਡ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                ਵਾਪਸ ਨਤੀਜਾ;
             }
-            if (value == &result) {
-                if (forbidResultAsValue) {
-                    errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                    return result;
+            ਜੇ (value == &ਨਤੀਜਾ) {
+                ਜੇ (forbid_ਨਤੀਜਾ_As_ਮੁੱਲ) {
+                    error_ਕੋਡ = U_ILLEGAL_ਦਲੀਲ_ERROR;
+                    ਵਾਪਸ ਨਤੀਜਾ;
                 }
-                if (i == 2) {
+                ਜੇ (i == 2) {
                     // We are appending to result which is also the first value object.
-                    if (n < offsetsLength) {
+                    ਜੇ (n < offsets_ਲੰਮਾਈ) {
                         offsets[n] = 0;
                     }
-                } else {
-                    if (n < offsetsLength) {
-                        offsets[n] = result.length();
+                } ਨਹੀਂਤਾਂ {
+                    ਜੇ (n < offsets_ਲੰਮਾਈ) {
+                        offsets[n] = ਨਤੀਜਾ.length();
                     }
-                    result.append(*resultCopy);
+                    ਨਤੀਜਾ.append(*ਨਤੀਜਾ_Copy);
                 }
-            } else {
-                if (n < offsetsLength) {
-                    offsets[n] = result.length();
+            } ਨਹੀਂਤਾਂ {
+                ਜੇ (n < offsets_ਲੰਮਾਈ) {
+                    offsets[n] = ਨਤੀਜਾ.length();
                 }
-                result.append(*value);
+                ਨਤੀਜਾ.append(*value);
             }
-        } else {
-            int32_t length = n - ARG_NUM_LIMIT;
-            result.append(compiledPattern + i, length);
+        } ਨਹੀਂਤਾਂ {
+            int32_t length = n - ARG_ਅੰਕ_ਹੱਦਬੰਦੀ;
+            ਨਤੀਜਾ.append(compiled_ਨਮੂਨਾ + i, length);
             i += length;
         }
     }
-    return result;
+    ਵਾਪਸ ਨਤੀਜਾ;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ਸਿਰਾ
