@@ -18,9 +18,9 @@
 #ifndef USTRING_H
 #define USTRING_H
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "unicode/uiter.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/putil.h"
+#অন্তর্ভাব "unicode/uiter.h"
 
 /**
  * \def UBRK_TYPEDEF_UBREAK_ITERATOR
@@ -30,7 +30,7 @@
 #ifndef UBRK_TYPEDEF_UBREAK_ITERATOR
 #   define UBRK_TYPEDEF_UBREAK_ITERATOR
 /** Simple declaration for u_strToTitle() to avoid including unicode/ubrk.h. @stable ICU 2.1*/
-    typedef struct UBreakIterator UBreakIterator;
+    প্রকারনির্দেশ সংরচনা UBreakIterator UBreakIterator;
 #endif
 
 /**
@@ -90,7 +90,7 @@
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_strlen(const UChar *s);
+u_strlen(ধ্রুব UChar *s);
 /*@}*/
 
 /**
@@ -107,7 +107,7 @@ u_strlen(const UChar *s);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_countChar32(const UChar *s, int32_t length);
+u_গুনতি_Char32(ধ্রুব UChar *s, int32_t length);
 
 /**
  * Check if the string contains more Unicode code points than a certain number.
@@ -128,7 +128,7 @@ u_countChar32(const UChar *s, int32_t length);
  * @stable ICU 2.4
  */
 U_CAPI UBool U_EXPORT2
-u_strHasMoreChar32Than(const UChar *s, int32_t length, int32_t number);
+u_strHasMoreChar32Than(ধ্রুব UChar *s, int32_t length, int32_t সংখ্যা);
 
 /**
  * Concatenate two ustrings.  Appends a copy of <code>src</code>,
@@ -141,7 +141,7 @@ u_strHasMoreChar32Than(const UChar *s, int32_t length, int32_t number);
  * @stable ICU 2.0
  */
 U_CAPI UChar* U_EXPORT2
-u_strcat(UChar* dst U_LIFETIME_BOUND, const UChar* src);
+u_strcat(UChar* dst U_LIFETIME_BOUND, ধ্রুব UChar* src);
 
 /**
  * Concatenate two ustrings.  
@@ -158,7 +158,7 @@ u_strcat(UChar* dst U_LIFETIME_BOUND, const UChar* src);
  * @stable ICU 2.0
  */
 U_CAPI UChar* U_EXPORT2
-u_strncat(UChar* dst U_LIFETIME_BOUND, const UChar* src, int32_t n);
+u_strncat(UChar* dst U_LIFETIME_BOUND, ধ্রুব UChar* src, int32_t n);
 
 /**
  * Find the first occurrence of a substring in a string.
@@ -181,7 +181,7 @@ u_strncat(UChar* dst U_LIFETIME_BOUND, const UChar* src, int32_t n);
  * @see u_strFindLast
  */
 U_CAPI UChar* U_EXPORT2
-u_strstr(const UChar* s U_LIFETIME_BOUND, const UChar* substring);
+u_strstr(ধ্রুব UChar* s U_LIFETIME_BOUND, ধ্রুব UChar* substring);
 
 /**
  * Find the first occurrence of a substring in a string.
@@ -205,9 +205,9 @@ u_strstr(const UChar* s U_LIFETIME_BOUND, const UChar* substring);
  * @see u_strFindLast
  */
 U_CAPI UChar* U_EXPORT2
-u_strFindFirst(const UChar* s U_LIFETIME_BOUND,
+u_strFindFirst(ধ্রুব UChar* s U_LIFETIME_BOUND,
                int32_t length,
-               const UChar* substring,
+               ধ্রুব UChar* substring,
                int32_t subLength);
 
 /**
@@ -228,7 +228,7 @@ u_strFindFirst(const UChar* s U_LIFETIME_BOUND,
  * @see u_strFindFirst
  */
 U_CAPI UChar* U_EXPORT2
-u_strchr(const UChar* s U_LIFETIME_BOUND, UChar c);
+u_strchr(ধ্রুব UChar* s U_LIFETIME_BOUND, UChar c);
 
 /**
  * Find the first occurrence of a code point in a string.
@@ -248,7 +248,7 @@ u_strchr(const UChar* s U_LIFETIME_BOUND, UChar c);
  * @see u_strFindFirst
  */
 U_CAPI UChar* U_EXPORT2
-u_strchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c);
+u_strchr32(ধ্রুব UChar* s U_LIFETIME_BOUND, UChar32 c);
 
 /**
  * Find the last occurrence of a substring in a string.
@@ -271,7 +271,7 @@ u_strchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c);
  * @see u_strFindLast
  */
 U_CAPI UChar* U_EXPORT2
-u_strrstr(const UChar* s U_LIFETIME_BOUND, const UChar* substring);
+u_strrstr(ধ্রুব UChar* s U_LIFETIME_BOUND, ধ্রুব UChar* substring);
 
 /**
  * Find the last occurrence of a substring in a string.
@@ -295,9 +295,9 @@ u_strrstr(const UChar* s U_LIFETIME_BOUND, const UChar* substring);
  * @see u_strFindLast
  */
 U_CAPI UChar* U_EXPORT2
-u_strFindLast(const UChar* s U_LIFETIME_BOUND,
+u_strFindLast(ধ্রুব UChar* s U_LIFETIME_BOUND,
               int32_t length,
-              const UChar* substring,
+              ধ্রুব UChar* substring,
               int32_t subLength);
 
 /**
@@ -318,7 +318,7 @@ u_strFindLast(const UChar* s U_LIFETIME_BOUND,
  * @see u_strFindLast
  */
 U_CAPI UChar* U_EXPORT2
-u_strrchr(const UChar* s U_LIFETIME_BOUND, UChar c);
+u_strrchr(ধ্রুব UChar* s U_LIFETIME_BOUND, UChar c);
 
 /**
  * Find the last occurrence of a code point in a string.
@@ -338,7 +338,7 @@ u_strrchr(const UChar* s U_LIFETIME_BOUND, UChar c);
  * @see u_strFindLast
  */
 U_CAPI UChar* U_EXPORT2
-u_strrchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c);
+u_strrchr32(ধ্রুব UChar* s U_LIFETIME_BOUND, UChar32 c);
 
 /**
  * Locates the first occurrence in the string <code>string</code> of any of the characters
@@ -353,7 +353,7 @@ u_strrchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c);
  * @stable ICU 2.0
  */
 U_CAPI UChar* U_EXPORT2
-u_strpbrk(const UChar* string U_LIFETIME_BOUND, const UChar* matchSet);
+u_strpbrk(ধ্রুব UChar* string U_LIFETIME_BOUND, ধ্রুব UChar* matchSet);
 
 /**
  * Returns the number of consecutive characters in <code>string</code>,
@@ -369,7 +369,7 @@ u_strpbrk(const UChar* string U_LIFETIME_BOUND, const UChar* matchSet);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_strcspn(const UChar *string, const UChar *matchSet);
+u_strcspn(ধ্রুব UChar *string, ধ্রুব UChar *matchSet);
 
 /**
  * Returns the number of consecutive characters in <code>string</code>,
@@ -385,7 +385,7 @@ u_strcspn(const UChar *string, const UChar *matchSet);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_strspn(const UChar *string, const UChar *matchSet);
+u_strspn(ধ্রুব UChar *string, ধ্রুব UChar *matchSet);
 
 /**
  * The string tokenizer API allows an application to break a string into
@@ -413,7 +413,7 @@ u_strspn(const UChar *string, const UChar *matchSet);
  * @stable ICU 2.0
  */
 U_CAPI UChar* U_EXPORT2
-u_strtok_r(UChar* src U_LIFETIME_BOUND, const UChar* delim, UChar** saveState);
+u_strtok_r(UChar* src U_LIFETIME_BOUND, ধ্রুব UChar* delim, UChar** saveState);
 
 /**
  * Compare two Unicode strings for bitwise equality (code unit order).
@@ -426,8 +426,8 @@ u_strtok_r(UChar* src U_LIFETIME_BOUND, const UChar* delim, UChar** saveState);
  * @stable ICU 2.0
  */
 U_CAPI int32_t  U_EXPORT2
-u_strcmp(const UChar     *s1, 
-         const UChar     *s2);
+u_strcmp(ধ্রুব UChar     *s1, 
+         ধ্রুব UChar     *s2);
 
 /**
  * Compare two Unicode strings in code point order.
@@ -441,7 +441,7 @@ u_strcmp(const UChar     *s1,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_strcmpCodePointOrder(const UChar *s1, const UChar *s2);
+u_strcmpCodePointOrder(ধ্রুব UChar *s1, ধ্রুব UChar *s2);
 
 /**
  * Compare two Unicode strings (binary order).
@@ -471,8 +471,8 @@ u_strcmpCodePointOrder(const UChar *s1, const UChar *s2);
  * @stable ICU 2.2
  */
 U_CAPI int32_t U_EXPORT2
-u_strCompare(const UChar *s1, int32_t length1,
-             const UChar *s2, int32_t length2,
+u_strCompare(ধ্রুব UChar *s1, int32_t length1,
+             ধ্রুব UChar *s2, int32_t length2,
              UBool codePointOrder);
 
 /**
@@ -539,8 +539,8 @@ u_strCompareIter(UCharIterator *iter1, UCharIterator *iter2, UBool codePointOrde
  * @stable ICU 2.2
  */
 U_CAPI int32_t U_EXPORT2
-u_strCaseCompare(const UChar *s1, int32_t length1,
-                 const UChar *s2, int32_t length2,
+u_strCaseCompare(ধ্রুব UChar *s1, int32_t length1,
+                 ধ্রুব UChar *s2, int32_t length2,
                  uint32_t options,
                  UErrorCode *pErrorCode);
 
@@ -557,8 +557,8 @@ u_strCaseCompare(const UChar *s1, int32_t length1,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_strncmp(const UChar     *ucs1, 
-     const UChar     *ucs2, 
+u_strncmp(ধ্রুব UChar     *ucs1, 
+     ধ্রুব UChar     *ucs2, 
      int32_t     n);
 
 /**
@@ -575,7 +575,7 @@ u_strncmp(const UChar     *ucs1,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_strncmpCodePointOrder(const UChar *s1, const UChar *s2, int32_t n);
+u_strncmpCodePointOrder(ধ্রুব UChar *s1, ধ্রুব UChar *s2, int32_t n);
 
 /**
  * Compare two strings case-insensitively using full case folding.
@@ -597,7 +597,7 @@ u_strncmpCodePointOrder(const UChar *s1, const UChar *s2, int32_t n);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_strcasecmp(const UChar *s1, const UChar *s2, uint32_t options);
+u_strcasecmp(ধ্রুব UChar *s1, ধ্রুব UChar *s2, uint32_t options);
 
 /**
  * Compare two strings case-insensitively using full case folding.
@@ -621,7 +621,7 @@ u_strcasecmp(const UChar *s1, const UChar *s2, uint32_t options);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_strncasecmp(const UChar *s1, const UChar *s2, int32_t n, uint32_t options);
+u_strncasecmp(ধ্রুব UChar *s1, ধ্রুব UChar *s2, int32_t n, uint32_t options);
 
 /**
  * Compare two strings case-insensitively using full case folding.
@@ -645,7 +645,7 @@ u_strncasecmp(const UChar *s1, const UChar *s2, int32_t n, uint32_t options);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_memcasecmp(const UChar *s1, const UChar *s2, int32_t length, uint32_t options);
+u_memcasecmp(ধ্রুব UChar *s1, ধ্রুব UChar *s2, int32_t length, uint32_t options);
 
 /**
  * Copy a ustring. Adds a null terminator.
@@ -656,7 +656,7 @@ u_memcasecmp(const UChar *s1, const UChar *s2, int32_t length, uint32_t options)
  * @stable ICU 2.0
  */
 U_CAPI UChar* U_EXPORT2
-u_strcpy(UChar* dst U_LIFETIME_BOUND, const UChar* src);
+u_strcpy(UChar* dst U_LIFETIME_BOUND, ধ্রুব UChar* src);
 
 /**
  * Copy a ustring.
@@ -670,9 +670,9 @@ u_strcpy(UChar* dst U_LIFETIME_BOUND, const UChar* src);
  * @stable ICU 2.0
  */
 U_CAPI UChar* U_EXPORT2
-u_strncpy(UChar* dst U_LIFETIME_BOUND, const UChar* src, int32_t n);
+u_strncpy(UChar* dst U_LIFETIME_BOUND, ধ্রুব UChar* src, int32_t n);
 
-#if !UCONFIG_NO_CONVERSION
+#যদি !UCONFIG_NO_CONVERSION
 
 /**
  * Copy a byte string encoded in the default codepage to a ustring.
@@ -684,7 +684,7 @@ u_strncpy(UChar* dst U_LIFETIME_BOUND, const UChar* src, int32_t n);
  * @return A pointer to <code>dst</code>.
  * @stable ICU 2.0
  */
-U_CAPI UChar* U_EXPORT2 u_uastrcpy(UChar* dst U_LIFETIME_BOUND, const char* src);
+U_CAPI UChar* U_EXPORT2 u_uastrcpy(UChar* dst U_LIFETIME_BOUND, ধ্রুব বর্ণ* src);
 
 /**
  * Copy a byte string encoded in the default codepage to a ustring.
@@ -698,7 +698,7 @@ U_CAPI UChar* U_EXPORT2 u_uastrcpy(UChar* dst U_LIFETIME_BOUND, const char* src)
  * @return A pointer to <code>dst</code>.
  * @stable ICU 2.0
  */
-U_CAPI UChar* U_EXPORT2 u_uastrncpy(UChar* dst U_LIFETIME_BOUND, const char* src, int32_t n);
+U_CAPI UChar* U_EXPORT2 u_uastrncpy(UChar* dst U_LIFETIME_BOUND, ধ্রুব বর্ণ* src, int32_t n);
 
 /**
  * Copy ustring to a byte string encoded in the default codepage.
@@ -710,7 +710,7 @@ U_CAPI UChar* U_EXPORT2 u_uastrncpy(UChar* dst U_LIFETIME_BOUND, const char* src
  * @return A pointer to <code>dst</code>.
  * @stable ICU 2.0
  */
-U_CAPI char* U_EXPORT2 u_austrcpy(char* dst U_LIFETIME_BOUND, const UChar* src);
+U_CAPI বর্ণ* U_EXPORT2 u_austrcpy(বর্ণ* dst U_LIFETIME_BOUND, ধ্রুব UChar* src);
 
 /**
  * Copy ustring to a byte string encoded in the default codepage.
@@ -724,7 +724,7 @@ U_CAPI char* U_EXPORT2 u_austrcpy(char* dst U_LIFETIME_BOUND, const UChar* src);
  * @return A pointer to <code>dst</code>.
  * @stable ICU 2.0
  */
-U_CAPI char* U_EXPORT2 u_austrncpy(char* dst U_LIFETIME_BOUND, const UChar* src, int32_t n);
+U_CAPI বর্ণ* U_EXPORT2 u_austrncpy(বর্ণ* dst U_LIFETIME_BOUND, ধ্রুব UChar* src, int32_t n);
 
 #endif
 
@@ -737,7 +737,7 @@ U_CAPI char* U_EXPORT2 u_austrncpy(char* dst U_LIFETIME_BOUND, const UChar* src,
  * @stable ICU 2.0
  */
 U_CAPI UChar* U_EXPORT2
-u_memcpy(UChar* dest U_LIFETIME_BOUND, const UChar* src, int32_t count);
+u_memcpy(UChar* dest U_LIFETIME_BOUND, ধ্রুব UChar* src, int32_t গুনতি);
 
 /**
  * Synonym for memmove(), but with UChars only.
@@ -748,7 +748,7 @@ u_memcpy(UChar* dest U_LIFETIME_BOUND, const UChar* src, int32_t count);
  * @stable ICU 2.0
  */
 U_CAPI UChar* U_EXPORT2
-u_memmove(UChar* dest U_LIFETIME_BOUND, const UChar* src, int32_t count);
+u_memmove(UChar* dest U_LIFETIME_BOUND, ধ্রুব UChar* src, int32_t গুনতি);
 
 /**
  * Initialize <code>count</code> characters of <code>dest</code> to <code>c</code>.
@@ -760,7 +760,7 @@ u_memmove(UChar* dest U_LIFETIME_BOUND, const UChar* src, int32_t count);
  * @stable ICU 2.0
  */
 U_CAPI UChar* U_EXPORT2
-u_memset(UChar* dest U_LIFETIME_BOUND, UChar c, int32_t count);
+u_memset(UChar* dest U_LIFETIME_BOUND, UChar c, int32_t গুনতি);
 
 /**
  * Compare the first <code>count</code> UChars of each buffer.
@@ -774,7 +774,7 @@ u_memset(UChar* dest U_LIFETIME_BOUND, UChar c, int32_t count);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_memcmp(const UChar *buf1, const UChar *buf2, int32_t count);
+u_memcmp(ধ্রুব UChar *buf1, ধ্রুব UChar *buf2, int32_t গুনতি);
 
 /**
  * Compare two Unicode strings in code point order.
@@ -790,7 +790,7 @@ u_memcmp(const UChar *buf1, const UChar *buf2, int32_t count);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_memcmpCodePointOrder(const UChar *s1, const UChar *s2, int32_t count);
+u_memcmpCodePointOrder(ধ্রুব UChar *s1, ধ্রুব UChar *s2, int32_t গুনতি);
 
 /**
  * Find the first occurrence of a BMP code point in a string.
@@ -810,7 +810,7 @@ u_memcmpCodePointOrder(const UChar *s1, const UChar *s2, int32_t count);
  * @see u_strFindFirst
  */
 U_CAPI UChar* U_EXPORT2
-u_memchr(const UChar* s U_LIFETIME_BOUND, UChar c, int32_t count);
+u_memchr(ধ্রুব UChar* s U_LIFETIME_BOUND, UChar c, int32_t গুনতি);
 
 /**
  * Find the first occurrence of a code point in a string.
@@ -830,7 +830,7 @@ u_memchr(const UChar* s U_LIFETIME_BOUND, UChar c, int32_t count);
  * @see u_strFindFirst
  */
 U_CAPI UChar* U_EXPORT2
-u_memchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t count);
+u_memchr32(ধ্রুব UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t গুনতি);
 
 /**
  * Find the last occurrence of a BMP code point in a string.
@@ -850,7 +850,7 @@ u_memchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t count);
  * @see u_strFindLast
  */
 U_CAPI UChar* U_EXPORT2
-u_memrchr(const UChar* s U_LIFETIME_BOUND, UChar c, int32_t count);
+u_memrchr(ধ্রুব UChar* s U_LIFETIME_BOUND, UChar c, int32_t গুনতি);
 
 /**
  * Find the last occurrence of a code point in a string.
@@ -870,7 +870,7 @@ u_memrchr(const UChar* s U_LIFETIME_BOUND, UChar c, int32_t count);
  * @see u_strFindLast
  */
 U_CAPI UChar* U_EXPORT2
-u_memrchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t count);
+u_memrchr32(ধ্রুব UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t গুনতি);
 
 /**
  * Unicode String literals in C.
@@ -919,16 +919,16 @@ u_memrchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t count);
  *
  * @stable ICU 2.0
  */
-#if defined(U_DECLARE_UTF16)
-#   define U_STRING_DECL(var, cs, length) static const UChar *var=(const UChar *)U_DECLARE_UTF16(cs)
+#যদি defined(U_DECLARE_UTF16)
+#   define U_STRING_DECL(var, cs, length) স্থির ধ্রুব UChar *var=(ধ্রুব UChar *)U_DECLARE_UTF16(cs)
     /**@stable ICU 2.0 */
 #   define U_STRING_INIT(var, cs, length)
-#elif U_SIZEOF_WCHAR_T==U_SIZEOF_UCHAR && (U_CHARSET_FAMILY==U_ASCII_FAMILY || defined(U_WCHAR_IS_UTF16))
-#   define U_STRING_DECL(var, cs, length) static const UChar var[(length)+1]=L ## cs
+#নোচেদ্যদি U_SIZEOF_WCHAR_T==U_SIZEOF_UCHAR && (U_CHARSET_FAMILY==U_ASCII_FAMILY || defined(U_WCHAR_IS_UTF16))
+#   define U_STRING_DECL(var, cs, length) স্থির ধ্রুব UChar var[(length)+1]=L ## cs
     /**@stable ICU 2.0 */
 #   define U_STRING_INIT(var, cs, length)
-#else
-#   define U_STRING_DECL(var, cs, length) static UChar var[(length)+1]
+#অন্যথা
+#   define U_STRING_DECL(var, cs, length) স্থির UChar var[(length)+1]
     /**@stable ICU 2.0 */
 #   define U_STRING_INIT(var, cs, length) u_charsToUChars(cs, var, length+1)
 #endif
@@ -981,7 +981,7 @@ u_memrchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t count);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_unescape(const char *src,
+u_unescape(ধ্রুব বর্ণ *src,
            UChar *dest, int32_t destCapacity);
 
 U_CDECL_BEGIN
@@ -997,7 +997,7 @@ U_CDECL_BEGIN
  * @see u_unescapeAt
  * @stable ICU 2.0
  */
-typedef UChar (U_CALLCONV *UNESCAPE_CHAR_AT)(int32_t offset, void *context);
+প্রকারনির্দেশ UChar (U_CALLCONV *UNESCAPE_CHAR_AT)(int32_t offset, শূন্য *context);
 U_CDECL_END
 
 /**
@@ -1032,7 +1032,7 @@ U_CAPI UChar32 U_EXPORT2
 u_unescapeAt(UNESCAPE_CHAR_AT charAt,
              int32_t *offset,
              int32_t length,
-             void *context);
+             শূন্য *context);
 
 /**
  * Uppercase the characters in a string.
@@ -1056,8 +1056,8 @@ u_unescapeAt(UNESCAPE_CHAR_AT charAt,
  */
 U_CAPI int32_t U_EXPORT2
 u_strToUpper(UChar *dest, int32_t destCapacity,
-             const UChar *src, int32_t srcLength,
-             const char *locale,
+             ধ্রুব UChar *src, int32_t srcLength,
+             ধ্রুব বর্ণ *locale,
              UErrorCode *pErrorCode);
 
 /**
@@ -1082,11 +1082,11 @@ u_strToUpper(UChar *dest, int32_t destCapacity,
  */
 U_CAPI int32_t U_EXPORT2
 u_strToLower(UChar *dest, int32_t destCapacity,
-             const UChar *src, int32_t srcLength,
-             const char *locale,
+             ধ্রুব UChar *src, int32_t srcLength,
+             ধ্রুব বর্ণ *locale,
              UErrorCode *pErrorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#যদি !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * Titlecase a string.
@@ -1128,9 +1128,9 @@ u_strToLower(UChar *dest, int32_t destCapacity,
  */
 U_CAPI int32_t U_EXPORT2
 u_strToTitle(UChar *dest, int32_t destCapacity,
-             const UChar *src, int32_t srcLength,
+             ধ্রুব UChar *src, int32_t srcLength,
              UBreakIterator *titleIter,
-             const char *locale,
+             ধ্রুব বর্ণ *locale,
              UErrorCode *pErrorCode);
 
 #endif
@@ -1161,11 +1161,11 @@ u_strToTitle(UChar *dest, int32_t destCapacity,
  */
 U_CAPI int32_t U_EXPORT2
 u_strFoldCase(UChar *dest, int32_t destCapacity,
-              const UChar *src, int32_t srcLength,
+              ধ্রুব UChar *src, int32_t srcLength,
               uint32_t options,
               UErrorCode *pErrorCode);
 
-#if defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION
+#যদি defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION
 /**
  * Convert a UTF-16 string to a wchar_t string.
  * If it is known at compile time that wchar_t strings are in UTF-16 or UTF-32, then
@@ -1192,7 +1192,7 @@ U_CAPI wchar_t* U_EXPORT2
 u_strToWCS(wchar_t* dest U_LIFETIME_BOUND,
            int32_t destCapacity,
            int32_t* pDestLength,
-           const UChar* src,
+           ধ্রুব UChar* src,
            int32_t srcLength,
            UErrorCode* pErrorCode);
 /**
@@ -1221,7 +1221,7 @@ U_CAPI UChar* U_EXPORT2
 u_strFromWCS(UChar* dest U_LIFETIME_BOUND,
              int32_t destCapacity,
              int32_t* pDestLength,
-             const wchar_t* src,
+             ধ্রুব wchar_t* src,
              int32_t srcLength,
              UErrorCode* pErrorCode);
 #endif /* defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION */
@@ -1248,11 +1248,11 @@ u_strFromWCS(UChar* dest U_LIFETIME_BOUND,
  * @see u_strToUTF8WithSub
  * @see u_strFromUTF8
  */
-U_CAPI char* U_EXPORT2
-u_strToUTF8(char* dest U_LIFETIME_BOUND,
+U_CAPI বর্ণ* U_EXPORT2
+u_strToUTF8(বর্ণ* dest U_LIFETIME_BOUND,
             int32_t destCapacity,
             int32_t* pDestLength,
-            const UChar* src,
+            ধ্রুব UChar* src,
             int32_t srcLength,
             UErrorCode* pErrorCode);
 
@@ -1282,7 +1282,7 @@ U_CAPI UChar* U_EXPORT2
 u_strFromUTF8(UChar* dest U_LIFETIME_BOUND,
               int32_t destCapacity,
               int32_t* pDestLength,
-              const char* src,
+              ধ্রুব বর্ণ* src,
               int32_t srcLength,
               UErrorCode* pErrorCode);
 
@@ -1321,14 +1321,14 @@ u_strFromUTF8(UChar* dest U_LIFETIME_BOUND,
  * @see u_strFromUTF8WithSub
  * @stable ICU 3.6
  */
-U_CAPI char* U_EXPORT2
-u_strToUTF8WithSub(char* dest U_LIFETIME_BOUND,
+U_CAPI বর্ণ* U_EXPORT2
+u_strToUTF8WithSub(বর্ণ* dest U_LIFETIME_BOUND,
                    int32_t destCapacity,
                    int32_t* pDestLength,
-                   const UChar* src,
+                   ধ্রুব UChar* src,
                    int32_t srcLength,
                    UChar32 subchar,
-                   int32_t* pNumSubstitutions,
+                   int32_t* p_অঙ্ক_Substitutions,
                    UErrorCode* pErrorCode);
 
 /**
@@ -1371,10 +1371,10 @@ U_CAPI UChar* U_EXPORT2
 u_strFromUTF8WithSub(UChar* dest U_LIFETIME_BOUND,
                      int32_t destCapacity,
                      int32_t* pDestLength,
-                     const char* src,
+                     ধ্রুব বর্ণ* src,
                      int32_t srcLength,
                      UChar32 subchar,
-                     int32_t* pNumSubstitutions,
+                     int32_t* p_অঙ্ক_Substitutions,
                      UErrorCode* pErrorCode);
 
 /**
@@ -1432,7 +1432,7 @@ U_CAPI UChar* U_EXPORT2
 u_strFromUTF8Lenient(UChar* dest U_LIFETIME_BOUND,
                      int32_t destCapacity,
                      int32_t* pDestLength,
-                     const char* src,
+                     ধ্রুব বর্ণ* src,
                      int32_t srcLength,
                      UErrorCode* pErrorCode);
 
@@ -1462,7 +1462,7 @@ U_CAPI UChar32* U_EXPORT2
 u_strToUTF32(UChar32* dest U_LIFETIME_BOUND,
              int32_t destCapacity,
              int32_t* pDestLength,
-             const UChar* src,
+             ধ্রুব UChar* src,
              int32_t srcLength,
              UErrorCode* pErrorCode);
 
@@ -1492,7 +1492,7 @@ U_CAPI UChar* U_EXPORT2
 u_strFromUTF32(UChar* dest U_LIFETIME_BOUND,
                int32_t destCapacity,
                int32_t* pDestLength,
-               const UChar32* src,
+               ধ্রুব UChar32* src,
                int32_t srcLength,
                UErrorCode* pErrorCode);
 
@@ -1535,10 +1535,10 @@ U_CAPI UChar32* U_EXPORT2
 u_strToUTF32WithSub(UChar32* dest U_LIFETIME_BOUND,
                     int32_t destCapacity,
                     int32_t* pDestLength,
-                    const UChar* src,
+                    ধ্রুব UChar* src,
                     int32_t srcLength,
                     UChar32 subchar,
-                    int32_t* pNumSubstitutions,
+                    int32_t* p_অঙ্ক_Substitutions,
                     UErrorCode* pErrorCode);
 
 /**
@@ -1580,10 +1580,10 @@ U_CAPI UChar* U_EXPORT2
 u_strFromUTF32WithSub(UChar* dest U_LIFETIME_BOUND,
                       int32_t destCapacity,
                       int32_t* pDestLength,
-                      const UChar32* src,
+                      ধ্রুব UChar32* src,
                       int32_t srcLength,
                       UChar32 subchar,
-                      int32_t* pNumSubstitutions,
+                      int32_t* p_অঙ্ক_Substitutions,
                       UErrorCode* pErrorCode);
 
 /**
@@ -1618,11 +1618,11 @@ u_strFromUTF32WithSub(UChar* dest U_LIFETIME_BOUND,
  * @see u_strToUTF8WithSub
  * @see u_strFromJavaModifiedUTF8WithSub
  */
-U_CAPI char* U_EXPORT2
-u_strToJavaModifiedUTF8(char* dest U_LIFETIME_BOUND,
+U_CAPI বর্ণ* U_EXPORT2
+u_strToJavaModifiedUTF8(বর্ণ* dest U_LIFETIME_BOUND,
                         int32_t destCapacity,
                         int32_t* pDestLength,
-                        const UChar* src,
+                        ধ্রুব UChar* src,
                         int32_t srcLength,
                         UErrorCode* pErrorCode);
 
@@ -1671,10 +1671,10 @@ U_CAPI UChar* U_EXPORT2
 u_strFromJavaModifiedUTF8WithSub(UChar* dest U_LIFETIME_BOUND,
                                  int32_t destCapacity,
                                  int32_t* pDestLength,
-                                 const char* src,
+                                 ধ্রুব বর্ণ* src,
                                  int32_t srcLength,
                                  UChar32 subchar,
-                                 int32_t* pNumSubstitutions,
+                                 int32_t* p_অঙ্ক_Substitutions,
                                  UErrorCode* pErrorCode);
 
 #endif

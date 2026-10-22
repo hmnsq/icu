@@ -3,9 +3,9 @@
 #ifndef __ULOCBUILDER_H__
 #define __ULOCBUILDER_H__
 
-#include "unicode/localpointer.h"
-#include "unicode/ulocale.h"
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/localpointer.h"
+#অন্তর্ভাব "unicode/ulocale.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
 /**
  * \file
@@ -16,13 +16,13 @@
  * Opaque C service object type for the locale builder API
  * @stable ICU 74
  */
-struct ULocaleBuilder;
+সংরচনা ULocaleBuilder;
 
 /**
  * C typedef for struct ULocaleBuilder.
  * @stable ICU 74
  */
-typedef struct ULocaleBuilder ULocaleBuilder;
+প্রকারনির্দেশ সংরচনা ULocaleBuilder ULocaleBuilder;
 
 /**
  * <code>ULocaleBuilder</code> is used to build valid <code>locale</code> id
@@ -72,14 +72,14 @@ typedef struct ULocaleBuilder ULocaleBuilder;
  * @stable ICU 74
  */
 U_CAPI ULocaleBuilder* U_EXPORT2
-ulocbld_open(void);
+ulocbld_open(শূন্য);
 
 /**
  * Close the builder and destroy it's internal states.
  * @param builder the builder
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 ulocbld_close(ULocaleBuilder* builder);
 
 /**
@@ -97,8 +97,8 @@ ulocbld_close(ULocaleBuilder* builder);
  *
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
-ulocbld_setLocale(ULocaleBuilder* builder, const char* locale, int32_t length);
+U_CAPI শূন্য U_EXPORT2
+ulocbld_setLocale(ULocaleBuilder* builder, ধ্রুব বর্ণ* locale, int32_t length);
 
 /**
  * Resets the <code>ULocaleBuilder</code> to match the provided
@@ -113,7 +113,7 @@ ulocbld_setLocale(ULocaleBuilder* builder, const char* locale, int32_t length);
  *
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 ulocbld_adoptULocale(ULocaleBuilder* builder, ULocale* locale);
 
 /**
@@ -136,8 +136,8 @@ ulocbld_adoptULocale(ULocaleBuilder* builder, ULocale* locale);
  *               null terminated,
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
-ulocbld_setLanguageTag(ULocaleBuilder* builder, const char* tag, int32_t length);
+U_CAPI শূন্য U_EXPORT2
+ulocbld_setLanguageTag(ULocaleBuilder* builder, ধ্রুব বর্ণ* tag, int32_t length);
 
 /**
  * Sets the language.  If <code>language</code> is the empty string, the
@@ -156,8 +156,8 @@ ulocbld_setLanguageTag(ULocaleBuilder* builder, const char* tag, int32_t length)
  *               null terminated,
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
-ulocbld_setLanguage(ULocaleBuilder* builder, const char* language, int32_t length);
+U_CAPI শূন্য U_EXPORT2
+ulocbld_setLanguage(ULocaleBuilder* builder, ধ্রুব বর্ণ* language, int32_t length);
 
 /**
  * Sets the script. If <code>script</code> is the empty string, the script in
@@ -177,8 +177,8 @@ ulocbld_setLanguage(ULocaleBuilder* builder, const char* language, int32_t lengt
  *               null terminated,
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
-ulocbld_setScript(ULocaleBuilder* builder, const char* script, int32_t length);
+U_CAPI শূন্য U_EXPORT2
+ulocbld_setScript(ULocaleBuilder* builder, ধ্রুব বর্ণ* script, int32_t length);
 
 /**
  * Sets the region.  If region is the empty string, the region in this
@@ -201,8 +201,8 @@ ulocbld_setScript(ULocaleBuilder* builder, const char* script, int32_t length);
  *               null terminated,
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
-ulocbld_setRegion(ULocaleBuilder* builder, const char* region, int32_t length);
+U_CAPI শূন্য U_EXPORT2
+ulocbld_setRegion(ULocaleBuilder* builder, ধ্রুব বর্ণ* region, int32_t length);
 
 /**
  * Sets the variant.  If variant is the empty string, the variant in this
@@ -227,8 +227,8 @@ ulocbld_setRegion(ULocaleBuilder* builder, const char* region, int32_t length);
  *               null terminated,
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
-ulocbld_setVariant(ULocaleBuilder* builder, const char* variant, int32_t length);
+U_CAPI শূন্য U_EXPORT2
+ulocbld_setVariant(ULocaleBuilder* builder, ধ্রুব বর্ণ* variant, int32_t length);
 
 /**
  * Sets the extension for the given key. If the value is the empty string,
@@ -253,8 +253,8 @@ ulocbld_setVariant(ULocaleBuilder* builder, const char* variant, int32_t length)
  *               null terminated,
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
-ulocbld_setExtension(ULocaleBuilder* builder, char key, const char* value, int32_t length);
+U_CAPI শূন্য U_EXPORT2
+ulocbld_setExtension(ULocaleBuilder* builder, বর্ণ চাবি, ধ্রুব বর্ণ* মান_2, int32_t length);
 
 /**
  * Sets the Unicode locale keyword type for the given key. If the type
@@ -281,9 +281,9 @@ ulocbld_setExtension(ULocaleBuilder* builder, char key, const char* value, int32
  *               be null terminated,
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 ulocbld_setUnicodeLocaleKeyword(ULocaleBuilder* builder,
-        const char* key, int32_t keyLength, const char* type, int32_t typeLength);
+        ধ্রুব বর্ণ* চাবি, int32_t চাবি_Length, ধ্রুব বর্ণ* type, int32_t typeLength);
 
 /**
  * Adds a unicode locale attribute, if not already present, otherwise
@@ -298,9 +298,9 @@ ulocbld_setUnicodeLocaleKeyword(ULocaleBuilder* builder,
  *               need to be null terminated,
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 ulocbld_addUnicodeLocaleAttribute(
-    ULocaleBuilder* builder, const char* attribute, int32_t length);
+    ULocaleBuilder* builder, ধ্রুব বর্ণ* attribute, int32_t length);
 
 /**
  * Removes a unicode locale attribute, if present, otherwise has no
@@ -317,9 +317,9 @@ ulocbld_addUnicodeLocaleAttribute(
  *               need to be null terminated,
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 ulocbld_removeUnicodeLocaleAttribute(
-    ULocaleBuilder* builder, const char* attribute, int32_t length);
+    ULocaleBuilder* builder, ধ্রুব বর্ণ* attribute, int32_t length);
 
 /**
  * Resets the builder to its initial, empty state.
@@ -328,7 +328,7 @@ ulocbld_removeUnicodeLocaleAttribute(
  * @param builder the builder
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 ulocbld_clear(ULocaleBuilder* builder);
 
 /**
@@ -338,7 +338,7 @@ ulocbld_clear(ULocaleBuilder* builder);
  * @param builder the builder
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 ulocbld_clearExtensions(ULocaleBuilder* builder);
 
 /**
@@ -358,7 +358,7 @@ ulocbld_clearExtensions(ULocaleBuilder* builder);
  * @stable ICU 74
  */
 U_CAPI int32_t U_EXPORT2
-ulocbld_buildLocaleID(ULocaleBuilder* builder, char* locale,
+ulocbld_buildLocaleID(ULocaleBuilder* builder, বর্ণ* locale,
                       int32_t localeCapacity, UErrorCode* err);
 
 /**
@@ -397,7 +397,7 @@ ulocbld_buildULocale(ULocaleBuilder* builder, UErrorCode* err);
  * @stable ICU 74
  */
 U_CAPI int32_t U_EXPORT2
-ulocbld_buildLanguageTag(ULocaleBuilder* builder, char* language,
+ulocbld_buildLanguageTag(ULocaleBuilder* builder, বর্ণ* language,
                       int32_t languageCapacity, UErrorCode* err);
 
 /**
@@ -412,9 +412,9 @@ ulocbld_buildLanguageTag(ULocaleBuilder* builder, char* language,
  * @stable ICU 74
  */
 U_CAPI UBool U_EXPORT2
-ulocbld_copyErrorTo(const ULocaleBuilder* builder, UErrorCode *outErrorCode);
+ulocbld_copyErrorTo(ধ্রুব ULocaleBuilder* builder, UErrorCode *outErrorCode);
 
-#if U_SHOW_CPLUSPLUS_API
+#যদি U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

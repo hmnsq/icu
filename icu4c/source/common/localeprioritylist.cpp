@@ -4,67 +4,67 @@
 // localeprioritylist.cpp
 // created: 2019jul11 Markus W. Scherer
 
-#include "unicode/utypes.h"
-#include "unicode/localpointer.h"
-#include "unicode/locid.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "localeprioritylist.h"
-#include "uarrsort.h"
-#include "uassert.h"
-#include "uhash.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/localpointer.h"
+#অন্তর্ভাব "unicode/locid.h"
+#অন্তর্ভাব "unicode/stringpiece.h"
+#অন্তর্ভাব "unicode/uobject.h"
+#অন্তর্ভাব "charstr.h"
+#অন্তর্ভাব "cmemory.h"
+#অন্তর্ভাব "localeprioritylist.h"
+#অন্তর্ভাব "uarrsort.h"
+#অন্তর্ভাব "uassert.h"
+#অন্তর্ভাব "uhash.h"
 
 U_NAMESPACE_BEGIN
 
-namespace {
+নামাকাশ {
 
-int32_t hashLocale(const UHashTok token) {
-    const auto* locale = static_cast<const Locale*>(token.pointer);
-    return locale->hashCode();
+int32_t hashLocale(ধ্রুব UHashTok token) {
+    ধ্রুব auto* locale = static_cast<ধ্রুব Locale*>(token.pointer);
+    প্রত্যাগম locale->hashCode();
 }
 
-UBool compareLocales(const UHashTok t1, const UHashTok t2) {
-    const auto* l1 = static_cast<const Locale*>(t1.pointer);
-    const auto* l2 = static_cast<const Locale*>(t2.pointer);
-    return *l1 == *l2;
+UBool compareLocales(ধ্রুব UHashTok t1, ধ্রুব UHashTok t2) {
+    ধ্রুব auto* l1 = static_cast<ধ্রুব Locale*>(t1.pointer);
+    ধ্রুব auto* l2 = static_cast<ধ্রুব Locale*>(t2.pointer);
+    প্রত্যাগম *l1 == *l2;
 }
 
 constexpr int32_t WEIGHT_ONE = 1000;
 
-struct LocaleAndWeight {
+সংরচনা LocaleAndWeight {
     Locale *locale;
     int32_t weight;  // 0..1000 = 0.0..1.0
     int32_t index;  // force stable sort
 
-    int32_t compare(const LocaleAndWeight &other) const {
+    int32_t compare(ধ্রুব LocaleAndWeight &other) ধ্রুব {
         int32_t diff = other.weight - weight;  // descending: other-this
-        if (diff != 0) { return diff; }
-        return index - other.index;
+        যদি (diff != 0) { প্রত্যাগম diff; }
+        প্রত্যাগম index - other.index;
     }
 };
 
 int32_t U_CALLCONV
-compareLocaleAndWeight(const void * /*context*/, const void *left, const void *right) {
-    return static_cast<const LocaleAndWeight *>(left)->
-        compare(*static_cast<const LocaleAndWeight *>(right));
+compareLocaleAndWeight(ধ্রুব শূন্য * /*context*/, ধ্রুব শূন্য *left, ধ্রুব শূন্য *ডান) {
+    প্রত্যাগম static_cast<ধ্রুব LocaleAndWeight *>(left)->
+        compare(*static_cast<ধ্রুব LocaleAndWeight *>(ডান));
 }
 
-const char *skipSpaces(const char *p, const char *limit) {
-    while (p < limit && *p == ' ') { ++p; }
-    return p;
+ধ্রুব বর্ণ *skipSpaces(ধ্রুব বর্ণ *p, ধ্রুব বর্ণ *limit) {
+    যাবত্ (p < limit && *p == ' ') { ++p; }
+    প্রত্যাগম p;
 }
 
-int32_t findTagLength(const char *p, const char *limit) {
+int32_t findTagLength(ধ্রুব বর্ণ *p, ধ্রুব বর্ণ *limit) {
     // Look for accept-language delimiters.
     // Leave other validation up to the Locale constructor.
-    const char *q;
-    for (q = p; q < limit; ++q) {
-        char c = *q;
-        if (c == ' ' || c == ',' || c == ';') { break; }
+    ধ্রুব বর্ণ *q;
+    প্রতি (q = p; q < limit; ++q) {
+        বর্ণ c = *q;
+        যদি (c == ' ' || c == ',' || c == ';') { ভঙ্গ; }
     }
-    return static_cast<int32_t>(q - p);
+    প্রত্যাগম static_cast<int32_t>(q - p);
 }
 
 /**
@@ -72,25 +72,25 @@ int32_t findTagLength(const char *p, const char *limit) {
  * Advances p to after the parsed substring.
  * Returns a negative value if parsing fails.
  */
-int32_t parseWeight(const char *&p, const char *limit) {
+int32_t parseWeight(ধ্রুব বর্ণ *&p, ধ্রুব বর্ণ *limit) {
     p = skipSpaces(p, limit);
-    char c;
-    if (p == limit || ((c = *p) != '0' && c != '1')) { return -1; }
+    বর্ণ c;
+    যদি (p == limit || ((c = *p) != '0' && c != '1')) { প্রত্যাগম -1; }
     int32_t weight = (c - '0') * 1000;
-    if (++p == limit || *p != '.') { return weight; }
+    যদি (++p == limit || *p != '.') { প্রত্যাগম weight; }
     int32_t multiplier = 100;
-    while (++p != limit && '0' <= (c = *p) && c <= '9') {
+    যাবত্ (++p != limit && '0' <= (c = *p) && c <= '9') {
         c -= '0';
-        if (multiplier > 0) {
+        যদি (multiplier > 0) {
             weight += c * multiplier;
             multiplier /= 10;
-        } else if (multiplier == 0) {
+        } অন্যথা যদি (multiplier == 0) {
             // round up
-            if (c >= 5) { ++weight; }
+            যদি (c >= 5) { ++weight; }
             multiplier = -1;
         }  // else ignore further fraction digits
     }
-    return weight <= WEIGHT_ONE ? weight : -1;  // bad if > 1.0
+    প্রত্যাগম weight <= WEIGHT_ONE ? weight : -1;  // bad if > 1.0
 }
 
 }  // namespace
@@ -106,60 +106,60 @@ int32_t parseWeight(const char *&p, const char *limit) {
  * template export declaration of some kind for the MaybeStackArray specialization
  * to be properly exported from the common DLL.
  */
-struct LocaleAndWeightArray : public UMemory {
-    MaybeStackArray<LocaleAndWeight, 20> array;
+সংরচনা LocaleAndWeightArray : সার্বজনিক UMemory {
+    Maybe_স্তূপ_Array<LocaleAndWeight, 20> array;
 };
 
 LocalePriorityList::LocalePriorityList(StringPiece s, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return; }
-    list = new LocaleAndWeightArray();
-    if (list == nullptr) {
+    যদি (U_FAILURE(errorCode)) { প্রত্যাগম; }
+    list = নূতন LocaleAndWeightArray();
+    যদি (list == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        প্রত্যাগম;
     }
-    const char *p = s.data();
-    const char *limit = p + s.length();
-    while ((p = skipSpaces(p, limit)) != limit) {
-        if (*p == ',') {  // empty range field
+    ধ্রুব বর্ণ *p = s.data();
+    ধ্রুব বর্ণ *limit = p + s.length();
+    যাবত্ ((p = skipSpaces(p, limit)) != limit) {
+        যদি (*p == ',') {  // empty range field
             ++p;
-            continue;
+            অনুবর্ত;
         }
         int32_t tagLength = findTagLength(p, limit);
-        if (tagLength == 0) {
+        যদি (tagLength == 0) {
             errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            প্রত্যাগম;
         }
         CharString tag(p, tagLength, errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        যদি (U_FAILURE(errorCode)) { প্রত্যাগম; }
         Locale locale = Locale(tag.data());
-        if (locale.isBogus()) {
+        যদি (locale.isBogus()) {
             errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            প্রত্যাগম;
         }
         int32_t weight = WEIGHT_ONE;
-        if ((p = skipSpaces(p + tagLength, limit)) != limit && *p == ';') {
-            if ((p = skipSpaces(p + 1, limit)) == limit || *p != 'q' ||
+        যদি ((p = skipSpaces(p + tagLength, limit)) != limit && *p == ';') {
+            যদি ((p = skipSpaces(p + 1, limit)) == limit || *p != 'q' ||
                     (p = skipSpaces(p + 1, limit)) == limit || *p != '=' ||
                     (++p, (weight = parseWeight(p, limit)) < 0)) {
                 errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                return;
+                প্রত্যাগম;
             }
             p = skipSpaces(p, limit);
         }
-        if (p != limit && *p != ',') {  // trailing junk
+        যদি (p != limit && *p != ',') {  // trailing junk
             errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            প্রত্যাগম;
         }
         add(locale, weight, errorCode);
-        if (p == limit) { break; }
+        যদি (p == limit) { ভঙ্গ; }
         ++p;
     }
     sort(errorCode);
 }
 
 LocalePriorityList::~LocalePriorityList() {
-    if (list != nullptr) {
-        for (int32_t i = 0; i < listLength; ++i) {
+    যদি (list != nullptr) {
+        প্রতি (int32_t i = 0; i < listLength; ++i) {
             delete list->array[i].locale;
         }
         delete list;
@@ -167,74 +167,74 @@ LocalePriorityList::~LocalePriorityList() {
     uhash_close(map);
 }
 
-const Locale *LocalePriorityList::localeAt(int32_t i) const {
-    return list->array[i].locale;
+ধ্রুব Locale *LocalePriorityList::localeAt(int32_t i) ধ্রুব {
+    প্রত্যাগম list->array[i].locale;
 }
 
 Locale *LocalePriorityList::orphanLocaleAt(int32_t i) {
-    if (list == nullptr) { return nullptr; }
+    যদি (list == nullptr) { প্রত্যাগম nullptr; }
     LocaleAndWeight &lw = list->array[i];
     Locale *l = lw.locale;
     lw.locale = nullptr;
-    return l;
+    প্রত্যাগম l;
 }
 
-bool LocalePriorityList::add(const Locale &locale, int32_t weight, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    if (map == nullptr) {
-        if (weight <= 0) { return true; }  // do not add q=0
+তার্কিক LocalePriorityList::add(ধ্রুব Locale &locale, int32_t weight, UErrorCode &errorCode) {
+    যদি (U_FAILURE(errorCode)) { প্রত্যাগম অসত্য; }
+    যদি (map == nullptr) {
+        যদি (weight <= 0) { প্রত্যাগম সত্য; }  // do not add q=0
         map = uhash_open(hashLocale, compareLocales, uhash_compareLong, &errorCode);
-        if (U_FAILURE(errorCode)) { return false; }
+        যদি (U_FAILURE(errorCode)) { প্রত্যাগম অসত্য; }
     }
     LocalPointer<Locale> clone;
-    UBool found = false;
+    UBool found = অসত্য;
     int32_t index = uhash_getiAndFound(map, &locale, &found);
-    if (found) {
+    যদি (found) {
         // Duplicate: Remove the old item and append it anew.
         LocaleAndWeight &lw = list->array[index];
         clone.adoptInstead(lw.locale);
         lw.locale = nullptr;
         lw.weight = 0;
-        ++numRemoved;
+        ++অঙ্ক_Removed;
     }
-    if (weight <= 0) {  // do not add q=0
-        if (found) {
+    যদি (weight <= 0) {  // do not add q=0
+        যদি (found) {
             // Not strictly necessary but cleaner.
             uhash_removei(map, &locale);
         }
-        return true;
+        প্রত্যাগম সত্য;
     }
-    if (clone.isNull()) {
+    যদি (clone.isNull()) {
         clone.adoptInstead(locale.clone());
-        if (clone.isNull() || (clone->isBogus() && !locale.isBogus())) {
+        যদি (clone.isNull() || (clone->isBogus() && !locale.isBogus())) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return false;
+            প্রত্যাগম অসত্য;
         }
     }
-    if (listLength == list->array.getCapacity()) {
+    যদি (listLength == list->array.getCapacity()) {
         int32_t newCapacity = listLength < 50 ? 100 : 4 * listLength;
-        if (list->array.resize(newCapacity, listLength) == nullptr) {
+        যদি (list->array.resize(newCapacity, listLength) == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return false;
+            প্রত্যাগম অসত্য;
         }
     }
     uhash_putiAllowZero(map, clone.getAlias(), listLength, &errorCode);
-    if (U_FAILURE(errorCode)) { return false; }
+    যদি (U_FAILURE(errorCode)) { প্রত্যাগম অসত্য; }
     LocaleAndWeight &lw = list->array[listLength];
     lw.locale = clone.orphan();
     lw.weight = weight;
     lw.index = listLength++;
-    if (weight < WEIGHT_ONE) { hasWeights = true; }
-    U_ASSERT(uhash_count(map) == getLength());
-    return true;
+    যদি (weight < WEIGHT_ONE) { hasWeights = সত্য; }
+    U_ASSERT(uhash_গুনতি(map) == getLength());
+    প্রত্যাগম সত্য;
 }
 
-void LocalePriorityList::sort(UErrorCode &errorCode) {
+শূন্য LocalePriorityList::sort(UErrorCode &errorCode) {
     // Sort by descending weights if there is a mix of weights.
     // The comparator forces a stable sort via the item index.
-    if (U_FAILURE(errorCode) || getLength() <= 1 || !hasWeights) { return; }
-    uprv_sortArray(list->array.getAlias(), listLength, sizeof(LocaleAndWeight),
-                   compareLocaleAndWeight, nullptr, false, &errorCode);
+    যদি (U_FAILURE(errorCode) || getLength() <= 1 || !hasWeights) { প্রত্যাগম; }
+    uprv_sortArray(list->array.getAlias(), listLength, পরিমাণ(LocaleAndWeight),
+                   compareLocaleAndWeight, nullptr, অসত্য, &errorCode);
 }
 
 U_NAMESPACE_END

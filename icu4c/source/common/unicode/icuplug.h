@@ -107,24 +107,24 @@
 #ifndef ICUPLUG_H
 #define ICUPLUG_H
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
 
-#if UCONFIG_ENABLE_PLUGINS || defined(U_IN_DOXYGEN)
+#যদি UCONFIG_ENABLE_PLUGINS || defined(U_IN_DOXYGEN)
 
 
 
 /* === Basic types === */
 
 #ifndef U_HIDE_INTERNAL_API
-struct UPlugData;
+সংরচনা UPlugData;
 /**
  * @{
  * Typedef for opaque structure passed to/from a plugin. 
  * Use the APIs to access it.
  * @internal ICU 4.4 Technology Preview
  */
-typedef struct UPlugData UPlugData;
+প্রকারনির্দেশ সংরচনা UPlugData UPlugData;
 
 /** @} */
 
@@ -148,13 +148,13 @@ typedef struct UPlugData UPlugData;
  * @see UPLUG_TOKEN
  * @internal ICU 4.4 Technology Preview
  */
-typedef uint32_t UPlugTokenReturn;
+প্রকারনির্দেশ uint32_t UPlugTokenReturn;
 
 /**
  * Reason code for the entrypoint's call
  * @internal ICU 4.4 Technology Preview
  */
-typedef enum {
+প্রকারনির্দেশ গণনা {
     UPLUG_REASON_QUERY = 0,     /**< The plugin is being queried for info. **/
     UPLUG_REASON_LOAD = 1,     /**< The plugin is being loaded. **/
     UPLUG_REASON_UNLOAD = 2,   /**< The plugin is being unloaded. **/
@@ -162,7 +162,7 @@ typedef enum {
      * Number of known reasons.
      * @internal The numeric value may change over time, see ICU ticket #12420.
      */
-    UPLUG_REASON_COUNT
+    UPLUG_REASON_গুনতি
 } UPlugReason;
 
 
@@ -173,16 +173,16 @@ typedef enum {
  *     ERR -> INVALID
  * @internal ICU 4.4 Technology Preview
  */
-typedef enum {
+প্রকারনির্দেশ গণনা {
     UPLUG_LEVEL_INVALID = 0,     /**< The plugin is invalid, hasn't called uplug_setLevel, or can't load. **/
     UPLUG_LEVEL_UNKNOWN = 1,     /**< The plugin is waiting to be installed. **/
-    UPLUG_LEVEL_LOW     = 2,     /**< The plugin must be called before u_init completes **/
-    UPLUG_LEVEL_HIGH    = 3,     /**< The plugin can run at any time. **/
+    UPLUG_LEVEL_নিচের     = 2,     /**< The plugin must be called before u_init completes **/
+    UPLUG_LEVEL_উপরের    = 3,     /**< The plugin can run at any time. **/
     /**
      * Number of known levels.
      * @internal The numeric value may change over time, see ICU ticket #12420.
      */
-    UPLUG_LEVEL_COUNT
+    UPLUG_LEVEL_গুনতি
 } UPlugLevel;
 
 /**
@@ -196,7 +196,7 @@ typedef enum {
  * @return A valid plugin must return UPLUG_TOKEN
  * @internal ICU 4.4 Technology Preview
  */
-typedef UPlugTokenReturn (U_EXPORT2 UPlugEntrypoint) (
+প্রকারনির্দেশ UPlugTokenReturn (U_EXPORT2 UPlugEntrypoint) (
                   UPlugData *plug,
                   UPlugReason reason,
                   UErrorCode *status);
@@ -211,7 +211,7 @@ typedef UPlugTokenReturn (U_EXPORT2 UPlugEntrypoint) (
  * @param dontUnload  set true if this plugin can't be unloaded
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI void U_EXPORT2 
+U_CAPI শূন্য U_EXPORT2 
 uplug_setPlugNoUnload(UPlugData *plug, UBool dontUnload);
 
 /**
@@ -220,7 +220,7 @@ uplug_setPlugNoUnload(UPlugData *plug, UBool dontUnload);
  * @param level the level of this plugin
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 uplug_setPlugLevel(UPlugData *plug, UPlugLevel level);
 
 /**
@@ -240,7 +240,7 @@ uplug_getPlugLevel(UPlugData *plug);
  * @internal ICU 4.4 Technology Preview
  */
 U_CAPI UPlugLevel U_EXPORT2
-uplug_getCurrentLevel(void);
+uplug_getCurrentLevel(শূন্য);
 
 
 /**
@@ -257,8 +257,8 @@ uplug_getPlugLoadStatus(UPlugData *plug);
  * @param name the name of this plugin. The first UPLUG_NAME_MAX characters willi be copied into a new buffer.
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI void U_EXPORT2
-uplug_setPlugName(UPlugData *plug, const char *name);
+U_CAPI শূন্য U_EXPORT2
+uplug_setPlugName(UPlugData *plug, ধ্রুব বর্ণ *name);
 
 /**
  * Get the human-readable name of this plugin.
@@ -266,7 +266,7 @@ uplug_setPlugName(UPlugData *plug, const char *name);
  * @return the name of this plugin
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI ধ্রুব বর্ণ* U_EXPORT2
 uplug_getPlugName(UPlugData* plug U_LIFETIME_BOUND);
 
 /**
@@ -275,8 +275,8 @@ uplug_getPlugName(UPlugData* plug U_LIFETIME_BOUND);
  * @return the symbol name, or NULL
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI const char* U_EXPORT2
-uplug_getSymbolName(UPlugData* plug U_LIFETIME_BOUND);
+U_CAPI ধ্রুব বর্ণ* U_EXPORT2
+uplug_get_প্রতীক_Name(UPlugData* plug U_LIFETIME_BOUND);
 
 /**
  * Return the library name for this plugin, if known.
@@ -285,7 +285,7 @@ uplug_getSymbolName(UPlugData* plug U_LIFETIME_BOUND);
  * @return the library name, or NULL
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI ধ্রুব বর্ণ* U_EXPORT2
 uplug_getLibraryName(UPlugData* plug U_LIFETIME_BOUND, UErrorCode* status);
 
 /**
@@ -295,7 +295,7 @@ uplug_getLibraryName(UPlugData* plug U_LIFETIME_BOUND, UErrorCode* status);
  * @return the library, or NULL
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI void * U_EXPORT2
+U_CAPI শূন্য * U_EXPORT2
 uplug_getLibrary(UPlugData *plug);
 
 /**
@@ -304,7 +304,7 @@ uplug_getLibrary(UPlugData *plug);
  * @return the context, or NULL if not set
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI void * U_EXPORT2
+U_CAPI শূন্য * U_EXPORT2
 uplug_getContext(UPlugData *plug);
 
 /**
@@ -313,8 +313,8 @@ uplug_getContext(UPlugData *plug);
  * @param context new context to set
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI void U_EXPORT2
-uplug_setContext(UPlugData *plug, void *context);
+U_CAPI শূন্য U_EXPORT2
+uplug_setContext(UPlugData *plug, শূন্য *context);
 
 
 /**
@@ -324,7 +324,7 @@ uplug_setContext(UPlugData *plug, void *context);
  * @return configuration string, or else null.
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI ধ্রুব বর্ণ* U_EXPORT2
 uplug_getConfiguration(UPlugData* plug U_LIFETIME_BOUND);
 
 /**
@@ -358,7 +358,7 @@ uplug_nextPlug(UPlugData *prior);
  * @internal ICU 4.4 Technology Preview
  */
 U_CAPI UPlugData* U_EXPORT2
-uplug_loadPlugFromEntrypoint(UPlugEntrypoint *entrypoint, const char *config, UErrorCode *status);
+uplug_loadPlugFromEntrypoint(UPlugEntrypoint *entrypoint, ধ্রুব বর্ণ *config, UErrorCode *status);
 
 
 /**
@@ -372,7 +372,7 @@ uplug_loadPlugFromEntrypoint(UPlugEntrypoint *entrypoint, const char *config, UE
  * @internal ICU 4.4 Technology Preview
  */
 U_CAPI UPlugData* U_EXPORT2
-uplug_loadPlugFromLibrary(const char *libName, const char *sym, const char *config, UErrorCode *status);
+uplug_loadPlugFromLibrary(ধ্রুব বর্ণ *libName, ধ্রুব বর্ণ *sym, ধ্রুব বর্ণ *config, UErrorCode *status);
 
 /**
  * Remove a plugin. 
@@ -381,7 +381,7 @@ uplug_loadPlugFromLibrary(const char *libName, const char *sym, const char *conf
  * @param status error result
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 uplug_removePlug(UPlugData *plug, UErrorCode *status);
 #endif  /* U_HIDE_INTERNAL_API */
 

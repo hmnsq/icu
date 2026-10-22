@@ -16,8 +16,8 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/errorcode.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/errorcode.h"
 
 U_NAMESPACE_BEGIN
 
@@ -26,17 +26,17 @@ ErrorCode::~ErrorCode() {}
 UErrorCode ErrorCode::reset() {
     UErrorCode code = errorCode;
     errorCode = U_ZERO_ERROR;
-    return code;
+    প্রত্যাগম code;
 }
 
-void ErrorCode::assertSuccess() const {
-    if(isFailure()) {
+শূন্য ErrorCode::assertSuccess() ধ্রুব {
+    যদি(isFailure()) {
         handleFailure();
     }
 }
 
-const char* ErrorCode::errorName() const {
-  return u_errorName(errorCode);
+ধ্রুব বর্ণ* ErrorCode::errorName() ধ্রুব {
+  প্রত্যাগম u_errorName(errorCode);
 }
 
 U_NAMESPACE_END

@@ -18,8 +18,8 @@
 #ifndef PUTILIMP_H
 #define PUTILIMP_H
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/putil.h"
 
 /**
  * \def U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
@@ -42,14 +42,14 @@
  * with an alternate path for unusual platforms.
  * @internal
  */
-#ifdef U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
+#ifdef U_SIGNED_ডান_SHIFT_IS_ARITHMETIC
     /* Use the predefined value. */
-#else
+#অন্যথা
     /*
      * Nearly all CPUs & compilers implement a right-shift of a signed integer
      * as an Arithmetic Shift Right (with sign extension).
      */
-#   define U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC 1
+#   define U_SIGNED_ডান_SHIFT_IS_ARITHMETIC 1
 #endif
 
 /** Define this to 1 if your platform supports IEEE 754 floating point,
@@ -68,8 +68,8 @@
  * Do not use ptrdiff_t since it is signed. size_t is unsigned.
  */
 /* TODO: This check fails on some z environments. Filed a ticket #9357 for this. */
-#if !defined(__intptr_t_defined) && !defined(UINTPTR_MAX) && (U_PLATFORM != U_PF_OS390)
-typedef size_t uintptr_t;
+#যদি !defined(__intptr_t_defined) && !defined(UINTPTR_MAX) && (U_PLATFORM != U_PF_OS390)
+প্রকারনির্দেশ size_t uintptr_t;
 #endif
 
 /*===========================================================================*/
@@ -78,100 +78,100 @@ typedef size_t uintptr_t;
 
 #ifdef U_HAVE_NL_LANGINFO_CODESET
     /* Use the predefined value. */
-#elif U_PLATFORM_USES_ONLY_WIN32_API || U_PLATFORM == U_PF_ANDROID || U_PLATFORM == U_PF_QNX
+#নোচেদ্যদি U_PLATFORM_USES_ONLY_WIN32_API || U_PLATFORM == U_PF_ANDROID || U_PLATFORM == U_PF_QNX
 #   define U_HAVE_NL_LANGINFO_CODESET 0
-#else
+#অন্যথা
 #   define U_HAVE_NL_LANGINFO_CODESET 1
 #endif
 
 #ifdef U_NL_LANGINFO_CODESET
     /* Use the predefined value. */
-#elif !U_HAVE_NL_LANGINFO_CODESET
+#নোচেদ্যদি !U_HAVE_NL_LANGINFO_CODESET
 #   define U_NL_LANGINFO_CODESET -1
-#elif U_PLATFORM == U_PF_OS400
+#নোচেদ্যদি U_PLATFORM == U_PF_OS400
    /* not defined */
-#elif U_PLATFORM == U_PF_HAIKU
+#নোচেদ্যদি U_PLATFORM == U_PF_HAIKU
    /* not defined */
-#else
+#অন্যথা
 #   define U_NL_LANGINFO_CODESET CODESET
 #endif
 
-#if defined(U_TZSET) || defined(U_HAVE_TZSET)
+#যদি defined(U_TZSET) || defined(U_HAVE_TZSET)
     /* Use the predefined value. */
-#elif U_PLATFORM_USES_ONLY_WIN32_API
+#নোচেদ্যদি U_PLATFORM_USES_ONLY_WIN32_API
     // UWP doesn't support tzset or environment variables for tz
-#if U_PLATFORM_HAS_WINUWP_API == 0
+#যদি U_PLATFORM_HAS_WINUWP_API == 0
 #   define U_TZSET _tzset
 #endif
-#elif U_PLATFORM == U_PF_OS400
+#নোচেদ্যদি U_PLATFORM == U_PF_OS400
    /* not defined */
-#elif U_PLATFORM == U_PF_HAIKU
+#নোচেদ্যদি U_PLATFORM == U_PF_HAIKU
    /* not defined */
-#elif defined(__wasi__)
+#নোচেদ্যদি defined(__wasi__)
    /* not defined */
-#else
+#অন্যথা
 #   define U_TZSET tzset
 #endif
 
-#if defined(U_TIMEZONE) || defined(U_HAVE_TIMEZONE)
+#যদি defined(U_TIMEZONE) || defined(U_HAVE_TIMEZONE)
     /* Use the predefined value. */
-#elif U_PLATFORM == U_PF_ANDROID
+#নোচেদ্যদি U_PLATFORM == U_PF_ANDROID
 #   define U_TIMEZONE timezone
-#elif defined(__UCLIBC__)
+#নোচেদ্যদি defined(__UCLIBC__)
     // uClibc does not have __timezone or _timezone.
-#elif defined(_NEWLIB_VERSION)
+#নোচেদ্যদি defined(_NEWLIB_VERSION)
 #   define U_TIMEZONE _timezone
-#elif defined(__GLIBC__)
+#নোচেদ্যদি defined(__GLIBC__)
     // glibc
 #   define U_TIMEZONE __timezone
-#elif U_PLATFORM_IS_LINUX_BASED
+#নোচেদ্যদি U_PLATFORM_IS_LINUX_BASED
     // not defined
-#elif U_PLATFORM_USES_ONLY_WIN32_API
+#নোচেদ্যদি U_PLATFORM_USES_ONLY_WIN32_API
 #   define U_TIMEZONE _timezone
-#elif U_PLATFORM == U_PF_BSD && !defined(__NetBSD__)
+#নোচেদ্যদি U_PLATFORM == U_PF_BSD && !defined(__NetBSD__)
    /* not defined */
-#elif U_PLATFORM == U_PF_OS400
+#নোচেদ্যদি U_PLATFORM == U_PF_OS400
    /* not defined */
-#elif U_PLATFORM == U_PF_IPHONE
+#নোচেদ্যদি U_PLATFORM == U_PF_IPHONE
    /* not defined */
-#elif defined(__wasi__)
+#নোচেদ্যদি defined(__wasi__)
    /* not defined */
-#else
+#অন্যথা
 #   define U_TIMEZONE timezone
 #endif
 
-#if defined(U_TZNAME) || defined(U_HAVE_TZNAME)
+#যদি defined(U_TZNAME) || defined(U_HAVE_TZNAME)
     /* Use the predefined value. */
-#elif U_PLATFORM_USES_ONLY_WIN32_API
+#নোচেদ্যদি U_PLATFORM_USES_ONLY_WIN32_API
     /* not usable on all windows platforms */
-#if U_PLATFORM_HAS_WINUWP_API == 0
+#যদি U_PLATFORM_HAS_WINUWP_API == 0
 #   define U_TZNAME _tzname
 #endif
-#elif U_PLATFORM == U_PF_OS400
+#নোচেদ্যদি U_PLATFORM == U_PF_OS400
    /* not defined */
-#elif U_PLATFORM == U_PF_HAIKU
+#নোচেদ্যদি U_PLATFORM == U_PF_HAIKU
     /* not defined, (well it is but a loop back to icu) */
-#elif defined(__wasi__)
+#নোচেদ্যদি defined(__wasi__)
    /* not defined */
-#else
+#অন্যথা
 #   define U_TZNAME tzname
 #endif
 
 #ifdef U_HAVE_MMAP
     /* Use the predefined value. */
-#elif U_PLATFORM_USES_ONLY_WIN32_API
+#নোচেদ্যদি U_PLATFORM_USES_ONLY_WIN32_API
 #   define U_HAVE_MMAP 0
-#else
+#অন্যথা
 #   define U_HAVE_MMAP 1
 #endif
 
 #ifdef U_HAVE_POPEN
     /* Use the predefined value. */
-#elif U_PLATFORM_USES_ONLY_WIN32_API
+#নোচেদ্যদি U_PLATFORM_USES_ONLY_WIN32_API
 #   define U_HAVE_POPEN 0
-#elif U_PLATFORM == U_PF_OS400
+#নোচেদ্যদি U_PLATFORM == U_PF_OS400
 #   define U_HAVE_POPEN 0
-#else
+#অন্যথা
 #   define U_HAVE_POPEN 1
 #endif
 
@@ -182,9 +182,9 @@ typedef size_t uintptr_t;
  */
 #ifdef U_HAVE_DIRENT_H
     /* Use the predefined value. */
-#elif U_PLATFORM_USES_ONLY_WIN32_API
+#নোচেদ্যদি U_PLATFORM_USES_ONLY_WIN32_API
 #   define U_HAVE_DIRENT_H 0
-#else
+#অন্যথা
 #   define U_HAVE_DIRENT_H 1
 #endif
 
@@ -200,9 +200,9 @@ typedef size_t uintptr_t;
  */
 #ifdef U_MAKE_IS_NMAKE
     /* Use the predefined value. */
-#elif U_PLATFORM == U_PF_WINDOWS
+#নোচেদ্যদি U_PLATFORM == U_PF_WINDOWS
 #   define U_MAKE_IS_NMAKE 1
-#else
+#অন্যথা
 #   define U_MAKE_IS_NMAKE 0
 #endif
 
@@ -222,83 +222,83 @@ typedef size_t uintptr_t;
  * Floating point utility to determine if a double is Not a Number (NaN).
  * @internal
  */
-U_CAPI UBool   U_EXPORT2 uprv_isNaN(double d);
+U_CAPI UBool   U_EXPORT2 uprv_isNaN(দ্বিগুণ d);
 /**
  * Floating point utility to determine if a double has an infinite value.
  * @internal
  */
-U_CAPI UBool   U_EXPORT2 uprv_isInfinite(double d);
+U_CAPI UBool   U_EXPORT2 uprv_isInfinite(দ্বিগুণ d);
 /**
  * Floating point utility to determine if a double has a positive infinite value.
  * @internal
  */
-U_CAPI UBool   U_EXPORT2 uprv_isPositiveInfinity(double d);
+U_CAPI UBool   U_EXPORT2 uprv_isPositiveInfinity(দ্বিগুণ d);
 /**
  * Floating point utility to determine if a double has a negative infinite value.
  * @internal
  */
-U_CAPI UBool   U_EXPORT2 uprv_isNegativeInfinity(double d);
+U_CAPI UBool   U_EXPORT2 uprv_isNegativeInfinity(দ্বিগুণ d);
 /**
  * Floating point utility that returns a Not a Number (NaN) value.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_getNaN(void);
+U_CAPI দ্বিগুণ  U_EXPORT2 uprv_getNaN(শূন্য);
 /**
  * Floating point utility that returns an infinite value.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_getInfinity(void);
+U_CAPI দ্বিগুণ  U_EXPORT2 uprv_getInfinity(শূন্য);
 
 /**
  * Floating point utility to truncate a double.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_trunc(double d);
+U_CAPI দ্বিগুণ  U_EXPORT2 uprv_trunc(দ্বিগুণ d);
 /**
  * Floating point utility to calculate the floor of a double.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_floor(double d);
+U_CAPI দ্বিগুণ  U_EXPORT2 uprv_floor(দ্বিগুণ d);
 /**
  * Floating point utility to calculate the ceiling of a double.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_ceil(double d);
+U_CAPI দ্বিগুণ  U_EXPORT2 uprv_ceil(দ্বিগুণ d);
 /**
  * Floating point utility to calculate the absolute value of a double.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_fabs(double d);
+U_CAPI দ্বিগুণ  U_EXPORT2 uprv_fabs(দ্বিগুণ d);
 /**
  * Floating point utility to calculate the fractional and integer parts of a double.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_modf(double d, double* pinteger);
+U_CAPI দ্বিগুণ  U_EXPORT2 uprv_modf(দ্বিগুণ d, দ্বিগুণ* pinteger);
 /**
  * Floating point utility to calculate the remainder of a double divided by another double.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_fmod(double d, double y);
+U_CAPI দ্বিগুণ  U_EXPORT2 uprv_fmod(দ্বিগুণ d, দ্বিগুণ y);
 /**
  * Floating point utility to calculate d to the power of exponent (d^exponent).
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_pow(double d, double exponent);
+U_CAPI দ্বিগুণ  U_EXPORT2 uprv_pow(দ্বিগুণ d, দ্বিগুণ exponent);
 /**
  * Floating point utility to calculate 10 to the power of exponent (10^exponent).
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_pow10(int32_t exponent);
+U_CAPI দ্বিগুণ  U_EXPORT2 uprv_pow10(int32_t exponent);
 /**
  * Floating point utility to calculate the maximum value of two doubles.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_fmax(double d, double y);
+U_CAPI দ্বিগুণ  U_EXPORT2 uprv_fmax(দ্বিগুণ d, দ্বিগুণ y);
 /**
  * Floating point utility to calculate the minimum value of two doubles.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_fmin(double d, double y);
+U_CAPI দ্বিগুণ  U_EXPORT2 uprv_fmin(দ্বিগুণ d, দ্বিগুণ y);
 /**
  * Private utility to calculate the maximum value of two integers.
  * @internal
@@ -310,10 +310,10 @@ U_CAPI int32_t U_EXPORT2 uprv_max(int32_t d, int32_t y);
  */
 U_CAPI int32_t U_EXPORT2 uprv_min(int32_t d, int32_t y);
 
-#if U_IS_BIG_ENDIAN
-#   define uprv_isNegative(number) (*((signed char *)&(number))<0)
-#else
-#   define uprv_isNegative(number) (*((signed char *)&(number)+sizeof(number)-1)<0)
+#যদি U_IS_BIG_ENDIAN
+#   define uprv_isNegative(সংখ্যা) (*((signed বর্ণ *)&(সংখ্যা))<0)
+#অন্যথা
+#   define uprv_isNegative(সংখ্যা) (*((signed বর্ণ *)&(সংখ্যা)+পরিমাণ(সংখ্যা)-1)<0)
 #endif
 
 /**
@@ -321,13 +321,13 @@ U_CAPI int32_t U_EXPORT2 uprv_min(int32_t d, int32_t y);
  * type of arbitrary bit length.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_maxMantissa(void);
+U_CAPI দ্বিগুণ  U_EXPORT2 uprv_maxMantissa(শূন্য);
 
 /**
  * Floating point utility to calculate the logarithm of a double.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_log(double d);
+U_CAPI দ্বিগুণ  U_EXPORT2 uprv_log(দ্বিগুণ d);
 
 /**
  * Does common notion of rounding e.g. uprv_floor(x + 0.5);
@@ -335,7 +335,7 @@ U_CAPI double  U_EXPORT2 uprv_log(double d);
  * @return the rounded double
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_round(double x);
+U_CAPI দ্বিগুণ  U_EXPORT2 uprv_round(দ্বিগুণ x);
 
 /**
  * Adds the signed integers a and b, storing the result in res.
@@ -363,7 +363,7 @@ U_CAPI UBool U_EXPORT2 uprv_add32_overflow(int32_t a, int32_t b, int32_t* res);
  */
 U_CAPI UBool U_EXPORT2 uprv_mul32_overflow(int32_t a, int32_t b, int32_t* res);
 
-#if 0
+#যদি 0
 /**
  * Returns the number of digits after the decimal point in a double number x.
  *
@@ -374,7 +374,7 @@ U_CAPI UBool U_EXPORT2 uprv_mul32_overflow(int32_t a, int32_t b, int32_t* res);
 /*U_CAPI int32_t  U_EXPORT2 uprv_digitsAfterDecimal(double x);*/
 #endif
 
-#if !U_CHARSET_IS_UTF8
+#যদি !U_CHARSET_IS_UTF8
 /**
  * Please use ucnv_getDefaultName() instead.
  * Return the default codepage for this platform and locale.
@@ -383,7 +383,7 @@ U_CAPI UBool U_EXPORT2 uprv_mul32_overflow(int32_t a, int32_t b, int32_t* res);
  * @return the default codepage for this platform
  * @internal
  */
-U_CAPI const char*  U_EXPORT2 uprv_getDefaultCodepage(void);
+U_CAPI ধ্রুব বর্ণ*  U_EXPORT2 uprv_getDefaultCodepage(শূন্য);
 #endif
 
 /**
@@ -395,7 +395,7 @@ U_CAPI const char*  U_EXPORT2 uprv_getDefaultCodepage(void);
  * @return the default locale ID string
  * @internal
  */
-U_CAPI const char*  U_EXPORT2 uprv_getDefaultLocaleID(void);
+U_CAPI ধ্রুব বর্ণ*  U_EXPORT2 uprv_getDefaultLocaleID(শূন্য);
 
 /**
  * Time zone utilities
@@ -429,7 +429,7 @@ U_CAPI const char*  U_EXPORT2 uprv_getDefaultLocaleID(void);
  * Date/Time application.
  * @internal
  */
-U_CAPI void     U_EXPORT2 uprv_tzset(void);
+U_CAPI শূন্য     U_EXPORT2 uprv_tzset(শূন্য);
 
 /**
  * Difference in seconds between coordinated universal
@@ -437,7 +437,7 @@ U_CAPI void     U_EXPORT2 uprv_tzset(void);
  * @return the difference in seconds between coordinated universal time and local time.
  * @internal
  */
-U_CAPI int32_t  U_EXPORT2 uprv_timezone(void);
+U_CAPI int32_t  U_EXPORT2 uprv_timezone(শূন্য);
 
 /**
  *   tzname(0)  Three-letter time-zone name derived from TZ environment
@@ -447,13 +447,13 @@ U_CAPI int32_t  U_EXPORT2 uprv_timezone(void);
  *              tzname(1) is an empty string.
  * @internal
  */
-U_CAPI const char* U_EXPORT2 uprv_tzname(int n);
+U_CAPI ধ্রুব বর্ণ* U_EXPORT2 uprv_tzname(পূর্ণাঙ্ক n);
 
 /**
  * Reset the global tzname cache.
  * @internal
  */
-U_CAPI void uprv_tzname_clear_cache(void);
+U_CAPI শূন্য uprv_tzname_clear_cache(শূন্য);
 
 /**
  * Get UTC (GMT) time measured in milliseconds since 0:00 on 1/1/1970.
@@ -461,7 +461,7 @@ U_CAPI void uprv_tzname_clear_cache(void);
  * @return the UTC time measured in milliseconds
  * @internal
  */
-U_CAPI UDate U_EXPORT2 uprv_getUTCtime(void);
+U_CAPI UDate U_EXPORT2 uprv_getUTCtime(শূন্য);
 
 /**
  * Get UTC (GMT) time measured in milliseconds since 0:00 on 1/1/1970.
@@ -470,7 +470,7 @@ U_CAPI UDate U_EXPORT2 uprv_getUTCtime(void);
  * @return the UTC time measured in milliseconds
  * @internal
  */
-U_CAPI UDate U_EXPORT2 uprv_getRawUTCtime(void);
+U_CAPI UDate U_EXPORT2 uprv_getRawUTCtime(শূন্য);
 
 /**
  * Determine whether a pathname is absolute or not, as defined by the platform.
@@ -478,7 +478,7 @@ U_CAPI UDate U_EXPORT2 uprv_getRawUTCtime(void);
  * @return true if the path is absolute
  * @internal (ICU 3.0)
  */
-U_CAPI UBool U_EXPORT2 uprv_pathIsAbsolute(const char *path);
+U_CAPI UBool U_EXPORT2 uprv_pathIsAbsolute(ধ্রুব বর্ণ *path);
 
 /**
  * Use U_MAX_PTR instead of this function.
@@ -486,7 +486,7 @@ U_CAPI UBool U_EXPORT2 uprv_pathIsAbsolute(const char *path);
  * @return the largest possible pointer greater than the base
  * @internal (ICU 3.8)
  */
-U_CAPI void * U_EXPORT2 uprv_maximumPtr(void *base);
+U_CAPI শূন্য * U_EXPORT2 uprv_maximumPtr(শূন্য *base);
 
 /**
  * Maximum value of a (void*) - use to indicate the limit of an 'infinite' buffer.
@@ -503,11 +503,11 @@ U_CAPI void * U_EXPORT2 uprv_maximumPtr(void *base);
  * @internal
  */
 #ifndef U_MAX_PTR
-#  if U_PLATFORM == U_PF_OS390 && !defined(_LP64)
+#  যদি U_PLATFORM == U_PF_OS390 && !defined(_LP64)
     /* We have 31-bit pointers. */
-#    define U_MAX_PTR(base) ((void *)0x7fffffff)
+#    define U_MAX_PTR(base) ((শূন্য *)0x7fffffff)
 #  elif U_PLATFORM == U_PF_OS400
-#    define U_MAX_PTR(base) uprv_maximumPtr((void *)base)
+#    define U_MAX_PTR(base) uprv_maximumPtr((শূন্য *)base)
 #  elif 0
     /*
      * For platforms where pointers are scalar values (which is normal, but unlike i5/OS)
@@ -520,13 +520,13 @@ U_CAPI void * U_EXPORT2 uprv_maximumPtr(void *base);
      * (See ICU tickets #7187 and #8096.)
      */
 #    define U_MAX_PTR(base) \
-    ((void *)(((char *)(base)+0x7fffffffu) > (char *)(base) \
-        ? ((char *)(base)+0x7fffffffu) \
-        : (char *)-1))
-#  else
+    ((শূন্য *)(((বর্ণ *)(base)+0x7fffffffu) > (বর্ণ *)(base) \
+        ? ((বর্ণ *)(base)+0x7fffffffu) \
+        : (বর্ণ *)-1))
+#  অন্যথা
     /* Default version. C++ standard compliant for scalar pointers. */
 #    define U_MAX_PTR(base) \
-    ((void *)(((uintptr_t)(base)+0x7fffffffu) > (uintptr_t)(base) \
+    ((শূন্য *)(((uintptr_t)(base)+0x7fffffffu) > (uintptr_t)(base) \
         ? ((uintptr_t)(base)+0x7fffffffu) \
         : (uintptr_t)-1))
 #  endif
@@ -549,20 +549,20 @@ U_CAPI void * U_EXPORT2 uprv_maximumPtr(void *base);
  * @internal
  */
 template <typename T>
-inline int32_t pinCapacity(T *dest, int32_t capacity) {
-    if (capacity <= 0) { return capacity; }
+অন্তঃস্থ int32_t pinCapacity(T *dest, int32_t capacity) {
+    যদি (capacity <= 0) { প্রত্যাগম capacity; }
 
     uintptr_t destInt = (uintptr_t)dest;
     uintptr_t maxInt;
 
-#  if U_PLATFORM == U_PF_OS390 && !defined(_LP64)
+#  যদি U_PLATFORM == U_PF_OS390 && !defined(_LP64)
     // We have 31-bit pointers.
     maxInt = 0x7fffffff;
 #  elif U_PLATFORM == U_PF_OS400
-    maxInt = (uintptr_t)uprv_maximumPtr((void *)dest);
-#  else
+    maxInt = (uintptr_t)uprv_maximumPtr((শূন্য *)dest);
+#  অন্যথা
     maxInt = destInt + 0x7fffffffu;
-    if (maxInt < destInt) {
+    যদি (maxInt < destInt) {
         // Less than 2GB to the end of the address space.
         // Pin to that to prevent address overflow.
         maxInt = static_cast<uintptr_t>(-1);
@@ -570,33 +570,33 @@ inline int32_t pinCapacity(T *dest, int32_t capacity) {
 #  endif
 
     uintptr_t maxBytes = maxInt - destInt;  // max. 2GB
-    int32_t maxCapacity = (int32_t)(maxBytes / sizeof(T));
-    return capacity <= maxCapacity ? capacity : maxCapacity;
+    int32_t maxCapacity = (int32_t)(maxBytes / পরিমাণ(T));
+    প্রত্যাগম capacity <= maxCapacity ? capacity : maxCapacity;
 }
 #endif   // __cplusplus
 
 /*  Dynamic Library Functions */
 
-typedef void (UVoidFunction)(void);
+প্রকারনির্দেশ শূন্য (UVoidFunction)(শূন্য);
 
-#if U_ENABLE_DYLOAD
+#যদি U_ENABLE_DYLOAD
 /**
  * Load a library
  * @internal (ICU 4.4)
  */
-U_CAPI void * U_EXPORT2 uprv_dl_open(const char *libName, UErrorCode *status);
+U_CAPI শূন্য * U_EXPORT2 uprv_dl_open(ধ্রুব বর্ণ *libName, UErrorCode *status);
 
 /**
  * Close a library
  * @internal (ICU 4.4)
  */
-U_CAPI void U_EXPORT2 uprv_dl_close( void *lib, UErrorCode *status);
+U_CAPI শূন্য U_EXPORT2 uprv_dl_close( শূন্য *lib, UErrorCode *status);
 
 /**
  * Extract a symbol from a library (function)
  * @internal (ICU 4.8)
  */
-U_CAPI UVoidFunction* U_EXPORT2 uprv_dlsym_func( void *lib, const char *symbolName, UErrorCode *status);
+U_CAPI UVoidFunction* U_EXPORT2 uprv_dlsym_func( শূন্য *lib, ধ্রুব বর্ণ *প্রতীক_Name, UErrorCode *status);
 
 /**
  * Extract a symbol from a library (function)
@@ -611,16 +611,16 @@ U_CAPI UVoidFunction* U_EXPORT2 uprv_dlsym_func( void *lib, const char *symbolNa
  * Define malloc and related functions
  * @internal
  */
-#if U_PLATFORM == U_PF_OS400
+#যদি U_PLATFORM == U_PF_OS400
 # define uprv_default_malloc(x) _C_TS_malloc(x)
 # define uprv_default_realloc(x,y) _C_TS_realloc(x,y)
 # define uprv_default_free(x) _C_TS_free(x)
 /* also _C_TS_calloc(x) */
-#else
+#অন্যথা
 /* C defaults */
 # define uprv_default_malloc(x) malloc(x)
 # define uprv_default_realloc(x,y) realloc(x,y)
-# define uprv_default_free(x) free(x)
+# define uprv_default_free(x) মুক্ত(x)
 #endif
 
 

@@ -23,8 +23,8 @@
 #ifndef ULOC_H
 #define ULOC_H
 
-#include "unicode/utypes.h"
-#include "unicode/uenum.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/uenum.h"
 
 /**
  * \file
@@ -280,7 +280,7 @@
  * Useful constant for the maximum total size of keywords and their values in a locale
  * @stable ICU 2.8
  */
-#define ULOC_KEYWORD_AND_VALUES_CAPACITY 100
+#define ULOC_KEYWORD_AND_মানসমূহ_CAPACITY 100
 
 /**
  * Invariant character separating keywords from the locale string
@@ -335,7 +335,7 @@
  * for that locale (although it may be empty).
  * @stable ICU 2.1
  */
-typedef enum {
+প্রকারনির্দেশ গণনা {
   /** This is locale the data actually comes from 
    * @stable ICU 2.1
    */
@@ -371,8 +371,8 @@ typedef enum {
  * @system
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
-uloc_getDefault(void);
+U_CAPI ধ্রুব বর্ণ* U_EXPORT2
+uloc_getDefault(শূন্য);
 
 /**
  * Sets ICU's default locale.  
@@ -391,8 +391,8 @@ uloc_getDefault(void);
  * @system
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-uloc_setDefault(const char* localeID,
+U_CAPI শূন্য U_EXPORT2
+uloc_setDefault(ধ্রুব বর্ণ* localeID,
         UErrorCode*       status);
 #endif  /* U_HIDE_SYSTEM_API */
 
@@ -412,8 +412,8 @@ uloc_setDefault(const char* localeID,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getLanguage(const char*    localeID,
-         char* language,
+uloc_getLanguage(ধ্রুব বর্ণ*    localeID,
+         বর্ণ* language,
          int32_t languageCapacity,
          UErrorCode* err);
 
@@ -433,8 +433,8 @@ uloc_getLanguage(const char*    localeID,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getScript(const char*    localeID,
-         char* script,
+uloc_getScript(ধ্রুব বর্ণ*    localeID,
+         বর্ণ* script,
          int32_t scriptCapacity,
          UErrorCode* err);
 
@@ -454,8 +454,8 @@ uloc_getScript(const char*    localeID,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getCountry(const char*    localeID,
-        char* country,
+uloc_getCountry(ধ্রুব বর্ণ*    localeID,
+        বর্ণ* country,
         int32_t countryCapacity,
         UErrorCode* err);
 
@@ -475,8 +475,8 @@ uloc_getCountry(const char*    localeID,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getVariant(const char*    localeID,
-        char* variant,
+uloc_getVariant(ধ্রুব বর্ণ*    localeID,
+        বর্ণ* variant,
         int32_t variantCapacity,
         UErrorCode* err);
 
@@ -502,8 +502,8 @@ uloc_getVariant(const char*    localeID,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getName(const char*    localeID,
-         char* name,
+uloc_getName(ধ্রুব বর্ণ*    localeID,
+         বর্ণ* name,
          int32_t nameCapacity,
          UErrorCode* err);
 
@@ -525,8 +525,8 @@ uloc_getName(const char*    localeID,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_canonicalize(const char*    localeID,
-         char* name,
+uloc_canonicalize(ধ্রুব বর্ণ*    localeID,
+         বর্ণ* name,
          int32_t nameCapacity,
          UErrorCode* err);
 
@@ -537,8 +537,8 @@ uloc_canonicalize(const char*    localeID,
  * @return language the ISO language code for localeID
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
-uloc_getISO3Language(const char* localeID);
+U_CAPI ধ্রুব বর্ণ* U_EXPORT2
+uloc_getISO3Language(ধ্রুব বর্ণ* localeID);
 
 
 /**
@@ -548,8 +548,8 @@ uloc_getISO3Language(const char* localeID);
  * @return country the ISO country code for localeID
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
-uloc_getISO3Country(const char* localeID);
+U_CAPI ধ্রুব বর্ণ* U_EXPORT2
+uloc_getISO3Country(ধ্রুব বর্ণ* localeID);
 
 /**
  * Gets the Win32 LCID value for the specified locale.
@@ -563,7 +563,7 @@ uloc_getISO3Country(const char* localeID);
  * @stable ICU 2.0
  */
 U_CAPI uint32_t U_EXPORT2
-uloc_getLCID(const char* localeID);
+uloc_getLCID(ধ্রুব বর্ণ* localeID);
 
 /**
  * Gets the language name suitable for display for the specified locale.
@@ -587,8 +587,8 @@ uloc_getLCID(const char* localeID);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayLanguage(const char* locale,
-            const char* displayLocale,
+uloc_getDisplayLanguage(ধ্রুব বর্ণ* locale,
+            ধ্রুব বর্ণ* displayLocale,
             UChar* language,
             int32_t languageCapacity,
             UErrorCode* status);
@@ -616,8 +616,8 @@ uloc_getDisplayLanguage(const char* locale,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayScript(const char* locale,
-            const char* displayLocale,
+uloc_getDisplayScript(ধ্রুব বর্ণ* locale,
+            ধ্রুব বর্ণ* displayLocale,
             UChar* script,
             int32_t scriptCapacity,
             UErrorCode* status);
@@ -648,8 +648,8 @@ uloc_getDisplayScript(const char* locale,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayCountry(const char* locale,
-                       const char* displayLocale,
+uloc_getDisplayCountry(ধ্রুব বর্ণ* locale,
+                       ধ্রুব বর্ণ* displayLocale,
                        UChar* country,
                        int32_t countryCapacity,
                        UErrorCode* status);
@@ -678,8 +678,8 @@ uloc_getDisplayCountry(const char* locale,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayVariant(const char* locale,
-                       const char* displayLocale,
+uloc_getDisplayVariant(ধ্রুব বর্ণ* locale,
+                       ধ্রুব বর্ণ* displayLocale,
                        UChar* variant,
                        int32_t variantCapacity,
                        UErrorCode* status);
@@ -727,8 +727,8 @@ uloc_getDisplayVariant(const char* locale,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayKeyword(const char* keyword,
-                       const char* displayLocale,
+uloc_getDisplayKeyword(ধ্রুব বর্ণ* keyword,
+                       ধ্রুব বর্ণ* displayLocale,
                        UChar* dest,
                        int32_t destCapacity,
                        UErrorCode* status);
@@ -755,9 +755,9 @@ uloc_getDisplayKeyword(const char* keyword,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayKeywordValue(   const char* locale,
-                               const char* keyword,
-                               const char* displayLocale,
+uloc_get_Display_Keyword_মান(   ধ্রুব বর্ণ* locale,
+                               ধ্রুব বর্ণ* keyword,
+                               ধ্রুব বর্ণ* displayLocale,
                                UChar* dest,
                                int32_t destCapacity,
                                UErrorCode* status);
@@ -778,8 +778,8 @@ uloc_getDisplayKeywordValue(   const char* locale,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayName(const char* localeID,
-            const char* inLocaleID,
+uloc_getDisplayName(ধ্রুব বর্ণ* localeID,
+            ধ্রুব বর্ণ* inLocaleID,
             UChar* result,
             int32_t maxResultSize,
             UErrorCode* err);
@@ -801,7 +801,7 @@ uloc_getDisplayName(const char* localeID,
  * @return a specified locale name of all available locales
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI ধ্রুব বর্ণ* U_EXPORT2
 uloc_getAvailable(int32_t n);
 
 /**
@@ -810,14 +810,14 @@ uloc_getAvailable(int32_t n);
  * @return the size of the locale list
  * @stable ICU 2.0
  */
-U_CAPI int32_t U_EXPORT2 uloc_countAvailable(void);
+U_CAPI int32_t U_EXPORT2 uloc_গুনতি_Available(শূন্য);
 
 /**
  * Types for uloc_getAvailableByType and uloc_countAvailableByType.
  *
  * @stable ICU 65
  */
-typedef enum ULocAvailableType {
+প্রকারনির্দেশ গণনা ULocAvailableType {
   /**
    * Locales that return data when passed to ICU APIs,
    * but not including legacy or alias locales.
@@ -856,7 +856,7 @@ typedef enum ULocAvailableType {
   /**
    * @internal
    */
-  ULOC_AVAILABLE_COUNT
+  ULOC_AVAILABLE_গুনতি
 #endif  /* U_HIDE_INTERNAL_API */
 } ULocAvailableType;
 
@@ -885,8 +885,8 @@ uloc_openAvailableByType(ULocAvailableType type, UErrorCode* status);
  * @return a list of all available language codes
  * @stable ICU 2.0
  */
-U_CAPI const char* const* U_EXPORT2
-uloc_getISOLanguages(void);
+U_CAPI ধ্রুব বর্ণ* ধ্রুব* U_EXPORT2
+uloc_getISOLanguages(শূন্য);
 
 /**
  *
@@ -897,8 +897,8 @@ uloc_getISOLanguages(void);
  * @return a list of all available country codes
  * @stable ICU 2.0
  */
-U_CAPI const char* const* U_EXPORT2
-uloc_getISOCountries(void);
+U_CAPI ধ্রুব বর্ণ* ধ্রুব* U_EXPORT2
+uloc_getISOCountries(শূন্য);
 
 /**
  * Truncate the locale ID string to get the parent locale ID.
@@ -914,8 +914,8 @@ uloc_getISOCountries(void);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getParent(const char*    localeID,
-                 char* parent,
+uloc_getParent(ধ্রুব বর্ণ*    localeID,
+                 বর্ণ* parent,
                  int32_t parentCapacity,
                  UErrorCode* err);
 
@@ -945,8 +945,8 @@ uloc_getParent(const char*    localeID,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getBaseName(const char*    localeID,
-         char* name,
+uloc_getBaseName(ধ্রুব বর্ণ*    localeID,
+         বর্ণ* name,
          int32_t nameCapacity,
          UErrorCode* err);
 
@@ -960,7 +960,7 @@ uloc_getBaseName(const char*    localeID,
  * @stable ICU 2.8
  */
 U_CAPI UEnumeration* U_EXPORT2
-uloc_openKeywords(const char* localeID,
+uloc_openKeywords(ধ্রুব বর্ণ* localeID,
                         UErrorCode* status);
 
 /**
@@ -977,9 +977,9 @@ uloc_openKeywords(const char* localeID,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getKeywordValue(const char* localeID,
-                     const char* keywordName,
-                     char* buffer, int32_t bufferCapacity,
+uloc_get_Keyword_মান(ধ্রুব বর্ণ* localeID,
+                     ধ্রুব বর্ণ* keywordName,
+                     বর্ণ* buffer, int32_t bufferCapacity,
                      UErrorCode* status);
 
 
@@ -1014,9 +1014,9 @@ uloc_getKeywordValue(const char* localeID,
  * @stable ICU 3.2
  */
 U_CAPI int32_t U_EXPORT2
-uloc_setKeywordValue(const char* keywordName,
-                     const char* keywordValue,
-                     char* buffer, int32_t bufferCapacity,
+uloc_set_Keyword_মান(ধ্রুব বর্ণ* keywordName,
+                     ধ্রুব বর্ণ* keyword_মান,
+                     বর্ণ* buffer, int32_t bufferCapacity,
                      UErrorCode* status);
 
 /**
@@ -1034,14 +1034,14 @@ uloc_setKeywordValue(const char* keywordName,
  * @stable ICU 54
  */
 U_CAPI UBool U_EXPORT2
-uloc_isRightToLeft(const char *locale);
+uloc_is_ডান_To_বাম(ধ্রুব বর্ণ *locale);
 
 /**
  * enums for the  return value for the character and line orientation
  * functions.
  * @stable ICU 4.0
  */
-typedef enum {
+প্রকারনির্দেশ গণনা {
   ULOC_LAYOUT_LTR   = 0,  /* left-to-right. */
   ULOC_LAYOUT_RTL    = 1,  /* right-to-left. */
   ULOC_LAYOUT_TTB    = 2,  /* top-to-bottom. */
@@ -1058,7 +1058,7 @@ typedef enum {
  * @stable ICU 4.0
  */
 U_CAPI ULayoutType U_EXPORT2
-uloc_getCharacterOrientation(const char* localeId,
+uloc_getCharacterOrientation(ধ্রুব বর্ণ* localeId,
                              UErrorCode *status);
 
 /**
@@ -1070,7 +1070,7 @@ uloc_getCharacterOrientation(const char* localeId,
  * @stable ICU 4.0
  */
 U_CAPI ULayoutType U_EXPORT2
-uloc_getLineOrientation(const char* localeId,
+uloc_get_সারি_Orientation(ধ্রুব বর্ণ* localeId,
                         UErrorCode *status);
 
 /**
@@ -1080,7 +1080,7 @@ uloc_getLineOrientation(const char* localeId,
  * @see uloc_acceptLanguage
  * @stable ICU 3.2
  */
-typedef enum {
+প্রকারনির্দেশ গণনা {
     /**
      * No exact match was found.
      * @stable ICU 3.2
@@ -1117,9 +1117,9 @@ typedef enum {
  * @stable ICU 3.2
  */
 U_CAPI int32_t U_EXPORT2
-uloc_acceptLanguageFromHTTP(char *result, int32_t resultAvailable,
+uloc_acceptLanguageFromHTTP(বর্ণ *result, int32_t resultAvailable,
                             UAcceptResult *outResult,
-                            const char *httpAcceptLanguage,
+                            ধ্রুব বর্ণ *httpAcceptLanguage,
                             UEnumeration* availableLocales,
                             UErrorCode *status);
 
@@ -1142,9 +1142,9 @@ uloc_acceptLanguageFromHTTP(char *result, int32_t resultAvailable,
  * @stable ICU 3.2
  */
 U_CAPI int32_t U_EXPORT2
-uloc_acceptLanguage(char *result, int32_t resultAvailable, 
-                    UAcceptResult *outResult, const char **acceptList,
-                    int32_t acceptListCount,
+uloc_acceptLanguage(বর্ণ *result, int32_t resultAvailable, 
+                    UAcceptResult *outResult, ধ্রুব বর্ণ **acceptList,
+                    int32_t accept_List_গুনতি,
                     UEnumeration* availableLocales,
                     UErrorCode *status);
 
@@ -1162,7 +1162,7 @@ uloc_acceptLanguage(char *result, int32_t resultAvailable,
  * @stable ICU 3.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getLocaleForLCID(uint32_t hostID, char *locale, int32_t localeCapacity,
+uloc_getLocaleForLCID(uint32_t hostID, বর্ণ *locale, int32_t localeCapacity,
                     UErrorCode *status);
 
 
@@ -1201,8 +1201,8 @@ uloc_getLocaleForLCID(uint32_t hostID, char *locale, int32_t localeCapacity,
  * @stable ICU 4.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_addLikelySubtags(const char*    localeID,
-         char* maximizedLocaleID,
+uloc_addLikelySubtags(ধ্রুব বর্ণ*    localeID,
+         বর্ণ* maximizedLocaleID,
          int32_t maximizedLocaleIDCapacity,
          UErrorCode* err);
 
@@ -1241,8 +1241,8 @@ uloc_addLikelySubtags(const char*    localeID,
  * @stable ICU 4.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_minimizeSubtags(const char*    localeID,
-         char* minimizedLocaleID,
+uloc_minimizeSubtags(ধ্রুব বর্ণ*    localeID,
+         বর্ণ* minimizedLocaleID,
          int32_t minimizedLocaleIDCapacity,
          UErrorCode* err);
 
@@ -1274,8 +1274,8 @@ uloc_minimizeSubtags(const char*    localeID,
  * @stable ICU 4.2
  */
 U_CAPI int32_t U_EXPORT2
-uloc_forLanguageTag(const char* langtag,
-                    char* localeID,
+uloc_forLanguageTag(ধ্রুব বর্ণ* langtag,
+                    বর্ণ* localeID,
                     int32_t localeIDCapacity,
                     int32_t* parsedLength,
                     UErrorCode* err);
@@ -1302,8 +1302,8 @@ uloc_forLanguageTag(const char* langtag,
  * @stable ICU 4.2
  */
 U_CAPI int32_t U_EXPORT2
-uloc_toLanguageTag(const char* localeID,
-                   char* langtag,
+uloc_toLanguageTag(ধ্রুব বর্ণ* localeID,
+                   বর্ণ* langtag,
                    int32_t langtagCapacity,
                    UBool strict,
                    UErrorCode* err);
@@ -1329,8 +1329,8 @@ uloc_toLanguageTag(const char* localeID,
  * @see uloc_toLegacyKey
  * @stable ICU 54
  */
-U_CAPI const char* U_EXPORT2
-uloc_toUnicodeLocaleKey(const char* keyword U_LIFETIME_BOUND);
+U_CAPI ধ্রুব বর্ণ* U_EXPORT2
+uloc_to_Unicode_Locale_চাবি(ধ্রুব বর্ণ* keyword U_LIFETIME_BOUND);
 
 /**
  * Converts the specified keyword value (legacy type, or BCP 47
@@ -1360,8 +1360,8 @@ uloc_toUnicodeLocaleKey(const char* keyword U_LIFETIME_BOUND);
  * @see uloc_toLegacyType
  * @stable ICU 54
  */
-U_CAPI const char* U_EXPORT2
-uloc_toUnicodeLocaleType(const char* keyword, const char* value U_LIFETIME_BOUND);
+U_CAPI ধ্রুব বর্ণ* U_EXPORT2
+uloc_toUnicodeLocaleType(ধ্রুব বর্ণ* keyword, ধ্রুব বর্ণ* মান_2 U_LIFETIME_BOUND);
 
 /**
  * Converts the specified keyword (BCP 47 Unicode locale extension key, or
@@ -1375,8 +1375,8 @@ uloc_toUnicodeLocaleType(const char* keyword, const char* value U_LIFETIME_BOUND
  * @see toUnicodeLocaleKey
  * @stable ICU 54
  */
-U_CAPI const char* U_EXPORT2
-uloc_toLegacyKey(const char* keyword U_LIFETIME_BOUND);
+U_CAPI ধ্রুব বর্ণ* U_EXPORT2
+uloc_to_Legacy_চাবি(ধ্রুব বর্ণ* keyword U_LIFETIME_BOUND);
 
 /**
  * Converts the specified keyword value (BCP 47 Unicode locale extension type,
@@ -1404,7 +1404,7 @@ uloc_toLegacyKey(const char* keyword U_LIFETIME_BOUND);
  * @see toUnicodeLocaleType
  * @stable ICU 54
  */
-U_CAPI const char* U_EXPORT2
-uloc_toLegacyType(const char* keyword, const char* value U_LIFETIME_BOUND);
+U_CAPI ধ্রুব বর্ণ* U_EXPORT2
+uloc_toLegacyType(ধ্রুব বর্ণ* keyword, ধ্রুব বর্ণ* মান_2 U_LIFETIME_BOUND);
 
 #endif /*_ULOC*/

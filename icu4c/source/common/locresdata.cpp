@@ -20,14 +20,14 @@
 *   that then do not depend on resource bundle code and this data.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "unicode/uloc.h"
-#include "unicode/ures.h"
-#include "charstr.h"
-#include "cstring.h"
-#include "ulocimp.h"
-#include "uresimp.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/putil.h"
+#অন্তর্ভাব "unicode/uloc.h"
+#অন্তর্ভাব "unicode/ures.h"
+#অন্তর্ভাব "charstr.h"
+#অন্তর্ভাব "cstring.h"
+#অন্তর্ভাব "ulocimp.h"
+#অন্তর্ভাব "uresimp.h"
 
 /*
  * Lookup a resource bundle table item with fallback on the table level.
@@ -42,16 +42,16 @@
  * default locale because that would result in a mix of languages that is
  * unpredictable to the programmer and most likely useless.
  */
-U_CAPI const char16_t * U_EXPORT2
-uloc_getTableStringWithFallback(const char *path, const char *locale,
-                              const char *tableKey, const char *subTableKey,
-                              const char *itemKey,
+U_CAPI ধ্রুব char16_t * U_EXPORT2
+uloc_getTableStringWithFallback(ধ্রুব বর্ণ *path, ধ্রুব বর্ণ *locale,
+                              ধ্রুব বর্ণ *table_চাবি, ধ্রুব বর্ণ *sub_Table_চাবি,
+                              ধ্রুব বর্ণ *item_চাবি,
                               int32_t *pLength,
                               UErrorCode *pErrorCode)
 {
-    if (U_FAILURE(*pErrorCode)) { return nullptr; }
+    যদি (U_FAILURE(*pErrorCode)) { প্রত্যাগম nullptr; }
 /*    char localeBuffer[ULOC_FULLNAME_CAPACITY*4];*/
-    const char16_t *item=nullptr;
+    ধ্রুব char16_t *item=nullptr;
     UErrorCode errorCode;
 
     /*
@@ -61,23 +61,23 @@ uloc_getTableStringWithFallback(const char *path, const char *locale,
     errorCode=U_ZERO_ERROR;
     icu::LocalUResourceBundlePointer rb(ures_open(path, locale, &errorCode));
 
-    if(U_FAILURE(errorCode)) {
+    যদি(U_FAILURE(errorCode)) {
         /* total failure, not even root could be opened */
         *pErrorCode=errorCode;
-        return nullptr;
-    } else if(errorCode==U_USING_DEFAULT_WARNING ||
+        প্রত্যাগম nullptr;
+    } অন্যথা যদি(errorCode==U_USING_DEFAULT_WARNING ||
                 (errorCode==U_USING_FALLBACK_WARNING && *pErrorCode!=U_USING_DEFAULT_WARNING)
     ) {
         /* set the "strongest" error code (success->fallback->default->failure) */
         *pErrorCode=errorCode;
     }
 
-    for(;;){
-        icu::StackUResourceBundle table;
-        icu::StackUResourceBundle subTable;
-        ures_getByKeyWithFallback(rb.getAlias(), tableKey, table.getAlias(), &errorCode);
+    প্রতি(;;){
+        icu::স্তূপ_UResource_Bundle table;
+        icu::স্তূপ_UResource_Bundle subTable;
+        ures_get_By_চাবি_With_Fallback(rb.getAlias(), table_চাবি, table.getAlias(), &errorCode);
 
-        if (subTableKey != nullptr) {
+        যদি (sub_Table_চাবি != nullptr) {
             /*
             ures_getByKeyWithFallback(table.getAlias(), subTableKey, subTable.getAlias(), &errorCode);
             item = ures_getStringByKeyWithFallback(subTable.getAlias(), itemKey, pLength, &errorCode);
@@ -87,131 +87,131 @@ uloc_getTableStringWithFallback(const char *path, const char *locale,
             
             break;*/
             
-            ures_getByKeyWithFallback(table.getAlias(), subTableKey, table.getAlias(), &errorCode);
+            ures_get_By_চাবি_With_Fallback(table.getAlias(), sub_Table_চাবি, table.getAlias(), &errorCode);
         }
-        if(U_SUCCESS(errorCode)){
-            item = ures_getStringByKeyWithFallback(table.getAlias(), itemKey, pLength, &errorCode);
-            if(U_FAILURE(errorCode)){
-                const char* replacement = nullptr;
+        যদি(U_SUCCESS(errorCode)){
+            item = ures_get_String_By_চাবি_With_Fallback(table.getAlias(), item_চাবি, pLength, &errorCode);
+            যদি(U_FAILURE(errorCode)){
+                ধ্রুব বর্ণ* replacement = nullptr;
                 *pErrorCode = errorCode; /*save the errorCode*/
                 errorCode = U_ZERO_ERROR;
                 /* may be a deprecated code */
-                if(uprv_strcmp(tableKey, "Countries")==0){
-                    replacement =  uloc_getCurrentCountryID(itemKey);
-                }else if(uprv_strcmp(tableKey, "Languages")==0){
-                    replacement =  uloc_getCurrentLanguageID(itemKey);
+                যদি(uprv_strcmp(table_চাবি, "Countries")==0){
+                    replacement =  uloc_getCurrentCountryID(item_চাবি);
+                }অন্যথা যদি(uprv_strcmp(table_চাবি, "Languages")==0){
+                    replacement =  uloc_getCurrentLanguageID(item_চাবি);
                 }
                 /*pointer comparison is ok since uloc_getCurrentCountryID & uloc_getCurrentLanguageID return the key itself is replacement is not found*/
-                if(replacement!=nullptr && itemKey != replacement){
-                    item = ures_getStringByKeyWithFallback(table.getAlias(), replacement, pLength, &errorCode);
-                    if(U_SUCCESS(errorCode)){
+                যদি(replacement!=nullptr && item_চাবি != replacement){
+                    item = ures_get_String_By_চাবি_With_Fallback(table.getAlias(), replacement, pLength, &errorCode);
+                    যদি(U_SUCCESS(errorCode)){
                         *pErrorCode = errorCode;
-                        break;
+                        ভঙ্গ;
                     }
                 }
-            }else{
-                break;
+            }অন্যথা{
+                ভঙ্গ;
             }
         }
         
-        if(U_FAILURE(errorCode)){    
+        যদি(U_FAILURE(errorCode)){    
 
             /* still can't figure out ?.. try the fallback mechanism */
             int32_t len = 0;
-            const char16_t* fallbackLocale =  nullptr;
+            ধ্রুব char16_t* fallbackLocale =  nullptr;
             *pErrorCode = errorCode;
             errorCode = U_ZERO_ERROR;
 
-            fallbackLocale = ures_getStringByKeyWithFallback(table.getAlias(), "Fallback", &len, &errorCode);
-            if(U_FAILURE(errorCode)){
+            fallbackLocale = ures_get_String_By_চাবি_With_Fallback(table.getAlias(), "Fallback", &len, &errorCode);
+            যদি(U_FAILURE(errorCode)){
                *pErrorCode = errorCode;
-                break;
+                ভঙ্গ;
             }
 
             icu::CharString explicitFallbackName;
             explicitFallbackName.appendInvariantChars(fallbackLocale, len, errorCode);
 
             /* guard against recursive fallback */
-            if (explicitFallbackName == locale) {
+            যদি (explicitFallbackName == locale) {
                 *pErrorCode = U_INTERNAL_PROGRAM_ERROR;
-                break;
+                ভঙ্গ;
             }
             rb.adoptInstead(ures_open(path, explicitFallbackName.data(), &errorCode));
-            if(U_FAILURE(errorCode)){
+            যদি(U_FAILURE(errorCode)){
                 *pErrorCode = errorCode;
-                break;
+                ভঙ্গ;
             }
             /* succeeded in opening the fallback bundle .. continue and try to fetch the item */
-        }else{
-            break;
+        }অন্যথা{
+            ভঙ্গ;
         }
     }
 
-    return item;
+    প্রত্যাগম item;
 }
 
-namespace {
+নামাকাশ {
 
 ULayoutType
-_uloc_getOrientationHelper(const char* localeId,
-                           const char* key,
+_uloc_getOrientationHelper(ধ্রুব বর্ণ* localeId,
+                           ধ্রুব বর্ণ* চাবি,
                            UErrorCode& status)
 {
     ULayoutType result = ULOC_LAYOUT_UNKNOWN;
 
-    if (U_FAILURE(status)) { return result; }
+    যদি (U_FAILURE(status)) { প্রত্যাগম result; }
 
-    if (localeId == nullptr) {
+    যদি (localeId == nullptr) {
         localeId = uloc_getDefault();
     }
     icu::CharString localeBuffer = ulocimp_canonicalize(localeId, status);
 
-    if (U_FAILURE(status)) { return result; }
+    যদি (U_FAILURE(status)) { প্রত্যাগম result; }
 
     int32_t length = 0;
-    const char16_t* const value =
+    ধ্রুব char16_t* ধ্রুব value =
         uloc_getTableStringWithFallback(
             nullptr,
             localeBuffer.data(),
             "layout",
             nullptr,
-            key,
+            চাবি,
             &length,
             &status);
 
-    if (U_FAILURE(status)) { return result; }
+    যদি (U_FAILURE(status)) { প্রত্যাগম result; }
 
-    if (length != 0) {
-        switch(value[0])
+    যদি (length != 0) {
+        বিকল্প(value[0])
         {
-        case 0x0062: /* 'b' */
+        পক্ষ 0x0062: /* 'b' */
             result = ULOC_LAYOUT_BTT;
-            break;
-        case 0x006C: /* 'l' */
+            ভঙ্গ;
+        পক্ষ 0x006C: /* 'l' */
             result = ULOC_LAYOUT_LTR;
-            break;
-        case 0x0072: /* 'r' */
+            ভঙ্গ;
+        পক্ষ 0x0072: /* 'r' */
             result = ULOC_LAYOUT_RTL;
-            break;
-        case 0x0074: /* 't' */
+            ভঙ্গ;
+        পক্ষ 0x0074: /* 't' */
             result = ULOC_LAYOUT_TTB;
-            break;
-        default:
+            ভঙ্গ;
+        স্বভাব:
             status = U_INTERNAL_PROGRAM_ERROR;
-            break;
+            ভঙ্গ;
         }
     }
 
-    return result;
+    প্রত্যাগম result;
 }
 
 }  // namespace
 
 U_CAPI ULayoutType U_EXPORT2
-uloc_getCharacterOrientation(const char* localeId,
+uloc_getCharacterOrientation(ধ্রুব বর্ণ* localeId,
                              UErrorCode *status)
 {
-    return _uloc_getOrientationHelper(localeId, "characters", *status);
+    প্রত্যাগম _uloc_getOrientationHelper(localeId, "characters", *status);
 }
 
 /**
@@ -222,8 +222,8 @@ uloc_getCharacterOrientation(const char* localeId,
  * @return an enum indicating the layout orientation for lines.
  */
 U_CAPI ULayoutType U_EXPORT2
-uloc_getLineOrientation(const char* localeId,
+uloc_get_সারি_Orientation(ধ্রুব বর্ণ* localeId,
                         UErrorCode *status)
 {
-    return _uloc_getOrientationHelper(localeId, "lines", *status);
+    প্রত্যাগম _uloc_getOrientationHelper(localeId, "lines", *status);
 }

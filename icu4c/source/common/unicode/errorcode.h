@@ -25,11 +25,11 @@
  *                 ICU C and C++ APIs from C++ user code.
  */
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#যদি U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#অন্তর্ভাব "unicode/uobject.h"
 
 U_NAMESPACE_BEGIN
 
@@ -81,27 +81,27 @@ U_NAMESPACE_BEGIN
  *
  * @stable ICU 4.2
  */
-class U_COMMON_API ErrorCode: public UMemory {
-public:
+class U_COMMON_API ErrorCode: সার্বজনিক UMemory {
+সার্বজনিক:
     /**
      * Default constructor. Initializes its UErrorCode to U_ZERO_ERROR.
      * @stable ICU 4.2
      */
     ErrorCode() : errorCode(U_ZERO_ERROR) {}
     /** Destructor, does nothing. See class documentation for details. @stable ICU 4.2 */
-    virtual ~ErrorCode();
+    আভাস ~ErrorCode();
     /** Conversion operator, returns a reference. @stable ICU 4.2 */
-    operator UErrorCode&() U_LIFETIME_BOUND { return errorCode; }
+    operator UErrorCode&() U_LIFETIME_BOUND { প্রত্যাগম errorCode; }
     /** Conversion operator, returns a pointer. @stable ICU 4.2 */
-    operator UErrorCode*() U_LIFETIME_BOUND { return &errorCode; }
+    operator UErrorCode*() U_LIFETIME_BOUND { প্রত্যাগম &errorCode; }
     /** Tests for U_SUCCESS(). @stable ICU 4.2 */
-    UBool isSuccess() const { return U_SUCCESS(errorCode); }
+    UBool isSuccess() ধ্রুব { প্রত্যাগম U_SUCCESS(errorCode); }
     /** Tests for U_FAILURE(). @stable ICU 4.2 */
-    UBool isFailure() const { return U_FAILURE(errorCode); }
+    UBool isFailure() ধ্রুব { প্রত্যাগম U_FAILURE(errorCode); }
     /** Returns the UErrorCode value. @stable ICU 4.2 */
-    UErrorCode get() const { return errorCode; }
+    UErrorCode get() ধ্রুব { প্রত্যাগম errorCode; }
     /** Sets the UErrorCode value. @stable ICU 4.2 */
-    void set(UErrorCode value) { errorCode=value; }
+    শূন্য set(UErrorCode মান_2) { errorCode=মান_2; }
     /** Returns the UErrorCode value and resets it to U_ZERO_ERROR. @stable ICU 4.2 */
     UErrorCode reset();
     /**
@@ -113,16 +113,16 @@ public:
      * \endcode
      * @stable ICU 4.4
      */
-    void assertSuccess() const;
+    শূন্য assertSuccess() ধ্রুব;
     /**
      * Return a string for the UErrorCode value.
      * The string will be the same as the name of the error code constant
      * in the UErrorCode enum.
      * @stable ICU 4.4
      */
-    const char* errorName() const;
+    ধ্রুব বর্ণ* errorName() ধ্রুব;
 
-protected:
+রক্ষিত:
     /**
      * Internal UErrorCode, accessible to subclasses.
      * @stable ICU 4.2
@@ -134,7 +134,7 @@ protected:
      * Throw an exception, log an error, terminate the program, or similar.
      * @stable ICU 4.2
      */
-    virtual void handleFailure() const {}
+    আভাস শূন্য handleFailure() ধ্রুব {}
 };
 
 U_NAMESPACE_END

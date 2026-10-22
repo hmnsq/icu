@@ -18,20 +18,20 @@
 *   Character conversion functions moved here from unistr.cpp
 */
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#যদি !UCONFIG_NO_CONVERSION
 
-#include "unicode/putil.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "unicode/ustring.h"
-#include "unicode/unistr.h"
-#include "unicode/ucnv.h"
-#include "ucnv_imp.h"
-#include "putilimp.h"
-#include "ustr_cnv.h"
-#include "ustr_imp.h"
+#অন্তর্ভাব "unicode/putil.h"
+#অন্তর্ভাব "cstring.h"
+#অন্তর্ভাব "cmemory.h"
+#অন্তর্ভাব "unicode/ustring.h"
+#অন্তর্ভাব "unicode/unistr.h"
+#অন্তর্ভাব "unicode/ucnv.h"
+#অন্তর্ভাব "ucnv_imp.h"
+#অন্তর্ভাব "putilimp.h"
+#অন্তর্ভাব "ustr_cnv.h"
+#অন্তর্ভাব "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -39,19 +39,19 @@ U_NAMESPACE_BEGIN
 // Constructors
 //========================================
 
-#if !U_CHARSET_IS_UTF8
+#যদি !U_CHARSET_IS_UTF8
 
-UnicodeString::UnicodeString(const char *codepageData) {
+UnicodeString::UnicodeString(ধ্রুব বর্ণ *codepageData) {
     fUnion.fFields.fLengthAndFlags = kShortString;
-    if(codepageData != 0) {
+    যদি(codepageData != 0) {
         doCodepageCreate(codepageData, (int32_t)uprv_strlen(codepageData), 0);
     }
 }
 
-UnicodeString::UnicodeString(const char *codepageData,
+UnicodeString::UnicodeString(ধ্রুব বর্ণ *codepageData,
                              int32_t dataLength) {
     fUnion.fFields.fLengthAndFlags = kShortString;
-    if(codepageData != 0) {
+    যদি(codepageData != 0) {
         doCodepageCreate(codepageData, dataLength, 0);
     }
 }
@@ -59,44 +59,44 @@ UnicodeString::UnicodeString(const char *codepageData,
 // else see unistr.cpp
 #endif
 
-UnicodeString::UnicodeString(const char *codepageData,
-                             const char *codepage) {
+UnicodeString::UnicodeString(ধ্রুব বর্ণ *codepageData,
+                             ধ্রুব বর্ণ *codepage) {
     fUnion.fFields.fLengthAndFlags = kShortString;
-    if (codepageData != nullptr) {
+    যদি (codepageData != nullptr) {
         doCodepageCreate(codepageData, static_cast<int32_t>(uprv_strlen(codepageData)), codepage);
     }
 }
 
-UnicodeString::UnicodeString(const char *codepageData,
+UnicodeString::UnicodeString(ধ্রুব বর্ণ *codepageData,
                              int32_t dataLength,
-                             const char *codepage) {
+                             ধ্রুব বর্ণ *codepage) {
     fUnion.fFields.fLengthAndFlags = kShortString;
-    if (codepageData != nullptr) {
+    যদি (codepageData != nullptr) {
         doCodepageCreate(codepageData, dataLength, codepage);
     }
 }
 
-UnicodeString::UnicodeString(const char *src, int32_t srcLength,
+UnicodeString::UnicodeString(ধ্রুব বর্ণ *src, int32_t srcLength,
                              UConverter *cnv,
                              UErrorCode &errorCode) {
     fUnion.fFields.fLengthAndFlags = kShortString;
-    if(U_SUCCESS(errorCode)) {
+    যদি(U_SUCCESS(errorCode)) {
         // check arguments
-        if(src==nullptr) {
+        যদি(src==nullptr) {
             // treat as an empty string, do nothing more
-        } else if(srcLength<-1) {
+        } অন্যথা যদি(srcLength<-1) {
             errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        } else {
+        } অন্যথা {
             // get input length
-            if(srcLength==-1) {
+            যদি(srcLength==-1) {
                 srcLength = static_cast<int32_t>(uprv_strlen(src));
             }
-            if(srcLength>0) {
-                if (cnv != nullptr) {
+            যদি(srcLength>0) {
+                যদি (cnv != nullptr) {
                     // use the provided converter
                     ucnv_resetToUnicode(cnv);
                     doCodepageCreate(src, srcLength, cnv, errorCode);
-                } else {
+                } অন্যথা {
                     // use the default converter
                     cnv=u_getDefaultConverter(&errorCode);
                     doCodepageCreate(src, srcLength, cnv, errorCode);
@@ -105,7 +105,7 @@ UnicodeString::UnicodeString(const char *src, int32_t srcLength,
             }
         }
 
-        if(U_FAILURE(errorCode)) {
+        যদি(U_FAILURE(errorCode)) {
             setToBogus();
         }
     }
@@ -115,14 +115,14 @@ UnicodeString::UnicodeString(const char *src, int32_t srcLength,
 // Codeset conversion
 //========================================
 
-#if !U_CHARSET_IS_UTF8
+#যদি !U_CHARSET_IS_UTF8
 
 int32_t
 UnicodeString::extract(int32_t start,
                        int32_t length,
-                       char *target,
-                       uint32_t dstSize) const {
-    return extract(start, length, target, dstSize, 0);
+                       বর্ণ *target,
+                       uint32_t dstSize) ধ্রুব {
+    প্রত্যাগম extract(start, length, target, dstSize, 0);
 }
 
 // else see unistr.cpp
@@ -131,13 +131,13 @@ UnicodeString::extract(int32_t start,
 int32_t
 UnicodeString::extract(int32_t start,
                        int32_t length,
-                       char *target,
+                       বর্ণ *target,
                        uint32_t dstSize,
-                       const char *codepage) const
+                       ধ্রুব বর্ণ *codepage) ধ্রুব
 {
     // if the arguments are illegal, then do nothing
-    if (/*dstSize < 0 || */(dstSize > 0 && target == nullptr)) {
-        return 0;
+    যদি (/*dstSize < 0 || */(dstSize > 0 && target == nullptr)) {
+        প্রত্যাগম 0;
     }
 
     // pin the indices to legal values
@@ -149,12 +149,12 @@ UnicodeString::extract(int32_t start,
     // as a limit in some functions, it may wrap around and yield a pointer
     // that compares less-than target.
     int32_t capacity;
-    if(dstSize < 0x7fffffff) {
+    যদি(dstSize < 0x7fffffff) {
         // Assume that the capacity is real and a limit pointer won't wrap around.
         capacity = static_cast<int32_t>(dstSize);
-    } else {
+    } অন্যথা {
         // Pin the capacity so that a limit pointer does not wrap around.
-        char* targetLimit = static_cast<char*>(U_MAX_PTR(target));
+        বর্ণ* targetLimit = static_cast<বর্ণ*>(U_MAX_PTR(target));
         // U_MAX_PTR(target) returns a targetLimit that is at most 0x7fffffff
         // greater than target and does not wrap around the top of the address space.
         capacity = static_cast<int32_t>(targetLimit - target);
@@ -165,73 +165,73 @@ UnicodeString::extract(int32_t start,
     UErrorCode status = U_ZERO_ERROR;
 
     // just write the NUL if the string length is 0
-    if(length == 0) {
-        return u_terminateChars(target, capacity, 0, &status);
+    যদি(length == 0) {
+        প্রত্যাগম u_terminateChars(target, capacity, 0, &status);
     }
 
     // if the codepage is the default, use our cache
     // if it is an empty string, then use the "invariant character" conversion
-    if (codepage == nullptr) {
-        const char *defaultName = ucnv_getDefaultName();
-        if(UCNV_FAST_IS_UTF8(defaultName)) {
-            return toUTF8(start, length, target, capacity);
+    যদি (codepage == nullptr) {
+        ধ্রুব বর্ণ *defaultName = ucnv_getDefaultName();
+        যদি(UCNV_FAST_IS_UTF8(defaultName)) {
+            প্রত্যাগম toUTF8(start, length, target, capacity);
         }
         converter = u_getDefaultConverter(&status);
-    } else if (*codepage == 0) {
+    } অন্যথা যদি (*codepage == 0) {
         // use the "invariant characters" conversion
         int32_t destLength;
-        if(length <= capacity) {
+        যদি(length <= capacity) {
             destLength = length;
-        } else {
+        } অন্যথা {
             destLength = capacity;
         }
         u_UCharsToChars(getArrayStart() + start, target, destLength);
-        return u_terminateChars(target, capacity, length, &status);
-    } else {
+        প্রত্যাগম u_terminateChars(target, capacity, length, &status);
+    } অন্যথা {
         converter = ucnv_open(codepage, &status);
     }
 
     length = doExtract(start, length, target, capacity, converter, status);
 
     // close the converter
-    if (codepage == nullptr) {
+    যদি (codepage == nullptr) {
         u_releaseDefaultConverter(converter);
-    } else {
+    } অন্যথা {
         ucnv_close(converter);
     }
 
-    return length;
+    প্রত্যাগম length;
 }
 
 int32_t
-UnicodeString::extract(char *dest, int32_t destCapacity,
+UnicodeString::extract(বর্ণ *dest, int32_t destCapacity,
                        UConverter *cnv,
-                       UErrorCode &errorCode) const
+                       UErrorCode &errorCode) ধ্রুব
 {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    যদি(U_FAILURE(errorCode)) {
+        প্রত্যাগম 0;
     }
 
-    if (isBogus() || destCapacity < 0 || (destCapacity > 0 && dest == nullptr)) {
+    যদি (isBogus() || destCapacity < 0 || (destCapacity > 0 && dest == nullptr)) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        প্রত্যাগম 0;
     }
 
     // nothing to do?
-    if(isEmpty()) {
-        return u_terminateChars(dest, destCapacity, 0, &errorCode);
+    যদি(isEmpty()) {
+        প্রত্যাগম u_terminateChars(dest, destCapacity, 0, &errorCode);
     }
 
     // get the converter
     UBool isDefaultConverter;
-    if (cnv == nullptr) {
-        isDefaultConverter=true;
+    যদি (cnv == nullptr) {
+        isDefaultConverter=সত্য;
         cnv=u_getDefaultConverter(&errorCode);
-        if(U_FAILURE(errorCode)) {
-            return 0;
+        যদি(U_FAILURE(errorCode)) {
+            প্রত্যাগম 0;
         }
-    } else {
-        isDefaultConverter=false;
+    } অন্যথা {
+        isDefaultConverter=অসত্য;
         ucnv_resetFromUnicode(cnv);
     }
 
@@ -239,75 +239,75 @@ UnicodeString::extract(char *dest, int32_t destCapacity,
     int32_t len=doExtract(0, length(), dest, destCapacity, cnv, errorCode);
 
     // release the converter
-    if(isDefaultConverter) {
+    যদি(isDefaultConverter) {
         u_releaseDefaultConverter(cnv);
     }
 
-    return len;
+    প্রত্যাগম len;
 }
 
 int32_t
 UnicodeString::doExtract(int32_t start, int32_t length,
-                         char *dest, int32_t destCapacity,
+                         বর্ণ *dest, int32_t destCapacity,
                          UConverter *cnv,
-                         UErrorCode &errorCode) const
+                         UErrorCode &errorCode) ধ্রুব
 {
-    if(U_FAILURE(errorCode)) {
-        if(destCapacity!=0) {
+    যদি(U_FAILURE(errorCode)) {
+        যদি(destCapacity!=0) {
             *dest=0;
         }
-        return 0;
+        প্রত্যাগম 0;
     }
 
-    const char16_t *src=getArrayStart()+start, *srcLimit=src+length;
-    char *originalDest=dest;
-    const char *destLimit;
+    ধ্রুব char16_t *src=getArrayStart()+start, *srcLimit=src+length;
+    বর্ণ *originalDest=dest;
+    ধ্রুব বর্ণ *destLimit;
 
-    if(destCapacity==0) {
+    যদি(destCapacity==0) {
         destLimit=dest=nullptr;
-    } else if(destCapacity==-1) {
+    } অন্যথা যদি(destCapacity==-1) {
         // Pin the limit to U_MAX_PTR if the "magic" destCapacity is used.
-        destLimit = static_cast<char*>(U_MAX_PTR(dest));
+        destLimit = static_cast<বর্ণ*>(U_MAX_PTR(dest));
         // for NUL-termination, translate into highest int32_t
         destCapacity=0x7fffffff;
-    } else {
+    } অন্যথা {
         destLimit=dest+destCapacity;
     }
 
     // perform the conversion
     UErrorCode bufferStatus = U_ZERO_ERROR;
-    ucnv_fromUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, true, &bufferStatus);
+    ucnv_fromUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, সত্য, &bufferStatus);
     length = static_cast<int32_t>(dest - originalDest);
 
     // if an overflow occurs, then get the preflighting length
-    if(bufferStatus==U_BUFFER_OVERFLOW_ERROR) {
-        char buffer[1024];
+    যদি(bufferStatus==U_BUFFER_OVERFLOW_ERROR) {
+        বর্ণ buffer[1024];
 
-        destLimit=buffer+sizeof(buffer);
-        do {
+        destLimit=buffer+পরিমাণ(buffer);
+        কুরু {
             dest=buffer;
             bufferStatus=U_ZERO_ERROR;
-            ucnv_fromUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, true, &bufferStatus);
+            ucnv_fromUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, সত্য, &bufferStatus);
             length += static_cast<int32_t>(dest - buffer);
-        } while(bufferStatus==U_BUFFER_OVERFLOW_ERROR);
+        } যাবত্(bufferStatus==U_BUFFER_OVERFLOW_ERROR);
     }
-    if (U_FAILURE(bufferStatus)) {
+    যদি (U_FAILURE(bufferStatus)) {
         errorCode = bufferStatus;
     }
 
-    return u_terminateChars(originalDest, destCapacity, length, &errorCode);
+    প্রত্যাগম u_terminateChars(originalDest, destCapacity, length, &errorCode);
 }
 
-void
-UnicodeString::doCodepageCreate(const char *codepageData,
+শূন্য
+UnicodeString::doCodepageCreate(ধ্রুব বর্ণ *codepageData,
                                 int32_t dataLength,
-                                const char *codepage)
+                                ধ্রুব বর্ণ *codepage)
 {
     // if there's nothing to convert, do nothing
-    if (codepageData == nullptr || dataLength == 0 || dataLength < -1) {
-        return;
+    যদি (codepageData == nullptr || dataLength == 0 || dataLength < -1) {
+        প্রত্যাগম;
     }
-    if(dataLength == -1) {
+    যদি(dataLength == -1) {
         dataLength = static_cast<int32_t>(uprv_strlen(codepageData));
     }
 
@@ -317,77 +317,77 @@ UnicodeString::doCodepageCreate(const char *codepageData,
     // if the codepage is the default, use our cache
     // if it is an empty string, then use the "invariant character" conversion
     UConverter *converter;
-    if (codepage == nullptr) {
-        const char *defaultName = ucnv_getDefaultName();
-        if(UCNV_FAST_IS_UTF8(defaultName)) {
+    যদি (codepage == nullptr) {
+        ধ্রুব বর্ণ *defaultName = ucnv_getDefaultName();
+        যদি(UCNV_FAST_IS_UTF8(defaultName)) {
             setToUTF8(StringPiece(codepageData, dataLength));
-            return;
+            প্রত্যাগম;
         }
         converter = u_getDefaultConverter(&status);
-    } else if (*codepage == 0) {
+    } অন্যথা যদি (*codepage == 0) {
         // use the "invariant characters" conversion
-        if(cloneArrayIfNeeded(dataLength, dataLength, false)) {
+        যদি(cloneArrayIfNeeded(dataLength, dataLength, অসত্য)) {
             u_charsToUChars(codepageData, getArrayStart(), dataLength);
             setLength(dataLength);
-        } else {
+        } অন্যথা {
             setToBogus();
         }
-        return;
-    } else {
+        প্রত্যাগম;
+    } অন্যথা {
         converter = ucnv_open(codepage, &status);
     }
 
     // if we failed, set the appropriate flags and return
-    if(U_FAILURE(status)) {
+    যদি(U_FAILURE(status)) {
         setToBogus();
-        return;
+        প্রত্যাগম;
     }
 
     // perform the conversion
     doCodepageCreate(codepageData, dataLength, converter, status);
-    if(U_FAILURE(status)) {
+    যদি(U_FAILURE(status)) {
         setToBogus();
     }
 
     // close the converter
-    if (codepage == nullptr) {
+    যদি (codepage == nullptr) {
         u_releaseDefaultConverter(converter);
-    } else {
+    } অন্যথা {
         ucnv_close(converter);
     }
 }
 
-void
-UnicodeString::doCodepageCreate(const char *codepageData,
+শূন্য
+UnicodeString::doCodepageCreate(ধ্রুব বর্ণ *codepageData,
                                 int32_t dataLength,
                                 UConverter *converter,
                                 UErrorCode &status)
 {
-    if(U_FAILURE(status)) {
-        return;
+    যদি(U_FAILURE(status)) {
+        প্রত্যাগম;
     }
 
     // set up the conversion parameters
-    const char *mySource     = codepageData;
-    const char *mySourceEnd  = mySource + dataLength;
+    ধ্রুব বর্ণ *mySource     = codepageData;
+    ধ্রুব বর্ণ *mySourceEnd  = mySource + dataLength;
     char16_t *array, *myTarget;
 
     // estimate the size needed:
     int32_t arraySize;
-    if(dataLength <= US_STACKBUF_SIZE) {
+    যদি(dataLength <= US_STACKBUF_SIZE) {
         // try to use the stack buffer
         arraySize = US_STACKBUF_SIZE;
-    } else {
+    } অন্যথা {
         // 1.25 char16_t's per source byte should cover most cases
         arraySize = dataLength + (dataLength >> 2);
     }
 
     // we do not care about the current contents
-    UBool doCopyArray = false;
-    for(;;) {
-        if(!cloneArrayIfNeeded(arraySize, arraySize, doCopyArray)) {
+    UBool doCopyArray = অসত্য;
+    প্রতি(;;) {
+        যদি(!cloneArrayIfNeeded(arraySize, arraySize, doCopyArray)) {
             setToBogus();
-            break;
+            ভঙ্গ;
         }
 
         // perform the conversion
@@ -395,24 +395,24 @@ UnicodeString::doCodepageCreate(const char *codepageData,
         myTarget = array + length();
         UErrorCode bufferStatus = U_ZERO_ERROR;
         ucnv_toUnicode(converter, &myTarget,  array + getCapacity(),
-            &mySource, mySourceEnd, nullptr, true, &bufferStatus);
+            &mySource, mySourceEnd, nullptr, সত্য, &bufferStatus);
 
         // update the conversion parameters
         setLength(static_cast<int32_t>(myTarget - array));
 
         // allocate more space and copy data, if needed
-        if(bufferStatus == U_BUFFER_OVERFLOW_ERROR) {
+        যদি(bufferStatus == U_BUFFER_OVERFLOW_ERROR) {
             // keep the previous conversion results
-            doCopyArray = true;
+            doCopyArray = সত্য;
 
             // estimate the new size needed, larger than before
             // try 2 char16_t's per remaining source byte
             arraySize = static_cast<int32_t>(length() + 2 * (mySourceEnd - mySource));
-        } else {
-            if (U_FAILURE(bufferStatus)) {
+        } অন্যথা {
+            যদি (U_FAILURE(bufferStatus)) {
                 status = bufferStatus;
             }
-            break;
+            ভঙ্গ;
         }
     }
 }

@@ -11,22 +11,22 @@
 #ifndef NORMLZR_H
 #define NORMLZR_H
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#যদি U_SHOW_CPLUSPLUS_API
 
 /**
  * \file 
  * \brief C++ API: Unicode Normalization
  */
  
-#if !UCONFIG_NO_NORMALIZATION
+#যদি !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/chariter.h"
-#include "unicode/normalizer2.h"
-#include "unicode/unistr.h"
-#include "unicode/unorm.h"
-#include "unicode/uobject.h"
+#অন্তর্ভাব "unicode/chariter.h"
+#অন্তর্ভাব "unicode/normalizer2.h"
+#অন্তর্ভাব "unicode/unistr.h"
+#অন্তর্ভাব "unicode/unorm.h"
+#অন্তর্ভাব "unicode/uobject.h"
 
 U_NAMESPACE_BEGIN
 /**
@@ -133,15 +133,15 @@ U_NAMESPACE_BEGIN
  * @author Laura Werner, Mark Davis, Markus Scherer
  * @stable ICU 2.0
  */
-class U_COMMON_API Normalizer : public UObject {
-public:
+class U_COMMON_API Normalizer : সার্বজনিক UObject {
+সার্বজনিক:
 #ifndef U_HIDE_DEPRECATED_API
   /**
    * If DONE is returned from an iteration function that returns a code point,
    * then there are no more normalization results available.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  enum {
+  গণনা {
       DONE=0xffff
   };
 
@@ -157,7 +157,7 @@ public:
    * @param mode  The normalization mode.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  Normalizer(const UnicodeString& str, UNormalizationMode mode);
+  Normalizer(ধ্রুব UnicodeString& str, UNormalizationMode mode);
 
   /**
    * Creates a new <code>Normalizer</code> object for iterating over the
@@ -182,7 +182,7 @@ public:
    * @param mode  The normalization mode.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  Normalizer(const CharacterIterator& iter, UNormalizationMode mode);
+  Normalizer(ধ্রুব CharacterIterator& iter, UNormalizationMode mode);
 #endif  /* U_HIDE_DEPRECATED_API */
 
 #ifndef U_FORCE_HIDE_DEPRECATED_API
@@ -191,13 +191,13 @@ public:
    * @param copy The object to be copied.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  Normalizer(const Normalizer& copy);
+  Normalizer(ধ্রুব Normalizer& copy);
 
   /**
    * Destructor
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  virtual ~Normalizer();
+  আভাস ~Normalizer();
 #endif  // U_FORCE_HIDE_DEPRECATED_API
 
   //-------------------------------------------------------------------------
@@ -219,7 +219,7 @@ public:
    * @param status    The error code.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  static void U_EXPORT2 normalize(const UnicodeString& source,
+  স্থির শূন্য U_EXPORT2 normalize(ধ্রুব UnicodeString& source,
                         UNormalizationMode mode, int32_t options,
                         UnicodeString& result,
                         UErrorCode &status);
@@ -241,7 +241,7 @@ public:
    * @param status    The error code.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  static void U_EXPORT2 compose(const UnicodeString& source,
+  স্থির শূন্য U_EXPORT2 compose(ধ্রুব UnicodeString& source,
                       UBool compat, int32_t options,
                       UnicodeString& result,
                       UErrorCode &status);
@@ -263,7 +263,7 @@ public:
    * @param status    The error code.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  static void U_EXPORT2 decompose(const UnicodeString& source,
+  স্থির শূন্য U_EXPORT2 decompose(ধ্রুব UnicodeString& source,
                         UBool compat, int32_t options,
                         UnicodeString& result,
                         UErrorCode &status);
@@ -288,8 +288,8 @@ public:
    * @see isNormalized
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  static inline UNormalizationCheckResult
-  quickCheck(const UnicodeString &source, UNormalizationMode mode, UErrorCode &status);
+  স্থির অন্তঃস্থ UNormalizationCheckResult
+  quickCheck(ধ্রুব UnicodeString &source, UNormalizationMode mode, UErrorCode &status);
 
   /**
    * Performing quick check on a string; same as the other version of quickCheck
@@ -304,8 +304,8 @@ public:
    * @see isNormalized
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  static UNormalizationCheckResult
-  quickCheck(const UnicodeString &source, UNormalizationMode mode, int32_t options, UErrorCode &status);
+  স্থির UNormalizationCheckResult
+  quickCheck(ধ্রুব UnicodeString &source, UNormalizationMode mode, int32_t options, UErrorCode &status);
 
   /**
    * Test if a string is in a given normalization form.
@@ -327,8 +327,8 @@ public:
    * @see quickCheck
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  static inline UBool
-  isNormalized(const UnicodeString &src, UNormalizationMode mode, UErrorCode &errorCode);
+  স্থির অন্তঃস্থ UBool
+  isNormalized(ধ্রুব UnicodeString &src, UNormalizationMode mode, UErrorCode &errorCode);
 
   /**
    * Test if a string is in a given normalization form; same as the other version of isNormalized
@@ -345,8 +345,8 @@ public:
    * @see quickCheck
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  static UBool
-  isNormalized(const UnicodeString &src, UNormalizationMode mode, int32_t options, UErrorCode &errorCode);
+  স্থির UBool
+  isNormalized(ধ্রুব UnicodeString &src, UNormalizationMode mode, int32_t options, UErrorCode &errorCode);
 
   /**
    * Concatenate normalized strings, making sure that the result is normalized as well.
@@ -377,9 +377,9 @@ public:
    *
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  static UnicodeString& U_EXPORT2
-  concatenate(const UnicodeString& left,
-              const UnicodeString& right,
+  স্থির UnicodeString& U_EXPORT2
+  concatenate(ধ্রুব UnicodeString& বাম,
+              ধ্রুব UnicodeString& ডান,
               UnicodeString& result U_LIFETIME_BOUND,
               UNormalizationMode mode,
               int32_t options,
@@ -450,8 +450,8 @@ public:
    *
    * @stable ICU 2.2
    */
-  static inline int32_t
-  compare(const UnicodeString &s1, const UnicodeString &s2,
+  স্থির অন্তঃস্থ int32_t
+  compare(ধ্রুব UnicodeString &s1, ধ্রুব UnicodeString &s2,
           uint32_t options,
           UErrorCode &errorCode);
 
@@ -531,14 +531,14 @@ public:
    * @param index the desired index in the input text.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  void                 setIndexOnly(int32_t index);
+  শূন্য                 setIndexOnly(int32_t index);
 
   /**
    * Reset the index to the beginning of the text.
    * This is equivalent to setIndexOnly(startIndex)).
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  void reset();
+  শূন্য reset();
 
   /**
    * Retrieve the current iteration position in the input text that is
@@ -554,7 +554,7 @@ public:
    * @return the current index in the input text
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  int32_t getIndex() const;
+  int32_t getIndex() ধ্রুব;
 
   /**
    * Retrieve the index of the start of the input text. This is the begin index
@@ -564,7 +564,7 @@ public:
    * @return the smallest index in the input text where the Normalizer operates
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  int32_t startIndex() const;
+  int32_t startIndex() ধ্রুব;
 
   /**
    * Retrieve the index of the end of the input text. This is the end index
@@ -576,7 +576,7 @@ public:
    * @return the first index in the input text where the Normalizer does not operate
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  int32_t endIndex() const;
+  int32_t endIndex() ধ্রুব;
 
   /**
    * Returns true when both iterators refer to the same character in the same
@@ -586,7 +586,7 @@ public:
    * @return comparison result
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  bool         operator==(const Normalizer& that) const;
+  bool         operator==(ধ্রুব Normalizer& that) ধ্রুব;
 
   /**
    * Returns false when both iterators refer to the same character in the same
@@ -596,7 +596,7 @@ public:
    * @return comparison result
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  inline bool         operator!=(const Normalizer& that) const;
+  অন্তঃস্থ bool         operator!=(ধ্রুব Normalizer& that) ধ্রুব;
 
   /**
    * Returns a pointer to a new Normalizer that is a clone of this one.
@@ -604,7 +604,7 @@ public:
    * @return a pointer to a new Normalizer
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  Normalizer*        clone() const;
+  Normalizer*        clone() ধ্রুব;
 
   /**
    * Generates a hash code for this iterator.
@@ -612,7 +612,7 @@ public:
    * @return the hash code
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  int32_t hashCode() const;
+  int32_t hashCode() ধ্রুব;
 
   //-------------------------------------------------------------------------
   // Property access methods
@@ -633,7 +633,7 @@ public:
    * @see #getUMode
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  void setMode(UNormalizationMode newMode);
+  শূন্য setMode(UNormalizationMode newMode);
 
   /**
    * Return the normalization mode for this object.
@@ -645,7 +645,7 @@ public:
    * @see #setMode
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  UNormalizationMode getUMode() const;
+  UNormalizationMode getUMode() ধ্রুব;
 
   /**
    * Set options that affect this <code>Normalizer</code>'s operation.
@@ -663,8 +663,8 @@ public:
    * @see #getOption
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  void setOption(int32_t option,
-         UBool value);
+  শূন্য setOption(int32_t option,
+         UBool মান_2);
 
   /**
    * Determine whether an option is turned on or off.
@@ -676,7 +676,7 @@ public:
    * @see #setOption
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  UBool getOption(int32_t option) const;
+  UBool getOption(int32_t option) ধ্রুব;
 
   /**
    * Set the input text over which this <code>Normalizer</code> will iterate.
@@ -686,7 +686,7 @@ public:
    * @param status a UErrorCode
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  void setText(const UnicodeString& newText,
+  শূন্য setText(ধ্রুব UnicodeString& newText,
            UErrorCode &status);
 
   /**
@@ -697,7 +697,7 @@ public:
    * @param status a UErrorCode
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  void setText(const CharacterIterator& newText,
+  শূন্য setText(ধ্রুব CharacterIterator& newText,
            UErrorCode &status);
 
   /**
@@ -709,7 +709,7 @@ public:
    * @param status a UErrorCode
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  void setText(ConstChar16Ptr newText,
+  শূন্য setText(ConstChar16Ptr newText,
                     int32_t length,
             UErrorCode &status);
   /**
@@ -718,14 +718,14 @@ public:
    * @param result Receives a copy of the text under iteration.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  void            getText(UnicodeString&  result);
+  শূন্য            getText(UnicodeString&  result);
 
   /**
    * ICU "poor man's RTTI", returns a UClassID for this class.
    * @returns a UClassID for this class.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  static UClassID U_EXPORT2 getStaticClassID();
+  স্থির UClassID U_EXPORT2 getStaticClassID();
 #endif  /* U_HIDE_DEPRECATED_API */
 
 #ifndef U_FORCE_HIDE_DEPRECATED_API
@@ -734,31 +734,31 @@ public:
    * @return a UClassID for the actual class.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  virtual UClassID getDynamicClassID() const override;
+  আভাস UClassID getDynamicClassID() ধ্রুব override;
 #endif  // U_FORCE_HIDE_DEPRECATED_API
 
-private:
+গুপ্ত:
   //-------------------------------------------------------------------------
   // Private functions
   //-------------------------------------------------------------------------
 
   Normalizer() = delete; // default constructor not implemented
-  Normalizer &operator=(const Normalizer &that) = delete; // assignment operator not implemented
+  Normalizer &operator=(ধ্রুব Normalizer &that) = delete; // assignment operator not implemented
 
   // Private utility methods for iteration
   // For documentation, see the source code
   UBool nextNormalize();
   UBool previousNormalize();
 
-  void    init();
-  void clearBuffer();
+  শূন্য    init();
+  শূন্য clearBuffer();
 
   //-------------------------------------------------------------------------
   // Private data
   //-------------------------------------------------------------------------
 
   FilteredNormalizer2*fFilteredNorm2;  // owned if not nullptr
-  const Normalizer2  *fNorm2;  // not owned; may be equal to fFilteredNorm2
+  ধ্রুব Normalizer2  *fNorm2;  // not owned; may be equal to fFilteredNorm2
   UNormalizationMode  fUMode;  // deprecated
   int32_t             fOptions;
 
@@ -779,31 +779,31 @@ private:
 //-------------------------------------------------------------------------
 
 #ifndef U_HIDE_DEPRECATED_API
-inline bool
-Normalizer::operator!= (const Normalizer& other) const
-{ return ! operator==(other); }
+অন্তঃস্থ bool
+Normalizer::operator!= (ধ্রুব Normalizer& other) ধ্রুব
+{ প্রত্যাগম ! operator==(other); }
 
-inline UNormalizationCheckResult
-Normalizer::quickCheck(const UnicodeString& source,
+অন্তঃস্থ UNormalizationCheckResult
+Normalizer::quickCheck(ধ্রুব UnicodeString& source,
                        UNormalizationMode mode,
                        UErrorCode &status) {
-    return quickCheck(source, mode, 0, status);
+    প্রত্যাগম quickCheck(source, mode, 0, status);
 }
 
-inline UBool
-Normalizer::isNormalized(const UnicodeString& source,
+অন্তঃস্থ UBool
+Normalizer::isNormalized(ধ্রুব UnicodeString& source,
                          UNormalizationMode mode,
                          UErrorCode &status) {
-    return isNormalized(source, mode, 0, status);
+    প্রত্যাগম isNormalized(source, mode, 0, status);
 }
 #endif  /* U_HIDE_DEPRECATED_API */
 
-inline int32_t
-Normalizer::compare(const UnicodeString &s1, const UnicodeString &s2,
+অন্তঃস্থ int32_t
+Normalizer::compare(ধ্রুব UnicodeString &s1, ধ্রুব UnicodeString &s2,
                     uint32_t options,
                     UErrorCode &errorCode) {
   // all argument checking is done in unorm_compare
-  return unorm_compare(toUCharPtr(s1.getBuffer()), s1.length(),
+  প্রত্যাগম unorm_compare(toUCharPtr(s1.getBuffer()), s1.length(),
                        toUCharPtr(s2.getBuffer()), s2.length(),
                        options,
                        &errorCode);

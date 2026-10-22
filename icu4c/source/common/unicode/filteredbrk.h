@@ -10,13 +10,13 @@
 #ifndef FILTEREDBRK_H
 #define FILTEREDBRK_H
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#যদি U_SHOW_CPLUSPLUS_API
 
-#include "unicode/brkiter.h"
+#অন্তর্ভাব "unicode/brkiter.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION && !UCONFIG_NO_FILTERED_BREAK_ITERATION
+#যদি !UCONFIG_NO_BREAK_ITERATION && !UCONFIG_NO_FILTERED_BREAK_ITERATION
 
 U_NAMESPACE_BEGIN
 
@@ -36,13 +36,13 @@ U_NAMESPACE_BEGIN
  *
  * @stable ICU 56
  */
-class U_COMMON_API FilteredBreakIteratorBuilder : public UObject {
- public:
+class U_COMMON_API FilteredBreakIteratorBuilder : সার্বজনিক UObject {
+ সার্বজনিক:
   /**
    *  destructor.
    * @stable ICU 56
    */
-  virtual ~FilteredBreakIteratorBuilder();
+  আভাস ~FilteredBreakIteratorBuilder();
 
   /**
    * Construct a FilteredBreakIteratorBuilder based on rules in a locale.
@@ -56,7 +56,7 @@ class U_COMMON_API FilteredBreakIteratorBuilder : public UObject {
    * @return the new builder
    * @stable ICU 56
    */
-  static FilteredBreakIteratorBuilder *createInstance(const Locale& where, UErrorCode& status);
+  স্থির FilteredBreakIteratorBuilder *createInstance(ধ্রুব Locale& where, UErrorCode& status);
 
 #ifndef U_HIDE_DEPRECATED_API
   /**
@@ -67,7 +67,7 @@ class U_COMMON_API FilteredBreakIteratorBuilder : public UObject {
    * @deprecated ICU 60 use createEmptyInstance instead
    * @see createEmptyInstance()
    */
-  static FilteredBreakIteratorBuilder *createInstance(UErrorCode &status);
+  স্থির FilteredBreakIteratorBuilder *createInstance(UErrorCode &status);
 #endif  /* U_HIDE_DEPRECATED_API */
 
   /**
@@ -77,7 +77,7 @@ class U_COMMON_API FilteredBreakIteratorBuilder : public UObject {
    * @return the new builder
    * @stable ICU 60
    */
-  static FilteredBreakIteratorBuilder *createEmptyInstance(UErrorCode &status);
+  স্থির FilteredBreakIteratorBuilder *createEmptyInstance(UErrorCode &status);
 
   /**
    * Suppress a certain string from being the end of a segment.
@@ -89,7 +89,7 @@ class U_COMMON_API FilteredBreakIteratorBuilder : public UObject {
    * false if the call was a no-op because the string was already being suppressed.
    * @stable ICU 56
    */
-  virtual UBool suppressBreakAfter(const UnicodeString& string, UErrorCode& status) = 0;
+  আভাস UBool suppressBreakAfter(ধ্রুব UnicodeString& string, UErrorCode& status) = 0;
 
   /**
    * Stop suppressing a certain string from being the end of the segment.
@@ -102,7 +102,7 @@ class U_COMMON_API FilteredBreakIteratorBuilder : public UObject {
    * false if the call was a no-op because the string was not being suppressed.
    * @stable ICU 56
    */
-  virtual UBool unsuppressBreakAfter(const UnicodeString& string, UErrorCode& status) = 0;
+  আভাস UBool unsuppressBreakAfter(ধ্রুব UnicodeString& string, UErrorCode& status) = 0;
 
 #ifndef U_FORCE_HIDE_DEPRECATED_API
   /**
@@ -114,7 +114,7 @@ class U_COMMON_API FilteredBreakIteratorBuilder : public UObject {
    * @deprecated ICU 60 use wrapIteratorWithFilter() instead
    * @see wrapBreakIteratorWithFilter()
    */
-  virtual BreakIterator *build(BreakIterator* adoptBreakIterator, UErrorCode& status) = 0;
+  আভাস BreakIterator *build(BreakIterator* adoptBreakIterator, UErrorCode& status) = 0;
 #endif  // U_FORCE_HIDE_DEPRECATED_API
 
   /**
@@ -130,11 +130,11 @@ class U_COMMON_API FilteredBreakIteratorBuilder : public UObject {
    * @return the new BreakIterator, owned by the caller.
    * @stable ICU 60
    */
-  inline BreakIterator *wrapIteratorWithFilter(BreakIterator* adoptBreakIterator, UErrorCode& status) {
-    return build(adoptBreakIterator, status);
+  অন্তঃস্থ BreakIterator *wrapIteratorWithFilter(BreakIterator* adoptBreakIterator, UErrorCode& status) {
+    প্রত্যাগম build(adoptBreakIterator, status);
   }
 
- protected:
+ রক্ষিত:
   /**
    * For subclass use
    * @stable ICU 56

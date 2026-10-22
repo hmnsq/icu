@@ -13,13 +13,13 @@
 #ifndef DBBI_H
 #define DBBI_H
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#যদি U_SHOW_CPLUSPLUS_API
 
-#include "unicode/rbbi.h"
+#অন্তর্ভাব "unicode/rbbi.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#যদি !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * \file
@@ -35,7 +35,7 @@ U_NAMESPACE_BEGIN
  * is deprecated as of ICU 3.6.
  * @deprecated ICU 3.6
  */
-typedef RuleBasedBreakIterator DictionaryBasedBreakIterator;
+প্রকারনির্দেশ RuleBasedBreakIterator DictionaryBasedBreakIterator;
 
 #endif  /* U_HIDE_DEPRECATED_API */
 

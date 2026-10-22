@@ -17,41 +17,41 @@
 *   were moved here to break dependency cycles among parts of the common library.
 */
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#যদি !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/brkiter.h"
-#include "unicode/locid.h"
-#include "unicode/ucasemap.h"
-#include "unicode/unistr.h"
-#include "ucasemap_imp.h"
+#অন্তর্ভাব "unicode/brkiter.h"
+#অন্তর্ভাব "unicode/locid.h"
+#অন্তর্ভাব "unicode/ucasemap.h"
+#অন্তর্ভাব "unicode/unistr.h"
+#অন্তর্ভাব "ucasemap_imp.h"
 
 U_NAMESPACE_BEGIN
 
 UnicodeString&
 UnicodeString::toTitle(BreakIterator* iter) U_LIFETIME_BOUND {
-    return toTitle(iter, Locale::getDefault(), 0);
+    প্রত্যাগম toTitle(iter, Locale::getDefault(), 0);
 }
 
 UnicodeString&
-UnicodeString::toTitle(BreakIterator* iter, const Locale& locale) U_LIFETIME_BOUND {
-    return toTitle(iter, locale, 0);
+UnicodeString::toTitle(BreakIterator* iter, ধ্রুব Locale& locale) U_LIFETIME_BOUND {
+    প্রত্যাগম toTitle(iter, locale, 0);
 }
 
 UnicodeString&
 UnicodeString::toTitle(BreakIterator* iter,
-                       const Locale& locale,
+                       ধ্রুব Locale& locale,
                        uint32_t options) U_LIFETIME_BOUND {
     LocalPointer<BreakIterator> ownedIter;
     UErrorCode errorCode = U_ZERO_ERROR;
     iter = ustrcase_getTitleBreakIterator(&locale, "", options, iter, ownedIter, errorCode);
-    if (iter == nullptr) {
+    যদি (iter == nullptr) {
         setToBogus();
-        return *this;
+        প্রত্যাগম *এতত্;
     }
     caseMap(ustrcase_getCaseLocale(locale.getBaseName()), options, iter, ustrcase_internalToTitle);
-    return *this;
+    প্রত্যাগম *এতত্;
 }
 
 U_NAMESPACE_END

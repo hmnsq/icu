@@ -16,15 +16,15 @@
 *   UTF-7 converter implementation. Used to be in ucnv_utf.c.
 */
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#যদি !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "cmemory.h"
-#include "unicode/ucnv.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "uassert.h"
+#অন্তর্ভাব "cmemory.h"
+#অন্তর্ভাব "unicode/ucnv.h"
+#অন্তর্ভাব "ucnv_bld.h"
+#অন্তর্ভাব "ucnv_cnv.h"
+#অন্তর্ভাব "uassert.h"
 
 /* UTF-7 -------------------------------------------------------------------- */
 
@@ -98,7 +98,7 @@
 #define isLegalUTF7(c) (((uint8_t)((c)-32)<94 && (c)!=BACKSLASH) || isCRLFTAB(c))
 
 /* encode directly sets D and O and CR LF SP TAB */
-static const UBool encodeDirectlyMaximum[128]={
+স্থির ধ্রুব UBool encodeDirectlyMaximum[128]={
  /* 0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -114,7 +114,7 @@ static const UBool encodeDirectlyMaximum[128]={
 };
 
 /* encode directly set D and CR LF SP TAB but not set O */
-static const UBool encodeDirectlyRestricted[128]={
+স্থির ধ্রুব UBool encodeDirectlyRestricted[128]={
  /* 0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -129,7 +129,7 @@ static const UBool encodeDirectlyRestricted[128]={
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0
 };
 
-static const uint8_t
+স্থির ধ্রুব uint8_t
 toBase64[64]={
     /* A-Z */
     65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77,
@@ -143,7 +143,7 @@ toBase64[64]={
     43, 47
 };
 
-static const int8_t
+স্থির ধ্রুব int8_t
 fromBase64[128]={
     /* C0 controls, -1 for legal ones (CR LF TAB), -3 for illegal ones */
     -3, -3, -3, -3, -3, -3, -3, -3, -3, -1, -1, -3, -3, -1, -3, -3,
@@ -180,40 +180,40 @@ fromBase64[128]={
  */
 
 U_CDECL_BEGIN
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _UTF7Reset(UConverter *cnv, UConverterResetChoice choice) {
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    যদি(choice<=UCNV_RESET_TO_UNICODE) {
         /* reset toUnicode */
         cnv->toUnicodeStatus=0x1000000; /* inDirectMode=true */
         cnv->toULength=0;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
+    যদি(choice!=UCNV_RESET_TO_UNICODE) {
         /* reset fromUnicode */
         cnv->fromUnicodeStatus=(cnv->fromUnicodeStatus&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
     }
 }
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _UTF7Open(UConverter *cnv,
           UConverterLoadArgs *pArgs,
           UErrorCode *pErrorCode) {
-    (void)pArgs;
-    if(UCNV_GET_VERSION(cnv)<=1) {
+    (শূন্য)pArgs;
+    যদি(UCNV_GET_VERSION(cnv)<=1) {
         /* TODO(markus): Should just use cnv->options rather than copying the version number. */
         cnv->fromUnicodeStatus=UCNV_GET_VERSION(cnv)<<28;
         _UTF7Reset(cnv, UCNV_RESET_BOTH);
-    } else {
+    } অন্যথা {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
     }
 }
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _UTF7ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
                           UErrorCode *pErrorCode) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit;
+    ধ্রুব uint8_t *source, *sourceLimit;
     char16_t *target;
-    const char16_t *targetLimit;
+    ধ্রুব char16_t *targetLimit;
     int32_t *offsets;
 
     uint8_t *bytes;
@@ -226,7 +226,7 @@ _UTF7ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     int8_t base64Counter;
     UBool inDirectMode;
 
-    int8_t base64Value;
+    int8_t base64_মান;
 
     int32_t sourceIndex, nextSourceIndex;
 
@@ -234,8 +234,8 @@ _UTF7ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     /* set up the local pointers */
     cnv=pArgs->converter;
 
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
+    source=(ধ্রুব uint8_t *)pArgs->source;
+    sourceLimit=(ধ্রুব uint8_t *)pArgs->sourceLimit;
     target=pArgs->target;
     targetLimit=pArgs->targetLimit;
     offsets=pArgs->offsets;
@@ -253,7 +253,7 @@ _UTF7ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     sourceIndex=byteIndex==0 ? 0 : -1;
     nextSourceIndex=0;
 
-    if(inDirectMode) {
+    যদি(inDirectMode) {
 directMode:
         /*
          * In Direct Mode, most US-ASCII characters are encoded directly, i.e.,
@@ -266,39 +266,39 @@ directMode:
         byteIndex=0;
         length=(int32_t)(sourceLimit-source);
         targetCapacity=(int32_t)(targetLimit-target);
-        if(length>targetCapacity) {
+        যদি(length>targetCapacity) {
             length=targetCapacity;
         }
-        while(length>0) {
+        যাবত্(length>0) {
             b=*source++;
-            if(!isLegalUTF7(b)) {
+            যদি(!isLegalUTF7(b)) {
                 /* illegal */
                 bytes[0]=b;
                 byteIndex=1;
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                break;
-            } else if(b!=PLUS) {
+                ভঙ্গ;
+            } অন্যথা যদি(b!=PLUS) {
                 /* write directly encoded character */
                 *target++=b;
-                if(offsets!=nullptr) {
+                যদি(offsets!=nullptr) {
                     *offsets++=sourceIndex++;
                 }
-            } else /* PLUS */ {
+            } অন্যথা /* PLUS */ {
                 /* switch to Unicode mode */
                 nextSourceIndex=++sourceIndex;
-                inDirectMode=false;
+                inDirectMode=অসত্য;
                 byteIndex=0;
                 bits=0;
                 base64Counter=-1;
-                goto unicodeMode;
+                গচ্ছ unicodeMode;
             }
             --length;
         }
-        if(source<sourceLimit && target>=targetLimit) {
+        যদি(source<sourceLimit && target>=targetLimit) {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
         }
-    } else {
+    } অন্যথা {
 unicodeMode:
         /*
          * In Unicode (or "escape") Mode, UTF-16BE is base64-encoded.
@@ -310,12 +310,12 @@ unicodeMode:
          * keeping the index to the following byte.
          * Note that in 2 out of 3 cases, UChars overlap within a base64 byte.
          */
-        while(source<sourceLimit) {
-            if(target<targetLimit) {
+        যাবত্(source<sourceLimit) {
+            যদি(target<targetLimit) {
                 bytes[byteIndex++]=b=*source++;
                 ++nextSourceIndex;
-                base64Value = -3; /* initialize as illegal */
-                if(b>=126 || (base64Value=fromBase64[b])==-3 || base64Value==-1) {
+                base64_মান = -3; /* initialize as illegal */
+                যদি(b>=126 || (base64_মান=fromBase64[b])==-3 || base64_মান==-1) {
                     /* either
                      * base64Value==-1 for any legal character except base64 and minus sign, or
                      * base64Value==-3 for illegal characters:
@@ -329,115 +329,115 @@ unicodeMode:
                      *        It may be for example, a plus which we need to deal with in direct mode.
                      * 2.2.2. Else if the current char is illegal, we might as well deal with it here.
                      */
-                    inDirectMode=true;
-                    if(base64Counter==-1) {
+                    inDirectMode=সত্য;
+                    যদি(base64Counter==-1) {
                         /* illegal: + immediately followed by something other than base64 or minus sign */
                         /* include the plus sign in the reported sequence, but not the subsequent char */
                         --source;
                         bytes[0]=PLUS;
                         byteIndex=1;
                         *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        break;
-                    } else if(bits!=0) {
+                        ভঙ্গ;
+                    } অন্যথা যদি(bits!=0) {
                         /* bits are illegally left over, a char16_t is incomplete */
                         /* don't include current char (legal or illegal) in error seq */
                         --source;
                         --byteIndex;
                         *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        break;
-                    } else {
+                        ভঙ্গ;
+                    } অন্যথা {
                         /* previous char16_t was complete */
-                        if(base64Value==-3) {
+                        যদি(base64_মান==-3) {
                             /* current character is illegal, deal with it here */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            break;
-                        } else {
+                            ভঙ্গ;
+                        } অন্যথা {
                             /* un-read the current character in case it is a plus sign */
                             --source;
                             sourceIndex=nextSourceIndex-1;
-                            goto directMode;
+                            গচ্ছ directMode;
                         }
                     }
-                } else if(base64Value>=0) {
+                } অন্যথা যদি(base64_মান>=0) {
                     /* collect base64 bytes into UChars */
-                    switch(base64Counter) {
-                    case -1: /* -1 is immediately after the + */
-                    case 0:
-                        bits=base64Value;
+                    বিকল্প(base64Counter) {
+                    পক্ষ -1: /* -1 is immediately after the + */
+                    পক্ষ 0:
+                        bits=base64_মান;
                         base64Counter=1;
-                        break;
-                    case 1:
-                    case 3:
-                    case 4:
-                    case 6:
-                        bits=(uint16_t)((bits<<6)|base64Value);
+                        ভঙ্গ;
+                    পক্ষ 1:
+                    পক্ষ 3:
+                    পক্ষ 4:
+                    পক্ষ 6:
+                        bits=(uint16_t)((bits<<6)|base64_মান);
                         ++base64Counter;
-                        break;
-                    case 2:
-                        *target++=(char16_t)((bits<<4)|(base64Value>>2));
-                        if(offsets!=nullptr) {
+                        ভঙ্গ;
+                    পক্ষ 2:
+                        *target++=(char16_t)((bits<<4)|(base64_মান>>2));
+                        যদি(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                             sourceIndex=nextSourceIndex-1;
                         }
                         bytes[0]=b; /* keep this byte in case an error occurs */
                         byteIndex=1;
-                        bits=(uint16_t)(base64Value&3);
+                        bits=(uint16_t)(base64_মান&3);
                         base64Counter=3;
-                        break;
-                    case 5:
-                        *target++=(char16_t)((bits<<2)|(base64Value>>4));
-                        if(offsets!=nullptr) {
+                        ভঙ্গ;
+                    পক্ষ 5:
+                        *target++=(char16_t)((bits<<2)|(base64_মান>>4));
+                        যদি(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                             sourceIndex=nextSourceIndex-1;
                         }
                         bytes[0]=b; /* keep this byte in case an error occurs */
                         byteIndex=1;
-                        bits=(uint16_t)(base64Value&15);
+                        bits=(uint16_t)(base64_মান&15);
                         base64Counter=6;
-                        break;
-                    case 7:
-                        *target++=(char16_t)((bits<<6)|base64Value);
-                        if(offsets!=nullptr) {
+                        ভঙ্গ;
+                    পক্ষ 7:
+                        *target++=(char16_t)((bits<<6)|base64_মান);
+                        যদি(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                             sourceIndex=nextSourceIndex;
                         }
                         byteIndex=0;
                         bits=0;
                         base64Counter=0;
-                        break;
-                    default:
+                        ভঙ্গ;
+                    স্বভাব:
                         /* will never occur */
-                        break;
+                        ভঙ্গ;
                     }
-                } else /*base64Value==-2*/ {
+                } অন্যথা /*base64Value==-2*/ {
                     /* minus sign terminates the base64 sequence */
-                    inDirectMode=true;
-                    if(base64Counter==-1) {
+                    inDirectMode=সত্য;
+                    যদি(base64Counter==-1) {
                         /* +- i.e. a minus immediately following a plus */
                         *target++=PLUS;
-                        if(offsets!=nullptr) {
+                        যদি(offsets!=nullptr) {
                             *offsets++=sourceIndex-1;
                         }
-                    } else {
+                    } অন্যথা {
                         /* absorb the minus and leave the Unicode Mode */
-                        if(bits!=0) {
+                        যদি(bits!=0) {
                             /* bits are illegally left over, a char16_t is incomplete */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            break;
+                            ভঙ্গ;
                         }
                     }
                     sourceIndex=nextSourceIndex;
-                    goto directMode;
+                    গচ্ছ directMode;
                 }
-            } else {
+            } অন্যথা {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                ভঙ্গ;
             }
         }
     }
 
-    if(U_SUCCESS(*pErrorCode) && pArgs->flush && source==sourceLimit && bits==0) {
+    যদি(U_SUCCESS(*pErrorCode) && pArgs->flush && source==sourceLimit && bits==0) {
         /*
          * if we are in Unicode mode, then the byteIndex might not be 0,
          * but that is ok if bits==0
@@ -452,16 +452,16 @@ unicodeMode:
     cnv->toULength=byteIndex;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
+    pArgs->source=(ধ্রুব বর্ণ *)source;
     pArgs->target=target;
     pArgs->offsets=offsets;
 }
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _UTF7FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                             UErrorCode *pErrorCode) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
+    ধ্রুব char16_t *source, *sourceLimit;
     uint8_t *target, *targetLimit;
     int32_t *offsets;
 
@@ -469,7 +469,7 @@ _UTF7FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     char16_t c;
 
     /* UTF-7 state */
-    const UBool *encodeDirectly;
+    ধ্রুব UBool *encodeDirectly;
     uint8_t bits;
     int8_t base64Counter;
     UBool inDirectMode;
@@ -497,95 +497,95 @@ _UTF7FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     /* UTF-7 always encodes UTF-16 code units, therefore we need only a simple sourceIndex */
     sourceIndex=0;
 
-    if(inDirectMode) {
+    যদি(inDirectMode) {
 directMode:
         length=(int32_t)(sourceLimit-source);
         targetCapacity=(int32_t)(targetLimit-target);
-        if(length>targetCapacity) {
+        যদি(length>targetCapacity) {
             length=targetCapacity;
         }
-        while(length>0) {
+        যাবত্(length>0) {
             c=*source++;
             /* currently always encode CR LF SP TAB directly */
-            if(c<=127 && encodeDirectly[c]) {
+            যদি(c<=127 && encodeDirectly[c]) {
                 /* encode directly */
                 *target++=(uint8_t)c;
-                if(offsets!=nullptr) {
+                যদি(offsets!=nullptr) {
                     *offsets++=sourceIndex++;
                 }
-            } else if(c==PLUS) {
+            } অন্যথা যদি(c==PLUS) {
                 /* output +- for + */
                 *target++=PLUS;
-                if(target<targetLimit) {
+                যদি(target<targetLimit) {
                     *target++=MINUS;
-                    if(offsets!=nullptr) {
+                    যদি(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                         *offsets++=sourceIndex++;
                     }
                     /* realign length and targetCapacity */
-                    goto directMode;
-                } else {
-                    if(offsets!=nullptr) {
+                    গচ্ছ directMode;
+                } অন্যথা {
+                    যদি(offsets!=nullptr) {
                         *offsets++=sourceIndex++;
                     }
                     cnv->charErrorBuffer[0]=MINUS;
                     cnv->charErrorBufferLength=1;
                     *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    ভঙ্গ;
                 }
-            } else {
+            } অন্যথা {
                 /* un-read this character and switch to Unicode Mode */
                 --source;
                 *target++=PLUS;
-                if(offsets!=nullptr) {
+                যদি(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
-                inDirectMode=false;
+                inDirectMode=অসত্য;
                 base64Counter=0;
-                goto unicodeMode;
+                গচ্ছ unicodeMode;
             }
             --length;
         }
-        if(source<sourceLimit && target>=targetLimit) {
+        যদি(source<sourceLimit && target>=targetLimit) {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
         }
-    } else {
+    } অন্যথা {
 unicodeMode:
-        while(source<sourceLimit) {
-            if(target<targetLimit) {
+        যাবত্(source<sourceLimit) {
+            যদি(target<targetLimit) {
                 c=*source++;
-                if(c<=127 && encodeDirectly[c]) {
+                যদি(c<=127 && encodeDirectly[c]) {
                     /* encode directly */
-                    inDirectMode=true;
+                    inDirectMode=সত্য;
 
                     /* trick: back out this character to make this easier */
                     --source;
 
                     /* terminate the base64 sequence */
-                    if(base64Counter!=0) {
+                    যদি(base64Counter!=0) {
                         /* write remaining bits for the previous character */
                         *target++=toBase64[bits];
-                        if(offsets!=nullptr) {
+                        যদি(offsets!=nullptr) {
                             *offsets++=sourceIndex-1;
                         }
                     }
-                    if(fromBase64[c]!=-1) {
+                    যদি(fromBase64[c]!=-1) {
                         /* need to terminate with a minus */
-                        if(target<targetLimit) {
+                        যদি(target<targetLimit) {
                             *target++=MINUS;
-                            if(offsets!=nullptr) {
+                            যদি(offsets!=nullptr) {
                                 *offsets++=sourceIndex-1;
                             }
-                        } else {
+                        } অন্যথা {
                             cnv->charErrorBuffer[0]=MINUS;
                             cnv->charErrorBufferLength=1;
                             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                            break;
+                            ভঙ্গ;
                         }
                     }
-                    goto directMode;
-                } else {
+                    গচ্ছ directMode;
+                } অন্যথা {
                     /*
                      * base64 this character:
                      * Output 2 or 3 base64 bytes for the remaining bits of the previous character
@@ -595,17 +595,17 @@ unicodeMode:
                      * character to the next. The actual 2 or 4 bits are shifted to the left edge
                      * of the 6-bits field 5..0 to make the termination of the base64 sequence easier.
                      */
-                    switch(base64Counter) {
-                    case 0:
+                    বিকল্প(base64Counter) {
+                    পক্ষ 0:
                         *target++=toBase64[c>>10];
-                        if(target<targetLimit) {
+                        যদি(target<targetLimit) {
                             *target++=toBase64[(c>>4)&0x3f];
-                            if(offsets!=nullptr) {
+                            যদি(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                                 *offsets++=sourceIndex++;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
+                        } অন্যথা {
+                            যদি(offsets!=nullptr) {
                                 *offsets++=sourceIndex++;
                             }
                             cnv->charErrorBuffer[0]=toBase64[(c>>4)&0x3f];
@@ -614,20 +614,20 @@ unicodeMode:
                         }
                         bits=(uint8_t)((c&15)<<2);
                         base64Counter=1;
-                        break;
-                    case 1:
+                        ভঙ্গ;
+                    পক্ষ 1:
                         *target++=toBase64[bits|(c>>14)];
-                        if(target<targetLimit) {
+                        যদি(target<targetLimit) {
                             *target++=toBase64[(c>>8)&0x3f];
-                            if(target<targetLimit) {
+                            যদি(target<targetLimit) {
                                 *target++=toBase64[(c>>2)&0x3f];
-                                if(offsets!=nullptr) {
+                                যদি(offsets!=nullptr) {
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex++;
                                 }
-                            } else {
-                                if(offsets!=nullptr) {
+                            } অন্যথা {
+                                যদি(offsets!=nullptr) {
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex++;
                                 }
@@ -635,8 +635,8 @@ unicodeMode:
                                 cnv->charErrorBufferLength=1;
                                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
+                        } অন্যথা {
+                            যদি(offsets!=nullptr) {
                                 *offsets++=sourceIndex++;
                             }
                             cnv->charErrorBuffer[0]=toBase64[(c>>8)&0x3f];
@@ -646,20 +646,20 @@ unicodeMode:
                         }
                         bits=(uint8_t)((c&3)<<4);
                         base64Counter=2;
-                        break;
-                    case 2:
+                        ভঙ্গ;
+                    পক্ষ 2:
                         *target++=toBase64[bits|(c>>12)];
-                        if(target<targetLimit) {
+                        যদি(target<targetLimit) {
                             *target++=toBase64[(c>>6)&0x3f];
-                            if(target<targetLimit) {
+                            যদি(target<targetLimit) {
                                 *target++=toBase64[c&0x3f];
-                                if(offsets!=nullptr) {
+                                যদি(offsets!=nullptr) {
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex++;
                                 }
-                            } else {
-                                if(offsets!=nullptr) {
+                            } অন্যথা {
+                                যদি(offsets!=nullptr) {
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex++;
                                 }
@@ -667,8 +667,8 @@ unicodeMode:
                                 cnv->charErrorBufferLength=1;
                                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
+                        } অন্যথা {
+                            যদি(offsets!=nullptr) {
                                 *offsets++=sourceIndex++;
                             }
                             cnv->charErrorBuffer[0]=toBase64[(c>>6)&0x3f];
@@ -678,48 +678,48 @@ unicodeMode:
                         }
                         bits=0;
                         base64Counter=0;
-                        break;
-                    default:
+                        ভঙ্গ;
+                    স্বভাব:
                         /* will never occur */
-                        break;
+                        ভঙ্গ;
                     }
                 }
-            } else {
+            } অন্যথা {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                ভঙ্গ;
             }
         }
     }
 
-    if(pArgs->flush && source>=sourceLimit) {
+    যদি(pArgs->flush && source>=sourceLimit) {
         /* flush remaining bits to the target */
-        if(!inDirectMode) {
-            if (base64Counter!=0) {
-                if(target<targetLimit) {
+        যদি(!inDirectMode) {
+            যদি (base64Counter!=0) {
+                যদি(target<targetLimit) {
                     *target++=toBase64[bits];
-                    if(offsets!=nullptr) {
+                    যদি(offsets!=nullptr) {
                         *offsets++=sourceIndex-1;
                     }
-                } else {
+                } অন্যথা {
                     cnv->charErrorBuffer[cnv->charErrorBufferLength++]=toBase64[bits];
                     *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                 }
             }
             /* Add final MINUS to terminate unicodeMode */
-            if(target<targetLimit) {
+            যদি(target<targetLimit) {
                 *target++=MINUS;
-                if(offsets!=nullptr) {
+                যদি(offsets!=nullptr) {
                     *offsets++=sourceIndex-1;
                 }
-            } else {
+            } অন্যথা {
                 cnv->charErrorBuffer[cnv->charErrorBufferLength++]=MINUS;
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
             }
         }
         /* reset the state for the next conversion */
         cnv->fromUnicodeStatus=(cnv->fromUnicodeStatus&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
-    } else {
+    } অন্যথা {
         /* set the converter state back into UConverter */
         cnv->fromUnicodeStatus=
             (cnv->fromUnicodeStatus&0xf0000000)|    /* keep version*/
@@ -728,22 +728,22 @@ unicodeMode:
 
     /* write back the updated pointers */
     pArgs->source=source;
-    pArgs->target=(char *)target;
+    pArgs->target=(বর্ণ *)target;
     pArgs->offsets=offsets;
 }
 
-static const char * U_CALLCONV
-_UTF7GetName(const UConverter *cnv) {
-    switch(cnv->fromUnicodeStatus>>28) {
-    case 1:
-        return "UTF-7,version=1";
-    default:
-        return "UTF-7";
+স্থির ধ্রুব বর্ণ * U_CALLCONV
+_UTF7GetName(ধ্রুব UConverter *cnv) {
+    বিকল্প(cnv->fromUnicodeStatus>>28) {
+    পক্ষ 1:
+        প্রত্যাগম "UTF-7,version=1";
+    স্বভাব:
+        প্রত্যাগম "UTF-7";
     }
 }
 U_CDECL_END
 
-static const UConverterImpl _UTF7Impl={
+স্থির ধ্রুব UConverterImpl _UTF7Impl={
     UCNV_UTF7,
 
     nullptr,
@@ -769,20 +769,20 @@ static const UConverterImpl _UTF7Impl={
     nullptr
 };
 
-static const UConverterStaticData _UTF7StaticData={
-    sizeof(UConverterStaticData),
+স্থির ধ্রুব UConverterStaticData _UTF7StaticData={
+    পরিমাণ(UConverterStaticData),
     "UTF-7",
     0, /* TODO CCSID for UTF-7 */
     UCNV_IBM, UCNV_UTF7,
     1, 4,
     { 0x3f, 0, 0, 0 }, 1, /* the subchar is not used */
-    false, false,
+    অসত্য, অসত্য,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _UTF7Data=
+ধ্রুব UConverterSharedData _UTF7Data=
         UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF7StaticData, &_UTF7Impl);
 
 /* IMAP mailbox name encoding ----------------------------------------------- */
@@ -889,13 +889,13 @@ const UConverterSharedData _UTF7Data=
  */
 
 U_CDECL_BEGIN
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _IMAPToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
                           UErrorCode *pErrorCode) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit;
+    ধ্রুব uint8_t *source, *sourceLimit;
     char16_t *target;
-    const char16_t *targetLimit;
+    ধ্রুব char16_t *targetLimit;
     int32_t *offsets;
 
     uint8_t *bytes;
@@ -908,7 +908,7 @@ _IMAPToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     int8_t base64Counter;
     UBool inDirectMode;
 
-    int8_t base64Value;
+    int8_t base64_মান;
 
     int32_t sourceIndex, nextSourceIndex;
 
@@ -918,8 +918,8 @@ _IMAPToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     /* set up the local pointers */
     cnv=pArgs->converter;
 
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
+    source=(ধ্রুব uint8_t *)pArgs->source;
+    sourceLimit=(ধ্রুব uint8_t *)pArgs->sourceLimit;
     target=pArgs->target;
     targetLimit=pArgs->targetLimit;
     offsets=pArgs->offsets;
@@ -937,7 +937,7 @@ _IMAPToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     sourceIndex=byteIndex==0 ? 0 : -1;
     nextSourceIndex=0;
 
-    if(inDirectMode) {
+    যদি(inDirectMode) {
 directMode:
         /*
          * In Direct Mode, US-ASCII characters are encoded directly, i.e.,
@@ -949,39 +949,39 @@ directMode:
         byteIndex=0;
         length=(int32_t)(sourceLimit-source);
         targetCapacity=(int32_t)(targetLimit-target);
-        if(length>targetCapacity) {
+        যদি(length>targetCapacity) {
             length=targetCapacity;
         }
-        while(length>0) {
+        যাবত্(length>0) {
             b=*source++;
-            if(!isLegalIMAP(b)) {
+            যদি(!isLegalIMAP(b)) {
                 /* illegal */
                 bytes[0]=b;
                 byteIndex=1;
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                break;
-            } else if(b!=AMPERSAND) {
+                ভঙ্গ;
+            } অন্যথা যদি(b!=AMPERSAND) {
                 /* write directly encoded character */
                 *target++=b;
-                if(offsets!=nullptr) {
+                যদি(offsets!=nullptr) {
                     *offsets++=sourceIndex++;
                 }
-            } else /* AMPERSAND */ {
+            } অন্যথা /* AMPERSAND */ {
                 /* switch to Unicode mode */
                 nextSourceIndex=++sourceIndex;
-                inDirectMode=false;
+                inDirectMode=অসত্য;
                 byteIndex=0;
                 bits=0;
                 base64Counter=-1;
-                goto unicodeMode;
+                গচ্ছ unicodeMode;
             }
             --length;
         }
-        if(source<sourceLimit && target>=targetLimit) {
+        যদি(source<sourceLimit && target>=targetLimit) {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
         }
-    } else {
+    } অন্যথা {
 unicodeMode:
         /*
          * In Unicode (or "escape") Mode, UTF-16BE is base64-encoded.
@@ -994,109 +994,109 @@ unicodeMode:
          * keeping the index to the following byte.
          * Note that in 2 out of 3 cases, UChars overlap within a base64 byte.
          */
-        while(source<sourceLimit) {
-            if(target<targetLimit) {
+        যাবত্(source<sourceLimit) {
+            যদি(target<targetLimit) {
                 bytes[byteIndex++]=b=*source++;
                 ++nextSourceIndex;
-                if(b>0x7e) {
+                যদি(b>0x7e) {
                     /* illegal - test other illegal US-ASCII values by base64Value==-3 */
-                    inDirectMode=true;
+                    inDirectMode=সত্য;
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    break;
-                } else if((base64Value=FROM_BASE64_IMAP(b))>=0) {
+                    ভঙ্গ;
+                } অন্যথা যদি((base64_মান=FROM_BASE64_IMAP(b))>=0) {
                     /* collect base64 bytes into UChars */
-                    switch(base64Counter) {
-                    case -1: /* -1 is immediately after the & */
-                    case 0:
-                        bits=base64Value;
+                    বিকল্প(base64Counter) {
+                    পক্ষ -1: /* -1 is immediately after the & */
+                    পক্ষ 0:
+                        bits=base64_মান;
                         base64Counter=1;
-                        break;
-                    case 1:
-                    case 3:
-                    case 4:
-                    case 6:
-                        bits=(uint16_t)((bits<<6)|base64Value);
+                        ভঙ্গ;
+                    পক্ষ 1:
+                    পক্ষ 3:
+                    পক্ষ 4:
+                    পক্ষ 6:
+                        bits=(uint16_t)((bits<<6)|base64_মান);
                         ++base64Counter;
-                        break;
-                    case 2:
-                        c=(char16_t)((bits<<4)|(base64Value>>2));
-                        if(isLegalIMAP(c)) {
+                        ভঙ্গ;
+                    পক্ষ 2:
+                        c=(char16_t)((bits<<4)|(base64_মান>>2));
+                        যদি(isLegalIMAP(c)) {
                             /* illegal */
-                            inDirectMode=true;
+                            inDirectMode=সত্য;
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            গচ্ছ endloop;
                         }
                         *target++=c;
-                        if(offsets!=nullptr) {
+                        যদি(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                             sourceIndex=nextSourceIndex-1;
                         }
                         bytes[0]=b; /* keep this byte in case an error occurs */
                         byteIndex=1;
-                        bits=(uint16_t)(base64Value&3);
+                        bits=(uint16_t)(base64_মান&3);
                         base64Counter=3;
-                        break;
-                    case 5:
-                        c=(char16_t)((bits<<2)|(base64Value>>4));
-                        if(isLegalIMAP(c)) {
+                        ভঙ্গ;
+                    পক্ষ 5:
+                        c=(char16_t)((bits<<2)|(base64_মান>>4));
+                        যদি(isLegalIMAP(c)) {
                             /* illegal */
-                            inDirectMode=true;
+                            inDirectMode=সত্য;
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            গচ্ছ endloop;
                         }
                         *target++=c;
-                        if(offsets!=nullptr) {
+                        যদি(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                             sourceIndex=nextSourceIndex-1;
                         }
                         bytes[0]=b; /* keep this byte in case an error occurs */
                         byteIndex=1;
-                        bits=(uint16_t)(base64Value&15);
+                        bits=(uint16_t)(base64_মান&15);
                         base64Counter=6;
-                        break;
-                    case 7:
-                        c=(char16_t)((bits<<6)|base64Value);
-                        if(isLegalIMAP(c)) {
+                        ভঙ্গ;
+                    পক্ষ 7:
+                        c=(char16_t)((bits<<6)|base64_মান);
+                        যদি(isLegalIMAP(c)) {
                             /* illegal */
-                            inDirectMode=true;
+                            inDirectMode=সত্য;
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            গচ্ছ endloop;
                         }
                         *target++=c;
-                        if(offsets!=nullptr) {
+                        যদি(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                             sourceIndex=nextSourceIndex;
                         }
                         byteIndex=0;
                         bits=0;
                         base64Counter=0;
-                        break;
-                    default:
+                        ভঙ্গ;
+                    স্বভাব:
                         /* will never occur */
-                        break;
+                        ভঙ্গ;
                     }
-                } else if(base64Value==-2) {
+                } অন্যথা যদি(base64_মান==-2) {
                     /* minus sign terminates the base64 sequence */
-                    inDirectMode=true;
-                    if(base64Counter==-1) {
+                    inDirectMode=সত্য;
+                    যদি(base64Counter==-1) {
                         /* &- i.e. a minus immediately following an ampersand */
                         *target++=AMPERSAND;
-                        if(offsets!=nullptr) {
+                        যদি(offsets!=nullptr) {
                             *offsets++=sourceIndex-1;
                         }
-                    } else {
+                    } অন্যথা {
                         /* absorb the minus and leave the Unicode Mode */
-                        if(bits!=0 || (base64Counter!=0 && base64Counter!=3 && base64Counter!=6)) {
+                        যদি(bits!=0 || (base64Counter!=0 && base64Counter!=3 && base64Counter!=6)) {
                             /* bits are illegally left over, a char16_t is incomplete */
                             /* base64Counter other than 0, 3, 6 means non-minimal zero-padding, also illegal */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            break;
+                            ভঙ্গ;
                         }
                     }
                     sourceIndex=nextSourceIndex;
-                    goto directMode;
-                } else {
-                    if(base64Counter==-1) {
+                    গচ্ছ directMode;
+                } অন্যথা {
+                    যদি(base64Counter==-1) {
                         /* illegal: & immediately followed by something other than base64 or minus sign */
                         /* include the ampersand in the reported sequence */
                         --sourceIndex;
@@ -1107,14 +1107,14 @@ unicodeMode:
                     /* base64Value==-1 for characters that are illegal only in Unicode mode */
                     /* base64Value==-3 for illegal characters */
                     /* illegal */
-                    inDirectMode=true;
+                    inDirectMode=সত্য;
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    break;
+                    ভঙ্গ;
                 }
-            } else {
+            } অন্যথা {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                ভঙ্গ;
             }
         }
     }
@@ -1130,11 +1130,11 @@ endloop:
      *   in Unicode mode and byteIndex==0
      *   end of input and no truncated input
      */
-    if( U_SUCCESS(*pErrorCode) &&
+    যদি( U_SUCCESS(*pErrorCode) &&
         !inDirectMode && byteIndex==0 &&
         pArgs->flush && source>=sourceLimit
     ) {
-        if(base64Counter==-1) {
+        যদি(base64Counter==-1) {
             /* & at the very end of the input */
             /* make the ampersand the reported sequence */
             bytes[0]=AMPERSAND;
@@ -1142,7 +1142,7 @@ endloop:
         }
         /* else if(base64Counter!=-1) byteIndex remains 0 because there is no particular byte sequence */
 
-        inDirectMode=true; /* avoid looping */
+        inDirectMode=সত্য; /* avoid looping */
         *pErrorCode=U_TRUNCATED_CHAR_FOUND;
     }
 
@@ -1151,16 +1151,16 @@ endloop:
     cnv->toULength=byteIndex;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
+    pArgs->source=(ধ্রুব বর্ণ *)source;
     pArgs->target=target;
     pArgs->offsets=offsets;
 }
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _IMAPFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                             UErrorCode *pErrorCode) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
+    ধ্রুব char16_t *source, *sourceLimit;
     uint8_t *target, *targetLimit;
     int32_t *offsets;
 
@@ -1194,93 +1194,93 @@ _IMAPFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     /* UTF-7 always encodes UTF-16 code units, therefore we need only a simple sourceIndex */
     sourceIndex=0;
 
-    if(inDirectMode) {
+    যদি(inDirectMode) {
 directMode:
         length=(int32_t)(sourceLimit-source);
         targetCapacity=(int32_t)(targetLimit-target);
-        if(length>targetCapacity) {
+        যদি(length>targetCapacity) {
             length=targetCapacity;
         }
-        while(length>0) {
+        যাবত্(length>0) {
             c=*source++;
             /* encode 0x20..0x7e except '&' directly */
-            if(inSetDIMAP(c)) {
+            যদি(inSetDIMAP(c)) {
                 /* encode directly */
                 *target++=(uint8_t)c;
-                if(offsets!=nullptr) {
+                যদি(offsets!=nullptr) {
                     *offsets++=sourceIndex++;
                 }
-            } else if(c==AMPERSAND) {
+            } অন্যথা যদি(c==AMPERSAND) {
                 /* output &- for & */
                 *target++=AMPERSAND;
-                if(target<targetLimit) {
+                যদি(target<targetLimit) {
                     *target++=MINUS;
-                    if(offsets!=nullptr) {
+                    যদি(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                         *offsets++=sourceIndex++;
                     }
                     /* realign length and targetCapacity */
-                    goto directMode;
-                } else {
-                    if(offsets!=nullptr) {
+                    গচ্ছ directMode;
+                } অন্যথা {
+                    যদি(offsets!=nullptr) {
                         *offsets++=sourceIndex++;
                     }
                     cnv->charErrorBuffer[0]=MINUS;
                     cnv->charErrorBufferLength=1;
                     *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    ভঙ্গ;
                 }
-            } else {
+            } অন্যথা {
                 /* un-read this character and switch to Unicode Mode */
                 --source;
                 *target++=AMPERSAND;
-                if(offsets!=nullptr) {
+                যদি(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
-                inDirectMode=false;
+                inDirectMode=অসত্য;
                 base64Counter=0;
-                goto unicodeMode;
+                গচ্ছ unicodeMode;
             }
             --length;
         }
-        if(source<sourceLimit && target>=targetLimit) {
+        যদি(source<sourceLimit && target>=targetLimit) {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
         }
-    } else {
+    } অন্যথা {
 unicodeMode:
-        while(source<sourceLimit) {
-            if(target<targetLimit) {
+        যাবত্(source<sourceLimit) {
+            যদি(target<targetLimit) {
                 c=*source++;
-                if(isLegalIMAP(c)) {
+                যদি(isLegalIMAP(c)) {
                     /* encode directly */
-                    inDirectMode=true;
+                    inDirectMode=সত্য;
 
                     /* trick: back out this character to make this easier */
                     --source;
 
                     /* terminate the base64 sequence */
-                    if(base64Counter!=0) {
+                    যদি(base64Counter!=0) {
                         /* write remaining bits for the previous character */
                         *target++=TO_BASE64_IMAP(bits);
-                        if(offsets!=nullptr) {
+                        যদি(offsets!=nullptr) {
                             *offsets++=sourceIndex-1;
                         }
                     }
                     /* need to terminate with a minus */
-                    if(target<targetLimit) {
+                    যদি(target<targetLimit) {
                         *target++=MINUS;
-                        if(offsets!=nullptr) {
+                        যদি(offsets!=nullptr) {
                             *offsets++=sourceIndex-1;
                         }
-                    } else {
+                    } অন্যথা {
                         cnv->charErrorBuffer[0]=MINUS;
                         cnv->charErrorBufferLength=1;
                         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                        break;
+                        ভঙ্গ;
                     }
-                    goto directMode;
-                } else {
+                    গচ্ছ directMode;
+                } অন্যথা {
                     /*
                      * base64 this character:
                      * Output 2 or 3 base64 bytes for the remaining bits of the previous character
@@ -1290,19 +1290,19 @@ unicodeMode:
                      * character to the next. The actual 2 or 4 bits are shifted to the left edge
                      * of the 6-bits field 5..0 to make the termination of the base64 sequence easier.
                      */
-                    switch(base64Counter) {
-                    case 0:
+                    বিকল্প(base64Counter) {
+                    পক্ষ 0:
                         b=(uint8_t)(c>>10);
                         *target++=TO_BASE64_IMAP(b);
-                        if(target<targetLimit) {
+                        যদি(target<targetLimit) {
                             b=(uint8_t)((c>>4)&0x3f);
                             *target++=TO_BASE64_IMAP(b);
-                            if(offsets!=nullptr) {
+                            যদি(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                                 *offsets++=sourceIndex++;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
+                        } অন্যথা {
+                            যদি(offsets!=nullptr) {
                                 *offsets++=sourceIndex++;
                             }
                             b=(uint8_t)((c>>4)&0x3f);
@@ -1312,23 +1312,23 @@ unicodeMode:
                         }
                         bits=(uint8_t)((c&15)<<2);
                         base64Counter=1;
-                        break;
-                    case 1:
+                        ভঙ্গ;
+                    পক্ষ 1:
                         b=(uint8_t)(bits|(c>>14));
                         *target++=TO_BASE64_IMAP(b);
-                        if(target<targetLimit) {
+                        যদি(target<targetLimit) {
                             b=(uint8_t)((c>>8)&0x3f);
                             *target++=TO_BASE64_IMAP(b);
-                            if(target<targetLimit) {
+                            যদি(target<targetLimit) {
                                 b=(uint8_t)((c>>2)&0x3f);
                                 *target++=TO_BASE64_IMAP(b);
-                                if(offsets!=nullptr) {
+                                যদি(offsets!=nullptr) {
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex++;
                                 }
-                            } else {
-                                if(offsets!=nullptr) {
+                            } অন্যথা {
+                                যদি(offsets!=nullptr) {
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex++;
                                 }
@@ -1337,8 +1337,8 @@ unicodeMode:
                                 cnv->charErrorBufferLength=1;
                                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
+                        } অন্যথা {
+                            যদি(offsets!=nullptr) {
                                 *offsets++=sourceIndex++;
                             }
                             b=(uint8_t)((c>>8)&0x3f);
@@ -1350,23 +1350,23 @@ unicodeMode:
                         }
                         bits=(uint8_t)((c&3)<<4);
                         base64Counter=2;
-                        break;
-                    case 2:
+                        ভঙ্গ;
+                    পক্ষ 2:
                         b=(uint8_t)(bits|(c>>12));
                         *target++=TO_BASE64_IMAP(b);
-                        if(target<targetLimit) {
+                        যদি(target<targetLimit) {
                             b=(uint8_t)((c>>6)&0x3f);
                             *target++=TO_BASE64_IMAP(b);
-                            if(target<targetLimit) {
+                            যদি(target<targetLimit) {
                                 b=(uint8_t)(c&0x3f);
                                 *target++=TO_BASE64_IMAP(b);
-                                if(offsets!=nullptr) {
+                                যদি(offsets!=nullptr) {
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex++;
                                 }
-                            } else {
-                                if(offsets!=nullptr) {
+                            } অন্যথা {
+                                যদি(offsets!=nullptr) {
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex++;
                                 }
@@ -1375,8 +1375,8 @@ unicodeMode:
                                 cnv->charErrorBufferLength=1;
                                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
+                        } অন্যথা {
+                            যদি(offsets!=nullptr) {
                                 *offsets++=sourceIndex++;
                             }
                             b=(uint8_t)((c>>6)&0x3f);
@@ -1388,48 +1388,48 @@ unicodeMode:
                         }
                         bits=0;
                         base64Counter=0;
-                        break;
-                    default:
+                        ভঙ্গ;
+                    স্বভাব:
                         /* will never occur */
-                        break;
+                        ভঙ্গ;
                     }
                 }
-            } else {
+            } অন্যথা {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                ভঙ্গ;
             }
         }
     }
 
-    if(pArgs->flush && source>=sourceLimit) {
+    যদি(pArgs->flush && source>=sourceLimit) {
         /* flush remaining bits to the target */
-        if(!inDirectMode) {
-            if(base64Counter!=0) {
-                if(target<targetLimit) {
+        যদি(!inDirectMode) {
+            যদি(base64Counter!=0) {
+                যদি(target<targetLimit) {
                     *target++=TO_BASE64_IMAP(bits);
-                    if(offsets!=nullptr) {
+                    যদি(offsets!=nullptr) {
                         *offsets++=sourceIndex-1;
                     }
-                } else {
+                } অন্যথা {
                     cnv->charErrorBuffer[cnv->charErrorBufferLength++]=TO_BASE64_IMAP(bits);
                     *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                 }
             }
             /* need to terminate with a minus */
-            if(target<targetLimit) {
+            যদি(target<targetLimit) {
                 *target++=MINUS;
-                if(offsets!=nullptr) {
+                যদি(offsets!=nullptr) {
                     *offsets++=sourceIndex-1;
                 }
-            } else {
+            } অন্যথা {
                 cnv->charErrorBuffer[cnv->charErrorBufferLength++]=MINUS;
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
             }
         }
         /* reset the state for the next conversion */
         cnv->fromUnicodeStatus=(cnv->fromUnicodeStatus&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
-    } else {
+    } অন্যথা {
         /* set the converter state back into UConverter */
         cnv->fromUnicodeStatus=
             (cnv->fromUnicodeStatus&0xf0000000)|    /* keep version*/
@@ -1438,12 +1438,12 @@ unicodeMode:
 
     /* write back the updated pointers */
     pArgs->source=source;
-    pArgs->target=(char *)target;
+    pArgs->target=(বর্ণ *)target;
     pArgs->offsets=offsets;
 }
 U_CDECL_END
 
-static const UConverterImpl _IMAPImpl={
+স্থির ধ্রুব UConverterImpl _IMAPImpl={
     UCNV_IMAP_MAILBOX,
 
     nullptr,
@@ -1468,20 +1468,20 @@ static const UConverterImpl _IMAPImpl={
     nullptr
 };
 
-static const UConverterStaticData _IMAPStaticData={
-    sizeof(UConverterStaticData),
+স্থির ধ্রুব UConverterStaticData _IMAPStaticData={
+    পরিমাণ(UConverterStaticData),
     "IMAP-mailbox-name",
     0, /* TODO CCSID for IMAP-mailbox-name */
     UCNV_IBM, UCNV_IMAP_MAILBOX,
     1, 4,
     { 0x3f, 0, 0, 0 }, 1, /* the subchar is not used */
-    false, false,
+    অসত্য, অসত্য,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _IMAPData=
+ধ্রুব UConverterSharedData _IMAPData=
         UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_IMAPStaticData, &_IMAPImpl);
 
 #endif

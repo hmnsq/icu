@@ -13,7 +13,7 @@
 #ifndef __UREP_H
 #define __UREP_H
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
 U_CDECL_BEGIN
 
@@ -41,7 +41,7 @@ U_CDECL_BEGIN
  * This is currently only used in the Transliterator C API, see utrans.h .
  * @stable ICU 2.0
  */
-typedef void* UReplaceable;
+প্রকারনির্দেশ শূন্য* UReplaceable;
 
 /**
  * A set of function pointers that transliterators use to manipulate a
@@ -50,7 +50,7 @@ typedef void* UReplaceable;
  * Replaceable.
  * @stable ICU 2.0
  */
-typedef struct UReplaceableCallbacks {
+প্রকারনির্দেশ সংরচনা UReplaceableCallbacks {
 
     /**
      * Function pointer that returns the number of UChar code units in
@@ -60,7 +60,7 @@ typedef struct UReplaceableCallbacks {
      * @return The length of the text.
      * @stable ICU 2.0
      */
-    int32_t (*length)(const UReplaceable* rep);
+    int32_t (*length)(ধ্রুব UReplaceable* rep);
 
     /**
      * Function pointer that returns a UChar code units at the given
@@ -73,7 +73,7 @@ typedef struct UReplaceableCallbacks {
      * @return The UChar (code unit) at offset, or U+FFFF if the offset is out of bounds.
      * @stable ICU 2.0
      */
-    UChar   (*charAt)(const UReplaceable* rep,
+    UChar   (*charAt)(ধ্রুব UReplaceable* rep,
                       int32_t offset);
 
     /**
@@ -86,7 +86,7 @@ typedef struct UReplaceableCallbacks {
      * @return The UChar32 (code point) at offset, or U+FFFF if the offset is out of bounds.
      * @stable ICU 2.0
      */
-    UChar32 (*char32At)(const UReplaceable* rep,
+    UChar32 (*char32At)(ধ্রুব UReplaceable* rep,
                         int32_t offset);
     
     /**
@@ -105,10 +105,10 @@ typedef struct UReplaceableCallbacks {
      * is null-terminated.
      * @stable ICU 2.0
      */
-    void    (*replace)(UReplaceable* rep,
+    শূন্য    (*replace)(UReplaceable* rep,
                        int32_t start,
                        int32_t limit,
-                       const UChar* text,
+                       ধ্রুব UChar* text,
                        int32_t textLength);
     
     /**
@@ -124,7 +124,7 @@ typedef struct UReplaceableCallbacks {
      * <tt>dst</tt> must be at least <tt>(limit - start)</tt>.
      * @stable ICU 2.1
      */
-    void    (*extract)(UReplaceable* rep,
+    শূন্য    (*extract)(UReplaceable* rep,
                        int32_t start,
                        int32_t limit,
                        UChar* dst);
@@ -145,7 +145,7 @@ typedef struct UReplaceableCallbacks {
      * inserted.
      * @stable ICU 2.0
      */
-    void    (*copy)(UReplaceable* rep,
+    শূন্য    (*copy)(UReplaceable* rep,
                     int32_t start,
                     int32_t limit,
                     int32_t dest);    

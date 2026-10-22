@@ -8,109 +8,109 @@
 // Author: wilsonh@google.com (Wilson Hsieh)
 //
 
-#include "unicode/utypes.h"
-#include "unicode/stringpiece.h"
-#include "cstring.h"
-#include "cmemory.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/stringpiece.h"
+#অন্তর্ভাব "cstring.h"
+#অন্তর্ভাব "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
-StringPiece::StringPiece(const char* str U_LIFETIME_BOUND)
+StringPiece::StringPiece(ধ্রুব বর্ণ* str U_LIFETIME_BOUND)
     : ptr_(str), length_((str == nullptr) ? 0 : static_cast<int32_t>(uprv_strlen(str))) { }
 
-StringPiece::StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos) {
-  if (pos < 0) {
+StringPiece::StringPiece(ধ্রুব StringPiece& x U_LIFETIME_BOUND, int32_t pos) {
+  যদি (pos < 0) {
     pos = 0;
-  } else if (pos > x.length_) {
+  } অন্যথা যদি (pos > x.length_) {
     pos = x.length_;
   }
   ptr_ = x.ptr_ + pos;
   length_ = x.length_ - pos;
 }
 
-StringPiece::StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len) {
-  if (pos < 0) {
+StringPiece::StringPiece(ধ্রুব StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len) {
+  যদি (pos < 0) {
     pos = 0;
-  } else if (pos > x.length_) {
+  } অন্যথা যদি (pos > x.length_) {
     pos = x.length_;
   }
-  if (len < 0) {
+  যদি (len < 0) {
     len = 0;
-  } else if (len > x.length_ - pos) {
+  } অন্যথা যদি (len > x.length_ - pos) {
     len = x.length_ - pos;
   }
   ptr_ = x.ptr_ + pos;
   length_ = len;
 }
 
-void StringPiece::set(const char* str) {
+শূন্য StringPiece::set(ধ্রুব বর্ণ* str) {
   ptr_ = str;
-  if (str != nullptr)
+  যদি (str != nullptr)
     length_ = static_cast<int32_t>(uprv_strlen(str));
-  else
+  অন্যথা
     length_ = 0;
 }
 
 int32_t StringPiece::find(StringPiece needle, int32_t offset) {
-  if (length() == 0 && needle.length() == 0) {
-    return 0;
+  যদি (length() == 0 && needle.length() == 0) {
+    প্রত্যাগম 0;
   }
   // TODO: Improve to be better than O(N^2)?
-  for (int32_t i = offset; i < length(); i++) {
+  প্রতি (int32_t i = offset; i < length(); i++) {
     int32_t j = 0;
-    for (; j < needle.length(); i++, j++) {
-      if (data()[i] != needle.data()[j]) {
+    প্রতি (; j < needle.length(); i++, j++) {
+      যদি (data()[i] != needle.data()[j]) {
         i -= j;
-        goto outer_end;
+        গচ্ছ outer_end;
       }
     }
-    return i - j;
-    outer_end: void();
+    প্রত্যাগম i - j;
+    outer_end: শূন্য();
   }
-  return -1;
+  প্রত্যাগম -1;
 }
 
 int32_t StringPiece::compare(StringPiece other) {
   int32_t i = 0;
-  for (; i < length(); i++) {
-    if (i == other.length()) {
+  প্রতি (; i < length(); i++) {
+    যদি (i == other.length()) {
       // this is longer
-      return 1;
+      প্রত্যাগম 1;
     }
-    char a = data()[i];
-    char b = other.data()[i];
-    if (a < b) {
-      return -1;
-    } else if (a > b) {
-      return 1;
+    বর্ণ a = data()[i];
+    বর্ণ b = other.data()[i];
+    যদি (a < b) {
+      প্রত্যাগম -1;
+    } অন্যথা যদি (a > b) {
+      প্রত্যাগম 1;
     }
   }
-  if (i < other.length()) {
+  যদি (i < other.length()) {
     // other is longer
-    return -1;
+    প্রত্যাগম -1;
   }
-  return 0;
+  প্রত্যাগম 0;
 }
 
 U_EXPORT UBool U_EXPORT2
-operator==(const StringPiece& x, const StringPiece& y) {
+operator==(ধ্রুব StringPiece& x, ধ্রুব StringPiece& y) {
   int32_t len = x.size();
-  if (len != y.size()) {
-    return false;
+  যদি (len != y.size()) {
+    প্রত্যাগম অসত্য;
   }
-  if (len == 0) {
-    return true;
+  যদি (len == 0) {
+    প্রত্যাগম সত্য;
   }
-  const char* p = x.data();
-  const char* p2 = y.data();
+  ধ্রুব বর্ণ* p = x.data();
+  ধ্রুব বর্ণ* p2 = y.data();
   // Test last byte in case strings share large common prefix
   --len;
-  if (p[len] != p2[len]) return false;
+  যদি (p[len] != p2[len]) প্রত্যাগম অসত্য;
   // At this point we can, but don't have to, ignore the last byte.
-  return uprv_memcmp(p, p2, len) == 0;
+  প্রত্যাগম uprv_memcmp(p, p2, len) == 0;
 }
 
 
-const int32_t StringPiece::npos = 0x7fffffff;
+ধ্রুব int32_t StringPiece::npos = 0x7fffffff;
 
 U_NAMESPACE_END

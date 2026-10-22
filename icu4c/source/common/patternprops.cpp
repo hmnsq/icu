@@ -14,8 +14,8 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "patternprops.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "patternprops.h"
 
 U_NAMESPACE_BEGIN
 
@@ -26,7 +26,7 @@ U_NAMESPACE_BEGIN
  * bit 2 if Pattern_White_Space is true.
  * That is, Pattern_Syntax is encoded as 3 and Pattern_White_Space as 5.
  */
-static const uint8_t latin1[256]={
+স্থির ধ্রুব uint8_t latin1[256]={
     // WS: 9..D
     0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -61,7 +61,7 @@ static const uint8_t latin1[256]={
  * a small table of 32-bit data words.
  * The first two data words are all-zeros and all-ones.
  */
-static const uint8_t index2000[130]={
+স্থির ধ্রুব uint8_t index2000[130]={
     2, 3, 4, 0, 0, 0, 0, 0,  // 20xx
     0, 0, 0, 0, 5, 1, 1, 1,  // 21xx
     1, 1, 1, 1, 1, 1, 1, 1,  // 22xx
@@ -85,7 +85,7 @@ static const uint8_t index2000[130]={
  * One 32-bit integer per 32 characters. Ranges of all-false and all-true
  * are mapped to the first two values, other ranges map to appropriate bit patterns.
  */
-static const uint32_t syntax2000[]={
+স্থির ধ্রুব uint32_t syntax2000[]={
     0,
     0xffffffff,
     0xffff0000,  // 2: 2010..201F
@@ -102,7 +102,7 @@ static const uint32_t syntax2000[]={
  * Same as syntax2000, but with additional bits set for the
  * Pattern_White_Space characters 200E 200F 2028 2029.
  */
-static const uint32_t syntaxOrWhiteSpace2000[]={
+স্থির ধ্রুব uint32_t syntaxOrWhiteSpace2000[]={
     0,
     0xffffffff,
     0xffffc000,  // 2: 200E..201F
@@ -117,114 +117,114 @@ static const uint32_t syntaxOrWhiteSpace2000[]={
 
 UBool
 PatternProps::isSyntax(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return (latin1[c] >> 1) & 1;
-    } else if(c<0x2010) {
-        return false;
-    } else if(c<=0x3030) {
+    যদি(c<0) {
+        প্রত্যাগম অসত্য;
+    } অন্যথা যদি(c<=0xff) {
+        প্রত্যাগম (latin1[c] >> 1) & 1;
+    } অন্যথা যদি(c<0x2010) {
+        প্রত্যাগম অসত্য;
+    } অন্যথা যদি(c<=0x3030) {
         uint32_t bits=syntax2000[index2000[(c-0x2000)>>5]];
-        return (bits >> (c & 0x1f)) & 1;
-    } else if(0xfd3e<=c && c<=0xfe46) {
-        return c<=0xfd3f || 0xfe45<=c;
-    } else {
-        return false;
+        প্রত্যাগম (bits >> (c & 0x1f)) & 1;
+    } অন্যথা যদি(0xfd3e<=c && c<=0xfe46) {
+        প্রত্যাগম c<=0xfd3f || 0xfe45<=c;
+    } অন্যথা {
+        প্রত্যাগম অসত্য;
     }
 }
 
 UBool
 PatternProps::isSyntaxOrWhiteSpace(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return latin1[c] & 1;
-    } else if(c<0x200e) {
-        return false;
-    } else if(c<=0x3030) {
+    যদি(c<0) {
+        প্রত্যাগম অসত্য;
+    } অন্যথা যদি(c<=0xff) {
+        প্রত্যাগম latin1[c] & 1;
+    } অন্যথা যদি(c<0x200e) {
+        প্রত্যাগম অসত্য;
+    } অন্যথা যদি(c<=0x3030) {
         uint32_t bits=syntaxOrWhiteSpace2000[index2000[(c-0x2000)>>5]];
-        return (bits >> (c & 0x1f)) & 1;
-    } else if(0xfd3e<=c && c<=0xfe46) {
-        return c<=0xfd3f || 0xfe45<=c;
-    } else {
-        return false;
+        প্রত্যাগম (bits >> (c & 0x1f)) & 1;
+    } অন্যথা যদি(0xfd3e<=c && c<=0xfe46) {
+        প্রত্যাগম c<=0xfd3f || 0xfe45<=c;
+    } অন্যথা {
+        প্রত্যাগম অসত্য;
     }
 }
 
 UBool
 PatternProps::isWhiteSpace(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return (latin1[c] >> 2) & 1;
-    } else if(0x200e<=c && c<=0x2029) {
-        return c<=0x200f || 0x2028<=c;
-    } else {
-        return false;
+    যদি(c<0) {
+        প্রত্যাগম অসত্য;
+    } অন্যথা যদি(c<=0xff) {
+        প্রত্যাগম (latin1[c] >> 2) & 1;
+    } অন্যথা যদি(0x200e<=c && c<=0x2029) {
+        প্রত্যাগম c<=0x200f || 0x2028<=c;
+    } অন্যথা {
+        প্রত্যাগম অসত্য;
     }
 }
 
-const char16_t *
-PatternProps::skipWhiteSpace(const char16_t *s, int32_t length) {
-    while(length>0 && isWhiteSpace(*s)) {
+ধ্রুব char16_t *
+PatternProps::skipWhiteSpace(ধ্রুব char16_t *s, int32_t length) {
+    যাবত্(length>0 && isWhiteSpace(*s)) {
         ++s;
         --length;
     }
-    return s;
+    প্রত্যাগম s;
 }
 
 int32_t
-PatternProps::skipWhiteSpace(const UnicodeString& s, int32_t start) {
+PatternProps::skipWhiteSpace(ধ্রুব UnicodeString& s, int32_t start) {
     int32_t i = start;
     int32_t length = s.length();
-    while(i<length && isWhiteSpace(s.charAt(i))) {
+    যাবত্(i<length && isWhiteSpace(s.charAt(i))) {
         ++i;
     }
-    return i;
+    প্রত্যাগম i;
 }
 
-const char16_t *
-PatternProps::trimWhiteSpace(const char16_t *s, int32_t &length) {
-    if(length<=0 || (!isWhiteSpace(s[0]) && !isWhiteSpace(s[length-1]))) {
-        return s;
+ধ্রুব char16_t *
+PatternProps::trimWhiteSpace(ধ্রুব char16_t *s, int32_t &length) {
+    যদি(length<=0 || (!isWhiteSpace(s[0]) && !isWhiteSpace(s[length-1]))) {
+        প্রত্যাগম s;
     }
     int32_t start=0;
     int32_t limit=length;
-    while(start<limit && isWhiteSpace(s[start])) {
+    যাবত্(start<limit && isWhiteSpace(s[start])) {
         ++start;
     }
-    if(start<limit) {
+    যদি(start<limit) {
         // There is non-white space at start; we will not move limit below that,
         // so we need not test start<limit in the loop.
-        while(isWhiteSpace(s[limit-1])) {
+        যাবত্(isWhiteSpace(s[limit-1])) {
             --limit;
         }
     }
     length=limit-start;
-    return s+start;
+    প্রত্যাগম s+start;
 }
 
 UBool
-PatternProps::isIdentifier(const char16_t *s, int32_t length) {
-    if(length<=0) {
-        return false;
+PatternProps::isIdentifier(ধ্রুব char16_t *s, int32_t length) {
+    যদি(length<=0) {
+        প্রত্যাগম অসত্য;
     }
-    const char16_t *limit=s+length;
-    do {
-        if(isSyntaxOrWhiteSpace(*s++)) {
-            return false;
+    ধ্রুব char16_t *limit=s+length;
+    কুরু {
+        যদি(isSyntaxOrWhiteSpace(*s++)) {
+            প্রত্যাগম অসত্য;
         }
-    } while(s<limit);
-    return true;
+    } যাবত্(s<limit);
+    প্রত্যাগম সত্য;
 }
 
-const char16_t *
-PatternProps::skipIdentifier(const char16_t *s, int32_t length) {
-    while(length>0 && !isSyntaxOrWhiteSpace(*s)) {
+ধ্রুব char16_t *
+PatternProps::skipIdentifier(ধ্রুব char16_t *s, int32_t length) {
+    যাবত্(length>0 && !isSyntaxOrWhiteSpace(*s)) {
         ++s;
         --length;
     }
-    return s;
+    প্রত্যাগম s;
 }
 
 U_NAMESPACE_END

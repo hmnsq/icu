@@ -7,16 +7,16 @@
 #ifndef __LOCALEPRIORITYLIST_H__
 #define __LOCALEPRIORITYLIST_H__
 
-#include "unicode/utypes.h"
-#include "unicode/locid.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/locid.h"
+#অন্তর্ভাব "unicode/stringpiece.h"
+#অন্তর্ভাব "unicode/uobject.h"
 
-struct UHashtable;
+সংরচনা UHashtable;
 
 U_NAMESPACE_BEGIN
 
-struct LocaleAndWeightArray;
+সংরচনা LocaleAndWeightArray;
 
 /**
  * Parses a list of locales from an accept-language string.
@@ -54,58 +54,58 @@ struct LocaleAndWeightArray;
  *        qvalue         = ( "0" [ "." 0*3DIGIT ] )
  *                       | ( "1" [ "." 0*3("0") ] )
  */
-class U_COMMON_API LocalePriorityList : public UMemory {
-public:
-    class Iterator : public Locale::Iterator {
-    public:
-        UBool hasNext() const override { return count < length; }
+class U_COMMON_API LocalePriorityList : সার্বজনিক UMemory {
+সার্বজনিক:
+    class Iterator : সার্বজনিক Locale::Iterator {
+    সার্বজনিক:
+        UBool hasNext() ধ্রুব override { প্রত্যাগম গুনতি < length; }
 
-        const Locale &next() override {
-            for(;;) {
-                const Locale *locale = list.localeAt(index++);
-                if (locale != nullptr) {
-                    ++count;
-                    return *locale;
+        ধ্রুব Locale &next() override {
+            প্রতি(;;) {
+                ধ্রুব Locale *locale = list.localeAt(index++);
+                যদি (locale != nullptr) {
+                    ++গুনতি;
+                    প্রত্যাগম *locale;
                 }
             }
         }
 
-    private:
+    গুপ্ত:
         friend class LocalePriorityList;
 
-        Iterator(const LocalePriorityList &list) : list(list), length(list.getLength()) {}
+        Iterator(ধ্রুব LocalePriorityList &list) : list(list), length(list.getLength()) {}
 
-        const LocalePriorityList &list;
+        ধ্রুব LocalePriorityList &list;
         int32_t index = 0;
-        int32_t count = 0;
-        const int32_t length;
+        int32_t গুনতি = 0;
+        ধ্রুব int32_t length;
     };
 
     LocalePriorityList(StringPiece s, UErrorCode &errorCode);
 
     ~LocalePriorityList();
 
-    int32_t getLength() const { return listLength - numRemoved; }
+    int32_t getLength() ধ্রুব { প্রত্যাগম listLength - অঙ্ক_Removed; }
 
-    int32_t getLengthIncludingRemoved() const { return listLength; }
+    int32_t getLengthIncludingRemoved() ধ্রুব { প্রত্যাগম listLength; }
 
-    Iterator iterator() const { return Iterator(*this); }
+    Iterator iterator() ধ্রুব { প্রত্যাগম Iterator(*this); }
 
-    const Locale *localeAt(int32_t i) const;
+    ধ্রুব Locale *localeAt(int32_t i) ধ্রুব;
 
     Locale *orphanLocaleAt(int32_t i);
 
-private:
-    LocalePriorityList(const LocalePriorityList &) = delete;
-    LocalePriorityList &operator=(const LocalePriorityList &) = delete;
+গুপ্ত:
+    LocalePriorityList(ধ্রুব LocalePriorityList &) = delete;
+    LocalePriorityList &operator=(ধ্রুব LocalePriorityList &) = delete;
 
-    bool add(const Locale &locale, int32_t weight, UErrorCode &errorCode);
+    bool add(ধ্রুব Locale &locale, int32_t weight, UErrorCode &errorCode);
 
-    void sort(UErrorCode &errorCode);
+    শূন্য sort(UErrorCode &errorCode);
 
     LocaleAndWeightArray *list = nullptr;
     int32_t listLength = 0;
-    int32_t numRemoved = 0;
+    int32_t অঙ্ক_Removed = 0;
     bool hasWeights = false;  // other than 1.0
     UHashtable *map = nullptr;
 };

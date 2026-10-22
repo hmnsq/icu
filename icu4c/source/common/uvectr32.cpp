@@ -10,9 +10,9 @@
 **********************************************************************
 */
 
-#include "uvectr32.h"
-#include "cmemory.h"
-#include "putilimp.h"
+#অন্তর্ভাব "uvectr32.h"
+#অন্তর্ভাব "cmemory.h"
+#অন্তর্ভাব "putilimp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -46,21 +46,21 @@ UVector32::UVector32(int32_t initialCapacity, UErrorCode &status) :
 
 
 
-void UVector32::_init(int32_t initialCapacity, UErrorCode &status) {
+শূন্য UVector32::_init(int32_t initialCapacity, UErrorCode &status) {
     // Fix bogus initialCapacity values; avoid malloc(0)
-    if (initialCapacity < 1) {
+    যদি (initialCapacity < 1) {
         initialCapacity = DEFAULT_CAPACITY;
     }
-    if (maxCapacity>0 && maxCapacity<initialCapacity) {
+    যদি (maxCapacity>0 && maxCapacity<initialCapacity) {
         initialCapacity = maxCapacity;
     }
-    if (initialCapacity > static_cast<int32_t>(INT32_MAX / sizeof(int32_t))) {
+    যদি (initialCapacity > static_cast<int32_t>(INT32_MAX / পরিমাণ(int32_t))) {
         initialCapacity = uprv_min(DEFAULT_CAPACITY, maxCapacity);
     }
-    elements = static_cast<int32_t*>(uprv_malloc(sizeof(int32_t) * initialCapacity));
-    if (elements == nullptr) {
+    elements = static_cast<int32_t*>(uprv_malloc(পরিমাণ(int32_t) * initialCapacity));
+    যদি (elements == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
+    } অন্যথা {
         capacity = initialCapacity;
     }
 }
@@ -73,39 +73,39 @@ UVector32::~UVector32() {
 /**
  * Assign this object to another (make this a copy of 'other').
  */
-void UVector32::assign(const UVector32& other, UErrorCode &ec) {
-    if (ensureCapacity(other.count, ec)) {
+শূন্য UVector32::assign(ধ্রুব UVector32& other, UErrorCode &ec) {
+    যদি (ensureCapacity(other.count, ec)) {
         setSize(other.count);
-        for (int32_t i=0; i<other.count; ++i) {
+        প্রতি (int32_t i=0; i<other.count; ++i) {
             elements[i] = other.elements[i];
         }
     }
 }
 
 
-bool UVector32::operator==(const UVector32& other) const {
+তার্কিক UVector32::operator==(ধ্রুব UVector32& other) ধ্রুব {
     int32_t i;
-    if (count != other.count) return false;
-    for (i=0; i<count; ++i) {
-        if (elements[i] != other.elements[i]) {
-            return false;
+    যদি (count != other.count) প্রত্যাগম অসত্য;
+    প্রতি (i=0; i<count; ++i) {
+        যদি (elements[i] != other.elements[i]) {
+            প্রত্যাগম অসত্য;
         }
     }
-    return true;
+    প্রত্যাগম সত্য;
 }
 
 
-void UVector32::setElementAt(int32_t elem, int32_t index) {
-    if (0 <= index && index < count) {
+শূন্য UVector32::setElementAt(int32_t elem, int32_t index) {
+    যদি (0 <= index && index < count) {
         elements[index] = elem;
     }
     /* else index out of range */
 }
 
-void UVector32::insertElementAt(int32_t elem, int32_t index, UErrorCode &status) {
+শূন্য UVector32::ঢোকাও_Element_At(int32_t elem, int32_t index, UErrorCode &status) {
     // must have 0 <= index <= count
-    if (0 <= index && index <= count && ensureCapacity(count + 1, status)) {
-        for (int32_t i=count; i>index; --i) {
+    যদি (0 <= index && index <= count && ensureCapacity(count + 1, status)) {
+        প্রতি (int32_t i=count; i>index; --i) {
             elements[i] = elements[i-1];
         }
         elements[index] = elem;
@@ -114,157 +114,157 @@ void UVector32::insertElementAt(int32_t elem, int32_t index, UErrorCode &status)
     /* else index out of range */
 }
 
-UBool UVector32::containsAll(const UVector32& other) const {
-    for (int32_t i=0; i<other.size(); ++i) {
-        if (indexOf(other.elements[i]) < 0) {
-            return false;
+UBool UVector32::containsAll(ধ্রুব UVector32& other) ধ্রুব {
+    প্রতি (int32_t i=0; i<other.size(); ++i) {
+        যদি (indexOf(other.elements[i]) < 0) {
+            প্রত্যাগম অসত্য;
         }
     }
-    return true;
+    প্রত্যাগম সত্য;
 }
 
-UBool UVector32::containsNone(const UVector32& other) const {
-    for (int32_t i=0; i<other.size(); ++i) {
-        if (indexOf(other.elements[i]) >= 0) {
-            return false;
+UBool UVector32::containsNone(ধ্রুব UVector32& other) ধ্রুব {
+    প্রতি (int32_t i=0; i<other.size(); ++i) {
+        যদি (indexOf(other.elements[i]) >= 0) {
+            প্রত্যাগম অসত্য;
         }
     }
-    return true;
+    প্রত্যাগম সত্য;
 }
 
-UBool UVector32::removeAll(const UVector32& other) {
-    UBool changed = false;
-    for (int32_t i=0; i<other.size(); ++i) {
+UBool UVector32::removeAll(ধ্রুব UVector32& other) {
+    UBool changed = অসত্য;
+    প্রতি (int32_t i=0; i<other.size(); ++i) {
         int32_t j = indexOf(other.elements[i]);
-        if (j >= 0) {
+        যদি (j >= 0) {
             removeElementAt(j);
-            changed = true;
+            changed = সত্য;
         }
     }
-    return changed;
+    প্রত্যাগম changed;
 }
 
-UBool UVector32::retainAll(const UVector32& other) {
-    UBool changed = false;
-    for (int32_t j=size()-1; j>=0; --j) {
+UBool UVector32::retainAll(ধ্রুব UVector32& other) {
+    UBool changed = অসত্য;
+    প্রতি (int32_t j=size()-1; j>=0; --j) {
         int32_t i = other.indexOf(elements[j]);
-        if (i < 0) {
+        যদি (i < 0) {
             removeElementAt(j);
-            changed = true;
+            changed = সত্য;
         }
     }
-    return changed;
+    প্রত্যাগম changed;
 }
 
-void UVector32::removeElementAt(int32_t index) {
-    if (index >= 0) {
-        for (int32_t i=index; i<count-1; ++i) {
+শূন্য UVector32::removeElementAt(int32_t index) {
+    যদি (index >= 0) {
+        প্রতি (int32_t i=index; i<count-1; ++i) {
             elements[i] = elements[i+1];
         }
         --count;
     }
 }
 
-void UVector32::removeAllElements() {
+শূন্য UVector32::removeAllElements() {
     count = 0;
 }
 
-UBool   UVector32::equals(const UVector32 &other) const {
-    int      i;
+UBool   UVector32::equals(ধ্রুব UVector32 &other) ধ্রুব {
+    পূর্ণাঙ্ক      i;
 
-    if (this->count != other.count) {
-        return false;
+    যদি (এতত্->count != other.count) {
+        প্রত্যাগম অসত্য;
     }
-    for (i=0; i<count; i++) {
-        if (elements[i] != other.elements[i]) {
-            return false;
+    প্রতি (i=0; i<count; i++) {
+        যদি (elements[i] != other.elements[i]) {
+            প্রত্যাগম অসত্য;
         }
     }
-    return true;
+    প্রত্যাগম সত্য;
 }
 
 
 
 
-int32_t UVector32::indexOf(int32_t key, int32_t startIndex) const {
+int32_t UVector32::indexOf(int32_t চাবি, int32_t startIndex) ধ্রুব {
     int32_t i;
-    for (i=startIndex; i<count; ++i) {
-        if (key == elements[i]) {
-            return i;
+    প্রতি (i=startIndex; i<count; ++i) {
+        যদি (চাবি == elements[i]) {
+            প্রত্যাগম i;
         }
     }
-    return -1;
+    প্রত্যাগম -1;
 }
 
 
 UBool UVector32::expandCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+    যদি (U_FAILURE(status)) {
+        প্রত্যাগম অসত্য;
     }
-    if (minimumCapacity < 0) {
+    যদি (minimumCapacity < 0) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        প্রত্যাগম অসত্য;
     }
-    if (capacity >= minimumCapacity) {
-        return true;
+    যদি (capacity >= minimumCapacity) {
+        প্রত্যাগম সত্য;
     }
-    if (maxCapacity>0 && minimumCapacity>maxCapacity) {
+    যদি (maxCapacity>0 && minimumCapacity>maxCapacity) {
         status = U_BUFFER_OVERFLOW_ERROR;
-        return false;
+        প্রত্যাগম অসত্য;
     }
-    if (capacity > (INT32_MAX - 1) / 2) {  // integer overflow check
+    যদি (capacity > (INT32_MAX - 1) / 2) {  // integer overflow check
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        প্রত্যাগম অসত্য;
     }
     int32_t newCap = capacity * 2;
-    if (newCap < minimumCapacity) {
+    যদি (newCap < minimumCapacity) {
         newCap = minimumCapacity;
     }
-    if (maxCapacity > 0 && newCap > maxCapacity) {
+    যদি (maxCapacity > 0 && newCap > maxCapacity) {
         newCap = maxCapacity;
     }
-    if (newCap > static_cast<int32_t>(INT32_MAX / sizeof(int32_t))) { // integer overflow check
+    যদি (newCap > static_cast<int32_t>(INT32_MAX / পরিমাণ(int32_t))) { // integer overflow check
         // We keep the original memory contents on bad minimumCapacity/maxCapacity.
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        প্রত্যাগম অসত্য;
     }
-    int32_t* newElems = static_cast<int32_t*>(uprv_realloc(elements, sizeof(int32_t) * newCap));
-    if (newElems == nullptr) {
+    int32_t* newElems = static_cast<int32_t*>(uprv_realloc(elements, পরিমাণ(int32_t) * newCap));
+    যদি (newElems == nullptr) {
         // We keep the original contents on the memory failure on realloc.
         status = U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        প্রত্যাগম অসত্য;
     }
     elements = newElems;
     capacity = newCap;
-    return true;
+    প্রত্যাগম সত্য;
 }
 
-void UVector32::setMaxCapacity(int32_t limit) {
+শূন্য UVector32::setMaxCapacity(int32_t limit) {
     U_ASSERT(limit >= 0);
-    if (limit < 0) {
+    যদি (limit < 0) {
         limit = 0;
     }
-    if (limit > static_cast<int32_t>(INT32_MAX / sizeof(int32_t))) { // integer overflow check for realloc
+    যদি (limit > static_cast<int32_t>(INT32_MAX / পরিমাণ(int32_t))) { // integer overflow check for realloc
         //  Something is very wrong, don't realloc, leave capacity and maxCapacity unchanged
-        return;
+        প্রত্যাগম;
     }
     maxCapacity = limit;
-    if (capacity <= maxCapacity || maxCapacity == 0) {
+    যদি (capacity <= maxCapacity || maxCapacity == 0) {
         // Current capacity is within the new limit.
-        return;
+        প্রত্যাগম;
     }
     
     // New maximum capacity is smaller than the current size.
     // Realloc the storage to the new, smaller size.
-    int32_t* newElems = static_cast<int32_t*>(uprv_realloc(elements, sizeof(int32_t) * maxCapacity));
-    if (newElems == nullptr) {
+    int32_t* newElems = static_cast<int32_t*>(uprv_realloc(elements, পরিমাণ(int32_t) * maxCapacity));
+    যদি (newElems == nullptr) {
         // Realloc to smaller failed.
         //   Just keep what we had.  No need to call it a failure.
-        return;
+        প্রত্যাগম;
     }
     elements = newElems;
     capacity = maxCapacity;
-    if (count > capacity) {
+    যদি (count > capacity) {
         count = capacity;
     }
 }
@@ -275,17 +275,17 @@ void UVector32::setMaxCapacity(int32_t limit) {
  * newSize.  If newSize is larger, grow the array, filling in new
  * slots with nullptr.
  */
-void UVector32::setSize(int32_t newSize) {
+শূন্য UVector32::setSize(int32_t newSize) {
     int32_t i;
-    if (newSize < 0) {
-        return;
+    যদি (newSize < 0) {
+        প্রত্যাগম;
     }
-    if (newSize > count) {
+    যদি (newSize > count) {
         UErrorCode ec = U_ZERO_ERROR;
-        if (!ensureCapacity(newSize, ec)) {
-            return;
+        যদি (!ensureCapacity(newSize, ec)) {
+            প্রত্যাগম;
         }
-        for (i=count; i<newSize; ++i) {
+        প্রতি (i=count; i<newSize; ++i) {
             elements[i] = 0;
         }
     } 
@@ -300,26 +300,26 @@ void UVector32::setSize(int32_t newSize) {
  * as defined by 'compare'.  The current elements are assumed to
  * be sorted already.
  */
-void UVector32::sortedInsert(int32_t tok, UErrorCode& ec) {
+শূন্য UVector32::sorted_ঢোকাও(int32_t tok, UErrorCode& ec) {
     // Perform a binary search for the location to insert tok at.  Tok
     // will be inserted between two elements a and b such that a <=
     // tok && tok < b, where there is a 'virtual' elements[-1] always
     // less than tok and a 'virtual' elements[count] always greater
     // than tok.
     int32_t min = 0, max = count;
-    while (min != max) {
+    যাবত্ (min != max) {
         int32_t probe = (min + max) / 2;
         //int8_t c = (*compare)(elements[probe], tok);
         //if (c > 0) {
-        if (elements[probe] > tok) {
+        যদি (elements[probe] > tok) {
             max = probe;
-        } else {
+        } অন্যথা {
             // assert(c <= 0);
             min = probe + 1;
         }
     }
-    if (ensureCapacity(count + 1, ec)) {
-        for (int32_t i=count; i>min; --i) {
+    যদি (ensureCapacity(count + 1, ec)) {
+        প্রতি (int32_t i=count; i>min; --i) {
             elements[i] = elements[i-1];
         }
         elements[min] = tok;

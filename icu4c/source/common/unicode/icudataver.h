@@ -18,7 +18,7 @@
 #ifndef __ICU_DATA_VER_H__
 #define __ICU_DATA_VER_H__
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
 /**
  * @stable ICU 49
@@ -28,7 +28,7 @@
 /**
  * @stable ICU 49
  */
-#define U_ICU_DATA_KEY "DataVersion"
+#define U_ICU_DATA_চাবি "DataVersion"
 
 /**
  * Retrieves the data version from icuver and stores it in dataVersionFillin.
@@ -38,6 +38,6 @@
  * 
  * @stable ICU 49
  */
-U_CAPI void U_EXPORT2 u_getDataVersion(UVersionInfo dataVersionFillin, UErrorCode *status);
+U_CAPI শূন্য U_EXPORT2 u_getDataVersion(UVersionInfo dataVersionFillin, UErrorCode *status);
 
 #endif

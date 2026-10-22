@@ -10,17 +10,17 @@
 * This file contains platform independent math.
 */
 
-#include "putilimp.h"
+#অন্তর্ভাব "putilimp.h"
 
 U_CAPI int32_t U_EXPORT2
 uprv_max(int32_t x, int32_t y)
 {
-    return (x > y ? x : y);
+    প্রত্যাগম (x > y ? x : y);
 }
 
 U_CAPI int32_t U_EXPORT2
 uprv_min(int32_t x, int32_t y)
 {
-    return (x > y ? y : x);
+    প্রত্যাগম (x > y ? y : x);
 }
 

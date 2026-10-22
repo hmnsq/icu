@@ -21,9 +21,9 @@
 #ifndef __UPROPSVEC_H__
 #define __UPROPSVEC_H__
 
-#include "unicode/utypes.h"
-#include "utrie.h"
-#include "utrie2.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "utrie.h"
+#অন্তর্ভাব "utrie2.h"
 
 U_CDECL_BEGIN
 
@@ -49,16 +49,16 @@ U_CDECL_BEGIN
  * It would be possible to store only one range boundary per row,
  * but self-contained rows allow to later sort them by contents.
  */
-struct UPropsVectors;
-typedef struct UPropsVectors UPropsVectors;
+সংরচনা UPropsVectors;
+প্রকারনির্দেশ সংরচনা UPropsVectors UPropsVectors;
 
 /*
  * Special pseudo code points for storing the initialValue and the errorValue,
  * which are used to initialize a UTrie2 or similar.
  */
 #define UPVEC_FIRST_SPECIAL_CP 0x110000
-#define UPVEC_INITIAL_VALUE_CP 0x110000
-#define UPVEC_ERROR_VALUE_CP 0x110001
+#define UPVEC_INITIAL_মান_CP 0x110000
+#define UPVEC_ERROR_মান_CP 0x110001
 #define UPVEC_MAX_CP 0x110001
 
 /*
@@ -66,7 +66,7 @@ typedef struct UPropsVectors UPropsVectors;
  * delivering special values and the beginning of delivering real ones.
  * Stable value, unlike UPVEC_MAX_CP which might grow over time.
  */
-#define UPVEC_START_REAL_VALUES_CP 0x200000
+#define UPVEC_START_REAL_মানসমূহ_CP 0x200000
 
 /*
  * Open a UPropsVectors object.
@@ -75,7 +75,7 @@ typedef struct UPropsVectors UPropsVectors;
 U_CAPI UPropsVectors * U_EXPORT2
 upvec_open(int32_t columns, UErrorCode *pErrorCode);
 
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 upvec_close(UPropsVectors *pv);
 
 /*
@@ -84,11 +84,11 @@ upvec_close(UPropsVectors *pv);
  *
  * Will set U_NO_WRITE_PERMISSION if called after upvec_compact().
  */
-U_CAPI void U_EXPORT2
-upvec_setValue(UPropsVectors *pv,
+U_CAPI শূন্য U_EXPORT2
+upvec_set_মান(UPropsVectors *pv,
                UChar32 start, UChar32 end,
                int32_t column,
-               uint32_t value, uint32_t mask,
+               uint32_t মান_2, uint32_t mask,
                UErrorCode *pErrorCode);
 
 /*
@@ -96,7 +96,7 @@ upvec_setValue(UPropsVectors *pv,
  * Always returns 0 if called after upvec_compact().
  */
 U_CAPI uint32_t U_EXPORT2
-upvec_getValue(const UPropsVectors *pv, UChar32 c, int32_t column);
+upvec_get_মান(ধ্রুব UPropsVectors *pv, UChar32 c, int32_t column);
 
 /*
  * pRangeStart and pRangeEnd can be NULL.
@@ -104,7 +104,7 @@ upvec_getValue(const UPropsVectors *pv, UChar32 c, int32_t column);
  *         or if called after upvec_compact()
  */
 U_CAPI uint32_t * U_EXPORT2
-upvec_getRow(const UPropsVectors *pv, int32_t rowIndex,
+upvec_getRow(ধ্রুব UPropsVectors *pv, int32_t rowIndex,
              UChar32 *pRangeStart, UChar32 *pRangeEnd);
 
 /*
@@ -125,22 +125,22 @@ upvec_getRow(const UPropsVectors *pv, int32_t rowIndex,
  * and the row is arbitrary (but not NULL).
  * Then, in the second phase, the handler is called for each row of real values.
  */
-typedef void U_CALLCONV
-UPVecCompactHandler(void *context,
+প্রকারনির্দেশ শূন্য U_CALLCONV
+UPVecCompactHandler(শূন্য *context,
                     UChar32 start, UChar32 end,
                     int32_t rowIndex, uint32_t *row, int32_t columns,
                     UErrorCode *pErrorCode);
 
-U_CAPI void U_EXPORT2
-upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, void *context, UErrorCode *pErrorCode);
+U_CAPI শূন্য U_EXPORT2
+upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, শূন্য *context, UErrorCode *pErrorCode);
 
 /*
  * Get the vectors array after calling upvec_compact().
  * The caller must not modify nor release the returned array.
  * Returns NULL if called before upvec_compact().
  */
-U_CAPI const uint32_t * U_EXPORT2
-upvec_getArray(const UPropsVectors *pv, int32_t *pRows, int32_t *pColumns);
+U_CAPI ধ্রুব uint32_t * U_EXPORT2
+upvec_getArray(ধ্রুব UPropsVectors *pv, int32_t *pRows, int32_t *pColumns);
 
 /*
  * Get a clone of the vectors array after calling upvec_compact().
@@ -148,7 +148,7 @@ upvec_getArray(const UPropsVectors *pv, int32_t *pRows, int32_t *pColumns);
  * Returns NULL if called before upvec_compact().
  */
 U_CAPI uint32_t * U_EXPORT2
-upvec_cloneArray(const UPropsVectors *pv,
+upvec_cloneArray(ধ্রুব UPropsVectors *pv,
                  int32_t *pRows, int32_t *pColumns, UErrorCode *pErrorCode);
 
 /*
@@ -158,17 +158,17 @@ upvec_cloneArray(const UPropsVectors *pv,
 U_CAPI UTrie2 * U_EXPORT2
 upvec_compactToUTrie2WithRowIndexes(UPropsVectors *pv, UErrorCode *pErrorCode);
 
-struct UPVecToUTrie2Context {
+সংরচনা UPVecToUTrie2Context {
     UTrie2 *trie;
-    int32_t initialValue;
-    int32_t errorValue;
-    int32_t maxValue;
+    int32_t initial_মান;
+    int32_t error_মান;
+    int32_t max_মান;
 };
-typedef struct UPVecToUTrie2Context UPVecToUTrie2Context;
+প্রকারনির্দেশ সংরচনা UPVecToUTrie2Context UPVecToUTrie2Context;
 
 /* context=UPVecToUTrie2Context, creates the trie and stores the rowIndex values */
-U_CAPI void U_CALLCONV
-upvec_compactToUTrie2Handler(void *context,
+U_CAPI শূন্য U_CALLCONV
+upvec_compactToUTrie2Handler(শূন্য *context,
                              UChar32 start, UChar32 end,
                              int32_t rowIndex, uint32_t *row, int32_t columns,
                              UErrorCode *pErrorCode);
