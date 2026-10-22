@@ -17,13 +17,13 @@
 #ifndef __UCHARSTRIEBUILDER_H__
 #define __UCHARSTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#सचे U_SHOW_CPLUSPLUS_API
 
-#include "unicode/stringtriebuilder.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/unistr.h"
+#अन्तर्भाव "unicode/stringtriebuilder.h"
+#अन्तर्भाव "unicode/ucharstrie.h"
+#अन्तर्भाव "unicode/unistr.h"
 
 /**
  * \file
@@ -40,8 +40,8 @@ class UCharsTrieElement;
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API UCharsTrieBuilder : public StringTrieBuilder {
-public:
+class U_COMMON_API UCharsTrieBuilder : सार्वजनिक StringTrieBuilder {
+सार्वजनिक:
     /**
      * Constructs an empty builder.
      * @param errorCode Standard ICU error code.
@@ -53,7 +53,7 @@ public:
      * Destructor.
      * @stable ICU 4.8
      */
-    virtual ~UCharsTrieBuilder();
+    आभास ~UCharsTrieBuilder();
 
     /**
      * Adds a (string, value) pair.
@@ -69,8 +69,8 @@ public:
      * @return *this
      * @stable ICU 4.8
      */
-    UCharsTrieBuilder& add(const UnicodeString& s,
-                           int32_t value,
+    UCharsTrieBuilder& add(ध्रुव UnicodeString& s,
+                           int32_t मानम्_2,
                            UErrorCode& errorCode) U_LIFETIME_BOUND;
 
     /**
@@ -132,50 +132,50 @@ public:
         strings.remove();
         elementsLength=0;
         ucharsLength=0;
-        return *this;
+        पटिनिवत्त *this;
     }
 
-private:
-    UCharsTrieBuilder(const UCharsTrieBuilder &other) = delete;  // no copy constructor
-    UCharsTrieBuilder &operator=(const UCharsTrieBuilder &other) = delete;  // no assignment operator
+गुप्त:
+    UCharsTrieBuilder(ध्रुव UCharsTrieBuilder &other) = delete;  // no copy constructor
+    UCharsTrieBuilder &operator=(ध्रुव UCharsTrieBuilder &other) = delete;  // no assignment operator
 
-    void buildUChars(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
+    शून्य buildUChars(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
 
-    virtual int32_t getElementStringLength(int32_t i) const override;
-    virtual char16_t getElementUnit(int32_t i, int32_t unitIndex) const override;
-    virtual int32_t getElementValue(int32_t i) const override;
+    आभास int32_t getElementStringLength(int32_t i) ध्रुव override;
+    आभास char16_t getElementUnit(int32_t i, int32_t unitIndex) ध्रुव override;
+    आभास int32_t get_Element_मानम्(int32_t i) ध्रुव override;
 
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) const override;
+    आभास int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) ध्रुव override;
 
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const override;
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const override;
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const override;
+    आभास int32_t गणनम्_Element_Units(int32_t start, int32_t limit, int32_t unitIndex) ध्रुव override;
+    आभास int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t गणनम्) ध्रुव override;
+    आभास int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) ध्रुव override;
 
-    virtual UBool matchNodesCanHaveValues() const override { return true; }
+    आभास UBool match_Nodes_Can_Have_मानानि() ध्रुव override { पटिनिवत्त true; }
 
-    virtual int32_t getMaxBranchLinearSubNodeLength() const override { return UCharsTrie::kMaxBranchLinearSubNodeLength; }
-    virtual int32_t getMinLinearMatch() const override { return UCharsTrie::kMinLinearMatch; }
-    virtual int32_t getMaxLinearMatchLength() const override { return UCharsTrie::kMaxLinearMatchLength; }
+    आभास int32_t get_Max_Branch_Linear_Sub_ग्रन्थिः_Length() ध्रुव override { पटिनिवत्त UCharsTrie::k_Max_Branch_Linear_Sub_ग्रन्थिः_Length; }
+    आभास int32_t getMinLinearMatch() ध्रुव override { पटिनिवत्त UCharsTrie::kMinLinearMatch; }
+    आभास int32_t getMaxLinearMatchLength() ध्रुव override { पटिनिवत्त UCharsTrie::kMaxLinearMatchLength; }
 
-    class UCTLinearMatchNode : public LinearMatchNode {
-    public:
-        UCTLinearMatchNode(const char16_t *units, int32_t len, Node *nextNode);
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    private:
-        const char16_t *s;
+    class UCTLinear_Match_ग्रन्थिः : सार्वजनिक Linear_Match_ग्रन्थिः {
+    सार्वजनिक:
+        UCTLinear_Match_ग्रन्थिः(ध्रुव char16_t *units, int32_t len, ग्रन्थिः_2 *next_ग्रन्थिः);
+        आभास bool operator==(ध्रुव ग्रन्थिः_2 &other) ध्रुव override;
+        आभास शून्य लिख(StringTrieBuilder &builder) override;
+    गुप्त:
+        ध्रुव char16_t *s;
     };
 
-    virtual Node *createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                        Node *nextNode) const override;
+    आभास ग्रन्थिः_2 *create_Linear_Match_ग्रन्थिः(int32_t i, int32_t unitIndex, int32_t length,
+                                        ग्रन्थिः_2 *next_ग्रन्थिः) ध्रुव override;
 
     UBool ensureCapacity(int32_t length);
-    virtual int32_t write(int32_t unit) override;
-    int32_t write(const char16_t *s, int32_t length);
-    virtual int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) override;
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) override;
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) override;
-    virtual int32_t writeDeltaTo(int32_t jumpTarget) override;
+    आभास int32_t लिख(int32_t unit) override;
+    int32_t लिख(ध्रुव char16_t *s, int32_t length);
+    आभास int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) override;
+    आभास int32_t write_मानम्_And_Final(int32_t i, UBool isFinal) override;
+    आभास int32_t write_मानम्_And_Type(UBool has_मानम्, int32_t मानम्_2, int32_t ग्रन्थिः) override;
+    आभास int32_t writeDeltaTo(int32_t jumpTarget) override;
 
     UnicodeString strings;
     UCharsTrieElement *elements;

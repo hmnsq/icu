@@ -19,13 +19,13 @@
 *   for better modularization.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "udataswp.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "uassert.h"
-#include "uinvchar.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "udataswp.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "uassert.h"
+#अन्तर्भाव "uinvchar.h"
 
 /* invariant-character handling --------------------------------------------- */
 
@@ -62,7 +62,7 @@
  * These tables do not establish a converter or a codepage.
  */
 
-static const uint8_t asciiFromEbcdic[256]={
+स्थिर ध्रुव uint8_t asciiFromEbcdic[256]={
     0x00, 0x01, 0x02, 0x03, 0x00, 0x09, 0x00, 0x7f, 0x00, 0x00, 0x00, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
     0x10, 0x11, 0x12, 0x13, 0x00, 0x0a, 0x08, 0x00, 0x18, 0x19, 0x00, 0x00, 0x1c, 0x1d, 0x1e, 0x1f,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x0a, 0x17, 0x1b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x06, 0x07,
@@ -84,7 +84,7 @@ static const uint8_t asciiFromEbcdic[256]={
     0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-static const uint8_t ebcdicFromAscii[256]={
+स्थिर ध्रुव uint8_t ebcdicFromAscii[256]={
     0x00, 0x01, 0x02, 0x03, 0x37, 0x2d, 0x2e, 0x2f, 0x16, 0x05, 0x00, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
     0x10, 0x11, 0x12, 0x13, 0x3c, 0x3d, 0x32, 0x26, 0x18, 0x19, 0x3f, 0x27, 0x1c, 0x1d, 0x1e, 0x1f,
     0x40, 0x00, 0x7f, 0x00, 0x00, 0x6c, 0x50, 0x7d, 0x4d, 0x5d, 0x5c, 0x4e, 0x6b, 0x60, 0x4b, 0x61,
@@ -107,7 +107,7 @@ static const uint8_t ebcdicFromAscii[256]={
 };
 
 /* Same as asciiFromEbcdic[] except maps all letters to lowercase. */
-static const uint8_t lowercaseAsciiFromEbcdic[256]={
+स्थिर ध्रुव uint8_t lowercaseAsciiFromEbcdic[256]={
     0x00, 0x01, 0x02, 0x03, 0x00, 0x09, 0x00, 0x7f, 0x00, 0x00, 0x00, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
     0x10, 0x11, 0x12, 0x13, 0x00, 0x0a, 0x08, 0x00, 0x18, 0x19, 0x00, 0x00, 0x1c, 0x1d, 0x1e, 0x1f,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x0a, 0x17, 0x1b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x06, 0x07,
@@ -154,7 +154,7 @@ static const uint8_t lowercaseAsciiFromEbcdic[256]={
  * 7d  '}' <right brace>
  * 7e  '~' <tilde>
  */
-static const uint32_t invariantChars[4]={
+स्थिर ध्रुव uint32_t invariantChars[4]={
     0xfffffbff, /* 00..1f but not 0a */
     0xffffffe5, /* 20..3f but not 21 23 24 */
     0x87fffffe, /* 40..5f but not 40 5b..5e */
@@ -170,19 +170,19 @@ static const uint32_t invariantChars[4]={
 /* test signed types for invariant characters, adds test for positive values */
 #define SCHAR_IS_INVARIANT(c) ((0<=(c)) && UCHAR_IS_INVARIANT(c))
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#सचे U_CHARSET_FAMILY==U_ASCII_FAMILY
 #define CHAR_TO_UCHAR(c) c
 #define UCHAR_TO_CHAR(c) c
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#नोचेद्यदि U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #define CHAR_TO_UCHAR(u) asciiFromEbcdic[u]
 #define UCHAR_TO_CHAR(u) ebcdicFromAscii[u]
-#else
+#अञ्ञथा
 #   error U_CHARSET_FAMILY is not valid
 #endif
 
 
-U_CAPI void U_EXPORT2
-u_charsToUChars(const char *cs, char16_t *us, int32_t length) {
+U_CAPI शून्य U_EXPORT2
+u_charsToUChars(ध्रुव वर्ण *cs, char16_t *us, int32_t length) {
     char16_t u;
     uint8_t c;
 
@@ -191,7 +191,7 @@ u_charsToUChars(const char *cs, char16_t *us, int32_t length) {
      * For EBCDIC systems, this works for characters with codes from
      * codepages 37 and 1047 or compatible.
      */
-    while(length>0) {
+    याव(length>0) {
         c=(uint8_t)(*cs++);
         u=(char16_t)CHAR_TO_UCHAR(c);
         U_ASSERT((u!=0 || c==0)); /* only invariant chars converted? */
@@ -200,41 +200,41 @@ u_charsToUChars(const char *cs, char16_t *us, int32_t length) {
     }
 }
 
-U_CAPI void U_EXPORT2
-u_UCharsToChars(const char16_t *us, char *cs, int32_t length) {
+U_CAPI शून्य U_EXPORT2
+u_UCharsToChars(ध्रुव char16_t *us, वर्ण *cs, int32_t length) {
     char16_t u;
 
-    while(length>0) {
+    याव(length>0) {
         u=*us++;
-        if(!UCHAR_IS_INVARIANT(u)) {
-            U_ASSERT(false); /* Variant characters were used. These are not portable in ICU. */
+        सचे(!UCHAR_IS_INVARIANT(u)) {
+            U_ASSERT(मिच्छा); /* Variant characters were used. These are not portable in ICU. */
             u=0;
         }
-        *cs++=(char)UCHAR_TO_CHAR(u);
+        *cs++=(वर्ण)UCHAR_TO_CHAR(u);
         --length;
     }
 }
 
 U_CAPI UBool U_EXPORT2
-uprv_isInvariantString(const char *s, int32_t length) {
+uprv_isInvariantString(ध्रुव वर्ण *s, int32_t length) {
     uint8_t c;
 
-    for(;;) {
-        if(length<0) {
+    अत्थाय(;;) {
+        सचे(length<0) {
             /* NUL-terminated */
             c=(uint8_t)*s++;
-            if(c==0) {
-                break;
+            सचे(c==0) {
+                भङ्ग;
             }
-        } else {
+        } अञ्ञथा {
             /* count length */
-            if(length==0) {
-                break;
+            सचे(length==0) {
+                भङ्ग;
             }
             --length;
             c=(uint8_t)*s++;
-            if(c==0) {
-                continue; /* NUL is invariant */
+            सचे(c==0) {
+                अनुवर्त; /* NUL is invariant */
             }
         }
         /* c!=0 now, one branch below checks c==0 for variant characters */
@@ -243,37 +243,37 @@ uprv_isInvariantString(const char *s, int32_t length) {
          * no assertions here because these functions are legitimately called
          * for strings with variant characters
          */
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
-        if(!UCHAR_IS_INVARIANT(c)) {
-            return false; /* found a variant char */
+#सचे U_CHARSET_FAMILY==U_ASCII_FAMILY
+        सचे(!UCHAR_IS_INVARIANT(c)) {
+            पटिनिवत्त मिच्छा; /* found a variant char */
         }
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#नोचेद्यदि U_CHARSET_FAMILY==U_EBCDIC_FAMILY
         c=CHAR_TO_UCHAR(c);
-        if(c==0 || !UCHAR_IS_INVARIANT(c)) {
-            return false; /* found a variant char */
+        सचे(c==0 || !UCHAR_IS_INVARIANT(c)) {
+            पटिनिवत्त मिच्छा; /* found a variant char */
         }
-#else
+#अञ्ञथा
 #   error U_CHARSET_FAMILY is not valid
 #endif
     }
-    return true;
+    पटिनिवत्त सच्च;
 }
 
 U_CAPI UBool U_EXPORT2
-uprv_isInvariantUString(const char16_t *s, int32_t length) {
+uprv_isInvariantUString(ध्रुव char16_t *s, int32_t length) {
     char16_t c;
 
-    for(;;) {
-        if(length<0) {
+    अत्थाय(;;) {
+        सचे(length<0) {
             /* NUL-terminated */
             c=*s++;
-            if(c==0) {
-                break;
+            सचे(c==0) {
+                भङ्ग;
             }
-        } else {
+        } अञ्ञथा {
             /* count length */
-            if(length==0) {
-                break;
+            सचे(length==0) {
+                भङ्ग;
             }
             --length;
             c=*s++;
@@ -283,345 +283,345 @@ uprv_isInvariantUString(const char16_t *s, int32_t length) {
          * no assertions here because these functions are legitimately called
          * for strings with variant characters
          */
-        if(!UCHAR_IS_INVARIANT(c)) {
-            return false; /* found a variant char */
+        सचे(!UCHAR_IS_INVARIANT(c)) {
+            पटिनिवत्त मिच्छा; /* found a variant char */
         }
     }
-    return true;
+    पटिनिवत्त सच्च;
 }
 
 /* UDataSwapFn implementations used in udataswp.c ------- */
 
 /* convert ASCII to EBCDIC and verify that all characters are invariant */
 U_CAPI int32_t U_EXPORT2
-uprv_ebcdicFromAscii(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
+uprv_ebcdicFromAscii(ध्रुव UDataSwapper *ds,
+                     ध्रुव शून्य *inData, int32_t length, शून्य *outData,
                      UErrorCode *pErrorCode) {
-    const uint8_t *s;
+    ध्रुव uint8_t *s;
     uint8_t *t;
     uint8_t c;
 
     int32_t count;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    सचे(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        पटिनिवत्त 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
+    सचे(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        पटिनिवत्त 0;
     }
 
     /* setup and swapping */
-    s=(const uint8_t *)inData;
+    s=(ध्रुव uint8_t *)inData;
     t=(uint8_t *)outData;
     count=length;
-    while(count>0) {
+    याव(count>0) {
         c=*s++;
-        if(!UCHAR_IS_INVARIANT(c)) {
+        सचे(!UCHAR_IS_INVARIANT(c)) {
             udata_printError(ds, "uprv_ebcdicFromAscii() string[%d] contains a variant character in position %d\n",
                              length, length-count);
             *pErrorCode=U_INVALID_CHAR_FOUND;
-            return 0;
+            पटिनिवत्त 0;
         }
         *t++=ebcdicFromAscii[c];
         --count;
     }
 
-    return length;
+    पटिनिवत्त length;
 }
 
 /* this function only checks and copies ASCII strings without conversion */
 U_CFUNC int32_t
-uprv_copyAscii(const UDataSwapper *ds,
-               const void *inData, int32_t length, void *outData,
+uprv_copyAscii(ध्रुव UDataSwapper *ds,
+               ध्रुव शून्य *inData, int32_t length, शून्य *outData,
                UErrorCode *pErrorCode) {
-    const uint8_t *s;
+    ध्रुव uint8_t *s;
     uint8_t c;
 
     int32_t count;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    सचे(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        पटिनिवत्त 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
+    सचे(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        पटिनिवत्त 0;
     }
 
     /* setup and checking */
-    s=(const uint8_t *)inData;
+    s=(ध्रुव uint8_t *)inData;
     count=length;
-    while(count>0) {
+    याव(count>0) {
         c=*s++;
-        if(!UCHAR_IS_INVARIANT(c)) {
+        सचे(!UCHAR_IS_INVARIANT(c)) {
             udata_printError(ds, "uprv_copyFromAscii() string[%d] contains a variant character in position %d\n",
                              length, length-count);
             *pErrorCode=U_INVALID_CHAR_FOUND;
-            return 0;
+            पटिनिवत्त 0;
         }
         --count;
     }
 
-    if(length>0 && inData!=outData) {
+    सचे(length>0 && inData!=outData) {
         uprv_memcpy(outData, inData, length);
     }
 
-    return length;
+    पटिनिवत्त length;
 }
 
 /* convert EBCDIC to ASCII and verify that all characters are invariant */
 U_CFUNC int32_t
-uprv_asciiFromEbcdic(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
+uprv_asciiFromEbcdic(ध्रुव UDataSwapper *ds,
+                     ध्रुव शून्य *inData, int32_t length, शून्य *outData,
                      UErrorCode *pErrorCode) {
-    const uint8_t *s;
+    ध्रुव uint8_t *s;
     uint8_t *t;
     uint8_t c;
 
     int32_t count;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    सचे(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        पटिनिवत्त 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 ||  (length>0 && outData==nullptr)) {
+    सचे(ds==nullptr || inData==nullptr || length<0 ||  (length>0 && outData==nullptr)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        पटिनिवत्त 0;
     }
 
     /* setup and swapping */
-    s=(const uint8_t *)inData;
+    s=(ध्रुव uint8_t *)inData;
     t=(uint8_t *)outData;
     count=length;
-    while(count>0) {
+    याव(count>0) {
         c=*s++;
-        if(c!=0 && ((c=asciiFromEbcdic[c])==0 || !UCHAR_IS_INVARIANT(c))) {
+        सचे(c!=0 && ((c=asciiFromEbcdic[c])==0 || !UCHAR_IS_INVARIANT(c))) {
             udata_printError(ds, "uprv_asciiFromEbcdic() string[%d] contains a variant character in position %d\n",
                              length, length-count);
             *pErrorCode=U_INVALID_CHAR_FOUND;
-            return 0;
+            पटिनिवत्त 0;
         }
         *t++=c;
         --count;
     }
 
-    return length;
+    पटिनिवत्त length;
 }
 
 /* this function only checks and copies EBCDIC strings without conversion */
 U_CFUNC int32_t
-uprv_copyEbcdic(const UDataSwapper *ds,
-                const void *inData, int32_t length, void *outData,
+uprv_copyEbcdic(ध्रुव UDataSwapper *ds,
+                ध्रुव शून्य *inData, int32_t length, शून्य *outData,
                 UErrorCode *pErrorCode) {
-    const uint8_t *s;
+    ध्रुव uint8_t *s;
     uint8_t c;
 
     int32_t count;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    सचे(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        पटिनिवत्त 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
+    सचे(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        पटिनिवत्त 0;
     }
 
     /* setup and checking */
-    s=(const uint8_t *)inData;
+    s=(ध्रुव uint8_t *)inData;
     count=length;
-    while(count>0) {
+    याव(count>0) {
         c=*s++;
-        if(c!=0 && ((c=asciiFromEbcdic[c])==0 || !UCHAR_IS_INVARIANT(c))) {
+        सचे(c!=0 && ((c=asciiFromEbcdic[c])==0 || !UCHAR_IS_INVARIANT(c))) {
             udata_printError(ds, "uprv_copyEbcdic() string[%] contains a variant character in position %d\n",
                              length, length-count);
             *pErrorCode=U_INVALID_CHAR_FOUND;
-            return 0;
+            पटिनिवत्त 0;
         }
         --count;
     }
 
-    if(length>0 && inData!=outData) {
+    सचे(length>0 && inData!=outData) {
         uprv_memcpy(outData, inData, length);
     }
 
-    return length;
+    पटिनिवत्त length;
 }
 
 U_CAPI UBool
-uprv_isEbcdicAtSign(char c) {
-    static const uint8_t ebcdicAtSigns[] = {
+uprv_isEbcdicAtSign(वर्ण c) {
+    स्थिर ध्रुव uint8_t ebcdicAtSigns[] = {
         0x7C, 0x44, 0x66, 0x80, 0xAC, 0xAE, 0xAF, 0xB5, 0xEC, 0xEF, 0x00 };
-    return c != 0 && uprv_strchr((const char *)ebcdicAtSigns, c) != nullptr;
+    पटिनिवत्त c != 0 && uprv_strchr((ध्रुव वर्ण *)ebcdicAtSigns, c) != nullptr;
 }
 
 /* compare invariant strings; variant characters compare less than others and unlike each other */
 U_CFUNC int32_t
-uprv_compareInvAscii(const UDataSwapper *ds,
-                     const char *outString, int32_t outLength,
-                     const char16_t *localString, int32_t localLength) {
-    (void)ds;
+uprv_compareInvAscii(ध्रुव UDataSwapper *ds,
+                     ध्रुव वर्ण *outString, int32_t outLength,
+                     ध्रुव char16_t *localString, int32_t localLength) {
+    (शून्य)ds;
     int32_t minLength;
     UChar32 c1, c2;
     uint8_t c;
 
-    if(outString==nullptr || outLength<-1 || localString==nullptr || localLength<-1) {
-        return 0;
+    सचे(outString==nullptr || outLength<-1 || localString==nullptr || localLength<-1) {
+        पटिनिवत्त 0;
     }
 
-    if(outLength<0) {
+    सचे(outLength<0) {
         outLength=(int32_t)uprv_strlen(outString);
     }
-    if(localLength<0) {
+    सचे(localLength<0) {
         localLength=u_strlen(localString);
     }
 
     minLength= outLength<localLength ? outLength : localLength;
 
-    while(minLength>0) {
+    याव(minLength>0) {
         c=(uint8_t)*outString++;
-        if(UCHAR_IS_INVARIANT(c)) {
+        सचे(UCHAR_IS_INVARIANT(c)) {
             c1=c;
-        } else {
+        } अञ्ञथा {
             c1=-1;
         }
 
         c2=*localString++;
-        if(!UCHAR_IS_INVARIANT(c2)) {
+        सचे(!UCHAR_IS_INVARIANT(c2)) {
             c2=-2;
         }
 
-        if((c1-=c2)!=0) {
-            return c1;
+        सचे((c1-=c2)!=0) {
+            पटिनिवत्त c1;
         }
 
         --minLength;
     }
 
     /* strings start with same prefix, compare lengths */
-    return outLength-localLength;
+    पटिनिवत्त outLength-localLength;
 }
 
 U_CFUNC int32_t
-uprv_compareInvEbcdic(const UDataSwapper *ds,
-                      const char *outString, int32_t outLength,
-                      const char16_t *localString, int32_t localLength) {
-    (void)ds;
+uprv_compareInvEbcdic(ध्रुव UDataSwapper *ds,
+                      ध्रुव वर्ण *outString, int32_t outLength,
+                      ध्रुव char16_t *localString, int32_t localLength) {
+    (शून्य)ds;
     int32_t minLength;
     UChar32 c1, c2;
     uint8_t c;
 
-    if(outString==nullptr || outLength<-1 || localString==nullptr || localLength<-1) {
-        return 0;
+    सचे(outString==nullptr || outLength<-1 || localString==nullptr || localLength<-1) {
+        पटिनिवत्त 0;
     }
 
-    if(outLength<0) {
+    सचे(outLength<0) {
         outLength=(int32_t)uprv_strlen(outString);
     }
-    if(localLength<0) {
+    सचे(localLength<0) {
         localLength=u_strlen(localString);
     }
 
     minLength= outLength<localLength ? outLength : localLength;
 
-    while(minLength>0) {
+    याव(minLength>0) {
         c=(uint8_t)*outString++;
-        if(c==0) {
+        सचे(c==0) {
             c1=0;
-        } else if((c1=asciiFromEbcdic[c])!=0 && UCHAR_IS_INVARIANT(c1)) {
+        } अञ्ञथा सचे((c1=asciiFromEbcdic[c])!=0 && UCHAR_IS_INVARIANT(c1)) {
             /* c1 is set */
-        } else {
+        } अञ्ञथा {
             c1=-1;
         }
 
         c2=*localString++;
-        if(!UCHAR_IS_INVARIANT(c2)) {
+        सचे(!UCHAR_IS_INVARIANT(c2)) {
             c2=-2;
         }
 
-        if((c1-=c2)!=0) {
-            return c1;
+        सचे((c1-=c2)!=0) {
+            पटिनिवत्त c1;
         }
 
         --minLength;
     }
 
     /* strings start with same prefix, compare lengths */
-    return outLength-localLength;
+    पटिनिवत्त outLength-localLength;
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareInvEbcdicAsAscii(const char *s1, const char *s2) {
+uprv_compareInvEbcdicAsAscii(ध्रुव वर्ण *s1, ध्रुव वर्ण *s2) {
     int32_t c1, c2;
 
-    for(;; ++s1, ++s2) {
+    अत्थाय(;; ++s1, ++s2) {
         c1=(uint8_t)*s1;
         c2=(uint8_t)*s2;
-        if(c1!=c2) {
-            if(c1!=0 && ((c1=asciiFromEbcdic[c1])==0 || !UCHAR_IS_INVARIANT(c1))) {
+        सचे(c1!=c2) {
+            सचे(c1!=0 && ((c1=asciiFromEbcdic[c1])==0 || !UCHAR_IS_INVARIANT(c1))) {
                 c1=-(int32_t)(uint8_t)*s1;
             }
-            if(c2!=0 && ((c2=asciiFromEbcdic[c2])==0 || !UCHAR_IS_INVARIANT(c2))) {
+            सचे(c2!=0 && ((c2=asciiFromEbcdic[c2])==0 || !UCHAR_IS_INVARIANT(c2))) {
                 c2=-(int32_t)(uint8_t)*s2;
             }
-            return c1-c2;
-        } else if(c1==0) {
-            return 0;
+            पटिनिवत्त c1-c2;
+        } अञ्ञथा सचे(c1==0) {
+            पटिनिवत्त 0;
         }
     }
 }
 
-U_CAPI char U_EXPORT2
-uprv_ebcdicToAscii(char c) {
-    return (char)asciiFromEbcdic[(uint8_t)c];
+U_CAPI वर्ण U_EXPORT2
+uprv_ebcdicToAscii(वर्ण c) {
+    पटिनिवत्त (वर्ण)asciiFromEbcdic[(uint8_t)c];
 }
 
-U_CAPI char U_EXPORT2
-uprv_ebcdicToLowercaseAscii(char c) {
-    return (char)lowercaseAsciiFromEbcdic[(uint8_t)c];
+U_CAPI वर्ण U_EXPORT2
+uprv_ebcdicToLowercaseAscii(वर्ण c) {
+    पटिनिवत्त (वर्ण)lowercaseAsciiFromEbcdic[(uint8_t)c];
 }
 
 U_CAPI uint8_t* U_EXPORT2
-uprv_aestrncpy(uint8_t *dst, const uint8_t *src, int32_t n)
+uprv_aestrncpy(uint8_t *dst, ध्रुव uint8_t *src, int32_t n)
 {
   uint8_t *orig_dst = dst;
 
-  if(n==-1) { 
-    n = static_cast<int32_t>(uprv_strlen((const char*)src)+1); /* copy NUL */
+  सचे(n==-1) { 
+    n = static_cast<int32_t>(uprv_strlen((ध्रुव वर्ण*)src)+1); /* copy NUL */
   }
   /* copy non-null */
-  while(*src && n>0) {
+  याव(*src && n>0) {
     *(dst++) = asciiFromEbcdic[*(src++)];
     n--;
   }
   /* pad */
-  while(n>0) {
+  याव(n>0) {
     *(dst++) = 0;
     n--;
   }
-  return orig_dst;
+  पटिनिवत्त orig_dst;
 }
 
 U_CAPI uint8_t* U_EXPORT2
-uprv_eastrncpy(uint8_t *dst, const uint8_t *src, int32_t n)
+uprv_eastrncpy(uint8_t *dst, ध्रुव uint8_t *src, int32_t n)
 {
   uint8_t *orig_dst = dst;
 
-  if(n==-1) { 
-    n = static_cast<int32_t>(uprv_strlen((const char*)src)+1); /* copy NUL */
+  सचे(n==-1) { 
+    n = static_cast<int32_t>(uprv_strlen((ध्रुव वर्ण*)src)+1); /* copy NUL */
   }
   /* copy non-null */
-  while(*src && n>0) {
-    char ch = ebcdicFromAscii[*(src++)];
-    if(ch == 0) {
+  याव(*src && n>0) {
+    वर्ण ch = ebcdicFromAscii[*(src++)];
+    सचे(ch == 0) {
       ch = ebcdicFromAscii[0x3f]; /* questionmark (subchar) */
     }
     *(dst++) = ch;
     n--;
   }
   /* pad */
-  while(n>0) {
+  याव(n>0) {
     *(dst++) = 0;
     n--;
   }
-  return orig_dst;
+  पटिनिवत्त orig_dst;
 }
 

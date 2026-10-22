@@ -8,19 +8,19 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#सचे !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "ucln_cmn.h"
-#include "uassert.h"
+#अन्तर्भाव "unicode/resbund.h"
+#अन्तर्भाव "uresimp.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "servloc.h"
+#अन्तर्भाव "ustrfmt.h"
+#अन्तर्भाव "uhash.h"
+#अन्तर्भाव "charstr.h"
+#अन्तर्भाव "ucln_cmn.h"
+#अन्तर्भाव "uassert.h"
 
 #define UNDERSCORE_CHAR ((char16_t)0x005f)
 #define AT_SIGN_CHAR    ((char16_t)64)
@@ -29,60 +29,60 @@
 
 U_NAMESPACE_BEGIN
 
-LocaleKeyFactory::LocaleKeyFactory(int32_t coverage)
+Locale_कुञ्चिका_Factory::Locale_कुञ्चिका_Factory(int32_t coverage)
   : _name()
   , _coverage(coverage)
 {
 }
 
-LocaleKeyFactory::LocaleKeyFactory(int32_t coverage, const UnicodeString& name)
+Locale_कुञ्चिका_Factory::Locale_कुञ्चिका_Factory(int32_t coverage, ध्रुव UnicodeString& name)
   : _name(name)
   , _coverage(coverage)
 {
 }
 
-LocaleKeyFactory::~LocaleKeyFactory() {
+Locale_कुञ्चिका_Factory::~Locale_कुञ्चिका_Factory() {
 }
 
 UObject*
-LocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const {
-    if (handlesKey(key, status)) {
-        const LocaleKey& lkey = static_cast<const LocaleKey&>(key);
+Locale_कुञ्चिका_Factory::create(ध्रुव ICUService_कुञ्चिका& कुञ्चिका, ध्रुव ICUService* service, UErrorCode& status) ध्रुव {
+    सचे (handles_कुञ्चिका(कुञ्चिका, status)) {
+        ध्रुव Locale_कुञ्चिका& lkey = static_cast<ध्रुव Locale_कुञ्चिका&>(कुञ्चिका);
         int32_t kind = lkey.kind();
         Locale loc;
         lkey.currentLocale(loc);
 
-        return handleCreate(loc, kind, service, status);
+        पटिनिवत्त handleCreate(loc, kind, service, status);
     }
-    return nullptr;
+    पटिनिवत्त nullptr;
 }
 
 UBool
-LocaleKeyFactory::handlesKey(const ICUServiceKey& key, UErrorCode& status) const {
-    const Hashtable* supported = getSupportedIDs(status);
-    if (supported) {
+Locale_कुञ्चिका_Factory::handles_कुञ्चिका(ध्रुव ICUService_कुञ्चिका& कुञ्चिका, UErrorCode& status) ध्रुव {
+    ध्रुव Hashtable* supported = getSupportedIDs(status);
+    सचे (supported) {
         UnicodeString id;
-        key.currentID(id);
-        return supported->get(id) != nullptr;
+        कुञ्चिका.currentID(id);
+        पटिनिवत्त supported->get(id) != nullptr;
     }
-    return false;
+    पटिनिवत्त मिच्छा;
 }
 
-void
-LocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const {
-    const Hashtable* supported = getSupportedIDs(status);
-    if (supported) {
+शून्य
+Locale_कुञ्चिका_Factory::updateVisibleIDs(Hashtable& result, UErrorCode& status) ध्रुव {
+    ध्रुव Hashtable* supported = getSupportedIDs(status);
+    सचे (supported) {
         UBool visible = (_coverage & 0x1) == 0;
-        const UHashElement* elem = nullptr;
+        ध्रुव UHashElement* elem = nullptr;
         int32_t pos = UHASH_FIRST;
-        while ((elem = supported->nextElement(pos)) != nullptr) {
-            const UnicodeString& id = *static_cast<const UnicodeString*>(elem->key.pointer);
-            if (!visible) {
+        याव ((elem = supported->nextElement(pos)) != nullptr) {
+            ध्रुव UnicodeString& id = *static_cast<ध्रुव UnicodeString*>(elem->कुञ्चिका.pointer);
+            सचे (!visible) {
                 result.remove(id);
-            } else {
-                result.put(id, (void*)this, status); // this is dummy non-void marker used for set semantics
-                if (U_FAILURE(status)) {
-                    break;
+            } अञ्ञथा {
+                result.put(id, (शून्य*)एतत्, status); // this is dummy non-void marker used for set semantics
+                सचे (U_FAILURE(status)) {
+                    भङ्ग;
                 }
             }
         }
@@ -90,26 +90,26 @@ LocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const 
 }
 
 UnicodeString&
-LocaleKeyFactory::getDisplayName(const UnicodeString& id, const Locale& locale, UnicodeString& result) const {
-    if ((_coverage & 0x1) == 0) {
+Locale_कुञ्चिका_Factory::getDisplayName(ध्रुव UnicodeString& id, ध्रुव Locale& locale, UnicodeString& result) ध्रुव {
+    सचे ((_coverage & 0x1) == 0) {
         //UErrorCode status = U_ZERO_ERROR;
         // assume if this is called on us, we support some fallback of this id
         // if (isSupportedID(id, status)) {
             Locale loc;
             LocaleUtility::initLocaleFromName(id, loc);
-            return loc.getDisplayName(locale, result);
+            पटिनिवत्त loc.getDisplayName(locale, result);
         // }
     }
     result.setToBogus();
-    return result;
+    पटिनिवत्त result;
 }
 
 UObject*
-LocaleKeyFactory::handleCreate(const Locale& /* loc */, 
+Locale_कुञ्चिका_Factory::handleCreate(ध्रुव Locale& /* loc */, 
                    int32_t /* kind */, 
-                   const ICUService* /* service */, 
-                   UErrorCode& /* status */) const {
-    return nullptr;
+                   ध्रुव ICUService* /* service */, 
+                   UErrorCode& /* status */) ध्रुव {
+    पटिनिवत्त nullptr;
 }
 
 //UBool
@@ -118,31 +118,31 @@ LocaleKeyFactory::handleCreate(const Locale& /* loc */,
 //    return ids && ids->get(id);
 //}
 
-const Hashtable*
-LocaleKeyFactory::getSupportedIDs(UErrorCode& /* status */) const {
-    return nullptr;
+ध्रुव Hashtable*
+Locale_कुञ्चिका_Factory::getSupportedIDs(UErrorCode& /* status */) ध्रुव {
+    पटिनिवत्त nullptr;
 }
 
 #ifdef SERVICE_DEBUG
 UnicodeString&
-LocaleKeyFactory::debug(UnicodeString& result) const
+Locale_कुञ्चिका_Factory::debug(UnicodeString& result) ध्रुव
 {
     debugClass(result);
     result.append((UnicodeString)", name: ");
     result.append(_name);
     result.append((UnicodeString)", coverage: ");
     result.append(_coverage);
-    return result;
+    पटिनिवत्त result;
 }
 
 UnicodeString&
-LocaleKeyFactory::debugClass(UnicodeString& result) const
+Locale_कुञ्चिका_Factory::debugClass(UnicodeString& result) ध्रुव
 {
-  return result.append((UnicodeString)"LocaleKeyFactory");
+  पटिनिवत्त result.append((UnicodeString)"LocaleKeyFactory");
 }
 #endif
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(LocaleKeyFactory)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Locale_कुञ्चिका_Factory)
 
 U_NAMESPACE_END
 

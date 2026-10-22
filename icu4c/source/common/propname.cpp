@@ -11,18 +11,18 @@
 * 2010nov19 Markus Scherer  Rewrite for formatVersion 2.
 **********************************************************************
 */
-#include "propname.h"
-#include "unicode/uchar.h"
-#include "unicode/udata.h"
-#include "unicode/uscript.h"
-#include "umutex.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uarrsort.h"
-#include "uinvchar.h"
+#अन्तर्भाव "propname.h"
+#अन्तर्भाव "unicode/uchar.h"
+#अन्तर्भाव "unicode/udata.h"
+#अन्तर्भाव "unicode/uscript.h"
+#अन्तर्भाव "umutex.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "uarrsort.h"
+#अन्तर्भाव "uinvchar.h"
 
 #define INCLUDED_FROM_PROPNAME_CPP
-#include "propname_data.h"
+#अन्तर्भाव "propname_data.h"
 
 U_CDECL_BEGIN
 
@@ -31,21 +31,21 @@ U_CDECL_BEGIN
  * and lowercases it.
  * @return ((advance count for the name)<<8)|character
  */
-static inline int32_t
-getASCIIPropertyNameChar(const char *name) {
+स्थिर अन्तःस्थ int32_t
+getASCIIPropertyNameChar(ध्रुव वर्ण *name) {
     int32_t i;
-    char c;
+    वर्ण c;
 
     /* Ignore delimiters '-', '_', and ASCII White_Space */
-    for(i=0;
+    अत्थाय(i=0;
         (c=name[i++])==0x2d || c==0x5f ||
         c==0x20 || (0x09<=c && c<=0x0d);
     ) {}
 
-    if(c!=0) {
-        return (i << 8) | static_cast<uint8_t>(uprv_asciitolower(c));
-    } else {
-        return i<<8;
+    सचे(c!=0) {
+        पटिनिवत्त (i << 8) | static_cast<uint8_t>(uprv_asciitolower(c));
+    } अञ्ञथा {
+        पटिनिवत्त i<<8;
     }
 }
 
@@ -54,21 +54,21 @@ getASCIIPropertyNameChar(const char *name) {
  * and lowercases it.
  * @return ((advance count for the name)<<8)|character
  */
-static inline int32_t
-getEBCDICPropertyNameChar(const char *name) {
+स्थिर अन्तःस्थ int32_t
+getEBCDICPropertyNameChar(ध्रुव वर्ण *name) {
     int32_t i;
-    char c;
+    वर्ण c;
 
     /* Ignore delimiters '-', '_', and EBCDIC White_Space */
-    for(i=0;
+    अत्थाय(i=0;
         (c=name[i++])==0x60 || c==0x6d ||
         c==0x40 || c==0x05 || c==0x15 || c==0x25 || c==0x0b || c==0x0c || c==0x0d;
     ) {}
 
-    if(c!=0) {
-        return (i << 8) | static_cast<uint8_t>(uprv_ebcdictolower(c));
-    } else {
-        return i<<8;
+    सचे(c!=0) {
+        पटिनिवत्त (i << 8) | static_cast<uint8_t>(uprv_ebcdictolower(c));
+    } अञ्ञथा {
+        पटिनिवत्त i<<8;
     }
 }
 
@@ -90,23 +90,23 @@ getEBCDICPropertyNameChar(const char *name) {
  */
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareASCIIPropertyNames(const char *name1, const char *name2) {
+uprv_compareASCIIPropertyNames(ध्रुव वर्ण *name1, ध्रुव वर्ण *name2) {
     int32_t rc, r1, r2;
 
-    for(;;) {
+    अत्थाय(;;) {
         r1=getASCIIPropertyNameChar(name1);
         r2=getASCIIPropertyNameChar(name2);
 
         /* If we reach the ends of both strings then they match */
-        if(((r1|r2)&0xff)==0) {
-            return 0;
+        सचे(((r1|r2)&0xff)==0) {
+            पटिनिवत्त 0;
         }
 
         /* Compare the lowercased characters */
-        if(r1!=r2) {
+        सचे(r1!=r2) {
             rc=(r1&0xff)-(r2&0xff);
-            if(rc!=0) {
-                return rc;
+            सचे(rc!=0) {
+                पटिनिवत्त rc;
             }
         }
 
@@ -116,23 +116,23 @@ uprv_compareASCIIPropertyNames(const char *name1, const char *name2) {
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareEBCDICPropertyNames(const char *name1, const char *name2) {
+uprv_compareEBCDICPropertyNames(ध्रुव वर्ण *name1, ध्रुव वर्ण *name2) {
     int32_t rc, r1, r2;
 
-    for(;;) {
+    अत्थाय(;;) {
         r1=getEBCDICPropertyNameChar(name1);
         r2=getEBCDICPropertyNameChar(name2);
 
         /* If we reach the ends of both strings then they match */
-        if(((r1|r2)&0xff)==0) {
-            return 0;
+        सचे(((r1|r2)&0xff)==0) {
+            पटिनिवत्त 0;
         }
 
         /* Compare the lowercased characters */
-        if(r1!=r2) {
+        सचे(r1!=r2) {
             rc=(r1&0xff)-(r2&0xff);
-            if(rc!=0) {
-                return rc;
+            सचे(rc!=0) {
+                पटिनिवत्त rc;
             }
         }
 
@@ -147,188 +147,188 @@ U_NAMESPACE_BEGIN
 
 int32_t PropNameData::findProperty(int32_t property) {
     int32_t i=1;  // valueMaps index, initially after numRanges
-    for(int32_t numRanges=valueMaps[0]; numRanges>0; --numRanges) {
+    अत्थाय(int32_t अङ्कः_Ranges=मानम्_Maps[0]; अङ्कः_Ranges>0; --अङ्कः_Ranges) {
         // Read and skip the start and limit of this range.
-        int32_t start=valueMaps[i];
-        int32_t limit=valueMaps[i+1];
+        int32_t start=मानम्_Maps[i];
+        int32_t limit=मानम्_Maps[i+1];
         i+=2;
-        if(property<start) {
-            break;
+        सचे(property<start) {
+            भङ्ग;
         }
-        if(property<limit) {
-            return i+(property-start)*2;
+        सचे(property<limit) {
+            पटिनिवत्त i+(property-start)*2;
         }
         i+=(limit-start)*2;  // Skip all entries for this range.
     }
-    return 0;
+    पटिनिवत्त 0;
 }
 
-int32_t PropNameData::findPropertyValueNameGroup(int32_t valueMapIndex, int32_t value) {
-    if(valueMapIndex==0) {
-        return 0;  // The property does not have named values.
+int32_t PropNameData::find_Property_मानम्_Name_Group(int32_t मानम्_Map_Index, int32_t value) {
+    सचे(मानम्_Map_Index==0) {
+        पटिनिवत्त 0;  // The property does not have named values.
     }
-    ++valueMapIndex;  // Skip the BytesTrie offset.
-    int32_t numRanges=valueMaps[valueMapIndex++];
-    if(numRanges<0x10) {
+    ++मानम्_Map_Index;  // Skip the BytesTrie offset.
+    int32_t अङ्कः_Ranges=मानम्_Maps[मानम्_Map_Index++];
+    सचे(अङ्कः_Ranges<0x10) {
         // Ranges of values.
-        for(; numRanges>0; --numRanges) {
+        अत्थाय(; अङ्कः_Ranges>0; --अङ्कः_Ranges) {
             // Read and skip the start and limit of this range.
-            int32_t start=valueMaps[valueMapIndex];
-            int32_t limit=valueMaps[valueMapIndex+1];
-            valueMapIndex+=2;
-            if(value<start) {
-                break;
+            int32_t start=मानम्_Maps[मानम्_Map_Index];
+            int32_t limit=मानम्_Maps[मानम्_Map_Index+1];
+            मानम्_Map_Index+=2;
+            सचे(value<start) {
+                भङ्ग;
             }
-            if(value<limit) {
-                return valueMaps[valueMapIndex+value-start];
+            सचे(value<limit) {
+                पटिनिवत्त मानम्_Maps[मानम्_Map_Index+value-start];
             }
-            valueMapIndex+=limit-start;  // Skip all entries for this range.
+            मानम्_Map_Index+=limit-start;  // Skip all entries for this range.
         }
-    } else {
+    } अञ्ञथा {
         // List of values.
-        int32_t valuesStart=valueMapIndex;
-        int32_t nameGroupOffsetsStart=valueMapIndex+numRanges-0x10;
-        do {
-            int32_t v=valueMaps[valueMapIndex];
-            if(value<v) {
-                break;
+        int32_t मानानि_Start=मानम्_Map_Index;
+        int32_t nameGroupOffsetsStart=मानम्_Map_Index+अङ्कः_Ranges-0x10;
+        करोहि {
+            int32_t v=मानम्_Maps[मानम्_Map_Index];
+            सचे(value<v) {
+                भङ्ग;
             }
-            if(value==v) {
-                return valueMaps[nameGroupOffsetsStart+valueMapIndex-valuesStart];
+            सचे(value==v) {
+                पटिनिवत्त मानम्_Maps[nameGroupOffsetsStart+मानम्_Map_Index-मानानि_Start];
             }
-        } while(++valueMapIndex<nameGroupOffsetsStart);
+        } याव(++मानम्_Map_Index<nameGroupOffsetsStart);
     }
-    return 0;
+    पटिनिवत्त 0;
 }
 
-const char *PropNameData::getName(const char *nameGroup, int32_t nameIndex) {
-    int32_t numNames=*nameGroup++;
-    if(nameIndex<0 || numNames<=nameIndex) {
-        return nullptr;
+ध्रुव वर्ण *PropNameData::getName(ध्रुव वर्ण *nameGroup, int32_t nameIndex) {
+    int32_t अङ्कः_Names=*nameGroup++;
+    सचे(nameIndex<0 || अङ्कः_Names<=nameIndex) {
+        पटिनिवत्त nullptr;
     }
     // Skip nameIndex names.
-    for(; nameIndex>0; --nameIndex) {
+    अत्थाय(; nameIndex>0; --nameIndex) {
         nameGroup=uprv_strchr(nameGroup, 0)+1;
     }
-    if(*nameGroup==0) {
-        return nullptr;  // no name (Property[Value]Aliases.txt has "n/a")
+    सचे(*nameGroup==0) {
+        पटिनिवत्त nullptr;  // no name (Property[Value]Aliases.txt has "n/a")
     }
-    return nameGroup;
+    पटिनिवत्त nameGroup;
 }
 
-UBool PropNameData::containsName(BytesTrie &trie, const char *name) {
-    if(name==nullptr) {
-        return false;
+UBool PropNameData::containsName(BytesTrie &trie, ध्रुव वर्ण *name) {
+    सचे(name==nullptr) {
+        पटिनिवत्त मिच्छा;
     }
-    UStringTrieResult result=USTRINGTRIE_NO_VALUE;
-    char c;
-    while((c=*name++)!=0) {
+    UStringTrieResult result=USTRINGTRIE_NO_मानम्;
+    वर्ण c;
+    याव((c=*name++)!=0) {
         c=uprv_invCharToLowercaseAscii(c);
         // Ignore delimiters '-', '_', and ASCII White_Space.
-        if(c==0x2d || c==0x5f || c==0x20 || (0x09<=c && c<=0x0d)) {
-            continue;
+        सचे(c==0x2d || c==0x5f || c==0x20 || (0x09<=c && c<=0x0d)) {
+            अनुवर्त;
         }
-        if(!USTRINGTRIE_HAS_NEXT(result)) {
-            return false;
+        सचे(!USTRINGTRIE_HAS_NEXT(result)) {
+            पटिनिवत्त मिच्छा;
         }
         result = trie.next(static_cast<uint8_t>(c));
     }
-    return USTRINGTRIE_HAS_VALUE(result);
+    पटिनिवत्त USTRINGTRIE_HAS_मानम्(result);
 }
 
-const char *PropNameData::getPropertyName(int32_t property, int32_t nameChoice) {
-    int32_t valueMapIndex=findProperty(property);
-    if(valueMapIndex==0) {
-        return nullptr;  // Not a known property.
+ध्रुव वर्ण *PropNameData::getPropertyName(int32_t property, int32_t nameChoice) {
+    int32_t मानम्_Map_Index=findProperty(property);
+    सचे(मानम्_Map_Index==0) {
+        पटिनिवत्त nullptr;  // Not a known property.
     }
-    return getName(nameGroups+valueMaps[valueMapIndex], nameChoice);
+    पटिनिवत्त getName(nameGroups+मानम्_Maps[मानम्_Map_Index], nameChoice);
 }
 
-const char *PropNameData::getPropertyValueName(int32_t property, int32_t value, int32_t nameChoice) {
-    int32_t valueMapIndex=findProperty(property);
-    if(valueMapIndex==0) {
-        return nullptr;  // Not a known property.
+ध्रुव वर्ण *PropNameData::get_Property_मानम्_Name(int32_t property, int32_t value, int32_t nameChoice) {
+    int32_t मानम्_Map_Index=findProperty(property);
+    सचे(मानम्_Map_Index==0) {
+        पटिनिवत्त nullptr;  // Not a known property.
     }
-    int32_t nameGroupOffset=findPropertyValueNameGroup(valueMaps[valueMapIndex+1], value);
-    if(nameGroupOffset==0) {
-        return nullptr;
+    int32_t nameGroupOffset=find_Property_मानम्_Name_Group(मानम्_Maps[मानम्_Map_Index+1], value);
+    सचे(nameGroupOffset==0) {
+        पटिनिवत्त nullptr;
     }
-    return getName(nameGroups+nameGroupOffset, nameChoice);
+    पटिनिवत्त getName(nameGroups+nameGroupOffset, nameChoice);
 }
 
-int32_t PropNameData::getPropertyOrValueEnum(int32_t bytesTrieOffset, const char *alias) {
+int32_t PropNameData::get_Property_Or_मानम्_Enum(int32_t bytesTrieOffset, ध्रुव वर्ण *alias) {
     BytesTrie trie(bytesTries+bytesTrieOffset);
-    if(containsName(trie, alias)) {
-        return trie.getValue();
-    } else {
-        return UCHAR_INVALID_CODE;
+    सचे(containsName(trie, alias)) {
+        पटिनिवत्त trie.get_मानम्();
+    } अञ्ञथा {
+        पटिनिवत्त UCHAR_INVALID_CODE;
     }
 }
 
-int32_t PropNameData::getPropertyEnum(const char *alias) {
-    return getPropertyOrValueEnum(0, alias);
+int32_t PropNameData::getPropertyEnum(ध्रुव वर्ण *alias) {
+    पटिनिवत्त get_Property_Or_मानम्_Enum(0, alias);
 }
 
-int32_t PropNameData::getPropertyValueEnum(int32_t property, const char *alias) {
-    int32_t valueMapIndex=findProperty(property);
-    if(valueMapIndex==0) {
-        return UCHAR_INVALID_CODE;  // Not a known property.
+int32_t PropNameData::get_Property_मानम्_Enum(int32_t property, ध्रुव वर्ण *alias) {
+    int32_t मानम्_Map_Index=findProperty(property);
+    सचे(मानम्_Map_Index==0) {
+        पटिनिवत्त UCHAR_INVALID_CODE;  // Not a known property.
     }
-    valueMapIndex=valueMaps[valueMapIndex+1];
-    if(valueMapIndex==0) {
-        return UCHAR_INVALID_CODE;  // The property does not have named values.
+    मानम्_Map_Index=मानम्_Maps[मानम्_Map_Index+1];
+    सचे(मानम्_Map_Index==0) {
+        पटिनिवत्त UCHAR_INVALID_CODE;  // The property does not have named values.
     }
     // valueMapIndex is the start of the property's valueMap,
     // where the first word is the BytesTrie offset.
-    return getPropertyOrValueEnum(valueMaps[valueMapIndex], alias);
+    पटिनिवत्त get_Property_Or_मानम्_Enum(मानम्_Maps[मानम्_Map_Index], alias);
 }
 U_NAMESPACE_END
 
 //----------------------------------------------------------------------
 // Public API implementation
 
-U_CAPI const char* U_EXPORT2
+U_CAPI ध्रुव वर्ण* U_EXPORT2
 u_getPropertyName(UProperty property,
                   UPropertyNameChoice nameChoice) UPRV_NO_SANITIZE_UNDEFINED {
     // The nameChoice is really an integer with a couple of named constants.
     // Unicode allows for names other than short and long ones.
     // If present, these will be returned for U_LONG_PROPERTY_NAME + i, where i=1, 2,...
     U_NAMESPACE_USE
-    return PropNameData::getPropertyName(property, nameChoice);
+    पटिनिवत्त PropNameData::getPropertyName(property, nameChoice);
 }
 
 U_CAPI UProperty U_EXPORT2
-u_getPropertyEnum(const char* alias) {
+u_getPropertyEnum(ध्रुव वर्ण* alias) {
     U_NAMESPACE_USE
-    return (UProperty)PropNameData::getPropertyEnum(alias);
+    पटिनिवत्त (UProperty)PropNameData::getPropertyEnum(alias);
 }
 
-U_CAPI const char* U_EXPORT2
-u_getPropertyValueName(UProperty property,
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+u_get_Property_मानम्_Name(UProperty property,
                        int32_t value,
                        UPropertyNameChoice nameChoice) UPRV_NO_SANITIZE_UNDEFINED {
     // The nameChoice is really an integer with a couple of named constants.
     // Unicode allows for names other than short and long ones.
     // If present, these will be returned for U_LONG_PROPERTY_NAME + i, where i=1, 2,...
     U_NAMESPACE_USE
-    return PropNameData::getPropertyValueName(property, value, nameChoice);
+    पटिनिवत्त PropNameData::get_Property_मानम्_Name(property, value, nameChoice);
 }
 
 U_CAPI int32_t U_EXPORT2
-u_getPropertyValueEnum(UProperty property,
-                       const char* alias) {
+u_get_Property_मानम्_Enum(UProperty property,
+                       ध्रुव वर्ण* alias) {
     U_NAMESPACE_USE
-    return PropNameData::getPropertyValueEnum(property, alias);
+    पटिनिवत्त PropNameData::get_Property_मानम्_Enum(property, alias);
 }
 
-U_CAPI const char*  U_EXPORT2
+U_CAPI ध्रुव वर्ण*  U_EXPORT2
 uscript_getName(UScriptCode scriptCode){
-    return u_getPropertyValueName(UCHAR_SCRIPT, scriptCode,
+    पटिनिवत्त u_get_Property_मानम्_Name(UCHAR_SCRIPT, scriptCode,
                                   U_LONG_PROPERTY_NAME);
 }
 
-U_CAPI const char*  U_EXPORT2
+U_CAPI ध्रुव वर्ण*  U_EXPORT2
 uscript_getShortName(UScriptCode scriptCode){
-    return u_getPropertyValueName(UCHAR_SCRIPT, scriptCode,
+    पटिनिवत्त u_get_Property_मानम्_Name(UCHAR_SCRIPT, scriptCode,
                                   U_SHORT_PROPERTY_NAME);
 }

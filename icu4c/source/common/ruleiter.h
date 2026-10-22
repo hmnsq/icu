@@ -13,13 +13,13 @@
 #ifndef _RULEITER_H_
 #define _RULEITER_H_
 
-#include "unicode/uobject.h"
+#अन्तर्भाव "unicode/uobject.h"
 
 U_NAMESPACE_BEGIN
 
 class UnicodeString;
 class ParsePosition;
-class SymbolTable;
+class चिह्नम्_Table;
 
 /**
  * An iterator that returns 32-bit code points.  This class is deliberately
@@ -28,7 +28,7 @@ class SymbolTable;
  * @author Alan Liu
  * @since ICU 2.8
  */
-class RuleCharacterIterator : public UMemory {
+class RuleCharacterIterator : सार्वजनिक UMemory {
 
     // TODO: Ideas for later.  (Do not implement if not needed, lest the
     // code coverage numbers go down due to unused methods.)
@@ -36,11 +36,11 @@ class RuleCharacterIterator : public UMemory {
     // 2. Rather than return DONE, throw an exception if the end
     // is reached -- this is an alternate usage model, probably not useful.
 
-private:
+गुप्त:
     /**
      * Text being iterated.
      */    
-    const UnicodeString& text;
+    ध्रुव UnicodeString& text;
 
     /**
      * Position of iterator.
@@ -50,44 +50,44 @@ private:
     /**
      * Symbol table used to parse and dereference variables.  May be 0.
      */
-    const SymbolTable* sym;
+    ध्रुव चिह्नम्_Table* sym;
     
     /**
      * Current variable expansion, or 0 if none.
      */
-    const UnicodeString* buf;
+    ध्रुव UnicodeString* buf;
 
     /**
      * Position within buf.  Meaningless if buf == 0.
      */
     int32_t bufPos;
 
-public:
+सार्वजनिक:
     /**
      * Value returned when there are no more characters to iterate.
      */
-    static constexpr int32_t DONE = -1;
+    स्थिर constexpr int32_t DONE = -1;
 
     /**
      * Bitmask option to enable parsing of variable names.  If (options &
      * PARSE_VARIABLES) != 0, then an embedded variable will be expanded to
      * its value.  Variables are parsed using the SymbolTable API.
      */
-    static constexpr int32_t PARSE_VARIABLES = 1;
+    स्थिर constexpr int32_t PARSE_VARIABLES = 1;
 
     /**
      * Bitmask option to enable parsing of escape sequences.  If (options &
      * PARSE_ESCAPES) != 0, then an embedded escape sequence will be expanded
      * to its value.  Escapes are parsed using Utility.unescapeAt().
      */
-    static constexpr int32_t PARSE_ESCAPES   = 2;
+    स्थिर constexpr int32_t PARSE_ESCAPES   = 2;
 
     /**
      * Bitmask option to enable skipping of whitespace.  If (options &
      * SKIP_WHITESPACE) != 0, then Pattern_White_Space characters will be silently
      * skipped, as if they were not present in the input.
      */
-    static constexpr int32_t SKIP_WHITESPACE = 4;
+    स्थिर constexpr int32_t SKIP_WHITESPACE = 4;
 
     /**
      * Constructs an iterator over the given text, starting at the given
@@ -100,13 +100,13 @@ public:
      * variable has been dereferenced, then pos will <em>not</em> increment as
      * characters of the variable value are iterated.
      */
-    RuleCharacterIterator(const UnicodeString& text, const SymbolTable* sym,
+    RuleCharacterIterator(ध्रुव UnicodeString& text, ध्रुव चिह्नम्_Table* sym,
                           ParsePosition& pos);
     
     /**
      * Returns true if this iterator has no more characters to return.
      */
-    UBool atEnd() const;
+    UBool atEnd() ध्रुव;
 
     /**
      * Returns the next character using the given options, or DONE if there
@@ -127,14 +127,14 @@ public:
     /**
      * Returns true if this iterator is currently within a variable expansion.
      */
-    inline UBool inVariable() const;
+    अन्तःस्थ UBool inVariable() ध्रुव;
 
     /**
      * An opaque object representing the position of a RuleCharacterIterator.
      */
-    struct Pos : public UMemory {
-    private:
-        const UnicodeString* buf;
+    संरचना Pos : सार्वजनिक UMemory {
+    गुप्त:
+        ध्रुव UnicodeString* buf;
         int32_t pos;
         int32_t bufPos;
         friend class RuleCharacterIterator;
@@ -157,14 +157,14 @@ public:
      * @param p a position object to be set to this iterator's
      * current position.
      */
-    void getPos(Pos& p) const;
+    शून्य getPos(Pos& p) ध्रुव;
 
     /**
      * Restores this iterator to the position it had when getPos()
      * set the given object.
      * @param p a position object previously set by getPos()
      */
-    void setPos(const Pos& p);
+    शून्य setPos(ध्रुव Pos& p);
 
     /**
      * Skips ahead past any ignored characters, as indicated by the given
@@ -174,7 +174,7 @@ public:
      * @param options one or more of the following options, bitwise-OR-ed
      * together: PARSE_VARIABLES, PARSE_ESCAPES, SKIP_WHITESPACE.
      */
-    void skipIgnored(int32_t options);
+    शून्य skipIgnored(int32_t options);
 
     /**
      * Returns a string containing the remainder of the characters to be
@@ -190,14 +190,14 @@ public:
      * @param maxLookAhead The maximum to copy into the result.
      * @return a reference to result
      */
-    UnicodeString& lookahead(UnicodeString& result, int32_t maxLookAhead = -1) const;
+    UnicodeString& lookahead(UnicodeString& result, int32_t maxLookAhead = -1) ध्रुव;
 
     /**
      * Advances the position by the given number of 16-bit code units.
      * This is useful in conjunction with the lookahead() method.
      * @param count the number of 16-bit code units to jump over
      */
-    void jumpahead(int32_t count);
+    शून्य jumpahead(int32_t गणनम्);
 
     /**
      * Returns a string representation of this object, consisting of the
@@ -208,23 +208,23 @@ public:
      */
 //    UnicodeString& toString(UnicodeString& result) const;
     
-private:
+गुप्त:
     /**
      * Returns the current 32-bit code point without parsing escapes, parsing
      * variables, or skipping whitespace.
      * @return the current 32-bit code point
      */
-    UChar32 _current() const;
+    UChar32 _current() ध्रुव;
     
     /**
      * Advances the position by the given amount.
      * @param count the number of 16-bit code units to advance past
      */
-    void _advance(int32_t count);
+    शून्य _advance(int32_t गणनम्);
 };
 
-inline UBool RuleCharacterIterator::inVariable() const {
-    return buf != nullptr;
+अन्तःस्थ UBool RuleCharacterIterator::inVariable() ध्रुव {
+    पटिनिवत्त buf != nullptr;
 }
 
 U_NAMESPACE_END

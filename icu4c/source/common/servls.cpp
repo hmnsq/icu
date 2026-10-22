@@ -8,17 +8,17 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#सचे !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "charstr.h"
-#include "uassert.h"
+#अन्तर्भाव "unicode/resbund.h"
+#अन्तर्भाव "uresimp.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "servloc.h"
+#अन्तर्भाव "ustrfmt.h"
+#अन्तर्भाव "charstr.h"
+#अन्तर्भाव "uassert.h"
 
 #define UNDERSCORE_CHAR ((char16_t)0x005f)
 #define AT_SIGN_CHAR    ((char16_t)64)
@@ -31,7 +31,7 @@ ICULocaleService::ICULocaleService()
 {
 }
 
-ICULocaleService::ICULocaleService(const UnicodeString& dname)
+ICULocaleService::ICULocaleService(ध्रुव UnicodeString& dname)
   : ICUService(dname)
   , fallbackLocale(Locale::getDefault())
 {
@@ -42,124 +42,124 @@ ICULocaleService::~ICULocaleService()
 }
 
 UObject*
-ICULocaleService::get(const Locale& locale, UErrorCode& status) const
+ICULocaleService::get(ध्रुव Locale& locale, UErrorCode& status) ध्रुव
 {
-    return get(locale, LocaleKey::KIND_ANY, nullptr, status);
+    पटिनिवत्त get(locale, Locale_कुञ्चिका::KIND_ANY, nullptr, status);
 }
 
 UObject*
-ICULocaleService::get(const Locale& locale, int32_t kind, UErrorCode& status) const
+ICULocaleService::get(ध्रुव Locale& locale, int32_t kind, UErrorCode& status) ध्रुव
 {
-    return get(locale, kind, nullptr, status);
+    पटिनिवत्त get(locale, kind, nullptr, status);
 }
 
 UObject*
-ICULocaleService::get(const Locale& locale, Locale* actualReturn, UErrorCode& status) const
+ICULocaleService::get(ध्रुव Locale& locale, Locale* actualReturn, UErrorCode& status) ध्रुव
 {
-    return get(locale, LocaleKey::KIND_ANY, actualReturn, status);
+    पटिनिवत्त get(locale, Locale_कुञ्चिका::KIND_ANY, actualReturn, status);
 }
 
 UObject*
-ICULocaleService::get(const Locale& locale, int32_t kind, Locale* actualReturn, UErrorCode& status) const
+ICULocaleService::get(ध्रुव Locale& locale, int32_t kind, Locale* actualReturn, UErrorCode& status) ध्रुव
 {
     UObject* result = nullptr;
-    if (U_FAILURE(status)) {
-        return result;
+    सचे (U_FAILURE(status)) {
+        पटिनिवत्त result;
     }
 
     UnicodeString locName(locale.getName(), -1, US_INV);
-    if (locName.isBogus()) {
+    सचे (locName.isBogus()) {
         status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
-        ICUServiceKey* key = createKey(&locName, kind, status);
-        if (key) {
-            if (actualReturn == nullptr) {
-                result = getKey(*key, status);
-            } else {
+    } अञ्ञथा {
+        ICUService_कुञ्चिका* कुञ्चिका = create_कुञ्चिका(&locName, kind, status);
+        सचे (कुञ्चिका) {
+            सचे (actualReturn == nullptr) {
+                result = get_कुञ्चिका(*कुञ्चिका, status);
+            } अञ्ञथा {
                 UnicodeString temp;
-                result = getKey(*key, &temp, status);
+                result = get_कुञ्चिका(*कुञ्चिका, &temp, status);
 
-                if (result != nullptr) {
-                    key->parseSuffix(temp);
+                सचे (result != nullptr) {
+                    कुञ्चिका->parseSuffix(temp);
                     LocaleUtility::initLocaleFromName(temp, *actualReturn);
                 }
             }
-            delete key;
+            delete कुञ्चिका;
         }
     }
-    return result;
+    पटिनिवत्त result;
 }
 
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const UnicodeString& locale, 
+URegistry_कुञ्चिका
+ICULocaleService::registerInstance(UObject* objToAdopt, ध्रुव UnicodeString& locale, 
     UBool visible, UErrorCode& status)
 {
     Locale loc;
     LocaleUtility::initLocaleFromName(locale, loc);
-    return registerInstance(objToAdopt, loc, LocaleKey::KIND_ANY, 
-        visible ? LocaleKeyFactory::VISIBLE : LocaleKeyFactory::INVISIBLE, status);
+    पटिनिवत्त registerInstance(objToAdopt, loc, Locale_कुञ्चिका::KIND_ANY, 
+        visible ? Locale_कुञ्चिका_Factory::VISIBLE : Locale_कुञ्चिका_Factory::INVISIBLE, status);
 }
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const Locale& locale, UErrorCode& status)
+URegistry_कुञ्चिका
+ICULocaleService::registerInstance(UObject* objToAdopt, ध्रुव Locale& locale, UErrorCode& status)
 {
-    return registerInstance(objToAdopt, locale, LocaleKey::KIND_ANY, LocaleKeyFactory::VISIBLE, status);
+    पटिनिवत्त registerInstance(objToAdopt, locale, Locale_कुञ्चिका::KIND_ANY, Locale_कुञ्चिका_Factory::VISIBLE, status);
 }
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const Locale& locale, int32_t kind, UErrorCode& status)
+URegistry_कुञ्चिका
+ICULocaleService::registerInstance(UObject* objToAdopt, ध्रुव Locale& locale, int32_t kind, UErrorCode& status)
 {
-    return registerInstance(objToAdopt, locale, kind, LocaleKeyFactory::VISIBLE, status);
+    पटिनिवत्त registerInstance(objToAdopt, locale, kind, Locale_कुञ्चिका_Factory::VISIBLE, status);
 }
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const Locale& locale, int32_t kind, int32_t coverage, UErrorCode& status)
+URegistry_कुञ्चिका
+ICULocaleService::registerInstance(UObject* objToAdopt, ध्रुव Locale& locale, int32_t kind, int32_t coverage, UErrorCode& status)
 {
-    ICUServiceFactory * factory = new SimpleLocaleKeyFactory(objToAdopt, locale, kind, coverage);
-    if (factory != nullptr) {
-        return registerFactory(factory, status);
+    ICUServiceFactory * factory = नूतन Simple_Locale_कुञ्चिका_Factory(objToAdopt, locale, kind, coverage);
+    सचे (factory != nullptr) {
+        पटिनिवत्त registerFactory(factory, status);
     }
     delete objToAdopt;
-    return nullptr;
+    पटिनिवत्त nullptr;
 }
 
-#if 0
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const UnicodeString& locale, UErrorCode& status)
+#सचे 0
+URegistry_कुञ्चिका
+ICULocaleService::registerInstance(UObject* objToAdopt, ध्रुव UnicodeString& locale, UErrorCode& status)
 {
-    return registerInstance(objToAdopt, locale, LocaleKey::KIND_ANY, LocaleKeyFactory::VISIBLE, status);
+    पटिनिवत्त registerInstance(objToAdopt, locale, Locale_कुञ्चिका::KIND_ANY, Locale_कुञ्चिका_Factory::VISIBLE, status);
 }
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const UnicodeString& locale, UBool visible, UErrorCode& status)
+URegistry_कुञ्चिका
+ICULocaleService::registerInstance(UObject* objToAdopt, ध्रुव UnicodeString& locale, UBool visible, UErrorCode& status)
 {
-    return registerInstance(objToAdopt, locale, LocaleKey::KIND_ANY,
-                            visible ? LocaleKeyFactory::VISIBLE : LocaleKeyFactory::INVISIBLE,
+    पटिनिवत्त registerInstance(objToAdopt, locale, Locale_कुञ्चिका::KIND_ANY,
+                            visible ? Locale_कुञ्चिका_Factory::VISIBLE : Locale_कुञ्चिका_Factory::INVISIBLE,
                             status);
 }
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const UnicodeString& locale, int32_t kind, int32_t coverage, UErrorCode& status)
+URegistry_कुञ्चिका
+ICULocaleService::registerInstance(UObject* objToAdopt, ध्रुव UnicodeString& locale, int32_t kind, int32_t coverage, UErrorCode& status)
 {
-    ICUServiceFactory * factory = new SimpleLocaleKeyFactory(objToAdopt, locale, kind, coverage);
-    if (factory != nullptr) {
-        return registerFactory(factory, status);
+    ICUServiceFactory * factory = नूतन Simple_Locale_कुञ्चिका_Factory(objToAdopt, locale, kind, coverage);
+    सचे (factory != nullptr) {
+        पटिनिवत्त registerFactory(factory, status);
     }
     delete objToAdopt;
-    return nullptr;
+    पटिनिवत्त nullptr;
 }
 #endif
 
-class ServiceEnumeration : public StringEnumeration {
-private:
-    const ICULocaleService* _service;
+वग्ग ServiceEnumeration : सार्वजनिक StringEnumeration {
+गुप्त:
+    ध्रुव ICULocaleService* _service;
     int32_t _timestamp;
     UVector _ids;
     int32_t _pos;
 
-private:
-    ServiceEnumeration(const ICULocaleService* service U_LIFETIME_BOUND, UErrorCode& status)
+गुप्त:
+    ServiceEnumeration(ध्रुव ICULocaleService* service U_LIFETIME_BOUND, UErrorCode& status)
         : _service(service)
         , _timestamp(service->getTimestamp())
         , _ids(uprv_deleteUObject, nullptr, status)
@@ -168,85 +168,85 @@ private:
         _service->getVisibleIDs(_ids, status);
     }
 
-    ServiceEnumeration(const ServiceEnumeration &other, UErrorCode &status)
+    ServiceEnumeration(ध्रुव ServiceEnumeration &other, UErrorCode &status)
         : _service(other._service)
         , _timestamp(other._timestamp)
         , _ids(uprv_deleteUObject, nullptr, status)
         , _pos(0)
     {
-        if(U_SUCCESS(status)) {
+        सचे(U_SUCCESS(status)) {
             int32_t i, length;
 
             length = other._ids.size();
-            for(i = 0; i < length; ++i) {
+            अत्थाय(i = 0; i < length; ++i) {
                 LocalPointer<UnicodeString> clonedId(static_cast<UnicodeString*>(other._ids.elementAt(i))->clone(), status);
                 _ids.adoptElement(clonedId.orphan(), status);
             }
 
-            if(U_SUCCESS(status)) {
+            सचे(U_SUCCESS(status)) {
                 _pos = other._pos;
             }
         }
     }
 
-public:
-    static ServiceEnumeration* create(const ICULocaleService* service U_LIFETIME_BOUND) {
+सार्वजनिक:
+    स्थिर ServiceEnumeration* create(ध्रुव ICULocaleService* service U_LIFETIME_BOUND) {
         UErrorCode status = U_ZERO_ERROR;
-        ServiceEnumeration* result = new ServiceEnumeration(service, status);
-        if (U_SUCCESS(status)) {
-            return result;
+        ServiceEnumeration* result = नूतन ServiceEnumeration(service, status);
+        सचे (U_SUCCESS(status)) {
+            पटिनिवत्त result;
         }
         delete result;
-        return nullptr;
+        पटिनिवत्त nullptr;
     }
 
-    virtual ~ServiceEnumeration();
+    आभास ~ServiceEnumeration();
 
-    virtual StringEnumeration *clone() const override {
+    आभास StringEnumeration *clone() ध्रुव override {
         UErrorCode status = U_ZERO_ERROR;
-        ServiceEnumeration *cl = new ServiceEnumeration(*this, status);
-        if(U_FAILURE(status)) {
+        ServiceEnumeration *cl = नूतन ServiceEnumeration(*एतत्, status);
+        सचे(U_FAILURE(status)) {
             delete cl;
             cl = nullptr;
         }
-        return cl;
+        पटिनिवत्त cl;
     }
 
-    UBool upToDate(UErrorCode& status) const {
-        if (U_SUCCESS(status)) {
-            if (_timestamp == _service->getTimestamp()) {
-                return true;
+    UBool upToDate(UErrorCode& status) ध्रुव {
+        सचे (U_SUCCESS(status)) {
+            सचे (_timestamp == _service->getTimestamp()) {
+                पटिनिवत्त सच्च;
             }
             status = U_ENUM_OUT_OF_SYNC_ERROR;
         }
-        return false;
+        पटिनिवत्त मिच्छा;
     }
 
-    virtual int32_t count(UErrorCode& status) const override {
-        return upToDate(status) ? _ids.size() : 0;
+    आभास int32_t count(UErrorCode& status) ध्रुव override {
+        पटिनिवत्त upToDate(status) ? _ids.size() : 0;
     }
 
-    virtual const UnicodeString* snext(UErrorCode& status) U_LIFETIME_BOUND override {
-        if (upToDate(status) && (_pos < _ids.size())) {
-            return static_cast<const UnicodeString*>(_ids[_pos++]);
+    आभास ध्रुव UnicodeString* snext(UErrorCode& status) U_LIFETIME_BOUND override {
+        सचे (upToDate(status) && (_pos < _ids.size())) {
+            पटिनिवत्त static_cast<ध्रुव UnicodeString*>(_ids[_pos++]);
         }
-        return nullptr;
+        पटिनिवत्त nullptr;
     }
 
-    virtual void reset(UErrorCode& status) override {
-        if (status == U_ENUM_OUT_OF_SYNC_ERROR) {
+    आभास शून्य reset(UErrorCode& status) override {
+        सचे (status == U_ENUM_OUT_OF_SYNC_ERROR) {
             status = U_ZERO_ERROR;
         }
-        if (U_SUCCESS(status)) {
+        सचे (U_SUCCESS(status)) {
             _timestamp = _service->getTimestamp();
             _pos = 0;
             _service->getVisibleIDs(_ids, status);
         }
     }
 
-public:
-    static UClassID U_EXPORT2 getStaticClassID();
-    virtual UClassID getDynamicClassID() const override;
+सार्वजनिक:
+    स्थिर UClassID U_EXPORT2 getStaticClassID();
+    आभास UClassID getDynamicClassID() ध्रुव override;
 };
 
 ServiceEnumeration::~ServiceEnumeration() {}
@@ -254,38 +254,38 @@ ServiceEnumeration::~ServiceEnumeration() {}
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ServiceEnumeration)
 
 StringEnumeration*
-ICULocaleService::getAvailableLocales() const U_LIFETIME_BOUND
+ICULocaleService::getAvailableLocales() ध्रुव U_LIFETIME_BOUND
 {
-    return ServiceEnumeration::create(this);
+    पटिनिवत्त ServiceEnumeration::create(एतत्);
 }
 
-const UnicodeString&
-ICULocaleService::validateFallbackLocale() const
+ध्रुव UnicodeString&
+ICULocaleService::validateFallbackLocale() ध्रुव
 {
-    const Locale&     loc    = Locale::getDefault();
-    ICULocaleService* ncThis = const_cast<ICULocaleService*>(this);
-    static UMutex llock;
+    ध्रुव Locale&     loc    = Locale::getDefault();
+    ICULocaleService* ncThis = const_cast<ICULocaleService*>(एतत्);
+    स्थिर UMutex llock;
     {
         Mutex mutex(&llock);
-        if (loc != fallbackLocale) {
+        सचे (loc != fallbackLocale) {
             ncThis->fallbackLocale = loc;
             LocaleUtility::initNameFromLocale(loc, ncThis->fallbackLocaleName);
             ncThis->clearServiceCache();
         }
     }
-    return fallbackLocaleName;
+    पटिनिवत्त fallbackLocaleName;
 }
 
-ICUServiceKey*
-ICULocaleService::createKey(const UnicodeString* id, UErrorCode& status) const
+ICUService_कुञ्चिका*
+ICULocaleService::create_कुञ्चिका(ध्रुव UnicodeString* id, UErrorCode& status) ध्रुव
 {
-    return LocaleKey::createWithCanonicalFallback(id, &validateFallbackLocale(), status);
+    पटिनिवत्त Locale_कुञ्चिका::createWithCanonicalFallback(id, &validateFallbackLocale(), status);
 }
 
-ICUServiceKey*
-ICULocaleService::createKey(const UnicodeString* id, int32_t kind, UErrorCode& status) const
+ICUService_कुञ्चिका*
+ICULocaleService::create_कुञ्चिका(ध्रुव UnicodeString* id, int32_t kind, UErrorCode& status) ध्रुव
 {
-    return LocaleKey::createWithCanonicalFallback(id, &validateFallbackLocale(), kind, status);
+    पटिनिवत्त Locale_कुञ्चिका::createWithCanonicalFallback(id, &validateFallbackLocale(), kind, status);
 }
 
 U_NAMESPACE_END

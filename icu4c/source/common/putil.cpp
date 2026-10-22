@@ -41,47 +41,47 @@
 
 // Defines _XOPEN_SOURCE for access to POSIX functions.
 // Must be before any other #includes.
-#include "uposixdefs.h"
+#अन्तर्भाव "uposixdefs.h"
 
 // First, the platform type. Need this for U_PLATFORM.
-#include "unicode/platform.h"
+#अन्तर्भाव "unicode/platform.h"
 
 /*
  * Cygwin with GCC requires inclusion of time.h after the above disabling strict asci mode statement.
  */
-#include <time.h>
+#अन्तर्भाव <time.h>
 
-#if !U_PLATFORM_USES_ONLY_WIN32_API
-#include <sys/time.h>
+#सचे !U_PLATFORM_USES_ONLY_WIN32_API
+#अन्तर्भाव <sys/time.h>
 #endif
 
 /* include the rest of the ICU headers */
-#include "unicode/putil.h"
-#include "unicode/ustring.h"
-#include "putilimp.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "locmap.h"
-#include "ucln_cmn.h"
-#include "charstr.h"
+#अन्तर्भाव "unicode/putil.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "putilimp.h"
+#अन्तर्भाव "uassert.h"
+#अन्तर्भाव "umutex.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "locmap.h"
+#अन्तर्भाव "ucln_cmn.h"
+#अन्तर्भाव "charstr.h"
 
 /* Include standard headers. */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <locale.h>
-#include <float.h>
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव <stdlib.h>
+#अन्तर्भाव <string.h>
+#अन्तर्भाव <math.h>
+#अन्तर्भाव <locale.h>
+#अन्तर्भाव <float.h>
 
 #ifndef U_COMMON_IMPLEMENTATION
-#error U_COMMON_IMPLEMENTATION not set - must be set for all ICU source files in common/ - see https://unicode-org.github.io/icu/userguide/icu/howtouseicu.html
+#error U_COMMON_IMPLEMENTATION not set - must be set अत्थाय all ICU source files in common/ - see https://unicode-org.github.io/icu/userguide/icu/howtouseicu.html
 #endif
 
 
 /* include system headers */
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#सचे U_PLATFORM_USES_ONLY_WIN32_API
     /*
      * TODO: U_PLATFORM_USES_ONLY_WIN32_API includes MinGW.
      * Should Cygwin be included as well (U_PLATFORM_HAS_WIN32_API)
@@ -98,18 +98,18 @@
 #   include <windows.h>
 #   include "unicode/uloc.h"
 #   include "wintz.h"
-#elif U_PLATFORM == U_PF_OS400
+#नोचेद्यदि U_PLATFORM == U_PF_OS400
 #   include <float.h>
 #   include <qusec.h>       /* error code structure */
 #   include <qusrjobi.h>
 #   include <qliept.h>      /* EPT_CALL macro  - this include must be after all other "QSYSINCs" */
 #   include <mih/testptr.h> /* For uprv_maximumPtr */
-#elif U_PLATFORM == U_PF_OS390
+#नोचेद्यदि U_PLATFORM == U_PF_OS390
 #   include "unicode/ucnv.h"   /* Needed for UCNV_SWAP_LFNL_OPTION_STRING */
-#elif U_PLATFORM_IS_DARWIN_BASED || U_PLATFORM_IS_LINUX_BASED || U_PLATFORM == U_PF_BSD || U_PLATFORM == U_PF_SOLARIS
+#नोचेद्यदि U_PLATFORM_IS_DARWIN_BASED || U_PLATFORM_IS_LINUX_BASED || U_PLATFORM == U_PF_BSD || U_PLATFORM == U_PF_SOLARIS
 #   include <limits.h>
 #   include <unistd.h>
-#   if U_PLATFORM == U_PF_SOLARIS
+#   सचे U_PLATFORM == U_PF_SOLARIS
 #       ifndef _XPG4_2
 #           define _XPG4_2
 #       endif
@@ -117,7 +117,7 @@
 #       include <sys/system_properties.h>
 #       include <dlfcn.h>
 #   endif
-#elif U_PLATFORM == U_PF_QNX
+#नोचेद्यदि U_PLATFORM == U_PF_QNX
 #   include <sys/neutrino.h>
 #endif
 
@@ -128,19 +128,19 @@
  *
  */
 
-#if U_HAVE_NL_LANGINFO_CODESET
-#include <langinfo.h>
+#सचे U_HAVE_NL_LANGINFO_CODESET
+#अन्तर्भाव <langinfo.h>
 #endif
 
 /**
  * Simple things (presence of functions, etc) should just go in configure.in and be added to
  * icucfg.h via autoheader.
  */
-#if U_PLATFORM_IMPLEMENTS_POSIX
-#   if U_PLATFORM == U_PF_OS400
+#सचे U_PLATFORM_IMPLEMENTS_POSIX
+#   सचे U_PLATFORM == U_PF_OS400
 #    define HAVE_DLFCN_H 0
 #    define HAVE_DLOPEN 0
-#   else
+#   अञ्ञथा
 #   ifndef HAVE_DLFCN_H
 #    define HAVE_DLFCN_H 1
 #   endif
@@ -151,7 +151,7 @@
 #   ifndef HAVE_GETTIMEOFDAY
 #    define HAVE_GETTIMEOFDAY 1
 #   endif
-#else
+#अञ्ञथा
 #   define HAVE_DLFCN_H 0
 #   define HAVE_DLOPEN 0
 #   define HAVE_GETTIMEOFDAY 0
@@ -163,7 +163,7 @@ U_NAMESPACE_USE
 #define DATA_TYPE "dat"
 
 /* Leave this copyright notice here! */
-static const char copyright[] = U_COPYRIGHT_STRING;
+स्थिर ध्रुव वर्ण copyright[] = U_COPYRIGHT_STRING;
 
 /* floating point implementations ------------------------------------------- */
 
@@ -171,12 +171,12 @@ static const char copyright[] = U_COPYRIGHT_STRING;
 #define SIGN 0x80000000U
 
 /* Make it easy to define certain types of constants */
-typedef union {
+प्रकारनिर्देश सङ्घ {
     int64_t i64; /* This must be defined first in order to allow the initialization to work. This is a C89 feature. */
-    double d64;
+    द्विगुण d64;
 } BitPatternConversion;
-static const BitPatternConversion gNan = {static_cast<int64_t>(INT64_C(0x7FF8000000000000))};
-static const BitPatternConversion gInf = {static_cast<int64_t>(INT64_C(0x7FF0000000000000))};
+स्थिर ध्रुव BitPatternConversion gNan = {static_cast<int64_t>(INT64_C(0x7FF8000000000000))};
+स्थिर ध्रुव BitPatternConversion gInf = {static_cast<int64_t>(INT64_C(0x7FF0000000000000))};
 
 /*---------------------------------------------------------------------------
   Platform utilities
@@ -186,9 +186,9 @@ static const BitPatternConversion gInf = {static_cast<int64_t>(INT64_C(0x7FF0000
   functions).
   ---------------------------------------------------------------------------*/
 
-#if U_PLATFORM_USES_ONLY_WIN32_API || U_PLATFORM == U_PF_OS400
+#सचे U_PLATFORM_USES_ONLY_WIN32_API || U_PLATFORM == U_PF_OS400
 #   undef U_POSIX_LOCALE
-#else
+#अञ्ञथा
 #   define U_POSIX_LOCALE    1
 #endif
 
@@ -196,84 +196,84 @@ static const BitPatternConversion gInf = {static_cast<int64_t>(INT64_C(0x7FF0000
     WARNING! u_topNBytesOfDouble and u_bottomNBytesOfDouble
     can't be properly optimized by the gcc compiler sometimes (i.e. gcc 3.2).
 */
-#if !IEEE_754
-static char*
-u_topNBytesOfDouble(double* d, int n)
+#सचे !IEEE_754
+स्थिर वर्ण*
+u_शिखरम्_NBytes_Of_Double(द्विगुण* d, पूर्णाङ्क n)
 {
-#if U_IS_BIG_ENDIAN
-    return (char*)d;
-#else
-    return (char*)(d + 1) - n;
+#सचे U_IS_BIG_ENDIAN
+    पटिनिवत्त (वर्ण*)d;
+#अञ्ञथा
+    पटिनिवत्त (वर्ण*)(d + 1) - n;
 #endif
 }
 
-static char*
-u_bottomNBytesOfDouble(double* d, int n)
+स्थिर वर्ण*
+u_bottomNBytesOfDouble(द्विगुण* d, पूर्णाङ्क n)
 {
-#if U_IS_BIG_ENDIAN
-    return (char*)(d + 1) - n;
-#else
-    return (char*)d;
+#सचे U_IS_BIG_ENDIAN
+    पटिनिवत्त (वर्ण*)(d + 1) - n;
+#अञ्ञथा
+    पटिनिवत्त (वर्ण*)d;
 #endif
 }
 #endif   /* !IEEE_754 */
 
-#if IEEE_754
-static UBool
-u_signBit(double d) {
+#सचे IEEE_754
+स्थिर UBool
+u_signBit(द्विगुण d) {
     uint8_t hiByte;
-#if U_IS_BIG_ENDIAN
+#सचे U_IS_BIG_ENDIAN
     hiByte = *(uint8_t *)&d;
-#else
-    hiByte = *(reinterpret_cast<uint8_t*>(&d) + sizeof(double) - 1);
+#अञ्ञथा
+    hiByte = *(reinterpret_cast<uint8_t*>(&d) + परिमाण(द्विगुण) - 1);
 #endif
-    return (hiByte & 0x80) != 0;
+    पटिनिवत्त (hiByte & 0x80) != 0;
 }
 #endif
 
 
 
-#if defined (U_DEBUG_FAKETIME)
+#सचे defined (U_DEBUG_FAKETIME)
 /* Override the clock to test things without having to move the system clock.
  * Assumes POSIX gettimeofday() will function
  */
 UDate fakeClock_t0 = 0; /** Time to start the clock from **/
 UDate fakeClock_dt = 0; /** Offset (fake time - real time) **/
-UBool fakeClock_set = false; /** True if fake clock has spun up **/
+UBool fakeClock_set = मिच्छा; /** True if fake clock has spun up **/
 
-static UDate getUTCtime_real() {
-    struct timeval posixTime;
+स्थिर UDate getUTCtime_real() {
+    संरचना timeval posixTime;
     gettimeofday(&posixTime, nullptr);
-    return (UDate)(((int64_t)posixTime.tv_sec * U_MILLIS_PER_SECOND) + (posixTime.tv_usec/1000));
+    पटिनिवत्त (UDate)(((int64_t)posixTime.tv_sec * U_MILLIS_PER_SECOND) + (posixTime.tv_usec/1000));
 }
 
-static UDate getUTCtime_fake() {
-    static UMutex fakeClockMutex;
+स्थिर UDate getUTCtime_fake() {
+    स्थिर UMutex fakeClockMutex;
     umtx_lock(&fakeClockMutex);
-    if(!fakeClock_set) {
+    सचे(!fakeClock_set) {
         UDate real = getUTCtime_real();
-        const char *fake_start = getenv("U_FAKETIME_START");
-        if((fake_start!=nullptr) && (fake_start[0]!=0)) {
+        ध्रुव वर्ण *fake_start = getenv("U_FAKETIME_START");
+        सचे((fake_start!=nullptr) && (fake_start[0]!=0)) {
             sscanf(fake_start,"%lf",&fakeClock_t0);
             fakeClock_dt = fakeClock_t0 - real;
             fprintf(stderr,"U_DEBUG_FAKETIME was set at compile time, so the ICU clock will start at a preset value\n"
                     "env variable U_FAKETIME_START=%.0f (%s) for an offset of %.0f ms from the current time %.0f\n",
                     fakeClock_t0, fake_start, fakeClock_dt, real);
-        } else {
+        } अञ्ञथा {
           fakeClock_dt = 0;
             fprintf(stderr,"U_DEBUG_FAKETIME was set at compile time, but U_FAKETIME_START was not set.\n"
                     "Set U_FAKETIME_START to the number of milliseconds since 1/1/1970 to set the ICU clock.\n");
         }
-        fakeClock_set = true;
+        fakeClock_set = सच्च;
     }
     umtx_unlock(&fakeClockMutex);
 
-    return getUTCtime_real() + fakeClock_dt;
+    पटिनिवत्त getUTCtime_real() + fakeClock_dt;
 }
 #endif
 
-#if U_PLATFORM_USES_ONLY_WIN32_API
-typedef union {
+#सचे U_PLATFORM_USES_ONLY_WIN32_API
+प्रकारनिर्देश सङ्घ {
     int64_t int64;
     FILETIME fileTime;
 } FileTimeConversion;   /* This is like a ULARGE_INTEGER */
@@ -294,10 +294,10 @@ typedef union {
 U_CAPI UDate U_EXPORT2
 uprv_getUTCtime()
 {
-#if defined(U_DEBUG_FAKETIME)
-    return getUTCtime_fake(); /* Hook for overriding the clock */
-#else
-    return uprv_getRawUTCtime();
+#सचे defined(U_DEBUG_FAKETIME)
+    पटिनिवत्त getUTCtime_fake(); /* Hook for overriding the clock */
+#अञ्ञथा
+    पटिनिवत्त uprv_getRawUTCtime();
 #endif
 }
 
@@ -305,21 +305,21 @@ uprv_getUTCtime()
 U_CAPI UDate U_EXPORT2
 uprv_getRawUTCtime()
 {
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#सचे U_PLATFORM_USES_ONLY_WIN32_API
 
     FileTimeConversion winTime;
     GetSystemTimeAsFileTime(&winTime.fileTime);
-    return (UDate)((winTime.int64 - EPOCH_BIAS) / HECTONANOSECOND_PER_MILLISECOND);
-#else
+    पटिनिवत्त (UDate)((winTime.int64 - EPOCH_BIAS) / HECTONANOSECOND_PER_MILLISECOND);
+#अञ्ञथा
 
-#if HAVE_GETTIMEOFDAY
-    struct timeval posixTime;
+#सचे HAVE_GETTIMEOFDAY
+    संरचना timeval posixTime;
     gettimeofday(&posixTime, nullptr);
-    return (UDate)(((int64_t)posixTime.tv_sec * U_MILLIS_PER_SECOND) + (posixTime.tv_usec/1000));
-#else
+    पटिनिवत्त (UDate)(((int64_t)posixTime.tv_sec * U_MILLIS_PER_SECOND) + (posixTime.tv_usec/1000));
+#अञ्ञथा
     time_t epochtime;
     time(&epochtime);
-    return (UDate)epochtime * U_MILLIS_PER_SECOND;
+    पटिनिवत्त (UDate)epochtime * U_MILLIS_PER_SECOND;
 #endif
 
 #endif
@@ -336,188 +336,188 @@ uprv_getRawUTCtime()
   ---------------------------------------------------------------------------*/
 
 U_CAPI UBool U_EXPORT2
-uprv_isNaN(double number)
+uprv_isNaN(द्विगुण number)
 {
-#if IEEE_754
-    BitPatternConversion convertedNumber;
-    convertedNumber.d64 = number;
+#सचे IEEE_754
+    BitPatternConversion converted_सङ्ख्या;
+    converted_सङ्ख्या.d64 = number;
     /* Infinity is 0x7FF0000000000000U. Anything greater than that is a NaN */
-    return (convertedNumber.i64 & U_INT64_MAX) > gInf.i64;
+    पटिनिवत्त (converted_सङ्ख्या.i64 & U_INT64_MAX) > gInf.i64;
 
-#elif U_PLATFORM == U_PF_OS390
-    uint32_t highBits = *(uint32_t*)u_topNBytesOfDouble(&number,
-                        sizeof(uint32_t));
-    uint32_t lowBits  = *(uint32_t*)u_bottomNBytesOfDouble(&number,
-                        sizeof(uint32_t));
+#नोचेद्यदि U_PLATFORM == U_PF_OS390
+    uint32_t उच्चः_Bits = *(uint32_t*)u_शिखरम्_NBytes_Of_Double(&number,
+                        परिमाण(uint32_t));
+    uint32_t नीचः_Bits  = *(uint32_t*)u_bottomNBytesOfDouble(&number,
+                        परिमाण(uint32_t));
 
-    return ((highBits & 0x7F080000L) == 0x7F080000L) &&
-      (lowBits == 0x00000000L);
+    पटिनिवत्त ((उच्चः_Bits & 0x7F080000L) == 0x7F080000L) &&
+      (नीचः_Bits == 0x00000000L);
 
-#else
+#अञ्ञथा
     /* If your platform doesn't support IEEE 754 but *does* have an NaN value,*/
     /* you'll need to replace this default implementation with what's correct*/
     /* for your platform.*/
-    return number != number;
+    पटिनिवत्त number != number;
 #endif
 }
 
 U_CAPI UBool U_EXPORT2
-uprv_isInfinite(double number)
+uprv_isInfinite(द्विगुण number)
 {
-#if IEEE_754
-    BitPatternConversion convertedNumber;
-    convertedNumber.d64 = number;
+#सचे IEEE_754
+    BitPatternConversion converted_सङ्ख्या;
+    converted_सङ्ख्या.d64 = number;
     /* Infinity is exactly 0x7FF0000000000000U. */
-    return (convertedNumber.i64 & U_INT64_MAX) == gInf.i64;
-#elif U_PLATFORM == U_PF_OS390
-    uint32_t highBits = *(uint32_t*)u_topNBytesOfDouble(&number,
-                        sizeof(uint32_t));
-    uint32_t lowBits  = *(uint32_t*)u_bottomNBytesOfDouble(&number,
-                        sizeof(uint32_t));
+    पटिनिवत्त (converted_सङ्ख्या.i64 & U_INT64_MAX) == gInf.i64;
+#नोचेद्यदि U_PLATFORM == U_PF_OS390
+    uint32_t उच्चः_Bits = *(uint32_t*)u_शिखरम्_NBytes_Of_Double(&number,
+                        परिमाण(uint32_t));
+    uint32_t नीचः_Bits  = *(uint32_t*)u_bottomNBytesOfDouble(&number,
+                        परिमाण(uint32_t));
 
-    return ((highBits  & ~SIGN) == 0x70FF0000L) && (lowBits == 0x00000000L);
+    पटिनिवत्त ((उच्चः_Bits  & ~SIGN) == 0x70FF0000L) && (नीचः_Bits == 0x00000000L);
 
-#else
+#अञ्ञथा
     /* If your platform doesn't support IEEE 754 but *does* have an infinity*/
     /* value, you'll need to replace this default implementation with what's*/
     /* correct for your platform.*/
-    return number == (2.0 * number);
+    पटिनिवत्त number == (2.0 * number);
 #endif
 }
 
 U_CAPI UBool U_EXPORT2
-uprv_isPositiveInfinity(double number)
+uprv_isPositiveInfinity(द्विगुण number)
 {
-#if IEEE_754 || U_PLATFORM == U_PF_OS390
-    return number > 0 && uprv_isInfinite(number);
-#else
-    return uprv_isInfinite(number);
+#सचे IEEE_754 || U_PLATFORM == U_PF_OS390
+    पटिनिवत्त number > 0 && uprv_isInfinite(number);
+#अञ्ञथा
+    पटिनिवत्त uprv_isInfinite(number);
 #endif
 }
 
 U_CAPI UBool U_EXPORT2
-uprv_isNegativeInfinity(double number)
+uprv_isNegativeInfinity(द्विगुण number)
 {
-#if IEEE_754 || U_PLATFORM == U_PF_OS390
-    return number < 0 && uprv_isInfinite(number);
+#सचे IEEE_754 || U_PLATFORM == U_PF_OS390
+    पटिनिवत्त number < 0 && uprv_isInfinite(number);
 
-#else
-    uint32_t highBits = *(uint32_t*)u_topNBytesOfDouble(&number,
-                        sizeof(uint32_t));
-    return((highBits & SIGN) && uprv_isInfinite(number));
+#अञ्ञथा
+    uint32_t उच्चः_Bits = *(uint32_t*)u_शिखरम्_NBytes_Of_Double(&number,
+                        परिमाण(uint32_t));
+    पटिनिवत्त((उच्चः_Bits & SIGN) && uprv_isInfinite(number));
 
 #endif
 }
 
-U_CAPI double U_EXPORT2
+U_CAPI द्विगुण U_EXPORT2
 uprv_getNaN()
 {
-#if IEEE_754 || U_PLATFORM == U_PF_OS390
-    return gNan.d64;
-#else
+#सचे IEEE_754 || U_PLATFORM == U_PF_OS390
+    पटिनिवत्त gNan.d64;
+#अञ्ञथा
     /* If your platform doesn't support IEEE 754 but *does* have an NaN value,*/
     /* you'll need to replace this default implementation with what's correct*/
     /* for your platform.*/
-    return 0.0;
+    पटिनिवत्त 0.0;
 #endif
 }
 
-U_CAPI double U_EXPORT2
+U_CAPI द्विगुण U_EXPORT2
 uprv_getInfinity()
 {
-#if IEEE_754 || U_PLATFORM == U_PF_OS390
-    return gInf.d64;
-#else
+#सचे IEEE_754 || U_PLATFORM == U_PF_OS390
+    पटिनिवत्त gInf.d64;
+#अञ्ञथा
     /* If your platform doesn't support IEEE 754 but *does* have an infinity*/
     /* value, you'll need to replace this default implementation with what's*/
     /* correct for your platform.*/
-    return 0.0;
+    पटिनिवत्त 0.0;
 #endif
 }
 
-U_CAPI double U_EXPORT2
-uprv_floor(double x)
+U_CAPI द्विगुण U_EXPORT2
+uprv_floor(द्विगुण x)
 {
-    return floor(x);
+    पटिनिवत्त floor(x);
 }
 
-U_CAPI double U_EXPORT2
-uprv_ceil(double x)
+U_CAPI द्विगुण U_EXPORT2
+uprv_ceil(द्विगुण x)
 {
-    return ceil(x);
+    पटिनिवत्त ceil(x);
 }
 
-U_CAPI double U_EXPORT2
-uprv_round(double x)
+U_CAPI द्विगुण U_EXPORT2
+uprv_round(द्विगुण x)
 {
-    return uprv_floor(x + 0.5);
+    पटिनिवत्त uprv_floor(x + 0.5);
 }
 
-U_CAPI double U_EXPORT2
-uprv_fabs(double x)
+U_CAPI द्विगुण U_EXPORT2
+uprv_fabs(द्विगुण x)
 {
-    return fabs(x);
+    पटिनिवत्त fabs(x);
 }
 
-U_CAPI double U_EXPORT2
-uprv_modf(double x, double* y)
+U_CAPI द्विगुण U_EXPORT2
+uprv_modf(द्विगुण x, द्विगुण* y)
 {
-    return modf(x, y);
+    पटिनिवत्त modf(x, y);
 }
 
-U_CAPI double U_EXPORT2
-uprv_fmod(double x, double y)
+U_CAPI द्विगुण U_EXPORT2
+uprv_fmod(द्विगुण x, द्विगुण y)
 {
-    return fmod(x, y);
+    पटिनिवत्त fmod(x, y);
 }
 
-U_CAPI double U_EXPORT2
-uprv_pow(double x, double y)
+U_CAPI द्विगुण U_EXPORT2
+uprv_pow(द्विगुण x, द्विगुण y)
 {
     /* This is declared as "double pow(double x, double y)" */
-    return pow(x, y);
+    पटिनिवत्त pow(x, y);
 }
 
-U_CAPI double U_EXPORT2
+U_CAPI द्विगुण U_EXPORT2
 uprv_pow10(int32_t x)
 {
-    return pow(10.0, (double)x);
+    पटिनिवत्त pow(10.0, (द्विगुण)x);
 }
 
-U_CAPI double U_EXPORT2
-uprv_fmax(double x, double y)
+U_CAPI द्विगुण U_EXPORT2
+uprv_fmax(द्विगुण x, द्विगुण y)
 {
-#if IEEE_754
+#सचे IEEE_754
     /* first handle NaN*/
-    if(uprv_isNaN(x) || uprv_isNaN(y))
-        return uprv_getNaN();
+    सचे(uprv_isNaN(x) || uprv_isNaN(y))
+        पटिनिवत्त uprv_getNaN();
 
     /* check for -0 and 0*/
-    if(x == 0.0 && y == 0.0 && u_signBit(x))
-        return y;
+    सचे(x == 0.0 && y == 0.0 && u_signBit(x))
+        पटिनिवत्त y;
 
 #endif
 
     /* this should work for all flt point w/o NaN and Inf special cases */
-    return (x > y ? x : y);
+    पटिनिवत्त (x > y ? x : y);
 }
 
-U_CAPI double U_EXPORT2
-uprv_fmin(double x, double y)
+U_CAPI द्विगुण U_EXPORT2
+uprv_fmin(द्विगुण x, द्विगुण y)
 {
-#if IEEE_754
+#सचे IEEE_754
     /* first handle NaN*/
-    if(uprv_isNaN(x) || uprv_isNaN(y))
-        return uprv_getNaN();
+    सचे(uprv_isNaN(x) || uprv_isNaN(y))
+        पटिनिवत्त uprv_getNaN();
 
     /* check for -0 and 0*/
-    if(x == 0.0 && y == 0.0 && u_signBit(y))
-        return y;
+    सचे(x == 0.0 && y == 0.0 && u_signBit(y))
+        पटिनिवत्त y;
 
 #endif
 
     /* this should work for all flt point w/o NaN and Inf special cases */
-    return (x > y ? y : x);
+    पटिनिवत्त (x > y ? y : x);
 }
 
 U_CAPI UBool U_EXPORT2
@@ -528,7 +528,7 @@ uprv_add32_overflow(int32_t a, int32_t b, int32_t* res) {
     auto b64 = static_cast<int64_t>(b);
     int64_t res64 = a64 + b64;
     *res = static_cast<int32_t>(res64);
-    return res64 != *res;
+    पटिनिवत्त res64 != *res;
 }
 
 U_CAPI UBool U_EXPORT2
@@ -539,7 +539,7 @@ uprv_mul32_overflow(int32_t a, int32_t b, int32_t* res) {
     auto b64 = static_cast<int64_t>(b);
     int64_t res64 = a64 * b64;
     *res = static_cast<int32_t>(res64);
-    return res64 != *res;
+    पटिनिवत्त res64 != *res;
 }
 
 /**
@@ -549,23 +549,23 @@ uprv_mul32_overflow(int32_t a, int32_t b, int32_t* res) {
  * floor(3.3) = 3, floor(-3.3) = -4
  * ceil(3.3) = 4, ceil(-3.3) = -3
  */
-U_CAPI double U_EXPORT2
-uprv_trunc(double d)
+U_CAPI द्विगुण U_EXPORT2
+uprv_trunc(द्विगुण d)
 {
-#if IEEE_754
+#सचे IEEE_754
     /* handle error cases*/
-    if(uprv_isNaN(d))
-        return uprv_getNaN();
-    if(uprv_isInfinite(d))
-        return uprv_getInfinity();
+    सचे(uprv_isNaN(d))
+        पटिनिवत्त uprv_getNaN();
+    सचे(uprv_isInfinite(d))
+        पटिनिवत्त uprv_getInfinity();
 
-    if(u_signBit(d))    /* Signbit() picks up -0.0;  d<0 does not. */
-        return ceil(d);
-    else
-        return floor(d);
+    सचे(u_signBit(d))    /* Signbit() picks up -0.0;  d<0 does not. */
+        पटिनिवत्त ceil(d);
+    अञ्ञथा
+        पटिनिवत्त floor(d);
 
-#else
-    return d >= 0 ? floor(d) : ceil(d);
+#अञ्ञथा
+    पटिनिवत्त d >= 0 ? floor(d) : ceil(d);
 
 #endif
 }
@@ -574,22 +574,22 @@ uprv_trunc(double d)
  * Return the largest positive number that can be represented by an integer
  * type of arbitrary bit length.
  */
-U_CAPI double U_EXPORT2
+U_CAPI द्विगुण U_EXPORT2
 uprv_maxMantissa()
 {
-    return pow(2.0, DBL_MANT_DIG + 1.0) - 1.0;
+    पटिनिवत्त pow(2.0, DBL_MANT_DIG + 1.0) - 1.0;
 }
 
-U_CAPI double U_EXPORT2
-uprv_log(double d)
+U_CAPI द्विगुण U_EXPORT2
+uprv_log(द्विगुण d)
 {
-    return log(d);
+    पटिनिवत्त log(d);
 }
 
-U_CAPI void * U_EXPORT2
-uprv_maximumPtr(void * base)
+U_CAPI शून्य * U_EXPORT2
+uprv_maximumPtr(शून्य * base)
 {
-#if U_PLATFORM == U_PF_OS400
+#सचे U_PLATFORM == U_PF_OS400
     /*
      * With the provided function we should never be out of range of a given segment
      * (a traditional/typical segment that is).  Our segments have 5 bytes for the
@@ -607,15 +607,15 @@ uprv_maximumPtr(void * base)
      * Unlike other operating systems, the pointer model isn't determined at
      * compile time on i5/OS.
      */
-    if ((base != nullptr) && (_TESTPTR(base, _C_TERASPACE_CHECK))) {
+    सचे ((base != nullptr) && (_TESTPTR(base, _C_TERASPACE_CHECK))) {
         /* if it is a TERASPACE pointer the max is 2GB - 4k */
-        return ((void *)(((char *)base)-((uint32_t)(base))+((uint32_t)0x7fffefff)));
+        पटिनिवत्त ((शून्य *)(((वर्ण *)base)-((uint32_t)(base))+((uint32_t)0x7fffefff)));
     }
     /* otherwise 16MB since nullptr ptr is not checkable or the ptr is not TERASPACE */
-    return ((void *)(((char *)base)-((uint32_t)(base))+((uint32_t)0xffefff)));
+    पटिनिवत्त ((शून्य *)(((वर्ण *)base)-((uint32_t)(base))+((uint32_t)0xffefff)));
 
-#else
-    return U_MAX_PTR(base);
+#अञ्ञथा
+    पटिनिवत्त U_MAX_PTR(base);
 #endif
 }
 
@@ -628,12 +628,12 @@ uprv_maximumPtr(void * base)
 /* Generic time zone layer -------------------------------------------------- */
 
 /* Time zone utilities */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uprv_tzset()
 {
-#if defined(U_TZSET)
+#सचे defined(U_TZSET)
     U_TZSET();
-#else
+#अञ्ञथा
     /* no initialization*/
 #endif
 }
@@ -642,23 +642,23 @@ U_CAPI int32_t U_EXPORT2
 uprv_timezone()
 {
 #ifdef U_TIMEZONE
-    return U_TIMEZONE;
-#else
+    पटिनिवत्त U_TIMEZONE;
+#अञ्ञथा
     time_t t, t1, t2;
-    struct tm tmrec;
+    संरचना tm tmrec;
     int32_t tdiff = 0;
 
     time(&t);
-    uprv_memcpy( &tmrec, localtime(&t), sizeof(tmrec) );
-#if U_PLATFORM != U_PF_IPHONE
+    uprv_memcpy( &tmrec, localtime(&t), परिमाण(tmrec) );
+#सचे U_PLATFORM != U_PF_IPHONE
     UBool dst_checked = (tmrec.tm_isdst != 0); /* daylight savings time is checked*/
 #endif
     t1 = mktime(&tmrec);                 /* local time in seconds*/
-    uprv_memcpy( &tmrec, gmtime(&t), sizeof(tmrec) );
+    uprv_memcpy( &tmrec, gmtime(&t), परिमाण(tmrec) );
     t2 = mktime(&tmrec);                 /* GMT (or UTC) in seconds*/
     tdiff = t2 - t1;
 
-#if U_PLATFORM != U_PF_IPHONE
+#सचे U_PLATFORM != U_PF_IPHONE
     /* imitate NT behaviour, which returns same timezone offset to GMT for
        winter and summer.
        This does not work on all platforms. For instance, on glibc on Linux
@@ -667,22 +667,22 @@ uprv_timezone()
        platform where this does not work. Linux + glibc and Mac OS 10.5
        have U_TIMEZONE defined so that this code is not reached.
     */
-    if (dst_checked)
+    सचे (dst_checked)
         tdiff += 3600;
 #endif
-    return tdiff;
+    पटिनिवत्त tdiff;
 #endif
 }
 
 /* Note that U_TZNAME does *not* have to be tzname, but if it is,
    some platforms need to have it declared here. */
 
-#if defined(U_TZNAME) && (U_PLATFORM == U_PF_IRIX || U_PLATFORM_IS_DARWIN_BASED)
+#सचे defined(U_TZNAME) && (U_PLATFORM == U_PF_IRIX || U_PLATFORM_IS_DARWIN_BASED)
 /* RS6000 and others reject char **tzname.  */
-extern U_IMPORT char *U_TZNAME[];
+बाह्य U_IMPORT वर्ण *U_TZNAME[];
 #endif
 
-#if !UCONFIG_NO_FILE_IO && ((U_PLATFORM_IS_DARWIN_BASED && (U_PLATFORM != U_PF_IPHONE || defined(U_TIMEZONE))) || U_PLATFORM_IS_LINUX_BASED || U_PLATFORM == U_PF_BSD || U_PLATFORM == U_PF_SOLARIS)
+#सचे !UCONFIG_NO_FILE_IO && ((U_PLATFORM_IS_DARWIN_BASED && (U_PLATFORM != U_PF_IPHONE || defined(U_TIMEZONE))) || U_PLATFORM_IS_LINUX_BASED || U_PLATFORM == U_PF_BSD || U_PLATFORM == U_PF_SOLARIS)
 /* These platforms are likely to use Olson timezone IDs. */
 /* common targets of the symbolic link at TZDEFAULT are:
  * "/usr/share/zoneinfo/<olsonID>" default, older Linux distros, macOS to 10.12
@@ -695,48 +695,48 @@ extern U_IMPORT char *U_TZNAME[];
  */
 
 #define CHECK_LOCALTIME_LINK 1
-#if U_PLATFORM_IS_DARWIN_BASED
-#include <tzfile.h>
+#सचे U_PLATFORM_IS_DARWIN_BASED
+#अन्तर्भाव <tzfile.h>
 #define TZZONEINFO      (TZDIR "/")
-#elif U_PLATFORM == U_PF_SOLARIS
+#नोचेद्यदि U_PLATFORM == U_PF_SOLARIS
 #define TZDEFAULT       "/etc/localtime"
 #define TZZONEINFO      "/usr/share/lib/zoneinfo/"
 #define TZ_ENV_CHECK    "localtime"
-#else
+#अञ्ञथा
 #define TZDEFAULT       "/etc/localtime"
 #define TZZONEINFO      "/usr/share/zoneinfo/"
 #endif
 #define TZZONEINFOTAIL  "/zoneinfo/"
-#if U_HAVE_DIRENT_H
+#सचे U_HAVE_DIRENT_H
 #define TZFILE_SKIP     "posixrules" /* tz file to skip when searching. */
 /* Some Linux distributions have 'localtime' in /usr/share/zoneinfo
    symlinked to /etc/localtime, which makes searchForTZFile return
    'localtime' when it's the first match. */
 #define TZFILE_SKIP2    "localtime"
-#define SEARCH_TZFILE
-#include <dirent.h>  /* Needed to search through system timezone files */
+#define अन्वेषणम्_TZFILE
+#अन्तर्भाव <dirent.h>  /* Needed to search through system timezone files */
 #endif
-static char gTimeZoneBuffer[PATH_MAX];
-static const char *gTimeZoneBufferPtr = nullptr;
+स्थिर वर्ण gTimeZoneBuffer[PATH_MAX];
+स्थिर ध्रुव वर्ण *gTimeZoneBufferPtr = nullptr;
 #endif
 
-#if !U_PLATFORM_USES_ONLY_WIN32_API
+#सचे !U_PLATFORM_USES_ONLY_WIN32_API
 #define isNonDigit(ch) (ch < '0' || '9' < ch)
 #define isDigit(ch) ('0' <= ch && ch <= '9')
-static UBool isValidOlsonID(const char *id) {
+स्थिर UBool isValidOlsonID(ध्रुव वर्ण *id) {
     int32_t idx = 0;
     int32_t idxMax = 0;
 
     /* Determine if this is something like Iceland (Olson ID)
     or AST4ADT (non-Olson ID) */
-    while (id[idx] && isNonDigit(id[idx]) && id[idx] != ',') {
+    याव (id[idx] && isNonDigit(id[idx]) && id[idx] != ',') {
         idx++;
     }
 
     /* Allow at maximum 2 numbers at the end of the id to support zone id's
     like GMT+11. */
     idxMax = idx + 2;
-    while (id[idx] && isDigit(id[idx]) && idx < idxMax) {
+    याव (id[idx] && isDigit(id[idx]) && idx < idxMax) {
         idx++;
     }
 
@@ -744,7 +744,7 @@ static UBool isValidOlsonID(const char *id) {
     The timezone is sometimes set to "CST-7CDT", "CST6CDT5,J129,J131/19:30",
     "GRNLNDST3GRNLNDDT" or similar, so we cannot use it.
     The rest of the time it could be an Olson ID. George */
-    return id[idx] == 0
+    पटिनिवत्त id[idx] == 0
         || uprv_strcmp(id, "PST8PDT") == 0
         || uprv_strcmp(id, "MST7MDT") == 0
         || uprv_strcmp(id, "CST6CDT") == 0
@@ -763,8 +763,8 @@ static UBool isValidOlsonID(const char *id) {
    fails because, say, 'posix/America/New_York' is not an Olson
    timezone id ('America/New_York' is). So, we have to skip
    'posix/' and 'right/' at the beginning. */
-static void skipZoneIDPrefix(const char** id) {
-    if (uprv_strncmp(*id, "posix/", 6) == 0
+स्थिर शून्य skipZoneIDPrefix(ध्रुव वर्ण** id) {
+    सचे (uprv_strncmp(*id, "posix/", 6) == 0
         || uprv_strncmp(*id, "right/", 6) == 0)
     {
         *id += 6;
@@ -772,18 +772,18 @@ static void skipZoneIDPrefix(const char** id) {
 }
 #endif
 
-#if defined(U_TZNAME) && !U_PLATFORM_USES_ONLY_WIN32_API
+#सचे defined(U_TZNAME) && !U_PLATFORM_USES_ONLY_WIN32_API
 
 #define CONVERT_HOURS_TO_SECONDS(offset) (int32_t)(offset*3600)
-typedef struct OffsetZoneMapping {
+प्रकारनिर्देश संरचना OffsetZoneMapping {
     int32_t offsetSeconds;
     int32_t daylightType; /* 0=U_DAYLIGHT_NONE, 1=daylight in June-U_DAYLIGHT_JUNE, 2=daylight in December=U_DAYLIGHT_DECEMBER*/
-    const char *stdID;
-    const char *dstID;
-    const char *olsonID;
+    ध्रुव वर्ण *stdID;
+    ध्रुव वर्ण *dstID;
+    ध्रुव वर्ण *olsonID;
 } OffsetZoneMapping;
 
-enum { U_DAYLIGHT_NONE=0,U_DAYLIGHT_JUNE=1,U_DAYLIGHT_DECEMBER=2 };
+गणना { U_DAYLIGHT_NONE=0,U_DAYLIGHT_JUNE=1,U_DAYLIGHT_DECEMBER=2 };
 
 /*
 This list tries to disambiguate a set of abbreviated timezone IDs and offsets
@@ -794,7 +794,7 @@ Sometimes no daylight savings (0) is important to define due to aliases.
 This list can be tested with icu/source/test/compat/tzone.pl
 More values could be added to daylightType to increase precision.
 */
-static const struct OffsetZoneMapping OFFSET_ZONE_MAPPINGS[] = {
+स्थिर ध्रुव संरचना OffsetZoneMapping OFFSET_ZONE_MAPPINGS[] = {
     {-45900, 2, "CHAST", "CHADT", "Pacific/Chatham"},
     {-43200, 1, "PETT", "PETST", "Asia/Kamchatka"},
     {-43200, 2, "NZST", "NZDT", "Pacific/Auckland"},
@@ -858,31 +858,31 @@ static const struct OffsetZoneMapping OFFSET_ZONE_MAPPINGS[] = {
 
 /*#define DEBUG_TZNAME*/
 
-static const char* remapShortTimeZone(const char *stdID, const char *dstID, int32_t daylightType, int32_t offset)
+स्थिर ध्रुव वर्ण* remapShortTimeZone(ध्रुव वर्ण *stdID, ध्रुव वर्ण *dstID, int32_t daylightType, int32_t offset)
 {
     int32_t idx;
 #ifdef DEBUG_TZNAME
     fprintf(stderr, "TZ=%s std=%s dst=%s daylight=%d offset=%d\n", getenv("TZ"), stdID, dstID, daylightType, offset);
 #endif
-    for (idx = 0; idx < UPRV_LENGTHOF(OFFSET_ZONE_MAPPINGS); idx++)
+    अत्थाय (idx = 0; idx < UPRV_LENGTHOF(OFFSET_ZONE_MAPPINGS); idx++)
     {
-        if (offset == OFFSET_ZONE_MAPPINGS[idx].offsetSeconds
+        सचे (offset == OFFSET_ZONE_MAPPINGS[idx].offsetSeconds
             && daylightType == OFFSET_ZONE_MAPPINGS[idx].daylightType
             && strcmp(OFFSET_ZONE_MAPPINGS[idx].stdID, stdID) == 0
             && strcmp(OFFSET_ZONE_MAPPINGS[idx].dstID, dstID) == 0)
         {
-            return OFFSET_ZONE_MAPPINGS[idx].olsonID;
+            पटिनिवत्त OFFSET_ZONE_MAPPINGS[idx].olsonID;
         }
     }
-    return nullptr;
+    पटिनिवत्त nullptr;
 }
 #endif
 
-#ifdef SEARCH_TZFILE
+#ifdef अन्वेषणम्_TZFILE
 #define MAX_READ_SIZE 512
 
-typedef struct DefaultTZInfo {
-    char* defaultTZBuffer;
+प्रकारनिर्देश संरचना DefaultTZInfo {
+    वर्ण* defaultTZBuffer;
     int64_t defaultTZFileSize;
     FILE* defaultTZFilePtr;
     int32_t defaultTZPosition;
@@ -892,145 +892,145 @@ typedef struct DefaultTZInfo {
  * This method compares the two files given to see if they are a match.
  * It is currently use to compare two TZ files.
  */
-static UBool compareBinaryFiles(const char* TZFileName, DefaultTZInfo* tzInfo) {
+स्थिर UBool compare_द्विमान_Files(ध्रुव वर्ण* TZFileName, DefaultTZInfo* tzInfo) {
     FILE* file;
     int64_t sizeFile;
-    int64_t sizeFileLeft;
+    int64_t size_File_वामः;
     int32_t sizeFileRead;
     int32_t sizeFileToRead;
-    char bufferFile[MAX_READ_SIZE];
-    UBool result = true;
+    वर्ण bufferFile[MAX_READ_SIZE];
+    UBool result = सच्च;
 
     U_ASSERT(tzInfo->defaultTZFilePtr != nullptr);
     file = fopen(TZFileName, "r");
 
     tzInfo->defaultTZPosition = 0; /* reset position to begin search */
 
-    if (file != nullptr) {
+    सचे (file != nullptr) {
         /* First check that the file size are equal. */
-        if (tzInfo->defaultTZFileSize == 0) {
+        सचे (tzInfo->defaultTZFileSize == 0) {
             fseek(tzInfo->defaultTZFilePtr, 0, SEEK_END);
             tzInfo->defaultTZFileSize = ftell(tzInfo->defaultTZFilePtr);
         }
-        if (fseek(file, 0, SEEK_END) != 0) {
+        सचे (fseek(file, 0, SEEK_END) != 0) {
             fclose(file);
-            return false;
+            पटिनिवत्त मिच्छा;
         }
         sizeFile = ftell(file);
-        if (sizeFile == -1) {
+        सचे (sizeFile == -1) {
             fclose(file);
-            return false;
+            पटिनिवत्त मिच्छा;
         }
-        sizeFileLeft = sizeFile;
+        size_File_वामः = sizeFile;
 
-        if (sizeFile != tzInfo->defaultTZFileSize) {
-            result = false;
-        } else {
+        सचे (sizeFile != tzInfo->defaultTZFileSize) {
+            result = मिच्छा;
+        } अञ्ञथा {
             /* Store the data from the files in separate buffers and
              * compare each byte to determine equality.
              */
-            if (tzInfo->defaultTZBuffer == nullptr) {
-                if (fseek(tzInfo->defaultTZFilePtr, 0, SEEK_SET) != 0) {
+            सचे (tzInfo->defaultTZBuffer == nullptr) {
+                सचे (fseek(tzInfo->defaultTZFilePtr, 0, SEEK_SET) != 0) {
                     fclose(file);
-                    return false;
+                    पटिनिवत्त मिच्छा;
                 }
-                tzInfo->defaultTZBuffer = static_cast<char*>(uprv_malloc(sizeof(char) * tzInfo->defaultTZFileSize));
+                tzInfo->defaultTZBuffer = static_cast<वर्ण*>(uprv_malloc(परिमाण(वर्ण) * tzInfo->defaultTZFileSize));
                 sizeFileRead = fread(tzInfo->defaultTZBuffer, 1, tzInfo->defaultTZFileSize, tzInfo->defaultTZFilePtr);
             }
-            if (fseek(file, 0, SEEK_SET) != 0) {
+            सचे (fseek(file, 0, SEEK_SET) != 0) {
                 fclose(file);
-                return false;
+                पटिनिवत्त मिच्छा;
             }
-            while(sizeFileLeft > 0) {
+            याव(size_File_वामः > 0) {
                 uprv_memset(bufferFile, 0, MAX_READ_SIZE);
-                sizeFileToRead = sizeFileLeft < MAX_READ_SIZE ? sizeFileLeft : MAX_READ_SIZE;
+                sizeFileToRead = size_File_वामः < MAX_READ_SIZE ? size_File_वामः : MAX_READ_SIZE;
 
                 sizeFileRead = fread(bufferFile, 1, sizeFileToRead, file);
-                if (sizeFileRead == -1) {
+                सचे (sizeFileRead == -1) {
                     fclose(file);
-                    return false;
+                    पटिनिवत्त मिच्छा;
                 }
-                if (memcmp(tzInfo->defaultTZBuffer + tzInfo->defaultTZPosition, bufferFile, sizeFileRead) != 0) {
-                    result = false;
-                    break;
+                सचे (memcmp(tzInfo->defaultTZBuffer + tzInfo->defaultTZPosition, bufferFile, sizeFileRead) != 0) {
+                    result = मिच्छा;
+                    भङ्ग;
                 }
-                sizeFileLeft -= sizeFileRead;
+                size_File_वामः -= sizeFileRead;
                 tzInfo->defaultTZPosition += sizeFileRead;
             }
         }
-    } else {
-        result = false;
+    } अञ्ञथा {
+        result = मिच्छा;
     }
 
-    if (file != nullptr) {
+    सचे (file != nullptr) {
         fclose(file);
     }
 
-    return result;
+    पटिनिवत्त result;
 }
 
 
 /* dirent also lists two entries: "." and ".." that we can safely ignore. */
 #define SKIP1 "."
 #define SKIP2 ".."
-static UBool U_CALLCONV putil_cleanup();
-static CharString *gSearchTZFileResult = nullptr;
+स्थिर UBool U_CALLCONV putil_cleanup();
+स्थिर CharString *g_अन्वेषणम्_TZFile_Result = nullptr;
 
 /*
  * This method recursively traverses the directory given for a matching TZ file and returns the first match.
  * This function is not thread safe - it uses a global, gSearchTZFileResult, to hold its results.
  */
-static char* searchForTZFile(const char* path, DefaultTZInfo* tzInfo) {
+स्थिर वर्ण* अन्वेषणम्_For_TZFile(ध्रुव वर्ण* path, DefaultTZInfo* tzInfo) {
     DIR* dirp = nullptr;
-    struct dirent* dirEntry = nullptr;
-    char* result = nullptr;
+    संरचना dirent* dirEntry = nullptr;
+    वर्ण* result = nullptr;
     UErrorCode status = U_ZERO_ERROR;
 
     /* There is no reference file to compare against, so do not traverse the zoneinfo tree. */
-    if (tzInfo->defaultTZFilePtr == nullptr) {
-        return nullptr;
+    सचे (tzInfo->defaultTZFilePtr == nullptr) {
+        पटिनिवत्त nullptr;
     }
 
     /* Save the current path */
     CharString curpath(path, -1, status);
-    if (U_FAILURE(status)) {
-        goto cleanupAndReturn;
+    सचे (U_FAILURE(status)) {
+        गच्छ cleanupAndReturn;
     }
 
     dirp = opendir(path);
-    if (dirp == nullptr) {
-        goto cleanupAndReturn;
+    सचे (dirp == nullptr) {
+        गच्छ cleanupAndReturn;
     }
 
-    if (gSearchTZFileResult == nullptr) {
-        gSearchTZFileResult = new CharString;
-        if (gSearchTZFileResult == nullptr) {
-            goto cleanupAndReturn;
+    सचे (g_अन्वेषणम्_TZFile_Result == nullptr) {
+        g_अन्वेषणम्_TZFile_Result = नूतन CharString;
+        सचे (g_अन्वेषणम्_TZFile_Result == nullptr) {
+            गच्छ cleanupAndReturn;
         }
         ucln_common_registerCleanup(UCLN_COMMON_PUTIL, putil_cleanup);
     }
 
     /* Check each entry in the directory. */
-    while((dirEntry = readdir(dirp)) != nullptr) {
-        const char* dirName = dirEntry->d_name;
-        if (uprv_strcmp(dirName, SKIP1) != 0 && uprv_strcmp(dirName, SKIP2) != 0
+    याव((dirEntry = readdir(dirp)) != nullptr) {
+        ध्रुव वर्ण* dirName = dirEntry->d_name;
+        सचे (uprv_strcmp(dirName, SKIP1) != 0 && uprv_strcmp(dirName, SKIP2) != 0
             && uprv_strcmp(TZFILE_SKIP, dirName) != 0 && uprv_strcmp(TZFILE_SKIP2, dirName) != 0) {
             /* Create a newpath with the new entry to test each entry in the directory. */
             CharString newpath(curpath, status);
             newpath.append(dirName, -1, status);
-            if (U_FAILURE(status)) {
-                break;
+            सचे (U_FAILURE(status)) {
+                भङ्ग;
             }
 
             DIR* subDirp = nullptr;
-            if ((subDirp = opendir(newpath.data())) != nullptr) {
+            सचे ((subDirp = opendir(newpath.data())) != nullptr) {
                 /* If this new path is a directory, make a recursive call with the newpath. */
                 closedir(subDirp);
                 newpath.append('/', status);
-                if (U_FAILURE(status)) {
-                    break;
+                सचे (U_FAILURE(status)) {
+                    भङ्ग;
                 }
-                result = searchForTZFile(newpath.data(), tzInfo);
+                result = अन्वेषणम्_For_TZFile(newpath.data(), tzInfo);
                 /*
                  Have to get out here. Otherwise, we'd keep looking
                  and return the first match in the top-level directory
@@ -1039,77 +1039,77 @@ static char* searchForTZFile(const char* path, DefaultTZInfo* tzInfo) {
                  It worked without this in most cases because we have a fallback of calling
                  localtime_r to figure out the default timezone.
                 */
-                if (result != nullptr)
-                    break;
-            } else {
-                if(compareBinaryFiles(newpath.data(), tzInfo)) {
-                    int32_t amountToSkip = sizeof(TZZONEINFO) - 1;
-                    if (amountToSkip > newpath.length()) {
+                सचे (result != nullptr)
+                    भङ्ग;
+            } अञ्ञथा {
+                सचे(compare_द्विमान_Files(newpath.data(), tzInfo)) {
+                    int32_t amountToSkip = परिमाण(TZZONEINFO) - 1;
+                    सचे (amountToSkip > newpath.length()) {
                         amountToSkip = newpath.length();
                     }
-                    const char* zoneid = newpath.data() + amountToSkip;
+                    ध्रुव वर्ण* zoneid = newpath.data() + amountToSkip;
                     skipZoneIDPrefix(&zoneid);
-                    gSearchTZFileResult->clear();
-                    gSearchTZFileResult->append(zoneid, -1, status);
-                    if (U_FAILURE(status)) {
-                        break;
+                    g_अन्वेषणम्_TZFile_Result->clear();
+                    g_अन्वेषणम्_TZFile_Result->append(zoneid, -1, status);
+                    सचे (U_FAILURE(status)) {
+                        भङ्ग;
                     }
-                    result = gSearchTZFileResult->data();
+                    result = g_अन्वेषणम्_TZFile_Result->data();
                     /* Get out after the first one found. */
-                    break;
+                    भङ्ग;
                 }
             }
         }
     }
 
   cleanupAndReturn:
-    if (dirp) {
+    सचे (dirp) {
         closedir(dirp);
     }
-    return result;
+    पटिनिवत्त result;
 }
 #endif
 
-#if U_PLATFORM == U_PF_ANDROID
-typedef int(system_property_read_callback)(const prop_info* info,
-                                           void (*callback)(void* cookie,
-                                                            const char* name,
-                                                            const char* value,
+#सचे U_PLATFORM == U_PF_ANDROID
+प्रकारनिर्देश पूर्णाङ्क(system_property_read_callback)(ध्रुव prop_info* info,
+                                           शून्य (*callback)(शून्य* cookie,
+                                                            ध्रुव वर्ण* name,
+                                                            ध्रुव वर्ण* value,
                                                             uint32_t serial),
-                                           void* cookie);
-typedef int(system_property_get)(const char*, char*);
+                                           शून्य* cookie);
+प्रकारनिर्देश पूर्णाङ्क(system_property_get)(ध्रुव वर्ण*, वर्ण*);
 
-static char gAndroidTimeZone[PROP_VALUE_MAX] = { '\0' };
+स्थिर वर्ण gAndroidTimeZone[PROP_मानम्_MAX] = { '\0' };
 
-static void u_property_read(void* cookie, const char* name, const char* value,
+स्थिर शून्य u_property_read(शून्य* cookie, ध्रुव वर्ण* name, ध्रुव वर्ण* value,
                             uint32_t serial) {
-    uprv_strcpy((char* )cookie, value);
+    uprv_strcpy((वर्ण* )cookie, value);
 }
 #endif
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uprv_tzname_clear_cache()
 {
-#if U_PLATFORM == U_PF_ANDROID
+#सचे U_PLATFORM == U_PF_ANDROID
     /* Android's timezone is stored in system property. */
     gAndroidTimeZone[0] = '\0';
-    void* libc = dlopen("libc.so", RTLD_NOLOAD);
-    if (libc) {
+    शून्य* libc = dlopen("libc.so", RTLD_NOLOAD);
+    सचे (libc) {
         /* Android API 26+ has new API to get system property and old API
          * (__system_property_get) is deprecated */
         system_property_read_callback* property_read_callback =
             (system_property_read_callback*)dlsym(
                 libc, "__system_property_read_callback");
-        if (property_read_callback) {
-            const prop_info* info =
+        सचे (property_read_callback) {
+            ध्रुव prop_info* info =
                 __system_property_find("persist.sys.timezone");
-            if (info) {
+            सचे (info) {
                 property_read_callback(info, &u_property_read, gAndroidTimeZone);
             }
-        } else {
+        } अञ्ञथा {
             system_property_get* property_get =
                 (system_property_get*)dlsym(libc, "__system_property_get");
-            if (property_get) {
+            सचे (property_get) {
                 property_get("persist.sys.timezone", gAndroidTimeZone);
             }
         }
@@ -1117,21 +1117,21 @@ uprv_tzname_clear_cache()
     }
 #endif
 
-#if defined(CHECK_LOCALTIME_LINK) && !defined(DEBUG_SKIP_LOCALTIME_LINK)
+#सचे defined(CHECK_LOCALTIME_LINK) && !defined(DEBUG_SKIP_LOCALTIME_LINK)
     gTimeZoneBufferPtr = nullptr;
 #endif
 }
 
-U_CAPI const char* U_EXPORT2
-uprv_tzname(int n)
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+uprv_tzname(पूर्णाङ्क n)
 {
-    (void)n; // Avoid unreferenced parameter warning.
-    const char *tzid = nullptr;
-#if U_PLATFORM_USES_ONLY_WIN32_API
+    (शून्य)n; // Avoid unreferenced parameter warning.
+    ध्रुव वर्ण *tzid = nullptr;
+#सचे U_PLATFORM_USES_ONLY_WIN32_API
     tzid = uprv_detectWindowsTimeZone();
 
-    if (tzid != nullptr) {
-        return tzid;
+    सचे (tzid != nullptr) {
+        पटिनिवत्त tzid;
     }
 
 #ifndef U_TZNAME
@@ -1139,10 +1139,10 @@ uprv_tzname(int n)
     // the other code path returns a pointer to a heap location.
     // If we don't have a name already, then tzname wouldn't be any
     // better, so just fall back.
-    return uprv_strdup("");
+    पटिनिवत्त uprv_strdup("");
 #endif // !U_TZNAME
 
-#else
+#अञ्ञथा
 
 /*#if U_PLATFORM_IS_DARWIN_BASED
     int ret;
@@ -1155,40 +1155,40 @@ uprv_tzname(int n)
 
 /* This code can be temporarily disabled to test tzname resolution later on. */
 #ifndef DEBUG_TZNAME
-#if U_PLATFORM == U_PF_ANDROID
+#सचे U_PLATFORM == U_PF_ANDROID
     tzid = gAndroidTimeZone;
-#else
+#अञ्ञथा
     tzid = getenv("TZ");
 #endif
-    if (tzid != nullptr && isValidOlsonID(tzid)
-#if U_PLATFORM == U_PF_SOLARIS
+    सचे (tzid != nullptr && isValidOlsonID(tzid)
+#सचे U_PLATFORM == U_PF_SOLARIS
     /* Don't misinterpret TZ "localtime" on Solaris as a time zone name. */
         && uprv_strcmp(tzid, TZ_ENV_CHECK) != 0
 #endif
     ) {
         /* The colon forces tzset() to treat the remainder as zoneinfo path */
-        if (tzid[0] == ':') {
+        सचे (tzid[0] == ':') {
             tzid++;
         }
         /* This might be a good Olson ID. */
         skipZoneIDPrefix(&tzid);
-        return tzid;
+        पटिनिवत्त tzid;
     }
     /* else U_TZNAME will give a better result. */
 #endif
 
-#if defined(CHECK_LOCALTIME_LINK) && !defined(DEBUG_SKIP_LOCALTIME_LINK)
+#सचे defined(CHECK_LOCALTIME_LINK) && !defined(DEBUG_SKIP_LOCALTIME_LINK)
     /* Caller must handle threading issues */
-    if (gTimeZoneBufferPtr == nullptr) {
+    सचे (gTimeZoneBufferPtr == nullptr) {
         /*
         This is a trick to look at the name of the link to get the Olson ID
         because the tzfile contents is underspecified.
         This isn't guaranteed to work because it may not be a symlink.
         */
-        char *ret = realpath(TZDEFAULT, gTimeZoneBuffer);
-        if (ret != nullptr && uprv_strcmp(TZDEFAULT, gTimeZoneBuffer) != 0) {
+        वर्ण *ret = realpath(TZDEFAULT, gTimeZoneBuffer);
+        सचे (ret != nullptr && uprv_strcmp(TZDEFAULT, gTimeZoneBuffer) != 0) {
             int32_t tzZoneInfoTailLen = uprv_strlen(TZZONEINFOTAIL);
-            const char *tzZoneInfoTailPtr = uprv_strstr(gTimeZoneBuffer, TZZONEINFOTAIL);
+            ध्रुव वर्ण *tzZoneInfoTailPtr = uprv_strstr(gTimeZoneBuffer, TZZONEINFOTAIL);
             // MacOS14 has the realpath as something like
             // /usr/share/zoneinfo.default/Australia/Melbourne
             // which will not have "/zoneinfo/" in the path.
@@ -1196,60 +1196,60 @@ uprv_tzname(int n)
             // /var/db/timezone/zoneinfo/Australia/Melbourne
             // We also fall back to reading the link if the realpath leads to something like
             // /usr/share/zoneinfo/posixrules
-            if (tzZoneInfoTailPtr == nullptr ||
+            सचे (tzZoneInfoTailPtr == nullptr ||
                     uprv_strcmp(tzZoneInfoTailPtr + tzZoneInfoTailLen, "posixrules") == 0) {
-                ssize_t size = readlink(TZDEFAULT, gTimeZoneBuffer, sizeof(gTimeZoneBuffer)-1);
-                if (size > 0) {
+                ssize_t size = readlink(TZDEFAULT, gTimeZoneBuffer, परिमाण(gTimeZoneBuffer)-1);
+                सचे (size > 0) {
                     gTimeZoneBuffer[size] = 0;
                     tzZoneInfoTailPtr = uprv_strstr(gTimeZoneBuffer, TZZONEINFOTAIL);
                 }
             }
-            if (tzZoneInfoTailPtr != nullptr) {
+            सचे (tzZoneInfoTailPtr != nullptr) {
                 tzZoneInfoTailPtr += tzZoneInfoTailLen;
                 skipZoneIDPrefix(&tzZoneInfoTailPtr);
-                if (isValidOlsonID(tzZoneInfoTailPtr)) {
-                    return (gTimeZoneBufferPtr = tzZoneInfoTailPtr);
+                सचे (isValidOlsonID(tzZoneInfoTailPtr)) {
+                    पटिनिवत्त (gTimeZoneBufferPtr = tzZoneInfoTailPtr);
                 }
             }
-        } else {
-#if defined(SEARCH_TZFILE)
-            DefaultTZInfo* tzInfo = (DefaultTZInfo*)uprv_malloc(sizeof(DefaultTZInfo));
-            if (tzInfo != nullptr) {
+        } अञ्ञथा {
+#सचे defined(अन्वेषणम्_TZFILE)
+            DefaultTZInfo* tzInfo = (DefaultTZInfo*)uprv_malloc(परिमाण(DefaultTZInfo));
+            सचे (tzInfo != nullptr) {
                 tzInfo->defaultTZBuffer = nullptr;
                 tzInfo->defaultTZFileSize = 0;
                 tzInfo->defaultTZFilePtr = fopen(TZDEFAULT, "r");
                 tzInfo->defaultTZPosition = 0;
 
-                gTimeZoneBufferPtr = searchForTZFile(TZZONEINFO, tzInfo);
+                gTimeZoneBufferPtr = अन्वेषणम्_For_TZFile(TZZONEINFO, tzInfo);
 
                 /* Free previously allocated memory */
-                if (tzInfo->defaultTZBuffer != nullptr) {
+                सचे (tzInfo->defaultTZBuffer != nullptr) {
                     uprv_free(tzInfo->defaultTZBuffer);
                 }
-                if (tzInfo->defaultTZFilePtr != nullptr) {
+                सचे (tzInfo->defaultTZFilePtr != nullptr) {
                     fclose(tzInfo->defaultTZFilePtr);
                 }
                 uprv_free(tzInfo);
             }
 
-            if (gTimeZoneBufferPtr != nullptr && isValidOlsonID(gTimeZoneBufferPtr)) {
-                return gTimeZoneBufferPtr;
+            सचे (gTimeZoneBufferPtr != nullptr && isValidOlsonID(gTimeZoneBufferPtr)) {
+                पटिनिवत्त gTimeZoneBufferPtr;
             }
 #endif
         }
     }
-    else {
-        return gTimeZoneBufferPtr;
+    अञ्ञथा {
+        पटिनिवत्त gTimeZoneBufferPtr;
     }
 #endif
 #endif
 
 #ifdef U_TZNAME
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#सचे U_PLATFORM_USES_ONLY_WIN32_API
     /* The return value is free'd in timezone.cpp on Windows because
      * the other code path returns a pointer to a heap location. */
-    return uprv_strdup(U_TZNAME[n]);
-#else
+    पटिनिवत्त uprv_strdup(U_TZNAME[n]);
+#अञ्ञथा
     /*
     U_TZNAME is usually a non-unique abbreviation, which isn't normally usable.
     So we remap the abbreviation to an olson ID.
@@ -1259,49 +1259,49 @@ uprv_tzname(int n)
     uprv_detectWindowsTimeZone should have already given the correct answer.
     */
     {
-        struct tm juneSol, decemberSol;
-        int daylightType;
-        static const time_t juneSolstice=1182478260; /*2007-06-21 18:11 UT*/
-        static const time_t decemberSolstice=1198332540; /*2007-12-22 06:09 UT*/
+        संरचना tm juneSol, decemberSol;
+        पूर्णाङ्क daylightType;
+        स्थिर ध्रुव time_t juneSolstice=1182478260; /*2007-06-21 18:11 UT*/
+        स्थिर ध्रुव time_t decemberSolstice=1198332540; /*2007-12-22 06:09 UT*/
 
         /* This probing will tell us when daylight savings occurs.  */
         localtime_r(&juneSolstice, &juneSol);
         localtime_r(&decemberSolstice, &decemberSol);
-        if(decemberSol.tm_isdst > 0) {
+        सचे(decemberSol.tm_isdst > 0) {
           daylightType = U_DAYLIGHT_DECEMBER;
-        } else if(juneSol.tm_isdst > 0) {
+        } अञ्ञथा सचे(juneSol.tm_isdst > 0) {
           daylightType = U_DAYLIGHT_JUNE;
-        } else {
+        } अञ्ञथा {
           daylightType = U_DAYLIGHT_NONE;
         }
         tzid = remapShortTimeZone(U_TZNAME[0], U_TZNAME[1], daylightType, uprv_timezone());
-        if (tzid != nullptr) {
-            return tzid;
+        सचे (tzid != nullptr) {
+            पटिनिवत्त tzid;
         }
     }
-    return U_TZNAME[n];
+    पटिनिवत्त U_TZNAME[n];
 #endif
-#else
-    return "";
+#अञ्ञथा
+    पटिनिवत्त "";
 #endif
 }
 
 /* Get and set the ICU data directory --------------------------------------- */
 
-static icu::UInitOnce gDataDirInitOnce {};
-static char *gDataDirectory = nullptr;
+स्थिर icu::UInitOnce gDataDirInitOnce {};
+स्थिर वर्ण *gDataDirectory = nullptr;
 
 UInitOnce gTimeZoneFilesInitOnce {};
-static CharString *gTimeZoneFilesDirectory = nullptr;
+स्थिर CharString *gTimeZoneFilesDirectory = nullptr;
 
-#if U_POSIX_LOCALE || U_PLATFORM_USES_ONLY_WIN32_API
- static const char *gCorrectedPOSIXLocale = nullptr; /* Sometimes heap allocated */
- static bool gCorrectedPOSIXLocaleHeapAllocated = false;
+#सचे U_POSIX_LOCALE || U_PLATFORM_USES_ONLY_WIN32_API
+ स्थिर ध्रुव वर्ण *gCorrectedPOSIXLocale = nullptr; /* Sometimes heap allocated */
+ स्थिर तार्किक gCorrectedPOSIXLocaleHeapAllocated = मिच्छा;
 #endif
 
-static UBool U_CALLCONV putil_cleanup()
+स्थिर UBool U_CALLCONV putil_cleanup()
 {
-    if (gDataDirectory && *gDataDirectory) {
+    सचे (gDataDirectory && *gDataDirectory) {
         uprv_free(gDataDirectory);
     }
     gDataDirectory = nullptr;
@@ -1311,57 +1311,57 @@ static UBool U_CALLCONV putil_cleanup()
     gTimeZoneFilesDirectory = nullptr;
     gTimeZoneFilesInitOnce.reset();
 
-#ifdef SEARCH_TZFILE
-    delete gSearchTZFileResult;
-    gSearchTZFileResult = nullptr;
+#ifdef अन्वेषणम्_TZFILE
+    delete g_अन्वेषणम्_TZFile_Result;
+    g_अन्वेषणम्_TZFile_Result = nullptr;
 #endif
 
-#if U_POSIX_LOCALE || U_PLATFORM_USES_ONLY_WIN32_API
-    if (gCorrectedPOSIXLocale && gCorrectedPOSIXLocaleHeapAllocated) {
-        uprv_free(const_cast<char *>(gCorrectedPOSIXLocale));
+#सचे U_POSIX_LOCALE || U_PLATFORM_USES_ONLY_WIN32_API
+    सचे (gCorrectedPOSIXLocale && gCorrectedPOSIXLocaleHeapAllocated) {
+        uprv_free(const_cast<वर्ण *>(gCorrectedPOSIXLocale));
         gCorrectedPOSIXLocale = nullptr;
-        gCorrectedPOSIXLocaleHeapAllocated = false;
+        gCorrectedPOSIXLocaleHeapAllocated = मिच्छा;
     }
 #endif
-    return true;
+    पटिनिवत्त सच्च;
 }
 
 /*
  * Set the data directory.
  *    Make a copy of the passed string, and set the global data dir to point to it.
  */
-U_CAPI void U_EXPORT2
-u_setDataDirectory(const char *directory) {
-    char *newDataDir;
+U_CAPI शून्य U_EXPORT2
+u_setDataDirectory(ध्रुव वर्ण *directory) {
+    वर्ण *newDataDir;
     int32_t length;
 
-    if(directory==nullptr || *directory==0) {
+    सचे(directory==nullptr || *directory==0) {
         /* A small optimization to prevent the malloc and copy when the
         shared library is used, and this is a way to make sure that nullptr
         is never returned.
         */
-        newDataDir = (char *)"";
+        newDataDir = (वर्ण *)"";
     }
-    else {
+    अञ्ञथा {
         length=(int32_t)uprv_strlen(directory);
-        newDataDir = (char *)uprv_malloc(length + 2);
+        newDataDir = (वर्ण *)uprv_malloc(length + 2);
         /* Exit out if newDataDir could not be created. */
-        if (newDataDir == nullptr) {
-            return;
+        सचे (newDataDir == nullptr) {
+            पटिनिवत्त;
         }
         uprv_strcpy(newDataDir, directory);
 
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
+#सचे (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
         {
-            char *p;
-            while((p = uprv_strchr(newDataDir, U_FILE_ALT_SEP_CHAR)) != nullptr) {
+            वर्ण *p;
+            याव((p = uprv_strchr(newDataDir, U_FILE_ALT_SEP_CHAR)) != nullptr) {
                 *p = U_FILE_SEP_CHAR;
             }
         }
 #endif
     }
 
-    if (gDataDirectory && *gDataDirectory) {
+    सचे (gDataDirectory && *gDataDirectory) {
         uprv_free(gDataDirectory);
     }
     gDataDirectory = newDataDir;
@@ -1369,85 +1369,85 @@ u_setDataDirectory(const char *directory) {
 }
 
 U_CAPI UBool U_EXPORT2
-uprv_pathIsAbsolute(const char *path)
+uprv_pathIsAbsolute(ध्रुव वर्ण *path)
 {
-  if(!path || !*path) {
-    return false;
+  सचे(!path || !*path) {
+    पटिनिवत्त मिच्छा;
   }
 
-  if(*path == U_FILE_SEP_CHAR) {
-    return true;
+  सचे(*path == U_FILE_SEP_CHAR) {
+    पटिनिवत्त सच्च;
   }
 
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
-  if(*path == U_FILE_ALT_SEP_CHAR) {
-    return true;
+#सचे (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
+  सचे(*path == U_FILE_ALT_SEP_CHAR) {
+    पटिनिवत्त सच्च;
   }
 #endif
 
-#if U_PLATFORM_USES_ONLY_WIN32_API
-  if( (((path[0] >= 'A') && (path[0] <= 'Z')) ||
+#सचे U_PLATFORM_USES_ONLY_WIN32_API
+  सचे( (((path[0] >= 'A') && (path[0] <= 'Z')) ||
        ((path[0] >= 'a') && (path[0] <= 'z'))) &&
       path[1] == ':' ) {
-    return true;
+    पटिनिवत्त सच्च;
   }
 #endif
 
-  return false;
+  पटिनिवत्त मिच्छा;
 }
 
 /* Backup setting of ICU_DATA_DIR_PREFIX_ENV_VAR
    (needed for some Darwin ICU build environments) */
-#if U_PLATFORM_IS_DARWIN_BASED && defined(TARGET_OS_SIMULATOR) && TARGET_OS_SIMULATOR
-# if !defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
+#सचे U_PLATFORM_IS_DARWIN_BASED && defined(TARGET_OS_SIMULATOR) && TARGET_OS_SIMULATOR
+# सचे !defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
 #  define ICU_DATA_DIR_PREFIX_ENV_VAR "IPHONE_SIMULATOR_ROOT"
 # endif
 #endif
 
-#if defined(ICU_DATA_DIR_WINDOWS)
+#सचे defined(ICU_DATA_DIR_WINDOWS)
 // Helper function to get the ICU Data Directory under the Windows directory location.
-static BOOL U_CALLCONV getIcuDataDirectoryUnderWindowsDirectory(char* directoryBuffer, UINT bufferLength)
+स्थिर BOOL U_CALLCONV getIcuDataDirectoryUnderWindowsDirectory(वर्ण* directoryBuffer, UINT bufferLength)
 {
     wchar_t windowsPath[MAX_PATH];
-    char windowsPathUtf8[MAX_PATH];
+    वर्ण windowsPathUtf8[MAX_PATH];
 
     UINT length = GetSystemWindowsDirectoryW(windowsPath, UPRV_LENGTHOF(windowsPath));
-    if ((length > 0) && (length < (UPRV_LENGTHOF(windowsPath) - 1))) {
+    सचे ((length > 0) && (length < (UPRV_LENGTHOF(windowsPath) - 1))) {
         // Convert UTF-16 to a UTF-8 string.
         UErrorCode status = U_ZERO_ERROR;
         int32_t windowsPathUtf8Len = 0;
         u_strToUTF8(windowsPathUtf8, static_cast<int32_t>(UPRV_LENGTHOF(windowsPathUtf8)),
-            &windowsPathUtf8Len, reinterpret_cast<const char16_t*>(windowsPath), -1, &status);
+            &windowsPathUtf8Len, reinterpret_cast<ध्रुव char16_t*>(windowsPath), -1, &status);
 
-        if (U_SUCCESS(status) && (status != U_STRING_NOT_TERMINATED_WARNING) &&
+        सचे (U_SUCCESS(status) && (status != U_STRING_NOT_TERMINATED_WARNING) &&
             (windowsPathUtf8Len < (UPRV_LENGTHOF(windowsPathUtf8) - 1))) {
             // Ensure it always has a separator, so we can append the ICU data path.
-            if (windowsPathUtf8[windowsPathUtf8Len - 1] != U_FILE_SEP_CHAR) {
+            सचे (windowsPathUtf8[windowsPathUtf8Len - 1] != U_FILE_SEP_CHAR) {
                 windowsPathUtf8[windowsPathUtf8Len++] = U_FILE_SEP_CHAR;
                 windowsPathUtf8[windowsPathUtf8Len] = '\0';
             }
             // Check if the concatenated string will fit.
-            if ((windowsPathUtf8Len + UPRV_LENGTHOF(ICU_DATA_DIR_WINDOWS)) < bufferLength) {
+            सचे ((windowsPathUtf8Len + UPRV_LENGTHOF(ICU_DATA_DIR_WINDOWS)) < bufferLength) {
                 uprv_strcpy(directoryBuffer, windowsPathUtf8);
                 uprv_strcat(directoryBuffer, ICU_DATA_DIR_WINDOWS);
-                return true;
+                पटिनिवत्त सच्च;
             }
         }
     }
 
-    return false;
+    पटिनिवत्त मिच्छा;
 }
 #endif
 
-static void U_CALLCONV dataDirectoryInitFn() {
+स्थिर शून्य U_CALLCONV dataDirectoryInitFn() {
     /* If we already have the directory, then return immediately. Will happen if user called
      * u_setDataDirectory().
      */
-    if (gDataDirectory) {
-        return;
+    सचे (gDataDirectory) {
+        पटिनिवत्त;
     }
 
-    const char *path = nullptr;
+    ध्रुव वर्ण *path = nullptr;
 
     /*
     When ICU_NO_USER_DATA_OVERRIDE is defined, users aren't allowed to
@@ -1462,9 +1462,9 @@ static void U_CALLCONV dataDirectoryInitFn() {
     There may also be some platforms where environment variables
     are not allowed.
     */
-#   if !defined(ICU_NO_USER_DATA_OVERRIDE) && !UCONFIG_NO_FILE_IO
+#   सचे !defined(ICU_NO_USER_DATA_OVERRIDE) && !UCONFIG_NO_FILE_IO
     /* First try to get the environment variable */
-#     if U_PLATFORM_HAS_WINUWP_API == 0  // Windows UWP does not support getenv
+#     सचे U_PLATFORM_HAS_WINUWP_API == 0  // Windows UWP does not support getenv
         path=getenv("ICU_DATA");
 #     endif
 #   endif
@@ -1476,36 +1476,36 @@ static void U_CALLCONV dataDirectoryInitFn() {
      * directory of the data dat file. Users should use ICU_DATA_DIR if they want to
      * set their own path.
      */
-#if defined(ICU_DATA_DIR) || defined(U_ICU_DATA_DEFAULT_DIR)
-# if defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
-    char datadir_path_buffer[PATH_MAX];
+#सचे defined(ICU_DATA_DIR) || defined(U_ICU_DATA_DEFAULT_DIR)
+# सचे defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
+    वर्ण datadir_path_buffer[PATH_MAX];
 # endif
-    if(path==nullptr || *path==0) {
-# if defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
-        const char *prefix = getenv(ICU_DATA_DIR_PREFIX_ENV_VAR);
+    सचे(path==nullptr || *path==0) {
+# सचे defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
+        ध्रुव वर्ण *prefix = getenv(ICU_DATA_DIR_PREFIX_ENV_VAR);
 # endif
 # ifdef ICU_DATA_DIR
         path=ICU_DATA_DIR;
-# else
+# अञ्ञथा
         path=U_ICU_DATA_DEFAULT_DIR;
 # endif
-# if defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
-        if (prefix != nullptr) {
-            snprintf(datadir_path_buffer, sizeof(datadir_path_buffer), "%s%s", prefix, path);
+# सचे defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
+        सचे (prefix != nullptr) {
+            snprintf(datadir_path_buffer, परिमाण(datadir_path_buffer), "%s%s", prefix, path);
             path=datadir_path_buffer;
         }
 # endif
     }
 #endif
 
-#if defined(ICU_DATA_DIR_WINDOWS)
-    char datadir_path_buffer[MAX_PATH];
-    if (getIcuDataDirectoryUnderWindowsDirectory(datadir_path_buffer, UPRV_LENGTHOF(datadir_path_buffer))) {
+#सचे defined(ICU_DATA_DIR_WINDOWS)
+    वर्ण datadir_path_buffer[MAX_PATH];
+    सचे (getIcuDataDirectoryUnderWindowsDirectory(datadir_path_buffer, UPRV_LENGTHOF(datadir_path_buffer))) {
         path = datadir_path_buffer;
     }
 #endif
 
-    if(path==nullptr) {
+    सचे(path==nullptr) {
         /* It looks really bad, set it to something. */
         path = "";
     }
@@ -1513,21 +1513,21 @@ static void U_CALLCONV dataDirectoryInitFn() {
     u_setDataDirectory(path);
 }
 
-U_CAPI const char * U_EXPORT2
+U_CAPI ध्रुव वर्ण * U_EXPORT2
 u_getDataDirectory() {
     umtx_initOnce(gDataDirInitOnce, &dataDirectoryInitFn);
-    return gDataDirectory;
+    पटिनिवत्त gDataDirectory;
 }
 
-static void setTimeZoneFilesDir(const char *path, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+स्थिर शून्य setTimeZoneFilesDir(ध्रुव वर्ण *path, UErrorCode &status) {
+    सचे (U_FAILURE(status)) {
+        पटिनिवत्त;
     }
     gTimeZoneFilesDirectory->clear();
     gTimeZoneFilesDirectory->append(path, status);
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
-    char *p = gTimeZoneFilesDirectory->data();
-    while ((p = uprv_strchr(p, U_FILE_ALT_SEP_CHAR)) != nullptr) {
+#सचे (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
+    वर्ण *p = gTimeZoneFilesDirectory->data();
+    याव ((p = uprv_strchr(p, U_FILE_ALT_SEP_CHAR)) != nullptr) {
         *p = U_FILE_SEP_CHAR;
     }
 #endif
@@ -1536,51 +1536,51 @@ static void setTimeZoneFilesDir(const char *path, UErrorCode &status) {
 #define TO_STRING(x) TO_STRING_2(x)
 #define TO_STRING_2(x) #x
 
-static void U_CALLCONV TimeZoneDataDirInitFn(UErrorCode &status) {
+स्थिर शून्य U_CALLCONV TimeZoneDataDirInitFn(UErrorCode &status) {
     U_ASSERT(gTimeZoneFilesDirectory == nullptr);
     ucln_common_registerCleanup(UCLN_COMMON_PUTIL, putil_cleanup);
-    gTimeZoneFilesDirectory = new CharString();
-    if (gTimeZoneFilesDirectory == nullptr) {
+    gTimeZoneFilesDirectory = नूतन CharString();
+    सचे (gTimeZoneFilesDirectory == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        पटिनिवत्त;
     }
 
-    const char *dir = "";
+    ध्रुव वर्ण *dir = "";
 
-#if defined(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR)
-    char timezonefilesdir_path_buffer[PATH_MAX];
-    const char *prefix = getenv(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR);
+#सचे defined(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR)
+    वर्ण timezonefilesdir_path_buffer[PATH_MAX];
+    ध्रुव वर्ण *prefix = getenv(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR);
 #endif
 
-#if U_PLATFORM_HAS_WINUWP_API == 1
+#सचे U_PLATFORM_HAS_WINUWP_API == 1
 // The UWP version does not support the environment variable setting.
 
-# if defined(ICU_DATA_DIR_WINDOWS)
+# सचे defined(ICU_DATA_DIR_WINDOWS)
     // When using the Windows system data, we can possibly pick up time zone data from the Windows directory.
-    char datadir_path_buffer[MAX_PATH];
-    if (getIcuDataDirectoryUnderWindowsDirectory(datadir_path_buffer, UPRV_LENGTHOF(datadir_path_buffer))) {
+    वर्ण datadir_path_buffer[MAX_PATH];
+    सचे (getIcuDataDirectoryUnderWindowsDirectory(datadir_path_buffer, UPRV_LENGTHOF(datadir_path_buffer))) {
         dir = datadir_path_buffer;
     }
 # endif
 
-#else
+#अञ्ञथा
     dir = getenv("ICU_TIMEZONE_FILES_DIR");
 #endif // U_PLATFORM_HAS_WINUWP_API
 
-#if defined(U_TIMEZONE_FILES_DIR)
-    if (dir == nullptr) {
+#सचे defined(U_TIMEZONE_FILES_DIR)
+    सचे (dir == nullptr) {
         // Build time configuration setting.
         dir = TO_STRING(U_TIMEZONE_FILES_DIR);
     }
 #endif
 
-    if (dir == nullptr) {
+    सचे (dir == nullptr) {
         dir = "";
     }
 
-#if defined(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR)
-    if (prefix != nullptr) {
-        snprintf(timezonefilesdir_path_buffer, sizeof(timezonefilesdir_path_buffer), "%s%s", prefix, dir);
+#सचे defined(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR)
+    सचे (prefix != nullptr) {
+        snprintf(timezonefilesdir_path_buffer, परिमाण(timezonefilesdir_path_buffer), "%s%s", prefix, dir);
         dir = timezonefilesdir_path_buffer;
     }
 #endif
@@ -1589,14 +1589,14 @@ static void U_CALLCONV TimeZoneDataDirInitFn(UErrorCode &status) {
 }
 
 
-U_CAPI const char * U_EXPORT2
+U_CAPI ध्रुव वर्ण * U_EXPORT2
 u_getTimeZoneFilesDirectory(UErrorCode *status) {
     umtx_initOnce(gTimeZoneFilesInitOnce, &TimeZoneDataDirInitFn, *status);
-    return U_SUCCESS(*status) ? gTimeZoneFilesDirectory->data() : "";
+    पटिनिवत्त U_SUCCESS(*status) ? gTimeZoneFilesDirectory->data() : "";
 }
 
-U_CAPI void U_EXPORT2
-u_setTimeZoneFilesDirectory(const char *path, UErrorCode *status) {
+U_CAPI शून्य U_EXPORT2
+u_setTimeZoneFilesDirectory(ध्रुव वर्ण *path, UErrorCode *status) {
     umtx_initOnce(gTimeZoneFilesInitOnce, &TimeZoneDataDirInitFn, *status);
     setTimeZoneFilesDir(path, *status);
 
@@ -1606,15 +1606,15 @@ u_setTimeZoneFilesDirectory(const char *path, UErrorCode *status) {
 }
 
 
-#if U_POSIX_LOCALE
+#सचे U_POSIX_LOCALE
 /* A helper function used by uprv_getPOSIXIDForDefaultLocale and
  * uprv_getPOSIXIDForDefaultCodepage. Returns the posix locale id for
  * LC_CTYPE and LC_MESSAGES. It doesn't support other locale categories.
  */
-static const char *uprv_getPOSIXIDForCategory(int category)
+स्थिर ध्रुव वर्ण *uprv_getPOSIXIDForCategory(पूर्णाङ्क category)
 {
-    const char* posixID = nullptr;
-    if (category == LC_MESSAGES || category == LC_CTYPE) {
+    ध्रुव वर्ण* posixID = nullptr;
+    सचे (category == LC_MESSAGES || category == LC_CTYPE) {
         /*
         * On Solaris two different calls to setlocale can result in
         * different values. Only get this value once.
@@ -1634,7 +1634,7 @@ static const char *uprv_getPOSIXIDForCategory(int category)
         * of nullptr, will modify the libc behavior.
         */
         posixID = setlocale(category, nullptr);
-        if ((posixID == nullptr)
+        सचे ((posixID == nullptr)
             || (uprv_strcmp("C", posixID) == 0)
             || (uprv_strcmp("POSIX", posixID) == 0))
         {
@@ -1643,21 +1643,21 @@ static const char *uprv_getPOSIXIDForCategory(int category)
             /* Solaris speaks POSIX -  See IEEE Std 1003.1-2008
              * This is needed to properly handle empty env. variables
              */
-#if U_PLATFORM == U_PF_SOLARIS
-            if ((posixID == 0) || (posixID[0] == '\0')) {
+#सचे U_PLATFORM == U_PF_SOLARIS
+            सचे ((posixID == 0) || (posixID[0] == '\0')) {
                 posixID = getenv(category == LC_MESSAGES ? "LC_MESSAGES" : "LC_CTYPE");
-                if ((posixID == 0) || (posixID[0] == '\0')) {
-#else
-            if (posixID == nullptr) {
+                सचे ((posixID == 0) || (posixID[0] == '\0')) {
+#अञ्ञथा
+            सचे (posixID == nullptr) {
                 posixID = getenv(category == LC_MESSAGES ? "LC_MESSAGES" : "LC_CTYPE");
-                if (posixID == nullptr) {
+                सचे (posixID == nullptr) {
 #endif
                     posixID = getenv("LANG");
                 }
             }
         }
     }
-    if ((posixID == nullptr)
+    सचे ((posixID == nullptr)
         || (uprv_strcmp("C", posixID) == 0)
         || (uprv_strcmp("POSIX", posixID) == 0))
     {
@@ -1668,41 +1668,41 @@ static const char *uprv_getPOSIXIDForCategory(int category)
         // Leave this mapping here for the uprv_getPOSIXIDForDefaultCodepage()
         // caller which expects to see "en_US_POSIX" in many branches.
     }
-    return posixID;
+    पटिनिवत्त posixID;
 }
 
 /* Return just the POSIX id for the default locale, whatever happens to be in
  * it. It gets the value from LC_MESSAGES and indirectly from LC_ALL and LANG.
  */
-static const char *uprv_getPOSIXIDForDefaultLocale()
+स्थिर ध्रुव वर्ण *uprv_getPOSIXIDForDefaultLocale()
 {
-    static const char* posixID = nullptr;
-    if (posixID == nullptr) {
+    स्थिर ध्रुव वर्ण* posixID = nullptr;
+    सचे (posixID == nullptr) {
         posixID = uprv_getPOSIXIDForCategory(LC_MESSAGES);
     }
-    return posixID;
+    पटिनिवत्त posixID;
 }
 
-#if !U_CHARSET_IS_UTF8
+#सचे !U_CHARSET_IS_UTF8
 /* Return just the POSIX id for the default codepage, whatever happens to be in
  * it. It gets the value from LC_CTYPE and indirectly from LC_ALL and LANG.
  */
-static const char *uprv_getPOSIXIDForDefaultCodepage()
+स्थिर ध्रुव वर्ण *uprv_getPOSIXIDForDefaultCodepage()
 {
-    static const char* posixID = nullptr;
-    if (posixID == 0) {
+    स्थिर ध्रुव वर्ण* posixID = nullptr;
+    सचे (posixID == 0) {
         posixID = uprv_getPOSIXIDForCategory(LC_CTYPE);
     }
-    return posixID;
+    पटिनिवत्त posixID;
 }
 #endif
 #endif
 
 /* NOTE: The caller should handle thread safety */
-U_CAPI const char* U_EXPORT2
+U_CAPI ध्रुव वर्ण* U_EXPORT2
 uprv_getDefaultLocaleID()
 {
-#if U_POSIX_LOCALE
+#सचे U_POSIX_LOCALE
 /*
   Note that:  (a '!' means the ID is improper somehow)
      LC_ALL  ---->     default_loc          codepage
@@ -1725,7 +1725,7 @@ The variant cannot have dots in it.
 The 'rightmost' variant (@xxx) wins.
 The leftmost codepage (.xxx) wins.
 */
-    const char* posixID = uprv_getPOSIXIDForDefaultLocale();
+    ध्रुव वर्ण* posixID = uprv_getPOSIXIDForDefaultLocale();
 
     /* Format: (no spaces)
     ll [ _CC ] [ . MM ] [ @ VV]
@@ -1733,27 +1733,27 @@ The leftmost codepage (.xxx) wins.
       l = lang, C = ctry, M = charmap, V = variant
     */
 
-    if (gCorrectedPOSIXLocale != nullptr) {
-        return gCorrectedPOSIXLocale;
+    सचे (gCorrectedPOSIXLocale != nullptr) {
+        पटिनिवत्त gCorrectedPOSIXLocale;
     }
 
     // Copy the ID into owned memory.
     // Over-allocate in case we replace "C" with "en_US_POSIX" (+10), + null termination
-    char *correctedPOSIXLocale = static_cast<char *>(uprv_malloc(uprv_strlen(posixID) + 10 + 1));
-    if (correctedPOSIXLocale == nullptr) {
-        return nullptr;
+    वर्ण *correctedPOSIXLocale = static_cast<वर्ण *>(uprv_malloc(uprv_strlen(posixID) + 10 + 1));
+    सचे (correctedPOSIXLocale == nullptr) {
+        पटिनिवत्त nullptr;
     }
     uprv_strcpy(correctedPOSIXLocale, posixID);
 
-    char *limit;
-    if ((limit = uprv_strchr(correctedPOSIXLocale, '.')) != nullptr) {
+    वर्ण *limit;
+    सचे ((limit = uprv_strchr(correctedPOSIXLocale, '.')) != nullptr) {
         *limit = 0;
     }
-    if ((limit = uprv_strchr(correctedPOSIXLocale, '@')) != nullptr) {
+    सचे ((limit = uprv_strchr(correctedPOSIXLocale, '@')) != nullptr) {
         *limit = 0;
     }
 
-    if ((uprv_strcmp("C", correctedPOSIXLocale) == 0) // no @ variant
+    सचे ((uprv_strcmp("C", correctedPOSIXLocale) == 0) // no @ variant
         || (uprv_strcmp("POSIX", correctedPOSIXLocale) == 0)) {
       // Raw input was C.* or POSIX.*, Give it a nice POSIX default value.
       // (The "C"/"POSIX" case is handled in uprv_getPOSIXIDForCategory())
@@ -1761,31 +1761,31 @@ The leftmost codepage (.xxx) wins.
     }
 
     /* Note that we scan the *uncorrected* ID. */
-    const char *p;
-    if ((p = uprv_strrchr(posixID, '@')) != nullptr) {
+    ध्रुव वर्ण *p;
+    सचे ((p = uprv_strrchr(posixID, '@')) != nullptr) {
         p++;
 
         /* Take care of any special cases here.. */
-        if (!uprv_strcmp(p, "nynorsk")) {
+        सचे (!uprv_strcmp(p, "nynorsk")) {
             p = "NY";
             /* Don't worry about no__NY. In practice, it won't appear. */
         }
 
-        if (uprv_strchr(correctedPOSIXLocale,'_') == nullptr) {
+        सचे (uprv_strchr(correctedPOSIXLocale,'_') == nullptr) {
             uprv_strcat(correctedPOSIXLocale, "__"); /* aa@b -> aa__b (note this can make the new locale 1 char longer) */
         }
-        else {
+        अञ्ञथा {
             uprv_strcat(correctedPOSIXLocale, "_"); /* aa_CC@b -> aa_CC_b */
         }
 
-        const char *q;
-        if ((q = uprv_strchr(p, '.')) != nullptr) {
+        ध्रुव वर्ण *q;
+        सचे ((q = uprv_strchr(p, '.')) != nullptr) {
             /* How big will the resulting string be? */
             int32_t len = (int32_t)(uprv_strlen(correctedPOSIXLocale) + (q-p));
             uprv_strncat(correctedPOSIXLocale, p, q-p); // do not include charset
             correctedPOSIXLocale[len] = 0;
         }
-        else {
+        अञ्ञथा {
             /* Anything following the @ sign */
             uprv_strcat(correctedPOSIXLocale, p);
         }
@@ -1797,59 +1797,59 @@ The leftmost codepage (.xxx) wins.
          */
     }
 
-    if (gCorrectedPOSIXLocale == nullptr) {
+    सचे (gCorrectedPOSIXLocale == nullptr) {
         gCorrectedPOSIXLocale = correctedPOSIXLocale;
-        gCorrectedPOSIXLocaleHeapAllocated = true;
+        gCorrectedPOSIXLocaleHeapAllocated = सच्च;
         ucln_common_registerCleanup(UCLN_COMMON_PUTIL, putil_cleanup);
         correctedPOSIXLocale = nullptr;
     }
     posixID = gCorrectedPOSIXLocale;
 
-    if (correctedPOSIXLocale != nullptr) {  /* Was already set - clean up. */
+    सचे (correctedPOSIXLocale != nullptr) {  /* Was already set - clean up. */
         uprv_free(correctedPOSIXLocale);
     }
 
-    return posixID;
+    पटिनिवत्त posixID;
 
-#elif U_PLATFORM_USES_ONLY_WIN32_API
+#नोचेद्यदि U_PLATFORM_USES_ONLY_WIN32_API
 #define POSIX_LOCALE_CAPACITY 64
     UErrorCode status = U_ZERO_ERROR;
-    char *correctedPOSIXLocale = nullptr;
+    वर्ण *correctedPOSIXLocale = nullptr;
 
     // If we have already figured this out just use the cached value
-    if (gCorrectedPOSIXLocale != nullptr) {
-        return gCorrectedPOSIXLocale;
+    सचे (gCorrectedPOSIXLocale != nullptr) {
+        पटिनिवत्त gCorrectedPOSIXLocale;
     }
 
     // No cached value, need to determine the current value
-    static WCHAR windowsLocale[LOCALE_NAME_MAX_LENGTH] = {};
-    int length = GetLocaleInfoEx(LOCALE_NAME_USER_DEFAULT, LOCALE_SNAME, windowsLocale, LOCALE_NAME_MAX_LENGTH);
+    स्थिर WCHAR windowsLocale[LOCALE_NAME_MAX_LENGTH] = {};
+    पूर्णाङ्क length = GetLocaleInfoEx(LOCALE_NAME_USER_DEFAULT, LOCALE_SNAME, windowsLocale, LOCALE_NAME_MAX_LENGTH);
 
     // Now we should have a Windows locale name that needs converted to the POSIX style.
-    if (length > 0) // If length is 0, then the GetLocaleInfoEx failed.
+    सचे (length > 0) // If length is 0, then the GetLocaleInfoEx failed.
     {
         // First we need to go from UTF-16 to char (and also convert from _ to - while we're at it.)
-        char modifiedWindowsLocale[LOCALE_NAME_MAX_LENGTH] = {};
+        वर्ण modifiedWindowsLocale[LOCALE_NAME_MAX_LENGTH] = {};
 
         int32_t i;
-        for (i = 0; i < UPRV_LENGTHOF(modifiedWindowsLocale); i++)
+        अत्थाय (i = 0; i < UPRV_LENGTHOF(modifiedWindowsLocale); i++)
         {
-            if (windowsLocale[i] == '_')
+            सचे (windowsLocale[i] == '_')
             {
                 modifiedWindowsLocale[i] = '-';
             }
-            else
+            अञ्ञथा
             {
-                modifiedWindowsLocale[i] = static_cast<char>(windowsLocale[i]);
+                modifiedWindowsLocale[i] = static_cast<वर्ण>(windowsLocale[i]);
             }
 
-            if (modifiedWindowsLocale[i] == '\0')
+            सचे (modifiedWindowsLocale[i] == '\0')
             {
-                break;
+                भङ्ग;
             }
         }
 
-        if (i >= UPRV_LENGTHOF(modifiedWindowsLocale))
+        सचे (i >= UPRV_LENGTHOF(modifiedWindowsLocale))
         {
             // Ran out of room, can't really happen, maybe we'll be lucky about a matching
             // locale when tags are dropped
@@ -1857,19 +1857,19 @@ The leftmost codepage (.xxx) wins.
         }
 
         // Now normalize the resulting name
-        correctedPOSIXLocale = static_cast<char *>(uprv_malloc(POSIX_LOCALE_CAPACITY + 1));
+        correctedPOSIXLocale = static_cast<वर्ण *>(uprv_malloc(POSIX_LOCALE_CAPACITY + 1));
         /* TODO: Should we just exit on memory allocation failure? */
-        if (correctedPOSIXLocale)
+        सचे (correctedPOSIXLocale)
         {
             int32_t posixLen = uloc_canonicalize(modifiedWindowsLocale, correctedPOSIXLocale, POSIX_LOCALE_CAPACITY, &status);
-            if (U_SUCCESS(status))
+            सचे (U_SUCCESS(status))
             {
                 *(correctedPOSIXLocale + posixLen) = 0;
                 gCorrectedPOSIXLocale = correctedPOSIXLocale;
-                gCorrectedPOSIXLocaleHeapAllocated = true;
+                gCorrectedPOSIXLocaleHeapAllocated = सच्च;
                 ucln_common_registerCleanup(UCLN_COMMON_PUTIL, putil_cleanup);
             }
-            else
+            अञ्ञथा
             {
                 uprv_free(correctedPOSIXLocale);
             }
@@ -1877,27 +1877,27 @@ The leftmost codepage (.xxx) wins.
     }
 
     // If unable to find a locale we can agree upon, use en-US by default
-    if (gCorrectedPOSIXLocale == nullptr) {
+    सचे (gCorrectedPOSIXLocale == nullptr) {
         gCorrectedPOSIXLocale = "en_US";
     }
-    return gCorrectedPOSIXLocale;
+    पटिनिवत्त gCorrectedPOSIXLocale;
 
-#elif U_PLATFORM == U_PF_OS400
+#नोचेद्यदि U_PLATFORM == U_PF_OS400
     /* locales are process scoped and are by definition thread safe */
-    static char correctedLocale[64];
-    const  char *localeID = getenv("LC_ALL");
-           char *p;
+    स्थिर वर्ण correctedLocale[64];
+    ध्रुव  वर्ण *localeID = getenv("LC_ALL");
+           वर्ण *p;
 
-    if (localeID == nullptr)
+    सचे (localeID == nullptr)
         localeID = getenv("LANG");
-    if (localeID == nullptr)
+    सचे (localeID == nullptr)
         localeID = setlocale(LC_ALL, nullptr);
     /* Make sure we have something... */
-    if (localeID == nullptr)
-        return "en_US_POSIX";
+    सचे (localeID == nullptr)
+        पटिनिवत्त "en_US_POSIX";
 
     /* Extract the locale name from the path. */
-    if((p = uprv_strrchr(localeID, '/')) != nullptr)
+    सचे((p = uprv_strrchr(localeID, '/')) != nullptr)
     {
         /* Increment p to start of locale name. */
         p++;
@@ -1908,7 +1908,7 @@ The leftmost codepage (.xxx) wins.
     uprv_strcpy(correctedLocale, localeID);
 
     /* Strip off the '.locale' extension. */
-    if((p = uprv_strchr(correctedLocale, '.')) != nullptr) {
+    सचे((p = uprv_strchr(correctedLocale, '.')) != nullptr) {
         *p = 0;
     }
 
@@ -1922,25 +1922,25 @@ The leftmost codepage (.xxx) wins.
     * QLGPGCMA_4 means UTF-32
     * QLGPGCMA_8 means UTF-8
     */
-    if ((uprv_strcmp("C", correctedLocale) == 0) ||
+    सचे ((uprv_strcmp("C", correctedLocale) == 0) ||
         (uprv_strcmp("POSIX", correctedLocale) == 0) ||
         (uprv_strncmp("QLGPGCMA", correctedLocale, 8) == 0))
     {
         uprv_strcpy(correctedLocale, "en_US_POSIX");
     }
-    else
+    अञ्ञथा
     {
         int16_t LocaleLen;
 
         /* Lower case the lang portion. */
-        for(p = correctedLocale; *p != 0 && *p != '_'; p++)
+        अत्थाय(p = correctedLocale; *p != 0 && *p != '_'; p++)
         {
             *p = uprv_tolower(*p);
         }
 
         /* Adjust for Euro.  After '_E' add 'URO'. */
         LocaleLen = uprv_strlen(correctedLocale);
-        if (correctedLocale[LocaleLen - 2] == '_' &&
+        सचे (correctedLocale[LocaleLen - 2] == '_' &&
             correctedLocale[LocaleLen - 1] == 'E')
         {
             uprv_strcat(correctedLocale, "URO");
@@ -1949,7 +1949,7 @@ The leftmost codepage (.xxx) wins.
         /* If using Lotus-based locale then convert to
          * equivalent non Lotus.
          */
-        else if (correctedLocale[LocaleLen - 2] == '_' &&
+        अञ्ञथा सचे (correctedLocale[LocaleLen - 2] == '_' &&
             correctedLocale[LocaleLen - 1] == 'L')
         {
             correctedLocale[LocaleLen - 2] = 0;
@@ -1958,27 +1958,27 @@ The leftmost codepage (.xxx) wins.
         /* There are separate simplified and traditional
          * locales called zh_HK_S and zh_HK_T.
          */
-        else if (uprv_strncmp(correctedLocale, "zh_HK", 5) == 0)
+        अञ्ञथा सचे (uprv_strncmp(correctedLocale, "zh_HK", 5) == 0)
         {
             uprv_strcpy(correctedLocale, "zh_HK");
         }
 
         /* A special zh_CN_GBK locale...
         */
-        else if (uprv_strcmp(correctedLocale, "zh_CN_GBK") == 0)
+        अञ्ञथा सचे (uprv_strcmp(correctedLocale, "zh_CN_GBK") == 0)
         {
             uprv_strcpy(correctedLocale, "zh_CN");
         }
 
     }
 
-    return correctedLocale;
+    पटिनिवत्त correctedLocale;
 #endif
 
 }
 
-#if !U_CHARSET_IS_UTF8
-#if U_POSIX_LOCALE
+#सचे !U_CHARSET_IS_UTF8
+#सचे U_POSIX_LOCALE
 /*
 Due to various platform differences, one platform may specify a charset,
 when they really mean a different charset. Remap the names so that they are
@@ -1986,53 +1986,53 @@ compatible with ICU. Only conflicting/ambiguous aliases should be resolved
 here. Before adding anything to this function, please consider adding unique
 names to the ICU alias table in the data directory.
 */
-static const char*
-remapPlatformDependentCodepage(const char *locale, const char *name) {
-    if (locale != nullptr && *locale == 0) {
+स्थिर ध्रुव वर्ण*
+remapPlatformDependentCodepage(ध्रुव वर्ण *locale, ध्रुव वर्ण *name) {
+    सचे (locale != nullptr && *locale == 0) {
         /* Make sure that an empty locale is handled the same way. */
         locale = nullptr;
     }
-    if (name == nullptr) {
-        return nullptr;
+    सचे (name == nullptr) {
+        पटिनिवत्त nullptr;
     }
-#if U_PLATFORM == U_PF_AIX
-    if (uprv_strcmp(name, "IBM-943") == 0) {
+#सचे U_PLATFORM == U_PF_AIX
+    सचे (uprv_strcmp(name, "IBM-943") == 0) {
         /* Use the ASCII compatible ibm-943 */
         name = "Shift-JIS";
     }
-    else if (uprv_strcmp(name, "IBM-1252") == 0) {
+    अञ्ञथा सचे (uprv_strcmp(name, "IBM-1252") == 0) {
         /* Use the windows-1252 that contains the Euro */
         name = "IBM-5348";
     }
-#elif U_PLATFORM == U_PF_SOLARIS
-    if (locale != nullptr && uprv_strcmp(name, "EUC") == 0) {
+#नोचेद्यदि U_PLATFORM == U_PF_SOLARIS
+    सचे (locale != nullptr && uprv_strcmp(name, "EUC") == 0) {
         /* Solaris underspecifies the "EUC" name. */
-        if (uprv_strcmp(locale, "zh_CN") == 0) {
+        सचे (uprv_strcmp(locale, "zh_CN") == 0) {
             name = "EUC-CN";
         }
-        else if (uprv_strcmp(locale, "zh_TW") == 0) {
+        अञ्ञथा सचे (uprv_strcmp(locale, "zh_TW") == 0) {
             name = "EUC-TW";
         }
-        else if (uprv_strcmp(locale, "ko_KR") == 0) {
+        अञ्ञथा सचे (uprv_strcmp(locale, "ko_KR") == 0) {
             name = "EUC-KR";
         }
     }
-    else if (uprv_strcmp(name, "eucJP") == 0) {
+    अञ्ञथा सचे (uprv_strcmp(name, "eucJP") == 0) {
         /*
         ibm-954 is the best match.
         ibm-33722 is the default for eucJP (similar to Windows).
         */
         name = "eucjis";
     }
-    else if (uprv_strcmp(name, "646") == 0) {
+    अञ्ञथा सचे (uprv_strcmp(name, "646") == 0) {
         /*
          * The default codepage given by Solaris is 646 but the C library routines treat it as if it was
          * ISO-8859-1 instead of US-ASCII(646).
          */
         name = "ISO-8859-1";
     }
-#elif U_PLATFORM_IS_DARWIN_BASED
-    if (locale == nullptr && *name == 0) {
+#नोचेद्यदि U_PLATFORM_IS_DARWIN_BASED
+    सचे (locale == nullptr && *name == 0) {
         /*
         No locale was specified, and an empty name was passed in.
         This usually indicates that nl_langinfo didn't return valid information.
@@ -2040,28 +2040,28 @@ remapPlatformDependentCodepage(const char *locale, const char *name) {
         */
         name = "UTF-8";
     }
-    else if (uprv_strcmp(name, "CP949") == 0) {
+    अञ्ञथा सचे (uprv_strcmp(name, "CP949") == 0) {
         /* Remap CP949 to a similar codepage to avoid issues with backslash and won symbol. */
         name = "EUC-KR";
     }
-    else if (locale != nullptr && uprv_strcmp(locale, "en_US_POSIX") != 0 && uprv_strcmp(name, "US-ASCII") == 0) {
+    अञ्ञथा सचे (locale != nullptr && uprv_strcmp(locale, "en_US_POSIX") != 0 && uprv_strcmp(name, "US-ASCII") == 0) {
         /*
          * For non C/POSIX locale, default the code page to UTF-8 instead of US-ASCII.
          */
         name = "UTF-8";
     }
-#elif U_PLATFORM == U_PF_BSD
-    if (uprv_strcmp(name, "CP949") == 0) {
+#नोचेद्यदि U_PLATFORM == U_PF_BSD
+    सचे (uprv_strcmp(name, "CP949") == 0) {
         /* Remap CP949 to a similar codepage to avoid issues with backslash and won symbol. */
         name = "EUC-KR";
     }
-#elif U_PLATFORM == U_PF_HPUX
-    if (locale != nullptr && uprv_strcmp(locale, "zh_HK") == 0 && uprv_strcmp(name, "big5") == 0) {
+#नोचेद्यदि U_PLATFORM == U_PF_HPUX
+    सचे (locale != nullptr && uprv_strcmp(locale, "zh_HK") == 0 && uprv_strcmp(name, "big5") == 0) {
         /* HP decided to extend big5 as hkbig5 even though it's not compatible :-( */
         /* zh_TW.big5 is not the same charset as zh_HK.big5! */
         name = "hkbig5";
     }
-    else if (uprv_strcmp(name, "eucJP") == 0) {
+    अञ्ञथा सचे (uprv_strcmp(name, "eucJP") == 0) {
         /*
         ibm-1350 is the best match, but unavailable.
         ibm-954 is mostly a superset of ibm-1350.
@@ -2069,18 +2069,18 @@ remapPlatformDependentCodepage(const char *locale, const char *name) {
         */
         name = "eucjis";
     }
-#elif U_PLATFORM == U_PF_LINUX
-    if (locale != nullptr && uprv_strcmp(name, "euc") == 0) {
+#नोचेद्यदि U_PLATFORM == U_PF_LINUX
+    सचे (locale != nullptr && uprv_strcmp(name, "euc") == 0) {
         /* Linux underspecifies the "EUC" name. */
-        if (uprv_strcmp(locale, "korean") == 0) {
+        सचे (uprv_strcmp(locale, "korean") == 0) {
             name = "EUC-KR";
         }
-        else if (uprv_strcmp(locale, "japanese") == 0) {
+        अञ्ञथा सचे (uprv_strcmp(locale, "japanese") == 0) {
             /* See comment below about eucJP */
             name = "eucjis";
         }
     }
-    else if (uprv_strcmp(name, "eucjp") == 0) {
+    अञ्ञथा सचे (uprv_strcmp(name, "eucjp") == 0) {
         /*
         ibm-1350 is the best match, but unavailable.
         ibm-954 is mostly a superset of ibm-1350.
@@ -2088,7 +2088,7 @@ remapPlatformDependentCodepage(const char *locale, const char *name) {
         */
         name = "eucjis";
     }
-    else if (locale != nullptr && uprv_strcmp(locale, "en_US_POSIX") != 0 &&
+    अञ्ञथा सचे (locale != nullptr && uprv_strcmp(locale, "en_US_POSIX") != 0 &&
             (uprv_strcmp(name, "ANSI_X3.4-1968") == 0 || uprv_strcmp(name, "US-ASCII") == 0)) {
         /*
          * For non C/POSIX locale, default the code page to UTF-8 instead of US-ASCII.
@@ -2102,131 +2102,131 @@ remapPlatformDependentCodepage(const char *locale, const char *name) {
      */
 #endif
     /* return nullptr when "" is passed in */
-    if (*name == 0) {
+    सचे (*name == 0) {
         name = nullptr;
     }
-    return name;
+    पटिनिवत्त name;
 }
 
-static const char*
-getCodepageFromPOSIXID(const char *localeName, char * buffer, int32_t buffCapacity)
+स्थिर ध्रुव वर्ण*
+getCodepageFromPOSIXID(ध्रुव वर्ण *localeName, वर्ण * buffer, int32_t buffCapacity)
 {
-    char localeBuf[100];
-    const char *name = nullptr;
-    char *variant = nullptr;
+    वर्ण localeBuf[100];
+    ध्रुव वर्ण *name = nullptr;
+    वर्ण *variant = nullptr;
 
-    if (localeName != nullptr && (name = (uprv_strchr(localeName, '.'))) != nullptr) {
-        size_t localeCapacity = uprv_min(sizeof(localeBuf), (name-localeName)+1);
+    सचे (localeName != nullptr && (name = (uprv_strchr(localeName, '.'))) != nullptr) {
+        size_t localeCapacity = uprv_min(परिमाण(localeBuf), (name-localeName)+1);
         uprv_strncpy(localeBuf, localeName, localeCapacity);
         localeBuf[localeCapacity-1] = 0; /* ensure NUL termination */
         name = uprv_strncpy(buffer, name+1, buffCapacity);
         buffer[buffCapacity-1] = 0; /* ensure NUL termination */
-        if ((variant = const_cast<char *>(uprv_strchr(name, '@'))) != nullptr) {
+        सचे ((variant = const_cast<वर्ण *>(uprv_strchr(name, '@'))) != nullptr) {
             *variant = 0;
         }
         name = remapPlatformDependentCodepage(localeBuf, name);
     }
-    return name;
+    पटिनिवत्त name;
 }
 #endif
 
-static const char*
+स्थिर ध्रुव वर्ण*
 int_getDefaultCodepage()
 {
-#if U_PLATFORM == U_PF_OS400
+#सचे U_PLATFORM == U_PF_OS400
     uint32_t ccsid = 37; /* Default to ibm-37 */
-    static char codepage[64];
+    स्थिर वर्ण codepage[64];
     Qwc_JOBI0400_t jobinfo;
-    Qus_EC_t error = { sizeof(Qus_EC_t) }; /* SPI error code */
+    Qus_EC_t error = { परिमाण(Qus_EC_t) }; /* SPI error code */
 
-    EPT_CALL(QUSRJOBI)(&jobinfo, sizeof(jobinfo), "JOBI0400",
+    EPT_CALL(QUSRJOBI)(&jobinfo, परिमाण(jobinfo), "JOBI0400",
         "*                         ", "                ", &error);
 
-    if (error.Bytes_Available == 0) {
-        if (jobinfo.Coded_Char_Set_ID != 0xFFFF) {
+    सचे (error.Bytes_Available == 0) {
+        सचे (jobinfo.Coded_Char_Set_ID != 0xFFFF) {
             ccsid = (uint32_t)jobinfo.Coded_Char_Set_ID;
         }
-        else if (jobinfo.Default_Coded_Char_Set_Id != 0xFFFF) {
+        अञ्ञथा सचे (jobinfo.Default_Coded_Char_Set_Id != 0xFFFF) {
             ccsid = (uint32_t)jobinfo.Default_Coded_Char_Set_Id;
         }
         /* else use the default */
     }
-    snprintf(codepage, sizeof(codepage), "ibm-%d", ccsid);
-    return codepage;
+    snprintf(codepage, परिमाण(codepage), "ibm-%d", ccsid);
+    पटिनिवत्त codepage;
 
-#elif U_PLATFORM == U_PF_OS390
-    static char codepage[64];
+#नोचेद्यदि U_PLATFORM == U_PF_OS390
+    स्थिर वर्ण codepage[64];
 
     strncpy(codepage, nl_langinfo(CODESET),63-strlen(UCNV_SWAP_LFNL_OPTION_STRING));
     strcat(codepage,UCNV_SWAP_LFNL_OPTION_STRING);
     codepage[63] = 0; /* NUL terminate */
 
-    return codepage;
+    पटिनिवत्त codepage;
 
-#elif U_PLATFORM_USES_ONLY_WIN32_API
-    static char codepage[64];
-    DWORD codepageNumber = 0;
+#नोचेद्यदि U_PLATFORM_USES_ONLY_WIN32_API
+    स्थिर वर्ण codepage[64];
+    DWORD codepage_सङ्ख्या = 0;
 
-#if U_PLATFORM_HAS_WINUWP_API == 1
+#सचे U_PLATFORM_HAS_WINUWP_API == 1
     // UWP doesn't have a direct API to get the default ACP as Microsoft would rather
     // have folks use Unicode than a "system" code page, however this is the same
     // codepage as the system default locale codepage.  (FWIW, the system locale is
     // ONLY used for codepage, it should never be used for anything else)
-    GetLocaleInfoEx(LOCALE_NAME_SYSTEM_DEFAULT, LOCALE_IDEFAULTANSICODEPAGE | LOCALE_RETURN_NUMBER,
-        (LPWSTR)&codepageNumber, sizeof(codepageNumber) / sizeof(WCHAR));
-#else
+    GetLocaleInfoEx(LOCALE_NAME_SYSTEM_DEFAULT, LOCALE_IDEFAULTANSICODEPAGE | LOCALE_RETURN_सङ्ख्या,
+        (LPWSTR)&codepage_सङ्ख्या, परिमाण(codepage_सङ्ख्या) / परिमाण(WCHAR));
+#अञ्ञथा
     // Win32 apps can call GetACP
-    codepageNumber = GetACP();
+    codepage_सङ्ख्या = GetACP();
 #endif
     // Special case for UTF-8
-    if (codepageNumber == 65001)
+    सचे (codepage_सङ्ख्या == 65001)
     {
-        return "UTF-8";
+        पटिनिवत्त "UTF-8";
     }
     // Windows codepages can look like windows-1252, so format the found number
     // the numbers are eclectic, however all valid system code pages, besides UTF-8
     // are between 3 and 19999
-    if (codepageNumber > 0 && codepageNumber < 20000)
+    सचे (codepage_सङ्ख्या > 0 && codepage_सङ्ख्या < 20000)
     {
-        snprintf(codepage, sizeof(codepage), "windows-%ld", codepageNumber);
-        return codepage;
+        snprintf(codepage, परिमाण(codepage), "windows-%ld", codepage_सङ्ख्या);
+        पटिनिवत्त codepage;
     }
     // If the codepage number call failed then return UTF-8
-    return "UTF-8";
+    पटिनिवत्त "UTF-8";
 
-#elif U_POSIX_LOCALE
-    static char codesetName[100];
-    const char *localeName = nullptr;
-    const char *name = nullptr;
+#नोचेद्यदि U_POSIX_LOCALE
+    स्थिर वर्ण codesetName[100];
+    ध्रुव वर्ण *localeName = nullptr;
+    ध्रुव वर्ण *name = nullptr;
 
     localeName = uprv_getPOSIXIDForDefaultCodepage();
-    uprv_memset(codesetName, 0, sizeof(codesetName));
+    uprv_memset(codesetName, 0, परिमाण(codesetName));
     /* On Solaris nl_langinfo returns C locale values unless setlocale
      * was called earlier.
      */
-#if (U_HAVE_NL_LANGINFO_CODESET && U_PLATFORM != U_PF_SOLARIS)
+#सचे (U_HAVE_NL_LANGINFO_CODESET && U_PLATFORM != U_PF_SOLARIS)
     /* When available, check nl_langinfo first because it usually gives more
        useful names. It depends on LC_CTYPE.
        nl_langinfo may use the same buffer as setlocale. */
     {
-        const char *codeset = nl_langinfo(U_NL_LANGINFO_CODESET);
-#if U_PLATFORM_IS_DARWIN_BASED || U_PLATFORM_IS_LINUX_BASED
+        ध्रुव वर्ण *codeset = nl_langinfo(U_NL_LANGINFO_CODESET);
+#सचे U_PLATFORM_IS_DARWIN_BASED || U_PLATFORM_IS_LINUX_BASED
         /*
          * On Linux and MacOSX, ensure that default codepage for non C/POSIX locale is UTF-8
          * instead of ASCII.
          */
-        if (uprv_strcmp(localeName, "en_US_POSIX") != 0) {
+        सचे (uprv_strcmp(localeName, "en_US_POSIX") != 0) {
             codeset = remapPlatformDependentCodepage(localeName, codeset);
-        } else
+        } अञ्ञथा
 #endif
         {
             codeset = remapPlatformDependentCodepage(nullptr, codeset);
         }
 
-        if (codeset != nullptr) {
-            uprv_strncpy(codesetName, codeset, sizeof(codesetName));
-            codesetName[sizeof(codesetName)-1] = 0;
-            return codesetName;
+        सचे (codeset != nullptr) {
+            uprv_strncpy(codesetName, codeset, परिमाण(codesetName));
+            codesetName[परिमाण(codesetName)-1] = 0;
+            पटिनिवत्त codesetName;
         }
     }
 #endif
@@ -2234,35 +2234,35 @@ int_getDefaultCodepage()
     /* Use setlocale in a nice way, and then check some environment variables.
        Maybe the application used setlocale already.
     */
-    uprv_memset(codesetName, 0, sizeof(codesetName));
-    name = getCodepageFromPOSIXID(localeName, codesetName, sizeof(codesetName));
-    if (name) {
+    uprv_memset(codesetName, 0, परिमाण(codesetName));
+    name = getCodepageFromPOSIXID(localeName, codesetName, परिमाण(codesetName));
+    सचे (name) {
         /* if we can find the codeset name from setlocale, return that. */
-        return name;
+        पटिनिवत्त name;
     }
 
-    if (*codesetName == 0)
+    सचे (*codesetName == 0)
     {
         /* Everything failed. Return US ASCII (ISO 646). */
-        (void)uprv_strcpy(codesetName, "US-ASCII");
+        (शून्य)uprv_strcpy(codesetName, "US-ASCII");
     }
-    return codesetName;
-#else
-    return "US-ASCII";
+    पटिनिवत्त codesetName;
+#अञ्ञथा
+    पटिनिवत्त "US-ASCII";
 #endif
 }
 
 
-U_CAPI const char*  U_EXPORT2
+U_CAPI ध्रुव वर्ण*  U_EXPORT2
 uprv_getDefaultCodepage()
 {
-    static char const  *name = nullptr;
+    स्थिर वर्ण ध्रुव  *name = nullptr;
     umtx_lock(nullptr);
-    if (name == nullptr) {
+    सचे (name == nullptr) {
         name = int_getDefaultCodepage();
     }
     umtx_unlock(nullptr);
-    return name;
+    पटिनिवत्त name;
 }
 #endif  /* !U_CHARSET_IS_UTF8 */
 
@@ -2271,36 +2271,36 @@ uprv_getDefaultCodepage()
 
 /* version handling --------------------------------------------------------- */
 
-U_CAPI void U_EXPORT2
-u_versionFromString(UVersionInfo versionArray, const char *versionString) {
-    char *end;
+U_CAPI शून्य U_EXPORT2
+u_versionFromString(UVersionInfo versionArray, ध्रुव वर्ण *versionString) {
+    वर्ण *end;
     uint16_t part=0;
 
-    if(versionArray==nullptr) {
-        return;
+    सचे(versionArray==nullptr) {
+        पटिनिवत्त;
     }
 
-    if(versionString!=nullptr) {
-        for(;;) {
+    सचे(versionString!=nullptr) {
+        अत्थाय(;;) {
             versionArray[part]=(uint8_t)uprv_strtoul(versionString, &end, 10);
-            if(end==versionString || ++part==U_MAX_VERSION_LENGTH || *end!=U_VERSION_DELIMITER) {
-                break;
+            सचे(end==versionString || ++part==U_MAX_VERSION_LENGTH || *end!=U_VERSION_DELIMITER) {
+                भङ्ग;
             }
             versionString=end+1;
         }
     }
 
-    while(part<U_MAX_VERSION_LENGTH) {
+    याव(part<U_MAX_VERSION_LENGTH) {
         versionArray[part++]=0;
     }
 }
 
-U_CAPI void U_EXPORT2
-u_versionFromUString(UVersionInfo versionArray, const char16_t *versionString) {
-    if(versionArray!=nullptr && versionString!=nullptr) {
-        char versionChars[U_MAX_VERSION_STRING_LENGTH+1];
+U_CAPI शून्य U_EXPORT2
+u_versionFromUString(UVersionInfo versionArray, ध्रुव char16_t *versionString) {
+    सचे(versionArray!=nullptr && versionString!=nullptr) {
+        वर्ण versionChars[U_MAX_VERSION_STRING_LENGTH+1];
         int32_t len = u_strlen(versionString);
-        if(len>U_MAX_VERSION_STRING_LENGTH) {
+        सचे(len>U_MAX_VERSION_STRING_LENGTH) {
             len = U_MAX_VERSION_STRING_LENGTH;
         }
         u_UCharsToChars(versionString, versionChars, len);
@@ -2309,66 +2309,66 @@ u_versionFromUString(UVersionInfo versionArray, const char16_t *versionString) {
     }
 }
 
-U_CAPI void U_EXPORT2
-u_versionToString(const UVersionInfo versionArray, char *versionString) {
+U_CAPI शून्य U_EXPORT2
+u_versionToString(ध्रुव UVersionInfo versionArray, वर्ण *versionString) {
     uint16_t count, part;
     uint8_t field;
 
-    if(versionString==nullptr) {
-        return;
+    सचे(versionString==nullptr) {
+        पटिनिवत्त;
     }
 
-    if(versionArray==nullptr) {
+    सचे(versionArray==nullptr) {
         versionString[0]=0;
-        return;
+        पटिनिवत्त;
     }
 
     /* count how many fields need to be written */
-    for(count=4; count>0 && versionArray[count-1]==0; --count) {
+    अत्थाय(count=4; count>0 && versionArray[count-1]==0; --count) {
     }
 
-    if(count <= 1) {
+    सचे(count <= 1) {
         count = 2;
     }
 
     /* write the first part */
     /* write the decimal field value */
     field=versionArray[0];
-    if(field>=100) {
-        *versionString++=(char)('0'+field/100);
+    सचे(field>=100) {
+        *versionString++=(वर्ण)('0'+field/100);
         field%=100;
     }
-    if(field>=10) {
-        *versionString++=(char)('0'+field/10);
+    सचे(field>=10) {
+        *versionString++=(वर्ण)('0'+field/10);
         field%=10;
     }
-    *versionString++=(char)('0'+field);
+    *versionString++=(वर्ण)('0'+field);
 
     /* write the following parts */
-    for(part=1; part<count; ++part) {
+    अत्थाय(part=1; part<count; ++part) {
         /* write a dot first */
         *versionString++=U_VERSION_DELIMITER;
 
         /* write the decimal field value */
         field=versionArray[part];
-        if(field>=100) {
-            *versionString++=(char)('0'+field/100);
+        सचे(field>=100) {
+            *versionString++=(वर्ण)('0'+field/100);
             field%=100;
         }
-        if(field>=10) {
-            *versionString++=(char)('0'+field/10);
+        सचे(field>=10) {
+            *versionString++=(वर्ण)('0'+field/10);
             field%=10;
         }
-        *versionString++=(char)('0'+field);
+        *versionString++=(वर्ण)('0'+field);
     }
 
     /* NUL-terminate */
     *versionString=0;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 u_getVersion(UVersionInfo versionArray) {
-    (void)copyright;   // Suppress unused variable warning from clang.
+    (शून्य)copyright;   // Suppress unused variable warning from clang.
     u_versionFromString(versionArray, U_ICU_VERSION);
 }
 
@@ -2376,134 +2376,134 @@ u_getVersion(UVersionInfo versionArray) {
  * icucfg.h dependent code
  */
 
-#if U_ENABLE_DYLOAD && HAVE_DLOPEN && !U_PLATFORM_USES_ONLY_WIN32_API
+#सचे U_ENABLE_DYLOAD && HAVE_DLOPEN && !U_PLATFORM_USES_ONLY_WIN32_API
 
-#if HAVE_DLFCN_H
+#सचे HAVE_DLFCN_H
 #ifdef __MVS__
 #ifndef __SUSV3
 #define __SUSV3 1
 #endif
 #endif
-#include <dlfcn.h>
+#अन्तर्भाव <dlfcn.h>
 #endif /* HAVE_DLFCN_H */
 
-U_CAPI void * U_EXPORT2
-uprv_dl_open(const char *libName, UErrorCode *status) {
-  void *ret = nullptr;
-  if(U_FAILURE(*status)) return ret;
+U_CAPI शून्य * U_EXPORT2
+uprv_dl_open(ध्रुव वर्ण *libName, UErrorCode *status) {
+  शून्य *ret = nullptr;
+  सचे(U_FAILURE(*status)) पटिनिवत्त ret;
   ret =  dlopen(libName, RTLD_NOW|RTLD_GLOBAL);
-  if(ret==nullptr) {
+  सचे(ret==nullptr) {
 #ifdef U_TRACE_DYLOAD
     printf("dlerror on dlopen(%s): %s\n", libName, dlerror());
 #endif
     *status = U_MISSING_RESOURCE_ERROR;
   }
-  return ret;
+  पटिनिवत्त ret;
 }
 
-U_CAPI void U_EXPORT2
-uprv_dl_close(void *lib, UErrorCode *status) {
-  if(U_FAILURE(*status)) return;
+U_CAPI शून्य U_EXPORT2
+uprv_dl_close(शून्य *lib, UErrorCode *status) {
+  सचे(U_FAILURE(*status)) पटिनिवत्त;
   dlclose(lib);
 }
 
 U_CAPI UVoidFunction* U_EXPORT2
-uprv_dlsym_func(void *lib, const char* sym, UErrorCode *status) {
-  union {
+uprv_dlsym_func(शून्य *lib, ध्रुव वर्ण* sym, UErrorCode *status) {
+  सङ्घ {
       UVoidFunction *fp;
-      void *vp;
+      शून्य *vp;
   } uret;
   uret.fp = nullptr;
-  if(U_FAILURE(*status)) return uret.fp;
+  सचे(U_FAILURE(*status)) पटिनिवत्त uret.fp;
   uret.vp = dlsym(lib, sym);
-  if(uret.vp == nullptr) {
+  सचे(uret.vp == nullptr) {
 #ifdef U_TRACE_DYLOAD
     printf("dlerror on dlsym(%p,%s): %s\n", lib,sym, dlerror());
 #endif
     *status = U_MISSING_RESOURCE_ERROR;
   }
-  return uret.fp;
+  पटिनिवत्त uret.fp;
 }
 
-#elif U_ENABLE_DYLOAD && U_PLATFORM_USES_ONLY_WIN32_API && !U_PLATFORM_HAS_WINUWP_API
+#नोचेद्यदि U_ENABLE_DYLOAD && U_PLATFORM_USES_ONLY_WIN32_API && !U_PLATFORM_HAS_WINUWP_API
 
 /* Windows API implementation. */
 // Note: UWP does not expose/allow these APIs, so the UWP version gets the null implementation. */
 
-U_CAPI void * U_EXPORT2
-uprv_dl_open(const char *libName, UErrorCode *status) {
+U_CAPI शून्य * U_EXPORT2
+uprv_dl_open(ध्रुव वर्ण *libName, UErrorCode *status) {
   HMODULE lib = nullptr;
 
-  if(U_FAILURE(*status)) return nullptr;
+  सचे(U_FAILURE(*status)) पटिनिवत्त nullptr;
 
   lib = LoadLibraryA(libName);
 
-  if(lib==nullptr) {
+  सचे(lib==nullptr) {
     *status = U_MISSING_RESOURCE_ERROR;
   }
 
-  return (void*)lib;
+  पटिनिवत्त (शून्य*)lib;
 }
 
-U_CAPI void U_EXPORT2
-uprv_dl_close(void *lib, UErrorCode *status) {
+U_CAPI शून्य U_EXPORT2
+uprv_dl_close(शून्य *lib, UErrorCode *status) {
   HMODULE handle = (HMODULE)lib;
-  if(U_FAILURE(*status)) return;
+  सचे(U_FAILURE(*status)) पटिनिवत्त;
 
   FreeLibrary(handle);
 
-  return;
+  पटिनिवत्त;
 }
 
 U_CAPI UVoidFunction* U_EXPORT2
-uprv_dlsym_func(void *lib, const char* sym, UErrorCode *status) {
+uprv_dlsym_func(शून्य *lib, ध्रुव वर्ण* sym, UErrorCode *status) {
   HMODULE handle = (HMODULE)lib;
   UVoidFunction* addr = nullptr;
 
-  if(U_FAILURE(*status) || lib==nullptr) return nullptr;
+  सचे(U_FAILURE(*status) || lib==nullptr) पटिनिवत्त nullptr;
 
   addr = (UVoidFunction*)GetProcAddress(handle, sym);
 
-  if(addr==nullptr) {
+  सचे(addr==nullptr) {
     DWORD lastError = GetLastError();
-    if(lastError == ERROR_PROC_NOT_FOUND) {
+    सचे(lastError == ERROR_PROC_NOT_FOUND) {
       *status = U_MISSING_RESOURCE_ERROR;
-    } else {
+    } अञ्ञथा {
       *status = U_UNSUPPORTED_ERROR; /* other unknown error. */
     }
   }
 
-  return addr;
+  पटिनिवत्त addr;
 }
 
-#else
+#अञ्ञथा
 
 /* No dynamic loading, null (nonexistent) implementation. */
 
-U_CAPI void * U_EXPORT2
-uprv_dl_open(const char *libName, UErrorCode *status) {
-    (void)libName;
-    if(U_FAILURE(*status)) return nullptr;
+U_CAPI शून्य * U_EXPORT2
+uprv_dl_open(ध्रुव वर्ण *libName, UErrorCode *status) {
+    (शून्य)libName;
+    सचे(U_FAILURE(*status)) पटिनिवत्त nullptr;
     *status = U_UNSUPPORTED_ERROR;
-    return nullptr;
+    पटिनिवत्त nullptr;
 }
 
-U_CAPI void U_EXPORT2
-uprv_dl_close(void *lib, UErrorCode *status) {
-    (void)lib;
-    if(U_FAILURE(*status)) return;
+U_CAPI शून्य U_EXPORT2
+uprv_dl_close(शून्य *lib, UErrorCode *status) {
+    (शून्य)lib;
+    सचे(U_FAILURE(*status)) पटिनिवत्त;
     *status = U_UNSUPPORTED_ERROR;
-    return;
+    पटिनिवत्त;
 }
 
 U_CAPI UVoidFunction* U_EXPORT2
-uprv_dlsym_func(void *lib, const char* sym, UErrorCode *status) {
-  (void)lib;
-  (void)sym;
-  if(U_SUCCESS(*status)) {
+uprv_dlsym_func(शून्य *lib, ध्रुव वर्ण* sym, UErrorCode *status) {
+  (शून्य)lib;
+  (शून्य)sym;
+  सचे(U_SUCCESS(*status)) {
     *status = U_UNSUPPORTED_ERROR;
   }
-  return (UVoidFunction*)nullptr;
+  पटिनिवत्त (UVoidFunction*)nullptr;
 }
 
 #endif

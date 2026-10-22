@@ -7,9 +7,9 @@
 ******************************************************************************
 */
 
-#include "uvectr64.h"
-#include "cmemory.h"
-#include "putilimp.h"
+#अन्तर्भाव "uvectr64.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "putilimp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -43,21 +43,21 @@ UVector64::UVector64(int32_t initialCapacity, UErrorCode &status) :
 
 
 
-void UVector64::_init(int32_t initialCapacity, UErrorCode &status) {
+शून्य UVector64::_init(int32_t initialCapacity, UErrorCode &status) {
     // Fix bogus initialCapacity values; avoid malloc(0)
-    if (initialCapacity < 1) {
+    सचे (initialCapacity < 1) {
         initialCapacity = DEFAULT_CAPACITY;
     }
-    if (maxCapacity>0 && maxCapacity<initialCapacity) {
+    सचे (maxCapacity>0 && maxCapacity<initialCapacity) {
         initialCapacity = maxCapacity;
     }
-    if (initialCapacity > static_cast<int32_t>(INT32_MAX / sizeof(int64_t))) {
+    सचे (initialCapacity > static_cast<int32_t>(INT32_MAX / परिमाण(int64_t))) {
         initialCapacity = uprv_min(DEFAULT_CAPACITY, maxCapacity);
     }
-    elements = static_cast<int64_t*>(uprv_malloc(sizeof(int64_t) * initialCapacity));
-    if (elements == nullptr) {
+    elements = static_cast<int64_t*>(uprv_malloc(परिमाण(int64_t) * initialCapacity));
+    सचे (elements == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
+    } अञ्ञथा {
         capacity = initialCapacity;
     }
 }
@@ -70,39 +70,39 @@ UVector64::~UVector64() {
 /**
  * Assign this object to another (make this a copy of 'other').
  */
-void UVector64::assign(const UVector64& other, UErrorCode &ec) {
-    if (ensureCapacity(other.count, ec)) {
+शून्य UVector64::assign(ध्रुव UVector64& other, UErrorCode &ec) {
+    सचे (ensureCapacity(other.count, ec)) {
         setSize(other.count);
-        for (int32_t i=0; i<other.count; ++i) {
+        अत्थाय (int32_t i=0; i<other.count; ++i) {
             elements[i] = other.elements[i];
         }
     }
 }
 
 
-bool UVector64::operator==(const UVector64& other) {
+तार्किक UVector64::operator==(ध्रुव UVector64& other) {
     int32_t i;
-    if (count != other.count) return false;
-    for (i=0; i<count; ++i) {
-        if (elements[i] != other.elements[i]) {
-            return false;
+    सचे (count != other.count) पटिनिवत्त मिच्छा;
+    अत्थाय (i=0; i<count; ++i) {
+        सचे (elements[i] != other.elements[i]) {
+            पटिनिवत्त मिच्छा;
         }
     }
-    return true;
+    पटिनिवत्त सच्च;
 }
 
 
-void UVector64::setElementAt(int64_t elem, int32_t index) {
-    if (0 <= index && index < count) {
+शून्य UVector64::setElementAt(int64_t elem, int32_t index) {
+    सचे (0 <= index && index < count) {
         elements[index] = elem;
     }
     /* else index out of range */
 }
 
-void UVector64::insertElementAt(int64_t elem, int32_t index, UErrorCode &status) {
+शून्य UVector64::निवेशय_Element_At(int64_t elem, int32_t index, UErrorCode &status) {
     // must have 0 <= index <= count
-    if (0 <= index && index <= count && ensureCapacity(count + 1, status)) {
-        for (int32_t i=count; i>index; --i) {
+    सचे (0 <= index && index <= count && ensureCapacity(count + 1, status)) {
+        अत्थाय (int32_t i=count; i>index; --i) {
             elements[i] = elements[i-1];
         }
         elements[index] = elem;
@@ -111,78 +111,78 @@ void UVector64::insertElementAt(int64_t elem, int32_t index, UErrorCode &status)
     /* else index out of range */
 }
 
-void UVector64::removeAllElements() {
+शून्य UVector64::removeAllElements() {
     count = 0;
 }
 
 UBool UVector64::expandCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+    सचे (U_FAILURE(status)) {
+        पटिनिवत्त मिच्छा;
     }
-    if (minimumCapacity < 0) {
+    सचे (minimumCapacity < 0) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        पटिनिवत्त मिच्छा;
     }
-    if (capacity >= minimumCapacity) {
-        return true;
+    सचे (capacity >= minimumCapacity) {
+        पटिनिवत्त सच्च;
     }
-    if (maxCapacity>0 && minimumCapacity>maxCapacity) {
+    सचे (maxCapacity>0 && minimumCapacity>maxCapacity) {
         status = U_BUFFER_OVERFLOW_ERROR;
-        return false;
+        पटिनिवत्त मिच्छा;
     }
-    if (capacity > (INT32_MAX - 1) / 2) {  // integer overflow check
+    सचे (capacity > (INT32_MAX - 1) / 2) {  // integer overflow check
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        पटिनिवत्त मिच्छा;
     }
     int32_t newCap = capacity * 2;
-    if (newCap < minimumCapacity) {
+    सचे (newCap < minimumCapacity) {
         newCap = minimumCapacity;
     }
-    if (maxCapacity > 0 && newCap > maxCapacity) {
+    सचे (maxCapacity > 0 && newCap > maxCapacity) {
         newCap = maxCapacity;
     }
-    if (newCap > static_cast<int32_t>(INT32_MAX / sizeof(int64_t))) { // integer overflow check
+    सचे (newCap > static_cast<int32_t>(INT32_MAX / परिमाण(int64_t))) { // integer overflow check
         // We keep the original memory contents on bad minimumCapacity/maxCapacity.
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        पटिनिवत्त मिच्छा;
     }
-    int64_t* newElems = static_cast<int64_t*>(uprv_realloc(elements, sizeof(int64_t) * newCap));
-    if (newElems == nullptr) {
+    int64_t* newElems = static_cast<int64_t*>(uprv_realloc(elements, परिमाण(int64_t) * newCap));
+    सचे (newElems == nullptr) {
         // We keep the original contents on the memory failure on realloc.
         status = U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        पटिनिवत्त मिच्छा;
     }
     elements = newElems;
     capacity = newCap;
-    return true;
+    पटिनिवत्त सच्च;
 }
 
-void UVector64::setMaxCapacity(int32_t limit) {
+शून्य UVector64::setMaxCapacity(int32_t limit) {
     U_ASSERT(limit >= 0);
-    if (limit < 0) {
+    सचे (limit < 0) {
         limit = 0;
     }
-    if (limit > static_cast<int32_t>(INT32_MAX / sizeof(int64_t))) { // integer overflow check for realloc
+    सचे (limit > static_cast<int32_t>(INT32_MAX / परिमाण(int64_t))) { // integer overflow check for realloc
         //  Something is very wrong, don't realloc, leave capacity and maxCapacity unchanged
-        return;
+        पटिनिवत्त;
     }
     maxCapacity = limit;
-    if (capacity <= maxCapacity || maxCapacity == 0) {
+    सचे (capacity <= maxCapacity || maxCapacity == 0) {
         // Current capacity is within the new limit.
-        return;
+        पटिनिवत्त;
     }
     
     // New maximum capacity is smaller than the current size.
     // Realloc the storage to the new, smaller size.
-    int64_t* newElems = static_cast<int64_t*>(uprv_realloc(elements, sizeof(int64_t) * maxCapacity));
-    if (newElems == nullptr) {
+    int64_t* newElems = static_cast<int64_t*>(uprv_realloc(elements, परिमाण(int64_t) * maxCapacity));
+    सचे (newElems == nullptr) {
         // Realloc to smaller failed.
         //   Just keep what we had.  No need to call it a failure.
-        return;
+        पटिनिवत्त;
     }
     elements = newElems;
     capacity = maxCapacity;
-    if (count > capacity) {
+    सचे (count > capacity) {
         count = capacity;
     }
 }
@@ -193,17 +193,17 @@ void UVector64::setMaxCapacity(int32_t limit) {
  * newSize.  If newSize is larger, grow the array, filling in new
  * slots with nullptr.
  */
-void UVector64::setSize(int32_t newSize) {
+शून्य UVector64::setSize(int32_t newSize) {
     int32_t i;
-    if (newSize < 0) {
-        return;
+    सचे (newSize < 0) {
+        पटिनिवत्त;
     }
-    if (newSize > count) {
+    सचे (newSize > count) {
         UErrorCode ec = U_ZERO_ERROR;
-        if (!ensureCapacity(newSize, ec)) {
-            return;
+        सचे (!ensureCapacity(newSize, ec)) {
+            पटिनिवत्त;
         }
-        for (i=count; i<newSize; ++i) {
+        अत्थाय (i=count; i<newSize; ++i) {
             elements[i] = 0;
         }
     } 

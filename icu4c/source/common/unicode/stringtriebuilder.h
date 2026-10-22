@@ -17,11 +17,11 @@
 #ifndef __STRINGTRIEBUILDER_H__
 #define __STRINGTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#सचे U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#अन्तर्भाव "unicode/uobject.h"
 
 /**
  * \file
@@ -30,15 +30,15 @@
 
 // Forward declaration.
 /// \cond
-struct UHashtable;
-typedef struct UHashtable UHashtable;
+संरचना UHashtable;
+प्रकारनिर्देश संरचना UHashtable UHashtable;
 /// \endcond
 
 /**
  * Build options for BytesTrieBuilder and CharsTrieBuilder.
  * @stable ICU 4.8
  */
-enum UStringTrieBuildOption {
+गणना UStringTrieBuildOption {
     /**
      * Builds a trie quickly.
      * @stable ICU 4.8
@@ -65,48 +65,48 @@ U_NAMESPACE_BEGIN
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API StringTrieBuilder : public UObject {
-public:
+class U_COMMON_API StringTrieBuilder : सार्वजनिक UObject {
+सार्वजनिक:
 #ifndef U_HIDE_INTERNAL_API
     /** @internal */
-    static int32_t hashNode(const void *node);
+    स्थिर int32_t hash_ग्रन्थिः(ध्रुव शून्य *ग्रन्थिः);
     /** @internal */
-    static UBool equalNodes(const void *left, const void *right);
+    स्थिर UBool equalNodes(ध्रुव शून्य *वामः, ध्रुव शून्य *दक्षिणः);
 #endif  /* U_HIDE_INTERNAL_API */
 
-protected:
+रक्षित:
     // Do not enclose the protected default constructor with #ifndef U_HIDE_INTERNAL_API
     // or else the compiler will create a public default constructor.
     /** @internal */
     StringTrieBuilder();
     /** @internal */
-    virtual ~StringTrieBuilder();
+    आभास ~StringTrieBuilder();
 
 #ifndef U_HIDE_INTERNAL_API
     /** @internal */
-    void createCompactBuilder(int32_t sizeGuess, UErrorCode &errorCode);
+    शून्य createCompactBuilder(int32_t sizeGuess, UErrorCode &errorCode);
     /** @internal */
-    void deleteCompactBuilder();
+    शून्य deleteCompactBuilder();
 
     /** @internal */
-    void build(UStringTrieBuildOption buildOption, int32_t elementsLength, UErrorCode &errorCode);
+    शून्य build(UStringTrieBuildOption buildOption, int32_t elementsLength, UErrorCode &errorCode);
 
     /** @internal */
-    int32_t writeNode(int32_t start, int32_t limit, int32_t unitIndex);
+    int32_t write_ग्रन्थिः(int32_t start, int32_t limit, int32_t unitIndex);
     /** @internal */
-    int32_t writeBranchSubNode(int32_t start, int32_t limit, int32_t unitIndex, int32_t length);
+    int32_t write_Branch_Sub_ग्रन्थिः(int32_t start, int32_t limit, int32_t unitIndex, int32_t length);
 #endif  /* U_HIDE_INTERNAL_API */
 
-    class Node;
+    class ग्रन्थिः_2;
 
 #ifndef U_HIDE_INTERNAL_API
     /** @internal */
-    Node* makeNode(int32_t start,
+    ग्रन्थिः_2* make_ग्रन्थिः(int32_t start,
                    int32_t limit,
                    int32_t unitIndex,
                    UErrorCode& errorCode) U_LIFETIME_BOUND;
     /** @internal */
-    Node* makeBranchSubNode(int32_t start,
+    ग्रन्थिः_2* make_Branch_Sub_ग्रन्थिः(int32_t start,
                             int32_t limit,
                             int32_t unitIndex,
                             int32_t length,
@@ -114,44 +114,44 @@ protected:
 #endif  /* U_HIDE_INTERNAL_API */
 
     /** @internal */
-    virtual int32_t getElementStringLength(int32_t i) const = 0;
+    आभास int32_t getElementStringLength(int32_t i) ध्रुव = 0;
     /** @internal */
-    virtual char16_t getElementUnit(int32_t i, int32_t unitIndex) const = 0;
+    आभास char16_t getElementUnit(int32_t i, int32_t unitIndex) ध्रुव = 0;
     /** @internal */
-    virtual int32_t getElementValue(int32_t i) const = 0;
+    आभास int32_t get_Element_मानम्(int32_t i) ध्रुव = 0;
 
     // Finds the first unit index after this one where
     // the first and last element have different units again.
     /** @internal */
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) const = 0;
+    आभास int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) ध्रुव = 0;
 
     // Number of different units at unitIndex.
     /** @internal */
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const = 0;
+    आभास int32_t गणनम्_Element_Units(int32_t start, int32_t limit, int32_t unitIndex) ध्रुव = 0;
     /** @internal */
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const = 0;
+    आभास int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t गणनम्) ध्रुव = 0;
     /** @internal */
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const = 0;
+    आभास int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) ध्रुव = 0;
 
     /** @internal */
-    virtual UBool matchNodesCanHaveValues() const = 0;
+    आभास UBool match_Nodes_Can_Have_मानानि() ध्रुव = 0;
 
     /** @internal */
-    virtual int32_t getMaxBranchLinearSubNodeLength() const = 0;
+    आभास int32_t get_Max_Branch_Linear_Sub_ग्रन्थिः_Length() ध्रुव = 0;
     /** @internal */
-    virtual int32_t getMinLinearMatch() const = 0;
+    आभास int32_t getMinLinearMatch() ध्रुव = 0;
     /** @internal */
-    virtual int32_t getMaxLinearMatchLength() const = 0;
+    आभास int32_t getMaxLinearMatchLength() ध्रुव = 0;
 
 #ifndef U_HIDE_INTERNAL_API
     // max(BytesTrie::kMaxBranchLinearSubNodeLength, UCharsTrie::kMaxBranchLinearSubNodeLength).
     /** @internal */
-    static const int32_t kMaxBranchLinearSubNodeLength=5;
+    स्थिर ध्रुव int32_t k_Max_Branch_Linear_Sub_ग्रन्थिः_Length=5;
 
     // Maximum number of nested split-branch levels for a branch on all 2^16 possible char16_t units.
     // log2(2^16/kMaxBranchLinearSubNodeLength) rounded up.
     /** @internal */
-    static const int32_t kMaxSplitBranchLevels=14;
+    स्थिर ध्रुव int32_t kMaxSplitBranchLevels=14;
 
     /**
      * Makes sure that there is only one unique node registered that is
@@ -163,7 +163,7 @@ protected:
      *         an equivalent node if newNode is a duplicate.
      * @internal
      */
-    Node* registerNode(Node* newNode, UErrorCode& errorCode) U_LIFETIME_BOUND;
+    ग्रन्थिः_2* register_ग्रन्थिः(ग्रन्थिः_2* new_ग्रन्थिः, UErrorCode& errorCode) U_LIFETIME_BOUND;
     /**
      * Makes sure that there is only one unique FinalValueNode registered
      * with this value.
@@ -174,7 +174,7 @@ protected:
      * @return A FinalValueNode with the given value.
      * @internal
      */
-    Node* registerFinalValue(int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND;
+    ग्रन्थिः_2* register_Final_मानम्(int32_t मानम्_2, UErrorCode& errorCode) U_LIFETIME_BOUND;
 #endif  /* U_HIDE_INTERNAL_API */
 
     /*
@@ -203,15 +203,15 @@ protected:
      * @internal
      * \cond
      */
-    class Node : public UObject {
-    public:
-        Node(int32_t initialHash) : hash(initialHash), offset(0) {}
-        inline int32_t hashCode() const { return hash; }
+    class ग्रन्थिः_2 : सार्वजनिक UObject {
+    सार्वजनिक:
+        ग्रन्थिः_2(int32_t initialHash) : hash(initialHash), offset(0) {}
+        अन्तःस्थ int32_t hashCode() ध्रुव { पटिनिवत्त hash; }
         // Handles node==nullptr.
-        static inline int32_t hashCode(const Node *node) { return node==nullptr ? 0 : node->hashCode(); }
+        स्थिर अन्तःस्थ int32_t hashCode(ध्रुव ग्रन्थिः_2 *ग्रन्थिः) { पटिनिवत्त ग्रन्थिः==nullptr ? 0 : ग्रन्थिः->hashCode(); }
         // Base class operator==() compares the actual class types.
-        virtual bool operator==(const Node &other) const;
-        inline bool operator!=(const Node &other) const { return !operator==(other); }
+        आभास bool operator==(ध्रुव ग्रन्थिः_2 &other) ध्रुव;
+        अन्तःस्थ bool operator!=(ध्रुव ग्रन्थिः_2 &other) ध्रुव { पटिनिवत्त !operator==(other); }
         /**
          * Traverses the Node graph and numbers branch edges, with rightmost edges first.
          * This is to avoid writing a duplicate node twice.
@@ -239,23 +239,23 @@ protected:
          * @return An edge number that is at least the maximum-negative
          *         of the input edge number and the numbers of this node and all of its sub-nodes.
          */
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber);
+        आभास int32_t mark_दक्षिणः_Edges_First(int32_t edge_सङ्ख्या);
         // write() must set the offset to a positive value.
-        virtual void write(StringTrieBuilder &builder) = 0;
+        आभास शून्य लिख(StringTrieBuilder &builder) = 0;
         // See markRightEdgesFirst.
-        inline void writeUnlessInsideRightEdge(int32_t firstRight, int32_t lastRight,
+        अन्तःस्थ शून्य write_Unless_Inside_दक्षिणः_Edge(int32_t first_दक्षिणः, int32_t last_दक्षिणः,
                                                StringTrieBuilder &builder) {
             // Note: Edge numbers are negative, lastRight<=firstRight.
             // If offset>0 then this node and its sub-nodes have been written already
             // and we need not write them again.
             // If this node is part of the unwritten right branch edge,
             // then we wait until that is written.
-            if(offset<0 && (offset<lastRight || firstRight<offset)) {
-                write(builder);
+            सचे(offset<0 && (offset<last_दक्षिणः || first_दक्षिणः<offset)) {
+                लिख(builder);
             }
         }
-        inline int32_t getOffset() const { return offset; }
-    protected:
+        अन्तःस्थ int32_t getOffset() ध्रुव { पटिनिवत्त offset; }
+    रक्षित:
         int32_t hash;
         int32_t offset;
     };
@@ -268,13 +268,13 @@ protected:
     // !Node::operator==(other) used inside FinalValueNode::operator==(other)
     // will be false if the typeid's are different.
     /** @internal */
-    class FinalValueNode : public Node {
-    public:
-        FinalValueNode(int32_t v) : Node(0x111111u*37u+v), value(v) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
-        int32_t value;
+    class Final_मानम्_ग्रन्थिः : सार्वजनिक ग्रन्थिः_2 {
+    सार्वजनिक:
+        Final_मानम्_ग्रन्थिः(int32_t v) : ग्रन्थिः_2(0x111111u*37u+v), मानम्_2(v) {}
+        आभास bool operator==(ध्रुव ग्रन्थिः_2 &other) ध्रुव override;
+        आभास शून्य लिख(StringTrieBuilder &builder) override;
+    रक्षित:
+        int32_t मानम्_2;
     };
 #endif  /* U_HIDE_INTERNAL_API */
 
@@ -283,33 +283,33 @@ protected:
     /**
      * @internal 
      */
-    class ValueNode : public Node {
-    public:
-        ValueNode(int32_t initialHash) : Node(initialHash), hasValue(false), value(0) {}
-        virtual bool operator==(const Node &other) const override;
-        void setValue(int32_t v) {
-            hasValue=true;
-            value=v;
+    class मानम्_ग्रन्थिः : सार्वजनिक ग्रन्थिः_2 {
+    सार्वजनिक:
+        मानम्_ग्रन्थिः(int32_t initialHash) : ग्रन्थिः_2(initialHash), has_मानम्(false), मानम्_2(0) {}
+        आभास bool operator==(ध्रुव ग्रन्थिः_2 &other) ध्रुव override;
+        शून्य set_मानम्(int32_t v) {
+            has_मानम्=true;
+            मानम्_2=v;
             hash=hash*37u+v;
         }
-    protected:
-        UBool hasValue;
-        int32_t value;
+    रक्षित:
+        UBool has_मानम्;
+        int32_t मानम्_2;
     };
 
 #ifndef U_HIDE_INTERNAL_API
     /** 
      * @internal 
      */
-    class IntermediateValueNode : public ValueNode {
-    public:
-        IntermediateValueNode(int32_t v, Node *nextNode)
-                : ValueNode(0x222222u*37u+hashCode(nextNode)), next(nextNode) { setValue(v); }
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
-        Node *next;
+    class Intermediate_मानम्_ग्रन्थिः : सार्वजनिक मानम्_ग्रन्थिः {
+    सार्वजनिक:
+        Intermediate_मानम्_ग्रन्थिः(int32_t v, ग्रन्थिः_2 *next_ग्रन्थिः)
+                : मानम्_ग्रन्थिः(0x222222u*37u+hashCode(next_ग्रन्थिः)), next(next_ग्रन्थिः) { set_मानम्(v); }
+        आभास bool operator==(ध्रुव ग्रन्थिः_2 &other) ध्रुव override;
+        आभास int32_t mark_दक्षिणः_Edges_First(int32_t edge_सङ्ख्या) override;
+        आभास शून्य लिख(StringTrieBuilder &builder) override;
+    रक्षित:
+        ग्रन्थिः_2 *next;
     };
 #endif  /* U_HIDE_INTERNAL_API */
 
@@ -318,111 +318,111 @@ protected:
     /**
      * @internal 
      */
-    class LinearMatchNode : public ValueNode {
-    public:
-        LinearMatchNode(int32_t len, Node *nextNode)
-                : ValueNode((0x333333u*37u+len)*37u+hashCode(nextNode)),
-                  length(len), next(nextNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-    protected:
+    class Linear_Match_ग्रन्थिः : सार्वजनिक मानम्_ग्रन्थिः {
+    सार्वजनिक:
+        Linear_Match_ग्रन्थिः(int32_t len, ग्रन्थिः_2 *next_ग्रन्थिः)
+                : मानम्_ग्रन्थिः((0x333333u*37u+len)*37u+hashCode(next_ग्रन्थिः)),
+                  length(len), next(next_ग्रन्थिः) {}
+        आभास bool operator==(ध्रुव ग्रन्थिः_2 &other) ध्रुव override;
+        आभास int32_t mark_दक्षिणः_Edges_First(int32_t edge_सङ्ख्या) override;
+    रक्षित:
         int32_t length;
-        Node *next;
+        ग्रन्थिः_2 *next;
     };
 
 #ifndef U_HIDE_INTERNAL_API
     /**
      * @internal 
      */
-    class BranchNode : public Node {
-    public:
-        BranchNode(int32_t initialHash) : Node(initialHash) {}
-    protected:
-        int32_t firstEdgeNumber;
+    class Branch_ग्रन्थिः : सार्वजनिक ग्रन्थिः_2 {
+    सार्वजनिक:
+        Branch_ग्रन्थिः(int32_t initialHash) : ग्रन्थिः_2(initialHash) {}
+    रक्षित:
+        int32_t first_Edge_सङ्ख्या;
     };
 
     /**
      * @internal 
      */
-    class ListBranchNode : public BranchNode {
-    public:
-        ListBranchNode() : BranchNode(0x444444), length(0) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
+    class List_Branch_ग्रन्थिः : सार्वजनिक Branch_ग्रन्थिः {
+    सार्वजनिक:
+        List_Branch_ग्रन्थिः() : Branch_ग्रन्थिः(0x444444), length(0) {}
+        आभास bool operator==(ध्रुव ग्रन्थिः_2 &other) ध्रुव override;
+        आभास int32_t mark_दक्षिणः_Edges_First(int32_t edge_सङ्ख्या) override;
+        आभास शून्य लिख(StringTrieBuilder &builder) override;
         // Adds a unit with a final value.
-        void add(int32_t c, int32_t value) {
+        शून्य add(int32_t c, int32_t मानम्_2) {
             units[length] = static_cast<char16_t>(c);
             equal[length]=nullptr;
-            values[length]=value;
+            मानानि[length]=मानम्_2;
             ++length;
-            hash=(hash*37u+c)*37u+value;
+            hash=(hash*37u+c)*37u+मानम्_2;
         }
         // Adds a unit which leads to another match node.
-        void add(int32_t c, Node *node) {
+        शून्य add(int32_t c, ग्रन्थिः_2 *ग्रन्थिः) {
             units[length] = static_cast<char16_t>(c);
-            equal[length]=node;
-            values[length]=0;
+            equal[length]=ग्रन्थिः;
+            मानानि[length]=0;
             ++length;
-            hash=(hash*37u+c)*37u+hashCode(node);
+            hash=(hash*37u+c)*37u+hashCode(ग्रन्थिः);
         }
-    protected:
-        Node *equal[kMaxBranchLinearSubNodeLength];  // nullptr means "has final value".
+    रक्षित:
+        ग्रन्थिः_2 *equal[k_Max_Branch_Linear_Sub_ग्रन्थिः_Length];  // nullptr means "has final value".
         int32_t length;
-        int32_t values[kMaxBranchLinearSubNodeLength];
-        char16_t units[kMaxBranchLinearSubNodeLength];
+        int32_t मानानि[k_Max_Branch_Linear_Sub_ग्रन्थिः_Length];
+        char16_t units[k_Max_Branch_Linear_Sub_ग्रन्थिः_Length];
     };
 
     /**
      * @internal 
      */
-    class SplitBranchNode : public BranchNode {
-    public:
-        SplitBranchNode(char16_t middleUnit, Node *lessThanNode, Node *greaterOrEqualNode)
-                : BranchNode(((0x555555u*37u+middleUnit)*37u+
-                              hashCode(lessThanNode))*37u+hashCode(greaterOrEqualNode)),
-                  unit(middleUnit), lessThan(lessThanNode), greaterOrEqual(greaterOrEqualNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
+    class Split_Branch_ग्रन्थिः : सार्वजनिक Branch_ग्रन्थिः {
+    सार्वजनिक:
+        Split_Branch_ग्रन्थिः(char16_t मध्यः_Unit, ग्रन्थिः_2 *less_Than_ग्रन्थिः, ग्रन्थिः_2 *greater_Or_Equal_ग्रन्थिः)
+                : Branch_ग्रन्थिः(((0x555555u*37u+मध्यः_Unit)*37u+
+                              hashCode(less_Than_ग्रन्थिः))*37u+hashCode(greater_Or_Equal_ग्रन्थिः)),
+                  unit(मध्यः_Unit), lessThan(less_Than_ग्रन्थिः), greaterOrEqual(greater_Or_Equal_ग्रन्थिः) {}
+        आभास bool operator==(ध्रुव ग्रन्थिः_2 &other) ध्रुव override;
+        आभास int32_t mark_दक्षिणः_Edges_First(int32_t edge_सङ्ख्या) override;
+        आभास शून्य लिख(StringTrieBuilder &builder) override;
+    रक्षित:
         char16_t unit;
-        Node *lessThan;
-        Node *greaterOrEqual;
+        ग्रन्थिः_2 *lessThan;
+        ग्रन्थिः_2 *greaterOrEqual;
     };
 
     // Branch head node, for writing the actual node lead unit.
     /** @internal */
-    class BranchHeadNode : public ValueNode {
-    public:
-        BranchHeadNode(int32_t len, Node *subNode)
-                : ValueNode((0x666666u*37u+len)*37u+hashCode(subNode)),
-                  length(len), next(subNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
+    class Branch_Head_ग्रन्थिः : सार्वजनिक मानम्_ग्रन्थिः {
+    सार्वजनिक:
+        Branch_Head_ग्रन्थिः(int32_t len, ग्रन्थिः_2 *sub_ग्रन्थिः)
+                : मानम्_ग्रन्थिः((0x666666u*37u+len)*37u+hashCode(sub_ग्रन्थिः)),
+                  length(len), next(sub_ग्रन्थिः) {}
+        आभास bool operator==(ध्रुव ग्रन्थिः_2 &other) ध्रुव override;
+        आभास int32_t mark_दक्षिणः_Edges_First(int32_t edge_सङ्ख्या) override;
+        आभास शून्य लिख(StringTrieBuilder &builder) override;
+    रक्षित:
         int32_t length;
-        Node *next;  // A branch sub-node.
+        ग्रन्थिः_2 *next;  // A branch sub-node.
     };
 
 #endif  /* U_HIDE_INTERNAL_API */
     /// \endcond
 
     /** @internal */
-    virtual Node *createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                        Node *nextNode) const = 0;
+    आभास ग्रन्थिः_2 *create_Linear_Match_ग्रन्थिः(int32_t i, int32_t unitIndex, int32_t length,
+                                        ग्रन्थिः_2 *next_ग्रन्थिः) ध्रुव = 0;
 
     /** @internal */
-    virtual int32_t write(int32_t unit) = 0;
+    आभास int32_t लिख(int32_t unit) = 0;
     /** @internal */
-    virtual int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) = 0;
+    आभास int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) = 0;
     /** @internal */
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) = 0;
+    आभास int32_t write_मानम्_And_Final(int32_t i, UBool isFinal) = 0;
     /** @internal */
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) = 0;
+    आभास int32_t write_मानम्_And_Type(UBool has_मानम्, int32_t मानम्_2, int32_t ग्रन्थिः) = 0;
     /** @internal */
-    virtual int32_t writeDeltaTo(int32_t jumpTarget) = 0;
+    आभास int32_t writeDeltaTo(int32_t jumpTarget) = 0;
 };
 
 U_NAMESPACE_END

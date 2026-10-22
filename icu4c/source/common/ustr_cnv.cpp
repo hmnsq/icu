@@ -18,32 +18,32 @@
 *   Character conversion functions moved here from ustring.c
 */
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#सचे !UCONFIG_NO_CONVERSION
 
-#include "unicode/ustring.h"
-#include "unicode/ucnv.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "umutex.h"
-#include "ustr_cnv.h"
-#include "ucnv_bld.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "unicode/ucnv.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "umutex.h"
+#अन्तर्भाव "ustr_cnv.h"
+#अन्तर्भाव "ucnv_bld.h"
 
 /* mutexed access to a shared default converter ----------------------------- */
 
-static UConverter *gDefaultConverter = nullptr;
+स्थिर UConverter *gDefaultConverter = nullptr;
 
 U_CAPI UConverter* U_EXPORT2
 u_getDefaultConverter(UErrorCode *status)
 {
     UConverter *converter = nullptr;
     
-    if (gDefaultConverter != nullptr) {
+    सचे (gDefaultConverter != nullptr) {
         icu::umtx_lock(nullptr);
         
         /* need to check to make sure it wasn't taken out from under us */
-        if (gDefaultConverter != nullptr) {
+        सचे (gDefaultConverter != nullptr) {
             converter = gDefaultConverter;
             gDefaultConverter = nullptr;
         }
@@ -51,48 +51,48 @@ u_getDefaultConverter(UErrorCode *status)
     }
 
     /* if the cache was empty, create a converter */
-    if(converter == nullptr) {
+    सचे(converter == nullptr) {
         converter = ucnv_open(nullptr, status);
-        if(U_FAILURE(*status)) {
+        सचे(U_FAILURE(*status)) {
             ucnv_close(converter);
             converter = nullptr;
         }
     }
 
-    return converter;
+    पटिनिवत्त converter;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 u_releaseDefaultConverter(UConverter *converter)
 {
-    if(gDefaultConverter == nullptr) {
-        if (converter != nullptr) {
+    सचे(gDefaultConverter == nullptr) {
+        सचे (converter != nullptr) {
             ucnv_reset(converter);
         }
         ucnv_enableCleanup();
         icu::umtx_lock(nullptr);
-        if(gDefaultConverter == nullptr) {
+        सचे(gDefaultConverter == nullptr) {
             gDefaultConverter = converter;
             converter = nullptr;
         }
         icu::umtx_unlock(nullptr);
     }
 
-    if(converter != nullptr) {
+    सचे(converter != nullptr) {
         ucnv_close(converter);
     }
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 u_flushDefaultConverter()
 {
     UConverter *converter = nullptr;
     
-    if (gDefaultConverter != nullptr) {
+    सचे (gDefaultConverter != nullptr) {
         icu::umtx_lock(nullptr);
         
         /* need to check to make sure it wasn't taken out from under us */
-        if (gDefaultConverter != nullptr) {
+        सचे (gDefaultConverter != nullptr) {
             converter = gDefaultConverter;
             gDefaultConverter = nullptr;
         }
@@ -100,7 +100,7 @@ u_flushDefaultConverter()
     }
 
     /* if the cache was populated, flush it */
-    if(converter != nullptr) {
+    सचे(converter != nullptr) {
          ucnv_close(converter);
     }
 }
@@ -114,27 +114,27 @@ u_flushDefaultConverter()
 /*
  returns the minimum of (the length of the null-terminated string) and n.
 */
-static int32_t u_astrnlen(const char *s1, int32_t n)
+स्थिर int32_t u_astrnlen(ध्रुव वर्ण *s1, int32_t n)
 {
     int32_t len = 0;
 
-    if (s1)
+    सचे (s1)
     {
-        while (n-- && *(s1++))
+        याव (n-- && *(s1++))
         {
             len++;
         }
     }
-    return len;
+    पटिनिवत्त len;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_uastrncpy(char16_t* ucs1 U_LIFETIME_BOUND, const char* s2, int32_t n)
+u_uastrncpy(char16_t* ucs1 U_LIFETIME_BOUND, ध्रुव वर्ण* s2, int32_t n)
 {
   char16_t *target = ucs1;
   UErrorCode err = U_ZERO_ERROR;
   UConverter *cnv = u_getDefaultConverter(&err);
-  if(U_SUCCESS(err) && cnv != nullptr) {
+  सचे(U_SUCCESS(err) && cnv != nullptr) {
     ucnv_reset(cnv);
     ucnv_toUnicode(cnv,
                    &target,
@@ -142,28 +142,28 @@ u_uastrncpy(char16_t* ucs1 U_LIFETIME_BOUND, const char* s2, int32_t n)
                    &s2,
                    s2+u_astrnlen(s2, n),
                    nullptr,
-                   true,
+                   सच्च,
                    &err);
     ucnv_reset(cnv); /* be good citizens */
     u_releaseDefaultConverter(cnv);
-    if(U_FAILURE(err) && (err != U_BUFFER_OVERFLOW_ERROR) ) {
+    सचे(U_FAILURE(err) && (err != U_BUFFER_OVERFLOW_ERROR) ) {
       *ucs1 = 0; /* failure */
     }
-    if(target < (ucs1+n)) { /* U_BUFFER_OVERFLOW_ERROR isn't an err, just means no termination will happen. */
+    सचे(target < (ucs1+n)) { /* U_BUFFER_OVERFLOW_ERROR isn't an err, just means no termination will happen. */
       *target = 0;  /* terminate */
     }
-  } else {
+  } अञ्ञथा {
     *ucs1 = 0;
   }
-  return ucs1;
+  पटिनिवत्त ucs1;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_uastrcpy(char16_t* ucs1 U_LIFETIME_BOUND, const char* s2)
+u_uastrcpy(char16_t* ucs1 U_LIFETIME_BOUND, ध्रुव वर्ण* s2)
 {
   UErrorCode err = U_ZERO_ERROR;
   UConverter *cnv = u_getDefaultConverter(&err);
-  if(U_SUCCESS(err) && cnv != nullptr) {
+  सचे(U_SUCCESS(err) && cnv != nullptr) {
     ucnv_toUChars(cnv,
                     ucs1,
                     MAX_STRLEN,
@@ -171,39 +171,39 @@ u_uastrcpy(char16_t* ucs1 U_LIFETIME_BOUND, const char* s2)
                     (int32_t)uprv_strlen(s2),
                     &err);
     u_releaseDefaultConverter(cnv);
-    if(U_FAILURE(err)) {
+    सचे(U_FAILURE(err)) {
       *ucs1 = 0;
     }
-  } else {
+  } अञ्ञथा {
     *ucs1 = 0;
   }
-  return ucs1;
+  पटिनिवत्त ucs1;
 }
 
 /*
  returns the minimum of (the length of the null-terminated string) and n.
 */
-static int32_t u_ustrnlen(const char16_t *ucs1, int32_t n)
+स्थिर int32_t u_ustrnlen(ध्रुव char16_t *ucs1, int32_t n)
 {
     int32_t len = 0;
 
-    if (ucs1)
+    सचे (ucs1)
     {
-        while (n-- && *(ucs1++))
+        याव (n-- && *(ucs1++))
         {
             len++;
         }
     }
-    return len;
+    पटिनिवत्त len;
 }
 
-U_CAPI char* U_EXPORT2
-u_austrncpy(char* s1 U_LIFETIME_BOUND, const char16_t* ucs2, int32_t n)
+U_CAPI वर्ण* U_EXPORT2
+u_austrncpy(वर्ण* s1 U_LIFETIME_BOUND, ध्रुव char16_t* ucs2, int32_t n)
 {
-  char *target = s1;
+  वर्ण *target = s1;
   UErrorCode err = U_ZERO_ERROR;
   UConverter *cnv = u_getDefaultConverter(&err);
-  if(U_SUCCESS(err) && cnv != nullptr) {
+  सचे(U_SUCCESS(err) && cnv != nullptr) {
     ucnv_reset(cnv);
     ucnv_fromUnicode(cnv,
                   &target,
@@ -211,28 +211,28 @@ u_austrncpy(char* s1 U_LIFETIME_BOUND, const char16_t* ucs2, int32_t n)
                   &ucs2,
                   ucs2+u_ustrnlen(ucs2, n),
                   nullptr,
-                  true,
+                  सच्च,
                   &err);
     ucnv_reset(cnv); /* be good citizens */
     u_releaseDefaultConverter(cnv);
-    if(U_FAILURE(err) && (err != U_BUFFER_OVERFLOW_ERROR) ) {
+    सचे(U_FAILURE(err) && (err != U_BUFFER_OVERFLOW_ERROR) ) {
       *s1 = 0; /* failure */
     }
-    if(target < (s1+n)) { /* U_BUFFER_OVERFLOW_ERROR isn't an err, just means no termination will happen. */
+    सचे(target < (s1+n)) { /* U_BUFFER_OVERFLOW_ERROR isn't an err, just means no termination will happen. */
       *target = 0;  /* terminate */
     }
-  } else {
+  } अञ्ञथा {
     *s1 = 0;
   }
-  return s1;
+  पटिनिवत्त s1;
 }
 
-U_CAPI char* U_EXPORT2
-u_austrcpy(char* s1 U_LIFETIME_BOUND, const char16_t* ucs2)
+U_CAPI वर्ण* U_EXPORT2
+u_austrcpy(वर्ण* s1 U_LIFETIME_BOUND, ध्रुव char16_t* ucs2)
 {
   UErrorCode err = U_ZERO_ERROR;
   UConverter *cnv = u_getDefaultConverter(&err);
-  if(U_SUCCESS(err) && cnv != nullptr) {
+  सचे(U_SUCCESS(err) && cnv != nullptr) {
     int32_t len = ucnv_fromUChars(cnv,
                   s1,
                   MAX_STRLEN,
@@ -241,10 +241,10 @@ u_austrcpy(char* s1 U_LIFETIME_BOUND, const char16_t* ucs2)
                   &err);
     u_releaseDefaultConverter(cnv);
     s1[len] = 0;
-  } else {
+  } अञ्ञथा {
     *s1 = 0;
   }
-  return s1;
+  पटिनिवत्त s1;
 }
 
 #endif

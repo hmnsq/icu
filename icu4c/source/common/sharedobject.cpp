@@ -7,11 +7,11 @@
 ******************************************************************************
 * sharedobject.cpp
 */
-#include "sharedobject.h"
-#include "mutex.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "unifiedcache.h"
+#अन्तर्भाव "sharedobject.h"
+#अन्तर्भाव "mutex.h"
+#अन्तर्भाव "uassert.h"
+#अन्तर्भाव "umutex.h"
+#अन्तर्भाव "unifiedcache.h"
 
 U_NAMESPACE_BEGIN
 
@@ -19,9 +19,9 @@ SharedObject::~SharedObject() {}
 
 UnifiedCacheBase::~UnifiedCacheBase() {}
 
-void
-SharedObject::addRef() const {
-    umtx_atomic_inc(&hardRefCount);
+शून्य
+SharedObject::addRef() ध्रुव {
+    umtx_atomic_inc(&hard_Ref_गणनम्);
 }
 
 // removeRef Decrement the reference count and delete if it is zero.
@@ -32,30 +32,30 @@ SharedObject::addRef() const {
 //           a cache eviction cycle concurrently.
 //           NO ACCESS TO *this PERMITTED AFTER REFERENCE COUNT == 0 for cached objects.
 //           THE OBJECT MAY ALREADY BE GONE.
-void
-SharedObject::removeRef() const {
-    const UnifiedCacheBase *cache = this->cachePtr;
-    int32_t updatedRefCount = umtx_atomic_dec(&hardRefCount);
-    U_ASSERT(updatedRefCount >= 0);
-    if (updatedRefCount == 0) {
-        if (cache) {
+शून्य
+SharedObject::removeRef() ध्रुव {
+    ध्रुव UnifiedCacheBase *cache = एतत्->cachePtr;
+    int32_t updated_Ref_गणनम् = umtx_atomic_dec(&hard_Ref_गणनम्);
+    U_ASSERT(updated_Ref_गणनम् >= 0);
+    सचे (updated_Ref_गणनम् == 0) {
+        सचे (cache) {
             cache->handleUnreferencedObject();
-        } else {
-            delete this;
+        } अञ्ञथा {
+            delete एतत्;
         }
     }
 }
 
 
 int32_t
-SharedObject::getRefCount() const {
-    return umtx_loadAcquire(hardRefCount);
+SharedObject::get_Ref_गणनम्() ध्रुव {
+    पटिनिवत्त umtx_loadAcquire(hard_Ref_गणनम्);
 }
 
-void
-SharedObject::deleteIfZeroRefCount() const {
-    if (this->cachePtr == nullptr && getRefCount() == 0) {
-        delete this;
+शून्य
+SharedObject::delete_If_Zero_Ref_गणनम्() ध्रुव {
+    सचे (एतत्->cachePtr == nullptr && get_Ref_गणनम्() == 0) {
+        delete एतत्;
     }
 }
 

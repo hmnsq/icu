@@ -14,16 +14,16 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/ucharstriebuilder.h"
-#include "unicode/unistr.h"
-#include "unicode/ustring.h"
-#include "cmemory.h"
-#include "uarrsort.h"
-#include "uassert.h"
-#include "uhash.h"
-#include "ustr_imp.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/ucharstrie.h"
+#अन्तर्भाव "unicode/ucharstriebuilder.h"
+#अन्तर्भाव "unicode/unistr.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "uarrsort.h"
+#अन्तर्भाव "uassert.h"
+#अन्तर्भाव "uhash.h"
+#अन्तर्भाव "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -33,46 +33,46 @@ U_NAMESPACE_BEGIN
  * It might(!) take less memory if we collected the data in a temporary, dynamic trie.
  */
 
-class UCharsTrieElement : public UMemory {
-public:
+वग्ग UCharsTrieElement : सार्वजनिक UMemory {
+सार्वजनिक:
     // Use compiler's default constructor, initializes nothing.
 
-    void setTo(const UnicodeString &s, int32_t val, UnicodeString &strings, UErrorCode &errorCode);
+    शून्य setTo(ध्रुव UnicodeString &s, int32_t val, UnicodeString &strings, UErrorCode &errorCode);
 
-    UnicodeString getString(const UnicodeString& strings U_LIFETIME_BOUND) const {
+    UnicodeString getString(ध्रुव UnicodeString& strings U_LIFETIME_BOUND) ध्रुव {
         int32_t length=strings[stringOffset];
-        return strings.tempSubString(stringOffset+1, length);
+        पटिनिवत्त strings.tempSubString(stringOffset+1, length);
     }
-    int32_t getStringLength(const UnicodeString &strings) const {
-        return strings[stringOffset];
-    }
-
-    char16_t charAt(int32_t index, const UnicodeString &strings) const {
-        return strings[stringOffset+1+index];
+    int32_t getStringLength(ध्रुव UnicodeString &strings) ध्रुव {
+        पटिनिवत्त strings[stringOffset];
     }
 
-    int32_t getValue() const { return value; }
+    char16_t charAt(int32_t index, ध्रुव UnicodeString &strings) ध्रुव {
+        पटिनिवत्त strings[stringOffset+1+index];
+    }
 
-    int32_t compareStringTo(const UCharsTrieElement &o, const UnicodeString &strings) const;
+    int32_t get_मानम्() ध्रुव { पटिनिवत्त value; }
 
-private:
+    int32_t compareStringTo(ध्रुव UCharsTrieElement &o, ध्रुव UnicodeString &strings) ध्रुव;
+
+गुप्त:
     // The first strings unit contains the string length.
     // (Compared with a stringLength field here, this saves 2 bytes per string.)
     int32_t stringOffset;
     int32_t value;
 };
 
-void
-UCharsTrieElement::setTo(const UnicodeString &s, int32_t val,
+शून्य
+UCharsTrieElement::setTo(ध्रुव UnicodeString &s, int32_t val,
                          UnicodeString &strings, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    सचे(U_FAILURE(errorCode)) {
+        पटिनिवत्त;
     }
     int32_t length=s.length();
-    if(length>0xffff) {
+    सचे(length>0xffff) {
         // Too long: We store the length in 1 unit.
         errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        पटिनिवत्त;
     }
     stringOffset=strings.length();
     strings.append(static_cast<char16_t>(length));
@@ -81,8 +81,8 @@ UCharsTrieElement::setTo(const UnicodeString &s, int32_t val,
 }
 
 int32_t
-UCharsTrieElement::compareStringTo(const UCharsTrieElement &other, const UnicodeString &strings) const {
-    return getString(strings).compare(other.getString(strings));
+UCharsTrieElement::compareStringTo(ध्रुव UCharsTrieElement &other, ध्रुव UnicodeString &strings) ध्रुव {
+    पटिनिवत्त getString(strings).compare(other.getString(strings));
 }
 
 UCharsTrieBuilder::UCharsTrieBuilder(UErrorCode & /*errorCode*/)
@@ -95,51 +95,51 @@ UCharsTrieBuilder::~UCharsTrieBuilder() {
 }
 
 UCharsTrieBuilder&
-UCharsTrieBuilder::add(const UnicodeString& s,
+UCharsTrieBuilder::add(ध्रुव UnicodeString& s,
                        int32_t value,
                        UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+    सचे(U_FAILURE(errorCode)) {
+        पटिनिवत्त *एतत्;
     }
-    if(ucharsLength>0) {
+    सचे(ucharsLength>0) {
         // Cannot add elements after building.
         errorCode=U_NO_WRITE_PERMISSION;
-        return *this;
+        पटिनिवत्त *एतत्;
     }
-    if(elementsLength==elementsCapacity) {
+    सचे(elementsLength==elementsCapacity) {
         int32_t newCapacity;
-        if(elementsCapacity==0) {
+        सचे(elementsCapacity==0) {
             newCapacity=1024;
-        } else {
+        } अञ्ञथा {
             newCapacity=4*elementsCapacity;
         }
-        UCharsTrieElement *newElements=new UCharsTrieElement[newCapacity];
-        if(newElements==nullptr) {
+        UCharsTrieElement *newElements=नूतन UCharsTrieElement[newCapacity];
+        सचे(newElements==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            पटिनिवत्त *एतत्;
         }
-        if(elementsLength>0) {
-            uprv_memcpy(newElements, elements, (size_t)elementsLength*sizeof(UCharsTrieElement));
+        सचे(elementsLength>0) {
+            uprv_memcpy(newElements, elements, (size_t)elementsLength*परिमाण(UCharsTrieElement));
         }
         delete[] elements;
         elements=newElements;
         elementsCapacity=newCapacity;
     }
     elements[elementsLength++].setTo(s, value, strings, errorCode);
-    if(U_SUCCESS(errorCode) && strings.isBogus()) {
+    सचे(U_SUCCESS(errorCode) && strings.isBogus()) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
     }
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 U_CDECL_BEGIN
 
-static int32_t U_CALLCONV
-compareElementStrings(const void *context, const void *left, const void *right) {
-    const UnicodeString *strings=static_cast<const UnicodeString *>(context);
-    const UCharsTrieElement *leftElement=static_cast<const UCharsTrieElement *>(left);
-    const UCharsTrieElement *rightElement=static_cast<const UCharsTrieElement *>(right);
-    return leftElement->compareStringTo(*rightElement, *strings);
+स्थिर int32_t U_CALLCONV
+compareElementStrings(ध्रुव शून्य *context, ध्रुव शून्य *left, ध्रुव शून्य *दक्षिणः) {
+    ध्रुव UnicodeString *strings=static_cast<ध्रुव UnicodeString *>(context);
+    ध्रुव UCharsTrieElement *वामः_Element=static_cast<ध्रुव UCharsTrieElement *>(left);
+    ध्रुव UCharsTrieElement *दक्षिणः_Element=static_cast<ध्रुव UCharsTrieElement *>(दक्षिणः);
+    पटिनिवत्त वामः_Element->compareStringTo(*दक्षिणः_Element, *strings);
 }
 
 U_CDECL_END
@@ -148,16 +148,16 @@ UCharsTrie *
 UCharsTrieBuilder::build(UStringTrieBuildOption buildOption, UErrorCode &errorCode) {
     buildUChars(buildOption, errorCode);
     UCharsTrie *newTrie=nullptr;
-    if(U_SUCCESS(errorCode)) {
-        newTrie=new UCharsTrie(uchars, uchars+(ucharsCapacity-ucharsLength));
-        if(newTrie==nullptr) {
+    सचे(U_SUCCESS(errorCode)) {
+        newTrie=नूतन UCharsTrie(uchars, uchars+(ucharsCapacity-ucharsLength));
+        सचे(newTrie==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-        } else {
+        } अञ्ञथा {
             uchars=nullptr;  // The new trie now owns the array.
             ucharsCapacity=0;
         }
     }
-    return newTrie;
+    पटिनिवत्त newTrie;
 }
 
 UnicodeString&
@@ -165,44 +165,44 @@ UCharsTrieBuilder::buildUnicodeString(UStringTrieBuildOption buildOption,
                                       UnicodeString& result U_LIFETIME_BOUND,
                                       UErrorCode& errorCode) U_LIFETIME_BOUND {
     buildUChars(buildOption, errorCode);
-    if(U_SUCCESS(errorCode)) {
-        result.setTo(false, uchars+(ucharsCapacity-ucharsLength), ucharsLength);
+    सचे(U_SUCCESS(errorCode)) {
+        result.setTo(मिच्छा, uchars+(ucharsCapacity-ucharsLength), ucharsLength);
     }
-    return result;
+    पटिनिवत्त result;
 }
 
-void
+शून्य
 UCharsTrieBuilder::buildUChars(UStringTrieBuildOption buildOption, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    सचे(U_FAILURE(errorCode)) {
+        पटिनिवत्त;
     }
-    if(uchars!=nullptr && ucharsLength>0) {
+    सचे(uchars!=nullptr && ucharsLength>0) {
         // Already built.
-        return;
+        पटिनिवत्त;
     }
-    if(ucharsLength==0) {
-        if(elementsLength==0) {
+    सचे(ucharsLength==0) {
+        सचे(elementsLength==0) {
             errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return;
+            पटिनिवत्त;
         }
-        if(strings.isBogus()) {
+        सचे(strings.isBogus()) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            पटिनिवत्त;
         }
-        uprv_sortArray(elements, elementsLength, static_cast<int32_t>(sizeof(UCharsTrieElement)),
+        uprv_sortArray(elements, elementsLength, static_cast<int32_t>(परिमाण(UCharsTrieElement)),
                       compareElementStrings, &strings,
-                      false,  // need not be a stable sort
+                      मिच्छा,  // need not be a stable sort
                       &errorCode);
-        if(U_FAILURE(errorCode)) {
-            return;
+        सचे(U_FAILURE(errorCode)) {
+            पटिनिवत्त;
         }
         // Duplicate strings are not allowed.
         UnicodeString prev=elements[0].getString(strings);
-        for(int32_t i=1; i<elementsLength; ++i) {
+        अत्थाय(int32_t i=1; i<elementsLength; ++i) {
             UnicodeString current=elements[i].getString(strings);
-            if(prev==current) {
+            सचे(prev==current) {
                 errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-                return;
+                पटिनिवत्त;
             }
             prev.fastCopyFrom(current);
         }
@@ -210,135 +210,135 @@ UCharsTrieBuilder::buildUChars(UStringTrieBuildOption buildOption, UErrorCode &e
     // Create and char16_t-serialize the trie for the elements.
     ucharsLength=0;
     int32_t capacity=strings.length();
-    if(capacity<1024) {
+    सचे(capacity<1024) {
         capacity=1024;
     }
-    if(ucharsCapacity<capacity) {
+    सचे(ucharsCapacity<capacity) {
         uprv_free(uchars);
         uchars=static_cast<char16_t *>(uprv_malloc(capacity*2));
-        if(uchars==nullptr) {
+        सचे(uchars==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
             ucharsCapacity=0;
-            return;
+            पटिनिवत्त;
         }
         ucharsCapacity=capacity;
     }
     StringTrieBuilder::build(buildOption, elementsLength, errorCode);
-    if(uchars==nullptr) {
+    सचे(uchars==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
     }
 }
 
 int32_t
-UCharsTrieBuilder::getElementStringLength(int32_t i) const {
-    return elements[i].getStringLength(strings);
+UCharsTrieBuilder::getElementStringLength(int32_t i) ध्रुव {
+    पटिनिवत्त elements[i].getStringLength(strings);
 }
 
 char16_t
-UCharsTrieBuilder::getElementUnit(int32_t i, int32_t unitIndex) const {
-    return elements[i].charAt(unitIndex, strings);
+UCharsTrieBuilder::getElementUnit(int32_t i, int32_t unitIndex) ध्रुव {
+    पटिनिवत्त elements[i].charAt(unitIndex, strings);
 }
 
 int32_t
-UCharsTrieBuilder::getElementValue(int32_t i) const {
-    return elements[i].getValue();
+UCharsTrieBuilder::get_Element_मानम्(int32_t i) ध्रुव {
+    पटिनिवत्त elements[i].get_मानम्();
 }
 
 int32_t
-UCharsTrieBuilder::getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) const {
-    const UCharsTrieElement &firstElement=elements[first];
-    const UCharsTrieElement &lastElement=elements[last];
+UCharsTrieBuilder::getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) ध्रुव {
+    ध्रुव UCharsTrieElement &firstElement=elements[first];
+    ध्रुव UCharsTrieElement &lastElement=elements[last];
     int32_t minStringLength=firstElement.getStringLength(strings);
-    while(++unitIndex<minStringLength &&
+    याव(++unitIndex<minStringLength &&
             firstElement.charAt(unitIndex, strings)==
             lastElement.charAt(unitIndex, strings)) {}
-    return unitIndex;
+    पटिनिवत्त unitIndex;
 }
 
 int32_t
-UCharsTrieBuilder::countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const {
+UCharsTrieBuilder::गणनम्_Element_Units(int32_t start, int32_t limit, int32_t unitIndex) ध्रुव {
     int32_t length=0;  // Number of different units at unitIndex.
     int32_t i=start;
-    do {
+    करोहि {
         char16_t unit=elements[i++].charAt(unitIndex, strings);
-        while(i<limit && unit==elements[i].charAt(unitIndex, strings)) {
+        याव(i<limit && unit==elements[i].charAt(unitIndex, strings)) {
             ++i;
         }
         ++length;
-    } while(i<limit);
-    return length;
+    } याव(i<limit);
+    पटिनिवत्त length;
 }
 
 int32_t
-UCharsTrieBuilder::skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const {
-    do {
+UCharsTrieBuilder::skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) ध्रुव {
+    करोहि {
         char16_t unit=elements[i++].charAt(unitIndex, strings);
-        while(unit==elements[i].charAt(unitIndex, strings)) {
+        याव(unit==elements[i].charAt(unitIndex, strings)) {
             ++i;
         }
-    } while(--count>0);
-    return i;
+    } याव(--count>0);
+    पटिनिवत्त i;
 }
 
 int32_t
-UCharsTrieBuilder::indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const {
-    while(unit==elements[i].charAt(unitIndex, strings)) {
+UCharsTrieBuilder::indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) ध्रुव {
+    याव(unit==elements[i].charAt(unitIndex, strings)) {
         ++i;
     }
-    return i;
+    पटिनिवत्त i;
 }
 
-UCharsTrieBuilder::UCTLinearMatchNode::UCTLinearMatchNode(const char16_t *units, int32_t len, Node *nextNode)
-        : LinearMatchNode(len, nextNode), s(units) {
+UCharsTrieBuilder::UCTLinear_Match_ग्रन्थिः::UCTLinear_Match_ग्रन्थिः(ध्रुव char16_t *units, int32_t len, Node *next_ग्रन्थिः)
+        : Linear_Match_ग्रन्थिः(len, next_ग्रन्थिः), s(units) {
     hash=hash*37u+ustr_hashUCharsN(units, len);
 }
 
-bool
-UCharsTrieBuilder::UCTLinearMatchNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
+तार्किक
+UCharsTrieBuilder::UCTLinear_Match_ग्रन्थिः::operator==(ध्रुव Node &other) ध्रुव {
+    सचे(एतत्==&other) {
+        पटिनिवत्त सच्च;
     }
-    if(!LinearMatchNode::operator==(other)) {
-        return false;
+    सचे(!Linear_Match_ग्रन्थिः::operator==(other)) {
+        पटिनिवत्त मिच्छा;
     }
-    const UCTLinearMatchNode &o=static_cast<const UCTLinearMatchNode &>(other);
-    return 0==u_memcmp(s, o.s, length);
+    ध्रुव UCTLinear_Match_ग्रन्थिः &o=static_cast<ध्रुव UCTLinear_Match_ग्रन्थिः &>(other);
+    पटिनिवत्त 0==u_memcmp(s, o.s, length);
 }
 
-void
-UCharsTrieBuilder::UCTLinearMatchNode::write(StringTrieBuilder &builder) {
+शून्य
+UCharsTrieBuilder::UCTLinear_Match_ग्रन्थिः::लिख(StringTrieBuilder &builder) {
     UCharsTrieBuilder &b=(UCharsTrieBuilder &)builder;
-    next->write(builder);
-    b.write(s, length);
-    offset=b.writeValueAndType(hasValue, value, b.getMinLinearMatch()+length-1);
+    next->लिख(builder);
+    b.लिख(s, length);
+    offset=b.write_मानम्_And_Type(has_मानम्, value, b.getMinLinearMatch()+length-1);
 }
 
 StringTrieBuilder::Node *
-UCharsTrieBuilder::createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                         Node *nextNode) const {
-    return new UCTLinearMatchNode(
+UCharsTrieBuilder::create_Linear_Match_ग्रन्थिः(int32_t i, int32_t unitIndex, int32_t length,
+                                         Node *next_ग्रन्थिः) ध्रुव {
+    पटिनिवत्त नूतन UCTLinear_Match_ग्रन्थिः(
             elements[i].getString(strings).getBuffer()+unitIndex,
             length,
-            nextNode);
+            next_ग्रन्थिः);
 }
 
 UBool
 UCharsTrieBuilder::ensureCapacity(int32_t length) {
-    if(uchars==nullptr) {
-        return false;  // previous memory allocation had failed
+    सचे(uchars==nullptr) {
+        पटिनिवत्त मिच्छा;  // previous memory allocation had failed
     }
-    if(length>ucharsCapacity) {
+    सचे(length>ucharsCapacity) {
         int32_t newCapacity=ucharsCapacity;
-        do {
+        करोहि {
             newCapacity*=2;
-        } while(newCapacity<=length);
+        } याव(newCapacity<=length);
         char16_t *newUChars=static_cast<char16_t *>(uprv_malloc(newCapacity*2));
-        if(newUChars==nullptr) {
+        सचे(newUChars==nullptr) {
             // unable to allocate memory
             uprv_free(uchars);
             uchars=nullptr;
             ucharsCapacity=0;
-            return false;
+            पटिनिवत्त मिच्छा;
         }
         u_memcpy(newUChars+(newCapacity-ucharsLength),
                  uchars+(ucharsCapacity-ucharsLength), ucharsLength);
@@ -346,101 +346,101 @@ UCharsTrieBuilder::ensureCapacity(int32_t length) {
         uchars=newUChars;
         ucharsCapacity=newCapacity;
     }
-    return true;
+    पटिनिवत्त सच्च;
 }
 
 int32_t
-UCharsTrieBuilder::write(int32_t unit) {
+UCharsTrieBuilder::लिख(int32_t unit) {
     int32_t newLength=ucharsLength+1;
-    if(ensureCapacity(newLength)) {
+    सचे(ensureCapacity(newLength)) {
         ucharsLength=newLength;
         uchars[ucharsCapacity - ucharsLength] = static_cast<char16_t>(unit);
     }
-    return ucharsLength;
+    पटिनिवत्त ucharsLength;
 }
 
 int32_t
-UCharsTrieBuilder::write(const char16_t *s, int32_t length) {
+UCharsTrieBuilder::लिख(ध्रुव char16_t *s, int32_t length) {
     int32_t newLength=ucharsLength+length;
-    if(ensureCapacity(newLength)) {
+    सचे(ensureCapacity(newLength)) {
         ucharsLength=newLength;
         u_memcpy(uchars+(ucharsCapacity-ucharsLength), s, length);
     }
-    return ucharsLength;
+    पटिनिवत्त ucharsLength;
 }
 
 int32_t
 UCharsTrieBuilder::writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) {
-    return write(elements[i].getString(strings).getBuffer()+unitIndex, length);
+    पटिनिवत्त लिख(elements[i].getString(strings).getBuffer()+unitIndex, length);
 }
 
 int32_t
-UCharsTrieBuilder::writeValueAndFinal(int32_t i, UBool isFinal) {
-    if(0<=i && i<=UCharsTrie::kMaxOneUnitValue) {
-        return write(i|(isFinal<<15));
+UCharsTrieBuilder::write_मानम्_And_Final(int32_t i, UBool isFinal) {
+    सचे(0<=i && i<=UCharsTrie::k_Max_One_Unit_मानम्) {
+        पटिनिवत्त लिख(i|(isFinal<<15));
     }
     char16_t intUnits[3];
     int32_t length;
-    if(i<0 || i>UCharsTrie::kMaxTwoUnitValue) {
-        intUnits[0] = static_cast<char16_t>(UCharsTrie::kThreeUnitValueLead);
+    सचे(i<0 || i>UCharsTrie::k_Max_Two_Unit_मानम्) {
+        intUnits[0] = static_cast<char16_t>(UCharsTrie::k_Three_Unit_मानम्_Lead);
         intUnits[1] = static_cast<char16_t>(static_cast<uint32_t>(i) >> 16);
         intUnits[2] = static_cast<char16_t>(i);
         length=3;
     // } else if(i<=UCharsTrie::kMaxOneUnitValue) {
     //     intUnits[0]=(char16_t)(i);
     //     length=1;
-    } else {
-        intUnits[0] = static_cast<char16_t>(UCharsTrie::kMinTwoUnitValueLead + (i >> 16));
+    } अञ्ञथा {
+        intUnits[0] = static_cast<char16_t>(UCharsTrie::k_Min_Two_Unit_मानम्_Lead + (i >> 16));
         intUnits[1] = static_cast<char16_t>(i);
         length=2;
     }
     intUnits[0] = static_cast<char16_t>(intUnits[0] | (isFinal << 15));
-    return write(intUnits, length);
+    पटिनिवत्त लिख(intUnits, length);
 }
 
 int32_t
-UCharsTrieBuilder::writeValueAndType(UBool hasValue, int32_t value, int32_t node) {
-    if(!hasValue) {
-        return write(node);
+UCharsTrieBuilder::write_मानम्_And_Type(UBool has_मानम्, int32_t value, int32_t ग्रन्थिः) {
+    सचे(!has_मानम्) {
+        पटिनिवत्त लिख(ग्रन्थिः);
     }
     char16_t intUnits[3];
     int32_t length;
-    if(value<0 || value>UCharsTrie::kMaxTwoUnitNodeValue) {
-        intUnits[0] = static_cast<char16_t>(UCharsTrie::kThreeUnitNodeValueLead);
+    सचे(value<0 || value>UCharsTrie::k_Max_Two_Unit_ग्रन्थिः_मानम्) {
+        intUnits[0] = static_cast<char16_t>(UCharsTrie::k_Three_Unit_ग्रन्थिः_मानम्_Lead);
         intUnits[1] = static_cast<char16_t>(static_cast<uint32_t>(value) >> 16);
         intUnits[2] = static_cast<char16_t>(value);
         length=3;
-    } else if(value<=UCharsTrie::kMaxOneUnitNodeValue) {
+    } अञ्ञथा सचे(value<=UCharsTrie::k_Max_One_Unit_ग्रन्थिः_मानम्) {
         intUnits[0] = static_cast<char16_t>((value + 1) << 6);
         length=1;
-    } else {
-        intUnits[0] = static_cast<char16_t>(UCharsTrie::kMinTwoUnitNodeValueLead + ((value >> 10) & 0x7fc0));
+    } अञ्ञथा {
+        intUnits[0] = static_cast<char16_t>(UCharsTrie::k_Min_Two_Unit_ग्रन्थिः_मानम्_Lead + ((value >> 10) & 0x7fc0));
         intUnits[1] = static_cast<char16_t>(value);
         length=2;
     }
-    intUnits[0] |= static_cast<char16_t>(node);
-    return write(intUnits, length);
+    intUnits[0] |= static_cast<char16_t>(ग्रन्थिः);
+    पटिनिवत्त लिख(intUnits, length);
 }
 
 int32_t
 UCharsTrieBuilder::writeDeltaTo(int32_t jumpTarget) {
     int32_t i=ucharsLength-jumpTarget;
     U_ASSERT(i>=0);
-    if(i<=UCharsTrie::kMaxOneUnitDelta) {
-        return write(i);
+    सचे(i<=UCharsTrie::kMaxOneUnitDelta) {
+        पटिनिवत्त लिख(i);
     }
     char16_t intUnits[3];
     int32_t length;
-    if(i<=UCharsTrie::kMaxTwoUnitDelta) {
+    सचे(i<=UCharsTrie::kMaxTwoUnitDelta) {
         intUnits[0] = static_cast<char16_t>(UCharsTrie::kMinTwoUnitDeltaLead + (i >> 16));
         length=1;
-    } else {
+    } अञ्ञथा {
         intUnits[0] = static_cast<char16_t>(UCharsTrie::kThreeUnitDeltaLead);
         intUnits[1] = static_cast<char16_t>(i >> 16);
         length=2;
     }
     intUnits[length++] = static_cast<char16_t>(i);
-    return write(intUnits, length);
+    पटिनिवत्त लिख(intUnits, length);
 }
 
 U_NAMESPACE_END

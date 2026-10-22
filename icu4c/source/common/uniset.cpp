@@ -10,38 +10,38 @@
 **********************************************************************
 */
 
-#include "unicode/utypes.h"
-#include "unicode/parsepos.h"
-#include "unicode/symtable.h"
-#include "unicode/uniset.h"
-#include "unicode/ustring.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "ruleiter.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "patternprops.h"
-#include "uelement.h"
-#include "util.h"
-#include "uvector.h"
-#include "charstr.h"
-#include "ustrfmt.h"
-#include "uassert.h"
-#include "bmpset.h"
-#include "unisetspan.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/parsepos.h"
+#अन्तर्भाव "unicode/symtable.h"
+#अन्तर्भाव "unicode/uniset.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "unicode/utf8.h"
+#अन्तर्भाव "unicode/utf16.h"
+#अन्तर्भाव "ruleiter.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "patternprops.h"
+#अन्तर्भाव "uelement.h"
+#अन्तर्भाव "util.h"
+#अन्तर्भाव "uvector.h"
+#अन्तर्भाव "charstr.h"
+#अन्तर्भाव "ustrfmt.h"
+#अन्तर्भाव "uassert.h"
+#अन्तर्भाव "bmpset.h"
+#अन्तर्भाव "unisetspan.h"
 
 // HIGH_VALUE > all valid values. 110000 for codepoints
-#define UNICODESET_HIGH 0x0110000
+#define UNICODESET_उच्चः 0x0110000
 
 // LOW <= all valid values. ZERO for codepoints
-#define UNICODESET_LOW 0x000000
+#define UNICODESET_नीचः 0x000000
 
 /** Max list [0, 1, 2, ..., max code point, HIGH] */
-constexpr int32_t MAX_LENGTH = UNICODESET_HIGH + 1;
+constexpr int32_t MAX_LENGTH = UNICODESET_उच्चः + 1;
 
 U_NAMESPACE_BEGIN
 
-SymbolTable::~SymbolTable() {}
+चिह्नम्_Table::~चिह्नम्_Table() {}
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UnicodeSet)
 
@@ -51,13 +51,13 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UnicodeSet)
  * pinning values > UNICODESET_HIGH-1 to UNICODESET_HIGH-1.
  * It modifies its argument in-place and also returns it.
  */
-static inline UChar32 pinCodePoint(UChar32& c) {
-    if (c < UNICODESET_LOW) {
-        c = UNICODESET_LOW;
-    } else if (c > (UNICODESET_HIGH-1)) {
-        c = (UNICODESET_HIGH-1);
+स्थिर अन्तःस्थ UChar32 pinCodePoint(UChar32& c) {
+    सचे (c < UNICODESET_नीचः) {
+        c = UNICODESET_नीचः;
+    } अञ्ञथा सचे (c > (UNICODESET_उच्चः-1)) {
+        c = (UNICODESET_उच्चः-1);
     }
-    return c;
+    पटिनिवत्त c;
 }
 
 //----------------------------------------------------------------
@@ -77,26 +77,26 @@ static inline UChar32 pinCodePoint(UChar32& c) {
 // #define DEBUG_MEM
 
 #ifdef DEBUG_MEM
-#include <stdio.h>
-static int32_t _dbgCount = 0;
+#अन्तर्भाव <stdio.h>
+स्थिर int32_t dbg_गणनम् = 0;
 
-static inline void _dbgct(UnicodeSet* set) {
+स्थिर अन्तःस्थ शून्य _dbgct(UnicodeSet* set) {
     UnicodeString str;
-    set->toPattern(str, true);
-    char buf[40];
+    set->toPattern(str, सच्च);
+    वर्ण buf[40];
     str.extract(0, 39, buf, "");
-    printf("DEBUG UnicodeSet: ct 0x%08X; %d %s\n", set, ++_dbgCount, buf);
+    printf("DEBUG UnicodeSet: ct 0x%08X; %d %s\n", set, ++dbg_गणनम्, buf);
 }
 
-static inline void _dbgdt(UnicodeSet* set) {
+स्थिर अन्तःस्थ शून्य _dbgdt(UnicodeSet* set) {
     UnicodeString str;
-    set->toPattern(str, true);
-    char buf[40];
+    set->toPattern(str, सच्च);
+    वर्ण buf[40];
     str.extract(0, 39, buf, "");
-    printf("DEBUG UnicodeSet: dt 0x%08X; %d %s\n", set, --_dbgCount, buf);
+    printf("DEBUG UnicodeSet: dt 0x%08X; %d %s\n", set, --dbg_गणनम्, buf);
 }
 
-#else
+#अञ्ञथा
 
 #define _dbgct(set)
 #define _dbgdt(set)
@@ -107,26 +107,26 @@ static inline void _dbgdt(UnicodeSet* set) {
 // UnicodeString in UVector support
 //----------------------------------------------------------------
 
-static void U_CALLCONV cloneUnicodeString(UElement *dst, UElement *src) {
-    dst->pointer = new UnicodeString(*static_cast<UnicodeString*>(src->pointer));
+स्थिर शून्य U_CALLCONV cloneUnicodeString(UElement *dst, UElement *src) {
+    dst->pointer = नूतन UnicodeString(*static_cast<UnicodeString*>(src->pointer));
 }
 
-static int32_t U_CALLCONV compareUnicodeString(UElement t1, UElement t2) {
-    const UnicodeString& a = *static_cast<const UnicodeString*>(t1.pointer);
-    const UnicodeString& b = *static_cast<const UnicodeString*>(t2.pointer);
-    return a.compare(b);
+स्थिर int32_t U_CALLCONV compareUnicodeString(UElement t1, UElement t2) {
+    ध्रुव UnicodeString& a = *static_cast<ध्रुव UnicodeString*>(t1.pointer);
+    ध्रुव UnicodeString& b = *static_cast<ध्रुव UnicodeString*>(t2.pointer);
+    पटिनिवत्त a.compare(b);
 }
 
-UBool UnicodeSet::hasStrings() const {
-    return strings_ != nullptr && !strings_->isEmpty();
+UBool UnicodeSet::hasStrings() ध्रुव {
+    पटिनिवत्त strings_ != nullptr && !strings_->isEmpty();
 }
 
-int32_t UnicodeSet::stringsSize() const {
-    return strings_ == nullptr ? 0 : strings_->size();
+int32_t UnicodeSet::stringsSize() ध्रुव {
+    पटिनिवत्त strings_ == nullptr ? 0 : strings_->size();
 }
 
-UBool UnicodeSet::stringsContains(const UnicodeString &s) const {
-    return strings_ != nullptr && strings_->contains((void*) &s);
+UBool UnicodeSet::stringsContains(ध्रुव UnicodeString &s) ध्रुव {
+    पटिनिवत्त strings_ != nullptr && strings_->contains((शून्य*) &s);
 }
 
 //----------------------------------------------------------------
@@ -137,8 +137,8 @@ UBool UnicodeSet::stringsContains(const UnicodeString &s) const {
  * Constructs an empty set.
  */
 UnicodeSet::UnicodeSet() {
-    list[0] = UNICODESET_HIGH;
-    _dbgct(this);
+    list[0] = UNICODESET_उच्चः;
+    _dbgct(एतत्);
 }
 
 /**
@@ -149,37 +149,37 @@ UnicodeSet::UnicodeSet() {
  * @param end last character, inclusive, of range
  */
 UnicodeSet::UnicodeSet(UChar32 start, UChar32 end) {
-    list[0] = UNICODESET_HIGH;
+    list[0] = UNICODESET_उच्चः;
     add(start, end);
-    _dbgct(this);
+    _dbgct(एतत्);
 }
 
 /**
  * Constructs a set that is identical to the given UnicodeSet.
  */
-UnicodeSet::UnicodeSet(const UnicodeSet& o) : UnicodeFilter(o) {
-    *this = o;
-    _dbgct(this);
+UnicodeSet::UnicodeSet(ध्रुव UnicodeSet& o) : UnicodeFilter(o) {
+    *एतत् = o;
+    _dbgct(एतत्);
 }
 
 // Copy-construct as thawed.
-UnicodeSet::UnicodeSet(const UnicodeSet& o, UBool /* asThawed */) : UnicodeFilter(o) {
-    if (ensureCapacity(o.len)) {
+UnicodeSet::UnicodeSet(ध्रुव UnicodeSet& o, UBool /* asThawed */) : UnicodeFilter(o) {
+    सचे (ensureCapacity(o.len)) {
         // *this = o except for bmpSet and stringSpan
         len = o.len;
-        uprv_memcpy(list, o.list, (size_t)len*sizeof(UChar32));
-        if (o.hasStrings()) {
+        uprv_memcpy(list, o.list, (size_t)len*परिमाण(UChar32));
+        सचे (o.hasStrings()) {
             UErrorCode status = U_ZERO_ERROR;
-            if (!allocateStrings(status) ||
+            सचे (!allocateStrings(status) ||
                     (strings_->assign(*o.strings_, cloneUnicodeString, status), U_FAILURE(status))) {
                 setToBogus();
-                return;
+                पटिनिवत्त;
             }
         }
-        if (o.pat) {
+        सचे (o.pat) {
             setPattern(o.pat, o.patLen);
         }
-        _dbgct(this);
+        _dbgct(एतत्);
     }
 }
 
@@ -187,12 +187,12 @@ UnicodeSet::UnicodeSet(const UnicodeSet& o, UBool /* asThawed */) : UnicodeFilte
  * Destructs the set.
  */
 UnicodeSet::~UnicodeSet() {
-    _dbgdt(this); // first!
-    if (list != stackList) {
+    _dbgdt(एतत्); // first!
+    सचे (list != राशिः_List) {
         uprv_free(list);
     }
     delete bmpSet;
-    if (buffer != stackList) {
+    सचे (buffer != राशिः_List) {
         uprv_free(buffer);
     }
     delete strings_;
@@ -203,56 +203,56 @@ UnicodeSet::~UnicodeSet() {
 /**
  * Assigns this object to be a copy of another.
  */
-UnicodeSet& UnicodeSet::operator=(const UnicodeSet& o) U_LIFETIME_BOUND {
-    return copyFrom(o, false);
+UnicodeSet& UnicodeSet::operator=(ध्रुव UnicodeSet& o) U_LIFETIME_BOUND {
+    पटिनिवत्त copyFrom(o, मिच्छा);
 }
 
-UnicodeSet& UnicodeSet::copyFrom(const UnicodeSet& o, UBool asThawed) U_LIFETIME_BOUND {
-    if (this == &o) {
-        return *this;
+UnicodeSet& UnicodeSet::copyFrom(ध्रुव UnicodeSet& o, UBool asThawed) U_LIFETIME_BOUND {
+    सचे (एतत् == &o) {
+        पटिनिवत्त *एतत्;
     }
-    if (isFrozen()) {
-        return *this;
+    सचे (isFrozen()) {
+        पटिनिवत्त *एतत्;
     }
-    if (o.isBogus()) {
+    सचे (o.isBogus()) {
         setToBogus();
-        return *this;
+        पटिनिवत्त *एतत्;
     }
-    if (!ensureCapacity(o.len)) {
+    सचे (!ensureCapacity(o.len)) {
         // ensureCapacity will mark the UnicodeSet as Bogus if OOM failure happens.
-        return *this;
+        पटिनिवत्त *एतत्;
     }
     len = o.len;
-    uprv_memcpy(list, o.list, (size_t)len*sizeof(UChar32));
-    if (o.bmpSet != nullptr && !asThawed) {
-        bmpSet = new BMPSet(*o.bmpSet, list, len);
-        if (bmpSet == nullptr) { // Check for memory allocation error.
+    uprv_memcpy(list, o.list, (size_t)len*परिमाण(UChar32));
+    सचे (o.bmpSet != nullptr && !asThawed) {
+        bmpSet = नूतन BMPSet(*o.bmpSet, list, len);
+        सचे (bmpSet == nullptr) { // Check for memory allocation error.
             setToBogus();
-            return *this;
+            पटिनिवत्त *एतत्;
         }
     }
-    if (o.hasStrings()) {
+    सचे (o.hasStrings()) {
         UErrorCode status = U_ZERO_ERROR;
-        if ((strings_ == nullptr && !allocateStrings(status)) ||
+        सचे ((strings_ == nullptr && !allocateStrings(status)) ||
                 (strings_->assign(*o.strings_, cloneUnicodeString, status), U_FAILURE(status))) {
             setToBogus();
-            return *this;
+            पटिनिवत्त *एतत्;
         }
-    } else if (hasStrings()) {
+    } अञ्ञथा सचे (hasStrings()) {
         strings_->removeAllElements();
     }
-    if (o.stringSpan != nullptr && strings_ != nullptr && !asThawed) {
-        stringSpan = new UnicodeSetStringSpan(*o.stringSpan, *strings_);
-        if (stringSpan == nullptr) { // Check for memory allocation error.
+    सचे (o.stringSpan != nullptr && strings_ != nullptr && !asThawed) {
+        stringSpan = नूतन UnicodeSetStringSpan(*o.stringSpan, *strings_);
+        सचे (stringSpan == nullptr) { // Check for memory allocation error.
             setToBogus();
-            return *this;
+            पटिनिवत्त *एतत्;
         }
     }
     releasePattern();
-    if (o.pat) {
+    सचे (o.pat) {
         setPattern(o.pat, o.patLen);
     }
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 /**
@@ -260,12 +260,12 @@ UnicodeSet& UnicodeSet::copyFrom(const UnicodeSet& o, UBool asThawed) U_LIFETIME
  * to support cloning in order to allow classes using
  * UnicodeMatchers, such as Transliterator, to implement cloning.
  */
-UnicodeSet* UnicodeSet::clone() const {
-    return new UnicodeSet(*this);
+UnicodeSet* UnicodeSet::clone() ध्रुव {
+    पटिनिवत्त नूतन UnicodeSet(*एतत्);
 }
 
-UnicodeSet *UnicodeSet::cloneAsThawed() const {
-    return new UnicodeSet(*this, true);
+UnicodeSet *UnicodeSet::cloneAsThawed() ध्रुव {
+    पटिनिवत्त नूतन UnicodeSet(*एतत्, सच्च);
 }
 
 /**
@@ -278,14 +278,14 @@ UnicodeSet *UnicodeSet::cloneAsThawed() const {
  * @param o set to be compared for equality with this set.
  * @return <tt>true</tt> if the specified set is equal to this set.
  */
-bool UnicodeSet::operator==(const UnicodeSet& o) const {
-    if (len != o.len) return false;
-    for (int32_t i = 0; i < len; ++i) {
-        if (list[i] != o.list[i]) return false;
+तार्किक UnicodeSet::operator==(ध्रुव UnicodeSet& o) ध्रुव {
+    सचे (len != o.len) पटिनिवत्त मिच्छा;
+    अत्थाय (int32_t i = 0; i < len; ++i) {
+        सचे (list[i] != o.list[i]) पटिनिवत्त मिच्छा;
     }
-    if (hasStrings() != o.hasStrings()) { return false; }
-    if (hasStrings() && *strings_ != *o.strings_) return false;
-    return true;
+    सचे (hasStrings() != o.hasStrings()) { पटिनिवत्त मिच्छा; }
+    सचे (hasStrings() && *strings_ != *o.strings_) पटिनिवत्त मिच्छा;
+    पटिनिवत्त सच्च;
 }
 
 /**
@@ -294,13 +294,13 @@ bool UnicodeSet::operator==(const UnicodeSet& o) const {
  * @return the hash code value for this set.
  * @see Object#hashCode()
  */
-int32_t UnicodeSet::hashCode() const {
+int32_t UnicodeSet::hashCode() ध्रुव {
     uint32_t result = static_cast<uint32_t>(len);
-    for (int32_t i = 0; i < len; ++i) {
+    अत्थाय (int32_t i = 0; i < len; ++i) {
         result *= 1000003u;
         result += list[i];
     }
-    return static_cast<int32_t>(result);
+    पटिनिवत्त static_cast<int32_t>(result);
 }
 
 //----------------------------------------------------------------
@@ -314,13 +314,13 @@ int32_t UnicodeSet::hashCode() const {
  *
  * @return the number of elements in this set (its cardinality).
  */
-int32_t UnicodeSet::size() const {
+int32_t UnicodeSet::size() ध्रुव {
     int32_t n = 0;
-    int32_t count = getRangeCount();
-    for (int32_t i = 0; i < count; ++i) {
+    int32_t count = get_Range_गणनम्();
+    अत्थाय (int32_t i = 0; i < count; ++i) {
         n += getRangeEnd(i) - getRangeStart(i) + 1;
     }
-    return n + stringsSize();
+    पटिनिवत्त n + stringsSize();
 }
 
 /**
@@ -328,8 +328,8 @@ int32_t UnicodeSet::size() const {
  *
  * @return <tt>true</tt> if this set contains no elements.
  */
-UBool UnicodeSet::isEmpty() const {
-    return len == 1 && !hasStrings();
+UBool UnicodeSet::isEmpty() ध्रुव {
+    पटिनिवत्त len == 1 && !hasStrings();
 }
 
 /**
@@ -337,7 +337,7 @@ UBool UnicodeSet::isEmpty() const {
  * @param c character to be checked for containment
  * @return true if the test condition is met
  */
-UBool UnicodeSet::contains(UChar32 c) const {
+UBool UnicodeSet::contains(UChar32 c) ध्रुव {
     // Set i to the index of the start item greater than ch
     // We know we will terminate without length test!
     // LATER: for large sets, add binary search
@@ -345,17 +345,17 @@ UBool UnicodeSet::contains(UChar32 c) const {
     //for (;;) {
     //    if (c < list[++i]) break;
     //}
-    if (bmpSet != nullptr) {
-        return bmpSet->contains(c);
+    सचे (bmpSet != nullptr) {
+        पटिनिवत्त bmpSet->contains(c);
     }
-    if (stringSpan != nullptr) {
-        return stringSpan->contains(c);
+    सचे (stringSpan != nullptr) {
+        पटिनिवत्त stringSpan->contains(c);
     }
-    if (c >= UNICODESET_HIGH) { // Don't need to check LOW bound
-        return false;
+    सचे (c >= UNICODESET_उच्चः) { // Don't need to check LOW bound
+        पटिनिवत्त मिच्छा;
     }
     int32_t i = findCodePoint(c);
-    return i & 1; // return true if odd
+    पटिनिवत्त i & 1; // return true if odd
 }
 
 /**
@@ -367,7 +367,7 @@ UBool UnicodeSet::contains(UChar32 c) const {
  * @return the smallest integer i in the range 0..len-1,
  * inclusive, such that c < list[i]
  */
-int32_t UnicodeSet::findCodePoint(UChar32 c) const {
+int32_t UnicodeSet::findCodePoint(UChar32 c) ध्रुव {
     /* Examples:
                                        findCodePoint(c)
        set              list[]         c=0 1 3 4 7 8
@@ -380,27 +380,27 @@ int32_t UnicodeSet::findCodePoint(UChar32 c) const {
 
     // Return the smallest i such that c < list[i].  Assume
     // list[len - 1] == HIGH and that c is legal (0..HIGH-1).
-    if (c < list[0])
-        return 0;
+    सचे (c < list[0])
+        पटिनिवत्त 0;
     // High runner test.  c is often after the last range, so an
     // initial check for this condition pays off.
     int32_t lo = 0;
     int32_t hi = len - 1;
-    if (lo >= hi || c >= list[hi-1])
-        return hi;
+    सचे (lo >= hi || c >= list[hi-1])
+        पटिनिवत्त hi;
     // invariant: c >= list[lo]
     // invariant: c < list[hi]
-    for (;;) {
+    अत्थाय (;;) {
         int32_t i = (lo + hi) >> 1;
-        if (i == lo) {
-            break; // Found!
-        } else if (c < list[i]) {
+        सचे (i == lo) {
+            भङ्ग; // Found!
+        } अञ्ञथा सचे (c < list[i]) {
             hi = i;
-        } else {
+        } अञ्ञथा {
             lo = i;
         }
     }
-    return hi;
+    पटिनिवत्त hi;
 }
 
 /**
@@ -410,13 +410,13 @@ int32_t UnicodeSet::findCodePoint(UChar32 c) const {
  * @param end last character, inclusive, of the range
  * @return true if the test condition is met
  */
-UBool UnicodeSet::contains(UChar32 start, UChar32 end) const {
+UBool UnicodeSet::contains(UChar32 start, UChar32 end) ध्रुव {
     //int32_t i = -1;
     //for (;;) {
     //    if (start < list[++i]) break;
     //}
     int32_t i = findCodePoint(start);
-    return ((i & 1) != 0 && end < list[i]);
+    पटिनिवत्त ((i & 1) != 0 && end < list[i]);
 }
 
 /**
@@ -425,12 +425,12 @@ UBool UnicodeSet::contains(UChar32 start, UChar32 end) const {
  * @param s string to be checked for containment
  * @return <tt>true</tt> if this set contains the specified string
  */
-UBool UnicodeSet::contains(const UnicodeString& s) const {
+UBool UnicodeSet::contains(ध्रुव UnicodeString& s) ध्रुव {
     int32_t cp = getSingleCP(s);
-    if (cp < 0) {
-        return stringsContains(s);
-    } else {
-        return contains(static_cast<UChar32>(cp));
+    सचे (cp < 0) {
+        पटिनिवत्त stringsContains(s);
+    } अञ्ञथा {
+        पटिनिवत्त contains(static_cast<UChar32>(cp));
     }
 }
 
@@ -440,17 +440,17 @@ UBool UnicodeSet::contains(const UnicodeString& s) const {
  * @param c set to be checked for containment
  * @return true if the test condition is met
  */
-UBool UnicodeSet::containsAll(const UnicodeSet& c) const {
+UBool UnicodeSet::containsAll(ध्रुव UnicodeSet& c) ध्रुव {
     // The specified set is a subset if all of its pairs are contained in
     // this set.  It's possible to code this more efficiently in terms of
     // direct manipulation of the inversion lists if the need arises.
-    int32_t n = c.getRangeCount();
-    for (int i=0; i<n; ++i) {
-        if (!contains(c.getRangeStart(i), c.getRangeEnd(i))) {
-            return false;
+    int32_t n = c.get_Range_गणनम्();
+    अत्थाय (पूर्णाङ्क i=0; i<n; ++i) {
+        सचे (!contains(c.getRangeStart(i), c.getRangeEnd(i))) {
+            पटिनिवत्त मिच्छा;
         }
     }
-    return !c.hasStrings() || (strings_ != nullptr && strings_->containsAll(*c.strings_));
+    पटिनिवत्त !c.hasStrings() || (strings_ != nullptr && strings_->containsAll(*c.strings_));
 }
 
 /**
@@ -459,8 +459,8 @@ UBool UnicodeSet::containsAll(const UnicodeSet& c) const {
  * @param s string containing characters to be checked for containment
  * @return true if the test condition is met
  */
-UBool UnicodeSet::containsAll(const UnicodeString& s) const {
-    return span(s.getBuffer(), s.length(), USET_SPAN_CONTAINED) == s.length();
+UBool UnicodeSet::containsAll(ध्रुव UnicodeString& s) ध्रुव {
+    पटिनिवत्त span(s.getBuffer(), s.length(), USET_SPAN_CONTAINED) == s.length();
 }
 
 /**
@@ -470,13 +470,13 @@ UBool UnicodeSet::containsAll(const UnicodeString& s) const {
  * @param end last character, inclusive, of the range
  * @return true if the test condition is met
  */
-UBool UnicodeSet::containsNone(UChar32 start, UChar32 end) const {
+UBool UnicodeSet::containsNone(UChar32 start, UChar32 end) ध्रुव {
     //int32_t i = -1;
     //for (;;) {
     //    if (start < list[++i]) break;
     //}
     int32_t i = findCodePoint(start);
-    return ((i & 1) == 0 && end < list[i]);
+    पटिनिवत्त ((i & 1) == 0 && end < list[i]);
 }
 
 /**
@@ -485,17 +485,17 @@ UBool UnicodeSet::containsNone(UChar32 start, UChar32 end) const {
  * @param c set to be checked for containment
  * @return true if the test condition is met
  */
-UBool UnicodeSet::containsNone(const UnicodeSet& c) const {
+UBool UnicodeSet::containsNone(ध्रुव UnicodeSet& c) ध्रुव {
     // The specified set is a subset if all of its pairs are contained in
     // this set.  It's possible to code this more efficiently in terms of
     // direct manipulation of the inversion lists if the need arises.
-    int32_t n = c.getRangeCount();
-    for (int32_t i=0; i<n; ++i) {
-        if (!containsNone(c.getRangeStart(i), c.getRangeEnd(i))) {
-            return false;
+    int32_t n = c.get_Range_गणनम्();
+    अत्थाय (int32_t i=0; i<n; ++i) {
+        सचे (!containsNone(c.getRangeStart(i), c.getRangeEnd(i))) {
+            पटिनिवत्त मिच्छा;
         }
     }
-    return strings_ == nullptr || !c.hasStrings() || strings_->containsNone(*c.strings_);
+    पटिनिवत्त strings_ == nullptr || !c.hasStrings() || strings_->containsNone(*c.strings_);
 }
 
 /**
@@ -504,8 +504,8 @@ UBool UnicodeSet::containsNone(const UnicodeSet& c) const {
  * @param s string containing characters to be checked for containment
  * @return true if the test condition is met
  */
-UBool UnicodeSet::containsNone(const UnicodeString& s) const {
-    return span(s.getBuffer(), s.length(), USET_SPAN_NOT_CONTAINED) == s.length();
+UBool UnicodeSet::containsNone(ध्रुव UnicodeString& s) ध्रुव {
+    पटिनिवत्त span(s.getBuffer(), s.length(), USET_SPAN_NOT_CONTAINED) == s.length();
 }
 
 /**
@@ -513,7 +513,7 @@ UBool UnicodeSet::containsNone(const UnicodeString& s) const {
  * is the given value.  This is used by <tt>RuleBasedTransliterator</tt> for
  * indexing.
  */
-UBool UnicodeSet::matchesIndexValue(uint8_t v) const {
+UBool UnicodeSet::matches_Index_मानम्(uint8_t v) ध्रुव {
     /* The index value v, in the range [0,255], is contained in this set if
      * it is contained in any pair of this set.  Pairs either have the high
      * bytes equal, or unequal.  If the high bytes are equal, then we have
@@ -523,49 +523,49 @@ UBool UnicodeSet::matchesIndexValue(uint8_t v) const {
      * time zone month containment logic.)
      */
     int32_t i;
-    int32_t rangeCount=getRangeCount();
-    for (i=0; i<rangeCount; ++i) {
-        UChar32 low = getRangeStart(i);
-        UChar32 high = getRangeEnd(i);
-        if ((low & ~0xFF) == (high & ~0xFF)) {
-            if ((low & 0xFF) <= v && v <= (high & 0xFF)) {
-                return true;
+    int32_t range_गणनम्=get_Range_गणनम्();
+    अत्थाय (i=0; i<range_गणनम्; ++i) {
+        UChar32 नीचः = getRangeStart(i);
+        UChar32 उच्चः = getRangeEnd(i);
+        सचे ((नीचः & ~0xFF) == (उच्चः & ~0xFF)) {
+            सचे ((नीचः & 0xFF) <= v && v <= (उच्चः & 0xFF)) {
+                पटिनिवत्त सच्च;
             }
-        } else if ((low & 0xFF) <= v || v <= (high & 0xFF)) {
-            return true;
+        } अञ्ञथा सचे ((नीचः & 0xFF) <= v || v <= (उच्चः & 0xFF)) {
+            पटिनिवत्त सच्च;
         }
     }
-    if (hasStrings()) {
-        for (i=0; i<strings_->size(); ++i) {
-            const UnicodeString& s = *static_cast<const UnicodeString*>(strings_->elementAt(i));
-            if (s.isEmpty()) {
-                continue;  // skip the empty string
+    सचे (hasStrings()) {
+        अत्थाय (i=0; i<strings_->size(); ++i) {
+            ध्रुव UnicodeString& s = *static_cast<ध्रुव UnicodeString*>(strings_->elementAt(i));
+            सचे (s.isEmpty()) {
+                अनुवर्त;  // skip the empty string
             }
             UChar32 c = s.char32At(0);
-            if ((c & 0xFF) == v) {
-                return true;
+            सचे ((c & 0xFF) == v) {
+                पटिनिवत्त सच्च;
             }
         }
     }
-    return false;
+    पटिनिवत्त मिच्छा;
 }
 
 /**
  * Implementation of UnicodeMatcher::matches().  Always matches the
  * longest possible multichar string.
  */
-UMatchDegree UnicodeSet::matches(const Replaceable& text,
+UMatchDegree UnicodeSet::matches(ध्रुव Replaceable& text,
                                  int32_t& offset,
                                  int32_t limit,
                                  UBool incremental) {
-    if (offset == limit) {
-        if (contains(U_ETHER)) {
-            return incremental ? U_PARTIAL_MATCH : U_MATCH;
-        } else {
-            return U_MISMATCH;
+    सचे (offset == limit) {
+        सचे (contains(U_ETHER)) {
+            पटिनिवत्त incremental ? U_PARTIAL_MATCH : U_MATCH;
+        } अञ्ञथा {
+            पटिनिवत्त U_MISMATCH;
         }
-    } else {
-        if (hasStrings()) { // try strings first
+    } अञ्ञथा {
+        सचे (hasStrings()) { // try strings first
 
             // might separate forward and backward loops later
             // for now they are combined
@@ -584,53 +584,53 @@ UMatchDegree UnicodeSet::matches(const Replaceable& text,
 
             // If there are multiple strings that can match we
             // return the longest match.
-            int32_t highWaterLength = 0;
+            int32_t उच्चः_Water_Length = 0;
 
-            for (i=0; i<strings_->size(); ++i) {
-                const UnicodeString& trial = *static_cast<const UnicodeString*>(strings_->elementAt(i));
-                if (trial.isEmpty()) {
-                    continue;  // skip the empty string
+            अत्थाय (i=0; i<strings_->size(); ++i) {
+                ध्रुव UnicodeString& trial = *static_cast<ध्रुव UnicodeString*>(strings_->elementAt(i));
+                सचे (trial.isEmpty()) {
+                    अनुवर्त;  // skip the empty string
                 }
 
                 char16_t c = trial.charAt(forward ? 0 : trial.length() - 1);
 
                 // Strings are sorted, so we can optimize in the
                 // forward direction.
-                if (forward && c > firstChar) break;
-                if (c != firstChar) continue;
+                सचे (forward && c > firstChar) भङ्ग;
+                सचे (c != firstChar) अनुवर्त;
 
                 int32_t matchLen = matchRest(text, offset, limit, trial);
 
-                if (incremental) {
+                सचे (incremental) {
                     int32_t maxLen = forward ? limit-offset : offset-limit;
-                    if (matchLen == maxLen) {
+                    सचे (matchLen == maxLen) {
                         // We have successfully matched but only up to limit.
-                        return U_PARTIAL_MATCH;
+                        पटिनिवत्त U_PARTIAL_MATCH;
                     }
                 }
 
-                if (matchLen == trial.length()) {
+                सचे (matchLen == trial.length()) {
                     // We have successfully matched the whole string.
-                    if (matchLen > highWaterLength) {
-                        highWaterLength = matchLen;
+                    सचे (matchLen > उच्चः_Water_Length) {
+                        उच्चः_Water_Length = matchLen;
                     }
                     // In the forward direction we know strings
                     // are sorted so we can bail early.
-                    if (forward && matchLen < highWaterLength) {
-                        break;
+                    सचे (forward && matchLen < उच्चः_Water_Length) {
+                        भङ्ग;
                     }
-                    continue;
+                    अनुवर्त;
                 }
             }
 
             // We've checked all strings without a partial match.
             // If we have full matches, return the longest one.
-            if (highWaterLength != 0) {
-                offset += forward ? highWaterLength : -highWaterLength;
-                return U_MATCH;
+            सचे (उच्चः_Water_Length != 0) {
+                offset += forward ? उच्चः_Water_Length : -उच्चः_Water_Length;
+                पटिनिवत्त U_MATCH;
             }
         }
-        return UnicodeFilter::matches(text, offset, limit, incremental);
+        पटिनिवत्त UnicodeFilter::matches(text, offset, limit, incremental);
     }
 }
 
@@ -655,34 +655,34 @@ UMatchDegree UnicodeSet::matches(const Replaceable& text,
  * s.length().  If there is a mismatch between s and text, return
  * 0
  */
-int32_t UnicodeSet::matchRest(const Replaceable& text,
+int32_t UnicodeSet::matchRest(ध्रुव Replaceable& text,
                               int32_t start, int32_t limit,
-                              const UnicodeString& s) {
+                              ध्रुव UnicodeString& s) {
     int32_t i;
     int32_t maxLen;
     int32_t slen = s.length();
-    if (start < limit) {
+    सचे (start < limit) {
         maxLen = limit - start;
-        if (maxLen > slen) maxLen = slen;
-        for (i = 1; i < maxLen; ++i) {
-            if (text.charAt(start + i) != s.charAt(i)) return 0;
+        सचे (maxLen > slen) maxLen = slen;
+        अत्थाय (i = 1; i < maxLen; ++i) {
+            सचे (text.charAt(start + i) != s.charAt(i)) पटिनिवत्त 0;
         }
-    } else {
+    } अञ्ञथा {
         maxLen = start - limit;
-        if (maxLen > slen) maxLen = slen;
+        सचे (maxLen > slen) maxLen = slen;
         --slen; // <=> slen = s.length() - 1;
-        for (i = 1; i < maxLen; ++i) {
-            if (text.charAt(start - i) != s.charAt(slen - i)) return 0;
+        अत्थाय (i = 1; i < maxLen; ++i) {
+            सचे (text.charAt(start - i) != s.charAt(slen - i)) पटिनिवत्त 0;
         }
     }
-    return maxLen;
+    पटिनिवत्त maxLen;
 }
 
 /**
  * Implement of UnicodeMatcher
  */
-void UnicodeSet::addMatchSetTo(UnicodeSet& toUnionTo) const {
-    toUnionTo.addAll(*this);
+शून्य UnicodeSet::addMatchSetTo(UnicodeSet& toUnionTo) ध्रुव {
+    toUnionTo.addAll(*एतत्);
 }
 
 /**
@@ -692,20 +692,20 @@ void UnicodeSet::addMatchSetTo(UnicodeSet& toUnionTo) const {
  * <code>charAt()</code>.
  * @return an index from 0..size()-1, or -1
  */
-int32_t UnicodeSet::indexOf(UChar32 c) const {
-    if (c < MIN_VALUE || c > MAX_VALUE) {
-        return -1;
+int32_t UnicodeSet::indexOf(UChar32 c) ध्रुव {
+    सचे (c < MIN_मानम् || c > MAX_मानम्) {
+        पटिनिवत्त -1;
     }
     int32_t i = 0;
     int32_t n = 0;
-    for (;;) {
+    अत्थाय (;;) {
         UChar32 start = list[i++];
-        if (c < start) {
-            return -1;
+        सचे (c < start) {
+            पटिनिवत्त -1;
         }
         UChar32 limit = list[i++];
-        if (c < limit) {
-            return n + c - start;
+        सचे (c < limit) {
+            पटिनिवत्त n + c - start;
         }
         n += limit - start;
     }
@@ -719,22 +719,22 @@ int32_t UnicodeSet::indexOf(UChar32 c) const {
  * @param index an index from 0..size()-1
  * @return the character at the given index, or (UChar32)-1.
  */
-UChar32 UnicodeSet::charAt(int32_t index) const {
-    if (index >= 0) {
+UChar32 UnicodeSet::charAt(int32_t index) ध्रुव {
+    सचे (index >= 0) {
         // len2 is the largest even integer <= len, that is, it is len
         // for even values and len-1 for odd values.  With odd values
         // the last entry is UNICODESET_HIGH.
         int32_t len2 = len & ~1;
-        for (int32_t i=0; i < len2;) {
+        अत्थाय (int32_t i=0; i < len2;) {
             UChar32 start = list[i++];
             int32_t count = list[i++] - start;
-            if (index < count) {
-                return static_cast<UChar32>(start + index);
+            सचे (index < count) {
+                पटिनिवत्त static_cast<UChar32>(start + index);
             }
             index -= count;
         }
     }
-    return static_cast<UChar32>(-1);
+    पटिनिवत्त static_cast<UChar32>(-1);
 }
 
 /**
@@ -748,7 +748,7 @@ UChar32 UnicodeSet::charAt(int32_t index) const {
 UnicodeSet& UnicodeSet::set(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
     clear();
     complement(start, end);
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 /**
@@ -763,62 +763,62 @@ UnicodeSet& UnicodeSet::set(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
  * to this set.
  */
 UnicodeSet& UnicodeSet::add(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
-    if (pinCodePoint(start) < pinCodePoint(end)) {
+    सचे (pinCodePoint(start) < pinCodePoint(end)) {
         UChar32 limit = end + 1;
         // Fast path for adding a new range after the last one.
         // Odd list length: [..., lastStart, lastLimit, HIGH]
-        if ((len & 1) != 0) {
+        सचे ((len & 1) != 0) {
             // If the list is empty, set lastLimit low enough to not be adjacent to 0.
             UChar32 lastLimit = len == 1 ? -2 : list[len - 2];
-            if (lastLimit <= start && !isFrozen() && !isBogus()) {
-                if (lastLimit == start) {
+            सचे (lastLimit <= start && !isFrozen() && !isBogus()) {
+                सचे (lastLimit == start) {
                     // Extend the last range.
                     list[len - 2] = limit;
-                    if (limit == UNICODESET_HIGH) {
+                    सचे (limit == UNICODESET_उच्चः) {
                         --len;
                     }
-                } else {
+                } अञ्ञथा {
                     list[len - 1] = start;
-                    if (limit < UNICODESET_HIGH) {
-                        if (ensureCapacity(len + 2)) {
+                    सचे (limit < UNICODESET_उच्चः) {
+                        सचे (ensureCapacity(len + 2)) {
                             list[len++] = limit;
-                            list[len++] = UNICODESET_HIGH;
+                            list[len++] = UNICODESET_उच्चः;
                         }
-                    } else {  // limit == UNICODESET_HIGH
-                        if (ensureCapacity(len + 1)) {
-                            list[len++] = UNICODESET_HIGH;
+                    } अञ्ञथा {  // limit == UNICODESET_HIGH
+                        सचे (ensureCapacity(len + 1)) {
+                            list[len++] = UNICODESET_उच्चः;
                         }
                     }
                 }
                 releasePattern();
-                return *this;
+                पटिनिवत्त *एतत्;
             }
         }
         // This is slow. Could be much faster using findCodePoint(start)
         // and modifying the list, dealing with adjacent & overlapping ranges.
-        UChar32 range[3] = { start, limit, UNICODESET_HIGH };
+        UChar32 range[3] = { start, limit, UNICODESET_उच्चः };
         add(range, 2, 0);
-    } else if (start == end) {
+    } अञ्ञथा सचे (start == end) {
         add(start);
     }
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 // #define DEBUG_US_ADD
 
 #ifdef DEBUG_US_ADD
-#include <stdio.h>
-void dump(UChar32 c) {
-    if (c <= 0xFF) {
-        printf("%c", (char)c);
-    } else {
+#अन्तर्भाव <stdio.h>
+शून्य dump(UChar32 c) {
+    सचे (c <= 0xFF) {
+        printf("%c", (वर्ण)c);
+    } अञ्ञथा {
         printf("U+%04X", c);
     }
 }
-void dump(const UChar32* list, int32_t len) {
+शून्य dump(ध्रुव UChar32* list, int32_t len) {
     printf("[");
-    for (int32_t i=0; i<len; ++i) {
-        if (i != 0) printf(", ");
+    अत्थाय (int32_t i=0; i<len; ++i) {
+        सचे (i != 0) printf(", ");
         dump(list[i]);
     }
     printf("]");
@@ -837,7 +837,7 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
     int32_t i = findCodePoint(pinCodePoint(c));
 
     // already in set?
-    if ((i & 1) != 0  || isFrozen() || isBogus()) return *this;
+    सचे ((i & 1) != 0  || isFrozen() || isBogus()) पटिनिवत्त *एतत्;
 
     // HIGH is 0x110000
     // assert(list[len-1] == HIGH);
@@ -860,18 +860,18 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
     printf(" => ");
 #endif
 
-    if (c == list[i]-1) {
+    सचे (c == list[i]-1) {
         // c is before start of next range
         list[i] = c;
         // if we touched the HIGH mark, then add a new one
-        if (c == (UNICODESET_HIGH - 1)) {
-            if (!ensureCapacity(len+1)) {
+        सचे (c == (UNICODESET_उच्चः - 1)) {
+            सचे (!ensureCapacity(len+1)) {
                 // ensureCapacity will mark the object as Bogus if OOM failure happens.
-                return *this;
+                पटिनिवत्त *एतत्;
             }
-            list[len++] = UNICODESET_HIGH;
+            list[len++] = UNICODESET_उच्चः;
         }
-        if (i > 0 && c == list[i-1]) {
+        सचे (i > 0 && c == list[i-1]) {
             // collapse adjacent ranges
 
             // [..., start_k-1, c, c, limit_k, ..., HIGH]
@@ -884,19 +884,19 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
             UChar32* dst = list + i - 1;
             UChar32* src = dst + 2;
             UChar32* srclimit = list + len;
-            while (src < srclimit) *(dst++) = *(src++);
+            याव (src < srclimit) *(dst++) = *(src++);
 
             len -= 2;
         }
     }
 
-    else if (i > 0 && c == list[i-1]) {
+    अञ्ञथा सचे (i > 0 && c == list[i-1]) {
         // c is after end of prior range
         list[i-1]++;
         // no need to check for collapse here
     }
 
-    else {
+    अञ्ञथा {
         // At this point we know the new char is not adjacent to
         // any existing ranges, and it is not 10FFFF.
 
@@ -909,13 +909,13 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
         //                             ^
         //                             list[i]
 
-        if (!ensureCapacity(len+2)) {
+        सचे (!ensureCapacity(len+2)) {
             // ensureCapacity will mark the object as Bogus if OOM failure happens.
-            return *this;
+            पटिनिवत्त *एतत्;
         }
 
         UChar32 *p = list + i;
-        uprv_memmove(p + 2, p, (len - i) * sizeof(*p));
+        uprv_memmove(p + 2, p, (len - i) * परिमाण(*p));
         list[i] = c;
         list[i+1] = c+1;
         len += 2;
@@ -925,8 +925,8 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
     dump(list, len);
     printf("\n");
 
-    for (i=1; i<len; ++i) {
-        if (list[i] <= list[i-1]) {
+    अत्थाय (i=1; i<len; ++i) {
+        सचे (list[i] <= list[i-1]) {
             // Corrupt array!
             printf("ERROR: list has been corrupted\n");
             exit(1);
@@ -935,7 +935,7 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
 #endif
 
     releasePattern();
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 /**
@@ -947,40 +947,40 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
  * @param s the source string
  * @return the modified set, for chaining
  */
-UnicodeSet& UnicodeSet::add(const UnicodeString& s) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) return *this;
+UnicodeSet& UnicodeSet::add(ध्रुव UnicodeString& s) U_LIFETIME_BOUND {
+    सचे (isFrozen() || isBogus()) पटिनिवत्त *एतत्;
     int32_t cp = getSingleCP(s);
-    if (cp < 0) {
-        if (!stringsContains(s)) {
+    सचे (cp < 0) {
+        सचे (!stringsContains(s)) {
             _add(s);
             releasePattern();
         }
-    } else {
+    } अञ्ञथा {
         add(static_cast<UChar32>(cp));
     }
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 /**
  * Adds the given string, in order, to 'strings_'.  The given string
  * must have been checked by the caller to not already be in 'strings_'.
  */
-void UnicodeSet::_add(const UnicodeString& s) {
-    if (isFrozen() || isBogus()) {
-        return;
+शून्य UnicodeSet::_add(ध्रुव UnicodeString& s) {
+    सचे (isFrozen() || isBogus()) {
+        पटिनिवत्त;
     }
     UErrorCode ec = U_ZERO_ERROR;
-    if (strings_ == nullptr && !allocateStrings(ec)) {
+    सचे (strings_ == nullptr && !allocateStrings(ec)) {
         setToBogus();
-        return;
+        पटिनिवत्त;
     }
-    LocalPointer<UnicodeString> t(new UnicodeString(s));
-    if (t.isNull()) { // Check for memory allocation error.
+    LocalPointer<UnicodeString> t(नूतन UnicodeString(s));
+    सचे (t.isNull()) { // Check for memory allocation error.
         setToBogus();
-        return;
+        पटिनिवत्त;
     }
-    strings_->sortedInsert(t.orphan(), compareUnicodeString, ec);
-    if (U_FAILURE(ec)) {
+    strings_->sorted_निवेशय(t.orphan(), compareUnicodeString, ec);
+    सचे (U_FAILURE(ec)) {
         setToBogus();
     }
 }
@@ -990,16 +990,16 @@ void UnicodeSet::_add(const UnicodeString& s) {
  * otherwise returns -1.
  * @param string to test
  */
-int32_t UnicodeSet::getSingleCP(const UnicodeString& s) {
+int32_t UnicodeSet::getSingleCP(ध्रुव UnicodeString& s) {
     int32_t sLength = s.length();
-    if (sLength == 1) return s.charAt(0);
-    if (sLength == 2) {
+    सचे (sLength == 1) पटिनिवत्त s.charAt(0);
+    सचे (sLength == 2) {
         UChar32 cp = s.char32At(0);
-        if (cp > 0xFFFF) { // is surrogate pair
-            return cp;
+        सचे (cp > 0xFFFF) { // is surrogate pair
+            पटिनिवत्त cp;
         }
     }
-    return -1;
+    पटिनिवत्त -1;
 }
 
 /**
@@ -1008,13 +1008,13 @@ int32_t UnicodeSet::getSingleCP(const UnicodeString& s) {
  * @param the source string
  * @return the modified set, for chaining
  */
-UnicodeSet& UnicodeSet::addAll(const UnicodeString& s) U_LIFETIME_BOUND {
+UnicodeSet& UnicodeSet::addAll(ध्रुव UnicodeString& s) U_LIFETIME_BOUND {
     UChar32 cp;
-    for (int32_t i = 0; i < s.length(); i += U16_LENGTH(cp)) {
+    अत्थाय (int32_t i = 0; i < s.length(); i += U16_LENGTH(cp)) {
         cp = s.char32At(i);
         add(cp);
     }
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 /**
@@ -1023,11 +1023,11 @@ UnicodeSet& UnicodeSet::addAll(const UnicodeString& s) U_LIFETIME_BOUND {
  * @param the source string
  * @return the modified set, for chaining
  */
-UnicodeSet& UnicodeSet::retainAll(const UnicodeString& s) U_LIFETIME_BOUND {
+UnicodeSet& UnicodeSet::retainAll(ध्रुव UnicodeString& s) U_LIFETIME_BOUND {
     UnicodeSet set;
     set.addAll(s);
     retainAll(set);
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 /**
@@ -1036,11 +1036,11 @@ UnicodeSet& UnicodeSet::retainAll(const UnicodeString& s) U_LIFETIME_BOUND {
  * @param the source string
  * @return the modified set, for chaining
  */
-UnicodeSet& UnicodeSet::complementAll(const UnicodeString& s) U_LIFETIME_BOUND {
+UnicodeSet& UnicodeSet::complementAll(ध्रुव UnicodeString& s) U_LIFETIME_BOUND {
     UnicodeSet set;
     set.addAll(s);
     complementAll(set);
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 /**
@@ -1049,19 +1049,19 @@ UnicodeSet& UnicodeSet::complementAll(const UnicodeString& s) U_LIFETIME_BOUND {
  * @param the source string
  * @return the modified set, for chaining
  */
-UnicodeSet& UnicodeSet::removeAll(const UnicodeString& s) U_LIFETIME_BOUND {
+UnicodeSet& UnicodeSet::removeAll(ध्रुव UnicodeString& s) U_LIFETIME_BOUND {
     UnicodeSet set;
     set.addAll(s);
     removeAll(set);
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 UnicodeSet& UnicodeSet::removeAllStrings() U_LIFETIME_BOUND {
-    if (!isFrozen() && hasStrings()) {
+    सचे (!isFrozen() && hasStrings()) {
         strings_->removeAllElements();
         releasePattern();
     }
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 
@@ -1071,12 +1071,12 @@ UnicodeSet& UnicodeSet::removeAllStrings() U_LIFETIME_BOUND {
  * @param the source string
  * @return a newly created set containing the given string
  */
-UnicodeSet* U_EXPORT2 UnicodeSet::createFrom(const UnicodeString& s) {
-    UnicodeSet *set = new UnicodeSet();
-    if (set != nullptr) { // Check for memory allocation error.
+UnicodeSet* U_EXPORT2 UnicodeSet::createFrom(ध्रुव UnicodeString& s) {
+    UnicodeSet *set = नूतन UnicodeSet();
+    सचे (set != nullptr) { // Check for memory allocation error.
         set->add(s);
     }
-    return set;
+    पटिनिवत्त set;
 }
 
 
@@ -1085,12 +1085,12 @@ UnicodeSet* U_EXPORT2 UnicodeSet::createFrom(const UnicodeString& s) {
  * @param the source string
  * @return a newly created set containing the given characters
  */
-UnicodeSet* U_EXPORT2 UnicodeSet::createFromAll(const UnicodeString& s) {
-    UnicodeSet *set = new UnicodeSet();
-    if (set != nullptr) { // Check for memory allocation error.
+UnicodeSet* U_EXPORT2 UnicodeSet::createFromAll(ध्रुव UnicodeString& s) {
+    UnicodeSet *set = नूतन UnicodeSet();
+    सचे (set != nullptr) { // Check for memory allocation error.
         set->addAll(s);
     }
-    return set;
+    पटिनिवत्त set;
 }
 
 /**
@@ -1104,37 +1104,37 @@ UnicodeSet* U_EXPORT2 UnicodeSet::createFromAll(const UnicodeString& s) {
  * to this set.
  */
 UnicodeSet& UnicodeSet::retain(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
-    if (pinCodePoint(start) <= pinCodePoint(end)) {
-        UChar32 range[3] = { start, end+1, UNICODESET_HIGH };
+    सचे (pinCodePoint(start) <= pinCodePoint(end)) {
+        UChar32 range[3] = { start, end+1, UNICODESET_उच्चः };
         retain(range, 2, 0);
-    } else {
+    } अञ्ञथा {
         clear();
     }
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 UnicodeSet& UnicodeSet::retain(UChar32 c) U_LIFETIME_BOUND {
-    return retain(c, c);
+    पटिनिवत्त retain(c, c);
 }
 
-UnicodeSet& UnicodeSet::retain(const UnicodeString &s) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) { return *this; }
+UnicodeSet& UnicodeSet::retain(ध्रुव UnicodeString &s) U_LIFETIME_BOUND {
+    सचे (isFrozen() || isBogus()) { पटिनिवत्त *एतत्; }
     UChar32 cp = getSingleCP(s);
-    if (cp < 0) {
-        bool isIn = stringsContains(s);
+    सचे (cp < 0) {
+        तार्किक isIn = stringsContains(s);
         // Check for getRangeCount() first to avoid somewhat-expensive size()
         // when there are single code points.
-        if (isIn && getRangeCount() == 0 && size() == 1) {
-            return *this;
+        सचे (isIn && get_Range_गणनम्() == 0 && size() == 1) {
+            पटिनिवत्त *एतत्;
         }
         clear();
-        if (isIn) {
+        सचे (isIn) {
             _add(s);
         }
-    } else {
+    } अञ्ञथा {
         retain(cp, cp);
     }
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 /**
@@ -1149,11 +1149,11 @@ UnicodeSet& UnicodeSet::retain(const UnicodeString &s) U_LIFETIME_BOUND {
  * from this set.
  */
 UnicodeSet& UnicodeSet::remove(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
-    if (pinCodePoint(start) <= pinCodePoint(end)) {
-        UChar32 range[3] = { start, end+1, UNICODESET_HIGH };
+    सचे (pinCodePoint(start) <= pinCodePoint(end)) {
+        UChar32 range[3] = { start, end+1, UNICODESET_उच्चः };
         retain(range, 2, 2);
     }
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 /**
@@ -1162,7 +1162,7 @@ UnicodeSet& UnicodeSet::remove(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
  * returns.
  */
 UnicodeSet& UnicodeSet::remove(UChar32 c) U_LIFETIME_BOUND {
-    return remove(c, c);
+    पटिनिवत्त remove(c, c);
 }
 
 /**
@@ -1172,17 +1172,17 @@ UnicodeSet& UnicodeSet::remove(UChar32 c) U_LIFETIME_BOUND {
  * @param the source string
  * @return the modified set, for chaining
  */
-UnicodeSet& UnicodeSet::remove(const UnicodeString& s) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) return *this;
+UnicodeSet& UnicodeSet::remove(ध्रुव UnicodeString& s) U_LIFETIME_BOUND {
+    सचे (isFrozen() || isBogus()) पटिनिवत्त *एतत्;
     int32_t cp = getSingleCP(s);
-    if (cp < 0) {
-        if (strings_ != nullptr && strings_->removeElement((void*) &s)) {
+    सचे (cp < 0) {
+        सचे (strings_ != nullptr && strings_->removeElement((शून्य*) &s)) {
             releasePattern();
         }
-    } else {
+    } अञ्ञथा {
         remove(static_cast<UChar32>(cp), static_cast<UChar32>(cp));
     }
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 /**
@@ -1197,19 +1197,19 @@ UnicodeSet& UnicodeSet::remove(const UnicodeString& s) U_LIFETIME_BOUND {
  * from this set.
  */
 UnicodeSet& UnicodeSet::complement(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+    सचे (isFrozen() || isBogus()) {
+        पटिनिवत्त *एतत्;
     }
-    if (pinCodePoint(start) <= pinCodePoint(end)) {
-        UChar32 range[3] = { start, end+1, UNICODESET_HIGH };
+    सचे (pinCodePoint(start) <= pinCodePoint(end)) {
+        UChar32 range[3] = { start, end+1, UNICODESET_उच्चः };
         exclusiveOr(range, 2, 0);
     }
     releasePattern();
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 UnicodeSet& UnicodeSet::complement(UChar32 c) U_LIFETIME_BOUND {
-    return complement(c, c);
+    पटिनिवत्त complement(c, c);
 }
 
 /**
@@ -1217,22 +1217,22 @@ UnicodeSet& UnicodeSet::complement(UChar32 c) U_LIFETIME_BOUND {
  * <code>complement(MIN_VALUE, MAX_VALUE)</code>.
  */
 UnicodeSet& UnicodeSet::complement() U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+    सचे (isFrozen() || isBogus()) {
+        पटिनिवत्त *एतत्;
     }
-    if (list[0] == UNICODESET_LOW) {
-        uprv_memmove(list, list + 1, (size_t)(len-1)*sizeof(UChar32));
+    सचे (list[0] == UNICODESET_नीचः) {
+        uprv_memmove(list, list + 1, (size_t)(len-1)*परिमाण(UChar32));
         --len;
-    } else {
-        if (!ensureCapacity(len+1)) {
-            return *this;
+    } अञ्ञथा {
+        सचे (!ensureCapacity(len+1)) {
+            पटिनिवत्त *एतत्;
         }
-        uprv_memmove(list + 1, list, (size_t)len*sizeof(UChar32));
-        list[0] = UNICODESET_LOW;
+        uprv_memmove(list + 1, list, (size_t)len*परिमाण(UChar32));
+        list[0] = UNICODESET_नीचः;
         ++len;
     }
     releasePattern();
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 /**
@@ -1243,20 +1243,20 @@ UnicodeSet& UnicodeSet::complement() U_LIFETIME_BOUND {
  * @param s the string to complement
  * @return this object, for chaining
  */
-UnicodeSet& UnicodeSet::complement(const UnicodeString& s) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) return *this;
+UnicodeSet& UnicodeSet::complement(ध्रुव UnicodeString& s) U_LIFETIME_BOUND {
+    सचे (isFrozen() || isBogus()) पटिनिवत्त *एतत्;
     int32_t cp = getSingleCP(s);
-    if (cp < 0) {
-        if (stringsContains(s)) {
-            strings_->removeElement((void*) &s);
-        } else {
+    सचे (cp < 0) {
+        सचे (stringsContains(s)) {
+            strings_->removeElement((शून्य*) &s);
+        } अञ्ञथा {
             _add(s);
         }
         releasePattern();
-    } else {
+    } अञ्ञथा {
         complement(static_cast<UChar32>(cp), static_cast<UChar32>(cp));
     }
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 /**
@@ -1269,21 +1269,21 @@ UnicodeSet& UnicodeSet::complement(const UnicodeString& s) U_LIFETIME_BOUND {
  * @param c set whose elements are to be added to this set.
  * @see #add(char, char)
  */
-UnicodeSet& UnicodeSet::addAll(const UnicodeSet& c) U_LIFETIME_BOUND {
-    if ( c.len>0 && c.list!=nullptr ) {
+UnicodeSet& UnicodeSet::addAll(ध्रुव UnicodeSet& c) U_LIFETIME_BOUND {
+    सचे ( c.len>0 && c.list!=nullptr ) {
         add(c.list, c.len, 0);
     }
 
     // Add strings in order
-    if ( c.strings_!=nullptr ) {
-        for (int32_t i=0; i<c.strings_->size(); ++i) {
-            const UnicodeString* s = static_cast<const UnicodeString*>(c.strings_->elementAt(i));
-            if (!stringsContains(*s)) {
+    सचे ( c.strings_!=nullptr ) {
+        अत्थाय (int32_t i=0; i<c.strings_->size(); ++i) {
+            ध्रुव UnicodeString* s = static_cast<ध्रुव UnicodeString*>(c.strings_->elementAt(i));
+            सचे (!stringsContains(*s)) {
                 _add(*s);
             }
         }
     }
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 /**
@@ -1295,19 +1295,19 @@ UnicodeSet& UnicodeSet::addAll(const UnicodeSet& c) U_LIFETIME_BOUND {
  *
  * @param c set that defines which elements this set will retain.
  */
-UnicodeSet& UnicodeSet::retainAll(const UnicodeSet& c) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+UnicodeSet& UnicodeSet::retainAll(ध्रुव UnicodeSet& c) U_LIFETIME_BOUND {
+    सचे (isFrozen() || isBogus()) {
+        पटिनिवत्त *एतत्;
     }
     retain(c.list, c.len, 0);
-    if (hasStrings()) {
-        if (!c.hasStrings()) {
+    सचे (hasStrings()) {
+        सचे (!c.hasStrings()) {
             strings_->removeAllElements();
-        } else {
+        } अञ्ञथा {
             strings_->retainAll(*c.strings_);
         }
     }
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 /**
@@ -1319,15 +1319,15 @@ UnicodeSet& UnicodeSet::retainAll(const UnicodeSet& c) U_LIFETIME_BOUND {
  * @param c set that defines which elements will be removed from
  *          this set.
  */
-UnicodeSet& UnicodeSet::removeAll(const UnicodeSet& c) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+UnicodeSet& UnicodeSet::removeAll(ध्रुव UnicodeSet& c) U_LIFETIME_BOUND {
+    सचे (isFrozen() || isBogus()) {
+        पटिनिवत्त *एतत्;
     }
     retain(c.list, c.len, 2);
-    if (hasStrings() && c.hasStrings()) {
+    सचे (hasStrings() && c.hasStrings()) {
         strings_->removeAll(*c.strings_);
     }
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 /**
@@ -1338,21 +1338,21 @@ UnicodeSet& UnicodeSet::removeAll(const UnicodeSet& c) U_LIFETIME_BOUND {
  * @param c set that defines which elements will be xor'ed from
  *          this set.
  */
-UnicodeSet& UnicodeSet::complementAll(const UnicodeSet& c) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+UnicodeSet& UnicodeSet::complementAll(ध्रुव UnicodeSet& c) U_LIFETIME_BOUND {
+    सचे (isFrozen() || isBogus()) {
+        पटिनिवत्त *एतत्;
     }
     exclusiveOr(c.list, c.len, 0);
 
-    if (c.strings_ != nullptr) {
-        for (int32_t i=0; i<c.strings_->size(); ++i) {
-            void* e = c.strings_->elementAt(i);
-            if (strings_ == nullptr || !strings_->removeElement(e)) {
-                _add(*static_cast<const UnicodeString*>(e));
+    सचे (c.strings_ != nullptr) {
+        अत्थाय (int32_t i=0; i<c.strings_->size(); ++i) {
+            शून्य* e = c.strings_->elementAt(i);
+            सचे (strings_ == nullptr || !strings_->removeElement(e)) {
+                _add(*static_cast<ध्रुव UnicodeString*>(e));
             }
         }
     }
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 /**
@@ -1360,18 +1360,18 @@ UnicodeSet& UnicodeSet::complementAll(const UnicodeSet& c) U_LIFETIME_BOUND {
  * empty after this call returns.
  */
 UnicodeSet& UnicodeSet::clear() U_LIFETIME_BOUND {
-    if (isFrozen()) {
-        return *this;
+    सचे (isFrozen()) {
+        पटिनिवत्त *एतत्;
     }
-    list[0] = UNICODESET_HIGH;
+    list[0] = UNICODESET_उच्चः;
     len = 1;
     releasePattern();
-    if (strings_ != nullptr) {
+    सचे (strings_ != nullptr) {
         strings_->removeAllElements();
     }
     // Remove bogus
     fFlags = 0;
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 /**
@@ -1380,8 +1380,8 @@ UnicodeSet& UnicodeSet::clear() U_LIFETIME_BOUND {
  * @see #getRangeStart
  * @see #getRangeEnd
  */
-int32_t UnicodeSet::getRangeCount() const {
-    return len/2;
+int32_t UnicodeSet::get_Range_गणनम्() ध्रुव {
+    पटिनिवत्त len/2;
 }
 
 /**
@@ -1390,8 +1390,8 @@ int32_t UnicodeSet::getRangeCount() const {
  * @see #getRangeCount
  * @see #getRangeEnd
  */
-UChar32 UnicodeSet::getRangeStart(int32_t index) const {
-    return list[index*2];
+UChar32 UnicodeSet::getRangeStart(int32_t index) ध्रुव {
+    पटिनिवत्त list[index*2];
 }
 
 /**
@@ -1400,12 +1400,12 @@ UChar32 UnicodeSet::getRangeStart(int32_t index) const {
  * @see #getRangeStart
  * @see #getRangeEnd
  */
-UChar32 UnicodeSet::getRangeEnd(int32_t index) const {
-    return list[index*2 + 1] - 1;
+UChar32 UnicodeSet::getRangeEnd(int32_t index) ध्रुव {
+    पटिनिवत्त list[index*2 + 1] - 1;
 }
 
-const UnicodeString* UnicodeSet::getString(int32_t index) const U_LIFETIME_BOUND {
-    return static_cast<const UnicodeString*>(strings_->elementAt(index));
+ध्रुव UnicodeString* UnicodeSet::getString(int32_t index) ध्रुव U_LIFETIME_BOUND {
+    पटिनिवत्त static_cast<ध्रुव UnicodeString*>(strings_->elementAt(index));
 }
 
 /**
@@ -1413,60 +1413,60 @@ const UnicodeString* UnicodeSet::getString(int32_t index) const U_LIFETIME_BOUND
  * possible space, without changing this object's value.
  */
 UnicodeSet& UnicodeSet::compact() U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+    सचे (isFrozen() || isBogus()) {
+        पटिनिवत्त *एतत्;
     }
     // Delete buffer first to defragment memory less.
-    if (buffer != stackList) {
+    सचे (buffer != राशिः_List) {
         uprv_free(buffer);
         buffer = nullptr;
         bufferCapacity = 0;
     }
-    if (list == stackList) {
+    सचे (list == राशिः_List) {
         // pass
-    } else if (len <= INITIAL_CAPACITY) {
-        uprv_memcpy(stackList, list, len * sizeof(UChar32));
+    } अञ्ञथा सचे (len <= INITIAL_CAPACITY) {
+        uprv_memcpy(राशिः_List, list, len * परिमाण(UChar32));
         uprv_free(list);
-        list = stackList;
+        list = राशिः_List;
         capacity = INITIAL_CAPACITY;
-    } else if ((len + 7) < capacity) {
+    } अञ्ञथा सचे ((len + 7) < capacity) {
         // If we have more than a little unused capacity, shrink it to len.
-        UChar32* temp = static_cast<UChar32*>(uprv_realloc(list, sizeof(UChar32) * len));
-        if (temp) {
+        UChar32* temp = static_cast<UChar32*>(uprv_realloc(list, परिमाण(UChar32) * len));
+        सचे (temp) {
             list = temp;
             capacity = len;
         }
         // else what the heck happened?! We allocated less memory!
         // Oh well. We'll keep our original array.
     }
-    if (strings_ != nullptr && strings_->isEmpty()) {
+    सचे (strings_ != nullptr && strings_->isEmpty()) {
         delete strings_;
         strings_ = nullptr;
     }
-    return *this;
+    पटिनिवत्त *एतत्;
 }
 
 #ifdef DEBUG_SERIALIZE
-#include <stdio.h>
+#अन्तर्भाव <stdio.h>
 #endif
 
 /**
  * Deserialize constructor.
  */
-UnicodeSet::UnicodeSet(const uint16_t data[], int32_t dataLen, ESerialization serialization,
+UnicodeSet::UnicodeSet(ध्रुव uint16_t data[], int32_t dataLen, ESerialization serialization,
                        UErrorCode &ec) {
 
-  if(U_FAILURE(ec)) {
+  सचे(U_FAILURE(ec)) {
     setToBogus();
-    return;
+    पटिनिवत्त;
   }
 
-  if( (serialization != kSerialized)
+  सचे( (serialization != kSerialized)
       || (data==nullptr)
       || (dataLen < 1)) {
     ec = U_ILLEGAL_ARGUMENT_ERROR;
     setToBogus();
-    return;
+    पटिनिवत्त;
   }
 
   // bmp?
@@ -1477,19 +1477,19 @@ UnicodeSet::UnicodeSet(const uint16_t data[], int32_t dataLen, ESerialization se
 #ifdef DEBUG_SERIALIZE
   printf("dataLen %d headerSize %d bmpLen %d len %d. data[0]=%X/%X/%X/%X\n", dataLen,headerSize,bmpLength,newLength, data[0],data[1],data[2],data[3]);
 #endif
-  if(!ensureCapacity(newLength + 1)) {  // +1 for HIGH
-    return;
+  सचे(!ensureCapacity(newLength + 1)) {  // +1 for HIGH
+    पटिनिवत्त;
   }
   // copy bmp
   int32_t i;
-  for(i = 0; i< bmpLength;i++) {
+  अत्थाय(i = 0; i< bmpLength;i++) {
     list[i] = data[i+headerSize];
 #ifdef DEBUG_SERIALIZE
     printf("<<16@%d[%d] %X\n", i+headerSize, i, list[i]);
 #endif
   }
   // copy smp
-  for(i=bmpLength;i<newLength;i++) {
+  अत्थाय(i=bmpLength;i<newLength;i++) {
     list[i] = (static_cast<UChar32>(data[headerSize + bmpLength + (i - bmpLength) * 2 + 0]) << 16) +
                static_cast<UChar32>(data[headerSize + bmpLength + (i - bmpLength) * 2 + 1]);
 #ifdef DEBUG_SERIALIZE
@@ -1497,59 +1497,59 @@ UnicodeSet::UnicodeSet(const uint16_t data[], int32_t dataLen, ESerialization se
 #endif
   }
   U_ASSERT(i == newLength);
-  if (i == 0 || list[i - 1] != UNICODESET_HIGH) {
-    list[i++] = UNICODESET_HIGH;
+  सचे (i == 0 || list[i - 1] != UNICODESET_उच्चः) {
+    list[i++] = UNICODESET_उच्चः;
   }
   len = i;
 }
 
 
-int32_t UnicodeSet::serialize(uint16_t *dest, int32_t destCapacity, UErrorCode& ec) const {
+int32_t UnicodeSet::serialize(uint16_t *dest, int32_t destCapacity, UErrorCode& ec) ध्रुव {
     int32_t bmpLength, length, destLength;
 
-    if (U_FAILURE(ec)) {
-        return 0;
+    सचे (U_FAILURE(ec)) {
+        पटिनिवत्त 0;
     }
 
-    if (destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
+    सचे (destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
         ec=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        पटिनिवत्त 0;
     }
 
     /* count necessary 16-bit units */
-    length=this->len-1; // Subtract 1 to ignore final UNICODESET_HIGH
+    length=एतत्->len-1; // Subtract 1 to ignore final UNICODESET_HIGH
     // assert(length>=0);
-    if (length==0) {
+    सचे (length==0) {
         /* empty set */
-        if (destCapacity>0) {
+        सचे (destCapacity>0) {
             *dest=0;
-        } else {
+        } अञ्ञथा {
             ec=U_BUFFER_OVERFLOW_ERROR;
         }
-        return 1;
+        पटिनिवत्त 1;
     }
     /* now length>0 */
 
-    if (this->list[length-1]<=0xffff) {
+    सचे (एतत्->list[length-1]<=0xffff) {
         /* all BMP */
         bmpLength=length;
-    } else if (this->list[0]>=0x10000) {
+    } अञ्ञथा सचे (एतत्->list[0]>=0x10000) {
         /* all supplementary */
         bmpLength=0;
         length*=2;
-    } else {
+    } अञ्ञथा {
         /* some BMP, some supplementary */
-        for (bmpLength=0; bmpLength<length && this->list[bmpLength]<=0xffff; ++bmpLength) {}
+        अत्थाय (bmpLength=0; bmpLength<length && एतत्->list[bmpLength]<=0xffff; ++bmpLength) {}
         length=bmpLength+2*(length-bmpLength);
     }
 #ifdef DEBUG_SERIALIZE
     printf(">> bmpLength%d length%d len%d\n", bmpLength, length, len);
 #endif
     /* length: number of 16-bit array units */
-    if (length>0x7fff) {
+    सचे (length>0x7fff) {
         /* there are only 15 bits for the length in the first serialized word */
         ec=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        पटिनिवत्त 0;
     }
 
     /*
@@ -1559,41 +1559,41 @@ int32_t UnicodeSet::serialize(uint16_t *dest, int32_t destCapacity, UErrorCode& 
      * 1 bmpLength unit (if there are supplementary values)
      */
     destLength=length+((length>bmpLength)?2:1);
-    if (destLength<=destCapacity) {
-        const UChar32 *p;
+    सचे (destLength<=destCapacity) {
+        ध्रुव UChar32 *p;
         int32_t i;
 
 #ifdef DEBUG_SERIALIZE
         printf("writeHdr\n");
 #endif
         *dest = static_cast<uint16_t>(length);
-        if (length>bmpLength) {
+        सचे (length>bmpLength) {
             *dest|=0x8000;
             *++dest = static_cast<uint16_t>(bmpLength);
         }
         ++dest;
 
         /* write the BMP part of the array */
-        p=this->list;
-        for (i=0; i<bmpLength; ++i) {
+        p=एतत्->list;
+        अत्थाय (i=0; i<bmpLength; ++i) {
 #ifdef DEBUG_SERIALIZE
-          printf("writebmp: %x\n", (int)*p);
+          printf("writebmp: %x\n", (पूर्णाङ्क)*p);
 #endif
             *dest++ = static_cast<uint16_t>(*p++);
         }
 
         /* write the supplementary part of the array */
-        for (; i<length; i+=2) {
+        अत्थाय (; i<length; i+=2) {
 #ifdef DEBUG_SERIALIZE
-          printf("write32: %x\n", (int)*p);
+          printf("write32: %x\n", (पूर्णाङ्क)*p);
 #endif
             *dest++ = static_cast<uint16_t>(*p >> 16);
             *dest++ = static_cast<uint16_t>(*p++);
         }
-    } else {
+    } अञ्ञथा {
         ec=U_BUFFER_OVERFLOW_ERROR;
     }
-    return destLength;
+    पटिनिवत्त destLength;
 }
 
 //----------------------------------------------------------------
@@ -1604,88 +1604,88 @@ int32_t UnicodeSet::serialize(uint16_t *dest, int32_t destCapacity, UErrorCode& 
  * Allocate our strings vector and return true if successful.
  */
 UBool UnicodeSet::allocateStrings(UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+    सचे (U_FAILURE(status)) {
+        पटिनिवत्त मिच्छा;
     }
-    strings_ = new UVector(uprv_deleteUObject,
+    strings_ = नूतन UVector(uprv_deleteUObject,
                           uhash_compareUnicodeString, 1, status);
-    if (strings_ == nullptr) { // Check for memory allocation error.
+    सचे (strings_ == nullptr) { // Check for memory allocation error.
         status = U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        पटिनिवत्त मिच्छा;
     }
-    if (U_FAILURE(status)) {
+    सचे (U_FAILURE(status)) {
         delete strings_;
         strings_ = nullptr;
-        return false;
+        पटिनिवत्त मिच्छा;
     } 
-    return true;
+    पटिनिवत्त सच्च;
 }
 
 int32_t UnicodeSet::nextCapacity(int32_t minCapacity) {
     // Grow exponentially to reduce the frequency of allocations.
-    if (minCapacity < INITIAL_CAPACITY) {
-        return minCapacity + INITIAL_CAPACITY;
-    } else if (minCapacity <= 2500) {
-        return 5 * minCapacity;
-    } else {
+    सचे (minCapacity < INITIAL_CAPACITY) {
+        पटिनिवत्त minCapacity + INITIAL_CAPACITY;
+    } अञ्ञथा सचे (minCapacity <= 2500) {
+        पटिनिवत्त 5 * minCapacity;
+    } अञ्ञथा {
         int32_t newCapacity = 2 * minCapacity;
-        if (newCapacity > MAX_LENGTH) {
+        सचे (newCapacity > MAX_LENGTH) {
             newCapacity = MAX_LENGTH;
         }
-        return newCapacity;
+        पटिनिवत्त newCapacity;
     }
 }
 
-bool UnicodeSet::ensureCapacity(int32_t newLen) {
-    if (newLen > MAX_LENGTH) {
+तार्किक UnicodeSet::ensureCapacity(int32_t newLen) {
+    सचे (newLen > MAX_LENGTH) {
         newLen = MAX_LENGTH;
     }
-    if (newLen <= capacity) {
-        return true;
+    सचे (newLen <= capacity) {
+        पटिनिवत्त सच्च;
     }
     int32_t newCapacity = nextCapacity(newLen);
-    UChar32* temp = static_cast<UChar32*>(uprv_malloc(newCapacity * sizeof(UChar32)));
-    if (temp == nullptr) {
+    UChar32* temp = static_cast<UChar32*>(uprv_malloc(newCapacity * परिमाण(UChar32)));
+    सचे (temp == nullptr) {
         setToBogus(); // set the object to bogus state if an OOM failure occurred.
-        return false;
+        पटिनिवत्त मिच्छा;
     }
     // Copy only the actual contents.
-    uprv_memcpy(temp, list, len * sizeof(UChar32));
-    if (list != stackList) {
+    uprv_memcpy(temp, list, len * परिमाण(UChar32));
+    सचे (list != राशिः_List) {
         uprv_free(list);
     }
     list = temp;
     capacity = newCapacity;
-    return true;
+    पटिनिवत्त सच्च;
 }
 
-bool UnicodeSet::ensureBufferCapacity(int32_t newLen) {
-    if (newLen > MAX_LENGTH) {
+तार्किक UnicodeSet::ensureBufferCapacity(int32_t newLen) {
+    सचे (newLen > MAX_LENGTH) {
         newLen = MAX_LENGTH;
     }
-    if (newLen <= bufferCapacity) {
-        return true;
+    सचे (newLen <= bufferCapacity) {
+        पटिनिवत्त सच्च;
     }
     int32_t newCapacity = nextCapacity(newLen);
-    UChar32* temp = static_cast<UChar32*>(uprv_malloc(newCapacity * sizeof(UChar32)));
-    if (temp == nullptr) {
+    UChar32* temp = static_cast<UChar32*>(uprv_malloc(newCapacity * परिमाण(UChar32)));
+    सचे (temp == nullptr) {
         setToBogus();
-        return false;
+        पटिनिवत्त मिच्छा;
     }
     // The buffer has no contents to be copied.
     // It is always filled from scratch after this call.
-    if (buffer != stackList) {
+    सचे (buffer != राशिः_List) {
         uprv_free(buffer);
     }
     buffer = temp;
     bufferCapacity = newCapacity;
-    return true;
+    पटिनिवत्त सच्च;
 }
 
 /**
  * Swap list and buffer.
  */
-void UnicodeSet::swapBuffers() {
+शून्य UnicodeSet::swapBuffers() {
     // swap list and buffer
     UChar32* temp = list;
     list = buffer;
@@ -1696,7 +1696,7 @@ void UnicodeSet::swapBuffers() {
     bufferCapacity = c;
 }
 
-void UnicodeSet::setToBogus() {
+शून्य UnicodeSet::setToBogus() {
     clear(); // Remove everything in the set.
     fFlags = kIsBogus;
 }
@@ -1705,50 +1705,50 @@ void UnicodeSet::setToBogus() {
 // Implementation: Fundamental operators
 //----------------------------------------------------------------
 
-static inline UChar32 max(UChar32 a, UChar32 b) {
-    return (a > b) ? a : b;
+स्थिर अन्तःस्थ UChar32 max(UChar32 a, UChar32 b) {
+    पटिनिवत्त (a > b) ? a : b;
 }
 
 // polarity = 0, 3 is normal: x xor y
 // polarity = 1, 2: x xor ~y == x === y
 
-void UnicodeSet::exclusiveOr(const UChar32* other, int32_t otherLen, int8_t polarity) {
-    if (isFrozen() || isBogus()) {
-        return;
+शून्य UnicodeSet::exclusiveOr(ध्रुव UChar32* other, int32_t otherLen, int8_t polarity) {
+    सचे (isFrozen() || isBogus()) {
+        पटिनिवत्त;
     }
-    if (!ensureBufferCapacity(len + otherLen)) {
-        return;
+    सचे (!ensureBufferCapacity(len + otherLen)) {
+        पटिनिवत्त;
     }
 
     int32_t i = 0, j = 0, k = 0;
     UChar32 a = list[i++];
     UChar32 b;
-    if (polarity == 1 || polarity == 2) {
-        b = UNICODESET_LOW;
-        if (other[j] == UNICODESET_LOW) { // skip base if already LOW
+    सचे (polarity == 1 || polarity == 2) {
+        b = UNICODESET_नीचः;
+        सचे (other[j] == UNICODESET_नीचः) { // skip base if already LOW
             ++j;
             b = other[j];
         }
-    } else {
+    } अञ्ञथा {
         b = other[j++];
     }
     // simplest of all the routines
     // sort the values, discarding identicals!
-    for (;;) {
-        if (a < b) {
+    अत्थाय (;;) {
+        सचे (a < b) {
             buffer[k++] = a;
             a = list[i++];
-        } else if (b < a) {
+        } अञ्ञथा सचे (b < a) {
             buffer[k++] = b;
             b = other[j++];
-        } else if (a != UNICODESET_HIGH) { // at this point, a == b
+        } अञ्ञथा सचे (a != UNICODESET_उच्चः) { // at this point, a == b
             // discard both values!
             a = list[i++];
             b = other[j++];
-        } else { // DONE!
-            buffer[k++] = UNICODESET_HIGH;
+        } अञ्ञथा { // DONE!
+            buffer[k++] = UNICODESET_उच्चः;
             len = k;
-            break;
+            भङ्ग;
         }
     }
     swapBuffers();
@@ -1760,12 +1760,12 @@ void UnicodeSet::exclusiveOr(const UChar32* other, int32_t otherLen, int8_t pola
 // polarity = 1: ~x union y
 // polarity = 3: ~x union ~y
 
-void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
-    if (isFrozen() || isBogus() || other==nullptr) {
-        return;
+शून्य UnicodeSet::add(ध्रुव UChar32* other, int32_t otherLen, int8_t polarity) {
+    सचे (isFrozen() || isBogus() || other==nullptr) {
+        पटिनिवत्त;
     }
-    if (!ensureBufferCapacity(len + otherLen)) {
-        return;
+    सचे (!ensureBufferCapacity(len + otherLen)) {
+        पटिनिवत्त;
     }
 
     int32_t i = 0, j = 0, k = 0;
@@ -1773,37 +1773,37 @@ void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
     UChar32 b = other[j++];
     // change from xor is that we have to check overlapping pairs
     // polarity bit 1 means a is second, bit 2 means b is.
-    for (;;) {
-        switch (polarity) {
-          case 0: // both first; take lower if unequal
-            if (a < b) { // take a
+    अत्थाय (;;) {
+        विकल्प (polarity) {
+          पक्ष 0: // both first; take lower if unequal
+            सचे (a < b) { // take a
                 // Back up over overlapping ranges in buffer[]
-                if (k > 0 && a <= buffer[k-1]) {
+                सचे (k > 0 && a <= buffer[k-1]) {
                     // Pick latter end value in buffer[] vs. list[]
                     a = max(list[i], buffer[--k]);
-                } else {
+                } अञ्ञथा {
                     // No overlap
                     buffer[k++] = a;
                     a = list[i];
                 }
                 i++; // Common if/else code factored out
                 polarity ^= 1;
-            } else if (b < a) { // take b
-                if (k > 0 && b <= buffer[k-1]) {
+            } अञ्ञथा सचे (b < a) { // take b
+                सचे (k > 0 && b <= buffer[k-1]) {
                     b = max(other[j], buffer[--k]);
-                } else {
+                } अञ्ञथा {
                     buffer[k++] = b;
                     b = other[j];
                 }
                 j++;
                 polarity ^= 2;
-            } else { // a == b, take a, drop b
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } अञ्ञथा { // a == b, take a, drop b
+                सचे (a == UNICODESET_उच्चः) गच्छ loop_end;
                 // This is symmetrical; it doesn't matter if
                 // we backtrack with a or b. - liu
-                if (k > 0 && a <= buffer[k-1]) {
+                सचे (k > 0 && a <= buffer[k-1]) {
                     a = max(list[i], buffer[--k]);
-                } else {
+                } अञ्ञथा {
                     // No overlap
                     buffer[k++] = a;
                     a = list[i];
@@ -1813,54 +1813,54 @@ void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
                 b = other[j++];
                 polarity ^= 2;
             }
-            break;
-          case 3: // both second; take higher if unequal, and drop other
-            if (b <= a) { // take a
-                if (a == UNICODESET_HIGH) goto loop_end;
+            भङ्ग;
+          पक्ष 3: // both second; take higher if unequal, and drop other
+            सचे (b <= a) { // take a
+                सचे (a == UNICODESET_उच्चः) गच्छ loop_end;
                 buffer[k++] = a;
-            } else { // take b
-                if (b == UNICODESET_HIGH) goto loop_end;
+            } अञ्ञथा { // take b
+                सचे (b == UNICODESET_उच्चः) गच्छ loop_end;
                 buffer[k++] = b;
             }
             a = list[i++];
             polarity ^= 1;   // factored common code
             b = other[j++];
             polarity ^= 2;
-            break;
-          case 1: // a second, b first; if b < a, overlap
-            if (a < b) { // no overlap, take a
+            भङ्ग;
+          पक्ष 1: // a second, b first; if b < a, overlap
+            सचे (a < b) { // no overlap, take a
                 buffer[k++] = a; a = list[i++]; polarity ^= 1;
-            } else if (b < a) { // OVERLAP, drop b
+            } अञ्ञथा सचे (b < a) { // OVERLAP, drop b
                 b = other[j++];
                 polarity ^= 2;
-            } else { // a == b, drop both!
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } अञ्ञथा { // a == b, drop both!
+                सचे (a == UNICODESET_उच्चः) गच्छ loop_end;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
                 polarity ^= 2;
             }
-            break;
-          case 2: // a first, b second; if a < b, overlap
-            if (b < a) { // no overlap, take b
+            भङ्ग;
+          पक्ष 2: // a first, b second; if a < b, overlap
+            सचे (b < a) { // no overlap, take b
                 buffer[k++] = b;
                 b = other[j++];
                 polarity ^= 2;
-            } else  if (a < b) { // OVERLAP, drop a
+            } अञ्ञथा  सचे (a < b) { // OVERLAP, drop a
                 a = list[i++];
                 polarity ^= 1;
-            } else { // a == b, drop both!
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } अञ्ञथा { // a == b, drop both!
+                सचे (a == UNICODESET_उच्चः) गच्छ loop_end;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
                 polarity ^= 2;
             }
-            break;
+            भङ्ग;
         }
     }
  loop_end:
-    buffer[k++] = UNICODESET_HIGH;    // terminate
+    buffer[k++] = UNICODESET_उच्चः;    // terminate
     len = k;
     swapBuffers();
     releasePattern();
@@ -1871,12 +1871,12 @@ void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
 // polarity = 1: ~x intersect y
 // polarity = 3: ~x intersect ~y
 
-void UnicodeSet::retain(const UChar32* other, int32_t otherLen, int8_t polarity) {
-    if (isFrozen() || isBogus()) {
-        return;
+शून्य UnicodeSet::retain(ध्रुव UChar32* other, int32_t otherLen, int8_t polarity) {
+    सचे (isFrozen() || isBogus()) {
+        पटिनिवत्त;
     }
-    if (!ensureBufferCapacity(len + otherLen)) {
-        return;
+    सचे (!ensureBufferCapacity(len + otherLen)) {
+        पटिनिवत्त;
     }
 
     int32_t i = 0, j = 0, k = 0;
@@ -1884,78 +1884,78 @@ void UnicodeSet::retain(const UChar32* other, int32_t otherLen, int8_t polarity)
     UChar32 b = other[j++];
     // change from xor is that we have to check overlapping pairs
     // polarity bit 1 means a is second, bit 2 means b is.
-    for (;;) {
-        switch (polarity) {
-          case 0: // both first; drop the smaller
-            if (a < b) { // drop a
+    अत्थाय (;;) {
+        विकल्प (polarity) {
+          पक्ष 0: // both first; drop the smaller
+            सचे (a < b) { // drop a
                 a = list[i++];
                 polarity ^= 1;
-            } else if (b < a) { // drop b
+            } अञ्ञथा सचे (b < a) { // drop b
                 b = other[j++];
                 polarity ^= 2;
-            } else { // a == b, take one, drop other
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } अञ्ञथा { // a == b, take one, drop other
+                सचे (a == UNICODESET_उच्चः) गच्छ loop_end;
                 buffer[k++] = a;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
                 polarity ^= 2;
             }
-            break;
-          case 3: // both second; take lower if unequal
-            if (a < b) { // take a
+            भङ्ग;
+          पक्ष 3: // both second; take lower if unequal
+            सचे (a < b) { // take a
                 buffer[k++] = a;
                 a = list[i++];
                 polarity ^= 1;
-            } else if (b < a) { // take b
+            } अञ्ञथा सचे (b < a) { // take b
                 buffer[k++] = b;
                 b = other[j++];
                 polarity ^= 2;
-            } else { // a == b, take one, drop other
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } अञ्ञथा { // a == b, take one, drop other
+                सचे (a == UNICODESET_उच्चः) गच्छ loop_end;
                 buffer[k++] = a;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
                 polarity ^= 2;
             }
-            break;
-          case 1: // a second, b first;
-            if (a < b) { // NO OVERLAP, drop a
+            भङ्ग;
+          पक्ष 1: // a second, b first;
+            सचे (a < b) { // NO OVERLAP, drop a
                 a = list[i++];
                 polarity ^= 1;
-            } else if (b < a) { // OVERLAP, take b
+            } अञ्ञथा सचे (b < a) { // OVERLAP, take b
                 buffer[k++] = b;
                 b = other[j++];
                 polarity ^= 2;
-            } else { // a == b, drop both!
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } अञ्ञथा { // a == b, drop both!
+                सचे (a == UNICODESET_उच्चः) गच्छ loop_end;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
                 polarity ^= 2;
             }
-            break;
-          case 2: // a first, b second; if a < b, overlap
-            if (b < a) { // no overlap, drop b
+            भङ्ग;
+          पक्ष 2: // a first, b second; if a < b, overlap
+            सचे (b < a) { // no overlap, drop b
                 b = other[j++];
                 polarity ^= 2;
-            } else  if (a < b) { // OVERLAP, take a
+            } अञ्ञथा  सचे (a < b) { // OVERLAP, take a
                 buffer[k++] = a;
                 a = list[i++];
                 polarity ^= 1;
-            } else { // a == b, drop both!
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } अञ्ञथा { // a == b, drop both!
+                सचे (a == UNICODESET_उच्चः) गच्छ loop_end;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
                 polarity ^= 2;
             }
-            break;
+            भङ्ग;
         }
     }
  loop_end:
-    buffer[k++] = UNICODESET_HIGH;    // terminate
+    buffer[k++] = UNICODESET_उच्चः;    // terminate
     len = k;
     swapBuffers();
     releasePattern();
@@ -1965,9 +1965,9 @@ void UnicodeSet::retain(const UChar32* other, int32_t otherLen, int8_t polarity)
  * Append the <code>toPattern()</code> representation of a
  * string to the given <code>StringBuffer</code>.
  */
-void UnicodeSet::_appendToPat(UnicodeString& buf, const UnicodeString& s, UBool escapeUnprintable) {
+शून्य UnicodeSet::_appendToPat(UnicodeString& buf, ध्रुव UnicodeString& s, UBool escapeUnprintable) {
     UChar32 cp;
-    for (int32_t i = 0; i < s.length(); i += U16_LENGTH(cp)) {
+    अत्थाय (int32_t i = 0; i < s.length(); i += U16_LENGTH(cp)) {
         _appendToPat(buf, cp = s.char32At(i), escapeUnprintable);
     }
 }
@@ -1976,42 +1976,42 @@ void UnicodeSet::_appendToPat(UnicodeString& buf, const UnicodeString& s, UBool 
  * Append the <code>toPattern()</code> representation of a
  * character to the given <code>StringBuffer</code>.
  */
-void UnicodeSet::_appendToPat(UnicodeString& buf, UChar32 c, UBool escapeUnprintable) {
-    if (escapeUnprintable ? ICU_Utility::isUnprintable(c) : ICU_Utility::shouldAlwaysBeEscaped(c)) {
+शून्य UnicodeSet::_appendToPat(UnicodeString& buf, UChar32 c, UBool escapeUnprintable) {
+    सचे (escapeUnprintable ? ICU_Utility::isUnprintable(c) : ICU_Utility::shouldAlwaysBeEscaped(c)) {
         // Use hex escape notation (\uxxxx or \Uxxxxxxxx) for anything
         // unprintable
         ICU_Utility::escape(buf, c);
-        return;
+        पटिनिवत्त;
     }
     // Okay to let ':' pass through
-    switch (c) {
-    case u'[':
-    case u']':
-    case u'-':
-    case u'^':
-    case u'&':
-    case u'\\':
-    case u'{':
-    case u'}':
-    case u':':
-    case SymbolTable::SYMBOL_REF:
+    विकल्प (c) {
+    पक्ष u'[':
+    पक्ष u']':
+    पक्ष u'-':
+    पक्ष u'^':
+    पक्ष u'&':
+    पक्ष u'\\':
+    पक्ष u'{':
+    पक्ष u'}':
+    पक्ष u':':
+    पक्ष चिह्नम्_Table::चिह्नम्_REF:
         buf.append(u'\\');
-        break;
-    default:
+        भङ्ग;
+    स्वभाव:
         // Escape whitespace
-        if (PatternProps::isWhiteSpace(c)) {
+        सचे (PatternProps::isWhiteSpace(c)) {
             buf.append(u'\\');
         }
-        break;
+        भङ्ग;
     }
     buf.append(c);
 }
 
-void UnicodeSet::_appendToPat(UnicodeString &result, UChar32 start, UChar32 end,
+शून्य UnicodeSet::_appendToPat(UnicodeString &result, UChar32 start, UChar32 end,
                               UBool escapeUnprintable) {
     _appendToPat(result, start, escapeUnprintable);
-    if (start != end) {
-        if ((start+1) != end ||
+    सचे (start != end) {
+        सचे ((start+1) != end ||
                 // Avoid writing what looks like a lead+trail surrogate pair.
                 start == 0xdbff) {
             result.append(u'-');
@@ -2026,38 +2026,38 @@ void UnicodeSet::_appendToPat(UnicodeString &result, UChar32 start, UChar32 end,
  * is one.  Otherwise it will be generated.
  */
 UnicodeString& UnicodeSet::_toPattern(UnicodeString& result U_LIFETIME_BOUND,
-                                      UBool escapeUnprintable) const
+                                      UBool escapeUnprintable) ध्रुव
 {
-    if (pat != nullptr) {
+    सचे (pat != nullptr) {
         int32_t i;
-        int32_t backslashCount = 0;
-        for (i=0; i<patLen; ) {
+        int32_t backslash_गणनम् = 0;
+        अत्थाय (i=0; i<patLen; ) {
             UChar32 c;
             U16_NEXT(pat, i, patLen, c);
-            if (escapeUnprintable ?
+            सचे (escapeUnprintable ?
                     ICU_Utility::isUnprintable(c) : ICU_Utility::shouldAlwaysBeEscaped(c)) {
                 // If the unprintable character is preceded by an odd
                 // number of backslashes, then it has been escaped.
                 // Before unescaping it, we delete the final
                 // backslash.
-                if ((backslashCount % 2) == 1) {
+                सचे ((backslash_गणनम् % 2) == 1) {
                     result.truncate(result.length() - 1);
                 }
                 ICU_Utility::escape(result, c);
-                backslashCount = 0;
-            } else {
+                backslash_गणनम् = 0;
+            } अञ्ञथा {
                 result.append(c);
-                if (c == u'\\') {
-                    ++backslashCount;
-                } else {
-                    backslashCount = 0;
+                सचे (c == u'\\') {
+                    ++backslash_गणनम्;
+                } अञ्ञथा {
+                    backslash_गणनम् = 0;
                 }
             }
         }
-        return result;
+        पटिनिवत्त result;
     }
 
-    return _generatePattern(result, escapeUnprintable);
+    पटिनिवत्त _generatePattern(result, escapeUnprintable);
 }
 
 /**
@@ -2066,10 +2066,10 @@ UnicodeString& UnicodeSet::_toPattern(UnicodeString& result U_LIFETIME_BOUND,
  * will produce another set that is equal to this one.
  */
 UnicodeString& UnicodeSet::toPattern(UnicodeString& result U_LIFETIME_BOUND,
-                                     UBool escapeUnprintable) const
+                                     UBool escapeUnprintable) ध्रुव
 {
     result.truncate(0);
-    return _toPattern(result, escapeUnprintable);
+    पटिनिवत्त _toPattern(result, escapeUnprintable);
 }
 
 /**
@@ -2078,7 +2078,7 @@ UnicodeString& UnicodeSet::toPattern(UnicodeString& result U_LIFETIME_BOUND,
  * passed to applyPattern().
  */
 UnicodeString& UnicodeSet::_generatePattern(UnicodeString& result U_LIFETIME_BOUND,
-                                            UBool escapeUnprintable) const
+                                            UBool escapeUnprintable) ध्रुव
 {
     result.append(u'[');
 
@@ -2096,7 +2096,7 @@ UnicodeString& UnicodeSet::_generatePattern(UnicodeString& result U_LIFETIME_BOU
     //
     // *But* do not write the inverse (complement) if there are strings.
     // Since ICU 70, the '^' performs a code point complement which removes all strings.
-    if (len >= 4 && list[0] == 0 && limit == len && !hasStrings()) {
+    सचे (len >= 4 && list[0] == 0 && limit == len && !hasStrings()) {
         // Emit the inverse
         result.append(u'^');
         // Offsetting the inversion list index by one lets us
@@ -2106,48 +2106,48 @@ UnicodeString& UnicodeSet::_generatePattern(UnicodeString& result U_LIFETIME_BOU
     }
 
     // Emit the ranges as pairs.
-    while (i < limit) {
+    याव (i < limit) {
         UChar32 start = list[i];  // getRangeStart()
         UChar32 end = list[i + 1] - 1;  // getRangeEnd() = range limit minus one
-        if (!(0xd800 <= end && end <= 0xdbff)) {
+        सचे (!(0xd800 <= end && end <= 0xdbff)) {
             _appendToPat(result, start, end, escapeUnprintable);
             i += 2;
-        } else {
+        } अञ्ञथा {
             // The range ends with a lead surrogate.
             // Avoid writing what looks like a lead+trail surrogate pair.
             // 1. Postpone ranges that start with a lead surrogate code point.
             int32_t firstLead = i;
-            while ((i += 2) < limit && list[i] <= 0xdbff) {}
+            याव ((i += 2) < limit && list[i] <= 0xdbff) {}
             int32_t firstAfterLead = i;
             // 2. Write following ranges that start with a trail surrogate code point.
-            while (i < limit && (start = list[i]) <= 0xdfff) {
+            याव (i < limit && (start = list[i]) <= 0xdfff) {
                 _appendToPat(result, start, list[i + 1] - 1, escapeUnprintable);
                 i += 2;
             }
             // 3. Now write the postponed ranges.
-            for (int j = firstLead; j < firstAfterLead; j += 2) {
+            अत्थाय (पूर्णाङ्क j = firstLead; j < firstAfterLead; j += 2) {
                 _appendToPat(result, list[j], list[j + 1] - 1, escapeUnprintable);
             }
         }
     }
 
-    if (strings_ != nullptr) {
-        for (int32_t i = 0; i<strings_->size(); ++i) {
+    सचे (strings_ != nullptr) {
+        अत्थाय (int32_t i = 0; i<strings_->size(); ++i) {
             result.append(u'{');
             _appendToPat(result,
-                         *static_cast<const UnicodeString*>(strings_->elementAt(i)),
+                         *static_cast<ध्रुव UnicodeString*>(strings_->elementAt(i)),
                          escapeUnprintable);
             result.append(u'}');
         }
     }
-    return result.append(u']');
+    पटिनिवत्त result.append(u']');
 }
 
 /**
 * Release existing cached pattern
 */
-void UnicodeSet::releasePattern() {
-    if (pat) {
+शून्य UnicodeSet::releasePattern() {
+    सचे (pat) {
         uprv_free(pat);
         pat = nullptr;
         patLen = 0;
@@ -2157,10 +2157,10 @@ void UnicodeSet::releasePattern() {
 /**
 * Set the new pattern to cache.
 */
-void UnicodeSet::setPattern(const char16_t *newPat, int32_t newPatLen) {
+शून्य UnicodeSet::setPattern(ध्रुव char16_t *newPat, int32_t newPatLen) {
     releasePattern();
-    pat = static_cast<char16_t*>(uprv_malloc((newPatLen + 1) * sizeof(char16_t)));
-    if (pat) {
+    pat = static_cast<char16_t*>(uprv_malloc((newPatLen + 1) * परिमाण(char16_t)));
+    सचे (pat) {
         patLen = newPatLen;
         u_memcpy(pat, newPat, patLen);
         pat[patLen] = 0;
@@ -2170,16 +2170,16 @@ void UnicodeSet::setPattern(const char16_t *newPat, int32_t newPatLen) {
 }
 
 UnicodeSet* UnicodeSet::freeze() U_LIFETIME_BOUND {
-    if(!isFrozen() && !isBogus()) {
+    सचे(!isFrozen() && !isBogus()) {
         compact();
 
         // Optimize contains() and span() and similar functions.
-        if (hasStrings()) {
-            stringSpan = new UnicodeSetStringSpan(*this, *strings_, UnicodeSetStringSpan::ALL);
-            if (stringSpan == nullptr) {
+        सचे (hasStrings()) {
+            stringSpan = नूतन UnicodeSetStringSpan(*एतत्, *strings_, UnicodeSetStringSpan::ALL);
+            सचे (stringSpan == nullptr) {
                 setToBogus();
-                return this;
-            } else if (!stringSpan->needsStringSpanUTF16()) {
+                पटिनिवत्त एतत्;
+            } अञ्ञथा सचे (!stringSpan->needsStringSpanUTF16()) {
                 // All strings are irrelevant for span() etc. because
                 // all of each string's code points are contained in this set.
                 // Do not check needsStringSpanUTF8() because UTF-8 has at most as
@@ -2189,165 +2189,165 @@ UnicodeSet* UnicodeSet::freeze() U_LIFETIME_BOUND {
                 stringSpan = nullptr;
             }
         }
-        if (stringSpan == nullptr) {
+        सचे (stringSpan == nullptr) {
             // No span-relevant strings: Optimize for code point spans.
-            bmpSet=new BMPSet(list, len);
-            if (bmpSet == nullptr) { // Check for memory allocation error.
+            bmpSet=नूतन BMPSet(list, len);
+            सचे (bmpSet == nullptr) { // Check for memory allocation error.
                 setToBogus();
             }
         }
     }
-    return this;
+    पटिनिवत्त एतत्;
 }
 
-int32_t UnicodeSet::span(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(length>0 && bmpSet!=nullptr) {
-        return static_cast<int32_t>(bmpSet->span(s, s + length, spanCondition) - s);
+int32_t UnicodeSet::span(ध्रुव char16_t *s, int32_t length, USetSpanCondition spanCondition) ध्रुव {
+    सचे(length>0 && bmpSet!=nullptr) {
+        पटिनिवत्त static_cast<int32_t>(bmpSet->span(s, s + length, spanCondition) - s);
     }
-    if(length<0) {
+    सचे(length<0) {
         length=u_strlen(s);
     }
-    if(length==0) {
-        return 0;
+    सचे(length==0) {
+        पटिनिवत्त 0;
     }
-    if(stringSpan!=nullptr) {
-        return stringSpan->span(s, length, spanCondition);
-    } else if(hasStrings()) {
+    सचे(stringSpan!=nullptr) {
+        पटिनिवत्त stringSpan->span(s, length, spanCondition);
+    } अञ्ञथा सचे(hasStrings()) {
         uint32_t which= spanCondition==USET_SPAN_NOT_CONTAINED ?
                             UnicodeSetStringSpan::FWD_UTF16_NOT_CONTAINED :
                             UnicodeSetStringSpan::FWD_UTF16_CONTAINED;
-        UnicodeSetStringSpan strSpan(*this, *strings_, which);
-        if(strSpan.needsStringSpanUTF16()) {
-            return strSpan.span(s, length, spanCondition);
+        UnicodeSetStringSpan strSpan(*एतत्, *strings_, which);
+        सचे(strSpan.needsStringSpanUTF16()) {
+            पटिनिवत्त strSpan.span(s, length, spanCondition);
         }
     }
 
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
+    सचे(spanCondition!=USET_SPAN_NOT_CONTAINED) {
         spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
     }
 
     UChar32 c;
     int32_t start=0, prev=0;
-    do {
+    करोहि {
         U16_NEXT(s, start, length, c);
-        if(spanCondition!=contains(c)) {
-            break;
+        सचे(spanCondition!=contains(c)) {
+            भङ्ग;
         }
-    } while((prev=start)<length);
-    return prev;
+    } याव((prev=start)<length);
+    पटिनिवत्त prev;
 }
 
-int32_t UnicodeSet::spanBack(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(length>0 && bmpSet!=nullptr) {
-        return static_cast<int32_t>(bmpSet->spanBack(s, s + length, spanCondition) - s);
+int32_t UnicodeSet::spanBack(ध्रुव char16_t *s, int32_t length, USetSpanCondition spanCondition) ध्रुव {
+    सचे(length>0 && bmpSet!=nullptr) {
+        पटिनिवत्त static_cast<int32_t>(bmpSet->spanBack(s, s + length, spanCondition) - s);
     }
-    if(length<0) {
+    सचे(length<0) {
         length=u_strlen(s);
     }
-    if(length==0) {
-        return 0;
+    सचे(length==0) {
+        पटिनिवत्त 0;
     }
-    if(stringSpan!=nullptr) {
-        return stringSpan->spanBack(s, length, spanCondition);
-    } else if(hasStrings()) {
+    सचे(stringSpan!=nullptr) {
+        पटिनिवत्त stringSpan->spanBack(s, length, spanCondition);
+    } अञ्ञथा सचे(hasStrings()) {
         uint32_t which= spanCondition==USET_SPAN_NOT_CONTAINED ?
                             UnicodeSetStringSpan::BACK_UTF16_NOT_CONTAINED :
                             UnicodeSetStringSpan::BACK_UTF16_CONTAINED;
-        UnicodeSetStringSpan strSpan(*this, *strings_, which);
-        if(strSpan.needsStringSpanUTF16()) {
-            return strSpan.spanBack(s, length, spanCondition);
+        UnicodeSetStringSpan strSpan(*एतत्, *strings_, which);
+        सचे(strSpan.needsStringSpanUTF16()) {
+            पटिनिवत्त strSpan.spanBack(s, length, spanCondition);
         }
     }
 
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
+    सचे(spanCondition!=USET_SPAN_NOT_CONTAINED) {
         spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
     }
 
     UChar32 c;
     int32_t prev=length;
-    do {
+    करोहि {
         U16_PREV(s, 0, length, c);
-        if(spanCondition!=contains(c)) {
-            break;
+        सचे(spanCondition!=contains(c)) {
+            भङ्ग;
         }
-    } while((prev=length)>0);
-    return prev;
+    } याव((prev=length)>0);
+    पटिनिवत्त prev;
 }
 
-int32_t UnicodeSet::spanUTF8(const char *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(length>0 && bmpSet!=nullptr) {
-        const uint8_t* s0 = reinterpret_cast<const uint8_t*>(s);
-        return static_cast<int32_t>(bmpSet->spanUTF8(s0, length, spanCondition) - s0);
+int32_t UnicodeSet::spanUTF8(ध्रुव वर्ण *s, int32_t length, USetSpanCondition spanCondition) ध्रुव {
+    सचे(length>0 && bmpSet!=nullptr) {
+        ध्रुव uint8_t* s0 = reinterpret_cast<ध्रुव uint8_t*>(s);
+        पटिनिवत्त static_cast<int32_t>(bmpSet->spanUTF8(s0, length, spanCondition) - s0);
     }
-    if(length<0) {
+    सचे(length<0) {
         length = static_cast<int32_t>(uprv_strlen(s));
     }
-    if(length==0) {
-        return 0;
+    सचे(length==0) {
+        पटिनिवत्त 0;
     }
-    if(stringSpan!=nullptr) {
-        return stringSpan->spanUTF8(reinterpret_cast<const uint8_t*>(s), length, spanCondition);
-    } else if(hasStrings()) {
+    सचे(stringSpan!=nullptr) {
+        पटिनिवत्त stringSpan->spanUTF8(reinterpret_cast<ध्रुव uint8_t*>(s), length, spanCondition);
+    } अञ्ञथा सचे(hasStrings()) {
         uint32_t which= spanCondition==USET_SPAN_NOT_CONTAINED ?
                             UnicodeSetStringSpan::FWD_UTF8_NOT_CONTAINED :
                             UnicodeSetStringSpan::FWD_UTF8_CONTAINED;
-        UnicodeSetStringSpan strSpan(*this, *strings_, which);
-        if(strSpan.needsStringSpanUTF8()) {
-            return strSpan.spanUTF8(reinterpret_cast<const uint8_t*>(s), length, spanCondition);
+        UnicodeSetStringSpan strSpan(*एतत्, *strings_, which);
+        सचे(strSpan.needsStringSpanUTF8()) {
+            पटिनिवत्त strSpan.spanUTF8(reinterpret_cast<ध्रुव uint8_t*>(s), length, spanCondition);
         }
     }
 
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
+    सचे(spanCondition!=USET_SPAN_NOT_CONTAINED) {
         spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
     }
 
     UChar32 c;
     int32_t start=0, prev=0;
-    do {
+    करोहि {
         U8_NEXT_OR_FFFD(s, start, length, c);
-        if(spanCondition!=contains(c)) {
-            break;
+        सचे(spanCondition!=contains(c)) {
+            भङ्ग;
         }
-    } while((prev=start)<length);
-    return prev;
+    } याव((prev=start)<length);
+    पटिनिवत्त prev;
 }
 
-int32_t UnicodeSet::spanBackUTF8(const char *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(length>0 && bmpSet!=nullptr) {
-        const uint8_t* s0 = reinterpret_cast<const uint8_t*>(s);
-        return bmpSet->spanBackUTF8(s0, length, spanCondition);
+int32_t UnicodeSet::spanBackUTF8(ध्रुव वर्ण *s, int32_t length, USetSpanCondition spanCondition) ध्रुव {
+    सचे(length>0 && bmpSet!=nullptr) {
+        ध्रुव uint8_t* s0 = reinterpret_cast<ध्रुव uint8_t*>(s);
+        पटिनिवत्त bmpSet->spanBackUTF8(s0, length, spanCondition);
     }
-    if(length<0) {
+    सचे(length<0) {
         length = static_cast<int32_t>(uprv_strlen(s));
     }
-    if(length==0) {
-        return 0;
+    सचे(length==0) {
+        पटिनिवत्त 0;
     }
-    if(stringSpan!=nullptr) {
-        return stringSpan->spanBackUTF8(reinterpret_cast<const uint8_t*>(s), length, spanCondition);
-    } else if(hasStrings()) {
+    सचे(stringSpan!=nullptr) {
+        पटिनिवत्त stringSpan->spanBackUTF8(reinterpret_cast<ध्रुव uint8_t*>(s), length, spanCondition);
+    } अञ्ञथा सचे(hasStrings()) {
         uint32_t which= spanCondition==USET_SPAN_NOT_CONTAINED ?
                             UnicodeSetStringSpan::BACK_UTF8_NOT_CONTAINED :
                             UnicodeSetStringSpan::BACK_UTF8_CONTAINED;
-        UnicodeSetStringSpan strSpan(*this, *strings_, which);
-        if(strSpan.needsStringSpanUTF8()) {
-            return strSpan.spanBackUTF8(reinterpret_cast<const uint8_t*>(s), length, spanCondition);
+        UnicodeSetStringSpan strSpan(*एतत्, *strings_, which);
+        सचे(strSpan.needsStringSpanUTF8()) {
+            पटिनिवत्त strSpan.spanBackUTF8(reinterpret_cast<ध्रुव uint8_t*>(s), length, spanCondition);
         }
     }
 
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
+    सचे(spanCondition!=USET_SPAN_NOT_CONTAINED) {
         spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
     }
 
     UChar32 c;
     int32_t prev=length;
-    do {
+    करोहि {
         U8_PREV_OR_FFFD(s, 0, length, c);
-        if(spanCondition!=contains(c)) {
-            break;
+        सचे(spanCondition!=contains(c)) {
+            भङ्ग;
         }
-    } while((prev=length)>0);
-    return prev;
+    } याव((prev=length)>0);
+    पटिनिवत्त prev;
 }
 
 U_NAMESPACE_END
