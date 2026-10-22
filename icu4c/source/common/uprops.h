@@ -22,13 +22,13 @@
 #ifndef __UPROPS_H__
 #define __UPROPS_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
-#include "uset_imp.h"
-#include "udataswp.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uset.h"
+#ضمن "uset_imp.h"
+#ضمن "udataswp.h"
 
 /* indexes[] entries */
-enum {
+تعداد {
     UPROPS_PROPS32_INDEX,
     UPROPS_EXCEPTIONS_INDEX,
     UPROPS_EXCEPTIONS_TOP_INDEX,
@@ -56,7 +56,7 @@ enum {
 };
 
 /* definitions for the main properties words */
-enum {
+تعداد {
     /* general category shift==0                                0 (5 bits) */
     /* reserved                                                 5 (1 bit) */
     UPROPS_NUMERIC_TYPE_VALUE_SHIFT=6                       /*  6 (10 bits) */
@@ -68,7 +68,7 @@ enum {
 #define GET_NUMERIC_TYPE_VALUE(props) ((props)>>UPROPS_NUMERIC_TYPE_VALUE_SHIFT)
 
 /* constants for the storage form of numeric types and values */
-enum {
+تعداد {
     /** No numeric value. */
     UPROPS_NTV_NONE=0,
     /** Decimal digits: nv=0..9 */
@@ -150,26 +150,26 @@ namespace {
 // new characters are similar to old ones.)
 // See https://github.com/unicode-org/icu/pull/3025 for details.
 
-inline constexpr uint32_t UPROPS_AGE_MASK = 0xff000000;
-inline constexpr int32_t UPROPS_AGE_SHIFT = 24;
+مضمن constexpr uint32_t UPROPS_AGE_MASK = 0xff000000;
+مضمن constexpr int32_t UPROPS_AGE_SHIFT = 24;
 
-inline constexpr uint8_t UPROPS_AGE_MAJOR_MAX = 63;
-inline constexpr uint8_t UPROPS_AGE_MINOR_MAX = 3;
+مضمن constexpr uint8_t UPROPS_AGE_MAJOR_MAX = 63;
+مضمن constexpr uint8_t UPROPS_AGE_MINOR_MAX = 3;
 
-inline constexpr uint32_t UPROPS_EA_MASK = 0x00007000;
-inline constexpr int32_t UPROPS_EA_SHIFT = 12;
+مضمن constexpr uint32_t UPROPS_EA_MASK = 0x00007000;
+مضمن constexpr int32_t UPROPS_EA_SHIFT = 12;
 
-inline constexpr uint32_t UPROPS_INCB_MASK = 0x00018000;
-inline constexpr int32_t UPROPS_INCB_SHIFT = 15;
+مضمن constexpr uint32_t UPROPS_INCB_MASK = 0x00018000;
+مضمن constexpr int32_t UPROPS_INCB_SHIFT = 15;
 
 /** Script_Extensions: mask includes Script */
-inline constexpr uint32_t UPROPS_SCRIPT_X_MASK = 0x00000fff;
+مضمن constexpr uint32_t UPROPS_SCRIPT_X_MASK = 0x00000fff;
 
 // UPROPS_SCRIPT_X_WITH_COMMON must be the lowest value that involves Script_Extensions.
-inline constexpr uint32_t UPROPS_SCRIPT_X_WITH_OTHER = 0xc00;
-inline constexpr uint32_t UPROPS_SCRIPT_X_WITH_INHERITED = 0x800;
-inline constexpr uint32_t UPROPS_SCRIPT_X_WITH_COMMON = 0x400;
-inline constexpr int32_t UPROPS_MAX_SCRIPT = 0x3ff;
+مضمن constexpr uint32_t UPROPS_SCRIPT_X_WITH_OTHER = 0xc00;
+مضمن constexpr uint32_t UPROPS_SCRIPT_X_WITH_INHERITED = 0x800;
+مضمن constexpr uint32_t UPROPS_SCRIPT_X_WITH_COMMON = 0x400;
+مضمن constexpr int32_t UPROPS_MAX_SCRIPT = 0x3ff;
 
 /*
  * Properties in vector word 1
@@ -182,7 +182,7 @@ inline constexpr int32_t UPROPS_MAX_SCRIPT = 0x3ff;
  *
  * ICU 2.6/uprops format version 3.2 stores full properties instead of "Other_".
  */
-enum {
+تعداد {
     UPROPS_WHITE_SPACE,
     UPROPS_DASH,
     UPROPS_HYPHEN,
@@ -242,10 +242,10 @@ enum {
 // We do not store separate data for Identifier_Status:
 // We can derive that from the encoded Identifier_Type via a simple range check.
 
-inline constexpr uint32_t UPROPS_2_ID_TYPE_MASK = 0xfc000000;
-inline constexpr int32_t UPROPS_2_ID_TYPE_SHIFT = 26;
+مضمن constexpr uint32_t UPROPS_2_ID_TYPE_MASK = 0xfc000000;
+مضمن constexpr int32_t UPROPS_2_ID_TYPE_SHIFT = 26;
 
-enum {
+تعداد {
     // A high bit for use in idTypeToEncoded[] but not used in the data
     UPROPS_ID_TYPE_BIT = 0x80,
 
@@ -276,7 +276,7 @@ enum {
  * When UPROPS_ID_TYPE_BIT is set, then use "&" to test whether the value bit is set.
  * When UPROPS_ID_TYPE_BIT is not set, then compare ("==") the array value with the data value.
  */
-inline constexpr uint8_t uprops_idTypeToEncoded[] = {
+مضمن constexpr uint8_t uprops_idTypeToEncoded[] = {
     UPROPS_ID_TYPE_NOT_CHARACTER,
     UPROPS_ID_TYPE_DEPRECATED,
     UPROPS_ID_TYPE_DEFAULT_IGNORABLE,
@@ -314,7 +314,7 @@ inline constexpr uint8_t uprops_idTypeToEncoded[] = {
 namespace {
 
 // Bits 9..0 in UPROPS_MAX_VALUES_OTHER_INDEX
-inline constexpr uint32_t UPROPS_MAX_BLOCK = 0x3ff;
+مضمن constexpr uint32_t UPROPS_MAX_BLOCK = 0x3ff;
 
 }  // namespace
 
@@ -377,7 +377,7 @@ U_CFUNC UBool
 u_isprintPOSIX(UChar32 c);
 
 /** Some code points. @internal */
-enum {
+تعداد {
     TAB     =0x0009,
     LF      =0x000a,
     FF      =0x000c,
@@ -400,7 +400,7 @@ enum {
  * @return 0 if no character names available.
  */
 U_CAPI int32_t U_EXPORT2
-uprv_getMaxCharNameLength(void);
+uprv_getMaxCharNameLength(فراغ);
 
 /**
  * Fills set with characters that are used in Unicode character names.
@@ -408,15 +408,15 @@ uprv_getMaxCharNameLength(void);
  * Just empties the set if no character names are available.
  * @param sa USetAdder to receive characters.
  */
-U_CAPI void U_EXPORT2
-uprv_getCharNameCharacters(const USetAdder *sa);
+U_CAPI فراغ U_EXPORT2
+uprv_getCharNameCharacters(ثابت USetAdder *sa);
 
 /**
  * Constants for which data and implementation files provide which properties.
  * Used by UnicodeSet for service-specific property enumeration.
  * @internal
  */
-enum UPropertySource {
+تعداد UPropertySource {
     /** No source, not a supported property. */
     UPROPS_SRC_NONE,
     /** From uchar.c/uprops.icu main trie */
@@ -453,7 +453,7 @@ enum UPropertySource {
     /** One more than the highest UPropertySource (UPROPS_SRC_) constant. */
     UPROPS_SRC_COUNT
 };
-typedef enum UPropertySource UPropertySource;
+تعريفنوع تعداد UPropertySource UPropertySource;
 
 /**
  * @see UPropertySource
@@ -467,24 +467,24 @@ uprops_getSource(UProperty which);
  * start of each range of same properties to the set.
  * @internal
  */
-U_CFUNC void U_EXPORT2
-uchar_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode);
+U_CFUNC فراغ U_EXPORT2
+uchar_addPropertyStarts(ثابت USetAdder *sa, UErrorCode *pErrorCode);
 
 /**
  * Enumerate uprops.icu's properties vectors trie and add the
  * start of each range of same properties to the set.
  * @internal
  */
-U_CFUNC void U_EXPORT2
-upropsvec_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode);
+U_CFUNC فراغ U_EXPORT2
+upropsvec_addPropertyStarts(ثابت USetAdder *sa, UErrorCode *pErrorCode);
 
-U_CFUNC void U_EXPORT2
-uprops_addPropertyStarts(UPropertySource src, const USetAdder *sa, UErrorCode *pErrorCode);
+U_CFUNC فراغ U_EXPORT2
+uprops_addPropertyStarts(UPropertySource src, ثابت USetAdder *sa, UErrorCode *pErrorCode);
 
 #ifdef __cplusplus
 
-U_CFUNC void U_EXPORT2
-ublock_addPropertyStarts(const USetAdder *sa, UErrorCode &errorCode);
+U_CFUNC فراغ U_EXPORT2
+ublock_addPropertyStarts(ثابت USetAdder *sa, UErrorCode &errorCode);
 
 #endif  // __cplusplus
 
@@ -501,8 +501,8 @@ uprv_getInclusions(const USetAdder *sa, UErrorCode *pErrorCode);
 */
 
 /** @internal for icuexportdata */
-U_CAPI void U_EXPORT2
-uprv_addScriptExtensionsCodePoints(const USetAdder *sa, UErrorCode *pErrorCode);
+U_CAPI فراغ U_EXPORT2
+uprv_addScriptExtensionsCodePoints(ثابت USetAdder *sa, UErrorCode *pErrorCode);
 
 // TODO: Move this into a different header file (udataswp.h? new unames.h?) so that uprops.h
 // need not be C-compatible any more.
@@ -511,8 +511,8 @@ uprv_addScriptExtensionsCodePoints(const USetAdder *sa, UErrorCode *pErrorCode);
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uchar_swapNames(const UDataSwapper *ds,
-                const void *inData, int32_t length, void *outData,
+uchar_swapNames(ثابت UDataSwapper *ds,
+                ثابت فراغ *inData, int32_t length, فراغ *outData,
                 UErrorCode *pErrorCode);
 
 #ifdef __cplusplus
@@ -522,10 +522,10 @@ U_NAMESPACE_BEGIN
 class UnicodeSet;
 
 class CharacterProperties {
-public:
+عام:
     CharacterProperties() = delete;
-    static const UnicodeSet *getInclusionsForProperty(UProperty prop, UErrorCode &errorCode);
-    static const UnicodeSet *getBinaryPropertySet(UProperty property, UErrorCode &errorCode);
+    ساكن ثابت UnicodeSet *getInclusionsForProperty(UProperty prop, UErrorCode &errorCode);
+    ساكن ثابت UnicodeSet *getBinaryPropertySet(UProperty property, UErrorCode &errorCode);
 };
 
 // implemented in uniset_props.cpp

@@ -14,131 +14,131 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#אם !UCONFIG_NO_FORMATTING
 
-#include "unicode/messagepattern.h"
-#include "unicode/unistr.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "messageimpl.h"
-#include "patternprops.h"
-#include "putilimp.h"
-#include "uassert.h"
+#ضمن "unicode/messagepattern.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/utf16.h"
+#ضمن "cmemory.h"
+#ضمن "cstring.h"
+#ضمن "messageimpl.h"
+#ضمن "patternprops.h"
+#ضمن "putilimp.h"
+#ضمن "uassert.h"
 
 U_NAMESPACE_BEGIN
 
 // Unicode character/code point constants ---------------------------------- ***
 
-static const char16_t u_pound=0x23;
-static const char16_t u_apos=0x27;
-static const char16_t u_plus=0x2B;
-static const char16_t u_comma=0x2C;
-static const char16_t u_minus=0x2D;
-static const char16_t u_dot=0x2E;
-static const char16_t u_colon=0x3A;
-static const char16_t u_lessThan=0x3C;
-static const char16_t u_equal=0x3D;
-static const char16_t u_A=0x41;
-static const char16_t u_C=0x43;
-static const char16_t u_D=0x44;
-static const char16_t u_E=0x45;
-static const char16_t u_H=0x48;
-static const char16_t u_I=0x49;
-static const char16_t u_L=0x4C;
-static const char16_t u_N=0x4E;
-static const char16_t u_O=0x4F;
-static const char16_t u_P=0x50;
-static const char16_t u_R=0x52;
-static const char16_t u_S=0x53;
-static const char16_t u_T=0x54;
-static const char16_t u_U=0x55;
-static const char16_t u_Z=0x5A;
-static const char16_t u_a=0x61;
-static const char16_t u_c=0x63;
-static const char16_t u_d=0x64;
-static const char16_t u_e=0x65;
-static const char16_t u_f=0x66;
-static const char16_t u_h=0x68;
-static const char16_t u_i=0x69;
-static const char16_t u_l=0x6C;
-static const char16_t u_n=0x6E;
-static const char16_t u_o=0x6F;
-static const char16_t u_p=0x70;
-static const char16_t u_r=0x72;
-static const char16_t u_s=0x73;
-static const char16_t u_t=0x74;
-static const char16_t u_u=0x75;
-static const char16_t u_z=0x7A;
-static const char16_t u_leftCurlyBrace=0x7B;
-static const char16_t u_pipe=0x7C;
-static const char16_t u_rightCurlyBrace=0x7D;
-static const char16_t u_lessOrEqual=0x2264;  // U+2264 is <=
+ساكن ثابت char16_t u_pound=0x23;
+ساكن ثابت char16_t u_apos=0x27;
+ساكن ثابت char16_t u_plus=0x2B;
+ساكن ثابت char16_t u_comma=0x2C;
+ساكن ثابت char16_t u_minus=0x2D;
+ساكن ثابت char16_t u_dot=0x2E;
+ساكن ثابت char16_t u_colon=0x3A;
+ساكن ثابت char16_t u_lessThan=0x3C;
+ساكن ثابت char16_t u_equal=0x3D;
+ساكن ثابت char16_t u_A=0x41;
+ساكن ثابت char16_t u_C=0x43;
+ساكن ثابت char16_t u_D=0x44;
+ساكن ثابت char16_t u_E=0x45;
+ساكن ثابت char16_t u_H=0x48;
+ساكن ثابت char16_t u_I=0x49;
+ساكن ثابت char16_t u_L=0x4C;
+ساكن ثابت char16_t u_N=0x4E;
+ساكن ثابت char16_t u_O=0x4F;
+ساكن ثابت char16_t u_P=0x50;
+ساكن ثابت char16_t u_R=0x52;
+ساكن ثابت char16_t u_S=0x53;
+ساكن ثابت char16_t u_T=0x54;
+ساكن ثابت char16_t u_U=0x55;
+ساكن ثابت char16_t u_Z=0x5A;
+ساكن ثابت char16_t u_a=0x61;
+ساكن ثابت char16_t u_c=0x63;
+ساكن ثابت char16_t u_d=0x64;
+ساكن ثابت char16_t u_e=0x65;
+ساكن ثابت char16_t u_f=0x66;
+ساكن ثابت char16_t u_h=0x68;
+ساكن ثابت char16_t u_i=0x69;
+ساكن ثابت char16_t u_l=0x6C;
+ساكن ثابت char16_t u_n=0x6E;
+ساكن ثابت char16_t u_o=0x6F;
+ساكن ثابت char16_t u_p=0x70;
+ساكن ثابت char16_t u_r=0x72;
+ساكن ثابت char16_t u_s=0x73;
+ساكن ثابت char16_t u_t=0x74;
+ساكن ثابت char16_t u_u=0x75;
+ساكن ثابت char16_t u_z=0x7A;
+ساكن ثابت char16_t u_leftCurlyBrace=0x7B;
+ساكن ثابت char16_t u_pipe=0x7C;
+ساكن ثابت char16_t u_rightCurlyBrace=0x7D;
+ساكن ثابت char16_t u_lessOrEqual=0x2264;  // U+2264 is <=
 
-static const char16_t kOffsetColon[]={  // "offset:"
+ساكن ثابت char16_t kOffsetColon[]={  // "offset:"
     u_o, u_f, u_f, u_s, u_e, u_t, u_colon
 };
 
-static const char16_t kOther[]={  // "other"
+ساكن ثابت char16_t kOther[]={  // "other"
     u_o, u_t, u_h, u_e, u_r
 };
 
 // MessagePatternList ------------------------------------------------------ ***
 
 template<typename T, int32_t stackCapacity>
-class MessagePatternList : public UMemory {
-public:
+מחלקה MessagePatternList : عام UMemory {
+عام:
     MessagePatternList() {}
-    void copyFrom(const MessagePatternList<T, stackCapacity> &other,
+    فراغ copyFrom(ثابت MessagePatternList<T, stackCapacity> &other,
                   int32_t length,
                   UErrorCode &errorCode);
     UBool ensureCapacityForOneMore(int32_t oldLength, UErrorCode &errorCode);
-    UBool equals(const MessagePatternList<T, stackCapacity> &other, int32_t length) const {
-        for(int32_t i=0; i<length; ++i) {
-            if(a[i]!=other.a[i]) { return false; }
+    UBool equals(ثابت MessagePatternList<T, stackCapacity> &other, int32_t length) ثابت {
+        עבור(int32_t i=0; i<length; ++i) {
+            אם(a[i]!=other.a[i]) { החזר שקר; }
         }
-        return true;
+        החזר אמת;
     }
 
     MaybeStackArray<T, stackCapacity> a;
 };
 
 template<typename T, int32_t stackCapacity>
-void
+فراغ
 MessagePatternList<T, stackCapacity>::copyFrom(
-        const MessagePatternList<T, stackCapacity> &other,
+        ثابت MessagePatternList<T, stackCapacity> &other,
         int32_t length,
         UErrorCode &errorCode) {
-    if(U_SUCCESS(errorCode) && length>0) {
-        if(length>a.getCapacity() && nullptr==a.resize(length)) {
+    אם(U_SUCCESS(errorCode) && length>0) {
+        אם(length>a.getCapacity() && nullptr==a.resize(length)) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            החזר;
         }
-        uprv_memcpy(a.getAlias(), other.a.getAlias(), (size_t)length*sizeof(T));
+        uprv_memcpy(a.getAlias(), other.a.getAlias(), (size_t)length*حجم(T));
     }
 }
 
 template<typename T, int32_t stackCapacity>
 UBool
 MessagePatternList<T, stackCapacity>::ensureCapacityForOneMore(int32_t oldLength, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+    אם(U_FAILURE(errorCode)) {
+        החזר שקר;
     }
-    if(a.getCapacity()>oldLength || a.resize(2*oldLength, oldLength)!=nullptr) {
-        return true;
+    אם(a.getCapacity()>oldLength || a.resize(2*oldLength, oldLength)!=nullptr) {
+        החזר אמת;
     }
     errorCode=U_MEMORY_ALLOCATION_ERROR;
-    return false;
+    החזר שקר;
 }
 
 // MessagePatternList specializations -------------------------------------- ***
 
-class MessagePatternDoubleList : public MessagePatternList<double, 8> {
+מחלקה MessagePatternDoubleList : عام MessagePatternList<مزدوج, 8> {
 };
 
-class MessagePatternPartsList : public MessagePatternList<MessagePattern::Part, 32> {
+מחלקה MessagePatternPartsList : عام MessagePatternList<MessagePattern::Part, 32> {
 };
 
 // MessagePattern constructors etc. ---------------------------------------- ***
@@ -147,7 +147,7 @@ MessagePattern::MessagePattern(UErrorCode &errorCode)
         : aposMode(UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_MODE),
           partsList(nullptr), parts(nullptr), partsLength(0),
           numericValuesList(nullptr), numericValues(nullptr), numericValuesLength(0),
-          hasArgNames(false), hasArgNumbers(false), needsAutoQuoting(false) {
+          hasArgNames(שקר), hasArgNumbers(שקר), needsAutoQuoting(שקר) {
     init(errorCode);
 }
 
@@ -155,50 +155,50 @@ MessagePattern::MessagePattern(UMessagePatternApostropheMode mode, UErrorCode &e
         : aposMode(mode),
           partsList(nullptr), parts(nullptr), partsLength(0),
           numericValuesList(nullptr), numericValues(nullptr), numericValuesLength(0),
-          hasArgNames(false), hasArgNumbers(false), needsAutoQuoting(false) {
+          hasArgNames(שקר), hasArgNumbers(שקר), needsAutoQuoting(שקר) {
     init(errorCode);
 }
 
-MessagePattern::MessagePattern(const UnicodeString &pattern, UParseError *parseError, UErrorCode &errorCode)
+MessagePattern::MessagePattern(ثابت UnicodeString &pattern, UParseError *parseError, UErrorCode &errorCode)
         : aposMode(UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_MODE),
           partsList(nullptr), parts(nullptr), partsLength(0),
           numericValuesList(nullptr), numericValues(nullptr), numericValuesLength(0),
-          hasArgNames(false), hasArgNumbers(false), needsAutoQuoting(false) {
-    if(init(errorCode)) {
+          hasArgNames(שקר), hasArgNumbers(שקר), needsAutoQuoting(שקר) {
+    אם(init(errorCode)) {
         parse(pattern, parseError, errorCode);
     }
 }
 
 UBool
 MessagePattern::init(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+    אם(U_FAILURE(errorCode)) {
+        החזר שקר;
     }
-    partsList=new MessagePatternPartsList();
-    if(partsList==nullptr) {
+    partsList=جديد MessagePatternPartsList();
+    אם(partsList==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        החזר שקר;
     }
     parts=partsList->a.getAlias();
-    return true;
+    החזר אמת;
 }
 
-MessagePattern::MessagePattern(const MessagePattern &other)
+MessagePattern::MessagePattern(ثابت MessagePattern &other)
         : UObject(other), aposMode(other.aposMode), msg(other.msg),
           partsList(nullptr), parts(nullptr), partsLength(0),
           numericValuesList(nullptr), numericValues(nullptr), numericValuesLength(0),
           hasArgNames(other.hasArgNames), hasArgNumbers(other.hasArgNumbers),
           needsAutoQuoting(other.needsAutoQuoting) {
     UErrorCode errorCode=U_ZERO_ERROR;
-    if(!copyStorage(other, errorCode)) {
+    אם(!copyStorage(other, errorCode)) {
         clear();
     }
 }
 
 MessagePattern&
-MessagePattern::operator=(const MessagePattern& other) U_LIFETIME_BOUND {
-    if(this==&other) {
-        return *this;
+MessagePattern::operator=(ثابت MessagePattern& other) U_LIFETIME_BOUND {
+    אם(هذا==&other) {
+        החזר *هذا;
     }
     aposMode=other.aposMode;
     msg=other.msg;
@@ -206,55 +206,55 @@ MessagePattern::operator=(const MessagePattern& other) U_LIFETIME_BOUND {
     hasArgNumbers=other.hasArgNumbers;
     needsAutoQuoting=other.needsAutoQuoting;
     UErrorCode errorCode=U_ZERO_ERROR;
-    if(!copyStorage(other, errorCode)) {
+    אם(!copyStorage(other, errorCode)) {
         clear();
     }
-    return *this;
+    החזר *هذا;
 }
 
 UBool
-MessagePattern::copyStorage(const MessagePattern &other, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+MessagePattern::copyStorage(ثابت MessagePattern &other, UErrorCode &errorCode) {
+    אם(U_FAILURE(errorCode)) {
+        החזר שקר;
     }
     parts=nullptr;
     partsLength=0;
     numericValues=nullptr;
     numericValuesLength=0;
-    if(partsList==nullptr) {
-        partsList=new MessagePatternPartsList();
-        if(partsList==nullptr) {
+    אם(partsList==nullptr) {
+        partsList=جديد MessagePatternPartsList();
+        אם(partsList==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return false;
+            החזר שקר;
         }
         parts=partsList->a.getAlias();
     }
-    if(other.partsLength>0) {
+    אם(other.partsLength>0) {
         partsList->copyFrom(*other.partsList, other.partsLength, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return false;
+        אם(U_FAILURE(errorCode)) {
+            החזר שקר;
         }
         parts=partsList->a.getAlias();
         partsLength=other.partsLength;
     }
-    if(other.numericValuesLength>0) {
-        if(numericValuesList==nullptr) {
-            numericValuesList=new MessagePatternDoubleList();
-            if(numericValuesList==nullptr) {
+    אם(other.numericValuesLength>0) {
+        אם(numericValuesList==nullptr) {
+            numericValuesList=جديد MessagePatternDoubleList();
+            אם(numericValuesList==nullptr) {
                 errorCode=U_MEMORY_ALLOCATION_ERROR;
-                return false;
+                החזר שקר;
             }
             numericValues=numericValuesList->a.getAlias();
         }
         numericValuesList->copyFrom(
             *other.numericValuesList, other.numericValuesLength, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return false;
+        אם(U_FAILURE(errorCode)) {
+            החזר שקר;
         }
         numericValues=numericValuesList->a.getAlias();
         numericValuesLength=other.numericValuesLength;
     }
-    return true;
+    החזר אמת;
 }
 
 MessagePattern::~MessagePattern() {
@@ -265,61 +265,61 @@ MessagePattern::~MessagePattern() {
 // MessagePattern API ------------------------------------------------------ ***
 
 MessagePattern&
-MessagePattern::parse(const UnicodeString& pattern,
+MessagePattern::parse(ثابت UnicodeString& pattern,
                       UParseError* parseError,
                       UErrorCode& errorCode) U_LIFETIME_BOUND {
     preParse(pattern, parseError, errorCode);
     parseMessage(0, 0, 0, UMSGPAT_ARG_TYPE_NONE, parseError, errorCode);
     postParse();
-    return *this;
+    החזר *هذا;
 }
 
 MessagePattern&
-MessagePattern::parseChoiceStyle(const UnicodeString& pattern,
+MessagePattern::parseChoiceStyle(ثابت UnicodeString& pattern,
                                  UParseError* parseError,
                                  UErrorCode& errorCode) U_LIFETIME_BOUND {
     preParse(pattern, parseError, errorCode);
     parseChoiceStyle(0, 0, parseError, errorCode);
     postParse();
-    return *this;
+    החזר *هذا;
 }
 
 MessagePattern&
-MessagePattern::parsePluralStyle(const UnicodeString& pattern,
+MessagePattern::parsePluralStyle(ثابت UnicodeString& pattern,
                                  UParseError* parseError,
                                  UErrorCode& errorCode) U_LIFETIME_BOUND {
     preParse(pattern, parseError, errorCode);
     parsePluralOrSelectStyle(UMSGPAT_ARG_TYPE_PLURAL, 0, 0, parseError, errorCode);
     postParse();
-    return *this;
+    החזר *هذا;
 }
 
 MessagePattern&
-MessagePattern::parseSelectStyle(const UnicodeString& pattern,
+MessagePattern::parseSelectStyle(ثابت UnicodeString& pattern,
                                  UParseError* parseError,
                                  UErrorCode& errorCode) U_LIFETIME_BOUND {
     preParse(pattern, parseError, errorCode);
     parsePluralOrSelectStyle(UMSGPAT_ARG_TYPE_SELECT, 0, 0, parseError, errorCode);
     postParse();
-    return *this;
+    החזר *هذا;
 }
 
-void
+فراغ
 MessagePattern::clear() {
     // Mostly the same as preParse().
     msg.remove();
-    hasArgNames=hasArgNumbers=false;
-    needsAutoQuoting=false;
+    hasArgNames=hasArgNumbers=שקר;
+    needsAutoQuoting=שקר;
     partsLength=0;
     numericValuesLength=0;
 }
 
-bool
-MessagePattern::operator==(const MessagePattern &other) const {
-    if(this==&other) {
-        return true;
+منطقي
+MessagePattern::operator==(ثابت MessagePattern &other) ثابت {
+    אם(هذا==&other) {
+        החזר אמת;
     }
-    return
+    החזר
         aposMode==other.aposMode &&
         msg==other.msg &&
         // parts.equals(o.parts)
@@ -329,48 +329,48 @@ MessagePattern::operator==(const MessagePattern &other) const {
 }
 
 int32_t
-MessagePattern::hashCode() const {
+MessagePattern::hashCode() ثابت {
     int32_t hash=(aposMode*37+msg.hashCode())*37+partsLength;
-    for(int32_t i=0; i<partsLength; ++i) {
+    עבור(int32_t i=0; i<partsLength; ++i) {
         hash=hash*37+parts[i].hashCode();
     }
-    return hash;
+    החזר hash;
 }
 
 int32_t
-MessagePattern::validateArgumentName(const UnicodeString &name) {
-    if(!PatternProps::isIdentifier(name.getBuffer(), name.length())) {
-        return UMSGPAT_ARG_NAME_NOT_VALID;
+MessagePattern::validateArgumentName(ثابت UnicodeString &name) {
+    אם(!PatternProps::isIdentifier(name.getBuffer(), name.length())) {
+        החזר UMSGPAT_ARG_NAME_NOT_VALID;
     }
-    return parseArgNumber(name, 0, name.length());
+    החזר parseArgNumber(name, 0, name.length());
 }
 
 UnicodeString
-MessagePattern::autoQuoteApostropheDeep() const {
-    if(!needsAutoQuoting) {
-        return msg;
+MessagePattern::autoQuoteApostropheDeep() ثابت {
+    אם(!needsAutoQuoting) {
+        החזר msg;
     }
     UnicodeString modified(msg);
     // Iterate backward so that the insertion indexes do not change.
     int32_t count=countParts();
-    for(int32_t i=count; i>0;) {
-        const Part &part=getPart(--i);
-        if(part.getType()==UMSGPAT_PART_TYPE_INSERT_CHAR) {
+    עבור(int32_t i=count; i>0;) {
+        ثابت Part &part=getPart(--i);
+        אם(part.getType()==UMSGPAT_PART_TYPE_INSERT_CHAR) {
            modified.insert(part.index, static_cast<char16_t>(part.value));
         }
     }
-    return modified;
+    החזר modified;
 }
 
-double
-MessagePattern::getNumericValue(const Part &part) const {
+مزدوج
+MessagePattern::getNumericValue(ثابت Part &part) ثابت {
     UMessagePatternPartType type=part.type;
-    if(type==UMSGPAT_PART_TYPE_ARG_INT) {
-        return part.value;
-    } else if(type==UMSGPAT_PART_TYPE_ARG_DOUBLE) {
-        return numericValues[part.value];
-    } else {
-        return UMSGPAT_NO_NUMERIC_VALUE;
+    אם(type==UMSGPAT_PART_TYPE_ARG_INT) {
+        החזר part.value;
+    } אחרת אם(type==UMSGPAT_PART_TYPE_ARG_DOUBLE) {
+        החזר numericValues[part.value];
+    } אחרת {
+        החזר UMSGPAT_NO_NUMERIC_VALUE;
     }
 }
 
@@ -380,24 +380,24 @@ MessagePattern::getNumericValue(const Part &part) const {
   * @return the "offset:" value.
   * @draft ICU 4.8
   */
-double
-MessagePattern::getPluralOffset(int32_t pluralStart) const {
-    const Part &part=getPart(pluralStart);
-    if(Part::hasNumericValue(part.type)) {
-        return getNumericValue(part);
-    } else {
-        return 0;
+مزدوج
+MessagePattern::getPluralOffset(int32_t pluralStart) ثابت {
+    ثابت Part &part=getPart(pluralStart);
+    אם(Part::hasNumericValue(part.type)) {
+        החזר getNumericValue(part);
+    } אחרת {
+        החזר 0;
     }
 }
 
 // MessagePattern::Part ---------------------------------------------------- ***
 
-bool
-MessagePattern::Part::operator==(const Part &other) const {
-    if(this==&other) {
-        return true;
+منطقي
+MessagePattern::Part::operator==(ثابت Part &other) ثابت {
+    אם(هذا==&other) {
+        החזר אמת;
     }
-    return
+    החזר
         type==other.type &&
         index==other.index &&
         length==other.length &&
@@ -407,30 +407,30 @@ MessagePattern::Part::operator==(const Part &other) const {
 
 // MessagePattern parser --------------------------------------------------- ***
 
-void
-MessagePattern::preParse(const UnicodeString &pattern, UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+فراغ
+MessagePattern::preParse(ثابت UnicodeString &pattern, UParseError *parseError, UErrorCode &errorCode) {
+    אם(U_FAILURE(errorCode)) {
+        החזר;
     }
-    if(parseError!=nullptr) {
+    אם(parseError!=nullptr) {
         parseError->line=0;
         parseError->offset=0;
         parseError->preContext[0]=0;
         parseError->postContext[0]=0;
     }
     msg=pattern;
-    hasArgNames=hasArgNumbers=false;
-    needsAutoQuoting=false;
+    hasArgNames=hasArgNumbers=שקר;
+    needsAutoQuoting=שקר;
     partsLength=0;
     numericValuesLength=0;
 }
 
-void
+فراغ
 MessagePattern::postParse() {
-    if(partsList!=nullptr) {
+    אם(partsList!=nullptr) {
         parts=partsList->a.getAlias();
     }
-    if(numericValuesList!=nullptr) {
+    אם(numericValuesList!=nullptr) {
         numericValues=numericValuesList->a.getAlias();
     }
 }
@@ -439,37 +439,37 @@ int32_t
 MessagePattern::parseMessage(int32_t index, int32_t msgStartLength,
                              int32_t nestingLevel, UMessagePatternArgType parentType,
                              UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    אם(U_FAILURE(errorCode)) {
+        החזר 0;
     }
-    if(nestingLevel>Part::MAX_NESTED_LEVELS) {
+    אם(nestingLevel>Part::MAX_NESTED_LEVELS) {
         errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        החזר 0;
     }
     int32_t msgStart=partsLength;
     addPart(UMSGPAT_PART_TYPE_MSG_START, index, msgStartLength, nestingLevel, errorCode);
     index+=msgStartLength;
-    for(;;) {  // while(index<msg.length()) with U_FAILURE(errorCode) check
-        if(U_FAILURE(errorCode)) {
-            return 0;
+    עבור(;;) {  // while(index<msg.length()) with U_FAILURE(errorCode) check
+        אם(U_FAILURE(errorCode)) {
+            החזר 0;
         }
-        if(index>=msg.length()) {
-            break;
+        אם(index>=msg.length()) {
+            اكسر;
         }
         char16_t c=msg.charAt(index++);
-        if(c==u_apos) {
-            if(index==msg.length()) {
+        אם(c==u_apos) {
+            אם(index==msg.length()) {
                 // The apostrophe is the last character in the pattern. 
                 // Add a Part for auto-quoting.
                 addPart(UMSGPAT_PART_TYPE_INSERT_CHAR, index, 0,
                         u_apos, errorCode);  // value=char to be inserted
-                needsAutoQuoting=true;
-            } else {
+                needsAutoQuoting=אמת;
+            } אחרת {
                 c=msg.charAt(index);
-                if(c==u_apos) {
+                אם(c==u_apos) {
                     // double apostrophe, skip the second one
                     addPart(UMSGPAT_PART_TYPE_SKIP_SYNTAX, index++, 1, 0, errorCode);
-                } else if(
+                } אחרת אם(
                     aposMode==UMSGPAT_APOS_DOUBLE_REQUIRED ||
                     c==u_leftCurlyBrace || c==u_rightCurlyBrace ||
                     (parentType==UMSGPAT_ARG_TYPE_CHOICE && c==u_pipe) ||
@@ -478,43 +478,43 @@ MessagePattern::parseMessage(int32_t index, int32_t msgStartLength,
                     // skip the quote-starting apostrophe
                     addPart(UMSGPAT_PART_TYPE_SKIP_SYNTAX, index-1, 1, 0, errorCode);
                     // find the end of the quoted literal text
-                    for(;;) {
+                    עבור(;;) {
                         index=msg.indexOf(u_apos, index+1);
-                        if(index>=0) {
-                            if(/*(index+1)<msg.length() &&*/ msg.charAt(index+1)==u_apos) {
+                        אם(index>=0) {
+                            אם(/*(index+1)<msg.length() &&*/ msg.charAt(index+1)==u_apos) {
                                 // double apostrophe inside quoted literal text
                                 // still encodes a single apostrophe, skip the second one
                                 addPart(UMSGPAT_PART_TYPE_SKIP_SYNTAX, ++index, 1, 0, errorCode);
-                            } else {
+                            } אחרת {
                                 // skip the quote-ending apostrophe
                                 addPart(UMSGPAT_PART_TYPE_SKIP_SYNTAX, index++, 1, 0, errorCode);
-                                break;
+                                اكسر;
                             }
-                        } else {
+                        } אחרת {
                             // The quoted text reaches to the end of the of the message.
                             index=msg.length();
                             // Add a Part for auto-quoting.
                             addPart(UMSGPAT_PART_TYPE_INSERT_CHAR, index, 0,
                                     u_apos, errorCode);  // value=char to be inserted
-                            needsAutoQuoting=true;
-                            break;
+                            needsAutoQuoting=אמת;
+                            اكسر;
                         }
                     }
-                } else {
+                } אחרת {
                     // Interpret the apostrophe as literal text.
                     // Add a Part for auto-quoting.
                     addPart(UMSGPAT_PART_TYPE_INSERT_CHAR, index, 0,
                             u_apos, errorCode);  // value=char to be inserted
-                    needsAutoQuoting=true;
+                    needsAutoQuoting=אמת;
                 }
             }
-        } else if(UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(parentType) && c==u_pound) {
+        } אחרת אם(UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(parentType) && c==u_pound) {
             // The unquoted # in a plural message fragment will be replaced
             // with the (number-offset).
             addPart(UMSGPAT_PART_TYPE_REPLACE_NUMBER, index-1, 1, 0, errorCode);
-        } else if(c==u_leftCurlyBrace) {
+        } אחרת אם(c==u_leftCurlyBrace) {
             index=parseArg(index-1, 1, nestingLevel, parseError, errorCode);
-        } else if((nestingLevel>0 && c==u_rightCurlyBrace) ||
+        } אחרת אם((nestingLevel>0 && c==u_rightCurlyBrace) ||
                   (parentType==UMSGPAT_ARG_TYPE_CHOICE && c==u_pipe)) {
             // Finish the message before the terminator.
             // In a choice style, report the "}" substring only for the following ARG_LIMIT,
@@ -522,22 +522,22 @@ MessagePattern::parseMessage(int32_t index, int32_t msgStartLength,
             int32_t limitLength=(parentType==UMSGPAT_ARG_TYPE_CHOICE && c==u_rightCurlyBrace) ? 0 : 1;
             addLimitPart(msgStart, UMSGPAT_PART_TYPE_MSG_LIMIT, index-1, limitLength,
                          nestingLevel, errorCode);
-            if(parentType==UMSGPAT_ARG_TYPE_CHOICE) {
+            אם(parentType==UMSGPAT_ARG_TYPE_CHOICE) {
                 // Let the choice style parser see the '}' or '|'.
-                return index-1;
-            } else {
+                החזר index-1;
+            } אחרת {
                 // continue parsing after the '}'
-                return index;
+                החזר index;
             }
         }  // else: c is part of literal text
     }
-    if(nestingLevel>0 && !inTopLevelChoiceMessage(nestingLevel, parentType)) {
+    אם(nestingLevel>0 && !inTopLevelChoiceMessage(nestingLevel, parentType)) {
         setParseError(parseError, 0);  // Unmatched '{' braces in message.
         errorCode=U_UNMATCHED_BRACES;
-        return 0;
+        החזר 0;
     }
     addLimitPart(msgStart, UMSGPAT_PART_TYPE_MSG_LIMIT, index, 0, nestingLevel, errorCode);
-    return index;
+    החזר index;
 }
 
 int32_t
@@ -546,226 +546,226 @@ MessagePattern::parseArg(int32_t index, int32_t argStartLength, int32_t nestingL
     int32_t argStart=partsLength;
     UMessagePatternArgType argType=UMSGPAT_ARG_TYPE_NONE;
     addPart(UMSGPAT_PART_TYPE_ARG_START, index, argStartLength, argType, errorCode);
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    אם(U_FAILURE(errorCode)) {
+        החזר 0;
     }
     int32_t nameIndex=index=skipWhiteSpace(index+argStartLength);
-    if(index==msg.length()) {
+    אם(index==msg.length()) {
         setParseError(parseError, 0);  // Unmatched '{' braces in message.
         errorCode=U_UNMATCHED_BRACES;
-        return 0;
+        החזר 0;
     }
     // parse argument name or number
     index=skipIdentifier(index);
     int32_t number=parseArgNumber(nameIndex, index);
-    if(number>=0) {
+    אם(number>=0) {
         int32_t length=index-nameIndex;
-        if(length>Part::MAX_LENGTH || number>Part::MAX_VALUE) {
+        אם(length>Part::MAX_LENGTH || number>Part::MAX_VALUE) {
             setParseError(parseError, nameIndex);  // Argument number too large.
             errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            החזר 0;
         }
-        hasArgNumbers=true;
+        hasArgNumbers=אמת;
         addPart(UMSGPAT_PART_TYPE_ARG_NUMBER, nameIndex, length, number, errorCode);
-    } else if(number==UMSGPAT_ARG_NAME_NOT_NUMBER) {
+    } אחרת אם(number==UMSGPAT_ARG_NAME_NOT_NUMBER) {
         int32_t length=index-nameIndex;
-        if(length>Part::MAX_LENGTH) {
+        אם(length>Part::MAX_LENGTH) {
             setParseError(parseError, nameIndex);  // Argument name too long.
             errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            החזר 0;
         }
-        hasArgNames=true;
+        hasArgNames=אמת;
         addPart(UMSGPAT_PART_TYPE_ARG_NAME, nameIndex, length, 0, errorCode);
-    } else {  // number<-1 (ARG_NAME_NOT_VALID)
+    } אחרת {  // number<-1 (ARG_NAME_NOT_VALID)
         setParseError(parseError, nameIndex);  // Bad argument syntax.
         errorCode=U_PATTERN_SYNTAX_ERROR;
-        return 0;
+        החזר 0;
     }
     index=skipWhiteSpace(index);
-    if(index==msg.length()) {
+    אם(index==msg.length()) {
         setParseError(parseError, 0);  // Unmatched '{' braces in message.
         errorCode=U_UNMATCHED_BRACES;
-        return 0;
+        החזר 0;
     }
     char16_t c=msg.charAt(index);
-    if(c==u_rightCurlyBrace) {
+    אם(c==u_rightCurlyBrace) {
         // all done
-    } else if(c!=u_comma) {
+    } אחרת אם(c!=u_comma) {
         setParseError(parseError, nameIndex);  // Bad argument syntax.
         errorCode=U_PATTERN_SYNTAX_ERROR;
-        return 0;
-    } else /* ',' */ {
+        החזר 0;
+    } אחרת /* ',' */ {
         // parse argument type: case-sensitive a-zA-Z
         int32_t typeIndex=index=skipWhiteSpace(index+1);
-        while(index<msg.length() && isArgTypeChar(msg.charAt(index))) {
+        כלעוד(index<msg.length() && isArgTypeChar(msg.charAt(index))) {
             ++index;
         }
         int32_t length=index-typeIndex;
         index=skipWhiteSpace(index);
-        if(index==msg.length()) {
+        אם(index==msg.length()) {
             setParseError(parseError, 0);  // Unmatched '{' braces in message.
             errorCode=U_UNMATCHED_BRACES;
-            return 0;
+            החזר 0;
         }
-        if(length==0 || ((c=msg.charAt(index))!=u_comma && c!=u_rightCurlyBrace)) {
+        אם(length==0 || ((c=msg.charAt(index))!=u_comma && c!=u_rightCurlyBrace)) {
             setParseError(parseError, nameIndex);  // Bad argument syntax.
             errorCode=U_PATTERN_SYNTAX_ERROR;
-            return 0;
+            החזר 0;
         }
-        if(length>Part::MAX_LENGTH) {
+        אם(length>Part::MAX_LENGTH) {
             setParseError(parseError, nameIndex);  // Argument type name too long.
             errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            החזר 0;
         }
         argType=UMSGPAT_ARG_TYPE_SIMPLE;
-        if(length==6) {
+        אם(length==6) {
             // case-insensitive comparisons for complex-type names
-            if(isChoice(typeIndex)) {
+            אם(isChoice(typeIndex)) {
                 argType=UMSGPAT_ARG_TYPE_CHOICE;
-            } else if(isPlural(typeIndex)) {
+            } אחרת אם(isPlural(typeIndex)) {
                 argType=UMSGPAT_ARG_TYPE_PLURAL;
-            } else if(isSelect(typeIndex)) {
+            } אחרת אם(isSelect(typeIndex)) {
                 argType=UMSGPAT_ARG_TYPE_SELECT;
             }
-        } else if(length==13) {
-            if(isSelect(typeIndex) && isOrdinal(typeIndex+6)) {
+        } אחרת אם(length==13) {
+            אם(isSelect(typeIndex) && isOrdinal(typeIndex+6)) {
                 argType=UMSGPAT_ARG_TYPE_SELECTORDINAL;
             }
         }
         // change the ARG_START type from NONE to argType
         partsList->a[argStart].value = static_cast<int16_t>(argType);
-        if(argType==UMSGPAT_ARG_TYPE_SIMPLE) {
+        אם(argType==UMSGPAT_ARG_TYPE_SIMPLE) {
             addPart(UMSGPAT_PART_TYPE_ARG_TYPE, typeIndex, length, 0, errorCode);
         }
         // look for an argument style (pattern)
-        if(c==u_rightCurlyBrace) {
-            if(argType!=UMSGPAT_ARG_TYPE_SIMPLE) {
+        אם(c==u_rightCurlyBrace) {
+            אם(argType!=UMSGPAT_ARG_TYPE_SIMPLE) {
                 setParseError(parseError, nameIndex);  // No style field for complex argument.
                 errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+                החזר 0;
             }
-        } else /* ',' */ {
+        } אחרת /* ',' */ {
             ++index;
-            if(argType==UMSGPAT_ARG_TYPE_SIMPLE) {
+            אם(argType==UMSGPAT_ARG_TYPE_SIMPLE) {
                 index=parseSimpleStyle(index, parseError, errorCode);
-            } else if(argType==UMSGPAT_ARG_TYPE_CHOICE) {
+            } אחרת אם(argType==UMSGPAT_ARG_TYPE_CHOICE) {
                 index=parseChoiceStyle(index, nestingLevel, parseError, errorCode);
-            } else {
+            } אחרת {
                 index=parsePluralOrSelectStyle(argType, index, nestingLevel, parseError, errorCode);
             }
         }
     }
     // Argument parsing stopped on the '}'.
     addLimitPart(argStart, UMSGPAT_PART_TYPE_ARG_LIMIT, index, 1, argType, errorCode);
-    return index+1;
+    החזר index+1;
 }
 
 int32_t
 MessagePattern::parseSimpleStyle(int32_t index, UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    אם(U_FAILURE(errorCode)) {
+        החזר 0;
     }
     int32_t start=index;
     int32_t nestedBraces=0;
-    while(index<msg.length()) {
+    כלעוד(index<msg.length()) {
         char16_t c=msg.charAt(index++);
-        if(c==u_apos) {
+        אם(c==u_apos) {
             // Treat apostrophe as quoting but include it in the style part.
             // Find the end of the quoted literal text.
             index=msg.indexOf(u_apos, index);
-            if(index<0) {
+            אם(index<0) {
                 // Quoted literal argument style text reaches to the end of the message.
                 setParseError(parseError, start);
                 errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+                החזר 0;
             }
             // skip the quote-ending apostrophe
             ++index;
-        } else if(c==u_leftCurlyBrace) {
+        } אחרת אם(c==u_leftCurlyBrace) {
             ++nestedBraces;
-        } else if(c==u_rightCurlyBrace) {
-            if(nestedBraces>0) {
+        } אחרת אם(c==u_rightCurlyBrace) {
+            אם(nestedBraces>0) {
                 --nestedBraces;
-            } else {
+            } אחרת {
                 int32_t length=--index-start;
-                if(length>Part::MAX_LENGTH) {
+                אם(length>Part::MAX_LENGTH) {
                     setParseError(parseError, start);  // Argument style text too long.
                     errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                    return 0;
+                    החזר 0;
                 }
                 addPart(UMSGPAT_PART_TYPE_ARG_STYLE, start, length, 0, errorCode);
-                return index;
+                החזר index;
             }
         }  // c is part of literal text
     }
     setParseError(parseError, 0);  // Unmatched '{' braces in message.
     errorCode=U_UNMATCHED_BRACES;
-    return 0;
+    החזר 0;
 }
 
 int32_t
 MessagePattern::parseChoiceStyle(int32_t index, int32_t nestingLevel,
                                  UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    אם(U_FAILURE(errorCode)) {
+        החזר 0;
     }
     int32_t start=index;
     index=skipWhiteSpace(index);
-    if(index==msg.length() || msg.charAt(index)==u_rightCurlyBrace) {
+    אם(index==msg.length() || msg.charAt(index)==u_rightCurlyBrace) {
         setParseError(parseError, 0);  // Missing choice argument pattern.
         errorCode=U_PATTERN_SYNTAX_ERROR;
-        return 0;
+        החזר 0;
     }
-    for(;;) {
+    עבור(;;) {
         // The choice argument style contains |-separated (number, separator, message) triples.
         // Parse the number.
         int32_t numberIndex=index;
         index=skipDouble(index);
         int32_t length=index-numberIndex;
-        if(length==0) {
+        אם(length==0) {
             setParseError(parseError, start);  // Bad choice pattern syntax.
             errorCode=U_PATTERN_SYNTAX_ERROR;
-            return 0;
+            החזר 0;
         }
-        if(length>Part::MAX_LENGTH) {
+        אם(length>Part::MAX_LENGTH) {
             setParseError(parseError, numberIndex);  // Choice number too long.
             errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            החזר 0;
         }
-        parseDouble(numberIndex, index, true, parseError, errorCode);  // adds ARG_INT or ARG_DOUBLE
-        if(U_FAILURE(errorCode)) {
-            return 0;
+        parseDouble(numberIndex, index, אמת, parseError, errorCode);  // adds ARG_INT or ARG_DOUBLE
+        אם(U_FAILURE(errorCode)) {
+            החזר 0;
         }
         // Parse the separator.
         index=skipWhiteSpace(index);
-        if(index==msg.length()) {
+        אם(index==msg.length()) {
             setParseError(parseError, start);  // Bad choice pattern syntax.
             errorCode=U_PATTERN_SYNTAX_ERROR;
-            return 0;
+            החזר 0;
         }
         char16_t c=msg.charAt(index);
-        if(!(c==u_pound || c==u_lessThan || c==u_lessOrEqual)) {  // U+2264 is <=
+        אם(!(c==u_pound || c==u_lessThan || c==u_lessOrEqual)) {  // U+2264 is <=
             setParseError(parseError, start);  // Expected choice separator (#<\u2264) instead of c.
             errorCode=U_PATTERN_SYNTAX_ERROR;
-            return 0;
+            החזר 0;
         }
         addPart(UMSGPAT_PART_TYPE_ARG_SELECTOR, index, 1, 0, errorCode);
         // Parse the message fragment.
         index=parseMessage(++index, 0, nestingLevel+1, UMSGPAT_ARG_TYPE_CHOICE, parseError, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return 0;
+        אם(U_FAILURE(errorCode)) {
+            החזר 0;
         }
         // parseMessage(..., CHOICE) returns the index of the terminator, or msg.length().
-        if(index==msg.length()) {
-            return index;
+        אם(index==msg.length()) {
+            החזר index;
         }
-        if(msg.charAt(index)==u_rightCurlyBrace) {
-            if(!inMessageFormatPattern(nestingLevel)) {
+        אם(msg.charAt(index)==u_rightCurlyBrace) {
+            אם(!inMessageFormatPattern(nestingLevel)) {
                 setParseError(parseError, start);  // Bad choice pattern syntax.
                 errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+                החזר 0;
             }
-            return index;
+            החזר index;
         }  // else the terminator is '|'
         index=skipWhiteSpace(index+1);
     }
@@ -775,233 +775,233 @@ int32_t
 MessagePattern::parsePluralOrSelectStyle(UMessagePatternArgType argType,
                                          int32_t index, int32_t nestingLevel,
                                          UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    אם(U_FAILURE(errorCode)) {
+        החזר 0;
     }
     int32_t start=index;
-    UBool isEmpty=true;
-    UBool hasOther=false;
-    for(;;) {
+    UBool isEmpty=אמת;
+    UBool hasOther=שקר;
+    עבור(;;) {
         // First, collect the selector looking for a small set of terminators.
         // It would be a little faster to consider the syntax of each possible
         // token right here, but that makes the code too complicated.
         index=skipWhiteSpace(index);
         UBool eos=index==msg.length();
-        if(eos || msg.charAt(index)==u_rightCurlyBrace) {
-            if(eos==inMessageFormatPattern(nestingLevel)) {
+        אם(eos || msg.charAt(index)==u_rightCurlyBrace) {
+            אם(eos==inMessageFormatPattern(nestingLevel)) {
                 setParseError(parseError, start);  // Bad plural/select pattern syntax.
                 errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+                החזר 0;
             }
-            if(!hasOther) {
+            אם(!hasOther) {
                 setParseError(parseError, 0);  // Missing 'other' keyword in plural/select pattern.
                 errorCode=U_DEFAULT_KEYWORD_MISSING;
-                return 0;
+                החזר 0;
             }
-            return index;
+            החזר index;
         }
         int32_t selectorIndex=index;
-        if(UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) && msg.charAt(selectorIndex)==u_equal) {
+        אם(UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) && msg.charAt(selectorIndex)==u_equal) {
             // explicit-value plural selector: =double
             index=skipDouble(index+1);
             int32_t length=index-selectorIndex;
-            if(length==1) {
+            אם(length==1) {
                 setParseError(parseError, start);  // Bad plural/select pattern syntax.
                 errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+                החזר 0;
             }
-            if(length>Part::MAX_LENGTH) {
+            אם(length>Part::MAX_LENGTH) {
                 setParseError(parseError, selectorIndex);  // Argument selector too long.
                 errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                return 0;
+                החזר 0;
             }
             addPart(UMSGPAT_PART_TYPE_ARG_SELECTOR, selectorIndex, length, 0, errorCode);
-            parseDouble(selectorIndex+1, index, false,
+            parseDouble(selectorIndex+1, index, שקר,
                         parseError, errorCode);  // adds ARG_INT or ARG_DOUBLE
-        } else {
+        } אחרת {
             index=skipIdentifier(index);
             int32_t length=index-selectorIndex;
-            if(length==0) {
+            אם(length==0) {
                 setParseError(parseError, start);  // Bad plural/select pattern syntax.
                 errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+                החזר 0;
             }
             // Note: The ':' in "offset:" is just beyond the skipIdentifier() range.
-            if( UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) && length==6 && index<msg.length() &&
+            אם( UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) && length==6 && index<msg.length() &&
                 0==msg.compare(selectorIndex, 7, kOffsetColon, 0, 7)
             ) {
                 // plural offset, not a selector
-                if(!isEmpty) {
+                אם(!isEmpty) {
                     // Plural argument 'offset:' (if present) must precede key-message pairs.
                     setParseError(parseError, start);
                     errorCode=U_PATTERN_SYNTAX_ERROR;
-                    return 0;
+                    החזר 0;
                 }
                 // allow whitespace between offset: and its value
                 int32_t valueIndex=skipWhiteSpace(index+1);  // The ':' is at index.
                 index=skipDouble(valueIndex);
-                if(index==valueIndex) {
+                אם(index==valueIndex) {
                     setParseError(parseError, start);  // Missing value for plural 'offset:'.
                     errorCode=U_PATTERN_SYNTAX_ERROR;
-                    return 0;
+                    החזר 0;
                 }
-                if((index-valueIndex)>Part::MAX_LENGTH) {
+                אם((index-valueIndex)>Part::MAX_LENGTH) {
                     setParseError(parseError, valueIndex);  // Plural offset value too long.
                     errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                    return 0;
+                    החזר 0;
                 }
-                parseDouble(valueIndex, index, false,
+                parseDouble(valueIndex, index, שקר,
                             parseError, errorCode);  // adds ARG_INT or ARG_DOUBLE
-                if(U_FAILURE(errorCode)) {
-                    return 0;
+                אם(U_FAILURE(errorCode)) {
+                    החזר 0;
                 }
-                isEmpty=false;
-                continue;  // no message fragment after the offset
-            } else {
+                isEmpty=שקר;
+                استمر;  // no message fragment after the offset
+            } אחרת {
                 // normal selector word
-                if(length>Part::MAX_LENGTH) {
+                אם(length>Part::MAX_LENGTH) {
                     setParseError(parseError, selectorIndex);  // Argument selector too long.
                     errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                    return 0;
+                    החזר 0;
                 }
                 addPart(UMSGPAT_PART_TYPE_ARG_SELECTOR, selectorIndex, length, 0, errorCode);
-                if(0==msg.compare(selectorIndex, length, kOther, 0, 5)) {
-                    hasOther=true;
+                אם(0==msg.compare(selectorIndex, length, kOther, 0, 5)) {
+                    hasOther=אמת;
                 }
             }
         }
-        if(U_FAILURE(errorCode)) {
-            return 0;
+        אם(U_FAILURE(errorCode)) {
+            החזר 0;
         }
 
         // parse the message fragment following the selector
         index=skipWhiteSpace(index);
-        if(index==msg.length() || msg.charAt(index)!=u_leftCurlyBrace) {
+        אם(index==msg.length() || msg.charAt(index)!=u_leftCurlyBrace) {
             setParseError(parseError, selectorIndex);  // No message fragment after plural/select selector.
             errorCode=U_PATTERN_SYNTAX_ERROR;
-            return 0;
+            החזר 0;
         }
         index=parseMessage(index, 1, nestingLevel+1, argType, parseError, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return 0;
+        אם(U_FAILURE(errorCode)) {
+            החזר 0;
         }
-        isEmpty=false;
+        isEmpty=שקר;
     }
 }
 
 int32_t
-MessagePattern::parseArgNumber(const UnicodeString &s, int32_t start, int32_t limit) {
+MessagePattern::parseArgNumber(ثابت UnicodeString &s, int32_t start, int32_t limit) {
     // If the identifier contains only ASCII digits, then it is an argument _number_
     // and must not have leading zeros (except "0" itself).
     // Otherwise it is an argument _name_.
-    if(start>=limit) {
-        return UMSGPAT_ARG_NAME_NOT_VALID;
+    אם(start>=limit) {
+        החזר UMSGPAT_ARG_NAME_NOT_VALID;
     }
     int32_t number;
     // Defer numeric errors until we know there are only digits.
     UBool badNumber;
     char16_t c=s.charAt(start++);
-    if(c==0x30) {
-        if(start==limit) {
-            return 0;
-        } else {
+    אם(c==0x30) {
+        אם(start==limit) {
+            החזר 0;
+        } אחרת {
             number=0;
-            badNumber=true;  // leading zero
+            badNumber=אמת;  // leading zero
         }
-    } else if(0x31<=c && c<=0x39) {
+    } אחרת אם(0x31<=c && c<=0x39) {
         number=c-0x30;
-        badNumber=false;
-    } else {
-        return UMSGPAT_ARG_NAME_NOT_NUMBER;
+        badNumber=שקר;
+    } אחרת {
+        החזר UMSGPAT_ARG_NAME_NOT_NUMBER;
     }
-    while(start<limit) {
+    כלעוד(start<limit) {
         c=s.charAt(start++);
-        if(0x30<=c && c<=0x39) {
-            if(number>=INT32_MAX/10) {
-                badNumber=true;  // overflow
-            } else {
+        אם(0x30<=c && c<=0x39) {
+            אם(number>=INT32_MAX/10) {
+                badNumber=אמת;  // overflow
+            } אחרת {
                 number=number*10+(c-0x30);
             }
-        } else {
-            return UMSGPAT_ARG_NAME_NOT_NUMBER;
+        } אחרת {
+            החזר UMSGPAT_ARG_NAME_NOT_NUMBER;
         }
     }
     // There are only ASCII digits.
-    if(badNumber) {
-        return UMSGPAT_ARG_NAME_NOT_VALID;
-    } else {
-        return number;
+    אם(badNumber) {
+        החזר UMSGPAT_ARG_NAME_NOT_VALID;
+    } אחרת {
+        החזר number;
     }
 }
 
-void
+فراغ
 MessagePattern::parseDouble(int32_t start, int32_t limit, UBool allowInfinity,
                             UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    אם(U_FAILURE(errorCode)) {
+        החזר;
     }
     U_ASSERT(start<limit);
     // fake loop for easy exit and single throw statement
-    for(;;) { /*loop doesn't iterate*/
+    עבור(;;) { /*loop doesn't iterate*/
         // fast path for small integers and infinity
         int32_t value=0;
         int32_t isNegative=0;  // not boolean so that we can easily add it to value
         int32_t index=start;
         char16_t c=msg.charAt(index++);
-        if(c==u_minus) {
+        אם(c==u_minus) {
             isNegative=1;
-            if(index==limit) {
-                break;  // no number
+            אם(index==limit) {
+                اكسر;  // no number
             }
             c=msg.charAt(index++);
-        } else if(c==u_plus) {
-            if(index==limit) {
-                break;  // no number
+        } אחרת אם(c==u_plus) {
+            אם(index==limit) {
+                اكسر;  // no number
             }
             c=msg.charAt(index++);
         }
-        if(c==0x221e) {  // infinity
-            if(allowInfinity && index==limit) {
-                double infinity=uprv_getInfinity();
+        אם(c==0x221e) {  // infinity
+            אם(allowInfinity && index==limit) {
+                مزدوج infinity=uprv_getInfinity();
                 addArgDoublePart(
                     isNegative!=0 ? -infinity : infinity,
                     start, limit-start, errorCode);
-                return;
-            } else {
-                break;
+                החזר;
+            } אחרת {
+                اكسر;
             }
         }
         // try to parse the number as a small integer but fall back to a double
-        while('0'<=c && c<='9') {
+        כלעוד('0'<=c && c<='9') {
             value=value*10+(c-'0');
-            if(value>(Part::MAX_VALUE+isNegative)) {
-                break;  // not a small-enough integer
+            אם(value>(Part::MAX_VALUE+isNegative)) {
+                اكسر;  // not a small-enough integer
             }
-            if(index==limit) {
+            אם(index==limit) {
                 addPart(UMSGPAT_PART_TYPE_ARG_INT, start, limit-start,
                         isNegative!=0 ? -value : value, errorCode);
-                return;
+                החזר;
             }
             c=msg.charAt(index++);
         }
         // Let Double.parseDouble() throw a NumberFormatException.
-        char numberChars[128];
-        int32_t capacity = static_cast<int32_t>(sizeof(numberChars));
+        حرف numberChars[128];
+        int32_t capacity = static_cast<int32_t>(حجم(numberChars));
         int32_t length=limit-start;
-        if(length>=capacity) {
-            break;  // number too long
+        אם(length>=capacity) {
+            اكسر;  // number too long
         }
         msg.extract(start, length, numberChars, capacity, US_INV);
-        if (static_cast<int32_t>(uprv_strlen(numberChars)) < length) {
-            break;  // contains non-invariant character that was turned into NUL
+        אם (static_cast<int32_t>(uprv_strlen(numberChars)) < length) {
+            اكسر;  // contains non-invariant character that was turned into NUL
         }
-        char *end;
-        double numericValue=uprv_strtod(numberChars, &end);
-        if(end!=(numberChars+length)) {
-            break;  // parsing error
+        حرف *end;
+        مزدوج numericValue=uprv_strtod(numberChars, &end);
+        אם(end!=(numberChars+length)) {
+            اكسر;  // parsing error
         }
         addArgDoublePart(numericValue, start, length, errorCode);
-        return;
+        החזר;
     }
     setParseError(parseError, start /*, limit*/);  // Bad syntax for numeric value.
     errorCode=U_PATTERN_SYNTAX_ERROR;
@@ -1009,43 +1009,43 @@ MessagePattern::parseDouble(int32_t start, int32_t limit, UBool allowInfinity,
 
 int32_t
 MessagePattern::skipWhiteSpace(int32_t index) {
-    const char16_t *s=msg.getBuffer();
+    ثابت char16_t *s=msg.getBuffer();
     int32_t msgLength=msg.length();
-    const char16_t *t=PatternProps::skipWhiteSpace(s+index, msgLength-index);
-    return static_cast<int32_t>(t - s);
+    ثابت char16_t *t=PatternProps::skipWhiteSpace(s+index, msgLength-index);
+    החזר static_cast<int32_t>(t - s);
 }
 
 int32_t
 MessagePattern::skipIdentifier(int32_t index) {
-    const char16_t *s=msg.getBuffer();
+    ثابت char16_t *s=msg.getBuffer();
     int32_t msgLength=msg.length();
-    const char16_t *t=PatternProps::skipIdentifier(s+index, msgLength-index);
-    return static_cast<int32_t>(t - s);
+    ثابت char16_t *t=PatternProps::skipIdentifier(s+index, msgLength-index);
+    החזר static_cast<int32_t>(t - s);
 }
 
 int32_t
 MessagePattern::skipDouble(int32_t index) {
     int32_t msgLength=msg.length();
-    while(index<msgLength) {
+    כלעוד(index<msgLength) {
         char16_t c=msg.charAt(index);
         // U+221E: Allow the infinity symbol, for ChoiceFormat patterns.
-        if((c<0x30 && c!=u_plus && c!=u_minus && c!=u_dot) || (c>0x39 && c!=u_e && c!=u_E && c!=0x221e)) {
-            break;
+        אם((c<0x30 && c!=u_plus && c!=u_minus && c!=u_dot) || (c>0x39 && c!=u_e && c!=u_E && c!=0x221e)) {
+            اكسر;
         }
         ++index;
     }
-    return index;
+    החזר index;
 }
 
 UBool
 MessagePattern::isArgTypeChar(UChar32 c) {
-    return (u_a<=c && c<=u_z) || (u_A<=c && c<=u_Z);
+    החזר (u_a<=c && c<=u_z) || (u_A<=c && c<=u_Z);
 }
 
 UBool
 MessagePattern::isChoice(int32_t index) {
     char16_t c;
-    return
+    החזר
         ((c=msg.charAt(index++))==u_c || c==u_C) &&
         ((c=msg.charAt(index++))==u_h || c==u_H) &&
         ((c=msg.charAt(index++))==u_o || c==u_O) &&
@@ -1057,7 +1057,7 @@ MessagePattern::isChoice(int32_t index) {
 UBool
 MessagePattern::isPlural(int32_t index) {
     char16_t c;
-    return
+    החזר
         ((c=msg.charAt(index++))==u_p || c==u_P) &&
         ((c=msg.charAt(index++))==u_l || c==u_L) &&
         ((c=msg.charAt(index++))==u_u || c==u_U) &&
@@ -1069,7 +1069,7 @@ MessagePattern::isPlural(int32_t index) {
 UBool
 MessagePattern::isSelect(int32_t index) {
     char16_t c;
-    return
+    החזר
         ((c=msg.charAt(index++))==u_s || c==u_S) &&
         ((c=msg.charAt(index++))==u_e || c==u_E) &&
         ((c=msg.charAt(index++))==u_l || c==u_L) &&
@@ -1081,7 +1081,7 @@ MessagePattern::isSelect(int32_t index) {
 UBool
 MessagePattern::isOrdinal(int32_t index) {
     char16_t c;
-    return
+    החזר
         ((c=msg.charAt(index++))==u_o || c==u_O) &&
         ((c=msg.charAt(index++))==u_r || c==u_R) &&
         ((c=msg.charAt(index++))==u_d || c==u_D) &&
@@ -1093,21 +1093,21 @@ MessagePattern::isOrdinal(int32_t index) {
 
 UBool
 MessagePattern::inMessageFormatPattern(int32_t nestingLevel) {
-    return nestingLevel>0 || partsList->a[0].type==UMSGPAT_PART_TYPE_MSG_START;
+    החזר nestingLevel>0 || partsList->a[0].type==UMSGPAT_PART_TYPE_MSG_START;
 }
 
 UBool
 MessagePattern::inTopLevelChoiceMessage(int32_t nestingLevel, UMessagePatternArgType parentType) {
-    return
+    החזר
         nestingLevel==1 &&
         parentType==UMSGPAT_ARG_TYPE_CHOICE &&
         partsList->a[0].type!=UMSGPAT_PART_TYPE_MSG_START;
 }
 
-void
+فراغ
 MessagePattern::addPart(UMessagePatternPartType type, int32_t index, int32_t length,
                         int32_t value, UErrorCode &errorCode) {
-    if(partsList->ensureCapacityForOneMore(partsLength, errorCode)) {
+    אם(partsList->ensureCapacityForOneMore(partsLength, errorCode)) {
         Part &part=partsList->a[partsLength++];
         part.type=type;
         part.index=index;
@@ -1117,7 +1117,7 @@ MessagePattern::addPart(UMessagePatternPartType type, int32_t index, int32_t len
     }
 }
 
-void
+فراغ
 MessagePattern::addLimitPart(int32_t start,
                              UMessagePatternPartType type, int32_t index, int32_t length,
                              int32_t value, UErrorCode &errorCode) {
@@ -1125,44 +1125,44 @@ MessagePattern::addLimitPart(int32_t start,
     addPart(type, index, length, value, errorCode);
 }
 
-void
-MessagePattern::addArgDoublePart(double numericValue, int32_t start, int32_t length,
+فراغ
+MessagePattern::addArgDoublePart(مزدوج numericValue, int32_t start, int32_t length,
                                  UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    אם(U_FAILURE(errorCode)) {
+        החזר;
     }
     int32_t numericIndex=numericValuesLength;
-    if(numericValuesList==nullptr) {
-        numericValuesList=new MessagePatternDoubleList();
-        if(numericValuesList==nullptr) {
+    אם(numericValuesList==nullptr) {
+        numericValuesList=جديد MessagePatternDoubleList();
+        אם(numericValuesList==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            החזר;
         }
-    } else if(!numericValuesList->ensureCapacityForOneMore(numericValuesLength, errorCode)) {
-        return;
-    } else {
-        if(numericIndex>Part::MAX_VALUE) {
+    } אחרת אם(!numericValuesList->ensureCapacityForOneMore(numericValuesLength, errorCode)) {
+        החזר;
+    } אחרת {
+        אם(numericIndex>Part::MAX_VALUE) {
             errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return;
+            החזר;
         }
     }
     numericValuesList->a[numericValuesLength++]=numericValue;
     addPart(UMSGPAT_PART_TYPE_ARG_DOUBLE, start, length, numericIndex, errorCode);
 }
 
-void
+فراغ
 MessagePattern::setParseError(UParseError *parseError, int32_t index) {
-    if(parseError==nullptr) {
-        return;
+    אם(parseError==nullptr) {
+        החזר;
     }
     parseError->offset=index;
 
     // Set preContext to some of msg before index.
     // Avoid splitting a surrogate pair.
     int32_t length=index;
-    if(length>=U_PARSE_CONTEXT_LEN) {
+    אם(length>=U_PARSE_CONTEXT_LEN) {
         length=U_PARSE_CONTEXT_LEN-1;
-        if(length>0 && U16_IS_TRAIL(msg[index-length])) {
+        אם(length>0 && U16_IS_TRAIL(msg[index-length])) {
             --length;
         }
     }
@@ -1171,9 +1171,9 @@ MessagePattern::setParseError(UParseError *parseError, int32_t index) {
 
     // Set postContext to some of msg starting at index.
     length=msg.length()-index;
-    if(length>=U_PARSE_CONTEXT_LEN) {
+    אם(length>=U_PARSE_CONTEXT_LEN) {
         length=U_PARSE_CONTEXT_LEN-1;
-        if(length>0 && U16_IS_LEAD(msg[index+length-1])) {
+        אם(length>0 && U16_IS_LEAD(msg[index+length-1])) {
             --length;
         }
     }
@@ -1183,22 +1183,22 @@ MessagePattern::setParseError(UParseError *parseError, int32_t index) {
 
 // MessageImpl ------------------------------------------------------------- ***
 
-void
-MessageImpl::appendReducedApostrophes(const UnicodeString &s, int32_t start, int32_t limit,
+فراغ
+MessageImpl::appendReducedApostrophes(ثابت UnicodeString &s, int32_t start, int32_t limit,
                                       UnicodeString &sb) {
     int32_t doubleApos=-1;
-    for(;;) {
+    עבור(;;) {
         int32_t i=s.indexOf(u_apos, start);
-        if(i<0 || i>=limit) {
+        אם(i<0 || i>=limit) {
             sb.append(s, start, limit-start);
-            break;
+            اكسر;
         }
-        if(i==doubleApos) {
+        אם(i==doubleApos) {
             // Double apostrophe at start-1 and start==i, append one.
             sb.append(u_apos);
             ++start;
             doubleApos=-1;
-        } else {
+        } אחרת {
             // Append text between apostrophes and skip this one.
             sb.append(s, start, i-start);
             doubleApos=start=i+1;
@@ -1208,21 +1208,21 @@ MessageImpl::appendReducedApostrophes(const UnicodeString &s, int32_t start, int
 
 // Ported from second half of ICU4J SelectFormat.format(String).
 UnicodeString&
-MessageImpl::appendSubMessageWithoutSkipSyntax(const MessagePattern& msgPattern,
+MessageImpl::appendSubMessageWithoutSkipSyntax(ثابت MessagePattern& msgPattern,
                                                int32_t msgStart,
                                                UnicodeString& result U_LIFETIME_BOUND) {
-    const UnicodeString &msgString=msgPattern.getPatternString();
+    ثابت UnicodeString &msgString=msgPattern.getPatternString();
     int32_t prevIndex=msgPattern.getPart(msgStart).getLimit();
-    for(int32_t i=msgStart;;) {
-        const MessagePattern::Part &part=msgPattern.getPart(++i);
+    עבור(int32_t i=msgStart;;) {
+        ثابت MessagePattern::Part &part=msgPattern.getPart(++i);
         UMessagePatternPartType type=part.getType();
         int32_t index=part.getIndex();
-        if(type==UMSGPAT_PART_TYPE_MSG_LIMIT) {
-            return result.append(msgString, prevIndex, index-prevIndex);
-        } else if(type==UMSGPAT_PART_TYPE_SKIP_SYNTAX) {
+        אם(type==UMSGPAT_PART_TYPE_MSG_LIMIT) {
+            החזר result.append(msgString, prevIndex, index-prevIndex);
+        } אחרת אם(type==UMSGPAT_PART_TYPE_SKIP_SYNTAX) {
             result.append(msgString, prevIndex, index-prevIndex);
             prevIndex=part.getLimit();
-        } else if(type==UMSGPAT_PART_TYPE_ARG_START) {
+        } אחרת אם(type==UMSGPAT_PART_TYPE_ARG_START) {
             result.append(msgString, prevIndex, index-prevIndex);
             prevIndex=index;
             i=msgPattern.getLimitPartIndex(i);

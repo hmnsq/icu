@@ -26,9 +26,9 @@
  * @see UCharIterator
  */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#אם U_SHOW_CPLUSPLUS_API
     U_NAMESPACE_BEGIN
 
     class CharacterIterator;
@@ -39,8 +39,8 @@
 
 U_CDECL_BEGIN
 
-struct UCharIterator;
-typedef struct UCharIterator UCharIterator; /**< C typedef for struct UCharIterator. @stable ICU 2.1 */
+بنية UCharIterator;
+تعريفنوع بنية UCharIterator UCharIterator; /**< C typedef for struct UCharIterator. @stable ICU 2.1 */
 
 /**
  * Origin constants for UCharIterator.getIndex() and UCharIterator.move().
@@ -48,12 +48,12 @@ typedef struct UCharIterator UCharIterator; /**< C typedef for struct UCharItera
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef enum UCharIteratorOrigin {
+تعريفنوع تعداد UCharIteratorOrigin {
     UITER_START, UITER_CURRENT, UITER_LIMIT, UITER_ZERO, UITER_LENGTH
 } UCharIteratorOrigin;
 
 /** Constants for UCharIterator. @stable ICU 2.6 */
-enum {
+تعداد {
     /**
      * Constant value that may be returned by UCharIteratorMove
      * indicating that the final UTF-16 index is not known, but that the move succeeded.
@@ -103,7 +103,7 @@ enum {
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef int32_t U_CALLCONV
+تعريفنوع int32_t U_CALLCONV
 UCharIteratorGetIndex(UCharIterator *iter, UCharIteratorOrigin origin);
 
 /**
@@ -140,7 +140,7 @@ UCharIteratorGetIndex(UCharIterator *iter, UCharIteratorOrigin origin);
  * @see UITER_UNKNOWN_INDEX
  * @stable ICU 2.1
  */
-typedef int32_t U_CALLCONV
+تعريفنوع int32_t U_CALLCONV
 UCharIteratorMove(UCharIterator *iter, int32_t delta, UCharIteratorOrigin origin);
 
 /**
@@ -155,7 +155,7 @@ UCharIteratorMove(UCharIterator *iter, int32_t delta, UCharIteratorOrigin origin
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef UBool U_CALLCONV
+تعريفنوع UBool U_CALLCONV
 UCharIteratorHasNext(UCharIterator *iter);
 
 /**
@@ -169,7 +169,7 @@ UCharIteratorHasNext(UCharIterator *iter);
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef UBool U_CALLCONV
+تعريفنوع UBool U_CALLCONV
 UCharIteratorHasPrevious(UCharIterator *iter);
  
 /**
@@ -184,7 +184,7 @@ UCharIteratorHasPrevious(UCharIterator *iter);
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef UChar32 U_CALLCONV
+تعريفنوع UChar32 U_CALLCONV
 UCharIteratorCurrent(UCharIterator *iter);
 
 /**
@@ -200,7 +200,7 @@ UCharIteratorCurrent(UCharIterator *iter);
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef UChar32 U_CALLCONV
+تعريفنوع UChar32 U_CALLCONV
 UCharIteratorNext(UCharIterator *iter);
 
 /**
@@ -216,7 +216,7 @@ UCharIteratorNext(UCharIterator *iter);
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef UChar32 U_CALLCONV
+تعريفنوع UChar32 U_CALLCONV
 UCharIteratorPrevious(UCharIterator *iter);
 
 /**
@@ -230,7 +230,7 @@ UCharIteratorPrevious(UCharIterator *iter);
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef int32_t U_CALLCONV
+تعريفنوع int32_t U_CALLCONV
 UCharIteratorReserved(UCharIterator *iter, int32_t something);
 
 /**
@@ -277,8 +277,8 @@ UCharIteratorReserved(UCharIterator *iter, int32_t something);
  * @see UITER_NO_STATE
  * @stable ICU 2.6
  */
-typedef uint32_t U_CALLCONV
-UCharIteratorGetState(const UCharIterator *iter);
+تعريفنوع uint32_t U_CALLCONV
+UCharIteratorGetState(ثابت UCharIterator *iter);
 
 /**
  * Function type declaration for UCharIterator.setState().
@@ -305,7 +305,7 @@ UCharIteratorGetState(const UCharIterator *iter);
  * @see UCharIteratorGetState
  * @stable ICU 2.6
  */
-typedef void U_CALLCONV
+تعريفنوع فراغ U_CALLCONV
 UCharIteratorSetState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCode);
 
 
@@ -338,13 +338,13 @@ UCharIteratorSetState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCod
  *
  * @stable ICU 2.1
  */
-struct UCharIterator {
+بنية UCharIterator {
     /**
      * (protected) Pointer to string or wrapped object or similar.
      * Not used by caller.
      * @stable ICU 2.1
      */
-    const void *context;
+    ثابت فراغ *context;
 
     /**
      * (protected) Length of string or similar.
@@ -548,7 +548,7 @@ uiter_previous32(UCharIterator *iter);
  * @stable ICU 2.6
  */
 U_CAPI uint32_t U_EXPORT2
-uiter_getState(const UCharIterator *iter);
+uiter_getState(ثابت UCharIterator *iter);
 
 /**
  * Restore the "state" of the iterator using a state word from a getState() call.
@@ -565,7 +565,7 @@ uiter_getState(const UCharIterator *iter);
  * @see UCharIteratorSetState
  * @stable ICU 2.6
  */
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 uiter_setState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCode);
 
 /**
@@ -590,8 +590,8 @@ uiter_setState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCode);
  * @see UCharIterator
  * @stable ICU 2.1
  */
-U_CAPI void U_EXPORT2
-uiter_setString(UCharIterator *iter, const UChar *s, int32_t length);
+U_CAPI فراغ U_EXPORT2
+uiter_setString(UCharIterator *iter, ثابت UChar *s, int32_t length);
 
 /**
  * Set up a UCharIterator to iterate over a UTF-16BE string
@@ -613,8 +613,8 @@ uiter_setString(UCharIterator *iter, const UChar *s, int32_t length);
  * @see uiter_setString
  * @stable ICU 2.6
  */
-U_CAPI void U_EXPORT2
-uiter_setUTF16BE(UCharIterator *iter, const char *s, int32_t length);
+U_CAPI فراغ U_EXPORT2
+uiter_setUTF16BE(UCharIterator *iter, ثابت حرف *s, int32_t length);
 
 /**
  * Set up a UCharIterator to iterate over a UTF-8 string.
@@ -649,10 +649,10 @@ uiter_setUTF16BE(UCharIterator *iter, const char *s, int32_t length);
  * @see UCharIterator
  * @stable ICU 2.6
  */
-U_CAPI void U_EXPORT2
-uiter_setUTF8(UCharIterator *iter, const char *s, int32_t length);
+U_CAPI فراغ U_EXPORT2
+uiter_setUTF8(UCharIterator *iter, ثابت حرف *s, int32_t length);
 
-#if U_SHOW_CPLUSPLUS_API
+#אם U_SHOW_CPLUSPLUS_API
 
 /**
  * Set up a UCharIterator to wrap around a C++ CharacterIterator.
@@ -674,7 +674,7 @@ uiter_setUTF8(UCharIterator *iter, const char *s, int32_t length);
  * @see UCharIterator
  * @stable ICU 2.1
  */
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 uiter_setCharacterIterator(UCharIterator *iter, icu::CharacterIterator *charIter);
 
 /**
@@ -699,8 +699,8 @@ uiter_setCharacterIterator(UCharIterator *iter, icu::CharacterIterator *charIter
  * @see UCharIterator
  * @stable ICU 2.1
  */
-U_CAPI void U_EXPORT2
-uiter_setReplaceable(UCharIterator *iter, const icu::Replaceable *rep);
+U_CAPI فراغ U_EXPORT2
+uiter_setReplaceable(UCharIterator *iter, ثابت icu::Replaceable *rep);
 
 #endif
 

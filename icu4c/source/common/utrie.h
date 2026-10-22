@@ -19,8 +19,8 @@
 #ifndef __UTRIE_H__
 #define __UTRIE_H__
 
-#include "unicode/utypes.h"
-#include "unicode/utf16.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/utf16.h"
 
 U_CDECL_BEGIN
 
@@ -50,7 +50,7 @@ U_CDECL_BEGIN
 /**
  * Trie constants, defining shift widths, index array lengths, etc.
  */
-enum {
+تعداد {
     /** Shift size for shifting right the input index. 1..9 */
     UTRIE_SHIFT=5,
 
@@ -137,7 +137,7 @@ enum {
  * @param data data value for a surrogate from the trie, including the folding offset
  * @return offset>=UTRIE_BMP_INDEX_LENGTH, or 0 if there is no data for the lead surrogate
  */
-typedef int32_t U_CALLCONV
+تعريفنوع int32_t U_CALLCONV
 UTrieGetFoldingOffset(uint32_t data);
 
 /**
@@ -149,9 +149,9 @@ UTrieGetFoldingOffset(uint32_t data);
  *
  * Or the data table is 32 bits wide and accessed via the data32 pointer.
  */
-struct UTrie {
-    const uint16_t *index;
-    const uint32_t *data32; /* NULL if 16b data is used via index */
+بنية UTrie {
+    ثابت uint16_t *index;
+    ثابت uint32_t *data32; /* NULL if 16b data is used via index */
 
     /**
      * This function is not used in _FROM_LEAD, _FROM_BMP, and _FROM_OFFSET_TRAIL macros.
@@ -171,7 +171,7 @@ struct UTrie {
 };
 
 #ifndef __UTRIE2_H__
-typedef struct UTrie UTrie;
+تعريفنوع بنية UTrie UTrie;
 #endif
 
 /** Internal trie getter from an offset (0 if c16 is a BMP/lead units) and a 16-bit unit */
@@ -190,9 +190,9 @@ typedef struct UTrie UTrie;
     __offset=(trie)->getFoldingOffset(result); \
 \
     /* get the real data from the folded lead/trail units */ \
-    if(__offset>0) { \
+    אם(__offset>0) { \
         (result)=_UTRIE_GET_RAW((trie), data, __offset, (c2)&0x3ff); \
-    } else { \
+    } אחרת { \
         (result)=(resultType)((trie)->initialValue); \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -207,14 +207,14 @@ typedef struct UTrie UTrie;
  *   if((c32)<=0xd7ff) { (result)=_UTRIE_GET_RAW(trie, data, 0, c32); }
  */
 #define _UTRIE_GET(trie, data, c32, result, resultType) UPRV_BLOCK_MACRO_BEGIN { \
-    if((uint32_t)(c32)<=0xffff) { \
+    אם((uint32_t)(c32)<=0xffff) { \
         /* BMP code points */ \
         (result)=_UTRIE_GET_FROM_BMP(trie, data, c32); \
-    } else if((uint32_t)(c32)<=0x10ffff) { \
+    } אחרת אם((uint32_t)(c32)<=0x10ffff) { \
         /* supplementary code point */ \
         UChar __lead16=U16_LEAD(c32); \
         _UTRIE_GET_FROM_PAIR(trie, data, __lead16, c32, result, resultType); \
-    } else { \
+    } אחרת { \
         /* out of range */ \
         (result)=(resultType)((trie)->initialValue); \
     } \
@@ -223,13 +223,13 @@ typedef struct UTrie UTrie;
 /** Internal next-post-increment: get the next code point (c, c2) and its data */
 #define _UTRIE_NEXT(trie, data, src, limit, c, c2, result, resultType) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=*(src)++; \
-    if(!U16_IS_LEAD(c)) { \
+    אם(!U16_IS_LEAD(c)) { \
         (c2)=0; \
         (result)=_UTRIE_GET_RAW((trie), data, 0, (c)); \
-    } else if((src)!=(limit) && U16_IS_TRAIL((c2)=*(src))) { \
+    } אחרת אם((src)!=(limit) && U16_IS_TRAIL((c2)=*(src))) { \
         ++(src); \
         _UTRIE_GET_FROM_PAIR((trie), data, (c), (c2), (result), resultType); \
-    } else { \
+    } אחרת { \
         /* unpaired lead surrogate code point */ \
         (c2)=0; \
         (result)=_UTRIE_GET_RAW((trie), data, UTRIE_LEAD_INDEX_DISP, (c)); \
@@ -239,21 +239,21 @@ typedef struct UTrie UTrie;
 /** Internal previous: get the previous code point (c, c2) and its data */
 #define _UTRIE_PREVIOUS(trie, data, start, src, c, c2, result, resultType) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=*--(src); \
-    if(!U16_IS_SURROGATE(c)) { \
+    אם(!U16_IS_SURROGATE(c)) { \
         (c2)=0; \
         (result)=_UTRIE_GET_RAW((trie), data, 0, (c)); \
-    } else if(!U16_IS_SURROGATE_LEAD(c)) { \
+    } אחרת אם(!U16_IS_SURROGATE_LEAD(c)) { \
         /* trail surrogate */ \
-        if((start)!=(src) && U16_IS_LEAD((c2)=*((src)-1))) { \
+        אם((start)!=(src) && U16_IS_LEAD((c2)=*((src)-1))) { \
             --(src); \
             (result)=(c); (c)=(c2); (c2)=(UChar)(result); /* swap c, c2 */ \
             _UTRIE_GET_FROM_PAIR((trie), data, (c), (c2), (result), resultType); \
-        } else { \
+        } אחרת { \
             /* unpaired trail surrogate code point */ \
             (c2)=0; \
             (result)=_UTRIE_GET_RAW((trie), data, 0, (c)); \
         } \
-    } else { \
+    } אחרת { \
         /* unpaired lead surrogate code point */ \
         (c2)=0; \
         (result)=_UTRIE_GET_RAW((trie), data, UTRIE_LEAD_INDEX_DISP, (c)); \
@@ -452,8 +452,8 @@ typedef struct UTrie UTrie;
  * @param value a value from the trie
  * @return the value that is to be passed on to the UTrieEnumRange function
  */
-typedef uint32_t U_CALLCONV
-UTrieEnumValue(const void *context, uint32_t value);
+تعريفنوع uint32_t U_CALLCONV
+UTrieEnumValue(ثابت فراغ *context, uint32_t value);
 
 /**
  * Callback from utrie_enum(), is called for each contiguous range
@@ -468,8 +468,8 @@ UTrieEnumValue(const void *context, uint32_t value);
  * @param value the value that is set for all code points in [start..limit[
  * @return false to stop the enumeration
  */
-typedef UBool U_CALLCONV
-UTrieEnumRange(const void *context, UChar32 start, UChar32 limit, uint32_t value);
+تعريفنوع UBool U_CALLCONV
+UTrieEnumRange(ثابت فراغ *context, UChar32 start, UChar32 limit, uint32_t value);
 
 /**
  * Enumerate efficiently all values in a trie.
@@ -487,9 +487,9 @@ UTrieEnumRange(const void *context, UChar32 start, UChar32 limit, uint32_t value
  *                  of code points with the same value
  * @param context an opaque pointer that is passed on to the callback functions
  */
-U_CAPI void U_EXPORT2
-utrie_enum(const UTrie *trie,
-           UTrieEnumValue *enumValue, UTrieEnumRange *enumRange, const void *context);
+U_CAPI فراغ U_EXPORT2
+utrie_enum(ثابت UTrie *trie,
+           UTrieEnumValue *enumValue, UTrieEnumRange *enumRange, ثابت فراغ *context);
 
 /**
  * Unserialize a trie from 32-bit-aligned memory.
@@ -503,7 +503,7 @@ utrie_enum(const UTrie *trie,
  * @return the number of bytes at data taken up by the trie data
  */
 U_CAPI int32_t U_EXPORT2
-utrie_unserialize(UTrie *trie, const void *data, int32_t length, UErrorCode *pErrorCode);
+utrie_unserialize(UTrie *trie, ثابت فراغ *data, int32_t length, UErrorCode *pErrorCode);
 
 /**
  * "Unserialize" a dummy trie.
@@ -527,7 +527,7 @@ utrie_unserialize(UTrie *trie, const void *data, int32_t length, UErrorCode *pEr
  */
 U_CAPI int32_t U_EXPORT2
 utrie_unserializeDummy(UTrie *trie,
-                       void *data, int32_t length,
+                       فراغ *data, int32_t length,
                        uint32_t initialValue, uint32_t leadUnitValue,
                        UBool make16BitTrie,
                        UErrorCode *pErrorCode);
@@ -551,7 +551,7 @@ utrie_defaultGetFoldingOffset(uint32_t data);
  * Opaque definition, here only to make fillIn parameters possible
  * for utrie_open() and utrie_clone().
  */
-struct UNewTrie {
+بنية UNewTrie {
     /**
      * Index values at build-time are 32 bits wide for easier processing.
      * Bit 31 is set if the data block is used by multiple index values (from utrie_setRange()).
@@ -571,7 +571,7 @@ struct UNewTrie {
     int32_t map[UTRIE_MAX_BUILD_TIME_DATA_LENGTH>>UTRIE_SHIFT];
 };
 
-typedef struct UNewTrie UNewTrie;
+تعريفنوع بنية UNewTrie UNewTrie;
 
 /**
  * Build-time trie callback function, used with utrie_serialize().
@@ -591,7 +591,7 @@ typedef struct UNewTrie UNewTrie;
  *
  * @return a folded value, or 0 if there is no relevant data for the lead surrogate.
  */
-typedef uint32_t U_CALLCONV
+تعريفنوع uint32_t U_CALLCONV
 UNewTrieGetFoldedValue(UNewTrie *trie, UChar32 start, int32_t offset);
 
 /**
@@ -637,7 +637,7 @@ utrie_open(UNewTrie *fillIn,
  * @return a pointer to the initialized fillIn or the allocated and initialized new UNewTrie
  */
 U_CAPI UNewTrie * U_EXPORT2
-utrie_clone(UNewTrie *fillIn, const UNewTrie *other, uint32_t *aliasData, int32_t aliasDataLength);
+utrie_clone(UNewTrie *fillIn, ثابت UNewTrie *other, uint32_t *aliasData, int32_t aliasDataLength);
 
 /**
  * Close a build-time trie structure, and release memory
@@ -645,7 +645,7 @@ utrie_clone(UNewTrie *fillIn, const UNewTrie *other, uint32_t *aliasData, int32_
  *
  * @param trie the build-time trie
  */
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 utrie_close(UNewTrie *trie);
 
 /**
@@ -727,7 +727,7 @@ utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t value, U
  * @return the number of bytes written for the trie
  */
 U_CAPI int32_t U_EXPORT2
-utrie_serialize(UNewTrie *trie, void *data, int32_t capacity,
+utrie_serialize(UNewTrie *trie, فراغ *data, int32_t capacity,
                 UNewTrieGetFoldedValue *getFoldedValue,
                 UBool reduceTo16Bits,
                 UErrorCode *pErrorCode);
@@ -747,7 +747,7 @@ utrie_serialize(UNewTrie *trie, void *data, int32_t capacity,
  * uint16_t data[header.dataLength];
  * @internal
  */
-typedef struct UTrieHeader {
+تعريفنوع بنية UTrieHeader {
     /** "Trie" in big-endian US-ASCII (0x54726965) */
     uint32_t signature;
 
@@ -771,7 +771,7 @@ typedef struct UTrieHeader {
  * Constants for use with UTrieHeader.options.
  * @internal
  */
-enum {
+تعداد {
     /** Mask to get the UTRIE_SHIFT value from options. */
     UTRIE_OPTIONS_SHIFT_MASK=0xf,
 

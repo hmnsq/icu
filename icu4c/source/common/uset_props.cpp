@@ -19,74 +19,74 @@
 *   uniset_props.cpp, split off for modularization.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "unicode/uset.h"
-#include "unicode/uniset.h"
-#include "cmemory.h"
-#include "unicode/ustring.h"
-#include "unicode/parsepos.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uobject.h"
+#ضمن "unicode/uset.h"
+#ضمن "unicode/uniset.h"
+#ضمن "cmemory.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/parsepos.h"
 
 U_NAMESPACE_USE
 
 U_CAPI USet* U_EXPORT2
-uset_openPattern(const char16_t* pattern, int32_t patternLength,
+uset_openPattern(ثابت char16_t* pattern, int32_t patternLength,
                  UErrorCode* ec)
 {
     UnicodeString pat(patternLength==-1, pattern, patternLength);
-    UnicodeSet* set = new UnicodeSet(pat, *ec);
+    UnicodeSet* set = جديد UnicodeSet(pat, *ec);
     /* test for nullptr */
-    if (set == nullptr) {
+    אם (set == nullptr) {
         *ec = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        החזר nullptr;
     }
 
-    if (U_FAILURE(*ec)) {
+    אם (U_FAILURE(*ec)) {
         delete set;
         set = nullptr;
     }
-    return (USet*) set;
+    החזר (USet*) set;
 }
 
 U_CAPI USet* U_EXPORT2
-uset_openPatternOptions(const char16_t* pattern, int32_t patternLength,
+uset_openPatternOptions(ثابت char16_t* pattern, int32_t patternLength,
                  uint32_t options,
                  UErrorCode* ec)
 {
     UnicodeString pat(patternLength==-1, pattern, patternLength);
-    UnicodeSet* set = new UnicodeSet(pat, options, nullptr, *ec);
+    UnicodeSet* set = جديد UnicodeSet(pat, options, nullptr, *ec);
     /* test for nullptr */
-    if (set == nullptr) {
+    אם (set == nullptr) {
         *ec = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        החזר nullptr;
     }
 
-    if (U_FAILURE(*ec)) {
+    אם (U_FAILURE(*ec)) {
         delete set;
         set = nullptr;
     }
-    return (USet*) set;
+    החזר (USet*) set;
 }
 
 
 U_CAPI int32_t U_EXPORT2 
 uset_applyPattern(USet *set,
-                  const char16_t *pattern, int32_t patternLength,
+                  ثابت char16_t *pattern, int32_t patternLength,
                   uint32_t options,
                   UErrorCode *status){
 
     // status code needs to be checked since we 
     // dereference it
-    if(status == nullptr || U_FAILURE(*status)){
-        return 0;
+    אם(status == nullptr || U_FAILURE(*status)){
+        החזר 0;
     }
 
     // check only the set paramenter
     // if pattern is nullptr or NUL terminated
     // UnicodeString constructor takes care of it
-    if(set == nullptr){
+    אם(set == nullptr){
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        החזר 0;
     }
 
     UnicodeString pat(pattern, patternLength);
@@ -95,19 +95,19 @@ uset_applyPattern(USet *set,
    
     ((UnicodeSet*) set)->applyPattern(pat, pos, options, nullptr, *status);
     
-    return pos.getIndex();
+    החזר pos.getIndex();
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 uset_applyIntPropertyValue(USet* set,
                UProperty prop, int32_t value, UErrorCode* ec) {
     ((UnicodeSet*) set)->applyIntPropertyValue(prop, value, *ec);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 uset_applyPropertyAlias(USet* set,
-                        const char16_t *prop, int32_t propLength,
-                        const char16_t *value, int32_t valueLength,
+                        ثابت char16_t *prop, int32_t propLength,
+                        ثابت char16_t *value, int32_t valueLength,
             UErrorCode* ec) {
 
     UnicodeString p(prop, propLength);
@@ -117,27 +117,27 @@ uset_applyPropertyAlias(USet* set,
 }
 
 U_CAPI UBool U_EXPORT2
-uset_resemblesPattern(const char16_t *pattern, int32_t patternLength,
+uset_resemblesPattern(ثابت char16_t *pattern, int32_t patternLength,
                       int32_t pos) {
 
     UnicodeString pat(pattern, patternLength);
 
-    return ((pos+1) < pat.length() &&
+    החזר ((pos+1) < pat.length() &&
             pat.charAt(pos) == (char16_t)91/*[*/) ||
             UnicodeSet::resemblesPattern(pat, pos);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_toPattern(const USet* set,
+uset_toPattern(ثابت USet* set,
                char16_t* result, int32_t resultCapacity,
                UBool escapeUnprintable,
                UErrorCode* ec) {
     UnicodeString pat;
-    ((const UnicodeSet*) set)->toPattern(pat, escapeUnprintable);
-    return pat.extract(result, resultCapacity, *ec);
+    ((ثابت UnicodeSet*) set)->toPattern(pat, escapeUnprintable);
+    החזר pat.extract(result, resultCapacity, *ec);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 uset_closeOver(USet* set, int32_t attributes) {
     ((UnicodeSet*) set)->UnicodeSet::closeOver(attributes);
 }

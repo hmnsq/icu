@@ -63,12 +63,12 @@
 #ifndef UCNV_CB_H
 #define UCNV_CB_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#אם !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_err.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "unicode/ucnv_err.h"
 
 /**
  * ONLY used by FromU callback functions.
@@ -84,9 +84,9 @@
  * @see ucnv_cbFromUWriteSub
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 ucnv_cbFromUWriteBytes (UConverterFromUnicodeArgs *args,
-                        const char* source,
+                        ثابت حرف* source,
                         int32_t length,
                         int32_t offsetIndex,
                         UErrorCode * err);
@@ -104,7 +104,7 @@ ucnv_cbFromUWriteBytes (UConverterFromUnicodeArgs *args,
  * @see ucnv_cbFromUWriteBytes
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 
+U_CAPI فراغ U_EXPORT2 
 ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
                       int32_t offsetIndex,
                       UErrorCode * err);
@@ -121,9 +121,9 @@ ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
  * @see ucnv_cbToUWriteSub
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
-                             const UChar** source,
-                             const UChar*  sourceLimit,
+U_CAPI فراغ U_EXPORT2 ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
+                             ثابت UChar** source,
+                             ثابت UChar*  sourceLimit,
                              int32_t offsetIndex,
                              UErrorCode * err);
 
@@ -140,8 +140,8 @@ U_CAPI void U_EXPORT2 ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
  * @see ucnv_cbToUWriteSub
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 ucnv_cbToUWriteUChars (UConverterToUnicodeArgs *args,
-                                             const UChar* source,
+U_CAPI فراغ U_EXPORT2 ucnv_cbToUWriteUChars (UConverterToUnicodeArgs *args,
+                                             ثابت UChar* source,
                                              int32_t length,
                                              int32_t offsetIndex,
                                              UErrorCode * err);
@@ -156,7 +156,7 @@ U_CAPI void U_EXPORT2 ucnv_cbToUWriteUChars (UConverterToUnicodeArgs *args,
  * @see ucnv_cbToUWriteUChars
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 ucnv_cbToUWriteSub (UConverterToUnicodeArgs *args,
+U_CAPI فراغ U_EXPORT2 ucnv_cbToUWriteSub (UConverterToUnicodeArgs *args,
                        int32_t offsetIndex,
                        UErrorCode * err);
 #endif

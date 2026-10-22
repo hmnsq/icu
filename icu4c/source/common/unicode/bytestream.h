@@ -37,14 +37,14 @@
  * \brief C++ API: Interface for writing bytes, and implementation classes.
  */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#אם U_SHOW_CPLUSPLUS_API
 
-#include <type_traits>
+#ضمن <type_traits>
 
-#include "unicode/uobject.h"
-#include "unicode/std_string.h"
+#ضمن "unicode/uobject.h"
+#ضمن "unicode/std_string.h"
 
 U_NAMESPACE_BEGIN
 
@@ -52,8 +52,8 @@ U_NAMESPACE_BEGIN
  * A ByteSink can be filled with bytes.
  * @stable ICU 4.2
  */
-class U_COMMON_API ByteSink : public UMemory {
-public:
+class U_COMMON_API ByteSink : عام UMemory {
+عام:
   /**
    * Default constructor.
    * @stable ICU 4.2
@@ -71,7 +71,7 @@ public:
    * @param n the number of bytes; must be non-negative
    * @stable ICU 4.2
    */
-  virtual void Append(const char* bytes, int32_t n) = 0;
+  virtual فراغ Append(ثابت حرف* bytes, int32_t n) = 0;
 
   /**
    * Appends n bytes to this. Same as Append().
@@ -84,11 +84,11 @@ public:
    * @param n the number of bytes; must be non-negative
    * @stable ICU 67
    */
-  inline void AppendU8(const char* bytes, int32_t n) {
+  مضمن فراغ AppendU8(ثابت حرف* bytes, int32_t n) {
     Append(bytes, n);
   }
 
-#if defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
+#אם defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
   /**
    * Appends n bytes to this. Same as Append() but for a const char8_t * pointer.
    * Call AppendU8() with u8"string literals" which are const char * in C++11
@@ -100,8 +100,8 @@ public:
    * @param n the number of bytes; must be non-negative
    * @stable ICU 67
    */
-  inline void AppendU8(const char8_t* bytes, int32_t n) {
-    Append(reinterpret_cast<const char*>(bytes), n);
+  مضمن فراغ AppendU8(ثابت char8_t* bytes, int32_t n) {
+    Append(reinterpret_cast<ثابت حرف*>(bytes), n);
   }
 #endif
 
@@ -147,9 +147,9 @@ public:
    * @return a buffer with *result_capacity>=min_capacity
    * @stable ICU 4.2
    */
-  virtual char* GetAppendBuffer(int32_t min_capacity,
+  virtual حرف* GetAppendBuffer(int32_t min_capacity,
                                 int32_t desired_capacity_hint,
-                                char* scratch U_LIFETIME_BOUND,
+                                حرف* scratch U_LIFETIME_BOUND,
                                 int32_t scratch_capacity,
                                 int32_t* result_capacity) U_LIFETIME_BOUND;
 
@@ -161,11 +161,11 @@ public:
    * The default implementation of Flush() does nothing.
    * @stable ICU 4.2
    */
-  virtual void Flush();
+  virtual فراغ Flush();
 
-private:
-  ByteSink(const ByteSink &) = delete;
-  ByteSink &operator=(const ByteSink &) = delete;
+خاص:
+  ByteSink(ثابت ByteSink &) = delete;
+  ByteSink &operator=(ثابت ByteSink &) = delete;
 };
 
 // -------------------------------------------------------------
@@ -180,15 +180,15 @@ private:
  * Overflow does not cause a runtime error.
  * @stable ICU 4.2
  */
-class U_COMMON_API CheckedArrayByteSink : public ByteSink {
-public:
+class U_COMMON_API CheckedArrayByteSink : عام ByteSink {
+عام:
   /**
    * Constructs a ByteSink that will write to outbuf[0..capacity-1].
    * @param outbuf buffer to write to
    * @param capacity size of the buffer
    * @stable ICU 4.2
    */
-  CheckedArrayByteSink(char* outbuf, int32_t capacity);
+  CheckedArrayByteSink(حرف* outbuf, int32_t capacity);
   /**
    * Destructor.
    * @stable ICU 4.2
@@ -209,7 +209,7 @@ public:
    * @param n the number of bytes; must be non-negative
    * @stable ICU 4.2
    */
-  virtual void Append(const char* bytes, int32_t n) override;
+  virtual فراغ Append(ثابت حرف* bytes, int32_t n) override;
   /**
    * Returns a writable buffer for appending and writes the buffer's capacity to
    * *result_capacity. For details see the base class documentation.
@@ -224,9 +224,9 @@ public:
    * @return a buffer with *result_capacity>=min_capacity
    * @stable ICU 4.2
    */
-  virtual char* GetAppendBuffer(int32_t min_capacity,
+  virtual حرف* GetAppendBuffer(int32_t min_capacity,
                                 int32_t desired_capacity_hint,
-                                char* scratch U_LIFETIME_BOUND,
+                                حرف* scratch U_LIFETIME_BOUND,
                                 int32_t scratch_capacity,
                                 int32_t* result_capacity) U_LIFETIME_BOUND override;
   /**
@@ -234,14 +234,14 @@ public:
    * @return number of bytes written to the buffer
    * @stable ICU 4.2
    */
-  int32_t NumberOfBytesWritten() const { return size_; }
+  int32_t NumberOfBytesWritten() ثابت { החזר size_; }
   /**
    * Returns true if any bytes were discarded, i.e., if there was an
    * attempt to write more than 'capacity' bytes.
    * @return true if more than 'capacity' bytes were Append()ed
    * @stable ICU 4.2
    */
-  UBool Overflowed() const { return overflowed_; }
+  UBool Overflowed() ثابت { החזר overflowed_; }
   /**
    * Returns the number of bytes appended to the sink.
    * If Overflowed() then NumberOfBytesAppended()>NumberOfBytesWritten()
@@ -249,29 +249,29 @@ public:
    * @return number of bytes written to the buffer
    * @stable ICU 4.6
    */
-  int32_t NumberOfBytesAppended() const { return appended_; }
-private:
-  char* outbuf_;
-  const int32_t capacity_;
+  int32_t NumberOfBytesAppended() ثابت { החזר appended_; }
+خاص:
+  حرف* outbuf_;
+  ثابت int32_t capacity_;
   int32_t size_;
   int32_t appended_;
   UBool overflowed_;
 
   CheckedArrayByteSink() = delete;
-  CheckedArrayByteSink(const CheckedArrayByteSink &) = delete;
-  CheckedArrayByteSink &operator=(const CheckedArrayByteSink &) = delete;
+  CheckedArrayByteSink(ثابت CheckedArrayByteSink &) = delete;
+  CheckedArrayByteSink &operator=(ثابت CheckedArrayByteSink &) = delete;
 };
 
 namespace prv {
 /** @internal */
-template<typename StringClass, typename = void>
-struct value_type_or_char {
+template<typename StringClass, typename = فراغ>
+بنية value_type_or_char {
   /** @internal */
-  using type = char;
+  using type = حرف;
 };
 /** @internal */
 template<typename StringClass>
-struct value_type_or_char<StringClass, std::void_t<typename StringClass::value_type>> {
+بنية value_type_or_char<StringClass, std::void_t<typename StringClass::value_type>> {
   /** @internal */
   using type = typename StringClass::value_type;
 };
@@ -290,9 +290,9 @@ using value_type_or_char_t = typename value_type_or_char<StringClass>::type;
  * @stable ICU 4.2
  */
 template<typename StringClass>
-class StringByteSink : public ByteSink {
+class StringByteSink : عام ByteSink {
   using Unit = typename prv::value_type_or_char_t<StringClass>;
- public:
+ عام:
   /**
    * Constructs a ByteSink that will append bytes to the dest string.
    * @param dest pointer to string object to append to
@@ -307,7 +307,7 @@ class StringByteSink : public ByteSink {
    * @stable ICU 60
    */
   StringByteSink(StringClass* dest, int32_t initialAppendCapacity) : dest_(dest) {
-    if (initialAppendCapacity > 0 &&
+    אם (initialAppendCapacity > 0 &&
         static_cast<uint32_t>(initialAppendCapacity) > dest->capacity() - dest->length()) {
       dest->reserve(dest->length() + initialAppendCapacity);
     }
@@ -318,19 +318,19 @@ class StringByteSink : public ByteSink {
    * @param n the number of bytes; must be non-negative
    * @stable ICU 4.2
    */
-  virtual void Append(const char* data, int32_t n) override {
-    if constexpr (std::is_same_v<Unit, char>) {
+  virtual فراغ Append(ثابت حرف* data, int32_t n) override {
+    אם constexpr (std::is_same_v<Unit, حرف>) {
       dest_->append(data, n);
-    } else {
-      dest_->append(reinterpret_cast<const Unit*>(data), n);
+    } אחרת {
+      dest_->append(reinterpret_cast<ثابت Unit*>(data), n);
     }
   }
- private:
+ خاص:
   StringClass* dest_;
 
   StringByteSink() = delete;
-  StringByteSink(const StringByteSink &) = delete;
-  StringByteSink &operator=(const StringByteSink &) = delete;
+  StringByteSink(ثابت StringByteSink &) = delete;
+  StringByteSink &operator=(ثابت StringByteSink &) = delete;
 };
 
 U_NAMESPACE_END

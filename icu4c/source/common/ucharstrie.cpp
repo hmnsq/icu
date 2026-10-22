@@ -14,13 +14,13 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/appendable.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/uobject.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "uassert.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/appendable.h"
+#ضمن "unicode/ucharstrie.h"
+#ضمن "unicode/uobject.h"
+#ضمن "unicode/utf16.h"
+#ضمن "cmemory.h"
+#ضمن "uassert.h"
 
 U_NAMESPACE_BEGIN
 
@@ -29,20 +29,20 @@ UCharsTrie::~UCharsTrie() {
 }
 
 UStringTrieResult
-UCharsTrie::current() const {
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
-    } else {
+UCharsTrie::current() ثابت {
+    ثابت char16_t *pos=pos_;
+    אם(pos==nullptr) {
+        החזר USTRINGTRIE_NO_MATCH;
+    } אחרת {
         int32_t node;
-        return (remainingMatchLength_<0 && (node=*pos)>=kMinValueLead) ?
+        החזר (remainingMatchLength_<0 && (node=*pos)>=kMinValueLead) ?
                 valueResult(node) : USTRINGTRIE_NO_VALUE;
     }
 }
 
 UStringTrieResult
 UCharsTrie::firstForCodePoint(UChar32 cp) {
-    return cp<=0xffff ?
+    החזר cp<=0xffff ?
         first(cp) :
         (USTRINGTRIE_HAS_NEXT(first(U16_LEAD(cp))) ?
             next(U16_TRAIL(cp)) :
@@ -51,7 +51,7 @@ UCharsTrie::firstForCodePoint(UChar32 cp) {
 
 UStringTrieResult
 UCharsTrie::nextForCodePoint(UChar32 cp) {
-    return cp<=0xffff ?
+    החזר cp<=0xffff ?
         next(cp) :
         (USTRINGTRIE_HAS_NEXT(next(U16_LEAD(cp))) ?
             next(U16_TRAIL(cp)) :
@@ -59,19 +59,19 @@ UCharsTrie::nextForCodePoint(UChar32 cp) {
 }
 
 UStringTrieResult
-UCharsTrie::branchNext(const char16_t *pos, int32_t length, int32_t uchar) {
+UCharsTrie::branchNext(ثابت char16_t *pos, int32_t length, int32_t uchar) {
     // Branch according to the current unit.
-    if(length==0) {
+    אם(length==0) {
         length=*pos++;
     }
     ++length;
     // The length of the branch is the number of units to select from.
     // The data structure encodes a binary search.
-    while(length>kMaxBranchLinearSubNodeLength) {
-        if(uchar<*pos++) {
+    כלעוד(length>kMaxBranchLinearSubNodeLength) {
+        אם(uchar<*pos++) {
             length>>=1;
             pos=jumpByDelta(pos);
-        } else {
+        } אחרת {
             length=length-(length>>1);
             pos=skipDelta(pos);
         }
@@ -79,23 +79,23 @@ UCharsTrie::branchNext(const char16_t *pos, int32_t length, int32_t uchar) {
     // Drop down to linear search for the last few units.
     // length>=2 because the loop body above sees length>kMaxBranchLinearSubNodeLength>=3
     // and divides length by 2.
-    do {
-        if(uchar==*pos++) {
+    עשה {
+        אם(uchar==*pos++) {
             UStringTrieResult result;
             int32_t node=*pos;
-            if(node&kValueIsFinal) {
+            אם(node&kValueIsFinal) {
                 // Leave the final value for getValue() to read.
                 result=USTRINGTRIE_FINAL_VALUE;
-            } else {
+            } אחרת {
                 // Use the non-final value as the jump delta.
                 ++pos;
                 // int32_t delta=readValue(pos, node);
                 int32_t delta;
-                if(node<kMinTwoUnitValueLead) {
+                אם(node<kMinTwoUnitValueLead) {
                     delta=node;
-                } else if(node<kThreeUnitValueLead) {
+                } אחרת אם(node<kThreeUnitValueLead) {
                     delta=((node-kMinTwoUnitValueLead)<<16)|*pos++;
-                } else {
+                } אחרת {
                     delta=(pos[0]<<16)|pos[1];
                     pos+=2;
                 }
@@ -105,175 +105,175 @@ UCharsTrie::branchNext(const char16_t *pos, int32_t length, int32_t uchar) {
                 result= node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
             }
             pos_=pos;
-            return result;
+            החזר result;
         }
         --length;
         pos=skipValue(pos);
-    } while(length>1);
-    if(uchar==*pos++) {
+    } כלעוד(length>1);
+    אם(uchar==*pos++) {
         pos_=pos;
         int32_t node=*pos;
-        return node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
-    } else {
+        החזר node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
+    } אחרת {
         stop();
-        return USTRINGTRIE_NO_MATCH;
+        החזר USTRINGTRIE_NO_MATCH;
     }
 }
 
 UStringTrieResult
-UCharsTrie::nextImpl(const char16_t *pos, int32_t uchar) {
+UCharsTrie::nextImpl(ثابت char16_t *pos, int32_t uchar) {
     int32_t node=*pos++;
-    for(;;) {
-        if(node<kMinLinearMatch) {
-            return branchNext(pos, node, uchar);
-        } else if(node<kMinValueLead) {
+    עבור(;;) {
+        אם(node<kMinLinearMatch) {
+            החזר branchNext(pos, node, uchar);
+        } אחרת אם(node<kMinValueLead) {
             // Match the first of length+1 units.
             int32_t length=node-kMinLinearMatch;  // Actual match length minus 1.
-            if(uchar==*pos++) {
+            אם(uchar==*pos++) {
                 remainingMatchLength_=--length;
                 pos_=pos;
-                return (length<0 && (node=*pos)>=kMinValueLead) ?
+                החזר (length<0 && (node=*pos)>=kMinValueLead) ?
                         valueResult(node) : USTRINGTRIE_NO_VALUE;
-            } else {
+            } אחרת {
                 // No match.
-                break;
+                اكسر;
             }
-        } else if(node&kValueIsFinal) {
+        } אחרת אם(node&kValueIsFinal) {
             // No further matching units.
-            break;
-        } else {
+            اكسر;
+        } אחרת {
             // Skip intermediate value.
             pos=skipNodeValue(pos, node);
             node&=kNodeTypeMask;
         }
     }
     stop();
-    return USTRINGTRIE_NO_MATCH;
+    החזר USTRINGTRIE_NO_MATCH;
 }
 
 UStringTrieResult
 UCharsTrie::next(int32_t uchar) {
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    ثابت char16_t *pos=pos_;
+    אם(pos==nullptr) {
+        החזר USTRINGTRIE_NO_MATCH;
     }
     int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    if(length>=0) {
+    אם(length>=0) {
         // Remaining part of a linear-match node.
-        if(uchar==*pos++) {
+        אם(uchar==*pos++) {
             remainingMatchLength_=--length;
             pos_=pos;
             int32_t node;
-            return (length<0 && (node=*pos)>=kMinValueLead) ?
+            החזר (length<0 && (node=*pos)>=kMinValueLead) ?
                     valueResult(node) : USTRINGTRIE_NO_VALUE;
-        } else {
+        } אחרת {
             stop();
-            return USTRINGTRIE_NO_MATCH;
+            החזר USTRINGTRIE_NO_MATCH;
         }
     }
-    return nextImpl(pos, uchar);
+    החזר nextImpl(pos, uchar);
 }
 
 UStringTrieResult
 UCharsTrie::next(ConstChar16Ptr ptr, int32_t sLength) {
-    const char16_t *s=ptr;
-    if(sLength<0 ? *s==0 : sLength==0) {
+    ثابت char16_t *s=ptr;
+    אם(sLength<0 ? *s==0 : sLength==0) {
         // Empty input.
-        return current();
+        החזר current();
     }
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    ثابت char16_t *pos=pos_;
+    אם(pos==nullptr) {
+        החזר USTRINGTRIE_NO_MATCH;
     }
     int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    for(;;) {
+    עבור(;;) {
         // Fetch the next input unit, if there is one.
         // Continue a linear-match node without rechecking sLength<0.
         int32_t uchar;
-        if(sLength<0) {
-            for(;;) {
-                if((uchar=*s++)==0) {
+        אם(sLength<0) {
+            עבור(;;) {
+                אם((uchar=*s++)==0) {
                     remainingMatchLength_=length;
                     pos_=pos;
                     int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
+                    החזר (length<0 && (node=*pos)>=kMinValueLead) ?
                             valueResult(node) : USTRINGTRIE_NO_VALUE;
                 }
-                if(length<0) {
+                אם(length<0) {
                     remainingMatchLength_=length;
-                    break;
+                    اكسر;
                 }
-                if(uchar!=*pos) {
+                אם(uchar!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    החזר USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
             }
-        } else {
-            for(;;) {
-                if(sLength==0) {
+        } אחרת {
+            עבור(;;) {
+                אם(sLength==0) {
                     remainingMatchLength_=length;
                     pos_=pos;
                     int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
+                    החזר (length<0 && (node=*pos)>=kMinValueLead) ?
                             valueResult(node) : USTRINGTRIE_NO_VALUE;
                 }
                 uchar=*s++;
                 --sLength;
-                if(length<0) {
+                אם(length<0) {
                     remainingMatchLength_=length;
-                    break;
+                    اكسر;
                 }
-                if(uchar!=*pos) {
+                אם(uchar!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    החזר USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
             }
         }
         int32_t node=*pos++;
-        for(;;) {
-            if(node<kMinLinearMatch) {
+        עבור(;;) {
+            אם(node<kMinLinearMatch) {
                 UStringTrieResult result=branchNext(pos, node, uchar);
-                if(result==USTRINGTRIE_NO_MATCH) {
-                    return USTRINGTRIE_NO_MATCH;
+                אם(result==USTRINGTRIE_NO_MATCH) {
+                    החזר USTRINGTRIE_NO_MATCH;
                 }
                 // Fetch the next input unit, if there is one.
-                if(sLength<0) {
-                    if((uchar=*s++)==0) {
-                        return result;
+                אם(sLength<0) {
+                    אם((uchar=*s++)==0) {
+                        החזר result;
                     }
-                } else {
-                    if(sLength==0) {
-                        return result;
+                } אחרת {
+                    אם(sLength==0) {
+                        החזר result;
                     }
                     uchar=*s++;
                     --sLength;
                 }
-                if(result==USTRINGTRIE_FINAL_VALUE) {
+                אם(result==USTRINGTRIE_FINAL_VALUE) {
                     // No further matching units.
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    החזר USTRINGTRIE_NO_MATCH;
                 }
                 pos=pos_;  // branchNext() advanced pos and wrote it to pos_ .
                 node=*pos++;
-            } else if(node<kMinValueLead) {
+            } אחרת אם(node<kMinValueLead) {
                 // Match length+1 units.
                 length=node-kMinLinearMatch;  // Actual match length minus 1.
-                if(uchar!=*pos) {
+                אם(uchar!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    החזר USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
-                break;
-            } else if(node&kValueIsFinal) {
+                اكسر;
+            } אחרת אם(node&kValueIsFinal) {
                 // No further matching units.
                 stop();
-                return USTRINGTRIE_NO_MATCH;
-            } else {
+                החזר USTRINGTRIE_NO_MATCH;
+            } אחרת {
                 // Skip intermediate value.
                 pos=skipNodeValue(pos, node);
                 node&=kNodeTypeMask;
@@ -282,20 +282,20 @@ UCharsTrie::next(ConstChar16Ptr ptr, int32_t sLength) {
     }
 }
 
-const char16_t*
-UCharsTrie::findUniqueValueFromBranch(const char16_t* pos U_LIFETIME_BOUND,
+ثابت char16_t*
+UCharsTrie::findUniqueValueFromBranch(ثابت char16_t* pos U_LIFETIME_BOUND,
                                       int32_t length,
                                       UBool haveUniqueValue,
                                       int32_t& uniqueValue) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+    כלעוד(length>kMaxBranchLinearSubNodeLength) {
         ++pos;  // ignore the comparison unit
-        if(nullptr==findUniqueValueFromBranch(jumpByDelta(pos), length>>1, haveUniqueValue, uniqueValue)) {
-            return nullptr;
+        אם(nullptr==findUniqueValueFromBranch(jumpByDelta(pos), length>>1, haveUniqueValue, uniqueValue)) {
+            החזר nullptr;
         }
         length=length-(length>>1);
         pos=skipDelta(pos);
     }
-    do {
+    עשה {
         ++pos;  // ignore a comparison unit
         // handle its value
         int32_t node=*pos++;
@@ -303,61 +303,61 @@ UCharsTrie::findUniqueValueFromBranch(const char16_t* pos U_LIFETIME_BOUND,
         node&=0x7fff;
         int32_t value=readValue(pos, node);
         pos=skipValue(pos, node);
-        if(isFinal) {
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return nullptr;
+        אם(isFinal) {
+            אם(haveUniqueValue) {
+                אם(value!=uniqueValue) {
+                    החזר nullptr;
                 }
-            } else {
+            } אחרת {
                 uniqueValue=value;
-                haveUniqueValue=true;
+                haveUniqueValue=אמת;
             }
-        } else {
-            if(!findUniqueValue(pos+value, haveUniqueValue, uniqueValue)) {
-                return nullptr;
+        } אחרת {
+            אם(!findUniqueValue(pos+value, haveUniqueValue, uniqueValue)) {
+                החזר nullptr;
             }
-            haveUniqueValue=true;
+            haveUniqueValue=אמת;
         }
-    } while(--length>1);
-    return pos+1;  // ignore the last comparison unit
+    } כלעוד(--length>1);
+    החזר pos+1;  // ignore the last comparison unit
 }
 
 UBool
-UCharsTrie::findUniqueValue(const char16_t *pos, UBool haveUniqueValue, int32_t &uniqueValue) {
+UCharsTrie::findUniqueValue(ثابت char16_t *pos, UBool haveUniqueValue, int32_t &uniqueValue) {
     int32_t node=*pos++;
-    for(;;) {
-        if(node<kMinLinearMatch) {
-            if(node==0) {
+    עבור(;;) {
+        אם(node<kMinLinearMatch) {
+            אם(node==0) {
                 node=*pos++;
             }
             pos=findUniqueValueFromBranch(pos, node+1, haveUniqueValue, uniqueValue);
-            if(pos==nullptr) {
-                return false;
+            אם(pos==nullptr) {
+                החזר שקר;
             }
-            haveUniqueValue=true;
+            haveUniqueValue=אמת;
             node=*pos++;
-        } else if(node<kMinValueLead) {
+        } אחרת אם(node<kMinValueLead) {
             // linear-match node
             pos+=node-kMinLinearMatch+1;  // Ignore the match units.
             node=*pos++;
-        } else {
+        } אחרת {
             UBool isFinal = static_cast<UBool>(node >> 15);
             int32_t value;
-            if(isFinal) {
+            אם(isFinal) {
                 value=readValue(pos, node&0x7fff);
-            } else {
+            } אחרת {
                 value=readNodeValue(pos, node);
             }
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return false;
+            אם(haveUniqueValue) {
+                אם(value!=uniqueValue) {
+                    החזר שקר;
                 }
-            } else {
+            } אחרת {
                 uniqueValue=value;
-                haveUniqueValue=true;
+                haveUniqueValue=אמת;
             }
-            if(isFinal) {
-                return true;
+            אם(isFinal) {
+                החזר אמת;
             }
             pos=skipNodeValue(pos, node);
             node&=kNodeTypeMask;
@@ -366,50 +366,50 @@ UCharsTrie::findUniqueValue(const char16_t *pos, UBool haveUniqueValue, int32_t 
 }
 
 int32_t
-UCharsTrie::getNextUChars(Appendable &out) const {
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return 0;
+UCharsTrie::getNextUChars(Appendable &out) ثابت {
+    ثابت char16_t *pos=pos_;
+    אם(pos==nullptr) {
+        החזר 0;
     }
-    if(remainingMatchLength_>=0) {
+    אם(remainingMatchLength_>=0) {
         out.appendCodeUnit(*pos);  // Next unit of a pending linear-match node.
-        return 1;
+        החזר 1;
     }
     int32_t node=*pos++;
-    if(node>=kMinValueLead) {
-        if(node&kValueIsFinal) {
-            return 0;
-        } else {
+    אם(node>=kMinValueLead) {
+        אם(node&kValueIsFinal) {
+            החזר 0;
+        } אחרת {
             pos=skipNodeValue(pos, node);
             node&=kNodeTypeMask;
         }
     }
-    if(node<kMinLinearMatch) {
-        if(node==0) {
+    אם(node<kMinLinearMatch) {
+        אם(node==0) {
             node=*pos++;
         }
         out.reserveAppendCapacity(++node);
         getNextBranchUChars(pos, node, out);
-        return node;
-    } else {
+        החזר node;
+    } אחרת {
         // First unit of the linear-match node.
         out.appendCodeUnit(*pos);
-        return 1;
+        החזר 1;
     }
 }
 
-void
-UCharsTrie::getNextBranchUChars(const char16_t *pos, int32_t length, Appendable &out) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+فراغ
+UCharsTrie::getNextBranchUChars(ثابت char16_t *pos, int32_t length, Appendable &out) {
+    כלעוד(length>kMaxBranchLinearSubNodeLength) {
         ++pos;  // ignore the comparison unit
         getNextBranchUChars(jumpByDelta(pos), length>>1, out);
         length=length-(length>>1);
         pos=skipDelta(pos);
     }
-    do {
+    עשה {
         out.appendCodeUnit(*pos++);
         pos=skipValue(pos);
-    } while(--length>1);
+    } כלעוד(--length>1);
     out.appendCodeUnit(*pos);
 }
 

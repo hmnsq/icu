@@ -29,13 +29,13 @@
  *   - by changing the default setting of U_DISABLE_RENAMING in uconfig.h
  */
 
-#include "unicode/uconfig.h"
+#ضمن "unicode/uconfig.h"
 
-#if !U_DISABLE_RENAMING
+#אם !U_DISABLE_RENAMING
 
 // Disable Renaming for Visual Studio's IntelliSense feature and for LLVM's Clang-Tidy tool, so that
 // 'Go-to-Definition' (F12) and 'include-cleaner' respectively will work.
-#if !(defined(_MSC_VER) && defined(__INTELLISENSE__)) && !defined(__clang_analyzer__)
+#אם !(defined(_MSC_VER) && defined(__INTELLISENSE__)) && !defined(__clang_analyzer__)
 
 /* We need the U_ICU_ENTRY_POINT_RENAME definition. There's a default one in unicode/uvernum.h we can use, but we will give
    the platform a chance to define it first.
@@ -43,17 +43,17 @@
  */
 
 #ifndef U_ICU_ENTRY_POINT_RENAME
-#include "unicode/umachine.h"
+#ضمن "unicode/umachine.h"
 #endif
 
 /* If we still don't have U_ICU_ENTRY_POINT_RENAME use the default. */
 #ifndef U_ICU_ENTRY_POINT_RENAME
-#include "unicode/uvernum.h"
+#ضمن "unicode/uvernum.h"
 #endif
 
 /* Error out before the following defines cause very strange and unexpected code breakage */
 #ifndef U_ICU_ENTRY_POINT_RENAME
-#error U_ICU_ENTRY_POINT_RENAME is not defined - cannot continue. Consider defining U_DISABLE_RENAMING if renaming should not be used.
+#error U_ICU_ENTRY_POINT_RENAME is not defined - cannot استمر. Consider defining U_DISABLE_RENAMING אם renaming should not be used.
 #endif
 
 

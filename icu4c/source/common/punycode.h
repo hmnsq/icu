@@ -27,9 +27,9 @@ http://www.nicemice.net/amc/
 #ifndef __PUNYCODE_H__
 #define __PUNYCODE_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#אם !UCONFIG_NO_IDNA
 
 /**
  * u_strToPunycode() converts Unicode to Punycode.
@@ -66,9 +66,9 @@ http://www.nicemice.net/amc/
  * @see u_strFromPunycode
  */
 U_CAPI int32_t
-u_strToPunycode(const UChar *src, int32_t srcLength,
+u_strToPunycode(ثابت UChar *src, int32_t srcLength,
                 UChar *dest, int32_t destCapacity,
-                const UBool *caseFlags,
+                ثابت UBool *caseFlags,
                 UErrorCode *pErrorCode);
 
 /**
@@ -101,7 +101,7 @@ u_strToPunycode(const UChar *src, int32_t srcLength,
  * @see u_strToPunycode
  */
 U_CAPI int32_t
-u_strFromPunycode(const UChar *src, int32_t srcLength,
+u_strFromPunycode(ثابت UChar *src, int32_t srcLength,
                   UChar *dest, int32_t destCapacity,
                   UBool *caseFlags,
                   UErrorCode *pErrorCode);

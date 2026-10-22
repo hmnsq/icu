@@ -18,13 +18,13 @@
 *   Internal function for sorting arrays.
 */
 
-#include <cstddef>
+#ضمن <cstddef>
 
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "uarrsort.h"
+#ضمن "unicode/utypes.h"
+#ضمن "cmemory.h"
+#ضمن "uarrsort.h"
 
-enum {
+تعداد {
     /**
      * "from Knuth"
      *
@@ -36,52 +36,52 @@ enum {
     STACK_ITEM_SIZE=200
 };
 
-static constexpr int32_t sizeInMaxAlignTs(int32_t sizeInBytes) {
-    return (sizeInBytes + sizeof(std::max_align_t) - 1) / sizeof(std::max_align_t);
+ساكن constexpr int32_t sizeInMaxAlignTs(int32_t sizeInBytes) {
+    החזר (sizeInBytes + حجم(std::max_align_t) - 1) / حجم(std::max_align_t);
 }
 
 /* UComparator convenience implementations ---------------------------------- */
 
 U_CAPI int32_t U_EXPORT2
-uprv_uint16Comparator(const void *context, const void *left, const void *right) {
-    (void)context;
-    return (int32_t)*(const uint16_t *)left - (int32_t)*(const uint16_t *)right;
+uprv_uint16Comparator(ثابت فراغ *context, ثابت فراغ *left, ثابت فراغ *right) {
+    (فراغ)context;
+    החזר (int32_t)*(ثابت uint16_t *)left - (int32_t)*(ثابت uint16_t *)right;
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_int32Comparator(const void *context, const void *left, const void *right) {
-    (void)context;
-    return *(const int32_t *)left - *(const int32_t *)right;
+uprv_int32Comparator(ثابت فراغ *context, ثابت فراغ *left, ثابت فراغ *right) {
+    (فراغ)context;
+    החזר *(ثابت int32_t *)left - *(ثابت int32_t *)right;
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_uint32Comparator(const void *context, const void *left, const void *right) {
-    (void)context;
-    uint32_t l=*(const uint32_t *)left, r=*(const uint32_t *)right;
+uprv_uint32Comparator(ثابت فراغ *context, ثابت فراغ *left, ثابت فراغ *right) {
+    (فراغ)context;
+    uint32_t l=*(ثابت uint32_t *)left, r=*(ثابت uint32_t *)right;
 
     /* compare directly because (l-r) would overflow the int32_t result */
-    if(l<r) {
-        return -1;
-    } else if(l==r) {
-        return 0;
-    } else /* l>r */ {
-        return 1;
+    אם(l<r) {
+        החזר -1;
+    } אחרת אם(l==r) {
+        החזר 0;
+    } אחרת /* l>r */ {
+        החזר 1;
     }
 }
 
 /* Insertion sort using binary search --------------------------------------- */
 
 U_CAPI int32_t U_EXPORT2
-uprv_stableBinarySearch(char *array, int32_t limit, void *item, int32_t itemSize,
-                        UComparator *cmp, const void *context) {
+uprv_stableBinarySearch(حرف *array, int32_t limit, فراغ *item, int32_t itemSize,
+                        UComparator *cmp, ثابت فراغ *context) {
     int32_t start=0;
-    UBool found=false;
+    UBool found=שקר;
 
     /* Binary search until we get down to a tiny sub-array. */
-    while((limit-start)>=MIN_QSORT) {
+    כלעוד((limit-start)>=MIN_QSORT) {
         int32_t i=(start+limit)/2;
         int32_t diff=cmp(context, item, array+i*itemSize);
-        if(diff==0) {
+        אם(diff==0) {
             /*
              * Found the item. We look for the *last* occurrence of such
              * an item, for stable sorting.
@@ -93,43 +93,43 @@ uprv_stableBinarySearch(char *array, int32_t limit, void *item, int32_t itemSize
              * (where found will never become true in the insertion sort)
              * or potentially many duplicates.
              */
-            found=true;
+            found=אמת;
             start=i+1;
-        } else if(diff<0) {
+        } אחרת אם(diff<0) {
             limit=i;
-        } else {
+        } אחרת {
             start=i;
         }
     }
 
     /* Linear search over the remaining tiny sub-array. */
-    while(start<limit) {
+    כלעוד(start<limit) {
         int32_t diff=cmp(context, item, array+start*itemSize);
-        if(diff==0) {
-            found=true;
-        } else if(diff<0) {
-            break;
+        אם(diff==0) {
+            found=אמת;
+        } אחרת אם(diff<0) {
+            اكسر;
         }
         ++start;
     }
-    return found ? (start-1) : ~start;
+    החזר found ? (start-1) : ~start;
 }
 
-static void
-doInsertionSort(char *array, int32_t length, int32_t itemSize,
-                UComparator *cmp, const void *context, void *pv) {
+ساكن فراغ
+doInsertionSort(حرف *array, int32_t length, int32_t itemSize,
+                UComparator *cmp, ثابت فراغ *context, فراغ *pv) {
     int32_t j;
 
-    for(j=1; j<length; ++j) {
-        char *item=array+j*itemSize;
+    עבור(j=1; j<length; ++j) {
+        حرف *item=array+j*itemSize;
         int32_t insertionPoint=uprv_stableBinarySearch(array, j, item, itemSize, cmp, context);
-        if(insertionPoint<0) {
+        אם(insertionPoint<0) {
             insertionPoint=~insertionPoint;
-        } else {
+        } אחרת {
             ++insertionPoint;  /* one past the last equal item */
         }
-        if(insertionPoint<j) {
-            char *dest=array+insertionPoint*itemSize;
+        אם(insertionPoint<j) {
+            حرف *dest=array+insertionPoint*itemSize;
             uprv_memcpy(pv, item, itemSize);  /* v=array[j] */
             uprv_memmove(dest+itemSize, dest, (j-insertionPoint)*(size_t)itemSize);
             uprv_memcpy(dest, pv, itemSize);  /* array[insertionPoint]=v */
@@ -137,15 +137,15 @@ doInsertionSort(char *array, int32_t length, int32_t itemSize,
     }
 }
 
-static void
-insertionSort(char *array, int32_t length, int32_t itemSize,
-              UComparator *cmp, const void *context, UErrorCode *pErrorCode) {
+ساكن فراغ
+insertionSort(حرف *array, int32_t length, int32_t itemSize,
+              UComparator *cmp, ثابت فراغ *context, UErrorCode *pErrorCode) {
 
     icu::MaybeStackArray<std::max_align_t, sizeInMaxAlignTs(STACK_ITEM_SIZE)> v;
-    if (sizeInMaxAlignTs(itemSize) > v.getCapacity() &&
+    אם (sizeInMaxAlignTs(itemSize) > v.getCapacity() &&
             v.resize(sizeInMaxAlignTs(itemSize)) == nullptr) {
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        החזר;
     }
 
     doInsertionSort(array, length, itemSize, cmp, context, v.getAlias());
@@ -165,17 +165,17 @@ insertionSort(char *array, int32_t length, int32_t itemSize,
  * 4. Auflage 1986
  * ISBN 3-519-02260-5
  */
-static void
-subQuickSort(char *array, int32_t start, int32_t limit, int32_t itemSize,
-             UComparator *cmp, const void *context,
-             void *px, void *pw) {
+ساكن فراغ
+subQuickSort(حرف *array, int32_t start, int32_t limit, int32_t itemSize,
+             UComparator *cmp, ثابت فراغ *context,
+             فراغ *px, فراغ *pw) {
     int32_t left, right;
 
     /* start and left are inclusive, limit and right are exclusive */
-    do {
-        if((start+MIN_QSORT)>=limit) {
+    עשה {
+        אם((start+MIN_QSORT)>=limit) {
             doInsertionSort(array+start*itemSize, limit-start, itemSize, cmp, context, px);
-            break;
+            اكسر;
         }
 
         left=start;
@@ -184,23 +184,23 @@ subQuickSort(char *array, int32_t start, int32_t limit, int32_t itemSize,
         /* x=array[middle] */
         uprv_memcpy(px, array+(size_t)((start+limit)/2)*itemSize, itemSize);
 
-        do {
-            while(/* array[left]<x */
+        עשה {
+            כלעוד(/* array[left]<x */
                   cmp(context, array+left*itemSize, px)<0
             ) {
                 ++left;
             }
-            while(/* x<array[right-1] */
+            כלעוד(/* x<array[right-1] */
                   cmp(context, px, array+(right-1)*itemSize)<0
             ) {
                 --right;
             }
 
             /* swap array[left] and array[right-1] via w; ++left; --right */
-            if(left<right) {
+            אם(left<right) {
                 --right;
 
-                if(left<right) {
+                אם(left<right) {
                     uprv_memcpy(pw, array+(size_t)left*itemSize, itemSize);
                     uprv_memcpy(array+(size_t)left*itemSize, array+(size_t)right*itemSize, itemSize);
                     uprv_memcpy(array+(size_t)right*itemSize, pw, itemSize);
@@ -208,38 +208,38 @@ subQuickSort(char *array, int32_t start, int32_t limit, int32_t itemSize,
 
                 ++left;
             }
-        } while(left<right);
+        } כלעוד(left<right);
 
         /* sort sub-arrays */
-        if((right-start)<(limit-left)) {
+        אם((right-start)<(limit-left)) {
             /* sort [start..right[ */
-            if(start<(right-1)) {
+            אם(start<(right-1)) {
                 subQuickSort(array, start, right, itemSize, cmp, context, px, pw);
             }
 
             /* sort [left..limit[ */
             start=left;
-        } else {
+        } אחרת {
             /* sort [left..limit[ */
-            if(left<(limit-1)) {
+            אם(left<(limit-1)) {
                 subQuickSort(array, left, limit, itemSize, cmp, context, px, pw);
             }
 
             /* sort [start..right[ */
             limit=right;
         }
-    } while(start<(limit-1));
+    } כלעוד(start<(limit-1));
 }
 
-static void
-quickSort(char *array, int32_t length, int32_t itemSize,
-            UComparator *cmp, const void *context, UErrorCode *pErrorCode) {
+ساكن فراغ
+quickSort(حرف *array, int32_t length, int32_t itemSize,
+            UComparator *cmp, ثابت فراغ *context, UErrorCode *pErrorCode) {
     /* allocate two intermediate item variables (x and w) */
     icu::MaybeStackArray<std::max_align_t, sizeInMaxAlignTs(STACK_ITEM_SIZE) * 2> xw;
-    if(sizeInMaxAlignTs(itemSize)*2 > xw.getCapacity() &&
+    אם(sizeInMaxAlignTs(itemSize)*2 > xw.getCapacity() &&
             xw.resize(sizeInMaxAlignTs(itemSize) * 2) == nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+        החזר;
     }
 
     subQuickSort(array, 0, length, itemSize, cmp, context,
@@ -252,23 +252,23 @@ quickSort(char *array, int32_t length, int32_t itemSize,
  * Check arguments, select an appropriate implementation,
  * cast the array to char * so that array+i*itemSize works.
  */
-U_CAPI void U_EXPORT2
-uprv_sortArray(void *array, int32_t length, int32_t itemSize,
-               UComparator *cmp, const void *context,
+U_CAPI فراغ U_EXPORT2
+uprv_sortArray(فراغ *array, int32_t length, int32_t itemSize,
+               UComparator *cmp, ثابت فراغ *context,
                UBool sortStable, UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    אם(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        החזר;
     }
-    if((length>0 && array==nullptr) || length<0 || itemSize<=0 || cmp==nullptr) {
+    אם((length>0 && array==nullptr) || length<0 || itemSize<=0 || cmp==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        החזר;
     }
 
-    if(length<=1) {
-        return;
-    } else if(length<MIN_QSORT || sortStable) {
-        insertionSort((char *)array, length, itemSize, cmp, context, pErrorCode);
-    } else {
-        quickSort((char *)array, length, itemSize, cmp, context, pErrorCode);
+    אם(length<=1) {
+        החזר;
+    } אחרת אם(length<MIN_QSORT || sortStable) {
+        insertionSort((حرف *)array, length, itemSize, cmp, context, pErrorCode);
+    } אחרת {
+        quickSort((حرف *)array, length, itemSize, cmp, context, pErrorCode);
     }
 }

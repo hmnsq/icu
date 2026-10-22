@@ -10,14 +10,14 @@
 #ifndef DICTBE_H
 #define DICTBE_H
 
-#include "unicode/utypes.h"
-#include "unicode/uniset.h"
-#include "unicode/utext.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uniset.h"
+#ضمن "unicode/utext.h"
 
-#include "brkeng.h"
-#include "hash.h"
-#include "mlbe.h"
-#include "uvectr32.h"
+#ضمن "brkeng.h"
+#ضمن "hash.h"
+#ضمن "mlbe.h"
+#ضمن "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
@@ -36,8 +36,8 @@ class Normalizer2;
  * <p>After it is constructed a DictionaryBreakEngine may be shared between
  * threads without synchronization.</p>
  */
-class DictionaryBreakEngine : public LanguageBreakEngine {
- private:
+class DictionaryBreakEngine : عام LanguageBreakEngine {
+ خاص:
     /**
      * The set of characters handled by this engine
      * @internal
@@ -45,7 +45,7 @@ class DictionaryBreakEngine : public LanguageBreakEngine {
 
   UnicodeSet    fSet;
 
- public:
+ عام:
 
   /**
    * <p>Constructor </p>
@@ -66,7 +66,7 @@ class DictionaryBreakEngine : public LanguageBreakEngine {
    * @return true if this engine handles the particular character and break
    * type.
    */
-  virtual UBool handles(UChar32 c, const char* locale) const override;
+  virtual UBool handles(UChar32 c, ثابت حرف* locale) ثابت override;
 
   /**
    * <p>Find any breaks within a run in the supplied text.</p>
@@ -85,16 +85,16 @@ class DictionaryBreakEngine : public LanguageBreakEngine {
                               int32_t endPos,
                               UVector32 &foundBreaks,
                               UBool isPhraseBreaking,
-                              UErrorCode& status ) const override;
+                              UErrorCode& status ) ثابت override;
 
- protected:
+ محمي:
 
  /**
   * <p>Set the character set handled by this engine.</p>
   *
   * @param set A UnicodeSet of the set of characters handled by the engine
   */
-  virtual void setCharacters( const UnicodeSet &set );
+  virtual فراغ setCharacters( ثابت UnicodeSet &set );
 
  /**
   * <p>Divide up a range of known dictionary characters handled by this break engine.</p>
@@ -111,7 +111,7 @@ class DictionaryBreakEngine : public LanguageBreakEngine {
                                            int32_t rangeEnd,
                                            UVector32 &foundBreaks,
                                            UBool isPhraseBreaking,
-                                           UErrorCode& status) const = 0;
+                                           UErrorCode& status) ثابت = 0;
 
 };
 
@@ -126,8 +126,8 @@ class DictionaryBreakEngine : public LanguageBreakEngine {
  * <p>After it is constructed a ThaiBreakEngine may be shared between
  * threads without synchronization.</p>
  */
-class ThaiBreakEngine : public DictionaryBreakEngine {
- private:
+class ThaiBreakEngine : عام DictionaryBreakEngine {
+ خاص:
     /**
      * The set of characters handled by this engine
      * @internal
@@ -139,7 +139,7 @@ class ThaiBreakEngine : public DictionaryBreakEngine {
   UnicodeSet                fMarkSet;
   DictionaryMatcher  *fDictionary;
 
- public:
+ عام:
 
   /**
    * <p>Default constructor.</p>
@@ -154,7 +154,7 @@ class ThaiBreakEngine : public DictionaryBreakEngine {
    */
   virtual ~ThaiBreakEngine();
 
- protected:
+ محمي:
  /**
   * <p>Divide up a range of known dictionary characters handled by this break engine.</p>
   *
@@ -170,7 +170,7 @@ class ThaiBreakEngine : public DictionaryBreakEngine {
                                            int32_t rangeEnd,
                                            UVector32 &foundBreaks,
                                            UBool isPhraseBreaking,
-                                           UErrorCode& status) const override;
+                                           UErrorCode& status) ثابت override;
 
 };
 
@@ -185,8 +185,8 @@ class ThaiBreakEngine : public DictionaryBreakEngine {
  * <p>After it is constructed a LaoBreakEngine may be shared between
  * threads without synchronization.</p>
  */
-class LaoBreakEngine : public DictionaryBreakEngine {
- private:
+class LaoBreakEngine : عام DictionaryBreakEngine {
+ خاص:
     /**
      * The set of characters handled by this engine
      * @internal
@@ -197,7 +197,7 @@ class LaoBreakEngine : public DictionaryBreakEngine {
   UnicodeSet                fMarkSet;
   DictionaryMatcher  *fDictionary;
 
- public:
+ عام:
 
   /**
    * <p>Default constructor.</p>
@@ -212,7 +212,7 @@ class LaoBreakEngine : public DictionaryBreakEngine {
    */
   virtual ~LaoBreakEngine();
 
- protected:
+ محمي:
  /**
   * <p>Divide up a range of known dictionary characters handled by this break engine.</p>
   *
@@ -228,7 +228,7 @@ class LaoBreakEngine : public DictionaryBreakEngine {
                                            int32_t rangeEnd,
                                            UVector32 &foundBreaks,
                                            UBool isPhraseBreaking,
-                                           UErrorCode& status) const override;
+                                           UErrorCode& status) ثابت override;
 
 };
 
@@ -243,8 +243,8 @@ class LaoBreakEngine : public DictionaryBreakEngine {
  * <p>After it is constructed a BurmeseBreakEngine may be shared between
  * threads without synchronization.</p>
  */
-class BurmeseBreakEngine : public DictionaryBreakEngine {
- private:
+class BurmeseBreakEngine : عام DictionaryBreakEngine {
+ خاص:
     /**
      * The set of characters handled by this engine
      * @internal
@@ -255,7 +255,7 @@ class BurmeseBreakEngine : public DictionaryBreakEngine {
   UnicodeSet                fMarkSet;
   DictionaryMatcher  *fDictionary;
 
- public:
+ عام:
 
   /**
    * <p>Default constructor.</p>
@@ -270,7 +270,7 @@ class BurmeseBreakEngine : public DictionaryBreakEngine {
    */
   virtual ~BurmeseBreakEngine();
 
- protected:
+ محمي:
  /**
   * <p>Divide up a range of known dictionary characters.</p>
   *
@@ -286,7 +286,7 @@ class BurmeseBreakEngine : public DictionaryBreakEngine {
                                            int32_t rangeEnd,
                                            UVector32 &foundBreaks,
                                            UBool isPhraseBreaking,
-                                           UErrorCode& status) const override;
+                                           UErrorCode& status) ثابت override;
 
 };
 
@@ -301,8 +301,8 @@ class BurmeseBreakEngine : public DictionaryBreakEngine {
  * <p>After it is constructed a KhmerBreakEngine may be shared between
  * threads without synchronization.</p>
  */
-class KhmerBreakEngine : public DictionaryBreakEngine {
- private:
+class KhmerBreakEngine : عام DictionaryBreakEngine {
+ خاص:
     /**
      * The set of characters handled by this engine
      * @internal
@@ -313,7 +313,7 @@ class KhmerBreakEngine : public DictionaryBreakEngine {
   UnicodeSet                fMarkSet;
   DictionaryMatcher  *fDictionary;
 
- public:
+ عام:
 
   /**
    * <p>Default constructor.</p>
@@ -328,7 +328,7 @@ class KhmerBreakEngine : public DictionaryBreakEngine {
    */
   virtual ~KhmerBreakEngine();
 
- protected:
+ محمي:
  /**
   * <p>Divide up a range of known dictionary characters.</p>
   *
@@ -344,18 +344,18 @@ class KhmerBreakEngine : public DictionaryBreakEngine {
                                            int32_t rangeEnd,
                                            UVector32 &foundBreaks,
                                            UBool isPhraseBreaking,
-                                           UErrorCode& status) const override;
+                                           UErrorCode& status) ثابت override;
 
 };
 
-#if !UCONFIG_NO_NORMALIZATION
+#אם !UCONFIG_NO_NORMALIZATION
 
 /*******************************************************************
  * CjkBreakEngine
  */
 
 //indicates language/script that the CjkBreakEngine will handle
-enum LanguageType {
+تعداد LanguageType {
     kKorean,
     kChineseJapanese
 };
@@ -365,8 +365,8 @@ enum LanguageType {
  * dictionary with costs associated with each word and
  * Viterbi decoding to determine CJK-specific breaks.</p>
  */
-class CjkBreakEngine : public DictionaryBreakEngine {
- protected:
+class CjkBreakEngine : عام DictionaryBreakEngine {
+ محمي:
     /**
      * The set of characters handled by this engine
      * @internal
@@ -376,21 +376,21 @@ class CjkBreakEngine : public DictionaryBreakEngine {
   UnicodeSet                fClosePunctuationSet;
 
   DictionaryMatcher        *fDictionary;
-  const Normalizer2        *nfkcNorm2;
+  ثابت Normalizer2        *nfkcNorm2;
   MlBreakEngine            *fMlBreakEngine;
   bool                      isCj;
 
- private:
+ خاص:
   // Load Japanese extensions.
-  void loadJapaneseExtensions(UErrorCode& error);
+  فراغ loadJapaneseExtensions(UErrorCode& error);
   // Load Japanese Hiragana.
-  void loadHiragana(UErrorCode& error);
+  فراغ loadHiragana(UErrorCode& error);
   // Initialize fSkipSet by loading Japanese Hiragana and extensions.
-  void initJapanesePhraseParameter(UErrorCode& error);
+  فراغ initJapanesePhraseParameter(UErrorCode& error);
 
   Hashtable fSkipSet;
 
- public:
+ عام:
 
     /**
      * <p>Default constructor.</p>
@@ -406,7 +406,7 @@ class CjkBreakEngine : public DictionaryBreakEngine {
      */
   virtual ~CjkBreakEngine();
 
- protected:
+ محمي:
     /**
      * <p>Divide up a range of known dictionary characters handled by this break engine.</p>
      *
@@ -422,7 +422,7 @@ class CjkBreakEngine : public DictionaryBreakEngine {
           int32_t rangeEnd,
           UVector32 &foundBreaks,
           UBool isPhraseBreaking,
-          UErrorCode& status) const override;
+          UErrorCode& status) ثابت override;
 
 };
 

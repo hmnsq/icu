@@ -8,19 +8,19 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#אם !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "ucln_cmn.h"
-#include "uassert.h"
+#ضمن "unicode/resbund.h"
+#ضمن "uresimp.h"
+#ضمن "cmemory.h"
+#ضمن "servloc.h"
+#ضمن "ustrfmt.h"
+#ضمن "uhash.h"
+#ضمن "charstr.h"
+#ضمن "ucln_cmn.h"
+#ضمن "uassert.h"
 
 #define UNDERSCORE_CHAR ((char16_t)0x005f)
 #define AT_SIGN_CHAR    ((char16_t)64)
@@ -34,7 +34,7 @@ ICUResourceBundleFactory::ICUResourceBundleFactory()
 {
 }
 
-ICUResourceBundleFactory::ICUResourceBundleFactory(const UnicodeString& bundleName)
+ICUResourceBundleFactory::ICUResourceBundleFactory(ثابت UnicodeString& bundleName)
   : LocaleKeyFactory(VISIBLE)
   , _bundleName(bundleName)
 {
@@ -42,47 +42,47 @@ ICUResourceBundleFactory::ICUResourceBundleFactory(const UnicodeString& bundleNa
 
 ICUResourceBundleFactory::~ICUResourceBundleFactory() {}
 
-const Hashtable*
-ICUResourceBundleFactory::getSupportedIDs(UErrorCode& status) const
+ثابت Hashtable*
+ICUResourceBundleFactory::getSupportedIDs(UErrorCode& status) ثابت
 {
-    if (U_SUCCESS(status)) {
-        return LocaleUtility::getAvailableLocaleNames(_bundleName);
+    אם (U_SUCCESS(status)) {
+        החזר LocaleUtility::getAvailableLocaleNames(_bundleName);
     }
-    return nullptr;
+    החזר nullptr;
 }
 
 UObject*
-ICUResourceBundleFactory::handleCreate(const Locale& loc, int32_t /* kind */, const ICUService* /* service */, UErrorCode& status) const
+ICUResourceBundleFactory::handleCreate(ثابت Locale& loc, int32_t /* kind */, ثابت ICUService* /* service */, UErrorCode& status) ثابت
 {
-    if (U_SUCCESS(status)) {
+    אם (U_SUCCESS(status)) {
         // _bundleName is a package name
         // and should only contain invariant characters
                 // ??? is it always true that the max length of the bundle name is 19?
                 // who made this change? -- dlf
-        char pkg[20];
+        حرف pkg[20];
         int32_t length;
-        length = _bundleName.extract(0, INT32_MAX, pkg, static_cast<int32_t>(sizeof(pkg)), US_INV);
-        if (length >= static_cast<int32_t>(sizeof(pkg))) {
-            return nullptr;
+        length = _bundleName.extract(0, INT32_MAX, pkg, static_cast<int32_t>(حجم(pkg)), US_INV);
+        אם (length >= static_cast<int32_t>(حجم(pkg))) {
+            החזר nullptr;
         }
-        return new ResourceBundle(pkg, loc, status);
+        החזר جديد ResourceBundle(pkg, loc, status);
     }
-    return nullptr;
+    החזר nullptr;
 }
 
 #ifdef SERVICE_DEBUG
 UnicodeString&
-ICUResourceBundleFactory::debug(UnicodeString& result) const
+ICUResourceBundleFactory::debug(UnicodeString& result) ثابت
 {
     LocaleKeyFactory::debug(result);
     result.append((UnicodeString)", bundle: ");
-    return result.append(_bundleName);
+    החזר result.append(_bundleName);
 }
 
 UnicodeString&
-ICUResourceBundleFactory::debugClass(UnicodeString& result) const
+ICUResourceBundleFactory::debugClass(UnicodeString& result) ثابت
 {
-    return result.append((UnicodeString)"ICUResourceBundleFactory");
+    החזר result.append((UnicodeString)"ICUResourceBundleFactory");
 }
 #endif
 

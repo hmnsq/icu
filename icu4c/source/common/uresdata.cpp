@@ -19,21 +19,21 @@
 *   06/24/02    weiv        Added support for resource sharing
 */
 
-#include "unicode/utypes.h"
-#include "unicode/udata.h"
-#include "unicode/ustring.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "resource.h"
-#include "uarrsort.h"
-#include "uassert.h"
-#include "ucol_swp.h"
-#include "udataswp.h"
-#include "uinvchar.h"
-#include "uresdata.h"
-#include "uresimp.h"
-#include "utracimp.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/udata.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/utf16.h"
+#ضمن "cmemory.h"
+#ضمن "cstring.h"
+#ضمن "resource.h"
+#ضمن "uarrsort.h"
+#ضمن "uassert.h"
+#ضمن "ucol_swp.h"
+#ضمن "udataswp.h"
+#ضمن "uinvchar.h"
+#ضمن "uresdata.h"
+#ضمن "uresimp.h"
+#ضمن "utracimp.h"
 
 /*
  * Resource access helpers
@@ -42,25 +42,25 @@
 /* get a const char* pointer to the key with the keyOffset byte offset from pRoot */
 #define RES_GET_KEY16(pResData, keyOffset) \
     ((keyOffset)<(pResData)->localKeyLimit ? \
-        (const char *)(pResData)->pRoot+(keyOffset) : \
+        (ثابت حرف *)(pResData)->pRoot+(keyOffset) : \
         (pResData)->poolBundleKeys+(keyOffset)-(pResData)->localKeyLimit)
 
 #define RES_GET_KEY32(pResData, keyOffset) \
     ((keyOffset)>=0 ? \
-        (const char *)(pResData)->pRoot+(keyOffset) : \
+        (ثابت حرف *)(pResData)->pRoot+(keyOffset) : \
         (pResData)->poolBundleKeys+((keyOffset)&0x7fffffff))
 
 #define URESDATA_ITEM_NOT_FOUND -1
 
 /* empty resources, returned when the resource offset is 0 */
-static const uint16_t gEmpty16=0;
+ساكن ثابت uint16_t gEmpty16=0;
 
-static const struct {
+ساكن ثابت بنية {
     int32_t length;
     int32_t res;
 } gEmpty32={ 0, 0 };
 
-static const struct {
+ساكن ثابت بنية {
     int32_t length;
     char16_t nul;
     char16_t pad;
@@ -71,76 +71,76 @@ static const struct {
  * the resource is of the expected type.
  */
 
-static int32_t
-_res_findTableItem(const ResourceData *pResData, const uint16_t *keyOffsets, int32_t length,
-                   const char *key, const char **realKey) {
-    const char *tableKey;
+ساكن int32_t
+_res_findTableItem(ثابت ResourceData *pResData, ثابت uint16_t *keyOffsets, int32_t length,
+                   ثابت حرف *key, ثابت حرف **realKey) {
+    ثابت حرف *tableKey;
     int32_t mid, start, limit;
-    int result;
+    صحيح result;
 
     /* do a binary search for the key */
     start=0;
     limit=length;
-    while(start<limit) {
+    כלעוד(start<limit) {
         mid = (start + limit) / 2;
         tableKey = RES_GET_KEY16(pResData, keyOffsets[mid]);
-        if (pResData->useNativeStrcmp) {
+        אם (pResData->useNativeStrcmp) {
             result = uprv_strcmp(key, tableKey);
-        } else {
+        } אחרת {
             result = uprv_compareInvCharsAsAscii(key, tableKey);
         }
-        if (result < 0) {
+        אם (result < 0) {
             limit = mid;
-        } else if (result > 0) {
+        } אחרת אם (result > 0) {
             start = mid + 1;
-        } else {
+        } אחרת {
             /* We found it! */
             *realKey=tableKey;
-            return mid;
+            החזר mid;
         }
     }
-    return URESDATA_ITEM_NOT_FOUND;  /* not found or table is empty. */
+    החזר URESDATA_ITEM_NOT_FOUND;  /* not found or table is empty. */
 }
 
-static int32_t
-_res_findTable32Item(const ResourceData *pResData, const int32_t *keyOffsets, int32_t length,
-                     const char *key, const char **realKey) {
-    const char *tableKey;
+ساكن int32_t
+_res_findTable32Item(ثابت ResourceData *pResData, ثابت int32_t *keyOffsets, int32_t length,
+                     ثابت حرف *key, ثابت حرف **realKey) {
+    ثابت حرف *tableKey;
     int32_t mid, start, limit;
-    int result;
+    صحيح result;
 
     /* do a binary search for the key */
     start=0;
     limit=length;
-    while(start<limit) {
+    כלעוד(start<limit) {
         mid = (start + limit) / 2;
         tableKey = RES_GET_KEY32(pResData, keyOffsets[mid]);
-        if (pResData->useNativeStrcmp) {
+        אם (pResData->useNativeStrcmp) {
             result = uprv_strcmp(key, tableKey);
-        } else {
+        } אחרת {
             result = uprv_compareInvCharsAsAscii(key, tableKey);
         }
-        if (result < 0) {
+        אם (result < 0) {
             limit = mid;
-        } else if (result > 0) {
+        } אחרת אם (result > 0) {
             start = mid + 1;
-        } else {
+        } אחרת {
             /* We found it! */
             *realKey=tableKey;
-            return mid;
+            החזר mid;
         }
     }
-    return URESDATA_ITEM_NOT_FOUND;  /* not found or table is empty. */
+    החזר URESDATA_ITEM_NOT_FOUND;  /* not found or table is empty. */
 }
 
 /* helper for res_load() ---------------------------------------------------- */
 
-static UBool U_CALLCONV
-isAcceptable(void *context,
-             const char * /*type*/, const char * /*name*/,
-             const UDataInfo *pInfo) {
+ساكن UBool U_CALLCONV
+isAcceptable(فراغ *context,
+             ثابت حرف * /*type*/, ثابت حرف * /*name*/,
+             ثابت UDataInfo *pInfo) {
     uprv_memcpy(context, pInfo->formatVersion, 4);
-    return
+    החזר
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
@@ -154,62 +154,62 @@ isAcceptable(void *context,
 
 /* semi-public functions ---------------------------------------------------- */
 
-static void
+ساكن فراغ
 res_init(ResourceData *pResData,
-         UVersionInfo formatVersion, const void *inBytes, int32_t length,
+         UVersionInfo formatVersion, ثابت فراغ *inBytes, int32_t length,
          UErrorCode *errorCode) {
     UResType rootType;
 
     /* get the root resource */
-    pResData->pRoot = static_cast<const int32_t*>(inBytes);
+    pResData->pRoot = static_cast<ثابت int32_t*>(inBytes);
     pResData->rootRes = static_cast<Resource>(*pResData->pRoot);
     pResData->p16BitUnits=&gEmpty16;
 
     /* formatVersion 1.1 must have a root item and at least 5 indexes */
-    if(length>=0 && (length/4)<((formatVersion[0]==1 && formatVersion[1]==0) ? 1 : 1+5)) {
+    אם(length>=0 && (length/4)<((formatVersion[0]==1 && formatVersion[1]==0) ? 1 : 1+5)) {
         *errorCode=U_INVALID_FORMAT_ERROR;
         res_unload(pResData);
-        return;
+        החזר;
     }
 
     /* currently, we accept only resources that have a Table as their roots */
     rootType = static_cast<UResType>(RES_GET_TYPE(pResData->rootRes));
-    if(!URES_IS_TABLE(rootType)) {
+    אם(!URES_IS_TABLE(rootType)) {
         *errorCode=U_INVALID_FORMAT_ERROR;
         res_unload(pResData);
-        return;
+        החזר;
     }
 
-    if(formatVersion[0]==1 && formatVersion[1]==0) {
+    אם(formatVersion[0]==1 && formatVersion[1]==0) {
         pResData->localKeyLimit=0x10000;  /* greater than any 16-bit key string offset */
-    } else {
+    } אחרת {
         /* bundles with formatVersion 1.1 and later contain an indexes[] array */
-        const int32_t *indexes=pResData->pRoot+1;
+        ثابت int32_t *indexes=pResData->pRoot+1;
         int32_t indexLength=indexes[URES_INDEX_LENGTH]&0xff;
-        if(indexLength<=URES_INDEX_MAX_TABLE_LENGTH) {
+        אם(indexLength<=URES_INDEX_MAX_TABLE_LENGTH) {
             *errorCode=U_INVALID_FORMAT_ERROR;
             res_unload(pResData);
-            return;
+            החזר;
         }
-        if( length>=0 &&
+        אם( length>=0 &&
             (length<((1+indexLength)<<2) ||
              length<(indexes[URES_INDEX_BUNDLE_TOP]<<2))
         ) {
             *errorCode=U_INVALID_FORMAT_ERROR;
             res_unload(pResData);
-            return;
+            החזר;
         }
-        if(indexes[URES_INDEX_KEYS_TOP]>(1+indexLength)) {
+        אם(indexes[URES_INDEX_KEYS_TOP]>(1+indexLength)) {
             pResData->localKeyLimit=indexes[URES_INDEX_KEYS_TOP]<<2;
         }
-        if(formatVersion[0]>=3) {
+        אם(formatVersion[0]>=3) {
             // In formatVersion 1, the indexLength took up this whole int.
             // In version 2, bits 31..8 were reserved and always 0.
             // In version 3, they contain bits 23..0 of the poolStringIndexLimit.
             // Bits 27..24 are in indexes[URES_INDEX_ATTRIBUTES] bits 15..12.
             pResData->poolStringIndexLimit = static_cast<int32_t>(static_cast<uint32_t>(indexes[URES_INDEX_LENGTH]) >> 8);
         }
-        if(indexLength>URES_INDEX_ATTRIBUTES) {
+        אם(indexLength>URES_INDEX_ATTRIBUTES) {
             int32_t att=indexes[URES_INDEX_ATTRIBUTES];
             pResData->noFallback = static_cast<UBool>(att & URES_ATT_NO_FALLBACK);
             pResData->isPoolBundle = static_cast<UBool>((att & URES_ATT_IS_POOL_BUNDLE) != 0);
@@ -217,70 +217,70 @@ res_init(ResourceData *pResData,
             pResData->poolStringIndexLimit|=(att&0xf000)<<12;  // bits 15..12 -> 27..24
             pResData->poolStringIndex16Limit = static_cast<int32_t>(static_cast<uint32_t>(att) >> 16);
         }
-        if((pResData->isPoolBundle || pResData->usesPoolBundle) && indexLength<=URES_INDEX_POOL_CHECKSUM) {
+        אם((pResData->isPoolBundle || pResData->usesPoolBundle) && indexLength<=URES_INDEX_POOL_CHECKSUM) {
             *errorCode=U_INVALID_FORMAT_ERROR;
             res_unload(pResData);
-            return;
+            החזר;
         }
-        if( indexLength>URES_INDEX_16BIT_TOP &&
+        אם( indexLength>URES_INDEX_16BIT_TOP &&
             indexes[URES_INDEX_16BIT_TOP]>indexes[URES_INDEX_KEYS_TOP]
         ) {
-            pResData->p16BitUnits = reinterpret_cast<const uint16_t*>(pResData->pRoot + indexes[URES_INDEX_KEYS_TOP]);
+            pResData->p16BitUnits = reinterpret_cast<ثابت uint16_t*>(pResData->pRoot + indexes[URES_INDEX_KEYS_TOP]);
         }
     }
 
-    if(formatVersion[0]==1 || U_CHARSET_FAMILY==U_ASCII_FAMILY) {
+    אם(formatVersion[0]==1 || U_CHARSET_FAMILY==U_ASCII_FAMILY) {
         /*
          * formatVersion 1: compare key strings in native-charset order
          * formatVersion 2 and up: compare key strings in ASCII order
          */
-        pResData->useNativeStrcmp=true;
+        pResData->useNativeStrcmp=אמת;
     }
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 res_read(ResourceData *pResData,
-         const UDataInfo *pInfo, const void *inBytes, int32_t length,
+         ثابت UDataInfo *pInfo, ثابت فراغ *inBytes, int32_t length,
          UErrorCode *errorCode) {
     UVersionInfo formatVersion;
 
-    uprv_memset(pResData, 0, sizeof(ResourceData));
-    if(U_FAILURE(*errorCode)) {
-        return;
+    uprv_memset(pResData, 0, حجم(ResourceData));
+    אם(U_FAILURE(*errorCode)) {
+        החזר;
     }
-    if(!isAcceptable(formatVersion, nullptr, nullptr, pInfo)) {
+    אם(!isAcceptable(formatVersion, nullptr, nullptr, pInfo)) {
         *errorCode=U_INVALID_FORMAT_ERROR;
-        return;
+        החזר;
     }
     res_init(pResData, formatVersion, inBytes, length, errorCode);
 }
 
-U_CFUNC void
+U_CFUNC فراغ
 res_load(ResourceData *pResData,
-         const char *path, const char *name, UErrorCode *errorCode) {
+         ثابت حرف *path, ثابت حرف *name, UErrorCode *errorCode) {
     UVersionInfo formatVersion;
 
-    uprv_memset(pResData, 0, sizeof(ResourceData));
+    uprv_memset(pResData, 0, حجم(ResourceData));
 
     /* load the ResourceBundle file */
     pResData->data=udata_openChoice(path, "res", name, isAcceptable, formatVersion, errorCode);
-    if(U_FAILURE(*errorCode)) {
-        return;
+    אם(U_FAILURE(*errorCode)) {
+        החזר;
     }
 
     /* get its memory and initialize *pResData */
     res_init(pResData, formatVersion, udata_getMemory(pResData->data), -1, errorCode);
 }
 
-U_CFUNC void
+U_CFUNC فراغ
 res_unload(ResourceData *pResData) {
-    if(pResData->data!=nullptr) {
+    אם(pResData->data!=nullptr) {
         udata_close(pResData->data);
         pResData->data=nullptr;
     }
 }
 
-static const int8_t gPublicTypes[URES_LIMIT] = {
+ساكن ثابت int8_t gPublicTypes[URES_LIMIT] = {
     URES_STRING,
     URES_BINARY,
     URES_TABLE,
@@ -304,49 +304,49 @@ static const int8_t gPublicTypes[URES_LIMIT] = {
 
 U_CAPI UResType U_EXPORT2
 res_getPublicType(Resource res) {
-    return (UResType)gPublicTypes[RES_GET_TYPE(res)];
+    החזר (UResType)gPublicTypes[RES_GET_TYPE(res)];
 }
 
-U_CAPI const char16_t * U_EXPORT2
-res_getStringNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength) {
-    const char16_t *p;
+U_CAPI ثابت char16_t * U_EXPORT2
+res_getStringNoTrace(ثابت ResourceData *pResData, Resource res, int32_t *pLength) {
+    ثابت char16_t *p;
     uint32_t offset=RES_GET_OFFSET(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_STRING_V2) {
+    אם(RES_GET_TYPE(res)==URES_STRING_V2) {
         int32_t first;
-        if((int32_t)offset<pResData->poolStringIndexLimit) {
-            p=(const char16_t *)pResData->poolBundleStrings+offset;
-        } else {
-            p=(const char16_t *)pResData->p16BitUnits+(offset-pResData->poolStringIndexLimit);
+        אם((int32_t)offset<pResData->poolStringIndexLimit) {
+            p=(ثابت char16_t *)pResData->poolBundleStrings+offset;
+        } אחרת {
+            p=(ثابت char16_t *)pResData->p16BitUnits+(offset-pResData->poolStringIndexLimit);
         }
         first=*p;
-        if(!U16_IS_TRAIL(first)) {
+        אם(!U16_IS_TRAIL(first)) {
             length=u_strlen(p);
-        } else if(first<0xdfef) {
+        } אחרת אם(first<0xdfef) {
             length=first&0x3ff;
             ++p;
-        } else if(first<0xdfff) {
+        } אחרת אם(first<0xdfff) {
             length=((first-0xdfef)<<16)|p[1];
             p+=2;
-        } else {
+        } אחרת {
             length=((int32_t)p[1]<<16)|p[2];
             p+=3;
         }
-    } else if(res==offset) /* RES_GET_TYPE(res)==URES_STRING */ {
-        const int32_t *p32= res==0 ? &gEmptyString.length : pResData->pRoot+res;
+    } אחרת אם(res==offset) /* RES_GET_TYPE(res)==URES_STRING */ {
+        ثابت int32_t *p32= res==0 ? &gEmptyString.length : pResData->pRoot+res;
         length=*p32++;
-        p=(const char16_t *)p32;
-    } else {
+        p=(ثابت char16_t *)p32;
+    } אחרת {
         p=nullptr;
         length=0;
     }
-    if(pLength) {
+    אם(pLength) {
         *pLength=length;
     }
-    return p;
+    החזר p;
 }
 
-namespace {
+نطاق {
 
 /**
  * CLDR string value (three empty-set symbols)=={2205, 2205, 2205}
@@ -354,146 +354,146 @@ namespace {
  * TODO: combine with other code that handles this marker, use EMPTY_SET constant.
  * TODO: maybe move to uresbund.cpp?
  */
-UBool isNoInheritanceMarker(const ResourceData *pResData, Resource res) {
+UBool isNoInheritanceMarker(ثابت ResourceData *pResData, Resource res) {
     uint32_t offset=RES_GET_OFFSET(res);
-    if (offset == 0) {
+    אם (offset == 0) {
         // empty string
-    } else if (res == offset) {
-        const int32_t *p32=pResData->pRoot+res;
+    } אחרת אם (res == offset) {
+        ثابت int32_t *p32=pResData->pRoot+res;
         int32_t length=*p32;
-        const char16_t* p = reinterpret_cast<const char16_t*>(p32);
-        return length == 3 && p[2] == 0x2205 && p[3] == 0x2205 && p[4] == 0x2205;
-    } else if (RES_GET_TYPE(res) == URES_STRING_V2) {
-        const char16_t *p;
-        if (static_cast<int32_t>(offset) < pResData->poolStringIndexLimit) {
-            p = reinterpret_cast<const char16_t*>(pResData->poolBundleStrings) + offset;
-        } else {
-            p = reinterpret_cast<const char16_t*>(pResData->p16BitUnits) + (offset - pResData->poolStringIndexLimit);
+        ثابت char16_t* p = reinterpret_cast<ثابت char16_t*>(p32);
+        החזר length == 3 && p[2] == 0x2205 && p[3] == 0x2205 && p[4] == 0x2205;
+    } אחרת אם (RES_GET_TYPE(res) == URES_STRING_V2) {
+        ثابت char16_t *p;
+        אם (static_cast<int32_t>(offset) < pResData->poolStringIndexLimit) {
+            p = reinterpret_cast<ثابت char16_t*>(pResData->poolBundleStrings) + offset;
+        } אחרת {
+            p = reinterpret_cast<ثابت char16_t*>(pResData->p16BitUnits) + (offset - pResData->poolStringIndexLimit);
         }
         int32_t first=*p;
-        if (first == 0x2205) {  // implicit length
-            return p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0;
-        } else if (first == 0xdc03) {  // explicit length 3 (should not occur)
-            return p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0x2205;
-        } else {
+        אם (first == 0x2205) {  // implicit length
+            החזר p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0;
+        } אחרת אם (first == 0xdc03) {  // explicit length 3 (should not occur)
+            החזר p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0x2205;
+        } אחרת {
             // Assume that the string has not been stored with more length units than necessary.
-            return false;
+            החזר שקר;
         }
     }
-    return false;
+    החזר שקר;
 }
 
-int32_t getStringArray(const ResourceData *pResData, const icu::ResourceArray &array,
+int32_t getStringArray(ثابت ResourceData *pResData, ثابت icu::ResourceArray &array,
                        icu::UnicodeString *dest, int32_t capacity,
                        UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    אם(U_FAILURE(errorCode)) {
+        החזר 0;
     }
-    if(dest == nullptr ? capacity != 0 : capacity < 0) {
+    אם(dest == nullptr ? capacity != 0 : capacity < 0) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        החזר 0;
     }
     int32_t length = array.getSize();
-    if(length == 0) {
-        return 0;
+    אם(length == 0) {
+        החזר 0;
     }
-    if(length > capacity) {
+    אם(length > capacity) {
         errorCode = U_BUFFER_OVERFLOW_ERROR;
-        return length;
+        החזר length;
     }
-    for(int32_t i = 0; i < length; ++i) {
+    עבור(int32_t i = 0; i < length; ++i) {
         int32_t sLength;
         // No tracing: handled by the caller
-        const char16_t *s = res_getStringNoTrace(pResData, array.internalGetResource(pResData, i), &sLength);
-        if(s == nullptr) {
+        ثابت char16_t *s = res_getStringNoTrace(pResData, array.internalGetResource(pResData, i), &sLength);
+        אם(s == nullptr) {
             errorCode = U_RESOURCE_TYPE_MISMATCH;
-            return 0;
+            החזר 0;
         }
-        dest[i].setTo(true, s, sLength);
+        dest[i].setTo(אמת, s, sLength);
     }
-    return length;
+    החזר length;
 }
 
 }  // namespace
 
-U_CAPI const char16_t * U_EXPORT2
-res_getAlias(const ResourceData *pResData, Resource res, int32_t *pLength) {
-    const char16_t *p;
+U_CAPI ثابت char16_t * U_EXPORT2
+res_getAlias(ثابت ResourceData *pResData, Resource res, int32_t *pLength) {
+    ثابت char16_t *p;
     uint32_t offset=RES_GET_OFFSET(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_ALIAS) {
-        const int32_t *p32= offset==0 ? &gEmptyString.length : pResData->pRoot+offset;
+    אם(RES_GET_TYPE(res)==URES_ALIAS) {
+        ثابت int32_t *p32= offset==0 ? &gEmptyString.length : pResData->pRoot+offset;
         length=*p32++;
-        p=(const char16_t *)p32;
-    } else {
+        p=(ثابت char16_t *)p32;
+    } אחרת {
         p=nullptr;
         length=0;
     }
-    if(pLength) {
+    אם(pLength) {
         *pLength=length;
     }
-    return p;
+    החזר p;
 }
 
-U_CAPI const uint8_t * U_EXPORT2
-res_getBinaryNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength) {
-    const uint8_t *p;
+U_CAPI ثابت uint8_t * U_EXPORT2
+res_getBinaryNoTrace(ثابت ResourceData *pResData, Resource res, int32_t *pLength) {
+    ثابت uint8_t *p;
     uint32_t offset=RES_GET_OFFSET(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_BINARY) {
-        const int32_t *p32= offset==0 ? (const int32_t*)&gEmpty32 : pResData->pRoot+offset;
+    אם(RES_GET_TYPE(res)==URES_BINARY) {
+        ثابت int32_t *p32= offset==0 ? (ثابت int32_t*)&gEmpty32 : pResData->pRoot+offset;
         length=*p32++;
-        p=(const uint8_t *)p32;
-    } else {
+        p=(ثابت uint8_t *)p32;
+    } אחרת {
         p=nullptr;
         length=0;
     }
-    if(pLength) {
+    אם(pLength) {
         *pLength=length;
     }
-    return p;
+    החזר p;
 }
 
 
-U_CAPI const int32_t * U_EXPORT2
-res_getIntVectorNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength) {
-    const int32_t *p;
+U_CAPI ثابت int32_t * U_EXPORT2
+res_getIntVectorNoTrace(ثابت ResourceData *pResData, Resource res, int32_t *pLength) {
+    ثابت int32_t *p;
     uint32_t offset=RES_GET_OFFSET(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_INT_VECTOR) {
-        p= offset==0 ? (const int32_t *)&gEmpty32 : pResData->pRoot+offset;
+    אם(RES_GET_TYPE(res)==URES_INT_VECTOR) {
+        p= offset==0 ? (ثابت int32_t *)&gEmpty32 : pResData->pRoot+offset;
         length=*p++;
-    } else {
+    } אחרת {
         p=nullptr;
         length=0;
     }
-    if(pLength) {
+    אם(pLength) {
         *pLength=length;
     }
-    return p;
+    החזר p;
 }
 
 U_CAPI int32_t U_EXPORT2
-res_countArrayItems(const ResourceData *pResData, Resource res) {
+res_countArrayItems(ثابت ResourceData *pResData, Resource res) {
     uint32_t offset=RES_GET_OFFSET(res);
-    switch(RES_GET_TYPE(res)) {
-    case URES_STRING:
-    case URES_STRING_V2:
-    case URES_BINARY:
-    case URES_ALIAS:
-    case URES_INT:
-    case URES_INT_VECTOR:
-        return 1;
-    case URES_ARRAY:
-    case URES_TABLE32:
-        return offset==0 ? 0 : *(pResData->pRoot+offset);
-    case URES_TABLE:
-        return offset==0 ? 0 : *((const uint16_t *)(pResData->pRoot+offset));
-    case URES_ARRAY16:
-    case URES_TABLE16:
-        return pResData->p16BitUnits[offset];
-    default:
-        return 0;
+    بدل(RES_GET_TYPE(res)) {
+    حالة URES_STRING:
+    حالة URES_STRING_V2:
+    حالة URES_BINARY:
+    حالة URES_ALIAS:
+    حالة URES_INT:
+    حالة URES_INT_VECTOR:
+        החזר 1;
+    حالة URES_ARRAY:
+    حالة URES_TABLE32:
+        החזר offset==0 ? 0 : *(pResData->pRoot+offset);
+    حالة URES_TABLE:
+        החזר offset==0 ? 0 : *((ثابت uint16_t *)(pResData->pRoot+offset));
+    حالة URES_ARRAY16:
+    حالة URES_TABLE16:
+        החזר pResData->p16BitUnits[offset];
+    افتراضي:
+        החזר 0;
     }
 }
 
@@ -501,335 +501,335 @@ U_NAMESPACE_BEGIN
 
 ResourceDataValue::~ResourceDataValue() {}
 
-UResType ResourceDataValue::getType() const {
-    return res_getPublicType(res);
+UResType ResourceDataValue::getType() ثابت {
+    החזר res_getPublicType(res);
 }
 
-const char16_t *ResourceDataValue::getString(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+ثابت char16_t *ResourceDataValue::getString(int32_t &length, UErrorCode &errorCode) ثابت {
+    אם(U_FAILURE(errorCode)) {
+        החזר nullptr;
     }
-    const char16_t *s = res_getString(fTraceInfo, &getData(), res, &length);
-    if(s == nullptr) {
+    ثابت char16_t *s = res_getString(fTraceInfo, &getData(), res, &length);
+    אם(s == nullptr) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return s;
+    החזר s;
 }
 
-const char16_t *ResourceDataValue::getAliasString(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+ثابت char16_t *ResourceDataValue::getAliasString(int32_t &length, UErrorCode &errorCode) ثابت {
+    אם(U_FAILURE(errorCode)) {
+        החזר nullptr;
     }
-    const char16_t *s = res_getAlias(&getData(), res, &length);
-    if(s == nullptr) {
+    ثابت char16_t *s = res_getAlias(&getData(), res, &length);
+    אם(s == nullptr) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return s;
+    החזר s;
 }
 
-int32_t ResourceDataValue::getInt(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+int32_t ResourceDataValue::getInt(UErrorCode &errorCode) ثابت {
+    אם(U_FAILURE(errorCode)) {
+        החזר 0;
     }
-    if(RES_GET_TYPE(res) != URES_INT) {
+    אם(RES_GET_TYPE(res) != URES_INT) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return res_getInt(fTraceInfo, res);
+    החזר res_getInt(fTraceInfo, res);
 }
 
-uint32_t ResourceDataValue::getUInt(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+uint32_t ResourceDataValue::getUInt(UErrorCode &errorCode) ثابت {
+    אם(U_FAILURE(errorCode)) {
+        החזר 0;
     }
-    if(RES_GET_TYPE(res) != URES_INT) {
+    אם(RES_GET_TYPE(res) != URES_INT) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return res_getUInt(fTraceInfo, res);
+    החזר res_getUInt(fTraceInfo, res);
 }
 
-const int32_t *ResourceDataValue::getIntVector(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+ثابت int32_t *ResourceDataValue::getIntVector(int32_t &length, UErrorCode &errorCode) ثابت {
+    אם(U_FAILURE(errorCode)) {
+        החזר nullptr;
     }
-    const int32_t *iv = res_getIntVector(fTraceInfo, &getData(), res, &length);
-    if(iv == nullptr) {
+    ثابت int32_t *iv = res_getIntVector(fTraceInfo, &getData(), res, &length);
+    אם(iv == nullptr) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return iv;
+    החזר iv;
 }
 
-const uint8_t *ResourceDataValue::getBinary(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+ثابت uint8_t *ResourceDataValue::getBinary(int32_t &length, UErrorCode &errorCode) ثابت {
+    אם(U_FAILURE(errorCode)) {
+        החזר nullptr;
     }
-    const uint8_t *b = res_getBinary(fTraceInfo, &getData(), res, &length);
-    if(b == nullptr) {
+    ثابت uint8_t *b = res_getBinary(fTraceInfo, &getData(), res, &length);
+    אם(b == nullptr) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return b;
+    החזר b;
 }
 
-ResourceArray ResourceDataValue::getArray(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return {};
+ResourceArray ResourceDataValue::getArray(UErrorCode &errorCode) ثابت {
+    אם(U_FAILURE(errorCode)) {
+        החזר {};
     }
-    const uint16_t *items16 = nullptr;
-    const Resource *items32 = nullptr;
+    ثابت uint16_t *items16 = nullptr;
+    ثابت Resource *items32 = nullptr;
     uint32_t offset=RES_GET_OFFSET(res);
     int32_t length = 0;
-    switch(RES_GET_TYPE(res)) {
-    case URES_ARRAY:
-        if (offset!=0) {  // empty if offset==0
-            items32 = reinterpret_cast<const Resource*>(getData().pRoot) + offset;
+    بدل(RES_GET_TYPE(res)) {
+    حالة URES_ARRAY:
+        אם (offset!=0) {  // empty if offset==0
+            items32 = reinterpret_cast<ثابت Resource*>(getData().pRoot) + offset;
             length = *items32++;
         }
-        break;
-    case URES_ARRAY16:
+        اكسر;
+    حالة URES_ARRAY16:
         items16 = getData().p16BitUnits+offset;
         length = *items16++;
-        break;
-    default:
+        اكسر;
+    افتراضي:
         errorCode = U_RESOURCE_TYPE_MISMATCH;
-        return {};
+        החזר {};
     }
-    return ResourceArray(items16, items32, length, fTraceInfo);
+    החזר ResourceArray(items16, items32, length, fTraceInfo);
 }
 
-ResourceTable ResourceDataValue::getTable(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return {};
+ResourceTable ResourceDataValue::getTable(UErrorCode &errorCode) ثابت {
+    אם(U_FAILURE(errorCode)) {
+        החזר {};
     }
-    const uint16_t *keys16 = nullptr;
-    const int32_t *keys32 = nullptr;
-    const uint16_t *items16 = nullptr;
-    const Resource *items32 = nullptr;
+    ثابت uint16_t *keys16 = nullptr;
+    ثابت int32_t *keys32 = nullptr;
+    ثابت uint16_t *items16 = nullptr;
+    ثابت Resource *items32 = nullptr;
     uint32_t offset = RES_GET_OFFSET(res);
     int32_t length = 0;
-    switch(RES_GET_TYPE(res)) {
-    case URES_TABLE:
-        if (offset != 0) {  // empty if offset==0
-            keys16 = reinterpret_cast<const uint16_t*>(getData().pRoot + offset);
+    بدل(RES_GET_TYPE(res)) {
+    حالة URES_TABLE:
+        אם (offset != 0) {  // empty if offset==0
+            keys16 = reinterpret_cast<ثابت uint16_t*>(getData().pRoot + offset);
             length = *keys16++;
-            items32 = reinterpret_cast<const Resource*>(keys16 + length + (~length & 1));
+            items32 = reinterpret_cast<ثابت Resource*>(keys16 + length + (~length & 1));
         }
-        break;
-    case URES_TABLE16:
+        اكسر;
+    حالة URES_TABLE16:
         keys16 = getData().p16BitUnits+offset;
         length = *keys16++;
         items16 = keys16 + length;
-        break;
-    case URES_TABLE32:
-        if (offset != 0) {  // empty if offset==0
+        اكسر;
+    حالة URES_TABLE32:
+        אם (offset != 0) {  // empty if offset==0
             keys32 = getData().pRoot+offset;
             length = *keys32++;
-            items32 = reinterpret_cast<const Resource*>(keys32) + length;
+            items32 = reinterpret_cast<ثابت Resource*>(keys32) + length;
         }
-        break;
-    default:
+        اكسر;
+    افتراضي:
         errorCode = U_RESOURCE_TYPE_MISMATCH;
-        return {};
+        החזר {};
     }
-    return ResourceTable(keys16, keys32, items16, items32, length, fTraceInfo);
+    החזר ResourceTable(keys16, keys32, items16, items32, length, fTraceInfo);
 }
 
-UBool ResourceDataValue::isNoInheritanceMarker() const {
-    return ::isNoInheritanceMarker(&getData(), res);
+UBool ResourceDataValue::isNoInheritanceMarker() ثابت {
+    החזר ::isNoInheritanceMarker(&getData(), res);
 }
 
 int32_t ResourceDataValue::getStringArray(UnicodeString *dest, int32_t capacity,
-                                          UErrorCode &errorCode) const {
-    return ::getStringArray(&getData(), getArray(errorCode), dest, capacity, errorCode);
+                                          UErrorCode &errorCode) ثابت {
+    החזר ::getStringArray(&getData(), getArray(errorCode), dest, capacity, errorCode);
 }
 
 int32_t ResourceDataValue::getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
-                                                         UErrorCode &errorCode) const {
-    if(URES_IS_ARRAY(res)) {
-        return ::getStringArray(&getData(), getArray(errorCode), dest, capacity, errorCode);
+                                                         UErrorCode &errorCode) ثابت {
+    אם(URES_IS_ARRAY(res)) {
+        החזר ::getStringArray(&getData(), getArray(errorCode), dest, capacity, errorCode);
     }
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    אם(U_FAILURE(errorCode)) {
+        החזר 0;
     }
-    if(dest == nullptr ? capacity != 0 : capacity < 0) {
+    אם(dest == nullptr ? capacity != 0 : capacity < 0) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        החזר 0;
     }
-    if(capacity < 1) {
+    אם(capacity < 1) {
         errorCode = U_BUFFER_OVERFLOW_ERROR;
-        return 1;
+        החזר 1;
     }
     int32_t sLength;
-    const char16_t *s = res_getString(fTraceInfo, &getData(), res, &sLength);
-    if(s != nullptr) {
-        dest[0].setTo(true, s, sLength);
-        return 1;
+    ثابت char16_t *s = res_getString(fTraceInfo, &getData(), res, &sLength);
+    אם(s != nullptr) {
+        dest[0].setTo(אמת, s, sLength);
+        החזר 1;
     }
     errorCode = U_RESOURCE_TYPE_MISMATCH;
-    return 0;
+    החזר 0;
 }
 
-UnicodeString ResourceDataValue::getStringOrFirstOfArray(UErrorCode &errorCode) const {
+UnicodeString ResourceDataValue::getStringOrFirstOfArray(UErrorCode &errorCode) ثابت {
     UnicodeString us;
-    if(U_FAILURE(errorCode)) {
-        return us;
+    אם(U_FAILURE(errorCode)) {
+        החזר us;
     }
     int32_t sLength;
-    const char16_t *s = res_getString(fTraceInfo, &getData(), res, &sLength);
-    if(s != nullptr) {
-        us.setTo(true, s, sLength);
-        return us;
+    ثابت char16_t *s = res_getString(fTraceInfo, &getData(), res, &sLength);
+    אם(s != nullptr) {
+        us.setTo(אמת, s, sLength);
+        החזר us;
     }
     ResourceArray array = getArray(errorCode);
-    if(U_FAILURE(errorCode)) {
-        return us;
+    אם(U_FAILURE(errorCode)) {
+        החזר us;
     }
-    if(array.getSize() > 0) {
+    אם(array.getSize() > 0) {
         // Tracing is already performed above (unimportant for trace that this is an array)
         s = res_getStringNoTrace(&getData(), array.internalGetResource(&getData(), 0), &sLength);
-        if(s != nullptr) {
-            us.setTo(true, s, sLength);
-            return us;
+        אם(s != nullptr) {
+            us.setTo(אמת, s, sLength);
+            החזר us;
         }
     }
     errorCode = U_RESOURCE_TYPE_MISMATCH;
-    return us;
+    החזר us;
 }
 
 U_NAMESPACE_END
 
-static Resource
-makeResourceFrom16(const ResourceData *pResData, int32_t res16) {
-    if(res16<pResData->poolStringIndex16Limit) {
+ساكن Resource
+makeResourceFrom16(ثابت ResourceData *pResData, int32_t res16) {
+    אם(res16<pResData->poolStringIndex16Limit) {
         // Pool string, nothing to do.
-    } else {
+    } אחרת {
         // Local string, adjust the 16-bit offset to a regular one,
         // with a larger pool string index limit.
         res16=res16-pResData->poolStringIndex16Limit+pResData->poolStringIndexLimit;
     }
-    return URES_MAKE_RESOURCE(URES_STRING_V2, res16);
+    החזר URES_MAKE_RESOURCE(URES_STRING_V2, res16);
 }
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByKey(const ResourceData *pResData, Resource table,
-                      int32_t *indexR, const char **key) {
+res_getTableItemByKey(ثابت ResourceData *pResData, Resource table,
+                      int32_t *indexR, ثابت حرف **key) {
     uint32_t offset=RES_GET_OFFSET(table);
     int32_t length;
     int32_t idx;
-    if(key == nullptr || *key == nullptr) {
-        return RES_BOGUS;
+    אם(key == nullptr || *key == nullptr) {
+        החזר RES_BOGUS;
     }
-    switch(RES_GET_TYPE(table)) {
-    case URES_TABLE: {
-        if (offset!=0) { /* empty if offset==0 */
-            const uint16_t *p= (const uint16_t *)(pResData->pRoot+offset);
+    بدل(RES_GET_TYPE(table)) {
+    حالة URES_TABLE: {
+        אם (offset!=0) { /* empty if offset==0 */
+            ثابت uint16_t *p= (ثابت uint16_t *)(pResData->pRoot+offset);
             length=*p++;
             *indexR=idx=_res_findTableItem(pResData, p, length, *key, key);
-            if(idx>=0) {
-                const Resource *p32=(const Resource *)(p+length+(~length&1));
-                return p32[idx];
+            אם(idx>=0) {
+                ثابت Resource *p32=(ثابت Resource *)(p+length+(~length&1));
+                החזר p32[idx];
             }
         }
-        break;
+        اكسر;
     }
-    case URES_TABLE16: {
-        const uint16_t *p=pResData->p16BitUnits+offset;
+    حالة URES_TABLE16: {
+        ثابت uint16_t *p=pResData->p16BitUnits+offset;
         length=*p++;
         *indexR=idx=_res_findTableItem(pResData, p, length, *key, key);
-        if(idx>=0) {
-            return makeResourceFrom16(pResData, p[length+idx]);
+        אם(idx>=0) {
+            החזר makeResourceFrom16(pResData, p[length+idx]);
         }
-        break;
+        اكسر;
     }
-    case URES_TABLE32: {
-        if (offset!=0) { /* empty if offset==0 */
-            const int32_t *p= pResData->pRoot+offset;
+    حالة URES_TABLE32: {
+        אם (offset!=0) { /* empty if offset==0 */
+            ثابت int32_t *p= pResData->pRoot+offset;
             length=*p++;
             *indexR=idx=_res_findTable32Item(pResData, p, length, *key, key);
-            if(idx>=0) {
-                return (Resource)p[length+idx];
+            אם(idx>=0) {
+                החזר (Resource)p[length+idx];
             }
         }
-        break;
+        اكسر;
     }
-    default:
-        break;
+    افتراضي:
+        اكسر;
     }
-    return RES_BOGUS;
+    החזר RES_BOGUS;
 }
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByIndex(const ResourceData *pResData, Resource table,
-                        int32_t indexR, const char **key) {
+res_getTableItemByIndex(ثابت ResourceData *pResData, Resource table,
+                        int32_t indexR, ثابت حرف **key) {
     uint32_t offset=RES_GET_OFFSET(table);
     int32_t length;
-    if (indexR < 0) {
-        return RES_BOGUS;
+    אם (indexR < 0) {
+        החזר RES_BOGUS;
     }
-    switch(RES_GET_TYPE(table)) {
-    case URES_TABLE: {
-        if (offset != 0) { /* empty if offset==0 */
-            const uint16_t *p= (const uint16_t *)(pResData->pRoot+offset);
+    بدل(RES_GET_TYPE(table)) {
+    حالة URES_TABLE: {
+        אם (offset != 0) { /* empty if offset==0 */
+            ثابت uint16_t *p= (ثابت uint16_t *)(pResData->pRoot+offset);
             length=*p++;
-            if(indexR<length) {
-                const Resource *p32=(const Resource *)(p+length+(~length&1));
-                if(key!=nullptr) {
+            אם(indexR<length) {
+                ثابت Resource *p32=(ثابت Resource *)(p+length+(~length&1));
+                אם(key!=nullptr) {
                     *key=RES_GET_KEY16(pResData, p[indexR]);
                 }
-                return p32[indexR];
+                החזר p32[indexR];
             }
         }
-        break;
+        اكسر;
     }
-    case URES_TABLE16: {
-        const uint16_t *p=pResData->p16BitUnits+offset;
+    حالة URES_TABLE16: {
+        ثابت uint16_t *p=pResData->p16BitUnits+offset;
         length=*p++;
-        if(indexR<length) {
-            if(key!=nullptr) {
+        אם(indexR<length) {
+            אם(key!=nullptr) {
                 *key=RES_GET_KEY16(pResData, p[indexR]);
             }
-            return makeResourceFrom16(pResData, p[length+indexR]);
+            החזר makeResourceFrom16(pResData, p[length+indexR]);
         }
-        break;
+        اكسر;
     }
-    case URES_TABLE32: {
-        if (offset != 0) { /* empty if offset==0 */
-            const int32_t *p= pResData->pRoot+offset;
+    حالة URES_TABLE32: {
+        אם (offset != 0) { /* empty if offset==0 */
+            ثابت int32_t *p= pResData->pRoot+offset;
             length=*p++;
-            if(indexR<length) {
-                if(key!=nullptr) {
+            אם(indexR<length) {
+                אם(key!=nullptr) {
                     *key=RES_GET_KEY32(pResData, p[indexR]);
                 }
-                return (Resource)p[length+indexR];
+                החזר (Resource)p[length+indexR];
             }
         }
-        break;
+        اكسر;
     }
-    default:
-        break;
+    افتراضي:
+        اكسر;
     }
-    return RES_BOGUS;
+    החזר RES_BOGUS;
 }
 
 U_CAPI Resource U_EXPORT2
-res_getResource(const ResourceData *pResData, const char *key) {
-    const char *realKey=key;
+res_getResource(ثابت ResourceData *pResData, ثابت حرف *key) {
+    ثابت حرف *realKey=key;
     int32_t idx;
-    return res_getTableItemByKey(pResData, pResData->rootRes, &idx, &realKey);
+    החזר res_getTableItemByKey(pResData, pResData->rootRes, &idx, &realKey);
 }
 
 
 UBool icu::ResourceTable::getKeyAndValue(int32_t i,
-                                         const char *&key, icu::ResourceValue &value) const {
-    if(0 <= i && i < length) {
+                                         ثابت حرف *&key, icu::ResourceValue &value) ثابت {
+    אם(0 <= i && i < length) {
         icu::ResourceDataValue &rdValue = static_cast<icu::ResourceDataValue &>(value);
-        if (keys16 != nullptr) {
+        אם (keys16 != nullptr) {
             key = RES_GET_KEY16(&rdValue.getData(), keys16[i]);
-        } else {
+        } אחרת {
             key = RES_GET_KEY32(&rdValue.getData(), keys32[i]);
         }
         Resource res;
-        if (items16 != nullptr) {
+        אם (items16 != nullptr) {
             res = makeResourceFrom16(&rdValue.getData(), items16[i]);
-        } else {
+        } אחרת {
             res = items32[i];
         }
         // Note: the ResourceTracer keeps a reference to the field of this
@@ -837,73 +837,73 @@ UBool icu::ResourceTable::getKeyAndValue(int32_t i,
         // alive for the duration that fields are being read from it
         // (including nested fields).
         rdValue.setResource(res, ResourceTracer(fTraceInfo, key));
-        return true;
+        החזר אמת;
     }
-    return false;
+    החזר שקר;
 }
 
-UBool icu::ResourceTable::findValue(const char *key, ResourceValue &value) const {
+UBool icu::ResourceTable::findValue(ثابت حرف *key, ResourceValue &value) ثابت {
     icu::ResourceDataValue &rdValue = static_cast<icu::ResourceDataValue &>(value);
-    const char *realKey = nullptr;
+    ثابت حرف *realKey = nullptr;
     int32_t i;
-    if (keys16 != nullptr) {
+    אם (keys16 != nullptr) {
         i = _res_findTableItem(&rdValue.getData(), keys16, length, key, &realKey);
-    } else {
+    } אחרת {
         i = _res_findTable32Item(&rdValue.getData(), keys32, length, key, &realKey);
     }
-    if (i >= 0) {
+    אם (i >= 0) {
         Resource res;
-        if (items16 != nullptr) {
+        אם (items16 != nullptr) {
             res = makeResourceFrom16(&rdValue.getData(), items16[i]);
-        } else {
+        } אחרת {
             res = items32[i];
         }
         // Same note about lifetime as in getKeyAndValue().
         rdValue.setResource(res, ResourceTracer(fTraceInfo, key));
-        return true;
+        החזר אמת;
     }
-    return false;
+    החזר שקר;
 }
 
 U_CAPI Resource U_EXPORT2
-res_getArrayItem(const ResourceData *pResData, Resource array, int32_t indexR) {
+res_getArrayItem(ثابت ResourceData *pResData, Resource array, int32_t indexR) {
     uint32_t offset=RES_GET_OFFSET(array);
-    if (indexR < 0) {
-        return RES_BOGUS;
+    אם (indexR < 0) {
+        החזר RES_BOGUS;
     }
-    switch(RES_GET_TYPE(array)) {
-    case URES_ARRAY: {
-        if (offset!=0) { /* empty if offset==0 */
-            const int32_t *p= pResData->pRoot+offset;
-            if(indexR<*p) {
-                return (Resource)p[1+indexR];
+    بدل(RES_GET_TYPE(array)) {
+    حالة URES_ARRAY: {
+        אם (offset!=0) { /* empty if offset==0 */
+            ثابت int32_t *p= pResData->pRoot+offset;
+            אם(indexR<*p) {
+                החזר (Resource)p[1+indexR];
             }
         }
-        break;
+        اكسر;
     }
-    case URES_ARRAY16: {
-        const uint16_t *p=pResData->p16BitUnits+offset;
-        if(indexR<*p) {
-            return makeResourceFrom16(pResData, p[1+indexR]);
+    حالة URES_ARRAY16: {
+        ثابت uint16_t *p=pResData->p16BitUnits+offset;
+        אם(indexR<*p) {
+            החזר makeResourceFrom16(pResData, p[1+indexR]);
         }
-        break;
+        اكسر;
     }
-    default:
-        break;
+    افتراضي:
+        اكسر;
     }
-    return RES_BOGUS;
+    החזר RES_BOGUS;
 }
 
-uint32_t icu::ResourceArray::internalGetResource(const ResourceData *pResData, int32_t i) const {
-    if (items16 != nullptr) {
-        return makeResourceFrom16(pResData, items16[i]);
-    } else {
-        return items32[i];
+uint32_t icu::ResourceArray::internalGetResource(ثابت ResourceData *pResData, int32_t i) ثابت {
+    אם (items16 != nullptr) {
+        החזר makeResourceFrom16(pResData, items16[i]);
+    } אחרת {
+        החזר items32[i];
     }
 }
 
-UBool icu::ResourceArray::getValue(int32_t i, icu::ResourceValue &value) const {
-    if(0 <= i && i < length) {
+UBool icu::ResourceArray::getValue(int32_t i, icu::ResourceValue &value) ثابت {
+    אם(0 <= i && i < length) {
         icu::ResourceDataValue &rdValue = static_cast<icu::ResourceDataValue &>(value);
         // Note: the ResourceTracer keeps a reference to the field of this
         // ResourceArray. This is OK because the ResourceArray should remain
@@ -912,31 +912,31 @@ UBool icu::ResourceArray::getValue(int32_t i, icu::ResourceValue &value) const {
         rdValue.setResource(
             internalGetResource(&rdValue.getData(), i),
             ResourceTracer(fTraceInfo, i));
-        return true;
+        החזר אמת;
     }
-    return false;
+    החזר שקר;
 }
 
 U_CFUNC Resource
-res_findResource(const ResourceData *pResData, Resource r, char** path, const char** key) {
-  char *pathP = *path, *nextSepP = *path;
-  char *closeIndex = nullptr;
+res_findResource(ثابت ResourceData *pResData, Resource r, حرف** path, ثابت حرف** key) {
+  حرف *pathP = *path, *nextSepP = *path;
+  حرف *closeIndex = nullptr;
   Resource t1 = r;
   Resource t2;
   int32_t indexR = 0;
   UResType type = (UResType)RES_GET_TYPE(t1);
 
   /* if you come in with an empty path, you'll be getting back the same resource */
-  if(!uprv_strlen(pathP)) {
-      return r;
+  אם(!uprv_strlen(pathP)) {
+      החזר r;
   }
 
   /* one needs to have an aggregate resource in order to search in it */
-  if(!URES_IS_CONTAINER(type)) {
-      return RES_BOGUS;
+  אם(!URES_IS_CONTAINER(type)) {
+      החזר RES_BOGUS;
   }
   
-  while(nextSepP && *pathP && t1 != RES_BOGUS && URES_IS_CONTAINER(type)) {
+  כלעוד(nextSepP && *pathP && t1 != RES_BOGUS && URES_IS_CONTAINER(type)) {
     /* Iteration stops if: the path has been consumed, we found a non-existing
      * resource (t1 == RES_BOGUS) or we found a scalar resource (including alias)
      */
@@ -944,31 +944,31 @@ res_findResource(const ResourceData *pResData, Resource r, char** path, const ch
     /* if there are more separators, terminate string 
      * and set path to the remaining part of the string
      */
-    if(nextSepP != nullptr) {
-      if(nextSepP == pathP) {
+    אם(nextSepP != nullptr) {
+      אם(nextSepP == pathP) {
         // Empty key string.
-        return RES_BOGUS;
+        החזר RES_BOGUS;
       }
       *nextSepP = 0; /* overwrite the separator with a NUL to terminate the key */
       *path = nextSepP+1;
-    } else {
+    } אחרת {
       *path = uprv_strchr(pathP, 0);
     }
 
     /* if the resource is a table */
     /* try the key based access */
-    if(URES_IS_TABLE(type)) {
+    אם(URES_IS_TABLE(type)) {
       *key = pathP;
       t2 = res_getTableItemByKey(pResData, t1, &indexR, key);
-    } else if(URES_IS_ARRAY(type)) {
+    } אחרת אם(URES_IS_ARRAY(type)) {
       indexR = uprv_strtol(pathP, &closeIndex, 10);
-      if(indexR >= 0 && *closeIndex == 0) {
+      אם(indexR >= 0 && *closeIndex == 0) {
         t2 = res_getArrayItem(pResData, t1, indexR);
-      } else {
+      } אחרת {
         t2 = RES_BOGUS; /* have an array, but don't have a valid index */
       }
       *key = nullptr;
-    } else { /* can't do much here, except setting t2 to bogus */
+    } אחרת { /* can't do much here, except setting t2 to bogus */
       t2 = RES_BOGUS;
     }
     t1 = t2;
@@ -977,7 +977,7 @@ res_findResource(const ResourceData *pResData, Resource r, char** path, const ch
     pathP = *path;
   }
 
-  return t1;
+  החזר t1;
 }
 
 /* resource bundle swapping ------------------------------------------------- */
@@ -1013,19 +1013,19 @@ res_findResource(const ResourceData *pResData, Resource r, char** path, const ch
  * after sorting this array by keys, the actual key/value arrays are permutated
  * according to the sorting indexes
  */
-typedef struct Row {
+تعريفنوع بنية Row {
     int32_t keyIndex, sortIndex;
 } Row;
 
-static int32_t U_CALLCONV
-ures_compareRows(const void *context, const void *left, const void *right) {
-    const char* keyChars = static_cast<const char*>(context);
-    return static_cast<int32_t>(uprv_strcmp(keyChars + static_cast<const Row*>(left)->keyIndex,
-                                            keyChars + static_cast<const Row*>(right)->keyIndex));
+ساكن int32_t U_CALLCONV
+ures_compareRows(ثابت فراغ *context, ثابت فراغ *left, ثابت فراغ *right) {
+    ثابت حرف* keyChars = static_cast<ثابت حرف*>(context);
+    החזר static_cast<int32_t>(uprv_strcmp(keyChars + static_cast<ثابت Row*>(left)->keyIndex,
+                                            keyChars + static_cast<ثابت Row*>(right)->keyIndex));
 }
 
-typedef struct TempTable {
-    const char *keyChars;
+تعريفنوع بنية TempTable {
+    ثابت حرف *keyChars;
     Row *rows;
     int32_t *resort;
     uint32_t *resFlags;
@@ -1033,53 +1033,53 @@ typedef struct TempTable {
     uint8_t majorFormatVersion;
 } TempTable;
 
-enum {
+تعداد {
     STACK_ROW_CAPACITY=200
 };
 
 /* The table item key string is not locally available. */
-static const char *const gUnknownKey="";
+ساكن ثابت حرف *ثابت gUnknownKey="";
 
-#if !UCONFIG_NO_COLLATION
+#אם !UCONFIG_NO_COLLATION
 // resource table key for collation binaries
-static const char16_t gCollationBinKey[]=u"%%CollationBin";
+ساكن ثابت char16_t gCollationBinKey[]=u"%%CollationBin";
 #endif
 
 /*
  * swap one resource item
  */
-static void
-ures_swapResource(const UDataSwapper *ds,
-                  const Resource *inBundle, Resource *outBundle,
+ساكن فراغ
+ures_swapResource(ثابت UDataSwapper *ds,
+                  ثابت Resource *inBundle, Resource *outBundle,
                   Resource res, /* caller swaps res itself */
-                  const char *key,
+                  ثابت حرف *key,
                   TempTable *pTempTable,
                   UErrorCode *pErrorCode) {
-    const Resource *p;
+    ثابت Resource *p;
     Resource *q;
     int32_t offset, count;
 
-    switch(RES_GET_TYPE(res)) {
-    case URES_TABLE16:
-    case URES_STRING_V2:
-    case URES_INT:
-    case URES_ARRAY16:
+    بدل(RES_GET_TYPE(res)) {
+    حالة URES_TABLE16:
+    حالة URES_STRING_V2:
+    حالة URES_INT:
+    حالة URES_ARRAY16:
         /* integer, or points to 16-bit units, nothing to do here */
-        return;
-    default:
-        break;
+        החזר;
+    افتراضي:
+        اكسر;
     }
 
     /* all other types use an offset to point to their data */
     offset = static_cast<int32_t>(RES_GET_OFFSET(res));
-    if(offset==0) {
+    אם(offset==0) {
         /* special offset indicating an empty item */
-        return;
+        החזר;
     }
-    if (pTempTable->resFlags[offset >> 5] & (static_cast<uint32_t>(1) << (offset & 0x1f))) {
+    אם (pTempTable->resFlags[offset >> 5] & (static_cast<uint32_t>(1) << (offset & 0x1f))) {
         /* we already swapped this resource item */
-        return;
-    } else {
+        החזר;
+    } אחרת {
         /* mark it as swapped now */
         pTempTable->resFlags[offset >> 5] |= static_cast<uint32_t>(1) << (offset & 0x1f);
     }
@@ -1087,26 +1087,26 @@ ures_swapResource(const UDataSwapper *ds,
     p=inBundle+offset;
     q=outBundle+offset;
 
-    switch(RES_GET_TYPE(res)) {
-    case URES_ALIAS:
+    بدل(RES_GET_TYPE(res)) {
+    حالة URES_ALIAS:
         /* physically same value layout as string, fall through */
         U_FALLTHROUGH;
-    case URES_STRING:
+    حالة URES_STRING:
         count = udata_readInt32(ds, static_cast<int32_t>(*p));
         /* swap length */
         ds->swapArray32(ds, p, 4, q, pErrorCode);
         /* swap each char16_t (the terminating NUL would not change) */
         ds->swapArray16(ds, p+1, 2*count, q+1, pErrorCode);
-        break;
-    case URES_BINARY:
+        اكسر;
+    حالة URES_BINARY:
         count = udata_readInt32(ds, static_cast<int32_t>(*p));
         /* swap length */
         ds->swapArray32(ds, p, 4, q, pErrorCode);
         /* no need to swap or copy bytes - ures_swap() copied them all */
 
         /* swap known formats */
-#if !UCONFIG_NO_COLLATION
-        if( key!=nullptr &&  /* the binary is in a table */
+#אם !UCONFIG_NO_COLLATION
+        אם( key!=nullptr &&  /* the binary is in a table */
             (key!=gUnknownKey ?
                 /* its table key string is "%%CollationBin" */
                 0==ds->compareInvChars(ds, key, -1,
@@ -1117,22 +1117,22 @@ ures_swapResource(const UDataSwapper *ds,
             ucol_swap(ds, p+1, count, q+1, pErrorCode);
         }
 #endif
-        break;
-    case URES_TABLE:
-    case URES_TABLE32:
+        اكسر;
+    حالة URES_TABLE:
+    حالة URES_TABLE32:
         {
-            const uint16_t *pKey16;
+            ثابت uint16_t *pKey16;
             uint16_t *qKey16;
 
-            const int32_t *pKey32;
+            ثابت int32_t *pKey32;
             int32_t *qKey32;
 
             Resource item;
             int32_t i, oldIndex;
 
-            if(RES_GET_TYPE(res)==URES_TABLE) {
+            אם(RES_GET_TYPE(res)==URES_TABLE) {
                 /* get table item count */
-                pKey16 = reinterpret_cast<const uint16_t*>(p);
+                pKey16 = reinterpret_cast<ثابت uint16_t*>(p);
                 qKey16 = reinterpret_cast<uint16_t*>(q);
                 count=ds->readUInt16(*pKey16);
 
@@ -1142,9 +1142,9 @@ ures_swapResource(const UDataSwapper *ds,
                 ds->swapArray16(ds, pKey16++, 2, qKey16++, pErrorCode);
 
                 offset+=((1+count)+1)/2;
-            } else {
+            } אחרת {
                 /* get table item count */
-                pKey32 = reinterpret_cast<const int32_t*>(p);
+                pKey32 = reinterpret_cast<ثابت int32_t*>(p);
                 qKey32 = reinterpret_cast<int32_t*>(q);
                 count=udata_readInt32(ds, *pKey32);
 
@@ -1156,46 +1156,46 @@ ures_swapResource(const UDataSwapper *ds,
                 offset+=1+count;
             }
 
-            if(count==0) {
-                break;
+            אם(count==0) {
+                اكسر;
             }
 
             p=inBundle+offset; /* pointer to table resources */
             q=outBundle+offset;
 
             /* recurse */
-            for(i=0; i<count; ++i) {
-                const char *itemKey=gUnknownKey;
-                if(pKey16!=nullptr) {
+            עבור(i=0; i<count; ++i) {
+                ثابت حرف *itemKey=gUnknownKey;
+                אם(pKey16!=nullptr) {
                     int32_t keyOffset=ds->readUInt16(pKey16[i]);
-                    if(keyOffset<pTempTable->localKeyLimit) {
-                        itemKey = reinterpret_cast<const char*>(outBundle) + keyOffset;
+                    אם(keyOffset<pTempTable->localKeyLimit) {
+                        itemKey = reinterpret_cast<ثابت حرف*>(outBundle) + keyOffset;
                     }
-                } else {
+                } אחרת {
                     int32_t keyOffset=udata_readInt32(ds, pKey32[i]);
-                    if(keyOffset>=0) {
-                        itemKey = reinterpret_cast<const char*>(outBundle) + keyOffset;
+                    אם(keyOffset>=0) {
+                        itemKey = reinterpret_cast<ثابت حرف*>(outBundle) + keyOffset;
                     }
                 }
                 item=ds->readUInt32(p[i]);
                 ures_swapResource(ds, inBundle, outBundle, item, itemKey, pTempTable, pErrorCode);
-                if(U_FAILURE(*pErrorCode)) {
+                אם(U_FAILURE(*pErrorCode)) {
                     udata_printError(ds, "ures_swapResource(table res=%08x)[%d].recurse(%08x) failed\n",
                                      res, i, item);
-                    return;
+                    החזר;
                 }
             }
 
-            if(pTempTable->majorFormatVersion>1 || ds->inCharset==ds->outCharset) {
+            אם(pTempTable->majorFormatVersion>1 || ds->inCharset==ds->outCharset) {
                 /* no need to sort, just swap the offset/value arrays */
-                if(pKey16!=nullptr) {
+                אם(pKey16!=nullptr) {
                     ds->swapArray16(ds, pKey16, count*2, qKey16, pErrorCode);
                     ds->swapArray32(ds, p, count*4, q, pErrorCode);
-                } else {
+                } אחרת {
                     /* swap key offsets and items as one array */
                     ds->swapArray32(ds, pKey32, count*2*4, qKey32, pErrorCode);
                 }
-                break;
+                اكسر;
             }
 
             /*
@@ -1206,24 +1206,24 @@ ures_swapResource(const UDataSwapper *ds,
              * sorting indexes and sort that.
              * Then we permutate and copy/swap the actual values.
              */
-            if(pKey16!=nullptr) {
-                for(i=0; i<count; ++i) {
+            אם(pKey16!=nullptr) {
+                עבור(i=0; i<count; ++i) {
                     pTempTable->rows[i].keyIndex=ds->readUInt16(pKey16[i]);
                     pTempTable->rows[i].sortIndex=i;
                 }
-            } else {
-                for(i=0; i<count; ++i) {
+            } אחרת {
+                עבור(i=0; i<count; ++i) {
                     pTempTable->rows[i].keyIndex=udata_readInt32(ds, pKey32[i]);
                     pTempTable->rows[i].sortIndex=i;
                 }
             }
-            uprv_sortArray(pTempTable->rows, count, sizeof(Row),
+            uprv_sortArray(pTempTable->rows, count, حجم(Row),
                            ures_compareRows, pTempTable->keyChars,
-                           false, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
+                           שקר, pErrorCode);
+            אם(U_FAILURE(*pErrorCode)) {
                 udata_printError(ds, "ures_swapResource(table res=%08x).uprv_sortArray(%d items) failed\n",
                                  res, count);
-                return;
+                החזר;
             }
 
             /*
@@ -1234,34 +1234,34 @@ ures_swapResource(const UDataSwapper *ds,
              * before the results are copied to the outBundle.
              */
             /* keys */
-            if(pKey16!=nullptr) {
+            אם(pKey16!=nullptr) {
                 uint16_t *rKey16;
 
-                if(pKey16!=qKey16) {
+                אם(pKey16!=qKey16) {
                     rKey16=qKey16;
-                } else {
+                } אחרת {
                     rKey16 = reinterpret_cast<uint16_t*>(pTempTable->resort);
                 }
-                for(i=0; i<count; ++i) {
+                עבור(i=0; i<count; ++i) {
                     oldIndex=pTempTable->rows[i].sortIndex;
                     ds->swapArray16(ds, pKey16+oldIndex, 2, rKey16+i, pErrorCode);
                 }
-                if(qKey16!=rKey16) {
+                אם(qKey16!=rKey16) {
                     uprv_memcpy(qKey16, rKey16, 2*count);
                 }
-            } else {
+            } אחרת {
                 int32_t *rKey32;
 
-                if(pKey32!=qKey32) {
+                אם(pKey32!=qKey32) {
                     rKey32=qKey32;
-                } else {
+                } אחרת {
                     rKey32=pTempTable->resort;
                 }
-                for(i=0; i<count; ++i) {
+                עבור(i=0; i<count; ++i) {
                     oldIndex=pTempTable->rows[i].sortIndex;
                     ds->swapArray32(ds, pKey32+oldIndex, 4, rKey32+i, pErrorCode);
                 }
-                if(qKey32!=rKey32) {
+                אם(qKey32!=rKey32) {
                     uprv_memcpy(qKey32, rKey32, 4*count);
                 }
             }
@@ -1271,22 +1271,22 @@ ures_swapResource(const UDataSwapper *ds,
                 Resource *r;
 
 
-                if(p!=q) {
+                אם(p!=q) {
                     r=q;
-                } else {
+                } אחרת {
                     r = reinterpret_cast<Resource*>(pTempTable->resort);
                 }
-                for(i=0; i<count; ++i) {
+                עבור(i=0; i<count; ++i) {
                     oldIndex=pTempTable->rows[i].sortIndex;
                     ds->swapArray32(ds, p+oldIndex, 4, r+i, pErrorCode);
                 }
-                if(q!=r) {
+                אם(q!=r) {
                     uprv_memcpy(q, r, 4*count);
                 }
             }
         }
-        break;
-    case URES_ARRAY:
+        اكسر;
+    حالة URES_ARRAY:
         {
             Resource item;
             int32_t i;
@@ -1296,38 +1296,38 @@ ures_swapResource(const UDataSwapper *ds,
             ds->swapArray32(ds, p++, 4, q++, pErrorCode);
 
             /* recurse */
-            for(i=0; i<count; ++i) {
+            עבור(i=0; i<count; ++i) {
                 item=ds->readUInt32(p[i]);
                 ures_swapResource(ds, inBundle, outBundle, item, nullptr, pTempTable, pErrorCode);
-                if(U_FAILURE(*pErrorCode)) {
+                אם(U_FAILURE(*pErrorCode)) {
                     udata_printError(ds, "ures_swapResource(array res=%08x)[%d].recurse(%08x) failed\n",
                                      res, i, item);
-                    return;
+                    החזר;
                 }
             }
 
             /* swap items */
             ds->swapArray32(ds, p, 4*count, q, pErrorCode);
         }
-        break;
-    case URES_INT_VECTOR:
+        اكسر;
+    حالة URES_INT_VECTOR:
         count = udata_readInt32(ds, static_cast<int32_t>(*p));
         /* swap length and each integer */
         ds->swapArray32(ds, p, 4*(1+count), q, pErrorCode);
-        break;
-    default:
+        اكسر;
+    افتراضي:
         /* also catches RES_BOGUS */
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        break;
+        اكسر;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ures_swap(const UDataSwapper *ds,
-          const void *inData, int32_t length, void *outData,
+ures_swap(ثابت UDataSwapper *ds,
+          ثابت فراغ *inData, int32_t length, فراغ *outData,
           UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
-    const Resource *inBundle;
+    ثابت UDataInfo *pInfo;
+    ثابت Resource *inBundle;
     Resource rootRes;
     int32_t headerSize, maxTableLength;
 
@@ -1335,20 +1335,20 @@ ures_swap(const UDataSwapper *ds,
     int32_t resort[STACK_ROW_CAPACITY];
     TempTable tempTable;
 
-    const int32_t *inIndexes;
+    ثابت int32_t *inIndexes;
 
     /* the following integers count Resource item offsets (4 bytes each), not bytes */
     int32_t bundleLength, indexLength, keysBottom, keysTop, resBottom, top;
 
     /* udata_swapDataHeader checks the arguments */
     headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    אם(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        החזר 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
+    pInfo=(ثابت UDataInfo *)((ثابت حرف *)inData+4);
+    אם(!(
         pInfo->dataFormat[0]==0x52 &&   /* dataFormat="ResB" */
         pInfo->dataFormat[1]==0x65 &&
         pInfo->dataFormat[2]==0x73 &&
@@ -1362,61 +1362,61 @@ ures_swap(const UDataSwapper *ds,
                          pInfo->dataFormat[2], pInfo->dataFormat[3],
                          pInfo->formatVersion[0], pInfo->formatVersion[1]);
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+        החזר 0;
     }
     tempTable.majorFormatVersion=pInfo->formatVersion[0];
 
     /* a resource bundle must contain at least one resource item */
-    if(length<0) {
+    אם(length<0) {
         bundleLength=-1;
-    } else {
+    } אחרת {
         bundleLength=(length-headerSize)/4;
 
         /* formatVersion 1.1 must have a root item and at least 5 indexes */
-        if(bundleLength<(1+5)) {
+        אם(bundleLength<(1+5)) {
             udata_printError(ds, "ures_swap(): too few bytes (%d after header) for a resource bundle\n",
                              length-headerSize);
             *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            החזר 0;
         }
     }
 
-    inBundle=(const Resource *)((const char *)inData+headerSize);
+    inBundle=(ثابت Resource *)((ثابت حرف *)inData+headerSize);
     rootRes=ds->readUInt32(*inBundle);
 
     /* formatVersion 1.1 adds the indexes[] array */
-    inIndexes=(const int32_t *)(inBundle+1);
+    inIndexes=(ثابت int32_t *)(inBundle+1);
 
     indexLength=udata_readInt32(ds, inIndexes[URES_INDEX_LENGTH])&0xff;
-    if(indexLength<=URES_INDEX_MAX_TABLE_LENGTH) {
+    אם(indexLength<=URES_INDEX_MAX_TABLE_LENGTH) {
         udata_printError(ds, "ures_swap(): too few indexes for a 1.1+ resource bundle\n");
         *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        החזר 0;
     }
     keysBottom=1+indexLength;
     keysTop=udata_readInt32(ds, inIndexes[URES_INDEX_KEYS_TOP]);
-    if(indexLength>URES_INDEX_16BIT_TOP) {
+    אם(indexLength>URES_INDEX_16BIT_TOP) {
         resBottom=udata_readInt32(ds, inIndexes[URES_INDEX_16BIT_TOP]);
-    } else {
+    } אחרת {
         resBottom=keysTop;
     }
     top=udata_readInt32(ds, inIndexes[URES_INDEX_BUNDLE_TOP]);
     maxTableLength=udata_readInt32(ds, inIndexes[URES_INDEX_MAX_TABLE_LENGTH]);
 
-    if(0<=bundleLength && bundleLength<top) {
+    אם(0<=bundleLength && bundleLength<top) {
         udata_printError(ds, "ures_swap(): resource top %d exceeds bundle length %d\n",
                          top, bundleLength);
         *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        החזר 0;
     }
-    if(keysTop>(1+indexLength)) {
+    אם(keysTop>(1+indexLength)) {
         tempTable.localKeyLimit=keysTop<<2;
-    } else {
+    } אחרת {
         tempTable.localKeyLimit=0;
     }
 
-    if(length>=0) {
-        Resource *outBundle=(Resource *)((char *)outData+headerSize);
+    אם(length>=0) {
+        Resource *outBundle=(Resource *)((حرف *)outData+headerSize);
 
         /* track which resources we have already swapped */
         uint32_t stackResFlags[STACK_ROW_CAPACITY];
@@ -1432,76 +1432,76 @@ ures_swap(const UDataSwapper *ds,
          */
         resFlagsLength=(length+31)>>5;          /* number of bytes needed */
         resFlagsLength=(resFlagsLength+3)&~3;   /* multiple of 4 bytes for uint32_t */
-        if(resFlagsLength<=(int32_t)sizeof(stackResFlags)) {
+        אם(resFlagsLength<=(int32_t)حجم(stackResFlags)) {
             tempTable.resFlags=stackResFlags;
-        } else {
+        } אחרת {
             tempTable.resFlags=(uint32_t *)uprv_malloc(resFlagsLength);
-            if(tempTable.resFlags==nullptr) {
+            אם(tempTable.resFlags==nullptr) {
                 udata_printError(ds, "ures_swap(): unable to allocate memory for tracking resources\n");
                 *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                return 0;
+                החזר 0;
             }
         }
         uprv_memset(tempTable.resFlags, 0, resFlagsLength);
 
         /* copy the bundle for binary and inaccessible data */
-        if(inData!=outData) {
+        אם(inData!=outData) {
             uprv_memcpy(outBundle, inBundle, 4*top);
         }
 
         /* swap the key strings, but not the padding bytes (0xaa) after the last string and its NUL */
         udata_swapInvStringBlock(ds, inBundle+keysBottom, 4*(keysTop-keysBottom),
                                     outBundle+keysBottom, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
+        אם(U_FAILURE(*pErrorCode)) {
             udata_printError(ds, "ures_swap().udata_swapInvStringBlock(keys[%d]) failed\n", 4*(keysTop-keysBottom));
-            if(tempTable.resFlags!=stackResFlags) {
+            אם(tempTable.resFlags!=stackResFlags) {
                 uprv_free(tempTable.resFlags);
             }
-            return 0;
+            החזר 0;
         }
 
         /* swap the 16-bit units (strings, table16, array16) */
-        if(keysTop<resBottom) {
+        אם(keysTop<resBottom) {
             ds->swapArray16(ds, inBundle+keysTop, (resBottom-keysTop)*4, outBundle+keysTop, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
+            אם(U_FAILURE(*pErrorCode)) {
                 udata_printError(ds, "ures_swap().swapArray16(16-bit units[%d]) failed\n", 2*(resBottom-keysTop));
-                if(tempTable.resFlags!=stackResFlags) {
+                אם(tempTable.resFlags!=stackResFlags) {
                     uprv_free(tempTable.resFlags);
                 }
-                return 0;
+                החזר 0;
             }
         }
 
         /* allocate the temporary table for sorting resource tables */
-        tempTable.keyChars=(const char *)outBundle; /* sort by outCharset */
-        if(tempTable.majorFormatVersion>1 || maxTableLength<=STACK_ROW_CAPACITY) {
+        tempTable.keyChars=(ثابت حرف *)outBundle; /* sort by outCharset */
+        אם(tempTable.majorFormatVersion>1 || maxTableLength<=STACK_ROW_CAPACITY) {
             tempTable.rows=rows;
             tempTable.resort=resort;
-        } else {
-            tempTable.rows=(Row *)uprv_malloc(maxTableLength*sizeof(Row)+maxTableLength*4);
-            if(tempTable.rows==nullptr) {
+        } אחרת {
+            tempTable.rows=(Row *)uprv_malloc(maxTableLength*حجم(Row)+maxTableLength*4);
+            אם(tempTable.rows==nullptr) {
                 udata_printError(ds, "ures_swap(): unable to allocate memory for sorting tables (max length: %d)\n",
                                  maxTableLength);
                 *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                if(tempTable.resFlags!=stackResFlags) {
+                אם(tempTable.resFlags!=stackResFlags) {
                     uprv_free(tempTable.resFlags);
                 }
-                return 0;
+                החזר 0;
             }
             tempTable.resort=(int32_t *)(tempTable.rows+maxTableLength);
         }
 
         /* swap the resources */
         ures_swapResource(ds, inBundle, outBundle, rootRes, nullptr, &tempTable, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
+        אם(U_FAILURE(*pErrorCode)) {
             udata_printError(ds, "ures_swapResource(root res=%08x) failed\n",
                              rootRes);
         }
 
-        if(tempTable.rows!=rows) {
+        אם(tempTable.rows!=rows) {
             uprv_free(tempTable.rows);
         }
-        if(tempTable.resFlags!=stackResFlags) {
+        אם(tempTable.resFlags!=stackResFlags) {
             uprv_free(tempTable.resFlags);
         }
 
@@ -1509,5 +1509,5 @@ ures_swap(const UDataSwapper *ds,
         ds->swapArray32(ds, inBundle, keysBottom*4, outBundle, pErrorCode);
     }
 
-    return headerSize+4*top;
+    החזר headerSize+4*top;
 }

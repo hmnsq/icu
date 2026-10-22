@@ -31,20 +31,20 @@
 #ifndef LOCID_H
 #define LOCID_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#אם U_SHOW_CPLUSPLUS_API
 
-#include <cstdint>
-#include <string_view>
+#ضمن <cstdint>
+#ضمن <string_view>
 
-#include "unicode/bytestream.h"
-#include "unicode/localpointer.h"
-#include "unicode/strenum.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
-#include "unicode/putil.h"
-#include "unicode/uloc.h"
+#ضمن "unicode/bytestream.h"
+#ضمن "unicode/localpointer.h"
+#ضمن "unicode/strenum.h"
+#ضمن "unicode/stringpiece.h"
+#ضمن "unicode/uobject.h"
+#ضمن "unicode/putil.h"
+#ضمن "unicode/uloc.h"
 
 /**
  * \file
@@ -54,7 +54,7 @@
 U_NAMESPACE_BEGIN
 
 // Forward Declarations
-void U_CALLCONV locale_available_init(); /**< @internal */
+فراغ U_CALLCONV locale_available_init(); /**< @internal */
 
 class StringEnumeration;
 class UnicodeString;
@@ -195,53 +195,53 @@ class UnicodeString;
  * @stable ICU 2.0
  * @see ResourceBundle
  */
-class U_COMMON_API_CLASS Locale : public UObject {
-public:
+class U_COMMON_API_CLASS Locale : عام UObject {
+عام:
     /** Useful constant for the Root locale. @stable ICU 4.4 */
-    U_COMMON_API static const Locale& U_EXPORT2 getRoot();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getRoot();
     /** Useful constant for this language. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getEnglish();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getEnglish();
     /** Useful constant for this language. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getFrench();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getFrench();
     /** Useful constant for this language. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getGerman();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getGerman();
     /** Useful constant for this language. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getItalian();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getItalian();
     /** Useful constant for this language. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getJapanese();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getJapanese();
     /** Useful constant for this language. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getKorean();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getKorean();
     /** Useful constant for this language. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getChinese();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getChinese();
     /** Useful constant for this language. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getSimplifiedChinese();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getSimplifiedChinese();
     /** Useful constant for this language. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getTraditionalChinese();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getTraditionalChinese();
 
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getFrance();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getFrance();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getGermany();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getGermany();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getItaly();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getItaly();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getJapan();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getJapan();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getKorea();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getKorea();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getChina();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getChina();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getPRC();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getPRC();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getTaiwan();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getTaiwan();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getUK();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getUK();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getUS();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getUS();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getCanada();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getCanada();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getCanadaFrench();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getCanadaFrench();
 
     /**
      * Construct a default locale object, a Locale for the default locale ID.
@@ -276,10 +276,10 @@ public:
      * @see uloc_getDefault
      * @stable ICU 2.0
      */
-    U_COMMON_API Locale(const char* language,
-                        const char* country = nullptr,
-                        const char* variant = nullptr,
-                        const char* keywordsAndValues = nullptr);
+    U_COMMON_API Locale(ثابت حرف* language,
+                        ثابت حرف* country = nullptr,
+                        ثابت حرف* variant = nullptr,
+                        ثابت حرف* keywordsAndValues = nullptr);
 
     /**
      * Initializes a Locale object from another Locale object.
@@ -287,7 +287,7 @@ public:
      * @param other The Locale object being copied in.
      * @stable ICU 2.0
      */
-    U_COMMON_API Locale(const Locale& other);
+    U_COMMON_API Locale(ثابت Locale& other);
 
     /**
      * Move constructor; might leave source in bogus state.
@@ -311,7 +311,7 @@ public:
      * @return      *this
      * @stable ICU 2.0
      */
-    U_COMMON_API Locale& operator=(const Locale& other) U_LIFETIME_BOUND;
+    U_COMMON_API Locale& operator=(ثابت Locale& other) U_LIFETIME_BOUND;
 
     /**
      * Move assignment operator; might leave source in bogus state.
@@ -331,7 +331,7 @@ public:
      * @return      true if the two locale keys are the same, false otherwise.
      * @stable ICU 2.0
      */
-    U_COMMON_API bool operator==(const Locale& other) const;
+    U_COMMON_API bool operator==(ثابت Locale& other) ثابت;
 
     /**
      * Checks if two locale keys are not the same.
@@ -341,7 +341,7 @@ public:
      *              otherwise.
      * @stable ICU 2.0
      */
-    U_COMMON_API inline bool operator!=(const Locale& other) const;
+    U_COMMON_API مضمن bool operator!=(ثابت Locale& other) ثابت;
 
     /**
      * Clone this object.
@@ -354,7 +354,7 @@ public:
      * @see getDynamicClassID
      * @stable ICU 2.8
      */
-    U_COMMON_API Locale* clone() const;
+    U_COMMON_API Locale* clone() ثابت;
 
 #ifndef U_HIDE_SYSTEM_API
     /**
@@ -372,7 +372,7 @@ public:
      * @system
      * @stable ICU 2.0
      */
-    U_COMMON_API static const Locale& U_EXPORT2 getDefault();
+    U_COMMON_API ساكن ثابت Locale& U_EXPORT2 getDefault();
 
     /**
      * Sets the default. Normally set once at the beginning of a process,
@@ -386,7 +386,7 @@ public:
      * @system
      * @stable ICU 2.0
      */
-    U_COMMON_API static void U_EXPORT2 setDefault(const Locale& newLocale, UErrorCode& success);
+    U_COMMON_API ساكن فراغ U_EXPORT2 setDefault(ثابت Locale& newLocale, UErrorCode& success);
 #endif  /* U_HIDE_SYSTEM_API */
 
     /**
@@ -410,7 +410,7 @@ public:
      * @return        the Locale for the specified BCP47 language tag.
      * @stable ICU 63
      */
-    U_COMMON_API static Locale U_EXPORT2 forLanguageTag(StringPiece tag, UErrorCode& status);
+    U_COMMON_API ساكن Locale U_EXPORT2 forLanguageTag(StringPiece tag, UErrorCode& status);
 
     /**
      * Returns a well-formed language tag for this Locale.
@@ -425,7 +425,7 @@ public:
      * @param status  error information if creating the language tag failed.
      * @stable ICU 63
      */
-    U_COMMON_API void toLanguageTag(ByteSink& sink, UErrorCode& status) const;
+    U_COMMON_API فراغ toLanguageTag(ByteSink& sink, UErrorCode& status) ثابت;
 
     /**
      * Returns a well-formed language tag for this Locale.
@@ -438,7 +438,7 @@ public:
      * @stable ICU 63
      */
     template<typename StringClass>
-    inline StringClass toLanguageTag(UErrorCode& status) const;
+    مضمن StringClass toLanguageTag(UErrorCode& status) ثابت;
 
     /**
      * Creates a locale which has had minimal canonicalization
@@ -449,11 +449,11 @@ public:
      * @stable ICU 2.0
      * @see uloc_getName
      */
-    U_COMMON_API static Locale U_EXPORT2 createFromName(const char* name);
+    U_COMMON_API ساكن Locale U_EXPORT2 createFromName(ثابت حرف* name);
 
 #ifndef U_HIDE_INTERNAL_API
     /** @internal */
-    U_COMMON_API static Locale U_EXPORT2 createFromName(StringPiece name);
+    U_COMMON_API ساكن Locale U_EXPORT2 createFromName(StringPiece name);
 #endif  /* U_HIDE_INTERNAL_API */
 
     /**
@@ -464,14 +464,14 @@ public:
      * @stable ICU 3.0
      * @see uloc_canonicalize
      */
-    U_COMMON_API static Locale U_EXPORT2 createCanonical(const char* name);
+    U_COMMON_API ساكن Locale U_EXPORT2 createCanonical(ثابت حرف* name);
 
     /**
      * Returns the locale's ISO-639 language code.
      * @return      An alias to the code
      * @stable ICU 2.0
      */
-    U_COMMON_API const char* getLanguage() const U_LIFETIME_BOUND;
+    U_COMMON_API ثابت حرف* getLanguage() ثابت U_LIFETIME_BOUND;
 
     /**
      * Returns the locale's ISO-15924 abbreviation script code.
@@ -480,21 +480,21 @@ public:
      * @see uscript_getCode
      * @stable ICU 2.8
      */
-    U_COMMON_API const char* getScript() const U_LIFETIME_BOUND;
+    U_COMMON_API ثابت حرف* getScript() ثابت U_LIFETIME_BOUND;
 
     /**
      * Returns the locale's ISO-3166 country code.
      * @return      An alias to the code
      * @stable ICU 2.0
      */
-    U_COMMON_API const char* getCountry() const U_LIFETIME_BOUND;
+    U_COMMON_API ثابت حرف* getCountry() ثابت U_LIFETIME_BOUND;
 
     /**
      * Returns the locale's variant code.
      * @return      An alias to the code
      * @stable ICU 2.0
      */
-    U_COMMON_API const char* getVariant() const U_LIFETIME_BOUND;
+    U_COMMON_API ثابت حرف* getVariant() ثابت U_LIFETIME_BOUND;
 
     /**
      * Returns the programmatic name of the entire locale, with the language,
@@ -504,7 +504,7 @@ public:
      * @return      A pointer to "name".
      * @stable ICU 2.0
      */
-    U_COMMON_API const char* getName() const U_LIFETIME_BOUND;
+    U_COMMON_API ثابت حرف* getName() ثابت U_LIFETIME_BOUND;
 
     /**
      * Returns the programmatic name of the entire locale as getName() would return,
@@ -513,7 +513,7 @@ public:
      * @see getName
      * @stable ICU 2.8
      */
-    U_COMMON_API const char* getBaseName() const U_LIFETIME_BOUND;
+    U_COMMON_API ثابت حرف* getBaseName() ثابت U_LIFETIME_BOUND;
 
     /**
      * Add the likely subtags for this Locale, per the algorithm described
@@ -544,7 +544,7 @@ public:
      *                U_ILLEGAL_ARGUMENT_ERROR.
      * @stable ICU 63
      */
-    U_COMMON_API void addLikelySubtags(UErrorCode& status);
+    U_COMMON_API فراغ addLikelySubtags(UErrorCode& status);
 
     /**
      * Minimize the subtags for this Locale, per the algorithm described
@@ -575,7 +575,7 @@ public:
      *                U_ILLEGAL_ARGUMENT_ERROR.
      * @stable ICU 63
      */
-    U_COMMON_API void minimizeSubtags(UErrorCode& status);
+    U_COMMON_API فراغ minimizeSubtags(UErrorCode& status);
 
     /**
      * Canonicalize the locale ID of this object according to CLDR.
@@ -583,7 +583,7 @@ public:
      * @stable ICU 67
      * @see createCanonical
      */
-    U_COMMON_API void canonicalize(UErrorCode& status);
+    U_COMMON_API فراغ canonicalize(UErrorCode& status);
 
     /**
      * Gets the list of keywords for the specified locale.
@@ -594,7 +594,7 @@ public:
      * @see getKeywords
      * @stable ICU 2.8
      */
-    U_COMMON_API StringEnumeration* createKeywords(UErrorCode& status) const;
+    U_COMMON_API StringEnumeration* createKeywords(UErrorCode& status) ثابت;
 
     /**
      * Gets the list of Unicode keywords for the specified locale.
@@ -605,7 +605,7 @@ public:
      * @see getUnicodeKeywords
      * @stable ICU 63
      */
-    U_COMMON_API StringEnumeration* createUnicodeKeywords(UErrorCode& status) const;
+    U_COMMON_API StringEnumeration* createUnicodeKeywords(UErrorCode& status) ثابت;
 
     /**
      * Gets the set of keywords for this Locale.
@@ -619,7 +619,7 @@ public:
      * @stable ICU 63
      */
     template<typename StringClass, typename OutputIterator>
-    inline void getKeywords(OutputIterator iterator, UErrorCode& status) const;
+    مضمن فراغ getKeywords(OutputIterator iterator, UErrorCode& status) ثابت;
 
     /**
      * Gets the set of Unicode keywords for this Locale.
@@ -633,7 +633,7 @@ public:
      * @stable ICU 63
      */
     template<typename StringClass, typename OutputIterator>
-    inline void getUnicodeKeywords(OutputIterator iterator, UErrorCode& status) const;
+    مضمن فراغ getUnicodeKeywords(OutputIterator iterator, UErrorCode& status) ثابت;
 
     /**
      * Gets the value for a keyword.
@@ -651,10 +651,10 @@ public:
      *
      * @stable ICU 2.8
      */
-    U_COMMON_API int32_t getKeywordValue(const char* keywordName,
-                                         char* buffer,
+    U_COMMON_API int32_t getKeywordValue(ثابت حرف* keywordName,
+                                         حرف* buffer,
                                          int32_t bufferCapacity,
-                                         UErrorCode& status) const;
+                                         UErrorCode& status) ثابت;
 
     /**
      * Gets the value for a keyword.
@@ -669,7 +669,7 @@ public:
      * @param status       error information if getting the value failed.
      * @stable ICU 63
      */
-    U_COMMON_API void getKeywordValue(StringPiece keywordName, ByteSink& sink, UErrorCode& status) const;
+    U_COMMON_API فراغ getKeywordValue(StringPiece keywordName, ByteSink& sink, UErrorCode& status) ثابت;
 
     /**
      * Gets the value for a keyword.
@@ -685,7 +685,7 @@ public:
      * @stable ICU 63
      */
     template<typename StringClass>
-    inline StringClass getKeywordValue(StringPiece keywordName, UErrorCode& status) const;
+    مضمن StringClass getKeywordValue(StringPiece keywordName, UErrorCode& status) ثابت;
 
     /**
      * Gets the Unicode value for a Unicode keyword.
@@ -700,9 +700,9 @@ public:
      * @param status       error information if getting the value failed.
      * @stable ICU 63
      */
-    U_COMMON_API void getUnicodeKeywordValue(StringPiece keywordName,
+    U_COMMON_API فراغ getUnicodeKeywordValue(StringPiece keywordName,
                                              ByteSink& sink,
-                                             UErrorCode& status) const;
+                                             UErrorCode& status) ثابت;
 
     /**
      * Gets the Unicode value for a Unicode keyword.
@@ -718,7 +718,7 @@ public:
      * @stable ICU 63
      */
     template<typename StringClass>
-    inline StringClass getUnicodeKeywordValue(StringPiece keywordName, UErrorCode& status) const;
+    مضمن StringClass getUnicodeKeywordValue(StringPiece keywordName, UErrorCode& status) ثابت;
 
     /**
      * Sets or removes the value for a keyword.
@@ -739,8 +739,8 @@ public:
      *
      * @stable ICU 49
      */
-    U_COMMON_API void setKeywordValue(const char* keywordName,
-                                      const char* keywordValue,
+    U_COMMON_API فراغ setKeywordValue(ثابت حرف* keywordName,
+                                      ثابت حرف* keywordValue,
                                       UErrorCode& status) {
         setKeywordValue(StringPiece{keywordName}, StringPiece{keywordValue}, status);
     }
@@ -763,7 +763,7 @@ public:
      * @param status Returns any error information while performing this operation.
      * @stable ICU 63
      */
-    U_COMMON_API void setKeywordValue(StringPiece keywordName,
+    U_COMMON_API فراغ setKeywordValue(StringPiece keywordName,
                                       StringPiece keywordValue,
                                       UErrorCode& status);
 
@@ -785,7 +785,7 @@ public:
      * @param status Returns any error information while performing this operation.
      * @stable ICU 63
      */
-    U_COMMON_API void setUnicodeKeywordValue(StringPiece keywordName,
+    U_COMMON_API فراغ setUnicodeKeywordValue(StringPiece keywordName,
                                              StringPiece keywordValue,
                                              UErrorCode& status);
 
@@ -795,14 +795,14 @@ public:
      * @return      An alias to the code, or an empty string
      * @stable ICU 2.0
      */
-    U_COMMON_API const char* getISO3Language() const;
+    U_COMMON_API ثابت حرف* getISO3Language() ثابت;
 
     /**
      * Fills in "name" with the locale's three-letter ISO-3166 country code.
      * @return      An alias to the code, or an empty string
      * @stable ICU 2.0
      */
-    U_COMMON_API const char* getISO3Country() const;
+    U_COMMON_API ثابت حرف* getISO3Country() ثابت;
 
     /**
      * Returns the Windows LCID value corresponding to this locale.
@@ -811,7 +811,7 @@ public:
      * there is no Windows LCID value that corresponds to this locale, returns 0.
      * @stable ICU 2.0
      */
-    U_COMMON_API uint32_t getLCID() const;
+    U_COMMON_API uint32_t getLCID() ثابت;
 
     /**
      * Returns whether this locale's script is written right-to-left.
@@ -826,7 +826,7 @@ public:
      * @return true if the locale's script is written right-to-left
      * @stable ICU 54
      */
-    U_COMMON_API UBool isRightToLeft() const;
+    U_COMMON_API UBool isRightToLeft() ثابت;
 
     /**
      * Fills in "dispLang" with the name of this locale's language in a format suitable for
@@ -837,7 +837,7 @@ public:
      * @return          A reference to "dispLang".
      * @stable ICU 2.0
      */
-    U_COMMON_API UnicodeString& getDisplayLanguage(UnicodeString& dispLang U_LIFETIME_BOUND) const;
+    U_COMMON_API UnicodeString& getDisplayLanguage(UnicodeString& dispLang U_LIFETIME_BOUND) ثابت;
 
     /**
      * Fills in "dispLang" with the name of this locale's language in a format suitable for
@@ -852,8 +852,8 @@ public:
      * @return          A reference to "dispLang".
      * @stable ICU 2.0
      */
-    U_COMMON_API UnicodeString& getDisplayLanguage(const Locale& displayLocale,
-                                                   UnicodeString& dispLang U_LIFETIME_BOUND) const;
+    U_COMMON_API UnicodeString& getDisplayLanguage(ثابت Locale& displayLocale,
+                                                   UnicodeString& dispLang U_LIFETIME_BOUND) ثابت;
 
     /**
      * Fills in "dispScript" with the name of this locale's script in a format suitable
@@ -864,7 +864,7 @@ public:
      * @return              A reference to "dispScript".
      * @stable ICU 2.8
      */
-    U_COMMON_API UnicodeString& getDisplayScript(UnicodeString& dispScript U_LIFETIME_BOUND) const;
+    U_COMMON_API UnicodeString& getDisplayScript(UnicodeString& dispScript U_LIFETIME_BOUND) ثابت;
 
     /**
      * Fills in "dispScript" with the name of this locale's country in a format suitable
@@ -880,8 +880,8 @@ public:
      * @return              A reference to "dispScript".
      * @stable ICU 2.8
      */
-    U_COMMON_API UnicodeString& getDisplayScript(const Locale& displayLocale,
-                                                 UnicodeString& dispScript U_LIFETIME_BOUND) const;
+    U_COMMON_API UnicodeString& getDisplayScript(ثابت Locale& displayLocale,
+                                                 UnicodeString& dispScript U_LIFETIME_BOUND) ثابت;
 
     /**
      * Fills in "dispCountry" with the name of this locale's country in a format suitable
@@ -893,7 +893,7 @@ public:
      * @stable ICU 2.0
      */
     U_COMMON_API UnicodeString&
-    getDisplayCountry(UnicodeString& dispCountry U_LIFETIME_BOUND) const;
+    getDisplayCountry(UnicodeString& dispCountry U_LIFETIME_BOUND) ثابت;
 
     /**
      * Fills in "dispCountry" with the name of this locale's country in a format suitable
@@ -910,8 +910,8 @@ public:
      * @stable ICU 2.0
      */
     U_COMMON_API UnicodeString&
-    getDisplayCountry(const Locale& displayLocale,
-                      UnicodeString& dispCountry U_LIFETIME_BOUND) const;
+    getDisplayCountry(ثابت Locale& displayLocale,
+                      UnicodeString& dispCountry U_LIFETIME_BOUND) ثابت;
 
     /**
      * Fills in "dispVar" with the name of this locale's variant code in a format suitable
@@ -920,7 +920,7 @@ public:
      * @return          A reference to "dispVar".
      * @stable ICU 2.0
      */
-    U_COMMON_API UnicodeString& getDisplayVariant(UnicodeString& dispVar U_LIFETIME_BOUND) const;
+    U_COMMON_API UnicodeString& getDisplayVariant(UnicodeString& dispVar U_LIFETIME_BOUND) ثابت;
 
     /**
      * Fills in "dispVar" with the name of this locale's variant code in a format
@@ -930,8 +930,8 @@ public:
      * @return          A reference to "dispVar".
      * @stable ICU 2.0
      */
-    U_COMMON_API UnicodeString& getDisplayVariant(const Locale& displayLocale,
-                                                  UnicodeString& dispVar U_LIFETIME_BOUND) const;
+    U_COMMON_API UnicodeString& getDisplayVariant(ثابت Locale& displayLocale,
+                                                  UnicodeString& dispVar U_LIFETIME_BOUND) ثابت;
 
     /**
      * Fills in "name" with the name of this locale in a format suitable for user display
@@ -944,7 +944,7 @@ public:
      * @return      A reference to "name".
      * @stable ICU 2.0
      */
-    U_COMMON_API UnicodeString& getDisplayName(UnicodeString& name U_LIFETIME_BOUND) const;
+    U_COMMON_API UnicodeString& getDisplayName(UnicodeString& name U_LIFETIME_BOUND) ثابت;
 
     /**
      * Fills in "name" with the name of this locale in a format suitable for user display
@@ -958,14 +958,14 @@ public:
      * @return          A reference to "name".
      * @stable ICU 2.0
      */
-    U_COMMON_API UnicodeString& getDisplayName(const Locale& displayLocale,
-                                               UnicodeString& name U_LIFETIME_BOUND) const;
+    U_COMMON_API UnicodeString& getDisplayName(ثابت Locale& displayLocale,
+                                               UnicodeString& name U_LIFETIME_BOUND) ثابت;
 
     /**
      * Generates a hash code for the locale.
      * @stable ICU 2.0
      */
-    U_COMMON_API int32_t hashCode() const;
+    U_COMMON_API int32_t hashCode() ثابت;
 
     /**
      * Sets the locale to bogus
@@ -975,14 +975,14 @@ public:
      * instantiated from a locale and from a rule set).
      * @stable ICU 2.1
      */
-    U_COMMON_API void setToBogus();
+    U_COMMON_API فراغ setToBogus();
 
     /**
      * Gets the bogus state. Locale object can be bogus if it doesn't exist
      * @return false if it is a real locale, true if it is a bogus locale
      * @stable ICU 2.1
      */
-    U_COMMON_API inline UBool isBogus() const;
+    U_COMMON_API مضمن UBool isBogus() ثابت;
 
     /**
      * Returns a list of all installed locales.
@@ -992,7 +992,7 @@ public:
      *              get ownership of this list, and must NOT delete it.
      * @stable ICU 2.0
      */
-    U_COMMON_API static const Locale* U_EXPORT2 getAvailableLocales(int32_t& count);
+    U_COMMON_API ساكن ثابت Locale* U_EXPORT2 getAvailableLocales(int32_t& count);
 
     /**
      * Gets a list of all available 2-letter country codes defined in ISO 3166.  This is a
@@ -1002,7 +1002,7 @@ public:
      * @return a list of all available country codes
      * @stable ICU 2.0
      */
-    U_COMMON_API static const char* const* U_EXPORT2 getISOCountries();
+    U_COMMON_API ساكن ثابت حرف* ثابت* U_EXPORT2 getISOCountries();
 
     /**
      * Returns a list of all unique language codes defined in ISO 639.
@@ -1015,28 +1015,28 @@ public:
      * @return a list of all available language codes
      * @stable ICU 2.0
      */
-    U_COMMON_API static const char* const* U_EXPORT2 getISOLanguages();
+    U_COMMON_API ساكن ثابت حرف* ثابت* U_EXPORT2 getISOLanguages();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      *
      * @stable ICU 2.2
      */
-    U_COMMON_API static UClassID U_EXPORT2 getStaticClassID();
+    U_COMMON_API ساكن UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      *
      * @stable ICU 2.2
      */
-    U_COMMON_API virtual UClassID getDynamicClassID() const override;
+    U_COMMON_API virtual UClassID getDynamicClassID() ثابت override;
 
     /**
      * A Locale iterator interface similar to a Java Iterator<Locale>.
      * @stable ICU 65
      */
     class U_COMMON_API Iterator /* not : public UObject because this is an interface/mixin class */ {
-    public:
+    عام:
         /** @stable ICU 65 */
         virtual ~Iterator();
 
@@ -1044,13 +1044,13 @@ public:
          * @return true if next() can be called again.
          * @stable ICU 65
          */
-        virtual UBool hasNext() const = 0;
+        virtual UBool hasNext() ثابت = 0;
 
         /**
          * @return the next locale.
          * @stable ICU 65
          */
-        virtual const Locale &next() = 0;
+        virtual ثابت Locale &next() = 0;
     };
 
     /**
@@ -1058,8 +1058,8 @@ public:
      * @stable ICU 65
      */
     template<typename Iter>
-    class RangeIterator : public Iterator, public UMemory {
-    public:
+    class RangeIterator : عام Iterator, عام UMemory {
+    عام:
         /**
          * Constructs an iterator from a begin/end range.
          * Each of the iterator parameter values must be an
@@ -1075,17 +1075,17 @@ public:
          * @return true if next() can be called again.
          * @stable ICU 65
          */
-        UBool hasNext() const override { return it_ != end_; }
+        UBool hasNext() ثابت override { החזר it_ != end_; }
 
         /**
          * @return the next locale.
          * @stable ICU 65
          */
-        const Locale &next() override { return *it_++; }
+        ثابت Locale &next() override { החזר *it_++; }
 
-    private:
+    خاص:
         Iter it_;
-        const Iter end_;
+        ثابت Iter end_;
     };
 
     /**
@@ -1094,8 +1094,8 @@ public:
      * @stable ICU 65
      */
     template<typename Iter, typename Conv>
-    class ConvertingIterator : public Iterator, public UMemory {
-    public:
+    class ConvertingIterator : عام Iterator, عام UMemory {
+    عام:
         /**
          * Constructs an iterator from a begin/end range.
          * Each of the iterator parameter values must be an
@@ -1113,27 +1113,27 @@ public:
          * @return true if next() can be called again.
          * @stable ICU 65
          */
-        UBool hasNext() const override { return it_ != end_; }
+        UBool hasNext() ثابت override { החזר it_ != end_; }
 
         /**
          * @return the next locale.
          * @stable ICU 65
          */
-        const Locale &next() override { return converter_(*it_++); }
+        ثابت Locale &next() override { החזר converter_(*it_++); }
 
-    private:
+    خاص:
         Iter it_;
-        const Iter end_;
+        ثابت Iter end_;
         Conv converter_;
     };
 
-protected: /* only protected for testing purposes. DO NOT USE. */
+محمي: /* only protected for testing purposes. DO NOT USE. */
 #ifndef U_HIDE_INTERNAL_API
     /**
      * Set this from a single POSIX style locale string.
      * @internal
      */
-    U_COMMON_API void setFromPOSIXID(const char* posixID);
+    U_COMMON_API فراغ setFromPOSIXID(ثابت حرف* posixID);
     /**
      * Minimize the subtags for this Locale, per the algorithm described
      * @param favorScript favor to keep script if true, to keep region if false.
@@ -1142,10 +1142,10 @@ protected: /* only protected for testing purposes. DO NOT USE. */
      *                U_ILLEGAL_ARGUMENT_ERROR.
      * @internal
      */
-    U_COMMON_API void minimizeSubtags(bool favorScript, UErrorCode& status);
+    U_COMMON_API فراغ minimizeSubtags(bool favorScript, UErrorCode& status);
 #endif  /* U_HIDE_INTERNAL_API */
 
-private:
+خاص:
     /**
      * Initialize the locale object with a new name.
      * Was deprecated - used in implementation - moved internal
@@ -1153,7 +1153,7 @@ private:
      * @param cLocaleID The new locale name.
      * @param canonicalize whether to call uloc_canonicalize on cLocaleID
      */
-    Locale& init(const char* localeID, UBool canonicalize) U_LIFETIME_BOUND;
+    Locale& init(ثابت حرف* localeID, UBool canonicalize) U_LIFETIME_BOUND;
     Locale& init(StringPiece localeID, UBool canonicalize) U_LIFETIME_BOUND;
 
     /*
@@ -1161,7 +1161,7 @@ private:
      *   NO side effects.   (Default constructor tries to get
      *   the default locale.)
      */
-    enum ELocaleType : uint8_t {
+    تعداد ELocaleType : uint8_t {
         eBOGUS,
         eNEST,
         eHEAP,
@@ -1171,87 +1171,87 @@ private:
     /**
      * Initialize the locale cache for commonly used locales
      */
-    static Locale* getLocaleCache();
+    ساكن Locale* getLocaleCache();
 
-    union Payload;
-    struct Nest;
-    struct Heap;
+    اتحاد Payload;
+    بنية Nest;
+    بنية Heap;
 
     /**
      * Locale data that can be nested directly within the union Payload object.
      */
-    struct Nest {
-        static constexpr size_t SIZE = 32;
+    بنية Nest {
+        ساكن constexpr size_t SIZE = 32;
 
         ELocaleType type = eNEST;
-        char language[4];
-        char script[5];
-        char region[4];
+        حرف language[4];
+        حرف script[5];
+        حرف region[4];
         uint8_t variantBegin;
-        char baseName[SIZE -
-                      sizeof type -
-                      sizeof language -
-                      sizeof script -
-                      sizeof region -
-                      sizeof variantBegin];
+        حرف baseName[SIZE -
+                      حجم type -
+                      حجم language -
+                      حجم script -
+                      حجم region -
+                      حجم variantBegin];
 
-        const char* getLanguage() const U_LIFETIME_BOUND { return language; }
-        const char* getScript() const U_LIFETIME_BOUND { return script; }
-        const char* getRegion() const U_LIFETIME_BOUND { return region; }
-        const char* getVariant() const U_LIFETIME_BOUND {
-            return variantBegin == 0 ? "" : getBaseName() + variantBegin;
+        ثابت حرف* getLanguage() ثابت U_LIFETIME_BOUND { החזר language; }
+        ثابت حرف* getScript() ثابت U_LIFETIME_BOUND { החזר script; }
+        ثابت حرف* getRegion() ثابت U_LIFETIME_BOUND { החזר region; }
+        ثابت حرف* getVariant() ثابت U_LIFETIME_BOUND {
+            החזר variantBegin == 0 ? "" : getBaseName() + variantBegin;
         }
-        const char* getBaseName() const U_LIFETIME_BOUND { return baseName; }
+        ثابت حرف* getBaseName() ثابت U_LIFETIME_BOUND { החזר baseName; }
 
         // Doesn't inherit from UMemory, shouldn't be heap allocated.
-        static void* U_EXPORT2 operator new(size_t) noexcept = delete;
-        static void* U_EXPORT2 operator new[](size_t) noexcept = delete;
+        ساكن فراغ* U_EXPORT2 operator new(size_t) noexcept = delete;
+        ساكن فراغ* U_EXPORT2 operator new[](size_t) noexcept = delete;
 
         Nest() : language{'\0'}, script{'\0'}, region{'\0'}, variantBegin{0}, baseName{'\0'} {}
 
-        void init(std::string_view language,
+        فراغ init(std::string_view language,
                   std::string_view script,
                   std::string_view region,
                   uint8_t variantBegin);
 
-        static bool fits(int32_t length,
+        ساكن bool fits(int32_t length,
                          std::string_view language,
                          std::string_view script,
                          std::string_view region) {
-            return length < static_cast<int32_t>(sizeof Nest::baseName) &&
-                   language.size() < sizeof Nest::language &&
-                   script.size() < sizeof Nest::script &&
-                   region.size() < sizeof Nest::region;
+            החזר length < static_cast<int32_t>(حجم Nest::baseName) &&
+                   language.size() < حجم Nest::language &&
+                   script.size() < حجم Nest::script &&
+                   region.size() < حجم Nest::region;
         }
 
-      private:
-        friend union Payload;
+      خاص:
+        friend اتحاد Payload;
         Nest(Heap&& heap, uint8_t variantBegin);
     };
-    static_assert(sizeof(Nest) == Nest::SIZE);
+    static_assert(حجم(Nest) == Nest::SIZE);
 
     /**
      * Locale data that needs to be heap allocated in the union Payload object.
      */
-    struct Heap {
-        struct Alloc;
+    بنية Heap {
+        بنية Alloc;
 
         ELocaleType type;
-        char language[ULOC_LANG_CAPACITY];
-        char script[ULOC_SCRIPT_CAPACITY];
-        char region[ULOC_COUNTRY_CAPACITY];
+        حرف language[ULOC_LANG_CAPACITY];
+        حرف script[ULOC_SCRIPT_CAPACITY];
+        حرف region[ULOC_COUNTRY_CAPACITY];
         Alloc* ptr;
 
-        const char* getLanguage() const U_LIFETIME_BOUND { return language; }
-        const char* getScript() const U_LIFETIME_BOUND { return script; }
-        const char* getRegion() const U_LIFETIME_BOUND { return region; }
-        const char* getVariant() const U_LIFETIME_BOUND;
-        const char* getFullName() const U_LIFETIME_BOUND;
-        const char* getBaseName() const U_LIFETIME_BOUND;
+        ثابت حرف* getLanguage() ثابت U_LIFETIME_BOUND { החזר language; }
+        ثابت حرف* getScript() ثابت U_LIFETIME_BOUND { החזר script; }
+        ثابت حرف* getRegion() ثابت U_LIFETIME_BOUND { החזר region; }
+        ثابت حرف* getVariant() ثابت U_LIFETIME_BOUND;
+        ثابت حرف* getFullName() ثابت U_LIFETIME_BOUND;
+        ثابت حرف* getBaseName() ثابت U_LIFETIME_BOUND;
 
         // Doesn't inherit from UMemory, shouldn't be heap allocated.
-        static void* U_EXPORT2 operator new(size_t) noexcept = delete;
-        static void* U_EXPORT2 operator new[](size_t) noexcept = delete;
+        ساكن فراغ* U_EXPORT2 operator new(size_t) noexcept = delete;
+        ساكن فراغ* U_EXPORT2 operator new[](size_t) noexcept = delete;
 
         Heap(std::string_view language,
              std::string_view script,
@@ -1259,47 +1259,47 @@ private:
              int32_t variantBegin);
         ~Heap();
 
-        Heap& operator=(const Heap& other) U_LIFETIME_BOUND;
+        Heap& operator=(ثابت Heap& other) U_LIFETIME_BOUND;
         Heap& operator=(Heap&& other) noexcept U_LIFETIME_BOUND;
     };
-    static_assert(sizeof(Heap) <= sizeof(Nest));
+    static_assert(حجم(Heap) <= حجم(Nest));
 
     /**
      * This is kind of std::variant but customized to not waste any space on the
      * discriminator or on any padding, and to copy any heap allocated object.
      */
-    union Payload {
-      private:
+    اتحاد Payload {
+      خاص:
         Nest nest;
         Heap heap;
         ELocaleType type;
 
-        void copy(const Payload& other);
-        void move(Payload&& other) noexcept;
+        فراغ copy(ثابت Payload& other);
+        فراغ move(Payload&& other) noexcept;
 
-      public:
+      عام:
         // Doesn't inherit from UMemory, shouldn't be heap allocated.
-        static void* U_EXPORT2 operator new(size_t) noexcept = delete;
-        static void* U_EXPORT2 operator new[](size_t) noexcept = delete;
+        ساكن فراغ* U_EXPORT2 operator new(size_t) noexcept = delete;
+        ساكن فراغ* U_EXPORT2 operator new[](size_t) noexcept = delete;
 
         Payload() : type{eBOGUS} {}
         ~Payload();
 
-        Payload(const Payload& other);
+        Payload(ثابت Payload& other);
         Payload(Payload&& other) noexcept;
 
-        Payload& operator=(const Payload& other) U_LIFETIME_BOUND;
+        Payload& operator=(ثابت Payload& other) U_LIFETIME_BOUND;
         Payload& operator=(Payload&& other) noexcept U_LIFETIME_BOUND;
 
-        void setToBogus();
-        bool isBogus() const { return type == eBOGUS; }
+        فراغ setToBogus();
+        bool isBogus() ثابت { החזר type == eBOGUS; }
 
         template <typename T, typename... Args> T& emplace(Args&&... args) U_LIFETIME_BOUND;
 
         template <typename T> T* get() U_LIFETIME_BOUND;
 
         template <typename BogusFn, typename NestFn, typename HeapFn, typename... Args>
-        auto visit(BogusFn bogusFn, NestFn nestFn, HeapFn heapFn, Args... args) const;
+        auto visit(BogusFn bogusFn, NestFn nestFn, HeapFn heapFn, Args... args) ثابت;
     } payload;
 
     /**
@@ -1310,97 +1310,97 @@ private:
      * @tparam HEAP Pointer to the Heap getter function.
      * @return the result from the getter, or the empty string if isBogus().
      */
-    template <const char* (Nest::*const NEST)() const,
-              const char* (Heap::*const HEAP)() const>
-    const char* getField() const U_LIFETIME_BOUND;
+    template <ثابت حرف* (Nest::*ثابت NEST)() ثابت,
+              ثابت حرف* (Heap::*ثابت HEAP)() ثابت>
+    ثابت حرف* getField() ثابت U_LIFETIME_BOUND;
 
-    static const Locale &getLocale(int locid);
+    ساكن ثابت Locale &getLocale(صحيح locid);
 
     /**
      * A friend to allow the default locale to be set by either the C or C++ API.
      */
-    friend Locale *locale_set_default_internal(const char *, UErrorCode& status);
+    friend Locale *locale_set_default_internal(ثابت حرف *, UErrorCode& status);
 
     /**
      */
-    friend void U_CALLCONV locale_available_init();
+    friend فراغ U_CALLCONV locale_available_init();
 };
 
-U_COMMON_API inline bool
-Locale::operator!=(const    Locale&     other) const
+U_COMMON_API مضمن bool
+Locale::operator!=(ثابت    Locale&     other) ثابت
 {
-    return !operator==(other);
+    החזר !operator==(other);
 }
 
-template<typename StringClass> inline StringClass
-Locale::toLanguageTag(UErrorCode& status) const
+template<typename StringClass> مضمن StringClass
+Locale::toLanguageTag(UErrorCode& status) ثابت
 {
-    if (U_FAILURE(status)) { return {}; }
+    אם (U_FAILURE(status)) { החזר {}; }
     StringClass result;
     StringByteSink<StringClass> sink(&result);
     toLanguageTag(sink, status);
-    return result;
+    החזר result;
 }
 
-template<typename StringClass, typename OutputIterator> inline void
-Locale::getKeywords(OutputIterator iterator, UErrorCode& status) const
+template<typename StringClass, typename OutputIterator> مضمن فراغ
+Locale::getKeywords(OutputIterator iterator, UErrorCode& status) ثابت
 {
-    if (U_FAILURE(status)) { return; }
+    אם (U_FAILURE(status)) { החזר; }
     LocalPointer<StringEnumeration> keys(createKeywords(status));
-    if (U_FAILURE(status) || keys.isNull()) {
-        return;
+    אם (U_FAILURE(status) || keys.isNull()) {
+        החזר;
     }
-    for (;;) {
+    עבור (;;) {
         int32_t resultLength;
-        const char* buffer = keys->next(&resultLength, status);
-        if (U_FAILURE(status) || buffer == nullptr) {
-            return;
+        ثابت حرف* buffer = keys->next(&resultLength, status);
+        אם (U_FAILURE(status) || buffer == nullptr) {
+            החזר;
         }
         *iterator++ = StringClass(buffer, resultLength);
     }
 }
 
-template<typename StringClass, typename OutputIterator> inline void
-Locale::getUnicodeKeywords(OutputIterator iterator, UErrorCode& status) const
+template<typename StringClass, typename OutputIterator> مضمن فراغ
+Locale::getUnicodeKeywords(OutputIterator iterator, UErrorCode& status) ثابت
 {
-    if (U_FAILURE(status)) { return; }
+    אם (U_FAILURE(status)) { החזר; }
     LocalPointer<StringEnumeration> keys(createUnicodeKeywords(status));
-    if (U_FAILURE(status) || keys.isNull()) {
-        return;
+    אם (U_FAILURE(status) || keys.isNull()) {
+        החזר;
     }
-    for (;;) {
+    עבור (;;) {
         int32_t resultLength;
-        const char* buffer = keys->next(&resultLength, status);
-        if (U_FAILURE(status) || buffer == nullptr) {
-            return;
+        ثابت حرف* buffer = keys->next(&resultLength, status);
+        אם (U_FAILURE(status) || buffer == nullptr) {
+            החזר;
         }
         *iterator++ = StringClass(buffer, resultLength);
     }
 }
 
-template<typename StringClass> inline StringClass
-Locale::getKeywordValue(StringPiece keywordName, UErrorCode& status) const
+template<typename StringClass> مضمن StringClass
+Locale::getKeywordValue(StringPiece keywordName, UErrorCode& status) ثابت
 {
-    if (U_FAILURE(status)) { return {}; }
+    אם (U_FAILURE(status)) { החזר {}; }
     StringClass result;
     StringByteSink<StringClass> sink(&result);
     getKeywordValue(keywordName, sink, status);
-    return result;
+    החזר result;
 }
 
-template<typename StringClass> inline StringClass
-Locale::getUnicodeKeywordValue(StringPiece keywordName, UErrorCode& status) const
+template<typename StringClass> مضمن StringClass
+Locale::getUnicodeKeywordValue(StringPiece keywordName, UErrorCode& status) ثابت
 {
-    if (U_FAILURE(status)) { return {}; }
+    אם (U_FAILURE(status)) { החזר {}; }
     StringClass result;
     StringByteSink<StringClass> sink(&result);
     getUnicodeKeywordValue(keywordName, sink, status);
-    return result;
+    החזר result;
 }
 
-U_COMMON_API inline UBool
-Locale::isBogus() const {
-    return payload.isBogus();
+U_COMMON_API مضمن UBool
+Locale::isBogus() ثابت {
+    החזר payload.isBogus();
 }
 
 U_NAMESPACE_END

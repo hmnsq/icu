@@ -7,7 +7,7 @@
 #ifndef __UCPMAP_H__
 #define __UCPMAP_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
 U_CDECL_BEGIN
 
@@ -27,7 +27,7 @@ U_CDECL_BEGIN
  * @see UMutableCPTrie
  * @stable ICU 63
  */
-typedef struct UCPMap UCPMap;
+تعريفنوع بنية UCPMap UCPMap;
 
 /**
  * Selectors for how ucpmap_getRange() etc. should report value ranges overlapping with surrogates.
@@ -38,7 +38,7 @@ typedef struct UCPMap UCPMap;
  * @see umutablecptrie_getRange
  * @stable ICU 63
  */
-enum UCPMapRangeOption {
+تعداد UCPMapRangeOption {
     /**
      * ucpmap_getRange() enumerates all same-value ranges as stored in the map.
      * Most users should use this option.
@@ -79,7 +79,7 @@ enum UCPMapRangeOption {
     UCPMAP_RANGE_FIXED_ALL_SURROGATES
 };
 #ifndef U_IN_DOXYGEN
-typedef enum UCPMapRangeOption UCPMapRangeOption;
+تعريفنوع تعداد UCPMapRangeOption UCPMapRangeOption;
 #endif
 
 /**
@@ -93,7 +93,7 @@ typedef enum UCPMapRangeOption UCPMapRangeOption;
  * @stable ICU 63
  */
 U_CAPI uint32_t U_EXPORT2
-ucpmap_get(const UCPMap *map, UChar32 c);
+ucpmap_get(ثابت UCPMap *map, UChar32 c);
 
 /**
  * Callback function type: Modifies a map value.
@@ -109,8 +109,8 @@ ucpmap_get(const UCPMap *map, UChar32 c);
  * @return the modified value
  * @stable ICU 63
  */
-typedef uint32_t U_CALLCONV
-UCPMapValueFilter(const void *context, uint32_t value);
+تعريفنوع uint32_t U_CALLCONV
+UCPMapValueFilter(ثابت فراغ *context, uint32_t value);
 
 /**
  * Returns the last code point such that all those from start to there have the same value.
@@ -149,9 +149,9 @@ UCPMapValueFilter(const void *context, uint32_t value);
  * @stable ICU 63
  */
 U_CAPI UChar32 U_EXPORT2
-ucpmap_getRange(const UCPMap *map, UChar32 start,
+ucpmap_getRange(ثابت UCPMap *map, UChar32 start,
                 UCPMapRangeOption option, uint32_t surrogateValue,
-                UCPMapValueFilter *filter, const void *context, uint32_t *pValue);
+                UCPMapValueFilter *filter, ثابت فراغ *context, uint32_t *pValue);
 
 U_CDECL_END
 
