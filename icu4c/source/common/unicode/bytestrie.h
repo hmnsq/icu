@@ -22,13 +22,13 @@
  * \brief C++ API: Trie for mapping byte sequences to integer values.
  */
 
-#include "unicode/utypes.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ଯଦି U_SHOW_CPLUSPLUS_API
 
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
-#include "unicode/ustringtrie.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/stringpiece.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/uobject.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/ustringtrie.h"
 
 class BytesTrieTest;
 
@@ -52,8 +52,8 @@ class UVector32;
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API BytesTrie : public UMemory {
-public:
+class U_COMMON_API BytesTrie : ସର୍ବସାଧାରଣ UMemory {
+ସର୍ବସାଧାରଣ:
     /**
      * Constructs a BytesTrie reader instance.
      *
@@ -68,8 +68,8 @@ public:
      * @param trieBytes The byte array that contains the serialized trie.
      * @stable ICU 4.8
      */
-    BytesTrie(const void* trieBytes U_LIFETIME_BOUND)
-            : ownedArray_(nullptr), bytes_(static_cast<const uint8_t *>(trieBytes)),
+    BytesTrie(ଅଚଳ ଶୂନ୍ୟ* trieBytes U_LIFETIME_BOUND)
+            : ownedArray_(nullptr), bytes_(static_cast<ଅଚଳ uint8_t *>(trieBytes)),
               pos_(bytes_), remainingMatchLength_(-1) {}
 
     /**
@@ -84,7 +84,7 @@ public:
      * @param other Another BytesTrie object.
      * @stable ICU 4.8
      */
-    BytesTrie(const BytesTrie &other)
+    BytesTrie(ଅଚଳ BytesTrie &other)
             : ownedArray_(nullptr), bytes_(other.bytes_),
               pos_(other.pos_), remainingMatchLength_(other.remainingMatchLength_) {}
 
@@ -96,7 +96,7 @@ public:
     BytesTrie& reset() U_LIFETIME_BOUND {
         pos_=bytes_;
         remainingMatchLength_=-1;
-        return *this;
+        ଫେରନ୍ତୁ *this;
     }
 
     /**
@@ -107,8 +107,8 @@ public:
      * @see resetToState64
      * @stable ICU 65
      */
-    uint64_t getState64() const {
-        return (static_cast<uint64_t>(remainingMatchLength_ + 2) << kState64RemainingShift) |
+    uint64_t getState64() ଅଚଳ {
+        ଫେରନ୍ତୁ (static_cast<uint64_t>(remainingMatchLength_ + 2) << kState64RemainingShift) |
             static_cast<uint64_t>(pos_ - bytes_);
     }
 
@@ -129,7 +129,7 @@ public:
     BytesTrie& resetToState64(uint64_t state) U_LIFETIME_BOUND {
         remainingMatchLength_ = static_cast<int32_t>(state >> kState64RemainingShift) - 2;
         pos_ = bytes_ + (state & kState64PosMask);
-        return *this;
+        ଫେରନ୍ତୁ *this;
     }
 
     /**
@@ -137,18 +137,18 @@ public:
      * and resetting the trie back to this state later.
      * @stable ICU 4.8
      */
-    class State : public UMemory {
-    public:
+    class State : ସର୍ବସାଧାରଣ UMemory {
+    ସର୍ବସାଧାରଣ:
         /**
          * Constructs an empty State.
          * @stable ICU 4.8
          */
         State() { bytes=nullptr; }
-    private:
+    ବ୍ୟକ୍ତିଗତ:
         friend class BytesTrie;
 
-        const uint8_t *bytes;
-        const uint8_t *pos;
+        ଅଚଳ uint8_t *bytes;
+        ଅଚଳ uint8_t *pos;
         int32_t remainingMatchLength;
     };
 
@@ -159,11 +159,11 @@ public:
      * @see resetToState
      * @stable ICU 4.8
      */
-    const BytesTrie& saveState(State& state) const U_LIFETIME_BOUND {
+    ଅଚଳ BytesTrie& saveState(State& state) ଅଚଳ U_LIFETIME_BOUND {
         state.bytes=bytes_;
         state.pos=pos_;
         state.remainingMatchLength=remainingMatchLength_;
-        return *this;
+        ଫେରନ୍ତୁ *this;
     }
 
     /**
@@ -176,12 +176,12 @@ public:
      * @see reset
      * @stable ICU 4.8
      */
-    BytesTrie& resetToState(const State& state) U_LIFETIME_BOUND {
-        if(bytes_==state.bytes && bytes_!=nullptr) {
+    BytesTrie& resetToState(ଅଚଳ State& state) U_LIFETIME_BOUND {
+        ଯଦି(bytes_==state.bytes && bytes_!=nullptr) {
             pos_=state.pos;
             remainingMatchLength_=state.remainingMatchLength;
         }
-        return *this;
+        ଫେରନ୍ତୁ *this;
     }
 
     /**
@@ -190,7 +190,7 @@ public:
      * @return The match/value Result.
      * @stable ICU 4.8
      */
-    UStringTrieResult current() const;
+    UStringTrieResult current() ଅଚଳ;
 
     /**
      * Traverses the trie from the initial state for this input byte.
@@ -200,12 +200,12 @@ public:
      * @return The match/value Result.
      * @stable ICU 4.8
      */
-    inline UStringTrieResult first(int32_t inByte) {
+    ଧାଡ଼ିଭିତରେ UStringTrieResult first(int32_t inByte) {
         remainingMatchLength_=-1;
-        if(inByte<0) {
+        ଯଦି(inByte<0) {
             inByte+=0x100;
         }
-        return nextImpl(bytes_, inByte);
+        ଫେରନ୍ତୁ nextImpl(bytes_, inByte);
     }
 
     /**
@@ -232,7 +232,7 @@ public:
      * @return The match/value Result.
      * @stable ICU 4.8
      */
-    UStringTrieResult next(const char *s, int32_t length);
+    UStringTrieResult next(ଅଚଳ ଅକ୍ଷର *s, int32_t length);
 
     /**
      * Returns a matching byte sequence's value if called immediately after
@@ -243,11 +243,11 @@ public:
      * @return The value for the byte sequence so far.
      * @stable ICU 4.8
      */
-    inline int32_t getValue() const {
-        const uint8_t *pos=pos_;
+    ଧାଡ଼ିଭିତରେ int32_t get_ମୂଲ୍ୟ() ଅଚଳ {
+        ଅଚଳ uint8_t *pos=pos_;
         int32_t leadByte=*pos++;
         // U_ASSERT(leadByte>=kMinValueLead);
-        return readValue(pos, leadByte>>1);
+        ଫେରନ୍ତୁ read_ମୂଲ୍ୟ(pos, leadByte>>1);
     }
 
     /**
@@ -259,10 +259,10 @@ public:
      *         map to the same value.
      * @stable ICU 4.8
      */
-    inline UBool hasUniqueValue(int32_t &uniqueValue) const {
-        const uint8_t *pos=pos_;
+    ଧାଡ଼ିଭିତରେ UBool has_Unique_ମୂଲ୍ୟ(int32_t &unique_ମୂଲ୍ୟ) ଅଚଳ {
+        ଅଚଳ uint8_t *pos=pos_;
         // Skip the rest of a pending linear-match node.
-        return pos!=nullptr && findUniqueValue(pos+remainingMatchLength_+1, false, uniqueValue);
+        ଫେରନ୍ତୁ pos!=nullptr && find_Unique_ମୂଲ୍ୟ(pos+remainingMatchLength_+1, false, unique_ମୂଲ୍ୟ);
     }
 
     /**
@@ -273,14 +273,14 @@ public:
      * @return the number of bytes which continue the byte sequence from here
      * @stable ICU 4.8
      */
-    int32_t getNextBytes(ByteSink &out) const;
+    int32_t getNextBytes(ByteSink &out) ଅଚଳ;
 
     /**
      * Iterator for all of the (byte sequence, value) pairs in a BytesTrie.
      * @stable ICU 4.8
      */
-    class U_COMMON_API Iterator : public UMemory {
-    public:
+    class U_COMMON_API Iterator : ସର୍ବସାଧାରଣ UMemory {
+    ସର୍ବସାଧାରଣ:
         /**
          * Iterates from the root of a byte-serialized BytesTrie.
          * @param trieBytes The trie bytes.
@@ -292,7 +292,7 @@ public:
          *                  function chaining. (See User Guide for details.)
          * @stable ICU 4.8
          */
-        Iterator(const void* trieBytes U_LIFETIME_BOUND,
+        Iterator(ଅଚଳ ଶୂନ୍ୟ* trieBytes U_LIFETIME_BOUND,
                  int32_t maxStringLength,
                  UErrorCode& errorCode);
 
@@ -307,7 +307,7 @@ public:
          *                  function chaining. (See User Guide for details.)
          * @stable ICU 4.8
          */
-        Iterator(const BytesTrie &trie, int32_t maxStringLength, UErrorCode &errorCode);
+        Iterator(ଅଚଳ BytesTrie &trie, int32_t maxStringLength, UErrorCode &errorCode);
 
         /**
          * Destructor.
@@ -326,7 +326,7 @@ public:
          * @return true if there are more elements.
          * @stable ICU 4.8
          */
-        UBool hasNext() const;
+        UBool hasNext() ଅଚଳ;
 
         /**
          * Finds the next (byte sequence, value) pair if there is one.
@@ -348,29 +348,29 @@ public:
          * @return The NUL-terminated byte sequence for the last successful next().
          * @stable ICU 4.8
          */
-        StringPiece getString() const U_LIFETIME_BOUND;
+        StringPiece getString() ଅଚଳ U_LIFETIME_BOUND;
         /**
          * @return The value for the last successful next().
          * @stable ICU 4.8
          */
-        int32_t getValue() const { return value_; }
+        int32_t get_ମୂଲ୍ୟ() ଅଚଳ { ଫେରନ୍ତୁ ମୂଲ୍ୟ; }
 
-    private:
+    ବ୍ୟକ୍ତିଗତ:
         UBool truncateAndStop();
 
-        const uint8_t* branchNext(const uint8_t* pos U_LIFETIME_BOUND,
+        ଅଚଳ uint8_t* branchNext(ଅଚଳ uint8_t* pos U_LIFETIME_BOUND,
                                   int32_t length,
                                   UErrorCode& errorCode);
 
-        const uint8_t *bytes_;
-        const uint8_t *pos_;
-        const uint8_t *initialPos_;
+        ଅଚଳ uint8_t *bytes_;
+        ଅଚଳ uint8_t *pos_;
+        ଅଚଳ uint8_t *initialPos_;
         int32_t remainingMatchLength_;
         int32_t initialRemainingMatchLength_;
 
         CharString *str_;
         int32_t maxLength_;
-        int32_t value_;
+        int32_t ମୂଲ୍ୟ;
 
         // The stack stores pairs of integers for backtracking to another
         // outbound edge of a branch node.
@@ -379,10 +379,10 @@ public:
         // and the remaining branch length in bits 24..16. (Bits 31..25 are unused.)
         // (We could store the remaining branch length minus 1 in bits 23..16 and not use bits 31..24,
         // but the code looks more confusing that way.)
-        UVector32 *stack_;
+        UVector32 *ଗଦା;
     };
 
-private:
+ବ୍ୟକ୍ତିଗତ:
     friend class BytesTrieBuilder;
     friend class ::BytesTrieTest;
 
@@ -392,81 +392,81 @@ private:
      * this constructor adopts the builder's array.
      * This constructor is only called by the builder.
      */
-    BytesTrie(void *adoptBytes, const void *trieBytes)
+    BytesTrie(ଶୂନ୍ୟ *adoptBytes, ଅଚଳ ଶୂନ୍ୟ *trieBytes)
             : ownedArray_(static_cast<uint8_t *>(adoptBytes)),
-              bytes_(static_cast<const uint8_t *>(trieBytes)),
+              bytes_(static_cast<ଅଚଳ uint8_t *>(trieBytes)),
               pos_(bytes_), remainingMatchLength_(-1) {}
 
     // No assignment operator.
-    BytesTrie &operator=(const BytesTrie &other) = delete;
+    BytesTrie &operator=(ଅଚଳ BytesTrie &other) = delete;
 
-    inline void stop() {
+    ଧାଡ଼ିଭିତରେ ଶୂନ୍ୟ stop() {
         pos_=nullptr;
     }
 
     // Reads a compact 32-bit integer.
     // pos is already after the leadByte, and the lead byte is already shifted right by 1.
-    static int32_t readValue(const uint8_t *pos, int32_t leadByte);
-    static inline const uint8_t* skipValue(const uint8_t* pos U_LIFETIME_BOUND, int32_t leadByte) {
+    ସ୍ଥିର int32_t read_ମୂଲ୍ୟ(ଅଚଳ uint8_t *pos, int32_t leadByte);
+    ସ୍ଥିର ଧାଡ଼ିଭିତରେ ଅଚଳ uint8_t* skip_ମୂଲ୍ୟ(ଅଚଳ uint8_t* pos U_LIFETIME_BOUND, int32_t leadByte) {
         // U_ASSERT(leadByte>=kMinValueLead);
-        if(leadByte>=(kMinTwoByteValueLead<<1)) {
-            if(leadByte<(kMinThreeByteValueLead<<1)) {
+        ଯଦି(leadByte>=(k_Min_Two_Byte_ମୂଲ୍ୟ_Lead<<1)) {
+            ଯଦି(leadByte<(k_Min_Three_Byte_ମୂଲ୍ୟ_Lead<<1)) {
                 ++pos;
-            } else if(leadByte<(kFourByteValueLead<<1)) {
+            } ଅନ୍ୟଥା ଯଦି(leadByte<(k_Four_Byte_ମୂଲ୍ୟ_Lead<<1)) {
                 pos+=2;
-            } else {
+            } ଅନ୍ୟଥା {
                 pos+=3+((leadByte>>1)&1);
             }
         }
-        return pos;
+        ଫେରନ୍ତୁ pos;
     }
-    static inline const uint8_t* skipValue(const uint8_t* pos U_LIFETIME_BOUND) {
+    ସ୍ଥିର ଧାଡ଼ିଭିତରେ ଅଚଳ uint8_t* skip_ମୂଲ୍ୟ(ଅଚଳ uint8_t* pos U_LIFETIME_BOUND) {
         int32_t leadByte=*pos++;
-        return skipValue(pos, leadByte);
+        ଫେରନ୍ତୁ skip_ମୂଲ୍ୟ(pos, leadByte);
     }
 
     // Reads a jump delta and jumps.
-    static const uint8_t* jumpByDelta(const uint8_t* pos U_LIFETIME_BOUND);
+    ସ୍ଥିର ଅଚଳ uint8_t* jumpByDelta(ଅଚଳ uint8_t* pos U_LIFETIME_BOUND);
 
-    static inline const uint8_t* skipDelta(const uint8_t* pos U_LIFETIME_BOUND) {
+    ସ୍ଥିର ଧାଡ଼ିଭିତରେ ଅଚଳ uint8_t* skipDelta(ଅଚଳ uint8_t* pos U_LIFETIME_BOUND) {
         int32_t delta=*pos++;
-        if(delta>=kMinTwoByteDeltaLead) {
-            if(delta<kMinThreeByteDeltaLead) {
+        ଯଦି(delta>=kMinTwoByteDeltaLead) {
+            ଯଦି(delta<kMinThreeByteDeltaLead) {
                 ++pos;
-            } else if(delta<kFourByteDeltaLead) {
+            } ଅନ୍ୟଥା ଯଦି(delta<kFourByteDeltaLead) {
                 pos+=2;
-            } else {
+            } ଅନ୍ୟଥା {
                 pos+=3+(delta&1);
             }
         }
-        return pos;
+        ଫେରନ୍ତୁ pos;
     }
 
-    static inline UStringTrieResult valueResult(int32_t node) {
-        return static_cast<UStringTrieResult>(USTRINGTRIE_INTERMEDIATE_VALUE - (node & kValueIsFinal));
+    ସ୍ଥିର ଧାଡ଼ିଭିତରେ UStringTrieResult ମୂଲ୍ୟ_Result(int32_t ଗଣ୍ଠି) {
+        ଫେରନ୍ତୁ static_cast<UStringTrieResult>(USTRINGTRIE_INTERMEDIATE_ମୂଲ୍ୟ - (ଗଣ୍ଠି & k_ମୂଲ୍ୟ_Is_Final));
     }
 
     // Handles a branch node for both next(byte) and next(string).
-    UStringTrieResult branchNext(const uint8_t *pos, int32_t length, int32_t inByte);
+    UStringTrieResult branchNext(ଅଚଳ uint8_t *pos, int32_t length, int32_t inByte);
 
     // Requires remainingLength_<0.
-    UStringTrieResult nextImpl(const uint8_t *pos, int32_t inByte);
+    UStringTrieResult nextImpl(ଅଚଳ uint8_t *pos, int32_t inByte);
 
     // Helper functions for hasUniqueValue().
     // Recursively finds a unique value (or whether there is not a unique one)
     // from a branch.
-    static const uint8_t* findUniqueValueFromBranch(const uint8_t* pos U_LIFETIME_BOUND,
+    ସ୍ଥିର ଅଚଳ uint8_t* find_Unique_ମୂଲ୍ୟ_From_Branch(ଅଚଳ uint8_t* pos U_LIFETIME_BOUND,
                                                     int32_t length,
-                                                    UBool haveUniqueValue,
-                                                    int32_t& uniqueValue);
+                                                    UBool have_Unique_ମୂଲ୍ୟ,
+                                                    int32_t& unique_ମୂଲ୍ୟ);
     // Recursively finds a unique value (or whether there is not a unique one)
     // starting from a position on a node lead byte.
-    static UBool findUniqueValue(const uint8_t *pos, UBool haveUniqueValue, int32_t &uniqueValue);
+    ସ୍ଥିର UBool find_Unique_ମୂଲ୍ୟ(ଅଚଳ uint8_t *pos, UBool have_Unique_ମୂଲ୍ୟ, int32_t &unique_ମୂଲ୍ୟ);
 
     // Helper functions for getNextBytes().
     // getNextBytes() when pos is on a branch node.
-    static void getNextBranchBytes(const uint8_t *pos, int32_t length, ByteSink &out);
-    static void append(ByteSink &out, int c);
+    ସ୍ଥିର ଶୂନ୍ୟ getNextBranchBytes(ଅଚଳ uint8_t *pos, int32_t length, ByteSink &out);
+    ସ୍ଥିର ଶୂନ୍ୟ append(ByteSink &out, ପୂର୍ଣ୍ଣସଂଖ୍ୟା c);
 
     // BytesTrie data structure
     //
@@ -507,62 +507,62 @@ private:
 
     // For a branch sub-node with at most this many entries, we drop down
     // to a linear search.
-    static const int32_t kMaxBranchLinearSubNodeLength=5;
+    ସ୍ଥିର ଅଚଳ int32_t k_Max_Branch_Linear_Sub_ଗଣ୍ଠି_Length=5;
 
     // 10..1f: Linear-match node, match 1..16 bytes and continue reading the next node.
-    static const int32_t kMinLinearMatch=0x10;
-    static const int32_t kMaxLinearMatchLength=0x10;
+    ସ୍ଥିର ଅଚଳ int32_t kMinLinearMatch=0x10;
+    ସ୍ଥିର ଅଚଳ int32_t kMaxLinearMatchLength=0x10;
 
     // 20..ff: Variable-length value node.
     // If odd, the value is final. (Otherwise, intermediate value or jump delta.)
     // Then shift-right by 1 bit.
     // The remaining lead byte value indicates the number of following bytes (0..4)
     // and contains the value's top bits.
-    static const int32_t kMinValueLead=kMinLinearMatch+kMaxLinearMatchLength;  // 0x20
+    ସ୍ଥିର ଅଚଳ int32_t k_Min_ମୂଲ୍ୟ_Lead=kMinLinearMatch+kMaxLinearMatchLength;  // 0x20
     // It is a final value if bit 0 is set.
-    static const int32_t kValueIsFinal=1;
+    ସ୍ଥିର ଅଚଳ int32_t k_ମୂଲ୍ୟ_Is_Final=1;
 
     // Compact value: After testing bit 0, shift right by 1 and then use the following thresholds.
-    static const int32_t kMinOneByteValueLead=kMinValueLead/2;  // 0x10
-    static const int32_t kMaxOneByteValue=0x40;  // At least 6 bits in the first byte.
+    ସ୍ଥିର ଅଚଳ int32_t k_Min_One_Byte_ମୂଲ୍ୟ_Lead=k_Min_ମୂଲ୍ୟ_Lead/2;  // 0x10
+    ସ୍ଥିର ଅଚଳ int32_t k_Max_One_Byte_ମୂଲ୍ୟ=0x40;  // At least 6 bits in the first byte.
 
-    static const int32_t kMinTwoByteValueLead=kMinOneByteValueLead+kMaxOneByteValue+1;  // 0x51
-    static const int32_t kMaxTwoByteValue=0x1aff;
+    ସ୍ଥିର ଅଚଳ int32_t k_Min_Two_Byte_ମୂଲ୍ୟ_Lead=k_Min_One_Byte_ମୂଲ୍ୟ_Lead+k_Max_One_Byte_ମୂଲ୍ୟ+1;  // 0x51
+    ସ୍ଥିର ଅଚଳ int32_t k_Max_Two_Byte_ମୂଲ୍ୟ=0x1aff;
 
-    static const int32_t kMinThreeByteValueLead=kMinTwoByteValueLead+(kMaxTwoByteValue>>8)+1;  // 0x6c
-    static const int32_t kFourByteValueLead=0x7e;
+    ସ୍ଥିର ଅଚଳ int32_t k_Min_Three_Byte_ମୂଲ୍ୟ_Lead=k_Min_Two_Byte_ମୂଲ୍ୟ_Lead+(k_Max_Two_Byte_ମୂଲ୍ୟ>>8)+1;  // 0x6c
+    ସ୍ଥିର ଅଚଳ int32_t k_Four_Byte_ମୂଲ୍ୟ_Lead=0x7e;
 
     // A little more than Unicode code points. (0x11ffff)
-    static const int32_t kMaxThreeByteValue=((kFourByteValueLead-kMinThreeByteValueLead)<<16)-1;
+    ସ୍ଥିର ଅଚଳ int32_t k_Max_Three_Byte_ମୂଲ୍ୟ=((k_Four_Byte_ମୂଲ୍ୟ_Lead-k_Min_Three_Byte_ମୂଲ୍ୟ_Lead)<<16)-1;
 
-    static const int32_t kFiveByteValueLead=0x7f;
+    ସ୍ଥିର ଅଚଳ int32_t k_Five_Byte_ମୂଲ୍ୟ_Lead=0x7f;
 
     // Compact delta integers.
-    static const int32_t kMaxOneByteDelta=0xbf;
-    static const int32_t kMinTwoByteDeltaLead=kMaxOneByteDelta+1;  // 0xc0
-    static const int32_t kMinThreeByteDeltaLead=0xf0;
-    static const int32_t kFourByteDeltaLead=0xfe;
-    static const int32_t kFiveByteDeltaLead=0xff;
+    ସ୍ଥିର ଅଚଳ int32_t kMaxOneByteDelta=0xbf;
+    ସ୍ଥିର ଅଚଳ int32_t kMinTwoByteDeltaLead=kMaxOneByteDelta+1;  // 0xc0
+    ସ୍ଥିର ଅଚଳ int32_t kMinThreeByteDeltaLead=0xf0;
+    ସ୍ଥିର ଅଚଳ int32_t kFourByteDeltaLead=0xfe;
+    ସ୍ଥିର ଅଚଳ int32_t kFiveByteDeltaLead=0xff;
 
-    static const int32_t kMaxTwoByteDelta=((kMinThreeByteDeltaLead-kMinTwoByteDeltaLead)<<8)-1;  // 0x2fff
-    static const int32_t kMaxThreeByteDelta=((kFourByteDeltaLead-kMinThreeByteDeltaLead)<<16)-1;  // 0xdffff
+    ସ୍ଥିର ଅଚଳ int32_t kMaxTwoByteDelta=((kMinThreeByteDeltaLead-kMinTwoByteDeltaLead)<<8)-1;  // 0x2fff
+    ସ୍ଥିର ଅଚଳ int32_t kMaxThreeByteDelta=((kFourByteDeltaLead-kMinThreeByteDeltaLead)<<16)-1;  // 0xdffff
 
     // For getState64():
     // The remainingMatchLength_ is -1..14=(kMaxLinearMatchLength=0x10)-2
     // so we need at least 5 bits for that.
     // We add 2 to store it as a positive value 1..16=kMaxLinearMatchLength.
-    static constexpr int32_t kState64RemainingShift = 59;
-    static constexpr uint64_t kState64PosMask = (UINT64_C(1) << kState64RemainingShift) - 1;
+    ସ୍ଥିର constexpr int32_t kState64RemainingShift = 59;
+    ସ୍ଥିର constexpr uint64_t kState64PosMask = (UINT64_C(1) << kState64RemainingShift) - 1;
 
     uint8_t *ownedArray_;
 
     // Fixed value referencing the BytesTrie bytes.
-    const uint8_t *bytes_;
+    ଅଚଳ uint8_t *bytes_;
 
     // Iterator variables.
 
     // Pointer to next trie byte to read. nullptr if no more matches.
-    const uint8_t *pos_;
+    ଅଚଳ uint8_t *pos_;
     // Remaining length of a linear-match node, minus 1. Negative if not in such a node.
     int32_t remainingMatchLength_;
 };

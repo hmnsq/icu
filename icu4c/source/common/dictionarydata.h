@@ -14,34 +14,34 @@
 #ifndef __DICTIONARYDATA_H__
 #define __DICTIONARYDATA_H__
 
-#include "unicode/utypes.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ଯଦି !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/utext.h"
-#include "unicode/udata.h"
-#include "udataswp.h"
-#include "unicode/uobject.h"
-#include "unicode/ustringtrie.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/utext.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/udata.h"
+#ଅନ୍ତର୍ଭାଵ "udataswp.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/uobject.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/ustringtrie.h"
 
 U_NAMESPACE_BEGIN
 
 class UCharsTrie;
 class BytesTrie;
 
-class U_COMMON_API DictionaryData : public UMemory {
-public:
-    static const int32_t TRIE_TYPE_BYTES; // = 0;
-    static const int32_t TRIE_TYPE_UCHARS; // = 1;
-    static const int32_t TRIE_TYPE_MASK; // = 7;
-    static const int32_t TRIE_HAS_VALUES; // = 8;
+class U_COMMON_API DictionaryData : ସର୍ବସାଧାରଣ UMemory {
+ସର୍ବସାଧାରଣ:
+    ସ୍ଥିର ଅଚଳ int32_t TRIE_TYPE_BYTES; // = 0;
+    ସ୍ଥିର ଅଚଳ int32_t TRIE_TYPE_UCHARS; // = 1;
+    ସ୍ଥିର ଅଚଳ int32_t TRIE_TYPE_MASK; // = 7;
+    ସ୍ଥିର ଅଚଳ int32_t TRIE_HAS_ମୂଲ୍ୟଗୁଡ଼ିକ; // = 8;
 
-    static const int32_t TRANSFORM_NONE; // = 0;
-    static const int32_t TRANSFORM_TYPE_OFFSET; // = 0x1000000;
-    static const int32_t TRANSFORM_TYPE_MASK; // = 0x7f000000;
-    static const int32_t TRANSFORM_OFFSET_MASK; // = 0x1fffff;
+    ସ୍ଥିର ଅଚଳ int32_t TRANSFORM_NONE; // = 0;
+    ସ୍ଥିର ଅଚଳ int32_t TRANSFORM_TYPE_OFFSET; // = 0x1000000;
+    ସ୍ଥିର ଅଚଳ int32_t TRANSFORM_TYPE_MASK; // = 0x7f000000;
+    ସ୍ଥିର ଅଚଳ int32_t TRANSFORM_OFFSET_MASK; // = 0x1fffff;
 
-    enum {
+    ଗଣନା {
         // Byte offsets from the start of the data, after the generic header.
         IX_STRING_TRIE_OFFSET,
         IX_RESERVED1_OFFSET,
@@ -55,7 +55,7 @@ public:
 
         IX_RESERVED6,
         IX_RESERVED7,
-        IX_COUNT
+        IX_ଗଣନା
     };
 };
 
@@ -66,10 +66,10 @@ public:
  * All implementations of this interface must be thread-safe if they are to be used inside of the
  * dictionary-based break iteration code.
  */
-class U_COMMON_API DictionaryMatcher : public UMemory {
-public:
+class U_COMMON_API DictionaryMatcher : ସର୍ବସାଧାରଣ UMemory {
+ସର୍ବସାଧାରଣ:
     DictionaryMatcher() {}
-    virtual ~DictionaryMatcher();
+    ଆଭାସୀ ~DictionaryMatcher();
     // this should emulate CompactTrieDictionary::matches()
     /*  @param text      The text in which to look for matching words. Matching begins
      *                   at the current position of the UText.
@@ -90,47 +90,47 @@ public:
      *                   of the longest complete word matched. May be nullptr.
      *  @return          Number of matching words found.
      */
-    virtual int32_t matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const = 0;
+    ଆଭାସୀ int32_t matches(UText *text, int32_t maxLength, int32_t limit,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *ମୂଲ୍ୟଗୁଡ଼ିକ,
+                            int32_t *prefix) ଅଚଳ = 0;
 
     /** @return DictionaryData::TRIE_TYPE_XYZ */
-    virtual int32_t getType() const = 0;
+    ଆଭାସୀ int32_t getType() ଅଚଳ = 0;
 };
 
 // Implementation of the DictionaryMatcher interface for a UCharsTrie dictionary
-class U_COMMON_API UCharsDictionaryMatcher : public DictionaryMatcher {
-public:
+class U_COMMON_API UCharsDictionaryMatcher : ସର୍ବସାଧାରଣ DictionaryMatcher {
+ସର୍ବସାଧାରଣ:
     // constructs a new UCharsDictionaryMatcher.
     // The UDataMemory * will be closed on this object's destruction.
-    UCharsDictionaryMatcher(const char16_t *c, UDataMemory *f) : characters(c), file(f) { }
-    virtual ~UCharsDictionaryMatcher();
-    virtual int32_t matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const override;
-    virtual int32_t getType() const override;
-private:
-    const char16_t *characters;
+    UCharsDictionaryMatcher(ଅଚଳ char16_t *c, UDataMemory *f) : characters(c), file(f) { }
+    ଆଭାସୀ ~UCharsDictionaryMatcher();
+    ଆଭାସୀ int32_t matches(UText *text, int32_t maxLength, int32_t limit,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *ମୂଲ୍ୟଗୁଡ଼ିକ,
+                            int32_t *prefix) ଅଚଳ override;
+    ଆଭାସୀ int32_t getType() ଅଚଳ override;
+ବ୍ୟକ୍ତିଗତ:
+    ଅଚଳ char16_t *characters;
     UDataMemory *file;
 };
 
 // Implementation of the DictionaryMatcher interface for a BytesTrie dictionary
-class U_COMMON_API BytesDictionaryMatcher : public DictionaryMatcher {
-public:
+class U_COMMON_API BytesDictionaryMatcher : ସର୍ବସାଧାରଣ DictionaryMatcher {
+ସର୍ବସାଧାରଣ:
     // constructs a new BytesTrieDictionaryMatcher
     // the transform constant should be the constant read from the file, not a masked version!
     // the UDataMemory * fed in here will be closed on this object's destruction
-    BytesDictionaryMatcher(const char *c, int32_t t, UDataMemory *f)
+    BytesDictionaryMatcher(ଅଚଳ ଅକ୍ଷର *c, int32_t t, UDataMemory *f)
             : characters(c), transformConstant(t), file(f) { }
-    virtual ~BytesDictionaryMatcher();
-    virtual int32_t matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const override;
-    virtual int32_t getType() const override;
-private:
-    UChar32 transform(UChar32 c) const;
+    ଆଭାସୀ ~BytesDictionaryMatcher();
+    ଆଭାସୀ int32_t matches(UText *text, int32_t maxLength, int32_t limit,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *ମୂଲ୍ୟଗୁଡ଼ିକ,
+                            int32_t *prefix) ଅଚଳ override;
+    ଆଭାସୀ int32_t getType() ଅଚଳ override;
+ବ୍ୟକ୍ତିଗତ:
+    UChar32 transform(UChar32 c) ଅଚଳ;
 
-    const char *characters;
+    ଅଚଳ ଅକ୍ଷର *characters;
     int32_t transformConstant;
     UDataMemory *file;
 };
@@ -138,7 +138,7 @@ private:
 U_NAMESPACE_END
 
 U_CAPI int32_t U_EXPORT2
-udict_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *outData, UErrorCode *pErrorCode);
+udict_swap(ଅଚଳ UDataSwapper *ds, ଅଚଳ ଶୂନ୍ୟ *inData, int32_t length, ଶୂନ୍ୟ *outData, UErrorCode *pErrorCode);
 
 /**
  * Format of dictionary .dict data files.

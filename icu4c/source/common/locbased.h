@@ -13,8 +13,8 @@
 #ifndef LOCBASED_H
 #define LOCBASED_H
 
-#include "unicode/locid.h"
-#include "unicode/uobject.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/locid.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/uobject.h"
 
 U_NAMESPACE_BEGIN
 
@@ -25,9 +25,9 @@ U_NAMESPACE_BEGIN
  * services framework.
  * @since ICU 2.8
  */
-class U_COMMON_API LocaleBased : public UMemory {
+class U_COMMON_API LocaleBased : ସର୍ବସାଧାରଣ UMemory {
 
- public:
+ ସର୍ବସାଧାରଣ:
 
     /**
      * Return locale meta-data for the service object wrapped by this
@@ -39,9 +39,9 @@ class U_COMMON_API LocaleBased : public UMemory {
      * @param status input-output error code
      * @return the indicated locale
      */
-    static const Locale& getLocale(
-        const Locale& valid U_LIFETIME_BOUND,
-        const Locale& actual U_LIFETIME_BOUND,
+    ସ୍ଥିର ଅଚଳ Locale& getLocale(
+        ଅଚଳ Locale& valid U_LIFETIME_BOUND,
+        ଅଚଳ Locale& actual U_LIFETIME_BOUND,
         ULocDataLocaleType type,
         UErrorCode& status);
 
@@ -55,8 +55,8 @@ class U_COMMON_API LocaleBased : public UMemory {
      * @param status input-output error code
      * @return the indicated locale ID
      */
-    static const char* getLocaleID(
-        const Locale& valid, const Locale& actual,
+    ସ୍ଥିର ଅଚଳ ଅକ୍ଷର* getLocaleID(
+        ଅଚଳ Locale& valid, ଅଚଳ Locale& actual,
         ULocDataLocaleType type, UErrorCode& status);
 
 };

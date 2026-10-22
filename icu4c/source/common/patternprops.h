@@ -17,8 +17,8 @@
 #ifndef __PATTERNPROPS_H__
 #define __PATTERNPROPS_H__
 
-#include "unicode/unistr.h"
-#include "unicode/utypes.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/unistr.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/utypes.h"
 
 U_NAMESPACE_BEGIN
 
@@ -42,54 +42,54 @@ U_NAMESPACE_BEGIN
  * @author mscherer
  */
 class U_COMMON_API PatternProps {
-public:
+ସର୍ବସାଧାରଣ:
     /**
      * @return true if c is a Pattern_Syntax code point.
      */
-    static UBool isSyntax(UChar32 c);
+    ସ୍ଥିର UBool isSyntax(UChar32 c);
 
     /**
      * @return true if c is a Pattern_Syntax or Pattern_White_Space code point.
      */
-    static UBool isSyntaxOrWhiteSpace(UChar32 c);
+    ସ୍ଥିର UBool isSyntaxOrWhiteSpace(UChar32 c);
 
     /**
      * @return true if c is a Pattern_White_Space character.
      */
-    static UBool isWhiteSpace(UChar32 c);
+    ସ୍ଥିର UBool isWhiteSpace(UChar32 c);
 
     /**
      * Skips over Pattern_White_Space starting at s.
      * @return The smallest pointer at or after s with a non-white space character.
      */
-    static const char16_t *skipWhiteSpace(const char16_t *s, int32_t length);
+    ସ୍ଥିର ଅଚଳ char16_t *skipWhiteSpace(ଅଚଳ char16_t *s, int32_t length);
 
     /**
      * Skips over Pattern_White_Space starting at index start in s.
      * @return The smallest index at or after start with a non-white space character.
      */
-    static int32_t skipWhiteSpace(const UnicodeString &s, int32_t start);
+    ସ୍ଥିର int32_t skipWhiteSpace(ଅଚଳ UnicodeString &s, int32_t start);
 
     /**
      * @return s except with leading and trailing Pattern_White_Space removed and length adjusted.
      */
-    static const char16_t *trimWhiteSpace(const char16_t *s, int32_t &length);
+    ସ୍ଥିର ଅଚଳ char16_t *trimWhiteSpace(ଅଚଳ char16_t *s, int32_t &length);
 
     /**
      * Tests whether the string contains a "pattern identifier", that is,
      * whether it contains only non-Pattern_White_Space, non-Pattern_Syntax characters.
      * @return true if there are no Pattern_White_Space or Pattern_Syntax characters in s.
      */
-    static UBool isIdentifier(const char16_t *s, int32_t length);
+    ସ୍ଥିର UBool isIdentifier(ଅଚଳ char16_t *s, int32_t length);
 
     /**
      * Skips over a "pattern identifier" starting at index s.
      * @return The smallest pointer at or after s with
      *         a Pattern_White_Space or Pattern_Syntax character.
      */
-    static const char16_t *skipIdentifier(const char16_t *s, int32_t length);
+    ସ୍ଥିର ଅଚଳ char16_t *skipIdentifier(ଅଚଳ char16_t *s, int32_t length);
 
-private:
+ବ୍ୟକ୍ତିଗତ:
     PatternProps() = delete;  // no constructor: all static methods
 };
 

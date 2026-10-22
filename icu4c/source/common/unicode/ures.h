@@ -25,12 +25,12 @@
 #ifndef URES_H
 #define URES_H
 
-#include "unicode/char16ptr.h"
-#include "unicode/utypes.h"
-#include "unicode/uloc.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/char16ptr.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/utypes.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/uloc.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
+#ଯଦି U_SHOW_CPLUSPLUS_API
+#ଅନ୍ତର୍ଭାଵ "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
 /**
@@ -55,19 +55,19 @@
  * UResourceBundle is an opaque type for handles for resource bundles in C APIs.
  * @stable ICU 2.0
  */
-struct UResourceBundle;
+ସଂରଚନା UResourceBundle;
 
 /**
  * @stable ICU 2.0
  */
-typedef struct UResourceBundle UResourceBundle;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା UResourceBundle UResourceBundle;
 
 /**
  * Numeric constants for types of resource items.
  * @see ures_getType
  * @stable ICU 2.0
  */
-typedef enum {
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ଗଣନା {
     /** Resource type constant for "no resource". @stable ICU 2.6 */
     URES_NONE=-1,
 
@@ -75,7 +75,7 @@ typedef enum {
     URES_STRING=0,
 
     /** Resource type constant for binary data. @stable ICU 2.6 */
-    URES_BINARY=1,
+    URES_ଦ୍ୱିମିକ=1,
 
     /** Resource type constant for tables of key-value pairs. @stable ICU 2.6 */
     URES_TABLE=2,
@@ -113,7 +113,7 @@ typedef enum {
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
     RES_STRING=URES_STRING,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
-    RES_BINARY=URES_BINARY,
+    RES_ଦ୍ୱିମିକ=URES_ଦ୍ୱିମିକ,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
     RES_TABLE=URES_TABLE,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
@@ -168,8 +168,8 @@ typedef enum {
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle*  U_EXPORT2
-ures_open(const char*    packageName,
-          const char*  locale,
+ures_open(ଅଚଳ ଅକ୍ଷର*    packageName,
+          ଅଚଳ ଅକ୍ଷର*  locale,
           UErrorCode*     status);
 
 
@@ -191,8 +191,8 @@ ures_open(const char*    packageName,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_openDirect(const char* packageName,
-                const char* locale,
+ures_openDirect(ଅଚଳ ଅକ୍ଷର* packageName,
+                ଅଚଳ ଅକ୍ଷର* locale,
                 UErrorCode* status);
 
 /**
@@ -214,8 +214,8 @@ ures_openDirect(const char* packageName,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_openU(const UChar* packageName,
-           const char* locale,
+ures_openU(ଅଚଳ UChar* packageName,
+           ଅଚଳ ଅକ୍ଷର* locale,
            UErrorCode* status);
 
 #ifndef U_HIDE_DEPRECATED_API
@@ -236,8 +236,8 @@ ures_openU(const UChar* packageName,
  * @deprecated ICU 2.8 User ures_getSize instead
  */
 U_DEPRECATED int32_t U_EXPORT2
-ures_countArrayItems(const UResourceBundle* resourceBundle,
-                     const char* resourceKey,
+ures_ଗଣନା_Array_ବସ୍ତୁଗୁଡ଼ିକ(ଅଚଳ UResourceBundle* resourceBundle,
+                     ଅଚଳ ଅକ୍ଷର* resource_ଚାବି,
                      UErrorCode* err);
 #endif  /* U_HIDE_DEPRECATED_API */
 
@@ -249,10 +249,10 @@ ures_countArrayItems(const UResourceBundle* resourceBundle,
  * @see ures_open
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI ଶୂନ୍ୟ U_EXPORT2
 ures_close(UResourceBundle* resourceBundle);
 
-#if U_SHOW_CPLUSPLUS_API
+#ଯଦି U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -282,8 +282,8 @@ U_NAMESPACE_END
  * @see ures_getVersion
  * @deprecated ICU 2.8 Use ures_getVersion instead.
  */
-U_DEPRECATED const char* U_EXPORT2
-ures_getVersionNumber(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
+U_DEPRECATED ଅଚଳ ଅକ୍ଷର* U_EXPORT2
+ures_get_Version_ସଂଖ୍ୟା(ଅଚଳ UResourceBundle* resourceBundle U_LIFETIME_BOUND);
 #endif  /* U_HIDE_DEPRECATED_API */
 
 /**
@@ -295,8 +295,8 @@ ures_getVersionNumber(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
  *                    as specified in the resource bundle or its parent.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ures_getVersion(const UResourceBundle* resB,
+U_CAPI ଶୂନ୍ୟ U_EXPORT2
+ures_getVersion(ଅଚଳ UResourceBundle* resB,
                 UVersionInfo versionInfo);
 
 #ifndef U_HIDE_DEPRECATED_API
@@ -312,8 +312,8 @@ ures_getVersion(const UResourceBundle* resB,
  * @return  A Locale name
  * @deprecated ICU 2.8 Use ures_getLocaleByType instead.
  */
-U_DEPRECATED const char* U_EXPORT2
-ures_getLocale(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCode* status);
+U_DEPRECATED ଅଚଳ ଅକ୍ଷର* U_EXPORT2
+ures_getLocale(ଅଚଳ UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCode* status);
 #endif  /* U_HIDE_DEPRECATED_API */
 
 /**
@@ -328,8 +328,8 @@ ures_getLocale(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCod
  * @return  A Locale name
  * @stable ICU 2.8
  */
-U_CAPI const char* U_EXPORT2
-ures_getLocaleByType(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI ଅଚଳ ଅକ୍ଷର* U_EXPORT2
+ures_getLocaleByType(ଅଚଳ UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                      ULocDataLocaleType type,
                      UErrorCode* status);
 
@@ -351,10 +351,10 @@ ures_getLocaleByType(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @param status The error code.
  * @internal
  */
-U_CAPI void U_EXPORT2
+U_CAPI ଶୂନ୍ୟ U_EXPORT2
 ures_openFillIn(UResourceBundle *r,
-                const char* packageName,
-                const char* localeID,
+                ଅଚଳ ଅକ୍ଷର* packageName,
+                ଅଚଳ ଅକ୍ଷର* localeID,
                 UErrorCode* status);
 #endif  /* U_HIDE_INTERNAL_API */
 
@@ -375,8 +375,8 @@ ures_openFillIn(UResourceBundle *r,
  * @see ures_getUInt
  * @stable ICU 2.0
  */
-U_CAPI const UChar* U_EXPORT2
-ures_getString(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI ଅଚଳ UChar* U_EXPORT2
+ures_getString(ଅଚଳ UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                int32_t* len,
                UErrorCode* status);
 
@@ -427,9 +427,9 @@ ures_getString(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @see u_strToUTF8
  * @stable ICU 3.6
  */
-U_CAPI const char* U_EXPORT2
-ures_getUTF8String(const UResourceBundle* resB,
-                   char* dest U_LIFETIME_BOUND,
+U_CAPI ଅଚଳ ଅକ୍ଷର* U_EXPORT2
+ures_getUTF8String(ଅଚଳ UResourceBundle* resB,
+                   ଅକ୍ଷର* dest U_LIFETIME_BOUND,
                    int32_t* length,
                    UBool forceCopy,
                    UErrorCode* status);
@@ -451,8 +451,8 @@ ures_getUTF8String(const UResourceBundle* resB,
  * @see ures_getUInt
  * @stable ICU 2.0
  */
-U_CAPI const uint8_t* U_EXPORT2
-ures_getBinary(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI ଅଚଳ uint8_t* U_EXPORT2
+ures_get_ଦ୍ୱିମିକ(ଅଚଳ UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                int32_t* len,
                UErrorCode* status);
 
@@ -473,8 +473,8 @@ ures_getBinary(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @see ures_getUInt
  * @stable ICU 2.0
  */
-U_CAPI const int32_t* U_EXPORT2
-ures_getIntVector(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI ଅଚଳ int32_t* U_EXPORT2
+ures_getIntVector(ଅଚଳ UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                   int32_t* len,
                   UErrorCode* status);
 
@@ -495,7 +495,7 @@ ures_getIntVector(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @stable ICU 2.0
  */
 U_CAPI uint32_t U_EXPORT2
-ures_getUInt(const UResourceBundle* resourceBundle,
+ures_getUInt(ଅଚଳ UResourceBundle* resourceBundle,
              UErrorCode *status);
 
 /**
@@ -515,7 +515,7 @@ ures_getUInt(const UResourceBundle* resourceBundle,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ures_getInt(const UResourceBundle* resourceBundle,
+ures_getInt(ଅଚଳ UResourceBundle* resourceBundle,
             UErrorCode *status);
 
 /**
@@ -529,7 +529,7 @@ ures_getInt(const UResourceBundle* resourceBundle,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ures_getSize(const UResourceBundle *resourceBundle);
+ures_getSize(ଅଚଳ UResourceBundle *resourceBundle);
 
 /**
  * Returns the type of a resource. Available types are defined in enum UResType
@@ -540,7 +540,7 @@ ures_getSize(const UResourceBundle *resourceBundle);
  * @stable ICU 2.0
  */
 U_CAPI UResType U_EXPORT2
-ures_getType(const UResourceBundle *resourceBundle);
+ures_getType(ଅଚଳ UResourceBundle *resourceBundle);
 
 /**
  * Returns the key associated with a given resource. Not all the resources have a key - only
@@ -550,8 +550,8 @@ ures_getType(const UResourceBundle *resourceBundle);
  * @return a key associated to this resource, or NULL if it doesn't have a key
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
-ures_getKey(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
+U_CAPI ଅଚଳ ଅକ୍ଷର* U_EXPORT2
+ures_get_ଚାବି(ଅଚଳ UResourceBundle* resourceBundle U_LIFETIME_BOUND);
 
 /* ITERATION API
     This API provides means for iterating through a resource
@@ -563,7 +563,7 @@ ures_getKey(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
  * @param resourceBundle a resource
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI ଶୂନ୍ୟ U_EXPORT2
 ures_resetIterator(UResourceBundle *resourceBundle);
 
 /**
@@ -574,7 +574,7 @@ ures_resetIterator(UResourceBundle *resourceBundle);
  * @stable ICU 2.0
  */
 U_CAPI UBool U_EXPORT2
-ures_hasNext(const UResourceBundle *resourceBundle);
+ures_hasNext(ଅଚଳ UResourceBundle *resourceBundle);
 
 /**
  * Returns the next resource in a given resource or NULL if there are no more resources
@@ -605,10 +605,10 @@ ures_getNextResource(UResourceBundle* resourceBundle,
  * @return a pointer to a zero-terminated UChar array which lives in a memory mapped/DLL file.
  * @stable ICU 2.0
  */
-U_CAPI const UChar* U_EXPORT2
+U_CAPI ଅଚଳ UChar* U_EXPORT2
 ures_getNextString(UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                    int32_t* len,
-                   const char** key,
+                   ଅଚଳ ଅକ୍ଷର** ଚାବି,
                    UErrorCode* status);
 
 /**
@@ -624,7 +624,7 @@ ures_getNextString(UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByIndex(const UResourceBundle* resourceBundle,
+ures_getByIndex(ଅଚଳ UResourceBundle* resourceBundle,
                 int32_t indexR,
                 UResourceBundle* fillIn U_LIFETIME_BOUND,
                 UErrorCode* status);
@@ -640,8 +640,8 @@ ures_getByIndex(const UResourceBundle* resourceBundle,
  * @return                  a pointer to a zero-terminated UChar array which lives in a memory mapped/DLL file.
  * @stable ICU 2.0
  */
-U_CAPI const UChar* U_EXPORT2
-ures_getStringByIndex(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI ଅଚଳ UChar* U_EXPORT2
+ures_getStringByIndex(ଅଚଳ UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                       int32_t indexS,
                       int32_t* len,
                       UErrorCode* status);
@@ -694,10 +694,10 @@ ures_getStringByIndex(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @see u_strToUTF8
  * @stable ICU 3.6
  */
-U_CAPI const char* U_EXPORT2
-ures_getUTF8StringByIndex(const UResourceBundle* resB,
+U_CAPI ଅଚଳ ଅକ୍ଷର* U_EXPORT2
+ures_getUTF8StringByIndex(ଅଚଳ UResourceBundle* resB,
                           int32_t stringIndex,
-                          char* dest U_LIFETIME_BOUND,
+                          ଅକ୍ଷର* dest U_LIFETIME_BOUND,
                           int32_t* pLength,
                           UBool forceCopy,
                           UErrorCode* status);
@@ -715,8 +715,8 @@ ures_getUTF8StringByIndex(const UResourceBundle* resB,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByKey(const UResourceBundle* resourceBundle,
-              const char* key,
+ures_get_By_ଚାବି(ଅଚଳ UResourceBundle* resourceBundle,
+              ଅଚଳ ଅକ୍ଷର* ଚାବି,
               UResourceBundle* fillIn U_LIFETIME_BOUND,
               UErrorCode* status);
 
@@ -732,9 +732,9 @@ ures_getByKey(const UResourceBundle* resourceBundle,
  * @return                  a pointer to a zero-terminated UChar array which lives in a memory mapped/DLL file.
  * @stable ICU 2.0
  */
-U_CAPI const UChar* U_EXPORT2
-ures_getStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
-                    const char* key,
+U_CAPI ଅଚଳ UChar* U_EXPORT2
+ures_get_String_By_ଚାବି(ଅଚଳ UResourceBundle* resB U_LIFETIME_BOUND,
+                    ଅଚଳ ଅକ୍ଷର* ଚାବି,
                     int32_t* len,
                     UErrorCode* status);
 
@@ -788,16 +788,16 @@ ures_getStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
  * @see u_strToUTF8
  * @stable ICU 3.6
  */
-U_CAPI const char* U_EXPORT2
-ures_getUTF8StringByKey(const UResourceBundle* resB,
-                        const char* key,
-                        char* dest U_LIFETIME_BOUND,
+U_CAPI ଅଚଳ ଅକ୍ଷର* U_EXPORT2
+ures_get_UTF8_String_By_ଚାବି(ଅଚଳ UResourceBundle* resB,
+                        ଅଚଳ ଅକ୍ଷର* ଚାବି,
+                        ଅକ୍ଷର* dest U_LIFETIME_BOUND,
                         int32_t* pLength,
                         UBool forceCopy,
                         UErrorCode* status);
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/unistr.h"
+#ଯଦି U_SHOW_CPLUSPLUS_API
+#ଅନ୍ତର୍ଭାଵ "unicode/unistr.h"
 
 U_NAMESPACE_BEGIN
 /**
@@ -811,17 +811,17 @@ U_NAMESPACE_BEGIN
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
-ures_getUnicodeString(const UResourceBundle* resB U_LIFETIME_BOUND, UErrorCode* status) {
+ଧାଡ଼ିଭିତରେ UnicodeString
+ures_getUnicodeString(ଅଚଳ UResourceBundle* resB U_LIFETIME_BOUND, UErrorCode* status) {
     UnicodeString result;
     int32_t len = 0;
-    const char16_t *r = ConstChar16Ptr(ures_getString(resB, &len, status));
-    if(U_SUCCESS(*status)) {
+    ଅଚଳ char16_t *r = ConstChar16Ptr(ures_getString(resB, &len, status));
+    ଯଦି(U_SUCCESS(*status)) {
         result.setTo(true, r, len);
-    } else {
+    } ଅନ୍ୟଥା {
         result.setToBogus();
     }
-    return result;
+    ଫେରନ୍ତୁ result;
 }
 
 /**
@@ -836,19 +836,19 @@ ures_getUnicodeString(const UResourceBundle* resB U_LIFETIME_BOUND, UErrorCode* 
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
+ଧାଡ଼ିଭିତରେ UnicodeString
 ures_getNextUnicodeString(UResourceBundle* resB U_LIFETIME_BOUND,
-                          const char** key,
+                          ଅଚଳ ଅକ୍ଷର** ଚାବି,
                           UErrorCode* status) {
     UnicodeString result;
     int32_t len = 0;
-    const char16_t* r = ConstChar16Ptr(ures_getNextString(resB, &len, key, status));
-    if(U_SUCCESS(*status)) {
+    ଅଚଳ char16_t* r = ConstChar16Ptr(ures_getNextString(resB, &len, ଚାବି, status));
+    ଯଦି(U_SUCCESS(*status)) {
         result.setTo(true, r, len);
-    } else {
+    } ଅନ୍ୟଥା {
         result.setToBogus();
     }
-    return result;
+    ଫେରନ୍ତୁ result;
 }
 
 /**
@@ -860,19 +860,19 @@ ures_getNextUnicodeString(UResourceBundle* resB U_LIFETIME_BOUND,
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
-ures_getUnicodeStringByIndex(const UResourceBundle* resB U_LIFETIME_BOUND,
+ଧାଡ଼ିଭିତରେ UnicodeString
+ures_getUnicodeStringByIndex(ଅଚଳ UResourceBundle* resB U_LIFETIME_BOUND,
                              int32_t indexS,
                              UErrorCode* status) {
     UnicodeString result;
     int32_t len = 0;
-    const char16_t* r = ConstChar16Ptr(ures_getStringByIndex(resB, indexS, &len, status));
-    if(U_SUCCESS(*status)) {
+    ଅଚଳ char16_t* r = ConstChar16Ptr(ures_getStringByIndex(resB, indexS, &len, status));
+    ଯଦି(U_SUCCESS(*status)) {
         result.setTo(true, r, len);
-    } else {
+    } ଅନ୍ୟଥା {
         result.setToBogus();
     }
-    return result;
+    ଫେରନ୍ତୁ result;
 }
 
 /**
@@ -885,19 +885,19 @@ ures_getUnicodeStringByIndex(const UResourceBundle* resB U_LIFETIME_BOUND,
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
-ures_getUnicodeStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
-                           const char* key,
+ଧାଡ଼ିଭିତରେ UnicodeString
+ures_get_Unicode_String_By_ଚାବି(ଅଚଳ UResourceBundle* resB U_LIFETIME_BOUND,
+                           ଅଚଳ ଅକ୍ଷର* ଚାବି,
                            UErrorCode* status) {
     UnicodeString result;
     int32_t len = 0;
-    const char16_t* r = ConstChar16Ptr(ures_getStringByKey(resB, key, &len, status));
-    if(U_SUCCESS(*status)) {
+    ଅଚଳ char16_t* r = ConstChar16Ptr(ures_get_String_By_ଚାବି(resB, ଚାବି, &len, status));
+    ଯଦି(U_SUCCESS(*status)) {
         result.setTo(true, r, len);
-    } else {
+    } ଅନ୍ୟଥା {
         result.setToBogus();
     }
-    return result;
+    ଫେରନ୍ତୁ result;
 }
 
 U_NAMESPACE_END
@@ -913,7 +913,7 @@ U_NAMESPACE_END
  * @stable ICU 3.2
  */
 U_CAPI UEnumeration* U_EXPORT2
-ures_openAvailableLocales(const char *packageName, UErrorCode *status);
+ures_openAvailableLocales(ଅଚଳ ଅକ୍ଷର *packageName, UErrorCode *status);
 
 
 #endif /*_URES*/

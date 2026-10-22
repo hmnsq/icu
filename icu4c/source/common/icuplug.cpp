@@ -15,32 +15,32 @@
 ******************************************************************************
 */
 
-#include "unicode/icuplug.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/icuplug.h"
 
 
-#if UCONFIG_ENABLE_PLUGINS
+#ଯଦି UCONFIG_ENABLE_PLUGINS
 
 
-#include "icuplugimp.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "putilimp.h"
-#include "ucln.h"
-#include <stdio.h>
+#ଅନ୍ତର୍ଭାଵ "icuplugimp.h"
+#ଅନ୍ତର୍ଭାଵ "cstring.h"
+#ଅନ୍ତର୍ଭାଵ "cmemory.h"
+#ଅନ୍ତର୍ଭାଵ "putilimp.h"
+#ଅନ୍ତର୍ଭାଵ "ucln.h"
+#ଅନ୍ତର୍ଭାଵ <stdio.h>
 #ifdef __MVS__  /* defined by z/OS compiler */
 #define _POSIX_SOURCE
-#include <cics.h> /* 12 Nov 2011 JAM iscics() function */
+#ଅନ୍ତର୍ଭାଵ <cics.h> /* 12 Nov 2011 JAM iscics() function */
 #endif
-#include "charstr.h"
+#ଅନ୍ତର୍ଭାଵ "charstr.h"
 
-using namespace icu;
+using ନାମାକାଶ icu;
 
 #ifndef UPLUG_TRACE
 #define UPLUG_TRACE 0
 #endif
 
-#if UPLUG_TRACE
-#include <stdio.h>
+#ଯଦି UPLUG_TRACE
+#ଅନ୍ତର୍ଭାଵ <stdio.h>
 #define DBG(x) fprintf(stderr, "%s:%d: ",__FILE__,__LINE__); fprintf x
 #endif
 
@@ -48,16 +48,16 @@ using namespace icu;
  * Internal structure of an ICU plugin. 
  */
 
-struct UPlugData {
+ସଂରଚନା UPlugData {
   UPlugEntrypoint  *entrypoint; /**< plugin entrypoint */
   uint32_t structSize;    /**< initialized to the size of this structure */
   uint32_t token;         /**< must be U_PLUG_TOKEN */
-  void *lib;              /**< plugin library, or nullptr */
-  char libName[UPLUG_NAME_MAX];   /**< library name */
-  char sym[UPLUG_NAME_MAX];        /**< plugin symbol, or nullptr */
-  char config[UPLUG_NAME_MAX];     /**< configuration data */
-  void *context;          /**< user context data */
-  char name[UPLUG_NAME_MAX];   /**< name of plugin */
+  ଶୂନ୍ୟ *lib;              /**< plugin library, or nullptr */
+  ଅକ୍ଷର libName[UPLUG_NAME_MAX];   /**< library name */
+  ଅକ୍ଷର sym[UPLUG_NAME_MAX];        /**< plugin symbol, or nullptr */
+  ଅକ୍ଷର config[UPLUG_NAME_MAX];     /**< configuration data */
+  ଶୂନ୍ୟ *context;          /**< user context data */
+  ଅକ୍ଷର name[UPLUG_NAME_MAX];   /**< name of plugin */
   UPlugLevel  level; /**< level of plugin */
   UBool   awaitingLoad; /**< true if the plugin is awaiting a load call */
   UBool   dontUnload; /**< true if plugin must stay resident (leak plugin and lib) */
@@ -66,8 +66,8 @@ struct UPlugData {
 
 
 
-#define UPLUG_LIBRARY_INITIAL_COUNT 8
-#define UPLUG_PLUGIN_INITIAL_COUNT 12
+#define UPLUG_LIBRARY_INITIAL_ଗଣନା 8
+#define UPLUG_PLUGIN_INITIAL_ଗଣନା 12
 
 /**
  * Remove an item
@@ -77,154 +77,154 @@ struct UPlugData {
  * @param itemToRemove the item number of the member
  * @return the new listsize 
  */
-static int32_t uplug_removeEntryAt(void *list, int32_t listSize, int32_t memberSize, int32_t itemToRemove) {
+ସ୍ଥିର int32_t uplug_removeEntryAt(ଶୂନ୍ୟ *list, int32_t listSize, int32_t memberSize, int32_t itemToRemove) {
   uint8_t *bytePtr = (uint8_t *)list;
     
   /* get rid of some bad cases first */
-  if(listSize<1) {
-    return listSize;
+  ଯଦି(listSize<1) {
+    ଫେରନ୍ତୁ listSize;
   }
     
   /* is there anything to move? */
-  if(listSize > itemToRemove+1) {
+  ଯଦି(listSize > itemToRemove+1) {
     memmove(bytePtr+(itemToRemove*memberSize), bytePtr+((itemToRemove+1)*memberSize), memberSize);
   }
     
-  return listSize-1;
+  ଫେରନ୍ତୁ listSize-1;
 }
 
 
 
 
-#if U_ENABLE_DYLOAD
+#ଯଦି U_ENABLE_DYLOAD
 /**
  * Library management. Internal. 
  * @internal
  */
-struct UPlugLibrary;
+ସଂରଚନା UPlugLibrary;
 
 /**
  * Library management. Internal. 
  * @internal
  */
-typedef struct UPlugLibrary {
-  void *lib;                           /**< library ptr */
-  char name[UPLUG_NAME_MAX]; /**< library name */
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା UPlugLibrary {
+  ଶୂନ୍ୟ *lib;                           /**< library ptr */
+  ଅକ୍ଷର name[UPLUG_NAME_MAX]; /**< library name */
   uint32_t ref;                        /**< reference count */
 } UPlugLibrary;
 
-static UPlugLibrary   staticLibraryList[UPLUG_LIBRARY_INITIAL_COUNT];
-static UPlugLibrary * libraryList = staticLibraryList;
-static int32_t libraryCount = 0;
-static int32_t libraryMax = UPLUG_LIBRARY_INITIAL_COUNT;
+ସ୍ଥିର UPlugLibrary   staticLibraryList[UPLUG_LIBRARY_INITIAL_ଗଣନା];
+ସ୍ଥିର UPlugLibrary * libraryList = staticLibraryList;
+ସ୍ଥିର int32_t library_ଗଣନା = 0;
+ସ୍ଥିର int32_t libraryMax = UPLUG_LIBRARY_INITIAL_ଗଣନା;
 
 /**
  * Search for a library. Doesn't lock
  * @param libName libname to search for
  * @return the library's struct
  */
-static int32_t searchForLibraryName(const char *libName) {
+ସ୍ଥିର int32_t ସନ୍ଧାନ_For_Library_Name(ଅଚଳ ଅକ୍ଷର *libName) {
   int32_t i;
     
-  for(i=0;i<libraryCount;i++) {
-    if(!uprv_strcmp(libName, libraryList[i].name)) {
-      return i;
+  ପାଇଁ(i=0;i<library_ଗଣନା;i++) {
+    ଯଦି(!uprv_strcmp(libName, libraryList[i].name)) {
+      ଫେରନ୍ତୁ i;
     }
   }
-  return -1;
+  ଫେରନ୍ତୁ -1;
 }
 
-static int32_t searchForLibrary(void *lib) {
+ସ୍ଥିର int32_t ସନ୍ଧାନ_For_Library(ଶୂନ୍ୟ *lib) {
   int32_t i;
     
-  for(i=0;i<libraryCount;i++) {
-    if(lib==libraryList[i].lib) {
-      return i;
+  ପାଇଁ(i=0;i<library_ଗଣନା;i++) {
+    ଯଦି(lib==libraryList[i].lib) {
+      ଫେରନ୍ତୁ i;
     }
   }
-  return -1;
+  ଫେରନ୍ତୁ -1;
 }
 
-U_CAPI char * U_EXPORT2
-uplug_findLibrary(void *lib, UErrorCode *status) {
+U_CAPI ଅକ୍ଷର * U_EXPORT2
+uplug_findLibrary(ଶୂନ୍ୟ *lib, UErrorCode *status) {
   int32_t libEnt;
-  char *ret = nullptr;
-  if(U_FAILURE(*status)) {
-    return nullptr;
+  ଅକ୍ଷର *ret = nullptr;
+  ଯଦି(U_FAILURE(*status)) {
+    ଫେରନ୍ତୁ nullptr;
   }
-  libEnt = searchForLibrary(lib);
-  if(libEnt!=-1) { 
+  libEnt = ସନ୍ଧାନ_For_Library(lib);
+  ଯଦି(libEnt!=-1) { 
     ret = libraryList[libEnt].name;
-  } else {
+  } ଅନ୍ୟଥା {
     *status = U_MISSING_RESOURCE_ERROR;
   }
-  return ret;
+  ଫେରନ୍ତୁ ret;
 }
 
-U_CAPI void * U_EXPORT2
-uplug_openLibrary(const char *libName, UErrorCode *status) {
+U_CAPI ଶୂନ୍ୟ * U_EXPORT2
+uplug_openLibrary(ଅଚଳ ଅକ୍ଷର *libName, UErrorCode *status) {
   int32_t libEntry = -1;
-  void *lib = nullptr;
+  ଶୂନ୍ୟ *lib = nullptr;
     
-  if(U_FAILURE(*status)) return nullptr;
+  ଯଦି(U_FAILURE(*status)) ଫେରନ୍ତୁ nullptr;
 
-  libEntry = searchForLibraryName(libName);
-  if(libEntry == -1) {
-    libEntry = libraryCount++;
-    if(libraryCount >= libraryMax) {
+  libEntry = ସନ୍ଧାନ_For_Library_Name(libName);
+  ଯଦି(libEntry == -1) {
+    libEntry = library_ଗଣନା++;
+    ଯଦି(library_ଗଣନା >= libraryMax) {
       /* Ran out of library slots. Statically allocated because we can't depend on allocating memory.. */
       *status = U_MEMORY_ALLOCATION_ERROR;
-#if UPLUG_TRACE
+#ଯଦି UPLUG_TRACE
       DBG((stderr, "uplug_openLibrary() - out of library slots (max %d)\n", libraryMax));
 #endif
-      return nullptr;
+      ଫେରନ୍ତୁ nullptr;
     }
     /* Some operating systems don't want 
        DL operations from multiple threads. */
     libraryList[libEntry].lib = uprv_dl_open(libName, status);
-#if UPLUG_TRACE
+#ଯଦି UPLUG_TRACE
     DBG((stderr, "uplug_openLibrary(%s,%s) libEntry %d, lib %p\n", libName, u_errorName(*status), libEntry, lib));
 #endif
         
-    if(libraryList[libEntry].lib == nullptr || U_FAILURE(*status)) {
+    ଯଦି(libraryList[libEntry].lib == nullptr || U_FAILURE(*status)) {
       /* cleanup. */
       libraryList[libEntry].lib = nullptr; /* failure with open */
       libraryList[libEntry].name[0] = 0;
-#if UPLUG_TRACE
+#ଯଦି UPLUG_TRACE
       DBG((stderr, "uplug_openLibrary(%s,%s) libEntry %d, lib %p\n", libName, u_errorName(*status), libEntry, lib));
 #endif
       /* no need to free - just won't increase the count. */
-      libraryCount--;
-    } else { /* is it still there? */
+      library_ଗଣନା--;
+    } ଅନ୍ୟଥା { /* is it still there? */
       /* link it in */
       uprv_strncpy(libraryList[libEntry].name,libName,UPLUG_NAME_MAX);
       libraryList[libEntry].ref=1;
       lib = libraryList[libEntry].lib;
     }
 
-  } else {
+  } ଅନ୍ୟଥା {
     lib = libraryList[libEntry].lib;
     libraryList[libEntry].ref++;
   }
-  return lib;
+  ଫେରନ୍ତୁ lib;
 }
 
-U_CAPI void U_EXPORT2
-uplug_closeLibrary(void *lib, UErrorCode *status) {
+U_CAPI ଶୂନ୍ୟ U_EXPORT2
+uplug_closeLibrary(ଶୂନ୍ୟ *lib, UErrorCode *status) {
   int32_t i;
     
-#if UPLUG_TRACE
-  DBG((stderr, "uplug_closeLibrary(%p,%s) list %p\n", lib, u_errorName(*status), (void*)libraryList));
+#ଯଦି UPLUG_TRACE
+  DBG((stderr, "uplug_closeLibrary(%p,%s) list %p\n", lib, u_errorName(*status), (ଶୂନ୍ୟ*)libraryList));
 #endif
-  if(U_FAILURE(*status)) return;
+  ଯଦି(U_FAILURE(*status)) ଫେରନ୍ତୁ;
     
-  for(i=0;i<libraryCount;i++) {
-    if(lib==libraryList[i].lib) {
-      if(--(libraryList[i].ref) == 0) {
+  ପାଇଁ(i=0;i<library_ଗଣନା;i++) {
+    ଯଦି(lib==libraryList[i].lib) {
+      ଯଦି(--(libraryList[i].ref) == 0) {
         uprv_dl_close(libraryList[i].lib, status);
-        libraryCount = uplug_removeEntryAt(libraryList, libraryCount, sizeof(*libraryList), i);
+        library_ଗଣନା = uplug_removeEntryAt(libraryList, library_ଗଣନା, ଆକାର(*libraryList), i);
       }
-      return;
+      ଫେରନ୍ତୁ;
     }
   }
   *status = U_INTERNAL_PROGRAM_ERROR; /* could not find the entry! */
@@ -232,36 +232,36 @@ uplug_closeLibrary(void *lib, UErrorCode *status) {
 
 #endif
 
-static UPlugData pluginList[UPLUG_PLUGIN_INITIAL_COUNT];
-static int32_t pluginCount = 0;
+ସ୍ଥିର UPlugData pluginList[UPLUG_PLUGIN_INITIAL_ଗଣନା];
+ସ୍ଥିର int32_t plugin_ଗଣନା = 0;
 
 
 
   
-static int32_t uplug_pluginNumber(UPlugData* d) {
-  UPlugData *pastPlug = &pluginList[pluginCount];
-  if(d<=pluginList) {
-    return 0;
-  } else if(d>=pastPlug) {
-    return pluginCount;
-  } else {
-    return (d-pluginList)/sizeof(pluginList[0]);
+ସ୍ଥିର int32_t uplug_plugin_ସଂଖ୍ୟା(UPlugData* d) {
+  UPlugData *pastPlug = &pluginList[plugin_ଗଣନା];
+  ଯଦି(d<=pluginList) {
+    ଫେରନ୍ତୁ 0;
+  } ଅନ୍ୟଥା ଯଦି(d>=pastPlug) {
+    ଫେରନ୍ତୁ plugin_ଗଣନା;
+  } ଅନ୍ୟଥା {
+    ଫେରନ୍ତୁ (d-pluginList)/ଆକାର(pluginList[0]);
   }
 }
 
 
 U_CAPI UPlugData * U_EXPORT2
 uplug_nextPlug(UPlugData *prior) {
-  if(prior==nullptr) {
-    return pluginList;
-  } else {
+  ଯଦି(prior==nullptr) {
+    ଫେରନ୍ତୁ pluginList;
+  } ଅନ୍ୟଥା {
     UPlugData *nextPlug = &prior[1];
-    UPlugData *pastPlug = &pluginList[pluginCount];
+    UPlugData *pastPlug = &pluginList[plugin_ଗଣନା];
     
-    if(nextPlug>=pastPlug) {
-      return nullptr;
-    } else {
-      return nextPlug;
+    ଯଦି(nextPlug>=pastPlug) {
+      ଫେରନ୍ତୁ nullptr;
+    } ଅନ୍ୟଥା {
+      ଫେରନ୍ତୁ nextPlug;
     }
   }
 }
@@ -271,84 +271,84 @@ uplug_nextPlug(UPlugData *prior) {
 /**
  * Call the plugin with some params
  */
-static void uplug_callPlug(UPlugData *plug, UPlugReason reason, UErrorCode *status) {
+ସ୍ଥିର ଶୂନ୍ୟ uplug_callPlug(UPlugData *plug, UPlugReason reason, UErrorCode *status) {
   UPlugTokenReturn token;
-  if(plug==nullptr||U_FAILURE(*status)) {
-    return;
+  ଯଦି(plug==nullptr||U_FAILURE(*status)) {
+    ଫେରନ୍ତୁ;
   }
   token = (*(plug->entrypoint))(plug, reason, status);
-  if(token!=UPLUG_TOKEN) {
+  ଯଦି(token!=UPLUG_TOKEN) {
     *status = U_INTERNAL_PROGRAM_ERROR;
   }
 }
 
 
-static void uplug_unloadPlug(UPlugData *plug, UErrorCode *status) {
-  if(plug->awaitingLoad) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
+ସ୍ଥିର ଶୂନ୍ୟ uplug_unloadPlug(UPlugData *plug, UErrorCode *status) {
+  ଯଦି(plug->awaitingLoad) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
     *status = U_INTERNAL_PROGRAM_ERROR;
-    return; 
+    ଫେରନ୍ତୁ; 
   }
-  if(U_SUCCESS(plug->pluginStatus)) {
+  ଯଦି(U_SUCCESS(plug->pluginStatus)) {
     /* Don't unload a plug which has a failing load status - means it didn't actually load. */
     uplug_callPlug(plug, UPLUG_REASON_UNLOAD, status);
   }
 }
 
-static void uplug_queryPlug(UPlugData *plug, UErrorCode *status) {
-  if(!plug->awaitingLoad || !(plug->level == UPLUG_LEVEL_UNKNOWN) ) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
+ସ୍ଥିର ଶୂନ୍ୟ uplug_queryPlug(UPlugData *plug, UErrorCode *status) {
+  ଯଦି(!plug->awaitingLoad || !(plug->level == UPLUG_LEVEL_UNKNOWN) ) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
     *status = U_INTERNAL_PROGRAM_ERROR;
-    return; 
+    ଫେରନ୍ତୁ; 
   }
   plug->level = UPLUG_LEVEL_INVALID;
   uplug_callPlug(plug, UPLUG_REASON_QUERY, status);
-  if(U_SUCCESS(*status)) { 
-    if(plug->level == UPLUG_LEVEL_INVALID) {
+  ଯଦି(U_SUCCESS(*status)) { 
+    ଯଦି(plug->level == UPLUG_LEVEL_INVALID) {
       plug->pluginStatus = U_PLUGIN_DIDNT_SET_LEVEL;
-      plug->awaitingLoad = false;
+      plug->awaitingLoad = ମିଥ୍ୟା;
     }
-  } else {
+  } ଅନ୍ୟଥା {
     plug->pluginStatus = U_INTERNAL_PROGRAM_ERROR;
-    plug->awaitingLoad = false;
+    plug->awaitingLoad = ମିଥ୍ୟା;
   }
 }
 
 
-static void uplug_loadPlug(UPlugData *plug, UErrorCode *status) {
-  if(U_FAILURE(*status)) {
-    return;
+ସ୍ଥିର ଶୂନ୍ୟ uplug_loadPlug(UPlugData *plug, UErrorCode *status) {
+  ଯଦି(U_FAILURE(*status)) {
+    ଫେରନ୍ତୁ;
   }
-  if(!plug->awaitingLoad || (plug->level < UPLUG_LEVEL_LOW) ) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
+  ଯଦି(!plug->awaitingLoad || (plug->level < UPLUG_LEVEL_ତଳ) ) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
     *status = U_INTERNAL_PROGRAM_ERROR;
-    return;
+    ଫେରନ୍ତୁ;
   }
   uplug_callPlug(plug, UPLUG_REASON_LOAD, status);
-  plug->awaitingLoad = false;
-  if(!U_SUCCESS(*status)) {
+  plug->awaitingLoad = ମିଥ୍ୟା;
+  ଯଦି(!U_SUCCESS(*status)) {
     plug->pluginStatus = U_INTERNAL_PROGRAM_ERROR;
   }
 }
 
-static UPlugData *uplug_allocateEmptyPlug(UErrorCode *status)
+ସ୍ଥିର UPlugData *uplug_allocateEmptyPlug(UErrorCode *status)
 {
   UPlugData *plug = nullptr;
 
-  if(U_FAILURE(*status)) {
-    return nullptr;
+  ଯଦି(U_FAILURE(*status)) {
+    ଫେରନ୍ତୁ nullptr;
   }
 
-  if(pluginCount == UPLUG_PLUGIN_INITIAL_COUNT) {
+  ଯଦି(plugin_ଗଣନା == UPLUG_PLUGIN_INITIAL_ଗଣନା) {
     *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    ଫେରନ୍ତୁ nullptr;
   }
 
-  plug = &pluginList[pluginCount++];
+  plug = &pluginList[plugin_ଗଣନା++];
 
   plug->token = UPLUG_TOKEN;
-  plug->structSize = sizeof(UPlugData);
+  plug->structSize = ଆକାର(UPlugData);
   plug->name[0]=0;
   plug->level = UPLUG_LEVEL_UNKNOWN; /* initialize to null state */
-  plug->awaitingLoad = true;
-  plug->dontUnload = false;
+  plug->awaitingLoad = ସତ୍ୟ;
+  plug->dontUnload = ମିଥ୍ୟା;
   plug->pluginStatus = U_ZERO_ERROR;
   plug->libName[0] = 0;
   plug->config[0]=0;
@@ -357,25 +357,25 @@ static UPlugData *uplug_allocateEmptyPlug(UErrorCode *status)
   plug->entrypoint=nullptr;
 
 
-  return plug;
+  ଫେରନ୍ତୁ plug;
 }
 
-static UPlugData *uplug_allocatePlug(UPlugEntrypoint *entrypoint, const char *config, void *lib, const char *symName,
+ସ୍ଥିର UPlugData *uplug_allocatePlug(UPlugEntrypoint *entrypoint, ଅଚଳ ଅକ୍ଷର *config, ଶୂନ୍ୟ *lib, ଅଚଳ ଅକ୍ଷର *symName,
                                      UErrorCode *status) {
   UPlugData *plug = uplug_allocateEmptyPlug(status);
-  if(U_FAILURE(*status)) {
-    return nullptr;
+  ଯଦି(U_FAILURE(*status)) {
+    ଫେରନ୍ତୁ nullptr;
   }
 
-  if(config!=nullptr) {
+  ଯଦି(config!=nullptr) {
     uprv_strncpy(plug->config, config, UPLUG_NAME_MAX);
-  } else {
+  } ଅନ୍ୟଥା {
     plug->config[0] = 0;
   }
     
-  if(symName!=nullptr) {
+  ଯଦି(symName!=nullptr) {
     uprv_strncpy(plug->sym, symName, UPLUG_NAME_MAX);
-  } else {
+  } ଅନ୍ୟଥା {
     plug->sym[0] = 0;
   }
     
@@ -383,50 +383,50 @@ static UPlugData *uplug_allocatePlug(UPlugEntrypoint *entrypoint, const char *co
   plug->lib = lib;
   uplug_queryPlug(plug, status);
     
-  return plug;
+  ଫେରନ୍ତୁ plug;
 }
 
-static void uplug_deallocatePlug(UPlugData *plug, UErrorCode *status) {
+ସ୍ଥିର ଶୂନ୍ୟ uplug_deallocatePlug(UPlugData *plug, UErrorCode *status) {
   UErrorCode subStatus = U_ZERO_ERROR;
-  if(!plug->dontUnload) {
-#if U_ENABLE_DYLOAD
+  ଯଦି(!plug->dontUnload) {
+#ଯଦି U_ENABLE_DYLOAD
     uplug_closeLibrary(plug->lib, &subStatus);
 #endif
   }
   plug->lib = nullptr;
-  if(U_SUCCESS(*status) && U_FAILURE(subStatus)) {
+  ଯଦି(U_SUCCESS(*status) && U_FAILURE(subStatus)) {
     *status = subStatus;
   }
   /* shift plugins up and decrement count. */
-  if(U_SUCCESS(*status)) {
+  ଯଦି(U_SUCCESS(*status)) {
     /* all ok- remove. */
-    pluginCount = uplug_removeEntryAt(pluginList, pluginCount, sizeof(plug[0]), uplug_pluginNumber(plug));
-  } else {
+    plugin_ଗଣନା = uplug_removeEntryAt(pluginList, plugin_ଗଣନା, ଆକାର(plug[0]), uplug_plugin_ସଂଖ୍ୟା(plug));
+  } ଅନ୍ୟଥା {
     /* not ok- leave as a message. */
-    plug->awaitingLoad=false;
+    plug->awaitingLoad=ମିଥ୍ୟା;
     plug->entrypoint=0;
-    plug->dontUnload=true;
+    plug->dontUnload=ସତ୍ୟ;
   }
 }
 
-static void uplug_doUnloadPlug(UPlugData *plugToRemove, UErrorCode *status) {
-  if(plugToRemove != nullptr) {
+ସ୍ଥିର ଶୂନ୍ୟ uplug_doUnloadPlug(UPlugData *plugToRemove, UErrorCode *status) {
+  ଯଦି(plugToRemove != nullptr) {
     uplug_unloadPlug(plugToRemove, status);
     uplug_deallocatePlug(plugToRemove, status);
   }
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ଶୂନ୍ୟ U_EXPORT2
 uplug_removePlug(UPlugData *plug, UErrorCode *status)  {
   UPlugData *cursor = nullptr;
   UPlugData *plugToRemove = nullptr;
-  if(U_FAILURE(*status)) return;
+  ଯଦି(U_FAILURE(*status)) ଫେରନ୍ତୁ;
     
-  for(cursor=pluginList;cursor!=nullptr;) {
-    if(cursor==plug) {
+  ପାଇଁ(cursor=pluginList;cursor!=nullptr;) {
+    ଯଦି(cursor==plug) {
       plugToRemove = plug;
       cursor=nullptr;
-    } else {
+    } ଅନ୍ୟଥା {
       cursor = uplug_nextPlug(cursor);
     }
   }
@@ -437,14 +437,14 @@ uplug_removePlug(UPlugData *plug, UErrorCode *status)  {
 
 
 
-U_CAPI void U_EXPORT2 
+U_CAPI ଶୂନ୍ୟ U_EXPORT2 
 uplug_setPlugNoUnload(UPlugData *data, UBool dontUnload)
 {
   data->dontUnload = dontUnload;
 }
 
 
-U_CAPI void U_EXPORT2
+U_CAPI ଶୂନ୍ୟ U_EXPORT2
 uplug_setPlugLevel(UPlugData *data, UPlugLevel level) {
   data->level = level;
 }
@@ -452,74 +452,74 @@ uplug_setPlugLevel(UPlugData *data, UPlugLevel level) {
 
 U_CAPI UPlugLevel U_EXPORT2
 uplug_getPlugLevel(UPlugData *data) {
-  return data->level;
+  ଫେରନ୍ତୁ data->level;
 }
 
 
-U_CAPI void U_EXPORT2
-uplug_setPlugName(UPlugData *data, const char *name) {
+U_CAPI ଶୂନ୍ୟ U_EXPORT2
+uplug_setPlugName(UPlugData *data, ଅଚଳ ଅକ୍ଷର *name) {
   uprv_strncpy(data->name, name, UPLUG_NAME_MAX);
 }
 
 
-U_CAPI const char* U_EXPORT2
+U_CAPI ଅଚଳ ଅକ୍ଷର* U_EXPORT2
 uplug_getPlugName(UPlugData* data U_LIFETIME_BOUND) {
-  return data->name;
+  ଫେରନ୍ତୁ data->name;
 }
 
 
-U_CAPI const char* U_EXPORT2
-uplug_getSymbolName(UPlugData* data U_LIFETIME_BOUND) {
-  return data->sym;
+U_CAPI ଅଚଳ ଅକ୍ଷର* U_EXPORT2
+uplug_get_ପ୍ରତୀକ_Name(UPlugData* data U_LIFETIME_BOUND) {
+  ଫେରନ୍ତୁ data->sym;
 }
 
-U_CAPI const char* U_EXPORT2
+U_CAPI ଅଚଳ ଅକ୍ଷର* U_EXPORT2
 uplug_getLibraryName(UPlugData* data U_LIFETIME_BOUND, UErrorCode* status) {
-  if(data->libName[0]) {
-    return data->libName;
-  } else {
-#if U_ENABLE_DYLOAD
-    return uplug_findLibrary(data->lib, status);
-#else
-    return nullptr;
+  ଯଦି(data->libName[0]) {
+    ଫେରନ୍ତୁ data->libName;
+  } ଅନ୍ୟଥା {
+#ଯଦି U_ENABLE_DYLOAD
+    ଫେରନ୍ତୁ uplug_findLibrary(data->lib, status);
+#ଅନ୍ୟଥା
+    ଫେରନ୍ତୁ nullptr;
 #endif
   }
 }
 
-U_CAPI void * U_EXPORT2
+U_CAPI ଶୂନ୍ୟ * U_EXPORT2
 uplug_getLibrary(UPlugData *data) {
-  return data->lib;
+  ଫେରନ୍ତୁ data->lib;
 }
 
-U_CAPI void * U_EXPORT2
+U_CAPI ଶୂନ୍ୟ * U_EXPORT2
 uplug_getContext(UPlugData *data) {
-  return data->context;
+  ଫେରନ୍ତୁ data->context;
 }
 
 
-U_CAPI void U_EXPORT2
-uplug_setContext(UPlugData *data, void *context) {
+U_CAPI ଶୂନ୍ୟ U_EXPORT2
+uplug_setContext(UPlugData *data, ଶୂନ୍ୟ *context) {
   data->context = context;
 }
 
-U_CAPI const char* U_EXPORT2
+U_CAPI ଅଚଳ ଅକ୍ଷର* U_EXPORT2
 uplug_getConfiguration(UPlugData* data U_LIFETIME_BOUND) {
-  return data->config;
+  ଫେରନ୍ତୁ data->config;
 }
 
 U_CAPI UPlugData* U_EXPORT2
 uplug_getPlugInternal(int32_t n) { 
-  if(n <0 || n >= pluginCount) {
-    return nullptr;
-  } else { 
-    return &(pluginList[n]);
+  ଯଦି(n <0 || n >= plugin_ଗଣନା) {
+    ଫେରନ୍ତୁ nullptr;
+  } ଅନ୍ୟଥା { 
+    ଫେରନ୍ତୁ &(pluginList[n]);
   }
 }
 
 
 U_CAPI UErrorCode U_EXPORT2
 uplug_getPlugLoadStatus(UPlugData *plug) {
-  return plug->pluginStatus;
+  ଫେରନ୍ତୁ plug->pluginStatus;
 }
 
 
@@ -528,222 +528,222 @@ uplug_getPlugLoadStatus(UPlugData *plug) {
 /**
  * Initialize a plugin from an entrypoint and library - but don't load it.
  */
-static UPlugData* uplug_initPlugFromEntrypointAndLibrary(UPlugEntrypoint *entrypoint, const char *config, void *lib, const char *sym,
+ସ୍ଥିର UPlugData* uplug_initPlugFromEntrypointAndLibrary(UPlugEntrypoint *entrypoint, ଅଚଳ ଅକ୍ଷର *config, ଶୂନ୍ୟ *lib, ଅଚଳ ଅକ୍ଷର *sym,
                                                          UErrorCode *status) {
   UPlugData *plug = nullptr;
 
   plug = uplug_allocatePlug(entrypoint, config, lib, sym, status);
 
-  if(U_SUCCESS(*status)) {
-    return plug;
-  } else {
+  ଯଦି(U_SUCCESS(*status)) {
+    ଫେରନ୍ତୁ plug;
+  } ଅନ୍ୟଥା {
     uplug_deallocatePlug(plug, status);
-    return nullptr;
+    ଫେରନ୍ତୁ nullptr;
   }
 }
 
 U_CAPI UPlugData* U_EXPORT2
-uplug_loadPlugFromEntrypoint(UPlugEntrypoint *entrypoint, const char *config, UErrorCode *status) {
+uplug_loadPlugFromEntrypoint(UPlugEntrypoint *entrypoint, ଅଚଳ ଅକ୍ଷର *config, UErrorCode *status) {
   UPlugData* plug = uplug_initPlugFromEntrypointAndLibrary(entrypoint, config, nullptr, nullptr, status);
   uplug_loadPlug(plug, status);
-  return plug;
+  ଫେରନ୍ତୁ plug;
 }
 
-#if U_ENABLE_DYLOAD
+#ଯଦି U_ENABLE_DYLOAD
 
-static UPlugData* 
-uplug_initErrorPlug(const char *libName, const char *sym, const char *config, const char *nameOrError, UErrorCode loadStatus, UErrorCode *status)
+ସ୍ଥିର UPlugData* 
+uplug_initErrorPlug(ଅଚଳ ଅକ୍ଷର *libName, ଅଚଳ ଅକ୍ଷର *sym, ଅଚଳ ଅକ୍ଷର *config, ଅଚଳ ଅକ୍ଷର *nameOrError, UErrorCode loadStatus, UErrorCode *status)
 {
   UPlugData *plug = uplug_allocateEmptyPlug(status);
-  if(U_FAILURE(*status)) return nullptr;
+  ଯଦି(U_FAILURE(*status)) ଫେରନ୍ତୁ nullptr;
 
   plug->pluginStatus = loadStatus;
-  plug->awaitingLoad = false; /* Won't load. */
-  plug->dontUnload = true; /* cannot unload. */
+  plug->awaitingLoad = ମିଥ୍ୟା; /* Won't load. */
+  plug->dontUnload = ସତ୍ୟ; /* cannot unload. */
 
-  if(sym!=nullptr) {
+  ଯଦି(sym!=nullptr) {
     uprv_strncpy(plug->sym, sym, UPLUG_NAME_MAX);
   }
 
-  if(libName!=nullptr) {
+  ଯଦି(libName!=nullptr) {
     uprv_strncpy(plug->libName, libName, UPLUG_NAME_MAX);
   }
 
-  if(nameOrError!=nullptr) {
+  ଯଦି(nameOrError!=nullptr) {
     uprv_strncpy(plug->name, nameOrError, UPLUG_NAME_MAX);
   }
 
-  if(config!=nullptr) {
+  ଯଦି(config!=nullptr) {
     uprv_strncpy(plug->config, config, UPLUG_NAME_MAX);
   }
 
-  return plug;
+  ଫେରନ୍ତୁ plug;
 }
 
 /**
  * Fetch a plugin from DLL, and then initialize it from a library- but don't load it.
  */
-static UPlugData* 
-uplug_initPlugFromLibrary(const char *libName, const char *sym, const char *config, UErrorCode *status) {
-  void *lib = nullptr;
+ସ୍ଥିର UPlugData* 
+uplug_initPlugFromLibrary(ଅଚଳ ଅକ୍ଷର *libName, ଅଚଳ ଅକ୍ଷର *sym, ଅଚଳ ଅକ୍ଷର *config, UErrorCode *status) {
+  ଶୂନ୍ୟ *lib = nullptr;
   UPlugData *plug = nullptr;
-  if(U_FAILURE(*status)) { return nullptr; }
+  ଯଦି(U_FAILURE(*status)) { ଫେରନ୍ତୁ nullptr; }
   lib = uplug_openLibrary(libName, status);
-  if(lib!=nullptr && U_SUCCESS(*status)) {
+  ଯଦି(lib!=nullptr && U_SUCCESS(*status)) {
     UPlugEntrypoint *entrypoint = nullptr;
     entrypoint = (UPlugEntrypoint*)uprv_dlsym_func(lib, sym, status);
 
-    if(entrypoint!=nullptr&&U_SUCCESS(*status)) {
+    ଯଦି(entrypoint!=nullptr&&U_SUCCESS(*status)) {
       plug = uplug_initPlugFromEntrypointAndLibrary(entrypoint, config, lib, sym, status);
-      if(plug!=nullptr&&U_SUCCESS(*status)) {
+      ଯଦି(plug!=nullptr&&U_SUCCESS(*status)) {
         plug->lib = lib; /* plug takes ownership of library */
         lib = nullptr; /* library is now owned by plugin. */
       }
-    } else {
+    } ଅନ୍ୟଥା {
       UErrorCode subStatus = U_ZERO_ERROR;
       plug = uplug_initErrorPlug(libName,sym,config,"ERROR: Could not load entrypoint",(lib==nullptr)?U_MISSING_RESOURCE_ERROR:*status,&subStatus);
     }
-    if(lib!=nullptr) { /* still need to close the lib */
+    ଯଦି(lib!=nullptr) { /* still need to close the lib */
       UErrorCode subStatus = U_ZERO_ERROR;
       uplug_closeLibrary(lib, &subStatus); /* don't care here */
     }
-  } else {
+  } ଅନ୍ୟଥା {
     UErrorCode subStatus = U_ZERO_ERROR;
     plug = uplug_initErrorPlug(libName,sym,config,"ERROR: could not load library",(lib==nullptr)?U_MISSING_RESOURCE_ERROR:*status,&subStatus);
   }
-  return plug;
+  ଫେରନ୍ତୁ plug;
 }
 
 U_CAPI UPlugData* U_EXPORT2
-uplug_loadPlugFromLibrary(const char *libName, const char *sym, const char *config, UErrorCode *status) { 
+uplug_loadPlugFromLibrary(ଅଚଳ ଅକ୍ଷର *libName, ଅଚଳ ଅକ୍ଷର *sym, ଅଚଳ ଅକ୍ଷର *config, UErrorCode *status) { 
   UPlugData *plug = nullptr;
-  if(U_FAILURE(*status)) { return nullptr; }
+  ଯଦି(U_FAILURE(*status)) { ଫେରନ୍ତୁ nullptr; }
   plug = uplug_initPlugFromLibrary(libName, sym, config, status);
   uplug_loadPlug(plug, status);
 
-  return plug;
+  ଫେରନ୍ତୁ plug;
 }
 
 #endif
 
-static UPlugLevel gCurrentLevel = UPLUG_LEVEL_LOW;
+ସ୍ଥିର UPlugLevel gCurrentLevel = UPLUG_LEVEL_ତଳ;
 
 U_CAPI UPlugLevel U_EXPORT2 uplug_getCurrentLevel() {
-  return gCurrentLevel;
+  ଫେରନ୍ତୁ gCurrentLevel;
 }
 
-static UBool U_CALLCONV uplug_cleanup()
+ସ୍ଥିର UBool U_CALLCONV uplug_cleanup()
 {
   int32_t i;
     
   UPlugData *pluginToRemove;
   /* cleanup plugs */
-  for(i=0;i<pluginCount;i++) {
+  ପାଇଁ(i=0;i<plugin_ଗଣନା;i++) {
     UErrorCode subStatus = U_ZERO_ERROR;
     pluginToRemove = &pluginList[i];
     /* unload and deallocate */
     uplug_doUnloadPlug(pluginToRemove, &subStatus);
   }
   /* close other held libs? */
-  gCurrentLevel = UPLUG_LEVEL_LOW;
-  return true;
+  gCurrentLevel = UPLUG_LEVEL_ତଳ;
+  ଫେରନ୍ତୁ ସତ୍ୟ;
 }
 
-#if U_ENABLE_DYLOAD
+#ଯଦି U_ENABLE_DYLOAD
 
-static void uplug_loadWaitingPlugs(UErrorCode *status) {
+ସ୍ଥିର ଶୂନ୍ୟ uplug_loadWaitingPlugs(UErrorCode *status) {
   int32_t i;
   UPlugLevel currentLevel = uplug_getCurrentLevel();
     
-  if(U_FAILURE(*status)) {
-    return;
+  ଯଦି(U_FAILURE(*status)) {
+    ଫେରନ୍ତୁ;
   }
-#if UPLUG_TRACE
+#ଯଦି UPLUG_TRACE
   DBG((stderr,  "uplug_loadWaitingPlugs() Level: %d\n", currentLevel));
 #endif
   /* pass #1: low level plugs */
-  for(i=0;i<pluginCount;i++) {
+  ପାଇଁ(i=0;i<plugin_ଗଣନା;i++) {
     UErrorCode subStatus = U_ZERO_ERROR;
     UPlugData *pluginToLoad = &pluginList[i];
-    if(pluginToLoad->awaitingLoad) {
-      if(pluginToLoad->level == UPLUG_LEVEL_LOW) {
-        if(currentLevel > UPLUG_LEVEL_LOW) {
-          pluginToLoad->pluginStatus = U_PLUGIN_TOO_HIGH;
-        } else {
+    ଯଦି(pluginToLoad->awaitingLoad) {
+      ଯଦି(pluginToLoad->level == UPLUG_LEVEL_ତଳ) {
+        ଯଦି(currentLevel > UPLUG_LEVEL_ତଳ) {
+          pluginToLoad->pluginStatus = U_PLUGIN_TOO_ଉପର;
+        } ଅନ୍ୟଥା {
           UPlugLevel newLevel;
           uplug_loadPlug(pluginToLoad, &subStatus);
           newLevel = uplug_getCurrentLevel();
-          if(newLevel > currentLevel) {
+          ଯଦି(newLevel > currentLevel) {
             pluginToLoad->pluginStatus = U_PLUGIN_CHANGED_LEVEL_WARNING;
             currentLevel = newLevel;
           }
         }
-        pluginToLoad->awaitingLoad = false;
+        pluginToLoad->awaitingLoad = ମିଥ୍ୟା;
       } 
     }
   }    
-  for(i=0;i<pluginCount;i++) {
+  ପାଇଁ(i=0;i<plugin_ଗଣନା;i++) {
     UErrorCode subStatus = U_ZERO_ERROR;
     UPlugData *pluginToLoad = &pluginList[i];
         
-    if(pluginToLoad->awaitingLoad) {
-      if(pluginToLoad->level == UPLUG_LEVEL_INVALID) { 
+    ଯଦି(pluginToLoad->awaitingLoad) {
+      ଯଦି(pluginToLoad->level == UPLUG_LEVEL_INVALID) { 
         pluginToLoad->pluginStatus = U_PLUGIN_DIDNT_SET_LEVEL;
-      } else if(pluginToLoad->level == UPLUG_LEVEL_UNKNOWN) {
+      } ଅନ୍ୟଥା ଯଦି(pluginToLoad->level == UPLUG_LEVEL_UNKNOWN) {
         pluginToLoad->pluginStatus = U_INTERNAL_PROGRAM_ERROR;
-      } else {
+      } ଅନ୍ୟଥା {
         uplug_loadPlug(pluginToLoad, &subStatus);
       }
-      pluginToLoad->awaitingLoad = false;
+      pluginToLoad->awaitingLoad = ମିଥ୍ୟା;
     }
   }
     
-#if UPLUG_TRACE
+#ଯଦି UPLUG_TRACE
   DBG((stderr,  " Done Loading Plugs. Level: %d\n", (int32_t)uplug_getCurrentLevel()));
 #endif
 }
 
 /* Name of the plugin config file */
-static char plugin_file[2048] = "";
+ସ୍ଥିର ଅକ୍ଷର plugin_file[2048] = "";
 #endif
 
-U_CAPI const char* U_EXPORT2
+U_CAPI ଅଚଳ ଅକ୍ଷର* U_EXPORT2
 uplug_getPluginFile() {
-#if U_ENABLE_DYLOAD && !UCONFIG_NO_FILE_IO
-  return plugin_file;
-#else
-  return nullptr;
+#ଯଦି U_ENABLE_DYLOAD && !UCONFIG_NO_FILE_IO
+  ଫେରନ୍ତୁ plugin_file;
+#ଅନ୍ୟଥା
+  ଫେରନ୍ତୁ nullptr;
 #endif
 }
 
 
 //  uplug_init()  is called first thing from u_init().
 
-U_CAPI void U_EXPORT2
+U_CAPI ଶୂନ୍ୟ U_EXPORT2
 uplug_init(UErrorCode *status) {
-#if !U_ENABLE_DYLOAD
-  (void)status; /* unused */
-#elif !UCONFIG_NO_FILE_IO
+#ଯଦି !U_ENABLE_DYLOAD
+  (ଶୂନ୍ୟ)status; /* unused */
+#ନଚେତଯଦି !UCONFIG_NO_FILE_IO
   CharString plugin_dir;
-  const char *env = getenv("ICU_PLUGINS");
+  ଅଚଳ ଅକ୍ଷର *env = getenv("ICU_PLUGINS");
 
-  if(U_FAILURE(*status)) return;
-  if(env != nullptr) {
+  ଯଦି(U_FAILURE(*status)) ଫେରନ୍ତୁ;
+  ଯଦି(env != nullptr) {
     plugin_dir.append(env, -1, *status);
   }
-  if(U_FAILURE(*status)) return;
+  ଯଦି(U_FAILURE(*status)) ଫେରନ୍ତୁ;
 
-#if defined(DEFAULT_ICU_PLUGINS) 
-  if(plugin_dir.isEmpty()) {
+#ଯଦି defined(DEFAULT_ICU_PLUGINS) 
+  ଯଦି(plugin_dir.isEmpty()) {
     plugin_dir.append(DEFAULT_ICU_PLUGINS, -1, *status);
   }
 #endif
 
-#if UPLUG_TRACE
+#ଯଦି UPLUG_TRACE
   DBG((stderr, "ICU_PLUGINS=%s\n", plugin_dir.data()));
 #endif
 
-  if(!plugin_dir.isEmpty()) {
+  ଯଦି(!plugin_dir.isEmpty()) {
     FILE *f;
         
     CharString pluginFile;
@@ -756,7 +756,7 @@ uplug_init(UErrorCode *status) {
 /* DDNAME can be connected to a file in the HFS if need be.                          */
 
     pluginFile.append("//DD:ICUPLUG", -1, *status);        /* JAM 20 Oct 2011 */
-#else
+#ଅନ୍ୟଥା
     pluginFile.append(plugin_dir, *status);
     pluginFile.append(U_FILE_SEP_STRING, -1, *status);
     pluginFile.append("icuplugins", -1, *status);
@@ -764,88 +764,88 @@ uplug_init(UErrorCode *status) {
     pluginFile.append(".txt", -1, *status);
 #endif
 
-#if UPLUG_TRACE
+#ଯଦି UPLUG_TRACE
     DBG((stderr, "status=%s\n", u_errorName(*status)));
 #endif
 
-    if(U_FAILURE(*status)) {
-      return;
+    ଯଦି(U_FAILURE(*status)) {
+      ଫେରନ୍ତୁ;
     }
-    if((size_t)pluginFile.length() > (sizeof(plugin_file)-1)) {
+    ଯଦି((size_t)pluginFile.length() > (ଆକାର(plugin_file)-1)) {
       *status = U_BUFFER_OVERFLOW_ERROR;
-#if UPLUG_TRACE
+#ଯଦି UPLUG_TRACE
       DBG((stderr, "status=%s\n", u_errorName(*status)));
 #endif
-      return;
+      ଫେରନ୍ତୁ;
     }
     
     /* plugin_file is not used for processing - it is only used 
        so that uplug_getPluginFile() works (i.e. icuinfo)
     */
-    pluginFile.extract(plugin_file, sizeof(plugin_file), *status);
+    pluginFile.extract(plugin_file, ଆକାର(plugin_file), *status);
 
-#if UPLUG_TRACE
-    DBG((stderr, "pluginfile= %s len %d/%d\n", plugin_file, (int)strlen(plugin_file), (int)sizeof(plugin_file)));
+#ଯଦି UPLUG_TRACE
+    DBG((stderr, "pluginfile= %s len %d/%d\n", plugin_file, (ପୂର୍ଣ୍ଣସଂଖ୍ୟା)strlen(plugin_file), (ପୂର୍ଣ୍ଣସଂଖ୍ୟା)ଆକାର(plugin_file)));
 #endif
         
 #ifdef __MVS__
-    if (iscics()) /* 12 Nov 2011 JAM */
+    ଯଦି (iscics()) /* 12 Nov 2011 JAM */
     {
         f = nullptr;
     }
-    else
+    ଅନ୍ୟଥା
 #endif
     {
         f = fopen(pluginFile.data(), "r");
     }
 
-    if(f != nullptr) {
-      char linebuf[1024];
-      char *p, *libName=nullptr, *symName=nullptr, *config=nullptr;
-      int32_t line = 0;
+    ଯଦି(f != nullptr) {
+      ଅକ୍ଷର linebuf[1024];
+      ଅକ୍ଷର *p, *libName=nullptr, *symName=nullptr, *config=nullptr;
+      int32_t ଧାଡ଼ି = 0;
             
             
-      while(fgets(linebuf,1023,f)) {
-        line++;
+      ଯେତେବେଳେ(fgets(linebuf,1023,f)) {
+        ଧାଡ଼ି++;
 
-        if(!*linebuf || *linebuf=='#') {
-          continue;
-        } else {
+        ଯଦି(!*linebuf || *linebuf=='#') {
+          ଜାରି;
+        } ଅନ୍ୟଥା {
           p = linebuf;
-          while(*p&&isspace((int)*p))
+          ଯେତେବେଳେ(*p&&isspace((ପୂର୍ଣ୍ଣସଂଖ୍ୟା)*p))
             p++;
-          if(!*p || *p=='#') continue;
+          ଯଦି(!*p || *p=='#') ଜାରି;
           libName = p;
-          while(*p&&!isspace((int)*p)) {
+          ଯେତେବେଳେ(*p&&!isspace((ପୂର୍ଣ୍ଣସଂଖ୍ୟା)*p)) {
             p++;
           }
-          if(!*p || *p=='#') continue; /* no tab after libname */
+          ଯଦି(!*p || *p=='#') ଜାରି; /* no tab after libname */
           *p=0; /* end of libname */
           p++;
-          while(*p&&isspace((int)*p)) {
+          ଯେତେବେଳେ(*p&&isspace((ପୂର୍ଣ୍ଣସଂଖ୍ୟା)*p)) {
             p++;
           }
-          if(!*p||*p=='#') continue; /* no symname after libname +tab */
+          ଯଦି(!*p||*p=='#') ଜାରି; /* no symname after libname +tab */
           symName = p;
-          while(*p&&!isspace((int)*p)) {
+          ଯେତେବେଳେ(*p&&!isspace((ପୂର୍ଣ୍ଣସଂଖ୍ୟା)*p)) {
             p++;
           }
                     
-          if(*p) { /* has config */
+          ଯଦି(*p) { /* has config */
             *p=0;
             ++p;
-            while(*p&&isspace((int)*p)) {
+            ଯେତେବେଳେ(*p&&isspace((ପୂର୍ଣ୍ଣସଂଖ୍ୟା)*p)) {
               p++;
             }
-            if(*p) {
+            ଯଦି(*p) {
               config = p;
             }
           }
                     
           /* chop whitespace at the end of the config */
-          if(config!=nullptr&&*config!=0) {
+          ଯଦି(config!=nullptr&&*config!=0) {
             p = config+strlen(config);
-            while(p>config&&isspace((int)*(--p))) {
+            ଯେତେବେଳେ(p>config&&isspace((ପୂର୍ଣ୍ଣସଂଖ୍ୟା)*(--p))) {
               *p=0;
             }
           }
@@ -854,28 +854,28 @@ uplug_init(UErrorCode *status) {
           { 
             UErrorCode subStatus = U_ZERO_ERROR;
             UPlugData *plug = uplug_initPlugFromLibrary(libName, symName, config, &subStatus);
-            if(U_FAILURE(subStatus) && U_SUCCESS(*status)) {
+            ଯଦି(U_FAILURE(subStatus) && U_SUCCESS(*status)) {
               *status = subStatus;
             }
-#if UPLUG_TRACE
+#ଯଦି UPLUG_TRACE
             DBG((stderr, "PLUGIN libName=[%s], sym=[%s], config=[%s]\n", libName, symName, config));
-            DBG((stderr, " -> %p, %s\n", (void*)plug, u_errorName(subStatus)));
-#else
-            (void)plug; /* unused */
+            DBG((stderr, " -> %p, %s\n", (ଶୂନ୍ୟ*)plug, u_errorName(subStatus)));
+#ଅନ୍ୟଥା
+            (ଶୂନ୍ୟ)plug; /* unused */
 #endif
           }
         }
       }
       fclose(f);
-    } else {
-#if UPLUG_TRACE
+    } ଅନ୍ୟଥା {
+#ଯଦି UPLUG_TRACE
       DBG((stderr, "Can't open plugin file %s\n", plugin_file));
 #endif
     }
   }
   uplug_loadWaitingPlugs(status);
 #endif /* U_ENABLE_DYLOAD */
-  gCurrentLevel = UPLUG_LEVEL_HIGH;
+  gCurrentLevel = UPLUG_LEVEL_ଉପର;
   ucln_registerCleanup(UCLN_UPLUG, uplug_cleanup);
 }
 

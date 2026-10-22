@@ -13,20 +13,20 @@
 #ifndef __PLURAL_MAP_H__
 #define __PLURAL_MAP_H__
 
-#include "unicode/uobject.h"
-#include "cmemory.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/uobject.h"
+#ଅନ୍ତର୍ଭାଵ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
 class UnicodeString;
 
-class U_COMMON_API PluralMapBase : public UMemory {
-public:
+class U_COMMON_API PluralMapBase : ସର୍ବସାଧାରଣ UMemory {
+ସର୍ବସାଧାରଣ:
     /**
      * The names of all the plural categories. NONE is not an actual plural
      * category, but rather represents the absence of a plural category.
      */
-    enum Category {
+    ଗଣନା Category {
         NONE = -1,
         OTHER,
         ZERO,
@@ -34,7 +34,7 @@ public:
         TWO,
         FEW,
         MANY,
-        CATEGORY_COUNT
+        CATEGORY_ଗଣନା
     };
 
     /**
@@ -42,20 +42,20 @@ public:
      * or "other" to a category enum. Returns NONE for an unrecognized
      * category name.
      */
-    static Category toCategory(const char *categoryName);
+    ସ୍ଥିର Category toCategory(ଅଚଳ ଅକ୍ଷର *categoryName);
 
     /**
      * Converts a category name such as "zero", "one", "two", "few", "many"
      * or "other" to a category enum.  Returns NONE for unrecognized
      * category name.
      */
-    static Category toCategory(const UnicodeString &categoryName);
+    ସ୍ଥିର Category toCategory(ଅଚଳ UnicodeString &categoryName);
 
     /**
      * Converts a category to a name.
      * Passing NONE or CATEGORY_COUNT for category returns nullptr.
      */
-    static const char *getCategoryName(Category category);
+    ସ୍ଥିର ଅଚଳ ଅକ୍ଷର *getCategoryName(Category category);
 };
 
 /**
@@ -69,8 +69,8 @@ public:
  * 4) Must extend UMemory
  */
 template<typename T>
-class PluralMap : public PluralMapBase {
-public:
+class PluralMap : ସର୍ବସାଧାରଣ PluralMapBase {
+ସର୍ବସାଧାରଣ:
     /**
      * Other category is maps to a copy of the default value.
      */
@@ -81,39 +81,39 @@ public:
     /**
      * Other category is mapped to otherVariant.
      */
-    PluralMap(const T &otherVariant) : fOtherVariant(otherVariant) {
+    PluralMap(ଅଚଳ T &otherVariant) : fOtherVariant(otherVariant) {
         initializeNew();
     }
 
-    PluralMap(const PluralMap<T> &other) : fOtherVariant(other.fOtherVariant) {
+    PluralMap(ଅଚଳ PluralMap<T> &other) : fOtherVariant(other.fOtherVariant) {
         fVariants[0] = &fOtherVariant;
-        for (int32_t i = 1; i < UPRV_LENGTHOF(fVariants); ++i) {
+        ପାଇଁ (int32_t i = 1; i < UPRV_LENGTHOF(fVariants); ++i) {
             fVariants[i] = other.fVariants[i] ?
                     new T(*other.fVariants[i]) : nullptr;
         }
     }
 
-    PluralMap<T> &operator=(const PluralMap<T> &other) {
-        if (this == &other) {
-            return *this;
+    PluralMap<T> &operator=(ଅଚଳ PluralMap<T> &other) {
+        ଯଦି (this == &other) {
+            ଫେରନ୍ତୁ *this;
         }
-        for (int32_t i = 0; i < UPRV_LENGTHOF(fVariants); ++i) {
-            if (fVariants[i] != nullptr && other.fVariants[i] != nullptr) {
+        ପାଇଁ (int32_t i = 0; i < UPRV_LENGTHOF(fVariants); ++i) {
+            ଯଦି (fVariants[i] != nullptr && other.fVariants[i] != nullptr) {
                 *fVariants[i] = *other.fVariants[i];
-            } else if (fVariants[i] != nullptr) {
+            } ଅନ୍ୟଥା ଯଦି (fVariants[i] != nullptr) {
                 delete fVariants[i];
                 fVariants[i] = nullptr;
-            } else if (other.fVariants[i] != nullptr) {
+            } ଅନ୍ୟଥା ଯଦି (other.fVariants[i] != nullptr) {
                 fVariants[i] = new T(*other.fVariants[i]);
-            } else {
+            } ଅନ୍ୟଥା {
                 // do nothing
             }
         }
-        return *this;
+        ଫେରନ୍ତୁ *this;
     }
 
     ~PluralMap() {
-        for (int32_t i = 1; i < UPRV_LENGTHOF(fVariants); ++i) {
+        ପାଇଁ (int32_t i = 1; i < UPRV_LENGTHOF(fVariants); ++i) {
             delete fVariants[i];
         }
     }
@@ -121,9 +121,9 @@ public:
     /**
      * Removes all mappings and makes 'other' point to the default value.
      */
-    void clear() {
+    ଶୂନ୍ୟ clear() {
         *fVariants[0] = T();
-        for (int32_t i = 1; i < UPRV_LENGTHOF(fVariants); ++i) {
+        ପାଇଁ (int32_t i = 1; i < UPRV_LENGTHOF(fVariants); ++i) {
             delete fVariants[i];
             fVariants[i] = nullptr;
         }
@@ -136,33 +136,33 @@ public:
      * to getCategoryName() to get the name of the plural category.
      * When this function returns nullptr, index is CATEGORY_COUNT
      */
-    const T *next(Category &index) const {
+    ଅଚଳ T *next(Category &index) ଅଚଳ {
         int32_t idx = index;
         ++idx;
-        for (; idx < UPRV_LENGTHOF(fVariants); ++idx) {
-            if (fVariants[idx] != nullptr) {
+        ପାଇଁ (; idx < UPRV_LENGTHOF(fVariants); ++idx) {
+            ଯଦି (fVariants[idx] != nullptr) {
                 index = static_cast<Category>(idx);
-                return fVariants[idx];
+                ଫେରନ୍ତୁ fVariants[idx];
             }
         }
         index = static_cast<Category>(idx);
-        return nullptr;
+        ଫେରନ୍ତୁ nullptr;
     }
 
     /**
      * non const version of next.
      */
     T *nextMutable(Category &index) {
-        const T *result = next(index);
-        return const_cast<T *>(result);
+        ଅଚଳ T *result = next(index);
+        ଫେରନ୍ତୁ const_cast<T *>(result);
     }
 
     /**
      * Returns the 'other' variant.
      * Same as calling get(OTHER).
      */
-    const T &getOther() const {
-        return get(OTHER);
+    ଅଚଳ T &getOther() ଅଚଳ {
+        ଫେରନ୍ତୁ get(OTHER);
     }
 
     /**
@@ -170,28 +170,28 @@ public:
      * If no value found, or v is NONE or CATEGORY_COUNT, falls
      * back to returning the value for the 'other' category.
      */
-    const T &get(Category v) const {
+    ଅଚଳ T &get(Category v) ଅଚଳ {
         int32_t index = v;
-        if (index < 0 || index >= UPRV_LENGTHOF(fVariants) || fVariants[index] == nullptr) {
-            return *fVariants[0];
+        ଯଦି (index < 0 || index >= UPRV_LENGTHOF(fVariants) || fVariants[index] == nullptr) {
+            ଫେରନ୍ତୁ *fVariants[0];
         }
-        return *fVariants[index];
+        ଫେରନ୍ତୁ *fVariants[index];
     }
 
     /**
      * Convenience routine to get the value by category name. Otherwise
      * works just like get(Category).
      */
-    const T &get(const char *category) const {
-        return get(toCategory(category));
+    ଅଚଳ T &get(ଅଚଳ ଅକ୍ଷର *category) ଅଚଳ {
+        ଫେରନ୍ତୁ get(toCategory(category));
     }
 
     /**
      * Convenience routine to get the value by category name as a
      * UnicodeString. Otherwise works just like get(category).
      */
-    const T &get(const UnicodeString &category) const {
-        return get(toCategory(category));
+    ଅଚଳ T &get(ଅଚଳ UnicodeString &category) ଅଚଳ {
+        ଫେରନ୍ତୁ get(toCategory(category));
     }
 
     /**
@@ -207,7 +207,7 @@ public:
     T *getMutable(
             Category category,
             UErrorCode &status) {
-        return getMutable(category, nullptr, status);
+        ଫେରନ୍ତୁ getMutable(category, nullptr, status);
     }
 
     /**
@@ -216,9 +216,9 @@ public:
      * reports an error if the category name is invalid.
      */
     T *getMutable(
-            const char *category,
+            ଅଚଳ ଅକ୍ଷର *category,
             UErrorCode &status) {
-        return getMutable(toCategory(category), nullptr, status);
+        ଫେରନ୍ତୁ getMutable(toCategory(category), nullptr, status);
     }
 
     /**
@@ -228,60 +228,60 @@ public:
      */
     T *getMutableWithDefault(
             Category category,
-            const T &defaultValue,
+            ଅଚଳ T &default_ମୂଲ୍ୟ,
             UErrorCode &status) {
-        return getMutable(category, &defaultValue, status);
+        ଫେରନ୍ତୁ getMutable(category, &default_ମୂଲ୍ୟ, status);
     }
 
     /**
      * Returns true if this object equals rhs.
      */
     UBool equals(
-            const PluralMap<T> &rhs,
-            UBool (*eqFunc)(const T &, const T &)) const {
-        for (int32_t i = 0; i < UPRV_LENGTHOF(fVariants); ++i) {
-            if (fVariants[i] == rhs.fVariants[i]) {
-                continue;
+            ଅଚଳ PluralMap<T> &rhs,
+            UBool (*eqFunc)(ଅଚଳ T &, ଅଚଳ T &)) ଅଚଳ {
+        ପାଇଁ (int32_t i = 0; i < UPRV_LENGTHOF(fVariants); ++i) {
+            ଯଦି (fVariants[i] == rhs.fVariants[i]) {
+                ଜାରି;
             }
-            if (fVariants[i] == nullptr || rhs.fVariants[i] == nullptr) {
-                return false;
+            ଯଦି (fVariants[i] == nullptr || rhs.fVariants[i] == nullptr) {
+                ଫେରନ୍ତୁ false;
             }
-            if (!eqFunc(*fVariants[i], *rhs.fVariants[i])) {
-                return false;
+            ଯଦି (!eqFunc(*fVariants[i], *rhs.fVariants[i])) {
+                ଫେରନ୍ତୁ false;
             }
         }
-        return true;
+        ଫେରନ୍ତୁ true;
     }
 
-private:
+ବ୍ୟକ୍ତିଗତ:
     T fOtherVariant;
     T* fVariants[6];
 
     T *getMutable(
             Category category,
-            const T *defaultValue,
+            ଅଚଳ T *default_ମୂଲ୍ୟ,
             UErrorCode &status) {
-        if (U_FAILURE(status)) {
-            return nullptr;
+        ଯଦି (U_FAILURE(status)) {
+            ଫେରନ୍ତୁ nullptr;
         }
         int32_t index = category;
-        if (index < 0 || index >= UPRV_LENGTHOF(fVariants)) {
+        ଯଦି (index < 0 || index >= UPRV_LENGTHOF(fVariants)) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return nullptr;
+            ଫେରନ୍ତୁ nullptr;
         }
-        if (fVariants[index] == nullptr) {
-            fVariants[index] = defaultValue == nullptr ?
-                    new T() : new T(*defaultValue);
+        ଯଦି (fVariants[index] == nullptr) {
+            fVariants[index] = default_ମୂଲ୍ୟ == nullptr ?
+                    new T() : new T(*default_ମୂଲ୍ୟ);
         }
-        if (!fVariants[index]) {
+        ଯଦି (!fVariants[index]) {
             status = U_MEMORY_ALLOCATION_ERROR;
         }
-        return fVariants[index];
+        ଫେରନ୍ତୁ fVariants[index];
     }
 
-    void initializeNew() {
+    ଶୂନ୍ୟ initializeNew() {
         fVariants[0] = &fOtherVariant;
-        for (int32_t i = 1; i < UPRV_LENGTHOF(fVariants); ++i) {
+        ପାଇଁ (int32_t i = 1; i < UPRV_LENGTHOF(fVariants); ++i) {
             fVariants[i] = nullptr;
         }
     }

@@ -7,11 +7,11 @@
 ******************************************************************************
 * sharedobject.cpp
 */
-#include "sharedobject.h"
-#include "mutex.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "unifiedcache.h"
+#ଅନ୍ତର୍ଭାଵ "sharedobject.h"
+#ଅନ୍ତର୍ଭାଵ "mutex.h"
+#ଅନ୍ତର୍ଭାଵ "uassert.h"
+#ଅନ୍ତର୍ଭାଵ "umutex.h"
+#ଅନ୍ତର୍ଭାଵ "unifiedcache.h"
 
 U_NAMESPACE_BEGIN
 
@@ -19,9 +19,9 @@ SharedObject::~SharedObject() {}
 
 UnifiedCacheBase::~UnifiedCacheBase() {}
 
-void
-SharedObject::addRef() const {
-    umtx_atomic_inc(&hardRefCount);
+ଶୂନ୍ୟ
+SharedObject::addRef() ଅଚଳ {
+    umtx_atomic_inc(&hard_Ref_ଗଣନା);
 }
 
 // removeRef Decrement the reference count and delete if it is zero.
@@ -32,30 +32,30 @@ SharedObject::addRef() const {
 //           a cache eviction cycle concurrently.
 //           NO ACCESS TO *this PERMITTED AFTER REFERENCE COUNT == 0 for cached objects.
 //           THE OBJECT MAY ALREADY BE GONE.
-void
-SharedObject::removeRef() const {
-    const UnifiedCacheBase *cache = this->cachePtr;
-    int32_t updatedRefCount = umtx_atomic_dec(&hardRefCount);
-    U_ASSERT(updatedRefCount >= 0);
-    if (updatedRefCount == 0) {
-        if (cache) {
+ଶୂନ୍ୟ
+SharedObject::removeRef() ଅଚଳ {
+    ଅଚଳ UnifiedCacheBase *cache = ଏହି->cachePtr;
+    int32_t updated_Ref_ଗଣନା = umtx_atomic_dec(&hard_Ref_ଗଣନା);
+    U_ASSERT(updated_Ref_ଗଣନା >= 0);
+    ଯଦି (updated_Ref_ଗଣନା == 0) {
+        ଯଦି (cache) {
             cache->handleUnreferencedObject();
-        } else {
-            delete this;
+        } ଅନ୍ୟଥା {
+            delete ଏହି;
         }
     }
 }
 
 
 int32_t
-SharedObject::getRefCount() const {
-    return umtx_loadAcquire(hardRefCount);
+SharedObject::get_Ref_ଗଣନା() ଅଚଳ {
+    ଫେରନ୍ତୁ umtx_loadAcquire(hard_Ref_ଗଣନା);
 }
 
-void
-SharedObject::deleteIfZeroRefCount() const {
-    if (this->cachePtr == nullptr && getRefCount() == 0) {
-        delete this;
+ଶୂନ୍ୟ
+SharedObject::delete_If_Zero_Ref_ଗଣନା() ଅଚଳ {
+    ଯଦି (ଏହି->cachePtr == nullptr && get_Ref_ଗଣନା() == 0) {
+        delete ଏହି;
     }
 }
 

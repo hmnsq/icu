@@ -12,11 +12,11 @@
 #ifndef SYMTABLE_H
 #define SYMTABLE_H
 
-#include "unicode/utypes.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ଯଦି U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/uobject.h"
 
 /**
  * \file
@@ -56,20 +56,20 @@ class UnicodeString;
  *
  * @stable ICU 2.8
  */
-class U_COMMON_API SymbolTable /* not : public UObject because this is an interface/mixin class */ {
-public:
+class U_COMMON_API ପ୍ରତୀକ_Table /* not : public UObject because this is an interface/mixin class */ {
+ସର୍ବସାଧାରଣ:
 
     /**
      * The character preceding a symbol reference name.
      * @stable ICU 2.8
      */
-    enum { SYMBOL_REF = 0x0024 /*$*/ };
+    ଗଣନା { ପ୍ରତୀକ_REF = 0x0024 /*$*/ };
 
     /**
      * Destructor.
      * @stable ICU 2.8
      */
-    virtual ~SymbolTable();
+    ଆଭାସୀ ~ପ୍ରତୀକ_Table();
 
     /**
      * Lookup the characters associated with this string and return it.
@@ -80,7 +80,7 @@ public:
      * there is no mapping for s.
      * @stable ICU 2.8
      */
-    virtual const UnicodeString* lookup(const UnicodeString& s) const U_LIFETIME_BOUND = 0;
+    ଆଭାସୀ ଅଚଳ UnicodeString* lookup(ଅଚଳ UnicodeString& s) ଅଚଳ U_LIFETIME_BOUND = 0;
 
     /**
      * Returns a pointer to a pre-parsed set associated with the variable with
@@ -88,8 +88,8 @@ public:
      * undefined or string-valued variable).
      * @internal
      */
-    virtual const UnicodeSet* lookupSet(const UnicodeString& /*name*/) const {
-        return nullptr;
+    ଆଭାସୀ ଅଚଳ UnicodeSet* lookupSet(ଅଚଳ UnicodeString& /*name*/) ଅଚଳ {
+        ଫେରନ୍ତୁ nullptr;
     }
 
     /**
@@ -100,7 +100,7 @@ public:
      * character, or nullptr if there is no mapping for ch.
      * @stable ICU 2.8
      */
-    virtual const UnicodeFunctor* lookupMatcher(UChar32 ch) const U_LIFETIME_BOUND = 0;
+    ଆଭାସୀ ଅଚଳ UnicodeFunctor* lookupMatcher(UChar32 ch) ଅଚଳ U_LIFETIME_BOUND = 0;
 
     /**
      * Parse a symbol reference name from the given string, starting
@@ -119,8 +119,8 @@ public:
      * valid symbolic name at the given position.
      * @stable ICU 2.8
      */
-    virtual UnicodeString parseReference(const UnicodeString& text,
-                                         ParsePosition& pos, int32_t limit) const = 0;
+    ଆଭାସୀ UnicodeString parseReference(ଅଚଳ UnicodeString& text,
+                                         ParsePosition& pos, int32_t limit) ଅଚଳ = 0;
 };
 U_NAMESPACE_END
 

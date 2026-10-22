@@ -20,107 +20,107 @@
 *
 ******************************************************************************
 */
-#include "unicode/uclean.h"
-#include "cmemory.h"
-#include "putilimp.h"
-#include "uassert.h"
-#include <stdlib.h>
+#ଅନ୍ତର୍ଭାଵ "unicode/uclean.h"
+#ଅନ୍ତର୍ଭାଵ "cmemory.h"
+#ଅନ୍ତର୍ଭାଵ "putilimp.h"
+#ଅନ୍ତର୍ଭାଵ "uassert.h"
+#ଅନ୍ତର୍ଭାଵ <stdlib.h>
 
 /* uprv_malloc(0) returns a pointer to this read-only data. */
-static const int32_t zeroMem[] = {0, 0, 0, 0, 0, 0};
+ସ୍ଥିର ଅଚଳ int32_t zeroMem[] = {0, 0, 0, 0, 0, 0};
 
 /* Function Pointers for user-supplied heap functions  */
-static const void     *pContext;
-static UMemAllocFn    *pAlloc;
-static UMemReallocFn  *pRealloc;
-static UMemFreeFn     *pFree;
+ସ୍ଥିର ଅଚଳ ଶୂନ୍ୟ     *pContext;
+ସ୍ଥିର UMemAllocFn    *pAlloc;
+ସ୍ଥିର UMemReallocFn  *pRealloc;
+ସ୍ଥିର UMemFreeFn     *pFree;
 
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-#include <stdio.h>
-static int n=0;
-static long b=0; 
+#ଯଦି U_DEBUG && defined(UPRV_MALLOC_ଗଣନା)
+#ଅନ୍ତର୍ଭାଵ <stdio.h>
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା n=0;
+ସ୍ଥିର long b=0; 
 #endif
 
-U_CAPI void * U_EXPORT2
+U_CAPI ଶୂନ୍ୟ * U_EXPORT2
 uprv_malloc(size_t s) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-#if 1
+#ଯଦି U_DEBUG && defined(UPRV_MALLOC_ଗଣନା)
+#ଯଦି 1
   putchar('>');
   fflush(stdout);
-#else
+#ଅନ୍ୟଥା
   fprintf(stderr,"MALLOC\t#%d\t%ul bytes\t%ul total\n", ++n,s,(b+=s)); fflush(stderr);
 #endif
 #endif
-    if (s > 0) {
-        if (pAlloc) {
-            return (*pAlloc)(pContext, s);
-        } else {
-            return uprv_default_malloc(s);
+    ଯଦି (s > 0) {
+        ଯଦି (pAlloc) {
+            ଫେରନ୍ତୁ (*pAlloc)(pContext, s);
+        } ଅନ୍ୟଥା {
+            ଫେରନ୍ତୁ uprv_default_malloc(s);
         }
-    } else {
-        return (void *)zeroMem;
+    } ଅନ୍ୟଥା {
+        ଫେରନ୍ତୁ (ଶୂନ୍ୟ *)zeroMem;
     }
 }
 
-U_CAPI void * U_EXPORT2
-uprv_realloc(void * buffer, size_t size) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+U_CAPI ଶୂନ୍ୟ * U_EXPORT2
+uprv_realloc(ଶୂନ୍ୟ * buffer, size_t size) {
+#ଯଦି U_DEBUG && defined(UPRV_MALLOC_ଗଣନା)
   putchar('~');
   fflush(stdout);
 #endif
-    if (buffer == zeroMem) {
-        return uprv_malloc(size);
-    } else if (size == 0) {
-        if (pFree) {
+    ଯଦି (buffer == zeroMem) {
+        ଫେରନ୍ତୁ uprv_malloc(size);
+    } ଅନ୍ୟଥା ଯଦି (size == 0) {
+        ଯଦି (pFree) {
             (*pFree)(pContext, buffer);
-        } else {
+        } ଅନ୍ୟଥା {
             uprv_default_free(buffer);
         }
-        return (void *)zeroMem;
-    } else {
-        if (pRealloc) {
-            return (*pRealloc)(pContext, buffer, size);
-        } else {
-            return uprv_default_realloc(buffer, size);
+        ଫେରନ୍ତୁ (ଶୂନ୍ୟ *)zeroMem;
+    } ଅନ୍ୟଥା {
+        ଯଦି (pRealloc) {
+            ଫେରନ୍ତୁ (*pRealloc)(pContext, buffer, size);
+        } ଅନ୍ୟଥା {
+            ଫେରନ୍ତୁ uprv_default_realloc(buffer, size);
         }
     }
 }
 
-U_CAPI void U_EXPORT2
-uprv_free(void *buffer) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+U_CAPI ଶୂନ୍ୟ U_EXPORT2
+uprv_free(ଶୂନ୍ୟ *buffer) {
+#ଯଦି U_DEBUG && defined(UPRV_MALLOC_ଗଣନା)
   putchar('<');
   fflush(stdout);
 #endif
-    if (buffer != zeroMem) {
-        if (pFree) {
+    ଯଦି (buffer != zeroMem) {
+        ଯଦି (pFree) {
             (*pFree)(pContext, buffer);
-        } else {
+        } ଅନ୍ୟଥା {
             uprv_default_free(buffer);
         }
     }
 }
 
-U_CAPI void * U_EXPORT2
+U_CAPI ଶୂନ୍ୟ * U_EXPORT2
 uprv_calloc(size_t num, size_t size) {
-    void *mem = nullptr;
+    ଶୂନ୍ୟ *mem = nullptr;
     size *= num;
     mem = uprv_malloc(size);
-    if (mem) {
+    ଯଦି (mem) {
         uprv_memset(mem, 0, size);
     }
-    return mem;
+    ଫେରନ୍ତୁ mem;
 }
 
-U_CAPI void U_EXPORT2
-u_setMemoryFunctions(const void *context, UMemAllocFn *a, UMemReallocFn *r, UMemFreeFn *f,  UErrorCode *status)
+U_CAPI ଶୂନ୍ୟ U_EXPORT2
+u_setMemoryFunctions(ଅଚଳ ଶୂନ୍ୟ *context, UMemAllocFn *a, UMemReallocFn *r, UMemFreeFn *f,  UErrorCode *status)
 {
-    if (U_FAILURE(*status)) {
-        return;
+    ଯଦି (U_FAILURE(*status)) {
+        ଫେରନ୍ତୁ;
     }
-    if (a==nullptr || r==nullptr || f==nullptr) {
+    ଯଦି (a==nullptr || r==nullptr || f==nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ଫେରନ୍ତୁ;
     }
     pContext  = context;
     pAlloc    = a;
@@ -134,5 +134,5 @@ U_CFUNC UBool cmemory_cleanup() {
     pAlloc     = nullptr;
     pRealloc   = nullptr;
     pFree      = nullptr;
-    return true;
+    ଫେରନ୍ତୁ ସତ୍ୟ;
 }

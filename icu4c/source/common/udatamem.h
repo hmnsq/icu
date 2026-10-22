@@ -21,23 +21,23 @@
 #ifndef __UDATAMEM_H__
 #define __UDATAMEM_H__
 
-#include "unicode/udata.h"
-#include "ucmndata.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/udata.h"
+#ଅନ୍ତର୍ଭାଵ "ucmndata.h"
 
-struct UDataMemory {
-    const commonDataFuncs  *vFuncs;      /* Function Pointers for accessing TOC             */
+ସଂରଚନା UDataMemory {
+    ଅଚଳ commonDataFuncs  *vFuncs;      /* Function Pointers for accessing TOC             */
 
-    const DataHeader *pHeader;     /* Header of the memory being described by this    */
+    ଅଚଳ DataHeader *pHeader;     /* Header of the memory being described by this    */
                                    /*   UDataMemory object.                           */
-    const void       *toc;         /* For common memory, table of contents for        */
+    ଅଚଳ ଶୂନ୍ୟ       *toc;         /* For common memory, table of contents for        */
                                    /*   the pieces within.                            */
     UBool             heapAllocated;  /* True if this UDataMemory Object is on the    */
                                    /*  heap and thus needs to be deleted when closed. */
 
-    void             *mapAddr;     /* For mapped or allocated memory, the start addr. */
+    ଶୂନ୍ୟ             *mapAddr;     /* For mapped or allocated memory, the start addr. */
                                    /* Only non-null if a close operation should unmap */
                                    /*  the associated data.                           */
-    void             *map;         /* Handle, or other data, OS dependent.            */
+    ଶୂନ୍ୟ             *map;         /* Handle, or other data, OS dependent.            */
                                    /* Only non-null if a close operation should unmap */
                                    /*  the associated data, and additional info       */
                                    /*   beyond the mapAddr is needed to do that.      */
@@ -45,17 +45,17 @@ struct UDataMemory {
 };
 
 U_CAPI  UDataMemory* U_EXPORT2 UDataMemory_createNewInstance(UErrorCode *pErr);
-U_CFUNC void         UDatamemory_assign  (UDataMemory *dest, UDataMemory *source);
-U_CFUNC void         UDataMemory_init    (UDataMemory *This);
-U_CFUNC UBool        UDataMemory_isLoaded(const UDataMemory *This);
-U_CFUNC void         UDataMemory_setData (UDataMemory *This, const void *dataAddr);
+U_CFUNC ଶୂନ୍ୟ         UDatamemory_assign  (UDataMemory *dest, UDataMemory *source);
+U_CFUNC ଶୂନ୍ୟ         UDataMemory_init    (UDataMemory *This);
+U_CFUNC UBool        UDataMemory_isLoaded(ଅଚଳ UDataMemory *This);
+U_CFUNC ଶୂନ୍ୟ         UDataMemory_setData (UDataMemory *This, ଅଚଳ ଶୂନ୍ୟ *dataAddr);
 
-U_CFUNC const DataHeader* UDataMemory_normalizeDataPointer(const void* p U_LIFETIME_BOUND);
+U_CFUNC ଅଚଳ DataHeader* UDataMemory_normalizeDataPointer(ଅଚଳ ଶୂନ୍ୟ* p U_LIFETIME_BOUND);
 
 U_CAPI int32_t U_EXPORT2
-udata_getLength(const UDataMemory *pData);
+udata_getLength(ଅଚଳ UDataMemory *pData);
 
-U_CAPI const void* U_EXPORT2
-udata_getRawMemory(const UDataMemory* pData U_LIFETIME_BOUND);
+U_CAPI ଅଚଳ ଶୂନ୍ୟ* U_EXPORT2
+udata_getRawMemory(ଅଚଳ UDataMemory* pData U_LIFETIME_BOUND);
 
 #endif

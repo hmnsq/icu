@@ -7,11 +7,11 @@
 #ifndef __EDITS_H__
 #define __EDITS_H__
 
-#include "unicode/utypes.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ଯଦି U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/uobject.h"
 
 /**
  * \file
@@ -77,23 +77,23 @@ class UnicodeString;
  *
  * @stable ICU 59
  */
-class U_COMMON_API Edits final : public UMemory {
-public:
+class U_COMMON_API Edits final : ସର୍ବସାଧାରଣ UMemory {
+ସର୍ବସାଧାରଣ:
     /**
      * Constructs an empty object.
      * @stable ICU 59
      */
     Edits() :
-            array(stackArray), capacity(STACK_CAPACITY), length(0), delta(0), numChanges(0),
+            array(ଗଦା_Array), capacity(ଗଦା_CAPACITY), length(0), delta(0), ଅଙ୍କ_Changes(0),
             errorCode_(U_ZERO_ERROR) {}
     /**
      * Copy constructor.
      * @param other source edits
      * @stable ICU 60
      */
-    Edits(const Edits &other) :
-            array(stackArray), capacity(STACK_CAPACITY), length(other.length),
-            delta(other.delta), numChanges(other.numChanges),
+    Edits(ଅଚଳ Edits &other) :
+            array(ଗଦା_Array), capacity(ଗଦା_CAPACITY), length(other.length),
+            delta(other.delta), ଅଙ୍କ_Changes(other.ଅଙ୍କ_Changes),
             errorCode_(other.errorCode_) {
         copyArray(other);
     }
@@ -104,8 +104,8 @@ public:
      * @stable ICU 60
      */
     Edits(Edits &&src) noexcept :
-            array(stackArray), capacity(STACK_CAPACITY), length(src.length),
-            delta(src.delta), numChanges(src.numChanges),
+            array(ଗଦା_Array), capacity(ଗଦା_CAPACITY), length(src.length),
+            delta(src.delta), ଅଙ୍କ_Changes(src.ଅଙ୍କ_Changes),
             errorCode_(src.errorCode_) {
         moveArray(src);
     }
@@ -122,7 +122,7 @@ public:
      * @return *this
      * @stable ICU 60
      */
-    Edits& operator=(const Edits& other) U_LIFETIME_BOUND;
+    Edits& operator=(ଅଚଳ Edits& other) U_LIFETIME_BOUND;
 
     /**
      * Move assignment operator, might leave src empty.
@@ -138,20 +138,20 @@ public:
      * Resets the data but may not release memory.
      * @stable ICU 59
      */
-    void reset() noexcept;
+    ଶୂନ୍ୟ reset() noexcept;
 
     /**
      * Adds a no-change edit: a record for an unchanged segment of text.
      * Normally called from inside ICU string transformation functions, not user code.
      * @stable ICU 59
      */
-    void addUnchanged(int32_t unchangedLength);
+    ଶୂନ୍ୟ addUnchanged(int32_t unchangedLength);
     /**
      * Adds a change edit: a record for a text replacement/insertion/deletion.
      * Normally called from inside ICU string transformation functions, not user code.
      * @stable ICU 59
      */
-    void addReplace(int32_t oldLength, int32_t newLength);
+    ଶୂନ୍ୟ addReplace(int32_t oldLength, int32_t newLength);
     /**
      * Sets the UErrorCode if an error occurred while recording edits.
      * Preserves older error codes in the outErrorCode.
@@ -162,25 +162,25 @@ public:
      * @return true if U_FAILURE(outErrorCode)
      * @stable ICU 59
      */
-    UBool copyErrorTo(UErrorCode &outErrorCode) const;
+    UBool copyErrorTo(UErrorCode &outErrorCode) ଅଚଳ;
 
     /**
      * How much longer is the new text compared with the old text?
      * @return new length minus old length
      * @stable ICU 59
      */
-    int32_t lengthDelta() const { return delta; }
+    int32_t lengthDelta() ଅଚଳ { ଫେରନ୍ତୁ delta; }
     /**
      * @return true if there are any change edits
      * @stable ICU 59
      */
-    UBool hasChanges() const { return numChanges != 0; }
+    UBool hasChanges() ଅଚଳ { ଫେରନ୍ତୁ ଅଙ୍କ_Changes != 0; }
 
     /**
      * @return the number of change edits
      * @stable ICU 60
      */
-    int32_t numberOfChanges() const { return numChanges; }
+    int32_t ସଂଖ୍ୟା_Of_Changes() ଅଚଳ { ଫେରନ୍ତୁ ଅଙ୍କ_Changes; }
 
     /**
      * Access to the list of edits.
@@ -200,7 +200,7 @@ public:
      * @see getFineIterator
      * @stable ICU 59
      */
-    struct U_COMMON_API Iterator final : public UMemory {
+    ସଂରଚନା U_COMMON_API Iterator final : ସର୍ବସାଧାରଣ UMemory {
         /**
          * Default constructor, empty iterator.
          * @stable ICU 60
@@ -214,12 +214,12 @@ public:
          * Copy constructor.
          * @stable ICU 59
          */
-        Iterator(const Iterator &other) = default;
+        Iterator(ଅଚଳ Iterator &other) = ପୂର୍ବନିର୍ଦ୍ଧାରିତ;
         /**
          * Assignment operator.
          * @stable ICU 59
          */
-        Iterator& operator=(const Iterator& other) U_LIFETIME_BOUND = default;
+        Iterator& operator=(ଅଚଳ Iterator& other) U_LIFETIME_BOUND = ପୂର୍ବନିର୍ଦ୍ଧାରିତ;
 
         /**
          * Advances the iterator to the next edit.
@@ -229,7 +229,7 @@ public:
          * @return true if there is another edit
          * @stable ICU 59
          */
-        UBool next(UErrorCode &errorCode) { return next(onlyChanges_, errorCode); }
+        UBool next(UErrorCode &errorCode) { ଫେରନ୍ତୁ next(onlyChanges_, errorCode); }
 
         /**
          * Moves the iterator to the edit that contains the source index.
@@ -251,7 +251,7 @@ public:
          * @stable ICU 59
          */
         UBool findSourceIndex(int32_t i, UErrorCode &errorCode) {
-            return findIndex(i, true, errorCode) == 0;
+            ଫେରନ୍ତୁ findIndex(i, true, errorCode) == 0;
         }
 
         /**
@@ -274,7 +274,7 @@ public:
          * @stable ICU 60
          */
         UBool findDestinationIndex(int32_t i, UErrorCode &errorCode) {
-            return findIndex(i, false, errorCode) == 0;
+            ଫେରନ୍ତୁ findIndex(i, false, errorCode) == 0;
         }
 
         /**
@@ -332,7 +332,7 @@ public:
          *         false if oldLength units remain unchanged.
          * @stable ICU 59
          */
-        UBool hasChange() const { return changed; }
+        UBool hasChange() ଅଚଳ { ଫେରନ୍ତୁ changed; }
 
         /**
          * The length of the current span in the source string, which starts at {@link #sourceIndex}.
@@ -340,7 +340,7 @@ public:
          * @return the number of units in the original string which are replaced or remain unchanged.
          * @stable ICU 59
          */
-        int32_t oldLength() const { return oldLength_; }
+        int32_t oldLength() ଅଚଳ { ଫେରନ୍ତୁ oldLength_; }
 
         /**
          * The length of the current span in the destination string, which starts at
@@ -351,7 +351,7 @@ public:
          *         Same as oldLength if hasChange() is false.
          * @stable ICU 59
          */
-        int32_t newLength() const { return newLength_; }
+        int32_t newLength() ଅଚଳ { ଫେରନ୍ତୁ newLength_; }
 
         /**
          * The start index of the current span in the source string; the span has length
@@ -360,7 +360,7 @@ public:
          * @return the current index into the source string
          * @stable ICU 59
          */
-        int32_t sourceIndex() const { return srcIndex; }
+        int32_t sourceIndex() ଅଚଳ { ଫେରନ୍ତୁ srcIndex; }
 
         /**
          * The start index of the current span in the replacement string; the span has length
@@ -377,9 +377,9 @@ public:
          *         not counting unchanged spans
          * @stable ICU 59
          */
-        int32_t replacementIndex() const {
+        int32_t replacementIndex() ଅଚଳ {
             // TODO: Throw an exception if we aren't in a change edit?
-            return replIndex;
+            ଫେରନ୍ତୁ replIndex;
         }
 
         /**
@@ -389,7 +389,7 @@ public:
          * @return the current index into the full destination string
          * @stable ICU 59
          */
-        int32_t destinationIndex() const { return destIndex; }
+        int32_t destinationIndex() ଅଚଳ { ଫେରନ୍ତୁ destIndex; }
 
 #ifndef U_HIDE_INTERNAL_API
         /**
@@ -397,24 +397,24 @@ public:
          * should not depend on the contents of the return string.
          * @internal
          */
-        UnicodeString& toString(UnicodeString& appendTo U_LIFETIME_BOUND) const;
+        UnicodeString& toString(UnicodeString& appendTo U_LIFETIME_BOUND) ଅଚଳ;
 #endif  // U_HIDE_INTERNAL_API
 
-    private:
+    ବ୍ୟକ୍ତିଗତ:
         friend class Edits;
 
-        Iterator(const uint16_t* a U_LIFETIME_BOUND, int32_t len, UBool oc, UBool crs);
+        Iterator(ଅଚଳ uint16_t* a U_LIFETIME_BOUND, int32_t len, UBool oc, UBool crs);
 
         int32_t readLength(int32_t head);
-        void updateNextIndexes();
-        void updatePreviousIndexes();
+        ଶୂନ୍ୟ updateNextIndexes();
+        ଶୂନ୍ୟ updatePreviousIndexes();
         UBool noNext();
         UBool next(UBool onlyChanges, UErrorCode &errorCode);
         UBool previous(UErrorCode &errorCode);
         /** @return -1: error or i<0; 0: found; 1: i>=string length */
         int32_t findIndex(int32_t i, UBool findSource, UErrorCode &errorCode);
 
-        const uint16_t *array;
+        ଅଚଳ uint16_t *array;
         int32_t index, length;
         // 0 if we are not within compressed equal-length changes.
         // Otherwise the number of remaining changes, including the current one.
@@ -435,8 +435,8 @@ public:
      * @return an Iterator that merges adjacent changes.
      * @stable ICU 59
      */
-    Iterator getCoarseChangesIterator() const U_LIFETIME_BOUND {
-        return Iterator(array, length, true, true);
+    Iterator getCoarseChangesIterator() ଅଚଳ U_LIFETIME_BOUND {
+        ଫେରନ୍ତୁ Iterator(array, length, true, true);
     }
 
     /**
@@ -447,8 +447,8 @@ public:
      * @return an Iterator that merges adjacent changes.
      * @stable ICU 59
      */
-    Iterator getCoarseIterator() const U_LIFETIME_BOUND {
-        return Iterator(array, length, false, true);
+    Iterator getCoarseIterator() ଅଚଳ U_LIFETIME_BOUND {
+        ଫେରନ୍ତୁ Iterator(array, length, false, true);
     }
 
     /**
@@ -459,8 +459,8 @@ public:
      * @return an Iterator that separates adjacent changes.
      * @stable ICU 59
      */
-    Iterator getFineChangesIterator() const U_LIFETIME_BOUND {
-        return Iterator(array, length, true, false);
+    Iterator getFineChangesIterator() ଅଚଳ U_LIFETIME_BOUND {
+        ଫେରନ୍ତୁ Iterator(array, length, true, false);
     }
 
     /**
@@ -470,8 +470,8 @@ public:
      * @return an Iterator that separates adjacent changes.
      * @stable ICU 59
      */
-    Iterator getFineIterator() const U_LIFETIME_BOUND {
-        return Iterator(array, length, false, false);
+    Iterator getFineIterator() ଅଚଳ U_LIFETIME_BOUND {
+        ଫେରନ୍ତୁ Iterator(array, length, false, false);
     }
 
     /**
@@ -501,27 +501,27 @@ public:
      * @return *this, with the merged edits appended
      * @stable ICU 60
      */
-    Edits& mergeAndAppend(const Edits& ab, const Edits& bc, UErrorCode& errorCode) U_LIFETIME_BOUND;
+    Edits& mergeAndAppend(ଅଚଳ Edits& ab, ଅଚଳ Edits& bc, UErrorCode& errorCode) U_LIFETIME_BOUND;
 
-private:
-    void releaseArray() noexcept;
-    Edits& copyArray(const Edits& other) U_LIFETIME_BOUND;
+ବ୍ୟକ୍ତିଗତ:
+    ଶୂନ୍ୟ releaseArray() noexcept;
+    Edits& copyArray(ଅଚଳ Edits& other) U_LIFETIME_BOUND;
     Edits& moveArray(Edits& src) noexcept U_LIFETIME_BOUND;
 
-    void setLastUnit(int32_t last) { array[length - 1] = static_cast<uint16_t>(last); }
-    int32_t lastUnit() const { return length > 0 ? array[length - 1] : 0xffff; }
+    ଶୂନ୍ୟ setLastUnit(int32_t last) { array[length - 1] = static_cast<uint16_t>(last); }
+    int32_t lastUnit() ଅଚଳ { ଫେରନ୍ତୁ length > 0 ? array[length - 1] : 0xffff; }
 
-    void append(int32_t r);
+    ଶୂନ୍ୟ append(int32_t r);
     UBool growArray();
 
-    static const int32_t STACK_CAPACITY = 100;
+    ସ୍ଥିର ଅଚଳ int32_t ଗଦା_CAPACITY = 100;
     uint16_t *array;
     int32_t capacity;
     int32_t length;
     int32_t delta;
-    int32_t numChanges;
+    int32_t ଅଙ୍କ_Changes;
     UErrorCode errorCode_;
-    uint16_t stackArray[STACK_CAPACITY];
+    uint16_t ଗଦା_Array[ଗଦା_CAPACITY];
 };
 
 U_NAMESPACE_END

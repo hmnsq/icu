@@ -22,9 +22,9 @@
 #ifndef MUTEX_H
 #define MUTEX_H
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "umutex.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/utypes.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/uobject.h"
+#ଅନ୍ତର୍ଭାଵ "umutex.h"
 
 U_NAMESPACE_BEGIN
 
@@ -53,8 +53,8 @@ U_NAMESPACE_BEGIN
   *         compiler!!
   */
 
-class U_COMMON_API Mutex : public UMemory {
-public:
+class U_COMMON_API Mutex : ସର୍ବସାଧାରଣ UMemory {
+ସର୍ବସାଧାରଣ:
     Mutex(UMutex *mutex = nullptr) : fMutex(mutex) {
         umtx_lock(fMutex);
     }
@@ -62,11 +62,11 @@ public:
         umtx_unlock(fMutex);
     }
 
-    Mutex(const Mutex &other) = delete; // forbid assigning of this class
-    Mutex &operator=(const Mutex &other) = delete; // forbid copying of this class
-    void *operator new(size_t s) = delete;  // forbid heap allocation. Locals only.
+    Mutex(ଅଚଳ Mutex &other) = delete; // forbid assigning of this class
+    Mutex &operator=(ଅଚଳ Mutex &other) = delete; // forbid copying of this class
+    ଶୂନ୍ୟ *operator new(size_t s) = delete;  // forbid heap allocation. Locals only.
 
-private:
+ବ୍ୟକ୍ତିଗତ:
     UMutex   *fMutex;
 };
 

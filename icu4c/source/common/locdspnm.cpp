@@ -7,27 +7,27 @@
 *******************************************************************************
 */
 
-#include "unicode/utypes.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#ଯଦି !UCONFIG_NO_FORMATTING
 
-#include "unicode/locdspnm.h"
-#include "unicode/simpleformatter.h"
-#include "unicode/ucasemap.h"
-#include "unicode/ures.h"
-#include "unicode/udisplaycontext.h"
-#include "unicode/brkiter.h"
-#include "unicode/ucurr.h"
-#include "bytesinkutil.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "mutex.h"
-#include "uassert.h"
-#include "ulocimp.h"
-#include "umutex.h"
-#include "ureslocs.h"
-#include "uresimp.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/locdspnm.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/simpleformatter.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/ucasemap.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/ures.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/udisplaycontext.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/brkiter.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/ucurr.h"
+#ଅନ୍ତର୍ଭାଵ "bytesinkutil.h"
+#ଅନ୍ତର୍ଭାଵ "charstr.h"
+#ଅନ୍ତର୍ଭାଵ "cmemory.h"
+#ଅନ୍ତର୍ଭାଵ "cstring.h"
+#ଅନ୍ତର୍ଭାଵ "mutex.h"
+#ଅନ୍ତର୍ଭାଵ "uassert.h"
+#ଅନ୍ତର୍ଭାଵ "ulocimp.h"
+#ଅନ୍ତର୍ଭାଵ "umutex.h"
+#ଅନ୍ତର୍ଭାଵ "ureslocs.h"
+#ଅନ୍ତର୍ଭାଵ "uresimp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -35,79 +35,79 @@ U_NAMESPACE_BEGIN
 
 // Access resource data for locale components.
 // Wrap code in uloc.c for now.
-class ICUDataTable {
-    const char* const path;
+ଶ୍ରେଣୀ ICUDataTable {
+    ଅଚଳ ଅକ୍ଷର* ଅଚଳ path;
     Locale locale;
 
-public:
+ସର୍ବସାଧାରଣ:
     // Note: path should be a pointer to a statically allocated string.
-    ICUDataTable(const char* path, const Locale& locale);
-    ~ICUDataTable() = default;
+    ICUDataTable(ଅଚଳ ଅକ୍ଷର* path, ଅଚଳ Locale& locale);
+    ~ICUDataTable() = ପୂର୍ବନିର୍ଦ୍ଧାରିତ;
 
-    const Locale& getLocale() U_LIFETIME_BOUND;
+    ଅଚଳ Locale& getLocale() U_LIFETIME_BOUND;
 
-    UnicodeString& get(const char* tableKey, const char* itemKey,
-                       UnicodeString& result U_LIFETIME_BOUND) const;
-    UnicodeString& get(const char* tableKey, const char* subTableKey, const char* itemKey,
-                       UnicodeString& result U_LIFETIME_BOUND) const;
+    UnicodeString& get(ଅଚଳ ଅକ୍ଷର* table_ଚାବି, ଅଚଳ ଅକ୍ଷର* item_ଚାବି,
+                       UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ;
+    UnicodeString& get(ଅଚଳ ଅକ୍ଷର* table_ଚାବି, ଅଚଳ ଅକ୍ଷର* sub_Table_ଚାବି, ଅଚଳ ଅକ୍ଷର* item_ଚାବି,
+                       UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ;
 
-    UnicodeString& getNoFallback(const char* tableKey, const char* itemKey,
-                                 UnicodeString& result U_LIFETIME_BOUND) const;
-    UnicodeString& getNoFallback(const char* tableKey, const char* subTableKey, const char* itemKey,
-                                 UnicodeString& result U_LIFETIME_BOUND) const;
+    UnicodeString& getNoFallback(ଅଚଳ ଅକ୍ଷର* table_ଚାବି, ଅଚଳ ଅକ୍ଷର* item_ଚାବି,
+                                 UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ;
+    UnicodeString& getNoFallback(ଅଚଳ ଅକ୍ଷର* table_ଚାବି, ଅଚଳ ଅକ୍ଷର* sub_Table_ଚାବି, ଅଚଳ ଅକ୍ଷର* item_ଚାବି,
+                                 UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ;
 };
 
-inline UnicodeString& ICUDataTable::get(const char* tableKey, const char* itemKey,
-                                        UnicodeString& result U_LIFETIME_BOUND) const {
-    return get(tableKey, nullptr, itemKey, result);
+ଧାଡ଼ିଭିତରେ UnicodeString& ICUDataTable::get(ଅଚଳ ଅକ୍ଷର* table_ଚାବି, ଅଚଳ ଅକ୍ଷର* item_ଚାବି,
+                                        UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
+    ଫେରନ୍ତୁ get(table_ଚାବି, nullptr, item_ଚାବି, result);
 }
 
-inline UnicodeString& ICUDataTable::getNoFallback(const char* tableKey, const char* itemKey,
-                                                  UnicodeString& result U_LIFETIME_BOUND) const {
-    return getNoFallback(tableKey, nullptr, itemKey, result);
+ଧାଡ଼ିଭିତରେ UnicodeString& ICUDataTable::getNoFallback(ଅଚଳ ଅକ୍ଷର* table_ଚାବି, ଅଚଳ ଅକ୍ଷର* item_ଚାବି,
+                                                  UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
+    ଫେରନ୍ତୁ getNoFallback(table_ଚାବି, nullptr, item_ଚାବି, result);
 }
 
-ICUDataTable::ICUDataTable(const char* path, const Locale& locale)
+ICUDataTable::ICUDataTable(ଅଚଳ ଅକ୍ଷର* path, ଅଚଳ Locale& locale)
     : path(path), locale(locale)
 {
     U_ASSERT(path != nullptr);
 }
 
-const Locale&
+ଅଚଳ Locale&
 ICUDataTable::getLocale() U_LIFETIME_BOUND {
-  return locale;
+  ଫେରନ୍ତୁ locale;
 }
 
 UnicodeString&
-ICUDataTable::get(const char* tableKey, const char* subTableKey, const char* itemKey,
-                  UnicodeString &result U_LIFETIME_BOUND) const {
+ICUDataTable::get(ଅଚଳ ଅକ୍ଷର* table_ଚାବି, ଅଚଳ ଅକ୍ଷର* sub_Table_ଚାବି, ଅଚଳ ଅକ୍ଷର* item_ଚାବି,
+                  UnicodeString &result U_LIFETIME_BOUND) ଅଚଳ {
   UErrorCode status = U_ZERO_ERROR;
   int32_t len = 0;
 
-  const char16_t *s = uloc_getTableStringWithFallback(path, locale.getName(),
-                                                   tableKey, subTableKey, itemKey,
+  ଅଚଳ char16_t *s = uloc_getTableStringWithFallback(path, locale.getName(),
+                                                   table_ଚାବି, sub_Table_ଚାବି, item_ଚାବି,
                                                    &len, &status);
-  if (U_SUCCESS(status) && len > 0) {
-    return result.setTo(s, len);
+  ଯଦି (U_SUCCESS(status) && len > 0) {
+    ଫେରନ୍ତୁ result.setTo(s, len);
   }
-  return result.setTo(UnicodeString(itemKey, -1, US_INV));
+  ଫେରନ୍ତୁ result.setTo(UnicodeString(item_ଚାବି, -1, US_INV));
 }
 
 UnicodeString&
-ICUDataTable::getNoFallback(const char* tableKey, const char* subTableKey, const char* itemKey,
-                            UnicodeString& result U_LIFETIME_BOUND) const {
+ICUDataTable::getNoFallback(ଅଚଳ ଅକ୍ଷର* table_ଚାବି, ଅଚଳ ଅକ୍ଷର* sub_Table_ଚାବି, ଅଚଳ ଅକ୍ଷର* item_ଚାବି,
+                            UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
   UErrorCode status = U_ZERO_ERROR;
   int32_t len = 0;
 
-  const char16_t *s = uloc_getTableStringWithFallback(path, locale.getName(),
-                                                   tableKey, subTableKey, itemKey,
+  ଅଚଳ char16_t *s = uloc_getTableStringWithFallback(path, locale.getName(),
+                                                   table_ଚାବି, sub_Table_ଚାବି, item_ଚାବି,
                                                    &len, &status);
-  if (U_SUCCESS(status)) {
-    return result.setTo(s, len);
+  ଯଦି (U_SUCCESS(status)) {
+    ଫେରନ୍ତୁ result.setTo(s, len);
   }
 
   result.setToBogus();
-  return result;
+  ଫେରନ୍ତୁ result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -116,39 +116,39 @@ LocaleDisplayNames::~LocaleDisplayNames() {}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#if 0  // currently unused
+#ଯଦି 0  // currently unused
 
-class DefaultLocaleDisplayNames : public LocaleDisplayNames {
+ଶ୍ରେଣୀ DefaultLocaleDisplayNames : ସର୍ବସାଧାରଣ LocaleDisplayNames {
   UDialectHandling dialectHandling;
 
-public:
+ସର୍ବସାଧାରଣ:
   // constructor
   DefaultLocaleDisplayNames(UDialectHandling dialectHandling);
 
-  virtual ~DefaultLocaleDisplayNames();
+  ଆଭାସୀ ~DefaultLocaleDisplayNames();
 
-  virtual const Locale& getLocale() const U_LIFETIME_BOUND;
-  virtual UDialectHandling getDialectHandling() const;
+  ଆଭାସୀ ଅଚଳ Locale& getLocale() ଅଚଳ U_LIFETIME_BOUND;
+  ଆଭାସୀ UDialectHandling getDialectHandling() ଅଚଳ;
 
-  virtual UnicodeString& localeDisplayName(const Locale& locale,
-                                           UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& localeDisplayName(const char* localeId,
-                                           UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& languageDisplayName(const char* lang,
-                                             UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& scriptDisplayName(const char* script,
-                                           UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& scriptDisplayName(UScriptCode scriptCode,
-                                           UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& regionDisplayName(const char* region,
-                                           UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& variantDisplayName(const char* variant,
-                                            UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& keyDisplayName(const char* key,
-                                        UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& keyValueDisplayName(const char* key,
-                                             const char* value,
-                                             UnicodeString& result U_LIFETIME_BOUND) const;
+  ଆଭାସୀ UnicodeString& localeDisplayName(ଅଚଳ Locale& locale,
+                                           UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ;
+  ଆଭାସୀ UnicodeString& localeDisplayName(ଅଚଳ ଅକ୍ଷର* localeId,
+                                           UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ;
+  ଆଭାସୀ UnicodeString& languageDisplayName(ଅଚଳ ଅକ୍ଷର* lang,
+                                             UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ;
+  ଆଭାସୀ UnicodeString& scriptDisplayName(ଅଚଳ ଅକ୍ଷର* script,
+                                           UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ;
+  ଆଭାସୀ UnicodeString& scriptDisplayName(UScriptCode scriptCode,
+                                           UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ;
+  ଆଭାସୀ UnicodeString& regionDisplayName(ଅଚଳ ଅକ୍ଷର* region,
+                                           UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ;
+  ଆଭାସୀ UnicodeString& variantDisplayName(ଅଚଳ ଅକ୍ଷର* variant,
+                                            UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ;
+  ଆଭାସୀ UnicodeString& ଚାବି_Display_Name(ଅଚଳ ଅକ୍ଷର* ଚାବି,
+                                        UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ;
+  ଆଭାସୀ UnicodeString& ଚାବି_ମୂଲ୍ୟ_Display_Name(ଅଚଳ ଅକ୍ଷର* ଚାବି,
+                                             ଅଚଳ ଅକ୍ଷର* value,
+                                             UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ;
 };
 
 DefaultLocaleDisplayNames::DefaultLocaleDisplayNames(UDialectHandling dialectHandling)
@@ -158,91 +158,91 @@ DefaultLocaleDisplayNames::DefaultLocaleDisplayNames(UDialectHandling dialectHan
 DefaultLocaleDisplayNames::~DefaultLocaleDisplayNames() {
 }
 
-const Locale&
-DefaultLocaleDisplayNames::getLocale() const U_LIFETIME_BOUND {
-  return Locale::getRoot();
+ଅଚଳ Locale&
+DefaultLocaleDisplayNames::getLocale() ଅଚଳ U_LIFETIME_BOUND {
+  ଫେରନ୍ତୁ Locale::get_ମୂଳ();
 }
 
 UDialectHandling
-DefaultLocaleDisplayNames::getDialectHandling() const {
-  return dialectHandling;
+DefaultLocaleDisplayNames::getDialectHandling() ଅଚଳ {
+  ଫେରନ୍ତୁ dialectHandling;
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::localeDisplayName(const Locale& locale,
-                                             UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(locale.getName(), -1, US_INV);
+DefaultLocaleDisplayNames::localeDisplayName(ଅଚଳ Locale& locale,
+                                             UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
+  ଫେରନ୍ତୁ result = UnicodeString(locale.getName(), -1, US_INV);
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::localeDisplayName(const char* localeId,
-                                             UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(localeId, -1, US_INV);
+DefaultLocaleDisplayNames::localeDisplayName(ଅଚଳ ଅକ୍ଷର* localeId,
+                                             UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
+  ଫେରନ୍ତୁ result = UnicodeString(localeId, -1, US_INV);
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::languageDisplayName(const char* lang,
-                                               UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(lang, -1, US_INV);
+DefaultLocaleDisplayNames::languageDisplayName(ଅଚଳ ଅକ୍ଷର* lang,
+                                               UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
+  ଫେରନ୍ତୁ result = UnicodeString(lang, -1, US_INV);
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::scriptDisplayName(const char* script,
-                                             UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(script, -1, US_INV);
+DefaultLocaleDisplayNames::scriptDisplayName(ଅଚଳ ଅକ୍ଷର* script,
+                                             UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
+  ଫେରନ୍ତୁ result = UnicodeString(script, -1, US_INV);
 }
 
 UnicodeString&
 DefaultLocaleDisplayNames::scriptDisplayName(UScriptCode scriptCode,
-                                             UnicodeString& result U_LIFETIME_BOUND) const {
-  const char* name = uscript_getName(scriptCode);
-  if (name) {
-    return result = UnicodeString(name, -1, US_INV);
+                                             UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
+  ଅଚଳ ଅକ୍ଷର* name = uscript_getName(scriptCode);
+  ଯଦି (name) {
+    ଫେରନ୍ତୁ result = UnicodeString(name, -1, US_INV);
   }
-  return result.remove();
+  ଫେରନ୍ତୁ result.remove();
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::regionDisplayName(const char* region,
-                                             UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(region, -1, US_INV);
+DefaultLocaleDisplayNames::regionDisplayName(ଅଚଳ ଅକ୍ଷର* region,
+                                             UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
+  ଫେରନ୍ତୁ result = UnicodeString(region, -1, US_INV);
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::variantDisplayName(const char* variant,
-                                              UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(variant, -1, US_INV);
+DefaultLocaleDisplayNames::variantDisplayName(ଅଚଳ ଅକ୍ଷର* variant,
+                                              UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
+  ଫେରନ୍ତୁ result = UnicodeString(variant, -1, US_INV);
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::keyDisplayName(const char* key,
-                                          UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(key, -1, US_INV);
+DefaultLocaleDisplayNames::ଚାବି_Display_Name(ଅଚଳ ଅକ୍ଷର* ଚାବି,
+                                          UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
+  ଫେରନ୍ତୁ result = UnicodeString(ଚାବି, -1, US_INV);
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::keyValueDisplayName(const char* /* key */,
-                                               const char* value,
-                                               UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(value, -1, US_INV);
+DefaultLocaleDisplayNames::ଚାବି_ମୂଲ୍ୟ_Display_Name(ଅଚଳ ଅକ୍ଷର* /*ଚାବି*/,
+                                               ଅଚଳ ଅକ୍ଷର* value,
+                                               UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
+  ଫେରନ୍ତୁ result = UnicodeString(value, -1, US_INV);
 }
 
 #endif  // currently unused class DefaultLocaleDisplayNames
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class LocaleDisplayNamesImpl : public LocaleDisplayNames {
+ଶ୍ରେଣୀ LocaleDisplayNamesImpl : ସର୍ବସାଧାରଣ LocaleDisplayNames {
     Locale locale;
     UDialectHandling dialectHandling;
     ICUDataTable langData;
     ICUDataTable regionData;
     SimpleFormatter separatorFormat;
     SimpleFormatter format;
-    SimpleFormatter keyTypeFormat;
+    SimpleFormatter ଚାବି_Type_Format;
     UDisplayContext capitalizationContext;
-#if !UCONFIG_NO_BREAK_ITERATION
+#ଯଦି !UCONFIG_NO_BREAK_ITERATION
     BreakIterator* capitalizationBrkIter;
-#else
+#ଅନ୍ୟଥା
     UObject* capitalizationBrkIter;
 #endif
     UnicodeString formatOpenParen;
@@ -253,73 +253,73 @@ class LocaleDisplayNamesImpl : public LocaleDisplayNames {
     UDisplayContext substitute;
 
     // Constants for capitalization context usage types.
-    enum CapContextUsage {
+    ଗଣନା CapContextUsage {
         kCapContextUsageLanguage,
         kCapContextUsageScript,
         kCapContextUsageTerritory,
         kCapContextUsageVariant,
-        kCapContextUsageKey,
-        kCapContextUsageKeyValue,
-        kCapContextUsageCount
+        k_Cap_Context_Usage_ଚାବି,
+        k_Cap_Context_Usage_ଚାବି_ମୂଲ୍ୟ,
+        k_Cap_Context_Usage_ଗଣନା
     };
     // Capitalization transforms. For each usage type, indicates whether to titlecase for
     // the context specified in capitalizationContext (which we know at construction time)
-     bool fCapitalization[kCapContextUsageCount];
+     ତାର୍କିକ fCapitalization[k_Cap_Context_Usage_ଗଣନା];
 
-public:
+ସର୍ବସାଧାରଣ:
     // constructor
-    LocaleDisplayNamesImpl(const Locale& locale, UDialectHandling dialectHandling);
-    LocaleDisplayNamesImpl(const Locale& locale, UDisplayContext *contexts, int32_t length);
-    virtual ~LocaleDisplayNamesImpl();
+    LocaleDisplayNamesImpl(ଅଚଳ Locale& locale, UDialectHandling dialectHandling);
+    LocaleDisplayNamesImpl(ଅଚଳ Locale& locale, UDisplayContext *contexts, int32_t length);
+    ଆଭାସୀ ~LocaleDisplayNamesImpl();
 
-    virtual const Locale& getLocale() const U_LIFETIME_BOUND override;
-    virtual UDialectHandling getDialectHandling() const override;
-    virtual UDisplayContext getContext(UDisplayContextType type) const override;
+    ଆଭାସୀ ଅଚଳ Locale& getLocale() ଅଚଳ U_LIFETIME_BOUND override;
+    ଆଭାସୀ UDialectHandling getDialectHandling() ଅଚଳ override;
+    ଆଭାସୀ UDisplayContext getContext(UDisplayContextType type) ଅଚଳ override;
 
-    virtual UnicodeString& localeDisplayName(const Locale& locale,
-                                             UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString& localeDisplayName(const char* localeId,
-                                             UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString&
-    languageDisplayName(const char* lang, UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString& scriptDisplayName(const char* script,
-                                             UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString& scriptDisplayName(UScriptCode scriptCode,
-                                             UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString& regionDisplayName(const char* region,
-                                             UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString&
-    variantDisplayName(const char* variant, UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString& keyDisplayName(const char* key,
-                                          UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString&
-    keyValueDisplayName(const char* key, const char* value,
-                        UnicodeString& result U_LIFETIME_BOUND) const override;
+    ଆଭାସୀ UnicodeString& localeDisplayName(ଅଚଳ Locale& locale,
+                                             UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ override;
+    ଆଭାସୀ UnicodeString& localeDisplayName(ଅଚଳ ଅକ୍ଷର* localeId,
+                                             UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ override;
+    ଆଭାସୀ UnicodeString&
+    languageDisplayName(ଅଚଳ ଅକ୍ଷର* lang, UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ override;
+    ଆଭାସୀ UnicodeString& scriptDisplayName(ଅଚଳ ଅକ୍ଷର* script,
+                                             UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ override;
+    ଆଭାସୀ UnicodeString& scriptDisplayName(UScriptCode scriptCode,
+                                             UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ override;
+    ଆଭାସୀ UnicodeString& regionDisplayName(ଅଚଳ ଅକ୍ଷର* region,
+                                             UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ override;
+    ଆଭାସୀ UnicodeString&
+    variantDisplayName(ଅଚଳ ଅକ୍ଷର* variant, UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ override;
+    ଆଭାସୀ UnicodeString& ଚାବି_Display_Name(ଅଚଳ ଅକ୍ଷର* ଚାବି,
+                                          UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ override;
+    ଆଭାସୀ UnicodeString&
+    ଚାବି_ମୂଲ୍ୟ_Display_Name(ଅଚଳ ଅକ୍ଷର* ଚାବି, ଅଚଳ ଅକ୍ଷର* value,
+                        UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ override;
 
-private:
-    UnicodeString& localeIdName(const char* localeId, UnicodeString& result U_LIFETIME_BOUND,
-                                bool substitute) const;
+ବ୍ୟକ୍ତିଗତ:
+    UnicodeString& localeIdName(ଅଚଳ ଅକ୍ଷର* localeId, UnicodeString& result U_LIFETIME_BOUND,
+                                ତାର୍କିକ substitute) ଅଚଳ;
     UnicodeString& appendWithSep(UnicodeString& buffer U_LIFETIME_BOUND,
-                                 const UnicodeString& src) const;
+                                 ଅଚଳ UnicodeString& src) ଅଚଳ;
     UnicodeString& adjustForUsageAndContext(CapContextUsage usage,
-                                            UnicodeString& result U_LIFETIME_BOUND) const;
-    UnicodeString& scriptDisplayName(const char* script, UnicodeString& result U_LIFETIME_BOUND,
-                                     bool skipAdjust) const;
-    UnicodeString& regionDisplayName(const char* region, UnicodeString& result U_LIFETIME_BOUND,
-                                     bool skipAdjust) const;
-    UnicodeString& variantDisplayName(const char* variant, UnicodeString& result U_LIFETIME_BOUND,
-                                      bool skipAdjust) const;
-    UnicodeString& keyDisplayName(const char* key, UnicodeString& result U_LIFETIME_BOUND,
-                                  bool skipAdjust) const;
-    UnicodeString& keyValueDisplayName(const char* key, const char* value,
+                                            UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ;
+    UnicodeString& scriptDisplayName(ଅଚଳ ଅକ୍ଷର* script, UnicodeString& result U_LIFETIME_BOUND,
+                                     ତାର୍କିକ skipAdjust) ଅଚଳ;
+    UnicodeString& regionDisplayName(ଅଚଳ ଅକ୍ଷର* region, UnicodeString& result U_LIFETIME_BOUND,
+                                     ତାର୍କିକ skipAdjust) ଅଚଳ;
+    UnicodeString& variantDisplayName(ଅଚଳ ଅକ୍ଷର* variant, UnicodeString& result U_LIFETIME_BOUND,
+                                      ତାର୍କିକ skipAdjust) ଅଚଳ;
+    UnicodeString& ଚାବି_Display_Name(ଅଚଳ ଅକ୍ଷର* ଚାବି, UnicodeString& result U_LIFETIME_BOUND,
+                                  ତାର୍କିକ skipAdjust) ଅଚଳ;
+    UnicodeString& ଚାବି_ମୂଲ୍ୟ_Display_Name(ଅଚଳ ଅକ୍ଷର* ଚାବି, ଅଚଳ ଅକ୍ଷର* value,
                                        UnicodeString& result U_LIFETIME_BOUND,
-                                       bool skipAdjust) const;
-    void initialize();
+                                       ତାର୍କିକ skipAdjust) ଅଚଳ;
+    ଶୂନ୍ୟ initialize();
 
-    struct CapitalizationContextSink;
+    ସଂରଚନା CapitalizationContextSink;
 };
 
-LocaleDisplayNamesImpl::LocaleDisplayNamesImpl(const Locale& locale,
+LocaleDisplayNamesImpl::LocaleDisplayNamesImpl(ଅଚଳ Locale& locale,
                                                UDialectHandling dialectHandling)
     : dialectHandling(dialectHandling)
     , langData(U_ICUDATA_LANG, locale)
@@ -332,7 +332,7 @@ LocaleDisplayNamesImpl::LocaleDisplayNamesImpl(const Locale& locale,
     initialize();
 }
 
-LocaleDisplayNamesImpl::LocaleDisplayNamesImpl(const Locale& locale,
+LocaleDisplayNamesImpl::LocaleDisplayNamesImpl(ଅଚଳ Locale& locale,
                                                UDisplayContext *contexts, int32_t length)
     : dialectHandling(ULDN_STANDARD_NAMES)
     , langData(U_ICUDATA_LANG, locale)
@@ -342,71 +342,71 @@ LocaleDisplayNamesImpl::LocaleDisplayNamesImpl(const Locale& locale,
     , nameLength(UDISPCTX_LENGTH_FULL)
     , substitute(UDISPCTX_SUBSTITUTE)
 {
-    while (length-- > 0) {
+    ଯେତେବେଳେ (length-- > 0) {
         UDisplayContext value = *contexts++;
         UDisplayContextType selector =
             static_cast<UDisplayContextType>(static_cast<uint32_t>(value) >> 8);
-        switch (selector) {
-            case UDISPCTX_TYPE_DIALECT_HANDLING:
+        ବାଛ (selector) {
+            ସ୍ଥିତି UDISPCTX_TYPE_DIALECT_HANDLING:
                 dialectHandling = static_cast<UDialectHandling>(value);
-                break;
-            case UDISPCTX_TYPE_CAPITALIZATION:
+                ଭାଙ୍ଗ;
+            ସ୍ଥିତି UDISPCTX_TYPE_CAPITALIZATION:
                 capitalizationContext = value;
-                break;
-            case UDISPCTX_TYPE_DISPLAY_LENGTH:
+                ଭାଙ୍ଗ;
+            ସ୍ଥିତି UDISPCTX_TYPE_DISPLAY_LENGTH:
                 nameLength = value;
-                break;
-            case UDISPCTX_TYPE_SUBSTITUTE_HANDLING:
+                ଭାଙ୍ଗ;
+            ସ୍ଥିତି UDISPCTX_TYPE_SUBSTITUTE_HANDLING:
                 substitute = value;
-                break;
-            default:
-                break;
+                ଭାଙ୍ଗ;
+            ପୂର୍ବନିର୍ଦ୍ଧାରିତ:
+                ଭାଙ୍ଗ;
         }
     }
     initialize();
 }
 
-struct LocaleDisplayNamesImpl::CapitalizationContextSink : public ResourceSink {
-    bool hasCapitalizationUsage;
+ସଂରଚନା LocaleDisplayNamesImpl::CapitalizationContextSink : ସର୍ବସାଧାରଣ ResourceSink {
+    ତାର୍କିକ hasCapitalizationUsage;
     LocaleDisplayNamesImpl& parent;
 
     CapitalizationContextSink(LocaleDisplayNamesImpl& _parent)
-      : hasCapitalizationUsage(false), parent(_parent) {}
-    virtual ~CapitalizationContextSink();
+      : hasCapitalizationUsage(ମିଥ୍ୟା), parent(_parent) {}
+    ଆଭାସୀ ~CapitalizationContextSink();
 
-    virtual void put(const char *key, ResourceValue &value, UBool /*noFallback*/,
+    ଆଭାସୀ ଶୂନ୍ୟ put(ଅଚଳ ଅକ୍ଷର *ଚାବି, Resource_ମୂଲ୍ୟ &value, UBool /*noFallback*/,
             UErrorCode &errorCode) override {
         ResourceTable contexts = value.getTable(errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        for (int i = 0; contexts.getKeyAndValue(i, key, value); ++i) {
+        ଯଦି (U_FAILURE(errorCode)) { ଫେରନ୍ତୁ; }
+        ପାଇଁ (ପୂର୍ଣ୍ଣସଂଖ୍ୟା i = 0; contexts.get_ଚାବି_And_ମୂଲ୍ୟ(i, ଚାବି, value); ++i) {
 
             CapContextUsage usageEnum;
-            if (uprv_strcmp(key, "key") == 0) {
-                usageEnum = kCapContextUsageKey;
-            } else if (uprv_strcmp(key, "keyValue") == 0) {
-                usageEnum = kCapContextUsageKeyValue;
-            } else if (uprv_strcmp(key, "languages") == 0) {
+            ଯଦି (uprv_strcmp(ଚାବି, "key") == 0) {
+                usageEnum = k_Cap_Context_Usage_ଚାବି;
+            } ଅନ୍ୟଥା ଯଦି (uprv_strcmp(ଚାବି, "keyValue") == 0) {
+                usageEnum = k_Cap_Context_Usage_ଚାବି_ମୂଲ୍ୟ;
+            } ଅନ୍ୟଥା ଯଦି (uprv_strcmp(ଚାବି, "languages") == 0) {
                 usageEnum = kCapContextUsageLanguage;
-            } else if (uprv_strcmp(key, "script") == 0) {
+            } ଅନ୍ୟଥା ଯଦି (uprv_strcmp(ଚାବି, "script") == 0) {
                 usageEnum = kCapContextUsageScript;
-            } else if (uprv_strcmp(key, "territory") == 0) {
+            } ଅନ୍ୟଥା ଯଦି (uprv_strcmp(ଚାବି, "territory") == 0) {
                 usageEnum = kCapContextUsageTerritory;
-            } else if (uprv_strcmp(key, "variant") == 0) {
+            } ଅନ୍ୟଥା ଯଦି (uprv_strcmp(ଚାବି, "variant") == 0) {
                 usageEnum = kCapContextUsageVariant;
-            } else {
-                continue;
+            } ଅନ୍ୟଥା {
+                ଜାରି;
             }
 
             int32_t len = 0;
-            const int32_t* intVector = value.getIntVector(len, errorCode);
-            if (U_FAILURE(errorCode)) { return; }
-            if (len < 2) { continue; }
+            ଅଚଳ int32_t* intVector = value.getIntVector(len, errorCode);
+            ଯଦି (U_FAILURE(errorCode)) { ଫେରନ୍ତୁ; }
+            ଯଦି (len < 2) { ଜାରି; }
 
             int32_t titlecaseInt = (parent.capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_UI_LIST_OR_MENU) ? intVector[0] : intVector[1];
-            if (titlecaseInt == 0) { continue; }
+            ଯଦି (titlecaseInt == 0) { ଜାରି; }
 
-            parent.fCapitalization[usageEnum] = true;
-            hasCapitalizationUsage = true;
+            parent.fCapitalization[usageEnum] = ସତ୍ୟ;
+            hasCapitalizationUsage = ସତ୍ୟ;
         }
     }
 };
@@ -414,16 +414,16 @@ struct LocaleDisplayNamesImpl::CapitalizationContextSink : public ResourceSink {
 // Virtual destructors must be defined out of line.
 LocaleDisplayNamesImpl::CapitalizationContextSink::~CapitalizationContextSink() {}
 
-void
+ଶୂନ୍ୟ
 LocaleDisplayNamesImpl::initialize() {
-    LocaleDisplayNamesImpl* nonConstThis = this;
-    nonConstThis->locale = langData.getLocale() == Locale::getRoot()
+    LocaleDisplayNamesImpl* nonConstThis = ଏହି;
+    nonConstThis->locale = langData.getLocale() == Locale::get_ମୂଳ()
         ? regionData.getLocale()
         : langData.getLocale();
 
     UnicodeString sep;
     langData.getNoFallback("localeDisplayPattern", "separator", sep);
-    if (sep.isBogus()) {
+    ଯଦି (sep.isBogus()) {
         sep = UnicodeString("{0}, {1}", -1, US_INV);
     }
     UErrorCode status = U_ZERO_ERROR;
@@ -431,16 +431,16 @@ LocaleDisplayNamesImpl::initialize() {
 
     UnicodeString pattern;
     langData.getNoFallback("localeDisplayPattern", "pattern", pattern);
-    if (pattern.isBogus()) {
+    ଯଦି (pattern.isBogus()) {
         pattern = UnicodeString("{0} ({1})", -1, US_INV);
     }
     format.applyPatternMinMaxArguments(pattern, 2, 2, status);
-    if (pattern.indexOf(static_cast<char16_t>(0xFF08)) >= 0) {
+    ଯଦି (pattern.indexOf(static_cast<char16_t>(0xFF08)) >= 0) {
         formatOpenParen.setTo(static_cast<char16_t>(0xFF08));         // fullwidth (
         formatReplaceOpenParen.setTo(static_cast<char16_t>(0xFF3B));  // fullwidth [
         formatCloseParen.setTo(static_cast<char16_t>(0xFF09));        // fullwidth )
         formatReplaceCloseParen.setTo(static_cast<char16_t>(0xFF3D)); // fullwidth ]
-    } else {
+    } ଅନ୍ୟଥା {
         formatOpenParen.setTo(static_cast<char16_t>(0x0028));         // (
         formatReplaceOpenParen.setTo(static_cast<char16_t>(0x005B));  // [
         formatCloseParen.setTo(static_cast<char16_t>(0x0029));        // )
@@ -449,34 +449,34 @@ LocaleDisplayNamesImpl::initialize() {
 
     UnicodeString ktPattern;
     langData.get("localeDisplayPattern", "keyTypePattern", ktPattern);
-    if (ktPattern.isBogus()) {
+    ଯଦି (ktPattern.isBogus()) {
         ktPattern = UnicodeString("{0}={1}", -1, US_INV);
     }
-    keyTypeFormat.applyPatternMinMaxArguments(ktPattern, 2, 2, status);
+    ଚାବି_Type_Format.applyPatternMinMaxArguments(ktPattern, 2, 2, status);
 
-    uprv_memset(fCapitalization, 0, sizeof(fCapitalization));
-#if !UCONFIG_NO_BREAK_ITERATION
+    uprv_memset(fCapitalization, 0, ଆକାର(fCapitalization));
+#ଯଦି !UCONFIG_NO_BREAK_ITERATION
     // Only get the context data if we need it! This is a const object so we know now...
     // Also check whether we will need a break iterator (depends on the data)
-    bool needBrkIter = false;
-    if (capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_UI_LIST_OR_MENU || capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_STANDALONE) {
+    ତାର୍କିକ needBrkIter = ମିଥ୍ୟା;
+    ଯଦି (capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_UI_LIST_OR_MENU || capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_STANDALONE) {
         LocalUResourceBundlePointer resource(ures_open(nullptr, locale.getName(), &status));
-        if (U_FAILURE(status)) { return; }
-        CapitalizationContextSink sink(*this);
-        ures_getAllItemsWithFallback(resource.getAlias(), "contextTransforms", sink, status);
-        if (status == U_MISSING_RESOURCE_ERROR) {
+        ଯଦି (U_FAILURE(status)) { ଫେରନ୍ତୁ; }
+        CapitalizationContextSink sink(*ଏହି);
+        ures_get_All_ବସ୍ତୁଗୁଡ଼ିକ_With_Fallback(resource.getAlias(), "contextTransforms", sink, status);
+        ଯଦି (status == U_MISSING_RESOURCE_ERROR) {
             // Silently ignore.  Not every locale has contextTransforms.
             status = U_ZERO_ERROR;
-        } else if (U_FAILURE(status)) {
-            return;
+        } ଅନ୍ୟଥା ଯଦି (U_FAILURE(status)) {
+            ଫେରନ୍ତୁ;
         }
         needBrkIter = sink.hasCapitalizationUsage;
     }
     // Get a sentence break iterator if we will need it
-    if (needBrkIter || capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_BEGINNING_OF_SENTENCE) {
+    ଯଦି (needBrkIter || capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_BEGINNING_OF_SENTENCE) {
         status = U_ZERO_ERROR;
         capitalizationBrkIter = BreakIterator::createSentenceInstance(locale, status);
-        if (U_FAILURE(status)) {
+        ଯଦି (U_FAILURE(status)) {
             delete capitalizationBrkIter;
             capitalizationBrkIter = nullptr;
         }
@@ -485,125 +485,125 @@ LocaleDisplayNamesImpl::initialize() {
 }
 
 LocaleDisplayNamesImpl::~LocaleDisplayNamesImpl() {
-#if !UCONFIG_NO_BREAK_ITERATION
+#ଯଦି !UCONFIG_NO_BREAK_ITERATION
     delete capitalizationBrkIter;
 #endif
 }
 
-const Locale&
-LocaleDisplayNamesImpl::getLocale() const U_LIFETIME_BOUND {
-    return locale;
+ଅଚଳ Locale&
+LocaleDisplayNamesImpl::getLocale() ଅଚଳ U_LIFETIME_BOUND {
+    ଫେରନ୍ତୁ locale;
 }
 
 UDialectHandling
-LocaleDisplayNamesImpl::getDialectHandling() const {
-    return dialectHandling;
+LocaleDisplayNamesImpl::getDialectHandling() ଅଚଳ {
+    ଫେରନ୍ତୁ dialectHandling;
 }
 
 UDisplayContext
-LocaleDisplayNamesImpl::getContext(UDisplayContextType type) const {
-    switch (type) {
-        case UDISPCTX_TYPE_DIALECT_HANDLING:
-            return static_cast<UDisplayContext>(dialectHandling);
-        case UDISPCTX_TYPE_CAPITALIZATION:
-            return capitalizationContext;
-        case UDISPCTX_TYPE_DISPLAY_LENGTH:
-            return nameLength;
-        case UDISPCTX_TYPE_SUBSTITUTE_HANDLING:
-            return substitute;
-        default:
-            break;
+LocaleDisplayNamesImpl::getContext(UDisplayContextType type) ଅଚଳ {
+    ବାଛ (type) {
+        ସ୍ଥିତି UDISPCTX_TYPE_DIALECT_HANDLING:
+            ଫେରନ୍ତୁ static_cast<UDisplayContext>(dialectHandling);
+        ସ୍ଥିତି UDISPCTX_TYPE_CAPITALIZATION:
+            ଫେରନ୍ତୁ capitalizationContext;
+        ସ୍ଥିତି UDISPCTX_TYPE_DISPLAY_LENGTH:
+            ଫେରନ୍ତୁ nameLength;
+        ସ୍ଥିତି UDISPCTX_TYPE_SUBSTITUTE_HANDLING:
+            ଫେରନ୍ତୁ substitute;
+        ପୂର୍ବନିର୍ଦ୍ଧାରିତ:
+            ଭାଙ୍ଗ;
     }
-    return static_cast<UDisplayContext>(0);
+    ଫେରନ୍ତୁ static_cast<UDisplayContext>(0);
 }
 
 UnicodeString&
 LocaleDisplayNamesImpl::adjustForUsageAndContext(CapContextUsage usage,
-                                                 UnicodeString& result U_LIFETIME_BOUND) const {
-#if !UCONFIG_NO_BREAK_ITERATION
+                                                 UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
+#ଯଦି !UCONFIG_NO_BREAK_ITERATION
     // check to see whether we need to titlecase result
-    if ( result.length() > 0 && u_islower(result.char32At(0)) && capitalizationBrkIter!= nullptr &&
+    ଯଦି ( result.length() > 0 && u_islower(result.char32At(0)) && capitalizationBrkIter!= nullptr &&
           ( capitalizationContext==UDISPCTX_CAPITALIZATION_FOR_BEGINNING_OF_SENTENCE || fCapitalization[usage] ) ) {
         // note fCapitalization[usage] won't be set unless capitalizationContext is UI_LIST_OR_MENU or STANDALONE
-        static UMutex capitalizationBrkIterLock;
+        ସ୍ଥିର UMutex capitalizationBrkIterLock;
         Mutex lock(&capitalizationBrkIterLock);
         result.toTitle(capitalizationBrkIter, locale, U_TITLECASE_NO_LOWERCASE | U_TITLECASE_NO_BREAK_ADJUSTMENT);
     }
 #endif
-    return result;
+    ଫେରନ୍ତୁ result;
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::localeDisplayName(const Locale& loc,
-                                          UnicodeString& result U_LIFETIME_BOUND) const {
-  if (loc.isBogus()) {
+LocaleDisplayNamesImpl::localeDisplayName(ଅଚଳ Locale& loc,
+                                          UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
+  ଯଦି (loc.isBogus()) {
     result.setToBogus();
-    return result;
+    ଫେରନ୍ତୁ result;
   }
   UnicodeString resultName;
 
-  const char* lang = loc.getLanguage();
-  if (uprv_strlen(lang) == 0) {
+  ଅଚଳ ଅକ୍ଷର* lang = loc.getLanguage();
+  ଯଦି (uprv_strlen(lang) == 0) {
     lang = "root";
   }
-  const char* script = loc.getScript();
-  const char* country = loc.getCountry();
-  const char* variant = loc.getVariant();
+  ଅଚଳ ଅକ୍ଷର* script = loc.getScript();
+  ଅଚଳ ଅକ୍ଷର* country = loc.getCountry();
+  ଅଚଳ ଅକ୍ଷର* variant = loc.getVariant();
 
-  bool hasScript = uprv_strlen(script) > 0;
-  bool hasCountry = uprv_strlen(country) > 0;
-  bool hasVariant = uprv_strlen(variant) > 0;
+  ତାର୍କିକ hasScript = uprv_strlen(script) > 0;
+  ତାର୍କିକ hasCountry = uprv_strlen(country) > 0;
+  ତାର୍କିକ hasVariant = uprv_strlen(variant) > 0;
 
-  if (dialectHandling == ULDN_DIALECT_NAMES) {
+  ଯଦି (dialectHandling == ULDN_DIALECT_NAMES) {
     UErrorCode status = U_ZERO_ERROR;
     CharString buffer;
-    do { // loop construct is so we can break early out of search
-      if (hasScript && hasCountry) {
+    କର { // loop construct is so we can break early out of search
+      ଯଦି (hasScript && hasCountry) {
         buffer.append(lang, status)
               .append('_', status)
               .append(script, status)
               .append('_', status)
               .append(country, status);
-        if (U_SUCCESS(status)) {
-          localeIdName(buffer.data(), resultName, false);
-          if (!resultName.isBogus()) {
-            hasScript = false;
-            hasCountry = false;
-            break;
+        ଯଦି (U_SUCCESS(status)) {
+          localeIdName(buffer.data(), resultName, ମିଥ୍ୟା);
+          ଯଦି (!resultName.isBogus()) {
+            hasScript = ମିଥ୍ୟା;
+            hasCountry = ମିଥ୍ୟା;
+            ଭାଙ୍ଗ;
           }
         }
       }
-      if (hasScript) {
+      ଯଦି (hasScript) {
         buffer.append(lang, status)
               .append('_', status)
               .append(script, status);
-        if (U_SUCCESS(status)) {
-          localeIdName(buffer.data(), resultName, false);
-          if (!resultName.isBogus()) {
-            hasScript = false;
-            break;
+        ଯଦି (U_SUCCESS(status)) {
+          localeIdName(buffer.data(), resultName, ମିଥ୍ୟା);
+          ଯଦି (!resultName.isBogus()) {
+            hasScript = ମିଥ୍ୟା;
+            ଭାଙ୍ଗ;
           }
         }
       }
-      if (hasCountry) {
+      ଯଦି (hasCountry) {
         buffer.append(lang, status)
               .append('_', status)
               .append(country, status);
-        if (U_SUCCESS(status)) {
-          localeIdName(buffer.data(), resultName, false);
-          if (!resultName.isBogus()) {
-            hasCountry = false;
-            break;
+        ଯଦି (U_SUCCESS(status)) {
+          localeIdName(buffer.data(), resultName, ମିଥ୍ୟା);
+          ଯଦି (!resultName.isBogus()) {
+            hasCountry = ମିଥ୍ୟା;
+            ଭାଙ୍ଗ;
           }
         }
       }
-    } while (false);
+    } ଯେତେବେଳେ (ମିଥ୍ୟା);
   }
-  if (resultName.isBogus() || resultName.isEmpty()) {
+  ଯଦି (resultName.isBogus() || resultName.isEmpty()) {
     localeIdName(lang, resultName, substitute == UDISPCTX_SUBSTITUTE);
-    if (resultName.isBogus()) {
+    ଯଦି (resultName.isBogus()) {
       result.setToBogus();
-      return result;
+      ଫେରନ୍ତୁ result;
     }
   }
 
@@ -611,27 +611,27 @@ LocaleDisplayNamesImpl::localeDisplayName(const Locale& loc,
   UnicodeString temp;
   UErrorCode status = U_ZERO_ERROR;
 
-  if (hasScript) {
-    UnicodeString script_str = scriptDisplayName(script, temp, true);
-    if (script_str.isBogus()) {
+  ଯଦି (hasScript) {
+    UnicodeString script_str = scriptDisplayName(script, temp, ସତ୍ୟ);
+    ଯଦି (script_str.isBogus()) {
       result.setToBogus();
-      return result;
+      ଫେରନ୍ତୁ result;
     }
     resultRemainder.append(script_str);
   }
-  if (hasCountry) {
-    UnicodeString region_str = regionDisplayName(country, temp, true);
-    if (region_str.isBogus()) {
+  ଯଦି (hasCountry) {
+    UnicodeString region_str = regionDisplayName(country, temp, ସତ୍ୟ);
+    ଯଦି (region_str.isBogus()) {
       result.setToBogus();
-      return result;
+      ଫେରନ୍ତୁ result;
     }
     appendWithSep(resultRemainder, region_str);
   }
-  if (hasVariant) {
-    UnicodeString variant_str = variantDisplayName(variant, temp, true);
-    if (variant_str.isBogus()) {
+  ଯଦି (hasVariant) {
+    UnicodeString variant_str = variantDisplayName(variant, temp, ସତ୍ୟ);
+    ଯଦି (variant_str.isBogus()) {
       result.setToBogus();
-      return result;
+      ଫେରନ୍ତୁ result;
     }
     appendWithSep(resultRemainder, variant_str);
   }
@@ -639,27 +639,27 @@ LocaleDisplayNamesImpl::localeDisplayName(const Locale& loc,
   resultRemainder.findAndReplace(formatCloseParen, formatReplaceCloseParen);
 
   LocalPointer<StringEnumeration> e(loc.createKeywords(status));
-  if (e.isValid() && U_SUCCESS(status)) {
+  ଯଦି (e.isValid() && U_SUCCESS(status)) {
     UnicodeString temp2;
-    const char* key;
-    while ((key = e->next((int32_t*)nullptr, status)) != nullptr) {
-        auto value = loc.getKeywordValue<CharString>(key, status);
-        if (U_FAILURE(status)) {
-            return result;
+    ଅଚଳ ଅକ୍ଷର* ଚାବି;
+    ଯେତେବେଳେ ((ଚାବି = e->next((int32_t*)nullptr, status)) != nullptr) {
+        auto value = loc.get_Keyword_ମୂଲ୍ୟ<CharString>(ଚାବି, status);
+        ଯଦି (U_FAILURE(status)) {
+            ଫେରନ୍ତୁ result;
       }
-      keyDisplayName(key, temp, true);
+      ଚାବି_Display_Name(ଚାବି, temp, ସତ୍ୟ);
       temp.findAndReplace(formatOpenParen, formatReplaceOpenParen);
       temp.findAndReplace(formatCloseParen, formatReplaceCloseParen);
-      keyValueDisplayName(key, value.data(), temp2, true);
+      ଚାବି_ମୂଲ୍ୟ_Display_Name(ଚାବି, value.data(), temp2, ସତ୍ୟ);
       temp2.findAndReplace(formatOpenParen, formatReplaceOpenParen);
       temp2.findAndReplace(formatCloseParen, formatReplaceCloseParen);
-      if (temp2 != UnicodeString(value.data(), -1, US_INV)) {
+      ଯଦି (temp2 != UnicodeString(value.data(), -1, US_INV)) {
         appendWithSep(resultRemainder, temp2);
-      } else if (temp != UnicodeString(key, -1, US_INV)) {
+      } ଅନ୍ୟଥା ଯଦି (temp != UnicodeString(ଚାବି, -1, US_INV)) {
         UnicodeString temp3;
-        keyTypeFormat.format(temp, temp2, temp3, status);
+        ଚାବି_Type_Format.format(temp, temp2, temp3, status);
         appendWithSep(resultRemainder, temp3);
-      } else {
+      } ଅନ୍ୟଥା {
         appendWithSep(resultRemainder, temp)
           .append(static_cast<char16_t>(0x3d) /* = */)
           .append(temp2);
@@ -667,246 +667,246 @@ LocaleDisplayNamesImpl::localeDisplayName(const Locale& loc,
     }
   }
 
-  if (!resultRemainder.isEmpty()) {
+  ଯଦି (!resultRemainder.isEmpty()) {
     format.format(resultName, resultRemainder, result.remove(), status);
-    return adjustForUsageAndContext(kCapContextUsageLanguage, result);
+    ଫେରନ୍ତୁ adjustForUsageAndContext(kCapContextUsageLanguage, result);
   }
 
   result = resultName;
-  return adjustForUsageAndContext(kCapContextUsageLanguage, result);
+  ଫେରନ୍ତୁ adjustForUsageAndContext(kCapContextUsageLanguage, result);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::appendWithSep(UnicodeString& buffer U_LIFETIME_BOUND, const UnicodeString& src) const {
-    if (buffer.isEmpty()) {
+LocaleDisplayNamesImpl::appendWithSep(UnicodeString& buffer U_LIFETIME_BOUND, ଅଚଳ UnicodeString& src) ଅଚଳ {
+    ଯଦି (buffer.isEmpty()) {
         buffer.setTo(src);
-    } else {
-        const UnicodeString *values[2] = { &buffer, &src };
+    } ଅନ୍ୟଥା {
+        ଅଚଳ UnicodeString *ମୂଲ୍ୟଗୁଡ଼ିକ[2] = { &buffer, &src };
         UErrorCode status = U_ZERO_ERROR;
-        separatorFormat.formatAndReplace(values, 2, buffer, nullptr, 0, status);
+        separatorFormat.formatAndReplace(ମୂଲ୍ୟଗୁଡ଼ିକ, 2, buffer, nullptr, 0, status);
     }
-    return buffer;
+    ଫେରନ୍ତୁ buffer;
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::localeDisplayName(const char* localeId,
-                                          UnicodeString& result U_LIFETIME_BOUND) const {
-    return localeDisplayName(Locale(localeId), result);
+LocaleDisplayNamesImpl::localeDisplayName(ଅଚଳ ଅକ୍ଷର* localeId,
+                                          UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
+    ଫେରନ୍ତୁ localeDisplayName(Locale(localeId), result);
 }
 
 // private
 UnicodeString&
-LocaleDisplayNamesImpl::localeIdName(const char* localeId,
-                                     UnicodeString& result U_LIFETIME_BOUND, bool substitute) const {
-    if (nameLength == UDISPCTX_LENGTH_SHORT) {
+LocaleDisplayNamesImpl::localeIdName(ଅଚଳ ଅକ୍ଷର* localeId,
+                                     UnicodeString& result U_LIFETIME_BOUND, ତାର୍କିକ substitute) ଅଚଳ {
+    ଯଦି (nameLength == UDISPCTX_LENGTH_SHORT) {
         langData.getNoFallback("Languages%short", localeId, result);
-        if (!result.isBogus()) {
-            return result;
+        ଯଦି (!result.isBogus()) {
+            ଫେରନ୍ତୁ result;
         }
     }
     langData.getNoFallback("Languages", localeId, result);
-    if (result.isBogus() && uprv_strchr(localeId, '_') == nullptr) {
+    ଯଦି (result.isBogus() && uprv_strchr(localeId, '_') == nullptr) {
         // Canonicalize lang and try again, ICU-20870
         // (only for language codes without script or region)
         Locale canonLocale = Locale::createCanonical(localeId);
-        const char* canonLocId = canonLocale.getName();
-        if (nameLength == UDISPCTX_LENGTH_SHORT) {
+        ଅଚଳ ଅକ୍ଷର* canonLocId = canonLocale.getName();
+        ଯଦି (nameLength == UDISPCTX_LENGTH_SHORT) {
             langData.getNoFallback("Languages%short", canonLocId, result);
-            if (!result.isBogus()) {
-                return result;
+            ଯଦି (!result.isBogus()) {
+                ଫେରନ୍ତୁ result;
             }
         }
         langData.getNoFallback("Languages", canonLocId, result);
     }
-    if (result.isBogus() && substitute) {
+    ଯଦି (result.isBogus() && substitute) {
         // use key, this is what langData.get (with fallback) falls back to.
         result.setTo(UnicodeString(localeId, -1, US_INV)); // use key (
     }
-    return result;
+    ଫେରନ୍ତୁ result;
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::languageDisplayName(const char* lang,
-                                            UnicodeString& result U_LIFETIME_BOUND) const {
-    if (uprv_strcmp("root", lang) == 0 || uprv_strchr(lang, '_') != nullptr) {
-        return result = UnicodeString(lang, -1, US_INV);
+LocaleDisplayNamesImpl::languageDisplayName(ଅଚଳ ଅକ୍ଷର* lang,
+                                            UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
+    ଯଦି (uprv_strcmp("root", lang) == 0 || uprv_strchr(lang, '_') != nullptr) {
+        ଫେରନ୍ତୁ result = UnicodeString(lang, -1, US_INV);
     }
-    if (nameLength == UDISPCTX_LENGTH_SHORT) {
+    ଯଦି (nameLength == UDISPCTX_LENGTH_SHORT) {
         langData.getNoFallback("Languages%short", lang, result);
-        if (!result.isBogus()) {
-            return adjustForUsageAndContext(kCapContextUsageLanguage, result);
+        ଯଦି (!result.isBogus()) {
+            ଫେରନ୍ତୁ adjustForUsageAndContext(kCapContextUsageLanguage, result);
         }
     }
     langData.getNoFallback("Languages", lang, result);
-    if (result.isBogus()) {
+    ଯଦି (result.isBogus()) {
         // Canonicalize lang and try again, ICU-20870
         Locale canonLocale = Locale::createCanonical(lang);
-        const char* canonLocId = canonLocale.getName();
-        if (nameLength == UDISPCTX_LENGTH_SHORT) {
+        ଅଚଳ ଅକ୍ଷର* canonLocId = canonLocale.getName();
+        ଯଦି (nameLength == UDISPCTX_LENGTH_SHORT) {
             langData.getNoFallback("Languages%short", canonLocId, result);
-            if (!result.isBogus()) {
-                return adjustForUsageAndContext(kCapContextUsageLanguage, result);
+            ଯଦି (!result.isBogus()) {
+                ଫେରନ୍ତୁ adjustForUsageAndContext(kCapContextUsageLanguage, result);
             }
         }
         langData.getNoFallback("Languages", canonLocId, result);
     }
-    if (result.isBogus() && substitute == UDISPCTX_SUBSTITUTE) {
+    ଯଦି (result.isBogus() && substitute == UDISPCTX_SUBSTITUTE) {
         // use key, this is what langData.get (with fallback) falls back to.
         result.setTo(UnicodeString(lang, -1, US_INV)); // use key (
     }
-    return adjustForUsageAndContext(kCapContextUsageLanguage, result);
+    ଫେରନ୍ତୁ adjustForUsageAndContext(kCapContextUsageLanguage, result);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::scriptDisplayName(const char* script,
+LocaleDisplayNamesImpl::scriptDisplayName(ଅଚଳ ଅକ୍ଷର* script,
                                           UnicodeString& result U_LIFETIME_BOUND,
-                                          bool skipAdjust) const {
-    if (nameLength == UDISPCTX_LENGTH_SHORT) {
+                                          ତାର୍କିକ skipAdjust) ଅଚଳ {
+    ଯଦି (nameLength == UDISPCTX_LENGTH_SHORT) {
         langData.getNoFallback("Scripts%short", script, result);
-        if (!result.isBogus()) {
-            return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageScript, result);
+        ଯଦି (!result.isBogus()) {
+            ଫେରନ୍ତୁ skipAdjust? result: adjustForUsageAndContext(kCapContextUsageScript, result);
         }
     }
-    if (substitute == UDISPCTX_SUBSTITUTE) {
+    ଯଦି (substitute == UDISPCTX_SUBSTITUTE) {
         langData.get("Scripts", script, result);
-    } else {
+    } ଅନ୍ୟଥା {
         langData.getNoFallback("Scripts", script, result);
     }
-    return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageScript, result);
+    ଫେରନ୍ତୁ skipAdjust? result: adjustForUsageAndContext(kCapContextUsageScript, result);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::scriptDisplayName(const char* script,
-                                          UnicodeString& result U_LIFETIME_BOUND) const {
-    return scriptDisplayName(script, result, false);
+LocaleDisplayNamesImpl::scriptDisplayName(ଅଚଳ ଅକ୍ଷର* script,
+                                          UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
+    ଫେରନ୍ତୁ scriptDisplayName(script, result, ମିଥ୍ୟା);
 }
 
 UnicodeString&
 LocaleDisplayNamesImpl::scriptDisplayName(UScriptCode scriptCode,
-                                          UnicodeString& result U_LIFETIME_BOUND) const {
-    return scriptDisplayName(uscript_getName(scriptCode), result, false);
+                                          UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
+    ଫେରନ୍ତୁ scriptDisplayName(uscript_getName(scriptCode), result, ମିଥ୍ୟା);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::regionDisplayName(const char* region,
+LocaleDisplayNamesImpl::regionDisplayName(ଅଚଳ ଅକ୍ଷର* region,
                                           UnicodeString& result U_LIFETIME_BOUND,
-                                          bool skipAdjust) const {
-    if (nameLength == UDISPCTX_LENGTH_SHORT) {
+                                          ତାର୍କିକ skipAdjust) ଅଚଳ {
+    ଯଦି (nameLength == UDISPCTX_LENGTH_SHORT) {
          regionData.getNoFallback("Countries%short", region, result);
-        if (!result.isBogus()) {
-            return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageTerritory, result);
+        ଯଦି (!result.isBogus()) {
+            ଫେରନ୍ତୁ skipAdjust? result: adjustForUsageAndContext(kCapContextUsageTerritory, result);
         }
     }
-    if (substitute == UDISPCTX_SUBSTITUTE) {
+    ଯଦି (substitute == UDISPCTX_SUBSTITUTE) {
         regionData.get("Countries", region, result);
-    } else {
+    } ଅନ୍ୟଥା {
         regionData.getNoFallback("Countries", region, result);
     }
-    return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageTerritory, result);
+    ଫେରନ୍ତୁ skipAdjust? result: adjustForUsageAndContext(kCapContextUsageTerritory, result);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::regionDisplayName(const char* region,
-                                          UnicodeString& result U_LIFETIME_BOUND) const {
-    return regionDisplayName(region, result, false);
+LocaleDisplayNamesImpl::regionDisplayName(ଅଚଳ ଅକ୍ଷର* region,
+                                          UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
+    ଫେରନ୍ତୁ regionDisplayName(region, result, ମିଥ୍ୟା);
 }
 
 
 UnicodeString&
-LocaleDisplayNamesImpl::variantDisplayName(const char* variant,
+LocaleDisplayNamesImpl::variantDisplayName(ଅଚଳ ଅକ୍ଷର* variant,
                                            UnicodeString& result U_LIFETIME_BOUND,
-                                           bool skipAdjust) const {
+                                           ତାର୍କିକ skipAdjust) ଅଚଳ {
     // don't have a resource for short variant names
-    if (substitute == UDISPCTX_SUBSTITUTE) {
+    ଯଦି (substitute == UDISPCTX_SUBSTITUTE) {
         langData.get("Variants", variant, result);
-    } else {
+    } ଅନ୍ୟଥା {
         langData.getNoFallback("Variants", variant, result);
     }
-    return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageVariant, result);
+    ଫେରନ୍ତୁ skipAdjust? result: adjustForUsageAndContext(kCapContextUsageVariant, result);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::variantDisplayName(const char* variant,
-                                           UnicodeString& result U_LIFETIME_BOUND) const {
-    return variantDisplayName(variant, result, false);
+LocaleDisplayNamesImpl::variantDisplayName(ଅଚଳ ଅକ୍ଷର* variant,
+                                           UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
+    ଫେରନ୍ତୁ variantDisplayName(variant, result, ମିଥ୍ୟା);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::keyDisplayName(const char* key,
+LocaleDisplayNamesImpl::ଚାବି_Display_Name(ଅଚଳ ଅକ୍ଷର* ଚାବି,
                                        UnicodeString& result U_LIFETIME_BOUND,
-                                       bool skipAdjust) const {
+                                       ତାର୍କିକ skipAdjust) ଅଚଳ {
     // don't have a resource for short key names
-    if (substitute == UDISPCTX_SUBSTITUTE) {
-        langData.get("Keys", key, result);
-    } else {
-        langData.getNoFallback("Keys", key, result);
+    ଯଦି (substitute == UDISPCTX_SUBSTITUTE) {
+        langData.get("Keys", ଚାବି, result);
+    } ଅନ୍ୟଥା {
+        langData.getNoFallback("Keys", ଚାବି, result);
     }
-    return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageKey, result);
+    ଫେରନ୍ତୁ skipAdjust? result: adjustForUsageAndContext(k_Cap_Context_Usage_ଚାବି, result);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::keyDisplayName(const char* key,
-                                       UnicodeString& result U_LIFETIME_BOUND) const {
-    return keyDisplayName(key, result, false);
+LocaleDisplayNamesImpl::ଚାବି_Display_Name(ଅଚଳ ଅକ୍ଷର* ଚାବି,
+                                       UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
+    ଫେରନ୍ତୁ ଚାବି_Display_Name(ଚାବି, result, ମିଥ୍ୟା);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::keyValueDisplayName(const char* key,
-                                            const char* value,
+LocaleDisplayNamesImpl::ଚାବି_ମୂଲ୍ୟ_Display_Name(ଅଚଳ ଅକ୍ଷର* ଚାବି,
+                                            ଅଚଳ ଅକ୍ଷର* value,
                                             UnicodeString& result U_LIFETIME_BOUND,
-                                            bool skipAdjust) const {
-    if (uprv_strcmp(key, "currency") == 0) {
+                                            ତାର୍କିକ skipAdjust) ଅଚଳ {
+    ଯଦି (uprv_strcmp(ଚାବି, "currency") == 0) {
         // ICU4C does not have ICU4J CurrencyDisplayInfo equivalent for now.
         UErrorCode sts = U_ZERO_ERROR;
-        UnicodeString ustrValue(value, -1, US_INV);
+        UnicodeString ustr_ମୂଲ୍ୟ(value, -1, US_INV);
         int32_t len;
-        const char16_t *currencyName = ucurr_getName(ustrValue.getTerminatedBuffer(),
+        ଅଚଳ char16_t *currencyName = ucurr_getName(ustr_ମୂଲ୍ୟ.getTerminatedBuffer(),
             locale.getBaseName(), UCURR_LONG_NAME, nullptr /* isChoiceFormat */, &len, &sts);
-        if (U_FAILURE(sts)) {
+        ଯଦି (U_FAILURE(sts)) {
             // Return the value as is on failure
-            result = ustrValue;
-            return result;
+            result = ustr_ମୂଲ୍ୟ;
+            ଫେରନ୍ତୁ result;
         }
         result.setTo(currencyName, len);
-        return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageKeyValue, result);
+        ଫେରନ୍ତୁ skipAdjust? result: adjustForUsageAndContext(k_Cap_Context_Usage_ଚାବି_ମୂଲ୍ୟ, result);
     }
 
-    if (nameLength == UDISPCTX_LENGTH_SHORT) {
-        langData.getNoFallback("Types%short", key, value, result);
-        if (!result.isBogus()) {
-            return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageKeyValue, result);
+    ଯଦି (nameLength == UDISPCTX_LENGTH_SHORT) {
+        langData.getNoFallback("Types%short", ଚାବି, value, result);
+        ଯଦି (!result.isBogus()) {
+            ଫେରନ୍ତୁ skipAdjust? result: adjustForUsageAndContext(k_Cap_Context_Usage_ଚାବି_ମୂଲ୍ୟ, result);
         }
     }
-    if (substitute == UDISPCTX_SUBSTITUTE) {
-        langData.get("Types", key, value, result);
-    } else {
-        langData.getNoFallback("Types", key, value, result);
+    ଯଦି (substitute == UDISPCTX_SUBSTITUTE) {
+        langData.get("Types", ଚାବି, value, result);
+    } ଅନ୍ୟଥା {
+        langData.getNoFallback("Types", ଚାବି, value, result);
     }
-    return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageKeyValue, result);
+    ଫେରନ୍ତୁ skipAdjust? result: adjustForUsageAndContext(k_Cap_Context_Usage_ଚାବି_ମୂଲ୍ୟ, result);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::keyValueDisplayName(const char* key,
-                                            const char* value,
-                                            UnicodeString& result U_LIFETIME_BOUND) const {
-    return keyValueDisplayName(key, value, result, false);
+LocaleDisplayNamesImpl::ଚାବି_ମୂଲ୍ୟ_Display_Name(ଅଚଳ ଅକ୍ଷର* ଚାବି,
+                                            ଅଚଳ ଅକ୍ଷର* value,
+                                            UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ {
+    ଫେରନ୍ତୁ ଚାବି_ମୂଲ୍ୟ_Display_Name(ଚାବି, value, result, ମିଥ୍ୟା);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 LocaleDisplayNames*
-LocaleDisplayNames::createInstance(const Locale& locale,
+LocaleDisplayNames::createInstance(ଅଚଳ Locale& locale,
                                    UDialectHandling dialectHandling) {
-    return new LocaleDisplayNamesImpl(locale, dialectHandling);
+    ଫେରନ୍ତୁ ନୂତନ LocaleDisplayNamesImpl(locale, dialectHandling);
 }
 
 LocaleDisplayNames*
-LocaleDisplayNames::createInstance(const Locale& locale,
+LocaleDisplayNames::createInstance(ଅଚଳ Locale& locale,
                                    UDisplayContext *contexts, int32_t length) {
-    if (contexts == nullptr) {
+    ଯଦି (contexts == nullptr) {
         length = 0;
     }
-    return new LocaleDisplayNamesImpl(locale, contexts, length);
+    ଫେରନ୍ତୁ ନୂତନ LocaleDisplayNamesImpl(locale, contexts, length);
 }
 
 U_NAMESPACE_END
@@ -916,202 +916,202 @@ U_NAMESPACE_END
 U_NAMESPACE_USE
 
 U_CAPI ULocaleDisplayNames * U_EXPORT2
-uldn_open(const char * locale,
+uldn_open(ଅଚଳ ଅକ୍ଷର * locale,
           UDialectHandling dialectHandling,
           UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return nullptr;
+  ଯଦି (U_FAILURE(*pErrorCode)) {
+    ଫେରନ୍ତୁ nullptr;
   }
-  if (locale == nullptr) {
+  ଯଦି (locale == nullptr) {
     locale = uloc_getDefault();
   }
-  return (ULocaleDisplayNames *)LocaleDisplayNames::createInstance(Locale(locale), dialectHandling);
+  ଫେରନ୍ତୁ (ULocaleDisplayNames *)LocaleDisplayNames::createInstance(Locale(locale), dialectHandling);
 }
 
 U_CAPI ULocaleDisplayNames * U_EXPORT2
-uldn_openForContext(const char * locale,
+uldn_openForContext(ଅଚଳ ଅକ୍ଷର * locale,
                     UDisplayContext *contexts, int32_t length,
                     UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return nullptr;
+  ଯଦି (U_FAILURE(*pErrorCode)) {
+    ଫେରନ୍ତୁ nullptr;
   }
-  if (locale == nullptr) {
+  ଯଦି (locale == nullptr) {
     locale = uloc_getDefault();
   }
-  return (ULocaleDisplayNames *)LocaleDisplayNames::createInstance(Locale(locale), contexts, length);
+  ଫେରନ୍ତୁ (ULocaleDisplayNames *)LocaleDisplayNames::createInstance(Locale(locale), contexts, length);
 }
 
 
-U_CAPI void U_EXPORT2
+U_CAPI ଶୂନ୍ୟ U_EXPORT2
 uldn_close(ULocaleDisplayNames *ldn) {
   delete (LocaleDisplayNames *)ldn;
 }
 
-U_CAPI const char* U_EXPORT2
-uldn_getLocale(const ULocaleDisplayNames* ldn U_LIFETIME_BOUND) {
-  if (ldn) {
-    return ((const LocaleDisplayNames *)ldn)->getLocale().getName();
+U_CAPI ଅଚଳ ଅକ୍ଷର* U_EXPORT2
+uldn_getLocale(ଅଚଳ ULocaleDisplayNames* ldn U_LIFETIME_BOUND) {
+  ଯଦି (ldn) {
+    ଫେରନ୍ତୁ ((ଅଚଳ LocaleDisplayNames *)ldn)->getLocale().getName();
   }
-  return nullptr;
+  ଫେରନ୍ତୁ nullptr;
 }
 
 U_CAPI UDialectHandling U_EXPORT2
-uldn_getDialectHandling(const ULocaleDisplayNames *ldn) {
-  if (ldn) {
-    return ((const LocaleDisplayNames *)ldn)->getDialectHandling();
+uldn_getDialectHandling(ଅଚଳ ULocaleDisplayNames *ldn) {
+  ଯଦି (ldn) {
+    ଫେରନ୍ତୁ ((ଅଚଳ LocaleDisplayNames *)ldn)->getDialectHandling();
   }
-  return ULDN_STANDARD_NAMES;
+  ଫେରନ୍ତୁ ULDN_STANDARD_NAMES;
 }
 
 U_CAPI UDisplayContext U_EXPORT2
-uldn_getContext(const ULocaleDisplayNames *ldn,
+uldn_getContext(ଅଚଳ ULocaleDisplayNames *ldn,
               UDisplayContextType type,
               UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return (UDisplayContext)0;
+  ଯଦି (U_FAILURE(*pErrorCode)) {
+    ଫେରନ୍ତୁ (UDisplayContext)0;
   }
-  return ((const LocaleDisplayNames *)ldn)->getContext(type);
+  ଫେରନ୍ତୁ ((ଅଚଳ LocaleDisplayNames *)ldn)->getContext(type);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_localeDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *locale,
+uldn_localeDisplayName(ଅଚଳ ULocaleDisplayNames *ldn,
+                       ଅଚଳ ଅକ୍ଷର *locale,
                        char16_t *result,
                        int32_t maxResultSize,
                        UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return 0;
+  ଯଦି (U_FAILURE(*pErrorCode)) {
+    ଫେରନ୍ତୁ 0;
   }
-  if (ldn == nullptr || locale == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
+  ଯଦି (ldn == nullptr || locale == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
     *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+    ଫେରନ୍ତୁ 0;
   }
   UnicodeString temp(result, 0, maxResultSize);
-  ((const LocaleDisplayNames *)ldn)->localeDisplayName(locale, temp);
-  if (temp.isBogus()) {
+  ((ଅଚଳ LocaleDisplayNames *)ldn)->localeDisplayName(locale, temp);
+  ଯଦି (temp.isBogus()) {
     *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+    ଫେରନ୍ତୁ 0;
   }
-  return temp.extract(result, maxResultSize, *pErrorCode);
+  ଫେରନ୍ତୁ temp.extract(result, maxResultSize, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_languageDisplayName(const ULocaleDisplayNames *ldn,
-                         const char *lang,
+uldn_languageDisplayName(ଅଚଳ ULocaleDisplayNames *ldn,
+                         ଅଚଳ ଅକ୍ଷର *lang,
                          char16_t *result,
                          int32_t maxResultSize,
                          UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return 0;
+  ଯଦି (U_FAILURE(*pErrorCode)) {
+    ଫେରନ୍ତୁ 0;
   }
-  if (ldn == nullptr || lang == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
+  ଯଦି (ldn == nullptr || lang == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
     *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+    ଫେରନ୍ତୁ 0;
   }
   UnicodeString temp(result, 0, maxResultSize);
-  ((const LocaleDisplayNames *)ldn)->languageDisplayName(lang, temp);
-  return temp.extract(result, maxResultSize, *pErrorCode);
+  ((ଅଚଳ LocaleDisplayNames *)ldn)->languageDisplayName(lang, temp);
+  ଫେରନ୍ତୁ temp.extract(result, maxResultSize, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_scriptDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *script,
+uldn_scriptDisplayName(ଅଚଳ ULocaleDisplayNames *ldn,
+                       ଅଚଳ ଅକ୍ଷର *script,
                        char16_t *result,
                        int32_t maxResultSize,
                        UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return 0;
+  ଯଦି (U_FAILURE(*pErrorCode)) {
+    ଫେରନ୍ତୁ 0;
   }
-  if (ldn == nullptr || script == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
+  ଯଦି (ldn == nullptr || script == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
     *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+    ଫେରନ୍ତୁ 0;
   }
   UnicodeString temp(result, 0, maxResultSize);
-  ((const LocaleDisplayNames *)ldn)->scriptDisplayName(script, temp);
-  return temp.extract(result, maxResultSize, *pErrorCode);
+  ((ଅଚଳ LocaleDisplayNames *)ldn)->scriptDisplayName(script, temp);
+  ଫେରନ୍ତୁ temp.extract(result, maxResultSize, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_scriptCodeDisplayName(const ULocaleDisplayNames *ldn,
+uldn_scriptCodeDisplayName(ଅଚଳ ULocaleDisplayNames *ldn,
                            UScriptCode scriptCode,
                            char16_t *result,
                            int32_t maxResultSize,
                            UErrorCode *pErrorCode) {
-  return uldn_scriptDisplayName(ldn, uscript_getName(scriptCode), result, maxResultSize, pErrorCode);
+  ଫେରନ୍ତୁ uldn_scriptDisplayName(ldn, uscript_getName(scriptCode), result, maxResultSize, pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_regionDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *region,
+uldn_regionDisplayName(ଅଚଳ ULocaleDisplayNames *ldn,
+                       ଅଚଳ ଅକ୍ଷର *region,
                        char16_t *result,
                        int32_t maxResultSize,
                        UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return 0;
+  ଯଦି (U_FAILURE(*pErrorCode)) {
+    ଫେରନ୍ତୁ 0;
   }
-  if (ldn == nullptr || region == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
+  ଯଦି (ldn == nullptr || region == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
     *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+    ଫେରନ୍ତୁ 0;
   }
   UnicodeString temp(result, 0, maxResultSize);
-  ((const LocaleDisplayNames *)ldn)->regionDisplayName(region, temp);
-  return temp.extract(result, maxResultSize, *pErrorCode);
+  ((ଅଚଳ LocaleDisplayNames *)ldn)->regionDisplayName(region, temp);
+  ଫେରନ୍ତୁ temp.extract(result, maxResultSize, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_variantDisplayName(const ULocaleDisplayNames *ldn,
-                        const char *variant,
+uldn_variantDisplayName(ଅଚଳ ULocaleDisplayNames *ldn,
+                        ଅଚଳ ଅକ୍ଷର *variant,
                         char16_t *result,
                         int32_t maxResultSize,
                         UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return 0;
+  ଯଦି (U_FAILURE(*pErrorCode)) {
+    ଫେରନ୍ତୁ 0;
   }
-  if (ldn == nullptr || variant == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
+  ଯଦି (ldn == nullptr || variant == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
     *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+    ଫେରନ୍ତୁ 0;
   }
   UnicodeString temp(result, 0, maxResultSize);
-  ((const LocaleDisplayNames *)ldn)->variantDisplayName(variant, temp);
-  return temp.extract(result, maxResultSize, *pErrorCode);
+  ((ଅଚଳ LocaleDisplayNames *)ldn)->variantDisplayName(variant, temp);
+  ଫେରନ୍ତୁ temp.extract(result, maxResultSize, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_keyDisplayName(const ULocaleDisplayNames *ldn,
-                    const char *key,
+uldn_ଚାବି_Display_Name(ଅଚଳ ULocaleDisplayNames *ldn,
+                    ଅଚଳ ଅକ୍ଷର *ଚାବି,
                     char16_t *result,
                     int32_t maxResultSize,
                     UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return 0;
+  ଯଦି (U_FAILURE(*pErrorCode)) {
+    ଫେରନ୍ତୁ 0;
   }
-  if (ldn == nullptr || key == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
+  ଯଦି (ldn == nullptr || ଚାବି == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
     *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+    ଫେରନ୍ତୁ 0;
   }
   UnicodeString temp(result, 0, maxResultSize);
-  ((const LocaleDisplayNames *)ldn)->keyDisplayName(key, temp);
-  return temp.extract(result, maxResultSize, *pErrorCode);
+  ((ଅଚଳ LocaleDisplayNames *)ldn)->ଚାବି_Display_Name(ଚାବି, temp);
+  ଫେରନ୍ତୁ temp.extract(result, maxResultSize, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_keyValueDisplayName(const ULocaleDisplayNames *ldn,
-                         const char *key,
-                         const char *value,
+uldn_ଚାବି_ମୂଲ୍ୟ_Display_Name(ଅଚଳ ULocaleDisplayNames *ldn,
+                         ଅଚଳ ଅକ୍ଷର *ଚାବି,
+                         ଅଚଳ ଅକ୍ଷର *value,
                          char16_t *result,
                          int32_t maxResultSize,
                          UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return 0;
+  ଯଦି (U_FAILURE(*pErrorCode)) {
+    ଫେରନ୍ତୁ 0;
   }
-  if (ldn == nullptr || key == nullptr || value == nullptr || (result == nullptr && maxResultSize > 0)
+  ଯଦି (ldn == nullptr || ଚାବି == nullptr || value == nullptr || (result == nullptr && maxResultSize > 0)
       || maxResultSize < 0) {
     *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+    ଫେରନ୍ତୁ 0;
   }
   UnicodeString temp(result, 0, maxResultSize);
-  ((const LocaleDisplayNames *)ldn)->keyValueDisplayName(key, value, temp);
-  return temp.extract(result, maxResultSize, *pErrorCode);
+  ((ଅଚଳ LocaleDisplayNames *)ldn)->ଚାବି_ମୂଲ୍ୟ_Display_Name(ଚାବି, value, temp);
+  ଫେରନ୍ତୁ temp.extract(result, maxResultSize, *pErrorCode);
 }
 
 #endif

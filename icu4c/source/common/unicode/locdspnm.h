@@ -10,22 +10,22 @@
 #ifndef LOCDSPNM_H
 #define LOCDSPNM_H
 
-#include "unicode/utypes.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ଯଦି U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
  * \brief C++ API: Provides display names of Locale and its components.
  */
 
-#if !UCONFIG_NO_FORMATTING
+#ଯଦି !UCONFIG_NO_FORMATTING
 
-#include "unicode/locid.h"
-#include "unicode/strenum.h"
-#include "unicode/uscript.h"
-#include "unicode/uldnames.h"
-#include "unicode/udisplaycontext.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/locid.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/strenum.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/uscript.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/uldnames.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/udisplaycontext.h"
 
 U_NAMESPACE_BEGIN
 
@@ -35,13 +35,13 @@ U_NAMESPACE_BEGIN
  * values, see Locale.
  * @stable ICU 4.4
  */
-class U_COMMON_API LocaleDisplayNames : public UObject {
-public:
+class U_COMMON_API LocaleDisplayNames : ସର୍ବସାଧାରଣ UObject {
+ସର୍ବସାଧାରଣ:
     /**
      * Destructor.
      * @stable ICU 4.4
      */
-    virtual ~LocaleDisplayNames();
+    ଆଭାସୀ ~LocaleDisplayNames();
 
     /**
      * Convenience overload of
@@ -51,7 +51,7 @@ public:
      * @return a LocaleDisplayNames instance
      * @stable ICU 4.4
      */
-    inline static LocaleDisplayNames* U_EXPORT2 createInstance(const Locale& locale);
+    ଧାଡ଼ିଭିତରେ ସ୍ଥିର LocaleDisplayNames* U_EXPORT2 createInstance(ଅଚଳ Locale& locale);
 
     /**
      * Returns an instance of LocaleDisplayNames that returns names
@@ -63,7 +63,7 @@ public:
      * @return a LocaleDisplayNames instance
      * @stable ICU 4.4
      */
-    static LocaleDisplayNames* U_EXPORT2 createInstance(const Locale& locale,
+    ସ୍ଥିର LocaleDisplayNames* U_EXPORT2 createInstance(ଅଚଳ Locale& locale,
                             UDialectHandling dialectHandling);
 
     /**
@@ -77,7 +77,7 @@ public:
      * @return a LocaleDisplayNames instance
      * @stable ICU 51
      */
-    static LocaleDisplayNames* U_EXPORT2 createInstance(const Locale& locale,
+    ସ୍ଥିର LocaleDisplayNames* U_EXPORT2 createInstance(ଅଚଳ Locale& locale,
                             UDisplayContext *contexts, int32_t length);
 
     // getters for state
@@ -87,14 +87,14 @@ public:
      * @return the display locale
      * @stable ICU 4.4
      */
-    virtual const Locale& getLocale() const U_LIFETIME_BOUND = 0;
+    ଆଭାସୀ ଅଚଳ Locale& getLocale() ଅଚଳ U_LIFETIME_BOUND = 0;
 
     /**
      * Returns the dialect handling used in the display names.
      * @return the dialect handling enum
      * @stable ICU 4.4
      */
-    virtual UDialectHandling getDialectHandling() const = 0;
+    ଆଭାସୀ UDialectHandling getDialectHandling() ଅଚଳ = 0;
 
     /**
      * Returns the UDisplayContext value for the specified UDisplayContextType.
@@ -102,7 +102,7 @@ public:
      * @return the UDisplayContext for the specified type.
      * @stable ICU 51
      */
-    virtual UDisplayContext getContext(UDisplayContextType type) const = 0;
+    ଆଭାସୀ UDisplayContext getContext(UDisplayContextType type) ଅଚଳ = 0;
 
     // names for entire locales
     /**
@@ -112,8 +112,8 @@ public:
      * @return the display name of the provided locale
      * @stable ICU 4.4
      */
-    virtual UnicodeString& localeDisplayName(const Locale& locale,
-                                             UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    ଆଭାସୀ UnicodeString& localeDisplayName(ଅଚଳ Locale& locale,
+                                             UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ = 0;
 
     /**
      * Returns the display name of the provided locale id.
@@ -122,8 +122,8 @@ public:
      * @return the display name of the provided locale
      * @stable ICU 4.4
      */
-    virtual UnicodeString& localeDisplayName(const char* localeId,
-                                             UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    ଆଭାସୀ UnicodeString& localeDisplayName(ଅଚଳ ଅକ୍ଷର* localeId,
+                                             UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ = 0;
 
     // names for components of a locale id
     /**
@@ -133,8 +133,8 @@ public:
      * @return the display name of the provided language code
      * @stable ICU 4.4
      */
-    virtual UnicodeString& languageDisplayName(const char* lang,
-                                               UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    ଆଭାସୀ UnicodeString& languageDisplayName(ଅଚଳ ଅକ୍ଷର* lang,
+                                               UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ = 0;
 
     /**
      * Returns the display name of the provided script code.
@@ -143,8 +143,8 @@ public:
      * @return the display name of the provided script code
      * @stable ICU 4.4
      */
-    virtual UnicodeString& scriptDisplayName(const char* script,
-                                             UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    ଆଭାସୀ UnicodeString& scriptDisplayName(ଅଚଳ ଅକ୍ଷର* script,
+                                             UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ = 0;
 
     /**
      * Returns the display name of the provided script code.
@@ -153,8 +153,8 @@ public:
      * @return the display name of the provided script code
      * @stable ICU 4.4
      */
-    virtual UnicodeString& scriptDisplayName(UScriptCode scriptCode,
-                                             UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    ଆଭାସୀ UnicodeString& scriptDisplayName(UScriptCode scriptCode,
+                                             UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ = 0;
 
     /**
      * Returns the display name of the provided region code.
@@ -163,8 +163,8 @@ public:
      * @return the display name of the provided region code
      * @stable ICU 4.4
      */
-    virtual UnicodeString& regionDisplayName(const char* region,
-                                             UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    ଆଭାସୀ UnicodeString& regionDisplayName(ଅଚଳ ଅକ୍ଷର* region,
+                                             UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ = 0;
 
     /**
      * Returns the display name of the provided variant.
@@ -173,8 +173,8 @@ public:
      * @return the display name of the provided variant
      * @stable ICU 4.4
      */
-    virtual UnicodeString& variantDisplayName(const char* variant,
-                                              UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    ଆଭାସୀ UnicodeString& variantDisplayName(ଅଚଳ ଅକ୍ଷର* variant,
+                                              UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ = 0;
 
     /**
      * Returns the display name of the provided locale key.
@@ -183,8 +183,8 @@ public:
      * @return the display name of the provided locale key
      * @stable ICU 4.4
      */
-    virtual UnicodeString& keyDisplayName(const char* key,
-                                          UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    ଆଭାସୀ UnicodeString& ଚାବି_Display_Name(ଅଚଳ ଅକ୍ଷର* ଚାବି,
+                                          UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ = 0;
 
     /**
      * Returns the display name of the provided value (used with the provided key).
@@ -194,12 +194,12 @@ public:
      * @return the display name of the provided value
      * @stable ICU 4.4
      */
-    virtual UnicodeString& keyValueDisplayName(const char* key, const char* value,
-                                               UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    ଆଭାସୀ UnicodeString& ଚାବି_ମୂଲ୍ୟ_Display_Name(ଅଚଳ ଅକ୍ଷର* ଚାବି, ଅଚଳ ଅକ୍ଷର* ମୂଲ୍ୟ_2,
+                                               UnicodeString& result U_LIFETIME_BOUND) ଅଚଳ = 0;
 };
 
-inline LocaleDisplayNames* LocaleDisplayNames::createInstance(const Locale& locale) {
-  return LocaleDisplayNames::createInstance(locale, ULDN_STANDARD_NAMES);
+ଧାଡ଼ିଭିତରେ LocaleDisplayNames* LocaleDisplayNames::createInstance(ଅଚଳ Locale& locale) {
+  ଫେରନ୍ତୁ LocaleDisplayNames::createInstance(locale, ULDN_STANDARD_NAMES);
 }
 
 U_NAMESPACE_END

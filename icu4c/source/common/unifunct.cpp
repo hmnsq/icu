@@ -7,7 +7,7 @@
 **********************************************************************
 */
 
-#include "unicode/unifunct.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/unifunct.h"
 
 U_NAMESPACE_BEGIN
 
@@ -15,12 +15,12 @@ UOBJECT_DEFINE_ABSTRACT_RTTI_IMPLEMENTATION(UnicodeFunctor)
 
 UnicodeFunctor::~UnicodeFunctor() {}
 
-UnicodeMatcher* UnicodeFunctor::toMatcher() const U_LIFETIME_BOUND {
-    return nullptr;
+UnicodeMatcher* UnicodeFunctor::toMatcher() ଅଚଳ U_LIFETIME_BOUND {
+    ଫେରନ୍ତୁ nullptr;
 }
 
-UnicodeReplacer* UnicodeFunctor::toReplacer() const U_LIFETIME_BOUND {
-    return nullptr;
+UnicodeReplacer* UnicodeFunctor::toReplacer() ଅଚଳ U_LIFETIME_BOUND {
+    ଫେରନ୍ତୁ nullptr;
 }
 
 U_NAMESPACE_END

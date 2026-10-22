@@ -10,14 +10,14 @@
 #ifndef DICTBE_H
 #define DICTBE_H
 
-#include "unicode/utypes.h"
-#include "unicode/uniset.h"
-#include "unicode/utext.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/utypes.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/uniset.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/utext.h"
 
-#include "brkeng.h"
-#include "hash.h"
-#include "mlbe.h"
-#include "uvectr32.h"
+#ଅନ୍ତର୍ଭାଵ "brkeng.h"
+#ଅନ୍ତର୍ଭାଵ "hash.h"
+#ଅନ୍ତର୍ଭାଵ "mlbe.h"
+#ଅନ୍ତର୍ଭାଵ "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
@@ -36,8 +36,8 @@ class Normalizer2;
  * <p>After it is constructed a DictionaryBreakEngine may be shared between
  * threads without synchronization.</p>
  */
-class DictionaryBreakEngine : public LanguageBreakEngine {
- private:
+class DictionaryBreakEngine : ସର୍ବସାଧାରଣ LanguageBreakEngine {
+ ବ୍ୟକ୍ତିଗତ:
     /**
      * The set of characters handled by this engine
      * @internal
@@ -45,7 +45,7 @@ class DictionaryBreakEngine : public LanguageBreakEngine {
 
   UnicodeSet    fSet;
 
- public:
+ ସର୍ବସାଧାରଣ:
 
   /**
    * <p>Constructor </p>
@@ -55,7 +55,7 @@ class DictionaryBreakEngine : public LanguageBreakEngine {
   /**
    * <p>Virtual destructor.</p>
    */
-  virtual ~DictionaryBreakEngine();
+  ଆଭାସୀ ~DictionaryBreakEngine();
 
   /**
    * <p>Indicate whether this engine handles a particular character for
@@ -66,7 +66,7 @@ class DictionaryBreakEngine : public LanguageBreakEngine {
    * @return true if this engine handles the particular character and break
    * type.
    */
-  virtual UBool handles(UChar32 c, const char* locale) const override;
+  ଆଭାସୀ UBool handles(UChar32 c, ଅଚଳ ଅକ୍ଷର* locale) ଅଚଳ override;
 
   /**
    * <p>Find any breaks within a run in the supplied text.</p>
@@ -80,21 +80,21 @@ class DictionaryBreakEngine : public LanguageBreakEngine {
    * @param status Information on any errors encountered.
    * @return The number of breaks found.
    */
-  virtual int32_t findBreaks( UText *text,
+  ଆଭାସୀ int32_t findBreaks( UText *text,
                               int32_t startPos,
                               int32_t endPos,
                               UVector32 &foundBreaks,
                               UBool isPhraseBreaking,
-                              UErrorCode& status ) const override;
+                              UErrorCode& status ) ଅଚଳ override;
 
- protected:
+ ସୁରକ୍ଷିତ:
 
  /**
   * <p>Set the character set handled by this engine.</p>
   *
   * @param set A UnicodeSet of the set of characters handled by the engine
   */
-  virtual void setCharacters( const UnicodeSet &set );
+  ଆଭାସୀ ଶୂନ୍ୟ setCharacters( ଅଚଳ UnicodeSet &set );
 
  /**
   * <p>Divide up a range of known dictionary characters handled by this break engine.</p>
@@ -106,12 +106,12 @@ class DictionaryBreakEngine : public LanguageBreakEngine {
   * @param status Information on any errors encountered.
   * @return The number of breaks found
   */
-  virtual int32_t divideUpDictionaryRange( UText *text,
+  ଆଭାସୀ int32_t divideUpDictionaryRange( UText *text,
                                            int32_t rangeStart,
                                            int32_t rangeEnd,
                                            UVector32 &foundBreaks,
                                            UBool isPhraseBreaking,
-                                           UErrorCode& status) const = 0;
+                                           UErrorCode& status) ଅଚଳ = 0;
 
 };
 
@@ -126,8 +126,8 @@ class DictionaryBreakEngine : public LanguageBreakEngine {
  * <p>After it is constructed a ThaiBreakEngine may be shared between
  * threads without synchronization.</p>
  */
-class ThaiBreakEngine : public DictionaryBreakEngine {
- private:
+class ThaiBreakEngine : ସର୍ବସାଧାରଣ DictionaryBreakEngine {
+ ବ୍ୟକ୍ତିଗତ:
     /**
      * The set of characters handled by this engine
      * @internal
@@ -139,7 +139,7 @@ class ThaiBreakEngine : public DictionaryBreakEngine {
   UnicodeSet                fMarkSet;
   DictionaryMatcher  *fDictionary;
 
- public:
+ ସର୍ବସାଧାରଣ:
 
   /**
    * <p>Default constructor.</p>
@@ -152,9 +152,9 @@ class ThaiBreakEngine : public DictionaryBreakEngine {
   /**
    * <p>Virtual destructor.</p>
    */
-  virtual ~ThaiBreakEngine();
+  ଆଭାସୀ ~ThaiBreakEngine();
 
- protected:
+ ସୁରକ୍ଷିତ:
  /**
   * <p>Divide up a range of known dictionary characters handled by this break engine.</p>
   *
@@ -165,12 +165,12 @@ class ThaiBreakEngine : public DictionaryBreakEngine {
   * @param status Information on any errors encountered.
   * @return The number of breaks found
   */
-  virtual int32_t divideUpDictionaryRange( UText *text,
+  ଆଭାସୀ int32_t divideUpDictionaryRange( UText *text,
                                            int32_t rangeStart,
                                            int32_t rangeEnd,
                                            UVector32 &foundBreaks,
                                            UBool isPhraseBreaking,
-                                           UErrorCode& status) const override;
+                                           UErrorCode& status) ଅଚଳ override;
 
 };
 
@@ -185,8 +185,8 @@ class ThaiBreakEngine : public DictionaryBreakEngine {
  * <p>After it is constructed a LaoBreakEngine may be shared between
  * threads without synchronization.</p>
  */
-class LaoBreakEngine : public DictionaryBreakEngine {
- private:
+class LaoBreakEngine : ସର୍ବସାଧାରଣ DictionaryBreakEngine {
+ ବ୍ୟକ୍ତିଗତ:
     /**
      * The set of characters handled by this engine
      * @internal
@@ -197,7 +197,7 @@ class LaoBreakEngine : public DictionaryBreakEngine {
   UnicodeSet                fMarkSet;
   DictionaryMatcher  *fDictionary;
 
- public:
+ ସର୍ବସାଧାରଣ:
 
   /**
    * <p>Default constructor.</p>
@@ -210,9 +210,9 @@ class LaoBreakEngine : public DictionaryBreakEngine {
   /**
    * <p>Virtual destructor.</p>
    */
-  virtual ~LaoBreakEngine();
+  ଆଭାସୀ ~LaoBreakEngine();
 
- protected:
+ ସୁରକ୍ଷିତ:
  /**
   * <p>Divide up a range of known dictionary characters handled by this break engine.</p>
   *
@@ -223,12 +223,12 @@ class LaoBreakEngine : public DictionaryBreakEngine {
   * @param status Information on any errors encountered.
   * @return The number of breaks found
   */
-  virtual int32_t divideUpDictionaryRange( UText *text,
+  ଆଭାସୀ int32_t divideUpDictionaryRange( UText *text,
                                            int32_t rangeStart,
                                            int32_t rangeEnd,
                                            UVector32 &foundBreaks,
                                            UBool isPhraseBreaking,
-                                           UErrorCode& status) const override;
+                                           UErrorCode& status) ଅଚଳ override;
 
 };
 
@@ -243,8 +243,8 @@ class LaoBreakEngine : public DictionaryBreakEngine {
  * <p>After it is constructed a BurmeseBreakEngine may be shared between
  * threads without synchronization.</p>
  */
-class BurmeseBreakEngine : public DictionaryBreakEngine {
- private:
+class BurmeseBreakEngine : ସର୍ବସାଧାରଣ DictionaryBreakEngine {
+ ବ୍ୟକ୍ତିଗତ:
     /**
      * The set of characters handled by this engine
      * @internal
@@ -255,7 +255,7 @@ class BurmeseBreakEngine : public DictionaryBreakEngine {
   UnicodeSet                fMarkSet;
   DictionaryMatcher  *fDictionary;
 
- public:
+ ସର୍ବସାଧାରଣ:
 
   /**
    * <p>Default constructor.</p>
@@ -268,9 +268,9 @@ class BurmeseBreakEngine : public DictionaryBreakEngine {
   /**
    * <p>Virtual destructor.</p>
    */
-  virtual ~BurmeseBreakEngine();
+  ଆଭାସୀ ~BurmeseBreakEngine();
 
- protected:
+ ସୁରକ୍ଷିତ:
  /**
   * <p>Divide up a range of known dictionary characters.</p>
   *
@@ -281,12 +281,12 @@ class BurmeseBreakEngine : public DictionaryBreakEngine {
   * @param status Information on any errors encountered.
   * @return The number of breaks found
   */
-  virtual int32_t divideUpDictionaryRange( UText *text,
+  ଆଭାସୀ int32_t divideUpDictionaryRange( UText *text,
                                            int32_t rangeStart,
                                            int32_t rangeEnd,
                                            UVector32 &foundBreaks,
                                            UBool isPhraseBreaking,
-                                           UErrorCode& status) const override;
+                                           UErrorCode& status) ଅଚଳ override;
 
 };
 
@@ -301,8 +301,8 @@ class BurmeseBreakEngine : public DictionaryBreakEngine {
  * <p>After it is constructed a KhmerBreakEngine may be shared between
  * threads without synchronization.</p>
  */
-class KhmerBreakEngine : public DictionaryBreakEngine {
- private:
+class KhmerBreakEngine : ସର୍ବସାଧାରଣ DictionaryBreakEngine {
+ ବ୍ୟକ୍ତିଗତ:
     /**
      * The set of characters handled by this engine
      * @internal
@@ -313,7 +313,7 @@ class KhmerBreakEngine : public DictionaryBreakEngine {
   UnicodeSet                fMarkSet;
   DictionaryMatcher  *fDictionary;
 
- public:
+ ସର୍ବସାଧାରଣ:
 
   /**
    * <p>Default constructor.</p>
@@ -326,9 +326,9 @@ class KhmerBreakEngine : public DictionaryBreakEngine {
   /**
    * <p>Virtual destructor.</p>
    */
-  virtual ~KhmerBreakEngine();
+  ଆଭାସୀ ~KhmerBreakEngine();
 
- protected:
+ ସୁରକ୍ଷିତ:
  /**
   * <p>Divide up a range of known dictionary characters.</p>
   *
@@ -339,23 +339,23 @@ class KhmerBreakEngine : public DictionaryBreakEngine {
   * @param status Information on any errors encountered.
   * @return The number of breaks found
   */
-  virtual int32_t divideUpDictionaryRange( UText *text,
+  ଆଭାସୀ int32_t divideUpDictionaryRange( UText *text,
                                            int32_t rangeStart,
                                            int32_t rangeEnd,
                                            UVector32 &foundBreaks,
                                            UBool isPhraseBreaking,
-                                           UErrorCode& status) const override;
+                                           UErrorCode& status) ଅଚଳ override;
 
 };
 
-#if !UCONFIG_NO_NORMALIZATION
+#ଯଦି !UCONFIG_NO_NORMALIZATION
 
 /*******************************************************************
  * CjkBreakEngine
  */
 
 //indicates language/script that the CjkBreakEngine will handle
-enum LanguageType {
+ଗଣନା LanguageType {
     kKorean,
     kChineseJapanese
 };
@@ -365,8 +365,8 @@ enum LanguageType {
  * dictionary with costs associated with each word and
  * Viterbi decoding to determine CJK-specific breaks.</p>
  */
-class CjkBreakEngine : public DictionaryBreakEngine {
- protected:
+class CjkBreakEngine : ସର୍ବସାଧାରଣ DictionaryBreakEngine {
+ ସୁରକ୍ଷିତ:
     /**
      * The set of characters handled by this engine
      * @internal
@@ -376,21 +376,21 @@ class CjkBreakEngine : public DictionaryBreakEngine {
   UnicodeSet                fClosePunctuationSet;
 
   DictionaryMatcher        *fDictionary;
-  const Normalizer2        *nfkcNorm2;
+  ଅଚଳ Normalizer2        *nfkcNorm2;
   MlBreakEngine            *fMlBreakEngine;
   bool                      isCj;
 
- private:
+ ବ୍ୟକ୍ତିଗତ:
   // Load Japanese extensions.
-  void loadJapaneseExtensions(UErrorCode& error);
+  ଶୂନ୍ୟ loadJapaneseExtensions(UErrorCode& error);
   // Load Japanese Hiragana.
-  void loadHiragana(UErrorCode& error);
+  ଶୂନ୍ୟ loadHiragana(UErrorCode& error);
   // Initialize fSkipSet by loading Japanese Hiragana and extensions.
-  void initJapanesePhraseParameter(UErrorCode& error);
+  ଶୂନ୍ୟ initJapanesePhraseParameter(UErrorCode& error);
 
   Hashtable fSkipSet;
 
- public:
+ ସର୍ବସାଧାରଣ:
 
     /**
      * <p>Default constructor.</p>
@@ -404,9 +404,9 @@ class CjkBreakEngine : public DictionaryBreakEngine {
     /**
      * <p>Virtual destructor.</p>
      */
-  virtual ~CjkBreakEngine();
+  ଆଭାସୀ ~CjkBreakEngine();
 
- protected:
+ ସୁରକ୍ଷିତ:
     /**
      * <p>Divide up a range of known dictionary characters handled by this break engine.</p>
      *
@@ -417,12 +417,12 @@ class CjkBreakEngine : public DictionaryBreakEngine {
      * @param status Information on any errors encountered.
      * @return The number of breaks found
      */
-  virtual int32_t divideUpDictionaryRange( UText *text,
+  ଆଭାସୀ int32_t divideUpDictionaryRange( UText *text,
           int32_t rangeStart,
           int32_t rangeEnd,
           UVector32 &foundBreaks,
           UBool isPhraseBreaking,
-          UErrorCode& status) const override;
+          UErrorCode& status) ଅଚଳ override;
 
 };
 

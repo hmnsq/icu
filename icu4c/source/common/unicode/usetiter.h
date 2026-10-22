@@ -9,12 +9,12 @@
 #ifndef USETITER_H
 #define USETITER_H
 
-#include "unicode/utypes.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ଯଦି U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
-#include "unicode/unistr.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/uobject.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/unistr.h"
 
 /**
  * \file 
@@ -64,13 +64,13 @@ class UnicodeString;
  * @author M. Davis
  * @stable ICU 2.4
  */
-class U_COMMON_API UnicodeSetIterator final : public UObject {
+class U_COMMON_API UnicodeSetIterator final : ସର୍ବସାଧାରଣ UObject {
     /**
      * Value of <tt>codepoint</tt> if the iterator points to a string.
      * If <tt>codepoint == IS_STRING</tt>, then examine
      * <tt>string</tt> for the current iteration result.
      */
-    enum { IS_STRING = -1 };
+    ଗଣନା { IS_STRING = -1 };
 
     /**
      * Current code point, or the special value <tt>IS_STRING</tt>, if
@@ -93,9 +93,9 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * to the current string.  If <tt>codepoint != IS_STRING</tt>, the
      * value of <tt>string</tt> is undefined.
      */
-    const UnicodeString* string;
+    ଅଚଳ UnicodeString* string;
 
- public:
+ ସର୍ବସାଧାରଣ:
 
     /**
      * Create an iterator over the given set.  The iterator is valid
@@ -103,7 +103,7 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * @param set set to iterate over
      * @stable ICU 2.4
      */
-    UnicodeSetIterator(const UnicodeSet& set U_LIFETIME_BOUND);
+    UnicodeSetIterator(ଅଚଳ UnicodeSet& set U_LIFETIME_BOUND);
 
     /**
      * Create an iterator over nothing.  <tt>next()</tt> and
@@ -117,7 +117,7 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * Destructor.
      * @stable ICU 2.4
      */
-    virtual ~UnicodeSetIterator();
+    ଆଭାସୀ ~UnicodeSetIterator();
 
     /**
      * Returns true if the current element is a string.  If so, the
@@ -134,14 +134,14 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * of the range.
      * @stable ICU 2.4
      */
-    inline UBool isString() const;
+    ଧାଡ଼ିଭିତରେ UBool isString() ଅଚଳ;
 
     /**
      * Returns the current code point, if <tt>isString()</tt> returned
      * false.  Otherwise returns an undefined result.
      * @stable ICU 2.4
      */
-    inline UChar32 getCodepoint() const;
+    ଧାଡ଼ିଭିତରେ UChar32 getCodepoint() ଅଚଳ;
 
     /**
      * Returns the end of the current code point range, if
@@ -149,7 +149,7 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * called.  Otherwise returns an undefined result.
      * @stable ICU 2.4
      */
-    inline UChar32 getCodepointEnd() const;
+    ଧାଡ଼ିଭିତରେ UChar32 getCodepointEnd() ଅଚଳ;
 
     /**
      * Returns the current string, if <tt>isString()</tt> returned
@@ -162,7 +162,7 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * 
      * @stable ICU 2.4
      */
-    const UnicodeString& getString() U_LIFETIME_BOUND;
+    ଅଚଳ UnicodeString& getString() U_LIFETIME_BOUND;
 
     /**
      * Skips over the remaining code points/ranges, if any.
@@ -173,12 +173,12 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * @stable ICU 70
      * @see UnicodeSet#strings()
      */
-    inline UnicodeSetIterator& skipToStrings() U_LIFETIME_BOUND {
+    ଧାଡ଼ିଭିତରେ UnicodeSetIterator& skipToStrings() U_LIFETIME_BOUND {
         // Finish code point/range iteration.
         range = endRange;
         endElement = -1;
         nextElement = 0;
-        return *this;
+        ଫେରନ୍ତୁ *this;
     }
 
     /**
@@ -233,38 +233,38 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * @param set the set to iterate over.
      * @stable ICU 2.4
      */
-    void reset(const UnicodeSet& set);
+    ଶୂନ୍ୟ reset(ଅଚଳ UnicodeSet& set);
 
     /**
      * Resets this iterator to the start of the set.
      * @stable ICU 2.4
      */
-    void reset();
+    ଶୂନ୍ୟ reset();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      *
      * @stable ICU 2.4
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ସ୍ଥିର UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      *
      * @stable ICU 2.4
      */
-    virtual UClassID getDynamicClassID() const override;
+    ଆଭାସୀ UClassID getDynamicClassID() ଅଚଳ override;
 
     // ======================= PRIVATES ===========================
 
-private:
+ବ୍ୟକ୍ତିଗତ:
 
     // endElement and nextElements are really UChar32's, but we keep
     // them as signed int32_t's so we can do comparisons with
     // endElement set to -1.  Leave them as int32_t's.
     /** The set
      */
-    const UnicodeSet* set;
+    ଅଚଳ UnicodeSet* set;
     /** End range
      */
     int32_t endRange;
@@ -282,7 +282,7 @@ private:
     int32_t nextString;
     /** String count
      */
-    int32_t stringCount;
+    int32_t string_ଗଣନା;
 
     /**
      *  Points to the string to use when the caller asks for a
@@ -292,27 +292,27 @@ private:
 
     /** Copy constructor. Disallowed.
      */
-    UnicodeSetIterator(const UnicodeSetIterator&) = delete;
+    UnicodeSetIterator(ଅଚଳ UnicodeSetIterator&) = delete;
 
     /** Assignment operator. Disallowed.
      */
-    UnicodeSetIterator& operator=(const UnicodeSetIterator&) = delete;
+    UnicodeSetIterator& operator=(ଅଚଳ UnicodeSetIterator&) = delete;
 
     /** Load range
      */
-    void loadRange(int32_t range);
+    ଶୂନ୍ୟ loadRange(int32_t range);
 };
 
-inline UBool UnicodeSetIterator::isString() const {
-    return codepoint < 0;
+ଧାଡ଼ିଭିତରେ UBool UnicodeSetIterator::isString() ଅଚଳ {
+    ଫେରନ୍ତୁ codepoint < 0;
 }
 
-inline UChar32 UnicodeSetIterator::getCodepoint() const {
-    return codepoint;
+ଧାଡ଼ିଭିତରେ UChar32 UnicodeSetIterator::getCodepoint() ଅଚଳ {
+    ଫେରନ୍ତୁ codepoint;
 }
 
-inline UChar32 UnicodeSetIterator::getCodepointEnd() const {
-    return codepointEnd;
+ଧାଡ଼ିଭିତରେ UChar32 UnicodeSetIterator::getCodepointEnd() ଅଚଳ {
+    ଫେରନ୍ତୁ codepointEnd;
 }
 
 

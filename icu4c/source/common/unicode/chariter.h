@@ -12,12 +12,12 @@
 #ifndef CHARITER_H
 #define CHARITER_H
 
-#include "unicode/utypes.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ଯଦି U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
-#include "unicode/unistr.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/uobject.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/unistr.h"
 /**
  * \file
  * \brief C++ API: Character Iterator
@@ -91,20 +91,20 @@ U_NAMESPACE_BEGIN
  *
  * @stable ICU 2.0
  */
-class U_COMMON_API ForwardCharacterIterator : public UObject {
-public:
+class U_COMMON_API ForwardCharacterIterator : ସର୍ବସାଧାରଣ UObject {
+ସର୍ବସାଧାରଣ:
     /**
      * Value returned by most of ForwardCharacterIterator's functions
      * when the iterator has reached the limits of its iteration.
      * @stable ICU 2.0
      */
-    enum { DONE = 0xffff };
+    ଗଣନା { DONE = 0xffff };
     
     /**
      * Destructor.  
      * @stable ICU 2.0
      */
-    virtual ~ForwardCharacterIterator();
+    ଆଭାସୀ ~ForwardCharacterIterator();
     
     /**
      * Returns true when both iterators refer to the same
@@ -114,7 +114,7 @@ public:
      * character in the same character-storage object
      * @stable ICU 2.0
      */
-    virtual bool operator==(const ForwardCharacterIterator& that) const = 0;
+    ଆଭାସୀ bool operator==(ଅଚଳ ForwardCharacterIterator& that) ଅଚଳ = 0;
     
     /**
      * Returns true when the iterators refer to different
@@ -126,14 +126,14 @@ public:
      * same text-storage object
      * @stable ICU 2.0
      */
-    inline bool operator!=(const ForwardCharacterIterator& that) const;
+    ଧାଡ଼ିଭିତରେ bool operator!=(ଅଚଳ ForwardCharacterIterator& that) ଅଚଳ;
     
     /**
      * Generates a hash code for this iterator.  
      * @return the hash code.
      * @stable ICU 2.0
      */
-    virtual int32_t hashCode() const = 0;
+    ଆଭାସୀ int32_t hashCode() ଅଚଳ = 0;
 
     /**
      * Returns a UClassID for this ForwardCharacterIterator ("poor man's
@@ -142,7 +142,7 @@ public:
      * @return a UClassID for this ForwardCharacterIterator 
      * @stable ICU 2.0
      */
-    virtual UClassID getDynamicClassID() const override = 0;
+    ଆଭାସୀ UClassID getDynamicClassID() ଅଚଳ override = 0;
 
     /**
      * Gets the current code unit for returning and advances to the next code unit
@@ -152,7 +152,7 @@ public:
      * @return the current code unit.
      * @stable ICU 2.0
      */
-    virtual char16_t nextPostInc() = 0;
+    ଆଭାସୀ char16_t nextPostInc() = 0;
 
     /**
      * Gets the current code point for returning and advances to the next code point
@@ -162,7 +162,7 @@ public:
      * @return the current code point.
      * @stable ICU 2.0
      */
-    virtual UChar32 next32PostInc() = 0;
+    ଆଭାସୀ UChar32 next32PostInc() = 0;
 
     /**
      * Returns false if there are no more code units or code points
@@ -173,21 +173,21 @@ public:
      * at or after the current position in the iteration range.
      * @stable ICU 2.0
      */
-    virtual UBool        hasNext() = 0;
+    ଆଭାସୀ UBool        hasNext() = 0;
     
-protected:
+ସୁରକ୍ଷିତ:
     /** Default constructor to be overridden in the implementing class. @stable ICU 2.0*/
     ForwardCharacterIterator();
     
     /** Copy constructor to be overridden in the implementing class. @stable ICU 2.0*/
-    ForwardCharacterIterator(const ForwardCharacterIterator &other);
+    ForwardCharacterIterator(ଅଚଳ ForwardCharacterIterator &other);
     
     /**
      * Assignment operator to be overridden in the implementing class.
      * @stable ICU 2.0
      */
-    ForwardCharacterIterator& operator=(const ForwardCharacterIterator&) U_LIFETIME_BOUND {
-        return *this;
+    ForwardCharacterIterator& operator=(ଅଚଳ ForwardCharacterIterator&) U_LIFETIME_BOUND {
+        ଫେରନ୍ତୁ *this;
     }
 };
 
@@ -360,19 +360,19 @@ protected:
  *
  * @stable ICU 2.0
  */
-class U_COMMON_API CharacterIterator : public ForwardCharacterIterator {
-public:
+class U_COMMON_API CharacterIterator : ସର୍ବସାଧାରଣ ForwardCharacterIterator {
+ସର୍ବସାଧାରଣ:
     /**
      * Origin enumeration for the move() and move32() functions.
      * @stable ICU 2.0
      */
-    enum EOrigin { kStart, kCurrent, kEnd };
+    ଗଣନା EOrigin { kStart, kCurrent, kEnd };
 
     /**
      * Destructor.
      * @stable ICU 2.0
      */
-    virtual ~CharacterIterator();
+    ଆଭାସୀ ~CharacterIterator();
 
     /**
      * Returns a pointer to a new CharacterIterator of the same
@@ -382,7 +382,7 @@ public:
      * @return a pointer to a new CharacterIterator
      * @stable ICU 2.0
      */
-    virtual CharacterIterator* clone() const = 0;
+    ଆଭାସୀ CharacterIterator* clone() ଅଚଳ = 0;
 
     /**
      * Sets the iterator to refer to the first code unit in its
@@ -391,7 +391,7 @@ public:
      * @return the first code unit in its iteration range.
      * @stable ICU 2.0
      */
-    virtual char16_t first() = 0;
+    ଆଭାସୀ char16_t first() = 0;
 
     /**
      * Sets the iterator to refer to the first code unit in its
@@ -401,7 +401,7 @@ public:
      * @return the first code unit in its iteration range.
      * @stable ICU 2.0
      */
-    virtual char16_t firstPostInc();
+    ଆଭାସୀ char16_t firstPostInc();
 
     /**
      * Sets the iterator to refer to the first code point in its
@@ -412,7 +412,7 @@ public:
      * @return the first code point in its iteration range.
      * @stable ICU 2.0
      */
-    virtual UChar32 first32() = 0;
+    ଆଭାସୀ UChar32 first32() = 0;
 
     /**
      * Sets the iterator to refer to the first code point in its
@@ -422,7 +422,7 @@ public:
      * @return the first code point in its iteration range.
      * @stable ICU 2.0
      */
-    virtual UChar32 first32PostInc();
+    ଆଭାସୀ UChar32 first32PostInc();
 
     /**
      * Sets the iterator to refer to the first code unit or code point in its
@@ -431,7 +431,7 @@ public:
      * @return the start position of the iteration range
      * @stable ICU 2.0
      */
-    inline int32_t    setToStart();
+    ଧାଡ଼ିଭିତରେ int32_t    setToStart();
 
     /**
      * Sets the iterator to refer to the last code unit in its
@@ -440,7 +440,7 @@ public:
      * @return the last code unit.
      * @stable ICU 2.0
      */
-    virtual char16_t last() = 0;
+    ଆଭାସୀ char16_t last() = 0;
 
     /**
      * Sets the iterator to refer to the last code point in its
@@ -449,7 +449,7 @@ public:
      * @return the last code point.
      * @stable ICU 2.0
      */
-    virtual UChar32 last32() = 0;
+    ଆଭାସୀ UChar32 last32() = 0;
 
     /**
      * Sets the iterator to the end of its iteration range, just behind
@@ -458,7 +458,7 @@ public:
      * @return the end position of the iteration range
      * @stable ICU 2.0
      */
-    inline int32_t    setToEnd();
+    ଧାଡ଼ିଭିତରେ int32_t    setToEnd();
 
     /**
      * Sets the iterator to refer to the "position"-th code unit
@@ -468,7 +468,7 @@ public:
      * @return the "position"-th code unit.
      * @stable ICU 2.0
      */
-    virtual char16_t         setIndex(int32_t position) = 0;
+    ଆଭାସୀ char16_t         setIndex(int32_t position) = 0;
 
     /**
      * Sets the iterator to refer to the beginning of the code point
@@ -481,21 +481,21 @@ public:
      * @return the "position"-th code point.
      * @stable ICU 2.0
      */
-    virtual UChar32       setIndex32(int32_t position) = 0;
+    ଆଭାସୀ UChar32       setIndex32(int32_t position) = 0;
 
     /**
      * Returns the code unit the iterator currently refers to. 
      * @return the current code unit. 
      * @stable ICU 2.0
      */
-    virtual char16_t current() const = 0;
+    ଆଭାସୀ char16_t current() ଅଚଳ = 0;
 
     /**
      * Returns the code point the iterator currently refers to.  
      * @return the current code point.
      * @stable ICU 2.0
      */
-    virtual UChar32 current32() const = 0;
+    ଆଭାସୀ UChar32 current32() ଅଚଳ = 0;
 
     /**
      * Advances to the next code unit in the iteration range
@@ -504,7 +504,7 @@ public:
      * @return the next code unit.
      * @stable ICU 2.0
      */
-    virtual char16_t next() = 0;
+    ଆଭାସୀ char16_t next() = 0;
 
     /**
      * Advances to the next code point in the iteration range
@@ -516,7 +516,7 @@ public:
      * @return the next code point.
      * @stable ICU 2.0
      */
-    virtual UChar32 next32() = 0;
+    ଆଭାସୀ UChar32 next32() = 0;
 
     /**
      * Advances to the previous code unit in the iteration range
@@ -525,7 +525,7 @@ public:
      * @return the previous code unit.
      * @stable ICU 2.0
      */
-    virtual char16_t previous() = 0;
+    ଆଭାସୀ char16_t previous() = 0;
 
     /**
      * Advances to the previous code point in the iteration range
@@ -534,7 +534,7 @@ public:
      * @return the previous code point. 
      * @stable ICU 2.0
      */
-    virtual UChar32 previous32() = 0;
+    ଆଭାସୀ UChar32 previous32() = 0;
 
     /**
      * Returns false if there are no more code units or code points
@@ -545,7 +545,7 @@ public:
      * before the current position in the iteration range, return true otherwise.
      * @stable ICU 2.0
      */
-    virtual UBool        hasPrevious() = 0;
+    ଆଭାସୀ UBool        hasPrevious() = 0;
 
     /**
      * Returns the numeric index in the underlying text-storage
@@ -557,7 +557,7 @@ public:
      * object of the character returned by first().
      * @stable ICU 2.0
      */
-    inline int32_t startIndex() const;
+    ଧାଡ଼ିଭିତରେ int32_t startIndex() ଅଚଳ;
 
     /**
      * Returns the numeric index in the underlying text-storage
@@ -568,7 +568,7 @@ public:
      * returned by last().
      * @stable ICU 2.0
      */
-    inline int32_t endIndex() const;
+    ଧାଡ଼ିଭିତରେ int32_t endIndex() ଅଚଳ;
 
     /**
      * Returns the numeric index in the underlying text-storage
@@ -578,7 +578,7 @@ public:
      * the character the iterator currently refers to
      * @stable ICU 2.0
      */
-    inline int32_t getIndex() const;
+    ଧାଡ଼ିଭିତରେ int32_t getIndex() ଅଚଳ;
 
     /**
      * Returns the length of the entire text in the underlying
@@ -586,7 +586,7 @@ public:
      * @return the length of the entire text in the text-storage object
      * @stable ICU 2.0
      */
-    inline int32_t           getLength() const;
+    ଧାଡ଼ିଭିତରେ int32_t           getLength() ଅଚଳ;
 
     /**
      * Moves the current position relative to the start or end of the
@@ -599,7 +599,7 @@ public:
      * @return the new position
      * @stable ICU 2.0
      */
-    virtual int32_t      move(int32_t delta, EOrigin origin) = 0;
+    ଆଭାସୀ int32_t      move(int32_t delta, EOrigin origin) = 0;
 
     /**
      * Moves the current position relative to the start or end of the
@@ -616,7 +616,7 @@ public:
      // One of the system headers right now is sometimes defining a conflicting macro we don't use
 #undef move32
 #endif
-    virtual int32_t      move32(int32_t delta, EOrigin origin) = 0;
+    ଆଭାସୀ int32_t      move32(int32_t delta, EOrigin origin) = 0;
 
     /**
      * Copies the text under iteration into the UnicodeString
@@ -624,9 +624,9 @@ public:
      * @param result Receives a copy of the text under iteration.  
      * @stable ICU 2.0
      */
-    virtual void            getText(UnicodeString&  result) = 0;
+    ଆଭାସୀ ଶୂନ୍ୟ            getText(UnicodeString&  result) = 0;
 
-protected:
+ସୁରକ୍ଷିତ:
     /**
      * Empty constructor.
      * @stable ICU 2.0
@@ -657,7 +657,7 @@ protected:
      * @param that The CharacterIterator to be copied
      * @stable ICU 2.0
      */
-    CharacterIterator(const CharacterIterator &that);
+    CharacterIterator(ଅଚଳ CharacterIterator &that);
 
     /**
      * Assignment operator.  Sets this CharacterIterator to have the same behavior,
@@ -666,7 +666,7 @@ protected:
      * @return the newly set CharacterIterator.
      * @stable ICU 2.0
      */
-    CharacterIterator& operator=(const CharacterIterator& that) U_LIFETIME_BOUND;
+    CharacterIterator& operator=(ଅଚଳ CharacterIterator& that) U_LIFETIME_BOUND;
 
     /**
      * Base class text length field.
@@ -694,39 +694,39 @@ protected:
     int32_t  end;
 };
 
-inline bool
-ForwardCharacterIterator::operator!=(const ForwardCharacterIterator& that) const {
-    return !operator==(that);
+ଧାଡ଼ିଭିତରେ bool
+ForwardCharacterIterator::operator!=(ଅଚଳ ForwardCharacterIterator& that) ଅଚଳ {
+    ଫେରନ୍ତୁ !operator==(that);
 }
 
-inline int32_t
+ଧାଡ଼ିଭିତରେ int32_t
 CharacterIterator::setToStart() {
-    return move(0, kStart);
+    ଫେରନ୍ତୁ move(0, kStart);
 }
 
-inline int32_t
+ଧାଡ଼ିଭିତରେ int32_t
 CharacterIterator::setToEnd() {
-    return move(0, kEnd);
+    ଫେରନ୍ତୁ move(0, kEnd);
 }
 
-inline int32_t
-CharacterIterator::startIndex() const {
-    return begin;
+ଧାଡ଼ିଭିତରେ int32_t
+CharacterIterator::startIndex() ଅଚଳ {
+    ଫେରନ୍ତୁ begin;
 }
 
-inline int32_t
-CharacterIterator::endIndex() const {
-    return end;
+ଧାଡ଼ିଭିତରେ int32_t
+CharacterIterator::endIndex() ଅଚଳ {
+    ଫେରନ୍ତୁ end;
 }
 
-inline int32_t
-CharacterIterator::getIndex() const {
-    return pos;
+ଧାଡ଼ିଭିତରେ int32_t
+CharacterIterator::getIndex() ଅଚଳ {
+    ଫେରନ୍ତୁ pos;
 }
 
-inline int32_t
-CharacterIterator::getLength() const {
-    return textLength;
+ଧାଡ଼ିଭିତରେ int32_t
+CharacterIterator::getLength() ଅଚଳ {
+    ଫେରନ୍ତୁ textLength;
 }
 
 U_NAMESPACE_END

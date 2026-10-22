@@ -8,19 +8,19 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#ଯଦି !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "ucln_cmn.h"
-#include "uassert.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/resbund.h"
+#ଅନ୍ତର୍ଭାଵ "uresimp.h"
+#ଅନ୍ତର୍ଭାଵ "cmemory.h"
+#ଅନ୍ତର୍ଭାଵ "servloc.h"
+#ଅନ୍ତର୍ଭାଵ "ustrfmt.h"
+#ଅନ୍ତର୍ଭାଵ "uhash.h"
+#ଅନ୍ତର୍ଭାଵ "charstr.h"
+#ଅନ୍ତର୍ଭାଵ "ucln_cmn.h"
+#ଅନ୍ତର୍ଭାଵ "uassert.h"
 
 #define UNDERSCORE_CHAR ((char16_t)0x005f)
 #define AT_SIGN_CHAR    ((char16_t)64)
@@ -29,60 +29,60 @@
 
 U_NAMESPACE_BEGIN
 
-LocaleKeyFactory::LocaleKeyFactory(int32_t coverage)
+Locale_ଚାବି_Factory::Locale_ଚାବି_Factory(int32_t coverage)
   : _name()
   , _coverage(coverage)
 {
 }
 
-LocaleKeyFactory::LocaleKeyFactory(int32_t coverage, const UnicodeString& name)
+Locale_ଚାବି_Factory::Locale_ଚାବି_Factory(int32_t coverage, ଅଚଳ UnicodeString& name)
   : _name(name)
   , _coverage(coverage)
 {
 }
 
-LocaleKeyFactory::~LocaleKeyFactory() {
+Locale_ଚାବି_Factory::~Locale_ଚାବି_Factory() {
 }
 
 UObject*
-LocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const {
-    if (handlesKey(key, status)) {
-        const LocaleKey& lkey = static_cast<const LocaleKey&>(key);
+Locale_ଚାବି_Factory::create(ଅଚଳ ICUService_ଚାବି& ଚାବି, ଅଚଳ ICUService* service, UErrorCode& status) ଅଚଳ {
+    ଯଦି (handles_ଚାବି(ଚାବି, status)) {
+        ଅଚଳ Locale_ଚାବି& lkey = static_cast<ଅଚଳ Locale_ଚାବି&>(ଚାବି);
         int32_t kind = lkey.kind();
         Locale loc;
         lkey.currentLocale(loc);
 
-        return handleCreate(loc, kind, service, status);
+        ଫେରନ୍ତୁ handleCreate(loc, kind, service, status);
     }
-    return nullptr;
+    ଫେରନ୍ତୁ nullptr;
 }
 
 UBool
-LocaleKeyFactory::handlesKey(const ICUServiceKey& key, UErrorCode& status) const {
-    const Hashtable* supported = getSupportedIDs(status);
-    if (supported) {
+Locale_ଚାବି_Factory::handles_ଚାବି(ଅଚଳ ICUService_ଚାବି& ଚାବି, UErrorCode& status) ଅଚଳ {
+    ଅଚଳ Hashtable* supported = getSupportedIDs(status);
+    ଯଦି (supported) {
         UnicodeString id;
-        key.currentID(id);
-        return supported->get(id) != nullptr;
+        ଚାବି.currentID(id);
+        ଫେରନ୍ତୁ supported->get(id) != nullptr;
     }
-    return false;
+    ଫେରନ୍ତୁ ମିଥ୍ୟା;
 }
 
-void
-LocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const {
-    const Hashtable* supported = getSupportedIDs(status);
-    if (supported) {
+ଶୂନ୍ୟ
+Locale_ଚାବି_Factory::updateVisibleIDs(Hashtable& result, UErrorCode& status) ଅଚଳ {
+    ଅଚଳ Hashtable* supported = getSupportedIDs(status);
+    ଯଦି (supported) {
         UBool visible = (_coverage & 0x1) == 0;
-        const UHashElement* elem = nullptr;
+        ଅଚଳ UHashElement* elem = nullptr;
         int32_t pos = UHASH_FIRST;
-        while ((elem = supported->nextElement(pos)) != nullptr) {
-            const UnicodeString& id = *static_cast<const UnicodeString*>(elem->key.pointer);
-            if (!visible) {
+        ଯେତେବେଳେ ((elem = supported->nextElement(pos)) != nullptr) {
+            ଅଚଳ UnicodeString& id = *static_cast<ଅଚଳ UnicodeString*>(elem->ଚାବି.pointer);
+            ଯଦି (!visible) {
                 result.remove(id);
-            } else {
-                result.put(id, (void*)this, status); // this is dummy non-void marker used for set semantics
-                if (U_FAILURE(status)) {
-                    break;
+            } ଅନ୍ୟଥା {
+                result.put(id, (ଶୂନ୍ୟ*)ଏହି, status); // this is dummy non-void marker used for set semantics
+                ଯଦି (U_FAILURE(status)) {
+                    ଭାଙ୍ଗ;
                 }
             }
         }
@@ -90,26 +90,26 @@ LocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const 
 }
 
 UnicodeString&
-LocaleKeyFactory::getDisplayName(const UnicodeString& id, const Locale& locale, UnicodeString& result) const {
-    if ((_coverage & 0x1) == 0) {
+Locale_ଚାବି_Factory::getDisplayName(ଅଚଳ UnicodeString& id, ଅଚଳ Locale& locale, UnicodeString& result) ଅଚଳ {
+    ଯଦି ((_coverage & 0x1) == 0) {
         //UErrorCode status = U_ZERO_ERROR;
         // assume if this is called on us, we support some fallback of this id
         // if (isSupportedID(id, status)) {
             Locale loc;
             LocaleUtility::initLocaleFromName(id, loc);
-            return loc.getDisplayName(locale, result);
+            ଫେରନ୍ତୁ loc.getDisplayName(locale, result);
         // }
     }
     result.setToBogus();
-    return result;
+    ଫେରନ୍ତୁ result;
 }
 
 UObject*
-LocaleKeyFactory::handleCreate(const Locale& /* loc */, 
+Locale_ଚାବି_Factory::handleCreate(ଅଚଳ Locale& /* loc */, 
                    int32_t /* kind */, 
-                   const ICUService* /* service */, 
-                   UErrorCode& /* status */) const {
-    return nullptr;
+                   ଅଚଳ ICUService* /* service */, 
+                   UErrorCode& /* status */) ଅଚଳ {
+    ଫେରନ୍ତୁ nullptr;
 }
 
 //UBool
@@ -118,31 +118,31 @@ LocaleKeyFactory::handleCreate(const Locale& /* loc */,
 //    return ids && ids->get(id);
 //}
 
-const Hashtable*
-LocaleKeyFactory::getSupportedIDs(UErrorCode& /* status */) const {
-    return nullptr;
+ଅଚଳ Hashtable*
+Locale_ଚାବି_Factory::getSupportedIDs(UErrorCode& /* status */) ଅଚଳ {
+    ଫେରନ୍ତୁ nullptr;
 }
 
 #ifdef SERVICE_DEBUG
 UnicodeString&
-LocaleKeyFactory::debug(UnicodeString& result) const
+Locale_ଚାବି_Factory::debug(UnicodeString& result) ଅଚଳ
 {
     debugClass(result);
     result.append((UnicodeString)", name: ");
     result.append(_name);
     result.append((UnicodeString)", coverage: ");
     result.append(_coverage);
-    return result;
+    ଫେରନ୍ତୁ result;
 }
 
 UnicodeString&
-LocaleKeyFactory::debugClass(UnicodeString& result) const
+Locale_ଚାବି_Factory::debugClass(UnicodeString& result) ଅଚଳ
 {
-  return result.append((UnicodeString)"LocaleKeyFactory");
+  ଫେରନ୍ତୁ result.append((UnicodeString)"LocaleKeyFactory");
 }
 #endif
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(LocaleKeyFactory)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Locale_ଚାବି_Factory)
 
 U_NAMESPACE_END
 

@@ -16,176 +16,176 @@
 *   created by: Vladimir Weinstein
 */
 
-#include "unicode/putil.h"
-#include "uenumimp.h"
-#include "cmemory.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/putil.h"
+#ଅନ୍ତର୍ଭାଵ "uenumimp.h"
+#ଅନ୍ତର୍ଭାଵ "cmemory.h"
 
 /* Layout of the baseContext buffer. */
-typedef struct {
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା {
     int32_t len;  /* number of bytes available starting at 'data' */
-    char    data; /* actual data starts here */
+    ଅକ୍ଷର    data; /* actual data starts here */
 } _UEnumBuffer;
 
 /* Extra bytes to allocate in the baseContext buffer. */
-static const int32_t PAD = 8;
+ସ୍ଥିର ଅଚଳ int32_t PAD = 8;
 
 /* Return a pointer to the baseContext buffer, possibly allocating
    or reallocating it if at least 'capacity' bytes are not available. */
-static void* _getBuffer(UEnumeration* en U_LIFETIME_BOUND, int32_t capacity) {
+ସ୍ଥିର ଶୂନ୍ୟ* _getBuffer(UEnumeration* en U_LIFETIME_BOUND, int32_t capacity) {
 
-    if (en->baseContext != nullptr) {
-        if (static_cast<_UEnumBuffer*>(en->baseContext)->len < capacity) {
+    ଯଦି (en->baseContext != nullptr) {
+        ଯଦି (static_cast<_UEnumBuffer*>(en->baseContext)->len < capacity) {
             capacity += PAD;
             en->baseContext = uprv_realloc(en->baseContext,
-                                           sizeof(int32_t) + capacity);
-            if (en->baseContext == nullptr) {
-                return nullptr;
+                                           ଆକାର(int32_t) + capacity);
+            ଯଦି (en->baseContext == nullptr) {
+                ଫେରନ୍ତୁ nullptr;
             }
             static_cast<_UEnumBuffer*>(en->baseContext)->len = capacity;
         }
-    } else {
+    } ଅନ୍ୟଥା {
         capacity += PAD;
-        en->baseContext = uprv_malloc(sizeof(int32_t) + capacity);
-        if (en->baseContext == nullptr) {
-            return nullptr;
+        en->baseContext = uprv_malloc(ଆକାର(int32_t) + capacity);
+        ଯଦି (en->baseContext == nullptr) {
+            ଫେରନ୍ତୁ nullptr;
         }
         static_cast<_UEnumBuffer*>(en->baseContext)->len = capacity;
     }
     
-    return static_cast<void*>(&static_cast<_UEnumBuffer*>(en->baseContext)->data);
+    ଫେରନ୍ତୁ static_cast<ଶୂନ୍ୟ*>(&static_cast<_UEnumBuffer*>(en->baseContext)->data);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ଶୂନ୍ୟ U_EXPORT2
 uenum_close(UEnumeration* en)
 {
-    if (en) {
-        if (en->close != nullptr) {
-            if (en->baseContext) {
+    ଯଦି (en) {
+        ଯଦି (en->close != nullptr) {
+            ଯଦି (en->baseContext) {
                 uprv_free(en->baseContext);
             }
             en->close(en);
-        } else { /* this seems dangerous, but we better kill the object */
+        } ଅନ୍ୟଥା { /* this seems dangerous, but we better kill the object */
             uprv_free(en);
         }
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-uenum_count(UEnumeration* en, UErrorCode* status)
+uenum_ଗଣନା(UEnumeration* en, UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return -1;
+    ଯଦି (!en || U_FAILURE(*status)) {
+        ଫେରନ୍ତୁ -1;
     }
-    if (en->count != nullptr) {
-        return en->count(en, status);
-    } else {
+    ଯଦି (en->count != nullptr) {
+        ଫେରନ୍ତୁ en->count(en, status);
+    } ଅନ୍ୟଥା {
         *status = U_UNSUPPORTED_ERROR;
-        return -1;
+        ଫେରନ୍ତୁ -1;
     }
 }
 
 /* Don't call this directly. Only uenum_unext should be calling this. */
-U_CAPI const char16_t* U_EXPORT2
+U_CAPI ଅଚଳ char16_t* U_EXPORT2
 uenum_unextDefault(UEnumeration* en U_LIFETIME_BOUND,
                    int32_t* resultLength,
                    UErrorCode* status)
 {
     char16_t *ustr = nullptr;
     int32_t len = 0;
-    if (en->next != nullptr) {
-        const char *cstr = en->next(en, &len, status);
-        if (cstr != nullptr) {
-            ustr = (char16_t*) _getBuffer(en, (len+1) * sizeof(char16_t));
-            if (ustr == nullptr) {
+    ଯଦି (en->next != nullptr) {
+        ଅଚଳ ଅକ୍ଷର *cstr = en->next(en, &len, status);
+        ଯଦି (cstr != nullptr) {
+            ustr = (char16_t*) _getBuffer(en, (len+1) * ଆକାର(char16_t));
+            ଯଦି (ustr == nullptr) {
                 *status = U_MEMORY_ALLOCATION_ERROR;
-            } else {
+            } ଅନ୍ୟଥା {
                 u_charsToUChars(cstr, ustr, len);
                 ustr[len] = 0;
             }
         }
-    } else {
+    } ଅନ୍ୟଥା {
         *status = U_UNSUPPORTED_ERROR;
     }
-    if (resultLength) {
+    ଯଦି (resultLength) {
         *resultLength = len;
     }
-    return ustr;
+    ଫେରନ୍ତୁ ustr;
 }
 
 /* Don't call this directly. Only uenum_next should be calling this. */
-U_CAPI const char* U_EXPORT2
+U_CAPI ଅଚଳ ଅକ୍ଷର* U_EXPORT2
 uenum_nextDefault(UEnumeration* en U_LIFETIME_BOUND,
                   int32_t* resultLength,
                   UErrorCode* status)
 {
-    if (en->uNext != nullptr) {
-        char *tempCharVal;
-        const char16_t *tempUCharVal = en->uNext(en, resultLength, status);
-        if (tempUCharVal == nullptr) {
-            return nullptr;
+    ଯଦି (en->uNext != nullptr) {
+        ଅକ୍ଷର *tempCharVal;
+        ଅଚଳ char16_t *tempUCharVal = en->uNext(en, resultLength, status);
+        ଯଦି (tempUCharVal == nullptr) {
+            ଫେରନ୍ତୁ nullptr;
         }
-        tempCharVal = (char*)
-            _getBuffer(en, (*resultLength+1) * sizeof(char));
-        if (!tempCharVal) {
+        tempCharVal = (ଅକ୍ଷର*)
+            _getBuffer(en, (*resultLength+1) * ଆକାର(ଅକ୍ଷର));
+        ଯଦି (!tempCharVal) {
             *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+            ଫେରନ୍ତୁ nullptr;
         }
         u_UCharsToChars(tempUCharVal, tempCharVal, *resultLength);
         tempCharVal[*resultLength] = 0;
-        return tempCharVal;
-    } else {
+        ଫେରନ୍ତୁ tempCharVal;
+    } ଅନ୍ୟଥା {
         *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+        ଫେରନ୍ତୁ nullptr;
     }
 }
 
-U_CAPI const char16_t* U_EXPORT2
+U_CAPI ଅଚଳ char16_t* U_EXPORT2
 uenum_unext(UEnumeration* en U_LIFETIME_BOUND,
             int32_t* resultLength,
             UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return nullptr;
+    ଯଦି (!en || U_FAILURE(*status)) {
+        ଫେରନ୍ତୁ nullptr;
     }
-    if (en->uNext != nullptr) {
-        return en->uNext(en, resultLength, status);
-    } else {
+    ଯଦି (en->uNext != nullptr) {
+        ଫେରନ୍ତୁ en->uNext(en, resultLength, status);
+    } ଅନ୍ୟଥା {
         *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+        ଫେରନ୍ତୁ nullptr;
     }
 }
 
-U_CAPI const char* U_EXPORT2
+U_CAPI ଅଚଳ ଅକ୍ଷର* U_EXPORT2
 uenum_next(UEnumeration* en U_LIFETIME_BOUND,
            int32_t* resultLength,
            UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return nullptr;
+    ଯଦି (!en || U_FAILURE(*status)) {
+        ଫେରନ୍ତୁ nullptr;
     }
-    if (en->next != nullptr) {
-        if (resultLength != nullptr) {
-            return en->next(en, resultLength, status);
+    ଯଦି (en->next != nullptr) {
+        ଯଦି (resultLength != nullptr) {
+            ଫେରନ୍ତୁ en->next(en, resultLength, status);
         }
-        else {
+        ଅନ୍ୟଥା {
             int32_t dummyLength=0;
-            return en->next(en, &dummyLength, status);
+            ଫେରନ୍ତୁ en->next(en, &dummyLength, status);
         }
-    } else {
+    } ଅନ୍ୟଥା {
         *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+        ଫେରନ୍ତୁ nullptr;
     }
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ଶୂନ୍ୟ U_EXPORT2
 uenum_reset(UEnumeration* en, UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return;
+    ଯଦି (!en || U_FAILURE(*status)) {
+        ଫେରନ୍ତୁ;
     }
-    if (en->reset != nullptr) {
+    ଯଦି (en->reset != nullptr) {
         en->reset(en, status);
-    } else {
+    } ଅନ୍ୟଥା {
         *status = U_UNSUPPORTED_ERROR;
     }
 }

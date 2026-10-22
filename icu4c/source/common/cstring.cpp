@@ -23,12 +23,12 @@
 
 
 
-#include <stdlib.h>
-#include <stdio.h>
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uassert.h"
+#ଅନ୍ତର୍ଭାଵ <stdlib.h>
+#ଅନ୍ତର୍ଭାଵ <stdio.h>
+#ଅନ୍ତର୍ଭାଵ "unicode/utypes.h"
+#ଅନ୍ତର୍ଭାଵ "cmemory.h"
+#ଅନ୍ତର୍ଭାଵ "cstring.h"
+#ଅନ୍ତର୍ଭାଵ "uassert.h"
 
 /*
  * We hardcode case conversion for invariant characters to match our expectation
@@ -49,32 +49,32 @@
  */
 
 U_CAPI UBool U_EXPORT2
-uprv_isASCIILetter(char c) {
-#if U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-    return
+uprv_isASCIILetter(ଅକ୍ଷର c) {
+#ଯଦି U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+    ଫେରନ୍ତୁ
         ('a'<=c && c<='i') || ('j'<=c && c<='r') || ('s'<=c && c<='z') ||
         ('A'<=c && c<='I') || ('J'<=c && c<='R') || ('S'<=c && c<='Z');
-#else
-    return ('a'<=c && c<='z') || ('A'<=c && c<='Z');
+#ଅନ୍ୟଥା
+    ଫେରନ୍ତୁ ('a'<=c && c<='z') || ('A'<=c && c<='Z');
 #endif
 }
 
-U_CAPI char U_EXPORT2
-uprv_toupper(char c) {
-#if U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-    if(('a'<=c && c<='i') || ('j'<=c && c<='r') || ('s'<=c && c<='z')) {
-        c=(char)(c+('A'-'a'));
+U_CAPI ଅକ୍ଷର U_EXPORT2
+uprv_toupper(ଅକ୍ଷର c) {
+#ଯଦି U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+    ଯଦି(('a'<=c && c<='i') || ('j'<=c && c<='r') || ('s'<=c && c<='z')) {
+        c=(ଅକ୍ଷର)(c+('A'-'a'));
     }
-#else
-    if('a'<=c && c<='z') {
-        c=(char)(c+('A'-'a'));
+#ଅନ୍ୟଥା
+    ଯଦି('a'<=c && c<='z') {
+        c=(ଅକ୍ଷର)(c+('A'-'a'));
     }
 #endif
-    return c;
+    ଫେରନ୍ତୁ c;
 }
 
 
-#if 0
+#ଯଦି 0
 /*
  * Commented out because cstring.h defines uprv_tolower() to be
  * the same as either uprv_asciitolower() or uprv_ebcdictolower()
@@ -84,67 +84,67 @@ uprv_toupper(char c) {
  * charset families, not just ASCII and EBCDIC, because its #else branch
  * is written generically.
  */
-U_CAPI char U_EXPORT2
-uprv_tolower(char c) {
-#if U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-    if(('A'<=c && c<='I') || ('J'<=c && c<='R') || ('S'<=c && c<='Z')) {
-        c=(char)(c+('a'-'A'));
+U_CAPI ଅକ୍ଷର U_EXPORT2
+uprv_tolower(ଅକ୍ଷର c) {
+#ଯଦି U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+    ଯଦି(('A'<=c && c<='I') || ('J'<=c && c<='R') || ('S'<=c && c<='Z')) {
+        c=(ଅକ୍ଷର)(c+('a'-'A'));
     }
-#else
-    if('A'<=c && c<='Z') {
-        c=(char)(c+('a'-'A'));
+#ଅନ୍ୟଥା
+    ଯଦି('A'<=c && c<='Z') {
+        c=(ଅକ୍ଷର)(c+('a'-'A'));
     }
 #endif
-    return c;
+    ଫେରନ୍ତୁ c;
 }
 #endif
 
-U_CAPI char U_EXPORT2
-uprv_asciitolower(char c) {
-    if(0x41<=c && c<=0x5a) {
-        c=(char)(c+0x20);
+U_CAPI ଅକ୍ଷର U_EXPORT2
+uprv_asciitolower(ଅକ୍ଷର c) {
+    ଯଦି(0x41<=c && c<=0x5a) {
+        c=(ଅକ୍ଷର)(c+0x20);
     }
-    return c;
+    ଫେରନ୍ତୁ c;
 }
 
-U_CAPI char U_EXPORT2
-uprv_ebcdictolower(char c) {
-    if( (0xc1<=(uint8_t)c && (uint8_t)c<=0xc9) ||
+U_CAPI ଅକ୍ଷର U_EXPORT2
+uprv_ebcdictolower(ଅକ୍ଷର c) {
+    ଯଦି( (0xc1<=(uint8_t)c && (uint8_t)c<=0xc9) ||
         (0xd1<=(uint8_t)c && (uint8_t)c<=0xd9) ||
         (0xe2<=(uint8_t)c && (uint8_t)c<=0xe9)
     ) {
-        c=(char)(c-0x40);
+        c=(ଅକ୍ଷର)(c-0x40);
     }
-    return c;
+    ଫେରନ୍ତୁ c;
 }
 
 
-U_CAPI char* U_EXPORT2
-T_CString_toLowerCase(char* str)
+U_CAPI ଅକ୍ଷର* U_EXPORT2
+T_CString_toLowerCase(ଅକ୍ଷର* str)
 {
-    char* origPtr = str;
+    ଅକ୍ଷର* origPtr = str;
 
-    if (str) {
-        do
+    ଯଦି (str) {
+        କର
             *str = uprv_tolower(*str);
-        while (*(str++));
+        ଯେତେବେଳେ (*(str++));
     }
 
-    return origPtr;
+    ଫେରନ୍ତୁ origPtr;
 }
 
-U_CAPI char* U_EXPORT2
-T_CString_toUpperCase(char* str)
+U_CAPI ଅକ୍ଷର* U_EXPORT2
+T_CString_toUpperCase(ଅକ୍ଷର* str)
 {
-    char* origPtr = str;
+    ଅକ୍ଷର* origPtr = str;
 
-    if (str) {
-        do
+    ଯଦି (str) {
+        କର
             *str = uprv_toupper(*str);
-        while (*(str++));
+        ଯେତେବେଳେ (*(str++));
     }
 
-    return origPtr;
+    ଫେରନ୍ତୁ origPtr;
 }
 
 /*
@@ -154,34 +154,34 @@ T_CString_toUpperCase(char* str)
  * Returns the length of the string (not including the NUL).
  */
 U_CAPI int32_t U_EXPORT2
-T_CString_integerToString(char* buffer, int32_t v, int32_t radix)
+T_CString_integerToString(ଅକ୍ଷର* buffer, int32_t v, int32_t radix)
 {
-    char      tbuf[30];
-    int32_t   tbx    = sizeof(tbuf);
+    ଅକ୍ଷର      tbuf[30];
+    int32_t   tbx    = ଆକାର(tbuf);
     uint8_t   digit;
     int32_t   length = 0;
     uint32_t  uval;
     
     U_ASSERT(radix>=2 && radix<=16);
     uval = (uint32_t) v;
-    if(v<0 && radix == 10) {
+    ଯଦି(v<0 && radix == 10) {
         /* Only in base 10 do we conside numbers to be signed. */
         uval = (uint32_t)(-v); 
         buffer[length++] = '-';
     }
     
-    tbx = sizeof(tbuf)-1;
+    tbx = ଆକାର(tbuf)-1;
     tbuf[tbx] = 0;   /* We are generating the digits backwards.  Null term the end. */
-    do {
+    କର {
         digit = (uint8_t)(uval % radix);
-        tbuf[--tbx] = (char)(T_CString_itosOffset(digit));
+        tbuf[--tbx] = (ଅକ୍ଷର)(T_CString_itosOffset(digit));
         uval  = uval / radix;
-    } while (uval != 0);
+    } ଯେତେବେଳେ (uval != 0);
     
     /* copy converted number into user buffer  */
     uprv_strcpy(buffer+length, tbuf+tbx);
-    length += sizeof(tbuf) - tbx -1;
-    return length;
+    length += ଆକାର(tbuf) - tbx -1;
+    ଫେରନ୍ତୁ length;
 }
 
 
@@ -192,76 +192,76 @@ T_CString_integerToString(char* buffer, int32_t v, int32_t radix)
  * Returns the length of the string, not including the terminating NUL.
  */
 U_CAPI int32_t U_EXPORT2
-T_CString_int64ToString(char* buffer, int64_t v, uint32_t radix)
+T_CString_int64ToString(ଅକ୍ଷର* buffer, int64_t v, uint32_t radix)
 {
-    char      tbuf[30];
-    int32_t   tbx    = sizeof(tbuf);
+    ଅକ୍ଷର      tbuf[30];
+    int32_t   tbx    = ଆକାର(tbuf);
     uint8_t   digit;
     int32_t   length = 0;
     uint64_t  uval;
     
     U_ASSERT(radix>=2 && radix<=16);
     uval = (uint64_t) v;
-    if(v<0 && radix == 10) {
+    ଯଦି(v<0 && radix == 10) {
         /* Only in base 10 do we conside numbers to be signed. */
         uval = (uint64_t)(-v); 
         buffer[length++] = '-';
     }
     
-    tbx = sizeof(tbuf)-1;
+    tbx = ଆକାର(tbuf)-1;
     tbuf[tbx] = 0;   /* We are generating the digits backwards.  Null term the end. */
-    do {
+    କର {
         digit = (uint8_t)(uval % radix);
-        tbuf[--tbx] = (char)(T_CString_itosOffset(digit));
+        tbuf[--tbx] = (ଅକ୍ଷର)(T_CString_itosOffset(digit));
         uval  = uval / radix;
-    } while (uval != 0);
+    } ଯେତେବେଳେ (uval != 0);
     
     /* copy converted number into user buffer  */
     uprv_strcpy(buffer+length, tbuf+tbx);
-    length += sizeof(tbuf) - tbx -1;
-    return length;
+    length += ଆକାର(tbuf) - tbx -1;
+    ଫେରନ୍ତୁ length;
 }
 
 
 U_CAPI int32_t U_EXPORT2
-T_CString_stringToInteger(const char *integerString, int32_t radix)
+T_CString_stringToInteger(ଅଚଳ ଅକ୍ଷର *integerString, int32_t radix)
 {
-    char *end;
-    return uprv_strtoul(integerString, &end, radix);
+    ଅକ୍ଷର *end;
+    ଫେରନ୍ତୁ uprv_strtoul(integerString, &end, radix);
 
 }
 
-U_CAPI int U_EXPORT2
-uprv_stricmp(const char *str1, const char *str2) {
-    if(str1==nullptr) {
-        if(str2==nullptr) {
-            return 0;
-        } else {
-            return -1;
+U_CAPI ପୂର୍ଣ୍ଣସଂଖ୍ୟା U_EXPORT2
+uprv_stricmp(ଅଚଳ ଅକ୍ଷର *str1, ଅଚଳ ଅକ୍ଷର *str2) {
+    ଯଦି(str1==nullptr) {
+        ଯଦି(str2==nullptr) {
+            ଫେରନ୍ତୁ 0;
+        } ଅନ୍ୟଥା {
+            ଫେରନ୍ତୁ -1;
         }
-    } else if(str2==nullptr) {
-        return 1;
-    } else {
+    } ଅନ୍ୟଥା ଯଦି(str2==nullptr) {
+        ଫେରନ୍ତୁ 1;
+    } ଅନ୍ୟଥା {
         /* compare non-nullptr strings lexically with lowercase */
-        int rc;
-        unsigned char c1, c2;
+        ପୂର୍ଣ୍ଣସଂଖ୍ୟା rc;
+        unsigned ଅକ୍ଷର c1, c2;
 
-        for(;;) {
-            c1=(unsigned char)*str1;
-            c2=(unsigned char)*str2;
-            if(c1==0) {
-                if(c2==0) {
-                    return 0;
-                } else {
-                    return -1;
+        ପାଇଁ(;;) {
+            c1=(unsigned ଅକ୍ଷର)*str1;
+            c2=(unsigned ଅକ୍ଷର)*str2;
+            ଯଦି(c1==0) {
+                ଯଦି(c2==0) {
+                    ଫେରନ୍ତୁ 0;
+                } ଅନ୍ୟଥା {
+                    ଫେରନ୍ତୁ -1;
                 }
-            } else if(c2==0) {
-                return 1;
-            } else {
+            } ଅନ୍ୟଥା ଯଦି(c2==0) {
+                ଫେରନ୍ତୁ 1;
+            } ଅନ୍ୟଥା {
                 /* compare non-zero characters with lowercase */
-                rc=(int)(unsigned char)uprv_tolower(c1)-(int)(unsigned char)uprv_tolower(c2);
-                if(rc!=0) {
-                    return rc;
+                rc=(ପୂର୍ଣ୍ଣସଂଖ୍ୟା)(unsigned ଅକ୍ଷର)uprv_tolower(c1)-(ପୂର୍ଣ୍ଣସଂଖ୍ୟା)(unsigned ଅକ୍ଷର)uprv_tolower(c2);
+                ଯଦି(rc!=0) {
+                    ଫେରନ୍ତୁ rc;
                 }
             }
             ++str1;
@@ -270,37 +270,37 @@ uprv_stricmp(const char *str1, const char *str2) {
     }
 }
 
-U_CAPI int U_EXPORT2
-uprv_strnicmp(const char *str1, const char *str2, uint32_t n) {
-    if(str1==nullptr) {
-        if(str2==nullptr) {
-            return 0;
-        } else {
-            return -1;
+U_CAPI ପୂର୍ଣ୍ଣସଂଖ୍ୟା U_EXPORT2
+uprv_strnicmp(ଅଚଳ ଅକ୍ଷର *str1, ଅଚଳ ଅକ୍ଷର *str2, uint32_t n) {
+    ଯଦି(str1==nullptr) {
+        ଯଦି(str2==nullptr) {
+            ଫେରନ୍ତୁ 0;
+        } ଅନ୍ୟଥା {
+            ଫେରନ୍ତୁ -1;
         }
-    } else if(str2==nullptr) {
-        return 1;
-    } else {
+    } ଅନ୍ୟଥା ଯଦି(str2==nullptr) {
+        ଫେରନ୍ତୁ 1;
+    } ଅନ୍ୟଥା {
         /* compare non-nullptr strings lexically with lowercase */
-        int rc;
-        unsigned char c1, c2;
+        ପୂର୍ଣ୍ଣସଂଖ୍ୟା rc;
+        unsigned ଅକ୍ଷର c1, c2;
 
-        for(; n--;) {
-            c1=(unsigned char)*str1;
-            c2=(unsigned char)*str2;
-            if(c1==0) {
-                if(c2==0) {
-                    return 0;
-                } else {
-                    return -1;
+        ପାଇଁ(; n--;) {
+            c1=(unsigned ଅକ୍ଷର)*str1;
+            c2=(unsigned ଅକ୍ଷର)*str2;
+            ଯଦି(c1==0) {
+                ଯଦି(c2==0) {
+                    ଫେରନ୍ତୁ 0;
+                } ଅନ୍ୟଥା {
+                    ଫେରନ୍ତୁ -1;
                 }
-            } else if(c2==0) {
-                return 1;
-            } else {
+            } ଅନ୍ୟଥା ଯଦି(c2==0) {
+                ଫେରନ୍ତୁ 1;
+            } ଅନ୍ୟଥା {
                 /* compare non-zero characters with lowercase */
-                rc=(int)(unsigned char)uprv_tolower(c1)-(int)(unsigned char)uprv_tolower(c2);
-                if(rc!=0) {
-                    return rc;
+                rc=(ପୂର୍ଣ୍ଣସଂଖ୍ୟା)(unsigned ଅକ୍ଷର)uprv_tolower(c1)-(ପୂର୍ଣ୍ଣସଂଖ୍ୟା)(unsigned ଅକ୍ଷର)uprv_tolower(c2);
+                ଯଦି(rc!=0) {
+                    ଫେରନ୍ତୁ rc;
                 }
             }
             ++str1;
@@ -308,34 +308,34 @@ uprv_strnicmp(const char *str1, const char *str2, uint32_t n) {
         }
     }
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-U_CAPI char* U_EXPORT2
-uprv_strdup(const char *src) {
+U_CAPI ଅକ୍ଷର* U_EXPORT2
+uprv_strdup(ଅଚଳ ଅକ୍ଷର *src) {
     size_t len = uprv_strlen(src) + 1;
-    char *dup = (char *) uprv_malloc(len);
+    ଅକ୍ଷର *dup = (ଅକ୍ଷର *) uprv_malloc(len);
 
-    if (dup) {
+    ଯଦି (dup) {
         uprv_memcpy(dup, src, len);
     }
 
-    return dup;
+    ଫେରନ୍ତୁ dup;
 }
 
-U_CAPI char* U_EXPORT2
-uprv_strndup(const char *src, int32_t n) {
-    char *dup;
+U_CAPI ଅକ୍ଷର* U_EXPORT2
+uprv_strndup(ଅଚଳ ଅକ୍ଷର *src, int32_t n) {
+    ଅକ୍ଷର *dup;
 
-    if(n < 0) {
+    ଯଦି(n < 0) {
         dup = uprv_strdup(src);
-    } else {
-        dup = (char*)uprv_malloc(n+1);
-        if (dup) { 
+    } ଅନ୍ୟଥା {
+        dup = (ଅକ୍ଷର*)uprv_malloc(n+1);
+        ଯଦି (dup) { 
             uprv_memcpy(dup, src, n);
             dup[n] = 0;
         }
     }
 
-    return dup;
+    ଫେରନ୍ତୁ dup;
 }

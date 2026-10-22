@@ -17,13 +17,13 @@
 #ifndef __UCHARSTRIEBUILDER_H__
 #define __UCHARSTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ଯଦି U_SHOW_CPLUSPLUS_API
 
-#include "unicode/stringtriebuilder.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/unistr.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/stringtriebuilder.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/ucharstrie.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/unistr.h"
 
 /**
  * \file
@@ -40,8 +40,8 @@ class UCharsTrieElement;
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API UCharsTrieBuilder : public StringTrieBuilder {
-public:
+class U_COMMON_API UCharsTrieBuilder : ସର୍ବସାଧାରଣ StringTrieBuilder {
+ସର୍ବସାଧାରଣ:
     /**
      * Constructs an empty builder.
      * @param errorCode Standard ICU error code.
@@ -53,7 +53,7 @@ public:
      * Destructor.
      * @stable ICU 4.8
      */
-    virtual ~UCharsTrieBuilder();
+    ଆଭାସୀ ~UCharsTrieBuilder();
 
     /**
      * Adds a (string, value) pair.
@@ -69,8 +69,8 @@ public:
      * @return *this
      * @stable ICU 4.8
      */
-    UCharsTrieBuilder& add(const UnicodeString& s,
-                           int32_t value,
+    UCharsTrieBuilder& add(ଅଚଳ UnicodeString& s,
+                           int32_t ମୂଲ୍ୟ_2,
                            UErrorCode& errorCode) U_LIFETIME_BOUND;
 
     /**
@@ -132,50 +132,50 @@ public:
         strings.remove();
         elementsLength=0;
         ucharsLength=0;
-        return *this;
+        ଫେରନ୍ତୁ *this;
     }
 
-private:
-    UCharsTrieBuilder(const UCharsTrieBuilder &other) = delete;  // no copy constructor
-    UCharsTrieBuilder &operator=(const UCharsTrieBuilder &other) = delete;  // no assignment operator
+ବ୍ୟକ୍ତିଗତ:
+    UCharsTrieBuilder(ଅଚଳ UCharsTrieBuilder &other) = delete;  // no copy constructor
+    UCharsTrieBuilder &operator=(ଅଚଳ UCharsTrieBuilder &other) = delete;  // no assignment operator
 
-    void buildUChars(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
+    ଶୂନ୍ୟ buildUChars(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
 
-    virtual int32_t getElementStringLength(int32_t i) const override;
-    virtual char16_t getElementUnit(int32_t i, int32_t unitIndex) const override;
-    virtual int32_t getElementValue(int32_t i) const override;
+    ଆଭାସୀ int32_t getElementStringLength(int32_t i) ଅଚଳ override;
+    ଆଭାସୀ char16_t getElementUnit(int32_t i, int32_t unitIndex) ଅଚଳ override;
+    ଆଭାସୀ int32_t get_Element_ମୂଲ୍ୟ(int32_t i) ଅଚଳ override;
 
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) const override;
+    ଆଭାସୀ int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) ଅଚଳ override;
 
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const override;
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const override;
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const override;
+    ଆଭାସୀ int32_t ଗଣନା_Element_Units(int32_t start, int32_t limit, int32_t unitIndex) ଅଚଳ override;
+    ଆଭାସୀ int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t ଗଣନା_2) ଅଚଳ override;
+    ଆଭାସୀ int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) ଅଚଳ override;
 
-    virtual UBool matchNodesCanHaveValues() const override { return true; }
+    ଆଭାସୀ UBool match_Nodes_Can_Have_ମୂଲ୍ୟଗୁଡ଼ିକ() ଅଚଳ override { ଫେରନ୍ତୁ true; }
 
-    virtual int32_t getMaxBranchLinearSubNodeLength() const override { return UCharsTrie::kMaxBranchLinearSubNodeLength; }
-    virtual int32_t getMinLinearMatch() const override { return UCharsTrie::kMinLinearMatch; }
-    virtual int32_t getMaxLinearMatchLength() const override { return UCharsTrie::kMaxLinearMatchLength; }
+    ଆଭାସୀ int32_t get_Max_Branch_Linear_Sub_ଗଣ୍ଠି_Length() ଅଚଳ override { ଫେରନ୍ତୁ UCharsTrie::k_Max_Branch_Linear_Sub_ଗଣ୍ଠି_Length; }
+    ଆଭାସୀ int32_t getMinLinearMatch() ଅଚଳ override { ଫେରନ୍ତୁ UCharsTrie::kMinLinearMatch; }
+    ଆଭାସୀ int32_t getMaxLinearMatchLength() ଅଚଳ override { ଫେରନ୍ତୁ UCharsTrie::kMaxLinearMatchLength; }
 
-    class UCTLinearMatchNode : public LinearMatchNode {
-    public:
-        UCTLinearMatchNode(const char16_t *units, int32_t len, Node *nextNode);
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    private:
-        const char16_t *s;
+    class UCTLinear_Match_ଗଣ୍ଠି : ସର୍ବସାଧାରଣ Linear_Match_ଗଣ୍ଠି {
+    ସର୍ବସାଧାରଣ:
+        UCTLinear_Match_ଗଣ୍ଠି(ଅଚଳ char16_t *units, int32_t len, ଗଣ୍ଠି_2 *next_ଗଣ୍ଠି);
+        ଆଭାସୀ bool operator==(ଅଚଳ ଗଣ୍ଠି_2 &other) ଅଚଳ override;
+        ଆଭାସୀ ଶୂନ୍ୟ ଲିଖ(StringTrieBuilder &builder) override;
+    ବ୍ୟକ୍ତିଗତ:
+        ଅଚଳ char16_t *s;
     };
 
-    virtual Node *createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                        Node *nextNode) const override;
+    ଆଭାସୀ ଗଣ୍ଠି_2 *create_Linear_Match_ଗଣ୍ଠି(int32_t i, int32_t unitIndex, int32_t length,
+                                        ଗଣ୍ଠି_2 *next_ଗଣ୍ଠି) ଅଚଳ override;
 
     UBool ensureCapacity(int32_t length);
-    virtual int32_t write(int32_t unit) override;
-    int32_t write(const char16_t *s, int32_t length);
-    virtual int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) override;
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) override;
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) override;
-    virtual int32_t writeDeltaTo(int32_t jumpTarget) override;
+    ଆଭାସୀ int32_t ଲିଖ(int32_t unit) override;
+    int32_t ଲିଖ(ଅଚଳ char16_t *s, int32_t length);
+    ଆଭାସୀ int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) override;
+    ଆଭାସୀ int32_t write_ମୂଲ୍ୟ_And_Final(int32_t i, UBool isFinal) override;
+    ଆଭାସୀ int32_t write_ମୂଲ୍ୟ_And_Type(UBool has_ମୂଲ୍ୟ, int32_t ମୂଲ୍ୟ_2, int32_t ଗଣ୍ଠି) override;
+    ଆଭାସୀ int32_t writeDeltaTo(int32_t jumpTarget) override;
 
     UnicodeString strings;
     UCharsTrieElement *elements;

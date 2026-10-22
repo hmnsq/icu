@@ -21,7 +21,7 @@
 #ifndef __UARRSORT_H__
 #define __UARRSORT_H__
 
-#include "unicode/utypes.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/utypes.h"
 
 U_CDECL_BEGIN
 /**
@@ -38,8 +38,8 @@ U_CDECL_BEGIN
  *
  * @internal
  */
-typedef int32_t U_CALLCONV
-UComparator(const void *context, const void *left, const void *right);
+ପ୍ରକାରବ୍ୟାଖ୍ୟା int32_t U_CALLCONV
+UComparator(ଅଚଳ ଶୂନ୍ୟ *context, ଅଚଳ ଶୂନ୍ୟ *ବାମ, ଅଚଳ ଶୂନ୍ୟ *ଡାହାଣ);
 U_CDECL_END
 
 /**
@@ -57,9 +57,9 @@ U_CDECL_END
  *
  * @internal
  */
-U_CAPI void U_EXPORT2
-uprv_sortArray(void *array, int32_t length, int32_t itemSize,
-               UComparator *cmp, const void *context,
+U_CAPI ଶୂନ୍ୟ U_EXPORT2
+uprv_sortArray(ଶୂନ୍ୟ *array, int32_t length, int32_t itemSize,
+               UComparator *cmp, ଅଚଳ ଶୂନ୍ୟ *context,
                UBool sortStable, UErrorCode *pErrorCode);
 
 /**
@@ -67,21 +67,21 @@ uprv_sortArray(void *array, int32_t length, int32_t itemSize,
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_uint16Comparator(const void *context, const void *left, const void *right);
+uprv_uint16Comparator(ଅଚଳ ଶୂନ୍ୟ *context, ଅଚଳ ଶୂନ୍ୟ *ବାମ, ଅଚଳ ଶୂନ୍ୟ *ଡାହାଣ);
 
 /**
  * Convenience UComparator implementation for int32_t arrays.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_int32Comparator(const void *context, const void *left, const void *right);
+uprv_int32Comparator(ଅଚଳ ଶୂନ୍ୟ *context, ଅଚଳ ଶୂନ୍ୟ *ବାମ, ଅଚଳ ଶୂନ୍ୟ *ଡାହାଣ);
 
 /**
  * Convenience UComparator implementation for uint32_t arrays.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_uint32Comparator(const void *context, const void *left, const void *right);
+uprv_uint32Comparator(ଅଚଳ ଶୂନ୍ୟ *context, ଅଚଳ ଶୂନ୍ୟ *ବାମ, ଅଚଳ ଶୂନ୍ୟ *ଡାହାଣ);
 
 /**
  * Much like Java Collections.binarySearch(list, key, comparator).
@@ -97,7 +97,7 @@ uprv_uint32Comparator(const void *context, const void *left, const void *right);
  *         or the index<0 for inserting the item at ~index in sorted order
  */
 U_CAPI int32_t U_EXPORT2
-uprv_stableBinarySearch(char *array, int32_t length, void *item, int32_t itemSize,
-                        UComparator *cmp, const void *context);
+uprv_stable_ଦ୍ୱିମିକ_ସନ୍ଧାନ(ଅକ୍ଷର *array, int32_t length, ଶୂନ୍ୟ *item, int32_t itemSize,
+                        UComparator *cmp, ଅଚଳ ଶୂନ୍ୟ *context);
 
 #endif

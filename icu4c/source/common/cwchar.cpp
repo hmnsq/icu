@@ -16,39 +16,39 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/utypes.h"
 
-#if !U_HAVE_WCSCPY
+#ଯଦି !U_HAVE_WCSCPY
 
-#include "cwchar.h"
+#ଅନ୍ତର୍ଭାଵ "cwchar.h"
 
-U_CAPI wchar_t *uprv_wcscat(wchar_t *dst, const wchar_t *src) {
+U_CAPI wchar_t *uprv_wcscat(wchar_t *dst, ଅଚଳ wchar_t *src) {
     wchar_t *start=dst;
-    while(*dst!=0) {
+    ଯେତେବେଳେ(*dst!=0) {
         ++dst;
     }
-    while((*dst=*src)!=0) {
+    ଯେତେବେଳେ((*dst=*src)!=0) {
         ++dst;
         ++src;
     }
-    return start;
+    ଫେରନ୍ତୁ start;
 }
 
-U_CAPI wchar_t *uprv_wcscpy(wchar_t *dst, const wchar_t *src) {
+U_CAPI wchar_t *uprv_wcscpy(wchar_t *dst, ଅଚଳ wchar_t *src) {
     wchar_t *start=dst;
-    while((*dst=*src)!=0) {
+    ଯେତେବେଳେ((*dst=*src)!=0) {
         ++dst;
         ++src;
     }
-    return start;
+    ଫେରନ୍ତୁ start;
 }
 
-U_CAPI size_t uprv_wcslen(const wchar_t *src) {
-    const wchar_t *start=src;
-    while(*src!=0) {
+U_CAPI size_t uprv_wcslen(ଅଚଳ wchar_t *src) {
+    ଅଚଳ wchar_t *start=src;
+    ଯେତେବେଳେ(*src!=0) {
         ++src;
     }
-    return src-start;
+    ଫେରନ୍ତୁ src-start;
 }
 
 #endif

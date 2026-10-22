@@ -8,109 +8,109 @@
 // Author: wilsonh@google.com (Wilson Hsieh)
 //
 
-#include "unicode/utypes.h"
-#include "unicode/stringpiece.h"
-#include "cstring.h"
-#include "cmemory.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/utypes.h"
+#ଅନ୍ତର୍ଭାଵ "unicode/stringpiece.h"
+#ଅନ୍ତର୍ଭାଵ "cstring.h"
+#ଅନ୍ତର୍ଭାଵ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
-StringPiece::StringPiece(const char* str U_LIFETIME_BOUND)
+StringPiece::StringPiece(ଅଚଳ ଅକ୍ଷର* str U_LIFETIME_BOUND)
     : ptr_(str), length_((str == nullptr) ? 0 : static_cast<int32_t>(uprv_strlen(str))) { }
 
-StringPiece::StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos) {
-  if (pos < 0) {
+StringPiece::StringPiece(ଅଚଳ StringPiece& x U_LIFETIME_BOUND, int32_t pos) {
+  ଯଦି (pos < 0) {
     pos = 0;
-  } else if (pos > x.length_) {
+  } ଅନ୍ୟଥା ଯଦି (pos > x.length_) {
     pos = x.length_;
   }
   ptr_ = x.ptr_ + pos;
   length_ = x.length_ - pos;
 }
 
-StringPiece::StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len) {
-  if (pos < 0) {
+StringPiece::StringPiece(ଅଚଳ StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len) {
+  ଯଦି (pos < 0) {
     pos = 0;
-  } else if (pos > x.length_) {
+  } ଅନ୍ୟଥା ଯଦି (pos > x.length_) {
     pos = x.length_;
   }
-  if (len < 0) {
+  ଯଦି (len < 0) {
     len = 0;
-  } else if (len > x.length_ - pos) {
+  } ଅନ୍ୟଥା ଯଦି (len > x.length_ - pos) {
     len = x.length_ - pos;
   }
   ptr_ = x.ptr_ + pos;
   length_ = len;
 }
 
-void StringPiece::set(const char* str) {
+ଶୂନ୍ୟ StringPiece::set(ଅଚଳ ଅକ୍ଷର* str) {
   ptr_ = str;
-  if (str != nullptr)
+  ଯଦି (str != nullptr)
     length_ = static_cast<int32_t>(uprv_strlen(str));
-  else
+  ଅନ୍ୟଥା
     length_ = 0;
 }
 
 int32_t StringPiece::find(StringPiece needle, int32_t offset) {
-  if (length() == 0 && needle.length() == 0) {
-    return 0;
+  ଯଦି (length() == 0 && needle.length() == 0) {
+    ଫେରନ୍ତୁ 0;
   }
   // TODO: Improve to be better than O(N^2)?
-  for (int32_t i = offset; i < length(); i++) {
+  ପାଇଁ (int32_t i = offset; i < length(); i++) {
     int32_t j = 0;
-    for (; j < needle.length(); i++, j++) {
-      if (data()[i] != needle.data()[j]) {
+    ପାଇଁ (; j < needle.length(); i++, j++) {
+      ଯଦି (data()[i] != needle.data()[j]) {
         i -= j;
-        goto outer_end;
+        ଯାଅ outer_end;
       }
     }
-    return i - j;
-    outer_end: void();
+    ଫେରନ୍ତୁ i - j;
+    outer_end: ଶୂନ୍ୟ();
   }
-  return -1;
+  ଫେରନ୍ତୁ -1;
 }
 
 int32_t StringPiece::compare(StringPiece other) {
   int32_t i = 0;
-  for (; i < length(); i++) {
-    if (i == other.length()) {
+  ପାଇଁ (; i < length(); i++) {
+    ଯଦି (i == other.length()) {
       // this is longer
-      return 1;
+      ଫେରନ୍ତୁ 1;
     }
-    char a = data()[i];
-    char b = other.data()[i];
-    if (a < b) {
-      return -1;
-    } else if (a > b) {
-      return 1;
+    ଅକ୍ଷର a = data()[i];
+    ଅକ୍ଷର b = other.data()[i];
+    ଯଦି (a < b) {
+      ଫେରନ୍ତୁ -1;
+    } ଅନ୍ୟଥା ଯଦି (a > b) {
+      ଫେରନ୍ତୁ 1;
     }
   }
-  if (i < other.length()) {
+  ଯଦି (i < other.length()) {
     // other is longer
-    return -1;
+    ଫେରନ୍ତୁ -1;
   }
-  return 0;
+  ଫେରନ୍ତୁ 0;
 }
 
 U_EXPORT UBool U_EXPORT2
-operator==(const StringPiece& x, const StringPiece& y) {
+operator==(ଅଚଳ StringPiece& x, ଅଚଳ StringPiece& y) {
   int32_t len = x.size();
-  if (len != y.size()) {
-    return false;
+  ଯଦି (len != y.size()) {
+    ଫେରନ୍ତୁ ମିଥ୍ୟା;
   }
-  if (len == 0) {
-    return true;
+  ଯଦି (len == 0) {
+    ଫେରନ୍ତୁ ସତ୍ୟ;
   }
-  const char* p = x.data();
-  const char* p2 = y.data();
+  ଅଚଳ ଅକ୍ଷର* p = x.data();
+  ଅଚଳ ଅକ୍ଷର* p2 = y.data();
   // Test last byte in case strings share large common prefix
   --len;
-  if (p[len] != p2[len]) return false;
+  ଯଦି (p[len] != p2[len]) ଫେରନ୍ତୁ ମିଥ୍ୟା;
   // At this point we can, but don't have to, ignore the last byte.
-  return uprv_memcmp(p, p2, len) == 0;
+  ଫେରନ୍ତୁ uprv_memcmp(p, p2, len) == 0;
 }
 
 
-const int32_t StringPiece::npos = 0x7fffffff;
+ଅଚଳ int32_t StringPiece::npos = 0x7fffffff;
 
 U_NAMESPACE_END
