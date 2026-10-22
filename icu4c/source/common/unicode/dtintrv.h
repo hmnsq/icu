@@ -14,11 +14,11 @@
 #ifndef __DTINTRV_H__
 #define __DTINTRV_H__
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#अन्तर्भाव "unicode/uobject.h"
 
 /**
  * \file
@@ -33,8 +33,8 @@ U_NAMESPACE_BEGIN
  * It is a pair of UDate representing from UDate 1 to UDate 2.
  * @stable ICU 4.0
 **/
-class U_COMMON_API DateInterval : public UObject {
-public:
+class U_COMMON_API DateInterval : सार्वजनिक UObject {
+सार्वजनिक:
 
     /** 
      * Construct a DateInterval given a from date and a to date.
@@ -48,21 +48,21 @@ public:
      * destructor
      * @stable ICU 4.0
      */
-    virtual ~DateInterval();
+    आभास ~DateInterval();
  
     /** 
      * Get the from date.
      * @return  the from date in dateInterval.
      * @stable ICU 4.0
      */
-    inline UDate getFromDate() const;
+    अन्तःस्थ UDate getFromDate() ध्रुव;
 
     /** 
      * Get the to date.
      * @return  the to date in dateInterval.
      * @stable ICU 4.0
      */
-    inline UDate getToDate() const;
+    अन्तःस्थ UDate getToDate() ध्रुव;
 
 
     /**
@@ -76,7 +76,7 @@ public:
      * @return          The class ID for all objects of this class.
      * @stable ICU 4.0
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    स्थिर UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * Returns a unique class ID POLYMORPHICALLY. Pure virtual override. This
@@ -89,33 +89,33 @@ public:
      *                  other classes have different class IDs.
      * @stable ICU 4.0
      */
-    virtual UClassID getDynamicClassID() const override;
+    आभास UClassID getDynamicClassID() ध्रुव override;
 
     /**
      * Copy constructor.
      * @stable ICU 4.0
      */
-    DateInterval(const DateInterval& other);
+    DateInterval(ध्रुव DateInterval& other);
 
     /**
      * Default assignment operator
      * @stable ICU 4.0
      */
-    DateInterval& operator=(const DateInterval&) U_LIFETIME_BOUND;
+    DateInterval& चालक=(ध्रुव DateInterval&) U_LIFETIME_BOUND;
 
     /**
      * Equality operator.
      * @return true if the two DateIntervals are the same
      * @stable ICU 4.0
      */
-    virtual bool operator==(const DateInterval& other) const;
+    आभास bool चालक==(ध्रुव DateInterval& other) ध्रुव;
 
     /**
      * Non-equality operator
      * @return true if the two DateIntervals are not the same
      * @stable ICU 4.0
      */
-    inline bool operator!=(const DateInterval& other) const;
+    अन्तःस्थ bool चालक!=(ध्रुव DateInterval& other) ध्रुव;
 
 
     /**
@@ -124,9 +124,9 @@ public:
      * @return a cloned DateInterval
      * @stable ICU 4.0
      */
-     virtual DateInterval* clone() const;
+     आभास DateInterval* clone() ध्रुव;
 
-private:
+गुप्त:
     /** 
      * Default constructor, not implemented.
      */
@@ -138,21 +138,21 @@ private:
 } ;// end class DateInterval
 
 
-inline UDate 
-DateInterval::getFromDate() const { 
-    return fromDate; 
+अन्तःस्थ UDate 
+DateInterval::getFromDate() ध्रुव { 
+    प्रत्यागम fromDate; 
 }
 
 
-inline UDate 
-DateInterval::getToDate() const { 
-    return toDate; 
+अन्तःस्थ UDate 
+DateInterval::getToDate() ध्रुव { 
+    प्रत्यागम toDate; 
 }
 
 
-inline bool
-DateInterval::operator!=(const DateInterval& other) const { 
-    return ( !operator==(other) );
+अन्तःस्थ bool
+DateInterval::चालक!=(ध्रुव DateInterval& other) ध्रुव { 
+    प्रत्यागम ( !चालक==(other) );
 }
 
 

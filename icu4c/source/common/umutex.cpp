@@ -20,17 +20,17 @@
 ******************************************************************************
 */
 
-#include "umutex.h"
+#अन्तर्भाव "umutex.h"
 
-#include "unicode/utypes.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
-#include "cmemory.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "uassert.h"
+#अन्तर्भाव "ucln_cmn.h"
+#अन्तर्भाव "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
 
-#if defined(U_USER_MUTEX_CPP)
+#यदि defined(U_USER_MUTEX_CPP)
 // Support for including an alternate implementation of mutexes has been withdrawn.
 // See issue ICU-20185.
 #error U_USER_MUTEX_CPP not supported
@@ -43,7 +43,7 @@ U_NAMESPACE_BEGIN
  *
  *************************************************************************************************/
 
-namespace {
+नामाकाश {
 std::mutex *initMutex;
 std::condition_variable *initCondition;
 
@@ -57,7 +57,7 @@ std::once_flag *pInitFlag = &initFlag;
 }  // Anonymous namespace
 
 U_CDECL_BEGIN
-static UBool U_CALLCONV umtx_cleanup() {
+स्थिर UBool U_CALLCONV umtx_cleanup() {
     initMutex->~mutex();
     initCondition->~condition_variable();
     UMutex::cleanup();
@@ -65,11 +65,11 @@ static UBool U_CALLCONV umtx_cleanup() {
     // Reset the once_flag, by destructing it and creating a fresh one in its place.
     // Do not use this trick anywhere else in ICU; use umtx_initOnce, not std::call_once().
     pInitFlag->~once_flag();
-    pInitFlag = new(&initFlag) std::once_flag();
-    return true;
+    pInitFlag = नूतन(&initFlag) std::once_flag();
+    प्रत्यागम सत्य;
 }
 
-static void U_CALLCONV umtx_init() {
+स्थिर शून्य U_CALLCONV umtx_init() {
     initMutex = STATIC_NEW(std::mutex);
     initCondition = STATIC_NEW(std::condition_variable);
     ucln_common_registerCleanup(UCLN_COMMON_MUTEX, umtx_cleanup);
@@ -79,26 +79,26 @@ U_CDECL_END
 
 std::mutex *UMutex::getMutex() {
     std::mutex *retPtr = fMutex.load(std::memory_order_acquire);
-    if (retPtr == nullptr) {
+    यदि (retPtr == nullptr) {
         std::call_once(*pInitFlag, umtx_init);
         std::lock_guard<std::mutex> guard(*initMutex);
         retPtr = fMutex.load(std::memory_order_acquire);
-        if (retPtr == nullptr) {
-            fMutex = new(fStorage) std::mutex();
+        यदि (retPtr == nullptr) {
+            fMutex = नूतन(fStorage) std::mutex();
             retPtr = fMutex;
             fListLink = gListHead;
-            gListHead = this;
+            gListHead = एतत्;
         }
     }
     U_ASSERT(retPtr != nullptr);
-    return retPtr;
+    प्रत्यागम retPtr;
 }
 
 UMutex *UMutex::gListHead = nullptr;
 
-void UMutex::cleanup() {
+शून्य UMutex::cleanup() {
     UMutex *next = nullptr;
-    for (UMutex *m = gListHead; m != nullptr; m = next) {
+    प्रति (UMutex *m = gListHead; m != nullptr; m = next) {
         (*m->fMutex).~mutex();
         m->fMutex = nullptr;
         next = m->fListLink;
@@ -108,19 +108,19 @@ void UMutex::cleanup() {
 }
 
 
-U_CAPI void  U_EXPORT2
+U_CAPI शून्य  U_EXPORT2
 umtx_lock(UMutex *mutex) {
-    if (mutex == nullptr) {
+    यदि (mutex == nullptr) {
         mutex = &globalMutex;
     }
     mutex->lock();
 }
 
 
-U_CAPI void  U_EXPORT2
+U_CAPI शून्य  U_EXPORT2
 umtx_unlock(UMutex* mutex)
 {
-    if (mutex == nullptr) {
+    यदि (mutex == nullptr) {
         mutex = &globalMutex;
     }
     mutex->unlock();
@@ -145,17 +145,17 @@ U_COMMON_API UBool U_EXPORT2
 umtx_initImplPreInit(UInitOnce &uio) {
     std::call_once(*pInitFlag, umtx_init);
     std::unique_lock<std::mutex> lock(*initMutex);
-    if (umtx_loadAcquire(uio.fState) == 0) {
+    यदि (umtx_loadAcquire(uio.fState) == 0) {
         umtx_storeRelease(uio.fState, 1);
-        return true;      // Caller will next call the init function.
-    } else {
-        while (umtx_loadAcquire(uio.fState) == 1) {
+        प्रत्यागम सत्य;      // Caller will next call the init function.
+    } अन्यथा {
+        यावत् (umtx_loadAcquire(uio.fState) == 1) {
             // Another thread is currently running the initialization.
             // Wait until it completes.
-            initCondition->wait(lock);
+            initCondition->रुको(lock);
         }
         U_ASSERT(uio.fState == 2);
-        return false;
+        प्रत्यागम असत्य;
     }
 }
 
@@ -166,7 +166,7 @@ umtx_initImplPreInit(UInitOnce &uio) {
 //   Some threads may be racing to test the fState variable outside of the mutex,
 //   requiring the use of store/release when changing its value.
 
-U_COMMON_API void U_EXPORT2
+U_COMMON_API शून्य U_EXPORT2
 umtx_initImplPostInit(UInitOnce &uio) {
     {
         std::unique_lock<std::mutex> lock(*initMutex);
@@ -183,20 +183,20 @@ U_NAMESPACE_END
  *
  *************************************************************************************************/
 
-U_DEPRECATED void U_EXPORT2
-u_setMutexFunctions(const void * /*context */, UMtxInitFn *, UMtxFn *,
+U_DEPRECATED शून्य U_EXPORT2
+u_setMutexFunctions(ध्रुव शून्य * /*context */, UMtxInitFn *, UMtxFn *,
                     UMtxFn *,  UMtxFn *, UErrorCode *status) {
-    if (U_SUCCESS(*status)) {
+    यदि (U_SUCCESS(*status)) {
         *status = U_UNSUPPORTED_ERROR;
     }
 }
 
 
 
-U_DEPRECATED void U_EXPORT2
-u_setAtomicIncDecFunctions(const void * /*context */, UMtxAtomicFn *, UMtxAtomicFn *,
+U_DEPRECATED शून्य U_EXPORT2
+u_setAtomicIncDecFunctions(ध्रुव शून्य * /*context */, UMtxAtomicFn *, UMtxAtomicFn *,
                            UErrorCode *status) {
-    if (U_SUCCESS(*status)) {
+    यदि (U_SUCCESS(*status)) {
         *status = U_UNSUPPORTED_ERROR;
     }
 }
