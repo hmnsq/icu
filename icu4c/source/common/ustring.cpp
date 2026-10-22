@@ -17,15 +17,15 @@
 ******************************************************************************
 */
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "unicode/uchar.h"
-#include "unicode/ustring.h"
-#include "unicode/utf16.h"
-#include "cstring.h"
-#include "cwchar.h"
-#include "cmemory.h"
-#include "ustr_imp.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/putil.h"
+#अन्तर्भाव "unicode/uchar.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "unicode/utf16.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "cwchar.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "ustr_imp.h"
 
 /* ANSI string.h - style functions ------------------------------------------ */
 
@@ -39,64 +39,64 @@
  * All pointers refer to the same buffer.
  * The limit pointer may be nullptr, all others must be real pointers.
  */
-static inline UBool
-isMatchAtCPBoundary(const char16_t *start, const char16_t *match, const char16_t *matchLimit, const char16_t *limit) {
-    if(U16_IS_TRAIL(*match) && start!=match && U16_IS_LEAD(*(match-1))) {
+स्थिर अन्तःस्थ UBool
+isMatchAtCPBoundary(अचर char16_t *start, अचर char16_t *match, अचर char16_t *matchLimit, अचर char16_t *limit) {
+    यदि(U16_IS_TRAIL(*match) && start!=match && U16_IS_LEAD(*(match-1))) {
         /* the leading edge of the match is in the middle of a surrogate pair */
-        return false;
+        फर्काऊ असत्य;
     }
-    if(U16_IS_LEAD(*(matchLimit-1)) && matchLimit!=limit && U16_IS_TRAIL(*matchLimit)) {
+    यदि(U16_IS_LEAD(*(matchLimit-1)) && matchLimit!=limit && U16_IS_TRAIL(*matchLimit)) {
         /* the trailing edge of the match is in the middle of a surrogate pair */
-        return false;
+        फर्काऊ असत्य;
     }
-    return true;
+    फर्काऊ सत्य;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strFindFirst(const char16_t* s U_LIFETIME_BOUND,
+u_strFindFirst(अचर char16_t* s U_LIFETIME_BOUND,
                int32_t length,
-               const char16_t* sub,
+               अचर char16_t* sub,
                int32_t subLength) {
-    const char16_t *start, *p, *q, *subLimit;
+    अचर char16_t *start, *p, *q, *subLimit;
     char16_t c, cs, cq;
 
-    if(sub==nullptr || subLength<-1) {
-        return (char16_t *)s;
+    यदि(sub==nullptr || subLength<-1) {
+        फर्काऊ (char16_t *)s;
     }
-    if(s==nullptr || length<-1) {
-        return nullptr;
+    यदि(s==nullptr || length<-1) {
+        फर्काऊ nullptr;
     }
 
     start=s;
 
-    if(length<0 && subLength<0) {
+    यदि(length<0 && subLength<0) {
         /* both strings are NUL-terminated */
-        if((cs=*sub++)==0) {
-            return (char16_t *)s;
+        यदि((cs=*sub++)==0) {
+            फर्काऊ (char16_t *)s;
         }
-        if(*sub==0 && !U16_IS_SURROGATE(cs)) {
+        यदि(*sub==0 && !U16_IS_SURROGATE(cs)) {
             /* the substring consists of a single, non-surrogate BMP code point */
-            return u_strchr(s, cs);
+            फर्काऊ u_strchr(s, cs);
         }
 
-        while((c=*s++)!=0) {
-            if(c==cs) {
+        जबसम्म((c=*s++)!=0) {
+            यदि(c==cs) {
                 /* found first substring char16_t, compare rest */
                 p=s;
                 q=sub;
-                for(;;) {
-                    if((cq=*q)==0) {
-                        if(isMatchAtCPBoundary(start, s-1, p, nullptr)) {
-                            return (char16_t *)(s-1); /* well-formed match */
-                        } else {
-                            break; /* no match because surrogate pair is split */
+                लागि(;;) {
+                    यदि((cq=*q)==0) {
+                        यदि(isMatchAtCPBoundary(start, s-1, p, nullptr)) {
+                            फर्काऊ (char16_t *)(s-1); /* well-formed match */
+                        } अन्यथा {
+                            रोक; /* no match because surrogate pair is split */
                         }
                     }
-                    if((c=*p)==0) {
-                        return nullptr; /* no match, and none possible after s */
+                    यदि((c=*p)==0) {
+                        फर्काऊ nullptr; /* no match, and none possible after s */
                     }
-                    if(c!=cq) {
-                        break; /* no match */
+                    यदि(c!=cq) {
+                        रोक; /* no match */
                     }
                     ++p;
                     ++q;
@@ -105,14 +105,14 @@ u_strFindFirst(const char16_t* s U_LIFETIME_BOUND,
         }
 
         /* not found */
-        return nullptr;
+        फर्काऊ nullptr;
     }
 
-    if(subLength<0) {
+    यदि(subLength<0) {
         subLength=u_strlen(sub);
     }
-    if(subLength==0) {
-        return (char16_t *)s;
+    यदि(subLength==0) {
+        फर्काऊ (char16_t *)s;
     }
 
     /* get sub[0] to search for it fast */
@@ -120,43 +120,43 @@ u_strFindFirst(const char16_t* s U_LIFETIME_BOUND,
     --subLength;
     subLimit=sub+subLength;
 
-    if(subLength==0 && !U16_IS_SURROGATE(cs)) {
+    यदि(subLength==0 && !U16_IS_SURROGATE(cs)) {
         /* the substring consists of a single, non-surrogate BMP code point */
-        return length<0 ? u_strchr(s, cs) : u_memchr(s, cs, length);
+        फर्काऊ length<0 ? u_strchr(s, cs) : u_memchr(s, cs, length);
     }
 
-    if(length<0) {
+    यदि(length<0) {
         /* s is NUL-terminated */
-        while((c=*s++)!=0) {
-            if(c==cs) {
+        जबसम्म((c=*s++)!=0) {
+            यदि(c==cs) {
                 /* found first substring char16_t, compare rest */
                 p=s;
                 q=sub;
-                for(;;) {
-                    if(q==subLimit) {
-                        if(isMatchAtCPBoundary(start, s-1, p, nullptr)) {
-                            return (char16_t *)(s-1); /* well-formed match */
-                        } else {
-                            break; /* no match because surrogate pair is split */
+                लागि(;;) {
+                    यदि(q==subLimit) {
+                        यदि(isMatchAtCPBoundary(start, s-1, p, nullptr)) {
+                            फर्काऊ (char16_t *)(s-1); /* well-formed match */
+                        } अन्यथा {
+                            रोक; /* no match because surrogate pair is split */
                         }
                     }
-                    if((c=*p)==0) {
-                        return nullptr; /* no match, and none possible after s */
+                    यदि((c=*p)==0) {
+                        फर्काऊ nullptr; /* no match, and none possible after s */
                     }
-                    if(c!=*q) {
-                        break; /* no match */
+                    यदि(c!=*q) {
+                        रोक; /* no match */
                     }
                     ++p;
                     ++q;
                 }
             }
         }
-    } else {
-        const char16_t *limit, *preLimit;
+    } अन्यथा {
+        अचर char16_t *limit, *preLimit;
 
         /* subLength was decremented above */
-        if(length<=subLength) {
-            return nullptr; /* s is shorter than sub */
+        यदि(length<=subLength) {
+            फर्काऊ nullptr; /* s is shorter than sub */
         }
 
         limit=s+length;
@@ -164,22 +164,22 @@ u_strFindFirst(const char16_t* s U_LIFETIME_BOUND,
         /* the substring must start before preLimit */
         preLimit=limit-subLength;
 
-        while(s!=preLimit) {
+        जबसम्म(s!=preLimit) {
             c=*s++;
-            if(c==cs) {
+            यदि(c==cs) {
                 /* found first substring char16_t, compare rest */
                 p=s;
                 q=sub;
-                for(;;) {
-                    if(q==subLimit) {
-                        if(isMatchAtCPBoundary(start, s-1, p, limit)) {
-                            return (char16_t *)(s-1); /* well-formed match */
-                        } else {
-                            break; /* no match because surrogate pair is split */
+                लागि(;;) {
+                    यदि(q==subLimit) {
+                        यदि(isMatchAtCPBoundary(start, s-1, p, limit)) {
+                            फर्काऊ (char16_t *)(s-1); /* well-formed match */
+                        } अन्यथा {
+                            रोक; /* no match because surrogate pair is split */
                         }
                     }
-                    if(*p!=*q) {
-                        break; /* no match */
+                    यदि(*p!=*q) {
+                        रोक; /* no match */
                     }
                     ++p;
                     ++q;
@@ -189,29 +189,29 @@ u_strFindFirst(const char16_t* s U_LIFETIME_BOUND,
     }
 
     /* not found */
-    return nullptr;
+    फर्काऊ nullptr;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strstr(const char16_t* s U_LIFETIME_BOUND, const char16_t* substring) {
-    return u_strFindFirst(s, -1, substring, -1);
+u_strstr(अचर char16_t* s U_LIFETIME_BOUND, अचर char16_t* substring) {
+    फर्काऊ u_strFindFirst(s, -1, substring, -1);
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strchr(const char16_t* s U_LIFETIME_BOUND, char16_t c) {
-    if(U16_IS_SURROGATE(c)) {
+u_strchr(अचर char16_t* s U_LIFETIME_BOUND, char16_t c) {
+    यदि(U16_IS_SURROGATE(c)) {
         /* make sure to not find half of a surrogate pair */
-        return u_strFindFirst(s, -1, &c, 1);
-    } else {
+        फर्काऊ u_strFindFirst(s, -1, &c, 1);
+    } अन्यथा {
         char16_t cs;
 
         /* trivial search for a BMP code point */
-        for(;;) {
-            if((cs=*s)==c) {
-                return (char16_t *)s;
+        लागि(;;) {
+            यदि((cs=*s)==c) {
+                फर्काऊ (char16_t *)s;
             }
-            if(cs==0) {
-                return nullptr;
+            यदि(cs==0) {
+                फर्काऊ nullptr;
             }
             ++s;
         }
@@ -219,85 +219,85 @@ u_strchr(const char16_t* s U_LIFETIME_BOUND, char16_t c) {
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strchr32(const char16_t* s U_LIFETIME_BOUND, UChar32 c) {
-    if((uint32_t)c<=U_BMP_MAX) {
+u_strchr32(अचर char16_t* s U_LIFETIME_BOUND, UChar32 c) {
+    यदि((uint32_t)c<=U_BMP_MAX) {
         /* find BMP code point */
-        return u_strchr(s, (char16_t)c);
-    } else if((uint32_t)c<=UCHAR_MAX_VALUE) {
+        फर्काऊ u_strchr(s, (char16_t)c);
+    } अन्यथा यदि((uint32_t)c<=UCHAR_MAX_मान) {
         /* find supplementary code point as surrogate pair */
         char16_t cs, lead=U16_LEAD(c), trail=U16_TRAIL(c);
 
-        while((cs=*s++)!=0) {
-            if(cs==lead && *s==trail) {
-                return (char16_t *)(s-1);
+        जबसम्म((cs=*s++)!=0) {
+            यदि(cs==lead && *s==trail) {
+                फर्काऊ (char16_t *)(s-1);
             }
         }
-        return nullptr;
-    } else {
+        फर्काऊ nullptr;
+    } अन्यथा {
         /* not a Unicode code point, not findable */
-        return nullptr;
+        फर्काऊ nullptr;
     }
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_memchr(const char16_t* s U_LIFETIME_BOUND, char16_t c, int32_t count) {
-    if(count<=0) {
-        return nullptr; /* no string */
-    } else if(U16_IS_SURROGATE(c)) {
+u_memchr(अचर char16_t* s U_LIFETIME_BOUND, char16_t c, int32_t count) {
+    यदि(count<=0) {
+        फर्काऊ nullptr; /* no string */
+    } अन्यथा यदि(U16_IS_SURROGATE(c)) {
         /* make sure to not find half of a surrogate pair */
-        return u_strFindFirst(s, count, &c, 1);
-    } else {
+        फर्काऊ u_strFindFirst(s, count, &c, 1);
+    } अन्यथा {
         /* trivial search for a BMP code point */
-        const char16_t *limit=s+count;
-        do {
-            if(*s==c) {
-                return (char16_t *)s;
+        अचर char16_t *limit=s+count;
+        गर {
+            यदि(*s==c) {
+                फर्काऊ (char16_t *)s;
             }
-        } while(++s!=limit);
-        return nullptr;
+        } जबसम्म(++s!=limit);
+        फर्काऊ nullptr;
     }
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_memchr32(const char16_t* s U_LIFETIME_BOUND, UChar32 c, int32_t count) {
-    if((uint32_t)c<=U_BMP_MAX) {
+u_memchr32(अचर char16_t* s U_LIFETIME_BOUND, UChar32 c, int32_t count) {
+    यदि((uint32_t)c<=U_BMP_MAX) {
         /* find BMP code point */
-        return u_memchr(s, (char16_t)c, count);
-    } else if(count<2) {
+        फर्काऊ u_memchr(s, (char16_t)c, count);
+    } अन्यथा यदि(count<2) {
         /* too short for a surrogate pair */
-        return nullptr;
-    } else if((uint32_t)c<=UCHAR_MAX_VALUE) {
+        फर्काऊ nullptr;
+    } अन्यथा यदि((uint32_t)c<=UCHAR_MAX_मान) {
         /* find supplementary code point as surrogate pair */
-        const char16_t *limit=s+count-1; /* -1 so that we do not need a separate check for the trail unit */
+        अचर char16_t *limit=s+count-1; /* -1 so that we do not need a separate check for the trail unit */
         char16_t lead=U16_LEAD(c), trail=U16_TRAIL(c);
 
-        do {
-            if(*s==lead && *(s+1)==trail) {
-                return (char16_t *)s;
+        गर {
+            यदि(*s==lead && *(s+1)==trail) {
+                फर्काऊ (char16_t *)s;
             }
-        } while(++s!=limit);
-        return nullptr;
-    } else {
+        } जबसम्म(++s!=limit);
+        फर्काऊ nullptr;
+    } अन्यथा {
         /* not a Unicode code point, not findable */
-        return nullptr;
+        फर्काऊ nullptr;
     }
 }
 
 /* Backward binary string search functions ---------------------------------- */
 
 U_CAPI char16_t* U_EXPORT2
-u_strFindLast(const char16_t* s U_LIFETIME_BOUND,
+u_strFindLast(अचर char16_t* s U_LIFETIME_BOUND,
               int32_t length,
-              const char16_t* sub,
+              अचर char16_t* sub,
               int32_t subLength) {
-    const char16_t *start, *limit, *p, *q, *subLimit;
+    अचर char16_t *start, *limit, *p, *q, *subLimit;
     char16_t c, cs;
 
-    if(sub==nullptr || subLength<-1) {
-        return (char16_t *)s;
+    यदि(sub==nullptr || subLength<-1) {
+        फर्काऊ (char16_t *)s;
     }
-    if(s==nullptr || length<-1) {
-        return nullptr;
+    यदि(s==nullptr || length<-1) {
+        फर्काऊ nullptr;
     }
 
     /*
@@ -310,11 +310,11 @@ u_strFindLast(const char16_t* s U_LIFETIME_BOUND,
      * markus 2002oct23
      */
 
-    if(subLength<0) {
+    यदि(subLength<0) {
         subLength=u_strlen(sub);
     }
-    if(subLength==0) {
-        return (char16_t *)s;
+    यदि(subLength==0) {
+        फर्काऊ (char16_t *)s;
     }
 
     /* get sub[subLength-1] to search for it fast */
@@ -322,18 +322,18 @@ u_strFindLast(const char16_t* s U_LIFETIME_BOUND,
     cs=*(--subLimit);
     --subLength;
 
-    if(subLength==0 && !U16_IS_SURROGATE(cs)) {
+    यदि(subLength==0 && !U16_IS_SURROGATE(cs)) {
         /* the substring consists of a single, non-surrogate BMP code point */
-        return length<0 ? u_strrchr(s, cs) : u_memrchr(s, cs, length);
+        फर्काऊ length<0 ? u_strrchr(s, cs) : u_memrchr(s, cs, length);
     }
 
-    if(length<0) {
+    यदि(length<0) {
         length=u_strlen(s);
     }
 
     /* subLength was decremented above */
-    if(length<=subLength) {
-        return nullptr; /* s is shorter than sub */
+    यदि(length<=subLength) {
+        फर्काऊ nullptr; /* s is shorter than sub */
     }
 
     start=s;
@@ -342,52 +342,52 @@ u_strFindLast(const char16_t* s U_LIFETIME_BOUND,
     /* the substring must start no later than s+subLength */
     s+=subLength;
 
-    while(s!=limit) {
+    जबसम्म(s!=limit) {
         c=*(--limit);
-        if(c==cs) {
+        यदि(c==cs) {
             /* found last substring char16_t, compare rest */
             p=limit;
             q=subLimit;
-            for(;;) {
-                if(q==sub) {
-                    if(isMatchAtCPBoundary(start, p, limit+1, start+length)) {
-                        return (char16_t *)p; /* well-formed match */
-                    } else {
-                        break; /* no match because surrogate pair is split */
+            लागि(;;) {
+                यदि(q==sub) {
+                    यदि(isMatchAtCPBoundary(start, p, limit+1, start+length)) {
+                        फर्काऊ (char16_t *)p; /* well-formed match */
+                    } अन्यथा {
+                        रोक; /* no match because surrogate pair is split */
                     }
                 }
-                if(*(--p)!=*(--q)) {
-                    break; /* no match */
+                यदि(*(--p)!=*(--q)) {
+                    रोक; /* no match */
                 }
             }
         }
     }
 
     /* not found */
-    return nullptr;
+    फर्काऊ nullptr;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strrstr(const char16_t* s U_LIFETIME_BOUND, const char16_t* substring) {
-    return u_strFindLast(s, -1, substring, -1);
+u_strrstr(अचर char16_t* s U_LIFETIME_BOUND, अचर char16_t* substring) {
+    फर्काऊ u_strFindLast(s, -1, substring, -1);
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strrchr(const char16_t* s U_LIFETIME_BOUND, char16_t c) {
-    if(U16_IS_SURROGATE(c)) {
+u_strrchr(अचर char16_t* s U_LIFETIME_BOUND, char16_t c) {
+    यदि(U16_IS_SURROGATE(c)) {
         /* make sure to not find half of a surrogate pair */
-        return u_strFindLast(s, -1, &c, 1);
-    } else {
-        const char16_t *result=nullptr;
+        फर्काऊ u_strFindLast(s, -1, &c, 1);
+    } अन्यथा {
+        अचर char16_t *result=nullptr;
         char16_t cs;
 
         /* trivial search for a BMP code point */
-        for(;;) {
-            if((cs=*s)==c) {
+        लागि(;;) {
+            यदि((cs=*s)==c) {
                 result=s;
             }
-            if(cs==0) {
-                return (char16_t *)result;
+            यदि(cs==0) {
+                फर्काऊ (char16_t *)result;
             }
             ++s;
         }
@@ -395,68 +395,68 @@ u_strrchr(const char16_t* s U_LIFETIME_BOUND, char16_t c) {
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strrchr32(const char16_t* s U_LIFETIME_BOUND, UChar32 c) {
-    if((uint32_t)c<=U_BMP_MAX) {
+u_strrchr32(अचर char16_t* s U_LIFETIME_BOUND, UChar32 c) {
+    यदि((uint32_t)c<=U_BMP_MAX) {
         /* find BMP code point */
-        return u_strrchr(s, (char16_t)c);
-    } else if((uint32_t)c<=UCHAR_MAX_VALUE) {
+        फर्काऊ u_strrchr(s, (char16_t)c);
+    } अन्यथा यदि((uint32_t)c<=UCHAR_MAX_मान) {
         /* find supplementary code point as surrogate pair */
-        const char16_t *result=nullptr;
+        अचर char16_t *result=nullptr;
         char16_t cs, lead=U16_LEAD(c), trail=U16_TRAIL(c);
 
-        while((cs=*s++)!=0) {
-            if(cs==lead && *s==trail) {
+        जबसम्म((cs=*s++)!=0) {
+            यदि(cs==lead && *s==trail) {
                 result=s-1;
             }
         }
-        return (char16_t *)result;
-    } else {
+        फर्काऊ (char16_t *)result;
+    } अन्यथा {
         /* not a Unicode code point, not findable */
-        return nullptr;
+        फर्काऊ nullptr;
     }
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_memrchr(const char16_t* s U_LIFETIME_BOUND, char16_t c, int32_t count) {
-    if(count<=0) {
-        return nullptr; /* no string */
-    } else if(U16_IS_SURROGATE(c)) {
+u_memrchr(अचर char16_t* s U_LIFETIME_BOUND, char16_t c, int32_t count) {
+    यदि(count<=0) {
+        फर्काऊ nullptr; /* no string */
+    } अन्यथा यदि(U16_IS_SURROGATE(c)) {
         /* make sure to not find half of a surrogate pair */
-        return u_strFindLast(s, count, &c, 1);
-    } else {
+        फर्काऊ u_strFindLast(s, count, &c, 1);
+    } अन्यथा {
         /* trivial search for a BMP code point */
-        const char16_t *limit=s+count;
-        do {
-            if(*(--limit)==c) {
-                return (char16_t *)limit;
+        अचर char16_t *limit=s+count;
+        गर {
+            यदि(*(--limit)==c) {
+                फर्काऊ (char16_t *)limit;
             }
-        } while(s!=limit);
-        return nullptr;
+        } जबसम्म(s!=limit);
+        फर्काऊ nullptr;
     }
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_memrchr32(const char16_t* s U_LIFETIME_BOUND, UChar32 c, int32_t count) {
-    if((uint32_t)c<=U_BMP_MAX) {
+u_memrchr32(अचर char16_t* s U_LIFETIME_BOUND, UChar32 c, int32_t count) {
+    यदि((uint32_t)c<=U_BMP_MAX) {
         /* find BMP code point */
-        return u_memrchr(s, (char16_t)c, count);
-    } else if(count<2) {
+        फर्काऊ u_memrchr(s, (char16_t)c, count);
+    } अन्यथा यदि(count<2) {
         /* too short for a surrogate pair */
-        return nullptr;
-    } else if((uint32_t)c<=UCHAR_MAX_VALUE) {
+        फर्काऊ nullptr;
+    } अन्यथा यदि((uint32_t)c<=UCHAR_MAX_मान) {
         /* find supplementary code point as surrogate pair */
-        const char16_t *limit=s+count-1;
+        अचर char16_t *limit=s+count-1;
         char16_t lead=U16_LEAD(c), trail=U16_TRAIL(c);
 
-        do {
-            if(*limit==trail && *(limit-1)==lead) {
-                return (char16_t *)(limit-1);
+        गर {
+            यदि(*limit==trail && *(limit-1)==lead) {
+                फर्काऊ (char16_t *)(limit-1);
             }
-        } while(s!=--limit);
-        return nullptr;
-    } else {
+        } जबसम्म(s!=--limit);
+        फर्काऊ nullptr;
+    } अन्यथा {
         /* not a Unicode code point, not findable */
-        return nullptr;
+        फर्काऊ nullptr;
     }
 }
 
@@ -468,68 +468,68 @@ u_memrchr32(const char16_t* s U_LIFETIME_BOUND, UChar32 c, int32_t count) {
  * is (polarity==true) or is not (false) contained in the matchSet.
  * Return -(string length)-1 if there is no such code point.
  */
-static int32_t
-_matchFromSet(const char16_t *string, const char16_t *matchSet, UBool polarity) {
+स्थिर int32_t
+_matchFromSet(अचर char16_t *string, अचर char16_t *matchSet, UBool polarity) {
     int32_t matchLen, matchBMPLen, strItr, matchItr;
     UChar32 stringCh, matchCh;
     char16_t c, c2;
 
     /* first part of matchSet contains only BMP code points */
     matchBMPLen = 0;
-    while((c = matchSet[matchBMPLen]) != 0 && U16_IS_SINGLE(c)) {
+    जबसम्म((c = matchSet[matchBMPLen]) != 0 && U16_IS_SINGLE(c)) {
         ++matchBMPLen;
     }
 
     /* second part of matchSet contains BMP and supplementary code points */
     matchLen = matchBMPLen;
-    while(matchSet[matchLen] != 0) {
+    जबसम्म(matchSet[matchLen] != 0) {
         ++matchLen;
     }
 
-    for(strItr = 0; (c = string[strItr]) != 0;) {
+    लागि(strItr = 0; (c = string[strItr]) != 0;) {
         ++strItr;
-        if(U16_IS_SINGLE(c)) {
-            if(polarity) {
-                for(matchItr = 0; matchItr < matchLen; ++matchItr) {
-                    if(c == matchSet[matchItr]) {
-                        return strItr - 1; /* one matches */
+        यदि(U16_IS_SINGLE(c)) {
+            यदि(polarity) {
+                लागि(matchItr = 0; matchItr < matchLen; ++matchItr) {
+                    यदि(c == matchSet[matchItr]) {
+                        फर्काऊ strItr - 1; /* one matches */
                     }
                 }
-            } else {
-                for(matchItr = 0; matchItr < matchLen; ++matchItr) {
-                    if(c == matchSet[matchItr]) {
-                        goto endloop;
+            } अन्यथा {
+                लागि(matchItr = 0; matchItr < matchLen; ++matchItr) {
+                    यदि(c == matchSet[matchItr]) {
+                        गच्छ endloop;
                     }
                 }
-                return strItr - 1; /* none matches */
+                फर्काऊ strItr - 1; /* none matches */
             }
-        } else {
+        } अन्यथा {
             /*
              * No need to check for string length before U16_IS_TRAIL
              * because c2 could at worst be the terminating NUL.
              */
-            if(U16_IS_SURROGATE_LEAD(c) && U16_IS_TRAIL(c2 = string[strItr])) {
+            यदि(U16_IS_SURROGATE_LEAD(c) && U16_IS_TRAIL(c2 = string[strItr])) {
                 ++strItr;
                 stringCh = U16_GET_SUPPLEMENTARY(c, c2);
-            } else {
+            } अन्यथा {
                 stringCh = c; /* unpaired trail surrogate */
             }
 
-            if(polarity) {
-                for(matchItr = matchBMPLen; matchItr < matchLen;) {
+            यदि(polarity) {
+                लागि(matchItr = matchBMPLen; matchItr < matchLen;) {
                     U16_NEXT(matchSet, matchItr, matchLen, matchCh);
-                    if(stringCh == matchCh) {
-                        return strItr - U16_LENGTH(stringCh); /* one matches */
+                    यदि(stringCh == matchCh) {
+                        फर्काऊ strItr - U16_LENGTH(stringCh); /* one matches */
                     }
                 }
-            } else {
-                for(matchItr = matchBMPLen; matchItr < matchLen;) {
+            } अन्यथा {
+                लागि(matchItr = matchBMPLen; matchItr < matchLen;) {
                     U16_NEXT(matchSet, matchItr, matchLen, matchCh);
-                    if(stringCh == matchCh) {
-                        goto endloop;
+                    यदि(stringCh == matchCh) {
+                        गच्छ endloop;
                     }
                 }
-                return strItr - U16_LENGTH(stringCh); /* none matches */
+                फर्काऊ strItr - U16_LENGTH(stringCh); /* none matches */
             }
         }
 endloop:
@@ -537,156 +537,156 @@ endloop:
     }
 
     /* Didn't find it. */
-    return -strItr-1;
+    फर्काऊ -strItr-1;
 }
 
 /* Search for a codepoint in a string that matches one of the matchSet codepoints. */
 U_CAPI char16_t* U_EXPORT2
-u_strpbrk(const char16_t* string U_LIFETIME_BOUND, const char16_t* matchSet)
+u_strpbrk(अचर char16_t* string U_LIFETIME_BOUND, अचर char16_t* matchSet)
 {
-    int32_t idx = _matchFromSet(string, matchSet, true);
-    if(idx >= 0) {
-        return (char16_t *)string + idx;
-    } else {
-        return nullptr;
+    int32_t idx = _matchFromSet(string, matchSet, सत्य);
+    यदि(idx >= 0) {
+        फर्काऊ (char16_t *)string + idx;
+    } अन्यथा {
+        फर्काऊ nullptr;
     }
 }
 
 /* Search for a codepoint in a string that matches one of the matchSet codepoints. */
 U_CAPI int32_t U_EXPORT2
-u_strcspn(const char16_t *string, const char16_t *matchSet)
+u_strcspn(अचर char16_t *string, अचर char16_t *matchSet)
 {
-    int32_t idx = _matchFromSet(string, matchSet, true);
-    if(idx >= 0) {
-        return idx;
-    } else {
-        return -idx - 1; /* == u_strlen(string) */
+    int32_t idx = _matchFromSet(string, matchSet, सत्य);
+    यदि(idx >= 0) {
+        फर्काऊ idx;
+    } अन्यथा {
+        फर्काऊ -idx - 1; /* == u_strlen(string) */
     }
 }
 
 /* Search for a codepoint in a string that does not match one of the matchSet codepoints. */
 U_CAPI int32_t U_EXPORT2
-u_strspn(const char16_t *string, const char16_t *matchSet)
+u_strspn(अचर char16_t *string, अचर char16_t *matchSet)
 {
-    int32_t idx = _matchFromSet(string, matchSet, false);
-    if(idx >= 0) {
-        return idx;
-    } else {
-        return -idx - 1; /* == u_strlen(string) */
+    int32_t idx = _matchFromSet(string, matchSet, असत्य);
+    यदि(idx >= 0) {
+        फर्काऊ idx;
+    } अन्यथा {
+        फर्काऊ -idx - 1; /* == u_strlen(string) */
     }
 }
 
 /* ----- Text manipulation functions --- */
 
 U_CAPI char16_t* U_EXPORT2
-u_strtok_r(char16_t* src U_LIFETIME_BOUND, const char16_t* delim, char16_t** saveState)
+u_strtok_r(char16_t* src U_LIFETIME_BOUND, अचर char16_t* delim, char16_t** saveState)
 {
     char16_t *tokSource;
     char16_t *nextToken;
     uint32_t nonDelimIdx;
 
     /* If saveState is nullptr, the user messed up. */
-    if (src != nullptr) {
+    यदि (src != nullptr) {
         tokSource = src;
         *saveState = src; /* Set to "src" in case there are no delimiters */
     }
-    else if (*saveState) {
+    अन्यथा यदि (*saveState) {
         tokSource = *saveState;
     }
-    else {
+    अन्यथा {
         /* src == nullptr && *saveState == nullptr */
         /* This shouldn't happen. We already finished tokenizing. */
-        return nullptr;
+        फर्काऊ nullptr;
     }
 
     /* Skip initial delimiters */
     nonDelimIdx = u_strspn(tokSource, delim);
     tokSource = &tokSource[nonDelimIdx];
 
-    if (*tokSource) {
+    यदि (*tokSource) {
         nextToken = u_strpbrk(tokSource, delim);
-        if (nextToken != nullptr) {
+        यदि (nextToken != nullptr) {
             /* Create a token */
             *(nextToken++) = 0;
             *saveState = nextToken;
-            return tokSource;
+            फर्काऊ tokSource;
         }
-        else if (*saveState) {
+        अन्यथा यदि (*saveState) {
             /* Return the last token */
             *saveState = nullptr;
-            return tokSource;
+            फर्काऊ tokSource;
         }
     }
-    else {
+    अन्यथा {
         /* No tokens were found. Only delimiters were left. */
         *saveState = nullptr;
     }
-    return nullptr;
+    फर्काऊ nullptr;
 }
 
 /* Miscellaneous functions -------------------------------------------------- */
 
 U_CAPI char16_t* U_EXPORT2
-u_strcat(char16_t* dst U_LIFETIME_BOUND, const char16_t* src)
+u_strcat(char16_t* dst U_LIFETIME_BOUND, अचर char16_t* src)
 {
     char16_t *anchor = dst;            /* save a pointer to start of dst */
 
-    while(*dst != 0) {              /* To end of first string          */
+    जबसम्म(*dst != 0) {              /* To end of first string          */
         ++dst;
     }
-    while((*(dst++) = *(src++)) != 0) {     /* copy string 2 over              */
+    जबसम्म((*(dst++) = *(src++)) != 0) {     /* copy string 2 over              */
     }
 
-    return anchor;
+    फर्काऊ anchor;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strncat(char16_t* dst U_LIFETIME_BOUND, const char16_t* src, int32_t n)
+u_strncat(char16_t* dst U_LIFETIME_BOUND, अचर char16_t* src, int32_t n)
 {
-    if(n > 0) {
+    यदि(n > 0) {
         char16_t *anchor = dst;            /* save a pointer to start of dst */
 
-        while(*dst != 0) {              /* To end of first string          */
+        जबसम्म(*dst != 0) {              /* To end of first string          */
             ++dst;
         }
-        while((*dst = *src) != 0) {     /* copy string 2 over              */
+        जबसम्म((*dst = *src) != 0) {     /* copy string 2 over              */
             ++dst;
-            if(--n == 0) {
+            यदि(--n == 0) {
                 *dst = 0;
-                break;
+                रोक;
             }
             ++src;
         }
 
-        return anchor;
-    } else {
-        return dst;
+        फर्काऊ anchor;
+    } अन्यथा {
+        फर्काऊ dst;
     }
 }
 
 /* ----- Text property functions --- */
 
 U_CAPI int32_t   U_EXPORT2
-u_strcmp(const char16_t *s1,
-    const char16_t *s2)
+u_strcmp(अचर char16_t *s1,
+    अचर char16_t *s2)
 {
     char16_t  c1, c2;
 
-    for(;;) {
+    लागि(;;) {
         c1=*s1++;
         c2=*s2++;
-        if (c1 != c2 || c1 == 0) {
-            break;
+        यदि (c1 != c2 || c1 == 0) {
+            रोक;
         }
     }
-    return (int32_t)c1 - (int32_t)c2;
+    फर्काऊ (int32_t)c1 - (int32_t)c2;
 }
 
 U_CFUNC int32_t U_EXPORT2
-uprv_strCompare(const char16_t *s1, int32_t length1,
-                const char16_t *s2, int32_t length2,
+uprv_strCompare(अचर char16_t *s1, int32_t length1,
+                अचर char16_t *s2, int32_t length2,
                 UBool strncmpStyle, UBool codePointOrder) {
-    const char16_t *start1, *start2, *limit1, *limit2;
+    अचर char16_t *start1, *start2, *limit1, *limit2;
     char16_t c1, c2;
 
     /* setup for fix-up */
@@ -694,20 +694,20 @@ uprv_strCompare(const char16_t *s1, int32_t length1,
     start2=s2;
 
     /* compare identical prefixes - they do not need to be fixed up */
-    if(length1<0 && length2<0) {
+    यदि(length1<0 && length2<0) {
         /* strcmp style, both NUL-terminated */
-        if(s1==s2) {
-            return 0;
+        यदि(s1==s2) {
+            फर्काऊ 0;
         }
 
-        for(;;) {
+        लागि(;;) {
             c1=*s1;
             c2=*s2;
-            if(c1!=c2) {
-                break;
+            यदि(c1!=c2) {
+                रोक;
             }
-            if(c1==0) {
-                return 0;
+            यदि(c1==0) {
+                फर्काऊ 0;
             }
             ++s1;
             ++s2;
@@ -715,27 +715,27 @@ uprv_strCompare(const char16_t *s1, int32_t length1,
 
         /* setup for fix-up */
         limit1=limit2=nullptr;
-    } else if(strncmpStyle) {
+    } अन्यथा यदि(strncmpStyle) {
         /* special handling for strncmp, assume length1==length2>=0 but also check for NUL */
-        if(s1==s2) {
-            return 0;
+        यदि(s1==s2) {
+            फर्काऊ 0;
         }
 
         limit1=start1+length1;
 
-        for(;;) {
+        लागि(;;) {
             /* both lengths are same, check only one limit */
-            if(s1==limit1) {
-                return 0;
+            यदि(s1==limit1) {
+                फर्काऊ 0;
             }
 
             c1=*s1;
             c2=*s2;
-            if(c1!=c2) {
-                break;
+            यदि(c1!=c2) {
+                रोक;
             }
-            if(c1==0) {
-                return 0;
+            यदि(c1==0) {
+                फर्काऊ 0;
             }
             ++s1;
             ++s2;
@@ -743,43 +743,43 @@ uprv_strCompare(const char16_t *s1, int32_t length1,
 
         /* setup for fix-up */
         limit2=start2+length1; /* use length1 here, too, to enforce assumption */
-    } else {
+    } अन्यथा {
         /* memcmp/UnicodeString style, both length-specified */
         int32_t lengthResult;
 
-        if(length1<0) {
+        यदि(length1<0) {
             length1=u_strlen(s1);
         }
-        if(length2<0) {
+        यदि(length2<0) {
             length2=u_strlen(s2);
         }
 
         /* limit1=start1+min(length1, length2) */
-        if(length1<length2) {
+        यदि(length1<length2) {
             lengthResult=-1;
             limit1=start1+length1;
-        } else if(length1==length2) {
+        } अन्यथा यदि(length1==length2) {
             lengthResult=0;
             limit1=start1+length1;
-        } else /* length1>length2 */ {
+        } अन्यथा /* length1>length2 */ {
             lengthResult=1;
             limit1=start1+length2;
         }
 
-        if(s1==s2) {
-            return lengthResult;
+        यदि(s1==s2) {
+            फर्काऊ lengthResult;
         }
 
-        for(;;) {
+        लागि(;;) {
             /* check pseudo-limit */
-            if(s1==limit1) {
-                return lengthResult;
+            यदि(s1==limit1) {
+                फर्काऊ lengthResult;
             }
 
             c1=*s1;
             c2=*s2;
-            if(c1!=c2) {
-                break;
+            यदि(c1!=c2) {
+                रोक;
             }
             ++s1;
             ++s2;
@@ -791,31 +791,31 @@ uprv_strCompare(const char16_t *s1, int32_t length1,
     }
 
     /* if both values are in or above the surrogate range, fix them up */
-    if(c1>=0xd800 && c2>=0xd800 && codePointOrder) {
+    यदि(c1>=0xd800 && c2>=0xd800 && codePointOrder) {
         /* subtract 0x2800 from BMP code points to make them smaller than supplementary ones */
-        if(
+        यदि(
             (c1<=0xdbff && (s1+1)!=limit1 && U16_IS_TRAIL(*(s1+1))) ||
             (U16_IS_TRAIL(c1) && start1!=s1 && U16_IS_LEAD(*(s1-1)))
         ) {
             /* part of a surrogate pair, leave >=d800 */
-        } else {
+        } अन्यथा {
             /* BMP code point - may be surrogate code point - make <d800 */
             c1-=0x2800;
         }
 
-        if(
+        यदि(
             (c2<=0xdbff && (s2+1)!=limit2 && U16_IS_TRAIL(*(s2+1))) ||
             (U16_IS_TRAIL(c2) && start2!=s2 && U16_IS_LEAD(*(s2-1)))
         ) {
             /* part of a surrogate pair, leave >=d800 */
-        } else {
+        } अन्यथा {
             /* BMP code point - may be surrogate code point - make <d800 */
             c2-=0x2800;
         }
     }
 
     /* now c1 and c2 are in the requested (code unit or code point) order */
-    return (int32_t)c1-(int32_t)c2;
+    फर्काऊ (int32_t)c1-(int32_t)c2;
 }
 
 /*
@@ -829,11 +829,11 @@ u_strCompareIter(UCharIterator *iter1, UCharIterator *iter2, UBool codePointOrde
     UChar32 c1, c2;
 
     /* argument checking */
-    if(iter1==nullptr || iter2==nullptr) {
-        return 0; /* bad arguments */
+    यदि(iter1==nullptr || iter2==nullptr) {
+        फर्काऊ 0; /* bad arguments */
     }
-    if(iter1==iter2) {
-        return 0; /* identical iterators */
+    यदि(iter1==iter2) {
+        फर्काऊ 0; /* identical iterators */
     }
 
     /* reset iterators to start? */
@@ -841,46 +841,46 @@ u_strCompareIter(UCharIterator *iter1, UCharIterator *iter2, UBool codePointOrde
     iter2->move(iter2, 0, UITER_START);
 
     /* compare identical prefixes - they do not need to be fixed up */
-    for(;;) {
+    लागि(;;) {
         c1=iter1->next(iter1);
         c2=iter2->next(iter2);
-        if(c1!=c2) {
-            break;
+        यदि(c1!=c2) {
+            रोक;
         }
-        if(c1==-1) {
-            return 0;
+        यदि(c1==-1) {
+            फर्काऊ 0;
         }
     }
 
     /* if both values are in or above the surrogate range, fix them up */
-    if(c1>=0xd800 && c2>=0xd800 && codePointOrder) {
+    यदि(c1>=0xd800 && c2>=0xd800 && codePointOrder) {
         /* subtract 0x2800 from BMP code points to make them smaller than supplementary ones */
-        if(
+        यदि(
             (c1<=0xdbff && U16_IS_TRAIL(iter1->current(iter1))) ||
             (U16_IS_TRAIL(c1) && (iter1->previous(iter1), U16_IS_LEAD(iter1->previous(iter1))))
         ) {
             /* part of a surrogate pair, leave >=d800 */
-        } else {
+        } अन्यथा {
             /* BMP code point - may be surrogate code point - make <d800 */
             c1-=0x2800;
         }
 
-        if(
+        यदि(
             (c2<=0xdbff && U16_IS_TRAIL(iter2->current(iter2))) ||
             (U16_IS_TRAIL(c2) && (iter2->previous(iter2), U16_IS_LEAD(iter2->previous(iter2))))
         ) {
             /* part of a surrogate pair, leave >=d800 */
-        } else {
+        } अन्यथा {
             /* BMP code point - may be surrogate code point - make <d800 */
             c2-=0x2800;
         }
     }
 
     /* now c1 and c2 are in the requested (code unit or code point) order */
-    return (int32_t)c1-(int32_t)c2;
+    फर्काऊ (int32_t)c1-(int32_t)c2;
 }
 
-#if 0
+#यदि 0
 /*
  * u_strCompareIter() does not leave the iterators _on_ the different units.
  * This is possible but would cost a few extra indirect function calls to back
@@ -897,23 +897,23 @@ u_strCompareIter(UCharIterator *iter1, UCharIterator *iter2, UBool codePointOrde
  *
  * The following fragment is part of what would need to be done for backing up.
  */
-void fragment {
+शून्य fragment {
         /* iff a surrogate is part of a surrogate pair, leave >=d800 */
-        if(c1<=0xdbff) {
-            if(!U16_IS_TRAIL(iter1->current(iter1))) {
+        यदि(c1<=0xdbff) {
+            यदि(!U16_IS_TRAIL(iter1->current(iter1))) {
                 /* lead surrogate code point - make <d800 */
                 c1-=0x2800;
             }
-        } else if(c1<=0xdfff) {
+        } अन्यथा यदि(c1<=0xdfff) {
             int32_t idx=iter1->getIndex(iter1, UITER_CURRENT);
             iter1->previous(iter1); /* ==c1 */
-            if(!U16_IS_LEAD(iter1->previous(iter1))) {
+            यदि(!U16_IS_LEAD(iter1->previous(iter1))) {
                 /* trail surrogate code point - make <d800 */
                 c1-=0x2800;
             }
             /* go back to behind where the difference is */
             iter1->move(iter1, idx, UITER_ZERO);
-        } else /* 0xe000<=c1<=0xffff */ {
+        } अन्यथा /* 0xe000<=c1<=0xffff */ {
             /* BMP code point - make <d800 */
             c1-=0x2800;
         }
@@ -921,110 +921,110 @@ void fragment {
 #endif
 
 U_CAPI int32_t U_EXPORT2
-u_strCompare(const char16_t *s1, int32_t length1,
-             const char16_t *s2, int32_t length2,
+u_strCompare(अचर char16_t *s1, int32_t length1,
+             अचर char16_t *s2, int32_t length2,
              UBool codePointOrder) {
     /* argument checking */
-    if(s1==nullptr || length1<-1 || s2==nullptr || length2<-1) {
-        return 0;
+    यदि(s1==nullptr || length1<-1 || s2==nullptr || length2<-1) {
+        फर्काऊ 0;
     }
-    return uprv_strCompare(s1, length1, s2, length2, false, codePointOrder);
+    फर्काऊ uprv_strCompare(s1, length1, s2, length2, असत्य, codePointOrder);
 }
 
 /* String compare in code point order - u_strcmp() compares in code unit order. */
 U_CAPI int32_t U_EXPORT2
-u_strcmpCodePointOrder(const char16_t *s1, const char16_t *s2) {
-    return uprv_strCompare(s1, -1, s2, -1, false, true);
+u_strcmpCodePointOrder(अचर char16_t *s1, अचर char16_t *s2) {
+    फर्काऊ uprv_strCompare(s1, -1, s2, -1, असत्य, सत्य);
 }
 
 U_CAPI int32_t   U_EXPORT2
-u_strncmp(const char16_t  *s1,
-     const char16_t  *s2,
+u_strncmp(अचर char16_t  *s1,
+     अचर char16_t  *s2,
      int32_t     n) 
 {
-    if(n > 0) {
+    यदि(n > 0) {
         int32_t rc;
-        for(;;) {
+        लागि(;;) {
             rc = (int32_t)*s1 - (int32_t)*s2;
-            if(rc != 0 || *s1 == 0 || --n == 0) {
-                return rc;
+            यदि(rc != 0 || *s1 == 0 || --n == 0) {
+                फर्काऊ rc;
             }
             ++s1;
             ++s2;
         }
-    } else {
-        return 0;
+    } अन्यथा {
+        फर्काऊ 0;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-u_strncmpCodePointOrder(const char16_t *s1, const char16_t *s2, int32_t n) {
-    return uprv_strCompare(s1, n, s2, n, true, true);
+u_strncmpCodePointOrder(अचर char16_t *s1, अचर char16_t *s2, int32_t n) {
+    फर्काऊ uprv_strCompare(s1, n, s2, n, सत्य, सत्य);
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strcpy(char16_t* dst U_LIFETIME_BOUND, const char16_t* src)
+u_strcpy(char16_t* dst U_LIFETIME_BOUND, अचर char16_t* src)
 {
     char16_t *anchor = dst;            /* save a pointer to start of dst */
 
-    while((*(dst++) = *(src++)) != 0) {     /* copy string 2 over              */
+    जबसम्म((*(dst++) = *(src++)) != 0) {     /* copy string 2 over              */
     }
 
-    return anchor;
+    फर्काऊ anchor;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strncpy(char16_t* dst U_LIFETIME_BOUND, const char16_t* src, int32_t n) {
+u_strncpy(char16_t* dst U_LIFETIME_BOUND, अचर char16_t* src, int32_t n) {
     char16_t *anchor = dst;            /* save a pointer to start of dst */
 
     /* copy string 2 over */
-    while(n > 0 && (*(dst++) = *(src++)) != 0) {
+    जबसम्म(n > 0 && (*(dst++) = *(src++)) != 0) {
         --n;
     }
 
-    return anchor;
+    फर्काऊ anchor;
 }
 
 U_CAPI int32_t   U_EXPORT2
-u_strlen(const char16_t *s)
+u_strlen(अचर char16_t *s)
 {
-#if U_SIZEOF_WCHAR_T == U_SIZEOF_UCHAR
-    return (int32_t)uprv_wcslen((const wchar_t *)s);
-#else
-    const char16_t *t = s;
-    while(*t != 0) {
+#यदि U_SIZEOF_WCHAR_T == U_SIZEOF_UCHAR
+    फर्काऊ (int32_t)uprv_wcslen((अचर ब_अक्षर_प्रकार *)s);
+#अन्यथा
+    अचर char16_t *t = s;
+    जबसम्म(*t != 0) {
       ++t;
     }
-    return t - s;
+    फर्काऊ t - s;
 #endif
 }
 
 U_CAPI int32_t U_EXPORT2
-u_countChar32(const char16_t *s, int32_t length) {
+u_गन्ती_Char32(अचर char16_t *s, int32_t length) {
     int32_t count;
 
-    if(s==nullptr || length<-1) {
-        return 0;
+    यदि(s==nullptr || length<-1) {
+        फर्काऊ 0;
     }
 
     count=0;
-    if(length>=0) {
-        while(length>0) {
+    यदि(length>=0) {
+        जबसम्म(length>0) {
             ++count;
-            if(U16_IS_LEAD(*s) && length>=2 && U16_IS_TRAIL(*(s+1))) {
+            यदि(U16_IS_LEAD(*s) && length>=2 && U16_IS_TRAIL(*(s+1))) {
                 s+=2;
                 length-=2;
-            } else {
+            } अन्यथा {
                 ++s;
                 --length;
             }
         }
-    } else /* length==-1 */ {
+    } अन्यथा /* length==-1 */ {
         char16_t c;
 
-        for(;;) {
-            if((c=*s++)==0) {
-                break;
+        लागि(;;) {
+            यदि((c=*s++)==0) {
+                रोक;
             }
             ++count;
 
@@ -1032,55 +1032,55 @@ u_countChar32(const char16_t *s, int32_t length) {
              * sufficient to look ahead one because of UTF-16;
              * safe to look ahead one because at worst that would be the terminating NUL
              */
-            if(U16_IS_LEAD(c) && U16_IS_TRAIL(*s)) {
+            यदि(U16_IS_LEAD(c) && U16_IS_TRAIL(*s)) {
                 ++s;
             }
         }
     }
-    return count;
+    फर्काऊ count;
 }
 
 U_CAPI UBool U_EXPORT2
-u_strHasMoreChar32Than(const char16_t *s, int32_t length, int32_t number) {
+u_strHasMoreChar32Than(अचर char16_t *s, int32_t length, int32_t number) {
 
-    if(number<0) {
-        return true;
+    यदि(number<0) {
+        फर्काऊ सत्य;
     }
-    if(s==nullptr || length<-1) {
-        return false;
+    यदि(s==nullptr || length<-1) {
+        फर्काऊ असत्य;
     }
 
-    if(length==-1) {
+    यदि(length==-1) {
         /* s is NUL-terminated */
         char16_t c;
 
         /* count code points until they exceed */
-        for(;;) {
-            if((c=*s++)==0) {
-                return false;
+        लागि(;;) {
+            यदि((c=*s++)==0) {
+                फर्काऊ असत्य;
             }
-            if(number==0) {
-                return true;
+            यदि(number==0) {
+                फर्काऊ सत्य;
             }
-            if(U16_IS_LEAD(c) && U16_IS_TRAIL(*s)) {
+            यदि(U16_IS_LEAD(c) && U16_IS_TRAIL(*s)) {
                 ++s;
             }
             --number;
         }
-    } else {
+    } अन्यथा {
         /* length>=0 known */
-        const char16_t *limit;
+        अचर char16_t *limit;
         int32_t maxSupplementary;
 
         /* s contains at least (length+1)/2 code points: <=2 UChars per cp */
-        if(((length+1)/2)>number) {
-            return true;
+        यदि(((length+1)/2)>number) {
+            फर्काऊ सत्य;
         }
 
         /* check if s does not even contain enough UChars */
         maxSupplementary=length-number;
-        if(maxSupplementary<=0) {
-            return false;
+        यदि(maxSupplementary<=0) {
+            फर्काऊ असत्य;
         }
         /* there are maxSupplementary=length-number more UChars than asked-for code points */
 
@@ -1089,18 +1089,18 @@ u_strHasMoreChar32Than(const char16_t *s, int32_t length, int32_t number) {
          * no more than maxSupplementary supplementary code points (char16_t pairs)
          */
         limit=s+length;
-        for(;;) {
-            if(s==limit) {
-                return false;
+        लागि(;;) {
+            यदि(s==limit) {
+                फर्काऊ असत्य;
             }
-            if(number==0) {
-                return true;
+            यदि(number==0) {
+                फर्काऊ सत्य;
             }
-            if(U16_IS_LEAD(*s++) && s!=limit && U16_IS_TRAIL(*s)) {
+            यदि(U16_IS_LEAD(*s++) && s!=limit && U16_IS_TRAIL(*s)) {
                 ++s;
-                if(--maxSupplementary<=0) {
+                यदि(--maxSupplementary<=0) {
                     /* too many pairs - too few code points */
-                    return false;
+                    फर्काऊ असत्य;
                 }
             }
             --number;
@@ -1109,61 +1109,61 @@ u_strHasMoreChar32Than(const char16_t *s, int32_t length, int32_t number) {
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_memcpy(char16_t* dest U_LIFETIME_BOUND, const char16_t* src, int32_t count) {
-    if(count > 0) {
-        uprv_memcpy(dest, src, (size_t)count*U_SIZEOF_UCHAR);
+u_memcpy(char16_t* dest U_LIFETIME_BOUND, अचर char16_t* src, int32_t count) {
+    यदि(count > 0) {
+        uprv_memcpy(dest, src, (माप_प्रकार)count*U_SIZEOF_UCHAR);
     }
-    return dest;
+    फर्काऊ dest;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_memmove(char16_t* dest U_LIFETIME_BOUND, const char16_t* src, int32_t count) {
-    if(count > 0) {
-        uprv_memmove(dest, src, (size_t)count*U_SIZEOF_UCHAR);
+u_memmove(char16_t* dest U_LIFETIME_BOUND, अचर char16_t* src, int32_t count) {
+    यदि(count > 0) {
+        uprv_memmove(dest, src, (माप_प्रकार)count*U_SIZEOF_UCHAR);
     }
-    return dest;
+    फर्काऊ dest;
 }
 
 U_CAPI char16_t* U_EXPORT2
 u_memset(char16_t* dest U_LIFETIME_BOUND, char16_t c, int32_t count) {
-    if(count > 0) {
+    यदि(count > 0) {
         char16_t *ptr = dest;
         char16_t *limit = dest + count;
 
-        while (ptr < limit) {
+        जबसम्म (ptr < limit) {
             *(ptr++) = c;
         }
     }
-    return dest;
+    फर्काऊ dest;
 }
 
 U_CAPI int32_t U_EXPORT2
-u_memcmp(const char16_t *buf1, const char16_t *buf2, int32_t count) {
-    if(count > 0) {
-        const char16_t *limit = buf1 + count;
+u_memcmp(अचर char16_t *buf1, अचर char16_t *buf2, int32_t count) {
+    यदि(count > 0) {
+        अचर char16_t *limit = buf1 + count;
         int32_t result;
 
-        while (buf1 < limit) {
+        जबसम्म (buf1 < limit) {
             result = (int32_t)(uint16_t)*buf1 - (int32_t)(uint16_t)*buf2;
-            if (result != 0) {
-                return result;
+            यदि (result != 0) {
+                फर्काऊ result;
             }
             buf1++;
             buf2++;
         }
     }
-    return 0;
+    फर्काऊ 0;
 }
 
 U_CAPI int32_t U_EXPORT2
-u_memcmpCodePointOrder(const char16_t *s1, const char16_t *s2, int32_t count) {
-    return uprv_strCompare(s1, count, s2, count, false, true);
+u_memcmpCodePointOrder(अचर char16_t *s1, अचर char16_t *s2, int32_t count) {
+    फर्काऊ uprv_strCompare(s1, count, s2, count, असत्य, सत्य);
 }
 
 /* u_unescape & support fns ------------------------------------------------- */
 
 /* This map must be in ASCENDING ORDER OF THE ESCAPE CODE */
-static const char16_t UNESCAPE_MAP[] = {
+स्थिर अचर char16_t UNESCAPE_MAP[] = {
     /*"   0x22, 0x22 */
     /*'   0x27, 0x27 */
     /*?   0x3F, 0x3F */
@@ -1177,28 +1177,28 @@ static const char16_t UNESCAPE_MAP[] = {
     /*t*/ 0x74, 0x09,
     /*v*/ 0x76, 0x0b
 };
-enum { UNESCAPE_MAP_LENGTH = UPRV_LENGTHOF(UNESCAPE_MAP) };
+गणना { UNESCAPE_MAP_LENGTH = UPRV_LENGTHOF(UNESCAPE_MAP) };
 
 /* Convert one octal digit to a numeric value 0..7, or -1 on failure */
-static int32_t _digit8(char16_t c) {
-    if (c >= u'0' && c <= u'7') {
-        return c - u'0';
+स्थिर int32_t _digit8(char16_t c) {
+    यदि (c >= u'0' && c <= u'7') {
+        फर्काऊ c - u'0';
     }
-    return -1;
+    फर्काऊ -1;
 }
 
 /* Convert one hex digit to a numeric value 0..F, or -1 on failure */
-static int32_t _digit16(char16_t c) {
-    if (c >= u'0' && c <= u'9') {
-        return c - u'0';
+स्थिर int32_t _digit16(char16_t c) {
+    यदि (c >= u'0' && c <= u'9') {
+        फर्काऊ c - u'0';
     }
-    if (c >= u'A' && c <= u'F') {
-        return c - (u'A' - 10);
+    यदि (c >= u'A' && c <= u'F') {
+        फर्काऊ c - (u'A' - 10);
     }
-    if (c >= u'a' && c <= u'f') {
-        return c - (u'a' - 10);
+    यदि (c >= u'a' && c <= u'f') {
+        फर्काऊ c - (u'a' - 10);
     }
-    return -1;
+    फर्काऊ -1;
 }
 
 /* Parse a single escape sequence.  Although this method deals in
@@ -1208,7 +1208,7 @@ U_CAPI UChar32 U_EXPORT2
 u_unescapeAt(UNESCAPE_CHAR_AT charAt,
              int32_t *offset,
              int32_t length,
-             void *context) {
+             शून्य *context) {
 
     int32_t start = *offset;
     UChar32 c;
@@ -1218,150 +1218,150 @@ u_unescapeAt(UNESCAPE_CHAR_AT charAt,
     int8_t maxDig = 0;
     int8_t bitsPerDigit = 4; 
     int32_t dig;
-    UBool braces = false;
+    UBool braces = असत्य;
 
     /* Check that offset is in range */
-    if (*offset < 0 || *offset >= length) {
-        goto err;
+    यदि (*offset < 0 || *offset >= length) {
+        गच्छ err;
     }
 
     /* Fetch first char16_t after '\\' */
     c = charAt((*offset)++, context);
 
     /* Convert hexadecimal and octal escapes */
-    switch (c) {
-    case u'u':
+    विकल्प (c) {
+    पक्ष u'u':
         minDig = maxDig = 4;
-        break;
-    case u'U':
+        रोक;
+    पक्ष u'U':
         minDig = maxDig = 8;
-        break;
-    case u'x':
+        रोक;
+    पक्ष u'x':
         minDig = 1;
-        if (*offset < length && charAt(*offset, context) == u'{') {
+        यदि (*offset < length && charAt(*offset, context) == u'{') {
             ++(*offset);
-            braces = true;
+            braces = सत्य;
             maxDig = 8;
-        } else {
+        } अन्यथा {
             maxDig = 2;
         }
-        break;
-    default:
+        रोक;
+    स्वभाव:
         dig = _digit8(c);
-        if (dig >= 0) {
+        यदि (dig >= 0) {
             minDig = 1;
             maxDig = 3;
             n = 1; /* Already have first octal digit */
             bitsPerDigit = 3;
             result = dig;
         }
-        break;
+        रोक;
     }
-    if (minDig != 0) {
-        while (*offset < length && n < maxDig) {
+    यदि (minDig != 0) {
+        जबसम्म (*offset < length && n < maxDig) {
             c = charAt(*offset, context);
             dig = (bitsPerDigit == 3) ? _digit8(c) : _digit16(c);
-            if (dig < 0) {
-                break;
+            यदि (dig < 0) {
+                रोक;
             }
             result = (result << bitsPerDigit) | dig;
             ++(*offset);
             ++n;
         }
-        if (n < minDig) {
-            goto err;
+        यदि (n < minDig) {
+            गच्छ err;
         }
-        if (braces) {
-            if (c != u'}') {
-                goto err;
+        यदि (braces) {
+            यदि (c != u'}') {
+                गच्छ err;
             }
             ++(*offset);
         }
-        if (result < 0 || result >= 0x110000) {
-            goto err;
+        यदि (result < 0 || result >= 0x110000) {
+            गच्छ err;
         }
         /* If an escape sequence specifies a lead surrogate, see if
          * there is a trail surrogate after it, either as an escape or
          * as a literal.  If so, join them up into a supplementary.
          */
-        if (*offset < length && U16_IS_LEAD(result)) {
+        यदि (*offset < length && U16_IS_LEAD(result)) {
             int32_t ahead = *offset + 1;
             c = charAt(*offset, context);
-            if (c == u'\\' && ahead < length) {
+            यदि (c == u'\\' && ahead < length) {
                 // Calling ourselves recursively may cause a stack overflow if
                 // we have repeated escaped lead surrogates.
                 // Limit the length to 11 ("x{0000DFFF}") after ahead.
                 int32_t tailLimit = ahead + 11;
-                if (tailLimit > length) {
+                यदि (tailLimit > length) {
                     tailLimit = length;
                 }
                 c = u_unescapeAt(charAt, &ahead, tailLimit, context);
             }
-            if (U16_IS_TRAIL(c)) {
+            यदि (U16_IS_TRAIL(c)) {
                 *offset = ahead;
                 result = U16_GET_SUPPLEMENTARY(result, c);
             }
         }
-        return result;
+        फर्काऊ result;
     }
 
     /* Convert C-style escapes in table */
-    for (int32_t i=0; i<UNESCAPE_MAP_LENGTH; i+=2) {
-        if (c == UNESCAPE_MAP[i]) {
-            return UNESCAPE_MAP[i+1];
-        } else if (c < UNESCAPE_MAP[i]) {
-            break;
+    लागि (int32_t i=0; i<UNESCAPE_MAP_LENGTH; i+=2) {
+        यदि (c == UNESCAPE_MAP[i]) {
+            फर्काऊ UNESCAPE_MAP[i+1];
+        } अन्यथा यदि (c < UNESCAPE_MAP[i]) {
+            रोक;
         }
     }
 
     /* Map \cX to control-X: X & 0x1F */
-    if (c == u'c' && *offset < length) {
+    यदि (c == u'c' && *offset < length) {
         c = charAt((*offset)++, context);
-        if (U16_IS_LEAD(c) && *offset < length) {
+        यदि (U16_IS_LEAD(c) && *offset < length) {
             char16_t c2 = charAt(*offset, context);
-            if (U16_IS_TRAIL(c2)) {
+            यदि (U16_IS_TRAIL(c2)) {
                 ++(*offset);
                 c = U16_GET_SUPPLEMENTARY(c, c2);
             }
         }
-        return 0x1F & c;
+        फर्काऊ 0x1F & c;
     }
 
     /* If no special forms are recognized, then consider
      * the backslash to generically escape the next character.
      * Deal with surrogate pairs. */
-    if (U16_IS_LEAD(c) && *offset < length) {
+    यदि (U16_IS_LEAD(c) && *offset < length) {
         char16_t c2 = charAt(*offset, context);
-        if (U16_IS_TRAIL(c2)) {
+        यदि (U16_IS_TRAIL(c2)) {
             ++(*offset);
-            return U16_GET_SUPPLEMENTARY(c, c2);
+            फर्काऊ U16_GET_SUPPLEMENTARY(c, c2);
         }
     }
-    return c;
+    फर्काऊ c;
 
  err:
     /* Invalid escape sequence */
     *offset = start; /* Reset to initial value */
-    return (UChar32)0xFFFFFFFF;
+    फर्काऊ (UChar32)0xFFFFFFFF;
 }
 
 /* u_unescapeAt() callback to return a char16_t from a char* */
-static char16_t U_CALLCONV
-_charPtr_charAt(int32_t offset, void *context) {
+स्थिर char16_t U_CALLCONV
+_charPtr_charAt(int32_t offset, शून्य *context) {
     char16_t c16;
     /* It would be more efficient to access the invariant tables
      * directly but there is no API for that. */
-    u_charsToUChars(static_cast<char*>(context) + offset, &c16, 1);
-    return c16;
+    u_charsToUChars(static_cast<वर्ण*>(context) + offset, &c16, 1);
+    फर्काऊ c16;
 }
 
 /* Append an escape-free segment of the text; used by u_unescape() */
-static void _appendUChars(char16_t *dest, int32_t destCapacity,
-                          const char *src, int32_t srcLen) {
-    if (destCapacity < 0) {
+स्थिर शून्य _appendUChars(char16_t *dest, int32_t destCapacity,
+                          अचर वर्ण *src, int32_t srcLen) {
+    यदि (destCapacity < 0) {
         destCapacity = 0;
     }
-    if (srcLen > destCapacity) {
+    यदि (srcLen > destCapacity) {
         srcLen = destCapacity;
     }
     u_charsToUChars(src, dest, srcLen);
@@ -1369,58 +1369,58 @@ static void _appendUChars(char16_t *dest, int32_t destCapacity,
 
 /* Do an invariant conversion of char* -> char16_t*, with escape parsing */
 U_CAPI int32_t U_EXPORT2
-u_unescape(const char *src, char16_t *dest, int32_t destCapacity) {
-    const char *segment = src;
+u_unescape(अचर वर्ण *src, char16_t *dest, int32_t destCapacity) {
+    अचर वर्ण *segment = src;
     int32_t i = 0;
-    char c;
+    वर्ण c;
 
-    while ((c=*src) != 0) {
+    जबसम्म ((c=*src) != 0) {
         /* '\\' intentionally written as compiler-specific
          * character constant to correspond to compiler-specific
          * char* constants. */
-        if (c == '\\') {
+        यदि (c == '\\') {
             int32_t lenParsed = 0;
             UChar32 c32;
-            if (src != segment) {
-                if (dest != nullptr) {
+            यदि (src != segment) {
+                यदि (dest != nullptr) {
                     _appendUChars(dest + i, destCapacity - i,
                                   segment, (int32_t)(src - segment));
                 }
                 i += (int32_t)(src - segment);
             }
             ++src; /* advance past '\\' */
-            c32 = u_unescapeAt(_charPtr_charAt, &lenParsed, (int32_t)uprv_strlen(src), const_cast<char*>(src));
-            if (lenParsed == 0) {
-                goto err;
+            c32 = u_unescapeAt(_charPtr_charAt, &lenParsed, (int32_t)uprv_strlen(src), const_cast<वर्ण*>(src));
+            यदि (lenParsed == 0) {
+                गच्छ err;
             }
             src += lenParsed; /* advance past escape seq. */
-            if (dest != nullptr && U16_LENGTH(c32) <= (destCapacity - i)) {
+            यदि (dest != nullptr && U16_LENGTH(c32) <= (destCapacity - i)) {
                 U16_APPEND_UNSAFE(dest, i, c32);
-            } else {
+            } अन्यथा {
                 i += U16_LENGTH(c32);
             }
             segment = src;
-        } else {
+        } अन्यथा {
             ++src;
         }
     }
-    if (src != segment) {
-        if (dest != nullptr) {
+    यदि (src != segment) {
+        यदि (dest != nullptr) {
             _appendUChars(dest + i, destCapacity - i,
                           segment, (int32_t)(src - segment));
         }
         i += (int32_t)(src - segment);
     }
-    if (dest != nullptr && i < destCapacity) {
+    यदि (dest != nullptr && i < destCapacity) {
         dest[i] = 0;
     }
-    return i;
+    फर्काऊ i;
 
  err:
-    if (dest != nullptr && destCapacity > 0) {
+    यदि (dest != nullptr && destCapacity > 0) {
         *dest = 0;
     }
-    return 0;
+    फर्काऊ 0;
 }
 
 /* NUL-termination of strings ----------------------------------------------- */
@@ -1430,22 +1430,22 @@ u_unescape(const char *src, char16_t *dest, int32_t destCapacity) {
  * Set warning and error codes accordingly.
  */
 #define __TERMINATE_STRING(dest, destCapacity, length, pErrorCode) UPRV_BLOCK_MACRO_BEGIN { \
-    if(pErrorCode!=nullptr && U_SUCCESS(*pErrorCode)) {                    \
+    यदि(pErrorCode!=nullptr && U_SUCCESS(*pErrorCode)) {                    \
         /* not a public function, so no complete argument checking */   \
                                                                         \
-        if(length<0) {                                                  \
+        यदि(length<0) {                                                  \
             /* assume that the caller handles this */                   \
-        } else if(length<destCapacity) {                                \
+        } अन्यथा यदि(length<destCapacity) {                                \
             /* NUL-terminate the string, the NUL fits */                \
             dest[length]=0;                                             \
             /* unset the not-terminated warning but leave all others */ \
-            if(*pErrorCode==U_STRING_NOT_TERMINATED_WARNING) {          \
+            यदि(*pErrorCode==U_STRING_NOT_TERMINATED_WARNING) {          \
                 *pErrorCode=U_ZERO_ERROR;                               \
             }                                                           \
-        } else if(length==destCapacity) {                               \
+        } अन्यथा यदि(length==destCapacity) {                               \
             /* unable to NUL-terminate, but the string itself fit - set a warning code */ \
             *pErrorCode=U_STRING_NOT_TERMINATED_WARNING;                \
-        } else /* length>destCapacity */ {                              \
+        } अन्यथा /* length>destCapacity */ {                              \
             /* even the string itself did not fit - set an error code */ \
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;                        \
         }                                                               \
@@ -1454,34 +1454,34 @@ u_unescape(const char *src, char16_t *dest, int32_t destCapacity) {
 
 U_CAPI char16_t U_EXPORT2
 u_asciiToUpper(char16_t c) {
-    if (u'a' <= c && c <= u'z') {
+    यदि (u'a' <= c && c <= u'z') {
         c = c + u'A' - u'a';
     }
-    return c;
+    फर्काऊ c;
 }
 
 U_CAPI int32_t U_EXPORT2
 u_terminateUChars(char16_t *dest, int32_t destCapacity, int32_t length, UErrorCode *pErrorCode) {
     __TERMINATE_STRING(dest, destCapacity, length, pErrorCode);
-    return length;
+    फर्काऊ length;
 }
 
 U_CAPI int32_t U_EXPORT2
-u_terminateChars(char *dest, int32_t destCapacity, int32_t length, UErrorCode *pErrorCode) {
+u_terminateChars(वर्ण *dest, int32_t destCapacity, int32_t length, UErrorCode *pErrorCode) {
     __TERMINATE_STRING(dest, destCapacity, length, pErrorCode);
-    return length;
+    फर्काऊ length;
 }
 
 U_CAPI int32_t U_EXPORT2
 u_terminateUChar32s(UChar32 *dest, int32_t destCapacity, int32_t length, UErrorCode *pErrorCode) {
     __TERMINATE_STRING(dest, destCapacity, length, pErrorCode);
-    return length;
+    फर्काऊ length;
 }
 
 U_CAPI int32_t U_EXPORT2
-u_terminateWChars(wchar_t *dest, int32_t destCapacity, int32_t length, UErrorCode *pErrorCode) {
+u_terminateWChars(ब_अक्षर_प्रकार *dest, int32_t destCapacity, int32_t length, UErrorCode *pErrorCode) {
     __TERMINATE_STRING(dest, destCapacity, length, pErrorCode);
-    return length;
+    फर्काऊ length;
 }
 
 // Compute the hash code for a string -------------------------------------- ***
@@ -1500,31 +1500,31 @@ u_terminateWChars(wchar_t *dest, int32_t destCapacity, int32_t length, UErrorCod
 
 #define STRING_HASH(TYPE, STR, STRLEN, DEREF) UPRV_BLOCK_MACRO_BEGIN { \
     uint32_t hash = 0;                        \
-    const TYPE *p = (const TYPE*) STR;        \
-    if (p != nullptr) {                          \
+    अचर TYPE *p = (अचर TYPE*) STR;        \
+    यदि (p != nullptr) {                          \
         int32_t len = (int32_t)(STRLEN);      \
         int32_t inc = ((len - 32) / 32) + 1;  \
-        const TYPE *limit = p + len;          \
-        while (p<limit) {                     \
+        अचर TYPE *limit = p + len;          \
+        जबसम्म (p<limit) {                     \
             hash = (hash * 37) + DEREF;       \
             p += inc;                         \
         }                                     \
     }                                         \
-    return static_cast<int32_t>(hash);        \
+    फर्काऊ static_cast<int32_t>(hash);        \
 } UPRV_BLOCK_MACRO_END
 
 /* Used by UnicodeString to compute its hashcode - Not public API. */
 U_CAPI int32_t U_EXPORT2
-ustr_hashUCharsN(const char16_t *str, int32_t length) {
+ustr_hashUCharsN(अचर char16_t *str, int32_t length) {
     STRING_HASH(char16_t, str, length, *p);
 }
 
 U_CAPI int32_t U_EXPORT2
-ustr_hashCharsN(const char *str, int32_t length) {
+ustr_hashCharsN(अचर वर्ण *str, int32_t length) {
     STRING_HASH(uint8_t, str, length, *p);
 }
 
 U_CAPI int32_t U_EXPORT2
-ustr_hashICharsN(const char *str, int32_t length) {
-    STRING_HASH(char, str, length, (uint8_t)uprv_tolower(*p));
+ustr_hashICharsN(अचर वर्ण *str, int32_t length) {
+    STRING_HASH(वर्ण, str, length, (uint8_t)uprv_tolower(*p));
 }

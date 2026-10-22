@@ -48,15 +48,15 @@
 ******************************************************************************
 */
 
-#include "unicode/utypes.h"
-#include "unicode/resbund.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/resbund.h"
 
-#include "cmemory.h"
-#include "mutex.h"
-#include "uassert.h"
-#include "umutex.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "mutex.h"
+#अन्तर्भाव "uassert.h"
+#अन्तर्भाव "umutex.h"
 
-#include "uresimp.h"
+#अन्तर्भाव "uresimp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -182,14 +182,14 @@ ResourceBundle::ResourceBundle(UErrorCode &err)
     fResource = ures_open(nullptr, Locale::getDefault().getName(), &err);
 }
 
-ResourceBundle::ResourceBundle(const ResourceBundle &other)
+ResourceBundle::ResourceBundle(अचर ResourceBundle &other)
                               :UObject(other), fLocale(nullptr)
 {
     UErrorCode status = U_ZERO_ERROR;
 
-    if (other.fResource) {
+    यदि (other.fResource) {
         fResource = ures_copyResb(nullptr, other.fResource, &status);
-    } else {
+    } अन्यथा {
         /* Copying a bad resource bundle */
         fResource = nullptr;
     }
@@ -198,201 +198,201 @@ ResourceBundle::ResourceBundle(const ResourceBundle &other)
 ResourceBundle::ResourceBundle(UResourceBundle *res, UErrorCode& err)
                                :UObject(), fLocale(nullptr)
 {
-    if (res) {
+    यदि (res) {
         fResource = ures_copyResb(nullptr, res, &err);
-    } else {
+    } अन्यथा {
         /* Copying a bad resource bundle */
         fResource = nullptr;
     }
 }
 
-ResourceBundle::ResourceBundle(const char* path, const Locale& locale, UErrorCode& err) 
+ResourceBundle::ResourceBundle(अचर वर्ण* path, अचर Locale& locale, UErrorCode& err) 
                                :UObject(), fLocale(nullptr)
 {
     fResource = ures_open(path, locale.getName(), &err);
 }
 
 
-ResourceBundle& ResourceBundle::operator=(const ResourceBundle& other) U_LIFETIME_BOUND
+ResourceBundle& ResourceBundle::चालक=(अचर ResourceBundle& other) U_LIFETIME_BOUND
 {
-    if(this == &other) {
-        return *this;
+    यदि(एतत् == &other) {
+        फर्काऊ *एतत्;
     }
-    if (fResource != nullptr) {
+    यदि (fResource != nullptr) {
         ures_close(fResource);
         fResource = nullptr;
     }
-    if (fLocale != nullptr) {
+    यदि (fLocale != nullptr) {
         delete fLocale;
         fLocale = nullptr;
     }
     UErrorCode status = U_ZERO_ERROR;
-    if (other.fResource) {
+    यदि (other.fResource) {
         fResource = ures_copyResb(nullptr, other.fResource, &status);
-    } else {
+    } अन्यथा {
         /* Copying a bad resource bundle */
         fResource = nullptr;
     }
-    return *this;
+    फर्काऊ *एतत्;
 }
 
 ResourceBundle::~ResourceBundle()
 {
-    if (fResource != nullptr) {
+    यदि (fResource != nullptr) {
         ures_close(fResource);
     }
     delete fLocale;
 }
 
 ResourceBundle *
-ResourceBundle::clone() const {
-    return new ResourceBundle(*this);
+ResourceBundle::clone() अचर {
+    फर्काऊ नूतन ResourceBundle(*एतत्);
 }
 
-UnicodeString ResourceBundle::getString(UErrorCode& status) const U_LIFETIME_BOUND {
+UnicodeString ResourceBundle::getString(UErrorCode& status) अचर U_LIFETIME_BOUND {
     int32_t len = 0;
-    const char16_t *r = ures_getString(fResource, &len, &status);
-    return UnicodeString(true, r, len);
+    अचर char16_t *r = ures_getString(fResource, &len, &status);
+    फर्काऊ UnicodeString(सत्य, r, len);
 }
 
-const uint8_t* ResourceBundle::getBinary(int32_t& len, UErrorCode& status) const U_LIFETIME_BOUND {
-    return ures_getBinary(fResource, &len, &status);
+अचर uint8_t* ResourceBundle::get_द्विआधारी(int32_t& len, UErrorCode& status) अचर U_LIFETIME_BOUND {
+    फर्काऊ ures_get_द्विआधारी(fResource, &len, &status);
 }
 
-const int32_t* ResourceBundle::getIntVector(int32_t& len,
-                                            UErrorCode& status) const U_LIFETIME_BOUND {
-    return ures_getIntVector(fResource, &len, &status);
+अचर int32_t* ResourceBundle::getIntVector(int32_t& len,
+                                            UErrorCode& status) अचर U_LIFETIME_BOUND {
+    फर्काऊ ures_getIntVector(fResource, &len, &status);
 }
 
-uint32_t ResourceBundle::getUInt(UErrorCode& status) const {
-    return ures_getUInt(fResource, &status);
+uint32_t ResourceBundle::getUInt(UErrorCode& status) अचर {
+    फर्काऊ ures_getUInt(fResource, &status);
 }
 
-int32_t ResourceBundle::getInt(UErrorCode& status) const {
-    return ures_getInt(fResource, &status);
+int32_t ResourceBundle::getInt(UErrorCode& status) अचर {
+    फर्काऊ ures_getInt(fResource, &status);
 }
 
-const char* ResourceBundle::getName() const U_LIFETIME_BOUND {
-    return ures_getName(fResource);
+अचर वर्ण* ResourceBundle::getName() अचर U_LIFETIME_BOUND {
+    फर्काऊ ures_getName(fResource);
 }
 
-const char* ResourceBundle::getKey() const U_LIFETIME_BOUND {
-    return ures_getKey(fResource);
+अचर वर्ण* ResourceBundle::get_साँचो() अचर U_LIFETIME_BOUND {
+    फर्काऊ ures_get_साँचो(fResource);
 }
 
-UResType ResourceBundle::getType() const {
-    return ures_getType(fResource);
+UResType ResourceBundle::getType() अचर {
+    फर्काऊ ures_getType(fResource);
 }
 
-int32_t ResourceBundle::getSize() const {
-    return ures_getSize(fResource);
+int32_t ResourceBundle::getSize() अचर {
+    फर्काऊ ures_getSize(fResource);
 }
 
-UBool ResourceBundle::hasNext() const {
-    return ures_hasNext(fResource);
+UBool ResourceBundle::hasNext() अचर {
+    फर्काऊ ures_hasNext(fResource);
 }
 
-void ResourceBundle::resetIterator() {
+शून्य ResourceBundle::resetIterator() {
     ures_resetIterator(fResource);
 }
 
 ResourceBundle ResourceBundle::getNext(UErrorCode& status) {
     UResourceBundle r;
 
-    ures_initStackObject(&r);
+    ures_init_थाक_Object(&r);
     ures_getNextResource(fResource, &r, &status);
     ResourceBundle res(&r, status);
-    if (U_SUCCESS(status)) {
+    यदि (U_SUCCESS(status)) {
         ures_close(&r);
     }
-    return res;
+    फर्काऊ res;
 }
 
 UnicodeString ResourceBundle::getNextString(UErrorCode& status) U_LIFETIME_BOUND {
     int32_t len = 0;
-    const char16_t* r = ures_getNextString(fResource, &len, nullptr, &status);
-    return UnicodeString(true, r, len);
+    अचर char16_t* r = ures_getNextString(fResource, &len, nullptr, &status);
+    फर्काऊ UnicodeString(सत्य, r, len);
 }
 
-UnicodeString ResourceBundle::getNextString(const char** key, UErrorCode& status) U_LIFETIME_BOUND {
+UnicodeString ResourceBundle::getNextString(अचर वर्ण** साँचो, UErrorCode& status) U_LIFETIME_BOUND {
     int32_t len = 0;
-    const char16_t* r = ures_getNextString(fResource, &len, key, &status);
-    return UnicodeString(true, r, len);
+    अचर char16_t* r = ures_getNextString(fResource, &len, साँचो, &status);
+    फर्काऊ UnicodeString(सत्य, r, len);
 }
 
-ResourceBundle ResourceBundle::get(int32_t indexR, UErrorCode& status) const {
+ResourceBundle ResourceBundle::get(int32_t indexR, UErrorCode& status) अचर {
     UResourceBundle r;
 
-    ures_initStackObject(&r);
+    ures_init_थाक_Object(&r);
     ures_getByIndex(fResource, indexR, &r, &status);
     ResourceBundle res(&r, status);
-    if (U_SUCCESS(status)) {
+    यदि (U_SUCCESS(status)) {
         ures_close(&r);
     }
-    return res;
+    फर्काऊ res;
 }
 
 UnicodeString ResourceBundle::getStringEx(int32_t indexS,
-                                          UErrorCode& status) const U_LIFETIME_BOUND {
+                                          UErrorCode& status) अचर U_LIFETIME_BOUND {
     int32_t len = 0;
-    const char16_t* r = ures_getStringByIndex(fResource, indexS, &len, &status);
-    return UnicodeString(true, r, len);
+    अचर char16_t* r = ures_getStringByIndex(fResource, indexS, &len, &status);
+    फर्काऊ UnicodeString(सत्य, r, len);
 }
 
-ResourceBundle ResourceBundle::get(const char* key, UErrorCode& status) const {
+ResourceBundle ResourceBundle::get(अचर वर्ण* साँचो, UErrorCode& status) अचर {
     UResourceBundle r;
 
-    ures_initStackObject(&r);
-    ures_getByKey(fResource, key, &r, &status);
+    ures_init_थाक_Object(&r);
+    ures_get_By_साँचो(fResource, साँचो, &r, &status);
     ResourceBundle res(&r, status);
-    if (U_SUCCESS(status)) {
+    यदि (U_SUCCESS(status)) {
         ures_close(&r);
     }
-    return res;
+    फर्काऊ res;
 }
 
-ResourceBundle ResourceBundle::getWithFallback(const char* key, UErrorCode& status){
+ResourceBundle ResourceBundle::getWithFallback(अचर वर्ण* साँचो, UErrorCode& status){
     UResourceBundle r;
-    ures_initStackObject(&r);
-    ures_getByKeyWithFallback(fResource, key, &r, &status);
+    ures_init_थाक_Object(&r);
+    ures_get_By_साँचो_With_Fallback(fResource, साँचो, &r, &status);
     ResourceBundle res(&r, status);
-    if(U_SUCCESS(status)){
+    यदि(U_SUCCESS(status)){
         ures_close(&r);
     }
-    return res;
+    फर्काऊ res;
 }
 
-UnicodeString ResourceBundle::getStringEx(const char* key,
-                                          UErrorCode& status) const U_LIFETIME_BOUND {
+UnicodeString ResourceBundle::getStringEx(अचर वर्ण* साँचो,
+                                          UErrorCode& status) अचर U_LIFETIME_BOUND {
     int32_t len = 0;
-    const char16_t* r = ures_getStringByKey(fResource, key, &len, &status);
-    return UnicodeString(true, r, len);
+    अचर char16_t* r = ures_get_String_By_साँचो(fResource, साँचो, &len, &status);
+    फर्काऊ UnicodeString(सत्य, r, len);
 }
 
-const char* ResourceBundle::getVersionNumber() const U_LIFETIME_BOUND {
-    return ures_getVersionNumberInternal(fResource);
+अचर वर्ण* ResourceBundle::get_Version_सङ्ख्या() अचर U_LIFETIME_BOUND {
+    फर्काऊ ures_get_Version_सङ्ख्या_Internal(fResource);
 }
 
-void ResourceBundle::getVersion(UVersionInfo versionInfo) const {
+शून्य ResourceBundle::getVersion(UVersionInfo versionInfo) अचर {
     ures_getVersion(fResource, versionInfo);
 }
 
-const Locale& ResourceBundle::getLocale() const U_LIFETIME_BOUND {
-    static UMutex gLocaleLock;
+अचर Locale& ResourceBundle::getLocale() अचर U_LIFETIME_BOUND {
+    स्थिर UMutex gLocaleLock;
     Mutex lock(&gLocaleLock);
-    if (fLocale != nullptr) {
-        return *fLocale;
+    यदि (fLocale != nullptr) {
+        फर्काऊ *fLocale;
     }
     UErrorCode status = U_ZERO_ERROR;
-    const char *localeName = ures_getLocaleInternal(fResource, &status);
-    ResourceBundle *ncThis = const_cast<ResourceBundle *>(this);
-    ncThis->fLocale = new Locale(localeName);
-    return ncThis->fLocale != nullptr ? *ncThis->fLocale : Locale::getDefault();
+    अचर वर्ण *localeName = ures_getLocaleInternal(fResource, &status);
+    ResourceBundle *ncThis = const_cast<ResourceBundle *>(एतत्);
+    ncThis->fLocale = नूतन Locale(localeName);
+    फर्काऊ ncThis->fLocale != nullptr ? *ncThis->fLocale : Locale::getDefault();
 }
 
-Locale ResourceBundle::getLocale(ULocDataLocaleType type, UErrorCode &status) const
+Locale ResourceBundle::getLocale(ULocDataLocaleType type, UErrorCode &status) अचर
 {
-  return ures_getLocaleByType(fResource, type, &status);
+  फर्काऊ ures_getLocaleByType(fResource, type, &status);
 }
 
 U_NAMESPACE_END

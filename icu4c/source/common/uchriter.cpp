@@ -7,12 +7,12 @@
 ******************************************************************************
 */
 
-#include "utypeinfo.h"  // for 'typeid' to work
+#अन्तर्भाव "utypeinfo.h"  // for 'typeid' to work
 
-#include "unicode/uchriter.h"
-#include "unicode/ustring.h"
-#include "unicode/utf16.h"
-#include "ustr_imp.h"
+#अन्तर्भाव "unicode/uchriter.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "unicode/utf16.h"
+#अन्तर्भाव "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -51,34 +51,34 @@ UCharCharacterIterator::UCharCharacterIterator(ConstChar16Ptr textPtr U_LIFETIME
 {
 }
 
-UCharCharacterIterator::UCharCharacterIterator(const UCharCharacterIterator& that)
+UCharCharacterIterator::UCharCharacterIterator(अचर UCharCharacterIterator& that)
 : CharacterIterator(that),
   text(that.text)
 {
 }
 
 UCharCharacterIterator&
-UCharCharacterIterator::operator=(const UCharCharacterIterator& that) U_LIFETIME_BOUND {
-    CharacterIterator::operator=(that);
+UCharCharacterIterator::चालक=(अचर UCharCharacterIterator& that) U_LIFETIME_BOUND {
+    CharacterIterator::चालक=(that);
     text = that.text;
-    return *this;
+    फर्काऊ *एतत्;
 }
 
 UCharCharacterIterator::~UCharCharacterIterator() {
 }
 
-bool
-UCharCharacterIterator::operator==(const ForwardCharacterIterator& that) const {
-    if (this == &that) {
-        return true;
+तार्किक
+UCharCharacterIterator::चालक==(अचर ForwardCharacterIterator& that) अचर {
+    यदि (एतत् == &that) {
+        फर्काऊ सत्य;
     }
-    if (typeid(*this) != typeid(that)) {
-        return false;
+    यदि (typeid(*एतत्) != typeid(that)) {
+        फर्काऊ असत्य;
     }
 
-    const UCharCharacterIterator&    realThat = static_cast<const UCharCharacterIterator&>(that);
+    अचर UCharCharacterIterator&    realThat = static_cast<अचर UCharCharacterIterator&>(that);
 
-    return text == realThat.text
+    फर्काऊ text == realThat.text
         && textLength == realThat.textLength
         && pos == realThat.pos
         && begin == realThat.begin
@@ -86,281 +86,281 @@ UCharCharacterIterator::operator==(const ForwardCharacterIterator& that) const {
 }
 
 int32_t
-UCharCharacterIterator::hashCode() const {
-    return ustr_hashUCharsN(text, textLength) ^ pos ^ begin ^ end;
+UCharCharacterIterator::hashCode() अचर {
+    फर्काऊ ustr_hashUCharsN(text, textLength) ^ pos ^ begin ^ end;
 }
 
 UCharCharacterIterator*
-UCharCharacterIterator::clone() const {
-    return new UCharCharacterIterator(*this);
+UCharCharacterIterator::clone() अचर {
+    फर्काऊ नूतन UCharCharacterIterator(*एतत्);
 }
 
 char16_t
 UCharCharacterIterator::first() {
     pos = begin;
-    if(pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    यदि(pos < end) {
+        फर्काऊ text[pos];
+    } अन्यथा {
+        फर्काऊ DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::firstPostInc() {
     pos = begin;
-    if(pos < end) {
-        return text[pos++];
-    } else {
-        return DONE;
+    यदि(pos < end) {
+        फर्काऊ text[pos++];
+    } अन्यथा {
+        फर्काऊ DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::last() {
     pos = end;
-    if(pos > begin) {
-        return text[--pos];
-    } else {
-        return DONE;
+    यदि(pos > begin) {
+        फर्काऊ text[--pos];
+    } अन्यथा {
+        फर्काऊ DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::setIndex(int32_t position) {
-    if(position < begin) {
+    यदि(position < begin) {
         pos = begin;
-    } else if(position > end) {
+    } अन्यथा यदि(position > end) {
         pos = end;
-    } else {
+    } अन्यथा {
         pos = position;
     }
-    if(pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    यदि(pos < end) {
+        फर्काऊ text[pos];
+    } अन्यथा {
+        फर्काऊ DONE;
     }
 }
 
 char16_t
-UCharCharacterIterator::current() const {
-    if (pos >= begin && pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+UCharCharacterIterator::current() अचर {
+    यदि (pos >= begin && pos < end) {
+        फर्काऊ text[pos];
+    } अन्यथा {
+        फर्काऊ DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::next() {
-    if (pos + 1 < end) {
-        return text[++pos];
-    } else {
+    यदि (pos + 1 < end) {
+        फर्काऊ text[++pos];
+    } अन्यथा {
         /* make current() return DONE */
         pos = end;
-        return DONE;
+        फर्काऊ DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::nextPostInc() {
-    if (pos < end) {
-        return text[pos++];
-    } else {
-        return DONE;
+    यदि (pos < end) {
+        फर्काऊ text[pos++];
+    } अन्यथा {
+        फर्काऊ DONE;
     }
 }
 
 UBool
 UCharCharacterIterator::hasNext() {
-    return pos < end;
+    फर्काऊ pos < end;
 }
 
 char16_t
 UCharCharacterIterator::previous() {
-    if (pos > begin) {
-        return text[--pos];
-    } else {
-        return DONE;
+    यदि (pos > begin) {
+        फर्काऊ text[--pos];
+    } अन्यथा {
+        फर्काऊ DONE;
     }
 }
 
 UBool
 UCharCharacterIterator::hasPrevious() {
-    return pos > begin;
+    फर्काऊ pos > begin;
 }
 
 UChar32
 UCharCharacterIterator::first32() {
     pos = begin;
-    if(pos < end) {
+    यदि(pos < end) {
         int32_t i = pos;
         UChar32 c;
         U16_NEXT(text, i, end, c);
-        return c;
-    } else {
-        return DONE;
+        फर्काऊ c;
+    } अन्यथा {
+        फर्काऊ DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::first32PostInc() {
     pos = begin;
-    if(pos < end) {
+    यदि(pos < end) {
         UChar32 c;
         U16_NEXT(text, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        फर्काऊ c;
+    } अन्यथा {
+        फर्काऊ DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::last32() {
     pos = end;
-    if(pos > begin) {
+    यदि(pos > begin) {
         UChar32 c;
         U16_PREV(text, begin, pos, c);
-        return c;
-    } else {
-        return DONE;
+        फर्काऊ c;
+    } अन्यथा {
+        फर्काऊ DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::setIndex32(int32_t position) {
-    if(position < begin) {
+    यदि(position < begin) {
         position = begin;
-    } else if(position > end) {
+    } अन्यथा यदि(position > end) {
         position = end;
     }
-    if(position < end) {
+    यदि(position < end) {
         U16_SET_CP_START(text, begin, position);
-        int32_t i = this->pos = position;
+        int32_t i = एतत्->pos = position;
         UChar32 c;
         U16_NEXT(text, i, end, c);
-        return c;
-    } else {
-        this->pos = position;
-        return DONE;
+        फर्काऊ c;
+    } अन्यथा {
+        एतत्->pos = position;
+        फर्काऊ DONE;
     }
 }
 
 UChar32
-UCharCharacterIterator::current32() const {
-    if (pos >= begin && pos < end) {
+UCharCharacterIterator::current32() अचर {
+    यदि (pos >= begin && pos < end) {
         UChar32 c;
         U16_GET(text, begin, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        फर्काऊ c;
+    } अन्यथा {
+        फर्काऊ DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::next32() {
-    if (pos < end) {
+    यदि (pos < end) {
         U16_FWD_1(text, pos, end);
-        if(pos < end) {
+        यदि(pos < end) {
             int32_t i = pos;
             UChar32 c;
             U16_NEXT(text, i, end, c);
-            return c;
+            फर्काऊ c;
         }
     }
     /* make current() return DONE */
     pos = end;
-    return DONE;
+    फर्काऊ DONE;
 }
 
 UChar32
 UCharCharacterIterator::next32PostInc() {
-    if (pos < end) {
+    यदि (pos < end) {
         UChar32 c;
         U16_NEXT(text, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        फर्काऊ c;
+    } अन्यथा {
+        फर्काऊ DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::previous32() {
-    if (pos > begin) {
+    यदि (pos > begin) {
         UChar32 c;
         U16_PREV(text, begin, pos, c);
-        return c;
-    } else {
-        return DONE;
+        फर्काऊ c;
+    } अन्यथा {
+        फर्काऊ DONE;
     }
 }
 
 int32_t
 UCharCharacterIterator::move(int32_t delta, CharacterIterator::EOrigin origin) {
-    switch(origin) {
-    case kStart:
+    विकल्प(origin) {
+    पक्ष kStart:
         pos = begin + delta;
-        break;
-    case kCurrent:
+        रोक;
+    पक्ष kCurrent:
         pos += delta;
-        break;
-    case kEnd:
+        रोक;
+    पक्ष kEnd:
         pos = end + delta;
-        break;
-    default:
-        break;
+        रोक;
+    स्वभाव:
+        रोक;
     }
 
-    if(pos < begin) {
+    यदि(pos < begin) {
         pos = begin;
-    } else if(pos > end) {
+    } अन्यथा यदि(pos > end) {
         pos = end;
     }
 
-    return pos;
+    फर्काऊ pos;
 }
 
 int32_t
 UCharCharacterIterator::move32(int32_t delta, CharacterIterator::EOrigin origin) {
     // this implementation relies on the "safe" version of the UTF macros
     // (or the trustworthiness of the caller)
-    switch(origin) {
-    case kStart:
+    विकल्प(origin) {
+    पक्ष kStart:
         pos = begin;
-        if(delta > 0) {
+        यदि(delta > 0) {
             U16_FWD_N(text, pos, end, delta);
         }
-        break;
-    case kCurrent:
-        if(delta > 0) {
+        रोक;
+    पक्ष kCurrent:
+        यदि(delta > 0) {
             U16_FWD_N(text, pos, end, delta);
-        } else {
+        } अन्यथा {
             U16_BACK_N(text, begin, pos, -delta);
         }
-        break;
-    case kEnd:
+        रोक;
+    पक्ष kEnd:
         pos = end;
-        if(delta < 0) {
+        यदि(delta < 0) {
             U16_BACK_N(text, begin, pos, -delta);
         }
-        break;
-    default:
-        break;
+        रोक;
+    स्वभाव:
+        रोक;
     }
 
-    return pos;
+    फर्काऊ pos;
 }
 
-void UCharCharacterIterator::setText(ConstChar16Ptr newText,
+शून्य UCharCharacterIterator::setText(ConstChar16Ptr newText,
                                      int32_t      newTextLength) {
     text = newText;
-    if (newText == nullptr || newTextLength < 0) {
+    यदि (newText == nullptr || newTextLength < 0) {
         newTextLength = 0;
     }
     end = textLength = newTextLength;
     pos = begin = 0;
 }
 
-void
+शून्य
 UCharCharacterIterator::getText(UnicodeString& result) {
     result = UnicodeString(text, textLength);
 }

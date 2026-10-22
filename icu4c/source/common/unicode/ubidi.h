@@ -19,12 +19,12 @@
 #ifndef UBIDI_H
 #define UBIDI_H
 
-#include "unicode/unistr.h"
-#include "unicode/utypes.h"
-#include "unicode/uchar.h"
+#अन्तर्भाव "unicode/unistr.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/uchar.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
+#यदि U_SHOW_CPLUSPLUS_API
+#अन्तर्भाव "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
 /**
@@ -338,7 +338,7 @@
  * @see UBIDI_MAX_EXPLICIT_LEVEL
  * @stable ICU 2.0
  */
-typedef uint8_t UBiDiLevel;
+प्रकारनिर्देश uint8_t UBiDiLevel;
 
 /** Paragraph level setting.<p>
  *
@@ -427,7 +427,7 @@ typedef uint8_t UBiDiLevel;
  * <code>UBiDiDirection</code> values indicate the text direction.
  * @stable ICU 2.0
  */
-enum UBiDiDirection {
+गणना UBiDiDirection {
   /** Left-to-right text. This is a 0 value.
    * <ul>
    * <li>As return value for <code>ubidi_getDirection()</code>, it means
@@ -469,7 +469,7 @@ enum UBiDiDirection {
 };
 
 /** @stable ICU 2.0 */
-typedef enum UBiDiDirection UBiDiDirection;
+प्रकारनिर्देश गणना UBiDiDirection UBiDiDirection;
 
 /**
  * Forward declaration of the <code>UBiDi</code> structure for the declaration of
@@ -481,10 +481,10 @@ typedef enum UBiDiDirection UBiDiDirection;
  * then interpreted each as one single line.
  * @stable ICU 2.0
  */
-struct UBiDi;
+संरचना UBiDi;
 
 /** @stable ICU 2.0 */
-typedef struct UBiDi UBiDi;
+प्रकारनिर्देश संरचना UBiDi UBiDi;
 
 /**
  * Allocate a <code>UBiDi</code> structure.
@@ -502,7 +502,7 @@ typedef struct UBiDi UBiDi;
  * @stable ICU 2.0
  */
 U_CAPI UBiDi * U_EXPORT2
-ubidi_open(void);
+ubidi_open(शून्य);
 
 /**
  * Allocate a <code>UBiDi</code> structure with preallocated memory
@@ -539,7 +539,7 @@ ubidi_open(void);
  * @stable ICU 2.0
  */
 U_CAPI UBiDi * U_EXPORT2
-ubidi_openSized(int32_t maxLength, int32_t maxRunCount, UErrorCode *pErrorCode);
+ubidi_openSized(int32_t maxLength, int32_t max_Run_गन्ती, UErrorCode *pErrorCode);
 
 /**
  * <code>ubidi_close()</code> must be called to free the memory
@@ -561,10 +561,10 @@ ubidi_openSized(int32_t maxLength, int32_t maxRunCount, UErrorCode *pErrorCode);
  * @see ubidi_setLine
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ubidi_close(UBiDi *pBiDi);
 
-#if U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -631,7 +631,7 @@ U_NAMESPACE_END
  * @see ubidi_setReorderingMode
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ubidi_setInverse(UBiDi *pBiDi, UBool isInverse);
 
 /**
@@ -673,7 +673,7 @@ ubidi_isInverse(UBiDi *pBiDi);
  * @see ubidi_setPara
  * @stable ICU 3.4
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ubidi_orderParagraphsLTR(UBiDi *pBiDi, UBool orderParagraphsLTR);
 
 /**
@@ -697,7 +697,7 @@ ubidi_isOrderParagraphsLTR(UBiDi *pBiDi);
  * @see ubidi_setReorderingMode
  * @stable ICU 3.6
  */
-typedef enum UBiDiReorderingMode {
+प्रकारनिर्देश गणना UBiDiReorderingMode {
     /** Regular Logical to Visual Bidi algorithm according to Unicode.
       * This is a 0 value.
       * @stable ICU 3.6 */
@@ -736,7 +736,7 @@ typedef enum UBiDiReorderingMode {
      * Number of values for reordering mode.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UBIDI_REORDER_COUNT
+    UBIDI_REORDER_गन्ती
 #endif  // U_HIDE_DEPRECATED_API
 } UBiDiReorderingMode;
 
@@ -891,7 +891,7 @@ typedef enum UBiDiReorderingMode {
  * @see ubidi_writeReordered
  * @stable ICU 3.6
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ubidi_setReorderingMode(UBiDi *pBiDi, UBiDiReorderingMode reorderingMode);
 
 /**
@@ -912,7 +912,7 @@ ubidi_getReorderingMode(UBiDi *pBiDi);
  * @see ubidi_setReorderingOptions
  * @stable ICU 3.6
  */
-typedef enum UBiDiReorderingOption {
+प्रकारनिर्देश गणना UBiDiReorderingOption {
     /**
      * option value for <code>ubidi_setReorderingOptions</code>:
      * disable all the options which can be set with this function
@@ -965,7 +965,7 @@ typedef enum UBiDiReorderingOption {
      * @see ubidi_setReorderingOptions
      * @stable ICU 3.6
      */
-    UBIDI_OPTION_INSERT_MARKS = 1,
+    UBIDI_OPTION_घुसाउ_MARKS = 1,
 
     /**
      * option bit for <code>ubidi_setReorderingOptions</code>:
@@ -1047,7 +1047,7 @@ typedef enum UBiDiReorderingOption {
  * @see ubidi_getReorderingOptions
  * @stable ICU 3.6
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ubidi_setReorderingOptions(UBiDi *pBiDi, uint32_t reorderingOptions);
 
 /**
@@ -1145,10 +1145,10 @@ ubidi_getReorderingOptions(UBiDi *pBiDi);
  * @see ubidi_setPara
  * @stable ICU 4.8
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ubidi_setContext(UBiDi *pBiDi,
-                 const UChar *prologue, int32_t proLength,
-                 const UChar *epilogue, int32_t epiLength,
+                 अचर UChar *prologue, int32_t proLength,
+                 अचर UChar *epilogue, int32_t epiLength,
                  UErrorCode *pErrorCode);
 
 /**
@@ -1233,8 +1233,8 @@ ubidi_setContext(UBiDi *pBiDi,
  * @param pErrorCode must be a valid pointer to an error code value.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ubidi_setPara(UBiDi *pBiDi, const UChar *text, int32_t length,
+U_CAPI शून्य U_EXPORT2
+ubidi_setPara(UBiDi *pBiDi, अचर UChar *text, int32_t length,
               UBiDiLevel paraLevel, UBiDiLevel *embeddingLevels,
               UErrorCode *pErrorCode);
 
@@ -1284,10 +1284,10 @@ ubidi_setPara(UBiDi *pBiDi, const UChar *text, int32_t length,
  * @see ubidi_getProcessedLength
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ubidi_setLine(const UBiDi *pParaBiDi,
+U_CAPI शून्य U_EXPORT2
+ubidi_set_पङ्क्ति(अचर UBiDi *pParaBiDi,
               int32_t start, int32_t limit,
-              UBiDi *pLineBiDi,
+              UBiDi *p_पङ्क्ति_Bi_Di,
               UErrorCode *pErrorCode);
 
 /**
@@ -1306,7 +1306,7 @@ ubidi_setLine(const UBiDi *pParaBiDi,
  * @stable ICU 2.0
  */
 U_CAPI UBiDiDirection U_EXPORT2
-ubidi_getDirection(const UBiDi *pBiDi);
+ubidi_getDirection(अचर UBiDi *pBiDi);
 
 /**
  * Gets the base direction of the text provided according
@@ -1336,7 +1336,7 @@ ubidi_getDirection(const UBiDi *pBiDi);
  * @stable ICU 4.6
  */
 U_CAPI UBiDiDirection U_EXPORT2
-ubidi_getBaseDirection(const UChar *text,  int32_t length );
+ubidi_getBaseDirection(अचर UChar *text,  int32_t length );
 
 /**
  * Get the pointer to the text.
@@ -1349,8 +1349,8 @@ ubidi_getBaseDirection(const UChar *text,  int32_t length );
  * @see ubidi_setLine
  * @stable ICU 2.0
  */
-U_CAPI const UChar* U_EXPORT2
-ubidi_getText(const UBiDi* pBiDi);
+U_CAPI अचर UChar* U_EXPORT2
+ubidi_getText(अचर UBiDi* pBiDi);
 
 /**
  * Get the length of the text.
@@ -1361,7 +1361,7 @@ ubidi_getText(const UBiDi* pBiDi);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ubidi_getLength(const UBiDi *pBiDi);
+ubidi_getLength(अचर UBiDi *pBiDi);
 
 /**
  * Get the paragraph level of the text.
@@ -1379,7 +1379,7 @@ ubidi_getLength(const UBiDi *pBiDi);
  * @stable ICU 2.0
  */
 U_CAPI UBiDiLevel U_EXPORT2
-ubidi_getParaLevel(const UBiDi *pBiDi);
+ubidi_getParaLevel(अचर UBiDi *pBiDi);
 
 /**
  * Get the number of paragraphs.
@@ -1390,7 +1390,7 @@ ubidi_getParaLevel(const UBiDi *pBiDi);
  * @stable ICU 3.4
  */
 U_CAPI int32_t U_EXPORT2
-ubidi_countParagraphs(UBiDi *pBiDi);
+ubidi_गन्ती_Paragraphs(UBiDi *pBiDi);
 
 /**
  * Get a paragraph, given a position within the text.
@@ -1427,7 +1427,7 @@ ubidi_countParagraphs(UBiDi *pBiDi);
  * @stable ICU 3.4
  */
 U_CAPI int32_t U_EXPORT2
-ubidi_getParagraph(const UBiDi *pBiDi, int32_t charIndex, int32_t *pParaStart,
+ubidi_getParagraph(अचर UBiDi *pBiDi, int32_t charIndex, int32_t *pParaStart,
                    int32_t *pParaLimit, UBiDiLevel *pParaLevel,
                    UErrorCode *pErrorCode);
 
@@ -1458,8 +1458,8 @@ ubidi_getParagraph(const UBiDi *pBiDi, int32_t charIndex, int32_t *pParaStart,
  *
  * @stable ICU 3.4
  */
-U_CAPI void U_EXPORT2
-ubidi_getParagraphByIndex(const UBiDi *pBiDi, int32_t paraIndex,
+U_CAPI शून्य U_EXPORT2
+ubidi_getParagraphByIndex(अचर UBiDi *pBiDi, int32_t paraIndex,
                           int32_t *pParaStart, int32_t *pParaLimit,
                           UBiDiLevel *pParaLevel, UErrorCode *pErrorCode);
 
@@ -1479,7 +1479,7 @@ ubidi_getParagraphByIndex(const UBiDi *pBiDi, int32_t paraIndex,
  * @stable ICU 2.0
  */
 U_CAPI UBiDiLevel U_EXPORT2
-ubidi_getLevelAt(const UBiDi *pBiDi, int32_t charIndex);
+ubidi_getLevelAt(अचर UBiDi *pBiDi, int32_t charIndex);
 
 /**
  * Get an array of levels for each character.<p>
@@ -1499,7 +1499,7 @@ ubidi_getLevelAt(const UBiDi *pBiDi, int32_t charIndex);
  * @see ubidi_getProcessedLength
  * @stable ICU 2.0
  */
-U_CAPI const UBiDiLevel* U_EXPORT2
+U_CAPI अचर UBiDiLevel* U_EXPORT2
 ubidi_getLevels(UBiDi* pBiDi, UErrorCode* pErrorCode);
 
 /**
@@ -1526,8 +1526,8 @@ ubidi_getLevels(UBiDi* pBiDi, UErrorCode* pErrorCode);
  * @see ubidi_getProcessedLength
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ubidi_getLogicalRun(const UBiDi *pBiDi, int32_t logicalPosition,
+U_CAPI शून्य U_EXPORT2
+ubidi_getLogicalRun(अचर UBiDi *pBiDi, int32_t logicalPosition,
                     int32_t *pLogicalLimit, UBiDiLevel *pLevel);
 
 /**
@@ -1546,7 +1546,7 @@ ubidi_getLogicalRun(const UBiDi *pBiDi, int32_t logicalPosition,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ubidi_countRuns(UBiDi *pBiDi, UErrorCode *pErrorCode);
+ubidi_गन्ती_Runs(UBiDi *pBiDi, UErrorCode *pErrorCode);
 
 /**
  * Get one run's logical start, length, and directionality,
@@ -1723,7 +1723,7 @@ ubidi_getLogicalIndex(UBiDi *pBiDi, int32_t visualIndex, UErrorCode *pErrorCode)
  * @see ubidi_getResultLength
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ubidi_getLogicalMap(UBiDi *pBiDi, int32_t *indexMap, UErrorCode *pErrorCode);
 
 /**
@@ -1759,7 +1759,7 @@ ubidi_getLogicalMap(UBiDi *pBiDi, int32_t *indexMap, UErrorCode *pErrorCode);
  * @see ubidi_getResultLength
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ubidi_getVisualMap(UBiDi *pBiDi, int32_t *indexMap, UErrorCode *pErrorCode);
 
 /**
@@ -1782,8 +1782,8 @@ ubidi_getVisualMap(UBiDi *pBiDi, int32_t *indexMap, UErrorCode *pErrorCode);
  *        The index map will result in <code>indexMap[logicalIndex]==visualIndex</code>.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ubidi_reorderLogical(const UBiDiLevel *levels, int32_t length, int32_t *indexMap);
+U_CAPI शून्य U_EXPORT2
+ubidi_reorderLogical(अचर UBiDiLevel *levels, int32_t length, int32_t *indexMap);
 
 /**
  * This is a convenience function that does not use a UBiDi object.
@@ -1805,8 +1805,8 @@ ubidi_reorderLogical(const UBiDiLevel *levels, int32_t length, int32_t *indexMap
  *        The index map will result in <code>indexMap[visualIndex]==logicalIndex</code>.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ubidi_reorderVisual(const UBiDiLevel *levels, int32_t length, int32_t *indexMap);
+U_CAPI शून्य U_EXPORT2
+ubidi_reorderVisual(अचर UBiDiLevel *levels, int32_t length, int32_t *indexMap);
 
 /**
  * Invert an index map.
@@ -1840,8 +1840,8 @@ ubidi_reorderVisual(const UBiDiLevel *levels, int32_t length, int32_t *indexMap)
  * @see UBIDI_MAP_NOWHERE
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ubidi_invertMap(const int32_t *srcMap, int32_t *destMap, int32_t length);
+U_CAPI शून्य U_EXPORT2
+ubidi_invertMap(अचर int32_t *srcMap, int32_t *destMap, int32_t length);
 
 /** option flags for ubidi_writeReordered() */
 
@@ -1876,7 +1876,7 @@ ubidi_invertMap(const int32_t *srcMap, int32_t *destMap, int32_t length);
  * @see ubidi_writeReordered
  * @stable ICU 2.0
  */
-#define UBIDI_INSERT_LRM_FOR_NUMERIC    4
+#define UBIDI_घुसाउ_LRM_FOR_NUMERIC    4
 
 /**
  * option bit for ubidi_writeReordered():
@@ -1946,7 +1946,7 @@ ubidi_invertMap(const int32_t *srcMap, int32_t *destMap, int32_t length);
  * @stable ICU 3.6
  */
 U_CAPI int32_t U_EXPORT2
-ubidi_getProcessedLength(const UBiDi *pBiDi);
+ubidi_getProcessedLength(अचर UBiDi *pBiDi);
 
 /**
  * Get the length of the reordered text resulting from the last call to
@@ -1976,7 +1976,7 @@ ubidi_getProcessedLength(const UBiDi *pBiDi);
  * @stable ICU 3.6
  */
 U_CAPI int32_t U_EXPORT2
-ubidi_getResultLength(const UBiDi *pBiDi);
+ubidi_getResultLength(अचर UBiDi *pBiDi);
 
 U_CDECL_BEGIN
 
@@ -1990,7 +1990,7 @@ U_CDECL_BEGIN
  * @see UBiDiClassCallback
  * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
  */
-#define U_BIDI_CLASS_DEFAULT  U_CHAR_DIRECTION_COUNT
+#define U_BIDI_CLASS_DEFAULT  U_CHAR_DIRECTION_गन्ती
 #endif  // U_HIDE_DEPRECATED_API
 
 /**
@@ -2013,8 +2013,8 @@ U_CDECL_BEGIN
  * @see ubidi_getClassCallback
  * @stable ICU 3.6
  */
-typedef UCharDirection U_CALLCONV
-UBiDiClassCallback(const void *context, UChar32 c);
+प्रकारनिर्देश UCharDirection U_CALLCONV
+UBiDiClassCallback(अचर शून्य *context, UChar32 c);
 
 U_CDECL_END
 
@@ -2063,10 +2063,10 @@ ubidi_getCustomizedClass(UBiDi *pBiDi, UChar32 c);
  * @see ubidi_getClassCallback
  * @stable ICU 3.6
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ubidi_setClassCallback(UBiDi *pBiDi, UBiDiClassCallback *newFn,
-                       const void *newContext, UBiDiClassCallback **oldFn,
-                       const void **oldContext, UErrorCode *pErrorCode);
+                       अचर शून्य *newContext, UBiDiClassCallback **oldFn,
+                       अचर शून्य **oldContext, UErrorCode *pErrorCode);
 
 /**
  * Get the current callback function used for Bidi class determination.
@@ -2080,8 +2080,8 @@ ubidi_setClassCallback(UBiDi *pBiDi, UBiDiClassCallback *newFn,
  * @see ubidi_setClassCallback
  * @stable ICU 3.6
  */
-U_CAPI void U_EXPORT2
-ubidi_getClassCallback(UBiDi *pBiDi, UBiDiClassCallback **fn, const void **context);
+U_CAPI शून्य U_EXPORT2
+ubidi_getClassCallback(UBiDi *pBiDi, UBiDiClassCallback **fn, अचर शून्य **context);
 
 /**
  * Take a <code>UBiDi</code> object containing the reordering
@@ -2201,7 +2201,7 @@ ubidi_writeReordered(UBiDi *pBiDi,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ubidi_writeReverse(const UChar *src, int32_t srcLength,
+ubidi_writeReverse(अचर UChar *src, int32_t srcLength,
                    UChar *dest, int32_t destSize,
                    uint16_t options,
                    UErrorCode *pErrorCode);
@@ -2211,7 +2211,7 @@ ubidi_writeReverse(const UChar *src, int32_t srcLength,
 
 /* Utilities for MessageFormat ------------------------------------------------*/
 
-#if U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -2223,7 +2223,7 @@ U_NAMESPACE_BEGIN
  * @internal ICU 79 technology preview
  * @deprecated This API is for technology preview only.
  */
-typedef enum UMFBidiOption {
+प्रकारनिर्देश गणना UMFBidiOption {
     /**
      * Left-to-right directionality.
      *
@@ -2263,7 +2263,7 @@ typedef enum UMFBidiOption {
  * @internal ICU 79 technology preview
  * @deprecated This API is for technology preview only.
  */
-typedef enum UMFDirectionality {
+प्रकारनिर्देश गणना UMFDirectionality {
     /**
      * Denotes a left-to-right message.
      *
@@ -2295,7 +2295,7 @@ typedef enum UMFDirectionality {
  * @internal ICU 79 technology preview
  * @deprecated This API is for technology preview only.
  */
-typedef enum UMFBidiIsolationStrategy {
+प्रकारनिर्देश गणना UMFBidiIsolationStrategy {
     /**
      * Do not perform bidi isolation.
      *
@@ -2322,7 +2322,7 @@ typedef enum UMFBidiIsolationStrategy {
  * @internal ICU 79 technology preview
  * @deprecated This API is for technology preview only.
  */
-typedef enum UMFBidiIsolationStyle {
+प्रकारनिर्देश गणना UMFBidiIsolationStyle {
     /**
      * Insert bidi control characters for isolation.
      *
@@ -2352,7 +2352,7 @@ typedef enum UMFBidiIsolationStyle {
  * @deprecated This API is for technology preview only.
  */
 U_CAPI UMFBidiOption U_EXPORT2
-ubidi_getMFOption(const UnicodeString& s);
+ubidi_getMFOption(अचर UnicodeString& s);
 
 /**
  * Isolate a string according to the "Default Bidi Strategy" from the MessageFormat

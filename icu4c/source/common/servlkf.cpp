@@ -8,19 +8,19 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#यदि !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "ucln_cmn.h"
-#include "uassert.h"
+#अन्तर्भाव "unicode/resbund.h"
+#अन्तर्भाव "uresimp.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "servloc.h"
+#अन्तर्भाव "ustrfmt.h"
+#अन्तर्भाव "uhash.h"
+#अन्तर्भाव "charstr.h"
+#अन्तर्भाव "ucln_cmn.h"
+#अन्तर्भाव "uassert.h"
 
 #define UNDERSCORE_CHAR ((char16_t)0x005f)
 #define AT_SIGN_CHAR    ((char16_t)64)
@@ -29,60 +29,60 @@
 
 U_NAMESPACE_BEGIN
 
-LocaleKeyFactory::LocaleKeyFactory(int32_t coverage)
+Locale_साँचो_Factory::Locale_साँचो_Factory(int32_t coverage)
   : _name()
   , _coverage(coverage)
 {
 }
 
-LocaleKeyFactory::LocaleKeyFactory(int32_t coverage, const UnicodeString& name)
+Locale_साँचो_Factory::Locale_साँचो_Factory(int32_t coverage, अचर UnicodeString& name)
   : _name(name)
   , _coverage(coverage)
 {
 }
 
-LocaleKeyFactory::~LocaleKeyFactory() {
+Locale_साँचो_Factory::~Locale_साँचो_Factory() {
 }
 
 UObject*
-LocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const {
-    if (handlesKey(key, status)) {
-        const LocaleKey& lkey = static_cast<const LocaleKey&>(key);
+Locale_साँचो_Factory::create(अचर ICUService_साँचो& साँचो, अचर ICUService* service, UErrorCode& status) अचर {
+    यदि (handles_साँचो(साँचो, status)) {
+        अचर Locale_साँचो& lkey = static_cast<अचर Locale_साँचो&>(साँचो);
         int32_t kind = lkey.kind();
         Locale loc;
         lkey.currentLocale(loc);
 
-        return handleCreate(loc, kind, service, status);
+        फर्काऊ handleCreate(loc, kind, service, status);
     }
-    return nullptr;
+    फर्काऊ nullptr;
 }
 
 UBool
-LocaleKeyFactory::handlesKey(const ICUServiceKey& key, UErrorCode& status) const {
-    const Hashtable* supported = getSupportedIDs(status);
-    if (supported) {
+Locale_साँचो_Factory::handles_साँचो(अचर ICUService_साँचो& साँचो, UErrorCode& status) अचर {
+    अचर Hashtable* supported = getSupportedIDs(status);
+    यदि (supported) {
         UnicodeString id;
-        key.currentID(id);
-        return supported->get(id) != nullptr;
+        साँचो.currentID(id);
+        फर्काऊ supported->get(id) != nullptr;
     }
-    return false;
+    फर्काऊ असत्य;
 }
 
-void
-LocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const {
-    const Hashtable* supported = getSupportedIDs(status);
-    if (supported) {
+शून्य
+Locale_साँचो_Factory::updateVisibleIDs(Hashtable& result, UErrorCode& status) अचर {
+    अचर Hashtable* supported = getSupportedIDs(status);
+    यदि (supported) {
         UBool visible = (_coverage & 0x1) == 0;
-        const UHashElement* elem = nullptr;
+        अचर UHashElement* elem = nullptr;
         int32_t pos = UHASH_FIRST;
-        while ((elem = supported->nextElement(pos)) != nullptr) {
-            const UnicodeString& id = *static_cast<const UnicodeString*>(elem->key.pointer);
-            if (!visible) {
-                result.remove(id);
-            } else {
-                result.put(id, (void*)this, status); // this is dummy non-void marker used for set semantics
-                if (U_FAILURE(status)) {
-                    break;
+        जबसम्म ((elem = supported->nextElement(pos)) != nullptr) {
+            अचर UnicodeString& id = *static_cast<अचर UnicodeString*>(elem->साँचो.pointer);
+            यदि (!visible) {
+                result.हटाओ(id);
+            } अन्यथा {
+                result.put(id, (शून्य*)एतत्, status); // this is dummy non-void marker used for set semantics
+                यदि (U_FAILURE(status)) {
+                    रोक;
                 }
             }
         }
@@ -90,26 +90,26 @@ LocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const 
 }
 
 UnicodeString&
-LocaleKeyFactory::getDisplayName(const UnicodeString& id, const Locale& locale, UnicodeString& result) const {
-    if ((_coverage & 0x1) == 0) {
+Locale_साँचो_Factory::getDisplayName(अचर UnicodeString& id, अचर Locale& locale, UnicodeString& result) अचर {
+    यदि ((_coverage & 0x1) == 0) {
         //UErrorCode status = U_ZERO_ERROR;
         // assume if this is called on us, we support some fallback of this id
         // if (isSupportedID(id, status)) {
             Locale loc;
             LocaleUtility::initLocaleFromName(id, loc);
-            return loc.getDisplayName(locale, result);
+            फर्काऊ loc.getDisplayName(locale, result);
         // }
     }
     result.setToBogus();
-    return result;
+    फर्काऊ result;
 }
 
 UObject*
-LocaleKeyFactory::handleCreate(const Locale& /* loc */, 
+Locale_साँचो_Factory::handleCreate(अचर Locale& /* loc */, 
                    int32_t /* kind */, 
-                   const ICUService* /* service */, 
-                   UErrorCode& /* status */) const {
-    return nullptr;
+                   अचर ICUService* /* service */, 
+                   UErrorCode& /* status */) अचर {
+    फर्काऊ nullptr;
 }
 
 //UBool
@@ -118,31 +118,31 @@ LocaleKeyFactory::handleCreate(const Locale& /* loc */,
 //    return ids && ids->get(id);
 //}
 
-const Hashtable*
-LocaleKeyFactory::getSupportedIDs(UErrorCode& /* status */) const {
-    return nullptr;
+अचर Hashtable*
+Locale_साँचो_Factory::getSupportedIDs(UErrorCode& /* status */) अचर {
+    फर्काऊ nullptr;
 }
 
 #ifdef SERVICE_DEBUG
 UnicodeString&
-LocaleKeyFactory::debug(UnicodeString& result) const
+Locale_साँचो_Factory::debug(UnicodeString& result) अचर
 {
     debugClass(result);
     result.append((UnicodeString)", name: ");
     result.append(_name);
     result.append((UnicodeString)", coverage: ");
     result.append(_coverage);
-    return result;
+    फर्काऊ result;
 }
 
 UnicodeString&
-LocaleKeyFactory::debugClass(UnicodeString& result) const
+Locale_साँचो_Factory::debugClass(UnicodeString& result) अचर
 {
-  return result.append((UnicodeString)"LocaleKeyFactory");
+  फर्काऊ result.append((UnicodeString)"LocaleKeyFactory");
 }
 #endif
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(LocaleKeyFactory)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Locale_साँचो_Factory)
 
 U_NAMESPACE_END
 

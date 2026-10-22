@@ -27,16 +27,16 @@
  * 08/23/01     george      Convert to C
  */
 
-#include "locmap.h"
-#include "charstr.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "ulocimp.h"
-#include "unicode/uloc.h"
+#अन्तर्भाव "locmap.h"
+#अन्तर्भाव "charstr.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "ulocimp.h"
+#अन्तर्भाव "unicode/uloc.h"
 
-#if U_PLATFORM_HAS_WIN32_API && UCONFIG_USE_WINDOWS_LCID_MAPPING_API
-#include <windows.h>
-#include <winnls.h> // LCIDToLocaleName and LocaleNameToLCID
+#यदि U_PLATFORM_HAS_WIN32_API && UCONFIG_USE_WINDOWS_LCID_MAPPING_API
+#अन्तर्भाव <windows.h>
+#अन्तर्भाव <winnls.h> // LCIDToLocaleName and LocaleNameToLCID
 #endif
 
 /*
@@ -48,7 +48,7 @@
  * [MS-LCID] Windows Language Code Identifier (LCID) Reference
  */
 
-namespace {
+नामाकाश {
 
 /*
 ////////////////////////////////////////////////
@@ -58,16 +58,16 @@ namespace {
 /////////////////////////////////////////////////
 */
 
-typedef struct ILcidPosixElement
+प्रकारनिर्देश संरचना ILcidPosixElement
 {
-    const uint32_t hostID;
-    const char * const posixID;
+    अचर uint32_t hostID;
+    अचर वर्ण * अचर posixID;
 } ILcidPosixElement;
 
-typedef struct ILcidPosixMap
+प्रकारनिर्देश संरचना ILcidPosixMap
 {
-    const uint32_t numRegions;
-    const struct ILcidPosixElement* const regionMaps;
+    अचर uint32_t अङ्क_Regions;
+    अचर संरचना ILcidPosixElement* अचर regionMaps;
 } ILcidPosixMap;
 
 
@@ -621,7 +621,7 @@ ILCID_POSIX_SUBTABLE(ro) {
 // TODO: This is almost certainly 'wrong'.  0 in Windows is a synonym for LOCALE_USER_DEFAULT.
 // More likely this is a similar concept to the Windows 0x7f Invariant locale ""
 // (Except that it's not invariant in ICU)
-ILCID_POSIX_SUBTABLE(root) {
+ILCID_POSIX_SUBTABLE(जरा) {
     {0x00,   "root"}
 };
 
@@ -903,7 +903,7 @@ constexpr ILcidPosixMap gPosixIDmap[] = {
     ILCID_POSIX_MAP(qut),   /*  qut K'iche                    0x86 */
     ILCID_POSIX_MAP(rm),    /*  rm  Raeto-Romance/Romansh     0x17 */
     ILCID_POSIX_MAP(ro),    /*  ro  Romanian                  0x18 */
-    ILCID_POSIX_MAP(root),  /*  root                          0x00 */
+    ILCID_POSIX_MAP(जरा),  /*  root                          0x00 */
     ILCID_POSIX_MAP(ru),    /*  ru  Russian                   0x19 */
     ILCID_POSIX_MAP(rw),    /*  rw  Kinyarwanda               0x87 */
     ILCID_POSIX_MAP(sa),    /*  sa  Sanskrit                  0x4f */
@@ -946,7 +946,7 @@ constexpr ILcidPosixMap gPosixIDmap[] = {
     ILCID_POSIX_MAP(zu),    /*  zu  Zulu                      0x35 */
 };
 
-constexpr uint32_t gLocaleCount = UPRV_LENGTHOF(gPosixIDmap);
+constexpr uint32_t g_Locale_गन्ती = UPRV_LENGTHOF(gPosixIDmap);
 
 /**
  * Do not call this function. It is called by hostID.
@@ -954,15 +954,15 @@ constexpr uint32_t gLocaleCount = UPRV_LENGTHOF(gPosixIDmap);
  * and this is an internal class.
  */
 int32_t
-idCmp(const char* id1, const char* id2)
+idCmp(अचर वर्ण* id1, अचर वर्ण* id2)
 {
     int32_t diffIdx = 0;
-    while (*id1 == *id2 && *id1 != 0) {
+    जबसम्म (*id1 == *id2 && *id1 != 0) {
         diffIdx++;
         id1++;
         id2++;
     }
-    return diffIdx;
+    फर्काऊ diffIdx;
 }
 
 /**
@@ -974,20 +974,20 @@ idCmp(const char* id1, const char* id2)
  * @return the LCID
  */
 uint32_t
-getHostID(const ILcidPosixMap *this_0, const char* posixID, UErrorCode& status)
+getHostID(अचर ILcidPosixMap *this_0, अचर वर्ण* posixID, UErrorCode& status)
 {
-    if (U_FAILURE(status)) { return locmap_root->hostID; }
+    यदि (U_FAILURE(status)) { फर्काऊ locmap_जरा->hostID; }
     int32_t bestIdx = 0;
     int32_t bestIdxDiff = 0;
     int32_t posixIDlen = static_cast<int32_t>(uprv_strlen(posixID));
     uint32_t idx;
 
-    for (idx = 0; idx < this_0->numRegions; idx++ ) {
+    लागि (idx = 0; idx < this_0->अङ्क_Regions; idx++ ) {
         int32_t sameChars = idCmp(posixID, this_0->regionMaps[idx].posixID);
-        if (sameChars > bestIdxDiff && this_0->regionMaps[idx].posixID[sameChars] == 0) {
-            if (posixIDlen == sameChars) {
+        यदि (sameChars > bestIdxDiff && this_0->regionMaps[idx].posixID[sameChars] == 0) {
+            यदि (posixIDlen == sameChars) {
                 /* Exact match */
-                return this_0->regionMaps[idx].hostID;
+                फर्काऊ this_0->regionMaps[idx].hostID;
             }
             bestIdxDiff = sameChars;
             bestIdx = idx;
@@ -995,33 +995,33 @@ getHostID(const ILcidPosixMap *this_0, const char* posixID, UErrorCode& status)
     }
     /* We asked for something unusual, like en_ZZ, and we try to return the number for the same language. */
     /* We also have to make sure that sid and si and similar string subsets don't match. */
-    if ((posixID[bestIdxDiff] == '_' || posixID[bestIdxDiff] == '@')
+    यदि ((posixID[bestIdxDiff] == '_' || posixID[bestIdxDiff] == '@')
         && this_0->regionMaps[bestIdx].posixID[bestIdxDiff] == 0)
     {
         status = U_USING_FALLBACK_WARNING;
-        return this_0->regionMaps[bestIdx].hostID;
+        फर्काऊ this_0->regionMaps[bestIdx].hostID;
     }
 
     /*no match found */
     status = U_ILLEGAL_ARGUMENT_ERROR;
-    return locmap_root->hostID;
+    फर्काऊ locmap_जरा->hostID;
 }
 
-const char*
-getPosixID(const ILcidPosixMap *this_0, uint32_t hostID)
+अचर वर्ण*
+getPosixID(अचर ILcidPosixMap *this_0, uint32_t hostID)
 {
     uint32_t i;
-    for (i = 0; i < this_0->numRegions; i++)
+    लागि (i = 0; i < this_0->अङ्क_Regions; i++)
     {
-        if (this_0->regionMaps[i].hostID == hostID)
+        यदि (this_0->regionMaps[i].hostID == hostID)
         {
-            return this_0->regionMaps[i].posixID;
+            फर्काऊ this_0->regionMaps[i].posixID;
         }
     }
 
     /* If you get here, then no matching region was found,
        so return the language id with the wild card region. */
-    return this_0->regionMaps[0].posixID;
+    फर्काऊ this_0->regionMaps[0].posixID;
 }
 
 /*
@@ -1031,18 +1031,18 @@ getPosixID(const ILcidPosixMap *this_0, uint32_t hostID)
 //
 /////////////////////////////////////
 */
-#if U_PLATFORM_HAS_WIN32_API && UCONFIG_USE_WINDOWS_LCID_MAPPING_API
+#यदि U_PLATFORM_HAS_WIN32_API && UCONFIG_USE_WINDOWS_LCID_MAPPING_API
 /*
  * Various language tags needs to be changed:
  * quz -> qu
  * prs -> fa
  */
-void FIX_LANGUAGE_ID_TAG(char* buffer, int32_t len) {
-    if (len >= 3) {
-        if (buffer[0] == 'q' && buffer[1] == 'u' && buffer[2] == 'z') {
+शून्य FIX_LANGUAGE_ID_TAG(वर्ण* buffer, int32_t len) {
+    यदि (len >= 3) {
+        यदि (buffer[0] == 'q' && buffer[1] == 'u' && buffer[2] == 'z') {
             buffer[2] = 0;
             uprv_strcat(buffer, buffer+3);
-        } else if (buffer[0] == 'p' && buffer[1] == 'r' && buffer[2] == 's') {
+        } अन्यथा यदि (buffer[0] == 'p' && buffer[1] == 'r' && buffer[2] == 's') {
             buffer[0] = 'f'; buffer[1] = 'a'; buffer[2] = 0;
             uprv_strcat(buffer, buffer+3);
         }
@@ -1053,57 +1053,57 @@ void FIX_LANGUAGE_ID_TAG(char* buffer, int32_t len) {
 }  // namespace
 
 U_CAPI int32_t
-uprv_convertToPosix(uint32_t hostid, char *posixID, int32_t posixIDCapacity, UErrorCode* status)
+uprv_convertToPosix(uint32_t hostid, वर्ण *posixID, int32_t posixIDCapacity, UErrorCode* status)
 {
     uint16_t langID;
     uint32_t localeIndex;
-    UBool bLookup = true;
-    const char *pPosixID = nullptr;
+    UBool bLookup = सत्य;
+    अचर वर्ण *pPosixID = nullptr;
 
-#if U_PLATFORM_HAS_WIN32_API && UCONFIG_USE_WINDOWS_LCID_MAPPING_API
+#यदि U_PLATFORM_HAS_WIN32_API && UCONFIG_USE_WINDOWS_LCID_MAPPING_API
     static_assert(ULOC_FULLNAME_CAPACITY > LOCALE_NAME_MAX_LENGTH, "Windows locale names have smaller length than ICU locale names.");
 
-    char locName[LOCALE_NAME_MAX_LENGTH] = {};
+    वर्ण locName[LOCALE_NAME_MAX_LENGTH] = {};
 
     // Note: Windows primary lang ID 0x92 in LCID is used for Central Kurdish and
     // GetLocaleInfo() maps such LCID to "ku". However, CLDR uses "ku" for
     // Northern Kurdish and "ckb" for Central Kurdish. For this reason, we cannot
     // use the Windows API to resolve locale ID for this specific case.
-    if ((hostid & 0x3FF) != 0x92) {
+    यदि ((hostid & 0x3FF) != 0x92) {
         int32_t tmpLen = 0;
         char16_t windowsLocaleName[LOCALE_NAME_MAX_LENGTH] = {};
 
         // Note: LOCALE_ALLOW_NEUTRAL_NAMES was enabled in Windows7+, prior versions did not handle neutral (no-region) locale names.
         tmpLen = LCIDToLocaleName(hostid, (PWSTR)windowsLocaleName, UPRV_LENGTHOF(windowsLocaleName), LOCALE_ALLOW_NEUTRAL_NAMES);
-        if (tmpLen > 1) {
+        यदि (tmpLen > 1) {
             int32_t i = 0;
             // Only need to look up in table if have _, eg for de-de_phoneb type alternate sort.
-            bLookup = false;
-            for (i = 0; i < UPRV_LENGTHOF(locName); i++)
+            bLookup = असत्य;
+            लागि (i = 0; i < UPRV_LENGTHOF(locName); i++)
             {
-                locName[i] = (char)(windowsLocaleName[i]);
+                locName[i] = (वर्ण)(windowsLocaleName[i]);
 
                 // Windows locale name may contain sorting variant, such as "es-ES_tradnl".
                 // In such cases, we need special mapping data found in the hardcoded table
                 // in this source file.
-                if (windowsLocaleName[i] == L'_')
+                यदि (windowsLocaleName[i] == L'_')
                 {
                     // Keep the base locale, without variant
                     // TODO: Should these be mapped from _phoneb to @collation=phonebook, etc.?
                     locName[i] = '\0';
                     tmpLen = i;
-                    bLookup = true;
-                    break;
+                    bLookup = सत्य;
+                    रोक;
                 }
-                else if (windowsLocaleName[i] == L'-')
+                अन्यथा यदि (windowsLocaleName[i] == L'-')
                 {
                     // Windows names use -, ICU uses _
                     locName[i] = '_';
                 }
-                else if (windowsLocaleName[i] == L'\0')
+                अन्यथा यदि (windowsLocaleName[i] == L'\0')
                 {
                     // No point in doing more work than necessary
-                    break;
+                    रोक;
                 }
             }
             // TODO: Need to understand this better, why isn't it an alias?
@@ -1113,45 +1113,45 @@ uprv_convertToPosix(uint32_t hostid, char *posixID, int32_t posixIDCapacity, UEr
     }
 #endif
 
-    if (bLookup) {
-        const char *pCandidate = nullptr;
+    यदि (bLookup) {
+        अचर वर्ण *pCandidate = nullptr;
         langID = LANGUAGE_LCID(hostid);
 
-        for (localeIndex = 0; localeIndex < gLocaleCount; localeIndex++) {
-            if (langID == gPosixIDmap[localeIndex].regionMaps->hostID) {
+        लागि (localeIndex = 0; localeIndex < g_Locale_गन्ती; localeIndex++) {
+            यदि (langID == gPosixIDmap[localeIndex].regionMaps->hostID) {
                 pCandidate = getPosixID(&gPosixIDmap[localeIndex], hostid);
-                break;
+                रोक;
             }
         }
 
         /* On Windows, when locale name has a variant, we still look up the hardcoded table.
            If a match in the hardcoded table is longer than the Windows locale name without
            variant, we use the one as the result */
-        if (pCandidate && (pPosixID == nullptr || uprv_strlen(pCandidate) > uprv_strlen(pPosixID))) {
+        यदि (pCandidate && (pPosixID == nullptr || uprv_strlen(pCandidate) > uprv_strlen(pPosixID))) {
             pPosixID = pCandidate;
         }
     }
 
-    if (pPosixID) {
+    यदि (pPosixID) {
         int32_t resLen = static_cast<int32_t>(uprv_strlen(pPosixID));
         int32_t copyLen = resLen <= posixIDCapacity ? resLen : posixIDCapacity;
         uprv_memcpy(posixID, pPosixID, copyLen);
-        if (resLen < posixIDCapacity) {
+        यदि (resLen < posixIDCapacity) {
             posixID[resLen] = 0;
-            if (*status == U_STRING_NOT_TERMINATED_WARNING) {
+            यदि (*status == U_STRING_NOT_TERMINATED_WARNING) {
                 *status = U_ZERO_ERROR;
             }
-        } else if (resLen == posixIDCapacity) {
+        } अन्यथा यदि (resLen == posixIDCapacity) {
             *status = U_STRING_NOT_TERMINATED_WARNING;
-        } else {
+        } अन्यथा {
             *status = U_BUFFER_OVERFLOW_ERROR;
         }
-        return resLen;
+        फर्काऊ resLen;
     }
 
     /* no match found */
     *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+    फर्काऊ 0;
 }
 
 /*
@@ -1164,32 +1164,32 @@ uprv_convertToPosix(uint32_t hostid, char *posixID, int32_t posixIDCapacity, UEr
 /////////////////////////////////////
 */
 U_CAPI uint32_t
-uprv_convertToLCIDPlatform(const char* localeID, UErrorCode* status)
+uprv_convertToLCIDPlatform(अचर वर्ण* localeID, UErrorCode* status)
 {
-    if (U_FAILURE(*status)) {
-        return 0;
+    यदि (U_FAILURE(*status)) {
+        फर्काऊ 0;
     }
 
     // The purpose of this function is to leverage the Windows platform name->lcid
     // conversion functionality when available.
-#if U_PLATFORM_HAS_WIN32_API && UCONFIG_USE_WINDOWS_LCID_MAPPING_API
+#यदि U_PLATFORM_HAS_WIN32_API && UCONFIG_USE_WINDOWS_LCID_MAPPING_API
     icu::CharString baseName;
-    const char * mylocaleID = localeID;
+    अचर वर्ण * mylocaleID = localeID;
 
     // Check any for keywords.
-    if (uprv_strchr(localeID, '@'))
+    यदि (uprv_strchr(localeID, '@'))
     {
-        icu::CharString collVal = ulocimp_getKeywordValue(localeID, "collation", *status);
-        if (U_SUCCESS(*status) && !collVal.isEmpty())
+        icu::CharString collVal = ulocimp_get_Keyword_मान(localeID, "collation", *status);
+        यदि (U_SUCCESS(*status) && !collVal.isEmpty())
         {
             // If it contains the keyword collation, return 0 so that the LCID lookup table will be used.
-            return 0;
+            फर्काऊ 0;
         }
-        else
+        अन्यथा
         {
             // If the locale ID contains keywords other than collation, just use the base name.
             baseName = ulocimp_getBaseName(localeID, *status);
-            if (U_SUCCESS(*status) && !baseName.isEmpty())
+            यदि (U_SUCCESS(*status) && !baseName.isEmpty())
             {
                 mylocaleID = baseName.data();
             }
@@ -1197,93 +1197,93 @@ uprv_convertToLCIDPlatform(const char* localeID, UErrorCode* status)
     }
 
     // this will change it from de_DE@collation=phonebook to de-DE-u-co-phonebk form
-    icu::CharString asciiBCP47Tag = ulocimp_toLanguageTag(mylocaleID, false, *status);
+    icu::CharString asciiBCP47Tag = ulocimp_toLanguageTag(mylocaleID, असत्य, *status);
 
-    if (U_SUCCESS(*status))
+    यदि (U_SUCCESS(*status))
     {
         // Need it to be UTF-16, not 8-bit
-        wchar_t bcp47Tag[LOCALE_NAME_MAX_LENGTH] = {};
+        ब_अक्षर_प्रकार bcp47Tag[LOCALE_NAME_MAX_LENGTH] = {};
         int32_t i;
-        for (i = 0; i < UPRV_LENGTHOF(bcp47Tag); i++)
+        लागि (i = 0; i < UPRV_LENGTHOF(bcp47Tag); i++)
         {
-            if (asciiBCP47Tag[i] == '\0')
+            यदि (asciiBCP47Tag[i] == '\0')
             {
-                break;
+                रोक;
             }
-            else
+            अन्यथा
             {
                 // Copy the character
-                bcp47Tag[i] = static_cast<wchar_t>(asciiBCP47Tag[i]);
+                bcp47Tag[i] = static_cast<ब_अक्षर_प्रकार>(asciiBCP47Tag[i]);
             }
         }
 
-        if (i < (UPRV_LENGTHOF(bcp47Tag) - 1))
+        यदि (i < (UPRV_LENGTHOF(bcp47Tag) - 1))
         {
             // Ensure it's null terminated
             bcp47Tag[i] = L'\0';
             LCID lcid = LocaleNameToLCID(bcp47Tag, LOCALE_ALLOW_NEUTRAL_NAMES);
-            if (lcid > 0)
+            यदि (lcid > 0)
             {
                 // Found LCID from windows, return that one, unless its completely ambiguous
                 // LOCALE_USER_DEFAULT and transients are OK because they will round trip
                 // for this process.
-                if (lcid != LOCALE_CUSTOM_UNSPECIFIED)
+                यदि (lcid != LOCALE_CUSTOM_UNSPECIFIED)
                 {
-                    return lcid;
+                    फर्काऊ lcid;
                 }
             }
         }
     }
-#else
-    (void) localeID; // Suppress unused variable warning.
+#अन्यथा
+    (शून्य) localeID; // Suppress unused variable warning.
 #endif
 
     // Nothing found, or not implemented.
-    return 0;
+    फर्काऊ 0;
 }
 
 U_CAPI uint32_t
-uprv_convertToLCID(const char *langID, const char* posixID, UErrorCode* status)
+uprv_convertToLCID(अचर वर्ण *langID, अचर वर्ण* posixID, UErrorCode* status)
 {
-    if (U_FAILURE(*status) ||
+    यदि (U_FAILURE(*status) ||
             langID == nullptr ||
             posixID == nullptr ||
             uprv_strlen(langID) < 2 ||
             uprv_strlen(posixID) < 2) {
-        return locmap_root->hostID;
+        फर्काऊ locmap_जरा->hostID;
     }
 
     // This function does the table lookup when native platform name->lcid conversion isn't available,
     // or for locales that don't follow patterns the platform expects.
-    uint32_t   low    = 0;
-    uint32_t   high   = gLocaleCount;
+    uint32_t   तल्लो    = 0;
+    uint32_t   माथिल्लो   = g_Locale_गन्ती;
     uint32_t   mid;
     uint32_t   oldmid = 0;
     int32_t    compVal;
 
     uint32_t   value         = 0;
-    uint32_t   fallbackValue = (uint32_t)-1;
+    uint32_t   fallback_मान = (uint32_t)-1;
     UErrorCode myStatus;
     uint32_t   idx;
 
     /*Binary search for the map entry for normal cases */
 
-    while (high > low)  /*binary search*/{
+    जबसम्म (माथिल्लो > तल्लो)  /*द्विआधारी खोज*/{
 
-        mid = (high+low) >> 1; /*Finds median*/
+        mid = (माथिल्लो+तल्लो) >> 1; /*Finds median*/
 
-        if (mid == oldmid) 
-            break;
+        यदि (mid == oldmid) 
+            रोक;
 
         compVal = uprv_strcmp(langID, gPosixIDmap[mid].regionMaps->posixID);
-        if (compVal < 0){
-            high = mid;
+        यदि (compVal < 0){
+            माथिल्लो = mid;
         }
-        else if (compVal > 0){
-            low = mid;
+        अन्यथा यदि (compVal > 0){
+            तल्लो = mid;
         }
-        else /*we found it*/{
-            return getHostID(&gPosixIDmap[mid], posixID, *status);
+        अन्यथा /*we found it*/{
+            फर्काऊ getHostID(&gPosixIDmap[mid], posixID, *status);
         }
         oldmid = mid;
     }
@@ -1292,23 +1292,23 @@ uprv_convertToLCID(const char *langID, const char* posixID, UErrorCode* status)
      * Sometimes we can't do a binary search on posixID because some LCIDs
      * go to different locales.  We hit one of those special cases.
      */
-    for (idx = 0; idx < gLocaleCount; idx++ ) {
+    लागि (idx = 0; idx < g_Locale_गन्ती; idx++ ) {
         myStatus = U_ZERO_ERROR;
         value = getHostID(&gPosixIDmap[idx], posixID, myStatus);
-        if (myStatus == U_ZERO_ERROR) {
-            return value;
+        यदि (myStatus == U_ZERO_ERROR) {
+            फर्काऊ value;
         }
-        else if (myStatus == U_USING_FALLBACK_WARNING) {
-            fallbackValue = value;
+        अन्यथा यदि (myStatus == U_USING_FALLBACK_WARNING) {
+            fallback_मान = value;
         }
     }
 
-    if (fallbackValue != (uint32_t)-1) {
+    यदि (fallback_मान != (uint32_t)-1) {
         *status = U_USING_FALLBACK_WARNING;
-        return fallbackValue;
+        फर्काऊ fallback_मान;
     }
 
     /* no match found */
     *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return locmap_root->hostID;   /* return international (root) */
+    फर्काऊ locmap_जरा->hostID;   /* return international (root) */
 }

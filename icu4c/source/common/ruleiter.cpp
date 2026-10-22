@@ -10,19 +10,19 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#include "ruleiter.h"
-#include "unicode/parsepos.h"
-#include "unicode/symtable.h"
-#include "unicode/unistr.h"
-#include "unicode/utf16.h"
-#include "patternprops.h"
+#अन्तर्भाव "ruleiter.h"
+#अन्तर्भाव "unicode/parsepos.h"
+#अन्तर्भाव "unicode/symtable.h"
+#अन्तर्भाव "unicode/unistr.h"
+#अन्तर्भाव "unicode/utf16.h"
+#अन्तर्भाव "patternprops.h"
 
 /* \U87654321 or \ud800\udc00 */
 #define MAX_U_NOTATION_LEN 12
 
 U_NAMESPACE_BEGIN
 
-RuleCharacterIterator::RuleCharacterIterator(const UnicodeString& theText, const SymbolTable* theSym,
+RuleCharacterIterator::RuleCharacterIterator(अचर UnicodeString& theText, अचर चिह्न_Table* theSym,
                       ParsePosition& thePos) :
     text(theText),
     pos(thePos),
@@ -31,98 +31,98 @@ RuleCharacterIterator::RuleCharacterIterator(const UnicodeString& theText, const
     bufPos(0)
 {}
 
-UBool RuleCharacterIterator::atEnd() const {
-    return buf == nullptr && pos.getIndex() == text.length();
+UBool RuleCharacterIterator::atEnd() अचर {
+    फर्काऊ buf == nullptr && pos.getIndex() == text.length();
 }
 
 UChar32 RuleCharacterIterator::next(int32_t options, UBool& isEscaped, UErrorCode& ec) {
-    if (U_FAILURE(ec)) return DONE;
+    यदि (U_FAILURE(ec)) फर्काऊ DONE;
 
     UChar32 c = DONE;
-    isEscaped = false;
+    isEscaped = असत्य;
 
-    for (;;) {
+    लागि (;;) {
         c = _current();
         _advance(U16_LENGTH(c));
 
-        if (c == SymbolTable::SYMBOL_REF && buf == nullptr &&
+        यदि (c == चिह्न_Table::चिह्न_REF && buf == nullptr &&
             (options & PARSE_VARIABLES) != 0 && sym != nullptr) {
             UnicodeString name = sym->parseReference(text, pos, text.length());
             // If name is empty there was an isolated SYMBOL_REF;
             // return it.  Caller must be prepared for this.
-            if (name.length() == 0) {
-                break;
+            यदि (name.length() == 0) {
+                रोक;
             }
             bufPos = 0;
             buf = sym->lookup(name);
-            if (buf == nullptr) {
+            यदि (buf == nullptr) {
                 ec = U_UNDEFINED_VARIABLE;
-                return DONE;
+                फर्काऊ DONE;
             }
             // Handle empty variable value
-            if (buf->length() == 0) {
+            यदि (buf->length() == 0) {
                 buf = nullptr;
             }
-            continue;
+            जारी;
         }
 
-        if ((options & SKIP_WHITESPACE) != 0 && PatternProps::isWhiteSpace(c)) {
-            continue;
+        यदि ((options & SKIP_WHITESPACE) != 0 && PatternProps::isWhiteSpace(c)) {
+            जारी;
         }
 
-        if (c == 0x5C /*'\\'*/ && (options & PARSE_ESCAPES) != 0) {
+        यदि (c == 0x5C /*'\\'*/ && (options & PARSE_ESCAPES) != 0) {
             UnicodeString tempEscape;
             int32_t offset = 0;
             c = lookahead(tempEscape, MAX_U_NOTATION_LEN).unescapeAt(offset);
             jumpahead(offset);
-            isEscaped = true;
-            if (c < 0) {
+            isEscaped = सत्य;
+            यदि (c < 0) {
                 ec = U_MALFORMED_UNICODE_ESCAPE;
-                return DONE;
+                फर्काऊ DONE;
             }
         }
 
-        break;
+        रोक;
     }
 
-    return c;
+    फर्काऊ c;
 }
 
-void RuleCharacterIterator::getPos(RuleCharacterIterator::Pos& p) const {
+शून्य RuleCharacterIterator::getPos(RuleCharacterIterator::Pos& p) अचर {
     p.buf = buf;
     p.pos = pos.getIndex();
     p.bufPos = bufPos;
 }
 
-void RuleCharacterIterator::setPos(const RuleCharacterIterator::Pos& p) {
+शून्य RuleCharacterIterator::setPos(अचर RuleCharacterIterator::Pos& p) {
     buf = p.buf;
     pos.setIndex(p.pos);
     bufPos = p.bufPos;
 }
 
-void RuleCharacterIterator::skipIgnored(int32_t options) {
-    if ((options & SKIP_WHITESPACE) != 0) {
-        for (;;) {
+शून्य RuleCharacterIterator::skipIgnored(int32_t options) {
+    यदि ((options & SKIP_WHITESPACE) != 0) {
+        लागि (;;) {
             UChar32 a = _current();
-            if (!PatternProps::isWhiteSpace(a)) break;
+            यदि (!PatternProps::isWhiteSpace(a)) रोक;
             _advance(U16_LENGTH(a));
         }
     }
 }
 
-UnicodeString& RuleCharacterIterator::lookahead(UnicodeString& result, int32_t maxLookAhead) const {
-    if (maxLookAhead < 0) {
+UnicodeString& RuleCharacterIterator::lookahead(UnicodeString& result, int32_t maxLookAhead) अचर {
+    यदि (maxLookAhead < 0) {
         maxLookAhead = 0x7FFFFFFF;
     }
-    if (buf != nullptr) {
+    यदि (buf != nullptr) {
         buf->extract(bufPos, maxLookAhead, result);
-    } else {
+    } अन्यथा {
         text.extract(pos.getIndex(), maxLookAhead, result);
     }
-    return result;
+    फर्काऊ result;
 }
 
-void RuleCharacterIterator::jumpahead(int32_t count) {
+शून्य RuleCharacterIterator::jumpahead(int32_t count) {
     _advance(count);
 }
 
@@ -134,24 +134,24 @@ UnicodeString& RuleCharacterIterator::toString(UnicodeString& result) const {
 }
 */
 
-UChar32 RuleCharacterIterator::_current() const {
-    if (buf != nullptr) {
-        return buf->char32At(bufPos);
-    } else {
-        int i = pos.getIndex();
-        return (i < text.length()) ? text.char32At(i) : static_cast<UChar32>(DONE);
+UChar32 RuleCharacterIterator::_current() अचर {
+    यदि (buf != nullptr) {
+        फर्काऊ buf->char32At(bufPos);
+    } अन्यथा {
+        पूर्णाङ्क i = pos.getIndex();
+        फर्काऊ (i < text.length()) ? text.char32At(i) : static_cast<UChar32>(DONE);
     }
 }
 
-void RuleCharacterIterator::_advance(int32_t count) {
-    if (buf != nullptr) {
+शून्य RuleCharacterIterator::_advance(int32_t count) {
+    यदि (buf != nullptr) {
         bufPos += count;
-        if (bufPos == buf->length()) {
+        यदि (bufPos == buf->length()) {
             buf = nullptr;
         }
-    } else {
+    } अन्यथा {
         pos.setIndex(pos.getIndex() + count);
-        if (pos.getIndex() > text.length()) {
+        यदि (pos.getIndex() > text.length()) {
             pos.setIndex(text.length());
         }
     }

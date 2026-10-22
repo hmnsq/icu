@@ -4,21 +4,21 @@
 #ifndef MLBREAKENGINE_H
 #define MLBREAKENGINE_H
 
-#include "hash.h"
-#include "unicode/resbund.h"
-#include "unicode/uniset.h"
-#include "unicode/utext.h"
-#include "uvectr32.h"
+#अन्तर्भाव "hash.h"
+#अन्तर्भाव "unicode/resbund.h"
+#अन्तर्भाव "unicode/uniset.h"
+#अन्तर्भाव "unicode/utext.h"
+#अन्तर्भाव "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#यदि !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * A machine learning break engine for the phrase breaking in Japanese.
  */
-class MlBreakEngine : public UMemory {
-   public:
+class MlBreakEngine : सार्वजनिक UMemory {
+   सार्वजनिक:
     /**
      * Constructor.
      *
@@ -27,15 +27,15 @@ class MlBreakEngine : public UMemory {
      * @param closePunctuationSet An UnicodeSet with close punctuation.
      * @param status Information on any errors encountered.
      */
-    MlBreakEngine(const UnicodeSet &digitOrOpenPunctuationOrAlphabetSet,
-                  const UnicodeSet &closePunctuationSet, UErrorCode &status);
+    MlBreakEngine(अचर UnicodeSet &digitOrOpenPunctuationOrAlphabetSet,
+                  अचर UnicodeSet &closePunctuationSet, UErrorCode &status);
 
     /**
      * Virtual destructor.
      */
-    virtual ~MlBreakEngine();
+    आभास ~MlBreakEngine();
 
-   public:
+   सार्वजनिक:
     /**
      * Divide up a range of characters handled by this break engine.
      *
@@ -49,16 +49,16 @@ class MlBreakEngine : public UMemory {
      * @return The number of breaks found
      */
     int32_t divideUpRange(UText *inText, int32_t rangeStart, int32_t rangeEnd,
-                          UVector32 &foundBreaks, const UnicodeString &inString,
-                          const LocalPointer<UVector32> &inputMap, UErrorCode &status) const;
+                          UVector32 &foundBreaks, अचर UnicodeString &inString,
+                          अचर LocalPointer<UVector32> &आगत_Map, UErrorCode &status) अचर;
 
-   private:
+   गुप्त:
     /**
      * Load the machine learning's model file.
      *
      * @param error Information on any errors encountered.
      */
-    void loadMLModel(UErrorCode &error);
+    शून्य loadMLModel(UErrorCode &error);
 
     /**
      * In the machine learning's model file, specify the name of the key and value to load the
@@ -70,7 +70,7 @@ class MlBreakEngine : public UMemory {
      * @param model A hashtable to store the pairs of the feature and its score.
      * @param error Information on any errors encountered.
      */
-    void initKeyValue(UResourceBundle *rb, const char *keyName, const char *valueName,
+    शून्य init_साँचो_मान(UResourceBundle *rb, अचर वर्ण *साँचो_Name, अचर वर्ण *मान_Name,
                       Hashtable &model, UErrorCode &error);
 
     /**
@@ -81,8 +81,8 @@ class MlBreakEngine : public UMemory {
      * @param status Information on any errors encountered.
      * @return The number of code units of the first four characters in inString.
      */
-    int32_t initIndexList(const UnicodeString &inString, int32_t *indexList,
-                          UErrorCode &status) const;
+    int32_t initIndexList(अचर UnicodeString &inString, int32_t *indexList,
+                          UErrorCode &status) अचर;
 
     /**
      * Evaluate whether the index is a potential breakpoint.
@@ -96,11 +96,11 @@ class MlBreakEngine : public UMemory {
      * @param status Information on any errors encountered.
      * @return The number of breakpoints
      */
-    int32_t evaluateBreakpoint(const UnicodeString &inString, int32_t *indexList, int32_t startIdx,
-                               int32_t numCodeUnits, int32_t numBreaks, UVector32 &boundary,
-                               UErrorCode &status) const;
+    int32_t evaluateBreakpoint(अचर UnicodeString &inString, int32_t *indexList, int32_t startIdx,
+                               int32_t अङ्क_Code_Units, int32_t अङ्क_Breaks, UVector32 &boundary,
+                               UErrorCode &status) अचर;
 
-    void printUnicodeString(const UnicodeString &s) const;
+    शून्य printUnicodeString(अचर UnicodeString &s) अचर;
 
     UnicodeSet fDigitOrOpenPunctuationOrAlphabetSet;
     UnicodeSet fClosePunctuationSet;

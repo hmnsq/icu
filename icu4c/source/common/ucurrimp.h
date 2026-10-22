@@ -10,10 +10,10 @@
 #ifndef _UCURR_IMP_H_
 #define _UCURR_IMP_H_
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/parsepos.h"
-#include "unicode/uniset.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/unistr.h"
+#अन्तर्भाव "unicode/parsepos.h"
+#अन्तर्भाव "unicode/uniset.h"
 
 /**
  * Internal method.  Given a currency ISO code and a locale, return
@@ -25,8 +25,8 @@
  * This is used for backward compatibility with old currency logic in
  * DecimalFormat and DecimalFormatSymbols.
  */
-U_CAPI void
-uprv_getStaticCurrencyName(const UChar* iso, const char* loc,
+U_CAPI शून्य
+uprv_getStaticCurrencyName(अचर UChar* iso, अचर वर्ण* loc,
                            icu::UnicodeString& result, UErrorCode& ec);
 
 /**
@@ -53,9 +53,9 @@ uprv_getStaticCurrencyName(const UChar* iso, const char* loc,
  *
  * @internal
  */
-U_CAPI void
-uprv_parseCurrency(const char* locale,
-                   const icu::UnicodeString& text,
+U_CAPI शून्य
+uprv_parseCurrency(अचर वर्ण* locale,
+                   अचर icu::UnicodeString& text,
                    icu::ParsePosition& pos,
                    int8_t type,
                    int32_t* partialMatchLen,
@@ -69,7 +69,7 @@ uprv_parseCurrency(const char* locale,
  * @param locale the locale of the display names of interest
  * @param result the UnicodeSet to which to add the starting characters
  */
-void uprv_currencyLeads(const char* locale, icu::UnicodeSet& result, UErrorCode& ec);
+शून्य uprv_currencyLeads(अचर वर्ण* locale, icu::UnicodeSet& result, UErrorCode& ec);
 
 
 

@@ -17,8 +17,8 @@
 
 #ifndef USC_IMPL_H
 #define USC_IMPL_H
-#include "unicode/utypes.h"
-#include "unicode/uscript.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/uscript.h"
 
 /**
  * <code>UScriptRun</code> is used to find runs of characters in
@@ -54,9 +54,9 @@
  *  }
  * </pre>
  */
-struct UScriptRun;
+संरचना UScriptRun;
 
-typedef struct UScriptRun UScriptRun;
+प्रकारनिर्देश संरचना UScriptRun UScriptRun;
 
 /**
  * Create a <code>UScriptRun</code> object for iterating over the given text. This object must
@@ -78,7 +78,7 @@ typedef struct UScriptRun UScriptRun;
  *         or <code>NULL</code> if the operation failed.
  */
 U_CAPI UScriptRun * U_EXPORT2
-uscript_openRun(const UChar *src, int32_t length, UErrorCode *pErrorCode);
+uscript_openRun(अचर UChar *src, int32_t length, UErrorCode *pErrorCode);
 
 /**
  * Frees the given <code>UScriptRun</code> object and any storage associated with it.
@@ -86,7 +86,7 @@ uscript_openRun(const UChar *src, int32_t length, UErrorCode *pErrorCode);
  *
  * @param scriptRun is the <code>UScriptRun</code> object which will be freed.
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uscript_closeRun(UScriptRun *scriptRun);
 
 /**
@@ -95,7 +95,7 @@ uscript_closeRun(UScriptRun *scriptRun);
  *
  * @param scriptRun is the address of the <code>UScriptRun</code> object to be reset.
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uscript_resetRun(UScriptRun *scriptRun);
 
 /**
@@ -113,8 +113,8 @@ uscript_resetRun(UScriptRun *scriptRun);
  *        indicates a failure on entry, the function will immediately return.
  *        On exit the value will indicate the success of the operation.
  */
-U_CAPI void U_EXPORT2
-uscript_setRunText(UScriptRun *scriptRun, const UChar *src, int32_t length, UErrorCode *pErrorCode);
+U_CAPI शून्य U_EXPORT2
+uscript_setRunText(UScriptRun *scriptRun, अचर UChar *src, int32_t length, UErrorCode *pErrorCode);
 
 /**
  * Advance the <code>UScriptRun</code> object to the next script run, return the start and limit
