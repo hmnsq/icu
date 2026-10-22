@@ -16,29 +16,29 @@
 #ifndef RBBI_H
 #define RBBI_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
  * \brief C++ API: Rule Based Break Iterator
  */
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#إذا !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/brkiter.h"
-#include "unicode/udata.h"
-#include "unicode/parseerr.h"
-#include "unicode/schriter.h"
+#ضمن "unicode/brkiter.h"
+#ضمن "unicode/udata.h"
+#ضمن "unicode/parseerr.h"
+#ضمن "unicode/schriter.h"
 
-struct UCPTrie;
+بنية UCPTrie;
 
 U_NAMESPACE_BEGIN
 
 /** @internal */
 class  LanguageBreakEngine;
-struct RBBIDataHeader;
+بنية RBBIDataHeader;
 class  RBBIDataWrapper;
 class  UnhandledEngine;
 class  UStack;
@@ -57,8 +57,8 @@ class  UStack;
  * event.
  * @internal ICU 74 technology preview
  */
-class ExternalBreakEngine : public UObject {
-  public:
+class ExternalBreakEngine : عام UObject {
+  عام:
     /**
      * destructor
      * @internal ICU 74 technology preview
@@ -74,7 +74,7 @@ class ExternalBreakEngine : public UObject {
      * @return true if this engine handles the particular character for that locale.
      * @internal ICU 74 technology preview
      */
-    virtual bool isFor(UChar32 c, const char* locale) const = 0;
+    virtual bool isFor(UChar32 c, ثابت حرف* locale) ثابت = 0;
 
     /**
      * <p>Indicate whether this engine handles a particular character.This method is
@@ -84,7 +84,7 @@ class ExternalBreakEngine : public UObject {
      * @return true if this engine handles the particular character.
      * @internal ICU 74 technology preview
      */
-    virtual bool handles(UChar32 c) const = 0;
+    virtual bool handles(UChar32 c) ثابت = 0;
 
     /**
      * <p>Divide up a range of text handled by this break engine.</p>
@@ -101,7 +101,7 @@ class ExternalBreakEngine : public UObject {
      */
      virtual int32_t fillBreaks(UText* text,  int32_t start, int32_t end,
                                int32_t* foundBreaks, int32_t foundBreaksCapacity,
-                               UErrorCode& status) const = 0;
+                               UErrorCode& status) ثابت = 0;
 };
 #endif  /* U_HIDE_INTERNAL_API */
 
@@ -117,16 +117,16 @@ class ExternalBreakEngine : public UObject {
  *
  * <p>This class is not intended to be subclassed.</p>
  */
-class U_COMMON_API RuleBasedBreakIterator /*final*/ : public BreakIterator {
+class U_COMMON_API RuleBasedBreakIterator /*final*/ : عام BreakIterator {
 
-private:
+خاص:
     /**
      * The UText through which this BreakIterator accesses the text
      */
     UText  fText = UTEXT_INITIALIZER;
 
 #ifndef U_HIDE_INTERNAL_API
-public:
+عام:
 #endif /* U_HIDE_INTERNAL_API */
     /**
      * The rule data for this BreakIterator instance.
@@ -135,7 +135,7 @@ public:
      */
     RBBIDataWrapper    *fData = nullptr;
 
-private:
+خاص:
     /**
       * The saved error code associated with this break iterator.
       * This is the value to be returned by copyErrorTo().
@@ -186,7 +186,7 @@ private:
      * Counter for the number of characters encountered with the "dictionary"
      *   flag set.
      */
-    uint32_t            fDictionaryCharCount = 0;
+    uint32_t            f_Dictionary_Char_کيراءن = 0;
 
     /**
      *   A character iterator that refers to the same text as the UText, above.
@@ -256,7 +256,7 @@ private:
      */
     RuleBasedBreakIterator(UErrorCode *status);
 
-public:
+عام:
 
     /** Default constructor.  Creates an empty shell of an iterator, with no
      *  rules or text to iterate over.   Object can subsequently be assigned to,
@@ -271,7 +271,7 @@ public:
      * @param that The RuleBasedBreakIterator passed to be copied
      * @stable ICU 2.0
      */
-    RuleBasedBreakIterator(const RuleBasedBreakIterator& that);
+    RuleBasedBreakIterator(ثابت RuleBasedBreakIterator& that);
 
     /**
      * Construct a RuleBasedBreakIterator from a set of rules supplied as a string.
@@ -281,7 +281,7 @@ public:
      * @param status Information on any errors encountered.
      * @stable ICU 2.2
      */
-    RuleBasedBreakIterator( const UnicodeString    &rules,
+    RuleBasedBreakIterator( ثابت UnicodeString    &rules,
                              UParseError           &parseError,
                              UErrorCode            &status);
 
@@ -308,7 +308,7 @@ public:
      *   binary rules.
      * @stable ICU 4.8
      */
-    RuleBasedBreakIterator(const uint8_t *compiledRules,
+    RuleBasedBreakIterator(ثابت uint8_t *compiledRules,
                            uint32_t       ruleLength,
                            UErrorCode    &status);
 
@@ -339,7 +339,7 @@ public:
      * @return the newly created RuleBasedBreakIterator
      *  @stable ICU 2.0
      */
-    RuleBasedBreakIterator& operator=(const RuleBasedBreakIterator& that) U_LIFETIME_BOUND;
+    RuleBasedBreakIterator& operator=(ثابت RuleBasedBreakIterator& that) U_LIFETIME_BOUND;
 
     /**
      * Equality operator.  Returns true if both BreakIterators are of the
@@ -349,7 +349,7 @@ public:
      * same class, have the same behavior, and iterate over the same text.
      *  @stable ICU 2.0
      */
-    virtual bool operator==(const BreakIterator& that) const override;
+    virtual bool operator==(ثابت BreakIterator& that) ثابت override;
 
     /**
      * Not-equal operator.  If operator== returns true, this returns false,
@@ -358,8 +358,8 @@ public:
      * @return true if both BreakIterators are not same.
      *  @stable ICU 2.0
      */
-    inline bool operator!=(const BreakIterator& that) const {
-        return !operator==(that);
+    مضمن bool operator!=(ثابت BreakIterator& that) ثابت {
+        أرجع !operator==(that);
     }
 
     /**
@@ -372,21 +372,21 @@ public:
      * @return a newly-constructed RuleBasedBreakIterator
      * @stable ICU 2.0
      */
-    virtual RuleBasedBreakIterator* clone() const override;
+    virtual RuleBasedBreakIterator* clone() ثابت override;
 
     /**
      * Compute a hash code for this BreakIterator
      * @return A hash code
      *  @stable ICU 2.0
      */
-    virtual int32_t hashCode() const;
+    virtual int32_t hashCode() ثابت;
 
     /**
      * Returns the description used to create this iterator
      * @return the description used to create this iterator
      *  @stable ICU 2.0
      */
-    virtual const UnicodeString& getRules() const U_LIFETIME_BOUND;
+    virtual ثابت UnicodeString& getRules() ثابت U_LIFETIME_BOUND;
 
     //=======================================================================
     // BreakIterator overrides
@@ -416,7 +416,7 @@ public:
      * @return An iterator over the text being analyzed.
      * @stable ICU 2.0
      */
-    virtual CharacterIterator& getText() const U_LIFETIME_BOUND override;
+    virtual CharacterIterator& getText() ثابت U_LIFETIME_BOUND override;
 
     /**
       *  Get a UText for the text being analyzed.
@@ -432,7 +432,7 @@ public:
       *           UText was provided, it will always be returned.
       * @stable ICU 3.4
       */
-    virtual UText* getUText(UText* fillIn U_LIFETIME_BOUND, UErrorCode& status) const override;
+    virtual UText* getUText(UText* fillIn U_LIFETIME_BOUND, UErrorCode& status) ثابت override;
 
     /**
      * Set the iterator to analyze a new piece of text.  This function resets
@@ -441,7 +441,7 @@ public:
      * takes ownership of the character iterator.  The caller MUST NOT delete it!
      *  @stable ICU 2.0
      */
-    virtual void adoptText(CharacterIterator* newText) override;
+    virtual فراغ adoptText(CharacterIterator* newText) override;
 
     /**
      * Set the iterator to analyze a new piece of text.  This function resets
@@ -454,7 +454,7 @@ public:
      * @param newText The text to analyze.
      *  @stable ICU 2.0
      */
-    virtual void setText(const UnicodeString& newText) override;
+    virtual فراغ setText(ثابت UnicodeString& newText) override;
 
     /**
      * Reset the break iterator to operate over the text represented by
@@ -469,7 +469,7 @@ public:
      * @param status  Receives any error codes.
      * @stable ICU 3.4
      */
-    virtual void  setText(UText *text, UErrorCode &status) override;
+    virtual فراغ  setText(UText *text, UErrorCode &status) override;
 
     /**
      * Sets the current iteration position to the beginning of the text, position zero.
@@ -547,7 +547,7 @@ public:
      * @return The current iteration position.
      * @stable ICU 2.0
      */
-    virtual int32_t current() const override;
+    virtual int32_t current() ثابت override;
 
     /**
      * Return the status tag from the break rule that determined the boundary at
@@ -580,7 +580,7 @@ public:
      * @see UWordBreak
      * @stable ICU 2.2
      */
-    virtual int32_t getRuleStatus() const override;
+    virtual int32_t getRuleStatus() ثابت override;
 
    /**
     * Get the status (tag) values from the break rule(s) that determined the boundary
@@ -618,7 +618,7 @@ public:
      *                  other classes have different class IDs.
      * @stable ICU 2.0
      */
-    virtual UClassID getDynamicClassID() const override;
+    virtual UClassID getDynamicClassID() ثابت override;
 
     /**
      * Returns the class ID for this class.  This is useful only for
@@ -631,7 +631,7 @@ public:
      * @return          The class ID for all objects of this class.
      * @stable ICU 2.0
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ساكن UClassID U_EXPORT2 getStaticClassID();
 
 #ifndef U_FORCE_HIDE_DEPRECATED_API
     /**
@@ -660,7 +660,7 @@ public:
      *          or if the stackBuffer was too small to hold the clone.
      * @deprecated ICU 52. Use clone() instead.
      */
-    virtual RuleBasedBreakIterator *createBufferClone(void *stackBuffer,
+    virtual RuleBasedBreakIterator *createBufferClone(فراغ *تيندنن_Buffer,
                                                       int32_t &BufferSize,
                                                       UErrorCode &status) override;
 #endif  // U_FORCE_HIDE_DEPRECATED_API
@@ -682,7 +682,7 @@ public:
      *           caller, and must not be modified or deleted.
      * @stable ICU 4.8
      */
-    virtual const uint8_t* getBinaryRules(uint32_t& length) U_LIFETIME_BOUND;
+    virtual ثابت uint8_t* get_بيناري_Rules(uint32_t& length) U_LIFETIME_BOUND;
 
     /**
      *  Set the subject text string upon which the break iterator is operating
@@ -709,17 +709,17 @@ public:
      *
      * @stable ICU 49
      */
-    virtual RuleBasedBreakIterator& refreshInputText(UText* input,
+    virtual RuleBasedBreakIterator& refresh_ماسوقن_Text(UText* ماسوقن,
                                                      UErrorCode& status) U_LIFETIME_BOUND override;
 
 
-private:
+خاص:
     //=======================================================================
     // implementation
     //=======================================================================
 
 #ifndef U_HIDE_INTERNAL_API
-public:
+عام:
 #endif /* U_HIDE_INTERNAL_API */
     /**
      * Iterate backwards from an arbitrary position in the input text using the
@@ -734,7 +734,7 @@ public:
      */
     int32_t handleSafePrevious(int32_t fromPosition);
 
-private:
+خاص:
     /**
      * Find a rule-based boundary by running the state machine.
      * Input
@@ -761,7 +761,7 @@ private:
      * signature)
      */
 
-    typedef uint16_t (*PTrieFunc)(const UCPTrie *, UChar32);
+    تعريفنوع uint16_t (*PTrieFunc)(ثابت UCPTrie *, UChar32);
 
     template<typename RowType, PTrieFunc trieFunc>
     int32_t handleSafePrevious(int32_t fromPosition);
@@ -776,22 +776,22 @@ private:
      * @param c         A character in the dictionary set
      * @param locale    The locale.
      */
-    const LanguageBreakEngine* getLanguageBreakEngine(UChar32 c,
-                                                      const char* locale) U_LIFETIME_BOUND;
+    ثابت LanguageBreakEngine* getLanguageBreakEngine(UChar32 c,
+                                                      ثابت حرف* locale) U_LIFETIME_BOUND;
 
-  public:
+  عام:
 #ifndef U_HIDE_INTERNAL_API
     /**
      *   Debugging function only.
      *   @internal
      */
-     void dumpCache();
+     فراغ dumpCache();
 
     /**
      * Debugging function only.
      * @internal
      */
-    void dumpTables();
+    فراغ dumpTables();
 #endif  /* U_HIDE_INTERNAL_API */
 
 #ifndef U_HIDE_INTERNAL_API
@@ -804,7 +804,7 @@ private:
      * @param status the in/out status code, no special meanings are assigned
      * @internal ICU 74 technology preview
      */
-    static void U_EXPORT2 registerExternalBreakEngine(
+    ساكن فراغ U_EXPORT2 registerExternalBreakEngine(
                   ExternalBreakEngine* toAdopt, UErrorCode& status);
 #endif  /* U_HIDE_INTERNAL_API */
 

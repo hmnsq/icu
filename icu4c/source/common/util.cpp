@@ -10,21 +10,21 @@
 **********************************************************************
 */
 
-#include "unicode/unimatch.h"
-#include "unicode/utf16.h"
-#include "patternprops.h"
-#include "util.h"
+#ضمن "unicode/unimatch.h"
+#ضمن "unicode/utf16.h"
+#ضمن "patternprops.h"
+#ضمن "util.h"
 
 // Define char16_t constants using hex for EBCDIC compatibility
 
-static const char16_t BACKSLASH  = 0x005C; /*\*/
-static const char16_t UPPER_U    = 0x0055; /*U*/
-static const char16_t LOWER_U    = 0x0075; /*u*/
-static const char16_t APOSTROPHE = 0x0027; // '\''
-static const char16_t SPACE      = 0x0020; // ' '
+ساكن ثابت char16_t BACKSLASH  = 0x005C; /*\*/
+ساكن ثابت char16_t UPPER_U    = 0x0055; /*U*/
+ساكن ثابت char16_t LOWER_U    = 0x0075; /*u*/
+ساكن ثابت char16_t APOSTROPHE = 0x0027; // '\''
+ساكن ثابت char16_t SPACE      = 0x0020; // ' '
 
 // "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-static const char16_t DIGITS[] = {
+ساكن ثابت char16_t DIGITS[] = {
     48,49,50,51,52,53,54,55,56,57,
     65,66,67,68,69,70,71,72,73,74,
     75,76,77,78,79,80,81,82,83,84,
@@ -33,84 +33,84 @@ static const char16_t DIGITS[] = {
 
 U_NAMESPACE_BEGIN
 
-UnicodeString& ICU_Utility::appendNumber(UnicodeString& result, int32_t n,
+UnicodeString& ICU_Utility::append_نومبور(UnicodeString& result, int32_t n,
                                      int32_t radix, int32_t minDigits) {
-    if (radix < 2 || radix > 36) {
+    إذا (radix < 2 || radix > 36) {
         // Bogus radix
-        return result.append(static_cast<char16_t>(63)/*?*/);
+        أرجع result.append(static_cast<char16_t>(63)/*?*/);
     }
     // Handle negatives
-    if (n < 0) {
+    إذا (n < 0) {
         n = -n;
         result.append(static_cast<char16_t>(45)/*-*/);
     }
     // First determine the number of digits
     int32_t nn = n;
     int32_t r = 1;
-    while (nn >= radix) {
+    طالما (nn >= radix) {
         nn /= radix;
         r *= radix;
         --minDigits;
     }
     // Now generate the digits
-    while (--minDigits > 0) {
+    طالما (--minDigits > 0) {
         result.append(DIGITS[0]);
     }
-    while (r > 0) {
+    طالما (r > 0) {
         int32_t digit = n / r;
         result.append(DIGITS[digit]);
         n -= digit * r;
         r /= radix;
     }
-    return result;
+    أرجع result;
 }
 
 UBool ICU_Utility::isUnprintable(UChar32 c) {
-    return !(c >= 0x20 && c <= 0x7E);
+    أرجع !(c >= 0x20 && c <= 0x7E);
 }
 
 UBool ICU_Utility::shouldAlwaysBeEscaped(UChar32 c) {
-    if (c < 0x20) {
-        return true;  // C0 control codes
-    } else if (c <= 0x7e) {
-        return false;  // printable ASCII
-    } else if (c <= 0x9f) {
-        return true;  // C1 control codes
-    } else if (c < 0xd800) {
-        return false;  // most of the BMP
-    } else if (c <= 0xdfff || (0xfdd0 <= c && c <= 0xfdef) || (c & 0xfffe) == 0xfffe) {
-        return true;  // surrogate or noncharacter code points
-    } else if (c <= 0x10ffff) {
-        return false;  // all else
-    } else {
-        return true;  // not a code point
+    إذا (c < 0x20) {
+        أرجع true;  // C0 control codes
+    } وإلا إذا (c <= 0x7e) {
+        أرجع خطأ;  // printable ASCII
+    } وإلا إذا (c <= 0x9f) {
+        أرجع true;  // C1 control codes
+    } وإلا إذا (c < 0xd800) {
+        أرجع خطأ;  // most of the BMP
+    } وإلا إذا (c <= 0xdfff || (0xfdd0 <= c && c <= 0xfdef) || (c & 0xfffe) == 0xfffe) {
+        أرجع true;  // surrogate or noncharacter code points
+    } وإلا إذا (c <= 0x10ffff) {
+        أرجع خطأ;  // all else
+    } وإلا {
+        أرجع true;  // not a code point
     }
 }
 
 UBool ICU_Utility::escapeUnprintable(UnicodeString& result, UChar32 c) {
-    if (isUnprintable(c)) {
+    إذا (isUnprintable(c)) {
         escape(result, c);
-        return true;
+        أرجع true;
     }
-    return false;
+    أرجع خطأ;
 }
 
 UnicodeString &ICU_Utility::escape(UnicodeString& result, UChar32 c) {
     result.append(BACKSLASH);
-    if (c & ~0xFFFF) {
+    إذا (c & ~0xFFFF) {
         result.append(UPPER_U);
         result.append(DIGITS[0xF&(c>>28)]);
         result.append(DIGITS[0xF&(c>>24)]);
         result.append(DIGITS[0xF&(c>>20)]);
         result.append(DIGITS[0xF&(c>>16)]);
-    } else {
+    } وإلا {
         result.append(LOWER_U);
     }
     result.append(DIGITS[0xF&(c>>12)]);
     result.append(DIGITS[0xF&(c>>8)]);
     result.append(DIGITS[0xF&(c>>4)]);
     result.append(DIGITS[0xF&c]);
-    return result;
+    أرجع result;
 }
 
 /**
@@ -146,15 +146,15 @@ int32_t ICU_Utility::quotedIndexOf(const UnicodeString& text,
  * @return the index of the first non-white-space character at or
  * after pos, or str.length(), if there is none.
  */
-int32_t ICU_Utility::skipWhitespace(const UnicodeString& str, int32_t& pos,
+int32_t ICU_Utility::skipWhitespace(ثابت UnicodeString& str, int32_t& pos,
                                     UBool advance) {
     int32_t p = pos;
-    const char16_t* s = str.getBuffer();
+    ثابت char16_t* s = str.getBuffer();
     p = static_cast<int32_t>(PatternProps::skipWhiteSpace(s + p, str.length() - p) - s);
-    if (advance) {
+    إذا (advance) {
         pos = p;
     }
-    return p;
+    أرجع p;
 }
 
 /**
@@ -212,16 +212,16 @@ int32_t ICU_Utility::skipWhitespace(const UnicodeString& str, int32_t& pos,
  * @return true if 'ch' is seen preceded by zero or more
  * whitespace characters.
  */
-UBool ICU_Utility::parseChar(const UnicodeString& id, int32_t& pos, char16_t ch) {
+UBool ICU_Utility::parseChar(ثابت UnicodeString& id, int32_t& pos, char16_t ch) {
     int32_t start = pos;
     skipWhitespace(id, pos, true);
-    if (pos == id.length() ||
+    إذا (pos == id.length() ||
         id.charAt(pos) != ch) {
         pos = start;
-        return false;
+        أرجع خطأ;
     }
     ++pos;
-    return true;
+    أرجع true;
 }
 
 /**
@@ -240,64 +240,64 @@ UBool ICU_Utility::parseChar(const UnicodeString& id, int32_t& pos, char16_t ch)
  * @param limit offset after last character to parse
  * @return index after last parsed character, or -1 on parse failure.
  */
-int32_t ICU_Utility::parsePattern(const UnicodeString& pat,
-                                  const Replaceable& text,
+int32_t ICU_Utility::parsePattern(ثابت UnicodeString& pat,
+                                  ثابت Replaceable& text,
                                   int32_t index,
                                   int32_t limit) {
     int32_t ipat = 0;
 
     // empty pattern matches immediately
-    if (ipat == pat.length()) {
-        return index;
+    إذا (ipat == pat.length()) {
+        أرجع index;
     }
 
     UChar32 cpat = pat.char32At(ipat);
 
-    while (index < limit) {
+    طالما (index < limit) {
         UChar32 c = text.char32At(index);
 
         // parse \s*
-        if (cpat == 126 /*~*/) {
-            if (PatternProps::isWhiteSpace(c)) {
+        إذا (cpat == 126 /*~*/) {
+            إذا (PatternProps::isWhiteSpace(c)) {
                 index += U16_LENGTH(c);
-                continue;
-            } else {
-                if (++ipat == pat.length()) {
-                    return index; // success; c unparsed
+                استمر;
+            } وإلا {
+                إذا (++ipat == pat.length()) {
+                    أرجع index; // success; c unparsed
                 }
                 // fall thru; process c again with next cpat
             }
         }
 
         // parse literal
-        else if (c == cpat) {
+        وإلا إذا (c == cpat) {
             index += U16_LENGTH(c);
             ipat += U16_LENGTH(cpat);
-            if (ipat == pat.length()) {
-                return index; // success; c parsed
+            إذا (ipat == pat.length()) {
+                أرجع index; // success; c parsed
             }
             // fall thru; get next cpat
         }
 
         // match failure of literal
-        else {
-            return -1;
+        وإلا {
+            أرجع -1;
         }
 
         cpat = pat.char32At(ipat);
     }
 
-    return -1; // text ended before end of pat
+    أرجع -1; // text ended before end of pat
 }
 
-int32_t ICU_Utility::parseAsciiInteger(const UnicodeString& str, int32_t& pos) {
+int32_t ICU_Utility::parseAsciiInteger(ثابت UnicodeString& str, int32_t& pos) {
     int32_t result = 0;
     char16_t c;
-    while (pos < str.length() && (c = str.charAt(pos)) >= u'0' && c <= u'9') {
+    طالما (pos < str.length() && (c = str.charAt(pos)) >= u'0' && c <= u'9') {
         result = result * 10 + (c - u'0');
         pos++;
     }
-    return result;
+    أرجع result;
 }
 
 /**
@@ -318,7 +318,7 @@ int32_t ICU_Utility::parseAsciiInteger(const UnicodeString& str, int32_t& pos) {
  * cleared out by, at the end, calling this method with a literal
  * character.
  */
-void ICU_Utility::appendToRule(UnicodeString& rule,
+فراغ ICU_Utility::appendToRule(UnicodeString& rule,
                                UChar32 c,
                                UBool isLiteral,
                                UBool escapeUnprintable,
@@ -326,9 +326,9 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
     // If we are escaping unprintables, then escape them outside
     // quotes.  \u and \U are not recognized within quotes.  The same
     // logic applies to literals, but literals are never escaped.
-    if (isLiteral ||
+    إذا (isLiteral ||
         (escapeUnprintable && ICU_Utility::isUnprintable(c))) {
-        if (quoteBuf.length() > 0) {
+        إذا (quoteBuf.length() > 0) {
             // We prefer backslash APOSTROPHE to double APOSTROPHE
             // (more readable, less similar to ") so if there are
             // double APOSTROPHEs at the ends, we pull them outside
@@ -336,7 +336,7 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
 
             // If the first thing in the quoteBuf is APOSTROPHE
             // (doubled) then pull it out.
-            while (quoteBuf.length() >= 2 &&
+            طالما (quoteBuf.length() >= 2 &&
                    quoteBuf.charAt(0) == APOSTROPHE &&
                    quoteBuf.charAt(1) == APOSTROPHE) {
                 rule.append(BACKSLASH).append(APOSTROPHE);
@@ -344,42 +344,42 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
             }
             // If the last thing in the quoteBuf is APOSTROPHE
             // (doubled) then remove and count it and add it after.
-            int32_t trailingCount = 0;
-            while (quoteBuf.length() >= 2 &&
+            int32_t trailing_کيراءن = 0;
+            طالما (quoteBuf.length() >= 2 &&
                    quoteBuf.charAt(quoteBuf.length()-2) == APOSTROPHE &&
                    quoteBuf.charAt(quoteBuf.length()-1) == APOSTROPHE) {
                 quoteBuf.truncate(quoteBuf.length()-2);
-                ++trailingCount;
+                ++trailing_کيراءن;
             }
-            if (quoteBuf.length() > 0) {
+            إذا (quoteBuf.length() > 0) {
                 rule.append(APOSTROPHE);
                 rule.append(quoteBuf);
                 rule.append(APOSTROPHE);
                 quoteBuf.truncate(0);
             }
-            while (trailingCount-- > 0) {
+            طالما (trailing_کيراءن-- > 0) {
                 rule.append(BACKSLASH).append(APOSTROPHE);
             }
         }
-        if (c != static_cast<UChar32>(-1)) {
+        إذا (c != static_cast<UChar32>(-1)) {
             /* Since spaces are ignored during parsing, they are
              * emitted only for readability.  We emit one here
              * only if there isn't already one at the end of the
              * rule.
              */
-            if (c == SPACE) {
+            إذا (c == SPACE) {
                 int32_t len = rule.length();
-                if (len > 0 && rule.charAt(len-1) != c) {
+                إذا (len > 0 && rule.charAt(len-1) != c) {
                     rule.append(c);
                 }
-            } else if (!escapeUnprintable || !ICU_Utility::escapeUnprintable(rule, c)) {
+            } وإلا إذا (!escapeUnprintable || !ICU_Utility::escapeUnprintable(rule, c)) {
                 rule.append(c);
             }
         }
     }
 
     // Escape ' and '\' and don't begin a quote just for them
-    else if (quoteBuf.length() == 0 &&
+    وإلا إذا (quoteBuf.length() == 0 &&
              (c == APOSTROPHE || c == BACKSLASH)) {
         rule.append(BACKSLASH);
         rule.append(c);
@@ -388,7 +388,7 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
     // Specials (printable ascii that isn't [0-9a-zA-Z]) and
     // whitespace need quoting.  Also append stuff to quotes if we are
     // building up a quoted substring already.
-    else if (quoteBuf.length() > 0 ||
+    وإلا إذا (quoteBuf.length() > 0 ||
              (c >= 0x0021 && c <= 0x007E &&
               !((c >= 0x0030/*'0'*/ && c <= 0x0039/*'9'*/) ||
                 (c >= 0x0041/*'A'*/ && c <= 0x005A/*'Z'*/) ||
@@ -396,23 +396,23 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
              PatternProps::isWhiteSpace(c)) {
         quoteBuf.append(c);
         // Double ' within a quote
-        if (c == APOSTROPHE) {
+        إذا (c == APOSTROPHE) {
             quoteBuf.append(c);
         }
     }
     
     // Otherwise just append
-    else {
+    وإلا {
         rule.append(c);
     }
 }
 
-void ICU_Utility::appendToRule(UnicodeString& rule,
-                               const UnicodeString& text,
+فراغ ICU_Utility::appendToRule(UnicodeString& rule,
+                               ثابت UnicodeString& text,
                                UBool isLiteral,
                                UBool escapeUnprintable,
                                UnicodeString& quoteBuf) {
-    for (int32_t i=0; i<text.length(); ++i) {
+    لكل (int32_t i=0; i<text.length(); ++i) {
         appendToRule(rule, text[i], isLiteral, escapeUnprintable, quoteBuf);
     }
 }
@@ -421,11 +421,11 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
  * Given a matcher reference, which may be null, append its
  * pattern as a literal to the given rule.
  */
-void ICU_Utility::appendToRule(UnicodeString& rule,
-                               const UnicodeMatcher* matcher,
+فراغ ICU_Utility::appendToRule(UnicodeString& rule,
+                               ثابت UnicodeMatcher* matcher,
                                UBool escapeUnprintable,
                                UnicodeString& quoteBuf) {
-    if (matcher != nullptr) {
+    إذا (matcher != nullptr) {
         UnicodeString pat;
         appendToRule(rule, matcher->toPattern(pat, escapeUnprintable),
                      true, escapeUnprintable, quoteBuf);

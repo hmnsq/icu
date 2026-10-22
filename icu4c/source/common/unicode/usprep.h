@@ -24,10 +24,10 @@
  * \brief C API: Implements the StringPrep algorithm.
  */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
+#إذا U_SHOW_CPLUSPLUS_API
+#ضمن "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
 /**
@@ -62,15 +62,15 @@
  * </ol>
  * @author Ram Viswanadha
  */
-#if !UCONFIG_NO_IDNA
+#إذا !UCONFIG_NO_IDNA
 
-#include "unicode/parseerr.h"
+#ضمن "unicode/parseerr.h"
 
 /**
  * The StringPrep profile
  * @stable ICU 2.8
  */
-typedef struct UStringPrepProfile UStringPrepProfile;
+تعريفنوع بنية UStringPrepProfile UStringPrepProfile;
 
 
 /** 
@@ -95,7 +95,7 @@ typedef struct UStringPrepProfile UStringPrepProfile;
  * @see usprep_openByType
  * @stable ICU 4.2
  */
-typedef enum UStringPrepProfileType {
+تعريفنوع تعداد UStringPrepProfileType {
     /**
      * RFC3491 Nameprep
      * @stable ICU 4.2
@@ -185,8 +185,8 @@ typedef enum UStringPrepProfileType {
  * @stable ICU 2.8
  */
 U_CAPI UStringPrepProfile* U_EXPORT2
-usprep_open(const char* path, 
-            const char* fileName,
+usprep_open(ثابت حرف* path, 
+            ثابت حرف* fileName,
             UErrorCode* status);
 
 /**
@@ -209,10 +209,10 @@ usprep_openByType(UStringPrepProfileType type,
  * @param profile The profile to close
  * @stable ICU 2.8
  */
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 usprep_close(UStringPrepProfile* profile);
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -261,8 +261,8 @@ U_NAMESPACE_END
  */
 
 U_CAPI int32_t U_EXPORT2
-usprep_prepare(   const UStringPrepProfile* prep,
-                  const UChar* src, int32_t srcLength, 
+usprep_prepare(   ثابت UStringPrepProfile* prep,
+                  ثابت UChar* src, int32_t srcLength, 
                   UChar* dest, int32_t destCapacity,
                   int32_t options,
                   UParseError* parseError,

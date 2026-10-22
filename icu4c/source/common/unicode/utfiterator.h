@@ -7,23 +7,23 @@
 #ifndef __UTFITERATOR_H__
 #define __UTFITERATOR_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API || !defined(UTYPES_H)
+#إذا U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API || !defined(UTYPES_H)
 
-#include <iterator>
-#if __has_include(<version>)
-#include <version>
+#ضمن <iterator>
+#إذا __has_include(<version>)
+#ضمن <version>
 #endif
-#if defined(__cpp_lib_ranges)
-#include <ranges>
+#إذا defined(__cpp_lib_ranges)
+#ضمن <ranges>
 #endif
-#include <string>
-#include <string_view>
-#include <type_traits>
-#include "unicode/utf16.h"
-#include "unicode/utf8.h"
-#include "unicode/uversion.h"
+#ضمن <string>
+#ضمن <string_view>
+#ضمن <type_traits>
+#ضمن "unicode/utf16.h"
+#ضمن "unicode/utf8.h"
+#ضمن "unicode/uversion.h"
 
 /**
  * \file
@@ -152,7 +152,7 @@
  * @see UTFIterator
  * @see UTFStringCodePoints
  */
-typedef enum UTFIllFormedBehavior {
+تعريفنوع تعداد UTFIllFormedBehavior {
     /**
      * Returns a negative value (-1=U_SENTINEL) instead of a code point.
      * If the CP32 template parameter for the relevant classes is an unsigned type,
@@ -176,11 +176,11 @@ typedef enum UTFIllFormedBehavior {
 namespace U_HEADER_ONLY_NAMESPACE {
 
 namespace prv {
-#if U_CPLUSPLUS_VERSION >= 20
+#إذا U_CPLUSPLUS_VERSION >= 20
 
 /** @internal */
 template<typename Iter>
-using iter_value_t = typename std::iter_value_t<Iter>;
+using iter_نيلاي_t = typename std::iter_نيلاي_t<Iter>;
 
 /** @internal */
 template<typename Iter>
@@ -198,11 +198,11 @@ constexpr bool bidirectional_iterator = std::bidirectional_iterator<Iter>;
 template<typename Range>
 constexpr bool range = std::ranges::range<Range>;
 
-#else
+#وإلا
 
 /** @internal */
 template<typename Iter>
-using iter_value_t = typename std::iterator_traits<Iter>::value_type;
+using iter_نيلاي_t = typename std::iterator_traits<Iter>::نيلاي_type;
 
 /** @internal */
 template<typename Iter>
@@ -223,41 +223,41 @@ constexpr bool bidirectional_iterator =
         typename std::iterator_traits<Iter>::iterator_category>;
 
 /** @internal */
-template<typename Range, typename = void>
-struct range_type : std::false_type {};
+template<typename Range, typename = فراغ>
+بنية range_type : std::false_type {};
 
 /** @internal */
 template<typename Range>
-struct range_type<
+بنية range_type<
     Range,
     std::void_t<decltype(std::declval<Range>().begin()),
                 decltype(std::declval<Range>().end())>> : std::true_type {};
 
 /** @internal */
 template<typename Range>
-constexpr bool range = range_type<Range>::value;
+constexpr bool range = range_type<Range>::نيلاي_2;
 
 #endif
 
 /** @internal */
-template <typename T> struct is_basic_string_view : std::false_type {};
+template <typename T> بنية is_basic_string_view : std::false_type {};
 
 /** @internal */
 template <typename... Args>
-struct is_basic_string_view<std::basic_string_view<Args...>> : std::true_type {};
+بنية is_basic_string_view<std::basic_string_view<Args...>> : std::true_type {};
 
 /** @internal */
-template <typename T> constexpr bool is_basic_string_view_v = is_basic_string_view<T>::value;
+template <typename T> constexpr bool is_basic_string_view_v = is_basic_string_view<T>::نيلاي_2;
 
 /** @internal */
 template<typename CP32, bool skipSurrogates>
 class CodePointsIterator {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
+    static_assert(حجم(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+عام:
     /** C++ iterator boilerplate @internal */
-    using value_type = CP32;
+    using نيلاي_type = CP32;
     /** C++ iterator boilerplate @internal */
-    using reference = value_type;
+    using reference = نيلاي_type;
     /** C++ iterator boilerplate @internal */
     using pointer = CP32 *;
     /** C++ iterator boilerplate @internal */
@@ -266,29 +266,29 @@ public:
     using iterator_category = std::forward_iterator_tag;
 
     /** @internal */
-    inline CodePointsIterator(CP32 c) : c_(c) {}
+    مضمن CodePointsIterator(CP32 c) : c_(c) {}
     /** @internal */
-    inline bool operator==(const CodePointsIterator &other) const { return c_ == other.c_; }
+    مضمن bool operator==(ثابت CodePointsIterator &other) ثابت { أرجع c_ == other.c_; }
     /** @internal */
-    inline bool operator!=(const CodePointsIterator &other) const { return !operator==(other); }
+    مضمن bool operator!=(ثابت CodePointsIterator &other) ثابت { أرجع !operator==(other); }
     /** @internal */
-    inline CP32 operator*() const { return c_; }
+    مضمن CP32 operator*() ثابت { أرجع c_; }
     /** @internal */
-    inline CodePointsIterator& operator++() U_LIFETIME_BOUND {  // pre-increment
+    مضمن CodePointsIterator& operator++() U_LIFETIME_BOUND {  // pre-increment
         ++c_;
-        if (skipSurrogates && c_ == 0xd800) {
+        إذا (skipSurrogates && c_ == 0xd800) {
             c_ = 0xe000;
         }
-        return *this;
+        أرجع *this;
     }
     /** @internal */
-    inline CodePointsIterator operator++(int) {  // post-increment
+    مضمن CodePointsIterator operator++(صحيح) {  // post-increment
         CodePointsIterator result(*this);
         ++(*this);
-        return result;
+        أرجع result;
     }
 
-private:
+خاص:
     CP32 c_;
 };
 
@@ -306,8 +306,8 @@ private:
  */
 template<typename CP32>
 class AllCodePoints {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
+    static_assert(حجم(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+عام:
     /** Constructor. @draft ICU 78 */
     AllCodePoints() {}
     /**
@@ -315,12 +315,12 @@ public:
      *     The iterator returns CP32 integers.
      * @draft ICU 78
      */
-    auto begin() const { return prv::CodePointsIterator<CP32, false>(0); }
+    auto begin() ثابت { أرجع prv::CodePointsIterator<CP32, false>(0); }
     /**
      * @return an exclusive-end iterator over all Unicode code points.
      * @draft ICU 78
      */
-    auto end() const { return prv::CodePointsIterator<CP32, false>(0x110000); }
+    auto end() ثابت { أرجع prv::CodePointsIterator<CP32, false>(0x110000); }
 };
 
 /**
@@ -336,22 +336,22 @@ public:
  * @see U_IS_SCALAR_VALUE
  */
 template<typename CP32>
-class AllScalarValues {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
+class All_Scalar_نيلاي_سموا {
+    static_assert(حجم(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+عام:
     /** Constructor. @draft ICU 78 */
-    AllScalarValues() {}
+    All_Scalar_نيلاي_سموا() {}
     /**
      * @return an iterator over all Unicode scalar values.
      *     The iterator returns CP32 integers.
      * @draft ICU 78
      */
-    auto begin() const { return prv::CodePointsIterator<CP32, true>(0); }
+    auto begin() ثابت { أرجع prv::CodePointsIterator<CP32, true>(0); }
     /**
      * @return an exclusive-end iterator over all Unicode scalar values.
      * @draft ICU 78
      */
-    auto end() const { return prv::CodePointsIterator<CP32, true>(0x110000); }
+    auto end() ثابت { أرجع prv::CodePointsIterator<CP32, true>(0x110000); }
 };
 
 /**
@@ -369,19 +369,19 @@ public:
  * @see UnsafeUTFStringCodePoints
  * @draft ICU 78
  */
-template<typename CP32, typename UnitIter, typename = void>
+template<typename CP32, typename UnitIter, typename = فراغ>
 class UnsafeCodeUnits {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-    using Unit = typename prv::iter_value_t<UnitIter>;
-public:
+    static_assert(حجم(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+    using Unit = typename prv::iter_نيلاي_t<UnitIter>;
+عام:
     /** @internal */
     UnsafeCodeUnits(CP32 codePoint, uint8_t length, UnitIter start, UnitIter limit) :
             c_(codePoint), len_(length), start_(start), limit_(limit) {}
 
     /** Copy constructor. @draft ICU 78 */
-    UnsafeCodeUnits(const UnsafeCodeUnits &other) = default;
+    UnsafeCodeUnits(ثابت UnsafeCodeUnits &other) = افتراضي;
     /** Copy assignment operator. @draft ICU 78 */
-    UnsafeCodeUnits &operator=(const UnsafeCodeUnits &other) = default;
+    UnsafeCodeUnits &operator=(ثابت UnsafeCodeUnits &other) = افتراضي;
 
     /**
      * @return the Unicode code point decoded from the code unit sequence.
@@ -390,57 +390,57 @@ public:
      *     UTFIllFormedBehavior template parameter.
      * @draft ICU 78
      */
-    CP32 codePoint() const { return c_; }
+    CP32 codePoint() ثابت { أرجع c_; }
 
     /**
      * @return the start of the code unit sequence for one code point.
      * Only enabled if UnitIter is a (multi-pass) forward_iterator or better.
      * @draft ICU 78
      */
-    UnitIter begin() const { return start_; }
+    UnitIter begin() ثابت { أرجع start_; }
 
     /**
      * @return the limit (exclusive end) of the code unit sequence for one code point.
      * Only enabled if UnitIter is a (multi-pass) forward_iterator or better.
      * @draft ICU 78
      */
-    UnitIter end() const { return limit_; }
+    UnitIter end() ثابت { أرجع limit_; }
 
     /**
      * @return the length of the code unit sequence for one code point.
      * @draft ICU 78
      */
-    uint8_t length() const { return len_; }
+    uint8_t length() ثابت { أرجع len_; }
 
-#if U_CPLUSPLUS_VERSION >= 20
+#إذا U_CPLUSPLUS_VERSION >= 20
     /**
      * @return a string_view of the code unit sequence for one code point.
      * Only works if UnitIter is a pointer or a contiguous_iterator.
      * @draft ICU 78
      */
     template<std::contiguous_iterator Iter = UnitIter>
-    std::basic_string_view<Unit> stringView() const {
-        return std::basic_string_view<Unit>(begin(), end());
+    std::basic_string_view<Unit> stringView() ثابت {
+        أرجع std::basic_string_view<Unit>(begin(), end());
     }
-#else
+#وإلا
     /**
      * @return a string_view of the code unit sequence for one code point.
      * Only works if UnitIter is a pointer or a contiguous_iterator.
      * @draft ICU 78
      */
-    template<typename Iter = UnitIter, typename Unit = typename std::iterator_traits<Iter>::value_type>
+    template<typename Iter = UnitIter, typename Unit = typename std::iterator_traits<Iter>::نيلاي_type>
     std::enable_if_t<std::is_pointer_v<Iter> ||
                          std::is_same_v<Iter, typename std::basic_string<Unit>::iterator> ||
                          std::is_same_v<Iter, typename std::basic_string<Unit>::const_iterator> ||
                          std::is_same_v<Iter, typename std::basic_string_view<Unit>::iterator> ||
                          std::is_same_v<Iter, typename std::basic_string_view<Unit>::const_iterator>,
                      std::basic_string_view<Unit>>
-    stringView() const {
-        return std::basic_string_view<Unit>(&*start_, len_);
+    stringView() ثابت {
+        أرجع std::basic_string_view<Unit>(&*start_, len_);
     }
 #endif
 
-private:
+خاص:
     // Order of fields with padding and access frequency in mind.
     CP32 c_;
     uint8_t len_;
@@ -456,18 +456,18 @@ class UnsafeCodeUnits<
         CP32,
         UnitIter,
         std::enable_if_t<!prv::forward_iterator<UnitIter>>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
+    static_assert(حجم(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+عام:
     UnsafeCodeUnits(CP32 codePoint, uint8_t length) : c_(codePoint), len_(length) {}
 
-    UnsafeCodeUnits(const UnsafeCodeUnits &other) = default;
-    UnsafeCodeUnits &operator=(const UnsafeCodeUnits &other) = default;
+    UnsafeCodeUnits(ثابت UnsafeCodeUnits &other) = افتراضي;
+    UnsafeCodeUnits &operator=(ثابت UnsafeCodeUnits &other) = افتراضي;
 
-    CP32 codePoint() const { return c_; }
+    CP32 codePoint() ثابت { أرجع c_; }
 
-    uint8_t length() const { return len_; }
+    uint8_t length() ثابت { أرجع len_; }
 
-private:
+خاص:
     // Order of fields with padding and access frequency in mind.
     CP32 c_;
     uint8_t len_;
@@ -489,25 +489,25 @@ private:
  * @see UTFStringCodePoints
  * @draft ICU 78
  */
-template<typename CP32, typename UnitIter, typename = void>
-class CodeUnits : public UnsafeCodeUnits<CP32, UnitIter> {
-public:
+template<typename CP32, typename UnitIter, typename = فراغ>
+class CodeUnits : عام UnsafeCodeUnits<CP32, UnitIter> {
+عام:
     /** @internal */
     CodeUnits(CP32 codePoint, uint8_t length, bool wellFormed, UnitIter start, UnitIter limit) :
             UnsafeCodeUnits<CP32, UnitIter>(codePoint, length, start, limit), ok_(wellFormed) {}
 
     /** Copy constructor. @draft ICU 78 */
-    CodeUnits(const CodeUnits &other) = default;
+    CodeUnits(ثابت CodeUnits &other) = افتراضي;
     /** Copy assignment operator. @draft ICU 78 */
-    CodeUnits &operator=(const CodeUnits &other) = default;
+    CodeUnits &operator=(ثابت CodeUnits &other) = افتراضي;
 
     /**
      * @return true if the decoded code unit sequence is well-formed.
      * @draft ICU 78
      */
-    bool wellFormed() const { return ok_; }
+    bool wellFormed() ثابت { أرجع ok_; }
 
-private:
+خاص:
     bool ok_;
 };
 
@@ -519,17 +519,17 @@ class CodeUnits<
         CP32,
         UnitIter,
         std::enable_if_t<!prv::forward_iterator<UnitIter>>> :
-            public UnsafeCodeUnits<CP32, UnitIter> {
-public:
+            عام UnsafeCodeUnits<CP32, UnitIter> {
+عام:
     CodeUnits(CP32 codePoint, uint8_t length, bool wellFormed) :
             UnsafeCodeUnits<CP32, UnitIter>(codePoint, length), ok_(wellFormed) {}
 
-    CodeUnits(const CodeUnits &other) = default;
-    CodeUnits &operator=(const CodeUnits &other) = default;
+    CodeUnits(ثابت CodeUnits &other) = افتراضي;
+    CodeUnits &operator=(ثابت CodeUnits &other) = افتراضي;
 
-    bool wellFormed() const { return ok_; }
+    bool wellFormed() ثابت { أرجع ok_; }
 
-private:
+خاص:
     bool ok_;
 };
 #endif  // U_IN_DOXYGEN
@@ -538,7 +538,7 @@ private:
 
 #ifndef U_IN_DOXYGEN
 template<typename CP32, UTFIllFormedBehavior behavior,
-         typename UnitIter, typename LimitIter = UnitIter, typename = void>
+         typename UnitIter, typename LimitIter = UnitIter, typename = فراغ>
 class UTFImpl;
 
 // Note: readAndInc() functions take both a p0 and a p iterator.
@@ -556,38 +556,38 @@ template<typename CP32, UTFIllFormedBehavior behavior, typename UnitIter, typena
 class UTFImpl<
         CP32, behavior,
         UnitIter, LimitIter,
-        std::enable_if_t<sizeof(typename prv::iter_value_t<UnitIter>) == 1>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+        std::enable_if_t<حجم(typename prv::iter_نيلاي_t<UnitIter>) == 1>> {
+    static_assert(حجم(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
     static_assert(behavior != UTF_BEHAVIOR_SURROGATE,
                   "For 8-bit strings, the SURROGATE option does not have an equivalent.");
-public:
+عام:
     // Handle ill-formed UTF-8
-    U_FORCE_INLINE static CP32 sub() {
-        if constexpr (behavior == UTF_BEHAVIOR_NEGATIVE) {
-            return U_SENTINEL;
-        } else {
+    U_FORCE_INLINE ساكن CP32 sub() {
+        إذا constexpr (behavior == UTF_BEHAVIOR_NEGATIVE) {
+            أرجع U_SENTINEL;
+        } وإلا {
             static_assert(behavior == UTF_BEHAVIOR_FFFD);
-            return 0xfffd;
+            أرجع 0xfffd;
         }
     }
 
-    U_FORCE_INLINE static void inc(UnitIter &p, const LimitIter &limit) {
+    U_FORCE_INLINE ساكن فراغ inc(UnitIter &p, ثابت LimitIter &limit) {
         // Very similar to U8_FWD_1().
         uint8_t b = *p;
         ++p;
-        if (U8_IS_LEAD(b) && p != limit) {
+        إذا (U8_IS_LEAD(b) && p != limit) {
             uint8_t t1 = *p;
-            if ((0xe0 <= b && b < 0xf0)) {
-                if (U8_IS_VALID_LEAD3_AND_T1(b, t1) &&
+            إذا ((0xe0 <= b && b < 0xf0)) {
+                إذا (U8_IS_VALID_LEAD3_AND_T1(b, t1) &&
                         ++p != limit && U8_IS_TRAIL(*p)) {
                     ++p;
                 }
-            } else if (b < 0xe0) {
-                if (U8_IS_TRAIL(t1)) {
+            } وإلا إذا (b < 0xe0) {
+                إذا (U8_IS_TRAIL(t1)) {
                     ++p;
                 }
-            } else /* b >= 0xf0 */ {
-                if (U8_IS_VALID_LEAD4_AND_T1(b, t1) &&
+            } وإلا /* b >= 0xf0 */ {
+                إذا (U8_IS_VALID_LEAD4_AND_T1(b, t1) &&
                         ++p != limit && U8_IS_TRAIL(*p) &&
                         ++p != limit && U8_IS_TRAIL(*p)) {
                     ++p;
@@ -596,56 +596,56 @@ public:
         }
     }
 
-    U_FORCE_INLINE static void dec(UnitIter start, UnitIter &p) {
+    U_FORCE_INLINE ساكن فراغ dec(UnitIter start, UnitIter &p) {
         // Very similar to U8_BACK_1().
         uint8_t c = *--p;
-        if (U8_IS_TRAIL(c) && p != start) {
+        إذا (U8_IS_TRAIL(c) && p != start) {
             UnitIter p1 = p;
             uint8_t b1 = *--p1;
-            if (U8_IS_LEAD(b1)) {
-                if (b1 < 0xe0 ||
+            إذا (U8_IS_LEAD(b1)) {
+                إذا (b1 < 0xe0 ||
                         (b1 < 0xf0 ?
                             U8_IS_VALID_LEAD3_AND_T1(b1, c) :
                             U8_IS_VALID_LEAD4_AND_T1(b1, c))) {
                     p = p1;
-                    return;
+                    أرجع;
                 }
-            } else if (U8_IS_TRAIL(b1) && p1 != start) {
+            } وإلا إذا (U8_IS_TRAIL(b1) && p1 != start) {
                 uint8_t b2 = *--p1;
-                if (0xe0 <= b2 && b2 <= 0xf4) {
-                    if (b2 < 0xf0 ?
+                إذا (0xe0 <= b2 && b2 <= 0xf4) {
+                    إذا (b2 < 0xf0 ?
                             U8_IS_VALID_LEAD3_AND_T1(b2, b1) :
                             U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
                         p = p1;
-                        return;
+                        أرجع;
                     }
-                } else if (U8_IS_TRAIL(b2) && p1 != start) {
+                } وإلا إذا (U8_IS_TRAIL(b2) && p1 != start) {
                     uint8_t b3 = *--p1;
-                    if (0xf0 <= b3 && b3 <= 0xf4 && U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
+                    إذا (0xf0 <= b3 && b3 <= 0xf4 && U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
                         p = p1;
-                        return;
+                        أرجع;
                     }
                 }
             }
         }
     }
 
-    U_FORCE_INLINE static CodeUnits<CP32, UnitIter> readAndInc(
-            UnitIter &p0, UnitIter &p, const LimitIter &limit) {
+    U_FORCE_INLINE ساكن CodeUnits<CP32, UnitIter> readAndInc(
+            UnitIter &p0, UnitIter &p, ثابت LimitIter &limit) {
         constexpr bool isMultiPass = prv::forward_iterator<UnitIter>;
         // Very similar to U8_NEXT_OR_FFFD().
         CP32 c = uint8_t(*p);
         ++p;
-        if (U8_IS_SINGLE(c)) {
-            if constexpr (isMultiPass) {
-                return {c, 1, true, p0, p};
-            } else {
-                return {c, 1, true};
+        إذا (U8_IS_SINGLE(c)) {
+            إذا constexpr (isMultiPass) {
+                أرجع {c, 1, true, p0, p};
+            } وإلا {
+                أرجع {c, 1, true};
             }
         }
         uint8_t length = 1;
         uint8_t t = 0;
-        if (p != limit &&
+        إذا (p != limit &&
                 // fetch/validate/assemble all but last trail byte
                 (c >= 0xe0 ?
                     (c < 0xf0 ?  // U+0800..U+FFFF except surrogates
@@ -665,72 +665,72 @@ public:
             c = (c << 6) | t;
             ++length;
             ++p;
-            if constexpr (isMultiPass) {
-                return {c, length, true, p0, p};
-            } else {
-                return {c, length, true};
+            إذا constexpr (isMultiPass) {
+                أرجع {c, length, true, p0, p};
+            } وإلا {
+                أرجع {c, length, true};
             }
         }
-        if constexpr (isMultiPass) {
-            return {sub(), length, false, p0, p};
-        } else {
-            return {sub(), length, false};
+        إذا constexpr (isMultiPass) {
+            أرجع {sub(), length, false, p0, p};
+        } وإلا {
+            أرجع {sub(), length, false};
         }
     }
 
-    U_FORCE_INLINE static CodeUnits<CP32, UnitIter> decAndRead(UnitIter start, UnitIter &p) {
+    U_FORCE_INLINE ساكن CodeUnits<CP32, UnitIter> decAndRead(UnitIter start, UnitIter &p) {
         // Very similar to U8_PREV_OR_FFFD().
         UnitIter p0 = p;
         CP32 c = uint8_t(*--p);
-        if (U8_IS_SINGLE(c)) {
-            return {c, 1, true, p, p0};
+        إذا (U8_IS_SINGLE(c)) {
+            أرجع {c, 1, true, p, p0};
         }
-        if (U8_IS_TRAIL(c) && p != start) {
+        إذا (U8_IS_TRAIL(c) && p != start) {
             UnitIter p1 = p;
             uint8_t b1 = *--p1;
-            if (U8_IS_LEAD(b1)) {
-                if (b1 < 0xe0) {
+            إذا (U8_IS_LEAD(b1)) {
+                إذا (b1 < 0xe0) {
                     p = p1;
                     c = ((b1 - 0xc0) << 6) | (c & 0x3f);
-                    return {c, 2, true, p, p0};
-                } else if (b1 < 0xf0 ?
+                    أرجع {c, 2, true, p, p0};
+                } وإلا إذا (b1 < 0xf0 ?
                             U8_IS_VALID_LEAD3_AND_T1(b1, c) :
                             U8_IS_VALID_LEAD4_AND_T1(b1, c)) {
                     // Truncated 3- or 4-byte sequence.
                     p = p1;
-                    return {sub(), 2, false, p, p0};
+                    أرجع {sub(), 2, false, p, p0};
                 }
-            } else if (U8_IS_TRAIL(b1) && p1 != start) {
+            } وإلا إذا (U8_IS_TRAIL(b1) && p1 != start) {
                 // Extract the value bits from the last trail byte.
                 c &= 0x3f;
                 uint8_t b2 = *--p1;
-                if (0xe0 <= b2 && b2 <= 0xf4) {
-                    if (b2 < 0xf0) {
+                إذا (0xe0 <= b2 && b2 <= 0xf4) {
+                    إذا (b2 < 0xf0) {
                         b2 &= 0xf;
-                        if (U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
+                        إذا (U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
                             p = p1;
                             c = (b2 << 12) | ((b1 & 0x3f) << 6) | c;
-                            return {c, 3, true, p, p0};
+                            أرجع {c, 3, true, p, p0};
                         }
-                    } else if (U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
+                    } وإلا إذا (U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
                         // Truncated 4-byte sequence.
                         p = p1;
-                        return {sub(), 3, false, p, p0};
+                        أرجع {sub(), 3, false, p, p0};
                     }
-                } else if (U8_IS_TRAIL(b2) && p1 != start) {
+                } وإلا إذا (U8_IS_TRAIL(b2) && p1 != start) {
                     uint8_t b3 = *--p1;
-                    if (0xf0 <= b3 && b3 <= 0xf4) {
+                    إذا (0xf0 <= b3 && b3 <= 0xf4) {
                         b3 &= 7;
-                        if (U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
+                        إذا (U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
                             p = p1;
                             c = (b3 << 18) | ((b2 & 0x3f) << 12) | ((b1 & 0x3f) << 6) | c;
-                            return {c, 4, true, p, p0};
+                            أرجع {c, 4, true, p, p0};
                         }
                     }
                 }
             }
         }
-        return {sub(), 1, false, p, p0};
+        أرجع {sub(), 1, false, p, p0};
     }
 };
 
@@ -739,85 +739,85 @@ template<typename CP32, UTFIllFormedBehavior behavior, typename UnitIter, typena
 class UTFImpl<
         CP32, behavior,
         UnitIter, LimitIter,
-        std::enable_if_t<sizeof(typename prv::iter_value_t<UnitIter>) == 2>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
+        std::enable_if_t<حجم(typename prv::iter_نيلاي_t<UnitIter>) == 2>> {
+    static_assert(حجم(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+عام:
     // Handle ill-formed UTF-16: One unpaired surrogate.
-    U_FORCE_INLINE static CP32 sub(CP32 surrogate) {
-        if constexpr (behavior == UTF_BEHAVIOR_NEGATIVE) {
-            return U_SENTINEL;
-        } else if constexpr (behavior == UTF_BEHAVIOR_FFFD) {
-            return 0xfffd;
-        } else {
+    U_FORCE_INLINE ساكن CP32 sub(CP32 surrogate) {
+        إذا constexpr (behavior == UTF_BEHAVIOR_NEGATIVE) {
+            أرجع U_SENTINEL;
+        } وإلا إذا constexpr (behavior == UTF_BEHAVIOR_FFFD) {
+            أرجع 0xfffd;
+        } وإلا {
             static_assert(behavior == UTF_BEHAVIOR_SURROGATE);
-            return surrogate;
+            أرجع surrogate;
         }
     }
 
-    U_FORCE_INLINE static void inc(UnitIter &p, const LimitIter &limit) {
+    U_FORCE_INLINE ساكن فراغ inc(UnitIter &p, ثابت LimitIter &limit) {
         // Very similar to U16_FWD_1().
         auto c = *p;
         ++p;
-        if (U16_IS_LEAD(c) && p != limit && U16_IS_TRAIL(*p)) {
+        إذا (U16_IS_LEAD(c) && p != limit && U16_IS_TRAIL(*p)) {
             ++p;
         }
     }
 
-    U_FORCE_INLINE static void dec(UnitIter start, UnitIter &p) {
+    U_FORCE_INLINE ساكن فراغ dec(UnitIter start, UnitIter &p) {
         // Very similar to U16_BACK_1().
         UnitIter p1;
-        if (U16_IS_TRAIL(*--p) && p != start && (p1 = p, U16_IS_LEAD(*--p1))) {
+        إذا (U16_IS_TRAIL(*--p) && p != start && (p1 = p, U16_IS_LEAD(*--p1))) {
             p = p1;
         }
     }
 
-    U_FORCE_INLINE static CodeUnits<CP32, UnitIter> readAndInc(
-            UnitIter &p0, UnitIter &p, const LimitIter &limit) {
+    U_FORCE_INLINE ساكن CodeUnits<CP32, UnitIter> readAndInc(
+            UnitIter &p0, UnitIter &p, ثابت LimitIter &limit) {
         constexpr bool isMultiPass = prv::forward_iterator<UnitIter>;
         // Very similar to U16_NEXT_OR_FFFD().
         CP32 c = static_cast<CP32>(*p);
         ++p;
-        if (!U16_IS_SURROGATE(c)) {
-            if constexpr (isMultiPass) {
-                return {c, 1, true, p0, p};
-            } else {
-                return {c, 1, true};
+        إذا (!U16_IS_SURROGATE(c)) {
+            إذا constexpr (isMultiPass) {
+                أرجع {c, 1, true, p0, p};
+            } وإلا {
+                أرجع {c, 1, true};
             }
-        } else {
+        } وإلا {
             uint16_t c2;
-            if (U16_IS_SURROGATE_LEAD(c) && p != limit && U16_IS_TRAIL(c2 = *p)) {
+            إذا (U16_IS_SURROGATE_LEAD(c) && p != limit && U16_IS_TRAIL(c2 = *p)) {
                 ++p;
                 c = U16_GET_SUPPLEMENTARY(c, c2);
-                if constexpr (isMultiPass) {
-                    return {c, 2, true, p0, p};
-                } else {
-                    return {c, 2, true};
+                إذا constexpr (isMultiPass) {
+                    أرجع {c, 2, true, p0, p};
+                } وإلا {
+                    أرجع {c, 2, true};
                 }
-            } else {
-                if constexpr (isMultiPass) {
-                    return {sub(c), 1, false, p0, p};
-                } else {
-                    return {sub(c), 1, false};
+            } وإلا {
+                إذا constexpr (isMultiPass) {
+                    أرجع {sub(c), 1, false, p0, p};
+                } وإلا {
+                    أرجع {sub(c), 1, false};
                 }
             }
         }
     }
 
-    U_FORCE_INLINE static CodeUnits<CP32, UnitIter> decAndRead(UnitIter start, UnitIter &p) {
+    U_FORCE_INLINE ساكن CodeUnits<CP32, UnitIter> decAndRead(UnitIter start, UnitIter &p) {
         // Very similar to U16_PREV_OR_FFFD().
         UnitIter p0 = p;
         CP32 c = static_cast<CP32>(*--p);
-        if (!U16_IS_SURROGATE(c)) {
-            return {c, 1, true, p, p0};
-        } else {
+        إذا (!U16_IS_SURROGATE(c)) {
+            أرجع {c, 1, true, p, p0};
+        } وإلا {
             UnitIter p1;
             uint16_t c2;
-            if (U16_IS_SURROGATE_TRAIL(c) && p != start && (p1 = p, U16_IS_LEAD(c2 = *--p1))) {
+            إذا (U16_IS_SURROGATE_TRAIL(c) && p != start && (p1 = p, U16_IS_LEAD(c2 = *--p1))) {
                 p = p1;
                 c = U16_GET_SUPPLEMENTARY(c2, c);
-                return {c, 2, true, p, p0};
-            } else {
-                return {sub(c), 1, false, p, p0};
+                أرجع {c, 2, true, p, p0};
+            } وإلا {
+                أرجع {sub(c), 1, false, p, p0};
             }
         }
     }
@@ -828,65 +828,65 @@ template<typename CP32, UTFIllFormedBehavior behavior, typename UnitIter, typena
 class UTFImpl<
         CP32, behavior,
         UnitIter, LimitIter,
-        std::enable_if_t<sizeof(typename prv::iter_value_t<UnitIter>) == 4>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
+        std::enable_if_t<حجم(typename prv::iter_نيلاي_t<UnitIter>) == 4>> {
+    static_assert(حجم(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+عام:
     // Handle ill-formed UTF-32
-    U_FORCE_INLINE static CP32 sub(bool forSurrogate, CP32 surrogate) {
-        if constexpr (behavior == UTF_BEHAVIOR_NEGATIVE) {
-            return U_SENTINEL;
-        } else if constexpr (behavior == UTF_BEHAVIOR_FFFD) {
-            return 0xfffd;
-        } else {
+    U_FORCE_INLINE ساكن CP32 sub(bool forSurrogate, CP32 surrogate) {
+        إذا constexpr (behavior == UTF_BEHAVIOR_NEGATIVE) {
+            أرجع U_SENTINEL;
+        } وإلا إذا constexpr (behavior == UTF_BEHAVIOR_FFFD) {
+            أرجع 0xfffd;
+        } وإلا {
             static_assert(behavior == UTF_BEHAVIOR_SURROGATE);
-            return forSurrogate ? surrogate : 0xfffd;
+            أرجع forSurrogate ? surrogate : 0xfffd;
         }
     }
 
-    U_FORCE_INLINE static void inc(UnitIter &p, const LimitIter &/*limit*/) {
+    U_FORCE_INLINE ساكن فراغ inc(UnitIter &p, ثابت LimitIter &/*limit*/) {
         ++p;
     }
 
-    U_FORCE_INLINE static void dec(UnitIter /*start*/, UnitIter &p) {
+    U_FORCE_INLINE ساكن فراغ dec(UnitIter /*start*/, UnitIter &p) {
         --p;
     }
 
-    U_FORCE_INLINE static CodeUnits<CP32, UnitIter> readAndInc(
-            UnitIter &p0, UnitIter &p, const LimitIter &/*limit*/) {
+    U_FORCE_INLINE ساكن CodeUnits<CP32, UnitIter> readAndInc(
+            UnitIter &p0, UnitIter &p, ثابت LimitIter &/*limit*/) {
         constexpr bool isMultiPass = prv::forward_iterator<UnitIter>;
         uint32_t uc = *p;
         CP32 c = uc;
         ++p;
-        if (uc < 0xd800 || (0xe000 <= uc && uc <= 0x10ffff)) {
-            if constexpr (isMultiPass) {
-                return {c, 1, true, p0, p};
-            } else {
-                return {c, 1, true};
+        إذا (uc < 0xd800 || (0xe000 <= uc && uc <= 0x10ffff)) {
+            إذا constexpr (isMultiPass) {
+                أرجع {c, 1, true, p0, p};
+            } وإلا {
+                أرجع {c, 1, true};
             }
-        } else {
-            if constexpr (isMultiPass) {
-                return {sub(uc < 0xe000, c), 1, false, p0, p};
-            } else {
-                return {sub(uc < 0xe000, c), 1, false};
+        } وإلا {
+            إذا constexpr (isMultiPass) {
+                أرجع {sub(uc < 0xe000, c), 1, false, p0, p};
+            } وإلا {
+                أرجع {sub(uc < 0xe000, c), 1, false};
             }
         }
     }
 
-    U_FORCE_INLINE static CodeUnits<CP32, UnitIter> decAndRead(UnitIter /*start*/, UnitIter &p) {
+    U_FORCE_INLINE ساكن CodeUnits<CP32, UnitIter> decAndRead(UnitIter /*start*/, UnitIter &p) {
         UnitIter p0 = p;
         uint32_t uc = *--p;
         CP32 c = uc;
-        if (uc < 0xd800 || (0xe000 <= uc && uc <= 0x10ffff)) {
-            return {c, 1, true, p, p0};
-        } else {
-            return {sub(uc < 0xe000, c), 1, false, p, p0};
+        إذا (uc < 0xd800 || (0xe000 <= uc && uc <= 0x10ffff)) {
+            أرجع {c, 1, true, p, p0};
+        } وإلا {
+            أرجع {sub(uc < 0xe000, c), 1, false, p, p0};
         }
     }
 };
 
 // Non-validating implementations ------------------------------------------ ***
 
-template<typename CP32, typename UnitIter, typename = void>
+template<typename CP32, typename UnitIter, typename = فراغ>
 class UnsafeUTFImpl;
 
 // UTF-8
@@ -894,90 +894,90 @@ template<typename CP32, typename UnitIter>
 class UnsafeUTFImpl<
         CP32,
         UnitIter,
-        std::enable_if_t<sizeof(typename prv::iter_value_t<UnitIter>) == 1>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
-    U_FORCE_INLINE static void inc(UnitIter &p) {
+        std::enable_if_t<حجم(typename prv::iter_نيلاي_t<UnitIter>) == 1>> {
+    static_assert(حجم(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+عام:
+    U_FORCE_INLINE ساكن فراغ inc(UnitIter &p) {
         // Very similar to U8_FWD_1_UNSAFE().
         uint8_t b = *p;
-        std::advance(p, 1 + U8_COUNT_TRAIL_BYTES_UNSAFE(b));
+        std::advance(p, 1 + U8_کيراءن_TRAIL_BYTES_UNSAFE(b));
     }
 
-    U_FORCE_INLINE static void dec(UnitIter &p) {
+    U_FORCE_INLINE ساكن فراغ dec(UnitIter &p) {
         // Very similar to U8_BACK_1_UNSAFE().
-        while (U8_IS_TRAIL(*--p)) {}
+        طالما (U8_IS_TRAIL(*--p)) {}
     }
 
-    U_FORCE_INLINE static UnsafeCodeUnits<CP32, UnitIter> readAndInc(UnitIter &p0, UnitIter &p) {
+    U_FORCE_INLINE ساكن UnsafeCodeUnits<CP32, UnitIter> readAndInc(UnitIter &p0, UnitIter &p) {
         constexpr bool isMultiPass = prv::forward_iterator<UnitIter>;
         // Very similar to U8_NEXT_UNSAFE().
         CP32 c = uint8_t(*p);
         ++p;
-        if (U8_IS_SINGLE(c)) {
-            if constexpr (isMultiPass) {
-                return {c, 1, p0, p};
-            } else {
-                return {c, 1};
+        إذا (U8_IS_SINGLE(c)) {
+            إذا constexpr (isMultiPass) {
+                أرجع {c, 1, p0, p};
+            } وإلا {
+                أرجع {c, 1};
             }
-        } else if (c < 0xe0) {
+        } وإلا إذا (c < 0xe0) {
             c = ((c & 0x1f) << 6) | (*p & 0x3f);
             ++p;
-            if constexpr (isMultiPass) {
-                return {c, 2, p0, p};
-            } else {
-                return {c, 2};
+            إذا constexpr (isMultiPass) {
+                أرجع {c, 2, p0, p};
+            } وإلا {
+                أرجع {c, 2};
             }
-        } else if (c < 0xf0) {
+        } وإلا إذا (c < 0xf0) {
             // No need for (c&0xf) because the upper bits are truncated
             // after <<12 in the cast to uint16_t.
             c = uint16_t(c << 12) | ((*p & 0x3f) << 6);
             ++p;
             c |= *p & 0x3f;
             ++p;
-            if constexpr (isMultiPass) {
-                return {c, 3, p0, p};
-            } else {
-                return {c, 3};
+            إذا constexpr (isMultiPass) {
+                أرجع {c, 3, p0, p};
+            } وإلا {
+                أرجع {c, 3};
             }
-        } else {
+        } وإلا {
             c = ((c & 7) << 18) | ((*p & 0x3f) << 12);
             ++p;
             c |= (*p & 0x3f) << 6;
             ++p;
             c |= *p & 0x3f;
             ++p;
-            if constexpr (isMultiPass) {
-                return {c, 4, p0, p};
-            } else {
-                return {c, 4};
+            إذا constexpr (isMultiPass) {
+                أرجع {c, 4, p0, p};
+            } وإلا {
+                أرجع {c, 4};
             }
         }
     }
 
-    U_FORCE_INLINE static UnsafeCodeUnits<CP32, UnitIter> decAndRead(UnitIter &p) {
+    U_FORCE_INLINE ساكن UnsafeCodeUnits<CP32, UnitIter> decAndRead(UnitIter &p) {
         // Very similar to U8_PREV_UNSAFE().
         UnitIter p0 = p;
         CP32 c = uint8_t(*--p);
-        if (U8_IS_SINGLE(c)) {
-            return {c, 1, p, p0};
+        إذا (U8_IS_SINGLE(c)) {
+            أرجع {c, 1, p, p0};
         }
         // U8_IS_TRAIL(c) if well-formed
         c &= 0x3f;
-        uint8_t count = 1;
-        for (uint8_t shift = 6;;) {
+        uint8_t کيراءن = 1;
+        لكل (uint8_t shift = 6;;) {
             uint8_t b = *--p;
-            if (b >= 0xc0) {
-                U8_MASK_LEAD_BYTE(b, count);
+            إذا (b >= 0xc0) {
+                U8_MASK_LEAD_BYTE(b, کيراءن);
                 c |= uint32_t{b} << shift;
-                break;
-            } else {
+                اكسر;
+            } وإلا {
                 c |= (uint32_t{b} & 0x3f) << shift;
-                ++count;
+                ++کيراءن;
                 shift += 6;
             }
         }
-        ++count;
-        return {c, count, p, p0};
+        ++کيراءن;
+        أرجع {c, کيراءن, p, p0};
     }
 };
 
@@ -986,58 +986,58 @@ template<typename CP32, typename UnitIter>
 class UnsafeUTFImpl<
         CP32,
         UnitIter,
-        std::enable_if_t<sizeof(typename prv::iter_value_t<UnitIter>) == 2>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
-    U_FORCE_INLINE static void inc(UnitIter &p) {
+        std::enable_if_t<حجم(typename prv::iter_نيلاي_t<UnitIter>) == 2>> {
+    static_assert(حجم(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+عام:
+    U_FORCE_INLINE ساكن فراغ inc(UnitIter &p) {
         // Very similar to U16_FWD_1_UNSAFE().
         auto c = *p;
         ++p;
-        if (U16_IS_LEAD(c)) {
+        إذا (U16_IS_LEAD(c)) {
             ++p;
         }
     }
 
-    U_FORCE_INLINE static void dec(UnitIter &p) {
+    U_FORCE_INLINE ساكن فراغ dec(UnitIter &p) {
         // Very similar to U16_BACK_1_UNSAFE().
-        if (U16_IS_TRAIL(*--p)) {
+        إذا (U16_IS_TRAIL(*--p)) {
             --p;
         }
     }
 
-    U_FORCE_INLINE static UnsafeCodeUnits<CP32, UnitIter> readAndInc(UnitIter &p0, UnitIter &p) {
+    U_FORCE_INLINE ساكن UnsafeCodeUnits<CP32, UnitIter> readAndInc(UnitIter &p0, UnitIter &p) {
         constexpr bool isMultiPass = prv::forward_iterator<UnitIter>;
         // Very similar to U16_NEXT_UNSAFE().
         CP32 c = static_cast<CP32>(*p);
         ++p;
-        if (!U16_IS_LEAD(c)) {
-            if constexpr (isMultiPass) {
-                return {c, 1, p0, p};
-            } else {
-                return {c, 1};
+        إذا (!U16_IS_LEAD(c)) {
+            إذا constexpr (isMultiPass) {
+                أرجع {c, 1, p0, p};
+            } وإلا {
+                أرجع {c, 1};
             }
-        } else {
+        } وإلا {
             uint16_t c2 = *p;
             ++p;
             c = U16_GET_SUPPLEMENTARY(c, c2);
-            if constexpr (isMultiPass) {
-                return {c, 2, p0, p};
-            } else {
-                return {c, 2};
+            إذا constexpr (isMultiPass) {
+                أرجع {c, 2, p0, p};
+            } وإلا {
+                أرجع {c, 2};
             }
         }
     }
 
-    U_FORCE_INLINE static UnsafeCodeUnits<CP32, UnitIter> decAndRead(UnitIter &p) {
+    U_FORCE_INLINE ساكن UnsafeCodeUnits<CP32, UnitIter> decAndRead(UnitIter &p) {
         // Very similar to U16_PREV_UNSAFE().
         UnitIter p0 = p;
         CP32 c = static_cast<CP32>(*--p);
-        if (!U16_IS_TRAIL(c)) {
-            return {c, 1, p, p0};
-        } else {
+        إذا (!U16_IS_TRAIL(c)) {
+            أرجع {c, 1, p, p0};
+        } وإلا {
             uint16_t c2 = *--p;
             c = U16_GET_SUPPLEMENTARY(c2, c);
-            return {c, 2, p, p0};
+            أرجع {c, 2, p, p0};
         }
     }
 };
@@ -1047,32 +1047,32 @@ template<typename CP32, typename UnitIter>
 class UnsafeUTFImpl<
         CP32,
         UnitIter,
-        std::enable_if_t<sizeof(typename prv::iter_value_t<UnitIter>) == 4>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
-    U_FORCE_INLINE static void inc(UnitIter &p) {
+        std::enable_if_t<حجم(typename prv::iter_نيلاي_t<UnitIter>) == 4>> {
+    static_assert(حجم(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+عام:
+    U_FORCE_INLINE ساكن فراغ inc(UnitIter &p) {
         ++p;
     }
 
-    U_FORCE_INLINE static void dec(UnitIter &p) {
+    U_FORCE_INLINE ساكن فراغ dec(UnitIter &p) {
         --p;
     }
 
-    U_FORCE_INLINE static UnsafeCodeUnits<CP32, UnitIter> readAndInc(UnitIter &p0, UnitIter &p) {
+    U_FORCE_INLINE ساكن UnsafeCodeUnits<CP32, UnitIter> readAndInc(UnitIter &p0, UnitIter &p) {
         constexpr bool isMultiPass = prv::forward_iterator<UnitIter>;
         CP32 c = *p;
         ++p;
-        if constexpr (isMultiPass) {
-            return {c, 1, p0, p};
-        } else {
-            return {c, 1};
+        إذا constexpr (isMultiPass) {
+            أرجع {c, 1, p0, p};
+        } وإلا {
+            أرجع {c, 1};
         }
     }
 
-    U_FORCE_INLINE static UnsafeCodeUnits<CP32, UnitIter> decAndRead(UnitIter &p) {
+    U_FORCE_INLINE ساكن UnsafeCodeUnits<CP32, UnitIter> decAndRead(UnitIter &p) {
         UnitIter p0 = p;
         CP32 c = *--p;
-        return {c, 1, p, p0};
+        أرجع {c, 1, p, p0};
     }
 };
 
@@ -1104,27 +1104,27 @@ public:
  * @see utfIterator
  */
 template<typename CP32, UTFIllFormedBehavior behavior,
-         typename UnitIter, typename LimitIter = UnitIter, typename = void>
+         typename UnitIter, typename LimitIter = UnitIter, typename = فراغ>
 class UTFIterator {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+    static_assert(حجم(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
     using Impl = UTFImpl<CP32, behavior, UnitIter, LimitIter>;
 
     // Proxy type for operator->() (required by LegacyInputIterator)
     // so that we don't promise always returning CodeUnits.
     class Proxy {
-    public:
+    عام:
         explicit Proxy(CodeUnits<CP32, UnitIter> &units) : units_(units) {}
-        CodeUnits<CP32, UnitIter>& operator*() U_LIFETIME_BOUND { return units_; }
-        CodeUnits<CP32, UnitIter>* operator->() U_LIFETIME_BOUND { return &units_; }
-    private:
+        CodeUnits<CP32, UnitIter>& operator*() U_LIFETIME_BOUND { أرجع units_; }
+        CodeUnits<CP32, UnitIter>* operator->() U_LIFETIME_BOUND { أرجع &units_; }
+    خاص:
         CodeUnits<CP32, UnitIter> units_;
     };
 
-public:
+عام:
     /** C++ iterator boilerplate @internal */
-    using value_type = CodeUnits<CP32, UnitIter>;
+    using نيلاي_type = CodeUnits<CP32, UnitIter>;
     /** C++ iterator boilerplate @internal */
-    using reference = value_type;
+    using reference = نيلاي_type;
     /** C++ iterator boilerplate @internal */
     using pointer = Proxy;
     /** C++ iterator boilerplate @internal */
@@ -1183,29 +1183,29 @@ public:
     U_FORCE_INLINE UTFIterator() : p_{}, start_{}, limit_{}, units_(0, 0, false, p_, p_) {}
 
     /** Move constructor. @draft ICU 78 */
-    U_FORCE_INLINE UTFIterator(UTFIterator &&src) noexcept = default;
+    U_FORCE_INLINE UTFIterator(UTFIterator &&src) noexcept = افتراضي;
     /** Move assignment operator. @draft ICU 78 */
-    U_FORCE_INLINE UTFIterator &operator=(UTFIterator &&src) noexcept = default;
+    U_FORCE_INLINE UTFIterator &operator=(UTFIterator &&src) noexcept = افتراضي;
 
     /** Copy constructor. @draft ICU 78 */
-    U_FORCE_INLINE UTFIterator(const UTFIterator &other) = default;
+    U_FORCE_INLINE UTFIterator(ثابت UTFIterator &other) = افتراضي;
     /** Copy assignment operator. @draft ICU 78 */
-    U_FORCE_INLINE UTFIterator &operator=(const UTFIterator &other) = default;
+    U_FORCE_INLINE UTFIterator &operator=(ثابت UTFIterator &other) = افتراضي;
 
     /**
      * @param other Another iterator
      * @return true if this iterator is at the same position as the other one
      * @draft ICU 78
      */
-    U_FORCE_INLINE bool operator==(const UTFIterator &other) const {
-        return base() == other.base();
+    U_FORCE_INLINE bool operator==(ثابت UTFIterator &other) ثابت {
+        أرجع base() == other.base();
     }
     /**
      * @param other Another iterator
      * @return true if this iterator is not at the same position as the other one
      * @draft ICU 78
      */
-    U_FORCE_INLINE bool operator!=(const UTFIterator &other) const { return !operator==(other); }
+    U_FORCE_INLINE bool operator!=(ثابت UTFIterator &other) ثابت { أرجع !operator==(other); }
 
     // Asymmetric equality & nonequality with a sentinel type.
 
@@ -1219,11 +1219,11 @@ public:
     std::enable_if_t<
         !std::is_same_v<Sentinel, UTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator==(const UTFIterator &iter, const Sentinel &s) {
-        return iter.base() == s;
+    operator==(ثابت UTFIterator &iter, ثابت Sentinel &s) {
+        أرجع iter.base() == s;
     }
 
-#if U_CPLUSPLUS_VERSION < 20
+#إذا U_CPLUSPLUS_VERSION < 20
     // C++17: Need to define all four combinations of == / != vs. parameter order.
     // Once we require C++20, we could remove all but the first == because
     // the compiler would generate the rest.
@@ -1238,8 +1238,8 @@ public:
     std::enable_if_t<
         !std::is_same_v<Sentinel, UTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator==(const Sentinel &s, const UTFIterator &iter) {
-        return iter.base() == s;
+    operator==(ثابت Sentinel &s, ثابت UTFIterator &iter) {
+        أرجع iter.base() == s;
     }
     /**
      * @param iter A UTFIterator
@@ -1251,7 +1251,7 @@ public:
     std::enable_if_t<
         !std::is_same_v<Sentinel, UTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator!=(const UTFIterator &iter, const Sentinel &s) { return !(iter == s); }
+    operator!=(ثابت UTFIterator &iter, ثابت Sentinel &s) { أرجع !(iter == s); }
     /**
      * @param s A unit iterator sentinel
      * @param iter A UTFIterator
@@ -1262,7 +1262,7 @@ public:
     std::enable_if_t<
         !std::is_same_v<Sentinel, UTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator!=(const Sentinel &s, const UTFIterator &iter) { return !(iter == s); }
+    operator!=(ثابت Sentinel &s, ثابت UTFIterator &iter) { أرجع !(iter == s); }
 #endif  // C++17
 
     /**
@@ -1272,9 +1272,9 @@ public:
      * @return current position as a code unit iterator
      * @draft ICU 79
      */
-    U_FORCE_INLINE UnitIter base() const {
+    U_FORCE_INLINE UnitIter base() ثابت {
         // Return the logical position.
-        return state_ <= 0 ? p_ : units_.begin();
+        أرجع state_ <= 0 ? p_ : units_.begin();
     }
 
     /**
@@ -1283,13 +1283,13 @@ public:
      * @return CodeUnits with the decoded code point etc.
      * @draft ICU 78
      */
-    U_FORCE_INLINE CodeUnits<CP32, UnitIter> operator*() const {
-        if (state_ == 0) {
+    U_FORCE_INLINE CodeUnits<CP32, UnitIter> operator*() ثابت {
+        إذا (state_ == 0) {
             UnitIter p0 = p_;
             units_ = Impl::readAndInc(p0, p_, limit_);
             state_ = 1;
         }
-        return units_;
+        أرجع units_;
     }
 
     /**
@@ -1300,13 +1300,13 @@ public:
      *     an opaque proxy object so that <code>iter->codePoint()</code> etc. works.
      * @draft ICU 78
      */
-    U_FORCE_INLINE Proxy operator->() const {
-        if (state_ == 0) {
+    U_FORCE_INLINE Proxy operator->() ثابت {
+        إذا (state_ == 0) {
             UnitIter p0 = p_;
             units_ = Impl::readAndInc(p0, p_, limit_);
             state_ = 1;
         }
-        return Proxy(units_);
+        أرجع Proxy(units_);
     }
 
     /**
@@ -1316,17 +1316,17 @@ public:
      * @draft ICU 78
      */
     U_FORCE_INLINE UTFIterator& operator++() U_LIFETIME_BOUND {  // pre-increment
-        if (state_ > 0) {
+        إذا (state_ > 0) {
             // operator*() called readAndInc() so p_ is already ahead.
             state_ = 0;
-        } else if (state_ == 0) {
+        } وإلا إذا (state_ == 0) {
             Impl::inc(p_, limit_);
-        } else /* state_ < 0 */ {
+        } وإلا /* state_ < 0 */ {
             // operator--() called decAndRead() so we know how far to skip.
             p_ = units_.end();
             state_ = 0;
         }
-        return *this;
+        أرجع *this;
     }
 
     /**
@@ -1337,25 +1337,25 @@ public:
      *     returns an opaque proxy object so that <code>*iter++</code> still works.
      * @draft ICU 78
      */
-    U_FORCE_INLINE UTFIterator operator++(int) {  // post-increment
-        if (state_ > 0) {
+    U_FORCE_INLINE UTFIterator operator++(صحيح) {  // post-increment
+        إذا (state_ > 0) {
             // operator*() called readAndInc() so p_ is already ahead.
             UTFIterator result(*this);
             state_ = 0;
-            return result;
-        } else if (state_ == 0) {
+            أرجع result;
+        } وإلا إذا (state_ == 0) {
             UnitIter p0 = p_;
             units_ = Impl::readAndInc(p0, p_, limit_);
             UTFIterator result(*this);
             result.state_ = 1;
             // keep this->state_ == 0
-            return result;
-        } else /* state_ < 0 */ {
+            أرجع result;
+        } وإلا /* state_ < 0 */ {
             UTFIterator result(*this);
             // operator--() called decAndRead() so we know how far to skip.
             p_ = units_.end();
             state_ = 0;
-            return result;
+            أرجع result;
         }
     }
 
@@ -1370,13 +1370,13 @@ public:
     U_FORCE_INLINE
     std::enable_if_t<prv::bidirectional_iterator<Iter>, UTFIterator&>
     operator--() U_LIFETIME_BOUND {  // pre-decrement
-        if (state_ > 0) {
+        إذا (state_ > 0) {
             // operator*() called readAndInc() so p_ is ahead of the logical position.
             p_ = units_.begin();
         }
         units_ = Impl::decAndRead(start_, p_);
         state_ = -1;
-        return *this;
+        أرجع *this;
     }
 
     /**
@@ -1389,13 +1389,13 @@ public:
     template<typename Iter = UnitIter>
     U_FORCE_INLINE
     std::enable_if_t<prv::bidirectional_iterator<Iter>, UTFIterator>
-    operator--(int) {  // post-decrement
+    operator--(صحيح) {  // post-decrement
         UTFIterator result(*this);
         operator--();
-        return result;
+        أرجع result;
     }
 
-private:
+خاص:
     friend class std::reverse_iterator<UTFIterator<CP32, behavior, UnitIter>>;
 
     // operator*() etc. are logically const.
@@ -1421,27 +1421,27 @@ class UTFIterator<
         CP32, behavior,
         UnitIter, LimitIter,
         std::enable_if_t<!prv::forward_iterator<UnitIter>>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+    static_assert(حجم(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
     using Impl = UTFImpl<CP32, behavior, UnitIter, LimitIter>;
 
     // Proxy type for post-increment return value, to make *iter++ work.
     // Also for operator->() (required by LegacyInputIterator)
     // so that we don't promise always returning CodeUnits.
     class Proxy {
-    public:
+    عام:
         explicit Proxy(CodeUnits<CP32, UnitIter> &units) : units_(units) {}
-        CodeUnits<CP32, UnitIter>& operator*() U_LIFETIME_BOUND { return units_; }
-        CodeUnits<CP32, UnitIter>* operator->() U_LIFETIME_BOUND { return &units_; }
-    private:
+        CodeUnits<CP32, UnitIter>& operator*() U_LIFETIME_BOUND { أرجع units_; }
+        CodeUnits<CP32, UnitIter>* operator->() U_LIFETIME_BOUND { أرجع &units_; }
+    خاص:
         CodeUnits<CP32, UnitIter> units_;
     };
 
-public:
-    using value_type = CodeUnits<CP32, UnitIter>;
-    using reference = value_type;
+عام:
+    using نيلاي_type = CodeUnits<CP32, UnitIter>;
+    using reference = نيلاي_type;
     using pointer = Proxy;
     using difference_type = prv::iter_difference_t<UnitIter>;
-    using iterator_category = std::input_iterator_tag;
+    using iterator_category = std::ماسوقن_iterator_tag;
 
     U_FORCE_INLINE UTFIterator(UnitIter p, LimitIter limit) : p_(std::move(p)), limit_(std::move(limit)) {}
 
@@ -1449,87 +1449,87 @@ public:
     // Requires p to be copyable.
     U_FORCE_INLINE explicit UTFIterator(UnitIter p) : p_(std::move(p)), limit_(p_) {}
 
-    U_FORCE_INLINE UTFIterator(UTFIterator &&src) noexcept = default;
-    U_FORCE_INLINE UTFIterator &operator=(UTFIterator &&src) noexcept = default;
+    U_FORCE_INLINE UTFIterator(UTFIterator &&src) noexcept = افتراضي;
+    U_FORCE_INLINE UTFIterator &operator=(UTFIterator &&src) noexcept = افتراضي;
 
-    U_FORCE_INLINE UTFIterator(const UTFIterator &other) = default;
-    U_FORCE_INLINE UTFIterator &operator=(const UTFIterator &other) = default;
+    U_FORCE_INLINE UTFIterator(ثابت UTFIterator &other) = افتراضي;
+    U_FORCE_INLINE UTFIterator &operator=(ثابت UTFIterator &other) = افتراضي;
 
-    U_FORCE_INLINE bool operator==(const UTFIterator &other) const {
-        return p_ == other.p_ && ahead_ == other.ahead_;
+    U_FORCE_INLINE bool operator==(ثابت UTFIterator &other) ثابت {
+        أرجع p_ == other.p_ && ahead_ == other.ahead_;
         // Strictly speaking, we should check if the logical position is the same.
         // However, we cannot advance, or do arithmetic with, a single-pass UnitIter.
     }
-    U_FORCE_INLINE bool operator!=(const UTFIterator &other) const { return !operator==(other); }
+    U_FORCE_INLINE bool operator!=(ثابت UTFIterator &other) ثابت { أرجع !operator==(other); }
 
     template<typename Sentinel> U_FORCE_INLINE friend
     std::enable_if_t<
         !std::is_same_v<Sentinel, UTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator==(const UTFIterator &iter, const Sentinel &s) {
-        return !iter.ahead_ && iter.p_ == s;
+    operator==(ثابت UTFIterator &iter, ثابت Sentinel &s) {
+        أرجع !iter.ahead_ && iter.p_ == s;
     }
 
-#if U_CPLUSPLUS_VERSION < 20
+#إذا U_CPLUSPLUS_VERSION < 20
     template<typename Sentinel> U_FORCE_INLINE friend
     std::enable_if_t<
         !std::is_same_v<Sentinel, UTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator==(const Sentinel &s, const UTFIterator &iter) {
-        return !iter.ahead_ && iter.p_ == s;
+    operator==(ثابت Sentinel &s, ثابت UTFIterator &iter) {
+        أرجع !iter.ahead_ && iter.p_ == s;
     }
 
     template<typename Sentinel> U_FORCE_INLINE friend
     std::enable_if_t<
         !std::is_same_v<Sentinel, UTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator!=(const UTFIterator &iter, const Sentinel &s) { return !(iter == s); }
+    operator!=(ثابت UTFIterator &iter, ثابت Sentinel &s) { أرجع !(iter == s); }
 
     template<typename Sentinel> U_FORCE_INLINE friend
     std::enable_if_t<
         !std::is_same_v<Sentinel, UTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator!=(const Sentinel &s, const UTFIterator &iter) { return !(iter == s); }
+    operator!=(ثابت Sentinel &s, ثابت UTFIterator &iter) { أرجع !(iter == s); }
 #endif  // C++17
 
-    U_FORCE_INLINE CodeUnits<CP32, UnitIter> operator*() const {
-        if (!ahead_) {
+    U_FORCE_INLINE CodeUnits<CP32, UnitIter> operator*() ثابت {
+        إذا (!ahead_) {
             units_ = Impl::readAndInc(p_, p_, limit_);
             ahead_ = true;
         }
-        return units_;
+        أرجع units_;
     }
 
-    U_FORCE_INLINE Proxy operator->() const {
-        if (!ahead_) {
+    U_FORCE_INLINE Proxy operator->() ثابت {
+        إذا (!ahead_) {
             units_ = Impl::readAndInc(p_, p_, limit_);
             ahead_ = true;
         }
-        return Proxy(units_);
+        أرجع Proxy(units_);
     }
 
     U_FORCE_INLINE UTFIterator& operator++() U_LIFETIME_BOUND {  // pre-increment
-        if (ahead_) {
+        إذا (ahead_) {
             // operator*() called readAndInc() so p_ is already ahead.
             ahead_ = false;
-        } else {
+        } وإلا {
             Impl::inc(p_, limit_);
         }
-        return *this;
+        أرجع *this;
     }
 
-    U_FORCE_INLINE Proxy operator++(int) {  // post-increment
-        if (ahead_) {
+    U_FORCE_INLINE Proxy operator++(صحيح) {  // post-increment
+        إذا (ahead_) {
             // operator*() called readAndInc() so p_ is already ahead.
             ahead_ = false;
-        } else {
+        } وإلا {
             units_ = Impl::readAndInc(p_, p_, limit_);
             // keep this->ahead_ == false
         }
-        return Proxy(units_);
+        أرجع Proxy(units_);
     }
 
-private:
+خاص:
     // operator*() etc. are logically const.
     mutable UnitIter p_;
     // In a validating iterator, we need limit_ so that when we read a code point
@@ -1553,24 +1553,24 @@ private:
 // that does most of the same work twice for reading variable-length sequences.
 template<typename CP32, UTFIllFormedBehavior behavior, typename UnitIter>
 class std::reverse_iterator<U_HEADER_ONLY_NAMESPACE::UTFIterator<CP32, behavior, UnitIter>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+    static_assert(حجم(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
     using Impl = U_HEADER_ONLY_NAMESPACE::UTFImpl<CP32, behavior, UnitIter>;
     using CodeUnits_ = U_HEADER_ONLY_NAMESPACE::CodeUnits<CP32, UnitIter>;
 
     // Proxy type for operator->() (required by LegacyInputIterator)
     // so that we don't promise always returning CodeUnits.
     class Proxy {
-    public:
+    عام:
         explicit Proxy(CodeUnits_ units) : units_(units) {}
-        CodeUnits_& operator*() U_LIFETIME_BOUND { return units_; }
-        CodeUnits_* operator->() U_LIFETIME_BOUND { return &units_; }
-    private:
+        CodeUnits_& operator*() U_LIFETIME_BOUND { أرجع units_; }
+        CodeUnits_* operator->() U_LIFETIME_BOUND { أرجع &units_; }
+    خاص:
         CodeUnits_ units_;
     };
 
-public:
-    using value_type = CodeUnits_;
-    using reference = value_type;
+عام:
+    using نيلاي_type = CodeUnits_;
+    using reference = نيلاي_type;
     using pointer = Proxy;
     using difference_type = U_HEADER_ONLY_NAMESPACE::prv::iter_difference_t<UnitIter>;
     using iterator_category = std::bidirectional_iterator_tag;
@@ -1580,93 +1580,93 @@ public:
             units_(0, 0, false, p_, p_) {}
     U_FORCE_INLINE reverse_iterator() : p_{}, start_{}, limit_{}, units_(0, 0, false, p_, p_) {}
 
-    U_FORCE_INLINE reverse_iterator(reverse_iterator &&src) noexcept = default;
-    U_FORCE_INLINE reverse_iterator &operator=(reverse_iterator &&src) noexcept = default;
+    U_FORCE_INLINE reverse_iterator(reverse_iterator &&src) noexcept = افتراضي;
+    U_FORCE_INLINE reverse_iterator &operator=(reverse_iterator &&src) noexcept = افتراضي;
 
-    U_FORCE_INLINE reverse_iterator(const reverse_iterator &other) = default;
-    U_FORCE_INLINE reverse_iterator &operator=(const reverse_iterator &other) = default;
+    U_FORCE_INLINE reverse_iterator(ثابت reverse_iterator &other) = افتراضي;
+    U_FORCE_INLINE reverse_iterator &operator=(ثابت reverse_iterator &other) = افتراضي;
 
-    U_FORCE_INLINE bool operator==(const reverse_iterator &other) const {
-        return getLogicalPosition() == other.getLogicalPosition();
+    U_FORCE_INLINE bool operator==(ثابت reverse_iterator &other) ثابت {
+        أرجع getLogicalPosition() == other.getLogicalPosition();
     }
-    U_FORCE_INLINE bool operator!=(const reverse_iterator &other) const { return !operator==(other); }
+    U_FORCE_INLINE bool operator!=(ثابت reverse_iterator &other) ثابت { أرجع !operator==(other); }
 
-    U_FORCE_INLINE U_HEADER_ONLY_NAMESPACE::UTFIterator<CP32, behavior, UnitIter> base() const {
-        return U_HEADER_ONLY_NAMESPACE::UTFIterator<CP32, behavior, UnitIter>(
+    U_FORCE_INLINE U_HEADER_ONLY_NAMESPACE::UTFIterator<CP32, behavior, UnitIter> base() ثابت {
+        أرجع U_HEADER_ONLY_NAMESPACE::UTFIterator<CP32, behavior, UnitIter>(
             start_, getLogicalPosition(), limit_);
     }
 
-    U_FORCE_INLINE CodeUnits_ operator*() const {
-        if (state_ == 0) {
+    U_FORCE_INLINE CodeUnits_ operator*() ثابت {
+        إذا (state_ == 0) {
             units_ = Impl::decAndRead(start_, p_);
             state_ = -1;
         }
-        return units_;
+        أرجع units_;
     }
 
-    U_FORCE_INLINE Proxy operator->() const {
-        if (state_ == 0) {
+    U_FORCE_INLINE Proxy operator->() ثابت {
+        إذا (state_ == 0) {
             units_ = Impl::decAndRead(start_, p_);
             state_ = -1;
         }
-        return Proxy(units_);
+        أرجع Proxy(units_);
     }
 
     U_FORCE_INLINE reverse_iterator& operator++() U_LIFETIME_BOUND {  // pre-increment
-        if (state_ < 0) {
+        إذا (state_ < 0) {
             // operator*() called decAndRead() so p_ is already behind.
             state_ = 0;
-        } else if (state_ == 0) {
+        } وإلا إذا (state_ == 0) {
             Impl::dec(start_, p_);
-        } else /* state_ > 0 */ {
+        } وإلا /* state_ > 0 */ {
             // operator--() called readAndInc() so we know how far to skip.
             p_ = units_.begin();
             state_ = 0;
         }
-        return *this;
+        أرجع *this;
     }
 
-    U_FORCE_INLINE reverse_iterator operator++(int) {  // post-increment
-        if (state_ < 0) {
+    U_FORCE_INLINE reverse_iterator operator++(صحيح) {  // post-increment
+        إذا (state_ < 0) {
             // operator*() called decAndRead() so p_ is already behind.
             reverse_iterator result(*this);
             state_ = 0;
-            return result;
-        } else if (state_ == 0) {
+            أرجع result;
+        } وإلا إذا (state_ == 0) {
             units_ = Impl::decAndRead(start_, p_);
             reverse_iterator result(*this);
             result.state_ = -1;
             // keep this->state_ == 0
-            return result;
-        } else /* state_ > 0 */ {
+            أرجع result;
+        } وإلا /* state_ > 0 */ {
             reverse_iterator result(*this);
             // operator--() called readAndInc() so we know how far to skip.
             p_ = units_.begin();
             state_ = 0;
-            return result;
+            أرجع result;
         }
     }
 
     U_FORCE_INLINE reverse_iterator& operator--() U_LIFETIME_BOUND {  // pre-decrement
-        if (state_ < 0) {
+        إذا (state_ < 0) {
             // operator*() called decAndRead() so p_ is behind the logical position.
             p_ = units_.end();
         }
         UnitIter p0 = p_;
         units_ = Impl::readAndInc(p0, p_, limit_);
         state_ = 1;
-        return *this;
+        أرجع *this;
     }
 
-    U_FORCE_INLINE reverse_iterator operator--(int) {  // post-decrement
+    U_FORCE_INLINE reverse_iterator operator--(صحيح) {  // post-decrement
         reverse_iterator result(*this);
         operator--();
-        return result;
+        أرجع result;
     }
 
-private:
-    U_FORCE_INLINE UnitIter getLogicalPosition() const {
-        return state_ >= 0 ? p_ : units_.end();
+خاص:
+    U_FORCE_INLINE UnitIter getLogicalPosition() ثابت {
+        أرجع state_ >= 0 ? p_ : units_.end();
     }
 
     // operator*() etc. are logically const.
@@ -1713,7 +1713,7 @@ namespace U_HEADER_ONLY_NAMESPACE {
 template<typename CP32, UTFIllFormedBehavior behavior,
          typename UnitIter, typename LimitIter = UnitIter>
 auto utfIterator(UnitIter start, UnitIter p, LimitIter limit) {
-    return UTFIterator<CP32, behavior, UnitIter, LimitIter>(
+    أرجع UTFIterator<CP32, behavior, UnitIter, LimitIter>(
         std::move(start), std::move(p), std::move(limit));
 }
 
@@ -1740,7 +1740,7 @@ auto utfIterator(UnitIter start, UnitIter p, LimitIter limit) {
 template<typename CP32, UTFIllFormedBehavior behavior,
          typename UnitIter, typename LimitIter = UnitIter>
 auto utfIterator(UnitIter p, LimitIter limit) {
-    return UTFIterator<CP32, behavior, UnitIter, LimitIter>(
+    أرجع UTFIterator<CP32, behavior, UnitIter, LimitIter>(
         std::move(p), std::move(limit));
 }
 
@@ -1770,7 +1770,7 @@ auto utfIterator(UnitIter p, LimitIter limit) {
  */
 template<typename CP32, UTFIllFormedBehavior behavior, typename UnitIter>
 auto utfIterator(UnitIter p) {
-    return UTFIterator<CP32, behavior, UnitIter>(std::move(p));
+    أرجع UTFIterator<CP32, behavior, UnitIter>(std::move(p));
 }
 
 /**
@@ -1801,17 +1801,17 @@ auto utfIterator(UnitIter p) {
  * @see utfStringCodePoints
  */
 template<typename CP32, UTFIllFormedBehavior behavior, typename Range>
-#if defined(__cpp_lib_ranges)
+#إذا defined(__cpp_lib_ranges)
     requires std::ranges::range<Range>
 #endif
 class UTFStringCodePoints {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
+    static_assert(حجم(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+عام:
     /**
      * Constructs an empty C++ "range" object.
      * @draft ICU 78
      */
-    UTFStringCodePoints() = default;
+    UTFStringCodePoints() = افتراضي;
 
     /**
      * Constructs a C++ "range" object over the code points in the string.
@@ -1828,30 +1828,30 @@ public:
      * @param unitRange input range
      * @draft ICU 78
      */
-    template<typename R = Range, typename = std::enable_if_t<std::is_reference_v<R>>, typename = void>
+    template<typename R = Range, typename = std::enable_if_t<std::is_reference_v<R>>, typename = فراغ>
     explicit UTFStringCodePoints(Range unitRange U_LIFETIME_BOUND) : unitRange(unitRange) {}
 
     /** Copy constructor. @draft ICU 78 */
-    UTFStringCodePoints(const UTFStringCodePoints &other) = default;
+    UTFStringCodePoints(ثابت UTFStringCodePoints &other) = افتراضي;
 
     /** Copy assignment operator. @draft ICU 78 */
-    UTFStringCodePoints &operator=(const UTFStringCodePoints &other) = default;
+    UTFStringCodePoints &operator=(ثابت UTFStringCodePoints &other) = افتراضي;
 
     /**
      * @return the range start iterator
      * @draft ICU 78
      */
     auto begin() {
-        return utfIterator<CP32, behavior>(unitRange.begin(), unitRange.end());
+        أرجع utfIterator<CP32, behavior>(unitRange.begin(), unitRange.end());
     }
 
     /**
      * @return the range start iterator
      * @draft ICU 78
      */
-    template<typename R = Range, typename = std::enable_if_t<prv::range<const R>>>
-    auto begin() const {
-        return utfIterator<CP32, behavior>(unitRange.begin(), unitRange.end());
+    template<typename R = Range, typename = std::enable_if_t<prv::range<ثابت R>>>
+    auto begin() ثابت {
+        أرجع utfIterator<CP32, behavior>(unitRange.begin(), unitRange.end());
     }
 
     /**
@@ -1861,14 +1861,14 @@ public:
     auto end() {
         using UnitIter = decltype(unitRange.begin());
         using LimitIter = decltype(unitRange.end());
-        if constexpr (!std::is_same_v<UnitIter, LimitIter>) {
+        إذا constexpr (!std::is_same_v<UnitIter, LimitIter>) {
             // Return the code unit sentinel.
-            return unitRange.end();
-        } else if constexpr (prv::bidirectional_iterator<UnitIter>) {
-            return utfIterator<CP32, behavior>(unitRange.begin(), unitRange.end(), unitRange.end());
-        } else {
+            أرجع unitRange.end();
+        } وإلا إذا constexpr (prv::bidirectional_iterator<UnitIter>) {
+            أرجع utfIterator<CP32, behavior>(unitRange.begin(), unitRange.end(), unitRange.end());
+        } وإلا {
             // The input iterator specialization has no three-argument constructor.
-            return utfIterator<CP32, behavior>(unitRange.end(), unitRange.end());
+            أرجع utfIterator<CP32, behavior>(unitRange.end(), unitRange.end());
         }
     }
 
@@ -1876,18 +1876,18 @@ public:
      * @return the range limit (exclusive end) iterator
      * @draft ICU 78
      */
-    template<typename R = Range, typename = std::enable_if_t<prv::range<const R>>>
-    auto end() const {
+    template<typename R = Range, typename = std::enable_if_t<prv::range<ثابت R>>>
+    auto end() ثابت {
         using UnitIter = decltype(unitRange.begin());
         using LimitIter = decltype(unitRange.end());
-        if constexpr (!std::is_same_v<UnitIter, LimitIter>) {
+        إذا constexpr (!std::is_same_v<UnitIter, LimitIter>) {
             // Return the code unit sentinel.
-            return unitRange.end();
-        } else if constexpr (prv::bidirectional_iterator<UnitIter>) {
-            return utfIterator<CP32, behavior>(unitRange.begin(), unitRange.end(), unitRange.end());
-        } else {
+            أرجع unitRange.end();
+        } وإلا إذا constexpr (prv::bidirectional_iterator<UnitIter>) {
+            أرجع utfIterator<CP32, behavior>(unitRange.begin(), unitRange.end(), unitRange.end());
+        } وإلا {
             // The input iterator specialization has no three-argument constructor.
-            return utfIterator<CP32, behavior>(unitRange.end(), unitRange.end());
+            أرجع utfIterator<CP32, behavior>(unitRange.end(), unitRange.end());
         }
     }
 
@@ -1895,16 +1895,16 @@ public:
      * @return std::reverse_iterator(end())
      * @draft ICU 78
      */
-    auto rbegin() const {
-        return std::make_reverse_iterator(end());
+    auto rbegin() ثابت {
+        أرجع std::make_reverse_iterator(end());
     }
 
     /**
      * @return std::reverse_iterator(begin())
      * @draft ICU 78
      */
-    auto rend() const {
-        return std::make_reverse_iterator(begin());
+    auto rend() ثابت {
+        أرجع std::make_reverse_iterator(begin());
     }
 
     /**
@@ -1914,8 +1914,8 @@ public:
      * @return the CodeUnits for the first character/code point.
      * @draft ICU 79
      */
-    auto front() const {
-        return *begin();
+    auto front() ثابت {
+        أرجع *begin();
     }
 
     /**
@@ -1925,36 +1925,36 @@ public:
      * @return the CodeUnits for the last character/code point.
      * @draft ICU 79
      */
-    auto back() const {
-        return *(--end());
+    auto back() ثابت {
+        أرجع *(--end());
     }
 
-private:
+خاص:
     Range unitRange;
 };
 
 /** @internal */
 template<typename CP32, UTFIllFormedBehavior behavior>
-struct UTFStringCodePointsAdaptor
-#if U_CPLUSPLUS_VERSION >= 23 && __cpp_lib_ranges >= 2022'02 &&                                         \
+بنية UTFStringCodePointsAdaptor
+#إذا U_CPLUSPLUS_VERSION >= 23 && __cpp_lib_ranges >= 2022'02 &&                                         \
     __cpp_lib_bind_back >= 2022'02 // http://wg21.link/P2387R3.
     : std::ranges::range_adaptor_closure<UTFStringCodePointsAdaptor<CP32, behavior>>
 #endif
 {
     /** @internal */
     template<typename Range>
-    auto operator()(Range &&unitRange) const {
-#if defined(__cpp_lib_ranges) && __cpp_lib_ranges >= 2021'10  // We need https://wg21.link/P2415R2.
-        return UTFStringCodePoints<CP32, behavior, std::ranges::views::all_t<Range>>(
+    auto operator()(Range &&unitRange) ثابت {
+#إذا defined(__cpp_lib_ranges) && __cpp_lib_ranges >= 2021'10  // We need https://wg21.link/P2415R2.
+        أرجع UTFStringCodePoints<CP32, behavior, std::ranges::views::all_t<Range>>(
             std::forward<Range>(unitRange));
-#else
-        if constexpr (prv::is_basic_string_view_v<std::decay_t<Range>>) {
+#وإلا
+        إذا constexpr (prv::is_basic_string_view_v<std::decay_t<Range>>) {
             // Take basic_string_view by copy, not by reference.  In C++20 this is handled by
             // all_t<Range>, which is Range if Range is a view.
-            return UTFStringCodePoints<CP32, behavior, std::decay_t<Range>>(
+            أرجع UTFStringCodePoints<CP32, behavior, std::decay_t<Range>>(
                 std::forward<Range>(unitRange));
-        } else {
-            return UTFStringCodePoints<CP32, behavior, Range>(std::forward<Range>(unitRange));
+        } وإلا {
+            أرجع UTFStringCodePoints<CP32, behavior, Range>(std::forward<Range>(unitRange));
         }
 #endif
     }
@@ -2000,27 +2000,27 @@ constexpr UTFStringCodePointsAdaptor<CP32, behavior> utfStringCodePoints;
  * @draft ICU 78
  * @see unsafeUTFIterator
  */
-template<typename CP32, typename UnitIter, typename = void>
+template<typename CP32, typename UnitIter, typename = فراغ>
 class UnsafeUTFIterator {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+    static_assert(حجم(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
     using Impl = UnsafeUTFImpl<CP32, UnitIter>;
 
     // Proxy type for operator->() (required by LegacyInputIterator)
     // so that we don't promise always returning UnsafeCodeUnits.
     class Proxy {
-    public:
+    عام:
         explicit Proxy(UnsafeCodeUnits<CP32, UnitIter> &units) : units_(units) {}
-        UnsafeCodeUnits<CP32, UnitIter>& operator*() U_LIFETIME_BOUND { return units_; }
-        UnsafeCodeUnits<CP32, UnitIter>* operator->() U_LIFETIME_BOUND { return &units_; }
-    private:
+        UnsafeCodeUnits<CP32, UnitIter>& operator*() U_LIFETIME_BOUND { أرجع units_; }
+        UnsafeCodeUnits<CP32, UnitIter>* operator->() U_LIFETIME_BOUND { أرجع &units_; }
+    خاص:
         UnsafeCodeUnits<CP32, UnitIter> units_;
     };
 
-public:
+عام:
     /** C++ iterator boilerplate @internal */
-    using value_type = UnsafeCodeUnits<CP32, UnitIter>;
+    using نيلاي_type = UnsafeCodeUnits<CP32, UnitIter>;
     /** C++ iterator boilerplate @internal */
-    using reference = value_type;
+    using reference = نيلاي_type;
     /** C++ iterator boilerplate @internal */
     using pointer = Proxy;
     /** C++ iterator boilerplate @internal */
@@ -2049,29 +2049,29 @@ public:
     U_FORCE_INLINE UnsafeUTFIterator() : p_{}, units_(0, 0, p_, p_) {}
 
     /** Move constructor. @draft ICU 78 */
-    U_FORCE_INLINE UnsafeUTFIterator(UnsafeUTFIterator &&src) noexcept = default;
+    U_FORCE_INLINE UnsafeUTFIterator(UnsafeUTFIterator &&src) noexcept = افتراضي;
     /** Move assignment operator. @draft ICU 78 */
-    U_FORCE_INLINE UnsafeUTFIterator &operator=(UnsafeUTFIterator &&src) noexcept = default;
+    U_FORCE_INLINE UnsafeUTFIterator &operator=(UnsafeUTFIterator &&src) noexcept = افتراضي;
 
     /** Copy constructor. @draft ICU 78 */
-    U_FORCE_INLINE UnsafeUTFIterator(const UnsafeUTFIterator &other) = default;
+    U_FORCE_INLINE UnsafeUTFIterator(ثابت UnsafeUTFIterator &other) = افتراضي;
     /** Copy assignment operator. @draft ICU 78 */
-    U_FORCE_INLINE UnsafeUTFIterator &operator=(const UnsafeUTFIterator &other) = default;
+    U_FORCE_INLINE UnsafeUTFIterator &operator=(ثابت UnsafeUTFIterator &other) = افتراضي;
 
     /**
      * @param other Another iterator
      * @return true if this iterator is at the same position as the other one
      * @draft ICU 78
      */
-    U_FORCE_INLINE bool operator==(const UnsafeUTFIterator &other) const {
-        return base() == other.base();
+    U_FORCE_INLINE bool operator==(ثابت UnsafeUTFIterator &other) ثابت {
+        أرجع base() == other.base();
     }
     /**
      * @param other Another iterator
      * @return true if this iterator is not at the same position as the other one
      * @draft ICU 78
      */
-    U_FORCE_INLINE bool operator!=(const UnsafeUTFIterator &other) const { return !operator==(other); }
+    U_FORCE_INLINE bool operator!=(ثابت UnsafeUTFIterator &other) ثابت { أرجع !operator==(other); }
 
     /**
      * @param iter An UnsafeUTFIterator
@@ -2083,11 +2083,11 @@ public:
     std::enable_if_t<
         !std::is_same_v<Sentinel, UnsafeUTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator==(const UnsafeUTFIterator &iter, const Sentinel &s) {
-        return iter.base() == s;
+    operator==(ثابت UnsafeUTFIterator &iter, ثابت Sentinel &s) {
+        أرجع iter.base() == s;
     }
 
-#if U_CPLUSPLUS_VERSION < 20
+#إذا U_CPLUSPLUS_VERSION < 20
     /**
      * @param s A unit iterator sentinel
      * @param iter An UnsafeUTFIterator
@@ -2098,8 +2098,8 @@ public:
     std::enable_if_t<
         !std::is_same_v<Sentinel, UnsafeUTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator==(const Sentinel &s, const UnsafeUTFIterator &iter) {
-        return iter.base() == s;
+    operator==(ثابت Sentinel &s, ثابت UnsafeUTFIterator &iter) {
+        أرجع iter.base() == s;
     }
     /**
      * @param iter An UnsafeUTFIterator
@@ -2111,7 +2111,7 @@ public:
     std::enable_if_t<
         !std::is_same_v<Sentinel, UnsafeUTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator!=(const UnsafeUTFIterator &iter, const Sentinel &s) { return !(iter == s); }
+    operator!=(ثابت UnsafeUTFIterator &iter, ثابت Sentinel &s) { أرجع !(iter == s); }
     /**
      * @param s A unit iterator sentinel
      * @param iter An UnsafeUTFIterator
@@ -2122,7 +2122,7 @@ public:
     std::enable_if_t<
         !std::is_same_v<Sentinel, UnsafeUTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator!=(const Sentinel &s, const UnsafeUTFIterator &iter) { return !(iter == s); }
+    operator!=(ثابت Sentinel &s, ثابت UnsafeUTFIterator &iter) { أرجع !(iter == s); }
 #endif  // C++17
 
     /**
@@ -2132,9 +2132,9 @@ public:
      * @return current position as a code unit iterator
      * @draft ICU 79
      */
-    U_FORCE_INLINE UnitIter base() const {
+    U_FORCE_INLINE UnitIter base() ثابت {
         // Return the logical position.
-        return state_ <= 0 ? p_ : units_.begin();
+        أرجع state_ <= 0 ? p_ : units_.begin();
     }
 
     /**
@@ -2143,13 +2143,13 @@ public:
      * @return CodeUnits with the decoded code point etc.
      * @draft ICU 78
      */
-    U_FORCE_INLINE UnsafeCodeUnits<CP32, UnitIter> operator*() const {
-        if (state_ == 0) {
+    U_FORCE_INLINE UnsafeCodeUnits<CP32, UnitIter> operator*() ثابت {
+        إذا (state_ == 0) {
             UnitIter p0 = p_;
             units_ = Impl::readAndInc(p0, p_);
             state_ = 1;
         }
-        return units_;
+        أرجع units_;
     }
 
     /**
@@ -2160,13 +2160,13 @@ public:
      *     an opaque proxy object so that <code>iter->codePoint()</code> etc. works.
      * @draft ICU 78
      */
-    U_FORCE_INLINE Proxy operator->() const {
-        if (state_ == 0) {
+    U_FORCE_INLINE Proxy operator->() ثابت {
+        إذا (state_ == 0) {
             UnitIter p0 = p_;
             units_ = Impl::readAndInc(p0, p_);
             state_ = 1;
         }
-        return Proxy(units_);
+        أرجع Proxy(units_);
     }
 
     /**
@@ -2176,17 +2176,17 @@ public:
      * @draft ICU 78
      */
     U_FORCE_INLINE UnsafeUTFIterator& operator++() U_LIFETIME_BOUND {  // pre-increment
-        if (state_ > 0) {
+        إذا (state_ > 0) {
             // operator*() called readAndInc() so p_ is already ahead.
             state_ = 0;
-        } else if (state_ == 0) {
+        } وإلا إذا (state_ == 0) {
             Impl::inc(p_);
-        } else /* state_ < 0 */ {
+        } وإلا /* state_ < 0 */ {
             // operator--() called decAndRead() so we know how far to skip.
             p_ = units_.end();
             state_ = 0;
         }
-        return *this;
+        أرجع *this;
     }
 
     /**
@@ -2197,25 +2197,25 @@ public:
      *     returns an opaque proxy object so that <code>*iter++</code> still works.
      * @draft ICU 78
      */
-    U_FORCE_INLINE UnsafeUTFIterator operator++(int) {  // post-increment
-        if (state_ > 0) {
+    U_FORCE_INLINE UnsafeUTFIterator operator++(صحيح) {  // post-increment
+        إذا (state_ > 0) {
             // operator*() called readAndInc() so p_ is already ahead.
             UnsafeUTFIterator result(*this);
             state_ = 0;
-            return result;
-        } else if (state_ == 0) {
+            أرجع result;
+        } وإلا إذا (state_ == 0) {
             UnitIter p0 = p_;
             units_ = Impl::readAndInc(p0, p_);
             UnsafeUTFIterator result(*this);
             result.state_ = 1;
             // keep this->state_ == 0
-            return result;
-        } else /* state_ < 0 */ {
+            أرجع result;
+        } وإلا /* state_ < 0 */ {
             UnsafeUTFIterator result(*this);
             // operator--() called decAndRead() so we know how far to skip.
             p_ = units_.end();
             state_ = 0;
-            return result;
+            أرجع result;
         }
     }
 
@@ -2230,13 +2230,13 @@ public:
     U_FORCE_INLINE
     std::enable_if_t<prv::bidirectional_iterator<Iter>, UnsafeUTFIterator&>
     operator--() U_LIFETIME_BOUND {  // pre-decrement
-        if (state_ > 0) {
+        إذا (state_ > 0) {
             // operator*() called readAndInc() so p_ is ahead of the logical position.
             p_ = units_.begin();
         }
         units_ = Impl::decAndRead(p_);
         state_ = -1;
-        return *this;
+        أرجع *this;
     }
 
     /**
@@ -2249,13 +2249,13 @@ public:
     template<typename Iter = UnitIter>
     U_FORCE_INLINE
     std::enable_if_t<prv::bidirectional_iterator<Iter>, UnsafeUTFIterator>
-    operator--(int) {  // post-decrement
+    operator--(صحيح) {  // post-decrement
         UnsafeUTFIterator result(*this);
         operator--();
-        return result;
+        أرجع result;
     }
 
-private:
+خاص:
     friend class std::reverse_iterator<UnsafeUTFIterator<CP32, UnitIter>>;
 
     // operator*() etc. are logically const.
@@ -2277,111 +2277,111 @@ class UnsafeUTFIterator<
         CP32,
         UnitIter,
         std::enable_if_t<!prv::forward_iterator<UnitIter>>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+    static_assert(حجم(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
     using Impl = UnsafeUTFImpl<CP32, UnitIter>;
 
     // Proxy type for post-increment return value, to make *iter++ work.
     // Also for operator->() (required by LegacyInputIterator)
     // so that we don't promise always returning UnsafeCodeUnits.
     class Proxy {
-    public:
+    عام:
         explicit Proxy(UnsafeCodeUnits<CP32, UnitIter> &units) : units_(units) {}
-        UnsafeCodeUnits<CP32, UnitIter>& operator*() U_LIFETIME_BOUND { return units_; }
-        UnsafeCodeUnits<CP32, UnitIter>* operator->() U_LIFETIME_BOUND { return &units_; }
-    private:
+        UnsafeCodeUnits<CP32, UnitIter>& operator*() U_LIFETIME_BOUND { أرجع units_; }
+        UnsafeCodeUnits<CP32, UnitIter>* operator->() U_LIFETIME_BOUND { أرجع &units_; }
+    خاص:
         UnsafeCodeUnits<CP32, UnitIter> units_;
     };
 
-public:
-    using value_type = UnsafeCodeUnits<CP32, UnitIter>;
-    using reference = value_type;
+عام:
+    using نيلاي_type = UnsafeCodeUnits<CP32, UnitIter>;
+    using reference = نيلاي_type;
     using pointer = Proxy;
     using difference_type = prv::iter_difference_t<UnitIter>;
-    using iterator_category = std::input_iterator_tag;
+    using iterator_category = std::ماسوقن_iterator_tag;
 
     U_FORCE_INLINE explicit UnsafeUTFIterator(UnitIter p) : p_(std::move(p)) {}
 
-    U_FORCE_INLINE UnsafeUTFIterator(UnsafeUTFIterator &&src) noexcept = default;
-    U_FORCE_INLINE UnsafeUTFIterator &operator=(UnsafeUTFIterator &&src) noexcept = default;
+    U_FORCE_INLINE UnsafeUTFIterator(UnsafeUTFIterator &&src) noexcept = افتراضي;
+    U_FORCE_INLINE UnsafeUTFIterator &operator=(UnsafeUTFIterator &&src) noexcept = افتراضي;
 
-    U_FORCE_INLINE UnsafeUTFIterator(const UnsafeUTFIterator &other) = default;
-    U_FORCE_INLINE UnsafeUTFIterator &operator=(const UnsafeUTFIterator &other) = default;
+    U_FORCE_INLINE UnsafeUTFIterator(ثابت UnsafeUTFIterator &other) = افتراضي;
+    U_FORCE_INLINE UnsafeUTFIterator &operator=(ثابت UnsafeUTFIterator &other) = افتراضي;
 
-    U_FORCE_INLINE bool operator==(const UnsafeUTFIterator &other) const {
-        return p_ == other.p_ && ahead_ == other.ahead_;
+    U_FORCE_INLINE bool operator==(ثابت UnsafeUTFIterator &other) ثابت {
+        أرجع p_ == other.p_ && ahead_ == other.ahead_;
         // Strictly speaking, we should check if the logical position is the same.
         // However, we cannot advance, or do arithmetic with, a single-pass UnitIter.
     }
-    U_FORCE_INLINE bool operator!=(const UnsafeUTFIterator &other) const { return !operator==(other); }
+    U_FORCE_INLINE bool operator!=(ثابت UnsafeUTFIterator &other) ثابت { أرجع !operator==(other); }
 
     template<typename Sentinel> U_FORCE_INLINE friend
     std::enable_if_t<
         !std::is_same_v<Sentinel, UnsafeUTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator==(const UnsafeUTFIterator &iter, const Sentinel &s) {
-        return !iter.ahead_ && iter.p_ == s;
+    operator==(ثابت UnsafeUTFIterator &iter, ثابت Sentinel &s) {
+        أرجع !iter.ahead_ && iter.p_ == s;
     }
 
-#if U_CPLUSPLUS_VERSION < 20
+#إذا U_CPLUSPLUS_VERSION < 20
     template<typename Sentinel> U_FORCE_INLINE friend
     std::enable_if_t<
         !std::is_same_v<Sentinel, UnsafeUTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator==(const Sentinel &s, const UnsafeUTFIterator &iter) {
-        return !iter.ahead_ && iter.p_ == s;
+    operator==(ثابت Sentinel &s, ثابت UnsafeUTFIterator &iter) {
+        أرجع !iter.ahead_ && iter.p_ == s;
     }
 
     template<typename Sentinel> U_FORCE_INLINE friend
     std::enable_if_t<
         !std::is_same_v<Sentinel, UnsafeUTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator!=(const UnsafeUTFIterator &iter, const Sentinel &s) { return !(iter == s); }
+    operator!=(ثابت UnsafeUTFIterator &iter, ثابت Sentinel &s) { أرجع !(iter == s); }
 
     template<typename Sentinel> U_FORCE_INLINE friend
     std::enable_if_t<
         !std::is_same_v<Sentinel, UnsafeUTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator!=(const Sentinel &s, const UnsafeUTFIterator &iter) { return !(iter == s); }
+    operator!=(ثابت Sentinel &s, ثابت UnsafeUTFIterator &iter) { أرجع !(iter == s); }
 #endif  // C++17
 
-    U_FORCE_INLINE UnsafeCodeUnits<CP32, UnitIter> operator*() const {
-        if (!ahead_) {
+    U_FORCE_INLINE UnsafeCodeUnits<CP32, UnitIter> operator*() ثابت {
+        إذا (!ahead_) {
             units_ = Impl::readAndInc(p_, p_);
             ahead_ = true;
         }
-        return units_;
+        أرجع units_;
     }
 
-    U_FORCE_INLINE Proxy operator->() const {
-        if (!ahead_) {
+    U_FORCE_INLINE Proxy operator->() ثابت {
+        إذا (!ahead_) {
             units_ = Impl::readAndInc(p_, p_);
             ahead_ = true;
         }
-        return Proxy(units_);
+        أرجع Proxy(units_);
     }
 
     U_FORCE_INLINE UnsafeUTFIterator& operator++() U_LIFETIME_BOUND {  // pre-increment
-        if (ahead_) {
+        إذا (ahead_) {
             // operator*() called readAndInc() so p_ is already ahead.
             ahead_ = false;
-        } else {
+        } وإلا {
             Impl::inc(p_);
         }
-        return *this;
+        أرجع *this;
     }
 
-    U_FORCE_INLINE Proxy operator++(int) {  // post-increment
-        if (ahead_) {
+    U_FORCE_INLINE Proxy operator++(صحيح) {  // post-increment
+        إذا (ahead_) {
             // operator*() called readAndInc() so p_ is already ahead.
             ahead_ = false;
-        } else {
+        } وإلا {
             units_ = Impl::readAndInc(p_, p_);
             // keep this->ahead_ == false
         }
-        return Proxy(units_);
+        أرجع Proxy(units_);
     }
 
-private:
+خاص:
     // operator*() etc. are logically const.
     mutable UnitIter p_;
     // Keep state so that we call readAndInc() only once for both operator*() and ++
@@ -2402,24 +2402,24 @@ private:
 // that does most of the same work twice for reading variable-length sequences.
 template<typename CP32, typename UnitIter>
 class std::reverse_iterator<U_HEADER_ONLY_NAMESPACE::UnsafeUTFIterator<CP32, UnitIter>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+    static_assert(حجم(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
     using Impl = U_HEADER_ONLY_NAMESPACE::UnsafeUTFImpl<CP32, UnitIter>;
     using UnsafeCodeUnits_ = U_HEADER_ONLY_NAMESPACE::UnsafeCodeUnits<CP32, UnitIter>;
 
     // Proxy type for operator->() (required by LegacyInputIterator)
     // so that we don't promise always returning UnsafeCodeUnits.
     class Proxy {
-    public:
+    عام:
         explicit Proxy(UnsafeCodeUnits_ units) : units_(units) {}
-        UnsafeCodeUnits_& operator*() U_LIFETIME_BOUND { return units_; }
-        UnsafeCodeUnits_* operator->() U_LIFETIME_BOUND { return &units_; }
-    private:
+        UnsafeCodeUnits_& operator*() U_LIFETIME_BOUND { أرجع units_; }
+        UnsafeCodeUnits_* operator->() U_LIFETIME_BOUND { أرجع &units_; }
+    خاص:
         UnsafeCodeUnits_ units_;
     };
 
-public:
-    using value_type = UnsafeCodeUnits_;
-    using reference = value_type;
+عام:
+    using نيلاي_type = UnsafeCodeUnits_;
+    using reference = نيلاي_type;
     using pointer = Proxy;
     using difference_type = U_HEADER_ONLY_NAMESPACE::prv::iter_difference_t<UnitIter>;
     using iterator_category = std::bidirectional_iterator_tag;
@@ -2428,93 +2428,93 @@ public:
             p_(iter.base()), units_(0, 0, p_, p_) {}
     U_FORCE_INLINE reverse_iterator() : p_{}, units_(0, 0, p_, p_) {}
 
-    U_FORCE_INLINE reverse_iterator(reverse_iterator &&src) noexcept = default;
-    U_FORCE_INLINE reverse_iterator &operator=(reverse_iterator &&src) noexcept = default;
+    U_FORCE_INLINE reverse_iterator(reverse_iterator &&src) noexcept = افتراضي;
+    U_FORCE_INLINE reverse_iterator &operator=(reverse_iterator &&src) noexcept = افتراضي;
 
-    U_FORCE_INLINE reverse_iterator(const reverse_iterator &other) = default;
-    U_FORCE_INLINE reverse_iterator &operator=(const reverse_iterator &other) = default;
+    U_FORCE_INLINE reverse_iterator(ثابت reverse_iterator &other) = افتراضي;
+    U_FORCE_INLINE reverse_iterator &operator=(ثابت reverse_iterator &other) = افتراضي;
 
-    U_FORCE_INLINE bool operator==(const reverse_iterator &other) const {
-        return getLogicalPosition() == other.getLogicalPosition();
+    U_FORCE_INLINE bool operator==(ثابت reverse_iterator &other) ثابت {
+        أرجع getLogicalPosition() == other.getLogicalPosition();
     }
-    U_FORCE_INLINE bool operator!=(const reverse_iterator &other) const { return !operator==(other); }
+    U_FORCE_INLINE bool operator!=(ثابت reverse_iterator &other) ثابت { أرجع !operator==(other); }
 
-    U_FORCE_INLINE U_HEADER_ONLY_NAMESPACE::UnsafeUTFIterator<CP32, UnitIter> base() const {
-        return U_HEADER_ONLY_NAMESPACE::UnsafeUTFIterator<CP32, UnitIter>(
+    U_FORCE_INLINE U_HEADER_ONLY_NAMESPACE::UnsafeUTFIterator<CP32, UnitIter> base() ثابت {
+        أرجع U_HEADER_ONLY_NAMESPACE::UnsafeUTFIterator<CP32, UnitIter>(
             getLogicalPosition());
     }
 
-    U_FORCE_INLINE UnsafeCodeUnits_ operator*() const {
-        if (state_ == 0) {
+    U_FORCE_INLINE UnsafeCodeUnits_ operator*() ثابت {
+        إذا (state_ == 0) {
             units_ = Impl::decAndRead(p_);
             state_ = -1;
         }
-        return units_;
+        أرجع units_;
     }
 
-    U_FORCE_INLINE Proxy operator->() const {
-        if (state_ == 0) {
+    U_FORCE_INLINE Proxy operator->() ثابت {
+        إذا (state_ == 0) {
             units_ = Impl::decAndRead(p_);
             state_ = -1;
         }
-        return Proxy(units_);
+        أرجع Proxy(units_);
     }
 
     U_FORCE_INLINE reverse_iterator& operator++() U_LIFETIME_BOUND {  // pre-increment
-        if (state_ < 0) {
+        إذا (state_ < 0) {
             // operator*() called decAndRead() so p_ is already behind.
             state_ = 0;
-        } else if (state_ == 0) {
+        } وإلا إذا (state_ == 0) {
             Impl::dec(p_);
-        } else /* state_ > 0 */ {
+        } وإلا /* state_ > 0 */ {
             // operator--() called readAndInc() so we know how far to skip.
             p_ = units_.begin();
             state_ = 0;
         }
-        return *this;
+        أرجع *this;
     }
 
-    U_FORCE_INLINE reverse_iterator operator++(int) {  // post-increment
-        if (state_ < 0) {
+    U_FORCE_INLINE reverse_iterator operator++(صحيح) {  // post-increment
+        إذا (state_ < 0) {
             // operator*() called decAndRead() so p_ is already behind.
             reverse_iterator result(*this);
             state_ = 0;
-            return result;
-        } else if (state_ == 0) {
+            أرجع result;
+        } وإلا إذا (state_ == 0) {
             units_ = Impl::decAndRead(p_);
             reverse_iterator result(*this);
             result.state_ = -1;
             // keep this->state_ == 0
-            return result;
-        } else /* state_ > 0 */ {
+            أرجع result;
+        } وإلا /* state_ > 0 */ {
             reverse_iterator result(*this);
             // operator--() called readAndInc() so we know how far to skip.
             p_ = units_.begin();
             state_ = 0;
-            return result;
+            أرجع result;
         }
     }
 
     U_FORCE_INLINE reverse_iterator& operator--() U_LIFETIME_BOUND {  // pre-decrement
-        if (state_ < 0) {
+        إذا (state_ < 0) {
             // operator*() called decAndRead() so p_ is behind the logical position.
             p_ = units_.end();
         }
         UnitIter p0 = p_;
         units_ = Impl::readAndInc(p0, p_);
         state_ = 1;
-        return *this;
+        أرجع *this;
     }
 
-    U_FORCE_INLINE reverse_iterator operator--(int) {  // post-decrement
+    U_FORCE_INLINE reverse_iterator operator--(صحيح) {  // post-decrement
         reverse_iterator result(*this);
         operator--();
-        return result;
+        أرجع result;
     }
 
-private:
-    U_FORCE_INLINE UnitIter getLogicalPosition() const {
-        return state_ >= 0 ? p_ : units_.end();
+خاص:
+    U_FORCE_INLINE UnitIter getLogicalPosition() ثابت {
+        أرجع state_ >= 0 ? p_ : units_.end();
     }
 
     // operator*() etc. are logically const.
@@ -2549,7 +2549,7 @@ namespace U_HEADER_ONLY_NAMESPACE {
  */
 template<typename CP32, typename UnitIter>
 auto unsafeUTFIterator(UnitIter iter) {
-    return UnsafeUTFIterator<CP32, UnitIter>(std::move(iter));
+    أرجع UnsafeUTFIterator<CP32, UnitIter>(std::move(iter));
 }
 
 /**
@@ -2580,17 +2580,17 @@ auto unsafeUTFIterator(UnitIter iter) {
  * @see unsafeUTFStringCodePoints
  */
 template<typename CP32, typename Range>
-#if defined(__cpp_lib_ranges)
+#إذا defined(__cpp_lib_ranges)
     requires std::ranges::range<Range>
 #endif
 class UnsafeUTFStringCodePoints {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
+    static_assert(حجم(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+عام:
     /**
      * Constructs an empty C++ "range" object.
      * @draft ICU 78
      */
-    UnsafeUTFStringCodePoints() = default;
+    UnsafeUTFStringCodePoints() = افتراضي;
 
     /**
      * Constructs a C++ "range" object over the code points in the string.
@@ -2607,30 +2607,30 @@ public:
      * @param unitRange input range
      * @draft ICU 78
      */
-    template<typename R = Range, typename = std::enable_if_t<std::is_reference_v<R>>, typename = void>
+    template<typename R = Range, typename = std::enable_if_t<std::is_reference_v<R>>, typename = فراغ>
     explicit UnsafeUTFStringCodePoints(Range unitRange U_LIFETIME_BOUND) : unitRange(unitRange) {}
 
     /** Copy constructor. @draft ICU 78 */
-    UnsafeUTFStringCodePoints(const UnsafeUTFStringCodePoints &other) = default;
+    UnsafeUTFStringCodePoints(ثابت UnsafeUTFStringCodePoints &other) = افتراضي;
 
     /** Copy assignment operator. @draft ICU 78 */
-    UnsafeUTFStringCodePoints &operator=(const UnsafeUTFStringCodePoints &other) = default;
+    UnsafeUTFStringCodePoints &operator=(ثابت UnsafeUTFStringCodePoints &other) = افتراضي;
 
     /**
      * @return the range start iterator
      * @draft ICU 78
      */
     auto begin() {
-        return unsafeUTFIterator<CP32>(unitRange.begin());
+        أرجع unsafeUTFIterator<CP32>(unitRange.begin());
     }
 
     /**
      * @return the range start iterator
      * @draft ICU 78
      */
-    template<typename R = Range, typename = std::enable_if_t<prv::range<const R>>>
-    auto begin() const {
-        return unsafeUTFIterator<CP32>(unitRange.begin());
+    template<typename R = Range, typename = std::enable_if_t<prv::range<ثابت R>>>
+    auto begin() ثابت {
+        أرجع unsafeUTFIterator<CP32>(unitRange.begin());
     }
 
     /**
@@ -2640,11 +2640,11 @@ public:
     auto end() {
         using UnitIter = decltype(unitRange.begin());
         using LimitIter = decltype(unitRange.end());
-        if constexpr (!std::is_same_v<UnitIter, LimitIter>) {
+        إذا constexpr (!std::is_same_v<UnitIter, LimitIter>) {
             // Return the code unit sentinel.
-            return unitRange.end();
-        } else {
-            return unsafeUTFIterator<CP32>(unitRange.end());
+            أرجع unitRange.end();
+        } وإلا {
+            أرجع unsafeUTFIterator<CP32>(unitRange.end());
         }
     }
 
@@ -2652,15 +2652,15 @@ public:
      * @return the range limit (exclusive end) iterator
      * @draft ICU 78
      */
-    template<typename R = Range, typename = std::enable_if_t<prv::range<const R>>>
-    auto end() const {
+    template<typename R = Range, typename = std::enable_if_t<prv::range<ثابت R>>>
+    auto end() ثابت {
         using UnitIter = decltype(unitRange.begin());
         using LimitIter = decltype(unitRange.end());
-        if constexpr (!std::is_same_v<UnitIter, LimitIter>) {
+        إذا constexpr (!std::is_same_v<UnitIter, LimitIter>) {
             // Return the code unit sentinel.
-            return unitRange.end();
-        } else {
-            return unsafeUTFIterator<CP32>(unitRange.end());
+            أرجع unitRange.end();
+        } وإلا {
+            أرجع unsafeUTFIterator<CP32>(unitRange.end());
         }
     }
 
@@ -2668,16 +2668,16 @@ public:
      * @return std::reverse_iterator(end())
      * @draft ICU 78
      */
-    auto rbegin() const {
-        return std::make_reverse_iterator(end());
+    auto rbegin() ثابت {
+        أرجع std::make_reverse_iterator(end());
     }
 
     /**
      * @return std::reverse_iterator(begin())
      * @draft ICU 78
      */
-    auto rend() const {
-        return std::make_reverse_iterator(begin());
+    auto rend() ثابت {
+        أرجع std::make_reverse_iterator(begin());
     }
 
     /**
@@ -2687,8 +2687,8 @@ public:
      * @return the CodeUnits for the first character/code point.
      * @draft ICU 79
      */
-    auto front() const {
-        return *begin();
+    auto front() ثابت {
+        أرجع *begin();
     }
 
     /**
@@ -2698,34 +2698,34 @@ public:
      * @return the CodeUnits for the last character/code point.
      * @draft ICU 79
      */
-    auto back() const {
-        return *(--end());
+    auto back() ثابت {
+        أرجع *(--end());
     }
 
-private:
+خاص:
     Range unitRange;
 };
 
 /** @internal */
 template<typename CP32>
-struct UnsafeUTFStringCodePointsAdaptor
-#if U_CPLUSPLUS_VERSION >= 23 && __cpp_lib_ranges >= 2022'02 &&                                         \
+بنية UnsafeUTFStringCodePointsAdaptor
+#إذا U_CPLUSPLUS_VERSION >= 23 && __cpp_lib_ranges >= 2022'02 &&                                         \
     __cpp_lib_bind_back >= 2022'02 // http://wg21.link/P2387R3.
     : std::ranges::range_adaptor_closure<UnsafeUTFStringCodePointsAdaptor<CP32>>
 #endif
 {
     /** @internal */
     template<typename Range>
-    auto operator()(Range &&unitRange) const {
-#if defined(__cpp_lib_ranges) && __cpp_lib_ranges >= 2021'10  // We need https://wg21.link/P2415R2.
-        return UnsafeUTFStringCodePoints<CP32, std::ranges::views::all_t<Range>>(std::forward<Range>(unitRange));
-#else
-        if constexpr (prv::is_basic_string_view_v<std::decay_t<Range>>) {
+    auto operator()(Range &&unitRange) ثابت {
+#إذا defined(__cpp_lib_ranges) && __cpp_lib_ranges >= 2021'10  // We need https://wg21.link/P2415R2.
+        أرجع UnsafeUTFStringCodePoints<CP32, std::ranges::views::all_t<Range>>(std::forward<Range>(unitRange));
+#وإلا
+        إذا constexpr (prv::is_basic_string_view_v<std::decay_t<Range>>) {
             // Take basic_string_view by copy, not by reference.  In C++20 this is handled by
             // all_t<Range>, which is Range if Range is a view.
-            return UnsafeUTFStringCodePoints<CP32, std::decay_t<Range>>(std::forward<Range>(unitRange));
-        } else {
-            return UnsafeUTFStringCodePoints<CP32, Range>(std::forward<Range>(unitRange));
+            أرجع UnsafeUTFStringCodePoints<CP32, std::decay_t<Range>>(std::forward<Range>(unitRange));
+        } وإلا {
+            أرجع UnsafeUTFStringCodePoints<CP32, Range>(std::forward<Range>(unitRange));
         }
 #endif
     }
@@ -2750,7 +2750,7 @@ constexpr UnsafeUTFStringCodePointsAdaptor<CP32> unsafeUTFStringCodePoints;
 }  // namespace U_HEADER_ONLY_NAMESPACE
 
 
-#if defined(__cpp_lib_ranges)
+#إذا defined(__cpp_lib_ranges)
 template <typename CP32, UTFIllFormedBehavior behavior, typename Range>
 constexpr bool std::ranges::enable_borrowed_range<
     U_HEADER_ONLY_NAMESPACE::UTFStringCodePoints<CP32, behavior, Range>> =

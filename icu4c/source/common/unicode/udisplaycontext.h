@@ -10,9 +10,9 @@
 #ifndef UDISPLAYCONTEXT_H
 #define UDISPLAYCONTEXT_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#إذا !UCONFIG_NO_FORMATTING
 
 /**
  * \file
@@ -24,7 +24,7 @@
  * Note, the specific numeric values are internal and may change.
  * @stable ICU 51
  */
-enum UDisplayContextType {
+تعداد UDisplayContextType {
     /**
      * Type to retrieve the dialect handling setting, e.g.
      * UDISPCTX_STANDARD_NAMES or UDISPCTX_DIALECT_NAMES.
@@ -54,14 +54,14 @@ enum UDisplayContextType {
 /**
 *  @stable ICU 51
 */
-typedef enum UDisplayContextType UDisplayContextType;
+تعريفنوع تعداد UDisplayContextType UDisplayContextType;
 
 /**
  * Display context settings.
  * Note, the specific numeric values are internal and may change.
  * @stable ICU 51
  */
-enum UDisplayContext {
+تعداد UDisplayContext {
     /**
      * ================================
      * DIALECT_HANDLING can be set to one of UDISPCTX_STANDARD_NAMES or
@@ -101,7 +101,7 @@ enum UDisplayContext {
      * formatted with capitalization appropriate for the middle of a sentence.
      * @stable ICU 51
      */
-    UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE = (UDISPCTX_TYPE_CAPITALIZATION<<8) + 1,
+    UDISPCTX_CAPITALIZATION_FOR_تڠه_OF_SENTENCE = (UDISPCTX_TYPE_CAPITALIZATION<<8) + 1,
     /**
      * The capitalization context if a date, date symbol or display name is to be
      * formatted with capitalization appropriate for the beginning of a sentence.
@@ -166,7 +166,7 @@ enum UDisplayContext {
 /**
 *  @stable ICU 51
 */
-typedef enum UDisplayContext UDisplayContext;
+تعريفنوع تعداد UDisplayContext UDisplayContext;
 
 #endif /* #if !UCONFIG_NO_FORMATTING */
 
